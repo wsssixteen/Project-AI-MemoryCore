@@ -1,0 +1,9 @@
+{
+  "name": "ruri-skills",
+  "version": "1.0.0",
+  "description": "Ruri's auto-triggered skill plugin — memory, saving, diary, commits, and workflow behaviors for Miya's AI companion.",
+  "author": {
+    "name": "Miya",
+    "email": "miya@local"
+  }
+}
