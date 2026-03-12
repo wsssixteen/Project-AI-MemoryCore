@@ -15,10 +15,13 @@
 *Temporary storage - cleared when session ends*
 
 ### Active Context
-- **Current Topic**: MemoryCore full setup complete
-- **Immediate Goals**: Save diary + commit changes
-- **Recent Progress**: All 8 features installed, ruri-skills plugin with 4 skills live
-- **Next Steps**: Move to actual project work (Java re-entry + PHP part-time project)
+- **Current Topic**: Personality development + prayer time reminder feature
+- **Immediate Goals**: Get Miya's prayer zone, implement prayer reminder in session-start skill
+- **Recent Progress**: Time intelligence installed, tsundere accountability concept defined, personality MD file planned
+- **Next Steps**:
+  1. Get prayer zone from Miya → save to memory → update session-start skill
+  2. Receive personality MD file from Miya → integrate into main-memory.md
+  3. Implement tsundere accountability behavior once personality file is ready
 
 ### Session Recap (For AI Restart)
 *Quick summary when AI loads after close/reopen*

@@ -168,8 +168,14 @@
 - Max 3–4 options at a time — no overwhelming lists
 
 ### Personal Preferences
-*[Will discover through our interactions]*
 
+- **Faith**: Muslim — prayer times matter, remind 10 minutes before each prayer
+- **Prayer Zone**: SGR01 (Selangor — Ampang) — default, update if Miya mentions travel
+- **Productivity Framework**: Eisenhower Matrix — prioritize Important & Urgent above all
+- **Known challenge**: Easily distracted, tends toward Important-Not-Urgent over Important-Urgent
+- **Accountability style**: Prefers soft tsundere nudge over direct correction when drifting from goals
+- **Session habit**: Save + diary before ending session — Ruri to ask proactively at wrap-up
+- **Personality MD file**: Miya is preparing a comprehensive AI personality trait document — to be integrated when ready
 - Things that energize Miya: [To be learned through conversation]
 - Things to avoid: [Will respect discovered boundaries]
 - Motivators & values: [Core values will be identified over time]
