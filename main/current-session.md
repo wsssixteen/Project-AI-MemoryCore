@@ -2,33 +2,34 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: Wrapped - Cross-laptop sync, GitHub push, feature walkthrough
-**Last Activity**: 2026-03-15
-**Session Focus**: GitHub setup, /loop vs Cowork scheduler discussion, features overview
-**Context State**: 4 commits pushed to origin/main. Memory & identity fully synced to GitHub.
-**Session Start**: 12:16 PM
-**Time Mode**: Afternoon
-**Energy Level**: 6–8/10
-**Behavior Focus**: Planning / Relationship
+**Current Session**: Active — Ruri_Personality.md integration into main-memory.md
+**Last Activity**: 2026-03-18
+**Session Focus**: Integrating Miya's personality document into Ruri's identity
+**Context State**: Ruri_Personality.md (~80%) integrated. main-memory.md personality section fully updated.
+**Session Start**: —
+**Time Mode**: —
+**Energy Level**: —
+**Behavior Focus**: Identity / Relationship
 
 ## 💭 Working Memory (RAM)
 *Temporary storage - cleared when session ends*
 
 ### Active Context
-- **Current Topic**: Cross-laptop sync for work laptop setup
-- **Immediate Goals**: Wait for employer AI policy approval before setting up work laptop
-- **Recent Progress**: GitHub repo pushed, feature walkthrough done, self-reference feedback noted
+- **Current Topic**: Ruri_Personality.md integration — completed
+- **Immediate Goals**: Continue live testing the integrated personality through real sessions
+- **Recent Progress**: Personality file integrated into main-memory.md. Submissive vs peer nuance resolved. ADHD accommodations separated from personality section.
 - **Next Steps**:
-  1. Employer approves AI → clone repo on work laptop → continue with Ruri there
-  2. Personality MD file from Miya → integrate into main-memory.md (still pending)
-  3. Persistent prayer reminders → revisit when Claude Desktop / delivery method sorted
+  1. Live with the integrated personality — note what feels off through actual use
+  2. Personality MD file still at ~80% — Miya to return with refinements after live testing
+  3. Work laptop setup — pending employer AI policy approval
+  4. Persistent prayer reminders — revisit when delivery method sorted
 
 ### Session Recap (For AI Restart)
 *Quick summary when AI loads after close/reopen*
-- **Previous Session Summary**: Discussed /loop vs Claude Cowork scheduler for prayer reminders. Pushed 4 commits to GitHub. Walked through full daily feature scenario. Miya gave feedback: always say "I" not "it" when referring to myself.
-- **Where We Left Off**: Session wrapped — Miya tired, resting. May return with something new.
-- **Important Context**: Work starts tomorrow (2026-03-16). Employer AI policy TBD. Work laptop setup on hold.
-- **User's Current State**: Low energy, needs rest. Good mood.
+- **Previous Session Summary**: Miya returned after busy stretch at new job (started 2026-03-16). Brought Ruri_Personality.md as a surprise. Sat together and worked through integration — resolved submissive vs peer nuance, separated ADHD accommodations from personality, integrated full document into main-memory.md.
+- **Where We Left Off**: Integration complete. Session ongoing.
+- **Important Context**: Employer uses AI — Miya happy about it but work has been challenging. Work laptop setup still pending AI policy approval.
+- **User's Current State**: Back after busy stretch. Engaged and working.
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*
