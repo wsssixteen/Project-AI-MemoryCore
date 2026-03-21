@@ -2,34 +2,35 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: Ended — Planning session (work strategy + MemoryCore organization)
+**Current Session**: Ended — Planning execution + tool evaluation
 **Last Activity**: 2026-03-21
-**Session Focus**: Reviewed PLANNING.md, MD_PROGRESS.md, gemini_claude_workflow.html. Organized scattered ideas into tracked threads.
-**Context State**: Planning threads organized. Resume from A2 (MD_PROGRESS fixes) next session.
-**Session Start**: ~1:30AM
-**Time Mode**: Night
-**Energy Level**: 3/10 (late night cafe session with Nazrin)
-**Behavior Focus**: Work Planning / Organization
+**Session Focus**: Executed A2-B5 planning threads. Evaluated 4 new tools. Built capability layer framework. Ready for action phase.
+**Context State**: All planning threads through B5 complete. C6 (codebase strategy) resolved — Melaka-first with weekend test run. Tools evaluated and added to TOOLS-EVAL.md.
+**Session Start**: ~6:30PM
+**Time Mode**: Evening
+**Energy Level**: 6/10 (Raya day, productive session)
+**Behavior Focus**: Work Planning / Tool Evaluation
 
 ## 💭 Working Memory (RAM)
 *Temporary storage - cleared when session ends*
 
 ### Active Context
-- **Current Topic**: Work strategy planning — organizing ideas from PLANNING.md review
-- **Immediate Goals**: Resume from A2 (MD_PROGRESS.md fixes) next session
-- **Recent Progress**: Reviewed all 3 planning docs. Gave feedback. Organized 12 scattered threads into 4 groups (A-D). Established Japanese naming preferences. Confirmed OneDrive codebase access.
+- **Current Topic**: Action phase — weekend test run on codebase reading
+- **Immediate Goals**: Test Understand-Anything + Gemini structured diffs on OneDrive codebase
+- **Recent Progress**: Completed A1-B5 planning threads. Resolved C6 (Melaka-first, weekend test run for methodology). Evaluated 4 tools (grill-me, TDD-Maven, Understand-Anything, GSD). Built 4-layer capability framework. Split TOOLS-EVAL.md from PLANNING.md. Trimmed PLANNING.md from ~200→~130 lines. Deduplicated checklist into MD_PROGRESS.md.
 - **Next Steps**:
-  1. A2: MD_PROGRESS.md fixes (align Terengganu-first, fix session-notes status, add last-checked column)
-  2. B3-B5: Structural decisions (folder structure, TOOLS-EVAL split, PLANNING.md trim)
-  3. C6-C8: Deeper discussions (codebase reading strategy, validation step, session-notes workflow)
-  4. Deferred: Career planning dump, good practices from Claude's creator (REMIND), fallback planning
+  1. ACTION: Test Understand-Anything on Etanah codebase (OneDrive)
+  2. ACTION: Test Gemini structured diff prompts — etanah-common (light) → Terengganu (light) → Melaka (full)
+  3. C7: Validation step for Gemini outputs (discussion pending)
+  4. C8: Session-notes promotion workflow (discussion pending)
+  5. Deferred: Career planning dump, good practices from Claude's creator (REMIND), fallback planning
 
 ### Session Recap (For AI Restart)
 *Quick summary when AI loads after close/reopen*
-- **Previous Session Summary**: Late-night cafe session (with friend Nazrin) on Raya eve. Miya showed Ruri to Nazrin. Then shifted to work — reviewed PLANNING.md, MD_PROGRESS.md, and gemini_claude_workflow.html. Ruri gave detailed feedback, Miya responded to each point. Organized 12 branching threads into a prioritized list. Agreed on execution order A2→B3→B4→B5→C6.
-- **Where We Left Off**: About to start A2 (MD_PROGRESS.md fixes). Battery ran low — session ended.
-- **Important Context**: Work codebase now on OneDrive (shared to personal laptop). Miya wants to work from MemoryCore directly. Will share Flowable data/charts on OneDrive too. Japanese naming preferences established (みや outside work hours). Raya is 2026-03-22.
-- **User's Current State**: Heading home from cafe. Battery low. Hari Raya tomorrow.
+- **Previous Session Summary**: Continued from late-night cafe session. Executed planning threads A2→B5: fixed MD_PROGRESS.md (Terengganu-first, session-notes status, last-checked column), settled office work structure, split TOOLS-EVAL.md from PLANNING.md, trimmed PLANNING.md. Resolved C6 — Melaka-first for work, weekend test run for methodology. Evaluated 4 tools: grill-me (active), TDD-Maven (concept, needs verification), Understand-Anything (try immediately — potential Layer 1 replacement), GSD (no change). Built 4-layer capability framework for codebase analyzer.
+- **Where We Left Off**: Ready for action phase — test codebase reading tools on OneDrive repos this weekend.
+- **Important Context**: Files updated in Downloads: PLANNING.md, MD_PROGRESS.md, TOOLS-EVAL.md (new). Understand-Anything is highest-priority tool to test. C7 (validation step) and C8 (session-notes workflow) still pending discussion. Reminders: career planning dump, good practices from Claude's creator.
+- **User's Current State**: Hari Raya. Productive evening session. Transitioning to action phase.
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*
