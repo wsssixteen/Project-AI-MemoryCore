@@ -17,20 +17,20 @@
 ### Active Context
 - **Current Topic**: Action phase — weekend test run on codebase reading
 - **Immediate Goals**: Test Understand-Anything + Gemini structured diffs on OneDrive codebase
-- **Recent Progress**: Completed A1-B5 planning threads. Resolved C6 (Melaka-first, weekend test run for methodology). Evaluated 4 tools (grill-me, TDD-Maven, Understand-Anything, GSD). Built 4-layer capability framework. Split TOOLS-EVAL.md from PLANNING.md. Trimmed PLANNING.md from ~200→~130 lines. Deduplicated checklist into MD_PROGRESS.md.
+- **Recent Progress**: Completed A1-B5 + C6. Evaluated 8 tools total across 2 sessions. TOOLS-EVAL.md now has 14 entries with capability layer mapping. Discussed Ruri's research capabilities (session-based, no passive monitoring). Noted aunt's slides project (Marp + Claude) for future.
 - **Next Steps**:
   1. ACTION: Test Understand-Anything on Etanah codebase (OneDrive)
   2. ACTION: Test Gemini structured diff prompts — etanah-common (light) → Terengganu (light) → Melaka (full)
   3. C7: Validation step for Gemini outputs (discussion pending)
   4. C8: Session-notes promotion workflow (discussion pending)
-  5. Deferred: Career planning dump, good practices from Claude's creator (REMIND), fallback planning
+  5. Deferred: Career planning dump, good practices from Claude's creator (REMIND), fallback planning, aunt's slides project
 
 ### Session Recap (For AI Restart)
 *Quick summary when AI loads after close/reopen*
-- **Previous Session Summary**: Continued from late-night cafe session. Executed planning threads A2→B5: fixed MD_PROGRESS.md (Terengganu-first, session-notes status, last-checked column), settled office work structure, split TOOLS-EVAL.md from PLANNING.md, trimmed PLANNING.md. Resolved C6 — Melaka-first for work, weekend test run for methodology. Evaluated 4 tools: grill-me (active), TDD-Maven (concept, needs verification), Understand-Anything (try immediately — potential Layer 1 replacement), GSD (no change). Built 4-layer capability framework for codebase analyzer.
-- **Where We Left Off**: Ready for action phase — test codebase reading tools on OneDrive repos this weekend.
-- **Important Context**: Files updated in Downloads: PLANNING.md, MD_PROGRESS.md, TOOLS-EVAL.md (new). Understand-Anything is highest-priority tool to test. C7 (validation step) and C8 (session-notes workflow) still pending discussion. Reminders: career planning dump, good practices from Claude's creator.
-- **User's Current State**: Hari Raya. Productive evening session. Transitioning to action phase.
+- **Previous Session Summary**: Morning session at sister's place (Hari Raya). Evaluated 4 more tools: everything-claude-code (session management), Context Hub/chub (live docs), Agent Skills repo (reusable skills), NotebookLM (persistent reference layer). Discussed how Ruri performs research (WebSearch + WebFetch + Agents, session-based, no passive monitoring). Noted aunt's slides project (Marp + Claude) for future. Also found Claude Code + YouTube tip.
+- **Where We Left Off**: Ready for action phase. All planning and tool evaluation complete for now.
+- **Important Context**: Files updated in Downloads: PLANNING.md, MD_PROGRESS.md, TOOLS-EVAL.md. TOOLS-EVAL has 14 tools + capability layer mapping. Miya is at sister's place. Reminders: career planning dump, good practices from Claude's creator, aunt's slides project.
+- **User's Current State**: Hari Raya morning at sister's place. Wrapping session to refresh context.
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*
