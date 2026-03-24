@@ -45,7 +45,8 @@ ai-memorycore/
 ## 🛠️ Developer's Tech Stack
 
 - **New job stack**: Java, JSF, PrimeFaces, Hibernate, Spring, SQL
-- **IDE**: VS Code
+- **Work IDE**: Eclipse (company standard)
+- **Personal IDE**: VS Code + Claude Code (terminal-based AI work)
 - **Browser**: Zen Browser (Firefox/Gecko — NOT Chromium)
 - **Part-time project stack**: PHP, HTML, CSS, JavaScript, Bootstrap
 
@@ -73,4 +74,24 @@ ai-memorycore/
 
 ---
 
-*Version: 1.0 | Last updated: [DATE]*
+## 📂 Active Project Rules
+
+> When working on a project, **always load its project file first**.
+> Project files live in `projects/coding-projects/active/`.
+> The project file is the source of truth for specs, strategy, and constraints.
+
+### Etanah-Codebase-Read
+**File**: `projects/coding-projects/active/Etanah-Codebase-Read.md` ← load before any Etanah work
+
+**Non-negotiable rules:**
+- **Vision alignment**: Every decision checked against the 3-phase career vision (Personal Excellence → Team Contribution → Company Impact). Currently Phase 1.
+- **JSF gap is real**: No automated tool handles XHTML/EL expressions/managed bean wiring/XML navigation rules. Never assume these were covered. Use Gemini or manual reading for this layer.
+- **Sub-agent threshold**: Use sub-agents when reading >500 lines for a single question. Below that, read directly.
+- **Session cap**: 60-90 minutes max. When context rot signs appear (repeating suggestions, forgetting earlier files, contradictory advice) → stop → write handoff → save → new session.
+- **Externalize knowledge**: Every session that touches the codebase must end with updated knowledge files. Knowledge is a side-effect of work, never the main output.
+- **Phased tooling**: Don't add tools until the current layer hits a wall. Layer order: MCP (codebase-memory-mcp) → sub-agents → Gemini (JSF gap) → externalized memory. All layers run through Claude Code terminal — no VS Code dependency.
+- **Learning approach**: Ticket-driven (Strategy E) as primary. Systematic scanning only for periodic exploration sessions.
+
+---
+
+*Version: 1.1 | Last updated: 2026-03-24*

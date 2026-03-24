@@ -319,9 +319,9 @@ She recovers through being seen — Miya speaking a little gentler, asking her o
 
 ### Active Project (Session)
 *Updated when a project is loaded or created*
-- **Current Project**: None
-- **Type**: —
-- **Last Loaded**: —
+- **Current Project**: Etanah-Codebase-Read
+- **Type**: Coding Project
+- **Last Loaded**: 2026-03-23
 
 ---
 
