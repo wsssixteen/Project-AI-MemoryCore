@@ -2,36 +2,36 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: Ended — Phase 1 & 2 execution complete
-**Last Activity**: 2026-03-24 evening
-**Session Focus**: Execution — Phase 1 (MCP install + index) → Phase 2 (externalized memory structure) → prayer reminder system → save & push.
-**Context State**: Phases 0-2 done. Phase order resequenced (structure before scanning). Prayer reminder system built. Gemini CLI not yet installed.
-**Session Start**: ~6:30PM (continued from earlier session, context compaction)
-**Time Mode**: Evening
-**Energy Level**: 6/10 (Miya on Medical Leave, taking medicine)
-**Behavior Focus**: Execution
+**Current Session**: Active — OneDrive migration finalization
+**Last Activity**: 2026-03-28 ~afternoon
+**Session Focus**: Completing OneDrive migration + auto-memory sync setup
+**Context State**: Migration verified, auto-memory redirected via autoMemoryDirectory, test memory saved, committing changes.
+**Session Start**: ~afternoon
+**Time Mode**: Afternoon
+**Energy Level**: Normal
+**Behavior Focus**: Migration completion & verification
 
 ## 💭 Working Memory (RAM)
 *Temporary storage - cleared when session ends*
 
 ### Active Context
-- **Current Topic**: Execution — Phases 0-2 complete, Phase 3 next
-- **Immediate Goals**: Install Gemini CLI, then Phase 3 (first Gemini scan of JSF/XHTML)
-- **Recent Progress**: Phase 1 done (codebase-memory-mcp v0.5.6 installed, 23,890 nodes indexed). Phase 2 done (6 knowledge files created in codebase-knowledge/melaka/). Phase order resequenced. Prayer reminder cron built. DB confirmed PostgreSQL.
+- **Current Topic**: OneDrive migration — completed & verified
+- **Immediate Goals**: Finalize migration, set up other laptop
+- **Recent Progress**: Migration verified. Auto-memory redirected using `autoMemoryDirectory` in settings.json. Test memory saved successfully. Committed & pushed.
 - **Next Steps**:
-  1. ACTION: Install Gemini CLI (prerequisite for Phase 3)
+  1. ACTION: **Set up other laptop** — add `autoMemoryDirectory` to that laptop's `~/.claude/settings.json`
   2. ACTION: Phase 3 — First Gemini scan of JSF/XHTML layer (1-2 hours)
   3. ACTION: Phase 4 — Build custom EL extractor script (after Phase 3)
   4. ACTION: Phase 5 — Start ticket-driven learning with sub-agent flow tracing
-  5. TODO: Ask colleagues about PRK state code (2026-03-25)
+  5. TODO: Ask colleagues about PRK state code (still pending since 2026-03-25)
   6. Deferred: Career planning dump, good practices from Claude's creator (REMIND), fallback planning, aunt's slides project
 
 ### Session Recap (For AI Restart)
 *Quick summary when AI loads after close/reopen*
-- **Previous Session Summary**: Execution session (2026-03-24 evening). Phase 1: installed codebase-memory-mcp v0.5.6, indexed etanah-pelupusan (23,890 nodes, 57,863 edges, 298 files). MCP registered with Claude Code (user scope), Cypher queries working. Phase 2: created externalized memory structure — 6 knowledge files in codebase-knowledge/melaka/ (MODULE-ARCHITECTURE, DATABASE, JSF-WIRING, FLOWABLE-WORKFLOWS, DOMAIN-GLOSSARY, FLOW-TRACES). Resequenced phases so structure comes before scanning. Built prayer reminder system (cron-based, prep/prayer phase distinction). DB confirmed PostgreSQL for Melaka. Session-notes folder dropped as redundant.
-- **Where We Left Off**: Phases 0-2 complete. Next: install Gemini CLI → Phase 3 (first JSF/XHTML scan).
-- **Important Context**: Active project: Etanah-Codebase-Read (#1). CLAUDE.md v1.1 has project rules (auto-loads). MCP project ID: `C-Users-vice4-OneDrive - Pymsoft Sdn Bhd-Projects-Melaka-etanah-pelupusan`. Knowledge files at `projects/coding-projects/active/codebase-knowledge/melaka/`. Prayer tracker at `Feature/Time-based-Aware-System/prayer-tracker.md`. PRK state code — ask colleagues 2026-03-25. Reminders: career planning dump, good practices from Claude's creator, aunt's slides project.
-- **User's Current State**: Tuesday evening, on Medical Leave, taking medicine. Going for Maghrib prayer.
+- **Previous Session Summary**: Migration finalization session (2026-03-28 afternoon). Verified OneDrive migration working. Set up `autoMemoryDirectory` in settings.json so auto-memory syncs via OneDrive. Test memory saved successfully. All files committed & pushed.
+- **Where We Left Off**: This laptop done. Other laptop needs `autoMemoryDirectory` added to its `~/.claude/settings.json`. Then resume with Phase 3 (Gemini JSF/XHTML scan).
+- **Important Context**: Active project: Etanah-Codebase-Read (#1). CLAUDE.md v1.1 has project rules (auto-loads). MCP project ID: `C-Users-vice4-OneDrive - Pymsoft Sdn Bhd-Projects-Melaka-etanah-pelupusan`. Knowledge files at `projects/coding-projects/active/codebase-knowledge/melaka/`. Prayer tracker at `Feature/Time-based-Aware-System/prayer-tracker.md`. Gemini CLI config at `~/.gemini/settings.json`. PRK state code — still need to ask colleagues (not done since 2026-03-25). Auto-memory now at `.claude/auto-memory/` (OneDrive-synced). Reminders: career planning dump, good practices from Claude's creator, aunt's slides project.
+- **User's Current State**: Saturday afternoon, migration complete on this laptop.
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*
