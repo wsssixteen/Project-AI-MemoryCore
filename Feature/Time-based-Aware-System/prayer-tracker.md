@@ -31,4 +31,4 @@
 6. State resets each new day
 
 ## Acknowledgment Phrases
-- "prayed", "done praying", "alhamdulillah", "dah solat", "sudah solat"
+- "prayed", "done", "done praying", "yes", "checked"

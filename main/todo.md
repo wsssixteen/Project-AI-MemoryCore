@@ -1,0 +1,76 @@
+# 📋 Ruri's Backlog
+*Persistent to-do list — items removed only when confirmed done*
+
+---
+
+## How This Works
+
+| Trigger | Action |
+|---|---|
+| "remember later", "do later", "save to next session", "remind me later", "push to [later/tonight/tomorrow]", "hold that", "park that", "set that aside", "we'll come back to this", "skip that for now" | Add to this file **immediately, mid-conversation — not at save time** |
+| "what are our to-do lists" | Read this file, present as one line per EM quadrant, comma-separated — brief for skimming. Then ask which to work on. |
+| Task confirmed done | Remove from this file |
+
+*This file is independent — `current-session.md` continues as-is.*
+
+**Fallback rules:**
+- **Proactive**: If multiple items were mentioned at session start and not all addressed → ask before saving: *"Should I add the unfinished ones to todo?"*
+- **Save sweep**: At every `save` — check working memory for unresolved deferred items not yet in `todo.md`, add them automatically.
+
+---
+
+## 🟢 Active
+
+> EM ranking applies across all categories.
+> **Q1** Urgent + Important · **Q2** Important, not urgent · **Q3** Urgent, not important · **Q4** Someday
+
+### 🔴 Q1 — Do Now
+
+| Category | Item | Notes |
+|---|---|---|
+| Work | **QA-253492** Phase 3 | Post-mortem + Redmine close + GSheet update |
+
+### 🟡 Q2 — Schedule
+
+| Category | Item | Notes |
+|---|---|---|
+| System | **Quest: auto test-record SQL** | Phase 0 step added to protocol. Next: make it smarter (hook or template). DATABASE.md must always be loaded before SQL work. |
+| System | **SCRIPTS.md** (new codebase-knowledge file) | Working SQL patterns: senior's base script + annotations, shortform table name mapping (tgsn=tugasan etc.), ID_PENGENALAN format documented |
+| System | **Quest: Pre-implementation scrutiny gate** | Add 5-question pre-flight checklist to Phase 1 of quest-protocol.md before any code change |
+| Learning | **Phase 3** Gemini scan | First JSF/XHTML layer scan — 1–2 hours |
+| Learning | **Phase 4** EL extractor script | After Phase 3 |
+| Learning | **Phase 5** Ticket-driven learning | Sub-agent flow tracing — after Phase 4 |
+| System | **Prayer reminder rework** | One-shot crons at exact times, not polling |
+| System | **Hook scripts** | ~~Done 2026-04-02~~ ticket-gate + commit-gate wired |
+| Personal | **Career planning dump** | — |
+
+### 🟠 Q3 — Minimize
+
+| Category | Item | Notes |
+|---|---|---|
+| Learning | **PRK state code** | Ask colleagues — pending since 2026-03-25 |
+
+### ⚪ Q4 — Someday
+
+| Category | Item | Notes |
+|---|---|---|
+| System | **Project file template update** | Add mandatory file paths: Task folder, codebase, DB/TDD, Flowables |
+| System | **System Structure section** | Document Ruri's folder map in this file |
+| System | **Familiar skill deep-dive** | Weekend — リドワンさん curious how it actually works under the hood; discuss together |
+| System | **Kiyoraka features** | ~~Done 2026-04-02~~ All 4 systems implemented |
+| Personal | **Aunt's slides project** | Claude + Marp — help aunt with presentations |
+| Personal | **Good practices from Claude's creator** | *(REMIND)* |
+| Personal | **Pendrive cold-backup idea** | — |
+
+---
+
+## 🗄️ Shelved
+*Ideas on ice — not abandoned, kept for when circumstances change*
+
+| Item | Notes |
+|---|---|
+| **Fallback planning** | Context forgotten — keeping for reference |
+
+---
+
+*Last updated: 2026-04-01*
