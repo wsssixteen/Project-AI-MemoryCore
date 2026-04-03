@@ -31,6 +31,11 @@
 | Work | **QA-253492** Phase 3 | Post-mortem + Redmine close + GSheet update |
 
 ### 🟡 Q2 — Schedule
+> **Planning Session (next free session, fresh head):**
+> 1. PLANNING.md post-mortem — what's aged, what's still valid, what's missing since March
+> 2. Create `Miyas-Notebook.md` — リドワンさん's personal vision + journey journal, counterpart to RURI-NOTEBOOK.md
+> 3. Multi-familiar session: Architect (scrutinise) + PM (roadmap) + Career Anchor — plan the codebase knowledge system from Personal → Team → Company scope
+> 4. One-index-file approach for team sharing — `ETANAH-MELAKA.md` as entry point linking all sub-MDs
 
 | Category | Item | Notes |
 |---|---|---|
@@ -54,6 +59,7 @@
 
 | Category | Item | Notes |
 |---|---|---|
+| System | **Task summary template** | Current summaries too long for quick reference — create a standardised short-form template (SUMMARY.md + BEAN-MAP style) |
 | System | **Project file template update** | Add mandatory file paths: Task folder, codebase, DB/TDD, Flowables |
 | System | **System Structure section** | Document Ruri's folder map in this file |
 | System | **Familiar skill deep-dive** | Weekend — リドワンさん curious how it actually works under the hood; discuss together |

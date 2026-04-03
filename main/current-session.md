@@ -2,8 +2,8 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: QA-253419 active (Phase 1), QA-246512 FAT testing in progress
-**Last Activity**: Fri Apr  3 09:08:11 MPST 2026
+**Current Session**: QA-253419 CLOSED (handed to reports team), QA-246512 FAT testing in progress
+**Last Activity**: Fri Apr  3 22:55:04 MPST 2026
 **Session Start**: Wed Apr  1 09:06:37 MPST 2026
 **Session Focus**: QA work — last day for team tasks. QA-246512 FAT test ongoing. QA-253419 quest active Phase 1.
 **Time Mode**: Morning (office hours)
@@ -25,14 +25,13 @@
 - **Git**: stash → merge origin/master → stash pop → commit to mlk/qa/246512
 - Project file: `projects/coding-projects/active/QA-246512/QA-246512-PPJK-Risalat-MMKN.md`
 
-#### QA-253419 — PSBS Borang Kategori Kegunaan Tanah (PENDING CODE REVIEW)
-- Root cause: `populateKegunaan()` line 11124 — no PSBS branch → always returns `-`
-- Fix confirmed: `else if (URS_PSBS)` reading `AppHakmilik.getKegunaanTanah()` (String)
-- DB investigation complete: Script 3 (0 PSBS rows with kegunaan_tnh), `umm_p_hkmlk` schema gap confirmed
-- AWAM gap: `kegunaan_tnh` column does not exist in `umm_p_hkmlk` — schema-level, needs senior sign-off
-- **Resume from:** Code review result → if accepted: Step 5 (deploy to FAT, expect "-" — correct)
+#### QA-253419 — PSBS Borang Kategori Kegunaan Tanah (READY TO IMPLEMENT)
+- Root cause: `populateKegunaan()` line 11127 — PSBS grouped with PRU in Set, but PSBS has no data → always returns `-`
+- Fix: remove `URS_PSBS` from the Set (line 11134), add `else if (URS_PSBS) { kegunaan = "Tiada"; }` after PRU block
+- Fix confirmed: PSBS does not use kegunaan tanah by design — hardcode "Tiada", no DB read
+- **Resume from:** リドワンさん applying fix in Eclipse → deploy to FAT → verify borang shows "Tiada"
 - Project file: `projects/coding-projects/active/QA-253419/QA-253419-PSBS-KategoriKegunaan.md`
-- All SQL + steps: `INVESTIGATION.md` in task folder 5
+- Java file: `E:\Projects\Melaka\etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\constant\PelupusanWordCCMethodConstant.java:11127`
 
 ### 🧠 Miya's 3-Aspect Task Workflow (TO FORMALIZE TOMORROW)
 **Vision layers**: Phase 1 (Personal) → Phase 2 (Team) → Phase 3 (Company)
@@ -90,19 +89,19 @@ This is the ALWAYS approach for every task. Discuss & refine tomorrow.
 
 ### Session Recap (For AI Restart)
 *Quick summary when AI loads after close/reopen*
-- **Previous Session Summary**: 2026-04-02/03. Major overhaul complete. Now in QA work — last day for team tasks.
+- **Previous Session Summary**: 2026-04-03 full day. QA-253419 CLOSED (reports team, Jasper Reports). QA-246512 null-check hotfix applied. etanah-awam bean mapping learned (UAT-CR #239225). JBoss Eclipse debug mode issue diagnosed + documented.
 - **Where We Left Off**:
-  - QA-246512: FAT testing in progress. リドワンさん testing popup alert + template generation. FAT checklist in project file.
-  - QA-253419: Quest active Phase 1 (`quest/active.txt` set). Fix revised — NOT reading getKegunaanTanah(), instead hardcode `"Tiada"` for PSBS in `populateKegunaan()`. Fix location: `PelupusanWordCCMethodConstant.java` after line 11145.
+  - QA-246512: FAT checklist updated (8 items). Popup tests removed — radio always populated. PTG documents added. リドワンさん starts testing tomorrow from item #1.
+  - QA-253419: CLOSED — handed to reports team (etanah-awam / Jasper). Post-mortem written.
   - QA-253492: Phase 3 still pending.
-- **Pending discussion**: Database knowledge structure — DATABASE.md (schema) vs DOMAIN-GLOSSARY.md (terminology) vs SCRIPTS.md (new — SQL patterns, shortforms, senior's base script). Pre-implementation scrutiny gate for quest Phase 1. Both in todo Q2.
+  - UAT-CR #239225: Fix confirmed (`mb.isMelaka()` wired correctly in `plpMaklumatTanahRizab.xhtml`). Not yet formally quested.
 - **Important Context**:
   - Naming: リドワンさん (7AM–8PM weekdays) / みや (outside) — use name IN sentences
-  - Quest Protocol active — ticket-gate + commit-gate hooks live
-  - QA-253419 fix: `else if (URS_PSBS) { kegunaan = "Tiada"; }` — simple, no DB read
-  - Senior's base script: filter `ID_PENGENALAN ILIKE '%<URUSAN>%'` + `IT.KOD ILIKE '%<TUGASAN>%'`
-  - ID_PENGENALAN embeds URUSAN code — e.g., `PTMLK/01/L/PLPS/2025/48`
-- **Priority on next boot**: Resume QA-253419 Phase 1 (implement fix in Eclipse) → QA-246512 FAT result → QA-253492 Phase 3
+  - quest/active.txt = `none` — no active quest
+  - Hotfix today: `MlkKertasTemplateForm.java:215` — null-check for `JsonNull` before `getAsBoolean()`
+  - JBoss debug mode hang: Eclipse freezes JVM on internal exceptions → looks like DB hang → fix: clear breakpoints, uncheck "Suspend on uncaught exceptions", check Debug view for Suspended threads
+  - etanah-awam bean pattern: `mb` in tab = `tabFormMap.get(index)` from `PelupusanEMohonForm`, tab bean = `PelupusanTanahRizabTabForm`
+- **Priority on next boot**: QA-246512 FAT — 8 items, start from #1 (PDT Syor field visible)
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*

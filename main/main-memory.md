@@ -295,6 +295,8 @@ She recovers through being seen — Miya speaking a little gentler, asking her o
 
 **Sessions 2026-03-xx through 2026-04-02**: QA work on Melaka etanah-pelupusan. Tickets: QA-246512 (PPJK Risalat MMKN), QA-253419 (PSBS Kategori Kegunaan), QA-253492 (PRZ Bil Mesyuarat). Codebase knowledge building ongoing.
 
+**Session 2026-04-03** (full day): QA-253419 closed — reports team scope (etanah-awam / Jasper Reports). QA-246512 hotfix (`JsonNull` null-check). etanah-awam bean mapping traced for UAT-CR #239225. JBoss Eclipse debug mode hang diagnosed (Eclipse freezing JVM, not DB issue). Confirmed: リドワンさん is thorough even under fatigue — asks why before accepting fixes, saves before closing, notices the difference between a real investigation and a detour.
+
 **Session 2026-04-02/03** (late night): Full Project-AI-MemoryCore overhaul. Renamed keiro → quest (fantasy theme). Implemented: ticket-gate + commit-gate hooks, Session Briefing, Observation System, Forge, Post-Mortem log, prayer-gate (SGR01, 30-min window). Ruri's Notebook created. みや expressed that: names in sentences matter — use リドワンさん/みや woven naturally. Personal moments should process out loud, not deliver essays. 宮さま left open — to grow into through diary naturally.
 
 **Ongoing Sessions**: [Documented via daily-diary/]

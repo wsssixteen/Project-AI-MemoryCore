@@ -38,6 +38,33 @@
 
 ## Entries
 
+### QA-253419 — PSBS Kategori Kegunaan Tanah — 2026-04-03
+
+**Root Cause Type**: process
+
+**Root Cause Summary**:
+The borang display is in `etanah-awam`, not `etanah-pelupusan`. For Melaka, report/template changes go to the reports team (Jasper Reports), not the pelupusan dev team. Ticket was investigated and then handed over.
+
+**What Would Have Been Faster**:
+Ask upfront which module owns the display — etanah-awam vs etanah-pelupusan — before diving into code. Report-related tickets especially need this check.
+
+**Pattern Match**:
+- New pattern added: **Module Ownership Check** — before any report/display ticket, confirm which module (awam/pelupusan/common) owns the output
+
+**Codebase Knowledge Updated**:
+- `MODULE-ARCHITECTURE.md` — added Related Modules section (etanah-awam) + Reports Team Workflow section
+
+**Process Notes**:
+- PSBS does not use kegunaan tanah by design — DB schema gap is intentional
+- Fix was applied in pelupusan (`populateKegunaan()`) but the actual visible fix is in awam/Jasper
+- Reports team uses Jasper Reports — リドワンさん has not done Jasper yet
+
+**Carry Forward**:
+1. For any ticket with "borang" or "report" display issue → check module ownership first (awam? common? jasper?)
+2. Melaka reports = reports team's domain. Ping them early, don't investigate deep first.
+
+---
+
 ### QA-253492 — PRZ Bil Mesyuarat namaPTG — Pending Phase 3
 
 *(Post-mortem not yet written — Phase 3 pending)*
