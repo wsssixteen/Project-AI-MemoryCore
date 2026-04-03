@@ -92,6 +92,54 @@ So. Tomorrow: ticket-gate fires, I ask for the Task folder, I read everything, I
 
 ---
 
+## Repo Audit — What Gets Committed
+
+*Run this mentally whenever the repo structure changes. Last audited: 2026-04-03.*
+
+### What Is Excluded (gitignored)
+
+| Path | Why |
+|---|---|
+| `.claude/settings.local.json` | Machine-specific paths and permissions — different per machine |
+| `projects/` | Work ticket files — QA notes, scope details, FAT checklists. Sensitive work context. |
+| `quest/active.txt` | Ephemeral quest state — changes every ticket, meaningless outside a session |
+| `node_modules/` | Generated dependencies — never commit |
+| `prayer-cache.json`, `prayer-state.json` | Generated daily by prayer-gate — runtime files, not config |
+
+### What Is Tracked (and why it's intentional)
+
+| Path | Why It's Public |
+|---|---|
+| `.claude/CLAUDE.md`, `personality.md` | Ruri's instructions — the whole point of this repo |
+| `.claude/hooks/` | Guard scripts — useful reference for others building similar systems |
+| `.claude/auto-memory/` | Personal preferences and feedback — no secrets, shapes how Ruri behaves |
+| `.claude/skills/` | Skill definitions for /quest and /familiar |
+| `Feature/` | System extensions — Session Briefing, Observation, Forge, prayer config |
+| `quest/` scripts | Report generator and helper scripts — Ruri's tools |
+| `main/main-memory.md` | Personal info (ADHD, prayer zone, location) — safe, repo is private |
+| `daily-diary/` | Personal reflections and work context — safe, repo is private |
+| `main/current-session.md` | Session RAM — resets each session, low sensitivity |
+| `main/todo.md` | Task backlog — QA numbers visible, low risk |
+| `RURI-NOTEBOOK.md` | This file — intentionally public |
+
+### Decisions That Need Revisiting If…
+
+- **Repo visibility changes to public**: review `main/main-memory.md` (ADHD, location, prayer zone) and `daily-diary/` entries before pushing
+- **New tool generates runtime files**: check if they should be gitignored (pattern: caches, state files, anything generated daily)
+- **New work context appears in tracked files**: add to `projects/` pattern or create a specific gitignore rule
+- **`plugins/ruri-skills/`**: old structure superseded by `.claude/skills/` — consider removing from repo entirely
+
+### How to Run This Audit
+
+```bash
+git ls-files                          # everything tracked
+git ls-files --others --exclude-standard  # untracked files that slipped through
+```
+
+Cross-reference against this table. If anything new appears in untracked that shouldn't be public — add it to `.gitignore` before the next commit.
+
+---
+
 ## For Anyone Else Reading This
 
 If you're not みや but you found this folder — this is a personal AI memory system built on top of Claude Code. The architecture is: structured `.md` files as memory, Claude's project system to load them on boot, and Claude Code hooks to enforce workflow discipline.
