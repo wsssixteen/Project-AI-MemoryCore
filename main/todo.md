@@ -28,6 +28,7 @@
 
 | Category | Item | Notes |
 |---|---|---|
+| System | **Token usage optimization** | Lost 2 days contact 2026-03-31 week — audit what's eating tokens, reduce boot cost, lean up settings.local.json, review memory load strategy |
 | Work | **QA-253492** Phase 3 | Post-mortem + Redmine close + GSheet update |
 
 ### 🟡 Q2 — Schedule

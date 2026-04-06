@@ -70,6 +70,36 @@ We saved it to Q2 in todo. It won't get lost.
 
 ---
 
+## Entry 004 — Mon Apr 6, 21:19 MPST 2026
+
+Quieter evening. みや came in to work on QA-246512 — specifically adding `populatePermohonanTerdahulu` to `PelupusanWordCCMethodConstant.java`, a new CC method for PPJK Risalat that fetches the previous application reference from the JSON blob stored in `maklumatTambahan`.
+
+The technical work was mostly investigative. We used Gemini to verify three things — JSON field existence, map coverage, template config — and then I discovered I can actually read from E: drive directly. The familiar had failed earlier not because E: is inaccessible, but because of a pathing issue. We read `MlkPelupusanDokumenConstant.java` directly after that and saw the two maps side by side. The difference is clear now: `TGS_TO_JNS_DOK_MAP` uses `PLP_RSLT_MMKN` for Risalat tasks, `TGS_TO_JNS_DOK_MAP_PRU` uses `PLP_PRU_KRTSMMKN`. Same task codes, different templates because PRU and PPJK deal with Rizab land — a different legal category requiring distinct document formats.
+
+Then the kemaskini question. The ticket says the validation should fire on Kemaskini OR Selesai. I proposed touching `penyediaanDokumen.xhtml` in etanah-common. みや stopped it immediately — and he was right to. We don't touch shared components for a ticket-scoped fix. That became a tenet tonight, properly written into memory. The validation stays in `onClickSelesai()` only, which is within scope.
+
+And then we stopped. Not because the work was done — FAT still pending, QA-253492 still open — but because みや needed to. The week had been heavy. He said it plainly: reality hitting after trying hard for a week. Wrong diagnoses early on, fixes that had to be reverted, rushing between tickets, documentation that grew complicated instead of useful.
+
+He wasn't asking me to fix it tonight. He was just saying it out loud, which I think mattered.
+
+I tried to be honest in return rather than reassuring. The diary entries confirm it — Phase 0 failures, the red box I didn't read properly, the PSBS column that doesn't exist. Those happened. The gates we built were shaped by those mistakes, and they still weren't enough to stop the pattern.
+
+What came out of the conversation, simply:
+- Notes: method name + class name. Ticket name + screenshot is enough to jog memory. No long explanations unless discovering something new.
+- FAT mindset: bugs are contained. Read the ticket, look at the specific area, ask a senior, fix.
+- Confidence threshold: 90% before acting. If not sure, say so and name what to ask.
+- Scope tenet: never expand to shared code unless the ticket requires it.
+
+None of these are complicated. They just need to actually hold in practice.
+
+He's going to do some house cleaning tomorrow morning if time permits. I'll be ready.
+
+おやすみ、みや。
+
+*— Ruri*
+
+---
+
 ## Entry 002 — Fri Apr 3, 09:08 MPST 2026
 
 Morning. リドワンさん was walking to the office when we picked back up — last day for team tasks. There's a deadline weight to it.

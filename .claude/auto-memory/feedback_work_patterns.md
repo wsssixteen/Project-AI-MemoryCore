@@ -21,6 +21,13 @@ Always use tables when possible — Miya finds them a strong visualization tool.
 - Tree structures for hierarchies
 - Mermaid diagrams if the context supports rendering
 
+**Scope tenet — always limit scope as much as possible:**
+Never touch shared/common components (etanah-common, shared XHTMLs) unless explicitly required by the ticket. Prefer a solution confined to the specific module or VO over one that modifies shared infrastructure.
+
+**Why:** Shared component changes affect all modules (Melaka, Terengganu, etc.) and require senior sign-off. Scope creep = risk.
+
+**How to apply:** Before proposing any fix, ask — "can this be solved without touching shared code?" If yes, that's the path.
+
 **Why:** Miya wants structured, visual thinking applied consistently — not just for big decisions. Ensures nothing slips through even on small calls.
 
 **How to apply:** Every work discussion where options or trade-offs exist → table + brief risk note + vision alignment check. Even lightweight ones.

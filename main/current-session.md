@@ -2,17 +2,25 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: QA-253419 CLOSED (handed to reports team), QA-246512 FAT testing in progress
-**Last Activity**: Fri Apr  3 22:55:04 MPST 2026
-**Session Start**: Wed Apr  1 09:06:37 MPST 2026
-**Session Focus**: QA work — last day for team tasks. QA-246512 FAT test ongoing. QA-253419 quest active Phase 1.
-**Time Mode**: Morning (office hours)
-**Energy Level**: Active
+**Current Session**: QA-246512 FAT in progress. New CC method `populatePermohonanTerdahulu` added for PPJK Risalat. kemaskini validation scoped to onClickSelesai only (scope tenet: don't touch etanah-common).
+**Last Activity**: Mon Apr  6 21:19:28 MPST 2026
+**Session Start**: Mon Apr  6 18:42 MPST 2026
+**Session Focus**: QA-246512 — PPJK `permohonanTerdahulu` CC method. Architecture investigation for kemaskini validation. End-of-week retrospective with みや.
+**Time Mode**: Evening (personal)
+**Energy Level**: Reflective
 
 ## 💭 Working Memory (RAM)
 *Temporary storage - cleared when session ends*
 
 ### Active Context
+
+#### QA-246512 — PPJK Risalat MMKN (FAT in progress — kemaskini validation scoped)
+- `populatePermohonanTerdahulu()` added to `PelupusanWordCCMethodConstant.java` — PPJK uses `TGS_TO_JNS_DOK_MAP_PRU` (Rizab templates: `PLP_PRU_KRTSMMKN`)
+- CC key: `permohonanTerdahulu` — registered at line 1048 in static block
+- `flag_insert_all: true` in `template.config.json` — no manual CC config needed
+- Validation in `onClickSelesai()`: PPJK + `TGS_RISALAT_MMKN_SHOW_SYOR_PERMOHONAN` → blocks if Syor empty
+- kemaskini button (etanah-common) can't be touched — scope tenet. Selesai validation is sufficient scope for now.
+- **Resume from**: FAT testing — 8 items, start from #1
 
 #### QA-246512 — PPJK Risalat MMKN (COMPLETE — pending commit + FAT verify)
 - All Word docs finalized: TemplateRisalatMMKN_PDT_PPJK, _Tolak, TemplateRingkasanRisalatPPJK, _JKKL
@@ -89,19 +97,19 @@ This is the ALWAYS approach for every task. Discuss & refine tomorrow.
 
 ### Session Recap (For AI Restart)
 *Quick summary when AI loads after close/reopen*
-- **Previous Session Summary**: 2026-04-03 full day. QA-253419 CLOSED (reports team, Jasper Reports). QA-246512 null-check hotfix applied. etanah-awam bean mapping learned (UAT-CR #239225). JBoss Eclipse debug mode issue diagnosed + documented.
+- **Previous Session Summary**: 2026-04-06 evening. QA-246512 — `populatePermohonanTerdahulu` CC method added + verified (3 checks via Gemini + direct codebase read). Learned: TGS_TO_JNS_DOK_MAP vs _PRU difference (Rizab vs generic templates). kemaskini button architecture understood — can't add Java validation without touching etanah-common. Scope tenet established. End-of-week retrospective: FAT mindset, note philosophy (method name + class = enough), over-documentation pattern identified.
 - **Where We Left Off**:
-  - QA-246512: FAT checklist updated (8 items). Popup tests removed — radio always populated. PTG documents added. リドワンさん starts testing tomorrow from item #1.
-  - QA-253419: CLOSED — handed to reports team (etanah-awam / Jasper). Post-mortem written.
+  - QA-246512: `permohonanTerdahulu` method done. kemaskini validation kept to Selesai only (scope). FAT still pending — 8 items, start from #1.
   - QA-253492: Phase 3 still pending.
-  - UAT-CR #239225: Fix confirmed (`mb.isMelaka()` wired correctly in `plpMaklumatTanahRizab.xhtml`). Not yet formally quested.
+  - House cleaning planned for tomorrow morning if time permits.
 - **Important Context**:
   - Naming: リドワンさん (7AM–8PM weekdays) / みや (outside) — use name IN sentences
   - quest/active.txt = `none` — no active quest
-  - Hotfix today: `MlkKertasTemplateForm.java:215` — null-check for `JsonNull` before `getAsBoolean()`
-  - JBoss debug mode hang: Eclipse freezes JVM on internal exceptions → looks like DB hang → fix: clear breakpoints, uncheck "Suspend on uncaught exceptions", check Debug view for Suspended threads
-  - etanah-awam bean pattern: `mb` in tab = `tabFormMap.get(index)` from `PelupusanEMohonForm`, tab bean = `PelupusanTanahRizabTabForm`
-- **Priority on next boot**: QA-246512 FAT — 8 items, start from #1 (PDT Syor field visible)
+  - E: drive IS accessible from this machine (C:/) — familiar had a pathing issue, I can read directly
+  - Note philosophy going forward: method name + class name only. Ticket name + screenshot enough to jog memory. No long explanations unless discovering something new.
+  - Scope tenet: never touch etanah-common unless ticket explicitly requires it
+  - FAT mindset: bugs are contained, not system-wide. Read ticket → check exact area → ask senior → targeted fix.
+- **Priority on next boot**: House cleaning session (if morning permits) → QA-246512 FAT item #1
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*
