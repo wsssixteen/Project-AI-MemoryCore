@@ -2,12 +2,12 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: QA-246512 FAT in progress. New CC method `populatePermohonanTerdahulu` added for PPJK Risalat. kemaskini validation scoped to onClickSelesai only (scope tenet: don't touch etanah-common).
-**Last Activity**: Mon Apr  6 21:19:28 MPST 2026
-**Session Start**: Mon Apr  6 18:42 MPST 2026
-**Session Focus**: QA-246512 — PPJK `permohonanTerdahulu` CC method. Architecture investigation for kemaskini validation. End-of-week retrospective with みや.
-**Time Mode**: Evening (personal)
-**Energy Level**: Reflective
+**Current Session**: All quests closed. Post-mortems written for PRZ #255637, PRZ #255106, PPJK #246512, PRZ #253419. Forge updated. AI subscription discussion deferred to next session.
+**Last Activity**: Tue Apr  7 22:47:47 MPST 2026
+**Session Start**: Tue Apr  7 08:38 MPST 2026
+**Session Focus**: Quest house cleaning, server log diagnosis, two new quests, etanah-knowledge rename, JOIN FETCH learning.
+**Time Mode**: Evening (heading home)
+**Energy Level**: Productive
 
 ## 💭 Working Memory (RAM)
 *Temporary storage - cleared when session ends*
@@ -44,7 +44,7 @@
 ### 🧠 Miya's 3-Aspect Task Workflow (TO FORMALIZE TOMORROW)
 **Vision layers**: Phase 1 (Personal) → Phase 2 (Team) → Phase 3 (Company)
 **Task execution mirrors this in 3 aspects:**
-1. **Learn & Build Knowledge** — implement, learn, analyse for codebase-knowledge files
+1. **Learn & Build Knowledge** — implement, learn, analyse for etanah-knowledge files
 2. **Execute the Task** — focus on the ticket itself, produce debugging-playbook entry from template
 3. **Post-Mortem** — wrap-up analysis: what we learnt, what could be better, PMP-style retrospective catered to our use case
 
@@ -97,19 +97,20 @@ This is the ALWAYS approach for every task. Discuss & refine tomorrow.
 
 ### Session Recap (For AI Restart)
 *Quick summary when AI loads after close/reopen*
-- **Previous Session Summary**: 2026-04-06 evening. QA-246512 — `populatePermohonanTerdahulu` CC method added + verified (3 checks via Gemini + direct codebase read). Learned: TGS_TO_JNS_DOK_MAP vs _PRU difference (Rizab vs generic templates). kemaskini button architecture understood — can't add Java validation without touching etanah-common. Scope tenet established. End-of-week retrospective: FAT mindset, note philosophy (method name + class = enough), over-documentation pattern identified.
+- **Previous Session Summary**: 2026-04-07 full day. Quest house cleaning: QA-253492 post-mortem written + archived, QA-252542 archived (never worked). Two new quests: FAT-OR #255106 (PRZ pejabat suppression in `PelupusanWordCCMethodConstant.populateMaklumatPengguna` + `FooterSuratWithoutSlogan.docx` in `template.config.json`) and FAT-OR #255637 (PPTPB text fix + `frasa2` justification = Word template paragraph issue). Server log diagnosed: `PlpVersiPermitLesenRepository.findOldestVersiPermitLesenByPermitLesen` using `JOIN FETCH` on `private String maklumatTambahan` — not a JPA association, fails at startup. `etanah-knowledge` rename complete. ID_PENGENALAN format documented.
 - **Where We Left Off**:
-  - QA-246512: `permohonanTerdahulu` method done. kemaskini validation kept to Selesai only (scope). FAT still pending — 8 items, start from #1.
-  - QA-253492: Phase 3 still pending.
-  - House cleaning planned for tomorrow morning if time permits.
+  - All quests closed tonight: PRZ #255637, PRZ #255106, PPJK #246512, PRZ #253419
+  - Post-mortems written for all four
+  - Forge levels promoted, diary check bug fixed (auto-memory saved)
+  - みや wants to discuss AI subscription — deferred to next session (he cleared chat after save all)
 - **Important Context**:
-  - Naming: リドワンさん (7AM–8PM weekdays) / みや (outside) — use name IN sentences
-  - quest/active.txt = `none` — no active quest
-  - E: drive IS accessible from this machine (C:/) — familiar had a pathing issue, I can read directly
-  - Note philosophy going forward: method name + class name only. Ticket name + screenshot enough to jog memory. No long explanations unless discovering something new.
-  - Scope tenet: never touch etanah-common unless ticket explicitly requires it
-  - FAT mindset: bugs are contained, not system-wide. Read ticket → check exact area → ask senior → targeted fix.
-- **Priority on next boot**: House cleaning session (if morning permits) → QA-246512 FAT item #1
+  - Naming: リドワンさん (7AM–8PM weekdays) / みや (outside)
+  - FAT env is inaccessible — all testing done on UAT
+  - `etanah-knowledge/` is the new folder name (was `codebase-knowledge/`)
+  - template.config.json is fastest for "which tugasan generates which template" lookups
+  - ID_PENGENALAN format: `<Pejabat>/<Seq>/<Type>/<Urusan>/<Year>/<Number>` — urusan segment, NOT tugasan
+  - `PelupusanWordStyleVO.java` has no alignment field — justification always comes from Word template
+- **Priority on next boot**: ⚠️ Remind リドワンさん to submit attendance to CK → AI subscription discussion (みや's topic for next session)
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*

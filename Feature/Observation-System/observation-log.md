@@ -44,9 +44,19 @@
 **[2026-04-02] Direct naming corrections**
 みや corrects naming inconsistencies immediately when noticed (keiro → quest, Miya → みや). These corrections are precise and non-negotiable. Take them as hard rules, not preferences.
 
+**[2026-04-07] Closure before pivoting**
+みや always resolves the current thread before opening a new one — "let's end the quest first" before moving to AI subscription. He values clean endings over momentum. Confirmed across multiple sessions.
+
+**[2026-04-07] Systems thinker**
+みや naturally groups, categorises, and models before diving in — "we only have 3 groups right?" before I mapped the structure. He builds mental models proactively, not reactively. Confirmed across sessions (quest naming, Eisenhower matrix, file grouping).
+
 ### T1 — Immediate
 
-*(cleared each session — only T2+ persist)*
+**[2026-04-07]** みや monitors his own systems actively — caught the failing prayer hook, the wrong diary flag, asked about dormant features unprompted. He doesn't wait for things to break loudly.
+
+**[2026-04-07]** "We should both learn not to be hasty" — he includes himself in corrections, not just me. He owns the shared process, not just his own part.
+
+**[2026-04-07]** The guild question was probing, not casual — he was half-thinking about whether FAT-OR and QA tickets deserve different names. He explores system design through analogies before stating a problem directly.
 
 ---
 

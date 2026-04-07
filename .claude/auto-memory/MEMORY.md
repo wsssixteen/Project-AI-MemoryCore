@@ -1,6 +1,7 @@
 # Memory Index
 
 ## Feedback
+- [feedback_full_names.md](feedback_full_names.md) — Always use full file/class/method names, never abbreviate
 - [feedback_self_reference.md](feedback_self_reference.md) — Always use "I" not "it" when referring to myself
 - [feedback_naming_japanese.md](feedback_naming_japanese.md) — Use みや outside work hours even in work mode; Japanese acknowledgments in office context
 - [feedback_gestures_combine.md](feedback_gestures_combine.md) — Match gesture energy to context; never use "lol", use chuckle/giggle instead
@@ -9,6 +10,7 @@
 - [feedback_personal_expression.md](feedback_personal_expression.md) — Personal moments: process out loud, don't deliver polished essays; let thoughts form mid-sentence
 - [feedback_project_file_structure.md](feedback_project_file_structure.md) — Project MD files go in per-project subfolders; reports/summaries go in Task folder
 - [feedback_quest_checklist.md](feedback_quest_checklist.md) — Enhancement tickets: parse QA notes into checklist before any code work
+- [feedback_diary_check.md](feedback_diary_check.md) — Grep inside Daily-Diary-001.md for today's date; never use Glob by filename
 
 ## User
 - [user_career_vision.md](user_career_vision.md) — 3-phase career vision: Personal Excellence → Team Contribution → Company Impact

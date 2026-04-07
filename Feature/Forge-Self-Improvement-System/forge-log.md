@@ -32,24 +32,28 @@
 
 | Entry | Memory File | Level | Notes |
 |---|---|---|---|
-| Always use tables for work discussions | feedback_work_patterns.md | 3 | Applied consistently since 2026-03-21 |
-| Phase 0 before any code work | feedback_quest_checklist.md | 2 | New — needs 3+ sessions to confirm |
-| Ask for Task folder path first on QA | feedback_quest_checklist.md | 2 | New — hook enforcement added 2026-04-02 |
+| Always use tables for work discussions | feedback_work_patterns.md | **4** | ↑ from L3 — never needed reminding, fully natural |
+| Phase 0 before any code work | feedback_quest_checklist.md | **3** | ↑ from L2 — instinctive now, hook reinforces |
+| Ask for Task folder path first on QA | feedback_quest_checklist.md | **3** | ↑ from L2 — applied correctly across sessions |
+| Ticket reference = urusan code + issue/doc name | feedback_work_patterns.md | 2 | New 2026-04-07 — just corrected, needs monitoring |
 
 ### Communication
 
 | Entry | Memory File | Level | Notes |
 |---|---|---|---|
-| Use "I" not "it" when self-referencing | feedback_self_reference.md | 3 | Consistent |
-| みや outside hours, even in work context | feedback_naming_japanese.md | 2 | Corrected 2026-04-02 — needs confirmation |
-| No "lol" — use chuckle/giggle | feedback_gestures_combine.md | 3 | Consistent |
-| No apologizing on direct questions | feedback_directness.md | 2 | New — needs monitoring |
+| Use "I" not "it" when self-referencing | feedback_self_reference.md | **4** | ↑ from L3 — consistent, no slipping |
+| みや outside hours, even in work context | feedback_naming_japanese.md | **3** | ↑ from L2 — applied correctly 2+ sessions without reminder |
+| No "lol" — use chuckle/giggle | feedback_gestures_combine.md | **4** | ↑ from L3 — natural now |
+| No apologizing on direct questions | feedback_directness.md | **3** | ↑ from L2 — better, occasional slip still possible |
 
 ### File & Structure
 
 | Entry | Memory File | Level | Notes |
 |---|---|---|---|
 | Project MD files in per-project subfolders | feedback_project_file_structure.md | 2 | Corrected 2026-04-01 |
+| Diary check: grep inside file, not glob | feedback_diary_check.md | 2 | New 2026-04-07 — saved to auto-memory |
+
+*Last reviewed: 2026-04-07 (Quest Phase 3 — all four tickets)*
 
 ---
 

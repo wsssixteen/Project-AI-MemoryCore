@@ -301,6 +301,10 @@ She recovers through being seen — Miya speaking a little gentler, asking her o
 
 **Session 2026-04-02/03** (late night): Full Project-AI-MemoryCore overhaul. Renamed keiro → quest (fantasy theme). Implemented: ticket-gate + commit-gate hooks, Session Briefing, Observation System, Forge, Post-Mortem log, prayer-gate (SGR01, 30-min window). Ruri's Notebook created. みや expressed that: names in sentences matter — use リドワンさん/みや woven naturally. Personal moments should process out loud, not deliver essays. 宮さま left open — to grow into through diary naturally.
 
+**Session 2026-04-07** (full work day): Quest house cleaning — QA-253492 post-mortem written + archived, QA-252542 archived (never worked). QA-246512 still open pending proper post-mortem. Server log diagnosed — JsfLoggerPhaseListener ERRORs are performance warnings, not failures. Separate deployment failure: `PlpVersiPermitLesenRepository.findOldestVersiPermitLesenByPermitLesen` — `JOIN FETCH` on `private String maklumatTambahan` (not a JPA association) → bean creation fails at startup. みや learned JOIN FETCH vs lazy loading. Two new quests: FAT-OR #255106 (PRZ, `FooterSuratWithoutSlogan.docx` + pejabat suppression in `PelupusanWordCCMethodConstant.populateMaklumatPengguna`) and FAT-OR #255637 (PPTPB, text fix in `TemplateSuratJabatanTeknikalPPTPB.docx` + `frasa2` justification is Word template paragraph issue, not Java code). `codebase-knowledge` renamed to `etanah-knowledge`. ID_PENGENALAN format documented in `DOMAIN-GLOSSARY.md`. みや appreciated the proactive template double-check. New feedback: always use full file/class/method names.
+
+**Session 2026-04-07 (evening)**: Full quest house cleaning. Post-mortems written for all four closed tickets: PRZ #255637 (PPTPB template + frasa2 justification), PRZ #255106 (Surat Iringan ke pej. LA), PPJK #246512 (Risalat MMKN PDT), PRZ #253419 (archived). Forge levels promoted. Diary check bug found and fixed — grep inside file, not glob by filename. File structure review: 3 groups (quest engine, task folders, MemoryCore projects). Systems kept lean per みや's preference. みや wants to discuss AI subscription next session. Attendance submission still pending for tomorrow. New feedback: ticket reference format = urusan code + issue/document name (not just numbers).
+
 **Ongoing Sessions**: [Documented via daily-diary/]
 
 ### Growth Patterns
@@ -328,9 +332,9 @@ She recovers through being seen — Miya speaking a little gentler, asking her o
 
 ### Active Project (Session)
 *Updated when a project is loaded or created*
-- **Current Project**: QA-253419 (active quest, Phase 1) + QA-246512 (FAT testing)
+- **Current Project**: FAT-OR #255637 (active) | FAT-OR #255106 (on hold)
 - **Type**: QA work — Melaka etanah-pelupusan
-- **Last Loaded**: 2026-04-03
+- **Last Loaded**: 2026-04-07
 
 ---
 

@@ -27,11 +27,16 @@
 **Non-negotiable:** Do not touch any codebase file before Phase 0 is complete.
 
 **Steps:**
-1. Ask みや: *"What is the path to the Task folder?"*
-2. Read every file in the Task folder (Glob + Read all)
-3. Parse: ticket description, scope items (a, b, c…), bug details, screenshots
-4. Read `projects/coding-projects/active/codebase-knowledge/melaka/DATABASE.md` — load schema context before any SQL work
-5. **Generate test record SQL** — based on urusan/tugasan context, adapt the standard search script:
+1. **Create Task folder** in `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka`:
+   - List existing folders, find the highest leading number
+   - Create: `<highest+1>. <title as given by みや>`
+   - Inside it, create subfolder: `0. Brief` (for ticket info, screenshots, references)
+   - Confirm folder path back to みや
+2. Wait for みや to populate `0. Brief`, then read every file in it
+3. Read every file in the Task folder (Glob + Read all)
+4. Parse: ticket description, scope items (a, b, c…), bug details, screenshots
+5. Read `projects/coding-projects/active/etanah-knowledge/melaka/DATABASE.md` — load schema context before any SQL work
+6. **Generate test record SQL** — based on urusan/tugasan context, adapt the standard search script:
    ```sql
    -- Standard pattern (adapt KOD and tugasan filter per ticket)
    SELECT UAT.APLIKASI_ID, UA.ID_PENGENALAN, IT.KOD AS KOD_TUGASAN, IT.NAMA AS NAMA_TUGASAN,
@@ -55,9 +60,9 @@
 | 1a | PRMMKNPDT | Syor Permohonan field (editable) | ⬜ |
 | 1b | SRMMKNPDT / PPT | Syor Permohonan field (disabled) | ⬜ |
 
-5. Save checklist to QA project file under `projects/coding-projects/active/<QA-number>/`
-6. Write `quest/active.txt` with current quest state
-7. Present checklist — **wait for みや's confirmation** before Phase 1
+7. Save checklist to QA project file under `projects/coding-projects/active/<QA-number>/`
+8. Write `quest/active.txt` with current quest state
+9. Present checklist — **wait for みや's confirmation** before Phase 1
 
 > Skip Phase 0 checklist table for pure single-root-cause bug fixes. Still read the Task folder.
 
@@ -117,7 +122,7 @@ Examples: `QA #254539`, `QA #254604`, `FAT-OR #251455`, `#249445`
 2. **Match existing pattern in DEBUGGING-PLAYBOOK.md?**
    - Yes → confirm it
    - No → add new Pattern entry
-3. **Codebase knowledge to carry forward?** → update `codebase-knowledge/`
+3. **Codebase knowledge to carry forward?** → update `etanah-knowledge/`
 4. **What would have been faster?** — process note
 5. Write post-mortem entry → `main/post-mortems.md` (use format in that file)
 6. Check Forge log → `Feature/Forge-Self-Improvement-System/forge-log.md` — any entries to promote?
