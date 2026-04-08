@@ -18,6 +18,7 @@
 | `/quest start <QA> <path>` | Phase 0 begins via skill |
 | `/quest hold` | Current quest paused |
 | `/quest resume` | Resume held quest |
+| "Restart quest `QA #<number>`" | Reset phase to 0, status to active — search Task folder first, then `Archive/` inside it |
 
 ---
 
@@ -36,23 +37,37 @@
 3. Read every file in the Task folder (Glob + Read all)
 4. Parse: ticket description, scope items (a, b, c…), bug details, screenshots
 5. Read `projects/coding-projects/active/etanah-knowledge/melaka/DATABASE.md` — load schema context before any SQL work
-6. **Generate test record SQL** — based on urusan/tugasan context, adapt the standard search script:
+6. **Generate test record SQL** — auto-fill from ticket context using the standard template below:
+   - **Urusan**: grep `DOMAIN-GLOSSARY.md` for the urusan KOD from the ticket (e.g. PSBS, PRZ, PPJK)
+   - **Tugasan**: grep `DOMAIN-GLOSSARY.md` Known Tugasan Codes section for matching KOD or NAMA
+   - **ID_PENGENALAN**: if provided in ticket → use subquery approach (preferred)
+   - **If ID_PENGENALAN not provided**: uncomment and fill `IT.KOD` or `IT.NAMA` filter instead
+   - `LAST_MODIFIED_DATE` may be NULL on unmodified records — always wrap with `COALESCE(LAST_MODIFIED_DATE, CREATED_DATE)`
    ```sql
-   -- Standard pattern (adapt KOD and tugasan filter per ticket)
-   SELECT UAT.APLIKASI_ID, UA.ID_PENGENALAN, IT.KOD AS KOD_TUGASAN, IT.NAMA AS NAMA_TUGASAN,
-     UAT.FLAG_AKTIF, pps.NAMA_PENGGUNA, ips.NAMA AS pejabat
+   -- Auto-filled at quest creation. Uncomment tugasan filter only if ID_PENGENALAN not available.
+   SELECT
+     UAT.A_TGSN_ID, UAT.CREATED_DATE, UAT.LAST_MODIFIED_DATE, UAT.PEJABAT_ID, UAT.LAST_MODIFIED_BY,
+     IT.TGSN_ID, IT.NAMA AS NAMA_TUGASAN, IT.KOD AS KOD_TUGASAN,
+     AK.PROCESS_INSTANCE_ID, UAT.PERANAN_SEMASA, PPS.NAMA_PENGGUNA AS PENGGUNA_SEMASA,
+     IPS.KOD AS KOD_PEJABAT_PENGGUNA_SEMASA, IPS.NAMA AS PEJABAT_PENGGUNA_SEMASA,
+     UAT.FLAG_AKTIF, UAT.APLIKASI_ID
    FROM UMM_A_TGSN UAT
    INNER JOIN IND_TGSN IT ON IT.TGSN_ID = UAT.TGSN_ID
-   LEFT JOIN PCP_PENGGUNA pps ON pps.PENGGUNA_ID = UAT.PENGGUNA_SEMASA_ID
-   LEFT JOIN IND_PEJABAT ips ON ips.PEJABAT_ID = pps.PEJABAT_ID
-   INNER JOIN UMM_APLIKASI UA ON UA.APLIKASI_ID = UAT.APLIKASI_ID
-   INNER JOIN IND_URSN U ON U.URSN_ID = UA.URSN_ID
-   WHERE U.KOD = '<URUSAN_KOD>'
-     AND IT.KOD ILIKE '%<TUGASAN_KOD>%'
-     AND UAT.FLAG_AKTIF = 1
-   ORDER BY UAT.CREATED_DATE DESC LIMIT 10;
+   LEFT JOIN UMM_ALIRAN_KERJA AK ON AK.ALIRAN_KERJA_ID = UAT.ALIRAN_KERJA_ID
+   LEFT JOIN PCP_PENGGUNA PPS ON PPS.PENGGUNA_ID = UAT.PENGGUNA_SEMASA_ID
+   LEFT JOIN IND_PEJABAT IPS ON IPS.PEJABAT_ID = PPS.PEJABAT_ID
+   WHERE UAT.APLIKASI_ID IN (
+     SELECT UA.APLIKASI_ID
+     FROM UMM_APLIKASI UA
+     WHERE UA.ID_PENGENALAN ILIKE '%<ID_PENGENALAN>%'  -- fill from ticket, or replace block with urusan filter
+   )
+   AND UAT.FLAG_AKTIF = 'Y'
+   AND COALESCE(UAT.LAST_MODIFIED_DATE, UAT.CREATED_DATE) <= CURRENT_DATE - INTERVAL '2 months'
+   --AND IT.KOD ILIKE '%<TUGASAN_KOD>%'   -- uncomment if no ID_PENGENALAN
+   --AND IT.NAMA ILIKE '%<TUGASAN_NAMA>%'  -- uncomment if no ID_PENGENALAN
+   ORDER BY UAT.CREATED_DATE DESC;
    ```
-   Present the adapted script to リドワンさん before Phase 1 — do not skip this step.
+   Present the filled script to リドワンさん before Phase 1 — do not skip this step.
 6. Build checklist table — one row per deliverable:
 
 | Item | Tugasan | Description | Status |

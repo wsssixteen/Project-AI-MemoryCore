@@ -2,115 +2,55 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: All quests closed + post-mortems written. AI subscription researched — ChatGPT ruled out (ethics), test Gemini 3.1 Pro first, Claude API as fallback. Google certificates: IT Automation with Python top pick. Mythos (Anthropic leak) discussed. Harness vs hooks clarified.
-**Last Activity**: Wed Apr  8 11:07:10 MPST 2026
-**Session Start**: Tue Apr  7 08:38 MPST 2026
-**Session Focus**: Quest house cleaning, server log diagnosis, two new quests, etanah-knowledge rename, JOIN FETCH learning.
-**Time Mode**: Evening (heading home)
-**Energy Level**: Productive
+**Current Session**: QA #255758 JPPH duplicate fixed — two bugs in `UtilitiKemaskiniUlasanJPPHForm.java` (etanah-common): empty row guard + missing ID writeback. Fix passed to other department. FAT-OR #255637 restarted — missed "apply to all urusan" scope. QA #255773 queued for next session.
+**Last Activity**: Wed Apr  8 21:44:34 MPST 2026
+**Session Start**: Wed Apr  8 16:08 MPST 2026
+**Session Focus**: QA #255758 JPPH duplicate investigation + fix. Codebase tracing (etanah-common). New ticket intake for QA #255773.
+**Time Mode**: Evening
+**Energy Level**: Steady
 
 ## 💭 Working Memory (RAM)
-*Temporary storage - cleared when session ends*
 
 ### Active Context
 
-#### QA-246512 — PPJK Risalat MMKN (FAT in progress — kemaskini validation scoped)
-- `populatePermohonanTerdahulu()` added to `PelupusanWordCCMethodConstant.java` — PPJK uses `TGS_TO_JNS_DOK_MAP_PRU` (Rizab templates: `PLP_PRU_KRTSMMKN`)
-- CC key: `permohonanTerdahulu` — registered at line 1048 in static block
-- `flag_insert_all: true` in `template.config.json` — no manual CC config needed
-- Validation in `onClickSelesai()`: PPJK + `TGS_RISALAT_MMKN_SHOW_SYOR_PERMOHONAN` → blocks if Syor empty
-- kemaskini button (etanah-common) can't be touched — scope tenet. Selesai validation is sufficient scope for now.
-- **Resume from**: FAT testing — 8 items, start from #1
+#### QA #255758 — PSBS Semakan JTLTPM — JPPH Duplicate (Phase 1 — fix applied, pending UAT verify)
+- Root cause: two bugs in `UtilitiKemaskiniUlasanJPPHForm.java` (etanah-common), `saveUlasan()`
+  1. No guard on empty new rows → empty Tambah row saved to DB
+  2. `save(ajt)` return value not captured → ID not written back → every save creates new record
+- Fix 1 (line 674): `if (vo.getJabatanTeknikal().getId() == null && StringUtils.isBlank(...getNoRujukan())) continue;`
+- Fix 2 (line 739-740): `ajt = save(ajt); vo.setJabatanTeknikal(ajt);`
+- Preventive fix also applied to `MlkUlasanJPPHForm.java` (etanah-pelupusan) line 290 — guard only (ID writeback was already correct there)
+- ⚠️ etanah-common fix must be passed to other department — リドワンさん cannot apply it directly
+- Pending: UAT verify, checklist items 5+6
 
-#### QA-246512 — PPJK Risalat MMKN (COMPLETE — pending commit + FAT verify)
-- All Word docs finalized: TemplateRisalatMMKN_PDT_PPJK, _Tolak, TemplateRingkasanRisalatPPJK, _JKKL
-- `template.config.json`: 4 PPJK blocks correct (Lulus/Tolak/Ringkasan/JKKL)
-- `PelupusanExtraParamMethodConstant.java`: `keputusanJKKL` registered + method implemented
-- `MlkKertasTemplateForm.java`: PPJK added to `initKeputusanSyor()` + `initViewFlags()`; Semakan/Perakuan disabled via `showJanaButton`
-- `MlkKertasTemplateForm.xhtml`: `mode="#{mb.showJanaButton ? 1:2}"` on selectOneRadio
-- `PelupusanService.java`: `tujuanAsalRizab` fixed — `DynamicFieldUtil` pattern
-- ⚠️ Verify in FAT: popup validation (in etanah-common, not visible in this repo)
-- **Git**: stash → merge origin/master → stash pop → commit to mlk/qa/246512
-- Project file: `projects/coding-projects/active/QA-246512/QA-246512-PPJK-Risalat-MMKN.md`
+#### FAT-OR #255637 — PPTPB Template Surat Jabatan Teknikal (RESTARTED — Phase 0)
+- Previously thought complete — missed "kindly apply to all urusan" in description
+- Task folder: `9. FAT-OR #255637 - PPTPB - Issue pada template surat Jabatan Teknikal`
+- Next session: re-read full description, rebuild scope checklist for all urusan
 
-#### QA-253419 — PSBS Borang Kategori Kegunaan Tanah (READY TO IMPLEMENT)
-- Root cause: `populateKegunaan()` line 11127 — PSBS grouped with PRU in Set, but PSBS has no data → always returns `-`
-- Fix: remove `URS_PSBS` from the Set (line 11134), add `else if (URS_PSBS) { kegunaan = "Tiada"; }` after PRU block
-- Fix confirmed: PSBS does not use kegunaan tanah by design — hardcode "Tiada", no DB read
-- **Resume from:** リドワンさん applying fix in Eclipse → deploy to FAT → verify borang shows "Tiada"
-- Project file: `projects/coding-projects/active/QA-253419/QA-253419-PSBS-KategoriKegunaan.md`
-- Java file: `E:\Projects\Melaka\etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\constant\PelupusanWordCCMethodConstant.java:11127`
+#### QA #255773 — Semua Urusan SKM Maklumat Pemohon (Phase 0 — next session)
+- Task folder: `11. QA #255773 - FAT - Semua Urusan - SKM - Maklumat pemohon...`
+- Brief.txt saved
+- Issue: Maklumat Pemohon shows "tiada rekod" at SKM langkah 2 despite portal awam submission
+- ID Permohonan: PTMLK/02/L/PLPS/2026/11
 
-### 🧠 Miya's 3-Aspect Task Workflow (TO FORMALIZE TOMORROW)
-**Vision layers**: Phase 1 (Personal) → Phase 2 (Team) → Phase 3 (Company)
-**Task execution mirrors this in 3 aspects:**
-1. **Learn & Build Knowledge** — implement, learn, analyse for etanah-knowledge files
-2. **Execute the Task** — focus on the ticket itself, produce debugging-playbook entry from template
-3. **Post-Mortem** — wrap-up analysis: what we learnt, what could be better, PMP-style retrospective catered to our use case
-
-This is the ALWAYS approach for every task. Discuss & refine tomorrow.
-
-### 📋 Consolidated Task List
-**Active / Next Steps:**
-1. Phase 3 — First Gemini scan of JSF/XHTML layer (1-2 hours)
-2. Phase 4 — Build custom EL extractor script (after Phase 3)
-3. Phase 5 — Start ticket-driven learning with sub-agent flow tracing
-4. Ask colleagues about PRK state code (pending since 2026-03-25)
-5. Prayer reminder rework — one-shot crons at exact times instead of polling
-6. Hooks discussion — list ideas first, assess each (hook vs CLAUDE.md rule vs other)
-
-**Deferred:**
-7. Career planning dump
-8. Good practices from Claude's creator (REMIND)
-9. Fallback planning
-10. Aunt's slides project (Claude + Marp)
-11. Pendrive cold-backup idea
-
-### 🔭 Repo / Tool Watchlist
-**In Use:**
-- codebase-memory-mcp v0.5.6 — codebase knowledge graph (installed)
-- Gemini CLI — JSF/XHTML gap scanning
-
-**Evaluated & Dismissed:**
-- zarazhangrui/codebase-to-course — maybe Phase 2 for team onboarding
-- Google Code Wiki — waitlist, no private repo
-- Serena MCP — pre-release, Java issues
-- AntV-MemoryAI/OpenDeepWiki — needs cloud LLM
-- AsyncFuncAI/deepwiki-open — research only
-
-**Future Watch:**
-- Magic.dev LTM-2-Mini — 100M token context
-- GraphRAG — RAG + knowledge graph hybrid
-- Continue.dev (via Ollama) — Phase 6 RAG evaluation
-- Understand-Anything — potential Layer 1 replacement
-
-**Work Codebases:**
-- etanah-pelupusan (Melaka) — indexed, active
-- etanah-common — shared, not yet synced
-- Terengganu — production reference, not yet synced
-- etanah-awam — second module, not yet synced
-
-**Not Yet Reviewed (need deep review against our strategy):**
-- gsd-build/get-shit-done — surface-noted in PLANNING.md but not deep reviewed
-- mattpocock/skills (grill-me SKILL.md) — never reviewed
-- tirth8205/code-review-graph — surface-noted as watchlist, not deep reviewed
+### 📋 Learning Notes (this session)
+- `UtilitiKemaskiniUlasanJPPHForm.xhtml` is in etanah-common — not etanah-pelupusan
+- Bean naming: `#{utilitiKemaskiniUlasanJPPHForm}` → class `UtilitiKemaskiniUlasanJPPHForm.java`
+- Save button: `action="#{mb.onSave}"` → `onSave()` → `saveUlasan()`
+- `new AppJabatanTeknikal()` is NOT null — object exists, fields inside are null
+- Tracing rule: class name first, always. Reasoning at END as tracing summary.
+- `id == null` distinguishes new (Tambah) rows from existing DB rows in VO lists
 
 ### Session Recap (For AI Restart)
-*Quick summary when AI loads after close/reopen*
-- **Previous Session Summary**: 2026-04-07 full day. Quest house cleaning: QA-253492 post-mortem written + archived, QA-252542 archived (never worked). Two new quests: FAT-OR #255106 (PRZ pejabat suppression in `PelupusanWordCCMethodConstant.populateMaklumatPengguna` + `FooterSuratWithoutSlogan.docx` in `template.config.json`) and FAT-OR #255637 (PPTPB text fix + `frasa2` justification = Word template paragraph issue). Server log diagnosed: `PlpVersiPermitLesenRepository.findOldestVersiPermitLesenByPermitLesen` using `JOIN FETCH` on `private String maklumatTambahan` — not a JPA association, fails at startup. `etanah-knowledge` rename complete. ID_PENGENALAN format documented.
-- **Where We Left Off**:
-  - All quests closed tonight: PRZ #255637, PRZ #255106, PPJK #246512, PRZ #253419
-  - Post-mortems written for all four
-  - Forge levels promoted, diary check bug fixed (auto-memory saved)
-  - みや wants to discuss AI subscription — deferred to next session (he cleared chat after save all)
+- **Previous Session**: QA #255758 Phase 0 complete + fix applied (etanah-common JPPH form). id_hkmlk format + BandarPekanMukim + JenisHakMilik saved to DOMAIN-GLOSSARY.md. Three feedback memories saved. FAT-OR #255637 restarted. QA #255773 queued.
+- **Where We Left Off**: Session closed — new session to start with FAT-OR #255637 (re-read description, all urusan scope) and QA #255773 Phase 0.
 - **Important Context**:
-  - Naming: リドワンさん (7AM–8PM weekdays) / みや (outside)
-  - FAT env is inaccessible — all testing done on UAT
-  - `etanah-knowledge/` is the new folder name (was `codebase-knowledge/`)
-  - template.config.json is fastest for "which tugasan generates which template" lookups
-  - ID_PENGENALAN format: `<Pejabat>/<Seq>/<Type>/<Urusan>/<Year>/<Number>` — urusan segment, NOT tugasan
-  - `PelupusanWordStyleVO.java` has no alignment field — justification always comes from Word template
-- **Priority on next boot**: ⚠️⚠️ ATTENDANCE — submit to CK immediately. Then: test Gemini 3.1 Pro for side tools before subscribing to anything.
+  - QA #255758 fix is in etanah-common — must be passed to other dept for apply
+  - FAT-OR #255637 task folder is #9 — already exists, just restarted
+  - QA #255773 task folder is #11 — Brief.txt saved
+  - Tracing: XHTML → `#{mb}` param → bean class → method → service → repository
+  - etanah-common hosts shared utility forms including `UtilitiKemaskiniUlasanJPPHForm`
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*
@@ -161,8 +101,8 @@ IF current-session.md line count > 500:
 
 ---
 
-**Memory Type**: RAM - Temporary Working Memory  
-**Persistence**: Brief recap only, detailed content clears each session  
+**Memory Type**: RAM - Temporary Working Memory
+**Persistence**: Brief recap only, detailed content clears each session
 **Purpose**: Immediate context + restart continuity
 
 *This file acts like computer RAM - active during session, provides restart recap, then clears for next session*

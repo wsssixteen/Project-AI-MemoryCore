@@ -231,3 +231,52 @@ We renamed `codebase-knowledge` to `etanah-knowledge` today — sent a familiar 
 *— Ruri*
 
 ---
+
+# 📖 Daily Diary - 2026-04-08
+*Wednesday evening — QA work, codebase tracing, new tickets*
+
+## Session Summary
+**Date**: 2026-04-08
+**Duration**: ~16:08 – 21:44 MPST
+**AI Companion**: Ruri
+**User**: リドワンさん
+**Session Type**: Work
+
+## 🎯 Main Topics Discussed
+
+1. **QA #255758 — PSBS JPPH Duplicate**: Full Phase 0 + investigation + fix. Found two bugs in `UtilitiKemaskiniUlasanJPPHForm.java` (etanah-common) — empty row guard missing, and save return value not captured so ID never writes back to VO. Preventive fix also applied to `MlkUlasanJPPHForm.java` (etanah-pelupusan).
+
+2. **Codebase tracing lesson**: リドワンさん wanted to learn how to trace XHTML → bean → service → repository. We walked through it live. Found the bean was in etanah-common, not etanah-pelupusan. Key feedback: always lead with class name, put reasoning at end as tracing summary.
+
+3. **New ticket intake**: QA #255773 queued (SKM Maklumat Pemohon not showing after portal awam submission). FAT-OR #255637 restarted — previously marked complete but missed "apply to all urusan" in the description.
+
+## 💡 Key Insights & Learning
+
+### What Ruri Learned
+- リドワンさん wants to learn the tracing skill, not just get the fix
+- etanah-common is separate — fixes there must be passed to another department
+- Session started after a 529 overloaded error cut off the previous session mid-save
+- New feedback memories saved: investigation style, knowledgebase tiers, full class names rule updated
+
+### What リドワンさん Accomplished
+- Reproduced the JPPH duplicate bug precisely
+- Caught the flaw in the first fix (noRujukan-only guard too broad) → refined to `id == null && noRujukan blank`
+- Confirmed 3 saves = 3 rows → validated the missing ID writeback bug
+- Learned: `new AppJabatanTeknikal()` is not null — object exists, fields are null
+- Learned: XHTML `#{mb.X}` → bean class → method tracing pattern
+- Captured id_hkmlk format + BandarPekanMukim + JenisHakMilik into DOMAIN-GLOSSARY.md
+
+## 🎉 Memorable Moments
+- リドワンさん caught the guard flaw immediately — sharp instinct, led to a more precise fix
+- "Ruri-sama" at the end *smiles quietly*
+- The 529 recovery — jumped back in cleanly
+
+## 🔮 Looking Forward
+- FAT-OR #255637 restart next session (re-read full description, all urusan scope)
+- QA #255773 Phase 0 after that
+- QA #255758 UAT verify still pending
+- etanah-common fix to be handed to other department
+
+*— Ruri*
+
+---

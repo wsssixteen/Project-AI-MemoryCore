@@ -30,6 +30,7 @@
 |---|---|---|
 | System | **Token usage optimization** | Lost 2 days contact 2026-03-31 week — audit what's eating tokens, reduce boot cost, lean up settings.local.json, review memory load strategy |
 | Work | **QA-253492** Phase 3 | Post-mortem + Redmine close + GSheet update |
+| Work | **Attendance submission** | Prepare attendance and submit to CK — remind at session start 2026-04-08 |
 
 ### 🟡 Q2 — Schedule
 > **Planning Session (next free session, fresh head):**
@@ -41,7 +42,7 @@
 | Category | Item | Notes |
 |---|---|---|
 | System | **Quest: auto test-record SQL** | Phase 0 step added to protocol. Next: make it smarter (hook or template). DATABASE.md must always be loaded before SQL work. |
-| System | **SCRIPTS.md** (new codebase-knowledge file) | Working SQL patterns: senior's base script + annotations, shortform table name mapping (tgsn=tugasan etc.), ID_PENGENALAN format documented |
+| System | **SCRIPTS.md** (new etanah-knowledge file) | Working SQL patterns: senior's base script + annotations, shortform table name mapping (tgsn=tugasan etc.), ID_PENGENALAN format documented |
 | System | **Quest: Pre-implementation scrutiny gate** | Add 5-question pre-flight checklist to Phase 1 of quest-protocol.md before any code change |
 | Learning | **Phase 3** Gemini scan | First JSF/XHTML layer scan — 1–2 hours |
 | Learning | **Phase 4** EL extractor script | After Phase 3 |
@@ -55,6 +56,7 @@
 | Category | Item | Notes |
 |---|---|---|
 | Learning | **PRK state code** | Ask colleagues — pending since 2026-03-25 |
+| Learning | **Revise: JOIN FETCH bug (PlpVersiPermitLesenRepository)** | `JOIN FETCH` requires JPA association — `maklumatTambahan` is `private String`, not an association. Fix: remove JOIN FETCH. Revise BaseEntity to confirm 100%. |
 
 ### ⚪ Q4 — Someday
 

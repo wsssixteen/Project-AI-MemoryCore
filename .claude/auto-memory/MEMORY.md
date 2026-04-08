@@ -11,6 +11,9 @@
 - [feedback_project_file_structure.md](feedback_project_file_structure.md) — Project MD files go in per-project subfolders; reports/summaries go in Task folder
 - [feedback_quest_checklist.md](feedback_quest_checklist.md) — Enhancement tickets: parse QA notes into checklist before any code work
 - [feedback_diary_check.md](feedback_diary_check.md) — Grep inside Daily-Diary-001.md for today's date; never use Glob by filename
+- [feedback_tasks_folder_format.md](feedback_tasks_folder_format.md) — Files in 1. Tasks\Melaka\ must be .txt by default, not .md
+- [feedback_knowledgebase_tiers.md](feedback_knowledgebase_tiers.md) — Remind みや when second-tier info should be saved to knowledgebase; don't skip silently
+- [feedback_investigation_style.md](feedback_investigation_style.md) — Reasoning/chain-of-thought goes at the END as a tracing summary, not inline mid-explanation
 
 ## User
 - [user_career_vision.md](user_career_vision.md) — 3-phase career vision: Personal Excellence → Team Contribution → Company Impact
