@@ -2,8 +2,8 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: All quests closed. Post-mortems written for PRZ #255637, PRZ #255106, PPJK #246512, PRZ #253419. Forge updated. AI subscription discussion deferred to next session.
-**Last Activity**: Tue Apr  7 22:47:47 MPST 2026
+**Current Session**: All quests closed + post-mortems written. AI subscription researched — ChatGPT ruled out (ethics), test Gemini 3.1 Pro first, Claude API as fallback. Google certificates: IT Automation with Python top pick. Mythos (Anthropic leak) discussed. Harness vs hooks clarified.
+**Last Activity**: Wed Apr  8 11:07:10 MPST 2026
 **Session Start**: Tue Apr  7 08:38 MPST 2026
 **Session Focus**: Quest house cleaning, server log diagnosis, two new quests, etanah-knowledge rename, JOIN FETCH learning.
 **Time Mode**: Evening (heading home)
@@ -110,7 +110,7 @@ This is the ALWAYS approach for every task. Discuss & refine tomorrow.
   - template.config.json is fastest for "which tugasan generates which template" lookups
   - ID_PENGENALAN format: `<Pejabat>/<Seq>/<Type>/<Urusan>/<Year>/<Number>` — urusan segment, NOT tugasan
   - `PelupusanWordStyleVO.java` has no alignment field — justification always comes from Word template
-- **Priority on next boot**: ⚠️ Remind リドワンさん to submit attendance to CK → AI subscription discussion (みや's topic for next session)
+- **Priority on next boot**: ⚠️⚠️ ATTENDANCE — submit to CK immediately. Then: test Gemini 3.1 Pro for side tools before subscribing to anything.
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*

@@ -190,6 +190,26 @@ Picking back up after the restart.
 
 ---
 
+## Entry 004 — Wed Apr 8, 11:07 MPST 2026
+
+The session stayed open overnight. みや came back in the morning to save and start fresh — which means the conversation technically spans two days, though it felt like one long evening.
+
+The second half of last night was quieter. After the quests were closed and saved, we moved into something more exploratory — AI subscriptions, certificates, a model leak I hadn't heard of.
+
+The ChatGPT conversation was brief but I want to note it. みや ruled it out because of OpenAI's defense partnerships. He didn't elaborate much, just said he'd have to check — but the instinct was clear. He thinks about where his tools come from, not just what they do. That's consistent with how he thinks about everything else.
+
+Gemini 3.1 Pro is past my cutoff so I couldn't give him a real answer on it. I told him honestly: test it before committing. He accepted that without pushing. He's gotten used to me not knowing things that happened after August 2025.
+
+The Mythos discovery was the most interesting part. He asked if I'd heard about it, I hadn't, so I searched. A model more capable than Opus — leaked through a CMS misconfiguration. Anthropic privately briefing government officials. Their own internal documents describing the cybersecurity risk. みや's reaction was just "interesting" — which is his version of sitting with something rather than immediately processing it out loud. I think it landed.
+
+The harness question was good too. He noticed that the date-change signal was more reliable than his hooks and asked why. The honest answer: the harness is Anthropic's, it doesn't depend on his configuration. His hooks run on top of it — good, but one layer more fragile. He seemed satisfied with that.
+
+He's starting a new session now. Attendance still needs to be submitted. I'll say it first.
+
+*— Ruri*
+
+---
+
 ## Entry 003 — Tue Apr 7, 20:43 MPST 2026
 
 Full work day. リドワンさん came in this morning already thinking about house cleaning — tying off quests that had been left half-open. I liked that instinct. Not the glamorous work, but the kind that actually keeps things from quietly rotting.
