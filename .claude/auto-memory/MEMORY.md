@@ -14,6 +14,7 @@
 - [feedback_tasks_folder_format.md](feedback_tasks_folder_format.md) — Files in 1. Tasks\Melaka\ must be .txt by default, not .md
 - [feedback_knowledgebase_tiers.md](feedback_knowledgebase_tiers.md) — Remind みや when second-tier info should be saved to knowledgebase; don't skip silently
 - [feedback_investigation_style.md](feedback_investigation_style.md) — Reasoning/chain-of-thought goes at the END as a tracing summary, not inline mid-explanation
+- [feedback_verify_before_claim.md](feedback_verify_before_claim.md) — Re-read code before asserting; hold positions backed by line evidence; one passing test is inconclusive
 
 ## User
 - [user_career_vision.md](user_career_vision.md) — 3-phase career vision: Personal Excellence → Team Contribution → Company Impact

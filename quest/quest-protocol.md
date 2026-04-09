@@ -32,6 +32,7 @@
    - List existing folders, find the highest leading number
    - Create: `<highest+1>. <title as given by みや>`
    - Inside it, create subfolder: `0. Brief` (for ticket info, screenshots, references)
+   - Inside the root of the Task folder, create `1. Notes.txt` — leave empty for みや to fill
    - Confirm folder path back to みや
 2. Wait for みや to populate `0. Brief`, then read every file in it
 3. Read every file in the Task folder (Glob + Read all)

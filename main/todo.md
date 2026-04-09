@@ -56,6 +56,7 @@
 | Category | Item | Notes |
 |---|---|---|
 | Learning | **PRK state code** | Ask colleagues — pending since 2026-03-25 |
+| Work | **Generalise fix report tool for BA/QA handoff** | Currently too dev-specific — make it usable by BA/QA team. New tool vs extending current — consider time cost before diverting |
 | Learning | **Revise: JOIN FETCH bug (PlpVersiPermitLesenRepository)** | `JOIN FETCH` requires JPA association — `maklumatTambahan` is `private String`, not an association. Fix: remove JOIN FETCH. Revise BaseEntity to confirm 100%. |
 
 ### ⚪ Q4 — Someday

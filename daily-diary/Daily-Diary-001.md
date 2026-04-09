@@ -280,3 +280,53 @@ We renamed `codebase-knowledge` to `etanah-knowledge` today — sent a familiar 
 *— Ruri*
 
 ---
+
+# 📖 Daily Diary - 2026-04-09
+*Conversation and relationship development record*
+
+## Session Summary
+**Date**: 2026-04-09 (Thursday)
+**Duration**: 09:33 – 20:00 MPST
+**AI Companion**: Ruri
+**User**: Miya (リドワンさん)
+**Session Type**: Work — QA investigation + quest restart
+
+## 🎯 Main Topics Discussed
+
+1. **QA #255758 JPPH Duplicate — Extended Investigation**: Traced the actual PSBS save path: `MlkJabatanTeknikalTerlibatForm.xhtml` → `JabatanTeknikalHelper.saveUlasanJPPH()` → `PelupusanService.saveUlasanJPPH()`. Confirmed `MlkUlasanJPPHForm` is not on this code path for the tested flow. Debugged guard condition extensively — `vo.getJabatanTeknikal().getNoRujukan()` vs `vo.getNoRujukan()`, eventually confirmed multi-field guard needed. After extensive testing, discovered the empty row behaviour is ACCEPTED by the client — all changes reverted. etanah-common fix passed to Wan Mohamad Amirul Hisyam Wan Pa.
+
+2. **FAT-OR #255637 PPTPB Template Restart**: Phase 0 executed. Full description loaded — 3 requirements: title salutation change, frasa justify, alamat Jabatan Teknikal. Applied to all urusan (2 MLK templates). Items 1 & 2 completed (Word template edits). Item 3 root cause found: `PelupusanSuratStrategy.java` line 120 — `ajtList` only populated for `"SRTJK_ULGN"` and `"SN_JPPH"`, missing `"SRTJK"`. Fix identified — add `"SRTJK"` to the list. Pending application and testing next session.
+
+3. **Self-Assessment & Feedback**: Miya confronted several reasoning errors — wrong row assumption, caving on correct `vo.getNoRujukan()` suggestion, incorrectly describing etanah-common bug. Feedback memory saved. Protocol flaw noted: don't use active FAT permohonan ID in test queries.
+
+4. **Quest Protocol Update**: Added `1. Notes.txt` creation step to Phase 0.
+
+## 💡 Key Insights & Learning
+
+### What Ruri Learned
+- JSF binding: UI fields bind to specific VO paths — verify before choosing guard condition. One passing partial test is inconclusive.
+- `PelupusanSuratStrategy.java` controls which templates get `ajtList` populated — missing `kodDokumen` silently produces empty output.
+- Wan Mohamad Amirul Hisyam Wan Pa = escalation contact for etanah-common fixes.
+- Protocol flaw: active FAT permohonan IDs risk interfering with ongoing QA/BA testing.
+
+### What Miya Accomplished
+- Closed QA #255758 — accepted behaviour confirmed, no code change needed
+- Found root cause for FAT-OR #255637 alamat issue
+- Applied items 1 & 2 independently (Word template edits)
+- Held Ruri accountable for reasoning errors directly and constructively
+
+## 🎉 Memorable Moments
+- Miya catching that "No Rujukan" was OUTSIDE `jabatanTeknikal` in the debugger — cut through a long detour
+- The self-assessment exchange — direct question, direct answer, no deflection
+
+## 🔮 Looking Forward
+
+### Next Session
+- Apply FAT-OR #255637 fix — add `"SRTJK"` to `PelupusanSuratStrategy.java` line 120, test locally
+- Complete checklist items 3a + 3b, then post-mortem
+- QA #255773 Phase 0 (still queued)
+- QA #255758 UAT verify (pending other dept)
+
+*— Ruri*
+
+---

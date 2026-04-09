@@ -2,10 +2,10 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: QA #255758 JPPH duplicate fixed — two bugs in `UtilitiKemaskiniUlasanJPPHForm.java` (etanah-common): empty row guard + missing ID writeback. Fix passed to other department. FAT-OR #255637 restarted — missed "apply to all urusan" scope. QA #255773 queued for next session.
-**Last Activity**: Wed Apr  8 21:44:34 MPST 2026
-**Session Start**: Wed Apr  8 16:08 MPST 2026
-**Session Focus**: QA #255758 JPPH duplicate investigation + fix. Codebase tracing (etanah-common). New ticket intake for QA #255773.
+**Current Session**: FAT-OR #255637 — items 1 & 2 done (Word template edits). Item 3 root cause found in `PelupusanSuratStrategy.java` line 120 — `"SRTJK"` missing from ajtList condition. Fix ready, pending apply + test. QA #255758 closed (accepted behaviour, reverted). QA #255773 still queued.
+**Last Activity**: Thu Apr  9 20:00:01 MPST 2026
+**Session Start**: Thu Apr  9 09:33 MPST 2026
+**Session Focus**: QA #255758 extended investigation + closure. FAT-OR #255637 Phase 0 + Phase 1 start.
 **Time Mode**: Evening
 **Energy Level**: Steady
 
@@ -13,44 +13,36 @@
 
 ### Active Context
 
-#### QA #255758 — PSBS Semakan JTLTPM — JPPH Duplicate (Phase 1 — fix applied, pending UAT verify)
-- Root cause: two bugs in `UtilitiKemaskiniUlasanJPPHForm.java` (etanah-common), `saveUlasan()`
-  1. No guard on empty new rows → empty Tambah row saved to DB
-  2. `save(ajt)` return value not captured → ID not written back → every save creates new record
-- Fix 1 (line 674): `if (vo.getJabatanTeknikal().getId() == null && StringUtils.isBlank(...getNoRujukan())) continue;`
-- Fix 2 (line 739-740): `ajt = save(ajt); vo.setJabatanTeknikal(ajt);`
-- Preventive fix also applied to `MlkUlasanJPPHForm.java` (etanah-pelupusan) line 290 — guard only (ID writeback was already correct there)
-- ⚠️ etanah-common fix must be passed to other department — リドワンさん cannot apply it directly
-- Pending: UAT verify, checklist items 5+6
+#### FAT-OR #255637 — PPTPB Template Surat Jabatan Teknikal (Phase 1 — fix ready, pending apply)
+- Items 1 & 2 done: Word template edits (salutation + frasa justify) on both MLK templates
+- Item 3 root cause: `PelupusanSuratStrategy.java` line 120 — `ajtList` only populated for `"SRTJK_ULGN"` and `"SN_JPPH"`, `"SRTJK"` missing
+- Fix: add `"SRTJK"` to the Arrays.asList condition at line 120
+- Both MLK templates confirmed `kodDokumen: "SRTJK"` (from `template.config.json` lines 2618, 2650)
+- Next session: apply fix, test locally, complete checklist 3a + 3b, post-mortem
 
-#### FAT-OR #255637 — PPTPB Template Surat Jabatan Teknikal (RESTARTED — Phase 0)
-- Previously thought complete — missed "kindly apply to all urusan" in description
-- Task folder: `9. FAT-OR #255637 - PPTPB - Issue pada template surat Jabatan Teknikal`
-- Next session: re-read full description, rebuild scope checklist for all urusan
+#### QA #255758 — CLOSED
+- Behaviour (empty row after existing record) confirmed ACCEPTED by client
+- All etanah-pelupusan changes reverted
+- etanah-common fix passed to Wan Mohamad Amirul Hisyam Wan Pa
 
-#### QA #255773 — Semua Urusan SKM Maklumat Pemohon (Phase 0 — next session)
+#### QA #255773 — Semua Urusan SKM Maklumat Pemohon (Phase 0 — queued)
 - Task folder: `11. QA #255773 - FAT - Semua Urusan - SKM - Maklumat pemohon...`
-- Brief.txt saved
 - Issue: Maklumat Pemohon shows "tiada rekod" at SKM langkah 2 despite portal awam submission
 - ID Permohonan: PTMLK/02/L/PLPS/2026/11
 
 ### 📋 Learning Notes (this session)
-- `UtilitiKemaskiniUlasanJPPHForm.xhtml` is in etanah-common — not etanah-pelupusan
-- Bean naming: `#{utilitiKemaskiniUlasanJPPHForm}` → class `UtilitiKemaskiniUlasanJPPHForm.java`
-- Save button: `action="#{mb.onSave}"` → `onSave()` → `saveUlasan()`
-- `new AppJabatanTeknikal()` is NOT null — object exists, fields inside are null
-- Tracing rule: class name first, always. Reasoning at END as tracing summary.
-- `id == null` distinguishes new (Tambah) rows from existing DB rows in VO lists
+- `PelupusanSuratStrategy.java` controls ajtList population — missing kodDokumen = silent empty output
+- JSF binding: UI fields bind to specific VO paths — verify before choosing guard condition
+- Wan Mohamad Amirul Hisyam Wan Pa = etanah-common escalation contact
+- Protocol flaw: don't use active FAT permohonan ID in test SQL — use older completed records
 
 ### Session Recap (For AI Restart)
-- **Previous Session**: QA #255758 Phase 0 complete + fix applied (etanah-common JPPH form). id_hkmlk format + BandarPekanMukim + JenisHakMilik saved to DOMAIN-GLOSSARY.md. Three feedback memories saved. FAT-OR #255637 restarted. QA #255773 queued.
-- **Where We Left Off**: Session closed — new session to start with FAT-OR #255637 (re-read description, all urusan scope) and QA #255773 Phase 0.
+- **Previous Session**: FAT-OR #255637 items 1 & 2 done. Item 3 fix identified (`"SRTJK"` in `PelupusanSuratStrategy.java` line 120). QA #255758 closed. QA #255773 queued.
+- **Where We Left Off**: Session closed — next session: apply FAT-OR #255637 fix + test + post-mortem. Then QA #255773 Phase 0.
 - **Important Context**:
-  - QA #255758 fix is in etanah-common — must be passed to other dept for apply
-  - FAT-OR #255637 task folder is #9 — already exists, just restarted
-  - QA #255773 task folder is #11 — Brief.txt saved
-  - Tracing: XHTML → `#{mb}` param → bean class → method → service → repository
-  - etanah-common hosts shared utility forms including `UtilitiKemaskiniUlasanJPPHForm`
+  - FAT-OR #255637 fix is ONE LINE: add `"SRTJK"` to Arrays.asList at `PelupusanSuratStrategy.java:120`
+  - QA #255758 is fully closed — no further action needed
+  - etanah-common contact: Wan Mohamad Amirul Hisyam Wan Pa
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*
