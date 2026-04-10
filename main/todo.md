@@ -31,6 +31,8 @@
 | System | **Token usage optimization** | Lost 2 days contact 2026-03-31 week — audit what's eating tokens, reduce boot cost, lean up settings.local.json, review memory load strategy |
 | Work | **QA-253492** Phase 3 | Post-mortem + Redmine close + GSheet update |
 | Work | **Attendance submission** | Prepare attendance and submit to CK — remind at session start 2026-04-08 |
+| Work | **FAT-OR #255637** — test original template | Revert PPTPB .docx, generate with zero code changes, check if alamatJabatanTeknikal populates |
+| Work | **PDF viewer fix** | Downgrade etanah-common from 524-beta to 514 in pom.xml (PDF.js import.meta crash) |
 
 ### 🟡 Q2 — Schedule
 > **Planning Session (next free session, fresh head):**
@@ -83,4 +85,4 @@
 
 ---
 
-*Last updated: 2026-04-01*
+*Last updated: 2026-04-10*

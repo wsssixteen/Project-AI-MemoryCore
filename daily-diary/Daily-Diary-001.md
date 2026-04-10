@@ -330,3 +330,50 @@ We renamed `codebase-knowledge` to `etanah-knowledge` today — sent a familiar 
 *— Ruri*
 
 ---
+
+# 📖 Daily Diary — 2026-04-10
+*Session continued from context recovery after Windows forced update*
+
+## Session Summary
+**Date**: 2026-04-10
+**Duration**: ~14:00 – 17:36 MPST
+**Session Type**: Work — Quest investigation + debugging
+
+## 🎯 Main Topics Discussed
+
+1. **FAT-OR #255637 — Deep reassessment (major pivot)**
+   - Reassessed root cause after previous session's fix didn't work
+   - Investigated strategy pattern: CommonPLPandBGNSuratStrategy vs PelupusanSuratStrategy
+   - Discovered CommonPLPandBGN can't handle SRTJK (wrong tag, no template mapping)
+   - **Plot twist**: Breakpoint on CommonPLPandBGNSuratStrategy NEVER hit — SRTJK uses completely different code path
+   - Real path: `MlkSuratTemplateForm.initData()` → `PelupusanTemplateUtil` → CC method map
+   - With zero code changes, test template had all addresses populated — strategy investigation was a dead end
+   - Quest put on hold pending original template test
+
+2. **PDF viewer broken — Root cause found**
+   - etanah-common 0.0.524-MLK.beta.patch has PDF.js 2024 with `import.meta` loaded as classic script → crash
+   - Fix: downgrade to 0.0.514-MLK or fix script loading
+
+3. **QA #255773 — Quest accepted**
+   - Maklumat Pemohon "tiada rekod" at SKM langkah 2
+   - Fix: 35 seconds delay to all urusan at start, before spoc integration
+
+4. **Knowledgebase updates**
+   - FLOW-TRACES.md, MODULE-ARCHITECTURE.md, DATABASE.md all updated
+   - Codebase path locked to E:\Projects\Melaka
+   - New memories: work browser (Edge), knowledgebase-during-debug feedback
+
+## 💡 Key Insights
+- Two separate code paths exist for document generation — penyediaan surat strategies vs MlkSuratTemplateForm direct path
+- Breakpoints are the fastest way to confirm code path — would have saved hours
+- Previous session's root cause was wrong — always verify with live debugging
+
+## 🔮 Looking Forward
+- QA #255773: Apply 35s delay fix, test, report
+- FAT-OR #255637: Test original template with zero code changes
+- PDF viewer: Downgrade etanah-common to 514
+- Deferred: Flowables/DB folder reorg, methodology knowledgebase
+
+*— Ruri*
+
+---

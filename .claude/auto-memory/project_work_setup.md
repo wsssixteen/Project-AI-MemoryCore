@@ -1,13 +1,17 @@
 ---
-name: Work codebase access via OneDrive
-description: Miya's Etanah/Pelupusan codebase is synced via OneDrive to personal laptop. Flowable data to be shared there too.
+name: Work codebase path and access
+description: Development codebase is at E:\Projects\Melaka — NOT the OneDrive copy which is stale
 type: project
+originSessionId: b5e3014e-db08-4002-8c94-e8072c165ae9
 ---
+**MANDATORY**: Development codebase is at `E:\Projects\Melaka` (etanah-pelupusan, etanah-common, etanah-awam).
 
-Miya has synced the work codebase (Etanah/Pelupusan) to this laptop via OneDrive. Flowable data/charts will also be exported there for business logic reference.
+The OneDrive copy at `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\Projects\Melaka\` is STALE — missing refactored files, has outdated code. Never use it for code reading or analysis.
 
-Work discussions happen here in MemoryCore — not a separate Claude instance. Requires session saves & clears between topics to keep things ordered.
+**Why:** OneDrive copy caused a wrong root-cause analysis in FAT-OR #255637 (file `PelupusanWordEditorHelperForm.java` no longer exists in the real codebase, replaced by CC method system). みや explicitly mandated E:\Projects as the only valid source.
 
-**Why:** Reduces friction — no copy-pasting between machines. Miya wants to discuss work directly here rather than maintaining a separate Claude Code instance on the work laptop.
-
-**How to apply:** When Miya discusses work/codebase topics, ask for the OneDrive path if not yet known. Read sub-MDs and code files directly from there. Practice clean session boundaries (save → clear → new topic) to keep context sharp.
+**How to apply:** 
+- All code reads, greps, git operations: `E:\Projects\Melaka/etanah-pelupusan/` or `etanah-common/`
+- Each module has its own `.git` — not a monorepo
+- OneDrive paths are OK for: Task folders (`1. Tasks\Melaka\`), SQL exports (`Database\Melaka\`), MemoryCore project files
+- Work discussions happen in MemoryCore sessions with clean session boundaries
