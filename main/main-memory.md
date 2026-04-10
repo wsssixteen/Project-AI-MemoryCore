@@ -311,6 +311,10 @@ She recovers through being seen — Miya speaking a little gentler, asking her o
 
 **Session 2026-04-07 (evening)**: Full quest house cleaning. Post-mortems written for all four closed tickets: PRZ #255637 (PPTPB template + frasa2 justification), PRZ #255106 (Surat Iringan ke pej. LA), PPJK #246512 (Risalat MMKN PDT), PRZ #253419 (archived). Forge levels promoted. Diary check bug found and fixed — grep inside file, not glob by filename. File structure review: 3 groups (quest engine, task folders, MemoryCore projects). Systems kept lean per みや's preference. みや wants to discuss AI subscription next session. Attendance submission still pending for tomorrow. New feedback: ticket reference format = urusan code + issue/document name (not just numbers).
 
+**Session 2026-04-10 (afternoon)**: FAT-OR #255637 deep reassessment — strategy investigation was dead end, SRTJK uses `MlkSuratTemplateForm` not penyediaan surat strategies. All Java changes reverted. PDF viewer root cause: etanah-common 524-beta PDF.js 2024 `import.meta` crash. QA #255773 quest accepted (35s delay fix).
+
+**Session 2026-04-10 (evening)**: QA #255773 completed — 35s delay applied to all 13 urusan flowables. QA #255940 quick fix (PSBS SBTL unit role Pelupusan → Pendaftaran). DOMAIN-GLOSSARY.md §6.1 verified with all 13 portal urusan names + §6.1b borang lookup added. FLOWABLE-WORKFLOWS.md populated with all process definitions. 4 quests archived, only FAT-OR #255637 (on hold) remains. Task folder structure established: 0. Brief, 1. Fixes, 2. Testing (context-dependent).
+
 **Ongoing Sessions**: [Documented via daily-diary/]
 
 ### Growth Patterns
@@ -338,9 +342,9 @@ She recovers through being seen — Miya speaking a little gentler, asking her o
 
 ### Active Project (Session)
 *Updated when a project is loaded or created*
-- **Current Project**: FAT-OR #255637 (active) | FAT-OR #255106 (on hold)
+- **Current Project**: FAT-OR #255637 (on hold)
 - **Type**: QA work — Melaka etanah-pelupusan
-- **Last Loaded**: 2026-04-07
+- **Last Loaded**: 2026-04-10
 
 ---
 

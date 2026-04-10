@@ -1,13 +1,3 @@
-qa=255773
-title=QA #255773 - FAT - Semua Urusan - SKM - Maklumat pemohon yang telah diisi di portal awam tidak papar pada aplikasi
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\11. QA #255773 - FAT - Semua Urusan - SKM - Maklumat pemohon yang telah diisi di portal awam tidak papar pada aplikasi
-phase=0
-local_test_confirmed=false
-status=active
-env=MLKFAT
-id_permohonan=PTMLK/02/L/PLPS/2026/11
-fix=Add 35 seconds delay to all urusan at start, before spoc integration
-
 qa=255637
 title=FAT-OR #255637 - PPTPB - Issue pada template surat Jabatan Teknikal
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\9. FAT-OR #255637 - PPTPB - Issue pada template surat Jabatan Teknikal
@@ -17,18 +7,3 @@ status=hold
 env=MLKFAT
 id_permohonan=PTMLK/02/L/PPTPB/2026/1
 note=Strategy investigation was dead end — SRTJK goes through MlkSuratTemplateForm not strategy pattern. Need to test original template with zero code changes. All Java changes reverted. PDF viewer broken due to etanah-common 0.0.524-MLK.beta.patch (PDF.js 2024 import.meta issue).
-
-qa=255758
-title=QA #255758 - FAT - PSBS - Semakan JTLTPM - Maklumat panel JPPH duplicate
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\10. QA #255758 - FAT - PSBS - Semakan JTLTPM - Maklumat panel JPPH duplicate
-phase=complete
-local_test_confirmed=false
-status=complete
-note=Behaviour accepted — empty row after existing record is intentional. etanah-pelupusan changes reverted. etanah-common fix passed to Wan Mohamad Amirul Hisyam Wan Pa.
-
-qa=255106
-title=FAT-OR #255106 - PRZ - Pembetulan pada Surat Iringan ke pej. LA
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\8. FAT-OR #255106 - PRZ - Penyediaan Warta dan Surat Iringan Pewartaan (Pembetulan pada Surat Iringan ke pej. LA)
-phase=complete
-local_test_confirmed=true
-status=complete

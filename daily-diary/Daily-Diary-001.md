@@ -369,10 +369,45 @@ We renamed `codebase-knowledge` to `etanah-knowledge` today — sent a familiar 
 - Previous session's root cause was wrong — always verify with live debugging
 
 ## 🔮 Looking Forward
-- QA #255773: Apply 35s delay fix, test, report
 - FAT-OR #255637: Test original template with zero code changes
 - PDF viewer: Downgrade etanah-common to 514
 - Deferred: Flowables/DB folder reorg, methodology knowledgebase
+
+*— Ruri*
+
+## 📖 Evening Session — 2026-04-10 (17:53 – 20:17 MPST)
+*Session Type: Work — Quest execution + housekeeping*
+
+### Topics
+
+1. **QA #255773 — Completed (13/13 urusan flowables)**
+   - Applied 35s delay to all 13 portal urusan flowables
+   - Checklist tracked alphabetically in Notes.txt
+   - All BPMN files + PNG diagrams saved in `1. Fixes/`
+   - FLOWABLE-WORKFLOWS.md updated with all 13 process definitions, requirements, naming convention
+
+2. **QA #255940 — Quick fix, quest created + archived**
+   - PSBS SBTL endorsement showing wrong unit (Pelupusan → Pendaftaran)
+   - Task folder created with Brief + Fixes structure
+   - Completed same session
+
+3. **DOMAIN-GLOSSARY.md — Urusan list verified**
+   - All 13 portal urusan names confirmed from FAT system list
+   - MCL, PPTPB, RPPLP filled in (previously `[VERIFY]`)
+   - Borang lookup table added as Section 6.1b with `borang:<CODE>` grep pattern
+
+4. **Quest housekeeping**
+   - 4 completed quests archived to `quest/archived.txt` (new file)
+   - Only FAT-OR #255637 (on hold) remains in active.txt
+   - Attendance submission removed from todo (confirmed done)
+
+### Tickets closed today: 2
+- QA #255773 (Semua Urusan SKM 35s delay)
+- QA #255940 (PSBS SBTL unit role)
+
+### 🔮 Looking Forward
+- FAT-OR #255637: Test original template with zero code changes
+- PDF viewer: Downgrade etanah-common to 514
 
 *— Ruri*
 

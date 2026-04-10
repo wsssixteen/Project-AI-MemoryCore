@@ -1,0 +1,37 @@
+qa=255773
+title=QA #255773 - FAT - Semua Urusan - SKM - Maklumat pemohon yang telah diisi di portal awam tidak papar pada aplikasi
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\11. QA #255773 - FAT - Semua Urusan - SKM - Maklumat pemohon yang telah diisi di portal awam tidak papar pada aplikasi
+phase=complete
+local_test_confirmed=false
+status=complete
+env=MLKFAT
+id_permohonan=PTMLK/02/L/PLPS/2026/11
+fix=Add 35 seconds delay to all urusan at start, before spoc integration
+note=35s delay added to all 13 urusan flowables. No testing performed.
+closed=2026-04-10
+
+qa=255940
+title=QA #255940 - FAT - PSBS - Semakan Permohonan Lulus (SBTL) - Papar peranan Unit yang salah, unit Pelupusan
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\12. QA #255940 - FAT - PSBS - Semakan Permohonan Lulus (SBTL) - Papar peranan Unit yang salah, unit Pelupusan
+phase=complete
+local_test_confirmed=false
+status=complete
+note=Fix applied quickly. Flowable unit role was showing Pelupusan instead of Pendaftaran for SBTL endorsement. No testing performed.
+closed=2026-04-10
+
+qa=255758
+title=QA #255758 - FAT - PSBS - Semakan JTLTPM - Maklumat panel JPPH duplicate
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\10. QA #255758 - FAT - PSBS - Semakan JTLTPM - Maklumat panel JPPH duplicate
+phase=complete
+local_test_confirmed=false
+status=complete
+note=Behaviour accepted — empty row after existing record is intentional. etanah-pelupusan changes reverted. etanah-common fix passed to Wan Mohamad Amirul Hisyam Wan Pa.
+closed=2026-04-09
+
+qa=255106
+title=FAT-OR #255106 - PRZ - Pembetulan pada Surat Iringan ke pej. LA
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\8. FAT-OR #255106 - PRZ - Penyediaan Warta dan Surat Iringan Pewartaan (Pembetulan pada Surat Iringan ke pej. LA)
+phase=complete
+local_test_confirmed=true
+status=complete
+closed=2026-04-07
