@@ -1,3 +1,12 @@
+qa=255637
+title=FAT-OR #255637 - PPTPB - Issue pada template surat Jabatan Teknikal
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\9. FAT-OR #255637 - PPTPB - Issue pada template surat Jabatan Teknikal
+phase=complete
+local_test_confirmed=true
+status=complete
+note=Template-only fix (items 1 & 2). Item 3 (alamat) was not a code bug — address populates with zero code changes via MlkSuratTemplateForm path.
+closed=2026-04-11
+
 qa=255773
 title=QA #255773 - FAT - Semua Urusan - SKM - Maklumat pemohon yang telah diisi di portal awam tidak papar pada aplikasi
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\11. QA #255773 - FAT - Semua Urusan - SKM - Maklumat pemohon yang telah diisi di portal awam tidak papar pada aplikasi

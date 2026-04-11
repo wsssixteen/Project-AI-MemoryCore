@@ -69,6 +69,7 @@ ai-memorycore/
 - Show a **changelog** when updating files, not the full file
 - No unsolicited refactoring or scope expansion
 - If developer repeats a question — just re-answer, no correction
+- **Always produce class chains** when tracing code: `ClassA → ClassB → ClassC` showing execution flow. Top priority — used for explaining to colleagues, single-view understanding, and saving tokens on re-investigation. Applies to all projects, not just quest work.
 
 ---
 

@@ -1,9 +1,1 @@
-qa=255637
-title=FAT-OR #255637 - PPTPB - Issue pada template surat Jabatan Teknikal
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\9. FAT-OR #255637 - PPTPB - Issue pada template surat Jabatan Teknikal
-phase=1
-local_test_confirmed=false
-status=hold
-env=MLKFAT
-id_permohonan=PTMLK/02/L/PPTPB/2026/1
-note=Strategy investigation was dead end — SRTJK goes through MlkSuratTemplateForm not strategy pattern. Need to test original template with zero code changes. All Java changes reverted. PDF viewer broken due to etanah-common 0.0.524-MLK.beta.patch (PDF.js 2024 import.meta issue).
+none

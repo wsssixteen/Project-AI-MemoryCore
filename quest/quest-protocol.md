@@ -84,6 +84,22 @@
 
 ---
 
+## Task Folder File Rules
+
+### Notes.txt — Keep it SHORT
+- Test data, codebase path, key finding (1-3 lines max)
+- No deferred topics, no investigation logs, no strategy explanations
+- If it's longer than ~15 lines, it's too long — move detail to Fix.txt or knowledgebase
+
+### Fix.txt — Structured, categorized
+- **CHAIN** section always first: class → class → class flow showing how execution reaches the fix point. One of みや's top priorities — for showing others, for remembering in a single view, and for saving tokens on re-investigation.
+- **APPLIED FIX** section: file, line, what changed, root cause (brief)
+- **INVESTIGATED BUT NOT NEEDED** section: always keep unused/investigated fixes for reference, with reason why not needed. Never discard investigation work — it has value for future tickets and explaining decisions.
+- **CONFUSING CONSTANT** or similar warnings: gotchas for future reference
+- This is the source of truth for what was done and why
+
+---
+
 ## Phase 1 — Execute
 
 **Goal:** Solve the ticket.

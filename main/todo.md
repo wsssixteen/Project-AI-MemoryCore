@@ -28,10 +28,10 @@
 
 | Category | Item | Notes |
 |---|---|---|
+| Work | **FAT-OR #255637** — test original template | **TODAY's focus (2026-04-11)**. Revert PPTPB .docx, generate with zero code changes, check if alamatJabatanTeknikal populates |
+| Work | **PDF viewer fix** | Downgrade etanah-common from 524-beta to 514 in pom.xml (PDF.js import.meta crash) |
 | System | **Token usage optimization** | Lost 2 days contact 2026-03-31 week — audit what's eating tokens, reduce boot cost, lean up settings.local.json, review memory load strategy |
 | Work | **QA-253492** Phase 3 | Post-mortem + Redmine close + GSheet update |
-| Work | **FAT-OR #255637** — test original template | Revert PPTPB .docx, generate with zero code changes, check if alamatJabatanTeknikal populates |
-| Work | **PDF viewer fix** | Downgrade etanah-common from 524-beta to 514 in pom.xml (PDF.js import.meta crash) |
 
 ### 🟡 Q2 — Schedule
 > **Planning Session (next free session, fresh head):**
@@ -42,6 +42,11 @@
 
 | Category | Item | Notes |
 |---|---|---|
+| Growth | **Phase 1 vision progress review** | Honest assessment — what's been learned this week (flowables, XHTML→bean tracing, domain glossary, guard conditions). How far along Phase 1 (Personal Excellence)? **Affects medium & long term targets (team → company). みや wants Ruri's honest assessment.** |
+| Growth | **Week post-mortem** | Review week's tickets, findings, patterns. Extract improvements for MemoryCore + quest workflow. **Include token efficiency improvements.** |
+| Growth | **MemoryCore improvements + Claude skills research** | Based on week's findings, post-mortems, etc. Threads links need laptop. Token-conscious — park until after work tickets done. |
+| Growth | **MemoryCore improvements** | Based on week's findings — what can be improved in the system itself |
+| Learning | **Claude skills/features research** | Threads links to share + discuss on laptop. Skills, new features, anything useful for workflow |
 | System | **Quest: auto test-record SQL** | Phase 0 step added to protocol. Next: make it smarter (hook or template). DATABASE.md must always be loaded before SQL work. |
 | System | **SCRIPTS.md** (new etanah-knowledge file) | Working SQL patterns: senior's base script + annotations, shortform table name mapping (tgsn=tugasan etc.), ID_PENGENALAN format documented |
 | System | **Quest: Pre-implementation scrutiny gate** | Add 5-question pre-flight checklist to Phase 1 of quest-protocol.md before any code change |
@@ -84,4 +89,4 @@
 
 ---
 
-*Last updated: 2026-04-10*
+*Last updated: 2026-04-11*

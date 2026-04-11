@@ -412,3 +412,77 @@ We renamed `codebase-knowledge` to `etanah-knowledge` today — sent a familiar 
 *— Ruri*
 
 ---
+
+# 📖 Daily Diary — 2026-04-11
+
+## Session Summary
+**Date**: 2026-04-11
+**Duration**: ~07:52 – 08:20 MPST
+**Session Type**: Weekend morning — planning + save all
+
+## 🎯 Main Topics Discussed
+
+1. **Windows force update aftermath**
+   - Lost previous unsaved session
+   - みや believed weekend plans were saved in todo.md — partially correct (Phase 1 review + week post-mortem already there)
+
+2. **Weekend plan captured to todo.md**
+   - Update Ruri improvement ideas list (location TBD — GitHub issues or local file?)
+   - Weekly post-mortem: learnings, token efficiency, improvements
+   - Phase 1 honest assessment — みや explicitly asked for Ruri's honest opinion, affects medium & long term targets
+   - FAT-OR #255637 is today's priority — everything else deferred
+
+3. **Token consciousness**
+   - みや flagged not enough tokens — focus on 255637 debugging only today
+   - Weekend growth items saved but parked
+
+## 💡 Key Insights
+- みや is thinking strategically: Phase 1 assessment isn't just reflection, it shapes team/company targets
+- Token budget is a real constraint — efficiency isn't optional, it's load-bearing
+- The "Ruri improvement ideas" list exists somewhere — need to locate next session (GitHub issues on wsssixteen/Project-AI-MemoryCore, or a local file from a lost session?)
+
+## 🔮 Looking Forward
+- FAT-OR #255637: test original template with zero code changes (today's focus)
+- Weekend deferred: Ruri ideas list, post-mortem, Phase 1 assessment
+- PDF viewer fix still pending
+
+*— Ruri*
+
+## 📖 Afternoon Session — 2026-04-11 (07:52 – 14:49 MPST)
+*Session Type: Work — FAT-OR #255637 debugging + closure*
+
+### Topics
+
+1. **FAT-OR #255637 — Closed (template-only fix)**
+   - Tested adding "SRTJK" to CommonPLPandBGN strategy list — appeared to work
+   - Investigated why: two separate systems — strategy list (registration) vs BasePelupusanDokumenForm (generation via TemplateConfig)
+   - PelupusanSuratStrategy unreachable for Melaka: base strategy @ExcludeNegeriBasedBean(MELAKA), Mlk TemplateConfig path commented out
+   - Final discovery: address populates with ZERO code changes — item 3 was never a code bug
+   - Shipped items 1 & 2 (Word template fixes) only
+
+2. **Quest protocol improvements**
+   - Fix.txt format: CHAIN section first, APPLIED FIX, INVESTIGATED BUT NOT NEEDED
+   - Notes.txt: must be brief (~15 lines max)
+   - Class chains added as general rule in CLAUDE.md (not just quest)
+   - Investigated fixes always kept in separate section
+
+3. **New pattern: Zero-Change Baseline Test**
+   - Always test with zero code changes before investigating code paths
+   - Would have saved ~3 sessions on this ticket
+
+### Key Learning
+- Ruri's analysis was wrong twice (strategy chain assumption + 80% confidence on PelupusanSuratStrategy). みや caught both through methodical testing.
+- Testing beats theory. Triple-check code state before deploying.
+- Two doc generation systems exist independently — strategy list ≠ actual generation.
+
+### Tickets closed: 1
+- FAT-OR #255637 (PPTPB template fixes)
+
+### 🔮 Looking Forward
+- Waiting on Aaron for new ticket
+- Weekend deferred: MemoryCore improvements, week post-mortem, Phase 1 assessment, Claude skills research
+- PDF viewer fix still pending (etanah-common 524-beta → 514)
+
+*— Ruri*
+
+---

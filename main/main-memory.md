@@ -315,6 +315,8 @@ She recovers through being seen — Miya speaking a little gentler, asking her o
 
 **Session 2026-04-10 (evening)**: QA #255773 completed — 35s delay applied to all 13 urusan flowables. QA #255940 quick fix (PSBS SBTL unit role Pelupusan → Pendaftaran). DOMAIN-GLOSSARY.md §6.1 verified with all 13 portal urusan names + §6.1b borang lookup added. FLOWABLE-WORKFLOWS.md populated with all process definitions. 4 quests archived, only FAT-OR #255637 (on hold) remains. Task folder structure established: 0. Brief, 1. Fixes, 2. Testing (context-dependent).
 
+**Session 2026-04-11 (morning → afternoon)**: FAT-OR #255637 closed — template-only fix (items 1 & 2), item 3 (alamat) was never a code bug. Multi-session Java investigation was a rabbit hole. New pattern: Zero-Change Baseline Test. Two separate doc systems discovered: strategy list (registration) vs `BasePelupusanDokumenForm` (generation via TemplateConfig). `PelupusanSuratStrategy` unreachable for Melaka. Quest protocol updated: Fix.txt format (chain first, investigated fixes kept), Notes.txt brevity rule, class chains as general rule. みや tested methodically — triple-checked code, step-by-step deploys. Ruri's analysis was wrong twice (strategy chain + confidence call); みや caught both by testing.
+
 **Ongoing Sessions**: [Documented via daily-diary/]
 
 ### Growth Patterns

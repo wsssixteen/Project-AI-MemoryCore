@@ -2,50 +2,38 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: QA #255773 completed (13/13 flowables). QA #255940 completed. All quests archived except FAT-OR #255637 (on hold).
-**Last Activity**: Fri Apr 10 20:17:41 MPST 2026
-**Session Start**: Fri Apr 10 ~17:53 MPST 2026
-**Session Focus**: QA #255773 flowable execution + QA #255940 quick fix + housekeeping
-**Time Mode**: Evening
-**Energy Level**: Steady
+**Current Session**: Brief session — save weekend plans to todo, save all before debugging 255637.
+**Last Activity**: Sat Apr 11 14:49:26 MPST 2026
+**Session Start**: Sat Apr 11 ~07:52 MPST 2026
+**Session Focus**: Weekend planning + save all
+**Time Mode**: Morning (Weekend)
+**Energy Level**: Fresh
 
 ## 💭 Working Memory (RAM)
 
 ### Active Context
 
-#### QA #255773 — Semua Urusan SKM Maklumat Pemohon (COMPLETE)
-- Fix: 35s delay added to all 13 urusan flowables
-- All BPMN + PNG saved in task folder `1. Fixes/`
-- FLOWABLE-WORKFLOWS.md updated in etanah-knowledge
+#### FAT-OR #255637 — COMPLETE ✅
+- Template-only fix (items 1 & 2). Item 3 not a code bug.
+- Post-mortem written. Quest archived.
+- New pattern: Zero-Change Baseline Test
 
-#### QA #255940 — PSBS SBTL Unit Role (COMPLETE)
-- Flowable unit role showing Pelupusan instead of Pendaftaran for SBTL endorsement
-- Quick fix, no testing
-- Task folder created + archived
-
-#### FAT-OR #255637 — PPTPB Template Surat Jabatan Teknikal (ON HOLD)
-- Strategy investigation was dead end — SRTJK goes through MlkSuratTemplateForm
-- Need to test original template with zero code changes
-- All Java changes reverted
-
-#### PDF Viewer Broken — Root Cause Found
-- etanah-common 0.0.524-MLK.beta.patch → PDF.js 2024 import.meta crash
-- Fix: downgrade to 0.0.514-MLK
+#### Waiting on
+- Aaron for new ticket — no reply yet (~1hr+)
+- Weekend plans still deferred in todo.md
 
 ### 📋 Learning Notes (this session)
-- Flowable naming: MLK_PLP_<URUSAN>.bpmn20.xml
-- 13 portal urusan confirmed + organized alphabetically in DOMAIN-GLOSSARY.md §6.1
-- Borang lookup added as §6.1b with borang:<CODE> grep pattern
-- Task folder structure: 0. Brief, 1. Fixes, 2. Testing (context-dependent)
-- Quest archival: completed quests go to quest/archived.txt
+- Two separate doc systems: strategy list (registration) vs BasePelupusanDokumenForm (generation)
+- PelupusanSuratStrategy unreachable for Melaka (@ExcludeNegeriBasedBean + commented out)
+- Always baseline test with zero changes before code investigation
 
 ### Session Recap (For AI Restart)
-- **Previous Session**: FAT-OR #255637 deep investigation (dead end). QA #255773 accepted.
-- **Where We Left Off**: QA #255773 + QA #255940 both completed and archived. FLOWABLE-WORKFLOWS.md populated. Save all done.
+- **Previous Session**: FAT-OR #255637 closed — template-only fix, no Java changes needed. Post-mortem written.
+- **Where We Left Off**: All quests complete. Waiting on Aaron for new ticket (no reply). Save all done.
 - **Important Context**:
-  - FAT-OR #255637: test original template with zero code changes to determine actual bug
-  - PDF fix: downgrade etanah-common from 524-beta to 514 in pom.xml
-  - Only 1 active quest remaining (255637, on hold)
+  - PDF fix still pending: downgrade etanah-common 524-beta → 514
+  - Weekend deferred (in todo.md): MemoryCore improvements, week post-mortem, Phase 1 assessment, Claude skills research
+  - New pattern learned: Zero-Change Baseline Test — always test with no changes before investigating code
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*

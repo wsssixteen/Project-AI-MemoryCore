@@ -175,4 +175,33 @@ Quest was on hold due to server issues and session was not closed properly befor
 
 ---
 
+### FAT-OR #255637 — PPTPB Surat Jabatan Teknikal (alamat + template fixes) — 2026-04-11
+
+**Root Cause Type**: config (template)
+
+**Root Cause Summary**:
+Three items. Items 1 & 2: Word template text + paragraph justification fixes in `TemplateSuratJabatanTeknikalPPTPB.docx`. Item 3 (alamatJabatanTeknikal not displaying): was never a code bug — address populates correctly with zero code changes through `MlkSuratTemplateForm` → `BasePelupusanDokumenForm` → `TemplateConfig` path. Multi-session Java investigation was a rabbit hole.
+
+**What Would Have Been Faster**:
+Test with zero code changes FIRST before investigating code paths. If the template generates correctly without changes, the bug is in the template, not the code. Would have saved ~3 sessions of strategy/chain tracing.
+
+**Pattern Match**:
+- New pattern: **Zero-Change Baseline Test** — before any code investigation, generate the document with zero changes to establish whether the bug is code or template/config
+
+**Codebase Knowledge Updated**:
+- Two separate document systems: strategy list (registers available types) vs `BasePelupusanDokumenForm` (actual generation via TemplateConfig). They are NOT connected.
+- `PelupusanPenyediaanSuratStrategy` is `@ExcludeNegeriBasedBean(MELAKA)` — base strategy excluded for Melaka
+- `MlkPelupusanPenyediaanSuratStrategy` TemplateConfig path is commented out — `PelupusanSuratStrategy` is unreachable for Melaka
+
+**Process Notes**:
+- Spent 3+ sessions tracing `CommonPLPandBGNSuratStrategy` → `PelupusanSuratStrategy` chains before discovering neither is in the execution path
+- Stale Hibernate error (`AppJabatanTeknikal#1419`) was a red herring — concurrency issue, not data issue
+- PDF viewer broken separately (etanah-common 524-beta) added confusion to testing
+
+**Carry Forward**:
+1. Always do a zero-change baseline test before code investigation
+2. When two systems exist for the same concern (registration vs generation), trace which one is actually executing before fixing either
+
+---
+
 *Post-Mortem Log v1.0 — 2026-04-02*
