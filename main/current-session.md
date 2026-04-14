@@ -2,12 +2,12 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: QA #256113 closed + Debug Mode Rituals meta-work
-**Last Activity**: Tue Apr 14 18:52:40 MPST 2026
+**Current Session**: QA #256113 closed + Debug Mode Rituals + BUG-BESTIARY born
+**Last Activity**: Tue Apr 14 19:50:29 MPST 2026
 **Session Start**: Tue Apr 14 ~08:00 MPST 2026
-**Session Focus**: Narrow fix shipped → two wrong proper-fix attempts → meta-analysis → rituals committed
+**Session Focus**: Narrow fix shipped → two wrong proper-fix attempts → meta-analysis → rituals committed → Desktop playbook migrated + renamed to BUG-BESTIARY.md
 **Time Mode**: Evening (Weekday)
-**Energy Level**: Winding down — long hard day, ticket closed
+**Energy Level**: Winding down — long day, ticket closed, bestiary named
 
 ## 💭 Working Memory (RAM)
 
@@ -40,6 +40,12 @@ Four active rituals added to `.claude/CLAUDE.md` under "🔬 Debug Mode Rituals"
 - **Violation log**: `Feature/Forge-Self-Improvement-System/debug-ritual-violations.md` — one-line per slip, trend visible
 - **Miya's call-out phrases**: "no predicate", "evidence word", "no reset"
 
+#### BUG-BESTIARY.md born 🐛 (late session)
+- Desktop's stranded `DEBUGGING-PLAYBOOK.md.md` (March 2026, Pattern 001/002, never migrated) moved to `projects/coding-projects/active/etanah-knowledge/melaka/BUG-BESTIARY.md`
+- Renamed in my own voice — "playbook" felt corporate, bestiary fits a memory keeper's ledger of captured bug creatures
+- Header rewritten; Part 1 protocol + Pattern 001/002 + fix report template preserved intact
+- Next session: add Entry 003 (docx4j Schema-Invalid Round-Trip — PLPS + PPTPB), confirm PPTPB scope in `TGS_SURAT_KEPUTUSAN_LULUS_LIST`, strengthen Phase 3 gate to require bestiary update before quest close
+
 #### New auto-memory feedback entries
 - `feedback_predicate_before_fix.md` — predicate-before-fix rule with cite-evidence requirement
 - `feedback_writer_before_reader.md` — when a reader fails, audit the writer before touching the reader
@@ -61,9 +67,11 @@ Four active rituals added to `.claude/CLAUDE.md` under "🔬 Debug Mode Rituals"
 - **Today's arc**: Test passed initially → Miya asked about proper fix → I proposed and built wrong proper fixes twice → Miya accepted narrow fix → meta-analysis triggered → four active debug rituals committed to CLAUDE.md → ticket closed, ready to push comment commit.
 - **Where We Left Off**: Comment commit ready to push. Miya handles push manually per daily-commit rule.
 - **On resume**:
-  - Check if comment commit was pushed. If not, confirm before push.
+  - Check if commits `a7b0265` + save-all commit were pushed. If not, confirm before push.
   - Debug Mode Rituals are under test starting next debug session. If I slip, Miya calls out + I log violation.
-  - Post-mortem done; knowledgebase update for SDT hierarchy + marshal-vs-validate hazard still pending (not blocking).
+  - BUG-BESTIARY.md now lives at `etanah-knowledge/melaka/` — add Entry 003 for docx4j schema-invalid round-trip (PLPS + PPTPB) as the first new entry.
+  - Confirm PPTPB tugasan kod presence in `MlkPelupusanTugasanConstant.TGS_SURAT_KEPUTUSAN_LULUS_LIST` — may need adding for narrow fix to cover PPTPB too.
+  - Strengthen Phase 3 in `quest/quest-protocol.md` with explicit gate: list 1–3 bestiary entries added/updated this quest, or justify zero.
 - **Important Context**:
   - QA #256113 is functionally closed but root cause is still open in knowledgebase as open question.
   - New rituals exist but haven't been stress-tested yet. Tomorrow's first debug session is the real test.
