@@ -17,6 +17,10 @@
 - [feedback_verify_before_claim.md](feedback_verify_before_claim.md) — Re-read code before asserting; hold positions backed by line evidence; one passing test is inconclusive
 - [feedback_knowledgebase_during_debug.md](feedback_knowledgebase_during_debug.md) — Every debug/scan session must produce knowledgebase entries + consider retrieval improvements
 - [feedback_daily_commit.md](feedback_daily_commit.md) — Auto-commit at save all; never auto-push, みや pushes manually
+- [feedback_check_archives.md](feedback_check_archives.md) — Always check archive folders for past tickets/projects/quests before asking
+- [feedback_fix_txt_structure.md](feedback_fix_txt_structure.md) — Fix.txt stays compact: chain + root cause + applied fix + verification only; exclude speculative/ruled-out sections
+- [feedback_predicate_before_fix.md](feedback_predicate_before_fix.md) — Before proposing code, state the predicate that must hold + cite file:line evidence; no test requests without it
+- [feedback_writer_before_reader.md](feedback_writer_before_reader.md) — When a reader sees wrong/missing state, audit the writer that produced the input before patching the reader
 
 ## User
 - [user_career_vision.md](user_career_vision.md) — 3-phase career vision: Personal Excellence → Team Contribution → Company Impact

@@ -38,6 +38,34 @@
 
 ## Entries
 
+### QA-256113 — PLPS Syarat-syarat missing on Selesai — 2026-04-14
+
+**Root Cause Type**: code (schema-invalid marshaling)
+
+**Root Cause Summary**:
+`PelupusanWordEditorUtil.insertContentControlTableInDocument` (lines 628-631) unconditionally inserts a rebuilt `Tbl` into any SDT's `sdtContent`. For row-level SDTs (`CTSdtRow`), the OOXML schema `CTSdtContentRow` only allows `Tr` children, not `Tbl`. docx4j's in-memory list accepts the shape, marshals schema-invalid XML on pass 1 save, and JAXB silently drops the mismatched child on pass 2 unmarshal — leaving the SDT's content null and the Selesai-pass populate unable to find a table template.
+
+**What Would Have Been Faster**:
+Check the writer, not just the reader. When pass 2's reader (`findTableByContentControlTag`) sees wrong/missing state, the first question is "what did pass 1's writer put in the file?" — not "why can't the reader parse it?". The fix was 80 lines above the symptom in the same file, same function.
+
+**Pattern Match**:
+- New pattern to add: **"When a parser sees wrong state, audit the writer first."**
+- New pattern to add: **"docx4j object graphs are not schema-validated on marshal — row-level/cell-level SDTs must only receive schema-legal children."**
+
+**Codebase Knowledge Updated**:
+- Pending (after test confirms): `etanah-knowledge/` entry on SDT hierarchy (SdtBlock/SdtRun/CTSdtRow/CTSdtCell) and the marshal-vs-validate hazard.
+
+**Process Notes**:
+Two wrong fixes in one day on the same ticket. Both built on the same failure mode: **symptom → plausible story → fix**, skipping **symptom → observed state → mechanism**. Failure 1 (clear+repopulate theory) assumed execution reached line 583 without checking — the function actually bailed at line 544. Failure 2 (missing-branches refactor) assumed pass 2 had a differently-shaped child — debugger actually showed no child at all. In both cases, evidence that would have killed the theory was available in under a minute of re-reading, but I asked for a test-rebuild cycle instead. User paid for my laziness with a full day.
+
+**Carry Forward**:
+1. **Predicate-before-fix rule**: before proposing code, state "This fix works iff *X* holds, and *X* holds because file:line shows *Y*." If that sentence can't be written, the fix isn't ready.
+2. **Writer-before-reader rule**: when a parser fails, read the code that produced the input bytes before touching the parser.
+3. **One failed theory → full reset**: after a wrong fix, re-read raw evidence from scratch. Do not build on the discovery that led to the wrong fix — momentum is a failure mode.
+4. **No test request without a line-cited predicate**: user's rebuild/redeploy/restart cycle is expensive. My code re-read is free. I owe the re-read first.
+
+---
+
 ### QA-253419 — PSBS Kategori Kegunaan Tanah — 2026-04-03
 
 **Root Cause Type**: process

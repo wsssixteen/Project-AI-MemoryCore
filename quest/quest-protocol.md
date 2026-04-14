@@ -91,12 +91,67 @@
 - No deferred topics, no investigation logs, no strategy explanations
 - If it's longer than ~15 lines, it's too long — move detail to Fix.txt or knowledgebase
 
-### Fix.txt — Structured, categorized
-- **CHAIN** section always first: class → class → class flow showing how execution reaches the fix point. One of みや's top priorities — for showing others, for remembering in a single view, and for saving tokens on re-investigation.
-- **APPLIED FIX** section: file, line, what changed, root cause (brief)
-- **INVESTIGATED BUT NOT NEEDED** section: always keep unused/investigated fixes for reference, with reason why not needed. Never discard investigation work — it has value for future tickets and explaining decisions.
-- **CONFUSING CONSTANT** or similar warnings: gotchas for future reference
-- This is the source of truth for what was done and why
+### Fix.txt — Compact, re-reference oriented
+Fix.txt is a quick-reference for re-reading the fix months later — not a full investigation log. Keep it compact.
+
+**Required sections (in order):**
+- **CHAIN** — class → class → class flow showing how execution reaches the fix point. Always first. Top priority — for showing others, single-view recall, saving tokens on re-investigation.
+- **ROOT CAUSE (short)** — 2–4 sentences, plain language
+- **APPLIED FIX** — per-file diff + 1-line why per change
+- **VERIFICATION** — breakpoints to hit + what to check while testing
+- **GLOSSARY** (optional) — only for new/unfamiliar terms introduced by this ticket
+- **MORE INFO** (optional) — single-line pointer to `quest/handoff-<QA>.md` for full trail
+
+**Excluded from Fix.txt** (these live elsewhere):
+- "What is not known yet" / unfamiliar concepts → post-mortem teaching section
+- "Known related bugs / followup" → forge-log or post-mortem observations
+- "Investigated but not needed" / ruled-out hypotheses → handoff file only, never Fix.txt
+
+**Why**: Fix.txt's job is "remind me what was done and why" — not "walk through every path considered". Investigation trail belongs in the handoff file during the quest and the post-mortem after close.
+
+**Work-document naming rule**: never use みや, リドワンさん, or any nickname inside Fix.txt — Task folder files are potential colleague handover artifacts. Stay professional and name-free.
+
+### SUMMARY.txt — Quest close-out (mandatory at Phase 3)
+> **Why this exists**: Without a proper summary, reopening a quest months later forces a full re-investigation — searching git, reading diffs, guessing context. This file is the single document that makes re-entry instant.
+
+**Template** (copy into Task folder as `SUMMARY.txt` at Phase 3):
+```
+TICKET: <ticket type + number, e.g. UAT-CR #239225>
+DATE CLOSED: <YYYY-MM-DD>
+STATUS: <COMPLETE | PARTIAL — list what's missing>
+
+--- SCOPE ---
+<paste original scope from ticket/Alex — verbatim or near-verbatim>
+
+--- REPOS + BRANCHES ---
+<for each repo that needed changes>
+Repo: <repo name>
+Branch: <branch name>
+Commit: <short hash + message>
+Merged to: <target branches, e.g. mlk/release/uat, mlk/int-env>
+Author: <who committed>
+
+--- WHAT WAS DONE ---
+<one line per fix, with file path>
+
+--- WHAT WAS NOT DONE (if PARTIAL) ---
+<repo, file, what's missing, why>
+
+--- GIT VERIFICATION ---
+Committed: YES/NO per repo
+Pushed: YES/NO per repo
+Merged: YES/NO + target branch
+Stashed: YES/NO — describe if yes
+
+--- REOPENING NOTES ---
+<anything a future session needs to know to pick this up cold>
+```
+
+**Rules:**
+- Every field is mandatory — if a repo was mentioned in scope but no fix was committed, it MUST appear under "WHAT WAS NOT DONE"
+- Status must be PARTIAL if any scope item is unfinished — never mark COMPLETE with missing work
+- Git hashes are required — not just "committed", the actual hash
+- This file replaces the old ad-hoc SUMMARY.md format
 
 ---
 
@@ -114,6 +169,69 @@
 1. Confirm all checklist items are `[x]`
 2. Ask: *"Have you tested locally?"* — update `local_test_confirmed=true` in `quest/active.txt`
 3. Only then run `git commit -m "QA #<number>"`
+
+### Fix Walkthrough — mandatory after every code edit batch
+
+> **Why**: Without a structured walkthrough, each code change is just a diff in isolation. みや can't explain to a colleague why we touched the VO if she doesn't have the root cause, class chain, and "why these changes as a set" in one place. Also: the walkthrough becomes 80% of the Phase 3 Fix.txt, so writing it now makes post-mortem nearly free. Cost is ~1 turn per fix, saves multiple re-explanation cycles.
+
+**Trigger**: immediately after code edits land in Phase 1 — **unprompted, same turn as the edits**. Do NOT wait for みや to ask.
+
+**Required structure:**
+
+```
+## Fix Walkthrough
+
+### The problem (1–2 sentences)
+<root cause in plain language — no jargon unless defined right there>
+
+### Class chain
+CallerA → CallerB → EngineC → PopulatorD
+(mark where the bug lives with ⚠️)
+
+### Why these changes as a set (2–3 sentences)
+<the big why — how the edits collectively address the root cause,
+what would be incomplete if any single one were missing>
+
+### Per-change walkthrough
+For each file changed:
+- **File:line**
+- diff block
+- **Why this change**: 1 short paragraph
+- **What would break without it**: 1 sentence
+
+### Blast radius
+<who is affected / who is untouched / why the scope is right>
+
+### Document / template changes
+<explicit "none" if none — prevents silent skipping of Word-side check>
+```
+
+**Rules:**
+- **Big why goes FIRST** — before any diff. If みや can't explain the fix to a colleague from the first three sections alone, the walkthrough has failed.
+- **Class chain always present** — per CLAUDE.md top-priority rule. Visual anchor for how execution reaches the bug.
+- **"What would break without it"** forces justification of each diff independently. If you can't answer that line for a change, it probably shouldn't be in the patch.
+- **Document/template changes line is mandatory** — even when "none". Catches the silent-skip failure mode.
+- Walkthrough content is the primary input to Phase 3 Fix.txt (CHAIN + APPLIED FIX sections) — write it well now, reuse at close-out.
+
+### Mid-Quest Handoff File — mandatory when session ends mid-investigation
+
+> **Why**: If a fix fails local testing, next session's me has the fix context but not the investigation trail — forcing either blind retry of the same theory or wasted re-exploration. A handoff file persists the reasoning, ruled-out paths, and a triage ladder so failure recovery is cheap.
+
+**Trigger**: any `save all` / `save` / session wind-down while `phase ∈ {0, 1, 2}` and `local_test_confirmed=false` and code edits were made.
+
+**File**: `quest/handoff-<QA-number>.md` — overwrite on each save during the quest; deleted at Phase 3 close.
+
+**Required sections:**
+1. **Current state** — what's been applied, what's pending test, what to do next
+2. **Root cause theory (with evidence)** — the theory + file:line pointers for re-verification, NOT just the conclusion
+3. **Ruled out** — hypotheses we disproved and why (so next session doesn't re-walk them)
+4. **Parked / alternative hypotheses** — things we haven't fully disproven but deprioritized (so if primary fix fails, we know where to go next)
+5. **Triage ladder if fix fails** — ordered checks: "If X still broken, breakpoint at A:line, inspect B. If A is fine, check C..." Concrete, file:line specific.
+6. **What a different root cause would look like** — early warning signs that the theory is wrong + which subsystem to revisit
+
+**On session boot**: if `quest/active.txt` shows `phase < complete` AND `quest/handoff-<QA>.md` exists, session briefing must include *"📋 Handoff file present — read before acting"*.
+
+**On Phase 3 close**: handoff file is extracted into post-mortem (investigation arc), then deleted from `quest/`.
 
 ---
 
@@ -150,16 +268,21 @@ Examples: `QA #254539`, `QA #254604`, `FAT-OR #251455`, `#249445`
 
 **Goal:** Extract learnings, close the quest.
 
-1. **Root cause type?** — data / config / code / schema / process
-2. **Match existing pattern in DEBUGGING-PLAYBOOK.md?**
+1. **Write SUMMARY.txt** in the Task folder — use the template from Task Folder File Rules above. This is mandatory and comes FIRST.
+   - Verify every repo mentioned in scope has a git hash or a "NOT DONE" entry
+   - Run `git log --oneline --grep="<ticket#>"` per repo to collect hashes
+   - Run `git branch -a --contains <hash>` to confirm merge status
+   - If status is PARTIAL, flag it clearly — do NOT archive to `Archive/` until all scope items are addressed
+2. **Root cause type?** — data / config / code / schema / process
+3. **Match existing pattern in DEBUGGING-PLAYBOOK.md?**
    - Yes → confirm it
    - No → add new Pattern entry
-3. **Codebase knowledge to carry forward?** → update `etanah-knowledge/`
-4. **What would have been faster?** — process note
-5. Write post-mortem entry → `main/post-mortems.md` (use format in that file)
-6. Check Forge log → `Feature/Forge-Self-Improvement-System/forge-log.md` — any entries to promote?
-7. Update `quest/active.txt`: set `phase=complete`
-8. Quick save
+4. **Codebase knowledge to carry forward?** → update `etanah-knowledge/`
+5. **What would have been faster?** — process note
+6. Write post-mortem entry → `main/post-mortems.md` (use format in that file)
+7. Check Forge log → `Feature/Forge-Self-Improvement-System/forge-log.md` — any entries to promote?
+8. Update `quest/active.txt`: set `phase=complete`
+9. Quick save
 
 ---
 
@@ -172,6 +295,26 @@ Examples: `QA #254539`, `QA #254604`, `FAT-OR #251455`, `#249445`
 | Template reference | DEBUGGING-PLAYBOOK.md Part 3 |
 | Output format | `.docx` matching Bug Fix Report standard |
 | Images | Full path per screenshot, or `null` for placeholder |
+
+---
+
+## Quest Re-Entry Protocol
+
+> **When reopening/investigating a past quest** — whether to check status, fix a regression, or resume partial work.
+
+**Step 1 — Find the Task folder:**
+- Check `1. Tasks/Melaka/` first (active), then `1. Tasks/Melaka/Archive/` (closed)
+- The Task folder is the SINGLE SOURCE OF TRUTH — read everything in it before any git/code investigation
+
+**Step 2 — Read SUMMARY.txt FIRST:**
+- If SUMMARY.txt exists → it has all commits, branches, scope, and what's missing. No git archaeology needed.
+- If SUMMARY.txt does NOT exist (old quests before this protocol) → read whatever summary/notes exist, then verify via git
+
+**Step 3 — Only then go to git:**
+- Use commit hashes from SUMMARY.txt to verify current state
+- Do NOT grep the entire codebase or search git history blindly — SUMMARY.txt should have every hash
+
+**Why:** Without this protocol, re-entry costs 10+ tool calls and hundreds of tokens to reconstruct context that should be in one file. UAT-CR #239225 (2026-04-11) proved this — the Task folder had an incomplete ad-hoc summary, forcing a full git archaeology session.
 
 ---
 
@@ -188,4 +331,4 @@ status=<active|hold>
 ---
 
 *Quest — every ticket is a quest accepted, executed, and chronicled.*
-*Protocol version: 2.0 — 2026-04-02 (renamed from Keiro)*
+*Protocol version: 2.4 — 2026-04-14 (Fix.txt structure rewritten: compact re-reference format, excluded sections moved to handoff, work-document naming rule)*

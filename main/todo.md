@@ -28,10 +28,11 @@
 
 | Category | Item | Notes |
 |---|---|---|
-| Work | **FAT-OR #255637** — test original template | **TODAY's focus (2026-04-11)**. Revert PPTPB .docx, generate with zero code changes, check if alamatJabatanTeknikal populates |
+| ~~Work~~ | ~~**FAT-OR #255637** — test original template~~ | ~~CLOSED 2026-04-11~~ |
 | Work | **PDF viewer fix** | Downgrade etanah-common from 524-beta to 514 in pom.xml (PDF.js import.meta crash) |
 | System | **Token usage optimization** | Lost 2 days contact 2026-03-31 week — audit what's eating tokens, reduce boot cost, lean up settings.local.json, review memory load strategy |
 | Work | **QA-253492** Phase 3 | Post-mortem + Redmine close + GSheet update |
+| Work | **UAT-CR #239225** — pelupusan side | みや handling personally; awam side confirmed done |
 
 ### 🟡 Q2 — Schedule
 > **Planning Session (next free session, fresh head):**

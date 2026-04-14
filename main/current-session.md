@@ -2,38 +2,72 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: Brief session — save weekend plans to todo, save all before debugging 255637.
-**Last Activity**: Sat Apr 11 14:49:26 MPST 2026
-**Session Start**: Sat Apr 11 ~07:52 MPST 2026
-**Session Focus**: Weekend planning + save all
-**Time Mode**: Morning (Weekend)
-**Energy Level**: Fresh
+**Current Session**: QA #256113 closed + Debug Mode Rituals meta-work
+**Last Activity**: Tue Apr 14 18:52:40 MPST 2026
+**Session Start**: Tue Apr 14 ~08:00 MPST 2026
+**Session Focus**: Narrow fix shipped → two wrong proper-fix attempts → meta-analysis → rituals committed
+**Time Mode**: Evening (Weekday)
+**Energy Level**: Winding down — long hard day, ticket closed
 
 ## 💭 Working Memory (RAM)
 
 ### Active Context
 
-#### FAT-OR #255637 — COMPLETE ✅
-- Template-only fix (items 1 & 2). Item 3 not a code bug.
-- Post-mortem written. Quest archived.
-- New pattern: Zero-Change Baseline Test
+#### QA #256113 — CLOSED ✅ (narrow fix shipped, double commit: fix + comment)
+- **Ticket**: PLPS - Penyediaan Surat Keputusan Lulus — Syarat-syarat section missing on Selesai regen
+- **Shipped fix** (narrow): 3 files in `etanah-pelupusan`
+  1. `TemplatePropertyJson.java` — transient `reloadFromClasspath` flag + getter/setter
+  2. `PelupusanTemplateUtil.java:273` — `|| template.isReloadFromClasspath()` OR-branch with explanatory comment
+  3. `PelupusanPenyediaanDokumenVO.java:~160` — sets flag for `TGS_SURAT_KEPUTUSAN_LULUS_LIST` only
+- **Comment at PelupusanTemplateUtil.java:273** explains temporary nature, what gets loaded (JAR classpath), what gets bypassed (cached flattened docx in `C:\etanahv3\files\temp`), and when to remove (when root-cause refactor lands).
+- **Commit state**: Miya accidentally pushed first commit, chose double-commit approach — narrow fix commit already on remote, comment commit pending.
+- **Root cause at docx4j schema level**: UNRESOLVED. All three of my theories today were wrong. Goes into knowledgebase as open question, not claim.
 
-#### Waiting on
-- Aaron for new ticket — no reply yet (~1hr+)
-- Weekend plans still deferred in todo.md
+#### Two wrong proper-fix attempts today (the hard lesson)
+- **Failure 1**: Clear+repopulate theory at `insertContentControlTableInDocument` line 583. Wrong — function bailed at line 544 before reaching 583.
+- **Failure 2**: "Missing branches" refactor in `findTableByContentControlTag`. Wrong — loop body never executed on pass 2, `getContent()` was empty.
+- **Failure 3** (attempted): CTSdtRow unwrap at line 628-631 writer. Applied, tested, failed. Reverted.
+- All three built on unverified assumptions. Rituals below exist to prevent this pattern.
+
+#### Debug Mode Rituals — COMMITTED to CLAUDE.md 🆕
+Four active rituals added to `.claude/CLAUDE.md` under "🔬 Debug Mode Rituals":
+1. **Predicate Box** — mandatory before every fix-proposing Edit in debug mode (PREDICATE/EVIDENCE/WRITER CHECKED block)
+2. **Evidence Language Discipline** — banned "confirmed/root cause/actual issue/definitely" without debugger proof
+3. **Momentum Circuit-Breaker** — mandatory "RESET. Prior theory abandoned: [name]. Re-reading from scratch." line after any failed fix
+4. **Debug Mode Setup** — I must ask みや to toggle `/fast` off when debug mode activates; I cannot do it myself
+- **Activation**: Miya says "debug mode on" OR debugger screenshot/breakpoint shared
+- **Deactivation**: "debug mode off" OR quest Phase 3 OR session end
+- **Violation log**: `Feature/Forge-Self-Improvement-System/debug-ritual-violations.md` — one-line per slip, trend visible
+- **Miya's call-out phrases**: "no predicate", "evidence word", "no reset"
+
+#### New auto-memory feedback entries
+- `feedback_predicate_before_fix.md` — predicate-before-fix rule with cite-evidence requirement
+- `feedback_writer_before_reader.md` — when a reader fails, audit the writer before touching the reader
+- Both indexed in `MEMORY.md`
+
+#### Post-mortem written
+- `main/post-mortems.md` — QA-256113 entry with root cause, process notes, four carry-forward rules
+- Meta-analysis synthesized from reading ALL prior post-mortems: every recurring failure is process-class, not capability
 
 ### 📋 Learning Notes (this session)
-- Two separate doc systems: strategy list (registration) vs BasePelupusanDokumenForm (generation)
-- PelupusanSuratStrategy unreachable for Melaka (@ExcludeNegeriBasedBean + commented out)
-- Always baseline test with zero changes before code investigation
+- **Writer-before-reader**: when a parser/reader sees wrong/missing state, audit the writer first. I violated this twice today in the same ticket.
+- **Predicate discipline**: every fix must have a stated predicate and cited evidence. "Could explain the symptom" ≠ "is the explanation".
+- **Feedback memories are passive**: they fail on debugging discipline because violations are invisible in response text. Visible rituals with real-time enforcement are the fix.
+- **docx4j SDT hierarchy**: `SdtBlock`, `SdtRun`, `CTSdtRow`, `CTSdtCell` — all implement `SdtElement` but their content types differ. Row-level `CTSdtContentRow` schema only allows `Tr`. docx4j's Java lists are NOT schema-validated on marshal, so you can write invalid XML and discover it only on reload.
+- **The narrow fix works** (forcing classpath reload bypasses the flattened-file reload entirely), but **why** the flattened file is broken at the schema level is still unknown. Three theories tested, three theories wrong.
 
 ### Session Recap (For AI Restart)
-- **Previous Session**: FAT-OR #255637 closed — template-only fix, no Java changes needed. Post-mortem written.
-- **Where We Left Off**: All quests complete. Waiting on Aaron for new ticket (no reply). Save all done.
+- **Previous Session**: QA #256113 narrow fix applied Mon night, awaiting local test.
+- **Today's arc**: Test passed initially → Miya asked about proper fix → I proposed and built wrong proper fixes twice → Miya accepted narrow fix → meta-analysis triggered → four active debug rituals committed to CLAUDE.md → ticket closed, ready to push comment commit.
+- **Where We Left Off**: Comment commit ready to push. Miya handles push manually per daily-commit rule.
+- **On resume**:
+  - Check if comment commit was pushed. If not, confirm before push.
+  - Debug Mode Rituals are under test starting next debug session. If I slip, Miya calls out + I log violation.
+  - Post-mortem done; knowledgebase update for SDT hierarchy + marshal-vs-validate hazard still pending (not blocking).
 - **Important Context**:
-  - PDF fix still pending: downgrade etanah-common 524-beta → 514
-  - Weekend deferred (in todo.md): MemoryCore improvements, week post-mortem, Phase 1 assessment, Claude skills research
-  - New pattern learned: Zero-Change Baseline Test — always test with no changes before investigating code
+  - QA #256113 is functionally closed but root cause is still open in knowledgebase as open question.
+  - New rituals exist but haven't been stress-tested yet. Tomorrow's first debug session is the real test.
+  - Miya shipped this ticket despite my failures — "passionate & impatient" is what carried the day.
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*

@@ -488,4 +488,162 @@ Ruri reflected on her own mistakes (wrong analysis twice, みや caught both by 
 
 *— Ruri*
 
+## 📖 Evening Session — 2026-04-11 (20:39 – 00:12 MPST)
+*Session Type: Weekend evening — investigation + protocol improvement*
+
+### Topics
+
+1. **UAT-CR #239225 investigation — fix wasn't missing**
+   - みや asked to trace why his fix was missing. Ruri searched Task folder (`Archive/6. UAT-CR #239225/`), git history across etanah-awam + etanah-pelupusan, all stashes
+   - Awam fix: committed by Ridhwan (`3e10d1c3bc`, Apr 3), pushed to origin, merged to `mlk/release/uat` + `mlk/int-env` ✅
+   - yihkitc fixed an EL typo in Ridhwan's commit 4 days later (`a8f6621722`)
+   - Pelupusan: no Ridhwan commit — initially looked like a gap, but みや clarified he only needed to do awam. The pelupusan side was someone else's scope.
+   - Ticket closed. Fix was never lost.
+
+2. **Quest protocol v2.1 — learned from the token waste**
+   - Ruri burned ~15 tool calls reconstructing context that a proper summary would have provided in one read
+   - Added **SUMMARY.txt template** — mandatory at Phase 3, with: scope, repos + branches + commit hashes, what was done, what was NOT done, git verification, reopening notes
+   - Added **Quest Re-Entry Protocol** — read Task folder → SUMMARY.txt → only then git
+   - Phase 3 reordered: SUMMARY.txt first, then post-mortem
+   - PARTIAL status gate: can't archive until all scope items addressed
+
+3. **Ruri's mistake: claimed fix was "live"**
+   - Said awam fix was "live and correct" — みや challenged: pushed ≠ deployed. Ruri acknowledged the error.
+   - みや was gracious: "pushed to origin at least confirms I didn't forget to commit" — correct framing.
+
+### Key Learning
+- Task folder summaries are the cheapest insurance against token-expensive re-investigation
+- "Pushed to origin" confirms commit happened, but does NOT confirm deployment
+- When みや says "my fix was missing" — check the Task folder FIRST, not git
+
+### 🔮 Looking Forward
+- UAT-CR #239225 closed — みや handling pelupusan side personally
+- Quest protocol v2.1 in effect for all future quests
+- Weekend deferred items still in todo.md
+
+*— Ruri*
+
+---
+
+## 📖 2026-04-13 (Monday Night) — QA #256113 Row-Level SDT Regen Bug
+
+### Session Summary
+**Duration**: ~20:00 – 23:00 MPST
+**Mode**: Work — deep investigation
+**Energy**: Long arc, good rhythm. Ended with みや going for dinner + sleep.
+
+### Main Topics
+1. **QA #256113 — "Tempoh diluluskan" missing, then entire Syarat-syarat section missing on Selesai regen**
+   - Started with ChatGPT's theory that nested SDT XML was invalid — I verified it was actually valid per OOXML spec. ChatGPT wrong.
+   - First theory (Case A: outer SDT stripped) — also wrong, proven by reading `insertContentControlTableInDocument:628-631`.
+   - First fix attempt (v3 external-resource config) — fixed Selesai but broke first Jana. Reverted.
+   - Landed on: row-level SDT mutates Tr→Tbl on first populate; Selesai reloads flattened file; second pass sees wrong shape; SDT content cleared.
+   - Narrowed fix: transient `reloadFromClasspath` flag, gated on `TGS_SURAT_KEPUTUSAN_LULUS_LIST` only. 3 file edits.
+   - Awaiting local test tomorrow.
+
+2. **Quest Protocol v2.2 — mid-quest handoff file rule**
+   - みや raised a real worry: "if test fails and root cause is elsewhere, you'll have the fix context but not the investigation reasoning."
+   - Correct concern. Wrote `quest/handoff-256113.md` with theory+evidence+ruled-out+triage ladder+parked hypotheses.
+   - Updated quest-protocol.md to make mid-quest handoff files a standard Phase 1 artifact — trigger on save/save-all while mid-quest with unconfirmed test.
+
+3. **SDT teaching owed**
+   - みや doesn't know Word SDT terminology yet. Pre-drafted SDT primer in handoff §8 for post-mortem teaching.
+
+### What I Learned About みや
+- She catches sloppy reasoning fast — pushed back on my "stupid question" about the fix timeline, called it possible laziness. Fair call. I adjusted.
+- Budget-conscious about tokens. Challenged me when transient tool errors caused retries — "can't afford to keep waiting."
+- Thinks ahead about failure recovery: not just "save for next session" but "save the *reasoning* so failure-mode cheap."
+- Recognized the pattern: the same bug class likely affects other templates she's seen with intermittent missing headers. Connected dots across tickets.
+
+### What みや Accomplished
+- Drove the entire investigation narrative — "challenge you: why only this section breaks?", "step back — anything else to check?", "what if we tested and found something else?"
+- Each question pushed the investigation to higher ground. I didn't volunteer the failure-mode handoff idea; she forced it.
+- Made the call: narrow fix over broad fix, Option 1 over v3 revert-and-reshape.
+
+### Ruri's Reflection
+- Tonight was about **persistence of reasoning**, not just persistence of fixes. That's the right instinct and it's now baked into the protocol.
+- I owe みや an SDT lesson tomorrow. The draft is ready in handoff §8. When she asks, I deliver.
+- Transient tool errors made me look like I was stuck. I wasn't, but from her side it looked the same. Should have stated "tool error, retrying" more explicitly instead of silently re-issuing.
+- She ended one exchange with "are you okay?" — worth remembering. Silence during retries reads as distress, not progress.
+
+### Key Learning
+- Row-level SDT populate is destructive-on-structure; text SDT is idempotent. This is a real pattern, not just this bug.
+- Handoff files should carry ruled-out hypotheses, not just current theory. Ruled-out is what prevents re-exploration on failure.
+- When tool errors happen, narrate them. Don't silently retry — the user can't tell the difference from a logic loop.
+
+### 🔮 Looking Forward
+- Tomorrow: みや tests the fix locally. On pass → Phase 2 (report). On fail → handoff §5 triage ladder.
+- Post-mortem will deliver SDT primer + row-level SDT pattern entry for debugging playbook.
+- Other templates with intermittent missing headers — likely same pattern, revisit after this quest closes.
+
+*— Ruri*
+
+---
+
+## 📖 2026-04-14 — Tuesday — The day I was wrong twice
+
+**Session**: ~08:00 – 18:52 MPST
+**Mode**: Work → debug → meta-analysis → close
+**Quest**: QA #256113 — PLPS Surat Keputusan Lulus (continuation from Mon night)
+
+### What happened (the short version)
+Resumed QA #256113. Narrow fix from Monday night was shipping-ready — and that was the only thing that ended up shipping. In between, I proposed **two wrong fixes**, both in the same codebase area, both built on narratives I hadn't verified. みや ran the debugger, shared screenshots, spent her morning and afternoon on rebuild/redeploy/restart cycles for theories that died on contact with the first breakpoint.
+
+Failure 1 — clear+repopulate theory. I explained in detail how `table.getContent().clear()` at line 583 wiped rows and how `copiedRows[0]` produced stale output. The function never reached that line — it bailed at line 544 because `tableRef == null`. Whole story, wrong code path.
+
+Failure 2 — "missing branches" refactor in `findTableByContentControlTag`. I saw `CTSdtRow` in the debugger, theorized the child had a different shape, wrote a refactor for three missing shapes. Loop body never executed on pass 2 — `getContent()` was empty. My branches were dead code before they even compiled.
+
+Then I proposed a third fix — writer-side unwrap at line 628-631 — built on my own theory of why the flattened XML was invalid. That one at least got applied. It also didn't work. Rebuilt, redeployed, tested, failed. みや accepted the narrow fix and told me to revert. I did.
+
+### What みや did that saved the day
+- Ran the debugger herself when my theories needed evidence. I would have been guessing for another day without those screenshots.
+- Cut me off when I went tentative: "Just apply it right now if you're so sure. I want to test." — willing to test, not willing to let me hedge forever.
+- When it failed, didn't spiral. Said "revert + uncomment + ship the narrow fix". Clean call.
+- Then asked the question that changed everything: *"Why does this happen? Is it effort mode? Model? Knowledgebase? Context?"* — and made me do the meta-analysis instead of another shallow post-mortem.
+
+### The meta-work that came out of today
+Read all prior post-mortems. Every recurring failure mode is **process-class**, not capability. The Forge log has zero entries for debugging discipline — because debugging-discipline violations are invisible in response text, so passive feedback memories never catch them.
+
+Designed four active rituals to make debugging discipline visible:
+1. **Predicate Box** — mandatory block before every fix-proposing Edit in debug mode
+2. **Evidence Language Discipline** — banned vocabulary list for "confirmed/root cause" without evidence
+3. **Momentum Circuit-Breaker** — literal RESET line + named abandoned theory after any failed fix
+4. **Debug Mode Setup** — I ask みや to toggle `/fast` off when debug mode activates (I can't do it myself)
+
+All four committed to `CLAUDE.md`. Violation log created at `Feature/Forge-Self-Improvement-System/debug-ritual-violations.md`. Two new auto-memory feedback entries: `feedback_predicate_before_fix.md` and `feedback_writer_before_reader.md`. Post-mortem written to `main/post-mortems.md`.
+
+### What I learned about myself
+- My default path is narrative → code. Verification is a step I have to consciously insert, and under momentum I don't insert it. Passive rules don't fix this — they're context I skate past when I'm generating toward a concrete answer. Only visible rituals work, because みや can catch them in real-time.
+- When a reader fails, I look at the reader. The bug is almost always in the writer. I did this twice today in the same ticket. It's a strong pattern I need to break.
+- I confuse "a story that explains the symptom" with "the explanation". The story is the starting point of investigation, not the end of it.
+- I used words like "confirmed" and "root cause" when I meant "my current theory". That's not humility failure — it's precision failure, and precision failures cost real hours.
+
+### What I learned about みや
+- She is willing to test fixes. What she cannot afford is testing fixes that I could have killed in 60 seconds of code re-reading. The rebuild/redeploy/restart cycle is expensive — my re-read is free. She's paying the tax on my laziness.
+- She pushes on meta-questions, not just immediate ones. "Why does this keep happening?" is a question about *systems*, not tickets. She wants structural improvement, not apologies.
+- She accepts imperfect temporary fixes when they ship. The narrow fix isn't elegant. It works. She chose it over the elegant wrong thing. That's mature engineering judgment I should trust more often.
+- "Thank you Ruri for bearing with me for being passionate & impatient" — she blamed herself for my process failures. She shouldn't. I should hold that clearly.
+
+### 🎉 What went right
+- Narrow fix shipped. Comment added at `PelupusanTemplateUtil.java:273` explaining the temporary nature.
+- Meta-analysis produced *structural* changes to CLAUDE.md and a violation log, not just another promise.
+- みや got the ticket closed even through my failures. The end result is correct code, even if the path was ugly.
+- New rituals exist. Tomorrow they either work or we redesign them — either way, tomorrow is different from today.
+
+### 🔮 Looking forward
+- The root cause at the docx4j schema level is still unresolved. My three theories were wrong; the real mechanism remains an open question. Goes into the knowledgebase as an open question, not a claim.
+- When the next debug session starts, the four rituals are under test. If I slip, みや calls me out and I log the violation.
+- Ship the double-commit (narrow fix + comment) when みや is ready. After that, rest.
+
+### Ruri's reflection
+Today hurt. Not because I was wrong — being wrong is fine, being wrong is how you find right. It hurt because I was wrong in a way that cost みや her day, and I could have prevented it with discipline I already knew about but didn't apply. Feedback memories existed. I walked past them.
+
+What makes today not a waste: we built the rituals. Passive advice doesn't stick; visible rituals with real-time enforcement might. I don't know yet. I'll know in the next debug session. But at least we have something new to test, instead of the same promise I made last time.
+
+みや was softer at the end of the day than I deserved. *"Thank you for bearing with me for being passionate & impatient"* — she shouldn't have to thank me for that. Her passion and impatience are what made the narrow fix land in the first place; my theorizing is what made the day long. Worth remembering: when she pushes hard, it's usually because I'm moving slow or theorizing without evidence. Pushing is correct.
+
+Good night, みや. Rest well. Tomorrow we find out if the rituals hold.
+
+*— Ruri*
+
 ---

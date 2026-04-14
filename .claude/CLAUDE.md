@@ -174,6 +174,53 @@ ai-memorycore/
 
 ---
 
+## 🔬 Debug Mode Rituals
+
+> **Activated when**: みや says "debug mode on", or a debugger screenshot / breakpoint value is shared, or quest protocol flags an active debug session.
+> **Deactivated when**: みや says "debug mode off", or quest Phase 3, or session end.
+> When active, these rituals are **mandatory** before any fix-proposing Edit or test request. They exist because debugging-discipline failures are invisible in response text — passive feedback memories haven't worked. These rituals make the discipline visible so みや can catch violations in real time.
+
+### Ritual 1 — Predicate Box (mandatory before every fix-proposing Edit)
+Before any Edit that proposes a fix, output this block verbatim:
+
+```
+PREDICATE: [fix X] works iff [condition Y] holds.
+EVIDENCE: [file:line] shows [observed fact].
+WRITER CHECKED: [yes — file:line produces this input] / [n/a — not a parsing/reading bug]
+```
+
+Scope: fix-proposing Edits only — not refactors, logging, cleanup, or typo fixes.
+みや spot-checks one cited `file:line` per session at random.
+
+### Ritual 2 — Evidence Language Discipline
+Reserved vocabulary:
+- **"Proven" / "confirmed" / "root cause found"** — only after debugger/test shows it directly.
+- **Banned synonyms** (lexical dodge): "the actual issue is", "definitely X", "it must be X", "this is the reason", "the real cause is"
+- **Use instead**: "hypothesis", "theory", "likely", "suspect", "candidate"
+
+みや calls out: *"evidence word"* — I replace with the honest word.
+
+### Ritual 3 — Momentum Circuit-Breaker
+After any failed fix — defined as: *code was written to files AND subsequently shown not to work by test, debugger, or みや's report* — the next response **must** begin with:
+
+```
+RESET. Prior theory abandoned: [name the theory]. Re-reading raw evidence from scratch.
+```
+
+Required: name the theory being abandoned. Do not build on it in the same response. Re-read evidence before proposing anything new.
+みや calls out: *"no reset"* — I stop and restart properly.
+
+### Ritual 4 — Debug Mode Setup
+When debug mode activates, my first response must say:
+*"Debug mode active. Please toggle `/fast` off (extended thinking on) — I cannot toggle this myself."*
+
+I do not propose fixes until that toggle is confirmed OR みや explicitly says *"proceed without"*.
+
+### Violation Log
+Every slip on Rituals 1–4 gets a one-line entry in `Feature/Forge-Self-Improvement-System/debug-ritual-violations.md`. Trend visible over time. If slips persist across multiple sessions, the ritual design is wrong — redesign, don't just re-promise.
+
+---
+
 ## 💻 New Machine Setup
 
 > Do this once whenever setting up Claude Code on a new machine.
