@@ -30,6 +30,8 @@
 |---|---|---|
 | ~~Work~~ | ~~**FAT-OR #255637** — test original template~~ | ~~CLOSED 2026-04-11~~ |
 | Work | **PDF viewer fix** | Downgrade etanah-common from 524-beta to 514 in pom.xml (PDF.js import.meta crash) |
+| Work | **#255773 — unblock PLTP local submission** | Morning: ask colleague how to submit PLTP from local AWAM past `CarianRasmiHakmilikForm.xhtml` "No Resit Carian Rasmi" gate. Dummy receipt? Dev-skip? Seed script? Separate Carian Rasmi flow? Pure unblock — don't guess. Added 2026-04-15 evening. |
+| Work | **#255773 — FAT local DB access request** | In flight. Needed as fallback if fresh local PLTP repro doesn't trigger the bug. Follow up on status in morning. |
 | System | **Token usage optimization** | Lost 2 days contact 2026-03-31 week — audit what's eating tokens, reduce boot cost, lean up settings.local.json, review memory load strategy |
 | Work | **QA-253492** Phase 3 | Post-mortem + Redmine close + GSheet update |
 | Work | **UAT-CR #239225** — pelupusan side | みや handling personally; awam side confirmed done |
@@ -50,6 +52,8 @@
 | Learning | **Claude skills/features research** | Threads links to share + discuss on laptop. Skills, new features, anything useful for workflow |
 | System | **Quest: auto test-record SQL** | Phase 0 step added to protocol. Next: make it smarter (hook or template). DATABASE.md must always be loaded before SQL work. |
 | System | **SCRIPTS.md** (new etanah-knowledge file) | Working SQL patterns: senior's base script + annotations, shortform table name mapping (tgsn=tugasan etc.), ID_PENGENALAN format documented |
+| System | **Move `Database/Melaka/` + `Flowables/Melaka/` into project** | Currently at `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\Database\Melaka` and `Flowables\Melaka`. I keep forgetting they exist because they're outside the project folder. Relocate into `projects/coding-projects/active/etanah-knowledge/melaka/` as subfolders (or similar). Added 2026-04-15 after second forget. |
+| System | **`inscribe` skill — end-of-day ticket handover** | Writes compact `Handover.txt` into the Task folder (parallel to `Fix.txt`) when a ticket goes on hold or day ends mid-investigation. **Priority: show don't tell** — lead with file:line / table / column / SQL / stack; prose is minimal framing. Shape: Symptom → Code path (read + write) → SQL evidence → Hypotheses + candidates → Next actions → Do-not list. みや picks up the paper trail from the Task folder physically, no need to open MemoryCore. First instance created 2026-04-15 for #255773 — use as template. Also write the longer narrative to `quest/handoff-<qa>.md`. Later: pair with a `resume ticket <QA#>` read-back. Added 2026-04-15. |
 | System | **Quest: Pre-implementation scrutiny gate** | Add 5-question pre-flight checklist to Phase 1 of quest-protocol.md before any code change |
 | Learning | **Phase 3** Gemini scan | First JSF/XHTML layer scan — 1–2 hours |
 | Learning | **Phase 4** EL extractor script | After Phase 3 |
@@ -65,6 +69,7 @@
 | Learning | **PRK state code** | Ask colleagues — pending since 2026-03-25 |
 | Work | **Generalise fix report tool for BA/QA handoff** | Currently too dev-specific — make it usable by BA/QA team. New tool vs extending current — consider time cost before diverting |
 | Learning | **Revise: JOIN FETCH bug (PlpVersiPermitLesenRepository)** | `JOIN FETCH` requires JPA association — `maklumatTambahan` is `private String`, not an association. Fix: remove JOIN FETCH. Revise BaseEntity to confirm 100%. |
+| System | **BUG-BESTIARY: copy-paste bug at `PelupusanSpocService.java:522`** | `apt.getUnitLuasDipohon().getKod()` inside `UnitLuasDilulus` block — should be `getUnitLuasDilulus().getKod()`. Latent, pre-existing, not #255773. Guarded behind `if (apt.getUnitLuasDilulus() != null)` which is false pre-approval so never triggers currently. Add as BUG-BESTIARY entry next time we touch that class. Found 2026-04-15 evening during #255773 narrowing. |
 
 ### ⚪ Q4 — Someday
 
@@ -90,4 +95,4 @@
 
 ---
 
-*Last updated: 2026-04-11*
+*Last updated: 2026-04-15*

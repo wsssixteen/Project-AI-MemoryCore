@@ -46,6 +46,11 @@ These three are not separate systems. They are three axes of the same question: 
 1. What did Ruri do better this week than last?
 2. Where did Ruri still slip into old patterns?
 3. One concrete adjustment for next week.
+4. **System Appraisal** — review `forge-log.md` → *System Appraisal Queue*. For each pending rule/workflow/memory:
+   - Is it too narrow or too coupled to one project/domain?
+   - Does it disrupt workflow or limit Ruri where it shouldn't?
+   - Does it still match how Ruri actually works, or is it vestigial?
+   - Decide: keep / refine / retire. Record the decision on the queue entry.
 
 ## Axis 2 — Knowledge Growth
 1. What did the codebase teach us this week?

@@ -37,7 +37,7 @@
 2. Wait for みや to populate `0. Brief`, then read every file in it
 3. Read every file in the Task folder (Glob + Read all)
 4. Parse: ticket description, scope items (a, b, c…), bug details, screenshots
-5. Read `projects/coding-projects/active/etanah-knowledge/melaka/DATABASE.md` — load schema context before any SQL work
+5. **Inventory-first knowledgebase load** — `Glob projects/coding-projects/active/etanah-knowledge/<state>/` → `Read` every file whose scope overlaps the ticket's symptom (not just `DATABASE.md` — `BUG-BESTIARY.md`, `FLOWABLE-WORKFLOWS.md`, `DOMAIN-GLOSSARY.md`, `MODULE-ARCHITECTURE.md`, `JSF-WIRING.md`, `FLOW-TRACES.md` as relevant). No hypothesis, no SQL, no code grep before this step. See `feedback_inventory_first.md`.
 6. **Generate test record SQL** — auto-fill from ticket context using the standard template below:
    - **Urusan**: grep `DOMAIN-GLOSSARY.md` for the urusan KOD from the ticket (e.g. PSBS, PRZ, PPJK)
    - **Tugasan**: grep `DOMAIN-GLOSSARY.md` Known Tugasan Codes section for matching KOD or NAMA

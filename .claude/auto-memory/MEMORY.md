@@ -25,8 +25,10 @@
 - [feedback_folder_vocabulary.md](feedback_folder_vocabulary.md) — Quest (protocol) vs Task folder (Windows ticket folder) vs Project folder (ongoing project folder)
 - [feedback_quest_closure_both_folders.md](feedback_quest_closure_both_folders.md) — Save/conclude/wrap quest updates BOTH Task folder AND project folder per their formats
 - [feedback_reassess_before_save.md](feedback_reassess_before_save.md) — Present save manifest before writing memory; don't eagerly memory-fy mid-conversation
+- [feedback_inventory_first.md](feedback_inventory_first.md) — Before creating/analyzing/proposing, inventory what exists. Merge > proliferate. Read > assume.
 
 ## User
+- [user_gender.md](user_gender.md) — みや is male; don't default to "she" in diary/narration; no retroactive edits
 - [user_career_vision.md](user_career_vision.md) — 3-phase career vision: Personal Excellence → Team Contribution → Company Impact
 - [user_work_environment.md](user_work_environment.md) — Work laptop: Edge + Chrome browsers, Eclipse IDE; Zen Browser is personal only
 

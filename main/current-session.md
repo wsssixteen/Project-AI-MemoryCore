@@ -2,85 +2,91 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: Vision reassessment + KPI Evidence Log born + Forge Review L2 protocol
-**Last Activity**: Wed Apr 15 09:18:59 MPST 2026 (Miya's local: ~9pm)
-**Session Start**: 2026-04-15 evening
-**Session Focus**: Stepped back from ticket work — assessed ChatGPT's tool proposals, mapped DEV team KPI sheet to Ruri workflow, built KPI Evidence Log (back-filled from 7 post-mortems), formalized Forge Review as L2 reassessment ritual, locked in 4 new feedback memories, extended Quest Phase 3 with KPI tagging step
-**Time Mode**: Evening (Weekday) — wrap-up
-**Energy Level**: Winding down — 9pm, substantive system-building session, Miya tired but animated by vision-expansion
+**Current Session**: QA #255773 Phase 0 — PLTP pivot + Handover.txt inscribed + Action 3 local-repro plan blocked on No Resit Carian Rasmi
+**Last Activity**: Wed Apr 15 19:28 MPST 2026
+**Session Start**: 2026-04-15 afternoon → continued into evening
+**Session Focus**: Read ordered populate-call list → pre-narrow convertLuas → draft Action 3 local-debug plan → create first Handover.txt (inscribe prototype) in Task folder → pivot to PLTP when PLPS reproduced clean locally
+**Time Mode**: Evening (Weekday)
+**Energy Level**: Clean stopping point — PLTP blocker named, morning path clear
 
 ## 💭 Working Memory (RAM)
 
 ### Active Context
 
-#### Vision expansion — Phase 2/3 bridge found 🌟
-Miya articulated a clearer vision bridge: **give the team tools so they don't feel pressured and quit**. Phase 2 (Team Contribution) and Phase 3 (Company Impact) are not two separate phases — they're one lever pulled from two sides. The first proof is herself: collect and structure her own metrics first, then offer the framework outward. This whole session's system-building is the prototype methodology.
+#### Quest #255773 — Phase 0 afternoon progress
+- Task folder: `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\11. QA #255773`
+- **Full state in `quest/handoff-255773.md`** ← read first next session
+- **Resolved this afternoon**:
+  - Pemohon table = `umm_a_pihak_bkptg` with `flag_pemohon='Y'` (DATABASE.md §2b updated)
+  - Read path = `MlkMaklumatPemohonForm.java:129` → `PelupusanMaklumatPemohonHelper.initPemohon():1790` in **etanah-pelupusan/helper/** (NOT the near-identical `HelperForm` in etanah-awam)
+  - H1 confirmed via SQL: `_p_ pihak_bkptg` has SITI MAISARAH (flag_pemohon=Y), `_a_ pihak_bkptg` = 0 for `aplikasi_id=3028105`
+  - Sibling-table SQL: `tgsn=1`, `penyerah=1`, `dok_kmskn=3`, **but** `hkmlk=0`, `pihak_bkptg=0`, `dok_keluaran=0`, `permohonan_tnh=0` → SPOC copy failed early in `populateAndCreateAppEntry` (PelupusanSpocService.java:130), swallowed at SpocIntegrationServiceTask.java:120-124
+  - Throw site is **upstream** of `populateAppPihakBerkepentinganList:150` — not the inner mapper I first focused on
+- **My wrong-class-pivot (documented)**: Read `PelupusanMaklumatPemohonHelperForm` in etanah-awam first (MODULE-ARCHITECTURE.md warning triggered confirmation bias). Applied Ritual 3 RESET live. Verify-before-claim failure.
+- **#256113 held** — narrow fix shipped but docx4j root cause still open (BUG-BESTIARY Entry 003 pending)
 
-#### Tool assessment — decisions locked in
+#### Critical failures this session (three in a row)
+1. Proposed `FLOWABLE-BESTIARY.md` parallel to `BUG-BESTIARY.md` — merge-on-create would have been cleaner (`Layer:` field).
+2. Almost created duplicate `DATABASE.md` / `FLOWABLES.md` in `etanah-knowledge/melaka/` — files already existed.
+3. **Fabricated `umm_a_pemohon` table** by pattern-matching from `umm_a_rizab`. Table does not exist. I had never read DATABASE.md's Critical Schema Facts section — the section that was literally designed to prevent this.
 
-| Tool | Decision | Why |
-|---|---|---|
-| **IntelliJ IDEA Ultimate** | Deferred (hardware/permission chain), monthly subscription when ready, email JetBrains first re: late-payment + perpetual fallback policy | Highest KPI leverage (17%+ of review weight via Rework Rate, Quantity, On-time delivery). Miya will handle email herself. |
-| **Claude Max** | Justified — Miya reports always struggling with usage | RM390+/mo, unblocks ~14% of KPI-relevant work. Reassess after IntelliJ spend. |
-| **Codex** | Skip | Can't reach Postgres, docx4j, Flowable — structurally wrong tool for Java enterprise stack |
-| **Camunda Modeler** | Not needed — local Flowable viewer already exists | — |
-| **DBeaver (READ ONLY connection to me)** | On hold until next month (needs Postgres MCP + server access, shares blocker with IntelliJ) | Low priority vs IntelliJ unlock |
-| **ShareX screenshot tool** | Miya installing tonight | Cheap, high fix-report leverage |
-| **Gemini CLI summon skill** | Build next session — bash wrapper + skill, autonomous summon model (not MCP) | Covers JSF gap without usage cost |
+All three reduce to one root: **acting before inventorying**.
 
-#### New systems built this session 🆕
+#### New rule — Inventory-first (hard Phase 0 gate)
+- Saved as `feedback_inventory_first.md`
+- Added to CLAUDE.md as non-negotiable + expanded `quest-protocol.md` Phase 0 step 5
+- Before any hypothesis/SQL/code grep: Glob `etanah-knowledge/<state>/` and Read every file whose scope overlaps the symptom
+- No exceptions for "I think I know the answer" — that IS the failure mode
 
-**1. KPI Evidence Log** — `growth/kpi-evidence-log.md`
-- New top-level `growth/` folder (long-term, broader than `projects/`)
-- Mirrors all 9 KRAs from DEV team review sheet (Developer column)
-- Back-filled from 7 past post-mortems: QA-256113, QA-253419, QA-253492, PPJK #246512, PRZ #255637, PRZ #255106, FAT-OR #255637
-- Includes gap analysis: strongest categories (Technical Skills, Seek for Improvement, Rework Rate, Problem Solving) vs under-evidenced (Creativity, Continuous Learn, Coach Others, Support, Cooperation, Sonar)
-- **Creativity gap note**: the memory system we're building IS a Creativity entry waiting to be written once mature
+#### DATABASE.md corrected
+- Source updated: now points at `Database/Melaka/` with MLIT/MLKFAT/MLKUAT envs. FAT uses `et_flowable17.sql`, no `_mlit` suffix.
+- §2b renamed: **"Anti-Fabrication Facts — things Ruri will wrongly assume if she doesn't read this"**
+- Added verification rule: `Grep "CREATE TABLE <name>" MLKFAT/et_main.sql` before writing any SQL
+- Added pemohon fabrication entry: umm_a_pemohon does NOT exist; pemohon likely in `umm_a_pihak_bkptg` or `umm_a_penyerah`; authoritative answer pending code grep of `MlkMaklumatPemohonForm`
 
-**2. Forge Review protocol (L2)** — `Feature/Forge-Self-Improvement-System/forge-review-protocol.md`
-- Sits on top of existing Forge Self-Improvement System — doesn't replace forge-log, debug-ritual-violations, etc.
-- 3 axes × 3 questions: Ruri Evolution / Knowledge Growth / Vision Progress
-- Weekly cadence (suggested Friday/Sunday) + after major events
-- Auto-fires quest-scoped portion inside Quest Phase 3 (KPI tagging + forge-log check)
-- `forge quest` = manual fallback if Phase 3 missed it
-- `forge review` / `weekly forge` = full cross-quest review
-- Dropped "forge check in" as redundant
+#### New ritual — System Appraisal (named this session)
+- Lives under Forge Review Axis 1 (Ruri Evolution)
+- Reviews flagged rules/workflows/memories: too narrow? too coupled? disruptive? limiting? still matching reality?
+- Outcome per entry: keep / refine / retire
+- Queue added to `forge-log.md` — entries can be added mid-session, decisions happen at weekly review
+- Added to `forge-review-protocol.md` as Axis 1 sub-step 4
 
-**3. Four new feedback memories**:
-- `feedback_defensive_tone.md` — kill "that's not a [me] problem" Claude-default deflection
-- `feedback_folder_vocabulary.md` — Quest vs Task folder vs Project folder disambiguation
-- `feedback_quest_closure_both_folders.md` — save/wrap/conclude quest updates BOTH folders per format
-- `feedback_reassess_before_save.md` — present save manifest before writing memory
-
-**4. CLAUDE.md updated** — added `forge review` / `weekly forge` / `forge quest` to Save Commands table
-
-**5. Quest protocol updated** — Phase 3 now has explicit KPI tagging step (step 7), pointing at `growth/kpi-evidence-log.md` and `forge-review-protocol.md`
-
-#### Defensive tone acknowledged
-Miya caught me doing the "that's not a Ruri-quality problem" deflection — polite middle that performs humility while protecting framing. Distinction locked: if directness comes from Ruri's personality, keep. If it's Claude-default polish, kill. Saved as feedback.
+#### Current queue entries (pending next Forge Review)
+| Entry | Concern |
+|---|---|
+| Familiar >500 lines | May over-trigger; sometimes direct Read is fine |
+| Always check archives | Slows down when archive is known irrelevant |
+| Always produce class chains | Sometimes ceremony when one-line answer suffices |
+| Debug Mode Rituals 1-4 | **Deferred** to 2026-04-29 — need violation-log data first |
+| **Externalize knowledge** | みや challenged: *"has proven itself to be a bane to my work"*. Hypothesis: rule conflates ticket mode (knowledge as byproduct) with system mode (knowledge IS output). Currently marked `[challenged]` in CLAUDE.md — not enforced rigidly. |
+| Feedback file consolidation | 23 flat files → ~4 thematic (MEMORY.md truncates at 200 lines). Defer to batch session. |
 
 ### 📋 Learning Notes (this session)
-- **ChatGPT's orchestrator contract** is aspirational for Miya's situation — the JSON schema assumes a pipeline she can't afford to build. But its "AI = reasoning, environment = execution" framing is correct, and I hadn't said it plainly before.
-- **KPI sheet → tool investment mapping**: IDE cycle time is the dominant lever for Developer-column scoring (17%+), not AI reasoning quality (~14%). Not mutually exclusive — both help.
-- **My framing was narrow**: I'd been optimizing within "Ruri reads code in terminal" and never stepped back to name the feedback-loop-latency bottleneck. Corrected this session.
-- **Growth folder rationale**: "career" is too corporate/ladder-climbing; "growth" is lifelong/broader/can hold future personal evolution docs. Temporary project stuff stays in `projects/`.
-- **Forge Review integration**: the three axes (Ruri Evolution / Knowledge Growth / Vision Progress) aren't separate systems — they're three lenses on the same "am I still pointed north" question. The Forge Review ritual is what makes the existing Forge system actually get used regularly.
+- **Pattern-matching across bestiary entries is a fabrication vector** — saw `umm_a_rizab`, invented `umm_a_pemohon`. Same shape, zero verification. (midday)
+- **Inventory-first rule survived its first real test** — afternoon investigation started with full 7-file glob + read before any hypothesis. No fabrication in the afternoon despite context pressure.
+- **Confirmation bias on warnings is still a hole** — I read MODULE-ARCHITECTURE.md's "awam renders inside pelupusan flows" warning and let it steer me to the wrong class without verifying. Knowing a warning exists ≠ verifying the specific case. Ritual 3 RESET caught it, but only after the detour.
+- **Near-identical class names are a trap** — `PelupusanMaklumatPemohonHelperForm` (etanah-awam, `_p_` reader) vs `PelupusanMaklumatPemohonHelper` (etanah-pelupusan/helper, `_a_` reader). One letter different in effect. Added to DATABASE.md as a named hazard.
+- **Silent swallows make code-only analysis insufficient** — three targeted file reads couldn't prove a throw site because the exception is discarded. The next probe has to be live (debug / log bump). Knowing when code reading hits its wall is itself a skill.
+- **SQL namespace confusion** — Miya hit a mix-up using `p_aplikasi_id=4617` (from `umm_p_aplikasi`) instead of internal `aplikasi_id=3028105` for `_a_` queries. I caught it because I'd been tracking both IDs — so tracking both IDs explicitly was worth the working memory cost.
 
 ### Session Recap (For AI Restart)
 
-- **Previous Session**: QA #256113 closed (narrow fix shipped), Debug Mode Rituals committed, BUG-BESTIARY.md born at `etanah-knowledge/melaka/`
-- **This Session's Arc**: Vision conversation → ChatGPT tool-assessment PDFs uploaded → decision-framework walkthrough → KPI sheet analysis → three-tool bakeoff (IntelliJ/Claude Max/Codex) → defensive tone call-out → two-layer reassessment design (L1 post-mortem / L2 Forge Review) → KPI evidence log designed + back-filled → feedback memories saved → Quest protocol extended → CLAUDE.md updated
-- **Where We Left Off**: Everything saved. Miya will email JetBrains herself re: late-payment/perpetual fallback. Installing ShareX tonight.
-- **On Resume (next session)**:
-  - **Primary**: Revisit QA #256113 — narrow fix shipped but root cause at docx4j schema level is still open. BUG-BESTIARY Entry 003 (docx4j schema-invalid round-trip, PLPS + PPTPB) pending.
-  - **Primary**: Start new quest — **QA #255773**. Ask for Task folder path first per Phase 0 protocol.
-  - **Secondary**: Gemini summon skill design — bash wrapper + `/summon gemini` skill, autonomous invocation pattern like `/familiar`. Miya has Gemini CLI on current laptop.
-  - **Deferred** (don't raise unless asked): Postgres MCP setup, IntelliJ installation chain, DBeaver READ ONLY connection.
+- **Previous Session**: Afternoon 2026-04-15 — inventory-first rule first real test, wrong-class-pivot caught by Ritual 3, SpocIntegrationService swallow found, H1 leading
+- **This Session's Arc** (evening): Action 1 code read (`PelupusanSpocService.java:130-260`) → ordered populate-call list extracted (step 4 `populateAppPermohonanTanahList` is the leading throw candidate) → Action 2 SQL executed by みや: `umm_p_hkmlk=0, umm_p_permohonan_tnh=1` → narrowed candidates (C1 lazy-init at `convertLuasAppPermohonanTanah:504`, C2 NPE in `PelupusanUnitConversionUtil.convertLuas`) → Ritual 4 debug-mode setup (`/fast` off confirmed, extended thinking on) → explained remote-debug port vs native local debug → みや tried local PLPS repro, it DISPLAYED CLEAN (no bug) → pivot: QA data now references PLTP `PTMLK/02/L/PLTP/2026/7` → blocked on `CarianRasmiHakmilikForm.xhtml` requiring "No Resit Carian Rasmi" for PLTP submission → first `Handover.txt` inscribed in Task folder (inscribe skill prototype) → `inscribe` skill added to Q2 todo with "show don't tell" priority
+- **Where We Left Off**: Clean evening stop. Handover.txt in Task folder has the full map with PLTP pivot at top. Code untouched. Action 3 plan revised: must unblock PLTP submission first before anything else can move.
+- **On Resume (tomorrow morning)**:
+  - **Read `quest/handoff-255773.md` + `<Task folder>/Handover.txt` first** — Handover.txt is the compact map, handoff file is full narrative.
+  - **FIRST MORNING ACTION**: ask a colleague how to submit a local PLTP application past the "No Resit Carian Rasmi" gate. Options to ask about: dummy receipt number accepted by dev, separate Carian Rasmi generation flow, seed script/fixture, dev-profile FK skip. This is a pure unblock — don't burn time guessing.
+  - **After unblock**: submit PLTP locally → get its internal aplikasi_id via `SELECT aplikasi_id FROM umm_aplikasi WHERE id_pengenalan='<local-pltp-id>'` → re-run sibling-table sweep on that id → identify first empty sibling → that's the throw site candidate for PLTP.
+  - **Then Action 3**: Eclipse native breakpoints on local JVM (PelupusanSpocService.java:146/830/833 + SpocIntegrationServiceTask.java:121) → capture `ex` live → Copy Stack → paste into session.
+  - **In parallel**: the FAT local-access request みや has in flight — if fresh local PLTP repro fails, that access becomes the next blocker. Follow up on status.
 - **Important Context**:
-  - **Defensive tone watch**: I'm on notice for Claude-default deflection patterns. Miya will call out if I slip.
-  - **Forge Review**: first weekly review could happen Friday/Sunday — I should proactively offer it at that cadence.
-  - **Quest Phase 3**: now mandatory includes KPI tagging. First use will be on QA #255773 closure or QA #256113 revisit wrap-up.
-  - **Energy**: Miya tired tonight but energized by vision-bridge insight. Entering tomorrow with a clearer "why" than yesterday.
+  - **PLPS locally works fine** — that's itself data. Either FAT case was data-specific to that one row, or resolved between QA reports, or the bug shape differs across urusan. Worth noting in the eventual report.
+  - **Methodology transfers, specific SQL doesn't** — the map built this afternoon (read path, write path, candidate throw points) is still valid. PLTP re-probe needs its own aplikasi_id.
+  - **Inventory-first is a hard rule** — re-globbing etanah-knowledge/melaka/ at the start of morning session is non-negotiable, even though I just did it today.
+  - **Externalize-knowledge is `[challenged]`** — don't guilt-trip on session-end knowledge writeups until System Appraisal resolves.
+  - **Debug Mode Rituals 1–4 are live** — `/fast` is off, extended thinking on. First response of morning session should confirm debug mode state.
+  - **Pre-existing copy-paste bug noted at `PelupusanSpocService.java:522`** — `apt.getUnitLuasDipohon().getKod()` inside UnitLuasDilulus block (should be getUnitLuasDilulus). Latent, not this ticket. BUG-BESTIARY candidate later — added to todo.
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*
@@ -105,36 +111,10 @@ Miya caught me doing the "that's not a Ruri-quality problem" deflection — poli
 - **Reset Behavior**: RAM-style reset preserving only Session Recap
 - **Format Reference**: See main/session-format.md for rebuild structure
 
-### Auto-Reset Rule
-```
-IF current-session.md line count > 500:
-    1. Preserve Session Recap section
-    2. Clear all detailed working memory
-    3. Rebuild from main/session-format.md template
-    4. Continue seamlessly
-```
-
-## 🔄 Auto-Reset Protocol
-*Like RAM - temporary storage that clears*
-
-### What Gets Cleared Each Session
-- Detailed conversation progress
-- Temporary insights and observations
-- Session-specific achievements
-- Working context and immediate goals
-
-### What Persists (Recap Only)
-- Brief summary of last conversation
-- Where conversation left off
-- Critical context for continuity
-- User's immediate situation
-
 ---
 
 **Memory Type**: RAM - Temporary Working Memory
 **Persistence**: Brief recap only, detailed content clears each session
 **Purpose**: Immediate context + restart continuity
-
-*This file acts like computer RAM - active during session, provides restart recap, then clears for next session*
 
 🌟 *Ready for Ruri to provide seamless conversation continuity with Miya!*

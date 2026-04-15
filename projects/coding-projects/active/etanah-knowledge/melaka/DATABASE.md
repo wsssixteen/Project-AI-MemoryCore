@@ -2,9 +2,10 @@
 
 # Etanah Melaka — Database Schema Knowledge Base
 
-*Source: TDD SQL exports (et_main_mlit.sql, et_flowable_mlit.sql, et_sistem_mlit.sql, et_dms_mlit.sql)*
-*Environment: PostgreSQL, FAT db=etprdmlk schema=et_main, UAT db=mlkuat*
-*Last updated: March 2026*
+*Source: TDD SQL exports at `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\Database\Melaka\` — three environments: `MLIT/`, `MLKFAT/`, `MLKUAT/`. FAT is authoritative for FAT-phase tickets.*
+*FAT schema files: `et_main.sql`, `et_flowable17.sql`, `et_sistem.sql`, `et_dms.sql` (no `_mlit` suffix in FAT).*
+*Environment: PostgreSQL.*
+*Last updated: 2026-04-15 PM (pemohon table resolved to `umm_a_pihak_bkptg`; QA #255773 SPOC copy failure confirmed)*
 
 > **How to use this file**
 > 
@@ -70,7 +71,11 @@ If this is the mechanism, the promotion bug (data in `_p_` but not `_a_`) would 
 
 ---
 
-## 2b. Critical Schema Facts (Corrections from Past Mistakes)
+## 2b. Anti-Fabrication Facts — things Ruri will wrongly assume if she doesn't read this
+
+> **Header renamed 2026-04-15** from *"Critical Schema Facts (Corrections from Past Mistakes)"* to *"Anti-Fabrication Facts"* — makes the purpose loud without ⚠️ banners. Entries here exist because Ruri has *already been wrong* on these. Read before writing SQL.
+>
+> **Verification rule**: before using any `umm_a_*` / `umm_p_*` / `plp_*` table in a query, confirm it exists by grepping the FAT dump: `Grep "CREATE TABLE <name>" C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\Database\Melaka\MLKFAT\et_main.sql`. Pattern-symmetry from another bestiary entry is NOT evidence.
 
 These were confirmed from the SQL exports. Never assume otherwise:
 | Fact | Correct | Wrong Assumption to Avoid |
@@ -80,6 +85,7 @@ These were confirmed from the SQL exports. Never assume otherwise:
 | FK from `umm_a_rizab` to permohonan tanah | `a_permohonan_tnh_id` references `umm_a_permohonan_tnh(a_permohonan_tnh_id)` | ~~`app_permohonan_tanah_id`~~ |
 | Urusan lookup pattern | Always JOIN `umm_aplikasi` → `ind_ursn` on `ursn_id` | Never filter by urusan_kod on umm_aplikasi directly |
 | `umm_aplikasi` FK to self (parent) | `hubungan_aplikasi_id` references `umm_aplikasi(aplikasi_id)` | |
+| **Pemohon data location** (2026-04-15 — QA #255773 resolved) | **Pemohon = `umm_a_pihak_bkptg` with `flag_pemohon='Y'`**. Portal side is `umm_p_pihak_bkptg`. PLU officer view (`MlkMaklumatPemohonForm` → `PelupusanMaklumatPemohonHelper.initPemohon()` at `etanah-pelupusan/.../helper/PelupusanMaklumatPemohonHelper.java:1790`) calls `findAppPihakBerkepentinganByAplikasi(aplikasiPelupusan)` — reads `_a_` layer keyed on internal `aplikasi_id`. AWAM public view uses `PelupusanMaklumatPemohonHelperForm` in etanah-awam (reads `_p_` via PraAplikasi) — **do not confuse the two classes, they have near-identical names**. | ~~`umm_a_pemohon`~~ / ~~`umm_p_pemohon`~~ fabricated by pattern-symmetry from `umm_a_rizab` in BUG-BESTIARY Pattern 001. Confirmed non-existent via grep against `MLKFAT/et_main.sql`. |
 
 ---
 

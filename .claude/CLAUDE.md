@@ -143,7 +143,8 @@ ai-memorycore/
 - **JSF gap is real**: No automated tool handles XHTML/EL expressions/managed bean wiring/XML navigation rules. Never assume these were covered. Use Gemini or manual reading for this layer.
 - **Sub-agent threshold**: Use sub-agents when reading >500 lines for a single question. Below that, read directly.
 - **Session cap**: 60-90 minutes max. When context rot signs appear (repeating suggestions, forgetting earlier files, contradictory advice) → stop → write handoff → save → new session.
-- **Externalize knowledge**: Every session that touches the codebase must end with updated knowledge files. Knowledge is a side-effect of work, never the main output.
+- **Inventory-first Phase 0 load** (hard rule, 2026-04-15): Before any hypothesis, SQL, or code read on a codebase bug, Phase 0 MUST `Glob` `projects/coding-projects/active/etanah-knowledge/<state>/` and `Read` every file whose scope overlaps the ticket's symptom. No exceptions for *"I think I know the answer"* — that's the exact failure mode. See `feedback_inventory_first.md`.
+- **Externalize knowledge** ⚠️ *[challenged 2026-04-15 — pending System Appraisal at next Forge Review. Rule may be split by session mode: ticket mode vs system mode. Do not enforce rigidly in the meantime.]*: Every session that touches the codebase must end with updated knowledge files. Knowledge is a side-effect of work, never the main output.
 - **Phased tooling**: Don't add tools until the current layer hits a wall. Layer order: MCP (codebase-memory-mcp) → sub-agents → Gemini (JSF gap) → externalized memory. All layers run through Claude Code terminal — no VS Code dependency.
 - **Learning approach**: Ticket-driven (Strategy E) as primary. Systematic scanning only for periodic exploration sessions.
 

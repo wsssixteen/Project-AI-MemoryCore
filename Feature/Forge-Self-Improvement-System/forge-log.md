@@ -73,3 +73,25 @@ If you notice a Level 3/4 entry being violated — demote it. That's honest data
 ---
 
 *Forge System v1.0 — 2026-04-02*
+
+---
+
+## System Appraisal Queue
+
+> Rules / workflows / memories flagged for review at next Forge Review weekly.
+> "System Appraisal" ritual lives under Axis 1 — Ruri Evolution.
+> For each entry: is it too narrow? too coupled? disruptive? limiting? still matching reality?
+> Outcome per entry: **keep · refine · retire**.
+
+| Entry | Flagged | Concern | Outcome |
+|---|---|---|---|
+| "Summon a familiar when reading files >500 lines" | 2026-04-15 | May over-trigger — sometimes one direct Read is fine even for 600+ lines. Cost vs context-protection trade-off unclear. | Pending |
+| "Always check archive folders before asking" | 2026-04-15 | Good default, but slows things down when archive is known irrelevant. No exception clause. | Pending |
+| "Always produce class chains when tracing code" | 2026-04-15 | High-value rule, but sometimes a one-line answer is sufficient and the chain becomes ceremony. Need a "when chain is overkill" clause. | Pending |
+| *(Debug Mode Rituals 1–4)* | — | **Not yet.** Too new. Need 2+ weeks of `debug-ritual-violations.md` data before appraising. Revisit 2026-04-29. | Deferred |
+| **"Externalize knowledge"** rule (Etanah-Codebase-Read non-negotiables) | 2026-04-15 | リドワンさん challenged: *"has proven itself to be a bane to my work."* Hypothesis: rule conflates *ticket mode* (knowledge as byproduct) with *system mode* (knowledge/architecture IS output). "Every session MUST" clause forces ticket-mode framing on system-mode work, creating guilt/churn. Possible refactor: move externalization from "session end" to "Quest Phase 3 only, for findings that would have saved a past-self significant time." Currently marked `[challenged]` in CLAUDE.md — not enforced rigidly. | Pending |
+| **Feedback file consolidation** (22→~4 thematic) | 2026-04-15 | MEMORY.md truncates at 200 lines. Current 23 flat feedback files will grow unbounded. Proposed thematic merge: `feedback_investigation.md` / `feedback_communication.md` / `feedback_workflow.md` / `feedback_structure.md`. Each with internal sections per rule. Defer to a dedicated batch session — not mid-quest. | Pending |
+
+### How to add an entry
+Any time みや flags a rule as disruptive/limiting, OR Ruri notices one mid-session, add a row here immediately — don't wait for Forge Review. The queue is the holding pen; the review is where decisions happen.
+
