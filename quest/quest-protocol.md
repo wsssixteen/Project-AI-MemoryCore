@@ -280,9 +280,10 @@ Examples: `QA #254539`, `QA #254604`, `FAT-OR #251455`, `#249445`
 4. **Codebase knowledge to carry forward?** → update `etanah-knowledge/`
 5. **What would have been faster?** — process note
 6. Write post-mortem entry → `main/post-mortems.md` (use format in that file)
-7. Check Forge log → `Feature/Forge-Self-Improvement-System/forge-log.md` — any entries to promote?
-8. Update `quest/active.txt`: set `phase=complete`
-9. Quick save
+7. **KPI tagging** (Forge Review — quest-scoped) — tag this ticket against 1-3 KPI categories in `growth/kpi-evidence-log.md` with a one-line evidence note per category. See `Feature/Forge-Self-Improvement-System/forge-review-protocol.md`. If missed here, run `forge quest` later to recover.
+8. Check Forge log → `Feature/Forge-Self-Improvement-System/forge-log.md` — any entries to promote?
+9. Update `quest/active.txt`: set `phase=complete`
+10. Quick save
 
 ---
 

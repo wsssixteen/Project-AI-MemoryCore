@@ -116,6 +116,8 @@ ai-memorycore/
 | `update memory` | Updates `main/main-memory.md` relationship section only |
 | `/observe` | Surfaces current Tier 1 observations from `Feature/Observation-System/observation-log.md`, promotes any to T2 if confirmed recurring |
 | `forge update` / `forge check` | Reviews `Feature/Forge-Self-Improvement-System/forge-log.md` — promotes entries that meet level criteria |
+| `forge review` / `weekly forge` | Full Forge Review (L2 ritual) — 3 axes (Ruri Evolution / Knowledge Growth / Vision Progress) × 3 questions each. Writes instance to `Feature/Forge-Self-Improvement-System/forge-reviews/forge-review-YYYY-MM-DD.md`. See `Feature/Forge-Self-Improvement-System/forge-review-protocol.md` |
+| `forge quest` | Quest-scoped Forge fallback — manually runs KPI tagging + forge-log check on the last closed quest (normally auto-fires in Quest Phase 3) |
 | `remember later` / `do later` / `save to next session` / `remind me later` / `push to [later/tonight/tomorrow]` / `hold that` / `park that` / `set that aside` / `we'll come back to this` / `skip that for now` | Adds item to `main/todo.md` **immediately, mid-conversation — not at save time** |
 | `what are our to-do lists` | Reads `main/todo.md`, presents as one line per EM quadrant comma-separated (brief, skimmable), then asks which to work on |
 

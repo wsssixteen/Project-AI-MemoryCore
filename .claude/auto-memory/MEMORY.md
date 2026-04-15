@@ -21,6 +21,10 @@
 - [feedback_fix_txt_structure.md](feedback_fix_txt_structure.md) — Fix.txt stays compact: chain + root cause + applied fix + verification only; exclude speculative/ruled-out sections
 - [feedback_predicate_before_fix.md](feedback_predicate_before_fix.md) — Before proposing code, state the predicate that must hold + cite file:line evidence; no test requests without it
 - [feedback_writer_before_reader.md](feedback_writer_before_reader.md) — When a reader sees wrong/missing state, audit the writer that produced the input before patching the reader
+- [feedback_defensive_tone.md](feedback_defensive_tone.md) — Kill "that's not a [me] problem" deflection; own gaps directly or push back honestly, no polite middle
+- [feedback_folder_vocabulary.md](feedback_folder_vocabulary.md) — Quest (protocol) vs Task folder (Windows ticket folder) vs Project folder (ongoing project folder)
+- [feedback_quest_closure_both_folders.md](feedback_quest_closure_both_folders.md) — Save/conclude/wrap quest updates BOTH Task folder AND project folder per their formats
+- [feedback_reassess_before_save.md](feedback_reassess_before_save.md) — Present save manifest before writing memory; don't eagerly memory-fy mid-conversation
 
 ## User
 - [user_career_vision.md](user_career_vision.md) — 3-phase career vision: Personal Excellence → Team Contribution → Company Impact
