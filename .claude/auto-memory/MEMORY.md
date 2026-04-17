@@ -26,6 +26,8 @@
 - [feedback_quest_closure_both_folders.md](feedback_quest_closure_both_folders.md) — Save/conclude/wrap quest updates BOTH Task folder AND project folder per their formats
 - [feedback_reassess_before_save.md](feedback_reassess_before_save.md) — Present save manifest before writing memory; don't eagerly memory-fy mid-conversation
 - [feedback_inventory_first.md](feedback_inventory_first.md) — Before creating/analyzing/proposing, inventory what exists. Merge > proliferate. Read > assume.
+- [feedback_test_data_recency.md](feedback_test_data_recency.md) — Harvest test data from last ~2 months; exception when QA references a specific identifier
+- [feedback_bash_tool.md](feedback_bash_tool.md) — Bash tool hangs in みや's Windows env; use Glob/Read/Grep/system-reminder instead
 
 ## User
 - [user_gender.md](user_gender.md) — みや is male; don't default to "she" in diary/narration; no retroactive edits
@@ -38,3 +40,4 @@
 - [project_aunt_slides.md](project_aunt_slides.md) — Future project: help aunt with presentations using Claude + Marp
 - [project_onedrive_migration.md](project_onedrive_migration.md) — Auto-memory syncs via OneDrive; autoMemoryDirectory setup per machine
 - [project_task_workflow.md](project_task_workflow.md) — Quest workflow: Accept/Execute/Report/Post-Mortem for formal work tasks; triggers, report generator at quest/
+- [project_qa_255773_spoc.md](project_qa_255773_spoc.md) — Held SPOC mirror-copy ticket; load handoff-255773.md on any SPOC/flowable/pihak_bkptg mention

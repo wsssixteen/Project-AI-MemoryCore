@@ -30,11 +30,11 @@
 |---|---|---|
 | ~~Work~~ | ~~**FAT-OR #255637** — test original template~~ | ~~CLOSED 2026-04-11~~ |
 | Work | **PDF viewer fix** | Downgrade etanah-common from 524-beta to 514 in pom.xml (PDF.js import.meta crash) |
-| Work | **#255773 — unblock PLTP local submission** | Morning: ask colleague how to submit PLTP from local AWAM past `CarianRasmiHakmilikForm.xhtml` "No Resit Carian Rasmi" gate. Dummy receipt? Dev-skip? Seed script? Separate Carian Rasmi flow? Pure unblock — don't guess. Added 2026-04-15 evening. |
-| Work | **#255773 — FAT local DB access request** | In flight. Needed as fallback if fresh local PLTP repro doesn't trigger the bug. Follow up on status in morning. |
 | System | **Token usage optimization** | Lost 2 days contact 2026-03-31 week — audit what's eating tokens, reduce boot cost, lean up settings.local.json, review memory load strategy |
-| Work | **QA-253492** Phase 3 | Post-mortem + Redmine close + GSheet update |
+| ~~Work~~ | ~~**QA-253492** Phase 3~~ | ~~CLOSED 2026-04-17 — post-mortem was already in main/post-mortems.md (2026-04-07); Redmine + GSheet closed 2026-04-17~~ |
 | Work | **UAT-CR #239225** — pelupusan side | みや handling personally; awam side confirmed done |
+| Work | **FAT-OR #255106** — reopen | Doc file: `Archive/8. FAT-OR #255106.../2. Fixes/TemplateSuratIringanKepadaPewartaan.docx` |
+| Work | **QA #256875** — FAT - PRBB - Bayaran Pelbagai - Tidak papar apa-apa maklumat bayaran | Not yet accepted |
 
 ### 🟡 Q2 — Schedule
 > **Planning Session (next free session, fresh head):**
@@ -92,6 +92,7 @@
 | Item | Notes |
 |---|---|
 | **Fallback planning** | Context forgotten — keeping for reference |
+| **#255773 infra unblocks** | Local PLTP submission bypass + FAT local DB access — both were set up when I was driving #255773. Ticket handed to colleague 2026-04-16. Re-activate if SPOC+flowable work returns to my plate. Shelved 2026-04-17. |
 
 ---
 

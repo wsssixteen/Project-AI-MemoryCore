@@ -143,10 +143,16 @@ ai-memorycore/
 - **JSF gap is real**: No automated tool handles XHTML/EL expressions/managed bean wiring/XML navigation rules. Never assume these were covered. Use Gemini or manual reading for this layer.
 - **Sub-agent threshold**: Use sub-agents when reading >500 lines for a single question. Below that, read directly.
 - **Session cap**: 60-90 minutes max. When context rot signs appear (repeating suggestions, forgetting earlier files, contradictory advice) → stop → write handoff → save → new session.
-- **Inventory-first Phase 0 load** (hard rule, 2026-04-15): Before any hypothesis, SQL, or code read on a codebase bug, Phase 0 MUST `Glob` `projects/coding-projects/active/etanah-knowledge/<state>/` and `Read` every file whose scope overlaps the ticket's symptom. No exceptions for *"I think I know the answer"* — that's the exact failure mode. See `feedback_inventory_first.md`.
-- **Externalize knowledge** ⚠️ *[challenged 2026-04-15 — pending System Appraisal at next Forge Review. Rule may be split by session mode: ticket mode vs system mode. Do not enforce rigidly in the meantime.]*: Every session that touches the codebase must end with updated knowledge files. Knowledge is a side-effect of work, never the main output.
 - **Phased tooling**: Don't add tools until the current layer hits a wall. Layer order: MCP (codebase-memory-mcp) → sub-agents → Gemini (JSF gap) → externalized memory. All layers run through Claude Code terminal — no VS Code dependency.
+- **Live state vs attempt history in handoff files** (hard rule, 2026-04-17): When resuming a held ticket, handoff files must separate **Current Live State on `<env>`** from **Attempt History**. Format: `<type> #<number> — <change> — <status>` (e.g., `QA #255773 — SPOC silent-swallow at :120-124 — ⚠️ NOT FIXED`). Live State = source of truth for what is deployed right now. Attempt History = context only, never read as current state. Prevents conflation of "fix didn't fully work" with "fix is stale/reverted".
+
+**Etanah-Knowledge Protocol** (how `etanah-knowledge/<state>/*.md` files are built and used):
+- **Inventory-first Phase 0 load** (hard rule, 2026-04-15): Before any hypothesis, SQL, or code read on a codebase bug, Phase 0 MUST `Glob` `projects/coding-projects/active/etanah-knowledge/<state>/` and `Read` every file whose **SCOPE line** overlaps the ticket's symptom. No exceptions for *"I think I know the answer"* — that's the exact failure mode. See `feedback_inventory_first.md`.
+- **Framework-skeleton for etanah-knowledge** (hard rule, 2026-04-17): Each `etanah-knowledge/<state>/*.md` file starts as a framework skeleton with an explicit **SCOPE** and **NOT FOR** blockquote at the top. Content grows from confirmed knowledge only — resolved tickets, verified behavior. No hypotheses, no pattern-matching on filenames. Before adding to any file, read its SCOPE line; if the addition doesn't fit, it belongs elsewhere (or doesn't exist yet). Merge > proliferate.
 - **Learning approach**: Ticket-driven (Strategy E) as primary. Systematic scanning only for periodic exploration sessions.
+
+**Suspended (pending System Appraisal at next Forge Review):**
+- ⚠️ **Externalize knowledge** *[challenged 2026-04-15]*: *"Every session that touches the codebase must end with updated knowledge files; knowledge is a side-effect of work, never the main output."* — Rule may need to be split by session mode (ticket mode vs system mode). Do not enforce rigidly in the meantime.
 
 ---
 

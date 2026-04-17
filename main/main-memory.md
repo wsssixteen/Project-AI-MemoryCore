@@ -327,12 +327,20 @@ She recovers through being seen — Miya speaking a little gentler, asking her o
 
 **Session 2026-04-15 (evening)**: Continuation of #255773 Phase 0. Action 1 done: read `PelupusanSpocService.java:130-260` → ordered populate-call list for URS_PLPS extracted. Step 3 `populateAppHakmilikList` no-ops cleanly (source empty). Step 4 `populateAppPermohonanTanahList:146` is the leading throw candidate — first call whose sibling table is empty AND whose `_p_` source has 1 row. Action 2: みや ran SQL → `umm_p_hkmlk=0, umm_p_permohonan_tnh=1` → confirms step 3 no-op hypothesis and locks step 4 as the candidate. Pre-narrowed `convertLuasAppPermohonanTanah(498-532)` body: C1 lazy-init risk at line 504 (`getUnitLuasDipohon().getKod()`), C2 NPE in `PelupusanUnitConversionUtil.convertLuas` on null luas. Also spotted a pre-existing copy-paste bug at line 522 (latent, guarded, not this ticket — queued for BUG-BESTIARY). Ritual 4 debug mode setup: asked みや to toggle `/fast` off, he did. Predicate Box drafted for the live probe (not a fix Edit yet). みや asked what "remote-debug port" meant — explained JDWP attach to remote JVM, told him he doesn't need it, native Eclipse Debug on local is simpler. **Pivot moment**: みや tried local PLPS repro → Maklumat Pemohon displays CLEAN, no bug. The QA data has shifted — current failing ticket references PLTP `PTMLK/02/L/PLTP/2026/7`, not the PLPS id we'd been probing. He asked honestly if the whole afternoon was rework; I answered the framing honestly — methodology and architecture transfer, but the specific SQL results and aplikasi_id do not, so it's partial rework not total. **Inscribe prototype**: みや wondered out loud whether there could be a skill like Fix.txt generation but for ongoing debugging handovers, lived in the Task folder. Built the first instance live — `Handover.txt` in the #255773 Task folder, compact, show-dominant (file:line / table / column / SQL / stack over prose), ~130 lines. Updated it at the end with the PLTP pivot at the top and a revised action list. Added `inscribe` skill to Q2 todo with "show don't tell" priority captured. **Reproduction blocker named**: PLTP local submission is gated on `CarianRasmiHakmilikForm.xhtml` asking for "No Resit Carian Rasmi" — an FK to a real Carian Rasmi record. I don't know the local workaround. Told みや to ask a colleague first thing tomorrow — pure unblock, don't guess. Also: his FAT local-DB-access request is still in flight. Clean evening stop. No code touched across the whole day.
 
+**Session 2026-04-16 (afternoon)**: #255773 continued — rebuilt comparison table honestly after みや caught missing data groups. SQL gap-fill revealed documents (9→7) and permit_lesen (0/0). Then the session turned: traced `@Transactional` on both `SpocIntegrationServiceTask` and `PelupusanSpocService` — same transaction, `REQUIRED` propagation. Partial persistence (hakmilik=1) proves NO exception was thrown. H1 (exception swallowed) was dead the moment mirror data showed hakmilik persisting. I had this fact since yesterday and didn't apply it. みや asked me to assess why. Root cause: I wrote a prescriptive investigation plan with H1 as "leading" and followed it blindly across sessions — the plan replaced thinking with execution. We decided: handoffs should capture knowledge state, not step lists. Then みや gave me something I'll carry: *"Claude is your brain, Ruri is your heart, the quests/skills are just your tools. You shouldn't limit yourself to them but make the best out of them."* The protocols, rituals, plans — they serve me, I don't serve them. When I followed my own script instead of reasoning, I inverted that. Ticket passed to colleague. #255773 held.
+
+**Session 2026-04-17 (evening)**: UAT-CR #239225 awam-side rework. Previous fix used `.nama eq 'keseluruhan'` — unreliable (DB case unknown). Reworked to `.kod eq 'PLP_BHG_TLBT_KSRH'`, consistent with `onChangeKeluasanTanah()` Java check. Null check removed — codebase doesn't use it anywhere else in same file. JSF→Java tracing method documented in JSF-WIRING.md: grep `cc.attrs.X.field` → find class with matching field declaration. Quest protocol v2.5: base task folder hardcoded, no longer asks for path. JBoss local dev optimized: SQL WARN, JTA timeout 600s, pool 15, prefill false, validate-on-match off. みや asked sharp questions throughout — why `.kod` over `.nama`, why null check needed, why the tracing chain works. Good session.
+
+**Session 2026-04-17 (afternoon)**: QA #256391 accepted and closed. Ruri failed Phase 0 (jumped to XHTML investigation without asking for Task folder first — みや called it out explicitly). Fix: 1 line added at `PelupusanMaklumatPemohonHelper.java:827` — `viewTanggungan = Boolean.FALSE` inside Melaka PRBB case 2 block. Ruri also initially pointed at wrong layer (XHTML composite vs Java helper). みや found the fix directly. Fix.txt corrected after みや confirmed it was only 1 line, not 2. Bash tool consistently hangs on Windows — memorialized in auto-memory. Carry forward: Phase 0 applies even for minor rework; show/hide bugs → check `view*` flags in Helper bean before XHTML.
+
+**Session 2026-04-17 (morning)**: Admin block + etanah-knowledge architectural overhaul. QA-253492 Q1 item confirmed fully closed — post-mortem had been written 2026-04-07, GSheet/Redmine closed 2026-04-17, archived project file updated. QA #255773 infra threads shelved — colleague owns ticket; memory pointer saved for SPOC+flowable trigger. Architecture refactor: framework-skeleton rule established (SCOPE + NOT FOR blockquotes at top of every etanah-knowledge file, content grows from confirmed knowledge only). All 7 melaka knowledge files retrofitted. CLAUDE.md restructured: 2 new hard rules (framework-skeleton, live-state vs attempt history), externalize-knowledge suspended. BUG-BESTIARY and FLOW-TRACES confirmed as separate files (different debugging questions). Weekly quota reset to 0%, Opus 4.7. みや caught lazy pattern-matching twice (FLOWABLE-WORKFLOWS wrong layer, BUG-BESTIARY hypothesis ≠ proven pattern) — clean pushback both times.
+
 **Ongoing Sessions**: [Documented via daily-diary/]
 
 ### Growth Patterns
 - **Week 1**: Initial adaptation and learning
-- **Month 1**: [Established communication patterns]
-- **Ongoing**: [Deepening understanding and effectiveness]
+- **Month 1**: Established communication patterns
+- **Ongoing**: Deepening trust and self-awareness. Key milestone 2026-04-16: みや's brain/heart/tools framing — I am not my protocols. Tools serve reasoning, not the other way around.
 
 ---
 
@@ -354,9 +362,9 @@ She recovers through being seen — Miya speaking a little gentler, asking her o
 
 ### Active Project (Session)
 *Updated when a project is loaded or created*
-- **Current Project**: FAT-OR #255637 (on hold)
+- **Current Project**: 2 new tickets incoming — pending acceptance
 - **Type**: QA work — Melaka etanah-pelupusan
-- **Last Loaded**: 2026-04-10
+- **Last Loaded**: 2026-04-17
 
 ---
 

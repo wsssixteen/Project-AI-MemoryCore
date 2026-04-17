@@ -10,7 +10,7 @@
 
 | Phrase | Action |
 |---|---|
-| `QA #<number>` | Phase 0 begins — ask for Task folder path |
+| `QA #<number>` | Phase 0 begins — auto-resolve Task folder (see Phase 0 Step 1) |
 | "I have a task/ticket/bug to debug" | Phase 0 begins |
 | Any formal Etanah/Redmine task context | Phase 0 begins |
 | "Create the report" | Phase 2 begins — ask for output path + screenshot paths |
@@ -27,10 +27,14 @@
 **Goal:** Read Task folder → build scope checklist → confirm before coding.
 **Non-negotiable:** Do not touch any codebase file before Phase 0 is complete.
 
+**Base task folder path (known — do not ask):**
+`C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka`
+
 **Steps:**
-1. **Create Task folder** in `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka`:
-   - List existing folders, find the highest leading number
-   - Create: `<highest+1>. <title as given by みや>`
+1. **Locate or create Task folder:**
+   - Glob `1. Tasks\Melaka\` for existing folders matching the QA/UAT-CR number — if found, that IS the Task folder; read it
+   - If not found in active: Glob `1. Tasks\Melaka\Archive\` as well (archive for numbering reference)
+   - If creating new: find the highest leading number across BOTH active + Archive, then create `<highest+1>. <title as given by みや>` in `1. Tasks\Melaka\`
    - Inside it, create subfolder: `0. Brief` (for ticket info, screenshots, references)
    - Inside the root of the Task folder, create `1. Notes.txt` — leave empty for みや to fill
    - Confirm folder path back to みや
@@ -332,4 +336,4 @@ status=<active|hold>
 ---
 
 *Quest — every ticket is a quest accepted, executed, and chronicled.*
-*Protocol version: 2.4 — 2026-04-14 (Fix.txt structure rewritten: compact re-reference format, excluded sections moved to handoff, work-document naming rule)*
+*Protocol version: 2.5 — 2026-04-17 (Base task folder path hardcoded; Phase 0 auto-resolves folder via Glob active + Archive — no longer asks みや for path)*
