@@ -28,6 +28,8 @@
 - [feedback_inventory_first.md](feedback_inventory_first.md) — Before creating/analyzing/proposing, inventory what exists. Merge > proliferate. Read > assume.
 - [feedback_test_data_recency.md](feedback_test_data_recency.md) — Harvest test data from last ~2 months; exception when QA references a specific identifier
 - [feedback_bash_tool.md](feedback_bash_tool.md) — Bash tool hangs in みや's Windows env; use Glob/Read/Grep/system-reminder instead
+- [feedback_standalone_db.md](feedback_standalone_db.md) — Remind みや to confirm standalone.xml DB target at Quest Phase 0
+- [feedback_location_check.md](feedback_location_check.md) — Ask network location (office/home) at session start; never assume
 
 ## User
 - [user_gender.md](user_gender.md) — みや is male; don't default to "she" in diary/narration; no retroactive edits

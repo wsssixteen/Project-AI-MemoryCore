@@ -38,6 +38,81 @@
 
 ## Entries
 
+### FAT-OR-255106 — Surat Iringan missing ID Permohonan on page 2 — 2026-04-17
+
+**Root Cause Type**: config (Word template)
+
+**Root Cause Summary**:
+`TemplateSuratIringanKepadaPewartaan.docx` second page header did not include the ID Permohonan field. Field was present in the body but missing from the page 2 header section, so it disappeared after the first page break.
+
+**What Would Have Been Faster**:
+N/A — fix was straightforward template edit. みや identified and applied directly.
+
+**Pattern Match**:
+- No pattern match — template-only fix
+
+**Codebase Knowledge Updated**:
+- None
+
+**Process Notes**:
+Quick rework ticket. みや updated the docx, tested on UAT, confirmed pass in one round.
+
+**Carry Forward**:
+- For Word template fixes: always check both body AND header/footer sections for the missing field — headers are separate from body content in docx.
+
+---
+
+### UAT-CR-239225 — PPJK Kawasan Pajakan disabled fields — 2026-04-17
+
+**Root Cause Type**: code
+
+**Root Cause Summary**:
+`luasTanah2` and `unitLuasTanah2` disabled condition used `.nama eq 'keseluruhan'` (case-unknown DB label) instead of `.kod`. Secondary: `onChangeKeluasanTanah()` had a redundant `getLuasRizab() != null` in the outer condition, blocking the null-clear path for new records. `ui-state-error` persisted on the disabled field due to JSF view state preserving the invalid component state.
+
+**What Would Have Been Faster**:
+The Java listener `onChangeKeluasanTanah()` already used `.getKod()` for the same check — checking it first would have resolved the `.kod vs .nama` question immediately without needing DB confirmation.
+
+**Pattern Match**:
+- Confirmed: **SenaraiAhliKumpulan comparisons always use `.kod`** — `.nama` is display label only, unreliable for logic. All Java-side checks use `.getKod()`.
+- Note: JSF EL cannot reference Java constants — always grep the constant → copy literal string into EL.
+
+**Codebase Knowledge Updated**:
+- `JSF-WIRING.md` — Java constant → EL literal pattern confirmed
+
+**Process Notes**:
+Multiple secondary bugs discovered during testing (stale value on new record, red field on disabled input). Server-side `PrimeFaces.current().executeScript()` proved more reliable than XHTML `oncomplete` for clearing UI state after panel re-render.
+
+**Carry Forward**:
+1. For any `SenaraiAhliKumpulan` disabled condition: check the Java listener for the same field first — it will show the correct `.kod` value.
+2. When a compound `if` condition is refactored into nested `if/else`, verify the outer condition doesn't repeat inner guards.
+
+---
+
+### QA-256391 — PRBB Tanggungan row showing — 2026-04-17
+
+**Root Cause Type**: code
+
+**Root Cause Summary**:
+`PelupusanMaklumatPemohonHelper.java` case 2 (Individu) sets `viewTanggungan = TRUE` at line 808 for general PRBB. The Melaka-specific `if (melaka)` override block was missing `viewTanggungan = FALSE`. `viewMaklumatTanggungan` was already FALSE (pre-existing). The absent `viewTanggungan = FALSE` left the general TRUE value (line 808) effective for Melaka PRBB.
+
+**What Would Have Been Faster**:
+みや found the fix directly in the Java helper. I initially pointed at the XHTML composite layer (`c:if test="#{!isPLTP}"`), which was the wrong layer — the control flag lives in the bean, not the view.
+
+**Pattern Match**:
+- Confirmed: **view flag controlled in bean helper, not XHTML** — when a field shows/hides unexpectedly, check the `view*` / `mandatory*` flags in the Helper class before touching the XHTML condition.
+
+**Codebase Knowledge Updated**:
+- None (ticket too narrow to warrant a new knowledge file entry)
+
+**Process Notes**:
+Rework ticket with one minor item remaining. Quest Phase 0 was skipped — I jumped to code investigation without asking for Task folder path first. Also required みや's correction to identify the right file (Java helper vs XHTML composite).
+
+**Carry Forward**:
+1. Even for "minor fix left" rework tickets, Phase 0 still applies — ask for Task folder first.
+2. For show/hide field bugs: check `view*` flags in the Helper bean before the XHTML condition.
+
+---
+
 ### QA-256113 — PLPS Syarat-syarat missing on Selesai — 2026-04-14
 
 **Root Cause Type**: code (schema-invalid marshaling)

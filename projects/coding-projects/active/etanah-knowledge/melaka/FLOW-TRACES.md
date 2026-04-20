@@ -1,6 +1,9 @@
 # Melaka — Flow Traces
 *End-to-end traces: UI → Bean → Service → Repository → DB*
 
+> **SCOPE**: End-to-end traces of single user actions: UI → Bean → Service → Repository → DB, entry points **confirmed via breakpoint**. One trace per confirmed happy path.
+> **NOT FOR**: Bug patterns (→ BUG-BESTIARY.md), hypothesis-tracking (→ `quest/handoff-<qa>.md`), unverified speculation.
+
 > Each trace follows one user action through the full stack.
 > This is the core learning output from ticket-driven work (Phase 5).
 

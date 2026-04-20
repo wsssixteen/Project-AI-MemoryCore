@@ -1,7 +1,15 @@
 # Quest Handoff — QA #255773 (mid-Phase 0)
 
-**Written**: 2026-04-15 ~12:45 MPST, **updated 2026-04-15 ~17:10 MPST** (afternoon session: confirmed pemohon table + H1 via SQL, traced wrong-class-pivot, need throw-site probe).
-**Status**: Phase 0 still — read-path architecture resolved, write-path root cause narrowed to "SPOC threw early before `populateAppPihakBerkepentinganList`". No code touched.
+**Written**: 2026-04-15 ~12:45 MPST
+**Updated**: 2026-04-16 ~14:30 MPST — bug reproduced 2x on FAT, investigation plan written.
+**Status**: Phase 0 — bug reproduced, copy boundary confirmed, next step is checking `_p_` row content. No code touched.
+
+## ★ LATEST — 2026-04-16 afternoon
+**Investigation plan file**: `C:\Users\Ridhwan\.claude\plans\serialized-shimmying-valiant.md`
+**Handover.txt**: updated in Task folder with reproduction data + mirror pattern.
+**Key finding**: SPOC copy stops after hakmilik (copied OK) but before permohonan_tnh and pihak_bkptg (both FAILED). 2/2 fresh PLTP cases identical. Exception swallowed silently.
+**Next session**: Start at Step 1 of the plan file. Step 3 (check `_p_` row content) is the critical one.
+**Branch**: `mlk/release/uat` across all repos.
 
 ---
 

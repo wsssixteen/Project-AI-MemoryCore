@@ -1,6 +1,9 @@
 # Melaka — Module Architecture
 *Primary knowledge file for etanah-pelupusan (Melaka state)*
 
+> **SCOPE**: Package structure of etanah-pelupusan, module boundaries (pelupusan vs awam vs common), inter-module ownership rules (e.g. reports team, Jasper), class/method counts.
+> **NOT FOR**: Specific bug patterns, individual Java method anatomy, SQL schemas.
+
 ## Codebase Stats
 - **Files**: 298 (indexed 2026-03-24)
 - **Classes**: 295

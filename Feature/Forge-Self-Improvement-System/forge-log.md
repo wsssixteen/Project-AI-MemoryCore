@@ -28,6 +28,13 @@
 
 ## Active Entries
 
+### Reasoning & Investigation
+
+| Entry | Memory File | Level | Notes |
+|---|---|---|---|
+| Don't write prescriptive plans for yourself | *(no memory file — structural change)* | **1** | 2026-04-16 — prescriptive step-by-step plans anchored H1 hypothesis across sessions, bypassed natural @Transactional reasoning. Fix: handoffs capture knowledge state, not execution steps. Claude reasons fresh each session. |
+| Hypothesis kill-condition check at resume | *(no memory file — embedded in plan format)* | **1** | 2026-04-16 — leading hypothesis survived 3 sessions unchallenged because plan said "leading" and I followed. State-of-knowledge format forces re-derivation naturally. |
+
 ### Work Patterns
 
 | Entry | Memory File | Level | Notes |

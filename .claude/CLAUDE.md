@@ -110,7 +110,7 @@ ai-memorycore/
 
 | Command | What happens |
 |---|---|
-| `save` | Runs `date`, stamps exact datetime into `current-session.md` under **Last Activity**, then updates session Working Memory + confirms |
+| `save` | Runs `date`, stamps exact datetime into `current-session.md` under **Last Activity**, updates session Working Memory, outputs session depth (`LIGHT / MEDIUM / HEAVY` — X reads, Y tool calls, Z topic threads), then confirms |
 | `quick save` | Runs `date`, stamps exact datetime, one-line save, no other output |
 | `save all` | Runs `date` → stamps Last Activity → updates session Working Memory → updates `main/main-memory.md` relationship section → **writes diary entry** in `daily-diary/` (use protocol in `daily-diary/daily-diary-protocol.md`) → confirms all 3 done → then ask: *"Should we commit and push to GitHub? Core Ruri files changed."* |
 | `update memory` | Updates `main/main-memory.md` relationship section only |
@@ -142,7 +142,7 @@ ai-memorycore/
 - **Vision alignment**: Every decision checked against the 3-phase career vision (Personal Excellence → Team Contribution → Company Impact). Currently Phase 1.
 - **JSF gap is real**: No automated tool handles XHTML/EL expressions/managed bean wiring/XML navigation rules. Never assume these were covered. Use Gemini or manual reading for this layer.
 - **Sub-agent threshold**: Use sub-agents when reading >500 lines for a single question. Below that, read directly.
-- **Session cap**: 60-90 minutes max. When context rot signs appear (repeating suggestions, forgetting earlier files, contradictory advice) → stop → write handoff → save → new session.
+- **Session cap**: 60-90 minutes max — OR by context fill (GSD metric: 0–30% peak; 30–50% good; **50–70% rushing/cutting corners; 70%+ hallucinations begin**). Whichever limit is hit first. At every `save`, self-report session depth: `LIGHT / MEDIUM / HEAVY (X reads, Y tool calls, Z topic threads)`. When limit is hit OR context rot signs appear (repeating suggestions, forgetting earlier files, contradictory advice) → stop → write handoff → save → new session.
 - **Phased tooling**: Don't add tools until the current layer hits a wall. Layer order: MCP (codebase-memory-mcp) → sub-agents → Gemini (JSF gap) → externalized memory. All layers run through Claude Code terminal — no VS Code dependency.
 - **Live state vs attempt history in handoff files** (hard rule, 2026-04-17): When resuming a held ticket, handoff files must separate **Current Live State on `<env>`** from **Attempt History**. Format: `<type> #<number> — <change> — <status>` (e.g., `QA #255773 — SPOC silent-swallow at :120-124 — ⚠️ NOT FIXED`). Live State = source of truth for what is deployed right now. Attempt History = context only, never read as current state. Prevents conflation of "fix didn't fully work" with "fix is stale/reverted".
 
@@ -254,4 +254,9 @@ Everything else (personality, memory, session, permissions, project rules) is in
 
 ---
 
-*Version: 1.5 | Last updated: 2026-04-02*
+**Available Skills:**
+- `/quest start|hold|resume` — quest workflow
+- `/familiar` — sub-agent for large files
+- `/appraise [subject]` — Socratic plan stress-test (9-question interrogation across Assumption / Scope / Evidence axes)
+
+*Version: 1.6 | Last updated: 2026-04-20*

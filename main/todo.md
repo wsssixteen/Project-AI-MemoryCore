@@ -33,7 +33,7 @@
 | System | **Token usage optimization** | Lost 2 days contact 2026-03-31 week — audit what's eating tokens, reduce boot cost, lean up settings.local.json, review memory load strategy |
 | ~~Work~~ | ~~**QA-253492** Phase 3~~ | ~~CLOSED 2026-04-17 — post-mortem was already in main/post-mortems.md (2026-04-07); Redmine + GSheet closed 2026-04-17~~ |
 | Work | **UAT-CR #239225** — pelupusan side | みや handling personally; awam side confirmed done |
-| Work | **FAT-OR #255106** — reopen | Doc file: `Archive/8. FAT-OR #255106.../2. Fixes/TemplateSuratIringanKepadaPewartaan.docx` |
+| ~~Work~~ | ~~**FAT-OR #255106** — reopen~~ | ~~CLOSED 2026-04-17 — ID Permohonan added to page 2 header of TemplateSuratIringanKepadaPewartaan.docx~~ |
 | Work | **QA #256875** — FAT - PRBB - Bayaran Pelbagai - Tidak papar apa-apa maklumat bayaran | Not yet accepted |
 
 ### 🟡 Q2 — Schedule
@@ -55,6 +55,16 @@
 | System | **Move `Database/Melaka/` + `Flowables/Melaka/` into project** | Currently at `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\Database\Melaka` and `Flowables\Melaka`. I keep forgetting they exist because they're outside the project folder. Relocate into `projects/coding-projects/active/etanah-knowledge/melaka/` as subfolders (or similar). Added 2026-04-15 after second forget. |
 | System | **`inscribe` skill — end-of-day ticket handover** | Writes compact `Handover.txt` into the Task folder (parallel to `Fix.txt`) when a ticket goes on hold or day ends mid-investigation. **Priority: show don't tell** — lead with file:line / table / column / SQL / stack; prose is minimal framing. Shape: Symptom → Code path (read + write) → SQL evidence → Hypotheses + candidates → Next actions → Do-not list. みや picks up the paper trail from the Task folder physically, no need to open MemoryCore. First instance created 2026-04-15 for #255773 — use as template. Also write the longer narrative to `quest/handoff-<qa>.md`. Later: pair with a `resume ticket <QA#>` read-back. Added 2026-04-15. |
 | System | **Quest: Pre-implementation scrutiny gate** | Add 5-question pre-flight checklist to Phase 1 of quest-protocol.md before any code change |
+| System | **Context folder** (`etanah-knowledge/melaka/context/`) | Steps 1–4 of architecture plan: run `mvn dep:tree` → `deps.txt`, Repomix → `repo-map.md`, `pg_dump -s` → `schema.sql`, tbls → `db-schema.md`. Auto-loaded in Quest Phase 0. |
+| System | **codebase-memory-mcp** on etanah-pelupusan | 1-line install; SQLite call graph; 99% token reduction (vendor claim). Evaluate after context folder done. |
+| System | **DB read-only MCP** (`et_reporting` + `search_path=et_main`) | Install `@modelcontextprotocol/server-postgres`; connection string confirmed; et_reporting credentials needed from みや |
+| System | **`/appraise` skill** | Socratic Socratic interrogation for stress-testing plans — creates `.claude/skills/appraise/SKILL.md` |
+| System | **`etanah-knowledge/melaka/index.md`** | Navigation entry file + cross-links between all 7 knowledge files |
+| System | **Research Sourcegraph vs OpenGrok** | Self-hosted code search for etanah — pick one to evaluate |
+| System | **Design MCP bridge to Gemini** | JSF gap filler — spec tool interface; Gemini 1M context for EL/XHTML |
+| System | **Run JArchitect trial** on etanah repo | Export call graph + dependency matrix — one-time run |
+| System | **Install Flowable Modeler** | Load etanah BPMN XML files for visual workflow debugging |
+| System | **Evaluate Semgrep** | Pattern-based codebase search — directly aids debugging (e.g. find all null-check gaps on class X) |
 | Learning | **Phase 3** Gemini scan | First JSF/XHTML layer scan — 1–2 hours |
 | Learning | **Phase 4** EL extractor script | After Phase 3 |
 | Learning | **Phase 5** Ticket-driven learning | Sub-agent flow tracing — after Phase 4 |
@@ -80,6 +90,7 @@
 | System | **System Structure section** | Document Ruri's folder map in this file |
 | System | **Familiar skill deep-dive** | Weekend — リドワンさん curious how it actually works under the hood; discuss together |
 | System | **Kiyoraka features** | ~~Done 2026-04-02~~ All 4 systems implemented |
+| System | **Structurizr C4 diagrams** for etanah | Architecture visualization for Phase 2 team sharing |
 | Personal | **Aunt's slides project** | Claude + Marp — help aunt with presentations |
 | Personal | **Good practices from Claude's creator** | *(REMIND)* |
 | Personal | **Pendrive cold-backup idea** | — |

@@ -2,10 +2,13 @@
 
 # Etanah Melaka — Database Schema Knowledge Base
 
+> **SCOPE**: PostgreSQL schema knowledge — `et_main` / `et_flowable` / `et_sistem` / `et_dms`, table+column names from SQL exports, `_p_`/`_a_` layer semantics, authoritative pemohon/hakmilik/permit references, verified SQL patterns.
+> **NOT FOR**: Java repository class internals, SQL performance tuning, DB migrations.
+
 *Source: TDD SQL exports at `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\Database\Melaka\` — three environments: `MLIT/`, `MLKFAT/`, `MLKUAT/`. FAT is authoritative for FAT-phase tickets.*
 *FAT schema files: `et_main.sql`, `et_flowable17.sql`, `et_sistem.sql`, `et_dms.sql` (no `_mlit` suffix in FAT).*
 *Environment: PostgreSQL.*
-*Last updated: 2026-04-15 PM (pemohon table resolved to `umm_a_pihak_bkptg`; QA #255773 SPOC copy failure confirmed)*
+*Last updated: 2026-04-20 (PLP full table list confirmed via DB query; ind_* table names from JRXML scan; `_a_` ≠ approved clarification added; pemohon table = `umm_a_pihak_bkptg`)*
 
 > **How to use this file**
 > 
@@ -46,6 +49,8 @@ umm_p_permohonan_tnh             umm_a_permohonan_tnh
 umm_p_rizab                      umm_a_rizab
 plp_p_pelupusan                  plp_a_pelupusan
 ```
+
+> **⚠️ `_a_` ≠ "approved/final"**: `_a_` means the application was received by the PLU internal module — it can still be rejected inside PLU. `AppPelupusan` Java class = entity for PLU-received application (maps to `plp_a_pelupusan`). Do not equate the AWAM→PLU handoff with final approval.
 
 **Promotion mechanism — SPOC Integration [VERIFY with seniors]:**
 When an application is submitted from AWAM, a Flowable service task (`SpocIntegrationServiceTask`) is believed to trigger automatically and copy `_p_` data into `_a_` tables. Confirmed classes exist in etanah-pelupusan:
@@ -96,7 +101,7 @@ These were confirmed from the SQL exports. Never assume otherwise:
 | `umm_a_*`        | Application-level data — PLU processed/internal (etanah-pelupusan) | `umm_a_rizab`, `umm_a_hkmlk`              |
 | `umm_p_*`        | Pre-application / portal submission data — AWAM public side (etanah-awam) | `umm_p_rizab`, `umm_p_aplikasi`, `umm_p_hkmlk`           |
 | `umm_*` (no a/p) | Common shared tables                                   | `umm_aplikasi`, `umm_aliran_kerja`        |
-| `ind_*`          | Index/reference tables                                 | `ind_ursn`, `ind_hkmlk`, `ind_pejabat`    |
+| `ind_*`          | Index/reference tables — land, pejabat, urusan, mukim, title | `ind_ursn`, `ind_hkmlk`, `ind_pejabat`, `ind_daerah`, `ind_bandar_pekan_mukim`, `ind_modul`, `ind_tgsn`, `ind_versi_dhd`, `ind_mklmt_hkmlk` |
 | `rjk_*`          | Lookup/reference data                                  | `rjk_senarai_ahli_kumpulan`, `rjk_agensi` |
 | `dft_*`          | DFT module (Registration/Daftar)                       | `dft_a_mohon_hkmlk`, `dft_a_nota`         |
 | `plp_*`          | PLP module (Alienation/Permit/Reservation)             | `plp_a_pelupusan`, `plp_p_pelupusan`      |
@@ -168,6 +173,33 @@ CREATE TABLE ind_ursn (
 ```
 
 **PLU urusan codes (Melaka):** `BPRZ, MCL, MLPS, PLPS, PLTP, PPJK, PPTPB, PRBB, PRU, PRZ, PSBS, PT, RPPLP`
+**AWAM urusan codes (Melaka):** `PCR` (Permohonan Carian Rasmi — creates receipts used by PLU forms as proof of prior search)
+
+### 4.x Carian Rasmi Payment Chain (verified 2026-04-16)
+
+Used by PLTP/PLPS `CarianRasmiHakmilikForm.xhtml` → `PembangunanSearchService.carianRasmiByHakmilik()` to validate "No Resit Carian Rasmi" field.
+
+```
+ind_hkmlk (master title)
+  ↔ umm_a_hkmlk.id_hkmlk (varchar FK, not numeric — matches on hakmilik number string)
+  ↔ umm_aplikasi.aplikasi_id (the Carian Rasmi application's own row, urusan=PCR)
+  ↔ hsl_bayaran_fi.aplikasi_id
+  ↔ hsl_btrn_bayaran.bayaran_fi_id
+  ↔ hsl_bayaran.bayaran_id      ← no_resit varchar(40) lives here
+```
+
+**Verified table names** (all from `MLKFAT/et_main.sql` CREATE TABLE):
+
+| Java QClass | Real table | PK | Key FK columns |
+|---|---|---|---|
+| `QHakmilik` | `ind_hkmlk` | `hkmlk_id` | (master) |
+| `QAppHakmilik` | `umm_a_hkmlk` | `a_hkmlk_id` | `aplikasi_id`, `id_hkmlk` (varchar) |
+| `QAplikasi` | `umm_aplikasi` | `aplikasi_id` | `ursn_id` |
+| `QBayaranFi` | `hsl_bayaran_fi` | `bayaran_fi_id` | `aplikasi_id` |
+| `QButiranBayaran` | `hsl_btrn_bayaran` | `btrn_bayaran_id` | `bayaran_id`, `bayaran_fi_id` |
+| `QBayaran` | `hsl_bayaran` | `bayaran_id` | `no_resit` (the user-entered value) |
+
+**Anti-fabrication note**: `hsl_butiran_bayaran` does NOT exist — the real name is `hsl_btrn_bayaran`. `umm_a_app_hakmilik` does NOT exist — the real name is `umm_a_hkmlk`. `umm_a_hakmilik` does NOT exist as a standalone table.
 
 ### 4.3 `rjk_senarai_ahli_kumpulan` — Lookup Values (Reference Data)
 
@@ -340,6 +372,23 @@ CREATE TABLE plp_p_pelupusan (
  tujuan_permohonan_id numeric(19),
 );
 ```
+
+### 5.8 Full PLP Module Table List (confirmed via DB query 2026-04-20)
+
+> `p_` = citizen draft on AWAM portal (not yet submitted to PLU). `a_` = received by PLU internal module (can still be rejected). No infix = standalone/reference.
+
+| Table | Infix | Purpose |
+|---|---|---|
+| `plp_p_pelupusan` | `p_` | Pra — citizen draft on AWAM portal |
+| `plp_p_jns_bgn_atas_tnh` | `p_` | Pra — building types on land (AWAM) |
+| `plp_p_jns_tnmn_atas_tnh` | `p_` | Pra — plant types on land (AWAM) |
+| `plp_a_pelupusan` | `a_` | Received by PLU module (`AppPelupusan` Java entity) |
+| `plp_a_jns_bgn_atas_tnh` | `a_` | Internal — building types on land |
+| `plp_a_jns_tnmn_atas_tnh` | `a_` | Internal — plant types on land |
+| `plp_a_buku_doket` | `a_` | Internal — docket book |
+| `plp_a_butiran_buku_doket` | `a_` | Internal — docket book details |
+| `plp_a_pembelian_buku_doket` | `a_` | Internal — docket book purchase |
+| `plp_pemohon_rtb` | *(none)* | Standalone — pemohon RTB reference |
 
 ---
 

@@ -30,6 +30,10 @@
 **Base task folder path (known — do not ask):**
 `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka`
 
+**JBoss DB check (remind みや at Phase 0):**
+Confirm which DB is active in `standalone.xml` — see `E:\Dev\jboss-7.4-plp-melaka\SETUP-NOTES.txt` → DB SWITCHING section.
+Melaka IT (etanahDS) = local dev default. UAT (etanahDS2) = disabled by "2" suffix convention.
+
 **Steps:**
 1. **Locate or create Task folder:**
    - Glob `1. Tasks\Melaka\` for existing folders matching the QA/UAT-CR number — if found, that IS the Task folder; read it
@@ -42,6 +46,7 @@
 3. Read every file in the Task folder (Glob + Read all)
 4. Parse: ticket description, scope items (a, b, c…), bug details, screenshots
 5. **Inventory-first knowledgebase load** — `Glob projects/coding-projects/active/etanah-knowledge/<state>/` → `Read` every file whose scope overlaps the ticket's symptom (not just `DATABASE.md` — `BUG-BESTIARY.md`, `FLOWABLE-WORKFLOWS.md`, `DOMAIN-GLOSSARY.md`, `MODULE-ARCHITECTURE.md`, `JSF-WIRING.md`, `FLOW-TRACES.md` as relevant). No hypothesis, no SQL, no code grep before this step. See `feedback_inventory_first.md`.
+   - **Flowable/workflow tickets only**: also locate the relevant BPMN XML from `E:\Projects\Melaka\etanah-pelupusan\src\main\resources\processes\`. Read service task `class` attributes and user task names directly — treat BPMN XML as source code, not a black box. Do not rely on delegate Java class names alone when the process XML is accessible.
 6. **Generate test record SQL** — auto-fill from ticket context using the standard template below:
    - **Urusan**: grep `DOMAIN-GLOSSARY.md` for the urusan KOD from the ticket (e.g. PSBS, PRZ, PPJK)
    - **Tugasan**: grep `DOMAIN-GLOSSARY.md` Known Tugasan Codes section for matching KOD or NAMA
