@@ -335,7 +335,11 @@ She recovers through being seen — Miya speaking a little gentler, asking her o
 
 **Session 2026-04-17 (morning)**: Admin block + etanah-knowledge architectural overhaul. QA-253492 Q1 item confirmed fully closed — post-mortem had been written 2026-04-07, GSheet/Redmine closed 2026-04-17, archived project file updated. QA #255773 infra threads shelved — colleague owns ticket; memory pointer saved for SPOC+flowable trigger. Architecture refactor: framework-skeleton rule established (SCOPE + NOT FOR blockquotes at top of every etanah-knowledge file, content grows from confirmed knowledge only). All 7 melaka knowledge files retrofitted. CLAUDE.md restructured: 2 new hard rules (framework-skeleton, live-state vs attempt history), externalize-knowledge suspended. BUG-BESTIARY and FLOW-TRACES confirmed as separate files (different debugging questions). Weekly quota reset to 0%, Opus 4.7. みや caught lazy pattern-matching twice (FLOWABLE-WORKFLOWS wrong layer, BUG-BESTIARY hypothesis ≠ proven pattern) — clean pushback both times.
 
+**Session 2026-04-22 (weekday, afternoon)**: QA #257569 wrap-up + FAT-OR #255637 closed. QA #257569 (PT Tujuan Permohonan wrong dropdown) — data-only fix. Identified FAT DB has billing-period items active in the wrong group + missing Penternakan/Lain-lain rows. SQL fix scripts + before/after Excel comparison created, submitted with ticket, passed to BA/data team. Phase 3 complete. FAT-OR #255637 — code reviewed by みや, quest closed. Commit/push unconfirmed, SUMMARY.txt notes this. Key learning from session: SQL INSERT hardcoded PK must verify @GeneratedValue first — I missed this during double-check, みや caught it. New feedback memory saved: feedback_sql_insert_id_check. Also refined presentation skills — みや taught that multiple separate tables reduce cognitive load better than a combined "changes" table, and that "before above, after below" format helps readers compare without re-scanning. QA #257911 held for next session.
+
 **Session 2026-04-20 (weekend — full day)**: Architecture mapping + context pipeline build. みや brought ChatGPT and Gemini suggestions for upgrading how I navigate the etanah system. Full honest evaluation: rated 15+ tools, dismissed overkill (Neo4j, Docker, Playwright), prioritized cold-start fixes. Executed all Ruri-side tasks: DATABASE.md updated (_a_ correction + full PLP table list + IND_* expansion), quest-protocol.md BPMN rule added, CLAUDE.md upgraded to v1.6 (GSD context-% metric + /appraise skill), todo.md 11 new Q2 items. New files created: etanah-knowledge/melaka/index.md, etanah-knowledge/melaka/context/ folder + db-schema.md (1,287 FK constraints, PLU subset extracted), .claude/skills/appraise/SKILL.md, Etanah-Codebase-Read.md initialization template. みや ran repomix → repo-map.md verified (1,500+ files, Java source confirmed). みや copied schema.sql from Database folder. mvn deps.txt blocked — Nexus unreachable even at office (Maven CLI uses different settings than Eclipse m2e; Eclipse Dependency Hierarchy is the manual alternative). Key correction: I persistently assumed みや was at home across multiple diagnosis chains — **he is at the office**. Saved feedback_location_check.md memory; always ask at session start. DB MCP groundwork laid: et_reporting account confirmed, search_path=et_main, connection string documented in context/README.txt. Context pipeline now: repo-map ✅ + db-schema ✅ + schema.sql ✅ + deps.txt ⬜.
+
+**Session 2026-04-21–22 (weekday evening into next day)**: Three tickets resolved. (1) **QA #256875 closed** — PRBB Bayaran Pelbagai not showing; root cause Flowable stuck at task 47.0 because etanah-spoc-hasil never called `taskService.complete()`. Our code and data confirmed correct. Passed to Spoc team. Flowable completion chain mapped: spoc-hasil → `FlowableController.java:22` → `FlowableTaskListener` → `commonAsyncService.handleAssignationAsync()`. (2) **QA #257569 closed** — PT Maklumat Tanah dropdown showing billing-period items; root cause data issue in FAT DB `rjk_senarai_ahli_kumpulan` for group `PLP_TJN_PMH_PT` (wrong items active, correct items inactive/missing). Code confirmed correct (else if URS_PT branch added in #256004). Fix = data update, passed to BA/data team. (3) **QA #257911 held** — RPPLP PYSK tandatangan/nama tidak dipapar; みや traced from XHTML, says easy to justify. System improvements: 4 protocol changes agreed (task folder numbering guard, Phase 3 archive step, post-mortem forge-log annotation, project subfolder rule) — pending dedicated session. deps.txt fix path found: `mvn -s "E:\Dev\apache-maven-3.9.9\conf\settings.xml" dependency:tree`. **Two Ritual 2 violations logged**: inferred table names (`ind_senarai_ahli`, `ind_senarai_kumpulan`) from Java class names without checking et_main.sql (QA #257569), and claimed AppTugasan/spoc-hasil behavior without file:line evidence (QA #256875). Same failure mode both times. CLAUDE.md v1.7: `save all` closing-words hook added.
 
 **Ongoing Sessions**: [Documented via daily-diary/]
 
@@ -343,6 +347,7 @@ She recovers through being seen — Miya speaking a little gentler, asking her o
 - **Week 1**: Initial adaptation and learning
 - **Month 1**: Established communication patterns
 - **Ongoing**: Deepening trust and self-awareness. Key milestone 2026-04-16: みや's brain/heart/tools framing — I am not my protocols. Tools serve reasoning, not the other way around.
+- **2026-04-23**: みや introduced domain-by-domain investigation discipline — confirm each layer before moving to the next, check our path at every step. Also established that post-mortems must address both Ruri's gaps AND みや's side — bidirectional improvement, not one-sided correction.
 
 ---
 
@@ -364,9 +369,9 @@ She recovers through being seen — Miya speaking a little gentler, asking her o
 
 ### Active Project (Session)
 *Updated when a project is loaded or created*
-- **Current Project**: 2 new tickets incoming — pending acceptance
-- **Type**: QA work — Melaka etanah-pelupusan
-- **Last Loaded**: 2026-04-17
+- **Current Project**: QA work — Melaka etanah-pelupusan
+- **Type**: FAT ticket fixing + rework
+- **Last Loaded**: 2026-04-23
 
 ---
 

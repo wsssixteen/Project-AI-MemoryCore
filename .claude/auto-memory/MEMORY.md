@@ -30,6 +30,10 @@
 - [feedback_bash_tool.md](feedback_bash_tool.md) — Bash tool hangs in みや's Windows env; use Glob/Read/Grep/system-reminder instead
 - [feedback_standalone_db.md](feedback_standalone_db.md) — Remind みや to confirm standalone.xml DB target at Quest Phase 0
 - [feedback_location_check.md](feedback_location_check.md) — Ask network location (office/home) at session start; never assume
+- [feedback_task_folder_ownership.md](feedback_task_folder_ownership.md) — Task folder structure: `0. Brief/` (みや's screenshots) + `1. Notes.txt` (blank for みや); Ruri's investigation → project subfolder only
+- [feedback_complete_before_deliver.md](feedback_complete_before_deliver.md) — Missing info for a script/query? Ask first, deliver complete — never give placeholder scripts as deliverables
+- [feedback_share_content_in_chat.md](feedback_share_content_in_chat.md) — Share file content directly in chat, not just the path; exception: very long files → summarize + path
+- [feedback_sql_insert_id_check.md](feedback_sql_insert_id_check.md) — SQL INSERT with hardcoded PK: verify @GeneratedValue on entity before accepting; use nextval() if sequence-managed
 
 ## User
 - [user_gender.md](user_gender.md) — みや is male; don't default to "she" in diary/narration; no retroactive edits

@@ -88,6 +88,39 @@ Multiple secondary bugs discovered during testing (stale value on new record, re
 
 ---
 
+### QA-256875 — PRBB Bayaran Pelbagai not showing / Flowable stuck at 47.0 — 2026-04-21
+
+**Root Cause Type**: process (external module — etanah-spoc-hasil)
+
+**Root Cause Summary**:
+Payment display not showing is **by design** — hidden when `flag_bayar = 'Y'`. The actual issue was Flowable stuck at task 47.0 (Bayaran Pelbagai) because `etanah-spoc-hasil` (Spoc module) did not call `taskService.complete()` to advance to 48.0. No code change required on our side. Ticket passed to Spoc team.
+
+**What Would Have Been Faster**:
+Querying `umm_a_tgsn.flag_aktif` for the specific permohonan early would have confirmed the stuck Flowable task immediately, without needing to trace the full callback chain first.
+
+**Pattern Match**:
+
+- New: **Payment display hidden by design** — when `flag_bayar = 'Y'`, payment section is intentionally hidden. Don't treat missing UI as bug without checking the flag first.
+- New: **Flowable completion belongs to Spoc (`etanah-spoc-hasil`)** — `taskService.complete()` is not called anywhere in etanah-pelupusan or etanah-common. If a task is stuck in `ACT_RU_TASK`, the issue is always external (Spoc side).
+- New: **Flowable callback chain** — Spoc → `taskService.complete(taskId)` → Flowable → `GET /flowable/user?taskCode&taskId` → `FlowableController.java:22` → `FlowableTaskListener.receiveUserTask()` → next task assigned.
+
+**Codebase Knowledge Updated**:
+
+- `et_flowable17` is a **schema name** (not DB name) — query as `et_flowable17.act_hi_taskinst` (history) or `et_flowable17.act_ru_task` (active tasks). `act_ru_task` requires schema prefix; bare name fails with relation does not exist.
+- `umm_a_tgsn` = AppTugasan table. Key columns: `id_bpm_task` (Flowable task FK), `flag_aktif` (Y=pending/N=done), `status_tugasan` (SELESAI=done). Source: `et_main.sql:39595`.
+
+**Process Notes**:
+
+Made unverified claims about table names and Spoc code without citing sources — required みや's correction. `et_main.sql` was in the context pipeline the whole time and had the table definitions; should have queried it first.
+→ forge-log: evidence-discipline failure — claimed table behavior before running a single query against the available schema file.
+
+**Carry Forward**:
+
+1. For any "data not showing" ticket: query `umm_a_tgsn.flag_aktif` first — a stuck Flowable task is invisible in UI but obvious in the table.
+2. Flowable schema = `et_flowable17`. Always prefix: `et_flowable17.act_hi_taskinst` / `et_flowable17.act_ru_task`.
+
+---
+
 ### QA-256391 — PRBB Tanggungan row showing — 2026-04-17
 
 **Root Cause Type**: code
@@ -304,6 +337,33 @@ Test with zero code changes FIRST before investigating code paths. If the templa
 **Carry Forward**:
 1. Always do a zero-change baseline test before code investigation
 2. When two systems exist for the same concern (registration vs generation), trace which one is actually executing before fixing either
+
+---
+
+### QA-257569 — PT KKMMKN Tujuan Permohonan wrong dropdown on FAT — 2026-04-22
+
+**Root Cause Type**: data
+
+**Root Cause Summary**:
+FAT DB `rjk_senarai_ahli_kumpulan` for group `PLP_TJN_PMH_PT` had billing-period items (turutan 21–29) with `flag_aktif='Y'`, causing them to appear in the Tujuan Permohonan dropdown. Correct items (Penternakan, Lain-lain) were missing entirely from FAT. Code was correct and matched UAT — pure data discrepancy between environments.
+
+**What Would Have Been Faster**:
+Running the SELECT on both UAT and FAT immediately at Phase 0 would have confirmed the data discrepancy in one step. Instead, code tracing was done first to find the group kod, then the DB comparison followed. For "wrong dropdown items" tickets — check the data first, code second.
+
+**Pattern Match**:
+- New: **Dropdown wrong items → check reference data table first** — when a dropdown shows wrong items, run SELECT on `rjk_senarai_ahli_kumpulan` for the group kod before any code investigation. The fix is almost always data, not code.
+
+**Codebase Knowledge Updated**:
+- `rjk_senarai_ahli_kumpulan` ID column uses sequence `SEQ_SENARAI_AHLI_KUMPULAN` — never hardcode IDs in INSERT; use `nextval('SEQ_SENARAI_AHLI_KUMPULAN')`. Entity: `SenaraiAhliKumpulan.java` (etanah-domain 1.1.129).
+- Class chain for PT Tujuan Permohonan dropdown: `MlkMaklumatTanahPemberimilikanForm.xhtml` → `mlkKadarCukaiTanahForm.xhtml:61` → `PelupusanExcelReaderHelper.java:1066-1079` (else if URS_PT) → `PelupusanConstant.SK_TUJUAN_PERMOHONAN_PT = "PLP_TJN_PMH_PT"` → `rjk_senarai_kumpulan` / `rjk_senarai_ahli_kumpulan`
+
+**Process Notes**:
+Data-only fix. No code change, no commit. SQL fix scripts + before/after Excel table created and submitted with ticket. Passed to BA/data team to execute on FAT DB.
+→ forge-log: new feedback memory `feedback_sql_insert_id_check` — missed sequence check during SQL double-check; caught by みや's question, not by my own review.
+
+**Carry Forward**:
+1. "Wrong dropdown items" = check reference data table SELECT before code. Group kod is in `PelupusanConstant` — one grep to find it.
+2. SQL INSERT with hardcoded PK → always verify `@GeneratedValue` on entity first. Use `nextval('SEQ_...')` if sequence-managed.
 
 ---
 

@@ -2,54 +2,64 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: 2026-04-20 — Weekend planning + context pipeline execution
-**Last Activity**: Mon Apr 20 ~16:54 MPST 2026
-**Session Start**: 2026-04-20 (weekend)
-**Session Focus**: Architecture mapping session — evaluated ChatGPT + Gemini suggestions; executed all Ruri-side tasks; built etanah-knowledge/melaka/context/ pipeline (repo-map, db-schema, schema.sql). QA #256875 still pending for next session.
-**Time Mode**: Weekend
+**Current Session**: 2026-04-23 — QA #257911 closed + QA #257569 rework closed
+**Last Activity**: Thu Apr 23 18:36:14 MPST 2026
+**Session Start**: 2026-04-23 (weekday, evening)
+**Session Focus**: Closed QA #257911 (RPPLP PYSK config fix). Reworked + closed QA #257569 (code + UAT data fix). Post-mortem on investigation discipline. Feedback saved on domain-by-domain style.
+**Time Mode**: Weekday evening
 **Energy Level**: Full capacity. Model: Sonnet 4.6.
 
 ## 💭 Working Memory (RAM)
 
 ### Active Context
 
-#### Session 2026-04-20 — Architecture mapping + context pipeline execution
+#### Session 2026-04-23 — QA #257911 closed + QA #257569 rework closed
 
-- **Planning layer done**: Evaluated 15+ tools suggested by ChatGPT + Gemini. Rated, dismissed overkill (Neo4j/Docker/Playwright), prioritized cold-start fixes.
-- **DATABASE.md**: 4 edits — `_a_` ≠ approved clarification, IND_* expansion, full PLP table list (Section 5.8), last-updated stamp.
-- **quest-protocol.md**: BPMN XML as code rule added to Phase 0 Step 5 for flowable/workflow tickets.
-- **CLAUDE.md v1.6**: GSD context-% metric in session cap, session depth at every `save`, /appraise in Available Skills.
-- **todo.md**: 11 new Q2 System items + 1 Q4 item added.
-- **New files created**:
-  - `etanah-knowledge/melaka/index.md` — navigation entry point for all 7 knowledge files
-  - `etanah-knowledge/melaka/context/README.txt` — commands + MCP connection string
-  - `etanah-knowledge/melaka/context/repo-map.md` — みや ran repomix; verified legit (1,500+ files, source starts line 1544)
-  - `etanah-knowledge/melaka/context/db-schema.md` — PLU FK map extracted from et_main.sql (1,287 total FKs, PLU subset)
-  - `etanah-knowledge/melaka/context/schema.sql` — みや copied from Database\Melaka\MLKFAT\et_main.sql
-  - `.claude/skills/appraise/SKILL.md` — Socratic 9-question plan interrogation skill
-  - `.claude/auto-memory/feedback_location_check.md` — always ask office/home at session start
-- **Etanah-Codebase-Read.md**: Initialization Prompt Template added; 2026-04-20 progress log entry.
-- **deps.txt blocked**: Maven CLI can't reach Nexus (172.16.90.152:8081). Eclipse m2e uses different settings. Use Eclipse Dependency Hierarchy as manual alternative.
-- **Location assumption error**: Persistently assumed みや was at home — he is at the office. Auto-memory saved.
+**QA #257911 — CLOSED ✅**
+- Issue: RPPLP PYSK PKMMKN — tandatangan + nama pegawai tidak dipapar selepas klik Selesai untuk Peraku
+- Root cause: Config typo — `STATUS_SEMAKAN_PERAKU` (never a valid constant) in PKMMKN action list of `template.config.json`. System reads `adk.getStatus().getKod()` = `STATUS_PENYEDIAAN_PERAKU` → lookup failed → CC dispatch skipped
+- Fix: 2-line change in `template.config.json` — PKMMKN entries (Lulus + Tolak) under `PLP_SRTKPTSN_PTG`
+- Gemini had applied bloated diff (added PYSKPDT + PGSKPDT everywhere) — reverted + clean 2-line re-apply
+- Fix #2 (regenerateDocumentWithSignature override) — investigated but NOT needed; fix #1 alone sufficient
+- Form: `MlkMuatNaikCabutanMinitForm.xhtml` | Template: `TemplateSuratKeputusanPTGRPPLPLulus/Tolak.docx`
+- Task folder: 16. QA #257911
 
-#### Incoming
-- **QA #256875** — not yet accepted, next ticket
-- **#255773** HELD — colleague owns it; load `quest/handoff-255773.md` if it resurfaces
+**QA #257569 — CLOSED ✅ (Rework)**
+- Issue: Tujuan Permohonan dropdown for PT KKMMKN showing wrong items (billing-period); rework complaint: Lain-lain missing
+- Root cause: `mlkKadarCukaiTanahForm.xhtml:60` binds to `tujuanPermohonanSelectItems`, but PT branch was loading KAT_TNH into `tujuanPermohonanPTSelectItems` (separate variable, unused by this XHTML). Fix introduced in #256004 but wiring was incomplete.
+- Code fix (PelupusanExcelReaderHelper.java):
+  1. `excluded.add("Perniagaan")` inside PT branch
+  2. `tujuanPermohonanSelectItems = tujuanPermohonanPTSelectItems`
+- UAT KAT_TNH outdated vs FAT — script created: `2. Fix/6. SCRIPT - update_uat_kat_tnh.sql` (2 UPDATEs + 1 INSERT)
+- Expected 6 items: Bangunan (Perniagaan dan Lain-Lain), Bangunan Kediaman, Industri, Penternakan, Pertanian, Lain-lain
+- みや applied and confirmed working
+- Task folder: 17. QA #257569
+
+**FAT-OR #255637 — STILL HELD (pending_commit)**
+- Fix applied: `populateFrasa2` in `PelupusanWordCCMethodConstant.java`
+- Pending: みや code review → commit → push → close Redmine
+
+**Protocol feedback saved this session:**
+- Task folder structure: create all folders (0. Brief, 1. Simulate, 2. Fix, 3. Rework, 1. Notes.txt) at quest start even if empty
+- 3. Rework\ = rework work only; 2. Fix\ = original fix artifacts
+- Investigation style: domain-by-domain, confirm each finding before moving to next layer
 
 ### 📋 Learning Notes (this session)
-- **Always ask office/home at session start** — never assume from time of day or guesswork
-- **Grep tool requires `glob: "*.sql"`** to search SQL files — doesn't include them by default
-- **etanah-knowledge/melaka/context/**: repo-map + db-schema + schema.sql now populated; deps.txt blocked
-- **MCP connection string for et_reporting**: `options=-c search_path=et_main -c default_transaction_read_only=on application_name=mcp_agent`
+- **STATUS_SEMAKAN_PERAKU** was never a real constant — config typo from day one, not a backend change
+- **template.config.json variable wiring gap** pattern: KAT_TNH was already coded in #256004 but into wrong variable; XHTML binding confirmed which variable actually matters
+- **Gemini diff review** is mandatory — Gemini tends to apply broad speculative changes beyond what was asked
+- **Test fix #1 before proposing fix #2** — confirmed this session (fix #2 was unnecessary)
+- **Compare FAT vs UAT carefully** — local UAT DB can be outdated; server UAT is the true reference
+- **KATETAPUSH skip rationale** — skip when UAT version newer AND field excluded from UI anyway
 
 ### Session Recap (For AI Restart)
 
-- **Previous Session** (2026-04-17 full day): Admin close + QA #256391 closed + UAT-CR #239225 reworked + JBoss optimized + FAT-OR #255106 closed.
-- **This Session** (2026-04-20 weekend): Architecture mapping + executed all Ruri-side context pipeline tasks. Context folder built. CLAUDE.md v1.6. /appraise skill.
+- **Previous Session** (2026-04-22): QA #257911 investigation started, held. QA #257569 data fix closed.
+- **This Session** (2026-04-23 weekday): QA #257911 closed (config fix). QA #257569 rework closed (code fix + UAT data script). Post-mortem. Protocol feedback.
 - **On Resume**:
-  - QA #256875 — not yet accepted, next ticket
-  - #255773 HELD — colleague owns it; load `quest/handoff-255773.md` if resurfaces
-  - DB MCP setup still pending: et_reporting credential confirmation needed from みや
+  - FAT-OR #255637 — still pending みや code review + commit + Redmine close
+  - Protocol housekeeping session: 4 agreed changes still in todo.md Q2
+  - QA #257569 UAT data script — confirm BA/data team executes on UAT
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*

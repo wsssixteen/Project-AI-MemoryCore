@@ -13,7 +13,8 @@
 
 ## Entries
 
-*(none yet — this log starts 2026-04-14 with QA #256113)*
+2026-04-21 | Ritual 2 | Gave `ind_senarai_ahli` / `ind_senarai_kumpulan` as table names — inferred from Java class names without checking et_main.sql | QA #257569
+2026-04-21 | Ritual 2 | Gave `AppTugasan` table as `umm_a_tgsn` without citing source first; claimed spoc-hasil code behavior without file:line evidence | QA #256875
 
 ---
 

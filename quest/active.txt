@@ -1,5 +1,19 @@
-qa=239225
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\6. UAT-CR #239225
-phase=1
+qa=QA-257569
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\17. QA #257569 - FAT - PT - KKMMKN - Tujuan Permohonan Salah pada Kadar Cukai Tanah
+phase=complete
 local_test_confirmed=false
-status=active
+note=Data fix. SQL scripts + Excel comparison table created and submitted with ticket. Passed to BA/data team to execute on FAT DB. CLOSED 2026-04-22.
+
+held:
+qa=QA-257911
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\16. QA #257911 - FAT - RPPLP - PYSK - Apabila klik selesai untuk peraku, tandatangan dan nama pegawai tidak dipaparkan
+phase=0
+status=hold
+note=みや traced from XHTML and says easy to justify. Held pending next session.
+
+closed:
+qa=FAT-OR-255637
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\9. FAT-OR #255637 - PPTPB - Issue pada template surat Jabatan Teknikal
+phase=complete
+status=closed
+note=Fix applied (populateFrasa2 CaseBuilder). Code reviewed by みや 2026-04-22. Commit unconfirmed — reopen if rework needed.
