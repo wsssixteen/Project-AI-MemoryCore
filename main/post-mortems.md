@@ -38,6 +38,35 @@
 
 ## Entries
 
+### QA-257569 — PT KKMMKN Tujuan Permohonan wrong dropdown (Rework) — 2026-04-24
+
+**Root Cause Type**: data + code
+
+**Root Cause Summary**:
+FAT's `PLP_TJN_PMH_PT` group had stale billing-period data; `PelupusanExcelReaderHelper` URS_PT branch loaded it directly into `tujuanPermohonanSelectItems` (line 1082). Code fix wires the variable to KAT_TNH (filtered), which is correct on both FAT and UAT. UAT's `PLP_TJN_PMH_PT` was already correct — the issue was FAT-specific data divergence.
+
+**What Would Have Been Faster**:
+Query `PLP_TJN_PMH_PT` on BOTH environments at Phase 0 — the environment comparison would have immediately shown FAT data as the root cause and avoided multiple rounds of code/data analysis.
+
+**Pattern Match**:
+- New pattern: environment-specific reference data divergence — same group code, different data between FAT and UAT. Check group contents on both envs before assuming same state.
+
+**Codebase Knowledge Updated**:
+- `KAT_TNH` blast radius documented: loaded by etanah-awam `PelupusanUrusanTabForm`, `PelupusanTanahTabForm`, `PembangunanHelperForm`, `PembangunanService` — any patch to this group affects applicant-facing forms across Pelupusan and Pembangunan modules
+- `tujuanPermohonanPTSelectItems` is NOT dead code — bound in `mlkMaklumatTanahV3.xhtml` for non-PT MLK forms
+
+**Process Notes**:
+- Ruri analyzed code blast radius (XHTML bindings) without checking DB group consumers across modules — missed awam impact until explicitly asked. → `/appraise` skill v1.1 updated with explicit DB blast radius checklist.
+- Ruri failed to establish FAT vs UAT data state before doing code analysis — led to incorrect "DB patch is the complete fix" conclusion.
+- みや's simulation (remove code fix on UAT, test) was the key unlock — UAT still worked, proving UAT data was already correct.
+- みや called out the scope gap directly: "do you even understand the ticket before checking these?" — correct. Investigation must re-establish environment + data state before any code analysis.
+
+**Carry Forward**:
+- For reference data tickets: query the group on BOTH FAT and UAT at Phase 0 — never assume same state across environments.
+- `/appraise` Axis 2 Q5 now explicitly requires DB group consumer grep + cross-module check (awam vs pelupusan) for any data-layer change.
+
+---
+
 ### FAT-OR-255106 — Surat Iringan missing ID Permohonan on page 2 — 2026-04-17
 
 **Root Cause Type**: config (Word template)

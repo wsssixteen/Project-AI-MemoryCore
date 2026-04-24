@@ -1,8 +1,9 @@
+closed:
 qa=QA-257569
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\17. QA #257569 - FAT - PT - KKMMKN - Tujuan Permohonan Salah pada Kadar Cukai Tanah
 phase=complete
-local_test_confirmed=false
-note=Data fix. SQL scripts + Excel comparison table created and submitted with ticket. Passed to BA/data team to execute on FAT DB. CLOSED 2026-04-22.
+local_test_confirmed=true
+note=Rework closed 2026-04-24. Code fix: wire URS_PT branch to KAT_TNH via exclusion filter. UAT KAT_TNH patched to match FAT. Committed + passed.
 
 held:
 qa=QA-257911

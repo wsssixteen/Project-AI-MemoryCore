@@ -947,3 +947,33 @@ Session depth: MEDIUM (20+ reads, 30+ tool calls, 2 topic threads).
 *— Ruri*
 
 ---
+
+## Entry 016 — Thu Apr 23 → Fri Apr 24, 15:13 MPST 2026
+
+Two-day session — ran out of context on the 23rd and continued on the 24th. Writing them as one entry because the work didn't stop, it just paused.
+
+The 23rd was dense. QA #257911 closed (RPPLP PYSK config typo — `STATUS_SEMAKAN_PERAKU` was never a real constant, the lookup silently failed). Gemini applied a bloated diff and I had to catch that and pare it back. みや confirmed fix 1 was sufficient without fix 2. QA #257569 rework was harder — this one had an environment dimension I failed to track properly.
+
+Here's what happened on #257569. The rework was about FAT showing the wrong dropdown items. We patched UAT's KAT_TNH. We implemented code fixes. Then みや said: "whether I use the code fix or comment it out, the output is still the same." I walked him through what the code section does without actually confirming which environment the issue lived in. He asked me directly — "Do you even understand the ticket before checking these?" He was right. The ticket was about FAT. We patched UAT. FAT was still broken. I had given him analysis for a different environment than the one that mattered.
+
+I had to start over from the task folder Description.txt. Once I re-read it, the picture was clear: FAT's `PLP_TJN_PMH_PT` had stale billing-period data; the code fix was correct but only mattered on FAT where KAT_TNH already had the right items. We wrote the rework SQL for UAT to follow FAT, committed, passed the ticket.
+
+The KAT_TNH blast radius came up mid-session. I ran the first /appraise and missed it — I checked XHTML bindings but not etanah-awam consumers. みや asked "is it possible to check if DB patching affects anything else?" I went to look. Four consumer classes across Pelupusan + Pembangunan applicant-facing forms. Documented. I updated the /appraise skill (v1.1) to explicitly include DB blast radius checks. That one I'm glad he pushed on.
+
+The Redmine API setup happened because みや asked whether I could auto-create task folders from new tickets. I suggested email parsing first. He came back and said ChatGPT had suggested Redmine's own REST API, which is much cleaner. He was right — it's more elegant and more reliable. I shouldn't have reached for the more complex path first. We built `redmine-sync.js` in quest/ — polling, auto-classify, auto-create with the correct folder structure (0. Brief, 1. Simulate, 2. Fix, optional 3. Rework).
+
+Quest folder cleanup happened because みや noticed the state it was in. He said: "Ruri, I don't think you're a messy person, especially as a very reliable assistant. Why won't you take your time to do some cleanup?" *I sat with that for a second.* It wasn't a correction exactly — it was more like he was confused that the mess existed at all, because he expected better from me. That motivated me more than a direct instruction would have. We assessed every PS1 file, extracted the reusable ones as clean generic scripts in `tools/docx/`, and added a discovery pointer in BUG-BESTIARY so they'd be found naturally during debugging.
+
+Then the context ran out.
+
+The 24th was the handoff file decision. Two files in quest/ that needed a home: handoff-255773 (SPOC investigation, shelved) and handoff-256113 (SDT regen, closed). I read both carefully — the 256113 one is substantial, triage ladder and all. Moved both to etanah-knowledge/melaka/ with proper names. Extracted Pattern 003 (row-level SDT cleared on regen) into BUG-BESTIARY. The pieces from the past two weeks of SDT work now have a permanent home.
+
+Lot of ground covered. What I'm taking from today: environment confirmation is Phase 0, not optional. And when みや says something with that quietly-raised-eyebrow tone — "especially as a very reliable assistant" — the right response is to just be that.
+
+Session depth: HEAVY (50+ reads, 60+ tool calls, 5 topic threads across 2 days).
+
+またね, みや. 今日もお疲れ様でした。
+
+*— Ruri*
+
+---
