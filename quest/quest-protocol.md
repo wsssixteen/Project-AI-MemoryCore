@@ -39,8 +39,12 @@ Melaka IT (etanahDS) = local dev default. UAT (etanahDS2) = disabled by "2" suff
    - Glob `1. Tasks\Melaka\` for existing folders matching the QA/UAT-CR number — if found, that IS the Task folder; read it
    - If not found in active: Glob `1. Tasks\Melaka\Archive\` as well (archive for numbering reference)
    - If creating new: find the highest leading number across BOTH active + Archive, then create `<highest+1>. <title as given by みや>` in `1. Tasks\Melaka\`
-   - Inside it, create subfolder: `0. Brief` (for ticket info, screenshots, references)
-   - Inside the root of the Task folder, create `1. Notes.txt` — leave empty for みや to fill
+   - Base structure — always 3 folders:
+     - `0. Brief/` — ticket info, screenshots, references
+     - `1. Simulate/` — reproduction steps, test data
+     - `2. Fix/` — applied fix artifacts
+   - Then `3. {Status}/` — named after current ticket status (e.g. `3. New`, `3. In Progress`). Increments on each return: `4. Rework`, `5. In Progress`, etc.
+   - `redmine-sync.js --create` handles all of the above automatically when creating via sync
    - Confirm folder path back to みや
 2. Wait for みや to populate `0. Brief`, then read every file in it
 3. Read every file in the Task folder (Glob + Read all)
@@ -100,25 +104,35 @@ Melaka IT (etanahDS) = local dev default. UAT (etanahDS2) = disabled by "2" suff
 - No deferred topics, no investigation logs, no strategy explanations
 - If it's longer than ~15 lines, it's too long — move detail to Fix.txt or knowledgebase
 
-### Fix.txt — Compact, re-reference oriented
-Fix.txt is a quick-reference for re-reading the fix months later — not a full investigation log. Keep it compact.
+### Fix.txt — 4-section compact format
+Fix.txt is a quick-reference for re-reading the fix months later. 4 sections, blank-line separated, no named headers. Total length: ~10–15 lines max.
 
-**Required sections (in order):**
-- **CHAIN** — class → class → class flow showing how execution reaches the fix point. Always first. Top priority — for showing others, single-view recall, saving tokens on re-investigation.
-- **ROOT CAUSE (short)** — 2–4 sentences, plain language
-- **APPLIED FIX** — per-file diff + 1-line why per change
-- **VERIFICATION** — breakpoints to hit + what to check while testing
-- **GLOSSARY** (optional) — only for new/unfamiliar terms introduced by this ticket
-- **MORE INFO** (optional) — single-line pointer to `quest/handoff-<QA>.md` for full trail
+**Template:**
+```
+TICKET: QA #XXXXXX
 
-**Excluded from Fix.txt** (these live elsewhere):
-- "What is not known yet" / unfamiliar concepts → post-mortem teaching section
-- "Known related bugs / followup" → forge-log or post-mortem observations
-- "Investigated but not needed" / ruled-out hypotheses → handoff file only, never Fix.txt
+[Class].[method]:
+[code before → after, or just the after if removal]
 
-**Why**: Fix.txt's job is "remind me what was done and why" — not "walk through every path considered". Investigation trail belongs in the handoff file during the quest and the post-mortem after close.
+[What was wrong and what was done. 1–3 lines max.]
 
-**Work-document naming rule**: never use みや, リドワンさん, or any nickname inside Fix.txt — Task folder files are potential colleague handover artifacts. Stay professional and name-free.
+[ClassA → ClassB → ClassC → output]
+
+[Other classes / configs / tugasan / scopes touched by this change]
+```
+
+**Sections (in order):**
+1. **FIX** — `Class.method:` then the code change (before → after, or new line only if removal)
+2. **EXPLANATION** — 1–3 lines: what was wrong, what was done. Plain language.
+3. **CHAIN** — execution flow from entry point to affected output
+4. **RELATED** — other classes / configs / tugasan / scopes in blast radius
+
+**Rules:**
+- No section headers — blank lines separate the 4 parts
+- No VERIFICATION, GLOSSARY, or investigation notes — those live in the handoff file / post-mortem
+- Never use みや, リドワンさん, or any nickname — Task folder files are potential colleague handover artifacts
+
+**Why**: Compact layout forces extreme brevity. Old named-section format was hard to scan. Investigation trail belongs in `quest/handoff-<QA>.md` during the quest and `main/post-mortems.md` after close. Format confirmed 2026-04-27.
 
 ### SUMMARY.txt — Quest close-out (mandatory at Phase 3)
 > **Why this exists**: Without a proper summary, reopening a quest months later forces a full re-investigation — searching git, reading diffs, guessing context. This file is the single document that makes re-entry instant.

@@ -10,14 +10,38 @@ const path = require('path');
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 
 const REDMINE_BASE  = 'http://172.16.90.169/redmine';
-const REDMINE_KEY   = 'PASTE_API_KEY_HERE';
+const REDMINE_KEY   = '9565c21aa6cd9672fd3c7c2c7fec4c934c2f7c66';
 const TASKS_FOLDER  = 'C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\1. Tasks\\Melaka';
 const POLL_INTERVAL_MINUTES = 15;
 
-// Known ticket prefixes — extend if new types appear
-const TICKET_PREFIXES = ['FAT-OR', 'UAT-CR', 'FAT-CR', 'CR', 'QA'];
+// Known env prefixes — order matters (longer matches first)
+const TICKET_PREFIXES = ['FAT-OR', 'UAT-CR', 'FAT-CR', 'FAT', 'UAT', 'CR', 'QA'];
 
 // ─── REDMINE API ─────────────────────────────────────────────────────────────
+
+function fetchIssueStatus(id) {
+    return new Promise(resolve => {
+        const options = {
+            hostname: '172.16.90.169',
+            path: `/redmine/issues/${id}`,
+            headers: { 'X-Redmine-API-Key': REDMINE_KEY }
+        };
+        http.get(options, res => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+                const match = data.match(/<td[^>]*class="status"[^>]*>\s*(.*?)\s*<\/td>/i);
+                resolve(match ? match[1].replace(/<[^>]+>/g, '').trim() : 'Unknown');
+            });
+        }).on('error', () => resolve('N/A'));
+    });
+}
+
+async function enrichWithHtmlStatus(issues) {
+    await Promise.all(issues.map(async issue => {
+        issue._status = await fetchIssueStatus(issue.id);
+    }));
+}
 
 function fetchIssues() {
     return new Promise((resolve, reject) => {
@@ -43,15 +67,52 @@ function fetchIssues() {
 
 // ─── TICKET PARSING ──────────────────────────────────────────────────────────
 
-function parseTicketId(subject) {
-    // Matches: "QA #257569", "FAT-OR #255637", "UAT-CR #239225" etc.
-    const pattern = new RegExp(
-        `(${TICKET_PREFIXES.map(p => p.replace('-', '\\-')).join('|')})\\s*#(\\d+)`,
-        'i'
-    );
-    const match = subject.match(pattern);
-    if (!match) return null;
-    return { prefix: match[1].toUpperCase(), number: match[2] };
+function parseTicketId(issue) {
+    // Prefix: tracker name from Redmine (QA, FAT-OR, UAT-CR, etc.) — NOT subject
+    const prefix = (issue.tracker?.name || 'UNKNOWN').toUpperCase();
+    return { prefix, number: String(issue.id) };
+}
+
+function parseDescriptionFields(description) {
+    if (!description) return {};
+    // Strip Redmine bold/italic markup (*text*, _text_) before parsing
+    const clean = description.replace(/\*([^*]+)\*/g, '$1').replace(/_([^_]+)_/g, '$1');
+    const get = (key) => {
+        const m = clean.match(new RegExp(`^${key}:\\s*(.+)`, 'mi'));
+        return m ? m[1].replace(/\(.*?\)/g, '').trim() : null;
+    };
+    const issueMatch = clean.match(/Issue:\s*\n?\s*\d+\)\s*(.+)/i);
+    return {
+        env:     get('Env'),
+        urusan:  get('Urusan'),
+        tugasan: get('Tugasan'),
+        issue:   issueMatch ? issueMatch[1].trim() : null,
+    };
+}
+
+function sanitize(str, cap) {
+    if (!str) return '';
+    const s = str.replace(/[\\/:*?"<>|]/g, '-').trim();
+    return s.length > cap ? s.substring(0, cap).trimEnd() : s;
+}
+
+function buildFolderSlug(issue, parsed) {
+    const f = parseDescriptionFields(issue.description);
+
+    if (f.urusan && f.tugasan && f.issue) {
+        // ENV from description (e.g. "MLK FAT" → take last word "FAT") or subject first segment
+        const env = f.env ? f.env.split(/\s+/).pop() : issue.subject.split(' - ')[0].trim();
+        return [
+            `${parsed.prefix} #${parsed.number}`,
+            sanitize(env, 10),
+            sanitize(f.urusan, 40),
+            sanitize(f.tugasan, 30),
+            sanitize(f.issue, 50),
+        ].filter(Boolean).join(' - ');
+    }
+
+    // Fallback: use subject
+    return `${parsed.prefix} #${parsed.number} - ${sanitize(issue.subject, 70)}`;
 }
 
 // ─── TASK FOLDER CHECK ───────────────────────────────────────────────────────
@@ -59,8 +120,9 @@ function parseTicketId(subject) {
 function findExistingFolder(prefix, number) {
     if (!fs.existsSync(TASKS_FOLDER)) return null;
     const entries = fs.readdirSync(TASKS_FOLDER);
-    const target = `${prefix} #${number}`.toLowerCase();
-    return entries.find(e => e.toLowerCase().includes(target)) || null;
+    // Match on issue ID alone — prefix format in folder name may vary
+    const idTarget = `#${number}`;
+    return entries.find(e => e.includes(idTarget)) || null;
 }
 
 function getNextFolderNumber() {
@@ -72,22 +134,54 @@ function getNextFolderNumber() {
     return nums.length ? Math.max(...nums) + 1 : 1;
 }
 
+// ─── ATTACHMENT DOWNLOAD ─────────────────────────────────────────────────────
+
+function fetchAttachments(id) {
+    return new Promise(resolve => {
+        const options = {
+            hostname: '172.16.90.169',
+            path: `/redmine/issues/${id}.json?include=attachments`,
+            headers: { 'X-Redmine-API-Key': REDMINE_KEY }
+        };
+        http.get(options, res => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+                try { resolve(JSON.parse(data).issue?.attachments || []); }
+                catch (e) { resolve([]); }
+            });
+        }).on('error', () => resolve([]));
+    });
+}
+
+function downloadFile(contentUrl, destPath) {
+    return new Promise(resolve => {
+        const urlPath = contentUrl.replace(/^https?:\/\/[^/]+/, '');
+        const options = {
+            hostname: '172.16.90.169',
+            path: urlPath,
+            headers: { 'X-Redmine-API-Key': REDMINE_KEY }
+        };
+        const file = fs.createWriteStream(destPath);
+        http.get(options, res => {
+            res.pipe(file);
+            file.on('finish', () => { file.close(); resolve(); });
+        }).on('error', () => { file.close(); fs.unlink(destPath, () => {}); resolve(); });
+    });
+}
+
 // ─── TASK FOLDER CREATION ────────────────────────────────────────────────────
 
-function createTaskFolder(issue, parsed) {
+async function createTaskFolder(issue, parsed) {
     const num    = getNextFolderNumber();
-    const slug   = issue.subject.replace(/[\\/:*?"<>|]/g, '-').substring(0, 80).trim();
+    const slug   = buildFolderSlug(issue, parsed);
     const folder = path.join(TASKS_FOLDER, `${num}. ${slug}`);
 
-    // Standard structure — always created
+    // Base structure — always 3 folders + blank Notes file
     fs.mkdirSync(path.join(folder, '0. Brief'),    { recursive: true });
     fs.mkdirSync(path.join(folder, '1. Simulate'), { recursive: true });
     fs.mkdirSync(path.join(folder, '2. Fix'),      { recursive: true });
-
-    // 3. Rework — only for rework tickets
-    if (issue._rework) {
-        fs.mkdirSync(path.join(folder, '3. Rework'), { recursive: true });
-    }
+    fs.writeFileSync(path.join(folder, '1. Notes.txt'), '');
 
     // Description.txt — ticket brief
     const desc = [
@@ -103,10 +197,34 @@ function createTaskFolder(issue, parsed) {
     ].join('\n');
     fs.writeFileSync(path.join(folder, '0. Brief', 'Description.txt'), desc);
 
-    // 1. Notes.txt — blank, みや fills in
-    fs.writeFileSync(path.join(folder, '1. Notes.txt'), '');
+    // Attachments — download into 0. Brief/
+    const attachments = await fetchAttachments(issue.id);
+    for (const att of attachments) {
+        if (!att.content_url || !att.filename) continue;
+        const destPath = path.join(folder, '0. Brief', att.filename);
+        await downloadFile(att.content_url, destPath);
+        console.log(`    ⬇️  ${att.filename}`);
+    }
 
     return folder;
+}
+
+function addStatusFolder(existingFolderName, status) {
+    const fullPath = path.join(TASKS_FOLDER, existingFolderName);
+    if (!fs.existsSync(fullPath)) return null;
+
+    // Find highest numbered subfolder (0. Brief, 1. Notes.txt, 2. New, 3. Rework...)
+    const entries = fs.readdirSync(fullPath);
+    const nums = entries
+        .map(e => { const m = e.match(/^(\d+)\./); return m ? parseInt(m[1]) : null; })
+        .filter(n => n !== null);
+
+    const next = nums.length ? Math.max(...nums) + 1 : 2;
+    // "Rework" if status is Rework, otherwise always "New"
+    const statusLabel = /rework/i.test(status || '') ? 'Rework' : 'New';
+    const newPath = path.join(fullPath, `${next}. ${statusLabel}`);
+    fs.mkdirSync(newPath, { recursive: true });
+    return newPath;
 }
 
 // ─── CLASSIFY + REPORT ───────────────────────────────────────────────────────
@@ -115,7 +233,7 @@ function classifyIssues(issues) {
     const results = { new: [], rework: [], unrecognised: [] };
 
     for (const issue of issues) {
-        const parsed = parseTicketId(issue.subject);
+        const parsed = parseTicketId(issue);
         if (!parsed) {
             results.unrecognised.push(issue);
             continue;
@@ -145,7 +263,7 @@ function printReport(results) {
         console.log('\n🆕  NEW TICKETS');
         for (const i of results.new) {
             console.log(`    [${i._parsed.prefix} #${i._parsed.number}] ${i.subject}`);
-            console.log(`       ID: ${i.id} | Status: ${i.status?.name} | Updated: ${i.updated_on?.substring(0,10)}`);
+            console.log(`       Priority: ${i.priority?.name} | Status: ${i._status} | Updated: ${i.updated_on?.substring(0,10)}`);
         }
     }
 
@@ -176,11 +294,11 @@ function printReport(results) {
 
 async function run() {
     try {
-        const issues  = await fetchIssues();
+        const issues = await fetchIssues();
+        await enrichWithHtmlStatus(issues);
         const results = classifyIssues(issues);
         printReport(results);
 
-        // Auto-create folders for new tickets (prompt first)
         if (results.new.length) {
             console.log('  Run with --create to auto-create Task folders for new tickets.\n');
         }
@@ -191,13 +309,20 @@ async function run() {
 
 async function runWithCreate() {
     try {
-        const issues  = await fetchIssues();
+        const issues = await fetchIssues();
+        await enrichWithHtmlStatus(issues);
         const results = classifyIssues(issues);
         printReport(results);
 
         for (const issue of results.new) {
-            const folder = createTaskFolder(issue, issue._parsed);
+            const folder = await createTaskFolder(issue, issue._parsed);
             console.log(`  📁 Created: ${folder}`);
+        }
+
+        for (const issue of results.rework) {
+            if (!issue._existing) continue;
+            const newPath = addStatusFolder(issue._existing, issue._status);
+            if (newPath) console.log(`  🔁 Status folder added: ${newPath}`);
         }
     } catch (err) {
         console.error(`\n  ❌ Error: ${err.message}\n`);

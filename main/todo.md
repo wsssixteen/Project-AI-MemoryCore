@@ -28,6 +28,7 @@
 
 | Category | Item | Notes |
 |---|---|---|
+| System | **Review Fix.md format** | みや to review the markdown layout in `Archive\13. QA #256113...\Fix.md` (4 sections, bold labels, HR dividers, code blocks) and confirm or adjust before applying to future tickets. |
 | ~~Work~~ | ~~**FAT-OR #255637** — test original template~~ | ~~CLOSED 2026-04-11~~ |
 | Work | **PDF viewer fix** | Downgrade etanah-common from 524-beta to 514 in pom.xml (PDF.js import.meta crash) |
 | System | **Token usage optimization** | Lost 2 days contact 2026-03-31 week — audit what's eating tokens, reduce boot cost, lean up settings.local.json, review memory load strategy |
@@ -50,6 +51,8 @@
 | Growth | **MemoryCore improvements + Claude skills research** | Based on week's findings, post-mortems, etc. Threads links need laptop. Token-conscious — park until after work tickets done. |
 | Growth | **MemoryCore improvements** | Based on week's findings — what can be improved in the system itself |
 | Learning | **Claude skills/features research** | Threads links to share + discuss on laptop. Skills, new features, anything useful for workflow |
+| ~~System~~ | ~~**redmine-sync: new ticket folder fixes**~~ | ~~DONE 2026-04-27 — (1) no status subfolder on new create, (2) 1. Notes.txt in task root, (3) attachments downloaded to 0. Brief~~ |
+| System | **Quest invoke cleanup** | On `/quest start`: auto-move completed quests → Archive, keep active/suspended in main. If ticket matches archived quest, move it back to main before starting. |
 | System | **Quest: auto test-record SQL** | Phase 0 step added to protocol. Next: make it smarter (hook or template). DATABASE.md must always be loaded before SQL work. |
 | System | **SCRIPTS.md** (new etanah-knowledge file) | Working SQL patterns: senior's base script + annotations, shortform table name mapping (tgsn=tugasan etc.), ID_PENGENALAN format documented |
 | System | **Move `Database/Melaka/` + `Flowables/Melaka/` into project** | Currently at `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\Database\Melaka` and `Flowables\Melaka`. I keep forgetting they exist because they're outside the project folder. Relocate into `projects/coding-projects/active/etanah-knowledge/melaka/` as subfolders (or similar). Added 2026-04-15 after second forget. |

@@ -2,65 +2,92 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: 2026-04-24 — Quest cleanup + BUG-BESTIARY Pattern 003 + Redmine sync
-**Last Activity**: Fri Apr 24 15:13:24 MPST 2026
-**Session Start**: 2026-04-24 (weekday, afternoon — continuation from 2026-04-23 session that ran out of context)
-**Session Focus**: QA #257569 rework closed. Redmine API auto-task setup (redmine-sync.js). Quest folder cleanup (tools/docx/ + handoff migration). /appraise v1.1. BUG-BESTIARY Pattern 003.
-**Time Mode**: Weekday afternoon
+**Current Session**: 2026-04-27 — QA #256113 wrap-up + QA #258022 Phase 0 + redmine-sync improvements + Fix.md format design
+**Last Activity**: Mon Apr 27 ~afternoon MPST 2026
+**Session Start**: 2026-04-27 (weekday, second session of the day)
+**Session Focus**: Confirmed redmine-sync.js 3 todos done. Designed + confirmed new Fix.md 4-section format with みや. Updated feedback_fix_txt_structure.md + quest-protocol.md. Cleared old files from QA #256113 Task folder, created Fix.md with markdown formatting.
+**Time Mode**: Weekday morning
 **Energy Level**: Full capacity. Model: Sonnet 4.6.
 
 ## 💭 Working Memory (RAM)
 
 ### Active Context
 
-#### Session 2026-04-23 — QA #257911 closed + QA #257569 rework closed
+#### Session 2026-04-24 — Continuation (context overflow from Apr 23)
 
-**QA #257911 — CLOSED ✅**
-- Root cause: Config typo — `STATUS_SEMAKAN_PERAKU` (never a real constant) in PKMMKN action list of `template.config.json`
-- Fix: 2-line change in `template.config.json` — PKMMKN entries under `PLP_SRTKPTSN_PTG`
-- Fix #2 (regenerateDocumentWithSignature) — investigated, NOT needed; fix #1 sufficient
+**redmine-sync.js — Fully Improved**
+- `quest/redmine-sync.js` — Final improvements made this session
+- Prefix: uses `issue.tracker.name` (not subject segment)
+- Priority displayed in log output
+- Status: scraped from HTML `<td class="status">` via `fetchIssueStatus()`
+- Folder naming: `{n}. {PREFIX} #{ID} - {env} - {urusan} - {tugasan} - {issue brief}`
+- Base folder structure: `0. Brief/`, `1. Simulate/`, `2. Fix/` then `3. {Status}/` (flexible, increments on rework)
+- `findExistingFolder`: matches by `#${number}` only
+- TICKET_PREFIXES: `['FAT-OR', 'UAT-CR', 'FAT-CR', 'FAT', 'UAT', 'CR', 'QA']`
 
-**QA #257569 — CLOSED ✅ (Rework)**
-- Root cause: FAT `PLP_TJN_PMH_PT` had stale billing-period data; code fix wires KAT_TNH (already correct on FAT) to the dropdown
-- Code fix (PelupusanExcelReaderHelper.java): `excluded.add("Perniagaan")` + `tujuanPermohonanSelectItems = tujuanPermohonanPTSelectItems`
-- UAT KAT_TNH patched via `3. Rework/1. SCRIPT - update_uat_kat_tnh.sql`
-- みや applied + confirmed working
-- Key lesson: check environment (FAT vs UAT) at Phase 0 before any analysis
+**Task folder cleanup — COMPLETE (Apr 27)**
+- `13. QA #256113` archived ✅
+- `18. QA #258022` created (Phase 0 held)
+- Folders 9, 11, 12 archived in previous session
 
-#### Session 2026-04-24 — Quest cleanup + knowledge migration
+**QA #257911 — CLOSED ✅ (confirmed prior session)**
+- Fix: STATUS_SEMAKAN_PERAKU typo in template.config.json. Commit 5ebfec1f12.
 
-**Redmine sync — redmine-sync.js created**
-- `quest/redmine-sync.js` — polls Redmine API, classifies tickets (new/rework), auto-creates Task folders
-- Usage: `node quest/redmine-sync.js [--poll] [--create]`
-- みや to add API key at line 14 (`REDMINE_KEY`)
+#### Session 2026-04-27 — QA #256113 + QA #258022
 
-**Quest folder cleanup — COMPLETE**
-- 5 stale PS1 scripts → `tools/docx/` (3 clean generic scripts: Read-DocxTags.ps1, Read-DocxText.ps1, Dump-DocxXml.ps1)
-- BUG-BESTIARY: Docx Debugging Tools section added
-- handoff-255773.md → `etanah-knowledge/melaka/handoff-255773-spoc-swallow.md`
-- handoff-256113.md → `etanah-knowledge/melaka/handoff-256113-sdt-regen.md`
-- BUG-BESTIARY: **Pattern 003 added** (row-level SDT cleared on Selesai regen)
-- `/appraise` skill updated to v1.1 (DB blast radius checklist in Axis 2 Q2)
+**QA #256113 — CLOSED ✅**
+- Root cause: perihal string in `MlkPengiraanBayaranLesenForm.performCustomSave()` was prepending
+  "Tempoh diluluskan lesen ini adalah X tahun." before the date-range sentence
+- Fix: みや removed that prefix sentence (line 589), keeping only date-range string
+- Stray changes (PelupusanMaklumatPermitLesenHelper.java + extra MlkPengiraanBayaranLesenForm blocks)
+  reverted via `git checkout HEAD` — みや confirmed only line 589 was intended
+- Blast radius: URS_PLPS only (guard confirmed). TGS_SURAT_KEPUTUSAN_LULUS_LIST = 3 steps
+  (Penyediaan/Semakan/Pengesahan Surat Keputusan) — all correctly in scope.
+- Test: FAT — surat deleted, regenerated, syarat correct. PASS.
+- Commit: 5be6379ea0 → merged 331a2df1bf → mlk/master
+- Fix.txt ✅ | SUMMARY.txt ✅ | Archived ✅ | active.txt updated ✅
 
-**FAT-OR #255637 — STILL HELD (pending_commit)**
-- Fix applied, pending みや code review → commit → push → close Redmine
+**QA #258022 — Phase 0 STARTED, HELD**
+- Urusan: Utiliti Pengeluaran Lesen Dan Permit (OPLPS, OMLPS, OPRBB, OPRU, OPJKK, OPPTPB) — "lite" pelupusan
+- Issue: Semakan Maklumat Dan Tindakan — missing Pembetulan + Agihan Kepada fields
+- Form: `MlkPenyediaanBorang4AeL1eForm` → `BasePelupusanLiteForm` (parent not yet read)
+- Panel: `mlkSemakanMaklumatPanel.xhtml` — `adaPegawaiAgih` controls Agihan Kepada,
+  `tindakanTugasanVO.sortedLevelOptionList` drives Pembetulan radio buttons
+- Investigation stopped at: BasePelupusanLiteForm not read, `adaPegawaiAgih` source not confirmed,
+  template.config.json Semakan Borang section not checked
+- Task folder: `18. QA #258022 - FAT - OPLPS - ...`
 
 ### 📋 Learning Notes (this session)
-- **Environment-first at Phase 0**: always confirm FAT vs UAT (or whatever the ticket env is) before any analysis — this session's key failure
-- **KAT_TNH blast radius**: shared reference data (senarai_kumpulan_id=145) consumed by etanah-awam Pelupusan + Pembangunan applicant-facing forms — any patch affects them
-- **Redmine API > email parsing** for ticket ingestion — cleaner, more reliable, no IMAP dependency
-- **DB blast radius in /appraise**: added explicitly to Axis 2 Q2 so it's never skipped again
-- **Row-level SDT regen pattern (Pattern 003)**: Tr→Tbl destructive mutation on first pass; fix = force classpath reload on regen via transient flag
+- **PLPS FLOWABLE**: TGS_SURAT_KEPUTUSAN_LULUS_LIST = 3 sequential tugasan (Penyediaan/Semakan/Pengesahan Surat Keputusan). All share same perihal logic. Intentional design. Added to FLOWABLE-WORKFLOWS.md.
+- **Git hygiene**: When stash pop or pull brings extra changes, use `git diff --stat HEAD` to identify. Use `git checkout HEAD -- <file>` to revert individual files before commit.
+- **Appraise discipline**: Must read the ticket accurately before appraise (Axis 1 wrong on first pass — I misread "tidak papar" as absence instead of unwanted presence).
+- **みや as code author**: When みや makes the fix, my job is blast radius + verification + cleanup — not rewrite or re-justify the approach.
 
 ### Session Recap (For AI Restart)
 
-- **Previous Session** (2026-04-23 weekday): QA #257911 closed (config fix). QA #257569 rework closed (code fix + UAT data script). /appraise run. Redmine sync built.
-- **This Session** (2026-04-24 weekday): Handoff files migrated to knowledge folder. BUG-BESTIARY Pattern 003 added. Quest cleanup completed. save all.
+- **Previous Session** (2026-04-24 weekday): redmine-sync.js built. Quest folder cleanup. FAT-OR #255637 still pending commit.
+- **This Session** (2026-04-27 weekday): QA #256113 closed (みや fixed perihal string, Ruri handled appraise + blast radius + git cleanup). QA #258022 Phase 0 started but held. redmine-sync.js improvements continued.
 - **On Resume**:
-  - FAT-OR #255637 — still pending みや code review + commit + Redmine close
-  - Redmine API key — みや to add to `quest/redmine-sync.js` line 14
+  - QA #258022 — Phase 0 held: read `BasePelupusanLiteForm`, find `adaPegawaiAgih` source, check template.config.json Semakan Borang section
+  - FAT-OR #255637 — still pending commit (from みや)
+  - redmine-sync.js todo: (1) no status subfolder for new tickets, (2) create 1. Notes.txt in task root, (3) download attachments to 0. Brief
+  - Quest invoke cleanup: auto-archive finished quests on `/quest start`
   - Protocol housekeeping session: 4 agreed changes still in todo.md Q2
-  - QA #257569 UAT data script — confirm BA/data team executes on UAT server
+
+**redmine-sync.js — late fixes:**
+- `statusLabel` in both `createTaskFolder` + `addStatusFolder` normalised:
+  "Rework" if status matches /rework/i, "New" for everything else. Number still increments.
+- `createTaskFolder`: removed `3. {status}` subfolder — status subfolders only created by `addStatusFolder`
+  (existing ticket = done before). New tickets get base 3 folders + `1. Notes.txt` only.
+- `createTaskFolder` now async: fetches attachments via `GET /issues/{id}.json?include=attachments`,
+  downloads each file (img/pdf/mp4/etc.) into `0. Brief/`.
+- `runWithCreate`: updated to `await createTaskFolder(...)`.
+
+**Context strategy — decided end of session:**
+- Context window not configurable (200k model-bound, autocompact buffer 33k hardcoded)
+- Mid-session saves: PROCEED — re-check rule already mitigates context loss risk
+- Familiars for saves: decided NO — preserving full context more important than token saving
+- Phase boundary saves remain the primary strategy
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*

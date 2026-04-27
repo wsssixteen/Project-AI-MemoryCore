@@ -5,12 +5,18 @@ phase=complete
 local_test_confirmed=true
 note=Rework closed 2026-04-24. Code fix: wire URS_PT branch to KAT_TNH via exclusion filter. UAT KAT_TNH patched to match FAT. Committed + passed.
 
-held:
+closed:
 qa=QA-257911
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\16. QA #257911 - FAT - RPPLP - PYSK - Apabila klik selesai untuk peraku, tandatangan dan nama pegawai tidak dipaparkan
-phase=0
-status=hold
-note=みや traced from XHTML and says easy to justify. Held pending next session.
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\16. QA #257911 - FAT - RPPLP - PYSK - Apabila klik selesai untuk peraku, tandatangan dan nama pegawai tidak dipaparkan
+phase=complete
+note=Fix: STATUS_SEMAKAN_PERAKU typo in template.config.json PKMMKN action list. Commit 5ebfec1f12 on mlk/qa/257911. Closed 2026-04-22.
+
+closed:
+qa=QA-256113
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\13. QA #256113 - FAT - PLPS - Penyediaan Surat Keputusan Lulus Tidak papar Tempoh diluluskan
+phase=complete
+local_test_confirmed=true
+note=Fix: removed "Tempoh diluluskan lesen ini adalah X tahun." prefix from perihal string in MlkPengiraanBayaranLesenForm.performCustomSave(). URS_PLPS scope. Committed 5be6379ea0, merged 331a2df1bf → mlk/master. Closed 2026-04-27.
 
 closed:
 qa=FAT-OR-255637
