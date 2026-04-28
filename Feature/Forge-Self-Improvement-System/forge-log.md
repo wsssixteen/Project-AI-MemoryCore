@@ -41,8 +41,10 @@
 |---|---|---|---|
 | Always use tables for work discussions | feedback_work_patterns.md | **4** | ↑ from L3 — never needed reminding, fully natural |
 | Phase 0 before any code work | feedback_quest_checklist.md | **3** | ↑ from L2 — instinctive now, hook reinforces |
+| Description-first, not screenshot-first | *(no memory file yet)* | **1** | 2026-04-27 — QA #258418: searched for label from BA screenshot, found `MlkBorang4AeForm.xhtml`, implemented there — but REMARK in description said different tugasan (Surat Keputusan Lulus ≠ Borang 4Ae). BA's screenshot was wrong. Should have matched "Langkah: Pengiraan Bayaran Lesen" + REMARK tugasan list FIRST before any XHTML search. |
 | Ask for Task folder path first on QA | feedback_quest_checklist.md | **3** | ↑ from L2 — applied correctly across sessions |
 | Ticket reference = urusan code + issue/doc name | feedback_work_patterns.md | 2 | New 2026-04-07 — just corrected, needs monitoring |
+| Bash tool — scripts are Ruri's to run, not みや's | feedback_bash_tool.md | **1** | 2026-04-27 — overcorrected "avoid Bash" rule; pushed redmine-sync.js to みや instead of running it myself. Corrected. |
 
 ### Communication
 

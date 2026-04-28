@@ -19,6 +19,7 @@
 | `/quest hold` | Current quest paused |
 | `/quest resume` | Resume held quest |
 | "Restart quest `QA #<number>`" | Reset phase to 0, status to active — search Task folder first, then `Archive/` inside it |
+| `"Read Redmine"` | Run `node quest/redmine-sync.js`, then `--create` for any new tickets; for each new ticket: add a held Phase 0 entry to `active.txt` (`status=hold`); report results. みや picks which quest to start. No Phase 0 reading until みや confirms. |
 
 ---
 

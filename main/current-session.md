@@ -2,11 +2,11 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: 2026-04-27 — QA #256113 wrap-up + QA #258022 Phase 0 + redmine-sync improvements + Fix.md format design
-**Last Activity**: Mon Apr 27 ~afternoon MPST 2026
-**Session Start**: 2026-04-27 (weekday, second session of the day)
-**Session Focus**: Confirmed redmine-sync.js 3 todos done. Designed + confirmed new Fix.md 4-section format with みや. Updated feedback_fix_txt_structure.md + quest-protocol.md. Cleared old files from QA #256113 Task folder, created Fix.md with markdown formatting.
-**Time Mode**: Weekday morning
+**Current Session**: 2026-04-28 — QA #258022 implementation + scrutiny discussion
+**Last Activity**: Tue Apr 28 15:57 MPST 2026
+**Session Start**: 2026-04-28 (weekday, afternoon)
+**Session Focus**: QA #258022 — 3 root-cause fixes implemented (tindakan.config.json SB4CE entry, MlkMaklumatUrusanPermitForm getter + initRenderPanel, PelupusanTugasanConstant TGSN_*_ALL constants). BasePelupusanLiteForm simplified (Codex's OR chains → ImmutableSet.contains). MlkPenyediaanBorang4CeP1eForm reverted to pre-Codex TRG reference pattern (out of scope). Deep scrutiny discussion with みや on every Codex change. Codebase categorization item added to todo.md Q2. Pending: FAT test.
+**Time Mode**: Weekday afternoon
 **Energy Level**: Full capacity. Model: Sonnet 4.6.
 
 ## 💭 Working Memory (RAM)
@@ -63,16 +63,35 @@
 - **Appraise discipline**: Must read the ticket accurately before appraise (Axis 1 wrong on first pass — I misread "tidak papar" as absence instead of unwanted presence).
 - **みや as code author**: When みや makes the fix, my job is blast radius + verification + cleanup — not rewrite or re-justify the approach.
 
+#### Session 2026-04-28 — QA #258022 Implementation
+
+**QA #258022 — IMPLEMENTATION COMPLETE, PENDING FAT TEST**
+- **Fix 1**: `src/main/resources/config/MLK/tindakan.config.json` — added `tugasanSB4CE_UTILITI` entry after `tugasanSMB_ALL`. `option_type: smb_all` → loads Pembetulan radio + Tindakan Seterusnya for all 6 Utiliti urusan.
+- **Fix 2a**: `MlkMaklumatUrusanPermitForm.java:172` — getter: `URS_PRBB.equals(kodUrusan)` → `URUSAN_LITE_LIST.contains(kodUrusan)`
+- **Fix 2b**: `MlkMaklumatUrusanPermitForm.java` `initRenderPanel()` — added URUSAN_LITE_LIST else-if block: sets `adaPegawaiAgih = true` when tugasan = TGS_SEMAKAN_BRG_4CE
+- **Constants**: `PelupusanTugasanConstant.java` — added `TGSN_PENGESAHAN_BORANG_ALL`, `TGSN_PENYEDIAAN_BORANG_ALL`, `TGSN_SEMAKAN_BORANG_ALL` (ImmutableSet, each pairing base code + 4Ce code)
+- **Simplify**: `BasePelupusanLiteForm.java` `onChangeTindakanKeputusan()` — Codex's 3 inline OR booleans replaced with `TGSN_*_ALL.contains(tugasanCode)`
+- **Kept**: `MlkPelupusanPegawaiAgihService.java` SB4CE routing block (Codex, correct)
+- **Kept pending test**: `PelupusanPegawaiAgihService.hasTugasanSemakanBorang` SB4CE fallback (likely dead code — clean up after FAT confirms)
+- **Reverted**: `MlkPenyediaanBorang4CeP1eForm.java` — both Codex's `initEditModeBorang` (lines 117–127) and `initBukuDoketHelper` (line 142) reverted to TRG-reference pattern; out of scope (Penyediaan ≠ Semakan)
+
+**Class chain confirmed:**
+`MlkMaklumatUrusanPermitForm.xhtml → MlkMaklumatUrusanPermitForm.java → mlkSemakanMaklumatPanel.xhtml → tindakanTugasanVO [FIX 1] + adaPegawaiAgih [FIX 2a+2b]`
+
+### 📋 Learning Notes (this session)
+- **Appraise vs Simplify**: Appraise = scrutinise correctness of logic (especially external/Codex code). Simplify = assumes code is correct, looks for reuse/quality/efficiency improvements. Use appraise first when the source is unverified.
+- **"Harmless" requires evidence**: Line 142 simplify in `MlkPenyediaanBorang4CeP1eForm` was called "harmless" — but `TGSN_PENGESAHAN_BORANG_ALL` included `PB4CE` (Codex's addition), original was `TGS_PENGESAHAN_BORANG` only. Untested path change is never harmless.
+- **Codex correct-bean discipline**: Codex modified `MlkPenyediaanBorang4CeP1eForm` (Penyediaan) instead of `MlkMaklumatUrusanPermitForm` (Semakan). Always verify the bean serves the right XHTML before accepting changes.
+
 ### Session Recap (For AI Restart)
 
-- **Previous Session** (2026-04-24 weekday): redmine-sync.js built. Quest folder cleanup. FAT-OR #255637 still pending commit.
-- **This Session** (2026-04-27 weekday): QA #256113 closed (みや fixed perihal string, Ruri handled appraise + blast radius + git cleanup). QA #258022 Phase 0 started but held. redmine-sync.js improvements continued.
+- **Previous Sessions** (2026-04-27): QA #256113 closed. QA #258022 Phase 0 held. QA #258418 Phase 0 investigated (awaiting clarification).
+- **This Session** (2026-04-28): QA #258022 full implementation complete. 3 root-cause fixes + 2 simplify changes + 1 revert. Pending FAT test.
 - **On Resume**:
-  - QA #258022 — Phase 0 held: read `BasePelupusanLiteForm`, find `adaPegawaiAgih` source, check template.config.json Semakan Borang section
-  - FAT-OR #255637 — still pending commit (from みや)
-  - redmine-sync.js todo: (1) no status subfolder for new tickets, (2) create 1. Notes.txt in task root, (3) download attachments to 0. Brief
-  - Quest invoke cleanup: auto-archive finished quests on `/quest start`
-  - Protocol housekeeping session: 4 agreed changes still in todo.md Q2
+  - QA #258022 — **PENDING FAT TEST**: Open `PTMLK/01/L/OPRBB/2026/1` on Semakan Borang step → verify Pembetulan radio (Ya/Tidak) + Agihan Kepada dropdown. Also test OMLPS.
+  - Post-test cleanup: if FAT passes → remove SB4CE fallback in `PelupusanPegawaiAgihService.hasTugasanSemakanBorang`
+  - QA #258418 — still awaiting BA/senior clarification
+  - Protocol housekeeping session: 4 agreed changes pending (todo.md Q2)
 
 **redmine-sync.js — late fixes:**
 - `statusLabel` in both `createTaskFolder` + `addStatusFolder` normalised:

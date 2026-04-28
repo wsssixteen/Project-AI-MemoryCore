@@ -30,10 +30,9 @@
 |---|---|---|
 | System | **Review Fix.md format** | みや to review the markdown layout in `Archive\13. QA #256113...\Fix.md` (4 sections, bold labels, HR dividers, code blocks) and confirm or adjust before applying to future tickets. |
 | ~~Work~~ | ~~**FAT-OR #255637** — test original template~~ | ~~CLOSED 2026-04-11~~ |
-| Work | **PDF viewer fix** | Downgrade etanah-common from 524-beta to 514 in pom.xml (PDF.js import.meta crash) |
 | System | **Token usage optimization** | Lost 2 days contact 2026-03-31 week — audit what's eating tokens, reduce boot cost, lean up settings.local.json, review memory load strategy |
 | ~~Work~~ | ~~**QA-253492** Phase 3~~ | ~~CLOSED 2026-04-17 — post-mortem was already in main/post-mortems.md (2026-04-07); Redmine + GSheet closed 2026-04-17~~ |
-| Work | **UAT-CR #239225** — pelupusan side | みや handling personally; awam side confirmed done |
+| ~~Work~~ | ~~**UAT-CR #239225** — pelupusan side~~ | ~~Closed 2026-04-27 — no rework requested; change request implementation confirmed successful~~ |
 | ~~Work~~ | ~~**FAT-OR #255106** — reopen~~ | ~~CLOSED 2026-04-17 — ID Permohonan added to page 2 header of TemplateSuratIringanKepadaPewartaan.docx~~ |
 | ~~Work~~ | ~~**QA #256875** — FAT - PRBB - Bayaran Pelbagai - Tidak papar apa-apa maklumat bayaran~~ | ~~CLOSED 2026-04-21 — Passed to Spoc team. No code change on our side.~~ |
 
