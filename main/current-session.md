@@ -3,7 +3,7 @@
 
 ## Session RAM Status
 **Current Session**: 2026-04-28 — QA #258022 implementation + scrutiny discussion
-**Last Activity**: Tue Apr 28 15:57 MPST 2026
+**Last Activity**: Wed Apr 29 00:17 MPST 2026
 **Session Start**: 2026-04-28 (weekday, afternoon)
 **Session Focus**: QA #258022 — 3 root-cause fixes implemented (tindakan.config.json SB4CE entry, MlkMaklumatUrusanPermitForm getter + initRenderPanel, PelupusanTugasanConstant TGSN_*_ALL constants). BasePelupusanLiteForm simplified (Codex's OR chains → ImmutableSet.contains). MlkPenyediaanBorang4CeP1eForm reverted to pre-Codex TRG reference pattern (out of scope). Deep scrutiny discussion with みや on every Codex change. Codebase categorization item added to todo.md Q2. Pending: FAT test.
 **Time Mode**: Weekday afternoon
@@ -85,13 +85,59 @@
 
 ### Session Recap (For AI Restart)
 
-- **Previous Sessions** (2026-04-27): QA #256113 closed. QA #258022 Phase 0 held. QA #258418 Phase 0 investigated (awaiting clarification).
-- **This Session** (2026-04-28): QA #258022 full implementation complete. 3 root-cause fixes + 2 simplify changes + 1 revert. Pending FAT test.
-- **On Resume**:
-  - QA #258022 — **PENDING FAT TEST**: Open `PTMLK/01/L/OPRBB/2026/1` on Semakan Borang step → verify Pembetulan radio (Ya/Tidak) + Agihan Kepada dropdown. Also test OMLPS.
-  - Post-test cleanup: if FAT passes → remove SB4CE fallback in `PelupusanPegawaiAgihService.hasTugasanSemakanBorang`
-  - QA #258418 — still awaiting BA/senior clarification
-  - Protocol housekeeping session: 4 agreed changes pending (todo.md Q2)
+- **Previous Sessions** (2026-04-27): QA #256113 closed. QA #258022 Phase 0 held.
+- **Session 1 (2026-04-28)**: QA #258022 implementation — 3 root-cause fixes + 2 simplify changes + 1 revert. FAT test showed STILL BROKEN.
+- **Session 2 (2026-04-28 cont.)**: FAT fail root cause found via entity-verified SQL.
+
+#### QA #258022 — IMPLEMENTATION BROKEN, NEEDS REWORK
+
+**Critical finding from SQL (verified entity-first):**
+- Test app `PTMLK/01/L/OPRBB/2026/1` tugasan sequence: PB → **SMB** → SB → CT_AKK_PB (currently active)
+- Semakan Borang step uses `SMB` (TGS_SEMAK_BORANG), NOT `SB4CE` (TGS_SEMAKAN_BRG_4CE)
+- **Fix 1 was WRONG**: Added `tugasanSB4CE_UTILITI` entry — but OPRBB Semakan uses `SMB`, not `SB4CE`
+- **Fix 2a/2b were in WRONG BEAN**: Applied to `MlkMaklumatUrusanPermitForm` (serves PRBB Semakan) — OPRBB uses `MlkPenyediaanBorang4CeP1eForm`
+
+**SQL used to confirm (entities verified from sources jar):**
+```sql
+SELECT at_.A_TGSN_ID, at_.FLAG_AKTIF, at_.STATUS_TUGASAN, t.KOD
+FROM et_main.UMM_A_TGSN at_
+JOIN et_main.IND_TGSN t ON t.TGSN_ID = at_.TGSN_ID
+JOIN et_main.UMM_APLIKASI a ON a.APLIKASI_ID = at_.APLIKASI_ID
+WHERE a.ID_PENGENALAN = 'PTMLK/01/L/OPRBB/2026/1'
+ORDER BY at_.A_TGSN_ID;
+```
+Entity annotations confirmed from `etanah-domain-1.1.75.pgsql.mlk.patch95-sources.jar` (extracted to `C:/temp/etanah-src/`):
+- `AppTugasan` → `UMM_A_TGSN`, FK to Tugasan = `TGSN_ID`, FK to Aplikasi = `APLIKASI_ID`
+- `Tugasan` → `IND_TGSN`, kod column = `KOD`
+- `Aplikasi` → `UMM_APLIKASI`, identifier column = `ID_PENGENALAN`
+
+**Correct fixes needed:**
+1. **Config (Fix 1 replacement)**: In `tugasanSMB_ALL` → add OPRBB, OPLPS, OMLPS, OPRU, OPPJK, OPPTPB to `included_urusan_list` (OR add a new `tugasanSMB_UTILITI` entry with `kod_list: SMB` — preferred to avoid polluting SMB_ALL scope). Remove wrong `tugasanSB4CE_UTILITI` entry.
+2. **adaPegawaiAgih fix**: In `MlkPenyediaanBorang4CeP1eForm.initEditModeBorang()` — add URUSAN_LITE_LIST + `TGS_SEMAK_BORANG` (SMB) branch → `adaPegawaiAgih = Boolean.TRUE`. NOT `MlkMaklumatUrusanPermitForm`.
+3. **Revert MlkMaklumatUrusanPermitForm**: Fix 2a (getter line 172) and Fix 2b (initRenderPanel block) need to be reverted to original.
+
+**On Resume (new session):**
+- Load `projects/coding-projects/active/QA-258022/handoff-258022.md` — full context + fix plan
+- Run `/appraise` on the 4-fix plan BEFORE any code (みや's requirement)
+- QA #258418 — still awaiting BA/senior clarification
+- Protocol housekeeping session: 4 agreed changes pending (todo.md Q2)
+
+#### QA #258022 — INVESTIGATION COMPLETE (2026-04-28 Session 3)
+
+**New findings that changed the fix plan:**
+- みや confirmed: Lite (O*) urusan NEVER use 4CE tugasan codes. OPRBB uses PB/SMB/SB only.
+- 5 borang form variants extend BasePelupusanLiteForm for MLK: 4Ae, 4Be, 4Ce, 4De, 4Ee
+- `MlkPenyediaanBorang4CeP1eForm` SHADOWS parent's adaPegawaiAgih with its own private field
+- `adaPegawaiAgih` declared in BasePelupusanForm:88 as `protected Boolean = FALSE`
+- initEditModeBorang() in 4Ce only sets adaPegawaiAgih=TRUE for PB, not SMB → bug confirmed
+- Other forms (4Ae,4Be,4De,4Ee) have no override → always FALSE for SMB
+- `tugasanSMB_ALL` in tindakan.config.json has NO Lite codes → Pembetulan never loads for Lite
+
+**Correct 4-fix plan — full detail in handoff-258022.md:**
+1. `tindakan.config.json` — remove SB4CE entry, add Lite codes to tugasanSMB_ALL
+2. `BasePelupusanLiteForm.initData()` — add adaPegawaiAgih=TRUE for TGS_SEMAK_BORANG (covers 4Ae/4Be/4De/4Ee)
+3. `MlkPenyediaanBorang4CeP1eForm.initEditModeBorang()` — add SMB to PB condition (covers 4Ce separately)
+4. `MlkMaklumatUrusanPermitForm` — revert Attempt 1 Fix 2a/2b (wrong bean)
 
 **redmine-sync.js — late fixes:**
 - `statusLabel` in both `createTaskFolder` + `addStatusFolder` normalised:

@@ -168,7 +168,8 @@ ai-memorycore/
 - Any formal Etanah/Redmine work context
 
 **Non-negotiable rules:**
-- When QA # is mentioned: ask for Task folder path FIRST. Read every file in it. Build scope checklist. Confirm with みや before touching any code.
+- **Handoff file first** (hard rule, 2026-04-29): When a QA # is mentioned, check `active.txt` for that entry. If `handoff_file=` is present → Read that file IMMEDIATELY, before asking for Task folder, before any investigation. The handoff IS the context — treat it as if this conversation never closed.
+- When QA # is mentioned AND no `handoff_file=` exists: ask for Task folder path FIRST. Read every file in it. Build scope checklist. Confirm with みや before touching any code.
 - Never commit without `local_test_confirmed` in quest state.
 - Summon a familiar (sub-agent) when reading files >500 lines.
 
@@ -176,7 +177,7 @@ ai-memorycore/
 0. **Accept** — read Task folder → build scope checklist → confirm before coding
 1. **Execute** — work through checklist item by item, track findings silently
 2. **Report** — on "create the report": ask output path + screenshot paths → run `node quest/generate_fix_report.js`
-3. **Post-Mortem** — on "wrap up": extract learnings, update patterns, close quest
+3. **Post-Mortem** — on "wrap up": extract learnings, update patterns, close quest → **review CLAUDE.md for any ticket-specific rules or fields added during this quest; remove what was temporary, promote what should be permanent**
 
 **Report generator**: `quest/generate_fix_report.js` (Node.js, `docx` package)
 

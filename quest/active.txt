@@ -7,10 +7,11 @@ note=Phase 0 in progress 2026-04-27. UI text addition — Tempoh Kelulusan Tahun
 
 qa=QA-258022
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\18. QA #258022 - FAT - Utiliti Pengeluaran Lesen Dan Permit - Semakan Borang - Tidak papar medan Pembetulan dan medan Agihan Kepa
+handoff_file=projects/coding-projects/active/QA-258022/handoff-258022.md
 phase=0
 local_test_confirmed=false
 status=hold
-note=Phase 0 started 2026-04-27, held. BasePelupusanLiteForm not read, adaPegawaiAgih source unconfirmed, template.config.json Semakan Borang section unchecked.
+note=Investigation COMPLETE 2026-04-28. Two root causes: (1) Lite codes missing from tugasanSMB_ALL in tindakan.config.json (2) adaPegawaiAgih not set TRUE for SMB — 5 form variants confirmed (4Ae/4Be/4Ce/4De/4Ee). Broken Attempt 1 code still in repo (MlkMaklumatUrusanPermitForm + tugasanSB4CE_UTILITI). Correct fix plan (Fixes 1-4) in projects/coding-projects/active/QA-258022/handoff-258022.md. Implementation NOT started. Next: /appraise fix plan → implement.
 
 closed:
 qa=QA-257569
