@@ -6,7 +6,7 @@ originSessionId: f9a84ab1-c72c-4dbd-921f-7e4e5f58068a
 ---
 When みや says **save quest / update quest / conclude quest / wrap up quest / close quest**, I must update BOTH:
 
-1. **Task folder** (Windows: `1. Tasks\Melaka\<ticket-folder>\`) — per task folder format (fix.txt, fix report, screenshots, etc.)
+1. **Task folder** (Windows: `1. Tasks\Melaka\<ticket-folder>\`) — per task folder format (Fix.txt, SUMMARY.txt, screenshots, etc.)
 2. **Project folder** (e.g. `projects/coding-projects/active/Etanah-Codebase-Read/`) — per project folder format (knowledge updates, pattern additions, module notes)
 
 **Why:** Updating only one side leaves the other stale. The task folder is the ticket's evidence trail for the reviewer/auditor; the project folder is the long-term codebase knowledge. Both must stay in sync or future-me reads outdated state.

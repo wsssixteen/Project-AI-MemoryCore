@@ -1,8 +1,7 @@
 # Quest Protocol
 
-> Four-phase work ritual for formal job tasks (Etanah Melaka).
-> Activated on work triggers. Produces a structured Fix Report .docx at close.
-> Each QA ticket is a Quest — accepted, executed, chronicled, and reflected upon.
+> Three-phase work ritual for formal job tasks (Etanah Melaka).
+> Activated on work triggers. Each QA ticket is a Quest — accepted, executed, and reflected upon.
 
 ---
 
@@ -13,8 +12,7 @@
 | `QA #<number>` | Phase 0 begins — auto-resolve Task folder (see Phase 0 Step 1) |
 | "I have a task/ticket/bug to debug" | Phase 0 begins |
 | Any formal Etanah/Redmine task context | Phase 0 begins |
-| "Create the report" | Phase 2 begins — ask for output path + screenshot paths |
-| "Wrap up" / "Post-mortem" / "What did we learn" | Phase 3 begins |
+| "Wrap up" / "Post-mortem" / "What did we learn" | Phase 2 begins |
 | `/quest start <QA> <path>` | Phase 0 begins via skill |
 | `/quest hold` | Current quest paused |
 | `/quest resume` | Resume held quest |
@@ -135,10 +133,10 @@ TICKET: QA #XXXXXX
 
 **Why**: Compact layout forces extreme brevity. Old named-section format was hard to scan. Investigation trail belongs in `quest/handoff-<QA>.md` during the quest and `main/post-mortems.md` after close. Format confirmed 2026-04-27.
 
-### SUMMARY.txt — Quest close-out (mandatory at Phase 3)
+### SUMMARY.txt — Quest close-out (mandatory at Phase 2)
 > **Why this exists**: Without a proper summary, reopening a quest months later forces a full re-investigation — searching git, reading diffs, guessing context. This file is the single document that makes re-entry instant.
 
-**Template** (copy into Task folder as `SUMMARY.txt` at Phase 3):
+**Template** (copy into Task folder as `SUMMARY.txt` at Phase 2):
 ```
 TICKET: <ticket type + number, e.g. UAT-CR #239225>
 DATE CLOSED: <YYYY-MM-DD>
@@ -187,16 +185,22 @@ Stashed: YES/NO — describe if yes
 - Work through Phase 0 checklist — tick `[x]` only when verified in code
 - Track key findings silently: what was NULL, what was root cause, what changed
 - Note files involved and whether compilation is required
-- Do not generate report or wrap up until explicitly asked
+- Do not wrap up until explicitly asked
 
 **Before committing:**
 1. Confirm all checklist items are `[x]`
 2. Ask: *"Have you tested locally?"* — update `local_test_confirmed=true` in `quest/active.txt`
 3. Only then run `git commit -m "QA #<number>"`
 
+**Commit convention:**
+```bash
+git commit -m "QA #<number>"
+```
+Examples: `QA #254539`, `QA #254604`, `FAT-OR #251455`, `#249445`
+
 ### Fix Walkthrough — mandatory after every code edit batch
 
-> **Why**: Without a structured walkthrough, each code change is just a diff in isolation. みや can't explain to a colleague why we touched the VO if she doesn't have the root cause, class chain, and "why these changes as a set" in one place. Also: the walkthrough becomes 80% of the Phase 3 Fix.txt, so writing it now makes post-mortem nearly free. Cost is ~1 turn per fix, saves multiple re-explanation cycles.
+> **Why**: Without a structured walkthrough, each code change is just a diff in isolation. みや can't explain to a colleague why we touched the VO if she doesn't have the root cause, class chain, and "why these changes as a set" in one place. Also: the walkthrough becomes 80% of the Phase 2 Fix.txt, so writing it now makes post-mortem nearly free. Cost is ~1 turn per fix, saves multiple re-explanation cycles.
 
 **Trigger**: immediately after code edits land in Phase 1 — **unprompted, same turn as the edits**. Do NOT wait for みや to ask.
 
@@ -235,15 +239,15 @@ For each file changed:
 - **Class chain always present** — per CLAUDE.md top-priority rule. Visual anchor for how execution reaches the bug.
 - **"What would break without it"** forces justification of each diff independently. If you can't answer that line for a change, it probably shouldn't be in the patch.
 - **Document/template changes line is mandatory** — even when "none". Catches the silent-skip failure mode.
-- Walkthrough content is the primary input to Phase 3 Fix.txt (CHAIN + APPLIED FIX sections) — write it well now, reuse at close-out.
+- Walkthrough content is the primary input to Phase 2 Fix.txt (CHAIN + APPLIED FIX sections) — write it well now, reuse at close-out.
 
 ### Mid-Quest Handoff File — mandatory when session ends mid-investigation
 
 > **Why**: If a fix fails local testing, next session's me has the fix context but not the investigation trail — forcing either blind retry of the same theory or wasted re-exploration. A handoff file persists the reasoning, ruled-out paths, and a triage ladder so failure recovery is cheap.
 
-**Trigger**: any `save all` / `save` / session wind-down while `phase ∈ {0, 1, 2}` and `local_test_confirmed=false` and code edits were made.
+**Trigger**: any `save all` / `save` / session wind-down while `phase ∈ {0, 1}` and `local_test_confirmed=false` and code edits were made.
 
-**File**: `quest/handoff-<QA-number>.md` — overwrite on each save during the quest; deleted at Phase 3 close.
+**File**: `quest/handoff-<QA-number>.md` — overwrite on each save during the quest; deleted at Phase 2 close.
 
 **Required sections:**
 1. **Current state** — what's been applied, what's pending test, what to do next
@@ -255,40 +259,11 @@ For each file changed:
 
 **On session boot**: if `quest/active.txt` shows `phase < complete` AND `quest/handoff-<QA>.md` exists, session briefing must include *"📋 Handoff file present — read before acting"*.
 
-**On Phase 3 close**: handoff file is extracted into post-mortem (investigation arc), then deleted from `quest/`.
+**On Phase 2 close**: handoff file is extracted into post-mortem (investigation arc), then deleted from `quest/`.
 
 ---
 
-## Phase 2 — Chronicle (Report)
-
-**Goal:** Produce the .docx fix report.
-
-**On trigger:**
-1. Ask: *"Output path for the .docx report?"*
-2. Ask: *"Screenshot paths? Drop them in a folder and share the full paths, or null for placeholders."*
-   - Expected: ticket, issue (bug visible), root cause (1+), fix (1–2)
-3. Edit the DATA section of `quest/generate_fix_report.js`
-4. Run: `node quest/generate_fix_report.js`
-5. Confirm: *"Report saved to [path]."*
-
-**Screenshot naming convention:**
-```
-1_ticket.png
-2_issue.png
-3_root_cause.png
-4_fix_1.png
-4_fix_2.png
-```
-
-**Commit convention:**
-```bash
-git commit -m "QA #<number>"
-```
-Examples: `QA #254539`, `QA #254604`, `FAT-OR #251455`, `#249445`
-
----
-
-## Phase 3 — Reflect (Post-Mortem)
+## Phase 2 — Reflect (Post-Mortem)
 
 **Goal:** Extract learnings, close the quest.
 
@@ -298,7 +273,7 @@ Examples: `QA #254539`, `QA #254604`, `FAT-OR #251455`, `#249445`
    - Run `git branch -a --contains <hash>` to confirm merge status
    - If status is PARTIAL, flag it clearly — do NOT archive to `Archive/` until all scope items are addressed
 2. **Root cause type?** — data / config / code / schema / process
-3. **Match existing pattern in DEBUGGING-PLAYBOOK.md?**
+3. **Match existing pattern in BUG-BESTIARY.md?**
    - Yes → confirm it
    - No → add new Pattern entry
 4. **Codebase knowledge to carry forward?** → update `etanah-knowledge/`
@@ -308,18 +283,6 @@ Examples: `QA #254539`, `QA #254604`, `FAT-OR #251455`, `#249445`
 8. Check Forge log → `Feature/Forge-Self-Improvement-System/forge-log.md` — any entries to promote?
 9. Update `quest/active.txt`: set `phase=complete`
 10. Quick save
-
----
-
-## Report Generator
-
-| Item | Value |
-|---|---|
-| Script | `quest/generate_fix_report.js` |
-| Run | `node quest/generate_fix_report.js` |
-| Template reference | DEBUGGING-PLAYBOOK.md Part 3 |
-| Output format | `.docx` matching Bug Fix Report standard |
-| Images | Full path per screenshot, or `null` for placeholder |
 
 ---
 
@@ -348,12 +311,12 @@ Examples: `QA #254539`, `QA #254604`, `FAT-OR #251455`, `#249445`
 ```
 qa=<number>
 task_folder=<path>
-phase=<0|1|2|3|complete>
+phase=<0|1|2|complete>
 local_test_confirmed=<true|false>
 status=<active|hold>
 ```
 
 ---
 
-*Quest — every ticket is a quest accepted, executed, and chronicled.*
-*Protocol version: 2.5 — 2026-04-17 (Base task folder path hardcoded; Phase 0 auto-resolves folder via Glob active + Archive — no longer asks みや for path)*
+*Quest — every ticket is a quest accepted, executed, and reflected upon.*
+*Protocol version: 3.0 — 2026-04-29 (Removed Phase 2 Report — `.docx` generation no longer used. Renumbered: Accept(0) / Execute(1) / Reflect(2). Overview reports like DB ERD prioritized over per-ticket .docx.)*

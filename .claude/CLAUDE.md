@@ -35,7 +35,7 @@ ai-memorycore/
 ├── main/
 │   ├── main-memory.md         ← Unified AI identity + Miya profile (living doc)
 │   ├── current-session.md     ← Active task tracker (resets per session)
-│   ├── post-mortems.md        ← Quest post-mortem log (written at Phase 3)
+│   ├── post-mortems.md        ← Quest post-mortem log (written at Phase 2)
 │   ├── main-memory-format.md  ← Permanent format reference for main memory
 │   └── session-format.md      ← Permanent format reference for session memory
 ├── Feature/                   ← System extensions
@@ -70,6 +70,7 @@ ai-memorycore/
 - No unsolicited refactoring or scope expansion
 - If developer repeats a question — just re-answer, no correction
 - **Always produce class chains** when tracing code: `ClassA → ClassB → ClassC` showing execution flow. Top priority — used for explaining to colleagues, single-view understanding, and saving tokens on re-investigation. Applies to all projects, not just quest work.
+- **Mistake → action, not words** (hard rule, 2026-04-29): When I make a mistake, the response must include a concrete next-step action — file edit, protocol update, removed assumption, scheduled check, etc. — not just "I'll do better" or "noted". みや's tolerance for repeat slips drops sharply once a verbal apology has been given. The action goes in chat AND in the canonical doc that should have prevented the slip (this rule itself is an example: the slip was claiming a hard rule that wasn't actually written anywhere; the action is this CLAUDE.md edit). If the right canonical home isn't obvious, ask before defaulting back to a new feedback file.
 
 ---
 
@@ -117,7 +118,7 @@ ai-memorycore/
 | `/observe` | Surfaces current Tier 1 observations from `Feature/Observation-System/observation-log.md`, promotes any to T2 if confirmed recurring |
 | `forge update` / `forge check` | Reviews `Feature/Forge-Self-Improvement-System/forge-log.md` — promotes entries that meet level criteria |
 | `forge review` / `weekly forge` | Full Forge Review (L2 ritual) — 3 axes (Ruri Evolution / Knowledge Growth / Vision Progress) × 3 questions each. Writes instance to `Feature/Forge-Self-Improvement-System/forge-reviews/forge-review-YYYY-MM-DD.md`. See `Feature/Forge-Self-Improvement-System/forge-review-protocol.md` |
-| `forge quest` | Quest-scoped Forge fallback — manually runs KPI tagging + forge-log check on the last closed quest (normally auto-fires in Quest Phase 3) |
+| `forge quest` | Quest-scoped Forge fallback — manually runs KPI tagging + forge-log check on the last closed quest (normally auto-fires in Quest Phase 2) |
 | `Read Redmine` | Run `node quest/redmine-sync.js` → then `--create` for any new tickets → for each new ticket: add held Phase 0 entry to `active.txt` (`status=hold`) → report results. みや picks which quest to start first. |
 | `remember later` / `do later` / `save to next session` / `remind me later` / `push to [later/tonight/tomorrow]` / `hold that` / `park that` / `set that aside` / `we'll come back to this` / `skip that for now` | Adds item to `main/todo.md` **immediately, mid-conversation — not at save time** |
 | `what are our to-do lists` | Reads `main/todo.md`, presents as one line per EM quadrant comma-separated (brief, skimmable), then asks which to work on |
@@ -176,10 +177,7 @@ ai-memorycore/
 **Phases:**
 0. **Accept** — read Task folder → build scope checklist → confirm before coding
 1. **Execute** — work through checklist item by item, track findings silently
-2. **Report** — on "create the report": ask output path + screenshot paths → run `node quest/generate_fix_report.js`
-3. **Post-Mortem** — on "wrap up": extract learnings, update patterns, close quest → **review CLAUDE.md for any ticket-specific rules or fields added during this quest; remove what was temporary, promote what should be permanent**
-
-**Report generator**: `quest/generate_fix_report.js` (Node.js, `docx` package)
+2. **Reflect** — on "wrap up": extract learnings, update patterns, close quest → **review CLAUDE.md for any ticket-specific rules or fields added during this quest; remove what was temporary, promote what should be permanent**
 
 **Skills**: `/quest start|hold|resume` — `.claude/skills/quest/SKILL.md`
 **Familiar**: `/familiar` — `.claude/skills/familiar/SKILL.md`
@@ -189,7 +187,7 @@ ai-memorycore/
 ## 🔬 Debug Mode Rituals
 
 > **Activated when**: みや says "debug mode on", or a debugger screenshot / breakpoint value is shared, or quest protocol flags an active debug session.
-> **Deactivated when**: みや says "debug mode off", or quest Phase 3, or session end.
+> **Deactivated when**: みや says "debug mode off", or quest Phase 2, or session end.
 > When active, these rituals are **mandatory** before any fix-proposing Edit or test request. They exist because debugging-discipline failures are invisible in response text — passive feedback memories haven't worked. These rituals make the discipline visible so みや can catch violations in real time.
 
 ### Ritual 1 — Predicate Box (mandatory before every fix-proposing Edit)

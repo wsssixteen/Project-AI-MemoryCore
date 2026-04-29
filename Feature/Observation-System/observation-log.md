@@ -41,6 +41,9 @@
 
 ### T2 — Recurring
 
+**[2026-04-29] Simplify feedback ignored — kept adding instead of removing**
+Across QA #258022 (3 sessions, 2026-04-28 → 2026-04-29), みや told me 3-4+ times: "this is a mature system, refer to working urusans/tugasans, the implementation is too much, simplify, scrutinize Codex's changes." I ignored every signal — each iteration added more Java/config rather than searching for the minimal existing-pattern fix. Final fix was 1 file (+19/-1) when initial attempts modified 4-5 files including unnecessary Java. Pattern source: I treated "simplify" as a vague request rather than a hard instruction. Mitigations captured in `feedback_simplify_and_reference.md` and forge-log entry. Watch for this in next ticket — does the next "simplify" feedback shrink the diff or grow it?
+
 **[2026-04-02] Direct naming corrections**
 みや corrects naming inconsistencies immediately when noticed (keiro → quest, Miya → みや). These corrections are precise and non-negotiable. Take them as hard rules, not preferences.
 

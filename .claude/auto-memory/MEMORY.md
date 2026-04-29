@@ -34,6 +34,8 @@
 - [feedback_complete_before_deliver.md](feedback_complete_before_deliver.md) — Missing info for a script/query? Ask first, deliver complete — never give placeholder scripts as deliverables
 - [feedback_share_content_in_chat.md](feedback_share_content_in_chat.md) — Share file content directly in chat, not just the path; exception: very long files → summarize + path
 - [feedback_sql_insert_id_check.md](feedback_sql_insert_id_check.md) — SQL INSERT with hardcoded PK: verify @GeneratedValue on entity before accepting; use nextval() if sequence-managed
+- [feedback_simplify_and_reference.md](feedback_simplify_and_reference.md) — Mature system → find working analog first; "simplify" means SUBTRACT not add; scrutinize AI-generated code, never trust as reference
+- [feedback_uat_fat_environments.md](feedback_uat_fat_environments.md) — UAT (mlkuat / et_main_uat) is local testing default; FAT (mlkfat / etprdmlk / et_main) is for simulation only; flowable alter page shifts test apps between tugasan steps
 
 ## User
 - [user_gender.md](user_gender.md) — みや is male; don't default to "she" in diary/narration; no retroactive edits

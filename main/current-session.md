@@ -2,157 +2,99 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: 2026-04-28 — QA #258022 implementation + scrutiny discussion
-**Last Activity**: Wed Apr 29 00:17 MPST 2026
-**Session Start**: 2026-04-28 (weekday, afternoon)
-**Session Focus**: QA #258022 — 3 root-cause fixes implemented (tindakan.config.json SB4CE entry, MlkMaklumatUrusanPermitForm getter + initRenderPanel, PelupusanTugasanConstant TGSN_*_ALL constants). BasePelupusanLiteForm simplified (Codex's OR chains → ImmutableSet.contains). MlkPenyediaanBorang4CeP1eForm reverted to pre-Codex TRG reference pattern (out of scope). Deep scrutiny discussion with みや on every Codex change. Codebase categorization item added to todo.md Q2. Pending: FAT test.
+**Current Session**: 2026-04-29 — QA #258022 rework + peranan investigation + DB MCP wiring + cleanup
+**Last Activity**: Wed Apr 29 20:09 MPST 2026
+**Session Start**: 2026-04-29 (weekday, afternoon → evening)
+**Session Focus**: QA #258022 1-file fix done. Peranan model fully validated via SQL (KPT=Ketua Pembantu Tadbir, full 9-role taxonomy, perananSemasa format `-ROLE1-ROLE2-...-`, screenshots reproduce person-for-person). MCP postgres tools wired for both UAT (mlkuat/et_main_uat) and FAT (etprdmlk/et_main) using `et_reporting` + `etanah123`; wrapper enforces `transaction_read_only=on` (verified). Cleanup: deleted `quest/generate_fix_report.js` + node_modules + package files; quest-protocol simplified from 4-phase to 3-phase (Accept/Execute/Reflect — Phase 2 Report retired). New feedback memory: `feedback_uat_fat_environments.md` (UAT=local, FAT=BA-shared sim, flowable alter page note). Heavy session — context ~600k+, time to save and reboot.
 **Time Mode**: Weekday afternoon
-**Energy Level**: Full capacity. Model: Sonnet 4.6.
+**Energy Level**: Full capacity. Model: Sonnet 4.6 (and Opus 4.7 for some segments).
 
 ## 💭 Working Memory (RAM)
 
 ### Active Context
 
-#### Session 2026-04-24 — Continuation (context overflow from Apr 23)
+#### Session 2026-04-29 — QA #258022 Rework + Systemic Lesson
 
-**redmine-sync.js — Fully Improved**
-- `quest/redmine-sync.js` — Final improvements made this session
-- Prefix: uses `issue.tracker.name` (not subject segment)
-- Priority displayed in log output
-- Status: scraped from HTML `<td class="status">` via `fetchIssueStatus()`
-- Folder naming: `{n}. {PREFIX} #{ID} - {env} - {urusan} - {tugasan} - {issue brief}`
-- Base folder structure: `0. Brief/`, `1. Simulate/`, `2. Fix/` then `3. {Status}/` (flexible, increments on rework)
-- `findExistingFolder`: matches by `#${number}` only
-- TICKET_PREFIXES: `['FAT-OR', 'UAT-CR', 'FAT-CR', 'FAT', 'UAT', 'CR', 'QA']`
+**QA #258022 — REWORK COMPLETE, AWAITING FAT RETEST**
 
-**Task folder cleanup — COMPLETE (Apr 27)**
-- `13. QA #256113` archived ✅
-- `18. QA #258022` created (Phase 0 held)
-- Folders 9, 11, 12 archived in previous session
+Final state: **1 file diff on top of HEAD master** — `tindakan.config.json` (+19/-1):
+- Removed Lite codes from `tugasanSMB_ALL` (back to non-Lite only)
+- Added new `tugasanSMB_UTILITI` entry with 7 Lite urusan codes → option_type `smb_utiliti`
+- Added new `smb_utiliti` option_type definition: single `keputusan` field, no `multi_levels`, no Tindakan Seterusnya
 
-**QA #257911 — CLOSED ✅ (confirmed prior session)**
-- Fix: STATUS_SEMAKAN_PERAKU typo in template.config.json. Commit 5ebfec1f12.
+All Java fixes from Attempt 2 reverted (Fix 2 BaseLiteForm.initData SMB block, Fix 3 4Ce.initEditModeBorang SMB condition, TGSN_*_ALL constants, onChangeTindakanKeputusan refactor). All match HEAD master after upstream pull.
 
-#### Session 2026-04-27 — QA #256113 + QA #258022
+**Why config-only works (the truth)**:
+- The existing `BasePelupusanLiteForm.onChangeTindakanKeputusan()` already had a `TGS_SEMAK_BORANG` branch calling `onRepopulatePegawaiAgih()` for Lite SMB — even **before** aaron's #236191 commit
+- The service `MlkPelupusanPegawaiAgihService.retrievePerananPegawaiAgih` already populated officers for `URUSAN_LITE_LIST + SMB + KELENGKAPAN_TIDAK`
+- 4Ce's existing `setAdaPegawaiAgih()` at line 532 already bridges the private shadow field via dynamic dispatch
+- The bug was purely a missing config entry → no Pembetulan radio → no AJAX trigger → existing chain never executed
 
-**QA #256113 — CLOSED ✅**
-- Root cause: perihal string in `MlkPengiraanBayaranLesenForm.performCustomSave()` was prepending
-  "Tempoh diluluskan lesen ini adalah X tahun." before the date-range sentence
-- Fix: みや removed that prefix sentence (line 589), keeping only date-range string
-- Stray changes (PelupusanMaklumatPermitLesenHelper.java + extra MlkPengiraanBayaranLesenForm blocks)
-  reverted via `git checkout HEAD` — みや confirmed only line 589 was intended
-- Blast radius: URS_PLPS only (guard confirmed). TGS_SURAT_KEPUTUSAN_LULUS_LIST = 3 steps
-  (Penyediaan/Semakan/Pengesahan Surat Keputusan) — all correctly in scope.
-- Test: FAT — surat deleted, regenerated, syarat correct. PASS.
-- Commit: 5be6379ea0 → merged 331a2df1bf → mlk/master
-- Fix.txt ✅ | SUMMARY.txt ✅ | Archived ✅ | active.txt updated ✅
+**Aaron's #236191 (pulled mid-session)**:
+- Wraps existing Lite handling in `URUSAN_LITE_LIST` guard + adds new else branch for non-Lite urusan that share `BasePelupusanLiteForm`
+- **UNRELATED to QA #258022** — the Lite branch (which we care about) was untouched
+- Pulling kept our diff aligned with master but didn't change the fix needs
 
-**QA #258022 — Phase 0 STARTED, HELD**
-- Urusan: Utiliti Pengeluaran Lesen Dan Permit (OPLPS, OMLPS, OPRBB, OPRU, OPJKK, OPPTPB) — "lite" pelupusan
-- Issue: Semakan Maklumat Dan Tindakan — missing Pembetulan + Agihan Kepada fields
-- Form: `MlkPenyediaanBorang4AeL1eForm` → `BasePelupusanLiteForm` (parent not yet read)
-- Panel: `mlkSemakanMaklumatPanel.xhtml` — `adaPegawaiAgih` controls Agihan Kepada,
-  `tindakanTugasanVO.sortedLevelOptionList` drives Pembetulan radio buttons
-- Investigation stopped at: BasePelupusanLiteForm not read, `adaPegawaiAgih` source not confirmed,
-  template.config.json Semakan Borang section not checked
-- Task folder: `18. QA #258022 - FAT - OPLPS - ...`
+**Stash safety net**: `stash@{0}` preserves Attempt 2's broader changes + the out-of-scope service file additions (non-Lite SMB4CE handling) in case any are needed for a different ticket.
 
-### 📋 Learning Notes (this session)
-- **PLPS FLOWABLE**: TGS_SURAT_KEPUTUSAN_LULUS_LIST = 3 sequential tugasan (Penyediaan/Semakan/Pengesahan Surat Keputusan). All share same perihal logic. Intentional design. Added to FLOWABLE-WORKFLOWS.md.
-- **Git hygiene**: When stash pop or pull brings extra changes, use `git diff --stat HEAD` to identify. Use `git checkout HEAD -- <file>` to revert individual files before commit.
-- **Appraise discipline**: Must read the ticket accurately before appraise (Axis 1 wrong on first pass — I misread "tidak papar" as absence instead of unwanted presence).
-- **みや as code author**: When みや makes the fix, my job is blast radius + verification + cleanup — not rewrite or re-justify the approach.
+#### THE BIG LESSON — Captured into Memory System
 
-#### Session 2026-04-28 — QA #258022 Implementation
+みや called out the 3-day pattern: across multiple sessions for a 1-file fix, he repeatedly told me:
+- "This is a mature system — things are catered for"
+- "Refer to other working urusans/tugasans"
+- "The implementation is too much"
+- "Simplify"
+- "Scrutinize Codex's changes"
 
-**QA #258022 — IMPLEMENTATION COMPLETE, PENDING FAT TEST**
-- **Fix 1**: `src/main/resources/config/MLK/tindakan.config.json` — added `tugasanSB4CE_UTILITI` entry after `tugasanSMB_ALL`. `option_type: smb_all` → loads Pembetulan radio + Tindakan Seterusnya for all 6 Utiliti urusan.
-- **Fix 2a**: `MlkMaklumatUrusanPermitForm.java:172` — getter: `URS_PRBB.equals(kodUrusan)` → `URUSAN_LITE_LIST.contains(kodUrusan)`
-- **Fix 2b**: `MlkMaklumatUrusanPermitForm.java` `initRenderPanel()` — added URUSAN_LITE_LIST else-if block: sets `adaPegawaiAgih = true` when tugasan = TGS_SEMAKAN_BRG_4CE
-- **Constants**: `PelupusanTugasanConstant.java` — added `TGSN_PENGESAHAN_BORANG_ALL`, `TGSN_PENYEDIAAN_BORANG_ALL`, `TGSN_SEMAKAN_BORANG_ALL` (ImmutableSet, each pairing base code + 4Ce code)
-- **Simplify**: `BasePelupusanLiteForm.java` `onChangeTindakanKeputusan()` — Codex's 3 inline OR booleans replaced with `TGSN_*_ALL.contains(tugasanCode)`
-- **Kept**: `MlkPelupusanPegawaiAgihService.java` SB4CE routing block (Codex, correct)
-- **Kept pending test**: `PelupusanPegawaiAgihService.hasTugasanSemakanBorang` SB4CE fallback (likely dead code — clean up after FAT confirms)
-- **Reverted**: `MlkPenyediaanBorang4CeP1eForm.java` — both Codex's `initEditModeBorang` (lines 117–127) and `initBukuDoketHelper` (line 142) reverted to TRG-reference pattern; out of scope (Penyediaan ≠ Semakan)
+I ignored every signal. Each iteration ADDED code instead of removing it. Final fix matched what みや had been pointing toward all along.
 
-**Class chain confirmed:**
-`MlkMaklumatUrusanPermitForm.xhtml → MlkMaklumatUrusanPermitForm.java → mlkSemakanMaklumatPanel.xhtml → tindakanTugasanVO [FIX 1] + adaPegawaiAgih [FIX 2a+2b]`
+**Captured to memory system**:
+- `auto-memory/feedback_simplify_and_reference.md` (new) — Mature system → find working analog first; "simplify" means SUBTRACT not add; scrutinize AI-generated code
+- `auto-memory/MEMORY.md` — indexed
+- `Feature/Observation-System/observation-log.md` — T2 entry (recurring across multiple sessions in same ticket)
+- `Feature/Forge-Self-Improvement-System/forge-log.md` — L1 entry under Reasoning & Investigation (flagged: if pattern repeats again, rule design needs rethinking)
+
+#### Documentation Produced (project folder primary references)
+
+`projects/coding-projects/active/QA-258022/`:
+- `handoff-258022.md` — rewritten with honest accounting (Attempt 1-3 + post-pull); separates Live State from Attempt History per CLAUDE.md hard rule
+- `STORYLINE-FOR-CODE-REVIEW.md` — narrative for code review with Q&A talking points (including "why 3 days for 1 file")
+- `DEBUGGING-WALKTHROUGH.md` — 10-step thought process from BA brief to fix; for Friday's debugging playbook study session
+- `LITE-URUSAN-SEMAKAN-FLOW.md` — architectural reference (5 form variants, field shadowing, two categories)
+
+#### Friday Items Added to todo.md (Q2)
+
+- "Friday recap: QA #258022 debugging walkthrough" — read DEBUGGING-WALKTHROUGH.md + STORYLINE-FOR-CODE-REVIEW.md together
+- "Build JSF debugging playbook" — generalize from #258022: standard sequence (DevTools → grep label → composite first → form XHTML → bean → config), layer-order checklist, field-to-source cheat sheet template
 
 ### 📋 Learning Notes (this session)
-- **Appraise vs Simplify**: Appraise = scrutinise correctness of logic (especially external/Codex code). Simplify = assumes code is correct, looks for reuse/quality/efficiency improvements. Use appraise first when the source is unverified.
-- **"Harmless" requires evidence**: Line 142 simplify in `MlkPenyediaanBorang4CeP1eForm` was called "harmless" — but `TGSN_PENGESAHAN_BORANG_ALL` included `PB4CE` (Codex's addition), original was `TGS_PENGESAHAN_BORANG` only. Untested path change is never harmless.
-- **Codex correct-bean discipline**: Codex modified `MlkPenyediaanBorang4CeP1eForm` (Penyediaan) instead of `MlkMaklumatUrusanPermitForm` (Semakan). Always verify the bean serves the right XHTML before accepting changes.
+
+- **Read option_type before extending its included_urusan_list** — adding to `tugasanSMB_ALL` inherits ALL of `smb_all`'s rendering shape, including `multi_levels.jenisTindakanSeterusnya`. The config file is right there, ~700 lines down. Not reading it caused the FAT failure.
+- **Field shadowing in Java** — fields are NOT virtual. `private Boolean adaPegawaiAgih` in 4Ce shadows parent's protected field. Method calls via `mb.setAdaPegawaiAgih()` are virtual (hit child setter), but raw field access in parent methods writes to parent's field. Same name, different storage.
+- **`git pull` before starting work** — would have spotted aaron's #236191 immediately and avoided the TGSN_*_ALL refactor scope creep.
+- **"Simplify" feedback is hard, not soft** — it's an instruction with measurable success: next diff must SHRINK. If it grows, the feedback was misread.
 
 ### Session Recap (For AI Restart)
 
-- **Previous Sessions** (2026-04-27): QA #256113 closed. QA #258022 Phase 0 held.
-- **Session 1 (2026-04-28)**: QA #258022 implementation — 3 root-cause fixes + 2 simplify changes + 1 revert. FAT test showed STILL BROKEN.
-- **Session 2 (2026-04-28 cont.)**: FAT fail root cause found via entity-verified SQL.
+- **Previous Session (2026-04-28 — multi-session)**: QA #258022 investigation across 3 sessions. Attempt 1 broken (wrong tugasan codes). Investigation produced 4-fix plan in handoff-258022.md. Implementation NOT yet done; `/appraise` required before code.
 
-#### QA #258022 — IMPLEMENTATION BROKEN, NEEDS REWORK
+- **Today (2026-04-29)**: Resumed from auto-compact. Ran /appraise on 4-fix plan, implemented (Attempt 2). FAT FAILED with two new bugs (Tindakan Seterusnya pollution from smb_all option_type, empty Agihan Kepada at load from Fix 3). Reworked into Attempt 3 with new smb_utiliti option_type + Java reverts. Pulled upstream master mid-rework, resolved conflict in BasePelupusanLiteForm (took upstream — aaron's #236191 was structurally cleaner). Net result: 1-file diff. みや called out the systemic over-engineering pattern — captured into memory system. Save all checkpoint triggered.
 
-**Critical finding from SQL (verified entity-first):**
-- Test app `PTMLK/01/L/OPRBB/2026/1` tugasan sequence: PB → **SMB** → SB → CT_AKK_PB (currently active)
-- Semakan Borang step uses `SMB` (TGS_SEMAK_BORANG), NOT `SB4CE` (TGS_SEMAKAN_BRG_4CE)
-- **Fix 1 was WRONG**: Added `tugasanSB4CE_UTILITI` entry — but OPRBB Semakan uses `SMB`, not `SB4CE`
-- **Fix 2a/2b were in WRONG BEAN**: Applied to `MlkMaklumatUrusanPermitForm` (serves PRBB Semakan) — OPRBB uses `MlkPenyediaanBorang4CeP1eForm`
+**On Resume (new session)**: 
+- **TOMORROW MORNING — RESUME WITH THIS**: QA #258022 awaiting FAT retest on みや's side (1-file config fix on top of HEAD master). 
 
-**SQL used to confirm (entities verified from sources jar):**
-```sql
-SELECT at_.A_TGSN_ID, at_.FLAG_AKTIF, at_.STATUS_TUGASAN, t.KOD
-FROM et_main.UMM_A_TGSN at_
-JOIN et_main.IND_TGSN t ON t.TGSN_ID = at_.TGSN_ID
-JOIN et_main.UMM_APLIKASI a ON a.APLIKASI_ID = at_.APLIKASI_ID
-WHERE a.ID_PENGENALAN = 'PTMLK/01/L/OPRBB/2026/1'
-ORDER BY at_.A_TGSN_ID;
-```
-Entity annotations confirmed from `etanah-domain-1.1.75.pgsql.mlk.patch95-sources.jar` (extracted to `C:/temp/etanah-src/`):
-- `AppTugasan` → `UMM_A_TGSN`, FK to Tugasan = `TGSN_ID`, FK to Aplikasi = `APLIKASI_ID`
-- `Tugasan` → `IND_TGSN`, kod column = `KOD`
-- `Aplikasi` → `UMM_APLIKASI`, identifier column = `ID_PENGENALAN`
-
-**Correct fixes needed:**
-1. **Config (Fix 1 replacement)**: In `tugasanSMB_ALL` → add OPRBB, OPLPS, OMLPS, OPRU, OPPJK, OPPTPB to `included_urusan_list` (OR add a new `tugasanSMB_UTILITI` entry with `kod_list: SMB` — preferred to avoid polluting SMB_ALL scope). Remove wrong `tugasanSB4CE_UTILITI` entry.
-2. **adaPegawaiAgih fix**: In `MlkPenyediaanBorang4CeP1eForm.initEditModeBorang()` — add URUSAN_LITE_LIST + `TGS_SEMAK_BORANG` (SMB) branch → `adaPegawaiAgih = Boolean.TRUE`. NOT `MlkMaklumatUrusanPermitForm`.
-3. **Revert MlkMaklumatUrusanPermitForm**: Fix 2a (getter line 172) and Fix 2b (initRenderPanel block) need to be reverted to original.
-
-**On Resume (new session):**
-- Load `projects/coding-projects/active/QA-258022/handoff-258022.md` — full context + fix plan
-- Run `/appraise` on the 4-fix plan BEFORE any code (みや's requirement)
-- QA #258418 — still awaiting BA/senior clarification
-- Protocol housekeeping session: 4 agreed changes pending (todo.md Q2)
-
-#### QA #258022 — INVESTIGATION COMPLETE (2026-04-28 Session 3)
-
-**New findings that changed the fix plan:**
-- みや confirmed: Lite (O*) urusan NEVER use 4CE tugasan codes. OPRBB uses PB/SMB/SB only.
-- 5 borang form variants extend BasePelupusanLiteForm for MLK: 4Ae, 4Be, 4Ce, 4De, 4Ee
-- `MlkPenyediaanBorang4CeP1eForm` SHADOWS parent's adaPegawaiAgih with its own private field
-- `adaPegawaiAgih` declared in BasePelupusanForm:88 as `protected Boolean = FALSE`
-- initEditModeBorang() in 4Ce only sets adaPegawaiAgih=TRUE for PB, not SMB → bug confirmed
-- Other forms (4Ae,4Be,4De,4Ee) have no override → always FALSE for SMB
-- `tugasanSMB_ALL` in tindakan.config.json has NO Lite codes → Pembetulan never loads for Lite
-
-**Correct 4-fix plan — full detail in handoff-258022.md:**
-1. `tindakan.config.json` — remove SB4CE entry, add Lite codes to tugasanSMB_ALL
-2. `BasePelupusanLiteForm.initData()` — add adaPegawaiAgih=TRUE for TGS_SEMAK_BORANG (covers 4Ae/4Be/4De/4Ee)
-3. `MlkPenyediaanBorang4CeP1eForm.initEditModeBorang()` — add SMB to PB condition (covers 4Ce separately)
-4. `MlkMaklumatUrusanPermitForm` — revert Attempt 1 Fix 2a/2b (wrong bean)
-
-**redmine-sync.js — late fixes:**
-- `statusLabel` in both `createTaskFolder` + `addStatusFolder` normalised:
-  "Rework" if status matches /rework/i, "New" for everything else. Number still increments.
-- `createTaskFolder`: removed `3. {status}` subfolder — status subfolders only created by `addStatusFolder`
-  (existing ticket = done before). New tickets get base 3 folders + `1. Notes.txt` only.
-- `createTaskFolder` now async: fetches attachments via `GET /issues/{id}.json?include=attachments`,
-  downloads each file (img/pdf/mp4/etc.) into `0. Brief/`.
-- `runWithCreate`: updated to `await createTaskFolder(...)`.
-
-**Context strategy — decided end of session:**
-- Context window not configurable (200k model-bound, autocompact buffer 33k hardcoded)
-- Mid-session saves: PROCEED — re-check rule already mitigates context loss risk
-- Familiars for saves: decided NO — preserving full context more important than token saving
-- Phase boundary saves remain the primary strategy
+  **2 permohonan IDs to test (UAT, mlkuat, his local JBoss target)**:
+  | id_pengenalan | Form variant | Why |
+  |---|---|---|
+  | `PTMLK/01/L/OPRBB/2026/1` | 4Ce (Cat 2 — private shadow field) | Already validated via screenshots + Q5 person-for-person |
+  | `PTMLK/01/L/OMLPS/2026/4` | 4Ae (Cat 1 — inherited field) | NEW coverage — different form class, same login user (sanarimah) |
+  
+  Testing both = full code-path coverage for all 7 Lite urusan. The other 5 (OPLPS / OPRU / OPPJK / OPPTPB / OPLBP) share the same code paths as one of these two — testing them adds zero new coverage. If みや wants to test them anyway, use **flowable alter page** to shift any existing app of that urusan to SMB step.
+- **Phase 2 (Reflect/Post-Mortem) of QA #258022** is the natural next move once FAT retest passes. Per quest-protocol v3.0 — write SUMMARY.txt, update knowledgebase, close.
+- **MCP postgres tools available** — `mcp__postgres-mlkuat__query` and `mcp__postgres-mlkfat__query`. Use freely for SELECT (wrapper enforces read-only). NEVER attempt CREATE/INSERT/UPDATE/DELETE — both wrapper-blocked and harness-blocked, but don't tempt fate.
+- **Three-layer security model**: Harness (Claude Code Desktop, asks みや) → MCP wrapper (SET TRANSACTION READ ONLY) → DB account (et_reporting can write at account level — proven). Two layers active; DB-level read-only Option A/B/C deferred (see todo).
+- Friday: re-read DEBUGGING-WALKTHROUGH.md + STORYLINE-FOR-CODE-REVIEW.md, build JSF debugging playbook
+- Active feedback memories — `feedback_simplify_and_reference.md` (mature system, simplify=subtract), `feedback_uat_fat_environments.md` (UAT=local, FAT=BA-shared sim, flowable alter page)
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*

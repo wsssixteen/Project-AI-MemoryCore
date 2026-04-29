@@ -34,6 +34,7 @@
 |---|---|---|---|
 | Don't write prescriptive plans for yourself | *(no memory file — structural change)* | **1** | 2026-04-16 — prescriptive step-by-step plans anchored H1 hypothesis across sessions, bypassed natural @Transactional reasoning. Fix: handoffs capture knowledge state, not execution steps. Claude reasons fresh each session. |
 | Hypothesis kill-condition check at resume | *(no memory file — embedded in plan format)* | **1** | 2026-04-16 — leading hypothesis survived 3 sessions unchallenged because plan said "leading" and I followed. State-of-knowledge format forces re-derivation naturally. |
+| Simplify means subtract — reference working examples first | feedback_simplify_and_reference.md | **1** | 2026-04-29 — QA #258022 burned 3 days on 1-file fix. みや said "mature system, refer working urusans, simplify, scrutinize Codex" 3-4+ times across sessions. Each iteration ADDED instead of subtracted. Same feedback delivered repeatedly = strong signal lesson hasn't stuck. Process changes proposed: (1) Quest Phase 0 — add "find working analog" step before designing fix; (2) after any "simplify" feedback, response must show what was REMOVED; (3) read option_type definition before extending its included_urusan_list; (4) Codex output goes through scrutiny pass. Watch closely on next ticket — if same pattern repeats, the rule itself needs redesign, not just re-promise. |
 
 ### Work Patterns
 
