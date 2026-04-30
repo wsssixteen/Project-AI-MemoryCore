@@ -7,17 +7,58 @@
 
 ## Triggers
 
+### Initial activation (Phase 0)
 | Phrase | Action |
 |---|---|
 | `QA #<number>` | Phase 0 begins — auto-resolve Task folder (see Phase 0 Step 1) |
 | "I have a task/ticket/bug to debug" | Phase 0 begins |
 | Any formal Etanah/Redmine task context | Phase 0 begins |
-| "Wrap up" / "Post-mortem" / "What did we learn" | Phase 2 begins |
 | `/quest start <QA> <path>` | Phase 0 begins via skill |
-| `/quest hold` | Current quest paused |
-| `/quest resume` | Resume held quest |
 | "Restart quest `QA #<number>`" | Reset phase to 0, status to active — search Task folder first, then `Archive/` inside it |
 | `"Read Redmine"` | Run `node quest/redmine-sync.js`, then `--create` for any new tickets; for each new ticket: add a held Phase 0 entry to `active.txt` (`status=hold`); report results. みや picks which quest to start. No Phase 0 reading until みや confirms. |
+
+### Phase transitions
+| Phrase | Action |
+|---|---|
+| "Wrap up" / "Post-mortem" / "What did we learn" | Phase 2 begins |
+| `/quest hold` | Current quest paused |
+| `/quest resume` | Resume held quest |
+
+### Re-engagement (added 2026-04-30 — broadened triggers)
+**These phrases require Ruri to re-verify Task folder + handoff are loaded in CURRENT session context BEFORE producing any analysis, appraisal, or proposal:**
+
+| Phrase pattern | Examples |
+|---|---|
+| Ticket continuation | "continue ticket X", "let's work on X", "let's do X", "back to X", "resume X", "X rework" |
+| Methodology applied | "/appraise on X", "/simplify X", "scrutinize X", "review X again" |
+| Implicit ticket scope | "focus on X", "I want to do X", "X next" |
+
+**Hard rule** (added 2026-04-30): Loading files at session start is NOT enough. Re-engagement after time-gap or context-shift requires explicit re-verification — read the Task folder + handoff again, OR confirm in chat: "Task folder + handoff still in working memory: ✓ — proceeding with [analysis/appraisal/proposal]." 
+
+**Why**: 2026-04-30 morning slip — みや asked /appraise on QA #258022 angles; Ruri had loaded the handoff at session start but didn't re-verify before judging. Fabricated a "label confirmation gap" that the ticket text already answered. Ruri's `feedback_inventory_first.md` covered "before creating" but not "before EVERY judgement." This rule extends it.
+
+**Sister rule — Reading ≠ understanding** (hard rule, 2026-04-30): Loading files is necessary but not sufficient. When stating any user/role/data fact about a ticket, cite the source line (e.g. "Notes.txt:9 lists nurulazura under FAT — context: Simulate prep, not the SMB tester"). Synthesis is mandatory across Task folder × handoff × code state before any conclusion. 2026-04-30 afternoon slip: misread Notes.txt context, treated nurulazura (PB tester) as SMB tester.
+
+**Task folder file ownership** (hard rule, 2026-04-30):
+
+| File / location | Owner | Ruri may write? |
+|---|---|---|
+| `1. Notes.txt` | みや (his personal scratch — understanding/memory) | ❌ **Read-only for Ruri.** Never edit, append, or auto-update. |
+| `0. Brief/Description.txt` | Source of truth — original ticket text + BA replies | ✅ Append BA replies / scope clarifications with clear separator + dated header (preserves history) |
+| `0. Brief/<screenshots>` | みや (BA-attached or みや-curated) | ❌ Don't add or replace |
+| `0. Brief/<numbered subfolders>` (e.g. `1. Clarification/`) | みや (back-and-forth artifact bins) | ❌ Don't add files unless みや asks |
+| `1. Simulate/` | Reproduction steps + test data | ✅ Append findings (test SQL, IDs validated) |
+| `2. Fix/` | Applied fix artifacts | ✅ Write Fix.txt summary on Phase 2 |
+| Project subfolder `projects/coding-projects/active/<ticket>/` | Ruri's investigation workspace | ✅ Free use — handoff, walkthrough, learning docs |
+
+**Why**: 2026-04-30 — みや clarified that `1. Notes.txt` is his personal aide-mémoire, not a ticket-shared doc. Scope changes from BA must update `Description.txt` (the brief / source of truth), not Notes. Without this rule, Ruri would conflate the two and overwrite みや's memory aids with auto-updates.
+
+**On BA reply append**: format is
+```
+─── BA REPLY <YYYY-MM-DD> ───
+<verbatim quote of BA's notes from Redmine journal>
+```
+Below the existing Description text. Don't rewrite original. Each BA reply gets its own block.
 
 ---
 

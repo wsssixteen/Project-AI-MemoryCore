@@ -1,17 +1,43 @@
-qa=QA-258418
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\19. QA #258418 - FAT - PLPS - Penyediaan Surat Keputusan Lul - Tidak papar ayat -(tidak termasuk tahun kelulusan)
+qa=QA-259342
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\20. QA #259342 - PT & PSBS - PT & PSBS - Perlu apply pada semua tugasan - Medan Pilihan Jenis Tanah papar kedudukan yang sal
 phase=0
 local_test_confirmed=false
+status=hold
+note=NEW from Redmine sync 2026-04-30. Subject: PT & PSBS - Panel Kadar Cukai Tanah - Penambahan formula medan Kadar Cukai Tanah dan kedudukan Jenis Tanah. Urusan: PT & PSBS. Tugasan: Apply pada semua tugasan with Kadar Cukai Tanah panel (starts from Penyediaan Risalat MMKN PDT). 2 issues: (1) Medan Pilihan Jenis Tanah papar kedudukan salah — Tanah Pekan should be BEFORE Tanah Desa. (2) Penambahan Kadar Cukai Tanah dari Maintenance — display format e.g. "RM 120.00 (RM 29.00 setiap 100 meter persegi () per hakmilik)". Brief has 2 PNG screenshots. Phase 0 needed: load FLOWABLE-WORKFLOWS.md, JSF-WIRING.md, BUG-BESTIARY.md, DOMAIN-GLOSSARY.md, identify which XHTML(s) render Kadar Cukai Tanah panel + Jenis Tanah dropdown.
+
+qa=QA-259318
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\21. QA #259318 - [FAT] PRU - Pembetulan Pada Template Surat Keputusan Lulus
+phase=0
+local_test_confirmed=false
+status=hold
+note=NEW from Redmine sync 2026-04-30. Subject: [FAT] PRU - Pembetulan Pada Template Surat Keputusan Lulus. ID Permohonan: PTMLK/01/L/PRU/2026/10. 6 issues all template-side: (1) Tahun Tamat Kelulusan calculation (should give 2035 starting from Tahun Mula Kelulusan), (2) rename Isipadu → Keluasan, (3) "Meterpadu" → "Meter padu", (4)+(5) pembetulan per attached PDF, (6) add phrase "MELAKA SAYANG RAKYAT" on row 3. Brief has reference PDF "PRU - Lulus - Correction 30042026.pdf". Likely small template/XHTML edits — Surat Keputusan Lulus template for PRU urusan. Phase 0 needed: identify the PRU SKL template file (likely .docx in `etanah-pelupusan/src/main/resources/template/MLK/`).
+
+qa=QA-258418
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\19. QA #258418 - FAT - PLPS - Penyediaan Surat Keputusan Lul - Tidak papar ayat -(tidak termasuk tahun kelulusan)
+handoff_file=projects/coding-projects/active/QA-258418/SESSION-HANDOFF-2026-04-30.md
+phase=1
+local_test_confirmed=false
 status=active
-note=Phase 0 in progress 2026-04-27. UI text addition — Tempoh Kelulusan Tahun field, red label, 3 surat kelulusan tugasan.
+note=Phase 1 in progress 2026-04-30. UI text addition. BA scope (PLPS-only): SSK + PSSK + PYB4AE + PB4AE (4 tugasan). 2 XHTMLs DB-verified: `lesen/MlkBorang4AeForm.xhtml` (4Ae tugasan) + `common/MlkPengiraanBayaranLesenForm.xhtml` (SKL tugasan). BPMN-verified order: SKL (34/35/36) → Borang 4Ae (40/41) — SKL comes FIRST. Placement attempts (a) wrong column alignment, (b) inline next to input, (c) crashed prod (ComponentNotFoundException, reverted), (d) panelGroup+br+outputText (replaced before test). **CURRENT (UNTESTED, post-/simplify)**: single `<h:outputText rendered="..." style="color:red; display:block;" value="(tidak termasuk tahun kelulusan)" />` inside formField after input value. 1 element per file (was 4 before /simplify). Fallback chain in SESSION-HANDOFF-2026-04-30.md: (d) br approach, then (a) outside formField with `margin-left:25%`. Test IDs: PTMLK/02/L/PLPS/2026/4 (PYB4AE, nurulazura, Jasin), PTMLK/01/L/PLPS/2026/113 (PB4AE, azlee, Melaka Tengah), PTMLK/01/L/PLPS/2025/91 (SSK, azlee, Melaka Tengah). PSSK 0 active in UAT — flowable-alter SSK→PSSK after testing #3. Branch: still on mlk/master, uncommitted WIP. See SESSION-HANDOFF-2026-04-30.md for full context.
+
+closed:
+qa=QA-258022
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\18. QA #258022 - FAT - Utiliti Pengeluaran Lesen Dan Permit - Semakan Borang - Tidak papar medan Pembetulan dan medan Agihan Kepa
+handoff_file=projects/coding-projects/active/QA-258022/handoff-258022.md
+session_handoff=projects/coding-projects/active/QA-258022/SESSION-HANDOFF-2026-04-30-AM.md
+phase=1-complete
+local_test_confirmed=true
+status=closed-pending-FAT
+note=UAT-CONFIRMED 2026-04-30. 2-file fix on mlk/qa/258022 branch (committed + pushed). (1) tindakan.config.json — tugasanSMB_LITE entry + smb_utiliti option_type. (2) MlkPelupusanPegawaiAgihService.java:261-278 — Lite-specific Ya cascade per BA spec (KPT→PT, PPD→PT,KPT, KPPD→PT,KPT,PPD). UAT 4Ce + 4Ae both verified working. Phase 2 (Reflect/Post-Mortem) pending "wrap up" command. POST-ticket items in Q2 todo: smb_utiliti→pembetulan simplification, validation methodology rule, KELENGKAPAN naming legacy, Flowable Lite check, class chain doc.
 
 qa=QA-258022
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\18. QA #258022 - FAT - Utiliti Pengeluaran Lesen Dan Permit - Semakan Borang - Tidak papar medan Pembetulan dan medan Agihan Kepa
 handoff_file=projects/coding-projects/active/QA-258022/handoff-258022.md
+session_handoff=projects/coding-projects/active/QA-258022/SESSION-HANDOFF-2026-04-30-AM.md
 phase=0
 local_test_confirmed=false
 status=hold
-note=Investigation COMPLETE 2026-04-28. Two root causes: (1) Lite codes missing from tugasanSMB_ALL in tindakan.config.json (2) adaPegawaiAgih not set TRUE for SMB — 5 form variants confirmed (4Ae/4Be/4Ce/4De/4Ee). Broken Attempt 1 code still in repo (MlkMaklumatUrusanPermitForm + tugasanSB4CE_UTILITI). Correct fix plan (Fixes 1-4) in projects/coding-projects/active/QA-258022/handoff-258022.md. Implementation NOT started. Next: /appraise fix plan → implement.
+note=Live state: 2-file fix. (1) tindakan.config.json — new tugasanSMB_LITE entry + smb_utiliti option_type (config rendering). (2) MlkPelupusanPegawaiAgihService.java:261-278 — new Lite-specific Ya cascade per BA spec (KPT→{PT}, PPD→{PT,KPT}, KPPD→{PT,KPT,PPD}). UAT-confirmed working 2026-04-30: 4Ce path via PTMLK/01/L/OPRBB/2026/1 (sanarimah KPT) → PT users shown for Ya, PPD/KPPD/PTNH for Tidak. 4Ae path via PTMLK/01/L/OMLPS/2026/4 (sanarimah KPT) → same correct behavior. Awaiting FAT retest (deploy to FAT JBoss). FAT test ID: PTMLK/02/L/OPRBB/2026/5 (shahniza@melaka SMB tester at Jasin). Naming refined: tugasanSMB_UTILITI → tugasanSMB_LITE (matches URUSAN_LITE_LIST constant). POST-ticket items in todo Q2: smb_utiliti→pembetulan simplification, validation methodology rule, KELENGKAPAN naming legacy, peranan×urusan×tugasan matrix, DB ERD, Flowable Lite check, class chain doc, trigger broadening rule.
 
 closed:
 qa=QA-257569

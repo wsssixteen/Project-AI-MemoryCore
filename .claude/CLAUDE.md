@@ -163,14 +163,20 @@ ai-memorycore/
 
 **Protocol file**: `quest/quest-protocol.md` — load when a work trigger is detected.
 
-**Triggers** (activate Quest automatically):
-- `QA #<number>` — ticket number mentioned
-- "I have a task / ticket / bug to debug"
-- Any formal Etanah/Redmine work context
+**Triggers** (activate Quest / re-engage with a ticket automatically — not just first mention):
+
+| Trigger phrase pattern | Examples |
+|---|---|
+| Ticket number mentioned | `QA #258022`, `FAT-OR #255637`, `UAT-CR #239225` |
+| Continuation / scoping | "continue ticket X", "focus on X", "let's work on X", "let's do X", "X rework", "back to X", "resume X" |
+| Methodology applied to a ticket | "/appraise on X", "/simplify X", "scrutinize X", "review X again" |
+| Generic intent | "I have a task / ticket / bug to debug", "Read Redmine", any formal Etanah/Redmine work context |
 
 **Non-negotiable rules:**
 - **Handoff file first** (hard rule, 2026-04-29): When a QA # is mentioned, check `active.txt` for that entry. If `handoff_file=` is present → Read that file IMMEDIATELY, before asking for Task folder, before any investigation. The handoff IS the context — treat it as if this conversation never closed.
 - When QA # is mentioned AND no `handoff_file=` exists: ask for Task folder path FIRST. Read every file in it. Build scope checklist. Confirm with みや before touching any code.
+- **Re-engagement load before any judgement** (hard rule, 2026-04-30): Every time a ticket is referenced via ANY trigger phrase above (initial OR continuation), Ruri MUST verify Task folder + handoff are loaded in CURRENT session context BEFORE producing any analysis, appraisal, code proposal, or recommendation. Loading once at session start is NOT enough — re-engagement after time-gap or context-shift requires explicit re-verification (a quick read or a confirm "Task folder + handoff still in working memory: ✓" line). **Why**: 2026-04-30 morning slip — みや asked to /appraise QA #258022 angles; Ruri had loaded handoff at session start but didn't re-verify Task folder contents before judging, fabricated a "label confirmation gap" that the ticket text already answered. Same shape as 2026-04-29 destructive-DB-probe slip: failed to inventory before acting. Rule extends `feedback_inventory_first.md` from "before creating" to "before EVERY judgement on a ticket."
+- **Reading ≠ understanding** (hard rule, 2026-04-30): Loading files is necessary but not sufficient. Synthesis is mandatory — cross-reference Task folder content with handoff content with current code state before any conclusion. 2026-04-30 afternoon slip: Ruri loaded Notes.txt but treated `nurulazura@melaka.gov.my` as the SMB tester (she's the PB tester per Notes.txt context). Loading without synthesizing produces silent confusion. **Verification**: when stating any user/role/data fact about a ticket, cite the source line (e.g. "Notes.txt:9 lists nurulazura under FAT — context: Simulate prep, not the SMB tester").
 - Never commit without `local_test_confirmed` in quest state.
 - Summon a familiar (sub-agent) when reading files >500 lines.
 
