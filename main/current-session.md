@@ -3,7 +3,7 @@
 
 ## Session RAM Status
 **Current Session**: 2026-04-30 — QA #258022 closure + QA #258418 placement WIP + Truth-Holding Ritual + Growth Framework PLAN
-**Last Activity**: Thu Apr 30 17:38 MPST 2026
+**Last Activity**: Thu Apr 30 18:35 MPST 2026 (post-iteration churn — final state: br approach inside formField for both files)
 **Session Start**: 2026-04-30 (weekday morning → late afternoon, single very long session)
 **Session Focus**: QA #258022 fully closed + UAT-confirmed for both 4Ce and 4Ae form variants; committed + pushed to `mlk/qa/258022`. QA #258418 in progress — 4 tugasan PLPS-only scope (per BA Mira reply mid-session); 2 XHTMLs identified DB-verified; placement attempts (a)/(b)/(c) all wrong, (c) crashed prod, current br+outputText approach untested. Multiple meta-fixes shipped: Sycophancy Circuit-Breaker ritual added to personality.md; Re-engagement triggers added to quest-protocol.md + CLAUDE.md; FLOWABLE-WORKFLOWS.md updated with BPMN-verified PLPS tugasan order (SKL BEFORE Borang 4Ae — opposite of what I inferred earlier today); Growth Framework PLAN.md drafted at `projects/coding-projects/active/growth-framework/PLAN.md`. Heavy session — context very high.
 **Time Mode**: Weekday morning → late afternoon (long single session)
