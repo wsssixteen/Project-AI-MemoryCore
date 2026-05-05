@@ -21,8 +21,31 @@
 | Phrase | Action |
 |---|---|
 | "Wrap up" / "Post-mortem" / "What did we learn" | Phase 2 begins |
+| **Closure-on-Redmine signals** (added 2026-05-04): "I've passed/closed/submitted the ticket", "ticket is closed", "Redmine closed", "BA accepted", "FAT accepted", "approved on Redmine", "we're done with this ticket" | Phase 2 begins (BA-side closure is the strongest signal that the ticket is fully done — auto-trigger Phase 2 unless みや explicitly says "not yet, wait") |
 | `/quest hold` | Current quest paused |
 | `/quest resume` | Resume held quest |
+
+### Prepare-to-commit (added 2026-05-04)
+| Phrase | Action |
+|---|---|
+| "I want to commit now" / "Ready to commit" / "Prepare commit" / "Prepare me to commit" | Run prepare-commit sequence (below) |
+| "We're done with the fix" / "Fix is done" / "Phase 1 done" / "We're done with Phase 1" | Run prepare-commit sequence |
+| "Branch and stage" / "Stage for commit" | Run prepare-commit sequence |
+
+**Prepare-commit sequence** (per みや 2026-04-30 convention):
+1. `git status --short` and `git branch --show-current` — confirm current state
+2. If branch is `mlk/<type>/<number>` already: skip steps 3-6, jump to step 7 (already on the right branch from earlier session)
+3. If branch is `mlk/master` with modifications: `git stash push -m "<ticket> fix prep"`
+4. `git pull --ff-only origin mlk/master`
+5. `git checkout -b mlk/<type>/<number>` — type+number from `quest/active.txt` (`qa`/`fat`/`uat`/`fat-or`/`uat-cr`)
+6. `git stash pop` — auto-pop. If conflict, `git status` for unmerged paths, **PAUSE and report to みや** (don't auto-resolve)
+7. `git add <each modified file by name>` — stage all the work-in-progress files (NEVER `git add .` or `-A`)
+8. `git status` to verify staged files
+9. **HAND OFF** — output: *"Ready for commit. Branch: `mlk/<type>/<number>`. N files staged. Write your commit message and run `git commit -m \"<your message>\"`."*
+
+**Hard rule**: Ruri does NOT write the commit message. Ruri does NOT run `git commit`. Ruri does NOT run `git push`. The skill stops at staging.
+
+**Rework branches**: if `mlk/<type>/<number>` already exists locally or remotely (this is a rework), the new branch name is `mlk/<type>/<number>v2` (no dash, sequential — v3, v4, etc.). Detect via `git branch --list "mlk/<type>/<number>*"`.
 
 ### Re-engagement (added 2026-04-30 — broadened triggers)
 **These phrases require Ruri to re-verify Task folder + handoff are loaded in CURRENT session context BEFORE producing any analysis, appraisal, or proposal:**
@@ -73,6 +96,25 @@ Below the existing Description text. Don't rewrite original. Each BA reply gets 
 **JBoss DB check (remind みや at Phase 0):**
 Confirm which DB is active in `standalone.xml` — see `E:\Dev\jboss-7.4-plp-melaka\SETUP-NOTES.txt` → DB SWITCHING section.
 Melaka IT (etanahDS) = local dev default. UAT (etanahDS2) = disabled by "2" suffix convention.
+
+**Pre-Steps — Branch + PDF rituals (added 2026-05-04, hard rule):**
+
+**Step 0a — Branch check (both repos):** Before any analysis, in BOTH `etanah-pelupusan` and `etanah-awam`:
+```bash
+git branch --show-current && git status --short
+```
+If current branch ≠ `mlk/master`, run: `git stash push -m "<context>" → git checkout mlk/master → git pull --ff-only origin mlk/master → git stash pop`. Untracked files survive the switch. **Why**: 2026-05-04 QA #259318 — started edits on the previous ticket's branch.
+
+**Step 0b — PDF annotation extraction:** If the Task folder contains any `.pdf` (BA correction marks, mock-ups), extract every `Annot` (highlight, comment, popup text) before reading the brief:
+```python
+import fitz
+doc = fitz.open('<path>')
+for p, page in enumerate(doc):
+    for a in (page.annots() or []):
+        print(f'p{p+1}', a.info.get('content',''),
+              'highlighted:', doc[p].get_textbox(fitz.Quad(a.vertices[0:4]).rect) if a.vertices else '')
+```
+The default Read tool exposes visual page content but NOT the BA's per-annotation comments — those are PDF metadata. Map every comment to a ticket issue before proceeding. **Why**: 2026-05-04 QA #259318 — missed all 8 BA comments including "Tukar Nama Label Kepada **Luas**" (not Keluasan), "remove" instruction on formula tail, "bold" instructions on multiple highlights.
 
 **Steps:**
 1. **Locate or create Task folder:**

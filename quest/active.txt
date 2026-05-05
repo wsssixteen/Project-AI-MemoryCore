@@ -1,24 +1,44 @@
 qa=QA-259342
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\20. QA #259342 - PT & PSBS - PT & PSBS - Perlu apply pada semua tugasan - Medan Pilihan Jenis Tanah papar kedudukan yang sal
+early_diagnostic=projects/coding-projects/active/QA-259342/early-diagnostic.md
+branch=mlk/qa/259342
 phase=0
 local_test_confirmed=false
-status=hold
-note=NEW from Redmine sync 2026-04-30. Subject: PT & PSBS - Panel Kadar Cukai Tanah - Penambahan formula medan Kadar Cukai Tanah dan kedudukan Jenis Tanah. Urusan: PT & PSBS. Tugasan: Apply pada semua tugasan with Kadar Cukai Tanah panel (starts from Penyediaan Risalat MMKN PDT). 2 issues: (1) Medan Pilihan Jenis Tanah papar kedudukan salah — Tanah Pekan should be BEFORE Tanah Desa. (2) Penambahan Kadar Cukai Tanah dari Maintenance — display format e.g. "RM 120.00 (RM 29.00 setiap 100 meter persegi () per hakmilik)". Brief has 2 PNG screenshots. Phase 0 needed: load FLOWABLE-WORKFLOWS.md, JSF-WIRING.md, BUG-BESTIARY.md, DOMAIN-GLOSSARY.md, identify which XHTML(s) render Kadar Cukai Tanah panel + Jenis Tanah dropdown.
+status=delegated
+delegated_to=Aaron
+delegated_date=2026-05-05
+learning_marker=2026-05-05 — みや wants to trace fix later in project branch for learning
+note=TRANSFERRED 2026-05-05 — Aaron took back the ticket due to BA urgency. Early diagnostic preserved at projects/coding-projects/active/QA-259342/early-diagnostic.md (urusan classification + 3 issues identified including Issue 3 that was only in screenshot annotation, code/DB locations, test data candidates, 4 BA questions queued). Original brief: Subject: PT & PSBS - Panel Kadar Cukai Tanah - Penambahan formula medan Kadar Cukai Tanah dan kedudukan Jenis Tanah. **Follow-up**: trace Aaron's fix on `mlk/qa/259342` branch when closed for learning purposes.
+
+qa=QA-259534
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\22. QA #259534 - [FAT] PRBB - Kemasukan Keputusan JKBB - Papar Keluasan Disyorkan JKKL
+autonomous_report=projects/coding-projects/active/QA-259534/AUTONOMOUS-DEBUG-REPORT-2026-05-05.md
+branch=(none — mlk/qa/259534 was created today, then reverted + deleted after empirical evidence showed fix was dead code on test scenarios)
+phase=1-investigating
+local_test_confirmed=false
+status=hold-pending-live-repro
+test_apps_uat=PTMLK/01/L/PRBB/2025/39 (nuradilla), PTMLK/03/L/PRBB/2025/41 (marlinda — has parallel KKJKBB row), PTMLK/01/L/PRBB/2026/12 (LINA's fresh app, awaiting tugasan rows)
+test_apps_fat=PTMLK/03/L/PRBB/2026/20 (mohdzaini — currently at PYSK, kod=JK_LLS — best repro candidate)
+infra=JBoss running localhost:8080 + JDWP on 8787 (left running for tomorrow); jdb at C:/Program Files/Java/jdk-17/bin/jdb.exe; Postgres MCPs operational
+note=NEW from Redmine sync 2026-05-05. Subject: FAT - PRBB - Kemasukan Keputusan JKBB dan Penyediaan Surat Keputusan - Papar medan Keluasan Disyorkan JKKL. Tugasan = **KKJKBB** (per ticket). Bean = **MlkMuatNaikCabutanMinitForm** (breakpoint-confirmed on /39). **Day-1 outcome (2026-05-05)**: Hypothesis = listener at MlkMuatNaikCabutanMinitForm.java:3505-3510 (yihkitc commit b458041, 2026-04-28) sets viewKeluasanJKKL=TRUE without urusan/tugasan guard. Fix shape = Option E (positive tugasan-list guard mirroring init block at :1118-1128) — STRUCTURALLY CORRECT. Was committed + reverted same day after Eclipse breakpoint test on /39 showed line 3505 didn't hit; reverting was a misinterpretation by me — SakKeputusanJKKT was null only because /39's current iteration hadn't received a Lulus selection yet (early return at line 3228 short-circuited before kod-comparison branches). **Bug fires only when user clicks Lulus radio** (AJAX listener sets SAK non-null mid-method) → 3505 matches → 3510 fires → viewKeluasanJKKL=TRUE → field appears. **Tomorrow first action**: live-repro by clicking Lulus radio on /39 with bp at 3505 watching kod; if fires with JKKL_LULUS, re-apply Option E fix on a fresh mlk/qa/259534 branch. **Side-bug logged**: BPM prep at MlkMuatNaikCabutanMinitForm.java:4301 checks JKKT_LULUS but kod is JKKL_LULUS — silent flow-routing failure (separate ticket). **Correction logged 2026-05-05 late**: earlier I drifted into "bug is on PYSK / wrong bean" speculation by conflating /20's current state (advanced to PYSK) with the QA's original capture state (KKJKBB on 2026-04-28). Ticket Subject was always KKJKBB. Bean was always MlkMuatNaikCabutanMinitForm. みや caught the drift.
 
 qa=QA-259318
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\21. QA #259318 - [FAT] PRU - Pembetulan Pada Template Surat Keputusan Lulus
-phase=0
-local_test_confirmed=false
-status=hold
-note=NEW from Redmine sync 2026-04-30. Subject: [FAT] PRU - Pembetulan Pada Template Surat Keputusan Lulus. ID Permohonan: PTMLK/01/L/PRU/2026/10. 6 issues all template-side: (1) Tahun Tamat Kelulusan calculation (should give 2035 starting from Tahun Mula Kelulusan), (2) rename Isipadu → Keluasan, (3) "Meterpadu" → "Meter padu", (4)+(5) pembetulan per attached PDF, (6) add phrase "MELAKA SAYANG RAKYAT" on row 3. Brief has reference PDF "PRU - Lulus - Correction 30042026.pdf". Likely small template/XHTML edits — Surat Keputusan Lulus template for PRU urusan. Phase 0 needed: identify the PRU SKL template file (likely .docx in `etanah-pelupusan/src/main/resources/template/MLK/`).
+branch=mlk/qa/259318
+phase=1-complete
+local_test_confirmed=true
+status=closed-pending-FAT
+underlying_issue=Redmine #252314 — MSR (MELAKA SAYANG RAKYAT) slogan migration NOT fully resolved upstream. #252314 (2026-03-11, by zaidi) added MSR to 23 templates; UAT-CR #235094 (next day) regressed many. As of QA-259318 closure: 11 SuratKeputusanLulus*.docx templates migrated to frasa2 (DB-driven, regression-proof). Other ~12 non-SKL templates from #252314 scope still un-migrated and at regression risk. Tracked in todo Q3.
+learning_marker=2026-05-05 — trace MSR migration completion across full #252314 scope; revisit if any of the ~12 non-SKL templates regress
+note=Phase 1 closed 2026-05-04. 11 SuratKeputusanLulus*.docx templates migrated to frasa2 (DB-driven, regression-proof). Removed JcEnumeration.BOTH default at PelupusanWordEditorUtil.java:482-487 (4 templates that explicitly want BOTH set jc=both themselves — unaffected). Spawned 7 hard rules in CLAUDE.md (Word-template-first, Word XML run-join, branch check at Phase 0, PDF annotation extraction, renderer-side overrides, no extra code comments, batch same-layer edits) + 12 audit-log pending entries. ID Permohonan: PTMLK/01/L/PRU/2026/10. Original 6 issues: (1) Tahun Tamat Kelulusan year calc, (2) Isipadu→Luas, (3) "Meterpadu"→"Meter padu", (4-5) pembetulan per PDF, (6) "MELAKA SAYANG RAKYAT" line 3. Q3 todo entry: audit + migrate the other ~12 non-SKL templates from #252314 scope. Phase 2 (Reflect/wrap up) pending. Awaiting FAT retest.
 
 qa=QA-258418
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\19. QA #258418 - FAT - PLPS - Penyediaan Surat Keputusan Lul - Tidak papar ayat -(tidak termasuk tahun kelulusan)
 handoff_file=projects/coding-projects/active/QA-258418/SESSION-HANDOFF-2026-04-30.md
-phase=1
-local_test_confirmed=false
-status=active
-note=Phase 1 in progress 2026-04-30. UI text addition. BA scope (PLPS-only): SSK + PSSK + PYB4AE + PB4AE (4 tugasan). 2 XHTMLs DB-verified: `lesen/MlkBorang4AeForm.xhtml` (4Ae tugasan) + `common/MlkPengiraanBayaranLesenForm.xhtml` (SKL tugasan). BPMN-verified order: SKL (34/35/36) → Borang 4Ae (40/41). **FINAL STATE 2026-04-30 18:35 MPST**: br approach inside formField for BOTH files — `<h:panelGroup rendered="#{kodUrusan eq 'PLPS'}"> <br/> <h:outputText style="color:red;" value="(tidak termasuk tahun kelulusan)" /> </h:panelGroup>` (SKL file uses `isPLPS`). みや confirmed lesen file br approach renders correctly. Iteration churn during session: a→b→c (crashed)→d (br)→e (display:block, broke)→outside+margin (broke alignment when margin removed)→back to br. Lesson logged to forge + sycophancy violations. Test IDs: PTMLK/02/L/PLPS/2026/4 (PYB4AE), PTMLK/01/L/PLPS/2026/113 (PB4AE), PTMLK/01/L/PLPS/2025/91 (SSK), no active PSSK (flowable-alter). Branch: mlk/master, uncommitted. みや leaving for the day; will commit on his side per convention. See SESSION-HANDOFF-2026-04-30.md.
+phase=1-complete
+local_test_confirmed=true
+status=closed-pending-FAT
+note=Phase 1 CLOSED 2026-05-04 (per みや). UI text addition shipped. BA scope (PLPS-only): SSK + PSSK + PYB4AE + PB4AE (4 tugasan). 2 XHTMLs DB-verified: `lesen/MlkBorang4AeForm.xhtml` (4Ae tugasan) + `common/MlkPengiraanBayaranLesenForm.xhtml` (SKL tugasan). BPMN-verified order: SKL (34/35/36) → Borang 4Ae (40/41). **FINAL APPLIED**: br approach inside formField for BOTH files — `<h:panelGroup rendered="#{kodUrusan eq 'PLPS'}"> <br/> <h:outputText style="color:red;" value="(tidak termasuk tahun kelulusan)" /> </h:panelGroup>` (SKL file uses `isPLPS`). Test IDs: PTMLK/02/L/PLPS/2026/4 (PYB4AE), PTMLK/01/L/PLPS/2026/113 (PB4AE), PTMLK/01/L/PLPS/2025/91 (SSK), no active PSSK (flowable-alter). Phase 2 (Reflect/wrap up) pending. Awaiting FAT retest. See SESSION-HANDOFF-2026-04-30.md.
 
 closed:
 qa=QA-258022
@@ -29,15 +49,6 @@ phase=1-complete
 local_test_confirmed=true
 status=closed-pending-FAT
 note=UAT-CONFIRMED 2026-04-30. 2-file fix on mlk/qa/258022 branch (committed + pushed). (1) tindakan.config.json — tugasanSMB_LITE entry + smb_utiliti option_type. (2) MlkPelupusanPegawaiAgihService.java:261-278 — Lite-specific Ya cascade per BA spec (KPT→PT, PPD→PT,KPT, KPPD→PT,KPT,PPD). UAT 4Ce + 4Ae both verified working. Phase 2 (Reflect/Post-Mortem) pending "wrap up" command. POST-ticket items in Q2 todo: smb_utiliti→pembetulan simplification, validation methodology rule, KELENGKAPAN naming legacy, Flowable Lite check, class chain doc.
-
-qa=QA-258022
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\18. QA #258022 - FAT - Utiliti Pengeluaran Lesen Dan Permit - Semakan Borang - Tidak papar medan Pembetulan dan medan Agihan Kepa
-handoff_file=projects/coding-projects/active/QA-258022/handoff-258022.md
-session_handoff=projects/coding-projects/active/QA-258022/SESSION-HANDOFF-2026-04-30-AM.md
-phase=0
-local_test_confirmed=false
-status=hold
-note=Live state: 2-file fix. (1) tindakan.config.json — new tugasanSMB_LITE entry + smb_utiliti option_type (config rendering). (2) MlkPelupusanPegawaiAgihService.java:261-278 — new Lite-specific Ya cascade per BA spec (KPT→{PT}, PPD→{PT,KPT}, KPPD→{PT,KPT,PPD}). UAT-confirmed working 2026-04-30: 4Ce path via PTMLK/01/L/OPRBB/2026/1 (sanarimah KPT) → PT users shown for Ya, PPD/KPPD/PTNH for Tidak. 4Ae path via PTMLK/01/L/OMLPS/2026/4 (sanarimah KPT) → same correct behavior. Awaiting FAT retest (deploy to FAT JBoss). FAT test ID: PTMLK/02/L/OPRBB/2026/5 (shahniza@melaka SMB tester at Jasin). Naming refined: tugasanSMB_UTILITI → tugasanSMB_LITE (matches URUSAN_LITE_LIST constant). POST-ticket items in todo Q2: smb_utiliti→pembetulan simplification, validation methodology rule, KELENGKAPAN naming legacy, peranan×urusan×tugasan matrix, DB ERD, Flowable Lite check, class chain doc, trigger broadening rule.
 
 closed:
 qa=QA-257569

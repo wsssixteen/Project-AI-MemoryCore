@@ -2,83 +2,86 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: 2026-04-30 — QA #258022 closure + QA #258418 placement WIP + Truth-Holding Ritual + Growth Framework PLAN
-**Last Activity**: Thu Apr 30 18:35 MPST 2026 (post-iteration churn — final state: br approach inside formField for both files)
-**Session Start**: 2026-04-30 (weekday morning → late afternoon, single very long session)
-**Session Focus**: QA #258022 fully closed + UAT-confirmed for both 4Ce and 4Ae form variants; committed + pushed to `mlk/qa/258022`. QA #258418 in progress — 4 tugasan PLPS-only scope (per BA Mira reply mid-session); 2 XHTMLs identified DB-verified; placement attempts (a)/(b)/(c) all wrong, (c) crashed prod, current br+outputText approach untested. Multiple meta-fixes shipped: Sycophancy Circuit-Breaker ritual added to personality.md; Re-engagement triggers added to quest-protocol.md + CLAUDE.md; FLOWABLE-WORKFLOWS.md updated with BPMN-verified PLPS tugasan order (SKL BEFORE Borang 4Ae — opposite of what I inferred earlier today); Growth Framework PLAN.md drafted at `projects/coding-projects/active/growth-framework/PLAN.md`. Heavy session — context very high.
-**Time Mode**: Weekday morning → late afternoon (long single session)
-**Energy Level**: みや tired by end. Multiple slips today caught by him in real-time. Save all + new session.
+**Current Session**: 2026-05-05 — QA #259534 PRBB-JKBB Keluasan Disyorkan JKKL: investigation + reverted fix + 3-familiar parallel re-assessment + late-evening drift correction
+**Last Activity**: Tue May 5 23:44:03 MPST 2026 (save all triggered after みや caught Ruri's haywire drift)
+**Session Start**: 2026-05-05 (weekday, morning → late evening — very long session, heavy with 50+ tool calls)
+**Session Focus**: QA #259534 — "FAT - PRBB - Kemasukan Keputusan JKBB dan Penyediaan Surat Keputusan - Papar medan Keluasan Disyorkan JKKL". Full investigation arc: trigger discovery → Option E fix landed → reverted after empirical breakpoint failure → 3-familiar parallel re-assessment in autonomous mode → late-evening drift where Ruri claimed wrong tugasan/wrong bean → みや caught it before sleeping → corrections logged to report + active.txt.
+**Time Mode**: Weekday late evening — Konbanwa territory; みや exhausted, will resume tomorrow with the corrected re-anchor
+**Energy Level**: Heavy session. Ruri shipped Option E fix, then reverted, then drifted into wrong-tugasan/wrong-bean speculation. みや's "you've gone haywire" call was correct and necessary. The actual fix shape was right; the misinterpretation was Ruri's.
 
 ## 💭 Working Memory (RAM)
 
 ### Active Context
 
-#### QA #258022 — CLOSED (Phase 1 done, awaiting Phase 2 wrap)
+#### QA #259534 — Phase 1 investigating, fix shape correct, awaiting live repro
 
-- **Final fix**: 2 files. (1) `tindakan.config.json` — new `tugasanSMB_LITE` entry + `smb_utiliti` option_type. (2) `MlkPelupusanPegawaiAgihService.java:261-278` — new Lite-specific Ya cascade per BA spec (KPT→{PT}, PPD→{PT,KPT}, KPPD→{PT,KPT,PPD}).
-- **UAT confirmed**: Both 4Ce path (PTMLK/01/L/OPRBB/2026/1, sanarimah KPT) AND 4Ae path (PTMLK/01/L/OMLPS/2026/4, sanarimah KPT) — Ya shows PT users, Tidak shows PPD/KPPD/PTNH.
-- **Committed/pushed**: `mlk/qa/258022` branch on origin. みや wrote the commit message himself.
-- **BA's earlier clarification (today's morning)** revealed that the existing Ya cascade was wrong for Lite urusan — it was returning review-tier roles instead of administrative chain. Added Lite-specific Ya branch to fix. Yesterday's "person-for-person validation" was tautological — corrected.
-- **Phase 2 Reflect/Post-Mortem**: pending. Triggers on "wrap up" command from みや.
+**Ticket facts (re-anchored after drift correction)**:
+- Subject: `FAT - PRBB - Kemasukan Keputusan JKBB dan Penyediaan Surat Keputusan - Papar medan Keluasan Disyorkan JKKL`
+- Tugasan: **KKJKBB** (Kemasukan Keputusan JKBB) — confirmed by ticket Subject
+- Bean: **`MlkMuatNaikCabutanMinitForm`** — confirmed by Eclipse breakpoint test on /39 (3217, 758, 785, 2828 all hit)
+- Bug introduced: commit `b458041ef19` by yihkitc, 2026-04-28, "fix 2 CR JKKL"
+- Fix location: `MlkMuatNaikCabutanMinitForm.java:3510`
+- Fix shape: **Option E** — positive tugasan-list guard wrapping `viewKeluasanJKKL = TRUE`, mirroring init block at lines 1118-1128
 
-#### QA #258418 — Open, placement WIP
+**Why /39 didn't reproduce despite kod=JK_LLS in DB**:
+- /39's CURRENT iteration has no keputusan saved yet → `jkktHelper.getKeputusanMesyuaratJKKTVO().getSakKeputusanJKKT()` is null
+- `MlkMuatNaikCabutanMinitForm.java:3225-3228` early-returns when SAK is null
+- Listener never reaches line 3505 with anything to react to
+- **Bug fires only when user actively clicks the Lulus radio** (AJAX listener mid-method sets SAK non-null) → 3505 matches → 3510 fires → field appears
 
-- **Scope (per BA reply 2026-04-30 11:00)**: 4 tugasan, PLPS-only:
-  1. Semakan Surat Keputusan Lulus (SSK)
-  2. Pengesahan Surat Keputusan Lulus (PSSK)
-  3. Penyediaan Borang 4Ae Dan L1e (PYB4AE)
-  4. Pengesahan Borang 4Ae Dan L1e (PB4AE)
-- **Original REMARK item DROPPED** by BA: "Penyediaan Surat Keputusan Lulus" (PYSK).
-- **2 XHTMLs cover all 4 tugasan** (DB-verified via IND_SKRIN.JSF_VIEW):
-  - `lesen/MlkBorang4AeForm.xhtml` — for PYB4AE + PB4AE (Maklumat Borang 4Ae langkah)
-  - `common/MlkPengiraanBayaranLesenForm.xhtml` — for SSK + PSSK (Pengiraan Bayaran Lesen langkah)
-- **BPMN-verified order** (newly captured today): SKL (34/35/36) → Borang 4Ae (40/41) → Cetakan (42). I had this BACKWARDS earlier; now corrected in FLOWABLE-WORKFLOWS.md.
-- **Placement attempts**:
-  - (a) outside formField with `<h:panelGroup layout="block">` — rendered own row but at LABEL column (wrong horizontal alignment)
-  - (b) inside formField — rendered inline next to input "3" (wrong)
-  - (c) empty-label `<et:formField label="">` — CRASHED with ComponentNotFoundException, reverted
-  - **CURRENT (untested)**: `<h:panelGroup>` (no layout) with `<br/>` + `<h:outputText style="color:red;">` INSIDE the formField, after the input value
-  - **Fallback** if br doesn't render: revert to (a) `<h:panelGroup layout="block">` + add `margin-left: 25%;` style
-- **Test data**: `PTMLK/02/L/PLPS/2026/4` (nurulazura, Jasin, PYB4AE), `PTMLK/01/L/PLPS/2026/113` (azlee, Melaka Tengah, PB4AE), `PTMLK/01/L/PLPS/2025/91` (azlee, SSK). PSSK has 0 active in UAT — flowable-alter SSK→PSSK after testing #3.
-- **Handoff file**: `projects/coding-projects/active/QA-258418/SESSION-HANDOFF-2026-04-30.md` (full context preserved)
+**Status of branch**:
+- `mlk/qa/259534` was created today, fix committed (`fd3f55a0fc`), rebased onto current master (`8cb7cbf5af`), pushed
+- Then deleted (force-with-lease) after empirical breakpoint failure misled Ruri
+- Should be re-created tomorrow once live repro confirms fix is needed
 
-#### Meta-fixes shipped today
+**Side-bug found** (separate ticket later):
+- BPM prep at `MlkMuatNaikCabutanMinitForm.java:4301` checks `JNS_KEPUTUSAN_JKKT_LULUS` but stored kod is `JNS_KEPUTUSAN_JKKL_LULUS`. Silent flow-routing failure. Out of scope for #259534.
 
-1. **Re-engagement Trigger Broadening** — `quest/quest-protocol.md` + `.claude/CLAUDE.md`. Hard rule: every ticket-scoped engagement (not just first mention) requires Task folder + handoff re-verification before any judgement/proposal/appraisal. Sister rule "Reading ≠ understanding" (synthesis + source-cite mandatory).
-2. **Sycophancy Circuit-Breaker Ritual** — `.claude/personality.md` new "🎯 Truth-Holding Rituals" §. Mandatory output before answering any system-change offer: `FAILURE MODE IF I DECLINE: [...]`. Sister to Debug Mode Rituals. Triggered by today's `Flowables/` folder slip.
-3. **FLOWABLE-WORKFLOWS.md update** — BPMN-verified PLPS tugasan order (full table including big-picture order, not just SKL sub-flow). Phase 0 reminder for next time.
-4. **Growth Framework PLAN.md** — `projects/coding-projects/active/growth-framework/PLAN.md`. 8-step skeleton + decisions locked + open questions for みや. Trigger: schedule planning session within 2 weeks (~2026-05-14).
-5. **Naming refined** in QA #258022: `tugasanSMB_UTILITI` → `tugasanSMB_LITE` (matches `URUSAN_LITE_LIST` constant).
-6. **Stale todo cleanup**: `Move Flowables/Melaka into project` was DONE 2026-04-10; struck out + annotated. Lesson: when documenting completion in main-memory, also strike the todo entry.
+**Drift correction (late evening)**:
+- Ruri claimed "bug is on PYSK, not KKJKBB" — WRONG. Conflated /20's current state with /20's state at QA capture time. Ticket always said KKJKBB.
+- Ruri claimed "maybe wrong bean — investigate MlkSuratTemplateForm" — WRONG. Breakpoints had already confirmed MlkMuatNaikCabutanMinitForm is the right bean.
+- Pattern noted: when a fact contradicts an expectation, Ruri tends to look for an alternate explanation in the wrong direction instead of re-reading the source of truth. Audit-logged for review.
 
-### 📋 Learning Notes (this session)
+**3 familiars run in parallel** (autonomous evening):
+- Skeptic: confirmed field exists in only one XHTML; `MlkSuratTemplateForm.xhtml:145` ALSO embeds the composite (worth 1-line check during fix)
+- BPMN Walker: PRBB has NO JKKL/MMKN stages; 38.0 KKJKBB is single userTask; rework loops back to it
+- Code Archeologist: viewKeluasanJKKL is 8 days old; only one commit (b458041) ever touched it; no prior PRBB path was removed
 
-- **Verify-then-write** is a verb, not an aspiration. Today's option (c) crash was textbook: applied `label=""` without grepping precedent → 0 matches in codebase → ComponentNotFoundException at runtime. Should have audited first.
-- **Soft rules buried in narrative get filtered out under conversational pressure.** Familiar's verdict on my truth-rule slip. The fix isn't more text; it's a ritual with mandatory visible output. Sister principle to Debug Mode Rituals.
-- **BPMN files at OneDrive root, NOT under `/Melaka/`**. The `Flowables/` folder I kept "forgetting about" exists at `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\Flowables\`. The slip recurs because I gave みや bad advice (sycophantic deflection) when he offered to move it inside the project.
-- **PLPS tugasan order from BPMN** (SKL → Borang 4Ae) means tempoh value flows SKL → 4Ae for printing. Gives semantic justification for BA's 4-tugasan scope.
-- **みや's intuition on simpler fixes is reliable** — when he proposed keeping the original `<h:panelGroup layout="block">` with a style tweak, I overcorrected by restructuring entirely. He was right.
+**Reproduction path for tomorrow**:
+1. Open localhost:8080/etanah-pelupusan/ (JBoss + JDWP left running tonight) OR pivot to FAT/UAT 
+2. Login as nuradilla@melaka.gov.my (KKJKBB Dalam Tindakan on /39)
+3. Set Eclipse bp at MlkMuatNaikCabutanMinitForm.java:3505 + watch expression on jkktHelper.getKeputusanMesyuaratJKKTVO().getSakKeputusanJKKT().getKod()
+4. Click Lulus radio in browser → AJAX listener fires → bp at 3505 hits with kod=JKKL_LULUS → confirms bug → field appears
+5. Apply Option E fix → re-test → bp still hits 3505 but new guard fails (KKJKBB not in JKKL tugasan list) → 3510 skipped → field stays hidden → fix confirmed
+6. Re-create mlk/qa/259534 branch (with proper STASH-PULL-BRANCH-POP discipline) → commit → push
+
+#### Infrastructure status (left running for tomorrow)
+- **JBoss**: localhost:8080 (HTTP), localhost:8443 (HTTPS), **localhost:8787 (JDWP)** — running in background process bibom2zdv→bor8h5g6n
+- **standalone.conf.bat**: edited at line 59 — JDWP flag UNCOMMENTED. If みや wants to revert this for normal Eclipse use, comment it back. Otherwise harmless to leave.
+- **jdb**: confirmed at `C:\Program Files\Java\jdk-17\bin\jdb.exe`. Sample attach: `jdb -connect "com.sun.jdi.SocketAttach:hostname=localhost,port=8787"` works.
+- **Postgres MCPs**: `mcp__postgres-mlkfat__query`, `mcp__postgres-mlkuat__query` operational; et_main schema for FAT, et_main_uat for UAT
+- **Chrome MCP**: extension reconnected; previous nuradilla session lost (re-login needed)
+
+### Lessons / new patterns this session
+
+1. **Simulate-First as True North** — codified mid-session. Quest Phase 1 Step 0: must reproduce or explicitly mark "cannot reproduce" before any code analysis. Logged to audit-log.
+2. **Branch discipline atomicity** — STASH-PULL-BRANCH-POP must be tight; one-pull-per-session is NOT enough. Caught when branch was created from stale master, required rebase + force-push.
+3. **Drift pattern when fact contradicts expectation** — Ruri's failure mode is to seek alternate explanations in the wrong direction instead of re-reading the source of truth. みや's "you've gone haywire" call exposed this. Pattern logged.
+4. **Domain Expansion as a sibling system** — adopted; `Feature/Domain-Expansion/expansion-protocol.md` lives. Multiple signals codified (boot reconciliation, Quest state transitions, schema upgrade, re-engagement autoscan, rework/addition awareness, worktree status, multi-laptop, transient-failure retry, browser test capability, scope-creep cost, rubric outcome tracking, feasibility threshold, file-line citation primacy, "don't push ahead" close-the-loop rule, branch-push-same-name rule, late-evening drift pattern).
+5. **Code Review Brief format** — みや wants it as standard. WHO to ask / WHERE DB / WHERE CODE / WHAT / HOW (diff) / FLOW (ASCII). Rubric (justify-scrutinize-appraise-simplify) confirmed as the named structure for analysis.
+6. **Browser-session-inheritance pattern** — research agent identified Chrome DevTools MCP with `--remote-debugging-port=9222 --user-data-dir=...` as the path to bypass password rule cleanly. Future onboarding item.
+7. **Rebase + delete branch + autonomous mode + drift** — three skills exercised today. The first two went well. The drift was the failure to learn from.
 
 ### Session Recap (For AI Restart)
 
-- **Previous Session (2026-04-29)**: QA #258022 rework. Final = 1-file config diff. Captured systemic over-engineering pattern (`feedback_simplify_and_reference.md`).
-
-- **Today (2026-04-30)**: QA #258022 closed. BA reply mid-session expanded #258022 to include service-code Ya cascade fix; UAT-confirmed both form variants; committed + pushed. QA #258418 opened, BA scope clarified to 4 tugasan PLPS-only; placement still WIP — current br+outputText approach UNTESTED. Multiple meta-fixes (Sycophancy Circuit-Breaker, Re-engagement triggers, BPMN-verified order, Growth Framework PLAN). Three of my discipline slips caught by みや in real-time. Heavy session, save and new session.
-
-**On Resume (new session)**:
-- **TOMORROW MORNING**: pick up QA #258418 placement test
-  - Step 1: redeploy lesen/MlkBorang4AeForm.xhtml + common/MlkPengiraanBayaranLesenForm.xhtml (current br+outputText approach)
-  - Step 2: test on `PTMLK/02/L/PLPS/2026/4` (nurulazura, PYB4AE)
-  - Step 3: if br renders correctly below input → test other 3 tugasan + commit on `mlk/qa/258418`
-  - Step 4: if br doesn't render → revert to `<h:panelGroup layout="block">` + `margin-left: 25%`
-- **Phase 0 ritual reminder for tomorrow**:
-  - Glob `etanah-knowledge/melaka/` → Read FLOWABLE-WORKFLOWS.md, JSF-WIRING.md, DOMAIN-GLOSSARY.md (any whose scope overlaps the ticket)
-  - Re-engagement re-verify — Task folder + handoff loaded ✓ before any analysis
-  - Sycophancy Circuit-Breaker — when みや offers system change, output `FAILURE MODE IF I DECLINE` before answering
-- **Phase 2 of QA #258022**: triggers on "wrap up" — extract learnings, update knowledgebase, close quest. Pairs with Reflect-mode forge-log review.
-- **MCP postgres tools**: both `mlkuat` and `mlkfat` allowed in settings.local.json (added today). No more permission prompts on SELECTs.
-- **Committed code on etanah-pelupusan**: `mlk/qa/258022` branch (#258022 fix); `mlk/master` has uncommitted #258418 WIP (2 XHTMLs).
-- **Active rituals**: Predicate Box (Debug Mode 1), Evidence Language (DM 2), Reset (DM 3), Debug Mode Setup (DM 4), Sycophancy Circuit-Breaker (Truth-Holding S — new today).
+- **Today (2026-05-05)**: QA #259534 investigation. Long arc: trigger discovery (yihkitc commit b458041) → Option E fix shape designed → committed → reverted after empirical bp failure misled me → 3-familiar parallel re-assessment in autonomous mode → drift into wrong-tugasan/wrong-bean speculation → みや caught it just before sleeping → corrections logged.
+- **On Resume tomorrow**:
+  - Read `projects/coding-projects/active/QA-259534/AUTONOMOUS-DEBUG-REPORT-2026-05-05.md` (start with the correction header at top)
+  - Tugasan = KKJKBB. Bean = MlkMuatNaikCabutanMinitForm. Fix shape (Option E) is correct.
+  - Reproduce by clicking Lulus radio on /39 — listener hits 3505 with kod=JKKL_LULUS → field appears → confirms bug
+  - Apply Option E, commit on a fresh `mlk/qa/259534` branch with proper discipline (fetch+pull immediately before checkout -b)
+  - Side-bug at `MlkMuatNaikCabutanMinitForm.java:4301` is logged for separate ticket
+  - JBoss + JDWP infra still running unless みや stops it
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*

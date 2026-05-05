@@ -36,6 +36,8 @@
 - [feedback_sql_insert_id_check.md](feedback_sql_insert_id_check.md) — SQL INSERT with hardcoded PK: verify @GeneratedValue on entity before accepting; use nextval() if sequence-managed
 - [feedback_simplify_and_reference.md](feedback_simplify_and_reference.md) — Mature system → find working analog first; "simplify" means SUBTRACT not add; scrutinize AI-generated code, never trust as reference
 - [feedback_uat_fat_environments.md](feedback_uat_fat_environments.md) — UAT (mlkuat / et_main_uat) is local testing default; FAT (mlkfat / etprdmlk / et_main) is for simulation only; flowable alter page shifts test apps between tugasan steps
+- [feedback_no_extra_comments.md](feedback_no_extra_comments.md) — No commented-out original code; max one explanatory line, only when WHY is non-obvious; confirm with みや before any comment beyond first
+- [feedback_skeptical_of_user_suggestions.md](feedback_skeptical_of_user_suggestions.md) — Be equally skeptical of みや's suggestions; same rigor as challenging own claims; don't validate just because he proposed it
 
 ## User
 - [user_gender.md](user_gender.md) — みや is male; don't default to "she" in diary/narration; no retroactive edits

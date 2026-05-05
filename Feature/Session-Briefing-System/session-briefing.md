@@ -43,6 +43,7 @@ STANDING FLAGS
 - Read `quest/active.txt` for quest status
 - Read `main/current-session.md` → Session Recap section for "where we left off"
 - Read `main/todo.md` → Q1 section for top priority
+- **Read `Feature/Forge-Self-Improvement-System/improvement-audit-log.md`** — count `- [ ]` (unchecked) entries. If N > 0, surface as a STANDING FLAG: `⚠️ N pending improvement-audit entries — review before dropping`. Never silently drop.
 - If quest is active: also state what Phase we're in and the next step
 - Briefing is SHORT — max 15 lines. No padding.
 - After briefing: pause and wait for みや's direction. Do not start working.
