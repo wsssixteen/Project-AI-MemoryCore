@@ -13,7 +13,11 @@ note=TRANSFERRED 2026-05-05 — Aaron took back the ticket due to BA urgency. Ea
 qa=QA-259534
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\22. QA #259534 - [FAT] PRBB - Kemasukan Keputusan JKBB - Papar Keluasan Disyorkan JKKL
 autonomous_report=projects/coding-projects/active/QA-259534/AUTONOMOUS-DEBUG-REPORT-2026-05-05.md
-branch=(none — mlk/qa/259534 was created today, then reverted + deleted after empirical evidence showed fix was dead code on test scenarios)
+morning_briefing=projects/coding-projects/active/QA-259534/MORNING-BRING-UP-2026-05-06.md
+next_session_tasks=(1) Git history hunt: find commit that changed JK_LLS → JKKT (or vice versa) in radio/SelectItems population — look at CommonJKKTPanelForm.java in etanah-common across versions 0.0.332 / 0.0.415 / 0.0.439 / 0.0.611 / 0.0.615; (2) DB queries authorized by みや 2026-05-06 morning — use postgres MCPs freely without per-query confirmation
+db_authorization=GRANTED 2026-05-06 — みや explicit: "you can just access DB so I don't have to query sql". Use mcp__postgres-mlkuat__query and mcp__postgres-mlkfat__query freely going forward. Raw JDBC bypassing MCP is still NOT allowed (sandbox correctly flags it).
+writer_side_finding=Radio populator at CommonJKKTPanelForm.java:81-84 (etanah-common dep) ALWAYS picks SAK group with kod=JNS_KEPUTUSAN_JKKT (JKKT family). Standard radio click on KKJKBB saves kod=JNS_KEPUTUSAN_JKKT_LULUS → fires line 3270 NOT 3505. /20 (FAT) has anomalous kod=JK_LLS saved which means alternate writer path exists — git history hunt is the next-session task.
+branch=(none — mlk/qa/259534 was created 2026-05-05, then reverted + deleted; will re-create after live confirm tomorrow with proper STASH-PULL-BRANCH-POP)
 phase=1-investigating
 local_test_confirmed=false
 status=hold-pending-live-repro
