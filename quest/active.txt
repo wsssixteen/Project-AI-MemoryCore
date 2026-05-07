@@ -12,19 +12,19 @@ note=TRANSFERRED 2026-05-05 — Aaron took back the ticket due to BA urgency. Ea
 
 qa=QA-259534
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\22. QA #259534 - [FAT] PRBB - Kemasukan Keputusan JKBB - Papar Keluasan Disyorkan JKKL
-autonomous_report=projects/coding-projects/active/QA-259534/AUTONOMOUS-DEBUG-REPORT-2026-05-05.md
-morning_briefing=projects/coding-projects/active/QA-259534/MORNING-BRING-UP-2026-05-06.md
-next_session_tasks=(1) Git history hunt: find commit that changed JK_LLS → JKKT (or vice versa) in radio/SelectItems population — look at CommonJKKTPanelForm.java in etanah-common across versions 0.0.332 / 0.0.415 / 0.0.439 / 0.0.611 / 0.0.615; (2) DB queries authorized by みや 2026-05-06 morning — use postgres MCPs freely without per-query confirmation
-db_authorization=GRANTED 2026-05-06 — みや explicit: "you can just access DB so I don't have to query sql". Use mcp__postgres-mlkuat__query and mcp__postgres-mlkfat__query freely going forward. Raw JDBC bypassing MCP is still NOT allowed (sandbox correctly flags it).
-writer_side_finding=Radio populator at CommonJKKTPanelForm.java:81-84 (etanah-common dep) ALWAYS picks SAK group with kod=JNS_KEPUTUSAN_JKKT (JKKT family). Standard radio click on KKJKBB saves kod=JNS_KEPUTUSAN_JKKT_LULUS → fires line 3270 NOT 3505. /20 (FAT) has anomalous kod=JK_LLS saved which means alternate writer path exists — git history hunt is the next-session task.
-branch=(none — mlk/qa/259534 was created 2026-05-05, then reverted + deleted; will re-create after live confirm tomorrow with proper STASH-PULL-BRANCH-POP)
-phase=1-investigating
+branch=(none — never re-created after revert; no code fix shipped)
+phase=2-reflect
 local_test_confirmed=false
-status=hold-pending-live-repro
-test_apps_uat=PTMLK/01/L/PRBB/2025/39 (nuradilla), PTMLK/03/L/PRBB/2025/41 (marlinda — has parallel KKJKBB row), PTMLK/01/L/PRBB/2026/12 (LINA's fresh app, awaiting tugasan rows)
-test_apps_fat=PTMLK/03/L/PRBB/2026/20 (mohdzaini — currently at PYSK, kod=JK_LLS — best repro candidate)
-infra=JBoss running localhost:8080 + JDWP on 8787 (left running for tomorrow); jdb at C:/Program Files/Java/jdk-17/bin/jdb.exe; Postgres MCPs operational
-note=NEW from Redmine sync 2026-05-05. Subject: FAT - PRBB - Kemasukan Keputusan JKBB dan Penyediaan Surat Keputusan - Papar medan Keluasan Disyorkan JKKL. Tugasan = **KKJKBB** (per ticket). Bean = **MlkMuatNaikCabutanMinitForm** (breakpoint-confirmed on /39). **Day-1 outcome (2026-05-05)**: Hypothesis = listener at MlkMuatNaikCabutanMinitForm.java:3505-3510 (yihkitc commit b458041, 2026-04-28) sets viewKeluasanJKKL=TRUE without urusan/tugasan guard. Fix shape = Option E (positive tugasan-list guard mirroring init block at :1118-1128) — STRUCTURALLY CORRECT. Was committed + reverted same day after Eclipse breakpoint test on /39 showed line 3505 didn't hit; reverting was a misinterpretation by me — SakKeputusanJKKT was null only because /39's current iteration hadn't received a Lulus selection yet (early return at line 3228 short-circuited before kod-comparison branches). **Bug fires only when user clicks Lulus radio** (AJAX listener sets SAK non-null mid-method) → 3505 matches → 3510 fires → viewKeluasanJKKL=TRUE → field appears. **Tomorrow first action**: live-repro by clicking Lulus radio on /39 with bp at 3505 watching kod; if fires with JKKL_LULUS, re-apply Option E fix on a fresh mlk/qa/259534 branch. **Side-bug logged**: BPM prep at MlkMuatNaikCabutanMinitForm.java:4301 checks JKKT_LULUS but kod is JKKL_LULUS — silent flow-routing failure (separate ticket). **Correction logged 2026-05-05 late**: earlier I drifted into "bug is on PYSK / wrong bean" speculation by conflating /20's current state (advanced to PYSK) with the QA's original capture state (KKJKBB on 2026-04-28). Ticket Subject was always KKJKBB. Bean was always MlkMuatNaikCabutanMinitForm. みや caught the drift.
+status=closed-pending-BA-verification
+delegated_to=BA/QA team
+delegated_date=2026-05-06
+post_mortem=main/post-mortems.md (entry 2026-05-06)
+key_finding=URUSAN_INVOLVE_JKKL_LIST excludes PRBB and PRZ (saved to etanah-knowledge/melaka/URUSAN-FLOW.md). PelupusanService.populateKeputusanSelectItem PRBB falls to else → JKKT items only. /20 stored JK_LLS row has NULL audit dates — anomalous data. yihkit's b458041 (2026-04-28 08:21) didn't reach mlk/fat-env until 2026-05-05 12:24 — 7-day gap. QA captured screenshot 2026-04-28 09:10 — pre-b458041 code. Whatever fired the bug then is unidentified.
+notes:
+  - 2026-05-05: investigated, hypothesised Option E fix at MlkMuatNaikCabutanMinitForm.java:3510, branch created + reverted
+  - 2026-05-06 morning: yihkit shared 4 references — XHTML 415-424, MlkPelupusanTugasanConstant:104, initKeputusan() at :649-721, kod-stored DB query
+  - 2026-05-06 PM: empirical test on /20 KKJKBB altered from PYSK + Lulus + save → field NOT showing despite stored kod=JK_LLS. Bug not reproducible on current FAT.
+  - 2026-05-06 PM: みや recorded Alter Flowable repro video on /20, uploaded to Redmine, ticket passed back to BA/QA for verification. **No code fix shipped.**
 
 qa=QA-259318
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\21. QA #259318 - [FAT] PRU - Pembetulan Pada Template Surat Keputusan Lulus
@@ -43,6 +43,65 @@ phase=1-complete
 local_test_confirmed=true
 status=closed-pending-FAT
 note=Phase 1 CLOSED 2026-05-04 (per みや). UI text addition shipped. BA scope (PLPS-only): SSK + PSSK + PYB4AE + PB4AE (4 tugasan). 2 XHTMLs DB-verified: `lesen/MlkBorang4AeForm.xhtml` (4Ae tugasan) + `common/MlkPengiraanBayaranLesenForm.xhtml` (SKL tugasan). BPMN-verified order: SKL (34/35/36) → Borang 4Ae (40/41). **FINAL APPLIED**: br approach inside formField for BOTH files — `<h:panelGroup rendered="#{kodUrusan eq 'PLPS'}"> <br/> <h:outputText style="color:red;" value="(tidak termasuk tahun kelulusan)" /> </h:panelGroup>` (SKL file uses `isPLPS`). Test IDs: PTMLK/02/L/PLPS/2026/4 (PYB4AE), PTMLK/01/L/PLPS/2026/113 (PB4AE), PTMLK/01/L/PLPS/2025/91 (SSK), no active PSSK (flowable-alter). Phase 2 (Reflect/wrap up) pending. Awaiting FAT retest. See SESSION-HANDOFF-2026-04-30.md.
+
+closed:
+qa=QA-250665
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\25. QA #250665 - FAT - PLPS - AWAM- APPS - Jenis Pemohon = Individu - Papar nama medan
+branch=mlk/qa/250665
+commit=973c44dbeb (2026-05-06 20:19) — fix QA #250665 - APPS papar 'Lama tinggal di Melaka' untuk PLPS
+phase=2-complete
+status=closed-pending-FAT
+local_test_confirmed=true
+post_mortem=main/post-mortems.md (entry 2026-05-07)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-07)
+knowledge_files_created=etanah-knowledge/melaka/FRONTEND-PATTERNS.md
+out_of_scope_changes=helper-getter `isPLPS()` refactor attempted post-commit but reverted (untested at runtime; deferred to next deploy cycle, e.g. QA #259759)
+learning_marker=2026-05-07 — when next touching PelupusanMaklumatPemohonHelper.java OR adjacent XHTMLs, complete the helper-getter refactor (add `public Boolean isPLPS()`, replace deep-nav at mlkMaklumatPemilikAsalForm.xhtml:979 with `cc.attrs.helper.PLPS`)
+scope_anchor=PLPS only. APPS (pelupusan officer side) label → "Lama tinggal di Melaka". PSBS + others unchanged.
+test_apps_uat=PTMLK/02/L/PLPS/2026/6 (nurulazura — PLPS verify ✓), PTMLK/01/L/PSBS/2026/6 (aslilahramat — PSBS sanity ✓)
+note=Phase 2 closed 2026-05-07. Pushed to mlk/qa/250665. 9+ audit-log entries spawned. Awaiting BA/QA FAT retest.
+
+qa=QA-259759
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\23. QA #259759 - FAT - PLPS - Template Surat Keputusan Lulus - Ayat pada item 4 tidak p
+phase=0
+status=hold
+local_test_confirmed=false
+scope_layer=.docx template + populator Java
+effort_estimate=LOW (~1-3 hours) — same pattern family as QA-259318
+tugasan=Penyediaan Surat Keputusan Lulus (PLPS) — surat to pemohon
+test_app=PTMLK/01/L/PLPS/2026/15
+issue_one_liner=Item 3 ayat papar tarikh tidak patut + Item 4 ayat tidak papar (1 ribu sahaja)
+suspected_files=TemplateSuratKeputusanLulusPemohon*.docx + PelupusanWordCCMethodConstant.java handlers + PelupusanTemplateUtil populator
+knowledge_overlap=Recently closed QA-259318 (11 SKL templates migrated to frasa2). Patterns + tooling ready.
+note=NEW from Redmine sync 2026-05-06. Status=New. Common Version 0.0.615-MLK (current). FAT branch. Two ayat issues — same pattern family as just-closed QA-259318.
+
+qa=QA-259428
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\24. QA #259428 - PLTP - Penyediaan surat Jabatan Teknikal dan Ulasan YB - Tidak papar p
+phase=0
+status=hold
+local_test_confirmed=false
+scope_layer=Java populator + .docx lampiran template
+effort_estimate=MEDIUM (~3-5 hours) — needs JT lampiran trace + conditional charting state
+tugasan=Penyediaan surat Jabatan Teknikal dan Ulasan YB (PLTP)
+test_app=PTMLK/03/L/PLTP/2026/8 (ID already proceed)
+issue_one_liner=Surat JT tidak papar pelan permohonan pada lampiran when added before charting mohon/siasatan tanah
+related_redmine=UAT-CR #236559 (weilurn's PelupusanWordEditorUtil refactor — referenced in brief)
+suspected_files=PelupusanTemplateUtil + Surat JT populator + lampiran-pelan logic + charting state check
+knowledge_overlap=URUSAN-FLOW.md (PLTP not in JKKL list, used JKKT). #236559 was the BOTH-forcing fix from QA-259318 audit-log.
+note=NEW from Redmine sync 2026-05-06. Status=New. Common Version 0.0.611-MLK (older — verify deployed). Refer to UAT-CR #236559 — Ruri has prior knowledge of weilurn's refactor at PelupusanWordEditorUtil:482-487.
+
+qa=QA-247710
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\26. QA #247710 - PRU - Penambahbaikan Skrin dan Template Risalat MMKN PDT & PTG
+phase=0
+status=hold
+local_test_confirmed=false
+scope_layer=Enhancement — XHTML + Bean + validator + .docx template (full stack)
+effort_estimate=HIGH (~6-10 hours) — multi-component, mandatory per-tugasan logic, alert + readonly + template ayat injection
+tugasan=Penyediaan Risalat MMKN PDT + Penyediaan Risalat MMKN PTG (Semakan + Perakuan steps too)
+issue_one_liner=Add Syor Permohonan (Lulus/Tolak) field with alert validation + readonly downstream + ayat injection in Risalat template (per Item 5/6)
+suspected_files=Risalat MMKN PDT/PTG XHTMLs + backing bean + Risalat template .docx + populator handler + tindakan.config.json (mandatory rule for Syor field)
+knowledge_overlap=PERANAN-LEARNING.md mentions Risalat MMKN. tindakan.config.json mandatory_when patterns from QA-258022.
+note=NEW from Redmine sync 2026-05-06. Status=Rework. Enhancement (not bug fix). Multi-step BA spec — needs careful checklist parsing (CLAUDE.md hard rule for enhancement tickets). Largest of the 4 new tickets.
 
 closed:
 qa=QA-258022

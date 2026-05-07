@@ -67,6 +67,73 @@ Query `PLP_TJN_PMH_PT` on BOTH environments at Phase 0 — the environment compa
 
 ---
 
+### QA-250665 — PLPS-APPS label rename "Tempoh tinggal di Melaka" → "Lama tinggal di Melaka" — 2026-05-06 (committed) / 2026-05-07 (Phase 2 reflect)
+
+**Root Cause Type**: code (1-line XHTML predicate change)
+
+**Root Cause Summary**:
+`mlkMaklumatPemilikAsalForm.xhtml:979` — keluasan/tinggal label ternary had only PSBS branch; PLPS fell into default "Tempoh tinggal di Melaka" or PSBS's "Lama tinggal di Mukim" depending on flag. Added a positive PLPS guard reading from helper bean (`cc.attrs.helper.aplikasiPelupusan.urusan.kod eq 'PLPS'`). PSBS + all other urusans untouched. Mirrors AWAM-side fix shipped 2026-03 by adhwa+chanjun (their helper-default approach, distinct from our XHTML-ternary approach).
+
+**What Would Have Been Faster**:
+**Page-render chain trace before fix proposal.** Three rounds of fix-shape (cc.attrs scalar → page-forward patch → helper deep-nav) all because the actual rendering page wasn't verified — I assumed `MlkMaklumatPemohonForm.xhtml` from filename semantics, then `MlkMaklumatPerserahanForm.xhtml` from a guess. Neither reliably handled SKM tugasan. The robust path was reading helper state, which works regardless of which page renders. Decision tree captured in new `etanah-knowledge/melaka/FRONTEND-PATTERNS.md`.
+
+**Pattern Match**:
+- New pattern: **helper bean access > deep navigation > per-include scalar** for state checks. Captured in FRONTEND-PATTERNS.md decision tree.
+- New pattern: **JavaBean Introspector all-caps rule** — `isPLPS()` is read as `cc.attrs.helper.PLPS` in EL (kept all-caps because first 2+ chars are uppercase). Captured.
+- New pattern: **`<h:form id="centerForm">` is shared across many pages** — rendered HTML id alone doesn't pin which XHTML produced output. Use `<ui:param name="mb">` reference at page top. Captured.
+- New pattern: **debug markers in literal strings** (みや's "ya/no/asdasd" technique) — fast confirmation that a branch fired AND deploy is live. Captured.
+
+**Codebase Knowledge Updated**:
+- Created `etanah-knowledge/melaka/FRONTEND-PATTERNS.md` (new file, framework-skeleton with SCOPE/NOT FOR). 7 sections: Pattern A/B/C, decision tree, chain forwarding, EL property naming, page-trace methods, debug technique, lessons from this ticket.
+- `URUSAN-FLOW.md` cross-referenced (URUSAN_INVOLVE_JKKL_LIST relevant to PLPS context).
+
+**Process Notes**:
+- ~6 hours spent on a 1-line fix. Drivers: (a) initial scope confusion (BA brief said AWAM/APPS, didn't read latest Redmine comment which flipped scope to APPS-only = pelupusan-side), (b) page-render chain assumption from filename, (c) two failed deploy/test cycles before landing on helper deep-nav.
+- Multiple slips on existing rules (inventory-first Phase 0, scope discipline, page-render chain trace). All logged to improvement-audit-log.md as pending-review entries.
+- Helper-getter (`isPLPS()`) attempted post-fix but **untested at runtime**, reverted to keep ship-state clean. Logged as code-quality follow-up.
+
+**Carry Forward**:
+1. **Phase 0 page-render chain trace mandatory before fix proposal** — captured in FRONTEND-PATTERNS.md.
+2. **Add helper-getter `isPLPS()` properly + verify EL access** — pick up next time we touch this helper or have a fresh deploy cycle (e.g. QA #259759 tomorrow).
+3. **Read full Redmine ticket history**, not just initial Description.txt — captured as redmine-sync.js follow-up.
+4. **Commit message convention** — subject-only, no body, no Co-Authored-By trailer in this repo.
+5. **Multiple slips on existing rules signal "I'm not running existing infrastructure"** — meta-pattern, captured as audit-existing-before-proposing rule.
+
+---
+
+### QA-259534 — PRBB-KKJKBB Keluasan JKKL field — 2026-05-06
+
+**Root Cause Type**: not-reproduced (closed pending BA verification — no code fix shipped)
+
+**Root Cause Summary**:
+QA captured the bug on FAT 2026-04-28 09:10. yihkit's commit b458041 ("fix 2 CR JKKL", same day 08:21) did NOT reach `mlk/fat-env` until 2026-05-05 12:24 (7-day gap, verified via `git log --ancestry-path b458041..origin/mlk/fat-env --merges`). So QA's screenshot was from PRE-yihkit code. Empirical re-test on 2026-05-06 — /20 altered PYSK→KKJKBB + Lulus + save — did not reproduce the field showing despite stored kod=`JNS_KPTSN_MSYRT_JK_LLS`. Static analysis cannot pinpoint the firing path. Video evidence of non-reproduction sent to BA/QA via Redmine.
+
+**What Would Have Been Faster**:
+**Simulate first.** ~2 days of code/git analysis and theory churn before testing. The Alter Flowable repro on /20 (PYSK→KKJKBB + Lulus + save) took minutes once attempted and would have set the boundary on the entire investigation immediately. → New audit-log entry "Simulate before code-deep-dive".
+
+**Pattern Match**:
+- New pattern: **commit ≠ merged-to-FAT**. Always check `git log --ancestry-path <commit>..origin/mlk/fat-env --merges` before assuming a commit's behavior is what FAT is running. Captured in audit-log.
+- New pattern: **graceful degradation on data/code mismatch**. /20's stored JK-family SAK + current JKKT-only populator → JSF can't restore selection cleanly → bug shape no longer presents. Worth carrying as: stored data + current populator mismatch can hide bugs that real users still hit.
+- New pattern: **Java alias ≠ string value**. `PelupusanConstant.JNS_KEPUTUSAN_JKKL_LULUS = "JNS_KPTSN_MSYRT_JK_LLS"`. Java says JKKL; string is generic JK. Always check resolved string before reasoning.
+
+**Codebase Knowledge Updated**:
+- Created `etanah-knowledge/melaka/URUSAN-FLOW.md` — URUSAN_INVOLVE_JKKL_LIST (PRU, PT, PLPS, BPRZ, PPJK), JK vs JKKT SAK group separation (UAT 30959 / FAT 31023 vs 1057), naming-trap section
+- PelupusanService.populateKeputusanSelectItem urusan→radio-items mapping understood (PRBB falls to else → JKKT items only)
+
+**Process Notes**:
+- Three back-and-forth swings on conclusions in same session: "no fix needed" → "Option E needed" → "no fix needed". Cause: prematurely committing to static-analysis conclusions before empirical test. → Becomes hard rule: simulate before code-deep-dive.
+- ASCII diagrams + file:line citations worked well for keeping みや oriented during code walkthroughs.
+- yihkit's intel (4 references in one paste) saved hours of git hunting — collegial collaboration is a force-multiplier.
+- DB MCP usage authorized + worked smoothly; verified group structures across UAT and FAT.
+
+**Carry Forward**:
+1. **Simulate before code-deep-dive** — Phase 0 first action for any UI-symptom ticket is Alter Flowable + repro attempt.
+2. **Verify deployment timeline** — at Phase 0, check whether the suspected commit is actually on the env's branch.
+3. **Side-issue 2-strike rule** — drop side-investigations after 2 failed test attempts during main-issue testing.
+4. **Time budget on active.txt** — KPI 2 tickets/day × 4-6h. Track elapsed at phase transitions.
+
+---
+
 ### FAT-OR-255106 — Surat Iringan missing ID Permohonan on page 2 — 2026-04-17
 
 **Root Cause Type**: config (Word template)

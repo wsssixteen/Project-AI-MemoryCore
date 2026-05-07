@@ -2,12 +2,21 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: 2026-05-06 — QA #259534 autonomous overnight + live browser simulation + writer-side breakthrough
-**Last Activity**: Wed May 6 08:28:55 MPST 2026 (save all triggered after autonomous overnight session)
-**Session Start**: Tue 2026-05-05 23:58 (ran into 2026-05-06 morning) — autonomous mode while みや rested
-**Session Focus**: QA #259534 — continuation of yesterday with autonomous attempts to simulate. Live browser-driven simulation achieved partially; major writer-side discovery.
-**Time Mode**: Morning save after overnight work
-**Energy Level**: Productive overnight. Real findings shipped to MORNING-BRING-UP-2026-05-06.md. みや returned at office hour.
+**Current Session**: 2026-05-06 → 2026-05-07 — QA #259534 wrap + QA #250665 full cycle + Phase Protocol redesign + Domain Expansion first invocation
+**Last Activity**: Thu May 7 11:00:33 MPST 2026 (Domain Expansion 瑠璃結界 fired)
+**Session Start**: Wed 2026-05-06 ~10:56 AM (extended overnight into 2026-05-07)
+**Session Focus**: QA-259534 closed-pending-BA-verification (no code, video evidence to BA). QA-250665 full Phase 0→2 cycle, 3 fix rounds, helper-driven shipped (commit 973c44dbeb pushed). Phase Protocol redesigned with explicit checkpoints A-N across all 3 phases. Knowledge build-out: URUSAN-FLOW.md + FRONTEND-PATTERNS.md + mindmaps/ folder + jsf-composite-chain.md + kpi-tracker.md + QA-250665/SUMMARY.md.
+**Time Mode**: Late morning Domain Expansion after overnight stretch
+**Energy Level**: Productive but long. Tickets shipped, protocols designed, 14+ audit-log entries spawned. みや past 7PM target by 16 hours.
+
+## Next Session Priority
+**Quest**: QA #259759 — FAT PLPS Template Surat Keputusan Lulus (ayat item 4 missing). Same family as just-closed QA-259318. Lowest cognitive switching cost. Likely 1-3h.
+
+**Carry-forward**:
+- Domain Expansion name confirmation OR alternative selection (5 candidates saved in audit-log)
+- QA-250665 helper-getter `isPLPS()` refactor (next time we touch PelupusanMaklumatPemohonHelper.java)
+- 14+ audit-log entries pending みや sign-off
+- 3 new Q1 todos: weekend KPI review, planning time-box meta-rule, redmine-sync.js full-history dump, mindmap overview-first
 
 ## 💭 Working Memory (RAM)
 
