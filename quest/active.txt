@@ -62,21 +62,27 @@ test_apps_uat=PTMLK/02/L/PLPS/2026/6 (nurulazura — PLPS verify ✓), PTMLK/01/
 note=Phase 2 closed 2026-05-07. Pushed to mlk/qa/250665. 9+ audit-log entries spawned. Awaiting BA/QA FAT retest.
 
 qa=QA-259759
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\23. QA #259759 - FAT - PLPS - Template Surat Keputusan Lulus - Ayat pada item 4 tidak p
-phase=0
-status=hold
-local_test_confirmed=false
-scope_layer=.docx template + populator Java
-effort_estimate=LOW (~1-3 hours) — same pattern family as QA-259318
-tugasan=Penyediaan Surat Keputusan Lulus (PLPS) — surat to pemohon
-test_app=PTMLK/01/L/PLPS/2026/15
-issue_one_liner=Item 3 ayat papar tarikh tidak patut + Item 4 ayat tidak papar (1 ribu sahaja)
-suspected_files=TemplateSuratKeputusanLulusPemohon*.docx + PelupusanWordCCMethodConstant.java handlers + PelupusanTemplateUtil populator
-knowledge_overlap=Recently closed QA-259318 (11 SKL templates migrated to frasa2). Patterns + tooling ready.
-note=NEW from Redmine sync 2026-05-06. Status=New. Common Version 0.0.615-MLK (current). FAT branch. Two ayat issues — same pattern family as just-closed QA-259318.
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\23. QA #259759 - FAT - PLPS - PYSK - SKL Item 3 dan Item 4 ayat hilang
+early_diagnostic=projects/coding-projects/active/QA-259759/early-diagnostic.md
+branch=mlk/qa/259759
+commit=29fbbc8d15 (2026-05-07 16:50) — fix QA #259759 - PLPS - Template SKL Item 3 dan Item 4 ayat
+phase=1-complete
+status=closed-pending-FAT
+local_test_confirmed=true
+scope_anchor=PLPS only. Template Surat Keputusan Lulus PLPS — Item 3 (remove date range, Sahaja → SAHAJA bold, terbilang verified) + Item 4 ayat added with 3 placeholders (tahunSemasa, tahunBerikut, thnTamatKelulusan). Do NOT touch other SKL templates or other urusans.
+scope_layer=.docx template + new Java populator
+effort_actual=~6 hours (incl. Cp A familiar verification + populator audit + 4 docx programmatic edits + Cp D Rubric + Cp E render verify)
+tugasan=Penyediaan Surat Keputusan Lulus (PLPS) — PYSK — surat to pemohon
+test_app_uat=PTMLK/01/L/PLPS/2025/91 (azlee@melaka.gov.my, district 01 Melaka Tengah, Semakan SKL tugasan) — render confirmed by みや
+files_changed=src/main/java/my/gov/etanah/pelupusan/constant/PelupusanWordCCMethodConstant.java (new TAG_THN_TAMAT_KELULUSAN constant + registration + populateThnTamatKelulusan method) + src/main/resources/template/MLK/TemplateSuratKeputusanLulusPLPS.docx (Item 3 bracket fix, SAHAJA caps, Item 4 ayat with new CC tags)
+out_of_scope_changes=none — strict PLPS-only scope; new populator is additive (zero impact on PRU/other SKL urusans)
+learning_marker=2026-05-07 — PLPS data-source split (typed apl.tarikhAkhir column null, dates in maklumatTambahan JSON) is now documented as a hard rule pattern for future PLPS work; pairs with the audit-log entry on this finding
+knowledge_overlap=QA-259318 (11 SKL templates migrated to frasa2 last week — same family). Patterns + tooling ready, reused.
+note=Phase 1 closed 2026-05-07 ~17:05. Branch pushed to origin/mlk/qa/259759 (first push, set upstream). みや submitted ticket on Redmine. Awaiting BA/QA FAT retest. Phase 2 (Reflect/wrap up) pending みや's direction.
 
 qa=QA-259428
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\24. QA #259428 - PLTP - Penyediaan surat Jabatan Teknikal dan Ulasan YB - Tidak papar p
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\24. QA #259428 - FAT - PLTP - PSJT - Lampiran pelan tidak papar pada surat JT
+early_diagnostic=projects/coding-projects/active/QA-259428/early-diagnostic.md
 phase=0
 status=hold
 local_test_confirmed=false
@@ -91,7 +97,8 @@ knowledge_overlap=URUSAN-FLOW.md (PLTP not in JKKL list, used JKKT). #236559 was
 note=NEW from Redmine sync 2026-05-06. Status=New. Common Version 0.0.611-MLK (older — verify deployed). Refer to UAT-CR #236559 — Ruri has prior knowledge of weilurn's refactor at PelupusanWordEditorUtil:482-487.
 
 qa=QA-247710
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\26. QA #247710 - PRU - Penambahbaikan Skrin dan Template Risalat MMKN PDT & PTG
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\26. QA #247710 - FAT - PRU - PRMMKN - Penambahbaikan skrin dan template
+early_diagnostic=projects/coding-projects/active/QA-247710/early-diagnostic.md
 phase=0
 status=hold
 local_test_confirmed=false

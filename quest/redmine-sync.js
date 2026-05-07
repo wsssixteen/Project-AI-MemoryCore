@@ -213,15 +213,34 @@ function addStatusFolder(existingFolderName, status) {
     const fullPath = path.join(TASKS_FOLDER, existingFolderName);
     if (!fs.existsSync(fullPath)) return null;
 
-    // Find highest numbered subfolder (0. Brief, 1. Notes.txt, 2. New, 3. Rework...)
-    const entries = fs.readdirSync(fullPath);
-    const nums = entries
-        .map(e => { const m = e.match(/^(\d+)\./); return m ? parseInt(m[1]) : null; })
-        .filter(n => n !== null);
+    // 2 conditions for creating a status subfolder (per みや 2026-05-07):
+    //   (1) Status MUST be Rework (case-insensitive) — no other status triggers folder creation
+    //   (2) Project folder MUST exist at projects/coding-projects/active/<TYPE>-<NUM>/ — we've previously worked on it
+    const statusLower = (status || '').toLowerCase().trim();
+    if (statusLower !== 'rework') return null;
 
-    const next = nums.length ? Math.max(...nums) + 1 : 2;
-    // "Rework" if status is Rework, otherwise always "New"
-    const statusLabel = /rework/i.test(status || '') ? 'Rework' : 'New';
+    // Parse folder name "<NN>. <TYPE> #<NUM> - ..." to extract type + number
+    const m = existingFolderName.match(/^\d+\.\s*([A-Z][A-Z-]*)\s+#(\d+)/);
+    if (!m) return null;
+    const projectFolder = path.resolve(__dirname, '..', 'projects', 'coding-projects', 'active', `${m[1]}-${m[2]}`);
+    if (!fs.existsSync(projectFolder)) return null;
+
+    const statusLabel = 'Rework';
+    const entries = fs.readdirSync(fullPath);
+
+    // Idempotent: skip if "Rework" folder already exists (re-sync should not duplicate)
+    const sameStatusExists = entries.some(e => {
+        const em = e.match(/^\d+\.\s*(.+?)\s*$/);
+        return em && em[1].toLowerCase() === statusLabel.toLowerCase();
+    });
+    if (sameStatusExists) return null;
+
+    // Find highest numbered subfolder (0. Brief, 1. Simulate, 2. Fix, 3. Rework...)
+    const nums = entries
+        .map(e => { const em = e.match(/^(\d+)\./); return em ? parseInt(em[1]) : null; })
+        .filter(n => n !== null);
+    const next = nums.length ? Math.max(...nums) + 1 : 3;
+
     const newPath = path.join(fullPath, `${next}. ${statusLabel}`);
     fs.mkdirSync(newPath, { recursive: true });
     return newPath;

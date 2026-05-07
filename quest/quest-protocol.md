@@ -15,7 +15,7 @@
 | Any formal Etanah/Redmine task context | Phase 0 begins |
 | `/quest start <QA> <path>` | Phase 0 begins via skill |
 | "Restart quest `QA #<number>`" | Reset phase to 0, status to active — search Task folder first, then `Archive/` inside it |
-| `"Read Redmine"` | Run `node quest/redmine-sync.js`, then `--create` for any new tickets; for each new ticket: add a held Phase 0 entry to `active.txt` (`status=hold`); report results. みや picks which quest to start. No Phase 0 reading until みや confirms. |
+| `"Read Redmine"` | Run `node quest/redmine-sync.js`, then `--create` for any new tickets; for each new ticket: add a held Phase 0 entry to `active.txt` (`status=hold`); **then auto-spawn a Cp A early-diagnostic familiar per new ticket** (writes `projects/coding-projects/active/QA-<num>/early-diagnostic.md` — see Phase 0 Read-Redmine sub-protocol below); report results in a single table including username + tugasan_kod inference per ticket. みや picks which quest to start. No Phase 0 manual reading until みや confirms. |
 
 ### Phase transitions
 | Phrase | Action |
@@ -46,6 +46,55 @@
 **Hard rule**: Ruri does NOT write the commit message. Ruri does NOT run `git commit`. Ruri does NOT run `git push`. The skill stops at staging.
 
 **Rework branches**: if `mlk/<type>/<number>` already exists locally or remotely (this is a rework), the new branch name is `mlk/<type>/<number>v2` (no dash, sequential — v3, v4, etc.). Detect via `git branch --list "mlk/<type>/<number>*"`.
+
+**Phase 1 close-out — return to master ready (hard rule, added 2026-05-07):**
+
+After commit + push lands successfully (みや confirms or pushes himself):
+1. `git checkout mlk/master` on the relevant repo (etanah-pelupusan / etanah-awam)
+2. `git pull --ff-only origin mlk/master`
+3. Verify: working tree clean, branch on `mlk/master`, master at latest origin tip
+
+The fix branch (`mlk/<type>/<number>`) stays; don't delete. External merge happens via PR/another reviewer.
+
+**Why**: pairs with Phase 0 Step 0a — without close-out, the next ticket's Phase 0 starts on stale master OR on the previous ticket's branch (2026-05-07 QA #259759 — etanah-pelupusan was still on `mlk/qa/250665` AND master was 2 commits behind). Close-out makes ticket-to-ticket transitions atomic.
+
+**Pre-push remote-state notification (hard rule, added 2026-05-07):**
+
+EVERY time みや approves "commit push" / "push" / equivalent, BEFORE running `git push`:
+1. `git ls-remote origin mlk/<type>/<number>` — query whether the branch exists on remote
+2. Notify みや with one of these states:
+   - **First push** — branch does NOT exist on remote yet → push creates it (`git push -u origin <branch>`)
+   - **Updates existing** — branch EXISTS on remote with N commits ahead/behind → push updates it (rework cycle: `git push origin <branch>`, possibly needs `--force-with-lease` if rebased)
+3. Show the ahead/behind count if existing
+4. Push immediately after notification (no further confirmation needed since みや already authorized "push" in his message)
+
+**Why**: rework cycles vs first-push behave differently. First push needs `-u` to set upstream. Existing branch update may need `--force-with-lease` if rebased. Notification ensures みや sees the state and can intervene if it's not what he expected (e.g. if he thought it was first push but branch already exists from a colleague's prior work).
+
+**Order of operations for "commit push" cycle (hard rule, added 2026-05-07 after order-bundle slip):**
+
+1. **Remote check first** (`git ls-remote origin <branch>`) + notify state — BEFORE commit. Allows みや to pause if remote state is unexpected.
+2. **Commit** (local-only; doesn't depend on remote)
+3. **Pre-push announcement** — show commit hash + target branch + intended push variant (`push -u` / plain `push` / `--force-with-lease`)
+4. **Push**
+5. **Push-result report** to みや
+6. **Wait** for みや to submit/pass ticket on Redmine (out of Ruri's scope)
+7. **Phase 1 close-out** — `git checkout mlk/master` + `git pull --ff-only origin mlk/master`
+8. **Update active.txt** — phase=1-complete, status=closed-pending-FAT, branch=, commit=
+9. **Audit-log + protocol updates** — orthogonal, can run any time same session
+
+**Why this exists**: 2026-05-07 — Ruri bundled "Adding protocol + executing commit + remote check + push + close-out" in one breath, ran them in parallel via tool calls in a single message. みや caught the bundle: ordering should be sequential with notification points, not parallelized. Specifically, the pre-push notification (step 1) must precede the commit so みや can intervene BEFORE local state changes.
+
+**Phase 1 → ticket submission (みや's role):**
+
+After Ruri's push lands, **みや submits the ticket on Redmine** — this means:
+1. みや navigates to the ticket in Redmine
+2. Changes ticket status from "New" / "In Progress" to "Resolved" (or equivalent state that signals "code is done, awaiting BA verification")
+3. Adds his commit hash + branch name as a Redmine note (typically)
+4. Reassigns to BA/QA tester (e.g. Nurul Amirah Nadiah) for FAT verification
+
+This is **outside Ruri's scope** — Ruri does NOT touch Redmine status. Ruri's role at this point: do Phase 1 close-out (switch to mlk/master + pull) + update `quest/active.txt` to `phase=1-complete`, `status=closed-pending-FAT`. Then wait for みや's direction (Phase 2 post-mortem, or next ticket per Ruri's effort-ranked recommendation).
+
+**On BA acceptance** (later, possibly different session): Phase 2 fires per the existing closure-on-Redmine signals.
 
 ### Re-engagement (added 2026-04-30 — broadened triggers)
 **These phrases require Ruri to re-verify Task folder + handoff are loaded in CURRENT session context BEFORE producing any analysis, appraisal, or proposal:**
@@ -97,13 +146,18 @@ Below the existing Description text. Don't rewrite original. Each BA reply gets 
 Confirm which DB is active in `standalone.xml` — see `E:\Dev\jboss-7.4-plp-melaka\SETUP-NOTES.txt` → DB SWITCHING section.
 Melaka IT (etanahDS) = local dev default. UAT (etanahDS2) = disabled by "2" suffix convention.
 
-**Pre-Steps — Branch + PDF rituals (added 2026-05-04, hard rule):**
+**Step 0 — Mandatory FIRST actions at quest start (hard rule, strengthened 2026-05-07):**
 
-**Step 0a — Branch check (both repos):** Before any analysis, in BOTH `etanah-pelupusan` and `etanah-awam`:
+Run BEFORE any other tool call (other than time-stamping `Get-Date`). NOT after Word-template lookup. NOT after etanah-knowledge inventory. NOT after Description.txt read. **First. No exceptions.** Skipping these means the ticket starts on stale code or the wrong branch — both surfaced in real slips (2026-05-04 QA #259318 wrong branch; 2026-05-07 QA #259759 master was 2 commits behind: `3b0885b5be Temporarily disable #252285` + `d8b972edd1 #236336` would have been silently missed).
+
+**Step 0a — Branch check + master pull (both repos, hard rule, added 2026-05-04):** In BOTH `etanah-pelupusan` and `etanah-awam`:
 ```bash
+git fetch origin mlk/master
+git log HEAD..origin/mlk/master --oneline   # what we missed
+git diff --stat HEAD origin/mlk/master | head -20  # files affected
 git branch --show-current && git status --short
 ```
-If current branch ≠ `mlk/master`, run: `git stash push -m "<context>" → git checkout mlk/master → git pull --ff-only origin mlk/master → git stash pop`. Untracked files survive the switch. **Why**: 2026-05-04 QA #259318 — started edits on the previous ticket's branch.
+If current branch ≠ `mlk/master`, run: `git stash push -m "<context>" → git checkout mlk/master → git pull --ff-only origin mlk/master → git stash pop`. Untracked files survive the switch. If already on `mlk/master`, just `git pull --ff-only origin mlk/master`. **Surface the diff to みや — what we missed could "kill us" if it touches files in our suspected scope**.
 
 **Step 0b — PDF annotation extraction:** If the Task folder contains any `.pdf` (BA correction marks, mock-ups), extract every `Annot` (highlight, comment, popup text) before reading the brief:
 ```python
@@ -176,6 +230,28 @@ The default Read tool exposes visual page content but NOT the BA's per-annotatio
 9. Present checklist — **wait for みや's confirmation** before Phase 1
 
 > Skip Phase 0 checklist table for pure single-root-cause bug fixes. Still read the Task folder.
+
+---
+
+### Read-Redmine sub-protocol — Auto-Cp A familiar (added 2026-05-07)
+
+**Trigger**: any "Read Redmine" / "retrieve tickets" sync that returns ≥1 NEW ticket.
+
+**Per new ticket** (after `redmine-sync.js --create` lands the folder):
+
+1. **Spawn a familiar** (Agent with `general-purpose` subagent) — its prompt must include:
+   - Ticket #, Task folder path, codebase root (`E:\Projects\Melaka\etanah-pelupusan`), etanah-knowledge folder path
+   - Reference the 5 hard rules for Word-template work (Word-template-first lookup, Word XML run-join, Branch check, PDF annotation extraction, Renderer-side overrides)
+   - Output: write `projects/coding-projects/active/QA-<num>/early-diagnostic.md` with sections — Ticket scope (verbatim), Urusan/Tugasan/Layer classification, Suspected files (with file:line where confidence high), Word template state (CC tags + Item-area context), Candidate populators, Knowledge-file overlap, BA scope_anchor (positive + explicit DO NOT), Test data (id + tugasan_kod + username inference), Open questions, Effort estimate, NOT-in-scope list
+   - Stay strictly read-only. Cite file:line. Mark "**unknown — needs runtime/みや input**" rather than guess.
+
+2. **When みや picks a ticket from the list** — Ruri reads the early-diagnostic skeptically AGAINST the Description.txt + the BA's stated symptom. Confirm or reject each claim. The diagnostic is the familiar's draft; Ruri verifies as Cp A wrap-up.
+
+**Why**: 2026-05-07 — みや asked Ruri to spawn a familiar AFTER she'd already done a partial Cp A herself. The familiar's findings were better (file:line citations for terbilang handler, sister-template precedent, docx local-Modified state) than Ruri's solo work. If the familiar runs at retrieval time, the diagnostic is already loaded when みや picks the ticket — also surfaces username + tugasan_kod for simulation from the start.
+
+**Cost vs benefit**: ~1 familiar spawn per new ticket (~$0.05–0.20 each). Saves multiple round-trips at quest-start when みや would otherwise have to ask for username/tugasan/scope data. Solidifies pre-assessment.
+
+**Folder format reminder for redmine-sync.js**: new ticket folders MUST include env prefix (FAT/UAT) AND Tugasan KOD where derivable (`MlkPelupusanTugasanConstant.java`). Format: `<NN>. <type> #<num> - <env> - <urusan_kod> - <tugasan_kod> - <issue>`. Defer to Q1 todo for full JS implementation; for now Ruri renames manually post-create when format is wrong.
 
 ---
 
