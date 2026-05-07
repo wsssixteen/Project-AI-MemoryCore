@@ -16,7 +16,7 @@
 **Quest 2**: **QA-260154 full Phase 0→2** — lowest effort (~1.5-3h) — early-diagnostic already loaded, fix shape known: add `URS_PT → ImmutableList.of(TGS_PENYEDIAAN_RISALAT_MMKN_PDT, ...)` to empty no-op `updateTgsnBolehKemaskiniCukaiPanelMap` ([MlkPelupusanTugasanConstant.java:326-329](file:///E:/Projects/Melaka/etanah-pelupusan/src/main/java/my/gov/etanah/pelupusan/constant/mlk/MlkPelupusanTugasanConstant.java#L326)). BA wording check needed for ralat literal.
 
 **Carry-forward**:
-- Domain Expansion name CONFIRMED — **るり結界 (ラピス バリアー)** per みや 2026-05-07 evening; emoji TBD next session (candidates: 🔷 / 💠 / 🌌 / 🪻 / 🛡️)
+- Domain Expansion name + emoji CONFIRMED — **💠 るり結界 (ラピス バリアー)** per みや 2026-05-07 evening
 - QA-250665 helper-getter `isPLPS()` refactor (deferred to next deploy cycle, e.g. on QA-260154 if it touches PelupusanMaklumatPemohonHelper.java — unlikely)
 - ~90+ audit-log entries pending みや sign-off (5 new spawned today: pre-push notification, order-of-ops, ticket submission scope, 2-condition status folder, Phase 1 close)
 - Pending Q1 todos from prior sessions still active
