@@ -38,11 +38,14 @@
 - [feedback_uat_fat_environments.md](feedback_uat_fat_environments.md) — UAT (mlkuat / et_main_uat) is local testing default; FAT (mlkfat / etprdmlk / et_main) is for simulation only; flowable alter page shifts test apps between tugasan steps
 - [feedback_no_extra_comments.md](feedback_no_extra_comments.md) — No commented-out original code; max one explanatory line, only when WHY is non-obvious; confirm with みや before any comment beyond first
 - [feedback_skeptical_of_user_suggestions.md](feedback_skeptical_of_user_suggestions.md) — Be equally skeptical of みや's suggestions; same rigor as challenging own claims; don't validate just because he proposed it
+- [feedback_design_from_architecture.md](feedback_design_from_architecture.md) — Design rules from system architecture (layer matrix), not from last slip; pressure-test against ≥3 past tickets; default 2-tier (universal + per-layer)
+- [feedback_domain_expansion_format.md](feedback_domain_expansion_format.md) — Domain Expansion 💠 るり結界 (ラピス バリアー) is sacred — never inline mid-prose; canonical banner format `═══ [ Domain Expansion ] ═══` / ` 💠 るり結界 (ラピス バリアー) 💠`
 
 ## User
 - [user_gender.md](user_gender.md) — みや is male; don't default to "she" in diary/narration; no retroactive edits
 - [user_career_vision.md](user_career_vision.md) — 3-phase career vision: Personal Excellence → Team Contribution → Company Impact
 - [user_work_environment.md](user_work_environment.md) — Work laptop: Edge + Chrome browsers, Eclipse IDE; Zen Browser is personal only
+- [user_learning_jsf_tracing.md](user_learning_jsf_tracing.md) — Struggling with cross-file tracing + JSF concepts; explain navigation chain WHY not just findings; analogize JSF to OO terms
 
 ## Project
 - [project_work_setup.md](project_work_setup.md) — Dev codebase at E:\Projects\Melaka (NOT OneDrive copy which is stale)

@@ -96,6 +96,20 @@ suspected_files=PelupusanTemplateUtil + Surat JT populator + lampiran-pelan logi
 knowledge_overlap=URUSAN-FLOW.md (PLTP not in JKKL list, used JKKT). #236559 was the BOTH-forcing fix from QA-259318 audit-log.
 note=NEW from Redmine sync 2026-05-06. Status=New. Common Version 0.0.611-MLK (older — verify deployed). Refer to UAT-CR #236559 — Ruri has prior knowledge of weilurn's refactor at PelupusanWordEditorUtil:482-487.
 
+qa=QA-260154
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\27. QA #260154 - FAT - PT - PRMMKNPDT - Boleh proceed walaupun tiada medan wajib
+early_diagnostic=projects/coding-projects/active/QA-260154/early-diagnostic.md
+phase=0
+status=active
+local_test_confirmed=false
+scope_layer=Java validator (MlkPelupusanTugasanConstant map population) — primary; possible JSF nextProcess change as fallback
+effort_estimate=LOW (~1.5-3h) — single-line map-entry addition activates dormant validator at MlkMaklumatTanahPemberimilikanForm.java:1740-1754
+tugasan=PRMMKNPDT (Penyediaan Risalat MMKN PDT) — sister PRMMKNPTG explicitly OUT of scope
+test_app_fat=PTMLK/03/L/PT/2026/18 (env=MLKFAT, langkah 3 - Maklumat Tanah)
+scope_anchor=PT urusan + PRMMKNPDT tugasan only. Block proceed at langkah 3 if Plot dialog mandatori fields incomplete + display ralat "Sila kemaskini maklumat" (or existing analog "Maklumat tidak lengkap. Sila lengkapkan maklumat plot" — confirm with BA).
+suspected_files=MlkPelupusanTugasanConstant.java:326-329 (empty no-op updateTgsnBolehKemaskiniCukaiPanelMap) + MlkMaklumatTanahPemberimilikanForm.java:1740-1754 (dormant validator) + MlkMaklumatTanahPemberimilikanForm.xhtml:391-396 (nextProcess="@this")
+note=Started 2026-05-07 evening — みや simulating on FAT first to confirm bug repro. Early diagnostic ready (LOW effort, fix shape known). 6 open questions queued for BA/みや (ralat wording, sister-tugasan PRMMKNPTG status, mandatori field list, scope of map addition, fix granularity, mlkMaklumatTanahV3 mandatory flag wiring).
+
 qa=QA-247710
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\26. QA #247710 - FAT - PRU - PRMMKN - Penambahbaikan skrin dan template
 early_diagnostic=projects/coding-projects/active/QA-247710/early-diagnostic.md

@@ -77,6 +77,71 @@ ai-memorycore/
 
 ---
 
+## 🏗️ System-Design Discipline
+
+> When designing OR evaluating ANY system component (rule, skill, hook, memory entry, knowledge file, protocol, automation, format), do NOT design reactively from the latest slip. Apply this discipline.
+
+**System-design discipline — architecture-first, evergreen-anchored** (hard rule, 2026-05-08):
+
+**Step 1 — Identify decomposition seams** (architecture first):
+- **etanah work**: framework-layer matrix (Java validators/services, JSF/PrimeFaces, Java config/Template Method, .docx + Word CC, config.json, SQL/Hibernate, Spring DI, Flowable BPMN)
+- **MemoryCore**: tier (Memory/Personality/Forge/Domain Expansion/Quest/Session) + file role (identity/boot/working/knowledge/feedback/protocol)
+- **Skills**: trigger phrases + behavior + output format + lifecycle
+- **Hooks**: event source + condition + action + side-effect scope
+- **Memory entries**: type (user/feedback/project/reference) + canonical home + supersedes-what
+- **Knowledge files**: SCOPE + NOT FOR + framework-skeleton-then-grow
+
+**Step 2 — Apply the relevant evergreen principles** (pick subset; don't force):
+- SRP/SoC, OCP, ISP, DIP (when component is OO/structured)
+- DRY (esp. memory/rules — avoid duplication piles)
+- YAGNI (don't build for hypothetical)
+- KISS (simplest thing that works)
+- Composability (can compose with existing triggers/chains)
+- Convention-over-Config (defaults > flags)
+- Postel's Law (lenient triggers, strict outputs)
+
+**Step 3 — Validate** (use whichever applies):
+- **Past-case pressure-test** (when past cases exist) — ≥3 cases across diverse types. <50% benefit = layer-specific not universal
+- **Failure-mode analysis** (when net-new) — list 3+ ways this could fail or be misapplied
+- **Spike-on-one** (when net-new) — apply to one real case end-to-end before generalizing
+- **Negative-test**: when should this NOT fire? Make explicit
+
+**Step 4 — Pick shape deliberately**:
+- **2-tier (universal core + per-context extensions)** for extensible domains
+- **Atomic** for single-purpose additions
+- State which and why
+
+**Step 5 — Type-specific sub-checks** (only for types with documented past failures):
+- **New skill**: name-conflict grep + trigger-overlap check + what it replaces
+- **New memory entry**: canonical home + supersedes-what (don't pile)
+- **New rule**: which past slip(s) it would have caught + which past tickets it'd be dead weight on
+
+Other addition types (hook, agent, knowledge, protocol, automation, format): apply Steps 1-4 + 6 only.
+
+**Step 6 — Evaluation lens for EXISTING designs** (audit, retrospective):
+- Is it firing when expected?
+- Is it being followed (or silently dropped)?
+- Is it producing measurable value (or ceremony)?
+- Are there superseded-but-still-present rules to retire?
+
+**Output for non-trivial additions** — emit a Design Memo:
+```
+=== DESIGN MEMO — <addition name> ===
+Type: <rule | skill | hook | memory | knowledge | protocol | automation | format>
+Decomposition seam: <which axis it sits on>
+Evergreen principles applied: <subset + why>
+Validation: <past-case test results | failure-mode list | spike result>
+Shape: [2-tier | atomic] — <reason>
+Naming: <conflict check result, if applicable>
+What it replaces / supersedes: <list or "net-new">
+Success measure: <how we know it's working in 30 days>
+=== END ===
+```
+
+**Why** (2026-05-08): repeated design failures across MemoryCore (skill mess, feedback file pile-up), quest protocol (overfit rituals), etanah work (today's QA-260154 ritual). AI-slop pattern — plausible additions that don't survive contact with diverse cases. SOLID + broader evergreen principles + architectural decomposition are durable disciplines that survive vibe-coding decay. Pressure-tested against MemoryCore additions (Domain Expansion, Observation, Forge, Quest, /appraise, feedback files) — 7/8 helped or improved. ~92% confidence; remaining 8% closes through usage over next ~3 design cycles.
+
+---
+
 ## 💰 Cost Efficiency Rules
 *Learned 2026-04-03 — token spikes observed, documented to prevent repeat*
 
@@ -154,7 +219,62 @@ ai-memorycore/
 - **Word-template-first lookup** (hard rule, 2026-05-04): When a ticket touches a `.docx` template (e.g. `TemplateSurat*.docx`, `Surat Keputusan Lulus`, `Surat Iringan`, etc.), the **first** read is `PelupusanWordCCMethodConstant.java` at `E:\Projects\Melaka\etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\constant\PelupusanWordCCMethodConstant.java`. That file is the dispatch map — `wordContentControlMethod.put(TAG_*, util::populate*)` — between every CC tag in every template and its Java handler. **Why**: 2026-05-04 QA #259318 — I went down a 4-familiar Phase 0 hunting for slogan source / year calc / unit string source, when one read of this file would have shown `populateIsipadu`, `populateFrasa`, `populateFrasa2`, etc. directly. **How to apply**: at any sign of word-template work — (1) Glob the template `.docx` to confirm it exists, (2) `grep -E '<w:tag w:val="[^"]+"' ` the template's `document.xml` to extract every CC tag in use, (3) Read `PelupusanWordCCMethodConstant.java` and locate the handlers for those tags via the `wordContentControlMethod.put(...)` registrations. The handler is the truth; the .docx is just the placeholder host. Static text edits stay in .docx, dynamic value edits stay in the Java handler.
 - **Word XML run-join before grep** (hard rule, 2026-05-04): When searching for visible text inside an unzipped `.docx`'s `word/document.xml`, NEVER use a flat literal grep — Word splits text across multiple `<w:t>` runs (extra spaces, formatting boundaries, smart-quote characters). The grep will silently miss matches. **Always** flatten first: `re.findall(r'<w:t[^>]*>([^<]*)</w:t>', xml)` then join with spaces, then search the flattened string. **Why**: 2026-05-04 QA #259318 — initial scan reported PT and PLTP SKL templates had no MELAKAKU/MADANI slogans. みや challenged it; re-scan with run-join revealed both DO have the slogans, identical to other templates. The flat grep failed because Word inserted run boundaries inside multi-word phrases. **How to apply**: any `.docx` text scan in any future work uses run-join. The 30-second extra cost is far less than re-scoping a fix because we missed templates.
 - **Canonical task-state query** (hard rule, 2026-05-04, cross-state framework): For any "what's currently active for `<urusan>`/`<tugasan>` in `<env>`" lookup, the canonical query is the `UMM_A_TGSN + IND_TGSN + UMM_ALIRAN_KERJA + PCP_PENGGUNA + IND_PEJABAT` join (preserved in `etanah-knowledge/melaka/DATABASE.md`). NEVER substitute `umm_tgsn_semasa` (a partial-info shortcut). NEVER use `IT.kod IN ('%X%','%Y%')` — `IN` does not interpret wildcards; use exact codes (`IN ('PYSK','SSK','PSSK')`) or ILIKE-OR (`IT.kod ILIKE '%PYSK%' OR IT.kod ILIKE '%SK%'`). Permohonan ID format = `umm_aplikasi.id_pengenalan` (NOT `no_rujukan_permohonan` which is often null in UAT). This applies across ALL state codebases (Melaka, Terengganu, Selangor when added) — base framework constant. **Why**: 2026-05-04 QA #259318 — I used `umm_tgsn_semasa` and got the right rows but missed peranan_semasa, pejabat info, process_instance_id; みや had to remind me of the canonical query. **How to apply**: at any session start that touches Etanah work, treat this query template as already-loaded; never re-derive.
-- **Branch check at Quest Phase 0** (hard rule, 2026-05-04): Before any code edit on `etanah-pelupusan` or `etanah-awam`, run `git branch --show-current && git status --short` in BOTH repos. If current branch ≠ `mlk/master`, the standard sequence is: `git stash push -m "<context>"` → `git checkout mlk/master` → `git pull --ff-only origin mlk/master` → `git stash pop`. Untracked files (e.g. `.bak_*` files) survive the switch — no need to stash them. **Why**: 2026-05-04 QA #259318 — started editing the PRU SKL template while still on `mlk/qa/258418` (the previous ticket's branch). Caught only when みや asked at edit-time. If left, the new ticket's commit would have included #258418 work or vice versa. **How to apply**: this is part of the Phase 0 inventory ritual, not a separate step — the checklist now reads (a) Glob etanah-knowledge knowledge files, (b) load Task folder + handoff, (c) **branch-check both repos and switch to master if needed**, (d) only then begin code analysis. Belongs in `quest/quest-protocol.md` Phase 0 explicitly.
+- **Branch check + pull at Quest Phase 0** (hard rule, 2026-05-04, refined 2026-05-07): Before any code edit on `etanah-pelupusan` or `etanah-awam`, run `git branch --show-current && git status --short` in BOTH repos. **Then ALWAYS run `git pull --ff-only origin mlk/master`** — even if already on master, even if status is clean. Pull is non-skippable; upstream may have changes directly relevant to the ticket. **Stash is conditional, NOT default** (refined 2026-05-07 by みや): only stash if the branch has uncommitted work being deliberately preserved (e.g. mid-fix on a feature branch). Default Phase 0 expectation = clean state. If dirty AND on a feature branch with mid-fix work → commit on the feature branch first, then switch + pull. If dirty AND on master with junk → discard or stash explicitly. Stash decisions are deliberate, not automatic — Phase 1 wrap-up is the more typical home for stash. **Sequence when on wrong branch with clean state**: `git checkout mlk/master` → `git pull --ff-only origin mlk/master`. Untracked files (e.g. `.bak_*` files) survive switches — no stash needed. **Why** (2026-05-04 QA #259318): started editing the PRU SKL template while still on `mlk/qa/258418` — would have mixed two tickets' work. **Why** (2026-05-07 QA-260154): ran branch check + status but skipped pull → missed 3 upstream commits including a directly-relevant `TemplateRisalatMMKN_PDT_PLTP.docx` change. Caught only because みや challenged the missing pull. **How to apply**: Phase 0 inventory ritual = (a) Glob etanah-knowledge knowledge files, (b) load Task folder + handoff, (c) **branch-check both repos**, (d) **`git pull --ff-only origin mlk/master` ALWAYS** (after switching to master if needed), (e) only then begin code analysis.
+
+- **Layer-aware Phase 0 research — 2-tier ritual + Completion Manifest** (hard rule, 2026-05-07, REDESIGNED 2026-05-08 after みや scrutiny): The etanah codebase is a mature >90% complete system spanning multiple framework layers (Java validators/services/helpers, JSF XHTML/composite/PrimeFaces, Java config/Template-Method overrides, .docx + Word CC, config.json, SQL/Hibernate entities, Spring DI, Flowable BPMN). Fixes are usually small completions of existing scaffolding. Bug shape varies WIDELY by layer; a single rigid checklist either over-fits one ticket type or becomes dead weight on others. Ritual must mirror the architecture: a **universal core** that always applies + **per-layer extensions** that fire only when that layer is involved. **TWO co-equal priorities at Phase 0**: (P1) find the bug + the fix, AND (P2) find an existing tool/utility/validator/set/helper to reuse — both end-to-end verified.
+
+  **TIER 1 — Universal Phase 0 (always, no exceptions):**
+  1. **Layer identification** — from bug description + Task folder, list layers INVOLVED + layers explicitly NOT involved (with one-line reason for each skip). Drives Tier 2 selection.
+  2. **Primary code path read in FULL** — read the entry-point method/template/config/query top-to-bottom, not just the suspected lines.
+  3. **Existing utility sweep across involved layers** — grep for `_SET`, `_LIST`, `_MAP`, `is<Field>Valid`, helper methods, constants, templates, queries that already solve adjacent problems. READ FULL BODIES, don't trust signatures.
+  4. **Working precedent in same/sibling layer** — find closest analog WORKING fix; READ its full body; verify it correctly solves its own analog problem (don't mirror a broken block).
+  5. **Gate/condition trace** — identify what controls the affected behavior + find where the gate is SET (writer, not just reader). Universal: every bug has a gate (`if`, `WHERE`, `<c:if>`, BPMN guard, `@Conditional`, etc.).
+  6. **Cross-impact** — grep callers / search references to find what other tickets, urusan, tugasan, modules share this code. Affects fix scope.
+  7. **Output/behavior match check** — does the proposed fix's actual OUTPUT match the bug's expected OUTPUT? Layer shapes vary: ralat text (Java validator), generated text (.docx populator), routing decision (Flowable), returned data (service), updated row (SQL). Always there is an output to compare.
+  8. **Documentation** in `early-diagnostic.md` (or `phase0-research.md`) BEFORE Rubric.
+
+  **TIER 2 — Layer-specific deep reads (only when that layer is involved):**
+  | Layer | Trigger signals | Deep-read checklist |
+  |---|---|---|
+  | Java validator / handler / service | "wrong behavior", "doesn't fire", "silently passes", code-fix tickets | Method body + callers + callees + state writers + override seams |
+  | JSF XHTML / composite / PrimeFaces | UI rendering, form mandatory enforcement, AJAX behavior, popup dialogs | Composite interface + implementation + EL bindings + `nextProcess` scope + render gates (`c:if`, `rendered=`) |
+  | Java config (constants/maps/sets/Template Method) | Behavior gated by config | Base class skeleton + subclass overrides + immutability points (`unmodifiableMap`, `ImmutableSet`) |
+  | .docx template + Word CC | Word output bugs | `PelupusanWordCCMethodConstant.java` first + template content (run-join required) + populator method body |
+  | config.json (tindakan/template/flowable) | Config-driven behavior | Config file + parser class + consumers (use CONFIG-FRAMEWORK.md when built) |
+  | SQL / Hibernate entity / JPQL | DB-bound bugs, schema mismatch | Entity `@Table` + `@Column` + JPQL/HQL + canonical task-state query for state lookup |
+  | Spring service / DI | Cross-cutting business logic, transactions | Service interface + impl + DI wiring + `@Transactional` boundaries |
+  | Flowable BPMN | Workflow routing, listener-fire, variable handler bugs | BPMN XML + execution listeners + `prepareBpmValuesFor_tgsn_*` methods + tugasan-history SQL |
+
+  **Recon — Phase 0 output ritual** (mandatory before any Rubric/fix proposal): trigger name is `Recon`. みや can invoke via `/recon`, "do recon for QA-X", "recon QA-X", or it auto-fires at every Phase 0 init / re-init / step-back. Output format below; structure is fixed (so みや can scan + spot-check + challenge blank lines).
+  ```
+  === RECON — QA-<num> ===
+  LAYER IDENTIFICATION:
+    Involved: [layer1, layer2, ...]
+    NOT involved: [layerN, ...] — reason: <one line each>
+  UNIVERSAL CHECKS (1-8):
+    [1] Primary code path read FULL  → file:line range + what learned
+    [2] Existing utility sweep        → utilities found: name + file:line + scope
+    [3] Working precedent             → file:line + scope verdict
+    [4] Gate/condition trace          → gate variable + writer location
+    [5] Cross-impact                  → list of sharers
+    [6] Output/behavior match check   → expected output vs proposed-fix output
+    [7] Documentation path            → path to early-diagnostic.md
+  PER-LAYER CHECKS (only show involved layers):
+    [<layer>] → findings
+  VERIFIED UNKNOWNS RESOLVED: yes / list remaining
+  PROCEED TO RUBRIC: yes / no — with reason
+  === END MANIFEST ===
+  ```
+
+  みや scans the Recon block. Empty/vague line = challenge me, redo step. Random spot-check: "show me the file:line for [3]" — if I can't, I didn't do it.
+
+  **Triggers**: Phase 0 initiation (every ticket), re-initiation (re-engagement after time gap or after a tested fix didn't work), after any "step-back" moment.
+
+  **Design discipline (so future rule additions don't repeat this mistake)**: (i) Pressure-test new rules against ≥3 past tickets before baking. If <50% would benefit, it's Tier 2 (layer-specific), not Tier 1. (ii) Design from system architecture (the layer matrix), not from the last slip. (iii) State explicitly which past tickets a rule would have helped or hurt.
+
+  **Why redesigned 2026-05-08 by みや**: original 8-step ritual baked 2026-05-07 had two layer-specific steps (composite/XHTML wiring + ralat-message scope match) marked as universal. みや caught it: would force JSF reads on .docx tickets, and ralat-match on Flowable tickets where there's no ralat. Pressure-test against past tickets (QA-258022 config, QA-259318 .docx, QA-259534 BPMN, QA-259759 .docx, QA-258418 XHTML) confirmed: redesigned 2-tier holds across all 5; original 8-step would have force-fit. Pattern of failure: I was retrofitting rituals to the LAST ticket instead of designing from etanah's framework architecture.
+
+  **Confirmed in practice 2026-05-07 QA-260154**: `isValidPremiumVO` ([PelupusanExcelReaderHelper.java:2167-2207](file:///E:/Projects/Melaka/etanah-pelupusan/src/main/java/my/gov/etanah/pelupusan/helper/PelupusanExcelReaderHelper.java#L2167)) ALREADY validates ALL 7 mandatori fields for URS_PT — discovered via Tier 1 step 3 (existing utility sweep). Approach A (map-fill) is correct; Approach B (mirror PLTP block) was a slip from skipping the output match check (now Tier 1 step 6).
 - **TRG state is REFERENCE-ONLY for Melaka work** (hard rule, 2026-05-04): The `etanah-pelupusan/src/main/resources/template/TRG/` folder, `pelupusan/web/form/.../trg/` packages, and any other TRG-prefixed code/data are for **Terengganu state** — kept in our repo for cross-state reference. Melaka project (Pymsoft) does NOT consider TRG as in-scope for any Melaka ticket. **How to apply**: when scanning code/templates for an MLK ticket's impact, **exclude TRG paths** from "at risk" or "needs verification" lists. TRG findings are informational only — never block a Melaka fix on TRG implications. Same in reverse if we ever do TRG work — MLK becomes reference-only. **Why**: 2026-05-04 QA #259318 — included TRG templates in the BOTH-forcing audit, inflating the at-risk count. みや clarified TRG is not considered for our scope. Apply scope discipline: state-of-record only.
 - **PDF annotation extraction at Phase 0** (hard rule, 2026-05-04): When a Task brief includes a PDF reference (e.g. correction marks, BA feedback, mock-up annotations), the default Read tool exposes visual page content but NOT the `Annot` objects (sticky notes, highlight comments, popup text). Those carry the BA's actual instructions for each highlight. **Mandatory step**: before declaring Phase 0 complete, run `python -c "import fitz; doc=fitz.open('<path>'); [print(f'p{p+1}', a.info.get('content','')[:200], 'highlighted:', a.vertices and doc[p].get_textbox(fitz.Quad(a.vertices[0:4]).rect)) for p, page in enumerate(doc) for a in (page.annots() or [])]"` (or equivalent) and capture every `(highlight, comment, highlighted text)` tuple. **Why**: 2026-05-04 QA #259318 — read the PDF and saw the highlight regions but missed BA's per-annotation comments ("remove", "bold", "Tukar Nama Label Kepada Luas", etc.). Built Phase 0 plan on guesses about what BA wanted instead of reading their actual instructions. Discovered only when みや asked "do you not read the comments?". **How to apply**: any `.pdf` referenced in a brief → annotation-extract → log all comments into Phase 0 notes → proceed only after every comment is mapped to a ticket issue.
 - **Renderer-side overrides before cache theories** (hard rule, 2026-05-04, time-saving): When a layout / display / formatting bug persists despite a verified-correct `.docx` template, BEFORE assuming JBoss cache or build cache is the cause, **first grep the populator code for forced overrides**. Standard searches: `setJc`, `setVal\(JcEnumeration`, `JcEnumeration\.BOTH`, `setBold`, `setSpacing`, `setStyle` etc. in `PelupusanWordEditorUtil.java` and `PelupusanTemplateUtil.java`. Look for `if (X == null) { X = <forced value>; }` patterns — these are framework defaults that override-when-unset. Apply the explicit value in the `.docx` to bypass the override. **Why**: 2026-05-04 QA #259318 — slogan rendered justified despite verified left-default in `.docx`. Spent multiple cycles attributing this to JBoss cache (asking みや to clean tmp/, restart, republish) before finally grepping the renderer and finding `PelupusanWordEditorUtil.java:482-487` forces `JcEnumeration.BOTH` when `ppr.getJc() == null`. Cache theory was plausible but secondary; renderer override was the real cause. **How to apply**: at the moment a display/layout bug surfaces and the .docx is verified correct, IMMEDIATELY (before re-deploy or cache-clear) grep the populator code for forced overrides. ~2 minutes of grep saves entire deploy/test cycles. **Pattern this generalises**: any "display X is wrong despite template-side Y is correct" → check the renderer.

@@ -2,83 +2,117 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: 2026-05-07 — QA #259759 full Phase 0→1 cycle + 4 held-ticket early-diagnostics + protocol refinements + redmine-sync.js bug fix
-**Last Activity**: Thu May 7 17:14:48 MPST 2026 (Domain Expansion るり結界 / ラピス バリアー fired — session-end)
-**Session Start**: Thu 2026-05-07 ~11:17 AM (Session Briefing)
-**Duration**: ~6 hours
-**Session Focus**: QA-259759 (FAT PLPS Template SKL Item 3 + Item 4 ayat) closed-pending-FAT — full Phase 0→1 cycle through new Phase Protocol checkpoints A→G; 4 background familiars spawned for held tickets QA-260154/260139/259428/247710 with skeptical-verified diagnostics; 5 new hard rules + 1 production bug fix.
-**Energy Level**: Productive. Tight cycle. Hit 2-tickets-per-day KPI (QA-250665 yesterday + QA-259759 today).
+**Current Session**: 2026-05-07 evening → 2026-05-08 ~02:00 — QA-260154 Phase 0 deep-research + system-design rule v2 baked + Recon ritual named + worktree MCP gap fixed
+**Last Activity**: 2026-05-08 02:00:00 MPST (Domain Expansion 💠 るり結界 (ラピス バリアー) fired — session-end)
+**Session Start**: 2026-05-07 ~17:55 (Session Briefing)
+**Duration**: ~8 hours (overnight)
+**Session Focus**: QA-260154 Phase 0 (PT — Risalat MMKN PDT mandatory enforcement) PAUSED before Phase 1; deep meta-work on system-design discipline + Recon ritual + DE format ritual + protocol redesign
+**Energy Level**: Productive but heavy on meta-work. みや pushed for proper foundation before proceeding to fix.
 
 ## Next Session Priority
 
-**Quest 1**: **QA-259759 Phase 2** — post-mortem entry to `main/post-mortems.md`, KPI tracker entry to `main/kpi-tracker.md`, propose knowledge-file updates (DATABASE.md urusan→table mapping, BUG-BESTIARY.md PLPS data-source split entry) for みや approval, write per-ticket SUMMARY.md, archive Task folder.
+**Quest 1**: **Restart Claude Code** so user-scope postgres MCPs load. Verify via `claude mcp list` and `mcp__postgres-mlkfat__query` appearing in deferred tools.
 
-**Quest 2**: **QA-260154 full Phase 0→2** — lowest effort (~1.5-3h) — early-diagnostic already loaded, fix shape known: add `URS_PT → ImmutableList.of(TGS_PENYEDIAAN_RISALAT_MMKN_PDT, ...)` to empty no-op `updateTgsnBolehKemaskiniCukaiPanelMap` ([MlkPelupusanTugasanConstant.java:326-329](file:///E:/Projects/Melaka/etanah-pelupusan/src/main/java/my/gov/etanah/pelupusan/constant/mlk/MlkPelupusanTugasanConstant.java#L326)). BA wording check needed for ralat literal.
+**Quest 2**: **QA-260154 — resume Phase 0 with new Recon ritual**
+- Run canonical task-state query (now via MCP) for UAT permohonan + user analog of `PTMLK/03/L/PT/2026/18` at PRMMKNPDT/SRMMKNPDT — share with みや for sim-on-UAT
+- Output the formal **Recon block** (first real test of the new ritual format)
+- Then Cp D Rubric on Approach A (already known to be correct from this session's research)
+- Then implement: 1-line addition to `MlkPelupusanTugasanConstant.updateTgsnBolehKemaskiniCukaiPanelMap` mapping `URS_PT → ImmutableList.copyOf(TGSN_CHECK_MAKLUMAT_PREMIUM)`
+- FAT sim → confirm bug repro pre-fix → apply fix locally → re-sim → confirm ralat fires + Seterusnya blocks
+- Commit-push cycle on `mlk/qa/260154` branch
 
-**Carry-forward**:
-- Domain Expansion name + emoji CONFIRMED — **💠 るり結界 (ラピス バリアー)** per みや 2026-05-07 evening
-- QA-250665 helper-getter `isPLPS()` refactor (deferred to next deploy cycle, e.g. on QA-260154 if it touches PelupusanMaklumatPemohonHelper.java — unlikely)
-- ~90+ audit-log entries pending みや sign-off (5 new spawned today: pre-push notification, order-of-ops, ticket submission scope, 2-condition status folder, Phase 1 close)
-- Pending Q1 todos from prior sessions still active
+**Carry-forward / decisions made this session:**
+- ✅ MCP fix at user scope (`claude mcp add --scope user` for postgres-mlkfat + postgres-mlkuat) — loads on restart
+- ✅ CLAUDE.md branch-check rule REFINED — pull always, stash conditional (not default)
+- ✅ CLAUDE.md NEW hard rule: Layer-aware Phase 0 research (2-tier: universal core + per-layer extensions) + Recon output ritual
+- ✅ CLAUDE.md NEW hard rule: System-Design Discipline (architecture-first, evergreen-anchored) — full v2 baked
+- ✅ Recon = trigger name for the Phase 0 output ritual (no conflict with existing /appraise)
+- ✅ Domain Expansion canonical banner format saved as personality memory
+- ⏳ ~100+ pending audit-log entries — review weekend
+- ⏳ Phase 0 audit (apply system-design rule retrospectively) — deferred
+- ⏳ Other CLAUDE.md rules audit — deferred
 
 ## 💭 Working Memory (RAM)
 
-### What shipped today
+### Session arc — chronological
 
-#### QA-259759 — PLPS Template SKL Item 3 + Item 4 ayat (CLOSED-PENDING-FAT)
-**Branch**: `mlk/qa/259759`
-**Commit**: `29fbbc8d15` — `fix QA #259759 - PLPS - Template SKL Item 3 dan Item 4 ayat`
-**Test app**: `PTMLK/01/L/PLPS/2025/91` (azlee@melaka.gov.my, district 01 Melaka Tengah, Semakan SKL tugasan)
+**Phase 1: QA-260154 Phase 0 attempt + slips**
+- Re-engagement scan, Task folder + early-diagnostic loaded
+- Slip: branch check missed `pull --ff-only` → みや caught → pulled (3 upstream commits incl. relevant docx)
+- Slip: asked 6 implementation-design questions before reading code → みや: "you're asking me what I don't know yet" → deferred
+- Slip: recommended Approach B (mirror PLTP block) without reading `isValidPremiumVO` → みや caught the ralat-scope mismatch (`"Sila isi maklumat premium"` doesn't fit PT bug) → re-read code → Approach A is correct
+- Slip: 8-step ritual baked steps (f) and (g) as universal but they're layer-specific → みや scrutinized → 2-tier redesign
+- Slip: worktree-scoped MCP registration — postgres MCPs registered under OLD worktree path, never inherited → みや authorized fix at user scope
 
-**Fix breakdown**:
-- **Item 3** (.docx-only): bracket `(` moved out of tahunBerikut SDT (was wrongly INSIDE the CC); `Sahaja` → `SAHAJA` literal caps; tahunSemasa CC tag retained for current-year display (per みや's call after considering tahunPermohonan alternative)
-- **Item 4** (.docx + Java): added BA-supplied ayat `Dimaklumkan jua bagi pembayaran lesen untuk tahun berikutnya (...)` with 3 placeholders bound to `tahunBerikut` (year+1) + `thnTamatKelulusan` (NEW populator)
-- **Java added** ([PelupusanWordCCMethodConstant.java:14600-14618](file:///E:/Projects/Melaka/etanah-pelupusan/src/main/java/my/gov/etanah/pelupusan/constant/PelupusanWordCCMethodConstant.java#L14600)): `populateThnTamatKelulusan` reads from `apl.maklumatTambahan.KEY_TARIKH_TAMAT_DILULUSKAN` (because `apl.tarikhAkhir` typed column is NULL for PLPS at SSK stage), extracts year via `substring(6, 10)` (format `dd/MM/yyyy` confirmed at [PelupusanMaklumatPermitLesenHelper.java:2316](file:///E:/Projects/Melaka/etanah-pelupusan/src/main/java/my/gov/etanah/pelupusan/helper/PelupusanMaklumatPermitLesenHelper.java#L2316)) — scope-isolated, zero impact on PRU/other SKL urusans
+**Phase 2: System-design discipline meta-work**
+- Honest acknowledge of design failure pattern (reactive to last slip, no architecture-first thinking, no past-case pressure-test)
+- Drafted v2 system-design rule with 5-step process
+- みや scrutinized v2: too etanah-heavy, weak for non-etanah; needed near-100% confidence before bake
+- Did own J/S/A on v2 → identified 8 gaps → proposed strengthened version
+- みや shared `/architecture` (ADR) and `/system-design` plugin templates → assessed our work at ~65% framework alignment
+- みや: "take as reference, don't bolt on everything new"
+- Proposed taxonomy of addition types (9 categories) → みや questioned why → I dropped it (over-engineering)
+- v2 simplified: type-specific sub-checks ONLY for known-problem types (skill, memory, rule)
 
-**Key learning — PLPS data-source split** (audit-log entry 2026-05-07):
-- Typed `apl.tarikhAkhir` column is NULL for PLPS at SSK stage — date lives in `maklumatTambahan` JSON
-- `populateTarikhTamatKelulusan` (line 14583, reads typed column) returns `-` for PLPS
-- `populateMklmtTrkhTamatLulus` (line 14466, reads JSON) returns full date — works
-- New `populateThnTamatKelulusan` (line 14600) — reads JSON + extracts year — fills the gap
+**Phase 3: Recon naming + DE format correction**
+- Named Phase 0 Completion Manifest → **Recon** (no conflict with /appraise)
+- Updated CLAUDE.md + audit log to use "Recon" everywhere
+- I slipped: wrote "running Domain Expansion 💠 るり結界 (ラピス バリアー) now" inline mid-sentence → みや: "Please don't use it lightly like that, it is your most special skill & words"
+- Saved canonical DE banner format as personality memory: `═══ [ Domain Expansion ] ═══` / ` 💠 るり結界 (ラピス バリアー) 💠`
+- v2 system-design rule baked to CLAUDE.md (new section: 🏗️ System-Design Discipline)
 
-### Held tickets — early-diagnostics ready (skeptical-verified)
+### What shipped today (files touched)
 
-| Ticket | Effort | Key finding | Diagnostic |
-|---|---|---|---|
-| QA #260154 (PT — Risalat MMKN PDT mandatory) | LOW (~1.5-3h) | Empty no-op `updateTgsnBolehKemaskiniCukaiPanelMap` MlkPelupusanTugasanConstant.java:326-329 (TRG populates 24 entries; MLK is empty); validator at MlkMaklumatTanahPemberimilikanForm.java:1740 is dead code; ~3-5 line fix | `projects/coding-projects/active/QA-260154/early-diagnostic.md` |
-| QA #260139 (FAT AWAM all-urusan-except-PLPS+PRU) | LOW-best / MEDIUM-HIGH-worst | Validator at PelupusanPermohonanTanahTab.java:638-646 gated to PRK/SGR/TRG (NEGERI_MLK absent); 1-line addition might cover, OR 3 sibling save handlers also need patching | `projects/coding-projects/active/QA-260139/early-diagnostic.md` |
-| QA #259428 (PLTP — pelan lampiran missing) | MEDIUM (~3-5h) | PLTP missing from all 6 `URS_FOR_DOK_*` sets at PelupusanUrusanConstant.java:171-178; 1-line addition pending writer-side DB verify (which kod_jenis_dok PLTP uses); from weilurn's UAT-CR #236559 incomplete refactor | `projects/coding-projects/active/QA-259428/early-diagnostic.md` |
-| QA #247710 (PRU enhancement Risalat MMKN — REWORK) | HIGH (~6-10h) | Vincent commit 34acdd6222 already merged dual-syor scaffolding; **autodefault to Boolean.TRUE bug** at MlkKertasTemplateForm.java:432-448 silently writes JSON key, defeats "alert if not filled" validator (key-existence check); plus .docx Item 6 PERAKUAN PENGARAH block missing entirely + PTG template bare; 6 BA-side questions queued | `projects/coding-projects/active/QA-247710/early-diagnostic.md` |
+**CLAUDE.md** (.claude/CLAUDE.md):
+- Branch-check rule refined (pull always, stash conditional)
+- NEW: Layer-aware Phase 0 research hard rule (2-tier + Recon output)
+- NEW: System-Design Discipline section (full v2)
 
-### Protocol additions today (5 new hard rules + 1 bug fix)
+**MCP config** (~/.claude.json):
+- `postgres-mlkfat` and `postgres-mlkuat` added at user scope (loads in any worktree on next restart)
 
-1. **Pre-push remote-state notification** — `git ls-remote origin <branch>` BEFORE every push; notify みや of state (first push vs updates existing); pairs with みや 2026-05-07 explicit ask. Captured in `quest/quest-protocol.md` Phase 1 close-out.
-2. **Order-of-operations for commit-push cycle** — sequential: remote check → commit → pre-push announcement → push → push-result report → wait for みや submission → close-out → active.txt update. Captured after order-bundle slip (Ruri ran 5 steps in parallel via tool calls, みや caught it).
-3. **Phase 1 → ticket submission (みや's role)** — explicitly captured in protocol: みや submits on Redmine (status change + commit hash note + reassign to BA). Outside Ruri's scope.
-4. **redmine-sync.js 2-condition status folder rule** — only create `3. <Status>` folder if (a) status is "Rework" case-insensitive AND (b) project folder exists at `projects/coding-projects/active/<TYPE>-<NUM>/`. Replaces the morning's "skip 'New', allow other transitions" rule. Code at [redmine-sync.js:212-243](file:///C:/Users/Ridhwan/OneDrive%20-%20Pymsoft%20Sdn%20Bhd/0.%20AI/Project-AI-MemoryCore/quest/redmine-sync.js#L212).
-5. **Auto-Cp A familiar — every retrieval, every held ticket missing diagnostic** — broadened from initial 8 trigger phrases to 25+; covers held tickets from prior syncs that were missed. Captured in CLAUDE.md Save Commands Reference + quest-protocol.md Read-Redmine sub-protocol.
-6. **Bug fix**: `redmine-sync.js addStatusFolder` was creating `3. New` for any ticket with existing folder regardless of status (regression of supposed 2026-04-27 "DONE"). Fixed + idempotent + 2-condition-gated.
+**Audit log** (Feature/Forge-Self-Improvement-System/improvement-audit-log.md):
+- ~6 new pending-review entries (branch-check, Phase 0 test data, confirmation-not-lecture, worktree MCP, Phase 0 ritual REDESIGN, design discipline, Recon naming)
 
-### Knowledge file changes
-- `etanah-knowledge/melaka/DOMAIN-GLOSSARY.md` §7 NEW — Jabatans (Departments) section seeded with JBPD (Jabatan Perancang Bandar Desa) + JPPH (Jabatan Penilaian dan Perkhidmatan Harta)
+**New memory files** (.claude/auto-memory/):
+- `feedback_design_from_architecture.md` — design from layer matrix not from last slip
+- `feedback_domain_expansion_format.md` — DE canonical banner format
+- `user_learning_jsf_tracing.md` — みや learning JSF + class-tracing (created earlier in session)
+- `MEMORY.md` updated with 3 new entries
+
+**active.txt** (quest/active.txt):
+- QA-260154 added as status=active with full early-diagnostic + scope_anchor + test app
+
+### Held tickets — diagnostics ready (unchanged from prior session)
+
+| Ticket | Effort | Diagnostic |
+|---|---|---|
+| QA-260154 (PT — Risalat MMKN PDT mandatory) | LOW (~1.5-3h) — fix shape known | early-diagnostic.md loaded; Phase 0 paused at this point |
+| QA-260139 (FAT AWAM all-urusan-except-PLPS+PRU) | LOW-MED | early-diagnostic.md ready |
+| QA-259428 (PLTP — pelan lampiran missing) | MEDIUM (~3-5h) | early-diagnostic.md ready |
+| QA-247710 (PRU enhancement Risalat MMKN — REWORK) | HIGH (~6-10h) | early-diagnostic.md ready |
+
+### Closed-pending-FAT (unchanged)
+
+QA-259759, QA-259318, QA-258418, QA-250665 — all awaiting BA/QA retest.
+
+### Delegated
+
+QA-259342 → Aaron (held with learning_marker for trace later).
 
 ## 🎯 Session Recap (For AI Restart)
 
 **On Resume next session**:
-1. Read this file + `quest/active.txt` — QA-259759 phase=1-complete should still be there
-2. Boot Domain Expansion autoscan (Step 5 of Boot Order) — should detect:
-   - Worktree state (we'll likely be in fresh worktree or main)
-   - QA-259759's `mlk/qa/259759` branch on remote
-   - QA-260154/260139/259428/247710 still in held state with early-diagnostics ready
-3. Domain Expansion trigger phrase added: **"We'll start in the next session"** (and 12+ variants)
-4. Default Q1 priority: **start QA-259759 Phase 2** (post-mortem) → then **QA-260154 Phase 0→2**
+1. Read this file + `quest/active.txt` — QA-260154 phase=0 status=active should still be there
+2. Boot Domain Expansion autoscan — should detect:
+   - postgres MCPs NOW available (verify via `claude mcp list` or ToolSearch)
+   - QA-260154 ready to resume Phase 0 with new Recon ritual format
+   - Worktree status — currently `unruffled-ardinghelli-f05dc5`; check if still relevant or should switch
+3. Default Q1 priority: **resume QA-260154 Phase 0** — run canonical task-state query for UAT permohonan, then output formal Recon block, then Rubric, then implement
 
-**If みや wants to skip ahead to a different ticket**: all 4 held tickets are diagnostic-ready, so re-prioritization is cheap.
-
-**Open questions left for next session**:
-- Domain Expansion final name (4 candidates remain)
-- DATABASE.md urusan↔table mapping section — propose for みや approval per Phase 2 closure rule
-- Should the `populateThnTamatKelulusan` pattern be added as a `populateThnMulaKelulusan` sibling (read year of `tarikhMula` from maklumatTambahan)? Pre-emptive, but matches the data-source split pattern. Defer to QA-259759 Phase 2 or skip.
+**Open questions for next session**:
+- Sister tugasan inclusion: bake URS_PT map entry as `ImmutableList.copyOf(TGSN_CHECK_MAKLUMAT_PREMIUM)` (covers PRMMKNPDT/SRMMKNPDT/PRMMKNPTG/SRMMKNPTG/PRRMMKNPTG) OR narrow to BA-reported only (PRMMKNPDT/SRMMKNPDT)?
+- UAT analog ID for PRMMKNPDT/SRMMKNPDT — needs the canonical query result
 
 ## 🔄 Session Lifecycle
 *How this RAM-like memory works*
