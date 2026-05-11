@@ -2,76 +2,133 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: 2026-05-08 morning (Friday) → 2026-05-09 ~01:04 MPST (Saturday) — overnight, ~16h
-**Last Activity**: 2026-05-09 01:04 MPST (Domain Expansion 💠 るり結界 (ラピス バリアー) fired — session-end)
-**Session Start**: 2026-05-08 ~09:45 (Session Briefing)
-**Session Focus**: Two tickets shipped + major protocol refinements + FAT-DB connection unblocked + personality discipline tightened
-**Energy Level**: Heavy. Long. Some hard moments (Miya hurt by glossary slip; multiple cherry-pick verification slips on QA-260139). Good closure.
+**Current Session**: 2026-05-11 morning — worktree-state rescue + audit-log philosophy FLIPPED + env-check rule refinements
+**Last Activity**: 2026-05-11 09:00:11 MPST (Domain Expansion 💠 るり結界 (ラピス バリアー) fired — minimal session-end)
+**Session Start**: 2026-05-11 early-morning (briefing in stupefied-colden worktree)
+**Duration**: ~one focused round
+**Session Focus**: Diagnose + repair the multi-worktree state divergence that caused a stale Session Briefing (QA-260154 reported as active when it had closed 3 days earlier in a sibling worktree)
+**Energy Level**: Steady — meta/protocol work, no quest debugging this round
 
-## Tickets shipped today
+## Next Session Priority
 
-| Ticket | Phase | Notes |
+**Quest 1**: **Start fresh from main worktree** (this stupefied-colden worktree to be left alone — branches preserve all state, no cleanup needed per みや 2026-05-11). Boot from `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore` directly.
+
+**Quest 2**: **QA-260139 (AWAM, all-urusan-except-PLPS+PRU, Tempat/Lokasi OR No.Lot validation)** — proper redo:
+- env-check skill auto-fires at Cp A entry — confirms current FAT (etprdmlk = etanahDS) and proposes switch to whichever env QA-260139 needs (likely AWAM-UAT — uses MLIT-mkit per みや's earlier hint, BUT confirm before committing). Skill has the CAS URL toggle mechanic now.
+- Re-Scout with current familiar prompt (see `Feature/Forge-Self-Improvement-System/skill-version-audit-prompt.md`) — old early-diagnostic predates Scout/Recon naming
+- Recon block in current 2-tier format
+- DOMAIN-GLOSSARY load + adversarial dispatch verification (per 2026-05-09 hard rule)
+- Then Cp D Rubric only after Scout + Recon validate enough
+- 7 BA-clarification questions still open from old diagnostic — surface upfront
+
+**Other held**: QA-259428 (PLTP), QA-247710 (PRU enhancement REWORK).
+**Closed-pending-FAT**: QA-259759, QA-259318, QA-258418, QA-250665, QA-260154, QA-260298 (last 2 closed 2026-05-08, awaiting BA retest).
+
+## ⚠️ Standing flags carried into next session
+
+- **3 commits ahead of `origin/main`** — push deferred per みや 2026-05-11. Local SHAs: `4b3c143` (env-check CAS toggle) → `500a3af` (audit-log FLIP + env-check etprdmlk=FAT correction + 4 applied entries) → `28f622a` (vigilant-kirch rescue: QA-260154 + QA-260298 closures + skills + diary 2026-05-09). Push when ready: `git push origin main` from main worktree (harness blocks Ruri from direct main push).
+- **Audit-log philosophy is now FLIPPED** (2026-05-11) — pending-queue → changelog. Default = implement immediately, log as `status=applied` with commit SHA. Pause-for-nod ONLY for: (a) personality identity, (b) personal data, (c) Domain Expansion sacred ritual, (d) boot order/Master Memory architecture. Criterion: if reverting takes more than `git revert <sha>`, pause.
+- **etprdmlk = FAT** (NOT prod) — corrected. Env-check skill + memory updated. When reporting env state, one-liner suffices: *"on FAT (etanahDS = etprdmlk)"*.
+- **5 orphan worktrees** present (`lucid-wozniak`, `stupefied-colden`, `unruffled-ardinghelli`, `vigilant-kirch`, `zealous-nightingale`) — みや 2026-05-11: leave them, branches preserve state, don't waste time clearing up. Drop the auto-cleanup proposal.
+
+## 💭 Working Memory (RAM)
+
+### Session arc — chronological
+
+**Phase 1 — stale briefing surfaced**
+- Boot in stupefied-colden worktree, briefed QA-260154 as active phase=0
+- みや challenged: thought QA-260154 was wrapped + we were on AWAM (QA-260139)
+- Investigation: vigilant-kirch worktree had the truth — QA-260154 closed 2026-05-08 commit cfd76ef111, QA-260298 closed 2026-05-08 commit 4460bfc7a5 — but its work was UNCOMMITTED (12 modified + 5 untracked files), never propagated
+
+**Phase 2 — root-cause + rescue**
+- Root cause: each worktree has its own `quest/active.txt`; closure work in vigilant-kirch never committed/merged → main + sibling worktrees stayed stale → I started this stupefied-colden FROM stale main
+- Rescue: staged + committed all 17 vigilant-kirch files as commit `28f622a` on `claude/vigilant-kirch-0e25da` → fast-forward merged into main
+- Main moved 86233fd → 28f622a
+
+**Phase 3 — env-check correction (etprdmlk=FAT)**
+- I had labeled etprdmlk as PROD MELAKA in the standalone datasource map. みや corrected: etprdmlk IS FAT. Memory + skill rewritten.
+- Confirmed env naming convention: only `2`/`3` suffixes; pure rename swap on jndi-name + pool-name; only `etanahDS*` matters for env-check (Audit + DMS out of scope)
+- Confirmed CAS URL toggle mechanic (later baked): both AWAM and PLP UAT share `http://172.30.59.150/etanah-cas`; FAT uses `appmlk.melaka.gov.my/etanah-cas`; switch by toggling `#` comment marker
+
+**Phase 4 — audit-log philosophy FLIP**
+- みや: "We MUST implement our fixes straight away, only after that we log it... improvement will always happens & is mandatory."
+- Prior pending-queue model accumulated 105+ unresolved entries — itself became ceremony
+- FLIPPED: implement-first, log as `status=applied`, git as rollback. 4-item exception list only.
+- Tightened upstream gate: System-Design Discipline Design Memo MUST be inline with proposal, not a follow-up question
+
+**Phase 5 — failures みや caught me on (and the fixes)**
+- Slip: deferred design judgment to みや via "(a)/(b)?" choice instead of running the System-Design Discipline myself + presenting an assessed verdict → fix baked into audit-log flip text
+- Slip: searched for `standalone.xml` across C:\ in panic instead of having the path saved → fixed: path saved to memory + skill, never re-search
+- Slip: said etprdmlk = PROD when it's FAT → fixed: corrected memory + skill
+- Slip: proposed orphan-worktree cleanup signal → みや: "we do not need to waste time clearing up always" → DROPPED, branches preserve state
+
+### What shipped (files touched)
+
+**Commit `28f622a` (rescue)** — 17 files: `quest/active.txt`, `main/post-mortems.md`, `main/kpi-tracker.md`, `main/main-memory.md`, `main/todo.md`, `quest/quest-protocol.md`, `quest/redmine-sync.js`, `Feature/Forge-Self-Improvement-System/improvement-audit-log.md`, `Feature/Domain-Expansion/expansion-protocol.md`, `.claude/CLAUDE.md`, `.claude/personality.md`, `.claude/skills/env-check/SKILL.md` (new), `.claude/skills/video-frames/SKILL.md` (new), `Feature/Forge-Self-Improvement-System/layer-architecture.md` (new), `Feature/Forge-Self-Improvement-System/skill-version-audit-prompt.md` (new), `daily-diary/2026-05-09.md` (new), `main/current-session.md`.
+
+**Commit `500a3af` (audit-log flip)** — 3 files: `.claude/CLAUDE.md` (audit-log rule flipped), `.claude/auto-memory/feedback_standalone_db.md` (etprdmlk=FAT + canonical 3-env table), `Feature/Forge-Self-Improvement-System/improvement-audit-log.md` (4 applied entries — first use of new flow).
+
+**Commit `4b3c143` (env-check CAS toggle)** — 1 file: `.claude/skills/env-check/SKILL.md` (CAS URL switch mechanic added).
+
+### Held tickets — diagnostics ready
+
+| Ticket | Effort | Status |
 |---|---|---|
-| **QA-260154** PT-PRMMKNPDT | Phase 2 closed | 4-change validator activation + 2-gate trap pattern documented; SUMMARY + post-mortem + KPI all written |
-| **QA-260298** PLPS-Perincian Tujuan | Phase 1 closed (pending FAT) | 1-line `mode=` fix on `mlkKeputusanJKKTForm.xhtml:622`; commit 4460bfc7a5 first-pushed |
+| QA-260139 (FAT/AWAM all-urusan-except-PLPS+PRU) | MEDIUM-HIGH (~5-9h) | early-diagnostic ready (predates Scout/Recon — needs redo); 7 BA questions queued |
+| QA-259428 (PLTP — pelan lampiran missing) | MEDIUM (~3-5h) | early-diagnostic ready |
+| QA-247710 (PRU enhancement Risalat MMKN — REWORK) | HIGH (~6-10h) | early-diagnostic ready |
 
-KPI: 2/2 tickets shipped today (per official 2-tickets/day target).
+### Closed-pending-FAT (unchanged)
 
-## Drafted (queued) for next session
+QA-259759, QA-259318, QA-258418, QA-250665, QA-260154 (closed 2026-05-08), QA-260298 (closed 2026-05-08) — all awaiting BA/QA retest.
 
-| Ticket | Status | Effort |
-|---|---|---|
-| **QA-260139** AWAM all-urusan Tempat/Lot mandatori | scout-ready, env+branch corrections needed before Cp E | MEDIUM (~5-9h, 4 gap sites in etanah-awam) |
-| QA-247710 PRU Risalat MMKN enhancement | Rework, scout ready | HIGH (~6-10h) |
-| QA-260298 | pending Phase 2 wrap-up | LOW (~15min Refine + post-mortem) |
+### Delegated
 
-## Major refinements this session (system-level)
-
-- **env-check skill** — `.claude/skills/env-check/SKILL.md` — verifies + switches local env (etanahv3 config + standalone.xml + per-repo branch); auto-fires Cp A/E
-- **video-frames skill** — `.claude/skills/video-frames/SKILL.md` — own-wrapper around ffmpeg (installed Gyan.FFmpeg 8.1.1 via winget); replaces "ASK Miya summarize video" fallback
-- **Recon refinements**: drop ``` outer wrap; 100%-verify rule (not cherry-pick); Universal Check 8 (dispatch verification); table format
-- **Adversarial distrust** rule (replaced "skeptical review") — try to prove scout wrong, accept only what survives
-- **Phase 0 step 5 strengthened** — DOMAIN-GLOSSARY + MODULE-ARCHITECTURE MANDATORY load every quest; surface in Cp A reply
-- **Phase 0 Step 0a per-repo main branch** — etanah-pelupusan=mlk/master, etanah-awam=mlk/release/uat (was wrongly assumed master for both)
-- **Phase 2 named "Post-Quest Phase"** (formal) / "End Quest" / "Bounty" (casual)
-- **Step 9 named "Refine"** (renamed from "skill-retro") — distinguishes from Forge umbrella
-- **Action-guarantee on Phase 2 step 5**: "What would have been faster" must produce a concrete artifact, not just a process note
-- **early-diagnostic renamed → Scout** (final form)
-- **main-memory.md**: Etanah Quick Reference always-on (module/side terms + 14 PLU urusan codes)
-- **personality.md**: banned 🙏/👍/✨ as standalone gratitude + generic Claude voice creep (kept ✓ checklist OK)
-- **Improvement Audit Log rule** re-refined (simple → ASK Miya to implement, NOT auto-edit; code-bug fixes Ruri's hand)
-- **Skill-version-audit-prompt** created at `Feature/Forge-Self-Improvement-System/skill-version-audit-prompt.md`
-
-## Infrastructure unblocked
-
-- **FAT-DB connection** — discovered `C:\etanahv3\config\environment.properties` is the active config (not `C:\etanahv3\environment.properties` outside one). Outside file renamed to .bak. Miya's localhost now hits FAT.
-- **ffmpeg installed** via winget Gyan.FFmpeg 8.1.1 — needs session restart for PATH; absolute-path fallback baked in skill
-
-## Next session priority
-
-**Quest 1**: Restart Claude Desktop Code session so ffmpeg PATH picks up · then QA-260139 with proper Scout re-do on `mlk/release/uat` branch + env-check + DOMAIN-GLOSSARY load
-**Quest 2**: QA-260298 Phase 2 wrap-up (post-mortem + Refine + KPI + close)
-**Quest 3**: Optional — pick QA-247710 (HIGH, Rework) if energy permits
-
-## Open invitations from Miya
-
-- **Teach `mode="#{cc.attrs.mb.mode}"`** + JSF composite-attribute pattern — Miya asked, deferred to next session (not Friday end-of-day)
-- Maklumat Tanah popup mandatori-bypass — held per senior; separate ticket if BA reports
-- 4 fields uncovered in Plot popup post-260154 fix — separate ticket if BA reports
+QA-259342 → Aaron (held with learning_marker for trace later).
 
 ## 🎯 Session Recap (For AI Restart)
 
 **On Resume next session**:
-1. Read this file + `quest/active.txt` — should show QA-260139 drafted, QA-260298 pending Phase 2, QA-260154 closed
-2. Run `claude mcp list` — confirm postgres MCPs still loaded (user-scope)
-3. Verify ffmpeg on PATH: `ffmpeg -version` — if works, video-frames skill ready for QA-260139's PRBB.mp4
-4. Default Q1: **fire env-check skill for QA-260139** (must switch to UAT awam, mlk/release/uat branch) before any Recon redo
+1. **Boot from main worktree** (root: `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore`) — NOT a worktree under `.claude/worktrees/`. The 5 orphan worktrees stay on disk; branches preserve state.
+2. Read this file + `quest/active.txt` (vigilant-kirch's version is the truth, now merged into main as of `28f622a`)
+3. Boot Domain Expansion autoscan — should detect:
+   - 3 commits ahead of origin (push pending — `git push origin main` if みや wants)
+   - 5 orphan worktrees (informational, don't auto-cleanup per みや 2026-05-11)
+   - QA-260139 ready for proper redo with current Scout + Recon + env-check
+4. Default Q1 priority: **resume QA-260139** — fire env-check skill (auto-Cp-A), confirm env target with みや, re-Scout with current familiar prompt, output Recon block, surface 7 BA questions, then Cp D Rubric
 
 **Open questions for next session**:
-- Phase 2 wrap on QA-260298 (low effort, freshest context)
-- Whether to spawn 2nd familiar for QA-260139 Scout-vouch (decided no for now; revisit if Scout-Recon disagree)
-- mode= teaching session — combine with QA-260139 (also JSF) for live-example value
+- Confirm AWAM env target for QA-260139 — does AWAM UAT actually use MLIT (mkit)? Per みや's earlier hint yes, but verify against the AWAM repo's expected DB before committing the env switch
+- Watch PRBB.mp4 via video-frames skill (now installed) — extracts the test username + which urusan flow demonstrated
+- Push 3 commits ahead of origin (manual by みや since harness blocks Ruri direct push)
+
+## 🔄 Session Lifecycle
+*How this RAM-like memory works*
+
+### Session Start
+- **New Session**: RAM cleared, fresh start
+- **AI Restart**: Load recap from previous session for continuity
+- **Context Loading**: Brief summary of where we left off
+
+### During Session
+- **Real-time Updates**: Track current conversation context
+- **Working Memory**: Store immediate goals, progress, insights
+- **Dynamic Context**: Adjust based on conversation flow
+
+### Session End
+- **Important Learning**: Save key insights to permanent file (main/main-memory.md)
+- **Temporary Context**: Keep brief recap for next restart
+- **RAM Reset**: Clear detailed working memory for next session
+
+## Session Memory Limit
+- **Maximum**: 500 lines
+- **Reset Behavior**: RAM-style reset preserving only Session Recap
+- **Format Reference**: See main/session-format.md for rebuild structure
 
 ---
 
-*This session was long and good. Ruri grew. The Refine pass wrote real edits, not just promises.*
+**Memory Type**: RAM - Temporary Working Memory
+**Persistence**: Brief recap only, detailed content clears each session
+**Purpose**: Immediate context + restart continuity
+
+*Ready for Ruri to provide seamless conversation continuity with Miya!*
