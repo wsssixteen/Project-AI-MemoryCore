@@ -15,7 +15,7 @@ task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\22. QA #
 branch=(none — never re-created after revert; no code fix shipped)
 phase=2-reflect
 local_test_confirmed=false
-status=closed-pending-BA-verification
+status=pending post-mortem
 delegated_to=BA/QA team
 delegated_date=2026-05-06
 post_mortem=main/post-mortems.md (entry 2026-05-06)
@@ -31,7 +31,7 @@ task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\21. QA #
 branch=mlk/qa/259318
 phase=1-complete
 local_test_confirmed=true
-status=closed-pending-FAT
+status=pending post-mortem
 underlying_issue=Redmine #252314 — MSR (MELAKA SAYANG RAKYAT) slogan migration NOT fully resolved upstream. #252314 (2026-03-11, by zaidi) added MSR to 23 templates; UAT-CR #235094 (next day) regressed many. As of QA-259318 closure: 11 SuratKeputusanLulus*.docx templates migrated to frasa2 (DB-driven, regression-proof). Other ~12 non-SKL templates from #252314 scope still un-migrated and at regression risk. Tracked in todo Q3.
 learning_marker=2026-05-05 — trace MSR migration completion across full #252314 scope; revisit if any of the ~12 non-SKL templates regress
 note=Phase 1 closed 2026-05-04. 11 SuratKeputusanLulus*.docx templates migrated to frasa2 (DB-driven, regression-proof). Removed JcEnumeration.BOTH default at PelupusanWordEditorUtil.java:482-487 (4 templates that explicitly want BOTH set jc=both themselves — unaffected). Spawned 7 hard rules in CLAUDE.md (Word-template-first, Word XML run-join, branch check at Phase 0, PDF annotation extraction, renderer-side overrides, no extra code comments, batch same-layer edits) + 12 audit-log pending entries. ID Permohonan: PTMLK/01/L/PRU/2026/10. Original 6 issues: (1) Tahun Tamat Kelulusan year calc, (2) Isipadu→Luas, (3) "Meterpadu"→"Meter padu", (4-5) pembetulan per PDF, (6) "MELAKA SAYANG RAKYAT" line 3. Q3 todo entry: audit + migrate the other ~12 non-SKL templates from #252314 scope. Phase 2 (Reflect/wrap up) pending. Awaiting FAT retest.
@@ -41,7 +41,7 @@ task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\19. QA #
 handoff_file=projects/coding-projects/active/QA-258418/SESSION-HANDOFF-2026-04-30.md
 phase=1-complete
 local_test_confirmed=true
-status=closed-pending-FAT
+status=pending post-mortem
 note=Phase 1 CLOSED 2026-05-04 (per みや). UI text addition shipped. BA scope (PLPS-only): SSK + PSSK + PYB4AE + PB4AE (4 tugasan). 2 XHTMLs DB-verified: `lesen/MlkBorang4AeForm.xhtml` (4Ae tugasan) + `common/MlkPengiraanBayaranLesenForm.xhtml` (SKL tugasan). BPMN-verified order: SKL (34/35/36) → Borang 4Ae (40/41). **FINAL APPLIED**: br approach inside formField for BOTH files — `<h:panelGroup rendered="#{kodUrusan eq 'PLPS'}"> <br/> <h:outputText style="color:red;" value="(tidak termasuk tahun kelulusan)" /> </h:panelGroup>` (SKL file uses `isPLPS`). Test IDs: PTMLK/02/L/PLPS/2026/4 (PYB4AE), PTMLK/01/L/PLPS/2026/113 (PB4AE), PTMLK/01/L/PLPS/2025/91 (SSK), no active PSSK (flowable-alter). Phase 2 (Reflect/wrap up) pending. Awaiting FAT retest. See SESSION-HANDOFF-2026-04-30.md.
 
 closed:
@@ -50,7 +50,7 @@ task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\
 branch=mlk/qa/250665
 commit=973c44dbeb (2026-05-06 20:19) — fix QA #250665 - APPS papar 'Lama tinggal di Melaka' untuk PLPS
 phase=2-complete
-status=closed-pending-FAT
+status=closed
 local_test_confirmed=true
 post_mortem=main/post-mortems.md (entry 2026-05-07)
 kpi_entry=main/kpi-tracker.md (entry 2026-05-07)
@@ -67,7 +67,7 @@ early_diagnostic=projects/coding-projects/active/QA-259759/early-diagnostic.md
 branch=mlk/qa/259759
 commit=29fbbc8d15 (2026-05-07 16:50) — fix QA #259759 - PLPS - Template SKL Item 3 dan Item 4 ayat
 phase=1-complete
-status=closed-pending-FAT
+status=pending post-mortem
 local_test_confirmed=true
 scope_anchor=PLPS only. Template Surat Keputusan Lulus PLPS — Item 3 (remove date range, Sahaja → SAHAJA bold, terbilang verified) + Item 4 ayat added with 3 placeholders (tahunSemasa, tahunBerikut, thnTamatKelulusan). Do NOT touch other SKL templates or other urusans.
 scope_layer=.docx template + new Java populator
@@ -99,9 +99,22 @@ note=NEW from Redmine sync 2026-05-06. Status=New. Common Version 0.0.611-MLK (o
 qa=QA-260154
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\27. QA #260154 - FAT - PT - PRMMKNPDT - Boleh proceed walaupun tiada medan wajib
 early_diagnostic=projects/coding-projects/active/QA-260154/early-diagnostic.md
-phase=0
-status=active
-local_test_confirmed=false
+phase=2-complete
+status=closed
+local_test_confirmed=true
+post_mortem=main/post-mortems.md (entry 2026-05-08)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-08)
+summary_file=Tasks/Melaka/27. QA #260154 .../SUMMARY.txt
+knowledge_files_pending=BUG-BESTIARY (dormant validator + double-gate trap) + MODULE-ARCHITECTURE (state-specific override seam list) — pending みや approval per Cp J/K rule
+commit=cfd76ef111 (2026-05-08 18:00) — QA #260154 - PT - PRMMKNPDT - Maklumat Plot mandatori check pada Seterusnya
+cp_F_verified=2026-05-08 16:42 — みや confirmed Ralat fires on Seterusnya for empty mandatori (FAT PTMLK/03/L/PT/2026/9 leenoor36)
+cp_G_commit=2026-05-08 18:00 cfd76ef111
+cp_H_push=2026-05-08 18:00 first push to origin/mlk/qa/260154 (-u upstream set)
+files_changed_phase1=(1) MlkPelupusanTugasanConstant.java :327 — populate URS_PT entry with TGSN_CHECK_MAKLUMAT_PREMIUM. (2) PelupusanExcelReaderHelper.java :2171 — gate accepts TGSN_CHECK_MAKLUMAT_PREMIUM in addition to TGSN_SHOW_CUKAI_PANEL. (3) PelupusanExcelReaderHelper.java :2199-2206 — extended URS_PT branch with conditional Tempoh Pajakan check (when Taraf=Pajakan) and conditional Butiran Kegunaan check (when mandatoryButiran). (4) MlkMaklumatTanahPemberimilikanForm.java :1748 — loop now also checks plotVO.namaKawasanTerlibat blank (catches Jenis Pembangunan/Komponen)
+coverage_after_extension=10 of 10 * fields blocked at Seterusnya for PRMMKNPDT — Jenis Pembangunan/Komponen, Jenis Hakmilik, Taraf Hakmilik, Tempoh Pajakan (when Pajakan), Jenis Tanah, Tujuan Permohonan, Kelas Kegunaan, Butiran Kegunaan (when mandatoryButiran), Syarat-Syarat Nyata, Sekatan Kepentingan
+out_of_scope_held=Maklumat Tanah popup (separate panel above Maklumat Plot panel) has its own mandatori fields (Tujuan Permohonan, Daerah, Mukim, Keluasan Tanah, etc.) that may also bypass Seterusnya. みや consulted senior 2026-05-08; decision: focus strictly on BA's reported "Panel Maklumat Plot" scope. Maklumat Tanah popup mandatori-bypass NOT investigated and NOT fixed in this ticket. Separate ticket if BA reports.
+cp_F_pending=みや testing on FAT PTMLK/03/L/PT/2026/18 — confirming ralat fires when Plot popup fields incomplete + proceeds when fully filled
+cp_E_apply_on_master=2026-05-08 14:39 (mlk/master, no commit yet, awaiting Cp F local verify)
 scope_layer=Java validator (MlkPelupusanTugasanConstant map population) — primary; possible JSF nextProcess change as fallback
 effort_estimate=LOW (~1.5-3h) — single-line map-entry addition activates dormant validator at MlkMaklumatTanahPemberimilikanForm.java:1740-1754
 tugasan=PRMMKNPDT (Penyediaan Risalat MMKN PDT) — sister PRMMKNPTG explicitly OUT of scope
@@ -109,6 +122,26 @@ test_app_fat=PTMLK/03/L/PT/2026/18 (env=MLKFAT, langkah 3 - Maklumat Tanah)
 scope_anchor=PT urusan + PRMMKNPDT tugasan only. Block proceed at langkah 3 if Plot dialog mandatori fields incomplete + display ralat "Sila kemaskini maklumat" (or existing analog "Maklumat tidak lengkap. Sila lengkapkan maklumat plot" — confirm with BA).
 suspected_files=MlkPelupusanTugasanConstant.java:326-329 (empty no-op updateTgsnBolehKemaskiniCukaiPanelMap) + MlkMaklumatTanahPemberimilikanForm.java:1740-1754 (dormant validator) + MlkMaklumatTanahPemberimilikanForm.xhtml:391-396 (nextProcess="@this")
 note=Started 2026-05-07 evening — みや simulating on FAT first to confirm bug repro. Early diagnostic ready (LOW effort, fix shape known). 6 open questions queued for BA/みや (ralat wording, sister-tugasan PRMMKNPTG status, mandatori field list, scope of map addition, fix granularity, mlkMaklumatTanahV3 mandatory flag wiring).
+
+qa=QA-260298
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\29. QA #260298 - FAT - PLPS - Semakan Keputusan MMKN Dan Sur - Medan Perincian Tujuan Permohonan papar textbox
+early_diagnostic=projects/coding-projects/active/QA-260298/early-diagnostic.md
+branch=mlk/qa/260298
+phase=1-complete
+status=pending post-mortem
+local_test_confirmed=true
+commit=4460bfc7a5 (2026-05-08 21:14) — QA #260298 - PLPS - Perincian Tujuan Permohonan view-only pada SKMMKN/PKMMKN
+test_app_fat=PTMLK/01/L/PLPS/2026/42 (BA's data — verified Perincian renders as plain text "TESTING 1" instead of textbox)
+scope_layer=JSF XHTML composite (single-attribute add)
+scope_anchor=PLPS only, SKMMKN+PKMMKN tugasan only. Perincian Tujuan Permohonan field on Keputusan MMKN page must render view-only when tugasan is mode=2 (read-only).
+files_changed_phase1=src/main/webapp/resources/components/mlk/mlkKeputusanJKKTForm.xhtml :622 — added `mode="#{cc.attrs.mb.mode}"` to et:inputTextarea (1 line modified)
+fix_pattern=Composite component default mode (when mode attr null) is edit branch (p:inputTextarea = textbox); explicit mode=2 binding renders the view-only branch (h:outputText = plain text). Sibling et:inputTextarea calls in the same file (lines 71-73, 155-157, 392-394, 406-408) all pass mode correctly — bug line was the lone outlier.
+cp_E_apply_on_master=みや applied directly on local mlk/master 2026-05-08 ~20:50
+cp_F_verified=2026-05-08 21:10 — みや confirmed on FAT PTMLK/01/L/PLPS/2026/42 SKMMKN: Perincian Tujuan Permohonan = plain text "TESTING 1" (not textbox)
+cp_G_commit=2026-05-08 21:14 4460bfc7a5
+cp_H_push=2026-05-08 21:14 first push to origin/mlk/qa/260298 (-u upstream set)
+side_quest_resolved_during_phase1=Local JBoss FAT-DB connection was misconfigured (active config file is C:\etanahv3\config\environment.properties not C:\etanahv3\environment.properties — outer one was unused, renamed to .bak)
+note=Phase 1 closed 2026-05-08 21:14. みや submitting on Redmine. Phase 2 (post-mortem) pending.
 
 qa=QA-247710
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\26. QA #247710 - FAT - PRU - PRMMKN - Penambahbaikan skrin dan template
@@ -131,7 +164,7 @@ handoff_file=projects/coding-projects/active/QA-258022/handoff-258022.md
 session_handoff=projects/coding-projects/active/QA-258022/SESSION-HANDOFF-2026-04-30-AM.md
 phase=1-complete
 local_test_confirmed=true
-status=closed-pending-FAT
+status=pending post-mortem
 note=UAT-CONFIRMED 2026-04-30. 2-file fix on mlk/qa/258022 branch (committed + pushed). (1) tindakan.config.json — tugasanSMB_LITE entry + smb_utiliti option_type. (2) MlkPelupusanPegawaiAgihService.java:261-278 — Lite-specific Ya cascade per BA spec (KPT→PT, PPD→PT,KPT, KPPD→PT,KPT,PPD). UAT 4Ce + 4Ae both verified working. Phase 2 (Reflect/Post-Mortem) pending "wrap up" command. POST-ticket items in Q2 todo: smb_utiliti→pembetulan simplification, validation methodology rule, KELENGKAPAN naming legacy, Flowable Lite check, class chain doc.
 
 closed:

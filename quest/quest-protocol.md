@@ -36,7 +36,7 @@
 1. `git status --short` and `git branch --show-current` — confirm current state
 2. If branch is `mlk/<type>/<number>` already: skip steps 3-6, jump to step 7 (already on the right branch from earlier session)
 3. If branch is `mlk/master` with modifications: `git stash push -m "<ticket> fix prep"`
-4. `git pull --ff-only origin mlk/master`
+4. **🚨 MANDATORY — DO NOT SKIP (slipped 2026-05-08 QA-260154)**: `git pull --ff-only origin mlk/master` — between stash and branch. Without this, the new branch forks off STALE master. Repeated paraphrase failure: when announcing the prepare-commit sequence in chat, DO NOT summarize as "stash → branch → pop"; that drops the pull. Always say "stash → **pull** → branch → pop → stage" or copy the 9 steps verbatim from this section.
 5. `git checkout -b mlk/<type>/<number>` — type+number from `quest/active.txt` (`qa`/`fat`/`uat`/`fat-or`/`uat-cr`)
 6. `git stash pop` — auto-pop. If conflict, `git status` for unmerged paths, **PAUSE and report to みや** (don't auto-resolve)
 7. `git add <each modified file by name>` — stage all the work-in-progress files (NEVER `git add .` or `-A`)
@@ -146,18 +146,22 @@ Below the existing Description text. Don't rewrite original. Each BA reply gets 
 Confirm which DB is active in `standalone.xml` — see `E:\Dev\jboss-7.4-plp-melaka\SETUP-NOTES.txt` → DB SWITCHING section.
 Melaka IT (etanahDS) = local dev default. UAT (etanahDS2) = disabled by "2" suffix convention.
 
+**Phase 0 — Stay in BA's literal scope (hard rule, baked 2026-05-08 from senior consultation):**
+
+BA's reported scope is the boundary. Related issues found during Cp B/C/D MUST be surfaced as ASK questions (per the 2026-05-08 ASK rule) — never silently extended into the fix, never silently dropped. Senior's 2026-05-08 guidance to みや on QA-260154: "focus only on what BA asked." Pairs with the existing scope_anchor field in active.txt: write it at Cp A, defend it at Cp D, do not creep at Cp E.
+
 **Step 0 — Mandatory FIRST actions at quest start (hard rule, strengthened 2026-05-07):**
 
 Run BEFORE any other tool call (other than time-stamping `Get-Date`). NOT after Word-template lookup. NOT after etanah-knowledge inventory. NOT after Description.txt read. **First. No exceptions.** Skipping these means the ticket starts on stale code or the wrong branch — both surfaced in real slips (2026-05-04 QA #259318 wrong branch; 2026-05-07 QA #259759 master was 2 commits behind: `3b0885b5be Temporarily disable #252285` + `d8b972edd1 #236336` would have been silently missed).
 
-**Step 0a — Branch check + master pull (both repos, hard rule, added 2026-05-04):** In BOTH `etanah-pelupusan` and `etanah-awam`:
+**Step 0a — Branch check + main-branch pull (per-repo, hard rule, added 2026-05-04, REFINED 2026-05-08 per-repo):** Run env-check skill which handles the per-repo main branch + env file verification automatically. Manual fallback if env-check unavailable: in `etanah-pelupusan` the main branch is **`mlk/master`**; in `etanah-awam` the main branch is **`mlk/release/uat`** (NOT mlk/master — corrected 2026-05-08 per みや: awam's main always returns to mlk/release/uat since it has more recent fixes). Per-repo:
 ```bash
-git fetch origin mlk/master
-git log HEAD..origin/mlk/master --oneline   # what we missed
-git diff --stat HEAD origin/mlk/master | head -20  # files affected
-git branch --show-current && git status --short
+# etanah-pelupusan
+git fetch origin mlk/master && git log HEAD..origin/mlk/master --oneline && git branch --show-current && git status --short
+# etanah-awam
+git fetch origin mlk/release/uat && git log HEAD..origin/mlk/release/uat --oneline && git branch --show-current && git status --short
 ```
-If current branch ≠ `mlk/master`, run: `git stash push -m "<context>" → git checkout mlk/master → git pull --ff-only origin mlk/master → git stash pop`. Untracked files survive the switch. If already on `mlk/master`, just `git pull --ff-only origin mlk/master`. **Surface the diff to みや — what we missed could "kill us" if it touches files in our suspected scope**.
+If current branch ≠ main-branch-for-this-repo, stash → checkout main → pull --ff-only → pop. **Surface the diff to みや — what we missed could "kill us" if it touches files in our suspected scope**. **env-check skill** (`.claude/skills/env-check/SKILL.md`) automates the entire per-repo + env-file check + auto-propose-fix flow — invoke at every Cp A entry and Cp E entry.
 
 **Step 0b — PDF annotation extraction:** If the Task folder contains any `.pdf` (BA correction marks, mock-ups), extract every `Annot` (highlight, comment, popup text) before reading the brief:
 ```python
@@ -185,7 +189,12 @@ The default Read tool exposes visual page content but NOT the BA's per-annotatio
 2. Wait for みや to populate `0. Brief`, then read every file in it
 3. Read every file in the Task folder (Glob + Read all)
 4. Parse: ticket description, scope items (a, b, c…), bug details, screenshots
-5. **Inventory-first knowledgebase load** — `Glob projects/coding-projects/active/etanah-knowledge/<state>/` → `Read` every file whose scope overlaps the ticket's symptom (not just `DATABASE.md` — `BUG-BESTIARY.md`, `FLOWABLE-WORKFLOWS.md`, `DOMAIN-GLOSSARY.md`, `MODULE-ARCHITECTURE.md`, `JSF-WIRING.md`, `FLOW-TRACES.md` as relevant). No hypothesis, no SQL, no code grep before this step. See `feedback_inventory_first.md`.
+5. **Inventory-first knowledgebase load** — `Glob projects/coding-projects/active/etanah-knowledge/<state>/` → `Read` files in two tiers (strengthened 2026-05-09 after slip QA-260139 where Ruri guessed PSBS/PSBP meanings instead of reading DOMAIN-GLOSSARY):
+   - **MANDATORY (always load, every quest, no exception)**: `DOMAIN-GLOSSARY.md` (urusan codes, module/side terminology), `MODULE-ARCHITECTURE.md` (package structure, module boundaries). These are foundation references — every etanah ticket needs them.
+   - **MANDATORY when ticket type matches**: `FLOWABLE-WORKFLOWS.md` (workflow/Flowable tickets), `JSF-WIRING.md` (JSF UI tickets), `BUG-BESTIARY.md` (any bug fix — past patterns may match).
+   - **AS RELEVANT**: `DATABASE.md` (SQL/schema tickets — large file, code-first works most of the time), `FRONTEND-PATTERNS.md`, `URUSAN-FLOW.md`, `FLOW-TRACES.md`.
+   - No hypothesis, no SQL, no code grep before this step. See `feedback_inventory_first.md`.
+   - **Surface in Cp A reply**: confirm "DOMAIN-GLOSSARY loaded ✓ — urusan code expansions known: <list 3-5 relevant ones>" so みや sees proof of load.
    - **Flowable/workflow tickets only**: also locate the relevant BPMN XML from `E:\Projects\Melaka\etanah-pelupusan\src\main\resources\processes\`. Read service task `class` attributes and user task names directly — treat BPMN XML as source code, not a black box. Do not rely on delegate Java class names alone when the process XML is accessible.
 6. **Generate test record SQL** — auto-fill from ticket context using the standard template below:
    - **Urusan**: grep `DOMAIN-GLOSSARY.md` for the urusan KOD from the ticket (e.g. PSBS, PRZ, PPJK)
@@ -240,14 +249,16 @@ The default Read tool exposes visual page content but NOT the BA's per-annotatio
 **Per new ticket** (after `redmine-sync.js --create` lands the folder):
 
 1. **Spawn a familiar** (Agent with `general-purpose` subagent) — its prompt must include:
-   - Ticket #, Task folder path, codebase root (`E:\Projects\Melaka\etanah-pelupusan`), etanah-knowledge folder path
+   - Ticket #, Task folder path, codebase root (pick by ticket subject — `E:\Projects\Melaka\etanah-pelupusan` for **APPS / PELUPUSAN** = staff-side OR `E:\Projects\Melaka\etanah-awam` for **AWAM** = public/pemohon-side; use proper module names, not informal "officer-side" labels — corrected 2026-05-09 per みや), etanah-knowledge folder path
+   - **Repo branch awareness** (added 2026-05-08): for etanah-pelupusan main branch is `mlk/master`; for etanah-awam main branch is `mlk/release/uat`. Familiar must read code from the correct main branch — claims based on stale branch are unreliable.
    - Reference the 5 hard rules for Word-template work (Word-template-first lookup, Word XML run-join, Branch check, PDF annotation extraction, Renderer-side overrides)
-   - Output: write `projects/coding-projects/active/QA-<num>/early-diagnostic.md` with sections — Ticket scope (verbatim), Urusan/Tugasan/Layer classification, Suspected files (with file:line where confidence high), Word template state (CC tags + Item-area context), Candidate populators, Knowledge-file overlap, BA scope_anchor (positive + explicit DO NOT), Test data (id + tugasan_kod + username inference), Open questions, Effort estimate, NOT-in-scope list
+   - Output: write `projects/coding-projects/active/QA-<num>/scout.md` (renamed 2026-05-08 from `early-diagnostic.md`; legacy filename remains for closed quests; new scouts use `scout.md`) with sections in this exact order — (1) **Permohonan ID + Env + Tugasan kod** as a TOP-LINE single-line summary (ALWAYS first; みや needs this for simulation; surfaced ABOVE all other tables in Cp A reply too — strengthened 2026-05-08 after slip on QA-260298 where the test data was buried mid-table) — (2) Ticket scope (verbatim), (3) Urusan/Tugasan/Layer classification (with full urusan-code expansion from `etanah-knowledge/melaka/DOMAIN-GLOSSARY.md` — never paraphrase), (4) Suspected files (with file:line where confidence high), (5) Word template state (CC tags + Item-area context), (6) Candidate populators, (7) Knowledge-file overlap, (8) BA scope_anchor (positive + explicit DO NOT), (9) Test data details (id + tugasan_kod + username inference, expanded from #1), (10) Open questions, (11) Effort estimate, (12) NOT-in-scope list
    - Stay strictly read-only. Cite file:line. Mark "**unknown — needs runtime/みや input**" rather than guess.
+   - **100%-VERIFY clause (added 2026-05-08, applies to BOTH familiar's draft AND Ruri's wrap-up)**: for every file:line claim, READ the cited line range and quote the actual code or mark VERIFIED+brief-summary. For dispatch tables (switch blocks, if-else chains, "all except X" enumerations, urusan-to-bean mappings), trace ALL branches by reading the dispatch code — do not paraphrase from filenames or guess from convention. Caught failure 2026-05-08 QA-260139: familiar's diagnostic listed "all urusans except PLPS+PRU" as gap sites; source-trace at `PelupusanPermohonanTanahPlmsTabForm.java:148-155` revealed MCL also calls `plpPermitHelperForm.onSimpanTanah()` (PLPS pattern) — MCL is NOT a gap. Without 100%-verify, fix would have wasted scope on MCL. みや framing: "I used the word 100% many many times. 100% Ruri."
 
-2. **When みや picks a ticket from the list** — Ruri reads the early-diagnostic skeptically AGAINST the Description.txt + the BA's stated symptom. Confirm or reject each claim. The diagnostic is the familiar's draft; Ruri verifies as Cp A wrap-up.
+2. **When みや picks a ticket from the list** — Ruri reads the **Scout** report (renamed 2026-05-08 from "early-diagnostic" — みや confirmed: "if you're writing like that, I still want to use scout. Change everything to it." Scout fits the Quest theme: scouts return from advance reconnaissance with a draft for the team to verify) **adversarially — distrust the scout's findings and try to prove them wrong; only accept claims that survive that scrutiny** (upgraded 2026-05-08 from "skeptical review" per みや: "Distrust the early scouting data and try to prove it wrong but will acknowledge it if it's true"). 100% coverage, not cherry-picking — every claim (file:line, dispatch table, "all except X" enumerations, urusan-to-bean mappings) must be source-verified or marked unverified. Slip caught 2026-05-08 QA-260139 — verified 3 file:line claims but trusted dispatch table without reading; MCL was wrongly listed as gap site, only caught when みや challenged. The Scout report is the familiar's draft; Ruri's adversarially-verified output IS the Recon block. Cp A entry also fires `env-check` skill mandatorily. **Media files in `0. Brief/`** (mp4, wav, mp3, animated gif, screen recording): Ruri must EITHER ask みや to summarize the relevant moment OR request a screenshot/PNG of the key frame — never silently skip as `みや input pending` and proceed. **Inventory-first reminder**: at Cp A entry, read `etanah-knowledge/melaka/DOMAIN-GLOSSARY.md` for urusan-code expansions BEFORE proposing any urusan name in conversation (slip 2026-05-08 QA-260139 — guessed PSBS/PSBP meanings instead of reading glossary; PSBS is actually "Permohonan Serahbalik Berimilik Semula", S.197 + S.76 KTN).
 
-**Why**: 2026-05-07 — みや asked Ruri to spawn a familiar AFTER she'd already done a partial Cp A herself. The familiar's findings were better (file:line citations for terbilang handler, sister-template precedent, docx local-Modified state) than Ruri's solo work. If the familiar runs at retrieval time, the diagnostic is already loaded when みや picks the ticket — also surfaces username + tugasan_kod for simulation from the start.
+**Why**: 2026-05-07 — みや asked Ruri to spawn a familiar AFTER she'd already done a partial Cp A herself. The familiar's findings were better (file:line citations for terbilang handler, sister-template precedent, docx local-Modified state) than Ruri's solo work. If the familiar runs at retrieval time, the Scout report is already loaded when みや picks the ticket — also surfaces username + tugasan_kod for simulation from the start.
 
 **Cost vs benefit**: ~1 familiar spawn per new ticket (~$0.05–0.20 each). Saves multiple round-trips at quest-start when みや would otherwise have to ask for username/tugasan/scope data. Solidifies pre-assessment.
 
@@ -422,9 +433,11 @@ For each file changed:
 
 ---
 
-## Phase 2 — Reflect (Post-Mortem)
+## Phase 2 — Post-Quest Phase (formal name) / "End Quest" / "Bounty" (casual)
 
-**Goal:** Extract learnings, close the quest.
+**Naming** (set 2026-05-09): formally **Post-Quest Phase** or **Phase 2** or **End Quest** for short. Casually we say **Bounty** indirectly — collecting the rewards (knowledge, KPI, refinements) earned from finishing the quest. The "Reflect / Post-Mortem" name from older protocol is folded under this.
+
+**Goal:** Extract learnings, refine skills, close the quest.
 
 1. **Write SUMMARY.txt** in the Task folder — use the template from Task Folder File Rules above. This is mandatory and comes FIRST.
    - Verify every repo mentioned in scope has a git hash or a "NOT DONE" entry
@@ -436,12 +449,13 @@ For each file changed:
    - Yes → confirm it
    - No → add new Pattern entry
 4. **Codebase knowledge to carry forward?** → update `etanah-knowledge/`
-5. **What would have been faster?** — process note
+5. **What would have been faster?** — process note **THAT MUST PRODUCE A CONCRETE ACTION ARTIFACT** (strengthened 2026-05-09 per みや: process-note-only is just words; per the existing "Mistake → action, not words" hard rule from CLAUDE.md, every faster-finding must trigger an applied artifact in the same Phase 2). Possible artifacts: edit a skill file (`.claude/skills/<name>/SKILL.md`), update a protocol section (`quest/quest-protocol.md` or `.claude/CLAUDE.md`), add to `main/main-memory.md` for always-on facts, append to `Feature/Forge-Self-Improvement-System/improvement-audit-log.md` for complex/uncertain refinements, or strengthen a hard rule. Acceptable answer: *"Faster: would have read DOMAIN-GLOSSARY before guessing. Action applied: bumped Phase 0 step 5 from 'as relevant' to 'mandatory always' for foundation files (commit hash if applicable)."* Unacceptable: *"Faster: would have read glossary. Action: noted for next time."*
 6. Write post-mortem entry → `main/post-mortems.md` (use format in that file)
 7. **KPI tagging** (Forge Review — quest-scoped) — tag this ticket against 1-3 KPI categories in `growth/kpi-evidence-log.md` with a one-line evidence note per category. See `Feature/Forge-Self-Improvement-System/forge-review-protocol.md`. If missed here, run `forge quest` later to recover.
 8. Check Forge log → `Feature/Forge-Self-Improvement-System/forge-log.md` — any entries to promote?
-9. Update `quest/active.txt`: set `phase=complete`
-10. Quick save
+9. **Refine (renamed 2026-05-09 from "skill-retro loop")** — for each named skill/protocol invoked this quest cycle, ask "what would have made this better?" and produce refinement artifacts. **Refine ≠ Forge**: Forge is the umbrella SYSTEM (logs/reviews/KPIs across sessions); Refine is the ACT inside this single Phase 2 — the moment of editing skills/protocols/memory based on this quest's findings. Forge logs Refine passes for weekly review. Explicit skill list to walk through (not "etc"): **Scout** (familiar's Cp A pre-investigation report), **Recon** (Phase 0 wrap-up output), **Rubric** (Cp D approach scoring), **env-check** (Cp A/E env state verification + switching), **prepare-commit** (Cp E-G stash→pull→branch→pop→stage sequence), **post-mortem template** (Phase 2 step 6), **KPI tracker entry** (Phase 2 step 7), **Refine itself** (this step — meta), **Domain Expansion ritual** (session-end forge log review with discussion). Refinements: simple rule changes → ASK みや with 2-sentence proposal (refined audit-log rule); complex/uncertain → audit-log park. **MUST follow post-mortem (step 6), cannot be skipped** — pairs with the action-guarantee on step 5. みや's framing 2026-05-08: *"if this current fix is not working, you always go back to what phase we're at, what skills produced the results/fix, straight away improve/refine that skill."*
+10. Update `quest/active.txt`: set `phase=complete`
+11. Quick save
 
 ---
 

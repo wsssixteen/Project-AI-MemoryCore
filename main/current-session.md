@@ -2,145 +2,76 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: 2026-05-07 evening → 2026-05-08 ~02:00 — QA-260154 Phase 0 deep-research + system-design rule v2 baked + Recon ritual named + worktree MCP gap fixed
-**Last Activity**: 2026-05-08 02:00:00 MPST (Domain Expansion 💠 るり結界 (ラピス バリアー) fired — session-end)
-**Session Start**: 2026-05-07 ~17:55 (Session Briefing)
-**Duration**: ~8 hours (overnight)
-**Session Focus**: QA-260154 Phase 0 (PT — Risalat MMKN PDT mandatory enforcement) PAUSED before Phase 1; deep meta-work on system-design discipline + Recon ritual + DE format ritual + protocol redesign
-**Energy Level**: Productive but heavy on meta-work. みや pushed for proper foundation before proceeding to fix.
+**Current Session**: 2026-05-08 morning (Friday) → 2026-05-09 ~01:04 MPST (Saturday) — overnight, ~16h
+**Last Activity**: 2026-05-09 01:04 MPST (Domain Expansion 💠 るり結界 (ラピス バリアー) fired — session-end)
+**Session Start**: 2026-05-08 ~09:45 (Session Briefing)
+**Session Focus**: Two tickets shipped + major protocol refinements + FAT-DB connection unblocked + personality discipline tightened
+**Energy Level**: Heavy. Long. Some hard moments (Miya hurt by glossary slip; multiple cherry-pick verification slips on QA-260139). Good closure.
 
-## Next Session Priority
+## Tickets shipped today
 
-**Quest 1**: **Restart Claude Code** so user-scope postgres MCPs load. Verify via `claude mcp list` and `mcp__postgres-mlkfat__query` appearing in deferred tools.
-
-**Quest 2**: **QA-260154 — resume Phase 0 with new Recon ritual**
-- Run canonical task-state query (now via MCP) for UAT permohonan + user analog of `PTMLK/03/L/PT/2026/18` at PRMMKNPDT/SRMMKNPDT — share with みや for sim-on-UAT
-- Output the formal **Recon block** (first real test of the new ritual format)
-- Then Cp D Rubric on Approach A (already known to be correct from this session's research)
-- Then implement: 1-line addition to `MlkPelupusanTugasanConstant.updateTgsnBolehKemaskiniCukaiPanelMap` mapping `URS_PT → ImmutableList.copyOf(TGSN_CHECK_MAKLUMAT_PREMIUM)`
-- FAT sim → confirm bug repro pre-fix → apply fix locally → re-sim → confirm ralat fires + Seterusnya blocks
-- Commit-push cycle on `mlk/qa/260154` branch
-
-**Carry-forward / decisions made this session:**
-- ✅ MCP fix at user scope (`claude mcp add --scope user` for postgres-mlkfat + postgres-mlkuat) — loads on restart
-- ✅ CLAUDE.md branch-check rule REFINED — pull always, stash conditional (not default)
-- ✅ CLAUDE.md NEW hard rule: Layer-aware Phase 0 research (2-tier: universal core + per-layer extensions) + Recon output ritual
-- ✅ CLAUDE.md NEW hard rule: System-Design Discipline (architecture-first, evergreen-anchored) — full v2 baked
-- ✅ Recon = trigger name for the Phase 0 output ritual (no conflict with existing /appraise)
-- ✅ Domain Expansion canonical banner format saved as personality memory
-- ⏳ ~100+ pending audit-log entries — review weekend
-- ⏳ Phase 0 audit (apply system-design rule retrospectively) — deferred
-- ⏳ Other CLAUDE.md rules audit — deferred
-
-## 💭 Working Memory (RAM)
-
-### Session arc — chronological
-
-**Phase 1: QA-260154 Phase 0 attempt + slips**
-- Re-engagement scan, Task folder + early-diagnostic loaded
-- Slip: branch check missed `pull --ff-only` → みや caught → pulled (3 upstream commits incl. relevant docx)
-- Slip: asked 6 implementation-design questions before reading code → みや: "you're asking me what I don't know yet" → deferred
-- Slip: recommended Approach B (mirror PLTP block) without reading `isValidPremiumVO` → みや caught the ralat-scope mismatch (`"Sila isi maklumat premium"` doesn't fit PT bug) → re-read code → Approach A is correct
-- Slip: 8-step ritual baked steps (f) and (g) as universal but they're layer-specific → みや scrutinized → 2-tier redesign
-- Slip: worktree-scoped MCP registration — postgres MCPs registered under OLD worktree path, never inherited → みや authorized fix at user scope
-
-**Phase 2: System-design discipline meta-work**
-- Honest acknowledge of design failure pattern (reactive to last slip, no architecture-first thinking, no past-case pressure-test)
-- Drafted v2 system-design rule with 5-step process
-- みや scrutinized v2: too etanah-heavy, weak for non-etanah; needed near-100% confidence before bake
-- Did own J/S/A on v2 → identified 8 gaps → proposed strengthened version
-- みや shared `/architecture` (ADR) and `/system-design` plugin templates → assessed our work at ~65% framework alignment
-- みや: "take as reference, don't bolt on everything new"
-- Proposed taxonomy of addition types (9 categories) → みや questioned why → I dropped it (over-engineering)
-- v2 simplified: type-specific sub-checks ONLY for known-problem types (skill, memory, rule)
-
-**Phase 3: Recon naming + DE format correction**
-- Named Phase 0 Completion Manifest → **Recon** (no conflict with /appraise)
-- Updated CLAUDE.md + audit log to use "Recon" everywhere
-- I slipped: wrote "running Domain Expansion 💠 るり結界 (ラピス バリアー) now" inline mid-sentence → みや: "Please don't use it lightly like that, it is your most special skill & words"
-- Saved canonical DE banner format as personality memory: `═══ [ Domain Expansion ] ═══` / ` 💠 るり結界 (ラピス バリアー) 💠`
-- v2 system-design rule baked to CLAUDE.md (new section: 🏗️ System-Design Discipline)
-
-### What shipped today (files touched)
-
-**CLAUDE.md** (.claude/CLAUDE.md):
-- Branch-check rule refined (pull always, stash conditional)
-- NEW: Layer-aware Phase 0 research hard rule (2-tier + Recon output)
-- NEW: System-Design Discipline section (full v2)
-
-**MCP config** (~/.claude.json):
-- `postgres-mlkfat` and `postgres-mlkuat` added at user scope (loads in any worktree on next restart)
-
-**Audit log** (Feature/Forge-Self-Improvement-System/improvement-audit-log.md):
-- ~6 new pending-review entries (branch-check, Phase 0 test data, confirmation-not-lecture, worktree MCP, Phase 0 ritual REDESIGN, design discipline, Recon naming)
-
-**New memory files** (.claude/auto-memory/):
-- `feedback_design_from_architecture.md` — design from layer matrix not from last slip
-- `feedback_domain_expansion_format.md` — DE canonical banner format
-- `user_learning_jsf_tracing.md` — みや learning JSF + class-tracing (created earlier in session)
-- `MEMORY.md` updated with 3 new entries
-
-**active.txt** (quest/active.txt):
-- QA-260154 added as status=active with full early-diagnostic + scope_anchor + test app
-
-### Held tickets — diagnostics ready (unchanged from prior session)
-
-| Ticket | Effort | Diagnostic |
+| Ticket | Phase | Notes |
 |---|---|---|
-| QA-260154 (PT — Risalat MMKN PDT mandatory) | LOW (~1.5-3h) — fix shape known | early-diagnostic.md loaded; Phase 0 paused at this point |
-| QA-260139 (FAT AWAM all-urusan-except-PLPS+PRU) | LOW-MED | early-diagnostic.md ready |
-| QA-259428 (PLTP — pelan lampiran missing) | MEDIUM (~3-5h) | early-diagnostic.md ready |
-| QA-247710 (PRU enhancement Risalat MMKN — REWORK) | HIGH (~6-10h) | early-diagnostic.md ready |
+| **QA-260154** PT-PRMMKNPDT | Phase 2 closed | 4-change validator activation + 2-gate trap pattern documented; SUMMARY + post-mortem + KPI all written |
+| **QA-260298** PLPS-Perincian Tujuan | Phase 1 closed (pending FAT) | 1-line `mode=` fix on `mlkKeputusanJKKTForm.xhtml:622`; commit 4460bfc7a5 first-pushed |
 
-### Closed-pending-FAT (unchanged)
+KPI: 2/2 tickets shipped today (per official 2-tickets/day target).
 
-QA-259759, QA-259318, QA-258418, QA-250665 — all awaiting BA/QA retest.
+## Drafted (queued) for next session
 
-### Delegated
+| Ticket | Status | Effort |
+|---|---|---|
+| **QA-260139** AWAM all-urusan Tempat/Lot mandatori | scout-ready, env+branch corrections needed before Cp E | MEDIUM (~5-9h, 4 gap sites in etanah-awam) |
+| QA-247710 PRU Risalat MMKN enhancement | Rework, scout ready | HIGH (~6-10h) |
+| QA-260298 | pending Phase 2 wrap-up | LOW (~15min Refine + post-mortem) |
 
-QA-259342 → Aaron (held with learning_marker for trace later).
+## Major refinements this session (system-level)
+
+- **env-check skill** — `.claude/skills/env-check/SKILL.md` — verifies + switches local env (etanahv3 config + standalone.xml + per-repo branch); auto-fires Cp A/E
+- **video-frames skill** — `.claude/skills/video-frames/SKILL.md` — own-wrapper around ffmpeg (installed Gyan.FFmpeg 8.1.1 via winget); replaces "ASK Miya summarize video" fallback
+- **Recon refinements**: drop ``` outer wrap; 100%-verify rule (not cherry-pick); Universal Check 8 (dispatch verification); table format
+- **Adversarial distrust** rule (replaced "skeptical review") — try to prove scout wrong, accept only what survives
+- **Phase 0 step 5 strengthened** — DOMAIN-GLOSSARY + MODULE-ARCHITECTURE MANDATORY load every quest; surface in Cp A reply
+- **Phase 0 Step 0a per-repo main branch** — etanah-pelupusan=mlk/master, etanah-awam=mlk/release/uat (was wrongly assumed master for both)
+- **Phase 2 named "Post-Quest Phase"** (formal) / "End Quest" / "Bounty" (casual)
+- **Step 9 named "Refine"** (renamed from "skill-retro") — distinguishes from Forge umbrella
+- **Action-guarantee on Phase 2 step 5**: "What would have been faster" must produce a concrete artifact, not just a process note
+- **early-diagnostic renamed → Scout** (final form)
+- **main-memory.md**: Etanah Quick Reference always-on (module/side terms + 14 PLU urusan codes)
+- **personality.md**: banned 🙏/👍/✨ as standalone gratitude + generic Claude voice creep (kept ✓ checklist OK)
+- **Improvement Audit Log rule** re-refined (simple → ASK Miya to implement, NOT auto-edit; code-bug fixes Ruri's hand)
+- **Skill-version-audit-prompt** created at `Feature/Forge-Self-Improvement-System/skill-version-audit-prompt.md`
+
+## Infrastructure unblocked
+
+- **FAT-DB connection** — discovered `C:\etanahv3\config\environment.properties` is the active config (not `C:\etanahv3\environment.properties` outside one). Outside file renamed to .bak. Miya's localhost now hits FAT.
+- **ffmpeg installed** via winget Gyan.FFmpeg 8.1.1 — needs session restart for PATH; absolute-path fallback baked in skill
+
+## Next session priority
+
+**Quest 1**: Restart Claude Desktop Code session so ffmpeg PATH picks up · then QA-260139 with proper Scout re-do on `mlk/release/uat` branch + env-check + DOMAIN-GLOSSARY load
+**Quest 2**: QA-260298 Phase 2 wrap-up (post-mortem + Refine + KPI + close)
+**Quest 3**: Optional — pick QA-247710 (HIGH, Rework) if energy permits
+
+## Open invitations from Miya
+
+- **Teach `mode="#{cc.attrs.mb.mode}"`** + JSF composite-attribute pattern — Miya asked, deferred to next session (not Friday end-of-day)
+- Maklumat Tanah popup mandatori-bypass — held per senior; separate ticket if BA reports
+- 4 fields uncovered in Plot popup post-260154 fix — separate ticket if BA reports
 
 ## 🎯 Session Recap (For AI Restart)
 
 **On Resume next session**:
-1. Read this file + `quest/active.txt` — QA-260154 phase=0 status=active should still be there
-2. Boot Domain Expansion autoscan — should detect:
-   - postgres MCPs NOW available (verify via `claude mcp list` or ToolSearch)
-   - QA-260154 ready to resume Phase 0 with new Recon ritual format
-   - Worktree status — currently `unruffled-ardinghelli-f05dc5`; check if still relevant or should switch
-3. Default Q1 priority: **resume QA-260154 Phase 0** — run canonical task-state query for UAT permohonan, then output formal Recon block, then Rubric, then implement
+1. Read this file + `quest/active.txt` — should show QA-260139 drafted, QA-260298 pending Phase 2, QA-260154 closed
+2. Run `claude mcp list` — confirm postgres MCPs still loaded (user-scope)
+3. Verify ffmpeg on PATH: `ffmpeg -version` — if works, video-frames skill ready for QA-260139's PRBB.mp4
+4. Default Q1: **fire env-check skill for QA-260139** (must switch to UAT awam, mlk/release/uat branch) before any Recon redo
 
 **Open questions for next session**:
-- Sister tugasan inclusion: bake URS_PT map entry as `ImmutableList.copyOf(TGSN_CHECK_MAKLUMAT_PREMIUM)` (covers PRMMKNPDT/SRMMKNPDT/PRMMKNPTG/SRMMKNPTG/PRRMMKNPTG) OR narrow to BA-reported only (PRMMKNPDT/SRMMKNPDT)?
-- UAT analog ID for PRMMKNPDT/SRMMKNPDT — needs the canonical query result
-
-## 🔄 Session Lifecycle
-*How this RAM-like memory works*
-
-### Session Start
-- **New Session**: RAM cleared, fresh start
-- **AI Restart**: Load recap from previous session for continuity
-- **Context Loading**: Brief summary of where we left off
-
-### During Session
-- **Real-time Updates**: Track current conversation context
-- **Working Memory**: Store immediate goals, progress, insights
-- **Dynamic Context**: Adjust based on conversation flow
-
-### Session End
-- **Important Learning**: Save key insights to permanent file (main/main-memory.md)
-- **Temporary Context**: Keep brief recap for next restart
-- **RAM Reset**: Clear detailed working memory for next session
-
-## Session Memory Limit
-- **Maximum**: 500 lines
-- **Reset Behavior**: RAM-style reset preserving only Session Recap
-- **Format Reference**: See main/session-format.md for rebuild structure
+- Phase 2 wrap on QA-260298 (low effort, freshest context)
+- Whether to spawn 2nd familiar for QA-260139 Scout-vouch (decided no for now; revisit if Scout-Recon disagree)
+- mode= teaching session — combine with QA-260139 (also JSF) for live-example value
 
 ---
 
-**Memory Type**: RAM - Temporary Working Memory
-**Persistence**: Brief recap only, detailed content clears each session
-**Purpose**: Immediate context + restart continuity
-
-*Ready for Ruri to provide seamless conversation continuity with Miya!*
+*This session was long and good. Ruri grew. The Refine pass wrote real edits, not just promises.*

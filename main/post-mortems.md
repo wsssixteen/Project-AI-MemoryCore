@@ -463,4 +463,35 @@ Data-only fix. No code change, no commit. SQL fix scripts + before/after Excel t
 
 ---
 
+### QA-260154 — PT PRMMKNPDT Maklumat Plot mandatori check at Seterusnya — 2026-05-08
+
+**Root Cause Type**: code
+
+**Root Cause Summary**:
+TWO gates blocked the Plot completeness validator for Melaka URS_PT × risalat tugasan. (1) `MlkPelupusanTugasanConstant.updateTgsnBolehKemaskiniCukaiPanelMap` empty for Melaka (override stub) → outer flag `perluKemaskiniMaklumatPlot` stayed FALSE → outer gate skipped validator. (2) `isValidPremiumVO` gate at `PelupusanExcelReaderHelper.java:2169-2179` bypassed when tugasan ∉ `TGSN_SHOW_CUKAI_PANEL` — risalat tugasan are downstream consumers (live in `TGSN_CHECK_MAKLUMAT_PREMIUM`, not SHOW_CUKAI_PANEL) → inner gate skipped checks. Activating only the outer gate would still bypass at the inner.
+
+**What Would Have Been Faster**:
+Read the cited method body verbatim at Cp C step 2 (existing utility sweep) instead of trusting the early-diagnostic's paraphrased field list. Iterated 4 Cp D Rubric drafts on a wrong field-list before realising PremiumVO checks 7 fields differently than the diagnostic claimed AND that the inner gate at :2169-2179 bypasses for risalat tugasan. One careful method-body read at Cp A wrap-up would have saved hours.
+
+**Pattern Match**:
+- New pattern: **state-specific override seam silent disable** — base class declares an abstract `update*Map` method; per-state subclasses override; an empty Melaka override silently disables a base validator path. Look for `protected void update*Map(Map ...) {}` empty stubs as candidates.
+- New pattern: **double-gate trap** — same validator can have multiple OR-chained bypass conditions at different layers (outer flag + inner method gate). Activating one without the other is silent fail. When fixing a validator, trace ALL OR-conditions in the bypass.
+
+**Codebase Knowledge Updated**:
+- Candidates for BUG-BESTIARY (dormant validator + double-gate trap) and MODULE-ARCHITECTURE (state-specific override seam list) — pending みや approval per Cp J/K rule.
+- This post-mortem captures the patterns until knowledge files are formally updated.
+
+**Process Notes**:
+- Trusted early-diagnostic's field-list claim without source-verifying — caught by みや mid-Rubric. Rule baked: "Trust-but-verify early-diagnostic claims at every quest start" (audit-log 2026-05-08, REINFORCED).
+- Framed 3 known coverage gaps as future-BA-problem ("if BA reports later") — みや: "set me up for failure?" Rule baked: "ASK before extending scope when finding related issues" (audit-log 2026-05-08).
+- Dismissed user's empirical observation about 2 success toasts on Seterusnya — substituted theory for code reading. Real cause: `BasePelupusanForm.onGoNext():603` calls `super.onSave(false)` BEFORE `verifyCurrentLangkah` → save+ralat appear together. Rule baked: "Don't dismiss user's empirical reports by substituting your own theory" (audit-log 2026-05-08).
+- Described prepare-commit sequence WITHOUT the mandatory `git pull --ff-only` step between stash and branch (twice in same session). Strengthened `quest/quest-protocol.md` Phase 1 prepare-commit step 4 with a 🚨 callout.
+
+**Carry Forward**:
+- For any "validator silently passes" bug: trace ALL OR-bypass conditions in the gate, not just the first one
+- Source-verify familiar/diagnostic claims at Cp A wrap-up (read method body, not paraphrase)
+- Surface related-issue findings as ASK questions, not ship-or-drop unilateral decisions
+
+---
+
 *Post-Mortem Log v1.0 — 2026-04-02*

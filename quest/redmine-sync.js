@@ -93,7 +93,9 @@ function parseDescriptionFields(description) {
 function sanitize(str, cap) {
     if (!str) return '';
     const s = str.replace(/[\\/:*?"<>|]/g, '-').trim();
-    return s.length > cap ? s.substring(0, cap).trimEnd() : s;
+    const truncated = s.length > cap ? s.substring(0, cap).trimEnd() : s;
+    // Strip trailing dots/spaces — Windows + OneDrive cannot sync folders ending in '.' or ' ' (caught 2026-05-08, QA #260298 folder)
+    return truncated.replace(/[. ]+$/, '');
 }
 
 function buildFolderSlug(issue, parsed) {

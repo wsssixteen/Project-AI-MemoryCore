@@ -109,4 +109,44 @@
 
 ---
 
+### QA-260154 — PT PRMMKNPDT Maklumat Plot mandatori check at Seterusnya — 2026-05-08 — ~6-7 hours
+
+**Closure type**: code-fix-shipped (4 changes across 3 files), committed `cfd76ef111` on `mlk/qa/260154`, pushed first-time to remote, ready for FAT retest.
+
+**Time spent**: ~6-7 hours across the day (Phase 0 deep-research from prior session + Phase 1 today + Cp D iterations + extension dialogue + commit/push)
+
+**Extras solved beyond ticket scope**:
+- Coverage extended from BA's 7-field reported scope to all 10 `*` fields in the Plot popup (Jenis Pembangunan/Komponen + Tempoh Pajakan + Butiran Kegunaan added beyond the base PremiumVO check)
+- Sister tugasan coverage (SRMMKNPDT, PRMMKNPTG, SRMMKNPTG, PRRMMKNPTG) gained same fix — same plot-data dependency; prevents 4 likely-future Rework tickets
+- Created `Feature/Forge-Self-Improvement-System/layer-architecture.md` — L0 Continuous Improvement + 9 operational layers + reliability snapshot (per みや's mid-session ask)
+- 12+ audit-log entries spawned + 2 protocol files strengthened (CLAUDE.md System-Design Discipline pre-baked, quest-protocol.md Phase 1 prepare-commit step 4 callout)
+
+**Business logic learned**:
+- **Two-gate validator pattern** in `PelupusanExcelReaderHelper.isValidPremiumVO` — outer flag (`perluKemaskiniMaklumatPlot`) + inner method gate (`TGSN_SHOW_CUKAI_PANEL` membership). Both must be addressed for validator to fire.
+- **State-specific override seam** — `*PelupusanTugasanConstant` per-state subclasses override `update*Map` methods; empty stub silently disables a base-class validator path.
+- **Risalat tugasan vs panel-edit tugasan** distinction — `TGSN_CHECK_MAKLUMAT_PREMIUM` (downstream consumers, e.g. PRMMKNPDT) vs `TGSN_SHOW_CUKAI_PANEL` (in-place editors). Same data, different gates.
+- **Save-then-validate flow** in `BasePelupusanForm.onGoNext` — `super.onSave(false)` fires BEFORE `verifyCurrentLangkah` → confusing UX when validation fails post-save (success toast + ralat appear together).
+
+**New skills / patterns**:
+- **Recon block** as Cp C output ritual (formal verification structure baked + first real use this session)
+- **Layer > Business > Code** top-down explanation discipline (UI Label names, Logic-first columns)
+- **ASK-before-extending-scope** (vs ship-partial OR drop-scope-creep)
+- **Direct-implement-on-simple vs audit-log-on-complex** (refined audit log usage rule)
+- **Don't-dismiss-user-reports** (substitute-theory ban)
+
+**Audit-log entries spawned**: 12+
+- Trust-but-verify early-diagnostic claims (REINFORCED)
+- Recon block source-verify (REINFORCED)
+- ASK before extending scope when finding related issues
+- Set-up-for-failure pattern banned
+- POSITIVE forge — scope-awareness at fix-shape time
+- UI-to-code relating discipline + UI Label names + Logic-first columns + Impact/Result rename
+- Don't dismiss user's empirical reports
+- Prepare-commit sequence pull-step paraphrase slip (REINFORCED — protocol callout strengthened)
+- Refined audit-log rule (simple → direct-implement, complex → park)
+
+**Self-assessment**: 6-7 hours for what should have been ~2-hour ticket. Lost time to (a) building Cp D Rubric on wrong evidence (early-diagnostic field-list accepted without source-verify), (b) discovering the second gate at :2169 only on careful method-body read, (c) over-correcting on scope-extension framing instead of using ASK rule, (d) protocol-paraphrase slips on prepare-commit. Net positive: reusable patterns named, protocol files strengthened, layer-architecture system captured. KPI: 1 fully-shipped ticket today (260154) + 1 closed-pending-verify (260154 awaiting BA FAT retest). New session-start verification ritual should claw back time on next quest.
+
+---
+
 *Created 2026-05-06 in response to みや's KPI-tracking ask. Will capture every closed ticket going forward.*
