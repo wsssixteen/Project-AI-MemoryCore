@@ -11,27 +11,38 @@ allowed-tools: Read, Bash, Edit, Grep
 When invoked, env-check:
 
 1. **Detects target env** from active.txt or current quest scope:
-   - Pelupusan ticket → FAT default (post-2026-05-08)
-   - AWAM ticket → UAT default (FAT-AWAM unconfirmed)
-   - Module-only switch (same env, different repo) → no env file change, branch only
+   - Pelupusan ticket → FAT default for SQL-investigation, UAT for code-edit testing
+   - AWAM ticket → UAT (FAT-AWAM does not exist for local; always simulate on UAT regardless of where BA reported)
+   - Module switch (awam ↔ pelupusan) is heavy: requires WAR rebuild + JBoss redeploy (one WAR per JBoss instance)
 
-2. **Reads current state** of 3 env-affecting locations:
+2. **Reads current state** of 3 env-affecting locations + 1 deployment locus:
    - `C:\etanahv3\config\environment.properties` — `cas.url`, `proxy.url`
-   - `E:\Dev\jboss-7.4-plp-melaka\standalone\configuration\standalone.xml` — `etanahDS` `<connection-url>`
+   - `E:\Dev\jboss-7.4-plp-melaka\standalone\configuration\standalone.xml` — `etanahDS` `<connection-url>` (the ONE that changes; Audit/DMS/DS3 stay on mkit always — env-agnostic)
    - Branch on relevant repo:
-     - `etanah-pelupusan` main = `mlk/master`
-     - `etanah-awam` main = `mlk/release/uat` (NOT `mlk/master`; corrected 2026-05-08)
+     - `etanah-pelupusan` main = `mlk/master` (SAME branch for both UAT and FAT; only env config differs)
+     - `etanah-awam` main = `mlk/release/uat` (only UAT exists)
+   - Currently deployed WAR in `E:\Dev\jboss-7.4-plp-melaka\standalone\deployments\` — flags whether a module switch is needed
 
 3. **Compares + emits notification banner** (always visible, never silent)
 
 4. **If mismatch** → AUTO-PROPOSES the fix (specific edits, not vague), waits for みや's `apply` confirmation, then **applies** the changes (config-edit category per refined audit-log rule = Ruri's hand after authorization)
 
-5. **Always lists post-change steps** (mandatory ordering — never reorder):
+5. **Post-change steps differ by case** — pick the right list:
+
+   **Case A — Env-only switch (same module, swap config only)**: e.g. pelupusan-FAT ↔ pelupusan-UAT, both running `etanah-pelupusan.war`
    - (a) Stop JBoss completely (verify no java.exe in Task Manager)
    - (b) Delete `standalone\tmp\*` and `standalone\data\*` (cache busters)
-   - (c) **Only if WAR change**: `mvn clean install` on relevant repo
-   - (d) Start JBoss
-   - (e) Tail `server.log` to verify: cas.url binding + datasource URL
+   - (c) Start JBoss (no rebuild needed — WAR doesn't bake DB URL or cas.url)
+   - (d) Tail `server.log` to verify: cas.url binding + datasource URL
+
+   **Case B — Module switch (awam ↔ pelupusan, swap WAR)**: heavier; only ONE WAR can be deployed at a time per JBoss instance
+   - (a) Stop JBoss completely
+   - (b) Remove the currently-deployed WAR from `standalone\deployments\`
+   - (c) `mvn clean install` on the target repo (`etanah-pelupusan` or `etanah-awam`)
+   - (d) Copy the freshly-built `target\*.war` to `standalone\deployments\`
+   - (e) Delete `standalone\tmp\*` and `standalone\data\*` (cache busters)
+   - (f) Start JBoss
+   - (g) Tail `server.log` to verify: WAR deployed cleanly + cas.url binding + datasource URL
 
 ## Trigger phrases
 
@@ -44,14 +55,41 @@ When invoked, env-check:
 | `switch env to UAT` / `switch to UAT awam` | Same as above for UAT/awam |
 | `switch to <repo>` (same env) | Branch-only switch, verify env files match |
 
-## Mapping (per ticket scope)
+## Mapping (per ticket scope) — confirmed 2026-05-11 (2nd-pass after みや's JNDI-rename clarification)
 
-| Ticket scope | etanahv3 cas.url | standalone.xml etanahDS | Repo + main branch |
-|---|---|---|---|
-| pelupusan + FAT | `https://appmlk.melaka.gov.my/etanah-cas` | `jdbc:postgresql://172.30.17.104:5444/etprdmlk?currentSchema=et_main` | etanah-pelupusan @ `mlk/master` |
-| pelupusan + UAT | `http://172.30.59.150/etanah-cas` | `jdbc:postgresql://172.30.59.185:5444/mlkuat?currentSchema=et_main_uat` | etanah-pelupusan @ `mlk/master` |
-| awam + UAT | `http://172.30.59.150/etanah-cas` | `jdbc:postgresql://172.30.59.185:5444/mlkuat?currentSchema=et_main_uat` | etanah-awam @ `mlk/release/uat` |
-| awam + FAT | UNKNOWN — confirm with みや/BA before assuming exists | — | — |
+All 3 candidate datasources are PERMANENTLY PRESENT in standalone.xml. **Switching envs is a JNDI-rename, not a URL swap**: whichever should be active gets jndi-name + pool-name = `etanahDS` (no suffix); the other two get `etanahDS2` and `etanahDS3` suffixes (assignment between 2/3 is arbitrary).
+
+| Ticket scope | Which DS becomes `etanahDS` (active) | cas.url | Repo + branch | WAR deployed | Default? |
+|---|---|---|---|---|---|
+| **pelupusan + FAT** | `etprdmlk@172.30.17.104:5444 / et_main` | `https://appmlk.melaka.gov.my/etanah-cas` (FAT) | etanah-pelupusan @ `mlk/master` | etanah-pelupusan.war | ✅ **DEFAULT** — most tickets come from FAT |
+| pelupusan + UAT | `mlkuat@172.30.59.185:5444 / et_main_uat` | `http://172.30.59.150/etanah-cas` (UAT) | etanah-pelupusan @ `mlk/master` | etanah-pelupusan.war | Only when FAT lacks test data, OR BA states UAT in ticket |
+| **awam + UAT** | `mkit@172.16.100.197:5444 / et_main_mlit` | `http://172.30.59.150/etanah-cas` (UAT) | etanah-awam @ `mlk/release/uat` | etanah-awam.war | All AWAM tickets (FAT/UAT both tested here) |
+| awam + FAT | **N/A** — FAT-AWAM not exposed for local testing | | | | |
+
+**Switch mechanic** (verified against current standalone.xml lines 193-235 on 2026-05-11):
+```xml
+<!-- Currently active (AWAM-UAT): jndi-name = etanahDS, no suffix -->
+<datasource jndi-name="java:jboss/datasources/etanahDS"  pool-name="etanahDS"  ...>
+    <connection-url>jdbc:postgresql://172.16.100.197:5444/mkit?currentSchema=et_main_mlit</connection-url>
+<!-- Inactive: gets etanahDS2 -->
+<datasource jndi-name="java:jboss/datasources/etanahDS2" pool-name="etanahDS2" ...>
+    <connection-url>jdbc:postgresql://172.30.17.104:5444/etprdmlk?currentSchema=et_main</connection-url>
+<!-- Inactive: gets etanahDS3 -->
+<datasource jndi-name="java:jboss/datasources/etanahDS3" pool-name="etanahDS3" ...>
+    <connection-url>jdbc:postgresql://172.30.59.185:5444/mlkuat?currentSchema=et_main_uat</connection-url>
+```
+
+To switch from AWAM-UAT to FAT-PLP: rename the etprdmlk block's jndi/pool to `etanahDS` (drop suffix), and rename mkit's to `etanahDS2` (add suffix). The mlkuat block can stay at `etanahDS3` or swap with mkit — assignment of 2 vs 3 is arbitrary.
+
+**Datasources that DO NOT change** (env-agnostic, always-on mkit per 2026-05-11):
+- `etanahAuditDS` → `mkit / et_sistem_mlit` (line 173 area)
+- `etanahDMSDS` → `mkit / et_dms_mlit` (line 257 area)
+
+When switching `etanahDS`, leave Audit + DMS alone. The skill NEVER proposes edits to them.
+
+**SQL/MCP DB query path** (separate from app DB target):
+- Pelupusan-side data → `mcp__postgres-mlkuat__query` (UAT) or `mcp__postgres-mlkfat__query` (FAT)
+- AWAM-side data → `mcp__postgres-mlkuat__query` (rizab/master data overlaps mkit enough for read-only queries; no direct mkit MCP wired)
 
 ## CAS URL switch mechanic (rule, 2026-05-11)
 
@@ -70,6 +108,11 @@ cas.url=https\://appmlk.melaka.gov.my/etanah-cas          ← UNCOMMENT (FAT lin
 ```
 
 Edit must preserve the `\:` escape on `://` (Java properties format). Trailing-comment lines for TRGIT (`172.16.100.41`) and TRG-STAGING are OUT of scope for MLK work — leave commented.
+
+## Output cadence (added 2026-05-11 after みや feedback)
+
+- **First env-check banner of a session** (or after a major env switch): emit the FULL mapping table + all 4 aspect rows + post-change checklist.
+- **Subsequent banners within the same session** (e.g. re-verify after a switch, or status check at Cp E): emit ONLY the changed row(s) as a single-row update. Skip the full mapping table — みや already knows the layout. Format: `✓ <aspect> now <new value> (was <old>)` per changed row. If everything matches, one-line: `✅ All env aspects still match <env> — no change since last check.`
 
 ## Output format (always emitted)
 

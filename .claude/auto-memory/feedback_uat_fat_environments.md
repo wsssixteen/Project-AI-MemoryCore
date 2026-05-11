@@ -10,7 +10,18 @@ originSessionId: 9a250643-8b07-48d4-8408-3e2fb4b02911
 |---|---|---|---|---|
 | **UAT** (`mlkuat`) | 172.30.59.185:5444 | `mlkuat` | `et_main_uat` | **Local testing default.** みや's local JBoss `etanahDS` points here (see standalone.xml). All Phase 1 verification + most SQL investigations happen here. |
 | **FAT** (`mlkfat`) | 172.30.17.104:5444 | `etprdmlk` | `et_main` | **Simulation viewing only.** Use when BA/QA shares an `id_pengenalan` in a ticket and we need to see what they see. NOT for active dev testing. |
-| `mlit` (`et_main_mlit`) | 172.16.100.197:5444 | `mkit` | `et_main_mlit` | JBoss standalone awam-module testing. Niche — skip unless explicitly testing awam. |
+| `mlit` (`et_main_mlit`) | 172.16.100.197:5444 | `mkit` | `et_main_mlit` | **AWAM-UAT primary for LOCAL JBoss `etanahDS`** (confirmed 2026-05-11 second-pass). When deploying AWAM locally, `standalone.xml etanahDS` must point here. Distinct from DB-query path: for read-only SQL investigations, use `mlkuat` via MCP (data overlaps; mkit not wired to MCP). |
+
+**AWAM-tested-on-UAT-only rule (hard, 2026-05-11, finalized after 2nd-pass みや confirmation)**: AWAM bugs are simulated on UAT regardless of where BA reported them. FAT-AWAM is NOT a runnable local env. Three things to change when switching to AWAM-UAT mode:
+1. `etanahv3\config\environment.properties` → `cas.url=http\://172.30.59.150/etanah-cas` (UAT line uncommented, FAT line commented out)
+2. `standalone.xml` → `etanahDS` `<connection-url>` swapped to `jdbc:postgresql://172.16.100.197:5444/mkit?currentSchema=et_main_mlit` (this is the ONLY DB target change — Audit/DMS/DS3 stay on mkit always, env-agnostic)
+3. `etanah-awam` repo on branch `mlk/release/uat` (pelupusan repo can sit on `mlk/master` since not deployed)
+
+**One WAR per JBoss instance** (2026-05-11 confirmation): JBoss runs ONE WAR at a time. To switch from awam ↔ pelupusan: stop JBoss → remove currently-deployed WAR → `mvn clean install` on target repo → copy fresh WAR to `standalone\deployments\` → clean `tmp\*` + `data\*` → start JBoss. Same-app env switch (e.g. pelupusan-UAT ↔ pelupusan-FAT, both running etanah-pelupusan.war) is config-only: stop → clean tmp+data → start, no rebuild.
+
+**JNDI-rename mechanic for etanahDS** (2026-05-11 2nd-pass confirmation, supersedes any prior "swap connection-url" wording): All 3 candidate datasources stay permanently present in standalone.xml — switching is done by renaming the JNDI alias suffixes, NOT by editing connection-url values. The DS that should be active gets `jndi-name="java:jboss/datasources/etanahDS"` + `pool-name="etanahDS"` (NO suffix); the other two get `etanahDS2` and `etanahDS3` (assignment of 2 vs 3 is arbitrary). Switching is `Edit` on 2 attributes × 3 datasource blocks = 6 attribute edits total. Default = FAT-PLP (etprdmlk) because most tickets are FAT; UAT-PLP only if FAT lacks data OR BA explicitly states UAT; AWAM-UAT (mkit) for any AWAM ticket regardless of where BA reported.
+
+For READ-ONLY DB queries during investigation: use `mcp__postgres-mlkuat__query` against `mlkuat`/`et_main_uat` for both pelupusan-UAT and AWAM-UAT data — the rizab/master data overlaps mkit enough. If a candidate value fails in the AWAM portal, it's a mkit-only gap; ask みや for direct SQL access (no mkit MCP wired).
 
 **MCP wiring** (already configured 2026-04-29):
 - `mcp__postgres-mlkuat__query` → UAT
