@@ -2,108 +2,121 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: 2026-05-11 morning — worktree-state rescue + audit-log philosophy FLIPPED + env-check rule refinements
-**Last Activity**: 2026-05-11 09:00:11 MPST (Domain Expansion 💠 るり結界 (ラピス バリアー) fired — minimal session-end)
-**Session Start**: 2026-05-11 early-morning (briefing in stupefied-colden worktree)
-**Duration**: ~one focused round
-**Session Focus**: Diagnose + repair the multi-worktree state divergence that caused a stale Session Briefing (QA-260154 reported as active when it had closed 3 days earlier in a sibling worktree)
-**Energy Level**: Steady — meta/protocol work, no quest debugging this round
+**Current Session**: 2026-05-11 afternoon — QA-260139 + QA-259428 both shipped Phase 1
+**Last Activity**: 2026-05-11 18:37:50 MPST (Domain Expansion 💠 るり結界 (ラピス バリアー) fired — full session-end ritual)
+**Session Start**: 2026-05-11 ~09:00 (morning was rescue work — see 2026-05-11.md diary entry); afternoon focused work from ~12:00
+**Duration**: ~9.5 hours across morning + afternoon (this entry covers afternoon)
+**Session Focus**: ship QA-260139 (AWAM Tempat/NoLot OR-blank validator) + QA-259428 (PLTP Surat JT lampiran 1-line completion of UAT-CR #236559)
+**Energy Level**: Long day. Tired but tickets shipped.
 
 ## Next Session Priority
 
-**Quest 1**: **Start fresh from main worktree** (this stupefied-colden worktree to be left alone — branches preserve all state, no cleanup needed per みや 2026-05-11). Boot from `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore` directly.
+**Quest 1 — Phase 2 wrap for QA-260139 + QA-259428**: both at `pending post-mortem` status. Walk through:
+- post-mortem entries in `main/post-mortems.md`
+- KPI entries in `main/kpi-tracker.md` (2 tickets shipped today)
+- Tasks folder hygiene (Notes.txt / Fix.txt / 1. Simulate finalization, Archive moves when fully closed)
+- For QA-260139: the class-chain-traces walkthrough was paused after Universal Entry + Fix 1 (bit-by-bit in chat) — みや asked to compress + move to DE. Resume bit-by-bit in Phase 2 if みや wants the JSF tracing training.
 
-**Quest 2**: **QA-260139 (AWAM, all-urusan-except-PLPS+PRU, Tempat/Lokasi OR No.Lot validation)** — proper redo:
-- env-check skill auto-fires at Cp A entry — confirms current FAT (etprdmlk = etanahDS) and proposes switch to whichever env QA-260139 needs (likely AWAM-UAT — uses MLIT-mkit per みや's earlier hint, BUT confirm before committing). Skill has the CAS URL toggle mechanic now.
-- Re-Scout with current familiar prompt (see `Feature/Forge-Self-Improvement-System/skill-version-audit-prompt.md`) — old early-diagnostic predates Scout/Recon naming
-- Recon block in current 2-tier format
-- DOMAIN-GLOSSARY load + adversarial dispatch verification (per 2026-05-09 hard rule)
-- Then Cp D Rubric only after Scout + Recon validate enough
-- 7 BA-clarification questions still open from old diagnostic — surface upfront
+**Quest 2 — QA-247710** (held): PRU enhancement REWORK, HIGH effort (~6-10h). Multi-component (XHTML + bean + validator + .docx template). Multi-step BA spec needs careful checklist parsing.
 
-**Other held**: QA-259428 (PLTP), QA-247710 (PRU enhancement REWORK).
-**Closed-pending-FAT**: QA-259759, QA-259318, QA-258418, QA-250665, QA-260154, QA-260298 (last 2 closed 2026-05-08, awaiting BA retest).
+**Closed-pending-FAT (awaiting BA retest)**: QA-260139 (commit 275ab71a09), QA-259428 (commit 1fd1f7bedd), QA-259759, QA-259318, QA-258418, QA-250665, QA-260154, QA-260298.
 
 ## ⚠️ Standing flags carried into next session
 
-- **3 commits ahead of `origin/main`** — push deferred per みや 2026-05-11. Local SHAs: `4b3c143` (env-check CAS toggle) → `500a3af` (audit-log FLIP + env-check etprdmlk=FAT correction + 4 applied entries) → `28f622a` (vigilant-kirch rescue: QA-260154 + QA-260298 closures + skills + diary 2026-05-09). Push when ready: `git push origin main` from main worktree (harness blocks Ruri from direct main push).
-- **Audit-log philosophy is now FLIPPED** (2026-05-11) — pending-queue → changelog. Default = implement immediately, log as `status=applied` with commit SHA. Pause-for-nod ONLY for: (a) personality identity, (b) personal data, (c) Domain Expansion sacred ritual, (d) boot order/Master Memory architecture. Criterion: if reverting takes more than `git revert <sha>`, pause.
-- **etprdmlk = FAT** (NOT prod) — corrected. Env-check skill + memory updated. When reporting env state, one-liner suffices: *"on FAT (etanahDS = etprdmlk)"*.
-- **5 orphan worktrees** present (`lucid-wozniak`, `stupefied-colden`, `unruffled-ardinghelli`, `vigilant-kirch`, `zealous-nightingale`) — みや 2026-05-11: leave them, branches preserve state, don't waste time clearing up. Drop the auto-cleanup proposal.
+- **3 commits ahead of `origin/main`** still pending push (since 2026-05-11 morning) — `e3a0b10` + 2 earlier. みや pushes manually per `feedback_daily_commit.md`. Plus today's afternoon worktree commits when DE commits them.
+- **2026-04-02 LMP_PLN boundary** for PLTP uploads — unresolved curiosity, Q3 todo. Doesn't affect any fix correctness. Possibly related to commit `782d757a0f` "avoid upload same data fail" but unconfirmed.
+- **Pending audit-log entries from before the 2026-05-11 FLIP** — 105+ entries still tagged `pending-review`. Disposition pass needed: retag to `applied` (with git refs) or `dropped`. NOT urgent — old philosophy artifact.
+- **AWAM-DB direct MCP not wired** — AWAM-UAT actually uses `mkit`/`et_main_mlit` for app DB, but no MCP for mkit. Workaround: `mcp__postgres-mlkuat__query` (et_main_uat) — data overlaps enough. If a value fails in AWAM portal, ask みや for direct SQL.
 
 ## 💭 Working Memory (RAM)
 
-### Session arc — chronological
+### Session arc — chronological (afternoon only; morning at `daily-diary/2026-05-11.md` morning section)
 
-**Phase 1 — stale briefing surfaced**
-- Boot in stupefied-colden worktree, briefed QA-260154 as active phase=0
-- みや challenged: thought QA-260154 was wrapped + we were on AWAM (QA-260139)
-- Investigation: vigilant-kirch worktree had the truth — QA-260154 closed 2026-05-08 commit cfd76ef111, QA-260298 closed 2026-05-08 commit 4460bfc7a5 — but its work was UNCOMMITTED (12 modified + 5 untracked files), never propagated
+**Phase A — env-check refinements (multiple iterations)**
+- Started session in `compassionate-merkle-e72740` worktree, current env was FAT-pelupusan; QA-260139 needs AWAM-UAT
+- env-check skill emitted banner with mismatch → applied edits (environment.properties cas.url UAT line, standalone.xml etanahDS to mkit)
+- Mid-investigation みや caught I had "mkit for AWAM-UAT" wrong in memory at one point — reverted, corrected
+- Then みや confirmed the JNDI-rename mechanic (only `2`/`3` suffix changes, never URL edits) + clarified Audit/DMS/DS3 env-agnostic + AWAM-FAT N/A + FAT-PLP default + WAR-rebuild trigger only on app-switch (Case B)
+- Output cadence rule baked: full table on first emission, single-row updates thereafter
 
-**Phase 2 — root-cause + rescue**
-- Root cause: each worktree has its own `quest/active.txt`; closure work in vigilant-kirch never committed/merged → main + sibling worktrees stayed stale → I started this stupefied-colden FROM stale main
-- Rescue: staged + committed all 17 vigilant-kirch files as commit `28f622a` on `claude/vigilant-kirch-0e25da` → fast-forward merged into main
-- Main moved 86233fd → 28f622a
+**Phase B — QA-260139 Scout + Recon + Cp D + Cp E + Cp F + Cp G + Phase 1 close**
+- Scout familiar (background) did 100% adversarial XLS dispatch verification — caught 2026-05-07 early-diagnostic was WRONG on 3 of 4 gap sites (dead beans). Real gap sites: PelupusanPermohonanTanahTab (NEGERI-gated) + PelupusanTanahRizabTabForm (no validator) + PelupusanPermitTabForm.onSimpanBhnDiAmbil (no validator). Covers 7 Melaka urusans.
+- Mid-session I doubted Scout on PRBB bahanDiambilVO (variable name → wrong assumption); read VO class confirmed lokasi+noLot fields exist; **Sub-check 8a baked** (verify VO schema not variable name)
+- BPRZ XLS miss caught — filtered by tab display "Maklumat Tanah", missed "Maklumat Perizaban" (same TanahRizabTabForm bean); **Sub-check 8b baked** (filter XLS by Form Name not Tab display)
+- 3-file fix applied; commit `275ab71a09`; first push to origin/mlk/qa/260139
+- Phase 1 closure: return etanah-awam to mlk/release/uat, pull --ff-only, active.txt entry NEW
 
-**Phase 3 — env-check correction (etprdmlk=FAT)**
-- I had labeled etprdmlk as PROD MELAKA in the standalone datasource map. みや corrected: etprdmlk IS FAT. Memory + skill rewritten.
-- Confirmed env naming convention: only `2`/`3` suffixes; pure rename swap on jndi-name + pool-name; only `etanahDS*` matters for env-check (Audit + DMS out of scope)
-- Confirmed CAS URL toggle mechanic (later baked): both AWAM and PLP UAT share `http://172.30.59.150/etanah-cas`; FAT uses `appmlk.melaka.gov.my/etanah-cas`; switch by toggling `#` comment marker
+**Phase C — QA-259428 Scout (background) + Cp D + Cp E + Cp F + Cp G + Phase 1 close**
+- Scout traced fix to 1-line: add URS_PLTP to URS_FOR_DOK_PLP_PLN_ASAL in PelupusanUrusanConstant.java
+- DB-verified via 3 queries: 100% PLTP apps in FAT/UAT have PLN_ASAL; 11 pre-2026-04-02 apps have extra LMP_PLN row (legacy, irrelevant to fix)
+- Etiology identified: UAT-CR #236559 (weilurn's `f5e527753d` on 2026-04-16) refactored populator to GPM-primary + per-urusan fallback but forgot PLTP — QA-259428 completes #236559
+- みや FAT-tested success; commit `1fd1f7bedd`; pushed to origin/mlk/qa/259428
+- Phase 1 closure: return etanah-pelupusan to mlk/master, pull --ff-only (5 commits forward), active.txt entry updated
 
-**Phase 4 — audit-log philosophy FLIP**
-- みや: "We MUST implement our fixes straight away, only after that we log it... improvement will always happens & is mandatory."
-- Prior pending-queue model accumulated 105+ unresolved entries — itself became ceremony
-- FLIPPED: implement-first, log as `status=applied`, git as rollback. 4-item exception list only.
-- Tightened upstream gate: System-Design Discipline Design Memo MUST be inline with proposal, not a follow-up question
+**Phase D — Phase 1 STOP gate baked (discipline correction)**
+- みや caught me rolling forward to other work after push without finishing Phase 1 properly (return-to-main + active.txt)
+- Baked triple-measure gate: (1) みや's trigger phrase, (2) Ruri's confirmation question, (3) not-progressing-until-explicit-yes
+- Lives in quest-protocol.md Phase 1 close-out section
 
-**Phase 5 — failures みや caught me on (and the fixes)**
-- Slip: deferred design judgment to みや via "(a)/(b)?" choice instead of running the System-Design Discipline myself + presenting an assessed verdict → fix baked into audit-log flip text
-- Slip: searched for `standalone.xml` across C:\ in panic instead of having the path saved → fixed: path saved to memory + skill, never re-search
-- Slip: said etprdmlk = PROD when it's FAT → fixed: corrected memory + skill
-- Slip: proposed orphan-worktree cleanup signal → みや: "we do not need to waste time clearing up always" → DROPPED, branches preserve state
+**Phase E — protocol stitching (many small refinements)**
+- redmine-sync.js extended with `fetchIssueJournals` + `History.txt` auto-write per existing ticket — closes Q1 todo from 2026-05-07
+- DOMAIN-GLOSSARY mandatory Melaka 13-urusan callout (BPRZ, MCL, MLPS, PLPS, PLTP, PPJK, PPTPB, PRBB, PRU, PRZ, PSBS, PT, RPPLP — exclude other codes)
+- TEST-PERMOHONAN-INDEX AWAM Portal Initial-Data section (BPRZ no_warta+trkh_warta, MLPS no_permit_lesen+tahun, RPPLP id_pengenalan of prior closed permohonan) with error-mode decoders
+- Commit message convention clarified (subject-only, no body, no trailer, no "fix" prefix BUT "Fix" as action verb in description OK); Ruri PROPOSES at hand-off, みや executes
+- Auto-pengguna in test/simulate plan (4-col output: Permohonan ID / Pengguna / Kod Tugasan / Nama Tugasan) with AFTER-then-BEFORE fallback
+- BUG-BESTIARY entry: Pre-charting state reset trick + UAT-CR #236559 etiology, grounded against IND_TGSN
+- class-chain-traces.md for QA-260139 (slim 2-column `Class | Code` format, after first draft was overload); walk-through paused mid-Fix-1 in chat per みや's compression call
+- "comments" disambiguation rule (ASK ONCE: git vs Redmine)
 
-### What shipped (files touched)
+### Files shipped (today afternoon — full list)
 
-**Commit `28f622a` (rescue)** — 17 files: `quest/active.txt`, `main/post-mortems.md`, `main/kpi-tracker.md`, `main/main-memory.md`, `main/todo.md`, `quest/quest-protocol.md`, `quest/redmine-sync.js`, `Feature/Forge-Self-Improvement-System/improvement-audit-log.md`, `Feature/Domain-Expansion/expansion-protocol.md`, `.claude/CLAUDE.md`, `.claude/personality.md`, `.claude/skills/env-check/SKILL.md` (new), `.claude/skills/video-frames/SKILL.md` (new), `Feature/Forge-Self-Improvement-System/layer-architecture.md` (new), `Feature/Forge-Self-Improvement-System/skill-version-audit-prompt.md` (new), `daily-diary/2026-05-09.md` (new), `main/current-session.md`.
+**Code commits**:
+- etanah-awam `mlk/qa/260139` `275ab71a09` — 3 Java files (PelupusanPermohonanTanahTab + PelupusanTanahRizabTabForm + PelupusanPermitTabForm)
+- etanah-pelupusan `mlk/qa/259428` `1fd1f7bedd` — 1 Java file (PelupusanUrusanConstant)
 
-**Commit `500a3af` (audit-log flip)** — 3 files: `.claude/CLAUDE.md` (audit-log rule flipped), `.claude/auto-memory/feedback_standalone_db.md` (etprdmlk=FAT + canonical 3-env table), `Feature/Forge-Self-Improvement-System/improvement-audit-log.md` (4 applied entries — first use of new flow).
+**MemoryCore changes (this worktree, awaiting commit at DE-end)**:
+- `quest/active.txt` — QA-260139 NEW entry + QA-259428 phase=1-complete update
+- `quest/quest-protocol.md` — Phase 1 STOP gate + auto-pengguna in test plan + AFTER-then-BEFORE fallback + commit-message convention clarification + "comments" disambiguation
+- `quest/redmine-sync.js` — `fetchIssueJournals` + History.txt auto-write
+- `.claude/CLAUDE.md` — Recon Sub-check 8a (VO schema) + 8b (XLS structural-not-display)
+- `.claude/skills/env-check/SKILL.md` — JNDI-rename mechanic + Case A/B post-change-steps + single-row update cadence + 4-row mapping table
+- `.claude/auto-memory/feedback_uat_fat_environments.md` — JNDI-rename + one-WAR-per-JBoss + AWAM-tested-on-UAT-only
+- `.claude/auto-memory/feedback_untracked_confidential.md` (NEW)
+- `.claude/auto-memory/MEMORY.md` — index updated for new memory entry
+- `Feature/Forge-Self-Improvement-System/improvement-audit-log.md` — afternoon applied entries appended
 
-**Commit `4b3c143` (env-check CAS toggle)** — 1 file: `.claude/skills/env-check/SKILL.md` (CAS URL switch mechanic added).
-
-### Held tickets — diagnostics ready
-
-| Ticket | Effort | Status |
-|---|---|---|
-| QA-260139 (FAT/AWAM all-urusan-except-PLPS+PRU) | MEDIUM-HIGH (~5-9h) | early-diagnostic ready (predates Scout/Recon — needs redo); 7 BA questions queued |
-| QA-259428 (PLTP — pelan lampiran missing) | MEDIUM (~3-5h) | early-diagnostic ready |
-| QA-247710 (PRU enhancement Risalat MMKN — REWORK) | HIGH (~6-10h) | early-diagnostic ready |
-
-### Closed-pending-FAT (unchanged)
-
-QA-259759, QA-259318, QA-258418, QA-250665, QA-260154 (closed 2026-05-08), QA-260298 (closed 2026-05-08) — all awaiting BA/QA retest.
-
-### Delegated
-
-QA-259342 → Aaron (held with learning_marker for trace later).
+**Knowledge files (main repo path, untracked-by-design per `feedback_untracked_confidential.md`)**:
+- `projects/coding-projects/active/etanah-knowledge/melaka/DOMAIN-GLOSSARY.md` — Melaka 13-urusan mandatory callout
+- `projects/coding-projects/active/etanah-knowledge/melaka/TEST-PERMOHONAN-INDEX.md` — AWAM Portal Initial-Data section + sample candidates + error-mode decoders
+- `projects/coding-projects/active/etanah-knowledge/melaka/BUG-BESTIARY.md` — Pre-charting reset trick + UAT-CR #236559 etiology
+- `projects/coding-projects/active/QA-260139/scout-report.md` (NEW)
+- `projects/coding-projects/active/QA-260139/class-chain-traces.md` (NEW, slim format)
+- `projects/coding-projects/active/QA-259428/scout-report.md` (NEW)
 
 ## 🎯 Session Recap (For AI Restart)
 
 **On Resume next session**:
-1. **Boot from main worktree** (root: `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore`) — NOT a worktree under `.claude/worktrees/`. The 5 orphan worktrees stay on disk; branches preserve state.
-2. Read this file + `quest/active.txt` (vigilant-kirch's version is the truth, now merged into main as of `28f622a`)
+1. **Boot from main worktree** (`C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore`) OR continue in `compassionate-merkle-e72740` worktree — both have valid state after today's work
+2. Read this file + `quest/active.txt` for active quest status
 3. Boot Domain Expansion autoscan — should detect:
-   - 3 commits ahead of origin (push pending — `git push origin main` if みや wants)
-   - 5 orphan worktrees (informational, don't auto-cleanup per みや 2026-05-11)
-   - QA-260139 ready for proper redo with current Scout + Recon + env-check
-4. Default Q1 priority: **resume QA-260139** — fire env-check skill (auto-Cp-A), confirm env target with みや, re-Scout with current familiar prompt, output Recon block, surface 7 BA questions, then Cp D Rubric
+   - QA-260139 + QA-259428 closed-pending-FAT (commits pushed)
+   - 3 commits ahead on main worktree's origin (today morning's session-end commits still pending push)
+   - Today afternoon's worktree changes pending commit at next DE / wrap
+4. Default Q1 priority: Phase 2 wrap for QA-260139 + QA-259428 (post-mortem + KPI + Tasks folder hygiene)
+5. Q2 if time: QA-247710 PRU enhancement REWORK (HIGH effort, hold)
 
 **Open questions for next session**:
-- Confirm AWAM env target for QA-260139 — does AWAM UAT actually use MLIT (mkit)? Per みや's earlier hint yes, but verify against the AWAM repo's expected DB before committing the env switch
-- Watch PRBB.mp4 via video-frames skill (now installed) — extracts the test username + which urusan flow demonstrated
-- Push 3 commits ahead of origin (manual by みや since harness blocks Ruri direct push)
+- Phase 2 walkthrough — finish QA-260139 class-chain-traces bit-by-bit if みや wants (Universal Entry + Fix 1 done; Fix 2 + Fix 3 compressed at DE-time)
+- 2026-04-02 LMP_PLN boundary — investigate origin (commit 782d757a0f candidate)
+- Pending audit-log entries from pre-2026-05-11 (105+) — disposition pass
 
-## 🔄 Session Lifecycle
-*How this RAM-like memory works*
+**Design discussions deferred to next session** (added at end-of-session retro 2026-05-11):
+- **Scout/Recon naming + consolidation** — Scout vs Discovery vs Study vs Research vs Preparation; merge Scout + Recon into a single named phase. みや prefers "Scout" as a word but agrees "Discovery" makes more semantic sense.
+- **Single-canonical-per-ticket-doc full restructure** — filename, section structure, lifecycle hooks. Tonight dropped `handoff-XXX.md`; tomorrow's design work consolidates the rest (early-diagnostic + scout-report + class-chain-traces + Fix.txt) into one always-updated canonical doc.
+- **Conditional Scout/Recon** — based on ticket complexity (full ceremony for multi-layer / BA-ambiguous; skip-or-light for 1-line fixes like QA-259428). みや: "It feels like we only need to have human feedback if only given certain conditions, most likely the real gap is the business logic IF there is ambiguity or unknown factors from the ticket."
+- **Refining the refinement process** — Gap Sweep step now baked into DE session-end ritual so retrospective is continuous (not on-demand). Watch over next 2-3 sessions to see if it produces good gaps without ceremony; refine threshold if needed.
+
+## 🔄 Session Lifecycle (unchanged from format reference)
 
 ### Session Start
 - **New Session**: RAM cleared, fresh start

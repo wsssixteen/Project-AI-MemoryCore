@@ -272,6 +272,10 @@ Success measure: <how we know it's working in 30 days>
 
   **Universal Check 8 — Dispatch verification for shared-field/multi-urusan tickets** (added 2026-05-08): if the ticket touches a field or behavior shared across N urusans, source-verify the per-urusan dispatch table (typically `switch` blocks, `if (URSN_X.equals(...))` chains, or constants like `URUSAN_KEPUTUSAN_JKKT_LIST`). Don't trust paraphrased dispatch tables from the Scout report. Verification example: QA-260139 Scout claimed "all urusans except PLPS+PRU broken"; source-trace at `PelupusanPermohonanTanahPlmsTabForm.java:148-155` revealed MCL ALSO uses the canonical `plpPermitHelperForm.onSimpanTanah()` (PLPS pattern) → MCL is NOT a gap site. Without this check the fix would have wasted scope on MCL.
 
+  **Sub-check 8a — VO field schema verification (added 2026-05-11)**: when a method validates a VO and the gap analysis depends on which fields exist on that VO, READ the VO class declaration before inferring from variable name. **Variable name ≠ schema.** Example: `bahanDiambilVO` is typed `PelupusanPermitVO` and DOES carry `lokasi` + `noLot` fields (because the shared composite `plpButiranTanahPermitForm` is reused with different backing VOs that all expose the same field surface). 2026-05-11 QA-260139: doubted Scout's PRBB gap-site verdict by assuming bahanDiambilVO had no lokasi/noLot — wasted a verification round-trip and risked a sycophantic flip. **How to apply**: when a fix-proposing edit depends on a VO field existing, grep `private \w+ <fieldname>` or `get<Fieldname>` on the VO class file before doubting or proposing. Two minutes saves a flip.
+
+  **Sub-check 8b — XLS rule-engine lookup by structure, not display label (added 2026-05-11)**: AWAM dispatch is driven by `*_Provider.xls` files parsed by `AwamRuleEngine` (per-modul). When scanning the XLS for urusan coverage, filter on **Form Name** column (FQN — codebase-constant) or **Composite Component Name (JSF)** (XHTML path — codebase-constant), NOT on **Tab Name** column (display label — varies per urusan). 2026-05-11 QA-260139: filtered by `"Maklumat Tanah" in tab_names`, missing BPRZ (whose Form is `PelupusanTanahRizabTabForm` — same gap-site bean as PRZ+PPJK — but whose tab is labeled "Maklumat Perizaban" in the UI). 5 urusans went uncatalogued from that one mistake; 1 (BPRZ) was a real gap site that almost got missed from the fix scope. **How to apply**: always dump the full XLS sheet keyed by Form Name first; derive urusan coverage from the bean-side, then map back to tab labels only for the simulate-screenshot pairing.
+
   **Verdict**:
   | Verified Unknowns | <yes / list remaining> |
   | PROCEED TO RUBRIC | <yes/no> — <reason> |
@@ -355,16 +359,22 @@ Success measure: <how we know it's working in 30 days>
 > **Deactivated when**: みや says "debug mode off", or quest Phase 2, or session end.
 > When active, these rituals are **mandatory** before any fix-proposing Edit or test request. They exist because debugging-discipline failures are invisible in response text — passive feedback memories haven't worked. These rituals make the discipline visible so みや can catch violations in real time.
 
-### Ritual 1 — Predicate Box (mandatory before every fix-proposing Edit)
-Before any Edit that proposes a fix, output this block verbatim:
+### Ritual 1 — Predicate Box (mandatory before every code/config Edit)
+Before any Edit to source code or config, output this block verbatim:
 
 ```
-PREDICATE: [fix X] works iff [condition Y] holds.
+PREDICATE: [change X] works iff [condition Y] holds.
 EVIDENCE: [file:line] shows [observed fact].
 WRITER CHECKED: [yes — file:line produces this input] / [n/a — not a parsing/reading bug]
 ```
 
-Scope: fix-proposing Edits only — not refactors, logging, cleanup, or typo fixes.
+**Scope (refined 2026-05-11 by みや)**: ALL Edits to source code or config — no carve-outs. Even refactors, cleanups, typo fixes, logging additions, probe-style "try this and see if it works" Edits. **Size of the predicate scales with stakes**:
+- **Trivial** (typo, formatting, comment-only): one-line predicate stating "no behavior change expected, only X"
+- **Small** (1-liner with behavior implication, set/list membership additions, single-attribute toggles): full 3-line box
+- **Substantive** (multi-line or multi-file logic change): 3-line box + extra cites for each gate/condition touched
+
+Why no carve-outs (2026-05-11): a refactor can break behavior silently; a typo fix in code (not comments) can cause real bugs; probe-style Edits especially benefit because they need a clear "drop-if-fails" condition stated upfront. The 3-line box is cheap (~10 seconds); the silent slip it catches is expensive.
+
 みや spot-checks one cited `file:line` per session at random.
 
 ### Ritual 2 — Evidence Language Discipline
@@ -393,6 +403,26 @@ I do not propose fixes until that toggle is confirmed OR みや explicitly says 
 
 ### Violation Log
 Every slip on Rituals 1–4 gets a one-line entry in `Feature/Forge-Self-Improvement-System/debug-ritual-violations.md`. Trend visible over time. If slips persist across multiple sessions, the ritual design is wrong — redesign, don't just re-promise.
+
+---
+
+## 📝 Commit message attribution (MemoryCore-specific override, refined 2026-05-11)
+
+> Overrides the Anthropic Claude Code default trailer.
+
+For commits in this repo (`Project-AI-MemoryCore`), the Co-Authored-By trailer MUST use **Ruri** as the persona name, not Claude. The underlying model is still Claude, but the project's identity is Ruri.
+
+**Correct trailer**:
+```
+Co-Authored-By: Ruri <noreply@anthropic.com>
+```
+
+**Banned** (Anthropic default that みや explicitly rejected):
+```
+Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+```
+
+For **etanah** work commits (etanah-pelupusan, etanah-awam), follow the separate repo convention: subject-only, **no body, no trailer at all** (per `main/post-mortems.md:99` and the QA #260154/260298/259428 examples).
 
 ---
 

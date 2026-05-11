@@ -172,6 +172,76 @@ function downloadFile(contentUrl, destPath) {
     });
 }
 
+// ─── JOURNAL / COMMENT FETCH (Q1 todo 2026-05-07 — added 2026-05-11) ─────────
+
+function fetchIssueJournals(id) {
+    return new Promise(resolve => {
+        const options = {
+            hostname: '172.16.90.169',
+            path: `/redmine/issues/${id}.json?include=journals`,
+            headers: { 'X-Redmine-API-Key': REDMINE_KEY }
+        };
+        http.get(options, res => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+                try { resolve(JSON.parse(data).issue?.journals || []); }
+                catch (e) { resolve([]); }
+            });
+        }).on('error', () => resolve([]));
+    });
+}
+
+function formatJournalsForHistory(journals) {
+    if (!journals || !journals.length) return '(no journal entries)';
+    return journals.map(j => {
+        const date  = j.created_on || '';
+        const user  = j.user?.name || 'Unknown';
+        const notes = (j.notes || '').trim();
+        const details = (j.details || []).map(d => {
+            if (d.property === 'attr')       return `  [attr] ${d.name}: ${d.old_value || '∅'} → ${d.new_value || '∅'}`;
+            if (d.property === 'relation')   return `  [relation] ${d.name}: ${d.new_value || ''}`;
+            if (d.property === 'attachment') return `  [attachment] ${d.new_value || d.name || ''}`;
+            if (d.property === 'cf')         return `  [cf] field#${d.name}: ${d.old_value || '∅'} → ${d.new_value || '∅'}`;
+            return `  [${d.property}] ${JSON.stringify(d)}`;
+        }).join('\n');
+        const body = [];
+        if (details) body.push(details);
+        if (notes) {
+            body.push('  notes:');
+            body.push(notes.split('\n').map(l => '    ' + l).join('\n'));
+        }
+        return `--- ${date} by ${user} ---\n${body.join('\n')}`;
+    }).join('\n\n');
+}
+
+function writeHistoryFile(briefFolder, journals, issueMeta) {
+    const header = [
+        `Redmine ticket journal — synced ${new Date().toISOString()}`,
+        `Issue: ${issueMeta.prefix} #${issueMeta.number} — ${issueMeta.subject}`,
+        `Status: ${issueMeta.status} | Last updated: ${issueMeta.updated_on || ''}`,
+        '─'.repeat(70),
+        '',
+    ].join('\n');
+    const body = formatJournalsForHistory(journals);
+    fs.writeFileSync(path.join(briefFolder, 'History.txt'), header + body + '\n');
+}
+
+async function updateExistingTicketHistory(issue) {
+    if (!issue._existing) return 0;
+    const briefFolder = path.join(TASKS_FOLDER, issue._existing, '0. Brief');
+    if (!fs.existsSync(briefFolder)) return 0;
+    const journals = await fetchIssueJournals(issue.id);
+    writeHistoryFile(briefFolder, journals, {
+        prefix:    issue._parsed.prefix,
+        number:    issue._parsed.number,
+        subject:   issue.subject,
+        status:    issue._status,
+        updated_on: issue.updated_on,
+    });
+    return journals.length;
+}
+
 // ─── TASK FOLDER CREATION ────────────────────────────────────────────────────
 
 async function createTaskFolder(issue, parsed) {
@@ -313,15 +383,27 @@ function printReport(results) {
 
 // ─── MAIN ────────────────────────────────────────────────────────────────────
 
+async function syncJournalsForExisting(results) {
+    // Q1 todo (2026-05-07, applied 2026-05-11): write/refresh History.txt for every existing ticket
+    // so BA replies + status changes are visible without manually opening Redmine.
+    // Idempotent — overwrites History.txt each run with the full journal dump.
+    for (const issue of results.rework) {
+        if (!issue._existing) continue;
+        const n = await updateExistingTicketHistory(issue);
+        console.log(`    📝 [${issue._parsed.prefix} #${issue._parsed.number}] History.txt → ${n} journal ${n === 1 ? 'entry' : 'entries'}`);
+    }
+}
+
 async function run() {
     try {
         const issues = await fetchIssues();
         await enrichWithHtmlStatus(issues);
         const results = classifyIssues(issues);
         printReport(results);
+        await syncJournalsForExisting(results);
 
         if (results.new.length) {
-            console.log('  Run with --create to auto-create Task folders for new tickets.\n');
+            console.log('\n  Run with --create to auto-create Task folders for new tickets.\n');
         }
     } catch (err) {
         console.error(`\n  ❌ Error: ${err.message}\n`);
@@ -345,6 +427,8 @@ async function runWithCreate() {
             const newPath = addStatusFolder(issue._existing, issue._status);
             if (newPath) console.log(`  🔁 Status folder added: ${newPath}`);
         }
+
+        await syncJournalsForExisting(results);
     } catch (err) {
         console.error(`\n  ❌ Error: ${err.message}\n`);
     }

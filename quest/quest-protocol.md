@@ -32,29 +32,129 @@
 | "We're done with the fix" / "Fix is done" / "Phase 1 done" / "We're done with Phase 1" | Run prepare-commit sequence |
 | "Branch and stage" / "Stage for commit" | Run prepare-commit sequence |
 
-**Prepare-commit sequence** (per みや 2026-04-30 convention):
+**Prepare-commit sequence** (per みや 2026-04-30 convention, refined 2026-05-11):
+
+**Naming convention** (added 2026-05-11 by みや — replaces cryptic `Cp A/B/D/E` letters):
+
+| Old (cryptic) | New (descriptive) | Phase | What it covers |
+|---|---|---|---|
+| Cp A | **Discovery** | 0 | Scout familiar + early-diagnostic load + DOMAIN-GLOSSARY out-loud + etiology check (see below) |
+| Cp A wrap-up | **Recon** | 0 | Formal Recon block ritual — Universal Checks 1-8 with file:line per row |
+| Cp B | **Simulate** | 0/1 | Reproduce bug locally; auto-pengguna lookup; test plan emit |
+| Cp D | **Rubric** | 1 | Fix-shape options (A/B/C with pros/cons) + recommendation |
+| Cp E | **Apply** | 1 | Code edit applied (with Predicate Box per CLAUDE.md Ritual 1) |
+| Cp F | **Verify** | 1 | みや local-tests the fix; confirms ralat/behavior |
+| Cp G | **Commit hand-off** | 1 | Prepare-commit sequence (this section); Ruri proposes message, みや executes |
+| Cp H | **Push** | 1 | みや executes push |
+| Cp J/K | **Wrap** | 2 | Post-mortem + KPI + Tasks folder hygiene + knowledge file updates |
+
+Use the new names in chat going forward. Old Cp letters remain in protocol files for backwards-compat reference but should not be used in user-facing communication.
+
+**Auto-etiology check at Discovery (NEW 2026-05-11)**: Scout MUST parse the ticket's `Description.txt` AND `History.txt` for related-ticket references — patterns: `Refer to <TYPE>-<CR>? #?<num>`, `Related to ... #<num>`, `UAT-CR #<num>`, `QA #<num>`. For each found reference, `git log --all --grep <num> --format="%h %ci %an %s"` in the relevant repo (etanah-pelupusan or etanah-awam) and surface findings in `scout-report.md` under a new **`## Etiology — related tickets & origin commits`** section. Today's QA-259428 had "Refer to UAT-CR #236559" sitting in Description.txt line 13; Scout should have caught it without みや having to ask later. Pattern recognition: the smoking-gun commit for a bug-fix-completion ticket is usually findable via `git log --grep <related-CR-num>`.
+
+**Single canonical per-ticket doc principle (NEW 2026-05-11, full restructure deferred to next session)**: The multi-file pattern (`early-diagnostic.md` + `scout-report.md` + `handoff-XXX.md` + `class-chain-traces.md` + `Fix.txt`) is **deceiving** — reading one file but not the others gives a stale view. みや 2026-05-11: *"It has happened before. About the handoff, definitely drop it off."* Architectural direction: **single canonical doc per ticket, always-updated**, structured by phase (Discovery / Recon / Simulate / Rubric / Apply / Verify / Commit + Push / Etiology / Wrap). **Effective immediately**: `handoff-XXX.md` is **DEPRECATED** — for held tickets, resumption context lives in `scout-report.md` (or its successor). Full restructure of the file matrix (rename, section structure, lifecycle hooks) is design work scheduled for the next session.
+
+---
+
+**Step 0 — Base-branch identification (NEW 2026-05-11 after QA-260139 slip)**:
+
+| Repo | Source-of-truth base | Notes |
+|---|---|---|
+| etanah-pelupusan | **`mlk/master`** | UAT + FAT both use master; differs only by config |
+| etanah-awam | **`mlk/release/uat`** | Confirmed 2026-05-11 — has most recent commits (today). `mlk/int-env` is stale (2026-03-31). Do NOT base off int-env. |
+
+**Verification command** (run any time the right base is uncertain):
+```bash
+git for-each-ref --sort=-committerdate --format='%(committerdate:short)  %(refname:short)  %(subject)' refs/heads/mlk/release/uat refs/heads/mlk/int-env
+```
+The branch with the latest date is the source-of-truth. **DO NOT compare `origin/<branch>` refs** — single-branch `git pull origin <branch>` doesn't always update the corresponding `origin/<branch>` remote-tracking ref, so they go stale; comparing them gives wrong answers. **Compare LOCAL branch tips** (which the pull does update).
+
 1. `git status --short` and `git branch --show-current` — confirm current state
 2. If branch is `mlk/<type>/<number>` already: skip steps 3-6, jump to step 7 (already on the right branch from earlier session)
-3. If branch is `mlk/master` with modifications: `git stash push -m "<ticket> fix prep"`
-4. **🚨 MANDATORY — DO NOT SKIP (slipped 2026-05-08 QA-260154)**: `git pull --ff-only origin mlk/master` — between stash and branch. Without this, the new branch forks off STALE master. Repeated paraphrase failure: when announcing the prepare-commit sequence in chat, DO NOT summarize as "stash → branch → pop"; that drops the pull. Always say "stash → **pull** → branch → pop → stage" or copy the 9 steps verbatim from this section.
+3. If branch is the source-of-truth branch (per Step 0) with modifications: `git stash push -m "<ticket> fix prep"`
+4. **🚨 MANDATORY — DO NOT SKIP (slipped 2026-05-08 QA-260154)**: `git pull --ff-only origin <source-of-truth-branch>` — between stash and branch. Without this, the new branch forks off STALE base. Repeated paraphrase failure: when announcing the prepare-commit sequence in chat, DO NOT summarize as "stash → branch → pop"; that drops the pull. Always say "stash → **pull** → branch → pop → stage" or copy the 9 steps verbatim from this section.
 5. `git checkout -b mlk/<type>/<number>` — type+number from `quest/active.txt` (`qa`/`fat`/`uat`/`fat-or`/`uat-cr`)
 6. `git stash pop` — auto-pop. If conflict, `git status` for unmerged paths, **PAUSE and report to みや** (don't auto-resolve)
 7. `git add <each modified file by name>` — stage all the work-in-progress files (NEVER `git add .` or `-A`)
 8. `git status` to verify staged files
-9. **HAND OFF** — output: *"Ready for commit. Branch: `mlk/<type>/<number>`. N files staged. Write your commit message and run `git commit -m \"<your message>\"`."*
+9. **HAND OFF** — output: branch name + N files staged + **proposed commit message** (per the convention below — みや uses as-is, modifies, or overrides) + the exact `git commit` and `git push --set-upstream` commands ready to copy-run. Refined 2026-05-11 by みや: *"Please always include the comment into the protocol after you branched out successfully"* — proposing the message is now part of hand-off, not optional.
 
-**Hard rule**: Ruri does NOT write the commit message. Ruri does NOT run `git commit`. Ruri does NOT run `git push`. The skill stops at staging.
+**Hard rule (Cp G — Ruri proposes, みや executes; refined 2026-05-11 by みや)**: Ruri **MUST** propose the commit message at hand-off (per convention) — みや decides accept/modify/override. Ruri does NOT run `git commit`. Ruri does NOT run `git push`. The proposal must follow the convention below (no `fix` prefix, no `AWAM`/`MLK`/repo tags, subject-only, no body, no `Co-Authored-By` trailer).
+
+**Violation log (Cp G)**:
+- 2026-05-11 QA-260139: Ruri ran `git commit` itself + included body + Co-Authored-By trailer + "fix" prefix + "AWAM"/"MLK" tags. みや reset. **Still forbidden post-refinement**: running git commit/push is Ruri's hands-off; the wrong-format reasons are now caught at proposal time (みや reviews before executing).
+
+**Hard rule — "comments" disambiguation (added 2026-05-11)**: When みや asks for "the comments for this ticket", ASK ONCE which he means — git commit subject vs Redmine journal — and emit only that one. Don't auto-emit both. Default guess if unclear: git commit message (since Redmine journals are auto-written to `History.txt` by redmine-sync now).
+
+**Hard rule — Auto-pengguna in test/simulate plan (added 2026-05-11 after QA-259428 slip, refined same day)**: When emitting a test plan or simulate plan that mentions an officer login (Cp B simulate plan, Cp F verification plan, etc.), Ruri MUST auto-run the canonical task-state query for the test_app's `id_pengenalan` BEFORE finishing the plan, and INCLUDE the result as a 4-column table inline. **Standard output format (refined 2026-05-11)**:
+
+| Permohonan ID | Pengguna | Kod Tugasan | Nama Tugasan |
+|---|---|---|---|
+| <id_pengenalan> | <pcp_pengguna.nama_pengguna> | <ind_tgsn.kod> | <ind_tgsn.nama> |
+
+**Filter**: `UMM_A_TGSN.FLAG_AKTIF = 'Y'`. If zero rows return, apply the **AFTER-then-BEFORE fallback** (refined 2026-05-11 by みや):
+1. **Active at the target tugasan** (`KOD_TUGASAN = '<target>'` + `FLAG_AKTIF='Y'`) → use directly.
+2. **Active at a tugasan AFTER target** (workflow has advanced past target — all intermediate file-generation steps have already run, so flowable-rollback to target is data-safe) → use this and notify *"Active is at X (after target); use flowable-alter to roll back to target — intermediate files exist."*
+3. **Active at a tugasan BEFORE target** (workflow hasn't reached target — flowable-forward would SKIP intermediate file-generation, risking missing data) → use only if no AFTER option exists, notify *"⚠️ Active is at X (before target); flowable-forward to target may skip file generation. Consider asking BA for fresh test data."*
+
+Drop `peranan_semasa`, `kod_pejabat`, `pejabat`, `flag_aktif` from the displayed columns — too noisy; if needed for follow-up, run a separate query.
+
+**Standard query** (subquery via `UMM_APLIKASI.ID_PENGENALAN` to be schema-portable):
+```sql
+SELECT UA.ID_PENGENALAN AS permohonan_id,
+       pps.NAMA_PENGGUNA AS pengguna,
+       IT.KOD AS kod_tugasan,
+       IT.NAMA AS nama_tugasan
+FROM <schema>.UMM_A_TGSN UAT
+INNER JOIN <schema>.IND_TGSN IT ON IT.TGSN_ID = UAT.TGSN_ID
+LEFT JOIN <schema>.PCP_PENGGUNA pps ON pps.PENGGUNA_ID = UAT.PENGGUNA_SEMASA_ID
+LEFT JOIN <schema>.UMM_APLIKASI UA ON UA.APLIKASI_ID = UAT.APLIKASI_ID
+WHERE UA.ID_PENGENALAN ILIKE '%<test-app>%' AND UAT.FLAG_AKTIF = 'Y'
+ORDER BY UAT.CREATED_DATE DESC LIMIT 5;
+```
+Schema: `et_main` for MLKFAT (`mcp__postgres-mlkfat__query`), `et_main_uat` for MLKUAT (`mcp__postgres-mlkuat__query`).
+
+**Why**: 2026-05-11 QA-259428 simulate plan listed "PSJT officer login TBD — let me know if you want me to query" — みや had to point out the query should have auto-fired AND the original 13-column output was too noisy. The 4-column table is the standard going forward. **Violation log**: 2026-05-11 QA-260139 — Ruri ran `git commit` with self-written body + Co-Authored-By trailer + "fix" prefix + "AWAM" + "MLK" tags despite all four being against convention. みや had to reset the commit. Don't repeat.
+
+**Commit message convention** (Ruri PROPOSES at hand-off per Cp G rule above; みや executes):
+- **Format**: `<TICKET-TYPE> #<number> - <URUSAN> - <TUGASAN> - <short action description>`
+- **Examples** (verified accepted by みや):
+  - `QA #260154 - PT - PRMMKNPDT - Maklumat Plot mandatori check pada Seterusnya`
+  - `QA #260298 - PLPS - Perincian Tujuan Permohonan view-only pada SKMMKN/PKMMKN`
+  - `QA #259428 - PLTP - PSJT - Fix papar pelan permohonan pada lampiran Surat JT` ← note: "Fix" as action verb INSIDE description is OK
+- **"Fix" placement rule** (refined 2026-05-11):
+  - ❌ NO `fix` as **leading prefix** to the whole message — `fix QA #259428 - ...` is banned
+  - ✅ `Fix` as **action verb inside the short description** is fine and often the right framing — `... - PSJT - Fix papar pelan...`
+  - Other action verbs (Activate, Add, Remove, Block, Render, etc.) work the same way — pick whatever describes the change action best inside the description slot
+- **NO** `AWAM` / `MLK` / repo-name / negeri tags (the ticket # and Task folder already encode those)
+- **Subject-only**: no body, no `Co-Authored-By` trailer (repo convention)
+- Urusan kod (PT, PLPS, PLTP, etc.) and tugasan kod (PRMMKNPDT, SKMMKN, PSJT, etc.) ARE included as separate segments before the description — they're navigational, not part of the "short description"
 
 **Rework branches**: if `mlk/<type>/<number>` already exists locally or remotely (this is a rework), the new branch name is `mlk/<type>/<number>v2` (no dash, sequential — v3, v4, etc.). Detect via `git branch --list "mlk/<type>/<number>*"`.
 
-**Phase 1 close-out — return to master ready (hard rule, added 2026-05-07):**
+**Phase 1 close-out — return to main + active.txt + STOP gate (hard rule, added 2026-05-07, gate added 2026-05-11):**
 
-After commit + push lands successfully (みや confirms or pushes himself):
-1. `git checkout mlk/master` on the relevant repo (etanah-pelupusan / etanah-awam)
-2. `git pull --ff-only origin mlk/master`
-3. Verify: working tree clean, branch on `mlk/master`, master at latest origin tip
+**Trigger phrases from みや** (any one): *"passed the ticket"*, *"close phase 1"*, *"wrap [ticket]"*, *"ticket done"*, *"submitted on redmine"* (when paired with a recent commit+push of the same ticket).
 
-The fix branch (`mlk/<type>/<number>`) stays; don't delete. External merge happens via PR/another reviewer.
+After commit + push lands successfully:
+1. `git checkout <main-branch>` on the relevant repo — pelupusan = `mlk/master`, awam = `mlk/release/uat`
+2. `git pull --ff-only origin <main-branch>`
+3. Verify: working tree clean (Eclipse settings exceptions ignored), branch on `<main-branch>`, latest origin tip
+4. **Update `quest/active.txt`**: change/add the ticket's entry with `phase=1-complete`, `status=pending post-mortem`, `branch=mlk/<type>/<number>`, `commit=`, `cp_F_verified=`, `cp_G_commit=`, `cp_H_push=`, `files_changed_phase1=`, `scope_anchor=`, plus any `etiology=` / `db_verification=` / `learning_marker=` / `out_of_scope_held=` fields relevant to the ticket. Move into the right section of active.txt (keep with the other pending-post-mortem entries; not yet "closed:").
+
+5. **Run `/verify-close <ticket>` skill** (NEW 2026-05-11) — programmatic verification via `.claude/skills/verify-close/SKILL.md`. 4 file-state checks: commit landed (`git log`), push succeeded (local == origin SHA), repo on main + pulled (`git branch --show-current` + ahead-count == 0), `active.txt` entry has phase=1-complete + commit=<SHA>. Outputs green/red checklist. **Mandatory before STOP gate**; if any check is red, fix the gap before declaring closure.
+
+**🛑 STOP GATE — Ruri MUST PAUSE AFTER STEP 5 AND ASK FOR CONFIRMATION** (added 2026-05-11 after みや's discipline call):
+
+> Output verbatim: *"Phase 1 closure for QA-X complete. ✓ commit ✓ push ✓ return-to-main ✓ active.txt updated ✓ /verify-close green (all 4 checks). Confirm before I proceed to anything else?"*
+
+**Then WAIT.** Do not progress to Phase 2 / DE / sister-ticket / unrelated work until みや explicitly answers *"yes"*, *"proceed"*, *"go"*, *"ok next"*, or equivalent. This triple-measure exists because Ruri has previously rolled forward into adjacent work right after closure, scattering attention before the closure was fully checked. The triple measures:
+
+1. **みや's explicit trigger phrase** (e.g. "passed the ticket")
+2. **Ruri's confirmation question** at the gate (this STOP step)
+3. **Ruri's not-progressing** until explicit ack
+
+The fix branch (`mlk/<type>/<number>`) stays on origin; don't delete. External merge happens via PR/another reviewer. Phase 2 is its own initiation — handled separately when みや triggers "wrap up" / "post-mortem" / "phase 2".
 
 **Why**: pairs with Phase 0 Step 0a — without close-out, the next ticket's Phase 0 starts on stale master OR on the previous ticket's branch (2026-05-07 QA #259759 — etanah-pelupusan was still on `mlk/qa/250665` AND master was 2 commits behind). Close-out makes ticket-to-ticket transitions atomic.
 
