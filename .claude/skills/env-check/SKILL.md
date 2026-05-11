@@ -53,6 +53,24 @@ When invoked, env-check:
 | awam + UAT | `http://172.30.59.150/etanah-cas` | `jdbc:postgresql://172.30.59.185:5444/mlkuat?currentSchema=et_main_uat` | etanah-awam @ `mlk/release/uat` |
 | awam + FAT | UNKNOWN — confirm with みや/BA before assuming exists | — | — |
 
+## CAS URL switch mechanic (rule, 2026-05-11)
+
+The two MLK `cas.url` lines coexist in `environment.properties`; switching is done by toggling the `#` comment marker, NOT by editing the URL text. Both UAT (AWAM and PLP) use the same UAT CAS URL.
+
+**To switch to UAT** (any side):
+```
+# cas.url=https\://appmlk.melaka.gov.my/etanah-cas        ← comment OUT (FAT line)
+cas.url=http\://172.30.59.150/etanah-cas                  ← UNCOMMENT (UAT line)
+```
+
+**To switch to FAT** (any side):
+```
+cas.url=https\://appmlk.melaka.gov.my/etanah-cas          ← UNCOMMENT (FAT line)
+# cas.url=http\://172.30.59.150/etanah-cas                ← comment OUT (UAT line)
+```
+
+Edit must preserve the `\:` escape on `://` (Java properties format). Trailing-comment lines for TRGIT (`172.16.100.41`) and TRG-STAGING are OUT of scope for MLK work — leave commented.
+
 ## Output format (always emitted)
 
 ```
