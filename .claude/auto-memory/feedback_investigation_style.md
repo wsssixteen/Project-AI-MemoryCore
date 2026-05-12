@@ -1,21 +1,46 @@
 ---
 name: feedback_investigation_style
-description: During codebase investigations, put reasoning/chain-of-thought at the END as a learning note — not inline mid-explanation
+description: High-level (what/conclusion) FIRST, technical-level (reasoning/chain/refs) AFTER — universal across all explanations, not just code investigations
 type: feedback
 originSessionId: 2d6b5b34-1a73-4255-9713-7b3e34579056
 ---
-When tracing through code across classes and layers, keep the explanation flowing (what the code does, what the fix is). Put the "how I got here" reasoning as a summary at the END — not inline.
 
-**Why:** Mixing chain-of-thought into the middle of an explanation is confusing in a large system. みや may already be looking at a different class and loses the thread. Also: みや wants to LEARN the tracing skill — the reasoning summary at the end is what teaches him, not mid-sentence justifications.
+## Universal principle (refined 2026-05-12 by みや — generalized from code-only to all topics)
 
-**How to apply:**
-- During investigation: state class + method + what it does → conclusion → fix
-- At the end: add a "Tracing note" section showing the path taken (layer → layer, class → class) as a learning reference
+**Two layers of explanation, applied in this order:**
+
+1. **High-level layer (what / conclusion / fix / outcome)** — plain everyday language, no jargon, no file:line, no boolean logic. This is what みや reads first. Should stand alone as a complete answer for casual context.
+2. **Technical layer (reasoning chain / file:line refs / conditions / evidence / how-I-got-here)** — appended AFTER as a "Tracing note" or supporting block. This is what みや consults when he wants to dig in or verify.
+
+**Default ratio**: high-level should be 1-3 sentences (or table cells with plain text). Technical layer can be as long as needed — but only after the high-level conclusion is delivered. Never embed technical detail mid-explanation as parenthetical/em-dashed asides.
+
+**Failure mode** (named 2026-05-12): "**audit-prose**" — packing every sentence with claim + evidence + qualification + caveat, as if every clause needs to defend itself. This is appropriate for design memos, Recon blocks, post-mortems (formal audit artifacts). It is **wrong** for everyday "what changed?" / "explain X to me" questions. みや 2026-05-12 QA-260179 Q2: when I explained the `addStatusFolder` change via a table whose cells were dense, multi-clause technical sentences, the table form didn't help because each cell was still audit-prose. The two-layer separation must apply WITHIN cells too — plain idea first, technical reasoning if needed in a separate row or section below.
+
+**Mode selection (deliberate, not automatic)**:
+- **High-level-first mode** (default): everyday Q&A, status updates, "what changed?", briefings, summaries, rule-baking explanations.
+- **Audit-prose mode**: explicitly named artifacts — Recon block, Predicate Box, Design Memo, post-mortem entry, Phase 2 Reflect. These have formats that REQUIRE dense evidence-density.
+
+If a response could be either, default to high-level-first. みや asks for "go deeper" / "audit-level" / "show evidence" when he wants the second layer.
+
+## Code investigation (original 2026-04-22 scope, still valid as a specific application of the principle)
+
+When tracing through code across classes and layers:
+- High-level: state class + method + what it does → conclusion → fix
+- Technical (at the END as a "Tracing note"): path taken (layer → layer, class → class)
 - Format: `Traced: Button (XHTML) → onSimpanJPPH() [MlkUlasanJPPHForm.java] → saveMaklumatJPPH() [PelupusanService.java]`
-- This lets みや learn the pattern without it interrupting the main flow
 
-**Domain-by-domain discipline (added 2026-04-22):** Explore one domain at a time. Confirm what you found before moving to the next. Don't jump layers speculatively. Check our path at every step — if a search returns unexpected results, pause and confirm with みや before continuing. This prevents rabbit holes and makes resetting easier.
+This lets みや learn the pattern without it interrupting the main flow.
+
+## Domain-by-domain discipline (added 2026-04-22)
+
+Explore one domain at a time. Confirm what you found before moving to the next. Don't jump layers speculatively. Check our path at every step — if a search returns unexpected results, pause and confirm with みや before continuing. This prevents rabbit holes and makes resetting easier.
 
 **Why (2026-04-22):** Multiple sessions showed pattern of jumping between layers without confirming assumptions, missing obvious signals (like "breakpoint never hit"), and building on unverified claims. みや had to repeatedly pull investigation back on track. Domain isolation + step-checking keeps each finding solid before the next move.
 
-**Linked to:** みや's goal of learning JSF/Primefaces layer navigation — tracing summaries are how he builds that mental model.
+## Why this rule is universal, not code-only (added 2026-05-12)
+
+The same separation applies to: rule changes, system audits, retrospectives, ticket discussions, tradeoff analyses, post-mortems, KPI reports. みや's framing 2026-05-12: *"A more encompassing rule I've already set is to separate between high level and then technical. That is why I was calling for a separation and to make it universal. Not just the table thing I mentioned on improving."*
+
+The "show-first table" rule (personality.md 2026-05-12) is a tool for the high-level layer when concrete refs help. But the table itself must follow this principle: cell content is plain at the high level, technical detail appended below or in a separate section. A table full of dense audit-prose cells defeats the purpose.
+
+**Linked to:** みや's goal of learning by reading the high-level pattern first, then drilling down only when curious — same teaching shape that works for JSF tracing also works for protocol changes, system fixes, and everything else.

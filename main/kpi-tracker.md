@@ -119,7 +119,7 @@
 - Coverage extended from BA's 7-field reported scope to all 10 `*` fields in the Plot popup (Jenis Pembangunan/Komponen + Tempoh Pajakan + Butiran Kegunaan added beyond the base PremiumVO check)
 - Sister tugasan coverage (SRMMKNPDT, PRMMKNPTG, SRMMKNPTG, PRRMMKNPTG) gained same fix — same plot-data dependency; prevents 4 likely-future Rework tickets
 - Created `Feature/Forge-Self-Improvement-System/layer-architecture.md` — L0 Continuous Improvement + 9 operational layers + reliability snapshot (per みや's mid-session ask)
-- 12+ audit-log entries spawned + 2 protocol files strengthened (CLAUDE.md System-Design Discipline pre-baked, quest-protocol.md Phase 1 prepare-commit step 4 callout)
+- 12+ audit-log entries spawned + 2 protocol files strengthened (CLAUDE.md System-Design Discipline pre-refined, quest-protocol.md Phase 1 prepare-commit step 4 callout)
 
 **Business logic learned**:
 - **Two-gate validator pattern** in `PelupusanExcelReaderHelper.isValidPremiumVO` — outer flag (`perluKemaskiniMaklumatPlot`) + inner method gate (`TGSN_SHOW_CUKAI_PANEL` membership). Both must be addressed for validator to fire.
@@ -128,7 +128,7 @@
 - **Save-then-validate flow** in `BasePelupusanForm.onGoNext` — `super.onSave(false)` fires BEFORE `verifyCurrentLangkah` → confusing UX when validation fails post-save (success toast + ralat appear together).
 
 **New skills / patterns**:
-- **Recon block** as Cp C output ritual (formal verification structure baked + first real use this session)
+- **Recon block** as Cp C output ritual (formal verification structure refined + first real use this session)
 - **Layer > Business > Code** top-down explanation discipline (UI Label names, Logic-first columns)
 - **ASK-before-extending-scope** (vs ship-partial OR drop-scope-creep)
 - **Direct-implement-on-simple vs audit-log-on-complex** (refined audit log usage rule)
@@ -146,6 +146,39 @@
 - Refined audit-log rule (simple → direct-implement, complex → park)
 
 **Self-assessment**: 6-7 hours for what should have been ~2-hour ticket. Lost time to (a) building Cp D Rubric on wrong evidence (early-diagnostic field-list accepted without source-verify), (b) discovering the second gate at :2169 only on careful method-body read, (c) over-correcting on scope-extension framing instead of using ASK rule, (d) protocol-paraphrase slips on prepare-commit. Net positive: reusable patterns named, protocol files strengthened, layer-architecture system captured. KPI: 1 fully-shipped ticket today (260154) + 1 closed-pending-verify (260154 awaiting BA FAT retest). New session-start verification ritual should claw back time on next quest.
+
+---
+
+### QA-259318 — PRU Template Surat Keputusan Lulus (v1 + v2) — 2026-05-04 + 2026-05-12 — ~6h (v1) + ~45min (v2)
+
+**Closure type**: code-fix-shipped (template-binary edits, both rounds), v1 committed `3b8bbf7ff7` on `mlk/qa/259318` + 11 templates migrated to `frasa2`, v2 committed `1009782970` on `mlk/qa/259318v2` (single .docx bold-tag wrap). Both pushed.
+
+**Time spent**: v1 ~6 hours over 2026-05-04 (initial Phase 0 + deep PDF annotation + branch confusion + JBoss cache theory before renderer-side discovery + 11 template migrations + verification). v2 ~45min on 2026-05-12 (single .docx tweak, immediate FAT test on PTMLK/01/L/PRU/2026/10 PYSK, clean commit/push/close-out).
+
+**Extras solved beyond ticket scope**:
+- v1: Spawned 7 new hard rules in `.claude/CLAUDE.md` (Word-template-first, Word XML run-join, Branch check + pull at Phase 0, PDF annotation extraction, Renderer-side overrides before cache theories, No extra code comments, Batch same-layer edits)
+- v1: Migrated 11 SKL templates to `frasa2` (DB-driven, regression-proof) — prevents future MSR/slogan regressions across the family
+- v1: Removed `JcEnumeration.BOTH` default at `PelupusanWordEditorUtil.java:482-487` (4 templates that explicitly want BOTH set jc=both themselves are unaffected)
+- v2: Field-tested the new Notes.txt auto-log format (3-line compact: ENV — TUGASAN / ID / login)
+- v2: Refined commit message convention with BA verbatim quoting + drop-redundant-with-diff rules
+- v2: Dropped `addStatusFolder` Condition 2 in `quest/redmine-sync.js` (project-subfolder gate) — surfaced when this ticket's Rework status didn't get `3. Rework/` auto-created
+
+**Business logic learned**:
+- **Word .docx populator dispatch** — `PelupusanWordCCMethodConstant.java` is the truth; `.docx` is just the placeholder host. CC tag → populator handler is the canonical map. Captured in CLAUDE.md hard rule.
+- **frasa2 vs frasa pattern** — `frasa2` reads slogan/text from DB-keyed table, regression-proof to file-level template diffs. `frasa` was static-string-baked, regressed easily during multi-template touches.
+- **Renderer overrides** — `PelupusanWordEditorUtil.java` applies framework defaults when `.docx` properties are null (e.g., `setVal(JcEnumeration.BOTH)` when `ppr.getJc()` is null). Cache theory is plausible-but-secondary; renderer override is the real cause for "display X wrong despite verified-correct .docx".
+
+**New skills / patterns**:
+- **PDF annotation walk via `fitz`** — extract every `(highlight, comment, highlighted text)` tuple before declaring Phase 0 complete
+- **Run-join Word XML grep** — `re.findall(r'<w:t[^>]*>([^<]*)</w:t>', xml)` then space-join to defeat Word's run-splitting
+- **Word CC bold via `<w:rPr><w:b/></w:rPr>`** — simple terbilang phrase wrap, no Java change needed
+- **Notes.txt auto-log triggered on permohonan-ID mention** — auto-search pengguna semasa via canonical task-state query, append with `N) ENV — TUGASAN / ID / login` format
+
+**Audit-log entries spawned**: 12+ across v1 (2026-05-04) + 4 today (2026-05-12: compound trigger phrase, hands-off scope clarification, commit convention refinement, `addStatusFolder` Condition 2 drop)
+
+**Underlying issue still open (Q3 todo)**: Redmine #252314 (MELAKA SAYANG RAKYAT slogan migration) — 11 SKL templates fully migrated to `frasa2` (v1); other ~12 non-SKL templates from #252314 scope still un-migrated and at regression risk. Mechanical migration, bundleable.
+
+**Self-assessment**: v1 was textbook-slow (~6h for what should have been ~3h) — drivers were guess-driven Phase 0 (no PDF annot walk), JBoss cache theory before renderer grep, branch confusion. v1 spawned the corrective rules that made v2 frictionless. v2 was textbook-clean (~45min: ID lookup, .docx bold, FAT test, commit, push, verify-close all green). The rule investment in v1 paid off in v2's pace + cleanliness. KPI: 1 closed ticket today (v2), bringing the v1 family to closed status.
 
 ---
 

@@ -494,4 +494,44 @@ Read the cited method body verbatim at Cp C step 2 (existing utility sweep) inst
 
 ---
 
+### QA-259318 — PRU Template Surat Keputusan Lulus (v1 closure 2026-05-04 + v2 rework 2026-05-12)
+
+**Root Cause Type**: template (.docx binary)
+
+**Root Cause Summary**:
+**v1** (2026-05-04): 11 SuratKeputusanLulus*.docx templates had un-migrated/regressed slogan line, mixed Isipadu/Luas labels, "Meterpadu" typo, year-calc bug, and other point-by-point corrections from BA's PDF. Fix migrated all 11 templates to `frasa2` (DB-driven, regression-proof) + removed `JcEnumeration.BOTH` default in `PelupusanWordEditorUtil.java:482-487` (renderer override that defeated left-default in .docx). **v2** (2026-05-12): BA's 2026-05-07 UAT retest flagged the `(Ringgit Malaysia: Dua Ribu Empat Ratus)` terbilang phrase at point 3 was un-bold; fix wrapped the run in `<w:rPr><w:b/></w:rPr>` in `TemplateSuratKeputusanLulusPRU.docx` only. PRU-strict scope (other 11 SKL templates untouched — BA only flagged PRU).
+
+**What Would Have Been Faster**:
+**v1**: Reading `PelupusanWordCCMethodConstant.java` first (the dispatch map between every CC tag and its populator) instead of 4 familiars hunting for slogan / year calc / unit string sources independently. Single read would have surfaced all populators at once. Captured as "Word-template-first lookup" hard rule in CLAUDE.md (2026-05-04). **v2**: nothing to do faster — single .docx tweak with clear BA verbatim instruction, ~30min from ID retrieval to push.
+
+**Pattern Match**:
+- **v1**: New pattern — **renderer-side overrides before cache theories** — when display/layout bug persists despite a verified-correct template, grep populator code for `setVal\(JcEnumeration`, `setBold`, `setSpacing` patterns before assuming JBoss cache. Captured in CLAUDE.md as hard rule.
+- **v1**: New pattern — **Word XML run-join before grep** — Word splits text across `<w:t>` runs; flat literal grep silently misses matches. Always `re.findall(r'<w:t[^>]*>([^<]*)</w:t>', xml)` then space-join. Captured in CLAUDE.md.
+- **v1**: New pattern — **PDF annotation extraction at Phase 0** — Read tool exposes visual page content but NOT `Annot` objects (sticky notes, popup comments). Mandatory `python fitz` extraction step before declaring Phase 0 complete. Captured in CLAUDE.md.
+- **v2**: Reused **BA verbatim quoting** in commit message + **drop-redundant-with-diff** suffix rules (refined this session into quest-protocol.md). First field-test of the simplified Notes.txt auto-log format.
+
+**Codebase Knowledge Updated**:
+- **v1**: Spawned 7 hard rules in `.claude/CLAUDE.md` (Word-template-first, Word XML run-join, branch check + pull at Phase 0, PDF annotation extraction, renderer-side overrides, no extra code comments, batch same-layer edits) + 12 audit-log entries.
+- **v2**: 4 audit-log entries this session (compound trigger phrase, commit convention refinement, hands-off scope clarification, `addStatusFolder` Condition 2 drop).
+
+**Process Notes**:
+- **v1**: Started edits on wrong branch (`mlk/qa/258418`) before branch-check — caught by みや. Drove the "Branch check + pull at Quest Phase 0" hard rule.
+- **v1**: Built Phase 0 plan on guesses about what BA wanted because didn't extract PDF annotations — only discovered when みや asked *"do you not read the comments?"*. Drove PDF annotation extraction hard rule.
+- **v2**: Smooth Phase 1 — BA's 2026-05-07 rework note was unambiguous (verbatim phrase to bold), test app was already at PYSK without flowable-alter, single .docx tweak. Tested as the QA-259318 ID's existing FAT presence (`PTMLK/01/L/PRU/2026/10` PYSK under `azmezan@melaka.gov.my`).
+- **v2 slip**: hands-off scope misinterpretation — presented stash→branch→pop→add as copy-paste for みや instead of running automatically (he asked why). Corrected + protocol clarified mid-session.
+- **v2 slip**: used "bake/baked/baking" verb 2nd time in violation of 2026-05-11 personality.md rule. Replaced occurrences in canonical living docs (rules people apply); historical entries preserved.
+
+**Underlying issue (still open)**: Redmine #252314 (MELAKA SAYANG RAKYAT slogan migration) — 11 SKL templates fully migrated to `frasa2` (v1); other ~12 non-SKL templates from #252314 scope still un-migrated and at regression risk. Tracked in todo Q3.
+
+**Carry Forward**:
+1. **PDF annotation extraction is non-negotiable** — every `.pdf` referenced in a brief gets `fitz.annots()` walk before declaring Phase 0 complete.
+2. **Word-template-first read** — when a ticket touches `.docx`, `PelupusanWordCCMethodConstant.java` is the FIRST read, before any template inspection.
+3. **Run-join Word XML** before any grep on `document.xml` — defeats Word's run-splitting that silently breaks literal text matches.
+4. **Hands-off scope is `git commit` + `git push` ONLY** — all prep (stash/branch/pop/add) is Ruri-owned automatic.
+5. **Notes.txt auto-log format works** — 3-line compact (ENV — TUGASAN / ID / login) reads at a glance; field-tested this session.
+6. **BA verbatim quoting in commit** — when BA's ticket Description names a specific phrase, quote it in the commit subject. Drop suffix info that the git diff already reveals.
+7. **Audit + migrate the other ~12 non-SKL templates from #252314 scope** — Q3 todo entry; same `frasa2` migration shape, mechanical.
+
+---
+
 *Post-Mortem Log v1.0 — 2026-04-02*

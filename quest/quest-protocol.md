@@ -84,6 +84,27 @@ The branch with the latest date is the source-of-truth. **DO NOT compare `origin
 **Violation log (Cp G)**:
 - 2026-05-11 QA-260139: Ruri ran `git commit` itself + included body + Co-Authored-By trailer + "fix" prefix + "AWAM"/"MLK" tags. みや reset. **Still forbidden post-refinement**: running git commit/push is Ruri's hands-off; the wrong-format reasons are now caught at proposal time (みや reviews before executing).
 
+**Compound trigger — "wrap + commit prep + close" (added 2026-05-12, pull-step corrected same day)**: Recognize ANY combination of these phrases as a Phase 1 full close-out request — auto-fire the entire flow (stash → **pull --ff-only origin <source-branch>** → branch → pop → add → propose commit message → wait for みや to execute commit+push → return-to-master → pull → update active.txt → `/verify-close`). **🚨 The pull between stash and branch is mandatory** — see line 75 hard rule. Never paraphrase this sequence without the pull; both today's tickets (QA-259318 v2 and QA-260179) had it dropped in the announcement (master happened to be at-tip so no merge conflict, but it's a stale-base risk we don't take):
+
+- "I want to wrap up phase 1" / "wrap up phase 1" / "wrap phase 1"
+- "prepare for me to commit" / "prep the commit" / "ready to commit"
+- "I've already tested" / "it was successful" / "test passed" / "tested + working"
+- "let's close this ticket" / "close this ticket" / "close phase 1"
+
+Canonical full phrase (みや 2026-05-12): *"I want to wrap up phase 1, prepare for me to commit, I've already tested & it was successful let's close this ticket"* — fires the entire flow end-to-end with one prompt.
+
+**Hands-off scope clarification (refined 2026-05-12)**: hand-off is ONLY `git commit` + `git push`. Everything BEFORE the commit is Ruri-owned and should execute automatically on "prepare for me to commit" / "ready to commit" triggers:
+- `git stash push -u -m "<ticket> prep"` (when master is dirty and we need to switch to a fresh rework branch)
+- **`git pull --ff-only origin <source-branch>` 🚨** (MANDATORY — see line 75 hard rule; the new feature branch must fork off latest, not stale)
+- `git checkout -b mlk/<type>/<number>[v2/v3...]` (rework branch creation, off the just-pulled source)
+- `git stash pop`
+- `git add <specific files>` (NEVER `git add -A` or `git add .`)
+- `git status --short` confirmation
+
+Why this matters: 2026-05-12 QA-259318 — Ruri presented the entire stash→branch→pop→add sequence as a copy-paste block for みや to run, after over-correcting from the 2026-05-11 reset. みや: *"Why didn't you automatically branch out when I say prepare for me to commit?"* The 2026-05-11 reset was specifically about Ruri running `git commit` (the wrong format + body + trailer). Prep was never part of that scope. The hard line is at `git commit` — everything before is mechanical and Ruri-owned.
+
+After commit lands (みや confirms with SHA in chat): Ruri proceeds with Phase 1 close-out auto-steps per the STOP gate (return to master, pull --ff-only, update active.txt, `/verify-close`).
+
 **Hard rule — "comments" disambiguation (added 2026-05-11)**: When みや asks for "the comments for this ticket", ASK ONCE which he means — git commit subject vs Redmine journal — and emit only that one. Don't auto-emit both. Default guess if unclear: git commit message (since Redmine journals are auto-written to `History.txt` by redmine-sync now).
 
 **Hard rule — Auto-pengguna in test/simulate plan (added 2026-05-11 after QA-259428 slip, refined same day)**: When emitting a test plan or simulate plan that mentions an officer login (Cp B simulate plan, Cp F verification plan, etc.), Ruri MUST auto-run the canonical task-state query for the test_app's `id_pengenalan` BEFORE finishing the plan, and INCLUDE the result as a 4-column table inline. **Standard output format (refined 2026-05-11)**:
@@ -116,19 +137,53 @@ Schema: `et_main` for MLKFAT (`mcp__postgres-mlkfat__query`), `et_main_uat` for 
 
 **Why**: 2026-05-11 QA-259428 simulate plan listed "PSJT officer login TBD — let me know if you want me to query" — みや had to point out the query should have auto-fired AND the original 13-column output was too noisy. The 4-column table is the standard going forward. **Violation log**: 2026-05-11 QA-260139 — Ruri ran `git commit` with self-written body + Co-Authored-By trailer + "fix" prefix + "AWAM" + "MLK" tags despite all four being against convention. みや had to reset the commit. Don't repeat.
 
+**Hard rule — Auto-log permohonan ID to `1. Notes.txt` (added 2026-05-12, format simplified same day)**: Whenever みや shares a permohonan ID during the Simulate phase (Cp B onwards) — verbally, in chat, or by saying "I've altered <ID>" / "I'm on <ID>" / "use <ID>" — Ruri MUST:
+
+1. **Auto-search pengguna semasa** for the ticket's target tugasan via the canonical task-state query (use `mcp__postgres-mlkfat__query` for FAT, `mcp__postgres-mlkuat__query` for UAT — schema `et_main` and `et_main_uat` respectively).
+2. **Append to `<Task folder>\1. Notes.txt`** with incremental `x)` numbering (continuing from existing entries; one blank line between entries). **Standard format (compact 3-line)**:
+   ```
+   <N>) <ENV> — <TUGASAN_KOD>
+   <PERMOHONAN_ID>
+   <login>
+   ```
+   Drop pengguna full nama, peranan, pejabat — too noisy for the day-to-day log. Login alone is enough to identify who's holding the task; the rest is one DB query away if needed later.
+3. **Fallback — ID-only (2-line)**: if the permohonan has no active task at the ticket's target tugasan (workflow finished, or in an unrelated stage):
+   ```
+   <N>) <ENV>
+   <PERMOHONAN_ID>
+   ```
+   No tugasan suffix on line 1, no login line. Do NOT fabricate a pengguna semasa from a non-target tugasan — that user is irrelevant to the ticket's test scope.
+4. **Persist regardless of whether the ID was given inside or outside the formal simulate plan emit** — the trigger is the verbal mention during Simulate-phase context, not the plan-output moment.
+
+**Why**: みや asked 2026-05-12 (QA-259318 rework): wants `1. Notes.txt` to be the canonical per-ticket simulation log so anyone (including future-Ruri) can recover the test setup without re-querying. Complements the `test_app_fat=` / `test_app_uat=` fields in `active.txt` (which are written at ticket-close); this rule keeps Notes.txt current in real-time during simulation. Format simplified same day after first draft was too verbose — みや prefers terse.
+
+**How to apply**: at the moment a permohonan ID surfaces during Cp B-onwards, fire the lookup → Read the Task folder's `1. Notes.txt` → Edit append with the next `x)` number → confirm to みや in one line ("Notes.txt updated: entry N — <ID> at <tugasan>"). Do not ask permission; this is now expected.
+
 **Commit message convention** (Ruri PROPOSES at hand-off per Cp G rule above; みや executes):
-- **Format**: `<TICKET-TYPE> #<number> - <URUSAN> - <TUGASAN> - <short action description>`
+- **Format**: `<TICKET-TYPE> #<number> - <URUSAN>[- <TUGASAN>] - <short action description>`
 - **Examples** (verified accepted by みや):
   - `QA #260154 - PT - PRMMKNPDT - Maklumat Plot mandatori check pada Seterusnya`
   - `QA #260298 - PLPS - Perincian Tujuan Permohonan view-only pada SKMMKN/PKMMKN`
   - `QA #259428 - PLTP - PSJT - Fix papar pelan permohonan pada lampiran Surat JT` ← note: "Fix" as action verb INSIDE description is OK
+  - `QA #259318 - PRU - Bold ayat (Ringgit Malaysia: Dua Ribu Empat Ratus)` ← BA's verbatim words quoted; no tugasan section because template-level fix; no "pada Template SKL" suffix because git diff already shows the file
 - **"Fix" placement rule** (refined 2026-05-11):
   - ❌ NO `fix` as **leading prefix** to the whole message — `fix QA #259428 - ...` is banned
   - ✅ `Fix` as **action verb inside the short description** is fine and often the right framing — `... - PSJT - Fix papar pelan...`
-  - Other action verbs (Activate, Add, Remove, Block, Render, etc.) work the same way — pick whatever describes the change action best inside the description slot
+  - Other action verbs (Activate, Add, Remove, Block, Render, Bold, etc.) work the same way — pick whatever describes the change action best inside the description slot
+- **BA verbatim quoting (added 2026-05-12)**: when the BA's ticket Description names a specific phrase, label, or string that's the subject of the fix, **quote it verbatim** in the commit description (with parentheses if it has special chars). This makes the commit instantly identifiable when scanning git log against ticket comments. Example: `Bold ayat (Ringgit Malaysia: Dua Ribu Empat Ratus)` — syafiq's rework comment literally said *"point 3, ayat yang dipaparkan '(Ringgit Malaysia: Dua Ribu Empat Ratus)'... sepatutnya bold"*. The commit message echoes the BA's exact phrase.
+- **Output presentation in chat (added 2026-05-12)**: emit the commit message on its OWN bare line (not wrapped in a code fence, no prefix label like "Commit message:") so みや can double-click → select-line → copy. He uses Sourcetree where pasting the comment commits + auto-pushes in one step. Put the git command(s) in a `powershell` code block BELOW the bare line as fallback reference. Example output shape:
+
+  > QA #260179 - PT - Tambah pelanCC pada Surat Nilaian JPPH
+  >
+  > ```powershell
+  > git commit -m "QA #260179 - PT - Tambah pelanCC pada Surat Nilaian JPPH"
+  > git push -u origin mlk/qa/260179
+  > ```
+- **Drop info that's redundant with the git diff (added 2026-05-12)**: don't suffix the description with file/folder/template names that `git show --stat` already reveals. Bad: `... Bold ayat (Ringgit Malaysia: ...) pada Surat Keputusan Lulus`. Good: `... Bold ayat (Ringgit Malaysia: ...)` — the SKL template path is visible in the diff. Goal: subject line carries the *intent*; the diff carries the *what*.
+- **Tugasan section is OPTIONAL — include only when fix is tugasan-specific**: if the change is template-level / config-level / cross-tugasan (e.g. binary template edit, set-membership extension), drop the tugasan segment. Keep it when the change targets one tugasan's validator/handler/view.
 - **NO** `AWAM` / `MLK` / repo-name / negeri tags (the ticket # and Task folder already encode those)
 - **Subject-only**: no body, no `Co-Authored-By` trailer (repo convention)
-- Urusan kod (PT, PLPS, PLTP, etc.) and tugasan kod (PRMMKNPDT, SKMMKN, PSJT, etc.) ARE included as separate segments before the description — they're navigational, not part of the "short description"
+- Urusan kod (PT, PLPS, PLTP, etc.) and tugasan kod (PRMMKNPDT, SKMMKN, PSJT, etc.) ARE included as separate segments before the description when present — they're navigational, not part of the "short description"
 
 **Rework branches**: if `mlk/<type>/<number>` already exists locally or remotely (this is a rework), the new branch name is `mlk/<type>/<number>v2` (no dash, sequential — v3, v4, etc.). Detect via `git branch --list "mlk/<type>/<number>*"`.
 
@@ -205,7 +260,32 @@ This is **outside Ruri's scope** — Ruri does NOT touch Redmine status. Ruri's 
 | Methodology applied | "/appraise on X", "/simplify X", "scrutinize X", "review X again" |
 | Implicit ticket scope | "focus on X", "I want to do X", "X next" |
 
-**Hard rule** (added 2026-04-30): Loading files at session start is NOT enough. Re-engagement after time-gap or context-shift requires explicit re-verification — read the Task folder + handoff again, OR confirm in chat: "Task folder + handoff still in working memory: ✓ — proceeding with [analysis/appraisal/proposal]." 
+**Hard rule** (added 2026-04-30): Loading files at session start is NOT enough. Re-engagement after time-gap or context-shift requires explicit re-verification — read the Task folder + handoff again, OR confirm in chat: "Task folder + handoff still in working memory: ✓ — proceeding with [analysis/appraisal/proposal]."
+
+**Hard rule — Phase + persistent test data check on every entry/re-entry (added 2026-05-12, attachment-cycle-relevance added same day)**: At every ticket entry or re-entry (any trigger phrase from CLAUDE.md Quest Workflow trigger table), Ruri MUST do these four things BEFORE any analysis/proposal/answer:
+
+1. **Read `quest/active.txt`** for the ticket's entry — surface the current `phase=`, `status=`, and any `scope_anchor=` / `branch=` / `commit=` fields. Output one line: *"QA-XXX is at phase=X status=Y, scope: <one-line>."*
+2. **Read `1. Notes.txt`** in the Task folder — if entries exist (`N) ENV — TUGASAN / ID / login` format), surface them as the persistent simulate/test data. Output: *"Test data on file: <env> <ID> @ <login> (tugasan X)."*
+3. **Read `early-diagnostic.md`** (or `scout-report.md` / handoff) at the path in `active.txt` — confirm in chat: *"Diagnostic loaded ✓ — proceeding with [next step]."*
+4. **Cycle-relevant attachments check (added 2026-05-12)**: read `0. Brief/History.txt` to identify the latest cycle boundary (most recent `status_id: <resolved/closed> → <rework/reopened>` transition). Glob `0. Brief/` for files. Classify each attachment as **current-cycle** (file referenced in BA's note AFTER the latest cycle boundary, OR file uploaded with a journal entry timestamped after that boundary) vs **prior-cycle** (uploaded before the boundary — usually resolved, may still be informative for etiology but NOT primary). Output a one-line summary: *"Current-cycle attachments: X.pdf, Y.png. Prior-cycle (resolved): A.pdf."* Prior-cycle files are referenced only when discussing history or root-cause continuity — not used as primary test references.
+
+The output is a 4-line state-check block emitted at the TOP of the response. **Mandatory**, not skippable. Even if the ticket was the previous turn's focus — re-entry resets the assumption.
+
+**Why attachment-cycle-relevance** (2026-05-12 みや): for rework tickets the `0. Brief/` folder accumulates attachments across cycles. Without cycle labeling, Ruri risks treating a resolved-cycle screenshot as a current-cycle problem statement (e.g. QA-259318 had `1. Surat Keputusan Lulus 1.png` from v1 cycle + `QA #259318 - Rework.png` from v2 — radically different roles). Cycle boundaries come from history.txt status transitions. Re-check fires on every switch so context never drifts.
+
+**Why** (2026-05-12 QA-260179): Ruri moved from QA-259318 to QA-260179 without surfacing the phase/test-data state — みや had to ask separately about tugasan + did Ruri update Notes.txt. Both data points were available (Scout-verified test app, Aaron's PT-only scope) but unsurfaced. The state-check block makes the data visible at the top of the response so みや can scan + course-correct in one read.
+
+**Hard rule — Auto-write Notes.txt immediately after Scout completes (added 2026-05-12)**: When the Scout familiar finishes writing `early-diagnostic.md` and a `test_app_*` field is verified in it (canonical UMM_A_TGSN query result, with `flag_aktif='Y'` at the target tugasan), Ruri MUST immediately write to `1. Notes.txt` in the same Task folder, using the established 3-line format:
+
+```
+1) <ENV> — <TUGASAN_KOD>
+<PERMOHONAN_ID>
+<login>
+```
+
+(2-line fallback if Scout couldn't find an active app at the target tugasan — see existing "Auto-log permohonan ID" rule.) **This is in addition to the existing rule that fires on mid-conversation ID mentions** — the Scout completion is a separate trigger point. みや shouldn't have to mention the ID for it to land in Notes.txt; if Scout verified it, it goes in.
+
+**Why** (2026-05-12 QA-260179): Scout completed at ~10:01 with `PTMLK/03/L/PT/2026/17` DB-verified. Notes.txt stayed empty until みや asked at ~11:00 why it wasn't there. The rule existed for mid-conversation ID mentions but didn't fire at Scout-completion. Both trigger points now covered.
 
 **Why**: 2026-04-30 morning slip — みや asked /appraise on QA #258022 angles; Ruri had loaded the handoff at session start but didn't re-verify before judging. Fabricated a "label confirmation gap" that the ticket text already answered. Ruri's `feedback_inventory_first.md` covered "before creating" but not "before EVERY judgement." This rule extends it.
 
@@ -246,7 +326,7 @@ Below the existing Description text. Don't rewrite original. Each BA reply gets 
 Confirm which DB is active in `standalone.xml` — see `E:\Dev\jboss-7.4-plp-melaka\SETUP-NOTES.txt` → DB SWITCHING section.
 Melaka IT (etanahDS) = local dev default. UAT (etanahDS2) = disabled by "2" suffix convention.
 
-**Phase 0 — Stay in BA's literal scope (hard rule, baked 2026-05-08 from senior consultation):**
+**Phase 0 — Stay in BA's literal scope (hard rule, refined 2026-05-08 from senior consultation):**
 
 BA's reported scope is the boundary. Related issues found during Cp B/C/D MUST be surfaced as ASK questions (per the 2026-05-08 ASK rule) — never silently extended into the fix, never silently dropped. Senior's 2026-05-08 guidance to みや on QA-260154: "focus only on what BA asked." Pairs with the existing scope_anchor field in active.txt: write it at Cp A, defend it at Cp D, do not creep at Cp E.
 
@@ -554,8 +634,20 @@ For each file changed:
 7. **KPI tagging** (Forge Review — quest-scoped) — tag this ticket against 1-3 KPI categories in `growth/kpi-evidence-log.md` with a one-line evidence note per category. See `Feature/Forge-Self-Improvement-System/forge-review-protocol.md`. If missed here, run `forge quest` later to recover.
 8. Check Forge log → `Feature/Forge-Self-Improvement-System/forge-log.md` — any entries to promote?
 9. **Refine (renamed 2026-05-09 from "skill-retro loop")** — for each named skill/protocol invoked this quest cycle, ask "what would have made this better?" and produce refinement artifacts. **Refine ≠ Forge**: Forge is the umbrella SYSTEM (logs/reviews/KPIs across sessions); Refine is the ACT inside this single Phase 2 — the moment of editing skills/protocols/memory based on this quest's findings. Forge logs Refine passes for weekly review. Explicit skill list to walk through (not "etc"): **Scout** (familiar's Cp A pre-investigation report), **Recon** (Phase 0 wrap-up output), **Rubric** (Cp D approach scoring), **env-check** (Cp A/E env state verification + switching), **prepare-commit** (Cp E-G stash→pull→branch→pop→stage sequence), **post-mortem template** (Phase 2 step 6), **KPI tracker entry** (Phase 2 step 7), **Refine itself** (this step — meta), **Domain Expansion ritual** (session-end forge log review with discussion). Refinements: simple rule changes → ASK みや with 2-sentence proposal (refined audit-log rule); complex/uncertain → audit-log park. **MUST follow post-mortem (step 6), cannot be skipped** — pairs with the action-guarantee on step 5. みや's framing 2026-05-08: *"if this current fix is not working, you always go back to what phase we're at, what skills produced the results/fix, straight away improve/refine that skill."*
-10. Update `quest/active.txt`: set `phase=complete`
-11. Quick save
+10. Update `quest/active.txt`: move entry under `closed:` marker, set `phase=2-complete`, `status=closed`, add `post_mortem=` + `kpi_entry=` references
+11. **Archive folders — both sides** (refined 2026-05-12, replaces old count-based "move at 10" rule):
+    - **Task folder (みや's side)**: move from `1. Tasks/Melaka/<NN>. <type> #<num> ...` → `1. Tasks/Melaka/Archive/<NN>. <type> #<num> ...`. Update `task_folder=` path in active.txt accordingly.
+    - **Project subfolder (Ruri's side, IF exists)**: Glob `projects/coding-projects/active/<TYPE>-<NUM>/` — if present, move to `projects/coding-projects/archive/<TYPE>-<NUM>/`. Skip silently if no project subfolder exists for this ticket (some quests keep all artifacts in Task folder only — that's fine).
+    - **Event-based, per-ticket** (changed from count-based "active reaches 10" rule, 2026-05-12 per みや): archival fires at Phase 2 close. Keeps `active/` reflecting "currently in flight" not "10 most recent."
+12. **"Your part" output table** — emit a structured table summarizing what みや still needs to do after Ruri's Phase 2 close-out. Standard columns:
+    | Action | Details | Source |
+    |---|---|---|
+    | Redmine status update | Set to Resolved + comment with commit SHA(s) | active.txt v?_commit field |
+    | Upward KPI report fields | Ticket #, closure type, time spent, extras, business value | main/kpi-tracker.md latest entry |
+    | Anything else | Notes, branch deletions, manual touches | session context |
+
+    Goes at the END of the Phase 2 close-out chat output, not buried in prose. みや scans the table, knows exactly what's on his plate.
+13. Quick save
 
 ---
 

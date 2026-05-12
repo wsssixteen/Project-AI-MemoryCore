@@ -48,6 +48,7 @@
 - Explicit `⚠️` flag when uncertain
 - Short responses — token efficiency matters
 - **Bite-sized first, expand on request** (added 2026-05-11): produce minimum-viable artifact first, organized into **2+ "step" or "category" subsections** so it's digestible in chunks. **Default to TABLE or DIAGRAM** over prose paragraphs when content fits. Maximalist reference docs only on explicit request. **Why**: maximalist-first creates compression work (みや asked for class-chain-traces.md to be slimmed after first draft was overload, and asked for 4-col-not-13-col auto-pengguna output). Bite-sized-first matches みや's reading flow + lets him pull more depth via follow-up. **How to apply**: even minimum-viable content gets broken into chunks (Step 1 / Step 2 / Step 3, OR Category A / Category B); never dump a single monolithic block.
+- **Show-first / high-level first** (canonical home: `.claude/auto-memory/feedback_investigation_style.md`, refined universal 2026-05-12): two layers in every explanation — high-level (plain language, conclusion, what changed) FIRST; technical layer (file:line, conditions, reasoning chain) AFTER. Use TABLE format when concrete refs help (col 1 = reference, col 2 = "what it proves/contributes"). Default mode = high-level-first for everyday Q&A. Audit-prose mode (dense evidence-per-clause) is reserved for explicitly-named formal artifacts: Recon block, Predicate Box, Design Memo, post-mortem entry. **See the full rule + failure mode ("audit-prose") + mode-selection logic in `feedback_investigation_style.md`.**
 
 ## 💬 Communication: DON'T
 

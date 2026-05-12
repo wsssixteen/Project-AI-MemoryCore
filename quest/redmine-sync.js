@@ -121,10 +121,22 @@ function buildFolderSlug(issue, parsed) {
 
 function findExistingFolder(prefix, number) {
     if (!fs.existsSync(TASKS_FOLDER)) return null;
-    const entries = fs.readdirSync(TASKS_FOLDER);
-    // Match on issue ID alone — prefix format in folder name may vary
     const idTarget = `#${number}`;
-    return entries.find(e => e.includes(idTarget)) || null;
+
+    // Check active folder
+    const active = fs.readdirSync(TASKS_FOLDER).find(e => e.includes(idTarget));
+    if (active) return active;
+
+    // Check Archive subfolder (added 2026-05-12 — closed tickets relocated here at Phase 2)
+    // Returns 'Archive/<folderName>' so callers see the actual on-disk location and don't
+    // mistake an archived ticket for a brand-new one (which would re-create + duplicate).
+    const archivePath = path.join(TASKS_FOLDER, 'Archive');
+    if (fs.existsSync(archivePath)) {
+        const archived = fs.readdirSync(archivePath).find(e => e.includes(idTarget));
+        if (archived) return path.join('Archive', archived);
+    }
+
+    return null;
 }
 
 function getNextFolderNumber() {
@@ -285,17 +297,42 @@ function addStatusFolder(existingFolderName, status) {
     const fullPath = path.join(TASKS_FOLDER, existingFolderName);
     if (!fs.existsSync(fullPath)) return null;
 
-    // 2 conditions for creating a status subfolder (per みや 2026-05-07):
-    //   (1) Status MUST be Rework (case-insensitive) — no other status triggers folder creation
-    //   (2) Project folder MUST exist at projects/coding-projects/active/<TYPE>-<NUM>/ — we've previously worked on it
+    // ─────────────────────────────────────────────────────────────────────────
+    // VERSION HISTORY of this gate (added 2026-05-12 to prevent re-derivation):
+    //   v1 (pre-2026-05-07): always created status folder for any non-"New" status
+    //   v2 (2026-05-07):     2 conditions — status=Rework AND project subfolder
+    //                        at `projects/coding-projects/active/<TYPE>-<NUM>/` exists.
+    //                        Intent of Condition 2: distinguish "Rework FOR US" (we
+    //                        worked on this, BA bouncing back our fix) vs "Rework
+    //                        NEW-TO-US" (previously handled by another dev, now
+    //                        reassigned — for us, effectively a fresh ticket; no
+    //                        need for `3. Rework/` since we haven't even used
+    //                        `2. Fix/` yet).
+    //   v3 (2026-05-12 AM):  Condition 2 dropped — but this was a misread of the
+    //                        intent. QA-259318 had `2. Fix/Backup/` artifacts
+    //                        (=worked on by us) but no project subfolder. The
+    //                        original proxy was too narrow, not wrong-headed.
+    //   v4 (2026-05-12 PM):  Condition 2 RESTORED with a better proxy — non-empty
+    //                        `2. Fix/` indicates "we staged fix work here". Per
+    //                        みや's clarification: if `2. Fix/` is unused, this
+    //                        is effectively a new ticket for us → don't create
+    //                        `3. Rework/`. The `2. Fix/` non-empty check captures
+    //                        the original Case A vs Case B distinction more
+    //                        reliably than "project subfolder exists" did.
+    // ─────────────────────────────────────────────────────────────────────────
+    //
+    // Current gate (v4):
+    //   (1) Status MUST be Rework (case-insensitive)
+    //   (2) `2. Fix/` subfolder MUST be non-empty (= we've staged fix work here)
+    //   (3) Idempotent — skip if "Rework" folder already present
     const statusLower = (status || '').toLowerCase().trim();
     if (statusLower !== 'rework') return null;
 
-    // Parse folder name "<NN>. <TYPE> #<NUM> - ..." to extract type + number
-    const m = existingFolderName.match(/^\d+\.\s*([A-Z][A-Z-]*)\s+#(\d+)/);
-    if (!m) return null;
-    const projectFolder = path.resolve(__dirname, '..', 'projects', 'coding-projects', 'active', `${m[1]}-${m[2]}`);
-    if (!fs.existsSync(projectFolder)) return null;
+    // Condition 2: 2. Fix/ non-empty proxy for "we've worked on this ticket ourselves"
+    const fixFolder = path.join(fullPath, '2. Fix');
+    if (!fs.existsSync(fixFolder)) return null;
+    const fixEntries = fs.readdirSync(fixFolder).filter(e => !e.startsWith('.'));
+    if (fixEntries.length === 0) return null;
 
     const statusLabel = 'Rework';
     const entries = fs.readdirSync(fullPath);
@@ -420,6 +457,22 @@ async function runWithCreate() {
         for (const issue of results.new) {
             const folder = await createTaskFolder(issue, issue._parsed);
             console.log(`  📁 Created: ${folder}`);
+
+            // Also write History.txt at first create — covers journal entries that already exist
+            // for "New"-status tickets (e.g. assignment notes from leads). 2026-05-12 fix: prior
+            // behavior only wrote History.txt on re-sync (existing path), leaving net-new tickets
+            // without their already-present journal context.
+            const journals = await fetchIssueJournals(issue.id);
+            if (journals.length) {
+                writeHistoryFile(path.join(folder, '0. Brief'), journals, {
+                    prefix:    issue._parsed.prefix,
+                    number:    issue._parsed.number,
+                    subject:   issue.subject,
+                    status:    issue._status,
+                    updated_on: issue.updated_on,
+                });
+                console.log(`    📝 [${issue._parsed.prefix} #${issue._parsed.number}] History.txt → ${journals.length} journal ${journals.length === 1 ? 'entry' : 'entries'}`);
+            }
         }
 
         for (const issue of results.rework) {

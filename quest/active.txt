@@ -26,15 +26,23 @@ notes:
   - 2026-05-06 PM: empirical test on /20 KKJKBB altered from PYSK + Lulus + save → field NOT showing despite stored kod=JK_LLS. Bug not reproducible on current FAT.
   - 2026-05-06 PM: みや recorded Alter Flowable repro video on /20, uploaded to Redmine, ticket passed back to BA/QA for verification. **No code fix shipped.**
 
+closed:
 qa=QA-259318
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\21. QA #259318 - [FAT] PRU - Pembetulan Pada Template Surat Keputusan Lulus
-branch=mlk/qa/259318
-phase=1-complete
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\21. QA #259318 - [FAT] PRU - Pembetulan Pada Template Surat Keputusan Lulus
+branch=mlk/qa/259318 (v1, closed 2026-05-04) | mlk/qa/259318v2 (v2, closed 2026-05-12)
+phase=2-complete (v2)
+status=closed
 local_test_confirmed=true
-status=pending post-mortem
+post_mortem=main/post-mortems.md (entry 2026-05-12 — combined v1+v2)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-12 — combined v1+v2)
 underlying_issue=Redmine #252314 — MSR (MELAKA SAYANG RAKYAT) slogan migration NOT fully resolved upstream. #252314 (2026-03-11, by zaidi) added MSR to 23 templates; UAT-CR #235094 (next day) regressed many. As of QA-259318 closure: 11 SuratKeputusanLulus*.docx templates migrated to frasa2 (DB-driven, regression-proof). Other ~12 non-SKL templates from #252314 scope still un-migrated and at regression risk. Tracked in todo Q3.
 learning_marker=2026-05-05 — trace MSR migration completion across full #252314 scope; revisit if any of the ~12 non-SKL templates regress
-note=Phase 1 closed 2026-05-04. 11 SuratKeputusanLulus*.docx templates migrated to frasa2 (DB-driven, regression-proof). Removed JcEnumeration.BOTH default at PelupusanWordEditorUtil.java:482-487 (4 templates that explicitly want BOTH set jc=both themselves — unaffected). Spawned 7 hard rules in CLAUDE.md (Word-template-first, Word XML run-join, branch check at Phase 0, PDF annotation extraction, renderer-side overrides, no extra code comments, batch same-layer edits) + 12 audit-log pending entries. ID Permohonan: PTMLK/01/L/PRU/2026/10. Original 6 issues: (1) Tahun Tamat Kelulusan year calc, (2) Isipadu→Luas, (3) "Meterpadu"→"Meter padu", (4-5) pembetulan per PDF, (6) "MELAKA SAYANG RAKYAT" line 3. Q3 todo entry: audit + migrate the other ~12 non-SKL templates from #252314 scope. Phase 2 (Reflect/wrap up) pending. Awaiting FAT retest.
+v1_commit=3b8bbf7ff7 (2026-05-04) — QA #259318 (subject-only) — 11 SKL templates migrated to frasa2 + JcEnumeration.BOTH default removed; FAT-tested 2026-05-07 by syafiq → BA bounced back on un-bold terbilang
+v2_commit=1009782970 (2026-05-12) — QA #259318 - PRU - Bold ayat (Ringgit Malaysia: Dua Ribu Empat Ratus)
+v2_files_changed=src/main/resources/template/MLK/TemplateSuratKeputusanLulusPRU.docx (binary, 40828→41012 bytes) — wrapped the (Ringgit Malaysia: <terbilang>) text run in <w:rPr><w:b/></w:rPr> at point 3
+v2_test_app_fat=PTMLK/01/L/PRU/2026/10 (azmezan@melaka.gov.my, peranan PT, pejabat 01 Melaka Tengah, PYSK)
+v2_scope_anchor=PRU urusan only. Sister SKL templates (other 11 from #252314 scope) NOT touched in v2 — BA only flagged PRU.
+note=Phase 2 closed 2026-05-12. v1 Phase 1 (2026-05-04): 11 SKL templates migrated to frasa2 (DB-driven, regression-proof) + renderer override removed at PelupusanWordEditorUtil.java:482-487. Spawned 7 hard rules in CLAUDE.md + 12 audit-log entries. v2 Phase 1 (2026-05-12): single .docx tweak — bold terbilang at point 3 per syafiq's 2026-05-07 rework comment. みや tested on FAT PTMLK/01/L/PRU/2026/10 PYSK — bold confirmed rendering correctly. Commit 1009782970 pushed to origin/mlk/qa/259318v2. Task folder archived 2026-05-12. Q3 todo: audit + migrate the other ~12 non-SKL templates from #252314 scope.
 
 qa=QA-258418
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\19. QA #258418 - FAT - PLPS - Penyediaan Surat Keputusan Lul - Tidak papar ayat -(tidak termasuk tahun kelulusan)
@@ -173,6 +181,27 @@ cp_H_push=2026-05-08 21:14 first push to origin/mlk/qa/260298 (-u upstream set)
 side_quest_resolved_during_phase1=Local JBoss FAT-DB connection was misconfigured (active config file is C:\etanahv3\config\environment.properties not C:\etanahv3\environment.properties — outer one was unused, renamed to .bak)
 note=Phase 1 closed 2026-05-08 21:14. みや submitting on Redmine. Phase 2 (post-mortem) pending.
 
+qa=QA-260179
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\30. QA #260179 - PT - Surat Nilaian JPPH - Penambahan pelan pada janaan Surat Nilaian J
+early_diagnostic=projects/coding-projects/active/QA-260179/early-diagnostic.md
+branch=mlk/qa/260179
+commit=0a47bed0a1 (2026-05-12) — QA #260179 - PT - Tambah pelanCC pada Surat Nilaian JPPH
+phase=1-complete
+status=pending post-mortem
+local_test_confirmed=true
+scope_layer=.docx template binary edit (add pelanCC content-control). NOT a Java set-membership extension — PT already in URS_FOR_DOK_PLP_PLN_ASAL.
+effort_actual=~30min (Phase 0 inherited from familiar; Word UI insert + FAT test + commit/push close-out)
+tugasan=PSJT (TGS_PENYEDIAAN_SRT_JBTN_TEK_DAN_YB) — PSJT generates Surat JT + Surat YB + Surat Nilaian JPPH (config-mapped via template.config.json kodDokumen=SN_JPPH)
+test_app_fat=PTMLK/03/L/PT/2026/17 (selected by みや 2026-05-12, mohdzaini@melaka.gov.my, PDT Alor Gajah, PSJT, PLN_ASAL ✓)
+ba_prep_app_fat=PTMLK/03/L/PT/2026/18 (BA-referenced in 0. Brief/CTH SURAT YB.pdf — working Surat YB sample shows pelan rendering ⇒ PLN_ASAL confirmed uploaded for /18; Scout missed promoting this as primary candidate, caught by みや)
+related_redmine=UAT-CR #236559 (BA reference — symptom-similar but DIFFERENT layer from QA-259428's fix)
+scope_anchor=PT urusan + TemplateSuratNilaianJPPHPT.docx ONLY. Per Aaron's 2026-05-11 Redmine note: "for this ticket you should just need to add the same CC as the one you were checking for the other pelan CC ticket. but just put it for this particular template." Sister Surat Nilaian JPPH templates (MCL, PPJK, PLTP_PSBS, generic) deferred to separate tickets if BA reports later.
+files_changed_phase1=src/main/resources/template/MLK/TemplateSuratNilaianJPPHPT.docx (binary, 32787→33707 bytes = +920 bytes) — inserted a single <w:sdt> block with tag=pelanCC + alias=pelanCC + placeholder, mirroring the structure in TemplateSuratJabatanTeknikal.docx, at the lampiran location.
+cp_F_verified=2026-05-12 — みや confirmed PLN_ASAL renders on FAT PTMLK/03/L/PT/2026/17 PSJT after deploy
+cp_G_commit=2026-05-12 0a47bed0a1
+cp_H_push=2026-05-12 first push to origin/mlk/qa/260179 (-u upstream set)
+note=Phase 1 closed 2026-05-12. みや submitting on Redmine. Aaron's scope-clarifying note retrieved on 2nd sync (1st sync skipped journals on new-create — bug fixed in redmine-sync.js same session). Phase 2 (post-mortem + KPI) pending.
+
 qa=QA-247710
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\26. QA #247710 - FAT - PRU - PRMMKN - Penambahbaikan skrin dan template
 early_diagnostic=projects/coding-projects/active/QA-247710/early-diagnostic.md
@@ -185,7 +214,8 @@ tugasan=Penyediaan Risalat MMKN PDT + Penyediaan Risalat MMKN PTG (Semakan + Per
 issue_one_liner=Add Syor Permohonan (Lulus/Tolak) field with alert validation + readonly downstream + ayat injection in Risalat template (per Item 5/6)
 suspected_files=Risalat MMKN PDT/PTG XHTMLs + backing bean + Risalat template .docx + populator handler + tindakan.config.json (mandatory rule for Syor field)
 knowledge_overlap=PERANAN-LEARNING.md mentions Risalat MMKN. tindakan.config.json mandatory_when patterns from QA-258022.
-note=NEW from Redmine sync 2026-05-06. Status=Rework. Enhancement (not bug fix). Multi-step BA spec — needs careful checklist parsing (CLAUDE.md hard rule for enhancement tickets). Largest of the 4 new tickets.
+ba_rework_2026-05-06=syafiq tested MLKFAT PTMLK/01/L/PRU/2026/15 — (1) Item 5 not on new page, (2) Item 6 numbering missing + placeholders rendering as literal text. PRU - Risalat.pdf attached with 11 annotations covering page-breaks, "6." numbering, `<Syor Keputusan PTG>`, `<Daerah>`, `<Tujuan Permohonan>`, `<Tempoh Disyorkan>`, `<Jumlah Keluasan>`, `<Jumlah Isipadu>`, `<Kadar Bayaran>`, `<Jumlah Bayaran>`. Re-assigned to me 2026-05-06.
+note=Re-assigned via Redmine 2026-05-06 (rework). Status=Rework. Enhancement (not bug fix). Multi-step BA spec — needs careful checklist parsing. Prior commit 34acdd6222 (2026-04-11) landed; BA bouncing back template-rendering issues. Largest of the 4 new tickets. Early-diagnostic from 2026-05-06 found `paragraphPTGPRU` is the missing Item 6 slot; populator `populateSyorKeputusanPDT/PTG` already correct; gap is template-side + bean `updateKeputusanSyorOnFirstLoad` auto-defaulting JSON to TRUE which defeats the alert.
 
 closed:
 qa=QA-258022
