@@ -28,6 +28,39 @@
 | `serviceTask` | | |
 | `strategy` | | |
 | `util` | | |
+
+---
+
+## Architectural Patterns
+
+### Template injection — parent template + external `references/` child doc (added 2026-05-13)
+
+**Plain explanation**: Some Word templates display content that doesn't live in the main `.docx` file — it's injected at render time from a SEPARATE child `.docx` sitting in the `references/` folder. The child doc carries its own font/size/bold properties; those override whatever the parent template would have applied at the injection slot.
+
+**How the injection works**:
+
+| Component | Role |
+|---|---|
+| Parent template (e.g. `TemplateRingkasanRisalatPLTP.docx`) | Has a slot CC tag (e.g. `jabatanTeknikalPLTP`, `paragraphPTGPRU`) — empty placeholder for injected content |
+| Populator method (in `PelupusanWordCCMethodConstant.java`) | Returns `PelupusanWCCTableVO { externalPath = child.docx, externalTableTag = "section name", rows = [...] }` |
+| Child template (in `src/main/resources/template/MLK/references/`) | Holds the actual content + styling. Its CCs nest under section markers (e.g. `paragraphPTGPRU`, `jabatanTeknikalPLTP`) |
+| Render time | Framework loads child doc → finds matching section CC → copies content into parent's slot → applies populator's `rows` to fill inner CCs |
+
+**Confirmed instances** (2 so far):
+- `additionalJKKLParagraph.docx` — JKKL paragraph injection (QA-247710, 2026-05-12)
+- `JabatanTeknikal.docx` — JT table + Ulasan YB row injection (QA-260876, 2026-05-13)
+
+**Implications for fixes**:
+- Font/style issues at injection slots → fix in the CHILD doc, NOT the parent
+- Inner CCs of injected content are filled ONLY via populator's `rows` list — global `wordContentControlMethod` dispatch does NOT reach inside injected sections
+- When tracing what fills a CC inside an injected slot, look at: (1) which populator returns the slot's TableVO, (2) what rows that populator adds
+
+**File:line references**:
+- Populator dispatch map: `PelupusanWordCCMethodConstant.java` (search for `wordContentControlMethod.put(...)`)
+- Pattern populators: `populatePTGParagraph_*` (~line 15917+, QA-247710), various JT-table populators
+- Child docs: `src/main/resources/template/MLK/references/*.docx`
+
+**Why this matters**: failing to recognize this pattern at Phase 0 costs Cp E/F debugging time when "parent template font change didn't take" or "CC tag in main template renders as literal placeholder". The first read on any template ticket should check whether the affected cell sits inside an injected slot.
 | `vo` | | |
 | `web` | | |
 

@@ -534,4 +534,40 @@ Read the cited method body verbatim at Cp C step 2 (existing utility sweep) inst
 
 ---
 
+### QA-260876 — PLTP Ringkasan Risalat MMKN (Font + Ulasan YB wiring) — 2026-05-13
+
+**Root Cause Type**: template (.docx binary, 2 files — main + external `references/` ref doc)
+
+**Root Cause Summary**: `TemplateRingkasanRisalatPLTP.docx` had (1) wrong font on Ulasan Daripada cell — BA wanted Century Gothic 10.5pt; (2) Ulasan YB row was 100% static placeholder text with hardcoded "Durian Tunggal" DUN literal, no CC tags wired, so populators (`dunYB` / `tarikhTerimaUlasanYB` / `keputusanYB`) couldn't fill. **Architectural insight**: the JT-table section is INJECTED from external `template/MLK/references/JabatanTeknikal.docx` — its run properties drive rendering at the injection slot, NOT the parent template's. Font fix had to land in the external doc, not the parent. Same external-injection pattern as `additionalJKKLParagraph.docx` (QA-247710, 24h earlier).
+
+**What Would Have Been Faster**: Recognizing the parent/child template injection pattern (same as QA-247710's `additionalJKKLParagraph.docx`) at Phase 0 — the architectural lesson should have transferred since the two tickets are 24h apart. Pre-loading etanah-knowledge at orchestrator level (before spawning Scouts) would have surfaced the pattern.
+
+**Pattern Match**:
+- **Recurring (now 2 confirmed instances)**: External `references/` docs as injection-pattern children — parent template has slot CC, populator returns externalPath, **child doc's styling drives the injected slot**. Treat as the framework's standard pattern for table-block injection.
+- **New**: Ringkasan Risalat MMKN tugasan-binding rule — generates at *MMKNPTG / *MMKNPTGT side ONLY (NOT *MMKNPDT). The *MMKNPDT side generates a DIFFERENT document (Risalat MMKN PDT). Verify via `template.config.json` literal-key check, NOT by enumeration of lifecycle action arrays.
+- **Reused**: Word-template-first hard rule (CLAUDE.md 2026-05-04) + Recon Universal Check 1 transitive-references clause.
+
+**Codebase Knowledge Updated**:
+- 2 candidate entries for `etanah-knowledge/melaka/` (pending みや approval per Cp J/K rule):
+  - `MODULE-ARCHITECTURE.md` extension: external-injection child doc pattern (`references/` folder, populator-returned `PelupusanWCCTableVO` with externalPath, child styling overrides at injection slot)
+  - `FLOW-TRACES.md` extension: Ringkasan Risalat MMKN tugasan-binding map (*MMKNPTG / *MMKNPTGT only across all urusan variants), distinct from Risalat MMKN PDT (*MMKNPDT)
+
+**Process Notes**:
+- Scout misread `template.config.json` — claimed Ringkasan PLTP binds at PRMMKNPDT/SRMMKNPDT/PRMMKNPTG/SRMMKNPTG/PRRMMKNPTG + Tangguh (lifecycle status enumeration), when the actual binding is only `PRMMKNPTG + PRMMKNPTGT` (lines 4151-4163). I trusted Scout's source-cite without re-verifying. みや caught.
+- Spawned Sub-check 8c (config-file tugasan-binding verification) at Recon ritual.
+- Spawned broader framing shift: agent output = raw evidence, not findings. Verb discipline: never say "Scout claims X — verified" without showing the verification step.
+- Recon title format went through 3 iterations same day (4-axis → 4-axis-no-Langkah → 5-axis-with-Langkah). Final stable: `QA-### • App • Env • Urusan • Tugasan • Langkah`.
+- Notes.txt format reformed to 2-entry pattern (Entry 0 BA-prep state + Entry 1 sim app) with abbreviated `PLP`/`AWAM`. みや hand-edited 260876 Notes.txt as canonical example.
+- Refine Block format standardised (Slip / Diagnosis / Fix / Pressure-test) + version-bump discipline introduced.
+→ forge-log: 7+ audit-log entries spawned this ticket cycle.
+
+**Carry Forward**:
+1. **External-injection pattern recognition** — when scanning a parent template, identify any CC tag whose populator returns `externalPath`. Trace into the external doc + verify its CC tags + styling at Phase 0.
+2. **Ringkasan ≠ Risalat MMKN** — different docs, different tugasans. Add to etanah-knowledge for future scope-anchor clarity.
+3. **Source-verify Scout enumerations**, especially config-file tugasan-binding claims (Sub-check 8c mandatory).
+4. **Agent output = raw evidence**. Verification step is non-skippable; orchestrator does it.
+5. **Orchestrator pre-loads etanah-knowledge** before spawning Scouts — so ground truth exists to verify against.
+
+---
+
 *Post-Mortem Log v1.0 — 2026-04-02*

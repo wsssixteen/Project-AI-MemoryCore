@@ -41,8 +41,8 @@
 | Cp A | **Discovery** | 0 | Scout familiar + early-diagnostic load + DOMAIN-GLOSSARY out-loud + etiology check (see below) |
 | Cp A wrap-up | **Recon** | 0 | Formal Recon block ritual — Universal Checks 1-8 with file:line per row |
 | Cp B | **Simulate** | 0/1 | Reproduce bug locally; auto-pengguna lookup; test plan emit |
-| Cp D | **Rubric** | 1 | Fix-shape options (A/B/C with pros/cons) + recommendation |
-| Cp E | **Apply** | 1 | Code edit applied (with Predicate Box per CLAUDE.md Ritual 1) |
+| Cp D | **Rubric** | 1 | Fix-shape options (A/B/C with pros/cons) + recommendation. **MANDATORY for multi-file or multi-layer fixes**: include a one-block **Architecture diagram** at the top showing how the touched files/layers reference each other (parent template → CC tag slot → populator method → external resource). Use plain ASCII boxes + arrows, not Java type names. Why (2026-05-12 みや on QA-247710 Rubric v2): *"That Architecture clarification diagram is good. Is it part of Rubric protocol?"* — it wasn't, now it is. Single-file single-layer fixes can skip the diagram (e.g. a one-line constant addition). |
+| Cp E | **Apply** | 1 | Code edit applied (with Predicate Box per CLAUDE.md Ritual 1). **🚨 PRESERVATION DISCIPLINE — HARD RULE (added 2026-05-12 after QA-247710 deletion-overreach slip)**: ONLY modify the specific lines required by the Cp D Rubric. **DO NOT DELETE any unrelated existing line, comment, or commented-out code without explicit みや authorization** — even if it looks "dead", "irrelevant", "outdated", "rushing", or "duplicated". Commented-out code is INTENTIONAL preservation by the original developer (debugging hints, candidate restorations, historical context, warnings to future devs) — must be respected. "Dead code cleanup" is a SEPARATE refactor task, NOT part of any bug-fix or enhancement ticket. If a line appears unrelated to the fix → KEEP IT. If unsure → ASK before deleting. **Why** (2026-05-12 QA-247710 Cp E): I replaced the entire body of `populatePTGParagraph_PRU` with my 10-row injection, deleting (a) a critical warning comment ("Rushing, will attempt beautify later... cause external table to go missing"), (b) the noLot computation block, (c) the noLot eachRow injection, (d) ~100 lines of commented-out historical hints. みや: *"Did you just without any rights remove an important comment WARNING others about an issue? I just noticed you removed a WHOLE BLOCK of codes not just the comments!!"* The deletions weren't in the Cp D Rubric scope. The (a) warning would have prevented the later TagAttributeException debugging — I deleted my own future safety net. **How to apply**: at Cp E, use `Edit` with targeted `old_string` covering ONLY the change region (insert-before/insert-after patterns), NEVER large `old_string` that includes unrelated surrounding code. If the framework's `Edit` tool requires a larger anchor for uniqueness, expand the anchor but preserve every line in `new_string` except the deliberate change. Pressure-test: if みや asks "what else did you delete?" — the answer must be "nothing other than the X line(s) we discussed". Pairs with the existing scope_anchor rule. |
 | Cp F | **Verify** | 1 | みや local-tests the fix; confirms ralat/behavior |
 | Cp G | **Commit hand-off** | 1 | Prepare-commit sequence (this section); Ruri proposes message, みや executes |
 | Cp H | **Push** | 1 | みや executes push |
@@ -50,7 +50,7 @@
 
 Use the new names in chat going forward. Old Cp letters remain in protocol files for backwards-compat reference but should not be used in user-facing communication.
 
-**Auto-etiology check at Discovery (NEW 2026-05-11)**: Scout MUST parse the ticket's `Description.txt` AND `History.txt` for related-ticket references — patterns: `Refer to <TYPE>-<CR>? #?<num>`, `Related to ... #<num>`, `UAT-CR #<num>`, `QA #<num>`. For each found reference, `git log --all --grep <num> --format="%h %ci %an %s"` in the relevant repo (etanah-pelupusan or etanah-awam) and surface findings in `scout-report.md` under a new **`## Etiology — related tickets & origin commits`** section. Today's QA-259428 had "Refer to UAT-CR #236559" sitting in Description.txt line 13; Scout should have caught it without みや having to ask later. Pattern recognition: the smoking-gun commit for a bug-fix-completion ticket is usually findable via `git log --grep <related-CR-num>`.
+**Auto-etiology check at Discovery (NEW 2026-05-11, EXTENDED 2026-05-13 with parent-ticket linkages)**: Scout MUST parse the ticket's `Description.txt` AND `History.txt` for related-ticket references — patterns: `Refer to <TYPE>-<CR>? #?<num>`, `Related to ... #<num>`, `UAT-CR #<num>`, `QA #<num>`, `Requirement #<num>` (parent ticket linkage in Redmine). For each found reference, `git log --all --grep <num> --format="%h %ci %an %s"` in the relevant repo (etanah-pelupusan or etanah-awam) and surface findings in `early-diagnostic.md` under a new **`## Etiology — related tickets, parent linkages & origin commits`** section. **Parent-ticket handling extension (added 2026-05-13 per みや QA-260733 question)**: when Description shows `Requirement #X: <title>` parent linkages (e.g. QA-260733 has `Requirement #215975: Pelupusan - Parent Ticket All Urusan` + `Requirement #218297: PLTP - Permohonan Lanjut Tempoh Pajakan`), capture parent number + title only (DO NOT auto-fetch sub-requirements list — parents can have 100+ sub-tickets, context cost too high). Mark as on-demand: if a scope-ambiguity Q arises later at Rubric (e.g. "PLTP-only or all-urusans?"), THEN do targeted Redmine API lookup of the SPECIFIC parent's sub-requirements list. Cheaper, surfaced only when needed. Today's QA-259428 had "Refer to UAT-CR #236559" in Description.txt line 13; Scout should have caught it without みや having to ask later. Pattern recognition: the smoking-gun commit for a bug-fix-completion ticket is usually findable via `git log --grep <related-CR-num>`.
 
 **Single canonical per-ticket doc principle (NEW 2026-05-11, full restructure deferred to next session)**: The multi-file pattern (`early-diagnostic.md` + `scout-report.md` + `handoff-XXX.md` + `class-chain-traces.md` + `Fix.txt`) is **deceiving** — reading one file but not the others gives a stale view. みや 2026-05-11: *"It has happened before. About the handoff, definitely drop it off."* Architectural direction: **single canonical doc per ticket, always-updated**, structured by phase (Discovery / Recon / Simulate / Rubric / Apply / Verify / Commit + Push / Etiology / Wrap). **Effective immediately**: `handoff-XXX.md` is **DEPRECATED** — for held tickets, resumption context lives in `scout-report.md` (or its successor). Full restructure of the file matrix (rename, section structure, lifecycle hooks) is design work scheduled for the next session.
 
@@ -267,7 +267,10 @@ This is **outside Ruri's scope** — Ruri does NOT touch Redmine status. Ruri's 
 1. **Read `quest/active.txt`** for the ticket's entry — surface the current `phase=`, `status=`, and any `scope_anchor=` / `branch=` / `commit=` fields. Output one line: *"QA-XXX is at phase=X status=Y, scope: <one-line>."*
 2. **Read `1. Notes.txt`** in the Task folder — if entries exist (`N) ENV — TUGASAN / ID / login` format), surface them as the persistent simulate/test data. Output: *"Test data on file: <env> <ID> @ <login> (tugasan X)."*
 3. **Read `early-diagnostic.md`** (or `scout-report.md` / handoff) at the path in `active.txt` — confirm in chat: *"Diagnostic loaded ✓ — proceeding with [next step]."*
-4. **Cycle-relevant attachments check (added 2026-05-12)**: read `0. Brief/History.txt` to identify the latest cycle boundary (most recent `status_id: <resolved/closed> → <rework/reopened>` transition). Glob `0. Brief/` for files. Classify each attachment as **current-cycle** (file referenced in BA's note AFTER the latest cycle boundary, OR file uploaded with a journal entry timestamped after that boundary) vs **prior-cycle** (uploaded before the boundary — usually resolved, may still be informative for etiology but NOT primary). Output a one-line summary: *"Current-cycle attachments: X.pdf, Y.png. Prior-cycle (resolved): A.pdf."* Prior-cycle files are referenced only when discussing history or root-cause continuity — not used as primary test references.
+4. **Cycle-relevant artifacts check (added 2026-05-12, extended 2026-05-12 evening to cover comments)**: read `0. Brief/History.txt` to identify the latest cycle boundary (most recent `status_id: <resolved/closed> → <rework/reopened>` transition). Apply cycle-classification to BOTH attachments AND BA comments:
+   - **Attachments**: Glob `0. Brief/` for files. Classify each as **current-cycle** (file referenced in BA's note AFTER the latest cycle boundary, OR file uploaded with a journal entry timestamped after that boundary) vs **prior-cycle** (uploaded before — usually resolved, informative for etiology only).
+   - **Comments (BA journal entries)**: the BA comment(s) that appear AFTER the latest Resolved→Rework / Closed→Reopened transition ARE the current-cycle scope authority. Quote the current-cycle BA comment verbatim in Recon. Prior-cycle comments (original spec, prior tester feedback, dev-handoff notes) are reference-only — DO NOT treat them as current scope. The early-diagnostic's "what likely BA-rejected" inference section is **speculation** when it predates the current cycle — label such inferences `[prior-cycle, speculative — pending current-cycle BA confirm]` in Recon.
+   - Output a 2-line summary: *"Current-cycle attachments: X.pdf, Y.png. Prior-cycle (resolved): A.pdf."* + *"Current-cycle BA scope (verbatim): <1-3 line quote>."* Prior-cycle items are referenced only when discussing history or root-cause continuity — never used as primary scope.
 
 The output is a 4-line state-check block emitted at the TOP of the response. **Mandatory**, not skippable. Even if the ticket was the previous turn's focus — re-entry resets the assumption.
 
@@ -275,17 +278,64 @@ The output is a 4-line state-check block emitted at the TOP of the response. **M
 
 **Why** (2026-05-12 QA-260179): Ruri moved from QA-259318 to QA-260179 without surfacing the phase/test-data state — みや had to ask separately about tugasan + did Ruri update Notes.txt. Both data points were available (Scout-verified test app, Aaron's PT-only scope) but unsurfaced. The state-check block makes the data visible at the top of the response so みや can scan + course-correct in one read.
 
+**Why comments-extension** (2026-05-12 evening, QA-247710 re-entry): same root-cause shape as the attachment-cycle slip. Ruri emitted Recon with scope spanning bean autodefault + KEMASKINI alert + populator + template — pulled from early-diagnostic's "what likely BA-rejected" speculation section (written 2026-05-06, before current cycle). The actual current-cycle BA comment (syafiq, 2026-05-06 11:53, post Resolved→Rework transition) had 2 specific items: (1) Point 5 page-break, (2) Point 6 corrections per PDF. みや caught the gap: *"Did you take into account what's the latest conversation on the ticket after the ticket was re-opened?"* — the comment-cycle layer was unreferenced. Rule extension makes both artifact types (files + journal comments) cycle-classified at Phase 0 entry.
+
+**🚨 Rework re-engagement ordered-read sequence — HARD RULE (added 2026-05-13 after QA-259759 3rd-time slip)**: At ANY Rework re-engagement (ticket previously closed, now reopened with Resolved→Rework or Closed→Reopened transition), Ruri MUST follow this EXACT ordered sequence BEFORE any Effort assessment, deep-scout, or Recon emit:
+
+1. Read `Description.txt` (always — initial scope)
+2. Read `History.txt` (ALWAYS at Rework — not optional, not skippable even if early-diagnostic.md exists from prior cycle)
+3. Locate the cycle boundary (most-recent `status_id` line indicating Resolved→Rework / Closed→Reopened transition) and identify the BA's journal entry AFTER that boundary
+4. Read that journal entry as the **authoritative current-cycle scope** (per cycle-relevance rule above)
+5. Read cycle-relevant attachment(s) referenced in step-4's journal (PDFs via `python fitz` annotation walk if applicable)
+6. ONLY THEN decide: is the BA note + attachment self-explanatory enough to skip deep-scout (proceed direct to Recon with corrected Effort), OR is deep-scout still needed?
+7. NEVER reuse the existing early-diagnostic.md's Effort estimate when it predates the current cycle — Effort must be re-judged against current-cycle scope
+
+**Why** (2026-05-13 QA-259759 slip — みや: *"did you not read the latest history? This is very important for you to answer first."*): I treated the existing early-diagnostic.md (from v1, 2026-05-07) as the source of truth, assessed "deep scout needed", and labeled Effort based on stale v1 framing. The BA's actual rework note (Item 4 bold + missing "tahun" — single template-binary tweak, ~30min LOW Effort) was 1 mouse-click away in History.txt. **3rd-time repeat slip** on cycle-relevance: 2026-05-12 morning (attachments), 2026-05-12 evening (journal comments), now 2026-05-13 (Effort judgement from stale diagnostic). The cycle-relevance rule existed but didn't ENFORCE the read sequence. Now sequenced + numbered explicitly.
+
+**🚨 BA-question classification filter at Recon (added 2026-05-13 after QA-260733 simulation-bypass slip)**: When formulating "Open BA Qs" at Recon, every candidate question MUST be tagged with one of 4 classes BEFORE landing in the BA-Answerable section:
+
+- **(a) Current-behavior** ("does X happen today?", "is Y rendered now?") → **SIMULATE-FIRST** — these are answerable by running the app, NEVER pass to BA. Re-tag as "Simulation-Required" with the test data already on hand.
+- **(b) Intent/spec** ("should X happen?", "what is BA's expected behavior?") → BA-Answerable ✓
+- **(c) Future-scope/extension** ("should we extend to other urusan/tugasan?") → BA-Answerable ✓
+- **(d) Implementation-choice** ("approach A vs B?") → DEFER to Phase 1 Rubric — neither BA nor immediate concern
+
+Only (b) and (c) appear in Recon's "Open BA Qs" output. (a) and (d) are filtered out at Recon-emit time. **Why** (2026-05-13 QA-260733 Recon): I framed "does SSTP genuinely show Notis 5A today?" as a BA-Answerable Q. みや: *"Doesn't this simply can be clarified through Simulation? Do we really need to ask BA? You should be more anchored or aware of our own protocol. More grounded."* Right — current-behavior Qs go to simulation, not BA. Rule strengthens existing Phase-0 "no implementation-design Qs to BA" with current-behavior filtering.
+
 **Hard rule — Auto-write Notes.txt immediately after Scout completes (added 2026-05-12)**: When the Scout familiar finishes writing `early-diagnostic.md` and a `test_app_*` field is verified in it (canonical UMM_A_TGSN query result, with `flag_aktif='Y'` at the target tugasan), Ruri MUST immediately write to `1. Notes.txt` in the same Task folder, using the established 3-line format:
 
 ```
-1) <ENV> — <TUGASAN_KOD>
+1) <Application> — <ENV> — <TUGASAN_KOD>
 <PERMOHONAN_ID>
 <login>
 ```
 
-(2-line fallback if Scout couldn't find an active app at the target tugasan — see existing "Auto-log permohonan ID" rule.) **This is in addition to the existing rule that fires on mid-conversation ID mentions** — the Scout completion is a separate trigger point. みや shouldn't have to mention the ID for it to land in Notes.txt; if Scout verified it, it goes in.
+**Format re-refined 2026-05-13 by みや (with hand-edited 260876 Notes.txt as canonical example)**: TWO-entry format when BA-prep ID is past target tugasan AND fallback sim ID exists. Entry 0 = BA-prep ID with state note, Entry 1 = sim ID with `<Application> — <ENV> — <TUGASAN>` line. Application abbreviated: `PLP` (Pelupusan) or `AWAM`. **NO Langkah in Notes.txt** (Langkah is RECON-title-only — per みや 2026-05-13). Format:
+
+```
+0) BA — past <target_tugasan>, currently <BA-prep_current_tugasan>
+<BA-prep_Permohonan_ID>
+<BA-prep_pengguna_semasa>
+
+1) <PLP|AWAM> — <ENV> — <TUGASAN>
+<sim_Permohonan_ID>
+<sim_pengguna_semasa>
+```
+
+**Single-entry case** (BA-prep ID is at target tugasan, OR BA didn't pre-prep specific): just Entry 1, no Entry 0. Example:
+
+```
+1) PLP — FAT — SKM
+PTMLK/01/L/PLPS/2026/10
+nizalarif@melaka.gov.my
+```
+
+**Why two-entry**: みや values testing against BA's exact Permohonan ID for traceability — Entry 0 preserves the BA-prep state for reference + tug-of-flow reasoning, Entry 1 gives the actionable test app. みや 2026-05-13: *"can you straight away give the BA's Permohonan ID's pengguna semasa despite its Tugasan doesn't match with our Ticket? It is still important to test based on BA's exact Permohonan's data"*.
+
+(2-line fallback if Scout couldn't find any active app at the target tugasan — see existing "Auto-log permohonan ID" rule.) **This is in addition to the existing rule that fires on mid-conversation ID mentions** — the Scout completion is a separate trigger point. みや shouldn't have to mention the ID for it to land in Notes.txt; if Scout verified it, it goes in.
 
 **Why** (2026-05-12 QA-260179): Scout completed at ~10:01 with `PTMLK/03/L/PT/2026/17` DB-verified. Notes.txt stayed empty until みや asked at ~11:00 why it wasn't there. The rule existed for mid-conversation ID mentions but didn't fire at Scout-completion. Both trigger points now covered.
+
+**🚨 STRENGTHENED 2026-05-13 — sequential per-Scout enforcement (no batching)**: when multiple Scouts run in parallel (e.g. Redmine retrieval syncs 5 new tickets, 5 Scouts spawned), Ruri MUST write Notes.txt for each ticket AS THE SCOUT RETURNS — before any other tool call, before the next Scout's processing, before any Recon emit, before any synthesis output. **"Immediately" means sequentially per-ticket, NEVER batched-after-the-batch**. Pattern of slip 2026-05-13 (QA-260965/876/820/733/302 retrieval): all 5 Scouts completed in parallel, I went straight to Recon emit for みや, skipped the 5 Notes.txt writes entirely until みや caught it. Same root-cause shape as compound-trigger follow-through slips (Phase 1 close-out post-push steps, Cp E unauthorized deletions) — when in synthesis-output mode, per-step housekeeping gets skipped. **How to apply**: after each Scout returns, Notes.txt for that ticket is the NEXT tool call. Treat it as a sequence checkpoint, not an "anytime later" item.
 
 **Why**: 2026-04-30 morning slip — みや asked /appraise on QA #258022 angles; Ruri had loaded the handoff at session start but didn't re-verify before judging. Fabricated a "label confirmation gap" that the ticket text already answered. Ruri's `feedback_inventory_first.md` covered "before creating" but not "before EVERY judgement." This rule extends it.
 

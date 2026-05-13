@@ -182,4 +182,43 @@
 
 ---
 
+### QA-260876 — PLTP Ringkasan Risalat MMKN — 2026-05-13 — ~3h
+
+**Closure type**: code-fix-shipped (template-only, 2 .docx files in parent+child injection pattern), committed `7fe595d75f` on `mlk/qa/260876`, pushed first-time to remote, ready for FAT retest.
+
+**Time spent**: ~3 hours (Phase 0 Scout + Recon + Cp D Rubric + みや's iterative .docx edits in Word UI + font discovery trace into JabatanTeknikal.docx + commit/push close-out + Phase 2).
+
+**Extras solved beyond ticket scope**:
+- Parameterised the row label "YB ADUN Kawasan Durian Tunggal" → `<dun>` CC tag (now dynamically renders the actual DUN per application's data, e.g. "Asahan" for /9 land). BA had raised the question; we shipped the parameterisation.
+- Identified data-side issue on standalone "Dun" field (renders HYPHEN for /9 because alppList + aptList.maklumatTambahan both lack DUN data) — flagged as `out_of_scope_held` for future ticket if BA reports.
+- Verified + named the architectural pattern: external `references/` doc styling drives the injected slot (applies to future template tickets touching the Ringkasan/JKKL family).
+
+**Business logic learned**:
+- **Ringkasan Risalat MMKN** generates at *MMKNPTG / *MMKNPTGT side ONLY (NOT *MMKNPDT, despite confusingly-similar tugasan names). The *MMKNPDT side generates "Risalat MMKN PDT" — different document.
+- **External-injection child doc** styling overrides parent template's font/size at the injection slot. Populator only fills VALUES via rows; styling lives with the doc that owns the CC.
+- **`dun` vs `dunYB`** are independent data paths: `dun` reads `alppList` → `aptList.maklumatTambahan` (land's DUN, tied to Tanah entity); `dunYB` reads `jtList` for ADUN/DUN-flagged JT row → `agensi.alamat.bandar.nama` (YB's seat constituency, tied to Person entity).
+
+**New skills / patterns**:
+- Recon title 5-axis format (final): `QA-### • App • Env • Urusan • Tugasan • Langkah`
+- Notes.txt 2-entry pattern (Entry 0 = BA-prep state, Entry 1 = sim app), abbreviated `PLP`/`AWAM`
+- Refine Block standardised (Slip / Diagnosis / Fix / Pressure-test)
+- Sub-check 8c (config-file tugasan-binding verification at Recon)
+- Version-bump discipline at protocol refinement
+
+**Audit-log entries spawned**: 7+
+- Sub-check 8c (config tugasan-binding verify)
+- Refine Block — placeholder values banned in active.txt
+- Recon title format final (5-axis)
+- Notes.txt format final (2-entry)
+- TRG hard guardrail strengthening
+- Rework re-engagement ordered-read sequence
+- Notes.txt sequential per-Scout enforcement
+- BA-question classification filter at Recon
+- Scout/agent framing shift (raw evidence)
+- Recon Universal Check 1 transitive references
+
+**Self-assessment**: 3h for what should have been ~1.5-2h base scope. Time loss drivers: (a) Scout misread of tugasan-binding required re-verification, (b) parent-template font fix didn't take initially — discovery into JabatanTeknikal.docx was the key insight that came from みや's tracing, (c) protocol-format iterations (Recon title 3 versions, Notes.txt 2 versions) during the same cycle ate context. NET: shipped clean code-fix + 1 BA-flagged extra (dun parameterisation) + spawned 7+ rule refinements + got 2 architectural patterns named (external-injection, Ringkasan tugasan-binding) for future ticket use.
+
+---
+
 *Created 2026-05-06 in response to みや's KPI-tracking ask. Will capture every closed ticket going forward.*

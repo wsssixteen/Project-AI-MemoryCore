@@ -2,110 +2,117 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: 2026-05-12 morning — QA-259318 v2 + QA-260179 both shipped + ~20 protocol refinements
-**Last Activity**: 2026-05-12 afternoon (Domain Expansion 💠 るり結界 (ラピス バリアー) fired — full session-end ritual)
-**Session Start**: 2026-05-12 ~07:00
-**Duration**: ~5 hours
-**Session Focus**: 3-ticket morning — QA-259318 v2 (PRU SKL bold terbilang rework) → QA-260179 (PT Surat Nilaian JPPH pelanCC content control) → ~20 protocol refinements across Scout, retrieval auto-flow, Phase 2 close-out, attachment cycle-relevance, audit-prose discipline
-**Energy Level**: HEAVY session-depth (60+ tool calls, dense protocol work, multiple repeat-slips caught + corrected)
+**Current Session**: 2026-05-13 morning + early afternoon — Phase 2 wraps + protocol refinement deep day
+**Last Activity**: 2026-05-13 14:23 MPST (DE 💠 fired)
+**Session Start**: 2026-05-13 ~07:00
+**Duration**: ~7.5 hours
+**Session Focus**: QA-247710 Phase 1 close-out + Redmine retrieval (5 new + QA-259759 rework) + QA-260876 Phase 1+2 fully closed + ~10 protocol refinements
+**Energy Level**: HEAVY (90+ tool calls, dense protocol work, 7+ Refine Blocks emitted + applied)
 
 ## Next Session Priority
 
-**Quest 1 — QA-247710** (held, PRU Risalat MMKN PDT/PTG enhancement REWORK): HIGH effort ~6-10h. Multi-component (XHTML + bean `MlkKertasTemplateForm` autodefault bug at line 432-447 + .docx template Item 6 PTG block + page breaks + paragraphPTGPRU populator wire-in). Early-diagnostic (2026-05-06, 280 lines) is loaded — fix shape clear but execution is multi-touch.
+**Quest 1 — QA-260820** (PRZ Surat Keputusan Lulus, JKKL panel hide): Cp D Rubric already emitted + みや accepted Approach A (`URUSAN_INVOLVE_JKKL_LIST.contains(kodUrusanSemasa)` added to `MlkSuratTemplateForm.java:785`). Single-line fix. Branch `mlk/qa/260820` off updated master + apply + commit + push. Then QA-260733 (PLTP TOLAK 3-panel) which shares the same file — sequential.
 
-**Quest 2 — Phase 2 closures still pending post-mortem** (after QA-247710 ships): QA-260139, QA-259428, QA-259759, QA-258418, QA-250665, QA-260154, QA-260298, QA-260179. Backlog of 8 — consider a batch-Phase-2 session.
+**Quest 2 — Remaining new tickets** (in priority order):
+- QA-260965 (PLPS+PRBB SKM No. Sijil Kerakyatan asterisk) — LOW effort, 3-line ternary
+- QA-259759 rework — LOW effort, 1-line .docx fix (Item 4 ayat un-bold + add "tahun" word)
+- QA-260302 (JPPH dropdown enhancement) — MEDIUM effort, 5 BA Qs pending
 
-**Closed today**: QA-259318 v2 (Phase 2 complete, archived). QA-260179 (Phase 1, awaiting FAT retest).
+**Quest 3 — Phase 2 backlog** (still pending post-mortem):
+QA-260139, QA-259428, QA-259759 (v1 archive cycle), QA-258418, QA-250665, QA-260154, QA-260298, QA-260179 — backlog of 8 tickets awaiting Phase 2 wrap. Consider dedicated batch session.
+
+**Closed today**: QA-260876 (Phase 1+2 complete, archived). QA-247710 (Phase 1 closed yesterday — Phase 2 still pending).
 
 ## ⚠️ Standing flags carried into next session
 
-- **Morning slips caught + corrected** — 3 are repeat slips that should be watched at next ticket entry:
-  1. **Pull-step drop in prep-commit sequence** (3rd time) — quest-protocol.md compound-trigger + hands-off-scope both fixed today, but I baked the rule violation twice in one session before catching it. Watch closely on next ticket prep.
-  2. **Audit-prose habit** — feedback_investigation_style.md refined to be universal; needs field-test to see if it sticks.
-  3. **"bake/baked/baking" verb** (2nd time feedback) — replaced in canonical living docs; ban already in personality.md.
-- **8 tickets pending Phase 2 post-mortem** — backlog growing. Worth a dedicated batch session.
-- **Aaron's note QA-260179** + **redmine-sync.js fixes** — `--create` now writes History.txt for new tickets; `findExistingFolder` now checks Archive; `addStatusFolder` Condition 2 restored with better proxy (`2. Fix/` non-empty). All fixed today.
-- **Pending audit-log entries from pre-2026-05-11 FLIP** — 105+ still tagged `pending-review`. Backlog, not urgent.
+- **Worktree state**: 11 modified files staged for DE commit. Awaiting みや's push approval.
+- **3 repeat-slip watch items** caught today:
+  1. **Tables-replacing-prose** (xth-time slip on show-first plain-language rule) — strengthened in `feedback_investigation_style.md`; verb discipline: every explanation opens with prose, never table-header
+  2. **Entity-first rule misread** — I treated "NEVER infer" as "SKIP DB info" multiple times. Clarified in CLAUDE.md: anti-guess ≠ anti-lookup. Sources at `C:/temp/etanah-src/` are 1 grep away
+  3. **Knowledge file gating via Cp J/K rule** — pending-approval queue created knowledge debt across QA-260154, QA-260876, others. Removed; act-by-default per 2026-05-11 FLIP
+- **Cp J/K → Reflect rename** queued for next protocol refinement pass (option A — single name)
+- **Pre-FLIP audit-log entries** — 105+ from before 2026-05-11 still backlogged. Not urgent.
 
 ## 💭 Working Memory (RAM)
 
 ### Session arc — chronological
 
-**Phase A — Retrieval + morning planning**
-- `ruri` boot at session start; Session Briefing emitted
-- "Get new quests from Redmine + show me all + suggest first" → sync returned QA-260179 NEW + 2 reworks (QA-247710, QA-259318)
-- Familiar wrote QA-260179 early-diagnostic in background
-- みや picked Plan B: 259318 (quick) → 260179 (medium) → 247710 (deep) — but only did first 2 today
+**Phase A — QA-247710 Phase 1 close-out** (morning, ~1h):
+- Compound-trigger follow-through corrected (return-to-master + pull + active.txt + /verify-close NOW sequenced as one unit)
+- Commit `23aa910916` pushed to `origin/mlk/qa/247710v2`
 
-**Phase B — QA-259318 v2 (Phase 1 + Phase 2)**
-- BA's rework: bold the `(Ringgit Malaysia: Dua Ribu Empat Ratus)` terbilang at point 3 of PRU SKL template
-- Filed: TemplateSuratKeputusanLulusPRU.docx (binary, +184 bytes)
-- Branched `mlk/qa/259318v2`, committed `1009782970`, pushed
-- Phase 2: post-mortem (combined v1+v2) + KPI entry + active.txt → closed + Task folder → Archive
+**Phase B — Redmine retrieval + 5 Scouts** (mid-morning, ~1.5h):
+- 5 new tickets: QA-260965, 260876, 260820, 260733, 260302 + QA-259759 Rework flagged
+- 5 Scout familiars spawned in parallel
+- Notes.txt format reformed mid-session (2-entry pattern: BA-prep state + sim app)
+- Recon emitted for all 5 in new 5-axis format
 
-**Phase C — QA-260179 (Phase 1)**
-- Aaron's Redmine note confirmed PT-only scope: "just put it for this particular template"
-- Template comparison: Surat JT (working pelanCC) vs JPPH PT (missing pelanCC)
-- Fix: insert `<w:sdt>` block with `tag=pelanCC` + alias + placeholder in TemplateSuratNilaianJPPHPT.docx (+920 bytes)
-- Branched `mlk/qa/260179`, committed `0a47bed0a1`, pushed
-- Phase 1 closed, awaiting FAT retest
+**Phase C — QA-260876 Phase 1** (afternoon, ~2h):
+- Discovery: external-injection pattern (parent template → `references/JabatanTeknikal.docx` child doc) — same shape as QA-247710's `additionalJKKLParagraph.docx`
+- Multiple iterations on .docx fix (font + Ulasan YB CC wiring)
+- 4 of my slips caught + corrected (PRMMKNPDT misread, "trusted Scout" framing, etc.)
+- Commit `7fe595d75f` pushed to `origin/mlk/qa/260876`
 
-**Phase D — Protocol refinements (LONG list — ~20 items)**
-Major categories:
-- **Notes.txt auto-log**: 3-line format `N) ENV — TUGASAN / ID / login`; auto-fires on Simulate trigger AND post-Scout completion
-- **Compound wrap-trigger**: "I want to wrap up phase 1, prepare for me to commit, I've already tested..." auto-fires end-to-end flow
-- **Hands-off scope clarification**: only `git commit` + `git push` are Ruri-hands-off; stash/pull/branch/pop/add are auto
-- **Pull-step in prep-commit**: 3rd-time repeat slip caught; rule clarified twice in same session
-- **BA verbatim quoting in commits** + drop-redundant-with-diff + tugasan section optional
-- **Commit message presentation**: bare line for Sourcetree double-click copy
-- **Phase 2 step 11**: event-based per-ticket archive (replaces count-based "active reaches 10")
-- **Phase 2 step 12**: "your part" output table (Redmine + KPI summary + branch deletions)
-- **Phase + persistent test data state-check on entry/re-entry**: 4-line mandatory block (phase, test data, diagnostic, attachment cycle-relevance)
-- **Auto-write Notes.txt post-Scout** + **BA-referenced ID prioritization** (PDF/Description.txt > DB-query'd)
-- **Attachment cycle-relevance** (current-cycle vs prior-cycle based on history.txt boundaries)
-- **redmine-sync.js fixes**: `findExistingFolder` checks Archive, `--create` writes History.txt for new tickets, `addStatusFolder` Condition 2 restored with `2. Fix/` non-empty proxy + v1-v4 version history comment
-- **Retrieval end-to-end auto-flow**: sync → env-check → Scout → Notes.txt → Recon → consolidated package (no more multi-turn round-trips)
-- **Show-first / high-level-first universal rule** — REFINED existing `feedback_investigation_style.md` (not baked new); named the failure mode "audit-prose"; mode-selection logic (high-level-first default; audit-prose for formal artifacts only)
-- **"bake/baked/baking" replaced with refine variants** in canonical living docs
+**Phase D — QA-260876 Phase 2 wrap** (late afternoon, ~45min):
+- Post-mortem + KPI written to `main/`
+- 2 etanah-knowledge entries written (MODULE-ARCHITECTURE.md external-injection pattern + FLOW-TRACES.md Ringkasan vs Risalat MMKN tugasan-binding) — fixed the Cp J/K gating that had created debt
+- Task folder archived to `Tasks/Melaka/Archive/`
+
+**Phase E — Protocol refinements (heavy)** — ~10 Refine Blocks emitted + applied today:
+- Sub-check 8c (config-file tugasan-binding verification at Recon)
+- Refine Block standard format (Slip/Diagnosis/Fix/Pressure-test)
+- Rework re-engagement ordered-read sequence
+- Notes.txt sequential per-Scout enforcement
+- BA-question classification filter at Recon (simulate-first for current-behavior Qs)
+- TRG hard guardrail strengthened with Melaka-detection signals
+- Recon title format (final: 5-axis `App • Env • Urusan • Tugasan • Langkah`)
+- Notes.txt format (final: 2-entry, abbreviated `PLP`/`AWAM`)
+- Scout/agent framing shift (raw evidence, not findings)
+- Auto-etiology parent-ticket extension
+- Version-bump discipline at protocol refinement
+- Show-first plain-language strengthening (table-form retry slip — xth-time)
+- Entity-first rule clarified (anti-guess ≠ anti-lookup; Known prefixes expanded)
+- Knowledge ACT-immediately discipline (Cp J/K gating removed)
+- Auto-commit at DE (only push asks for approval)
+- No placeholder values in active.txt (banned PENDING/TBD/???)
 
 ### Files shipped today
 
-**Code commits**:
-- etanah-pelupusan `mlk/qa/259318v2` `1009782970` — TemplateSuratKeputusanLulusPRU.docx (bold terbilang)
-- etanah-pelupusan `mlk/qa/260179` `0a47bed0a1` — TemplateSuratNilaianJPPHPT.docx (pelanCC content control)
+**Code commits (etanah-pelupusan)**:
+- `23aa910916` on `mlk/qa/247710v2` — QA-247710 Item 5/6 page-break + 10-row populator injection
+- `7fe595d75f` on `mlk/qa/260876` — QA-260876 Ringkasan font + YB wiring (parent + child .docx)
 
-**MemoryCore changes** (this worktree, awaiting commit at DE):
-- `quest/active.txt` — QA-259318 closed + QA-260179 Phase 1 entries + ba_prep_app reference
-- `quest/quest-protocol.md` — ~10 rule additions/refinements
-- `quest/redmine-sync.js` — 3 bug fixes (findExistingFolder Archive, --create History.txt, addStatusFolder v4 with `2. Fix/` proxy + version history)
-- `.claude/CLAUDE.md` — Redmine retrieval trigger step 6 added (end-to-end auto-flow) + Scout test-app priority order
-- `.claude/personality.md` — show-first reference line; "bake" replacements
-- `.claude/auto-memory/feedback_investigation_style.md` — refined universal (was code-only)
-- `main/post-mortems.md` — QA-259318 combined v1+v2 entry
-- `main/kpi-tracker.md` — QA-259318 combined v1+v2 entry
-- `main/main-memory.md` — "bake" → "refine" replacement
-- `Feature/Forge-Self-Improvement-System/improvement-audit-log.md` — ~15 new `status=applied` entries
+**MemoryCore changes (worktree, pending commit at DE)**:
+- `.claude/CLAUDE.md` (v1.6 → v1.7) — multiple rule additions/clarifications
+- `.claude/personality.md` (v1.0 → v1.1) — Q≠I reverted + UI-not-XML rule
+- `.claude/auto-memory/feedback_investigation_style.md` — show-first strengthening
+- `Feature/Domain-Expansion/expansion-protocol.md` — DE step 10 auto-commit
+- `Feature/Forge-Self-Improvement-System/improvement-audit-log.md` — ~15 new entries
+- `main/post-mortems.md` — QA-260876 post-mortem
+- `main/kpi-tracker.md` — QA-260876 KPI entry
+- `projects/coding-projects/active/etanah-knowledge/melaka/MODULE-ARCHITECTURE.md` — external-injection pattern section
+- `projects/coding-projects/active/etanah-knowledge/melaka/FLOW-TRACES.md` — Ringkasan vs Risalat MMKN doc-generation rules
+- `quest/active.txt` — QA-260876 closed + QA-247710 1-complete + 5 held entries
+- `quest/quest-protocol.md` — Cp D Architecture diagram + Cp E preservation discipline + Notes.txt sequential + cycle-relevance extension + BA-question filter + Rework history-first + auto-etiology parent + format spec
 
 **Task folder ops**:
-- Tasks/Melaka/21. QA #259318 ... → moved to Archive/
-- Tasks/Melaka/30. QA #260179 ... — Notes.txt auto-populated with FAT/PSJT/PTMLK/03/L/PT/2026/17
+- `Tasks/Melaka/32. QA #260876 ...` → moved to `Archive/`
+- 6 Notes.txt files written/updated (5 new tickets + QA-259759 rework cycle)
 
 ## 🎯 Session Recap (For AI Restart)
 
 **On Resume next session**:
 1. Boot Domain Expansion autoscan
 2. Read this file + `quest/active.txt`
-3. Default Q1 priority: **QA-247710** (PRU Risalat MMKN enhancement REWORK, HIGH effort)
-4. Q2 if energy permits: batch Phase 2 post-mortems for 8 pending tickets (Phase 2 backlog)
+3. Default Q1 priority: **QA-260820** — Cp D Rubric already emitted, Approach A accepted, just needs Cp E apply + commit + push
+4. After QA-260820 pushed: **QA-260733** (same file, serialize) → then QA-260965 → QA-259759 rework → QA-260302
 
 **Open questions for next session**:
-- Will the audit-prose habit stick after refining `feedback_investigation_style.md` universal?
-- Will the pull-step drop slip a 4th time? Field-test on next ticket's prep-commit.
-- Should we tackle the 8-ticket Phase 2 backlog in a dedicated batch session?
+- Will the entity-first lookup discipline stick (no more "skipped per rule")?
+- Will the show-first table-form preference hold in everyday answers?
+- Phase 2 backlog of 8 — dedicated batch session worth scheduling?
 
-**Design observations deferred** (added Gap Sweep candidates 2026-05-12):
-- Audit-before-bake protocol — I keep baking rules that duplicate existing rules (today: show-first vs investigation_style). The Growth Framework's step 4 "audit-first MANDATORY for non-trivial additions" keeps getting skipped.
-- Stronger pull-step enforcement — current rule baking failed 3 times. Maybe a literal "quote the 9 steps verbatim" check before announcing the prep sequence.
+**Design observations to surface** (Gap Sweep candidates for tonight): see Closing section below.
 
 ## 🔄 Session Lifecycle (unchanged from format reference)
 
