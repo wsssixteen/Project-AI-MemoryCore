@@ -1,13 +1,19 @@
 # KPI Tracker
-*Per-ticket value capture beyond just close — extras, learning, skill build*
+*Per-ticket value capture beyond just close — what we learnt, tied to grep-able identifiers*
 
 > Lives alongside `post-mortems.md`. Post-mortem captures CAUSE; KPI tracker captures VALUE.
 > KPI target (official 2026-05-06): **2 tickets/day, 4-6 hours each**.
 > みや uses this for upward KPI reporting + self-review.
+>
+> *Version: 2.0 | Last updated: 2026-05-12 (2-col scannier table format per みや audit)*
 
 ---
 
-## Format
+## Format (scannier 2-col table — refined 2026-05-12 per みや)
+
+> **What changed (2026-05-12)**: Prose-heavy "Business logic learned" + "New skills / patterns" sections REPLACED with a single 2-column table. Column 1 = grep-able identifiers (class.method, file:line, constant names, config keys) so future-me can search the codebase fast. Column 2 = plain English what we learnt, tied to UI label / Business Logic / meta — the "explanation that completes the picture" for programmers.
+>
+> **Don't mix technical + high-level in one cell.** Separation is the point.
 
 ```markdown
 ### QA-###### — [name] — [date] — [time spent]
@@ -17,17 +23,27 @@
 
 **Time spent**: [hours / days]
 
-**Extras solved beyond ticket scope**:
-- [item + audit-log link if applicable]
+**What we learnt** (grep-able identifier ↔ plain English explanation):
 
-**Business logic learned**:
-- [domain concept + where captured in etanah-knowledge]
+| Identifier (searchable) | What we learnt (plain English) |
+|---|---|
+| `<Class.method>` @ `<file:line>` | <plain-English lesson tied to UI label / business logic / meta — no jargon> |
+| `<constant name>` / `<config key>` | <plain-English lesson — what it controls + when it matters> |
+| `<package path>` / `<XHTML composite>` | <plain-English lesson> |
 
-**New skills / patterns**:
-- [skill or pattern + reusability scope]
+**Extras solved beyond ticket scope** (one-liners, optional):
+- [item + audit-log entry or commit ref]
 
-**Audit-log entries spawned**: [count + brief]
+**Audit-log entries spawned**: [count]
 ```
+
+**Format sub-rules**:
+- Table rows: as many as feel meaningful, no minimum / no maximum — but every row must be genuinely useful for future search-and-recall
+- Column 1 cells: ONLY identifiers. No prose. Backtick-wrap. Include file:line where applicable.
+- Column 2 cells: ONLY plain English. Tie to UI label / business logic / meta concept. Never repeat technical detail from column 1.
+- Drop "Self-assessment" sub-section from old format — replaced by "Faster-finding" in post-mortem
+- Drop separate "Business logic learned" / "New skills / patterns" sub-sections — both merge into the 2-col table
+- "Extras solved beyond ticket scope" stays as bullets but optional — only when extras are genuinely worth surfacing
 
 ---
 

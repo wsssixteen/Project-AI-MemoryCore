@@ -81,7 +81,9 @@ ai-memorycore/
 
 > When designing OR evaluating ANY system component (rule, skill, hook, memory entry, knowledge file, protocol, automation, format), do NOT design reactively from the latest slip. Apply this discipline.
 
-**System-design discipline — architecture-first, evergreen-anchored** (hard rule, 2026-05-08):
+**System-design discipline — architecture-first, evergreen-anchored** (hard rule, 2026-05-08, refined 2026-05-12):
+
+**Step 0 — Refine before introducing** (hard rule, 2026-05-12 — THE GATE before any other step): When tempted to add a new workflow / file / skill / ritual, FIRST prove that the existing mechanism cannot be extended. Document explicitly: *(a) which existing thing is being refined*, *(b) what changes about it*, *(c) why refinement isn't sufficient — only if it isn't*. **Only if no existing mechanism covers the work** — and the work is truly distinct in shape OR actor OR evidence-type — does a new mechanism land. **Why** (2026-05-12, みや): "I'd prefer not to introduce new workflows but improve & refine upon the existing, unless you point out if something is truly distinct." Past failures of this rule cost weeks of bloat — Phase 2 absorbed too much, quest-protocol grew to 595 lines from reactive patches, feedback files piled to 30+ from per-slip additions. **How to apply**: every proposed addition emits a "Refines-X / Net-new-because-Y" line at top of its Design Memo. If "Refines-X" is empty, the design must justify the new mechanism as truly distinct. If both can be argued, refine wins by default.
 
 **Step 1 — Identify decomposition seams** (architecture first):
 - **etanah work**: framework-layer matrix (Java validators/services, JSF/PrimeFaces, Java config/Template Method, .docx + Word CC, config.json, SQL/Hibernate, Spring DI, Flowable BPMN)
@@ -115,8 +117,12 @@ ai-memorycore/
 - **New skill**: name-conflict grep + trigger-overlap check + what it replaces
 - **New memory entry**: canonical home + supersedes-what (don't pile)
 - **New rule**: which past slip(s) it would have caught + which past tickets it'd be dead weight on
+- **New MD file — versioning convention** (added 2026-05-12, follows Anthropic convention as ecosystem evolves):
+  - **Protocol / knowledge / skill files** (auto-loaded or auto-referenced) → frontmatter or footer with `version: X.Y` + `last_updated: YYYY-MM-DD`. Bump version on major reshape; update timestamp on every meaningful edit.
+  - **Multi-phase docs** (per-ticket quest docs when single-canonical doc lands) → section-level timestamps (`*Last updated: YYYY-MM-DD (Phase X close)*`) rather than file-level. Reading one section without staleness ambiguity.
+  - **Transient / working state** (`current-session.md`, `todo.md`, `active.txt`) → NO file-level versioning. Inline timestamps where they already exist.
 
-Other addition types (hook, agent, knowledge, protocol, automation, format): apply Steps 1-4 + 6 only.
+Other addition types (hook, agent, knowledge, protocol, automation, format): apply Steps 0-4 + 6 only.
 
 **Step 6 — Evaluation lens for EXISTING designs** (audit, retrospective):
 - Is it firing when expected?
@@ -311,6 +317,10 @@ PRESSURE-TEST: <past cases this would have caught + future failure-modes-watched
   みや scans the Recon block. Empty/vague line = challenge me, redo step. Random spot-check: "show me the file:line for [3]" — if I can't, I didn't do it.
 
   **Triggers**: Phase 0 initiation (every ticket), re-initiation (re-engagement after time gap or after a tested fix didn't work), after any "step-back" moment.
+
+  **Time-box on theory churn (added 2026-05-12 — refinement of existing Momentum Circuit-Breaker, Debug Mode Ritual 3 in this file)**: If first-pass Recon doesn't converge to a clear PROCEED-TO-RUBRIC verdict — i.e. unknowns remain, claims fail 100%-verify, or sister-defect grep contradicts the theory — STOP within 30 minutes. Fire the existing Momentum Circuit-Breaker: `RESET. Prior theory abandoned: <name>. Re-reading raw evidence from scratch.` Don't iterate the same Recon on the same theory past 30 minutes — that's sunk-cost commitment per playbook cognitive-traps. The mechanism is the EXISTING Ritual 3; the trigger is just fired earlier (at theory-churn during Recon) rather than only after a failed fix. **Why explicit**: 2026-05-06 QA-259534 churned ~2 days on "Option E theory" before Alter Flowable repro disproved it; a 30-min time-box would have flipped to simulate-first ~36 hours earlier.
+
+  **"Select isn't broken" — Java/JBoss/PrimeFaces edition (added 2026-05-12 — refinement of `feedback_simplify_and_reference.md` "find working analog first" rule)**: When a bug seems to live in the framework (JBoss lifecycle, PrimeFaces composite, Hibernate, Spring proxy, Flowable engine), **suspect own code first, direct dependency second, framework last**. The mature widely-deployed dependency has been exercised by thousands of users; etanah-side code has been exercised by us. Probability says the bug is in the code seen less. **How to apply**: cache theories, framework-bug theories, "JBoss must be misconfigured" theories all get pushed to LAST after own-code is verified. Already-applied in practice via the existing `Renderer-side overrides before cache theories` rule below; this is the broader principle.
 
   **Design discipline (so future rule additions don't repeat this mistake)**: (i) Pressure-test new rules against ≥3 past tickets before refining. If <50% would benefit, it's Tier 2 (layer-specific), not Tier 1. (ii) Design from system architecture (the layer matrix), not from the last slip. (iii) State explicitly which past tickets a rule would have helped or hurt.
 

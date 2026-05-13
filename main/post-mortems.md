@@ -1,38 +1,43 @@
 # Post-Mortem Log
 
 > Reflection entries after each completed quest.
-> Goal: extract what to carry forward — patterns, process notes, codebase knowledge.
-> Written at Quest Phase 3. Linked from project file.
+> Goal: extract the META layer — process notes, contributing factors, carry-forward todos.
+> Written at Quest Phase 2 (auto-triggered after commit verify per quest-protocol).
+> Linked from project file.
+>
+> *Version: 2.0 | Last updated: 2026-05-12 (slimmed to META-only per みや audit)*
 
 ---
 
-## Format
+## Format (slimmed 2026-05-12 — META-only)
+
+> **What changed (2026-05-12)**: Root Cause Type / Root Cause Summary / Pattern Match / Codebase Knowledge Updated sections REMOVED — they duplicated Phase 1 scout/recon/Fix Walkthrough content. The unique value of post-mortem is the META layer that needs the full quest arc to make sense.
 
 ```markdown
 ### QA-###### — [Short name] — [date]
 
-**Root Cause Type**: data / config / code / schema / process
+**Faster-finding** (1-2 lines — what would have made this quest faster + the action applied):
+Faster: [one-line observation]. Action applied: [concrete edit to skill/protocol/memory/knowledge — file:line or commit-sha].
 
-**Root Cause Summary**:
-[1-2 sentences]
+**Contributing Factors** (replaces single-root-cause framing when ≥2 conditions converged; use single-cause framing only when truly single):
+- [Factor 1 with file:line evidence]
+- [Factor 2 with file:line evidence]
+- [Factor 3 with file:line evidence]
+(For single-cause bugs: one line stating the root cause + file:line.)
 
-**What Would Have Been Faster**:
-[One concrete process note]
+**Process Notes** (anything about how we worked — what slowed us down, what helped, slips on existing rules):
+[Free-form bullets]
 
-**Pattern Match**:
-- Existing pattern confirmed: [pattern name] in DEBUGGING-PLAYBOOK.md
-- New pattern added: [pattern name]
-- No pattern match
-
-**Codebase Knowledge Updated**:
-- [File or concept updated in etanah-knowledge/]
-
-**Process Notes**:
-[Anything about how we worked — what slowed us down, what helped]
-
-**Carry Forward**:
-[1-2 things to do differently next time]
+**Carry Forward** (1-3 follow-up todos with home — Q1/Q2/Q3 todo, audit log, knowledge file update, etc.):
+- [Todo 1 + canonical home]
+- [Todo 2 + canonical home]
 ```
+
+**Format sub-rules**:
+- File:line citations in Contributing Factors are mandatory (matches Recon discipline)
+- Faster-finding action MUST be a concrete artifact (per CLAUDE.md "Mistake → action, not words" rule); "noted for next time" is unacceptable
+- Carry Forward items get their canonical home (todo.md quadrant / audit-log / specific knowledge file / etc.) — items without a home tend to drift
+- Knowledge-file updates that happened DURING the quest live in those files (with their own `version` bump) — DO NOT re-list them here
 
 ---
 

@@ -107,7 +107,17 @@ After commit lands (みや confirms with SHA in chat): Ruri proceeds with Phase 
 
 **Hard rule — "comments" disambiguation (added 2026-05-11)**: When みや asks for "the comments for this ticket", ASK ONCE which he means — git commit subject vs Redmine journal — and emit only that one. Don't auto-emit both. Default guess if unclear: git commit message (since Redmine journals are auto-written to `History.txt` by redmine-sync now).
 
-**Hard rule — Auto-pengguna in test/simulate plan (added 2026-05-11 after QA-259428 slip, refined same day)**: When emitting a test plan or simulate plan that mentions an officer login (Cp B simulate plan, Cp F verification plan, etc.), Ruri MUST auto-run the canonical task-state query for the test_app's `id_pengenalan` BEFORE finishing the plan, and INCLUDE the result as a 4-column table inline. **Standard output format (refined 2026-05-11)**:
+**Hard rule — Auto-pengguna at END of Recon (refined 2026-05-12 by みや for explicit trigger clarity)**:
+
+**Trigger** (sure-fire, explicit): Ruri MUST run the canonical task-state query for the test_app's `id_pengenalan` **at the END of Recon emit** — AS PART OF Recon's output block, NOT at start of Simulate. Test data is INPUT to Simulate, not its output. By the time みや sees the Recon Verdict line, the test-data table must be visible inline immediately above or below it.
+
+**Why explicit trigger** (2026-05-12, みや): "I need the solid proof you've written it down in the protocol/skill." Previously the rule said "when emitting a test plan" — ambiguous. The Recon block IS the moment of emit, because みや uses Recon to decide whether to proceed to Simulate; without test data in hand at Recon emit, he can't simulate.
+
+**Secondary triggers** (already in place, do not remove):
+- Cp B simulate plan emit (if Recon didn't already include it — fallback)
+- Cp F verification plan emit (different test data may apply if FAT vs UAT)
+
+**Standard output format (refined 2026-05-11)**:
 
 | Permohonan ID | Pengguna | Kod Tugasan | Nama Tugasan |
 |---|---|---|---|
@@ -199,9 +209,11 @@ After commit + push lands successfully:
 
 5. **Run `/verify-close <ticket>` skill** (NEW 2026-05-11) — programmatic verification via `.claude/skills/verify-close/SKILL.md`. 4 file-state checks: commit landed (`git log`), push succeeded (local == origin SHA), repo on main + pulled (`git branch --show-current` + ahead-count == 0), `active.txt` entry has phase=1-complete + commit=<SHA>. Outputs green/red checklist. **Mandatory before STOP gate**; if any check is red, fix the gap before declaring closure.
 
-**🛑 STOP GATE — Ruri MUST PAUSE AFTER STEP 5 AND ASK FOR CONFIRMATION** (added 2026-05-11 after みや's discipline call):
+6. **Auto-generate Fix.txt + SUMMARY.txt** (added 2026-05-12 — sure-fire trigger per みや) — fires AUTOMATICALLY right after `/verify-close` green, BEFORE the STOP gate. Both files render from `quest/active.txt` ticket entry + Phase 1 commit metadata + Phase 1 Fix Walkthrough content. **Trigger phrase explicit**: "verify-close green → render Fix.txt + SUMMARY.txt". Until this auto-gen lands as a skill, the trigger lives as a quest-protocol step — Ruri writes both files at this moment, every Phase 1 close, no exception. Format per Task Folder File Rules section above. **Why** (2026-05-12): Fix.txt + SUMMARY.txt have repeatedly failed to generate because the old trigger was "Phase 2 step 1" — and Phase 2 often gets deferred. Moving the trigger to Phase 1 close-out makes generation atomic with the commit/push/return-to-main flow.
 
-> Output verbatim: *"Phase 1 closure for QA-X complete. ✓ commit ✓ push ✓ return-to-main ✓ active.txt updated ✓ /verify-close green (all 4 checks). Confirm before I proceed to anything else?"*
+**🛑 STOP GATE — Ruri MUST PAUSE AFTER STEP 6 AND ASK FOR CONFIRMATION** (added 2026-05-11 after みや's discipline call):
+
+> Output verbatim: *"Phase 1 closure for QA-X complete. ✓ commit ✓ push ✓ return-to-main ✓ active.txt updated ✓ /verify-close green (all 4 checks) ✓ Fix.txt + SUMMARY.txt rendered. Confirm before I proceed to anything else?"*
 
 **Then WAIT.** Do not progress to Phase 2 / DE / sister-ticket / unrelated work until みや explicitly answers *"yes"*, *"proceed"*, *"go"*, *"ok next"*, or equivalent. This triple-measure exists because Ruri has previously rolled forward into adjacent work right after closure, scattering attention before the closure was fully checked. The triple measures:
 
@@ -419,8 +431,8 @@ The default Read tool exposes visual page content but NOT the BA's per-annotatio
 2. Wait for みや to populate `0. Brief`, then read every file in it
 3. Read every file in the Task folder (Glob + Read all)
 4. Parse: ticket description, scope items (a, b, c…), bug details, screenshots
-5. **Inventory-first knowledgebase load** — `Glob projects/coding-projects/active/etanah-knowledge/<state>/` → `Read` files in two tiers (strengthened 2026-05-09 after slip QA-260139 where Ruri guessed PSBS/PSBP meanings instead of reading DOMAIN-GLOSSARY):
-   - **MANDATORY (always load, every quest, no exception)**: `DOMAIN-GLOSSARY.md` (urusan codes, module/side terminology), `MODULE-ARCHITECTURE.md` (package structure, module boundaries). These are foundation references — every etanah ticket needs them.
+5. **Inventory-first knowledgebase load** — `Glob projects/coding-projects/active/etanah-knowledge/<state>/` → `Read` files in two tiers (strengthened 2026-05-09 after slip QA-260139 where Ruri guessed PSBS/PSBP meanings instead of reading DOMAIN-GLOSSARY; extended 2026-05-12 with DEFERRED-CRITICAL-ISSUES.md per みや):
+   - **MANDATORY (always load, every quest, no exception)**: `DOMAIN-GLOSSARY.md` (urusan codes, module/side terminology), `MODULE-ARCHITECTURE.md` (package structure, module boundaries), **`DEFERRED-CRITICAL-ISSUES.md`** (known issues deferred from past tickets — cross-check against current ticket's scope_anchor; surface as Standing Flag if any deferred item touches current ticket's surface). These are foundation references — every etanah ticket needs them.
    - **MANDATORY when ticket type matches**: `FLOWABLE-WORKFLOWS.md` (workflow/Flowable tickets), `JSF-WIRING.md` (JSF UI tickets), `BUG-BESTIARY.md` (any bug fix — past patterns may match).
    - **AS RELEVANT**: `DATABASE.md` (SQL/schema tickets — large file, code-first works most of the time), `FRONTEND-PATTERNS.md`, `URUSAN-FLOW.md`, `FLOW-TRACES.md`.
    - No hypothesis, no SQL, no code grep before this step. See `feedback_inventory_first.md`.
@@ -482,7 +494,8 @@ The default Read tool exposes visual page content but NOT the BA's per-annotatio
    - Ticket #, Task folder path, codebase root (pick by ticket subject — `E:\Projects\Melaka\etanah-pelupusan` for **APPS / PELUPUSAN** = staff-side OR `E:\Projects\Melaka\etanah-awam` for **AWAM** = public/pemohon-side; use proper module names, not informal "officer-side" labels — corrected 2026-05-09 per みや), etanah-knowledge folder path
    - **Repo branch awareness** (added 2026-05-08): for etanah-pelupusan main branch is `mlk/master`; for etanah-awam main branch is `mlk/release/uat`. Familiar must read code from the correct main branch — claims based on stale branch are unreliable.
    - Reference the 5 hard rules for Word-template work (Word-template-first lookup, Word XML run-join, Branch check, PDF annotation extraction, Renderer-side overrides)
-   - Output: write `projects/coding-projects/active/QA-<num>/scout.md` (renamed 2026-05-08 from `early-diagnostic.md`; legacy filename remains for closed quests; new scouts use `scout.md`) with sections in this exact order — (1) **Permohonan ID + Env + Tugasan kod** as a TOP-LINE single-line summary (ALWAYS first; みや needs this for simulation; surfaced ABOVE all other tables in Cp A reply too — strengthened 2026-05-08 after slip on QA-260298 where the test data was buried mid-table) — (2) Ticket scope (verbatim), (3) Urusan/Tugasan/Layer classification (with full urusan-code expansion from `etanah-knowledge/melaka/DOMAIN-GLOSSARY.md` — never paraphrase), (4) Suspected files (with file:line where confidence high), (5) Word template state (CC tags + Item-area context), (6) Candidate populators, (7) Knowledge-file overlap, (8) BA scope_anchor (positive + explicit DO NOT), (9) Test data details (id + tugasan_kod + username inference, expanded from #1), (10) Open questions, (11) Effort estimate, (12) NOT-in-scope list
+   - Output: write `projects/coding-projects/active/QA-<num>/scout.md` (renamed 2026-05-08 from `early-diagnostic.md`; legacy filename remains for closed quests; new scouts use `scout.md`) with sections in this exact order — (1) **Permohonan ID + Env + Tugasan kod** as a TOP-LINE single-line summary (ALWAYS first; みや needs this for simulation; surfaced ABOVE all other tables in Cp A reply too — strengthened 2026-05-08 after slip on QA-260298 where the test data was buried mid-table) — (2) **Gap statement** (added 2026-05-12 — 3 explicit lines: `Expected: <BA's expected behavior verbatim>`, `Observed: <actual behavior from Description.txt>`, `Gap: <the bug — one line>`. Refinement of Description.txt parsing; not a new doc — just 3 explicit lines at top of Scout instead of buried in prose. Anchors every downstream investigation step.) — (3) Ticket scope (verbatim), (4) Urusan/Tugasan/Layer classification (with full urusan-code expansion from `etanah-knowledge/melaka/DOMAIN-GLOSSARY.md` — never paraphrase), (5) Suspected files (with file:line where confidence high), (6) Word template state (CC tags + Item-area context), (7) Candidate populators, (8) Knowledge-file overlap, (9) BA scope_anchor (positive + explicit DO NOT), (10) Test data details (id + tugasan_kod + username inference, expanded from #1), (11) Open questions, (12) Effort estimate, (13) NOT-in-scope list
+   - **Observed-vs-inferred tag (added 2026-05-12)**: every file:line claim in Scout output marked with one of two tags — `(observed @ file:line)` when Scout literally read the cited line range and quoted the code, or `(inferred)` when Scout extrapolated from naming/convention/sibling files. The 100%-verify rule already forbids unmarked inference; making the tag explicit makes verification visible. Ruri's adversarial Recon checks every `(inferred)` tag — if it can't be elevated to `(observed)`, it gets demoted to "unknown — needs runtime/みや input".
    - Stay strictly read-only. Cite file:line. Mark "**unknown — needs runtime/みや input**" rather than guess.
    - **100%-VERIFY clause (added 2026-05-08, applies to BOTH familiar's draft AND Ruri's wrap-up)**: for every file:line claim, READ the cited line range and quote the actual code or mark VERIFIED+brief-summary. For dispatch tables (switch blocks, if-else chains, "all except X" enumerations, urusan-to-bean mappings), trace ALL branches by reading the dispatch code — do not paraphrase from filenames or guess from convention. Caught failure 2026-05-08 QA-260139: familiar's diagnostic listed "all urusans except PLPS+PRU" as gap sites; source-trace at `PelupusanPermohonanTanahPlmsTabForm.java:148-155` revealed MCL also calls `plpPermitHelperForm.onSimpanTanah()` (PLPS pattern) — MCL is NOT a gap. Without 100%-verify, fix would have wasted scope on MCL. みや framing: "I used the word 100% many many times. 100% Ruri."
 
@@ -503,8 +516,8 @@ The default Read tool exposes visual page content but NOT the BA's per-annotatio
 - No deferred topics, no investigation logs, no strategy explanations
 - If it's longer than ~15 lines, it's too long — move detail to Fix.txt or knowledgebase
 
-### Fix.txt — 4-section compact format
-Fix.txt is a quick-reference for re-reading the fix months later. 4 sections, blank-line separated, no named headers. Total length: ~10–15 lines max.
+### Fix.txt — 3-section compact format (trimmed 2026-05-12 per みや)
+Fix.txt is a quick-reference for re-reading the fix months later. 3 sections (was 4 — RELATED dropped), blank-line separated, no named headers. Total length: ~8–12 lines max.
 
 **Template:**
 ```
@@ -516,27 +529,27 @@ TICKET: QA #XXXXXX
 [What was wrong and what was done. 1–3 lines max.]
 
 [ClassA → ClassB → ClassC → output]
-
-[Other classes / configs / tugasan / scopes touched by this change]
 ```
 
 **Sections (in order):**
 1. **FIX** — `Class.method:` then the code change (before → after, or new line only if removal)
 2. **EXPLANATION** — 1–3 lines: what was wrong, what was done. Plain language.
 3. **CHAIN** — execution flow from entry point to affected output
-4. **RELATED** — other classes / configs / tugasan / scopes in blast radius
 
 **Rules:**
-- No section headers — blank lines separate the 4 parts
-- No VERIFICATION, GLOSSARY, or investigation notes — those live in the handoff file / post-mortem
+- No section headers — blank lines separate the 3 parts
+- No VERIFICATION, GLOSSARY, or investigation notes — those live in the post-mortem
+- No RELATED section — blast radius lives in post-mortem Contributing Factors + Carry Forward; Fix.txt stays tight
 - Never use みや, リドワンさん, or any nickname — Task folder files are potential colleague handover artifacts
+- **Auto-generated at Phase 1 close-out** (see Phase 1 close-out Step 6) — fires right after `/verify-close` green, BEFORE STOP gate
 
-**Why**: Compact layout forces extreme brevity. Old named-section format was hard to scan. Investigation trail belongs in `quest/handoff-<QA>.md` during the quest and `main/post-mortems.md` after close. Format confirmed 2026-04-27.
+**Why** (3-section, 2026-05-12): RELATED section in old 4-section format mostly duplicated post-mortem Contributing Factors. Trimming to 3 keeps Fix.txt scannable. Compact layout forces extreme brevity. Investigation trail belongs in `main/post-mortems.md` after close.
 
-### SUMMARY.txt — Quest close-out (mandatory at Phase 2)
+### SUMMARY.txt — Quest close-out (auto-generated at Phase 1 close-out, refined 2026-05-12)
 > **Why this exists**: Without a proper summary, reopening a quest months later forces a full re-investigation — searching git, reading diffs, guessing context. This file is the single document that makes re-entry instant.
+> **Auto-generation trigger** (2026-05-12 per みや sure-fire trigger): renders at Phase 1 close-out Step 6 — right after `/verify-close` green, BEFORE the STOP gate. **NOT hand-written**. Source: `quest/active.txt` ticket entry (commit hash, branch, scope_anchor, files_changed_phase1, cp_F_verified, cp_G_commit, cp_H_push, etiology, learning_marker, out_of_scope_held) + Phase 1 Fix Walkthrough content. All fields are derivable; if any are missing in active.txt at this moment, BLOCK the auto-gen and surface the missing field to みや for explicit fill.
 
-**Template** (copy into Task folder as `SUMMARY.txt` at Phase 2):
+**Template** (auto-generated into Task folder as `SUMMARY.txt` at Phase 1 close-out):
 ```
 TICKET: <ticket type + number, e.g. UAT-CR #239225>
 DATE CLOSED: <YYYY-MM-DD>
@@ -586,6 +599,27 @@ Stashed: YES/NO — describe if yes
 - Track key findings silently: what was NULL, what was root cause, what changed
 - Note files involved and whether compilation is required
 - Do not wrap up until explicitly asked
+
+### Rubric — fix-shape options (Cp D)
+
+After Recon emits PROCEED-TO-RUBRIC, Ruri emits 2-5 fix-shape options for みや to pick from. **Standard option set** (added 2026-05-12 — refined to include "when-not-to-debug" 5th option from debugging-playbook):
+
+| Option | Shape | When to pick |
+|---|---|---|
+| **A** | Targeted Java validator / handler fix | Single-site code defect, sister-defect grep clean |
+| **B** | Config-only fix (`tindakan.config.json`, `template.config.json`, etc.) | Dispatch/behavior gated by config; no Java change needed |
+| **C** | Template fix (`.docx` Word CC, populator method, XHTML composite) | Output-layer defect; populator + template both verified |
+| **D** | Multi-site / cross-bean fix | Pattern repeats across N urusan beans (e.g. QA-260139 three-bean OR-blank validator) |
+| **E** | **Don't debug — revert / work-around / wait for upstream** (added 2026-05-12) | (1) Bug appeared in recent change and diagnosis incomplete → revert is mitigation. (2) Bug is in a dependency we can't fix → work around at boundary. (3) Upstream CR (e.g. UAT-CR #XXX) addresses root cause → wait + verify the upstream fix lands instead of patching ours. (4) Scope creep — BA's reported issue is symptom of a deeper architectural concern; flag to senior, don't ship a band-aid. |
+
+**Rubric output format** (per option):
+- Option letter + shape
+- Pros (1-3 lines)
+- Cons / risks (1-3 lines)
+- Effort estimate (Low/Mid/High)
+- Recommendation rationale (only on Ruri's recommended option)
+
+**Why Option E exists**: debugging-playbook "When not to debug" — sometimes the right call is **revert / work-around / rewrite / mitigate-first**. Refinement of existing Cp D, not new workflow. Past tickets where this would have helped: QA-259534 (no fix shipped — passed back to BA after non-repro), QA-258022 (Attempt 2's Java scope creep — Option E "wait for aaron's upstream pull" would have saved a day).
 
 **Before committing:**
 1. Confirm all checklist items are `[x]`
@@ -667,37 +701,83 @@ For each file changed:
 
 **Naming** (set 2026-05-09): formally **Post-Quest Phase** or **Phase 2** or **End Quest** for short. Casually we say **Bounty** indirectly — collecting the rewards (knowledge, KPI, refinements) earned from finishing the quest. The "Reflect / Post-Mortem" name from older protocol is folded under this.
 
-**Goal:** Extract learnings, refine skills, close the quest.
+**Goal:** Extract the META layer — process learnings, contributing factors, skill refinements. Everything fix-mechanical (root cause, class chain, knowledge-file updates) already happened in Phase 1 via Fix Walkthrough + scout/recon docs.
 
-1. **Write SUMMARY.txt** in the Task folder — use the template from Task Folder File Rules above. This is mandatory and comes FIRST.
-   - Verify every repo mentioned in scope has a git hash or a "NOT DONE" entry
-   - Run `git log --oneline --grep="<ticket#>"` per repo to collect hashes
-   - Run `git branch -a --contains <hash>` to confirm merge status
-   - If status is PARTIAL, flag it clearly — do NOT archive to `Archive/` until all scope items are addressed
-2. **Root cause type?** — data / config / code / schema / process
-3. **Match existing pattern in BUG-BESTIARY.md?**
-   - Yes → confirm it
-   - No → add new Pattern entry
-4. **Codebase knowledge to carry forward?** → update `etanah-knowledge/`
-5. **What would have been faster?** — process note **THAT MUST PRODUCE A CONCRETE ACTION ARTIFACT** (strengthened 2026-05-09 per みや: process-note-only is just words; per the existing "Mistake → action, not words" hard rule from CLAUDE.md, every faster-finding must trigger an applied artifact in the same Phase 2). Possible artifacts: edit a skill file (`.claude/skills/<name>/SKILL.md`), update a protocol section (`quest/quest-protocol.md` or `.claude/CLAUDE.md`), add to `main/main-memory.md` for always-on facts, append to `Feature/Forge-Self-Improvement-System/improvement-audit-log.md` for complex/uncertain refinements, or strengthen a hard rule. Acceptable answer: *"Faster: would have read DOMAIN-GLOSSARY before guessing. Action applied: bumped Phase 0 step 5 from 'as relevant' to 'mandatory always' for foundation files (commit hash if applicable)."* Unacceptable: *"Faster: would have read glossary. Action: noted for next time."*
-6. Write post-mortem entry → `main/post-mortems.md` (use format in that file)
-7. **KPI tagging** (Forge Review — quest-scoped) — tag this ticket against 1-3 KPI categories in `growth/kpi-evidence-log.md` with a one-line evidence note per category. See `Feature/Forge-Self-Improvement-System/forge-review-protocol.md`. If missed here, run `forge quest` later to recover.
-8. Check Forge log → `Feature/Forge-Self-Improvement-System/forge-log.md` — any entries to promote?
-9. **Refine (renamed 2026-05-09 from "skill-retro loop")** — for each named skill/protocol invoked this quest cycle, ask "what would have made this better?" and produce refinement artifacts. **Refine ≠ Forge**: Forge is the umbrella SYSTEM (logs/reviews/KPIs across sessions); Refine is the ACT inside this single Phase 2 — the moment of editing skills/protocols/memory based on this quest's findings. Forge logs Refine passes for weekly review. Explicit skill list to walk through (not "etc"): **Scout** (familiar's Cp A pre-investigation report), **Recon** (Phase 0 wrap-up output), **Rubric** (Cp D approach scoring), **env-check** (Cp A/E env state verification + switching), **prepare-commit** (Cp E-G stash→pull→branch→pop→stage sequence), **post-mortem template** (Phase 2 step 6), **KPI tracker entry** (Phase 2 step 7), **Refine itself** (this step — meta), **Domain Expansion ritual** (session-end forge log review with discussion). Refinements: simple rule changes → ASK みや with 2-sentence proposal (refined audit-log rule); complex/uncertain → audit-log park. **MUST follow post-mortem (step 6), cannot be skipped** — pairs with the action-guarantee on step 5. みや's framing 2026-05-08: *"if this current fix is not working, you always go back to what phase we're at, what skills produced the results/fix, straight away improve/refine that skill."*
-10. Update `quest/active.txt`: move entry under `closed:` marker, set `phase=2-complete`, `status=closed`, add `post_mortem=` + `kpi_entry=` references
-11. **Archive folders — both sides** (refined 2026-05-12, replaces old count-based "move at 10" rule):
-    - **Task folder (みや's side)**: move from `1. Tasks/Melaka/<NN>. <type> #<num> ...` → `1. Tasks/Melaka/Archive/<NN>. <type> #<num> ...`. Update `task_folder=` path in active.txt accordingly.
-    - **Project subfolder (Ruri's side, IF exists)**: Glob `projects/coding-projects/active/<TYPE>-<NUM>/` — if present, move to `projects/coding-projects/archive/<TYPE>-<NUM>/`. Skip silently if no project subfolder exists for this ticket (some quests keep all artifacts in Task folder only — that's fine).
-    - **Event-based, per-ticket** (changed from count-based "active reaches 10" rule, 2026-05-12 per みや): archival fires at Phase 2 close. Keeps `active/` reflecting "currently in flight" not "10 most recent."
-12. **"Your part" output table** — emit a structured table summarizing what みや still needs to do after Ruri's Phase 2 close-out. Standard columns:
-    | Action | Details | Source |
-    |---|---|---|
-    | Redmine status update | Set to Resolved + comment with commit SHA(s) | active.txt v?_commit field |
-    | Upward KPI report fields | Ticket #, closure type, time spent, extras, business value | main/kpi-tracker.md latest entry |
-    | Anything else | Notes, branch deletions, manual touches | session context |
+**Streamlined 2026-05-12** (from 11 steps to 5, per みや audit): Phase 2 had absorbed too much; most steps duplicated Phase 1 work. The unique value of Phase 2 is the META layer that needs the full quest arc to make sense.
 
-    Goes at the END of the Phase 2 close-out chat output, not buried in prose. みや scans the table, knows exactly what's on his plate.
-13. Quick save
+**Auto-trigger (added 2026-05-12)**: Phase 2 fires **automatically** the moment みや confirms "submitted on Redmine" / "ticket passed" / "commit verified" — no separate "wrap up" command needed. The Phase 1 STOP gate transitions directly into Phase 2 emit. The 5 steps below must complete in **<3 minutes** of みや's reading time, total. If Phase 2 emit takes longer to draft, the format is wrong, not the work.
+
+### The 5 streamlined steps
+
+**Step 1 — Faster-finding (1-2 lines)** — *what would have made this quest faster, with an immediate action artifact*. Phase 1 process note that needs the full arc to make sense. Format: *"Faster: <one-line observation>. Action applied: <one-line concrete edit to skill/protocol/memory/knowledge>."* Per the existing "Mistake → action, not words" hard rule, every faster-finding MUST trigger an applied artifact in the same Phase 2 — not "noted for next time". みや reads this in <15 seconds.
+
+**Step 2 — KPI table (2-column scannier format, 2026-05-12)** — append to `main/kpi-tracker.md` per format defined there. Column 1 = grep-able identifiers (class.method, file:line, constant names, config keys). Column 2 = plain English what we learnt (ties to UI label / Business Logic / meta). **Don't mix technical + high-level in one cell.** Rows: as many as feel meaningful, no minimum. みや scans in ~30 seconds.
+
+**Step 3 — Post-mortem META entry** — append to `main/post-mortems.md` per format defined there. **META-only**: Contributing Factors (replaces single-root-cause framing per Cook's complex-systems principle when ≥2 conditions converged), Process Notes, Carry Forward todos. **Skip**: root-cause summary (already in scout/recon), class chain (already in Fix Walkthrough), codebase-knowledge-updated list (those updates already happened in the knowledge files themselves with their own version bumps — don't duplicate the list here).
+
+**Step 4 — Refine pass** — for each named skill/protocol invoked this quest, ask "what would have made this better?" and emit refinement artifacts. Skills to walk through (explicit list, not "etc"): Scout, Recon, Simulate, Rubric, Apply, Verify, env-check, prepare-commit, KPI tracker, post-mortem template, Refine itself, Domain Expansion ritual. **Output format**: bulleted list with yes/no checkboxes per refinement — みや approves/declines per item. Simple rule changes → ASK once with 2-sentence proposal. Complex/uncertain → park to audit log. Forge log entries promoted here. **Pairs with the action-guarantee on Step 1** — Refine pass artifacts ARE the actions.
+
+**Step 5 — Auto-render + archive both-sides + active.txt flip** — silent background step. (a) Fix.txt and SUMMARY.txt auto-generate from `quest/active.txt` closed-section entry + Phase 1 commit metadata + Step 3 post-mortem (see Phase 1 close-out section above for the generation step that fires BEFORE commit). (b) `quest/active.txt` ticket entry moves to `closed:` section with `phase=2-complete`, `status=closed`, `post_mortem=`, `kpi_entry=` refs. (c) **Archive folders — both sides** (refined 2026-05-12, replaces old count-based "move at 10" rule): **Task folder (みや's side)** moves from `1. Tasks/Melaka/<NN>. <type> #<num> ...` → `1. Tasks/Melaka/Archive/<NN>. <type> #<num> ...` (update `task_folder=` path in active.txt). **Project subfolder (Ruri's side, IF exists)** — Glob `projects/coding-projects/active/<TYPE>-<NUM>/`; if present, move to `projects/coding-projects/archive/<TYPE>-<NUM>/`. Skip silently if no project subfolder exists. **Event-based, per-ticket** — archival fires at Phase 2 close, not at count threshold. Keeps `active/` reflecting "currently in flight" not "10 most recent." (d) Quick save. みや doesn't read this step — it just completes.
+
+**Step 6 — "Your part" output table** — emit at the END of the Phase 2 chat output (NOT buried in prose). Standard columns:
+
+| Action | Details | Source |
+|---|---|---|
+| Redmine status update | Set to Resolved + comment with commit SHA(s) | active.txt v?_commit field |
+| Upward KPI report fields | Ticket #, closure type, time spent, extras, business value | main/kpi-tracker.md latest entry |
+| Anything else | Notes, branch deletions, manual touches | session context |
+
+みや scans the table, knows exactly what's on his plate. Last thing he sees per Phase 2 emit.
+
+### Auto-trigger flow (the new shape)
+
+```
+みや: "submitted on Redmine"  (or "ticket passed", "commit verified", etc.)
+         ↓
+Phase 1 STOP gate confirms (4 file-state checks via /verify-close)
+         ↓
+Phase 2 fires automatically — Ruri emits in single message:
+  • Step 1: Faster-finding (1-2 lines)
+  • Step 2: KPI table (2-col table)
+  • Step 3: Post-mortem META (Contributing Factors / Process Notes / Carry Forward)
+  • Step 4: Refine pass (bulleted yes/no list)
+  • Step 6: "Your part" output table (final emission)
+         ↓
+みや reads, approves/declines per item
+         ↓
+Step 5 silent: Fix.txt/SUMMARY.txt rendered, archive both-sides, active.txt flipped to closed, quick save
+```
+
+**Read time per Phase 2 emit**: target <3 minutes. If it's heavier, the format is wrong.
+
+### What used to be Phase 2 but is no longer
+
+| Old step | Where it lives now |
+|---|---|
+| SUMMARY.txt write | Auto-rendered from active.txt entry + commit metadata + post-mortem (see Phase 1 close-out) |
+| Root cause type label | Already in scout-report + recon — not duplicated |
+| BUG-BESTIARY pattern match | Auto-cross-referenced at Recon; only added to BUG-BESTIARY if genuinely new pattern (refine pass artifact) |
+| Codebase knowledge updated list | Lives in the knowledge files themselves (each has its own `version` + `last_updated`); not duplicated as a list |
+| Forge log + Refine | Merged into Step 4 Refine pass |
+| Quick save | Step 5 (silent) |
+
+### Sister-defect check (added 2026-05-12 — refinement of existing Cp F verify, per debugging-playbook adoption)
+
+At Cp F (Verify) — AFTER みや confirms the fix works on the test env, BEFORE Cp G commit hand-off — Ruri MUST grep the codebase for the same pattern elsewhere:
+
+> *"Sister-defect grep: same pattern at file:line elsewhere in the codebase?"*
+
+Concrete check: search for analogous code structure (same constant set, same dispatch table, same VO type) in sibling files. Report: (a) found same pattern at file:line → flag as sister-defect candidate for next ticket; (b) no sister patterns found → declare scope sealed.
+
+Already implicit in `URUSAN_INVOLVE_*_LIST` and other set-membership work; making it an explicit step at Cp F. **Pairs with Cook's contributing-factors framing** — the same defect class often exists in multiple sites.
+
+### Contributing-factors framing (added 2026-05-12 — refinement of post-mortem)
+
+In Step 3 post-mortem META entry, replace single-root-cause framing with **Contributing Factors** list when ≥2 conditions converged to produce the bug. Format: bulleted list, one factor per line, with file:line evidence. Single-cause bugs stay single-cause; multi-cause bugs get listed. Cook's structural claim: complex-system failures intrinsically require multiple defenses to fail at once — single-root-cause is at best the most salient factor.
+
+### "Refine before introducing" check at Refine pass (added 2026-05-12)
+
+At Step 4 Refine pass — every proposed refinement is tagged with `Refines-X` (existing mechanism being extended) or `Net-new-because-Y` (only when truly distinct). Per CLAUDE.md System-Design Discipline Step 0. If `Refines-X` is empty, the refinement must justify itself as a new mechanism — high bar. Default = refine wins.
 
 ---
 
