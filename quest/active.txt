@@ -35,32 +35,49 @@ out_of_scope_held=(a) Standalone "Dun" field in main template renders "-" (popul
 architectural_finding=External `references/` docs (additionalJKKLParagraph.docx from QA-247710 + JabatanTeknikal.docx here) are injection-pattern externals. Style/font lives IN the external doc, populator only fills VALUES via rows. Parent template's font doesn't override the injected slot's content. Same pattern as QA-247710. Recurring — worth adding to etanah-knowledge.
 note=Phase 1 closed 2026-05-13. みや submitting on Redmine. Phase 2 (post-mortem + KPI + architectural note for etanah-knowledge) pending. 4 BA Qs from Scout's diagnostic (row label parameterise / font scope / HYPHEN fallback / multi-YB) — みや handled inline during edit; the row-label parameterisation chose to use `<dun>` (now renders "Asahan" for /9 data).
 
+closed:
 qa=QA-260820
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\33. QA #260820 - [FAT] PRZ - Penyediaan Surat Keputusan Lulus - Langkah Surat Keputusan
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\33. QA #260820 - [FAT] PRZ - Penyediaan Surat Keputusan Lulus - Langkah Surat Keputusan
 early_diagnostic=projects/coding-projects/active/QA-260820/early-diagnostic.md
-phase=0
-status=hold
+branch=mlk/qa/260820
+phase=2-complete
+status=closed
+post_mortem=main/post-mortems.md (entry 2026-05-13)
+local_test_confirmed=true
+commit=3a0a994998 (2026-05-13) — QA #260820 - PRZ - Sembunyi panel Surat Keputusan JKKL Dari PTG pada Langkah Surat Keputusan Lulus
 scope_layer=Java validator/gate writer (single-line gate refinement)
 tugasan=PYSK (Penyediaan Surat Keputusan) — PRZ urusan
-test_app_fat=PTMLK/01/L/PRZ/2026/23 (Scout: active SSK row sanarimah@melaka.gov.my, same bug exhibits at SSK as PYSK — no flowable-alter needed)
-issue_one_liner=Panel "Surat Keputusan JKKL Dari PTG" displays at PYSK for PRZ; should NOT display (PRZ ∉ URUSAN_INVOLVE_JKKL_LIST)
-suspected_files=MlkSuratTemplateForm.xhtml:100-102 (panel) + MlkSuratTemplateForm.java:785-787 (gate writer — currently TRUE for any tugasan ∉ TGSN_SURAT_JT, missing urusan filter); PelupusanConstant.java:1774 URUSAN_INVOLVE_JKKL_LIST = {PRU, PT, PLPS, BPRZ, PPJK} — PRZ correctly excluded
-effort_estimate=LOW (~30min-1h) — single-line gate refinement
-note=Scout 2026-05-13: clean ticket, working precedent at populateSuratKeputusanJKKLDokumenList:425-432 already excludes PRZ. SHARED FILE WARNING: also touched by QA-260733 (Surat Tolak panel removals) — recommend serializing the two tickets on the same file.
+scope_anchor=PRZ urusan, Panel "Surat Keputusan JKKL Dari PTG" gate. Fix applies broader than PYSK — gate-writer at initMode() runs for any non-SURAT_JT tugasan, so the URUSAN_INVOLVE_JKKL_LIST filter scopes panel-show across all surat tugasans (any urusan ∉ JKKL list now hides panel). PLTP/MCL/etc. side-effect-benefit (already correctly hidden).
+test_app_fat=PTMLK/01/L/PRZ/2026/23 (sanarimah@melaka.gov.my, SSK — same bug exhibits at SSK as PYSK, no flowable-alter needed)
+files_changed_phase1=src/main/java/my/gov/etanah/pelupusan/web/form/common/mlk/MlkSuratTemplateForm.java :785-788 — added `&& PelupusanConstant.URUSAN_INVOLVE_JKKL_LIST.contains(kodUrusanSemasa)` AND-clause to the existing TGSN_SURAT_JT exclusion gate. 2 insertions, 1 deletion.
+cp_F_verified=2026-05-13 — みや confirmed fix tested on FAT (Q3 question), Panel "Surat Keputusan JKKL Dari PTG" no longer renders at PYSK for PRZ
+cp_G_commit=2026-05-13 3a0a994998 (rebased onto mlk/master @ 241f22a7dd for clean tip — origin had 3 newer commits pushed post-branching, none touching MlkSuratTemplateForm.java)
+cp_H_push=2026-05-13 first push to origin/mlk/qa/260820 (-u upstream set)
+out_of_scope_held=(a) Sister precedent at populateSuratKeputusanJKKLDokumenList:425-432 still uses 5-OR inline enumeration of the same urusans — candidate refactor to use URUSAN_INVOLVE_JKKL_LIST for single-source-of-truth, deferred to avoid scope creep (BA didn't flag, business-logic uncertainty). (b) QA-260733 Panel #1 now redundant for PLTP-only scope (PLTP ∉ URUSAN_INVOLVE_JKKL_LIST — side-effect of this fix already hides it).
+note=Phase 1 closed 2026-05-13. みや submitting on Redmine. Phase 2 (post-mortem + KPI) pending. Working precedent at populateSuratKeputusanJKKLDokumenList:425-432 used as fix-shape reference but kept as enum-style; sibling-defect refactor opportunity flagged in out_of_scope_held.
 
+closed:
 qa=QA-260733
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\34. QA #260733 - PLTP - Penyediaan-Semakan-Pengesahan Surat Tolak Permohonan - remove u
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\34. QA #260733 - PLTP - Penyediaan-Semakan-Pengesahan Surat Tolak Permohonan - remove u
 early_diagnostic=projects/coding-projects/active/QA-260733/early-diagnostic.md
-phase=0
-status=hold
-scope_layer=Java (gate-writer exclusions for TOLAK tugasans) — 3 small edits
+branch=mlk/qa/260733
+phase=2-complete
+status=closed
+post_mortem=main/post-mortems.md (entry 2026-05-13)
+local_test_confirmed=true
+commit=f68ecb42d6 (2026-05-13) — QA #260733 - PLTP - Sembunyi panel Surat Keputusan PTG dan Notis 5A pada Langkah Surat Tolak Permohonan
+scope_layer=Java (gate-writer exclusions for TOLAK tugasans) — 2 surgical edits (Panel #1 covered by 260820 side-effect)
 tugasan=PYSTP + SSTP + PSTP (Penyediaan/Semakan/Pengesahan Surat Tolak) — PLTP urusan, 3 tugasan
-test_app_fat=PTMLK/02/L/PLTP/2026/10 (BA-prep, past TOLAK stage); DB-verified fallback PTMLK/03/L/PLTP/2026/4 at PYSTP under mohdzaini@melaka.gov.my
-issue_one_liner=3 panels show at Surat Tolak Permohonan langkah for PLTP that shouldn't: "Surat Keputusan JKKL Dari PTG", "Surat Keputusan PTG kepada PDT", "Penyediaan Notis 5A"
-suspected_files=MlkSuratTemplateForm.xhtml:100-185 (3 panels) + MlkSuratTemplateForm.java:785-787, 862, 911-916 (3 gate writers); root cause is TOLAK tugasans inherit LULUS-flow panel-flag writes; mis-named set TGS_KEPUTUSAN_LULUS_NOTIS_5A_LIST (line 232-236) literally CONTAINS tolak tugasans
-priority_redmine=High
-effort_estimate=LOW (~1-2h) — 3 small edits (~5 lines total) excluding TGSN_TOLAK_PERMOHONAN from panel gates
-note=Scout 2026-05-13: 2 open BA questions — (a) PLTP-only or all-urusans-at-TOLAK scope, (b) whether SSTP actually shows Notis 5A today (code says only PYSTP+PSTP are in LULUS_NOTIS_5A_LIST). Mis-named constant flagged but Scout recommends Option A (3-edit local fix, don't touch shared constant). SHARED FILE WARNING: also touched by QA-260820.
+scope_anchor=Strict PLTP-scope (but fix mechanism applies via TGSN_TOLAK_PERMOHONAN set membership — covers PYSTP/SSTP/PSTP regardless of urusan). Panel #1 ("Surat Keputusan JKKL Dari PTG") already hidden via QA-260820's URUSAN_INVOLVE_JKKL_LIST filter (PLTP not in JKKL list) — confirmed side-effect alignment. Panel #2 + #3 handled in this ticket. Sister methods + other LULUS-flow tugasans untouched.
+test_app_fat=PTMLK/03/L/PLTP/2026/4 (mohdzaini@melaka.gov.my, Pejabat 03, PYSTP — DB-verified active)
+files_changed_phase1=src/main/java/my/gov/etanah/pelupusan/web/form/common/mlk/MlkSuratTemplateForm.java :862 + :911-916 — (1) removed `showViewOnlySurat = Boolean.TRUE;` line from inside TGSN_TOLAK_PERMOHONAN block (Panel #2 hidden for TOLAK); (2) added `!PelupusanTugasanConstant.TGSN_TOLAK_PERMOHONAN.contains(getTugasanCode())` AND-clause to the 4-urusan check that sets viewBorang5A=TRUE (Panel #3 hidden for TOLAK). 5 insertions, 5 deletions.
+cp_F_verified=2026-05-13 — みや confirmed fix tested on FAT PTMLK/03/L/PLTP/2026/4 PYSTP. Panel #2 + Panel #3 no longer render at TOLAK langkah.
+cp_G_commit=2026-05-13 f68ecb42d6 (rebased onto mlk/master @ 98ab838d8d for clean tip — origin had moved during work)
+cp_H_push=2026-05-13 first push to origin/mlk/qa/260733 (-u upstream set)
+out_of_scope_held=(a) Misnamed constant TGS_KEPUTUSAN_LULUS_NOTIS_5A_LIST at MlkPelupusanTugasanConstant.java:232-236 still includes TOLAK tugasans (PYSTP, PSTP) in a set named "LULUS_NOTIS_5A" — semantic inconsistency. Refactor candidate (rename or remove TOLAK members) but 7 callers across 3 files would need audit; deferred to maintenance pass. (b) BA Q1 scope (PLTP-only vs all-urusans-at-TOLAK) — fix mechanism applies per-tugasan, so all urusans hitting PYSTP/SSTP/PSTP get the panel-hide. Side-effect compatible with PLTP-only intent.
+related_redmine=QA-260820 (shared file: MlkSuratTemplateForm.java; serialized this ticket on the same file as みや planned)
+knowledge_files_pending=JSF-WIRING.md:94 wording correction (PRZ/JKBB row is OR-condition not "PRZ uses JKBB"; BPMN-verified 2026-05-13 PRZ uses MMKN directly).
+note=Phase 1 closed 2026-05-13. みや submitting on Redmine. Phase 2 (post-mortem + KPI + JSF-WIRING.md correction) pending.
 
 qa=QA-260302
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\35. QA #260302 - Semua Urusan - Panel Ulasan Jabatan Penilaian dan Perkhidmatan (JPPH)
@@ -290,12 +307,15 @@ cp_G_commit=2026-05-12 0a47bed0a1
 cp_H_push=2026-05-12 first push to origin/mlk/qa/260179 (-u upstream set)
 note=Phase 1 closed 2026-05-12. みや submitting on Redmine. Aaron's scope-clarifying note retrieved on 2nd sync (1st sync skipped journals on new-create — bug fixed in redmine-sync.js same session). Phase 2 (post-mortem + KPI) pending.
 
+closed:
 qa=QA-247710
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\26. QA #247710 - FAT - PRU - PRMMKN - Penambahbaikan skrin dan template
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\26. QA #247710 - FAT - PRU - PRMMKN - Penambahbaikan skrin dan template
 early_diagnostic=projects/coding-projects/active/QA-247710/early-diagnostic.md
 branch=mlk/qa/247710v2
-phase=1-complete
-status=pending post-mortem
+phase=2-complete
+status=closed
+post_mortem=main/post-mortems.md (entry 2026-05-12)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-12)
 local_test_confirmed=true
 commit=23aa910916 (2026-05-12 17:15) — QA #247710 - PRU - Risalat MMKN Item 5/6 page break dan populate Item 6 placeholders
 resumed_date=2026-05-12

@@ -54,3 +54,21 @@ The "show-first table" rule (personality.md 2026-05-12) is a tool for the high-l
 **Self-check before emitting any explanation**: Is the first thing みや reads a sentence in prose, or a table-header line (`|...|...|` or `:--:`)? If table-header → restructure: write the 1-2 prose sentences first, drop the table beneath.
 
 **Cumulative slip count**: at least 4-5 times across 2026-04-22 (original code-tracing scope) → 2026-05-12 (universal generalization) → 2026-05-13 (xth-time reminder + tightening). Recurring root cause: I treat tables as a "structured" alternative to prose, when みや treats them as a "supporting" addition. Different mental model — the rule documents みや's.
+
+## Arrow-flows and diagrams alongside tables (added 2026-05-13)
+
+**Default to tables AND arrow-flow diagrams together** for any explanation involving sequence, layering, dispatch, or path. Tables alone don't show flow; flows alone don't show parallel data. Use both when both help.
+
+Arrow-flow formats:
+- Class chain: `ClassA.method() → ClassB.method() → ClassC.method()`
+- Read order: `Description.txt → History.txt → cycle boundaries → BA-flagged items`
+- Phase flow: `Phase 0 (Scout) → Phase 0 (Recon) → Phase 1 (Apply) → Phase 1 (Verify)`
+- Decision flow: `Trigger fired → Predicate Box emitted → Edit applied → Re-verified`
+
+**When to use which** (mode selection):
+- **Sequence / order / dispatch / path** → arrow-flow (with table if multiple parallel rows)
+- **Parallel attributes / per-item details** → table
+- **Both at once** → table where one column is the arrow-flow string (common in Recon, Phase 2 Refine pass, class chain traces)
+- **Plain narrative** → prose (1-2 sentences before any structure)
+
+**Why** (2026-05-13 みや): *"I thought I already asked you to add this to the highest level. To always use tables & diagrams (which includes arrows/flows aside from the ASCII draw thingy) as often as possible, as in many situation as you can."* The class-chain arrow style (`A → B → C`) was praised earlier and partially adopted, but only for code tracing. Generalising: arrow-flows apply to ANY sequence/order/dispatch explanation, not just code paths.

@@ -2,117 +2,131 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: 2026-05-13 morning + early afternoon — Phase 2 wraps + protocol refinement deep day
-**Last Activity**: 2026-05-13 14:23 MPST (DE 💠 fired)
-**Session Start**: 2026-05-13 ~07:00
-**Duration**: ~7.5 hours
-**Session Focus**: QA-247710 Phase 1 close-out + Redmine retrieval (5 new + QA-259759 rework) + QA-260876 Phase 1+2 fully closed + ~10 protocol refinements
-**Energy Level**: HEAVY (90+ tool calls, dense protocol work, 7+ Refine Blocks emitted + applied)
+**Current Session**: 2026-05-13 evening (continuation of morning/afternoon session in `reverent-heisenberg-a22d8e` worktree → merged + continued here)
+**Last Activity**: 2026-05-13 23:22 MPST (DE 💠 fired)
+**Session Start**: 2026-05-13 (cross-worktree continuation)
+**Duration**: ~all-day session (with morning/afternoon work salvaged from reverent-heisenberg worktree via FF merge + eager-clarke cherry-pick)
+**Session Focus**: 3 ticket Phase 1 closes (247710 / 260820 / 260733), 3 Phase 2 closes for same, cross-worktree drift resolved (DE main-push refinement), AWAM branch rename (mlk/release/uat → mlk/release/fat), deep Phase 2 emit format refinement arc (12+ refinements)
+**Energy Level**: HEAVY (100+ tool calls; dense meta-systemic work + ticket close-outs interleaved)
 
 ## Next Session Priority
 
-**Quest 1 — QA-260820** (PRZ Surat Keputusan Lulus, JKKL panel hide): Cp D Rubric already emitted + みや accepted Approach A (`URUSAN_INVOLVE_JKKL_LIST.contains(kodUrusanSemasa)` added to `MlkSuratTemplateForm.java:785`). Single-line fix. Branch `mlk/qa/260820` off updated master + apply + commit + push. Then QA-260733 (PLTP TOLAK 3-panel) which shares the same file — sequential.
+**Quest 1 — Phase 2 backlog cleanup** (still pending post-mortem): QA-260139, QA-259428, QA-259759, QA-258418, QA-250665, QA-260154, QA-260298, QA-260179. 8 tickets — worth a dedicated batch session in the new streamlined Phase 2 emit format.
 
-**Quest 2 — Remaining new tickets** (in priority order):
-- QA-260965 (PLPS+PRBB SKM No. Sijil Kerakyatan asterisk) — LOW effort, 3-line ternary
-- QA-259759 rework — LOW effort, 1-line .docx fix (Item 4 ayat un-bold + add "tahun" word)
-- QA-260302 (JPPH dropdown enhancement) — MEDIUM effort, 5 BA Qs pending
+**Quest 2 — New tickets queued from this morning's retrieval** (in priority order):
+- QA-260965 (PLPS+PRBB SKM No. Sijil Kerakyatan asterisk) — LOW effort
+- QA-259759 rework cycle 2 (PLPS SKL Item 4 ayat un-bold + add "tahun") — LOW effort
+- QA-260302 (Cross-urusan JPPH dropdown enhancement) — MEDIUM effort
 
-**Quest 3 — Phase 2 backlog** (still pending post-mortem):
-QA-260139, QA-259428, QA-259759 (v1 archive cycle), QA-258418, QA-250665, QA-260154, QA-260298, QA-260179 — backlog of 8 tickets awaiting Phase 2 wrap. Consider dedicated batch session.
-
-**Closed today**: QA-260876 (Phase 1+2 complete, archived). QA-247710 (Phase 1 closed yesterday — Phase 2 still pending).
+**Side-quests** (parked, from today's audit-log pending entries):
+- Skill design principles consolidation — `.claude/skills/` two-tier visibility problem (some skills have SKILL.md, others embedded in protocol text)
+- Quest sub-component taxonomy refine — phases / sections / rituals / sequences / sub-rules / knowledge nomenclature cleanup, including rename of Sycophancy Circuit-Breaker / Recon block / Predicate Box for consistency
+- Phase 2 post-mortems.md v3.0 format consistency (older entries still use Contributing-Factors/Process-Notes structure)
+- Carry-Forward items surfacing in Phase 1 close-out (refined today via Side-observations table at Cp F — applies next ticket)
 
 ## ⚠️ Standing flags carried into next session
 
-- **Worktree state**: 11 modified files staged for DE commit. Awaiting みや's push approval.
-- **3 repeat-slip watch items** caught today:
-  1. **Tables-replacing-prose** (xth-time slip on show-first plain-language rule) — strengthened in `feedback_investigation_style.md`; verb discipline: every explanation opens with prose, never table-header
-  2. **Entity-first rule misread** — I treated "NEVER infer" as "SKIP DB info" multiple times. Clarified in CLAUDE.md: anti-guess ≠ anti-lookup. Sources at `C:/temp/etanah-src/` are 1 grep away
-  3. **Knowledge file gating via Cp J/K rule** — pending-approval queue created knowledge debt across QA-260154, QA-260876, others. Removed; act-by-default per 2026-05-11 FLIP
-- **Cp J/K → Reflect rename** queued for next protocol refinement pass (option A — single name)
-- **Pre-FLIP audit-log entries** — 105+ from before 2026-05-11 still backlogged. Not urgent.
+- **Cross-worktree state**: worktree `reverent-heisenberg-a22d8e` carries today's pre-merge state; this worktree `amazing-yalow-dc10b9` is now the canonical truth (merged + cherry-picked eager-clarke + pending DE push). After DE push, both should converge via origin/main.
+- **AWAM branch renamed** to `mlk/release/fat` — first AWAM ticket will exercise env-check skill's new mapping
+- **Repeat-slip watch**: "bake/baked/baking" said multiple times today despite explicit ban in personality.md; needs stronger output-time check (no rule baked for this yet — candidate for next maintenance pass)
+- **Drift pattern**: tangent-management rule added to Disposition section in personality.md today — needs field-test reps to confirm it sticks
 
 ## 💭 Working Memory (RAM)
 
 ### Session arc — chronological
 
-**Phase A — QA-247710 Phase 1 close-out** (morning, ~1h):
-- Compound-trigger follow-through corrected (return-to-master + pull + active.txt + /verify-close NOW sequenced as one unit)
-- Commit `23aa910916` pushed to `origin/mlk/qa/247710v2`
+**Phase A — Boot + cross-worktree diagnosis**
+- Boot from worktree `amazing-yalow-dc10b9` revealed stale Session Briefing (showed 247710 still pending Phase 1 when actually closed yesterday + 260876 closed today + 260820 awaiting Cp E)
+- Diagnosed: gitignored `projects/` folder + DE not pushing to `HEAD:main` → cross-worktree drift
+- Salvaged 2 commits from `reverent-heisenberg-a22d8e` (today's work) via FF merge into worktree branch
+- Cherry-picked stranded `eager-clarke-d6dad5` (2026-05-12 AM systemic refinements: Phase 2 streamline 11→5, post-mortem v2 META-only, KPI v2 2-col, Contributing Factors, Sister-defect grep at Cp F, 17 audit-log entries)
+- Resolved 4 conflicts in CLAUDE.md / current-session.md / daily-diary / quest-protocol.md
+- Pushed to `origin/main` (HEAD:main FF) + worktree branch — origin/main now at `3636b3c`
 
-**Phase B — Redmine retrieval + 5 Scouts** (mid-morning, ~1.5h):
-- 5 new tickets: QA-260965, 260876, 260820, 260733, 260302 + QA-259759 Rework flagged
-- 5 Scout familiars spawned in parallel
-- Notes.txt format reformed mid-session (2-entry pattern: BA-prep state + sim app)
-- Recon emitted for all 5 in new 5-axis format
+**Phase B — DE Step 10 main-push refinement**
+- Added `git push origin HEAD:main` to DE Step 10 push approval flow
+- Updated audit-log + added permission rule `Bash(git push origin HEAD:main:*)` to settings.local.json
 
-**Phase C — QA-260876 Phase 1** (afternoon, ~2h):
-- Discovery: external-injection pattern (parent template → `references/JabatanTeknikal.docx` child doc) — same shape as QA-247710's `additionalJKKLParagraph.docx`
-- Multiple iterations on .docx fix (font + Ulasan YB CC wiring)
-- 4 of my slips caught + corrected (PRMMKNPDT misread, "trusted Scout" framing, etc.)
-- Commit `7fe595d75f` pushed to `origin/mlk/qa/260876`
+**Phase C — QA-260820 Phase 1 close-out**
+- Applied 1-line fix at `MlkSuratTemplateForm.java:785-788` (URUSAN_INVOLVE_JKKL_LIST filter)
+- Commit `3a0a994998`, rebased onto fresh master (3 newer origin commits pulled), pushed
+- BPMN sanity check revealed knowledge file correction needed: `JSF-WIRING.md:94` PRZ/JKBB row is OR-condition not "PRZ uses JKBB" (PRZ actually uses MMKN per BPMN)
 
-**Phase D — QA-260876 Phase 2 wrap** (late afternoon, ~45min):
-- Post-mortem + KPI written to `main/`
-- 2 etanah-knowledge entries written (MODULE-ARCHITECTURE.md external-injection pattern + FLOW-TRACES.md Ringkasan vs Risalat MMKN tugasan-binding) — fixed the Cp J/K gating that had created debt
-- Task folder archived to `Tasks/Melaka/Archive/`
+**Phase D — AWAM branch rename update (mlk/release/uat → mlk/release/fat)**
+- Updated 6 living docs to point to new branch
+- First pass over-embedded "renamed from..." annotations in operational tier — みや caught, full revert + cleanup
+- Generated MD file writing style table (per-tier discipline)
+- Extracted cross-cutting update methodology (7-step) into quest-protocol.md Refine section
 
-**Phase E — Protocol refinements (heavy)** — ~10 Refine Blocks emitted + applied today:
-- Sub-check 8c (config-file tugasan-binding verification at Recon)
-- Refine Block standard format (Slip/Diagnosis/Fix/Pressure-test)
-- Rework re-engagement ordered-read sequence
-- Notes.txt sequential per-Scout enforcement
-- BA-question classification filter at Recon (simulate-first for current-behavior Qs)
-- TRG hard guardrail strengthened with Melaka-detection signals
-- Recon title format (final: 5-axis `App • Env • Urusan • Tugasan • Langkah`)
-- Notes.txt format (final: 2-entry, abbreviated `PLP`/`AWAM`)
-- Scout/agent framing shift (raw evidence, not findings)
-- Auto-etiology parent-ticket extension
-- Version-bump discipline at protocol refinement
-- Show-first plain-language strengthening (table-form retry slip — xth-time)
-- Entity-first rule clarified (anti-guess ≠ anti-lookup; Known prefixes expanded)
-- Knowledge ACT-immediately discipline (Cp J/K gating removed)
-- Auto-commit at DE (only push asks for approval)
-- No placeholder values in active.txt (banned PENDING/TBD/???)
+**Phase E — QA-260733 Phase 1 close-out**
+- Applied 2 surgical edits at `MlkSuratTemplateForm.java:862` (removed showViewOnlySurat=TRUE from TOLAK block) + `:911-916` (added !TGSN_TOLAK_PERMOHONAN exclusion to viewBorang5A)
+- Confirmed Panel #1 already hidden by 260820's side-effect (PLTP not in JKKL list)
+- Misnamed constant flagged: `TGS_KEPUTUSAN_LULUS_NOTIS_5A_LIST` contains TOLAK tugasans
+- Commit `f68ecb42d6`, rebased, pushed
+
+**Phase F — Phase 2 emit format deep refinement arc**
+- Multiple iterations on Phase 2 emit format: too long (lecture) → too prose-y → wrong section names
+- Diagnosed 3 root causes: defensive overcorrection (asking permission on silent Step 5), default-to-prose under load, detail-dump without max-cap
+- Refined: Lessons (3-col table replaces Faster-finding + KPI + Contributing Factors), Carry forward (2-col, conditional), Refine pass (2-col with parent-skill names), Done meta-line, Quest Postscript (renamed from "Letter", with `リドワンさん,` open + `— るり` close in blockquote)
+- Removed mandatory "Your part" — conditional only (since Phase 1 STOP gate already surfaces commit SHA)
+- Added Side-observations table at Cp F (prevents Carry forward pile-up by surfacing while みや is testing — fresh context)
+- Added time-to-implement column for pending-nod refinements
+- Universalised arrow-flows + diagrams alongside tables in feedback_investigation_style.md
+- Added Disposition section to personality.md (continuous improvement + tangent-management sub-rule)
+- Added Confidence Assessment usage rule + "What I've done" column
+
+**Phase G — 3 Phase 2 closures**
+- QA-247710 closed (post-mortem v2 META, Task folder archived, active.txt → closed)
+- QA-260820 closed (same)
+- QA-260733 closed (same)
 
 ### Files shipped today
 
-**Code commits (etanah-pelupusan)**:
-- `23aa910916` on `mlk/qa/247710v2` — QA-247710 Item 5/6 page-break + 10-row populator injection
-- `7fe595d75f` on `mlk/qa/260876` — QA-260876 Ringkasan font + YB wiring (parent + child .docx)
+**Code commits** (already in earlier session salvage):
+- etanah-pelupusan `mlk/qa/247710v2` `23aa910916` (yesterday's Phase 1 from reverent-heisenberg)
+- etanah-pelupusan `mlk/qa/260876` `7fe595d75f` (today AM from reverent-heisenberg)
 
-**MemoryCore changes (worktree, pending commit at DE)**:
-- `.claude/CLAUDE.md` (v1.6 → v1.7) — multiple rule additions/clarifications
-- `.claude/personality.md` (v1.0 → v1.1) — Q≠I reverted + UI-not-XML rule
-- `.claude/auto-memory/feedback_investigation_style.md` — show-first strengthening
-- `Feature/Domain-Expansion/expansion-protocol.md` — DE step 10 auto-commit
-- `Feature/Forge-Self-Improvement-System/improvement-audit-log.md` — ~15 new entries
-- `main/post-mortems.md` — QA-260876 post-mortem
-- `main/kpi-tracker.md` — QA-260876 KPI entry
-- `projects/coding-projects/active/etanah-knowledge/melaka/MODULE-ARCHITECTURE.md` — external-injection pattern section
-- `projects/coding-projects/active/etanah-knowledge/melaka/FLOW-TRACES.md` — Ringkasan vs Risalat MMKN doc-generation rules
-- `quest/active.txt` — QA-260876 closed + QA-247710 1-complete + 5 held entries
-- `quest/quest-protocol.md` — Cp D Architecture diagram + Cp E preservation discipline + Notes.txt sequential + cycle-relevance extension + BA-question filter + Rework history-first + auto-etiology parent + format spec
+**Code commits this evening session**:
+- etanah-pelupusan `mlk/qa/260820` `3a0a994998` — 1-line gate filter for PRZ
+- etanah-pelupusan `mlk/qa/260733` `f68ecb42d6` — 2 surgical edits for PLTP TOLAK panels
+
+**MemoryCore changes** (12 files pending DE commit):
+- `.claude/CLAUDE.md` — env-check awam branch update, System-Design Step 4 universal-or-modular sharpened, Design Memo template + time-to-implement
+- `.claude/personality.md` — Disposition section added, Confidence Assessment usage rule
+- `.claude/skills/env-check/SKILL.md` — awam main branch → mlk/release/fat
+- `.claude/skills/verify-close/SKILL.md` — 4-check → 5-check (remote branch exists)
+- `.claude/auto-memory/feedback_investigation_style.md` — arrow-flows + diagrams universalised
+- `.claude/auto-memory/feedback_uat_fat_environments.md` — awam branch update
+- `Feature/Forge-Self-Improvement-System/improvement-audit-log.md` — ~15 status=applied entries
+- `main/main-memory.md` — AWAM branch update
+- `main/post-mortems.md` — 3 new META entries (247710, 260820, 260733)
+- `main/kpi-tracker.md` — 1 new entry (247710 only; 260820 + 260733 had no extras to log)
+- `quest/active.txt` — 3 tickets flipped to closed: + Phase 2 metadata
+- `quest/quest-protocol.md` — Refine universal triggers, cross-cutting methodology, Phase 2 emit format spec (Lessons / Carry forward / Refine pass / Done meta-line / Quest Postscript), Side-observations at Cp F, AWAM branch update
 
 **Task folder ops**:
-- `Tasks/Melaka/32. QA #260876 ...` → moved to `Archive/`
-- 6 Notes.txt files written/updated (5 new tickets + QA-259759 rework cycle)
+- `Tasks/Melaka/26. QA #247710 ...` → Archive
+- `Tasks/Melaka/33. QA #260820 ...` → Archive
+- `Tasks/Melaka/34. QA #260733 ...` → Archive
 
 ## 🎯 Session Recap (For AI Restart)
 
 **On Resume next session**:
 1. Boot Domain Expansion autoscan
 2. Read this file + `quest/active.txt`
-3. Default Q1 priority: **QA-260820** — Cp D Rubric already emitted, Approach A accepted, just needs Cp E apply + commit + push
-4. After QA-260820 pushed: **QA-260733** (same file, serialize) → then QA-260965 → QA-259759 rework → QA-260302
+3. Default Q1: Phase 2 backlog cleanup (8 pending tickets) OR new ticket queue (260965 → 259759 rework → 260302)
+4. Apply new Phase 2 emit format (Lessons / Carry forward / Refine pass / Done meta-line / Quest Postscript)
+5. Apply new Side-observations table at Cp F for any new ticket testing
 
 **Open questions for next session**:
-- Will the entity-first lookup discipline stick (no more "skipped per rule")?
-- Will the show-first table-form preference hold in everyday answers?
-- Phase 2 backlog of 8 — dedicated batch session worth scheduling?
+- Will the new Phase 2 emit format hold under load (no prose-drift)?
+- Will Side-observations at Cp F actually prevent Carry forward pile-up?
+- Will tangent-management discipline stick (or drift again)?
 
-**Design observations to surface** (Gap Sweep candidates for tonight): see Closing section below.
+**Design observations to surface at next DE Gap Sweep**:
+- "bake" verb slip recurred multiple times today; output-time pre-emit scan candidate
+- Letter → Quest Postscript rename suggests other Quest ritual names may need similar revisits (Sycophancy Circuit-Breaker / Recon block / Predicate Box)
+- Phase 2 emit went through ~5 iterations today before converging — format spec at point-of-design would have prevented the drift
 
 ## 🔄 Session Lifecycle (unchanged from format reference)
 

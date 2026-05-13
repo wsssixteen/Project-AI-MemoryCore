@@ -108,10 +108,12 @@ ai-memorycore/
 - **Spike-on-one** (when net-new) — apply to one real case end-to-end before generalizing
 - **Negative-test**: when should this NOT fire? Make explicit
 
-**Step 4 — Pick shape deliberately**:
-- **2-tier (universal core + per-context extensions)** for extensible domains
-- **Atomic** for single-purpose additions
-- State which and why
+**Step 4 — Pick shape deliberately (universal-or-modular, no middle-ground bloat)** (sharpened 2026-05-13 per みや):
+- **Universal**: thin core + per-trigger entry points covering broad applicability. Examples: Refine (Phase 2 + mid-session cross-cutting + DE Gap Sweep), Domain Expansion (boot + ticket re-engagement + verbal-state-trigger + Redmine retrieval).
+- **Small-scoped modular**: one clear job done well. Examples: env-check (verify+switch env state), verify-close (5-check programmatic verification), familiar (sub-agent spawn for large reads).
+- **Banned shape — middle-ground bloat**: a "Refine-for-quest-only" sibling to "Refine-for-mid-session-only" — duplicate engines, scattered triggers, hidden overlap. If two candidates feel similar enough to share an engine, they should share one (universal). If they're genuinely different jobs, each stays modular.
+- State which shape + why in the Design Memo.
+- **Why** (2026-05-13 みや): *"I hope more of our skills can be more universal if not at least do its job well done if very small scoped & specific - modular."* Pressure-tested against today's Refine extension (engine stays, triggers broaden = universal) — passes. Pressure-tested against env-check (one job: env state verification — would NOT benefit from broadening into "all env-related work") — stays modular. The shape choice flows from honest scope assessment, not aesthetic preference.
 
 **Step 5 — Type-specific sub-checks** (only for types with documented past failures):
 - **New skill**: name-conflict grep + trigger-overlap check + what it replaces
@@ -141,6 +143,7 @@ Shape: [2-tier | atomic] — <reason>
 Naming: <conflict check result, if applicable>
 What it replaces / supersedes: <list or "net-new">
 Success measure: <how we know it's working in 30 days>
+Time to implement: <quick estimate — minutes / hours / multi-session> (added 2026-05-13 per みや)
 === END ===
 ```
 
@@ -338,7 +341,7 @@ PRESSURE-TEST: <past cases this would have caught + future failure-modes-watched
 - **Framework-skeleton for etanah-knowledge** (hard rule, 2026-04-17): Each `etanah-knowledge/<state>/*.md` file starts as a framework skeleton with an explicit **SCOPE** and **NOT FOR** blockquote at the top. Content grows from confirmed knowledge only — resolved tickets, verified behavior. No hypotheses, no pattern-matching on filenames. Before adding to any file, read its SCOPE line; if the addition doesn't fit, it belongs elsewhere (or doesn't exist yet). Merge > proliferate.
 - **Learning approach**: Ticket-driven (Strategy E) as primary. Systematic scanning only for periodic exploration sessions.
 
-- **env-check skill — invoked at every Cp A entry + Cp E entry** (hard rule, refined 2026-05-08): the `.claude/skills/env-check/SKILL.md` skill verifies and (with みや's authorization) switches local env state — `etanahv3\config\environment.properties` + `standalone.xml` + repo branch (per-repo: pelupusan=`mlk/master`, awam=`mlk/release/uat`). Always emits a notification banner (✅ match / ⚠️ mismatch). Mandatory at: (a) Cp A entry — before Scout's report is trusted, (b) Cp E entry — before any code edit. Manual triggers: `/env-check`, `check env`, `switch env to FAT`, `switch env to UAT`, `switch to <repo>`. Replaces the implicit "branch check + master pull on BOTH repos" of Phase 0 Step 0a (which incorrectly assumed mlk/master for awam). **Why named skill (not bundled rule)**: invoked at 3+ checkpoints, mapping table belongs in one place, future env additions live there. みや's framing 2026-05-08: *"I can ask you to change environments and you'll know what to change & what I should do after that (i.e restart jboss or clean maven then delete war files then clean jboss or whatever order is needed)."* Skill includes the post-change steps checklist (stop JBoss → delete tmp+data → mvn clean if WAR → restart → tail server.log).
+- **env-check skill — invoked at every Cp A entry + Cp E entry** (hard rule, refined 2026-05-08): the `.claude/skills/env-check/SKILL.md` skill verifies and (with みや's authorization) switches local env state — `etanahv3\config\environment.properties` + `standalone.xml` + repo branch (per-repo: pelupusan=`mlk/master`, awam=`mlk/release/fat`). Always emits a notification banner (✅ match / ⚠️ mismatch). Mandatory at: (a) Cp A entry — before Scout's report is trusted, (b) Cp E entry — before any code edit. Manual triggers: `/env-check`, `check env`, `switch env to FAT`, `switch env to UAT`, `switch to <repo>`. Replaces the implicit "branch check + master pull on BOTH repos" of Phase 0 Step 0a (which incorrectly assumed mlk/master for awam). **Why named skill (not bundled rule)**: invoked at 3+ checkpoints, mapping table belongs in one place, future env additions live there. みや's framing 2026-05-08: *"I can ask you to change environments and you'll know what to change & what I should do after that (i.e restart jboss or clean maven then delete war files then clean jboss or whatever order is needed)."* Skill includes the post-change steps checklist (stop JBoss → delete tmp+data → mvn clean if WAR → restart → tail server.log).
 
 **Suspended (pending System Appraisal at next Forge Review):**
 - ⚠️ **Externalize knowledge** *[challenged 2026-04-15]*: *"Every session that touches the codebase must end with updated knowledge files; knowledge is a side-effect of work, never the main output."* — Rule may need to be split by session mode (ticket mode vs system mode). Do not enforce rigidly in the meantime.

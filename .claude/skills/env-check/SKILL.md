@@ -20,7 +20,7 @@ When invoked, env-check:
    - `E:\Dev\jboss-7.4-plp-melaka\standalone\configuration\standalone.xml` — `etanahDS` `<connection-url>` (the ONE that changes; Audit/DMS/DS3 stay on mkit always — env-agnostic)
    - Branch on relevant repo:
      - `etanah-pelupusan` main = `mlk/master` (SAME branch for both UAT and FAT; only env config differs)
-     - `etanah-awam` main = `mlk/release/uat` (only UAT exists)
+     - `etanah-awam` main = `mlk/release/fat`
    - Currently deployed WAR in `E:\Dev\jboss-7.4-plp-melaka\standalone\deployments\` — flags whether a module switch is needed
 
 3. **Compares + emits notification banner** (always visible, never silent)
@@ -63,7 +63,7 @@ All 3 candidate datasources are PERMANENTLY PRESENT in standalone.xml. **Switchi
 |---|---|---|---|---|---|
 | **pelupusan + FAT** | `etprdmlk@172.30.17.104:5444 / et_main` | `https://appmlk.melaka.gov.my/etanah-cas` (FAT) | etanah-pelupusan @ `mlk/master` | etanah-pelupusan.war | ✅ **DEFAULT** — most tickets come from FAT |
 | pelupusan + UAT | `mlkuat@172.30.59.185:5444 / et_main_uat` | `http://172.30.59.150/etanah-cas` (UAT) | etanah-pelupusan @ `mlk/master` | etanah-pelupusan.war | Only when FAT lacks test data, OR BA states UAT in ticket |
-| **awam + UAT** | `mkit@172.16.100.197:5444 / et_main_mlit` | `http://172.30.59.150/etanah-cas` (UAT) | etanah-awam @ `mlk/release/uat` | etanah-awam.war | All AWAM tickets (FAT/UAT both tested here) |
+| **awam + UAT** | `mkit@172.16.100.197:5444 / et_main_mlit` | `http://172.30.59.150/etanah-cas` (UAT) | etanah-awam @ `mlk/release/fat` | etanah-awam.war | All AWAM tickets (FAT/UAT both tested here) |
 | awam + FAT | **N/A** — FAT-AWAM not exposed for local testing | | | | |
 
 **Switch mechanic** (verified against current standalone.xml lines 193-235 on 2026-05-11):

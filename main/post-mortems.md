@@ -575,4 +575,68 @@ Read the cited method body verbatim at Cp C step 2 (existing utility sweep) inst
 
 ---
 
+### QA-247710 — PRU Risalat MMKN PDT/PTG enhancement (Rework cycle 2) — 2026-05-12
+
+**Faster-finding**: Faster if external-injection pattern (`additionalJKKLParagraph.docx` child doc) recognized at Phase 0. Action applied: external-injection section in `MODULE-ARCHITECTURE.md` + cycle-relevance rule in `quest-protocol.md` (2026-05-13).
+
+**Contributing Factors**:
+| # | Factor | Evidence |
+|---|---|---|
+| 1 | Cycle-relevance failure — treated 2026-05-06 early-diagnostic's 11 anticipated issues as current scope | `quest/active.txt:332` ba_rework note captures BA's actual 2-item scope |
+| 2 | Defensive-line removal slip — stripped `ccVO.setType(TABLE)` thinking redundant | TagAttributeException at next render; load-bearing for Word XML parser |
+| 3 | Compound-trigger follow-through gap — stopped at push-verify | Forgot return-to-master + active.txt update + /verify-close until みや caught |
+| 4 | Question-as-Instruction misread | BPRZ urusan in another section header treated as in-scope, momentarily broke "6." rendering |
+
+**Process Notes**:
+| Item | Detail |
+|---|---|
+| Multi-cycle ticket | Original commit `34acdd6222` (Vincent Lee, 2026-04-11); rework 2026-05-06 by syafiq |
+| Architectural insight came late | External-injection pattern only named after QA-260876 surfaced same shape 24h later |
+
+**Carry Forward**:
+| Item | Home |
+|---|---|
+| Bean autodefault `updateKeputusanSyorOnFirstLoad` writes TRUE → defeats validator | `main/todo.md` Q3 |
+| KEMASKINI alert extension (currently SELESAI-only per BA spec) | `main/todo.md` Q3 |
+| 10 urusan font inconsistencies in `additionalJKKLParagraph.docx` | `etanah-knowledge/melaka/DEFERRED-CRITICAL-ISSUES.md` |
+
+---
+
+### QA-260820 — PRZ Surat Keputusan JKKL panel hide — 2026-05-13
+
+**Lessons**:
+
+| Plain language | Technical | Explanation |
+|---|---|---|
+| Use the named constant when one already captures the semantic, not an inline list of the same items | `PelupusanConstant.URUSAN_INVOLVE_JKKL_LIST` (5 urusans) over the 5-OR inline chain | DRY — if a new urusan joins JKKL flow, one place to update vs every inline list. The constant IS the canonical "urusans in JKKL workflow" |
+| The same one-line fix can quietly cover multiple tickets when its filter aligns with the underlying semantic | `MlkSuratTemplateForm.java:785-788` | Adding the urusan-list filter also hid Panel #1 of QA-260733 (PLTP TOLAK) — side-effect alignment validated the constant choice |
+| PRZ doesn't go through JKKL or JKBB councils — it uses MMKN directly | `MLK_PLP_PRZ.bpmn20.xml` contains only MMKN tugasan references | Earlier knowledge entry (`JSF-WIRING.md:94`) was misread as "PRZ uses JKBB"; the row actually documents an OR-condition. Correction pending in carry forward |
+
+**Carry forward**:
+
+| Item | Home |
+|---|---|
+| Refactor `populateSuratKeputusanJKKLDokumenList:425-432` 5-OR-chain to use `URUSAN_INVOLVE_JKKL_LIST` (same set, inline enum predates the constant) | `main/todo.md` Q3 |
+| Knowledge file wording fix — `JSF-WIRING.md:94` PRZ/JKBB row is an OR-condition, not "PRZ uses JKBB" | Knowledge file edit (next session) |
+
+---
+
+### QA-260733 — PLTP Surat Tolak 3-panel hide — 2026-05-13
+
+**Lessons**:
+
+| Plain language | Technical | Explanation |
+|---|---|---|
+| One ticket's fix can cover part of another's scope when filters align | QA-260820's `URUSAN_INVOLVE_JKKL_LIST` filter on `MlkSuratTemplateForm.java:785-788` | Panel #1 of this ticket (Surat Keputusan JKKL Dari PTG) was already hidden for PLTP by the time we got here — PLTP isn't in the JKKL list, so 260820's gate caught it for free |
+| Sometimes a constant's NAME and its CONTENTS tell different stories | `TGS_KEPUTUSAN_LULUS_NOTIS_5A_LIST` at `MlkPelupusanTugasanConstant.java:232-236` contains TOLAK tugasans (PYSTP, PSTP) | An old refactor that renamed but didn't reshape — fixing at the writer-site (per-tugasan filter) is safer than touching the constant with 5 callers across 3 files |
+| TOLAK flow inherits panel writes from LULUS unless explicitly excluded | `MlkSuratTemplateForm.java:862` + `:911-916` writers fire for TOLAK tugasans via the misnamed LULUS-list | The Surat Tolak Permohonan langkah shared the same writer block as LULUS surat tugasans; per-tugasan exclusion was the cleanest separation |
+
+**Carry forward**:
+
+| Item | Home |
+|---|---|
+| Refactor candidate: rename or reshape `TGS_KEPUTUSAN_LULUS_NOTIS_5A_LIST` (5 callers across 3 files; risky without coordinated audit) | `main/todo.md` Q3 |
+
+---
+
 *Post-Mortem Log v1.0 — 2026-04-02*

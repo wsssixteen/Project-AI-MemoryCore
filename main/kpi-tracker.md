@@ -237,4 +237,23 @@
 
 ---
 
+### QA-247710 — PRU Risalat MMKN PDT/PTG enhancement (Rework cycle 2) — 2026-05-12 — ~6h
+
+**Closure type**: code-fix-shipped (rework)
+**Time spent**: ~6h Phase 1 (across 2 days)
+
+**What we learnt**:
+
+| Identifier (searchable) | What we learnt (plain English) |
+|---|---|
+| `PelupusanWordCCMethodConstant.populatePTGParagraph_PRU` @ :15917-16175 | External-injection populator pattern — parent template hosts a slot, populator fills it with a constructed multi-CC row (10 inner CCs for PRU's Item 6) |
+| `references/additionalJKKLParagraph.docx` | External child doc — font/style lives in CHILD not parent. Parent's font is overridden by child's run properties |
+| `ccVO.setType(TABLE)` reset | Looks defensive, is load-bearing — never strip "defensive-looking" code without verifying call-graph |
+| Page-break in `.docx` | Template-binary edit only (`<w:br w:type="page"/>`) — cannot be wired from populator |
+
+**Extras solved beyond ticket scope**: none (strict current-cycle scope held)
+**Audit-log entries spawned**: ~8
+
+---
+
 *Created 2026-05-06 in response to みや's KPI-tracking ask. Will capture every closed ticket going forward.*
