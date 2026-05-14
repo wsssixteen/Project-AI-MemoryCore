@@ -637,6 +637,43 @@ Read the cited method body verbatim at Cp C step 2 (existing utility sweep) inst
 |---|---|
 | Refactor candidate: rename or reshape `TGS_KEPUTUSAN_LULUS_NOTIS_5A_LIST` (5 callers across 3 files; risky without coordinated audit) | `main/todo.md` Q3 |
 
+### QA-260965 — PLPS/PRBB No. Sijil Kerakyatan mandatori state-wide Melaka gate — 2026-05-14
+
+**Lessons**:
+
+| Plain language | Technical | Explanation |
+|---|---|---|
+| Init methods can be just as guilty as event handlers — both fire and both can flip flags | `PelupusanMaklumatPemohonHelper.initWarna()` @ 4274-4288 runs at page-load population (line 4256 call), NOT just on user action | I framed `mandatoryNoSijil = true` writers as "event handlers" early on — missed that `initWarna()` is called from the dialog-populate path. That's why the bug shows up before any user click |
+| Bug-manifestation depends on data, not just code — applicant's IC color drove whether the asterisk appeared | `pemohon.getWarnaPengenalan() != WARNA_BIRU` triggers the else-branch | みや's PRU test used Malaysian-citizen-blue-IC → init's IF branch fired → no asterisk. BA's PLPS test used non-blue IC → ELSE branch fired → asterisk. Same code path, different applicants. "No issue per BA test" ≠ "code is fine" |
+| Requirements (parent ticket #212906 + children #212990/#215476) are last-check-before-following-AWAM | Requirement #212990 journal (2025-07-17 by Anis Nabilah BA) specs `Warganegara=Malaysia → Taraf=Warganegara` | Pulling the parent Requirement at QA-260965 confirmed AWAM-side spec, surfaced #220373 (2025-07-15) as the commit that introduced Taraf-based citizenship logic ALONGSIDE warna without removing it — the duplication that powers the bug |
+| Code comments are for OTHER developers reading the code — never reference internal MD files; never frame as "out of scope" | Final comment shape: `// QA #260965 — BA clarification covers all urusan & this fix matches AWAM.` | Earlier draft pointed at `DEFERRED-CRITICAL-ISSUES.md` and framed as "going beyond ticket scope" — みや corrected both. Comments must be self-contained + framed as legitimate scope, not apology |
+| Melaka-gate is the right v1 shape when business logic is unknown — lets state evolve independently of others | `mandatoryNoSijil = melaka ? Boolean.FALSE : Boolean.TRUE` at 3 sites (initWarna 4286, onChangeWarganegara 4824, onChangeWarganegaraIbubapa 4851) | Architectural seam: Melaka becomes the "stable state project" where future complexity (Taraf-based logic, naturalized-citizen handling) lands inside the Melaka branch without touching TRG |
+
+**Contributing Factors**:
+
+| # | Factor | Evidence |
+|---|---|---|
+| 1 | Cherry-picked AWAM line 5542 as "canonical Melaka pattern" without inventorying full writer set | みや caught: AWAM has 11+ other `mandatoryNoSijil = true` writers (4100, 4812, 4831); line 5542 is one specific bangsa-warna branch. The real Melaka mechanism on AWAM is `viewNoSijilRakyatPanel = FALSE` panel-hide @ 976/2013/2132 |
+| 2 | BA-Q gate fired during Recon instead of after Rubric, skipping the deeper analysis | First-cycle Recon stopped before Rubric due to "BA scope ambiguity" — Rubric's architecture diagram + 100%-verify would have surfaced `initWarna()` 24h earlier. Hard rule landed today: BA-Q gate fires AFTER Rubric completion |
+| 3 | First Apply attempt over-scoped to state-wide before BA clarification + Requirement check | みや reverted my state-wide ternary the same day, exposed the missing Sub-check 8d (Dispatch vs BA-scope shape comparison). Sub-check 8d codified today |
+| 4 | Notes.txt auto-write only covered PLPS, missed PRBB despite ticket title listing both | Single-urusan auto-write path was the rule; multi-urusan extension landed today (one entry per urusan in title) |
+
+**Process Notes**:
+
+| Item | Detail |
+|---|---|
+| Multi-cycle convergence | BA WhatsApp clarification + Requirement #212906/#212990 fetch + `initWarna()` code finding all needed to lock in the right shape; no single source had it |
+| Hard rules spawned this ticket | Sub-check 8d (scope-shape verification), Code-first investigation before BA-ask, Apply hard-stop after working-tree edits, BA-Q gate timing (fire AFTER Rubric), Notes.txt multi-urusan rule, skill naming-tier convention, plain-vs-technical table format, arrow-flow notation format, v1-always-confirms-before-acting, Refine + Design Memo format → table (drop code-block wrap), Refine + Design Memo consolidated as sub-rituals of System-Design, code-comments-for-other-devs rule (no internal MD refs, no out-of-scope framing) |
+| BA chat reference | 2026-05-14 09:15-11:20 WhatsApp: "rasanya semua urusan ada isu yg sama"; "Urusan pru dgn ppjk x de isu tu" |
+
+**Carry Forward**:
+
+| Item | Home |
+|---|---|
+| warna-vs-Taraf mandatori duplication — unified-refactor pending BA business spec | `etanah-knowledge/melaka/DEFERRED-CRITICAL-ISSUES.md` entry added 2026-05-14 |
+| Polis-* warna codes don't trigger Malaysian-citizen Taraf path (Requirement #212990 violation) | `main/todo.md` Q2 — separate bug ticket |
+| Taraf-based mandatori refactor (cross-state architectural; pre-req: confirm TRG Taraf code parity) | `main/todo.md` Q2 — refactor ticket; supersedes Melaka-gate when shipped |
+
 ---
 
 *Post-Mortem Log v1.0 — 2026-04-02*

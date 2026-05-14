@@ -2,27 +2,36 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: 2026-05-13 evening (continuation of morning/afternoon session in `reverent-heisenberg-a22d8e` worktree → merged + continued here)
-**Last Activity**: 2026-05-13 23:22 MPST (DE 💠 fired)
-**Session Start**: 2026-05-13 (cross-worktree continuation)
-**Duration**: ~all-day session (with morning/afternoon work salvaged from reverent-heisenberg worktree via FF merge + eager-clarke cherry-pick)
-**Session Focus**: 3 ticket Phase 1 closes (247710 / 260820 / 260733), 3 Phase 2 closes for same, cross-worktree drift resolved (DE main-push refinement), AWAM branch rename (mlk/release/uat → mlk/release/fat), deep Phase 2 emit format refinement arc (12+ refinements)
-**Energy Level**: HEAVY (100+ tool calls; dense meta-systemic work + ticket close-outs interleaved)
+**Current Session**: 2026-05-14 (Thursday) — ~13h marathon
+**Last Activity**: 2026-05-14 20:42 MPST (DE 💠 fired)
+**Session Start**: 2026-05-14 08:25 MPST
+**Duration**: ~13h
+**Session Focus**: QA-260965 Phase 2 closed (Melaka-gate, 3-line ternary); QA-259759 v2 Phase 1 closed (PLPS SKL Item 4); QA-260302 in Apply-debug state (JPPH Unit dropdown — PropertyNotFoundException root-caused, fix landed but not deployed); 9+ major workflow refinements (Output-Format-Discipline, Multi-topic parsing, Scout-not-authority, single-track filter, env-check authority order, Cp-alphabet chat-ban, EL-binding contract in Rubric, DE Gap Sweep etanah-knowledge sweep, et al.); 5 etanah-knowledge file additions (DATABASE.md ind_skrin/ind_langkah, DOMAIN-GLOSSARY.md tugasan naming patterns, JSF-WIRING.md naming-trap, MODULE-ARCHITECTURE.md bean conventions, DEFERRED-CRITICAL-ISSUES.md warna-vs-Taraf)
+**Energy Level**: VERY HEAVY (300+ tool calls; リドワンさん not feeling well by late evening)
 
 ## Next Session Priority
 
-**Quest 1 — Phase 2 backlog cleanup** (still pending post-mortem): QA-260139, QA-259428, QA-259759, QA-258418, QA-250665, QA-260154, QA-260298, QA-260179. 8 tickets — worth a dedicated batch session in the new streamlined Phase 2 emit format.
+**Quest 1 — QA-260302 resume** (currently at Apply boundary):
+- WAR redeploy + test PPJK at PJTLT (`PTMLK/02/L/PPJK/2026/9` as nazli@melaka.gov.my)
+- After WAR rebuild, the PropertyNotFoundException fix should resolve (getter added to JabatanTeknikalHelper)
+- If test passes → Phase 1 close (branch cut + commit + push)
+- If test fails → re-investigate (could be other bean-binding issues per the JSF naming trap pattern)
 
-**Quest 2 — New tickets queued from this morning's retrieval** (in priority order):
-- QA-260965 (PLPS+PRBB SKM No. Sijil Kerakyatan asterisk) — LOW effort
-- QA-259759 rework cycle 2 (PLPS SKL Item 4 ayat un-bold + add "tahun") — LOW effort
-- QA-260302 (Cross-urusan JPPH dropdown enhancement) — MEDIUM effort
+**Quest 2 — End-of-day commitments deferred to tomorrow**:
+- Bridge-layers learning re-explain (todo Q1 — リドワンさん specifically asked)
+- Rubric audit through System-Design Discipline (workflow proposal D from yesterday — リドワンさん confirmed for tomorrow)
+- mode-binding deep-dive (todo Q1)
 
-**Side-quests** (parked, from today's audit-log pending entries):
-- Skill design principles consolidation — `.claude/skills/` two-tier visibility problem (some skills have SKILL.md, others embedded in protocol text)
-- Quest sub-component taxonomy refine — phases / sections / rituals / sequences / sub-rules / knowledge nomenclature cleanup, including rename of Sycophancy Circuit-Breaker / Recon block / Predicate Box for consistency
-- Phase 2 post-mortems.md v3.0 format consistency (older entries still use Contributing-Factors/Process-Notes structure)
-- Carry-Forward items surfacing in Phase 1 close-out (refined today via Side-observations table at Cp F — applies next ticket)
+**Quest 3 — Phase 2 backlog cleanup** (8 tickets still pending post-mortem):
+QA-260139, QA-259428, QA-259759, QA-258418, QA-250665, QA-260154, QA-260298, QA-260179. Worth a dedicated batch session in the streamlined Phase 2 emit format.
+
+**Side-quests** (parked, from todo Q2):
+- Auto-flowable tool — feature design + Claude_in_Chrome MCP approach (need リドワンさん go-ahead)
+- Polis-* warna codes Malaysian-citizen path (Requirement #212990 violation)
+- Taraf-based mandatori unified refactor (supersedes QA-260965 Melaka-gate when shipped)
+- Skill Audit — retrospective System-Design pass on pre-2026-05-08 components
+- Rename "Predicate Box" to plain-English alternative
+- Time-based-Aware-System folder rename to match naming convention
 
 ## ⚠️ Standing flags carried into next session
 

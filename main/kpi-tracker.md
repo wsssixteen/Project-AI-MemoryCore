@@ -256,4 +256,23 @@
 
 ---
 
+### QA-260965 — PLPS/PRBB No. Sijil Kerakyatan mandatori — 2026-05-14 — ~5h
+
+**Closure type**: code-fix-shipped (state-wide Melaka gate)
+**Time spent**: ~5h across two engagements (first Apply reverted, second Apply shipped after BA WhatsApp clarification + Requirement #212906/#212990 check)
+
+**What we learnt**:
+
+| Identifier (searchable) | What we learnt (plain English) |
+|---|---|
+| `PelupusanMaklumatPemohonHelper.initWarna()` @ 4274-4288 | Init method called from dialog-populate path (line 4256), NOT just event handler — fires on page load with `warna ≠ BIRU` → forces mandatori TRUE. This is the actual root-cause site, not the onChange handlers I framed it as initially |
+| Requirement #220373 (commit 0d091a244c, 2025-07-15) | Introduced Taraf-based citizenship logic ALONGSIDE the existing warna-based logic. Never removed the warna path → duplication that powers the bug |
+| Requirement #212990 journal 2025-07-17 (BA Anis Nabilah) | BA spec: `Warganegara=Malaysia → Taraf=Warganegara`. Polis-* warna codes don't trigger this path → wrong Taraf auto-set — separate bug captured in todo Q2 |
+| `melaka ? Boolean.FALSE : Boolean.TRUE` ternary at 3 sites | Melaka state-wide gate. Mirrors AWAM's panel-hide approach for Melaka (`viewNoSijilRakyatPanel=FALSE` @ 976/2013/2132 on AWAM bean). Different mechanism, same end-state |
+
+**Extras solved beyond ticket scope**: none (strict BA scope per Sub-check 8d; deferred refactors captured in DEFERRED-CRITICAL-ISSUES + todo Q2)
+**Audit-log entries spawned**: ~12
+
+---
+
 *Created 2026-05-06 in response to みや's KPI-tracking ask. Will capture every closed ticket going forward.*

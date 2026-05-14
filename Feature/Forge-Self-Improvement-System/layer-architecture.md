@@ -43,7 +43,7 @@
 |---|---|---|---|---|
 | 1 | **System Design Discipline** | Architect-first method for adding any rule/skill/hook/memory/format | hard rule | `.claude/CLAUDE.md` (System-Design Discipline section) |
 | 2 | **Identity / Personality / Memory** | Who I am + how I express + what I remember about みや | identity | `main/main-memory.md`, `.claude/personality.md`, `.claude/auto-memory/` |
-| 3 | **Quest Protocol** (Phases + Cp A-N) | Execution discipline for tickets | protocol | `quest/quest-protocol.md` + `.claude/CLAUDE.md` Quest Workflow |
+| 3 | **Quest Protocol** (Phases + Discovery → Wrap checkpoints) | Execution discipline for tickets | protocol | `quest/quest-protocol.md` + `.claude/CLAUDE.md` Quest Workflow |
 | 4 | **Skills** | Reusable named operations | per-skill SKILL.md | `.claude/skills/<name>/SKILL.md` + plugins |
 | 5 | **Hooks / Automation** | Pre/post tool gating | settings | `.claude/settings.local.json`, `.claude/settings.json` |
 | 6 | **Knowledge files** | Domain reference (etanah codebase, urusans, tugasan, BPMN, DB) | framework + ticket-driven growth | `projects/coding-projects/active/etanah-knowledge/melaka/*.md` |
@@ -63,7 +63,7 @@
 | 0 | **Continuous Improvement (mindset)** | **65%** | L0 manifests in Forge + audit-log + post-mortems, but **105 pending entries with no review cadence** = the catch-net has holes. Mindset present in design but inconsistent in practice. |
 | 1 | System Design Discipline | **40%** | v2 baked 2026-05-08; ~92% theory confidence per pressure-test; **0 real-world uses**. Validation pending next 3 design cycles. |
 | 2 | Memory / Personality | **75%** | Auto-load reliable; ~30 feedback files = pile-up; some clash (DE format slip 2026-05-07); refactor scheduled in Q2 todo. |
-| 3 | Quest Protocol (Cp A-N) | **65%** | Phase structure stable; Cp A-N + Recon **new — only QA-259759 ran end-to-end**. Need ≥3 more cycles to validate. |
+| 3 | Quest Protocol (Discovery → Wrap) | **65%** | Phase structure stable; Discovery → Wrap + Recon **new — only QA-259759 ran end-to-end**. Need ≥3 more cycles to validate. |
 | 4 | Skills | **50%** | /quest + /familiar solid; /appraise too broad (みや's note 2026-05-08, needs refinement + rename); /loop + /schedule exist; coverage gaps elsewhere. |
 | 5 | Hooks / Automation | **60%** | ticket-gate + commit-gate wired 2026-04-02; limited coverage beyond. |
 | 6 | Knowledge files | **70%** | Inventory-first + SCOPE/NOT FOR rules strong; gaps in CONFIG-FRAMEWORK + topic mindmaps (in Q2). |
@@ -103,7 +103,7 @@
 - After any layer-spanning change (e.g. v2 system-design rule baked → L1 needs re-assessment after 3 uses)
 - When みや asks "where are we now?"
 
-**Sign-off rule**: I (Ruri) propose changes to this doc; みや approves before merging. Same as mindmap protocol (Cp K rule from QA-259759 cycle).
+**Sign-off rule**: I (Ruri) propose changes to this doc; みや approves before merging. Same as mindmap protocol (Wrap rule from QA-259759 cycle).
 
 ---
 

@@ -15,7 +15,7 @@
 | Any formal Etanah/Redmine task context | Phase 0 begins |
 | `/quest start <QA> <path>` | Phase 0 begins via skill |
 | "Restart quest `QA #<number>`" | Reset phase to 0, status to active — search Task folder first, then `Archive/` inside it |
-| `"Read Redmine"` | Run `node quest/redmine-sync.js`, then `--create` for any new tickets; for each new ticket: add a held Phase 0 entry to `active.txt` (`status=hold`); **then auto-spawn a Cp A early-diagnostic familiar per new ticket** (writes `projects/coding-projects/active/QA-<num>/early-diagnostic.md` — see Phase 0 Read-Redmine sub-protocol below); report results in a single table including username + tugasan_kod inference per ticket. みや picks which quest to start. No Phase 0 manual reading until みや confirms. |
+| `"Read Redmine"` | Run `node quest/redmine-sync.js`, then `--create` for any new tickets; for each new ticket: add a held Phase 0 entry to `active.txt` (`status=hold`); **then auto-spawn a Discovery early-diagnostic familiar per new ticket** (writes `projects/coding-projects/active/QA-<num>/early-diagnostic.md` — see Phase 0 Read-Redmine sub-protocol below); report results in a single table including username + tugasan_kod inference per ticket. みや picks which quest to start. No Phase 0 manual reading until みや confirms. |
 
 ### Phase transitions
 | Phrase | Action |
@@ -34,21 +34,21 @@
 
 **Prepare-commit sequence** (per みや 2026-04-30 convention, refined 2026-05-11):
 
-**Naming convention** (added 2026-05-11 by みや — replaces cryptic `Cp A/B/D/E` letters):
+**Checkpoint names** (added 2026-05-11 by みや; alphabet codes purged 2026-05-14 by みや — *"remove everything related to alphabets and replace it with the appropriate names so that this doesn't repeat"*):
 
-| Old (cryptic) | New (descriptive) | Phase | What it covers |
-|---|---|---|---|
-| Cp A | **Discovery** | 0 | Scout familiar + early-diagnostic load + DOMAIN-GLOSSARY out-loud + etiology check (see below) |
-| Cp A wrap-up | **Recon** | 0 | Formal Recon block ritual — Universal Checks 1-8 with file:line per row |
-| Cp B | **Simulate** | 0/1 | Reproduce bug locally; auto-pengguna lookup; test plan emit |
-| Cp D | **Rubric** | 1 | Fix-shape options (A/B/C with pros/cons) + recommendation. **MANDATORY for multi-file or multi-layer fixes**: include a one-block **Architecture diagram** at the top showing how the touched files/layers reference each other (parent template → CC tag slot → populator method → external resource). Use plain ASCII boxes + arrows, not Java type names. Why (2026-05-12 みや on QA-247710 Rubric v2): *"That Architecture clarification diagram is good. Is it part of Rubric protocol?"* — it wasn't, now it is. Single-file single-layer fixes can skip the diagram (e.g. a one-line constant addition). |
-| Cp E | **Apply** | 1 | Code edit applied (with Predicate Box per CLAUDE.md Ritual 1). **🚨 PRESERVATION DISCIPLINE — HARD RULE (added 2026-05-12 after QA-247710 deletion-overreach slip)**: ONLY modify the specific lines required by the Cp D Rubric. **DO NOT DELETE any unrelated existing line, comment, or commented-out code without explicit みや authorization** — even if it looks "dead", "irrelevant", "outdated", "rushing", or "duplicated". Commented-out code is INTENTIONAL preservation by the original developer (debugging hints, candidate restorations, historical context, warnings to future devs) — must be respected. "Dead code cleanup" is a SEPARATE refactor task, NOT part of any bug-fix or enhancement ticket. If a line appears unrelated to the fix → KEEP IT. If unsure → ASK before deleting. **Why** (2026-05-12 QA-247710 Cp E): I replaced the entire body of `populatePTGParagraph_PRU` with my 10-row injection, deleting (a) a critical warning comment ("Rushing, will attempt beautify later... cause external table to go missing"), (b) the noLot computation block, (c) the noLot eachRow injection, (d) ~100 lines of commented-out historical hints. みや: *"Did you just without any rights remove an important comment WARNING others about an issue? I just noticed you removed a WHOLE BLOCK of codes not just the comments!!"* The deletions weren't in the Cp D Rubric scope. The (a) warning would have prevented the later TagAttributeException debugging — I deleted my own future safety net. **How to apply**: at Cp E, use `Edit` with targeted `old_string` covering ONLY the change region (insert-before/insert-after patterns), NEVER large `old_string` that includes unrelated surrounding code. If the framework's `Edit` tool requires a larger anchor for uniqueness, expand the anchor but preserve every line in `new_string` except the deliberate change. Pressure-test: if みや asks "what else did you delete?" — the answer must be "nothing other than the X line(s) we discussed". Pairs with the existing scope_anchor rule. |
-| Cp F | **Verify** | 1 | みや local-tests the fix; confirms ralat/behavior |
-| Cp G | **Commit hand-off** | 1 | Prepare-commit sequence (this section); Ruri proposes message, みや executes |
-| Cp H | **Push** | 1 | みや executes push |
-| Cp J/K | **Wrap** | 2 | Post-mortem + KPI + Tasks folder hygiene + knowledge file updates |
+| Checkpoint | Phase | What it covers |
+|---|---|---|
+| **Discovery** | 0 | Scout familiar + early-diagnostic load + DOMAIN-GLOSSARY out-loud + etiology check (see below) |
+| **Recon** | 0 | Formal Recon block ritual — Universal Checks 1-8 with file:line per row |
+| **Simulate** | 0/1 | Reproduce bug locally; auto-pengguna lookup; test plan emit |
+| **Rubric** | 1 | Fix-shape options (A/B/C with pros/cons) + recommendation. **Architecture diagram is ALWAYS shown — permanent fixture (refined 2026-05-14 by みや: *"Architecture diagram is perfect under Rubric, I hope this is made permanent so that it will always show when needed."*)**. Even single-file fixes get a 2-3 box diagram showing the file's relationship to its callers/consumers + the data flow. **EL-binding contract row MANDATORY when fix touches a JSF composite (added 2026-05-14 by みや after QA-260302 PropertyNotFoundException slip)**: when adding a method to be called via `#{cc.attrs.<X>.<method>}` from inside a composite, the Architecture diagram MUST include a row tracing what bean `cc.attrs.<X>` resolves to in EACH parent XHTML that mounts the composite (grep for the composite usage, list every `<X>=...` value). The method goes on THAT bean. **Why** (QA-260302): I added `getJenisUnitKadarNilaianSelectItems()` to `MlkUlasanJPPHForm.java` (filename match) but the 3 composites are mounted by parent screens passing `mb="#{mb.jabatanTeknikalHelper}"` — so `cc.attrs.mb` resolves to `JabatanTeknikalHelper`, NOT `MlkUlasanJPPHForm`. PropertyNotFoundException at runtime. Filename match ≠ backing bean. The diagram must explicitly trace the binding. Use plain ASCII boxes + arrows, not Java type names. |
+| **Apply** | 1 | Code edit applied (with Predicate Box per CLAUDE.md Ritual 1). **🚨 PRESERVATION DISCIPLINE — HARD RULE (added 2026-05-12 after QA-247710 deletion-overreach slip)**: ONLY modify the specific lines required by the Rubric. **DO NOT DELETE any unrelated existing line, comment, or commented-out code without explicit みや authorization** — even if it looks "dead", "irrelevant", "outdated", "rushing", or "duplicated". Commented-out code is INTENTIONAL preservation by the original developer (debugging hints, candidate restorations, historical context, warnings to future devs) — must be respected. "Dead code cleanup" is a SEPARATE refactor task, NOT part of any bug-fix or enhancement ticket. If a line appears unrelated to the fix → KEEP IT. If unsure → ASK before deleting. **Why** (2026-05-12 QA-247710 Apply): I replaced the entire body of `populatePTGParagraph_PRU` with my 10-row injection, deleting (a) a critical warning comment ("Rushing, will attempt beautify later... cause external table to go missing"), (b) the noLot computation block, (c) the noLot eachRow injection, (d) ~100 lines of commented-out historical hints. みや: *"Did you just without any rights remove an important comment WARNING others about an issue? I just noticed you removed a WHOLE BLOCK of codes not just the comments!!"* The deletions weren't in the Rubric scope. The (a) warning would have prevented the later TagAttributeException debugging — I deleted my own future safety net. **How to apply**: at Apply, use `Edit` with targeted `old_string` covering ONLY the change region (insert-before/insert-after patterns), NEVER large `old_string` that includes unrelated surrounding code. If the framework's `Edit` tool requires a larger anchor for uniqueness, expand the anchor but preserve every line in `new_string` except the deliberate change. Pressure-test: if みや asks "what else did you delete?" — the answer must be "nothing other than the X line(s) we discussed". Pairs with the existing scope_anchor rule. |
+| **Verify** | 1 | みや local-tests the fix; confirms ralat/behavior |
+| **Commit** | 1 | Prepare-commit sequence (this section); Ruri proposes message, みや executes |
+| **Push** | 1 | みや executes push |
+| **Wrap** | 2 | Post-mortem + KPI + Tasks folder hygiene + knowledge file updates |
 
-Use the new names in chat going forward. Old Cp letters remain in protocol files for backwards-compat reference but should not be used in user-facing communication.
+Use these names in chat going forward. Historical references in journal/changelog files (`daily-diary/`, `improvement-audit-log.md`, `main/post-mortems.md`, `main/kpi-tracker.md`, archived ticket entries in `quest/active.txt`) are NOT retroactively renamed — those are historical records of what was emitted at the time. Operational files (protocol, skill, personality, todo, current-session) are kept current with these names.
 
 **Auto-etiology check at Discovery (NEW 2026-05-11, EXTENDED 2026-05-13 with parent-ticket linkages)**: Scout MUST parse the ticket's `Description.txt` AND `History.txt` for related-ticket references — patterns: `Refer to <TYPE>-<CR>? #?<num>`, `Related to ... #<num>`, `UAT-CR #<num>`, `QA #<num>`, `Requirement #<num>` (parent ticket linkage in Redmine). For each found reference, `git log --all --grep <num> --format="%h %ci %an %s"` in the relevant repo (etanah-pelupusan or etanah-awam) and surface findings in `early-diagnostic.md` under a new **`## Etiology — related tickets, parent linkages & origin commits`** section. **Parent-ticket handling extension (added 2026-05-13 per みや QA-260733 question)**: when Description shows `Requirement #X: <title>` parent linkages (e.g. QA-260733 has `Requirement #215975: Pelupusan - Parent Ticket All Urusan` + `Requirement #218297: PLTP - Permohonan Lanjut Tempoh Pajakan`), capture parent number + title only (DO NOT auto-fetch sub-requirements list — parents can have 100+ sub-tickets, context cost too high). Mark as on-demand: if a scope-ambiguity Q arises later at Rubric (e.g. "PLTP-only or all-urusans?"), THEN do targeted Redmine API lookup of the SPECIFIC parent's sub-requirements list. Cheaper, surfaced only when needed. Today's QA-259428 had "Refer to UAT-CR #236559" in Description.txt line 13; Scout should have caught it without みや having to ask later. Pattern recognition: the smoking-gun commit for a bug-fix-completion ticket is usually findable via `git log --grep <related-CR-num>`.
 
@@ -79,9 +79,9 @@ The branch with the latest date is the source-of-truth. **DO NOT compare `origin
 8. `git status` to verify staged files
 9. **HAND OFF** — output: branch name + N files staged + **proposed commit message** (per the convention below — みや uses as-is, modifies, or overrides) + the exact `git commit` and `git push --set-upstream` commands ready to copy-run. Refined 2026-05-11 by みや: *"Please always include the comment into the protocol after you branched out successfully"* — proposing the message is now part of hand-off, not optional.
 
-**Hard rule (Cp G — Ruri proposes, みや executes; refined 2026-05-11 by みや)**: Ruri **MUST** propose the commit message at hand-off (per convention) — みや decides accept/modify/override. Ruri does NOT run `git commit`. Ruri does NOT run `git push`. The proposal must follow the convention below (no `fix` prefix, no `AWAM`/`MLK`/repo tags, subject-only, no body, no `Co-Authored-By` trailer).
+**Hard rule (Commit — Ruri proposes, みや executes; refined 2026-05-11 by みや)**: Ruri **MUST** propose the commit message at hand-off (per convention) — みや decides accept/modify/override. Ruri does NOT run `git commit`. Ruri does NOT run `git push`. The proposal must follow the convention below (no `fix` prefix, no `AWAM`/`MLK`/repo tags, subject-only, no body, no `Co-Authored-By` trailer).
 
-**Violation log (Cp G)**:
+**Violation log (Commit)**:
 - 2026-05-11 QA-260139: Ruri ran `git commit` itself + included body + Co-Authored-By trailer + "fix" prefix + "AWAM"/"MLK" tags. みや reset. **Still forbidden post-refinement**: running git commit/push is Ruri's hands-off; the wrong-format reasons are now caught at proposal time (みや reviews before executing).
 
 **Compound trigger — "wrap + commit prep + close" (added 2026-05-12, pull-step corrected same day)**: Recognize ANY combination of these phrases as a Phase 1 full close-out request — auto-fire the entire flow (stash → **pull --ff-only origin <source-branch>** → branch → pop → add → propose commit message → wait for みや to execute commit+push → return-to-master → pull → update active.txt → `/verify-close`). **🚨 The pull between stash and branch is mandatory** — see line 75 hard rule. Never paraphrase this sequence without the pull; both today's tickets (QA-259318 v2 and QA-260179) had it dropped in the announcement (master happened to be at-tip so no merge conflict, but it's a stale-base risk we don't take):
@@ -114,8 +114,8 @@ After commit lands (みや confirms with SHA in chat): Ruri proceeds with Phase 
 **Why explicit trigger** (2026-05-12, みや): "I need the solid proof you've written it down in the protocol/skill." Previously the rule said "when emitting a test plan" — ambiguous. The Recon block IS the moment of emit, because みや uses Recon to decide whether to proceed to Simulate; without test data in hand at Recon emit, he can't simulate.
 
 **Secondary triggers** (already in place, do not remove):
-- Cp B simulate plan emit (if Recon didn't already include it — fallback)
-- Cp F verification plan emit (different test data may apply if FAT vs UAT)
+- Simulate simulate plan emit (if Recon didn't already include it — fallback)
+- Verify verification plan emit (different test data may apply if FAT vs UAT)
 
 **Standard output format (refined 2026-05-11)**:
 
@@ -147,7 +147,7 @@ Schema: `et_main` for MLKFAT (`mcp__postgres-mlkfat__query`), `et_main_uat` for 
 
 **Why**: 2026-05-11 QA-259428 simulate plan listed "PSJT officer login TBD — let me know if you want me to query" — みや had to point out the query should have auto-fired AND the original 13-column output was too noisy. The 4-column table is the standard going forward. **Violation log**: 2026-05-11 QA-260139 — Ruri ran `git commit` with self-written body + Co-Authored-By trailer + "fix" prefix + "AWAM" + "MLK" tags despite all four being against convention. みや had to reset the commit. Don't repeat.
 
-**Hard rule — Auto-log permohonan ID to `1. Notes.txt` (added 2026-05-12, format simplified same day)**: Whenever みや shares a permohonan ID during the Simulate phase (Cp B onwards) — verbally, in chat, or by saying "I've altered <ID>" / "I'm on <ID>" / "use <ID>" — Ruri MUST:
+**Hard rule — Auto-log permohonan ID to `1. Notes.txt` (added 2026-05-12, format simplified same day)**: Whenever みや shares a permohonan ID during the Simulate phase (Simulate onwards) — verbally, in chat, or by saying "I've altered <ID>" / "I'm on <ID>" / "use <ID>" — Ruri MUST:
 
 1. **Auto-search pengguna semasa** for the ticket's target tugasan via the canonical task-state query (use `mcp__postgres-mlkfat__query` for FAT, `mcp__postgres-mlkuat__query` for UAT — schema `et_main` and `et_main_uat` respectively).
 2. **Append to `<Task folder>\1. Notes.txt`** with incremental `x)` numbering (continuing from existing entries; one blank line between entries). **Standard format (compact 3-line)**:
@@ -167,9 +167,9 @@ Schema: `et_main` for MLKFAT (`mcp__postgres-mlkfat__query`), `et_main_uat` for 
 
 **Why**: みや asked 2026-05-12 (QA-259318 rework): wants `1. Notes.txt` to be the canonical per-ticket simulation log so anyone (including future-Ruri) can recover the test setup without re-querying. Complements the `test_app_fat=` / `test_app_uat=` fields in `active.txt` (which are written at ticket-close); this rule keeps Notes.txt current in real-time during simulation. Format simplified same day after first draft was too verbose — みや prefers terse.
 
-**How to apply**: at the moment a permohonan ID surfaces during Cp B-onwards, fire the lookup → Read the Task folder's `1. Notes.txt` → Edit append with the next `x)` number → confirm to みや in one line ("Notes.txt updated: entry N — <ID> at <tugasan>"). Do not ask permission; this is now expected.
+**How to apply**: at the moment a permohonan ID surfaces during Simulate-onwards, fire the lookup → Read the Task folder's `1. Notes.txt` → Edit append with the next `x)` number → confirm to みや in one line ("Notes.txt updated: entry N — <ID> at <tugasan>"). Do not ask permission; this is now expected.
 
-**Commit message convention** (Ruri PROPOSES at hand-off per Cp G rule above; みや executes):
+**Commit message convention** (Ruri PROPOSES at hand-off per Commit rule above; みや executes):
 - **Format**: `<TICKET-TYPE> #<number> - <URUSAN>[- <TUGASAN>] - <short action description>`
 - **Examples** (verified accepted by みや):
   - `QA #260154 - PT - PRMMKNPDT - Maklumat Plot mandatori check pada Seterusnya`
@@ -205,7 +205,7 @@ After commit + push lands successfully:
 1. `git checkout <main-branch>` on the relevant repo — pelupusan = `mlk/master`, awam = `mlk/release/fat`
 2. `git pull --ff-only origin <main-branch>`
 3. Verify: working tree clean (Eclipse settings exceptions ignored), branch on `<main-branch>`, latest origin tip
-4. **Update `quest/active.txt`**: change/add the ticket's entry with `phase=1-complete`, `status=pending post-mortem`, `branch=mlk/<type>/<number>`, `commit=`, `cp_F_verified=`, `cp_G_commit=`, `cp_H_push=`, `files_changed_phase1=`, `scope_anchor=`, plus any `etiology=` / `db_verification=` / `learning_marker=` / `out_of_scope_held=` fields relevant to the ticket. Move into the right section of active.txt (keep with the other pending-post-mortem entries; not yet "closed:").
+4. **Update `quest/active.txt`**: change/add the ticket's entry with `phase=1-complete`, `status=pending post-mortem`, `branch=mlk/<type>/<number>`, `commit=`, `verified=`, `commit_sha=`, `pushed=`, `files_changed_phase1=`, `scope_anchor=`, plus any `etiology=` / `db_verification=` / `learning_marker=` / `out_of_scope_held=` fields relevant to the ticket. Move into the right section of active.txt (keep with the other pending-post-mortem entries; not yet "closed:").
 
 5. **Run `/verify-close <ticket>` skill** (NEW 2026-05-11) — programmatic verification via `.claude/skills/verify-close/SKILL.md`. 4 file-state checks: commit landed (`git log`), push succeeded (local == origin SHA), repo on main + pulled (`git branch --show-current` + ahead-count == 0), `active.txt` entry has phase=1-complete + commit=<SHA>. Outputs green/red checklist. **Mandatory before STOP gate**; if any check is red, fix the gap before declaring closure.
 
@@ -333,13 +333,29 @@ Only (b) and (c) appear in Recon's "Open BA Qs" output. (a) and (d) are filtered
 <sim_pengguna_semasa>
 ```
 
-**Single-entry case** (BA-prep ID is at target tugasan, OR BA didn't pre-prep specific): just Entry 1, no Entry 0. Example:
+**Single-entry case** (BA-prep ID is at target tugasan, OR BA didn't pre-prep specific) — **STRICT FORMAT (hard rule, refined 2026-05-14 by みや — supersedes earlier forms)**: title line is `N) <URUSAN> — <TUGASAN>` (urusan code + current tugasan — tugasan included so みや can revert via flowable-alter if testing moves the permohonan forward). Line 2 = permohonan ID. Line 3 = login. **NO bloat — no extra annotations, no parentheticals, no env labels.** Rework cycles use the same format. Example:
 
 ```
-1) PLP — FAT — SKM
+1) PLPS — SKM
 PTMLK/01/L/PLPS/2026/10
 nizalarif@melaka.gov.my
 ```
+
+**Why** (2026-05-14): みや 2026-05-14: *"Don't forget to update 1. Notes as well along with the original Tugasan so that I can alter back."* Test-flow may forward-alter the permohonan; the tugasan in the entry is the revert target.
+
+**Multi-urusan ticket case — write ONE entry per urusan** (added 2026-05-14 by みや after QA-260965 slip; STRICT FORMAT refined later same day after QA-260302 slip — supersedes earlier verbose-column form): when the ticket title lists multiple urusans OR the ticket affects multiple urusans (e.g. `"Semua Urusan - ..."` or `"PLPS, PRBB - ..."`), parse the urusan list and write one numbered entry PER urusan in the SAME strict format. No app-prefix, no env, no tugasan, no annotations. Example for QA-260965 ("PLPS, PRBB"):
+
+```
+1) PLPS
+PTMLK/01/L/PLPS/2026/10
+nizalarif@melaka.gov.my
+
+2) PRBB
+PTMLK/01/L/PRBB/2026/4
+asmida@melaka.gov.my
+```
+
+**Why** (2026-05-14 QA-260302): I wrote Notes.txt with App/ENV/Tugasan columns — みや: *"Don't bloat with extra info, just follow this format... Only mention URUSAN as the title."* The strict format is intentionally minimal — Notes.txt is a quick test-data lookup, NOT a state-snapshot. State context lives in active.txt + Recon + post-mortem.
 
 **Why two-entry**: みや values testing against BA's exact Permohonan ID for traceability — Entry 0 preserves the BA-prep state for reference + tug-of-flow reasoning, Entry 1 gives the actionable test app. みや 2026-05-13: *"can you straight away give the BA's Permohonan ID's pengguna semasa despite its Tugasan doesn't match with our Ticket? It is still important to test based on BA's exact Permohonan's data"*.
 
@@ -347,7 +363,7 @@ nizalarif@melaka.gov.my
 
 **Why** (2026-05-12 QA-260179): Scout completed at ~10:01 with `PTMLK/03/L/PT/2026/17` DB-verified. Notes.txt stayed empty until みや asked at ~11:00 why it wasn't there. The rule existed for mid-conversation ID mentions but didn't fire at Scout-completion. Both trigger points now covered.
 
-**🚨 STRENGTHENED 2026-05-13 — sequential per-Scout enforcement (no batching)**: when multiple Scouts run in parallel (e.g. Redmine retrieval syncs 5 new tickets, 5 Scouts spawned), Ruri MUST write Notes.txt for each ticket AS THE SCOUT RETURNS — before any other tool call, before the next Scout's processing, before any Recon emit, before any synthesis output. **"Immediately" means sequentially per-ticket, NEVER batched-after-the-batch**. Pattern of slip 2026-05-13 (QA-260965/876/820/733/302 retrieval): all 5 Scouts completed in parallel, I went straight to Recon emit for みや, skipped the 5 Notes.txt writes entirely until みや caught it. Same root-cause shape as compound-trigger follow-through slips (Phase 1 close-out post-push steps, Cp E unauthorized deletions) — when in synthesis-output mode, per-step housekeeping gets skipped. **How to apply**: after each Scout returns, Notes.txt for that ticket is the NEXT tool call. Treat it as a sequence checkpoint, not an "anytime later" item.
+**🚨 STRENGTHENED 2026-05-13 — sequential per-Scout enforcement (no batching)**: when multiple Scouts run in parallel (e.g. Redmine retrieval syncs 5 new tickets, 5 Scouts spawned), Ruri MUST write Notes.txt for each ticket AS THE SCOUT RETURNS — before any other tool call, before the next Scout's processing, before any Recon emit, before any synthesis output. **"Immediately" means sequentially per-ticket, NEVER batched-after-the-batch**. Pattern of slip 2026-05-13 (QA-260965/876/820/733/302 retrieval): all 5 Scouts completed in parallel, I went straight to Recon emit for みや, skipped the 5 Notes.txt writes entirely until みや caught it. Same root-cause shape as compound-trigger follow-through slips (Phase 1 close-out post-push steps, Apply unauthorized deletions) — when in synthesis-output mode, per-step housekeeping gets skipped. **How to apply**: after each Scout returns, Notes.txt for that ticket is the NEXT tool call. Treat it as a sequence checkpoint, not an "anytime later" item.
 
 **Why**: 2026-04-30 morning slip — みや asked /appraise on QA #258022 angles; Ruri had loaded the handoff at session start but didn't re-verify before judging. Fabricated a "label confirmation gap" that the ticket text already answered. Ruri's `feedback_inventory_first.md` covered "before creating" but not "before EVERY judgement." This rule extends it.
 
@@ -388,9 +404,13 @@ Below the existing Description text. Don't rewrite original. Each BA reply gets 
 Confirm which DB is active in `standalone.xml` — see `E:\Dev\jboss-7.4-plp-melaka\SETUP-NOTES.txt` → DB SWITCHING section.
 Melaka IT (etanahDS) = local dev default. UAT (etanahDS2) = disabled by "2" suffix convention.
 
+**Test-data query — single-track filter mandatory** (hard rule, added 2026-05-14 by みや after QA-260302 PTMLK/02/L/PLTP/2026/10 slip): When querying `umm_a_tgsn` for test data, ALWAYS filter to aplikasi with EXACTLY ONE active tugasan (`flag_aktif='Y'`). A single aplikasi can have multiple parallel workflow tracks (each on different `aliran_kerja_id` but same `aplikasi_id`) — when this happens, the user UI's "Senarai Tugasan Pengguna" doesn't reliably surface the older parallel track, so the test login can't access the permohonan even though `flag_aktif='Y'`. **The query pattern**: add a `WITH active_counts AS (SELECT aplikasi_id, COUNT(*) AS c FROM umm_a_tgsn WHERE flag_aktif='Y' GROUP BY aplikasi_id)` CTE + filter to `c = 1`. **Why** (2026-05-14): PTMLK/02/L/PLTP/2026/10 had PSJT (amalia) + PLT (mkhairi) both flag_aktif=Y on same aplikasi_id; amalia got "tiada dalam Senarai Tugasan Pengguna ini" error because the workflow had branched. Single-track filter eliminates this class of slip.
+
+**Code-first investigation before BA-ask** (hard rule, added 2026-05-14 by みや): When Scout/Recon surfaces a question that COULD potentially be answered by reading the code, framework defaults, or sibling-feature pattern, Ruri MUST attempt to resolve it via code investigation FIRST, then only ask BA what remains genuinely unresolved. **Failure mode being prevented**: piling open BA-Qs that are actually answerable from a 30-second grep + 1 file read. **Why** (2026-05-14 QA-260302): I surfaced 4 "open BA Qs" including (a) default value behavior, (c) downstream Surat rendering — both directly answerable by reading existing SelectItems patterns + Surat Nilaian JPPH template/populator code. みや: *"please refer else where what's the usual behaviour or even etanah's framework behaviour. Do this before suggesting asking first for hints"* + *"You need to at least check first the template or code that populates the template if this will be shown to have a concern. I appreciate the effort though but perhaps make it mandatory to check first."* **How to apply**: for each open Q surfaced at Recon, categorize as: (i) BA-only (e.g. "is this mandatori?" — pure spec question), (ii) Code-resolvable (e.g. "what does the framework default to?" — answerable via grep+read), (iii) Sibling-pattern-resolvable (e.g. "how does the upstream tugasan write this field?" — answerable via existing-field grep). Spend 5-15 min on (ii) and (iii) before drafting the BA-ask list. Only (i)-type Qs reach BA. Even (i)-type Qs should include "code hints suggest X" if applicable so BA can confirm/correct.
+
 **Phase 0 — Stay in BA's literal scope (hard rule, refined 2026-05-08 from senior consultation):**
 
-BA's reported scope is the boundary. Related issues found during Cp B/C/D MUST be surfaced as ASK questions (per the 2026-05-08 ASK rule) — never silently extended into the fix, never silently dropped. Senior's 2026-05-08 guidance to みや on QA-260154: "focus only on what BA asked." Pairs with the existing scope_anchor field in active.txt: write it at Cp A, defend it at Cp D, do not creep at Cp E.
+BA's reported scope is the boundary. Related issues found during Simulate / intermediate Recon / Rubric MUST be surfaced as ASK questions (per the 2026-05-08 ASK rule) — never silently extended into the fix, never silently dropped. Senior's 2026-05-08 guidance to みや on QA-260154: "focus only on what BA asked." Pairs with the existing scope_anchor field in active.txt: write it at Discovery, defend it at Rubric, do not creep at Apply.
 
 **Step 0 — Mandatory FIRST actions at quest start (hard rule, strengthened 2026-05-07):**
 
@@ -403,7 +423,7 @@ git fetch origin mlk/master && git log HEAD..origin/mlk/master --oneline && git 
 # etanah-awam
 git fetch origin mlk/release/fat && git log HEAD..origin/mlk/release/fat --oneline && git branch --show-current && git status --short
 ```
-If current branch ≠ main-branch-for-this-repo, stash → checkout main → pull --ff-only → pop. **Surface the diff to みや — what we missed could "kill us" if it touches files in our suspected scope**. **env-check skill** (`.claude/skills/env-check/SKILL.md`) automates the entire per-repo + env-file check + auto-propose-fix flow — invoke at every Cp A entry and Cp E entry.
+If current branch ≠ main-branch-for-this-repo, stash → checkout main → pull --ff-only → pop. **Surface the diff to みや — what we missed could "kill us" if it touches files in our suspected scope**. **env-check skill** (`.claude/skills/env-check/SKILL.md`) automates the entire per-repo + env-file check + auto-propose-fix flow — invoke at every Discovery entry and Apply entry.
 
 **Step 0b — PDF annotation extraction:** If the Task folder contains any `.pdf` (BA correction marks, mock-ups), extract every `Annot` (highlight, comment, popup text) before reading the brief:
 ```python
@@ -436,7 +456,7 @@ The default Read tool exposes visual page content but NOT the BA's per-annotatio
    - **MANDATORY when ticket type matches**: `FLOWABLE-WORKFLOWS.md` (workflow/Flowable tickets), `JSF-WIRING.md` (JSF UI tickets), `BUG-BESTIARY.md` (any bug fix — past patterns may match).
    - **AS RELEVANT**: `DATABASE.md` (SQL/schema tickets — large file, code-first works most of the time), `FRONTEND-PATTERNS.md`, `URUSAN-FLOW.md`, `FLOW-TRACES.md`.
    - No hypothesis, no SQL, no code grep before this step. See `feedback_inventory_first.md`.
-   - **Surface in Cp A reply**: confirm "DOMAIN-GLOSSARY loaded ✓ — urusan code expansions known: <list 3-5 relevant ones>" so みや sees proof of load.
+   - **Surface in Discovery reply**: confirm "DOMAIN-GLOSSARY loaded ✓ — urusan code expansions known: <list 3-5 relevant ones>" so みや sees proof of load.
    - **Flowable/workflow tickets only**: also locate the relevant BPMN XML from `E:\Projects\Melaka\etanah-pelupusan\src\main\resources\processes\`. Read service task `class` attributes and user task names directly — treat BPMN XML as source code, not a black box. Do not rely on delegate Java class names alone when the process XML is accessible.
 6. **Generate test record SQL** — auto-fill from ticket context using the standard template below:
    - **Urusan**: grep `DOMAIN-GLOSSARY.md` for the urusan KOD from the ticket (e.g. PSBS, PRZ, PPJK)
@@ -484,7 +504,7 @@ The default Read tool exposes visual page content but NOT the BA's per-annotatio
 
 ---
 
-### Read-Redmine sub-protocol — Auto-Cp A familiar (added 2026-05-07)
+### Read-Redmine sub-protocol — Auto-Discovery familiar (added 2026-05-07)
 
 **Trigger**: any "Read Redmine" / "retrieve tickets" sync that returns ≥1 NEW ticket.
 
@@ -494,15 +514,15 @@ The default Read tool exposes visual page content but NOT the BA's per-annotatio
    - Ticket #, Task folder path, codebase root (pick by ticket subject — `E:\Projects\Melaka\etanah-pelupusan` for **APPS / PELUPUSAN** = staff-side OR `E:\Projects\Melaka\etanah-awam` for **AWAM** = public/pemohon-side; use proper module names, not informal "officer-side" labels — corrected 2026-05-09 per みや), etanah-knowledge folder path
    - **Repo branch awareness** (added 2026-05-08): for etanah-pelupusan main branch is `mlk/master`; for etanah-awam main branch is `mlk/release/fat`. Familiar must read code from the correct main branch — claims based on stale branch are unreliable.
    - Reference the 5 hard rules for Word-template work (Word-template-first lookup, Word XML run-join, Branch check, PDF annotation extraction, Renderer-side overrides)
-   - Output: write `projects/coding-projects/active/QA-<num>/scout.md` (renamed 2026-05-08 from `early-diagnostic.md`; legacy filename remains for closed quests; new scouts use `scout.md`) with sections in this exact order — (1) **Permohonan ID + Env + Tugasan kod** as a TOP-LINE single-line summary (ALWAYS first; みや needs this for simulation; surfaced ABOVE all other tables in Cp A reply too — strengthened 2026-05-08 after slip on QA-260298 where the test data was buried mid-table) — (2) **Gap statement** (added 2026-05-12 — 3 explicit lines: `Expected: <BA's expected behavior verbatim>`, `Observed: <actual behavior from Description.txt>`, `Gap: <the bug — one line>`. Refinement of Description.txt parsing; not a new doc — just 3 explicit lines at top of Scout instead of buried in prose. Anchors every downstream investigation step.) — (3) Ticket scope (verbatim), (4) Urusan/Tugasan/Layer classification (with full urusan-code expansion from `etanah-knowledge/melaka/DOMAIN-GLOSSARY.md` — never paraphrase), (5) Suspected files (with file:line where confidence high), (6) Word template state (CC tags + Item-area context), (7) Candidate populators, (8) Knowledge-file overlap, (9) BA scope_anchor (positive + explicit DO NOT), (10) Test data details (id + tugasan_kod + username inference, expanded from #1), (11) Open questions, (12) Effort estimate, (13) NOT-in-scope list
+   - Output: write `projects/coding-projects/active/QA-<num>/scout.md` (renamed 2026-05-08 from `early-diagnostic.md`; legacy filename remains for closed quests; new scouts use `scout.md`) with sections in this exact order — (1) **Permohonan ID + Env + Tugasan kod** as a TOP-LINE single-line summary (ALWAYS first; みや needs this for simulation; surfaced ABOVE all other tables in Discovery reply too — strengthened 2026-05-08 after slip on QA-260298 where the test data was buried mid-table) — (2) **Gap statement** (added 2026-05-12 — 3 explicit lines: `Expected: <BA's expected behavior verbatim>`, `Observed: <actual behavior from Description.txt>`, `Gap: <the bug — one line>`. Refinement of Description.txt parsing; not a new doc — just 3 explicit lines at top of Scout instead of buried in prose. Anchors every downstream investigation step.) — (3) Ticket scope (verbatim), (4) Urusan/Tugasan/Layer classification (with full urusan-code expansion from `etanah-knowledge/melaka/DOMAIN-GLOSSARY.md` — never paraphrase), (5) Suspected files (with file:line where confidence high), (6) Word template state (CC tags + Item-area context), (7) Candidate populators, (8) Knowledge-file overlap, (9) BA scope_anchor (positive + explicit DO NOT), (10) Test data details (id + tugasan_kod + username inference, expanded from #1), (11) Open questions, (12) Effort estimate, (13) NOT-in-scope list
    - **Observed-vs-inferred tag (added 2026-05-12)**: every file:line claim in Scout output marked with one of two tags — `(observed @ file:line)` when Scout literally read the cited line range and quoted the code, or `(inferred)` when Scout extrapolated from naming/convention/sibling files. The 100%-verify rule already forbids unmarked inference; making the tag explicit makes verification visible. Ruri's adversarial Recon checks every `(inferred)` tag — if it can't be elevated to `(observed)`, it gets demoted to "unknown — needs runtime/みや input".
    - **Anticipated-issues speculation tag (added 2026-05-13)**: every anticipated issue / predicted scope item / suspected root cause in Scout output marked as `(SPECULATIVE)` unless directly confirmed by BA in current-cycle journal text. Flow: `Scout output (tagged SPECULATIVE) → Recon cross-reference against history.txt cycle boundaries → only BA-flagged current-cycle items enter fix scope`. **Why** (2026-05-13 QA-247710): Scout's early-diagnostic listed 11 anticipated issues based on PDF annotations + speculation; BA flagged only 2 in the current Rework cycle. Treating all 11 as scope inflated the work from ~2h to a multi-day investigation before みや caught it. Tag at source (Scout), verify at Recon (cycle-relevance check) — same observation that's now in `Phase 0 Re-engagement section step 4`, but applied to Scout output not just attachments.
    - Stay strictly read-only. Cite file:line. Mark "**unknown — needs runtime/みや input**" rather than guess.
    - **100%-VERIFY clause (added 2026-05-08, applies to BOTH familiar's draft AND Ruri's wrap-up)**: for every file:line claim, READ the cited line range and quote the actual code or mark VERIFIED+brief-summary. For dispatch tables (switch blocks, if-else chains, "all except X" enumerations, urusan-to-bean mappings), trace ALL branches by reading the dispatch code — do not paraphrase from filenames or guess from convention. Caught failure 2026-05-08 QA-260139: familiar's diagnostic listed "all urusans except PLPS+PRU" as gap sites; source-trace at `PelupusanPermohonanTanahPlmsTabForm.java:148-155` revealed MCL also calls `plpPermitHelperForm.onSimpanTanah()` (PLPS pattern) — MCL is NOT a gap. Without 100%-verify, fix would have wasted scope on MCL. みや framing: "I used the word 100% many many times. 100% Ruri."
 
-2. **When みや picks a ticket from the list** — Ruri reads the **Scout** report (renamed 2026-05-08 from "early-diagnostic" — みや confirmed: "if you're writing like that, I still want to use scout. Change everything to it." Scout fits the Quest theme: scouts return from advance reconnaissance with a draft for the team to verify) **adversarially — distrust the scout's findings and try to prove them wrong; only accept claims that survive that scrutiny** (upgraded 2026-05-08 from "skeptical review" per みや: "Distrust the early scouting data and try to prove it wrong but will acknowledge it if it's true"). 100% coverage, not cherry-picking — every claim (file:line, dispatch table, "all except X" enumerations, urusan-to-bean mappings) must be source-verified or marked unverified. Slip caught 2026-05-08 QA-260139 — verified 3 file:line claims but trusted dispatch table without reading; MCL was wrongly listed as gap site, only caught when みや challenged. The Scout report is the familiar's draft; Ruri's adversarially-verified output IS the Recon block. Cp A entry also fires `env-check` skill mandatorily. **Media files in `0. Brief/`** (mp4, wav, mp3, animated gif, screen recording): Ruri must EITHER ask みや to summarize the relevant moment OR request a screenshot/PNG of the key frame — never silently skip as `みや input pending` and proceed. **Inventory-first reminder**: at Cp A entry, read `etanah-knowledge/melaka/DOMAIN-GLOSSARY.md` for urusan-code expansions BEFORE proposing any urusan name in conversation (slip 2026-05-08 QA-260139 — guessed PSBS/PSBP meanings instead of reading glossary; PSBS is actually "Permohonan Serahbalik Berimilik Semula", S.197 + S.76 KTN).
+2. **When みや picks a ticket from the list** — Ruri reads the **Scout** report (renamed 2026-05-08 from "early-diagnostic" — みや confirmed: "if you're writing like that, I still want to use scout. Change everything to it." Scout fits the Quest theme: scouts return from advance reconnaissance with a draft for the team to verify) **adversarially — distrust the scout's findings and try to prove them wrong; only accept claims that survive that scrutiny** (upgraded 2026-05-08 from "skeptical review" per みや: "Distrust the early scouting data and try to prove it wrong but will acknowledge it if it's true"). 100% coverage, not cherry-picking — every claim (file:line, dispatch table, "all except X" enumerations, urusan-to-bean mappings) must be source-verified or marked unverified. Slip caught 2026-05-08 QA-260139 — verified 3 file:line claims but trusted dispatch table without reading; MCL was wrongly listed as gap site, only caught when みや challenged. The Scout report is the familiar's draft; Ruri's adversarially-verified output IS the Recon block. Discovery entry also fires `env-check` skill mandatorily. **Media files in `0. Brief/`** (mp4, wav, mp3, animated gif, screen recording): Ruri must EITHER ask みや to summarize the relevant moment OR request a screenshot/PNG of the key frame — never silently skip as `みや input pending` and proceed. **Inventory-first reminder**: at Discovery entry, read `etanah-knowledge/melaka/DOMAIN-GLOSSARY.md` for urusan-code expansions BEFORE proposing any urusan name in conversation (slip 2026-05-08 QA-260139 — guessed PSBS/PSBP meanings instead of reading glossary; PSBS is actually "Permohonan Serahbalik Berimilik Semula", S.197 + S.76 KTN).
 
-**Why**: 2026-05-07 — みや asked Ruri to spawn a familiar AFTER she'd already done a partial Cp A herself. The familiar's findings were better (file:line citations for terbilang handler, sister-template precedent, docx local-Modified state) than Ruri's solo work. If the familiar runs at retrieval time, the Scout report is already loaded when みや picks the ticket — also surfaces username + tugasan_kod for simulation from the start.
+**Why**: 2026-05-07 — みや asked Ruri to spawn a familiar AFTER she'd already done a partial Discovery herself. The familiar's findings were better (file:line citations for terbilang handler, sister-template precedent, docx local-Modified state) than Ruri's solo work. If the familiar runs at retrieval time, the Scout report is already loaded when みや picks the ticket — also surfaces username + tugasan_kod for simulation from the start.
 
 **Cost vs benefit**: ~1 familiar spawn per new ticket (~$0.05–0.20 each). Saves multiple round-trips at quest-start when みや would otherwise have to ask for username/tugasan/scope data. Solidifies pre-assessment.
 
@@ -548,7 +568,7 @@ TICKET: QA #XXXXXX
 
 ### SUMMARY.txt — Quest close-out (auto-generated at Phase 1 close-out, refined 2026-05-12)
 > **Why this exists**: Without a proper summary, reopening a quest months later forces a full re-investigation — searching git, reading diffs, guessing context. This file is the single document that makes re-entry instant.
-> **Auto-generation trigger** (2026-05-12 per みや sure-fire trigger): renders at Phase 1 close-out Step 6 — right after `/verify-close` green, BEFORE the STOP gate. **NOT hand-written**. Source: `quest/active.txt` ticket entry (commit hash, branch, scope_anchor, files_changed_phase1, cp_F_verified, cp_G_commit, cp_H_push, etiology, learning_marker, out_of_scope_held) + Phase 1 Fix Walkthrough content. All fields are derivable; if any are missing in active.txt at this moment, BLOCK the auto-gen and surface the missing field to みや for explicit fill.
+> **Auto-generation trigger** (2026-05-12 per みや sure-fire trigger): renders at Phase 1 close-out Step 6 — right after `/verify-close` green, BEFORE the STOP gate. **NOT hand-written**. Source: `quest/active.txt` ticket entry (commit hash, branch, scope_anchor, files_changed_phase1, verified, commit_sha, pushed, etiology, learning_marker, out_of_scope_held) + Phase 1 Fix Walkthrough content. All fields are derivable; if any are missing in active.txt at this moment, BLOCK the auto-gen and surface the missing field to みや for explicit fill.
 
 **Template** (auto-generated into Task folder as `SUMMARY.txt` at Phase 1 close-out):
 ```
@@ -601,7 +621,7 @@ Stashed: YES/NO — describe if yes
 - Note files involved and whether compilation is required
 - Do not wrap up until explicitly asked
 
-### Rubric — fix-shape options (Cp D)
+### Rubric — fix-shape options (Rubric)
 
 After Recon emits PROCEED-TO-RUBRIC, Ruri emits 2-5 fix-shape options for みや to pick from. **Standard option set** (added 2026-05-12 — refined to include "when-not-to-debug" 5th option from debugging-playbook):
 
@@ -620,9 +640,63 @@ After Recon emits PROCEED-TO-RUBRIC, Ruri emits 2-5 fix-shape options for みや
 - Effort estimate (Low/Mid/High)
 - Recommendation rationale (only on Ruri's recommended option)
 
-**Why Option E exists**: debugging-playbook "When not to debug" — sometimes the right call is **revert / work-around / rewrite / mitigate-first**. Refinement of existing Cp D, not new workflow. Past tickets where this would have helped: QA-259534 (no fix shipped — passed back to BA after non-repro), QA-258022 (Attempt 2's Java scope creep — Option E "wait for aaron's upstream pull" would have saved a day).
+**Why Option E exists**: debugging-playbook "When not to debug" — sometimes the right call is **revert / work-around / rewrite / mitigate-first**. Refinement of existing Rubric, not new workflow. Past tickets where this would have helped: QA-259534 (no fix shipped — passed back to BA after non-repro), QA-258022 (Attempt 2's Java scope creep — Option E "wait for aaron's upstream pull" would have saved a day).
 
-**Before committing:**
+### Phase 0 → Phase 1 autonomous flow (added 2026-05-14 per みや)
+
+**Default = autonomous Discovery → Simulate → Rubric → Apply** without waiting for みや's nod between checkpoints. Scout (Discovery), Recon (Recon wrap-up), and Rubric (Rubric) already run autonomously today; the refinement here is to **continue straight into Apply (apply)** unless one of the explicit STOP gates trips.
+
+**STOP gates** (Ruri pauses + surfaces, does NOT implement):
+| Gate | Trigger | What Ruri does |
+|---|---|---|
+| **BA-Answerable scope Q** | Simulate / intermediate Recon / Rubric surfaces a question only BA can answer (e.g. "scope: PLPS-only or all urusans?") | Surface as ASK block; do NOT implement until みや confirms scope or answers |
+| **Confidence < HIGH** | Rubric's recommended option has confidence ≠ HIGH (i.e. MEDIUM / LOW) — encoded in the inline confidence statement on the recommended option | Surface the uncertainty + recommended next step (more recon? Option E?); wait for みや's call |
+| **Competing options tied** | Rubric emits 2+ options with comparable pros/cons + no clear winner | Recommend one + flag the tie explicitly; wait for みや's pick |
+| **env-check mismatch** | env-check skill flags ⚠️ at Discovery or Apply entry | Surface mismatch + propose switch; wait for みや's authorization |
+| **Predicate Box ambiguity** | Predicate Box at Apply reveals a missing WRITER CHECKED or unclear EVIDENCE | Surface the gap; do NOT proceed with the edit |
+| **Preservation discipline conflict** | Apply implementation requires deleting/modifying unrelated lines beyond Rubric scope | Surface the conflict; wait for みや's call (per existing Apply HARD RULE) |
+
+**Confidence statement (mandatory inline at Rubric recommendation, separate from Confidence Assessment table)**: every Rubric recommendation includes a one-line `Confidence: HIGH / MEDIUM / LOW — because <reason>` statement. HIGH = autonomous straight to Apply. MEDIUM/LOW = STOP gate.
+
+**Why this refinement (2026-05-14 みや)**: *"Please implement fixes straight away after Rubric. I will read the results."* Pre-refinement: Ruri emitted Rubric + waited for みや's pick + waited for ack at Apply entry — two unnecessary round-trips when confidence is HIGH and there's no BA-block. Post-refinement: みや scans the streamed output (Scout → Recon → Rubric → Predicate Box → Edits → Fix Walkthrough) end-to-end + course-corrects only if a STOP gate trips. Net effect: same gates, fewer pauses.
+
+**What does NOT change**:
+- Predicate Box at Apply (Ritual 1) — still mandatory, still emitted before each Edit
+- Fix Walkthrough at end of Apply — still mandatory, still unprompted
+- Verify — みや local-tests; Ruri does not auto-run
+- Commit and Push (Commit/Push) — みや executes (per existing protocol)
+- Confidence Assessment table — still fires when ≥2 substantive items need みや's nod within one response (per personality.md)
+
+### Apply entry checklist (autonomous-flow guard)
+
+Before the first Edit lands at Apply:
+1. env-check ✅ (re-verified at Apply entry per env-check skill)
+2. Predicate Box emitted with file:line evidence
+3. Inline confidence on the recommended Rubric option = HIGH
+4. No BA-Answerable ASK question outstanding
+5. Preservation discipline confirmed (only Rubric-scope lines being touched)
+
+If any item fails → STOP gate fires → surface to みや.
+
+### Apply boundary — HARD STOP after working-tree edits (added 2026-05-14 per みや)
+
+**Apply does ONLY working-tree edits.** No branch creation. No commit prep. No `git add` / `git commit` / `git push`. No Phase 1 wrap-up. After edits land + Fix Walkthrough is emitted, **STOP** and wait for みや's Verify local testing.
+
+**Why**: `mlk/master` may receive upstream commits during みや's local testing window. The fix branch (`mlk/qa/<num>` or `mlk/qa/<num>v2`) is created at Commit prep AFTER `local_test_confirmed=true` — so the branch is cut from the freshest mlk/master state including anything that landed during testing. Cutting the branch at Apply means the fix sits on a snapshot that may be stale by submission time.
+
+**Working tree throughout Apply + Verify**: stays on `mlk/master`. Edits are uncommitted modifications on the master working tree. みや tests against this state.
+
+**What's banned at Apply**:
+- `git checkout -b mlk/qa/<num>v?` ← creating the fix branch
+- `git add` / `git stash` of the changes
+- "Prep commit message" / "ready for commit" framing in chat
+- Any Phase 1 wrap-up signalling (commit SHA prediction, push-ready language, active.txt status flip)
+
+**みや** (2026-05-14 QA-259759 Rework): *"Please make a hard stop only until implement fix. That is all I asked you to do, I didn't say anything about preparing to commit or wrap up phase 1 or prepare to submit ticket... There might me more updates to mlk/master while we're testing BEFORE we are ready to close phase 1 & pass the ticket in Redmine, I already told you this."* This pattern has happened multiple times; now explicit.
+
+**Commit prep is where branch creation lives** — and Commit should refresh mlk/master via `git fetch origin mlk/master && git pull --ff-only` BEFORE cutting the v-N branch, ensuring the fix is cut from freshest state.
+
+**Before committing (Commit):**
 1. Confirm all checklist items are `[x]`
 2. Ask: *"Have you tested locally?"* — update `local_test_confirmed=true` in `quest/active.txt`
 3. Only then run `git commit -m "QA #<number>"`
@@ -651,16 +725,23 @@ Examples: `QA #254539`, `QA #254604`, `FAT-OR #251455`, `#249445`
 CallerA → CallerB → EngineC → PopulatorD
 (mark where the bug lives with ⚠️)
 
-### Why these changes as a set (2–3 sentences)
-<the big why — how the edits collectively address the root cause,
-what would be incomplete if any single one were missing>
+### Why these changes as a set (table form, refined 2026-05-14 per みや)
 
-### Per-change walkthrough
-For each file changed:
-- **File:line**
-- diff block
-- **Why this change**: 1 short paragraph
-- **What would break without it**: 1 sentence
+| # | Change | Why-as-a-set rationale |
+|---|---|---|
+| 1 | <one-line change description> | <how it collectively addresses the root cause; what would be incomplete without it> |
+| 2 | ... | ... |
+| 3 | ... | ... |
+
+### Per-change walkthrough (refined 2026-05-14 per みや — separate concerns: BA's words vs Ruri's action)
+
+For each file changed, emit ONLY 2 bullets — no "why this change" prose, no "what would break without it" prose (both concerns are already covered by the Why-as-set table above). Separation of concerns:
+
+```
+**<file:line>**
+- **BA wording**: "<exact BA quote from Description.txt / History.txt / journal note — what BA asked for in their own words>"
+- **Action**: <plain-language description of what was done, in Word-UI verbs for .docx edits / one-sentence code edit summary for code>
+```
 
 ### Blast radius
 <who is affected / who is untouched / why the scope is right>
@@ -672,9 +753,24 @@ For each file changed:
 **Rules:**
 - **Big why goes FIRST** — before any diff. If みや can't explain the fix to a colleague from the first three sections alone, the walkthrough has failed.
 - **Class chain always present** — per CLAUDE.md top-priority rule. Visual anchor for how execution reaches the bug.
-- **"What would break without it"** forces justification of each diff independently. If you can't answer that line for a change, it probably shouldn't be in the patch.
+- **Per-change separation of concerns** (2026-05-14): BA's exact wording (bullet 1) is a quote — what they ASKED FOR; Action (bullet 2) is what Ruri DID. Don't mix the two. The why-as-set table (above) covers WHY at the set level, so per-change rationale prose is redundant.
 - **Document/template changes line is mandatory** — even when "none". Catches the silent-skip failure mode.
 - Walkthrough content is the primary input to Phase 2 Fix.txt (CHAIN + APPLIED FIX sections) — write it well now, reuse at close-out.
+
+### Verify step instructions — MUST include pengguna_semasa (added 2026-05-14 per みや)
+
+When Ruri emits the "Next steps (Verify — your turn)" summary at end of Apply, the test data line MUST include all 3 fields matching the Recon Test Data format: `<Permohonan_ID> at <tugasan> as <login>`. Dropping the login (pengguna_semasa name) is a slip — みや caught it 2026-05-14 QA-259759 Rework: *"make sure to mention the pengguna semasa name as well when you're summarizing the steps to do at the end of the reply."*
+
+**Format**:
+```
+Test on <Permohonan_ID> at <tugasan_kod> as <login_email>:
+  - <step 1>
+  - <step 2>
+  ...
+```
+
+Example (correct): `Test on PTMLK/01/L/PLPS/2026/1 at PYSK as nizalarif@melaka.gov.my`
+Example (slip): ~~`Test on PTMLK/01/L/PLPS/2026/1 at PYSK`~~ — missing login.
 
 ### Mid-Quest Handoff File — mandatory when session ends mid-investigation
 
@@ -807,19 +903,19 @@ Step 5 silent: Fix.txt/SUMMARY.txt rendered, archive both-sides, active.txt flip
 | Forge log + Refine | Merged into Step 4 Refine pass |
 | Quick save | Step 5 (silent) |
 
-### Sister-defect check (added 2026-05-12 — refinement of existing Cp F verify, per debugging-playbook adoption)
+### Sister-defect check (added 2026-05-12 — refinement of existing Verify verify, per debugging-playbook adoption)
 
-At Cp F (Verify) — AFTER みや confirms the fix works on the test env, BEFORE Cp G commit hand-off — Ruri MUST grep the codebase for the same pattern elsewhere:
+At Verify — AFTER みや confirms the fix works on the test env, BEFORE Commit commit hand-off — Ruri MUST grep the codebase for the same pattern elsewhere:
 
 > *"Sister-defect grep: same pattern at file:line elsewhere in the codebase?"*
 
 Concrete check: search for analogous code structure (same constant set, same dispatch table, same VO type) in sibling files. Report: (a) found same pattern at file:line → flag as sister-defect candidate for next ticket; (b) no sister patterns found → declare scope sealed.
 
-Already implicit in `URUSAN_INVOLVE_*_LIST` and other set-membership work; making it an explicit step at Cp F. **Pairs with Cook's contributing-factors framing** — the same defect class often exists in multiple sites.
+Already implicit in `URUSAN_INVOLVE_*_LIST` and other set-membership work; making it an explicit step at Verify. **Pairs with Cook's contributing-factors framing** — the same defect class often exists in multiple sites.
 
-### Side-observations table at Cp F (added 2026-05-13)
+### Side-observations table at Verify (added 2026-05-13)
 
-**Trigger**: at Cp F entry (when Ruri describes the test plan + test data + login to みや) AND/OR at cp_F_verified (when みや confirms test pass).
+**Trigger**: at Verify entry (when Ruri describes the test plan + test data + login to みや) AND/OR at verified (when みや confirms test pass).
 
 **Why**: みや is most clear-headed about the code during/after testing. Surfacing out-of-scope observations AT THAT MOMENT lets him decide their disposition while context is fresh — preventing the "Carry forward pile-up" at Phase 2 (where items get pushed forward simply because we waited too long to surface them).
 
@@ -838,7 +934,7 @@ Already implicit in `URUSAN_INVOLVE_*_LIST` and other set-membership work; makin
 - Knowledge file corrections needed (QA-260820's `JSF-WIRING.md:94` PRZ/JKBB wording)
 - Bean autodefault issues (QA-247710's `updateKeputusanSyorOnFirstLoad`)
 
-**Why explicit (2026-05-13 みや)**: *"I really hope next time during Phase 1 you will be more clear on the side things you notice so that we do not carry forward many things. Some things can definitely be asked to the BA if I am more clearer to what you're suggesting. I think another reason is because I didn't see the fix yet. Perhaps you must add a rule to remind me during testing phase or once I've done testing."* Goal: shift surface-timing from Phase 2 (too late) to Cp F (perfect — fresh hands-on context).
+**Why explicit (2026-05-13 みや)**: *"I really hope next time during Phase 1 you will be more clear on the side things you notice so that we do not carry forward many things. Some things can definitely be asked to the BA if I am more clearer to what you're suggesting. I think another reason is because I didn't see the fix yet. Perhaps you must add a rule to remind me during testing phase or once I've done testing."* Goal: shift surface-timing from Phase 2 (too late) to Verify (perfect — fresh hands-on context).
 
 ### Contributing-factors framing (added 2026-05-12 — refinement of post-mortem)
 

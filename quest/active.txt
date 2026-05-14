@@ -1,15 +1,28 @@
+closed:
 qa=QA-260965
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\31. QA #260965 - FAT - PLPS, PRBB - Semakan Kemasukan Maklumat - No. Sijil Kerakyatan ada tanda mandatori sedangkan
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\31. QA #260965 - FAT - PLPS, PRBB - Semakan Kemasukan Maklumat - No. Sijil Kerakyatan ada tanda mandatori sedangkan
 early_diagnostic=projects/coding-projects/active/QA-260965/early-diagnostic.md
-phase=0
-status=hold
-scope_layer=JSF composite + Java helper (cross-module visibility — pelupusan side adds mandatori, AWAM side hides panel)
-tugasan=SKM (TGS_SEMAKAN_KEMASUKAN_MAKLUMAT) — Maklumat Pemohon langkah
-test_app_fat=PTMLK/01/L/PLPS/2026/10 (BA-referenced — DB-verify at Discovery)
-issue_one_liner=No. Sijil Kerakyatan asterisk shows on pelupusan SKM but hidden on AWAM — pelupusan should match AWAM (no asterisk for Melaka)
-suspected_files=mlkMaklumatPemilikAsalForm.xhtml:523 binds helper.mandatoryNoSijil; PelupusanMaklumatPemohonHelper.java:4286/4824/4851 writers; AWAM hides via PelupusanMaklumatPemohonHelperForm.java:2013/2132 setting viewNoSijilRakyatPanel=FALSE for Melaka + hard "not isMelaka" gate on plpMaklumatPemohonPLTPForm.xhtml:378
-effort_estimate=LOW (~1-2h) — 3-line ternary wrap with melaka flag
-note=Cross-module ticket. Scout 2026-05-13 found AWAM hides the whole panel for Melaka; pelupusan side keeps panel visible but adds asterisk. Open BA Q: hide-entirely vs visible-without-asterisk on pelupusan side. PRBB test ID not in brief — needs DB lookup.
+branch=mlk/qa/260965
+phase=2-complete
+status=closed
+post_mortem=main/post-mortems.md (entry 2026-05-14)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-14)
+deferred_critical_entry=projects/coding-projects/active/etanah-knowledge/melaka/DEFERRED-CRITICAL-ISSUES.md (warna-vs-Taraf duplication, added 2026-05-14)
+commit_sha=c5e193161d (2026-05-14) — QA #260965 - PLPS PRBB - No. Sijil Kerakyatan tidak mandatori
+verified=2026-05-14 — みや confirmed test pass: PLPS at PTMLK/01/L/PLPS/2026/10 SKM as nizalarif@melaka.gov.my; PRBB at PTMLK/01/L/PRBB/2026/4 SKM as asmida@melaka.gov.my
+pushed=2026-05-14 first push to origin/mlk/qa/260965 (-u upstream set)
+files_changed_phase1=src/main/java/my/gov/etanah/pelupusan/helper/PelupusanMaklumatPemohonHelper.java :4286/4824/4851 — wrapped 3 `mandatoryNoSijil = TRUE` writers with `melaka ? Boolean.FALSE : Boolean.TRUE` ternary. Single explanatory comment at initWarna() line 4286 referencing the BA clarification + AWAM precedent.
+scope_anchor=Melaka state-wide. BA literal scope = PLPS+PRBB per ticket title; BA clarification (2026-05-14 WhatsApp) hunched "rasanya semua urusan ada isu yg sama"; AWAM's state-wide panel-hide precedent confirms parity. Sub-check 8d passes: Dispatch == BA-clarified scope == Fix shape. Non-Melaka states (TRG) untouched.
+scope_layer=Java helper (3 ternary wraps on existing TRUE writers)
+tugasan=SKM (Semakan Kemasukan Maklumat) — Maklumat Pemohon langkah
+test_app_fat=PTMLK/01/L/PLPS/2026/10 (PLPS) + PTMLK/01/L/PRBB/2026/4 (PRBB)
+deferred_critical_entry=projects/coding-projects/active/etanah-knowledge/melaka/DEFERRED-CRITICAL-ISSUES.md — warna-vs-Taraf mandatori-NoSijil duplication entry added 2026-05-14 with unified-refactor code shape in Quest chat log; pending BA business spec
+side_quest_tickets_pending=(a) Polis-* warna codes Malaysian-citizen Taraf path (Requirement #212990 violation), (b) Taraf-based mandatori unified refactor — both in main/todo.md Q2
+notes:
+  - 2026-05-13: Scout — cross-module ticket. AWAM hides panel state-wide for Melaka.
+  - 2026-05-14: First Apply attempt — state-wide melaka ternary, REVERTED for over-scope.
+  - 2026-05-14: BA WhatsApp clarification: PRU+PPJK "tak de isu" but BA hunch "rasanya semua urusan ada isu yg sama". Code analysis confirmed: PRU+PPJK code-wise vulnerable; BA's tests used Malaysian-citizen applicants so bug didn't manifest. Requirement #212906/#212990/#215476 checked — no contradiction with Melaka-gate.
+  - 2026-05-14: Phase 1 closed — 3-line Melaka-gate landed on mlk/qa/260965. Commit c5e193161d pushed.
 
 closed:
 qa=QA-260876
@@ -169,11 +182,18 @@ note=Phase 2 closed 2026-05-07. Pushed to mlk/qa/250665. 9+ audit-log entries sp
 qa=QA-259759
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\23. QA #259759 - FAT - PLPS - PYSK - SKL Item 3 dan Item 4 ayat hilang
 early_diagnostic=projects/coding-projects/active/QA-259759/early-diagnostic.md
-branch=mlk/qa/259759 (v1, closed Phase 1 2026-05-07) | v2 branch pending creation at re-engagement
+branch=mlk/qa/259759 (v1, closed Phase 1 2026-05-07) | mlk/qa/259759v2 (v2, Phase 1 closed 2026-05-14)
 v1_commit=29fbbc8d15 (2026-05-07 16:50) — fix QA #259759 - PLPS - Template SKL Item 3 dan Item 4 ayat
+v2_commit=801d63bbc2 (2026-05-14) — QA #259759 - PLPS - Item 4 ayat un-bold dan tambah perkataan 'tahun'
+v2_branch=mlk/qa/259759v2
+v2_verified=2026-05-14 — みや confirmed test pass after flowable-alter to PYSK on PTMLK/01/L/PLPS/2026/1 (nizalarif@melaka.gov.my); Item 4 ayat renders not-bold + with "tahun" word
+v2_pushed=2026-05-14 first push to origin/mlk/qa/259759v2 (-u upstream set)
+v2_files_changed=src/main/resources/template/MLK/TemplateSuratKeputusanLulusPLPS.docx (binary, 39813→35650 bytes) — 5 surgical XML edits: (1) "(" → "(tahun " before tahunBerikut SDT, (2-3) `<w:b/>` removed from inner runs of tahunBerikut + thnTamatKelulusan SDTs, (4-5) `<w:b/>` removed from sdtEndPr blocks of both SDTs (precautionary anti-propagation).
+v2_scope_anchor=PLPS only. TemplateSuratKeputusanLulusPLPS.docx Item 4 ayat ONLY. Two changes per BA Nurul Amirah Nadiah 2026-05-12 journal: (a) un-bold tahunBerikut + thnTamatKelulusan placeholders, (b) add "tahun" before `<1 tahun selepas tahun mula kelulusan>` placeholder. Sibling SKL templates (PRU/PT/PSBS/PLTP) NOT touched.
+v2_scope_layer=.docx template binary only — no Java change (populators already correct from v1 cycle)
 rework_detected=2026-05-13 via Redmine sync (3. Rework/ subfolder created, History.txt 8 journal entries)
-phase=0-rework
-status=hold
+phase=1-complete
+status=submitted
 rework_scope_anchor=PLPS only. TemplateSuratKeputusanLulusPLPS.docx Item 4 ayat ONLY. Two changes per BA Nurul Amirah Nadiah 2026-05-12 14:07 journal: (1) ayat at item 4 is currently BOLD → must be NOT bold, (2) add word "tahun" before the placeholder `<1 tahun selepas tahun mula kelulusan>`. Target paragraph: "Dimaklumkan jua bagi pembayaran lesen untuk tahun berikutnya (tahun <1 tahun selepas tahun mula kelulusan> hingga <tahun akhir kelulusan>) hendaklah dibayar pada awal tahun iaitu bulan Januari pada tahun tersebut." Item 3 (SAHAJA → SATU RIBU SAHAJA from prior cycle) was RESOLVED & VERIFIED by BA in this same journal — not in current rework scope.
 rework_test_app_fat=PTMLK/01/L/PLPS/2026/1 (BA-referenced; currently active at PYB4AE under nizalarif@melaka.gov.my; SKL doc generated earlier at PYSK — view via Penyediaan/Cetakan Surat path or flowable-alter to PYSK if regeneration needed)
 rework_attachment=0. Brief/QA #259759 - Test 1.pdf
