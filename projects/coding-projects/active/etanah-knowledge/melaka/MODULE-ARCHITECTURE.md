@@ -34,6 +34,42 @@
 ## Layer Map
 <!-- How the layers connect: UI → Bean → Service → Repository → DB -->
 
+## Bean-Type Conventions (added 2026-05-14 after QA-260302 filename-match slip)
+
+Class-name suffixes carry meaning. Understanding these prevents the "filename matches → bean must be the backing pair" trap.
+
+| Suffix | Role | Bound to | Lifecycle | Examples |
+|---|---|---|---|---|
+| `*Form` (`@ManagedBean @ViewScoped`) | Direct-screen managed bean | A specific XHTML under `protected/.../*.xhtml` — that XHTML's `<ui:param name="mb" value="#{<beanName>}"/>` directly references it | One per screen; per-view session | `MlkUlasanJPPHForm` (standalone form @ `protected/mlk/common/MlkUlasanJPPHForm.xhtml`); `MlkJabatanTeknikalTerlibatForm` (parent screen for "Jabatan Teknikal Terlibat" langkah) |
+| `*Helper` (POJO, NOT a managed bean) | State + getter/setter container passed AS the `mb` attribute INTO composites | A composite's `composite:attribute name="mb"` — parent screen instantiates the helper and passes via `mb="#{...helper}"` | Created/owned by the parent ManagedBean; lives in `helper/` package | `JabatanTeknikalHelper` (passed as `mb` to `mlkUlasanJPPHForm` composite + 4 other JT-related composites); `PelupusanMaklumatPemohonHelper`; `PelupusanMaklumatBayaranHelper` |
+| `*Builder` | Factory / construction-state object | Used by Helpers during init | Transient | `PelupusanMaklumatPemohonHelperBuilder` |
+| `*Service` (`@Service`, Spring) | Business logic + transaction boundaries | Injected via Spring; called from beans/helpers | Singleton | `PelupusanService`, `PelupusanSearchService` |
+| `*Constant` | Static codes / constants | Imported across the codebase | Static class | `PelupusanConstant`, `PelupusanUrusanConstant`, `MlkPelupusanTugasanConstant` |
+| `*VO` | Value Object — pure data holder | Used inside Java services; serialized into JSON for `maklumat_tambahan` | Transient | `JabatanTeknikalVO`, `PelupusanMaklumatPemohonVO` |
+
+### 🚨 Filename match ≠ Backing bean (the trap)
+
+A composite XHTML (e.g. `mlkUlasanJPPHForm.xhtml`) and a managed bean (e.g. `MlkUlasanJPPHForm.java`) can share a name but serve DIFFERENT roles. The composite has a generic `mb` attribute; the bean is the backing for a specific standalone XHTML (different file in `protected/` tree).
+
+**To find the actual backing class for a composite usage**: grep the composite tag name in `/src/main/webapp/protected/.../*.xhtml` — each occurrence shows `mb="#{...}"`. The EL path resolves to the actual class. The class with matching FILENAME is usually only the backing for the STANDALONE form, not the composite.
+
+**Full QA-260302 example** captured in `JSF-WIRING.md` (search "naming trap").
+
+## DB Source-of-Truth Routing Tables (added 2026-05-14)
+
+When a question is "which tugasan mounts which XHTML / langkah" — the source-of-truth is DB tables, not Java code or BPMN:
+
+| Table | Purpose | Key columns |
+|---|---|---|
+| `ind_skrin` | Screen registry (XHTML view paths) | `skrin_id`, `kod_skrin`, `jsf_view`, `nama_aplikasi` |
+| `ind_langkah` | Langkah↔Tugasan↔Screen binding | `langkah_id`, `kod`, `nama`, `skrin_id` (→ ind_skrin), `tgsn_id` (→ ind_tgsn), `turutan` |
+| `ind_tgsn` | Tugasan definition | `tgsn_id`, `kod`, `nama`, `ursn_id`, `peranan` |
+
+Canonical queries documented in `DATABASE.md` section 6.0.
+
+## Entry Points
+<!-- Main JSF pages and their backing managed beans -->
+
 ## Entry Points
 <!-- Main JSF pages and their backing managed beans -->
 
