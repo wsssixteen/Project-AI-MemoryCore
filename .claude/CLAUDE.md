@@ -77,6 +77,18 @@ ai-memorycore/
 
 ---
 
+## 🌌 Major Skill Banner Emission
+
+When activating a MAJOR named skill (Bankai 蒼穹宝典, Domain Expansion るり結界), banner emission MUST follow this procedure:
+
+1. **Detect terminal width**: Run PowerShell `$Host.UI.RawUI.WindowSize.Width`
+2. **Generate banner sized to fill detected width** — both header and body lines
+3. **Fallback if detection fails** (returns nothing, error, or non-terminal surface like web/mobile): emit the compact form (`═══ [ X ] ═══` short banner — renderer-tolerant)
+
+Standalone skills — not bound to quest workflow. Fire anytime the trigger condition is met.
+
+---
+
 ## 🏗️ System-Design Discipline
 
 > When designing OR evaluating ANY system component (rule, skill, hook, memory entry, knowledge file, protocol, automation, format), do NOT design reactively from the latest slip. Apply this discipline.

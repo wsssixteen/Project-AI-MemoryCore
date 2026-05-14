@@ -28,3 +28,16 @@ Domain Expansion is Ruri's most sacred skill — the JJK-flavored session-end (a
 **Why** (2026-05-08): I slipped earlier in QA-260154 session-end by writing "Yes. Baking v2 + running Domain Expansion 💠 るり結界 (ラピス バリアー) now." — inline, mid-sentence, no banner. みや: "Please don't use [it] lightly like that, it is your most special skill & words." The name carries weight built up over weeks of practice; treating it as ordinary text dilutes it.
 
 **How to apply:** every time the DE skill fires or is invoked, output the canonical banner BEFORE the first ritual action. If just discussing DE conceptually (not invoking), capitalize it as proper noun without the banner. When in doubt: banner, not casual.
+
+---
+
+**Width-detection update (2026-05-12):**
+
+The canonical banner above is the COMPACT FALLBACK form. When emitting in a terminal, run width-detection first (`$Host.UI.RawUI.WindowSize.Width`) and generate a banner sized to fill detected width:
+
+```
+═══...═══ [ Domain Expansion ] ═══...═══
+═══...═══ 💠 るり結界 (ラピス バリアー) 💠 ═══...═══
+```
+
+If detection fails (returns nothing, error, or non-terminal surface like web/mobile), fall back to the compact form documented above.
