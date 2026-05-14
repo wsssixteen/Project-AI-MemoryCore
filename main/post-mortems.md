@@ -1,38 +1,43 @@
 # Post-Mortem Log
 
 > Reflection entries after each completed quest.
-> Goal: extract what to carry forward — patterns, process notes, codebase knowledge.
-> Written at Quest Phase 3. Linked from project file.
+> Goal: extract the META layer — process notes, contributing factors, carry-forward todos.
+> Written at Quest Phase 2 (auto-triggered after commit verify per quest-protocol).
+> Linked from project file.
+>
+> *Version: 2.0 | Last updated: 2026-05-12 (slimmed to META-only per みや audit)*
 
 ---
 
-## Format
+## Format (slimmed 2026-05-12 — META-only)
+
+> **What changed (2026-05-12)**: Root Cause Type / Root Cause Summary / Pattern Match / Codebase Knowledge Updated sections REMOVED — they duplicated Phase 1 scout/recon/Fix Walkthrough content. The unique value of post-mortem is the META layer that needs the full quest arc to make sense.
 
 ```markdown
 ### QA-###### — [Short name] — [date]
 
-**Root Cause Type**: data / config / code / schema / process
+**Faster-finding** (1-2 lines — what would have made this quest faster + the action applied):
+Faster: [one-line observation]. Action applied: [concrete edit to skill/protocol/memory/knowledge — file:line or commit-sha].
 
-**Root Cause Summary**:
-[1-2 sentences]
+**Contributing Factors** (replaces single-root-cause framing when ≥2 conditions converged; use single-cause framing only when truly single):
+- [Factor 1 with file:line evidence]
+- [Factor 2 with file:line evidence]
+- [Factor 3 with file:line evidence]
+(For single-cause bugs: one line stating the root cause + file:line.)
 
-**What Would Have Been Faster**:
-[One concrete process note]
+**Process Notes** (anything about how we worked — what slowed us down, what helped, slips on existing rules):
+[Free-form bullets]
 
-**Pattern Match**:
-- Existing pattern confirmed: [pattern name] in DEBUGGING-PLAYBOOK.md
-- New pattern added: [pattern name]
-- No pattern match
-
-**Codebase Knowledge Updated**:
-- [File or concept updated in etanah-knowledge/]
-
-**Process Notes**:
-[Anything about how we worked — what slowed us down, what helped]
-
-**Carry Forward**:
-[1-2 things to do differently next time]
+**Carry Forward** (1-3 follow-up todos with home — Q1/Q2/Q3 todo, audit log, knowledge file update, etc.):
+- [Todo 1 + canonical home]
+- [Todo 2 + canonical home]
 ```
+
+**Format sub-rules**:
+- File:line citations in Contributing Factors are mandatory (matches Recon discipline)
+- Faster-finding action MUST be a concrete artifact (per CLAUDE.md "Mistake → action, not words" rule); "noted for next time" is unacceptable
+- Carry Forward items get their canonical home (todo.md quadrant / audit-log / specific knowledge file / etc.) — items without a home tend to drift
+- Knowledge-file updates that happened DURING the quest live in those files (with their own `version` bump) — DO NOT re-list them here
 
 ---
 
@@ -531,6 +536,143 @@ Read the cited method body verbatim at Cp C step 2 (existing utility sweep) inst
 5. **Notes.txt auto-log format works** — 3-line compact (ENV — TUGASAN / ID / login) reads at a glance; field-tested this session.
 6. **BA verbatim quoting in commit** — when BA's ticket Description names a specific phrase, quote it in the commit subject. Drop suffix info that the git diff already reveals.
 7. **Audit + migrate the other ~12 non-SKL templates from #252314 scope** — Q3 todo entry; same `frasa2` migration shape, mechanical.
+
+---
+
+### QA-260876 — PLTP Ringkasan Risalat MMKN (Font + Ulasan YB wiring) — 2026-05-13
+
+**Root Cause Type**: template (.docx binary, 2 files — main + external `references/` ref doc)
+
+**Root Cause Summary**: `TemplateRingkasanRisalatPLTP.docx` had (1) wrong font on Ulasan Daripada cell — BA wanted Century Gothic 10.5pt; (2) Ulasan YB row was 100% static placeholder text with hardcoded "Durian Tunggal" DUN literal, no CC tags wired, so populators (`dunYB` / `tarikhTerimaUlasanYB` / `keputusanYB`) couldn't fill. **Architectural insight**: the JT-table section is INJECTED from external `template/MLK/references/JabatanTeknikal.docx` — its run properties drive rendering at the injection slot, NOT the parent template's. Font fix had to land in the external doc, not the parent. Same external-injection pattern as `additionalJKKLParagraph.docx` (QA-247710, 24h earlier).
+
+**What Would Have Been Faster**: Recognizing the parent/child template injection pattern (same as QA-247710's `additionalJKKLParagraph.docx`) at Phase 0 — the architectural lesson should have transferred since the two tickets are 24h apart. Pre-loading etanah-knowledge at orchestrator level (before spawning Scouts) would have surfaced the pattern.
+
+**Pattern Match**:
+- **Recurring (now 2 confirmed instances)**: External `references/` docs as injection-pattern children — parent template has slot CC, populator returns externalPath, **child doc's styling drives the injected slot**. Treat as the framework's standard pattern for table-block injection.
+- **New**: Ringkasan Risalat MMKN tugasan-binding rule — generates at *MMKNPTG / *MMKNPTGT side ONLY (NOT *MMKNPDT). The *MMKNPDT side generates a DIFFERENT document (Risalat MMKN PDT). Verify via `template.config.json` literal-key check, NOT by enumeration of lifecycle action arrays.
+- **Reused**: Word-template-first hard rule (CLAUDE.md 2026-05-04) + Recon Universal Check 1 transitive-references clause.
+
+**Codebase Knowledge Updated**:
+- 2 candidate entries for `etanah-knowledge/melaka/` (pending みや approval per Cp J/K rule):
+  - `MODULE-ARCHITECTURE.md` extension: external-injection child doc pattern (`references/` folder, populator-returned `PelupusanWCCTableVO` with externalPath, child styling overrides at injection slot)
+  - `FLOW-TRACES.md` extension: Ringkasan Risalat MMKN tugasan-binding map (*MMKNPTG / *MMKNPTGT only across all urusan variants), distinct from Risalat MMKN PDT (*MMKNPDT)
+
+**Process Notes**:
+- Scout misread `template.config.json` — claimed Ringkasan PLTP binds at PRMMKNPDT/SRMMKNPDT/PRMMKNPTG/SRMMKNPTG/PRRMMKNPTG + Tangguh (lifecycle status enumeration), when the actual binding is only `PRMMKNPTG + PRMMKNPTGT` (lines 4151-4163). I trusted Scout's source-cite without re-verifying. みや caught.
+- Spawned Sub-check 8c (config-file tugasan-binding verification) at Recon ritual.
+- Spawned broader framing shift: agent output = raw evidence, not findings. Verb discipline: never say "Scout claims X — verified" without showing the verification step.
+- Recon title format went through 3 iterations same day (4-axis → 4-axis-no-Langkah → 5-axis-with-Langkah). Final stable: `QA-### • App • Env • Urusan • Tugasan • Langkah`.
+- Notes.txt format reformed to 2-entry pattern (Entry 0 BA-prep state + Entry 1 sim app) with abbreviated `PLP`/`AWAM`. みや hand-edited 260876 Notes.txt as canonical example.
+- Refine Block format standardised (Slip / Diagnosis / Fix / Pressure-test) + version-bump discipline introduced.
+→ forge-log: 7+ audit-log entries spawned this ticket cycle.
+
+**Carry Forward**:
+1. **External-injection pattern recognition** — when scanning a parent template, identify any CC tag whose populator returns `externalPath`. Trace into the external doc + verify its CC tags + styling at Phase 0.
+2. **Ringkasan ≠ Risalat MMKN** — different docs, different tugasans. Add to etanah-knowledge for future scope-anchor clarity.
+3. **Source-verify Scout enumerations**, especially config-file tugasan-binding claims (Sub-check 8c mandatory).
+4. **Agent output = raw evidence**. Verification step is non-skippable; orchestrator does it.
+5. **Orchestrator pre-loads etanah-knowledge** before spawning Scouts — so ground truth exists to verify against.
+
+---
+
+### QA-247710 — PRU Risalat MMKN PDT/PTG enhancement (Rework cycle 2) — 2026-05-12
+
+**Faster-finding**: Faster if external-injection pattern (`additionalJKKLParagraph.docx` child doc) recognized at Phase 0. Action applied: external-injection section in `MODULE-ARCHITECTURE.md` + cycle-relevance rule in `quest-protocol.md` (2026-05-13).
+
+**Contributing Factors**:
+| # | Factor | Evidence |
+|---|---|---|
+| 1 | Cycle-relevance failure — treated 2026-05-06 early-diagnostic's 11 anticipated issues as current scope | `quest/active.txt:332` ba_rework note captures BA's actual 2-item scope |
+| 2 | Defensive-line removal slip — stripped `ccVO.setType(TABLE)` thinking redundant | TagAttributeException at next render; load-bearing for Word XML parser |
+| 3 | Compound-trigger follow-through gap — stopped at push-verify | Forgot return-to-master + active.txt update + /verify-close until みや caught |
+| 4 | Question-as-Instruction misread | BPRZ urusan in another section header treated as in-scope, momentarily broke "6." rendering |
+
+**Process Notes**:
+| Item | Detail |
+|---|---|
+| Multi-cycle ticket | Original commit `34acdd6222` (Vincent Lee, 2026-04-11); rework 2026-05-06 by syafiq |
+| Architectural insight came late | External-injection pattern only named after QA-260876 surfaced same shape 24h later |
+
+**Carry Forward**:
+| Item | Home |
+|---|---|
+| Bean autodefault `updateKeputusanSyorOnFirstLoad` writes TRUE → defeats validator | `main/todo.md` Q3 |
+| KEMASKINI alert extension (currently SELESAI-only per BA spec) | `main/todo.md` Q3 |
+| 10 urusan font inconsistencies in `additionalJKKLParagraph.docx` | `etanah-knowledge/melaka/DEFERRED-CRITICAL-ISSUES.md` |
+
+---
+
+### QA-260820 — PRZ Surat Keputusan JKKL panel hide — 2026-05-13
+
+**Lessons**:
+
+| Plain language | Technical | Explanation |
+|---|---|---|
+| Use the named constant when one already captures the semantic, not an inline list of the same items | `PelupusanConstant.URUSAN_INVOLVE_JKKL_LIST` (5 urusans) over the 5-OR inline chain | DRY — if a new urusan joins JKKL flow, one place to update vs every inline list. The constant IS the canonical "urusans in JKKL workflow" |
+| The same one-line fix can quietly cover multiple tickets when its filter aligns with the underlying semantic | `MlkSuratTemplateForm.java:785-788` | Adding the urusan-list filter also hid Panel #1 of QA-260733 (PLTP TOLAK) — side-effect alignment validated the constant choice |
+| PRZ doesn't go through JKKL or JKBB councils — it uses MMKN directly | `MLK_PLP_PRZ.bpmn20.xml` contains only MMKN tugasan references | Earlier knowledge entry (`JSF-WIRING.md:94`) was misread as "PRZ uses JKBB"; the row actually documents an OR-condition. Correction pending in carry forward |
+
+**Carry forward**:
+
+| Item | Home |
+|---|---|
+| Refactor `populateSuratKeputusanJKKLDokumenList:425-432` 5-OR-chain to use `URUSAN_INVOLVE_JKKL_LIST` (same set, inline enum predates the constant) | `main/todo.md` Q3 |
+| Knowledge file wording fix — `JSF-WIRING.md:94` PRZ/JKBB row is an OR-condition, not "PRZ uses JKBB" | Knowledge file edit (next session) |
+
+---
+
+### QA-260733 — PLTP Surat Tolak 3-panel hide — 2026-05-13
+
+**Lessons**:
+
+| Plain language | Technical | Explanation |
+|---|---|---|
+| One ticket's fix can cover part of another's scope when filters align | QA-260820's `URUSAN_INVOLVE_JKKL_LIST` filter on `MlkSuratTemplateForm.java:785-788` | Panel #1 of this ticket (Surat Keputusan JKKL Dari PTG) was already hidden for PLTP by the time we got here — PLTP isn't in the JKKL list, so 260820's gate caught it for free |
+| Sometimes a constant's NAME and its CONTENTS tell different stories | `TGS_KEPUTUSAN_LULUS_NOTIS_5A_LIST` at `MlkPelupusanTugasanConstant.java:232-236` contains TOLAK tugasans (PYSTP, PSTP) | An old refactor that renamed but didn't reshape — fixing at the writer-site (per-tugasan filter) is safer than touching the constant with 5 callers across 3 files |
+| TOLAK flow inherits panel writes from LULUS unless explicitly excluded | `MlkSuratTemplateForm.java:862` + `:911-916` writers fire for TOLAK tugasans via the misnamed LULUS-list | The Surat Tolak Permohonan langkah shared the same writer block as LULUS surat tugasans; per-tugasan exclusion was the cleanest separation |
+
+**Carry forward**:
+
+| Item | Home |
+|---|---|
+| Refactor candidate: rename or reshape `TGS_KEPUTUSAN_LULUS_NOTIS_5A_LIST` (5 callers across 3 files; risky without coordinated audit) | `main/todo.md` Q3 |
+
+### QA-260965 — PLPS/PRBB No. Sijil Kerakyatan mandatori state-wide Melaka gate — 2026-05-14
+
+**Lessons**:
+
+| Plain language | Technical | Explanation |
+|---|---|---|
+| Init methods can be just as guilty as event handlers — both fire and both can flip flags | `PelupusanMaklumatPemohonHelper.initWarna()` @ 4274-4288 runs at page-load population (line 4256 call), NOT just on user action | I framed `mandatoryNoSijil = true` writers as "event handlers" early on — missed that `initWarna()` is called from the dialog-populate path. That's why the bug shows up before any user click |
+| Bug-manifestation depends on data, not just code — applicant's IC color drove whether the asterisk appeared | `pemohon.getWarnaPengenalan() != WARNA_BIRU` triggers the else-branch | みや's PRU test used Malaysian-citizen-blue-IC → init's IF branch fired → no asterisk. BA's PLPS test used non-blue IC → ELSE branch fired → asterisk. Same code path, different applicants. "No issue per BA test" ≠ "code is fine" |
+| Requirements (parent ticket #212906 + children #212990/#215476) are last-check-before-following-AWAM | Requirement #212990 journal (2025-07-17 by Anis Nabilah BA) specs `Warganegara=Malaysia → Taraf=Warganegara` | Pulling the parent Requirement at QA-260965 confirmed AWAM-side spec, surfaced #220373 (2025-07-15) as the commit that introduced Taraf-based citizenship logic ALONGSIDE warna without removing it — the duplication that powers the bug |
+| Code comments are for OTHER developers reading the code — never reference internal MD files; never frame as "out of scope" | Final comment shape: `// QA #260965 — BA clarification covers all urusan & this fix matches AWAM.` | Earlier draft pointed at `DEFERRED-CRITICAL-ISSUES.md` and framed as "going beyond ticket scope" — みや corrected both. Comments must be self-contained + framed as legitimate scope, not apology |
+| Melaka-gate is the right v1 shape when business logic is unknown — lets state evolve independently of others | `mandatoryNoSijil = melaka ? Boolean.FALSE : Boolean.TRUE` at 3 sites (initWarna 4286, onChangeWarganegara 4824, onChangeWarganegaraIbubapa 4851) | Architectural seam: Melaka becomes the "stable state project" where future complexity (Taraf-based logic, naturalized-citizen handling) lands inside the Melaka branch without touching TRG |
+
+**Contributing Factors**:
+
+| # | Factor | Evidence |
+|---|---|---|
+| 1 | Cherry-picked AWAM line 5542 as "canonical Melaka pattern" without inventorying full writer set | みや caught: AWAM has 11+ other `mandatoryNoSijil = true` writers (4100, 4812, 4831); line 5542 is one specific bangsa-warna branch. The real Melaka mechanism on AWAM is `viewNoSijilRakyatPanel = FALSE` panel-hide @ 976/2013/2132 |
+| 2 | BA-Q gate fired during Recon instead of after Rubric, skipping the deeper analysis | First-cycle Recon stopped before Rubric due to "BA scope ambiguity" — Rubric's architecture diagram + 100%-verify would have surfaced `initWarna()` 24h earlier. Hard rule landed today: BA-Q gate fires AFTER Rubric completion |
+| 3 | First Apply attempt over-scoped to state-wide before BA clarification + Requirement check | みや reverted my state-wide ternary the same day, exposed the missing Sub-check 8d (Dispatch vs BA-scope shape comparison). Sub-check 8d codified today |
+| 4 | Notes.txt auto-write only covered PLPS, missed PRBB despite ticket title listing both | Single-urusan auto-write path was the rule; multi-urusan extension landed today (one entry per urusan in title) |
+
+**Process Notes**:
+
+| Item | Detail |
+|---|---|
+| Multi-cycle convergence | BA WhatsApp clarification + Requirement #212906/#212990 fetch + `initWarna()` code finding all needed to lock in the right shape; no single source had it |
+| Hard rules spawned this ticket | Sub-check 8d (scope-shape verification), Code-first investigation before BA-ask, Apply hard-stop after working-tree edits, BA-Q gate timing (fire AFTER Rubric), Notes.txt multi-urusan rule, skill naming-tier convention, plain-vs-technical table format, arrow-flow notation format, v1-always-confirms-before-acting, Refine + Design Memo format → table (drop code-block wrap), Refine + Design Memo consolidated as sub-rituals of System-Design, code-comments-for-other-devs rule (no internal MD refs, no out-of-scope framing) |
+| BA chat reference | 2026-05-14 09:15-11:20 WhatsApp: "rasanya semua urusan ada isu yg sama"; "Urusan pru dgn ppjk x de isu tu" |
+
+**Carry Forward**:
+
+| Item | Home |
+|---|---|
+| warna-vs-Taraf mandatori duplication — unified-refactor pending BA business spec | `etanah-knowledge/melaka/DEFERRED-CRITICAL-ISSUES.md` entry added 2026-05-14 |
+| Polis-* warna codes don't trigger Malaysian-citizen Taraf path (Requirement #212990 violation) | `main/todo.md` Q2 — separate bug ticket |
+| Taraf-based mandatori refactor (cross-state architectural; pre-req: confirm TRG Taraf code parity) | `main/todo.md` Q2 — refactor ticket; supersedes Melaka-gate when shipped |
 
 ---
 

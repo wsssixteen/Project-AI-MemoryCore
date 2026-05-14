@@ -15,7 +15,7 @@ originSessionId: 9a250643-8b07-48d4-8408-3e2fb4b02911
 **AWAM-tested-on-UAT-only rule (hard, 2026-05-11, finalized after 2nd-pass みや confirmation)**: AWAM bugs are simulated on UAT regardless of where BA reported them. FAT-AWAM is NOT a runnable local env. Three things to change when switching to AWAM-UAT mode:
 1. `etanahv3\config\environment.properties` → `cas.url=http\://172.30.59.150/etanah-cas` (UAT line uncommented, FAT line commented out)
 2. `standalone.xml` → `etanahDS` `<connection-url>` swapped to `jdbc:postgresql://172.16.100.197:5444/mkit?currentSchema=et_main_mlit` (this is the ONLY DB target change — Audit/DMS/DS3 stay on mkit always, env-agnostic)
-3. `etanah-awam` repo on branch `mlk/release/uat` (pelupusan repo can sit on `mlk/master` since not deployed)
+3. `etanah-awam` repo on branch `mlk/release/fat` (pelupusan repo can sit on `mlk/master` since not deployed)
 
 **One WAR per JBoss instance** (2026-05-11 confirmation): JBoss runs ONE WAR at a time. To switch from awam ↔ pelupusan: stop JBoss → remove currently-deployed WAR → `mvn clean install` on target repo → copy fresh WAR to `standalone\deployments\` → clean `tmp\*` + `data\*` → start JBoss. Same-app env switch (e.g. pelupusan-UAT ↔ pelupusan-FAT, both running etanah-pelupusan.war) is config-only: stop → clean tmp+data → start, no rebuild.
 

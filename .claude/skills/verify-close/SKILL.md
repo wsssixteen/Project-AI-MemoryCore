@@ -1,6 +1,6 @@
 ---
 name: verify-close
-description: Programmatic Phase 1 closure verification — 4-step file-state check (commit landed, push succeeded, repo on main, active.txt updated). Outputs green/red checklist. Eliminates chat-state-vs-file-state drift at closure declaration.
+description: Programmatic Phase 1 closure verification — 5-step file-state check (commit landed, push succeeded, remote branch exists, repo on main, active.txt updated). Outputs green/red checklist. Eliminates chat-state-vs-file-state drift at closure declaration.
 allowed-tools: Bash, Read, Grep
 ---
 
@@ -8,7 +8,7 @@ allowed-tools: Bash, Read, Grep
 
 ## What this does
 
-After みや triggers Phase 1 closure ("passed the ticket" / "wrap [ticket]" / "close phase 1"), and after Ruri performs the close-out steps (return-to-main, active.txt update) and asks the STOP gate confirmation — the **verify-close skill** runs 4 programmatic file-state checks and outputs a green/red checklist.
+After みや triggers Phase 1 closure ("passed the ticket" / "wrap [ticket]" / "close phase 1"), and after Ruri performs the close-out steps (return-to-main, active.txt update) and asks the STOP gate confirmation — the **verify-close skill** runs 5 programmatic file-state checks and outputs a green/red checklist.
 
 Eliminates chat-state-vs-file-state drift: declared-closure must match actual-closure.
 
@@ -20,7 +20,7 @@ Eliminates chat-state-vs-file-state drift: declared-closure must match actual-cl
 | `/verify-close <QA-XXX>` | Manual run for any ticket |
 | `verify close for QA-X` | Same as above |
 
-## 4-step check procedure
+## 5-step check procedure
 
 For ticket `QA-<XXX>`, identify the repo (`etanah-pelupusan` or `etanah-awam`) from active.txt's entry, then run:
 
@@ -37,18 +37,24 @@ cd <repo> && git fetch origin mlk/qa/<XXX> 2>/dev/null
 ```
 Expected: `MATCH`. Green if local SHA == origin SHA.
 
-**Check 3 — Repo on main + pulled latest**
+**Check 3 — Remote branch confirmed exists** (added 2026-05-13 per みや — teammates need this to refer to the branch)
+```bash
+cd <repo> && git ls-remote origin mlk/qa/<XXX>
+```
+Expected: returns `<SHA>	refs/heads/mlk/qa/<XXX>`. Green if non-empty (separate from Check 2's diff-match — this proves the branch is discoverable by teammates who haven't fetched yet).
+
+**Check 4 — Repo on main + pulled latest**
 ```bash
 cd <repo> && git branch --show-current
 ```
-Expected: `mlk/master` (pelupusan) or `mlk/release/uat` (awam). Then:
+Expected: `mlk/master` (pelupusan) or `mlk/release/fat` (awam). Then:
 ```bash
 git fetch origin <main-branch> 2>/dev/null
 [ "$(git rev-parse <main>)" = "$(git rev-parse FETCH_HEAD)" ] && echo "AT-TIP" || echo "BEHIND"
 ```
 Expected: `AT-TIP`. Green if on main branch + at origin tip.
 
-**Check 4 — `active.txt` entry updated**
+**Check 5 — `active.txt` entry updated**
 ```bash
 grep -A 5 "^qa=QA-<XXX>" quest/active.txt
 ```
@@ -56,22 +62,17 @@ Expected: entry shows `phase=1-complete` AND `status=pending post-mortem` AND `c
 
 ## Output format
 
-```
-═══ VERIFY-CLOSE — QA-<XXX> ═══
-
 | Check | Status | Details |
 |---|---|---|
 | 1. Commit landed | ✅ / ⚠️ | <SHA on branch> |
-| 2. Push to origin | ✅ / ⚠️ | local == origin SHA / local ahead by N |
-| 3. Repo on main + pulled | ✅ / ⚠️ | <branch> @ <SHA>, 0/N commits ahead of origin |
-| 4. active.txt entry | ✅ / ⚠️ | phase=1-complete + commit=<SHA> present / missing field X |
+| 2. Push succeeded (local = origin) | ✅ / ⚠️ | local == origin SHA / local ahead by N |
+| 3. Remote branch exists | ✅ / ⚠️ | `refs/heads/mlk/qa/<XXX>` discoverable at origin |
+| 4. Repo on main + pulled | ✅ / ⚠️ | <branch> @ <SHA>, 0/N commits ahead of origin |
+| 5. active.txt entry | ✅ / ⚠️ | phase=1-complete + commit=<SHA> present / missing field X |
 
 Verdict: ✅ Phase 1 fully closed — safe to proceed
    OR
 Verdict: ⚠️ N issues — fix before declaring closure: <list>
-
-═══ END ═══
-```
 
 ## When auto-fires
 

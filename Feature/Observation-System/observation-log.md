@@ -44,6 +44,9 @@
 **[2026-04-29] Simplify feedback ignored — kept adding instead of removing**
 Across QA #258022 (3 sessions, 2026-04-28 → 2026-04-29), みや told me 3-4+ times: "this is a mature system, refer to working urusans/tugasans, the implementation is too much, simplify, scrutinize Codex's changes." I ignored every signal — each iteration added more Java/config rather than searching for the minimal existing-pattern fix. Final fix was 1 file (+19/-1) when initial attempts modified 4-5 files including unnecessary Java. Pattern source: I treated "simplify" as a vague request rather than a hard instruction. Mitigations captured in `feedback_simplify_and_reference.md` and forge-log entry. Watch for this in next ticket — does the next "simplify" feedback shrink the diff or grow it?
 
+**[2026-05-12] みや uses pushback as design-discipline enforcement** ↑ from T1
+Rather than directly saying "this is wrong", みや asks "is X truly different from Y you already have?" and lets me re-examine. Recurring teaching mode confirmed across 3+ sessions: 2026-04-30 BPMN inference catch ("did you check from flowable") + 2026-05-11 MCL false-flag catch + 2026-05-12 morning Zeller logbook / Audit 5 push-back. The pattern's effect: it forces me to strip vocabulary and check whether something is genuinely new or just renamed familiar concepts. When applied to design decisions, this is how the "Refine before introducing" tenet emerged — みや's questions about Zeller / 30-min time-box / 5 Whys collapsed all 10 adoptions into refinements. **Promoted T1→T2 2026-05-12 per みや**: "if you're increasing its priority, then yes. That is my way."
+
 **[2026-04-02] Direct naming corrections**
 みや corrects naming inconsistencies immediately when noticed (keiro → quest, Miya → みや). These corrections are precise and non-negotiable. Take them as hard rules, not preferences.
 
