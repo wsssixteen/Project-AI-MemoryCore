@@ -1,19 +1,13 @@
 # KPI Tracker
-*Per-ticket value capture beyond just close — what we learnt, tied to grep-able identifiers*
+*Per-ticket value capture beyond just close — extras, learning, skill build*
 
 > Lives alongside `post-mortems.md`. Post-mortem captures CAUSE; KPI tracker captures VALUE.
 > KPI target (official 2026-05-06): **2 tickets/day, 4-6 hours each**.
 > みや uses this for upward KPI reporting + self-review.
->
-> *Version: 2.0 | Last updated: 2026-05-12 (2-col scannier table format per みや audit)*
 
 ---
 
-## Format (scannier 2-col table — refined 2026-05-12 per みや)
-
-> **What changed (2026-05-12)**: Prose-heavy "Business logic learned" + "New skills / patterns" sections REPLACED with a single 2-column table. Column 1 = grep-able identifiers (class.method, file:line, constant names, config keys) so future-me can search the codebase fast. Column 2 = plain English what we learnt, tied to UI label / Business Logic / meta — the "explanation that completes the picture" for programmers.
->
-> **Don't mix technical + high-level in one cell.** Separation is the point.
+## Format
 
 ```markdown
 ### QA-###### — [name] — [date] — [time spent]
@@ -23,27 +17,17 @@
 
 **Time spent**: [hours / days]
 
-**What we learnt** (grep-able identifier ↔ plain English explanation):
+**Extras solved beyond ticket scope**:
+- [item + audit-log link if applicable]
 
-| Identifier (searchable) | What we learnt (plain English) |
-|---|---|
-| `<Class.method>` @ `<file:line>` | <plain-English lesson tied to UI label / business logic / meta — no jargon> |
-| `<constant name>` / `<config key>` | <plain-English lesson — what it controls + when it matters> |
-| `<package path>` / `<XHTML composite>` | <plain-English lesson> |
+**Business logic learned**:
+- [domain concept + where captured in etanah-knowledge]
 
-**Extras solved beyond ticket scope** (one-liners, optional):
-- [item + audit-log entry or commit ref]
+**New skills / patterns**:
+- [skill or pattern + reusability scope]
 
-**Audit-log entries spawned**: [count]
+**Audit-log entries spawned**: [count + brief]
 ```
-
-**Format sub-rules**:
-- Table rows: as many as feel meaningful, no minimum / no maximum — but every row must be genuinely useful for future search-and-recall
-- Column 1 cells: ONLY identifiers. No prose. Backtick-wrap. Include file:line where applicable.
-- Column 2 cells: ONLY plain English. Tie to UI label / business logic / meta concept. Never repeat technical detail from column 1.
-- Drop "Self-assessment" sub-section from old format — replaced by "Faster-finding" in post-mortem
-- Drop separate "Business logic learned" / "New skills / patterns" sub-sections — both merge into the 2-col table
-- "Extras solved beyond ticket scope" stays as bullets but optional — only when extras are genuinely worth surfacing
 
 ---
 
@@ -195,83 +179,6 @@
 **Underlying issue still open (Q3 todo)**: Redmine #252314 (MELAKA SAYANG RAKYAT slogan migration) — 11 SKL templates fully migrated to `frasa2` (v1); other ~12 non-SKL templates from #252314 scope still un-migrated and at regression risk. Mechanical migration, bundleable.
 
 **Self-assessment**: v1 was textbook-slow (~6h for what should have been ~3h) — drivers were guess-driven Phase 0 (no PDF annot walk), JBoss cache theory before renderer grep, branch confusion. v1 spawned the corrective rules that made v2 frictionless. v2 was textbook-clean (~45min: ID lookup, .docx bold, FAT test, commit, push, verify-close all green). The rule investment in v1 paid off in v2's pace + cleanliness. KPI: 1 closed ticket today (v2), bringing the v1 family to closed status.
-
----
-
-### QA-260876 — PLTP Ringkasan Risalat MMKN — 2026-05-13 — ~3h
-
-**Closure type**: code-fix-shipped (template-only, 2 .docx files in parent+child injection pattern), committed `7fe595d75f` on `mlk/qa/260876`, pushed first-time to remote, ready for FAT retest.
-
-**Time spent**: ~3 hours (Phase 0 Scout + Recon + Cp D Rubric + みや's iterative .docx edits in Word UI + font discovery trace into JabatanTeknikal.docx + commit/push close-out + Phase 2).
-
-**Extras solved beyond ticket scope**:
-- Parameterised the row label "YB ADUN Kawasan Durian Tunggal" → `<dun>` CC tag (now dynamically renders the actual DUN per application's data, e.g. "Asahan" for /9 land). BA had raised the question; we shipped the parameterisation.
-- Identified data-side issue on standalone "Dun" field (renders HYPHEN for /9 because alppList + aptList.maklumatTambahan both lack DUN data) — flagged as `out_of_scope_held` for future ticket if BA reports.
-- Verified + named the architectural pattern: external `references/` doc styling drives the injected slot (applies to future template tickets touching the Ringkasan/JKKL family).
-
-**Business logic learned**:
-- **Ringkasan Risalat MMKN** generates at *MMKNPTG / *MMKNPTGT side ONLY (NOT *MMKNPDT, despite confusingly-similar tugasan names). The *MMKNPDT side generates "Risalat MMKN PDT" — different document.
-- **External-injection child doc** styling overrides parent template's font/size at the injection slot. Populator only fills VALUES via rows; styling lives with the doc that owns the CC.
-- **`dun` vs `dunYB`** are independent data paths: `dun` reads `alppList` → `aptList.maklumatTambahan` (land's DUN, tied to Tanah entity); `dunYB` reads `jtList` for ADUN/DUN-flagged JT row → `agensi.alamat.bandar.nama` (YB's seat constituency, tied to Person entity).
-
-**New skills / patterns**:
-- Recon title 5-axis format (final): `QA-### • App • Env • Urusan • Tugasan • Langkah`
-- Notes.txt 2-entry pattern (Entry 0 = BA-prep state, Entry 1 = sim app), abbreviated `PLP`/`AWAM`
-- Refine Block standardised (Slip / Diagnosis / Fix / Pressure-test)
-- Sub-check 8c (config-file tugasan-binding verification at Recon)
-- Version-bump discipline at protocol refinement
-
-**Audit-log entries spawned**: 7+
-- Sub-check 8c (config tugasan-binding verify)
-- Refine Block — placeholder values banned in active.txt
-- Recon title format final (5-axis)
-- Notes.txt format final (2-entry)
-- TRG hard guardrail strengthening
-- Rework re-engagement ordered-read sequence
-- Notes.txt sequential per-Scout enforcement
-- BA-question classification filter at Recon
-- Scout/agent framing shift (raw evidence)
-- Recon Universal Check 1 transitive references
-
-**Self-assessment**: 3h for what should have been ~1.5-2h base scope. Time loss drivers: (a) Scout misread of tugasan-binding required re-verification, (b) parent-template font fix didn't take initially — discovery into JabatanTeknikal.docx was the key insight that came from みや's tracing, (c) protocol-format iterations (Recon title 3 versions, Notes.txt 2 versions) during the same cycle ate context. NET: shipped clean code-fix + 1 BA-flagged extra (dun parameterisation) + spawned 7+ rule refinements + got 2 architectural patterns named (external-injection, Ringkasan tugasan-binding) for future ticket use.
-
----
-
-### QA-247710 — PRU Risalat MMKN PDT/PTG enhancement (Rework cycle 2) — 2026-05-12 — ~6h
-
-**Closure type**: code-fix-shipped (rework)
-**Time spent**: ~6h Phase 1 (across 2 days)
-
-**What we learnt**:
-
-| Identifier (searchable) | What we learnt (plain English) |
-|---|---|
-| `PelupusanWordCCMethodConstant.populatePTGParagraph_PRU` @ :15917-16175 | External-injection populator pattern — parent template hosts a slot, populator fills it with a constructed multi-CC row (10 inner CCs for PRU's Item 6) |
-| `references/additionalJKKLParagraph.docx` | External child doc — font/style lives in CHILD not parent. Parent's font is overridden by child's run properties |
-| `ccVO.setType(TABLE)` reset | Looks defensive, is load-bearing — never strip "defensive-looking" code without verifying call-graph |
-| Page-break in `.docx` | Template-binary edit only (`<w:br w:type="page"/>`) — cannot be wired from populator |
-
-**Extras solved beyond ticket scope**: none (strict current-cycle scope held)
-**Audit-log entries spawned**: ~8
-
----
-
-### QA-260965 — PLPS/PRBB No. Sijil Kerakyatan mandatori — 2026-05-14 — ~5h
-
-**Closure type**: code-fix-shipped (state-wide Melaka gate)
-**Time spent**: ~5h across two engagements (first Apply reverted, second Apply shipped after BA WhatsApp clarification + Requirement #212906/#212990 check)
-
-**What we learnt**:
-
-| Identifier (searchable) | What we learnt (plain English) |
-|---|---|
-| `PelupusanMaklumatPemohonHelper.initWarna()` @ 4274-4288 | Init method called from dialog-populate path (line 4256), NOT just event handler — fires on page load with `warna ≠ BIRU` → forces mandatori TRUE. This is the actual root-cause site, not the onChange handlers I framed it as initially |
-| Requirement #220373 (commit 0d091a244c, 2025-07-15) | Introduced Taraf-based citizenship logic ALONGSIDE the existing warna-based logic. Never removed the warna path → duplication that powers the bug |
-| Requirement #212990 journal 2025-07-17 (BA Anis Nabilah) | BA spec: `Warganegara=Malaysia → Taraf=Warganegara`. Polis-* warna codes don't trigger this path → wrong Taraf auto-set — separate bug captured in todo Q2 |
-| `melaka ? Boolean.FALSE : Boolean.TRUE` ternary at 3 sites | Melaka state-wide gate. Mirrors AWAM's panel-hide approach for Melaka (`viewNoSijilRakyatPanel=FALSE` @ 976/2013/2132 on AWAM bean). Different mechanism, same end-state |
-
-**Extras solved beyond ticket scope**: none (strict BA scope per Sub-check 8d; deferred refactors captured in DEFERRED-CRITICAL-ISSUES + todo Q2)
-**Audit-log entries spawned**: ~12
 
 ---
 

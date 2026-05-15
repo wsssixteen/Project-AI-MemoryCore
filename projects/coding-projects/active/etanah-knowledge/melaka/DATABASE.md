@@ -394,67 +394,6 @@ CREATE TABLE plp_p_pelupusan (
 
 ## 6. Workflow Tables
 
-### 6.0 🗝️ Screen Routing Tables — `ind_langkah` + `ind_skrin` (THE SOURCE-OF-TRUTH for which tugasan mounts which XHTML, added 2026-05-14 by みや)
-
-> **WHY THIS EXISTS HERE**: The JSF view-resolver queries these at runtime to find which XHTML to render for a given tugasan. There's no obvious JPA entity exposing them, so they get missed when only doing entity-first SQL. ALWAYS check these tables when the question is "which tugasan / langkah mounts which XHTML / panel".
-
-**`ind_skrin`** — Screen ↔ XHTML mapping (the JSF view registry):
-
-```sql
-ind_skrin (
-  skrin_id      numeric PK,
-  kod_skrin     text,     -- e.g. 'PLP_JT_TLBT', 'PLP_JBT_TEK_TLT'
-  jsf_view      text,     -- e.g. '/protected/mlk/common/MlkJabatanTeknikalTerlibatForm.xhtml'
-  nama_aplikasi text      -- e.g. 'etanah-pelupusan'
-)
-```
-
-Each row = one mountable screen. Multiple `skrin_id` rows can point to the SAME `jsf_view` (e.g. `1145` AND `374` both → `MlkJabatanTeknikalTerlibatForm.xhtml`).
-
-**`ind_langkah`** — Langkah ↔ Screen ↔ Tugasan mapping (the sub-page registry):
-
-```sql
-ind_langkah (
-  langkah_id  numeric PK,
-  kod         text,    -- e.g. 'PJTLT_5', 'SJTLT_5', 'PLBP_PJTLT_5' — usually <tugasan_kod>_<turutan>
-  nama        text,    -- e.g. 'Jabatan Teknikal Terlibat'
-  perihal     text,
-  skrin_id    numeric, -- FK → ind_skrin (which XHTML this langkah renders)
-  tgsn_id     numeric, -- FK → ind_tgsn (which tugasan this langkah belongs to)
-  turutan     numeric, -- sequence/order within the tugasan
-  flag_aktif  char(1)
-)
-```
-
-Each row = one (tugasan × langkah) binding. Same langkah `nama` can appear under multiple tugasans (e.g. "Jabatan Teknikal Terlibat" appears under PJTLT, SJTLT, PSLTPM, PLBP_PJTLT, PLBP_SJTLT).
-
-**Canonical "which tugasan shows X langkah" query**:
-
-```sql
-SELECT DISTINCT it.kod AS tugasan_kod, it.nama AS tugasan_nama,
-       l.kod AS langkah_kod, s.jsf_view
-FROM et_main.ind_langkah l
-JOIN et_main.ind_tgsn it ON l.tgsn_id = it.tgsn_id
-JOIN et_main.ind_skrin s ON l.skrin_id = s.skrin_id
-WHERE l.nama ILIKE '%<langkah_name>%'
-  AND l.flag_aktif = 'Y'
-ORDER BY it.kod;
-```
-
-**Canonical "which tugasans mount X xhtml" query**:
-
-```sql
-SELECT DISTINCT it.kod AS tugasan_kod, it.nama AS tugasan_nama, l.nama AS langkah_nama
-FROM et_main.ind_skrin s
-JOIN et_main.ind_langkah l ON s.skrin_id = l.skrin_id
-JOIN et_main.ind_tgsn it ON l.tgsn_id = it.tgsn_id
-WHERE s.jsf_view ILIKE '%<xhtml_filename>%'
-  AND l.flag_aktif = 'Y'
-ORDER BY it.kod;
-```
-
-**Hard rule** (added 2026-05-14 by みや after QA-260302 slip where I exhausted tugasan-name guessing instead of querying these tables): when Phase 0 needs "which tugasan corresponds to BA's screenshot / which XHTML maps where", FIRST query `ind_langkah` + `ind_skrin`. みや 2026-05-14: *"these 2 tables is a gold mine for our etanah-knowledge. I wonder why you missed it."* Honest answer: no JPA entity surface → didn't enter my entity-first lookup → never queried information_schema for `*skrin*` or `*langkah*` tables. Adding here so future-Ruri (and the Recon ritual) checks these BEFORE name-guessing.
-
 ### 6.1 `umm_a_tgsn` — Application Task (Tugasan)
 
 ```sql

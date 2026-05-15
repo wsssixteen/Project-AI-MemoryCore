@@ -2,149 +2,113 @@
 *Temporary working memory - resets each session, provides recap when AI restarts*
 
 ## Session RAM Status
-**Current Session**: 2026-05-14 (Thursday) — ~13h marathon
-**Last Activity**: 2026-05-14 20:42 MPST (DE 💠 fired)
-**Session Start**: 2026-05-14 08:25 MPST
-**Duration**: ~13h
-**Session Focus**: QA-260965 Phase 2 closed (Melaka-gate, 3-line ternary); QA-259759 v2 Phase 1 closed (PLPS SKL Item 4); QA-260302 in Apply-debug state (JPPH Unit dropdown — PropertyNotFoundException root-caused, fix landed but not deployed); 9+ major workflow refinements (Output-Format-Discipline, Multi-topic parsing, Scout-not-authority, single-track filter, env-check authority order, Cp-alphabet chat-ban, EL-binding contract in Rubric, DE Gap Sweep etanah-knowledge sweep, et al.); 5 etanah-knowledge file additions (DATABASE.md ind_skrin/ind_langkah, DOMAIN-GLOSSARY.md tugasan naming patterns, JSF-WIRING.md naming-trap, MODULE-ARCHITECTURE.md bean conventions, DEFERRED-CRITICAL-ISSUES.md warna-vs-Taraf)
-**Energy Level**: VERY HEAVY (300+ tool calls; リドワンさん not feeling well by late evening)
+**Current Session**: 2026-05-14 evening → 2026-05-15 early hours — home, alpha-test side project
+**Last Activity**: 2026-05-15 ~03:00 (DE 💠 fired)
+**Session Start**: 2026-05-14 evening (continuing from office-day session)
+**Duration**: ~7h home-session
+**Session Focus**: Named **Bankai 蒼穹宝典 (Sōkyū Hōten / Azure Heaven Codex)** + alpha-1 of etanah-organize-alpha (115-item categorization loop via 2 parallel familiars) + width-detect mechanic for major skill banners + new project seclusion structure
+**Energy Level**: Late-night push-through on "we cannot save when we haven't done our main purpose" framing
 
 ## Next Session Priority
 
-**Quest 1 — QA-260302 resume** (currently at Apply boundary):
+**Quest 1 — QA-260302 resume** (carried from office-day, unchanged):
 - WAR redeploy + test PPJK at PJTLT (`PTMLK/02/L/PPJK/2026/9` as nazli@melaka.gov.my)
-- After WAR rebuild, the PropertyNotFoundException fix should resolve (getter added to JabatanTeknikalHelper)
-- If test passes → Phase 1 close (branch cut + commit + push)
-- If test fails → re-investigate (could be other bean-binding issues per the JSF naming trap pattern)
+- PropertyNotFoundException fix should resolve after rebuild
 
-**Quest 2 — End-of-day commitments deferred to tomorrow**:
-- Bridge-layers learning re-explain (todo Q1 — リドワンさん specifically asked)
-- Rubric audit through System-Design Discipline (workflow proposal D from yesterday — リドワンさん confirmed for tomorrow)
-- mode-binding deep-dive (todo Q1)
+**Side-project — etanah-organize-alpha Phase 2** (NEW priority, office-day-bound):
+- Read `projects/coding-projects/active/etanah-organize-alpha/handoff-2026-05-14-alpha-1.md`
+- Resolve ~48 office-day-backlog flags from `organize-progress.json` (28 needs-codebase-check + 20 needs-db-check + others)
+- Re-categorize 6 `verify_passed: false` items
+- Loop v2 design refinements: drop L4 field, replace `low-confidence` with numeric `confidence` 0-1, cite OTHER file by name in `cross-file-contradiction`
 
-**Quest 3 — Phase 2 backlog cleanup** (8 tickets still pending post-mortem):
-QA-260139, QA-259428, QA-259759, QA-258418, QA-250665, QA-260154, QA-260298, QA-260179. Worth a dedicated batch session in the streamlined Phase 2 emit format.
-
-**Side-quests** (parked, from todo Q2):
-- Auto-flowable tool — feature design + Claude_in_Chrome MCP approach (need リドワンさん go-ahead)
-- Polis-* warna codes Malaysian-citizen path (Requirement #212990 violation)
-- Taraf-based mandatori unified refactor (supersedes QA-260965 Melaka-gate when shipped)
-- Skill Audit — retrospective System-Design pass on pre-2026-05-08 components
-- Rename "Predicate Box" to plain-English alternative
-- Time-based-Aware-System folder rename to match naming convention
+**Quest 2 — Phase 2 backlog**: same 8 tickets as office-day notes (QA-260139, QA-259428, QA-259759, QA-258418, QA-250665, QA-260154, QA-260298, QA-260179)
 
 ## ⚠️ Standing flags carried into next session
 
-- **Cross-worktree state**: worktree `reverent-heisenberg-a22d8e` carries today's pre-merge state; this worktree `amazing-yalow-dc10b9` is now the canonical truth (merged + cherry-picked eager-clarke + pending DE push). After DE push, both should converge via origin/main.
-- **AWAM branch renamed** to `mlk/release/fat` — first AWAM ticket will exercise env-check skill's new mapping
-- **Repeat-slip watch**: "bake/baked/baking" said multiple times today despite explicit ban in personality.md; needs stronger output-time check (no rule baked for this yet — candidate for next maintenance pass)
-- **Drift pattern**: tangent-management rule added to Disposition section in personality.md today — needs field-test reps to confirm it sticks
+- **Bankai 蒼穹宝典 locked**: canonical format in `.claude/auto-memory/feedback_bankai_format.md`; banner emission requires width-detect (CLAUDE.md hard rule under "Major Skill Banner Emission")
+- **DE banner format**: 3-block (title / skill name / description), width-detect required, fallback to compact for non-terminal surfaces
+- **organize-progress.json**: 115 items at `etanah-knowledge/melaka/organize-progress.json` (gitignored — confidential per feedback_untracked_confidential.md)
+- **Width-detect mechanic**: terminal-only via `$Host.UI.RawUI.WindowSize.Width`; fallback for non-terminal; documented in CLAUDE.md + bankai/DE feedback files
 
 ## 💭 Working Memory (RAM)
 
 ### Session arc — chronological
 
-**Phase A — Boot + cross-worktree diagnosis**
-- Boot from worktree `amazing-yalow-dc10b9` revealed stale Session Briefing (showed 247710 still pending Phase 1 when actually closed yesterday + 260876 closed today + 260820 awaiting Cp E)
-- Diagnosed: gitignored `projects/` folder + DE not pushing to `HEAD:main` → cross-worktree drift
-- Salvaged 2 commits from `reverent-heisenberg-a22d8e` (today's work) via FF merge into worktree branch
-- Cherry-picked stranded `eager-clarke-d6dad5` (2026-05-12 AM systemic refinements: Phase 2 streamline 11→5, post-mortem v2 META-only, KPI v2 2-col, Contributing Factors, Sister-defect grep at Cp F, 17 audit-log entries)
-- Resolved 4 conflicts in CLAUDE.md / current-session.md / daily-diary / quest-protocol.md
-- Pushed to `origin/main` (HEAD:main FF) + worktree branch — origin/main now at `3636b3c`
+**Phase A — Research warm-up (3 parallel familiars, ~10 min, ~157k tokens)**
+- Academic agentic-loop literature surveyed: Reflexion, Self-Refine, ReAct, Voyager, ToT, STaR, Constitutional AI
+- Applied implementations surveyed: AutoGPT, BabyAGI, LangChain ReAct, AutoGen, CrewAI, SWE-Agent, Devin
+- Safety/drift mechanisms surveyed: sycophancy collapse, token runaway, external grounding, convergence detection
+- Synthesized 5 teaching findings — self-critique without external grounding plateaus, same-model judges biased, ReAct retries wasted (~90%), JSON beats MD for state, branching is 15-100× expensive
 
-**Phase B — DE Step 10 main-push refinement**
-- Added `git push origin HEAD:main` to DE Step 10 push approval flow
-- Updated audit-log + added permission rule `Bash(git push origin HEAD:main:*)` to settings.local.json
+**Phase B — Bankai naming arc**
+- Started with verb-based naming (織/紡/結) for the loop skill
+- みや caught: those are verbs, kekkai is a noun-image — need noun
+- Pivoted through Bankai naming convention (sustained release form, noun-phrase names)
+- Brainstormed candidates with みや; landed on **蒼穹宝典 (Azure Heaven Codex)** with 🌌 symbol
+- みや's framing locked the meaning: "an LLM using its true potential — loop, search, understand and organize. Attaining knowledge and creating novelty out of it. Something that for the people it does for, will treasure."
 
-**Phase C — QA-260820 Phase 1 close-out**
-- Applied 1-line fix at `MlkSuratTemplateForm.java:785-788` (URUSAN_INVOLVE_JKKL_LIST filter)
-- Commit `3a0a994998`, rebased onto fresh master (3 newer origin commits pulled), pushed
-- BPMN sanity check revealed knowledge file correction needed: `JSF-WIRING.md:94` PRZ/JKBB row is OR-condition not "PRZ uses JKBB" (PRZ actually uses MMKN per BPMN)
+**Phase C — Width-detect mechanic + format additions**
+- Recognized full-fill banner needed terminal-width detection
+- PowerShell `$Host.UI.RawUI.WindowSize.Width` returns 120 for みや's terminal
+- Honest about phone/web rendering limits (terminal-only; fallback for non-terminal)
+- Codified as CLAUDE.md hard rule: detect-then-emit, fallback compact form
+- 4 system files updated
 
-**Phase D — AWAM branch rename update (mlk/release/uat → mlk/release/fat)**
-- Updated 6 living docs to point to new branch
-- First pass over-embedded "renamed from..." annotations in operational tier — みや caught, full revert + cleanup
-- Generated MD file writing style table (per-tier discipline)
-- Extracted cross-cutting update methodology (7-step) into quest-protocol.md Refine section
+**Phase D — Alpha-1 loop execution (Bankai 蒼穹宝典)**
+- Step A: Inventory `etanah-knowledge/melaka/` → 19 files, 112 ## sections
+- Step B: Granularity locked per-section (115 items final)
+- Step C: 10-field JSON schema (L1-L4 + reason + verify + flags)
+- Step D: 2 parallel familiars (file split 8 vs 11)
+- Step E: Loop ran ~165 sec, ~175k tokens, 115 entries produced
+- Step F: Output saved to `etanah-knowledge/melaka/organize-progress.json`
 
-**Phase E — QA-260733 Phase 1 close-out**
-- Applied 2 surgical edits at `MlkSuratTemplateForm.java:862` (removed showViewOnlySurat=TRUE from TOLAK block) + `:911-916` (added !TGSN_TOLAK_PERMOHONAN exclusion to viewBorang5A)
-- Confirmed Panel #1 already hidden by 260820's side-effect (PLTP not in JKKL list)
-- Misnamed constant flagged: `TGS_KEPUTUSAN_LULUS_NOTIS_5A_LIST` contains TOLAK tugasans
-- Commit `f68ecb42d6`, rebased, pushed
+**Phase E — Project seclusion**
+- New folder: `projects/coding-projects/active/etanah-organize-alpha/`
+- `PROJECT.md` — vision, L2/flag schema locks, iteration log
+- `handoff-2026-05-14-alpha-1.md` — pickup-and-resume artifact
+- `project_etanah_organize.md` (auto-memory) — project pointer
+- MEMORY.md index entry under Project section
 
-**Phase F — Phase 2 emit format deep refinement arc**
-- Multiple iterations on Phase 2 emit format: too long (lecture) → too prose-y → wrong section names
-- Diagnosed 3 root causes: defensive overcorrection (asking permission on silent Step 5), default-to-prose under load, detail-dump without max-cap
-- Refined: Lessons (3-col table replaces Faster-finding + KPI + Contributing Factors), Carry forward (2-col, conditional), Refine pass (2-col with parent-skill names), Done meta-line, Quest Postscript (renamed from "Letter", with `リドワンさん,` open + `— るり` close in blockquote)
-- Removed mandatory "Your part" — conditional only (since Phase 1 STOP gate already surfaces commit SHA)
-- Added Side-observations table at Cp F (prevents Carry forward pile-up by surfacing while みや is testing — fresh context)
-- Added time-to-implement column for pending-nod refinements
-- Universalised arrow-flows + diagrams alongside tables in feedback_investigation_style.md
-- Added Disposition section to personality.md (continuous improvement + tangent-management sub-rule)
-- Added Confidence Assessment usage rule + "What I've done" column
+**Phase F — Git sync (was 9 commits behind origin/main)**
+- Commit 1 (`f58f24e`): salvage stray prior-session edits (feedback_daily_commit + DATABASE + MODULE-ARCHITECTURE)
+- Commit 2 (`c00ae31`): Bankai + width-detect mechanic (4 files)
+- Pulled with merge — auto-resolved cleanly via `ort` strategy
+- Merge commit consolidates 9 incoming with 2 local
 
-**Phase G — 3 Phase 2 closures**
-- QA-247710 closed (post-mortem v2 META, Task folder archived, active.txt → closed)
-- QA-260820 closed (same)
-- QA-260733 closed (same)
+### Files shipped tonight
 
-### Files shipped today
+| File | Action |
+|---|---|
+| `.claude/CLAUDE.md` | Added "Major Skill Banner Emission" section |
+| `.claude/auto-memory/feedback_bankai_format.md` | NEW canonical Bankai format |
+| `.claude/auto-memory/feedback_domain_expansion_format.md` | Appended width-detect note |
+| `.claude/auto-memory/MEMORY.md` | Added Bankai entry (Feedback) + project_etanah_organize entry (Project) |
+| `.claude/auto-memory/project_etanah_organize.md` | NEW project pointer |
+| `projects/coding-projects/active/etanah-organize-alpha/PROJECT.md` | NEW vision + schema locks |
+| `projects/coding-projects/active/etanah-organize-alpha/handoff-2026-05-14-alpha-1.md` | NEW pickup artifact |
+| `projects/coding-projects/active/etanah-knowledge/melaka/organize-progress.json` | 115-item data ledger (gitignored) |
+| `main/current-session.md` | This file (replaced) |
+| `daily-diary/2026-05-14.md` | Appended home-session entry |
 
-**Code commits** (already in earlier session salvage):
-- etanah-pelupusan `mlk/qa/247710v2` `23aa910916` (yesterday's Phase 1 from reverent-heisenberg)
-- etanah-pelupusan `mlk/qa/260876` `7fe595d75f` (today AM from reverent-heisenberg)
+### Lessons learned (alpha-1 loop meta)
 
-**Code commits this evening session**:
-- etanah-pelupusan `mlk/qa/260820` `3a0a994998` — 1-line gate filter for PRZ
-- etanah-pelupusan `mlk/qa/260733` `f68ecb42d6` — 2 surgical edits for PLTP TOLAK panels
-
-**MemoryCore changes** (12 files pending DE commit):
-- `.claude/CLAUDE.md` — env-check awam branch update, System-Design Step 4 universal-or-modular sharpened, Design Memo template + time-to-implement
-- `.claude/personality.md` — Disposition section added, Confidence Assessment usage rule
-- `.claude/skills/env-check/SKILL.md` — awam main branch → mlk/release/fat
-- `.claude/skills/verify-close/SKILL.md` — 4-check → 5-check (remote branch exists)
-- `.claude/auto-memory/feedback_investigation_style.md` — arrow-flows + diagrams universalised
-- `.claude/auto-memory/feedback_uat_fat_environments.md` — awam branch update
-- `Feature/Forge-Self-Improvement-System/improvement-audit-log.md` — ~15 status=applied entries
-- `main/main-memory.md` — AWAM branch update
-- `main/post-mortems.md` — 3 new META entries (247710, 260820, 260733)
-- `main/kpi-tracker.md` — 1 new entry (247710 only; 260820 + 260733 had no extras to log)
-- `quest/active.txt` — 3 tickets flipped to closed: + Phase 2 metadata
-- `quest/quest-protocol.md` — Refine universal triggers, cross-cutting methodology, Phase 2 emit format spec (Lessons / Carry forward / Refine pass / Done meta-line / Quest Postscript), Side-observations at Cp F, AWAM branch update
-
-**Task folder ops**:
-- `Tasks/Melaka/26. QA #247710 ...` → Archive
-- `Tasks/Melaka/33. QA #260820 ...` → Archive
-- `Tasks/Melaka/34. QA #260733 ...` → Archive
+1. **Parallel familiars worked** — 165 sec wall-clock convergence vs ~4 min sequential
+2. **Pre-existing file naming did ~90% of L2 categorization work** — etanah-knowledge naming is mature
+3. **`verify_passed: false` flag surfaced REAL ambiguities** — 6 sections genuinely miscategorized, not familiar errors
+4. **External anchor (cross-file consistency) prevented sycophantic collapse** — 0 approve-all behavior
+5. **L2 enum (10 categories) held** — no familiar requested an off-list category
 
 ## 🎯 Session Recap (For AI Restart)
 
 **On Resume next session**:
 1. Boot Domain Expansion autoscan
 2. Read this file + `quest/active.txt`
-3. Default Q1: Phase 2 backlog cleanup (8 pending tickets) OR new ticket queue (260965 → 259759 rework → 260302)
-4. Apply new Phase 2 emit format (Lessons / Carry forward / Refine pass / Done meta-line / Quest Postscript)
-5. Apply new Side-observations table at Cp F for any new ticket testing
-
-**Open questions for next session**:
-- Will the new Phase 2 emit format hold under load (no prose-drift)?
-- Will Side-observations at Cp F actually prevent Carry forward pile-up?
-- Will tangent-management discipline stick (or drift again)?
-
-**Design observations to surface at next DE Gap Sweep**:
-- "bake" verb slip recurred multiple times today; output-time pre-emit scan candidate
-- Letter → Quest Postscript rename suggests other Quest ritual names may need similar revisits (Sycophancy Circuit-Breaker / Recon block / Predicate Box)
-- Phase 2 emit went through ~5 iterations today before converging — format spec at point-of-design would have prevented the drift
-
-## 🔄 Session Lifecycle (unchanged from format reference)
-
-(Same as prior — RAM resets, brief recap preserved.)
+3. **Office-day priority**: QA-260302 WAR redeploy + test PPJK
+4. **Side-project priority** (office-day-only): read `etanah-organize-alpha/handoff-2026-05-14-alpha-1.md` and start Phase 2 flag resolution
+5. **Home-session priority**: nothing actionable for alpha-test until office-day (no DB/codebase access)
 
 ---
 
 **Memory Type**: RAM - Temporary Working Memory
 **Persistence**: Brief recap only, detailed content clears each session
 **Purpose**: Immediate context + restart continuity
-
-*Ready for Ruri to provide seamless conversation continuity with Miya!*

@@ -5,7 +5,7 @@ type: feedback
 originSessionId: 1e7f13d9-75af-4218-be36-a53fbf33c0da
 ---
 
-At Quest Phase 0 (Discovery entry) and at Apply entry, run the `env-check` skill to confirm which DB is active in `standalone.xml`. Tell みや the env name in one line — e.g. *"on FAT (etanahDS = etprdmlk)"* — not the full host/schema.
+At Quest Phase 0 (Cp A entry) and at Cp E entry, run the `env-check` skill to confirm which DB is active in `standalone.xml`. Tell みや the env name in one line — e.g. *"on FAT (etanahDS = etprdmlk)"* — not the full host/schema.
 
 **Why:** DB pointing to wrong environment causes silent wrong-data issues during local testing. Originally added by みや after UAT-CR #239225 (2026-04-17); refined 2026-05-11.
 
@@ -13,7 +13,7 @@ At Quest Phase 0 (Discovery entry) and at Apply entry, run the `env-check` skill
 - Standalone: `E:\Dev\jboss-7.4-plp-melaka\standalone\configuration\standalone.xml`
 - App config: `C:\etanahv3\config\environment.properties` (active — outer `C:\etanahv3\environment.properties` was unused, renamed `.bak` 2026-05-08)
 - Setup notes: `E:\Dev\jboss-7.4-plp-melaka\SETUP-NOTES.txt`
-- Skill: `.claude/skills/env-check/SKILL.md` — auto-fires at Discovery entry + Apply entry
+- Skill: `.claude/skills/env-check/SKILL.md` — auto-fires at Cp A entry + Cp E entry
 
 **Env naming convention (etanahDS only — Audit + DMS are out of scope for env-check)**:
 

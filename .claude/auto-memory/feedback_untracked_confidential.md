@@ -14,6 +14,6 @@ originSessionId: 85d3b4f3-3ce6-4741-88b7-d0d05b78e0e7
 - Worktrees won't see these files (they only see tracked content). When operating inside a worktree, READ from the main-repo absolute path; WRITE to wherever みや designates per the specific ask.
 - If みや explicitly says "commit X" for one of these files — honour the specific instruction, but don't generalize.
 
-**Past slip (2026-05-11)**: flagged "untracked files in main repo" as a meta-issue during QA-260139 Discovery. みや corrected immediately. Save here so I don't re-flag.
+**Past slip (2026-05-11)**: flagged "untracked files in main repo" as a meta-issue during QA-260139 Cp A. みや corrected immediately. Save here so I don't re-flag.
 
 **Pairs with**: feedback_uat_fat_environments.md (env state), CLAUDE.md (file structure conventions).

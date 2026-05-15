@@ -1,30 +1,8 @@
 # Melaka — Flow Traces
 *End-to-end traces: UI → Bean → Service → Repository → DB*
 
-> **SCOPE**: End-to-end traces of single user actions: UI → Bean → Service → Repository → DB, entry points **confirmed via breakpoint**. One trace per confirmed happy path. Also document-generation flow rules (which tugasan triggers which document).
+> **SCOPE**: End-to-end traces of single user actions: UI → Bean → Service → Repository → DB, entry points **confirmed via breakpoint**. One trace per confirmed happy path.
 > **NOT FOR**: Bug patterns (→ BUG-BESTIARY.md), hypothesis-tracking (→ `quest/handoff-<qa>.md`), unverified speculation.
-
-## Document generation rules
-
-### Ringkasan Risalat MMKN vs Risalat MMKN PDT (added 2026-05-13)
-
-**Plain explanation**: These are TWO different documents with confusingly-similar names. Ringkasan Risalat MMKN is a SUMMARY document generated at the PTG-side review tugasans. Risalat MMKN PDT is the actual brief generated at the PDT-side preparation tugasans. Don't conflate.
-
-**Source of truth**: `src/main/resources/config/MLK/template.config.json` — literal tugasan-key check (NOT the lifecycle action arrays like CREATE/SEDIA/SEMAK/PERAKU; those are document-state transitions, not tugasan bindings).
-
-| Document | Template files (per urusan) | Tugasan bindings | Document code |
-|---|---|---|---|
-| **Ringkasan Risalat MMKN** | `TemplateRingkasanRisalat*.docx` (default/PT/PSBS/PRZ/BPRZ/PPJK/PLTP/JKKL — 8 variants) | `PRMMKNPTG` + `PRMMKNPTGT` ONLY (PTG side + Tangguh variant) | `PLP_RNGKSN_RISALAT` |
-| **Risalat MMKN PDT** | `TemplateRisalatMMKN_PDT_*.docx` (and `_PTG` variants per urusan) | `PRMMKNPDT` + variants (PDT side) | (different code — verify in template.config.json) |
-
-**Verified via Sub-check 8c** (Recon's config-file tugasan-binding verification, added 2026-05-13): re-grepped `template.config.json` for each Ringkasan variant — all 8 variants bind ONLY to `PRMMKNPTG` + `PRMMKNPTGT`. Scout's earlier enumeration of PRMMKNPDT/SRMMKNPDT/etc. was extrapolated from the lifecycle action arrays, not from literal tugasan keys.
-
-**Implications for tickets**:
-- "Ringkasan Risalat MMKN" complaint → look at PTG-side tugasans (Penyediaan/Semakan/Perakuan Risalat MMKN PTG), NOT PDT-side
-- "Risalat MMKN PDT" complaint → PDT-side tugasans
-- The same .docx template can have CC tags shared across documents via the populator dispatch — but the GENERATION tugasan is template-config-bound, not populator-bound
-
-**Reference**: `template.config.json:4151-4163` for PLTP variant; same line range pattern for other urusan variants nearby.
 
 > Each trace follows one user action through the full stack.
 > This is the core learning output from ticket-driven work (Phase 5).

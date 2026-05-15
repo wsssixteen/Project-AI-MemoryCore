@@ -10,30 +10,24 @@ allowed-tools: Read, Bash, Edit, Grep
 
 When invoked, env-check:
 
-1. **Detects target env** from active.txt or current quest scope — **AUTHORITY ORDER (refined 2026-05-14 by みや — second-pass after QA-260302 FAT-default slip)**:
-   - **Priority 1**: Ticket Description.txt `Env:` line — `MLK FAT` / `MLKFAT` → FAT; `MLK UAT` / `MLKUAT` → UAT. This is authoritative when present.
-   - **Priority 2**: Task folder name `<NN>. <type> #<num> - <ENV> - <urusan_kod> - <tugasan_kod> - <issue>` — the `<ENV>` slot if present.
-   - **Priority 3 (when neither above specifies)**: **Use the CURRENT env state — do NOT force-switch.** Read `standalone.xml` etanahDS active jndi + `environment.properties` cas.url to detect what's currently configured; the answer = whatever's currently set. Saves the switch cost. Only switch if BA explicitly specified an env (Priority 1) that doesn't match current.
+1. **Detects target env** from active.txt or current quest scope:
+   - Pelupusan ticket → FAT default for SQL-investigation, UAT for code-edit testing
    - AWAM ticket → UAT (FAT-AWAM does not exist for local; always simulate on UAT regardless of where BA reported)
    - Module switch (awam ↔ pelupusan) is heavy: requires WAR rebuild + JBoss redeploy (one WAR per JBoss instance)
-   - Scout's `test_app_uat=` / `test_app_fat=` recommendation is a HINT only — does NOT override the authority order.
-   - **Why** (2026-05-14): First slip — Scout said UAT, I trusted it without checking Description.txt. First fix wrongly added "FAT default" — みや: *"I disliked hardcoded FAT or UAT. Make it more flexible... only if no environments are mentioned, then detect current env settings and use that. It saves time to keep on switching environments."* Correct rule: BA-specified > current-state. Never force a switch that's not BA-driven.
 
 2. **Reads current state** of 3 env-affecting locations + 1 deployment locus:
    - `C:\etanahv3\config\environment.properties` — `cas.url`, `proxy.url`
    - `E:\Dev\jboss-7.4-plp-melaka\standalone\configuration\standalone.xml` — `etanahDS` `<connection-url>` (the ONE that changes; Audit/DMS/DS3 stay on mkit always — env-agnostic)
    - Branch on relevant repo:
      - `etanah-pelupusan` main = `mlk/master` (SAME branch for both UAT and FAT; only env config differs)
-     - `etanah-awam` main = `mlk/release/uat` (the remote canonical branch — supersedes the 2026-05-13 `mlk/release/fat` rename which was never propagated to remote, caught 2026-05-14 QA-260965)
+     - `etanah-awam` main = `mlk/release/uat` (only UAT exists)
    - Currently deployed WAR in `E:\Dev\jboss-7.4-plp-melaka\standalone\deployments\` — flags whether a module switch is needed
 
-3. **Runs `git pull --ff-only origin <main-branch>` on the involved repo(s)** (added 2026-05-14 by みや after QA-260965 slip): non-skippable. If pull fails due to dirty working tree → surface error + propose `git stash` (only when there's mid-fix work to preserve) or discard. If pull fails non-fast-forward → surface conflict, do NOT auto-merge. **Why baked into env-check, not separate**: 2026-05-07 QA-260154 + 2026-05-14 QA-260965 both slipped on this two-rule split (branch-check ran, pull skipped). One skill, one flow.
+3. **Compares + emits notification banner** (always visible, never silent)
 
-4. **Compares + emits notification banner** (always visible, never silent)
+4. **If mismatch** → AUTO-PROPOSES the fix (specific edits, not vague), waits for みや's `apply` confirmation, then **applies** the changes (config-edit category per refined audit-log rule = Ruri's hand after authorization)
 
-5. **If mismatch** → AUTO-PROPOSES the fix (specific edits, not vague), waits for みや's `apply` confirmation, then **applies** the changes (config-edit category per refined audit-log rule = Ruri's hand after authorization)
-
-6. **Post-change steps differ by case** — pick the right list:
+5. **Post-change steps differ by case** — pick the right list:
 
    **Case A — Env-only switch (same module, swap config only)**: e.g. pelupusan-FAT ↔ pelupusan-UAT, both running `etanah-pelupusan.war`
    - (a) Stop JBoss completely (verify no java.exe in Task Manager)
@@ -54,8 +48,8 @@ When invoked, env-check:
 
 | Phrase | Action |
 |---|---|
-| Discovery entry (auto-fired before Recon) | Verify-only, notify |
-| Apply entry (auto-fired before any code edit) | Verify-only, notify |
+| Cp A entry (auto-fired before Recon) | Verify-only, notify |
+| Cp E entry (auto-fired before any code edit) | Verify-only, notify |
 | `/env-check` or `check env` | Manual verify + notify |
 | `switch env to FAT` / `switch to FAT pelupusan` | Detect target → propose edits → on `apply` → execute + post-steps |
 | `switch env to UAT` / `switch to UAT awam` | Same as above for UAT/awam |
@@ -69,7 +63,7 @@ All 3 candidate datasources are PERMANENTLY PRESENT in standalone.xml. **Switchi
 |---|---|---|---|---|---|
 | **pelupusan + FAT** | `etprdmlk@172.30.17.104:5444 / et_main` | `https://appmlk.melaka.gov.my/etanah-cas` (FAT) | etanah-pelupusan @ `mlk/master` | etanah-pelupusan.war | ✅ **DEFAULT** — most tickets come from FAT |
 | pelupusan + UAT | `mlkuat@172.30.59.185:5444 / et_main_uat` | `http://172.30.59.150/etanah-cas` (UAT) | etanah-pelupusan @ `mlk/master` | etanah-pelupusan.war | Only when FAT lacks test data, OR BA states UAT in ticket |
-| **awam + UAT** | `mkit@172.16.100.197:5444 / et_main_mlit` | `http://172.30.59.150/etanah-cas` (UAT) | etanah-awam @ `mlk/release/fat` | etanah-awam.war | All AWAM tickets (FAT/UAT both tested here) |
+| **awam + UAT** | `mkit@172.16.100.197:5444 / et_main_mlit` | `http://172.30.59.150/etanah-cas` (UAT) | etanah-awam @ `mlk/release/uat` | etanah-awam.war | All AWAM tickets (FAT/UAT both tested here) |
 | awam + FAT | **N/A** — FAT-AWAM not exposed for local testing | | | | |
 
 **Switch mechanic** (verified against current standalone.xml lines 193-235 on 2026-05-11):
@@ -118,7 +112,7 @@ Edit must preserve the `\:` escape on `://` (Java properties format). Trailing-c
 ## Output cadence (added 2026-05-11 after みや feedback)
 
 - **First env-check banner of a session** (or after a major env switch): emit the FULL mapping table + all 4 aspect rows + post-change checklist.
-- **Subsequent banners within the same session** (e.g. re-verify after a switch, or status check at Apply): emit ONLY the changed row(s) as a single-row update. Skip the full mapping table — みや already knows the layout. Format: `✓ <aspect> now <new value> (was <old>)` per changed row. If everything matches, one-line: `✅ All env aspects still match <env> — no change since last check.`
+- **Subsequent banners within the same session** (e.g. re-verify after a switch, or status check at Cp E): emit ONLY the changed row(s) as a single-row update. Skip the full mapping table — みや already knows the layout. Format: `✓ <aspect> now <new value> (was <old>)` per changed row. If everything matches, one-line: `✅ All env aspects still match <env> — no change since last check.`
 
 ## Output format (always emitted)
 
@@ -162,7 +156,7 @@ Pressure-tested against 3 sessions:
 
 ## Lifecycle
 
-- **L1 (now)**: skill file exists, manual + auto-trigger at Discovery / Apply
+- **L1 (now)**: skill file exists, manual + auto-trigger at Cp A/E
 - **L2 (after 3 quest cycles)**: refine mapping table based on edge cases discovered
 - **L3 (after stable)**: integrate with `/quest start` — auto-fire env-check at every quest activation
 
