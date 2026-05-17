@@ -13,21 +13,24 @@
 - **Knowledge graph**: 23,890 nodes / 57,863 edges
 
 ## Package Overview
-<!-- Populate from codebase-memory-mcp graph queries + manual reading -->
+*Filled from confirmed-knowledge tickets only — blank cells = not yet evidenced. Framework-skeleton-then-grow rule.*
 
-| Package | Purpose | Key Classes |
+| Package | Purpose | Key Classes (confirmed) |
 |---|---|---|
-| `config` | | |
-| `constant` | | |
-| `enumeration` | | |
-| `integration` | | |
-| `locator` | | |
-| `parameter` | | |
-| `repository` | | |
-| `service` | | |
-| `serviceTask` | | |
-| `strategy` | | |
-| `util` | | |
+| `config` | Spring `@Configuration` classes | <!-- TODO --> |
+| `constant` | String keys / kod codes / dispatch maps | `PelupusanConstant`, `PelupusanWordCCMethodConstant`, `MlkPelupusanTugasanConstant`, `TablePrefixConstant` |
+| `enumeration` | Enum types | <!-- TODO --> |
+| `helper` | Composite-backing bean helpers (shared logic for `*Form` beans, often `@ManagedBean` themselves) | `JabatanTeknikalHelper`, `PelupusanExcelReaderHelper`, `PelupusanMaklumatPemohonHelper` |
+| `integration` | Cross-system bridges | <!-- TODO --> |
+| `locator` | Spring service locator beans | `commonServiceLocator` (used to fetch services from `etanah-common`) |
+| `parameter` | Method parameter DTOs | <!-- TODO --> |
+| `repository` | Hibernate Spring Data repositories | <!-- TODO --> |
+| `service` | Business logic services (interface + Impl) | `ISenaraiKumpulanService` |
+| `serviceTask` | Flowable BPMN service-task handlers | <!-- TODO — Flowable tickets reference but no class confirmed --> |
+| `strategy` | kodDokumen → strategy resolution (Strategy pattern) | `MlkPelupusanPenyediaanSuratStrategy`, `PelupusanSuratStrategy`, `MlkPelupusanSuratStrategy`, `CommonPLPandBGNSuratStrategy` |
+| `util` | Stateless utility classes | `PelupusanWordEditorUtil`, `PelupusanTemplateUtil` |
+| `vo` | Page-state carrying VOs (passed between Bean / Helper / Service layers) | `AppJabatanTeknikalVO`, `PelupusanPermitVO`, `PelupusanWCCTableVO` |
+| `web` | JSF Managed Beans — composite backing + page controllers | `MlkUlasanJPPHForm`, `PelupusanPermohonanTanahPlmsTabForm`, `PelupusanTanahRizabTabForm` |
 
 ---
 
@@ -61,11 +64,61 @@
 - Child docs: `src/main/resources/template/MLK/references/*.docx`
 
 **Why this matters**: failing to recognize this pattern at Phase 0 costs Cp E/F debugging time when "parent template font change didn't take" or "CC tag in main template renders as literal placeholder". The first read on any template ticket should check whether the affected cell sits inside an injected slot.
-| `vo` | | |
-| `web` | | |
-
 ## Layer Map
-<!-- How the layers connect: UI → Bean → Service → Repository → DB -->
+
+**The chain** (confirmed end-to-end from QA-260302 + QA-260965 + QA-259759 work):
+
+```
+JSF XHTML (composite / page)
+  ↓ EL binding (#{cc.attrs.mb.<getter>}, #{cc.attrs.mb.<field>})
+ManagedBean (web.form.* — typically *Form class)
+  ↓ delegation
+Helper (helper.* — *Helper class, often @ManagedBean too)
+  ↓ commonServiceLocator OR SpringUtil.lookupBean(IService.class)
+Service (service.* — IService interface)
+  ↓ @Autowired Impl
+Repository (repository.* — Spring Data JPA)
+  ↓ JPQL / HQL
+Hibernate Entity (etanah-common: my.gov.etanah.domain.*)
+  ↓ @Table / @Column annotations
+Postgres DB (et_main_uat / et_main / mlit / mlkfat)
+```
+
+**Side-branches off the chain**:
+
+| Branch | Source layer | Purpose |
+|---|---|---|
+| Constants | `constant.*` | Loaded by Bean/Helper/Util for kod codes, dispatch keys, content-control tag names |
+| VOs | `vo.*` | Carried between Bean ↔ Helper ↔ Service; survives Ajax lifecycle as JSF view-state |
+| Utils | `util.*` | Stateless helpers (Word rendering, template loading) — called from Helper or Service |
+| Strategies | `strategy.*` | Dispatched by Bean/Helper via kodDokumen lookup — returns concrete strategy bean |
+| Locators | `locator.*` | Gateway from `etanah-pelupusan` to `etanah-common` services |
+| ServiceTasks | `serviceTask.*` | Flowable BPMN engine callbacks — outside the JSF chain, fires on workflow transitions |
+| Configs | `*.config.json` files | Parsed at startup (e.g. `template.config.json`, `tindakan.config.json`); consumed by Strategy + Helper layers |
+
+**Cross-module dependency**:
+- `etanah-pelupusan` (this module) → depends on → `etanah-common` (entities, base services, validators) + `etanah-awam` (some shared composites and report displays)
+- Entity classes live in `etanah-common` (Maven dependency), source-extractable to `C:/temp/etanah-src/my/gov/etanah/domain/`
+
+---
+
+## Bean-Type Conventions
+
+**Naming conventions** observed across pelupusan codebase (confirmed via QA-260302 + QA-260965 + QA-259759 + QA-260876):
+
+| Suffix / Pattern | Layer | Role | Example |
+|---|---|---|---|
+| `*Form` | `web.form.*` | JSF Managed Bean — page or composite controller; holds VOs + selection state; called from XHTML via `#{cc.attrs.mb.*}` | `MlkUlasanJPPHForm`, `PelupusanPermohonanTanahPlmsTabForm` |
+| `*Helper` | `helper.*` | Shared composite-backing bean — multiple `*Form` beans delegate to one Helper for cross-cut logic | `JabatanTeknikalHelper`, `PelupusanMaklumatPemohonHelper`, `PelupusanExcelReaderHelper` |
+| `*Builder` | `web.form.*.builder` or `helper.*.builder` | VO assembly — wraps multi-step VO construction | <!-- TODO — pattern observed but no class cited yet --> |
+| `I*Service` / `*ServiceImpl` | `service.*` | Business logic — interface + Impl pair, `@Autowired` into Helper/Form via `SpringUtil.lookupBean` or `commonServiceLocator` | `ISenaraiKumpulanService`, `IPermohonanService` |
+| `*Constant` | `constant.*` | Static keys / dispatch maps — never instantiated | `PelupusanConstant`, `PelupusanWordCCMethodConstant`, `MlkPelupusanTugasanConstant` |
+| `*VO` | `vo.*` | Page-state carrier — passed between layers, survives Ajax lifecycle | `AppJabatanTeknikalVO`, `PelupusanPermitVO`, `PelupusanWCCTableVO` |
+| `*Util` | `util.*` | Stateless helper — Word rendering, template loading, no managed-state | `PelupusanWordEditorUtil`, `PelupusanTemplateUtil` |
+| `*Strategy` / `*StrategyImpl` | `strategy.*` | Strategy pattern impl — dispatched by kodDokumen lookup | `PelupusanSuratStrategy`, `MlkPelupusanSuratStrategy` |
+
+**🚨 Naming trap — filename match ≠ backing bean** (QA-260302, 2026-05-14):
+A composite XHTML file `mlkUlasanJPPHForm.xhtml` does NOT necessarily bind to a class `MlkUlasanJPPHForm.java` even if the names match. Composites use `<composite:interface><composite:attribute name="mb"/>` — the actual backing bean is whatever the parent page passes as `mb="#{...}"`. Check the parent's EL binding, NOT the filename. See [JSF-WIRING.md](JSF-WIRING.md) for the worked example.
 
 ## Bean-Type Conventions (added 2026-05-14 after QA-260302 filename-match slip)
 
@@ -104,10 +157,12 @@ Canonical queries documented in `DATABASE.md` section 6.0.
 <!-- Main JSF pages and their backing managed beans -->
 
 ## Entry Points
-<!-- Main JSF pages and their backing managed beans -->
+<!-- Main JSF pages and their backing managed beans — TODO: requires broad sweep -->
 
 ## Key Services
-<!-- Core business logic classes and what they do -->
+<!-- Core business logic classes and what they do — TODO: requires broad sweep -->
+
+> *Entry Points / Key Services sections deliberately left as skeleton — populating these requires a systematic codebase sweep that hasn't been done yet. Grows from ticket evidence per framework-skeleton-then-grow rule.*
 
 ## Patterns Found
 

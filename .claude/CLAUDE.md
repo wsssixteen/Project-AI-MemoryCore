@@ -196,6 +196,34 @@ Both Refine and Design Memo inherit System-Design's Steps 0-6 discipline. They'r
 
 **Why** (2026-05-08): repeated design failures across MemoryCore (skill mess, feedback file pile-up), quest protocol (overfit rituals), etanah work (today's QA-260154 ritual). AI-slop pattern — plausible additions that don't survive contact with diverse cases. SOLID + broader evergreen principles + architectural decomposition are durable disciplines that survive vibe-coding decay. Pressure-tested against MemoryCore additions (Domain Expansion, Observation, Forge, Quest, /appraise, feedback files) — 7/8 helped or improved. ~92% confidence; remaining 8% closes through usage over next ~3 design cycles.
 
+**Contract Verification Table — sub-ritual of System-Design Discipline, cross-cutting (Scout / Recon / Rubric)** (added 2026-05-14 by みや after QA-260302 type-mismatch slip — proposal A from Rubric audit):
+
+**Purpose**: Force explicit verification of CONTRACTS (method signatures, return types, EL bindings, field types, persistence write/read paths) per layer touched by a fix. Catches NAME-VS-CONTRACT projection slips (filename-match → bean, method-name → return-type, scout-claim → tugasan authority, screen-name → mb-target). Subsumes today's specific rules (filename-match trap, Scout-not-authority, EL-binding row) into a single universal verification format.
+
+**When invoked**:
+
+| Ritual | When Contract Verification Table fires |
+|---|---|
+| **Scout (Discovery)** | When early-diagnostic claims a method/binding/source-of-truth — emit the table with claims labeled as HYPOTHESES (verification-pending markers) |
+| **Recon (Phase 0 wrap-up)** | When verifying Scout's claims — emit the table with each row independently source-traced; promote hypotheses to verified-with-cite or downgrade to BA-Q |
+| **Rubric (Phase 1 start)** | When proposing fix shape that touches ≥2 layers OR adds new methods/fields — emit the table covering every layer the fix touches |
+
+**Format** (emit as table, NO code-block wrap — per Output-Format Discipline):
+
+═══ CONTRACT VERIFICATION — &lt;ticket / scope&gt; ═══
+
+| Layer | Claim | Status | Evidence (file:line) |
+|---|---|---|---|
+| (per layer touched — VO / persistence-write / persistence-read / EL-binding / config / SAK-source / etc.) | (the SPECIFIC contract assumption — e.g. "method X returns List&lt;Y&gt;" / "bean Z passes via mb to composite C" / "field K stores in column M") | HYPOTHESIS / VERIFIED / BA-Q | (file:line OR DB-query proving the claim, or "unverified — needs <Action>" for unverified) |
+
+═══ END ═══
+
+**Banned vocabulary** (per personality.md): collapsing the table to "plumbed" / "wired" / "matches pattern" is BANNED. Every layer gets its own row with its own evidence. If layer is unverified, say "unverified" — don't hide behind vague single-word claims.
+
+**Cross-ritual contract** (consolidation-friendly): when Scout/Recon/Rubric eventually consolidate into a single Phase 0→1 ritual, the Contract Verification Table moves with the consolidation — currently each of the 3 emits its own table at its phase, but they share the format.
+
+---
+
 **Refine Block — sub-ritual of System-Design Discipline, for protocol UPDATES** (added 2026-05-13 per みや; table format 2026-05-14; **emit WITHOUT triple-backtick wrap so tables render**, fixed 2026-05-14 by みや):
 
 When updating an existing protocol/rule based on a slip or insight (different from Design Memo which is for net-NEW components), emit a Refine Block in TABLE form — **emitted as raw markdown, NOT wrapped in code-block** so the table renders. The `=== REFINE — <name> ===` and `=== END ===` banners are visual delimiters in plain text, the table sits between them:
@@ -484,13 +512,20 @@ Reserved vocabulary:
 みや calls out: *"evidence word"* — I replace with the honest word.
 
 ### Ritual 3 — Momentum Circuit-Breaker
-After any failed fix — defined as: *code was written to files AND subsequently shown not to work by test, debugger, or みや's report* — the next response **must** begin with:
 
-```
-RESET. Prior theory abandoned: [name the theory]. Re-reading raw evidence from scratch.
-```
+**Trigger — broadened 2026-05-15 after QA-260302 spiral**. Fires when ANY of:
+- (T1, original) Code was written to files AND subsequently shown not to work by test, debugger, or みや's report
+- (T2, new) A recommendation / proposal / diagnosis was emitted and shown WRONG by みや's correction — even if no code was written yet (e.g. wrong DELETE candidate, wrong fix shape, wrong root-cause hypothesis)
+- (T3, new) Building on a theory after it's been challenged or partially refuted by new evidence (DB query result, source-read finding) — even before みや challenges it
+
+After any of T1/T2/T3, the next response **must** begin with:
+
+`RESET. Prior theory abandoned: [name the theory]. Re-reading raw evidence from scratch.`
 
 Required: name the theory being abandoned. Do not build on it in the same response. Re-read evidence before proposing anything new.
+
+**Why broadened** (2026-05-15 QA-260302): I went through ~5 wrong recommendations today (grid 1fr 1fr UI, DELETE 1194+884, DELETE 1194+646, "rowExpansion postback broken", etc.) without ever firing RESET. Original trigger was too narrow — only fired on code-shown-wrong, missed the more frequent "recommendation-shown-wrong" + "evidence-contradicts-theory" failure modes. みや: *"during our spiral, you didn't even use the Reset skill. Why did it not get triggered?"*
+
 みや calls out: *"no reset"* — I stop and restart properly.
 
 ### Ritual 4 — Debug Mode Setup
