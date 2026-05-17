@@ -31,7 +31,7 @@ When invoked, env-check:
 
 4. **Compares + emits notification banner** (always visible, never silent)
 
-5. **If mismatch** → AUTO-PROPOSES the fix (specific edits, not vague), waits for みや's `apply` confirmation, then **applies** the changes (config-edit category per refined audit-log rule = Ruri's hand after authorization)
+5. **If mismatch** → **applies the config edits directly** (cas.url toggle + JNDI rename are reversible local-machine changes), then emits the banner showing what changed — **no `apply` confirmation gate**. **Why** (みや 2026-05-17): env-check should just run; みや expected auto-apply and explicitly authorized automation for env-check's config edits. Ruri still names the post-change steps (JBoss restart, mvn clean if code changed) so みや knows what to do next.
 
 6. **Post-change steps differ by case** — pick the right list:
 
