@@ -95,18 +95,23 @@ note=Phase 1 closed 2026-05-13. みや submitting on Redmine. Phase 2 (post-mort
 qa=QA-260302
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\35. QA #260302 - Semua Urusan - Panel Ulasan Jabatan Penilaian dan Perkhidmatan (JPPH)
 early_diagnostic=projects/coding-projects/active/QA-260302/early-diagnostic.md
-phase=0
-status=hold
-scope_layer=JSF composite + bean SelectItems getter (Java backend already plumbed end-to-end)
-tugasan=Cross-urusan, any tugasan with editable Ulasan JPPH panel
-test_app_uat=PTMLK/02/L/PLTP/2026/11 at tugasan PSJT under shamrizan@melaka.gov.my (Scout recommendation)
-issue_one_liner=Enhancement — add smp/sehektar unit-selector dropdown to lot-row of Ulasan JPPH panel, between Kadar Nilaian smp/sehektar(RM) and Nilaian Pasaran(RM)
-suspected_files=4 XHTML sites — mlkUlasanJPPHForm.xhtml + mlkUlasanJPPHFormPLPS.xhtml + mlkUlasanJPPHFormPPJK.xhtml (3 composites) + protected/mlk/common/MlkUlasanJPPHForm.xhtml (standalone) + 1 new SelectItems getter on MlkUlasanJPPHForm.java
-java_backend_status=Already plumbed: JabatanTeknikalVO.getUnitKadarNilaian() exists, MlkUlasanJPPHForm.java:339-342 + TrgUlasanJPPHForm.java:339-342 + PelupusanService.java:16043-16045 persist to umm_a_tgsn.maklumat_tambahan JSON, PelupusanSearchService.java:1454-1461 re-hydrates. rjk group PLP_JNS_UNT already has UNT_SMP turutan 1 + UNT_SEHEKTAR turutan 2.
-cross_urusan_blast_radius=PT, PSBS, PLTP, MCL (default branch) + PLPS + PPJK — confirmed via 3-way kodUrs dispatcher at mlkUlasanJPPH.xhtml:25-50
+phase=1
+status=active
+local_test_confirmed=partial — PPJK/PJTLT verified end-to-end on FAT; PT/PSBS/PLTP/MCL/PLPS untested
+issue_one_liner=Enhancement — add smp/sehektar Unit selector dropdown to the lot-row of the Ulasan JPPH panel, across 6 urusans (PT, PSBS, PLTP, MCL, PLPS, PPJK)
+scope_layer=JSF composite/XHTML + Java SelectItems getter + new constant
+scope_anchor=6 urusans sharing the JPPH lot-row panel. Pure-form enhancement — scope check 2026-05-15 confirmed the 4 user-input fields (kegunaan/kadar/unit/nilaian) live ONLY in umm_a_jabatan_teknikal.mklmt_tmbhn JSON; zero Word-template CC tags, zero template.config.json binding. No downstream document consumer.
+tugasan=JPPH panel renders on screen MlkJabatanTeknikalTerlibatForm.xhtml (skrin_id 1145 + 374), langkah "Jabatan Teknikal Terlibat". Real tugasan kods: PJTLT_5, SJTLT_5, PSLTPM_6, PLBP_PJTLT_5, PLBP_SJTLT_6 — found via ind_skrin + ind_langkah join (NOT PSJT, which was Scout's wrong guess, corrected 2026-05-14).
+files_changed=etanah-pelupusan (E: drive — UNCOMMITTED in that repo): (1) PelupusanConstant.java — new PLP_JNS_UNT constant. (2) JabatanTeknikalHelper.java — new getJenisUnitKadarNilaianSelectItems() getter (returns List<SelectItem> directly). (3) 4 JPPH XHTML files — Unit dropdown in its own <p:column headerText="Unit" width:15%>, Pattern A mirroring mlkMaklumatTerperinciPlot.xhtml:94-103. (4) MlkUlasanJPPHForm.java — getter added then removed as dead code (composites bind mb=JabatanTeknikalHelper, not the same-named bean).
+test_app_fat=PTMLK/02/L/PPJK/2026/9 (nazli@melaka.gov.my, PJTLT) — verified. Remaining 5 urusans each need a clean aplikasi with hakmilik chain + no duplicate JBT rows.
+verified=2026-05-15 — fix confirmed end-to-end on FAT: umm_a_jabatan_teknikal rows 683/684, all 7 child fields persist incl. the new unitKadarNilaian (UNT_SEHEKTAR / UNT_SMP).
+blocker_resolved=Persistence appeared broken — real cause was NonUniqueResultException from duplicate (aplikasi,agensi) rows in umm_a_jabatan_teknikal (multiple testers altering flowable). findJabatanTeknikalByAplikasiAndAgensi @ PelupusanService.java:8647 threw → transaction rollback → JPPH save never reached. Fixed by evidence-verified DB DELETE of the duplicate stub rows. Documented in BUG-BESTIARY.md.
 priority_redmine=Medium
-effort_estimate=MEDIUM (~3-5h) — enhancement, cross-urusan, multi-file XHTML
-note=Scout 2026-05-13: 6 open BA questions deferred (rjk group confirm, default value, mandatori flag, downstream Surat template rendering, TRG scope, upstream-tugasan writability). Java backend pre-plumbed — only XHTML missing. Test on UAT not FAT.
+notes:
+  - 2026-05-13: Scout — early-diagnostic written; 6 BA questions deferred.
+  - 2026-05-14: Apply — 4 XHTML + getter. Cascade of slips (filename-match, type-mismatch, Scout PSJT wrong tugasan, vague-vocab, visual placement). Real tugasan found via ind_skrin/ind_langkah.
+  - 2026-05-15: Persistence bug diagnosed → NonUniqueResultException; fixed by DB DELETE. Fix VERIFIED end-to-end on PPJK/PJTLT. Scope check confirmed pure-form. Session ff4b3697 expired before testing the remaining 5 urusans.
+  - NEXT: test PT/PSBS/PLTP/MCL/PLPS → Phase 1 close-out (commit etanah-pelupusan edits + push branch + update this entry).
 
 qa=QA-259342
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\20. QA #259342 - PT & PSBS - PT & PSBS - Perlu apply pada semua tugasan - Medan Pilihan Jenis Tanah papar kedudukan yang sal
