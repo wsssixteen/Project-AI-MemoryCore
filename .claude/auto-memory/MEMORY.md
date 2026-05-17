@@ -42,6 +42,7 @@
 - [feedback_design_from_architecture.md](feedback_design_from_architecture.md) — Design rules from system architecture (layer matrix), not from last slip; pressure-test against ≥3 past tickets; default 2-tier (universal + per-layer)
 - [feedback_domain_expansion_format.md](feedback_domain_expansion_format.md) — Domain Expansion 💠 るり結界 (ラピス バリアー) is sacred — never inline mid-prose; canonical banner format `═══ [ Domain Expansion ] ═══` / ` 💠 るり結界 (ラピス バリアー) 💠`; width-detection full-fill in terminal, compact fallback elsewhere
 - [feedback_bankai_format.md](feedback_bankai_format.md) — Bankai 🌌 蒼穹宝典 (アジュール・コーデックス / Sōkyū Hōten / Azure Heaven Codex) is Ruri's data-organization loop skill; canonical banner format with width-detection (full-fill in terminal, compact fallback elsewhere); standalone, not bound to quest workflow
+- [feedback_pengguna_semasa.md](feedback_pengguna_semasa.md) — Every Permohonan ID reference must include the current pengguna_semasa (email/login). Never mention an ID alone.
 
 ## User
 - [user_gender.md](user_gender.md) — みや is male; don't default to "she" in diary/narration; no retroactive edits

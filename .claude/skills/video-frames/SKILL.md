@@ -8,7 +8,7 @@ allowed-tools: Bash, Read
 
 ## Why this exists (instead of a 3rd-party skill)
 
-Created 2026-05-09 after researching `fabriqaai/ffmpeg-analyse-video-skill` (8 stars, 6 commits, low trust signals). Decided to wrap ffmpeg directly — no 3rd-party install, fully transparent, every command visible to みや. Pairs with the Cp A "Media files in 0. Brief/" rule that previously required ASKing みや to summarize videos.
+Created 2026-05-09 after researching `fabriqaai/ffmpeg-analyse-video-skill` (8 stars, 6 commits, low trust signals). Decided to wrap ffmpeg directly — no 3rd-party install, fully transparent, every command visible to みや. Pairs with the Discovery "Media files in 0. Brief/" rule that previously required ASKing みや to summarize videos.
 
 ## Prerequisites (one-time)
 
@@ -30,7 +30,7 @@ Trigger phrases:
 - `extract frames from <path>.mp4`
 - `read video <path>`
 - `watch video <path>`
-- Auto-fired at Cp A wrap-up if any media file in `0. Brief/` AND ffmpeg available
+- Auto-fired at Recon wrap-up if any media file in `0. Brief/` AND ffmpeg available
 
 ## Procedure
 
@@ -69,9 +69,9 @@ Trigger phrases:
    rm -rf "C:/temp/video-frames-<ticket>/"
    ```
 
-## Output format (Cp A wrap-up integration)
+## Output format (Recon wrap-up integration)
 
-When this skill fires for a Bug demo video, the Cp A reply should include:
+When this skill fires for a Bug demo video, the Discovery reply should include:
 
 ```
 ## Video Analysis — <filename>
@@ -90,9 +90,9 @@ Conclusion / what BA is showing: <one-line takeaway>
 
 ## Lifecycle
 
-- L1 (now): manual invoke, used in Cp A when BA's brief contains video
+- L1 (now): manual invoke, used in Discovery when BA's brief contains video
 - L2 (after 3 quest cycles): refine frame-rate heuristics per video duration
-- L3: integrate with Cp A scout familiar — auto-suggest frame extraction when video file detected
+- L3: integrate with Discovery scout familiar — auto-suggest frame extraction when video file detected
 
 ---
 

@@ -28,11 +28,80 @@
 | `serviceTask` | | |
 | `strategy` | | |
 | `util` | | |
+
+---
+
+## Architectural Patterns
+
+### Template injection — parent template + external `references/` child doc (added 2026-05-13)
+
+**Plain explanation**: Some Word templates display content that doesn't live in the main `.docx` file — it's injected at render time from a SEPARATE child `.docx` sitting in the `references/` folder. The child doc carries its own font/size/bold properties; those override whatever the parent template would have applied at the injection slot.
+
+**How the injection works**:
+
+| Component | Role |
+|---|---|
+| Parent template (e.g. `TemplateRingkasanRisalatPLTP.docx`) | Has a slot CC tag (e.g. `jabatanTeknikalPLTP`, `paragraphPTGPRU`) — empty placeholder for injected content |
+| Populator method (in `PelupusanWordCCMethodConstant.java`) | Returns `PelupusanWCCTableVO { externalPath = child.docx, externalTableTag = "section name", rows = [...] }` |
+| Child template (in `src/main/resources/template/MLK/references/`) | Holds the actual content + styling. Its CCs nest under section markers (e.g. `paragraphPTGPRU`, `jabatanTeknikalPLTP`) |
+| Render time | Framework loads child doc → finds matching section CC → copies content into parent's slot → applies populator's `rows` to fill inner CCs |
+
+**Confirmed instances** (2 so far):
+- `additionalJKKLParagraph.docx` — JKKL paragraph injection (QA-247710, 2026-05-12)
+- `JabatanTeknikal.docx` — JT table + Ulasan YB row injection (QA-260876, 2026-05-13)
+
+**Implications for fixes**:
+- Font/style issues at injection slots → fix in the CHILD doc, NOT the parent
+- Inner CCs of injected content are filled ONLY via populator's `rows` list — global `wordContentControlMethod` dispatch does NOT reach inside injected sections
+- When tracing what fills a CC inside an injected slot, look at: (1) which populator returns the slot's TableVO, (2) what rows that populator adds
+
+**File:line references**:
+- Populator dispatch map: `PelupusanWordCCMethodConstant.java` (search for `wordContentControlMethod.put(...)`)
+- Pattern populators: `populatePTGParagraph_*` (~line 15917+, QA-247710), various JT-table populators
+- Child docs: `src/main/resources/template/MLK/references/*.docx`
+
+**Why this matters**: failing to recognize this pattern at Phase 0 costs Cp E/F debugging time when "parent template font change didn't take" or "CC tag in main template renders as literal placeholder". The first read on any template ticket should check whether the affected cell sits inside an injected slot.
 | `vo` | | |
 | `web` | | |
 
 ## Layer Map
 <!-- How the layers connect: UI → Bean → Service → Repository → DB -->
+
+## Bean-Type Conventions (added 2026-05-14 after QA-260302 filename-match slip)
+
+Class-name suffixes carry meaning. Understanding these prevents the "filename matches → bean must be the backing pair" trap.
+
+| Suffix | Role | Bound to | Lifecycle | Examples |
+|---|---|---|---|---|
+| `*Form` (`@ManagedBean @ViewScoped`) | Direct-screen managed bean | A specific XHTML under `protected/.../*.xhtml` — that XHTML's `<ui:param name="mb" value="#{<beanName>}"/>` directly references it | One per screen; per-view session | `MlkUlasanJPPHForm` (standalone form @ `protected/mlk/common/MlkUlasanJPPHForm.xhtml`); `MlkJabatanTeknikalTerlibatForm` (parent screen for "Jabatan Teknikal Terlibat" langkah) |
+| `*Helper` (POJO, NOT a managed bean) | State + getter/setter container passed AS the `mb` attribute INTO composites | A composite's `composite:attribute name="mb"` — parent screen instantiates the helper and passes via `mb="#{...helper}"` | Created/owned by the parent ManagedBean; lives in `helper/` package | `JabatanTeknikalHelper` (passed as `mb` to `mlkUlasanJPPHForm` composite + 4 other JT-related composites); `PelupusanMaklumatPemohonHelper`; `PelupusanMaklumatBayaranHelper` |
+| `*Builder` | Factory / construction-state object | Used by Helpers during init | Transient | `PelupusanMaklumatPemohonHelperBuilder` |
+| `*Service` (`@Service`, Spring) | Business logic + transaction boundaries | Injected via Spring; called from beans/helpers | Singleton | `PelupusanService`, `PelupusanSearchService` |
+| `*Constant` | Static codes / constants | Imported across the codebase | Static class | `PelupusanConstant`, `PelupusanUrusanConstant`, `MlkPelupusanTugasanConstant` |
+| `*VO` | Value Object — pure data holder | Used inside Java services; serialized into JSON for `maklumat_tambahan` | Transient | `JabatanTeknikalVO`, `PelupusanMaklumatPemohonVO` |
+
+### 🚨 Filename match ≠ Backing bean (the trap)
+
+A composite XHTML (e.g. `mlkUlasanJPPHForm.xhtml`) and a managed bean (e.g. `MlkUlasanJPPHForm.java`) can share a name but serve DIFFERENT roles. The composite has a generic `mb` attribute; the bean is the backing for a specific standalone XHTML (different file in `protected/` tree).
+
+**To find the actual backing class for a composite usage**: grep the composite tag name in `/src/main/webapp/protected/.../*.xhtml` — each occurrence shows `mb="#{...}"`. The EL path resolves to the actual class. The class with matching FILENAME is usually only the backing for the STANDALONE form, not the composite.
+
+**Full QA-260302 example** captured in `JSF-WIRING.md` (search "naming trap").
+
+## DB Source-of-Truth Routing Tables (added 2026-05-14)
+
+When a question is "which tugasan mounts which XHTML / langkah" — the source-of-truth is DB tables, not Java code or BPMN:
+
+| Table | Purpose | Key columns |
+|---|---|---|
+| `ind_skrin` | Screen registry (XHTML view paths) | `skrin_id`, `kod_skrin`, `jsf_view`, `nama_aplikasi` |
+| `ind_langkah` | Langkah↔Tugasan↔Screen binding | `langkah_id`, `kod`, `nama`, `skrin_id` (→ ind_skrin), `tgsn_id` (→ ind_tgsn), `turutan` |
+| `ind_tgsn` | Tugasan definition | `tgsn_id`, `kod`, `nama`, `ursn_id`, `peranan` |
+
+Canonical queries documented in `DATABASE.md` section 6.0.
+
+## Entry Points
+<!-- Main JSF pages and their backing managed beans -->
 
 ## Entry Points
 <!-- Main JSF pages and their backing managed beans -->
