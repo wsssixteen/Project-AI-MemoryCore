@@ -55,6 +55,7 @@
 | Ask for Task folder path first on QA | feedback_quest_checklist.md | **3** | ↑ from L2 — applied correctly across sessions |
 | Ticket reference = urusan code + issue/doc name | feedback_work_patterns.md | 2 | New 2026-04-07 — just corrected, needs monitoring |
 | Bash tool — scripts are Ruri's to run, not みや's | feedback_bash_tool.md | **1** | 2026-04-27 — overcorrected "avoid Bash" rule; pushed redmine-sync.js to みや instead of running it myself. Corrected. |
+| Mandatory quest-step silent-skip | `quest/quest-protocol.md` (Phase 0 artifact gate + verify-close re-commit clause, v3.1) | **1** | 2026-05-18 — QA-260302: `early-diagnostic.md` never created despite the Auto-Discovery rule, AND state files never reconciled after the commit was re-done — both silent skips, unnoticed 5 days. Fixed with the visible-gate pattern (Phase 0 emits `early-diagnostic.md ✓`; verify-close re-runs on any re-commit). Watch L1→L2: do the next 3 tickets emit the Phase 0 artifact-gate line + keep `commit=` synced to HEAD without reminder? |
 
 ### Communication
 

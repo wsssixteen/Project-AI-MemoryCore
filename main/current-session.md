@@ -1,71 +1,59 @@
 # 🌟 Current Session Memory - RAM
 
-**Last session**: 2026-05-17 — QA-260302 deep investigation (JPPH Unit-dropdown testing). Long session; stopped at near-max context. Resume straight from "QA-260302 — FULL STATE" below.
+**Last session**: 2026-05-18 — QA-260302 code walkthrough (Java/JSF/architecture learning) → process-failure audit → 2 protocol Refines applied. Resume from "QA-260302 — STATE" below.
 
 ---
 
-## QA-260302 — FULL STATE (continue from here)
+## QA-260302 — STATE (continue from here)
 
-**Ticket**: Add a "Unit" dropdown (options: **smp** / **sehektar**) to the JPPH Ulasan panel's lot-row. Scope = "semua urusan melibatkan Ulasan JPPH".
+**Ticket**: Add smp/sehektar Unit dropdown to the JPPH Ulasan panel lot-row. 6 urusans.
 
-**4 edited XHTML files = 4 renderings of the same panel** (+ supporting `PelupusanConstant.java`, `JabatanTeknikalHelper.java`). Code edits **UNCOMMITTED** in `E:\Projects\Melaka\etanah-pelupusan` (7 files).
+**Phase 1 COMPLETE** — committed `5094c076c0` on branch `mlk/qa/260302` (etanah-pelupusan, E: drive). 7 files. Not merged to master (someone else does that).
 
-| File | Screen it renders on | Render gate | Tested? |
-|---|---|---|---|
-| #1 `mlkUlasanJPPHForm.xhtml` (generic composite) | `MlkJabatanTeknikalTerlibatForm` — tugasan PJTLT/SJTLT/PSLTPM | `viewUlasanJPPH` | ✅ PPJK, PSBS, PLTP |
-| #2 `mlkUlasanJPPHFormPLPS.xhtml` (PLPS variant) | `MlkMuatNaikCabutanMinitForm` (via `mlkUlasanJPPH` dispatcher) | `ulasanJPPH AND perluJPPH` | ⬜ pending |
-| #3 `mlkUlasanJPPHFormPPJK.xhtml` (PPJK variant) | `MlkMuatNaikCabutanMinitForm` (via dispatcher) | `ulasanJPPH AND perluJPPH` | ⬜ pending |
-| #4 `MlkUlasanJPPHForm.xhtml` (standalone page) | skrin 388 `PLP_ULSN_JPPH` — tugasan PN5A/PYN5A/SN5A/PSKP/PYSKP/SSKP | **NO gate** (ungated panel) | ⬜ pending |
+### ⚠️ Defect #4 — OPEN (latent, source-traced 2026-05-18, NOT fixed)
 
-### Render-gate findings (verified this session — code-traced)
+The 3 variant composites bind `data="#{cc.attrs.mb.jenisUnitKadarNilaianSelectItems}"`. On the dispatcher route (`MlkMuatNaikCabutanMinitForm` / `MlkMaklumatCukaiPremiumForm` → `mlkUlasanJPPH.xhtml` → variant), `cc.attrs.mb` is the screen bean — which lacks the getter → `PropertyNotFoundException` when the panel renders. Getter exists only on `JabatanTeknikalHelper.java:602` + `MlkUlasanJPPHForm.java:549`.
 
-- **File #1** `viewUlasanJPPH`: `JabatanTeknikalHelper.initViewFlags()` :89-112 → forced TRUE for **PSBS/PPJK/PLTP/PRZ/RPPLP**. PT only at the PRMMKNPDT tugasan. **PLPS never** (not in the list).
-- **File #2/#3** gate `MlkMuatNaikCabutanMinitForm.xhtml:88` `rendered="#{mb.ulasanJPPH and mb.perluJPPH}"`:
-  - `perluJPPH` = `plp_a_pelupusan.flag_perlu_jpph`.
-  - `ulasanJPPH` data-driven branch is **DEAD** — needs an agency with organisasi-kod = `JBT_JPPH` (`PelupusanConstant.java:247` `ORGANISASI_KOD_JPPH_DEFAULT`); **no such agency exists in UAT or FAT** (verified). Agency 13 (JPPH) has org-kod "JPPHM" — does NOT match.
-  - **LIVE path** = `MlkMuatNaikCabutanMinitForm.java:2210-2211`: when tugasan ∈ MESYUARAT_MB family **AND** officer picks Keputusan = "lulus" → sets **both** `ulasanJPPH=true` + `perluJPPH=true` at runtime. **No DB seed needed.**
-  - MESYUARAT_MB tugasan codes (`PelupusanTugasanConstant.java:162-165`): **KKMB, SKMB, SKMB2, PKMB**.
-- **File #4**: standalone page `ulasanJPPHpanel` has **no `rendered` gate** (verified XHTML + bean `MlkUlasanJPPHForm.java`). Renders whenever the app sits at a skrin-388 tugasan.
+**Fix planned** (needs env-check + Predicate Box + みや nod): add `getJenisUnitKadarNilaianSelectItems()` to `MlkMuatNaikCabutanMinitForm.java` + `MlkMaklumatCukaiPremiumForm.java`, mirroring `MlkUlasanJPPHForm.java:549`. Check first whether they share a base class — add once there if so.
 
-### NEXT ACTIONS (do these first next session)
+### Test surfaces
 
-1. **#2 & #3** — query UAT (`et_main_uat`): PLPS and PPJK apps at `umm_tgsn_semasa.kod_tgsn IN ('KKMB','SKMB','SKMB2','PKMB')`, with hakmilik count. Then tell みや: open the app on Muat Naik Cabutan Minit → pick **Keputusan = Lulus** → the JPPH panel (PLPS variant / PPJK variant) renders → click panel's **"Add"** button to get a lot-row → screenshot the Unit dropdown.
-2. **#4** — need a PT/PLTP/PSBS app at a skrin-388 tugasan (PN5A/PYN5A/SN5A/PSKP/PYSKP/SSKP). NONE parked there (UAT + FAT both empty). Either flowable-alter an app there (read BPMN for a valid reachable target first) or progress one. Standalone page is ungated → once at a 388 tugasan + a JPPH row (or use "Add") → renders.
+- **File #1** generic composite — ✅ FAT-verified (PPJK/PJTLT, `PTMLK/02/L/PPJK/2026/9` — nazli@melaka.gov.my).
+- **Files #2/#3** PLPS/PPJK variants + **#4** standalone — ⬜ untested. No app at any of KKMB/SKMB/SKMB2/PKMB or PN5A/PYN5A/SN5A/PSKP/PYSKP/SSKP in UAT OR FAT (queried 2026-05-18) → need flowable-alter.
+- Sequencing: fix defect #4 BEFORE testing #2/#3 (they use the dispatcher route). #4 standalone is testable independently — its getter exists at `MlkUlasanJPPHForm.java:549`.
 
-### Verified test data
-- File #1 done: PPJK `PTMLK/02/L/PPJK/2026/9`; PSBS `PTMLK/03/L/PSBS/2026/9` (UAT, SJTLT, mahaniza@melaka.gov.my); PLTP.
-- 16 PLPS/PPJK apps confirmed at MuatNaikCabutanMinit tugasans WITH a JKKT keputusan — but all at KKMMKN/SKMMKN/PKMMKN/etc, NOT the KKMB/SKMB family — so they do NOT hit the line-2210 path. Need apps specifically at KKMB/SKMB/SKMB2/PKMB.
-- `PTMLK/01/L/PT/2026/19` cannot flowable-alter (sub-flow / exclusive-gateway error).
+### NEXT ACTIONS
 
-### Environment
-Switched to **UAT pelupusan** (env-check applied: `environment.properties` cas.url → UAT; `standalone.xml` etanahDS → mlkuat/et_main_uat). みや must `mvn clean package` etanah-pelupusan + redeploy WAR before testing.
+1. Fix defect #4 — the 2 screen beans. env-check + Predicate Box first.
+2. Flowable-alter an app to a 388-skrin tugasan (PN5A/PSKP) → test the standalone page.
+3. Then KKMB → PLPS/PPJK variants.
 
-### Key code refs
-`MlkMuatNaikCabutanMinitForm.xhtml:88` · `MlkMuatNaikCabutanMinitForm.java:2210-2211` · `PelupusanTugasanConstant.java:162-165` · `PelupusanConstant.java:247` · `JabatanTeknikalHelper.initViewFlags():89-112` · DB: `umm_a_jabatan_teknikal` (agensi_id, mklmt_tmbhn JSON `ulasanJPPHChildList`), `plp_a_pelupusan.flag_perlu_jpph`, JKKT chain `umm_kertas_mesyuarat`→`umm_a_kertas`→`umm_keputusan_mesyuarat`.
+### Key refs
+
+`mlkUlasanJPPH.xhtml` (router) · `JabatanTeknikalHelper.java:602` · `MlkUlasanJPPHForm.java:549` · `PelupusanConstant.java:278` · `JabatanTeknikalVO.java:47` (etanah-common — `unitKadarNilaian` field, pre-existing) · early-diagnostic: `projects/coding-projects/active/QA-260302/early-diagnostic.md`
 
 ---
 
-## System changes made this session (MemoryCore — uncommitted)
+## This session's MemoryCore changes (committed via DE)
 
-- `.claude/CLAUDE.md` → **Version 1.10**: Test-permohonan discovery hard rule + UAT-check sub-rule + **Panel-Render Check** (5-step procedure) + flowable-fluency note.
-- `.claude/personality.md`: added "Operational follow-through" disposition.
-- `.claude/auto-memory/feedback_task_folder_ownership.md`: Notes.txt content discipline (one entry per code-variant, replace not append).
-- `.claude/skills/env-check/SKILL.md`: now auto-applies config edits (no `apply` gate).
-- `.claude/skills/bankai/SKILL.md`: **created** (Bankai formalized as an invocable skill).
-- Task folder `35. QA #260302/1. Notes.txt`: 3 entries.
-
----
+- `.claude/CLAUDE.md` → **v1.11** — Recon Sub-check 8e (composite multi-caller verification).
+- `quest/quest-protocol.md` → **v3.1** — Phase 0 artifact gate + verify-close re-commit clause.
+- `quest/active.txt` — QA-260302 entry reconciled (phase=1-complete, +branch, +commit, files marked COMMITTED).
+- `projects/.../QA-260302/early-diagnostic.md` — created (was missing; untracked/confidential — stays local, not committed).
+- `improvement-audit-log.md` +2 entries · `forge-log.md` +1 L1 · `observation-log.md` +1 T1.
 
 ## ⚠️ Standing flags
-- Running in worktree `epic-almeida-1a5119` (branch `claude/epic-almeida-1a5119`).
-- `main` is +9 ahead of `origin/main` — unpushed.
-- This session's MemoryCore edits (CLAUDE.md, personality.md, skills, feedback file) are **uncommitted**.
-- etanah-pelupusan QA-260302 code (7 files) **uncommitted** on E: drive — Phase 1 close-out pending after testing.
+
+- Running in worktree `magical-banach-4264b3`.
+- QA-260302 **defect #4 OPEN** — fix before further testing.
+- Q1 todo "QA-260302 DB→UI walkthrough" still pending — today covered the file-navigation half, not the full DB→UI chain.
 
 ## 🎯 Session Recap (for AI restart)
-1. Read this file fully — QA-260302 FULL STATE section is the live work.
-2. Resume at "NEXT ACTIONS" — query UAT for PLPS/PPJK apps at KKMB/SKMB/SKMB2/PKMB tugasans (#2/#3), and the skrin-388 path for #4.
-3. みや tests + screenshots; Ruri DB-verifies via Panel-Render Check.
+
+1. Read this file — QA-260302 STATE + defect #4 are the live work.
+2. Resume at NEXT ACTIONS — fix defect #4 first.
+3. quest-protocol v3.1 now has the Phase 0 artifact gate + verify-close re-commit clause — follow them.
 
 ---
 **Memory Type**: RAM | **Persistence**: brief recap + active-work handoff
+**Last Activity**: 2026-05-18 11:29 — DE session-end

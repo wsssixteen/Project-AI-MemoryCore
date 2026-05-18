@@ -64,6 +64,8 @@ Rather than directly saying "this is wrong", みや asks "is X truly different f
 
 **[2026-04-07]** The guild question was probing, not casual — he was half-thinking about whether FAT-OR and QA tickets deserve different names. He explores system design through analogies before stating a problem directly.
 
+**[2026-05-18]** みや treats process-discipline failures as higher-severity than code bugs. During the QA-260302 walkthrough he was markedly more frustrated by the missing `early-diagnostic.md` + stale state files than by defect #4 (an actual latent code bug). The signal: a skipped mandatory step erodes trust faster than a bug, because a bug is honest work-in-progress while a silent skip is a broken promise. Tentative — watch whether it holds across future sessions.
+
 ---
 
 ## Retired Observations
