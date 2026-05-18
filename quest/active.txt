@@ -1,3 +1,20 @@
+qa=QA-260869
+phase=1-complete
+status=pending post-mortem
+commit=2ed93b0526 (2026-05-18) — QA #260869 - Fix Surat Keputusan Lulus regenerate: header, maklumat & row-level table now populate.
+branch=mlk/qa/260869
+local_test_confirmed=true
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\36. QA #260869 - [FAT] PRZ - Semakan Surat Keputusan Lulus - Pilih Tindakan - Disemak d
+early_diagnostic=projects/coding-projects/active/QA-260869/early-diagnostic.md
+scope_anchor=QA-260869 (PRZ Semakan SKL — header surat + maklumat not populating) fixed via the #256113 root-cause refactor. Removed the #256113 classpath-reload hack so SKL tugasans (PYSK/SSK/PSSK) load the saved file again; rewrote findTableByContentControlTag (handle Tbl/Tr/Tc raw+wrapped) + added a CTSdtRow branch to insertContentControlTableInDocument (insert <w:tr> into row-level SDTs, not <w:tbl>). template.config.json QA-260869 config patch (PRZ+RPPLP actions arrays) REVERTED — refactor supersedes it.
+scope_layer=Java — 4 files (Word-CC table util, template util, penyediaan VO, TemplatePropertyJson)
+tugasan=SSK (Semakan Surat Keputusan Lulus) — PRZ; fix mechanism-wide across SKL tugasans PYSK/SSK/PSSK + all SKL urusans
+test_app_uat=PTMLK/01/L/PLPS/2026/112 (nizalarif@melaka.gov.my) — full Penyediaan→Semakan→Pengesahan chain, syarat-syarat table survived all 3 stages (2 save→reload round-trips). Tested on UAT (FAT down for "Mock Cutover 1").
+files_changed_phase1=PelupusanWordEditorUtil.java (findTableByContentControlTag comprehensive rewrite + CTSdtRow branch in insertContentControlTableInDocument), PelupusanTemplateUtil.java + PelupusanPenyediaanDokumenVO.java + TemplatePropertyJson.java (reloadFromClasspath hack removed). 4 files, +32/−37. template.config.json NOT in commit (reverted).
+out_of_scope_held=PRZ/RPPLP ship with empty actions arrays (template.config.json reverted) — not separately retested in that exact config; covered by code-parity with the PLPS full-chain test (identical refactor code path). Optional 100% close: PRZ smoke-test on UAT PTMLK/01/L/PRZ/2025/10 (sanarimah@melaka.gov.my).
+related=#256113 — the originating fix whose classpath-reload hack this refactor removes (Archive\13. QA #256113\4. Future Refactor - Handle Row-Level SDTs.txt). Breakpoint plan + diagnostic in projects/coding-projects/active/QA-260869/.
+note=Phase 1 closed 2026-05-18. みや confirmed test pass. Phase 2 (post-mortem + KPI) pending. #256113's row-level-SDT defect now fixed at root; hack gone.
+
 closed:
 qa=QA-260965
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\31. QA #260965 - FAT - PLPS, PRBB - Semakan Kemasukan Maklumat - No. Sijil Kerakyatan ada tanda mandatori sedangkan

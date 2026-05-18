@@ -11,6 +11,7 @@ allowed-tools: Read, Bash, Edit, Grep
 When invoked, env-check:
 
 1. **Detects target env** from active.txt or current quest scope — **AUTHORITY ORDER (refined 2026-05-14 by みや — second-pass after QA-260302 FAT-default slip)**:
+   - **⚠️ TEMPORARY OVERRIDE — UAT-only (added 2026-05-18 by みや — FAT down for "Mock Cutover 1")**: FAT is unavailable. Until FAT is restored, ALL pelupusan + awam work runs on **UAT** regardless of the ticket's `Env:` line — Priorities 1-3 below are SUSPENDED. **Remove this block when FAT is back online**; Priorities 1-3 then resume as normal.
    - **Priority 1**: Ticket Description.txt `Env:` line — `MLK FAT` / `MLKFAT` → FAT; `MLK UAT` / `MLKUAT` → UAT. This is authoritative when present.
    - **Priority 2**: Task folder name `<NN>. <type> #<num> - <ENV> - <urusan_kod> - <tugasan_kod> - <issue>` — the `<ENV>` slot if present.
    - **Priority 3 (when neither above specifies)**: **Use the CURRENT env state — do NOT force-switch.** Read `standalone.xml` etanahDS active jndi + `environment.properties` cas.url to detect what's currently configured; the answer = whatever's currently set. Saves the switch cost. Only switch if BA explicitly specified an env (Priority 1) that doesn't match current.

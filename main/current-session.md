@@ -1,59 +1,59 @@
 # 🌟 Current Session Memory - RAM
 
-**Last session**: 2026-05-18 — QA-260302 code walkthrough (Java/JSF/architecture learning) → process-failure audit → 2 protocol Refines applied. Resume from "QA-260302 — STATE" below.
+**Last session**: 2026-05-18 (evening) — QA-260869 Phase 1 closed + the #256113 root-cause refactor shipped. Resume at Phase 2.
 
 ---
 
-## QA-260302 — STATE (continue from here)
+## QA-260869 — STATE (Phase 2 next)
 
-**Ticket**: Add smp/sehektar Unit dropdown to the JPPH Ulasan panel lot-row. 6 urusans.
+**Ticket**: PRZ Semakan Surat Keputusan Lulus — header surat + maklumat not populating on regenerate.
 
-**Phase 1 COMPLETE** — committed `5094c076c0` on branch `mlk/qa/260302` (etanah-pelupusan, E: drive). 7 files. Not merged to master (someone else does that).
+**Phase 1 COMPLETE** — committed `2ed93b0526` on branch `mlk/qa/260869` (etanah-pelupusan), pushed, verify-close all 5 green. Not merged to master (someone else does that).
 
-### ⚠️ Defect #4 — OPEN (latent, source-traced 2026-05-18, NOT fixed)
+**What shipped — the #256113 root-cause refactor, 4 Java files:**
+- `PelupusanWordEditorUtil.java` — `findTableByContentControlTag` rewrite (handles Tbl/Tr/Tc, raw + JAXBElement-wrapped) + `CTSdtRow` branch in `insertContentControlTableInDocument` (insert `<w:tr>` into row-level SDTs, not `<w:tbl>`)
+- `PelupusanTemplateUtil.java` + `PelupusanPenyediaanDokumenVO.java` + `TemplatePropertyJson.java` — #256113 `reloadFromClasspath` classpath-reload hack removed
+- `template.config.json` QA-260869 config patch was **reverted** — refactor supersedes it
 
-The 3 variant composites bind `data="#{cc.attrs.mb.jenisUnitKadarNilaianSelectItems}"`. On the dispatcher route (`MlkMuatNaikCabutanMinitForm` / `MlkMaklumatCukaiPremiumForm` → `mlkUlasanJPPH.xhtml` → variant), `cc.attrs.mb` is the screen bean — which lacks the getter → `PropertyNotFoundException` when the panel renders. Getter exists only on `JabatanTeknikalHelper.java:602` + `MlkUlasanJPPHForm.java:549`.
+**Tested**: full Penyediaan→Semakan→Pengesahan chain on `PTMLK/01/L/PLPS/2026/112` (UAT) — syarat-syarat table survived all 3 stages. みや confirmed.
 
-**Fix planned** (needs env-check + Predicate Box + みや nod): add `getJenisUnitKadarNilaianSelectItems()` to `MlkMuatNaikCabutanMinitForm.java` + `MlkMaklumatCukaiPremiumForm.java`, mirroring `MlkUlasanJPPHForm.java:549`. Check first whether they share a base class — add once there if so.
+### Phase 2 — to do early morning 2026-05-19
+1. Post-mortem entry → `main/post-mortems.md`.
+2. KPI entry → `main/kpi-tracker.md`.
+3. Append this session's improvements to `improvement-audit-log.md` as `status=applied` (quest/notes.js, env-check UAT override, feedback_task_folder_ownership.md rewrite).
+4. etanah-knowledge capture: row-level-SDT / `CTSdtRow` defect + the #256113 hack mechanism (BUG-BESTIARY).
+5. Optional: PRZ smoke-test on UAT — `PTMLK/01/L/PRZ/2025/10` (sanarimah@melaka.gov.my) — closes PRZ in its empty-`actions` config 100%.
+6. Review CLAUDE.md / skills for temporary ticket-specific rules to retire.
 
-### Test surfaces
+QA-260869 project docs: `projects/coding-projects/active/QA-260869/` — early-diagnostic.md, changes-applied.md, refactor-breakpoint-plan.md.
 
-- **File #1** generic composite — ✅ FAT-verified (PPJK/PJTLT, `PTMLK/02/L/PPJK/2026/9` — nazli@melaka.gov.my).
-- **Files #2/#3** PLPS/PPJK variants + **#4** standalone — ⬜ untested. No app at any of KKMB/SKMB/SKMB2/PKMB or PN5A/PYN5A/SN5A/PSKP/PYSKP/SSKP in UAT OR FAT (queried 2026-05-18) → need flowable-alter.
-- Sequencing: fix defect #4 BEFORE testing #2/#3 (they use the dispatcher route). #4 standalone is testable independently — its getter exists at `MlkUlasanJPPHForm.java:549`.
+---
 
-### NEXT ACTIONS
-
-1. Fix defect #4 — the 2 screen beans. env-check + Predicate Box first.
-2. Flowable-alter an app to a 388-skrin tugasan (PN5A/PSKP) → test the standalone page.
-3. Then KKMB → PLPS/PPJK variants.
-
-### Key refs
-
-`mlkUlasanJPPH.xhtml` (router) · `JabatanTeknikalHelper.java:602` · `MlkUlasanJPPHForm.java:549` · `PelupusanConstant.java:278` · `JabatanTeknikalVO.java:47` (etanah-common — `unitKadarNilaian` field, pre-existing) · early-diagnostic: `projects/coding-projects/active/QA-260302/early-diagnostic.md`
+## QA-260316 — HELD (not started)
+PLPS - AWAM - Bayaran Permohonan papar 0.00. Retrieved via Redmine this session; Task folder `37. QA #260316...` created. Held Phase 0 — early-diagnostic not yet written. Start after QA-260869 Phase 2.
 
 ---
 
 ## This session's MemoryCore changes (committed via DE)
-
-- `.claude/CLAUDE.md` → **v1.11** — Recon Sub-check 8e (composite multi-caller verification).
-- `quest/quest-protocol.md` → **v3.1** — Phase 0 artifact gate + verify-close re-commit clause.
-- `quest/active.txt` — QA-260302 entry reconciled (phase=1-complete, +branch, +commit, files marked COMMITTED).
-- `projects/.../QA-260302/early-diagnostic.md` — created (was missing; untracked/confidential — stays local, not committed).
-- `improvement-audit-log.md` +2 entries · `forge-log.md` +1 L1 · `observation-log.md` +1 T1.
+- `quest/notes.js` — NEW: generates `1. Notes.txt` in the locked format (Notes.txt-drift fix)
+- `quest/active.txt` — QA-260869 entry added (phase=1-complete)
+- `.claude/skills/env-check/SKILL.md` — TEMPORARY UAT-only override (FAT down)
+- `.claude/auto-memory/feedback_task_folder_ownership.md` — rewritten: locked `1. Notes.txt` format
+- `.claude/CLAUDE.md` — Notes.txt auto-write reference → quest/notes.js
+- `projects/coding-projects/active/QA-260869/` — 3 docs created
 
 ## ⚠️ Standing flags
-
-- Running in worktree `magical-banach-4264b3`.
-- QA-260302 **defect #4 OPEN** — fix before further testing.
-- Q1 todo "QA-260302 DB→UI walkthrough" still pending — today covered the file-navigation half, not the full DB→UI chain.
+- Worktree `thirsty-shamir-285fe1`. 2 other sessions running from main — we are the leading branch (they haven't saved).
+- **env-check TEMPORARY UAT-only override** — FAT down for "Mock Cutover 1". Remove the override block in `env-check/SKILL.md` when FAT is back (みや will say "FAT is back").
+- QA-260869 Phase 2 pending — early morning 2026-05-19.
+- QA-260316 held, not started.
+- `/branch-and-push` skill recommended — 3rd pull-before-branch miss this session (todo.md already lists it).
 
 ## 🎯 Session Recap (for AI restart)
-
-1. Read this file — QA-260302 STATE + defect #4 are the live work.
-2. Resume at NEXT ACTIONS — fix defect #4 first.
-3. quest-protocol v3.1 now has the Phase 0 artifact gate + verify-close re-commit clause — follow them.
+1. Read this file — QA-260869 Phase 1 closed; Phase 2 is the next work.
+2. env is UAT (FAT down for Mock Cutover 1) — env-check temp override active.
+3. Phase 2 = post-mortem + KPI + audit-log + etanah-knowledge capture.
 
 ---
 **Memory Type**: RAM | **Persistence**: brief recap + active-work handoff
-**Last Activity**: 2026-05-18 11:29 — DE session-end
+**Last Activity**: 2026-05-18 20:44 — DE session-end
