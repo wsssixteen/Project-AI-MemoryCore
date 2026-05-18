@@ -34,6 +34,35 @@ The 3 variant composites bind `data="#{cc.attrs.mb.jenisUnitKadarNilaianSelectIt
 
 ---
 
+## QA-260316 — STATE ⚠️ CONTINUE TESTING FIRST THING TOMORROW (wait for みや's signal — tomorrow may include other work)
+
+**Ticket**: AWAM PLPS, Langkah Bayaran — fee shows 0.00, should show 50.00 (100.00 if tujuan = pengiklanan). Per UAT-CR #233195.
+
+**Scout + Recon + Rubric DONE** 2026-05-18 evening. Option 1 (config-driven) chosen — みや explicitly rejected hardcoding.
+
+### Fix APPLIED — NOT committed, NOT tested
+`etanah-awam` repo, branch `mlk/release/uat`. File `PelupusanBayaranOnlineStrategy.java`, both PLPS blocks:
+- Line 817 (PLPS block, bilangan>0) + line 976 (PLPS block, bilangan==0): `getJumlah() == null` → `getJumlah() == null || getJumlah().signum() == 0`
+- Root cause: `:551` pre-sets jumlah to `BigDecimal(0)`, so the `== null` fallback was dead code. `signum()==0` makes it fire → applies configured `fiPejabat.getKadar()`.
+- (Line numbers are post-pull; early-diagnostic.md still cites Scout's pre-pull :823/:982.)
+
+### Env switched this session
+- `standalone.xml` `etanahDS` → mkit `et_main_mlit` (AWAM UAT). mlkuat→`etanahDS2`, etprdmlk→`etanahDS3`. Verified one active `etanahDS`.
+- `cas.url` already UAT. `etanah-awam` on `mlk/release/uat`, pulled (61 files ff).
+- WAR still `etanah-pelupusan.war` — module switch pending: みや runs `mvn clean install` on etanah-awam + WAR swap + JBoss restart.
+
+### NEXT ACTIONS (tomorrow)
+1. みや: `mvn clean install` etanah-awam → swap WAR → start JBoss.
+2. Test: AWAM UAT, fresh PLPS application, non-pengiklanan tujuan, Bayaran step → Fi shows configured rate, not 0.00.
+3. Then commit the fix on `etanah-awam`; **diff this session's MemoryCore changes vs the updated main** (the deferred step — main updates after the other session saves first).
+
+### Deferred / open
+- `mlk/release/fat` access for AWAM — separate follow-up (testing on uat first).
+- env-check `SKILL.md` branch note ("fat rename never propagated to remote") may be wrong — みや says fat is a real remote branch needing access. Correct at session close.
+- etanah-knowledge: log "PLPS AWAM = no test-data harvest, applicant fills permohonan fresh" at DE Gap Sweep.
+
+---
+
 ## This session's MemoryCore changes (committed via DE)
 
 - `.claude/CLAUDE.md` → **v1.11** — Recon Sub-check 8e (composite multi-caller verification).

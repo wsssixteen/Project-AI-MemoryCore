@@ -1,3 +1,17 @@
+active:
+qa=QA-260316
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\37. QA #260316 - PLPS - AWAM - Bayaran Permohonan papar 0.00
+early_diagnostic=projects/coding-projects/active/QA-260316/early-diagnostic.md
+branch=mlk/release/uat
+phase=1
+local_test_confirmed=false
+status=active
+issue_one_liner=AWAM PLPS Bayaran step shows Fi 0.00 — should be 50.00 (100.00 if tujuan=pengiklanan), per UAT-CR #233195
+scope_layer=etanah-awam Java — PelupusanBayaranOnlineStrategy.java fee fallback
+files_changed=etanah-awam PelupusanBayaranOnlineStrategy.java (2 lines, NOT committed): PLPS fallback :817 + :976 — getJumlah()==null changed to ||signum()==0, so the dead fallback fires and applies fiPejabat.getKadar()
+notes:
+  - 2026-05-18: Scout+Recon+Rubric done. Option 1 (config-driven) fix applied to both PLPS blocks. Env switched to AWAM UAT (mkit). NOT committed, NOT tested. Continue testing first thing tomorrow — wait for みや's signal.
+
 closed:
 qa=QA-260965
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\31. QA #260965 - FAT - PLPS, PRBB - Semakan Kemasukan Maklumat - No. Sijil Kerakyatan ada tanda mandatori sedangkan
