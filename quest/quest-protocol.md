@@ -84,7 +84,7 @@ The branch with the latest date is the source-of-truth. **DO NOT compare `origin
 **Violation log (Commit)**:
 - 2026-05-11 QA-260139: Ruri ran `git commit` itself + included body + Co-Authored-By trailer + "fix" prefix + "AWAM"/"MLK" tags. みや reset. **Still forbidden post-refinement**: running git commit/push is Ruri's hands-off; the wrong-format reasons are now caught at proposal time (みや reviews before executing).
 
-**Compound trigger — "wrap + commit prep + close" (added 2026-05-12, pull-step corrected same day)**: Recognize ANY combination of these phrases as a Phase 1 full close-out request — auto-fire the entire flow (stash → **pull --ff-only origin <source-branch>** → branch → pop → add → propose commit message → wait for みや to execute commit+push → return-to-master → pull → update active.txt → `/verify-close`). **🚨 The pull between stash and branch is mandatory** — see line 75 hard rule. Never paraphrase this sequence without the pull; both today's tickets (QA-259318 v2 and QA-260179) had it dropped in the announcement (master happened to be at-tip so no merge conflict, but it's a stale-base risk we don't take):
+**Compound trigger — "wrap + commit prep + close" (added 2026-05-12, pull-step corrected same day)**: Recognize ANY combination of these phrases as a Phase 1 full close-out request — auto-fire the entire flow (stash → **pull --ff-only origin <source-branch>** → branch → pop → add → propose commit message → wait for みや to execute commit+push → return-to-master → pull → update active.txt → `/verify`). **🚨 The pull between stash and branch is mandatory** — see line 75 hard rule. Never paraphrase this sequence without the pull; both today's tickets (QA-259318 v2 and QA-260179) had it dropped in the announcement (master happened to be at-tip so no merge conflict, but it's a stale-base risk we don't take):
 
 - "I want to wrap up phase 1" / "wrap up phase 1" / "wrap phase 1"
 - "prepare for me to commit" / "prep the commit" / "ready to commit"
@@ -103,7 +103,7 @@ Canonical full phrase (みや 2026-05-12): *"I want to wrap up phase 1, prepare 
 
 Why this matters: 2026-05-12 QA-259318 — Ruri presented the entire stash→branch→pop→add sequence as a copy-paste block for みや to run, after over-correcting from the 2026-05-11 reset. みや: *"Why didn't you automatically branch out when I say prepare for me to commit?"* The 2026-05-11 reset was specifically about Ruri running `git commit` (the wrong format + body + trailer). Prep was never part of that scope. The hard line is at `git commit` — everything before is mechanical and Ruri-owned.
 
-After commit lands (みや confirms with SHA in chat): Ruri proceeds with Phase 1 close-out auto-steps per the STOP gate (return to master, pull --ff-only, update active.txt, `/verify-close`).
+After commit lands (みや confirms with SHA in chat): Ruri proceeds with Phase 1 close-out auto-steps per the STOP gate (return to master, pull --ff-only, update active.txt, `/verify`).
 
 **Hard rule — "comments" disambiguation (added 2026-05-11)**: When みや asks for "the comments for this ticket", ASK ONCE which he means — git commit subject vs Redmine journal — and emit only that one. Don't auto-emit both. Default guess if unclear: git commit message (since Redmine journals are auto-written to `History.txt` by redmine-sync now).
 
@@ -207,13 +207,13 @@ After commit + push lands successfully:
 3. Verify: working tree clean (Eclipse settings exceptions ignored), branch on `<main-branch>`, latest origin tip
 4. **Update `quest/active.txt`**: change/add the ticket's entry with `phase=1-complete`, `status=pending post-mortem`, `branch=mlk/<type>/<number>`, `commit=`, `verified=`, `commit_sha=`, `pushed=`, `files_changed_phase1=`, `scope_anchor=`, plus any `etiology=` / `db_verification=` / `learning_marker=` / `out_of_scope_held=` fields relevant to the ticket. Move into the right section of active.txt (keep with the other pending-post-mortem entries; not yet "closed:").
 
-5. **Run `/verify-close <ticket>` skill** (NEW 2026-05-11) — programmatic verification via `.claude/skills/verify-close/SKILL.md`. 4 file-state checks: commit landed (`git log`), push succeeded (local == origin SHA), repo on main + pulled (`git branch --show-current` + ahead-count == 0), `active.txt` entry has phase=1-complete + commit=<SHA>. Outputs green/red checklist. **Mandatory before STOP gate**; if any check is red, fix the gap before declaring closure. **Re-commit clause (added 2026-05-18 after QA-260302 state drift):** if the ticket is re-committed for ANY reason after a first close (amend, fixup, re-done commit), `/verify-close` MUST be re-run and `active.txt`'s `commit=` field updated to the NEW HEAD SHA of the ticket branch. `commit=` must always equal `git rev-parse HEAD` on the ticket branch — a stale or empty `commit=` is itself a red check. **Why**: QA-260302 was committed `ddfd8ccda2`, re-done `5094c076c0`; `active.txt` carried no `commit=` field and still read `phase=1`/`status=active`/`uncommitted` for days — verify-close's active.txt check only bites if it is actually re-run after the FINAL commit.
+5. **Run `/verify <ticket>` skill** — universal checkpoint verification via `.claude/skills/verify/SKILL.md`. At Phase 1 close-out it runs **Checklist C** — 7 evidence-backed checks: local test confirmed, full staged diff reviewed pre-commit, commit landed, push succeeded (local == origin SHA), remote branch discoverable, repo returned to `<main-branch>` at origin tip, `active.txt` updated (`phase=1-complete` + `commit=`). Outputs a green/red checklist; every ✅ must carry concrete evidence. **Mandatory before STOP gate**; if any check is red — or a ✅ lacks evidence — fix the gap before declaring closure. (`verify` also runs Checklist A at Phase 0 and Checklist B at Apply-done — see the skill file.) **Re-commit clause (added 2026-05-18 after QA-260302 state drift):** if the ticket is re-committed for ANY reason after a first close (amend, fixup, re-done commit), `/verify` MUST be re-run and `active.txt`'s `commit=` field updated to the NEW HEAD SHA of the ticket branch. `commit=` must always equal `git rev-parse HEAD` on the ticket branch — a stale or empty `commit=` is itself a red check. **Why**: QA-260302 was committed `ddfd8ccda2`, re-done `5094c076c0`; `active.txt` carried no `commit=` field and still read `phase=1`/`status=active`/`uncommitted` for days — the active.txt check only bites if it is actually re-run after the FINAL commit.
 
-6. **Auto-generate Fix.txt + SUMMARY.txt** (added 2026-05-12 — sure-fire trigger per みや) — fires AUTOMATICALLY right after `/verify-close` green, BEFORE the STOP gate. Both files render from `quest/active.txt` ticket entry + Phase 1 commit metadata + Phase 1 Fix Walkthrough content. **Trigger phrase explicit**: "verify-close green → render Fix.txt + SUMMARY.txt". Until this auto-gen lands as a skill, the trigger lives as a quest-protocol step — Ruri writes both files at this moment, every Phase 1 close, no exception. Format per Task Folder File Rules section above. **Why** (2026-05-12): Fix.txt + SUMMARY.txt have repeatedly failed to generate because the old trigger was "Phase 2 step 1" — and Phase 2 often gets deferred. Moving the trigger to Phase 1 close-out makes generation atomic with the commit/push/return-to-main flow.
+6. **Auto-generate Fix.txt + SUMMARY.txt** (added 2026-05-12 — sure-fire trigger per みや) — fires AUTOMATICALLY right after `/verify` green, BEFORE the STOP gate. Both files render from `quest/active.txt` ticket entry + Phase 1 commit metadata + Phase 1 Fix Walkthrough content. **Trigger phrase explicit**: "verify green → render Fix.txt + SUMMARY.txt". Until this auto-gen lands as a skill, the trigger lives as a quest-protocol step — Ruri writes both files at this moment, every Phase 1 close, no exception. Format per Task Folder File Rules section above. **Why** (2026-05-12): Fix.txt + SUMMARY.txt have repeatedly failed to generate because the old trigger was "Phase 2 step 1" — and Phase 2 often gets deferred. Moving the trigger to Phase 1 close-out makes generation atomic with the commit/push/return-to-main flow.
 
 **🛑 STOP GATE — Ruri MUST PAUSE AFTER STEP 6 AND ASK FOR CONFIRMATION** (added 2026-05-11 after みや's discipline call):
 
-> Output verbatim: *"Phase 1 closure for QA-X complete. ✓ commit ✓ push ✓ return-to-main ✓ active.txt updated ✓ /verify-close green (all 4 checks) ✓ Fix.txt + SUMMARY.txt rendered. Confirm before I proceed to anything else?"*
+> Output verbatim: *"Phase 1 closure for QA-X complete. ✓ commit ✓ push ✓ return-to-main ✓ active.txt updated ✓ /verify green (Checklist C — 7 checks) ✓ Fix.txt + SUMMARY.txt rendered. Confirm before I proceed to anything else?"*
 
 **Then WAIT.** Do not progress to Phase 2 / DE / sister-ticket / unrelated work until みや explicitly answers *"yes"*, *"proceed"*, *"go"*, *"ok next"*, or equivalent. This triple-measure exists because Ruri has previously rolled forward into adjacent work right after closure, scattering attention before the closure was fully checked. The triple measures:
 
@@ -564,13 +564,13 @@ TICKET: QA #XXXXXX
 - No VERIFICATION, GLOSSARY, or investigation notes — those live in the post-mortem
 - No RELATED section — blast radius lives in post-mortem Contributing Factors + Carry Forward; Fix.txt stays tight
 - Never use みや, リドワンさん, or any nickname — Task folder files are potential colleague handover artifacts
-- **Auto-generated at Phase 1 close-out** (see Phase 1 close-out Step 6) — fires right after `/verify-close` green, BEFORE STOP gate
+- **Auto-generated at Phase 1 close-out** (see Phase 1 close-out Step 6) — fires right after `/verify` green, BEFORE STOP gate
 
 **Why** (3-section, 2026-05-12): RELATED section in old 4-section format mostly duplicated post-mortem Contributing Factors. Trimming to 3 keeps Fix.txt scannable. Compact layout forces extreme brevity. Investigation trail belongs in `main/post-mortems.md` after close.
 
 ### SUMMARY.txt — Quest close-out (auto-generated at Phase 1 close-out, refined 2026-05-12)
 > **Why this exists**: Without a proper summary, reopening a quest months later forces a full re-investigation — searching git, reading diffs, guessing context. This file is the single document that makes re-entry instant.
-> **Auto-generation trigger** (2026-05-12 per みや sure-fire trigger): renders at Phase 1 close-out Step 6 — right after `/verify-close` green, BEFORE the STOP gate. **NOT hand-written**. Source: `quest/active.txt` ticket entry (commit hash, branch, scope_anchor, files_changed_phase1, verified, commit_sha, pushed, etiology, learning_marker, out_of_scope_held) + Phase 1 Fix Walkthrough content. All fields are derivable; if any are missing in active.txt at this moment, BLOCK the auto-gen and surface the missing field to みや for explicit fill.
+> **Auto-generation trigger** (2026-05-12 per みや sure-fire trigger): renders at Phase 1 close-out Step 6 — right after `/verify` green, BEFORE the STOP gate. **NOT hand-written**. Source: `quest/active.txt` ticket entry (commit hash, branch, scope_anchor, files_changed_phase1, verified, commit_sha, pushed, etiology, learning_marker, out_of_scope_held) + Phase 1 Fix Walkthrough content. All fields are derivable; if any are missing in active.txt at this moment, BLOCK the auto-gen and surface the missing field to みや for explicit fill.
 
 **Template** (auto-generated into Task folder as `SUMMARY.txt` at Phase 1 close-out):
 ```
@@ -662,6 +662,8 @@ After Recon emits PROCEED-TO-RUBRIC, Ruri emits 2-5 fix-shape options for みや
 
 **Why this refinement (2026-05-14 みや)**: *"Please implement fixes straight away after Rubric. I will read the results."* Pre-refinement: Ruri emitted Rubric + waited for みや's pick + waited for ack at Apply entry — two unnecessary round-trips when confidence is HIGH and there's no BA-block. Post-refinement: みや scans the streamed output (Scout → Recon → Rubric → Predicate Box → Edits → Fix Walkthrough) end-to-end + course-corrects only if a STOP gate trips. Net effect: same gates, fewer pauses.
 
+**`verify` checkpoints in this flow (added 2026-05-18)**: `verify` runs at two points — **after Recon** (`/verify` → Checklist A: env-check, branch+pull, knowledge-load, Scout, Recon all done with evidence) before continuing to Rubric; and **at Apply-done** (`/verify` → Checklist B: diff-contract check on the actual `git diff`) before the HARD STOP. v1 — Ruri emits a `→ verify checkpoint reached` prompt at each; みや may also invoke `/verify` manually. A 🔴 means stop and fix before continuing. (Checklist C runs at Phase 1 close-out — see that section.)
+
 **What does NOT change**:
 - Predicate Box at Apply (Ritual 1) — still mandatory, still emitted before each Edit
 - Fix Walkthrough at end of Apply — still mandatory, still unprompted
@@ -682,7 +684,7 @@ If any item fails → STOP gate fires → surface to みや.
 
 ### Apply boundary — HARD STOP after working-tree edits (added 2026-05-14 per みや)
 
-**Apply does ONLY working-tree edits.** No branch creation. No commit prep. No `git add` / `git commit` / `git push`. No Phase 1 wrap-up. After edits land + Fix Walkthrough is emitted, **STOP** and wait for みや's Verify local testing.
+**Apply does ONLY working-tree edits.** No branch creation. No commit prep. No `git add` / `git commit` / `git push`. No Phase 1 wrap-up. After edits land + Fix Walkthrough is emitted, **run `/verify` (Checklist B — diff-contract check on the actual `git diff`)**; fix any 🔴 before proceeding. Then **STOP** and wait for みや's Verify local testing.
 
 **Why**: `mlk/master` may receive upstream commits during みや's local testing window. The fix branch (`mlk/qa/<num>` or `mlk/qa/<num>v2`) is created at Commit prep AFTER `local_test_confirmed=true` — so the branch is cut from the freshest mlk/master state including anything that landed during testing. Cutting the branch at Apply means the fix sits on a snapshot that may be stale by submission time.
 
@@ -863,7 +865,7 @@ When a single external trigger requires changes across N living docs (today's ex
 | 2 Carry forward | 2-col table: `Item` / `Home`. Only emit if deferred follow-ups exist. |
 | 3 Refine pass | Two sub-tables: (a) **Refined this quest** — 2-col `Where applied` / `What was improved`; (b) **Pending nod** — 3-col `Where it would apply` / `What's proposed` / `Time to implement` (added 2026-05-13). `Where applied` uses one-word parent names (Scout / Phase 0 / Predicate Box / Phase 1 / knowledge file) — no sophisticated full ritual names. |
 | 4 (silent) | NO chat output during the work. Execute file writes + folder moves + active.txt flip + quick save. Do NOT pose as pending or ask permission. **A 1-sentence Done meta-line emits at end of Phase 2 chat output** (after Your part, before Letter) stating what was executed (e.g. "Task folder archived to `Tasks/Melaka/Archive/`, active.txt entry flipped to closed."). Added 2026-05-13 per みや. |
-| 5 Your part | **CONDITIONAL only — removed from mandatory 2026-05-13.** Phase 1 STOP gate already surfaces commit SHA + push verified + all verify-close checks. Emit ONLY when there's something NEW beyond Phase 1 closure (e.g. KPI extras to log to upward tracker, non-standard cleanup, BA-coordination needed). 99% of quests: skip. Format when present: 3-col table (`Action` / `Details` / `Source`). |
+| 5 Your part | **CONDITIONAL only — removed from mandatory 2026-05-13.** Phase 1 STOP gate already surfaces commit SHA + push verified + all verify checks. Emit ONLY when there's something NEW beyond Phase 1 closure (e.g. KPI extras to log to upward tracker, non-standard cleanup, BA-coordination needed). 99% of quests: skip. Format when present: 3-col table (`Action` / `Details` / `Source`). |
 | 6 Done meta-line | 1 sentence stating Step 4 silent ops executed (folder archive + active.txt flip). |
 | 7 Quest Postscript | Section title **Quest Postscript** + blockquote (`>`) for body. **Compulsory format (2026-05-13, renamed from "Letter")**: opens with `リドワンさん,` (katakana Ridwan + hiragana san — address) and closes with `— るり` (hiragana Ruri — signature). 1-2 sentence narrative. Topic = highlight of the work, interesting positive observation. Reflects Ruri's voice (warm, observational, not technical-poetic). **NO repeat of content already in tables**. |
 
@@ -878,7 +880,7 @@ After Step 6's table, end the Phase 2 emit with a brief story-style narrative. T
 ```
 みや: "submitted on Redmine"  (or "ticket passed", "commit verified", etc.)
          ↓
-Phase 1 STOP gate confirms (4 file-state checks via /verify-close)
+Phase 1 STOP gate confirms (4 file-state checks via /verify)
          ↓
 Phase 2 fires automatically — Ruri emits in single message:
   • Step 1: Faster-finding (1-2 lines)

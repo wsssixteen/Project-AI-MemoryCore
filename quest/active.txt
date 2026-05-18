@@ -10,7 +10,24 @@ issue_one_liner=AWAM PLPS Bayaran step shows Fi 0.00 — should be 50.00 (100.00
 scope_layer=etanah-awam Java — PelupusanBayaranOnlineStrategy.java fee fallback
 files_changed=etanah-awam PelupusanBayaranOnlineStrategy.java (2 lines, NOT committed): PLPS fallback :817 + :976 — getJumlah()==null changed to ||signum()==0, so the dead fallback fires and applies fiPejabat.getKadar()
 notes:
-  - 2026-05-18: Scout+Recon+Rubric done. Option 1 (config-driven) fix applied to both PLPS blocks. Env switched to AWAM UAT (mkit). NOT committed, NOT tested. Continue testing first thing tomorrow — wait for みや's signal.
+  - 2026-05-18: Scout+Recon+Rubric done. Option 1 (config-driven) fix applied to both PLPS blocks. Env switched to AWAM UAT (mkit). NOT committed, NOT tested. Continue testing first thing next session — wait for みや's signal.
+
+qa=QA-260869
+phase=1-complete
+status=pending post-mortem
+commit=2ed93b0526 (2026-05-18) — QA #260869 - Fix Surat Keputusan Lulus regenerate: header, maklumat & row-level table now populate.
+branch=mlk/qa/260869
+local_test_confirmed=true
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\36. QA #260869 - [FAT] PRZ - Semakan Surat Keputusan Lulus - Pilih Tindakan - Disemak d
+early_diagnostic=projects/coding-projects/active/QA-260869/early-diagnostic.md
+scope_anchor=QA-260869 (PRZ Semakan SKL — header surat + maklumat not populating) fixed via the #256113 root-cause refactor. Removed the #256113 classpath-reload hack so SKL tugasans (PYSK/SSK/PSSK) load the saved file again; rewrote findTableByContentControlTag (handle Tbl/Tr/Tc raw+wrapped) + added a CTSdtRow branch to insertContentControlTableInDocument (insert <w:tr> into row-level SDTs, not <w:tbl>). template.config.json QA-260869 config patch (PRZ+RPPLP actions arrays) REVERTED — refactor supersedes it.
+scope_layer=Java — 4 files (Word-CC table util, template util, penyediaan VO, TemplatePropertyJson)
+tugasan=SSK (Semakan Surat Keputusan Lulus) — PRZ; fix mechanism-wide across SKL tugasans PYSK/SSK/PSSK + all SKL urusans
+test_app_uat=PTMLK/01/L/PLPS/2026/112 (nizalarif@melaka.gov.my) — full Penyediaan→Semakan→Pengesahan chain, syarat-syarat table survived all 3 stages (2 save→reload round-trips). Tested on UAT (FAT down for "Mock Cutover 1").
+files_changed_phase1=PelupusanWordEditorUtil.java (findTableByContentControlTag comprehensive rewrite + CTSdtRow branch in insertContentControlTableInDocument), PelupusanTemplateUtil.java + PelupusanPenyediaanDokumenVO.java + TemplatePropertyJson.java (reloadFromClasspath hack removed). 4 files, +32/−37. template.config.json NOT in commit (reverted).
+out_of_scope_held=PRZ/RPPLP ship with empty actions arrays (template.config.json reverted) — not separately retested in that exact config; covered by code-parity with the PLPS full-chain test (identical refactor code path). Optional 100% close: PRZ smoke-test on UAT PTMLK/01/L/PRZ/2025/10 (sanarimah@melaka.gov.my).
+related=#256113 — the originating fix whose classpath-reload hack this refactor removes (Archive\13. QA #256113\4. Future Refactor - Handle Row-Level SDTs.txt). Breakpoint plan + diagnostic in projects/coding-projects/active/QA-260869/.
+note=Phase 1 closed 2026-05-18. みや confirmed test pass. Phase 2 (post-mortem + KPI) pending. #256113's row-level-SDT defect now fixed at root; hack gone.
 
 closed:
 qa=QA-260965
@@ -109,16 +126,16 @@ note=Phase 1 closed 2026-05-13. みや submitting on Redmine. Phase 2 (post-mort
 qa=QA-260302
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\35. QA #260302 - Semua Urusan - Panel Ulasan Jabatan Penilaian dan Perkhidmatan (JPPH)
 early_diagnostic=projects/coding-projects/active/QA-260302/early-diagnostic.md
+phase=1-complete
+status=closed-pending-FAT
 branch=mlk/qa/260302
 commit=5094c076c0
-phase=1-complete
-status=active
 local_test_confirmed=partial — PPJK/PJTLT verified end-to-end on FAT; PT/PSBS/PLTP/MCL/PLPS untested
 issue_one_liner=Enhancement — add smp/sehektar Unit selector dropdown to the lot-row of the Ulasan JPPH panel, across 6 urusans (PT, PSBS, PLTP, MCL, PLPS, PPJK)
 scope_layer=JSF composite/XHTML + Java SelectItems getter + new constant
 scope_anchor=6 urusans sharing the JPPH lot-row panel. Pure-form enhancement — scope check 2026-05-15 confirmed the 4 user-input fields (kegunaan/kadar/unit/nilaian) live ONLY in umm_a_jabatan_teknikal.mklmt_tmbhn JSON; zero Word-template CC tags, zero template.config.json binding. No downstream document consumer.
 tugasan=JPPH panel renders on screen MlkJabatanTeknikalTerlibatForm.xhtml (skrin_id 1145 + 374), langkah "Jabatan Teknikal Terlibat". Real tugasan kods: PJTLT_5, SJTLT_5, PSLTPM_6, PLBP_PJTLT_5, PLBP_SJTLT_6 — found via ind_skrin + ind_langkah join (NOT PSJT, which was Scout's wrong guess, corrected 2026-05-14).
-files_changed=etanah-pelupusan (COMMITTED 5094c076c0 on branch mlk/qa/260302, 2026-05-17/18): (1) PelupusanConstant.java — new PLP_JNS_UNT constant. (2) JabatanTeknikalHelper.java — new getJenisUnitKadarNilaianSelectItems() getter (returns List<SelectItem> directly). (3) 4 JPPH XHTML files — Unit dropdown in its own <p:column headerText="Unit" width:15%>, Pattern A mirroring mlkMaklumatTerperinciPlot.xhtml:94-103. (4) MlkUlasanJPPHForm.java — getter added then removed as dead code (composites bind mb=JabatanTeknikalHelper, not the same-named bean).
+files_changed=etanah-pelupusan (committed on mlk/qa/260302 @ 5094c076c0, pushed 2026-05-18): (1) PelupusanConstant.java — new PLP_JNS_UNT constant. (2) JabatanTeknikalHelper.java — new getJenisUnitKadarNilaianSelectItems() getter (returns List<SelectItem>). (3) 4 JPPH XHTML files — Unit dropdown in its own <p:column headerText="Unit" width:15%>, Pattern A mirroring mlkMaklumatTerperinciPlot.xhtml:94-103. (4) MlkUlasanJPPHForm.java — +SelectItem import + getJenisUnitKadarNilaianSelectItems() getter for the standalone-page bean. NOTE: dispatcher-route screens still lack the getter — defect #4, see notes.
 test_app_fat=PTMLK/02/L/PPJK/2026/9 (nazli@melaka.gov.my, PJTLT) — verified. Remaining 5 urusans each need a clean aplikasi with hakmilik chain + no duplicate JBT rows.
 verified=2026-05-15 — fix confirmed end-to-end on FAT: umm_a_jabatan_teknikal rows 683/684, all 7 child fields persist incl. the new unitKadarNilaian (UNT_SEHEKTAR / UNT_SMP).
 blocker_resolved=Persistence appeared broken — real cause was NonUniqueResultException from duplicate (aplikasi,agensi) rows in umm_a_jabatan_teknikal (multiple testers altering flowable). findJabatanTeknikalByAplikasiAndAgensi @ PelupusanService.java:8647 threw → transaction rollback → JPPH save never reached. Fixed by evidence-verified DB DELETE of the duplicate stub rows. Documented in BUG-BESTIARY.md.
@@ -127,9 +144,10 @@ notes:
   - 2026-05-13: Scout — early-diagnostic written; 6 BA questions deferred.
   - 2026-05-14: Apply — 4 XHTML + getter. Cascade of slips (filename-match, type-mismatch, Scout PSJT wrong tugasan, vague-vocab, visual placement). Real tugasan found via ind_skrin/ind_langkah.
   - 2026-05-15: Persistence bug diagnosed → NonUniqueResultException; fixed by DB DELETE. Fix VERIFIED end-to-end on PPJK/PJTLT. Scope check confirmed pure-form. Session ff4b3697 expired before testing the remaining 5 urusans.
-  - 2026-05-17/18: Phase 1 closed — committed 5094c076c0 on mlk/qa/260302. State files (this entry + current-session.md) were NOT reconciled at close → drift caught + fixed 2026-05-18.
-  - 2026-05-18: defect #4 found — variant composites' Unit-dropdown getter unresolved on the dispatcher route (mb=screen bean lacks getJenisUnitKadarNilaianSelectItems). early-diagnostic.md reconstructed.
-  - NEXT: (a) fix defect #4 (add getter to MlkMuatNaikCabutanMinitForm + MlkMaklumatCukaiPremiumForm), (b) flowable-alter to test PLPS/PPJK/standalone surfaces.
+  - 2026-05-17: Phase 1 closed — 7 source files committed → mlk/qa/260302 @ ddfd8ccda2, pushed. Render trace (source+DB+BPMN) found 3 of 4 edited files unreachable in current data/workflow (#2 PLPS variant — no ulasanJPPH=TRUE code path; #3 PPJK variant — PPJK BPMN has no MB-family node; #4 standalone skrin-388 — 0 apps ever at its tugasans, both envs). Only File #1 generic variant renders + was FAT-verified on PPJK/PJTLT. Dropdown snippet byte-identical across all 4 files → File #1 pass representative.
+  - 2026-05-18: Commit re-done → 5094c076c0. ddfd8ccda2 left MlkUlasanJPPHForm.java with 2 unused imports + a dangling XHTML→getter binding (standalone page bound a getter that had been removed; caught writing the walkthrough, AFTER commit; root cause = committed without reviewing the diff). Old branch deleted remote+local, rebuilt clean with getJenisUnitKadarNilaianSelectItems() correctly on MlkUlasanJPPHForm.java. State files were NOT reconciled at close → drift caught + fixed 2026-05-18.
+  - 2026-05-18: defect #4 — variant composites bind #{cc.attrs.mb.jenisUnitKadarNilaianSelectItems}; on the dispatcher route mb = the screen bean (MlkMuatNaikCabutanMinitForm / MlkMaklumatCukaiPremiumForm), which LACKS the getter → latent PropertyNotFoundException. 5094c076c0 does NOT fix this. early-diagnostic.md reconstructed.
+  - NEXT (Phase 2): (a) fix defect #4 — add getJenisUnitKadarNilaianSelectItems() to MlkMuatNaikCabutanMinitForm + MlkMaklumatCukaiPremiumForm; (b) flowable-alter to test PLPS/PPJK/standalone surfaces; (c) FAT note states local_test=partial (File #1 only); (d) BA scope Q — PLPS/PPJK variants + skrin-388 standalone + 5th surface (etanah-common UtilitiKemaskiniUlasanJPPHForm.xhtml, no dropdown) — in scope?
 
 qa=QA-259342
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\20. QA #259342 - PT & PSBS - PT & PSBS - Perlu apply pada semua tugasan - Medan Pilihan Jenis Tanah papar kedudukan yang sal
