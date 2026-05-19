@@ -275,4 +275,24 @@
 
 ---
 
+### QA-262027 — PSBS Surat Keputusan PTG kepada PDT — 2026-05-19
+
+**Closure type**: code-fix-shipped (5 .docx + Java fixes)
+**Time spent**: ~1 long session (batch-retrieved with 3 sibling PSBS tickets)
+
+**What we learnt**:
+
+| Identifier (searchable) | What we learnt (plain English) |
+|---|---|
+| `TemplateSuratMaklumanPTGPSBSLulus.docx` | The real PSBS PTG-decision surat (the `Keputusan`-named sibling is dead/legacy). Config-bound template.config.json:611-666, tugasans KKMMKN/SKMMKN/PKMMKN |
+| CC-tag casing | A template CC tag whose casing doesn't exactly match the Java `TAG_*` constant dispatches to NOTHING — the field stays a dead placeholder. `hasilTahunPertamawithRM` ≠ `hasilTahunPertamaWithRM` |
+| `populateBandarPekanMukim` @ 4649 | Deliberately strips the word "mukim" via `replaceAll` — the template is meant to supply the "Mukim" label itself (parallel to the static "Daerah" label) |
+| `populateNamaJenisAndNoHakmilik` @ 11758 | Uses `JenisHakmilik.getNama()` (full "Pajakan Negeri"); abbreviation is `.getKod()` ("PN", verified in `rjk_jns_hkmlk`). New `singkatanJenisNoHakmilik` tag added rather than mutating the shared populator |
+| `PelupusanWordEditorUtil` createP / createStyledParagraph | Old auto-justify-when-jc-null bug is fixed in mlk/master — both default to `JcEnumeration.LEFT`; `JcEnumeration.BOTH` appears nowhere in pelupusan source |
+
+**Extras solved beyond ticket scope**: none (strict BA-highlighted scope per the new ticket-cadence rule)
+**Audit-log entries spawned**: `checklist` skill, `QA-NNNN.md` doc, ticket-cadence memory, Phase-1-branch-timing refine
+
+---
+
 *Created 2026-05-06 in response to みや's KPI-tracking ask. Will capture every closed ticket going forward.*

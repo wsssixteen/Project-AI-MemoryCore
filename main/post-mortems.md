@@ -676,4 +676,42 @@ Read the cited method body verbatim at Cp C step 2 (existing utility sweep) inst
 
 ---
 
+### QA-262027 — PSBS Surat Keputusan PTG kepada PDT — 2026-05-19
+
+**Lessons**:
+
+| Plain language | Technical | Explanation |
+|---|---|---|
+| A deferred item in a footnote is a hidden item | BA issues #5 (PN) + #6 (Mukim prefix) were parked in a "Deferred (#4-#8)" prose line under a Rubric that read "test-ready" | みや had to challenge to surface them. Deferring is fine; deferring quietly is the sweep. A deferred item must be a visible decision, not a sub-line |
+| "Verified" must mean intent-verified, not mechanism-verified | Fix #1 marked "VERIFIED 100%" — but only the casing mismatch (`hasilTahunPertamawithRM` vs Java `…WithRM`) was traced; whether the corrected tag's populator (`getHasilThnPertama()` = first-year revenue) matches the BA's "Kadar Nilaian smp/sehektar" was never checked | Noticed-then-dropped: the BA's comment was recorded in the early-diagnostic, then rationalised away. A fix is "done" only when mechanism AND BA-intent both hold |
+| Branch is cut at Phase 1 close, after test — never at Apply | Created `mlk/qa/262027` at Apply time; `quest-protocol.md:687-701` explicitly bans it (Apply = working-tree edits on mlk/master only) | Branching early forks the fix off a master that may be stale by submission. Corrected: branch deleted, fix moved to mlk/master, re-cut at close after the test passed |
+
+**Contributing Factors**:
+
+| # | Factor | Evidence |
+|---|---|---|
+| 1 | No structured per-issue tracking — "deferred" lived in prose | Early-diagnostic had a discrepancy table but no status-per-phase; deferral was buryable. Fixed: `checklist` skill + QA-NNNN.md Issue Checklist |
+| 2 | "Verified" status conflated mechanism-real with fix-correct | Recon row #1 said VERIFIED on the casing trace alone; the populator output was never matched to the BA's stated intent |
+| 3 | Followed CLAUDE.md "Phase 1 Closure — Git Sequence" at Apply time | That section lists pull→branch→commit but lacked an explicit "run only after test passes" precondition; `quest-protocol.md` was unambiguous and not cross-checked |
+| 4 | Challenged items re-examined in isolation, not as a whole-quest RESET | When みや challenged #5/#6 + branching, fix #1 stayed "settled" — Momentum Circuit-Breaker T2 should have fired and re-audited every fix |
+
+**Process Notes**:
+
+| Item | Detail |
+|---|---|
+| Fix shipped | 5 fixes on `003862e9ff`: #1 CC-tag casing, #2 ejaan, #3 slogan jc both→left, #5 new `singkatanJenisNoHakmilik` tag+populator (PN abbrev), #6 static "Mukim " label |
+| New skill spawned | `checklist` — universal task checklist (Tier 3); core rule (mechanism-done ≠ done; intent must match) is the direct cure for the #1 slip |
+| New doc spawned | `QA-NNNN.md` per-quest lifecycle doc — Design Memo approved; Issue Checklist section is the visible-decision cure for the deferral slip |
+| Protocol gap surfaced | CLAUDE.md "Phase 1 Closure — Git Sequence" needs a precondition line (run only after `local_test_confirmed`) — text given to みや (file edit-blocked) |
+
+**Carry Forward**:
+
+| Item | Home |
+|---|---|
+| #1 value-source — does `hasilTahunPertama` satisfy BA's "Kadar Nilaian smp/sehektar"? | BA-Q on Redmine submission |
+| #7 (Tujuan+Perincian) + #8 (template structure) | Deferred — need Requirement #237882 attachment |
+| Heading "55 Tahun" vs body "1 Tahun" inconsistency | Out-of-scope observation — flagged to BA |
+
+---
+
 *Post-Mortem Log v1.0 — 2026-04-02*
