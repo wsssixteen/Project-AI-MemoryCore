@@ -621,7 +621,7 @@ For **etanah** work commits (etanah-pelupusan, etanah-awam), follow the separate
 
 ## 🔢 Phase 1 Closure — Git Sequence (hard rule, added 2026-05-18 — 3rd pull-before-branch miss)
 
-Ordered sequence for committing a quest fix. These steps, in this order, no exceptions:
+**Precondition (2026-05-19):** this sequence runs ONLY after `local_test_confirmed=true` — i.e. after みや confirms the test passes. Until then the fix is uncommitted working-tree edits on the repo main branch; **no `mlk/qa/*` branch exists**. Creating the branch at Apply is banned (`quest-protocol.md:687-701`). Ordered sequence for committing a quest fix. These steps, in this order, no exceptions:
 
 1. `git pull --ff-only origin <main>` — **FIRST**, while still on the repo's main branch, immediately before branching. `<main>` is **per-repo**: `mlk/master` (etanah-pelupusan) / `mlk/release/fat` (etanah-awam). Non-skippable every time — "already pulled this session" is NOT valid (upstream moves mid-session).
 2. `git checkout -b mlk/qa/<num>` — only after step 1.
@@ -670,6 +670,6 @@ Everything else (personality, memory, session, permissions, project rules) is in
 - `/familiar` — sub-agent for large files
 - `/appraise [subject]` — Socratic plan stress-test (9-question interrogation across Assumption / Scope / Evidence axes)
 
-*Version: 1.17 | Last updated: 2026-05-19*
+*Version: 1.18 | Last updated: 2026-05-19*
 
 **Version-bump discipline (added 2026-05-13 per みや)**: every Refine Block / hard-rule addition to a protocol file MUST update the file's Version + Last Updated stamp in the same edit pass. Version is a single-integer increment per protocol revision (1.6 → 1.7). Audit-log entries alone don't surface protocol drift; the footer stamp does.
