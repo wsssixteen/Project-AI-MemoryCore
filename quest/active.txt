@@ -31,6 +31,66 @@ out_of_scope_held=PRZ/RPPLP ship with empty actions arrays (template.config.json
 related=#256113 — the originating fix whose classpath-reload hack this refactor removes (Archive\13. QA #256113\4. Future Refactor - Handle Row-Level SDTs.txt). Breakpoint plan + diagnostic in projects/coding-projects/active/QA-260869/.
 note=Phase 1 closed 2026-05-18. みや confirmed test pass. Phase 2 (post-mortem + KPI) pending. #256113's row-level-SDT defect now fixed at root; hack gone.
 
+qa=QA-262027
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\39. QA #262027 - FAT - PSBS - Isu pada Surat Keputusan PTG kepada PDT
+early_diagnostic=projects/coding-projects/active/QA-262027/early-diagnostic.md
+branch=mlk/qa/262027
+commit=003862e9ff (2026-05-19) — QA #262027 - PSBS - Fix Surat Keputusan PTG kepada PDT
+phase=2-complete
+local_test_confirmed=true
+status=closed-pending-FAT
+post_mortem=main/post-mortems.md (entry 2026-05-19)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-19)
+issue_one_liner=PSBS Surat Keputusan PTG kepada PDT — maklumat tak tertarik, ejaan salah, align salah vs Requirement #237882
+scope_layer=.docx template + Java — TemplateSuratMaklumanPTGPSBSLulus.docx + PelupusanWordCCMethodConstant.java
+scope_anchor=3 confirmed defects fixed on the .docx (uncommitted working-tree edits on mlk/master): (1) CC-tag casing hasilTahunPertamawithRM->hasilTahunPertamaWithRM so <Hasil> dispatches to populateNotis5ACukaiTahunPertama (registered @ PelupusanWordCCMethodConstant.java:995); (2) frasa2 slogan paragraph w14:paraId 368FBC36 jc both->left; (3) ejaan menlanjutkan->melanjutkan. (4) #5 PN abbreviation — new tag singkatanJenisNoHakmilik + populator populateSingkatanJenisAndNoHakmilik (uses JenisHakmilik.getKod not getNama; kod PN verified in rjk_jns_hkmlk); template CC tag swapped namaJenisNoHakmilik->singkatanJenisNoHakmilik. (5) #6 Mukim prefix — static "Mukim " inserted before bandarPekanMukim CC tag (populator deliberately strips the word; template supplies the label, parallel to "Daerah {namaDaerah}"). Items #4, #7, #8 (Tarikh Disahkan / Tujuan+Perincian / template-structure) still DEFERRED — need Requirement #237882 doc + DB-value verify.
+files_changed=etanah-pelupusan (uncommitted working-tree edits on mlk/master): src/main/resources/template/MLK/TemplateSuratMaklumanPTGPSBSLulus.docx (5 edits) + src/main/java/my/gov/etanah/pelupusan/constant/PelupusanWordCCMethodConstant.java (new TAG_SINGKATAN_JENIS_NO_HAKMILIK + populateSingkatanJenisAndNoHakmilik + dispatch registration)
+test_app_uat=PTMLK/03/L/PSBS/2026/6 (masirah@melaka.gov.my) at KKMMKN, Lulus — zero-alter, generates SuratKeputusanPTG.docx. BA-prep app PTMLK/02/L/PSBS/2026/3 (mdiqbal@melaka.gov.my) is at SRMMKNPTG on UAT — would need flowable-alter to KKMMKN.
+notes:
+  - 2026-05-19: Retrieved (batch of 4 PSBS .docx tickets) + Scout + Recon. 3 .docx defects applied to mlk/master working tree, UNCOMMITTED, awaiting みや UAT test. Premature branch mlk/qa/262027 was created then deleted — corrected 2026-05-19, fix moved to mlk/master per quest-protocol Apply rule.
+  - 2026-05-19: #5 (PN) + #6 (Mukim) added per みや challenge. #1 RECLASSIFIED — casing fix is dispatch-only; the corrected tag populates hasilTahunPertama (Notis 5A first-year revenue), which is NOT verified to equal BA's "Kadar Nilaian smp/sehektar". #1 value-source = BA-Q, not "verified". Recon's "100%-verified" tag on #1 was wrong — only the casing MECHANISM was verified, not BA-intent match. env switched to pelupusan-UAT (standalone.xml etanahDS->mlkuat); JBoss rebuild+redeploy needed (Case B module switch awam->pelupusan). 5 items deferred — BA-Q list in early-diagnostic.md.
+
+qa=QA-262039
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\38. QA #262039 - FAT - PSBS - Isu pada Surat Keputusan Lulus kepada Pemohon
+early_diagnostic=projects/coding-projects/active/QA-262039/early-diagnostic.md
+phase=0
+status=hold
+issue_one_liner=PSBS Surat Keputusan Lulus kepada Pemohon — maklumat tak tertarik, perkataan duplicate vs Requirement #237883
+scope_layer=.docx template — TemplateSuratKeputusanLulusPSBS.docx; tugasan PYSKN5A/SSKN5A/PSKN5A
+scope_anchor=Scout: 12 discrepancies (8 static .docx, 3 CC-tag wiring/hardcoded values, 1 BA-confirm, 0 Java populator bugs). Fix-shape drafted per discrepancy in early-diagnostic.md.
+notes:
+  - 2026-05-19: Retrieved + Scout done. SILENT — Phase 0 + fix-shape persisted in early-diagnostic.md. Recon-100%-verify + Apply pending focus. 5 BA-Qs (chiefly the Notis 5A payment source + Requirement #237883 attachment).
+
+qa=QA-262004
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\40. QA #262004 - FAT - PSBS - Isu pada Ringkasan Risalat
+early_diagnostic=projects/coding-projects/active/QA-262004/early-diagnostic.md
+phase=0
+status=hold
+issue_one_liner=PSBS Ringkasan Risalat — maklumat tak tertarik, font/saiz beza, align salah vs Requirement #237880
+scope_layer=.docx template — TemplateRingkasanRisalatPSBS.docx (+ injected references/JabatanTeknikal.docx); tugasan PRMMKNPTG/SRMMKNPTG/PRRMMKNPTG
+scope_anchor=Scout: 10 discrepancies (6 static .docx, 3 CC-tag wiring/missing SDTs, 2 Java/data). PSBS template is an incomplete variant missing CCs its siblings carry + Arial/Century-Gothic font mix. Fix-shape drafted in early-diagnostic.md.
+notes:
+  - 2026-05-19: Retrieved + Scout done. SILENT — Phase 0 + fix-shape persisted. Recon-verify + Apply pending focus. Test app PTMLK/02/L/PSBS/2026/3 on UAT is currently AT SRMMKNPTG (zero-alter for this ticket). Shares Requirement #237880 with QA-261986.
+
+qa=QA-261986
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\41. QA #261986 - FAT - PSBS - Isu pada Risalat MMKN
+early_diagnostic=projects/coding-projects/active/QA-261986/early-diagnostic.md
+phase=0
+status=hold
+issue_one_liner=PSBS Risalat MMKN — maklumat tak tertarik, numbering salah, font beza, align salah vs Requirement #237880 (High priority)
+scope_layer=.docx template — TemplateRisalatMMKN_PDT_PSBS_Lulus.docx (+ injected references/additionalJKKLParagraph.docx); tugasan PRMMKNPDT/SRMMKNPDT/PRMMKNPTG/SRMMKNPTG
+scope_anchor=Scout: 22 discrepancies (~10 static .docx, ~5 injected-ref-doc, ~3-4 Java populator bugs, ~5 data). Confirmed Java bug: populatePTGParagraph_PSBS_Lulus @ PelupusanWordCCMethodConstant.java:17601 computes premiumPT then overwrites with HYPHEN (dead override). Fix-shape drafted in early-diagnostic.md.
+notes:
+  - 2026-05-19: Retrieved + Scout done. SILENT — Phase 0 + fix-shape persisted. Largest of the 4; the only one with Java populator bugs. Recon-verify + Apply pending focus. Shares Requirement #237880 + likely shares populators with QA-262004 — do Java fixes once, verify both.
+
+qa=QA-259339
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\42. QA #259339 - [FAT] PRU - Pembetulan Pada Template Kertas Pertimbangan
+phase=0
+status=hold
+issue_one_liner=PRU - Pembetulan pada Template Kertas Pertimbangan (FAT)
+notes:
+  - 2026-05-19: Retrieved (Redmine status "In Progress" — likely rework; History.txt has 6 journal entries). Task folder has PDF + Actual/Expected PNGs. Scout NOT yet run — deferred to when the ticket is picked (session wrap-up). early-diagnostic pending.
+
 closed:
 qa=QA-260965
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\31. QA #260965 - FAT - PLPS, PRBB - Semakan Kemasukan Maklumat - No. Sijil Kerakyatan ada tanda mandatori sedangkan
