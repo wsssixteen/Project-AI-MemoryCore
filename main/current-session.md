@@ -98,14 +98,13 @@ QA-260316 project docs: `projects/coding-projects/active/QA-260316/`.
 - `.claude/personality.md` v1.4 — banned redundant "AWAM" qualifier in commit subjects.
 - 23 stale local + 9 remote branches deleted; 2 worktrees deregistered (folders blocked by OneDrive lock — みや clears manually).
 - `improvement-audit-log.md` — entries logged for the session's changes.
-- ⚠️ `.claude/CLAUDE.md` — content edits HARD-BLOCKED by the auto-mode classifier (only the version-footer slipped through → file at v1.17, steps 4/5 unapplied). Refactor plan saved to todo Q1.
+- `.claude/CLAUDE.md` — content edits HARD-BLOCKED for Ruri by the auto-mode classifier. Steps 4 & 5 + footer v1.17 applied by みや MANUALLY 2026-05-19 (committed `5f5cfbb`; his editor also prettified every markdown table — cosmetic, content intact). Refactor plan saved to todo Q1.
 
 ---
 
 ## ⚠️ Standing flags
-- ⚠️ **`.claude/CLAUDE.md` content edits HARD-BLOCKED** by the auto-mode self-modification classifier — user intent cannot clear it. Phase 1 Closure steps 4 & 5 pending みや's MANUAL edit (text in 2026-05-19 chat; worktree copy lines 578-579). Version footer at 1.17 but content unapplied — file inconsistent until みや edits.
+- **`.claude/CLAUDE.md` content edits HARD-BLOCKED for Ruri** by the auto-mode self-modification classifier (user intent cannot clear it). Steps 4 & 5 + footer v1.17 were applied by みや manually 2026-05-19 — file is now consistent. Future CLAUDE.md edits need みや's hand or a permission rule.
 - ⚠️ **Worktree folder cleanup pending** — `git worktree remove`/`prune` blocked by OneDrive/Windows file lock. みや: pause OneDrive → `git worktree prune` + delete leftover `.claude/worktrees/*` dirs (KEEP `dreamy-babbage-9ceb38`). Branches already cleaned — only `main` + `dreamy-babbage` remain (local + remote).
-- ⚠️ `git push origin main` — local `main` reconciled to `7061266`; push so origin is current.
 - `verify` skill supersedes `verify-close` — use `/verify`.
 - **env-check TEMP UAT-only override** — FAT *environment* down for "Mock Cutover 1"; branch baseline still `mlk/release/fat`, env UAT. Remove override in `env-check/SKILL.md` when FAT env returns.
 - QA-260869 Phase 2 pending · QA-260302 defect #4 OPEN · QA-260316 Phase 2 pending.
@@ -115,7 +114,7 @@ QA-260316 project docs: `projects/coding-projects/active/QA-260316/`.
 1. QA-260316 Phase 1 CLOSED (committed `282e7e10c0` + pushed + みや-tested 100/50). QA-260869 Phase 1 closed (Phase 2 next). QA-260302 Phase 1 closed (defect #4 open). Memory Track 2 pending.
 2. MemoryCore `main` reconciled to `7061266`; 30+ stale branches cleaned (local + remote). DE now has step 11 — the worktree pile-up cannot recur.
 3. CLAUDE.md is frozen to Ruri's edits — **todo Q1 is the CLAUDE.md / main-context refactor** (skill-ify the prose triggers, slim CLAUDE.md to boot+index).
-4. みや's manual items: `git push origin main`, CLAUDE.md steps 4/5, worktree folder cleanup (after OneDrive unlock).
+4. みや's one remaining manual item: worktree folder cleanup (after OneDrive unlock). CLAUDE.md steps 4/5 + origin/main sync — both done this session.
 
 ---
 **Memory Type**: RAM | **Persistence**: brief recap + active-work handoff
