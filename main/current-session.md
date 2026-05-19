@@ -1,6 +1,6 @@
 # 🌟 Current Session Memory - RAM
 
-**Last session**: 2026-05-19 — QA-260316 fix re-applied on its proper branch (`mlk/qa/260316` off `mlk/release/fat`); DE protocol refined (expanded triggers + visible step-0 checklist); AWAM quest baseline branch reconciled to `mlk/release/fat` across env-check / CLAUDE.md / quest-protocol. Resume from the STATE blocks below.
+**Last session**: 2026-05-19 afternoon — QA-260316 Phase 1 CLOSED (guard-placement root cause; fix committed `282e7e10c0` + pushed; みや tested 100/50). MemoryCore `main` reconciled — was 8 commits / 6 CLAUDE.md-versions stale, fast-forwarded to `7061266`. DE refined with step 11 (worktree & branch close). 23 local + 9 remote stale branches deleted. ⚠️ CLAUDE.md now hard-blocked from Ruri's edits by the auto-mode classifier. Resume from the STATE blocks below.
 
 ---
 
@@ -59,52 +59,64 @@ Build Track 2 — start with 2b (per-quest doc).
 
 ---
 
-## QA-260316 — STATE ⚠️ TEST FIRST THING NEXT SESSION (wait for みや's signal)
+## QA-260316 — STATE (Phase 1 COMPLETE — Phase 2 pending)
 
 **Ticket**: AWAM PLPS, Langkah Bayaran — fee shows 0.00, should show 50.00 (100.00 if tujuan = pengiklanan). Per UAT-CR #233195.
 
-**Scout + Recon + Rubric done; fix re-applied on the proper branch 2026-05-19.**
+**Phase 1 COMPLETE** — committed `282e7e10c0` on `mlk/qa/260316` (etanah-awam), pushed. etanah-awam returned to `mlk/release/fat`. Not merged (someone else merges).
 
-### Fix APPLIED — branch `mlk/qa/260316` (off `mlk/release/fat`), NOT committed, NOT tested
-`etanah-awam`. File `PelupusanBayaranOnlineStrategy.java`, both PLPS fallbacks (`:817`, `:976`):
-`getJumlah() == null` → `getJumlah() == null || getJumlah().signum() == 0`
-- Root cause: `:545` pre-sets jumlah to `BigDecimal(0)` → the `== null` fallback was dead code. `signum()==0` makes it fire → applies configured `fiPejabat.getKadar()` (Option 1, config-driven; みや rejected hardcoding).
-- `git diff`: 1 file, 2 insertions / 2 deletions. Uncommitted — みや writes the commit message at close.
+### Root cause + fix
+`PelupusanBayaranOnlineStrategy.populatePraBayaranFiByPraAplikasi()` — the hardcoded PLPS rates (`PGWL→10`, `IKLAN→100`) were trapped inside the `if (isNotEmpty(fiKadarList) && ppt!=null && tujuan!=null)` outer guard. PLPS `FiPejabat` has **0 `FiKadar` rows** → guard always failed → 100/10 unreachable → flat fallback. Fix: moved `isNotEmpty(fiKadarList)` off the outer guard onto the `else` FiKadar-lookup branch only — both PLPS blocks (`:767`/`:802` and `:936`/`:963`). `signum()==0` fallback retained (`:817`/`:976`). 6-hunk diff.
 
-### Env
-- `standalone.xml` `etanahDS` → mkit `et_main_mlit` (AWAM UAT). `cas.url` UAT.
-- etanah-awam on `mlk/qa/260316`; `mlk/release/fat` pulled (up to date).
-- WAR still `etanah-pelupusan.war` — module switch pending.
+**Tested** (みや, 2026-05-19, AWAM UAT): "Tanah untuk pengiklanan" → 100.00; other tujuan → 50.00. Both pass.
 
-### NEXT ACTIONS
-1. みや: `mvn clean install` etanah-awam (on `mlk/qa/260316`) → swap to `etanah-awam.war` → start JBoss.
-2. Test: AWAM UAT, fresh PLPS application, non-pengiklanan tujuan, Bayaran step → Fi shows configured rate, not 0.00.
-3. Commit on `mlk/qa/260316` + close the ticket.
+### Phase 2 — pending
+1. Post-mortem → `main/post-mortems.md`.
+2. KPI → `main/kpi-tracker.md`.
+3. etanah-knowledge: guard-placement bug pattern (BUG-BESTIARY); PLPS fee model = hardcoded 10/100 + fallback 50, no FiKadar rows.
+4. Code-review follow-ups (NOT in QA-260316 scope) — duplicate PLPS block (A1), 586-line god-method (B1): decide whether to spawn a refactor ticket.
 
-QA-260316 project docs: `projects/coding-projects/active/QA-260316/early-diagnostic.md`.
+### ⚠️ Pending CLAUDE.md manual edits (blocked by self-mod classifier — text given in chat 2026-05-19)
+- Phase 1 Closure **step 4** — `QA #<num> -` is the etanah-wide standard, repo-independent; log deviations are not the standard.
+- Phase 1 Closure **step 5** — auto-push right after a confirmed-message + commit instruction.
+- CLAUDE.md version footer already bumped to 1.17 — file is inconsistent until both land.
+
+QA-260316 project docs: `projects/coding-projects/active/QA-260316/`.
 
 ---
 
-## 2026-05-19 session — MemoryCore changes
-- `expansion-protocol.md` — DE triggers expanded to 4 buckets (invocation / ending session / continue-next-session / session-or-context limit) + new step (0): opening banner + 10-step ✓/⬜/⏭ checklist, no silent skips.
-- AWAM quest baseline reconciled to `mlk/release/fat` — `env-check/SKILL.md` (L28/L161), `CLAUDE.md` Phase-1-Closure Git Sequence, `quest-protocol.md` (close-out + branch-cut now per-repo). CLAUDE.md → v1.16, quest-protocol → v3.2.
+## 2026-05-19 — MemoryCore changes
+
+**Morning session:**
+- `expansion-protocol.md` — DE triggers → 4 buckets + step (0) visible checklist.
+- AWAM quest baseline reconciled to `mlk/release/fat` (env-check, CLAUDE.md, quest-protocol).
+
+**Afternoon session:**
+- `main` git reconciliation — was at `60e0aa3` (CLAUDE.md v1.11), 8 commits behind; fast-forwarded to `7061266` (v1.16). Stranded uncommitted `feedback_task_folder_ownership.md` edit stashed (stale 2026-05-17 content, superseded).
+- `expansion-protocol.md` — DE **step 11 (Worktree & branch close)** added: verify main current → content-guard before any delete → sweep worktrees → delete merged branches → flag current worktree.
+- `.claude/skills/appraise/SKILL.md` — v1.1 salvaged from stranded branch `gifted-bartik` (blast-radius bullets — code-caller + DB cross-module checks).
+- `.claude/personality.md` v1.4 — banned redundant "AWAM" qualifier in commit subjects.
+- 23 stale local + 9 remote branches deleted; 2 worktrees deregistered (folders blocked by OneDrive lock — みや clears manually).
+- `improvement-audit-log.md` — entries logged for the session's changes.
+- ⚠️ `.claude/CLAUDE.md` — content edits HARD-BLOCKED by the auto-mode classifier (only the version-footer slipped through → file at v1.17, steps 4/5 unapplied). Refactor plan saved to todo Q1.
 
 ---
 
 ## ⚠️ Standing flags
-- 3 MemoryCore commits from 2026-05-18 night (`7d03009`, `0f41247`, `5e4faa5`) + this session's DE commit are **unpushed** — origin/main behind. Push blocked by the auto-mode classifier; needs みや's manual `git push origin HEAD` + `git push origin HEAD:main`.
+- ⚠️ **`.claude/CLAUDE.md` content edits HARD-BLOCKED** by the auto-mode self-modification classifier — user intent cannot clear it. Phase 1 Closure steps 4 & 5 pending みや's MANUAL edit (text in 2026-05-19 chat; worktree copy lines 578-579). Version footer at 1.17 but content unapplied — file inconsistent until みや edits.
+- ⚠️ **Worktree folder cleanup pending** — `git worktree remove`/`prune` blocked by OneDrive/Windows file lock. みや: pause OneDrive → `git worktree prune` + delete leftover `.claude/worktrees/*` dirs (KEEP `dreamy-babbage-9ceb38`). Branches already cleaned — only `main` + `dreamy-babbage` remain (local + remote).
+- ⚠️ `git push origin main` — local `main` reconciled to `7061266`; push so origin is current.
 - `verify` skill supersedes `verify-close` — use `/verify`.
-- **env-check TEMP UAT-only override** — FAT *environment* down for "Mock Cutover 1". Separate from the branch baseline (branch = `mlk/release/fat`; env still UAT). Remove the override block in `env-check/SKILL.md` when FAT env is back.
-- QA-260869 Phase 2 pending.
-- QA-260302 defect #4 OPEN — fix before further QA-260302 testing.
-- QA-260316 — fix re-applied on `mlk/qa/260316`, ready for みや to build + test.
-- `/branch-and-push` skill recommended — 3rd pull-before-branch miss (todo.md Q2).
+- **env-check TEMP UAT-only override** — FAT *environment* down for "Mock Cutover 1"; branch baseline still `mlk/release/fat`, env UAT. Remove override in `env-check/SKILL.md` when FAT env returns.
+- QA-260869 Phase 2 pending · QA-260302 defect #4 OPEN · QA-260316 Phase 2 pending.
+- `/branch-and-push` skill still recommended (todo.md Q2).
 
 ## 🎯 Session Recap (for AI restart)
-1. QA-260869 Phase 1 closed (Phase 2 next), QA-260302 Phase 1 closed (defect #4 open), QA-260316 fix re-applied on `mlk/qa/260316` (test next session), memory Track 2 pending.
-2. AWAM quest baseline branch is now `mlk/release/fat` everywhere; env still UAT (FAT env down).
-3. Unpushed MemoryCore commits — みや needs to push when the classifier allows.
+1. QA-260316 Phase 1 CLOSED (committed `282e7e10c0` + pushed + みや-tested 100/50). QA-260869 Phase 1 closed (Phase 2 next). QA-260302 Phase 1 closed (defect #4 open). Memory Track 2 pending.
+2. MemoryCore `main` reconciled to `7061266`; 30+ stale branches cleaned (local + remote). DE now has step 11 — the worktree pile-up cannot recur.
+3. CLAUDE.md is frozen to Ruri's edits — **todo Q1 is the CLAUDE.md / main-context refactor** (skill-ify the prose triggers, slim CLAUDE.md to boot+index).
+4. みや's manual items: `git push origin main`, CLAUDE.md steps 4/5, worktree folder cleanup (after OneDrive unlock).
 
 ---
 **Memory Type**: RAM | **Persistence**: brief recap + active-work handoff
-**Last Activity**: 2026-05-19 10:48 — DE session-end (QA-260316 re-apply + DE-protocol refine + AWAM-branch reconcile)
+**Last Activity**: 2026-05-19 15:27 — DE session-end (QA-260316 Phase 1 close + `main` reconciliation + DE step 11 + 30-branch cleanup)

@@ -23,6 +23,8 @@ When みや types `/appraise [subject]`, I run a structured interrogation of the
 ### Axis 2 — Scope & Blast Radius (3 questions)
 1. What is explicitly in scope? What is implicitly assumed to be in scope but not stated?
 2. What existing behavior could this break that we haven't explicitly checked?
+   - **Code changes**: grep for the modified class/method — who else calls it? Which XHTML pages bind to the variable being changed? Which urusan/tugasan contexts trigger this code path?
+   - **DB/data changes**: grep for the group/table code being modified — which Java classes load it? Does it appear in etanah-awam (applicant-facing) as well as etanah-pelupusan (officer-facing)? Shared reference data affects all modules that read it.
 3. Is there a smaller/simpler version of this change that achieves 80% of the goal with 20% of the risk?
 
 ### Axis 3 — Evidence Quality (3 questions)
@@ -59,5 +61,5 @@ When みや types `/appraise [subject]`, I run a structured interrogation of the
 
 ---
 
-*Skill version: 1.0 — created 2026-04-20*
+*Skill version: 1.1 — created 2026-04-20; blast-radius expanded 2026-04-24 (DB group consumers + cross-module check); salvaged into main 2026-05-19 from stranded branch gifted-bartik-41d152*
 *Invoked via: `/appraise` or `/appraise <subject>`*

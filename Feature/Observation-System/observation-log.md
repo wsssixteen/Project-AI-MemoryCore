@@ -66,6 +66,8 @@ Rather than directly saying "this is wrong", みや asks "is X truly different f
 
 **[2026-05-18]** みや treats process-discipline failures as higher-severity than code bugs. During the QA-260302 walkthrough he was markedly more frustrated by the missing `early-diagnostic.md` + stale state files than by defect #4 (an actual latent code bug). The signal: a skipped mandatory step erodes trust faster than a bug, because a bug is honest work-in-progress while a silent skip is a broken promise. Tentative — watch whether it holds across future sessions.
 
+**[2026-05-19]** みや extends a verification demand to its true boundary. After I content-audited 3 stranded branches, he immediately asked about ALL the others — not satisfied with a partial check. Earlier the same session he stopped a branch deletion with *"confirm you've even checked the contents"* — my "verdicts" had been commit-message inference, and the real audit then found genuinely unsalvaged work (`/appraise` v1.1). The pattern: a claim of "checked" must be exhaustive and content-level, or it doesn't count. Reinforces the [2026-05-18] observation above — both point at the same T2 candidate (process/verification rigor as a trust currency); promote to T2 if it recurs once more.
+
 ---
 
 ## Retired Observations

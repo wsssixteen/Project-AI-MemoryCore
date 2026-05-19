@@ -2,15 +2,17 @@ active:
 qa=QA-260316
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\37. QA #260316 - PLPS - AWAM - Bayaran Permohonan papar 0.00
 early_diagnostic=projects/coding-projects/active/QA-260316/early-diagnostic.md
-branch=mlk/release/uat
-phase=1
-local_test_confirmed=false
-status=active
+branch=mlk/qa/260316
+commit=282e7e10c0
+phase=1-complete
+local_test_confirmed=true
+status=pending post-mortem
 issue_one_liner=AWAM PLPS Bayaran step shows Fi 0.00 — should be 50.00 (100.00 if tujuan=pengiklanan), per UAT-CR #233195
-scope_layer=etanah-awam Java — PelupusanBayaranOnlineStrategy.java fee fallback
-files_changed=etanah-awam PelupusanBayaranOnlineStrategy.java (2 lines, NOT committed): PLPS fallback :817 + :976 — getJumlah()==null changed to ||signum()==0, so the dead fallback fires and applies fiPejabat.getKadar()
+scope_layer=etanah-awam Java — PelupusanBayaranOnlineStrategy.java PLPS fee resolution
+files_changed=etanah-awam PelupusanBayaranOnlineStrategy.java (committed 282e7e10c0): both PLPS blocks — moved isNotEmpty(fiKadarList) off the outer guard onto the else FiKadar-lookup branch only, so hardcoded PGWL->10 / IKLAN->100 are reachable; getJumlah()==null||signum()==0 fallback retained
 notes:
-  - 2026-05-18: Scout+Recon+Rubric done. Option 1 (config-driven) fix applied to both PLPS blocks. Env switched to AWAM UAT (mkit). NOT committed, NOT tested. Continue testing first thing next session — wait for みや's signal.
+  - 2026-05-18: Scout+Recon+Rubric done. signum() fallback applied (uncommitted). Env switched to AWAM UAT (mkit).
+  - 2026-05-19: Root cause refined — hardcoded 100/10 rates were trapped behind the isNotEmpty(fiKadarList) outer guard; PLPS FiPejabat has 0 FiKadar rows so the guard always failed -> 100 unreachable -> flat 50. Guard restructured (un-gated). Committed 282e7e10c0 on mlk/qa/260316, pushed. みや tested both 100 (pengiklanan) + 50 (non-pengiklanan) on AWAM UAT — pass. etanah-awam returned to mlk/release/fat. Phase 2 pending.
 
 qa=QA-260869
 phase=1-complete
