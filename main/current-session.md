@@ -1,6 +1,6 @@
 # 🌟 Current Session Memory - RAM
 
-**Last session**: 2026-05-18 — three reconciled sessions merged into main. (a) QA-260869 Phase 1 closed + the #256113 root-cause refactor shipped. (b) QA-260302 Phase 1 closed + `verify` skill built (memory Track 1) + Track 2 designed. (c) QA-260316 Scout/Recon/Rubric + fix applied to etanah-awam (AWAM PLPS Bayaran 0.00) — testing pending. Resume from the STATE blocks below.
+**Last session**: 2026-05-19 — QA-260316 fix re-applied on its proper branch (`mlk/qa/260316` off `mlk/release/fat`); DE protocol refined (expanded triggers + visible step-0 checklist); AWAM quest baseline branch reconciled to `mlk/release/fat` across env-check / CLAUDE.md / quest-protocol. Resume from the STATE blocks below.
 
 ---
 
@@ -17,14 +17,14 @@
 
 **Tested**: full Penyediaan→Semakan→Pengesahan chain on `PTMLK/01/L/PLPS/2026/112` (UAT) — syarat-syarat table survived all 3 stages. みや confirmed.
 
-### Phase 2 — to do early morning 2026-05-19
+### Phase 2 — pending
 1. Post-mortem → `main/post-mortems.md`.
 2. KPI → `main/kpi-tracker.md`.
-3. Append this session's improvements to `improvement-audit-log.md` as `status=applied` (quest/notes.js, env-check UAT override, feedback_task_folder_ownership.md rewrite, CLAUDE.md Phase-1-Closure git rule).
+3. Append this session's improvements to `improvement-audit-log.md` as `status=applied`.
 4. etanah-knowledge capture: row-level-SDT / `CTSdtRow` defect + #256113 hack mechanism (BUG-BESTIARY).
 5. Optional: PRZ smoke-test on UAT — `PTMLK/01/L/PRZ/2025/10` (sanarimah@melaka.gov.my).
 
-QA-260869 project docs: `projects/coding-projects/active/QA-260869/` — early-diagnostic.md, changes-applied.md, refactor-breakpoint-plan.md.
+QA-260869 project docs: `projects/coding-projects/active/QA-260869/`.
 
 ---
 
@@ -50,59 +50,61 @@ Variant composites bind `#{cc.attrs.mb.jenisUnitKadarNilaianSelectItems}`. On th
 ## Memory-system improvement — STATE
 
 3-track plan (from Hermes / memsearch research + appraisal):
-- **Track 1 — `verify` skill: ✅ DONE.** Universal checkpoint gate; integrated into `quest-protocol.md` at 3 checkpoints (Checklist A Phase 0 / B Apply-done / C Phase 1 close). `verify-close` superseded.
-- **Track 2 — capture + recall + per-quest doc: Design Memo APPROVED, build pending.** Order: 2b per-quest `QA-NNNN.md` → 2a-capture (Stop-hook → `daily-diary/transcripts/{date}.md`) → 2a-recall (SQLite FTS5 `memory-index.db`). In todo Q1. 2a-capture pre-req: verify the Claude Code `Stop` hook payload shape first.
-- **Track 3 — discipline + visibility: needs its own Design Memo.** Bounded boot snapshot + caps on the durable layer + skill-run feedback log. In todo Q1.
+- **Track 1 — `verify` skill: ✅ DONE.** Universal checkpoint gate; integrated into `quest-protocol.md` at 3 checkpoints. `verify-close` superseded.
+- **Track 2 — capture + recall + per-quest doc: Design Memo APPROVED, build pending.** Order: 2b per-quest `QA-NNNN.md` → 2a-capture (Stop-hook → `daily-diary/transcripts/{date}.md`) → 2a-recall (SQLite FTS5 `memory-index.db`). In todo Q1.
+- **Track 3 — discipline + visibility: needs its own Design Memo.** In todo Q1.
 
 ### NEXT (memory)
 Build Track 2 — start with 2b (per-quest doc).
 
 ---
 
-## QA-260316 — STATE ⚠️ CONTINUE TESTING FIRST THING NEXT SESSION (wait for みや's signal — session may open with other work)
+## QA-260316 — STATE ⚠️ TEST FIRST THING NEXT SESSION (wait for みや's signal)
 
 **Ticket**: AWAM PLPS, Langkah Bayaran — fee shows 0.00, should show 50.00 (100.00 if tujuan = pengiklanan). Per UAT-CR #233195.
 
-**Scout + Recon + Rubric DONE** 2026-05-18. Option 1 (config-driven) chosen — みや explicitly rejected hardcoding.
+**Scout + Recon + Rubric done; fix re-applied on the proper branch 2026-05-19.**
 
-### Fix APPLIED — NOT committed, NOT tested
-`etanah-awam` repo, branch `mlk/release/uat`. File `PelupusanBayaranOnlineStrategy.java`, both PLPS blocks:
-- Line 817 (PLPS block, bilangan>0) + line 976 (PLPS block, bilangan==0): `getJumlah() == null` → `getJumlah() == null || getJumlah().signum() == 0`
-- Root cause: `:551` pre-sets jumlah to `BigDecimal(0)`, so the `== null` fallback was dead code. `signum()==0` makes it fire → applies configured `fiPejabat.getKadar()`.
-- (Line numbers post-pull; early-diagnostic.md cites Scout's pre-pull :823/:982.)
+### Fix APPLIED — branch `mlk/qa/260316` (off `mlk/release/fat`), NOT committed, NOT tested
+`etanah-awam`. File `PelupusanBayaranOnlineStrategy.java`, both PLPS fallbacks (`:817`, `:976`):
+`getJumlah() == null` → `getJumlah() == null || getJumlah().signum() == 0`
+- Root cause: `:545` pre-sets jumlah to `BigDecimal(0)` → the `== null` fallback was dead code. `signum()==0` makes it fire → applies configured `fiPejabat.getKadar()` (Option 1, config-driven; みや rejected hardcoding).
+- `git diff`: 1 file, 2 insertions / 2 deletions. Uncommitted — みや writes the commit message at close.
 
-### Env switched
-- `standalone.xml` `etanahDS` → mkit `et_main_mlit` (AWAM UAT). mlkuat→`etanahDS2`, etprdmlk→`etanahDS3`. Verified one active `etanahDS`.
-- `cas.url` already UAT. `etanah-awam` on `mlk/release/uat`, pulled (61 files ff).
-- WAR still `etanah-pelupusan.war` — module switch pending: みや runs `mvn clean install` on etanah-awam + WAR swap + JBoss restart.
+### Env
+- `standalone.xml` `etanahDS` → mkit `et_main_mlit` (AWAM UAT). `cas.url` UAT.
+- etanah-awam on `mlk/qa/260316`; `mlk/release/fat` pulled (up to date).
+- WAR still `etanah-pelupusan.war` — module switch pending.
 
 ### NEXT ACTIONS
-1. みや: `mvn clean install` etanah-awam → swap WAR → start JBoss.
+1. みや: `mvn clean install` etanah-awam (on `mlk/qa/260316`) → swap to `etanah-awam.war` → start JBoss.
 2. Test: AWAM UAT, fresh PLPS application, non-pengiklanan tujuan, Bayaran step → Fi shows configured rate, not 0.00.
-3. Then commit the fix on `etanah-awam`.
-
-### Deferred / open
-- `mlk/release/fat` access for AWAM — separate follow-up (testing on uat first).
-- env-check `SKILL.md` branch note ("fat rename never propagated to remote") may be wrong — みや says fat is a real remote branch needing access. Correct when reviewed.
-- etanah-knowledge: log "PLPS AWAM = no test-data harvest, applicant fills permohonan fresh".
+3. Commit on `mlk/qa/260316` + close the ticket.
 
 QA-260316 project docs: `projects/coding-projects/active/QA-260316/early-diagnostic.md`.
 
 ---
 
+## 2026-05-19 session — MemoryCore changes
+- `expansion-protocol.md` — DE triggers expanded to 4 buckets (invocation / ending session / continue-next-session / session-or-context limit) + new step (0): opening banner + 10-step ✓/⬜/⏭ checklist, no silent skips.
+- AWAM quest baseline reconciled to `mlk/release/fat` — `env-check/SKILL.md` (L28/L161), `CLAUDE.md` Phase-1-Closure Git Sequence, `quest-protocol.md` (close-out + branch-cut now per-repo). CLAUDE.md → v1.16, quest-protocol → v3.2.
+
+---
+
 ## ⚠️ Standing flags
-- `verify` skill supersedes `verify-close` — use `/verify` going forward (notes referencing "verify-close" mean the same checkpoint check).
-- **env-check TEMPORARY UAT-only override** — FAT down for "Mock Cutover 1". Remove the override block in `env-check/SKILL.md` when FAT is back (みや says "FAT is back").
-- QA-260869 Phase 2 pending — early morning 2026-05-19.
+- 3 MemoryCore commits from 2026-05-18 night (`7d03009`, `0f41247`, `5e4faa5`) + this session's DE commit are **unpushed** — origin/main behind. Push blocked by the auto-mode classifier; needs みや's manual `git push origin HEAD` + `git push origin HEAD:main`.
+- `verify` skill supersedes `verify-close` — use `/verify`.
+- **env-check TEMP UAT-only override** — FAT *environment* down for "Mock Cutover 1". Separate from the branch baseline (branch = `mlk/release/fat`; env still UAT). Remove the override block in `env-check/SKILL.md` when FAT env is back.
+- QA-260869 Phase 2 pending.
 - QA-260302 defect #4 OPEN — fix before further QA-260302 testing.
-- QA-260316 — Scout/Recon/Rubric done, fix applied to etanah-awam (uncommitted), env on AWAM UAT; test first thing next session.
+- QA-260316 — fix re-applied on `mlk/qa/260316`, ready for みや to build + test.
 - `/branch-and-push` skill recommended — 3rd pull-before-branch miss (todo.md Q2).
 
 ## 🎯 Session Recap (for AI restart)
-1. Read this file — QA-260869 Phase 1 closed (Phase 2 next), QA-260302 Phase 1 closed (defect #4 open), QA-260316 fix applied (test next session), memory Track 2 pending.
-2. env is UAT (FAT down) — env-check temp override active. QA-260316 has the env on AWAM UAT (mkit).
-3. Three 2026-05-18 sessions reconciled into main.
+1. QA-260869 Phase 1 closed (Phase 2 next), QA-260302 Phase 1 closed (defect #4 open), QA-260316 fix re-applied on `mlk/qa/260316` (test next session), memory Track 2 pending.
+2. AWAM quest baseline branch is now `mlk/release/fat` everywhere; env still UAT (FAT env down).
+3. Unpushed MemoryCore commits — みや needs to push when the classifier allows.
 
 ---
 **Memory Type**: RAM | **Persistence**: brief recap + active-work handoff
-**Last Activity**: 2026-05-18 22:47 — DE session-end (3-session reconcile + QA-260316 Scout/Recon/Rubric/fix)
+**Last Activity**: 2026-05-19 10:48 — DE session-end (QA-260316 re-apply + DE-protocol refine + AWAM-branch reconcile)

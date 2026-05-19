@@ -25,7 +25,7 @@ When invoked, env-check:
    - `E:\Dev\jboss-7.4-plp-melaka\standalone\configuration\standalone.xml` — `etanahDS` `<connection-url>` (the ONE that changes; Audit/DMS/DS3 stay on mkit always — env-agnostic)
    - Branch on relevant repo:
      - `etanah-pelupusan` main = `mlk/master` (SAME branch for both UAT and FAT; only env config differs)
-     - `etanah-awam` main = `mlk/release/uat` (the remote canonical branch — supersedes the 2026-05-13 `mlk/release/fat` rename which was never propagated to remote, caught 2026-05-14 QA-260965)
+     - `etanah-awam` main = `mlk/release/fat` (confirmed on remote + accessible 2026-05-19; `mlk/release/uat` was used as a fallback 2026-05-13→18 ONLY because `mlk/release/fat` access had not yet been granted — that access is now resolved, so `mlk/release/fat` is the AWAM baseline for env prep, branch-out, and closure)
    - Currently deployed WAR in `E:\Dev\jboss-7.4-plp-melaka\standalone\deployments\` — flags whether a module switch is needed
 
 3. **Runs `git pull --ff-only origin <main-branch>` on the involved repo(s)** (added 2026-05-14 by みや after QA-260965 slip): non-skippable. If pull fails due to dirty working tree → surface error + propose `git stash` (only when there's mid-fix work to preserve) or discard. If pull fails non-fast-forward → surface conflict, do NOT auto-merge. **Why baked into env-check, not separate**: 2026-05-07 QA-260154 + 2026-05-14 QA-260965 both slipped on this two-rule split (branch-check ran, pull skipped). One skill, one flow.
@@ -158,7 +158,7 @@ Per `Feature/Forge-Self-Improvement-System/layer-architecture.md`, environment s
 
 Pressure-tested against 3 sessions:
 - 2026-05-08 QA-260298: would have caught FAT-cas-url mismatch before login attempts
-- 2026-05-08 QA-260139: would have caught awam-on-mlk/int-env (should be mlk/release/uat) before Recon read stale code
+- 2026-05-08 QA-260139: would have caught awam-on-mlk/int-env (should be mlk/release/fat) before Recon read stale code
 - 2026-04-30 QA-258022: would have confirmed UAT-pelupusan match → no false alarm
 
 ## Lifecycle
@@ -172,3 +172,4 @@ Continuous improvement entries land in `Feature/Forge-Self-Improvement-System/fo
 ---
 
 *Created: 2026-05-08 | Author: みや (proposed) + Ruri (drafted) | First quest applied: TBD*
+*Last updated: 2026-05-19 — AWAM main branch corrected `mlk/release/uat` → `mlk/release/fat` (access granted; baseline for env prep + branch-out + closure).*

@@ -572,7 +572,7 @@ For **etanah** work commits (etanah-pelupusan, etanah-awam), follow the separate
 
 Ordered sequence for committing a quest fix. These steps, in this order, no exceptions:
 
-1. `git pull --ff-only origin mlk/master` — **FIRST**, while still on `mlk/master`, immediately before branching. Non-skippable every time — "already pulled this session" is NOT valid (upstream moves mid-session).
+1. `git pull --ff-only origin <main>` — **FIRST**, while still on the repo's main branch, immediately before branching. `<main>` is **per-repo**: `mlk/master` (etanah-pelupusan) / `mlk/release/fat` (etanah-awam). Non-skippable every time — "already pulled this session" is NOT valid (upstream moves mid-session).
 2. `git checkout -b mlk/qa/<num>` — only after step 1.
 3. `git add <specific fix files>` — never `-A` for a ticket commit.
 4. Commit — etanah subject format `QA #<num> - <description>`. Subject-only, no body, no trailer. The `QA #<num> -` prefix is **mandatory** — teammates refer to the ticket number.
@@ -614,6 +614,6 @@ Everything else (personality, memory, session, permissions, project rules) is in
 - `/familiar` — sub-agent for large files
 - `/appraise [subject]` — Socratic plan stress-test (9-question interrogation across Assumption / Scope / Evidence axes)
 
-*Version: 1.15 | Last updated: 2026-05-18*
+*Version: 1.16 | Last updated: 2026-05-19*
 
 **Version-bump discipline (added 2026-05-13 per みや)**: every Refine Block / hard-rule addition to a protocol file MUST update the file's Version + Last Updated stamp in the same edit pass. Version is a single-integer increment per protocol revision (1.6 → 1.7). Audit-log entries alone don't surface protocol drift; the footer stamp does.

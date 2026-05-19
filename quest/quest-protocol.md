@@ -245,7 +245,7 @@ EVERY time みや approves "commit push" / "push" / equivalent, BEFORE running `
 4. **Push**
 5. **Push-result report** to みや
 6. **Wait** for みや to submit/pass ticket on Redmine (out of Ruri's scope)
-7. **Phase 1 close-out** — `git checkout mlk/master` + `git pull --ff-only origin mlk/master`
+7. **Phase 1 close-out** — `git checkout <main>` + `git pull --ff-only origin <main>` — `<main>` is per-repo: `mlk/master` (etanah-pelupusan) / `mlk/release/fat` (etanah-awam)
 8. **Update active.txt** — phase=1-complete, status=closed-pending-FAT, branch=, commit=
 9. **Audit-log + protocol updates** — orthogonal, can run any time same session
 
@@ -259,7 +259,7 @@ After Ruri's push lands, **みや submits the ticket on Redmine** — this means
 3. Adds his commit hash + branch name as a Redmine note (typically)
 4. Reassigns to BA/QA tester (e.g. Nurul Amirah Nadiah) for FAT verification
 
-This is **outside Ruri's scope** — Ruri does NOT touch Redmine status. Ruri's role at this point: do Phase 1 close-out (switch to mlk/master + pull) + update `quest/active.txt` to `phase=1-complete`, `status=closed-pending-FAT`. Then wait for みや's direction (Phase 2 post-mortem, or next ticket per Ruri's effort-ranked recommendation).
+This is **outside Ruri's scope** — Ruri does NOT touch Redmine status. Ruri's role at this point: do Phase 1 close-out (switch to the repo main branch — `mlk/master` pelupusan / `mlk/release/fat` awam — + pull) + update `quest/active.txt` to `phase=1-complete`, `status=closed-pending-FAT`. Then wait for みや's direction (Phase 2 post-mortem, or next ticket per Ruri's effort-ranked recommendation).
 
 **On BA acceptance** (later, possibly different session): Phase 2 fires per the existing closure-on-Redmine signals.
 
@@ -688,7 +688,7 @@ If any item fails → STOP gate fires → surface to みや.
 
 **Why**: `mlk/master` may receive upstream commits during みや's local testing window. The fix branch (`mlk/qa/<num>` or `mlk/qa/<num>v2`) is created at Commit prep AFTER `local_test_confirmed=true` — so the branch is cut from the freshest mlk/master state including anything that landed during testing. Cutting the branch at Apply means the fix sits on a snapshot that may be stale by submission time.
 
-**Working tree throughout Apply + Verify**: stays on `mlk/master`. Edits are uncommitted modifications on the master working tree. みや tests against this state.
+**Working tree throughout Apply + Verify**: stays on the repo main branch — `mlk/master` (etanah-pelupusan) / `mlk/release/fat` (etanah-awam). Edits are uncommitted modifications on that working tree. みや tests against this state. **For AWAM tickets, substitute `mlk/release/fat` for every `mlk/master` in this section** (the branch-cut-from-freshest rule is identical, just the branch name differs).
 
 **What's banned at Apply**:
 - `git checkout -b mlk/qa/<num>v?` ← creating the fix branch
@@ -985,3 +985,4 @@ status=<active|hold>
 *Quest — every ticket is a quest accepted, executed, and reflected upon.*
 *Protocol version: 3.0 — 2026-04-29 (Removed Phase 2 Report — `.docx` generation no longer used. Renumbered: Accept(0) / Execute(1) / Reflect(2). Overview reports like DB ERD prioritized over per-ticket .docx.)*
 *Protocol version: 3.1 — 2026-05-18 (added Phase 0 artifact gate + verify-close re-commit clause after QA-260302 process failures — early-diagnostic never created, state files not reconciled at close).*
+*Protocol version: 3.2 — 2026-05-19 (Phase 1 close-out + branch-cut rules made per-repo — AWAM baseline = `mlk/release/fat`, pelupusan = `mlk/master`; no longer hard-codes `mlk/master`).*
