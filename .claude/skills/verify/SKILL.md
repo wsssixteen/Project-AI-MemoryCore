@@ -31,6 +31,7 @@ Read `quest/active.txt` (active ticket, `phase=`, `status=`), `main/current-sess
 | Active ticket `phase=0` — Recon just emitted or being emitted | Quest — Phase 0 → Checklist A |
 | `phase=1` — fix edited, not yet handed to みや for testing | Quest — Apply-done → Checklist B |
 | `phase=1` — fix tested, closing out | Quest — Phase 1 close-out → Checklist C |
+| DE just ran — opening banner + step-0 checklist emitted this session, commit/push/merge sequence done (or attempted) | DE close-out → Checklist D |
 | No active workflow | Reply "no active checkpoint — nothing to verify" and stop |
 
 ## Steps 2-3 — Load checklist, re-check with evidence
@@ -70,6 +71,28 @@ For ticket `QA-<n>`, identify the repo from `active.txt`, then:
 | C5 | Remote branch discoverable by teammates | `git ls-remote origin mlk/qa/<n>` non-empty |
 | C6 | Repo returned to `mlk/master` (pelupusan) / `mlk/release/fat` (awam), at origin tip | `git branch --show-current` + `git fetch` ahead-count == 0 |
 | C7 | `active.txt` updated — `phase=1-complete`, `commit=<SHA>`, `status=` set | `grep -A8 "^qa=QA-<n>" quest/active.txt` |
+
+### Checklist D — DE close-out (added 2026-05-20 per みや)
+
+For end-of-session Domain Expansion ritual (the 11-step list in `Feature/Domain-Expansion/expansion-protocol.md`). Existence: DE was running without an external cross-check; the step-0 visible checklist is Ruri's gate, Checklist D is the external verification that catches steps that were marked ⏭ but shouldn't have been.
+
+| # | Step | How to verify |
+|---|---|---|
+| D1 | DE opening banner emitted | transcript trace |
+| D2 | Step-0 checklist (11 rows, ✓/⬜/⏭) emitted FIRST | transcript trace |
+| D3 | Time-stamp captured (step 1) | `date` / `Get-Date` output |
+| D4 | `main/current-session.md` updated (step 2) | `git log main/current-session.md` shows today's commit OR file mtime |
+| D5 | Diary entry for today (step 4) | `daily-diary/<YYYY-MM-DD>.md` exists |
+| D6 | Forge log reviewed (step 5) — promotion candidates surfaced as questions if applicable | transcript trace |
+| D7 | Observation log reviewed (step 6) | transcript trace |
+| D8 | Gap Sweep + etanah-knowledge sweep done (step 7) | transcript trace |
+| D9 | Closing words to みや (step 8) | transcript trace |
+| D10 | Change manifest emitted (step 9) — covered in chat OR commit body | transcript trace + `git show <SHA> --stat` |
+| D11a | Auto-commit — EVERY modified/untracked path covered (commit-scope rule, NOT authorship-filtered) | `git status` clean post-commit |
+| D11b | Auto-push — `origin/main` == local main HEAD | `git ls-remote origin main` matches local SHA |
+| D11c | **Worktree branch merged into main if commits exist on it** — the 2026-05-20 slip: committed + pushed but never merged | `git log --oneline main` shows merge commit; `git branch --merged main` lists the worktree branch |
+| D12 | Worktree close — sweep stale worktrees + branches OR explicit defer with reason (step 11) | `git worktree list` + transcript trace |
+| D13 | DE closing banner emitted | transcript trace |
 
 ## Step 4 — Output
 
