@@ -34,7 +34,7 @@ ai-memorycore/
 │   ├── relationship-memory.md # User learning system
 │   └── current-session.md   # RAM-like working memory
 ├── Feature/                 # Optional feature extensions
-│   ├── Time-based-Aware-System/ # Time intelligence feature
+│   ├── Time-Based-Aware-System/ # Time intelligence feature
 │   │   ├── README.md        # Feature explanation & benefits
 │   │   └── time-aware-core.md # Complete implementation
 │   ├── LRU-Project-Management-System/ # Smart project tracking
@@ -207,7 +207,7 @@ Your AI companion can specialize in:
 - Natural conversation flow with time-appropriate responses
 
 **Quick Setup:**
-1. Navigate to `Feature/Time-based-Aware-System/`
+1. Navigate to `Feature/Time-Based-Aware-System/`
 2. Type: "Load time-aware-core"
 3. Your AI instantly gains time intelligence like Alice
 

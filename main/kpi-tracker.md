@@ -295,4 +295,28 @@
 
 ---
 
+### QA-262039 — PSBS Surat Keputusan Lulus kepada Pemohon — 2026-05-19 — ~1 session
+
+**Closure type**: code-fix-shipped (template + Java), committed `9b1b9dbe1c` on `mlk/qa/262039`, pushed, tested OK on UAT — pending FAT retest.
+
+**Time spent**: ~1 session (ticket 1 of the 4-PSBS batch closed)
+
+**What we learnt**:
+
+| Identifier (searchable) | What we learnt (plain English) |
+|---|---|
+| `kadarCukai` / `kadarCukaiPT` / `hasilTahunPertamaWithRM` (`populateKadarCukai` / `populateKadarCukaiPT` / `populateNotis5ACukaiTahunPertama` @ :6754) | Three "Hasil Tahun Pertama" tags. PSBS surat uses `hasilTahunPertamaWithRM` (reads the Notis 5A record `getHasilThnPertama()`); `kadarCukaiPT` is PT-urusan (reads the apt `getKadarCukaiTanah()` column); `kadarCukai` reads an empty dynamic field. Pick the tag by urusan + data source, not by the rendered string |
+| `PelupusanUtil.captializeOnlyAllFirstLetter` @ `PelupusanUtil.java:341` | Existing title-case util — lowercases then capitalizes the first letter of every word (and after `(`). Use it; don't write a custom capitalize helper |
+| `sekatanKepentingan` vs `syaratKepentingan` (`populateSekatanKepentingan` / `populateTblSyaratKepentingan2`) | PSBS surat templates use `sekatanKepentingan` (plain-TEXT populator). `syaratKepentingan` is a table-injection populator — wrong tag → CC renders its literal placeholder |
+| `populateNoHakmilik` @ :11712 | Returns `jenisHakmilik.getKod() + " " + number` — the "PM"/"PN" prefix IS the title-type code, part of the hakmilik. Not a duplicate to strip |
+| static "bagi setiap 100 m.p. atau sebahagian daripadanya" | The Hasil-Tahun-Pertama rate phrase = a CC tag (the RM value) + static template text. The RisalatMMKN templates are the precedent for the value-populator + static-suffix combo |
+
+**Extras solved beyond ticket scope**:
+- Hasil Tahun Pertama wiring (`kadarCukai`→`hasilTahunPertamaWithRM` + rate suffix) — not in the BA's original 12-item PDF; surfaced from みや's test + the requirement #237883 photo
+- New `populateTotalNotis5APerkataanHurufPertamaBesar` populator — Title-Case amount-in-words
+
+**Audit-log entries spawned**: `checklist` skill refinement (independent enumeration), `feedback_test_data_recency` Filter 2, todo.md utility-sweep-on-instruction entry
+
+---
+
 *Created 2026-05-06 in response to みや's KPI-tracking ask. Will capture every closed ticket going forward.*

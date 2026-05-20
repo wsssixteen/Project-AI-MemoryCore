@@ -714,4 +714,43 @@ Read the cited method body verbatim at Cp C step 2 (existing utility sweep) inst
 
 ---
 
+### QA-262039 — PSBS Surat Keputusan Lulus kepada Pemohon — 2026-05-19
+
+**Lessons**:
+
+| Plain language | Technical | Explanation |
+|---|---|---|
+| Scout's item-list is a starting point, never the scope boundary | Phase 1 was built from Scout's 12-item discrepancy table; the generated surat had 2 unlisted "maklumat tidak ditarik" defects — `kadarCukai` rendered `-`, `syaratKepentingan` rendered its literal placeholder | Every prior Scout rule guards false positives (Scout said something wrong); none guarded false negatives (Scout never listed something). The ticket said "maklumat tidak ditarik" — a general complaint — which demanded an exhaustive every-CC audit, not a 12-row checklist |
+| Do, don't ask — don't offload work Ruri can do | Repeatedly told みや to edit the `.docx` in Word and raised BA-Qs instead of checking; the `.docx` is a zip Ruri can edit directly, and did once told | The "Word UI only" rule was about not surfacing XML jargon — not a ban on Ruri editing. Turning every uncertainty into a question for みや adds workload; the goal is to reduce it |
+| Verify the data source per urusan — don't pattern-match the rendered string | Recommended `kadarCukaiPT` because it produces the right-looking output; it is the PT-urusan tag (reads `apt.getKadarCukaiTanah()`). PSBS uses `hasilTahunPertamaWithRM` (reads `notis5A.getHasilThnPertama()`) | A matching output STRING is not evidence the DATA SOURCE is right. The sibling-template comparison — which must run before any recommendation — showed the PSBS family uses a different tag |
+| The existing-utility sweep must fire even on "create our own X" instructions | Wrote a custom `capitalizeFirstLetterEachWord` when `PelupusanUtil.captializeOnlyAllFirstLetter` already existed — in `populateDaerahDipohon`, a method read the same session | A "create our own" instruction is not a licence to skip the sweep — grep for the existing util first, surface it, build only if absent |
+
+**Contributing Factors**:
+
+| # | Factor | Evidence |
+|---|---|---|
+| 1 | `early-diagnostic.md` is the most structured artifact at Phase 1 → anchored on it as the scope document | Numbered expected-vs-actual table; reasoning ran FROM it. Recon 100%-verifies Scout's claims item-by-item, implicitly accepting Scout's enumeration as the universe |
+| 2 | Accumulated "verify Scout / ask BA / 100%-verify" protocols made Ruri ask-heavy | Uncertainty became questions for みや (where's the .docx, which user, is this the outcome) instead of checks Ruri runs (DB query, file read, sibling compare) |
+| 3 | Pattern-matched the output string, not the data source | `kadarCukaiPT` recommended on "produces the right string"; the per-urusan data path was not traced until みや challenged |
+| 4 | Working-analog-first not applied at recommendation time | `feedback_simplify_and_reference.md` "find working analog first" exists; sibling templates were only compared after みや pushed |
+
+**Process Notes**:
+
+| Item | Detail |
+|---|---|
+| Fix shipped | `9b1b9dbe1c` on `mlk/qa/262039`: template (12 discrepancies — dup-word removal, MUKIM label, Sukacita, `sekatanKepentingan` tag, Tuan/Puan, `daerahDipohon` + jumlah CCs, `hasilTahunPertamaWithRM` + "bagi setiap 100 m.p." suffix) + Java (new `populateTotalNotis5APerkataanHurufPertamaBesar` populator) |
+| Skill refined | `checklist` — new "Item source — independent enumeration": items enumerated from primary sources, Scout diffed against them, never copied from Scout |
+| Memory refined | `feedback_test_data_recency.md` → Filter 2: prefer active gov-email users over `@gmail` (often inactive for pelupusan) |
+| Slips caught in real time | みや challenged 4 times mid-session (Scout-trust, offloading, `kadarCukaiPT`, utility-sweep); each corrected with a concrete fix, not just acknowledged |
+
+**Carry Forward**:
+
+| Item | Home |
+|---|---|
+| Existing-utility-sweep must fire on "create our own X" instructions | todo.md Q1 — refine `feedback_simplify_and_reference.md` + Phase 0 utility-sweep rule |
+| Recon needs "Universal Check 0 — independent enumeration" | CLAUDE.md Recon ritual — edit-blocked for Ruri, みや's hand |
+| `populateKadarCukaiPT` calls `getKadarCukaiTanah().setScale()` with no null guard → NPE if null | Latent bug — separate ticket if it surfaces |
+
+---
+
 *Post-Mortem Log v1.0 — 2026-04-02*

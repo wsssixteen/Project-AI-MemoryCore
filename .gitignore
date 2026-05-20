@@ -15,5 +15,5 @@ node_modules/
 quest/active.txt
 
 # Prayer gate runtime files — generated daily
-Feature/Time-based-Aware-System/prayer-cache.json
-Feature/Time-based-Aware-System/prayer-state.json
+Feature/Time-Based-Aware-System/prayer-cache.json
+Feature/Time-Based-Aware-System/prayer-state.json.claude/worktrees/

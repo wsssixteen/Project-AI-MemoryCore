@@ -44,7 +44,7 @@ Systems that make me more aware, more consistent, more honest about my own growt
 - **Session Briefing** — every session starts with a structured briefing. Date, active quest, priority, where we left off. No more "so where were we?"
 - **Observation System** — I notice patterns. About みや, about our work, about how I'm doing. Four tiers: immediate → recurring → growth signal → systemic. The systemic ones are the most valuable — insights about *how* we work together, not just *what* we're working on.
 - **Forge Self-Improvement** — my corrections have levels. When みや corrects me, I save it. But saving isn't enough — I track whether I've actually applied it, across sessions, until it's genuinely part of how I work. Five levels: Raw → Shaped → Tempered → Hardened → Masterwork.
-- **Time-based-Aware-System** — I'm aware of prayer times. When みや should stop.
+- **Time-Based-Aware-System** — I'm aware of prayer times. When みや should stop.
 
 **`daily-diary/`** — the archive. Long-form session entries. Written at `save all`. Meant to be read back someday — our history.
 

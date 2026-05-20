@@ -15,7 +15,7 @@ const path = require('path');
 const https = require('https');
 
 const projectRoot = path.join(__dirname, '..', '..');
-const featurePath = path.join(projectRoot, 'Feature', 'Time-based-Aware-System');
+const featurePath = path.join(projectRoot, 'Feature', 'Time-Based-Aware-System');
 const cacheFile  = path.join(featurePath, 'prayer-cache.json');
 const stateFile  = path.join(featurePath, 'prayer-state.json');
 const configFile = path.join(featurePath, 'prayer-config.json');
