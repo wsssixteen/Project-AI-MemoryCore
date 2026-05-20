@@ -32,6 +32,7 @@ Read `quest/active.txt` (active ticket, `phase=`, `status=`), `main/current-sess
 | `phase=1` — fix edited, not yet handed to みや for testing | Quest — Apply-done → Checklist B |
 | `phase=1` — fix tested, closing out | Quest — Phase 1 close-out → Checklist C |
 | DE just ran — opening banner + step-0 checklist emitted this session, commit/push/merge sequence done (or attempted) | DE close-out → Checklist D |
+| Phase 2 just ran — 5 streamlined steps emitted, archive should have happened | Quest — Phase 2 close-out → **Checklist E** |
 | No active workflow | Reply "no active checkpoint — nothing to verify" and stop |
 
 ## Steps 2-3 — Load checklist, re-check with evidence
@@ -94,6 +95,27 @@ For end-of-session Domain Expansion ritual (the 11-step list in `Feature/Domain-
 | D12 | Worktree close — sweep stale worktrees + branches OR explicit defer with reason (step 11) | `git worktree list` + transcript trace |
 | D13 | DE closing banner emitted | transcript trace |
 
+### Checklist E — Quest Phase 2 close-out (added 2026-05-20 per みや)
+
+Phase 2's step 5 (archive both-sides + active.txt flip) was silently dropped on QA-262039 + QA-260302 — same disease as Phase 0 artifact silent-skip. Checklist E is the external cross-check that catches steps marked ✓ by Ruri but not actually done on disk.
+
+For ticket `QA-<n>` with active.txt entry transitioning to `status=closed`:
+
+| # | Step | How to verify |
+|---|---|---|
+| E1 | Faster-finding emitted in Phase 2 chat output (step 1) | transcript trace |
+| E2 | KPI entry exists at the cited path — `main/kpi-tracker.md` contains a header line matching this QA + today's date | `grep "QA-<n>" main/kpi-tracker.md` |
+| E3 | Post-mortem META entry exists — `main/post-mortems.md` contains a header line matching this QA + today's date | `grep "QA-<n>" main/post-mortems.md` |
+| E4 | active.txt entry has `post_mortem=` AND `kpi_entry=` lines pointing at the actual files | `grep -A10 "^qa=QA-<n>" quest/active.txt` |
+| E5 | Refine pass emitted in chat — at least one yes/no/park decision per relevant skill | transcript trace |
+| E6 | Fix.txt + SUMMARY.txt rendered in Task folder (auto-generated at Phase 1 close per the protocol, but verify here too) | `ls "<task-folder>/2. Fix/"` shows both files |
+| E7 | active.txt status flipped to `closed` (was `awaiting-ba` or `awaiting-phase-2`) | `grep -A8 "^qa=QA-<n>" quest/active.txt` → status=closed |
+| E8 | Task folder archived — moved from `1. Tasks/Melaka/<NN>. ...` → `1. Tasks/Melaka/Archive/<NN>. ...` | `ls "1. Tasks/Melaka/Archive/" \| grep "#<n>"` returns the folder |
+| E9 | Project subfolder archived (if it existed) — moved from `projects/coding-projects/active/QA-<n>/` → `projects/coding-projects/archive/QA-<n>/` | `ls projects/coding-projects/archive/` shows it OR active.txt notes no subfolder existed |
+| E10 | active.txt entry moved into the `closed:` section (not still in active section) | transcript trace + file structure |
+
+If any 🔴 — Ruri runs the missing step now, then re-verifies. This is the cure for the QA-262039-style silent-drop.
+
 ## Step 4 — Output
 
 Emit as a raw markdown table (NO code-fence wrap), between the banners:
@@ -125,8 +147,8 @@ Verdict: ALL GREEN — safe to proceed · OR · N RED — stop, fix: &lt;list&gt
 
 ## Lifecycle
 
-- **v1 (now)** — engine + Checklists A, B, C. Manual + checkpoint-prompt triggers. Supersedes `verify-close`.
-- **v1.1** — add Checklist D (Redmine retrieval: sync ran, tickets in active.txt, early-diagnostics written, results table emitted).
+- **v1 (now)** — engine + Checklists A, B, C, D, E. Manual + checkpoint-prompt triggers. Supersedes `verify-close`.
+- **v1.1** — add Checklist for Redmine retrieval (sync ran, tickets in active.txt, early-diagnostics written, results table emitted).
 - **v2** — after ≥3 cycles + みや's approval: auto-fire at checkpoint transitions.
 
 ---

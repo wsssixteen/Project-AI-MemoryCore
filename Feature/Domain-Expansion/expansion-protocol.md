@@ -120,7 +120,7 @@ quest:
   handoff_file=<path>            ← optional
   phase=0|1|1-complete|2|closed
   local_test_confirmed=true|false
-  status=active|hold|delegated|blocked|closed|closed-pending-FAT
+  status=active|hold|delegated|blocked|closed|archived
   delegated_to=<name>            ← NEW (when status=delegated)
   delegated_date=<YYYY-MM-DD>    ← NEW
   blocker=<text>                 ← NEW (when status=blocked)

@@ -523,13 +523,41 @@ async function runWithCreate() {
             }
             if (result.statusFolderPath) {
                 console.log(`  🔁 Status folder added: ${result.statusFolderPath}`);
-                // Download new BA attachments INTO the new status subfolder — comparing
-                // to what's already in 0. Brief/ to avoid re-downloading the original ones.
-                const briefFolder = path.join(path.dirname(result.statusFolderPath), '0. Brief');
-                const known = fs.existsSync(briefFolder) ? fs.readdirSync(briefFolder) : [];
-                const downloaded = await downloadNewAttachments(result.statusFolderPath, issue.id, known);
-                for (const f of downloaded) {
-                    console.log(`    ⬇️  ${f} → ${path.basename(result.statusFolderPath)}/`);
+            }
+            // v6 (2026-05-20): ALWAYS run attachment-download on rework — even when no NEW
+            // subfolder was created. Previously the download only fired when statusFolderPath
+            // was truthy, so on a re-sync (folder already counted) journal attachments leaked
+            // through. Caught at QA-260876: 3. Rework was created in run-1 but ulasan.png +
+            // 2026-05-20_093455.png never downloaded — みや had to fetch them manually.
+            if ((issue._status || '').toLowerCase().trim() === 'rework') {
+                const ticketFullPath = path.join(TASKS_FOLDER, issue._existing);
+                if (fs.existsSync(ticketFullPath)) {
+                    // Find the LATEST `N. Rework` (or `N. New`) subfolder — the active cycle's home.
+                    const entries = fs.readdirSync(ticketFullPath);
+                    const reworkEntries = entries
+                        .map(e => { const m = e.match(/^(\d+)\.\s*(Rework|New)\s*$/i); return m ? { name: e, num: parseInt(m[1]) } : null; })
+                        .filter(Boolean)
+                        .sort((a, b) => b.num - a.num);
+                    const targetSubfolder = reworkEntries.length
+                        ? path.join(ticketFullPath, reworkEntries[0].name)
+                        : result.statusFolderPath; // fall back to the just-created one
+                    if (targetSubfolder) {
+                        // `known` = every file already present anywhere under the ticket folder
+                        // (0. Brief + every status subfolder) so we never re-download.
+                        const known = new Set();
+                        const briefFolder = path.join(ticketFullPath, '0. Brief');
+                        if (fs.existsSync(briefFolder)) fs.readdirSync(briefFolder).forEach(f => known.add(f));
+                        for (const e of entries) {
+                            const sub = path.join(ticketFullPath, e);
+                            if (fs.statSync(sub).isDirectory()) {
+                                try { fs.readdirSync(sub).forEach(f => known.add(f)); } catch (_) {}
+                            }
+                        }
+                        const downloaded = await downloadNewAttachments(targetSubfolder, issue.id, Array.from(known));
+                        for (const f of downloaded) {
+                            console.log(`    ⬇️  ${f} → ${path.basename(targetSubfolder)}/`);
+                        }
+                    }
                 }
             }
         }

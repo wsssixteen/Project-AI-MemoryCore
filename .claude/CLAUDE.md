@@ -517,9 +517,9 @@ When updating an existing protocol/rule based on a slip or insight (different fr
 | "X taken by <name>" / "<name> handling X" / "handed to <name>" | `status=delegated`, `delegated_to=<name>`, `delegated_date=<today>`, append context note |
 | "blocked by Y" / "waiting on Z"                                | `status=blocked`, `blocker=<text>`, append note                                          |
 | "trace X later" / "want to learn from X's fix"                 | `learning_marker=<date> — <reason>`                                                      |
-| "close X" / "X is done" / "wrap X"                             | Phase 2 post-mortem + `status=closed` + archive Task folder                              |
+| "close X" / "X is done" / "wrap X"                             | Phase 2 post-mortem + status=archived + archive Task folder                              |
 
-**active.txt schema** (extended 2026-05-05): `branch=`, `delegated_to=`, `delegated_date=`, `blocker=`, `learning_marker=`, append-only `notes:` block with timestamps. Status codes: `active|hold|delegated|blocked|closed|closed-pending-FAT`. Backwards-compatible with existing `note=` (single-line) entries. See `Feature/Domain-Expansion/expansion-protocol.md` for full schema.
+**active.txt schema** (extended 2026-05-05): `branch=`, `delegated_to=`, `delegated_date=`, `blocker=`, `learning_marker=`, append-only `notes:` block with timestamps. Status codes: `active|hold|delegated|blocked|closed|archived`. Backwards-compatible with existing `note=` (single-line) entries. See `Feature/Domain-Expansion/expansion-protocol.md` for full schema.
 
 **Skills**: `/quest start|hold|resume` — `.claude/skills/quest/SKILL.md`
 **Familiar**: `/familiar` — `.claude/skills/familiar/SKILL.md`
@@ -669,6 +669,8 @@ Everything else (personality, memory, session, permissions, project rules) is in
 - `/quest start|hold|resume` — quest workflow
 - `/familiar` — sub-agent for large files
 - `/appraise [subject]` — Socratic plan stress-test (9-question interrogation across Assumption / Scope / Evidence axes)
+
+**Also load at boot**: `.claude/claude-md-amendments.md` — temp amendments to CLAUDE.md while this file is edit-blocked. Treat its contents as if part of this file.
 
 *Version: 1.18 | Last updated: 2026-05-19*
 

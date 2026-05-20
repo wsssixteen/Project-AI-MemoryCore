@@ -34,6 +34,20 @@ Where would you like to start, <Mode name>?
 
 ---
 
+## Pre-briefing housekeeping (silent, auto — added 2026-05-20 by みや)
+
+Run BEFORE composing the briefing. These are deterministic cleanups — only surface as a flag if something abnormal (uncommitted work on a stale worktree, merge conflict, etc.) prevents auto-cleanup.
+
+| Step | Command | When to surface |
+|---|---|---|
+| Prune missing worktree records | `git worktree prune` | Never surface — silent |
+| Remove stale `claude/*` worktrees merged to `main` | `git branch --merged main` → for each merged `claude/*` worktree: `git worktree remove <path>` then `git branch -d <branch>` | Only surface if a worktree has uncommitted/unmerged work — list it as a flag with the path so みや can decide |
+| Sweep currently-checked-out path | If running inside a worktree: skip removing the CURRENT one (cannot self-remove); emit a single line `Worktree <name> in use — will close at session-end` | Only when the active session IS a worktree |
+
+If all worktree cleanup runs cleanly: NO standing flag. みや shouldn't see worktree noise again.
+
+---
+
 ## Rules
 
 - Run `date` to get current time — always timestamp the briefing
@@ -71,4 +85,4 @@ Where would you like to start, リドワンさん?
 
 ---
 
-*Version: 1.1 | Last updated: 2026-05-14*
+*Version: 1.2 | Last updated: 2026-05-20 — added pre-briefing worktree auto-cleanup so stale worktrees never reach the standing-flag surface*

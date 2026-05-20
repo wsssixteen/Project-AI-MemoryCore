@@ -676,6 +676,45 @@ Read the cited method body verbatim at Cp C step 2 (existing utility sweep) inst
 
 ---
 
+### QA-262233 — PRZ Ringkasan Risalat MMKN PTG — 2026-05-20
+
+**Lessons**:
+
+| Plain language | Technical | Explanation |
+|---|---|---|
+| Compare against git HEAD, not against your own modified state | Wrong-baseline diagnosis — I compared JabatanTeknikal.docx against the `.bak_qa262233` (which was みや's TEST state with `5000 pct + autofit`), not against `git show HEAD:` (which is the BA-baseline at `9803 dxa + fixed`) | The "broken" state I claimed to diagnose was an artifact of みや's own testing iteration, not the real BA-baseline. Without git HEAD as the truth-anchor, any diagnosis builds on local working-tree state, which may itself be experimental |
+| Slow-load was DOC-STATE, not environmental | BA's original Kemaskini hang was caused by the OLD DMS-stored document baking broken table-width settings from a prior template state. Regeneration under the fixed template produces a clean document that opens instantly | The fix is for ALL future documents on this template — existing DMS docs need regeneration to benefit. Issue #1 + Issue #2 share the same root cause (the external JT table's width mismatch with parent), with #1 manifesting at MS Word's layout engine + #2 at render |
+| Cross-state file conflicts at Phase 1 close need surgical re-apply, not stash-pop | Upstream `15c16d30cb add ulasan mmkn` had touched `JabatanTeknikal.docx` between BA's report and my closure. Pull would have overwritten my fix. Resolved by saving my-fix locally, resetting + pulling fresh, re-applying my surgical XML edit on top of the new upstream — preserving both my fix AND upstream's additions | Binary files can't 3-way-merge. The "save → reset → pull → re-apply" pattern is the cure when conflicts arise on binaries |
+
+**Contributing Factors**:
+
+| # | Factor | Evidence |
+|---|---|---|
+| 1 | I diagnosed without anchoring to git HEAD first | First-pass diagnosis pointed at a state みや had created in his own testing; correct baseline only emerged after みや challenged with *"that autofit was my test, not BA's behaviour"* |
+| 2 | Phase 1 close-out lacked a visible "closure summary with timestamp" emission | Phase 1 closed at 2026-05-20 14:19 MPST but no closure-summary line was emitted to みや; he had to ask later. Cure: add a closure-summary emit step (proposed in Refine pass below) |
+| 3 | Misread the "T2 wrapper" pattern in the parent template — claimed it wrapped the JT placeholder when it actually wrapped the Ulasan-ADUN section | Nested-table parsing was naive at first pass; balanced parser surfaced the truth |
+| 4 | Commit subject missed urusan-hyphen segment | Ambiguity in CLAUDE.md's "subject format `QA #<num> - <description>`" — corrected via A10 amendment 2026-05-20 |
+
+**Process Notes**:
+
+| Item | Detail |
+|---|---|
+| Fix shipped | `30d37f3b44` on `mlk/qa/262233`: TemplateRingkasanRisalatPRZ.docx (parent — みや's edit: trHeight cleanup + structural split) + JabatanTeknikal.docx (external — width 10490 dxa + indent -743 to match parent's top section) |
+| Test pass | みや tested locally → BA's permohonan PTMLK/02/L/PRZ/2026/6 + sister urusan PT/PLPS — all Kemaskini fast, alignment confirmed clean |
+| New skill spawned | `auto-skill-on-mistake` — convert correction-shape inputs into deterministic skill/hook updates + failure log |
+| 8 hooks shipped this session | self-gate-impulse, auto-skill-trigger, operational-follow-through, file-list-after-refine, phase0-artifact-gate, worktree-cleanup-boot, boot-load-verification, notes-on-test-data — all v1 warn-only |
+| Protocol refinements | A10 (urusan-hyphen lock), A9 (next-operational-step), A8 (self-gate-at-impulse), A7 (file-list after refine) — all in claude-md-amendments.md |
+
+**Carry Forward**:
+
+| Item | Home |
+|---|---|
+| Phase 1 close-out summary emission (timestamp + commit SHA + close-out checklist result) | Refine quest-protocol.md Phase 1 close-out section — make summary line mandatory |
+| Hook v1.1 promotion criteria — when warn-only → block | After ≥3 cycles each hook fires correctly without false-positive |
+| DMS doc-regeneration on template fix — should this auto-fire? | Not now (out of scope); flag if same pattern recurs |
+
+---
+
 ### QA-262027 — PSBS Surat Keputusan PTG kepada PDT — 2026-05-19
 
 **Lessons**:
@@ -685,6 +724,7 @@ Read the cited method body verbatim at Cp C step 2 (existing utility sweep) inst
 | A deferred item in a footnote is a hidden item | BA issues #5 (PN) + #6 (Mukim prefix) were parked in a "Deferred (#4-#8)" prose line under a Rubric that read "test-ready" | みや had to challenge to surface them. Deferring is fine; deferring quietly is the sweep. A deferred item must be a visible decision, not a sub-line |
 | "Verified" must mean intent-verified, not mechanism-verified | Fix #1 marked "VERIFIED 100%" — but only the casing mismatch (`hasilTahunPertamawithRM` vs Java `…WithRM`) was traced; whether the corrected tag's populator (`getHasilThnPertama()` = first-year revenue) matches the BA's "Kadar Nilaian smp/sehektar" was never checked | Noticed-then-dropped: the BA's comment was recorded in the early-diagnostic, then rationalised away. A fix is "done" only when mechanism AND BA-intent both hold |
 | Branch is cut at Phase 1 close, after test — never at Apply | Created `mlk/qa/262027` at Apply time; `quest-protocol.md:687-701` explicitly bans it (Apply = working-tree edits on mlk/master only) | Branching early forks the fix off a master that may be stale by submission. Corrected: branch deleted, fix moved to mlk/master, re-cut at close after the test passed |
+| Incomplete existing-utility sweep — a "new" populator that is a near-clone of an existing method is itself the signal the capability already exists | #5 (PN abbrev) was shipped as a new `singkatanJenisNoHakmilik` tag + a new `populateSingkatanJenisAndNoHakmilik` Java populator that was byte-for-byte identical to the existing `populateNoHakmilik` @ :11712. Phase 0 only swept the tag the template already carried (`namaJenisNoHakmilik`) + `jenisHakmilik`; sibling hakmilik tags like `noHakmilik` were never grepped. **The tell that was ignored**: writing a populator that was a near-verbatim clone of an existing method | Sweep sibling tags / sibling populators, not just the one the template carries. When the "new" code being written is a near-clone of existing code — STOP — the capability already exists. Reconciled to `54f4b645b4` (5 .docx, 0 Java) via CC tag swap |
 
 **Contributing Factors**:
 
@@ -699,7 +739,7 @@ Read the cited method body verbatim at Cp C step 2 (existing utility sweep) inst
 
 | Item | Detail |
 |---|---|
-| Fix shipped | 5 fixes on `003862e9ff`: #1 CC-tag casing, #2 ejaan, #3 slogan jc both→left, #5 new `singkatanJenisNoHakmilik` tag+populator (PN abbrev), #6 static "Mukim " label |
+| Fix shipped | 5 .docx fixes on `54f4b645b4` (reconciled from `003862e9ff` — see Lessons row 4): #1 CC-tag casing, #2 ejaan, #3 slogan jc both→left, #5 template CC tag swap `namaJenisNoHakmilik`→existing `noHakmilik` (populator `populateNoHakmilik` @ :11712 already outputs "PN <number>"), #6 static "Mukim " label. **0 Java changes.** |
 | New skill spawned | `checklist` — universal task checklist (Tier 3); core rule (mechanism-done ≠ done; intent must match) is the direct cure for the #1 slip |
 | New doc spawned | `QA-NNNN.md` per-quest lifecycle doc — Design Memo approved; Issue Checklist section is the visible-decision cure for the deferral slip |
 | Protocol gap surfaced | CLAUDE.md "Phase 1 Closure — Git Sequence" needs a precondition line (run only after `local_test_confirmed`) — text given to みや (file edit-blocked) |

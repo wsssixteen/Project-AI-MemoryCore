@@ -275,9 +275,31 @@
 
 ---
 
-### QA-262027 — PSBS Surat Keputusan PTG kepada PDT — 2026-05-19
+### QA-262233 — PRZ Ringkasan Risalat MMKN PTG — 2026-05-20
 
-**Closure type**: code-fix-shipped (5 .docx + Java fixes)
+**Closure type**: 2-file edit (parent template + external resource), committed `30d37f3b44` on `mlk/qa/262233`, pushed; verified locally on BA's permohonan + 2 sister urusans
+
+**Time spent**: ~1 long session (batched alongside H1-H8 hook implementation + research)
+
+**What we learnt**:
+
+| Identifier (searchable) | What we learnt (plain English) |
+|---|---|
+| `TemplateRingkasanRisalatPRZ.docx` (parent) | The "Ulasan JT" block sits in document flow (between top-section and Ulasan-ADUN section). When the surrounding tables have negative `tblInd` (extending into the left margin) AND the injected JT table has different metrics, visible misalignment results |
+| `JabatanTeknikal.docx` Table tagged `jtRingkasanRisalatPRZ` | External shared resource — Table #16 of 20. Sister tables for PLPS / PT use absolute `dxa` widths + fixed layout; PRZ now matches the parent's 10490 dxa + -743 indent for pixel-flush alignment |
+| MS Word slow-open on baked-in malformed tables | An injected external table with mismatched width-settings (e.g. `pct` width against host page geometry, autofit layout against host's fixed parent) causes Word's table layout engine to enter expensive recalc loops on open — visible as "slow Kemaskini" until the document is regenerated under fixed-width settings |
+| Binary-file conflict resolution at Phase 1 close | `git pull --ff-only` aborts on dirty binary working tree. Pattern: save my-fix to temp → reset to HEAD → pull → re-create branch from new HEAD → re-apply surgical edit |
+| `populateJTRingkasanRisalatPRZ` @ PelupusanWordCCMethodConstant.java:10076 | Routes via `setExternalTableTag(ccVO.getTag())` — the populator name is per-urusan but the actual table source is the external `JabatanTeknikal.docx` looked up by CC tag |
+
+**Extras solved beyond ticket scope**: 8 hooks delivered (rule-to-hook migration, all v1 warn-only) + auto-skill-on-mistake skill + multiple amendments (A7 file-list, A8 self-gate, A9 next-operational-step, A10 urusan-hyphen)
+
+**Audit-log entries spawned**: auto-skill-on-mistake skill creation, skill-failure-log + per-hook .jsonl log files, A7/A8/A9/A10 amendments, Phase 2 visible step-checklist, /verify Checklist E
+
+---
+
+### QA-262027 — PSBS Surat Keputusan PTG kepada PDT — 2026-05-19 (reconciled 2026-05-19 evening)
+
+**Closure type**: code-fix-shipped (5 `.docx` fixes, 0 Java — final commit `54f4b645b4`; prior `003862e9ff` superseded — see "What we learnt" row on `populateNoHakmilik`)
 **Time spent**: ~1 long session (batch-retrieved with 3 sibling PSBS tickets)
 
 **What we learnt**:
@@ -287,7 +309,7 @@
 | `TemplateSuratMaklumanPTGPSBSLulus.docx` | The real PSBS PTG-decision surat (the `Keputusan`-named sibling is dead/legacy). Config-bound template.config.json:611-666, tugasans KKMMKN/SKMMKN/PKMMKN |
 | CC-tag casing | A template CC tag whose casing doesn't exactly match the Java `TAG_*` constant dispatches to NOTHING — the field stays a dead placeholder. `hasilTahunPertamawithRM` ≠ `hasilTahunPertamaWithRM` |
 | `populateBandarPekanMukim` @ 4649 | Deliberately strips the word "mukim" via `replaceAll` — the template is meant to supply the "Mukim" label itself (parallel to the static "Daerah" label) |
-| `populateNamaJenisAndNoHakmilik` @ 11758 | Uses `JenisHakmilik.getNama()` (full "Pajakan Negeri"); abbreviation is `.getKod()` ("PN", verified in `rjk_jns_hkmlk`). New `singkatanJenisNoHakmilik` tag added rather than mutating the shared populator |
+| `populateNoHakmilik` @ PelupusanWordCCMethodConstant.java:11712 | Existing populator that already outputs `"PN <number>"` — uses `JenisHakmilik.getKod()` then number. `populateNamaJenisAndNoHakmilik` @ 11758 uses `.getNama()` (full "Pajakan Negeri"). PSBS surat originally carried the `nama`-variant tag; the fix is a CC tag swap on the template — **no new Java**. The first-pass shipped a duplicate populator (`populateSingkatanJenisAndNoHakmilik` on `003862e9ff`) before みや caught it; final = swap to `noHakmilik` |
 | `PelupusanWordEditorUtil` createP / createStyledParagraph | Old auto-justify-when-jc-null bug is fixed in mlk/master — both default to `JcEnumeration.LEFT`; `JcEnumeration.BOTH` appears nowhere in pelupusan source |
 
 **Extras solved beyond ticket scope**: none (strict BA-highlighted scope per the new ticket-cadence rule)

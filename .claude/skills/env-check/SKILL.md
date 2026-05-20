@@ -116,6 +116,27 @@ cas.url=https\://appmlk.melaka.gov.my/etanah-cas          ← UNCOMMENT (FAT lin
 
 Edit must preserve the `\:` escape on `://` (Java properties format). Trailing-comment lines for TRGIT (`172.16.100.41`) and TRG-STAGING are OUT of scope for MLK work — leave commented.
 
+## Known local paths (added 2026-05-20 by みや — auto-loaded at every env-check invoke)
+
+These are stable on みや's machine; loaded with the skill so Ruri never asks at Quest Phase 0 / mid-investigation. When any of these changes (e.g. JBoss upgrade), update this block — it is the single canonical home.
+
+| Asset | Path |
+|---|---|
+| JBoss home | `E:\Dev\jboss-7.4-plp-melaka\` |
+| JBoss server.log | `E:\Dev\jboss-7.4-plp-melaka\standalone\log\server.log` |
+| JBoss tmp (cache buster) | `E:\Dev\jboss-7.4-plp-melaka\standalone\tmp\` |
+| JBoss data (cache buster) | `E:\Dev\jboss-7.4-plp-melaka\standalone\data\` |
+| JBoss deployments | `E:\Dev\jboss-7.4-plp-melaka\standalone\deployments\` |
+| JBoss standalone.xml | `E:\Dev\jboss-7.4-plp-melaka\standalone\configuration\standalone.xml` |
+| etanahv3 config | `C:\etanahv3\config\environment.properties` |
+| Maven settings.xml | `E:\Dev\apache-maven-3.9.9\conf\settings.xml` |
+| Maven local repo (.m2) | `E:\Dev\.m2_etanah` |
+| Code repos | `E:\Projects\Melaka\etanah-pelupusan\`, `E:\Projects\Melaka\etanah-awam\`, `E:\Projects\Melaka\etanah-common\` |
+| etanah-domain extracted sources | `C:\temp\etanah-src\my\gov\etanah\domain\` |
+| Setup notes | `E:\Dev\jboss-7.4-plp-melaka\SETUP-NOTES.txt` |
+
+**How Ruri uses this**: when any task or investigation needs a path (tail server.log, clean tmp, find a WAR, grep a config, extract a sources jar), reach for this table first — never ask みや. When a path is genuinely missing here, add it the same session.
+
 ## Output cadence (added 2026-05-11 after みや feedback)
 
 - **First env-check banner of a session** (or after a major env switch): emit the FULL mapping table + all 4 aspect rows + post-change checklist.
@@ -172,4 +193,4 @@ Continuous improvement entries land in `Feature/Forge-Self-Improvement-System/fo
 ---
 
 *Created: 2026-05-08 | Author: みや (proposed) + Ruri (drafted) | First quest applied: TBD*
-*Last updated: 2026-05-19 — AWAM main branch corrected `mlk/release/uat` → `mlk/release/fat` (access granted; baseline for env prep + branch-out + closure).*
+*Last updated: 2026-05-20 — added Known-local-paths block so Phase 0 stops asking for stable infrastructure paths mid-investigation.*

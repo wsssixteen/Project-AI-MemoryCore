@@ -84,6 +84,10 @@ The branch with the latest date is the source-of-truth. **DO NOT compare `origin
 **Violation log (Commit)**:
 - 2026-05-11 QA-260139: Ruri ran `git commit` itself + included body + Co-Authored-By trailer + "fix" prefix + "AWAM"/"MLK" tags. みや reset. **Still forbidden post-refinement**: running git commit/push is Ruri's hands-off; the wrong-format reasons are now caught at proposal time (みや reviews before executing).
 
+**Phase 1 close-out summary emission — MANDATORY (added 2026-05-20 by みや)**: When Phase 1 closes (after `/verify` Checklist C goes green), emit a one-line summary in chat: `Phase 1 closed at <YYYY-MM-DD HH:MM TZ> · commit <SHA> · duration <quest-initiation → close, in hours/minutes>`. Quest-initiation = the moment the QA # first appeared in active.txt OR the earliest "Retrieved" entry in the Step Log.
+
+**Phase 1 close-out backup-file cleanup — MANDATORY (added 2026-05-20 by みや)**: After successful push (between push and /verify Checklist C), delete any `.bak_*` files created during the fix iteration in the touched repo directories. Git history is the rollback fallback; on-disk backups become noise. **Failsafe**: if any `.bak_*` file is more than 7 days old, surface it to みや before deleting (it may be a deliberate long-term preserve). **Why** (2026-05-20 QA-262233): I created `JabatanTeknikal.docx.bak_pre_widen` + `JabatanTeknikal.docx.bak_qa262233` during iteration, committed the fix, never cleaned them up — みや had to ask. Cleanup is part of Phase 1 close, not optional housekeeping. **Why** (2026-05-20 QA-262233): I closed Phase 1 silently — みや had to ask when the close happened + why no report. Time-awareness slip: the meaningful metric is initiation → closure (quest duration), NOT phase-to-phase deltas. Pairs with reply-log.js Stop hook which already logs ts; the human-readable summary line is the gap.
+
 **Compound trigger — "wrap + commit prep + close" (added 2026-05-12, pull-step corrected same day)**: Recognize ANY combination of these phrases as a Phase 1 full close-out request — auto-fire the entire flow (stash → **pull --ff-only origin <source-branch>** → branch → pop → add → propose commit message → wait for みや to execute commit+push → return-to-master → pull → update active.txt → `/verify`). **🚨 The pull between stash and branch is mandatory** — see line 75 hard rule. Never paraphrase this sequence without the pull; both today's tickets (QA-259318 v2 and QA-260179) had it dropped in the announcement (master happened to be at-tip so no merge conflict, but it's a stale-base risk we don't take):
 
 - "I want to wrap up phase 1" / "wrap up phase 1" / "wrap phase 1"
@@ -205,7 +209,7 @@ After commit + push lands successfully:
 1. `git checkout <main-branch>` on the relevant repo — pelupusan = `mlk/master`, awam = `mlk/release/fat`
 2. `git pull --ff-only origin <main-branch>`
 3. Verify: working tree clean (Eclipse settings exceptions ignored), branch on `<main-branch>`, latest origin tip
-4. **Update `quest/active.txt`**: change/add the ticket's entry with `phase=1-complete`, `status=pending post-mortem`, `branch=mlk/<type>/<number>`, `commit=`, `verified=`, `commit_sha=`, `pushed=`, `files_changed_phase1=`, `scope_anchor=`, plus any `etiology=` / `db_verification=` / `learning_marker=` / `out_of_scope_held=` fields relevant to the ticket. Move into the right section of active.txt (keep with the other pending-post-mortem entries; not yet "closed:").
+4. **Update `quest/active.txt`**: change/add the ticket's entry with `phase=1-complete`, `status=closed` (per A6 v2 — Phase 1 done, Phase 2 still ahead), `branch=mlk/<type>/<number>`, `commit=`, `verified=`, `commit_sha=`, `pushed=`, `files_changed_phase1=`, `scope_anchor=`, plus any `etiology=` / `db_verification=` / `learning_marker=` / `out_of_scope_held=` fields relevant to the ticket. Move into the right section of active.txt (entry stays in active section until Phase 2 close flips to `archived`).
 
 5. **Run `/verify <ticket>` skill** — universal checkpoint verification via `.claude/skills/verify/SKILL.md`. At Phase 1 close-out it runs **Checklist C** — 7 evidence-backed checks: local test confirmed, full staged diff reviewed pre-commit, commit landed, push succeeded (local == origin SHA), remote branch discoverable, repo returned to `<main-branch>` at origin tip, `active.txt` updated (`phase=1-complete` + `commit=`). Outputs a green/red checklist; every ✅ must carry concrete evidence. **Mandatory before STOP gate**; if any check is red — or a ✅ lacks evidence — fix the gap before declaring closure. (`verify` also runs Checklist A at Phase 0 and Checklist B at Apply-done — see the skill file.) **Re-commit clause (added 2026-05-18 after QA-260302 state drift):** if the ticket is re-committed for ANY reason after a first close (amend, fixup, re-done commit), `/verify` MUST be re-run and `active.txt`'s `commit=` field updated to the NEW HEAD SHA of the ticket branch. `commit=` must always equal `git rev-parse HEAD` on the ticket branch — a stale or empty `commit=` is itself a red check. **Why**: QA-260302 was committed `ddfd8ccda2`, re-done `5094c076c0`; `active.txt` carried no `commit=` field and still read `phase=1`/`status=active`/`uncommitted` for days — the active.txt check only bites if it is actually re-run after the FINAL commit.
 
@@ -246,7 +250,7 @@ EVERY time みや approves "commit push" / "push" / equivalent, BEFORE running `
 5. **Push-result report** to みや
 6. **Wait** for みや to submit/pass ticket on Redmine (out of Ruri's scope)
 7. **Phase 1 close-out** — `git checkout <main>` + `git pull --ff-only origin <main>` — `<main>` is per-repo: `mlk/master` (etanah-pelupusan) / `mlk/release/fat` (etanah-awam)
-8. **Update active.txt** — phase=1-complete, status=closed-pending-FAT, branch=, commit=
+8. **Update active.txt** — phase=1-complete, status=closed (per A6 v2), branch=, commit=
 9. **Audit-log + protocol updates** — orthogonal, can run any time same session
 
 **Why this exists**: 2026-05-07 — Ruri bundled "Adding protocol + executing commit + remote check + push + close-out" in one breath, ran them in parallel via tool calls in a single message. みや caught the bundle: ordering should be sequential with notification points, not parallelized. Specifically, the pre-push notification (step 1) must precede the commit so みや can intervene BEFORE local state changes.
@@ -259,7 +263,7 @@ After Ruri's push lands, **みや submits the ticket on Redmine** — this means
 3. Adds his commit hash + branch name as a Redmine note (typically)
 4. Reassigns to BA/QA tester (e.g. Nurul Amirah Nadiah) for FAT verification
 
-This is **outside Ruri's scope** — Ruri does NOT touch Redmine status. Ruri's role at this point: do Phase 1 close-out (switch to the repo main branch — `mlk/master` pelupusan / `mlk/release/fat` awam — + pull) + update `quest/active.txt` to `phase=1-complete`, `status=closed-pending-FAT`. Then wait for みや's direction (Phase 2 post-mortem, or next ticket per Ruri's effort-ranked recommendation).
+This is **outside Ruri's scope** — Ruri does NOT touch Redmine status. Ruri's role at this point: do Phase 1 close-out (switch to the repo main branch — `mlk/master` pelupusan / `mlk/release/fat` awam — + pull) + update `quest/active.txt` to `phase=1-complete`, `status=closed` (per A6 v2 — Phase 2 will flip to `archived`). Then wait for みや's direction (Phase 2 post-mortem, or next ticket per Ruri's effort-ranked recommendation).
 
 **On BA acceptance** (later, possibly different session): Phase 2 fires per the existing closure-on-Redmine signals.
 
@@ -398,6 +402,8 @@ Below the existing Description text. Don't rewrite original. Each BA reply gets 
 **Non-negotiable:** Do not touch any codebase file before Phase 0 is complete.
 
 **Phase 0 artifact gate — visible, not silent (hard rule, added 2026-05-18 after QA-260302 early-diagnostic never created):** Phase 0 produces ONE mandatory artifact — `projects/coding-projects/active/QA-<num>/early-diagnostic.md`. Before any Phase 0 → Phase 1 transition, Ruri MUST emit a one-line gate: `Phase 0 artifacts: early-diagnostic.md ✓` — and the ✓ is written ONLY after a Glob confirms the file exists on disk. If it does not exist, create it NOW before continuing. **Why**: QA-260302's early-diagnostic was never created despite the mandatory Auto-Discovery rule — a silent skip, unnoticed for 5 days. Same disease as the 2026-05-17 boot-step silent-skip; same cure — make the step's completion visible so a skip leaves a trace. A skipped Phase 0 artifact must be visible, never silent.
+
+**Blocked-state checklist (hard rule, added 2026-05-20 by みや — cross-cutting, fires at any phase + during retrieval):** When any retrieval / Phase 0 / mid-quest step hits a blocker (missing attachment, ambiguous data, BA-Q needed, tool failure, env mismatch Ruri can't resolve), Ruri MUST emit a one-line checklist that names BOTH the blocked items AND the non-blocked items, THEN continue with the non-blocked items, THEN surface the blocker to みや with a specific ask. Banned: silent drift past a blocker; "I'll come back to it" without an entry; assuming みや will catch the gap; logging it ONLY as a standing flag in the briefing. **Format**: `🚧 Blocked: <item> — <reason / what's needed>` + `▶ Continuing with: <list of non-blocked items>` + `❓ For みや: <specific question or action needed>`. **Why** (2026-05-20 QA-260876): the rework attachment sync was logged only as a standing flag — the workflow drifted forward without explicit acknowledgment, and the attachments stayed un-downloaded for hours. みや: *"create a checklist straight away if something blocked you so that you can continue before progressing or drift. Please be more pro-active next time."* **How to apply**: at the moment any blocker surfaces — emit the 3-line checklist BEFORE the next action. Pairs with the personality.md "Enumerate-then-pursue" rule (the upstream cousin: enumerate paths when blocked, then this rule: surface the paths visibly so みや can intervene if needed).
 
 **Base task folder path (known — do not ask):**
 `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka`
@@ -807,6 +813,31 @@ Example (slip): ~~`Test on PTMLK/01/L/PLPS/2026/1 at PYSK`~~ — missing login.
 **Streamlined 2026-05-12** (from 11 steps to 5, per みや audit): Phase 2 had absorbed too much; most steps duplicated Phase 1 work. The unique value of Phase 2 is the META layer that needs the full quest arc to make sense.
 
 **Auto-trigger (added 2026-05-12)**: Phase 2 fires **automatically** the moment みや confirms "submitted on Redmine" / "ticket passed" / "commit verified" — no separate "wrap up" command needed. The Phase 1 STOP gate transitions directly into Phase 2 emit. The 5 steps below must complete in **<3 minutes** of みや's reading time, total. If Phase 2 emit takes longer to draft, the format is wrong, not the work.
+
+### Visible step-checklist at emit start (hard rule, added 2026-05-20 by みや — same shape as DE Step 0 + Phase 0 artifact gate)
+
+Phase 2 MUST begin with a visible 5-row checklist BEFORE the actual content. Each step marked ✓ done / ⬜ pending / ⏭ skipped (with written reason). Update inline as steps complete.
+
+**Checklist is the GATE, not the DELIVERABLE** (added 2026-05-20 by みや after Phase 2 silent-emit slip): The checklist marks step status, but each step's CONTENT must ALSO emit inline in chat (Faster-finding line + KPI table + post-mortem META summary + Refine decisions + "Your part" output table). Phase 2 is a chat-visible review — みや reads to verify + provides Redmine-side action. If only the checklist + verify table emit, Phase 2 has lost its purpose. **Why**: 2026-05-20 QA-262233 — I emitted checklist + Checklist E verify but no step content; みや: *"Phase 2 has lost its purpose. I don't gain anything or review anything."* Same pattern as visible-checklist landing → I treated it as the deliverable instead of the index.
+
+**Why** (Phase 2 checklist itself): Phase 2's step 5 (archive both-sides + active.txt flip) was repeatedly silent-skipped — see QA-262039 (Phase 2 ran but post_mortem= and kpi_entry= lines never reached active.txt), QA-260302 (Phase 2 never fully fired despite my claims). Same disease as the 2026-05-17 boot-step silent-skip; same cure — make every step's completion visible so a skip leaves a trace.
+
+Format:
+
+═══ PHASE 2 — QA-<num> ═══
+
+| Step | What | Status |
+|---|---|---|
+| 1 | Faster-finding | ⬜ pending |
+| 2 | KPI entry → main/kpi-tracker.md | ⬜ pending |
+| 3 | Post-mortem META → main/post-mortems.md | ⬜ pending |
+| 4 | Refine pass | ⬜ pending |
+| 5 | Auto-render Fix.txt/SUMMARY.txt + archive folders + active.txt flip | ⬜ pending |
+| Cross-check | /verify Checklist E | ⬜ pending |
+
+═══ END ═══
+
+<!-- "BA accepted" trigger REVERTED 2026-05-20 by みや — wrong scope. Ruri doesn't track BA-side state per quest-protocol's "outside Ruri's scope" rule. -->
 
 ### The 5 streamlined steps
 
