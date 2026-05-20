@@ -152,6 +152,36 @@ The table is emitted INLINE in the same chat turn as the work, BEFORE the next c
 
 **Scope**: fires for ANY response in which Ruri performed (a) ≥2 file edits, OR (b) any Refine Block, OR (c) any Design Memo, OR (d) any file creation/deletion. Single trivial edits exempt.
 
+### A13 — Renderer-override rule extended to image-positioning symptoms (hard rule, 2026-05-20 by みや — second instance of the "if (X==null) { X = <forced value> }" pattern slip)
+
+**Refine of**: CLAUDE.md Etanah-Codebase-Read section "Renderer-side overrides before cache theories" (hard rule 2026-05-04). Original rule scope: "layout / display / formatting bug". Symptom examples: text justification (BOTH), bold, spacing, style.
+
+**Extension**: The rule now ALSO fires on **image-positioning symptoms** — including (but not limited to):
+- Logo at wrong position despite template-side cell structure being correct
+- Image alignment doesn't change when SDT/CC alignment is edited in Word UI
+- Image size doesn't change when CC properties are edited
+- Image appears in wrong cell despite SDT relocation in template
+
+**Standard greps extended to**: `setImageAlignment`, `setImageWidth`, `setImageHeight`, `setMaxWidthInCentimeter`, `setFollowHeightWidthRatio`, `setImageAnchor`, alongside the existing `setJc`, `setVal\(JcEnumeration`, `setBold`, `setSpacing`, `setStyle`.
+
+**Why** (2026-05-20 QA-262370): `populateLogoPejabatTanahImage:12010-12012` had `if (ccVO.getImageAlignment() == null) { ccVO.setImageAlignment(JcEnumeration.CENTER); }` — exactly the pattern the 2026-05-04 rule warns about. I read those lines on first-pass Scout and DIDN'T trigger the rule because the rule's symptom list focused on text-layout bugs, not image positioning. みや: "the main cause was CENTER, just like BOTH before". Same root-cause SHAPE; my pattern-matcher was too narrow.
+
+**Pairs with**: A12 (Notes.txt as Recon precondition) — both are "rules that exist but didn't fire deterministically" → strengthening triggers, not adding new rules. Same disease, different surface.
+
+**Apply at**: Phase 0 Scout — when any visible-output bug surfaces (text, layout, image, font, alignment), grep the populator code + framework writer (`PelupusanWordEditorUtil` / `PelupusanTemplateUtil`) for `if (\w+\.get\w+\(\) == null)` blocks BEFORE assuming the bug is template-side or environment-side. Flag any found defaults as candidate root causes.
+
+### A12 — Notes.txt write is a HARD PRECONDITION of Recon emit (hard rule, 2026-05-20 by みや — third repeat of Notes.txt skip slip)
+
+**Refine of**: CLAUDE.md Read-Redmine sub-protocol point (6)(c) — *"Notes.txt auto-write post-Scout — run `node quest/notes.js`"*. The existing "post-Scout" temporal anchor is fuzzy and has slipped at least 3 times in 2026-05-20 alone (skill-failure-log records 3 instances). A loose temporal anchor is insufficient; the rule needs a deterministic gate.
+
+**New rule**: Before emitting the `═══ RECON — ...` block in chat, Ruri MUST verify Notes.txt for the active QA exists AND contains the verified test data (permohonan ID + login + tugasan). If empty or stale → STOP, run `node quest/notes.js` with the Scout-verified test data FIRST, THEN emit Recon. **Recon emit is BANNED while Notes.txt is empty or carries stale (unverified) test data.**
+
+**Verification method**: read `<Task folder>/1. Notes.txt`. Contents must match locked 3-line format per `feedback_task_folder_ownership.md` AND reflect the verified test app (not BA-prep ID unless Scout confirmed it's at the target tugasan).
+
+**Why**: 2026-05-20 QA-262370 — Scout returned verified `PTMLK/03/L/PLTP/2026/7` + `leenoor36@yahoo.com` + PYSKN5A; I emitted Recon + Predicate Box + Apply without ever writing Notes.txt. みや couldn't find the test data when needed. Same shape repeated 3x today; loose "post-Scout" rule doesn't stop it. Hard precondition does.
+
+**Pairs with**: feedback_task_folder_ownership.md (Notes.txt is Ruri's responsibility) + the Standing-flag staleness audit rule (added today) — both are "verify-before-emit" gates.
+
 ### A5 — `If blocked → emit checklist, continue with non-blocked items` rule (2026-05-20)
 
 Add under Quest Workflow non-negotiables:

@@ -59,6 +59,15 @@ If all worktree cleanup runs cleanly: NO standing flag. みや shouldn't see wor
 - Briefing is SHORT — max 15 lines. No padding.
 - **Closing salutation MUST inherit the name from MODE** (added 2026-05-14 by みや): if MODE says `Office hours → リドワンさん`, close with `Where would you like to start, リドワンさん?` — never switch names mid-briefing.
 - **Standing-flags scope = ACTION-REQUIRED or AWARENESS-CRITICAL** (clarified 2026-05-14 by みや): things みや should know about or act on this session — environment drift, blocking dependencies, FAT-retest pending, sync issues, untested protocol changes that affect TODAY's work. NOT for general "watch-and-confirm-later" observations — those belong in `current-session.md` → Next Session Priority or Working Memory. If unsure: flag it ONLY if みや would course-correct on hearing it; otherwise drop to observation.
+- **Standing-flag staleness audit — mandatory pre-emit (added 2026-05-20 by みや)**: for EVERY flag carried forward from `current-session.md`, perform a fast filesystem/git/tracker check that proves the flag is still real BEFORE surfacing it in the briefing. Flags that fail the check are DROPPED (or REWORDED if partially-real). Validation method per flag type:
+  - **Folder-location flag** ("X folder still in Archive") → `ls` the claimed path AND the expected destination
+  - **Attachment-missing flag** ("BA attachments not downloaded") → `ls` the Task folder's `0. Brief/` or `3. Rework/` for the named files
+  - **Refactor-pending flag** ("Refactor still pre-Phase-A") → read the tracker file (`Feature/Forge-Self-Improvement-System/claude-md-refactor-tracker.md` or equivalent)
+  - **Env-state flag** ("Still on UAT / wrong branch") → read `standalone.xml` + `git branch --show-current` in both repos
+  - **Sync-failure flag** ("redmine-sync gap on X") → re-attempt OR read the last-run log
+  - **Hook-warn-only flag** ("Hooks still v1 warn-only") → read the registration in `settings.local.json` + count fires in the hook's log
+  
+  Audit emit shape: silent if ALL flags survive; one inline table surfaced ABOVE the briefing only when ≥1 flag dropped or reworded — `| Flag | Reality | Verdict |`. **Banned**: emitting any flag whose validation step was skipped. **Why**: 2026-05-20 — briefing carried 3 stale flags (CLAUDE.md edit-block, QA-260876 folder, redmine attachments) that were already resolved on disk; copy-paste from session memory without filesystem check.
 - After briefing: pause and wait for みや's direction. Do not start working.
 
 ---
@@ -85,4 +94,4 @@ Where would you like to start, リドワンさん?
 
 ---
 
-*Version: 1.2 | Last updated: 2026-05-20 — added pre-briefing worktree auto-cleanup so stale worktrees never reach the standing-flag surface*
+*Version: 1.3 | Last updated: 2026-05-20 — added Standing-flag staleness audit (mandatory pre-emit) after 3 stale flags slipped into the briefing*

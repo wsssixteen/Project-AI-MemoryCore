@@ -19,15 +19,25 @@ notes:
   - 2026-05-20: Phase 1 closed — みや applied parent template fixes; Ruri applied external JT table fix; committed 30d37f3b44 on mlk/qa/262233, pushed. Repo returned to mlk/master + pulled (now at d438f75022 — pulled in mid-closure to clear "add ulasan mmkn" upstream conflict). Phase 2 pending.
 
 qa=QA-261613
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\44. QA #261613 - MLKFAT - PSBS - Kemasukan Keputusan MMKN dan P - Medan Tarikh Disahkan tidak papar pada skrin
-qa_doc=projects/coding-projects/active/QA-261613/QA-261613.md
-phase=0
-status=hold
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\44. QA #261613 - MLKFAT - PSBS - Kemasukan Keputusan MMKN dan P - Medan Tarikh Disahkan tidak papar pada skrin
+qa_doc=projects/coding-projects/archive/QA-261613/QA-261613.md
+branch=mlk/qa/261613
+commit=c7df4c24dc (2026-05-20) — QA #261613 - PSBS - KKMMKN - Tambah medan Tarikh Disahkan pada skrin
+phase=2-complete
+local_test_confirmed=true
+status=archived
+post_mortem=main/post-mortems.md (entry 2026-05-20)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-20)
 issue_one_liner=PSBS Kemasukan Keputusan MMKN — Medan "Tarikh Disahkan" tidak papar pada skrin
-scope_layer=JSF/XHTML composite for Tarikh Disahkan render-gate + helper if applicable — Scout pending
-scope_anchor=1 issue from BA Description + PNG. Medium priority. Same test app as QA-262039 (PTMLK/02/L/PSBS/2026/3, login aizzatyaqilah.95@gmail.com). No BA-mentioned cross-refs (sidebar relates:223325 ignored).
+scope_layer=Java helper flag-writer — single-line addition in MlkMuatNaikCabutanMinitForm.initView() PSBS branch
+scope_anchor=PSBS urusan only. PSBS branch in initView() at MlkMuatNaikCabutanMinitForm.java:806-815 — added showTarikhDisahkan=Boolean.TRUE; (line 810) mirroring PPJK precedent at line 865 + PRBB at line 790. Render gate at mlkKeputusanJKKTForm.xhtml:306-307 already correct; this fix flips the bean flag the gate reads. No inner tugasan filter — flag becomes TRUE across all PSBS tugasans that reach this form (SRMMKNPTG, PRMMKNPTG, KKMMKN etc.), matching PPTPB's always-TRUE-for-whole-urusan pattern at line 997.
+files_changed=src/main/java/my/gov/etanah/pelupusan/web/form/common/mlk/MlkMuatNaikCabutanMinitForm.java — 1 insertion at line 810 (+1, -0)
+tugasan=KKMMKN (TGS_KEMASUKAN_KEPUTUSAN_MMKN). Fix mechanism is urusan-wide (PSBS branch has no tugasan filter), covers KKMMKN + sister MMKN tugasans for PSBS.
+test_app_uat=PTMLK/03/L/PSBS/2026/6 (masirah@melaka.gov.my, KKMMKN, peranan PT, no flowable-alter needed — already at target tugasan on UAT). BA-prep PTMLK/02/L/PSBS/2026/3 is at SRMMKNPTG on UAT.
+verified=2026-05-20 — みや confirmed test pass on UAT PTMLK/03/L/PSBS/2026/6 KKMMKN; Tarikh Disahkan field renders correctly.
 notes:
   - 2026-05-20: Retrieved (batch with QA-262233). QA-261613.md skeleton + Issue Checklist (2 rows) written from primary sources. Scout familiar spawned in background. Logged to quest/retrieval-tracker.md run #1.
+  - 2026-05-20: Quest start to Phase 1 close in single session — Scout (prior) + Recon (this session, all Universal Checks 0-8e source-verified) + Predicate Box + 1-line Apply + みや tested OK on UAT PTMLK/03/L/PSBS/2026/6 KKMMKN. Committed c7df4c24dc on mlk/qa/261613, pushed (first push, -u upstream set). Repo returned to mlk/master + pulled. Phase 2 (post-mortem + KPI) pending.
 
 qa=QA-260316
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\37. QA #260316 - PLPS - AWAM - Bayaran Permohonan papar 0.00
@@ -105,6 +115,7 @@ task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\40. QA #
 early_diagnostic=projects/coding-projects/active/QA-262004/early-diagnostic.md
 phase=0
 status=hold
+held_reason=2026-05-20 18:35 — paused after Recon emit + Word UI fix-shape package for みや (9 docx discrepancies + 1 Java audit candidate). みや switched focus back to QA-262370 logo-positioning diagnosis. Ready to resume from "your nod on Word UI work + Java audit ask".
 issue_one_liner=PSBS Ringkasan Risalat — maklumat tak tertarik, font/saiz beza, align salah vs Requirement #237880
 scope_layer=.docx template — TemplateRingkasanRisalatPSBS.docx (+ injected references/JabatanTeknikal.docx); tugasan PRMMKNPTG/SRMMKNPTG/PRRMMKNPTG
 scope_anchor=Scout: 10 discrepancies (6 static .docx, 3 CC-tag wiring/missing SDTs, 2 Java/data). PSBS template is an incomplete variant missing CCs its siblings carry + Arial/Century-Gothic font mix. Fix-shape drafted in early-diagnostic.md.
@@ -121,6 +132,40 @@ scope_layer=.docx template — TemplateRisalatMMKN_PDT_PSBS_Lulus.docx (+ inject
 scope_anchor=Scout: 22 discrepancies (~10 static .docx, ~5 injected-ref-doc, ~3-4 Java populator bugs, ~5 data). Confirmed Java bug: populatePTGParagraph_PSBS_Lulus @ PelupusanWordCCMethodConstant.java:17601 computes premiumPT then overwrites with HYPHEN (dead override). Fix-shape drafted in early-diagnostic.md.
 notes:
   - 2026-05-19: Retrieved + Scout done. SILENT — Phase 0 + fix-shape persisted. Largest of the 4; the only one with Java populator bugs. Recon-verify + Apply pending focus. Shares Requirement #237880 + likely shares populators with QA-262004 — do Java fixes once, verify both.
+
+qa=QA-262370
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\46. QA #262370 - Semua surat - Reorganize header surat
+early_diagnostic=projects/coding-projects/archive/QA-262370/early-diagnostic.md
+branch=mlk/qa/262370
+commit=bcdcadadb3 (2026-05-20) — QA #262370 - Semua Urusan - Susun semula HeaderSurat agar logo Pejabat selari dengan maklumat hubungan
+phase=2-complete
+local_test_confirmed=true
+status=archived
+post_mortem=main/post-mortems.md (entry 2026-05-20)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-20)
+carry_forward=todo.md Q2 — Text-box SDT framework support enhancement (XPath via XmlUtils — docx4j 3.2.2 lacks wordprocessingShape typed classes)
+priority=High
+scope_anchor=Multi-urusan ("Semua surat"). Single .docx fix in HeaderSurat.docx (shared reference doc consumed by 69 surat templates via headerSurat1 CC tag). みや's Word UI implementation: 7-col grid restructure with logo at Row 0 cell[5], vMerge=restart through Row 5, vAlign=bottom — logo sits at bottom of merged cell = aligned with contact-info baseline. Asymmetric col widths (Telefon/Faks narrow at 1147 dxa, LamSes/Emel gridSpan=2 wide at 2502 dxa) preserve room for long URLs/emails. Java side: NO changes (CENTER-removal in PelupusanWordCCMethodConstant was applied earlier but reverted — みや's docx implementation works without it).
+scope_layer=.docx template binary only — HeaderSurat.docx (1 file, binary, 30968 → 29594 bytes = -1374 / -4.4%). 0 Java edits. 0 config edits.
+files_changed=src/main/resources/template/MLK/references/HeaderSurat.docx — みや's Word UI implementation (7-col grid; logo Row 0 cell[5] vMerge rows 0-5 vAlign=bottom; asymmetric contact-info col widths; new Row 8 empty bottom)
+test_app_uat=PTMLK/03/L/PLTP/2026/7 (leenoor36@yahoo.com, PYSKN5A, pejabat 03 Alor Gajah — BA-prep, visual repro for Alor Gajah logo issue)
+verified=2026-05-20 — みや tested on UAT, logo now renders at right edge aligned with contact-info baseline; matches Expected.png intent
+aaron_note_2026-05-20=for this one, as long as you adjust in suratHeader docx. should fix for all
+key_finding=The populator (PelupusanWordCCMethodConstant.populateLogoPejabatTanahImage:12010-12012) had `if (ccVO.getImageAlignment() == null) { setImageAlignment(CENTER); }` — identified during diagnosis as a forced-override pattern matching 2026-05-04 hard rule "Renderer-side overrides before cache theories" (QA #259318 BOTH precedent). Determined to NOT be needed for this fix — みや's vAlign=bottom + asymmetric col layout achieves the visual goal even with the CENTER override in place. CENTER-removal change reverted; Java unchanged. Same insight kept for future reference (logoPejabatTanah CC tag exists in exactly 1 file — HeaderSurat.docx — verified via repo-wide scan).
+notes:
+  - 2026-05-20: Retrieved via redmine-sync. Aaron Loh assigned + prep note specifies suratHeader.docx as the single fix file. Scout familiar completed early-diagnostic.md: 69-template fan-out via headerSurat1 CC tag confirmed; per-pejabat image dimensions in Java populator surfaced as alternative fix-surface; test data DB-verified UAT.
+  - 2026-05-20: Iteration cycle — Ruri v1 (Java per-pejabat dimension swap, kod-03) failed (didn't address layout); Ruri v2-v4 (programmatic XML restructure with vMerge + vAlign=center on logo cell) failed (vAlign=center wrong; should have been bottom). Ruri also added Java CENTER-default removal + text-box framework extension; both reverted by みや after errors. みや's Word UI iteration with vAlign=bottom + asymmetric col widths reached the right layout — clean docx-only fix shipped. Multiple slips logged to skill-failure-log: renderer-override rule miss at Phase 0, Momentum Circuit-Breaker miss after first failure, visual-fidelity excuse-framing, unverified docx4j FQN in framework extension.
+  - 2026-05-20: Phase 1 closed. Commit bcdcadadb3 on mlk/qa/262370 (1 file, binary 30968 → 29594 bytes). Pushed (first push, -u upstream set). Repo returned to mlk/master, clean. Phase 2 pending — post-mortem will capture the multi-iteration arc (5 attempts) + the vAlign=bottom insight + the visual-fidelity lessons.
+issue_one_liner=Semua surat — header layout issue at Alor Gajah pejabat 03: contact rows spread (Telefon→Emel gap) + logo orphaned upper-right. BA title says "logo too big"; annotations actually show vertical-gap symptom — same underlying root cause (image dimensions in populator OR HeaderSurat.docx header table cell widths).
+scope_layer=.docx template — `HeaderSurat.docx` external reference doc at `src/main/resources/template/MLK/references/HeaderSurat.docx` (consumed by 69 surat templates via the `headerSurat1` CC tag — zipfile scan verified). PLUS Java image-injector populator `PelupusanWordCCMethodConstant.populateLogoPejabatTanahImage` @ 11996-12065 with per-pejabat dimensions switch.
+scope_anchor=Multi-urusan ("Semua surat"). Two fix-surface candidates: (a) Java switch in `populateLogoPejabatTanahImage` per-pejabat image dimensions (kod 03 Alor Gajah is the visible outlier); (b) `HeaderSurat.docx` → `word/header2.xml` 4-column table cell width tuning (Aaron's literal "adjust in suratHeader docx" reading). Recon will spot-render Alor Gajah current output to pick.
+priority=High
+ba_ref_app=PTMLK/03/L/PLTP/2026/7 — MLKUAT, tugasan PYSKN5A (Penyediaan Surat Keputusan dan Borang Notis 5A), login leenoor36@yahoo.com (NORAIDAH BINTI MOHD NOR), peranan PT, pejabat 03 Alor Gajah — DB-verified by Scout
+attachments=0. Brief/Expected.png + 0. Brief/expected 1.1.jpg + 0. Brief/As is for surat.png
+aaron_note_2026-05-20=for this one, as long as you adjust in suratHeader docx. should fix for all
+scout_verdict=PROCEED TO RUBRIC — no BA-Q blocker; TRG hard-excluded per CLAUDE.md; effort S-M
+notes:
+  - 2026-05-20: Retrieved via redmine-sync. Aaron Loh assigned + prep note specifies suratHeader.docx as the single fix file. Scout familiar completed early-diagnostic.md: 69-template fan-out via headerSurat1 CC tag confirmed; per-pejabat image dimensions in Java populator surfaced as alternative fix-surface; test data DB-verified UAT. PROCEED TO RUBRIC.
 
 qa=QA-259339
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\42. QA #259339 - [FAT] PRU - Pembetulan Pada Template Kertas Pertimbangan
@@ -158,7 +203,7 @@ notes:
 
 closed:
 qa=QA-260876
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\32. QA #260876 - PLTP - Ringkasan Risalat MMKN -  Issue pada template Ringkasan Risalat
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\45. QA #260876 - PLTP - Ringkasan Risalat MMKN -  Issue pada template Ringkasan Risalat
 qa_doc=projects/coding-projects/active/QA-260876/QA-260876.md
 early_diagnostic=projects/coding-projects/active/QA-260876/early-diagnostic.md
 branch=mlk/qa/260876
@@ -182,7 +227,7 @@ cp_G_commit=2026-05-13 7fe595d75f
 cp_H_push=2026-05-13 first push to origin/mlk/qa/260876 (-u set)
 out_of_scope_held=(a) Standalone "Dun" field in main template renders "-" (populateDun returns HYPHEN because /9 data has neither alppList.dun nor aptList.maklumatTambahan KEY_DUN populated) — data-side issue, not BA-flagged this cycle. (b) Sibling Ringkasan variants (PT/PRZ/PSBS/PPJK/BPRZ/default/JKKL) NOT touched — only PLTP was flagged. (c) Cross-cell font consistency in JabatanTeknikal.docx other sections — not BA-flagged.
 architectural_finding=External `references/` docs (additionalJKKLParagraph.docx from QA-247710 + JabatanTeknikal.docx here) are injection-pattern externals. Style/font lives IN the external doc, populator only fills VALUES via rows. Parent template's font doesn't override the injected slot's content. Same pattern as QA-247710. Recurring — worth adding to etanah-knowledge.
-note=Phase 1 closed 2026-05-13. みや submitting on Redmine. Phase 2 (post-mortem + KPI + architectural note for etanah-knowledge) pending. 4 BA Qs from Scout's diagnostic (row label parameterise / font scope / HYPHEN fallback / multi-YB) — みや handled inline during edit; the row-label parameterisation chose to use `<dun>` (now renders "Asahan" for /9 data).
+note=Phase 1 closed 2026-05-13. みや submitting on Redmine. Phase 2 (post-mortem + KPI + architectural note for etanah-knowledge) pending. 4 BA Qs from Scout's diagnostic (row label parameterise / font scope / HYPHEN fallback / multi-YB) — みや handled inline during edit; the row-label parameterisation chose to use `<dun>` (now renders "Asahan" for /9 data). Folder relocated to active Tasks/Melaka/45 (no longer Archive/32) for rework cycle 2 — task_folder= updated 2026-05-20 next-session; both rework attachments (ulasan.png + 2026-05-20_093455.png) already in 3. Rework/ folder.
 
 closed:
 qa=QA-260820
@@ -326,38 +371,26 @@ test_apps_uat=PTMLK/02/L/PLPS/2026/6 (nurulazura — PLPS verify ✓), PTMLK/01/
 note=Phase 2 closed 2026-05-07. Pushed to mlk/qa/250665. 9+ audit-log entries spawned. Awaiting BA/QA FAT retest.
 
 qa=QA-259759
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\23. QA #259759 - FAT - PLPS - PYSK - SKL Item 3 dan Item 4 ayat hilang
-early_diagnostic=projects/coding-projects/active/QA-259759/early-diagnostic.md
-branch=mlk/qa/259759 (v1, closed Phase 1 2026-05-07) | mlk/qa/259759v2 (v2, Phase 1 closed 2026-05-14)
-v1_commit=29fbbc8d15 (2026-05-07 16:50) — fix QA #259759 - PLPS - Template SKL Item 3 dan Item 4 ayat
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\23. QA #259759 - FAT - PLPS - PYSK - SKL Item 3 dan Item 4 ayat hilang
+early_diagnostic=projects/coding-projects/archive/QA-259759/early-diagnostic.md
+branch=mlk/qa/259759 (v1) | mlk/qa/259759v2 (v2)
+v1_commit=29fbbc8d15 (2026-05-07) — fix QA #259759 - PLPS - Template SKL Item 3 dan Item 4 ayat
 v2_commit=801d63bbc2 (2026-05-14) — QA #259759 - PLPS - Item 4 ayat un-bold dan tambah perkataan 'tahun'
-v2_branch=mlk/qa/259759v2
-v2_verified=2026-05-14 — みや confirmed test pass after flowable-alter to PYSK on PTMLK/01/L/PLPS/2026/1 (nizalarif@melaka.gov.my); Item 4 ayat renders not-bold + with "tahun" word
-v2_pushed=2026-05-14 first push to origin/mlk/qa/259759v2 (-u upstream set)
-v2_files_changed=src/main/resources/template/MLK/TemplateSuratKeputusanLulusPLPS.docx (binary, 39813→35650 bytes) — 5 surgical XML edits: (1) "(" → "(tahun " before tahunBerikut SDT, (2-3) `<w:b/>` removed from inner runs of tahunBerikut + thnTamatKelulusan SDTs, (4-5) `<w:b/>` removed from sdtEndPr blocks of both SDTs (precautionary anti-propagation).
-v2_scope_anchor=PLPS only. TemplateSuratKeputusanLulusPLPS.docx Item 4 ayat ONLY. Two changes per BA Nurul Amirah Nadiah 2026-05-12 journal: (a) un-bold tahunBerikut + thnTamatKelulusan placeholders, (b) add "tahun" before `<1 tahun selepas tahun mula kelulusan>` placeholder. Sibling SKL templates (PRU/PT/PSBS/PLTP) NOT touched.
-v2_scope_layer=.docx template binary only — no Java change (populators already correct from v1 cycle)
-rework_detected=2026-05-13 via Redmine sync (3. Rework/ subfolder created, History.txt 8 journal entries)
-phase=1-complete
-status=closed
-rework_scope_anchor=PLPS only. TemplateSuratKeputusanLulusPLPS.docx Item 4 ayat ONLY. Two changes per BA Nurul Amirah Nadiah 2026-05-12 14:07 journal: (1) ayat at item 4 is currently BOLD → must be NOT bold, (2) add word "tahun" before the placeholder `<1 tahun selepas tahun mula kelulusan>`. Target paragraph: "Dimaklumkan jua bagi pembayaran lesen untuk tahun berikutnya (tahun <1 tahun selepas tahun mula kelulusan> hingga <tahun akhir kelulusan>) hendaklah dibayar pada awal tahun iaitu bulan Januari pada tahun tersebut." Item 3 (SAHAJA → SATU RIBU SAHAJA from prior cycle) was RESOLVED & VERIFIED by BA in this same journal — not in current rework scope.
-rework_test_app_fat=PTMLK/01/L/PLPS/2026/1 (BA-referenced; currently active at PYB4AE under nizalarif@melaka.gov.my; SKL doc generated earlier at PYSK — view via Penyediaan/Cetakan Surat path or flowable-alter to PYSK if regeneration needed)
-rework_attachment=0. Brief/QA #259759 - Test 1.pdf
-rework_effort_estimate=LOW (~30min) — single .docx template-binary edit via Word UI (remove bold on Item 4 ayat + add word "tahun" before placeholder)
-rework_scope_layer=.docx template binary only (TemplateSuratKeputusanLulusPLPS.docx in `src/main/resources/template/MLK/`) — NO Java edits needed
-v1_phase=1-complete
-status=active
+phase=2-complete
 local_test_confirmed=true
-scope_anchor=PLPS only. Template Surat Keputusan Lulus PLPS — Item 3 (remove date range, Sahaja → SAHAJA bold, terbilang verified) + Item 4 ayat added with 3 placeholders (tahunSemasa, tahunBerikut, thnTamatKelulusan). Do NOT touch other SKL templates or other urusans.
-scope_layer=.docx template + new Java populator
-effort_actual=~6 hours (incl. Cp A familiar verification + populator audit + 4 docx programmatic edits + Cp D Rubric + Cp E render verify)
-tugasan=Penyediaan Surat Keputusan Lulus (PLPS) — PYSK — surat to pemohon
-test_app_uat=PTMLK/01/L/PLPS/2025/91 (azlee@melaka.gov.my, district 01 Melaka Tengah, Semakan SKL tugasan) — render confirmed by みや
-files_changed=src/main/java/my/gov/etanah/pelupusan/constant/PelupusanWordCCMethodConstant.java (new TAG_THN_TAMAT_KELULUSAN constant + registration + populateThnTamatKelulusan method) + src/main/resources/template/MLK/TemplateSuratKeputusanLulusPLPS.docx (Item 3 bracket fix, SAHAJA caps, Item 4 ayat with new CC tags)
-out_of_scope_changes=none — strict PLPS-only scope; new populator is additive (zero impact on PRU/other SKL urusans)
-learning_marker=2026-05-07 — PLPS data-source split (typed apl.tarikhAkhir column null, dates in maklumatTambahan JSON) is now documented as a hard rule pattern for future PLPS work; pairs with the audit-log entry on this finding
-knowledge_overlap=QA-259318 (11 SKL templates migrated to frasa2 last week — same family). Patterns + tooling ready, reused.
-note=Phase 1 closed 2026-05-07 ~17:05. Branch pushed to origin/mlk/qa/259759 (first push, set upstream). みや submitted ticket on Redmine. Awaiting BA/QA FAT retest. Phase 2 (Reflect/wrap up) pending みや's direction.
+status=archived
+post_mortem=main/post-mortems.md (entry 2026-05-20 — combined v1+v2)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-20 — combined v1+v2)
+v1_test_app_uat=PTMLK/01/L/PLPS/2025/91 (azlee@melaka.gov.my, district 01 Melaka Tengah, Semakan SKL tugasan)
+v2_test_app_fat=PTMLK/01/L/PLPS/2026/1 (BA-referenced — nizalarif@melaka.gov.my; flowable-alter to PYSK for regeneration)
+v1_scope_anchor=PLPS only. TemplateSuratKeputusanLulusPLPS.docx — Item 3 (remove date range, Sahaja → SAHAJA bold, terbilang) + Item 4 ayat added with 3 placeholders (tahunSemasa, tahunBerikut, thnTamatKelulusan) via new TAG_THN_TAMAT_KELULUSAN populator.
+v2_scope_anchor=PLPS only. TemplateSuratKeputusanLulusPLPS.docx Item 4 ayat — un-bold tahunBerikut + thnTamatKelulusan placeholders + add "tahun" word before placeholder per BA 2026-05-12 journal.
+v1_files_changed=src/main/java/my/gov/etanah/pelupusan/constant/PelupusanWordCCMethodConstant.java (new TAG_THN_TAMAT_KELULUSAN constant + registration + populateThnTamatKelulusan method) + src/main/resources/template/MLK/TemplateSuratKeputusanLulusPLPS.docx (Item 3 bracket fix, SAHAJA caps, Item 4 ayat with new CC tags)
+v2_files_changed=src/main/resources/template/MLK/TemplateSuratKeputusanLulusPLPS.docx (binary, 39813→35650 bytes) — 5 surgical XML edits: (1) "(" → "(tahun " before tahunBerikut SDT, (2-3) <w:b/> removed from inner runs of tahunBerikut + thnTamatKelulusan SDTs, (4-5) <w:b/> removed from sdtEndPr blocks (precautionary anti-propagation). No Java change in v2.
+out_of_scope_changes=none — strict PLPS-only across both cycles; new populator is additive (zero impact on PRU/other SKL urusans)
+learning_marker=2026-05-07 — PLPS data-source split (typed apl.tarikhAkhir column null, dates in maklumatTambahan JSON) is documented as a hard rule pattern for future PLPS work; pairs with the audit-log entry on this finding
+knowledge_overlap=QA-259318 (11 SKL templates migrated to frasa2 — same family). Patterns + tooling ready, reused.
+note=Quest closed in 2 cycles: v1 Phase 1 (2026-05-07, ~6h) shipped Item 3 + Item 4 fix with new populator; BA bounced 2026-05-12 on Item 4 styling intent (BOLD should be NOT-bold + missing word "tahun" before placeholder). v2 Phase 1 (2026-05-14, ~30 min) shipped .docx-only fix per BA's journal. Phase 2 closed 2026-05-20 — combined post-mortem + KPI; folders archived; reconciliation of double-status anomaly applied.
 
 qa=QA-259428
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\24. QA #259428 - FAT - PLTP - PSJT - Lampiran pelan tidak papar pada surat JT

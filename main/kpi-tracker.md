@@ -2,7 +2,7 @@
 *Per-ticket value capture beyond just close — what we learnt, tied to grep-able identifiers*
 
 > Lives alongside `post-mortems.md`. Post-mortem captures CAUSE; KPI tracker captures VALUE.
-> KPI target (official 2026-05-06): **2 tickets/day, 4-6 hours each**.
+> KPI target (revised 2026-05-20): **3 tickets/day**. Effort varies — quick wins (~20-45 min) balance against multi-hour tickets so the daily count holds. Pairs with `feedback_ticket_cadence.md`.
 > みや uses this for upward KPI reporting + self-review.
 >
 > *Version: 2.0 | Last updated: 2026-05-12 (2-col scannier table format per みや audit)*
@@ -338,6 +338,81 @@
 - New `populateTotalNotis5APerkataanHurufPertamaBesar` populator — Title-Case amount-in-words
 
 **Audit-log entries spawned**: `checklist` skill refinement (independent enumeration), `feedback_test_data_recency` Filter 2, todo.md utility-sweep-on-instruction entry
+
+---
+
+### QA-261613 — PSBS KKMMKN Tarikh Disahkan field not rendering — 2026-05-20 — ~45 min
+
+**Closure type**: code-fix-shipped (1-line Java), committed `c7df4c24dc` on `mlk/qa/261613`, pushed, tested OK on UAT `PTMLK/03/L/PSBS/2026/6` (masirah@melaka.gov.my).
+
+**Time spent**: ~45 min single session (Scout's diagnostic from prior retrieval session carried ~90% of the value).
+
+**What we learnt**:
+
+| Identifier (searchable) | What we learnt (plain English) |
+|---|---|
+| `MlkMuatNaikCabutanMinitForm.initView()` PSBS branch @ `:806-815` | The PSBS urusan branch in `initView()` was the only one among 11 MMKN-decision branches missing `showTarikhDisahkan = Boolean.TRUE;`. Fix is a single-line add mirroring PPJK precedent at `:865` and PRBB at `:790`. |
+| `showTarikhDisahkan` field @ `:224` (`private Boolean = Boolean.FALSE`) | Bean field default FALSE — any urusan branch wanting the field visible must explicitly opt-in via `= TRUE`. ~20 `show<X>` flags in this form follow the same opt-in shape. |
+| Render gate `mlkKeputusanJKKTForm.xhtml:306-307` `rendered="#{cc.attrs.showTarikhDisahkan and not cc.attrs.showTarikhDisahkanJKKL}"` | Mutual-exclusion between regular + JKKL date fields. The XOR prevents both rendering at once. PSBS does not enter the JKKL flow (line `:1123`), so flipping the main flag is safe. |
+| PPTPB pattern @ `:997` (always-TRUE, no inner tugasan filter) | Use PPTPB as precedent for "whole-urusan opt-in" show flags (PSBS now follows this shape), PPJK at `:853-870` as precedent for "per-inner-tugasan" show flags. PSBS branch has no inner filter, so all PSBS tugasans reaching this form get the field. All such tugasans are MMKN-flow — appropriate scope. |
+
+**Extras solved beyond ticket scope**: none — strict BA scope.
+
+**Audit-log entries spawned**:
+- 2 Refine Blocks at session-start (DE step-0 format · Standing-flag staleness audit)
+- 2 skill-failure-log entries
+- active.txt path correction (QA-260876 stale Archive path → active /45)
+
+---
+
+### QA-259759 — PLPS Surat Keputusan Lulus Item 3 + Item 4 ayat — 2026-05-07 (v1) / 2026-05-14 (v2) / 2026-05-20 (Phase 2) — ~6h v1 + ~30 min v2
+
+**Closure type**: code-fix-shipped across 2 cycles (v1: template + Java populator · v2: .docx XML-only).
+
+**Time spent**: ~6.5 hours total across v1 + v2 (v1 ~6h, v2 ~30 min).
+
+**What we learnt**:
+
+| Identifier (searchable) | What we learnt (plain English) |
+|---|---|
+| `populateThnTamatKelulusan` + `TAG_THN_TAMAT_KELULUSAN` constant @ `PelupusanWordCCMethodConstant.java` (added v1, kept untouched in v2) | New Word CC populator for the SKL termination-year placeholder. PLPS-only data path — reads tahun from `maklumatTambahan` JSON, not the typed `apl.tarikhAkhir` column (which is null for PLPS). Confirms the PLPS data-source split documented since QA-259318. |
+| `TemplateSuratKeputusanLulusPLPS.docx` Item 4 ayat — `<w:b/>` inner runs + `<w:b/>` sdtEndPr | The placeholder bold-style lived in TWO XML locations: the inline runs inside the SDT (visible bold while populator value renders) AND the sdtEndPr block (style-propagation source for next-typed text). Removing only the inner runs was insufficient — sdtEndPr removal was a load-bearing precautionary edit. Save this for any "un-bold a CC placeholder" Word-XML edit. |
+| Literal text around CC placeholders — e.g. `"(tahun <placeholder>"` vs `"(<placeholder>"` | The space-glyph immediately before a CC placeholder is part of the template's STATIC text — separate from the populator output. If BA wants "(tahun X)" the template must carry "(tahun " as static and the populator fills X. Don't try to inject "tahun" via the populator. |
+| `frasa2` (DB-driven slogan migration from QA-259318) | The 11-SKL-template family from QA-259318 paid back here: PLPS SKL Item 3 ("SAHAJA" caps + bracket-fix) inherited the same template + verification tooling, so v1 ran ~2h faster than a cold start would have. Family-knowledge ROI is real and visible. |
+
+**Extras solved beyond ticket scope**: none — strict PLPS-only scope across both cycles.
+
+**Audit-log entries spawned**:
+- PLPS data-source split (typed apl.tarikhAkhir null, dates in maklumatTambahan JSON) — surfaced in v1 audit-log
+- Reconciliation finding: active.txt schema doesn't handle v2-layered-on-v1 cycles cleanly (duplicate `status=` lines slipped past for 6 days)
+
+---
+
+### QA-262370 — Semua surat - Reorganize header surat (logo Pejabat selari dengan maklumat hubungan) — 2026-05-20 — ~heavy multi-iteration session
+
+**Closure type**: code-fix-shipped — pure `.docx` edit, 0 Java. Committed `bcdcadadb3` on `mlk/qa/262370` (etanah-pelupusan). Tested OK on UAT `PTMLK/03/L/PLTP/2026/7` (Alor Gajah pejabat 03).
+
+**Time spent**: Heavy multi-iteration session. 5 Ruri-led attempts (Java per-pejabat dims → 4 programmatic XML variations → Java CENTER-removal → text-box framework extension) all failed; みや's single Word UI iteration with vAlign=bottom shipped clean.
+
+**What we learnt**:
+
+| Identifier (searchable) | What we learnt (plain English) |
+|---|---|
+| `HeaderSurat.docx` (shared reference doc at `src/main/resources/template/MLK/references/`) | Single source consumed by 69 surat templates via the `headerSurat1` CC tag injection. Aaron's "fix for all" is structurally true — 1 file edit propagates to every surat template. |
+| **vAlign=bottom on the merged logo cell** — canonical letterhead pattern | When you want a logo to sit at the baseline of adjacent content (contact info, addresses): vMerge the logo cell across all content rows + set vAlign=bottom in tcPr. Logo image renders at the bottom of the merged cell = aligned with content baseline. **My v4 used vAlign=center which centered geometrically and didn't match visual intent.** みや's letterhead intuition caught this. |
+| `populateLogoPejabatTanahImage @ PelupusanWordCCMethodConstant.java:12010-12012` | The `if (ccVO.getImageAlignment() == null) { setImageAlignment(CENTER); }` block is a forced-override pattern matching the 2026-05-04 "Renderer-side overrides before cache theories" hard rule (same shape as QA #259318's `JcEnumeration.BOTH`). Removing it would let SDT's own paragraph alignment propagate at runtime. **NOT needed for THIS fix** — みや's cell-layout achieves the visual goal regardless of the alignment override. Useful insight for future docx alignment work. |
+| `PelupusanWordEditorUtil.getAllElementFromObject @ :820-836` | Framework's SDT-traversal recursion stops at any object that does NOT implement `ContentAccessor`. Text-box-wrapped SDTs (inside `<w:txbxContent>` reachable via Drawing → Anchor → Graphic → GraphicData → CTWordprocessingShape → CTTextboxInfo) are INVISIBLE. Extension would need either XPath-based traversal OR docx4j upgrade. |
+| `docx4j 3.2.2` (project's Maven dep at `E:/Dev/.m2_etanah/org/docx4j/docx4j/3.2.2/`) | OLD version (~2015). Has `Drawing`, `Graphic`, `GraphicData`, `Anchor`, `Inline`, `CTTxbxContent`. MISSING: entire `org.docx4j.dml.wordprocessingShape` package — `CTWordprocessingShape` + `CTTextboxInfo` only exist in docx4j 6.x+. Any future Java that uses uncommon docx4j classes MUST be jar-tf-verified first. |
+
+**Extras solved beyond ticket scope**: none — strict BA scope (HeaderSurat.docx only).
+
+**Audit-log entries spawned**:
+- `feedback_visual_fidelity_no_excuses.md` (NEW) — bans "I can't see"/"no visual feedback" framings
+- A12 amendment — Notes.txt as Recon precondition
+- A13 amendment — Renderer-override rule extended to image-positioning symptoms
+- `feedback_simplify_and_reference.md` rule 5a — Word UI default for single-file structural `.docx` work
+- 5 new skill-failure-log rows (Renderer-override miss + Momentum Circuit-Breaker miss + Notes.txt skip + Visual-fidelity excuse + Unverified docx4j FQN)
+- todo.md Q2 — text-box SDT framework support enhancement queued with full implementation strategy (XPath via XmlUtils)
 
 ---
 

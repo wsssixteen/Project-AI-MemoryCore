@@ -12,7 +12,7 @@
 | Situation | Re-learning Java for new job starting in ~1 week |
 | Neurology | ADHD |
 | Timezone | GMT+8 |
-| Working Hours | 7AM–5PM |
+| Working Hours | **Base work day = 9 hours total** (8 working + 1 lunch break). Window-position anchored by みや's clock-in time when stated; else by active session presence. NOT a wall-clock window. (Refined 2026-05-20 — replaces fixed `7AM–5PM` which caused false time-pressure cues; lunch-inclusive base added same day for accurate hours-worked tracking.) |
 
 ---
 

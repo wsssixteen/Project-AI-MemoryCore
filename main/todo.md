@@ -57,6 +57,12 @@
 
 ### 🟡 Q2 — Schedule
 > **Planning Session (next free session, fresh head):**
+
+| Category | Item | Notes |
+|---|---|---|
+| System | **Text-box SDT framework support enhancement** (added 2026-05-20, QA-262370 carry-forward — みや asked to remember) | Extend `PelupusanWordEditorUtil.getAllElementFromObject @ :820-836` so SDTs nested inside Word text boxes (`<w:txbxContent>`) are findable by the framework. Currently the recursion stops at any non-`ContentAccessor` wrapper type (Drawing → Anchor → Graphic → GraphicData → ... → CTTxbxContent chain) → SDTs inside text boxes are invisible to populators. **For docx4j 3.2.2 (this project's version), the typed approach (CTWordprocessingShape/CTTextboxInfo) DOES NOT WORK** — those classes exist only in docx4j 6.x+ (verified via `jar tf E:/Dev/.m2_etanah/org/docx4j/docx4j/3.2.2/docx4j-3.2.2.jar` — `wordprocessingShape` package has 0 classes). **RECOMMENDED approach**: XPath-based traversal via `XmlUtils.getJAXBNodesViaXPath(part, "//w:txbxContent//w:sdt", true)`. Bypasses typed object model; works in any docx4j version; clean. Effort: 2-4h coding + 1-2h sandbox testing (need a deliberate text-box-wrapped-SDT docx to verify). **Why this matters**: future tickets that need pixel-precise floating logos / page-positioned content controls can use text boxes instead of being constrained to table cells. Full design + diagnosis in post-mortems.md (entry 2026-05-20 QA-262370). |
+
+
 > 1. PLANNING.md post-mortem — what's aged, what's still valid, what's missing since March
 > 2. Create `Miyas-Notebook.md` — リドワンさん's personal vision + journey journal, counterpart to RURI-NOTEBOOK.md
 > 3. Multi-familiar session: Architect (scrutinise) + PM (roadmap) + Career Anchor — plan the codebase knowledge system from Personal → Team → Company scope
