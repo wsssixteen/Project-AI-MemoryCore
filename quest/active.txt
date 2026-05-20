@@ -1,4 +1,26 @@
 active:
+qa=QA-262233
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\43. QA #262233 - PRZ - Penyediaan Risalat MMKN - PTG - Issue on Ringkasan Risalat MMKN
+qa_doc=projects/coding-projects/active/QA-262233/QA-262233.md
+phase=0
+status=hold
+issue_one_liner=PRZ Penyediaan Risalat MMKN PTG — Kemaskini button loads too long + Ulasan Teknikal table excessive vertical gap (per PNG "Tidak perlu gap")
+scope_layer=Risalat MMKN PRZ template (.docx) + Kemaskini handler — Scout pending
+scope_anchor=2 issues from BA Description + PNG annotation. High priority. No BA-mentioned cross-refs (sidebar relates:224344 ignored).
+notes:
+  - 2026-05-20: Retrieved (batch with QA-261613) — first test run of the refined retrieval system. QA-262233.md skeleton + Issue Checklist (4 rows) written from primary sources. Scout familiar spawned in background. Logged to quest/retrieval-tracker.md run #1.
+
+qa=QA-261613
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\44. QA #261613 - MLKFAT - PSBS - Kemasukan Keputusan MMKN dan P - Medan Tarikh Disahkan tidak papar pada skrin
+qa_doc=projects/coding-projects/active/QA-261613/QA-261613.md
+phase=0
+status=hold
+issue_one_liner=PSBS Kemasukan Keputusan MMKN — Medan "Tarikh Disahkan" tidak papar pada skrin
+scope_layer=JSF/XHTML composite for Tarikh Disahkan render-gate + helper if applicable — Scout pending
+scope_anchor=1 issue from BA Description + PNG. Medium priority. Same test app as QA-262039 (PTMLK/02/L/PSBS/2026/3, login aizzatyaqilah.95@gmail.com). No BA-mentioned cross-refs (sidebar relates:223325 ignored).
+notes:
+  - 2026-05-20: Retrieved (batch with QA-262233). QA-261613.md skeleton + Issue Checklist (2 rows) written from primary sources. Scout familiar spawned in background. Logged to quest/retrieval-tracker.md run #1.
+
 qa=QA-260316
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\37. QA #260316 - PLPS - AWAM - Bayaran Permohonan papar 0.00
 early_diagnostic=projects/coding-projects/active/QA-260316/early-diagnostic.md
@@ -53,13 +75,18 @@ notes:
 qa=QA-262039
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\38. QA #262039 - FAT - PSBS - Isu pada Surat Keputusan Lulus kepada Pemohon
 early_diagnostic=projects/coding-projects/active/QA-262039/early-diagnostic.md
-phase=0
-status=hold
+branch=mlk/qa/262039
+phase=2-complete
+local_test_confirmed=true
+commit=9b1b9dbe1c
+status=closed-pending-FAT
 issue_one_liner=PSBS Surat Keputusan Lulus kepada Pemohon — maklumat tak tertarik, perkataan duplicate vs Requirement #237883
 scope_layer=.docx template — TemplateSuratKeputusanLulusPSBS.docx; tugasan PYSKN5A/SSKN5A/PSKN5A
 scope_anchor=Scout: 12 discrepancies (8 static .docx, 3 CC-tag wiring/hardcoded values, 1 BA-confirm, 0 Java populator bugs). Fix-shape drafted per discrepancy in early-diagnostic.md.
 notes:
   - 2026-05-19: Retrieved + Scout done. SILENT — Phase 0 + fix-shape persisted in early-diagnostic.md. Recon-100%-verify + Apply pending focus. 5 BA-Qs (chiefly the Notis 5A payment source + Requirement #237883 attachment).
+  - 2026-05-19: Phase 1 closed — みや tested OK on UAT (PTMLK/02/L/PSBS/2025/2, aizzatyaqilah.95@gmail.com, PYSKN5A). Fixes: 5 static-text dup/label/space edits + sekatanKepentingan tag + daerahDipohon + jumlahBayaranNotis5A WithRMFormatted/PerkataanHurufPertamaBesar CCs + hasilTahunPertamaWithRM tag + "bagi setiap 100 m.p." static suffix + new populateTotalNotis5APerkataanHurufPertamaBesar Java populator (uses PelupusanUtil.captializeOnlyAllFirstLetter). Committed 9b1b9dbe1c, pushed mlk/qa/262039. Phase 2 post-mortem pending.
+  - 2026-05-19: Phase 2 done — post-mortem + KPI written; checklist skill refined (independent enumeration). Quest closed (closed-pending-FAT).
 
 qa=QA-262004
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\40. QA #262004 - FAT - PSBS - Isu pada Ringkasan Risalat
@@ -120,10 +147,14 @@ notes:
 closed:
 qa=QA-260876
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\32. QA #260876 - PLTP - Ringkasan Risalat MMKN -  Issue pada template Ringkasan Risalat
+qa_doc=projects/coding-projects/active/QA-260876/QA-260876.md
 early_diagnostic=projects/coding-projects/active/QA-260876/early-diagnostic.md
 branch=mlk/qa/260876
-phase=2-complete
-status=closed
+phase=0
+status=rework-cycle-2
+rework_cycle=2
+rework_reopened_ts=2026-05-20T01:36:04Z
+prior_close=phase=2-complete 2026-05-13 commit 7fe595d75f
 post_mortem=main/post-mortems.md (entry 2026-05-13)
 kpi_entry=main/kpi-tracker.md (entry 2026-05-13)
 knowledge_files_applied=etanah-knowledge/melaka/MODULE-ARCHITECTURE.md (external-injection pattern section) + etanah-knowledge/melaka/FLOW-TRACES.md (Ringkasan vs Risalat MMKN document-generation rules)
