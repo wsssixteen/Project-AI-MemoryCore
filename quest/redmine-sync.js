@@ -293,66 +293,101 @@ async function createTaskFolder(issue, parsed) {
     return folder;
 }
 
-function addStatusFolder(existingFolderName, status) {
-    const fullPath = path.join(TASKS_FOLDER, existingFolderName);
+// ─── REWORK / STATUS FOLDER HANDLING ─────────────────────────────────────────
+// v5 (2026-05-20): rebuilt after QA-260876 anomaly. Three behaviours now:
+//   (a) Unarchive — if the existing folder is under Archive/ and status is Rework,
+//       MOVE the folder back to active with a new number (ticket is no longer closed).
+//   (b) Cycle-aware folder creation — count Rework status transitions in journals
+//       vs existing "Rework"/"New" subfolders; only add a new subfolder when journals
+//       exceed folders (handles multi-cycle reworks correctly; idempotent on re-sync).
+//   (c) Auto-download new BA attachments into the new status subfolder, comparing
+//       to what's already in 0. Brief/ so each rework cycle's evidence is captured.
+//
+// Pre-v5 history (kept for context, not for re-derivation): v1 unconditional · v2/v4
+// gated on `2. Fix/` non-empty proxy · v3 dropped that gate. Replaced wholesale 2026-05-20.
+
+// Detect if a journal entry corresponds to a transition INTO Rework status
+// (Redmine status_id=23 in this instance). Used to count rework cycles.
+function isReworkTransition(journal) {
+    return (journal.details || []).some(d =>
+        d.property === 'attr' && d.name === 'status_id' && String(d.new_value) === '23'
+    );
+}
+
+// Move a Task folder OUT of Archive/ back to the active level with a new
+// number — fires when a previously-closed ticket is reopened to Rework.
+// Returns the new folder NAME (relative to TASKS_FOLDER), or null if no move.
+function unarchiveFolder(archiveRelPath) {
+    const oldPath = path.join(TASKS_FOLDER, archiveRelPath);
+    if (!fs.existsSync(oldPath)) return null;
+    const baseName = path.basename(archiveRelPath);
+    const slugMatch = baseName.match(/^\d+\.\s*(.+)$/);
+    const slug = slugMatch ? slugMatch[1] : baseName;
+    const newNum = getNextFolderNumber();
+    const newFolderName = `${newNum}. ${slug}`;
+    const newPath = path.join(TASKS_FOLDER, newFolderName);
+    fs.renameSync(oldPath, newPath);
+    return newFolderName;
+}
+
+// Download attachments NOT already present at the candidate known-files list.
+// Used at rework time to fetch the new BA screenshots that came with the reopen.
+async function downloadNewAttachments(destFolder, issueId, knownFilenames) {
+    const attachments = await fetchAttachments(issueId);
+    const known = new Set(knownFilenames);
+    const downloaded = [];
+    for (const att of attachments) {
+        if (!att.content_url || !att.filename) continue;
+        if (known.has(att.filename)) continue;
+        const destPath = path.join(destFolder, att.filename);
+        await downloadFile(att.content_url, destPath);
+        downloaded.push(att.filename);
+    }
+    return downloaded;
+}
+
+// addStatusFolder (v5) — async. When a ticket's Redmine status is Rework:
+//   1. If folder is in Archive/, MOVE it back to active.
+//   2. Count Rework transitions in journals vs existing "Rework"/"New" subfolders.
+//      If journals > folders, create a new subfolder numbered next-after-max-existing.
+//   3. Default label = "Rework" (sync can't classify Rework-on-same-issue vs
+//      Rework-because-BA-found-new-issue — みや renames to "New" manually if BA's
+//      journal note indicates a different issue).
+// Returns: { folderRelPath, unarchived, statusFolderPath } or null.
+async function addStatusFolder(existingFolderName, status, journals) {
+    if ((status || '').toLowerCase().trim() !== 'rework') return null;
+
+    // (1) Unarchive if needed
+    let folderRelPath = existingFolderName;
+    let unarchived = false;
+    if (existingFolderName.startsWith('Archive')) {
+        const newName = unarchiveFolder(existingFolderName);
+        if (!newName) return null;
+        folderRelPath = newName;
+        unarchived = true;
+    }
+
+    const fullPath = path.join(TASKS_FOLDER, folderRelPath);
     if (!fs.existsSync(fullPath)) return null;
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // VERSION HISTORY of this gate (added 2026-05-12 to prevent re-derivation):
-    //   v1 (pre-2026-05-07): always created status folder for any non-"New" status
-    //   v2 (2026-05-07):     2 conditions — status=Rework AND project subfolder
-    //                        at `projects/coding-projects/active/<TYPE>-<NUM>/` exists.
-    //                        Intent of Condition 2: distinguish "Rework FOR US" (we
-    //                        worked on this, BA bouncing back our fix) vs "Rework
-    //                        NEW-TO-US" (previously handled by another dev, now
-    //                        reassigned — for us, effectively a fresh ticket; no
-    //                        need for `3. Rework/` since we haven't even used
-    //                        `2. Fix/` yet).
-    //   v3 (2026-05-12 AM):  Condition 2 dropped — but this was a misread of the
-    //                        intent. QA-259318 had `2. Fix/Backup/` artifacts
-    //                        (=worked on by us) but no project subfolder. The
-    //                        original proxy was too narrow, not wrong-headed.
-    //   v4 (2026-05-12 PM):  Condition 2 RESTORED with a better proxy — non-empty
-    //                        `2. Fix/` indicates "we staged fix work here". Per
-    //                        みや's clarification: if `2. Fix/` is unused, this
-    //                        is effectively a new ticket for us → don't create
-    //                        `3. Rework/`. The `2. Fix/` non-empty check captures
-    //                        the original Case A vs Case B distinction more
-    //                        reliably than "project subfolder exists" did.
-    // ─────────────────────────────────────────────────────────────────────────
-    //
-    // Current gate (v4):
-    //   (1) Status MUST be Rework (case-insensitive)
-    //   (2) `2. Fix/` subfolder MUST be non-empty (= we've staged fix work here)
-    //   (3) Idempotent — skip if "Rework" folder already present
-    const statusLower = (status || '').toLowerCase().trim();
-    if (statusLower !== 'rework') return null;
-
-    // Condition 2: 2. Fix/ non-empty proxy for "we've worked on this ticket ourselves"
-    const fixFolder = path.join(fullPath, '2. Fix');
-    if (!fs.existsSync(fixFolder)) return null;
-    const fixEntries = fs.readdirSync(fixFolder).filter(e => !e.startsWith('.'));
-    if (fixEntries.length === 0) return null;
-
-    const statusLabel = 'Rework';
+    // (2) Count Rework transitions in journals vs existing Rework/New subfolders
+    const journalReworkCount = (journals || []).filter(isReworkTransition).length;
     const entries = fs.readdirSync(fullPath);
+    const reworkSubfolderCount = entries.filter(e =>
+        /^\d+\.\s*(Rework|New)\s*$/i.test(e)
+    ).length;
 
-    // Idempotent: skip if "Rework" folder already exists (re-sync should not duplicate)
-    const sameStatusExists = entries.some(e => {
-        const em = e.match(/^\d+\.\s*(.+?)\s*$/);
-        return em && em[1].toLowerCase() === statusLabel.toLowerCase();
-    });
-    if (sameStatusExists) return null;
+    let statusFolderPath = null;
+    if (journalReworkCount > reworkSubfolderCount) {
+        const nums = entries
+            .map(e => { const em = e.match(/^(\d+)\./); return em ? parseInt(em[1]) : null; })
+            .filter(n => n !== null);
+        const next = nums.length ? Math.max(...nums) + 1 : 3;
+        statusFolderPath = path.join(fullPath, `${next}. Rework`);
+        fs.mkdirSync(statusFolderPath, { recursive: true });
+    }
 
-    // Find highest numbered subfolder (0. Brief, 1. Simulate, 2. Fix, 3. Rework...)
-    const nums = entries
-        .map(e => { const em = e.match(/^(\d+)\./); return em ? parseInt(em[1]) : null; })
-        .filter(n => n !== null);
-    const next = nums.length ? Math.max(...nums) + 1 : 3;
-
-    const newPath = path.join(fullPath, `${next}. ${statusLabel}`);
-    fs.mkdirSync(newPath, { recursive: true });
-    return newPath;
+    return { folderRelPath, unarchived, statusFolderPath };
 }
 
 // ─── CLASSIFY + REPORT ───────────────────────────────────────────────────────
@@ -477,8 +512,26 @@ async function runWithCreate() {
 
         for (const issue of results.rework) {
             if (!issue._existing) continue;
-            const newPath = addStatusFolder(issue._existing, issue._status);
-            if (newPath) console.log(`  🔁 Status folder added: ${newPath}`);
+            // Fetch journals BEFORE addStatusFolder so the v5 logic can count
+            // Rework transitions and decide whether to add a new subfolder.
+            const journals = await fetchIssueJournals(issue.id);
+            const result = await addStatusFolder(issue._existing, issue._status, journals);
+            if (!result) continue;
+            if (result.unarchived) {
+                console.log(`  ↩️  Unarchived: ${issue._existing} → ${result.folderRelPath}`);
+                issue._existing = result.folderRelPath; // so subsequent history-update writes to the correct (active) path
+            }
+            if (result.statusFolderPath) {
+                console.log(`  🔁 Status folder added: ${result.statusFolderPath}`);
+                // Download new BA attachments INTO the new status subfolder — comparing
+                // to what's already in 0. Brief/ to avoid re-downloading the original ones.
+                const briefFolder = path.join(path.dirname(result.statusFolderPath), '0. Brief');
+                const known = fs.existsSync(briefFolder) ? fs.readdirSync(briefFolder) : [];
+                const downloaded = await downloadNewAttachments(result.statusFolderPath, issue.id, known);
+                for (const f of downloaded) {
+                    console.log(`    ⬇️  ${f} → ${path.basename(result.statusFolderPath)}/`);
+                }
+            }
         }
 
         await syncJournalsForExisting(results);

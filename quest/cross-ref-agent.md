@@ -72,9 +72,15 @@ For each source ticket, for each referenced ticket:
 
 ## Output contract
 
-- Writes ONLY to `projects/coding-projects/active/QA-NNNN/early-diagnostic.md` of each source ticket.
+- Writes ONLY to the source ticket's per-quest doc (`projects/coding-projects/active/QA-NNNN/QA-NNNN.md` "Related Ticket" section) — never `early-diagnostic.md` (post-2026-05-20 structural fold).
 - No code changes. No template changes. No commits.
 - One short summary table when done.
+
+## Cleanup (mandatory, added 2026-05-20 per みや)
+
+After extraction, the agent **MUST close the Redmine tab** it opened — call `mcp__Claude_in_Chrome__tabs_close_mcp` for the tab(s) used. Leaving the tab open creates clutter in みや's browser and forces him to clean up manually. The browser MCP isn't a "leave on" tool — it's used and closed each run.
+
+Final-message convention: after the summary table, include a one-liner `Cleanup: closed N Redmine tab(s) (id=…)` so the close action is visible, never silent.
 
 ## Lifecycle
 
