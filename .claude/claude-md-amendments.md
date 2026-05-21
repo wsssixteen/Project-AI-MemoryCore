@@ -188,6 +188,18 @@ Add under Quest Workflow non-negotiables:
 
 > **Blocked-state checklist** (hard rule, 2026-05-20): When any retrieval / Phase 0 / mid-quest step hits a blocker (missing attachment, ambiguous data, BA-Q needed, tool failure), Ruri MUST: (a) emit a one-line checklist of the blocked items + the non-blocked items, (b) continue with the non-blocked items, (c) surface the blocker to みや with a specific ask. Banned: silent drift past a blocker; "I'll come back to it" without an entry; assuming みや will catch the gap. **Why**: 2026-05-20 QA-260876 — sync didn't re-download BA attachments at rework status transition, Ruri logged it as a standing flag but the workflow drifted forward without a checklist. みや: *"create a checklist straight away if something blocked you so that you can continue before progressing or drift."*
 
+### A14 — PDF annotation extraction is a HARD PRECONDITION of Recon emit (hard rule, 2026-05-21 by みや — repeat of the annotation-skip slip)
+
+**Refine of**: CLAUDE.md Etanah-Codebase-Read "PDF annotation extraction at Phase 0" (hard rule, 2026-05-04, QA #259318). That rule exists but is a loose Phase-0 step with no gate — it has slipped multiple times (QA #259318, QA-260302 multi-dimensional evidence, QA-262004).
+
+**New rule**: Before emitting the `═══ RECON ═══` block, Ruri MUST have fitz-extracted the `Annot` objects of **every PDF in the ticket's `0. Brief/`** into `QA-NNNN.md` (or early-diagnostic). Extraction = each annotation's `type` + `content` (FreeText/highlight comment body) + the text under its rect. **Recon emit is BANNED while any 0. Brief/ PDF's annotations are un-extracted.**
+
+**Why it keeps slipping**: the PDF Read tool renders a visual page view that *looks* complete — Ruri sees the red highlights visually and assumes the annotations are "read", when only the rendering was seen, not the `Annot` content. The BA writes the actual answers (tag names `<xxx>`, "align ke kiri", expected values) inside the annotation bodies. QA-262004: 19 annotations carried every CC tag name + the answers to all 5 BA-Qs Ruri had instead deferred to みや.
+
+**Verification method**: `QA-NNNN.md` must contain an annotations section listing every PDF annotation. If absent → STOP, run the fitz extraction, THEN emit Recon.
+
+**Pairs with**: A12 (Notes.txt precondition) — same gate pattern. Both are "verify-before-Recon-emit" hard preconditions.
+
 ---
 
 *Created 2026-05-20 — temporary container until the CLAUDE.md refactor lands.*

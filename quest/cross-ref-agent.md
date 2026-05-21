@@ -30,6 +30,17 @@ At Redmine retrieval. After Scout has run (or in parallel), for each ticket whos
 
 **Mode-detection heuristic** (inside the agent): after fetching the referenced ticket's first page, count its journal entries + sub-references + attachments. If `>10` sub-items OR the title contains "Parent" / "Tracker" / "Senarai" → **parent-sweep**. Otherwise → **specific-ref + full fetch**.
 
+## Attachment extraction is NON-DEFERRABLE (hard rule, 2026-05-21 — QA-262004 slip)
+
+In **specific-ref** mode the referenced ticket's expected-spec attachment (the expected template `.docx`, the expected-output PDF, the annotated mock-up) is the **entire point of the chase**. Its CONTENT — structure, static text, field labels, exact wording — MUST be downloaded, opened, and extracted into `QA-NNNN.md` **at Phase 0**, before Recon, before any fix-shape.
+
+**Banned Phase-0 outcomes:**
+- "Attachments seen but not downloaded" / "attachment list noted" — listing names + sizes is NOT extraction.
+- "Consult at Apply time" / "fetch later" — the expected spec gates Recon and the fix-shape; deferring it defeats the chase.
+- Writing a BA-question of the form *"can you attach the expected template?"* when that template is an attachment on a BA-referenced ticket the agent can reach. Fetch it; don't ask for it.
+
+**Scope clarification — みや's "Task `0. Brief/` stays untouched" instruction:** that instruction governs the **Task folder only** (don't dump files / clutter みや's brief folder). It does NOT govern the cross-ref agent. The agent extracts attachment *content* into `QA-NNNN.md` — it never writes files into the Task folder, so the two never conflict. Do not cite the Task-folder instruction as a reason to skip extraction.
+
 ## Agent prompt template
 
 When invoking, fill in `{{...}}` placeholders and pass as the Agent's `prompt`:

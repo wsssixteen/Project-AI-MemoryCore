@@ -113,14 +113,15 @@ notes:
 qa=QA-262004
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\40. QA #262004 - FAT - PSBS - Isu pada Ringkasan Risalat
 early_diagnostic=projects/coding-projects/active/QA-262004/early-diagnostic.md
+qa_doc=projects/coding-projects/active/QA-262004/QA-262004.md
 phase=0
-status=hold
-held_reason=2026-05-20 18:35 — paused after Recon emit + Word UI fix-shape package for みや (9 docx discrepancies + 1 Java audit candidate). みや switched focus back to QA-262370 logo-positioning diagnosis. Ready to resume from "your nod on Word UI work + Java audit ask".
+status=active
 issue_one_liner=PSBS Ringkasan Risalat — maklumat tak tertarik, font/saiz beza, align salah vs Requirement #237880
 scope_layer=.docx template — TemplateRingkasanRisalatPSBS.docx (+ injected references/JabatanTeknikal.docx); tugasan PRMMKNPTG/SRMMKNPTG/PRRMMKNPTG
 scope_anchor=Scout: 10 discrepancies (6 static .docx, 3 CC-tag wiring/missing SDTs, 2 Java/data). PSBS template is an incomplete variant missing CCs its siblings carry + Arial/Century-Gothic font mix. Fix-shape drafted in early-diagnostic.md.
 notes:
   - 2026-05-19: Retrieved + Scout done. SILENT — Phase 0 + fix-shape persisted. Recon-verify + Apply pending focus. Test app PTMLK/02/L/PSBS/2026/3 on UAT is currently AT SRMMKNPTG (zero-alter for this ticket). Shares Requirement #237880 with QA-261986.
+  - 2026-05-21: Resumed as the "easy ticket" pick. QA-262004.md restructured — Issue Checklist (20 rows independently enumerated, 2 Scout misses) + Findings Register. Recon re-fired. Recommended test app PTMLK/02/L/PSBS/2026/1 (norazimah_m@melaka.gov.my, PRMMKNPTG).
 
 qa=QA-261986
 quest_start_ts=2026-05-21T02:18:59.854Z
@@ -128,7 +129,8 @@ task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\41. QA #
 early_diagnostic=projects/coding-projects/active/QA-261986/early-diagnostic.md
 qa_doc=projects/coding-projects/active/QA-261986/QA-261986.md
 phase=0
-status=active
+status=hold
+held_reason=2026-05-21 ~14:00 — Phase 0 COMPLETE (Recon verified + DB-traced). みや refocusing on easier tickets. Resume = fresh re-read from start per QA-261986.md §0 Resume Point. Recommended test app PTMLK/02/L/PSBS/2026/1 (norazimah_m@melaka.gov.my, PRMMKNPTG).
 issue_one_liner=PSBS Risalat MMKN — maklumat tak tertarik, numbering salah, font beza, align salah vs Requirement #237880 (High priority)
 scope_layer=.docx template — TemplateRisalatMMKN_PDT_PSBS_Lulus.docx (+ injected references/additionalJKKLParagraph.docx); tugasan PRMMKNPDT/SRMMKNPDT/PRMMKNPTG/SRMMKNPTG
 scope_anchor=Scout: 22 discrepancies (~10 static .docx, ~5 injected-ref-doc, ~3-4 Java populator bugs, ~5 data). Confirmed Java bug: populatePTGParagraph_PSBS_Lulus @ PelupusanWordCCMethodConstant.java:17601 computes premiumPT then overwrites with HYPHEN (dead override). Fix-shape drafted in early-diagnostic.md.
