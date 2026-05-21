@@ -822,20 +822,11 @@ Phase 2 MUST begin with a visible 5-row checklist BEFORE the actual content. Eac
 
 **Why** (Phase 2 checklist itself): Phase 2's step 5 (archive both-sides + active.txt flip) was repeatedly silent-skipped — see QA-262039 (Phase 2 ran but post_mortem= and kpi_entry= lines never reached active.txt), QA-260302 (Phase 2 never fully fired despite my claims). Same disease as the 2026-05-17 boot-step silent-skip; same cure — make every step's completion visible so a skip leaves a trace.
 
-Format:
+Format — single compact line (refined 2026-05-21 by みや — mirrors the DE step-0 line; a mere tracker must not eat space with a full table):
 
-═══ PHASE 2 — QA-<num> ═══
+`Phase 2 — QA-<num>:  1 ⬜ Faster-finding · 2 ⬜ KPI · 3 ⬜ Post-mortem · 4 ⬜ Refine · 5 ⬜ Render+archive · 6 ⬜ verify Checklist E`
 
-| Step | What | Status |
-|---|---|---|
-| 1 | Faster-finding | ⬜ pending |
-| 2 | KPI entry → main/kpi-tracker.md | ⬜ pending |
-| 3 | Post-mortem META → main/post-mortems.md | ⬜ pending |
-| 4 | Refine pass | ⬜ pending |
-| 5 | Auto-render Fix.txt/SUMMARY.txt + archive folders + active.txt flip | ⬜ pending |
-| Cross-check | /verify Checklist E | ⬜ pending |
-
-═══ END ═══
+Update each marker in place as the step completes (⬜ → ✓, or ⏭ + a one-line reason). It is a tracker line, NOT a table — tables are reserved for actual deliverables (the `/verify` Checklist E *output* stays a table because it carries evidence; the Phase 2 step-tracker does not).
 
 <!-- "BA accepted" trigger REVERTED 2026-05-20 by みや — wrong scope. Ruri doesn't track BA-side state per quest-protocol's "outside Ruri's scope" rule. -->
 
@@ -847,7 +838,7 @@ Format:
 
 **Step 3 — Post-mortem META entry** — append to `main/post-mortems.md` per format defined there. **META-only**: Contributing Factors (replaces single-root-cause framing per Cook's complex-systems principle when ≥2 conditions converged), Process Notes, Carry Forward todos. **Skip**: root-cause summary (already in scout/recon), class chain (already in Fix Walkthrough), codebase-knowledge-updated list (those updates already happened in the knowledge files themselves with their own version bumps — don't duplicate the list here).
 
-**Step 4 — Refine pass** — for each named skill/protocol invoked this quest, ask "what would have made this better?" and emit refinement artifacts. Skills to walk through (explicit list, not "etc"): Scout, Recon, Simulate, Rubric, Apply, Verify, env-check, prepare-commit, KPI tracker, post-mortem template, Refine itself, Domain Expansion ritual. **Output format**: bulleted list with yes/no checkboxes per refinement — みや approves/declines per item. Simple rule changes → ASK once with 2-sentence proposal. Complex/uncertain → park to audit log. Forge log entries promoted here. **Pairs with the action-guarantee on Step 1** — Refine pass artifacts ARE the actions.
+**Step 4 — Refine pass** — for each named skill/protocol invoked this quest, ask "what would have made this better?" and emit refinement artifacts. Skills to walk through (explicit list, not "etc"): Scout, Recon, Simulate, Rubric, Apply, Verify, env-check, prepare-commit, KPI tracker, post-mortem template, Refine itself, Domain Expansion ritual. **Output format**: bulleted list with yes/no checkboxes per refinement — みや approves/declines per item. Simple rule changes → ASK once with 2-sentence proposal. Complex/uncertain → park to audit log. Forge log entries promoted here. **Pairs with the action-guarantee on Step 1** — Refine pass artifacts ARE the actions. **Also** — process the quest's `## Improvement Checklist` section (in `QA-NNNN.md` / `early-diagnostic.md`): each captured "check-further" push whose corrected fix ended up working is promoted **automatically** into its fix-category check-set — no separate nod (みや's acceptance of the working fix during the quest WAS the nod, per みや 2026-05-21). One-offs, or pushes whose corrected fix did not pan out, are dropped. The per-quest section is transient — only promoted checks persist.
 
 ### Refine triggers — universal (extended 2026-05-13)
 

@@ -200,6 +200,32 @@ Add under Quest Workflow non-negotiables:
 
 **Pairs with**: A12 (Notes.txt precondition) — same gate pattern. Both are "verify-before-Recon-emit" hard preconditions.
 
+### A15 — Ruri closing-words extended to 3 more workflows (2026-05-21 by みや)
+
+**Refine of**: the Quest Postscript pattern (`quest-protocol.md` Phase 2 emit, step 7). Currently only Quest (Postscript) and Domain Expansion (closing banner + closing words) end with a Ruri-voice closing. みや 2026-05-21: most of a session reads as Claude-the-tool; only a few lines sound like Ruri. Extend the closing-words moment to 3 more workflow endings.
+
+**The closing-words format** (shared — same shape as the Quest Postscript): a short blockquote — opens `リドワンさん,`, closes `— るり`, 1-2 warm / observational sentences on a genuine positive highlight of that workflow's run. Short and genuine, never ceremony; skip only if the run was truly featureless.
+
+**The 3 new placements**:
+
+| Workflow | Closing fires |
+|---|---|
+| Redmine retrieval | after the results table (one-row-per-ticket sync table) — a brief read on the day's incoming batch |
+| Forge Review | at the very end of the review — a reflection on what the review surfaced (Forge Review is reflective by nature; the closing fits it best) |
+| Phase 1 close-out | after `/verify` Checklist C goes green — a brief note on the fix just shipped |
+
+Quest Postscript + DE closing remain as-is — A15 only adds the 3 above.
+
+### A16 — Primary-source-first + Scout prompts carry raw evidence (hard rule, 2026-05-21 by みや — QA-260876 wrong-road)
+
+**Refine of**: Recon Universal Check 1 ("primary code path read in full") + the Read-Redmine Scout-familiar discipline. Check 1 covers the code path; it does NOT cover (a) the user's own recent edit as the #1 primary source, nor (b) how a Scout prompt is framed.
+
+**Rule (a) — primary-source-first**: when a symptom is "X renders / behaves wrong" AND the user has been editing files (template, config, code), the FIRST evidence to read is the user's ACTUAL change — `git diff` / current-vs-baseline of what they edited — BEFORE forming or delegating any theory. The user's edit is the most direct pointer to the real target; a theory about the mechanism is not.
+
+**Rule (b) — Scout prompts carry raw evidence, not a hypothesis**: a Scout / familiar inherits the framing of its prompt and investigates within it. Frame every Scout prompt around the raw symptom + raw evidence ("the user edited the template and it renders wrong — find what changed and why"), NEVER around an assumed answer-space ("the JT table needs an ulasan cell — confirm"). A Scout cannot catch a misframe its prompt baked in. The 100%-verify rule applies to a Scout's *claims*; this rule guards the Scout's *premise*.
+
+**Why** (2026-05-21 QA-260876): I concluded the fix was a 2-part change to the `jtRingkasanRisalatPT` checkbox table and was about to implement it. The real issue — no `ulasanYB` CC tag existed; the fix is one Java populator. The `git diff` of `TemplateRingkasanRisalatPLTP.docx` showed `keputusanYB`→`ulasanJT` — みや had swapped a standalone `keputusanYB` CC; that one diff pinpointed the real target. I had it the whole time but spawned a Scout on my own JT-table assumption, then trusted the Scout's (inherited) premise. みや's "did you check fully you have the right context" caught it before the wrong fix landed.
+
 ---
 
 *Created 2026-05-20 — temporary container until the CLAUDE.md refactor lands.*

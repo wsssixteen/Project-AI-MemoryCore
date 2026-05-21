@@ -876,4 +876,45 @@ Faster: For visual-fidelity single-file `.docx` tickets, DEFAULT TO みや's Wor
 
 ---
 
+### QA-262004 — PSBS Ringkasan Risalat MMKN — 2026-05-21
+
+**Faster-finding**:
+Faster: the BA PDF's annotations carried every CC-tag name + the answers to the 5 BA-questions I'd deferred to みや — reading the PDF's rendered view skipped them. Action applied: created `.claude/skills/annotations/SKILL.md` + amendment A14 (PDF-annotation fitz-extraction is now a Recon-emit precondition).
+
+**Contributing Factors**:
+- Scope narrowed to the comfortable layer — I classified the 3 populator bugs (namaYB / dun / bakiTempohPajakan @ `PelupusanWordCCMethodConstant.java`) as out-of-template-scope and proposed a separate ticket. The ticket is *maklumat tidak ditarik* — the populators ARE where the not-pulling originates. みや: "fatal flawed judgement." Logged to `skill-failure-log.md` 2026-05-21.
+- PDF annotations not fitz-extracted at Phase 0 — the `Annot` objects on the BA PDF carried CC-tag guidance; the Read tool's rendered view created false "I've seen it" confidence.
+- A "QA-262370 caution" deferral framing made me hand doable `.docx` edits back to みや — `feedback_simplify_and_reference.md` rule 5a had over-generalized QA-262370 into a deferral reflex.
+
+**Process Notes**:
+- Concurrent-edit collision — a `.docx` script edited a paragraph みや had reworded in Word → duplicated text; caught + reverted. Lesson: check the `~$` lock + re-read the current paragraph state before scripting a `.docx`.
+- Once みや said "just do it, I can check," the validated backup→edit→check workflow ran clean across 5 scripts — accommodative and careful are not opposites.
+
+**Carry Forward**:
+- BPRZ duplicate-separator-line fix — uncommitted on `mlk/master`, needs its own ticket — `main/current-session.md` standing flag
+- CC-tag disambiguation glossary — `main/todo.md` Q2
+- `rjk_agensi.mklmt_tmbhn` as YB/DUN source-of-truth — `etanah-knowledge/melaka/DATABASE.md` (next knowledge sweep)
+
+---
+
+### QA-259339 — PRU Kertas Pertimbangan signature alignment — 2026-05-21
+
+**Faster-finding**:
+Faster: a `.docx` positioning fix needs the FULL layout chain traced — paragraph `jc` → cell width → table width/layout → page margin — not just the immediate property. The first Apply changed only the 3 paragraphs' `jc` → みや tested → "halfway"; the table was `tblW=auto` (auto-shrink, left-aligned). Action applied: captured to the QA-259339 Improvement Checklist; promoted at this Phase 2 (Step 4) into `verify` Checklist B.
+
+**Contributing Factors**:
+- v1 Apply traced only the paragraph-level property (`<w:jc>`), not the enclosing table's width/layout — so the autofit table's left-shrink was missed and the fix landed "halfway".
+- The first test summary named the wrong test tugasan — assumed the document generates at Penyediaan/Semakan; the PTNH signature actually populates at the decision step (KDO "Keputusan Pentadbir Tanah"). みや's domain knowledge corrected it.
+
+**Process Notes**:
+- This quest's Notes.txt / tugasan / flag-WHERE slips are logged in `skill-failure-log.md` (2026-05-21) — they drove the quest skill's new Pre-emit gate.
+- The Improvement Checklist mechanism (per-quest capture of "check-further" pushes → Phase 2 promotion) was designed + shipped during this quest.
+
+**Carry Forward**:
+- BPRZ duplicate-separator-line fix — uncommitted on `mlk/master`, needs its own ticket — `current-session.md` standing flag
+- Improvement Checklist v2 — layer-scoped promoted checks — `todo.md` Q2
+- Issue #1 wording ("Pentadbir Tanah `<Daerah>`" → "...Daerah `<Daerah>`") — DECIDED: leave as-is, owned by another team's unmerged branch
+
+---
+
 *Post-Mortem Log v1.0 — 2026-04-02*

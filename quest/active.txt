@@ -111,17 +111,23 @@ notes:
   - 2026-05-19: Phase 2 done — post-mortem + KPI written; checklist skill refined (independent enumeration). Quest closed (closed-pending-FAT).
 
 qa=QA-262004
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\40. QA #262004 - FAT - PSBS - Isu pada Ringkasan Risalat
-early_diagnostic=projects/coding-projects/active/QA-262004/early-diagnostic.md
-qa_doc=projects/coding-projects/active/QA-262004/QA-262004.md
-phase=0
-status=active
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\40. QA #262004 - FAT - PSBS - Isu pada Ringkasan Risalat
+early_diagnostic=projects/coding-projects/archive/QA-262004/early-diagnostic.md
+qa_doc=projects/coding-projects/archive/QA-262004/QA-262004.md
+branch=mlk/qa/262004
+commit=1c1e90009461ec3002b8b35941db63a9a318604d (2026-05-21) — QA #262004 - PSBS - Ringkasan Risalat MMKN - betulkan CC tag & tarikan maklumat YB, DUN, baki tempoh pajakan
+phase=2-complete
+local_test_confirmed=true
+status=closed
+post_mortem=main/post-mortems.md (entry 2026-05-21)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-21)
 issue_one_liner=PSBS Ringkasan Risalat — maklumat tak tertarik, font/saiz beza, align salah vs Requirement #237880
 scope_layer=.docx template — TemplateRingkasanRisalatPSBS.docx (+ injected references/JabatanTeknikal.docx); tugasan PRMMKNPTG/SRMMKNPTG/PRRMMKNPTG
 scope_anchor=Scout: 10 discrepancies (6 static .docx, 3 CC-tag wiring/missing SDTs, 2 Java/data). PSBS template is an incomplete variant missing CCs its siblings carry + Arial/Century-Gothic font mix. Fix-shape drafted in early-diagnostic.md.
 notes:
   - 2026-05-19: Retrieved + Scout done. SILENT — Phase 0 + fix-shape persisted. Recon-verify + Apply pending focus. Test app PTMLK/02/L/PSBS/2026/3 on UAT is currently AT SRMMKNPTG (zero-alter for this ticket). Shares Requirement #237880 with QA-261986.
   - 2026-05-21: Resumed as the "easy ticket" pick. QA-262004.md restructured — Issue Checklist (20 rows independently enumerated, 2 Scout misses) + Findings Register. Recon re-fired. Recommended test app PTMLK/02/L/PSBS/2026/1 (norazimah_m@melaka.gov.my, PRMMKNPTG).
+  - 2026-05-21: PHASE 1 CLOSED — committed 1c1e900094 on mlk/qa/262004 + pushed. Fix = TemplateRingkasanRisalatPSBS.docx CC-tag corrections + 3 populator fallbacks (namaYB/dun/bakiTempohPajakan) in PelupusanWordCCMethodConstant.java. local_test_confirmed by みや. Phase 2 post-mortem pending.
 
 qa=QA-261986
 quest_start_ts=2026-05-21T02:18:59.854Z
@@ -174,12 +180,21 @@ notes:
   - 2026-05-20: Retrieved via redmine-sync. Aaron Loh assigned + prep note specifies suratHeader.docx as the single fix file. Scout familiar completed early-diagnostic.md: 69-template fan-out via headerSurat1 CC tag confirmed; per-pejabat image dimensions in Java populator surfaced as alternative fix-surface; test data DB-verified UAT. PROCEED TO RUBRIC.
 
 qa=QA-259339
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\42. QA #259339 - [FAT] PRU - Pembetulan Pada Template Kertas Pertimbangan
-phase=0
-status=hold
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\42. QA #259339 - [FAT] PRU - Pembetulan Pada Template Kertas Pertimbangan
+early_diagnostic=projects/coding-projects/archive/QA-259339/early-diagnostic.md
+branch=mlk/qa/259339
+commit=a01ed525ac0b5afa952fa6ce7a919593d5104db0 (2026-05-21) — QA #259339 - PRU - Kertas Pertimbangan - align tandatangan Pentadbir Tanah ke kanan
+phase=2-complete
+status=closed
+local_test_confirmed=true
+post_mortem=main/post-mortems.md (entry 2026-05-21)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-21)
 issue_one_liner=PRU - Pembetulan pada Template Kertas Pertimbangan (FAT)
+scope_anchor=Current open issue = signature block alignment center→right (rework from 2026-05-07). Fix = <w:jc> center→right on 3 col-2 paragraphs (signPTNH / namaPTNH / title) in TemplateKertasPertimbanganPentadbirTanah_PRU.docx (+ sibling ...Syarikat_PRU.docx if in scope). .docx-only, no Java, no QA-262370 dependency. ~15-30 min.
 notes:
   - 2026-05-19: Retrieved (Redmine status "In Progress" — likely rework; History.txt has 6 journal entries). Task folder has PDF + Actual/Expected PNGs. Scout NOT yet run — deferred to when the ticket is picked (session wrap-up). early-diagnostic pending.
+  - 2026-05-21: Scout done (early-diagnostic.md written). Signature block is a borderless table cell (NOT a text box) — pure <w:jc> alignment fix. QA-262370 text-box enhancement NOT needed. Photo loads fine — not a loading bug. Quick win for next session.
+  - 2026-05-21: Apply done. <w:jc> center→right on 3 signature paragraphs (027ED435 signPTNH / 25791F16 namaPTNH / 78F8C270 title) in BOTH TemplateKertasPertimbanganPentadbirTanah_PRU.docx + ...Syarikat_PRU.docx. Validated clean (center -3, right +3, <w:p> unchanged). Uncommitted on mlk/master — awaiting みや UAT render test. FLAG: title para 78F8C270 still reads "Pentadbir Tanah <Daerah>" (Description issue #1 wording — NOT touched; may be in Aaron's unmerged branch).
 
 closed:
 qa=QA-260965
@@ -212,10 +227,15 @@ qa=QA-260876
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\45. QA #260876 - PLTP - Ringkasan Risalat MMKN -  Issue pada template Ringkasan Risalat
 qa_doc=projects/coding-projects/active/QA-260876/QA-260876.md
 early_diagnostic=projects/coding-projects/active/QA-260876/early-diagnostic.md
-branch=mlk/qa/260876
-phase=0
-status=hold
+branch=mlk/qa/260876v2
+commit=6f005892ca9e07a153bbbcd1e171e7877df6417f (2026-05-21) — QA #260876 - PLTP - Ringkasan Risalat MMKN - papar ulasan YB ADUN guna tag ulasanYB
+phase=1-complete
+status=awaiting-phase-2
+local_test_confirmed=true
 rework_cycle=2
+notes:
+  - 2026-05-21: Re-engaged (Rework Cycle 2), focused on the ulasanJT issue. Scout verdict: CODE issue. populateJTRingkasanRisalatPT (PelupusanWordCCMethodConstant.java:10020-10093) builds 6 cells per JT row but never an ulasanJT cell — the tag isn't driven, the Keputusan label leaks. Working analog: populator @10330 (TemplateRisalatMMKN_PDT_PLTP.docx) feeds jt.getUlasan() at 10398-10400. Fix-shape: add ulasanJT cell feeding jt.getUlasan(); pre-Rubric verify references/JabatanTeknikal.docx has the ulasanJT CC cell. early-diagnostic-ulasanJT.md written.
+  - 2026-05-21: RESET — the jtRingkasanRisalatPT-table theory was wrong (caught by みや's "did you check fully"). Real issue: no `ulasanYB` CC tag existed. Fix = new populateUlasanYB populator + ulasanYB registration in PelupusanWordCCMethodConstant.java + template CC tag keputusanYB→ulasanYB. Phase 1 CLOSED — committed 6f005892ca on mlk/qa/260876v2, pushed. local_test_confirmed by みや. JT-table top-line issue ruled out-of-scope by みや.
 rework_reopened_ts=2026-05-20T01:36:04Z
 prior_close=phase=2-complete 2026-05-13 commit 7fe595d75f
 post_mortem=main/post-mortems.md (entry 2026-05-13)
