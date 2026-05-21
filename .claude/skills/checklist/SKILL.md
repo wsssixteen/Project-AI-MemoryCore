@@ -79,6 +79,24 @@ The checklist **GROWS** through Recon / Apply / Test. Any finding outside the BA
 
 **Banned**: dropping an out-of-scope finding because "it's not in the ticket." Every finding has a visible row; only the disposition differs. みや 2026-05-19: *"Just like it is compulsory for you to highlight any findings & even asking me to go fix other things outside of scope. It is something that can grow along the way."*
 
+## Findings Register (non-negotiable)
+
+The **Issue Checklist** tracks BA-listed defects. The **Findings Register** is a second standing section in `QA-NNNN.md` for everything else worth not-missing. Two tracked sub-tables — both resolve at every phase boundary, exactly like Issue Checklist rows:
+
+### 4a. BA Questions
+
+`| # | Question | Self-checked? | Status |` — every question for the BA gets its own row.
+
+- **Self-checked? is mandatory** — a question earns a row only after Ruri has done her best to answer it from code / DB / docs first (per the "self-check before asking BA" discipline). The column records what was checked.
+- **Status**: `open` / `answered` / `mooted`.
+- **Why this exists**: BA-questions used to live as prose in `early-diagnostic.md` — they escaped the phase-boundary loop and could be silently dropped. As tracked rows they cannot. (QA-261986, 2026-05-21.)
+
+### 4b. Radius Findings
+
+`| # | Finding | Disposition |` — the standing home for the "Out-of-scope findings" discipline above. Every finding noticed within ticket radius but outside BA's stated scope gets a row + disposition (do-here / separate-ticket / `out_of_scope_held` / dead-end). The discipline was already non-negotiable; this just gives it a fixed section instead of floating.
+
+Negative test — skip an empty sub-table; never invent rows to fill it.
+
 ## Phase-boundary loop (non-negotiable)
 
 At each Quest phase boundary — Phase 0 → Phase 1 entry, Apply-done → みや tests, Phase 1 close → Phase 2 — **every checklist row must resolve** to one of:
@@ -105,3 +123,4 @@ v1 — manual `/checklist` + auto at Quest drafting + auto at generic-task post-
 ---
 *Created 2026-05-19 | Tier 3 skill | Proposed by みや, designed by Ruri*
 *Refined 2026-05-19 — added "Item source — independent enumeration": checklist items derived from primary sources, not copied from Scout (QA-262039 false-negative slip).*
+*Refined 2026-05-21 — added "Findings Register": BA Questions + Radius Findings as tracked sub-tables in QA-NNNN.md, both subject to the phase-boundary loop. BA-questions were prose in early-diagnostic.md and escaped the loop (QA-261986).*

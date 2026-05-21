@@ -123,10 +123,12 @@ notes:
   - 2026-05-19: Retrieved + Scout done. SILENT — Phase 0 + fix-shape persisted. Recon-verify + Apply pending focus. Test app PTMLK/02/L/PSBS/2026/3 on UAT is currently AT SRMMKNPTG (zero-alter for this ticket). Shares Requirement #237880 with QA-261986.
 
 qa=QA-261986
+quest_start_ts=2026-05-21T02:18:59.854Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\41. QA #261986 - FAT - PSBS - Isu pada Risalat MMKN
 early_diagnostic=projects/coding-projects/active/QA-261986/early-diagnostic.md
+qa_doc=projects/coding-projects/active/QA-261986/QA-261986.md
 phase=0
-status=hold
+status=active
 issue_one_liner=PSBS Risalat MMKN — maklumat tak tertarik, numbering salah, font beza, align salah vs Requirement #237880 (High priority)
 scope_layer=.docx template — TemplateRisalatMMKN_PDT_PSBS_Lulus.docx (+ injected references/additionalJKKLParagraph.docx); tugasan PRMMKNPDT/SRMMKNPDT/PRMMKNPTG/SRMMKNPTG
 scope_anchor=Scout: 22 discrepancies (~10 static .docx, ~5 injected-ref-doc, ~3-4 Java populator bugs, ~5 data). Confirmed Java bug: populatePTGParagraph_PSBS_Lulus @ PelupusanWordCCMethodConstant.java:17601 computes premiumPT then overwrites with HYPHEN (dead override). Fix-shape drafted in early-diagnostic.md.
@@ -137,13 +139,13 @@ qa=QA-262370
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\46. QA #262370 - Semua surat - Reorganize header surat
 early_diagnostic=projects/coding-projects/archive/QA-262370/early-diagnostic.md
 branch=mlk/qa/262370
-commit=bcdcadadb3 (2026-05-20) — QA #262370 - Semua Urusan - Susun semula HeaderSurat agar logo Pejabat selari dengan maklumat hubungan
+commit=6b1459a0eb (2026-05-21) — QA #262370 - Semua Urusan - Sokongan SDT dalam text-box + susun semula logo Pejabat HeaderSurat  [branch delete-recreated 2026-05-21; supersedes bcdcadadb3 vAlign approach]
 phase=2-complete
 local_test_confirmed=true
 status=archived
 post_mortem=main/post-mortems.md (entry 2026-05-20)
 kpi_entry=main/kpi-tracker.md (entry 2026-05-20)
-carry_forward=todo.md Q2 — Text-box SDT framework support enhancement (XPath via XmlUtils — docx4j 3.2.2 lacks wordprocessingShape typed classes)
+carry_forward=DONE 2026-05-21 — text-box SDT framework support SHIPPED. PelupusanWordEditorUtil.getAllElementFromObject extended: when recursion hits Drawing/Pict (non-ContentAccessor wrappers), TraversalUtil descends DrawingML/VML → v:textbox → w:txbxContent to collect SDTs. HeaderSurat.docx logo re-implemented as text-box-wrapped logoPejabatTanah CC. Branch mlk/qa/262370 delete-recreated with the text-box solution.
 priority=High
 scope_anchor=Multi-urusan ("Semua surat"). Single .docx fix in HeaderSurat.docx (shared reference doc consumed by 69 surat templates via headerSurat1 CC tag). みや's Word UI implementation: 7-col grid restructure with logo at Row 0 cell[5], vMerge=restart through Row 5, vAlign=bottom — logo sits at bottom of merged cell = aligned with contact-info baseline. Asymmetric col widths (Telefon/Faks narrow at 1147 dxa, LamSes/Emel gridSpan=2 wide at 2502 dxa) preserve room for long URLs/emails. Java side: NO changes (CENTER-removal in PelupusanWordCCMethodConstant was applied earlier but reverted — みや's docx implementation works without it).
 scope_layer=.docx template binary only — HeaderSurat.docx (1 file, binary, 30968 → 29594 bytes = -1374 / -4.4%). 0 Java edits. 0 config edits.
@@ -156,6 +158,8 @@ notes:
   - 2026-05-20: Retrieved via redmine-sync. Aaron Loh assigned + prep note specifies suratHeader.docx as the single fix file. Scout familiar completed early-diagnostic.md: 69-template fan-out via headerSurat1 CC tag confirmed; per-pejabat image dimensions in Java populator surfaced as alternative fix-surface; test data DB-verified UAT.
   - 2026-05-20: Iteration cycle — Ruri v1 (Java per-pejabat dimension swap, kod-03) failed (didn't address layout); Ruri v2-v4 (programmatic XML restructure with vMerge + vAlign=center on logo cell) failed (vAlign=center wrong; should have been bottom). Ruri also added Java CENTER-default removal + text-box framework extension; both reverted by みや after errors. みや's Word UI iteration with vAlign=bottom + asymmetric col widths reached the right layout — clean docx-only fix shipped. Multiple slips logged to skill-failure-log: renderer-override rule miss at Phase 0, Momentum Circuit-Breaker miss after first failure, visual-fidelity excuse-framing, unverified docx4j FQN in framework extension.
   - 2026-05-20: Phase 1 closed. Commit bcdcadadb3 on mlk/qa/262370 (1 file, binary 30968 → 29594 bytes). Pushed (first push, -u upstream set). Repo returned to mlk/master, clean. Phase 2 pending — post-mortem will capture the multi-iteration arc (5 attempts) + the vAlign=bottom insight + the visual-fidelity lessons.
+  - 2026-05-21: Text-box framework carry-forward COMPLETED + branch replaced. v3→v4→v5 diagnostic arc: v3 used a fresh empty Binder (binder.getXMLNode→null, confirmed via server.log); v4 used the part's binder via JaxbXmlPartXPathAware but only covered the Part-path (not the headerSurat1 external-CC injection path which passes a CTSdtContentBlock); v5 = the correct fix — recursion extended so Drawing/Pict trigger a TraversalUtil sub-walk (docx4j's own walker, descends Pict→VML CTShape→CTTextbox→txbxContent). Verified via 3 standalone probes (compiled against the live WAR classpath). HeaderSurat.docx: みや wrapped logoPejabatTanah CC in a text box; anchor had to be moved back INSIDE the headerSurat1 SDT (Ruri did the XML move — Word kept ejecting the anchor outside the CC). Logo renders correctly. Branch mlk/qa/262370 delete-recreated: new commit 6b1459a0eb (2 files: PelupusanWordEditorUtil.java +21, HeaderSurat.docx) supersedes bcdcadadb3. Old vAlign commit fully unreferenced. Repo on mlk/master.
+  - 2026-05-21: SIDE-NOTE (not part of QA-262370) — みや found + fixed a duplicate-separator-line issue in TemplateSuratMaklumanKepadaPemohonBPRZ.docx while testing (template had its own separator line; HeaderSurat already provides one). That .docx change is UNCOMMITTED on mlk/master working tree — needs its own ticket/commit.
 issue_one_liner=Semua surat — header layout issue at Alor Gajah pejabat 03: contact rows spread (Telefon→Emel gap) + logo orphaned upper-right. BA title says "logo too big"; annotations actually show vertical-gap symptom — same underlying root cause (image dimensions in populator OR HeaderSurat.docx header table cell widths).
 scope_layer=.docx template — `HeaderSurat.docx` external reference doc at `src/main/resources/template/MLK/references/HeaderSurat.docx` (consumed by 69 surat templates via the `headerSurat1` CC tag — zipfile scan verified). PLUS Java image-injector populator `PelupusanWordCCMethodConstant.populateLogoPejabatTanahImage` @ 11996-12065 with per-pejabat dimensions switch.
 scope_anchor=Multi-urusan ("Semua surat"). Two fix-surface candidates: (a) Java switch in `populateLogoPejabatTanahImage` per-pejabat image dimensions (kod 03 Alor Gajah is the visible outlier); (b) `HeaderSurat.docx` → `word/header2.xml` 4-column table cell width tuning (Aaron's literal "adjust in suratHeader docx" reading). Recon will spot-render Alor Gajah current output to pick.
