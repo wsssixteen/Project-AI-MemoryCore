@@ -12,21 +12,9 @@
 
 ## Active amendments
 
-### A1 — Available Skills list addendum (2026-05-19)
+### A1 — Available Skills list addendum — ✅ ABSORBED into CLAUDE.md 2026-05-22 (v1.19)
 
-The "Available Skills" footer in CLAUDE.md (above the version stamp) should also list:
-
-- `/checklist` — Universal task checklist; mandatory at quest accept + at every phase boundary. Independent enumeration, intent-mechanism dual-check. See `.claude/skills/checklist/SKILL.md`
-- `/env-check` — Verify/switch local env state (etanahv3 config + standalone.xml + repo branch). See `.claude/skills/env-check/SKILL.md`
-- `/verify` — Universal workflow-checkpoint verification (Phase 0 / Apply-done / Phase 1 close-out / DE Checklist D). See `.claude/skills/verify/SKILL.md`
-
-### A2 — Recon ritual: Universal Check 0 — independent enumeration (2026-05-19, QA-262039)
-
-Add as the FIRST row of the Recon Universal Checks table (before current Check 1):
-
-> | 0 | Independent issue enumeration | <Notes/PDF/Description.txt scan; not Scout's list> | List of N issues enumerated from primary sources; Scout's list diffed against, never copied |
-
-Rationale: Scout's item-list is a starting point, never the scope boundary. Every prior Scout rule guards false positives; none guarded false negatives. The independent enumeration catches "Scout never listed X" cases.
+### A2 — Recon Check 0 (independent enumeration) — ✅ FOLDED into CLAUDE.md Recon Universal Checks table 2026-05-22
 
 ### A3 — Quest doc migration: `QA-NNNN.md` is the per-quest record (2026-05-19)
 
@@ -34,11 +22,7 @@ The `Quest Workflow → Phases → 0. Accept` step should reference:
 
 > Create `projects/coding-projects/active/QA-<num>/QA-<num>.md` at quest-accept — single per-quest lifecycle doc. Companion `early-diagnostic.md` carries Scout's raw Phase 0 detail; `QA-<num>.md` carries the Issue Checklist + Phase log + commits. Updated at every phase trigger.
 
-### A4 — Phase 1 Closure Git Sequence precondition (2026-05-19)
-
-The "Phase 1 Closure — Git Sequence" section already says "this sequence runs ONLY after `local_test_confirmed=true`". Add a single-line cross-reference under that precondition:
-
-> Apply NEVER cuts a `mlk/qa/*` branch — see `quest/quest-protocol.md:687-701`. Branch is cut here, at Phase 1 close, after the test passes.
+### A4 — Phase 1 Closure cross-ref — ✅ DROPPED 2026-05-22 — redundant; CLAUDE.md Phase 1 precondition already states "Creating the branch at Apply is banned (quest-protocol.md:687-701)"
 
 ### A6 — Quest status revamp v2 (hard rule, 2026-05-20 by みや — refined same day for no-overlap)
 
@@ -85,15 +69,7 @@ Next operational step ⬜ pending: <specific command> — <reason for not runnin
 
 **Pairs with**: Operational-follow-through rule (personality.md, 2026-05-17) which it operationalizes.
 
-### A11 — Show-BEFORE-state mandatory in every Refine Block / proposal (hard rule, 2026-05-20 by みや)
-
-When proposing any refinement to an existing rule/protocol/skill/file, Ruri MUST first quote the CURRENT state of the thing being refined verbatim (or show the relevant file:line snippet) BEFORE describing the proposed change. The "Fix" of the Refine Block then reads as a delta against the visible Before, not as a standalone replacement.
-
-**Refine Block template gains a new mandatory field**: insert a `Before` row between `Diagnosis` and `Fix`. みや reads Before + Fix as a 2-cell delta — no opening-the-file-to-check-what-the-rule-actually-says burden on him.
-
-Same discipline applies to any change-proposal in chat (not just formal Refine Blocks): always show the original verbatim first, then the proposed.
-
-**Why** (みや 2026-05-20): "make it mandatory for you to always show back what you have before refining". I've been writing Fix-only blocks that read as "trust me, the new shape is good" — みや can't audit a change he can't see the original of.
+### A11 — Show-BEFORE-state in Refine Block — ✅ FOLDED into CLAUDE.md Refine Block template (new "Before" row) 2026-05-22
 
 ### A10 — Etanah commit subject format includes urusan/tugasan as hyphen-segments (hard rule, 2026-05-20 by みや; sub-rule added same day)
 
@@ -152,23 +128,7 @@ The table is emitted INLINE in the same chat turn as the work, BEFORE the next c
 
 **Scope**: fires for ANY response in which Ruri performed (a) ≥2 file edits, OR (b) any Refine Block, OR (c) any Design Memo, OR (d) any file creation/deletion. Single trivial edits exempt.
 
-### A13 — Renderer-override rule extended to image-positioning symptoms (hard rule, 2026-05-20 by みや — second instance of the "if (X==null) { X = <forced value> }" pattern slip)
-
-**Refine of**: CLAUDE.md Etanah-Codebase-Read section "Renderer-side overrides before cache theories" (hard rule 2026-05-04). Original rule scope: "layout / display / formatting bug". Symptom examples: text justification (BOTH), bold, spacing, style.
-
-**Extension**: The rule now ALSO fires on **image-positioning symptoms** — including (but not limited to):
-- Logo at wrong position despite template-side cell structure being correct
-- Image alignment doesn't change when SDT/CC alignment is edited in Word UI
-- Image size doesn't change when CC properties are edited
-- Image appears in wrong cell despite SDT relocation in template
-
-**Standard greps extended to**: `setImageAlignment`, `setImageWidth`, `setImageHeight`, `setMaxWidthInCentimeter`, `setFollowHeightWidthRatio`, `setImageAnchor`, alongside the existing `setJc`, `setVal\(JcEnumeration`, `setBold`, `setSpacing`, `setStyle`.
-
-**Why** (2026-05-20 QA-262370): `populateLogoPejabatTanahImage:12010-12012` had `if (ccVO.getImageAlignment() == null) { ccVO.setImageAlignment(JcEnumeration.CENTER); }` — exactly the pattern the 2026-05-04 rule warns about. I read those lines on first-pass Scout and DIDN'T trigger the rule because the rule's symptom list focused on text-layout bugs, not image positioning. みや: "the main cause was CENTER, just like BOTH before". Same root-cause SHAPE; my pattern-matcher was too narrow.
-
-**Pairs with**: A12 (Notes.txt as Recon precondition) — both are "rules that exist but didn't fire deterministically" → strengthening triggers, not adding new rules. Same disease, different surface.
-
-**Apply at**: Phase 0 Scout — when any visible-output bug surfaces (text, layout, image, font, alignment), grep the populator code + framework writer (`PelupusanWordEditorUtil` / `PelupusanTemplateUtil`) for `if (\w+\.get\w+\(\) == null)` blocks BEFORE assuming the bug is template-side or environment-side. Flag any found defaults as candidate root causes.
+### A13 — Renderer-override extended to image-positioning — ✅ FOLDED into CLAUDE.md "Renderer-side overrides before cache theories" rule 2026-05-22
 
 ### A12 — Notes.txt write is a HARD PRECONDITION of Recon emit (hard rule, 2026-05-20 by みや — third repeat of Notes.txt skip slip)
 
@@ -188,17 +148,7 @@ Add under Quest Workflow non-negotiables:
 
 > **Blocked-state checklist** (hard rule, 2026-05-20): When any retrieval / Phase 0 / mid-quest step hits a blocker (missing attachment, ambiguous data, BA-Q needed, tool failure), Ruri MUST: (a) emit a one-line checklist of the blocked items + the non-blocked items, (b) continue with the non-blocked items, (c) surface the blocker to みや with a specific ask. Banned: silent drift past a blocker; "I'll come back to it" without an entry; assuming みや will catch the gap. **Why**: 2026-05-20 QA-260876 — sync didn't re-download BA attachments at rework status transition, Ruri logged it as a standing flag but the workflow drifted forward without a checklist. みや: *"create a checklist straight away if something blocked you so that you can continue before progressing or drift."*
 
-### A14 — PDF annotation extraction is a HARD PRECONDITION of Recon emit (hard rule, 2026-05-21 by みや — repeat of the annotation-skip slip)
-
-**Refine of**: CLAUDE.md Etanah-Codebase-Read "PDF annotation extraction at Phase 0" (hard rule, 2026-05-04, QA #259318). That rule exists but is a loose Phase-0 step with no gate — it has slipped multiple times (QA #259318, QA-260302 multi-dimensional evidence, QA-262004).
-
-**New rule**: Before emitting the `═══ RECON ═══` block, Ruri MUST have fitz-extracted the `Annot` objects of **every PDF in the ticket's `0. Brief/`** into `QA-NNNN.md` (or early-diagnostic). Extraction = each annotation's `type` + `content` (FreeText/highlight comment body) + the text under its rect. **Recon emit is BANNED while any 0. Brief/ PDF's annotations are un-extracted.**
-
-**Why it keeps slipping**: the PDF Read tool renders a visual page view that *looks* complete — Ruri sees the red highlights visually and assumes the annotations are "read", when only the rendering was seen, not the `Annot` content. The BA writes the actual answers (tag names `<xxx>`, "align ke kiri", expected values) inside the annotation bodies. QA-262004: 19 annotations carried every CC tag name + the answers to all 5 BA-Qs Ruri had instead deferred to みや.
-
-**Verification method**: `QA-NNNN.md` must contain an annotations section listing every PDF annotation. If absent → STOP, run the fitz extraction, THEN emit Recon.
-
-**Pairs with**: A12 (Notes.txt precondition) — same gate pattern. Both are "verify-before-Recon-emit" hard preconditions.
+### A14 — PDF annotation extraction = Recon precondition — ✅ FOLDED into CLAUDE.md "PDF annotation extraction at Phase 0" rule 2026-05-22
 
 ### A15 — Ruri closing-words extended to 3 more workflows (2026-05-21 by みや)
 
@@ -216,15 +166,7 @@ Add under Quest Workflow non-negotiables:
 
 Quest Postscript + DE closing remain as-is — A15 only adds the 3 above.
 
-### A16 — Primary-source-first + Scout prompts carry raw evidence (hard rule, 2026-05-21 by みや — QA-260876 wrong-road)
-
-**Refine of**: Recon Universal Check 1 ("primary code path read in full") + the Read-Redmine Scout-familiar discipline. Check 1 covers the code path; it does NOT cover (a) the user's own recent edit as the #1 primary source, nor (b) how a Scout prompt is framed.
-
-**Rule (a) — primary-source-first**: when a symptom is "X renders / behaves wrong" AND the user has been editing files (template, config, code), the FIRST evidence to read is the user's ACTUAL change — `git diff` / current-vs-baseline of what they edited — BEFORE forming or delegating any theory. The user's edit is the most direct pointer to the real target; a theory about the mechanism is not.
-
-**Rule (b) — Scout prompts carry raw evidence, not a hypothesis**: a Scout / familiar inherits the framing of its prompt and investigates within it. Frame every Scout prompt around the raw symptom + raw evidence ("the user edited the template and it renders wrong — find what changed and why"), NEVER around an assumed answer-space ("the JT table needs an ulasan cell — confirm"). A Scout cannot catch a misframe its prompt baked in. The 100%-verify rule applies to a Scout's *claims*; this rule guards the Scout's *premise*.
-
-**Why** (2026-05-21 QA-260876): I concluded the fix was a 2-part change to the `jtRingkasanRisalatPT` checkbox table and was about to implement it. The real issue — no `ulasanYB` CC tag existed; the fix is one Java populator. The `git diff` of `TemplateRingkasanRisalatPLTP.docx` showed `keputusanYB`→`ulasanJT` — みや had swapped a standalone `keputusanYB` CC; that one diff pinpointed the real target. I had it the whole time but spawned a Scout on my own JT-table assumption, then trusted the Scout's (inherited) premise. みや's "did you check fully you have the right context" caught it before the wrong fix landed.
+### A16 — Primary-source-first + Scout-prompt framing — ✅ FOLDED into CLAUDE.md Recon section 2026-05-22
 
 ---
 

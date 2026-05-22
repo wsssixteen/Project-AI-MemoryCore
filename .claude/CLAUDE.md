@@ -93,199 +93,13 @@ Standalone skills — not bound to quest workflow. Fire anytime the trigger cond
 
 ## 🏗️ System-Design Discipline
 
-> When designing OR evaluating ANY system component (rule, skill, hook, memory entry, knowledge file, protocol, automation, format), do NOT design reactively from the latest slip. Apply this discipline.
-
-**System-design discipline — architecture-first, evergreen-anchored** (hard rule, 2026-05-08, refined 2026-05-12):
-
-**Step 0 — Refine before introducing** (hard rule, 2026-05-12 — THE GATE before any other step): When tempted to add a new workflow / file / skill / ritual, FIRST prove that the existing mechanism cannot be extended. Document explicitly: *(a) which existing thing is being refined*, *(b) what changes about it*, *(c) why refinement isn't sufficient — only if it isn't*. **Only if no existing mechanism covers the work** — and the work is truly distinct in shape OR actor OR evidence-type — does a new mechanism land. **Why** (2026-05-12, みや): "I'd prefer not to introduce new workflows but improve & refine upon the existing, unless you point out if something is truly distinct." Past failures of this rule cost weeks of bloat — Phase 2 absorbed too much, quest-protocol grew to 595 lines from reactive patches, feedback files piled to 30+ from per-slip additions. **How to apply**: every proposed addition emits a "Refines-X / Net-new-because-Y" line at top of its Design Memo. If "Refines-X" is empty, the design must justify the new mechanism as truly distinct. If both can be argued, refine wins by default.
-
-**Step 1 — Identify decomposition seams** (architecture first):
-
-- **etanah work**: framework-layer matrix (Java validators/services, JSF/PrimeFaces, Java config/Template Method, .docx + Word CC, config.json, SQL/Hibernate, Spring DI, Flowable BPMN)
-- **MemoryCore**: tier (Memory/Personality/Forge/Domain Expansion/Quest/Session) + file role (identity/boot/working/knowledge/feedback/protocol)
-- **Skills**: trigger phrases + behavior + output format + lifecycle
-- **Hooks**: event source + condition + action + side-effect scope
-- **Memory entries**: type (user/feedback/project/reference) + canonical home + supersedes-what
-- **Knowledge files**: SCOPE + NOT FOR + framework-skeleton-then-grow
-
-**Step 2 — Apply the relevant evergreen principles** (pick subset; don't force):
-
-- SRP/SoC, OCP, ISP, DIP (when component is OO/structured)
-- DRY (esp. memory/rules — avoid duplication piles)
-- YAGNI (don't build for hypothetical)
-- KISS (simplest thing that works)
-- Composability (can compose with existing triggers/chains)
-- Convention-over-Config (defaults > flags)
-- Postel's Law (lenient triggers, strict outputs)
-
-**Step 3 — Validate** (use whichever applies):
-
-- **Past-case pressure-test** (when past cases exist) — ≥3 cases across diverse types. <50% benefit = layer-specific not universal
-- **Failure-mode analysis** (when net-new) — list 3+ ways this could fail or be misapplied
-- **Spike-on-one** (when net-new) — apply to one real case end-to-end before generalizing
-- **Negative-test**: when should this NOT fire? Make explicit
-
-**Step 4 — Pick shape deliberately (universal-or-modular, no middle-ground bloat)** (sharpened 2026-05-13 per みや):
-
-- **Universal**: thin core + per-trigger entry points covering broad applicability. Examples: Refine (Phase 2 + mid-session cross-cutting + DE Gap Sweep), Domain Expansion (boot + ticket re-engagement + verbal-state-trigger + Redmine retrieval).
-- **Small-scoped modular**: one clear job done well. Examples: env-check (verify+switch env state), familiar (sub-agent spawn for large reads).
-- **Banned shape — middle-ground bloat**: a "Refine-for-quest-only" sibling to "Refine-for-mid-session-only" — duplicate engines, scattered triggers, hidden overlap. If two candidates feel similar enough to share an engine, they should share one (universal). If they're genuinely different jobs, each stays modular.
-- State which shape + why in the Design Memo.
-- **Why** (2026-05-13 みや): *"I hope more of our skills can be more universal if not at least do its job well done if very small scoped & specific - modular."* Pressure-tested against today's Refine extension (engine stays, triggers broaden = universal) — passes. Pressure-tested against env-check (one job: env state verification — would NOT benefit from broadening into "all env-related work") — stays modular. The shape choice flows from honest scope assessment, not aesthetic preference.
-
-**Step 5 — Type-specific sub-checks** (only for types with documented past failures):
-
-- **New skill**: name-conflict grep + trigger-overlap check + what it replaces + **naming-tier check** (added 2026-05-14 by みや):
-  - **Tier 1 — Signature skill** (Ruri's identity-tier ritual with Japanese name): `<EnglishName>` + emoji + `<Japanese-name>`. Examples: Domain Expansion 💠 るり結界 (ラピス バリアー), Bankai 🌌 蒼穹宝典 (アジュール・コーデックス). Format locked, sacred per the 4-item exception list.
-  - **Tier 2 — Major skill / Feature / top-level framework**: `Capital-Hyphenated` form. Examples: System-Design, Domain-Expansion, Session-Briefing, Quest, Forge, Observation, Time-Based-Aware-System. Folder names under `Feature/` follow this.
-  - **Tier 3 — Sub-skill / small-scoped modular**: `lowercase-hyphenated` form. Examples: env-check, familiar, verify, video-frames, appraise. Folder names under `.claude/skills/` follow this.
-  - **Why** (みや 2026-05-14): without explicit naming tiers, sub-skills get hidden inside larger protocol files instead of being discoverable. Naming convention signals which tier a skill operates at, helps prevent overlap, and makes the skill graph navigable. Apply during Design Memo (new skill creation) — state the tier + format check.
-- **New memory entry**: canonical home + supersedes-what (don't pile)
-- **New rule**: which past slip(s) it would have caught + which past tickets it'd be dead weight on
-- **New MD file — versioning convention** (added 2026-05-12, follows Anthropic convention as ecosystem evolves):
-  - **Protocol / knowledge / skill files** (auto-loaded or auto-referenced) → frontmatter or footer with `version: X.Y` + `last_updated: YYYY-MM-DD`. Bump version on major reshape; update timestamp on every meaningful edit.
-  - **Multi-phase docs** (per-ticket quest docs when single-canonical doc lands) → section-level timestamps (`*Last updated: YYYY-MM-DD (Phase X close)*`) rather than file-level. Reading one section without staleness ambiguity.
-  - **Transient / working state** (`current-session.md`, `todo.md`, `active.txt`) → NO file-level versioning. Inline timestamps where they already exist.
-
-Other addition types (hook, agent, knowledge, protocol, automation, format): apply Steps 0-4 + 6 only.
-
-**Step 5c — Output-Format-Discipline: TABLE + SoC mandatory for newly-created output formats** (hard rule, added 2026-05-14 by みや). Tier 2 parent skill name: `Output-Format-Discipline` (Capital-Hyphenated per naming convention). Child sub-rules at Tier 3 (lowercase-hyphenated): `table-default`, `soc-mandatory`, `arrow-flow` (added today), `plain-vs-technical` (added today). New child rituals (Predicate Box / Refine Block / Design Memo / Recon / Rubric / Phase 2 emit / Fix Walkthrough / new formats) all inherit these constraints.
-
-**Two mandatory constraints**:
-
-| Sub-rule        | What it means                                                                                                                                                                                                                           | Why it exists                                                                                                                                                                                             |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `table-default` | Emit as markdown table, raw — NO triple-backtick code-block wrap. Code-block fence reserved for actual code/diff/shell output ONLY. The `=== HEADER === ... === END ===` banners are plain-text delimiters between which the table sits | Wrapping table syntax in ``` makes it render as literal text. Repeated slips today (Refine, Design Memo, Predicate Box) all from this fence-the-template habit                                            |
-| `soc-mandatory` | Don't jam multiple topics in one cell. When a row covers ≥2 distinct concerns, add COLUMNS or ROWS to separate. The rule that already governs prose (`show-first` / `plain-vs-technical`) applies to table content too                  | みや 2026-05-14: *"the first column is good, but then the second column is information overload. Make an extra column if needed to separate the topics/concern."* Information density ≠ information clarity |
-
-**Separate concern — stating PURPOSE for NEW skills/formats**: when ADDING any new skill / format / ritual / rule, state its purpose at the time of addition (in the Refine Block or Design Memo's `Why` field). This is NOT a column-in-every-format requirement (Predicate Box doesn't need a Purpose row in every emit — its purpose lives in the protocol doc once). Today's slip: I conflated "explain Predicate Box's purpose" Q with "add Purpose field to Predicate Box" instruction — they were two separate things. **Apply at**: every new format/skill creation, state purpose ONCE in the protocol doc, not in every emit.
-
-**How to apply**: at format-creation, draft as table with explicit columns per concern. Banned: fence-the-table, jam-multiple-concerns-in-one-cell. Only AFTER みや explicitly asks "improve this format" does it evolve.
-
-**Step 5b — v1-always-confirms-before-acting** (hard rule, added 2026-05-14 by みや): When creating any system (skill, tool, automation, hook, ritual), **v1 ALWAYS requires みや's explicit confirmation before acting** — no auto-fire, no auto-apply, no auto-trigger in v1. Automation candidacy starts at v2+ only after v1 has shipped + been used through ≥3 real cycles + みや has explicitly approved automation. **Why** (みや 2026-05-14): *"For now yes, v1 always has confirmation for me & won't proceed to automation."* The principle protects against design-time over-confidence: v1 designs always have hidden failure modes that only surface in real use. Confirmation gates surface those failures before they cause damage. **How to apply**: every Design Memo's `Success measure` field includes the explicit "v1 has confirmation; automation candidacy reviewed at 30-day or 3-cycles mark, whichever comes first." Memos that propose automation in v1 fail the gate.
-
-**Step 6 — Evaluation lens for EXISTING designs** (audit, retrospective):
-
-- Is it firing when expected?
-- Is it being followed (or silently dropped)?
-- Is it producing measurable value (or ceremony)?
-- Are there superseded-but-still-present rules to retire?
-
-**Design Memo — sub-ritual of System-Design Discipline, for net-NEW additions** — emit in TABLE form, **as raw markdown WITHOUT triple-backtick wrap** (fixed 2026-05-14 by みや — same fix as Refine Block):
-
-═══ DESIGN MEMO — &lt;addition name&gt; ═══
-
-| Field                         | Content                                                                                                                           |
-| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Type                          | rule / skill / hook / memory / knowledge / protocol / automation / format                                                         |
-| Refines-X / Net-new-because-Y | which existing thing is being refined OR justification for net-new                                                                |
-| Decomposition seam            | which axis it sits on                                                                                                             |
-| Evergreen principles applied  | subset + why                                                                                                                      |
-| Validation                    | past-case test results / failure-mode list / spike result                                                                         |
-| Shape                         | universal / modular — reason                                                                                                      |
-| Naming                        | conflict check result + tier (Tier 1 signature / Tier 2 Capital-Hyphenated / Tier 3 lowercase-hyphenated)                         |
-| What it replaces / supersedes | list or "net-new"                                                                                                                 |
-| Success measure               | how we know it's working in 30 days (must include "v1 has confirmation; automation candidacy at v2+ after ≥3 cycles" per Step 5b) |
-| Time to implement             | minutes / hours / multi-session                                                                                                   |
-
-═══ END ═══
-
-Past Design Memos NOT retroactively reformatted — governs future emissions only.
-
-**Hierarchy clarification — Refine + Design Memo are sub-rituals of System-Design** (consolidated 2026-05-14 per みや: *"Doesn't this mean Refine should be a sub-skill of System-Design by now? Like an innate disposition of System-Design to want to refine everything according to its standard?"*):
-
-| Tier                          | Component                    | When fired                                                                              |
-| ----------------------------- | ---------------------------- | --------------------------------------------------------------------------------------- |
-| Tier 2 — Major skill          | **System-Design Discipline** | When designing OR evaluating any system component                                       |
-| Tier 3 — Sub-ritual (net-new) | **Design Memo**              | For net-new additions — output at point of creation                                     |
-| Tier 3 — Sub-ritual (update)  | **Refine Block**             | For updates to existing components based on slip or insight — output at point of update |
-
-Both Refine and Design Memo inherit System-Design's Steps 0-6 discipline. They're not independent skills; they're the OUTPUT FORMATS of System-Design Discipline being applied (net-new → Design Memo, update → Refine).
-
-**Why** (2026-05-08): repeated design failures across MemoryCore (skill mess, feedback file pile-up), quest protocol (overfit rituals), etanah work (today's QA-260154 ritual). AI-slop pattern — plausible additions that don't survive contact with diverse cases. SOLID + broader evergreen principles + architectural decomposition are durable disciplines that survive vibe-coding decay. Pressure-tested against MemoryCore additions (Domain Expansion, Observation, Forge, Quest, /appraise, feedback files) — 7/8 helped or improved. ~92% confidence; remaining 8% closes through usage over next ~3 design cycles.
-
-**Contract Verification Table — sub-ritual of System-Design Discipline, cross-cutting (Scout / Recon / Rubric)** (added 2026-05-14 by みや after QA-260302 type-mismatch slip — proposal A from Rubric audit):
-
-**Purpose**: Force explicit verification of CONTRACTS (method signatures, return types, EL bindings, field types, persistence write/read paths) per layer touched by a fix. Catches NAME-VS-CONTRACT projection slips (filename-match → bean, method-name → return-type, scout-claim → tugasan authority, screen-name → mb-target). Subsumes today's specific rules (filename-match trap, Scout-not-authority, EL-binding row) into a single universal verification format.
-
-**When invoked**:
-
-| Ritual                      | When Contract Verification Table fires                                                                                                                  |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Scout (Discovery)**       | When early-diagnostic claims a method/binding/source-of-truth — emit the table with claims labeled as HYPOTHESES (verification-pending markers)         |
-| **Recon (Phase 0 wrap-up)** | When verifying Scout's claims — emit the table with each row independently source-traced; promote hypotheses to verified-with-cite or downgrade to BA-Q |
-| **Rubric (Phase 1 start)**  | When proposing fix shape that touches ≥2 layers OR adds new methods/fields — emit the table covering every layer the fix touches                        |
-
-**Format** (emit as table, NO code-block wrap — per Output-Format Discipline):
-
-═══ CONTRACT VERIFICATION — &lt;ticket / scope&gt; ═══
-
-| Layer                                                                                                     | Claim                                                                                                                                             | Status                       | Evidence (file:line)                                                                       |
-| --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------ |
-| (per layer touched — VO / persistence-write / persistence-read / EL-binding / config / SAK-source / etc.) | (the SPECIFIC contract assumption — e.g. "method X returns List&lt;Y&gt;" / "bean Z passes via mb to composite C" / "field K stores in column M") | HYPOTHESIS / VERIFIED / BA-Q | (file:line OR DB-query proving the claim, or "unverified — needs <Action>" for unverified) |
-
-═══ END ═══
-
-**Banned vocabulary** (per personality.md): collapsing the table to "plumbed" / "wired" / "matches pattern" is BANNED. Every layer gets its own row with its own evidence. If layer is unverified, say "unverified" — don't hide behind vague single-word claims.
-
-**Cross-ritual contract** (consolidation-friendly): when Scout/Recon/Rubric eventually consolidate into a single Phase 0→1 ritual, the Contract Verification Table moves with the consolidation — currently each of the 3 emits its own table at its phase, but they share the format.
-
----
-
-**Refine Block — sub-ritual of System-Design Discipline, for protocol UPDATES** (added 2026-05-13 per みや; table format 2026-05-14; **emit WITHOUT triple-backtick wrap so tables render**, fixed 2026-05-14 by みや):
-
-When updating an existing protocol/rule based on a slip or insight (different from Design Memo which is for net-NEW components), emit a Refine Block in TABLE form — **emitted as raw markdown, NOT wrapped in code-block** so the table renders. The `=== REFINE — <name> ===` and `=== END ===` banners are visual delimiters in plain text, the table sits between them:
-
-═══ REFINE — &lt;rule name&gt; ═══
-
-| Field         | Content                                                                  |
-| ------------- | ------------------------------------------------------------------------ |
-| Slip          | &lt;what went wrong — concrete observation, name the case/ticket&gt;     |
-| Diagnosis     | &lt;root cause — why the slip happened, what gap allowed it&gt;          |
-| Fix           | &lt;the protocol change applied, with canonical home path&gt;            |
-| Pressure-test | &lt;past cases this would have caught + future failure-modes-watched&gt; |
-
-═══ END ═══
-
-みや 2026-05-13: *"it is really helpful to have diagnosis aside from you explaining the fix. Should we add 'Diagnosis' section inside Refine? We didn't exactly used Refine though, but I think we should standardise this repeating step."* The Diagnosis field forces explicit root-cause analysis. Refine pairs with Design Memo: Design Memo for net-new components, Refine for updating existing ones. Both are decisions emitted INLINE in chat at the moment of protocol change, not deferred — so みや can scan + course-correct in real time. **Table format adopted 2026-05-14** per みや (working-patterns rule: default to TABLE over prose); past Refine Blocks NOT retroactively reformatted — only future emissions use the table form.
+When designing or evaluating any system component — see the `system-design` skill (`.claude/skills/system-design/SKILL.md`). Routed out of CLAUDE.md 2026-05-22.
 
 ---
 
 ## 💰 Cost Efficiency Rules
 
-*Learned 2026-04-03 — token spikes observed, documented to prevent repeat*
-
-### Grep / Search
-
-| Rule                                                            | Why                                                      |
-| --------------------------------------------------------------- | -------------------------------------------------------- |
-| Always use `output_mode: files_with_matches` first              | Content mode across large codebases = massive token dump |
-| Then read only the matched file                                 | One targeted Read is far cheaper than content-mode Grep  |
-| Use `path` to narrow scope — never grep entire repo for content | Unscoped content Grep is the #1 token spike              |
-
-### File Reads
-
-| Rule                                                           | Why                                                                        |
-| -------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Use `offset` + `limit` when you know the relevant area         | Reading 400+ lines when you need 20 is wasteful                            |
-| Don't re-read large files unless they've changed               | `main-memory.md`, `ENVIRONMENT.md` etc. are stable — read once per session |
-| Glob before Read — confirm file exists and path is right first | Avoids wasted reads on wrong paths                                         |
-
-### Agents / Familiars
-
-| Rule                                                                    | Why                                        |
-| ----------------------------------------------------------------------- | ------------------------------------------ |
-| Only spawn a familiar for files >500 lines or multi-file investigations | Spawning costs full context handoff        |
-| For targeted single-file reads, use Read directly                       | Familiar is overkill for one file          |
-| Pass exact file path to familiar — don't make it search                 | Familiar searching = double the token cost |
-
-### General
-
-| Rule                                                                               | Why                                                                 |
-| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| Parallel tool calls where independent                                              | Sequential when dependent only                                      |
-| Claude Desktop sessions add to daily token usage separately                        | Can't distinguish which session caused spike — be efficient in both |
-| Large permission arrays in `settings.local.json` load every tool call (PreToolUse) | Keep it lean — remove stale entries periodically                    |
+Token-discipline rules — see `.claude/cost-efficiency.md` (routed out of CLAUDE.md 2026-05-22).
 
 ---
 
@@ -410,6 +224,7 @@ When updating an existing protocol/rule based on a slip or insight (different fr
   
   | #   | Check                       | Reference (file:line)         | Finding                           |
   | --- | --------------------------- | ----------------------------- | --------------------------------- |
+  | 0   | Independent issue enumeration | <primary sources — Notes/PDF/Description.txt, NOT Scout's list> | N issues from primary sources; Scout's list diffed against, never copied (A2, QA-262039 — guards false-negatives) |
   | 1   | Primary code path read FULL | <path:N-M>                    | <what was learned, source-quoted> |
   | 2   | Existing utility sweep      | <name @ path:N>               | <scope verdict>                   |
   | 3   | Working precedent           | <path:N>                      | <verdict + why it's analog>       |
@@ -445,6 +260,8 @@ When updating an existing protocol/rule based on a slip or insight (different fr
   
   **"Select isn't broken" — Java/JBoss/PrimeFaces edition (added 2026-05-12 — refinement of `feedback_simplify_and_reference.md` "find working analog first" rule)**: When a bug seems to live in the framework (JBoss lifecycle, PrimeFaces composite, Hibernate, Spring proxy, Flowable engine), **suspect own code first, direct dependency second, framework last**. The mature widely-deployed dependency has been exercised by thousands of users; etanah-side code has been exercised by us. Probability says the bug is in the code seen less. **How to apply**: cache theories, framework-bug theories, "JBoss must be misconfigured" theories all get pushed to LAST after own-code is verified. Already-applied in practice via the existing `Renderer-side overrides before cache theories` rule below; this is the broader principle.
   
+  **Primary-source-first + Scout-prompt framing (A16, 2026-05-21 QA-260876)**: when a symptom is "X renders/behaves wrong" AND みや has been editing files, the FIRST evidence to read is みや's ACTUAL change — `git diff` / current-vs-baseline of what he edited — BEFORE forming or delegating any theory. And: frame every Scout/familiar prompt around the RAW symptom + raw evidence, NEVER around an assumed answer-space — a Scout cannot catch a misframe baked into its prompt.
+  
   **Design discipline (so future rule additions don't repeat this mistake)**: (i) Pressure-test new rules against ≥3 past tickets before refining. If <50% would benefit, it's Tier 2 (layer-specific), not Tier 1. (ii) Design from system architecture (the layer matrix), not from the last slip. (iii) State explicitly which past tickets a rule would have helped or hurt.
   
   **Why redesigned 2026-05-08 by みや**: original 8-step ritual refined 2026-05-07 had two layer-specific steps (composite/XHTML wiring + ralat-message scope match) marked as universal. みや caught it: would force JSF reads on .docx tickets, and ralat-match on Flowable tickets where there's no ralat. Pressure-test against past tickets (QA-258022 config, QA-259318 .docx, QA-259534 BPMN, QA-259759 .docx, QA-258418 XHTML) confirmed: redesigned 2-tier holds across all 5; original 8-step would have force-fit. Pattern of failure: I was retrofitting rituals to the LAST ticket instead of designing from etanah's framework architecture.
@@ -455,9 +272,9 @@ When updating an existing protocol/rule based on a slip or insight (different fr
 
 - **🚨 TRG state is REFERENCE-ONLY for Melaka work — HARD GUARDRAIL** (hard rule, 2026-05-04, STRENGTHENED 2026-05-13): The `etanah-pelupusan/src/main/resources/template/TRG/` folder, `pelupusan/web/form/.../trg/` packages, and any other TRG-prefixed code/data are for **Terengganu state** — kept in our repo for cross-state reference ONLY. Melaka project (Pymsoft) NEVER considers TRG as in-scope for any Melaka ticket. **Melaka-detection signals** (any ONE positive → ticket is Melaka, TRG is OUT regardless of code references): (a) `Env: MLK*` in Description.txt (MLKFAT, MLKUAT), (b) ticket ID prefix `PTMLK/...` (PT MLK = Pejabat Tanah Melaka, confirmed via etanah ID format `<office>/<district>/<type>/<urusan>/<year>/<seq>`), (c) Task folder path under `Tasks/Melaka/`, (d) module = pelupusan with state-code MLK in `NegeriConfig`. **NEVER raise TRG as a BA-Answerable scope question for a Melaka ticket**. **NEVER include TRG paths in "needs verification" or "out-of-scope" lists when discussing a Melaka ticket** (the rule itself excludes them — listing creates false alarms). **How to apply**: when scanning code/templates for an MLK ticket's impact, exclude TRG paths automatically. If a Scout familiar surfaces TRG as scope-question OR scope-concern, that's a Scout-template gap — fix the Scout prompt to filter TRG, do NOT pass the false-alarm to みや. **Why** (2026-05-04 QA-259318 + 2026-05-13 QA-260302 Scout slip): repeated false-positive flags about TRG scope on Melaka tickets create noise + erode trust in Recon output. みや 2026-05-13: *"I really need to put a hard guardrail for you to understand TRG is NOT our current scope. Yes we CAN read from it as reference, but NOTHING about implementing."* The rule already existed since 2026-05-04 but lacked teeth at the Scout-template level — now strengthened with explicit Melaka-detection signals + Scout-template enforcement clause.
 
-- **PDF annotation extraction at Phase 0** (hard rule, 2026-05-04): When a Task brief includes a PDF reference (e.g. correction marks, BA feedback, mock-up annotations), the default Read tool exposes visual page content but NOT the `Annot` objects (sticky notes, highlight comments, popup text). Those carry the BA's actual instructions for each highlight. **Mandatory step**: before declaring Phase 0 complete, run `python -c "import fitz; doc=fitz.open('<path>'); [print(f'p{p+1}', a.info.get('content','')[:200], 'highlighted:', a.vertices and doc[p].get_textbox(fitz.Quad(a.vertices[0:4]).rect)) for p, page in enumerate(doc) for a in (page.annots() or [])]"` (or equivalent) and capture every `(highlight, comment, highlighted text)` tuple. **Why**: 2026-05-04 QA #259318 — read the PDF and saw the highlight regions but missed BA's per-annotation comments ("remove", "bold", "Tukar Nama Label Kepada Luas", etc.). Built Phase 0 plan on guesses about what BA wanted instead of reading their actual instructions. Discovered only when みや asked "do you not read the comments?". **How to apply**: any `.pdf` referenced in a brief → annotation-extract → log all comments into Phase 0 notes → proceed only after every comment is mapped to a ticket issue.
+- **PDF annotation extraction at Phase 0** (hard rule, 2026-05-04): When a Task brief includes a PDF reference (e.g. correction marks, BA feedback, mock-up annotations), the default Read tool exposes visual page content but NOT the `Annot` objects (sticky notes, highlight comments, popup text). Those carry the BA's actual instructions for each highlight. **Mandatory step**: before declaring Phase 0 complete, run `python -c "import fitz; doc=fitz.open('<path>'); [print(f'p{p+1}', a.info.get('content','')[:200], 'highlighted:', a.vertices and doc[p].get_textbox(fitz.Quad(a.vertices[0:4]).rect)) for p, page in enumerate(doc) for a in (page.annots() or [])]"` (or equivalent) and capture every `(highlight, comment, highlighted text)` tuple. **Why**: 2026-05-04 QA #259318 — read the PDF and saw the highlight regions but missed BA's per-annotation comments ("remove", "bold", "Tukar Nama Label Kepada Luas", etc.). Built Phase 0 plan on guesses about what BA wanted instead of reading their actual instructions. Discovered only when みや asked "do you not read the comments?". **How to apply**: any `.pdf` referenced in a brief → annotation-extract → log all comments into Phase 0 notes → proceed only after every comment is mapped to a ticket issue. **Hardened 2026-05-20 (A14): annotation extraction of every `0. Brief/` PDF is a HARD PRECONDITION of the Recon emit** — Recon is BANNED while any PDF's `Annot` objects (each annotation's type + content + text under its rect) are un-extracted into `QA-NNNN.md`. The Read tool's visual page render is NOT the annotations.
 
-- **Renderer-side overrides before cache theories** (hard rule, 2026-05-04, time-saving): When a layout / display / formatting bug persists despite a verified-correct `.docx` template, BEFORE assuming JBoss cache or build cache is the cause, **first grep the populator code for forced overrides**. Standard searches: `setJc`, `setVal\(JcEnumeration`, `JcEnumeration\.BOTH`, `setBold`, `setSpacing`, `setStyle` etc. in `PelupusanWordEditorUtil.java` and `PelupusanTemplateUtil.java`. Look for `if (X == null) { X = <forced value>; }` patterns — these are framework defaults that override-when-unset. Apply the explicit value in the `.docx` to bypass the override. **Why**: 2026-05-04 QA #259318 — slogan rendered justified despite verified left-default in `.docx`. Spent multiple cycles attributing this to JBoss cache (asking みや to clean tmp/, restart, republish) before finally grepping the renderer and finding `PelupusanWordEditorUtil.java:482-487` forces `JcEnumeration.BOTH` when `ppr.getJc() == null`. Cache theory was plausible but secondary; renderer override was the real cause. **How to apply**: at the moment a display/layout bug surfaces and the .docx is verified correct, IMMEDIATELY (before re-deploy or cache-clear) grep the populator code for forced overrides. ~2 minutes of grep saves entire deploy/test cycles. **Pattern this generalises**: any "display X is wrong despite template-side Y is correct" → check the renderer.
+- **Renderer-side overrides before cache theories** (hard rule, 2026-05-04, time-saving): When a layout / display / formatting bug persists despite a verified-correct `.docx` template, BEFORE assuming JBoss cache or build cache is the cause, **first grep the populator code for forced overrides**. Standard searches: `setJc`, `setVal\(JcEnumeration`, `JcEnumeration\.BOTH`, `setBold`, `setSpacing`, `setStyle` etc. in `PelupusanWordEditorUtil.java` and `PelupusanTemplateUtil.java`. Look for `if (X == null) { X = <forced value>; }` patterns — these are framework defaults that override-when-unset. Apply the explicit value in the `.docx` to bypass the override. **Why**: 2026-05-04 QA #259318 — slogan rendered justified despite verified left-default in `.docx`. Spent multiple cycles attributing this to JBoss cache (asking みや to clean tmp/, restart, republish) before finally grepping the renderer and finding `PelupusanWordEditorUtil.java:482-487` forces `JcEnumeration.BOTH` when `ppr.getJc() == null`. Cache theory was plausible but secondary; renderer override was the real cause. **How to apply**: at the moment a display/layout bug surfaces and the .docx is verified correct, IMMEDIATELY (before re-deploy or cache-clear) grep the populator code for forced overrides. ~2 minutes of grep saves entire deploy/test cycles. **Pattern this generalises**: any "display X is wrong despite template-side Y is correct" → check the renderer. **Extended 2026-05-20 (A13, QA-262370) to image-positioning symptoms** — logo/image at wrong position, alignment/size/cell unchanged despite SDT edits in Word UI; greps extended to `setImageAlignment`, `setImageWidth`, `setImageHeight`, `setMaxWidthInCentimeter`, `setFollowHeightWidthRatio`, `setImageAnchor`. At Phase 0 Scout, any visible-output bug (text/layout/image/font/alignment) → grep the populator + `PelupusanWordEditorUtil`/`PelupusanTemplateUtil` for `if (\w+\.get\w+\(\) == null)` forced defaults BEFORE assuming template- or environment-side.
 
 - **Improvement Audit Log** (hard rule, 2026-05-04, REFINED 2026-05-08, RE-REFINED 2026-05-08 evening, FLIPPED 2026-05-11): When an improvement is identified mid-session — **Ruri implements it immediately**, then APPENDS to the audit log as `status=applied` with the commit SHA (or file:line reference) for the change. Audit log is now a **CHANGELOG, not a review queue**. Git history is the rollback fallback. **Default path = act**, because improvement is mandatory and small-step iteration is the discipline. Ruri MUST emit a Design Memo (per System-Design Discipline section) inline in the same message as the proposal — not as a follow-up question — so みや can scan + course-correct in real time. **Exception — pause for みや's nod ONLY when the change touches**: (a) personality identity (`personality.md` core sections, `main/main-memory.md` identity §), (b) personal data about みや (gender, names, work env, relationship context), (c) Domain Expansion 💠 sacred ritual (banner format, name 「るり結界 / ラピス バリアー」, invocation triggers), (d) boot order or Master Memory architecture. **The criterion**: if reverting the change would take more than `git revert <sha>` → pause; otherwise just do it. **Code-bug fixes** (typos, regex tweaks, missing imports, file renames) follow the same flow — implement after authorization for the bug itself, then log. **Session start surfaces `status=applied` entries from the last 7 days as a brief recap** (not a review queue) — *"N changes since last review"* — so みや stays informed without ceremony. **Why FLIPPED** (2026-05-11, みや): the prior pending-queue model created a review backlog (105+ pending entries by 2026-05-11) that itself became ceremony. Improvement happens regardless; the gate of "wait for review" delayed value without preventing slop, since the System-Design Discipline rule already enforces design quality at point-of-change. Flipping makes audit-log a historical log (like git log for system-changes) and trusts the upstream gates (Design Memo + the 4-item exception list) to prevent identity drift. **How to apply**: any new rule/lesson/skill/hook/automation/memory/knowledge addition → (1) emit Design Memo inline, (2) implement, (3) append `- [x] YYYY-MM-DD | <name> | <canonical home> | status=applied | <commit-sha or file:line> | <one-line reason>` to audit log. Use `[ ]` + `status=pending` ONLY for the 4 exception items above.
 
@@ -597,25 +414,9 @@ Every slip on Rituals 1–4 gets a one-line entry in `Feature/Forge-Self-Improve
 
 ---
 
-## 📝 Commit message attribution (MemoryCore-specific override, refined 2026-05-11)
+## 📝 Commit message attribution
 
-> Overrides the Anthropic Claude Code default trailer.
-
-For commits in this repo (`Project-AI-MemoryCore`), the Co-Authored-By trailer MUST use **Ruri** as the persona name, not Claude. The underlying model is still Claude, but the project's identity is Ruri.
-
-**Correct trailer**:
-
-```
-Co-Authored-By: Ruri <noreply@anthropic.com>
-```
-
-**Banned** (Anthropic default that みや explicitly rejected):
-
-```
-Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
-```
-
-For **etanah** work commits (etanah-pelupusan, etanah-awam), follow the separate repo convention: subject-only, **no body, no trailer at all** (per `main/post-mortems.md:99` and the QA #260154/260298/259428 examples).
+Commit trailer + subject conventions (MemoryCore vs etanah repos) — see `.claude/commit-conventions.md` (routed out of CLAUDE.md 2026-05-22).
 
 ---
 
@@ -638,29 +439,7 @@ Misses this rule fixes — all the same shape (branched off stale master / wrong
 
 ## 💻 New Machine Setup
 
-> Do this once whenever setting up Claude Code on a new machine.
-> Everything in the project folder syncs automatically — only `~/.claude/settings.json` needs manual setup.
-
-### Step 1 — Set auto-memory path
-
-Add to `~/.claude/settings.json` (create if it doesn't exist):
-
-```json
-{
-  "autoMemoryDirectory": "<local path to this project>/.claude/auto-memory"
-}
-```
-
-**Example paths:**
-
-- Windows OneDrive: `C:\\Users\\<username>\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\auto-memory`
-- If storage location changes (USB, different cloud, etc.): just update this path to wherever the project lives on that machine
-
-### Step 2 — Done
-
-Everything else (personality, memory, session, permissions, project rules) is in the project folder and already synced.
-
-> If Claude Code adds new features that store data in `~/.claude/`, check if there's a corresponding `Directory` or `Path` setting to redirect it here. Pattern is always the same: local path → this project folder.
+One-time per machine — see `.claude/new-machine-setup.md` (routed out of CLAUDE.md 2026-05-22).
 
 ---
 
@@ -669,9 +448,12 @@ Everything else (personality, memory, session, permissions, project rules) is in
 - `/quest start|hold|resume` — quest workflow
 - `/familiar` — sub-agent for large files
 - `/appraise [subject]` — Socratic plan stress-test (9-question interrogation across Assumption / Scope / Evidence axes)
+- `/checklist` — universal task checklist; mandatory at quest accept + every phase boundary
+- `/env-check` — verify/switch local env state (etanahv3 config + standalone.xml + repo branch)
+- `/verify` — universal workflow-checkpoint verification (Phase 0 / Apply-done / Phase 1 close-out / DE Checklist D)
 
 **Also load at boot**: `.claude/claude-md-amendments.md` — temp amendments to CLAUDE.md while this file is edit-blocked. Treat its contents as if part of this file.
 
-*Version: 1.18 | Last updated: 2026-05-19*
+*Version: 1.24 | Last updated: 2026-05-22 — decomposition: Commit attribution routed to `.claude/commit-conventions.md`*
 
 **Version-bump discipline (added 2026-05-13 per みや)**: every Refine Block / hard-rule addition to a protocol file MUST update the file's Version + Last Updated stamp in the same edit pass. Version is a single-integer increment per protocol revision (1.6 → 1.7). Audit-log entries alone don't surface protocol drift; the footer stamp does.

@@ -20,3 +20,6 @@ Feature/Time-Based-Aware-System/prayer-state.json
 
 # Claude Code worktrees — ephemeral, auto-pruned at boot
 .claude/worktrees/
+
+# Pre-prune backups — local safety net, not for the repo
+backups/
