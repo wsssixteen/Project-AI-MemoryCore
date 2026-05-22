@@ -99,44 +99,9 @@ New signals get appended here as they're discovered. Each new signal also lands 
 
 ---
 
-## Quest State Transitions (signal #2 detailed)
+## Quest State Transitions + active.txt schema (signals #2 + #3)
 
-| Trigger phrase pattern | Examples | active.txt mutation |
-|---|---|---|
-| pause / hold / park | "pause QA #X", "hold X", "park that ticket" | `status=hold`, append `notes: paused <date> — <context>` |
-| resume / continue / back-to | "resume X", "continue X", "back to X" | `status=active` |
-| switch-to (current open) | "let's switch to Y", "let's work on Y instead" | Prompt: "Pause [current X]? With what note?" then mutate both |
-| taken-by-colleague | "X taken by <name>", "<name> handling X", "handed to <name>" | `status=delegated`, `delegated_to=<name>`, `delegated_date=<today>`, append context note |
-| blocked | "blocked by Y", "waiting on Z" | `status=blocked`, `blocker=<text>`, append note |
-| learning marker | "trace X later", "want to learn from X's fix" | `learning_marker=<date> — <reason>` |
-| closure | "close X", "X is done", "wrap X" | Phase 2 post-mortem + `status=closed` + archive Task folder |
-
-Fire as soon as heard, mid-conversation. Same pattern as `remember later` → todo.md.
-
----
-
-## active.txt schema (signal #3 detailed)
-
-```
-quest:
-  qa=QA-<NUM>
-  task_folder=<path>
-  branch=mlk/qa/<NUM>            ← NEW
-  early_diagnostic=<path>        ← optional
-  handoff_file=<path>            ← optional
-  phase=0|1|1-complete|2|closed
-  local_test_confirmed=true|false
-  status=active|hold|delegated|blocked|closed|archived
-  delegated_to=<name>            ← NEW (when status=delegated)
-  delegated_date=<YYYY-MM-DD>    ← NEW
-  blocker=<text>                 ← NEW (when status=blocked)
-  learning_marker=<date> — <why> ← NEW
-  notes:                         ← NEW (append-only with dates)
-    - <YYYY-MM-DD>: <event>
-    - <YYYY-MM-DD>: <event>
-```
-
-Backwards-compatible: existing `note=` (single-line) entries continue to work. New `notes:` (block, append-only) is preferred for new entries.
+The full Quest State Transitions trigger table and the extended `active.txt` schema (6-status set, plus `branch` / `delegated_to` / `delegated_date` / `blocker` / `learning_marker` / append-only `notes:` fields) are the **canonical content of `quest/quest-protocol.md` → "Quest State File (`quest/active.txt`) + State Transitions"** (consolidated there 2026-05-22 — quest-cluster decomposition). Domain Expansion's boot autoscan and verbal-trigger mutations read from that single source; no duplicate copy is maintained here.
 
 ---
 
@@ -170,4 +135,4 @@ Every refinement to this protocol — whether a rule tweak, signal added/removed
 ---
 
 *Created: 2026-05-05 | Protocol owner: Ruri | Review at every Forge Review until L4 stabilization*
-*Last updated: 2026-05-21 — added step (0a) Compaction check; same day refined its large-transcript branch to a concrete tail-read + scoped spot-grep procedure after first live use.*
+*Last updated: 2026-05-22 — signals #2/#3 (Quest State Transitions + active.txt schema) de-duplicated to a cross-ref; canonical home is now `quest/quest-protocol.md` (quest-cluster decomposition).*

@@ -38,11 +38,11 @@
 
 | Checkpoint | Phase | What it covers |
 |---|---|---|
-| **Discovery** | 0 | Scout familiar + early-diagnostic load + DOMAIN-GLOSSARY out-loud + etiology check (see below). **Scout outputs are HYPOTHESES, never assertions** — when early-diagnostic claims a method/binding/tugasan/source-of-truth, label it explicitly as "HYPOTHESIS — verification-pending" and emit a Contract Verification Table (per CLAUDE.md System-Design Discipline) with each row tagged HYPOTHESIS until Recon source-verifies. |
-| **Recon** | 0 | Formal Recon block ritual — Universal Checks 1-8 with file:line per row. **Plus Contract Verification Table** (cross-cutting per CLAUDE.md System-Design Discipline) when any Scout claim involves a method/binding/source-of-truth — each row independently source-traced (HYPOTHESIS → VERIFIED with file:line, OR downgraded to BA-Q). |
+| **Discovery** | 0 | Scout familiar + early-diagnostic load + DOMAIN-GLOSSARY out-loud + etiology check (see below). **Scout outputs are HYPOTHESES, never assertions** — when early-diagnostic claims a method/binding/tugasan/source-of-truth, label it explicitly as "HYPOTHESIS — verification-pending" and emit a Contract Verification Table (per the `system-design` skill) with each row tagged HYPOTHESIS until Recon source-verifies. |
+| **Recon** | 0 | Formal Recon block ritual — Universal Checks 1-8 with file:line per row. **Plus Contract Verification Table** (cross-cutting per the `system-design` skill) when any Scout claim involves a method/binding/source-of-truth — each row independently source-traced (HYPOTHESIS → VERIFIED with file:line, OR downgraded to BA-Q). |
 | **Simulate** | 0/1 | Reproduce bug locally; auto-pengguna lookup; test plan emit |
-| **Rubric** | 1 | Fix-shape options (A/B/C with pros/cons) + recommendation. **Architecture diagram is ALWAYS shown** (permanent fixture per みや 2026-05-14) — file-level relationships. **Contract Verification Table is ALSO ALWAYS shown** for any fix touching ≥2 layers OR adding new methods/fields/bindings — see `CLAUDE.md` System-Design Discipline → "Contract Verification Table" sub-ritual for canonical format (cross-cutting; same table format used by Scout + Recon + Rubric). Names hint, contracts decide — banned vocabulary ("plumbed", "wired", "matches pattern") per personality.md. Use plain ASCII boxes + arrows in the diagram, not Java type names. |
-| **Apply** | 1 | Code edit applied (with Predicate Box per CLAUDE.md Ritual 1). **🚨 PRESERVATION DISCIPLINE — HARD RULE (added 2026-05-12 after QA-247710 deletion-overreach slip)**: ONLY modify the specific lines required by the Rubric. **DO NOT DELETE any unrelated existing line, comment, or commented-out code without explicit みや authorization** — even if it looks "dead", "irrelevant", "outdated", "rushing", or "duplicated". Commented-out code is INTENTIONAL preservation by the original developer (debugging hints, candidate restorations, historical context, warnings to future devs) — must be respected. "Dead code cleanup" is a SEPARATE refactor task, NOT part of any bug-fix or enhancement ticket. If a line appears unrelated to the fix → KEEP IT. If unsure → ASK before deleting. **Why** (2026-05-12 QA-247710 Apply): I replaced the entire body of `populatePTGParagraph_PRU` with my 10-row injection, deleting (a) a critical warning comment ("Rushing, will attempt beautify later... cause external table to go missing"), (b) the noLot computation block, (c) the noLot eachRow injection, (d) ~100 lines of commented-out historical hints. みや: *"Did you just without any rights remove an important comment WARNING others about an issue? I just noticed you removed a WHOLE BLOCK of codes not just the comments!!"* The deletions weren't in the Rubric scope. The (a) warning would have prevented the later TagAttributeException debugging — I deleted my own future safety net. **How to apply**: at Apply, use `Edit` with targeted `old_string` covering ONLY the change region (insert-before/insert-after patterns), NEVER large `old_string` that includes unrelated surrounding code. If the framework's `Edit` tool requires a larger anchor for uniqueness, expand the anchor but preserve every line in `new_string` except the deliberate change. Pressure-test: if みや asks "what else did you delete?" — the answer must be "nothing other than the X line(s) we discussed". Pairs with the existing scope_anchor rule. |
+| **Rubric** | 1 | Fix-shape options (A/B/C with pros/cons) + recommendation. **Architecture diagram is ALWAYS shown** (permanent fixture per みや 2026-05-14) — file-level relationships. **Contract Verification Table is ALSO ALWAYS shown** for any fix touching ≥2 layers OR adding new methods/fields/bindings — see the `system-design` skill → "Contract Verification Table" sub-ritual for canonical format (cross-cutting; same table format used by Scout + Recon + Rubric). Names hint, contracts decide — banned vocabulary ("plumbed", "wired", "matches pattern") per personality.md. Use plain ASCII boxes + arrows in the diagram, not Java type names. |
+| **Apply** | 1 | Code edit applied (with Predicate Box per Ritual 1 — Debug Mode Rituals section below). **🚨 PRESERVATION DISCIPLINE — HARD RULE (added 2026-05-12 after QA-247710 deletion-overreach slip)**: ONLY modify the specific lines required by the Rubric. **DO NOT DELETE any unrelated existing line, comment, or commented-out code without explicit みや authorization** — even if it looks "dead", "irrelevant", "outdated", "rushing", or "duplicated". Commented-out code is INTENTIONAL preservation by the original developer (debugging hints, candidate restorations, historical context, warnings to future devs) — must be respected. "Dead code cleanup" is a SEPARATE refactor task, NOT part of any bug-fix or enhancement ticket. If a line appears unrelated to the fix → KEEP IT. If unsure → ASK before deleting. **Why** (2026-05-12 QA-247710 Apply): I replaced the entire body of `populatePTGParagraph_PRU` with my 10-row injection, deleting (a) a critical warning comment ("Rushing, will attempt beautify later... cause external table to go missing"), (b) the noLot computation block, (c) the noLot eachRow injection, (d) ~100 lines of commented-out historical hints. みや: *"Did you just without any rights remove an important comment WARNING others about an issue? I just noticed you removed a WHOLE BLOCK of codes not just the comments!!"* The deletions weren't in the Rubric scope. The (a) warning would have prevented the later TagAttributeException debugging — I deleted my own future safety net. **How to apply**: at Apply, use `Edit` with targeted `old_string` covering ONLY the change region (insert-before/insert-after patterns), NEVER large `old_string` that includes unrelated surrounding code. If the framework's `Edit` tool requires a larger anchor for uniqueness, expand the anchor but preserve every line in `new_string` except the deliberate change. Pressure-test: if みや asks "what else did you delete?" — the answer must be "nothing other than the X line(s) we discussed". Pairs with the existing scope_anchor rule. |
 | **Verify** | 1 | みや local-tests the fix; confirms ralat/behavior |
 | **Commit** | 1 | Prepare-commit sequence (this section); Ruri proposes message, みや executes |
 | **Push** | 1 | みや executes push |
@@ -77,18 +77,18 @@ The branch with the latest date is the source-of-truth. **DO NOT compare `origin
 6. `git stash pop` — auto-pop. If conflict, `git status` for unmerged paths, **PAUSE and report to みや** (don't auto-resolve)
 7. `git add <each modified file by name>` — stage all the work-in-progress files (NEVER `git add .` or `-A`)
 8. `git status` to verify staged files
-9. **HAND OFF** — output: branch name + N files staged + **proposed commit message** (per the convention below — みや uses as-is, modifies, or overrides) + the exact `git commit` and `git push --set-upstream` commands ready to copy-run. Refined 2026-05-11 by みや: *"Please always include the comment into the protocol after you branched out successfully"* — proposing the message is now part of hand-off, not optional.
+9. **HAND OFF** — output: branch name + N files staged + **proposed commit message** (per the convention below — みや uses as-is, modifies, or overrides). Once みや confirms the message and asks Ruri to commit, Ruri runs `git commit` then `git push` (see the Commit + Push hard rule below). Refined 2026-05-11 by みや: *"Please always include the comment into the protocol after you branched out successfully"* — proposing the message is now part of hand-off, not optional.
 
-**Hard rule (Commit — Ruri proposes, みや executes; refined 2026-05-11 by みや)**: Ruri **MUST** propose the commit message at hand-off (per convention) — みや decides accept/modify/override. Ruri does NOT run `git commit`. Ruri does NOT run `git push`. The proposal must follow the convention below (no `fix` prefix, no `AWAM`/`MLK`/repo tags, subject-only, no body, no `Co-Authored-By` trailer).
+**Hard rule (Commit + Push — Ruri proposes the message, then runs both; updated 2026-05-19 by みや — supersedes the prior "みや executes" model)**: Ruri **MUST** propose the commit message at hand-off (per convention) — みや decides accept/modify/override. Once みや has (a) confirmed the message and (b) asked Ruri to commit, Ruri runs `git commit` **then auto-runs `git push`** — no separate push instruction needed. Hold the push only if みや says "commit only" / "don't push". The harness auto-mode classifier may still prompt みや to approve the actual `git push`. The proposed message must follow the convention below (no `fix` prefix, no `AWAM`/`MLK`/repo tags, subject-only, no body, no `Co-Authored-By` trailer).
 
 **Violation log (Commit)**:
-- 2026-05-11 QA-260139: Ruri ran `git commit` itself + included body + Co-Authored-By trailer + "fix" prefix + "AWAM"/"MLK" tags. みや reset. **Still forbidden post-refinement**: running git commit/push is Ruri's hands-off; the wrong-format reasons are now caught at proposal time (みや reviews before executing).
+- 2026-05-11 QA-260139: Ruri ran `git commit` itself + included body + Co-Authored-By trailer + "fix" prefix + "AWAM"/"MLK" tags. みや reset. **Still forbidden post-2026-05-19-update**: body, Co-Authored-By trailer, "fix" prefix, "AWAM"/"MLK" tags. Running `git commit` / `git push` is now expected — after みや confirms the message — but only with a convention-correct subject; the wrong-format reasons are caught at proposal time (みや reviews before Ruri executes).
 
 **Phase 1 close-out summary emission — MANDATORY (added 2026-05-20 by みや)**: When Phase 1 closes (after `/verify` Checklist C goes green), emit a one-line summary in chat: `Phase 1 closed at <YYYY-MM-DD HH:MM TZ> · commit <SHA> · duration <quest-initiation → close, in hours/minutes>`. Quest-initiation = the moment the QA # first appeared in active.txt OR the earliest "Retrieved" entry in the Step Log.
 
 **Phase 1 close-out backup-file cleanup — MANDATORY (added 2026-05-20 by みや)**: After successful push (between push and /verify Checklist C), delete any `.bak_*` files created during the fix iteration in the touched repo directories. Git history is the rollback fallback; on-disk backups become noise. **Failsafe**: if any `.bak_*` file is more than 7 days old, surface it to みや before deleting (it may be a deliberate long-term preserve). **Why** (2026-05-20 QA-262233): I created `JabatanTeknikal.docx.bak_pre_widen` + `JabatanTeknikal.docx.bak_qa262233` during iteration, committed the fix, never cleaned them up — みや had to ask. Cleanup is part of Phase 1 close, not optional housekeeping. **Why** (2026-05-20 QA-262233): I closed Phase 1 silently — みや had to ask when the close happened + why no report. Time-awareness slip: the meaningful metric is initiation → closure (quest duration), NOT phase-to-phase deltas. Pairs with reply-log.js Stop hook which already logs ts; the human-readable summary line is the gap.
 
-**Compound trigger — "wrap + commit prep + close" (added 2026-05-12, pull-step corrected same day)**: Recognize ANY combination of these phrases as a Phase 1 full close-out request — auto-fire the entire flow (stash → **pull --ff-only origin <source-branch>** → branch → pop → add → propose commit message → wait for みや to execute commit+push → return-to-master → pull → update active.txt → `/verify`). **🚨 The pull between stash and branch is mandatory** — see line 75 hard rule. Never paraphrase this sequence without the pull; both today's tickets (QA-259318 v2 and QA-260179) had it dropped in the announcement (master happened to be at-tip so no merge conflict, but it's a stale-base risk we don't take):
+**Compound trigger — "wrap + commit prep + close" (added 2026-05-12, pull-step corrected same day)**: Recognize ANY combination of these phrases as a Phase 1 full close-out request — auto-fire the entire flow (stash → **pull --ff-only origin <source-branch>** → branch → pop → add → propose commit message → みや confirms the message → Ruri runs commit + push → return-to-main → pull → update active.txt → `/verify`). **🚨 The pull between stash and branch is mandatory** — see line 75 hard rule. Never paraphrase this sequence without the pull; both today's tickets (QA-259318 v2 and QA-260179) had it dropped in the announcement (master happened to be at-tip so no merge conflict, but it's a stale-base risk we don't take):
 
 - "I want to wrap up phase 1" / "wrap up phase 1" / "wrap phase 1"
 - "prepare for me to commit" / "prep the commit" / "ready to commit"
@@ -97,7 +97,7 @@ The branch with the latest date is the source-of-truth. **DO NOT compare `origin
 
 Canonical full phrase (みや 2026-05-12): *"I want to wrap up phase 1, prepare for me to commit, I've already tested & it was successful let's close this ticket"* — fires the entire flow end-to-end with one prompt.
 
-**Hands-off scope clarification (refined 2026-05-12)**: hand-off is ONLY `git commit` + `git push`. Everything BEFORE the commit is Ruri-owned and should execute automatically on "prepare for me to commit" / "ready to commit" triggers:
+**Hands-off scope clarification (refined 2026-05-12, updated 2026-05-19)**: prepare-commit prep is fully Ruri-owned and executes automatically on "prepare for me to commit" / "ready to commit" triggers:
 - `git stash push -u -m "<ticket> prep"` (when master is dirty and we need to switch to a fresh rework branch)
 - **`git pull --ff-only origin <source-branch>` 🚨** (MANDATORY — see line 75 hard rule; the new feature branch must fork off latest, not stale)
 - `git checkout -b mlk/<type>/<number>[v2/v3...]` (rework branch creation, off the just-pulled source)
@@ -105,9 +105,9 @@ Canonical full phrase (みや 2026-05-12): *"I want to wrap up phase 1, prepare 
 - `git add <specific files>` (NEVER `git add -A` or `git add .`)
 - `git status --short` confirmation
 
-Why this matters: 2026-05-12 QA-259318 — Ruri presented the entire stash→branch→pop→add sequence as a copy-paste block for みや to run, after over-correcting from the 2026-05-11 reset. みや: *"Why didn't you automatically branch out when I say prepare for me to commit?"* The 2026-05-11 reset was specifically about Ruri running `git commit` (the wrong format + body + trailer). Prep was never part of that scope. The hard line is at `git commit` — everything before is mechanical and Ruri-owned.
+Why this matters: 2026-05-12 QA-259318 — Ruri presented the entire stash→branch→pop→add sequence as a copy-paste block for みや to run, after over-correcting from the 2026-05-11 reset. みや: *"Why didn't you automatically branch out when I say prepare for me to commit?"* The prep sequence is mechanical and Ruri-owned. Ruri then proposes the commit message; once みや confirms it and asks Ruri to commit, Ruri runs `git commit` then `git push` (2026-05-19 update — see the Commit + Push hard rule above).
 
-After commit lands (みや confirms with SHA in chat): Ruri proceeds with Phase 1 close-out auto-steps per the STOP gate (return to master, pull --ff-only, update active.txt, `/verify`).
+After commit + push land: Ruri proceeds with Phase 1 close-out auto-steps per the STOP gate (return to main, pull --ff-only, update active.txt, `/verify`).
 
 **Hard rule — "comments" disambiguation (added 2026-05-11)**: When みや asks for "the comments for this ticket", ASK ONCE which he means — git commit subject vs Redmine journal — and emit only that one. Don't auto-emit both. Default guess if unclear: git commit message (since Redmine journals are auto-written to `History.txt` by redmine-sync now).
 
@@ -198,6 +198,7 @@ Schema: `et_main` for MLKFAT (`mcp__postgres-mlkfat__query`), `et_main_uat` for 
 - **NO** `AWAM` / `MLK` / repo-name / negeri tags (the ticket # and Task folder already encode those)
 - **Subject-only**: no body, no `Co-Authored-By` trailer (repo convention)
 - Urusan kod (PT, PLPS, PLTP, etc.) and tugasan kod (PRMMKNPDT, SKMMKN, PSJT, etc.) ARE included as separate segments before the description when present — they're navigational, not part of the "short description"
+- **Don't second-guess the format from `git log`** (2026-05-19 QA-260316): the log WILL contain non-conforming commits from other devs (`refs #<num>`, bare `#<num>`) and merge commits — those are deviations, NOT the standard. The `QA #<num> -` subject prefix is **mandatory** and **etanah-wide** (identical across pelupusan + awam, repo-independent). Teammates refer to the ticket number.
 
 **Rework branches**: if `mlk/<type>/<number>` already exists locally or remotely (this is a rework), the new branch name is `mlk/<type>/<number>v2` (no dash, sequential — v3, v4, etc.). Detect via `git branch --list "mlk/<type>/<number>*"`.
 
@@ -782,15 +783,16 @@ Test on <Permohonan_ID> at <tugasan_kod> as <login_email>:
 Example (correct): `Test on PTMLK/01/L/PLPS/2026/1 at PYSK as nizalarif@melaka.gov.my`
 Example (slip): ~~`Test on PTMLK/01/L/PLPS/2026/1 at PYSK`~~ — missing login.
 
-### Mid-Quest Handoff File — mandatory when session ends mid-investigation
+### Mid-Quest Investigation Trail — mandatory when session ends mid-investigation
 
-> **Why**: If a fix fails local testing, next session's me has the fix context but not the investigation trail — forcing either blind retry of the same theory or wasted re-exploration. A handoff file persists the reasoning, ruled-out paths, and a triage ladder so failure recovery is cheap.
+> *(Reconciled 2026-05-22: the separate `quest/handoff-<QA>.md` FILE is DEPRECATED — see line 55. みや 2026-05-11: "About the handoff, definitely drop it off." The investigation trail below is still mandatory; it now lives as a section IN the per-quest `QA-<num>.md` doc, not a standalone file.)*
+> **Why**: If a fix fails local testing, next session's me has the fix context but not the investigation trail — forcing either blind retry of the same theory or wasted re-exploration. The trail persists the reasoning, ruled-out paths, and a triage ladder so failure recovery is cheap.
 
 **Trigger**: any `save all` / `save` / session wind-down while `phase ∈ {0, 1}` and `local_test_confirmed=false` and code edits were made.
 
-**File**: `quest/handoff-<QA-number>.md` — overwrite on each save during the quest; deleted at Phase 2 close.
+**Home**: a `## Resumption — Investigation Trail` section inside `projects/coding-projects/active/QA-<num>/QA-<num>.md` — overwritten on each save during the quest. NOT a standalone `quest/handoff-*.md` file.
 
-**Required sections:**
+**Required content (6 sub-parts):**
 1. **Current state** — what's been applied, what's pending test, what to do next
 2. **Root cause theory (with evidence)** — the theory + file:line pointers for re-verification, NOT just the conclusion
 3. **Ruled out** — hypotheses we disproved and why (so next session doesn't re-walk them)
@@ -798,9 +800,81 @@ Example (slip): ~~`Test on PTMLK/01/L/PLPS/2026/1 at PYSK`~~ — missing login.
 5. **Triage ladder if fix fails** — ordered checks: "If X still broken, breakpoint at A:line, inspect B. If A is fine, check C..." Concrete, file:line specific.
 6. **What a different root cause would look like** — early warning signs that the theory is wrong + which subsystem to revisit
 
-**On session boot**: if `quest/active.txt` shows `phase < complete` AND `quest/handoff-<QA>.md` exists, session briefing must include *"📋 Handoff file present — read before acting"*.
+**On session boot**: if `quest/active.txt` shows `phase < complete` for a ticket, the session briefing surfaces that ticket's `QA-<num>.md` Resumption section as read-before-acting context.
 
-**On Phase 2 close**: handoff file is extracted into post-mortem (investigation arc), then deleted from `quest/`.
+**On Phase 2 close**: the Investigation Trail section feeds the post-mortem's investigation arc.
+
+---
+
+## Debug Mode Rituals
+
+> *(Migrated from CLAUDE.md 2026-05-22 — quest-cluster decomposition.)*
+> **Activated when**: みや says "debug mode on", or a debugger screenshot / breakpoint value is shared, or quest protocol flags an active debug session.
+> **Deactivated when**: みや says "debug mode off", or quest Phase 2, or session end.
+> When active, these rituals are **mandatory** before any fix-proposing Edit or test request. They exist because debugging-discipline failures are invisible in response text — passive feedback memories haven't worked. These rituals make the discipline visible so みや can catch violations in real time.
+
+### Ritual 1 — Predicate Box (mandatory before every code/config Edit)
+
+Before any Edit to source code or config, output the Predicate Box as a TABLE with separated concerns (per Output-Format Discipline — TABLE + SoC mandatory):
+
+| Field          | Sub-concern                         | Content                                                                                          |
+| -------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Predicate      | —                                   | `[change X] works iff [condition Y] holds.`                                                      |
+| Evidence       | (one row per distinct claim/source) | `[file:line] shows [observed fact]` — split into multiple rows when ≥2 distinct evidence sources |
+| Writer checked | —                                   | `yes — [file:line] produces this input` / `n/a — not a parsing/reading bug`                      |
+
+Wrap with `═══ PREDICATE BOX — <ticket> <one-line scope> ═══` opening + `═══ END ═══` closing banners (plain text, NO code-block fence).
+
+**Scope (refined 2026-05-11 by みや)**: ALL Edits to source code or config — no carve-outs. Even refactors, cleanups, typo fixes, logging additions, probe-style "try this and see if it works" Edits. **Size of the predicate scales with stakes**:
+
+- **Trivial** (typo, formatting, comment-only): one-line predicate stating "no behavior change expected, only X"
+- **Small** (1-liner with behavior implication, set/list membership additions, single-attribute toggles): full 3-line box
+- **Substantive** (multi-line or multi-file logic change): 3-line box + extra cites for each gate/condition touched
+
+Why no carve-outs (2026-05-11): a refactor can break behavior silently; a typo fix in code (not comments) can cause real bugs; probe-style Edits especially benefit because they need a clear "drop-if-fails" condition stated upfront. The 3-line box is cheap (~10 seconds); the silent slip it catches is expensive.
+
+**Defensive-line ban (added 2026-05-12 after QA-247710 Apply slip)**: at Apply execution, if implementing reveals a line that wasn't in the Rubric — PAUSE and predicate-justify before adding. "Defensive" reasoning is BANNED — every line needs a concrete predicate ("this line is needed because <observed concrete failure mode>"), NOT "in case X happens" or "to be safe". The Rubric scrutinizes the PROPOSED fix shape; without this rule, defensive lines added at implementation slip past Rubric. **Why**: 2026-05-12 QA-247710 Apply — I added `ccVO.setType(TABLE)` reset at end of populator with "in case the inner populate* calls mutated ccVO" reasoning. みや caught it: the framework reads the RETURNED tableVO, not the input ccVO, so the reset is dead code. BPRZ doesn't reset either. **How to apply**: at Apply, every added line passes the test "is this line necessary for the Rubric's predicate to hold? If not — don't add it. If unsure — call it out in the Predicate Box explicitly, don't bury it."
+
+みや spot-checks one cited `file:line` per session at random.
+
+### Ritual 2 — Evidence Language Discipline
+
+Reserved vocabulary:
+
+- **"Proven" / "confirmed" / "root cause found"** — only after debugger/test shows it directly.
+- **Banned synonyms** (lexical dodge): "the actual issue is", "definitely X", "it must be X", "this is the reason", "the real cause is"
+- **Use instead**: "hypothesis", "theory", "likely", "suspect", "candidate"
+
+みや calls out: *"evidence word"* — I replace with the honest word.
+
+### Ritual 3 — Momentum Circuit-Breaker
+
+**Trigger — broadened 2026-05-15 after QA-260302 spiral**. Fires when ANY of:
+
+- (T1, original) Code was written to files AND subsequently shown not to work by test, debugger, or みや's report
+- (T2, new) A recommendation / proposal / diagnosis was emitted and shown WRONG by みや's correction — even if no code was written yet (e.g. wrong DELETE candidate, wrong fix shape, wrong root-cause hypothesis)
+- (T3, new) Building on a theory after it's been challenged or partially refuted by new evidence (DB query result, source-read finding) — even before みや challenges it
+
+After any of T1/T2/T3, the next response **must** begin with:
+
+`RESET. Prior theory abandoned: [name the theory]. Re-reading raw evidence from scratch.`
+
+Required: name the theory being abandoned. Do not build on it in the same response. Re-read evidence before proposing anything new.
+
+**Why broadened** (2026-05-15 QA-260302): I went through ~5 wrong recommendations today (grid 1fr 1fr UI, DELETE 1194+884, DELETE 1194+646, "rowExpansion postback broken", etc.) without ever firing RESET. Original trigger was too narrow — only fired on code-shown-wrong, missed the more frequent "recommendation-shown-wrong" + "evidence-contradicts-theory" failure modes. みや: *"during our spiral, you didn't even use the Reset skill. Why did it not get triggered?"*
+
+みや calls out: *"no reset"* — I stop and restart properly.
+
+### Ritual 4 — Debug Mode Setup
+
+When debug mode activates, my first response must say:
+*"Debug mode active. Please toggle `/fast` off (extended thinking on) — I cannot toggle this myself."*
+
+I do not propose fixes until that toggle is confirmed OR みや explicitly says *"proceed without"*.
+
+### Violation Log
+
+Every slip on Rituals 1–4 gets a one-line entry in `Feature/Forge-Self-Improvement-System/debug-ritual-violations.md`. Trend visible over time. If slips persist across multiple sessions, the ritual design is wrong — redesign, don't just re-promise.
 
 ---
 
@@ -968,7 +1042,7 @@ In Step 3 post-mortem META entry, replace single-root-cause framing with **Contr
 
 ### "Refine before introducing" check at Refine pass (added 2026-05-12)
 
-At Step 4 Refine pass — every proposed refinement is tagged with `Refines-X` (existing mechanism being extended) or `Net-new-because-Y` (only when truly distinct). Per CLAUDE.md System-Design Discipline Step 0. If `Refines-X` is empty, the refinement must justify itself as a new mechanism — high bar. Default = refine wins.
+At Step 4 Refine pass — every proposed refinement is tagged with `Refines-X` (existing mechanism being extended) or `Net-new-because-Y` (only when truly distinct). Per the `system-design` skill Step 0. If `Refines-X` is empty, the refinement must justify itself as a new mechanism — high bar. Default = refine wins.
 
 ---
 
@@ -992,15 +1066,58 @@ At Step 4 Refine pass — every proposed refinement is tagged with `Refines-X` (
 
 ---
 
-## Quest State File (`quest/active.txt`)
+## Quest State File (`quest/active.txt`) + State Transitions
+
+> *(Extended schema + State Transitions table migrated from CLAUDE.md 2026-05-22 — quest-cluster decomposition. `Feature/Domain-Expansion/expansion-protocol.md` carries the same content as "signal #2/#3 detailed".)*
+
+### `active.txt` schema (extended 2026-05-05)
 
 ```
-qa=<number>
+qa=QA-<NUM>
 task_folder=<path>
-phase=<0|1|2|complete>
-local_test_confirmed=<true|false>
-status=<active|hold>
+branch=mlk/qa/<NUM>            ← set at Phase 1 close
+early_diagnostic=<path>        ← optional
+handoff_file=<path>            ← optional (handoff files deprecated — see line 55)
+phase=0|1|1-complete|2|2-complete
+local_test_confirmed=true|false
+status=active|hold|delegated|blocked|closed|archived
+commit=<SHA>                   ← set at Phase 1 close; must equal git rev-parse HEAD on the ticket branch
+delegated_to=<name>            ← when status=delegated
+delegated_date=<YYYY-MM-DD>
+blocker=<text>                 ← when status=blocked
+learning_marker=<date> — <why>
+notes:                         ← append-only, dated
+  - <YYYY-MM-DD>: <event>
 ```
+
+Backwards-compatible: existing `note=` (single-line) entries still work; the `notes:` block (append-only, dated) is preferred for new entries.
+
+**Status codes** (6, no overlap — each ticket sits in exactly ONE state):
+
+| Status | Meaning |
+|---|---|
+| `active` | currently being worked — Phase 0 or Phase 1 in flight |
+| `hold` | paused, awaiting next session |
+| `delegated` | a colleague has the ticket |
+| `blocked` | external dependency stopping Ruri's progress |
+| `closed` | **Phase 1 done** — commit pushed; Phase 2 (post-mortem + KPI + archive) NOT done yet |
+| `archived` | **Phase 2 done** — post-mortem written, KPI logged, Task folder + project subfolder moved to `Archive/` |
+
+Transition rules: Phase 1 close-out (commit + push + `/verify` Checklist C green) → `status=closed`. Phase 2 close-out (post-mortem + KPI + archive folders) → `status=archived`. Banned legacy strings: `closed-pending-FAT`, `pending post-mortem` (both conflated BA-side state or phase-incomplete state with overlapping semantics).
+
+### Quest State Transitions (mid-conversation triggers)
+
+Fire as soon as heard, mid-conversation — mutate `active.txt` immediately, same pattern as `remember later` → `todo.md`.
+
+| Trigger phrase | active.txt mutation |
+|---|---|
+| "pause QA #X" / "hold X" / "park X" | `status=hold`; append `notes: paused <date> — <context>` |
+| "resume X" / "continue X" / "back to X" | `status=active` |
+| "switch to Y" (with X currently active) | Prompt: *"Pause [X]? With what note?"* then mutate both |
+| "X taken by <name>" / "<name> handling X" / "handed to <name>" | `status=delegated`, `delegated_to=<name>`, `delegated_date=<today>`, append context note |
+| "blocked by Y" / "waiting on Z" | `status=blocked`, `blocker=<text>`, append note |
+| "trace X later" / "want to learn from X's fix" | `learning_marker=<date> — <reason>` |
+| "close X" / "X is done" / "wrap X" | Phase 2 post-mortem + `status=archived` + archive Task folder |
 
 ---
 
@@ -1008,3 +1125,4 @@ status=<active|hold>
 *Protocol version: 3.0 — 2026-04-29 (Removed Phase 2 Report — `.docx` generation no longer used. Renumbered: Accept(0) / Execute(1) / Reflect(2). Overview reports like DB ERD prioritized over per-ticket .docx.)*
 *Protocol version: 3.1 — 2026-05-18 (added Phase 0 artifact gate + verify-close re-commit clause after QA-260302 process failures — early-diagnostic never created, state files not reconciled at close).*
 *Protocol version: 3.2 — 2026-05-19 (Phase 1 close-out + branch-cut rules made per-repo — AWAM baseline = `mlk/release/fat`, pelupusan = `mlk/master`; no longer hard-codes `mlk/master`).*
+*Protocol version: 3.3 — 2026-05-22 (quest-cluster merge from CLAUDE.md: +Debug Mode Rituals section, +Quest State Transitions table, +extended `active.txt` schema with 6-status set; commit+push rule reconciled to the 2026-05-19 model — Ruri runs commit + push after みや confirms the message, superseding the prior "みや executes" hands-off; Mid-Quest Handoff File reconciled — the separate `handoff-*.md` is deprecated, the Investigation Trail now lives in `QA-<num>.md`; System-Design references repointed to the `system-design` skill).*

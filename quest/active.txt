@@ -134,14 +134,16 @@ quest_start_ts=2026-05-21T02:18:59.854Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\41. QA #261986 - FAT - PSBS - Isu pada Risalat MMKN
 early_diagnostic=projects/coding-projects/active/QA-261986/early-diagnostic.md
 qa_doc=projects/coding-projects/active/QA-261986/QA-261986.md
-phase=0
-status=hold
+phase=1
+status=active
 held_reason=2026-05-21 ~14:00 — Phase 0 COMPLETE (Recon verified + DB-traced). みや refocusing on easier tickets. Resume = fresh re-read from start per QA-261986.md §0 Resume Point. Recommended test app PTMLK/02/L/PSBS/2026/1 (norazimah_m@melaka.gov.my, PRMMKNPTG).
+resumed=2026-05-22 16:35 — みや resumed; he has edited TemplateRisalatMMKN_PDT_PSBS_Lulus.docx + raised 14 findings/Qs (cc tags, numbering, populators, reference-doc paragraphPTGPSBSLulus). Phase 1 investigation in progress.
 issue_one_liner=PSBS Risalat MMKN — maklumat tak tertarik, numbering salah, font beza, align salah vs Requirement #237880 (High priority)
 scope_layer=.docx template — TemplateRisalatMMKN_PDT_PSBS_Lulus.docx (+ injected references/additionalJKKLParagraph.docx); tugasan PRMMKNPDT/SRMMKNPDT/PRMMKNPTG/SRMMKNPTG
 scope_anchor=Scout: 22 discrepancies (~10 static .docx, ~5 injected-ref-doc, ~3-4 Java populator bugs, ~5 data). Confirmed Java bug: populatePTGParagraph_PSBS_Lulus @ PelupusanWordCCMethodConstant.java:17601 computes premiumPT then overwrites with HYPHEN (dead override). Fix-shape drafted in early-diagnostic.md.
 notes:
   - 2026-05-19: Retrieved + Scout done. SILENT — Phase 0 + fix-shape persisted. Largest of the 4; the only one with Java populator bugs. Recon-verify + Apply pending focus. Shares Requirement #237880 + likely shares populators with QA-262004 — do Java fixes once, verify both.
+  - 2026-05-22: Resumed. env-check ✓ (UAT-pelupusan). PDF re-extracted (all 5 pages). 2 Java edits applied (PelupusanWordCCMethodConstant.java:10497 JT numbering 3.1.x→3.x PSBS-guarded; :18648 staticTextPTGMelaka 2-line Melaka.) — uncommitted, untested. 4 Java items + .docx edits handed off (see QA-261986.md §6). Decisions: JT numbering PSBS-only; §6 jenisPemohon dynamic label.
 
 qa=QA-262370
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\46. QA #262370 - Semua surat - Reorganize header surat
@@ -600,3 +602,23 @@ task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\9. FAT-O
 phase=complete
 status=closed
 note=Fix applied (populateFrasa2 CaseBuilder). Committed and closed 2026-04-27. Archived.
+
+qa=QA-262869
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\46. QA #262869 - PPTPB - Template Risalat MMKN - Semua maklumat tidak ditarik ke dalam
+early_diagnostic=projects/coding-projects/active/QA-262869/early-diagnostic.md
+phase=0
+status=hold
+priority=Medium
+issue_one_liner=PPTPB Template Risalat MMKN — semua maklumat tidak ditarik ke item 6 (Perakuan Pengarah Tanah dan Galian)
+notes:
+  - 2026-05-22: Retrieved via redmine-sync (batch with QA-262783). Folder 46 created, QA #262869.pdf downloaded. Scout familiar spawned for early-diagnostic. Held pending pickup.
+
+qa=QA-262783
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\47. QA #262783 - FAT - PPTPB - Penyediaan Risalat MMKN PDT - Medan Bayaran Sewa Tambahan tidak default 0.00 dan
+early_diagnostic=projects/coding-projects/active/QA-262783/early-diagnostic.md
+phase=0
+status=hold
+priority=Medium
+issue_one_liner=PPTPB Penyediaan Risalat MMKN PDT — medan Bayaran Sewa Tambahan tidak default 0.00 + ada tanda mandatori (patut tiada)
+notes:
+  - 2026-05-22: Retrieved via redmine-sync (batch with QA-262869). Folder 47 created, QA #262783.png downloaded. Scout familiar spawned for early-diagnostic. Held pending pickup.
