@@ -30,7 +30,8 @@ The big one of this stretch. Test app: `PTMLK/02/L/PSBS/2026/1` (as `nor.aini@me
 
 - **126+ pending audit-log entries** (longstanding backlog — separate from the 8 r-entries from QA-261986 which are tagged status=applied).
 - 4 untracked paths still unclassified: `Feature/project-structure-compliance-handover.md`, `etanah_atlas/`, `zikxoUIF`, `outputs-temp/`.
-- Worktree `claude/modest-lederberg-d83586` from a prior session — will close at DE step 11.
+- ⚠️ **Worktree `claude/modest-lederberg-d83586` — HELD, not closed.** DE step 11 attempted; audit found substantial uncommitted experimental work inside: 7 modified core files (.claude/CLAUDE.md, personality.md, expansion-protocol.md, quest-protocol.md, todo.md, improvement-audit-log.md, skill-failure-log.md) + 9 new hook files (boot-required-read-gate, evolution-check-trigger, inventory-first-gate, meta-edit-gate, pre-action-check-gate, prose-default-gate, silent-claim-drift-gate, user-side-guardrail, best-practices-consult-gate) + 13 new skill folders (claim-verification, confidence-table, grep-rubric, multi-dim-evidence, over-generalization-check, predicate-box, rubric, scope-anchor-echo, stalling-detector, sycophancy-circuit-breaker, task-assignment-honesty, test-data-echo, usage-guidance) + MIYA-NOTEBOOK.md + library-items/agent-architecture/ + meta/. Branch at same SHA as main (4945d60) — no committed divergence; only uncommitted divergence. **Force-remove would lose all of it.** Needs みや decision: (a) cherry-pick into main, (b) commit to its own branch then archive, (c) discard. Path: `.claude/worktrees/modest-lederberg-d83586`.
+- Stale `.git/worktrees/` metadata folders (25 entries) cannot be pruned — OneDrive sync locks them. Cosmetic only; does not affect main worktree.
 - QA-261986 carry-forward (per post-mortem): Syarikat-variant block split, Tolak header consolidation, etanah-common mental-model knowledge file — all in todo.md.
 
 ## 🎯 Session Recap (for AI restart)
