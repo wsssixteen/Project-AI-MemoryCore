@@ -37,6 +37,22 @@
 
 ## Entries
 
+### QA-261986 — PSBS Risalat MMKN — multi-layer template + populator fixes — 2026-05-21 → 2026-05-23 — ≈2.5 days (multi-session, includes hold)
+
+**Closure type**: code-fix-shipped (7 files, +252/-11), committed `d2aa36240b` on `mlk/qa/261986`, pushed `-u origin`, みや tested OK on `PTMLK/02/L/PSBS/2026/1` (as `nor.aini@melaka.gov.my`, PRRMMKNPTG).
+
+**Extras**:
+- New knowledge file `etanah-knowledge/melaka/DEV-TESTING-HACKS.md` with **rahsia-gate** as first named procedure (trigger phrases, script path, restore steps, related gates) — durable cross-ticket reusable artefact
+- New Java composite `populateJabatanTeknikalTablePSBS` (~90 lines) — forks PSBS-specific JT rendering off the shared `populateJabatanTeknikalTablePT` path, includes wrapper sentence `(Ruj. Surat : X bertarikh Y) Z memaklumkan bahawa K terhadap permohonan ini.` builder + JPPHM-agensi ulasan override
+- New top-level SDT block `jabatanTeknikalPSBS` in `JabatanTeknikal.docx` (clone of `jabatanTeknikalPT` with underline stripped + "No.rujukan: …" paragraph replaced by `<jtAyat>` SDT)
+- 4 new global populators: `populateNilaianPasaranJPPH` / `populateKadarNilaianJPPH` / `populateNilaianPasaranJPPHPerkataan` / `populatePremiumPTPerkataan` — fire wherever their CC tag appears across templates, not just this ticket's scope
+- `populateMaklumatPajakanVOList` URS_PSBS branch added in `PelupusanTemplateReportMethodParameter.java` — unblocks `bakiTempohPajakan` for any future PSBS doc that consumes it
+- 5 protocol/personality refines landed mid-quest, now deterministic gates: PRE-EMIT REGEX GATE (Permohonan ID), Solution Gate (diagnosis), NEVER-fingerprint (DB audit columns), Post-refactor dead-branch audit (quest-protocol.md Apply), Action-scope split for Word .docx (personality.md v1.6)
+- `.bak_*` cleanup re-timing + Backup-on-mutation rule (quest-protocol.md Commit checkpoint) — codified per みや 2026-05-23 feedback
+- Surgical merge tool `qa261986_block_merge.py` — pattern reusable for any future binary-file conflict between local PSBS-block edits and upstream non-PSBS work
+
+---
+
 ### QA-250665 — PLPS-APPS "Lama tinggal di Melaka" label rename — 2026-05-06 → 2026-05-07 — ~6 hours
 
 **Closure type**: code-fix-shipped (1-line XHTML), committed `973c44dbeb` on `mlk/qa/250665`, pushed to remote, ready for FAT retest.
