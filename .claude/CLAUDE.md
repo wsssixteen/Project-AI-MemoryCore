@@ -56,9 +56,38 @@ ai-memorycore/
 
 ---
 
+## 🌐 Meta-Layer (Constitution) — added 2026-05-23
+
+**Meta-layer governs HOW Ruri decides + evolves. Enforces best-practices on every other layer below it (Layers 2-5).**
+
+**Master index:** `meta/INDEX.md` — lists all meta-layer components (principles · sub-indexes · enforcement hooks · honesty/discipline/user-side skills · evolution protocol · consolidated slip-log)
+
+**Always-on values:** `personality.md` "Honesty Invariants" section (added 2026-05-23 Phase 4) — default-to-prose BANNED · silent reassignment BANNED · diff-backing MANDATORY · scope-anchor must echo · choice-offering after "proceed" BANNED · over-generalization BANNED · test data must echo at hand-back
+
+**Triggered enforcement (hooks fire deterministically):**
+- `boot-required-read-gate.js` (SessionStart) — verifies CLAUDE.md "see X.md" pointers resolve
+- `pre-action-check-gate.js` (PreToolUse) — Notes.txt + env-check + PDF reminders on quest paths
+- `inventory-first-gate.js` (UserPromptSubmit) — catches new-structure proposals
+- `prose-default-gate.js` (UserPromptSubmit) — catches lock-signal phrases ("hardcode it", "hard rule")
+- `silent-claim-drift-gate.js` (Stop) — blocks "done" claims without diff-backing
+- `best-practices-consult-gate.js` (UserPromptSubmit) — design-decision routing
+- `meta-edit-gate.js` (PreToolUse) — recursive safety; gates edits to meta/* paths
+- `user-side-guardrail.js` (UserPromptSubmit) — guidance for みや's usage patterns
+
+**Atomic primitive skills (description-triggered):**
+- Discipline: `rubric` · `predicate-box` · `grep-rubric` · `multi-dim-evidence` · `sycophancy-circuit-breaker` · `confidence-table`
+- Honesty: `claim-verification` · `task-assignment-honesty` · `stalling-detector` · `scope-anchor-echo` · `over-generalization-check` · `test-data-echo`
+- User-side: `usage-guidance` (+ `MIYA-NOTEBOOK.md` training doc at root)
+
+**Self-enforcement:** Domain Expansion Step 12.5 (meta-audit) — checks hook-fire reliability + INDEX cross-reference validity + component-liveness audit. See `Feature/Domain-Expansion/expansion-protocol.md`.
+
+**Evolution:** SessionStart double-check (model-ID change + 30-day elapsed) + manual invoke. Reference: `library-items/agent-architecture/claude-code-best-practices.md` (re-research if >60 days old). See `meta/evolution-protocol.md`.
+
+---
+
 ## 🏗️ System-Design Discipline
 
-When designing or evaluating any system component — see the `system-design` skill (`.claude/skills/system-design/SKILL.md`). Routed out of CLAUDE.md 2026-05-22.
+When designing or evaluating any system component — see the `system-design` skill (`.claude/skills/system-design/SKILL.md`). Routed out of CLAUDE.md 2026-05-22. **NOTE 2026-05-23:** for any new behaviour add, the recommended entry point is now `meta-design-router` (currently named `auto-skill-on-mistake` skill; will be renamed in a follow-on pass) which itself invokes `system-design` at Step 2 of its loop.
 
 ---
 
@@ -78,7 +107,7 @@ Save / quick-save / save-all / update-memory / `/observe` / forge commands / Red
 
 When working on a project, **always load its project file first** - project files live in `projects/coding-projects/active/` and are the source of truth for specs, strategy, and constraints.
 
-**Etanah work**: load `projects/coding-projects/active/Etanah-Codebase-Read.md` before any Etanah ticket - it is the canonical home for the Non-Negotiable Rules (entity-first SQL, Word-template-first lookup, branch/pull discipline, layer-aware Phase 0 + Recon ritual, TRG guardrail, PDF annotation extraction, renderer-override checks) and the Etanah-Knowledge Protocol (migrated there 2026-05-22).
+**Etanah work**: load `projects/coding-projects/active/Etanah-Codebase-Read.md` before any Etanah ticket - it is the canonical home for the Non-Negotiable Rules (entity-first SQL, Word-template-first lookup, branch/pull discipline, layer-aware Phase 0 + Recon ritual, TRG guardrail, PDF annotation extraction, renderer-override checks) and the Etanah-Knowledge Protocol (migrated there 2026-05-22). **🔴 KNOWN BROKEN (2026-05-23):** this file does not exist yet — the 2026-05-22 decomposition cited it but never created it. Surfaced by Phase 0 baseline + boot-required-read-gate. Action: **use `bankai` skill to consolidate scattered Etanah content into the file** — see todo.md Q1 entry "Consolidate Etanah Non-Negotiable Rules + Etanah-Knowledge Protocol into Etanah-Codebase-Read.md via Bankai skill".
 
 ---
 

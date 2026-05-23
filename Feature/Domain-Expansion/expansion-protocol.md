@@ -134,5 +134,26 @@ Every refinement to this protocol — whether a rule tweak, signal added/removed
 
 ---
 
+---
+
+## Step 12.5 — meta-audit (added 2026-05-23, Phase 6 of meta-layer build)
+
+After Step 12's `/verify` Checklist D goes green, run a **meta-audit** pass before declaring DE closed. Covers the meta-layer's recursive-safety concerns (Stage 5 self-enforcement).
+
+| Sub-check | What it verifies | How |
+|---|---|---|
+| **Hook-fire reliability** | Each meta-layer hook fired the expected number of times this session | Count fires in `meta/hook-fire-log.md` per hook; flag any zero-fire enforcement hook |
+| **Cross-reference validity** | Every link in `meta/INDEX.md` + sub-indexes resolves to an existing file | Glob each cited path; flag broken links |
+| **Component-liveness** | Every file under `meta/` + every meta-layer skill / hook has at least one trigger or workflow that fires it | Read each component's "When this fires" section + match to actual triggers; flag orphans |
+| **Meta-edit-gate not dark** | `meta-edit-gate.js` fired in last 2 sessions (refinement #5 fallback) | Grep last 2 sessions' hook-fire-log for `meta-edit-gate`; raise standing flag if dark |
+| **Skill-load counter** | Each Discipline + Honesty + User-side skill loaded on its triggers (extended skill-failure-log schema) | Read `skill-failure-log.md` skill-load section; flag any skill with zero loads despite trigger phrases appearing |
+
+**Output:** silent if all sub-checks pass; one inline table surfaced ABOVE the DE closing banner only when ≥1 sub-check fails — `| Sub-check | Status | Detail |`.
+
+**Banned:** declaring DE closed without running this audit. Same shape as Standing-flag staleness audit (Session Briefing 2026-05-20) — verify-before-close, not after.
+
+---
+
 *Created: 2026-05-05 | Protocol owner: Ruri | Review at every Forge Review until L4 stabilization*
+*Updated 2026-05-23 — added Step 12.5 meta-audit (Phase 6 of meta-layer build)*
 *Last updated: 2026-05-22 — added step (0b) worktree/branch sync check (みや): detect worktree-vs-main + pull origin/main early if a worktree branch is behind. Earlier 2026-05-22 — signals #2/#3 (Quest State Transitions + active.txt schema) de-duplicated to a cross-ref; canonical home is now `quest/quest-protocol.md` (quest-cluster decomposition).*

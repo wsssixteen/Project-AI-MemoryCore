@@ -2,6 +2,15 @@
 
 > Three-phase work ritual for formal job tasks (Etanah Melaka).
 > Activated on work triggers. Each QA ticket is a Quest — accepted, executed, and reflected upon.
+>
+> **🌐 META-LAYER NOTE (added 2026-05-23, Phase 9 integration):** Quest is a Layer 2 workflow that COMPOSES Layer 3 capabilities (skills + hooks). Several disciplines historically embedded in this protocol have been **hoisted to atomic primitive skills** under the meta-layer (Layer 1). Quest invokes them by name; the underlying behavior lives in the primitive's SKILL.md.
+>
+> Hoisted Discipline primitives: `rubric` · `predicate-box` · `grep-rubric` · `multi-dim-evidence` · `sycophancy-circuit-breaker` · `confidence-table`.
+> Hoisted Honesty primitives (invoke at hand-back + claim moments): `claim-verification` · `scope-anchor-echo` · `test-data-echo` · `task-assignment-honesty` · `stalling-detector`.
+>
+> Full refactor (remove inline duplicates + cite primitives by name) deferred to follow-on pass. Phase 9 v1 left inline content as-is for safety; primitive references added here for visibility.
+>
+> See `meta/INDEX.md` + `meta/discipline-INDEX.md` + `meta/honesty-INDEX.md` + `MIYA-NOTEBOOK.md`.
 
 ---
 

@@ -1,5 +1,9 @@
 # Improvement Audit Log
 
+> **🪦 TOMBSTONE (2026-05-23, Phase 8 of meta-layer build):** This file is no longer the canonical home for NEW slip-driven improvement records. The new home is **`meta/slip-log.md`** under the meta-layer's INDEX. Historical entries below (124+ pending) remain for review here and will be migrated via Bankai in a follow-on pass. For NEW slip-driven refinements → append to `meta/slip-log.md` instead.
+>
+> ---
+>
 > Every impromptu rule, lesson, or workflow improvement captured mid-session lands here AS PENDING.
 > Reviewed at session start (Session Briefing surfaces unchecked entries as a flag).
 > An entry is dropped only after みや signs off — verbally or with `[x]` in the checkbox.

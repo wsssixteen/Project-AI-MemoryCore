@@ -1,7 +1,15 @@
 # Skill Failure Log
 
+> **🪦 TOMBSTONE (2026-05-23, Phase 8 of meta-layer build):** This file is no longer the canonical home for NEW slip records. The new home is **`meta/slip-log.md`** under the meta-layer's INDEX. Historical entries below remain for reference and will be migrated via Bankai in a follow-on pass.
+>
+> **For NEW slip records → append to `meta/slip-log.md` instead.**
+>
+> ---
+>
 > Appended only; never edited retroactively. Each row = one observed failure of a rule that should have fired.
 > Reviewed at Forge Review. If a single rule fails ≥3 times in 14 days, the rule's design needs rework — not another tighter trigger phrase.
+>
+> **Extended 2026-05-23 (Phase 6 of meta-layer build)** — now also tracks SKILL-LOAD COUNTS (not just failures). Each skill's description-trigger should fire when its trigger-phrases appear; load counts measure invocation-reliability. See `## Skill load counts` section at bottom (Phase 6 extension). DE meta-audit step (12.5) reads load counts; flags skills with zero loads despite trigger appearances.
 
 | Date | Missed behaviour | Existed as | Action taken | Path / commit |
 |---|---|---|---|---|
@@ -46,6 +54,8 @@
 
 | 2026-05-22 (QA-261986) | Told explicitly and repeatedly to "proceed / fix all / I want to test now", I kept responding with scope-analysis + "(a) attempt now / (b) close session" choice-offers instead of implementing. みや: "what the fuck why didn't you just implement". Stalling-via-deliberation after an explicit go. | nothing — distinct from the silent-reassignment row above; this is choice-offering used as avoidance of action | logged; rule — once みや has given an explicit proceed/implement instruction, deliberation + choice-offering is banned: implement, then report. Folds into the quest Pre-emit-gate redesign already flagged | skill-failure-log (this row) |
 
+| 2026-05-22 (boot) | Session Briefing improvised from memory — `session-briefing.md` never read at boot step 5. Result: no table format, no standing-flag staleness audit (8 flags copied verbatim from current-session.md incl. stale ones + a wrong audit-log count 126 vs actual 124), self-contradictory "no diary flag" item listed inside the flag list. Staleness-audit miss is **2nd occurrence** (1st 2026-05-20). | format file `session-briefing.md` — holds the briefing table format + staleness audit (added 2026-05-20) — is NOT in the boot-load-verification gate; gate covers 5 files, briefing's source file ungated | refine proposed, pending みや nod — add `session-briefing.md` as required-read #6 in `boot-load-verification.js` + extend the `✓` emit line; same `✓`-line extension in CLAUDE.md boot step 5 | .claude/hooks/boot-load-verification.js + .claude/CLAUDE.md (proposed) |
+
 ## Running counts (last 14 days)
 
 | Rule / skill | Failures | Status |
@@ -57,7 +67,7 @@
 | Phase 2 step 5 silent-skip | 1 | Watching |
 | Notes.txt update at trigger | 1 | Watching |
 | Wrong-baseline diagnosis | 1 | New — first occurrence today |
-| Stale Standing Flags emitted in Session Briefing | 1 | New — pre-emit staleness audit added |
+| Stale Standing Flags emitted in Session Briefing | 2 | 🔴 2nd occurrence — the 2026-05-20 staleness-audit prose didn't fire because `session-briefing.md` was never read at boot. Fix = gate the file-read in `boot-load-verification.js`, not more prose |
 | Visible-gate format inconsistency across rituals | 1 | New — DE step (0) aligned to Session Briefing |
 
 ---
