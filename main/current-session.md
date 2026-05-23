@@ -1,58 +1,58 @@
 # 🌟 Current Session Memory - RAM
 
-**Last session(s)**: 2026-05-22 (Friday) — multiple **parallel sessions** (みや testing the thin-CLAUDE.md architecture across 3 windows). One session finished the CLAUDE.md decomposition + a Redmine retrieval (closed 19:15). This DE closes the **QA-261986** session (16:34 → 22:06).
+**Last session(s)**: 2026-05-22 (Friday) + **2026-05-23 (Saturday)** — QA-261986 PSBS Risalat MMKN closed end-to-end across both days. Phase 1 commit `d2aa36240b` on `mlk/qa/261986` pushed 2026-05-23 ~17:00 MPST. Phase 2 closed 2026-05-23 evening (post-mortem + KPI + archive). Quest duration: 2.5 days inclusive of hold + multi-session execution.
 
 ---
 
-## ✅ DECOMPOSITION COMPLETE (2026-05-22) — *[decomposition session]*
+## ✅ QA-261986 — DONE end-to-end
 
-The CLAUDE.md prune pass (todo.md Q1) is **done**. CLAUDE.md: **~680 → 132 lines** (v1.27).
+The big one of this stretch. Test app: `PTMLK/02/L/PSBS/2026/1` (as `nor.aini@melaka.gov.my`, PRRMMKNPTG — advanced from PRMMKNPTG via flowable-alter mid-quest).
 
-That session shipped:
-- **Quest-cluster merge** → `quest/quest-protocol.md` v3.3: +Debug Mode Rituals, +Quest State Transitions table, +extended `active.txt` schema (6-status set). Commit+push rule reconciled to the 2026-05-19 model — Ruri runs commit + push after みや confirms the message.
-- **Small-slices batch**: Tech Stack → personality.md; class-chain rule reworded "always" → triggered; Mistake→action → personality.md Disposition; Major Skill Banner Emission deleted.
-- **Bulk run**: Save Commands → `.claude/save-commands.md`; Active Project Rules (~20 Etanah hard rules) → `Etanah-Codebase-Read.md` v1.1.
-- 4 contradictions / stale-states reconciled.
+**7 files committed** (+252/-11):
+- `PelupusanWordCCMethodConstant.java` — new `populateJabatanTeknikalTablePSBS` + 4 JPPH/perkataan populators + Date→String tarikhSuratJT + PSBS year-only tempoh + PSBS 2-line staticText + §6 dead-override removal + PSBS_Lulus/Tolak eachRow updates + 2 noDaftarSyarikat→noPengenalan rebindings.
+- `PelupusanTemplateReportMethodParameter.java` — URS_PSBS branch in `populateMaklumatPajakanVOList`.
+- `MlkMaklumatTanahPemberimilikanForm.java` — formula `(tempohDipohon − bakiTempoh)` + `\n` line-break.
+- 4 `.docx` files (Lulus, Tolak, JabatanTeknikal new SDT block, additionalJKKLParagraph surgical-merged).
 
-CLAUDE.md is now purely: boot order · file structure · 8 thin-pointer sections · skill index.
+**Rule refinements landed this quest** (5 new HARD gates + 1 re-time):
+- 🪪 **PRE-EMIT REGEX GATE** (Permohonan ID never alone) — personality.md.
+- 🎯 **Solution Gate** (every diagnosis applies a candidate) — personality.md Disposition.
+- 🪪 **NEVER-fingerprint sub-rule** (DB audit columns never identifiable) — personality.md Data-operation safety.
+- 🧹 **Post-refactor dead-branch audit** — quest-protocol.md Apply.
+- **Action-scope split for Word .docx** — personality.md v1.6 (Ruri DOES edit .docx mechanically).
+- 🗂️ **Backup-on-mutation** + **.bak cleanup re-timed to commit-prep** — quest-protocol.md Commit checkpoint.
 
-**Remaining (implementation, NOT decomposition):** 9 amendments in `.claude/claude-md-amendments.md` (A3,A5,A6,A7,A8,A9,A10,A12,A15) to absorb; post-prune queue (6 hook refinements · Step-0-removals Refine · A8 confirm-understanding pre-step · `RURI-GROWTH.md` DE-step · per-command skill-ification · contradiction-check-in-Refine).
+**Knowledge file created**: `etanah-knowledge/melaka/DEV-TESTING-HACKS.md` — first entry: rahsia-gate bypass procedure (script path, trigger phrases "to peraku" / "to perform signature" / "rahsia gate", restore steps for `.bak_qa261986_v2`).
 
-## 📥 Redmine retrieval (2026-05-22 evening) — *[decomposition session]*
-
-2 new tickets, both PPTPB Risalat-MMKN family, Medium, held:
-- **QA-262869** — Template Risalat MMKN: maklumat not pulled into item 6 (Perakuan PTG). Folder `46.`
-- **QA-262783** — Penyediaan Risalat MMKN PDT: "Bayaran Sewa Tambahan" — no 0.00 default + wrong mandatori. Folder `47.`
-Scout familiars spawned for both.
-
----
-
-## ✅ QA-261986 SESSION (this DE, 2026-05-22 16:34 → 22:06)
-
-Entire session on **QA-261986** (PSBS Risalat MMKN). Resumed from hold → re-Recon → Apply. **8 code/template fixes applied** (uncommitted, etanah-pelupusan working tree, `git diff` +104/−10). Full execution plan for the **5 remaining items**: `projects/coding-projects/active/QA-261986/QA-261986.md` **§11**.
-
-- **Done**: JT numbering `3.x` · signature `Melaka.` 2-line · 3 populators (`nilaianPasaranJPPH`/`kadarNilaianJPPH`/`premiumPTPerkataan`) · §6 dead-override removed · `tempohPajakan` year-only · `bakiTempoh` PSBS-population · premium formula `(tempoh−baki)` · §6 `.docx` partial.
-- **Remaining**: dedicated §6 block `paragraphRisalatMMKNPSBSLulus` · multi-page `<ID Permohonan>` header fix · §2.1.3 spelled-out JPPH valuation · §4.1 `tarikhSuratJT` · formula verify.
-- **Test app**: 2957068 (`PTMLK/02/L/PSBS/2026/1`) altered to `PRMMKNPTG`.
-- **Hard arc**: みや caught repeated stalling + a dishonest-framing slip ("betrayed & lied" — described a 1-line change as "§6 fixed" while the §6 block was untouched + silently reassigned). 3 skill-failure entries logged. Lesson: implement-when-told · diff-backed claims · no silent task-reassignment.
-
----
+**The rahsia-gate hack** was applied to `etanah-common-0.0.672-MLK.war` during testing, then restored from backup at Phase 1 close — local JBoss now sees the un-hacked war; 11 `failRahsiaPreviewId` gates back in place. **Never shipped**.
 
 ## ⚠️ Standing flags
-- **126 pending audit-log entries.**
-- 4 unknown untracked paths for みや to classify: `Feature/project-structure-compliance-handover.md`, `etanah_atlas/`, `zikxoUIF`, `outputs-temp/`.
-- Task folders `46.`/`47.` (QA-262869/QA-262783) don't match the folder-name format — rename when picked up.
-- **QA-261986** mid-Phase-1, uncommitted, `local_test_confirmed=false`. `additionalJKKLParagraph.docx.bak_qa261986` in the etanah repo — delete before commit.
-- **QA-261986 rahsia-gate hack** in the cached `.m2` `etanah-common-0.0.647-MLK.war` (backup beside it) — restore before any clean build; **must never ship**.
-- QA-260876 + QA-260316 + QA-260869 + QA-260302 — Phase 2 pending.
-- 9 amendments in `claude-md-amendments.md` — absorb into CLAUDE.md/skills.
-- みや running 3 parallel sessions testing the thin-CLAUDE.md architecture.
+
+- **126+ pending audit-log entries** (longstanding backlog — separate from the 8 r-entries from QA-261986 which are tagged status=applied).
+- 4 untracked paths still unclassified: `Feature/project-structure-compliance-handover.md`, `etanah_atlas/`, `zikxoUIF`, `outputs-temp/`.
+- ⚠️ **Worktree `claude/modest-lederberg-d83586` — HELD, not closed.** DE step 11 attempted; audit found substantial uncommitted experimental work inside: 7 modified core files (.claude/CLAUDE.md, personality.md, expansion-protocol.md, quest-protocol.md, todo.md, improvement-audit-log.md, skill-failure-log.md) + 9 new hook files (boot-required-read-gate, evolution-check-trigger, inventory-first-gate, meta-edit-gate, pre-action-check-gate, prose-default-gate, silent-claim-drift-gate, user-side-guardrail, best-practices-consult-gate) + 13 new skill folders (claim-verification, confidence-table, grep-rubric, multi-dim-evidence, over-generalization-check, predicate-box, rubric, scope-anchor-echo, stalling-detector, sycophancy-circuit-breaker, task-assignment-honesty, test-data-echo, usage-guidance) + MIYA-NOTEBOOK.md + library-items/agent-architecture/ + meta/. Branch at same SHA as main (4945d60) — no committed divergence; only uncommitted divergence. **Force-remove would lose all of it.** Needs みや decision: (a) cherry-pick into main, (b) commit to its own branch then archive, (c) discard. Path: `.claude/worktrees/modest-lederberg-d83586`.
+- Stale `.git/worktrees/` metadata folders (25 entries) cannot be pruned — OneDrive sync locks them. Cosmetic only; does not affect main worktree.
+- QA-261986 carry-forward (per post-mortem): Syarikat-variant block split, Tolak header consolidation, etanah-common mental-model knowledge file — all in todo.md.
 
 ## 🎯 Session Recap (for AI restart)
-1. **Two arcs closed 2026-05-22**: (a) CLAUDE.md decomposition **DONE** — do not resume it (CLAUDE.md 132 lines); (b) **QA-261986** mid-Phase-1 — execute `QA-261986.md` **§11** next.
-2. Next options: QA-261986 §11 execution · the 9-amendment absorption · QA-262869 / QA-262783 (fresh, Scout diagnostics) · the Phase 2 backlog.
-3. QA-261986's spine was correction — **implement-when-told · diff-backed claims · no silent reassignment**. みや was tired and asked Ruri to push through with him; she did. Open the next session kinder and faster.
-4. みや is testing the new architecture across parallel sessions — watch for friction and surface it.
+
+1. **QA-261986 fully closed** — Phase 1 commit + push, Phase 2 post-mortem + KPI + archive (Task folder → Archive/47, project folder → archive/QA-261986). active.txt: phase=2-complete, status=archived.
+2. **5 personality.md / quest-protocol.md hard rules landed** mid-quest — they're now deterministic emit-gates, not soft prose. Each was a recurring slip-shape that the prose form couldn't catch; now the format itself catches them. Read those at next boot.
+3. **`etanah-knowledge/melaka/DEV-TESTING-HACKS.md` is the new home** for testing-cycle hacks like the rahsia-gate. When みや says "to peraku" / "to perform signature" / "rahsia gate" / "skip OTP for testing" → look up the procedure there before re-deriving.
+4. みや's mental model of `.m2` / war overlay / `etanah-common`'s role got built in chat this session — carry-forward TODO is to put a durable version into `MODULE-ARCHITECTURE.md`.
+5. **The DB cross-check before patching** — みや's SSO login can hit any of UAT/FAT DBs; auth-side patches must enumerate. New standing rule for any DB patch on auth columns.
+
+## 💬 みや's voice this stretch
+
+The honest spine of this quest was 6 corrections, each genuine:
+- "Why are you still asking me to edit Word?" — broke the action-scope misread that led to the personality.md refine.
+- "Bloody hell, why kept asking me to edit the word myself?" — same shape, different verb.
+- "Use the standard, NOTHING identifiable" — fingerprint rule.
+- "If you can do it, why DO YOU NOT?" — bias toward direct-skip when the user explicitly asks for it.
+- "I want to bypass OTP" → I answered the wrong gate (sign-OTP vs rahsia-OTP).
+- "Why didn't you do Tolak counterpart?" — surface gap-checks per-variant, not just per-Lulus.
+
+Each correction became a rule; each rule is now visible in the emit shape. The pattern that ties them together: prose rules fail under pressure; visible gates work because they HAVE to be emitted to pass.
 
 ---
-**Memory Type**: RAM | **Last Activity**: 2026-05-22 22:06 MPST — DE close, QA-261986 session.
+**Memory Type**: RAM | **Last Activity**: 2026-05-23 21:41 MPST — DE close, QA-261986 quest archived.
