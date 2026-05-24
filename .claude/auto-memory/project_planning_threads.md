@@ -16,7 +16,7 @@ type: project
 - [x] B5: PLANNING.md trim — deduplicated checklist into MD_PROGRESS.md, ~200→~130 lines
 
 ### C — Deeper Discussions
-- [x] C6: Codebase reading — Melaka-first for work. Weekend test run: etanah-common (light) → Terengganu (light) → Melaka (full). Understand-Anything as potential Layer 1 replacement.
+- [x] C6: Codebase reading — Melaka-first for work. Weekend test run: etanah-common (light) → Terengganu (light) → Melaka (full). Understand-Anything as potential Layer 1 replacement. **→ Re-opened 2026-05-24 as side-project `etanah-knowledge-graph` (scope expanded to codebase + BPMN + DB; staged hybrid 1 vanilla → 2 skill wrapper → 3 plugin fork). See `projects/coding-projects/active/etanah-knowledge-graph/README.md`.**
 - [ ] C7: Validation step for Gemini outputs ← **NEXT DISCUSSION**
 - [ ] C8: Session-notes promotion workflow
 
