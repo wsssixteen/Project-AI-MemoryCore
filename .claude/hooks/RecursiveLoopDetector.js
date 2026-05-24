@@ -29,8 +29,10 @@ process.stdin.on('end', () => {
     const data = JSON.parse(input);
     const toolName = data.tool_name || '';
     const toolInput = data.tool_input || {};
+    const filePath = toolInput.file_path || toolInput.path || toolInput.notebook_path || '';
+    const pattern = toolInput.pattern || '';
     const argSnippet = JSON.stringify(toolInput).slice(0, 100);
-    const fingerprint = `${toolName}::${argSnippet}`;
+    const fingerprint = `${toolName}::${filePath}::${pattern}::${argSnippet}`;
 
     let buffer = [];
     if (fs.existsSync(BUFFER_FILE)) {

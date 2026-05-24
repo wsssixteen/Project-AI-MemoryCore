@@ -2,24 +2,27 @@
 
 > **AGENT_STATE discipline (Task #14, applied 2026-05-24)** — this file follows strict template: High-Level Objective · Current Progress · Active Context · Blockers · Immediate Next Steps. MUST be read at session boot (per boot-load-verification.js). MUST be updated at session end (per DE Step 2). Replaces freeform narrative pattern. See `library-items/agent-architecture/claude-code-best-practices.md` Section C for source pattern (LangGraph PostgresSaver checkpoint analogue).
 
-**Last session**: **2026-05-24 (Sunday)** — Meta-Layer Hardening + Architecture Validation. 5-parallel-audit + 11 tasks landed for weekend ticket-test. Quest workflow now invokes Honesty primitives at Hand-back (quest-protocol v3.4). Commits `4be9655` (Round 1 hardening) + `64f9e0a` (Round 2: 11 tasks). 4 commits ahead of origin/main. Hook count 29 · Skill count 25 · Tasks pending 11.
+**Last session**: **2026-05-24 (Sunday) — afternoon/evening** — Identity-layer + focused-mode design + Quest-ready DE. Round 3 (post-Round 2): addressed 2 four-item + 3-item series from みや on (a) identity-layer file usage/triggers, (b) miscount root-cause narrative, (c) Quest hand-back audit format gap + autonomous-Quest confidence MEDIUM not HIGH, (d) RecursiveLoopDetector explained plainly, (e) auto-migrate rule for main-memory growth (NOT a hook — judgement call), (f) backup-on-mutation relax (trust git for committed files), (g) focused-mode workflow designed (2-mode with safety floor + lock rules), (h) Phase 2 simple-report-vs-post-mortem split (escalation triggers). RecursiveLoopDetector fingerprint FIXED INLINE (added file_path + pattern — Task #33 done). Hook count 29 · Skill count 25 · **Tasks pending 18** (was 13; added #36-40 + Phase 2 close-outs + backup-relax + main-memory career-vision + master-memory trim).
 
 ## High-Level Objective (AGENT_STATE)
 
-Meta-layer hardening complete enough for weekend ticket-test. Next session: pick from priority clusters (industry-alignment redesigns #27-30 · Quest restore #22+23+31 · autonomy vision #12+13).
+Quest workflow READY for next-session ticket-test. Focused-mode designed (not yet wired into quest-protocol). Identity-layer & Layer 0 clarified. Next session: Phase 2 close-outs for QA-260316 + QA-260869 (focused-mode pilot), then pick a fresh ticket.
 
 ## Immediate Next Steps (AGENT_STATE)
 
-1. Test meta-layer on a real Etanah ticket this weekend (Quest will exercise Honesty primitives by name per v3.4)
-2. After ticket: pick next-session priority cluster from 11 pending tasks
-3. Manual: copy new hook registrations from worktree settings.local.json → main settings.local.json after worktree merges
+1. **Next session START**: Phase 2 close-outs for QA-260316 + QA-260869 (post-mortem + KPI; use focused-mode simple-report format) — proves Quest v3.4 wiring on closed work
+2. After that: pick fresh ticket (focused-mode for simple ones, complete-mode for first end-to-end test of new audit table when built)
+3. Apply Task #41 (backup-on-mutation relax to on-demand) at first .docx-touching quest of next session — inline edit to quest-protocol.md
+4. Apply Task #39 (focused-mode trigger phrases + mode field in active.txt schema) when next quest invokes focused mode for the first time
 
 ## Active Context (AGENT_STATE)
 
-- Branch `claude/modest-lederberg-d83586` (worktree) 4 commits ahead of `origin/main`; push needed before main fast-forward
-- New hooks (TurnChecklistGate · RecursiveLoopDetector · evaluator-optimizer skill) registered in worktree settings only — gitignored, manual replication for main
+- Branch `claude/modest-lederberg-d83586` (worktree) — currently in sync with origin/main; 5 working-tree mods staged for this DE close commit
+- New hooks (TurnChecklistGate · RecursiveLoopDetector + others) registered in worktree settings.local.json only — gitignored, manual replication for main worktree after merge
 - Bankai validated 2nd autonomous run (111 historical slip migration)
 - system-check skill exists, monthly cadence + on-demand
+- RecursiveLoopDetector fingerprint refined this turn: now `tool_name::file_path::pattern::argSnippet` — eliminates cross-file false positives
+- Focused-mode design = 2 modes (COMPLETE default · FOCUSED on trigger) with non-negotiable safety floor (env-check, predicate-box, backup IF needed, branch discipline, claim-verification, test-data-echo, scope-anchor-echo); demotion banned; promotion allowed
 
 ## Prior session
 
