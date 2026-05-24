@@ -1,5 +1,9 @@
 # Debug Ritual Violations Log
 
+> **🪦 TOMBSTONE (2026-05-24, Task #20):** This file is no longer the canonical home for NEW debug-ritual violations. The new home is **`meta/slip-log.md`** under the meta-layer's INDEX (root_category: pre-action-check-skip or stop-instead-of-action depending on violation type). Historical entries below remain for reference. For NEW debug-ritual violations → append to `meta/slip-log.md` with appropriate root_category.
+>
+> ---
+>
 > Tracks every slip on the four Debug Mode Rituals defined in `.claude/CLAUDE.md`.
 > One-line entry per violation. Trend visible over time.
 > If slips persist across sessions, the ritual design is wrong — redesign, don't re-promise.

@@ -1,5 +1,7 @@
 # Consolidated Slip Log — Meta-Layer Canonical Home
 
+> **Episodic Memory pattern (added 2026-05-24, Task #30 stub)** — per Reflexion-style pattern (Audit 5 industry recommendation): every slip entry should include a 1-paragraph "lesson" — the takeaway in plain language. SessionStart hook should consult recent lessons (last 30 days) for context. **Stub status**: convention added here; hook implementation deferred (per Task #30 — needs SessionStart hook that reads last-30-day slip-log entries and surfaces lesson summary). Going forward: every NEW slip-log entry includes a `lesson:` line in the row, ≤1 sentence, plain language.
+
 > **Purpose:** The canonical home for all slip records going forward. Replaces the 8 scattered slip-storage files (skill-failure-log / improvement-audit-log / forge-log / post-mortems / debug-ritual-violations / sycophancy-violations / diary slip-mentions / observation-log) per Stage 2 storage decision A.
 >
 > **Status:** Phase 8 of meta-layer build (2026-05-23) — initial schema + this-session slips + most-recent skill-failure-log entries. Full historical migration deferred to a follow-on pass; source files tombstone with pointer here.

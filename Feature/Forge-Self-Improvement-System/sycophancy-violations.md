@@ -1,4 +1,9 @@
 # Sycophancy Circuit-Breaker — Violation Log
+
+> **🪦 TOMBSTONE (2026-05-24, Task #20):** This file is no longer the canonical home for NEW sycophancy-circuit-breaker violations. The new home is **`meta/slip-log.md`** under the meta-layer's INDEX (root_category: agree-bias). Historical entries below remain for reference. For NEW violations → append to `meta/slip-log.md` with root_category=agree-bias.
+>
+> ---
+>
 *Tracks slips on Truth-Holding Ritual S (defined in `.claude/personality.md`).*
 
 > Each entry: one line. Date, what みや asked/offered, what Ruri answered, what the FAILURE MODE OUTPUT *should* have been, the consequence.

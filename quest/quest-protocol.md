@@ -1139,3 +1139,23 @@ Fire as soon as heard, mid-conversation — mutate `active.txt` immediately, sam
 *Protocol version: 3.1 — 2026-05-18 (added Phase 0 artifact gate + verify-close re-commit clause after QA-260302 process failures — early-diagnostic never created, state files not reconciled at close).*
 *Protocol version: 3.2 — 2026-05-19 (Phase 1 close-out + branch-cut rules made per-repo — AWAM baseline = `mlk/release/fat`, pelupusan = `mlk/master`; no longer hard-codes `mlk/master`).*
 *Protocol version: 3.3 — 2026-05-22 (quest-cluster merge from CLAUDE.md: +Debug Mode Rituals section, +Quest State Transitions table, +extended `active.txt` schema with 6-status set; commit+push rule reconciled to the 2026-05-19 model — Ruri runs commit + push after みや confirms the message, superseding the prior "みや executes" hands-off; Mid-Quest Handoff File reconciled — the separate `handoff-*.md` is deprecated, the Investigation Trail now lives in `QA-<num>.md`; System-Design references repointed to the `system-design` skill).*
+
+---
+
+## Phase 9 v2 (TARGETED — 2026-05-24, Task #22 partial) — Honesty primitive invocations at Hand-back
+
+**MANDATORY at every Phase 1 close-out + hand-back to みや for testing:** Quest workflow MUST invoke the following Honesty primitives by name in this order:
+
+1. `/scope-anchor-echo` — echo scope-anchor from active.txt + verify Edit diffs stay within
+2. `/claim-verification` — for any "done" / "ready for test" claim, cite files edited + commit SHA + scope-fit
+3. `/test-data-echo` — read Notes.txt → emit structured table (permohonan ID + pengguna semasa + tugasan + login + role-of-test + discriminator)
+4. `/task-assignment-honesty` — IF any sub-task was moved/deferred from みや-assigned column, surface as explicit reassignment-proposal
+5. `/stalling-detector` — IF みや gave explicit "proceed" earlier in conversation, BANNED to offer choices; act + report instead
+
+**Wiring source:** Audit 3 finding (2026-05-24) — Honesty primitives existed as skills but were ORPHANED from Quest workflow invocation. This section makes the invocation explicit. Full inline-duplicate removal still deferred to Phase 9 v2 FULL (Task #22 remaining scope).
+
+**Behaviour for Ruri at Hand-back checkpoint:**
+- Before emitting "▶ YOUR MOVE" block: invoke #1-#3 (always); invoke #4 conditionally; check #5 condition
+- Each invocation produces a visible-gate output in the response — みや can audit what fired
+
+*Protocol version: 3.4 — 2026-05-24 (Phase 9 v2 partial: Honesty primitive invocations explicit at Hand-back; Task #22 targeted minimum for weekend ticket test. Inline-duplicate removal still deferred to Phase 9 v2 FULL).*

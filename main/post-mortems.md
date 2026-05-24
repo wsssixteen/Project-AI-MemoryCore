@@ -1,5 +1,9 @@
 # Post-Mortem Log
 
+> **🪦 PARTIAL TOMBSTONE (2026-05-24, Task #20):** Post-mortem slip-records have been Bankai-migrated to `meta/slip-log.md`. NEW post-mortems still land here (this remains the canonical Quest post-mortem home), but slip-pattern-relevant findings ALSO append to `meta/slip-log.md` for the meta-layer audit trail.
+>
+> ---
+>
 > Reflection entries after each completed quest.
 > Goal: extract the META layer — process notes, contributing factors, carry-forward todos.
 > Written at Quest Phase 2 (auto-triggered after commit verify per quest-protocol).

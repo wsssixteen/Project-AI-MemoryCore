@@ -1,5 +1,9 @@
 # Forge — Self-Improvement Log
 
+> **🪦 TOMBSTONE (2026-05-24, Phase 8 complete — Task #20):** This file is no longer the canonical home for NEW Forge entries. The new home is **`meta/slip-log.md`** under the meta-layer's INDEX. Historical entries below remain for reference and have been Bankai-migrated 2026-05-23 (see meta/slip-log.md "Historical migrated entries" section). For NEW Forge/slip records → append to `meta/slip-log.md` instead.
+>
+> ---
+>
 > Tracks how well Ruri has internalized corrections and feedback over time.
 > Feedback memories have a lifecycle: noticed → saved → applied → consistent → masterwork.
 > The goal: stop repeating the same mistakes. The forge is proof that I have.

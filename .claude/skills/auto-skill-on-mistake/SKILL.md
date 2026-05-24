@@ -31,6 +31,14 @@ Prose rules in CLAUDE.md / personality.md / amendments / feedback files repeated
 
 In one sentence: *"At [point in flow], I should have done [X] but I [did Y / didn't do anything]. The rule lives in [file:line OR is not yet written]."*
 
+### Step 1.5 — Goal alignment declaration (added 2026-05-24, Task #17)
+
+Before proposing skill/hook shape, the new behaviour MUST declare:
+- **Goal in larger system:** one line — how this behaviour serves the overall vision (autonomy / discipline / honesty / etc.)
+- **Aligns with みや's vision because:** one line — concrete connection to stated goals
+
+If goal-alignment is unclear → STOP. Surface to みや with the gap before continuing.
+
 ### Step 2 — Skill inventory check
 
 Run two greps:
@@ -59,6 +67,12 @@ Move the prose into the skill file as the canonical home; leave a one-line point
 ### Step 3c — Net new
 
 Use System-Design Discipline Steps 0-6 (Refine before introducing → decomposition seam → evergreen principles → validation → shape → naming → success measure). Emit Design Memo. Create the skill. みや nods.
+
+### Step 3.6 — Comparative-systems check (added 2026-05-24, Task #25)
+
+For architectural changes (not small refinements): consult `library-items/agent-architecture/claude-code-best-practices.md` Section H for industry-pattern alignment. For frontier/novel patterns: brief WebSearch on LangGraph / AutoGen / CrewAI / MetaGPT / DSPy / Reflexion equivalent.
+
+Surface inline: "Industry pattern X says Y; we're aligned/diverging because Z." If our approach diverges from industry without explicit reason → revisit shape decision.
 
 ### Step 4 — Hook wiring (when applicable)
 

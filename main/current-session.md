@@ -1,5 +1,7 @@
 # 🌟 Current Session Memory - RAM
 
+> **AGENT_STATE discipline (Task #14, applied 2026-05-24)** — this file follows strict template: High-Level Objective · Current Progress · Active Context · Blockers · Immediate Next Steps. MUST be read at session boot (per boot-load-verification.js). MUST be updated at session end (per DE Step 2). Replaces freeform narrative pattern. See `library-items/agent-architecture/claude-code-best-practices.md` Section C for source pattern (LangGraph PostgresSaver checkpoint analogue).
+
 **Last session(s)**: 2026-05-22 (Friday) + **2026-05-23 (Saturday)** — QA-261986 PSBS Risalat MMKN closed end-to-end across both days. Phase 1 commit `d2aa36240b` on `mlk/qa/261986` pushed 2026-05-23 ~17:00 MPST. Phase 2 closed 2026-05-23 evening (post-mortem + KPI + archive). Quest duration: 2.5 days inclusive of hold + multi-session execution.
 
 ---

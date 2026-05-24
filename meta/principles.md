@@ -5,7 +5,27 @@
 
 ---
 
-## ⭐ The 6 PROTO-META-LAYER PRINCIPLES (highest priority)
+## ⭐ The 7 PROTO-META-LAYER PRINCIPLES (highest priority — Trifecta added 2026-05-24)
+
+### Trifecta (3G universal + 5G for autonomous-loop skills) — Principle #7
+
+Every structured work declares Goal · Guardrails · Grounded before execution. Autonomous-loop skills add Growth · Gas (= 5G).
+
+| Element | Plain meaning | When required |
+|---|---|---|
+| **Goal** | End-state to verify success against | Every skill / hook / workflow |
+| **Guardrails** | Execution-time checks that prevent straying | Every skill / hook / workflow |
+| **Grounded** | Foundation/context the work starts from (composite: Layer 0 Identity + Layer 1 Meta + Layer 5 State) | Every skill / hook / workflow |
+| **Growth** (autonomous-loop only) | How the skill adapts mid-run | Only for autonomous-loop skills like Bankai |
+| **Gas** (autonomous-loop only) | Resource budget — when to stop | Only for autonomous-loop skills |
+
+**Source:** みや 2026-05-24, validated against Audit 5 industry-pattern research. Bankai's 2026-05-23 autonomous run validated implicitly; future autonomous skills declare explicitly.
+
+**Where it lives:** Every new skill's frontmatter MUST include `metadata.trifecta:` block (see `.claude/skills/system-check/SKILL.md` for first explicit example).
+
+---
+
+## ⭐ The 6 ORIGINAL PROTO-META-LAYER PRINCIPLES (highest priority)
 
 These are the principles that govern HOW OTHER PRINCIPLES are designed, checked, and enforced. They form the backbone of the meta-layer.
 
