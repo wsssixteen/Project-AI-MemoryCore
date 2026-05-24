@@ -26,6 +26,11 @@ const TRIGGERS = [
   /\balways do X\b/i,
   /\balways show (me )?\b/i,
   /\b(always|never) (?!have|had|been|did|do|does)\w+\b.*\b(again|forward|going forward)\b/i,
+  // Added 2026-05-24 per Audit 2 finding
+  /\brecord (this|it|that) as (a |the )?policy\b/i,
+  /\bdocument (this|it|that) as (a |the )?(rule|policy|standard)\b/i,
+  /\badd (this|it|that) to enforcement\b/i,
+  /\bmake (this|it|that) policy\b/i,
 ];
 
 let input = '';

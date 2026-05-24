@@ -21,6 +21,14 @@ const TRIGGERS = [
   /\badd (a |an )?(new )?(folder|file|skill|hook)\b/i,
   /\bmake (a |an )?(new )?(folder|file|skill|hook)\b/i,
   /\bset up (a |an |the )?(folder|structure|skill|hook)\b/i,
+  // Added 2026-05-24 per Audit 2 finding + AGENT_STATE.md miss (Task #21)
+  /\blet'?s formalize\b/i,
+  /\bformalize (X |this )?as (a |new |the )?(file|pattern|doc|skill|rule|policy|standard)\b/i,
+  /\bcodify (X |this |it )?as\b/i,
+  /\badopt (X |this )?as (a |the |new )?(pattern|standard|rule|policy|file)\b/i,
+  /\bshould we have a (new )?(file|pattern|doc|skill|standard)\b/i,
+  /\bwe need a (new )?(file|pattern|doc|skill|policy)\b/i,
+  /\blet'?s add (a |an )?[A-Z][A-Z_]+\.md\b/,  // catches "let's add AGENT_STATE.md" style
 ];
 
 let input = '';

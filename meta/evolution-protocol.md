@@ -50,6 +50,12 @@ next-elapsed-check-due: 2026-06-22  # +30 days
 last-model-id-seen: claude-opus-4-7[1m]  # current session model
 research-file-last-updated: 2026-05-23
 research-file-path: library-items/agent-architecture/claude-code-best-practices.md
+
+# Added 2026-05-24 — system-check cadence (paired skill: .claude/skills/system-check/SKILL.md)
+last-system-check: 2026-05-24  # first run = this session's 5-parallel-audit
+next-system-check-due: 2026-06-23  # +30 days
+system-check-cadence-days: 30  # calibrate over first 3 runs
+last-system-check-findings-count: 35  # surfaced critical+high+medium gaps
 ```
 
 (Phase 7 implementation may move this state to `state/evolution-state.json` if hook-readable YAML state is cleaner; decide at implementation.)
