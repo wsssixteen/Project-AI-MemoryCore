@@ -6,7 +6,9 @@
 
 ## High-Level Objective (AGENT_STATE)
 
-Quest workflow READY for next-session ticket-test. Focused-mode designed (not yet wired into quest-protocol). Identity-layer & Layer 0 clarified. Next session: Phase 2 close-outs for QA-260316 + QA-260869 (focused-mode pilot), then pick a fresh ticket.
+Quest workflow READY for next-session ticket-test. Focused-mode designed (not yet wired into quest-protocol). Identity-layer & Layer 0 clarified. Plain-first + memory-claim red-alert hooks ADDED + Anthropic-bug audit CLEAN. Next session: Phase 2 close-outs for QA-260316 + QA-260869 (focused-mode pilot), then pick a fresh ticket.
+
+**Round 4 additions** (2026-05-24 18:16): MemoryClaimGate.js + PlainFirstGate.js hooks shipped (registered in settings.local.json); DE protocol Step 13 (Handoff Block) added; Task #51 PreToolUse exit-2 bug audit done with ZERO issues found (de-facto compliant); 6 new Anthropic-gap tasks added (#47-52). Hook count 31 · Tasks pending 21.
 
 ## Immediate Next Steps (AGENT_STATE)
 

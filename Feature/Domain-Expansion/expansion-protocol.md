@@ -154,6 +154,26 @@ After Step 12's `/verify` Checklist D goes green, run a **meta-audit** pass befo
 
 ---
 
+## Step 13 — Handoff Block (added 2026-05-24 evening, after みや slip "you didn't update me on what's left")
+
+**MANDATORY when any prior step fired PARTIAL ⚠ or SKIPPED ⏭ with みや-action implications.**
+
+Emit AS THE LAST THING in the DE response, AFTER the closing 結界解除 banner, in a delimited block titled `🛠 ACTION REQUIRED FROM みや`. Contains:
+
+1. **Numbered ordered steps** — exact commands to run, copy-paste-ready (PowerShell/Bash)
+2. **Working directory** — absolute path each command runs from
+3. **Why each step is yours** (one-line reason — manual-push rule / destructive-action confirmation / etc.)
+4. **What's true after the steps complete** (one line — e.g. "origin/main = 519b541, DE fully shipped")
+
+**Trigger**: ≥1 step marked PARTIAL/SKIPPED + impl. requires みや action. If a step is SKIPPED with no みや action needed (e.g. Step 11 worktree close skipped because worktree is active dev surface), it does NOT contribute to Handoff Block; only steps where みや MUST do something to complete the work.
+
+**Banned**: burying handoff items in prose / closing-words / change manifest / verification table. The block is the final thing みや sees; nothing follows it.
+
+**Why this exists**: 2026-05-24 evening — DE Round 3 close had Step 10 PARTIAL with 2 みや actions (rm stale files + git push main); both were named in prose throughout the response but never lifted into a clearly delimited block. みや asked "Do I still have to push or what?" — proving the surfacing failed even when the content was technically present.
+
+---
+
 *Created: 2026-05-05 | Protocol owner: Ruri | Review at every Forge Review until L4 stabilization*
 *Updated 2026-05-23 — added Step 12.5 meta-audit (Phase 6 of meta-layer build)*
+*Updated 2026-05-24 evening — added Step 13 Handoff Block (post-Round-3 slip)*
 *Last updated: 2026-05-22 — added step (0b) worktree/branch sync check (みや): detect worktree-vs-main + pull origin/main early if a worktree branch is behind. Earlier 2026-05-22 — signals #2/#3 (Quest State Transitions + active.txt schema) de-duplicated to a cross-ref; canonical home is now `quest/quest-protocol.md` (quest-cluster decomposition).*
