@@ -33,6 +33,12 @@
 | 2026-05-23 | Bare-agreed to みや's "trigger → system-design → best-practices → skill/hook" loop without pressure-testing | agree-bias | `feedback_skeptical_of_user_suggestions.md` + personality.md Disposition section | sycophancy-circuit-breaker hoisted to atomic skill (Phase 3) + Honesty Invariants identity section (Phase 4) | ✅ Yes |
 | 2026-05-23 | CLAUDE.md broken pointer to `projects/coding-projects/active/Etanah-Codebase-Read.md` (cited lines 81, 130; file doesn't exist from 2026-05-22 decomposition) | boot-or-required-read-skipped (variant: pointer rot, not skip) | None — no rule against creating pointers to non-existent files | Surfaced via Phase 0 baseline + `boot-required-read-gate.js` Phase 2 (catches future occurrences) + todo.md Q1 entry to consolidate via Bankai | ✅ Yes |
 
+## 2026-05-25 entries
+
+| Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |
+|---|---|---|---|---|---|
+| 2026-05-25 | Proposed Refine Blocks A/B for Superpowers debug integration (prior turn) WITHOUT wording-shape audit. Missed Anthropic skill-authoring guidance (Section A of canonical) + Meincke 2025 persuasion-principles data — both sitting in the same plugin I'd just installed (`superpowers/skills/writing-skills/`). リドワンさん had to explicitly trigger the metric-wise comparison ("check metric-wise") for the gap to surface; would have shipped silently otherwise. He flagged it as costing 99% of compliance lift across every prior rule we built together. <br>**Lesson:** Best-practices consult must cover form AND content; scope-gates that exempt "small refines" cause compounding effectiveness loss across every rule the meta-layer ships. Authority-language wording delivers measured 2.2× compliance vs same-content prose-default phrasing. | best-practices-not-consulted | `.claude/skills/auto-skill-on-mistake/SKILL.md` Step 3.6 — scoped to "architectural changes (not small refinements)" via Task #25 wording, which let small-refine proposals bypass the consult entirely | refined-skill — Step 3.6 promoted to dual-audit `Best-Practices Consult` with mandatory wording-shape sub-step (3.6b) covering all skill / always-on-rule changes, no scope exemption. Authority-loaded forcing-functions (Iron Law + Red Flags + Excuse table) modeled inside the refine itself to demonstrate the new wording-shape requirement | ✅ Yes — exact root_category the meta-layer is designed to catch; first occurrence triggered the structural fix |
+
 ---
 
 ## Historical entries (pointers to source files)
