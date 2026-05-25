@@ -641,14 +641,29 @@ status=closed
 note=Fix applied (populateFrasa2 CaseBuilder). Committed and closed 2026-04-27. Archived.
 
 qa=QA-262869
+quest_start_ts=2026-05-25T19:46:30.987Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\46. QA #262869 - PPTPB - Template Risalat MMKN - Semua maklumat tidak ditarik ke dalam
 early_diagnostic=projects/coding-projects/active/QA-262869/early-diagnostic.md
-phase=0
-status=hold
+qa_doc=projects/coding-projects/active/QA-262869/QA-262869.md
+branch=mlk/qa/262869
+commit=f39224960b (2026-05-26) — QA #262869 - PPTPB - PRRMMKNPTGT - Risalat MMKN section 6 populate placeholders
+phase=1-complete
+status=local-test-confirmed
+local_test_confirmed=true
 priority=Medium
 issue_one_liner=PPTPB Template Risalat MMKN — semua maklumat tidak ditarik ke item 6 (Perakuan Pengarah Tanah dan Galian)
+scope_layer=Java (populator + framework spacing) + docx (template formatting)
+scope_anchor=PPTPB urusan only · §6 paragraphPTGPPTPB block · framework spacing-preserve change is backward-compatible (defaults still applied when placeholder has no <w:spacing>)
+tugasan_reach=TGSN_SHOW_RISALAT_MMKN_PTG_PARAGRAPH = {PRMMKNPTG, SRMMKNPTG, PRRMMKNPTG, PRMMKNPTGT, SRMMKNPTGT, PRRMMKNPTGT}
+test_app_uat=PTMLK/02/L/PPTPB/2026/5 (nor.aini@melaka.gov.my, DATUK NORAINI BINTI TAWEL, role -PTG-) — tested at PRRMMKNPTGT on mlkfat
+files_changed=src/main/java/my/gov/etanah/pelupusan/constant/PelupusanWordCCMethodConstant.java (+64 lines, populator) · src/main/java/my/gov/etanah/pelupusan/util/word/PelupusanWordEditorUtil.java (+5/-3 lines, spacing preserve) · src/main/resources/template/MLK/references/additionalJKKLParagraph.docx (formatting — cell widths + syaratKelulusan SDT pPr)
+validation=mvn compile + JBoss restart + UAT test on PTMLK/02/L/PPTPB/2026/5 → §6 renders all 11 BA-flagged fields populated + syarat list with proper spacing/indent
+phase2_pending=post-mortem + kpi-tracker + G2 (unitLuas placeholder) + G3 (syaratKelulusan-as-table structural rework — separate ticket)
 notes:
   - 2026-05-22: Retrieved via redmine-sync (batch with QA-262783). Folder 46 created, QA #262869.pdf downloaded. Scout familiar spawned for early-diagnostic. Held pending pickup.
+  - 2026-05-25 evening: Quest resumed by みや. Phase 0 done autonomously: Scout + multi-dim BA PDF read + Recon + Predicate Box + Rubric + Apply. Phase 1 close blocked pending UAT test.
+  - 2026-05-26 early hours: Multi-hour iteration on §6. Root cause = populator helpers mutated shared ccVO type from TABLE→TEXT, framework silently dropped external-doc injection (warning at PelupusanWordCCMethodConstant.java:16994 about "external table to go missing" was the documented symptom). Fix = pass throwaway ccVO instances to each helper call. Followup work = docx formatting (cell widths + syaratKelulusan SDT placeholder pPr) + framework spacing-preserve change so placeholder's <w:spacing> survives the runtime override. Commit f39224960b pushed to origin/mlk/qa/262869. Phase 2 deferred (post-mortem + KPI + structural follow-ups) per みや exhaustion ~04:00 MPST.
+  - 2026-05-26 refine pass: 3-agent audit → CLAUDE.md hook counts fixed (v1.30, 35→37) + convention-check-gate.js promoted from salvage to active hooks + prepare-commit-trigger.js v1.1 (Step 7.5 commit-conventions.md read mandate) + 4 slip-log entries for this session's slips.
 
 qa=QA-262783
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\48. QA #262783 - FAT - PPTPB - Penyediaan Risalat MMKN PDT - Medan Bayaran Sewa Tambahan tidak default 0.00 dan

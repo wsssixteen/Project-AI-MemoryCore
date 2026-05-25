@@ -9,6 +9,12 @@
  * Phase 1 close-out was manual every time, 7-step sequence prone to skips.
  * 2026-05-11 QA-260139 slip: pull step omitted. 2026-05-12 みや: "why didn't
  * you automatically branch out when I say prepare for me to commit?"
+ *
+ * v1.1 2026-05-26 — Added Step 7.5 mandating `.claude/commit-conventions.md`
+ * read BEFORE drafting the commit message. Slip-driven: QA-262869 close-out
+ * drafted a verbose long-body commit ignoring the canonical etanah subject-only
+ * format `QA #<num> - <URUSAN> - <TUGASAN> - <description>`. The convention
+ * file existed but was never read at draft time.
  */
 const TRIGGERS = [
   /\bprepare (for me )?to commit\b/i,
@@ -45,6 +51,7 @@ process.stdin.on('end', () => {
       '  5. git checkout -b mlk/<type>/<number>  (or [v2/v3] if rework)',
       '  6. git stash pop  (resolve conflicts if any)',
       '  7. git add <specific files only>  (NEVER -A, NEVER .)',
+      '  7.5 READ .claude/commit-conventions.md FIRST (the format lives there — per-repo subject style + trailer rules). 2026-05-26 slip: drafted generic long-body commit ignoring the canonical subject-only "QA #<num> - <URUSAN> - <TUGASAN> - <description>" etanah format. Reading the file is mandatory before drafting.',
       '  8. PROPOSE commit message per convention → wait for みや confirm',
       '  9. AFTER confirm: git commit + git push (auto-runs per 2026-05-19)',
       '  10. Return to source-branch + git pull --ff-only + update active.txt',

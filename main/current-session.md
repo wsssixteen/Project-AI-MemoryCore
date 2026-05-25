@@ -2,24 +2,32 @@
 
 > **AGENT_STATE discipline (Task #14, applied 2026-05-24)** — strict template: High-Level Objective · Current Progress · Active Context · Blockers · Immediate Next Steps. MUST be read at session boot (per boot-load-verification.js). MUST be updated at session end (per DE Step 2).
 
-**Last session**: **2026-05-25 (Mon evening → 2026-05-26 Tue 00:02 MPST)** — long session, primary thread = QA-262233 cycle 2 (rework reopened by BA Nurhafizah 04:04 UTC). Single biggest takeaway: process-level Quest activation failure cascaded into multiple sub-slips for the entire session arc. Concrete shippable fix landed (commit `5023fbf2fc` etanah-pelupusan); meta-layer restorations also shipped (CLAUDE.md +80 lines / 9 amendments absorbed / new hook + 3 skill frontmatter fixes / ghost dir cleanup).
+**Last session**: **2026-05-25 (Mon evening) → 2026-05-26 Tue 04:05 MPST** — ~8h continuous, primary thread = QA-262869 (PPTPB Risalat MMKN §6). Phase 1 closed (commit `f39224960b` etanah-pelupusan). MemoryCore-side refine pass added: convention-check-gate.js promoted to active hooks + CLAUDE.md hook counts fixed (v1.30) + prepare-commit-trigger.js v1.1 (Step 7.5 commit-conventions.md read mandate) + 4 slip entries + active.txt updated.
+
+**Last session (2026-05-25)**: long session, primary thread = QA-262233 cycle 2 (rework reopened by BA Nurhafizah 04:04 UTC). Single biggest takeaway: process-level Quest activation failure cascaded into multiple sub-slips for the entire session arc. Concrete shippable fix landed (commit `5023fbf2fc` etanah-pelupusan); meta-layer restorations also shipped (CLAUDE.md +80 lines / 9 amendments absorbed / new hook + 3 skill frontmatter fixes / ghost dir cleanup).
 
 ## High-Level Objective (AGENT_STATE)
 
-Two threads consumed the session:
+Two threads consumed this session (2026-05-25 → 2026-05-26):
 
-1. **QA-262233 cycle 2 (rework)** — BA report: `PTMLK/03/L/PRZ/2026/11` on FAT renders 1 of 2 JTs added. Root cause: `populateJTRingkasanRisalatPRZ` filter parses `rjk_agensi.mklmt_tmbhn` for ADUN/DUN keys; UPEN on FAT has those keys but is a real Jabatan Teknikal (data-tag fragile). Fix: name-pattern filter (YB/YB. prefix OR AHLI DEWAN UNDANGAN substring). Shipped on `mlk/qa/262233v2`. Phase 2 closed (post-mortem + KPI + active.txt → archived).
+1. **QA-262869 PPTPB Risalat MMKN §6 (Phase 1 complete)** — wired 11 BA-flagged placeholder fields in `populatePTGParagraph_PPTPB`. Root debug: populator helpers (`populateNamaPemohonLower` etc.) each call `ccVO.setType(TEXT)`, clobbering the outer method's `setType(TABLE)` → framework silently drops external-doc table injection → §6 empty. Fix = pass throwaway `new PelupusanWordContentControlVO()` to each helper call instead of shared outer ccVO. Plus framework spacing-preserve change (PelupusanWordEditorUtil.java:917 — skip after=0 override when placeholder has its own `<w:spacing>`) + docx formatting (cell widths 709→1037, syaratKelulusan SDT placeholder pPr with hanging-indent + tab stop + after=120). Commit `f39224960b` on `mlk/qa/262869`, pushed.
 
-2. **Meta-layer trim-down audit + restorations** — diff between pre-decomp CLAUDE.md (commit `0660f2e`, 677 lines) vs current (170 lines) surfaced 3 high-risk sections compressed to cite-only without trigger-time visibility: Quest Workflow, Active Project Rules / Etanah non-negotiables, Debug Mode Rituals. All 3 restored to boot-loaded surface. 9 active amendments absorbed into canonical homes. 3 skill frontmatters fixed (`/appraise`, `/checklist`, `/quest`). 1 ghost directory removed (`/verify-close`). 1 new hook built (`quest-resume-preflight.js`).
+2. **MemoryCore refine pass (post-Phase-1)** — 3-agent audit (mistake-scanner / drift-reconciler / convention-auditor) → fixes landed in parent main: CLAUDE.md hook counts 35→37 (v1.30), `convention-check-gate.js` promoted from salvage to active hooks dir + dual-registered in settings.json, `prepare-commit-trigger.js` v1.1 Step 7.5 (commit-conventions.md read mandate), `meta/slip-log.md` 2026-05-26 section with 4 entries + lesson fields + running-count update + open follow-ups, `quest/active.txt` QA-262869 entry advanced phase=0/hold → phase=1-complete with closure metadata.
 
 ## Immediate Next Steps (AGENT_STATE)
 
-1. **DE step 10 push pending** — network was down at session close (GitHub unreachable). Local commits made; push queued as Handoff. みや runs `git push origin HEAD` + `git push origin HEAD:main` from the worktree when network returns. Both branches share base `bedcfb8`; FF push expected on main.
-2. **UAT data patch rollback** — `DELETE FROM et_main_uat.umm_a_jabatan_teknikal WHERE aplikasi_id = 2886121 AND a_jabatan_teknikal_id IN (3638, 3639, 3640); COMMIT;` (test app `PTMLK/01/L/PRZ/2025/5` returns to single-JT state).
-3. **QA-262233 cycle-2 deployer cherry-pick** — commit `5023fbf2fc` from `mlk/qa/262233v2` needs cherry-pick to `mlk/fat-env` so BA can verify her FAT report is resolved.
-4. **BA Redmine reply** for QA-262233 cycle 2 — confirm the fix once BA's FAT verification passes.
-5. **Sibling populator follow-up ticket** — `populateJTRingkasanRisalatPT` + `populateJTRingkasanRisalatPLPS` carry the same fragile metadata filter shape. Out-of-scope for QA-262233 cycle-2 commit; needs a separate ticket.
-6. **Carried from prior session**: QA-262869 PPTPB Phase 0 continuation (populator `populatePTGParagraph_PPTPB` at line 16974 needs §6 fields — WIP saved at `projects/coding-projects/active/QA-262869/populator-step6-WIP.java.txt` after the polluted stash recovery this session).
+1. **QA-262869 Phase 2** — post-mortem entry in `main/post-mortems.md`, KPI tracker entry, archive task folder + active.txt → archived. Deferred per みや exhaustion ~04:00 MPST.
+2. **QA-262869 stash@{0}** in etanah-pelupusan worktree contains みや's post-commit minor docx adjustments (after commit f39224960b). Pop + sync to WAR when iterating further.
+3. **QA-262869 G2 + G3 follow-ups** — separate tickets: G2 unitLuas placeholder (currently plain text, needs SDT in template) + G3 syaratKelulusan-as-table structural rework (move SDT to top-level in main template so methodMap dispatches `populateSyaratKelulusan2`).
+4. **Open hook builds** (deferred from refine pass — see `meta/slip-log.md` 2026-05-26 open-follow-ups + Agent 1 audit):
+   - `quest-fix-blast-radius-gate.js` — PreToolUse on populator/template edits, mandates sibling-method enumeration
+   - `convention-analog-gate.js` — PreToolUse on `populate*` methods, demands file:line analog citation
+   - Extend `silent-claim-drift-gate.js` to diagnostic claims
+   - Extend `commit-gate.js` to per-repo subject regex validation
+   - Tighten `convention-check-gate.js` postgres regex
+5. **QA-262233 cycle-2 deployer cherry-pick** (carried from prior session) — commit `5023fbf2fc` from `mlk/qa/262233v2` needs cherry-pick to `mlk/fat-env`.
+6. **BA Redmine replies pending** for QA-262869 (once Phase 2 closes) + QA-262233 cycle 2 (once FAT verification passes).
+7. **DE step 10 push** — about to fire at end of this DE.
 
 ## Active Context (AGENT_STATE)
 
