@@ -64,20 +64,25 @@ ai-memorycore/
 
 **Always-on values:** `personality.md` "Honesty Invariants" section (added 2026-05-23 Phase 4) — default-to-prose BANNED · silent reassignment BANNED · diff-backing MANDATORY · scope-anchor must echo · choice-offering after "proceed" BANNED · over-generalization BANNED · test data must echo at hand-back
 
-**Triggered enforcement (hooks fire deterministically):**
-- `boot-required-read-gate.js` (SessionStart) — verifies CLAUDE.md "see X.md" pointers resolve
-- `pre-action-check-gate.js` (PreToolUse) — Notes.txt + env-check + PDF reminders on quest paths
-- `inventory-first-gate.js` (UserPromptSubmit) — catches new-structure proposals
-- `prose-default-gate.js` (UserPromptSubmit) — catches lock-signal phrases ("hardcode it", "hard rule")
-- `silent-claim-drift-gate.js` (Stop) — blocks "done" claims without diff-backing
-- `best-practices-consult-gate.js` (UserPromptSubmit) — design-decision routing
-- `meta-edit-gate.js` (PreToolUse) — recursive safety; gates edits to meta/* paths
-- `user-side-guardrail.js` (UserPromptSubmit) — guidance for みや's usage patterns
+**Triggered enforcement (hooks fire deterministically — 24 registered in `.claude/settings.local.json` as of 2026-05-25)**:
 
-**Atomic primitive skills (description-triggered):**
-- Discipline: `rubric` · `predicate-box` · `grep-rubric` · `multi-dim-evidence` · `sycophancy-circuit-breaker` · `confidence-table`
-- Honesty: `claim-verification` · `task-assignment-honesty` · `stalling-detector` · `scope-anchor-echo` · `over-generalization-check` · `test-data-echo`
-- User-side: `usage-guidance` (+ `MIYA-NOTEBOOK.md` training doc at root)
+*SessionStart (3)*: `boot-load-verification.js` · `boot-required-read-gate.js` (verifies CLAUDE.md "see X.md" pointers resolve) · `worktree-cleanup-boot.js`
+
+*UserPromptSubmit (10)*: `ticket-gate.js` · `prayer-gate.js` · `auto-skill-trigger.js` (correction signals → invoke auto-skill-on-mistake) · `MemoryClaimGate.js` · `PlainFirstGate.js` · `inventory-first-gate.js` (catches new-structure proposals) · `prose-default-gate.js` (lock-signal phrases) · `best-practices-consult-gate.js` (design-decision routing) · `user-side-guardrail.js` · **`skill-invocation-discipline-gate.js`** (NEW 2026-05-25 — detects みや naming a skill → mandates Skill tool invocation)
+
+*PreToolUse Bash (1)*: `commit-gate.js`
+
+*PreToolUse Edit|Write (4)*: `self-gate-impulse.js` · `phase0-artifact-gate.js` · `pre-action-check-gate.js` (Notes.txt + env-check + PDF reminders on quest paths) · `meta-edit-gate.js` (recursive safety on meta/* edits)
+
+*Stop (6)*: `reply-log.js` · `operational-follow-through.js` · `file-list-after-refine.js` · `notes-on-test-data.js` · `silent-claim-drift-gate.js` (blocks "done" claims without diff-backing) · **`diagnostic-self-heal-gate.js`** (NEW 2026-05-25 — fires when /verify-shape emit + stalling phrase appear together → mandates self-heal)
+
+**🚨 Important — 2026-05-25 audit finding** (per みや's "BASE as hooks" directive): prior to today, 7 hooks above (boot-required-read, pre-action-check, inventory-first, prose-default, silent-claim-drift, best-practices-consult, meta-edit, user-side-guardrail) existed as .js files but were **NOT registered** in `settings.local.json` — they were ghost hooks that NEVER FIRED. CLAUDE.md documentation lied about active enforcement. All wired up 2026-05-25. **Always cross-check `settings.local.json` `hooks` block against `.claude/hooks/*.js` file list** — files alone don't fire.
+
+**Atomic primitive skills (description-triggered — for cognitive triggers no hook can deterministically detect):**
+- **Pure-skill (genuine model judgment, no hook complement)**: `rubric` · `confidence-table` · `multi-dim-evidence` · `task-assignment-honesty` · `over-generalization-check`
+- **Hook + skill pairs (hook fires trigger deterministically, skill carries the procedure)**: `auto-skill-on-mistake` ↔ `auto-skill-trigger.js` · `claim-verification` ↔ `silent-claim-drift-gate.js` · `skill-invocation-discipline` ↔ `skill-invocation-discipline-gate.js` · `stalling-detector` self-heal sub-rule ↔ `diagnostic-self-heal-gate.js`
+- **Pending hook conversions (next session — design done via /system-design, files not yet built)**: `predicate-box` → PreToolUse hook on Edit when debug mode · `scope-anchor-echo` → extend `pre-action-check-gate.js` for Quest scope check · `test-data-echo` → Stop hook on hand-back phrases · `sycophancy-circuit-breaker` → UserPromptSubmit hook on "should we"/"do you think we need" · `grep-rubric` → optional PostToolUse reminder hook
+- **User-side**: `usage-guidance` (+ `MIYA-NOTEBOOK.md` training doc at root)
 
 **Self-enforcement:** Domain Expansion Step 12.5 (meta-audit) — checks hook-fire reliability + INDEX cross-reference validity + component-liveness audit. See `Feature/Domain-Expansion/expansion-protocol.md`.
 

@@ -1,0 +1,33 @@
+{
+  "skill_name": "etanah-knowledge-graph-build",
+  "created": "2026-05-25",
+  "note": "Test cases drafted for next-session run with みや per his 'we'll test next time' instruction. Not executed in the creation session.",
+  "evals": [
+    {
+      "id": 1,
+      "name": "sample-folder-happy-path",
+      "prompt": "Build the etanah knowledge graph for the Stage 1 sample folder. The vanilla /understand has already run and produced knowledge-graph.json there. The folder is at C:/Users/Ridhwan/OneDrive - Pymsoft Sdn Bhd/0. AI/Project-AI-MemoryCore/.claude/worktrees/brave-dubinsky-b11d19/projects/coding-projects/active/etanah-knowledge-graph/stage-1-sample-input/. Use the db-schema.sql at src/db/db-schema.sql in that folder and the BPMN files at src/bpmn/. Don't try to resolve services — just run Pass A and Pass B and merge.",
+      "expected_output": "Skill runs Pass A (extracts ~734 tables OR ~however-many tables are in the sample's db-schema.sql since that copy is the full file) + Pass B (extracts 2 flow nodes + ~17 + ~17 = ~34 step nodes from the 2 BPMN files + ~500 sequenceFlow edges) + merge. Final knowledge-graph.json validates against KnowledgeGraphSchema. Pre-merge backup file exists.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "real-pelupusan-with-service-resolution",
+      "prompt": "Build the unified etanah-pelupusan graph at E:/Projects/Melaka/etanah-pelupusan. The vanilla understand-anything pipeline has been run there. Use db-schema.sql from the inputs folder of the side-project, BPMN files from C:/Users/Ridhwan/Downloads/0. Softwares/pelupusan/. Resolve service beans this time — I want to see the BPMN serviceTask to Spring @Service edges.",
+      "expected_output": "Skill runs all 3 phases. Phase A adds ~734 table nodes + ~734 defines_schema edges. Phase B adds 26 flow nodes + 613 userTask + 55 serviceTask = 668 step nodes + 3238 flow_step edges + some calls edges where serviceTask beans resolve. Merge succeeds. Final graph schema-valid.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "prerequisite-missing",
+      "prompt": "Build the etanah knowledge graph for /tmp/fake-project where vanilla /understand has NOT been run.",
+      "expected_output": "Skill halts immediately with explicit message: 'Vanilla /understand has not been run yet. Run /understand on /tmp/fake-project first, then re-invoke this skill.' Does NOT attempt to run vanilla. Does NOT produce a partial graph."
+    },
+    {
+      "id": 4,
+      "name": "bpmn-folder-empty",
+      "prompt": "Build the etanah graph for the sample folder but the BPMN folder I'll point you at is empty (/tmp/no-bpmn-here/). The db-schema is fine. Vanilla has run.",
+      "expected_output": "Phase A runs (SQL OK). Phase B skips gracefully with warning 'no BPMN input — workflow extraction skipped'. Merge proceeds with only Phase A subdomain. Final graph schema-valid."
+    }
+  ]
+}
