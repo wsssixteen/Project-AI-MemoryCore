@@ -162,14 +162,24 @@ notes:
 
 qa=QA-262370
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\46. QA #262370 - Semua surat - Reorganize header surat
+qa_doc=projects/coding-projects/archive/QA-262370/QA-262370.md
 early_diagnostic=projects/coding-projects/archive/QA-262370/early-diagnostic.md
 branch=mlk/qa/262370
-commit=6b1459a0eb (2026-05-21) — QA #262370 - Semua Urusan - Sokongan SDT dalam text-box + susun semula logo Pejabat HeaderSurat  [branch delete-recreated 2026-05-21; supersedes bcdcadadb3 vAlign approach]
-phase=2-complete
+commit_cycle2=19346cb0a5 (2026-05-25) — QA #262370 - Susun semula HeaderSurat contact info alignment + perbetulkan logo pejabat
+commit_prior=6b1459a0eb (2026-05-21) — QA #262370 - Semua Urusan - Sokongan SDT dalam text-box + susun semula logo Pejabat HeaderSurat
+phase=2-complete-cycle-2
 local_test_confirmed=true
 status=archived
-post_mortem=main/post-mortems.md (entry 2026-05-20)
-kpi_entry=main/kpi-tracker.md (entry 2026-05-20)
+rework_cycle=2
+rework_reopened_ts=2026-05-25T12:50+08:00
+rework_closed_ts=2026-05-25T16:50+08:00
+post_mortem=main/post-mortems.md (entry 2026-05-25, cycle 2)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-25, cycle 2)
+prior_post_mortem=main/post-mortems.md (entry 2026-05-20, cycle 1)
+prior_kpi_entry=main/kpi-tracker.md (entry 2026-05-20, cycle 1)
+test_app_uat=PTMLK/03/L/PLTP/2026/7 (leenoor36@yahoo.com, PYSKN5A, pejabat 03 Alor Gajah)
+verified_cycle2=2026-05-25 — みや applied own Word UI fixes (Telefon/Faks/LamanWeb/Emel alignment + logo pejabat positioning); committed + pushed 19346cb0a5; ready to pass ticket to BA on Redmine
+rework_trigger=Redmine journal 2026-05-25 01:27 by Nurhafizah Hasan — alignment adjustment for Telefon/Faks/LamanWeb/Emel + logo regression discovered during みや's edits
 carry_forward=DONE 2026-05-21 — text-box SDT framework support SHIPPED. PelupusanWordEditorUtil.getAllElementFromObject extended: when recursion hits Drawing/Pict (non-ContentAccessor wrappers), TraversalUtil descends DrawingML/VML → v:textbox → w:txbxContent to collect SDTs. HeaderSurat.docx logo re-implemented as text-box-wrapped logoPejabatTanah CC. Branch mlk/qa/262370 delete-recreated with the text-box solution.
 priority=High
 scope_anchor=Multi-urusan ("Semua surat"). Single .docx fix in HeaderSurat.docx (shared reference doc consumed by 69 surat templates via headerSurat1 CC tag). みや's Word UI implementation: 7-col grid restructure with logo at Row 0 cell[5], vMerge=restart through Row 5, vAlign=bottom — logo sits at bottom of merged cell = aligned with contact-info baseline. Asymmetric col widths (Telefon/Faks narrow at 1147 dxa, LamSes/Emel gridSpan=2 wide at 2502 dxa) preserve room for long URLs/emails. Java side: NO changes (CENTER-removal in PelupusanWordCCMethodConstant was applied earlier but reverted — みや's docx implementation works without it).

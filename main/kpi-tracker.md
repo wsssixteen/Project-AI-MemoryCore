@@ -175,6 +175,16 @@
 
 ---
 
+### QA-262370 (rework cycle 2) — Susun semula HeaderSurat contact alignment + logo pejabat — 2026-05-25 — heavy multi-iteration (full session)
+
+**Closure type**: code-fix-shipped — みや applied own Word UI fixes for Telefon/Faks/LamanWeb/Emel alignment + per-pejabat logo positioning. Committed `19346cb0a5` on top of cycle-1's `6b1459a0eb`, same branch `mlk/qa/262370`, pushed.
+
+**Extras**:
+- Standalone Java probe diagnostic — built + ran `HeaderSuratProbe.java` against the live WAR classpath; surfaced that v5's `TraversalUtil` on `Pict` (VML legacy text-box) finds ZERO nested SDTs. The v5 framework fix is incomplete for the Fallback path the mc-preprocessor picks. Diagnostic carried forward to `todo.md` Q2.
+- `word-ui-vocab-gate.js` hook shipped mid-session — deterministically injects "MANDATORY Word UI translation" reminder when `.docx`/Word/SDT/OOXML keywords appear in prompt. Hook count 33 → 34, UserPromptSubmit 14 → 15.
+- `rubric` skill v1.0→v1.1 — added multi-perspective mode (single-implementation review) alongside option-ranking. Same evaluative discipline, two modes, one cohesive home.
+- Session-briefing format spec fix — replaced ambiguous ```-fenced examples with 4-space-indent + explicit "NEVER wrap the briefing in a code fence" Iron Rule. Source-side fix; reader-side discipline replaced.
+
 ### QA-262370 — Semua surat - Reorganize header surat (logo Pejabat selari dengan maklumat hubungan) — 2026-05-20 → 2026-05-21 — heavy multi-iteration
 
 **Closure type**: code-fix-shipped — v5 text-box SDT framework + text-box HeaderSurat.docx, committed `6b1459a0eb` on `mlk/qa/262370` (supersedes the earlier `bcdcadadb3` vAlign-only approach).
