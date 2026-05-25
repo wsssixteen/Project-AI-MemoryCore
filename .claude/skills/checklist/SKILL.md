@@ -1,3 +1,9 @@
+---
+name: checklist
+description: Universal task checklist — enumerate every issue / requirement / sub-task into a tracked numbered list at the start of any multi-step task. Mandatory at quest accept + every phase boundary. Triggers — "/checklist", "make a checklist", "list every issue", "enumerate the items", "Phase 0 issue checklist", "track every sub-task", "go through every", "enumerate before pursuing", before any multi-item work.
+allowed-tools: Read, Write, Edit
+---
+
 # checklist — Universal Task Checklist
 
 ## Purpose

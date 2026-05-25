@@ -114,25 +114,88 @@ Save / quick-save / save-all / update-memory / `/observe` / forge commands / Red
 
 ## 📂 Active Project Rules
 
-When working on a project, **always load its project file first** - project files live in `projects/coding-projects/active/` and are the source of truth for specs, strategy, and constraints.
+When working on a project, **always load its project file first** — project files live in `projects/coding-projects/active/` and are the source of truth for specs, strategy, and constraints.
 
-**Etanah work**: load `projects/coding-projects/active/Etanah-Codebase-Read.md` before any Etanah ticket - it is the canonical home for the Non-Negotiable Rules (entity-first SQL, Word-template-first lookup, branch/pull discipline, layer-aware Phase 0 + Recon ritual, TRG guardrail, PDF annotation extraction, renderer-override checks) and the Etanah-Knowledge Protocol (migrated there 2026-05-22). **🔴 KNOWN BROKEN (2026-05-23):** this file does not exist yet — the 2026-05-22 decomposition cited it but never created it. Surfaced by Phase 0 baseline + boot-required-read-gate. Action: **use `bankai` skill to consolidate scattered Etanah content into the file** — see todo.md Q1 entry "Consolidate Etanah Non-Negotiable Rules + Etanah-Knowledge Protocol into Etanah-Codebase-Read.md via Bankai skill".
+**Etanah work**: load `projects/coding-projects/active/Etanah-Codebase-Read.md` (391 lines, exists on main — the prior "🔴 KNOWN BROKEN" annotation was stale and is now removed 2026-05-25; full body lives in that file). Below is the **trigger-time summary of the most critical non-negotiables** so they fire at boot recognition (restored 2026-05-25 — decomposition cite was prose-only, target file is not auto-loaded; redundant with `Etanah-Codebase-Read.md` by design, OK per みや 2026-05-25):
+
+**Etanah Non-Negotiable Rules at trigger time:**
+
+- **Working-analog first** (canonical: `.claude/auto-memory/feedback_simplify_and_reference.md`, auto-loaded; also injected as Phase-0 row #4 in `ticket-gate.js:87`): Etanah is a mature system — most patterns are already solved somewhere. Before any new fix, find the closest working analog (sibling urusan / sibling tugasan / sibling bean / sibling template / working entry in `tindakan.config.json` / `tugasan.config.json` / `template.config.json`) that solves a similar shape and read its config + code path. Match the existing shape. **Slip-log running count: 22 strikes (2nd most frequent slip category).** 「みや 2026-04-29 onwards: *"This is a mature system — things are catered for"*, *"Refer to other working urusans/tugasans"*, *"Scrutinize Codex's changes — don't just refer to them"*, *"Simplify"*.」
+- **Entity-first SQL**: query JPA entities via Hibernate annotations + DB tables, not by guessing column names. Verify table + column names before constructing SQL. Canonical task-state query: `UMM_A_TGSN + IND_TGSN + UMM_ALIRAN_KERJA + PCP_PENGGUNA + IND_PEJABAT`.
+- **Word-template-first lookup**: when a ticket touches a `.docx`, read `PelupusanWordCCMethodConstant.java` first to identify the populator + CC tags before grepping the template binary.
+- **PDF annotation extraction at Phase 0**: BA-provided PDFs contain Annot objects (FreeText comments, highlights, sticky notes) — extract via PyMuPDF (`annotations` skill) before treating the PDF text as the whole brief. Default Read tool misses annotations.
+- **Renderer-side overrides before cache theories**: when output looks wrong, grep for forced-override patterns (CENTER alignment overrides, hardcoded image dimensions, vMerge locks) at the renderer/util layer BEFORE blaming cache or build state.
+- **Branch / pull discipline**: at Phase 0 start, `git status && git branch --show-current` on relevant repos; if not on `mlk/master`, do the standard sequence (stash → checkout master → pull --ff-only → stash pop). At Phase 1 close, pull before branching (see Phase 1 Closure section below).
+- **Layer-aware Phase 0**: classify the fix layer (Java / .docx / config.json / SQL / Flowable BPMN / JSF / Spring) BEFORE Recon. Different layers have different Universal Checks.
+- **TRG guardrail**: TRG is HARD EXCLUDED from Melaka work. If a fix would touch TRG code paths, stop and surface.
+- **Multi-state classification first**: at every ticket-engagement, identify which state(s) the fix scope spans (Melaka-only, multi-state, all-states). Default scope = Melaka-only unless ticket explicitly broader.
 
 ---
 
 ## ⚔️ Quest Workflow
 
-**Protocol file**: `quest/quest-protocol.md` — load it when any work trigger fires. It is the canonical home for the full workflow: triggers, the non-negotiable rules, Phase 0/1/2, the Discovery → Recon → Simulate → Rubric → Apply → Verify → Commit → Push → Wrap checkpoints, **Quest State Transitions**, the extended `active.txt` schema, and the **Debug Mode Rituals**.
+**Protocol file**: `quest/quest-protocol.md` — full workflow body (Phase 0/1/2 phases, Discovery → Recon → Simulate → Rubric → Apply → Verify → Commit → Push → Wrap checkpoints, Quest State Transitions, extended `active.txt` schema, Debug Mode Rituals). Load it when any trigger below fires.
 
-**Triggers** (load the protocol + activate Quest): ticket number (`QA #258022`, `UAT-CR #239225`), continuation / scoping ("continue X", "back to X", "X rework", "focus on X", "resume X"), methodology on a ticket ("/appraise X", "review X again"), or any generic work intent ("I have a ticket to debug", "Read Redmine").
+**Triggers** (activate Quest / re-engage with a ticket automatically — not just first mention; restored to TABLE form at boot 2026-05-25 after the decomposition lost the bare-ticket-number coverage):
 
-**Skills**: `/quest start|hold|resume` · `/familiar` (sub-agent for >500-line reads) · `/env-check` · `/verify`
+| Trigger phrase pattern | Examples |
+|---|---|
+| Ticket number mentioned (ANY form — with or without prefix) | `QA #258022`, `FAT-OR #255637`, `UAT-CR #239225`, `262233`, `let's start with 262233`, `the 262233 ticket`, `PTMLK/.../PRZ/2026/X` |
+| Continuation / scoping | "continue ticket X", "focus on X", "let's work on X", "let's do X", "let's start with X", "X rework", "back to X", "resume X", "start X" |
+| Methodology applied to a ticket | "/appraise on X", "/simplify X", "scrutinize X", "review X again" |
+| Generic intent | "I have a task / ticket / bug to debug", "Read Redmine", any formal Etanah/Redmine work context |
+
+**Non-negotiable trigger-time rules (restored 2026-05-25 — lost during decomposition; failed this session's QA-262233 cycle-2 quest activation):**
+
+- **Handoff / Notes / History first** (hard rule, 2026-04-29; broadened 2026-05-25): when a ticket # is mentioned, ALWAYS check `quest/active.txt` for a matching `qa=QA-<num>` block. If found:
+  - Read `<task_folder>/1. Notes.txt` if it exists — prior test data + logins (cycle-1 entries are gold for rework cycles)
+  - Read `<task_folder>/0. Brief/History.txt` fully — full BA journal (not just tail)
+  - If `handoff_file=` field exists in the active.txt entry → read that file too
+  - **Failure mode this rule prevents** (2026-05-25 QA-262233 cycle-2): I "discovered" via SQL that `PTMLK/01/L/PRZ/2026/20` + `nor.aini@melaka.gov.my` were valid test data — they were literally Notes.txt entry #5 from cycle-1, sitting unread the entire session.
+
+- **Re-engagement load before any judgement** (hard rule, 2026-04-30 — re-surfaced to CLAUDE.md 2026-05-25): every time a ticket is referenced via ANY trigger above (initial OR continuation OR rework), Ruri MUST verify Task folder + Notes + History + handoff are loaded in CURRENT session context BEFORE producing any analysis, appraisal, code proposal, or recommendation. Loading once at session start is NOT enough — re-engagement after time-gap or context-shift requires explicit re-verification (a quick read or an emitted "Task folder + Notes + History loaded: ✓" line). Quest re-engagement on an `archived` ticket reopened by BA (Redmine status change) counts as a fresh engagement requiring full re-load + folder reactivation (Archive\ → Tasks\Melaka\<n>\ + create `3. Rework/` subfolder per DE signal #5 + cycle 2/3 convention).
+
+- **Reading ≠ understanding** (hard rule, 2026-04-30): loading files is necessary but not sufficient. Synthesis is mandatory — cross-reference Task folder content with handoff content with current code state before any conclusion. When stating any user/role/data fact about a ticket, cite the source line (`Notes.txt:5 says nor.aini@melaka.gov.my is at PRMMKNPTG on /2026/20`).
+
+- **Phase 0 classification** (added 2026-05-05 per DE signal #5): at ticket re-engagement, classify the entry context — **New / Rework / Addition** — via active.txt status + Redmine sync delta + `3. Rework/` subfolder presence. Folder reactivation Archive\ → Tasks\Melaka\<n>\ is required for Rework/Addition cycles.
+
+- Never commit without `local_test_confirmed=true` in quest state.
+- Summon `/familiar` (sub-agent) when reading files >500 lines.
+
+**Phase 0 mandatory reads at re-engagement** (visible checklist — emit at quest start, mark ✓ as each completes):
+
+```
+⬜ active.txt block for QA-<num> located + status read
+⬜ Task folder location confirmed (active vs Archive — move if Rework/Addition)
+⬜ 1. Notes.txt read (or created if quest-new)
+⬜ 0. Brief/History.txt read fully
+⬜ early-diagnostic.md / QA-<num>.md cycle-N section opened (Scout familiar spawn if missing)
+⬜ env-check run (UAT/FAT target confirmed per ticket Env)
+⬜ Recon Universal Checks block emitted (per quest-protocol.md Recon section)
+```
+
+**Skills**: `/quest start|hold|resume` · `/familiar` (sub-agent for >500-line reads) · `/env-check` · `/verify` · `/appraise` · `/checklist`
 
 ---
 
 ## 🔬 Debug Mode Rituals
 
-Predicate Box · Evidence Language Discipline · Momentum Circuit-Breaker · Debug Mode Setup · Violation Log — see `quest/quest-protocol.md` → **Debug Mode Rituals** (migrated there 2026-05-22). Activated when みや says "debug mode on", a debugger value is shared, or the quest protocol flags an active debug session; mandatory before any fix-proposing Edit while active.
+**Full body**: `quest/quest-protocol.md:822-890` (migrated there 2026-05-22). Below is the **trigger-time summary** so the rituals fire at boot recognition (restored 2026-05-25 — decomposition cite was prose-only, target file is not auto-loaded; redundant with quest-protocol.md by design, OK per みや 2026-05-25).
+
+**Activation**: みや says "debug mode on", a debugger value is shared, the quest protocol flags an active debug session, OR a fix-proposing Edit is imminent during investigation.
+
+**Mandatory rituals while in debug mode**:
+
+| # | Ritual | When to emit | Format / Discipline |
+|---|---|---|---|
+| 1 | **Predicate Box** | Before every code/config Edit | Emit a box: `TRUE IF: <what fix assumes>` / `PROVED BY: <file:line evidence>` / `FAILED WHEN: <what data shape disproves>`. Sub-rule (per `meta/slip-log.md` 2026-05-25): when ≥2 hypotheses exist, emit ONE box PER hypothesis + RANK by cost-to-verify (queries / files / UI steps), attempt cheapest first. Banned: issuing user-action steps on hypothesis N while hypotheses 1..N-1 are still unverified. |
+| 2 | **Evidence Language Discipline** | Whenever stating a hypothesis or finding | Use `verified` / `hypothesis` / `assumed` explicitly. **Banned**: "should", "ought to", "would", "could be", "most likely", "strong likely" without file:line backing. Soft hedges are defensive framing per `feedback_defensive_tone.md`. |
+| 3 | **Momentum Circuit-Breaker** | After theory fails 2× in a row | RESET — try a different CATEGORY of cause (data vs code vs config vs environment vs template), NOT a refined version of the same theory. Pairs with `RecursiveLoopDetector.js` PostToolUse hook (3× similar args → reminder). |
+| 4 | **Debug Mode Setup** | At debug session start | Confirm: env target (`/env-check`), debugger access path, logging level + server.log path (`E:/Dev/jboss-7.4-plp-melaka/standalone/log/server.log`), breakpoint placement, reproduction recipe. |
+
+**Violation log**: `Feature/Forge-Self-Improvement-System/debug-ritual-violations.md`. Slips on Rituals 1-4 get a one-line entry per occurrence. Recurring slip-shape → ritual redesign, not re-promise.
+
+**Skill anchors**: `predicate-box` (Ritual 1, auto-loaded skill description fires on Edit-during-debug recognition). Rituals 2-4 currently have NO skill anchor — they depend on this boot-loaded summary + the protocol file body.
 
 ---
 
@@ -163,8 +226,8 @@ One-time per machine — see `.claude/new-machine-setup.md` (routed out of CLAUD
 - `/env-check` — verify/switch local env state (etanahv3 config + standalone.xml + repo branch)
 - `/verify` — universal workflow-checkpoint verification (Phase 0 / Apply-done / Phase 1 close-out / DE Checklist D)
 
-**Also load at boot**: `.claude/claude-md-amendments.md` — temp amendments pending absorption into CLAUDE.md / skills (CLAUDE.md is editable again as of 2026-05-22; absorbing the 9 remaining amendments is the final decomposition step). Treat its contents as if part of this file until then.
+**Historical reference**: `.claude/claude-md-amendments.md` — ✅ EMPTIED 2026-05-25; all 16 amendments absorbed into canonical homes (table inside the file documents final disposition). File kept for historical disposition log; no active amendments load from it. Boot-load remains as informational-only / low-priority; can be dropped from boot list in a future cleanup.
 
-*Version: 1.27 | Last updated: 2026-05-22 - decomposition: Save Commands Reference -> `.claude/save-commands.md`; Active Project Rules (Etanah hard rules + Etanah-Knowledge Protocol) -> `Etanah-Codebase-Read.md`*
+*Version: 1.29 | Last updated: 2026-05-25 — Three sections restored at boot-loaded surface after QA-262233 cycle-2 audit identified same decomposition-broke-trigger-time-discipline failure mode: (1) Quest Workflow (v1.28 — trigger TABLE + 3 hard rules + Phase 0 visible checklist), (2) Active Project Rules / Etanah Non-Negotiable Rules summary (9 rules incl. working-analog-first surfaced from `feedback_simplify_and_reference.md`; stale "🔴 KNOWN BROKEN" annotation removed — Etanah-Codebase-Read.md exists on main at 391 lines), (3) Debug Mode Rituals summary (4 rituals with trigger-time formats; full body remains in `quest/quest-protocol.md:822-890`). Redundancy with target files is intentional per みや 2026-05-25: "It is okay to be redundant" — what matters is boot-loaded visibility. Lines added: ~80 total (CLAUDE.md ~170 → ~250, still 63% lighter than pre-decomp 677).*
 
 **Version-bump discipline (added 2026-05-13 per みや)**: every Refine Block / hard-rule addition to a protocol file MUST update the file's Version + Last Updated stamp in the same edit pass. Version is a single-integer increment per protocol revision (1.6 → 1.7). Audit-log entries alone don't surface protocol drift; the footer stamp does.

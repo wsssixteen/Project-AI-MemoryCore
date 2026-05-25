@@ -1,3 +1,9 @@
+---
+name: appraise
+description: Socratic plan stress-test — interrogate weak points across Assumption / Scope / Evidence axes. Triggers — "/appraise", "appraise this", "scrutinize", "stress-test the plan", "pressure-test", "interrogate the proposal", "weigh this approach", "challenge this plan", before committing to any implementation, architectural decision, or multi-step change.
+allowed-tools: Read, Grep, Glob, Bash
+---
+
 # /appraise — Socratic Plan Interrogation
 
 > Stress-test a plan, proposal, or approach by systematically interrogating its weak points.

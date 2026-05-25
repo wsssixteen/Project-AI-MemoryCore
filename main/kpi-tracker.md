@@ -37,6 +37,17 @@
 
 ## Entries
 
+### QA-262233 cycle 2 — PRZ Ringkasan Risalat MMKN PTG (Jabatan Teknikal fix) — 2026-05-25 — ~3h (multi-session, includes rediscovery overhead from Phase 0 skip)
+
+**Closure type**: code-fix-shipped (commit `5023fbf2fc` on `mlk/qa/262233v2`); BA verification on FAT pending (cherry-pick to `mlk/fat-env` by deployer team)
+
+**Extras**:
+- Identified + cleaned **polluted git stash pop** mid-Phase-1 — preserved 65 lines of QA-262869 PPTPB §6 populator WIP at `projects/coding-projects/active/QA-262869/populator-step6-WIP.java.txt` (otherwise would have been committed under wrong ticket OR lost). Cycle-2 commit was independently surgical: +8/-6.
+- Surfaced **two sibling-populator latent defects** (`populateJTRingkasanRisalatPT`, `populateJTRingkasanRisalatPLPS`) sharing the same fragile metadata filter shape — documented in post-mortem Carry Forward for follow-up ticket spawn.
+- Discovered + documented the **UAT latent YB-leak** (blank-metadata YBs like YB Puan Siti Faizah rendering inside JT tables on UAT) — same root cause as FAT's UPEN-drop bug, opposite direction. One fix solves both.
+
+---
+
 ### QA-262783 — PPTPB Bayaran Sewa Tambahan default 0.00 + remove mandatori — 2026-05-25 — ~25 min Phase 0+2
 
 **Closure type**: delegated (colleague faizudin already shipped commit `1692e97b52`; Ruri verified + Phase 2 archive only)

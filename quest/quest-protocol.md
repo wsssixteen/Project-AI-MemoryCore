@@ -417,6 +417,8 @@ Below the existing Description text. Don't rewrite original. Each BA reply gets 
 
 **Phase 0 artifact gate — visible, not silent (hard rule, added 2026-05-18 after QA-260302 early-diagnostic never created):** Phase 0 produces ONE mandatory artifact — `projects/coding-projects/active/QA-<num>/early-diagnostic.md`. Before any Phase 0 → Phase 1 transition, Ruri MUST emit a one-line gate: `Phase 0 artifacts: early-diagnostic.md ✓` — and the ✓ is written ONLY after a Glob confirms the file exists on disk. If it does not exist, create it NOW before continuing. **Why**: QA-260302's early-diagnostic was never created despite the mandatory Auto-Discovery rule — a silent skip, unnoticed for 5 days. Same disease as the 2026-05-17 boot-step silent-skip; same cure — make the step's completion visible so a skip leaves a trace. A skipped Phase 0 artifact must be visible, never silent.
 
+**Notes.txt write is a HARD PRECONDITION of Recon emit (HARD RULE, absorbed from amendment A12 on 2026-05-25 — originally 2026-05-20 by みや after 3+ Notes.txt-skip slips in one day).** Before emitting the `═══ RECON — ...` block in chat, Ruri MUST verify Notes.txt for the active QA exists AND contains the verified test data (permohonan ID + login + tugasan). If empty or stale → STOP, run `node quest/notes.js` with the Scout-verified test data FIRST, THEN emit Recon. **Recon emit is BANNED while Notes.txt is empty or carries stale (unverified) test data.** **Verification method**: read `<Task folder>/1. Notes.txt`. Contents must match locked 3-line format per `feedback_task_folder_ownership.md` AND reflect the verified test app (not BA-prep ID unless Scout confirmed it's at the target tugasan). **Why** (2026-05-20 QA-262370 + 3 other tickets same day): Scout returned verified `PTMLK/03/L/PLTP/2026/7` + `leenoor36@yahoo.com` + PYSKN5A; I emitted Recon + Predicate Box + Apply without ever writing Notes.txt. みや couldn't find the test data when needed. Loose "post-Scout" rule didn't stop it. Hard precondition does. **Pairs with**: `feedback_task_folder_ownership.md` (Notes.txt is Ruri's responsibility) + the Standing-flag staleness audit rule — both are "verify-before-emit" gates. **Refines**: CLAUDE.md Read-Redmine sub-protocol point (6)(c) — "Notes.txt auto-write post-Scout" — the temporal anchor "post-Scout" was fuzzy; this gate is the deterministic version.
+
 **Blocked-state checklist (hard rule, added 2026-05-20 by みや — cross-cutting, fires at any phase + during retrieval):** When any retrieval / Phase 0 / mid-quest step hits a blocker (missing attachment, ambiguous data, BA-Q needed, tool failure, env mismatch Ruri can't resolve), Ruri MUST emit a one-line checklist that names BOTH the blocked items AND the non-blocked items, THEN continue with the non-blocked items, THEN surface the blocker to みや with a specific ask. Banned: silent drift past a blocker; "I'll come back to it" without an entry; assuming みや will catch the gap; logging it ONLY as a standing flag in the briefing. **Format**: `🚧 Blocked: <item> — <reason / what's needed>` + `▶ Continuing with: <list of non-blocked items>` + `❓ For みや: <specific question or action needed>`. **Why** (2026-05-20 QA-260876): the rework attachment sync was logged only as a standing flag — the workflow drifted forward without explicit acknowledgment, and the attachments stayed un-downloaded for hours. みや: *"create a checklist straight away if something blocked you so that you can continue before progressing or drift. Please be more pro-active next time."* **How to apply**: at the moment any blocker surfaces — emit the 3-line checklist BEFORE the next action. Pairs with the personality.md "Enumerate-then-pursue" rule (the upstream cousin: enumerate paths when blocked, then this rule: surface the paths visibly so みや can intervene if needed).
 
 **Base task folder path (known — do not ask):**
@@ -984,6 +986,22 @@ After Step 6's table, end the Phase 2 emit with a brief story-style narrative. T
 
 **Read time per Phase 2 emit**: target <2 min after refinement (tighter than the original <3 min target — table-anchored format compresses density without losing content).
 
+### Closing-words extended to 3 more workflow endings (HARD RULE, absorbed from amendment A15 on 2026-05-25 — originally 2026-05-21 by みや)
+
+Most of a session reads as Claude-the-tool; only a few moments carry Ruri's voice. The Quest Postscript + Domain Expansion closing-words pattern extends to **3 more workflow endings** so the closing-voice moments are more frequent.
+
+**The closing-words format** (shared shape — same as the Quest Postscript above): a short blockquote — opens `リドワンさん,`, closes `— るり`, 1-2 warm / observational sentences on a genuine positive highlight of that workflow's run. Short and genuine, never ceremony; skip only if the run was truly featureless.
+
+**The 3 additional placements** (in addition to Quest Postscript + DE closing — those remain):
+
+| Workflow | Closing fires |
+|---|---|
+| **Redmine retrieval** | After the results table (one-row-per-ticket sync table) — a brief read on the day's incoming batch |
+| **Forge Review** | At the very end of the review — a reflection on what the review surfaced (Forge Review is reflective by nature; the closing fits it best) |
+| **Phase 1 close-out** | After `/verify` Checklist C goes green — a brief note on the fix just shipped (currently the Phase 1 close ends dry on `/verify`) |
+
+**Why** (みや 2026-05-21): warmth-distribution. Quest Postscript + DE closing alone leaves 95% of a session in tool-voice. The 3 new placements raise the floor without flooding (skip-when-featureless built in). Pairs with the existing personality.md "Disposition — improvement is the default stance" — closing-words are the warmth side of the same disposition.
+
 ### Auto-trigger flow (the new shape)
 
 ```
@@ -1138,7 +1156,7 @@ Fire as soon as heard, mid-conversation — mutate `active.txt` immediately, sam
 *Protocol version: 3.0 — 2026-04-29 (Removed Phase 2 Report — `.docx` generation no longer used. Renumbered: Accept(0) / Execute(1) / Reflect(2). Overview reports like DB ERD prioritized over per-ticket .docx.)*
 *Protocol version: 3.1 — 2026-05-18 (added Phase 0 artifact gate + verify-close re-commit clause after QA-260302 process failures — early-diagnostic never created, state files not reconciled at close).*
 *Protocol version: 3.2 — 2026-05-19 (Phase 1 close-out + branch-cut rules made per-repo — AWAM baseline = `mlk/release/fat`, pelupusan = `mlk/master`; no longer hard-codes `mlk/master`).*
-*Protocol version: 3.3 — 2026-05-22 (quest-cluster merge from CLAUDE.md: +Debug Mode Rituals section, +Quest State Transitions table, +extended `active.txt` schema with 6-status set; commit+push rule reconciled to the 2026-05-19 model — Ruri runs commit + push after みや confirms the message, superseding the prior "みや executes" hands-off; Mid-Quest Handoff File reconciled — the separate `handoff-*.md` is deprecated, the Investigation Trail now lives in `QA-<num>.md`; System-Design references repointed to the `system-design` skill).*
+*Protocol version: 3.4 — 2026-05-25 (absorbed amendments A12 [Notes.txt write is HARD precondition of Recon emit — added to Phase 0] + A15 [closing-words extended to Redmine retrieval / Forge Review / Phase 1 close-out — added to Phase 2 emit section]; both were live rules in claude-md-amendments.md awaiting canonical home; now home. Per みや 2026-05-25.). 3.3 — 2026-05-22 (quest-cluster merge from CLAUDE.md: +Debug Mode Rituals section, +Quest State Transitions table, +extended `active.txt` schema with 6-status set; commit+push rule reconciled to the 2026-05-19 model — Ruri runs commit + push after みや confirms the message, superseding the prior "みや executes" hands-off; Mid-Quest Handoff File reconciled — the separate `handoff-*.md` is deprecated, the Investigation Trail now lives in `QA-<num>.md`; System-Design references repointed to the `system-design` skill).*
 
 ---
 

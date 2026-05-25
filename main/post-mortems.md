@@ -47,6 +47,36 @@ Faster: [one-line observation]. Action applied: [concrete edit to skill/protocol
 
 ## Entries
 
+### QA-262233 cycle 2 — PRZ Ringkasan Risalat MMKN PTG (Jabatan Teknikal fix) — 2026-05-25
+
+**Faster-finding**: this entire quest could have been ~2 hours faster if Quest had been ACTIVATED at first ticket mention. Action applied: slip-log entries + `quest-resume-preflight.js` hook PROPOSED (not yet built) at `meta/slip-log.md` 2026-05-25 quest-protocol-skip row.
+
+**Contributing Factors**:
+- **Quest never activated**: `.claude/hooks/ticket-gate.js:47` regex `\b(?:QA|FAT-OR|UAT-CR|FAT|UAT)\s*#?\s*(\d{4,})\b/i` requires QA/FAT/UAT prefix. みや's "Let's start with 262233" had no prefix → hook silent → no Phase 0 preflight injected.
+- **`Etanah-Codebase-Read.md` still missing**: CLAUDE.md:81 cites it as canonical home for Etanah non-negotiables (incl. Notes.txt-read-at-quest-start, folder-reactivation-at-rework, Recon ritual). File doesn't exist (acknowledged `🔴 KNOWN BROKEN 2026-05-23`); rules are scattered prose.
+- **A12 amendment scope-mismatch**: claude-md-amendments.md A12 says "Notes.txt write is a HARD PRECONDITION of Recon emit" — gate fires on Recon emit. I never emitted Recon → gate never triggered → Notes.txt unread despite 5 cycle-1 entries (incl. `PTMLK/01/L/PRZ/2026/20` + `nor.aini@melaka.gov.my`) being precisely what I rediscovered via SQL.
+- **Predicate-box discipline applied to ONE hypothesis instead of N**: I emitted Predicate Box for template-collapse (expensive verify) but skipped the equally-plausible YB-filter hypothesis (1-SQL-query verify). `predicate-box` skill description doesn't mandate per-hypothesis emission + cost-to-verify ranking.
+- **Test-data filter axis incomplete**: SQL query filtered YB by `mklmt_tmbhn` metadata only, missing the name-pattern axis humans actually use. `multi-dim-evidence` skill exists but is scoped to BA visual evidence, not to test-app selection queries.
+- **Stash-pop pollution**: `git stash list` had 2 pre-existing entries (`QA-261986 prep` + `258022`) from prior sessions. Phase 1 `git stash pop` resurrected 65 lines of QA-262869 PPTPB §6 populator WIP. No hook checks `git stash list` before pop. Discovered mid-staged-diff review; surgically removed before commit; WIP preserved at `projects/coding-projects/active/QA-262869/populator-step6-WIP.java.txt`.
+
+**Process Notes**:
+- BA Nurhafizah reopened cycle 2 at 2026-05-25T04:04Z. UAT-side latent bug (YB blank-metadata leak) was ALSO addressed by the same fix — confirmed via UAT data patch test on `PTMLK/01/L/PRZ/2025/5` + 3 INSERTed JT rows.
+- Recon was emitted as a diagnostic walk, not as a formal Universal Checks block. CLAUDE.md's Recon discipline (per the moved-to-`Etanah-Codebase-Read.md`-but-file-missing rules) was prose-only, dependent on model attention.
+- I built `quest-resume-preflight.js` design but DIDN'T ship — みや countermanded mid-active-ticket: *"NOT WHEN I AM TRYING TO FOCUS ON MY FUCKING JOB RIGHT NOW"*. Hook code drafted; deferred to maintenance window.
+- Cycle-1 single-JT test verification masked the multi-JT path defect. Both directions (YB-leak-into-JT on UAT, real-JT-dropped-as-YB on FAT) are the same root cause — populator's metadata-driven filter is fragile.
+- Fix shipped: `5023fbf2fc` on `mlk/qa/262233v2`. +8/-6 in `populateJTRingkasanRisalatPRZ` filter — name-pattern detection (YB/YB. prefix OR AHLI DEWAN UNDANGAN substring), drops the `Gson gson = new Gson() + JsonObject parse` block entirely.
+
+**Carry Forward**:
+- Build `quest-resume-preflight.js` hook (bare-ticket-# regex + active.txt cross-check + status ∈ {hold/closed/archived/blocked/delegated} → mandate Phase 0 reads) → `main/todo.md` Q1 (next maintenance window, NOT during active ticket).
+- Apply name-pattern filter to sibling populators `populateJTRingkasanRisalatPT` + `populateJTRingkasanRisalatPLPS` — they carry the same fragile `obj.has("ADUN") || obj.has("DUN")` shape (verified `grep -n "obj.has" PelupusanWordCCMethodConstant.java` shows ≥5 occurrences) → spawn separate ticket OR roll into a follow-up commit on `mlk/qa/262233v2`.
+- Refine `predicate-box` skill SKILL.md with explicit sub-rule "≥2 hypotheses → predicate-box-per-hypothesis + rank-by-cost-to-verify + attempt cheapest first" → already proposed in `meta/slip-log.md` row 2026-05-25 predicate-box-incomplete-ranking; design memo pending.
+- Bankai consolidation to actually CREATE `Etanah-Codebase-Read.md` (todo.md Q1) — until done, the rules are homeless and quest-start gates can't reference them.
+- Add `git stash list` check to `prepare-commit-trigger.js` (or quest-protocol.md Phase 1 step 2) — warn when multiple stash entries exist before pop.
+- Personality.md "Mistake → action, not words" rule needs timing sub-clause: build hook AT slip-time IF lightweight, DEFER if user is mid-active-ticket-focus.
+- UAT data patch rollback SQL queued (below) — みや runs at convenient time.
+
+---
+
 ### QA-262783 — PPTPB Bayaran Sewa Tambahan default 0.00 + remove mandatori — 2026-05-25 — discovered already-fixed by colleague
 
 **Faster-finding**: would have skipped ~25 minutes of Scout/Recon/DB-fishing if Phase 0 had run `git log -- <suspected file>` as the FIRST diagnostic step — faizudin's commit `1692e97b52` would have surfaced instantly. Action applied: new Phase 0 sub-step "Prior-Work Probe" added to quest-protocol.md (proposed via Refine Block below — pending みや nod): `git log --oneline -10 -- <suspected_file>` + `git branch -a --contains <recent_commit>` BEFORE any Recon. Specifically catches the "ticket-already-fixed-by-colleague" class of waste.

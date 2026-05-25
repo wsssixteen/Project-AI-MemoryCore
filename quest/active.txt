@@ -2,21 +2,33 @@ active:
 qa=QA-262233
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\43. QA #262233 - PRZ - Penyediaan Risalat MMKN - PTG - Issue on Ringkasan Risalat MMKN
 qa_doc=projects/coding-projects/archive/QA-262233/QA-262233.md
-branch=mlk/qa/262233
-commit=30d37f3b44 (2026-05-20) — QA #262233 - PRZ - Ringkasan Risalat MMKN - align Ulasan JT table width + tighten row spacing
-phase=2-complete
+branch=mlk/qa/262233v2
+commit_cycle1=30d37f3b44 (2026-05-20) — QA #262233 - PRZ - Ringkasan Risalat MMKN - align Ulasan JT table width + tighten row spacing
+commit_cycle2=5023fbf2fc (2026-05-25) — QA #262233 - PRZ - Ringkasan Risalat MMKN - Jabatan Teknikal fix
+phase=2-complete-cycle-2
 local_test_confirmed=true
 status=archived
-post_mortem=main/post-mortems.md (entry 2026-05-20)
-kpi_entry=main/kpi-tracker.md (entry 2026-05-20)
-issue_one_liner=PRZ Penyediaan Risalat MMKN PTG — Kemaskini button loads too long + Ulasan Teknikal table excessive vertical gap (per PNG "Tidak perlu gap")
-scope_layer=Parent template TemplateRingkasanRisalatPRZ.docx + external JabatanTeknikal.docx (Table tagged jtRingkasanRisalatPRZ)
-scope_anchor=2 issues fixed by 2-file edit: (1) Issue #1 slow-load was DOC-STATE — old DMS document baked broken table-width settings; new document generated under fixed template loads fast (verified locally + on BA's permohonan after regen). (2) Issue #2 gap+misalignment fixed by parent template edit (trHeight cleanup + structural split) + JabatanTeknikal.docx PRZ-table widened to 18.5cm with -1.3cm indent to match parent's top-section dimensions.
-files_changed=TemplateRingkasanRisalatPRZ.docx (みや's edit — trHeight + structural split) + references/JabatanTeknikal.docx (PRZ-table dimensions widened to match parent)
-test_app_uat=PTMLK/02/L/PRZ/2026/6 (norhaslinda.r@melaka.gov.my) — BA's original permohonan, re-tested + alignment confirmed after regen
+rework_cycle=2
+rework_reopened_ts=2026-05-25T04:04:06Z
+rework_closed_ts=2026-05-25T20:45+08:00
+post_mortem_cycle1=main/post-mortems.md (entry 2026-05-20)
+post_mortem_cycle2=main/post-mortems.md (entry 2026-05-25 cycle-2)
+kpi_entry_cycle1=main/kpi-tracker.md (entry 2026-05-20)
+kpi_entry_cycle2=main/kpi-tracker.md (entry 2026-05-25 cycle-2)
+issue_one_liner_cycle1=PRZ Penyediaan Risalat MMKN PTG — Kemaskini button loads too long + Ulasan Teknikal table excessive vertical gap (per PNG "Tidak perlu gap")
+issue_one_liner_cycle2=BA Nurhafizah 2026-05-25 04:04 UTC reopened (status 5→23) — PTMLK/03/L/PRZ/2026/11 on MLKFAT renders 1 of 2 Jabatan Teknikal rows. Root cause: populator's YB filter parses rjk_agensi.mklmt_tmbhn for ADUN/DUN keys; UPEN on FAT has those keys but is a real Jabatan Teknikal (data-tag fragile across envs).
+scope_layer=Java populator only (cycle 2). populateJTRingkasanRisalatPRZ filter swapped from metadata-driven to name-pattern-driven (YB/YB. prefix OR AHLI DEWAN UNDANGAN substring). Sibling populators (PT, PLPS) share the fragile shape but are out-of-scope for this ticket — separate follow-up.
+scope_anchor=PRZ populator only. populateJTRingkasanRisalatPRZ at PelupusanWordCCMethodConstant.java:10095. Replaced metadata-driven YB filter (lines 10111-10121) with name-pattern filter. Verified against 35 UAT rjk_agensi rows + 3 FAT agensis on BA's app — catches all 6 real YBs, keeps all real JTs incl. UPEN. Also fixes latent UAT leak where blank-metadata YBs (e.g. YB Puan Siti Faizah) rendered inside JT table.
+files_changed_cycle1=TemplateRingkasanRisalatPRZ.docx (みや's edit — trHeight + structural split) + references/JabatanTeknikal.docx (PRZ-table dimensions widened to match parent)
+files_changed_cycle2=src/main/java/my/gov/etanah/pelupusan/constant/PelupusanWordCCMethodConstant.java (+8/-6, populateJTRingkasanRisalatPRZ YB filter swap)
+test_app_uat_cycle1=PTMLK/02/L/PRZ/2026/6 (norhaslinda.r@melaka.gov.my) — BA's original cycle-1 permohonan, single JT
+test_app_uat_cycle2=PTMLK/01/L/PRZ/2025/5 (masirah@melaka.gov.my, aplikasi_id=2886121, tugasan=PRMMKNPTG) — TEST DATA PATCH applied: 3 INSERTed JT rows (a_jabatan_teknikal_id 3638/3639/3640) for multi-JT + YB scenario. Verified fix renders 3 JT rows + YB Siti Faizah filtered to Ulasan ADUN section. Rollback SQL prepared.
+ba_repro_app=PTMLK/03/L/PRZ/2026/11 (FAT, env=mlkfat) — BA Nurhafizah's reproduction. UPEN agensi_id=13 on FAT has {"DUN":"Ayer Keroh","NAMA_YB":"YB TUAN KERK CHEE YEE"} mklmt_tmbhn — mis-tagged data that old filter dropped.
 notes:
   - 2026-05-20: Retrieved (batch with QA-261613) — first test run of the refined retrieval system. QA-262233.md skeleton + Issue Checklist (4 rows) written from primary sources. Scout familiar spawned in background. Logged to quest/retrieval-tracker.md run #1.
-  - 2026-05-20: Phase 1 closed — みや applied parent template fixes; Ruri applied external JT table fix; committed 30d37f3b44 on mlk/qa/262233, pushed. Repo returned to mlk/master + pulled (now at d438f75022 — pulled in mid-closure to clear "add ulasan mmkn" upstream conflict). Phase 2 pending.
+  - 2026-05-20: Cycle-1 Phase 1 closed — みや applied parent template fixes; Ruri applied external JT table fix; committed 30d37f3b44 on mlk/qa/262233, pushed. Repo returned to mlk/master + pulled. BA verified UAT 2026-05-22 with single-JT case → status=archived.
+  - 2026-05-25: BA Nurhafizah reopened (cycle 2) — FAT multi-JT shape not covered by cycle-1 test. Quest was NOT properly activated at re-engagement (Phase 0 skipped — slip logged to meta/slip-log.md as quest-protocol-skip). Notes.txt cycle-1 entries (5 test apps including PTMLK/01/L/PRZ/2026/20) never read until late in the session. Recon hypothesis-ranking-by-feel + simulate-skip slips also logged.
+  - 2026-05-25: Cycle-2 Phase 1 closed — committed 5023fbf2fc on mlk/qa/262233v2, pushed. Repo on mlk/master, up to date. Polluted git stash pop discovered mid-Phase-1: 65 lines of QA-262869 PPTPB §6 populator work-in-progress had been resurrected; saved to projects/coding-projects/active/QA-262869/populator-step6-WIP.java.txt and surgically removed before commit. Phase 2 (post-mortem + KPI cycle-2 + UAT data patch rollback) pending.
 
 qa=QA-261613
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\44. QA #261613 - MLKFAT - PSBS - Kemasukan Keputusan MMKN dan P - Medan Tarikh Disahkan tidak papar pada skrin

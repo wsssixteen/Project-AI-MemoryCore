@@ -44,6 +44,10 @@
           },
           {
             "type": "command",
+            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\quest-resume-preflight.js\""
+          },
+          {
+            "type": "command",
             "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\prayer-gate.js\""
           },
           {

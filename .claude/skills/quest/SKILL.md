@@ -1,6 +1,6 @@
 ---
 name: quest
-description: Quest workflow management — accept, hold, or resume a QA ticket quest
+description: Quest workflow management — accept, hold, resume, or START a QA ticket quest. Triggers — "/quest start|hold|resume", "let's start with <ticket>", "let's start on X", "start working on X", "start X", "begin X", "pick up X", "continue X", "back to X", "resume X", "X rework", any bare ticket number that cross-matches a `quest/active.txt` qa= entry (e.g. "262233", "PTMLK/.../PRZ/2026/N"), any formal Etanah/Redmine ticket reference. Loads protocol, reads Notes.txt + History.txt, classifies New/Rework/Addition, emits Phase 0 visible checklist.
 argument-hint: "start <QA-number> <task-folder-path> | hold | resume"
 allowed-tools: Read, Glob, Write, Bash
 ---
