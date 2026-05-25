@@ -148,4 +148,66 @@ See `meta/principles.md` for the full 68-principle classified inventory.
 
 ---
 
+## 11 · Phrasing reference — how to route asks to the right meta-layer component
+
+> Added 2026-05-25 after みや asked "what keywords/skills should I mention when implementing into a skill + how specific on workflow/checkpoint?"
+> Use this card when you want a specific gate or skill to fire deterministically.
+
+### 11a · Reference Card — keywords by intent
+
+| Your intent | Recommended phrasing | Routes to / fires |
+|---|---|---|
+| **Add NEW skill** (net-new behavior) | "Create a skill for X" + "triggers should be A, B, C" + "should fire when Y" + "should NOT fire when Z" | `auto-skill-on-mistake` Step 3c + `system-design` Steps 0-6 |
+| **REFINE existing skill** (shape/wording/trigger) | "Refine /<skill-name>" or "the /<skill-name> skill is missing X trigger" or "tighten triggers on /<skill-name>" | skill-invocation-discipline-gate fires → Ruri invokes that skill via Skill tool + auto-skill-on-mistake Step 3a |
+| **RENAME or restructure existing** | "Rename /<skill-name> to X because Y" + "the name should be more specific" | system-design Step 5 naming-tier check |
+| **TRIGGER a correction loop** (catching a slip) | "you missed", "you forgot", "why didn't you", "I already told you", "this is the Nth time", "unacceptable", "can you not", "shouldn't you have", "did you actually", "did you go through proper" | auto-skill-trigger.js → auto-skill-on-mistake invokes automatically |
+| **INVOKE a specific skill** for current task | "Use /<skill-name>" or "invoke /<skill-name>" or "run /<skill-name> properly" or "use it as intended" | skill-invocation-discipline-gate → Ruri MUST use Skill tool (manual SKILL.md execution banned) |
+| **Convert prose-rule → skill** | "This is in prose at <file>, make it a skill" + "trigger phrases should be A, B" | auto-skill-on-mistake Step 3b (prose exists → make skill) |
+| **Add a HOOK** (deterministic, fires 100%) | "Make this fire deterministically on X event" or "add a PreToolUse hook on Y" or "this should be a hook, not a skill" | auto-skill-on-mistake Step 4 — explicitly hook-not-skill |
+| **STRUCTURE change** (new folder/file) | Best to first say: "What exists? Should we extend instead?" before "Let's add a folder for X" | inventory-first-gate.js — forces meta/INDEX read before new structure |
+| **NEVER fall into "add to CLAUDE.md"** | Banned by default — CLAUDE.md should stay thin. Say "make this a skill" or "make this a hook" instead | prose-default-gate.js catches "add to CLAUDE.md" / "hard rule" lock-signals |
+
+### 11b · Reference Card — workflow / checkpoint specificity
+
+| Workflow | Checkpoints | Phrasing pattern |
+|---|---|---|
+| **Quest** | Phase 0 / 1 / 2 + Discovery · Recon · Simulate · Rubric · Apply · Verify · Commit · Push · Wrap | "At Quest Recon, always X" · "Before Apply, MUST Y" · "At Phase 1 close-out, do Z" |
+| **Domain Expansion** | 12 numbered steps (Step 0a compaction check · Step 0b worktree sync · Steps 1-12 content + close) | "Add to DE step 7 (Gap Sweep): check for X" · "DE step 11 (worktree close) should also Y" |
+| **Bankai** | Search → Verify → Apply → Review loop | "In Bankai's Verify phase, add Z" · "Bankai schema should include flag X" |
+| **Skill creation** (`auto-skill-on-mistake`) | Steps 1 / 1.5 / 2 / 3a-b-c / 3.6a / 3.6b / 4 / 5 / 6 | "Step 5 of auto-skill-on-mistake should X" · "Add to Step 3.6b audit table: Y check" |
+| **Boot / Session Briefing** | Boot order steps 1-5 + briefing line items | "At boot, also surface X" · "Add to Session Briefing standing-flags: Y" |
+| **Forge Review** | Weekly cadence | "At Forge Review, also check X" |
+| **General preference** (no workflow) | n/a | Just state the preference; Ruri routes to personality.md or new skill |
+
+### 11c · Two power-combos (most-routable phrasings)
+
+**Combo A — fastest correct skill refine**:
+> "/<skill-name> needs to also trigger on '<exact phrase>' — refine"
+>
+> Routes to: skill-invocation-discipline-gate (Ruri invokes via Skill tool) + auto-skill-on-mistake Step 3a (existing skill refine) + Step 3.6b wording-shape audit (mandatory).
+
+**Combo B — fastest workflow-checkpoint addition**:
+> "At <workflow> <checkpoint>, also <behavior>. Make it deterministic."
+>
+> Routes to: identifies workflow file (quest-protocol.md / expansion-protocol.md / etc) + system-design Step 0 (refine over new) + decision: is this a hook (deterministic) or skill (description-triggered)?
+
+### 11d · Anti-patterns (rephrase if you catch yourself saying these)
+
+| Phrasing | Why it fails | Rephrase as |
+|---|---|---|
+| "Add a rule for X" | No layer specified — defaults to prose, trips prose-default-gate | "Make X a skill / hook / Quest checkpoint rule" |
+| "Make it better" | No scope, no trigger | "/<skill-name> should also fire on Y" |
+| "Update CLAUDE.md to do X" | CLAUDE.md is edit-blocked + should stay thin | "Make this a skill / hook" |
+| "Make sure you always do X" | "Always" without trigger = prose decay | "When at Quest Apply, always X" or "On every Edit to .docx, always X" |
+| Just naming a skill without "use it" | Skill-invocation-discipline doesn't fire | "**Invoke** /<skill-name>" or "**Use** /<skill-name>" |
+
+### 11e · TL;DR
+
+1. **Mention the skill by name with `/`** when you want it to fire (e.g. `/auto-skill-on-mistake`).
+2. **Specify workflow + checkpoint** when the behavior is workflow-scoped (e.g. "at Quest Recon").
+3. **Say "make this a hook"** when you want deterministic firing; **"make this a skill"** when description-triggered is enough; **never** "add to CLAUDE.md" or "update the rules" by default.
+4. **For corrections**, the catch phrases ("you missed", "did you actually", "shouldn't you have") auto-fire the meta-loop — no need to specify the skill.
+
+---
+
 *Maintained by Ruri. Refined as みや's patterns evolve and as new anti-patterns surface.*
