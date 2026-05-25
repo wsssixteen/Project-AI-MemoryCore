@@ -12,6 +12,7 @@ const fs = require('fs');
 const path = require('path');
 
 const TRIGGERS = [
+  // Strong corrections (original patterns — kept)
   /\byou (missed|forgot|didn't|didn'?t do|should have)\b/i,
   /\bwhy did(?:n'?t)? you\b/i,
   /\bplease fix this\b/i,
@@ -22,6 +23,28 @@ const TRIGGERS = [
   /\byou'?ve wasted (my |your )?time\b/i, /\bwasted (my|your) time\b/i,
   /\bplease stop\b/i,
   /\bstop (doing|saying|making)\b/i,
+
+  // Socratic rebukes (added 2026-05-25 — Z13 self-heal correction slipped past)
+  /\bcan you not\b/i,                          // "Can you not self-heal this?"
+  /\bshouldn'?t you (have )?\b/i,              // "Shouldn't you have done X?"
+  /\bdid you (actually|really|even) \w+/i,    // "Did you actually run it?" / "Did you really check?"
+  /\bdid not use the skill\b/i,                // "did not use the skill" — meta-skill bypass
+  /\bdidn'?t use the skill\b/i,
+  /\byou didn'?t (use|invoke|run|follow|check)\b/i,  // "You didn't invoke the skill"
+  /\bis (that|this) (really )?(done|fixed|complete)\b/i,  // "Is that really done?"
+
+  // Meta-investigative questions (added 2026-05-25 — this turn's "did you go through proper meta" slipped past)
+  /\bdid you go through (proper |the )?\w+/i,  // "did you go through proper meta"
+  /\bI thought (it|this|that) (is|was) \w+/i,  // "I thought it is now used as hook"
+  /\bI thought (this )?(has been |is )?(solved|fixed|done)\b/i,
+  /\bif it fails,? why\b/i,                    // "If it fails, why does it fail?"
+  /\bwhy does (it|this|that) (fail|not work)\b/i,
+
+  // Tone/exhaustion (added 2026-05-25 — みや's "it gets tiring", "for wasting my time as well")
+  /\bgets tiring\b/i,
+  /\bfor wasting my time as well\b/i,
+  /\btiring\b.{0,30}(this|skill|rule|over)/i,
+  /\bjust keeps failing\b/i,
 ];
 
 let input = '';

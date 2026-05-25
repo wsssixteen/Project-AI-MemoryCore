@@ -31,6 +31,29 @@ When みや invokes ANY skill by name — `/understand`, `/verify`, `/quest`, `/
 | "It's faster to do it inline" | Speed is not a valid reason to skip the Skill tool |
 | "The skill might fail anyway" | Then surface the failure, don't preempt it |
 
+## Meta-skills are skills too (added 2026-05-25 after self-violation in turn-of-creation)
+
+**The trap**: this rule was originally written with examples like `/understand`, `/verify`, `/quest` — third-party / domain skills. The implicit framing was "skills I'd invoke for user-facing work." This excluded the meta-skills — `auto-skill-on-mistake`, `system-design`, `claim-verification`, `confidence-table`, `predicate-box`, etc. — which I treated as "procedures to internalize and follow inline." That's the same shape this skill bans. Within ONE TURN of creating this skill, I violated it on `auto-skill-on-mistake` (which was being triggered by the very session that birthed this skill).
+
+**Hard sub-rule**: when ANY skill's trigger fires — including the meta-skills — **invoke via Skill tool, don't follow inline**. The meta-skills are first-class skills in the available-skills list. They produce different output when invoked vs. internalized: an invocation is logged, the skill's specific framework gets exercised, and the discipline is auditable. Internalized "I'll just follow steps 1-5 in my head" is the loophole — same shape as the original failure this skill was built for.
+
+| Meta-skill | Trigger phrases that demand Skill-tool invocation |
+|---|---|
+| `auto-skill-on-mistake` | Any correction signal — covered by `auto-skill-trigger.js` hook; ALSO invoke when I notice a slip myself even if hook didn't fire |
+| `system-design` | Any "should we build X" / "let me design Y" / "Refine Block" / "Design Memo" / new-component impulse |
+| `claim-verification` | Before any "done"/"shipped"/"complete" emission |
+| `predicate-box` | Before any debug-mode code edit |
+| `scope-anchor-echo` | Before any code change during Quest |
+| `confidence-table` | When proposing ≥2 items needing みや's nod |
+| `rubric` | When evaluating ≥2 candidates |
+| `grep-rubric` | After any investigative grep |
+| `claim-verification` | Before any "done"/"complete" claim |
+| `test-data-echo` | At Quest hand-back |
+
+**Self-violation log** (2026-05-25, this turn): when I said "Acting on both. Refining stalling-detector first, logging the slip, then invoking /skill-creator", I invoked `/skill-creator` via Skill tool ✓ but treated `auto-skill-on-mistake` + `system-design` as inline procedures ❌. The hook didn't catch the Z13 correction OR this turn's meta-investigation. Both gaps addressed:
+- Hook patterns widened (auto-skill-trigger.js — Socratic + meta-investigative + tone-of-exhaustion regexes added)
+- This sub-rule added to make meta-skill invocation explicit
+
 ## Pre-emit self-check (mandatory before any Bash/Read/Write/Agent call in a skill-invocation context)
 
 When the conversation contains a trigger phrase OR Ruri's draft response contains "I'll follow the SKILL.md" / "I'll dispatch the phases" / "I'll run the pipeline manually" — **STOP**. Ask:
