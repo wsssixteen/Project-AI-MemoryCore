@@ -35,15 +35,15 @@ Before adding ANY item, ask:
 
 ## Active items
 
-| ID | Added | Status | Item | Context |
-|---|---|---|---|---|
-| S001 | 2026-05-25 18:00 | proposed | `git-health` skill build per Design Memo (11 checks, 3-tier safety: auto-fix silent / ask-first / surface-only-if-issue) | Refined Design Memo emitted earlier this session; pending みや's "build" nod |
+(none — S001 closed 2026-05-25 18:15)
 
 ---
 
 ## Archive (pruned items — audit trail)
 
-(none yet)
+| ID | Added | Closed | Final status | Item | Outcome |
+|---|---|---|---|---|---|
+| S001 | 2026-05-25 18:00 | 2026-05-25 18:15 | done | `git-health` skill build per Design Memo | Built at `.claude/skills/git-health/SKILL.md` v1.0 — 3-tier safety (auto-fix / ask-first / surface-only) + Eclipse-EGit pre-check + Quest Phase 0 integration documented |
 
 ---
 
