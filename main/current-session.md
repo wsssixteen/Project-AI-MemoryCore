@@ -74,4 +74,10 @@ The session was sharp corrections, each surfacing a real systemic gap:
 Each was a real gap. The system is stronger by 1 hook + 1 skill-refine + 1 spec-fix + multiple carry-forward items at end of session, despite the drift cost during.
 
 ---
-**Memory Type**: RAM | **Last Activity**: 2026-05-25 17:00 MPST — DE closing QA-262370 cycle 2 archived.
+**Memory Type**: RAM | **Last Activity**: 2026-05-25 17:44 MPST — DE-2 close: system-design v1.1 refine + etanah-pelupusan reftable revert (Eclipse compatibility).
+
+## Post-DE-1 stretch (17:00 → 17:44)
+
+- **`system-design` skill v1.0 → v1.1 refined** — triggered by みや's meta-question: "Why are you not already loaded about best practices when you are supposed to have knowledge about it during system-design? Is our system-design flawed?" Honest answer: yes, gap was real. Skill body had software-engineering principles (SRP/KISS/etc.) but NOT the Claude-Code-specific decision matrix from `library-items/agent-architecture/claude-code-best-practices.md`. The best-practices-consult-gate hook was a remedial safety net; skill should be preventive. Refine: Step 2 split into 2a (evergreen SE principles) + 2b (mandatory consult of canonical doc with decision matrix). Step 5 extended with hook design sub-checks + skill canonical-pattern alignment.
+- **etanah-pelupusan reftable revert** — earlier reftable migration broke Eclipse's EGit (showed `etanah-pelupusan .invalid`). Reverted reftable→files after deleting the case-colliding `sgr/eSokonganCR/190869` ref. Negative refspec `^refs/heads/sgr/eSokonganCR/190869` added to skip the colliding branch on future fetches. Fetch tested clean. みや needs F5/Refresh in Eclipse to clear the `.invalid` marker.
+- **`git-health` skill — Design Memo emitted, NOT built** — proposed at Quest Phase 0 as new Tier 3 skill (11 checks across sync/cleanliness/integrity/ref-format/worktree). Awaiting みや's nod ("build it" / "refine X" / "defer"). Carry-forward.

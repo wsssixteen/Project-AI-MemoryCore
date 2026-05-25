@@ -23,9 +23,30 @@ When tempted to add a new workflow / file / skill / ritual, FIRST prove the exis
 - **Memory entries**: type (user/feedback/project/reference) + canonical home + supersedes-what
 - **Knowledge files**: SCOPE + NOT FOR + framework-skeleton-then-grow
 
-## Step 2 — Apply relevant evergreen principles (pick subset; don't force)
+## Step 2 — Apply relevant evergreen principles AND consult canonical Anthropic patterns
+
+### 2a — Evergreen software-engineering principles (pick subset; don't force)
 
 SRP/SoC, OCP, ISP, DIP (OO/structured components) · DRY (esp. memory/rules) · YAGNI · KISS · Composability · Convention-over-Config · Postel's Law (lenient triggers, strict outputs).
+
+### 2b — Canonical Claude-Code-specific patterns (MANDATORY consult — added 2026-05-25)
+
+**BEFORE Step 4 (shape decision), READ `library-items/agent-architecture/claude-code-best-practices.md`** — Sections A (skills) · B (hooks) · C (CLAUDE.md memory) · F (settings) · H (recommendations). Check the file's `Last researched` line — if >60 days old, fire `evolution-check` first (Stage 6 of meta-layer).
+
+**Key decision criteria** the canonical doc encodes (apply explicitly):
+
+| Decision | Rule |
+|---|---|
+| MUST fire (deterministic always-when-Y) | → **hook** (not CLAUDE.md prose, not skill alone) |
+| Conditional (specific moment / matchable trigger phrase) | → **skill** with description that enumerates triggers |
+| Judgment (ongoing values / disposition) | → **CLAUDE.md / personality.md** |
+| Trigger + procedure pair | → **hook (fires trigger deterministically) + skill (carries procedure)** |
+| "Always do X when Y" pattern | → PreToolUse / PostToolUse / UserPromptSubmit hook |
+| Skill description content | Must enumerate triggers explicitly, NOT summarize workflow |
+| Skill body length | ≤500 lines; progressive disclosure when exceeded |
+| CLAUDE.md length | ≤200 lines, ruthlessly pruned, judgment-only |
+
+**Banned**: designing without consulting the canonical doc. If the doc is unreachable or stale, surface to みや BEFORE picking shape at Step 4 — never silently fall back to intuition.
 
 ## Step 3 — Validate (whichever applies)
 
@@ -43,15 +64,21 @@ SRP/SoC, OCP, ISP, DIP (OO/structured components) · DRY (esp. memory/rules) · 
 
 ## Step 5 — Type-specific sub-checks (only for types with documented past failures)
 
-- **New skill**: name-conflict grep + trigger-overlap check + what it replaces + **naming-tier check**:
+- **New skill**: name-conflict grep + trigger-overlap check + what it replaces + **naming-tier check** + **canonical-pattern alignment check** (added 2026-05-25):
   - **Tier 1 — Signature skill** (identity-tier ritual, Japanese name): `<EnglishName>` + emoji + `<Japanese-name>` (e.g. Domain Expansion 💠 るり結界). Format locked / sacred.
   - **Tier 2 — Major skill / Feature / top-level framework**: `Capital-Hyphenated` (e.g. System-Design, Quest, Session-Briefing). `Feature/` folders follow this.
   - **Tier 3 — Sub-skill / small-scoped modular**: `lowercase-hyphenated` (e.g. env-check, familiar, verify). `.claude/skills/` folders follow this.
+  - **Canonical-pattern checks per `library-items/agent-architecture/claude-code-best-practices.md`** (added 2026-05-25):
+    - **Skill body ≤500 lines** — progressive disclosure if exceeded (mutually-exclusive paths → separate files)
+    - **Description enumerates triggers explicitly** — not just "what the skill is"; triggers are the primary signal Claude uses to pick from 100+ skills
+    - **Is this really a skill?** — apply the decision matrix in Step 2b. If "MUST fire when Y" → hook, not skill. If "trigger + procedure" → pair (hook fires trigger, skill carries procedure).
+- **New hook** (added 2026-05-25): event-source picked correctly (UserPromptSubmit / PreToolUse / PostToolUse / Stop / SessionStart) + condition narrow enough to avoid false-fire + register in `.claude/settings.json` (NOT `settings.local.json` — that's gitignored, machine-specific). PreToolUse blocking uses JSON `hookSpecificOutput.permissionDecision` (NOT exit-code 2 — see canonical doc footnote on GH issue #24327).
 - **New memory entry**: canonical home + supersedes-what (don't pile).
-- **New rule**: which past slip(s) it would have caught + which past tickets it'd be dead weight on.
+- **New rule**: which past slip(s) it would have caught + which past tickets it'd be dead weight on. PLUS — **is this an "always do X when Y" pattern?** If yes → it belongs in a hook, not a prose rule (per canonical doc anti-pattern #1).
 - **New MD file — versioning**: protocol/knowledge/skill files → frontmatter or footer `version: X.Y` + `last_updated`. Multi-phase docs → section-level timestamps. Transient state (`current-session.md` / `todo.md` / `active.txt`) → no file-level versioning.
+- **System stabilization** (when ≥3 cycles confirm value): consider **plugin packaging** per canonical doc — `/plugin` UI + `marketplace.json`, even for internal-only use.
 
-Other addition types (hook, agent, knowledge, protocol, automation, format): apply Steps 0-4 + 6 only.
+Other addition types (agent, knowledge, protocol, automation, format): apply Steps 0-4 + 6 only.
 
 ## Step 5b — v1 always confirms before acting
 
@@ -145,4 +172,7 @@ Two approved refinements land here next: (1) **Step 0 extended to removals** —
 ---
 
 *Distilled from the CLAUDE.md "System-Design Discipline" section, routed out 2026-05-22 (decomposition). Justification-anecdotes pruned — full history in git + `RURI-GROWTH.md`.*
+
+*Version: 1.1 | Last updated: 2026-05-25 — Step 2 split into 2a (evergreen software-engineering principles) + 2b (mandatory consult of `library-items/agent-architecture/claude-code-best-practices.md` for Claude-Code-specific patterns). Step 5 extended with hook design sub-checks + skill canonical-pattern alignment checks (body ≤500 lines, description enumerates triggers, "always do X when Y" → hook decision) + plugin packaging at stabilization. Refine triggered by みや 2026-05-25: "Why are you not already loaded about best practices when you are supposed to have knowledge about it during system-design? Is our system-design flawed?" — answer was yes; the skill didn't reference the canonical doc internally, relied on the safety-net hook. Now self-contained.*
+
 *Version: 1.0 | Last updated: 2026-05-22*
