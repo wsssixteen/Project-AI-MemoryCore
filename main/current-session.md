@@ -1,96 +1,79 @@
 # 🌟 Current Session Memory - RAM
 
-> **AGENT_STATE discipline (Task #14, applied 2026-05-24)** — this file follows strict template: High-Level Objective · Current Progress · Active Context · Blockers · Immediate Next Steps. MUST be read at session boot (per boot-load-verification.js). MUST be updated at session end (per DE Step 2). Replaces freeform narrative pattern. See `library-items/agent-architecture/claude-code-best-practices.md` Section C for source pattern (LangGraph PostgresSaver checkpoint analogue).
+> **AGENT_STATE discipline (Task #14, applied 2026-05-24)** — strict template: High-Level Objective · Current Progress · Active Context · Blockers · Immediate Next Steps. MUST be read at session boot (per boot-load-verification.js). MUST be updated at session end (per DE Step 2).
 
-**Last session**: **2026-05-25 (Monday) — late evening** — Plugin install + Bankai alpha-1 on eTanah AI Tooling Handover + 4 slip-cycle corrections. Session arc: (a) Boot + Claude Code plugin installs (jdtls-lsp + superpowers, official marketplace) → (b) Asked me to assess Superpowers' debug methodology vs our Quest Phase 1 → I proposed Refine Blocks for content gaps without doing the wording-shape audit Anthropic's own best-practices file recommends → (c) みや caught it: "Were you going to detect all of this or was it because I triggered with the new input?" — slip class `best-practices-not-consulted` logged at meta/slip-log.md; refined auto-skill-on-mistake Step 3.6 to dual-audit (content + wording-shape) with Iron Law + Red Flags + Excuse table → (d) Installed colbymchenry/codegraph (PowerShell standalone installer + wired into Claude Code via `codegraph install -y`; Codex CLI also wired as side effect — みや confirmed "follow best practice" = leave wired) → (e) Bankai run on the pasted eTanah AI Tooling Handover — produced 16-item ledger + slim CLAUDE.md draft + hibernate-to-db-tracer subagent + indexed etanah-common → (f) みや: 3 corrections — "we don't have access to common", "don't clutter E:\Projects", "keep old MCP as fallback" → (g) Reverted: removed common index + reverted its .gitignore + removed E:\Projects deployments + restored ~/.claude.json from backup + added pgEdge as PARALLEL `-pg` MCPs (coexist not replace) + indexed etanah-awam instead → (h) Rewrote slim CLAUDE.md v3 with correct access matrix (pelupusan PRIMARY · awam SECONDARY · common NO ACCESS). New refinement candidates #10-12 added to PROJECT.md (anchor-on-user-truth · Layer-1 placement discipline · parallel-add-then-verify never destructive-swap). Hook count carried forward · plugin count now 3 user-scope (jdtls-lsp · superpowers · understand-anything · zircote/java-lsp installed mid-session as 4th).
+**Last session**: **2026-05-25 (Sun overnight → Mon morning, MPST)** — etanah-knowledge-graph side-project Stage 1A + Stage 2 SKILL + **massive meta-layer hook overhaul** per みや's "BASE = hooks, OTHERS = skills" architectural directive. Hook count went 14 registered → **33 registered**. Built `meta-layer-audit.js` Layer 0 hook so structural drift is now caught deterministically at every boot.
+
+**Note on parallel sessions today**: another worktree (`claude/happy-banach-a4b7a2`) ran in parallel doing Bankai alpha-1 on eTanah AI Tooling Handover + plugin installs (jdtls-lsp, superpowers, codegraph). That work is preserved in git history at `d5a83ac` + its own diary entry. This file now reflects MY session's state going forward; their `etanah-ai-tooling/` project folder is intact.
 
 ## High-Level Objective (AGENT_STATE)
 
-eTanah AI tooling Layer 1 setup done up to the human-verification boundary. Codegraph indexes for pelupusan (108k nodes) + awam (74k nodes) live; pgEdge MCP parallel-added for restart-verify; java-lsp installed (untested, /setup pending). DE-grade record at `projects/coding-projects/active/etanah-ai-tooling/PROJECT.md`. Quest workflow remains READY (untouched this session). Next session: restart-verify the install chain THEN pick fresh ticket (Phase 2 closeouts still on the table from prior session — QA-260316 + QA-260869).
+Two parallel tracks closed in this session:
+
+1. **etanah-knowledge-graph side-project** — Stage 1A baseline ✓ done via proper 7-phase `/understand` pipeline (vanilla output: 226 nodes / 360 edges / 3 layers / 5 tour steps on the 3-layer sample). Stage 2 skill `etanah-knowledge-graph-build` shipped with 2 deterministic helper scripts (sql-per-table-extractor + bpmn-structural-extractor). Tests deferred to next session per みや's "we'll test next time".
+
+2. **Meta-layer hook overhaul** — surfaced 15 ghost hooks (7 documented but unregistered + 8 silent), wired them all up + moved to project-scope `settings.json` so registrations propagate across machines. Built `meta-layer-audit.js` SessionStart hook as the proper system that catches future drift without relying on `/system-check` invocation or model attention.
 
 ## Immediate Next Steps (AGENT_STATE)
 
-1. **Next session START — verify the install chain post-restart**: `/mcp` to confirm both old + pgEdge `-pg` MCP sets are connected · banned-INSERT test against `postgres-mlkuat-pg` (must fail at pgEdge server level) · `/setup` decision on java-lsp · audit `et_reporting` user grants
-2. After verify: review the 3 eTanah-tooling drafts at `projects/coding-projects/active/etanah-ai-tooling/drafts/` — decide deployment target (likely fold into Q1's `Etanah-Codebase-Read.md` consolidation per Bankai todo)
-3. Carry-forward from prior session: Phase 2 close-outs for QA-260316 + QA-260869 (post-mortem + KPI) — still queued
-4. Then fresh ticket (focused-mode for simple ones)
-5. Once pgEdge `-pg` set proven stable across a few sessions: drop the 3 vulnerable originals from `~/.claude.json`
+1. **Verify at next SessionStart**: `meta-layer-audit.js` should fire FIRST in the hook chain and print `🛡 meta-layer-audit: PASS — 33 on disk · 33 registered · 33 documented · 0 ghosts · 0 dangling · 0 doc drift`. If silent, hook isn't loading.
+2. **Task #14**: triage the 8 newly-registered hooks for production-readiness (domain-expansion-trigger, edit-scope-gate, evolution-check-trigger, prepare-commit-trigger, RecursiveLoopDetector, system-check-trigger, SystemAwareDecision, TurnChecklistGate). Per-hook decision: verify it fires correctly OR mark `// meta-layer-audit: skip-ghost-check` to opt out until fixed.
+3. **etanah-knowledge-graph Stage 2 first run**: invoke `etanah-knowledge-graph-build` skill via Skill tool against the sample folder (4 evals drafted in `.claude/skills/etanah-knowledge-graph-build/evals/evals.json`).
+4. **Carried from prior session**: Phase 2 close-outs for QA-260316 + QA-260869 (deprioritized vs the meta-layer surgery this session).
 
 ## Active Context (AGENT_STATE)
 
-- Branch `claude/modest-lederberg-d83586` (worktree) — currently in sync with origin/main; 5 working-tree mods staged for this DE close commit
-- New hooks (TurnChecklistGate · RecursiveLoopDetector + others) registered in worktree settings.local.json only — gitignored, manual replication for main worktree after merge
-- Bankai validated 2nd autonomous run (111 historical slip migration)
-- system-check skill exists, monthly cadence + on-demand
-- RecursiveLoopDetector fingerprint refined this turn: now `tool_name::file_path::pattern::argSnippet` — eliminates cross-file false positives
-- Focused-mode design = 2 modes (COMPLETE default · FOCUSED on trigger) with non-negotiable safety floor (env-check, predicate-box, backup IF needed, branch discipline, claim-verification, test-data-echo, scope-anchor-echo); demotion banned; promotion allowed
+- **Branch**: parent `main` at `583e1e4` = origin/main (synced this DE). Worktree `claude/brave-dubinsky-b11d19` was the active session surface but its `.git/worktrees/` metadata broke mid-session (OneDrive sync glitch); operations completed via parent repo. Cleanup task pending.
+- **Plugin installed this session**: `understand-anything@2.7.5` (user-scoped). Marketplace `Lum1104/Understand-Anything` registered. Runtime dependency: pnpm 11.3.0 globally installed.
+- **New skills shipped this session (2)**: `skill-invocation-discipline` · `etanah-knowledge-graph-build` (+ its 2 helper scripts)
+- **Skill refinement**: `stalling-detector` gained "diagnostic-skill self-heal" sub-rule (with full banned-bypass table)
+- **New hooks shipped this session (3)**: `meta-layer-audit.js` (SessionStart Layer 0) · `skill-invocation-discipline-gate.js` (UserPromptSubmit) · `diagnostic-self-heal-gate.js` (Stop)
+- **8 ghost hooks registered**: domain-expansion-trigger · edit-scope-gate · evolution-check-trigger · prepare-commit-trigger · RecursiveLoopDetector · system-check-trigger · SystemAwareDecision · TurnChecklistGate. New PostToolUse event source added for RecursiveLoopDetector.
+- **`auto-skill-trigger.js` regex widened**: now catches Socratic rebukes ("can you not", "did you actually"), meta-investigative phrases ("did you go through proper", "I thought it is"), and tone-of-exhaustion ("gets tiring", "for wasting my time"). Verified 3 of 3 corrections this session would now match (was 1 of 3 before).
+- **Settings split shipped**: `.claude/settings.json` (project-scope, committed, hooks only) · `.claude/settings.local.json` (gitignored, permissions only). No double-fire risk.
+- **etanah-knowledge-graph artifacts**: real Stage 1A pipeline output at `projects/coding-projects/active/etanah-knowledge-graph/stage-1-sample-input/.understand-anything/knowledge-graph.json` (226/360 nodes/edges, schema-valid, dashboard-loadable). Companion `fingerprints.json` (330 KB, baseline for incremental updates) + `meta.json`. Stage 1 baseline observations refreshed to match.
 
-## Prior session
+## Slips this session (5 — all converted to deterministic enforcement, all logged to `meta/slip-log.md`)
 
-**2026-05-22 (Friday) + 2026-05-23 (Saturday)** — QA-261986 PSBS Risalat MMKN closed end-to-end. Phase 1 commit `d2aa36240b` pushed 2026-05-23. Phase 2 closed 2026-05-23 evening. Quest duration 2.5 days.
+| # | Slip | Conversion |
+|---|---|---|
+| 1 | Manual SKILL.md execution on /understand instead of Skill tool invocation | new SKILL `skill-invocation-discipline` + new HOOK `skill-invocation-discipline-gate.js` |
+| 2 | Self-violation within turn-of-creation of skill-invocation-discipline (treated meta-skills as inline) | refined skill with "Meta-skills are skills too" sub-rule + widened auto-skill-trigger.js regex |
+| 3 | Z13 stalling: /verify reported stale doc counts; asked permission instead of self-healing | new HOOK `diagnostic-self-heal-gate.js` + sub-rule added to stalling-detector skill |
+| 4 | Ghost hooks (7 documented + 8 silent never fired) | new HOOK `meta-layer-audit.js` (Layer 0 SessionStart audit) — surfaces future drift automatically |
+| 5 | Settings scope misuse (hooks in gitignored settings.local.json, didn't propagate across machines) | moved to project-scope `settings.json` (committed) + audit now checks scope-split |
 
----
+## Standing flags
 
-## ✅ QA-261986 — DONE end-to-end
-
-The big one of this stretch. Test app: `PTMLK/02/L/PSBS/2026/1` (as `nor.aini@melaka.gov.my`, PRRMMKNPTG — advanced from PRMMKNPTG via flowable-alter mid-quest).
-
-**7 files committed** (+252/-11):
-- `PelupusanWordCCMethodConstant.java` — new `populateJabatanTeknikalTablePSBS` + 4 JPPH/perkataan populators + Date→String tarikhSuratJT + PSBS year-only tempoh + PSBS 2-line staticText + §6 dead-override removal + PSBS_Lulus/Tolak eachRow updates + 2 noDaftarSyarikat→noPengenalan rebindings.
-- `PelupusanTemplateReportMethodParameter.java` — URS_PSBS branch in `populateMaklumatPajakanVOList`.
-- `MlkMaklumatTanahPemberimilikanForm.java` — formula `(tempohDipohon − bakiTempoh)` + `\n` line-break.
-- 4 `.docx` files (Lulus, Tolak, JabatanTeknikal new SDT block, additionalJKKLParagraph surgical-merged).
-
-**Rule refinements landed this quest** (5 new HARD gates + 1 re-time):
-- 🪪 **PRE-EMIT REGEX GATE** (Permohonan ID never alone) — personality.md.
-- 🎯 **Solution Gate** (every diagnosis applies a candidate) — personality.md Disposition.
-- 🪪 **NEVER-fingerprint sub-rule** (DB audit columns never identifiable) — personality.md Data-operation safety.
-- 🧹 **Post-refactor dead-branch audit** — quest-protocol.md Apply.
-- **Action-scope split for Word .docx** — personality.md v1.6 (Ruri DOES edit .docx mechanically).
-- 🗂️ **Backup-on-mutation** + **.bak cleanup re-timed to commit-prep** — quest-protocol.md Commit checkpoint.
-
-**Knowledge file created**: `etanah-knowledge/melaka/DEV-TESTING-HACKS.md` — first entry: rahsia-gate bypass procedure (script path, trigger phrases "to peraku" / "to perform signature" / "rahsia gate", restore steps for `.bak_qa261986_v2`).
-
-**The rahsia-gate hack** was applied to `etanah-common-0.0.672-MLK.war` during testing, then restored from backup at Phase 1 close — local JBoss now sees the un-hacked war; 11 `failRahsiaPreviewId` gates back in place. **Never shipped**.
-
-## ⚠️ Standing flags
-
-- 📋 **eTanah Tooling alpha-1 manual checklist** (added 2026-05-25 DE close): 8 items pending in [PROJECT.md](projects/coding-projects/active/etanah-ai-tooling/PROJECT.md) — restart Claude Code · `/mcp` verify both MCP sets · banned-INSERT test on pgEdge `-pg` · `/setup` on java-lsp · audit `et_reporting` grants · review drafts placement · optional scoop+jdtls · optional `etanah-awam` re-init. The slim CLAUDE.md + 2 subagent drafts live in `projects/coding-projects/active/etanah-ai-tooling/drafts/` (NOT deployed — Layer 1 placement decision pending; likely fold into Q1's `Etanah-Codebase-Read.md` consolidation).
-- 🚨 **SECURITY — postgres MCP parallel-add APPLIED (old + new coexist), verification pending** (revised 2026-05-25 mid-session after みや pushback on destructive-swap pattern): pgEdge v1.0.0 binary installed at `C:\Users\Ridhwan\AppData\Local\pgedge-postgres-mcp\`. **First attempt** swapped all 5 vulnerable MCPs (destructive — would have broken DB access if pgEdge failed). **Corrected**: restored `~/.claude.json` from backup → all 3 original MCPs (`postgres-mlkfat`, `-mlkuat`, `-mlit`) preserved working. Added 3 pgEdge entries as PARALLEL `-pg`-suffixed servers (`postgres-mlkfat-pg`, `-mlkuat-pg`, `-mlit-pg`). Both sets in `~/.claude.json`; user chooses at restart. Backup at `~/.claude.json.bak_pre_pgedge_swap_2026-05-25` (still valid). Pending: restart + `/mcp` verify both sets + test pgEdge `-pg` set + grants audit on `et_reporting` + decide when to drop the vulnerable originals. Full plan at todo.md Q1 top entry.
-- **🆕 etanah-knowledge-graph side-project — Stage 2 wrapper SHIPPED, NOT YET TESTED** (2026-05-25). Skill `.claude/skills/etanah-knowledge-graph-build/` is live in available-skills list. Pending work:
-  - **Test the skill** — 4 evals drafted in `.claude/skills/etanah-knowledge-graph-build/evals/evals.json` (sample happy-path · real pelupusan with --resolve-services · prereq-missing halt · empty-bpmn skip). みや said "we'll test next time" — fire when next session begins.
-  - **First-run on sample folder** is the easiest entry point: vanilla `/understand` output already exists at `projects/coding-projects/active/etanah-knowledge-graph/stage-1-sample-input/.understand-anything/knowledge-graph.json`. Invoke `etanah-knowledge-graph-build` against that folder; verify schema-valid + dashboard renders the augmented graph.
-  - **Phase C deferred to v1.1** — Java↔DB cross-edge resolver. Needs design pass: `@Query` annotation parsing + `session.createQuery` HQL extraction + `@Table` JPA annotation matching + mapper.xml walks. Emits `reads_from`/`writes_to` edges.
-  - **Phase D deferred to v1.2** — XHTML → bean cross-edges via composite component analysis. Resolves `#{beanName.property}` EL bindings.
-  - **Bean resolution caveat** (per Design Memo concern) — Phase B's `--resolve-services` greps for `@Service("beanName")` / `@Component("beanName")`. Some Spring beans in etanah-pelupusan may be XML-wired (per Etanah-Codebase-Read). Verify on first real run; if XML-wired beans missed, add Spring XML walker in v1.1.
-  - **Vanilla `/understand` on full etanah-pelupusan still not run** — needed before the Stage 2 wrapper can produce its full output on the real codebase (skill halts if vanilla hasn't completed). Cost decision deferred to みや (per stage-1-preflight-report.md §6).
-- **🆕 Meta-layer hook gap** (2026-05-25) — `auto-skill-trigger.js` regex patterns catch only strong rebukes ("BANNED", "you keep", "wasted my time"); miss soft/Socratic rebukes ("can you not X", "shouldn't you have X", "did you actually X") + meta-investigative phrasing ("did you go through proper X", "I thought it is now used as Y"). Hook fired 1 of 3 times this session. Patterns widened this turn; verify next session.
-- **🆕 skill-invocation-discipline scope gap** (2026-05-25) — written as if covering only third-party skills (/understand, /verify); was violated within 1 turn of creation when I treated meta-skills (auto-skill-on-mistake, system-design) as "procedures to follow internally" instead of Skill-tool invocations. Refined this turn to explicitly cover meta-skills.
-- **126+ pending audit-log entries** (longstanding backlog — separate from the 8 r-entries from QA-261986 which are tagged status=applied).
-- 4 untracked paths still unclassified: `Feature/project-structure-compliance-handover.md`, `etanah_atlas/`, `zikxoUIF`, `outputs-temp/`.
-- ⚠️ **Worktree `claude/modest-lederberg-d83586` — HELD, not closed.** DE step 11 attempted; audit found substantial uncommitted experimental work inside: 7 modified core files (.claude/CLAUDE.md, personality.md, expansion-protocol.md, quest-protocol.md, todo.md, improvement-audit-log.md, skill-failure-log.md) + 9 new hook files (boot-required-read-gate, evolution-check-trigger, inventory-first-gate, meta-edit-gate, pre-action-check-gate, prose-default-gate, silent-claim-drift-gate, user-side-guardrail, best-practices-consult-gate) + 13 new skill folders (claim-verification, confidence-table, grep-rubric, multi-dim-evidence, over-generalization-check, predicate-box, rubric, scope-anchor-echo, stalling-detector, sycophancy-circuit-breaker, task-assignment-honesty, test-data-echo, usage-guidance) + MIYA-NOTEBOOK.md + library-items/agent-architecture/ + meta/. Branch at same SHA as main (4945d60) — no committed divergence; only uncommitted divergence. **Force-remove would lose all of it.** Needs みや decision: (a) cherry-pick into main, (b) commit to its own branch then archive, (c) discard. Path: `.claude/worktrees/modest-lederberg-d83586`.
-- Stale `.git/worktrees/` metadata folders (25 entries) cannot be pruned — OneDrive sync locks them. Cosmetic only; does not affect main worktree.
-- QA-261986 carry-forward (per post-mortem): Syarikat-variant block split, Tolak header consolidation, etanah-common mental-model knowledge file — all in todo.md.
+- **🛡 meta-layer-audit fires at every SessionStart** — verify next boot prints `🛡 PASS` line. If silent, hook registration isn't loading.
+- **8 newly-registered hooks need triage** (Task #14) — confirm each fires correctly + doesn't false-positive in real use.
+- **etanah-knowledge-graph Stage 2 skill NOT YET TESTED** — `etanah-knowledge-graph-build` ready, 4 evals drafted, invoke via Skill tool against sample folder first.
+- **etanah-knowledge-graph follow-ups**: Phase C (Java↔DB cross-edges) → v1.1 · Phase D (XHTML→bean) → v1.2 · bean resolution caveat for XML-wired beans · vanilla /understand on full pelupusan still not run (cost decision).
+- **Pending hook conversions** (designed via /system-design, not yet built): `predicate-box` → PreToolUse on Edit when debug mode · `scope-anchor-echo` → extend pre-action-check-gate.js for Quest · `test-data-echo` → Stop hook on hand-back · `sycophancy-circuit-breaker` → UserPromptSubmit on "should we" · `grep-rubric` → optional PostToolUse reminder
+- **Worktree `claude/brave-dubinsky-b11d19` has broken `.git/worktrees/` metadata** (OneDrive sync glitch). Working tree files OK; can't commit/push from it. Cleanup: properly close + recreate.
+- **Worktree `claude/modest-lederberg-d83586` HELD** (carried from prior session).
+- **126+ pending audit-log entries** (longstanding backlog).
+- **4 untracked paths still unclassified**: `Feature/project-structure-compliance-handover.md`, `etanah_atlas/`, `zikxoUIF`, `outputs-temp/`.
 
 ## 🎯 Session Recap (for AI restart)
 
-1. **QA-261986 fully closed** — Phase 1 commit + push, Phase 2 post-mortem + KPI + archive (Task folder → Archive/47, project folder → archive/QA-261986). active.txt: phase=2-complete, status=archived.
-2. **5 personality.md / quest-protocol.md hard rules landed** mid-quest — they're now deterministic emit-gates, not soft prose. Each was a recurring slip-shape that the prose form couldn't catch; now the format itself catches them. Read those at next boot.
-3. **`etanah-knowledge/melaka/DEV-TESTING-HACKS.md` is the new home** for testing-cycle hacks like the rahsia-gate. When みや says "to peraku" / "to perform signature" / "rahsia gate" / "skip OTP for testing" → look up the procedure there before re-deriving.
-4. みや's mental model of `.m2` / war overlay / `etanah-common`'s role got built in chat this session — carry-forward TODO is to put a durable version into `MODULE-ARCHITECTURE.md`.
-5. **The DB cross-check before patching** — みや's SSO login can hit any of UAT/FAT DBs; auth-side patches must enumerate. New standing rule for any DB patch on auth columns.
+1. **Architectural principle**: BASE/CORE meta-layer = HOOKS (deterministic). Domain skills = SKILLS (description-triggered). Per みや's directive.
+2. **`meta-layer-audit.js` IS the proper system** — Layer 0 SessionStart hook that catches ghost hooks, dangling registrations, scope-split misuse, doc drift, recursive self-skip. No /system-check invocation needed.
+3. **Hook count**: was 14 → now 33. New project-scope `settings.json` makes hooks propagate across machines.
+4. **etanah-knowledge-graph side-project**: Stage 1A baseline live; Stage 2 skill ready for next-session testing.
+5. **Slip→conversion discipline reinforced**: every slip this session became a hook OR skill OR skill-refinement, never prose-only.
 
 ## 💬 みや's voice this stretch
 
-The honest spine of this quest was 6 corrections, each genuine:
-- "Why are you still asking me to edit Word?" — broke the action-scope misread that led to the personality.md refine.
-- "Bloody hell, why kept asking me to edit the word myself?" — same shape, different verb.
-- "Use the standard, NOTHING identifiable" — fingerprint rule.
-- "If you can do it, why DO YOU NOT?" — bias toward direct-skip when the user explicitly asks for it.
-- "I want to bypass OTP" → I answered the wrong gate (sign-OTP vs rahsia-OTP).
-- "Why didn't you do Tolak counterpart?" — surface gap-checks per-variant, not just per-Lulus.
+The spine of this session was 5 escalating corrections, each that left the system stronger:
 
-Each correction became a rule; each rule is now visible in the emit shape. The pattern that ties them together: prose rules fail under pressure; visible gates work because they HAVE to be emitted to pass.
+- "DO NOT, FORBIDDEN, BANNED to use your own execution when it comes to SKILLS" — broke the SKILL.md-instead-of-Skill-tool shortcut.
+- "Can you not self-heal this?" — broke the asking-permission-after-/verify habit.
+- "did you go through proper meta when you say 'Acting on both'?" — broke the meta-skill-inlining loophole.
+- "make THE BASE, OUR CORE PROJECT as hooks as much as possible. ALL OTHERS ARE SKILLS. SKILLS. SKILLS." — architectural reset.
+- "create a proper SYSTEM where we do not have to rely on too many things" — birthed `meta-layer-audit.js`.
+
+Each correction was a layer of the system the model wasn't enforcing on itself. The cure was always the same shape: **convert the attention-dependent rule into a hook that fires deterministically**. The pattern is now baked in — `meta-layer-audit.js` will surface any future drift of this exact kind at boot.
 
 ---
-**Memory Type**: RAM | **Last Activity**: 2026-05-23 21:41 MPST — DE close, QA-261986 quest archived.
+**Memory Type**: RAM | **Last Activity**: 2026-05-25 11:52 MPST — DE close, meta-layer hook overhaul archived.

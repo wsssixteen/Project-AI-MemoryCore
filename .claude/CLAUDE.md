@@ -64,19 +64,23 @@ ai-memorycore/
 
 **Always-on values:** `personality.md` "Honesty Invariants" section (added 2026-05-23 Phase 4) — default-to-prose BANNED · silent reassignment BANNED · diff-backing MANDATORY · scope-anchor must echo · choice-offering after "proceed" BANNED · over-generalization BANNED · test data must echo at hand-back
 
-**Triggered enforcement (hooks fire deterministically — 24 registered in `.claude/settings.local.json` as of 2026-05-25)**:
+**Triggered enforcement (hooks fire deterministically — 33 registered in `.claude/settings.json` as of 2026-05-25)**:
 
-*SessionStart (3)*: `boot-load-verification.js` · `boot-required-read-gate.js` (verifies CLAUDE.md "see X.md" pointers resolve) · `worktree-cleanup-boot.js`
+*SessionStart (6)*: **`meta-layer-audit.js`** (NEW 2026-05-25 — Layer 0 structural-integrity audit; auto-fires every boot; surfaces ghost hooks / scope split / doc drift) · `boot-load-verification.js` · `boot-required-read-gate.js` (verifies CLAUDE.md "see X.md" pointers resolve) · `worktree-cleanup-boot.js` · `evolution-check-trigger.js` (model-ID change + 30-day evolution-check reminder) · `system-check-trigger.js` (30-day system-check skill reminder)
 
-*UserPromptSubmit (10)*: `ticket-gate.js` · `prayer-gate.js` · `auto-skill-trigger.js` (correction signals → invoke auto-skill-on-mistake) · `MemoryClaimGate.js` · `PlainFirstGate.js` · `inventory-first-gate.js` (catches new-structure proposals) · `prose-default-gate.js` (lock-signal phrases) · `best-practices-consult-gate.js` (design-decision routing) · `user-side-guardrail.js` · **`skill-invocation-discipline-gate.js`** (NEW 2026-05-25 — detects みや naming a skill → mandates Skill tool invocation)
+*UserPromptSubmit (14)*: `ticket-gate.js` · `prayer-gate.js` · `auto-skill-trigger.js` (correction signals → invoke auto-skill-on-mistake) · `MemoryClaimGate.js` · `PlainFirstGate.js` · `inventory-first-gate.js` (catches new-structure proposals) · `prose-default-gate.js` (lock-signal phrases) · `best-practices-consult-gate.js` (design-decision routing) · `user-side-guardrail.js` · **`skill-invocation-discipline-gate.js`** (NEW 2026-05-25 — detects みや naming a skill → mandates Skill tool invocation) · `domain-expansion-trigger.js` (DE session-end trigger phrases → injects 12-step sequence) · `prepare-commit-trigger.js` (Phase 1 close-out trigger phrases → 7-step prepare-commit sequence) · `SystemAwareDecision.js` (always-consult-registry meta-trigger on substantive prompts) · `TurnChecklistGate.js` (multi-topic prompt → inject "✅ This-turn checklist" reminder)
 
 *PreToolUse Bash (1)*: `commit-gate.js`
 
-*PreToolUse Edit|Write (4)*: `self-gate-impulse.js` · `phase0-artifact-gate.js` · `pre-action-check-gate.js` (Notes.txt + env-check + PDF reminders on quest paths) · `meta-edit-gate.js` (recursive safety on meta/* edits)
+*PreToolUse Edit|Write (5)*: `self-gate-impulse.js` · `phase0-artifact-gate.js` · `pre-action-check-gate.js` (Notes.txt + env-check + PDF reminders on quest paths) · `meta-edit-gate.js` (recursive safety on meta/* edits) · `edit-scope-gate.js` (preservation discipline — block suspicious delete-unrelated-code patterns)
+
+*PostToolUse (1)*: `RecursiveLoopDetector.js` (detects same-tool + similar-args 3+ times in window → loop warning)
 
 *Stop (6)*: `reply-log.js` · `operational-follow-through.js` · `file-list-after-refine.js` · `notes-on-test-data.js` · `silent-claim-drift-gate.js` (blocks "done" claims without diff-backing) · **`diagnostic-self-heal-gate.js`** (NEW 2026-05-25 — fires when /verify-shape emit + stalling phrase appear together → mandates self-heal)
 
-**🚨 Important — 2026-05-25 audit finding** (per みや's "BASE as hooks" directive): prior to today, 7 hooks above (boot-required-read, pre-action-check, inventory-first, prose-default, silent-claim-drift, best-practices-consult, meta-edit, user-side-guardrail) existed as .js files but were **NOT registered** in `settings.local.json` — they were ghost hooks that NEVER FIRED. CLAUDE.md documentation lied about active enforcement. All wired up 2026-05-25. **Always cross-check `settings.local.json` `hooks` block against `.claude/hooks/*.js` file list** — files alone don't fire.
+**🛡 Layer 0 — `meta-layer-audit.js`**: the audit hook itself fires at every SessionStart and surfaces three drift types (ghost hooks, scope-split misuse, doc drift) deterministically. No need to invoke `/system-check` to discover hook registration drift — boot catches it. See `.claude/hooks/meta-layer-audit.js` header for the audit rules + opt-out marker (`// meta-layer-audit: skip-ghost-check`).
+
+**🚨 2026-05-25 audit findings** (per みや's "BASE as hooks" directive): prior to today, **15 hooks** existed as .js files but were never registered (7 in CLAUDE.md as "active", 8 silently undocumented). They were ghost hooks that NEVER FIRED. CLAUDE.md documentation lied about active enforcement. All 15 wired up + `meta-layer-audit.js` built so this never recurs silently. Hooks moved from `settings.local.json` (gitignored) to project-scope `settings.json` (committed) so registrations propagate across machines.
 
 **Atomic primitive skills (description-triggered — for cognitive triggers no hook can deterministically detect):**
 - **Pure-skill (genuine model judgment, no hook complement)**: `rubric` · `confidence-table` · `multi-dim-evidence` · `task-assignment-honesty` · `over-generalization-check`
