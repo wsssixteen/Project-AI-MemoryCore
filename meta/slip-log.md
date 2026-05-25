@@ -24,6 +24,39 @@
 
 ---
 
+## Running-count table (auto-maintained — updated on every entry per `auto-skill-on-mistake` Step 5 v3)
+
+> **How to read**: `🚨` = ≥2 strikes in same session (immediate escalation triggered) · `⚠️` = ≥2 strikes in 7 days (same-day escalation at DE) · `⚠️L` = ≥3 strikes in 14 days (legacy threshold tripped) · `✓` = no recent strikes
+>
+> **Update mechanism**: v1 = Ruri updates manually as part of Step 5 entry. v1.1 pending = `slip-count-tracker.js` PostToolUse hook on Edit/Write to this file.
+
+### By root_category
+
+| Root category | Last 30 days | Last 7 days | This session (2026-05-25) | Status |
+|---|---|---|---|---|
+| best-practices-not-consulted | 2 | 2 | **2** | 🚨 (2 strikes in one session — IMMEDIATE escalation per new Step 5 threshold) |
+| silent-claim-drift | 1 | 1 | 1 | ✓ (first strike) |
+| inventory-first-miss | 2 | 1 | **1** | ⚠️ (1 strike today: Step 5 threshold designed without consulting own slip-cadence data — refined this turn) |
+| boot-or-required-read-skipped | 2 | 0 | 0 | ✓ (legacy entries, older than 7d) |
+| agree-bias | 1 | 0 | 0 | ✓ |
+
+### By skill_path (refinement counts, not failure counts)
+
+> Note: refining a skill in response to OTHER slips is not itself a "strike against the skill." A skill strikes only when it FAILS to fire/enforce. The 3 refines of auto-skill-on-mistake today were responses to slips elsewhere — they indicate the skill is being SHARPENED, not failing.
+
+| Skill path | Refines this session | Notes |
+|---|---|---|
+| `.claude/skills/auto-skill-on-mistake/SKILL.md` | 3 (Step 3.6 dual audit · Step 5 thresholds · Step 5 tracking-table) | Each refine was a response to a different slip in another component. No skill-failure strikes against it. |
+| `.claude/skills/etanah-rahsia-bypass/SKILL.md` | 1 (renamed from `dev-testing-hack` + description tighten) | Response to best-practices-not-consulted strike 2 |
+
+### 🚨 Active escalation (this session)
+
+| Root category | Why escalated | Required action |
+|---|---|---|
+| `best-practices-not-consulted` — **2 strikes in 1 session** (immediate threshold per refined Step 5) | Strike 1: Refine Blocks A/B without wording-shape audit (caught by user's "check metric-wise"). Strike 2: dev-testing-hack creation without formal `system-design` Skill-tool invocation (caught by user's "did you go through system-design"). Both are the same shape: applying my own just-refined rules to OTHER work but skipping for components I create in the same turn. | **Structural defender question pending みや's call**: the latest refines (Step 3.6 dual audit + Step 5 tiered thresholds + this running-count table) are SHAPE FIXES on the existing skill. Open question: is wording-fix sufficient, or does best-practices-consult need to become a deterministic hook (PreToolUse on Write to `.claude/skills/`)? Hook would force the audit before any skill-creation Edit fires, eliminating Ruri's self-trigger gap. Surface at next session boot. |
+
+---
+
 ## 2026-05-23 entries (this session)
 
 | Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |

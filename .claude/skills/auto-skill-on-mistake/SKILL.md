@@ -140,15 +140,68 @@ Any row with **✗** → revise wording BEFORE Step 4 emit. **⚠️** rows surf
 
 If the missed behaviour can fire deterministically — e.g. "after every Edit to source code, run X check" — write the corresponding hook script under `.claude/hooks/<name>.js` and register it in `.claude/settings.local.json`. Hooks bypass the model and fire 100% of the time.
 
-### Step 5 — Failure log entry
+### Step 5 — Failure log entry + tiered escalation (refined 2026-05-25 — "12 days unacceptable" slip)
 
-Append a row to `Feature/Forge-Self-Improvement-System/skill-failure-log.md`:
+## The Iron Law
 
 ```
-| YYYY-MM-DD | <missed behaviour, 1 line> | <existed-as: skill / prose / nothing> | <action-taken: refined-skill / new-skill / new-hook> | <skill-or-hook path> |
+NO SLIP CLOSES WITHOUT SLIP-LOG ENTRY + RUNNING-COUNT TABLE UPDATE
 ```
 
-Maintain a running count per existing skill — if a single skill fails ≥3 times in 14 days, escalate: the skill's design is wrong, redesign rather than re-refine.
+Every Step 5 invocation MUST (a) append a row to `meta/slip-log.md` (the canonical home — `Feature/Forge-Self-Improvement-System/skill-failure-log.md` is tombstoned), (b) increment the running-count table at the TOP of `meta/slip-log.md` by BOTH `root_category` AND `skill_path`, (c) check the tiered escalation thresholds below + emit the escalation banner if any threshold tripped.
+
+**Violating the letter of this step is violating the spirit of this step.**
+
+### Tiered escalation thresholds (mandatory check after every entry)
+
+| Pattern | Threshold | Action |
+|---|---|---|
+| Same `root_category`, **2 strikes in same session** | 🚨 **IMMEDIATE escalation** | STOP the refine cycle. Design failure detected — the latest refine did not fix the structural gap. Surface to みや with: "this root_category is structurally undefended; propose redesign options before next attempt." Do NOT add another refine to the same skill. |
+| Same `root_category`, **2 strikes in 7 days** | ⚠️ **Same-day escalation** at session-end DE | Redesign the root-cause defender, don't add another wording refinement. |
+| Same `root_category`, 3 strikes in 14 days | ⚠️ Escalation | Same as above; retained for older slip patterns with longer cadence. |
+| Same `skill_path`, **2 strikes in same session** | 🚨 **Skill-design failure** | The skill's design is wrong, not its wording. Redesign the skill's SHAPE (scope / decomposition / triggers structure), not add another trigger phrase. |
+
+### Slip-log entry format (canonical)
+
+Append to `meta/slip-log.md` under the current date's section:
+
+```
+| YYYY-MM-DD (context) | <slip, 1 paragraph + Lesson:> | <root_category from schema enum> | <existing_rule cited file:line> | <action: refined-skill / new-skill / new-hook / refined-hook> | <meta-layer-relevant: ✅ Yes / ⚠️ Partial / ❌ No> |
+```
+
+### Running-count table (auto-readable, updated every entry)
+
+At the top of `meta/slip-log.md` (after the Schema section), maintain a table:
+
+| Root category | Last 30 days | Last 7 days | This session | Status |
+|---|---|---|---|---|
+| (per root_category from schema enum) | N | N | N | ✓ / ⚠️ (≥2/7d) / 🚨 (≥2/session) |
+
+**Status icons** — `✓` = no recent strikes · `⚠️` = at-threshold (warning) · `🚨` = over-threshold (escalation triggered).
+
+Update mechanism: v1 = Ruri updates manually as part of Step 5. v1.1 = `slip-count-tracker.js` PostToolUse hook on Edit/Write of `meta/slip-log.md` parses the appended row, increments counts, rewrites the table. v1.1 deferred until first proven need.
+
+### Red Flags — STOP if you catch yourself thinking:
+
+- "It's only 2 strikes, the rule says 3" — NO; the rule now says 2-in-session = escalate immediately
+- "Different skills failed, so the root_category count isn't really 2" — NO; root_category is the cluster axis, not the skill name
+- "I'll update the running-count later" — NO; same-emit update is mandatory, "later" = decay
+- "The strike was technically a different shape" — if it maps to the same root_category in the schema, it counts; don't sub-categorize to dodge
+- "Escalation means I have to do a big redesign now" — escalation means STOP the refine cycle + surface; the redesign decision is みや's, not yours
+- About to write a slip-log entry without updating the running-count table
+
+**ALL of these mean: STOP. Update the running-count. Check thresholds. Escalate if tripped.**
+
+### Excuse | Reality
+
+| Excuse | Reality |
+|---|---|
+| "Strike 2 in one session is just bad luck" | Bad luck twice in one session is structural failure, not luck. Escalate. |
+| "Running-count table is bureaucracy" | Without it, "count" is fictional — Ruri pretends to remember; numbers drift. Table = single source of truth. |
+| "The previous refine just landed, give it time" | The previous refine DIDN'T HOLD — that's the evidence the design is wrong. Don't repeat the same shape. |
+| "I'll wait for DE close to update the count" | Update at every entry, not batched. Batched = forgotten. |
+| "Per-skill count is enough; root_category is double work" | Per-skill misses cross-skill design failures (today: 2 different skill creations failed for `best-practices-not-consulted`). Both axes mandatory. |
+| "12 days is the protocol" | 12 days was wrong. The refined protocol is in-session / 7-day. みや: "even 3 sessions is unacceptable." |
 
 ### Step 6 — Visible report
 
@@ -162,7 +215,14 @@ Auto-skill ✓ — <missed behaviour>
 
 ## Failure-rate tracking format
 
-`Feature/Forge-Self-Improvement-System/skill-failure-log.md` — appended only, never edited retroactively. みや reviews at Forge Review intervals; if a skill's count is climbing, the design needs rework, not another tighter trigger phrase.
+**Canonical home**: `meta/slip-log.md` (replaced `Feature/Forge-Self-Improvement-System/skill-failure-log.md` per Phase 8 tombstone).
+
+Format: appended-only entries + running-count table at top (per Step 5 refined 2026-05-25). Counts maintained by both `root_category` and `skill_path`. Tiered escalation thresholds fire automatically at write-time:
+- 🚨 2 strikes same session → immediate STOP + surface
+- ⚠️ 2 strikes / 7 days → same-day escalation
+- ⚠️ 3 strikes / 14 days → escalation (legacy threshold)
+
+みや reviews at Forge Review intervals; escalation fires at write-time without waiting for review.
 
 ## What this skill explicitly does NOT do
 
@@ -181,3 +241,5 @@ Auto-skill ✓ — <missed behaviour>
 *Created 2026-05-20 by みや (asked) + Ruri (built). The single most important skill in the moment of correction — its job is to make the next correction not need to happen.*
 
 *Version: 2 | Last updated: 2026-05-25 — Step 3.6 promoted from `Comparative-systems check` (architectural-only content audit) to `Best-Practices Consult` (dual audit: 3.6a content + 3.6b wording-shape, latter mandatory for ALL skill/rule changes with no scope exemption). Refine triggered by 99%-compliance-lift slip 2026-05-25 — bypass via "small refine" scope was the structural gap. Modeled Authority-loaded forcing-functions (Iron Law + Red Flags + Excuse table) inside the refine itself to demonstrate the wording-shape the new step requires.*
+
+*Version: 3 | Last updated: 2026-05-25 (same day) — Step 5 refined: tiered escalation thresholds replace 3-in-14-days flat (now: 2-in-session = IMMEDIATE escalate; 2-in-7-days = same-day; 3-in-14-days retained for legacy). Counts now by BOTH root_category AND skill_path. Running-count table mandated at top of `meta/slip-log.md` (canonical home; skill-failure-log.md is tombstoned). Authority-loaded styling + Red Flags + Excuse table added per Step 3.6b. Refine triggered by 2-strikes-in-one-session on best-practices-not-consulted today; みや: "even 3 sessions is unacceptable."*
