@@ -47,6 +47,28 @@ Faster: [one-line observation]. Action applied: [concrete edit to skill/protocol
 
 ## Entries
 
+### QA-262783 — PPTPB Bayaran Sewa Tambahan default 0.00 + remove mandatori — 2026-05-25 — discovered already-fixed by colleague
+
+**Faster-finding**: would have skipped ~25 minutes of Scout/Recon/DB-fishing if Phase 0 had run `git log -- <suspected file>` as the FIRST diagnostic step — faizudin's commit `1692e97b52` would have surfaced instantly. Action applied: new Phase 0 sub-step "Prior-Work Probe" added to quest-protocol.md (proposed via Refine Block below — pending みや nod): `git log --oneline -10 -- <suspected_file>` + `git branch -a --contains <recent_commit>` BEFORE any Recon. Specifically catches the "ticket-already-fixed-by-colleague" class of waste.
+
+**Contributing Factors**:
+- BA reported the ticket 2026-05-22 (status=Open); faizudin landed the fix 2026-05-25 15:38; Ruri session resumed at 17:14 with the boot briefing reporting QA-262783 as `status=hold` because that's what active.txt still said. No mechanism notified active.txt that the fix shipped. Same shape as the open-quest-surfacer slip — both are state-divergence between Redmine + git + active.txt.
+- 2026-05-22 Scout output (early-diagnostic.md) was never persisted to disk — lost to orphan worktree `claude/brave-dubinsky-b11d19`. Had it been preserved, the 2-line fix hypothesis would have matched faizudin's commit exactly + made the prior-work probe obvious.
+- DB schema discovery loop on `umm_a_tgsn` / `umm_aplikasi` (no `id_permohonan` column) consumed 3 RecursiveLoopDetector strikes before pivoting. The right move was to skip pengguna verification entirely since the fix was already shipped, but I was on autopilot completing Phase 0 ritual steps.
+
+**Process Notes**:
+- **No code shipped by Ruri** — entire quest was a code-state discovery + Phase 2 close. Not all "quests" need Ruri coding.
+- **System-aware mindset partial win**: I caught the existing commit via `git log -- <file>` at Step ~8 of the investigation, but should have run it at Step 1.
+- **Hook built mid-session**: `open-quest-surfacer.js` would have surfaced the 2 hold-tickets at boot, saving the "did you miss quests?" round-trip from みや. Built + smoke-tested + みや registered in settings.json. Pending live verification at next boot.
+- **Slip-log entry**: 2 entries added to `meta/slip-log.md` — (i) boot briefing missed hold-quests; (ii) prior-work-probe not in Phase 0 default.
+
+**Carry Forward**:
+- ⬜ Phase 0 "Prior-Work Probe" sub-step proposal (Refine Block to quest-protocol.md) — pending みや nod. Home: quest/quest-protocol.md Phase 0 § Scout.
+- ⬜ FAT deployment of mlk/master HEAD or cherry-pick of 1692e97b52 to mlk/fat-env — for BA's actual test environment. Not Ruri's responsibility; surfaced for みや/deployer. Home: deferred (deployer team).
+- ⬜ Stale-Phase-0-artifact cleanup — `projects/coding-projects/active/QA-262783/early-diagnostic.md` was referenced in active.txt but never written. Add to DE Step 11 worktree-close audit to detect "referenced-but-missing" project artifacts. Home: todo.md Q2 (System).
+
+---
+
 ### QA-261986 — PSBS Risalat MMKN — multi-layer template + populator fixes — 2026-05-23
 
 **Faster-finding**: would have shipped a day faster if the rahsia-gate hack had been a NAMED knowledge entry from the start instead of being re-derived mid-cycle. Action applied: new `etanah-knowledge/melaka/DEV-TESTING-HACKS.md` with rahsia-gate as the first entry, trigger phrases listed ("to peraku", "to perform signature", etc.), restore procedure documented.

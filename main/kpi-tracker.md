@@ -37,6 +37,15 @@
 
 ## Entries
 
+### QA-262783 — PPTPB Bayaran Sewa Tambahan default 0.00 + remove mandatori — 2026-05-25 — ~25 min Phase 0+2
+
+**Closure type**: delegated (colleague faizudin already shipped commit `1692e97b52`; Ruri verified + Phase 2 archive only)
+
+**Extras**:
+- Built `open-quest-surfacer.js` SessionStart hook (new meta-layer hook) — fixes the recurring "Standing Flags miss open quests at boot" slip class structurally. Will surface every active/hold/blocked/delegated quest at every future boot. Logged to `meta/slip-log.md`.
+
+---
+
 ### QA-261986 — PSBS Risalat MMKN — multi-layer template + populator fixes — 2026-05-21 → 2026-05-23 — ≈2.5 days (multi-session, includes hold)
 
 **Closure type**: code-fix-shipped (7 files, +252/-11), committed `d2aa36240b` on `mlk/qa/261986`, pushed `-u origin`, みや tested OK on `PTMLK/02/L/PSBS/2026/1` (as `nor.aini@melaka.gov.my`, PRRMMKNPTG).

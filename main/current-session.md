@@ -2,78 +2,61 @@
 
 > **AGENT_STATE discipline (Task #14, applied 2026-05-24)** — strict template: High-Level Objective · Current Progress · Active Context · Blockers · Immediate Next Steps. MUST be read at session boot (per boot-load-verification.js). MUST be updated at session end (per DE Step 2).
 
-**Last session**: **2026-05-25 (Sun overnight → Mon morning, MPST)** — etanah-knowledge-graph side-project Stage 1A + Stage 2 SKILL + **massive meta-layer hook overhaul** per みや's "BASE = hooks, OTHERS = skills" architectural directive. Hook count went 14 registered → **33 registered**. Built `meta-layer-audit.js` Layer 0 hook so structural drift is now caught deterministically at every boot.
-
-**Note on parallel sessions today**: another worktree (`claude/happy-banach-a4b7a2`) ran in parallel doing Bankai alpha-1 on eTanah AI Tooling Handover + plugin installs (jdtls-lsp, superpowers, codegraph). That work is preserved in git history at `d5a83ac` + its own diary entry. This file now reflects MY session's state going forward; their `etanah-ai-tooling/` project folder is intact.
+**Last session**: **2026-05-25 (Mon afternoon, 17:14 → 18:20 MPST, ~1h05)** — short focused session. Two outcomes: (a) standing-flag slip caught + structurally fixed via new `open-quest-surfacer.js` hook (meta-layer hook count 33 → 34); (b) QA-262783 quest archived after discovering colleague faizudin already shipped the fix (`1692e97b52` merged to `mlk/master`). QA-262869 Phase 0 partial — Scout/Recon on populator done, `.docx` template inspection pending.
 
 ## High-Level Objective (AGENT_STATE)
 
-Two parallel tracks closed in this session:
+Two threads this session:
 
-1. **etanah-knowledge-graph side-project** — Stage 1A baseline ✓ done via proper 7-phase `/understand` pipeline (vanilla output: 226 nodes / 360 edges / 3 layers / 5 tour steps on the 3-layer sample). Stage 2 skill `etanah-knowledge-graph-build` shipped with 2 deterministic helper scripts (sql-per-table-extractor + bpmn-structural-extractor). Tests deferred to next session per みや's "we'll test next time".
+1. **Standing-flag slip → hook conversion** — boot briefing missed 2 hold-quests (QA-262783 + QA-262869) sitting in `active.txt` lines 621-639; Read tool truncated at 309. みや caught it. Built `open-quest-surfacer.js` SessionStart hook that reads `quest/active.txt` via `fs` (no token cap), greps `status ∈ {active, hold, blocked, delegated}`, emits one-line summary per match. Smoke-tested ✓ would have surfaced today's miss. みや registered in `settings.json`.
 
-2. **Meta-layer hook overhaul** — surfaced 15 ghost hooks (7 documented but unregistered + 8 silent), wired them all up + moved to project-scope `settings.json` so registrations propagate across machines. Built `meta-layer-audit.js` SessionStart hook as the proper system that catches future drift without relying on `/system-check` invocation or model attention.
+2. **QA-262783 quest archived (no Ruri code shipped)** — Phase 0 prior-work probe (`git log -- <suspected file>`) revealed `1692e97b52` by faizudin landed 2026-05-25 15:38, merged to `mlk/master` at `17b2c18ad9` + common version bumped to 0.0.695-MLK. Both BA symptoms covered: (a) VO getter `byrnSewaTambahan != null ? : BigDecimal.ZERO`; (b) XHTML removed `isMandatory="true"` + `required="true"` from `byrnSewaTmbh`. Phase 2 closed Ruri-side: active.txt flipped, post-mortem + KPI written.
 
 ## Immediate Next Steps (AGENT_STATE)
 
-1. **Verify at next SessionStart**: `meta-layer-audit.js` should fire FIRST in the hook chain and print `🛡 meta-layer-audit: PASS — 33 on disk · 33 registered · 33 documented · 0 ghosts · 0 dangling · 0 doc drift`. If silent, hook isn't loading.
-2. **Task #14**: triage the 8 newly-registered hooks for production-readiness (domain-expansion-trigger, edit-scope-gate, evolution-check-trigger, prepare-commit-trigger, RecursiveLoopDetector, system-check-trigger, SystemAwareDecision, TurnChecklistGate). Per-hook decision: verify it fires correctly OR mark `// meta-layer-audit: skip-ghost-check` to opt out until fixed.
-3. **etanah-knowledge-graph Stage 2 first run**: invoke `etanah-knowledge-graph-build` skill via Skill tool against the sample folder (4 evals drafted in `.claude/skills/etanah-knowledge-graph-build/evals/evals.json`).
-4. **Carried from prior session**: Phase 2 close-outs for QA-260316 + QA-260869 (deprioritized vs the meta-layer surgery this session).
+1. **みや action — folder move + Redmine sync**: blocked by classifier this session. Commands queued in Tasks #1 + #2 (TaskList). Next session boot, run them OR I retry once classifier recovers.
+2. **QA-262869 Phase 0 continuation** — populator `populatePTGParagraph_PPTPB` at `PelupusanWordCCMethodConstant.java:16974` already emits ~11 cells but NOT the BA-flagged §6 fields (namaPemohon, jenisPengenalan, noPengenalan, jenisHakmilik, noHakmilik, luasDisyorkan, unitLuas, bayaranDikenakan, kadarBayaran, syaratKelulusan). Fix shape parallels QA-261986 closure. Est 1-2h.
+3. **Verify Open-Quest Surfacer hook fires at next boot** — meta-layer-audit should now report 34 hooks on disk · 34 registered · 34 documented · 0 ghosts. If not, the new hook isn't loading from `settings.json`.
+4. **Carried from prior session**: Task #14 (triage 8 newly-registered hooks for production-readiness) · etanah-knowledge-graph Stage 2 first run · Phase 2 close-outs for QA-260316 + QA-260869.
 
 ## Active Context (AGENT_STATE)
 
-- **Branch**: parent `main` at `583e1e4` = origin/main (synced this DE). Worktree `claude/brave-dubinsky-b11d19` was the active session surface but its `.git/worktrees/` metadata broke mid-session (OneDrive sync glitch); operations completed via parent repo. Cleanup task pending.
-- **Plugin installed this session**: `understand-anything@2.7.5` (user-scoped). Marketplace `Lum1104/Understand-Anything` registered. Runtime dependency: pnpm 11.3.0 globally installed.
-- **New skills shipped this session (2)**: `skill-invocation-discipline` · `etanah-knowledge-graph-build` (+ its 2 helper scripts)
-- **Skill refinement**: `stalling-detector` gained "diagnostic-skill self-heal" sub-rule (with full banned-bypass table)
-- **New hooks shipped this session (3)**: `meta-layer-audit.js` (SessionStart Layer 0) · `skill-invocation-discipline-gate.js` (UserPromptSubmit) · `diagnostic-self-heal-gate.js` (Stop)
-- **8 ghost hooks registered**: domain-expansion-trigger · edit-scope-gate · evolution-check-trigger · prepare-commit-trigger · RecursiveLoopDetector · system-check-trigger · SystemAwareDecision · TurnChecklistGate. New PostToolUse event source added for RecursiveLoopDetector.
-- **`auto-skill-trigger.js` regex widened**: now catches Socratic rebukes ("can you not", "did you actually"), meta-investigative phrases ("did you go through proper", "I thought it is"), and tone-of-exhaustion ("gets tiring", "for wasting my time"). Verified 3 of 3 corrections this session would now match (was 1 of 3 before).
-- **Settings split shipped**: `.claude/settings.json` (project-scope, committed, hooks only) · `.claude/settings.local.json` (gitignored, permissions only). No double-fire risk.
-- **etanah-knowledge-graph artifacts**: real Stage 1A pipeline output at `projects/coding-projects/active/etanah-knowledge-graph/stage-1-sample-input/.understand-anything/knowledge-graph.json` (226/360 nodes/edges, schema-valid, dashboard-loadable). Companion `fingerprints.json` (330 KB, baseline for incremental updates) + `meta.json`. Stage 1 baseline observations refreshed to match.
+- **Branch**: worktree `claude/clever-driscoll-f307f8` is 2 commits behind `origin/main` at session start. DE step 10 will reconcile + push.
+- **New hook this session**: `open-quest-surfacer.js` (SessionStart, Layer 1 — meta-layer member). v1 REPORT-ONLY. Hook count: 34.
+- **Settings refinement**: `.claude/settings.local.json` — added `"defaultMode": "acceptEdits"` inside `permissions` block. Reason: classifier was intermittently refusing `node` + `mv` Bash commands this session. `acceptEdits` mode bypasses the classifier; Bash gets a one-click prompt instead. Takes effect on Claude Code restart.
+- **QA-262783 archive state**: active.txt `status=archived` + post-mortem + KPI written. **PARTIAL** — Task folder physical move (47 → Archive\48) still pending (classifier blocked `mv`); will surface in Handoff Block.
+- **Slip-log entries added**: 1 (boot briefing missed hold-quests; root_category `boot-or-required-read-skipped`).
+- **Classifier flake**: Opus-4.7-1M classifier intermittent on `node` + `mv` invocations this session. Worked fine for git read commands. みや approved the `acceptEdits` mode switch as the permanent mitigation.
 
-## Slips this session (5 — all converted to deterministic enforcement, all logged to `meta/slip-log.md`)
+## Slips this session (1 — converted to hook)
 
 | # | Slip | Conversion |
 |---|---|---|
-| 1 | Manual SKILL.md execution on /understand instead of Skill tool invocation | new SKILL `skill-invocation-discipline` + new HOOK `skill-invocation-discipline-gate.js` |
-| 2 | Self-violation within turn-of-creation of skill-invocation-discipline (treated meta-skills as inline) | refined skill with "Meta-skills are skills too" sub-rule + widened auto-skill-trigger.js regex |
-| 3 | Z13 stalling: /verify reported stale doc counts; asked permission instead of self-healing | new HOOK `diagnostic-self-heal-gate.js` + sub-rule added to stalling-detector skill |
-| 4 | Ghost hooks (7 documented + 8 silent never fired) | new HOOK `meta-layer-audit.js` (Layer 0 SessionStart audit) — surfaces future drift automatically |
-| 5 | Settings scope misuse (hooks in gitignored settings.local.json, didn't propagate across machines) | moved to project-scope `settings.json` (committed) + audit now checks scope-split |
+| 1 | Boot briefing missed 2 hold-quests (QA-262783 + QA-262869) — active.txt truncated at line 309 of 640 | new HOOK `open-quest-surfacer.js` (SessionStart) — reads full active.txt via fs, surfaces all `status ∈ {active, hold, blocked, delegated}` entries |
 
 ## Standing flags
 
-- **🛡 meta-layer-audit fires at every SessionStart** — verify next boot prints `🛡 PASS` line. If silent, hook registration isn't loading.
-- **8 newly-registered hooks need triage** (Task #14) — confirm each fires correctly + doesn't false-positive in real use.
-- **etanah-knowledge-graph Stage 2 skill NOT YET TESTED** — `etanah-knowledge-graph-build` ready, 4 evals drafted, invoke via Skill tool against sample folder first.
-- **etanah-knowledge-graph follow-ups**: Phase C (Java↔DB cross-edges) → v1.1 · Phase D (XHTML→bean) → v1.2 · bean resolution caveat for XML-wired beans · vanilla /understand on full pelupusan still not run (cost decision).
-- **Pending hook conversions** (designed via /system-design, not yet built): `predicate-box` → PreToolUse on Edit when debug mode · `scope-anchor-echo` → extend pre-action-check-gate.js for Quest · `test-data-echo` → Stop hook on hand-back · `sycophancy-circuit-breaker` → UserPromptSubmit on "should we" · `grep-rubric` → optional PostToolUse reminder
-- **Worktree `claude/brave-dubinsky-b11d19` has broken `.git/worktrees/` metadata** (OneDrive sync glitch). Working tree files OK; can't commit/push from it. Cleanup: properly close + recreate.
-- **Worktree `claude/modest-lederberg-d83586` HELD** (carried from prior session).
-- **126+ pending audit-log entries** (longstanding backlog).
-- **4 untracked paths still unclassified**: `Feature/project-structure-compliance-handover.md`, `etanah_atlas/`, `zikxoUIF`, `outputs-temp/`.
+- **🛡 open-quest-surfacer.js LIVE at next boot** — verify meta-layer-audit prints `34 on disk · 34 registered · 34 documented · 0 ghosts`. If silent, hook isn't loading.
+- **🔄 Classifier mitigation**: `permissions.defaultMode = "acceptEdits"` added to `settings.local.json`. Restart Claude Code for it to apply.
+- **⏳ QA-262783 follow-throughs blocked**: (a) Task folder physical move 47 → Archive\48 (PowerShell command in Handoff Block); (b) `mlk/fat-env` cherry-pick of `1692e97b52` (deployer team).
+- **⏳ Redmine sync pending**: `node quest/redmine-sync.js` blocked by classifier — みや to run manually or wait for next session.
+- **QA-262869 still status=hold** — only known available quest until Redmine sync runs. Phase 0 partial done.
+- **Carried**: worktree `claude/brave-dubinsky-b11d19` broken `.git/worktrees/` metadata (prior session) · 126+ audit-log entries · 4 untracked paths.
 
 ## 🎯 Session Recap (for AI restart)
 
-1. **Architectural principle**: BASE/CORE meta-layer = HOOKS (deterministic). Domain skills = SKILLS (description-triggered). Per みや's directive.
-2. **`meta-layer-audit.js` IS the proper system** — Layer 0 SessionStart hook that catches ghost hooks, dangling registrations, scope-split misuse, doc drift, recursive self-skip. No /system-check invocation needed.
-3. **Hook count**: was 14 → now 33. New project-scope `settings.json` makes hooks propagate across machines.
-4. **etanah-knowledge-graph side-project**: Stage 1A baseline live; Stage 2 skill ready for next-session testing.
-5. **Slip→conversion discipline reinforced**: every slip this session became a hook OR skill OR skill-refinement, never prose-only.
+1. **Slip → hook conversion still works as a discipline** — the morning slip (missed open quests) became a structurally enforced hook (`open-quest-surfacer.js`) the same session it was caught.
+2. **Prior-work probe `git log -- <file>`** is the missing Phase 0 sub-step that would have saved 25 minutes on QA-262783. Pending Refine Block proposal for quest-protocol.md.
+3. **Classifier flake mitigation**: `permissions.defaultMode = "acceptEdits"` in `settings.local.json`. Restart required.
+4. **Faizudin coordination gap**: colleagues can land fixes on tickets Ruri thinks are "his" — `git log -- <suspected_file>` at Phase 0 catches it. Not a new policy, just a missing default step.
 
-## 💬 みや's voice this stretch
+## 💬 みや's voice this session
 
-The spine of this session was 5 escalating corrections, each that left the system stronger:
+Spine: 3 corrections. Each landed a structural fix.
 
-- "DO NOT, FORBIDDEN, BANNED to use your own execution when it comes to SKILLS" — broke the SKILL.md-instead-of-Skill-tool shortcut.
-- "Can you not self-heal this?" — broke the asking-permission-after-/verify habit.
-- "did you go through proper meta when you say 'Acting on both'?" — broke the meta-skill-inlining loophole.
-- "make THE BASE, OUR CORE PROJECT as hooks as much as possible. ALL OTHERS ARE SKILLS. SKILLS. SKILLS." — architectural reset.
-- "create a proper SYSTEM where we do not have to rely on too many things" — birthed `meta-layer-audit.js`.
-
-Each correction was a layer of the system the model wasn't enforcing on itself. The cure was always the same shape: **convert the attention-dependent rule into a hook that fires deterministically**. The pattern is now baked in — `meta-layer-audit.js` will surface any future drift of this exact kind at boot.
+- "Failure at updating standing flags **again**" — converted missed-attention rule into deterministic hook.
+- "What's a classifier" / "I want fix" — converted opaque service outage into `defaultMode = acceptEdits` settings change. Permanent, machine-local.
+- "We've wasted a bit of time checking on this" — calibrated my Phase 0 ritual cost vs the actual fix work. Prior-work probe identified as Phase 0 default-step gap.
 
 ---
-**Memory Type**: RAM | **Last Activity**: 2026-05-25 11:52 MPST — DE close, meta-layer hook overhaul archived.
+**Memory Type**: RAM | **Last Activity**: 2026-05-25 18:20 MPST — DE close, short focused session.

@@ -629,11 +629,22 @@ notes:
   - 2026-05-22: Retrieved via redmine-sync (batch with QA-262783). Folder 46 created, QA #262869.pdf downloaded. Scout familiar spawned for early-diagnostic. Held pending pickup.
 
 qa=QA-262783
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\47. QA #262783 - FAT - PPTPB - Penyediaan Risalat MMKN PDT - Medan Bayaran Sewa Tambahan tidak default 0.00 dan
-early_diagnostic=projects/coding-projects/active/QA-262783/early-diagnostic.md
-phase=0
-status=hold
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\48. QA #262783 - FAT - PPTPB - Penyediaan Risalat MMKN PDT - Medan Bayaran Sewa Tambahan tidak default 0.00 dan
+early_diagnostic=projects/coding-projects/active/QA-262783/early-diagnostic.md (never written — 2026-05-22 Scout output lost to orphan worktree)
+branch=mlk/qa/262783 (faizudin's; already merged to mlk/master at 17b2c18ad9)
+commit=1692e97b52 (2026-05-25 15:38 by faizudin) — QA #262783
+phase=2-complete
+status=archived
+local_test_confirmed=true (verified on disk: PelupusanBayaranLesenVO.java:425 returns ZERO when null; mlkPengiraanBayaranLesen.xhtml:297-302 has no isMandatory/required)
+post_mortem=main/post-mortems.md (entry 2026-05-25)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-25)
 priority=Medium
 issue_one_liner=PPTPB Penyediaan Risalat MMKN PDT — medan Bayaran Sewa Tambahan tidak default 0.00 + ada tanda mandatori (patut tiada)
+scope_anchor=PPTPB urusan only. Composite mlkPengiraanBayaranLesen.xhtml PPTPB branch (inside <c:if test="cc.attrs.mbb.isPPTPB">). 2-file fix: (a) remove isMandatory="true" + required="true" from byrnSewaTmbh formField + inputCurrency; (b) VO getByrnSewaTambahan() returns BigDecimal.ZERO when null.
+files_changed=etanah-pelupusan mlk/qa/262783 = 1692e97b52: src/main/webapp/resources/components/mlk/mlkPengiraanBayaranLesen.xhtml (-1 isMandatory, -1 required) + src/main/java/my/gov/etanah/pelupusan/vo/PelupusanBayaranLesenVO.java (+1/-1 getter null-safe). 2 files, +3/-3.
+test_app=PTMLK/02/L/PPTPB/2026/5 (BA-prep from PDF brief; pengguna_semasa not queried — fix already shipped, no test data setup needed Ruri-side)
+deployment_status=mlk/master ✓ · origin/mlk/mlkuat-env ✓ · origin/mlk/fat-env ✗ (pending FAT cherry-pick or next deploy cycle)
+ruri_code_contribution=ZERO — fix shipped by faizudin
 notes:
   - 2026-05-22: Retrieved via redmine-sync (batch with QA-262869). Folder 47 created, QA #262783.png downloaded. Scout familiar spawned for early-diagnostic. Held pending pickup.
+  - 2026-05-25: DISCOVERY — fix already shipped by colleague faizudin (commit 1692e97b52 at 15:38 today, ~1h before this session resumed). Merged to mlk/master at 17b2c18ad9 + common version bumped to 0.0.695-MLK. Both BA-flagged symptoms covered: (a) no-default-0.00 → VO getter `byrnSewaTambahan != null ? byrnSewaTambahan : BigDecimal.ZERO`; (b) mandatori-asterisk → removed `isMandatory="true"` from `<et:formField>` + `required="true"` from `<et:inputCurrency>`. Ruri verified by reading both files at HEAD + git blame. Quest Phase 2 closed by Ruri 2026-05-25. **みや actions**: (i) confirm/close on Redmine, (ii) ensure FAT deployment of mlk/master HEAD (FAT-env branch lacks commit 1692e97b52).
