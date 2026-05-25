@@ -171,6 +171,18 @@ Emit AS THE LAST THING in the DE response, AFTER the closing 結界解除 banner
 
 **Why this exists**: 2026-05-24 evening — DE Round 3 close had Step 10 PARTIAL with 2 みや actions (rm stale files + git push main); both were named in prose throughout the response but never lifted into a clearly delimited block. みや asked "Do I still have to push or what?" — proving the surfacing failed even when the content was technically present.
 
+### Session-items surfacing (added 2026-05-25)
+
+Before emitting the closing banner — read `.claude/state/session-items.md` "Active items" section. If any items with status `proposed` or `in-progress`:
+
+- Fold them into the Handoff Block under a `📌 Session items pending` row (or add as its own table row group if multiple).
+- Include item ID + short description + "needs your nod" / "in progress" framing.
+- If migration to todo / standing-flag happened during this session — note in `📦 Session-item moves` row (audit trail).
+
+**Banned**: surfacing session-items mid-conversation as alarms/bells (per みや 2026-05-25). Only at DE close / Quest Postscript / save commands.
+
+**Pre-add gate** (referenced from `.claude/state/session-items.md`): before ANY addition to session-items, check (1) could Ruri fix this in-turn → FIX NOW don't add, (2) is it todo.md material → add there instead, (3) is it standing-flag material → add there instead. Only genuine cross-turn-within-session pending items go to session-items.
+
 ---
 
 *Created: 2026-05-05 | Protocol owner: Ruri | Review at every Forge Review until L4 stabilization*
