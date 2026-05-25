@@ -14,23 +14,36 @@ Also fires on: `"briefing"` / `"where were we"` / `"what's our status"`
 
 ## Briefing Format
 
-```
-⚔️ SESSION BRIEFING — [date] [time]
+> **🚫 Iron rule — NEVER wrap the briefing in a code fence (```), block quote (>), or any literal-output delimiter.** The briefing is plain markdown — tables, bullets, and bold must render natively. The example below is INDENTED to escape it within this doc; the indentation is NOT part of the output. Your emit's first character is `⚔` or a heading marker, NEVER ` ``` `.
+>
+> **Violating the letter is violating the spirit**: also banned — wrapping the briefing in `>` quote blocks, `~~~` tildes, or any other delimiter that signals "literal blob". The briefing is structured prose.
 
-| | |
-|---|---|
-| **Quest status** | [active QA # / phase / status]  OR  [N closed yesterday / top held] |
-| **Mode** | [Office hours → リドワンさん  /  Outside hours → みや] |
-| **Priority today** | Q1: [top urgent item]  •  Next: [second item if any] |
-| **Where we left off** | [1-2 sentence recap from current-session.md → Session Recap] |
+Example shape (4-space indented — render natively in your emit, do NOT copy the indentation):
 
-| Standing flags |
-|---|
-| ⚠️ [flag 1] |
-| ⚠️ [flag 2] |
+    ⚔️ SESSION BRIEFING — [date] [time]
 
-Where would you like to start, <Mode name>?
-```
+    | | |
+    |---|---|
+    | **Quest status** | [active QA # / phase / status]  OR  [N closed yesterday / top held] |
+    | **Mode** | [Office hours → リドワンさん  /  Outside hours → みや] |
+    | **Priority today** | Q1: [top urgent item]  •  Next: [second item if any] |
+    | **Where we left off** | [1-2 sentence recap from current-session.md → Session Recap] |
+
+    | Standing flags |
+    |---|
+    | ⚠️ [flag 1] |
+    | ⚠️ [flag 2] |
+
+    Where would you like to start, <Mode name>?
+
+### Red Flags — STOP if you catch yourself thinking:
+
+- "Code fence makes it look tidier" — NO; it breaks markdown rendering. STOP.
+- "The format spec uses ``` so I should too" — NO; the ``` in any format-spec file is markdown-escape FOR THE SPEC FILE, not output shape.
+- "Block-quoting it groups it visually" — NO; same problem with `>`. The briefing renders natively.
+- "Just this once for emphasis" — banned. Letter = spirit.
+
+If your first emit-character is `` ` ``, `>`, or `~`, STOP and restructure.
 
 ---
 
@@ -74,24 +87,26 @@ If all worktree cleanup runs cleanly: NO standing flag. みや shouldn't see wor
 
 ## Example
 
-```
-⚔️ SESSION BRIEFING — Thu Apr 3 09:15 MPST 2026
+(4-space indented to escape within this doc — render natively in your actual emit, no leading backticks)
 
-| | |
-|---|---|
-| **Quest status** | Active: QA #253419 — PSBS Borang Kategori Kegunaan Tanah  •  Phase 1 executing |
-| **Mode** | Office hours → リドワンさん |
-| **Priority today** | Q1: QA-253419 implement fix at populateKegunaan():11124  •  Next: QA-253492 Phase 3 close |
-| **Where we left off** | QA-253419 investigation complete. Fix = `else if (URS_PSBS)` reading `AppHakmilik.getKegunaanTanah()`. Resume from: verify return type → implement. |
+    ⚔️ SESSION BRIEFING — Thu Apr 3 09:15 MPST 2026
 
-| Standing flags |
-|---|
-| ⚠️ AWAM gap: kegunaan_tnh column missing in umm_p_hkmlk — needs senior sign-off |
-| ⚠️ QA-246512: popup alert still needs FAT verification |
+    | | |
+    |---|---|
+    | **Quest status** | Active: QA #253419 — PSBS Borang Kategori Kegunaan Tanah  •  Phase 1 executing |
+    | **Mode** | Office hours → リドワンさん |
+    | **Priority today** | Q1: QA-253419 implement fix at populateKegunaan():11124  •  Next: QA-253492 Phase 3 close |
+    | **Where we left off** | QA-253419 investigation complete. Fix = `else if (URS_PSBS)` reading `AppHakmilik.getKegunaanTanah()`. Resume from: verify return type → implement.
 
-Where would you like to start, リドワンさん?
-```
+    | Standing flags |
+    |---|
+    | ⚠️ AWAM gap: kegunaan_tnh column missing in umm_p_hkmlk — needs senior sign-off |
+    | ⚠️ QA-246512: popup alert still needs FAT verification |
+
+    Where would you like to start, リドワンさん?
 
 ---
+
+*Version: 1.4 | Last updated: 2026-05-25 — Iron rule against code-fence-wrapping the briefing. Format example moved from ```-fenced (ambiguous — looked like "wrap output") to 4-space-indented (unambiguous — markdown doc-escape only). Red Flags section added. Triggered by みや 2026-05-25 — "Why do you keep putting session briefing into a code block/quote?" after this session's boot wrapped the whole briefing in ```.*
 
 *Version: 1.3 | Last updated: 2026-05-20 — added Standing-flag staleness audit (mandatory pre-emit) after 3 stale flags slipped into the briefing*
