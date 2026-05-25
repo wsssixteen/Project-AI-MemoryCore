@@ -1,0 +1,670 @@
+active:
+qa=QA-262233
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\43. QA #262233 - PRZ - Penyediaan Risalat MMKN - PTG - Issue on Ringkasan Risalat MMKN
+qa_doc=projects/coding-projects/archive/QA-262233/QA-262233.md
+branch=mlk/qa/262233
+commit=30d37f3b44 (2026-05-20) — QA #262233 - PRZ - Ringkasan Risalat MMKN - align Ulasan JT table width + tighten row spacing
+phase=2-complete
+local_test_confirmed=true
+status=archived
+post_mortem=main/post-mortems.md (entry 2026-05-20)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-20)
+issue_one_liner=PRZ Penyediaan Risalat MMKN PTG — Kemaskini button loads too long + Ulasan Teknikal table excessive vertical gap (per PNG "Tidak perlu gap")
+scope_layer=Parent template TemplateRingkasanRisalatPRZ.docx + external JabatanTeknikal.docx (Table tagged jtRingkasanRisalatPRZ)
+scope_anchor=2 issues fixed by 2-file edit: (1) Issue #1 slow-load was DOC-STATE — old DMS document baked broken table-width settings; new document generated under fixed template loads fast (verified locally + on BA's permohonan after regen). (2) Issue #2 gap+misalignment fixed by parent template edit (trHeight cleanup + structural split) + JabatanTeknikal.docx PRZ-table widened to 18.5cm with -1.3cm indent to match parent's top-section dimensions.
+files_changed=TemplateRingkasanRisalatPRZ.docx (みや's edit — trHeight + structural split) + references/JabatanTeknikal.docx (PRZ-table dimensions widened to match parent)
+test_app_uat=PTMLK/02/L/PRZ/2026/6 (norhaslinda.r@melaka.gov.my) — BA's original permohonan, re-tested + alignment confirmed after regen
+notes:
+  - 2026-05-20: Retrieved (batch with QA-261613) — first test run of the refined retrieval system. QA-262233.md skeleton + Issue Checklist (4 rows) written from primary sources. Scout familiar spawned in background. Logged to quest/retrieval-tracker.md run #1.
+  - 2026-05-20: Phase 1 closed — みや applied parent template fixes; Ruri applied external JT table fix; committed 30d37f3b44 on mlk/qa/262233, pushed. Repo returned to mlk/master + pulled (now at d438f75022 — pulled in mid-closure to clear "add ulasan mmkn" upstream conflict). Phase 2 pending.
+
+qa=QA-261613
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\44. QA #261613 - MLKFAT - PSBS - Kemasukan Keputusan MMKN dan P - Medan Tarikh Disahkan tidak papar pada skrin
+qa_doc=projects/coding-projects/archive/QA-261613/QA-261613.md
+branch=mlk/qa/261613
+commit=c7df4c24dc (2026-05-20) — QA #261613 - PSBS - KKMMKN - Tambah medan Tarikh Disahkan pada skrin
+phase=2-complete
+local_test_confirmed=true
+status=archived
+post_mortem=main/post-mortems.md (entry 2026-05-20)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-20)
+issue_one_liner=PSBS Kemasukan Keputusan MMKN — Medan "Tarikh Disahkan" tidak papar pada skrin
+scope_layer=Java helper flag-writer — single-line addition in MlkMuatNaikCabutanMinitForm.initView() PSBS branch
+scope_anchor=PSBS urusan only. PSBS branch in initView() at MlkMuatNaikCabutanMinitForm.java:806-815 — added showTarikhDisahkan=Boolean.TRUE; (line 810) mirroring PPJK precedent at line 865 + PRBB at line 790. Render gate at mlkKeputusanJKKTForm.xhtml:306-307 already correct; this fix flips the bean flag the gate reads. No inner tugasan filter — flag becomes TRUE across all PSBS tugasans that reach this form (SRMMKNPTG, PRMMKNPTG, KKMMKN etc.), matching PPTPB's always-TRUE-for-whole-urusan pattern at line 997.
+files_changed=src/main/java/my/gov/etanah/pelupusan/web/form/common/mlk/MlkMuatNaikCabutanMinitForm.java — 1 insertion at line 810 (+1, -0)
+tugasan=KKMMKN (TGS_KEMASUKAN_KEPUTUSAN_MMKN). Fix mechanism is urusan-wide (PSBS branch has no tugasan filter), covers KKMMKN + sister MMKN tugasans for PSBS.
+test_app_uat=PTMLK/03/L/PSBS/2026/6 (masirah@melaka.gov.my, KKMMKN, peranan PT, no flowable-alter needed — already at target tugasan on UAT). BA-prep PTMLK/02/L/PSBS/2026/3 is at SRMMKNPTG on UAT.
+verified=2026-05-20 — みや confirmed test pass on UAT PTMLK/03/L/PSBS/2026/6 KKMMKN; Tarikh Disahkan field renders correctly.
+notes:
+  - 2026-05-20: Retrieved (batch with QA-262233). QA-261613.md skeleton + Issue Checklist (2 rows) written from primary sources. Scout familiar spawned in background. Logged to quest/retrieval-tracker.md run #1.
+  - 2026-05-20: Quest start to Phase 1 close in single session — Scout (prior) + Recon (this session, all Universal Checks 0-8e source-verified) + Predicate Box + 1-line Apply + みや tested OK on UAT PTMLK/03/L/PSBS/2026/6 KKMMKN. Committed c7df4c24dc on mlk/qa/261613, pushed (first push, -u upstream set). Repo returned to mlk/master + pulled. Phase 2 (post-mortem + KPI) pending.
+
+qa=QA-260316
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\37. QA #260316 - PLPS - AWAM - Bayaran Permohonan papar 0.00
+early_diagnostic=projects/coding-projects/active/QA-260316/early-diagnostic.md
+branch=mlk/qa/260316
+commit=282e7e10c0
+phase=1-complete
+local_test_confirmed=true
+status=closed
+issue_one_liner=AWAM PLPS Bayaran step shows Fi 0.00 — should be 50.00 (100.00 if tujuan=pengiklanan), per UAT-CR #233195
+scope_layer=etanah-awam Java — PelupusanBayaranOnlineStrategy.java PLPS fee resolution
+files_changed=etanah-awam PelupusanBayaranOnlineStrategy.java (committed 282e7e10c0): both PLPS blocks — moved isNotEmpty(fiKadarList) off the outer guard onto the else FiKadar-lookup branch only, so hardcoded PGWL->10 / IKLAN->100 are reachable; getJumlah()==null||signum()==0 fallback retained
+notes:
+  - 2026-05-18: Scout+Recon+Rubric done. signum() fallback applied (uncommitted). Env switched to AWAM UAT (mkit).
+  - 2026-05-19: Root cause refined — hardcoded 100/10 rates were trapped behind the isNotEmpty(fiKadarList) outer guard; PLPS FiPejabat has 0 FiKadar rows so the guard always failed -> 100 unreachable -> flat 50. Guard restructured (un-gated). Committed 282e7e10c0 on mlk/qa/260316, pushed. みや tested both 100 (pengiklanan) + 50 (non-pengiklanan) on AWAM UAT — pass. etanah-awam returned to mlk/release/fat. Phase 2 pending.
+
+qa=QA-260869
+phase=1-complete
+status=closed
+commit=2ed93b0526 (2026-05-18) — QA #260869 - Fix Surat Keputusan Lulus regenerate: header, maklumat & row-level table now populate.
+branch=mlk/qa/260869
+local_test_confirmed=true
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\36. QA #260869 - [FAT] PRZ - Semakan Surat Keputusan Lulus - Pilih Tindakan - Disemak d
+early_diagnostic=projects/coding-projects/active/QA-260869/early-diagnostic.md
+scope_anchor=QA-260869 (PRZ Semakan SKL — header surat + maklumat not populating) fixed via the #256113 root-cause refactor. Removed the #256113 classpath-reload hack so SKL tugasans (PYSK/SSK/PSSK) load the saved file again; rewrote findTableByContentControlTag (handle Tbl/Tr/Tc raw+wrapped) + added a CTSdtRow branch to insertContentControlTableInDocument (insert <w:tr> into row-level SDTs, not <w:tbl>). template.config.json QA-260869 config patch (PRZ+RPPLP actions arrays) REVERTED — refactor supersedes it.
+scope_layer=Java — 4 files (Word-CC table util, template util, penyediaan VO, TemplatePropertyJson)
+tugasan=SSK (Semakan Surat Keputusan Lulus) — PRZ; fix mechanism-wide across SKL tugasans PYSK/SSK/PSSK + all SKL urusans
+test_app_uat=PTMLK/01/L/PLPS/2026/112 (nizalarif@melaka.gov.my) — full Penyediaan→Semakan→Pengesahan chain, syarat-syarat table survived all 3 stages (2 save→reload round-trips). Tested on UAT (FAT down for "Mock Cutover 1").
+files_changed_phase1=PelupusanWordEditorUtil.java (findTableByContentControlTag comprehensive rewrite + CTSdtRow branch in insertContentControlTableInDocument), PelupusanTemplateUtil.java + PelupusanPenyediaanDokumenVO.java + TemplatePropertyJson.java (reloadFromClasspath hack removed). 4 files, +32/−37. template.config.json NOT in commit (reverted).
+out_of_scope_held=PRZ/RPPLP ship with empty actions arrays (template.config.json reverted) — not separately retested in that exact config; covered by code-parity with the PLPS full-chain test (identical refactor code path). Optional 100% close: PRZ smoke-test on UAT PTMLK/01/L/PRZ/2025/10 (sanarimah@melaka.gov.my).
+related=#256113 — the originating fix whose classpath-reload hack this refactor removes (Archive\13. QA #256113\4. Future Refactor - Handle Row-Level SDTs.txt). Breakpoint plan + diagnostic in projects/coding-projects/active/QA-260869/.
+note=Phase 1 closed 2026-05-18. みや confirmed test pass. Phase 2 (post-mortem + KPI) pending. #256113's row-level-SDT defect now fixed at root; hack gone.
+
+qa=QA-262027
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\39. QA #262027 - FAT - PSBS - Isu pada Surat Keputusan PTG kepada PDT
+early_diagnostic=projects/coding-projects/active/QA-262027/early-diagnostic.md
+branch=mlk/qa/262027
+commit=54f4b645b4 (2026-05-19) — QA #262027 - PSBS - Fix Surat Keputusan PTG kepada PDT
+phase=2-complete
+local_test_confirmed=true
+status=archived
+post_mortem=main/post-mortems.md (entry 2026-05-19, reconciled 2026-05-20)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-19, reconciled 2026-05-20)
+issue_one_liner=PSBS Surat Keputusan PTG kepada PDT — maklumat tak tertarik, ejaan salah, align salah vs Requirement #237882
+scope_layer=.docx template only — TemplateSuratMaklumanPTGPSBSLulus.docx
+scope_anchor=5 .docx fixes, 0 Java: (1) CC-tag casing hasilTahunPertamawithRM->hasilTahunPertamaWithRM so <Hasil> dispatches to populateNotis5ACukaiTahunPertama (registered @ PelupusanWordCCMethodConstant.java:995); (2) frasa2 slogan paragraph w14:paraId 368FBC36 jc both->left; (3) ejaan menlanjutkan->melanjutkan; (4) #5 PN abbreviation — template CC tag swapped namaJenisNoHakmilik->existing noHakmilik (populator populateNoHakmilik @ PelupusanWordCCMethodConstant.java:11712 already outputs 'PN <number>'); zero Java; (5) #6 Mukim prefix — static "Mukim " inserted before bandarPekanMukim CC tag (populator deliberately strips the word; template supplies the label, parallel to "Daerah {namaDaerah}"). Items #4, #7, #8 (Tarikh Disahkan / Tujuan+Perincian / template-structure) still DEFERRED — need Requirement #237882 doc + DB-value verify.
+files_changed=etanah-pelupusan mlk/qa/262027 = 54f4b645b4: src/main/resources/template/MLK/TemplateSuratMaklumanPTGPSBSLulus.docx (5 .docx edits). 0 Java. (Prior 003862e9ff was superseded — see notes 2026-05-19/20.)
+test_app_uat=PTMLK/03/L/PSBS/2026/6 (masirah@melaka.gov.my) at KKMMKN, Lulus — zero-alter, generates SuratKeputusanPTG.docx. BA-prep app PTMLK/02/L/PSBS/2026/3 (mdiqbal@melaka.gov.my) is at SRMMKNPTG on UAT — would need flowable-alter to KKMMKN.
+notes:
+  - 2026-05-19: Retrieved (batch of 4 PSBS .docx tickets) + Scout + Recon. 3 .docx defects applied to mlk/master working tree, UNCOMMITTED, awaiting みや UAT test. Premature branch mlk/qa/262027 was created then deleted — corrected 2026-05-19, fix moved to mlk/master per quest-protocol Apply rule.
+  - 2026-05-19: #5 (PN) + #6 (Mukim) added per みや challenge. #1 RECLASSIFIED — casing fix is dispatch-only; the corrected tag populates hasilTahunPertama (Notis 5A first-year revenue), which is NOT verified to equal BA's "Kadar Nilaian smp/sehektar". #1 value-source = BA-Q, not "verified". Recon's "100%-verified" tag on #1 was wrong — only the casing MECHANISM was verified, not BA-intent match. env switched to pelupusan-UAT (standalone.xml etanahDS->mlkuat); JBoss rebuild+redeploy needed (Case B module switch awam->pelupusan).
+  - 2026-05-19 evening: #5 RECONCILED — みや caught that populateNoHakmilik @ PelupusanWordCCMethodConstant.java:11712 already outputs 'PN <number>' (byte-for-byte identical to the new populator that was written). Root cause: incomplete existing-utility sweep at Phase 0 — only checked the tag the template carried (namaJenisNoHakmilik) + jenisHakmilik; never swept sibling hakmilik tags. The remote+local mlk/qa/262027 (003862e9ff) was deleted and recreated as 54f4b645b4 — 5 .docx edits, 0 Java, #5 via swap namaJenisNoHakmilik->existing noHakmilik. git diff mlk/master..mlk/qa/262027 confirms .docx-only.
+  - 2026-05-20: MemoryCore records reconciled per quest/handoff-QA-262027-doc-reconcile.md — this active.txt block, QA-262027.md, early-diagnostic.md, post-mortems.md, kpi-tracker.md all corrected to commit 54f4b645b4 + 5 .docx + 0 Java + noHakmilik swap. Handoff file deleted. 5 items deferred — BA-Q list in early-diagnostic.md.
+
+qa=QA-262039
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\38. QA #262039 - FAT - PSBS - Isu pada Surat Keputusan Lulus kepada Pemohon
+early_diagnostic=projects/coding-projects/active/QA-262039/early-diagnostic.md
+branch=mlk/qa/262039
+phase=2-complete
+local_test_confirmed=true
+commit=9b1b9dbe1c
+status=archived
+post_mortem=main/post-mortems.md (entry 2026-05-19)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-19)
+issue_one_liner=PSBS Surat Keputusan Lulus kepada Pemohon — maklumat tak tertarik, perkataan duplicate vs Requirement #237883
+scope_layer=.docx template — TemplateSuratKeputusanLulusPSBS.docx; tugasan PYSKN5A/SSKN5A/PSKN5A
+scope_anchor=Scout: 12 discrepancies (8 static .docx, 3 CC-tag wiring/hardcoded values, 1 BA-confirm, 0 Java populator bugs). Fix-shape drafted per discrepancy in early-diagnostic.md.
+notes:
+  - 2026-05-19: Retrieved + Scout done. SILENT — Phase 0 + fix-shape persisted in early-diagnostic.md. Recon-100%-verify + Apply pending focus. 5 BA-Qs (chiefly the Notis 5A payment source + Requirement #237883 attachment).
+  - 2026-05-19: Phase 1 closed — みや tested OK on UAT (PTMLK/02/L/PSBS/2025/2, aizzatyaqilah.95@gmail.com, PYSKN5A). Fixes: 5 static-text dup/label/space edits + sekatanKepentingan tag + daerahDipohon + jumlahBayaranNotis5A WithRMFormatted/PerkataanHurufPertamaBesar CCs + hasilTahunPertamaWithRM tag + "bagi setiap 100 m.p." static suffix + new populateTotalNotis5APerkataanHurufPertamaBesar Java populator (uses PelupusanUtil.captializeOnlyAllFirstLetter). Committed 9b1b9dbe1c, pushed mlk/qa/262039. Phase 2 post-mortem pending.
+  - 2026-05-19: Phase 2 done — post-mortem + KPI written; checklist skill refined (independent enumeration). Quest closed (closed-pending-FAT).
+
+qa=QA-262004
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\40. QA #262004 - FAT - PSBS - Isu pada Ringkasan Risalat
+early_diagnostic=projects/coding-projects/archive/QA-262004/early-diagnostic.md
+qa_doc=projects/coding-projects/archive/QA-262004/QA-262004.md
+branch=mlk/qa/262004
+commit=1c1e90009461ec3002b8b35941db63a9a318604d (2026-05-21) — QA #262004 - PSBS - Ringkasan Risalat MMKN - betulkan CC tag & tarikan maklumat YB, DUN, baki tempoh pajakan
+phase=2-complete
+local_test_confirmed=true
+status=closed
+post_mortem=main/post-mortems.md (entry 2026-05-21)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-21)
+issue_one_liner=PSBS Ringkasan Risalat — maklumat tak tertarik, font/saiz beza, align salah vs Requirement #237880
+scope_layer=.docx template — TemplateRingkasanRisalatPSBS.docx (+ injected references/JabatanTeknikal.docx); tugasan PRMMKNPTG/SRMMKNPTG/PRRMMKNPTG
+scope_anchor=Scout: 10 discrepancies (6 static .docx, 3 CC-tag wiring/missing SDTs, 2 Java/data). PSBS template is an incomplete variant missing CCs its siblings carry + Arial/Century-Gothic font mix. Fix-shape drafted in early-diagnostic.md.
+notes:
+  - 2026-05-19: Retrieved + Scout done. SILENT — Phase 0 + fix-shape persisted. Recon-verify + Apply pending focus. Test app PTMLK/02/L/PSBS/2026/3 on UAT is currently AT SRMMKNPTG (zero-alter for this ticket). Shares Requirement #237880 with QA-261986.
+  - 2026-05-21: Resumed as the "easy ticket" pick. QA-262004.md restructured — Issue Checklist (20 rows independently enumerated, 2 Scout misses) + Findings Register. Recon re-fired. Recommended test app PTMLK/02/L/PSBS/2026/1 (norazimah_m@melaka.gov.my, PRMMKNPTG).
+  - 2026-05-21: PHASE 1 CLOSED — committed 1c1e900094 on mlk/qa/262004 + pushed. Fix = TemplateRingkasanRisalatPSBS.docx CC-tag corrections + 3 populator fallbacks (namaYB/dun/bakiTempohPajakan) in PelupusanWordCCMethodConstant.java. local_test_confirmed by みや. Phase 2 post-mortem pending.
+
+qa=QA-261986
+quest_start_ts=2026-05-21T02:18:59.854Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\47. QA #261986 - FAT - PSBS - Isu pada Risalat MMKN
+early_diagnostic=projects/coding-projects/archive/QA-261986/early-diagnostic.md
+qa_doc=projects/coding-projects/archive/QA-261986/QA-261986.md
+branch=mlk/qa/261986
+commit=d2aa36240b (2026-05-23) — QA #261986 - PSBS - Risalat MMKN - Fix data issues & template side
+phase=2-complete
+status=archived
+local_test_confirmed=true
+pushed=2026-05-23 first push to origin/mlk/qa/261986 (-u upstream set)
+post_mortem=main/post-mortems.md (entry 2026-05-23)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-23)
+knowledge_files_applied=etanah-knowledge/melaka/DEV-TESTING-HACKS.md (new — rahsia-gate procedure)
+verified=2026-05-23 — みや tested OK on UAT PTMLK/02/L/PSBS/2026/1 (nor.aini@melaka.gov.my, PRRMMKNPTG): doc generation, signature, multi-page header, §6 ID label all rendering per BA expectation
+files_changed_phase1=7 files: PelupusanWordCCMethodConstant.java (+242/-7, new populateJabatanTeknikalTablePSBS + 4 JPPH/perkataan populators + various PSBS-scoped populator updates + 2 noDaftarSyarikat→noPengenalan rebindings); PelupusanTemplateReportMethodParameter.java (+2, URS_PSBS branch in populateMaklumatPajakanVOList); MlkMaklumatTanahPemberimilikanForm.java (+18/-3, premium formula (tempoh−baki) + \n line-break); TemplateRisalatMMKN_PDT_PSBS_Lulus.docx (header parts 19→3, +11 SDT tags / −4); TemplateRisalatMMKN_PDT_PSBS_Tolak.docx (jabatanTeknikalPSBS rename + nilaianPasaranJPPHPerkataan SDT + sectPr 2-N headerReference stripped); JabatanTeknikal.docx (new jabatanTeknikalPSBS SDT block); additionalJKKLParagraph.docx (surgical merge — HEAD's non-PSBS upstream work preserved + our paragraphPTGPSBSLulus + paragraphPTGPSBSTolak overlay)
+scope_anchor_final=PSBS Risalat MMKN — fix data binding + template structural issues per Req #237880. Layers touched: Java populators (urusan-PSBS scoped), .docx main templates (Lulus + Tolak), .docx reference blocks (paragraphPTGPSBS*, jabatanTeknikalPSBS new). TRG excluded.
+held_reason=2026-05-21 ~14:00 — Phase 0 COMPLETE (Recon verified + DB-traced). みや refocusing on easier tickets. Resume = fresh re-read from start per QA-261986.md §0 Resume Point. Recommended test app PTMLK/02/L/PSBS/2026/1 (norazimah_m@melaka.gov.my, PRMMKNPTG).
+resumed=2026-05-22 16:35 — みや resumed; he has edited TemplateRisalatMMKN_PDT_PSBS_Lulus.docx + raised 14 findings/Qs (cc tags, numbering, populators, reference-doc paragraphPTGPSBSLulus). Phase 1 investigation in progress.
+issue_one_liner=PSBS Risalat MMKN — maklumat tak tertarik, numbering salah, font beza, align salah vs Requirement #237880 (High priority)
+scope_layer=.docx template — TemplateRisalatMMKN_PDT_PSBS_Lulus.docx (+ injected references/additionalJKKLParagraph.docx); tugasan PRMMKNPDT/SRMMKNPDT/PRMMKNPTG/SRMMKNPTG
+scope_anchor=Scout: 22 discrepancies (~10 static .docx, ~5 injected-ref-doc, ~3-4 Java populator bugs, ~5 data). Confirmed Java bug: populatePTGParagraph_PSBS_Lulus @ PelupusanWordCCMethodConstant.java:17601 computes premiumPT then overwrites with HYPHEN (dead override). Fix-shape drafted in early-diagnostic.md.
+notes:
+  - 2026-05-19: Retrieved + Scout done. SILENT — Phase 0 + fix-shape persisted. Largest of the 4; the only one with Java populator bugs. Recon-verify + Apply pending focus. Shares Requirement #237880 + likely shares populators with QA-262004 — do Java fixes once, verify both.
+  - 2026-05-22: Resumed. env-check ✓ (UAT-pelupusan). PDF re-extracted (all 5 pages). 2 Java edits applied (PelupusanWordCCMethodConstant.java:10497 JT numbering 3.1.x→3.x PSBS-guarded; :18648 staticTextPTGMelaka 2-line Melaka.) — uncommitted, untested. 4 Java items + .docx edits handed off (see QA-261986.md §6). Decisions: JT numbering PSBS-only; §6 jenisPemohon dynamic label.
+  - 2026-05-22 (late): §11 execution — all 4 actionable items done (QA-261986.md §12). Item 4 = tarikhSuratJT Date→String fix in populateTarikhJT. Item 3 = new populateNilaianPasaranJPPHPerkataan populator + TAG_NILAIAN_PASARAN_JPPH_PERKATAAN. Item 1 = §6 block: 3 unfilled tags (jenisPemohon/tempohPajakanDipohon/formulaPremium) wired into populatePTGParagraph_PSBS_Lulus eachRow — NO new SDT (§11 plan over-engineered; simple wire achieves "data populates"). Item 2 RE-DIAGNOSED: NOT framework — idPermohonan SDT in only 4 of 21 header parts; template-side Word-UI fix. All edits in PelupusanWordCCMethodConstant.java, uncommitted, local_test_confirmed=false. Offline compile vs .m2_etanah = SUCCESS. Word-UI remaining for みや: item 2 headers + item 3 CC tag nilaianPasaranJPPHPerkataan in §2.1.3.
+  - 2026-05-23: みや escalated — banned me from handing mechanical .docx edits to him ("if you can do it, why DO YOU NOT?"). Both .docx edits applied directly via python/zipfile (atomic, integrity-verified, backup .bak_2026-05-23_pre_session_edit): Item 3 = nilaianPasaranJPPHPerkataan CC tag inserted in §2.1.3 between "(Ringgit Malaysia :" and "Sahaja)". Item 2 = header2 body (RAHSIA + idPermohonan SDT) propagated to all 17 empty header parts with unique w:id per copy; verified 21/21 header parts now carry banner. NO Word-UI work remaining for みや — only build + deploy + test. personality.md v1.6: prior "Python zipfile/fitz extraction, never edit" wording superseded — Ruri DOES edit .docx mechanically; UI vocab is for chat explanation only.
+  - 2026-05-23 Phase 1 closed: commit d2aa36240b on mlk/qa/261986, first push -u. Quest duration: 2026-05-21T02:18:59Z → 2026-05-23 ~late afternoon (≈2.5 days inclusive of hold + multi-session execution). Backup-on-mutation rule + .bak cleanup re-timing (to commit-prep) added to quest-protocol.md per みや 2026-05-23 feedback. Rahsia-gate war restored to clean state (etanah-common-0.0.672-MLK.war from .bak_qa261986_v2; backup file deleted post-restore; verified 11 failRahsiaPreviewId gates back in place). additionalJKKLParagraph.docx surgical-merged via qa261986_block_merge.py — upstream's non-PSBS work from #259165 + RPPLP preserved, our paragraphPTGPSBS{Lulus,Tolak} blocks overlaid. Phase 2 (post-mortem + KPI) pending みや trigger.
+  - 2026-05-23 r7: Re-applied rahsia-doc-access OTP gate hack for current etanah-common version 0.0.672-MLK (was on 0.0.647-MLK prior). Script: C:\Users\Ridhwan\AppData\Local\Temp\qa261986_otphack_v2.py. Edits: stripped 8 instances of "and item.dokRahsiaVO.failRahsiaPreviewId eq null" + 2 instances of "and cc.attrs.mb.dokumenRahsiaVO.failRahsiaPreviewId eq null" + 1 standalone "#{item.dokRahsiaVO.failRahsiaPreviewId eq null}" -> "true" — all in resources/components/penyediaanDokumen.xhtml inside the cached .m2 war. 11 total. Backup beside the war: .bak_qa261986_v2. Re-run only when Nexus re-fetch overwrites the hack — triggers: mvn -U flag, manual .m2/etanah-common deletion, or POM bump to a different etanah-common version. Vanilla `mvn install` / `mvn clean install` does NOT re-fetch released artifacts, hack persists. MUST NEVER ship to FAT/PROD — restore from backup before any clean build intended to keep. The 0.0.647 hack file (qa261986_otphack.py) is now stale — DELETE or KEEP as historical reference.
+  - 2026-05-23 round 3: §3 ULASAN JT refactor + Tolak block update + Tolak template fixes + DB diagnosis for §4.1. Java: new TAG_TABLE_JT_PSBS="jabatanTeknikalPSBS" + populateJabatanTeknikalTablePSBS method (wrapper sentence "(Ruj. Surat : X bertarikh Y) Z memaklumkan bahawa K terhadap permohonan ini." + i.<ulasan>; no underline on namaJT); registered. Tolak populator populatePTGParagraph_PSBS_Tolak: +2 cells (TAG_JENIS_PEMOHON, TAG_NO_DAFTAR_SYARIKAT). .docx: (a) JabatanTeknikal.docx new jabatanTeknikalPSBS top-level SDT block (copy of jabatanTeknikalPT with renamed alias+tag, underline stripped, "No.rujukan:..." paragraph replaced by single <jtAyat> SDT); (b) Tolak template + Lulus template CC tag renamed jabatanTeknikalPT→jabatanTeknikalPSBS; (c) additionalJKKLParagraph.docx paragraphPTGPSBSTolak: inserted "(<jenisPemohon> : <noDaftarSyarikat>)" after <namaPemohonPT>. Offline compile vs .m2_etanah = SUCCESS. §4.1 diagnosed: NOT a populator bug — populateTarikhJT/etc. work; ALL 3 JT rows for app 2957068 have trkh_ulasan=NULL and NO YB JT row exists (none has ADUN/DUN in mklmt_tmbhn) → all §4.1 fields render as HYPHEN. DATA patch SQL prepared for みや: INSERT a YB JT row referencing rjk_agensi.agensi_id=49 (YB DATUK FAIRUL NIZAM, DUN Asahan) + UPDATE existing 3 JT rows to set trkh_ulasan. Lulus Sahaja space-fix: file state currently correct (Word evidently inserted a separate space run between the SDT and "Sahaja" during みや's open/save) — no further action needed.
+
+qa=QA-262370
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\46. QA #262370 - Semua surat - Reorganize header surat
+qa_doc=projects/coding-projects/archive/QA-262370/QA-262370.md
+early_diagnostic=projects/coding-projects/archive/QA-262370/early-diagnostic.md
+branch=mlk/qa/262370
+commit_cycle2=19346cb0a5 (2026-05-25) — QA #262370 - Susun semula HeaderSurat contact info alignment + perbetulkan logo pejabat
+commit_prior=6b1459a0eb (2026-05-21) — QA #262370 - Semua Urusan - Sokongan SDT dalam text-box + susun semula logo Pejabat HeaderSurat
+phase=2-complete-cycle-2
+local_test_confirmed=true
+status=archived
+rework_cycle=2
+rework_reopened_ts=2026-05-25T12:50+08:00
+rework_closed_ts=2026-05-25T16:50+08:00
+post_mortem=main/post-mortems.md (entry 2026-05-25, cycle 2)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-25, cycle 2)
+prior_post_mortem=main/post-mortems.md (entry 2026-05-20, cycle 1)
+prior_kpi_entry=main/kpi-tracker.md (entry 2026-05-20, cycle 1)
+test_app_uat=PTMLK/03/L/PLTP/2026/7 (leenoor36@yahoo.com, PYSKN5A, pejabat 03 Alor Gajah)
+verified_cycle2=2026-05-25 — みや applied own Word UI fixes (Telefon/Faks/LamanWeb/Emel alignment + logo pejabat positioning); committed + pushed 19346cb0a5; ready to pass ticket to BA on Redmine
+rework_trigger=Redmine journal 2026-05-25 01:27 by Nurhafizah Hasan — alignment adjustment for Telefon/Faks/LamanWeb/Emel + logo regression discovered during みや's edits
+carry_forward=DONE 2026-05-21 — text-box SDT framework support SHIPPED. PelupusanWordEditorUtil.getAllElementFromObject extended: when recursion hits Drawing/Pict (non-ContentAccessor wrappers), TraversalUtil descends DrawingML/VML → v:textbox → w:txbxContent to collect SDTs. HeaderSurat.docx logo re-implemented as text-box-wrapped logoPejabatTanah CC. Branch mlk/qa/262370 delete-recreated with the text-box solution.
+priority=High
+scope_anchor=Multi-urusan ("Semua surat"). Single .docx fix in HeaderSurat.docx (shared reference doc consumed by 69 surat templates via headerSurat1 CC tag). みや's Word UI implementation: 7-col grid restructure with logo at Row 0 cell[5], vMerge=restart through Row 5, vAlign=bottom — logo sits at bottom of merged cell = aligned with contact-info baseline. Asymmetric col widths (Telefon/Faks narrow at 1147 dxa, LamSes/Emel gridSpan=2 wide at 2502 dxa) preserve room for long URLs/emails. Java side: NO changes (CENTER-removal in PelupusanWordCCMethodConstant was applied earlier but reverted — みや's docx implementation works without it).
+scope_layer=.docx template binary only — HeaderSurat.docx (1 file, binary, 30968 → 29594 bytes = -1374 / -4.4%). 0 Java edits. 0 config edits.
+files_changed=src/main/resources/template/MLK/references/HeaderSurat.docx — みや's Word UI implementation (7-col grid; logo Row 0 cell[5] vMerge rows 0-5 vAlign=bottom; asymmetric contact-info col widths; new Row 8 empty bottom)
+test_app_uat=PTMLK/03/L/PLTP/2026/7 (leenoor36@yahoo.com, PYSKN5A, pejabat 03 Alor Gajah — BA-prep, visual repro for Alor Gajah logo issue)
+verified=2026-05-20 — みや tested on UAT, logo now renders at right edge aligned with contact-info baseline; matches Expected.png intent
+aaron_note_2026-05-20=for this one, as long as you adjust in suratHeader docx. should fix for all
+key_finding=The populator (PelupusanWordCCMethodConstant.populateLogoPejabatTanahImage:12010-12012) had `if (ccVO.getImageAlignment() == null) { setImageAlignment(CENTER); }` — identified during diagnosis as a forced-override pattern matching 2026-05-04 hard rule "Renderer-side overrides before cache theories" (QA #259318 BOTH precedent). Determined to NOT be needed for this fix — みや's vAlign=bottom + asymmetric col layout achieves the visual goal even with the CENTER override in place. CENTER-removal change reverted; Java unchanged. Same insight kept for future reference (logoPejabatTanah CC tag exists in exactly 1 file — HeaderSurat.docx — verified via repo-wide scan).
+notes:
+  - 2026-05-20: Retrieved via redmine-sync. Aaron Loh assigned + prep note specifies suratHeader.docx as the single fix file. Scout familiar completed early-diagnostic.md: 69-template fan-out via headerSurat1 CC tag confirmed; per-pejabat image dimensions in Java populator surfaced as alternative fix-surface; test data DB-verified UAT.
+  - 2026-05-20: Iteration cycle — Ruri v1 (Java per-pejabat dimension swap, kod-03) failed (didn't address layout); Ruri v2-v4 (programmatic XML restructure with vMerge + vAlign=center on logo cell) failed (vAlign=center wrong; should have been bottom). Ruri also added Java CENTER-default removal + text-box framework extension; both reverted by みや after errors. みや's Word UI iteration with vAlign=bottom + asymmetric col widths reached the right layout — clean docx-only fix shipped. Multiple slips logged to skill-failure-log: renderer-override rule miss at Phase 0, Momentum Circuit-Breaker miss after first failure, visual-fidelity excuse-framing, unverified docx4j FQN in framework extension.
+  - 2026-05-20: Phase 1 closed. Commit bcdcadadb3 on mlk/qa/262370 (1 file, binary 30968 → 29594 bytes). Pushed (first push, -u upstream set). Repo returned to mlk/master, clean. Phase 2 pending — post-mortem will capture the multi-iteration arc (5 attempts) + the vAlign=bottom insight + the visual-fidelity lessons.
+  - 2026-05-21: Text-box framework carry-forward COMPLETED + branch replaced. v3→v4→v5 diagnostic arc: v3 used a fresh empty Binder (binder.getXMLNode→null, confirmed via server.log); v4 used the part's binder via JaxbXmlPartXPathAware but only covered the Part-path (not the headerSurat1 external-CC injection path which passes a CTSdtContentBlock); v5 = the correct fix — recursion extended so Drawing/Pict trigger a TraversalUtil sub-walk (docx4j's own walker, descends Pict→VML CTShape→CTTextbox→txbxContent). Verified via 3 standalone probes (compiled against the live WAR classpath). HeaderSurat.docx: みや wrapped logoPejabatTanah CC in a text box; anchor had to be moved back INSIDE the headerSurat1 SDT (Ruri did the XML move — Word kept ejecting the anchor outside the CC). Logo renders correctly. Branch mlk/qa/262370 delete-recreated: new commit 6b1459a0eb (2 files: PelupusanWordEditorUtil.java +21, HeaderSurat.docx) supersedes bcdcadadb3. Old vAlign commit fully unreferenced. Repo on mlk/master.
+  - 2026-05-21: SIDE-NOTE (not part of QA-262370) — みや found + fixed a duplicate-separator-line issue in TemplateSuratMaklumanKepadaPemohonBPRZ.docx while testing (template had its own separator line; HeaderSurat already provides one). That .docx change is UNCOMMITTED on mlk/master working tree — needs its own ticket/commit.
+issue_one_liner=Semua surat — header layout issue at Alor Gajah pejabat 03: contact rows spread (Telefon→Emel gap) + logo orphaned upper-right. BA title says "logo too big"; annotations actually show vertical-gap symptom — same underlying root cause (image dimensions in populator OR HeaderSurat.docx header table cell widths).
+scope_layer=.docx template — `HeaderSurat.docx` external reference doc at `src/main/resources/template/MLK/references/HeaderSurat.docx` (consumed by 69 surat templates via the `headerSurat1` CC tag — zipfile scan verified). PLUS Java image-injector populator `PelupusanWordCCMethodConstant.populateLogoPejabatTanahImage` @ 11996-12065 with per-pejabat dimensions switch.
+scope_anchor=Multi-urusan ("Semua surat"). Two fix-surface candidates: (a) Java switch in `populateLogoPejabatTanahImage` per-pejabat image dimensions (kod 03 Alor Gajah is the visible outlier); (b) `HeaderSurat.docx` → `word/header2.xml` 4-column table cell width tuning (Aaron's literal "adjust in suratHeader docx" reading). Recon will spot-render Alor Gajah current output to pick.
+priority=High
+ba_ref_app=PTMLK/03/L/PLTP/2026/7 — MLKUAT, tugasan PYSKN5A (Penyediaan Surat Keputusan dan Borang Notis 5A), login leenoor36@yahoo.com (NORAIDAH BINTI MOHD NOR), peranan PT, pejabat 03 Alor Gajah — DB-verified by Scout
+attachments=0. Brief/Expected.png + 0. Brief/expected 1.1.jpg + 0. Brief/As is for surat.png
+aaron_note_2026-05-20=for this one, as long as you adjust in suratHeader docx. should fix for all
+scout_verdict=PROCEED TO RUBRIC — no BA-Q blocker; TRG hard-excluded per CLAUDE.md; effort S-M
+notes:
+  - 2026-05-20: Retrieved via redmine-sync. Aaron Loh assigned + prep note specifies suratHeader.docx as the single fix file. Scout familiar completed early-diagnostic.md: 69-template fan-out via headerSurat1 CC tag confirmed; per-pejabat image dimensions in Java populator surfaced as alternative fix-surface; test data DB-verified UAT. PROCEED TO RUBRIC.
+
+qa=QA-259339
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\42. QA #259339 - [FAT] PRU - Pembetulan Pada Template Kertas Pertimbangan
+early_diagnostic=projects/coding-projects/archive/QA-259339/early-diagnostic.md
+branch=mlk/qa/259339
+commit=a01ed525ac0b5afa952fa6ce7a919593d5104db0 (2026-05-21) — QA #259339 - PRU - Kertas Pertimbangan - align tandatangan Pentadbir Tanah ke kanan
+phase=2-complete
+status=closed
+local_test_confirmed=true
+post_mortem=main/post-mortems.md (entry 2026-05-21)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-21)
+issue_one_liner=PRU - Pembetulan pada Template Kertas Pertimbangan (FAT)
+scope_anchor=Current open issue = signature block alignment center→right (rework from 2026-05-07). Fix = <w:jc> center→right on 3 col-2 paragraphs (signPTNH / namaPTNH / title) in TemplateKertasPertimbanganPentadbirTanah_PRU.docx (+ sibling ...Syarikat_PRU.docx if in scope). .docx-only, no Java, no QA-262370 dependency. ~15-30 min.
+notes:
+  - 2026-05-19: Retrieved (Redmine status "In Progress" — likely rework; History.txt has 6 journal entries). Task folder has PDF + Actual/Expected PNGs. Scout NOT yet run — deferred to when the ticket is picked (session wrap-up). early-diagnostic pending.
+  - 2026-05-21: Scout done (early-diagnostic.md written). Signature block is a borderless table cell (NOT a text box) — pure <w:jc> alignment fix. QA-262370 text-box enhancement NOT needed. Photo loads fine — not a loading bug. Quick win for next session.
+  - 2026-05-21: Apply done. <w:jc> center→right on 3 signature paragraphs (027ED435 signPTNH / 25791F16 namaPTNH / 78F8C270 title) in BOTH TemplateKertasPertimbanganPentadbirTanah_PRU.docx + ...Syarikat_PRU.docx. Validated clean (center -3, right +3, <w:p> unchanged). Uncommitted on mlk/master — awaiting みや UAT render test. FLAG: title para 78F8C270 still reads "Pentadbir Tanah <Daerah>" (Description issue #1 wording — NOT touched; may be in Aaron's unmerged branch).
+
+closed:
+qa=QA-260965
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\31. QA #260965 - FAT - PLPS, PRBB - Semakan Kemasukan Maklumat - No. Sijil Kerakyatan ada tanda mandatori sedangkan
+early_diagnostic=projects/coding-projects/active/QA-260965/early-diagnostic.md
+branch=mlk/qa/260965
+phase=2-complete
+status=archived
+post_mortem=main/post-mortems.md (entry 2026-05-14)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-14)
+deferred_critical_entry=projects/coding-projects/active/etanah-knowledge/melaka/DEFERRED-CRITICAL-ISSUES.md (warna-vs-Taraf duplication, added 2026-05-14)
+commit_sha=c5e193161d (2026-05-14) — QA #260965 - PLPS PRBB - No. Sijil Kerakyatan tidak mandatori
+verified=2026-05-14 — みや confirmed test pass: PLPS at PTMLK/01/L/PLPS/2026/10 SKM as nizalarif@melaka.gov.my; PRBB at PTMLK/01/L/PRBB/2026/4 SKM as asmida@melaka.gov.my
+pushed=2026-05-14 first push to origin/mlk/qa/260965 (-u upstream set)
+files_changed_phase1=src/main/java/my/gov/etanah/pelupusan/helper/PelupusanMaklumatPemohonHelper.java :4286/4824/4851 — wrapped 3 `mandatoryNoSijil = TRUE` writers with `melaka ? Boolean.FALSE : Boolean.TRUE` ternary. Single explanatory comment at initWarna() line 4286 referencing the BA clarification + AWAM precedent.
+scope_anchor=Melaka state-wide. BA literal scope = PLPS+PRBB per ticket title; BA clarification (2026-05-14 WhatsApp) hunched "rasanya semua urusan ada isu yg sama"; AWAM's state-wide panel-hide precedent confirms parity. Sub-check 8d passes: Dispatch == BA-clarified scope == Fix shape. Non-Melaka states (TRG) untouched.
+scope_layer=Java helper (3 ternary wraps on existing TRUE writers)
+tugasan=SKM (Semakan Kemasukan Maklumat) — Maklumat Pemohon langkah
+test_app_fat=PTMLK/01/L/PLPS/2026/10 (PLPS) + PTMLK/01/L/PRBB/2026/4 (PRBB)
+deferred_critical_entry=projects/coding-projects/active/etanah-knowledge/melaka/DEFERRED-CRITICAL-ISSUES.md — warna-vs-Taraf mandatori-NoSijil duplication entry added 2026-05-14 with unified-refactor code shape in Quest chat log; pending BA business spec
+side_quest_tickets_pending=(a) Polis-* warna codes Malaysian-citizen Taraf path (Requirement #212990 violation), (b) Taraf-based mandatori unified refactor — both in main/todo.md Q2
+notes:
+  - 2026-05-13: Scout — cross-module ticket. AWAM hides panel state-wide for Melaka.
+  - 2026-05-14: First Apply attempt — state-wide melaka ternary, REVERTED for over-scope.
+  - 2026-05-14: BA WhatsApp clarification: PRU+PPJK "tak de isu" but BA hunch "rasanya semua urusan ada isu yg sama". Code analysis confirmed: PRU+PPJK code-wise vulnerable; BA's tests used Malaysian-citizen applicants so bug didn't manifest. Requirement #212906/#212990/#215476 checked — no contradiction with Melaka-gate.
+  - 2026-05-14: Phase 1 closed — 3-line Melaka-gate landed on mlk/qa/260965. Commit c5e193161d pushed.
+
+closed:
+qa=QA-260876
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\45. QA #260876 - PLTP - Ringkasan Risalat MMKN -  Issue pada template Ringkasan Risalat
+qa_doc=projects/coding-projects/active/QA-260876/QA-260876.md
+early_diagnostic=projects/coding-projects/active/QA-260876/early-diagnostic.md
+branch=mlk/qa/260876v2
+commit=6f005892ca9e07a153bbbcd1e171e7877df6417f (2026-05-21) — QA #260876 - PLTP - Ringkasan Risalat MMKN - papar ulasan YB ADUN guna tag ulasanYB
+phase=1-complete
+status=awaiting-phase-2
+local_test_confirmed=true
+rework_cycle=2
+notes:
+  - 2026-05-21: Re-engaged (Rework Cycle 2), focused on the ulasanJT issue. Scout verdict: CODE issue. populateJTRingkasanRisalatPT (PelupusanWordCCMethodConstant.java:10020-10093) builds 6 cells per JT row but never an ulasanJT cell — the tag isn't driven, the Keputusan label leaks. Working analog: populator @10330 (TemplateRisalatMMKN_PDT_PLTP.docx) feeds jt.getUlasan() at 10398-10400. Fix-shape: add ulasanJT cell feeding jt.getUlasan(); pre-Rubric verify references/JabatanTeknikal.docx has the ulasanJT CC cell. early-diagnostic-ulasanJT.md written.
+  - 2026-05-21: RESET — the jtRingkasanRisalatPT-table theory was wrong (caught by みや's "did you check fully"). Real issue: no `ulasanYB` CC tag existed. Fix = new populateUlasanYB populator + ulasanYB registration in PelupusanWordCCMethodConstant.java + template CC tag keputusanYB→ulasanYB. Phase 1 CLOSED — committed 6f005892ca on mlk/qa/260876v2, pushed. local_test_confirmed by みや. JT-table top-line issue ruled out-of-scope by みや.
+rework_reopened_ts=2026-05-20T01:36:04Z
+prior_close=phase=2-complete 2026-05-13 commit 7fe595d75f
+post_mortem=main/post-mortems.md (entry 2026-05-13)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-13)
+knowledge_files_applied=etanah-knowledge/melaka/MODULE-ARCHITECTURE.md (external-injection pattern section) + etanah-knowledge/melaka/FLOW-TRACES.md (Ringkasan vs Risalat MMKN document-generation rules)
+local_test_confirmed=true
+commit=7fe595d75f (2026-05-13) — QA #260876 - PLTP - Ringkasan Risalat MMKN Font Ulasan Daripada dan wire Ulasan YB
+scope_anchor=PLTP urusan only. TemplateRingkasanRisalatPLTP.docx (main) + references/JabatanTeknikal.docx (external ref doc) — font fix on Ulasan Daripada cell (Century Gothic 10.5pt) + wire Ulasan YB row CC tags so dynamic data renders from existing populators (dunYB, tarikhTerimaUlasanYB, keputusanYB). Strict: only PLTP variant + JabatanTeknikal ref doc; sibling Ringkasan templates untouched.
+scope_layer=.docx template binary only (main + external ref doc — populators all pre-existed)
+tugasan=PRMMKNPTG / PRMMKNPTGT (template.config.json lines 4151-4163 verified — Ringkasan PLTP generates at *MMKNPTG side ONLY, NOT *MMKNPDT). Scout had wrong enumeration; verified by みや 2026-05-13.
+test_app_fat=PTMLK/03/L/PLTP/2026/10 (BA-prep, currently past PRMMKN at PSSTL under mohdzaini@melaka.gov.my pejabat 03) / fallback PTMLK/03/L/PLTP/2026/9 active at PRMMKNPDT
+files_changed_phase1=(1) src/main/resources/template/MLK/TemplateRingkasanRisalatPLTP.docx — Ulasan YB row CC tags wired (dunYB / tarikhTerimaUlasanYB / keputusanYB) so sentence "YB ADUN Kawasan <DUN> melalui surat... memberi ulasan dengan <KEPUTUSAN>" populates from JT row's data. Hardcoded "Durian Tunggal" replaced with `<dun>` parameterised label. (2) src/main/resources/template/MLK/references/JabatanTeknikal.docx — font fix to Century Gothic 10.5pt on Ulasan Daripada section (the external doc that gets injected — its run properties drive rendering, not the parent template's font; this discovery was the architectural insight of the ticket).
+cp_F_verified=2026-05-13 — みや confirmed render: YB row shows "Kawasan Asahan" (dunYB populator), Ulasan + Tarikh Surat + Keputusan all dynamically filled; font Century Gothic 10.5pt on Ulasan Daripada cell
+cp_G_commit=2026-05-13 7fe595d75f
+cp_H_push=2026-05-13 first push to origin/mlk/qa/260876 (-u set)
+out_of_scope_held=(a) Standalone "Dun" field in main template renders "-" (populateDun returns HYPHEN because /9 data has neither alppList.dun nor aptList.maklumatTambahan KEY_DUN populated) — data-side issue, not BA-flagged this cycle. (b) Sibling Ringkasan variants (PT/PRZ/PSBS/PPJK/BPRZ/default/JKKL) NOT touched — only PLTP was flagged. (c) Cross-cell font consistency in JabatanTeknikal.docx other sections — not BA-flagged.
+architectural_finding=External `references/` docs (additionalJKKLParagraph.docx from QA-247710 + JabatanTeknikal.docx here) are injection-pattern externals. Style/font lives IN the external doc, populator only fills VALUES via rows. Parent template's font doesn't override the injected slot's content. Same pattern as QA-247710. Recurring — worth adding to etanah-knowledge.
+note=Phase 1 closed 2026-05-13. みや submitting on Redmine. Phase 2 (post-mortem + KPI + architectural note for etanah-knowledge) pending. 4 BA Qs from Scout's diagnostic (row label parameterise / font scope / HYPHEN fallback / multi-YB) — みや handled inline during edit; the row-label parameterisation chose to use `<dun>` (now renders "Asahan" for /9 data). Folder relocated to active Tasks/Melaka/45 (no longer Archive/32) for rework cycle 2 — task_folder= updated 2026-05-20 next-session; both rework attachments (ulasan.png + 2026-05-20_093455.png) already in 3. Rework/ folder.
+
+closed:
+qa=QA-260820
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\33. QA #260820 - [FAT] PRZ - Penyediaan Surat Keputusan Lulus - Langkah Surat Keputusan
+early_diagnostic=projects/coding-projects/active/QA-260820/early-diagnostic.md
+branch=mlk/qa/260820
+phase=2-complete
+status=archived
+post_mortem=main/post-mortems.md (entry 2026-05-13)
+local_test_confirmed=true
+commit=3a0a994998 (2026-05-13) — QA #260820 - PRZ - Sembunyi panel Surat Keputusan JKKL Dari PTG pada Langkah Surat Keputusan Lulus
+scope_layer=Java validator/gate writer (single-line gate refinement)
+tugasan=PYSK (Penyediaan Surat Keputusan) — PRZ urusan
+scope_anchor=PRZ urusan, Panel "Surat Keputusan JKKL Dari PTG" gate. Fix applies broader than PYSK — gate-writer at initMode() runs for any non-SURAT_JT tugasan, so the URUSAN_INVOLVE_JKKL_LIST filter scopes panel-show across all surat tugasans (any urusan ∉ JKKL list now hides panel). PLTP/MCL/etc. side-effect-benefit (already correctly hidden).
+test_app_fat=PTMLK/01/L/PRZ/2026/23 (sanarimah@melaka.gov.my, SSK — same bug exhibits at SSK as PYSK, no flowable-alter needed)
+files_changed_phase1=src/main/java/my/gov/etanah/pelupusan/web/form/common/mlk/MlkSuratTemplateForm.java :785-788 — added `&& PelupusanConstant.URUSAN_INVOLVE_JKKL_LIST.contains(kodUrusanSemasa)` AND-clause to the existing TGSN_SURAT_JT exclusion gate. 2 insertions, 1 deletion.
+cp_F_verified=2026-05-13 — みや confirmed fix tested on FAT (Q3 question), Panel "Surat Keputusan JKKL Dari PTG" no longer renders at PYSK for PRZ
+cp_G_commit=2026-05-13 3a0a994998 (rebased onto mlk/master @ 241f22a7dd for clean tip — origin had 3 newer commits pushed post-branching, none touching MlkSuratTemplateForm.java)
+cp_H_push=2026-05-13 first push to origin/mlk/qa/260820 (-u upstream set)
+out_of_scope_held=(a) Sister precedent at populateSuratKeputusanJKKLDokumenList:425-432 still uses 5-OR inline enumeration of the same urusans — candidate refactor to use URUSAN_INVOLVE_JKKL_LIST for single-source-of-truth, deferred to avoid scope creep (BA didn't flag, business-logic uncertainty). (b) QA-260733 Panel #1 now redundant for PLTP-only scope (PLTP ∉ URUSAN_INVOLVE_JKKL_LIST — side-effect of this fix already hides it).
+note=Phase 1 closed 2026-05-13. みや submitting on Redmine. Phase 2 (post-mortem + KPI) pending. Working precedent at populateSuratKeputusanJKKLDokumenList:425-432 used as fix-shape reference but kept as enum-style; sibling-defect refactor opportunity flagged in out_of_scope_held.
+
+closed:
+qa=QA-260733
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\34. QA #260733 - PLTP - Penyediaan-Semakan-Pengesahan Surat Tolak Permohonan - remove u
+early_diagnostic=projects/coding-projects/active/QA-260733/early-diagnostic.md
+branch=mlk/qa/260733
+phase=2-complete
+status=archived
+post_mortem=main/post-mortems.md (entry 2026-05-13)
+local_test_confirmed=true
+commit=f68ecb42d6 (2026-05-13) — QA #260733 - PLTP - Sembunyi panel Surat Keputusan PTG dan Notis 5A pada Langkah Surat Tolak Permohonan
+scope_layer=Java (gate-writer exclusions for TOLAK tugasans) — 2 surgical edits (Panel #1 covered by 260820 side-effect)
+tugasan=PYSTP + SSTP + PSTP (Penyediaan/Semakan/Pengesahan Surat Tolak) — PLTP urusan, 3 tugasan
+scope_anchor=Strict PLTP-scope (but fix mechanism applies via TGSN_TOLAK_PERMOHONAN set membership — covers PYSTP/SSTP/PSTP regardless of urusan). Panel #1 ("Surat Keputusan JKKL Dari PTG") already hidden via QA-260820's URUSAN_INVOLVE_JKKL_LIST filter (PLTP not in JKKL list) — confirmed side-effect alignment. Panel #2 + #3 handled in this ticket. Sister methods + other LULUS-flow tugasans untouched.
+test_app_fat=PTMLK/03/L/PLTP/2026/4 (mohdzaini@melaka.gov.my, Pejabat 03, PYSTP — DB-verified active)
+files_changed_phase1=src/main/java/my/gov/etanah/pelupusan/web/form/common/mlk/MlkSuratTemplateForm.java :862 + :911-916 — (1) removed `showViewOnlySurat = Boolean.TRUE;` line from inside TGSN_TOLAK_PERMOHONAN block (Panel #2 hidden for TOLAK); (2) added `!PelupusanTugasanConstant.TGSN_TOLAK_PERMOHONAN.contains(getTugasanCode())` AND-clause to the 4-urusan check that sets viewBorang5A=TRUE (Panel #3 hidden for TOLAK). 5 insertions, 5 deletions.
+cp_F_verified=2026-05-13 — みや confirmed fix tested on FAT PTMLK/03/L/PLTP/2026/4 PYSTP. Panel #2 + Panel #3 no longer render at TOLAK langkah.
+cp_G_commit=2026-05-13 f68ecb42d6 (rebased onto mlk/master @ 98ab838d8d for clean tip — origin had moved during work)
+cp_H_push=2026-05-13 first push to origin/mlk/qa/260733 (-u upstream set)
+out_of_scope_held=(a) Misnamed constant TGS_KEPUTUSAN_LULUS_NOTIS_5A_LIST at MlkPelupusanTugasanConstant.java:232-236 still includes TOLAK tugasans (PYSTP, PSTP) in a set named "LULUS_NOTIS_5A" — semantic inconsistency. Refactor candidate (rename or remove TOLAK members) but 7 callers across 3 files would need audit; deferred to maintenance pass. (b) BA Q1 scope (PLTP-only vs all-urusans-at-TOLAK) — fix mechanism applies per-tugasan, so all urusans hitting PYSTP/SSTP/PSTP get the panel-hide. Side-effect compatible with PLTP-only intent.
+related_redmine=QA-260820 (shared file: MlkSuratTemplateForm.java; serialized this ticket on the same file as みや planned)
+knowledge_files_pending=JSF-WIRING.md:94 wording correction (PRZ/JKBB row is OR-condition not "PRZ uses JKBB"; BPMN-verified 2026-05-13 PRZ uses MMKN directly).
+note=Phase 1 closed 2026-05-13. みや submitting on Redmine. Phase 2 (post-mortem + KPI + JSF-WIRING.md correction) pending.
+
+qa=QA-260302
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\35. QA #260302 - Semua Urusan - Panel Ulasan Jabatan Penilaian dan Perkhidmatan (JPPH)
+early_diagnostic=projects/coding-projects/active/QA-260302/early-diagnostic.md
+phase=1-complete
+status=closed
+branch=mlk/qa/260302
+commit=5094c076c0
+local_test_confirmed=partial — PPJK/PJTLT verified end-to-end on FAT; PT/PSBS/PLTP/MCL/PLPS untested
+issue_one_liner=Enhancement — add smp/sehektar Unit selector dropdown to the lot-row of the Ulasan JPPH panel, across 6 urusans (PT, PSBS, PLTP, MCL, PLPS, PPJK)
+scope_layer=JSF composite/XHTML + Java SelectItems getter + new constant
+scope_anchor=6 urusans sharing the JPPH lot-row panel. Pure-form enhancement — scope check 2026-05-15 confirmed the 4 user-input fields (kegunaan/kadar/unit/nilaian) live ONLY in umm_a_jabatan_teknikal.mklmt_tmbhn JSON; zero Word-template CC tags, zero template.config.json binding. No downstream document consumer.
+tugasan=JPPH panel renders on screen MlkJabatanTeknikalTerlibatForm.xhtml (skrin_id 1145 + 374), langkah "Jabatan Teknikal Terlibat". Real tugasan kods: PJTLT_5, SJTLT_5, PSLTPM_6, PLBP_PJTLT_5, PLBP_SJTLT_6 — found via ind_skrin + ind_langkah join (NOT PSJT, which was Scout's wrong guess, corrected 2026-05-14).
+files_changed=etanah-pelupusan (committed on mlk/qa/260302 @ 5094c076c0, pushed 2026-05-18): (1) PelupusanConstant.java — new PLP_JNS_UNT constant. (2) JabatanTeknikalHelper.java — new getJenisUnitKadarNilaianSelectItems() getter (returns List<SelectItem>). (3) 4 JPPH XHTML files — Unit dropdown in its own <p:column headerText="Unit" width:15%>, Pattern A mirroring mlkMaklumatTerperinciPlot.xhtml:94-103. (4) MlkUlasanJPPHForm.java — +SelectItem import + getJenisUnitKadarNilaianSelectItems() getter for the standalone-page bean. NOTE: dispatcher-route screens still lack the getter — defect #4, see notes.
+test_app_fat=PTMLK/02/L/PPJK/2026/9 (nazli@melaka.gov.my, PJTLT) — verified. Remaining 5 urusans each need a clean aplikasi with hakmilik chain + no duplicate JBT rows.
+verified=2026-05-15 — fix confirmed end-to-end on FAT: umm_a_jabatan_teknikal rows 683/684, all 7 child fields persist incl. the new unitKadarNilaian (UNT_SEHEKTAR / UNT_SMP).
+blocker_resolved=Persistence appeared broken — real cause was NonUniqueResultException from duplicate (aplikasi,agensi) rows in umm_a_jabatan_teknikal (multiple testers altering flowable). findJabatanTeknikalByAplikasiAndAgensi @ PelupusanService.java:8647 threw → transaction rollback → JPPH save never reached. Fixed by evidence-verified DB DELETE of the duplicate stub rows. Documented in BUG-BESTIARY.md.
+priority_redmine=Medium
+notes:
+  - 2026-05-13: Scout — early-diagnostic written; 6 BA questions deferred.
+  - 2026-05-14: Apply — 4 XHTML + getter. Cascade of slips (filename-match, type-mismatch, Scout PSJT wrong tugasan, vague-vocab, visual placement). Real tugasan found via ind_skrin/ind_langkah.
+  - 2026-05-15: Persistence bug diagnosed → NonUniqueResultException; fixed by DB DELETE. Fix VERIFIED end-to-end on PPJK/PJTLT. Scope check confirmed pure-form. Session ff4b3697 expired before testing the remaining 5 urusans.
+  - 2026-05-17: Phase 1 closed — 7 source files committed → mlk/qa/260302 @ ddfd8ccda2, pushed. Render trace (source+DB+BPMN) found 3 of 4 edited files unreachable in current data/workflow (#2 PLPS variant — no ulasanJPPH=TRUE code path; #3 PPJK variant — PPJK BPMN has no MB-family node; #4 standalone skrin-388 — 0 apps ever at its tugasans, both envs). Only File #1 generic variant renders + was FAT-verified on PPJK/PJTLT. Dropdown snippet byte-identical across all 4 files → File #1 pass representative.
+  - 2026-05-18: Commit re-done → 5094c076c0. ddfd8ccda2 left MlkUlasanJPPHForm.java with 2 unused imports + a dangling XHTML→getter binding (standalone page bound a getter that had been removed; caught writing the walkthrough, AFTER commit; root cause = committed without reviewing the diff). Old branch deleted remote+local, rebuilt clean with getJenisUnitKadarNilaianSelectItems() correctly on MlkUlasanJPPHForm.java. State files were NOT reconciled at close → drift caught + fixed 2026-05-18.
+  - 2026-05-18: defect #4 — variant composites bind #{cc.attrs.mb.jenisUnitKadarNilaianSelectItems}; on the dispatcher route mb = the screen bean (MlkMuatNaikCabutanMinitForm / MlkMaklumatCukaiPremiumForm), which LACKS the getter → latent PropertyNotFoundException. 5094c076c0 does NOT fix this. early-diagnostic.md reconstructed.
+  - NEXT (Phase 2): (a) fix defect #4 — add getJenisUnitKadarNilaianSelectItems() to MlkMuatNaikCabutanMinitForm + MlkMaklumatCukaiPremiumForm; (b) flowable-alter to test PLPS/PPJK/standalone surfaces; (c) FAT note states local_test=partial (File #1 only); (d) BA scope Q — PLPS/PPJK variants + skrin-388 standalone + 5th surface (etanah-common UtilitiKemaskiniUlasanJPPHForm.xhtml, no dropdown) — in scope?
+
+qa=QA-259342
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\20. QA #259342 - PT & PSBS - PT & PSBS - Perlu apply pada semua tugasan - Medan Pilihan Jenis Tanah papar kedudukan yang sal
+early_diagnostic=projects/coding-projects/active/QA-259342/early-diagnostic.md
+branch=mlk/qa/259342
+phase=0
+local_test_confirmed=false
+status=delegated
+delegated_to=Aaron
+delegated_date=2026-05-05
+learning_marker=2026-05-05 — みや wants to trace fix later in project branch for learning
+note=TRANSFERRED 2026-05-05 — Aaron took back the ticket due to BA urgency. Early diagnostic preserved at projects/coding-projects/active/QA-259342/early-diagnostic.md (urusan classification + 3 issues identified including Issue 3 that was only in screenshot annotation, code/DB locations, test data candidates, 4 BA questions queued). Original brief: Subject: PT & PSBS - Panel Kadar Cukai Tanah - Penambahan formula medan Kadar Cukai Tanah dan kedudukan Jenis Tanah. **Follow-up**: trace Aaron's fix on `mlk/qa/259342` branch when closed for learning purposes.
+
+qa=QA-259534
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\22. QA #259534 - [FAT] PRBB - Kemasukan Keputusan JKBB - Papar Keluasan Disyorkan JKKL
+branch=(none — never re-created after revert; no code fix shipped)
+phase=2-complete
+local_test_confirmed=false
+status=archived
+delegated_to=BA/QA team
+delegated_date=2026-05-06
+post_mortem=main/post-mortems.md (entry 2026-05-06)
+key_finding=URUSAN_INVOLVE_JKKL_LIST excludes PRBB and PRZ (saved to etanah-knowledge/melaka/URUSAN-FLOW.md). PelupusanService.populateKeputusanSelectItem PRBB falls to else → JKKT items only. /20 stored JK_LLS row has NULL audit dates — anomalous data. yihkit's b458041 (2026-04-28 08:21) didn't reach mlk/fat-env until 2026-05-05 12:24 — 7-day gap. QA captured screenshot 2026-04-28 09:10 — pre-b458041 code. Whatever fired the bug then is unidentified.
+notes:
+  - 2026-05-05: investigated, hypothesised Option E fix at MlkMuatNaikCabutanMinitForm.java:3510, branch created + reverted
+  - 2026-05-06 morning: yihkit shared 4 references — XHTML 415-424, MlkPelupusanTugasanConstant:104, initKeputusan() at :649-721, kod-stored DB query
+  - 2026-05-06 PM: empirical test on /20 KKJKBB altered from PYSK + Lulus + save → field NOT showing despite stored kod=JK_LLS. Bug not reproducible on current FAT.
+  - 2026-05-06 PM: みや recorded Alter Flowable repro video on /20, uploaded to Redmine, ticket passed back to BA/QA for verification. **No code fix shipped.**
+
+closed:
+qa=QA-259318
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\21. QA #259318 - [FAT] PRU - Pembetulan Pada Template Surat Keputusan Lulus
+branch=mlk/qa/259318 (v1, closed 2026-05-04) | mlk/qa/259318v2 (v2, closed 2026-05-12)
+phase=2-complete (v2)
+status=archived
+local_test_confirmed=true
+post_mortem=main/post-mortems.md (entry 2026-05-12 — combined v1+v2)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-12 — combined v1+v2)
+underlying_issue=Redmine #252314 — MSR (MELAKA SAYANG RAKYAT) slogan migration NOT fully resolved upstream. #252314 (2026-03-11, by zaidi) added MSR to 23 templates; UAT-CR #235094 (next day) regressed many. As of QA-259318 closure: 11 SuratKeputusanLulus*.docx templates migrated to frasa2 (DB-driven, regression-proof). Other ~12 non-SKL templates from #252314 scope still un-migrated and at regression risk. Tracked in todo Q3.
+learning_marker=2026-05-05 — trace MSR migration completion across full #252314 scope; revisit if any of the ~12 non-SKL templates regress
+v1_commit=3b8bbf7ff7 (2026-05-04) — QA #259318 (subject-only) — 11 SKL templates migrated to frasa2 + JcEnumeration.BOTH default removed; FAT-tested 2026-05-07 by syafiq → BA bounced back on un-bold terbilang
+v2_commit=1009782970 (2026-05-12) — QA #259318 - PRU - Bold ayat (Ringgit Malaysia: Dua Ribu Empat Ratus)
+v2_files_changed=src/main/resources/template/MLK/TemplateSuratKeputusanLulusPRU.docx (binary, 40828→41012 bytes) — wrapped the (Ringgit Malaysia: <terbilang>) text run in <w:rPr><w:b/></w:rPr> at point 3
+v2_test_app_fat=PTMLK/01/L/PRU/2026/10 (azmezan@melaka.gov.my, peranan PT, pejabat 01 Melaka Tengah, PYSK)
+v2_scope_anchor=PRU urusan only. Sister SKL templates (other 11 from #252314 scope) NOT touched in v2 — BA only flagged PRU.
+note=Phase 2 closed 2026-05-12. v1 Phase 1 (2026-05-04): 11 SKL templates migrated to frasa2 (DB-driven, regression-proof) + renderer override removed at PelupusanWordEditorUtil.java:482-487. Spawned 7 hard rules in CLAUDE.md + 12 audit-log entries. v2 Phase 1 (2026-05-12): single .docx tweak — bold terbilang at point 3 per syafiq's 2026-05-07 rework comment. みや tested on FAT PTMLK/01/L/PRU/2026/10 PYSK — bold confirmed rendering correctly. Commit 1009782970 pushed to origin/mlk/qa/259318v2. Task folder archived 2026-05-12. Q3 todo: audit + migrate the other ~12 non-SKL templates from #252314 scope.
+
+qa=QA-258418
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\19. QA #258418 - FAT - PLPS - Penyediaan Surat Keputusan Lul - Tidak papar ayat -(tidak termasuk tahun kelulusan)
+handoff_file=projects/coding-projects/active/QA-258418/SESSION-HANDOFF-2026-04-30.md
+phase=1-complete
+local_test_confirmed=true
+status=closed
+note=Phase 1 CLOSED 2026-05-04 (per みや). UI text addition shipped. BA scope (PLPS-only): SSK + PSSK + PYB4AE + PB4AE (4 tugasan). 2 XHTMLs DB-verified: `lesen/MlkBorang4AeForm.xhtml` (4Ae tugasan) + `common/MlkPengiraanBayaranLesenForm.xhtml` (SKL tugasan). BPMN-verified order: SKL (34/35/36) → Borang 4Ae (40/41). **FINAL APPLIED**: br approach inside formField for BOTH files — `<h:panelGroup rendered="#{kodUrusan eq 'PLPS'}"> <br/> <h:outputText style="color:red;" value="(tidak termasuk tahun kelulusan)" /> </h:panelGroup>` (SKL file uses `isPLPS`). Test IDs: PTMLK/02/L/PLPS/2026/4 (PYB4AE), PTMLK/01/L/PLPS/2026/113 (PB4AE), PTMLK/01/L/PLPS/2025/91 (SSK), no active PSSK (flowable-alter). Phase 2 (Reflect/wrap up) pending. Awaiting FAT retest. See SESSION-HANDOFF-2026-04-30.md.
+
+closed:
+qa=QA-250665
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\25. QA #250665 - FAT - PLPS - AWAM- APPS - Jenis Pemohon = Individu - Papar nama medan
+branch=mlk/qa/250665
+commit=973c44dbeb (2026-05-06 20:19) — fix QA #250665 - APPS papar 'Lama tinggal di Melaka' untuk PLPS
+phase=2-complete
+status=archived
+local_test_confirmed=true
+post_mortem=main/post-mortems.md (entry 2026-05-07)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-07)
+knowledge_files_created=etanah-knowledge/melaka/FRONTEND-PATTERNS.md
+out_of_scope_changes=helper-getter `isPLPS()` refactor attempted post-commit but reverted (untested at runtime; deferred to next deploy cycle, e.g. QA #259759)
+learning_marker=2026-05-07 — when next touching PelupusanMaklumatPemohonHelper.java OR adjacent XHTMLs, complete the helper-getter refactor (add `public Boolean isPLPS()`, replace deep-nav at mlkMaklumatPemilikAsalForm.xhtml:979 with `cc.attrs.helper.PLPS`)
+scope_anchor=PLPS only. APPS (pelupusan officer side) label → "Lama tinggal di Melaka". PSBS + others unchanged.
+test_apps_uat=PTMLK/02/L/PLPS/2026/6 (nurulazura — PLPS verify ✓), PTMLK/01/L/PSBS/2026/6 (aslilahramat — PSBS sanity ✓)
+note=Phase 2 closed 2026-05-07. Pushed to mlk/qa/250665. 9+ audit-log entries spawned. Awaiting BA/QA FAT retest.
+
+qa=QA-259759
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\23. QA #259759 - FAT - PLPS - PYSK - SKL Item 3 dan Item 4 ayat hilang
+early_diagnostic=projects/coding-projects/archive/QA-259759/early-diagnostic.md
+branch=mlk/qa/259759 (v1) | mlk/qa/259759v2 (v2)
+v1_commit=29fbbc8d15 (2026-05-07) — fix QA #259759 - PLPS - Template SKL Item 3 dan Item 4 ayat
+v2_commit=801d63bbc2 (2026-05-14) — QA #259759 - PLPS - Item 4 ayat un-bold dan tambah perkataan 'tahun'
+phase=2-complete
+local_test_confirmed=true
+status=archived
+post_mortem=main/post-mortems.md (entry 2026-05-20 — combined v1+v2)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-20 — combined v1+v2)
+v1_test_app_uat=PTMLK/01/L/PLPS/2025/91 (azlee@melaka.gov.my, district 01 Melaka Tengah, Semakan SKL tugasan)
+v2_test_app_fat=PTMLK/01/L/PLPS/2026/1 (BA-referenced — nizalarif@melaka.gov.my; flowable-alter to PYSK for regeneration)
+v1_scope_anchor=PLPS only. TemplateSuratKeputusanLulusPLPS.docx — Item 3 (remove date range, Sahaja → SAHAJA bold, terbilang) + Item 4 ayat added with 3 placeholders (tahunSemasa, tahunBerikut, thnTamatKelulusan) via new TAG_THN_TAMAT_KELULUSAN populator.
+v2_scope_anchor=PLPS only. TemplateSuratKeputusanLulusPLPS.docx Item 4 ayat — un-bold tahunBerikut + thnTamatKelulusan placeholders + add "tahun" word before placeholder per BA 2026-05-12 journal.
+v1_files_changed=src/main/java/my/gov/etanah/pelupusan/constant/PelupusanWordCCMethodConstant.java (new TAG_THN_TAMAT_KELULUSAN constant + registration + populateThnTamatKelulusan method) + src/main/resources/template/MLK/TemplateSuratKeputusanLulusPLPS.docx (Item 3 bracket fix, SAHAJA caps, Item 4 ayat with new CC tags)
+v2_files_changed=src/main/resources/template/MLK/TemplateSuratKeputusanLulusPLPS.docx (binary, 39813→35650 bytes) — 5 surgical XML edits: (1) "(" → "(tahun " before tahunBerikut SDT, (2-3) <w:b/> removed from inner runs of tahunBerikut + thnTamatKelulusan SDTs, (4-5) <w:b/> removed from sdtEndPr blocks (precautionary anti-propagation). No Java change in v2.
+out_of_scope_changes=none — strict PLPS-only across both cycles; new populator is additive (zero impact on PRU/other SKL urusans)
+learning_marker=2026-05-07 — PLPS data-source split (typed apl.tarikhAkhir column null, dates in maklumatTambahan JSON) is documented as a hard rule pattern for future PLPS work; pairs with the audit-log entry on this finding
+knowledge_overlap=QA-259318 (11 SKL templates migrated to frasa2 — same family). Patterns + tooling ready, reused.
+note=Quest closed in 2 cycles: v1 Phase 1 (2026-05-07, ~6h) shipped Item 3 + Item 4 fix with new populator; BA bounced 2026-05-12 on Item 4 styling intent (BOLD should be NOT-bold + missing word "tahun" before placeholder). v2 Phase 1 (2026-05-14, ~30 min) shipped .docx-only fix per BA's journal. Phase 2 closed 2026-05-20 — combined post-mortem + KPI; folders archived; reconciliation of double-status anomaly applied.
+
+qa=QA-259428
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\24. QA #259428 - FAT - PLTP - PSJT - Lampiran pelan tidak papar pada surat JT
+early_diagnostic=projects/coding-projects/active/QA-259428/early-diagnostic.md
+scout_report=projects/coding-projects/active/QA-259428/scout-report.md
+branch=mlk/qa/259428
+phase=1-complete
+status=closed
+local_test_confirmed=true
+commit=1fd1f7bedd (2026-05-11 18:13) — QA #259428 - PLTP - PSJT - Fix papar pelan permohonan pada lampiran Surat JT
+scope_anchor=PLTP only. Add URS_PLTP to URS_FOR_DOK_PLP_PLN_ASAL set in PelupusanUrusanConstant.java. Fix completes UAT-CR #236559 refactor which omitted PLTP from the fallback chain. Both populators (Surat JT pelanCC + Surat YB pelanCMCC) covered by the single 1-line edit since they share the same URS_FOR_DOK_* lookup.
+scope_layer=Java config (set membership extension)
+tugasan=PSJT (Penyediaan Surat Jabatan Teknikal dan Ulasan YB)
+test_app_fat=PTMLK/02/L/PLTP/2026/10 (sabrijaluddin@melaka.gov.my, Pejabat Daerah Dan Tanah Jasin, peranan PT — BA-prepared 2026-05-11)
+etiology=UAT-CR #236559 (weilurn, smoking-gun commit f5e527753d on 2026-04-16, merged to mlk/master on 2026-04-19 via 686cb4d70a). #236559 introduced GPM-primary + per-urusan fallback chain on URS_FOR_DOK_* sets in populatePelanAsalImageMLK + new sibling populatePelanAsalImageCMCCMLK for Surat YB. Forgot PLTP in any of the 6 sets → fallback returned null bytes for PLTP → blank lampiran when generated pre-charting.
+db_verification=Across all 39 PLTP apps in FAT (mirrored in UAT at 98 apps): 100% have kod=PLN_ASAL in umm_a_dok_kmskn. 11 pre-2026-04-02 apps have a legacy LMP_PLN extra alongside PLN_ASAL — irrelevant to fix correctness (separate Q3 todo on origin of the legacy upload pattern).
+cp_F_verified=2026-05-11 — みや confirmed Pelan Permohonan papar pada lampiran Surat JT pre-charting on FAT PTMLK/02/L/PLTP/2026/10
+cp_G_commit=2026-05-11 18:13 1fd1f7bedd
+cp_H_push=2026-05-11 18:13 first push to origin/mlk/qa/259428 (-u upstream set)
+files_changed_phase1=src/main/java/my/gov/etanah/pelupusan/constant/PelupusanUrusanConstant.java :176-177 — added URS_PLTP to URS_FOR_DOK_PLP_PLN_ASAL ImmutableSet (was: URS_PT, URS_MCL; now: URS_PT, URS_MCL, URS_PLTP). 2 insertions, 1 deletion.
+out_of_scope_held=BA's reset-trick documented in BUG-BESTIARY ("delete GPM + GPST_GL via maintenance screen pelupusan" — turns any existing PLTP aplikasi back into a pre-charting bug-testbed). Q3 follow-up: investigate 2026-04-02 boundary where pre-boundary PLTP apps got an extra LMP_PLN row — possibly related to commit 782d757a0f "avoid upload same data fail" but unconfirmed; does not affect this fix.
+knowledge_files_pending=BUG-BESTIARY entry "Pre-charting state reset trick (Surat-JT lampiran family)" added 2026-05-11 with etiology grounded against UAT-CR #236559 + tugasan map (GCM, GST, SDU, SDS, PLT, PSJT, PGSJT).
+related_redmine=UAT-CR #236559 (the originating refactor — confirmed via git log f5e527753d diff)
+note=Phase 1 closed 2026-05-11 18:13. みや submitting on Redmine. Phase 2 (post-mortem + KPI + class-chain walk-through pairing with QA-260139) pending.
+
+qa=QA-260139
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\28. QA #260139 - FAT - ALL - AWAM - Tiada checking medan Tempat-Lot wajib
+scout_report=projects/coding-projects/active/QA-260139/scout-report.md
+class_chain_traces=projects/coding-projects/active/QA-260139/class-chain-traces.md
+branch=mlk/qa/260139
+phase=1-complete
+status=closed
+local_test_confirmed=partial (BPRZ + PRBB confirmed locally on UAT; PT NEGERI_MLK extension untested locally — 1-line addition matching existing PRK/SGR/TRG pattern, FAT verification deferred to BA retest)
+commit=275ab71a09 (2026-05-11 15:26) — QA #260139 - Fix checking Tempat/Lokasi/Wilayah atau No. Lot/PT/Plot
+scope_anchor=AWAM-side. All Melaka urusans (per the 13-urusan scope) needing the Tempat/Lokasi/Wilayah OR No.Lot/PT OR-blank validator on Maklumat Tanah save. Three gap-site beans, three fixes. Covered urusans: PT, PSBS, PLTP (via PelupusanPermohonanTanahTab); PRZ, BPRZ, PPJK (via PelupusanTanahRizabTabForm); PRBB (via PelupusanPermitTabForm.onSimpanBhnDiAmbil). Untouched (already-correct via canonical helpers): PLPS, MLPS, MCL, PPTPB (PelupusanPermitHelperForm); PRU (own canonical). Out of scope (no Maklumat Tanah tab): RPPLP.
+scope_layer=Java validators across 3 etanah-awam beans (3 separate fixes, single XLS-driven dispatch surface)
+test_apps_uat=BPRZ confirmed ✓ on AWAM-UAT (no_warta=1, trkh_warta=2026-03-02, rizab_id 1707 from ind_rizab). PRBB confirmed ✓ on AWAM-UAT (no_resit_carian_rasmi 260420BSAT00004 + Lot 17771). PT NEGERI-extension untested locally.
+cp_F_verified=2026-05-11 — みや confirmed BPRZ + PRBB ralat fires on UAT-AWAM. PT NEGERI_MLK extension structurally aligned with existing PRK/SGR/TRG pattern (1-line OR-list addition); FAT verification deferred.
+cp_G_commit=2026-05-11 15:26 275ab71a09
+cp_H_push=2026-05-11 15:26 first push to origin/mlk/qa/260139 (-u upstream set)
+files_changed_phase1=(1) PelupusanPermohonanTanahTab.java :638-641 — extend NEGERI list with NEGERI_MLK (covers PT, PSBS, PLTP). (2) PelupusanTanahRizabTabForm.java :309 — insert canonical OR-blank check after bandar/daerah gate (covers PRZ, BPRZ, PPJK). (3) PelupusanPermitTabForm.java :1003 — insert OR-blank check at method entry of onSimpanBhnDiAmbil (covers PRBB).
+sister_methods_out_of_scope=Strict BA scope. 4 sister save methods in the same 3 beans also lack OR-blank validation: onSimpanBhnDibuang (PRBB Bahan Dibuang sub-dialog), PelupusanPermohonanTanahTab.onSimpanBhnDiAmbil :2004, onSimpanSerahKerajaan :1006, onSimpanPajakan :860. みや 2026-05-11 chose Strict scope — defer sister methods to follow-up tickets if BA reports gaps.
+learning_marker=2026-05-11 — class chain traces baked to projects/coding-projects/active/QA-260139/class-chain-traces.md for Phase 2 walk-through (JSF + XLS dispatch + 3-fix tracing practice for みや).
+knowledge_files_pending=CLAUDE.md Recon ritual extended with Sub-check 8a (VO field schema verify, not variable name) + Sub-check 8b (XLS rule-engine lookup by Form Name not Tab display label) — both lessons distilled from this ticket's Scout slips.
+related_redmine=Net-new ticket (no upstream CR reference). 2026-05-09 hard rule on DOMAIN-GLOSSARY out-loud load + Recon 100% verification baked into Quest protocol because of this ticket's mid-investigation slips (MCL false-flag, BPRZ XLS miss).
+note=Phase 1 closed 2026-05-11 15:26. みや submitting on Redmine. Phase 2 (post-mortem + KPI + class-chain walk-through paired with QA-259428) pending.
+
+qa=QA-260154
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\27. QA #260154 - FAT - PT - PRMMKNPDT - Boleh proceed walaupun tiada medan wajib
+early_diagnostic=projects/coding-projects/active/QA-260154/early-diagnostic.md
+phase=2-complete
+status=archived
+local_test_confirmed=true
+post_mortem=main/post-mortems.md (entry 2026-05-08)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-08)
+summary_file=Tasks/Melaka/27. QA #260154 .../SUMMARY.txt
+knowledge_files_pending=BUG-BESTIARY (dormant validator + double-gate trap) + MODULE-ARCHITECTURE (state-specific override seam list) — pending みや approval per Cp J/K rule
+commit=cfd76ef111 (2026-05-08 18:00) — QA #260154 - PT - PRMMKNPDT - Maklumat Plot mandatori check pada Seterusnya
+cp_F_verified=2026-05-08 16:42 — みや confirmed Ralat fires on Seterusnya for empty mandatori (FAT PTMLK/03/L/PT/2026/9 leenoor36)
+cp_G_commit=2026-05-08 18:00 cfd76ef111
+cp_H_push=2026-05-08 18:00 first push to origin/mlk/qa/260154 (-u upstream set)
+files_changed_phase1=(1) MlkPelupusanTugasanConstant.java :327 — populate URS_PT entry with TGSN_CHECK_MAKLUMAT_PREMIUM. (2) PelupusanExcelReaderHelper.java :2171 — gate accepts TGSN_CHECK_MAKLUMAT_PREMIUM in addition to TGSN_SHOW_CUKAI_PANEL. (3) PelupusanExcelReaderHelper.java :2199-2206 — extended URS_PT branch with conditional Tempoh Pajakan check (when Taraf=Pajakan) and conditional Butiran Kegunaan check (when mandatoryButiran). (4) MlkMaklumatTanahPemberimilikanForm.java :1748 — loop now also checks plotVO.namaKawasanTerlibat blank (catches Jenis Pembangunan/Komponen)
+coverage_after_extension=10 of 10 * fields blocked at Seterusnya for PRMMKNPDT — Jenis Pembangunan/Komponen, Jenis Hakmilik, Taraf Hakmilik, Tempoh Pajakan (when Pajakan), Jenis Tanah, Tujuan Permohonan, Kelas Kegunaan, Butiran Kegunaan (when mandatoryButiran), Syarat-Syarat Nyata, Sekatan Kepentingan
+out_of_scope_held=Maklumat Tanah popup (separate panel above Maklumat Plot panel) has its own mandatori fields (Tujuan Permohonan, Daerah, Mukim, Keluasan Tanah, etc.) that may also bypass Seterusnya. みや consulted senior 2026-05-08; decision: focus strictly on BA's reported "Panel Maklumat Plot" scope. Maklumat Tanah popup mandatori-bypass NOT investigated and NOT fixed in this ticket. Separate ticket if BA reports.
+cp_F_pending=みや testing on FAT PTMLK/03/L/PT/2026/18 — confirming ralat fires when Plot popup fields incomplete + proceeds when fully filled
+cp_E_apply_on_master=2026-05-08 14:39 (mlk/master, no commit yet, awaiting Cp F local verify)
+scope_layer=Java validator (MlkPelupusanTugasanConstant map population) — primary; possible JSF nextProcess change as fallback
+effort_estimate=LOW (~1.5-3h) — single-line map-entry addition activates dormant validator at MlkMaklumatTanahPemberimilikanForm.java:1740-1754
+tugasan=PRMMKNPDT (Penyediaan Risalat MMKN PDT) — sister PRMMKNPTG explicitly OUT of scope
+test_app_fat=PTMLK/03/L/PT/2026/18 (env=MLKFAT, langkah 3 - Maklumat Tanah)
+scope_anchor=PT urusan + PRMMKNPDT tugasan only. Block proceed at langkah 3 if Plot dialog mandatori fields incomplete + display ralat "Sila kemaskini maklumat" (or existing analog "Maklumat tidak lengkap. Sila lengkapkan maklumat plot" — confirm with BA).
+suspected_files=MlkPelupusanTugasanConstant.java:326-329 (empty no-op updateTgsnBolehKemaskiniCukaiPanelMap) + MlkMaklumatTanahPemberimilikanForm.java:1740-1754 (dormant validator) + MlkMaklumatTanahPemberimilikanForm.xhtml:391-396 (nextProcess="@this")
+note=Started 2026-05-07 evening — みや simulating on FAT first to confirm bug repro. Early diagnostic ready (LOW effort, fix shape known). 6 open questions queued for BA/みや (ralat wording, sister-tugasan PRMMKNPTG status, mandatori field list, scope of map addition, fix granularity, mlkMaklumatTanahV3 mandatory flag wiring).
+
+qa=QA-260298
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\29. QA #260298 - FAT - PLPS - Semakan Keputusan MMKN Dan Sur - Medan Perincian Tujuan Permohonan papar textbox
+early_diagnostic=projects/coding-projects/active/QA-260298/early-diagnostic.md
+branch=mlk/qa/260298
+phase=1-complete
+status=closed
+local_test_confirmed=true
+commit=4460bfc7a5 (2026-05-08 21:14) — QA #260298 - PLPS - Perincian Tujuan Permohonan view-only pada SKMMKN/PKMMKN
+test_app_fat=PTMLK/01/L/PLPS/2026/42 (BA's data — verified Perincian renders as plain text "TESTING 1" instead of textbox)
+scope_layer=JSF XHTML composite (single-attribute add)
+scope_anchor=PLPS only, SKMMKN+PKMMKN tugasan only. Perincian Tujuan Permohonan field on Keputusan MMKN page must render view-only when tugasan is mode=2 (read-only).
+files_changed_phase1=src/main/webapp/resources/components/mlk/mlkKeputusanJKKTForm.xhtml :622 — added `mode="#{cc.attrs.mb.mode}"` to et:inputTextarea (1 line modified)
+fix_pattern=Composite component default mode (when mode attr null) is edit branch (p:inputTextarea = textbox); explicit mode=2 binding renders the view-only branch (h:outputText = plain text). Sibling et:inputTextarea calls in the same file (lines 71-73, 155-157, 392-394, 406-408) all pass mode correctly — bug line was the lone outlier.
+cp_E_apply_on_master=みや applied directly on local mlk/master 2026-05-08 ~20:50
+cp_F_verified=2026-05-08 21:10 — みや confirmed on FAT PTMLK/01/L/PLPS/2026/42 SKMMKN: Perincian Tujuan Permohonan = plain text "TESTING 1" (not textbox)
+cp_G_commit=2026-05-08 21:14 4460bfc7a5
+cp_H_push=2026-05-08 21:14 first push to origin/mlk/qa/260298 (-u upstream set)
+side_quest_resolved_during_phase1=Local JBoss FAT-DB connection was misconfigured (active config file is C:\etanahv3\config\environment.properties not C:\etanahv3\environment.properties — outer one was unused, renamed to .bak)
+note=Phase 1 closed 2026-05-08 21:14. みや submitting on Redmine. Phase 2 (post-mortem) pending.
+
+qa=QA-260179
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\30. QA #260179 - PT - Surat Nilaian JPPH - Penambahan pelan pada janaan Surat Nilaian J
+early_diagnostic=projects/coding-projects/active/QA-260179/early-diagnostic.md
+branch=mlk/qa/260179
+commit=0a47bed0a1 (2026-05-12) — QA #260179 - PT - Tambah pelanCC pada Surat Nilaian JPPH
+phase=1-complete
+status=closed
+local_test_confirmed=true
+scope_layer=.docx template binary edit (add pelanCC content-control). NOT a Java set-membership extension — PT already in URS_FOR_DOK_PLP_PLN_ASAL.
+effort_actual=~30min (Phase 0 inherited from familiar; Word UI insert + FAT test + commit/push close-out)
+tugasan=PSJT (TGS_PENYEDIAAN_SRT_JBTN_TEK_DAN_YB) — PSJT generates Surat JT + Surat YB + Surat Nilaian JPPH (config-mapped via template.config.json kodDokumen=SN_JPPH)
+test_app_fat=PTMLK/03/L/PT/2026/17 (selected by みや 2026-05-12, mohdzaini@melaka.gov.my, PDT Alor Gajah, PSJT, PLN_ASAL ✓)
+ba_prep_app_fat=PTMLK/03/L/PT/2026/18 (BA-referenced in 0. Brief/CTH SURAT YB.pdf — working Surat YB sample shows pelan rendering ⇒ PLN_ASAL confirmed uploaded for /18; Scout missed promoting this as primary candidate, caught by みや)
+related_redmine=UAT-CR #236559 (BA reference — symptom-similar but DIFFERENT layer from QA-259428's fix)
+scope_anchor=PT urusan + TemplateSuratNilaianJPPHPT.docx ONLY. Per Aaron's 2026-05-11 Redmine note: "for this ticket you should just need to add the same CC as the one you were checking for the other pelan CC ticket. but just put it for this particular template." Sister Surat Nilaian JPPH templates (MCL, PPJK, PLTP_PSBS, generic) deferred to separate tickets if BA reports later.
+files_changed_phase1=src/main/resources/template/MLK/TemplateSuratNilaianJPPHPT.docx (binary, 32787→33707 bytes = +920 bytes) — inserted a single <w:sdt> block with tag=pelanCC + alias=pelanCC + placeholder, mirroring the structure in TemplateSuratJabatanTeknikal.docx, at the lampiran location.
+cp_F_verified=2026-05-12 — みや confirmed PLN_ASAL renders on FAT PTMLK/03/L/PT/2026/17 PSJT after deploy
+cp_G_commit=2026-05-12 0a47bed0a1
+cp_H_push=2026-05-12 first push to origin/mlk/qa/260179 (-u upstream set)
+note=Phase 1 closed 2026-05-12. みや submitting on Redmine. Aaron's scope-clarifying note retrieved on 2nd sync (1st sync skipped journals on new-create — bug fixed in redmine-sync.js same session). Phase 2 (post-mortem + KPI) pending.
+
+closed:
+qa=QA-247710
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\26. QA #247710 - FAT - PRU - PRMMKN - Penambahbaikan skrin dan template
+early_diagnostic=projects/coding-projects/active/QA-247710/early-diagnostic.md
+branch=mlk/qa/247710v2
+phase=2-complete
+status=archived
+post_mortem=main/post-mortems.md (entry 2026-05-12)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-12)
+local_test_confirmed=true
+commit=23aa910916 (2026-05-12 17:15) — QA #247710 - PRU - Risalat MMKN Item 5/6 page break dan populate Item 6 placeholders
+resumed_date=2026-05-12
+scope_anchor=PRU urusan, Risalat MMKN PDT generation (PRMMKNPDT/SRMMKNPDT/PPT/PRMMKNPTG/SRMMKNPTG/PRRMMKNPTG tugasan via gate TGSN_SHOW_RISALAT_MMKN_PTG_PARAGRAPH). Two BA-flagged items from current Rework cycle (syafiq 2026-05-06 11:53): (1) Item 5 page break, (2) Item 6 corrections per PDF — page break + "6." numbering + 8 placeholder fills inside the external doc's PRU section. Strict current-cycle scope. NOT touched: Syarikat variant (per みや Q3), bean autodefault, KEMASKINI alert extension, other 10 urusan sections in additionalJKKLParagraph.docx.
+scope_layer=.docx template (page breaks) + external ref doc additionalJKKLParagraph.docx (font fix in PRU section) + Java populator (10-row injection wiring inner CCs of injected PRU section)
+test_app_fat=PTMLK/01/L/PRU/2026/15 (janinah@melaka.gov.my, PRMMKNPTG step, pejabat 01 Melaka Tengah)
+files_changed_phase1=(1) src/main/java/.../PelupusanWordCCMethodConstant.java populatePTGParagraph_PRU :15917-16175 — added 10-row injection for boldmmknPTGNumber, mmknPTGNumber, syorKeputusanPTG, namaDaerah, tujuanPermohonan, tempohPermitWithUnit, keluasan, isiPadu, sewaTahunan, jumlahBayaranPRU + load-bearing ccVO.setType(TABLE) reset before return (+100 / -0). (2) src/main/resources/template/MLK/TemplateRisalatMMKN_PDT_PRU.docx — Item 5 + Item 6 page breaks (binary 54481→53677 bytes, みや's UI edits). (3) src/main/resources/template/MLK/references/additionalJKKLParagraph.docx — font normalised to Arial 12 in PRU section (binary 77353→76819 bytes, みや's UI edits).
+out_of_scope_held=(a) Bean autodefault `updateKeputusanSyorOnFirstLoad` writes TRUE to JSON on first load → defeats validator, but not BA-flagged this cycle. (b) KEMASKINI alert extension (currently SELESAI-only) — spec mentions KEMASKINI but BA hasn't flagged. (c) Syarikat variant `TemplateRisalatMMKNSyarikat_PDT_PRU.docx` — PRU-only per みや. (d) Other 10 urusan sections in additionalJKKLParagraph.docx have font inconsistencies (PLTP: 1 Calibri + 11pt; PSBS-Lulus: 2 runs 8/9pt; PT-Lulus: 1 run 9pt) — flag for future tickets.
+cp_F_verified=2026-05-12 — みや confirmed render at PTMLK/01/L/PRU/2026/15 PRMMKNPTG after WAR rebuild + JBoss restart (99% success — only font issue which みや fixed in additionalJKKLParagraph.docx PRU section)
+cp_G_commit=2026-05-12 17:15 23aa910916b2381df2fc661e307ef48705d8c317
+cp_H_push=2026-05-12 first push to origin/mlk/qa/247710v2 (-u set)
+related_redmine=Original cycle commit 34acdd6222 by Vincent Lee (2026-04-11) — initial #247710 + #247707 implementation. BA bounced back 2026-05-06 by syafiq.
+note=Phase 1 closed 2026-05-12. みや submitting on Redmine. Phase 2 (post-mortem + KPI) pending. **Session retrospective**: multiple compounding slips this session — (1) cycle-relevance failure (treated early-diagnostic speculation as current-cycle scope), (2) Question-as-Instruction (BPRZ misread → broke "6." rendering), (3) defensive-line removal (ccVO.setType reset was load-bearing not defensive → TagAttributeException), (4) unauthorized deletions of warning comment + noLot block + commented-out hints + ~100 historical lines without authorization. All 4 caught by みや. Hard rules added: Question ≠ Instruction (personality.md), Defensive-line ban (CLAUDE.md Ritual 1), 🚨 Preservation discipline at Cp E (quest-protocol.md). Plus today's compound-trigger follow-through slip: I executed prep-commit but stopped at push-verify, forgetting return-to-master + active.txt update + /verify-close — みや caught it. To be logged in audit-log.
+local_test_confirmed=false
+scope_layer=Enhancement — XHTML + Bean + validator + .docx template (full stack)
+effort_estimate=HIGH (~6-10 hours) — multi-component, mandatory per-tugasan logic, alert + readonly + template ayat injection
+tugasan=Penyediaan Risalat MMKN PDT + Penyediaan Risalat MMKN PTG (Semakan + Perakuan steps too)
+issue_one_liner=Add Syor Permohonan (Lulus/Tolak) field with alert validation + readonly downstream + ayat injection in Risalat template (per Item 5/6)
+suspected_files=Risalat MMKN PDT/PTG XHTMLs + backing bean + Risalat template .docx + populator handler + tindakan.config.json (mandatory rule for Syor field)
+knowledge_overlap=PERANAN-LEARNING.md mentions Risalat MMKN. tindakan.config.json mandatory_when patterns from QA-258022.
+ba_rework_2026-05-06=syafiq tested MLKFAT PTMLK/01/L/PRU/2026/15 — (1) Item 5 not on new page, (2) Item 6 numbering missing + placeholders rendering as literal text. PRU - Risalat.pdf attached with 11 annotations covering page-breaks, "6." numbering, `<Syor Keputusan PTG>`, `<Daerah>`, `<Tujuan Permohonan>`, `<Tempoh Disyorkan>`, `<Jumlah Keluasan>`, `<Jumlah Isipadu>`, `<Kadar Bayaran>`, `<Jumlah Bayaran>`. Re-assigned to me 2026-05-06.
+note=Re-assigned via Redmine 2026-05-06 (rework). Status=Rework. Enhancement (not bug fix). Multi-step BA spec — needs careful checklist parsing. Prior commit 34acdd6222 (2026-04-11) landed; BA bouncing back template-rendering issues. Largest of the 4 new tickets. Early-diagnostic from 2026-05-06 found `paragraphPTGPRU` is the missing Item 6 slot; populator `populateSyorKeputusanPDT/PTG` already correct; gap is template-side + bean `updateKeputusanSyorOnFirstLoad` auto-defaulting JSON to TRUE which defeats the alert.
+
+closed:
+qa=QA-258022
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\18. QA #258022 - FAT - Utiliti Pengeluaran Lesen Dan Permit - Semakan Borang - Tidak papar medan Pembetulan dan medan Agihan Kepa
+handoff_file=projects/coding-projects/active/QA-258022/handoff-258022.md
+session_handoff=projects/coding-projects/active/QA-258022/SESSION-HANDOFF-2026-04-30-AM.md
+phase=1-complete
+local_test_confirmed=true
+status=closed
+note=UAT-CONFIRMED 2026-04-30. 2-file fix on mlk/qa/258022 branch (committed + pushed). (1) tindakan.config.json — tugasanSMB_LITE entry + smb_utiliti option_type. (2) MlkPelupusanPegawaiAgihService.java:261-278 — Lite-specific Ya cascade per BA spec (KPT→PT, PPD→PT,KPT, KPPD→PT,KPT,PPD). UAT 4Ce + 4Ae both verified working. Phase 2 (Reflect/Post-Mortem) pending "wrap up" command. POST-ticket items in Q2 todo: smb_utiliti→pembetulan simplification, validation methodology rule, KELENGKAPAN naming legacy, Flowable Lite check, class chain doc.
+
+closed:
+qa=QA-257569
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\17. QA #257569 - FAT - PT - KKMMKN - Tujuan Permohonan Salah pada Kadar Cukai Tanah
+phase=complete
+local_test_confirmed=true
+note=Rework closed 2026-04-24. Code fix: wire URS_PT branch to KAT_TNH via exclusion filter. UAT KAT_TNH patched to match FAT. Committed + passed.
+
+closed:
+qa=QA-257911
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\16. QA #257911 - FAT - RPPLP - PYSK - Apabila klik selesai untuk peraku, tandatangan dan nama pegawai tidak dipaparkan
+phase=complete
+note=Fix: STATUS_SEMAKAN_PERAKU typo in template.config.json PKMMKN action list. Commit 5ebfec1f12 on mlk/qa/257911. Closed 2026-04-22.
+
+closed:
+qa=QA-256113
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\13. QA #256113 - FAT - PLPS - Penyediaan Surat Keputusan Lulus Tidak papar Tempoh diluluskan
+phase=complete
+local_test_confirmed=true
+note=Fix: removed "Tempoh diluluskan lesen ini adalah X tahun." prefix from perihal string in MlkPengiraanBayaranLesenForm.performCustomSave(). URS_PLPS scope. Committed 5be6379ea0, merged 331a2df1bf → mlk/master. Closed 2026-04-27.
+
+closed:
+qa=FAT-OR-255637
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\9. FAT-OR #255637 - PPTPB - Issue pada template surat Jabatan Teknikal
+phase=complete
+status=closed
+note=Fix applied (populateFrasa2 CaseBuilder). Committed and closed 2026-04-27. Archived.
+
+qa=QA-262869
+quest_start_ts=2026-05-25T18:50+08:00
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\46. QA #262869 - PPTPB - Template Risalat MMKN - Semua maklumat tidak ditarik ke dalam
+qa_doc=projects/coding-projects/active/QA-262869/QA-262869.md
+branch=mlk/master (pre-Apply on working tree; mlk/qa/262869 to be created at Commit prep)
+phase=1-apply
+status=active
+local_test_confirmed=false
+priority=Medium
+issue_one_liner=PPTPB Template Risalat MMKN — semua maklumat tidak ditarik ke item 6 (Perakuan Pengarah Tanah dan Galian)
+scope_layer=Java only — PelupusanWordCCMethodConstant.populatePTGParagraph_PPTPB (single method, +11 cells)
+scope_anchor=PPTPB urusan only · §6 paragraphPTGPPTPB table · NO .docx changes · NO PSBS/PT/PLTP touch · 11 cells added via existing helper methods (mirror PSBS_Lulus post-QA-261986)
+tugasan_reach=TGSN_SHOW_RISALAT_MMKN_PTG_PARAGRAPH = {PRMMKNPTG, SRMMKNPTG, PRRMMKNPTG, PRMMKNPTGT, SRMMKNPTGT, PRRMMKNPTGT}
+test_app_uat=PTMLK/02/L/PPTPB/2026/5 (nor.aini@melaka.gov.my, DATUK NORAINI BINTI TAWEL, role -PTG-) — currently at PRRMMKNPTGT, in TGSN_SHOW set ✓, no flowable-alter needed
+files_changed_apply=src/main/java/my/gov/etanah/pelupusan/constant/PelupusanWordCCMethodConstant.java — +44 lines inside populatePTGParagraph_PPTPB (11 eachRow.add() calls for TAG_NAMA_PEMOHON_LOWER, TAG_JENIS_NO_KP, TAG_NO_PENGENALAN, TAG_NO_LOT, TAG_JENIS_HAKMILIK, TAG_NO_HAKMILIK, TAG_BANDAR_PEKAN_MUKIM_DIPOHON, TAG_LUAS_SYOR, TAG_BAYARAN_DIKENAKAN, TAG_KADAR_BAYARAN, TAG_SYARAT_KELULUSAN)
+validation=mvn -o compile 568 sources → BUILD SUCCESS (21.9s, no warnings)
+notes:
+  - 2026-05-22: Retrieved via redmine-sync (batch with QA-262783). Folder 46 created, QA #262869.pdf downloaded. Scout familiar spawned for early-diagnostic. Held pending pickup.
+  - 2026-05-25 evening: Quest resumed by みや. Phase 0 done autonomously: Scout (sub-agent) + multi-dim BA PDF read (§6 highlighted red, 12 placeholders enumerated) + Recon (verified Universal Checks 0-8 from primary sources — paragraphPTGPPTPB SDT extracted via zipfile, populator helpers verified via Grep, sister-urusan precedent PSBS_Lulus read end-to-end) + Predicate Box + Rubric (2 candidates, picked LOW-risk mirror-PSBS-pattern, deferred dead-cell cleanup) + Apply (Edit applied at PelupusanWordCCMethodConstant.java:16974+ block, 11 eachRow.add() calls inserted before `rows.add(eachRow)`). Notes.txt written via node quest/notes.js. mvn -o compile = BUILD SUCCESS. Phase 1 close blocked pending みや UAT test on PTMLK/02/L/PPTPB/2026/5 + commit-message review (Stop-at-stage gate). Meta-audit findings logged.
+
+qa=QA-262783
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\48. QA #262783 - FAT - PPTPB - Penyediaan Risalat MMKN PDT - Medan Bayaran Sewa Tambahan tidak default 0.00 dan
+early_diagnostic=projects/coding-projects/active/QA-262783/early-diagnostic.md (never written — 2026-05-22 Scout output lost to orphan worktree)
+branch=mlk/qa/262783 (faizudin's; already merged to mlk/master at 17b2c18ad9)
+commit=1692e97b52 (2026-05-25 15:38 by faizudin) — QA #262783
+phase=2-complete
+status=archived
+local_test_confirmed=true (verified on disk: PelupusanBayaranLesenVO.java:425 returns ZERO when null; mlkPengiraanBayaranLesen.xhtml:297-302 has no isMandatory/required)
+post_mortem=main/post-mortems.md (entry 2026-05-25)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-25)
+priority=Medium
+issue_one_liner=PPTPB Penyediaan Risalat MMKN PDT — medan Bayaran Sewa Tambahan tidak default 0.00 + ada tanda mandatori (patut tiada)
+scope_anchor=PPTPB urusan only. Composite mlkPengiraanBayaranLesen.xhtml PPTPB branch (inside <c:if test="cc.attrs.mbb.isPPTPB">). 2-file fix: (a) remove isMandatory="true" + required="true" from byrnSewaTmbh formField + inputCurrency; (b) VO getByrnSewaTambahan() returns BigDecimal.ZERO when null.
+files_changed=etanah-pelupusan mlk/qa/262783 = 1692e97b52: src/main/webapp/resources/components/mlk/mlkPengiraanBayaranLesen.xhtml (-1 isMandatory, -1 required) + src/main/java/my/gov/etanah/pelupusan/vo/PelupusanBayaranLesenVO.java (+1/-1 getter null-safe). 2 files, +3/-3.
+test_app=PTMLK/02/L/PPTPB/2026/5 (BA-prep from PDF brief; pengguna_semasa not queried — fix already shipped, no test data setup needed Ruri-side)
+deployment_status=mlk/master ✓ · origin/mlk/mlkuat-env ✓ · origin/mlk/fat-env ✗ (pending FAT cherry-pick or next deploy cycle)
+ruri_code_contribution=ZERO — fix shipped by faizudin
+notes:
+  - 2026-05-22: Retrieved via redmine-sync (batch with QA-262869). Folder 47 created, QA #262783.png downloaded. Scout familiar spawned for early-diagnostic. Held pending pickup.
+  - 2026-05-25: DISCOVERY — fix already shipped by colleague faizudin (commit 1692e97b52 at 15:38 today, ~1h before this session resumed). Merged to mlk/master at 17b2c18ad9 + common version bumped to 0.0.695-MLK. Both BA-flagged symptoms covered: (a) no-default-0.00 → VO getter `byrnSewaTambahan != null ? byrnSewaTambahan : BigDecimal.ZERO`; (b) mandatori-asterisk → removed `isMandatory="true"` from `<et:formField>` + `required="true"` from `<et:inputCurrency>`. Ruri verified by reading both files at HEAD + git blame. Quest Phase 2 closed by Ruri 2026-05-25. **みや actions**: (i) confirm/close on Redmine, (ii) ensure FAT deployment of mlk/master HEAD (FAT-env branch lacks commit 1692e97b52).
