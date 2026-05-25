@@ -1,10 +1,10 @@
 ---
-name: dev-testing-hack
-description: Use when applying or removing a testing-only patch on a binary artifact (WAR / JAR / zip / class files inside an archive) — e.g. "skip the rahsia gate", "bypass OTP for testing", "remove rahsia bypass", "restore from .bak", "did we undo the hack properly", "to peraku", "to perform signature", "apply rahsia bypass", "patch the war for testing", "enable the testing hack", "disable the testing hack". Enforces mandatory post-write + post-restore verification gates (size sanity / zip integrity / expected-change count / MD5) that PREVENT the silent-corruption + silent-restore-claim slip class. Pairs with `etanah-knowledge/melaka/DEV-TESTING-HACKS.md` which holds per-hack procedures.
+name: etanah-rahsia-bypass
+description: Use when applying or removing rahsia-bypass patches on etanah-common — for signature generation, OTP bypass, biometric ID bypass at the rahsia gate. Triggers — "skip rahsia gate", "skip the rahsia gate", "bypass OTP", "bypass biometric", "biometric identification", "generate signature", "generate signature for testing", "to peraku", "to perform signature", "apply rahsia bypass", "remove rahsia bypass", "enable rahsia bypass", "disable rahsia bypass", "restore from .bak", "did we undo the hack", "did we undo the hack properly". Pairs with `etanah-knowledge/melaka/DEV-TESTING-HACKS.md`.
 allowed-tools: Bash, Read, Write, Edit, Grep
 ---
 
-# Dev Testing Hack — safe apply + restore cycle for binary patches
+# etanah-rahsia-bypass — safe apply + restore cycle for etanah-common rahsia-gate patches
 
 ## The Iron Law
 
@@ -180,4 +180,5 @@ Use BEFORE running the patch/restore — the skill IS the gate, not a post-hoc a
 
 ## History
 
-- **2026-05-25** — Created in response to the rahsia-gate restore-claim slip surfaced during JBoss deployment investigation. The 0.0.647-MLK.war was 57MB partial-write for 3 days while the standing flag claimed "restored." Knowledge file `DEV-TESTING-HACKS.md` created alongside as the per-hack registry.
+- **2026-05-25** (morning) — Created as `dev-testing-hack` in response to the rahsia-gate restore-claim slip surfaced during JBoss deployment investigation. The 0.0.647-MLK.war was 57MB partial-write for 3 days while the standing flag claimed "restored." Knowledge file `DEV-TESTING-HACKS.md` created alongside as the per-hack registry.
+- **2026-05-25** (same day, refined) — **Renamed `dev-testing-hack` → `etanah-rahsia-bypass`** per みや's correction: the actual use case is etanah-common rahsia-bypass for signature generation + OTP + biometric ID at the rahsia gate; "dev-testing-hack" was too generic. Description rewritten <500 chars, removed workflow summary (Anthropic best-practice), added explicit triggers for "generate signature", "bypass OTP", "bypass biometric", "biometric identification". Refine ran through formal `system-design` Skill-tool invocation (Steps 0-6) + wording-shape audit per `auto-skill-on-mistake` Step 3.6b — the missed step at original creation.

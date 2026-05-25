@@ -2,7 +2,7 @@
 
 > **Purpose**: Per-hack registry of testing-only patches applied to eTanah binary artifacts (WAR / JAR / class files inside archives). Each entry MUST include: target file (full path + version), change description, expected-change-count assertion, exact apply + restore commands.
 >
-> **Companion skill**: `.claude/skills/dev-testing-hack/SKILL.md` — enforces the safety pattern. Read its Iron Law before any apply/restore cycle.
+> **Companion skill**: `.claude/skills/etanah-rahsia-bypass/SKILL.md` — enforces the safety pattern. Read its Iron Law before any apply/restore cycle. (Originally named `dev-testing-hack`; renamed 2026-05-25 same-day for use-case specificity per みや.)
 >
 > **Background** (2026-05-25): Created in response to the rahsia-gate restore-claim slip — the 0.0.647-MLK.war was on-disk corrupted for 3 days while the standing flag claimed "restored." This file now holds the procedure-of-record; the skill enforces verification at apply + restore.
 
@@ -163,4 +163,4 @@ NEVER add a hack here without writing the restore procedure. NEVER claim "applie
 
 ---
 
-*Created 2026-05-25 in response to rahsia-gate restore-claim slip. Companion to `.claude/skills/dev-testing-hack/SKILL.md` (Layer 3 — Capabilities). This file lives in Layer 4 (Knowledge) — etanah-specific per-hack procedures.*
+*Created 2026-05-25 in response to rahsia-gate restore-claim slip. Companion to `.claude/skills/etanah-rahsia-bypass/SKILL.md` (Layer 3 — Capabilities; originally named `dev-testing-hack`, renamed same-day for use-case specificity per みや). This file lives in Layer 4 (Knowledge) — etanah-specific per-hack procedures.*
