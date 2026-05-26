@@ -18,8 +18,7 @@
 
 ## How to Trigger
 
-- `/observe` — I share my current Tier 1 observations from this session
-- `"what have you noticed"` — same
+- `"what have you noticed"` — I share my current Tier 1 observations from this session
 - At `save all` — I check for T1 observations worth promoting to T2
 
 ---
@@ -71,6 +70,8 @@ Rather than directly saying "this is wrong", みや asks "is X truly different f
 **[2026-05-21]** ⬆️ **T2-PROMOTION TRIGGER MET.** Recurred — QA-262370 text-box session. みや's standing demand all session: *"check everything you can think of & be as maximum confident as you can."* He pushed back twice on under-verified output: a false *"compile clean, exit 0"* claim (I read the harness exit code, not the actual Maven output, which had failed on a toolchain error) and a *"defer — multi-hour work"* recommendation (*"it's not multi-hour if you've done proper checking"*). Both times the real answer came only once I built standalone probes + read raw evidence (server.log, docx4j source). Third clear occurrence of the [2026-05-18]/[2026-05-19] pattern — **verification rigor as trust currency** — satisfying the [2026-05-19] explicit promotion trigger. **→ This cluster is now T2 (Recurring).** Behavioural takeaway: a "verified"/"checked"/"clean" claim is only valid when backed by evidence I actually read end-to-end — exit codes, summaries, and plausible inference do not count.
 
 **[2026-05-22]** みや delegates long autonomous multi-step runs with a flag-collection safety net rather than per-step approval. This session: *"do a bulk edit and don't stop until finish, you can collect the flags"* — and the same day's first session, repeated *"continue"* over Ruri's checkpoint offers. The pattern: once a plan is agreed AND Ruri has shown the Refine-Block discipline holds, みや wants momentum — flags surfaced once at the end, not six pauses. Pairs with the 2026-05-22 morning-session "continue over checkpoint" note → candidate T2 if it recurs once more. Behavioural takeaway: under an explicit bulk-run instruction, make the reasonable call and keep going; collect deviations as flags for a single end-of-run review.
+
+**[2026-05-26]** "Memory of having added X" is not the same as "X exists on disk". みや said *"I thought I already added it"* about `/grill-me` — and the memory was supported by 3 of our own doc references treating the skill as installed across 4 days (MIYA-NOTEBOOK.md trigger-phrase table + design notes in main-memory.md from 2026-05-24 evening). The skill never existed on disk. Same shape as the 2026-05-25 ghost-hooks finding (15 hooks documented as "active" in CLAUDE.md but never registered in `settings.json`). When docs describe state, on-disk verification is the only valid evidence. Watch this pattern at every audit layer — skills, hooks, scripts, config files. **Promotion criterion**: if a third occurrence surfaces (any layer), promote to T2 + propose a `meta-layer-audit.js`-shaped skills-audit hook.
 
 ---
 

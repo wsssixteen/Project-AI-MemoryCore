@@ -10,7 +10,7 @@
 | 1 | POST-#258022 simplify: smb_utiliti → pembetulan | S | `tindakan.config.json:498-504,1274-1284` | Swap option_type ref + delete smb_utiliti def | Ready |
 | 2 | POST-#258022 validation methodology rule | S | `quest/quest-protocol.md` Phase 1 | Add code-vs-spec rule to Phase 1 | Ready |
 | 3 | POST-#258022 KELENGKAPAN naming legacy doc | S | `etanah-knowledge/melaka/DOMAIN-GLOSSARY.md` | Trace `KELENGKAPAN_MAKLUMAT_*` constant origin | Ready |
-| 4 | Plan readability rule properly | M | `.claude/skills/simplify/` (doesn't exist as project file) | Locate `/simplify` skill via harness | Needs research |
+| ~~4~~ | ~~Plan readability rule properly~~ | — | — | — | **DROPPED 2026-05-26** — `/simplify` never existed; concept lives in `feedback_simplify_and_reference.md` |
 | 5 | Q1 trigger broadening for ticket loading | S | `.claude/CLAUDE.md` Quest Workflow | Add trigger phrases list | **Top priority** |
 | 6 | Peranan × Urusan × Tugasan mind map | L | BPMN + IND_TGSN + tindakan.config.json | Sweep candidate groups per task | Cluster work |
 | 7 | DB ERD for etanah-pelupusan | M | Existing `pg_dump -s` (Q2 context-folder item) | Run tbls/SchemaSpy on dump | Pairs with #6 |
@@ -61,12 +61,8 @@ Cross-reference: this doc summarizes; the canonical source is still `main/todo.m
 - **Success Looks Like**: Hard rule added in BOTH files. Pairs with `feedback_inventory_first.md`.
 - **Dependencies**: None. **This is Q1, not Q2 — execute first.**
 
-### 5. Plan "readability is part of simplify" rule properly | S
-- **Entry Point**: `.claude/skills/simplify/` — **does not exist yet** (verified 2026-04-30). Skill lives in harness-provided skills list as `simplify`.
-- **What to Do First**: (1) Run `/simplify` skill once or read its harness description to see if readability already covered. (2) If not, decide canonical home: project-level skill SKILL.md (would need creating), `quest/quest-protocol.md` Phase 1 (pre-implementation scrutiny), or `.claude/CLAUDE.md` general rules section.
-- **Success Looks Like**: Rule placed in ONE canonical home (universally phrased: mental load, mirror in-file patterns, BA-domain terminology in comments). The premature addendum in `feedback_simplify_and_reference.md` removed.
-- **Dependencies**: None — but **architecturally pairs with #16 (Feedback architecture refactor)**. Both share the "rules need canonical homes" root cause.
-- **Notes**: There's no project `.claude/skills/simplify/` directory; the `simplify` skill is harness-built. Decide if a project-side wrapper SKILL.md is the right home.
+### ~~5. Plan "readability is part of simplify" rule properly~~ | DROPPED 2026-05-26
+**Reason**: Ghost-skill audit (2026-05-26) confirmed `/simplify` never existed as a project skill, in `~/.claude/plugins/marketplaces/`, or in any Anthropic-published marketplace. The harness-skill assumption in this section was wrong from the start. Readability concept already lives canonically in `auto-memory/feedback_simplify_and_reference.md` (auto-loaded); no separate skill home is needed. If the concept ever earns its own skill, route it through the `meta-design-router` workflow per current CLAUDE.md Honesty Invariants.
 
 ### 6. Class chain / call flow for Lite SMB Pembetulan | S
 - **Entry Point**: `projects/coding-projects/active/QA-258022/DEBUGGING-WALKTHROUGH.md` + `LITE-URUSAN-SEMAKAN-FLOW.md`
@@ -234,7 +230,7 @@ Ranked by **leverage / blocking risk**:
 1. **Phase numbering mismatch**: Project root `.claude/CLAUDE.md` references "Phase 2: Reflect" but the Phase 3 mention from item #33 (Protocol housekeeping) and worktree `.claude/CLAUDE.md` references 4-phase (Accept/Execute/Report/Post-Mortem). Two CLAUDE.md files exist with different protocol versions. Worktree version may be older. Verify which is canonical before applying #33.
 2. **Item #53 in source ("MemoryCore improvements")** appears twice in Q2 — one listed at line 52 ("MemoryCore improvements + Claude skills research") and another at line 53 ("MemoryCore improvements"). Likely duplicate that grew separately. Consider merging on next save.
 3. **Items #54/#65 ("Claude skills/features research")** — the Learning row at line 54 and Learning row at line 65 (Hermes repo) overlap conceptually. Hermes is the specific instance of the general skills-research item.
-4. **`.claude/skills/simplify/` does not exist as a project file** — but `simplify` is listed as available in the harness skill list. Item #5's plan to "read existing skill" needs to know this is a harness skill, not a project file.
+4. ~~**`.claude/skills/simplify/` does not exist as a project file**~~ — **RESOLVED 2026-05-26**: ghost-skill audit confirmed `/simplify` does not exist anywhere (no project file, no harness skill, no marketplace plugin). Original assumption that it was harness-built was wrong. Item #5 dropped.
 5. **3+ closed tickets count met for #21** — 257569, 257911, 256113, 255637 all closed. Decision trigger condition (a) is met; condition (b) Friday 2026-05-09 not yet. みや can decide #21 NOW if he wants.
 6. **#258022 cluster doc paths** — `SESSION-HANDOFF-2026-04-30-AM.md` exists alongside `handoff-258022.md`. Two handoff files. The active.txt references both — they're complementary, not duplicates, but verify naming pattern is intentional before next ticket.
 
