@@ -154,22 +154,42 @@ After Step 12's `/verify` Checklist D goes green, run a **meta-audit** pass befo
 
 ---
 
-## Step 13 — Handoff Block (added 2026-05-24 evening, after みや slip "you didn't update me on what's left")
+## Step 13 — Handoff Block — tiered (added 2026-05-24 evening; tiered 2026-05-26 after session-end overload slip)
 
-**MANDATORY when any prior step fired PARTIAL ⚠ or SKIPPED ⏭ with みや-action implications.**
+**Default is SILENCE.** A PARTIAL ⚠ step does NOT automatically warrant a Handoff Block. The criterion is *blocked work or stranded state* — not *anything that could be cleaner*.
 
-Emit AS THE LAST THING in the DE response, AFTER the closing 結界解除 banner, in a delimited block titled `🛠 ACTION REQUIRED FROM みや`. Contains:
+### Tier classification (mandatory before emitting anything)
 
-1. **Numbered ordered steps** — exact commands to run, copy-paste-ready (PowerShell/Bash)
-2. **Working directory** — absolute path each command runs from
-3. **Why each step is yours** (one-line reason — manual-push rule / destructive-action confirmation / etc.)
-4. **What's true after the steps complete** (one line — e.g. "origin/main = 519b541, DE fully shipped")
+| Tier | Trigger | Format |
+|---|---|---|
+| **Tier 0** (default — expected for routine PARTIALs) | All PARTIAL items either (a) resolve naturally on みや's next routine `git` interaction in the affected worktree, OR (b) are pure cosmetic cleanup with no work blocked | **Emit nothing.** Note the lag silently in DE step status if needed. |
+| **Tier 1** (single must-do action, non-destructive) | Exactly ONE action where みや MUST do something that won't self-resolve, AND it's a single command or trivial sequence | **One sentence** inline after DE banner. No block. No PowerShell wall. No per-step justification. Example: `Parent main lags 1 commit — pull when convenient.` |
+| **Tier 2** (multiple non-destructive actions OR a sequence) | ≥2 must-do actions OR a multi-step sequence, all non-destructive | **Brief numbered list** (≤5 lines). Working dir cited once at top if all commands run from the same path. No per-step "why this is yours" table. |
+| **Tier 3** (destructive OR cross-repo OR explicit request) | ANY destructive action (rm / reset --hard / force-push / branch -D / file delete) · commands spanning multiple repos in a sequence · みや explicitly asks "show me the commands" | **Full delimited block** as originally spec'd: numbered steps · working dir per command · why each step is yours · post-state guarantee. The safety wall earns its weight here. |
 
-**Trigger**: ≥1 step marked PARTIAL/SKIPPED + impl. requires みや action. If a step is SKIPPED with no みや action needed (e.g. Step 11 worktree close skipped because worktree is active dev surface), it does NOT contribute to Handoff Block; only steps where みや MUST do something to complete the work.
+### Trigger criterion (tightened)
 
-**Banned**: burying handoff items in prose / closing-words / change manifest / verification table. The block is the final thing みや sees; nothing follows it.
+A PARTIAL ⚠ qualifies for Handoff ONLY IF *all* of the following hold:
+- The next routine `git` interaction in the affected worktree will NOT resolve it
+- Leaving it unhandled blocks future work OR strands committed content
+- It is NOT pure cosmetic cleanup (ghost metadata, optional worktree removal, doc tidying)
 
-**Why this exists**: 2026-05-24 evening — DE Round 3 close had Step 10 PARTIAL with 2 みや actions (rm stale files + git push main); both were named in prose throughout the response but never lifted into a clearly delimited block. みや asked "Do I still have to push or what?" — proving the surfacing failed even when the content was technically present.
+If ANY of those fail → it's a Tier 0 silent note, not a Handoff item.
+
+### Banned
+
+- Emitting Tier 3 when Tier 1 fits — overload that doesn't serve みや
+- Bundling optional cosmetics into the same block as a real must-do (presentational inflation)
+- Burying handoff items in prose / closing-words / change manifest / verification table (original ban preserved)
+- "I included it just in case" — Tier 0 exists for "just in case" items
+
+### Why both bans matter
+
+**2026-05-24 evening**: DE Round 3 buried real actions in prose; みや asked *"Do I still have to push or what?"* — the original Step 13 spec was the fix.
+
+**2026-05-26**: DE close emitted Tier-3 wall for a Tier-0 situation (parent main lag resolves on next pull; ghost-worktree cleanup is purely cosmetic; sibling worktree removal is optional). みや: *"Just a simple decision question would've been."* The tier system is the fix — same safety principle (no buried actions) but with default-silence instead of default-exhaustive.
+
+### Session-items surfacing (preserved from original spec)
 
 ### Session-items surfacing (added 2026-05-25)
 
