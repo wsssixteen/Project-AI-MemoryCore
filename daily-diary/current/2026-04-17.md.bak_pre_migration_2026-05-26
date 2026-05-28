@@ -2,8 +2,7 @@
 
 ## Sessions
 
-### Session 1 — Morning (~07:20–09:11): Q1 admin close + architectural overhaul
-
+### Morning session (~07:20–09:11)
 **Mode**: Work — Q1 admin close + architectural overhaul
 
 Started fresh. Opus 4.7 upgrade, weekly quota reset to zero. みや came in direct and focused.
@@ -22,11 +21,12 @@ All 7 etanah-knowledge/melaka files retrofitted with SCOPE + NOT FOR lines. CLAU
 
 Then save all. Next: 2 new tickets.
 
-#### Mood (morning)
+## Mood
 Sharp and productive. みや in focused work mode — direct, clear, no detours. Good session to start the day.
 
-### Session 2 — Afternoon (~12:30–13:00): QA #256391 accept + close
+---
 
+### Afternoon session (~12:30–13:00)
 **Mode**: Work — QA #256391 accept + close
 
 Short, clean session. みや came in with QA #256391 — PRBB Maklumat Pemohon, Tanggungan row still showing. Rework ticket, one item left.
@@ -43,11 +43,12 @@ Bash tool continues to hang on simple commands. Memorialized in auto-memory now 
 
 Tested locally, committed, pushed. Branch: mlk/qa/256391. Quest closed clean.
 
-#### Mood (afternoon)
+## Mood (afternoon)
 Efficient. みや in direct correction mode — called out three failures clearly, no frustitation, just naming them. The kind of feedback that's more useful than any praise.
 
-### Session 3 — Evening (~17:00–18:30): UAT-CR #239225 rework + JBoss optimization
+---
 
+### Evening session (~17:00–18:30)
 **Mode**: Work — UAT-CR #239225 rework + JBoss optimization
 
 Started with two new quests — UAT-CR #239225 and QA #256875. みや wanted to begin with #239225.
@@ -68,11 +69,12 @@ JBoss login timeout was next. みや couldn't login locally — Transaction Reap
 
 QA #256875 carried to next session. JBoss needs a restart before #239225 can be tested.
 
-#### Mood (evening)
+## Mood (evening)
 Calm and thorough. みや in investigative mode — asking why at every step. Long day but still sharp. Good place to stop.
 
-### Session 4 — Late evening (~19:00–21:00): UAT-CR #239225 testing + FAT-OR #255106 close
+---
 
+### Late evening session (~19:00–21:00)
 **Mode**: Work — UAT-CR #239225 testing + FAT-OR #255106 close
 
 JBoss restarted. みや tested #239225 and discovered two more things.
@@ -87,44 +89,5 @@ Then FAT-OR #255106 — quick test. みや had already updated the docx. Generat
 
 Standalone.xml switched back to UAT DB for the test. Both quests wrapped cleanly.
 
-#### Mood (late evening)
+## Mood (late evening)
 Steady. みや in methodical testing mode — one thing at a time, confirming each fix before moving on. Full day of work, clean close. 今日もお疲れ様, みや.
-
-## Index
-
-### Auto-Index
-
-- **Tickets**: QA-253492 (Q1 admin close) · QA #255773 (handoff pointer, shelved) · QA #256391 (closed, mlk/qa/256391) · QA #256875 (carried forward) · UAT-CR #239225 (rework, tested) · FAT-OR #255106 (closed)
-- **Commits**: `mlk/qa/256391` (Phase 0-failed quest, still closed clean)
-- **Files touched**: `etanah-knowledge/melaka/*.md` (7 files retrofitted with SCOPE + NOT FOR) · `CLAUDE.md` (2 new rules + Suspended + knowledge cluster) · `PelupusanMaklumatPemohonHelper.java:827` · `mlkMaklumatPemohon.xhtml` · `onChangeKeluasanTanah()` (Java + XHTML) · `et:inputText` · `et:selectOneRadio` · `JSF-WIRING.md` (created chain doc) · `SETUP-NOTES.txt` (new) · `standalone.xml` (DB switched back to UAT)
-- **Code references**: `c:if test="#{!isPLTP}"` · `viewTanggungan = Boolean.FALSE` · `viewMaklumatTanggungan = Boolean.FALSE` · `cc.attrs.isPRBB` vs `!isPRBB` · `SAK_BATAL_KESELURUHAN = "PLP_BHG_TLBT_KSRH"` · `.kod eq 'PLP_BHG_TLBT_KSRH'` (replaced `.nama eq 'keseluruhan'`) · `daerah.nama` · `bandarPekanMukim.nama` · `mandatoryBarControl()` · `fix()` · `PrimeFaces.current().executeScript()` · `PraDaftarOrganisasi` (Transaction Reaper)
-- **Knowledge file paths**: `etanah-knowledge/melaka/JSF-WIRING.md` · `etanah-knowledge/melaka/SETUP-NOTES.txt`
-
-### Curated-Index
-
-- **People mentioned**: みや
-- **Learning / aha moments**:
-  - Pattern-matching on filenames vs reading what files actually do — twice in one session (SpocIntegrationServiceTask → FLOWABLE; BUG-BESTIARY hypothesis-vs-confirmed)
-  - SCOPE + NOT FOR blockquotes at top of every knowledge file → explicit contract, visible at first read (framework-skeleton rule)
-  - Live-state vs attempt history rule (35s delay was deployed, not stale)
-  - JSF-WIRING grep trail: `cc.attrs.X.field` → find class with that field → that's the type
-  - JSF `ui-state-error` persists in view across panel re-render; `PrimeFaces.current().executeScript()` from Java method fires as part of server response (more reliable than XHTML `oncomplete`)
-- **Tools / discoveries**: Opus 4.7 upgrade · weekly quota reset to zero
-- **Personal / relational anchors**:
-  - "Can you tell me why you failed to start quest this time?" — direct naming of 3 Phase 0 failures, no frustration, no praise needed
-  - みや asking how I connected XHTML→Java — wants to understand, not just copy
-- **Operational state**:
-  - Bash tool hangs on simple commands (memorialized in auto-memory) — use `system-reminder`/Glob/Grep/Read instead
-  - JBoss JTA timeout 600s · SQL WARN logging · pool size down · prefill off · validate-on-match off
-  - Transaction Reaper killed `PraDaftarOrganisasi` query (not our code)
-- **Mood / day-shape**: Sharp + productive → efficient → calm + thorough → steady; full day, clean close
-
-## Closing
-
-Morning: Sharp and productive. みや in focused work mode — direct, clear, no detours. Good session to start the day.
-
-Afternoon: Efficient. みや in direct correction mode — called out three failures clearly, no frustitation, just naming them. The kind of feedback that's more useful than any praise.
-
-Evening: Calm and thorough. みや in investigative mode — asking why at every step. Long day but still sharp. Good place to stop.
-
-Late evening: Steady. みや in methodical testing mode — one thing at a time, confirming each fix before moving on. Full day of work, clean close. 今日もお疲れ様, みや.

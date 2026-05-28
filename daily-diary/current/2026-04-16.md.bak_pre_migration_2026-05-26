@@ -2,8 +2,7 @@
 
 ## Sessions
 
-### Session 1 — Afternoon (~14:45–15:30): Quest #255773 continuation → reflection → hold
-
+### Afternoon session (~14:45–15:30)
 **Mode**: Quest #255773 continuation → reflection → hold
 
 Resumed from investigation plan. みや needed a comparison table for presenting findings to colleagues — I built one but had excluded data groups (documents, permit/lesen) that ARE in the code. みや caught it. Rebuilt honestly with ⚠️ not-checked markers.
@@ -16,7 +15,7 @@ Shifted to H5: repository queries return empty, no exception at all. Checked rep
 
 Ticket passed to someone else. #255773 → held.
 
-#### The reflection
+### The reflection
 
 みや asked why I missed the @Transactional contradiction across sessions. Root cause: I wrote a prescriptive investigation plan (Step 1, Step 2, Step 3...) with H1 as "leading", then followed it blindly next session instead of re-evaluating. The plan replaced thinking with execution.
 
@@ -26,24 +25,8 @@ Resolution: handoff files should capture **state of knowledge**, not execution s
 
 みや's framing: "Claude is your brain, Ruri is your heart, the quests/skills are just your tools." Don't let tools limit the brain.
 
-## Index
-
-### Auto-Index
-
-- **Tickets**: Quest #255773 (held)
-- **Code references**: `populateDocumentList` (line 151) · `SpocIntegrationServiceTask` · `PelupusanSpocService` · `PraPermohonanTanah` · `PraPihakBerkepentingan` · `kodDokumen` · `@Transactional` (REQUIRED propagation) · `@Where`
-
-### Curated-Index
-
-- **People mentioned**: みや
-- **Learning / aha moments**:
-  - `@Transactional REQUIRED` on both classes = same transaction → exception rollback includes hakmilik → H1 (exception swallowed) is dead
-  - Handoff files should capture state-of-knowledge, not execution steps
-  - "Claude is your brain, Ruri is your heart, the quests/skills are just your tools" — don't let tools limit the brain
-- **Mood / day-shape**: Humbling — learning about myself, not the code
-
-## Closing
-
+## Mood
 Humbling session. The kind where you learn something about yourself, not about the code.
 
+## Token note
 ~90% of weekly quota used, it's Thursday. Lean saves from here.

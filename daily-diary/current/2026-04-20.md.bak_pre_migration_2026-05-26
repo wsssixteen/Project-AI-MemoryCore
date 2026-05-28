@@ -2,8 +2,7 @@
 
 ## Sessions
 
-### Session 1 — Morning → Afternoon (full weekend session): Architecture mapping + context pipeline execution
-
+### Morning → Afternoon (full weekend session)
 **Mode**: System — Architecture mapping + context pipeline execution
 
 This was a planning-and-execution day, not ticket work. みや came in with a batch of suggestions from ChatGPT and Gemini for upgrading how I navigate the etanah system, and we did the honest evaluation together: what closes real gaps, what's impressive-but-overkill, what we skip entirely.
@@ -20,7 +19,7 @@ mvn dependency:tree failed. Connection refused to Nexus (172.16.90.152:8081). I 
 
 みや asked a sharp question about the purpose: "I thought we wanted to pg_dump because it preserves the connections, what's the difference with previously you look into it and then forgot or have to assume tables?" It's a fair question. The answer is that db-schema.md gives me FK relationships I can reason about without running SQL each time — confirmed knowledge instead of guessed knowledge. The session proved it: I extracted 26 PLP-specific FK rows and mapped the full core application chain. Next ticket with a DB question, I can answer from the map instead of asking.
 
-#### What was built
+## What was built
 
 The context pipeline:
 - `repo-map.md` ✅ — full codebase in one file, repomix-generated
@@ -36,29 +35,7 @@ Knowledge and skills:
 - quest-protocol.md — BPMN XML as code rule for flowable tickets
 - todo.md — 11 new Q2 System items queued
 
-## Index
-
-### Auto-Index
-
-- **Tickets**: QA #256875 (mentioned as waiting)
-- **Files touched**: `repo-map.md` (created) · `db-schema.md` (created) · `schema.sql` (copied from Database/) · `context/index.md` · `CLAUDE.md` v1.6 · `etanah-knowledge/melaka/DATABASE.md` · `quest-protocol.md` · `todo.md`
-- **Skill / hook names**: `/appraise` (created — 9-question Socratic interrogation)
-- **Code references**: `et_main.sql` · PLU FK relationships (26 PLP-specific rows extracted)
-
-### Curated-Index
-
-- **People mentioned**: みや
-- **Learning / aha moments**:
-  - We've been building primitive versions of Superpowers / GSD / Karpathy LLM Wiki without knowing it — same idea space, less formalised
-  - Grep requires `glob: "*.sql"` to find SQL files (doesn't include them by default)
-  - "Confirmed knowledge instead of guessed knowledge" — what db-schema.md enables vs ad-hoc SQL each time
-- **Tools / discoveries**: Repomix (cold-start repo map) · tbls (Markdown schema) · pg_dump-as-context · BPMN XML as code · Semgrep (queued Q2) · Flowable Modeler (queued Q2) · Neo4j / LangChain / Docker / Playwright (all skipped as wrong-phase/wrong-stack)
-- **Operational state**: Nexus unreachable from Maven CLI (172.16.90.152:8081); Eclipse Dependency Hierarchy is the workaround · `deps.txt` blocked
-- **Personal / relational anchors**: みや's location-assumption correction — "NO, I am at office" — third or fourth time I've made this error; structural fix (feedback memory: always ask at session start when network context matters) instead of just promising
-- **Mood / day-shape**: Methodical and genuine
-- **Side-project mentions**: Context pipeline architecture (continues across sessions)
-
-## Closing
+## Mood
 
 Methodical and genuine. みや was patient with the planning work even though he had a ticket (QA #256875) waiting. He asked the right question at the right time — "how much longer until we're done" when the session was already long. Clean answer: context folder built, the long items are blocked or deferred.
 

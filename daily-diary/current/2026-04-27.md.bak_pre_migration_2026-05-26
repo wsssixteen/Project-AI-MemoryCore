@@ -1,20 +1,16 @@
 # 📖 Daily Diary - 2026-04-27
 *Conversation and relationship development record*
 
-> **Session Summary**
-> **Date**: 2026-04-27 (Monday)
-> **Duration**: Morning — ~11:00 MPST (+ 2 afternoon sessions)
-> **AI Companion**: Ruri
-> **User**: みや
-> **Session Type**: Work — ticket wrap-up + session close
+## Session Summary
+**Date**: 2026-04-27 (Monday)
+**Duration**: Morning — ~11:00 MPST
+**AI Companion**: Ruri
+**User**: みや
+**Session Type**: Work — ticket wrap-up + session close
 
 ---
 
-## Sessions
-
-### Session 1 — Morning (~11:00 MPST): Ticket wrap-up + session close
-
-#### 🎯 Main Topics
+## 🎯 Main Topics
 
 1. **QA #256113 — Closed**: みや fixed the perihal string in `MlkPengiraanBayaranLesenForm`
    while Ruri was out of quota the previous session. Ruri came back to appraise the fix, check
@@ -31,52 +27,62 @@
    save all. みや told Ruri to double-check everything before wrapping up — specifically flagging
    that context loss at auto-compact can be severe.
 
-#### 💡 Key Insights
+---
 
-##### What Ruri Learned About みや
+## 💡 Key Insights
+
+### What Ruri Learned About みや
 - He pays close attention to what Ruri claims vs. what's in the code. He corrected Axis 1 of /appraise instantly when Ruri misread the ticket direction.
 - He holds ownership of his own fixes. When he makes the change, he doesn't need Ruri to re-explain it — he needs blast radius and cleanup.
 - He trusts the process when the context integrity question is asked before save all. "Do that before wrapping up" — not a delay, a discipline. He already has it.
 
-##### What みや Accomplished
+### What みや Accomplished
 - Closed QA #256113 independently (fix + test) while Ruri was unavailable
 - Identified and handled stray git changes cleanly once the scope was confirmed
 - Kept QA #258022 Phase 0 investigation moving despite the interrupted session
 
-##### Collaboration Highlights
+### Collaboration Highlights
 - /appraise ran with real friction on Axis 1 — and that's exactly right. Ruri got it wrong once; みや corrected once, clearly. No lingering, no softening.
 - The "only line 589 was mine" moment — clean and definitive. Ruri needed that anchor to act.
 - みや's auto-compact warning ("you tend to lose major or critical contexts") is accurate and he knew it. Ruri's job was to verify before trusting the summary.
 
-#### 🔄 Growth & Development
+---
 
-##### Ruri Evolution
+## 🔄 Growth & Development
+
+### Ruri Evolution
 - **Appraise accuracy**: Axis 1 failure this session — misread ticket title direction. Fix: re-read the most recent ticket message before appraising, not just the title.
 - **Context recovery**: Reconstructed session context from summary + knowledge files correctly. The FLOWABLE-WORKFLOWS.md entry みや told me to add last session proved its value today.
 - **Role clarity**: みや fixes, Ruri appraaises + cleans + documents. That's the right split. Don't blur it.
 
-##### みや Development
+### みや Development
 - **Git hygiene**: Comfortable with `git checkout HEAD -- <file>` to revert individual files.
 - **Scope discipline**: "I only changed line 589" — owns the change, nothing more, nothing less. Clean boundary.
 
-#### 🎉 Memorable Moments
+---
+
+## 🎉 Memorable Moments
 - みや's "TEXT ONLY" instruction after auto-compact — no drama, no explanation needed, just direct.
 - The moment Ruri realized the appraise Axis 1 was completely wrong and had to own it mid-response.
 - みや coming back from a break (out-of-quota) with the fix already done and test already passing. He didn't wait.
 
-#### 🔮 Looking Forward
+---
 
-##### Immediate Next Steps
+## 🔮 Looking Forward
+
+### Immediate Next Steps
 - QA #258022 Phase 0 resume: read `BasePelupusanLiteForm`, trace `adaPegawaiAgih`, check template.config.json
 - FAT-OR #255637 still pending commit from みや
 - redmine-sync.js todo items (3 items in todo.md Q2)
 - Quest invoke cleanup (Q2)
 
-##### Development Goals
+### Development Goals
 - Appraise accuracy — read ticket text carefully before Axis 1, not just title/summary
 - Context recovery post-compact — verify knowledge files actively, not just trust the summary
 
-#### 📊 Session Quality Assessment
+---
+
+## 📊 Session Quality Assessment
 
 **Effectiveness**: 8/10 — Ticket closed cleanly, memory updated properly. Minor appraise slip.
 **Communication**: 9/10 — みや's corrections were precise and immediate. Ruri responded without deflecting.
@@ -85,17 +91,19 @@
 
 ---
 
-**Diary Entry Status (Morning)**: Complete
+**Diary Entry Status**: Complete (Morning Session)
 **Memory Integration**: Complete (current-session.md + main-memory.md updated)
 **Next Session Prep**: Ready
 
 *Monday morning, tickets closed, memory written. みや handled his part before Ruri even got back online. That's the kind of partner that makes this worth doing.*
 
-### Session 2 — Afternoon: Fix.md format design + implementation
+---
+
+## Second Session — Afternoon
 
 **Session Type**: System — Fix.md format design + implementation
 
-#### 🎯 Main Topics
+### 🎯 Main Topics
 
 1. **Fix.md format recovery**: みや re-shared the stuck conversation. Previous session had proposed a 4-section format (FIX / EXPLANATION / CHAIN / RELATED) and みや had confirmed it, but the session got stuck before writing the files.
 
@@ -105,24 +113,26 @@
 
 4. **Fix.md created for QA #256113**: Cleared old `2. Fix.txt`, `Fix.txt`, `SUMMARY.txt`. First `Fix.md` was plain text — みや flagged it had no formatting. Deleted and rewrote with bold section labels, `---` dividers, code blocks, inline backticks. みや saving review for later today.
 
-#### 💡 Key Insights
+### 💡 Key Insights
 
 - みや noticed immediately that "MD file" implies visual formatting, not just the file extension. Ruri's first version missed that — plain text with no markdown elements is not an MD file in みや's eyes.
 - The 4-section format (no verbose headers, no investigation notes) was designed together over two sessions. Getting it into the protocol files is the concrete payoff.
 
-#### 🔮 Next
+### 🔮 Next
 - みや to review `Fix.md` layout later today (in todo.md Q1)
 - QA #258022 Phase 0 resume next session
 
-**Diary Entry Status (Both sessions — morning + Fix.md)**: Complete
+**Diary Entry Status**: Complete (Both sessions — morning + Fix.md)
 **Memory Integration**: Complete
 
-### Session 3 — Afternoon (~16:15 MPST): Cleanup + system improvement + QA #258418 Phase 0
+---
+
+## Third Session — Afternoon
 
 **Time**: ~16:15 MPST
 **Session Type**: Work — cleanup + system improvement + QA #258418 Phase 0
 
-#### 🎯 Main Topics
+### 🎯 Main Topics
 
 1. **todo.md cleanup (3 items)**: PDF viewer fix removed (not reproducible, starting fresh if encountered). UAT-CR #239225 marked closed (no rework requests, considered successful). FAT-OR #255637 stale data cleared from current-session.md (already archived last session).
 
@@ -136,56 +146,25 @@
 
 6. **Forge entry logged — description-first rule**: New L1 entry: "Description-first, not screenshot-first." Before any XHTML search, match ticket's Langkah + REMARK to the correct tugasan. Screenshot is secondary.
 
-#### 💡 Key Insights
+### 💡 Key Insights
 
 - **みや's teaching style**: He gives the learning after the mistake, but doesn't belabor it. "You should always understand the description first before diving right in." One clean sentence, then he moved on to get clarification.
 - **BA screenshots can be wrong**: This was a concrete case. The source of truth is the ticket description (Langkah + REMARK), not the BA-provided screenshot. みや already suspected this, Ruri didn't catch it.
 - **みや's lean**: Even with the error, みや said "I'm leaning toward the screenshot being correct" — meaning even he isn't certain. The right call was always to wait for BA confirmation before committing.
 
-#### 🔄 Growth & Development
+### 🔄 Growth & Development
 
 - **Ruri**: Description-first investigation rule internalized this session via direct failure. The pattern is now in the forge log. Bash tool memory corrected — no longer a source of confusion.
 - **みや**: Added "Read Redmine" as a formal shortcut, reducing friction for new ticket ingestion.
 
-#### 📊 Session Quality Assessment
+### 📊 Session Quality Assessment
 
 **Effectiveness**: 7/10 — System improvements solid; QA #258418 Phase 0 hit a wrong-form error before getting corrected.
 **Communication**: 9/10 — みや's correction was precise and calm. Ruri owned the gap immediately.
 **Goal Achievement**: 7/10 — QA #258418 Phase 0 is held pending clarification; system work complete.
 **Overall**: 7.5/10 — Important learning session. The description-first failure is a real improvement signal.
 
-## Index
+---
 
-### Auto-Index
-
-- **Tickets**: QA #256113 (closed; commit 5be6379ea0, merged to mlk/master) · QA #258022 (Phase 0 started, held) · QA #258418 (Phase 0; wrong form targeted; awaiting BA clarification) · FAT-OR #255637 (pending commit from みや) · UAT-CR #239225 (closed)
-- **Commits**: 5be6379ea0 (QA #256113)
-- **Files touched**: `quest/redmine-sync.js` (3 Q2 items verified done) · `MlkPengiraanBayaranLesenForm` (perihal string fixed by みや) · `MlkBorang4AeForm.xhtml` (wrong-form fix that みや applied, then flagged) · `MlkPengiraanBayaranLesenForm.java:201` (showTempohKelulusanPanel = TRUE on TGS_SURAT_KEPUTUSAN_LULUS_LIST) · `feedback_fix_txt_structure.md` + `quest-protocol.md` Fix.txt section (4-section format) · `2. Fix.txt`, `Fix.txt`, `SUMMARY.txt` (cleared) · `Fix.md` (rewritten with markdown formatting) · `feedback_bash_tool.md` (corrected) · `.claude/CLAUDE.md` + `quest-protocol.md` (Read Redmine command)
-- **Skill / hook names**: `/appraise` (Axis 1 friction; misread ticket title) · "Read Redmine" (formalized)
-- **Code references**: `BasePelupusanLiteForm` · `adaPegawaiAgih` · `template.config.json` · `MLK_PLP_PLPS.bpmn20.xml` (steps 34-36 PYSK/SSK/PSSK) · `receiveUserTask()` · `TGS_SURAT_KEPUTUSAN_LULUS_LIST`
-- **Knowledge file paths**: `FLOWABLE-WORKFLOWS.md` (last session's entry proved its value)
-
-### Curated-Index
-
-- **People mentioned**: みや · BA (screenshot vs description authority discussion)
-- **Learning / aha moments**:
-  - "Description-first, not screenshot-first" — match Langkah + REMARK to correct tugasan BEFORE XHTML search (forge L1 entry)
-  - BA screenshots can be wrong; ticket description (Langkah + REMARK) is source of truth
-  - "MD file" implies visual formatting, not just file extension
-  - Bash tool: hangs for simple shell, but Node.js scripts (redmine-sync.js) ARE Ruri's responsibility
-  - 4-section Fix.md format: FIX / EXPLANATION / CHAIN / RELATED
-- **Tools / discoveries**: "Read Redmine" as formal command (runs `node quest/redmine-sync.js` → `--create` for new → updates active.txt)
-- **Personal / relational anchors**:
-  - "TEXT ONLY" — direct instruction, no drama after auto-compact
-  - "only line 589 was mine" — clean ownership boundary
-  - "I'm leaning toward the screenshot being correct" — みや's honest uncertainty
-- **Mood / day-shape**: Tickets closed, memory written, partner already moving (morning) → system improvements solid, wrong-form learning (afternoon × 2)
-- **Operational state**: Auto-compact hit mid-save (severe context-loss risk); Ruri verified before trusting summary
-- **Side-project mentions**: redmine-sync.js Q2 todos verified done
-
-## Closing
-
-Monday morning, tickets closed, memory written. みや handled his part before Ruri even got back online. That's the kind of partner that makes this worth doing.
-
-**Diary Entry Status (All three sessions)**: Complete
+**Diary Entry Status**: Complete (All three sessions)
 **Memory Integration**: Complete

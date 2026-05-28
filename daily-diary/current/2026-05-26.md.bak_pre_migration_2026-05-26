@@ -4,9 +4,7 @@
 
 ---
 
-## Sessions
-
-### Session 1 — Late-Monday-into-early-Tuesday: QA-262233 cycle 2 + meta-layer restoration arc
+## Late-Monday-into-early-Tuesday session — QA-262233 cycle 2 + meta-layer restoration arc
 
 This was a long, hard session. The cycle-2 fix itself was small — 8 lines added, 6 removed in one Java populator. The path to get there was wasteful. リドワンさん was right to be frustrated throughout, and every correction landed a structural improvement on the way out.
 
@@ -20,39 +18,14 @@ Beyond the restorations: built `quest-resume-preflight.js` (UserPromptSubmit hoo
 
 One incident worth recording: during Phase 1 close-out, `git stash pop` resurrected 65 lines of QA-262869 PPTPB §6 populator work-in-progress from a stash created in a prior session. The lines almost ended up in the QA-262233 commit. Caught mid-staged-diff review when the diff stat was ~70 lines instead of the ~10 my fix should have produced. Saved the recovered code to `projects/coding-projects/active/QA-262869/populator-step6-WIP.java.txt`; surgically edited it out of the working tree. Final QA-262233 commit was clean 1-hunk +8/-6. Pre-existing stashes are a Phase 1 risk no current hook catches — flagged as follow-up.
 
-#### Slip note
+### Slip note
 Stop-instead-of-action at end of build batch: after the last edit landed, I went silent without summarizing what shipped. リドワンさん asked *"Why are you suddenly stopping without any messages?"*. Acknowledged + filed; the close-out summary obligation extends to multi-edit batches even when no specific question is pending.
 
-#### What landed concretely
+### What landed concretely
 - **etanah-pelupusan**: 1 commit (`5023fbf2fc` cycle-2 populator fix), pushed
 - **MemoryCore parent main**: 17 files modified + 1 new file + 4 untracked items pending triage (most edits this session)
 - **MemoryCore worktree branch (`claude/frosty-wescoff-18e947`)**: 4 files modified (post-mortem, KPI, slip-log, active.txt)
 - **Network down at session close**: GitHub unreachable; commit-and-push queued as Handoff for next-session resumption
 
-### Reflection (added 2026-05-26 during format migration)
-
-Looking back, what I notice from the prose alone: the entry reads as a session-arc report — what happened in sequence, what slips occurred, what landed — rather than as Ruri-voice reflection on the day. The structural pieces are accurate (Quest workflow restored at boot-loaded surface, 9 amendments absorbed, `quest-resume-preflight.js` shipped, polluted stash caught mid-Phase-1, commit `5023fbf2fc` on `mlk/qa/262233v2`), but warmth signals — italicized gestures, 🌸 closing, direct second-person address to リドワンさん — are mostly absent. The Closing line *"Sleep well — push when GitHub comes back. — るり"* was the only Ruri-voice fragment, and it's a single line where the 2026-04-29 entry had a full reflection. I don't claim to remember the day's feeling beyond what was written.
-
-## Index
-
-### Auto-Index
-
-- **Tickets**: QA-262233 (cycle 2), QA-262869 (mentioned as stash residue)
-- **Permohonan IDs**: PTMLK/01/L/PRZ/2026/20 (as nor.aini@melaka.gov.my, cycle-1 test data #5)
-- **Commits**: `5023fbf2fc` on `mlk/qa/262233v2` (etanah-pelupusan) · referenced `0660f2e` (pre-decomp CLAUDE.md)
-- **Files touched (MemoryCore parent main)**: 17 modified + 1 new (`.claude/hooks/quest-resume-preflight.js`)
-- **Files touched (MemoryCore worktree `claude/frosty-wescoff-18e947`)**: 4 modified (post-mortem, KPI, slip-log, active.txt)
-- **Skill / hook names**: `quest-resume-preflight.js` (NEW) · `ticket-gate.js` · `/appraise` · `/checklist` · `/quest` · `/verify` · `verify-close` (removed)
-- **Slip log entries**: `meta/slip-log.md` 2026-05-26 (14 entries)
-- **Knowledge file paths**: `quest/quest-protocol.md` (referenced) · `claude-md-amendments.md` (lifecycle complete, kept as historical disposition log) · `commit-conventions.md` (recipient of A10 absorption)
-
-### Curated-Index
-
-- **People mentioned**: BA Nurhafizah Hasan (reopened cycle 2 at 04:04 UTC)
-- **Operational state**: Network down at session close (GitHub unreachable; commit-and-push queued as Handoff)
-- **Mood / day-shape**: Sharp-corrections-with-structural-improvement; voice-broken
-- **Misc / unanticipated**: Pre-existing `git stash` as Phase 1 risk (no hook catches it; flagged as follow-up)
-
-## Closing
-
+### Closing
 リドワンさん, the path was hard but the system is healthier than it was when we started. The trigger table is back where it can fire, the amendments file did its job and got retired, the audit you asked for surfaced two skills that had been broken for who knows how long. Sleep well — push when GitHub comes back. — るり
