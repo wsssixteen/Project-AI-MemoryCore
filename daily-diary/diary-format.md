@@ -59,7 +59,7 @@ The Index is the grep surface for "Do you remember?" recall. It carries **canoni
 
 ### Auto-Index (H3)
 
-Regex-able structured entities. Phase 1: Ruri compiles manually at DE close. Phase 2: a Stop hook (`session-keyword-tracker.js`) extracts these throughout the day into `.claude/state/session-keywords/<YYYY-MM-DD>.jsonl`; DE step 4 reads + dedupes + categorizes.
+Regex-able structured entities. **Ruri compiles these manually at DE close.** (An auto-extraction Stop hook `session-keyword-tracker.js` was prototyped 2026-05-28 then REMOVED same day — tracking the JSONL as a committed file created perpetual dirty-tree noise, since every Stop event re-dirtied the tree after each commit. The auto-tracking approach is deferred for future redesign; see plan note. Until then, Auto-Index = manual compile, same as Curated-Index.)
 
 Categories (any with no entries today are omitted from render):
 
@@ -163,13 +163,15 @@ The diary's role is the entry doorway, not the answer itself. The detail lives i
 
 ---
 
-## Phase 1 vs Phase 2 boundary
+## Phase history (as-built, 2026-05-28)
 
-**Phase 1 (shipping 2026-05-26):** template + DE step 4 wording update + warn-only `diary-format-gate.js` Stop hook + migration of past entries. Ruri compiles Auto-Index manually at DE close.
+**Phase 1 (shipped 2026-05-28):** template + DE step 4 wording update + warn-only format-gate Stop hook + migration of 11 past entries. Ruri compiles Auto-Index manually at DE close.
 
-**Phase 2 (later):** `session-keyword-tracker.js` Stop hook auto-extracts entities throughout the day into `.claude/state/session-keywords/<YYYY-MM-DD>.jsonl`. DE step 4 reads + dedupes + categorizes into Auto-Index automatically. Voice signal spike-test (first-person rate · 🌸 presence · Claude-tic phrases · bullet density · closing length); voice gate warn-only.
+**Phase 2 (shipped then partially-reverted 2026-05-28):** `session-keyword-tracker.js` Stop hook auto-extracted entities into per-date JSONL. **REMOVED same day** — committing the continuously-mutating JSONL created perpetual dirty-tree noise (every Stop event re-dirtied the tree after each commit, so a session could never close clean). The voice-signal calibration that Phase 2 produced (via `voice-signal-spike.js`) was retained and baked into the Phase 3 integrity checker. **The auto-tracking approach itself is DEFERRED — to be redesigned properly in a future session** (likely a gitignored ephemeral working-buffer rather than a tracked file, so it feeds DE-step-4 compilation without git noise). Until then: Auto-Index = manual compile.
 
-**Phase 3 (later):** Generalize `diary-format-gate.js` → `de-output-integrity-checker.js` with config map; add other DE-touched files (`current-session.md`, etc.).
+**Phase 3 (shipped 2026-05-28):** `diary-format-gate.js` generalized → `de-output-integrity-checker.js` (config-driven; supersedes the Phase 1 hook). Checks structure (3 H2 sections) + voice signals (first-person rate ≥ 0.8 per 100 words in Sessions+Closing · Closing ≥ 3 non-empty lines — both calibrated via `voice-signal-spike.js` against the 11-entry corpus). Config map ready for other DE-touched files (`current-session.md` etc.) as drift patterns surface.
+
+**Voice signals that did NOT make the cut** (insufficient discrimination in the 11-entry corpus): 🌸 presence · Claude-tic phrases · bullet/table density. Re-test with `voice-signal-spike.js` if the corpus grows.
 
 ---
 

@@ -41,6 +41,13 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 
 39 unique hook files total, 40 registrations as of 2026-05-28 (convention-check-gate dual-registered on Bash + Edit|Write). Grouped by trigger phase. Includes `diary-format-gate.js` (Stop) + `quest-resume-preflight.js` (UserPromptSubmit) added by 2026-05-28 parallel session.
 
+> **⚠️ CORRECTION (2026-05-28, diary-redesign session)** — this catalog predates the diary-redesign hook changes and is STALE on the Stop-hook group. Actual current state:
+> - `diary-format-gate.js` (Phase 1) was **superseded by `de-output-integrity-checker.js`** (Phase 3, config-driven structure + voice-signal checker) and **deleted**.
+> - `session-keyword-tracker.js` (Phase 2 auto-Index) was **built then removed same day** — tracked-JSONL created perpetual dirty-tree noise; auto-tracking deferred for redesign.
+> - `voice-signal-spike.js` added (standalone read-only calibration tool, NOT a registered hook).
+> - Net Stop-hook registrations: was 6 (Phase 1 added diary-format-gate as 7th) → de-output-integrity-checker replaces it → back to 7 Stop registrations.
+> **A full catalog reconciliation is deferred** (flagged for the future "how best to structure this" session along with the auto-tracking redesign). The hook tables below are otherwise accurate for non-diary hooks.
+
 ### 3.1 SessionStart (7 hooks)
 
 | Hook | Owner | Watches | Injects/Blocks | Stakeholders (downstream) | Change-impact |

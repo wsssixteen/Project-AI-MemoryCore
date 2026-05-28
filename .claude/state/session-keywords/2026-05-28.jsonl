@@ -1,7 +1,0 @@
-{"date":"2026-05-28","worktree":"modest-saha-8e8678","category":"commit","canonical":"573ac1b","context":"t Steps refreshed; in commit `573ac1b` |\\n| D5 | Diary entry for to","first_seen_ts":"2026-05-28T02:41:13.564Z"}
-{"date":"2026-05-28","worktree":"modest-saha-8e8678","category":"commit","canonical":"99a681a","context":"in/main` == local HEAD | ✅ | `99a681a..573ac1b HEAD -> main` |\\n| D","first_seen_ts":"2026-05-28T02:41:13.564Z"}
-{"date":"2026-05-28","worktree":"modest-saha-8e8678","category":"commit","canonical":"1c4e120","context":"ered today across 5 commits (`1c4e120` Phase 1 ship → `8b8f251` mer","first_seen_ts":"2026-05-28T02:41:13.564Z"}
-{"date":"2026-05-28","worktree":"modest-saha-8e8678","category":"commit","canonical":"8b8f251","context":"ts (`1c4e120` Phase 1 ship → `8b8f251` merge → `57f3f5f` first DE c","first_seen_ts":"2026-05-28T02:41:13.564Z"}
-{"date":"2026-05-28","worktree":"modest-saha-8e8678","category":"commit","canonical":"57f3f5f","context":"e 1 ship → `8b8f251` merge → `57f3f5f` first DE close → `99a681a` P","first_seen_ts":"2026-05-28T02:41:13.564Z"}
-{"date":"2026-05-28","worktree":"modest-saha-8e8678","category":"commit","canonical":"6afbfac","context":"ow point at the same commit (`6afbfac`). My worktree is clean. The","first_seen_ts":"2026-05-28T02:52:30.741Z"}
-{"date":"2026-05-28","worktree":"modest-saha-8e8678","category":"commit","canonical":"176a0ff","context":"`distracted-tesla-693515`) | `176a0ff` | clean (old commit, fully i","first_seen_ts":"2026-05-28T02:52:30.741Z"}
