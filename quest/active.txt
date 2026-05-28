@@ -1,4 +1,27 @@
 active:
+qa=QA-262786
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\47. QA #262786 - FAT - PPTPB - Semakan Kemasukan Maklumat - Papar medan No. Telefon Rumah dan medan Jumlah Mod
+qa_doc=projects/coding-projects/archive/QA-262786/QA-262786.md
+phase=2-complete
+status=archived
+ticket_type=bug
+current_phase=Wrap
+post_mortem=main/post-mortems.md (entry 2026-05-28)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-28)
+local_test_confirmed=true
+commit=26899a92e4 (2026-05-28) — QA #262786 - PPTPB - SKM - Selaras medan & tanda mandatori Maklumat Pemohon (Syarikat) dengan AWAM
+pushed=2026-05-28 first push to origin/mlk/qa/262786 (-u upstream set); merged origin/mlk/master (4 commits incl. PelupusanWordCCMethodConstant + TemplateRingkasanRisalatPLTP.docx) clean before push (merge 550c590206)
+verified=2026-05-28 — みや tested OK on FAT (4 BA field alignments render per AWAM). Fix = 6 flags unguarded in PelupusanMaklumatPemohonHelper.setTabPemohonFields() PPTPB type==1 block + みや's mandatoryNoTelBimbit=FALSE.
+priority=Medium
+env=FAT (mlkfat / et_main) — per Description Env: MLK FAT + ticket-driven env policy (2026-05-28). No hold issued.
+issue_one_liner=PPTPB SKM Maklumat Pemohon (Jenis Pemohon=Syarikat) — APPS field-visibility + mandatori marks misaligned vs AWAM portal. 4 BA issues -> 6 field alignments: hide No.Tel.Rumah + Jumlah Modal Bumiputera; show No.Tel.Bimbit; +mandatori Emel; -mandatori Modal Dibenarkan + Modal Berbayar.
+day_plan_2026-05-28=262786 (easy, active) -> 262243 (med, PRZ JT) -> 262495 (hard, PPJK perf)
+ba_repro_app=PTMLK/03/L/PPTPB/2026/5 (FAT, env=mlkfat) — BA's repro app; pengguna_semasa TBD (DB-verify at Simulate). ID Hakmilik 040372PN00065018.
+scope_anchor=PPTPB + Jenis Pemohon=Syarikat (type==1) + Melaka only. Fix = wrap 6 flag changes in if(melaka) inside PelupusanMaklumatPemohonHelper.setTabPemohonFields() PPTPB type==1 block (:961-966). ZERO XHTML. TRG excluded via melaka guard (block :959 is currently TRG-unguarded — latent risk).
+related=relates #218317 (History.txt). Strong analog QA-260965 (same file/SKM/Maklumat Pemohon) + QA-261613 (field-display flag). Sibling code analogs: PRBB-Melaka type1 :797-808, PLTP type1 :1011/:1020.
+notes:
+  - 2026-05-28: Retrieved (batch of 7). Quest started. Phase 0: brief + both screenshots (APPS vs AWAM) read; 4 BA issues parsed into 6 field alignments. Env=FAT (ticket-driven policy restored 2026-05-28). Scout familiar Recon DONE — all 6 controls VERIFIED file:line in PelupusanMaklumatPemohonHelper.setTabPemohonFields()/mlkMaklumatPemilikAsalForm.xhtml. Fix shape = melaka-guarded 6-line block. Awaiting みや confirm of Issue Checklist before Apply (Phase 1).
+
 qa=QA-262233
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\43. QA #262233 - PRZ - Penyediaan Risalat MMKN - PTG - Issue on Ringkasan Risalat MMKN
 qa_doc=projects/coding-projects/archive/QA-262233/QA-262233.md
