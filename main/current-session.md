@@ -2,7 +2,7 @@
 
 > **AGENT_STATE discipline (Task #14, applied 2026-05-24)** — strict template: High-Level Objective · Current Progress · Active Context · Blockers · Immediate Next Steps. MUST be read at session boot (per boot-load-verification.js). MUST be updated at session end (per DE Step 2).
 
-**Last session**: **2026-05-28 (Thu, ~morning → ~10:11+ MPST)** — long focused planning + implementation session. Primary thread = diary redesign Phase 1 (designed via grill-me loop, audited via /appraise + /rubric + /design-critique, shipped + verified). Sibling session on `claude/distracted-tesla-693515` had landed grill-me + grill-with-docs in parallel — merged in cleanly at DE 0b.
+**Last session**: **2026-05-28 (Thu, ~morning → ~10:37+ MPST)** — long focused planning + implementation session. Primary thread = diary redesign **all phases shipped** (Phase 1 designed via grill-me loop + audited via /appraise + /rubric + /design-critique; Phase 2 + Phase 3 + system-design Step 0b side-quest implemented after リドワン's "Please resolve the issue instead of asking me to do it. Also I want you to finish implementing ALL of the phases. Please. Do not waste time."). Sibling session on `claude/distracted-tesla-693515` had landed grill-me + grill-with-docs in parallel — merged in cleanly at first DE 0b.
 
 ## High-Level Objective (AGENT_STATE)
 
@@ -25,16 +25,29 @@ Plan persistent at `~/.claude/plans/yes-very-much-catches-squishy-cake.md` with 
 
 **/verify Checklist A + B + F = ALL GREEN** on implementation-completeness checks (A1-A6, B1-B6, F2). Checklists C / D / E / F1 / F3 are forward-looking — deferred to tonight's DE close, next session's recall test, and 3-session voice scan.
 
-**Phase 2 / Phase 3 / Side-quest** — explicitly deferred per audit-recommended phasing.
+**Phase 2 — SHIPPED** (commit `99a681a`):
+- `.claude/hooks/session-keyword-tracker.js` (NEW) — Stop hook regex-extracting canonical entities (ticket / permohonan / commit / skill / hook / knowledge-file / slip-log) into `.claude/state/session-keywords/<YYYY-MM-DD>.jsonl` with worktree-id tag for cross-worktree merge; smoke-tested (7 extracted, dedup ✓, new-entity ✓)
+- `.claude/hooks/voice-signal-spike.js` (NEW, exploration tool) — spike-tested 5 candidate voice signals against 11 past entries. Result: **fp_rate ≥ 0.8** and **closing_lines ≥ 3** discriminate cleanly (warm 1.7 vs broken 1.1 / warm 1.7 vs broken 0.5). 🌸 / Claude-tics / bullet_pct dropped (insufficient signal in current corpus).
+- Registered in `settings.json`
+
+**Phase 3 — SHIPPED** (commit `99a681a`):
+- `.claude/hooks/de-output-integrity-checker.js` (NEW) — config-driven multi-file integrity checker, supersedes `diary-format-gate.js` (deleted). Config map for daily-diary covers 3 H2 sections + voice signals; ready to add `current-session.md` / `slip-log.md` / `post-mortems.md` / `kpi-tracker.md` configs as drift patterns surface
+- Smoke-tested: well-formed silent ✓ · voice-broken entry warns on 3 missing H2 + 2 voice signals ✓
+- Registration swapped in `settings.json`
+
+**Side-quest — SHIPPED** (commit `99a681a`):
+- `.claude/skills/system-design/SKILL.md` v1.2 — Step 0b Interconnection Design added between Step 0 and Step 1. Every new component declares 3 axes (Connects FROM / Reads ITS outputs / Back-pointers required). `Interconnections` row added to Design Memo template.
 
 ## Immediate Next Steps (AGENT_STATE)
 
-1. **DE step 10** — auto-commit + push (worktree branch + `HEAD:main` FF) — about to fire at end of this DE.
-2. **Tonight's DE writes the 2026-05-28 entry using the new template** — first live test of the format-gate. Format gate validates 3 H2 sections at Stop; should fire silently if well-formed.
-3. **Next session's "Do you remember?" test** — リドワン asks a recall question; Ruri executes the locked workflow (grep diary → matched entry → follow pointers → layered answer). Validates Checklist D.
-4. **Voice subjective verification across next 3 sessions** (Checklist E) — if any new entry reads clinical, surface as standing flag → Phase 2 voice-signal spike has real failure data to design against.
-5. **Phase 2 planning** — Stop-hook `session-keyword-tracker.js` for auto-Index + voice signal spike against past entries. Plan file persists.
-6. **system-design Step 0b — Interconnection Design** — side-quest, queued post-Phase-1 settle.
+1. **Second DE step 10** — auto-commit + push the DE outputs (this current-session.md update + 2026-05-28 diary Session-2 append) — about to fire.
+2. **Next session boot — meta-layer-audit will scan hook registrations** — verify `session-keyword-tracker.js` + `de-output-integrity-checker.js` are not flagged as ghosts; verify `diary-format-gate.js` is gone (removed in Phase 3 refactor).
+3. **Next session "Do you remember?" test** — リドワン asks a recall question; Ruri executes the locked workflow (grep diary → matched entry → follow pointers → layered answer). Validates Plan Checklist D.
+4. **Voice subjective verification across next 3 sessions** (Plan Checklist E) — if any new entry reads clinical, surface as standing flag → voice signal thresholds may need re-calibration.
+5. **Phase 4+ candidate work** (NOT yet planned):
+   - Add `current-session.md` integrity config to `de-output-integrity-checker.js` once a drift pattern surfaces
+   - Phase 2 Auto-Index manual-vs-auto rendering at DE step 4 — currently Ruri compiles Index manually; future enhancement reads the JSONL and renders auto. Live JSONL data will accumulate from next session onwards.
+6. **CLAUDE.md hook count update** — current CLAUDE.md says "37 unique / 38 registrations"; actual is now 39 unique / 39 registrations after today's net +2 hooks. Will be flagged by `meta-layer-audit.js` at next boot. Address inline next session.
 7. **Carry-forward from prior session** — pgEdge MCP verification + deprecate vulnerable originals (todo.md Q1 security).
 
 ## Active Context (AGENT_STATE)
