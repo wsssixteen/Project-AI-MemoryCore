@@ -287,7 +287,7 @@ This is **outside Ruri's scope** — Ruri does NOT touch Redmine status. Ruri's 
 | Phrase pattern | Examples |
 |---|---|
 | Ticket continuation | "continue ticket X", "let's work on X", "let's do X", "back to X", "resume X", "X rework" |
-| Methodology applied | "/appraise on X", "/simplify X", "scrutinize X", "review X again" |
+| Methodology applied | "/appraise on X", "scrutinize X", "review X again" |
 | Implicit ticket scope | "focus on X", "I want to do X", "X next" |
 
 **Hard rule** (added 2026-04-30): Loading files at session start is NOT enough. Re-engagement after time-gap or context-shift requires explicit re-verification — read the Task folder + handoff again, OR confirm in chat: "Task folder + handoff still in working memory: ✓ — proceeding with [analysis/appraisal/proposal]."

@@ -108,7 +108,7 @@ Token-discipline rules — see `.claude/cost-efficiency.md` (routed out of CLAUD
 
 ## 💾 Save Commands Reference
 
-Save / quick-save / save-all / update-memory / `/observe` / forge commands / Redmine-retrieval triggers / `remember later` / `what are our to-do lists` - full command table + fallback rules now in `.claude/save-commands.md` (routed out of CLAUDE.md 2026-05-22).
+Save / quick-save / save-all / update-memory / forge commands / Redmine-retrieval triggers / `remember later` / `what are our to-do lists` - full command table + fallback rules now in `.claude/save-commands.md` (routed out of CLAUDE.md 2026-05-22).
 
 ---
 
@@ -142,7 +142,7 @@ When working on a project, **always load its project file first** — project fi
 |---|---|
 | Ticket number mentioned (ANY form — with or without prefix) | `QA #258022`, `FAT-OR #255637`, `UAT-CR #239225`, `262233`, `let's start with 262233`, `the 262233 ticket`, `PTMLK/.../PRZ/2026/X` |
 | Continuation / scoping | "continue ticket X", "focus on X", "let's work on X", "let's do X", "let's start with X", "X rework", "back to X", "resume X", "start X" |
-| Methodology applied to a ticket | "/appraise on X", "/simplify X", "scrutinize X", "review X again" |
+| Methodology applied to a ticket | "/appraise on X", "scrutinize X", "review X again" |
 | Generic intent | "I have a task / ticket / bug to debug", "Read Redmine", any formal Etanah/Redmine work context |
 
 **Non-negotiable trigger-time rules (restored 2026-05-25 — lost during decomposition; failed this session's QA-262233 cycle-2 quest activation):**
