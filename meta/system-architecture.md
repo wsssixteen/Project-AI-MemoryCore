@@ -81,6 +81,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 | `SystemAwareDecision.js` | self | substantive prompts (always-consult-registry meta-trigger) | "scan skills/hooks/INDEX before responding" reminder | every skill + hook + INDEX file | If new registry layer added, this hook needs to scan it |
 | `TurnChecklistGate.js` | self | multi-topic prompts (≥3 numbered items OR ≥2 questions) | "✅ This-turn checklist" template | みや (visible) | Predicate update affects multi-topic detection |
 | `quest-resume-preflight.js` | self | bare ticket numbers cross-matching active.txt | Phase 0 preflight checklist | Quest skill resumption | Bare-ticket-format changes need regex update |
+| `scout-completeness-gate.js` | self (NEW 2026-05-28, plan Phase 3) | Scout / Recon trigger phrases ("scout spawn", "running recon", "verify each claim", "100% verify", "universal check", "sibling-structure") | injects 100%-VERIFY clause text + UC9 reminder + required Skill tool invocations list | quest-protocol.md 100%-VERIFY clause (line 545), predicate-box skill, claim-verification skill | Predicate-phrase changes (extending trigger detection) require regex update |
 
 ### 3.3 PreToolUse Bash (2 hooks)
 
@@ -110,6 +111,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 | `notes-on-test-data.js` | self | test-data mentions in turn | Notes.txt write reminder | Quest skill, Notes.txt state | Test-data detection changes affect reminder |
 | `silent-claim-drift-gate.js` | self | "done"/"complete" claims without diff-backing | advisory reminder (Stage 5A) / hard-block (Stage 5B) | Phase 5 enforcement, claim-verification skill | Phase 3 + Phase 5 both extend this hook |
 | `diagnostic-self-heal-gate.js` | self | /verify-shape emit + stalling phrase | self-heal mandate | stalling-detector skill | Predicate changes affect self-heal triggers |
+| `diary-format-gate.js` | self (NEW 2026-05-28, parallel session) | every Stop | validates 3 H2 sections in today's daily-diary entry (Sessions / Index / Closing) | daily-diary template, DE Step 4 | Template-section name changes require this hook update; warn-only (does not block) |
 
 ### 3.6 PostToolUse (1 hook)
 
@@ -136,11 +138,13 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 
 ### 4.1 Workflow skills (multi-step, persistent state)
 
-| Skill | Invocation | Produces | Stakeholders | Change-impact |
+| Skill | Invocation | Produces | Stakeholders / Touchpoints | Change-impact |
 |---|---|---|---|---|
-| `quest` | `/quest start|hold|resume [<QA-num>]` + trigger phrases (ticket numbers, "let's start with X", etc.) | active.txt entry + QA-NNN.md + workflow execution | Every Quest sub-skill (env-check, familiar, verify, appraise, predicate-box, etc.), Phase 2.5 workflow runner | Phase 2.5 rewrites this skill as Skill-tool composition runner |
-| `verify` | `/verify <ticket>` | Checklist A/B/C/D verdict | Quest Phase 1 close-out | Adding new checklists requires this skill update |
-| `appraise` | `/appraise <subject>` + trigger phrases ("grill me", "stress-test") | Socratic 9-question interrogation across Assumption/Scope/Evidence axes | Plan stress-tests, Quest Rubric phase (multi-perspective overlap) | Adding new axes requires this skill update |
+| `quest` | `/quest start|hold|resume [<QA-num>]` + trigger phrases (ticket numbers, "let's start with X", etc.) | active.txt entry + QA-NNN.md + workflow execution | every Quest sub-skill (env-check, familiar, verify, appraise, predicate-box, etc.); touchpoints = quest/active.txt, projects/coding-projects/active/QA-*/QA-*.md, Notes.txt | Phase 2.5 rewrote this skill as Skill-tool composition runner; further changes to phase sequencing require updates here + matching `current_phase=` semantics in active.txt |
+| `verify` | `/verify <ticket>` | Checklist A/B/C/D/E verdict | Quest Phase 1 + Phase 2 close-out; touchpoints = quest/active.txt, git state, file existence | Adding new checklists requires this skill update + meta-layer-audit.js extension if invariants involved |
+| `appraise` | `/appraise <subject>` + trigger phrases ("grill me", "stress-test") | Socratic 9-question interrogation across Assumption/Scope/Evidence axes | Plan stress-tests, Quest Rubric phase (multi-perspective overlap); touchpoints = the subject being appraised | Adding new axes requires this skill update; trigger-phrase additions require regex update in skill description |
+| `grill-me` | `/grill-me` (NEW 2026-05-28 parallel session) + trigger phrases | mattpocock's grill-me workflow output | Plan stress-tests; complements `appraise` | Installed verbatim from `https://github.com/mattpocock/skills`; modifications should preserve attribution comments |
+| `grill-with-docs` | `/grill-with-docs` (NEW 2026-05-28 from origin/main merge) | grill-me variant grounded against domain model docs | Plan stress-tests with documentation grounding | Same install-source contract as grill-me |
 
 ### 4.2 Discipline primitives (atomic, Edit-time / emit-time)
 
@@ -348,6 +352,7 @@ Every commit that updates this file appends a row here.
 |---|---|---|
 | 2026-05-27 | v1.0 initial creation per Plan `cached-floating-hummingbird.md` Phase 0 | Plan execution session |
 | 2026-05-28 | v1.1 — Phases 0-7 of plan executed: meta-edit-gate.js extended with paired-edit predicate; pre-action-check-gate.js extended with single-canonical-doc enforcement; scout-completeness-gate.js NEW; silent-claim-drift-gate.js Stage 5A extensions for skill-invocation drift + 100%-VERIFY + arch-doc-sync; QA-NNN-template.md NEW; quest/SKILL.md rewritten with Skill-tool composition + ticket-num arg + workflow runner mode; quest-protocol.md updated with ticket-type classification, tiered etanah-knowledge load, Scout/Recon clarity, UC9 sibling-structure-read, Proactive Initiative emit, 100%-VERIFY binding, Rubric phase expansion; rubric SKILL.md replaced with decay stub (decay 2026-06-07); discipline-INDEX.md strike-through on rubric; meta/hook-test-scenarios.md NEW with 10 dry-run scenarios | Plan `cached-floating-hummingbird.md` execution session |
+| 2026-05-28 | v1.2 — Post-/verify 4-partial-fixes: G2 (meta-layer-audit.js v1.1 extended with INV-3..INV-6 invariant checks at boot); E3 (added scout-completeness-gate.js + diary-format-gate.js to hook catalog); G1 (added grill-me + grill-with-docs to skill catalog with interconnection metadata); C4 (worktree-cleanup-boot.js v1.1 extended with decay-date scanner — flags decay-expired + decay-soon stubs at boot) | /verify follow-up of plan execution |
 
 ---
 
