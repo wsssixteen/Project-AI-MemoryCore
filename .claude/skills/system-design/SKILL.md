@@ -14,6 +14,22 @@ When tempted to add a new workflow / file / skill / ritual, FIRST prove the exis
 
 *Why: reactive per-slip additions cost weeks of bloat (quest-protocol → 595 lines; feedback files → 30+).*
 
+## Step 0b — Interconnection Design (added 2026-05-28)
+
+Once Step 0 confirms the addition is net-new (refine wasn't sufficient), the new component MUST declare its interconnections before Step 1's decomposition. **Standalone components rot in isolation** — they get added, then forgotten, then surface again as duplicate work or memory drift.
+
+Every proposed addition declares THREE interconnection axes:
+
+| Axis | Question | Example (diary-format-gate.js) |
+|---|---|---|
+| **Connects FROM** | What inputs / triggers / upstream files feed it? | DE Step 4 emit (closing banner) · daily-diary/current/*.md (the file it validates) |
+| **Reads ITS outputs** | What downstream consumers depend on what this produces? | リドワン (reads the warning at DE close) · future-Ruri (sees warnings via stdout in transcript) · meta-layer-audit (verifies hook fires) |
+| **Back-pointers required** | What related components need awareness of this to stay coherent? | `daily-diary/diary-format.md` (spec doc this hook enforces) · `expansion-protocol.md` Step 4 (the trigger source) · `settings.json` (registration) |
+
+**Why this matters:** without declared interconnections, every new component is a standalone island. The diary-redesign Phase 1 (2026-05-28) was the first concrete worked example — the diary's purpose IS interconnection (memory-graph hub pointing to other files); building it forced this principle into existence retroactively. From now on, every new component states its three axes up-front so the system doesn't grow more islands.
+
+*Banned*: shipping a new component with empty Connects-FROM or empty Reads-ITS-outputs. Empty Back-pointers may be legitimate (some components are pure leaves) but must be stated explicitly, not silently.
+
 ## Step 1 — Identify decomposition seams (architecture first)
 
 - **etanah work**: framework-layer matrix (Java validators/services, JSF/PrimeFaces, Java config/Template Method, .docx + Word CC, config.json, SQL/Hibernate, Spring DI, Flowable BPMN)
@@ -120,6 +136,7 @@ Refine + Design Memo are not independent skills — they are the OUTPUT FORMATS 
 |---|---|
 | Type | rule / skill / hook / memory / knowledge / protocol / automation / format |
 | Refines-X / Net-new-because-Y | which existing thing is refined OR justification for net-new |
+| Interconnections | **(added 2026-05-28, Step 0b)** Connects FROM: <inputs/triggers/upstream> · Reads ITS outputs: <downstream consumers> · Back-pointers required: <related components needing awareness, or "none — leaf component"> |
 | Decomposition seam | which axis it sits on |
 | Evergreen principles applied | subset + why |
 | Validation | past-case results / failure-mode list / spike result |
@@ -172,6 +189,8 @@ Two approved refinements land here next: (1) **Step 0 extended to removals** —
 ---
 
 *Distilled from the CLAUDE.md "System-Design Discipline" section, routed out 2026-05-22 (decomposition). Justification-anecdotes pruned — full history in git + `RURI-GROWTH.md`.*
+
+*Version: 1.2 | Last updated: 2026-05-28 — Step 0b (Interconnection Design) added between Step 0 and Step 1. Every new component declares 3 interconnection axes: Connects FROM / Reads ITS outputs / Back-pointers required. Plus `Interconnections` row added to Design Memo template. Diary redesign Phase 1 (2026-05-28) was the first concrete worked example — the diary's purpose IS interconnection (memory-graph hub pointing to other files). Side-quest from `~/.claude/plans/yes-very-much-catches-squishy-cake.md`.*
 
 *Version: 1.1 | Last updated: 2026-05-25 — Step 2 split into 2a (evergreen software-engineering principles) + 2b (mandatory consult of `library-items/agent-architecture/claude-code-best-practices.md` for Claude-Code-specific patterns). Step 5 extended with hook design sub-checks + skill canonical-pattern alignment checks (body ≤500 lines, description enumerates triggers, "always do X when Y" → hook decision) + plugin packaging at stabilization. Refine triggered by みや 2026-05-25: "Why are you not already loaded about best practices when you are supposed to have knowledge about it during system-design? Is our system-design flawed?" — answer was yes; the skill didn't reference the canonical doc internally, relied on the safety-net hook. Now self-contained.*
 

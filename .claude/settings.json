@@ -182,7 +182,11 @@
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\diary-format-gate.js\""
+            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\de-output-integrity-checker.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\session-keyword-tracker.js\""
           }
         ]
       }
