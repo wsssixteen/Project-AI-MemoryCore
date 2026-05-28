@@ -12,7 +12,7 @@
 
 | Primitive | Target path | Purpose | Source / Hoist origin | Build status |
 |---|---|---|---|---|
-| `rubric` | `.claude/skills/rubric/SKILL.md` | Structured fix-candidate evaluation — pros/cons table, rank, decide | Hoist from `quest/quest-protocol.md` Rubric checkpoint section | ⬜ Phase 3 |
+| ~~`rubric`~~ | ~~`.claude/skills/rubric/SKILL.md`~~ | ~~Structured fix-candidate evaluation~~ | ~~Hoist from Rubric checkpoint~~ | **ABSORBED 2026-05-28 → Quest Rubric phase + system-design Step 6. Stub decays 2026-06-07. See `.claude/skills/rubric/SKILL.md` for routing.** |
 | `predicate-box` | `.claude/skills/predicate-box/SKILL.md` | Before Edit while debugging, emit TRUE IF / PROVED BY / FAILED WHEN structure | Hoist from `quest/quest-protocol.md` Debug Mode Ritual 1 | ⬜ Phase 3 |
 | `grep-rubric` | `.claude/skills/grep-rubric/SKILL.md` | After every investigative grep, emit 3-line box: Proves / Negative / Next | NEW (currently prose-only in `improvement-audit-log.md` 2026-05-06) | ⬜ Phase 3 |
 | `multi-dim-evidence` | `.claude/skills/multi-dim-evidence/SKILL.md` | Read BA screenshots/PDFs across spatial + text + color + hierarchy dimensions, not text-only | Hoist from `personality.md` Communication: DO (added 2026-05-14, QA-260302) | ⬜ Phase 3 |

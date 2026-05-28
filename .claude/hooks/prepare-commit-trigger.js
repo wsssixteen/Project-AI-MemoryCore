@@ -15,6 +15,15 @@
  * drafted a verbose long-body commit ignoring the canonical etanah subject-only
  * format `QA #<num> - <URUSAN> - <TUGASAN> - <description>`. The convention
  * file existed but was never read at draft time.
+ *
+ * v1.2 2026-05-26 — Added Step 10.5 inlining the canonical active.txt status
+ * enum (per quest-protocol.md v3.5). Same shape of slip as v1.1: QA-262869
+ * Phase 1 close wrote `status=local-test-confirmed` (non-canonical) from
+ * improvisation. The enum existed at protocol line 1114 but wasn't read.
+ * Fix: inline the enum at trigger time so the canonical values are visible
+ * AT WRITE TIME, no separate file read required. Added new value
+ * `archived-shipped-by-other` (QA-262783 driver — faizudin shipped) so
+ * Ruri's cadence/KPI count excludes colleague-shipped tickets.
  */
 const TRIGGERS = [
   /\bprepare (for me )?to commit\b/i,
@@ -55,6 +64,14 @@ process.stdin.on('end', () => {
       '  8. PROPOSE commit message per convention → wait for みや confirm',
       '  9. AFTER confirm: git commit + git push (auto-runs per 2026-05-19)',
       '  10. Return to source-branch + git pull --ff-only + update active.txt',
+      '  10.5 active.txt status= MUST use canonical enum (per quest-protocol.md v3.5):',
+      '         active | hold | delegated | blocked | closed | archived | archived-shipped-by-other',
+      '         At Phase 1 close: ALWAYS `closed` (Phase 2 still ahead). Phase 2 close (post-mortem + KPI + archive)',
+      '         flips to `archived` if Ruri shipped, OR `archived-shipped-by-other` + `shipped_by=` + `ruri_code_contribution=`',
+      '         if colleague shipped (excludes from cadence/KPI count).',
+      '         BANNED legacy strings (caught 2026-05-26): awaiting-phase-2, local-test-confirmed, closed-pending-FAT, pending post-mortem.',
+      '         2026-05-26 slip: wrote `status=local-test-confirmed` from improvisation despite enum existing at quest-protocol.md:1114.',
+      '         If unsure → READ quest-protocol.md status-codes table BEFORE writing.',
       '  11. Emit Phase 1 summary line: `Phase 1 closed at <TS> · commit <SHA> · duration <accept→close>`',
       '  12. Invoke /verify Checklist C — cross-check the full sequence fired',
       '',
@@ -64,6 +81,7 @@ process.stdin.on('end', () => {
       '  - Silent commit without proposing message first',
       '  - Skip Phase 1 summary emission (mandatory per 2026-05-20)',
       '  - Skip /verify Checklist C',
+      '  - Write non-canonical status= value in active.txt (caused 2026-05-26 QA-262869 slip)',
       '',
     ].join('\n');
 

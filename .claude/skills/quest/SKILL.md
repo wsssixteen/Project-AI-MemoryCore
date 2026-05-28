@@ -15,41 +15,50 @@ Phase 0 — Accept the Quest:
 
 1. Read every file in the provided task folder path (Glob + Read all)
 2. Parse: ticket description, bug/enhancement details, scope items, screenshots notes
-3. Build scope checklist table:
+3. Classify ticket type (per plan Phase 2): read `Description.txt` + `History.txt`, classify as `bug | enhancement | cr | requirement` — write to `active.txt` `ticket_type=` field + the QA-NNN.md Context Loading section with Description-quote justification
+4. **Initialize the canonical per-quest doc** (per plan Phase 1, 2026-05-28): copy `.claude/skills/quest/QA-NNN-template.md` to `projects/coding-projects/active/QA-<number>/QA-<number>.md` and write the Discovery checklist into the `## Context Loading (Discovery)` section. Subsequent phase emits write into the SAME file (Recon → `## Debugging` section, Rubric → `## Code-Review` section, etc.). Do NOT create sibling files (`early-diagnostic.md` / `scout-report.md` / `handoff-XXX.md` / `class-chain-traces.md` / `Fix.txt`) — those are deprecated for new quests. `pre-action-check-gate.js` blocks edits to such sibling files.
 
 | Item | Description | Status |
 |---|---|---|
 | 1a | [from ticket] | ⬜ |
 
-4. Save checklist to project file at `projects/coding-projects/active/<QA-number>/`
-5. Write quest state to `quest/active.txt`:
+5. → Skill: etanah-knowledge-load (with `tier=always` — load 5 always-load layers per plan Phase 2; conditional layers load as `index.md` routes by ticket type + symptom)
+6. Write quest state to `quest/active.txt`:
    ```
    qa=<number>
    task_folder=<path>
-   phase=1
+   qa_doc=projects/coding-projects/active/<number>/QA-<number>.md
+   phase=0
+   status=active
+   ticket_type=<bug|enhancement|cr|requirement>
+   current_phase=Discovery
    local_test_confirmed=false
    ```
-6. Present checklist to みや — wait for confirmation before touching any code
+7. Present Issue Checklist to みや — wait for confirmation before touching any code
 
 Only proceed to Phase 1 after explicit confirmation.
 
 ---
 
-## /quest hold
+## /quest hold [<QA-number>]
 
-1. Read `quest/active.txt` to get current quest
+1. Read `quest/active.txt` to find the target quest:
+   - If `<QA-number>` arg supplied: match that specific entry
+   - If no arg: pick the single quest with `status=active` (error if 0 or >1 active)
 2. Update state: `status=hold`; append `held_reason=<date+time> — <context + みや's stated intent>`
-3. **Write a "Resume Point" block into `QA-NNNN.md`** — section `## 0. Resume Point` at the top of the doc. Must cover: current phase, what IS done, what is NOT done, open decisions, first-step-on-resume, and any みや-stated intent (e.g. "wants a fresh re-read from start"). The chat summary evaporates; `QA-NNNN.md` is the durable home the next-session briefing reads.
+3. **Write a "Resume Point" block into `QA-<NNN>.md`** — section `## 0. Resume Point` at the top of the doc. Must cover: current phase, what IS done, what is NOT done, open decisions, first-step-on-resume, and any みや-stated intent (e.g. "wants a fresh re-read from start"). The chat summary evaporates; `QA-<NNN>.md` is the durable home the next-session briefing reads.
 4. Summarise where we left off in one paragraph
-5. Confirm: "Quest <QA-number> is on hold. Run `/quest resume` to return to it."
+5. Confirm: "Quest <QA-number> is on hold. Run `/quest resume [<QA-number>]` to return to it."
 
 ---
 
-## /quest resume
+## /quest resume [<QA-number>]
 
-1. Read `quest/active.txt`
-2. If status=hold: restore context — read `QA-NNNN.md` (the `## 0. Resume Point` block FIRST), read project file, show checklist state
-3. Confirm: "Resuming Quest <QA-number>. Last state: [summary]."
+1. Read `quest/active.txt` to find the target quest:
+   - If `<QA-number>` arg supplied: match that specific held entry
+   - If no arg: pick the single quest with `status=hold` (error if 0 or >1 held)
+2. Restore context — read `QA-<NNN>.md` (the `## 0. Resume Point` block FIRST), then the rest of the doc top-to-bottom (Discovery → Debugging → Code-Review → Apply etc. — single canonical doc means no sibling files to chase)
+3. Confirm: "Resuming Quest <QA-number>. Last state: [Resume Point summary]."
 
 ---
 
@@ -122,6 +131,40 @@ Before any `git commit` on a quest:
 3. **Stop-at-stage gate (MANDATORY in v1 — added 2026-05-21 by みや)**: after `git add`, STOP. Emit the staged file list + the FULL staged diff (`git diff --cached`) + the drafted commit message, and WAIT for みや to review the message. Do NOT run `git commit` until みや explicitly approves the message. No auto-commit in this skill version — the stop is a hard gate, even when みや earlier said "close the ticket". **Why**: commit-message slips (QA-262233 missing urusan-hyphen, QA-260316 wrong subject) all happened when the message went uncommitted-unreviewed; a visible stop at the staged state lets みや catch the message before it is permanent.
 3b. **Work-repo cleanup (MANDATORY — added 2026-05-21 by みや)**: before staging, remove the throwaway artifacts Ruri created in the work repo during Apply — `*.bak*` backups, `*- Copy*` duplicates, orphaned `~$*` Word locks. Ruri's `.docx` backups belong in `outputs-temp/`, never the etanah repo. After cleanup, `git status` shows only the intended fix files + pre-existing unrelated changes — no Ruri-generated junk. **Why** (2026-05-21, QA-262004): Phase 1 close left `- Copy.docx` + 3 `.bak_ruri_*` files in the etanah repo; they were flagged to みや instead of cleaned.
 4. Only then proceed to commit
+
+---
+
+---
+
+## Workflow runner mode (NEW 2026-05-28 — plan Phase 2.5)
+
+Quest is a **workflow-type skill, not a one-shot**. Its job is to programmatically chain sub-skills via the Skill tool at each phase boundary — not to be a checklist Ruri reads and might skip.
+
+**Phase-boundary skill invocations (the contract — write these tokens at every phase emit)**:
+
+| Phase boundary | Required Skill tool invocations |
+|---|---|
+| `/quest start` Step 5 (Context Loading) | `→ Skill: etanah-knowledge-load` (tier=always) |
+| Discovery emit (Scout familiar output) | `→ Skill: scout` if multi-ticket retrieve mode |
+| Recon emit (per HYPOTHESIS claim) | `→ Skill: predicate-box` (TRUE IF / PROVED BY / FAILED WHEN per claim) |
+| Recon emit (Universal Check 9 sibling-structure read) | inline citation of 2-3 siblings file:line in Recon block; no separate Skill tool call but blocks Recon emit if absent (per Phase 3 scout-completeness-gate.js) |
+| Rubric emit (option-ranking) | `→ Skill: rubric` (currently absorbed into Quest Rubric phase per Phase 4 — slash-trigger still routes to stub) |
+| Rubric emit (≥2-layer fix) | `→ Skill: system-design` (Step 6 Multi-Perspective Scrutiny Table) |
+| Apply boundary (per Edit while debugging) | `→ Skill: predicate-box` (Debug Mode Ritual 1) + `→ Skill: scope-anchor-echo` |
+| Hand-back (every emit) | `→ Skill: claim-verification` + `→ Skill: test-data-echo` + `→ Skill: task-assignment-honesty` |
+| Phase 1 close-out | `prepare-commit-trigger.js` injects 12-step sequence (incl. Step 7.5 commit-conventions.md read); → Skill: verify (Checklist C) |
+
+**`current_phase=` tracking in active.txt**: as Quest progresses through phases, the `current_phase=` field updates so boot-time resume reads know where to pick up. Mutable per turn.
+
+**Skill-tool-failure fallback contract**:
+
+When Quest skill calls Skill tool for a sub-skill and the call FAILS (skill not in registry, body error, runtime exception):
+- **Surface** the error in chat — never silently continue
+- **Pause** workflow at that boundary — do NOT proceed to next phase
+- **Message** みや: "Skill tool call to `<skill>` failed: `<error>`. Workflow paused at `<phase>`. Investigate or bypass with `[skip-invoke <skill>: <reason>]`."
+- The existing `skill-invocation-discipline-gate.js` rule applies: "If it errors (skill not in available list, etc.), SURFACE the error to みや — do NOT shortcut to manual."
+
+**Workflow-execution bypass**: `[skip-phase-execution: <reason>]` for legitimate cases (turn is just a clarification question, no phase work intended). Visible in transcript for audit.
 
 ---
 

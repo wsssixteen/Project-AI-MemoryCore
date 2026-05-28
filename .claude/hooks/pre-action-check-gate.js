@@ -11,8 +11,17 @@
  * Doesn't BLOCK (would trip on legitimate cases); injects visible-gate
  * reminder.
  *
+
  * Created 2026-05-23 — Phase 2 of meta-layer build.
  * Iteration: tighten matching as evidence accumulates.
+ *
+ * v1.1 2026-05-28 — Added single-canonical-doc enforcement (plan Phase 1).
+ * Blocks edits to sibling files under projects/coding-projects/active/QA-*/
+ * that aren't QA-NNN.md itself (the canonical doc). Sibling files like
+ * early-diagnostic.md / scout-report.md / handoff-XXX.md / class-chain-traces.md
+ * / Fix.txt are deprecated for new quests. Pre-2026-05-28 quests retain
+ * their multi-file pattern (no migration); the gate only fires on new
+ * quest folders.
  */
 let input = '';
 process.stdin.resume();
@@ -34,7 +43,37 @@ process.stdin.on('end', () => {
     ];
 
     const isQuestPath = questPatterns.some(re => re.test(filePath));
-    if (!isQuestPath) process.exit(0);
+
+    // v1.1 single-canonical-doc enforcement (per plan Phase 1, 2026-05-28):
+    // Edits to projects/coding-projects/active/QA-NNN/<anything-but-QA-NNN.md>
+    // get a strong reminder that QA-NNN.md is the canonical doc for new quests.
+    // Deprecated sibling files: early-diagnostic.md, scout-report.md,
+    // handoff-XXX.md, class-chain-traces.md, Fix.txt.
+    // Bypass via [skip-canonical-doc: <reason>] for legitimate edge cases
+    // (e.g. pre-2026-05-28 in-flight quests retain multi-file pattern).
+    const inActiveQuestFolder = /projects[\\/]coding-projects[\\/]active[\\/]QA-[\d]+[\\/]/i.test(filePath);
+    const isCanonicalQADoc = /[\\/]QA-[\d]+\.md$/i.test(filePath);
+    const isDeprecatedSibling = inActiveQuestFolder && !isCanonicalQADoc && /\.(md|txt)$/i.test(filePath);
+
+    let canonicalDocReminder = '';
+    if (isDeprecatedSibling) {
+      canonicalDocReminder = [
+        '',
+        '🚫 single-canonical-doc rule (plan Phase 1, 2026-05-28):',
+        '   Edits should go into `QA-<NNN>.md` (single canonical doc per quest),',
+        '   NOT into sibling files. Deprecated for new quests: early-diagnostic.md,',
+        '   scout-report.md, handoff-XXX.md, class-chain-traces.md, Fix.txt.',
+        '',
+        '   If this is a pre-2026-05-28 in-flight quest using the legacy multi-file',
+        '   pattern, include `[skip-canonical-doc: pre-existing legacy quest]`',
+        '   in your message to bypass.',
+        '',
+        '   For new quests: write to QA-<NNN>.md\'s appropriate phase section instead.',
+        '',
+      ].join('\n');
+    }
+
+    if (!isQuestPath && !isDeprecatedSibling) process.exit(0);
 
     // Inject reminder
     const context = [
@@ -49,7 +88,7 @@ process.stdin.on('end', () => {
       '  4. Server log path known if debugging? (E:/Dev/jboss-7.4-plp-melaka/standalone/log/server.log)',
       '',
       'If any "NO" — fire the relevant check BEFORE proceeding with this edit.',
-      '',
+      canonicalDocReminder,
     ].join('\n');
 
     // Use hookSpecificOutput.additionalContext for PreToolUse advisory

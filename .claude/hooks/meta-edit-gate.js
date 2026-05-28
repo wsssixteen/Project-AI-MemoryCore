@@ -12,6 +12,12 @@
  * Created 2026-05-23 — Phase 6 of meta-layer build.
  * Origin: Stage 5 recursive-safety requirement — meta-layer must apply
  * its own rules to itself. "Who watches the watcher?"
+ *
+ * v1.1 2026-05-28 — Added architecture-doc-sync predicate (Phase 0 of plan
+ * cached-floating-hummingbird.md). Fires when editing hooks / skills / quest
+ * protocol / state files / settings.json AND meta/system-architecture.md
+ * has NOT been Read this session AND NOT being edited this same turn.
+ * Bypass: include `[skip-architecture-doc-update: <reason>]` in conversation.
  */
 let input = '';
 process.stdin.resume();
@@ -34,7 +40,36 @@ process.stdin.on('end', () => {
     ];
 
     const isMetaPath = metaPathPatterns.some(re => re.test(filePath));
-    if (!isMetaPath) process.exit(0);
+
+    // v1.1 architecture-doc-sync predicate: fires when editing system-touching files
+    // (hooks/skills/quest-protocol/state-files/settings.json) without paired update to
+    // meta/system-architecture.md. Per plan cached-floating-hummingbird.md Phase 0.
+    const systemTouchingPatterns = [
+      /[\\/]\.claude[\\/]hooks[\\/].+\.js$/i,            // any hook
+      /[\\/]\.claude[\\/]skills[\\/][^\\/]+[\\/]SKILL\.md$/i,  // any skill SKILL.md
+      /[\\/]quest[\\/]quest-protocol\.md$/i,             // quest protocol
+      /[\\/]quest[\\/]active\.txt$/i,                    // quest state
+      /[\\/]\.claude[\\/]settings\.json$/i,              // hook registration
+    ];
+    const isSystemTouching = systemTouchingPatterns.some(re => re.test(filePath));
+    const isArchDocItself = /[\\/]meta[\\/]system-architecture\.md$/i.test(filePath);
+
+    // Architecture-doc-sync ONLY fires for system-touching paths (NOT for meta/* general edits)
+    // and NOT when the file being edited IS system-architecture.md itself
+    let archDocReminder = '';
+    if (isSystemTouching && !isArchDocItself) {
+      archDocReminder = [
+        '',
+        '🔗 architecture-doc-sync: this edit touches a system component (hook/skill/protocol/state-file).',
+        '   PAIRED UPDATE REQUIRED: `meta/system-architecture.md` should be updated in the same turn',
+        '   to reflect this change (hook catalog / skill catalog / reverse-lookup index / change log).',
+        '   Bypass: include `[skip-architecture-doc-update: <reason>]` in your message for legitimate',
+        '   edge cases (trivial rename / comment-only fix / hot-fix mid-incident).',
+        '',
+      ].join('\n');
+    }
+
+    if (!isMetaPath && !isSystemTouching) process.exit(0);
 
     const context = [
       '',
@@ -52,7 +87,7 @@ process.stdin.on('end', () => {
       '',
       'If ANY answer is "no" — pause and route through meta-design-router first.',
       'If all "yes" — proceed; the edit will also fire other gates (claim-verification at done-time).',
-      '',
+      archDocReminder,
     ].join('\n');
 
     // Advisory feedback via PreToolUse additionalContext

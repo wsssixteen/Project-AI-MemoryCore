@@ -269,7 +269,7 @@ early_diagnostic=projects/coding-projects/active/QA-260876/early-diagnostic.md
 branch=mlk/qa/260876v2
 commit=6f005892ca9e07a153bbbcd1e171e7877df6417f (2026-05-21) — QA #260876 - PLTP - Ringkasan Risalat MMKN - papar ulasan YB ADUN guna tag ulasanYB
 phase=1-complete
-status=awaiting-phase-2
+status=closed
 local_test_confirmed=true
 rework_cycle=2
 notes:
@@ -648,7 +648,7 @@ qa_doc=projects/coding-projects/active/QA-262869/QA-262869.md
 branch=mlk/qa/262869
 commit=f39224960b (2026-05-26) — QA #262869 - PPTPB - PRRMMKNPTGT - Risalat MMKN section 6 populate placeholders
 phase=1-complete
-status=local-test-confirmed
+status=closed
 local_test_confirmed=true
 priority=Medium
 issue_one_liner=PPTPB Template Risalat MMKN — semua maklumat tidak ditarik ke item 6 (Perakuan Pengarah Tanah dan Galian)
@@ -671,10 +671,12 @@ early_diagnostic=projects/coding-projects/active/QA-262783/early-diagnostic.md (
 branch=mlk/qa/262783 (faizudin's; already merged to mlk/master at 17b2c18ad9)
 commit=1692e97b52 (2026-05-25 15:38 by faizudin) — QA #262783
 phase=2-complete
-status=archived
+status=archived-shipped-by-other
+shipped_by=faizudin (commit 1692e97b52 on etanah-pelupusan mlk/qa/262783, 2026-05-25 15:38)
+ruri_code_contribution=ZERO (verified-only — read both files at HEAD + git blame, no Ruri edits)
 local_test_confirmed=true (verified on disk: PelupusanBayaranLesenVO.java:425 returns ZERO when null; mlkPengiraanBayaranLesen.xhtml:297-302 has no isMandatory/required)
 post_mortem=main/post-mortems.md (entry 2026-05-25)
-kpi_entry=main/kpi-tracker.md (entry 2026-05-25)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-25 — EXCLUDED from Ruri cadence count per status=archived-shipped-by-other rule, added 2026-05-26)
 priority=Medium
 issue_one_liner=PPTPB Penyediaan Risalat MMKN PDT — medan Bayaran Sewa Tambahan tidak default 0.00 + ada tanda mandatori (patut tiada)
 scope_anchor=PPTPB urusan only. Composite mlkPengiraanBayaranLesen.xhtml PPTPB branch (inside <c:if test="cc.attrs.mbb.isPPTPB">). 2-file fix: (a) remove isMandatory="true" + required="true" from byrnSewaTmbh formField + inputCurrency; (b) VO getByrnSewaTambahan() returns BigDecimal.ZERO when null.

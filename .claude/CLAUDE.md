@@ -64,7 +64,7 @@ ai-memorycore/
 
 **Always-on values:** `personality.md` "Honesty Invariants" section (added 2026-05-23 Phase 4) — default-to-prose BANNED · silent reassignment BANNED · diff-backing MANDATORY · scope-anchor must echo · choice-offering after "proceed" BANNED · over-generalization BANNED · test data must echo at hand-back
 
-**Triggered enforcement (hooks fire deterministically — 37 unique hook files / 38 registrations in `.claude/settings.json` as of 2026-05-26 — added `convention-check-gate.js` (dual-registered Bash + Edit|Write) + `open-quest-surfacer.js`)**:
+**Triggered enforcement (hooks fire deterministically — 40 unique hook files / 41 registrations in `.claude/settings.json` as of 2026-05-28 — added `scout-completeness-gate.js` (UserPromptSubmit, plan Phase 3) + `diary-format-gate.js` (Stop, 2026-05-28 diary redesign) + `quest-resume-preflight.js` (UserPromptSubmit, prior); convention-check-gate dual-registered Bash + Edit|Write)**:
 
 *SessionStart (7)*: **`meta-layer-audit.js`** (NEW 2026-05-25 — Layer 0 structural-integrity audit; auto-fires every boot; surfaces ghost hooks / scope split / doc drift) · `boot-load-verification.js` · `boot-required-read-gate.js` (verifies CLAUDE.md "see X.md" pointers resolve) · `worktree-cleanup-boot.js` · `evolution-check-trigger.js` (model-ID change + 30-day evolution-check reminder) · `system-check-trigger.js` (30-day system-check skill reminder) · `open-quest-surfacer.js` (surfaces open quests from active.txt at boot)
 
