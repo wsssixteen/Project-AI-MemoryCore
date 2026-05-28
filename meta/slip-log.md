@@ -43,6 +43,8 @@
 | format-spec-misread | 1 | 1 | **1** | ✓ (first strike — new category emerging: markdown-escape-as-output-shape conflation in format-spec files) |
 | boot-or-required-read-skipped | 2 | 0 | 0 | ✓ (legacy entries, older than 7d) |
 | agree-bias | 1 | 0 | 0 | ✓ |
+| recon-rubric-not-surfaced-in-chat | 1 | 1 | 1 (2026-05-28) | ✓ (first strike — QA-262495: emitted Recon/Rubric into QA-NNN.md + winding prose to chat instead of a structured table+arrow-flow+plain-business-logic IN chat where みや judges; also concluded "data issue" from the QA-262233 precedent before doing the code check. Lesson: chat is the judging surface — Recon/Rubric MUST surface there as table+flow; the QA-NNN.md file is the record, NOT a substitute. Durable fix = quest skill phase-emit contract should mandate in-chat structured Recon/Rubric — proposed to みや, not edited mid-ticket to avoid more meta-bloat.) |
+| ruled-out-hypothesis-without-code | 1 | 1 | 1 (2026-05-28) | ⚠️ (QA-262495 — TWICE this thread: (1) declared the rahsia gate "ruled out as cause" from reasoning ("old doc was LAIN") WITHOUT reading the rahsia/Kemaskini code — it actually gates the Kemaskini button render (penyediaanDokumen.xhtml:292); (2) conflated the preview-pane block placeholder with opening-the-doc-to-edit. PLUS forgot a known hard-won blocker — OTP/Pengesahan is unusable in test (cost みや hours) — and re-suggested it. Lesson: do NOT reject a live hypothesis on reasoning alone — read the code path first; and consult DEV-TESTING-HACKS / the relevant skill for known blockers before suggesting a path. Fix: wrote the OTP-unusable purpose into etanah-rahsia-bypass SKILL.md so it can't recur.) |
 
 ### By skill_path (refinement counts, not failure counts)
 

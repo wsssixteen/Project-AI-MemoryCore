@@ -16,6 +16,10 @@ Every apply step MUST be followed by zip-integrity + size-sanity + expected-chan
 
 **Violating the letter of this rule is violating the spirit of this rule.**
 
+## ⛔ Purpose — this bypass EXISTS because OTP / Pengesahan is unusable in dev/test
+
+**NEVER suggest "just complete the OTP / Pengesahan / biometric" as an alternative to this bypass.** In the local dev/test environment the OTP/biometric Pengesahan infra is NOT available to the tester — the OTP goes to a real gov email / biometric device the tester does not control. **みや got stuck there for HOURS** before this bypass existed. The entire reason this skill exists is that pengesahan is a dead end in test. If you catch yourself about to say *"try the OTP/Pengesahan first"* — **STOP. That is the banned suggestion this skill replaces.** (Added 2026-05-28 after I re-suggested OTP and wasted みや's time — QA-262495. Two methods now exist: the .m2-war patch below, and the safer EXPLODED-DEPLOYMENT single-file patch — see `DEV-TESTING-HACKS.md` "EXPLODED-DEPLOYMENT variant".)
+
 ## Why this exists (2026-05-25 trigger)
 
 The rahsia-gate hack on `etanah-common-0.0.647-MLK.war` was applied during QA-261986 testing. Diary entry + standing flag both claimed "restored from backup at Phase 1 close — local JBoss now sees the un-hacked war." On 2026-05-25 the WAR was on-disk **CORRUPTED** (57 MB partial-write vs 92 MB backup; invalid zip; not loadable by Maven). The restore was never executed OR was interrupted; the close-claim went unverified. The corruption broke today's JBoss deployment (POST_MODULE phase failed; Hibernate classes unreachable) until manual recovery from `.bak_qa261986`.
