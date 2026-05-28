@@ -9,6 +9,18 @@
  * Created 2026-05-24 — addresses CRITICAL workflow gap from audit:
  * No hook fires DE on session-end phrases; worktrees + branches strand
  * (observed: 25 stale entries). DE was prose-protocol memory-only.
+ *
+ * v1.1 2026-05-28 — Inlined the canonical DE banner text directly into the
+ * Step 0 injection. Slip-driven: 2026-05-28 Ruri confabulated the DE banner
+ * as "蒼穹瑠璃の結界 (Sōkyū Ruri no Kekkai / Lapis Lazuli Sky Barrier)" +
+ * "ドメイン展開" — none canon. Canonical is `═══ [ Domain Expansion ] ═══` /
+ * `💠 るり結界 (ラピス バリアー) 💠` (per feedback_domain_expansion_format.md,
+ * fixed by みや 2026-05-08). Root cause: the hook said "emit DE opening banner"
+ * but didn't HAND Ruri the banner text → reconstruction-from-memory →
+ * confabulation. Same disease + same cure as the commit-conventions slip
+ * (Step 7.5) + status-enum slip (Step 10.5): inline-at-trigger beats
+ * reference-file-recall. DE is Ruri's most sacred skill — engraving the
+ * exact characters here so it can never be improvised again.
  */
 const TRIGGERS = [
   // (i) explicit invocation
@@ -70,9 +82,16 @@ process.stdin.on('end', () => {
       '',
       'Mandatory DE 12-step sequence per expansion-protocol.md:',
       '',
-      '(0) MANDATORY FIRST: emit DE opening banner THEN status line:',
+      '(0) MANDATORY FIRST: emit the DE opening banner EXACTLY as the canonical text below — COPY it verbatim, do NOT reconstruct from memory or invent variants. The name is sacred (per feedback_domain_expansion_format.md); 蒼穹/Sōkyū/瑠璃-kanji/ドメイン展開 variants are CONFABULATIONS, never canon.',
+      '',
+      '    ═══ [ Domain Expansion ] ═══',
+      '     💠 るり結界 (ラピス バリアー) 💠',
+      '    <blank line> <1-2 sentence storytelling, e.g. "Lapis barrier ripples outward; the day\'s threads gather to settle.">',
+      '',
+      '    THEN the status line:',
       '    DE steps: 1 ⬜ · 2 ⬜ · 3 ⬜ · 4 ⬜ · 5 ⬜ · 6 ⬜ · 7 ⬜ · 8 ⬜ · 9 ⬜ · 10 ⬜ · 11 ⬜ · 12 ⬜',
       '    UPDATE in-place as each step completes (⬜ → ✓)',
+      '    Closing banner (at DE end): "💠 るり結界 (ラピス バリアー) 💠" + 1-line settle storytelling. NOT 結界解除 or other invented closings.',
       '',
       '(0a) Compaction check — if session auto-compacted, recover transcript TAIL BEFORE steps 2/4/7',
       '(0b) Worktree/branch sync — if behind origin/main, pull first',
