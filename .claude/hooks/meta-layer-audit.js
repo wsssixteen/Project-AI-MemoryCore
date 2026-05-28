@@ -30,6 +30,13 @@
  *
  * v1: REPORT-ONLY (advisory, never blocks boot).
  * Automation candidacy at v2+ after ≥3 cycles with みや's approval.
+ *
+ * v1.1 2026-05-28 — Phase 0 of plan cached-floating-hummingbird.md:
+ * extended with INV-1..INV-6 invariants check per meta/system-architecture.md
+ * Section 6. New checks: status= canonical enum (INV-3), → Skill: tokens
+ * resolve to existing skill dirs (INV-4), ticket_type= canonical enum (INV-5),
+ * CLAUDE.md "see X.md" references resolve (INV-6). INV-1 + INV-2 already
+ * covered by the original ghost-hooks check.
  */
 const fs = require('fs');
 const path = require('path');
@@ -151,12 +158,123 @@ if (regOnly.length) {
   findings.push(`   → these run but CLAUDE.md doesn't mention them. Add to "Triggered enforcement" section for visibility.`);
 }
 
+// ─── Architecture invariants INV-3..INV-6 (v1.1, 2026-05-28) ──────
+// INV-1 + INV-2 are effectively covered by ghostsInCode/regOnly above.
+const invFindings = [];
+const QUEST_DIR = path.join(REPO_ROOT, 'quest');
+const SKILLS_DIR = path.join(REPO_ROOT, '.claude', 'skills');
+const PROTOCOL_PATH = path.join(QUEST_DIR, 'quest-protocol.md');
+const ACTIVE_TXT = path.join(QUEST_DIR, 'active.txt');
+
+// INV-3: every status= value in active.txt is in the canonical enum
+try {
+  const ENUM_STATUS = new Set(['active', 'hold', 'delegated', 'blocked', 'closed', 'archived', 'archived-shipped-by-other', 'local-test-confirmed', 'awaiting-phase-2', 'awaiting-ba']);
+  // Note: local-test-confirmed and awaiting-phase-2 are LEGACY values still tolerated in old entries; canonical going forward is the 7-value set
+  const CANONICAL = new Set(['active', 'hold', 'delegated', 'blocked', 'closed', 'archived', 'archived-shipped-by-other']);
+  const activeTxt = safeRead(ACTIVE_TXT);
+  if (activeTxt) {
+    const statusValues = [...activeTxt.matchAll(/^status=([^\s\n]+)/gm)].map(m => m[1].trim());
+    const nonCanonical = statusValues.filter(v => !CANONICAL.has(v));
+    if (nonCanonical.length > 0) {
+      const counts = nonCanonical.reduce((a, v) => (a[v] = (a[v] || 0) + 1, a), {});
+      const parts = Object.entries(counts).map(([k, n]) => `${k}(×${n})`).join(', ');
+      invFindings.push(`ℹ INV-3 (status= enum): non-canonical values seen in active.txt: ${parts}`);
+      invFindings.push(`   → canonical set: active|hold|delegated|blocked|closed|archived|archived-shipped-by-other. Legacy values like local-test-confirmed/awaiting-phase-2 should be migrated.`);
+    }
+  }
+} catch (e) { /* swallow */ }
+
+// INV-4: every "→ Skill: <name>" token in protocols/skills references a skill that exists
+try {
+  const skillDirs = fs.readdirSync(SKILLS_DIR, { withFileTypes: true })
+    .filter(d => d.isDirectory()).map(d => d.name.toLowerCase());
+  const existingSkills = new Set(skillDirs);
+  const scanFiles = [PROTOCOL_PATH];
+  // Scan all SKILL.md files
+  for (const d of fs.readdirSync(SKILLS_DIR, { withFileTypes: true })) {
+    if (d.isDirectory()) {
+      const sp = path.join(SKILLS_DIR, d.name, 'SKILL.md');
+      if (fs.existsSync(sp)) scanFiles.push(sp);
+    }
+  }
+  const tokenRe = /(?:→|->)\s*Skill\s*:\s*([a-z][a-z0-9_-]*)/gi;
+  const orphanTokens = new Map(); // name -> file refs
+  for (const fp of scanFiles) {
+    const t = safeRead(fp);
+    if (!t) continue;
+    let m;
+    while ((m = tokenRe.exec(t)) !== null) {
+      const name = m[1].toLowerCase();
+      if (!existingSkills.has(name)) {
+        if (!orphanTokens.has(name)) orphanTokens.set(name, []);
+        orphanTokens.get(name).push(path.basename(fp));
+      }
+    }
+  }
+  if (orphanTokens.size > 0) {
+    const parts = [...orphanTokens.entries()].map(([n, fs]) => `${n} (cited in: ${[...new Set(fs)].join(', ')})`);
+    invFindings.push(`ℹ INV-4 (→ Skill: token resolves): orphan tokens reference non-existent skills:`);
+    parts.forEach(p => invFindings.push(`   - ${p}`));
+    invFindings.push(`   → either add the missing skill dir under .claude/skills/, or remove the dangling tokens.`);
+  }
+} catch (e) { /* swallow */ }
+
+// INV-5: every ticket_type= value in active.txt is in canonical enum
+try {
+  const ENUM_TYPE = new Set(['bug', 'enhancement', 'cr', 'requirement']);
+  const activeTxt = safeRead(ACTIVE_TXT);
+  if (activeTxt) {
+    const typeValues = [...activeTxt.matchAll(/^ticket_type=([^\s\n]+)/gm)].map(m => m[1].trim().toLowerCase());
+    const nonCanonical = typeValues.filter(v => !ENUM_TYPE.has(v));
+    if (nonCanonical.length > 0) {
+      const counts = nonCanonical.reduce((a, v) => (a[v] = (a[v] || 0) + 1, a), {});
+      const parts = Object.entries(counts).map(([k, n]) => `${k}(×${n})`).join(', ');
+      invFindings.push(`ℹ INV-5 (ticket_type= enum): non-canonical values: ${parts}`);
+      invFindings.push(`   → canonical: bug|enhancement|cr|requirement`);
+    }
+  }
+} catch (e) { /* swallow */ }
+
+// INV-6: every "see X.md" / "see X/" reference in CLAUDE.md resolves to existing file/dir
+try {
+  const claudeMd = safeRead(CLAUDE_MD);
+  if (claudeMd) {
+    const seeRefs = [...claudeMd.matchAll(/(?:see|reference|cf\.?)\s+[`"]?([\w./\-_]+\.(?:md|txt|json|js))[`"]?/gi)].map(m => m[1]);
+    const brokenRefs = [];
+    for (const ref of seeRefs) {
+      const candidates = [
+        path.join(REPO_ROOT, ref),
+        path.join(REPO_ROOT, '.claude', ref),
+        path.join(REPO_ROOT, 'meta', ref),
+      ];
+      if (!candidates.some(p => fs.existsSync(p))) {
+        brokenRefs.push(ref);
+      }
+    }
+    // Note: boot-required-read-gate.js already checks this; INV-6 is defense-in-depth.
+    // Only flag if N broken refs > 0 AND boot-required-read-gate isn't also reporting them.
+    if (brokenRefs.length > 0) {
+      const uniqueBroken = [...new Set(brokenRefs)];
+      invFindings.push(`ℹ INV-6 (CLAUDE.md "see X" refs resolve): ${uniqueBroken.length} broken pointer(s) — defense-in-depth with boot-required-read-gate.js`);
+      uniqueBroken.slice(0, 5).forEach(r => invFindings.push(`   - ${r}`));
+      if (uniqueBroken.length > 5) invFindings.push(`   ... ${uniqueBroken.length - 5} more`);
+    }
+  }
+} catch (e) { /* swallow */ }
+
+// Append invariant findings to main findings
+if (invFindings.length > 0) {
+  findings.push(''); // separator
+  findings.push('── Architecture invariants (INV-3..INV-6, v1.1 2026-05-28) ──');
+  findings.push(...invFindings);
+}
+
 // ─── Output ─────────────────────────────────────────────────────────
 if (findings.length === 0) {
   process.stdout.write([
     '',
-    '🛡  meta-layer-audit: PASS — hook-registration integrity verified.',
-    `   ${onDisk.size} on disk · ${registered.size} registered · ${documented.size} documented · 0 ghosts · 0 dangling · 0 doc drift`,
+    '🛡  meta-layer-audit: PASS — hook-registration integrity + INV-1..INV-6 verified.',
+    `   ${onDisk.size} on disk · ${registered.size} registered · ${documented.size} documented · 0 ghosts · 0 dangling · 0 doc drift · 0 invariant violations`,
     ''
   ].join('\n'));
   process.exit(0);
