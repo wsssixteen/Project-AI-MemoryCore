@@ -11,7 +11,8 @@ allowed-tools: Read, Bash, Edit, Grep
 When invoked, env-check:
 
 1. **Detects target env** from active.txt or current quest scope — **AUTHORITY ORDER (refined 2026-05-14 by みや — second-pass after QA-260302 FAT-default slip)**:
-   - **⚠️ TEMPORARY OVERRIDE — UAT-only (added 2026-05-18 by みや — FAT down for "Mock Cutover 1")**: FAT is unavailable. Until FAT is restored, ALL pelupusan + awam work runs on **UAT** regardless of the ticket's `Env:` line — Priorities 1-3 below are SUSPENDED. **Remove this block when FAT is back online**; Priorities 1-3 then resume as normal.
+   - **✅ FAT RESTORED 2026-05-28 by みや** — the 2026-05-18 "Mock Cutover 1" UAT-only temporary override is REMOVED. Environment selection is **ticket-driven again** (Priorities below): switch the local target to the env where the BA tested, inferred from the Description `Env:` line + the permohonan ID's environment. FAT is a full local implement+test target again (no longer "simulation-viewing-only").
+   - **Priority 0 — `hold` override (added 2026-05-28 by みや)**: if みや said **"hold"** (or "don't switch env" / "stay on current") when starting THIS ticket, env-check does **NOT** switch — it verifies-and-reports only, using the CURRENT env state. **This beats Priorities 1-2.** **Why**: みや may be running multiple sessions in parallel; an unrequested switch of `standalone.xml etanahDS` / `cas.url` / branch would disturb another ticket's in-flight testing. When `hold` is in effect, emit the banner line `env switch SUPPRESSED (hold) — current state kept` so the skip is visible, never silent.
    - **Priority 1**: Ticket Description.txt `Env:` line — `MLK FAT` / `MLKFAT` → FAT; `MLK UAT` / `MLKUAT` → UAT. This is authoritative when present.
    - **Priority 2**: Task folder name `<NN>. <type> #<num> - <ENV> - <urusan_kod> - <tugasan_kod> - <issue>` — the `<ENV>` slot if present.
    - **Priority 3 (when neither above specifies)**: **Use the CURRENT env state — do NOT force-switch.** Read `standalone.xml` etanahDS active jndi + `environment.properties` cas.url to detect what's currently configured; the answer = whatever's currently set. Saves the switch cost. Only switch if BA explicitly specified an env (Priority 1) that doesn't match current.
@@ -68,7 +69,7 @@ All 3 candidate datasources are PERMANENTLY PRESENT in standalone.xml. **Switchi
 
 | Ticket scope | Which DS becomes `etanahDS` (active) | cas.url | Repo + branch | WAR deployed | Default? |
 |---|---|---|---|---|---|
-| **pelupusan + FAT** | `etprdmlk@172.30.17.104:5444 / et_main` | `https://appmlk.melaka.gov.my/etanah-cas` (FAT) | etanah-pelupusan @ `mlk/master` | etanah-pelupusan.war | ✅ **DEFAULT** — most tickets come from FAT |
+| **pelupusan + FAT** | `etprdmlk@172.30.17.104:5444 / et_main` | `https://etanah-app.melaka.gov.my/etanah-cas` (FAT) | etanah-pelupusan @ `mlk/master` | etanah-pelupusan.war | ✅ **DEFAULT** — most tickets come from FAT |
 | pelupusan + UAT | `mlkuat@172.30.59.185:5444 / et_main_uat` | `http://172.30.59.150/etanah-cas` (UAT) | etanah-pelupusan @ `mlk/master` | etanah-pelupusan.war | Only when FAT lacks test data, OR BA states UAT in ticket |
 | **awam + UAT** | `mkit@172.16.100.197:5444 / et_main_mlit` | `http://172.30.59.150/etanah-cas` (UAT) | etanah-awam @ `mlk/release/fat` | etanah-awam.war | All AWAM tickets (FAT/UAT both tested here) |
 | awam + FAT | **N/A** — FAT-AWAM not exposed for local testing | | | | |
@@ -104,13 +105,13 @@ The two MLK `cas.url` lines coexist in `environment.properties`; switching is do
 
 **To switch to UAT** (any side):
 ```
-# cas.url=https\://appmlk.melaka.gov.my/etanah-cas        ← comment OUT (FAT line)
+# cas.url=https\://etanah-app.melaka.gov.my/etanah-cas        ← comment OUT (FAT line)
 cas.url=http\://172.30.59.150/etanah-cas                  ← UNCOMMENT (UAT line)
 ```
 
 **To switch to FAT** (any side):
 ```
-cas.url=https\://appmlk.melaka.gov.my/etanah-cas          ← UNCOMMENT (FAT line)
+cas.url=https\://etanah-app.melaka.gov.my/etanah-cas          ← UNCOMMENT (FAT line)
 # cas.url=http\://172.30.59.150/etanah-cas                ← comment OUT (UAT line)
 ```
 
@@ -194,3 +195,4 @@ Continuous improvement entries land in `Feature/Forge-Self-Improvement-System/fo
 
 *Created: 2026-05-08 | Author: みや (proposed) + Ruri (drafted) | First quest applied: TBD*
 *Last updated: 2026-05-20 — added Known-local-paths block so Phase 0 stops asking for stable infrastructure paths mid-investigation.*
+*Last updated: 2026-05-28 — FAT RESTORED: removed the 2026-05-18 UAT-only "Mock Cutover 1" temporary override; env selection is ticket-driven again (match BA's tested env + permohonan ID env; FAT is a full local implement+test target). Added Priority 0 `hold` override — みや saying "hold" at ticket start suppresses the env switch to protect parallel sessions. AWAM→mkit/UAT special case unchanged (みや confirmed). Paired memory: `.claude/auto-memory/feedback_uat_fat_environments.md`.*
