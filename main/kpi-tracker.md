@@ -37,6 +37,12 @@
 
 ## Entries
 
+### QA-262786 — PPTPB · SKM · Maklumat Pemohon (Syarikat) — field-visibility + mandatori alignment vs AWAM — 2026-05-28
+
+**Closure type**: code-fix-shipped (commit `26899a92e4` on `mlk/qa/262786`, pushed; merged 4 upstream `mlk/master` commits clean before push) — BA verification pending
+
+**Extras**: None — standard in-scope close (clean ~9-line fix in one method, zero XHTML). The session's heavy length was **mistake-correction overhead** (Notes-format ×3, state-guard flip-flop ×3, Rubric + /verify skips), NOT beyond-scope value — captured in the post-mortem + `meta/slip-log.md`, deliberately NOT counted as a KPI extra per the format's "mistake-correction ≠ extra" rule.
+
 ### QA-262233 cycle 2 — PRZ Ringkasan Risalat MMKN PTG (Jabatan Teknikal fix) — 2026-05-25 — ~3h (multi-session, includes rediscovery overhead from Phase 0 skip)
 
 **Closure type**: code-fix-shipped (commit `5023fbf2fc` on `mlk/qa/262233v2`); BA verification on FAT pending (cherry-pick to `mlk/fat-env` by deployer team)

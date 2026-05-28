@@ -47,6 +47,26 @@ Faster: [one-line observation]. Action applied: [concrete edit to skill/protocol
 
 ## Entries
 
+### QA-262786 — PPTPB SKM Maklumat Pemohon (Syarikat) field/mandatori alignment vs AWAM — 2026-05-28
+
+**Faster-finding**: Faster: the state-guard saga (3 flip-flops) and the Notes-format saga (3 wrong attempts) both came from deciding on partial evidence instead of running the decisive check first. Action applied: (1) `Etanah-Codebase-Read.md` State Scoping Model — blast-radius is decided from **branch topology** (`git rev-list --left-right --count`, merge-base date), NOT folder layout / same-remote; (2) `feedback_task_folder_ownership.md` 3-line Notes lock re-confirmed + clarified (tugasan=KOD, clean login email only); (3) Rubric + `/verify` made **non-skippable** gates in `quest-protocol.md` (Apply-entry-checklist item 0 + verify-checkpoints).
+
+**Contributing Factors** (single trivial fix; all cost was process):
+- The code fix was a ~9-line, analog-backed, single-method change (`PelupusanMaklumatPemohonHelper.setTabPemohonFields()` PPTPB `type==1` block) — trivially correct once located.
+- Guard flip-flop ×3: decided blast-radius from folder layout → same-remote → `:5182 melaka&&PPTPB` before finally checking that `origin/master` (TRG) and `origin/mlk/master` forked 2022-12-28 and diverged ~15k commits with NO merge path. The decisive fact (merge topology) was checked last instead of first.
+- Notes.txt format ×3: terse-with-errors (full tugasan name + verbose login) → wrong over-correction to a rich block → the correct clean 3-line. The ~30 archived Notes were the ground truth the whole time; I didn't do the exhaustive search until みや demanded it.
+- Rubric + /verify skipped at Recon → the blast-radius lens that would have surfaced the state-scoping question never fired; it went to みや instead.
+
+**Process Notes**:
+- みや caught every slip in real time (guard, Notes format, Rubric skip, /verify skip, test-data timing, pengguna-login rule). High correction load — the exact load the meta-layer is meant to reduce.
+- FAT DB grant gap (`et_reporting` denied on `et_main`, both standard + pgEdge MCPs) blocked the `pengguna_semasa` lookup — Notes login is still `TBD` pending みや.
+- All process refinements were applied THIS session (their canonical homes + `meta/slip-log.md`), not deferred.
+
+**Carry Forward**:
+- **Phase-2 trigger hook** — none exists (prose-trigger + `/verify` Checklist E only); candidate deterministic hook → `main/todo.md` Q2.
+- **FAT `et_main` read grant** for `et_reporting` / `claude_readonly` → `main/todo.md` Q1 (pgEdge security item) — blocks FAT pengguna lookups.
+- **Notes.txt login for QA-262786** still `TBD` → fill when みや provides the FAT test login.
+
 ### QA-262233 cycle 2 — PRZ Ringkasan Risalat MMKN PTG (Jabatan Teknikal fix) — 2026-05-25
 
 **Faster-finding**: this entire quest could have been ~2 hours faster if Quest had been ACTIVATED at first ticket mention. Action applied: slip-log entries + `quest-resume-preflight.js` hook PROPOSED (not yet built) at `meta/slip-log.md` 2026-05-25 quest-protocol-skip row.

@@ -1,16 +1,18 @@
 ---
-name: Etanah environments — UAT is for local, FAT is for simulation only
-description: Distinguish UAT (mlkuat, schema et_main_uat — local JBoss target) from FAT (mlkfat/etprdmlk, schema et_main — only used to view BA-shared ticket data). Flowable alter page lets test apps shift between tugasan steps.
+name: Etanah environments — env selection is ticket-driven (match where BA tested); AWAM always on mkit/UAT
+description: Pick the local env per the ticket (BA's Env line + permohonan ID env) — UAT (mlkuat/et_main_uat) and FAT (mlkfat/etprdmlk/et_main) are BOTH valid local implement+test targets as of 2026-05-28 (FAT restored). EXCEPT AWAM tickets always run on mkit/et_main_mlit, and EXCEPT when みや says "hold" at ticket start (don't switch — parallel-session safety). Flowable alter page lets test apps shift between tugasan steps.
 type: feedback
 originSessionId: 9a250643-8b07-48d4-8408-3e2fb4b02911
 ---
 **Rule**: Etanah Melaka has multiple Postgres environments. They serve different purposes — never conflate.
 
+**Selection rule (updated 2026-05-28 — FAT restored)**: env is **ticket-driven** — switch the local target to where the BA tested, inferred from the Description `Env:` line + the permohonan ID's environment. UAT and FAT are BOTH valid local implement+test targets now (FAT is no longer simulation-only). **Two overrides**: (1) **AWAM tickets always run on `mkit`/UAT** regardless of where BA reported (FAT-AWAM is not a runnable local env); (2) if **みや says "hold"** when starting a ticket, do NOT switch env — he may be running parallel sessions and a switch would disturb another ticket's testing.
+
 | Env | Host | Database | Schema | When to use |
 |---|---|---|---|---|
-| **UAT** (`mlkuat`) | 172.30.59.185:5444 | `mlkuat` | `et_main_uat` | **Local testing default.** みや's local JBoss `etanahDS` points here (see standalone.xml). All Phase 1 verification + most SQL investigations happen here. |
-| **FAT** (`mlkfat`) | 172.30.17.104:5444 | `etprdmlk` | `et_main` | **Simulation viewing only.** Use when BA/QA shares an `id_pengenalan` in a ticket and we need to see what they see. NOT for active dev testing. |
-| `mlit` (`et_main_mlit`) | 172.16.100.197:5444 | `mkit` | `et_main_mlit` | **AWAM-UAT primary for LOCAL JBoss `etanahDS`** (confirmed 2026-05-11 second-pass). When deploying AWAM locally, `standalone.xml etanahDS` must point here. Distinct from DB-query path: for read-only SQL investigations, use `mlkuat` via MCP (data overlaps; mkit not wired to MCP). |
+| **UAT** (`mlkuat`) | 172.30.59.185:5444 | `mlkuat` | `et_main_uat` | **Local implement+test target when the ticket's Env is UAT** (BA tested on UAT, or permohonan ID is a UAT app). Also the read-only SQL-investigation default (data overlaps mkit). |
+| **FAT** (`mlkfat`) | 172.30.17.104:5444 | `etprdmlk` | `et_main` | **Local implement+test target when the ticket's Env is FAT** (BA tested on FAT — the common case). Restored 2026-05-28 as a full dev/test target; the earlier "simulation-viewing-only" restriction (2026-05-18 Mock Cutover 1) is LIFTED. |
+| `mlit` (`et_main_mlit`) | 172.16.100.197:5444 | `mkit` | `et_main_mlit` | **AWAM local target — ALWAYS.** Any AWAM ticket runs here regardless of where BA reported (FAT-AWAM is not runnable locally). When deploying AWAM locally, `standalone.xml etanahDS` points here. For read-only SQL, use `mlkuat` via MCP (data overlaps; mkit not wired to MCP). |
 
 **AWAM-tested-on-UAT-only rule (hard, 2026-05-11, finalized after 2nd-pass みや confirmation)**: AWAM bugs are simulated on UAT regardless of where BA reported them. FAT-AWAM is NOT a runnable local env. Three things to change when switching to AWAM-UAT mode:
 1. `etanahv3\config\environment.properties` → `cas.url=http\://172.30.59.150/etanah-cas` (UAT line uncommented, FAT line commented out)
@@ -35,9 +37,12 @@ For READ-ONLY DB queries during investigation: use `mcp__postgres-mlkuat__query`
 - This applies broadly — when test data is sparse (e.g. only 2 of 7 Lite urusan have active SMB), we can use any other application of the missing urusan and alter it forward
 
 **How to apply**:
-- Default to UAT (`et_main_uat` schema, `mcp__postgres-mlkuat__query`) for any Etanah investigation unless reason to use FAT
+- **Match the ticket's env** (BA's `Env:` line + permohonan ID env) for local implement+test — run `/env-check`, which switches `standalone.xml etanahDS` + `cas.url` + branch to that env. AWAM → always `mkit`/UAT. If みや said "hold" at ticket start → do NOT switch.
+- For read-only DB investigation: `mcp__postgres-mlkuat__query` (UAT) or `mcp__postgres-mlkfat__query` (FAT) — query the env that matches the ticket's data.
 - When SQL shows insufficient test data at a step → mention flowable alter page as the workaround instead of asking BA/QA for new test data
-- When citing schema in code/SQL: `et_main_uat` for local testing, `et_main` for FAT/simulation
+- When citing schema in code/SQL: `et_main_uat` for UAT, `et_main` for FAT, `et_main_mlit` for AWAM/mkit
 - At Phase 0 of any Etanah quest: confirm which environment we're targeting before running SQL
 
 **Origin**: 2026-04-29 — みや flagged this distinction during QA #258022 work after I conflated FAT and UAT in early SQL labelling.
+
+**Update 2026-05-28**: FAT restored as a full local implement+test target (the 2026-05-18 "Mock Cutover 1" UAT-only restriction is lifted). Env selection reverted to **ticket-driven** (match BA's tested env + permohonan ID env). Added the **"hold" parallel-session override** (みや may run multiple sessions; "hold" at ticket start = don't switch env). AWAM→`mkit`/UAT special case unchanged (みや confirmed 2026-05-28). Paired skill updated same day: `.claude/skills/env-check/SKILL.md` (Priority 0 `hold` override + temp-override removal).

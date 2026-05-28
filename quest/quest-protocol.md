@@ -713,6 +713,8 @@ After Recon emits PROCEED-TO-RUBRIC, Ruri emits 2-5 fix-shape options for みや
 
 **`verify` checkpoints in this flow (added 2026-05-18)**: `verify` runs at two points — **after Recon** (`/verify` → Checklist A: env-check, branch+pull, knowledge-load, Scout, Recon all done with evidence) before continuing to Rubric; and **at Apply-done** (`/verify` → Checklist B: diff-contract check on the actual `git diff`) before the HARD STOP. v1 — Ruri emits a `→ verify checkpoint reached` prompt at each; みや may also invoke `/verify` manually. A 🔴 means stop and fix before continuing. (Checklist C runs at Phase 1 close-out — see that section.)
 
+**NON-SKIPPABLE (added 2026-05-28 per みや — QA-262786 /verify miss)**: the /verify checkpoints above are mandatory gates, not optional prompts. Ruri MUST emit Checklist A (after Recon, before Rubric) and Checklist B (at Apply-done, before the HARD STOP); skipping either is the same class of slip as skipping Rubric. The Apply-entry-checklist item 0 is hereby extended to also require: "/verify Checklist A emitted this quest".
+
 **What does NOT change**:
 - Predicate Box at Apply (Ritual 1) — still mandatory, still emitted before each Edit
 - Fix Walkthrough at end of Apply — still mandatory, still unprompted
@@ -720,9 +722,16 @@ After Recon emits PROCEED-TO-RUBRIC, Ruri emits 2-5 fix-shape options for みや
 - Commit and Push (Commit/Push) — みや executes (per existing protocol)
 - Confidence Assessment table — still fires when ≥2 substantive items need みや's nod within one response (per personality.md)
 
+### Test-data prep timing (added 2026-05-28 per みや — QA-262786 slip)
+
+Test data is prepared at TWO points, never deferred:
+1. **Right after Redmine retrieval** — derive from Description + History (BA permohonan ID + env + urusan + tugasan + langkah + login). Most tickets already state it; write `1. Notes.txt` via `node quest/notes.js` **immediately**. If the login is DB-blocked or absent, write the entry anyway with login marked `TBD` — **never defer the whole file**.
+2. **After Rubric — ONLY IF** new findings require testing a different tugasan / app than the BA's. If Rubric surfaces nothing new, the retrieval-time test data stands.
+
 ### Apply entry checklist (autonomous-flow guard)
 
 Before the first Edit lands at Apply:
+0. **Rubric ACTUALLY EMITTED — NON-SKIPPABLE** (added 2026-05-28 per みや after QA-262786 skipped-Rubric slip): the Rubric section (fix-shape options + Multi-Perspective Scrutiny + **Impact/Usage trace**) must have been emitted THIS quest. Proposing a fix-shape or applying an Edit without a prior Rubric is BANNED. **Impact/Usage trace** = per touched field/method: (a) all WRITERS (later-override risk on this code path), (b) the READER/getter, (c) CALLERS of the init method (re-invoked?), (d) for state-scoped changes, BRANCH TOPOLOGY (divergence + merge path — NOT folder/remote). This is the pending "Integration Analysis sub-ritual" (todo Q1), now mandatory.
 1. env-check ✅ (re-verified at Apply entry per env-check skill)
 2. Predicate Box emitted with file:line evidence
 3. Inline confidence on the recommended Rubric option = HIGH
