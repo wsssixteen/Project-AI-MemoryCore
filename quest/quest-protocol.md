@@ -923,6 +923,14 @@ When debug mode activates, my first response must say:
 
 I do not propose fixes until that toggle is confirmed OR みや explicitly says *"proceed without"*.
 
+### Ritual 5 — Permanent-fix-first + exhaust-to-confidence before hand-back (added 2026-05-28 by みや, QA-262243)
+
+The goal of debugging is the **ROOT permanent fix, not a patch** that masks one reported instance. Before handing a diagnosis back to みや:
+
+- **Pursue the cause to ≥90% confidence OR until all accessible investigation methods are genuinely exhausted** — DB queries across the *whole affected data population* (not just the one reported app), code-path tracing, familiars, local repro. A residue I can verify with a tool I already hold is **NOT** a valid stopping point, and asking みや for it is BANNED (see `personality.md` "No asking-back for searchable facts").
+- **Always answer the class questions**: *what causes it · how confident am I · can the whole class be remediated · what is the permanent fix vs the stop-gap patch.* If a patch fixes only the reported instance, label it AS a stop-gap and state the permanent fix + remediation scope for the rest of the class.
+- **Banned**: handing back at first-confirmed-instance with "shall I investigate further? / how was this created?" when the method to answer it is accessible. **Why** (みや 2026-05-28, QA-262243): I confirmed the flag mechanism + that a data-patch renders the letter, then handed back the cause + can-we-patch-all questions instead of querying them. みや: *"find the solution until you're above 90% or have exhausted all methods accessible to you... The main goal is to find a permanent fix, not simply patch."*
+
 ### Violation Log
 
 Every slip on Rituals 1–4 gets a one-line entry in `Feature/Forge-Self-Improvement-System/debug-ritual-violations.md`. Trend visible over time. If slips persist across multiple sessions, the ritual design is wrong — redesign, don't just re-promise.

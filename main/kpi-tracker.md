@@ -37,6 +37,13 @@
 
 ## Entries
 
+### QA-262243 — PRZ Surat Jabatan Teknikal — applicant blank for Agensi — 2026-05-29 — multi-session investigation
+**Closure type**: code-fix-shipped (+ data backfill)
+**Extras**:
+- Root-caused + fixed a system-wide defect, not just the reported app: `savePemohon` left `adalahPemohon` UNSET for jenisPB 2/3/5 → invariant now covers the Kemasukan Perizaban utility + the general Maklumat Pemohon dialog + PBT/Majlis + the SPOC manual path (3 doors). Commit 185869d863.
+- Backfilled the existing PRZ agency backlog (11 apps + 1 PERKESO dup) beyond the BA's single app.
+- Built `ask-back-gate.js` Stop hook + wired the no-asking-back rule across CLAUDE.md / personality.md / quest-protocol.md (process-system hardening).
+
 ### QA-262786 — PPTPB · SKM · Maklumat Pemohon (Syarikat) — field-visibility + mandatori alignment vs AWAM — 2026-05-28
 
 **Closure type**: code-fix-shipped (commit `26899a92e4` on `mlk/qa/262786`, pushed; merged 4 upstream `mlk/master` commits clean before push) — BA verification pending

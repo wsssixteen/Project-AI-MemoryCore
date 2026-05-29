@@ -693,3 +693,21 @@ task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\
 phase=complete
 local_test_confirmed=true
 note=Fix: removed "Tempoh diluluskan lesen ini adalah X tahun." prefix from perihal string in MlkPengiraanBayaranLesenForm.performCustomSave(). URS_PLPS scope. Committed 5be6379ea0, merged 331a2df1bf → mlk/master. Closed 2026-04-27.
+
+# ---- archived 2026-05-29 (QA-262243, moved from active.txt at DE) ----
+
+qa=QA-262243
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\49. QA #262243 - PRZ - Penyediaan Surat Jabatan Teknikal dan Ulasan YB - Tak papar makl
+qa_doc=projects/coding-projects/archive/QA-262243/QA-262243.md
+phase=2-complete
+status=archived
+ticket_type=bug
+local_test_confirmed=true
+branch=mlk/qa/262243
+commit=185869d863 (2026-05-29) — QA #262243 - PRZ - Surat Jabatan Teknikal - add flag adalahPemohon for pemohon saved under non-pemohon jenisPB
+pushed=2026-05-29 first push to origin/mlk/qa/262243 (-u upstream set)
+post_mortem=main/post-mortems.md (entry 2026-05-29)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-29)
+verified=2026-05-29 — みや tested OK on UAT: fresh Perizaban app (Kemasukan Perizaban, Agensi) saves flag_pemohon='Y'; Surat JT renders applicant.
+root_cause=MlkKemasukanPerizabanForm:827 calls savePemohon(jenisPB=3); savePemohon flagged only jenisPB 1/4 -> 2/3/5 left adalahPemohon unset -> DB default 'N' -> getWakilPemohon null -> blank Surat JT.
+fix=savePemohon ensure-one-applicant invariant (PelupusanService ~:1230, fires only when aplikasi has zero flagged party AND jenisPB not 2/4) + SpocService:371 sole-applicant one-liner. Data backfill: 11 PRZ agency apps + 2026/29 + 1 PERKESO dup. Broader doors (general dialog / PBT-Majlis / SPOC) covered by the invariant.
