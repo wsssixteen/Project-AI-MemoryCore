@@ -47,6 +47,19 @@ Faster: [one-line observation]. Action applied: [concrete edit to skill/protocol
 
 ## Entries
 
+### QA-262243 — PRZ Surat Jabatan Teknikal blank applicant (Agensi) — 2026-05-29
+
+**Faster-finding**: Faster — for an *absence-of-flag* bug, search the CALLER side (which callers pass a jenisPB that SKIPS the setter), not just where the flag is set; and never conclude "path correct" from a repro of a *different* path than the broken one. Action applied: `ask-back-gate.js` Stop hook + `personality.md` "No asking-back for searchable facts" + quest Debug Ritual 5 (permanent-fix-first/exhaust) + `CLAUDE.md` v1.31 Explanation Discipline; reinforce grep-rubric negative-space on fix-informing greps.
+
+**Contributing Factors**:
+- Root cause: `MlkKemasukanPerizabanForm:827` saves the applicant via `savePemohon(jenisPB=3)`; `savePemohon` set `adalahPemohon` only for jenisPB 1 (TRUE) / 4 (FALSE) → 2/3/5 left UNSET → DB default `'N'` → `getWakilPemohon` returns null → blank Surat JT. Sweep found 3 origin doors (utility `:827` · general dialog `:4709` · SPOC `:371`) + the PBT/Majlis `jenisPB==5` case.
+- The surat populators were always correct — the fix is the applicant flag, not the document/populator.
+- Process (mine): searched `setAdalahPemohon` write-sites not the caller-side → missed the door for 4+ turns until みや named the form; over-scoped a PRZ ticket to all-urusan before anchoring; over-concluded "no code fix" from a wrong-path repro; prematurely flipped `status=closed` once (reverted).
+
+**Carry-forward / META**:
+- Fix = `savePemohon` "ensure-one-applicant" invariant (safe: fires only when an aplikasi has zero flagged party, excludes Wakil(2)/Penerima(4)) + `SpocService:371` one-liner. Commit `185869d863` on `mlk/qa/262243`.
+- 6 slips logged to `meta/slip-log.md`; `ask-back-gate.js` built as the escalation response to the recurring stop-instead-of-action category (rules alone hadn't held).
+
 ### QA-262786 — PPTPB SKM Maklumat Pemohon (Syarikat) field/mandatori alignment vs AWAM — 2026-05-28
 
 **Faster-finding**: Faster: the state-guard saga (3 flip-flops) and the Notes-format saga (3 wrong attempts) both came from deciding on partial evidence instead of running the decisive check first. Action applied: (1) `Etanah-Codebase-Read.md` State Scoping Model — blast-radius is decided from **branch topology** (`git rev-list --left-right --count`, merge-base date), NOT folder layout / same-remote; (2) `feedback_task_folder_ownership.md` 3-line Notes lock re-confirmed + clarified (tugasan=KOD, clean login email only); (3) Rubric + `/verify` made **non-skippable** gates in `quest-protocol.md` (Apply-entry-checklist item 0 + verify-checkpoints).

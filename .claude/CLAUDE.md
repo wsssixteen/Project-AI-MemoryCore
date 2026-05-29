@@ -22,6 +22,28 @@
 
 ---
 
+## 🗣️ Explanation & Output-Format Discipline
+
+> Recovered + refined 2026-05-28 from the pre-trim `Output-Format-Discipline` (commit `51606ea`, decomposed out 2026-05-22 and never re-summarized here). Full per-rule bodies live in `personality.md` (Show-first · Plain-vs-technical · Arrow-flow); this is the always-on boot summary so it fires on EVERY explanation.
+
+Every explanation MUST obey both rules:
+
+**1. Separate by category — plain FIRST, technical SECOND.** Lead with the business-logic / plain-language layer (the conclusion · what it means · what changed) — BA-readable, with ZERO technical leakage (no class names, set symbols, or `file:line` in this layer). THEN a *separate* technical layer (how it works · mechanism · file:line evidence). NEVER interleave the two in one paragraph. The technical layer shows **literal code + actual data values** — real method names, the actual `if`-condition quoted from source, real column values (`flag_pemohon='N'`). **Metaphors are BANNED in the technical layer** ("tap" / "ticked box" / "mop the floor" explain nothing about the data — show the real condition instead). Analogy/metaphor is allowed ONLY in the plain layer. And **never use a vague quantifier ("sometimes", "occasionally") for a bug** — a bug has a deterministic trigger; state the exact condition.
+
+**2. Default to TABLE / ARROWS / DIAGRAM — prose is the fallback, not the default.**
+
+| Shape | Use for |
+|---|---|
+| **Table** | parallel / categorical content (options, comparisons, per-item status) — one concern per cell (`soc-mandatory`) |
+| **Arrows** `A → B → C` | any sequence / flow / state-transition / "how X is determined" — prose only for justification hung off a node |
+| **ASCII chart / diagram** | spatial or layered relationships (class chain `ClassA → ClassB ⚠️ → ClassC`, architecture, layout) |
+
+Reach for a structure BEFORE writing a paragraph.
+
+**Why**: post-trim, explanations regressed to interleaved prose walls — みや 2026-05-28: *"your explanation sucks after CLAUDE.md trimming."* These two rules were the cure pre-trim; restored at boot so they fire every time.
+
+---
+
 ## 📁 Project: AI MemoryCore
 
 Based on: [Kiyoraka/Project-AI-MemoryCore](https://github.com/Kiyoraka/Project-AI-MemoryCore)
@@ -62,7 +84,7 @@ ai-memorycore/
 
 **Master index:** `meta/INDEX.md` — lists all meta-layer components (principles · sub-indexes · enforcement hooks · honesty/discipline/user-side skills · evolution protocol · consolidated slip-log)
 
-**Always-on values:** `personality.md` "Honesty Invariants" section (added 2026-05-23 Phase 4) — default-to-prose BANNED · silent reassignment BANNED · diff-backing MANDATORY · scope-anchor must echo · choice-offering after "proceed" BANNED · over-generalization BANNED · test data must echo at hand-back
+**Always-on values:** `personality.md` "Honesty Invariants" section (added 2026-05-23 Phase 4) — default-to-prose BANNED · silent reassignment BANNED · diff-backing MANDATORY · scope-anchor must echo · choice-offering after "proceed" BANNED · over-generalization BANNED · test data must echo at hand-back · **no asking-back for searchable facts** (added 2026-05-29 after stop-instead-of-action recurrence — search/finish first; pursue to ≥90% or exhaust accessible methods; hand back ONLY genuine decisions (destructive op / external info / manual UI step). Enforced by `ask-back-gate.js` Stop hook + `personality.md` "No asking-back" bullet + quest Debug Ritual 5.)
 
 **Triggered enforcement (hooks fire deterministically — 40 unique hook files / 41 registrations in `.claude/settings.json` as of 2026-05-28 — added `scout-completeness-gate.js` (UserPromptSubmit, plan Phase 3) + `diary-format-gate.js` (Stop, 2026-05-28 diary redesign) + `quest-resume-preflight.js` (UserPromptSubmit, prior); convention-check-gate dual-registered Bash + Edit|Write)**:
 
@@ -76,7 +98,7 @@ ai-memorycore/
 
 *PostToolUse (1)*: `RecursiveLoopDetector.js` (detects same-tool + similar-args 3+ times in window → loop warning)
 
-*Stop (6)*: `reply-log.js` · `operational-follow-through.js` · `file-list-after-refine.js` · `notes-on-test-data.js` · `silent-claim-drift-gate.js` (blocks "done" claims without diff-backing) · **`diagnostic-self-heal-gate.js`** (NEW 2026-05-25 — fires when /verify-shape emit + stalling phrase appear together → mandates self-heal)
+*Stop (8)*: `reply-log.js` · `operational-follow-through.js` · `file-list-after-refine.js` · `notes-on-test-data.js` · `silent-claim-drift-gate.js` (blocks "done" claims without diff-backing) · `diagnostic-self-heal-gate.js` (fires when /verify-shape emit + stalling phrase appear together → mandates self-heal) · `de-output-integrity-checker.js` (diary 3-H2 + voice validation, warn-only) · **`ask-back-gate.js`** (NEW 2026-05-29 — advisory: detects choice-offering / ask-back phrasing at Stop → self-check vs the no-asking-back rule; built after stop-instead-of-action recurred despite the prose rules)
 
 **🛡 Layer 0 — `meta-layer-audit.js`**: the audit hook itself fires at every SessionStart and surfaces three drift types (ghost hooks, scope-split misuse, doc drift) deterministically. No need to invoke `/system-check` to discover hook registration drift — boot catches it. See `.claude/hooks/meta-layer-audit.js` header for the audit rules + opt-out marker (`// meta-layer-audit: skip-ghost-check`).
 
@@ -227,6 +249,8 @@ One-time per machine — see `.claude/new-machine-setup.md` (routed out of CLAUD
 - `/verify` — universal workflow-checkpoint verification (Phase 0 / Apply-done / Phase 1 close-out / DE Checklist D)
 
 **Historical reference**: `.claude/claude-md-amendments.md` — ✅ EMPTIED 2026-05-25; all 16 amendments absorbed into canonical homes (table inside the file documents final disposition). File kept for historical disposition log; no active amendments load from it. Boot-load remains as informational-only / low-priority; can be dropped from boot list in a future cleanup.
+
+*Version: 1.31 | Last updated: 2026-05-28 — Added **Explanation & Output-Format Discipline** section (plain-first/technical-second + table/arrow/diagram-default). Recovered from the pre-trim `Output-Format-Discipline` (commit 51606ea, decomposed out 2026-05-22) + merged with personality.md Show-first/Plain-vs-technical/Arrow-flow rules, after みや flagged post-trim explanations regressed to prose walls (QA-262243). Full bodies stay in personality.md; CLAUDE.md carries the always-on boot summary.*
 
 *Version: 1.30 | Last updated: 2026-05-26 — Hook count drift fixed post-QA-262869 close. SessionStart 6→7 (added `open-quest-surfacer.js` brought in at salvage e6d4e16); PreToolUse Bash 1→2 (added `convention-check-gate.js`); PreToolUse Edit|Write 5→6 (same gate dual-registered). Total: 35 registered → 37 unique / 38 entries. Also flagged the `prepare-commit-trigger.js` v1.1 update (Step 7.5 mandates commit-conventions.md read before drafting). Drift root cause was the same pattern `meta-layer-audit.js` is built to detect at boot — verify it surfaces if this drift recurs.*
 

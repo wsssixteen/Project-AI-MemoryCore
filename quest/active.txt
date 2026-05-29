@@ -1,4 +1,32 @@
 active:
+qa=QA-262243
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\49. QA #262243 - PRZ - Penyediaan Surat Jabatan Teknikal dan Ulasan YB - Tak papar makl
+qa_doc=projects/coding-projects/archive/QA-262243/QA-262243.md
+phase=2-complete
+status=archived
+ticket_type=bug
+current_phase=Wrap
+local_test_confirmed=true
+branch=mlk/qa/262243
+commit=185869d863 (2026-05-29) — QA #262243 - PRZ - Surat Jabatan Teknikal - add flag adalahPemohon for pemohon saved under non-pemohon jenisPB
+pushed=2026-05-29 first push to origin/mlk/qa/262243 (-u upstream set)
+post_mortem=main/post-mortems.md (entry 2026-05-29)
+kpi_entry=main/kpi-tracker.md (entry 2026-05-29)
+verified=2026-05-29 — みや tested OK on UAT: fresh Perizaban app (Kemasukan Perizaban, Agensi) now saves flag_pemohon='Y'; Surat JT renders applicant.
+NOTE_2026-05-29=Phase 1 CLOSED. Code fix = savePemohon adalahPemohon invariant (PelupusanService.java ~:1230 — sets TRUE only when an aplikasi has zero flagged party + jenisPB not 2/4; covers Kemasukan Perizaban utility jenisPB=3 + general dialog) + SpocService:371 sole-applicant one-liner. Data backfill (existing PRZ agency apps) applied earlier. Root cause: MlkKemasukanPerizabanForm:827 passes jenisPB=3 → savePemohon only flagged 1/4 → applicant left 'N'. Broader doors (general dialog non-1 types / PBT-Majlis jenisPB==5 / SPOC) now also covered by the invariant. Phase 2 (post-mortem + KPI + archive) pending.
+env=UAT (mlkuat / et_main_uat) — per Description Env: MLKUAT
+priority=Medium
+relates=#224344 (History.txt)
+issue_one_liner=PRZ Surat Jabatan Teknikal (tugasan PSJT) — NAMA PEMOHON / ALAMAT blank + NO. TELEFON '-' for Agensi-type applicant (KWSP). Root cause VERIFIED: sole applicant pihak row has flag_pemohon='N' → getWakilPemohon() returns null → populators receive empty pemohon. NOT a populator/template defect.
+ba_repro_app=PTMLK/01/L/PRZ/2026/29 (aplikasi_id 2962546, MLKUAT) — pengguna_semasa aslilahramat@gmail.com, peranan PT, tugasan PSJT. Applicant a_pihak_bkptg_id=5348510 = KWSP, jns_pemohon=JNS_PMHN_PBDN_AGN_KRJN, flag_pemohon='N' (anomaly; 371 Agensi apps have 'Y', 82 have 'N').
+scope_anchor=NARROWED 2026-05-28 to PRZ urusan · tugasan PSJT · Surat Jabatan Teknikal ONLY (みや: "we're doing this urusan" — system-wide analysis was over-scope). In PRZ the agency applicant is ALWAYS JENPPM (Pemilik=applicant); no chargee/multi-party ambiguity (that was other urusan, OUT OF SCOPE). Target = ~8 real PRZ agency apps with flag_pemohon='N' (test rows excluded). Plan ACCEPTED by みや: implement BOTH (data fix flag_pemohon='Y' on the PRZ agency applicants + code prevention) then test. Option C (getWakilPemohon resilience) REJECTED (unsafe — could return a non-applicant). HOLD-APPLY 2026-05-28: みや testing another ticket → do NOT apply code/data yet. Code prevention needs PRZ-door repro first (AWAM:534 fix is PRZ-irrelevant — PRZ hardcoded TRUE; PRZ-officer door unpinned). TRG excluded.
+env_note_2026-05-28=local standalone.xml + cas.url edited to UAT but JBoss NOT restarted → change dormant; if みや restarts JBoss for the other ticket it comes up UAT. Revert if that ticket isn't UAT.
+door_test_2026-05-29=みや created fresh PRZ agency permohonan PTMLK/01/L/PRZ/2026/31 (AGENSI KERAJAAN 007, JENPPM) via normal flow → flag_pemohon='Y' (created_by=SYSTEM). CONCLUSION: current creation path is CORRECT; NO code fix needed for PRZ. The broken 'N' apps are legacy/other-path data (2026/29 was created_by=nizalarif vs SYSTEM here → hint of an older manual sub-path). QA-262243 = DATA-only fix.
+resolution_2026-05-29=FIX = data only. Patched flag_pemohon='Y' on: 2026/29 (verified renders) + 11 single-Pemilik PRZ agency apps (a_pihak_bkptg_id 5288088/5289297/5289298/5289299/5344862/5289916/5288090/5288093/5290046/5287852/5345197) + 1 of 3 dup PERKESO rows on 2025/10 (5269267). All on UAT. No code change. PROD needs same data correction for affected apps. System-wide non-PRZ AWAM:534 leak = OUT OF SCOPE → separate ticket.
+key_evidence=PelupusanService.getWakilPemohon():17604-17620 filters apb.getAdalahPemohon(); populateNoTelPemohon:12852-12878 ALREADY branches Agensi→getNoTelPejabat(); namaPemohonLower:5067-5076; alamatPemohonNoNewLine:7451-7474; adalahPemohon write conditional at PelupusanService:1214-1216 (jenisPB==1 only), DB default flag_pemohon='N'.
+notes:
+  - 2026-05-28: Quest started (New — folder in active Tasks\Melaka, not Archive; Redmine status New, assigned to みや 2026-05-26 by Aaron). Notes.txt written via notes.js (entry 1). Scout familiar + Recon done; root cause VERIFIED via DB+code trace. みや's hunches (missing Agensi branch / phone needs No.Tel.Pejabat / template empty noKP row) REFUTED by evidence — populators are type-agnostic + read universal fields that ARE populated, phone already branches for Agensi. Real cause = upstream flag_pemohon='N'. Awaiting みや direction before Rubric→Apply.
+
 qa=QA-262786
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\47. QA #262786 - FAT - PPTPB - Semakan Kemasukan Maklumat - Papar medan No. Telefon Rumah dan medan Jumlah Mod
 qa_doc=projects/coding-projects/archive/QA-262786/QA-262786.md
