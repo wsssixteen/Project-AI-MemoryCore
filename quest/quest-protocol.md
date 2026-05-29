@@ -1183,6 +1183,14 @@ Backwards-compatible: existing `note=` (single-line) entries still work; the `no
 
 Transition rules: Phase 1 close-out (commit + push + `/verify` Checklist C green) → `status=closed`. Phase 2 close-out (post-mortem + KPI + archive folders) → `status=archived` if Ruri shipped, OR `status=archived-shipped-by-other` if a colleague's commit landed the fix (Ruri verified only). Banned legacy strings: `closed-pending-FAT`, `pending post-mortem`, `awaiting-phase-2`, `local-test-confirmed` (all conflate BA-side state or phase-incomplete state with overlapping semantics — the canonical 7 above carry all the discriminators needed).
 
+### Working-memory discipline — active.txt holds OPEN quests only (added 2026-05-28)
+
+`active.txt` is **working memory**, not an archive. It holds ONLY quests whose status ∈ {`active`, `hold`, `blocked`, `delegated`}. The moment a quest reaches a terminal state (`closed` after Phase 1, or `archived` / `archived-shipped-by-other` after Phase 2) its block is **moved out** of `active.txt` into `quest/active-archive.txt` — never left in place.
+
+**Why**: closed-quest history is long-term *episodic* memory and already lives in its canonical homes — `QA-<NUM>.md` (per-quest record) + `main/post-mortems.md` + `main/kpi-tracker.md`. Leaving terminal blocks in `active.txt` conflates working memory with episodic memory, bloats every SessionStart read (the file had drifted to ~694 lines / ~100 KB / ~50 K tokens before the 2026-05-28 trim), and slows every quest. This is the **same bug class as standing-flags / session-items not clearing after a task completes** — completion must trigger working-memory cleanup, not append-only growth. (Agentic-memory model: working/short-term memory = only what's needed now; closed quests = long-term episodic, stored elsewhere.)
+
+**Mechanism**: Phase 2 close-out (step 5 — archive both-sides + active.txt flip) ALSO moves the block to `active-archive.txt`. Deterministic helper: `quest/active-trim.js` (dry-run by default; `--apply` backs up active.txt first, then splits open-vs-done by `status=`, treating legacy `phase=complete` blocks as done). Run it whenever active.txt accumulates terminal blocks. `active-archive.txt` is a pointer-grade episodic mirror — the authoritative records stay in QA-<NUM>.md + post-mortems + kpi-tracker; it can be pruned once redundancy is confirmed. Keeping active.txt open-only makes `open-quest-surfacer.js` accurate at boot (no archived ghosts) — the direct analog of the standing-flag staleness fix.
+
 ### Quest State Transitions (mid-conversation triggers)
 
 Fire as soon as heard, mid-conversation — mutate `active.txt` immediately, same pattern as `remember later` → `todo.md`.
@@ -1205,6 +1213,7 @@ Fire as soon as heard, mid-conversation — mutate `active.txt` immediately, sam
 *Protocol version: 3.1 — 2026-05-18 (added Phase 0 artifact gate + verify-close re-commit clause after QA-260302 process failures — early-diagnostic never created, state files not reconciled at close).*
 *Protocol version: 3.2 — 2026-05-19 (Phase 1 close-out + branch-cut rules made per-repo — AWAM baseline = `mlk/release/fat`, pelupusan = `mlk/master`; no longer hard-codes `mlk/master`).*
 *Protocol version: 3.4 — 2026-05-25 (absorbed amendments A12 [Notes.txt write is HARD precondition of Recon emit — added to Phase 0] + A15 [closing-words extended to Redmine retrieval / Forge Review / Phase 1 close-out — added to Phase 2 emit section]; both were live rules in claude-md-amendments.md awaiting canonical home; now home. Per みや 2026-05-25.). 3.3 — 2026-05-22 (quest-cluster merge from CLAUDE.md: +Debug Mode Rituals section, +Quest State Transitions table, +extended `active.txt` schema with 6-status set; commit+push rule reconciled to the 2026-05-19 model — Ruri runs commit + push after みや confirms the message, superseding the prior "みや executes" hands-off; Mid-Quest Handoff File reconciled — the separate `handoff-*.md` is deprecated, the Investigation Trail now lives in `QA-<num>.md`; System-Design references repointed to the `system-design` skill).*
+*Protocol version: 3.5 — 2026-05-28 (added "Working-memory discipline — active.txt holds OPEN quests only" subsection: terminal blocks move to `quest/active-archive.txt` via `quest/active-trim.js`; ties active.txt bloat to the standing-flag-not-clearing bug class. Companion action: active.txt trimmed 694→~30 lines; 34 terminal blocks moved to active-archive.txt + 2 dated backups kept.)*
 
 ---
 

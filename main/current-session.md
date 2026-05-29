@@ -1,34 +1,34 @@
 # 🌟 Current Session Memory - RAM
 
-> **AGENT_STATE discipline (Task #14)** — strict template: High-Level Objective · Current Progress · Active Context · Blockers · Immediate Next Steps. Read at boot (`boot-load-verification.js`); updated at session end (DE Step 2).
+> **AGENT_STATE discipline** — strict template: High-Level Objective · Current Progress · Active Context · Blockers · Immediate Next Steps. Read at boot; updated at session end (DE Step 2).
 
-**⚠️ Parallel-session note (2026-05-28)**: THREE+ independent sessions ran today (diary-redesign on `modest-saha-8e8678`; Quest-workflow-refactor; and THIS Etanah-QA session on `peaceful-moser-301c9e`). Each rewrote this RAM file at its DE. **Latest = this Etanah-QA session, ~16:46 MPST.** The RAM-file-can't-hold-parallel-sessions limitation persists — a structural item for the future redesign.
+**⚠️ Parallel sessions 2026-05-29**: TWO independent sessions ran. **(A)** THIS Etanah-QA session — **QA-262243 closed end-to-end** (worktree `xenodochial-sinoussi-2c084e`). **(B)** A parallel **QA-262495** investigation (worktree `blissful-williams-767a8d`) — handback-pending. Both end-states preserved below; the RAM-can't-cleanly-hold-parallel limitation persists.
 
-**Current session**: 2026-05-28 (Thu, ~16:46 MPST) — Etanah QA day: env-check FAT-restore + **QA-262786 closed end-to-end (Phase 0→2)** + heavy process refinement from my own slips.
+**Current session**: 2026-05-29 (Fri) — QA-262243 (PRZ Surat Jabatan Teknikal) closed Phase 0→2.
 
 ## High-Level Objective (AGENT_STATE)
-Close today's Etanah QA tickets (plan: 262786 easy → 262243 med → 262495 hard). QA-262786 done; **262243 + 262495 deferred to next session** per リドワンさん ("we'll start with the next ticket next session").
+Close QA-262243 (PRZ Surat JT prints blank applicant for Agensi). **Done.** (Parallel QA-262495 PPJK Kemaskini-hang being handed back.)
 
 ## Current Progress (AGENT_STATE)
-- **QA-262786 — CLOSED (phase=2-complete, status=archived)**. PPTPB · SKM · Maklumat Pemohon (Syarikat) — back-office field-visibility + mandatori marks aligned to the AWAM portal. Fix = 6 flags in `PelupusanMaklumatPemohonHelper.setTabPemohonFields()` PPTPB `type==1` block, **unguarded** (+ リドワンさん's `mandatoryNoTelBimbit=FALSE`). Commit `26899a92e4` on `mlk/qa/262786`; merged 4 upstream `mlk/master` commits clean; pushed. Post-mortem + KPI written; Task + project folders archived.
-- **env-check skill — FAT restored**: reverted to ticket-driven env selection + new Priority-0 "hold" override (parallel-session safety). FAT cas.url corrected → `etanah-app.melaka.gov.my`. `feedback_uat_fat_environments.md` + `MEMORY.md` index updated.
-- **Process refinements shipped (all from THIS session's slips)**: Notes.txt 3-line lock re-confirmed (tugasan=KOD + clean login); Rubric + /verify made non-skippable (quest-protocol); test-data 2-point timing rule; list-cleanup-on-execution meta-rule (todo.md); **State Scoping Model** (Etanah-Codebase-Read — decide blast-radius from BRANCH TOPOLOGY, not folder layout / same-remote).
+- **QA-262243 — CLOSED (phase=2-complete, status=archived).** Root cause: `MlkKemasukanPerizabanForm:827` → `savePemohon(jenisPB=3)`; `savePemohon` flagged `adalahPemohon` only for jenisPB 1/4 → 2/3/5 left UNSET → DB default `'N'` → `getWakilPemohon` null → blank Surat JT. Fix = `savePemohon` ensure-one-applicant invariant (`PelupusanService` ~:1230) + `PelupusanSpocService:371` one-liner. Commit `185869d863` on `mlk/qa/262243`. Data backfill: 11 PRZ agency apps + `2026/29` + 1 PERKESO dup. Tested OK.
+- **Meta shipped (this session's slips)**: `ask-back-gate.js` Stop hook (stop-instead-of-action recurred) · CLAUDE.md v1.31 Explanation & Output-Format Discipline + always-on no-asking-back · quest Debug Ritual 5 (permanent-fix-first / exhaust) · 6 slip-log entries.
+- **(Parallel) QA-262495** — handback-pending; TOP LEAD = **SERVER RUNTIME STATE** (JBoss restart clears the Kemaskini hang), NOT the document. Full trail in `QA-262495.md`.
 
 ## Active Context (AGENT_STATE)
-- Branch state: worktree `claude/peaceful-moser-301c9e` (level with origin/main). etanah-pelupusan repo back on `mlk/master` at origin tip; fix on `mlk/qa/262786`.
-- **Cross-tree edit split** — this session's MemoryCore edits are split: worktree (env-check skill, quest/active.txt) vs main checkout (auto-memory ×3, meta ×3, kpi-tracker, post-mortems, quest-protocol). Both must reach origin/main at DE step 10.
+- This DE merged `origin/main` (the QA-262495 session's 2 commits) into this worktree; resolved `active.txt` (adopted their trim → QA-262243 archived in `active-archive.txt`) + `slip-log.md` (union of both sessions' count-rows). Pushing HEAD + HEAD:main.
+- etanah-pelupusan: on `mlk/master`; QA-262243 fix on `mlk/qa/262243` (pushed). Uncommitted `TemplateSuratJabatanTeknikal.docx` (リドワンさん's kept edit) + a `…PPJK - Copy` junk file remain in the working tree (intentional, left).
+- (Parallel QA-262495) local dirty etanah state to revert before any keep-build: rahsia bypass on the exploded WAR + `QA262495-PROFILE` markers (see QA-262495.md).
 
 ## Blockers (AGENT_STATE)
-- **FAT `et_main` read grant** — `et_reporting` denied on both standard + pgEdge MCPs. Blocks `pengguna_semasa` lookups on FAT → QA-262786 Notes.txt login still `TBD`. (todo Q1 pgEdge security.)
+- (QA-262495) couldn't get a clean repro of the Kemaskini hang — needs a long-uptime server + thread-pool / WINWORD / heap monitoring.
 
 ## Immediate Next Steps (AGENT_STATE)
-1. **Next session: start QA-262243** (PRZ — Penyediaan Surat JT, maklumat pemohon tak papar; medium). Then 262495 (PPJK loading, hard).
-2. Fill QA-262786 Notes.txt login when リドワンさん gives the FAT test login.
-3. **Phase-2-trigger-hook** candidate (no enforcement hook — prose-trigger + /verify E only) → todo Q2 / meta.
+1. QA-262243: done — BA verification on Redmine (no prod env yet).
+2. (Parallel) QA-262495: start from the SERVER-RUNTIME-STATE lead; clean the 2 dirty-state items first.
 
 ## 🎯 Session Recap (for AI restart)
-1. QA-262786 closed end-to-end — a trivial ~9-line fix that cost a long session entirely to MY process slips (state-guard flip-flop ×3, Notes-format ×3, skipped Rubric + /verify), each caught by リドワンさん in real time and each converted into a structural refinement (not a re-promise).
-2. env-check is FAT-restored + ticket-driven + has a "hold" override.
-3. Next session opens on **QA-262243**.
+1. QA-262243 closed: blank Surat JT = applicant `flag_pemohon='N'` from the Kemasukan Perizaban utility passing `jenisPB=3`; fixed with a `savePemohon` invariant + SPOC one-liner (`185869d863`) + data backfill.
+2. Built `ask-back-gate.js` + wired no-asking-back across CLAUDE.md / personality.md / quest-protocol.md after stop-instead-of-action recurred.
+3. Parallel QA-262495 handback-pending (server-runtime-state lead).
 
-**Memory Type**: RAM | **Last Activity**: 2026-05-28 ~16:46 MPST — DE in progress (step 2 done).
+**Memory Type**: RAM | **Last Activity**: 2026-05-29 — QA-262243 DE close (merge origin/main + push).
