@@ -155,6 +155,18 @@ When working on a project, **always load its project file first** — project fi
 
 ---
 
+## 🗄️ Database & Entity Resolution
+
+> Added 2026-05-30 (merges the DB discipline trimmed out 2026-05-22 with みや's instructions), after a session where I guessed table/column names, queries errored, and I **fabricated** results. The resolving info was already in hand — the code entities I'd scanned, `DATABASE.md`, and the live DB keyed on `aplikasi_id`. (The `et_main[_uat].` **schema-prefix** rule lives in the **Entity-first SQL** bullet above; this section is the rest.)
+
+- **Load the schema knowledge file first** — `projects/coding-projects/active/etanah-knowledge/melaka/DATABASE.md` (from the TDD SQL exports; lives in the main-repo working tree, absent from worktrees) is the source of truth for table + column names. Trust it over assumptions; Glob + Read it at Phase 0 of any DB-touching work.
+- **The spine — `umm_aplikasi` + `aplikasi_id`**: a permohonan ID (`PTMLK/...`) = `umm_aplikasi.id_pengenalan`; from it get `aplikasi_id`, then reach every related table by joining on `aplikasi_id` (`umm_a_permohonan_tnh`, `umm_a_dok_keluaran`, `umm_a_tgsn`, …). Layer convention: `_p_` = AWAM/portal, `_a_` = PLU/internal (`_a_` ≠ approved).
+- **Entity-first, but don't skip the DB** — read the JPA `@Table`/`@Column` (or `DATABASE.md`) before naming a table/column; never infer from Java names. "Never infer" ≠ "skip the lookup": when the DB completes the answer or was asked for, query it — I have live access.
+- **100% complete chain check → save into `QA-NNNN.md`**: when scanning code for a fix, trace the FULL chain — XHTML/CC tag → bean/populator → entity getter → `@Table`/`@Column` → DB table+column → `aplikasi_id` join — and WRITE it into the quest's `QA-NNNN.md` (Debugging section). Reusable next cycle + auditable; don't keep it only in working memory.
+- **An errored/empty query is a STOP, never a fill-in** — read the actual error (wrong column / unqualified schema / wrong table), correct it, re-run. NEVER narrate a result the database did not return. This is verify-before-claim applied to SQL — the slip this section exists to kill.
+
+---
+
 ## ⚔️ Quest Workflow
 
 **🎯 THE CORE METHODOLOGY (the engine — keep it THIS simple).** This start-to-finish loop is what made debugging + implementation work so well; every gate / rule / hook below is a guardrail *on* this loop — **if any ever gets in its way, the loop wins.** (Restored to boot-load prominence 2026-05-30 per みや — it was intact in `quest-protocol.md` but buried under accretion + not boot-loaded.)
@@ -277,6 +289,8 @@ One-time per machine — see `.claude/new-machine-setup.md` (routed out of CLAUD
 - `/verify` — universal workflow-checkpoint verification (Phase 0 / Apply-done / Phase 1 close-out / DE Checklist D)
 
 **Historical reference**: `.claude/claude-md-amendments.md` — ✅ EMPTIED 2026-05-25; all 16 amendments absorbed into canonical homes (table inside the file documents final disposition). File kept for historical disposition log; no active amendments load from it. Boot-load remains as informational-only / low-priority; can be dropped from boot list in a future cleanup.
+
+*Version: 1.33 | Last updated: 2026-05-30 — Added **🗄️ Database & Entity Resolution** section: load `DATABASE.md` (schema source of truth) before SQL · `umm_aplikasi`+`aplikasi_id` spine (permohonan ID = `umm_aplikasi.id_pengenalan` → `aplikasi_id` → join everything) · `_p_`/`_a_` layer · entity-first-but-don't-skip-the-DB · 100%-chain-check saved into `QA-NNNN.md` · errored/empty query = STOP, never fabricate. Complements the schema-prefix sub-bullet under Entity-first SQL (added same day by the parallel quest-phase0 session). Built after a session where I guessed table/column names, the queries errored, and I fabricated results — when the resolving info (scanned code entities + `DATABASE.md` + live DB by `aplikasi_id`) was already in hand. Merged on top of the parallel session's v1.32 (core methodology + quest essentials), not clobbering it.*
 
 *Version: 1.32 | Last updated: 2026-05-30 — **Quest trigger-time essentials restored to boot-load** in the Quest Workflow section (Notes.txt canonical format · etanah-knowledge tier table · canonical task-state SQL · codebase-root + TRG-ban) + `quest-phase0` Workflow noted. Root cause named by みや 2026-05-30: the 2026-05-22 decomposition pushed operational quest detail into the non-boot-loaded `quest-protocol.md`, so quest *design/discussion* (not just live `/quest start`) ran on paraphrase → today's Notes-format + etanah-knowledge-load errors. Redundancy with protocol is intentional. Also shipped this session: built + wired + validated `quest-phase0` (Workflow-tool engine; fixed args-as-JSON-string delivery). ⚑ Flagged for a fresh-head session: **meta-layer effectiveness audit** — hook noise / false-positives (51 fake broken-pointers at boot, word-ui-gate misfires) / accumulation; みや 2026-05-30 asked "has the self-improving system backfired?" — assess net value + prune, don't defend. ALSO this session: **schema-qualify-tables DB rule** (Entity-first SQL — `et_main[_uat].` prefix; stop misreading missing-prefix errors as "connection lost") + the **core quest methodology** (Scout→Recon→Rubric) surfaced to boot-load prominence in the Quest Workflow section + quest SKILL.md — it was intact in `quest-protocol.md` but buried under accretion + not boot-loaded (みや 2026-05-30: "this is why it worked before; we REALLY need it back").*
 
