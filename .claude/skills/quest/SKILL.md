@@ -9,9 +9,34 @@ allowed-tools: Read, Glob, Write, Bash
 
 ARGUMENTS: $ARGUMENTS
 
+## 🎯 Core methodology — the engine (keep it simple)
+
+`Scout (trace the whole class chain, start→end · 100%-verify) → Recon (distrust + verify the Scout, prove it wrong) → Rubric (blast-radius + read sibling code for format/structure/style + emit 2-5 candidate fixes) → Apply`. This loop covers debugging → implementation in one straightforward pass; the phase machinery + skill invocations below **serve** it, never replace it. If a gate gets in the loop's way, the loop wins. Detail: `quest/quest-protocol.md`.
+
 ## /quest start <QA-number> <task-folder-path>
 
-Phase 0 — Accept the Quest:
+**Phase 0 runs as the `quest-phase0` Workflow (NEW 2026-05-29).** On `/quest start`, after deriving the ticket context, invoke the Workflow tool:
+
+```
+Workflow({ name: 'quest-phase0', args: {
+  qa, taskFolder, env,
+  codebaseRoot,            // 'etanah-pelupusan' (PLP/APPS) | 'etanah-awam' (AWAM) — by ticket subject
+  ticketType,              // bug | enhancement | template | cr
+  depth,                   // 'full' for bugs (adversarial Verify) | 'quick' otherwise; みや can override "deep"/"quick"
+  protocolPath: 'quest/quest-protocol.md',
+  knowledgeDir: 'projects/coding-projects/active/etanah-knowledge/melaka',
+  qaDocPath,               // projects/coding-projects/active/QA-<num>/QA-<num>.md
+  dbMcp                    // mcp__postgres-mlkuat__query | mcp__postgres-mlkfat__query — per ticket Env
+} })
+```
+
+- **Depth scaling** — `full` (Discovery → KnowledgeLoad → Recon → adversarial Verify → Synthesize) when `ticketType==='bug'`; `quick` (skips the adversarial fan-out) otherwise.
+- **Blast-radius by codebaseRoot** — `etanah-pelupusan` → codebase-only, **TRG BANNED** (ignored entirely). `etanah-awam` → **multi-state-aware** (other states share the portal).
+- The workflow **writes `1. Notes.txt`** (canonical format, `quest-protocol.md:373-403`) **and the QA-NNN.md investigation sections**, then returns a verified diagnosis + fix-shape.
+- After it returns: present the **Issue Checklist + diagnosis** to みや and **wait for confirmation before any code**. The interactive remainder (Rubric-pick → Apply → test → commit) stays human-gated in this skill — the workflow owns Phase 0 investigation ONLY.
+- **Fallback**: if the Workflow tool is unavailable (headless/cron), run the manual Phase 0 steps below directly.
+
+Phase 0 — Accept the Quest (manual steps / what the workflow encodes):
 
 1. Read every file in the provided task folder path (Glob + Read all)
 2. Parse: ticket description, bug/enhancement details, scope items, screenshots notes

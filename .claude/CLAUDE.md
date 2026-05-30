@@ -144,6 +144,7 @@ When working on a project, **always load its project file first** — project fi
 
 - **Working-analog first** (canonical: `.claude/auto-memory/feedback_simplify_and_reference.md`, auto-loaded; also injected as Phase-0 row #4 in `ticket-gate.js:87`): Etanah is a mature system — most patterns are already solved somewhere. Before any new fix, find the closest working analog (sibling urusan / sibling tugasan / sibling bean / sibling template / working entry in `tindakan.config.json` / `tugasan.config.json` / `template.config.json`) that solves a similar shape and read its config + code path. Match the existing shape. **Slip-log running count: 22 strikes (2nd most frequent slip category).** 「みや 2026-04-29 onwards: *"This is a mature system — things are catered for"*, *"Refer to other working urusans/tugasans"*, *"Scrutinize Codex's changes — don't just refer to them"*, *"Simplify"*.」
 - **Entity-first SQL**: query JPA entities via Hibernate annotations + DB tables, not by guessing column names. Verify table + column names before constructing SQL. Canonical task-state query: `UMM_A_TGSN + IND_TGSN + UMM_ALIRAN_KERJA + PCP_PENGGUNA + IND_PEJABAT`.
+  - **🚨 Schema-qualify EVERY table + read the error before blaming the connection** (added 2026-05-30 per みや — recurring misdiagnosis): table names in MCP postgres queries MUST carry the schema prefix — `et_main_uat.<table>` for `mcp__postgres-mlkuat__query` (UAT) and `et_main.<table>` for `mcp__postgres-mlkfat__query` (FAT). An unqualified table throws `relation "<table>" does not exist`, which I once misreported as **"lost connection to the DB"** — it was NOT a connection drop, just a missing prefix. **When a query fails, READ the actual error text first**: `relation does not exist` / `no schema` → add the `et_main[_uat].` prefix and retry; only a real timeout/network error is a connection issue. Never claim "DB connection lost" without quoting the actual error.
 - **Word-template-first lookup**: when a ticket touches a `.docx`, read `PelupusanWordCCMethodConstant.java` first to identify the populator + CC tags before grepping the template binary.
 - **PDF annotation extraction at Phase 0**: BA-provided PDFs contain Annot objects (FreeText comments, highlights, sticky notes) — extract via PyMuPDF (`annotations` skill) before treating the PDF text as the whole brief. Default Read tool misses annotations.
 - **Renderer-side overrides before cache theories**: when output looks wrong, grep for forced-override patterns (CENTER alignment overrides, hardcoded image dimensions, vMerge locks) at the renderer/util layer BEFORE blaming cache or build state.
@@ -155,6 +156,17 @@ When working on a project, **always load its project file first** — project fi
 ---
 
 ## ⚔️ Quest Workflow
+
+**🎯 THE CORE METHODOLOGY (the engine — keep it THIS simple).** This start-to-finish loop is what made debugging + implementation work so well; every gate / rule / hook below is a guardrail *on* this loop — **if any ever gets in its way, the loop wins.** (Restored to boot-load prominence 2026-05-30 per みや — it was intact in `quest-protocol.md` but buried under accretion + not boot-loaded.)
+
+`Scout → Recon → Rubric → Apply`
+
+1. **Scout** (Discovery) — spawn an agent that traces the **whole class chain, start → end** of the scan (full investigation, every `file:line`, 100%-verify). Produces a draft.
+2. **Recon** — **distrust the Scout's draft; try to prove it WRONG.** Accept only the claims that survive skeptical re-verification against the live code.
+3. **Rubric** — check the **blast radius** + read **sibling code** (similar urusan / permohonan / template) to match the existing format/structure/style, then emit **2-5 candidate fixes** and pick the best.
+4. **Apply** — implement the chosen fix.
+
+One straightforward pass covers debugging → implementation. Be as straightforward as possible; don't let the machinery smother it. Full detail in `quest-protocol.md` (Scout sub-protocol · adversarial Recon :574 · Rubric 2-5 options :675 · Blast radius :808 · sibling-check :1087).
 
 **Protocol file**: `quest/quest-protocol.md` — full workflow body (Phase 0/1/2 phases, Discovery → Recon → Simulate → Rubric → Apply → Verify → Commit → Push → Wrap checkpoints, Quest State Transitions, extended `active.txt` schema, Debug Mode Rituals). Load it when any trigger below fires.
 
@@ -195,6 +207,22 @@ When working on a project, **always load its project file first** — project fi
 ⬜ env-check run (UAT/FAT target confirmed per ticket Env)
 ⬜ Recon Universal Checks block emitted (per quest-protocol.md Recon section)
 ```
+
+**Quest trigger-time essentials** (restored to boot-load 2026-05-30 — these live fully in `quest/quest-protocol.md` but are summarized here so they're in context during quest *design/discussion*, not only at `/quest start`. The 2026-05-22 decomposition pushed them into the non-boot-loaded protocol → paraphrase errors when discussing quests without a live `/quest start`; redundancy is intentional per みや 2026-05-25):
+
+- **etanah-knowledge tiered load** (protocol:85-93): ALWAYS load `index.md + DOMAIN-GLOSSARY + MODULE-ARCHITECTURE + BUG-BESTIARY + DEFERRED-CRITICAL-ISSUES`; CONDITIONAL by layer — `DATABASE`(DB) · `FLOWABLE-WORKFLOWS`(workflow) · `JSF-WIRING`(UI) · `FLOW-TRACES`(deep-debug) · `FRONTEND-PATTERNS`(UI-enhance) · `URUSAN-FLOW`(cross-urusan) · `PERANAN-MAP`(role). These files live in the **main repo working tree** (untracked-confidential — absent from worktrees; point reads at main).
+
+- **`1. Notes.txt` canonical format** (protocol:373-403) — 3 lines per entry, NO bloat / env / extra-tugasan / annotations:
+  - single: `N) <URUSAN> — <TUGASAN>` / `<PERMOHONAN_ID>` / `<login>`
+  - multi-urusan: one 3-line entry per urusan
+  - two-entry (BA app past target tugasan): `0) BA — past <target>, currently <state>` / id / pengguna  +  `1) <PLP|AWAM> — <ENV> — <TUGASAN>` / sim-id / pengguna
+  - Written right after Redmine retrieval (`node quest/notes.js`), at Scout completion, and on mid-conversation ID mention; login `TBD` if DB-blocked — never defer the whole file.
+
+- **Canonical task-state SQL** (auto-pengguna, protocol:518-541): join `UMM_A_TGSN → IND_TGSN` (tugasan kod/nama) + `UMM_ALIRAN_KERJA` + `PCP_PENGGUNA` (pengguna_semasa login) + `IND_PEJABAT`; filter `FLAG_AKTIF='Y'`. Run at END of Recon → feeds Notes.txt.
+
+- **Codebase root + blast-radius**: pick `etanah-pelupusan` (PLP/APPS) vs `etanah-awam` (AWAM) by ticket subject. **TRG is BANNED from pelupusan blast-radius** (ignore it entirely — codebase-only scope); AWAM = multi-state-aware. Full Recon Universal Checks: `quest-protocol.md` Recon section.
+
+**Quest Phase-0 workflow** (NEW 2026-05-30): `/quest start` auto-invokes the `quest-phase0` Workflow (`.claude/workflows/quest-phase0.js`) — Discovery → etanah-knowledge load → Recon → adversarial Verify (bugs) → Synthesize; writes Notes.txt + QA-NNN.md; `depth=full` for bugs / `quick` otherwise. Validated 2026-05-30 (QA-260508). Caveat: pass `args` such that the script's `JSON.parse(args)` guard fires (the Workflow tool delivers args as a JSON string).
 
 **Skills**: `/quest start|hold|resume` · `/familiar` (sub-agent for >500-line reads) · `/env-check` · `/verify` · `/appraise` · `/checklist`
 
@@ -249,6 +277,8 @@ One-time per machine — see `.claude/new-machine-setup.md` (routed out of CLAUD
 - `/verify` — universal workflow-checkpoint verification (Phase 0 / Apply-done / Phase 1 close-out / DE Checklist D)
 
 **Historical reference**: `.claude/claude-md-amendments.md` — ✅ EMPTIED 2026-05-25; all 16 amendments absorbed into canonical homes (table inside the file documents final disposition). File kept for historical disposition log; no active amendments load from it. Boot-load remains as informational-only / low-priority; can be dropped from boot list in a future cleanup.
+
+*Version: 1.32 | Last updated: 2026-05-30 — **Quest trigger-time essentials restored to boot-load** in the Quest Workflow section (Notes.txt canonical format · etanah-knowledge tier table · canonical task-state SQL · codebase-root + TRG-ban) + `quest-phase0` Workflow noted. Root cause named by みや 2026-05-30: the 2026-05-22 decomposition pushed operational quest detail into the non-boot-loaded `quest-protocol.md`, so quest *design/discussion* (not just live `/quest start`) ran on paraphrase → today's Notes-format + etanah-knowledge-load errors. Redundancy with protocol is intentional. Also shipped this session: built + wired + validated `quest-phase0` (Workflow-tool engine; fixed args-as-JSON-string delivery). ⚑ Flagged for a fresh-head session: **meta-layer effectiveness audit** — hook noise / false-positives (51 fake broken-pointers at boot, word-ui-gate misfires) / accumulation; みや 2026-05-30 asked "has the self-improving system backfired?" — assess net value + prune, don't defend. ALSO this session: **schema-qualify-tables DB rule** (Entity-first SQL — `et_main[_uat].` prefix; stop misreading missing-prefix errors as "connection lost") + the **core quest methodology** (Scout→Recon→Rubric) surfaced to boot-load prominence in the Quest Workflow section + quest SKILL.md — it was intact in `quest-protocol.md` but buried under accretion + not boot-loaded (みや 2026-05-30: "this is why it worked before; we REALLY need it back").*
 
 *Version: 1.31 | Last updated: 2026-05-28 — Added **Explanation & Output-Format Discipline** section (plain-first/technical-second + table/arrow/diagram-default). Recovered from the pre-trim `Output-Format-Discipline` (commit 51606ea, decomposed out 2026-05-22) + merged with personality.md Show-first/Plain-vs-technical/Arrow-flow rules, after みや flagged post-trim explanations regressed to prose walls (QA-262243). Full bodies stay in personality.md; CLAUDE.md carries the always-on boot summary.*
 
