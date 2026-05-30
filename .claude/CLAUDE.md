@@ -40,6 +40,8 @@ Every explanation MUST obey both rules:
 
 Reach for a structure BEFORE writing a paragraph.
 
+**3. Anchor every explanation to what みや can SEE** (added 2026-05-31 per みや). Explain in terms of the **screen field labels** he sees (e.g. the dropdown *"Syarat-Syarat Nyata"*, the panel *"Maklumat Tanah"*), the **actual DB table + columns** (or a query result he can run), and **code** — NOT internal abstractions ("the VO", "the populator fallback") on their own. For any "where does X get its data / how does data flow" question, default to a **`UI → code → table` arrow** (what you see on screen → which method fetches it → which table/column it lands in). One arrow line communicates the data-flow faster than paragraphs. みや 2026-05-31: *"a simple arrow based on UI > code > table would've been understood straight away… communicate using what I can see — tables, query, code, UI through labels."*
+
 **Why**: post-trim, explanations regressed to interleaved prose walls — みや 2026-05-28: *"your explanation sucks after CLAUDE.md trimming."* These two rules were the cure pre-trim; restored at boot so they fire every time.
 
 ---
@@ -290,6 +292,8 @@ One-time per machine — see `.claude/new-machine-setup.md` (routed out of CLAUD
 - `/verify` — universal workflow-checkpoint verification (Phase 0 / Apply-done / Phase 1 close-out / DE Checklist D)
 
 **Historical reference**: `.claude/claude-md-amendments.md` — ✅ EMPTIED 2026-05-25; all 16 amendments absorbed into canonical homes (table inside the file documents final disposition). File kept for historical disposition log; no active amendments load from it. Boot-load remains as informational-only / low-priority; can be dropped from boot list in a future cleanup.
+
+*Version: 1.35 | Last updated: 2026-05-31 — Added rule **3. Anchor every explanation to what みや can SEE** to Explanation & Output-Format Discipline: use screen field labels (UI) + real DB table/columns (or query result) + code, not bare internal abstractions; default to a `UI → code → table` arrow for any data-flow / "where does X get its data" question. Per みや 2026-05-31 (QA-258004): a UI→code→table arrow would've landed immediately vs the prose/VO-jargon explanation.*
 
 *Version: 1.34 | Last updated: 2026-05-30 — Added **Smallest change + programmer-written convention** rule to Etanah Non-Negotiable Rules (per みや): keep code edits as small/specific as the fix needs; match the convention written by THIS system's own programmers (sibling etanah-* code), NOT framework-provided classes or Java-standard idioms, when the in-system pattern is sound; the copied analog must be real in-repo programmer code. Operationalizes "Working-analog first" + the Rubric sibling-read step. Added after a QA-258004 cycle where みや asked for smaller, convention-following changes.*
 
