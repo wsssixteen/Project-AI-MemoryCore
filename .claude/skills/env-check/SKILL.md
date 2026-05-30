@@ -99,6 +99,19 @@ When switching `etanahDS`, leave Audit + DMS alone. The skill NEVER proposes edi
 - Pelupusan-side data → `mcp__postgres-mlkuat__query` (UAT) or `mcp__postgres-mlkfat__query` (FAT)
 - AWAM-side data → `mcp__postgres-mlkuat__query` (rizab/master data overlaps mkit enough for read-only queries; no direct mkit MCP wired)
 
+### 🔴 LIVE-SCHEMA VERIFICATION — mandatory FIRST step before trusting ANY FAT/UAT query (HARD RULE, added 2026-05-30 after the et_main_15052026 snapshot waste)
+
+The FAT/UAT MCPs must connect as the app's datasource user (FAT = `et_main`, UAT = `et_main_uat`) — **NOT `et_reporting`**. `et_reporting` only has SELECT on the **`et_main_15052026` reporting snapshot**, which has DIVERGED from live `et_main` (permohonan IDs differ). A query against the snapshot returns real-looking rows that **do not exist in みや's running app** → wasted time.
+
+**At the FIRST FAT/UAT query of a session, run a live-access probe:**
+```
+SELECT current_user;                          -- must be the app user (et_main / et_main_uat), NOT et_reporting
+SELECT 1 FROM et_main.umm_aplikasi LIMIT 1;   -- (et_main_uat for UAT) — must succeed
+```
+If `current_user = et_reporting`, OR the probe errors `permission denied for schema et_main`, OR only a dated snapshot schema (`et_main_<date>`) is visible → **FLAG IMMEDIATELY + STOP.** Do NOT proceed on snapshot data, do NOT hand みや any permohonan ID, until live access is confirmed. Connection user lives in `~/.claude.json` (mlkfat/mlkuat MCP); changing it needs a Claude Code restart.
+
+**Why** (2026-05-30): pulled `PTMLK/01/L/PRU/2026/15` from the et_reporting snapshot; it didn't exist in みや's live FAT → wasted his time. Never trust a FAT/UAT query without confirming live-schema access first.
+
 ## CAS URL switch mechanic (rule, 2026-05-11)
 
 The two MLK `cas.url` lines coexist in `environment.properties`; switching is done by toggling the `#` comment marker, NOT by editing the URL text. Both UAT (AWAM and PLP) use the same UAT CAS URL.

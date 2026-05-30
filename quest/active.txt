@@ -1,5 +1,21 @@
 active:
 
+qa=QA-259702
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\51. QA #259702 - PRU - Pembetulan pada template Ringkasan Risalat dan Risalat MMKN - PT
+qa_doc=projects/coding-projects/active/QA-259702/QA-259702.md
+phase=0
+status=active
+ticket_type=bug
+current_phase=Discovery
+local_test_confirmed=false
+env=FAT (per Description Env: FAT, line 9) — NOT switched; confirm via /env-check at scope sign-off.
+status_redmine=New (synced 2026-05-29); assigned_to 1311 (みや) by Aaron Loh 2026-05-26 "please assist".
+issue_one_liner=PRU Ringkasan Risalat: DUN tidak papar + Lokasi/Keadaan-Tanah default ayat missing + Ulasan YB ADUN Kawasan not pulled; REMOVE Perihal Permohonan row + Nama YB from Ulasan Teknikal; Perakuan PTD must show Syor choice (Lulus->Boleh dipertimbangkan / Tolak->Tidak dipertimbangkan). Risalat MMKN PTG section blank in brief -> BA-Q. 7 items.
+test_app=NOT yet identified — Notes.txt empty; query a PRU app at the Ringkasan-Risalat tugasan at Recon.
+scope_anchor=7 BA-highlighted items on Ringkasan Risalat (1.1-1.7). Risalat MMKN PTG sub-section is blank in the brief -> BA-Q, OUT of scope until BA fills it. Do NOT expand beyond the 7 items.
+notes:
+  - 2026-05-30: /quest start. Phase 0 accept. Task-folder read (Description.txt + History.txt; Notes.txt empty). Classified bug (template-correction; items 1.4/1.5 CR-flavored removals). QA-259702.md initialized from template. etanah-knowledge-load skill is an orphan (boot INV-4) -> bypassed, manual knowledge load at Recon. Awaiting みや scope confirmation before Recon.
+
 qa=QA-262495
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\48. QA #262495 - PPJK - Semakan Risalat MMKN-PDT - Klik kemaskini - loading for too lon
 qa_doc=projects/coding-projects/active/QA-262495/QA-262495.md
