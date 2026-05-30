@@ -850,6 +850,9 @@ Example (slip): ~~`Test on PTMLK/01/L/PLPS/2026/1 at PYSK`~~ — missing login.
 4. **Parked / alternative hypotheses** — things we haven't fully disproven but deprioritized (so if primary fix fails, we know where to go next)
 5. **Triage ladder if fix fails** — ordered checks: "If X still broken, breakpoint at A:line, inspect B. If A is fine, check C..." Concrete, file:line specific.
 6. **What a different root cause would look like** — early warning signs that the theory is wrong + which subsystem to revisit
+7. **Failures hit this cycle (MANDATORY — added 2026-05-30)** — every failure encountered this cycle MUST be listed EXPLICITLY, never buried inside "current state": (a) **wrong / non-existent test data handed back** — cite the bad ID, why it was wrong, and the fix; (b) **runtime errors after the fix** — NPE / stack trace + the class chain + whether mine or pre-existing; (c) **env / DB-access / tooling failures**. A failure that next-session-me would otherwise re-pay is the single most important thing to persist.
+
+**active.txt sync (MANDATORY — added 2026-05-30)**: the SAME save MUST reconcile the ticket's `quest/active.txt` entry — update `phase` / `current_phase` to current reality AND append a `notes:` line summarizing the cycle outcome INCLUDING the failures from sub-part 7. The `QA-<num>.md` doc is the detail; `active.txt` is the INDEX the Session Briefing reads at boot — if the failure isn't in `active.txt`, boot cannot surface it. **Why** (2026-05-30 slip): QA-259702's §0 doc captured the wrong-permohonan + NPE failures, but `active.txt` stayed at `phase=0 / Discovery / accept-line-only`, so boot showed the quest as un-started and the failures were invisible. Root category: knowledge-transfer-incompleteness.
 
 **On session boot**: if `quest/active.txt` shows `phase < complete` for a ticket, the session briefing surfaces that ticket's `QA-<num>.md` Resumption section as read-before-acting context.
 
@@ -1232,6 +1235,8 @@ Fire as soon as heard, mid-conversation — mutate `active.txt` immediately, sam
 **Behaviour for Ruri at Hand-back checkpoint:**
 - Before emitting "▶ YOUR MOVE" block: invoke #1-#3 (always); invoke #4 conditionally; check #5 condition
 - Each invocation produces a visible-gate output in the response — みや can audit what fired
+
+*Protocol version: 3.6 — 2026-05-30 (Mid-Quest Investigation Trail: added required sub-part **7 "Failures hit this cycle"** (wrong test-data handed back / post-fix runtime errors / env-tooling failures) + a mandatory **active.txt-sync** clause (phase + notes-incl-failures). Driven by QA-259702: the §0 doc captured the wrong-permohonan + NPE failures but active.txt stayed at phase=0/Discovery, so the Session Briefing couldn't surface them. Root category: knowledge-transfer-incompleteness.).*
 
 *Protocol version: 3.5 — 2026-05-26 (Status enum extended 6→7: added `archived-shipped-by-other` for tickets where a colleague's commit landed the fix (Ruri verified-only or DISCOVERY-only). EXCLUDES the ticket from Ruri's cadence/KPI counts. Requires `shipped_by=` + `ruri_code_contribution=` fields. Driven by QA-262783 (faizudin shipped) where plain `archived` conflated Ruri's cadence. Also banned 2 more legacy strings: `awaiting-phase-2` and `local-test-confirmed` — caught in active.txt drift sweep, both retroactively normalized to `closed`.).*
 
