@@ -418,7 +418,7 @@ asmida@melaka.gov.my
 
 | File / location | Owner | Ruri may write? |
 |---|---|---|
-| `1. Notes.txt` | みや (his personal scratch — understanding/memory) | ❌ **Read-only for Ruri.** Never edit, append, or auto-update. |
+| `1. Notes.txt` | Shared — test-data log | ✅ **Ruri writes it, but ONLY via `node quest/notes.js`** (locked 3-line format; canonical spec = `feedback_task_folder_ownership.md`). NEVER hand-write; NEVER add prose / sections / "what to test" / caveats / rebuild steps — those belong in the chat ▶ YOUR MOVE block, never the file. *(The old "read-only / never write" handling is SUPERSEDED 2026-05-12 by the notes.js workflow — see Why below.)* |
 | `0. Brief/Description.txt` | Source of truth — original ticket text + BA replies | ✅ Append BA replies / scope clarifications with clear separator + dated header (preserves history) |
 | `0. Brief/<screenshots>` | みや (BA-attached or みや-curated) | ❌ Don't add or replace |
 | `0. Brief/<numbered subfolders>` (e.g. `1. Clarification/`) | みや (back-and-forth artifact bins) | ❌ Don't add files unless みや asks |
@@ -426,7 +426,7 @@ asmida@melaka.gov.my
 | `2. Fix/` | Applied fix artifacts | ✅ Write Fix.txt summary on Phase 2 |
 | Project subfolder `projects/coding-projects/active/<ticket>/` | Ruri's investigation workspace | ✅ Free use — handoff, walkthrough, learning docs |
 
-**Why**: 2026-04-30 — みや clarified that `1. Notes.txt` is his personal aide-mémoire, not a ticket-shared doc. Scope changes from BA must update `Description.txt` (the brief / source of truth), not Notes. Without this rule, Ruri would conflate the two and overwrite みや's memory aids with auto-updates.
+**Why**: 2026-04-30 — みや clarified that `1. Notes.txt` must NOT hold Ruri's investigation prose (that goes to the project subfolder). Scope changes from BA still update `Description.txt`, not Notes. **SUPERSEDED 2026-05-12+**: Notes.txt IS Ruri-written now — but ONLY as the locked 3-line test-data log via `node quest/notes.js`. The surviving discipline is "no investigation prose / no verbose sections in Notes.txt", NOT "never write it". **(2026-05-30: a verbose hand-written Notes.txt recurred precisely because this stale "read-only" row still contradicted the notes.js workflow — row corrected so the contradiction can't mislead again. Canonical format authority = `feedback_task_folder_ownership.md`.)**
 
 **On BA reply append**: format is
 ```
@@ -732,6 +732,18 @@ Test data is prepared at TWO points, never deferred:
 
 Before the first Edit lands at Apply:
 0. **Rubric ACTUALLY EMITTED — NON-SKIPPABLE** (added 2026-05-28 per みや after QA-262786 skipped-Rubric slip): the Rubric section (fix-shape options + Multi-Perspective Scrutiny + **Impact/Usage trace**) must have been emitted THIS quest. Proposing a fix-shape or applying an Edit without a prior Rubric is BANNED. **Impact/Usage trace** = per touched field/method: (a) all WRITERS (later-override risk on this code path), (b) the READER/getter, (c) CALLERS of the init method (re-invoked?), (d) for state-scoped changes, BRANCH TOPOLOGY (divergence + merge path — NOT folder/remote). This is the pending "Integration Analysis sub-ritual" (todo Q1), now mandatory.
+0.5. **Codebase Convention Check — pre-edit gate 🔑 (added 2026-05-30 per みや, QA-258004)**: before writing a single new line, decide the VERB — new code is the LAST resort. Emit this table FILLED (with `file:line` cites) BEFORE the first Edit:
+
+    | Verb | Question | Cite |
+    |---|---|---|
+    | **USE** | Does a method/util/constant/VO already do this as-is? (sweep `_SET _LIST _MAP is<Field>Valid` + sibling methods — READ FULL BODIES, not signatures) | `name @ path:N` |
+    | **INSERT-INTO** | Can this extend an existing method / config entry / dispatch table instead of a new one? | `path:N` |
+    | **UPDATE** | Should I modify an existing method rather than add a parallel one? | `path:N` |
+    | **COPY-FROM** | Closest sibling that already solves this shape (urusan / tugasan / bean / template / config entry) — mirror ITS structure | `path:N` |
+
+    Only if all four are exhausted → write new, then **convention-match to the nearest sibling**: **placement** (right section/region, NOT appended at file-bottom — e.g. a private helper goes with peer helpers, never under `// Getters and Setters`) · **naming** (sibling idiom: prefix · casing · language) · **comment density** (`feedback_no_extra_comments.md` — ≤1 WHY-line, no commented-out original, no narration) · **error/return idiom** (copy the sibling's try/catch · null-guard · return-type; confirm the caller consumes what you return). **Verify against real code, NEVER memory or AI-generated reference** (method exists + arity + field [Java field-shadowing] via codegraph/source; SQL table/column entity-first; scrutinize any AI/Codex line before citing). A near-clone of an existing method is a STOP signal → back up to USE/UPDATE.
+
+    *Consolidates the pre-trim "Existing utility sweep + Working precedent" (8-step Tier-1, lost in the 2026-05-22 trim `9d17887`) + adds the never-ruled placement/comment dimensions. **References, does NOT restate/override**: UC9 Sibling-structure read (Recon, `:51`) · the boot Working-analog bullet (CLAUDE.md) · Existing-utility-sweep (`Etanah-Codebase-Read.md:61`) · `feedback_simplify_and_reference.md`. Blast-radius → item 0's Impact/Usage trace; Preservation + dead-branch audit → Apply close.*
 1. env-check ✅ (re-verified at Apply entry per env-check skill)
 2. Predicate Box emitted with file:line evidence
 3. Inline confidence on the recommended Rubric option = HIGH
@@ -850,6 +862,9 @@ Example (slip): ~~`Test on PTMLK/01/L/PLPS/2026/1 at PYSK`~~ — missing login.
 4. **Parked / alternative hypotheses** — things we haven't fully disproven but deprioritized (so if primary fix fails, we know where to go next)
 5. **Triage ladder if fix fails** — ordered checks: "If X still broken, breakpoint at A:line, inspect B. If A is fine, check C..." Concrete, file:line specific.
 6. **What a different root cause would look like** — early warning signs that the theory is wrong + which subsystem to revisit
+7. **Failures hit this cycle (MANDATORY — added 2026-05-30)** — every failure encountered this cycle MUST be listed EXPLICITLY, never buried inside "current state": (a) **wrong / non-existent test data handed back** — cite the bad ID, why it was wrong, and the fix; (b) **runtime errors after the fix** — NPE / stack trace + the class chain + whether mine or pre-existing; (c) **env / DB-access / tooling failures**. A failure that next-session-me would otherwise re-pay is the single most important thing to persist.
+
+**active.txt sync (MANDATORY — added 2026-05-30)**: the SAME save MUST reconcile the ticket's `quest/active.txt` entry — update `phase` / `current_phase` to current reality AND append a `notes:` line summarizing the cycle outcome INCLUDING the failures from sub-part 7. The `QA-<num>.md` doc is the detail; `active.txt` is the INDEX the Session Briefing reads at boot — if the failure isn't in `active.txt`, boot cannot surface it. **Why** (2026-05-30 slip): QA-259702's §0 doc captured the wrong-permohonan + NPE failures, but `active.txt` stayed at `phase=0 / Discovery / accept-line-only`, so boot showed the quest as un-started and the failures were invisible. Root category: knowledge-transfer-incompleteness.
 
 **On session boot**: if `quest/active.txt` shows `phase < complete` for a ticket, the session briefing surfaces that ticket's `QA-<num>.md` Resumption section as read-before-acting context.
 
@@ -1232,6 +1247,10 @@ Fire as soon as heard, mid-conversation — mutate `active.txt` immediately, sam
 **Behaviour for Ruri at Hand-back checkpoint:**
 - Before emitting "▶ YOUR MOVE" block: invoke #1-#3 (always); invoke #4 conditionally; check #5 condition
 - Each invocation produces a visible-gate output in the response — みや can audit what fired
+
+*Protocol version: 3.7 — 2026-05-30 (Apply item **0.5 "Codebase Convention Check — pre-edit gate"**: a VERB table (USE / INSERT-INTO / UPDATE / COPY-FROM, each with `file:line` cite) that makes new code the last resort, then a placement / naming / comment-density / error-idiom convention-match against the nearest sibling. Recovers the pre-trim "Existing utility sweep + Working precedent" (8-step Tier-1, lost in the 2026-05-22 trim `9d17887`) + adds the never-ruled placement/comment dimensions. References UC9 / Working-analog / Etanah-Codebase-Read.md:61 / feedback_simplify_and_reference.md without restating them. Driven by QA-258004: new helpers dropped under `// Getters and Setters` with verbose comments + too-narrow change-scope — an approach Rubric ran but never a code-convention one. Root category: best-practices-not-consulted.).*
+
+*Protocol version: 3.6 — 2026-05-30 (Mid-Quest Investigation Trail: added required sub-part **7 "Failures hit this cycle"** (wrong test-data handed back / post-fix runtime errors / env-tooling failures) + a mandatory **active.txt-sync** clause (phase + notes-incl-failures). Driven by QA-259702: the §0 doc captured the wrong-permohonan + NPE failures but active.txt stayed at phase=0/Discovery, so the Session Briefing couldn't surface them. Root category: knowledge-transfer-incompleteness.).*
 
 *Protocol version: 3.5 — 2026-05-26 (Status enum extended 6→7: added `archived-shipped-by-other` for tickets where a colleague's commit landed the fix (Ruri verified-only or DISCOVERY-only). EXCLUDES the ticket from Ruri's cadence/KPI counts. Requires `shipped_by=` + `ruri_code_contribution=` fields. Driven by QA-262783 (faizudin shipped) where plain `archived` conflated Ruri's cadence. Also banned 2 more legacy strings: `awaiting-phase-2` and `local-test-confirmed` — caught in active.txt drift sweep, both retroactively normalized to `closed`.).*
 

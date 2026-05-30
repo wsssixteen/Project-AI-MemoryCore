@@ -12,6 +12,13 @@
  * frontmatter `decay-date: YYYY-MM-DD`. Hook scans all .claude/skills/* /SKILL.md;
  * if decay-date is reached or past → flag to stderr. If within 3 days → warning.
  * Current decay-pending: `rubric` (2026-06-07, plan Phase 4 absorption).
+ *
+ * v1.2 2026-05-30 — Absorbed DE step 11's worktree cleanup (per みや): now also
+ * REMOVES merged claude/* worktree DIRECTORIES (`git worktree remove`) BEFORE
+ * deleting their branches — so stranded worktrees self-clean at boot instead of
+ * at session-end DE. Never removes the current worktree or any dirty/unmerged one
+ * (plain `git worktree remove`, no --force, refuses those). Branch -d stays
+ * merged-only. DE step 11 (c)/(d)/(e) retired to a pointer here.
  */
 const { execSync } = require('child_process');
 const fs = require('fs');
@@ -30,14 +37,38 @@ try {
   // 1. Prune stale worktree records
   run('git worktree prune');
 
-  // 2. Find merged claude/* worktrees + branches
+  // 2. Find merged claude/* branches
   const mergedBranches = (run('git branch --merged main') || '').split('\n')
     .map(s => s.trim().replace(/^\*\s*/, ''))
     .filter(b => /^claude\//.test(b));
 
   if (mergedBranches.length === 0) process.exit(0);
+  const mergedSet = new Set(mergedBranches);
 
-  // 3. Delete the merged claude/* branches
+  // 3. Remove merged claude/* WORKTREE DIRECTORIES (absorbed from DE step 11, 2026-05-30).
+  //    Map worktree -> branch via porcelain; never self-remove the current worktree.
+  //    Plain `git worktree remove` (no --force) refuses dirty/locked worktrees → safe;
+  //    a merged branch means its content is already in main, so removal loses nothing.
+  const norm = p => path.resolve(p).replace(/\\/g, '/').toLowerCase();
+  const here = norm(projectRoot);
+  const wtPorcelain = run('git worktree list --porcelain') || '';
+  let cur = {};
+  for (const line of wtPorcelain.split('\n')) {
+    if (line.startsWith('worktree ')) cur = { path: line.slice(9).trim() };
+    else if (line.startsWith('branch ')) cur.branch = line.slice(7).trim().replace(/^refs\/heads\//, '');
+    else if (line.trim() === '') {
+      if (cur.path && cur.branch && mergedSet.has(cur.branch) && norm(cur.path) !== here) {
+        run(`git worktree remove "${cur.path}"`);
+      }
+      cur = {};
+    }
+  }
+  if (cur.path && cur.branch && mergedSet.has(cur.branch) && norm(cur.path) !== here) {
+    run(`git worktree remove "${cur.path}"`);
+  }
+
+  // 4. Delete the merged claude/* branches (now that their worktrees are gone;
+  //    `git branch -d` still refuses any branch checked out in a remaining worktree → safe)
   for (const b of mergedBranches) {
     run(`git branch -d "${b}"`);
   }
