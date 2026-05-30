@@ -2,32 +2,34 @@
 
 > **AGENT_STATE discipline** — High-Level Objective · Current Progress · Active Context · Blockers · Immediate Next Steps. Read at boot; updated at session end (DE Step 2).
 
-**Current session**: 2026-05-30 (Sat) Session 2 — QA-259702 resumed and made TESTABLE; failure-save gap fixed at root; worktree cleanup moved DE→silent boot; new Stop-Point Summary ("Test Scenario") format. Worktree `xenodochial-albattani-90d7ce`.
+**Current session**: 2026-05-30 (Sat) — TWO parallel sessions ran today. **(A)** QA-259702 (PRU Ringkasan Risalat), worktree `xenodochial-albattani-90d7ce` — DE'd + pushed earlier (origin/main 98ea109). **(B)** QA-258004 (MCL Surat Keputusan Lulus), worktree `fervent-cohen-3043a3` — this DE. Both quests are Phase 1 Verify, fix applied + uncommitted on etanah `mlk/master`, awaiting みや live test.
 
 ## High-Level Objective (AGENT_STATE)
-QA-259702 (PRU Ringkasan Risalat) → hand みや a live, deployed, testable app, then Phase 1 close. Test app + deployment now CONFIRMED; awaiting みや's live test next session.
+- **(B) QA-258004** — MCL Surat Keputusan Lulus letter prints blank Syarat Nyata + Sekatan Kepentingan + the Notis-5A bayaran amount, because the stored letter is generated once and never regenerated on data change. Deliver a deployed, testable UAT build, then Phase 1 close.
+- **(A) QA-259702** — hand みや a live, deployed, testable PRU app, then Phase 1 close. (Carried from the parallel session; testable, awaiting his live test.)
 
 ## Current Progress (AGENT_STATE)
-- **QA-259702 — Phase 1 APPLIED + NOW TESTABLE.** Live FAT DB reachable (et_main). Test app = `PTMLK/02/L/PRU/2026/12` @ `nor.aini@melaka.gov.my` at tugasan `PRRMMKNPTG` (Perakuan Risalat MMKN - PTG) — the ONLY active PRU app on FAT. New `TemplateRingkasanRisalatPRU.docx` (27.3KB) + MLK `template.config.json` PRU-split BOTH confirmed in the 17:22 redeployed WAR (TRG split absent = correct). `1. Notes.txt` rewritten via `notes.js`. ⚠️ same app throws the QA-262495 concurrent doc-gen NPE on document generation (pre-existing, build 29/5) — may block the render; the 17:22 restart is the best NPE-clear window.
-- **Failure-save gap fixed (meta):** last session saved the wrong-ID + NPE failures to `QA-259702.md §0` + RAM but NOT `active.txt` (the boot-visible index) → briefing couldn't surface them. `quest-protocol.md` **v3.6**: Investigation Trail sub-part **7 "Failures hit this cycle"** + mandatory **active.txt-sync** clause. `active.txt` reconciled (phase 1, current_phase=Verify, test_app resolved, failures logged). slip-log entry (`knowledge-transfer-incompleteness`, 2nd/7d).
-- **Worktree cleanup → silent SessionStart (per みや):** `worktree-cleanup-boot.js` **v1.2** now removes merged `claude/*` worktree DIRS (not just branches), merged-only/never-current. DE step 11 (c/d/e) retired → pointer. The 11 stranded worktrees auto-clean next boot.
-- **New Stop-Point Summary format ("Test Scenario"):** skill `stop-point-summary` + `personality.md` rule. "Test Scenario" = full stage summary (TABLE + Notes + Next) at testing hand-back; "Test Data" = bare echo; title varies by stage; emit at EVERY stop so みや isn't left hanging.
+- **(B) QA-258004 — Phase 1 APPLIED + DEPLOYED, awaiting test.** Root cause = stale stored `SRT_KPTSN_PLP` document (generated once via `initNewDokumenList`, never regen-on-change; view serves the stored DMS blob). Fix (Option A, mirrors `PelupusanHelper.onJana:393`) in `MlkMaklumatTanahPemberimilikanForm.java`: **UNCONDITIONAL** `invalidateSuratKeputusanLulusForRegeneration()` in the MCL save branch (any page Simpan → delete the editable stored letter → next view regenerates with live data; status-gated to skip PERAKU/CETAK/SELESAI signed letters) + an `onPremiumChange(...)` stub for the **QA-260955** regression (MethodNotFoundException that blocked the amount scenario). `mvn package` BUILD SUCCESS. Proper Maven WAR (413MB, has the META-INF/maven `pom.properties` the WTP WAR lacked → cures the `appVersionMap` NPE at JBoss startup) deployed to JBoss. env switched FAT→**UAT** (no MCL test data on FAT).
+- **(B) Process work this session:** (1) a method-**placement/verbose-comment** slip (new helpers dropped under `// Getters and Setters`, long comments, change-scope too narrow) — reverted + re-derived via workflow `w608xiy95`; slip-logged. (2) Built the cure into the protocol: **quest-protocol.md Apply item 0.5 — Codebase Convention Check** (USE/INSERT-INTO/UPDATE/COPY-FROM verb table + placement/naming/comment/error-idiom match before any new code), recovering the pre-trim "Existing utility sweep" lost in the 2026-05-22 trim.
+- **(A) QA-259702** — Phase 1 applied + testable: app `PTMLK/02/L/PRU/2026/12` @ `nor.aini@melaka.gov.my` at `PRRMMKNPTG`; new `TemplateRingkasanRisalatPRU.docx` + MLK `template.config.json` PRU-split confirmed in the deployed WAR. ⚠️ same app throws the QA-262495 concurrent doc-gen NPE on doc generation (pre-existing). Failure-save gap fixed → quest-protocol v3.6 (Investigation Trail "Failures hit this cycle" + active.txt-sync). Worktree cleanup → silent boot hook v1.2. New "Test Scenario" / Stop-Point Summary format.
 
 ## Active Context (AGENT_STATE)
-- etanah-pelupusan: deployed WAR (17:22 redeploy) HAS my changes. env = FAT (etprdmlk / et_main). Server restarted 17:22, healthy (pool 15 idle).
-- FAT DB: live `et_main` queryable now (`current_user=et_main`). MCP `et_reporting`→`et_main` fix took effect after the restart.
+- etanah-pelupusan `mlk/master`: BOTH fixes uncommitted on the working tree (QA-258004 Java + QA-259702 .docx/.config) — Phase 1 close-out branches them separately (`mlk/qa/258004`, `mlk/qa/259702`).
+- env = **UAT** (mlkuat / et_main_uat) as of this session's switch. JBoss WAR redeployed with the QA-258004 Maven build; tmp/data/deployments cleared by みや; server start pending.
+- MemoryCore: origin/main = 98ea109 (parallel QA-259702 DE). This DE FF'd into it and re-layers QA-258004 (active.txt block, quest-protocol item 0.5, diary section, this RAM). slip-log already carried both sessions' 2026-05-30 entries.
 
 ## Blockers (AGENT_STATE)
-- QA-259702 test depends on みや logging in as `nor.aini@melaka.gov.my` + opening `PTMLK/02/L/PRU/2026/12`. Risk: the concurrent doc-gen NPE (QA-262495 family) may block the document render.
+- **(B)** QA-258004 test depends on みや starting JBoss + logging in as `nurulazura@melaka.gov.my` + opening `PTMLK/02/L/MCL/2026/1` at PYSKN5A. Test A = syarat/sekatan now populate on the letter; Test B = the `jumlahBayaranNotis5A` amount renders.
+- **(A)** QA-259702 test risk: the QA-262495 doc-gen NPE may block the PRU render.
 
 ## Immediate Next Steps (AGENT_STATE)
-1. みや tests 1.2 / 1.3 / 1.4 / 1.7 on the app → if render OK, Phase 1 close (commit `TemplateRingkasanRisalatPRU.docx` + `template.config.json` to `mlk/qa/259702`).
-2. If the doc-gen NPE blocks the render → that's QA-262495 (separate, server-runtime); may need its fix first.
-3. 1.5 YB-leak: `jtRingkasanRisalatPLPS` populator (QA-262233 family) — data-patch + populator check.
+1. **(B)** みや starts JBoss → tests QA-258004 Test A + Test B on `PTMLK/02/L/MCL/2026/1` → if OK, Phase 1 close (branch `mlk/qa/258004`, stop-at-stage diff, commit after nod, push).
+2. **(A)** みや tests QA-259702 1.2/1.3/1.4/1.7 on `PTMLK/02/L/PRU/2026/12` → if render OK, Phase 1 close (`mlk/qa/259702`).
+3. Reconcile the **stale main repo** working tree (stuck at fd2b407, 11 behind origin/main; holds redundant uncommitted quest-protocol/slip-log copies now superseded by this DE's push) — clean + pull on next office boot.
 
 ## 🎯 Session Recap (for AI restart)
-1. QA-259702 now TESTABLE: app `PTMLK/02/L/PRU/2026/12` @ nor.aini at PRRMMKNPTG; new template + MLK config split CONFIRMED deployed (17:22 WAR); FAT DB live.
-2. Fixed the failure-save gap → `quest-protocol.md` v3.6 (Failures sub-part + active.txt-sync); `active.txt` reconciled.
-3. Worktree cleanup → silent boot (hook v1.2); new "Test Scenario" / Stop-Point Summary format (skill + personality rule).
+1. **QA-258004** (this session): stale-stored-document bug → unconditional regenerate-on-save fix in `MlkMaklumatTanahPemberimilikanForm.java` + onPremiumChange stub (QA-260955) → compiled → Maven WAR built (fixes appVersionMap NPE) → deployed to JBoss. env FAT→UAT. Awaiting Test A (syarat/sekatan) + Test B (amount) on `PTMLK/02/L/MCL/2026/1` @ nurulazura.
+2. **quest-protocol Apply item 0.5 — Codebase Convention Check** added (recovered pre-trim utility-sweep); slip-logged the placement/comment slip that prompted it.
+3. **QA-259702** (parallel session A): testable on `PTMLK/02/L/PRU/2026/12` @ nor.aini; quest-protocol v3.6 failure-save fix; worktree-cleanup silent boot; "Test Scenario" format.
 
-**Memory Type**: RAM | **Last Activity**: 2026-05-30 Session 2 — QA-259702 made testable + failure-save fix + worktree-cleanup-to-boot + Stop-Point Summary format.
+**Memory Type**: RAM | **Last Activity**: 2026-05-30 — QA-258004 fix applied + deployed (awaiting UAT test) + convention-check protocol item; alongside the parallel QA-259702 session (testable).

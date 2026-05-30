@@ -732,6 +732,18 @@ Test data is prepared at TWO points, never deferred:
 
 Before the first Edit lands at Apply:
 0. **Rubric ACTUALLY EMITTED — NON-SKIPPABLE** (added 2026-05-28 per みや after QA-262786 skipped-Rubric slip): the Rubric section (fix-shape options + Multi-Perspective Scrutiny + **Impact/Usage trace**) must have been emitted THIS quest. Proposing a fix-shape or applying an Edit without a prior Rubric is BANNED. **Impact/Usage trace** = per touched field/method: (a) all WRITERS (later-override risk on this code path), (b) the READER/getter, (c) CALLERS of the init method (re-invoked?), (d) for state-scoped changes, BRANCH TOPOLOGY (divergence + merge path — NOT folder/remote). This is the pending "Integration Analysis sub-ritual" (todo Q1), now mandatory.
+0.5. **Codebase Convention Check — pre-edit gate 🔑 (added 2026-05-30 per みや, QA-258004)**: before writing a single new line, decide the VERB — new code is the LAST resort. Emit this table FILLED (with `file:line` cites) BEFORE the first Edit:
+
+    | Verb | Question | Cite |
+    |---|---|---|
+    | **USE** | Does a method/util/constant/VO already do this as-is? (sweep `_SET _LIST _MAP is<Field>Valid` + sibling methods — READ FULL BODIES, not signatures) | `name @ path:N` |
+    | **INSERT-INTO** | Can this extend an existing method / config entry / dispatch table instead of a new one? | `path:N` |
+    | **UPDATE** | Should I modify an existing method rather than add a parallel one? | `path:N` |
+    | **COPY-FROM** | Closest sibling that already solves this shape (urusan / tugasan / bean / template / config entry) — mirror ITS structure | `path:N` |
+
+    Only if all four are exhausted → write new, then **convention-match to the nearest sibling**: **placement** (right section/region, NOT appended at file-bottom — e.g. a private helper goes with peer helpers, never under `// Getters and Setters`) · **naming** (sibling idiom: prefix · casing · language) · **comment density** (`feedback_no_extra_comments.md` — ≤1 WHY-line, no commented-out original, no narration) · **error/return idiom** (copy the sibling's try/catch · null-guard · return-type; confirm the caller consumes what you return). **Verify against real code, NEVER memory or AI-generated reference** (method exists + arity + field [Java field-shadowing] via codegraph/source; SQL table/column entity-first; scrutinize any AI/Codex line before citing). A near-clone of an existing method is a STOP signal → back up to USE/UPDATE.
+
+    *Consolidates the pre-trim "Existing utility sweep + Working precedent" (8-step Tier-1, lost in the 2026-05-22 trim `9d17887`) + adds the never-ruled placement/comment dimensions. **References, does NOT restate/override**: UC9 Sibling-structure read (Recon, `:51`) · the boot Working-analog bullet (CLAUDE.md) · Existing-utility-sweep (`Etanah-Codebase-Read.md:61`) · `feedback_simplify_and_reference.md`. Blast-radius → item 0's Impact/Usage trace; Preservation + dead-branch audit → Apply close.*
 1. env-check ✅ (re-verified at Apply entry per env-check skill)
 2. Predicate Box emitted with file:line evidence
 3. Inline confidence on the recommended Rubric option = HIGH
@@ -1235,6 +1247,8 @@ Fire as soon as heard, mid-conversation — mutate `active.txt` immediately, sam
 **Behaviour for Ruri at Hand-back checkpoint:**
 - Before emitting "▶ YOUR MOVE" block: invoke #1-#3 (always); invoke #4 conditionally; check #5 condition
 - Each invocation produces a visible-gate output in the response — みや can audit what fired
+
+*Protocol version: 3.7 — 2026-05-30 (Apply item **0.5 "Codebase Convention Check — pre-edit gate"**: a VERB table (USE / INSERT-INTO / UPDATE / COPY-FROM, each with `file:line` cite) that makes new code the last resort, then a placement / naming / comment-density / error-idiom convention-match against the nearest sibling. Recovers the pre-trim "Existing utility sweep + Working precedent" (8-step Tier-1, lost in the 2026-05-22 trim `9d17887`) + adds the never-ruled placement/comment dimensions. References UC9 / Working-analog / Etanah-Codebase-Read.md:61 / feedback_simplify_and_reference.md without restating them. Driven by QA-258004: new helpers dropped under `// Getters and Setters` with verbose comments + too-narrow change-scope — an approach Rubric ran but never a code-convention one. Root category: best-practices-not-consulted.).*
 
 *Protocol version: 3.6 — 2026-05-30 (Mid-Quest Investigation Trail: added required sub-part **7 "Failures hit this cycle"** (wrong test-data handed back / post-fix runtime errors / env-tooling failures) + a mandatory **active.txt-sync** clause (phase + notes-incl-failures). Driven by QA-259702: the §0 doc captured the wrong-permohonan + NPE failures but active.txt stayed at phase=0/Discovery, so the Session Briefing couldn't surface them. Root category: knowledge-transfer-incompleteness.).*
 
