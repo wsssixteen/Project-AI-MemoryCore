@@ -418,7 +418,7 @@ asmida@melaka.gov.my
 
 | File / location | Owner | Ruri may write? |
 |---|---|---|
-| `1. Notes.txt` | みや (his personal scratch — understanding/memory) | ❌ **Read-only for Ruri.** Never edit, append, or auto-update. |
+| `1. Notes.txt` | Shared — test-data log | ✅ **Ruri writes it, but ONLY via `node quest/notes.js`** (locked 3-line format; canonical spec = `feedback_task_folder_ownership.md`). NEVER hand-write; NEVER add prose / sections / "what to test" / caveats / rebuild steps — those belong in the chat ▶ YOUR MOVE block, never the file. *(The old "read-only / never write" handling is SUPERSEDED 2026-05-12 by the notes.js workflow — see Why below.)* |
 | `0. Brief/Description.txt` | Source of truth — original ticket text + BA replies | ✅ Append BA replies / scope clarifications with clear separator + dated header (preserves history) |
 | `0. Brief/<screenshots>` | みや (BA-attached or みや-curated) | ❌ Don't add or replace |
 | `0. Brief/<numbered subfolders>` (e.g. `1. Clarification/`) | みや (back-and-forth artifact bins) | ❌ Don't add files unless みや asks |
@@ -426,7 +426,7 @@ asmida@melaka.gov.my
 | `2. Fix/` | Applied fix artifacts | ✅ Write Fix.txt summary on Phase 2 |
 | Project subfolder `projects/coding-projects/active/<ticket>/` | Ruri's investigation workspace | ✅ Free use — handoff, walkthrough, learning docs |
 
-**Why**: 2026-04-30 — みや clarified that `1. Notes.txt` is his personal aide-mémoire, not a ticket-shared doc. Scope changes from BA must update `Description.txt` (the brief / source of truth), not Notes. Without this rule, Ruri would conflate the two and overwrite みや's memory aids with auto-updates.
+**Why**: 2026-04-30 — みや clarified that `1. Notes.txt` must NOT hold Ruri's investigation prose (that goes to the project subfolder). Scope changes from BA still update `Description.txt`, not Notes. **SUPERSEDED 2026-05-12+**: Notes.txt IS Ruri-written now — but ONLY as the locked 3-line test-data log via `node quest/notes.js`. The surviving discipline is "no investigation prose / no verbose sections in Notes.txt", NOT "never write it". **(2026-05-30: a verbose hand-written Notes.txt recurred precisely because this stale "read-only" row still contradicted the notes.js workflow — row corrected so the contradiction can't mislead again. Canonical format authority = `feedback_task_folder_ownership.md`.)**
 
 **On BA reply append**: format is
 ```
