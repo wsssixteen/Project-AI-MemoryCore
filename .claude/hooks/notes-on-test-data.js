@@ -42,7 +42,14 @@ process.stdin.on('end', () => {
     const active = getActiveQATaskFolder();
     if (!active) process.exit(0);
 
-    const notesPath = path.join(active.taskFolder, '1. Notes.txt');
+    // Per-ticket notes filename (renamed 2026-05-31): `1. <QA-NNNN>.txt`; legacy fallback `1. Notes.txt`.
+    const qaMatch = (active.qa || '').match(/(QA|FAT-OR|UAT-CR|FAT-CR|FAT|UAT|CR)-?(\d+)/i);
+    const qaTag = qaMatch ? `${qaMatch[1].toUpperCase()}-${qaMatch[2]}` : null;
+    let notesPath = qaTag ? path.join(active.taskFolder, `1. ${qaTag}.txt`) : path.join(active.taskFolder, '1. Notes.txt');
+    const legacyPath = path.join(active.taskFolder, '1. Notes.txt');
+    if (qaTag && !fs.existsSync(notesPath) && fs.existsSync(legacyPath)) {
+      notesPath = legacyPath;
+    }
     let notesContent = '';
     try { notesContent = fs.readFileSync(notesPath, 'utf8'); } catch (_) {}
 

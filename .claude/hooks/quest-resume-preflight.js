@@ -111,7 +111,7 @@ process.stdin.on('end', () => {
         const inArchive = /\\Archive\\/.test(state.task_folder);
         lines.push(`   ⬜ Confirm task folder location: ${state.task_folder}${inArchive ? '  🔴 IN ARCHIVE — propose reactivation move to active Tasks/Melaka/' : ''}`);
       }
-      lines.push(`   ⬜ Read \`<task_folder>/1. Notes.txt\` — prior test data + logins (cycle-1 entries are gold for rework)`);
+      lines.push(`   ⬜ Read \`<task_folder>/1. <NNN NNN>.txt\` (legacy \`1. Notes.txt\`) — prior test data + logins (cycle-1 entries are gold for rework)`);
       lines.push(`   ⬜ Read full \`<task_folder>/0. Brief/History.txt\` — BA's complete journal (not just tail)`);
       if (state.qa_doc) {
         lines.push(`   ⬜ Open \`${state.qa_doc}\` cycle-N section`);

@@ -732,3 +732,18 @@ scope_anchor=ONLY the rework: JT must papar on entry + survive refresh, PLTP ris
 notes:
   - 2026-05-31: Scout→Recon→Rubric→Apply. Recon VERIFIED: entry serves stored doc + skips populator (BasePelupusanDokumenForm:468/564); performCustomSave:1277 saves but never regenerates. Reused existing deleteExistingRisalatDocuments helper (tugasan-generic via TGS_TO_JNS_DOK_MAP). Phase 1 commit e40d1a66fe pushed origin/mlk/qa/253053; Phase 2 closed. Full record in qa_doc. Slip logged: traced display path 100% but not save path first (working-analog-miss).
 test_field=hello
+
+qa=QA-262755
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\53. QA #262755 - [FAT MCOT ISSUE] PLPS - Charting Keputusan - Maklumat Keputusan Mesyua
+qa_doc=projects/coding-projects/active/QA-262755/QA-262755.md
+phase=2
+status=archived
+branch=mlk/qa/262755
+commit=fa5234c452
+ticket_type=bug
+env=UAT (mlkuat / et_main_uat) — switched per ticket Env: FAT but BA app altered; verified on UAT 2025/41 + 2025/42
+local_test_confirmed=true
+current_phase=Phase 2 CLOSED 2026-06-01 — archived. Fix committed fa5234c452 + pushed to origin/mlk/qa/262755. Save+read both proven (DB row 1722325 BGN_JNS_KPTSN_PTG_LLS on 2025/42 KDO; 3-state browser experiment on 2025/41 CK panel). Post-mortem/KPI prose-appends SUSPENDED per CLAUDE.md v1.40 (Edit-via-Read trap). Per-quest detail in qa_doc (not yet written this cycle — single-canonical-doc rule applies; created as needed).
+issue_one_liner=Teknikal CK panel Maklumat Keputusan Mesyuarat/Keputusan PTG rendered blank for PLPS apps post-2026-05-13. Root cause = regression commit da605873b2 (Aaron) flipped PelupusanConstant.SAK_JNS_KPTSN_LULUS/_TOLAK from BGN_JNS_KPTSN_PTG_* (PTG family) to JNS_KEPUTUSAN_JKKT_* (JKKT family). Teknikal CK populator filters senarai_kumpulan_id=10 (PTG); JKKT family (1057) rejected. Per Chan Jun QA-228687 (2025-11-17) authoritative spec.
+scope_anchor=ONLY PelupusanConstant.SAK_JNS_KPTSN_LULUS/_TOLAK 2-line revert + MlkKemasukanKeputusanPentadbirTanahForm use-the-constant (+ fixed pre-existing missing kptsnDO assignment on TANGGUH/TOLAK branches). DO NOT expand to teknikal-side reader logic.
+related=related QA-228687 (Chan Jun PRBB sibling self-correction note 2025-11-17) · QA-234176 (origin of wrong JKKT_LULUS write) · QA-224924 (closed PLPS precursor)

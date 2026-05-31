@@ -32,7 +32,7 @@ Workflow({ name: 'quest-phase0', args: {
 
 - **Depth scaling** — `full` (Discovery → KnowledgeLoad → Recon → adversarial Verify → Synthesize) when `ticketType==='bug'`; `quick` (skips the adversarial fan-out) otherwise.
 - **Blast-radius by codebaseRoot** — `etanah-pelupusan` → codebase-only, **TRG BANNED** (ignored entirely). `etanah-awam` → **multi-state-aware** (other states share the portal).
-- The workflow **writes `1. Notes.txt`** (canonical format, `quest-protocol.md:373-403`) **and the QA-NNN.md investigation sections**, then returns a verified diagnosis + fix-shape.
+- The workflow **writes `1. <NNN NNN>.txt`** (canonical format, `quest-protocol.md:373-403`) **and the QA-NNN.md investigation sections**, then returns a verified diagnosis + fix-shape.
 - After it returns: present the **Issue Checklist + diagnosis** to みや and **wait for confirmation before any code**. The interactive remainder (Rubric-pick → Apply → test → commit) stays human-gated in this skill — the workflow owns Phase 0 investigation ONLY.
 - **Fallback**: if the Workflow tool is unavailable (headless/cron), run the manual Phase 0 steps below directly.
 
@@ -125,7 +125,7 @@ Before emitting ▶ YOUR MOVE, run this gate and emit it as the FIRST lines of t
 
 | Gate | Requirement |
 |---|---|
-| Notes.txt written | If the hand-back asks みや to test/simulate, `1. Notes.txt` in the Task folder MUST already hold this quest's entry (env / urusan / tugasan / langkah + permohonan ID + login). Missing → run `node quest/notes.js` NOW. Never hand-write it. |
+| Notes.txt written | If the hand-back asks みや to test/simulate, `1. <NNN NNN>.txt` in the Task folder MUST already hold this quest's entry (env / urusan / tugasan / langkah + permohonan ID + login). Missing → run `node quest/notes.js` NOW. Never hand-write it. |
 | Tugasan named | Every test/simulate instruction names the specific **tugasan** — not just the document/screen. みや needs to know where in the workflow to go. Omitting it = the same failure as a blank Notes.txt. |
 | Flag states WHERE — human-findable | Every flag / ⚠️ / caveat states a location みや can actually FIND: the file path PLUS, for a document, the visible **searchable text** + page number. NEVER cite an internal machine ID (Word `paraId`, SDT `id`, XML attribute) — みや cannot search those in Word. Say "the line reading '<visible text>' on page N", not "paragraph 78F8C270". |
 | Login present | Any permohonan ID carries its `pengguna_semasa` login (`feedback_pengguna_semasa.md`). Unknown → DB-query it first. |

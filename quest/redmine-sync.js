@@ -265,7 +265,12 @@ async function createTaskFolder(issue, parsed) {
     fs.mkdirSync(path.join(folder, '0. Brief'),    { recursive: true });
     fs.mkdirSync(path.join(folder, '1. Simulate'), { recursive: true });
     fs.mkdirSync(path.join(folder, '2. Fix'),      { recursive: true });
-    fs.writeFileSync(path.join(folder, '1. Notes.txt'), '');
+    // Notes file is named per-ticket — `1. NNN NNN.txt` (renamed 2026-05-31 from `1. Notes.txt`,
+    // adjusted same day from `1. QA-NNNN.txt` per みや → drop tracker prefix, space before last 3
+    // digits so the last-3 are quickly identifiable across many open tabs/greps).
+    const spaced = parsed.number.replace(/(\d+)(\d{3})$/, '$1 $2');
+    const notesFilename = `1. ${spaced}.txt`;
+    fs.writeFileSync(path.join(folder, notesFilename), '');
 
     // Description.txt — ticket brief
     const desc = [

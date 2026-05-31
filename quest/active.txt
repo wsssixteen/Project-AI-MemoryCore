@@ -62,4 +62,3 @@ delegated_to=Aaron
 delegated_date=2026-05-05
 learning_marker=2026-05-05 — みや wants to trace fix later in project branch for learning
 note=ARCHIVED 2026-05-31 — moved Task folder to Archive\ + status=archived to declutter the boot open-quest list (still owned by Aaron; if Redmine reassigns it back to みや, redmine-sync will unarchive). TRANSFERRED 2026-05-05 — Aaron took back the ticket due to BA urgency. Early diagnostic preserved at projects/coding-projects/active/QA-259342/early-diagnostic.md. **Follow-up**: trace Aaron's fix on `mlk/qa/259342` branch when closed for learning.
-

@@ -1,6 +1,6 @@
 export const meta = {
   name: 'quest-phase0',
-  description: 'Quest Phase 0 investigation engine for an Etanah ticket, grounded in quest/quest-protocol.md. Discovery -> etanah-knowledge tiered load -> Recon (codebase-only blast-radius; TRG banned for pelupusan, multi-state-aware for awam) -> adversarial Verify (bugs) -> Synthesize. Writes 1. Notes.txt (canonical format) + the QA-NNN.md investigation sections. Scales by ticket_type. Hands a verified diagnosis + fix-shape to the live /quest skill for Apply/test/commit (which stay human-gated).',
+  description: 'Quest Phase 0 investigation engine for an Etanah ticket, grounded in quest/quest-protocol.md. Discovery -> etanah-knowledge tiered load -> Recon (codebase-only blast-radius; TRG banned for pelupusan, multi-state-aware for awam) -> adversarial Verify (bugs) -> Synthesize. Writes 1. <NNN NNN>.txt (canonical format) + the QA-NNN.md investigation sections. Scales by ticket_type. Hands a verified diagnosis + fix-shape to the live /quest skill for Apply/test/commit (which stay human-gated).',
   phases: [
     { title: 'Discovery', detail: 'read brief + protocol Phase-0, classify, pick codebase-root/base-branch' },
     { title: 'KnowledgeLoad', detail: 'etanah-knowledge tiered load + working analog' },
@@ -43,7 +43,7 @@ const SYNTH_SCHEMA = { type: 'object', required: ['fixShape', 'confidence', 'rep
   reproAchieved: { type: 'string', description: 'Y | N | n/a (enhancement)' }, confidence: { type: 'string' },
   seniorBlocker: { type: 'string', description: 'only if solving genuinely stalled; else "none" — we solve, we do not manufacture questions' }, qaDocWritten: { type: 'boolean' } } }
 
-const base = `Quest Phase 0 for Etanah ticket ${t.qa}. READ-ONLY on all etanah code — the ONLY writes allowed are "1. Notes.txt" and the QA-NNN.md doc, and only by the agents explicitly told to write them. Codebase root: ${t.codebaseRoot}. Task folder: ${t.taskFolder}. Quest protocol (READ the cited sections — never work from memory): ${PROTO}. etanah-knowledge dir: ${t.knowledgeDir}. DB MCP: ${t.dbMcp} (load via ToolSearch).`
+const base = `Quest Phase 0 for Etanah ticket ${t.qa}. READ-ONLY on all etanah code — the ONLY writes allowed are "1. <NNN NNN>.txt" and the QA-NNN.md doc, and only by the agents explicitly told to write them. Codebase root: ${t.codebaseRoot}. Task folder: ${t.taskFolder}. Quest protocol (READ the cited sections — never work from memory): ${PROTO}. etanah-knowledge dir: ${t.knowledgeDir}. DB MCP: ${t.dbMcp} (load via ToolSearch).`
 
 // ---- Discovery ----
 phase('Discovery')
@@ -51,7 +51,7 @@ log(`Discovery for ${t.qa}`)
 const discovery = await agent(`${base}
 
 Read ${PROTO} Phase-0 section (~lines 460-555) for the exact Discovery procedure, then:
-- Read the task folder's "0. Brief/History.txt" (FULL), "Description.txt", "1. Notes.txt", and any PNG/PDF in 0. Brief.
+- Read the task folder's "0. Brief/History.txt" (FULL), "Description.txt", "1. <NNN NNN>.txt", and any PNG/PDF in 0. Brief.
 - Classify ticket_type (bug | enhancement | template | cr) and entry context (New | Rework | Addition).
 - Pick codebase_root (etanah-pelupusan for APPS/PELUPUSAN; etanah-awam for AWAM) and base-branch (mlk/master for pelupusan; mlk/release/fat for awam).
 - Extract urusan(s), tugasan(s), the layer guess, the BA-provided permohonan ID (if any), Expected vs Observed, and the scope anchor (BA's LITERAL scope: what is IN + explicit DO-NOT).`,
@@ -89,7 +89,7 @@ const recon = (await parallel(dims.map(d => () =>
 const testDataFinding = recon.find(f => f && f.dimension === 'test-data')
 const notes = await agent(`${base}
 
-Write "1. Notes.txt" in the Task folder using the CANONICAL format from ${PROTO}:373-403. Quote that format EXACTLY — 3 lines per entry, NO bloat, NO env labels (except the two-entry sim line), NO Langkah, NO parentheticals/annotations:
+Write "1. <NNN NNN>.txt" in the Task folder using the CANONICAL format from ${PROTO}:373-403. Quote that format EXACTLY — 3 lines per entry, NO bloat, NO env labels (except the two-entry sim line), NO Langkah, NO parentheticals/annotations:
 - SINGLE urusan at target tugasan:  line1 "N) <URUSAN> — <TUGASAN>"  /  line2 <PERMOHONAN_ID>  /  line3 <login>
 - MULTI urusan (${(discovery.urusans || []).join(', ') || 'per Discovery'}): one numbered entry PER urusan, same 3-line shape, blank line between entries.
 - If the BA-provided ID is PAST the target tugasan AND a sim app exists, use the TWO-entry form (Entry 0 = BA app + state note; Entry 1 = "N) <PLP|AWAM> — <ENV> — <TUGASAN>" + sim app).

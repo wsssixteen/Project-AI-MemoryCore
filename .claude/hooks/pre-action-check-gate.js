@@ -82,7 +82,7 @@ process.stdin.on('end', () => {
       `   Path: ${filePath}`,
       '',
       'Pre-action checks (run these IF not already done this turn):',
-      '  1. Notes.txt current for active quest? (read <Task folder>/1. Notes.txt)',
+      '  1. Notes file current for active quest? (read <Task folder>/1. <NNN NNN>.txt or legacy 1. Notes.txt)',
       '  2. env-check verified env target? (mlkuat / mlkfat / mkit per ticket)',
       '  3. PDF annotations extracted if BA PDF in 0. Brief/?',
       '  4. Server log path known if debugging? (E:/Dev/jboss-7.4-plp-melaka/standalone/log/server.log)',

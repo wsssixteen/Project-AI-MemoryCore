@@ -18,7 +18,7 @@ metadata:
 
 ## Steps
 
-1. **Read** the active Task folder's `1. Notes.txt` (locked 3-line format per `feedback_task_folder_ownership.md`)
+1. **Read** the active Task folder's `1. <NNN NNN>.txt` (legacy `1. Notes.txt`) — locked 3-line format per `feedback_task_folder_ownership.md`
 2. **Parse** the verified test data — permohonan ID + login email + tugasan code
 3. **Add context** — pengguna semasa (the login user's display name if recallable), tugasan name, peranan, env target (UAT/FAT/mkit)
 4. **Add role-of-test** — `[FIX VERIFICATION]` / `[REGRESSION SANITY]` / `[BLAST RADIUS]`

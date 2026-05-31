@@ -16,7 +16,7 @@ Always create `.txt` files inside the Tasks folder (`1. Tasks\Melaka\...`), not 
 1. Simulate\
 2. Fix\
 3. Rework\
-1. Notes.txt   ← blank, for みや to fill
+1. <NNN NNN>.txt   ← blank, for みや to fill (legacy folders: `1. Notes.txt`; renamed 2026-05-31)
 ```
 
 **Rework folder rule:** `3. Rework\` is only created when a quest is re-opened. All investigation and fix files produced during the rework go inside `3. Rework\` — not in `2. Fix\`.
