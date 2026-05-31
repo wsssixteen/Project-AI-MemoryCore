@@ -2,39 +2,31 @@
 
 > **AGENT_STATE discipline** — High-Level Objective · Current Progress · Active Context · Blockers · Immediate Next Steps. Read at boot; updated at session end.
 
-**Current session**: 2026-05-30 (Sat) — **THREE parallel sessions ran today.** **(A)** QA-259702 (PRU Ringkasan Risalat), worktree `xenodochial-albattani-90d7ce` — testable, awaiting みや test. **(B)** QA-258004 (MCL Surat Keputusan Lulus), worktree `fervent-cohen-3043a3` — applied + deployed, awaiting test. **(C)** quest-phase0 Workflow build + CLAUDE.md quest-recovery, worktree `vigorous-davinci-9237bd` — this DE.
+**Current session**: 2026-05-31 (Sun) — single session, worktree `jovial-wright-a8b935`. Theme: **debugging-methodology refinement** (loggers-not-breakpoints) + git-history archaeology on a trimmed rule. One etanah quest (QA-258004) re-engaged then discarded by みや.
 
 ## High-Level Objective (AGENT_STATE)
-- **(C)** Build a reusable Quest Phase-0 workflow (Claude Code Workflow tool) + fix the regression where quest operational detail wasn't boot-loaded + surface the core Scout→Recon→Rubric methodology. **Done.**
-- **(B) QA-258004** — MCL Surat Keputusan Lulus prints blank Syarat Nyata + Sekatan Kepentingan + the Notis-5A bayaran amount (stored letter generated once, never regenerated). Deliver deployed UAT build → Phase 1 close.
-- **(A) QA-259702** — hand みや a live, testable PRU app → Phase 1 close.
+- Recover/clarify the "don't make みや do my work" rule みや remembered banning (esp. breakpoints), and refine it into a usable debugging discipline. **Done — shipped to main.**
 
 ## Current Progress (AGENT_STATE)
-- **(C) quest-phase0 — BUILT + WIRED + VALIDATED.** `.claude/workflows/quest-phase0.js` — Discovery → etanah-knowledge tiered load → Recon → adversarial Verify (bugs) → Synthesize; writes `1. Notes.txt` (canonical format) + QA-NNN.md; scales by `ticket_type`; **TRG banned from pelupusan blast-radius**. Wired into `/quest` SKILL.md (auto-fire + depth-scale); cataloged in `meta/system-architecture.md`. Validated on **QA-260508 quick path** (args bound, Notes.txt 3-entry multi-urusan ✓, knowledge-from-main ✓, TRG ban ✓, QA-doc written ✓, ~9-file fix-shape). Bug fixed: Workflow tool delivers `args` as a **JSON string** → `JSON.parse(args)` guard; `knowledgeDir` MUST point at MAIN repo (etanah-knowledge untracked-confidential, absent from worktrees). **CLAUDE.md v1.32**: core **Scout→Recon→Rubric** methodology surfaced to boot-load (was intact in quest-protocol.md but buried + not boot-loaded) + quest trigger-time essentials (Notes format · etanah-knowledge tiers · canonical task-state SQL · codebase-root/TRG-ban) + **DB schema-qualify rule** (`et_main[_uat].` prefix; stop misreading missing-prefix errors as "connection lost"). Core methodology also surfaced atop quest SKILL.md.
-- **(B) QA-258004 — Phase 1 APPLIED + DEPLOYED, awaiting test.** Root cause = stale stored `SRT_KPTSN_PLP` document (generated once via `initNewDokumenList`, never regen-on-change). Fix (Option A, mirrors `PelupusanHelper.onJana:393`) in `MlkMaklumatTanahPemberimilikanForm.java`: UNCONDITIONAL `invalidateSuratKeputusanLulusForRegeneration()` in the MCL save branch (status-gated to skip signed letters) + `onPremiumChange(...)` stub for the QA-260955 regression. `mvn package` BUILD SUCCESS; Maven WAR (cures `appVersionMap` NPE) deployed; env FAT→UAT. Process: Apply item 0.5 **Codebase Convention Check** added to quest-protocol (recovered pre-trim utility-sweep) after a placement/verbose-comment slip.
-- **(A) QA-259702 — testable.** App `PTMLK/02/L/PRU/2026/12` @ `nor.aini@melaka.gov.my` at `PRRMMKNPTG`; new `TemplateRingkasanRisalatPRU.docx` + MLK `template.config.json` PRU-split confirmed deployed. ⚠️ same app throws the QA-262495 concurrent doc-gen NPE (pre-existing). quest-protocol v3.6 (Investigation Trail "Failures hit this cycle" + active.txt-sync); worktree-cleanup → silent boot hook v1.2; "Test Scenario" / Stop-Point Summary format.
+- **Debug-methodology refinement SHIPPED** (commit `3925e6a` → origin/main). New **Debug Ritual 6** (`quest/quest-protocol.md`): runtime confirmation = **extensive loggers (≥3 what-ifs) bundled INTO the first-pass fix build** (one rebuild carries fix + confirmation = 3-4× saving); **breakpoints BANNED** as a request to みや; breakpoint = very-very-last-resort only when there's no code change to bundle loggers into. Matched pair: **prepare-commit-trigger.js v1.3 Step 2.6** strips `QA<num>-PROBE:` loggers + debug comments before any BA-bound commit. Also: CLAUDE.md v1.37 (boot-table rows 5+6), personality.md v1.8 (no-asking-back runtime corollary), system-architecture.md v1.6.
+- **Archaeology finding** (context): the breakpoint-specific ban was NEVER codified (pre- or post-trim); the parent "No asking-back for searchable facts" rule (personality.md:165) already exists and post-dates the 2026-05-22 trim. みや hinted there are MORE good rules lost in the trim worth recovering later.
 
 ## Active Context (AGENT_STATE)
-- **(C)** MemoryCore: this DE merged `origin/main` (the A+B parallel-session commits) into worktree `vigorous-davinci-9237bd`, resolved current-session.md + diary by union, committed + pushed + merged to main.
-- **(A/B)** etanah-pelupusan `mlk/master`: BOTH fixes uncommitted on the working tree (QA-258004 Java + QA-259702 .docx/.config) — Phase 1 close-out branches them separately (`mlk/qa/258004`, `mlk/qa/259702`). env = **UAT**; JBoss WAR redeployed; server start pending.
-- **QA-262495 (handed back)**: bonus leads from session C — unconditional Jasper regen `BasePelupusanDokumenForm:575` · PPJK double-rebuild `MlkKertasTemplateForm:326` · `awaitTermination(Long.MAX_VALUE)` `PelupusanTemplateUtil:125`; みや's repro = Selesai→Kemas kini hangs forever, browser-refresh clears it → view-scoped state.
+- MemoryCore main is at `3925e6a` (this session's rule commit + this DE's diary/session commit on top).
+- ⚠️ **Sandbox Bash clock runs ~4h behind real machine clock** (real time read from JBoss server.log internal timestamps). Trust filesystem `ls` / server.log over `date` for real time.
 
 ## Blockers (AGENT_STATE)
-- **(B)** QA-258004 test depends on みや starting JBoss + login `nurulazura@melaka.gov.my` + opening `PTMLK/02/L/MCL/2026/1` at PYSKN5A. Test A = syarat/sekatan populate; Test B = `jumlahBayaranNotis5A` amount renders.
-- **(A)** QA-259702 test risk: the QA-262495 doc-gen NPE may block the PRU render.
-- **(C)** None.
+- None.
 
 ## Immediate Next Steps (AGENT_STATE)
-1. ⚑ **(meta) Meta-layer effectiveness audit — FRESH HEAD, TOP priority** — みや 2026-05-30: "has the self-improving system backfired?" Assess hook net-value; prune noise/false-positives (51 fake broken-pointers at boot · word-ui-gate misfires · ghost hooks · per-turn injection overhead). Effectiveness over ownership — do NOT defend.
-2. **(C) quest-phase0 follow-ups**: standardize the `JSON.parse(args)` guard in ALL workflow scripts; verify `/quest` name-based invocation picks up the current file (mid-session stale-cache seen — may switch wiring to absolute `scriptPath`).
-3. **(B)** みや tests QA-258004 Test A + Test B on `PTMLK/02/L/MCL/2026/1` → if OK, Phase 1 close (`mlk/qa/258004`).
-4. **(A)** みや tests QA-259702 on `PTMLK/02/L/PRU/2026/12` → if render OK, Phase 1 close (`mlk/qa/259702`).
-5. Reconcile the **stale main repo** working tree (was fd2b407, behind origin/main; redundant uncommitted copies superseded) — clean + pull on next office boot.
-6. Tickets available to work: QA-260508 / QA-253053 (plus 259702 / 258004 awaiting close).
+1. **(if みや wants)** Recover more trimmed rules from pre-trim CLAUDE.md (`51606ea`, 2026-05-20) — みや flagged several good ones were lost in the 2026-05-22 decomposition.
+2. **QA-258004** (still open, phase=1, active.txt) — diagnosis complete (entity-VO-rebuild-on-postback nulls the dropdown; capture/restore fix already coded + deployed; land-report fallback is reader-side masking). Investigation was DISCARDED this session per みや; resume only if he reopens it. Test data: `PTMLK/02/L/MCL/2026/1` @ nurulazura@melaka.gov.my, PYSKN5A, UAT.
+3. **QA-259702** (open, phase=1) — still awaiting live FAT test on `PTMLK/02/L/PRU/2026/12` @ nor.aini@melaka.gov.my.
+4. ⚑ **Meta-layer effectiveness audit** (TOP priority carried from 2026-05-30) — "has the self-improving system backfired?" Assess hook net-value; prune noise/false-positives (e.g. the RecursiveLoopDetector false-fired repeatedly this session on distinct greps/edits).
 
 ## 🎯 Session Recap (for AI restart)
-1. **(C)** quest-phase0 Workflow built + validated (QA-260508); core Scout→Recon→Rubric methodology + quest essentials + DB schema rule restored to boot-load (CLAUDE.md v1.32); meta-layer effectiveness audit flagged as TOP next-session priority.
-2. **(B)** QA-258004 stale-stored-document fix deployed (Maven WAR, env UAT), awaiting Test A/B on `PTMLK/02/L/MCL/2026/1` @ nurulazura.
-3. **(A)** QA-259702 testable on `PTMLK/02/L/PRU/2026/12` @ nor.aini; quest-protocol v3.6 + Test Scenario format.
+1. Refined debugging methodology: **loggers-not-breakpoints**, loggers bundled into the first-pass fix build (3-4× saving), breakpoints banned except very-last-resort. Shipped to main (`3925e6a`): Ritual 6 + prepare-commit Step 2.6 + CLAUDE.md v1.37 + personality.md v1.8 + system-architecture.md v1.6.
+2. Git-history archaeology: the breakpoint-ban みや remembered was never codified; the parent no-asking-back rule exists post-trim. More trimmed rules await recovery.
+3. QA-258004 re-engaged + diagnosed (dropdown null = entity-VO-rebuild design flaw, fix already deployed) then discarded per みや.
 
-**Memory Type**: RAM | **Last Activity**: 2026-05-30 — three parallel sessions: (C) quest-phase0 + CLAUDE.md recovery [this DE, merged to main], (B) QA-258004 deployed, (A) QA-259702 testable.
+**Memory Type**: RAM | **Last Activity**: 2026-05-31 — debug-methodology refinement (loggers-not-breakpoints) shipped to main; QA-258004 diagnosed then discarded; minimal DE close.
