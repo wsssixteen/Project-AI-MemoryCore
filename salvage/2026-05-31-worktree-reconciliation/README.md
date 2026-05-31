@@ -15,7 +15,12 @@ The unambiguous salvages from the same cleanup were already merged into the cano
 ## 2. `keen-hopper_ARCHITECTURE.md`
 - **Origin**: untracked `ARCHITECTURE.md` in worktree `keen-hopper-f74a0d` (never committed anywhere; absent from origin/main).
 - **What it is**: a whole-repo orientation doc ("front door for a fresh Claude Code instance") that points to `meta/system-architecture.md` for depth.
-- **Decision needed**: adopt as the repo's top-level `ARCHITECTURE.md` (additive, nothing conflicts) or discard. A quick read then adopt looks reasonable.
+- **Status — ON HOLD** (per みや 2026-05-31): keep this file here, do **not** act on it (not adopted, not discarded). Revisit later.
+
+## 3. `parent-2026-05-30-diary-variant.md`
+- **Origin**: untracked `daily-diary/current/2026-05-30.md` in the **parent `main` checkout** (from the `confident-elgamal` 2026-05-30 session), discarded when parent main was reset to origin/main.
+- **What's unique**: 3 lines not in the canonical 2026-05-30 diary (origin/main's version is 37 lines richer overall) — 2 Index entries (QA-259702 Phase-1 awaiting FAT test; the QA-262495-family doc-gen NPE on `PTMLK/02/L/PRU/2026/12`) + a **Closing reflection** ("Two corrections from みや today… a stale rule retired to main, a wrong database connection repaired and guarded against… Rest well, リドワンさん").
+- **Decision needed**: fold the closing reflection into the canonical 2026-05-30 diary, or leave as-is (the 2 index entries are likely already covered there). Low priority.
 
 ---
 
