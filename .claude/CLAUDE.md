@@ -55,7 +55,10 @@ Every explanation opens with the **bird's-eye answer** — what changed / what i
 
 **The two together:** every layer of 1b internally obeys 1a — the Overview layer is pure Plain register; the Mechanism layer is Technical register but bird's-eye-shaped (org-chart-not-executives); the Granular layer is Technical register at maximum zoom. One register per cell within each layer; layers ordered Overview → Detail across the answer.
 
-**2. Default to TABLE / ARROWS / DIAGRAM — prose is the fallback, not the default.**
+**2. Default to TABLE / ARROWS / DRAW / DIAGRAM — prose is the fallback, not the default.**
+
+**🎨 Draw is co-default with tables — added 2026-06-01 per みや** (*"I'm surprised how easy it is to understand you when you draw, this should be default"*). When the content has if/then forks, decision trees, parent-child hierarchy, layered zoom, or branching paths — ASCII drawing beats a flat table because the visual relationship IS the meaning. Examples already engraved in CLAUDE.md: Predicate Diagram (3-node flowchart) · class chain (vertical multi-arrow) · scope-disambiguation cascade · org-chart-style codebase layers. **Rule of thumb**: tables for **parallel/categorical** content · drawings for **branching/hierarchical/sequential** content · prose only as fallback for both.
+
 
 | Shape | Use for |
 |---|---|
@@ -237,14 +240,59 @@ When working on a project, **always load its project file first** — project fi
 
 **Per-phase reference**: Scout emit, Recon emit, and Rubric emit each follow this template. If the shape is missing, the phase did not run. The auditor (you or any reviewer) scores compliance against the 4 parts.
 
+**Class chain — vertical ASCII form (canonical for Arrows part of the template).** Horizontal `A → B → C → D` doesn't fit ≥3 hops on screen; the canonical shape is vertical with multi-line arrows + annotation in parens for each hop:
+
+```
+  MlkKertasTemplateForm.initData():211
+        |
+        ↓  (super.populatePenyediaanDokumenByDocumentMode)
+  BasePenyediaanDokumenForm.initPenyediaanMode():2489
+        |
+        ↓  (findPenyediaanDokumenList finds STORED doc)
+  BasePelupusanDokumenForm.refreshDokumenList():511
+        |
+        ↓  (passes isFirstEntry=true at :564)
+  ⚠️ updateDocumentListAndProcessTemplateIfNotAvailable():468
+        |
+        ↓  (if(!isFirstEntry) processTemplateList() — SKIPPED)
+  stale stored doc served → populator never re-runs → JT empty on paper
+```
+
 **🚨 FORCED PHASE-EMIT GATES — the loop only works when each phase produces a VISIBLE emit before the next (HARD RULE, added 2026-05-31 per みや, QA-259702).** The decomposition/trim kept this *arrow text* but lost the *forced emits* — so a session can "run the quest skill" yet freelance straight from a glance to an Edit, skipping Recon + Rubric. That is exactly what failed QA-259702 (built a new method instead of grepping the file for its own idiom). **The rule — during ANY quest, these emits are MANDATORY, in order, and an Edit to code/template/config is BANNED until they exist in THIS session:**
-   - **Scout emit** — follow the **📐 Canonical Phase Emit Template** above (description / table of file:line cites with kind=file-read|grep / arrows of the class chain / summary naming the bug-site `⚠️`).
-   - **Recon emit** — follow the **📐 Canonical Phase Emit Template**. The table = Universal Checks (1-9) with `Class.method:line` + status (VERIFIED / HYPOTHESIS / BA-Q) per row. No Edit before it.
-   - **Rubric emit** — follow the **📐 Canonical Phase Emit Template**. The table = (a) blast-radius row, (b) 2-3 **sibling file:line** rows for the convention (incl. existing in-file method/branch per the in-file-convention rule), (c) 2-5 candidate fixes (one marked CHOSEN). Arrows for option flow if helpful. No Edit before it.
+   - **Scout emit** — follow the **📐 Canonical Phase Emit Template** above (description / table of file:line cites with kind=file-read|grep / arrows of the class chain / summary naming the bug-site `⚠️`). **Honesty primitive**: state exactly which files you read + which file:line cites are PROVEN vs HYPOTHETICAL — never imply broader code-reading than you actually did.
+   - **Recon emit** — follow the **📐 Canonical Phase Emit Template**. **Universal Checks emit as a 1-line ✓ checklist** (e.g. `Universal Checks: env ✓ · codebase-root ✓ · blast-radius ✓ · sibling-read ✓ · ind_skrin ✓ · ind_langkah ✓ · pengguna-semasa ✓ · CC-tag ✓ · save-path ✓`) — naming each check is the honesty brake (forces actual check vs silent skip); only expand to a full table-row for the 1-2 checks that surfaced something load-bearing this quest. **Honesty primitive**: mark each as VERIFIED / HYPOTHESIS / BA-Q — never blend states; if you didn't read it, say HYPOTHESIS, not VERIFIED. No Edit before it.
+   - **Rubric emit** — follow the **📐 Canonical Phase Emit Template**. The table = (a) **blast-radius** row (all tugasan in shared `*_LIST`/`*_MAP` constants that the fix might silently miss — list them, not "and others"); (b) **2-3 sibling file:line** rows for the convention (incl. existing in-file method/branch per the in-file-convention rule + existing constants + existing available methods to reuse — naming `Constant.FOO` / `existingMethod()` you considered reusing); (c) **read-path AND write-path traced** — both rows named, not one; (d) **2-5 candidate fixes** (one marked CHOSEN); (e) **Falsifier + Logger** row — what data shape would prove this fix wrong + the `QA<num>-PROBE:` logger one-liner that would catch it at runtime (mandatory per Ritual 6 — falsifier-as-action, not falsifier-as-thought); (f) **Confidence % + "why this number, not higher / not lower"** — naked percentages drift to 80% as default; force the justification. **Honesty primitive**: cite the actual sibling file:line you read for the convention check; if you didn't read a sibling / didn't trace the save path / didn't scan the constant map for sibling tugasan / didn't search for an existing constant or method to reuse — say so; guessing is BANNED. No Edit before it.
    - **Logger choice (when the Rubric picks "add a probe logger")** — grep the parent class first. `*Config` subclasses inherit `GenericLogger` from `Config.java:14`; use **String-concat** (`TemplateConfig.java:202`). `*Form` classes use slf4j (`MlkKertasTemplateForm.java:160`). Declaring a child slf4j Logger when parent has `GenericLogger` silently breaks compile (QA-262755).
-   - **Predicate Box** — before each code Edit while debugging (Debug Ritual 1).
+   - **📐 Predicate Diagram** (replaces v1.x Predicate Box; renamed 2026-05-31 per みや — plain English over jargon) — before each code Edit while debugging, emit a 3-node ASCII flowchart: Assumption → Evidence → either-matches-or-falsifier. Overlap with Recon/Rubric is INTENTIONAL — it grounds the pre-Edit moment when stakes are highest. Falsifier branch is the unique part: forces you to name a data shape that would prove the fix wrong, then plant a `QA<num>-PROBE:` logger that would catch it (per Rubric row e + Ritual 6). Canonical shape:
+
+```
+            ┌──────────────────────────────────────────────────┐
+            │  ASSUMPTION                                      │
+            │  (TRUE IF: one sentence the fix bets on)         │
+            └────────────────────┬─────────────────────────────┘
+                                 │
+                                 ↓
+            ┌──────────────────────────────────────────────────┐
+            │  EVIDENCE                                        │
+            │  (PROVED BY <file:line> + quoted code)           │
+            └─────────┬─────────────────────────┬──────────────┘
+                      │                         │
+                  matches                  contradicted by
+                      │                         │
+                      ↓                         ↓
+        ┌─────────────────────┐   ┌───────────────────────────┐
+        │  APPLY              │   │  FALSIFIER                │
+        │  the fix            │   │  (data shape Y would       │
+        │                     │   │  break the assumption)     │
+        │                     │   │  → STOP, rerun Recon       │
+        │                     │   │  on the falsifier branch   │
+        └─────────────────────┘   └───────────────────────────┘
+```
+
    - **Per-file sibling-diff EMIT LINE** (HARD, breaks out of v1.38 long-paragraph wording — was slipped by all 3 haiku audit runs) — for EVERY edited file, emit verbatim ONE line before any build: **`<file:line> ← sibling <working file:line>: attrs ✓ · listener-sig ✓ · VO-instance ✓ · lifecycle ✓`** (or name the specific divergence in place of ✓). Building/deploying a file with no sibling-diff line is BANNED. The substance check (read a sibling, match the convention) without this emit-line does NOT satisfy the rule — the line IS the rule.
    **Banned**: jumping Scout→Apply; emitting a fix with no Recon/Rubric block this session; "I'll just edit it" without the sibling-citation. **Why this is the cure**: the flow worked pre-trim because each phase forced an inspectable, structured emit (headers, tables, `file:line`) — the structure WAS the discipline. Restore the forced emit and the convention-check can't be skipped. Pairs with the in-file-convention rule (Etanah Non-Negotiables) + the pending quest-phase-gate hook (todo.md) that will enforce this deterministically; until that ships, this boot-loaded rule is the guard.
+
+**📋 Confidence % at server-log review (testing phase, post-fix).** When みや returns with test results + server.log, emit the same Confidence % + "what changed" row — the post-log delta (logger confirmed assumption A · logger contradicted B → fix scope tightened) is a persistent signal みや uses to decide whether to commit/push or rerun.
 
 One straightforward pass covers debugging → implementation. Be as straightforward as possible; don't let the machinery smother it — but the three emits above are the floor, never skipped. Full detail in `quest-protocol.md` (Scout sub-protocol · adversarial Recon :574 · Rubric 2-5 options :675 · Blast radius :808 · sibling-check :1087).
 
@@ -278,19 +326,33 @@ One straightforward pass covers debugging → implementation. Be as straightforw
 - Never commit without `local_test_confirmed=true` in quest state.
 - Summon `/familiar` (sub-agent) when reading files >500 lines.
 
-**Phase 0 mandatory reads at re-engagement** (visible checklist — emit at quest start, mark ✓ as each completes):
+**Quest Preparation Verification** (renamed from "Phase 0 mandatory reads" 2026-05-31, refined with module-scope 2026-06-01 per みや). Emit AS A TABLE at quest start, BEFORE Scout fires. Naming each context source is the honesty brake (forces the actual load, not silent skip):
 
-```
-⬜ active.txt block for QA-<num> located + status read
-⬜ Task folder location confirmed (active vs Archive — move if Rework/Addition)
-⬜ 1. <NNN NNN>.txt (or legacy 1. Notes.txt) read (or created if quest-new)
-⬜ 0. Brief/History.txt read fully
-⬜ early-diagnostic.md / QA-<num>.md cycle-N section opened (Scout familiar spawn if missing)
-⬜ **🚨 BPMN flowable LOADED + SCOPE-CHECKED before Scout** — `Read` `MLK_PLP_<URUSAN>.bpmn20.xml` + grep the BA-tugasan name; verify the bug-tugasan is a **UserTask in pelupusan**, NOT a CallActivity calling a `MLK_TKL_*` sub-process (= etanah-teknikal, NOT testable locally; WAR not deployed). If teknikal-side → STOP + surface scope before Scout. (HARD RULE 2026-06-01, see Etanah Non-Negotiable below.)
-⬜ env-switch run (`/env-check` skill — UAT/FAT target SWITCHED per ticket Env: etanahv3 config + standalone.xml + repo branch aligned; not just confirmed)
-⬜ Recon Universal Checks block emitted (per quest-protocol.md Recon section)
-⬜ 1. <NNN NNN>.txt pengguna_semasa from LIVE DB — at END of Recon, **EXECUTE** the canonical task-state SQL via `mcp__postgres-mlkuat__query` (UAT) / `mcp__postgres-mlkfat__query` (FAT); doubles as **DB-MCP reachability fail-check**. **Execution is required for active quests** — stating the SQL form without running it does NOT satisfy this step (haiku audit 2026-05-31 caught all 3 runs citing "compliance test" to skip — that exception is BANNED for live quests). If query errors (`relation does not exist` / connection / auth) → STOP + surface BEFORE Recon needs live data (downstream Recon will fabricate without it). **Exception** — for explicit compliance/simulation context (auditor mode, archived-ticket walk-through), state SQL form + MCP server name only; otherwise EXECUTE.
-```
+| Context source | Loaded | Filename / path |
+|---|---|---|
+| active.txt block for QA-<num> | ✓ / ✗ | located + status read; if archived + reopened, folder reactivation noted |
+| Task folder + 1. \<NNN NNN\>.txt (or legacy 1. Notes.txt) + 0. Brief/History.txt | ✓ / ✗ | folder path; Notes content cited; History.txt read fully (not just tail) |
+| BA attachments (photos / .pdf / .docx / video) | ✓ / ⏭ n/a | filenames OR "none in 0. Brief/"; if .pdf → `annotations` skill ran for FreeText comments |
+| QA-<num>.md cycle-N section | ✓ / ✗ | path; Scout familiar spawn note if missing |
+| etanah-knowledge Always tier (5 files) | ✓ | `Loaded: index.md · DOMAIN-GLOSSARY · MODULE-ARCHITECTURE · BUG-BESTIARY · DEFERRED-CRITICAL-ISSUES` (Read ≥50 lines per file, not Glob-only) |
+| etanah-knowledge Conditional (per ticket layer) | ✓ / ⏭ n/a | filenames loaded (DATABASE.md / JSF-WIRING.md / etc.) OR "n/a — layer not touched" |
+| **🚨 BPMN flowable LOADED + SCOPE-CHECKED before Scout** (HARD 2026-06-01, QA-262755) | ✓ | `Read` `MLK_PLP_<URUSAN>.bpmn20.xml` + grep the BA-tugasan; classify: `<userTask>` = pelupusan (Scout OK) · `<callActivity calledElement="MLK_TKL_*">` = **etanah-teknikal** (NOT deployed locally — STOP + surface scope) · `<callActivity calledElement="MLK_PLP_SUB_*">` = pelupusan sub-process (Scout OK). If ≥3 files → folder path + count. |
+| **🎯 Scope (module) confirmed** (NEW 2026-06-01, disambiguation cascade) | ✓ + cite DISAMBIGUATION SOURCE | one of: **(a) BPMN classification above** (MOST authoritative — `<userTask>` vs `<callActivity MLK_TKL_*/MLK_PLP_SUB_*>`); **(b) Redmine Description URUSAN line + Permohonan ID prefix** (e.g. `PTMLK/01/L/PLPS/2026/X` → URUSAN=PLPS); **(c) screenshot header bar quoted text** (URUSAN/Tugasan label visible on top of page, NOT just visual feel); **(d) Permohonan ID exists** ⇒ AWAM stage passed, likely PLP (heuristic, not lock — could still be rare AWAM follow-up screen); **(e) grep BOTH codebases for the BA-highlighted field LABEL text** (label usually unique to one side, quote which codebase matched); **(f) BA-Q + STOP** if (a)-(e) all ambiguous. **Banned**: assuming scope from subject keyword alone. |
+| env-switch (`/env-check` skill) | ✓ | UAT/FAT target SWITCHED per ticket Env (etanahv3 config + standalone.xml + repo branch aligned — not just confirmed) |
+| LIVE DB pengguna_semasa (canonical task-state SQL) | ✓ | EXECUTED via `mcp__postgres-mlkuat__query` (UAT) / `mcp__postgres-mlkfat__query` (FAT) at end of Recon; result fed to Notes file; doubles as **DB-MCP reachability fail-check** — if query errors (`relation does not exist` / connection / auth), STOP + surface. Stating SQL form without running it does NOT satisfy this step (haiku audit caught all 3 sims skipping with "compliance test" excuse — BANNED for live quests). **Exception**: explicit compliance/simulation context (archived-ticket walk-through, auditor mode) — state SQL form + MCP server name only. |
+
+**Scope-category reference** (the 4 modules + their tells):
+
+| Scope | Codebase | Audience | Tells | Confused-with |
+|---|---|---|---|---|
+| **PLP** | `etanah-pelupusan` (Apps) | PT/PTG officers | URL `/Apps/`, Mlk*Form classes, BPMN `<userTask>` or `<callActivity MLK_PLP_SUB_*>` | AWAM (same urusan has both sides); etanah-teknikal (JT/CK tugasans share urusan but live in MLK_TKL_* callout) |
+| **AWAM** | `etanah-awam` (Pra) | applicant portal | URL `/Pra/` or `/Awam/`, public-facing screens | PLP (BA screenshots sometimes show AWAM expecting PLP fix) |
+| **etanah-teknikal** | NOT deployed on local JBoss (`.m2` empty) | JT/charting/CK roles | BPMN `<callActivity calledElement="MLK_TKL_*">`; manifests as 127.0.0.1:8080/etanah-teknikal 404 if Scouted as PLP | PLP (same urusan; CK = Charting Keputusan lives here — caught QA-262755) |
+| **etanah-common** | shared base library | both PLP + AWAM | base classes (`BasePelupusanDokumenForm`), shared utilities, populator framework | PLP — but fixes here have CROSS-SCOPE blast radius |
+
+**Harness on the way** (todo.md Q1, `quest/preflight.js <QA>`): the deterministic 3 rows (file existence · BPMN-by-URUSAN find + classify · LIVE DB SQL execute) will auto-run and emit the table with ✓ pre-filled; the read/synthesis rows stay manual. Until then, this table is emitted by hand at quest start.
+
+**Scout step 0** (HARD 2026-06-01): before tracing any class chain, confirm the **Scope row** of Quest Preparation Verification is ✓-cited (not ✓-empty); if ambiguous → run the disambiguation cascade or BA-Q + STOP. Scope-from-subject-keyword alone is BANNED.
 
 **Quest trigger-time essentials** (restored to boot-load 2026-05-30 — these live fully in `quest/quest-protocol.md` but are summarized here so they're in context during quest *design/discussion*, not only at `/quest start`. The 2026-05-22 decomposition pushed them into the non-boot-loaded protocol → paraphrase errors when discussing quests without a live `/quest start`; redundancy is intentional per みや 2026-05-25):
 
@@ -387,6 +449,8 @@ One-time per machine — see `.claude/new-machine-setup.md` (routed out of CLAUD
 - `/verify` — universal workflow-checkpoint verification (Phase 0 / Apply-done / Phase 1 close-out / DE Checklist D)
 
 **Historical reference**: `.claude/claude-md-amendments.md` — ✅ EMPTIED 2026-05-25; all 16 amendments absorbed into canonical homes (table inside the file documents final disposition). File kept for historical disposition log; no active amendments load from it. Boot-load remains as informational-only / low-priority; can be dropped from boot list in a future cleanup.
+
+*Version: 1.46 | Last updated: 2026-06-01 — **MERGE-and-extend patch**: restored 8 v1.45 items that the parallel-session commit `254994f` had inadvertently rolled back (class-chain vertical ASCII example + Predicate Diagram 3-node flowchart + Quest Preparation Verification table + 1-line Universal Checks + Confidence % at Rubric AND post-server-log + verbose Rubric wording + honesty primitives per phase + Falsifier+Logger Rubric row), KEPT the 4 items parallel-session correctly added (BPMN-first module-scope rule · BPMN-scope Phase 0 row · BPMN tier-table promotion to MANDATORY · Logger-choice GenericLogger vs slf4j · Notes file `1. <NNN NNN>.txt` rename), and ADDED 3 new items from this turn: (a) **🎨 Draw is co-default with tables** (rule 2 of Output-Format Discipline — drawings for branching/hierarchical/sequential content, tables for parallel/categorical, prose fallback only); (b) **🎯 Scope (module) row** in Quest Preparation Verification — disambiguation cascade BPMN→Description→Screenshot→Permohonan-ID→grep→BA-Q+STOP; (c) **Scope-category reference table** (PLP / AWAM / etanah-teknikal / etanah-common — with their tells + confused-with patterns); (d) **Scout step 0** — confirm Scope row ✓-cited before tracing any class chain; subject-keyword-only BANNED. Net: ~80 lines restored, ~10 net new, single-file CLAUDE.md patch. Per みや this session — wrong-module Scout caught in QA-262755 + the rolled-back v1.45 work needed to land alongside.*
 
 *Version: 1.45 | Last updated: 2026-06-01 — **🚨 BPMN-first module-scope check** (HARD RULE per みや, QA-262755). Added as the FIRST rule in Etanah Non-Negotiable list (must settle before working-analog-first) + added a Phase 0 mandatory checklist row + promoted BPMN load in the etanah-knowledge tier table from "On-demand" to "MANDATORY before Scout" for any tugasan/flow-routing ticket. **The rule**: BEFORE Scout, `Read` `MLK_PLP_<URUSAN>.bpmn20.xml`, grep the BA-tugasan label/kod, classify: UserTask = this module (pelupusan, can Scout) · CallActivity → `MLK_TKL_*` = etanah-teknikal (NOT deployed locally — `.m2` empty; STOP + surface scope) · CallActivity → `MLK_PLP_SUB_*` = pelupusan sub-process (Scout). **Why**: QA-262755 Scout treated CK (Charting Keputusan) as if it lived in etanah-pelupusan; the PLPS BPMN at `:516` clearly shows `38.0 Charting Keputusan Lulus` as `<callActivity calledElement="MLK_TKL_CL_LP">` — TKL prefix = teknikal. We built+deployed a fix to `MlkSemakanDokumenKelulusanForm` (pelupusan SDK tugasan) that could never fire on BA's CK page (etanah-teknikal, not on local JBoss); みや got a 404. One BPMN grep at Phase 0 would have surfaced the module-mismatch in seconds. Companion: BA-photo-set scope rule — BA often provides BOTH a pelupusan-side photo (SAVE step) and a teknikal-side photo (bug-site); read BOTH, scope the fix to the pelupusan step (SAVE writer) if the bug-site is teknikal-only.*
 
