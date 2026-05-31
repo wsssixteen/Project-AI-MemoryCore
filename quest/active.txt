@@ -1,8 +1,8 @@
 active:
 
 qa=QA-258004
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\52. QA #258004 - [FAT] MCL - Penyediaan Surat Keputusan, Borang Notis 5A, dan Lampiran
-qa_doc=projects/coding-projects/active/QA-258004/QA-258004.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\52. QA #258004 - [FAT] MCL - Penyediaan Surat Keputusan, Borang Notis 5A, dan Lampiran
+qa_doc=projects/coding-projects/archive/QA-258004/QA-258004.md
 phase=2
 status=archived
 branch=mlk/qa/258004v2
@@ -22,14 +22,18 @@ notes:
   - 2026-05-31 PHASE 1 CLOSED (commit ec64535e44, branch mlk/qa/258004v2). TRUE ROOT CAUSE (after a long debug — the early "stale stored doc" theory was only partial): the officer's Syarat Nyata / Sekatan Kepentingan dropdown selection never reached apt. Two breaks, both proven by LOGGER trace: (1) the dialog include `mlkMaklumatPajakanForm` did NOT forward `mbb` to the syarat composite → the change-ajax threw `'. mbb' resolved to null` → pick lost; (2) the dropdown entity value is re-decoded to null on the Simpan postback. FIX (4 files, mirrors the working RM-field onPremiumChange + sibling kadar-cukai dropdown): forward `mbb` (parent + pajakanForm includes) + dropdown listener `onSelectSyaratNyataSekatan` (no-paren) captures the pick into @ViewScoped fields on change + restore-onto-VO right before saveMaklumatPremiumCukai + guarded init-load. Also kept from earlier: onPremiumChange + saveMaklumatMCL (RM (i)/(ii) Dokumen Hakmilik persist) + invalidate-on-save (letter regenerates). みや live-confirmed: letter shows selected syarat (516/519) + sekatan (493/342 etc, correct casing) + RM amount. Populator land-report fallback REVERTED (apt now populated, not needed). Diagnostic loggers + 2 losing capture scenarios stripped before commit. Files: MlkMaklumatTanahPemberimilikanForm.java + .xhtml, mlkMaklumatPajakanForm.xhtml, mlkMaklumatSyaratNyataDanSekatanKepentingan.xhtml. KEY LESSON (みや): each edited file was NOT cross-checked against its working sibling → ~1.5 days lost; sibling-consistency-check hook parked in todo.md Q1 as the next task.
 
 qa=QA-259702
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\51. QA #259702 - PRU - Pembetulan pada template Ringkasan Risalat dan Risalat MMKN - PT
-qa_doc=projects/coding-projects/active/QA-259702/QA-259702.md
-phase=1
-status=active
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\51. QA #259702 - PRU - Pembetulan pada template Ringkasan Risalat dan Risalat MMKN - PT
+qa_doc=projects/coding-projects/archive/QA-259702/QA-259702.md
+post_mortem=main/post-mortems.md (QA-259702 entry, 2026-05-31)
+kpi_entry=main/kpi-tracker.md (QA-259702 entry, 2026-05-31)
+phase=2
+status=archived
+branch=mlk/qa/259702
+commit=59b7e62c90
 ticket_type=bug
-current_phase=Verify (implementation APPLIED on etanah mlk/master working tree, uncommitted; awaiting live-FAT test)
-local_test_confirmed=false
-env=FAT (per Description Env: FAT, line 9) — NOT switched; confirm via /env-check at scope sign-off.
+current_phase=Phase 2 CLOSED 2026-05-31 — post-mortem + KPI written; Task folder + project subfolder archived. Commit 59b7e62c90 on origin/mlk/qa/259702 (merge to master = colleague). みや live-tested on UAT PTMLK/01/L/PRU/2025/36 (env switched UAT per みや despite BA-FAT). All Ringkasan Risalat + Risalat MMKN fields populate.
+local_test_confirmed=true
+env=UAT (mlkuat / et_main_uat) — SWITCHED from FAT per みや this session (BA used FAT; みや chose UAT for testing + set up the env). Test app PTMLK/01/L/PRU/2025/36 @ masirah@melaka.gov.my, data-patched + flowable-altered to Ringkasan tugasan.
 status_redmine=New (synced 2026-05-29); assigned_to 1311 (みや) by Aaron Loh 2026-05-26 "please assist".
 issue_one_liner=PRU Ringkasan Risalat: DUN tidak papar + Lokasi/Keadaan-Tanah default ayat missing + Ulasan YB ADUN Kawasan not pulled; REMOVE Perihal Permohonan row + Nama YB from Ulasan Teknikal; Perakuan PTD must show Syor choice (Lulus->Boleh dipertimbangkan / Tolak->Tidak dipertimbangkan). Risalat MMKN PTG section blank in brief -> BA-Q. 7 items.
 test_app=PTMLK/02/L/PRU/2026/12 (aplikasi 3227866, nor.aini@melaka.gov.my, tugasan PRRMMKNPTG "Perakuan Risalat MMKN - PTG", role PTG, pejabat 1) — RESOLVED 2026-05-30 via live et_main; the ONLY active PRU app on FAT. Same app that threw the concurrent doc-gen NPE at 16:10 (QA-262495 family, pre-existing). New PRU template + MLK config split CONFIRMED in the 17:22 deployed WAR. Notes.txt rewritten via notes.js. [Prior wrong ID PTMLK/01/L/PRU/2026/15 was an et_reporting snapshot artifact.]
