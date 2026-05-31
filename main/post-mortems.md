@@ -1060,4 +1060,36 @@ Faster: a `.docx` positioning fix needs the FULL layout chain traced — paragra
 
 ---
 
+## QA #258004 — MCL Surat Keputusan Lulus: Syarat Nyata / Sekatan Kepentingan / Notis-5A bayaran not reflecting officer's input (closed 2026-05-31)
+
+**Ticket**: [FAT/UAT] MCL — Penyediaan Surat Keputusan, Borang Notis 5A (tugasan PYSKN5A). Rework reassigned to リドワン by Aaron 2026-05-26; scope trimmed to the 2026-05-18 last comment. Branch `mlk/qa/258004v2`, commit `ec64535e44` (local; not yet pushed to origin — parallel session owns origin/main).
+
+**Symptom**: the generated Surat Keputusan Lulus printed `-` (or stale values) for f) Syarat Nyata + g) Sekatan Kepentingan, and a stale Notis-5A bayaran amount, even though the officer selected them in the "Kemaskini Maklumat Tanah" popup.
+
+**True root cause** (found only after a long debug — the initial "stale stored document" theory was partial): the officer's dropdown selection never reached the application record (`umm_a_permohonan_tnh`) the letter reads. TWO independent breaks, both finally proven by bundled LOGGER trace:
+1. The dialog include `mlkMaklumatPajakanForm` did NOT forward `mbb` to the syarat/sekatan composite → the change-ajax threw `'. mbb' resolved to null` → the pick was lost. (Sibling `mlkMaklumatKadarCukaiTanah` in the same dialog DID forward `mbb`.)
+2. The dropdown's entity value is re-decoded to null on the Simpan postback; nothing captured it into a postback-surviving field.
+
+**Fix** (4 files, mirrors the working RM-field `onPremiumChange` + sibling `kadar-cukai-sebelum` dropdown): forward `mbb` (parent form + pajakanForm includes) · dropdown `listener=onSelectSyaratNyataSekatan` (no-paren) captures the pick into `@ViewScoped` fields on change · restore-onto-VO immediately before `saveMaklumatPremiumCukai` · guarded init-load. Plus (kept from earlier in the quest) `onPremiumChange` + `saveMaklumatMCL` (persist the (i)/(ii) Dokumen Hakmilik RM → Notis-5A amount) + invalidate-on-save (stored letter regenerates). みや live-confirmed all three on the letter.
+
+**Faster-finding**: the answer was "copy the working sibling's wiring" from the very start. The early "stale stored doc → regenerate" theory was only ~⅓ of it; the populator land-report fallback + casing-resolve detours were dead ends (reverted). The decisive tool was **bundled loggers** (Ritual 6), not breakpoints — breakpoints repeatedly failed to bind / misled; one logger build printed `mbb resolved to null` + `LISTENER FIRED:0` + which VO held the value, ending the guessing.
+
+**Contributing Factors** (the expensive ones — ~1.5 days):
+- **Per-file wiring was never diffed against the working sibling.** Each edited file (xhtml include missing `mbb`, listener with a stray `()`, save reading the wrong VO instance) silently diverged from a sibling that already worked, and I never cross-checked them until late. THIS is the headline lesson.
+- Over-reliance on theory + breakpoints over reading sibling code; multiple "fixes" shipped on hypothesis without proving the broken link first.
+- Deploy friction: Eclipse "Refresh-not-Build" + stale `target/classes` republish repeatedly deployed an incomplete WAR, masking whether a fix was even live (resolved by byte/MD5-comparing deployed classes, and later by みや doing Eclipse Project>Clean + JBoss>Clean).
+
+**Process Notes**:
+- New HARD RULE shipped this session: **CLAUDE.md v1.38 — PER-FILE SIBLING DIFF** (proactive, every edited file diffed against a named working sibling across all coupling points before build). Placed directly in CLAUDE.md per みや (bypassing system-design — rules in other MD files were being skipped).
+- **Sibling-consistency-check hook** parked in `todo.md` Q1 as the next task — to enforce the v1.38 rule deterministically.
+- Also this session: CLAUDE.md v1.33 (DB & Entity Resolution), v1.34 (smallest-change + programmer-convention), v1.35 (UI→code→table explanation), v1.36 (JSF copy-working-sibling), v1.37 (Ritual 6 loggers-not-breakpoints, parallel session).
+- Integrity slips logged earlier this quest (fabricated DB results before catching them) → `meta/slip-log.md`.
+
+**Carry Forward**:
+- Sibling-consistency-check hook/harness — `todo.md` Q1 (do next).
+- PT/PSBS/PLTP MCL-siblings may share the same dropdown-not-persisting shape — latent follow-up, NOT this ticket (scope_anchor held).
+- Commit `ec64535e44` is local-only; next session reconciles + pushes origin (parallel session owns origin/main now).
+
+---
+
 *Post-Mortem Log v1.0 — 2026-04-02*

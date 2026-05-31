@@ -433,3 +433,5 @@
 {"ts":"2026-05-28T08:29:54.979Z","qa_active":"QA-262233","phase":null,"status":null,"gap_since_prev_minutes":8}
 {"ts":"2026-05-28T08:33:21.633Z","qa_active":"QA-262233","phase":null,"status":null,"gap_since_prev_minutes":3}
 {"ts":"2026-05-28T08:43:53.054Z","qa_active":"QA-262233","phase":null,"status":null,"gap_since_prev_minutes":11}
+{"ts":"2026-05-31T02:41:14.087Z","qa_active":"QA-258004","phase":"1","status":"active","gap_since_prev_minutes":3957}
+{"ts":"2026-05-31T02:55:28.000Z","qa_active":"QA-258004","phase":"1","status":"closed","gap_since_prev_minutes":14}

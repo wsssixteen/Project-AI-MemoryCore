@@ -2,31 +2,35 @@
 
 > **AGENT_STATE discipline** — High-Level Objective · Current Progress · Active Context · Blockers · Immediate Next Steps. Read at boot; updated at session end.
 
-**Current session**: 2026-05-31 (Sun) — single session, worktree `jovial-wright-a8b935`. Theme: **debugging-methodology refinement** (loggers-not-breakpoints) + git-history archaeology on a trimmed rule. One etanah quest (QA-258004) re-engaged then discarded by みや.
+**Current session**: 2026-05-31 (Sun) — worktree `eloquent-noether-0c1bb4` (auto-cleaned mid-session; finished on main repo `main`). Theme: **QA-258004 closed end-to-end (Phase 0→2)** — the MCL Surat Keputusan Lulus syarat/sekatan/Notis-5A fix — plus the per-file-sibling-diff rule it taught.
 
 ## High-Level Objective (AGENT_STATE)
-- Recover/clarify the "don't make みや do my work" rule みや remembered banning (esp. breakpoints), and refine it into a usable debugging discipline. **Done — shipped to main.**
+- Resume + fix QA-258004 (MCL letter not reflecting officer's Syarat Nyata / Sekatan Kepentingan / Notis-5A bayaran), close Phase 1+2, then DE so QA-259702 can resume in a fresh session using the rules learned here. **Done.**
 
 ## Current Progress (AGENT_STATE)
-- **Debug-methodology refinement SHIPPED** (commit `3925e6a` → origin/main). New **Debug Ritual 6** (`quest/quest-protocol.md`): runtime confirmation = **extensive loggers (≥3 what-ifs) bundled INTO the first-pass fix build** (one rebuild carries fix + confirmation = 3-4× saving); **breakpoints BANNED** as a request to みや; breakpoint = very-very-last-resort only when there's no code change to bundle loggers into. Matched pair: **prepare-commit-trigger.js v1.3 Step 2.6** strips `QA<num>-PROBE:` loggers + debug comments before any BA-bound commit. Also: CLAUDE.md v1.37 (boot-table rows 5+6), personality.md v1.8 (no-asking-back runtime corollary), system-architecture.md v1.6.
-- **Archaeology finding** (context): the breakpoint-specific ban was NEVER codified (pre- or post-trim); the parent "No asking-back for searchable facts" rule (personality.md:165) already exists and post-dates the 2026-05-22 trim. みや hinted there are MORE good rules lost in the trim worth recovering later.
+- **QA-258004 CLOSED (Phase 1 + Phase 2).** etanah commit `ec64535e44` on branch `mlk/qa/258004v2`, **pushed to origin** (etanah repo). True root cause: officer's dropdown pick never reached `umm_a_permohonan_tnh` — (1) the dialog include `mlkMaklumatPajakanForm` didn't forward `mbb` to the syarat composite → `'. mbb' resolved to null` → pick lost; (2) the entity dropdown value re-decodes to null on Simpan postback. Fix (4 files, mirrors the working RM-field `onPremiumChange` + sibling `kadar-cukai-sebelum` dropdown): forward `mbb` + no-paren `onSelectSyaratNyataSekatan` listener captures into `@ViewScoped` fields on change + restore-onto-VO before `saveMaklumatPremiumCukai` + guarded init-load; kept `onPremiumChange`/`saveMaklumatMCL`/invalidate for the RM amount + letter regen. みや live-confirmed. Post-mortem in `main/post-mortems.md`.
+- **CLAUDE.md hardened 5× this session**: v1.33 DB & Entity Resolution · v1.34 smallest-change + programmer-convention · v1.35 UI→code→table explanation · v1.36 JSF copy-working-sibling · **v1.38 🚨 PER-FILE SIBLING DIFF (headline lesson)** — every edited file diffed against a named working sibling across ALL coupling points (include attrs · listener signature · VO-instance · lifecycle) BEFORE build. (v1.37 loggers-not-breakpoints came from the parallel session.)
+- **Decisive debug tool**: bundled LOGGERs (Ritual 6), not breakpoints — breakpoints repeatedly mis-bound/misled; one logger build printed `mbb resolved to null` + `LISTENER FIRED:0` + which VO held the value, ending ~1.5 days of guessing.
 
 ## Active Context (AGENT_STATE)
-- MemoryCore main is at `3925e6a` (this session's rule commit + this DE's diary/session commit on top).
-- ⚠️ **Sandbox Bash clock runs ~4h behind real machine clock** (real time read from JBoss server.log internal timestamps). Trust filesystem `ls` / server.log over `date` for real time.
+- MemoryCore: this DE committed **LOCAL ONLY (no push)** per みや — a parallel session owns origin/main right now; next session reconciles + pushes. Local `main` started this DE at `6be4ccb`, 0 behind/0 ahead origin.
+- etanah-pelupusan: on `mlk/master`; QA-259702's `template.config.json` + `TemplateRingkasanRisalatPRU.docx` remain uncommitted on the working tree (that ticket's, untouched by QA-258004's commit).
+- ⚠️ Sandbox Bash clock runs ~4h behind real machine (DE timestamp shows ~11:00; real ~15:00). Trust `ls`/server.log over `date`.
+- Worktree `eloquent-noether-0c1bb4` auto-cleaned mid-session; work finished from the main repo.
 
 ## Blockers (AGENT_STATE)
-- None.
+- None for QA-258004 (closed).
 
 ## Immediate Next Steps (AGENT_STATE)
-1. **(if みや wants)** Recover more trimmed rules from pre-trim CLAUDE.md (`51606ea`, 2026-05-20) — みや flagged several good ones were lost in the 2026-05-22 decomposition.
-2. **QA-258004** (still open, phase=1, active.txt) — diagnosis complete (entity-VO-rebuild-on-postback nulls the dropdown; capture/restore fix already coded + deployed; land-report fallback is reader-side masking). Investigation was DISCARDED this session per みや; resume only if he reopens it. Test data: `PTMLK/02/L/MCL/2026/1` @ nurulazura@melaka.gov.my, PYSKN5A, UAT.
-3. **QA-259702** (open, phase=1) — still awaiting live FAT test on `PTMLK/02/L/PRU/2026/12` @ nor.aini@melaka.gov.my.
-4. ⚑ **Meta-layer effectiveness audit** (TOP priority carried from 2026-05-30) — "has the self-improving system backfired?" Assess hook net-value; prune noise/false-positives (e.g. the RecursiveLoopDetector false-fired repeatedly this session on distinct greps/edits).
+1. **Sibling-consistency-check hook/harness** — `todo.md` Q1, do NEXT. Enforce CLAUDE.md v1.38 deterministically (extend `convention-check-gate.js` from "cite an analog" to "diff against the named sibling"). みや's explicit next-task directive.
+2. **QA-259702** (open, phase=1) — resume in the new session; awaiting live FAT test on `PTMLK/02/L/PRU/2026/12` @ nor.aini@melaka.gov.my. みや expects the fix to APPLY the rules learned here (per-file sibling diff, working-analog-first, loggers-not-breakpoints).
+3. **Reconcile + push MemoryCore to origin** once the parallel session releases origin/main.
+4. ⚑ Meta-layer effectiveness audit (carried) — hook net-value / false-positive pruning (RecursiveLoopDetector false-fired on distinct greps/edits again this session).
 
 ## 🎯 Session Recap (for AI restart)
-1. Refined debugging methodology: **loggers-not-breakpoints**, loggers bundled into the first-pass fix build (3-4× saving), breakpoints banned except very-last-resort. Shipped to main (`3925e6a`): Ritual 6 + prepare-commit Step 2.6 + CLAUDE.md v1.37 + personality.md v1.8 + system-architecture.md v1.6.
-2. Git-history archaeology: the breakpoint-ban みや remembered was never codified; the parent no-asking-back rule exists post-trim. More trimmed rules await recovery.
-3. QA-258004 re-engaged + diagnosed (dropdown null = entity-VO-rebuild design flaw, fix already deployed) then discarded per みや.
+1. **QA-258004 closed** (Phase 1+2, etanah `ec64535e44` / `mlk/qa/258004v2`): MCL letter now shows officer-selected Syarat Nyata + Sekatan Kepentingan + Notis-5A amount. Root cause = dropdown pick never persisted (`mbb` not forwarded + postback re-decode-to-null); fix mirrors the working RM-field + sibling-dropdown wiring.
+2. **Headline lesson → CLAUDE.md v1.38**: PER-FILE SIBLING DIFF before building — each edited file's every coupling point checked against a working sibling. The ~1.5-day cost came from skipping exactly this.
+3. Loggers-not-breakpoints (Ritual 6) was the tool that cracked it.
+4. MemoryCore DE committed local-only (no push) — parallel session owns origin.
 
-**Memory Type**: RAM | **Last Activity**: 2026-05-31 — debug-methodology refinement (loggers-not-breakpoints) shipped to main; QA-258004 diagnosed then discarded; minimal DE close.
+**Memory Type**: RAM | **Last Activity**: 2026-05-31 — QA-258004 closed end-to-end + CLAUDE.md v1.38 per-file-sibling-diff rule; DE local commit (no push); QA-259702 next.

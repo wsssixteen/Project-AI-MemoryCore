@@ -3,11 +3,13 @@ active:
 qa=QA-258004
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\52. QA #258004 - [FAT] MCL - Penyediaan Surat Keputusan, Borang Notis 5A, dan Lampiran
 qa_doc=projects/coding-projects/active/QA-258004/QA-258004.md
-phase=1
-status=active
+phase=2
+status=archived
+branch=mlk/qa/258004v2
+commit=ec64535e44
 ticket_type=bug
-current_phase=Verify (fix APPLIED + compiled + Maven WAR built & deployed to JBoss; awaiting みや live UAT test)
-local_test_confirmed=false
+current_phase=Phase 2 CLOSED 2026-05-31 — post-mortem written (main/post-mortems.md). Fix committed ec64535e44 + pushed to origin/mlk/qa/258004v2 (etanah repo); MemoryCore commit local-only pending next-session origin reconcile. みや live-confirmed letter shows officer-selected Syarat/Sekatan + Notis-5A amount.
+local_test_confirmed=true
 env=UAT (mlkuat / et_main_uat) — SWITCHED from FAT (folder name says [FAT]) because FAT had no MCL test data. standalone.xml etanahDS→mlkuat + environment.properties cas.url→UAT applied this session.
 status_redmine=reassigned to リドワン (1311) by Aaron 2026-05-26; scope trimmed to the 2026-05-18 last comment (Syarat Nyata + Sekatan Kepentingan). Prior fixes by Vincent Lee on mlk/qa/258004 (data-missing #257239 + wording).
 issue_one_liner=MCL Surat Keputusan Lulus prints blank Syarat Nyata + Sekatan Kepentingan (and the bayaran amount jumlahBayaranNotis5A) though the data exists — the stored SRT_KPTSN_PLP document is generated ONCE and never regenerated on data change. FIX = UNCONDITIONAL invalidate-on-save: any Simpan on MlkMaklumatTanahPemberimilikanForm (MCL) deletes the editable stored letter → next view regenerates with live data.
@@ -17,6 +19,7 @@ notes:
   - 2026-05-30: /quest start 258004. Phase 0 Discovery→Recon→Rubric complete (8 Universal Checks VERIFIED file:line; Option A chosen — invalidate stored doc on save, mirror PelupusanHelper.onJana:393). Root cause = stale stored document (generated once, never regen-on-change). Full record in qa_doc.
   - 2026-05-30 (Apply, uncommitted on etanah mlk/master): MlkMaklumatTanahPemberimilikanForm.java — (1) import AppDokumenKeluaran + IPelupusanDocumentService; (2) performCustomSave MCL branch (TGSN_SHOW_CUKAI_PANEL ~:1170) → invalidateSuratKeputusanLulusForRegeneration() under URS_MCL guard [UNCONDITIONAL per みや — ANY page change regenerates; status-gated to skip PERAKU/CETAK/SELESAI signed letters]; (3) onPremiumChange(PelupusanMaklumatPremiumCukaiVO) empty stub for the QA-260955 regression (MethodNotFoundException that blocked the amount scenario). mvn package = BUILD SUCCESS. A method-placement/verbose-comment slip occurred + was reverted & redone via workflow (slip-log 2026-05-30 QA-258004 entry).
   - 2026-05-30 (deploy): proper Maven WAR built (target/etanah-pelupusan.war, 413MB) — has the META-INF/maven pom.properties that the WTP-assembled WAR lacked (root cause of the appVersionMap NPE at JBoss startup). Copied to JBoss deployments; みや cleared tmp/data/deployments. AWAITING JBoss start + live UAT test: Test A (syarat/sekatan populate on the letter) + Test B (jumlahBayaranNotis5A amount). Then Phase 1 close-out (branch mlk/qa/258004 → stop-at-stage diff → commit after nod → push).
+  - 2026-05-31 PHASE 1 CLOSED (commit ec64535e44, branch mlk/qa/258004v2). TRUE ROOT CAUSE (after a long debug — the early "stale stored doc" theory was only partial): the officer's Syarat Nyata / Sekatan Kepentingan dropdown selection never reached apt. Two breaks, both proven by LOGGER trace: (1) the dialog include `mlkMaklumatPajakanForm` did NOT forward `mbb` to the syarat composite → the change-ajax threw `'. mbb' resolved to null` → pick lost; (2) the dropdown entity value is re-decoded to null on the Simpan postback. FIX (4 files, mirrors the working RM-field onPremiumChange + sibling kadar-cukai dropdown): forward `mbb` (parent + pajakanForm includes) + dropdown listener `onSelectSyaratNyataSekatan` (no-paren) captures the pick into @ViewScoped fields on change + restore-onto-VO right before saveMaklumatPremiumCukai + guarded init-load. Also kept from earlier: onPremiumChange + saveMaklumatMCL (RM (i)/(ii) Dokumen Hakmilik persist) + invalidate-on-save (letter regenerates). みや live-confirmed: letter shows selected syarat (516/519) + sekatan (493/342 etc, correct casing) + RM amount. Populator land-report fallback REVERTED (apt now populated, not needed). Diagnostic loggers + 2 losing capture scenarios stripped before commit. Files: MlkMaklumatTanahPemberimilikanForm.java + .xhtml, mlkMaklumatPajakanForm.xhtml, mlkMaklumatSyaratNyataDanSekatanKepentingan.xhtml. KEY LESSON (みや): each edited file was NOT cross-checked against its working sibling → ~1.5 days lost; sibling-consistency-check hook parked in todo.md Q1 as the next task.
 
 qa=QA-259702
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\51. QA #259702 - PRU - Pembetulan pada template Ringkasan Risalat dan Risalat MMKN - PT
