@@ -1,3 +1,5 @@
+# 🪦 DETACHED 2026-05-31 — Canonical home is meta/slip-log.md (per Q2 prune-not-delete audit). Historical entries below kept for archival; new entries route to meta/slip-log.md via auto-skill-on-mistake Step 5. Re-attach: remove this header + restore the source file's boot/INDEX wiring.
+
 # Hook Fire Log
 
 > **Purpose:** Per-session record of meta-layer hook fires. Each row = one hook firing event. Read by DE meta-audit step (12.5) to verify hook reliability.

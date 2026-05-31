@@ -711,3 +711,24 @@ kpi_entry=main/kpi-tracker.md (entry 2026-05-29)
 verified=2026-05-29 — みや tested OK on UAT: fresh Perizaban app (Kemasukan Perizaban, Agensi) saves flag_pemohon='Y'; Surat JT renders applicant.
 root_cause=MlkKemasukanPerizabanForm:827 calls savePemohon(jenisPB=3); savePemohon flagged only jenisPB 1/4 -> 2/3/5 left adalahPemohon unset -> DB default 'N' -> getWakilPemohon null -> blank Surat JT.
 fix=savePemohon ensure-one-applicant invariant (PelupusanService ~:1230, fires only when aplikasi has zero flagged party AND jenisPB not 2/4) + SpocService:371 sole-applicant one-liner. Data backfill: 11 PRZ agency apps + 2026/29 + 1 PERKESO dup. Broader doors (general dialog / PBT-Majlis / SPOC) covered by the invariant.
+
+qa=QA-253053
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\53. QA #253053 - [FAT] PLTP - Risalat MMKN - Tak papar jabatan teknikal yang dipilih pa
+qa_doc=projects/coding-projects/active/QA-253053/QA-253053.md
+post_mortem=main/post-mortems.md (QA-253053 entry, 2026-05-31)
+kpi_entry=main/kpi-tracker.md (QA-253053 entry, 2026-05-31)
+phase=2-complete
+status=archived
+branch=mlk/qa/253053
+commit=e40d1a66fe
+ticket_type=bug
+current_phase=Phase 2 CLOSED 2026-05-31 — committed e40d1a66fe + pushed origin/mlk/qa/253053; post-mortem + KPI written; Task folder archived. Fix = 2 mechanisms in MlkKertasTemplateForm.java: (1) entry-invalidate in initData (PLTP + TGS_RISALAT_MMKN_PDT_LIST/PTG_LIST → deleteAppDokumenKeluaranBasedOnJenisDokumen) for show-on-entry/refresh; (2) performCustomSave block (PLTP + PRMMKNPDT/SRMMKNPDT/PERAKUAN_PENTADBIR_TANAH → deleteExistingRisalatDocuments + repopulate) for show-on-Simpan. みや final-tested OK. OPEN: no status-guard at Perakuan (QA-258004 lesson) — follow-up.
+local_test_confirmed=true
+env=FAT (mlkfat / et_main / etprdmlk — live confirmed)
+status_redmine=Rework (status_id=23). Reassigned to リドワン (1311) by Aaron 2026-05-26 "please assist". Cycle-1 fix by Cheow Yih Kit 2026-03-31 (commit 56c596256258 — added the CC + populator + JabatanTeknikal.docx).
+issue_one_liner=PLTP Risalat MMKN — Jabatan Teknikal dipilih tidak papar pada kertas risalat. REWORK: JT only appears AFTER Selesai + vanishes on refresh. ROOT CAUSE: Simpan (performCustomSave) saved data but never regenerated the stored PLP_RSLT_MMKN doc; only the Melaka-UNUSED onJana path called the existing deleteExistingRisalatDocuments helper. FIX = call that helper on Simpan (+ entry-invalidate) so the selected JT papar.
+test_app=PTMLK/03/L/PLTP/2026/12 (aplikasi 3227857, samsiah_jaamat@melaka.gov.my) — live FAT, 4 JT rows; flowable-altered to PRMMKNPDT to test. [Brief /2026/1 + tester /2026/9 do NOT exist in live FAT — stale.]
+scope_anchor=ONLY the rework: JT must papar on entry + survive refresh, PLTP risalat tugasan (PRMMKNPDT/SRMMKNPDT/Perakuan). Cycle-1 CC/template DONE — do not redo. TRG excluded.
+notes:
+  - 2026-05-31: Scout→Recon→Rubric→Apply. Recon VERIFIED: entry serves stored doc + skips populator (BasePelupusanDokumenForm:468/564); performCustomSave:1277 saves but never regenerates. Reused existing deleteExistingRisalatDocuments helper (tugasan-generic via TGS_TO_JNS_DOK_MAP). Phase 1 commit e40d1a66fe pushed origin/mlk/qa/253053; Phase 2 closed. Full record in qa_doc. Slip logged: traced display path 100% but not save path first (working-analog-miss).
+test_field=hello

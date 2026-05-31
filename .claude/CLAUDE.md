@@ -16,7 +16,7 @@
    - Run `date`, read `quest/active.txt`, read `main/current-session.md` → Session Recap, read `main/todo.md` → Q1
    - Check `daily-diary/` — if no entry exists for today's date, add `⚠️ No diary entry yet today` to briefing flags
    - **Domain Expansion autoscan** (signal #1 + #6): run reconciliation diff between `active.txt` and disk truth (Tasks/Melaka/ vs Archive/, `git branch --list mlk/qa/*`, Fix/ folder progress, post-mortem entries, daily-diary mentions). Detect worktree status — if running in a worktree, surface as Standing Flag. Surface drift as Standing Flags.
-   - **Improvement Audit Log surface** (per 2026-05-04 hard rule): read `Feature/Forge-Self-Improvement-System/improvement-audit-log.md`, count `status=pending` entries, add `⚠️ N pending audit-log entries — review before dropping` flag.
+   - **Slip-log surface** (2026-05-31 re-pointed — was improvement-audit-log.md, now DETACHED): read `meta/slip-log.md`, surface only escalation rows (status ⚠️/🚨) from the running-count table; if zero escalations, emit no flag. Drops the noisy "N pending" count from the previous file.
    - Output: date/time, quest status, mode, top priority, where we left off, standing flags
    - Then wait for みや's direction
 
@@ -39,6 +39,8 @@ Every explanation MUST obey both rules:
 | **ASCII chart / diagram** | spatial or layered relationships (class chain `ClassA → ClassB ⚠️ → ClassC`, architecture, layout) |
 
 Reach for a structure BEFORE writing a paragraph.
+
+**🚨 HARD PRE-SEND GATE (added 2026-05-31 per みや — this rule broke AGAIN on QA-253053, ≥2nd strike).** Before sending ANY response containing ≥2 findings / options / steps / decisions / trade-offs: the FIRST structural element after the opening line MUST be a **TABLE or ARROW-flow** — NEVER a prose paragraph. **Self-check at send time**: *"Is my load-bearing content in a table/arrow, or buried in prose?"* If a draft has **≥3 consecutive prose sentences** carrying findings / a fix / an option / a decision → **STOP and convert to a table before sending.** **Banned**: prose paragraphs that "explain the fix / the option / the trade-off" when a 3-row table (`Root cause | Fix | Decision needed`) carries it faster. **A long-winding, cluttered message is ITSELF a rule violation — even when every fact in it is correct.** みや 2026-05-31 (QA-253053): *"your message is too cluttered, long-winding. You broke the rule to use tables or arrows or diagrams. Tables is the default to use whenever possible."*
 
 **3. Anchor every explanation to what みや can SEE** (added 2026-05-31 per みや). Explain in terms of the **screen field labels** he sees (e.g. the dropdown *"Syarat-Syarat Nyata"*, the panel *"Maklumat Tanah"*), the **actual DB table + columns** (or a query result he can run), and **code** — NOT internal abstractions ("the VO", "the populator fallback") on their own. For any "where does X get its data / how does data flow" question, default to a **`UI → code → table` arrow** (what you see on screen → which method fetches it → which table/column it lands in). One arrow line communicates the data-flow faster than paragraphs. みや 2026-05-31: *"a simple arrow based on UI > code > table would've been understood straight away… communicate using what I can see — tables, query, code, UI through labels."*
 
@@ -234,13 +236,23 @@ One straightforward pass covers debugging → implementation. Be as straightforw
 ⬜ 1. Notes.txt read (or created if quest-new)
 ⬜ 0. Brief/History.txt read fully
 ⬜ early-diagnostic.md / QA-<num>.md cycle-N section opened (Scout familiar spawn if missing)
-⬜ env-check run (UAT/FAT target confirmed per ticket Env)
+⬜ env-switch run (`/env-check` skill — UAT/FAT target SWITCHED per ticket Env: etanahv3 config + standalone.xml + repo branch aligned; not just confirmed)
 ⬜ Recon Universal Checks block emitted (per quest-protocol.md Recon section)
+⬜ 1. Notes.txt pengguna_semasa from LIVE DB — at END of Recon, run the canonical task-state SQL via `mcp__postgres-mlkuat__query` (UAT) / `mcp__postgres-mlkfat__query` (FAT); doubles as **DB-MCP reachability fail-check**. If query errors (`relation does not exist` / connection / auth) → STOP + surface BEFORE Recon needs live data (downstream Recon will fabricate without it).
 ```
 
 **Quest trigger-time essentials** (restored to boot-load 2026-05-30 — these live fully in `quest/quest-protocol.md` but are summarized here so they're in context during quest *design/discussion*, not only at `/quest start`. The 2026-05-22 decomposition pushed them into the non-boot-loaded protocol → paraphrase errors when discussing quests without a live `/quest start`; redundancy is intentional per みや 2026-05-25):
 
-- **etanah-knowledge tiered load** (protocol:85-93): ALWAYS load `index.md + DOMAIN-GLOSSARY + MODULE-ARCHITECTURE + BUG-BESTIARY + DEFERRED-CRITICAL-ISSUES`; CONDITIONAL by layer — `DATABASE`(DB) · `FLOWABLE-WORKFLOWS`(workflow) · `JSF-WIRING`(UI) · `FLOW-TRACES`(deep-debug) · `FRONTEND-PATTERNS`(UI-enhance) · `URUSAN-FLOW`(cross-urusan) · `PERANAN-MAP`(role). These files live in the **main repo working tree** (untracked-confidential — absent from worktrees; point reads at main).
+- **etanah-knowledge tiered load — FULL PATHS** (these files live in the **main repo working tree ONLY** — untracked-confidential, absent from worktrees; ALWAYS point reads at the main-repo path):
+
+  **Base:** `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore\projects\coding-projects\active\etanah-knowledge\melaka\`
+
+  | Tier | Files | When | Notes |
+  |---|---|---|---|
+  | **Always** (5) | `index.md` · `DOMAIN-GLOSSARY.md` · `MODULE-ARCHITECTURE.md` · `BUG-BESTIARY.md` · `DEFERRED-CRITICAL-ISSUES.md` | every `/quest start` | ~5-7k tokens; foundation refs |
+  | **Conditional** | `DATABASE.md`(DB) · `FLOWABLE-WORKFLOWS.md`(workflow) · `JSF-WIRING.md`(UI) · `FLOW-TRACES.md`(deep-debug) · `FRONTEND-PATTERNS.md`(UI-enhance) · `URUSAN-FLOW.md`(cross-urusan) · `PERANAN-MAP.md`(role) | load per `ticket_type` + Description keywords; routing logged in QA-NNN.md Context Loading | `index.md` routes |
+  | **On-demand** | `TEST-PERMOHONAN-INDEX.md` · `DEV-TESTING-HACKS.md` · BPMN XMLs at `flowables-bpmn\<MLK_PLP_<URUSAN>.bpmn20.xml>` | Simulate (test data) / Debug (Flowable trace) | **BPMN: load ONLY the file matching the ticket's URUSAN** (PSBS/PRZ/PLTP/PRU/PT/MCL/PPJK/PPTPB/RPPLP/etc.) — never all 20 (~3.9MB total). BPMN dir: `…\melaka\flowables-bpmn\` |
+  | **Archive — REFERENCE ONLY, DO NOT pre-load** | TDD SQL exports at `database-archive\Melaka\MLKUAT\` (`et_main_uat.sql` ~3.9MB / ~900k tokens) | NEVER at Phase 0 — query LIVE DB via MCP | Kept for offline / schema-diff only |
 
 - **`1. Notes.txt` canonical format** (protocol:373-403) — 3 lines per entry, NO bloat / env / extra-tugasan / annotations:
   - single: `N) <URUSAN> — <TUGASAN>` / `<PERMOHONAN_ID>` / `<login>`
@@ -248,7 +260,7 @@ One straightforward pass covers debugging → implementation. Be as straightforw
   - two-entry (BA app past target tugasan): `0) BA — past <target>, currently <state>` / id / pengguna  +  `1) <PLP|AWAM> — <ENV> — <TUGASAN>` / sim-id / pengguna
   - Written right after Redmine retrieval (`node quest/notes.js`), at Scout completion, and on mid-conversation ID mention; login `TBD` if DB-blocked — never defer the whole file.
 
-- **Canonical task-state SQL** (auto-pengguna, protocol:518-541): join `UMM_A_TGSN → IND_TGSN` (tugasan kod/nama) + `UMM_ALIRAN_KERJA` + `PCP_PENGGUNA` (pengguna_semasa login) + `IND_PEJABAT`; filter `FLAG_AKTIF='Y'`. Run at END of Recon → feeds Notes.txt.
+- **Canonical task-state SQL** (auto-pengguna, protocol:518-541): join `UMM_A_TGSN → IND_TGSN` (tugasan kod/nama) + `UMM_ALIRAN_KERJA` + `PCP_PENGGUNA` (pengguna_semasa login) + `IND_PEJABAT`; filter `FLAG_AKTIF='Y'`. Run at END of Recon via LIVE MCP (`mcp__postgres-mlkuat__query` UAT / `mcp__postgres-mlkfat__query` FAT) → feeds Notes.txt. **Live MCP > TDD SQL dumps** for Phase 0 (real state, row counts, FK validation); TDD reserved for offline/schema-diff only.
 
 - **Codebase root + blast-radius**: pick `etanah-pelupusan` (PLP/APPS) vs `etanah-awam` (AWAM) by ticket subject. **TRG is BANNED from pelupusan blast-radius** (ignore it entirely — codebase-only scope); AWAM = multi-state-aware. Full Recon Universal Checks: `quest-protocol.md` Recon section.
 
@@ -293,6 +305,20 @@ The ordered `pull → checkout -b → stage → commit → push → /verify` clo
 
 ---
 
+## 📦 Phase 2 Closure — Archive Hygiene (MANDATORY — boot-loaded 2026-05-31)
+
+> Boot-loaded here because it lived ONLY in `quest/quest-protocol.md` (Phase 2 Step 4/5 + the `status=archived` definition :1209) — a NON-boot-loaded home, so it was **silently skipped** repeatedly (QA-258004 2026-05-31 — only the status flipped, folder + block left in place; prior: QA-262039, QA-260302 Phase-2 step-5 skips). Same failure class as the decomposition that buried trigger-time rules. Redundant with the protocol by design (per みや — boot-loaded visibility is what matters).
+
+**`status=archived` is NOT "done" by itself.** Flipping the status field WITHOUT the moves below is an **incomplete close** — the exact slip this rule kills. At Phase 2 / quest wrap (or any "close X / X is done / archive X" trigger), ALL applicable moves MUST run in the SAME close-out, each emitted as a visible ✓:
+
+1. **Task folder → Archive** — `Move-Item` the Windows Task folder `1. Tasks\Melaka\<n>. …` into `1. Tasks\Melaka\Archive\`. Use `-LiteralPath` (folder names containing `[FAT]` break wildcard `Test-Path`/`Move-Item` — the `[...]` parses as a char-class). Verify with a literal `Get-ChildItem … | Where Name -like "*<num>*"` count, never trust a `Test-Path` on a bracketed name.
+2. **active.txt block → active-archive.txt** — `active.txt` is WORKING MEMORY: OPEN quests only (status ∈ active/hold/blocked/delegated). The moment a quest hits `closed`/`archived`, MOVE its whole block out to `quest/active-archive.txt` under a dated section header AND update the block's `task_folder=` to the new `Archive\` path.
+3. **Project subfolder** — if `projects/coding-projects/archive/` exists, move `…/active/QA-<num>/` there too; else leave it + note (Ruri's internal workspace — secondary).
+
+**Emit at Phase 2 close (visible gate)**: `Archive hygiene — QA-<num>: folder→Archive\ ✓ · active.txt block→active-archive.txt ✓ · project subfolder <✓|⬜ no-archive-dir>`. **Banned**: declaring a quest `archived`/`closed` with any applicable move un-done and un-emitted. Deterministic harness — `quest/archive-quest.js <QA>` doing all moves atomically — parked in todo.md Q1 (pairs with the sibling-consistency-check hook; both make Phase-close mechanical steps deterministic).
+
+---
+
 ## 💻 New Machine Setup
 
 One-time per machine — see `.claude/new-machine-setup.md` (routed out of CLAUDE.md 2026-05-22).
@@ -309,6 +335,12 @@ One-time per machine — see `.claude/new-machine-setup.md` (routed out of CLAUD
 - `/verify` — universal workflow-checkpoint verification (Phase 0 / Apply-done / Phase 1 close-out / DE Checklist D)
 
 **Historical reference**: `.claude/claude-md-amendments.md` — ✅ EMPTIED 2026-05-25; all 16 amendments absorbed into canonical homes (table inside the file documents final disposition). File kept for historical disposition log; no active amendments load from it. Boot-load remains as informational-only / low-priority; can be dropped from boot list in a future cleanup.
+
+*Version: 1.42 | Last updated: 2026-05-31 — **Quest-start anchored to FULL PATHS + LIVE DB fail-check** (per みや, end-of-session). (a) Phase 0 checklist: env-check → "env-switch" wording (config swaps already happen); NEW row "Notes.txt pengguna_semasa from LIVE DB via mcp__postgres-mlkuat/mlkfat__query at end of Recon — doubles as DB-MCP reachability fail-check; STOP if query errors." (b) etanah-knowledge tiered load → full-path table: base path pinned, BPMN load gated by ticket URUSAN (`MLK_PLP_<URUSAN>.bpmn20.xml` only, never all 20 = 3.9MB), TDD `database-archive/Melaka/MLKUAT/` marked REFERENCE-ONLY (NEVER pre-load: et_main_uat.sql ~900k tokens; live MCP strictly better). (c) Canonical task-state SQL bullet extended with MCP server names + "live MCP > TDD" verdict. Path-explicit rather than name-only so the rule binds Ruri at quest-start. Companion: detach pass (this session) marks 7 dead Forge/Observation logs DETACHED-not-DELETED with tombstone headers; CLAUDE.md improvement-audit-log boot-flag re-pointed to meta/slip-log.md.*
+
+*Version: 1.41 | Last updated: 2026-05-31 — Strengthened **Explanation & Output-Format Discipline** rule 2 with a **🚨 HARD PRE-SEND GATE**: first structural element MUST be a table/arrow, never a prose paragraph, when a response carries ≥2 findings/options/steps/decisions; ≥3 consecutive prose sentences carrying load-bearing content = STOP+convert; a cluttered long-winding message is itself a violation even when factually correct. Per みや QA-253053 — the table-default rule (already present, soft prose) was ignored on a Recon/Rubric hand-back; the clutter made verified work look like hand-waving. Soft-prose → hard self-enforced gate.*
+
+*Version: 1.40 | Last updated: 2026-05-31 — Added **📦 Phase 2 Closure — Archive Hygiene (MANDATORY)** section (between Phase 1 Closure and New Machine Setup). Boot-loads the previously-protocol-only archive rule: `status=archived` is NOT done by itself — at Phase 2 close ALL applicable moves MUST run + emit a visible ✓ line: (1) Task folder → `1. Tasks\Melaka\Archive\` (`-LiteralPath`; `[FAT]` breaks wildcard Test-Path), (2) active.txt block → `quest/active-archive.txt` + fix its `task_folder=`, (3) project subfolder if an archive dir exists. Per みや QA-258004: the 2026-05-31 close flipped status=archived but left the Task folder in active + the block in active.txt; the move-rule lived only in non-boot-loaded `quest-protocol.md` (same failure class as QA-262039/QA-260302 Phase-2 step-5 skips). Deterministic `quest/archive-quest.js <QA>` harness parked in todo.md Q1.*
 
 *Version: 1.39 | Last updated: 2026-05-31 — Two QA-259702 additions. (1) **🚨 CHECK THE CONVENTION INSIDE THE FILE YOU'RE EDITING — extend existing code, never add parallel new code** (Etanah Non-Negotiables, ~:149): grep the TARGET FILE for an existing method/branch idiom that does ~90% of the job and ADD A BRANCH, never clone — per QA-259702 where I built a new `populateSyorKeputusanPDTPru` + new CC tag instead of a 3-line `URS_PRU` branch in the existing `populateSyorKeputusanPDT` (the file already had the `URS_PRU.equals` idiom 16×). (2) **🚨 FORCED PHASE-EMIT GATES** in the Quest Workflow core-methodology block: the trim kept the Scout→Recon→Rubric arrow-text but lost the FORCED per-phase emits — so a quest can be "run" while freelancing straight to an Edit. Restored as a hard rule: during ANY quest, a structured Recon emit + a Rubric emit (blast-radius + 2-3 sibling file:line + 2-5 candidates) + Predicate Box are MANDATORY before any code/template/config Edit; jumping Scout→Apply is BANNED. This is the root-cause cure みや diagnosed ("the scout, recon, rubric all ran perfectly... headers/titles... you always used tables" pre-trim). Pairs with the pending quest-phase-gate hook (todo.md).*
 

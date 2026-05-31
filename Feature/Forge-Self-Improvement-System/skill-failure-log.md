@@ -1,3 +1,5 @@
+# 🪦 DETACHED 2026-05-31 — Canonical home is meta/slip-log.md (per Q2 prune-not-delete audit). Historical entries below kept for archival; new entries route to meta/slip-log.md via auto-skill-on-mistake Step 5. Re-attach: remove this header + restore the source file's boot/INDEX wiring.
+
 # Skill Failure Log
 
 > **🪦 TOMBSTONE (2026-05-23, Phase 8 of meta-layer build):** This file is no longer the canonical home for NEW slip records. The new home is **`meta/slip-log.md`** under the meta-layer's INDEX. Historical entries below remain for reference and will be migrated via Bankai in a follow-on pass.

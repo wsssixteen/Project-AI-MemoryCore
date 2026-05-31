@@ -1,3 +1,5 @@
+# 🪦 DETACHED 2026-05-31 — Canonical home is meta/slip-log.md (per Q2 prune-not-delete audit). Historical entries below kept for archival; new entries route to meta/slip-log.md via auto-skill-on-mistake Step 5. Re-attach: remove this header + restore the source file's boot/INDEX wiring.
+
 # Observation Log
 
 > Ruri's running record of patterns observed about みや, our work, and our process.

@@ -1,3 +1,5 @@
+# 🪦 DETACHED 2026-05-31 — Canonical home is meta/slip-log.md (per Q2 prune-not-delete audit). Historical entries below kept for archival; new entries route to meta/slip-log.md via auto-skill-on-mistake Step 5. Re-attach: remove this header + restore the source file's boot/INDEX wiring.
+
 # Debug Ritual Violations Log
 
 > **🪦 TOMBSTONE (2026-05-24, Task #20):** This file is no longer the canonical home for NEW debug-ritual violations. The new home is **`meta/slip-log.md`** under the meta-layer's INDEX (root_category: pre-action-check-skip or stop-instead-of-action depending on violation type). Historical entries below remain for reference. For NEW debug-ritual violations → append to `meta/slip-log.md` with appropriate root_category.
