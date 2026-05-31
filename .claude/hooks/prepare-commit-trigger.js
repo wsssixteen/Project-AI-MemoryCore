@@ -16,6 +16,12 @@
  * format `QA #<num> - <URUSAN> - <TUGASAN> - <description>`. The convention
  * file existed but was never read at draft time.
  *
+ * v1.3 2026-05-31 — Added Step 2.6: strip debug probe loggers + stray debug
+ * comments added during investigation BEFORE staging, so they never reach a
+ * BA-bound commit. Matched pair with Debug Ritual 6 (loggers-not-breakpoints,
+ * added same day) — Ritual 6 deliberately CREATES probe loggers (tagged
+ * `QA<num>-PROBE:`), Step 2.6 pays the debt at close. Per みや 2026-05-31.
+ *
  * v1.2 2026-05-26 — Added Step 10.5 inlining the canonical active.txt status
  * enum (per quest-protocol.md v3.5). Same shape of slip as v1.1: QA-262869
  * Phase 1 close wrote `status=local-test-confirmed` (non-canonical) from
@@ -55,6 +61,7 @@ process.stdin.on('end', () => {
       'Mandatory 7-step Prepare-Commit sequence (per quest-protocol.md):',
       '  1. PRE-CHECK: verify local_test_confirmed=true in quest/active.txt for current QA',
       '  2. Clean .bak files: rm any *.bak_* in work repo (per 2026-05-23 rule)',
+      '  2.6 STRIP debug instrumentation (per 2026-05-31 rule / Debug Ritual 6): grep the touched source files for the probe tag `QA<num>-PROBE:`, any LOGGER added THIS cycle, and commented-out debug code → REMOVE before staging. The ticket is BA-bound; temporary loggers/comments must not ship. Pre-existing loggers that belong to the codebase stay — only remove what was added this cycle (the PROBE tag makes them greppable).',
       '  3. git stash (preserve working tree)',
       '  4. git pull --ff-only origin <source-branch>  (MANDATORY — not optional)',
       '  5. git checkout -b mlk/<type>/<number>  (or [v2/v3] if rework)',
@@ -82,6 +89,7 @@ process.stdin.on('end', () => {
       '  - Skip Phase 1 summary emission (mandatory per 2026-05-20)',
       '  - Skip /verify Checklist C',
       '  - Write non-canonical status= value in active.txt (caused 2026-05-26 QA-262869 slip)',
+      '  - Commit leftover debug probe loggers / commented-out debug code to a BA-bound ticket (per 2026-05-31 rule — Step 2.6 strips them first)',
       '',
     ].join('\n');
 

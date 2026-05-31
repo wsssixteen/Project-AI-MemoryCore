@@ -860,7 +860,7 @@ Example (slip): ~~`Test on PTMLK/01/L/PLPS/2026/1 at PYSK`~~ — missing login.
 2. **Root cause theory (with evidence)** — the theory + file:line pointers for re-verification, NOT just the conclusion
 3. **Ruled out** — hypotheses we disproved and why (so next session doesn't re-walk them)
 4. **Parked / alternative hypotheses** — things we haven't fully disproven but deprioritized (so if primary fix fails, we know where to go next)
-5. **Triage ladder if fix fails** — ordered checks: "If X still broken, breakpoint at A:line, inspect B. If A is fine, check C..." Concrete, file:line specific.
+5. **Triage ladder if fix fails** — ordered checks: "If X still broken, add a logger at A:line, inspect B. If A is fine, check C..." Concrete, file:line specific. (Breakpoints BANNED — use loggers per Debug Ritual 6.)
 6. **What a different root cause would look like** — early warning signs that the theory is wrong + which subsystem to revisit
 7. **Failures hit this cycle (MANDATORY — added 2026-05-30)** — every failure encountered this cycle MUST be listed EXPLICITLY, never buried inside "current state": (a) **wrong / non-existent test data handed back** — cite the bad ID, why it was wrong, and the fix; (b) **runtime errors after the fix** — NPE / stack trace + the class chain + whether mine or pre-existing; (c) **env / DB-access / tooling failures**. A failure that next-session-me would otherwise re-pay is the single most important thing to persist.
 
@@ -946,9 +946,22 @@ The goal of debugging is the **ROOT permanent fix, not a patch** that masks one 
 - **Always answer the class questions**: *what causes it · how confident am I · can the whole class be remediated · what is the permanent fix vs the stop-gap patch.* If a patch fixes only the reported instance, label it AS a stop-gap and state the permanent fix + remediation scope for the rest of the class.
 - **Banned**: handing back at first-confirmed-instance with "shall I investigate further? / how was this created?" when the method to answer it is accessible. **Why** (みや 2026-05-28, QA-262243): I confirmed the flag mechanism + that a data-patch renders the letter, then handed back the cause + can-we-patch-all questions instead of querying them. みや: *"find the solution until you're above 90% or have exhausted all methods accessible to you... The main goal is to find a permanent fix, not simply patch."*
 
+### Ritual 6 — Runtime confirmation via loggers; breakpoints BANNED (added 2026-05-31 by みや)
+
+When static analysis (code-read + DB queries + sibling-trace) is **genuinely exhausted** and a runtime fact is still unconfirmed (root cause < ~90% confidence), the confirmation comes from **loggers**, never a breakpoint request.
+
+- **Bundle the loggers INTO the first-pass fix build — this is THE time-saver.** The trigger moment is the END of the first pass: `/quest start` → Discovery → Scout → Recon → Rubric has chosen the fix, and implementing it leaves ONE runtime thing unconfirmed. Add the probe loggers in the **SAME code change as the fix**, so the ONE rebuild+redeploy you were already going to do for the fix ALSO carries the runtime confirmation — no separate logger-only cycle. (みや 2026-05-31: *"this is why it is a HUGE time saver"* — the build is happening anyway, so the loggers ride along for free.)
+- **Breakpoints are BANNED as a request to みや.** A breakpoint halts the (already-slow) server and forces an interactive Ruri↔みや round-trip per value inspected. Loggers are ~3–4× faster: written once, one rebuild+restart, one run, the full log read back. (みや 2026-05-31: *"totally ban breakpoints if using loggers can absolutely cover all breakpoints possibilities… much much more quicker… 3-4x more time saving. Rather than back and forth me asking you about the breakpoints."*)
+- **Log EXTENSIVELY in ONE pass — cover ≥3 what-if scenarios.** You get ONE cheap rebuild+restart cycle; missing the needed spot costs another full cycle. So in a single pass instrument every competing hypothesis + every branch point + the null/empty checks: method entry/exit, the decoded value, each branch taken, the field state before/after the write. Cover what a breakpoint AND its watch-expressions would have shown — for ALL candidate causes, not just the leading one. Under-instrumenting (only the leading hypothesis) is the failure mode this ritual exists to prevent.
+- Use the project's logging idiom (`LOGGER.info(...)`) with a unique greppable tag (`QA<num>-PROBE:`) so the loggers are findable for removal at close. State the server.log path (`E:/Dev/jboss-7.4-plp-melaka/standalone/log/server.log`) in the hand-back so みや knows where to read.
+- **The VERY VERY last resort — a breakpoint ONLY when there is NO code change to bundle loggers into.** If the investigation needs zero code changes (pure read-only) so a logger would cost a whole rebuild cycle for nothing else, THEN — and only then — clearly tell みや there is nothing to rebuild and suggest a single, minimal breakpoint (state exactly WHERE to set it + WHAT one value to read). Last resort, surfaced with its reason, never the default. (Exact condition = Ruri's judgment per みや 2026-05-31; he confirmed "yes, last resort". Breakpoint *type* left unspecified — describe where+what, not the Eclipse mechanism.)
+- **Cleanup is mandatory**: probe loggers are temporary and MUST be removed at Phase 1 close (prepare-commit Step 2.6 / Phase 1 close-out scan).
+
+**Pairs with** Ritual 5 (exhaust-to-confidence) + `personality.md` "No asking-back for searchable facts": Ritual 5 says don't hand back before exhausting accessible methods; Ritual 6 says loggers ARE an accessible method, breakpoints are NOT (they require みや). Escalation ladder: **code-read → DB → extensive loggers (one pass) → (only if loggers genuinely cannot reach it) surface the specific limit to みや**.
+
 ### Violation Log
 
-Every slip on Rituals 1–4 gets a one-line entry in `Feature/Forge-Self-Improvement-System/debug-ritual-violations.md`. Trend visible over time. If slips persist across multiple sessions, the ritual design is wrong — redesign, don't just re-promise.
+Every slip on Rituals 1–6 gets a one-line entry in `Feature/Forge-Self-Improvement-System/debug-ritual-violations.md`. Trend visible over time. If slips persist across multiple sessions, the ritual design is wrong — redesign, don't just re-promise.
 
 ---
 
