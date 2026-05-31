@@ -28,7 +28,32 @@
 
 Every explanation MUST obey both rules:
 
-**1. Separate by category — plain FIRST, technical SECOND.** Lead with the business-logic / plain-language layer (the conclusion · what it means · what changed) — BA-readable, with ZERO technical leakage (no class names, set symbols, or `file:line` in this layer). THEN a *separate* technical layer (how it works · mechanism · file:line evidence). NEVER interleave the two in one paragraph. The technical layer shows **literal code + actual data values** — real method names, the actual `if`-condition quoted from source, real column values (`flag_pemohon='N'`). **Metaphors are BANNED in the technical layer** ("tap" / "ticked box" / "mop the floor" explain nothing about the data — show the real condition instead). Analogy/metaphor is allowed ONLY in the plain layer. And **never use a vague quantifier ("sometimes", "occasionally") for a bug** — a bug has a deterministic trigger; state the exact condition.
+**Rule 1 is TWO orthogonal principles (split 2026-05-31 per みや — the old "plain first" rule conflated them; haiku audit + the cluttered hand-back caught the gap).** Both apply to every explanation; they reinforce each other.
+
+**1a. Plain vs Technical — ONE REGISTER PER CONTAINER (a *register-separation* rule; applies everywhere — sentences, bullets, table cells, code comments).**
+
+Plain and Technical are two registers. Keep them in **separate containers** — separate sentences, separate bullets, separate table cells, separate code blocks. A single container that mashes both is a long-winding sentence wearing a table costume — it defeats the table.
+
+| Register | Holds | Example |
+|---|---|---|
+| **Plain** | natural words · conclusion · what changed · what it means · metaphor · analogy | "the dropdown didn't save because the listener never fired" |
+| **Technical** | identifiers · `file:line` · class/method names · SQL · column values · code | `MlkMaklumatPajakanForm.xhtml:42 — listener="#{mbb.onChange}" missing process="@this"` · `flag_pemohon='N'` |
+
+**Banned:** prose paragraphs with embedded `file:line` jumbles · table cells mixing "what + how + where" · bullets that interleave conclusion-language with code · metaphors in the technical register ("tap" / "ticked box" / "mop the floor" — they explain nothing about the data; show the real condition) · vague quantifiers ("sometimes", "occasionally") for a bug — a bug has a deterministic trigger; state the exact condition. **Why**: even after the table-first gate (v1.41) fires, a table whose cells each mash both registers is back to the same wall of text. Register-per-container is what makes the table actually carry the weight.
+
+**1b. Overview vs Detail — BIRD'S-EYE FIRST, GRANULAR LAST (a *depth-ordering* rule; applies to the structure of an answer).**
+
+Every explanation opens with the **bird's-eye answer** — what changed / what it means / the conclusion — in one breath, the way an annual report opens with "what the company did this year" before any org chart. **Reader earns each next layer** by reading the previous one; never firehose all depths into the first paragraph.
+
+| Layer | Holds | When |
+|---|---|---|
+| **Overview** (always present, opens the answer) | what + why + conclusion · in plain register (rule 1a) · readable in one breath | every answer |
+| **Mechanism / actors** (when the *how* matters) | class-chain `ClassA → ClassB → ⚠️ ClassC` · panel/screen labels · data flow `UI → code → table` · groups not individuals — like an org chart shows departments before listing every executive | non-trivial answers |
+| **Granular / `file:line`** (only when the precise location IS the load-bearing fact) | exact line numbers · quoted code · column values · SQL `WHERE` clauses | debugging · code citation · proof |
+
+**Banned:** opening with a class name or `file:line` · firehosing all depths into the first paragraph · "technical = granular" (it doesn't — a class-chain `A → B → ⚠️ C` is *technical AND bird's-eye*; `:line` is the deepest layer, last). **Why**: layered disclosure lets みや stop at the depth he needs; the firehose forces him to skim, and skimming is where the rule's nuance evaporates. Pairs with rule 3 (UI → code → table arrow as the natural Overview→Detail spine for any data-flow question).
+
+**The two together:** every layer of 1b internally obeys 1a — the Overview layer is pure Plain register; the Mechanism layer is Technical register but bird's-eye-shaped (org-chart-not-executives); the Granular layer is Technical register at maximum zoom. One register per cell within each layer; layers ordered Overview → Detail across the answer.
 
 **2. Default to TABLE / ARROWS / DIAGRAM — prose is the fallback, not the default.**
 
@@ -348,6 +373,8 @@ One-time per machine — see `.claude/new-machine-setup.md` (routed out of CLAUD
 - `/verify` — universal workflow-checkpoint verification (Phase 0 / Apply-done / Phase 1 close-out / DE Checklist D)
 
 **Historical reference**: `.claude/claude-md-amendments.md` — ✅ EMPTIED 2026-05-25; all 16 amendments absorbed into canonical homes (table inside the file documents final disposition). File kept for historical disposition log; no active amendments load from it. Boot-load remains as informational-only / low-priority; can be dropped from boot list in a future cleanup.
+
+*Version: 1.44 | Last updated: 2026-05-31 — **Split rule 1 into 1a + 1b** (Explanation & Output-Format Discipline). Old "plain FIRST, technical SECOND" was actually TWO orthogonal principles conflated: (1a) **Plain vs Technical = register-separation** that applies everywhere — sentences, bullets, table cells, code blocks — one register per container; even with table-first (v1.41) firing, a cell that mashes prose + `file:line` + SQL defeats the table; (1b) **Overview vs Detail = depth-ordering** that governs the structure of an answer — bird's-eye first (annual-report style), then mechanism (class-chain `A→B→⚠️C`, like an org chart of departments-not-individual-executives), then `file:line` only if location IS load-bearing; "technical ≠ granular" — a class-chain is technical AND bird's-eye. Both written verbose+shapes (per みや: detail-density anchors when paired with visual structure). All v1 nuance preserved: anti-jargon, BA-anchored, real values quoted, no vague quantifiers, metaphor-only-in-Plain. Per みや's annual-report metaphor + the haiku audit + the cluttered Recon hand-back slip earlier this session.*
 
 *Version: 1.43 | Last updated: 2026-05-31 — **3 audit-driven clarifications** after the haiku compliance audit caught all 3 simulation runs slipping on the same judgment-call rules. (a) **📐 Canonical Phase Emit Template** defined ONCE (description + table + arrows + summary) — each phase (Scout/Recon/Rubric) now has a one-line reference to it instead of restating; structure IS the discipline. (b) **Always-tier "load" defined** = `Read` first 50 lines minimum + emit `Loaded: <file> (≈Nk tokens)` per file; globbing-without-reading does NOT satisfy. (c) **LIVE DB MCP "execute" defined** — execution is required for active quests; stating SQL form without running is BANNED unless explicit compliance/simulation context. (d) **Per-file sibling-diff EMIT LINE** broken out of long-paragraph wording into its own standalone bolded bullet in FORCED PHASE-EMIT GATES (the line IS the rule; substance-without-line does not satisfy). Audit verdict: rules with clear output shape fired ~75% reliably even on haiku; judgment-call rules fired ~35% — these 3 fixes close that gap.*
 
