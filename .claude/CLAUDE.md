@@ -228,13 +228,58 @@ When working on a project, **always load its project file first** — project fi
 
 **Per-phase reference**: Scout emit, Recon emit, and Rubric emit each follow this template. If the shape is missing, the phase did not run. The auditor (you or any reviewer) scores compliance against the 4 parts.
 
+**Class chain — vertical ASCII form (canonical for Arrows part of the template).** Horizontal `A → B → C → D` doesn't fit ≥3 hops on screen; the canonical shape is vertical with multi-line arrows + annotation in parens for each hop:
+
+```
+  MlkKertasTemplateForm.initData():211
+        |
+        ↓  (super.populatePenyediaanDokumenByDocumentMode)
+  BasePenyediaanDokumenForm.initPenyediaanMode():2489
+        |
+        ↓  (findPenyediaanDokumenList finds STORED doc)
+  BasePelupusanDokumenForm.refreshDokumenList():511
+        |
+        ↓  (passes isFirstEntry=true at :564)
+  ⚠️ updateDocumentListAndProcessTemplateIfNotAvailable():468
+        |
+        ↓  (if(!isFirstEntry) processTemplateList() — SKIPPED)
+  stale stored doc served → populator never re-runs → JT empty on paper
+```
+
 **🚨 FORCED PHASE-EMIT GATES — the loop only works when each phase produces a VISIBLE emit before the next (HARD RULE, added 2026-05-31 per みや, QA-259702).** The decomposition/trim kept this *arrow text* but lost the *forced emits* — so a session can "run the quest skill" yet freelance straight from a glance to an Edit, skipping Recon + Rubric. That is exactly what failed QA-259702 (built a new method instead of grepping the file for its own idiom). **The rule — during ANY quest, these emits are MANDATORY, in order, and an Edit to code/template/config is BANNED until they exist in THIS session:**
-   - **Scout emit** — follow the **📐 Canonical Phase Emit Template** above (description / table of file:line cites with kind=file-read|grep / arrows of the class chain / summary naming the bug-site `⚠️`).
-   - **Recon emit** — follow the **📐 Canonical Phase Emit Template**. The table = Universal Checks (1-9) with `Class.method:line` + status (VERIFIED / HYPOTHESIS / BA-Q) per row. No Edit before it.
-   - **Rubric emit** — follow the **📐 Canonical Phase Emit Template**. The table = (a) blast-radius row, (b) 2-3 **sibling file:line** rows for the convention (incl. existing in-file method/branch per the in-file-convention rule), (c) 2-5 candidate fixes (one marked CHOSEN). Arrows for option flow if helpful. No Edit before it.
-   - **Predicate Box** — before each code Edit while debugging (Debug Ritual 1).
+   - **Scout emit** — follow the **📐 Canonical Phase Emit Template** above (description / table of file:line cites with kind=file-read|grep / arrows of the class chain / summary naming the bug-site `⚠️`). **Honesty primitive**: state exactly which files you read + which file:line cites are PROVEN vs HYPOTHETICAL — never imply broader code-reading than you actually did.
+   - **Recon emit** — follow the **📐 Canonical Phase Emit Template**. **Universal Checks emit as a 1-line ✓ checklist** (e.g. `Universal Checks: env ✓ · codebase-root ✓ · blast-radius ✓ · sibling-read ✓ · ind_skrin ✓ · ind_langkah ✓ · pengguna-semasa ✓ · CC-tag ✓ · save-path ✓`) — naming each check is the honesty brake (forces actual check vs silent skip); only expand to a full table-row for the 1-2 checks that surfaced something load-bearing this quest. **Honesty primitive**: mark each as VERIFIED / HYPOTHESIS / BA-Q — never blend states; if you didn't read it, say HYPOTHESIS, not VERIFIED. No Edit before it.
+   - **Rubric emit** — follow the **📐 Canonical Phase Emit Template**. The table = (a) **blast-radius** row (all tugasan in shared `*_LIST`/`*_MAP` constants that the fix might silently miss — list them, not "and others"); (b) **2-3 sibling file:line** rows for the convention (incl. existing in-file method/branch per the in-file-convention rule + existing constants + existing available methods to reuse — naming `Constant.FOO` / `existingMethod()` you considered reusing); (c) **read-path AND write-path traced** — both rows named, not one; (d) **2-5 candidate fixes** (one marked CHOSEN); (e) **Falsifier + Logger** row — what data shape would prove this fix wrong + the `QA<num>-PROBE:` logger one-liner that would catch it at runtime (mandatory per Ritual 6 — falsifier-as-action, not falsifier-as-thought); (f) **Confidence % + "why this number, not higher / not lower"** — naked percentages drift to 80% as default; force the justification. **Honesty primitive**: cite the actual sibling file:line you read for the convention check; if you didn't read a sibling / didn't trace the save path / didn't scan the constant map for sibling tugasan / didn't search for an existing constant or method to reuse — say so; guessing is BANNED. No Edit before it.
+   - **📐 Predicate Diagram** (replaces v1.x Predicate Box; renamed 2026-05-31 per みや — plain English over jargon) — before each code Edit while debugging, emit a 3-node ASCII flowchart: Assumption → Evidence → either-matches-or-falsifier. Overlap with Recon/Rubric is INTENTIONAL — it grounds the pre-Edit moment when stakes are highest. Falsifier branch is the unique part: forces you to name a data shape that would prove the fix wrong, then plant a `QA<num>-PROBE:` logger that would catch it (per Rubric row e + Ritual 6). Canonical shape:
+
+```
+            ┌──────────────────────────────────────────────────┐
+            │  ASSUMPTION                                      │
+            │  (TRUE IF: one sentence the fix bets on)         │
+            └────────────────────┬─────────────────────────────┘
+                                 │
+                                 ↓
+            ┌──────────────────────────────────────────────────┐
+            │  EVIDENCE                                        │
+            │  (PROVED BY <file:line> + quoted code)           │
+            └─────────┬─────────────────────────┬──────────────┘
+                      │                         │
+                  matches                  contradicted by
+                      │                         │
+                      ↓                         ↓
+        ┌─────────────────────┐   ┌───────────────────────────┐
+        │  APPLY              │   │  FALSIFIER                │
+        │  the fix            │   │  (data shape Y would       │
+        │                     │   │  break the assumption)     │
+        │                     │   │  → STOP, rerun Recon       │
+        │                     │   │  on the falsifier branch   │
+        └─────────────────────┘   └───────────────────────────┘
+```
+
    - **Per-file sibling-diff EMIT LINE** (HARD, breaks out of v1.38 long-paragraph wording — was slipped by all 3 haiku audit runs) — for EVERY edited file, emit verbatim ONE line before any build: **`<file:line> ← sibling <working file:line>: attrs ✓ · listener-sig ✓ · VO-instance ✓ · lifecycle ✓`** (or name the specific divergence in place of ✓). Building/deploying a file with no sibling-diff line is BANNED. The substance check (read a sibling, match the convention) without this emit-line does NOT satisfy the rule — the line IS the rule.
    **Banned**: jumping Scout→Apply; emitting a fix with no Recon/Rubric block this session; "I'll just edit it" without the sibling-citation. **Why this is the cure**: the flow worked pre-trim because each phase forced an inspectable, structured emit (headers, tables, `file:line`) — the structure WAS the discipline. Restore the forced emit and the convention-check can't be skipped. Pairs with the in-file-convention rule (Etanah Non-Negotiables) + the pending quest-phase-gate hook (todo.md) that will enforce this deterministically; until that ships, this boot-loaded rule is the guard.
+
+**📋 Confidence % at server-log review (testing phase, post-fix).** When みや returns with test results + server.log, emit the same Confidence % + "what changed" row — the post-log delta (logger confirmed assumption A · logger contradicted B → fix scope tightened) is a persistent signal みや uses to decide whether to commit/push or rerun.
 
 One straightforward pass covers debugging → implementation. Be as straightforward as possible; don't let the machinery smother it — but the three emits above are the floor, never skipped. Full detail in `quest-protocol.md` (Scout sub-protocol · adversarial Recon :574 · Rubric 2-5 options :675 · Blast radius :808 · sibling-check :1087).
 
@@ -266,18 +311,21 @@ One straightforward pass covers debugging → implementation. Be as straightforw
 - Never commit without `local_test_confirmed=true` in quest state.
 - Summon `/familiar` (sub-agent) when reading files >500 lines.
 
-**Phase 0 mandatory reads at re-engagement** (visible checklist — emit at quest start, mark ✓ as each completes):
+**Quest Preparation Verification** (renamed from "Phase 0 mandatory reads" 2026-05-31 per みや — table replaces the text-list; same anchor, one structural element). Emit AS A TABLE at quest start, BEFORE Scout fires. Naming each context source is the honesty brake (forces the actual load, not silent skip):
 
-```
-⬜ active.txt block for QA-<num> located + status read
-⬜ Task folder location confirmed (active vs Archive — move if Rework/Addition)
-⬜ 1. Notes.txt read (or created if quest-new)
-⬜ 0. Brief/History.txt read fully
-⬜ early-diagnostic.md / QA-<num>.md cycle-N section opened (Scout familiar spawn if missing)
-⬜ env-switch run (`/env-check` skill — UAT/FAT target SWITCHED per ticket Env: etanahv3 config + standalone.xml + repo branch aligned; not just confirmed)
-⬜ Recon Universal Checks block emitted (per quest-protocol.md Recon section)
-⬜ 1. Notes.txt pengguna_semasa from LIVE DB — at END of Recon, **EXECUTE** the canonical task-state SQL via `mcp__postgres-mlkuat__query` (UAT) / `mcp__postgres-mlkfat__query` (FAT); doubles as **DB-MCP reachability fail-check**. **Execution is required for active quests** — stating the SQL form without running it does NOT satisfy this step (haiku audit 2026-05-31 caught all 3 runs citing "compliance test" to skip — that exception is BANNED for live quests). If query errors (`relation does not exist` / connection / auth) → STOP + surface BEFORE Recon needs live data (downstream Recon will fabricate without it). **Exception** — for explicit compliance/simulation context (auditor mode, archived-ticket walk-through), state SQL form + MCP server name only; otherwise EXECUTE.
-```
+| Context source | Loaded | Filename / path |
+|---|---|---|
+| active.txt block for QA-<num> | ✓ / ✗ | located + status read; if archived + reopened, folder reactivation noted |
+| Task folder + 1. Notes.txt + 0. Brief/History.txt | ✓ / ✗ | folder path; Notes.txt content cited; History.txt read fully (not just tail) |
+| BA attachments (photos / .pdf / .docx / video) | ✓ / ⏭ n/a | filenames OR "none in 0. Brief/"; if .pdf → `annotations` skill ran for FreeText comments |
+| QA-<num>.md cycle-N section | ✓ / ✗ | path; Scout familiar spawn note if missing |
+| etanah-knowledge Always tier (5 files) | ✓ | `Loaded: index.md · DOMAIN-GLOSSARY · MODULE-ARCHITECTURE · BUG-BESTIARY · DEFERRED-CRITICAL-ISSUES` (Read ≥50 lines per file, not Glob-only) |
+| etanah-knowledge Conditional (per ticket layer) | ✓ / ⏭ n/a | filenames loaded (DATABASE.md / JSF-WIRING.md / etc.) OR "n/a — layer not touched" |
+| BPMN flowables (gated by ticket URUSAN) | ✓ / ⏭ n/a | `MLK_PLP_<URUSAN>.bpmn20.xml` (single file by URUSAN); if ≥3 files → folder path + count; "n/a" if UI/template-only ticket |
+| env-switch (`/env-check` skill) | ✓ | UAT/FAT target SWITCHED per ticket Env (etanahv3 config + standalone.xml + repo branch aligned — not just confirmed) |
+| LIVE DB pengguna_semasa (canonical task-state SQL) | ✓ | EXECUTED via `mcp__postgres-mlkuat__query` (UAT) / `mcp__postgres-mlkfat__query` (FAT) at end of Recon; result fed to Notes.txt; doubles as **DB-MCP reachability fail-check** — if query errors (`relation does not exist` / connection / auth), STOP + surface. Stating SQL form without running it does NOT satisfy this step (haiku audit caught all 3 sims skipping with "compliance test" excuse — BANNED for live quests). **Exception**: explicit compliance/simulation context (archived-ticket walk-through, auditor mode) — state SQL form + MCP server name only. |
+
+**Harness on the way** (todo.md Q1, `quest/preflight.js <QA>`): the deterministic 3 rows (file existence · BPMN-by-URUSAN find · LIVE DB SQL execute) will auto-run and emit the table with ✓ pre-filled; the read/synthesis rows stay manual. Until then, this table is emitted by hand at quest start.
 
 **Quest trigger-time essentials** (restored to boot-load 2026-05-30 — these live fully in `quest/quest-protocol.md` but are summarized here so they're in context during quest *design/discussion*, not only at `/quest start`. The 2026-05-22 decomposition pushed them into the non-boot-loaded protocol → paraphrase errors when discussing quests without a live `/quest start`; redundancy is intentional per みや 2026-05-25):
 
@@ -373,6 +421,8 @@ One-time per machine — see `.claude/new-machine-setup.md` (routed out of CLAUD
 - `/verify` — universal workflow-checkpoint verification (Phase 0 / Apply-done / Phase 1 close-out / DE Checklist D)
 
 **Historical reference**: `.claude/claude-md-amendments.md` — ✅ EMPTIED 2026-05-25; all 16 amendments absorbed into canonical homes (table inside the file documents final disposition). File kept for historical disposition log; no active amendments load from it. Boot-load remains as informational-only / low-priority; can be dropped from boot list in a future cleanup.
+
+*Version: 1.45 | Last updated: 2026-05-31 — **Quest Workflow upgrade — Predicate Diagram (replaces Box) + falsifier-as-logger + Confidence % + 1-line Universal Checks + Quest Preparation Verification table + verbose Rubric + class-chain vertical-arrow canonical form + honesty primitives per phase.** All 7 changes from the haiku audit + this session's QA-253053/258004/259702 slips, implemented as one cohesive Quest section upgrade. (1) **Predicate Box → Predicate Diagram**: 3-node ASCII flowchart (Assumption → Evidence → matches/falsifier branch); rename per みや (plain English over jargon); overlap with Recon/Rubric INTENTIONAL — grounds the pre-Edit moment when stakes are highest. (2) **Falsifier moves to Rubric as mandatory row** + paired `QA<num>-PROBE:` logger (Ritual 6) — falsifier-as-action, not falsifier-as-thought; the logger is what proves/disproves the assumption at runtime. (3) **Confidence % + "why this number, not higher/not lower"** added to Rubric summary AND post-fix server-log review — naked % drifts to 80% default, forced justification prevents drift. (4) **Class chain canonical = vertical with multi-line arrows + per-hop annotation in parens** (real QA-253053 example inline) — horizontal `A→B→C→D` doesn't fit ≥3 hops. (5) **Universal Checks → 1-line ✓ checklist** (`Universal Checks: env ✓ · codebase-root ✓ · …`); naming is the honesty brake; only expand to full table-row for the 1-2 checks that surfaced load-bearing this quest. (6) **Quest Preparation Verification** (renamed from Phase 0 mandatory reads) — text-list → table with `Loaded / Filename` columns covering BA attachments + etanah-knowledge tier + BPMN-by-URUSAN + LIVE DB; replaces existing checklist at same anchor (consolidation, not addition). `quest/preflight.js` harness parked in todo Q1. (7) **Rubric verbose wording** — sibling file:line + in-file convention (branch idiom) + existing constants + existing available methods to reuse + read-path AND write-path traced + ALL tugasan in shared `*_LIST`/`*_MAP` constants (kills the QA-253053 PRMMKNPDT-only blind spot). + **honesty primitive per phase** (1 sentence each in Scout/Recon/Rubric): "state exactly what you read / never blend VERIFIED with HYPOTHESIS / cite the actual sibling line — guessing BANNED." Audit data: rules with explicit honesty language fired 75% even on haiku vs 35% for implicit. Total ~70 lines added across Quest section; single-file patch.*
 
 *Version: 1.44 | Last updated: 2026-05-31 — **Split rule 1 into 1a + 1b** (Explanation & Output-Format Discipline). Old "plain FIRST, technical SECOND" was actually TWO orthogonal principles conflated: (1a) **Plain vs Technical = register-separation** that applies everywhere — sentences, bullets, table cells, code blocks — one register per container; even with table-first (v1.41) firing, a cell that mashes prose + `file:line` + SQL defeats the table; (1b) **Overview vs Detail = depth-ordering** that governs the structure of an answer — bird's-eye first (annual-report style), then mechanism (class-chain `A→B→⚠️C`, like an org chart of departments-not-individual-executives), then `file:line` only if location IS load-bearing; "technical ≠ granular" — a class-chain is technical AND bird's-eye. Both written verbose+shapes (per みや: detail-density anchors when paired with visual structure). All v1 nuance preserved: anti-jargon, BA-anchored, real values quoted, no vague quantifiers, metaphor-only-in-Plain. Per みや's annual-report metaphor + the haiku audit + the cluttered Recon hand-back slip earlier this session.*
 
