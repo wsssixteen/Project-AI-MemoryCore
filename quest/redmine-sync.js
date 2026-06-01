@@ -6,6 +6,7 @@
 const http = require('http');
 const fs   = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 
@@ -298,6 +299,43 @@ async function createTaskFolder(issue, parsed) {
     return folder;
 }
 
+// ─── active.txt AUTO-APPEND (added 2026-06-01, root-cause fix for "1 open quest" briefing slip) ─
+// Why: redmine-sync used to create the Task folder + History.txt but NEVER appended a status=hold
+// block to quest/active.txt. The "add a held Phase 0 entry" step in quest-protocol.md:27 was
+// prose-only — depended on the model running it manually. Result: 18 folders on disk, 1 block in
+// active.txt → boot's open-quest-surfacer surfaced only 1 of 18 (correctly reading a wrong source).
+// Now: after every successful createTaskFolder(), shell out to active-cli.js start so the block
+// lands automatically. Failure is logged but never crashes the sync (folder is the real artifact).
+function appendActiveBlock(issue, parsed, taskFolderAbs) {
+    const f = parseDescriptionFields(issue.description);
+    const env = f.env || (issue.subject.split(' - ')[0].trim() || 'unknown');
+    const subjectClean = issue.subject.replace(/"/g, "'").substring(0, 140);
+    const fields = [
+        `task_folder=${taskFolderAbs}`,
+        `phase=0`,
+        `status=hold`,
+        `ticket_type=bug`,
+        `env=${env}`,
+        `issue_one_liner=${subjectClean}`,
+    ];
+    if (f.urusan)  fields.push(`urusan=${f.urusan}`);
+    if (f.tugasan) fields.push(`tugasan=${f.tugasan}`);
+    try {
+        const cliPath = path.join(__dirname, 'active-cli.js');
+        const out = execFileSync('node', [cliPath, 'start', `QA-${parsed.number}`, ...fields], { encoding: 'utf8' });
+        console.log(`    ✏️  active.txt → QA-${parsed.number} appended (status=hold)`);
+        return true;
+    } catch (e) {
+        const msg = (e.stderr || e.stdout || e.message || '').toString().trim();
+        if (msg.includes('already exists')) {
+            // Idempotent — re-syncing an already-tracked ticket is fine, not an error.
+            return true;
+        }
+        console.log(`    ❌  active.txt append FAILED for QA-${parsed.number}: ${msg}`);
+        return false;
+    }
+}
+
 // ─── REWORK / STATUS FOLDER HANDLING ─────────────────────────────────────────
 // v5 (2026-05-20): rebuilt after QA-260876 anomaly. Three behaviours now:
 //   (a) Unarchive — if the existing folder is under Archive/ and status is Rework,
@@ -497,6 +535,10 @@ async function runWithCreate() {
         for (const issue of results.new) {
             const folder = await createTaskFolder(issue, issue._parsed);
             console.log(`  📁 Created: ${folder}`);
+
+            // Append a status=hold Phase-0 block to quest/active.txt so the boot
+            // open-quest-surfacer sees it. See appendActiveBlock() header for context.
+            appendActiveBlock(issue, issue._parsed, folder);
 
             // Also write History.txt at first create — covers journal entries that already exist
             // for "New"-status tickets (e.g. assignment notes from leads). 2026-05-12 fix: prior

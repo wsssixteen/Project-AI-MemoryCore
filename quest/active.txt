@@ -1,39 +1,5 @@
 active:
 
-qa=QA-258004
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\52. QA #258004 - [FAT] MCL - Penyediaan Surat Keputusan, Borang Notis 5A, dan Lampiran
-qa_doc=projects/coding-projects/archive/QA-258004/QA-258004.md
-phase=2
-status=archived
-branch=mlk/qa/258004v2
-commit=ec64535e44
-ticket_type=bug
-current_phase=Phase 2 CLOSED 2026-05-31 — post-mortem written (main/post-mortems.md). Fix committed ec64535e44 + pushed to origin/mlk/qa/258004v2 (etanah repo). みや live-confirmed letter shows officer-selected Syarat/Sekatan + Notis-5A amount.
-local_test_confirmed=true
-env=UAT (mlkuat / et_main_uat) — SWITCHED from FAT because FAT had no MCL test data.
-issue_one_liner=MCL Surat Keputusan Lulus prints blank Syarat Nyata + Sekatan Kepentingan (+ Notis-5A amount). True root cause: officer dropdown pick never reached apt — dialog include omitted mbb + entity re-decodes to null on postback. Fix mirrors working RM-field + sibling kadar-cukai dropdown.
-scope_anchor=ONLY the 2026-05-18 last-comment issue. Do NOT expand to sibling urusans (PT/PSBS/PLTP share the bug = follow-up candidate).
-notes:
-  - 2026-05-31 PHASE 1+2 CLOSED (commit ec64535e44, branch mlk/qa/258004v2). KEY LESSON (みや): each edited file was NOT cross-checked against its working sibling → ~1.5 days lost; sibling-consistency-check hook parked in todo.md Q1. Full record in qa_doc.
-
-qa=QA-259702
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\51. QA #259702 - PRU - Pembetulan pada template Ringkasan Risalat dan Risalat MMKN - PT
-qa_doc=projects/coding-projects/archive/QA-259702/QA-259702.md
-post_mortem=main/post-mortems.md (QA-259702 entry, 2026-05-31)
-kpi_entry=main/kpi-tracker.md (QA-259702 entry, 2026-05-31)
-phase=2
-status=archived
-branch=mlk/qa/259702
-commit=59b7e62c90
-ticket_type=bug
-current_phase=Phase 2 CLOSED 2026-05-31 — post-mortem + KPI written; archived. Commit 59b7e62c90 on origin/mlk/qa/259702. みや live-tested on UAT PTMLK/01/L/PRU/2025/36. All Ringkasan Risalat + Risalat MMKN fields populate.
-local_test_confirmed=true
-env=UAT (mlkuat / et_main_uat) — SWITCHED from FAT per みや this session.
-issue_one_liner=PRU Ringkasan Risalat: DUN tidak papar + Lokasi/Keadaan-Tanah default ayat missing + Ulasan YB not pulled; REMOVE Perihal row + Nama YB; Perakuan PTD Syor choice. 7 items.
-scope_anchor=7 BA-highlighted items on Ringkasan Risalat (1.1-1.7). Risalat MMKN PTG sub-section BA-Q, OUT of scope.
-notes:
-  - 2026-05-31 PHASE 1+2 CLOSED. LESSON (みや): extend the existing per-urusan method (add a URS_PRU branch) instead of building a new populateSyorKeputusanPDTPru + new CC tag → CLAUDE.md v1.39 "check the convention inside the file". Full record in qa_doc.
-
 qa=QA-262495
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\48. QA #262495 - PPJK - Semakan Risalat MMKN-PDT - Klik kemaskini - loading for too lon
 qa_doc=projects/coding-projects/active/QA-262495/QA-262495.md
@@ -51,14 +17,51 @@ related=relates #262699. Precedent QA-262233.
 notes:
   - 2026-05-29 — HANDBACK + TOP LEAD reframed (JBoss-restart clue → server runtime state). Full trail in QA-262495.md ★★ block.
 
-qa=QA-259342
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\20. QA #259342 - PT & PSBS - PT & PSBS - Perlu apply pada semua tugasan - Medan Pilihan Jenis Tanah papar kedudukan yang sal
-early_diagnostic=projects/coding-projects/active/QA-259342/early-diagnostic.md
-branch=mlk/qa/259342
+qa=QA-260508
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\50. QA #260508 - PT-PSBS-MCL - Panel maklumat plot dikeluarkan hakmilik - Tambah medan
 phase=0
-local_test_confirmed=false
-status=archived
-delegated_to=Aaron
-delegated_date=2026-05-05
-learning_marker=2026-05-05 — みや wants to trace fix later in project branch for learning
-note=ARCHIVED 2026-05-31 — moved Task folder to Archive\ + status=archived to declutter the boot open-quest list (still owned by Aaron; if Redmine reassigns it back to みや, redmine-sync will unarchive). TRANSFERRED 2026-05-05 — Aaron took back the ticket due to BA urgency. Early diagnostic preserved at projects/coding-projects/active/QA-259342/early-diagnostic.md. **Follow-up**: trace Aaron's fix on `mlk/qa/259342` branch when closed for learning.
+status=hold
+ticket_type=bug
+env=unknown
+issue_one_liner=PT-PSBS-MCL - Panel maklumat plot dikeluarkan hakmilik - Tambah medan
+note=backfilled 2026-06-01 from disk truth; pre-dated redmine-sync auto-append fix
+
+qa=QA-263344
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\51. QA #263344 - UAT - PRBB - Penyediaan Minit Bebas - Masuk tugasan terus pergi ke langkah 4- Penyediaan
+phase=0
+status=hold
+ticket_type=bug
+env=UAT
+issue_one_liner=Penyediaan Minit Bebas — Masuk tugasan terus pergi ke langkah 4- Penyediaan
+note=backfilled 2026-06-01 from disk truth; pre-dated redmine-sync auto-append fix
+urusan=PRBB
+tugasan=Penyediaan Minit Bebas
+
+qa=QA-259914
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\54. QA #259914 - PT - AWAM & APPS - Maklumat Pasangan - Terdapat perubahan pada medan-m
+phase=0
+status=hold
+ticket_type=bug
+env=PT
+issue_one_liner=Maklumat Pasangan — Terdapat perubahan pada medan-m
+note=backfilled 2026-06-01 from disk truth; pre-dated redmine-sync auto-append fix
+urusan=AWAM & APPS
+tugasan=Maklumat Pasangan
+
+qa=QA-247707
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\55. QA #247707 - PRZ - Penambahbaikan Skrin dan Template Risalat MMKN PDT & PTG
+phase=0
+status=hold
+ticket_type=bug
+env=unknown
+issue_one_liner=PRZ - Penambahbaikan Skrin dan Template Risalat MMKN PDT & PTG
+note=backfilled 2026-06-01 from disk truth; pre-dated redmine-sync auto-append fix
+
+qa=QA-246923
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\56. QA #246923 - PLPS - Penyediaan Risalat MMKN PDT-PTG - Isu pada template Risalat MMK
+phase=0
+status=hold
+ticket_type=bug
+env=unknown
+issue_one_liner=PLPS - Penyediaan Risalat MMKN PDT-PTG - Isu pada template Risalat MMK
+note=backfilled 2026-06-01 from disk truth; pre-dated redmine-sync auto-append fix

@@ -747,3 +747,64 @@ current_phase=Phase 2 CLOSED 2026-06-01 — archived. Fix committed fa5234c452 +
 issue_one_liner=Teknikal CK panel Maklumat Keputusan Mesyuarat/Keputusan PTG rendered blank for PLPS apps post-2026-05-13. Root cause = regression commit da605873b2 (Aaron) flipped PelupusanConstant.SAK_JNS_KPTSN_LULUS/_TOLAK from BGN_JNS_KPTSN_PTG_* (PTG family) to JNS_KEPUTUSAN_JKKT_* (JKKT family). Teknikal CK populator filters senarai_kumpulan_id=10 (PTG); JKKT family (1057) rejected. Per Chan Jun QA-228687 (2025-11-17) authoritative spec.
 scope_anchor=ONLY PelupusanConstant.SAK_JNS_KPTSN_LULUS/_TOLAK 2-line revert + MlkKemasukanKeputusanPentadbirTanahForm use-the-constant (+ fixed pre-existing missing kptsnDO assignment on TANGGUH/TOLAK branches). DO NOT expand to teknikal-side reader logic.
 related=related QA-228687 (Chan Jun PRBB sibling self-correction note 2025-11-17) · QA-234176 (origin of wrong JKKT_LULUS write) · QA-224924 (closed PLPS precursor)
+
+qa=QA-262762
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\52. QA #262762 - [FAT MCOT ISSUE] OPLPS - Penyediaan Borang 4Ae dan L1e - unable to sim
+phase=1
+status=archived
+ticket_type=bug
+env=unknown
+issue_one_liner=OPLPS Penyediaan Borang 4Ae: Tujuan Pengiklanan not persisted on Simpan + Borang papar Maksud Pendudukan duplicate. Root: save method omitted apt.tujuanPengiklanan write; populator fallback appended tujuanPermohonan twice; stored Borang served stale after data update. Fix: 3 changes — save write + populator field + invalidate stored doc on save (URS_OPLPS-gated).
+note=backfilled 2026-06-01 from disk truth; pre-dated redmine-sync auto-append fix
+current_phase=Phase 1 CLOSED 2026-06-01 — commit f4a73be3cc pushed origin/mlk/qa/262762. みや server.log-confirmed save+invalidate firing. 3 fixes: persist tujuanPengiklanan (PelupusanService:863+) + Maksud Pendudukan reads tujuanPengiklanan (PelupusanReportMethodConstant:1709+) + invalidate stored Borang on save gated URS_OPLPS (PelupusanService:889+)
+scope_anchor=OPLPS Penyediaan Borang panel — save tujuanPengiklanan + fix Borang 4Ae Maksud Pendudukan duplicate. NO sibling-urusan extension (PLPS/MLPS/OMLPS may also need it — DEFERRED until BA flags).
+local_test_confirmed=true
+commit=f4a73be3cc
+branch=mlk/qa/262762
+qa_doc=projects/coding-projects/archive/QA-262762/QA-262762.md
+
+qa=QA-258004
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\52. QA #258004 - [FAT] MCL - Penyediaan Surat Keputusan, Borang Notis 5A, dan Lampiran
+qa_doc=projects/coding-projects/archive/QA-258004/QA-258004.md
+phase=2
+status=archived
+branch=mlk/qa/258004v2
+commit=ec64535e44
+ticket_type=bug
+current_phase=Phase 2 CLOSED 2026-05-31 — post-mortem written (main/post-mortems.md). Fix committed ec64535e44 + pushed to origin/mlk/qa/258004v2 (etanah repo). みや live-confirmed letter shows officer-selected Syarat/Sekatan + Notis-5A amount.
+local_test_confirmed=true
+env=UAT (mlkuat / et_main_uat) — SWITCHED from FAT because FAT had no MCL test data.
+issue_one_liner=MCL Surat Keputusan Lulus prints blank Syarat Nyata + Sekatan Kepentingan (+ Notis-5A amount). True root cause: officer dropdown pick never reached apt — dialog include omitted mbb + entity re-decodes to null on postback. Fix mirrors working RM-field + sibling kadar-cukai dropdown.
+scope_anchor=ONLY the 2026-05-18 last-comment issue. Do NOT expand to sibling urusans (PT/PSBS/PLTP share the bug = follow-up candidate).
+notes:
+  - 2026-05-31 PHASE 1+2 CLOSED (commit ec64535e44, branch mlk/qa/258004v2). KEY LESSON (みや): each edited file was NOT cross-checked against its working sibling → ~1.5 days lost; sibling-consistency-check hook parked in todo.md Q1. Full record in qa_doc.
+
+qa=QA-259702
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\51. QA #259702 - PRU - Pembetulan pada template Ringkasan Risalat dan Risalat MMKN - PT
+qa_doc=projects/coding-projects/archive/QA-259702/QA-259702.md
+post_mortem=main/post-mortems.md (QA-259702 entry, 2026-05-31)
+kpi_entry=main/kpi-tracker.md (QA-259702 entry, 2026-05-31)
+phase=2
+status=archived
+branch=mlk/qa/259702
+commit=59b7e62c90
+ticket_type=bug
+current_phase=Phase 2 CLOSED 2026-05-31 — post-mortem + KPI written; archived. Commit 59b7e62c90 on origin/mlk/qa/259702. みや live-tested on UAT PTMLK/01/L/PRU/2025/36. All Ringkasan Risalat + Risalat MMKN fields populate.
+local_test_confirmed=true
+env=UAT (mlkuat / et_main_uat) — SWITCHED from FAT per みや this session.
+issue_one_liner=PRU Ringkasan Risalat: DUN tidak papar + Lokasi/Keadaan-Tanah default ayat missing + Ulasan YB not pulled; REMOVE Perihal row + Nama YB; Perakuan PTD Syor choice. 7 items.
+scope_anchor=7 BA-highlighted items on Ringkasan Risalat (1.1-1.7). Risalat MMKN PTG sub-section BA-Q, OUT of scope.
+notes:
+  - 2026-05-31 PHASE 1+2 CLOSED. LESSON (みや): extend the existing per-urusan method (add a URS_PRU branch) instead of building a new populateSyorKeputusanPDTPru + new CC tag → CLAUDE.md v1.39 "check the convention inside the file". Full record in qa_doc.
+
+qa=QA-259342
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\20. QA #259342 - PT & PSBS - PT & PSBS - Perlu apply pada semua tugasan - Medan Pilihan Jenis Tanah papar kedudukan yang sal
+early_diagnostic=projects/coding-projects/active/QA-259342/early-diagnostic.md
+branch=mlk/qa/259342
+phase=0
+local_test_confirmed=false
+status=archived
+delegated_to=Aaron
+delegated_date=2026-05-05
+learning_marker=2026-05-05 — みや wants to trace fix later in project branch for learning
+note=ARCHIVED 2026-05-31 — moved Task folder to Archive\ + status=archived to declutter the boot open-quest list (still owned by Aaron; if Redmine reassigns it back to みや, redmine-sync will unarchive). TRANSFERRED 2026-05-05 — Aaron took back the ticket due to BA urgency. Early diagnostic preserved at projects/coding-projects/active/QA-259342/early-diagnostic.md. **Follow-up**: trace Aaron's fix on `mlk/qa/259342` branch when closed for learning.

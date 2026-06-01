@@ -2,41 +2,55 @@
 
 > **AGENT_STATE discipline** — High-Level Objective · Current Progress · Active Context · Blockers · Immediate Next Steps. Read at boot; updated at session end.
 
-**Current session**: 2026-06-01 (Mon, long session ~05:10 MPST close) — worktree `nice-poitras-467e92`. Theme: **QA-262755 closed end-to-end (Phase 0→2)** — PLPS Charting Keputusan / Maklumat Keputusan Mesyuarat-Keputusan PTG panel rendered blank — root cause = `da605873b2` regression (Aaron 2026-05-13) flipped SAK constant family from PTG → JKKT.
+**Current session**: 2026-06-01 (Mon, Session 2, ~05:20→08:40 MPST, worktree `inspiring-jemison-1b18fd`). Theme: **QA-262762 OPLPS Borang 4Ae closed end-to-end** (3 fixes) + **3 deterministic harnesses built** (`redmine-sync.js` auto-append, `quest/archive-quest.js`, `quest/migrate-post-mortems.js`) + **post-mortems.md migrated wholesale into per-quest archive docs** + **Phase 2 KPI rule re-shaped to high-bar/only-if-significant** + **DE Step 3.5 retired**.
 
 ## High-Level Objective (AGENT_STATE)
-- Close QA-262755 (FAT MCOT). Done — fix shipped on `mlk/qa/262755` (etanah-pelupusan), commit `fa5234c452`. Phase 2 archived.
+- Close QA-262762 (FAT MCOT OPLPS Borang 4Ae). DONE — 3 fixes shipped on `mlk/qa/262762` (etanah-pelupusan), commit `f4a73be3cc`. Phase 1+2 archived.
+- Build the parked archive-quest harness. DONE + self-tested with dummy data.
+- Address みや's protocol-design feedback on auto-skill / post-mortems / KPI / Step 3.5. DONE.
 
 ## Current Progress (AGENT_STATE)
-- **QA-262755 CLOSED (Phase 1 + 2).** etanah `fa5234c452` on `mlk/qa/262755`, pushed origin. 2-file revert: `PelupusanConstant.java:1062-1063` constants restored to `BGN_JNS_KPTSN_PTG_LLS/_TLK` (8-year pre-regression baseline) + `MlkKemasukanKeputusanPentadbirTanahForm.java` switched JKKT-literals to the constants + fixed pre-existing missing `kptsnDO = ` assignment on TANGGUH/TOLAK branches.
-- **Proof-quality verification** that's worth repeating as a technique:
-  - 5-dim parallel workflow (`wf_62c77852-d6f`, 7 min) found the regressing SHA + Chan Jun's authoritative QA-228687 spec from 2025-11-17 ("the SAK code is not correct — should be BGN_JNS_KPTSN_PTG_LLS/_TLK").
-  - DB cross-module reverse-trace (shared `umm_keputusan` + `tkl_a_*` scan) proved no teknikal-private SAK storage exists → teknikal reads the same shared table → SAK class is the discriminator.
-  - **Live UAT browser 3-state experiment** (single-variable patch UPDATE on row 1623504 PTG→JKKT, observe panel, UNDO) gave irrefutable proof in 5 minutes. Game-changing technique — first time this session driving Edge via Claude-in-Chrome MCP.
-  - Post-Hantar DB verify on `2025/42` row 1722325: `mklmt_tmbhn=BGN_JNS_KPTSN_PTG_LLS`, `jns_keputusan_id=43`, `class_id=10` — byte-correct.
-- **Archived**: QA-262755 Task folder moved to `Tasks\Melaka\Archive\`; block moved to `quest/active-archive.txt` (36 total). Phase 2 prose-appends to post-mortem/KPI/slip-log remain SUSPENDED per CLAUDE.md v1.40.
-- **Browser MCP unlocked**: Edge SSO inheritance works end-to-end. Saved the Carian search workflow as the dashboard navigation shortcut (Laman Utama → Carian ID Permohonan, NOT Tugasan Umum).
-- **Redmine retrieved earlier this session**: 6 new tickets at start (2 MCOT — QA-262762 OPLPS Borang 4Ae, QA-262755 PLPS CK we just closed). The OPLPS pair (QA-262762) is the next-easiest candidate per Aaron's "straighforward" hint.
+- **QA-262762 CLOSED.** etanah `f4a73be3cc` on `mlk/qa/262762`, pushed origin. 3 independent bugs shipped in one commit:
+  - Bug A (`PelupusanService.java:863-870`): persist `apt.tujuanPengiklanan` on Simpan (mirrors :18292-18296 write pattern, null-guarded, TNH_OTHERS handled)
+  - Bug B (`PelupusanReportMethodConstant.java:1709-1715`): OPLPS Borang 4Ae populator reads `apt.tujuanPengiklanan` instead of duplicating `apt.tujuanPermohonan` in fallback
+  - Bug C (`PelupusanService.java:889-895`): invalidate stored `AppDokumenKeluaran(BRG_4AE)` after save commits, gated `URS_OPLPS`, `isRemoveDocumentRecord=false` (mirrors `MlkMaklumatPerizabanForm.java:820` + `MlkLaporanL1eForm.java:211`)
+- **Bug C false-start**: v1 was `MlkPenyediaanBorang4AeL1eForm.initReport()` override with `true` flag, no gate — violated 3 codebase conventions. みや caught it. Reverted + replaced with Option A (service-layer hook). Slip-log entry written 2026-06-01.
+- **Live-verified** via server.log (`E:/Dev/jboss-7.4-plp-melaka/standalone/log/server.log`): 07:43:51 + 07:44:51 traces show `saveTujuanPermohonanPermitLesen → deleteAppDokumenKeluaranBasedOnJenisDokumen([2962073, BRG_4AE, false]) → 13ms → save 54ms total`. No exceptions.
+- **Commit message convention HARDENED** — `commit-conventions.md` v1.2: tugasan = kod (NEVER full name) + description = action-oriented (NEVER mechanical change-list). みや's exact string used: `QA #262762 - OPLPS - PB - Tujuan Pengiklanan save + Borang papar maklumat reflect changes`.
+- **Test recording trimmed**: ffmpeg scene-detection cut 118s ShareX capture to 33s/37s versions in `2. Fix/`. Future workflow candidate.
+- **3 deterministic harnesses built this session**:
+  - `quest/redmine-sync.js` (modified): auto-appends `active.txt` block on new ticket creation. Fixes the "open-quest-surfacer shows 1 of 18 folders" root cause. Idempotent (skips if QA already in active.txt).
+  - `quest/archive-quest.js` (new): atomic Phase 2 hygiene — Task folder → Archive\ + project subfolder → archive/ + active.txt block → active-archive.txt. Self-tested with dummy data (idempotency proven, 1 test-artifact caveat re git-bash path forms documented).
+  - `quest/migrate-post-mortems.js` (new): one-shot migration of `main/post-mortems.md` 37 entries → per-quest archive docs. 2 bugs caught + fixed during run (substring-match false positive, normalization edge cases for `FAT-OR #` and `(rework cycle 2)` qualifiers). Zero data loss after fix.
+- **Protocol updates landed** (all per みや's directives):
+  - `expansion-protocol.md`: Step 3.5 RETIRED.
+  - `quest-protocol.md`: Phase 2 Step 2 (KPI) re-shaped to high-bar "only-if-significant-out-of-scope-critical" (default = skip + emit `KPI: skip — routine ticket-scope work` line). Step 3 (Post-mortem) writes to per-quest doc, not main/post-mortems.md.
+  - `main/post-mortems.md`: 1115-line append-only file replaced with redirect stub pointing to per-quest archive docs.
+  - `todo.md`: CLAUDE.md comment-policy rule + FORCED PHASE-EMIT GATES per-fix refine added to Q1. `archive-quest.js` marked DONE.
+- **active.txt cleanup**: 3 stale-archived blocks (QA-258004, QA-259702, QA-259342 from 2026-05-31) moved to active-archive.txt. Boot's open-quest-surfacer will now correctly show 6 open quests (matches Redmine).
+- **6 NEW backfilled hold-blocks** for previously-untracked Task folders: QA-260508, QA-263344, QA-262762 (later closed), QA-259914, QA-247707, QA-246923.
 
 ## Active Context (AGENT_STATE)
-- etanah-pelupusan: `mlk/qa/262755` (`fa5234c452`) on remote; merge to master is colleague's job.
-- MemoryCore: rich change set this session — protocol rename `1. Notes.txt → 1. <NNN NNN>.txt` (CLAUDE.md + scripts + hooks + skills + auto-memory), CLAUDE.md v1.45/v1.46 (BPMN-first scope-check + logger-convention rule), new `quest/active-archive.txt` entry, today's diary, this update — DE will sweep all in one commit.
-- ⚠️ Hook noise: `convention-check-gate` (5× false-fired on cited edits this session), `RecursiveLoopDetector` (false-fired on distinct multi-edit cycles ~10×), `prepare-commit-trigger` (fires prematurely). Standing Flag #4 evidence accumulating; pending /system-check.
-- ⚠️ Side-flag deferred: KPT-doc `<Sign Pentadbir Tanah>` / `(<Nama Pentadbir Tanah>)` placeholders not populating on the Kertas .docx — populator `populateSignaturePenggunaSemasa` lives in `etanah-common` (no local source), likely test-data limitation (idi.fazlul has no signature blob).
+- etanah-pelupusan: `mlk/qa/262762` (`f4a73be3cc`) on remote; merge to master is colleague's job. Local main on `mlk/master` clean.
+- MemoryCore: HUGE change set this session (commit-conventions v1.2, expansion-protocol Step 3.5 retired, quest-protocol Phase 2 Step 2+3 refined, todo.md updated, slip-log entry, active.txt + active-archive.txt churn, redmine-sync.js patched, 3 new quest/*.js scripts, 29 new archive QA-NNN/QA-NNN.md stubs from post-mortems migration + 8 appended sections in existing archive docs) — DE commit will sweep all.
+- 3 untracked unknowns to leave alone for now: `etanah_atlas/` (prior-session project), `outputs-temp/` (temp staging), `zikxoUIF` (stray zip).
+- ⚠️ Hook noise persists (Standing Flag #4 evidence accumulating): `convention-check-gate` false-fires on cited edits + on local CLI commands flagged as SQL · `RecursiveLoopDetector` false-fires on distinct iterative fixes · `meta-edit-gate` advisory fires post-fact even when edit was user-directed.
 
 ## Blockers (AGENT_STATE)
-- None. QA-262755 fully shipped.
+- None. QA-262762 shipped, all protocol asks done.
 
 ## Immediate Next Steps (AGENT_STATE)
-1. **QA-262762 OPLPS Borang 4Ae** (next MCOT in queue) — Scout already done this session (saved-row persistence bug; `saveTujuanPermohonanPermitLesen` doesn't write `apt.tujuanPengiklanan`). Effort LOW per Scout. Pick up next session.
-2. **Hook noise audit** (carry-over): `convention-check-gate` false-positive rate is too high; `RecursiveLoopDetector` mis-counts distinct edits. Pending a /system-check pass.
-3. **Cross-module-db-trace skill** (parked this session per みや) — when the next quest's investigation reaches "module X is out of local scope", build it for real then.
-4. **CK panel signature side-flag** — only if BA re-asks; otherwise it's a test-data limitation, not a code bug.
+1. **Pick next ticket from the 6 open quests** (boot will surface them): QA-262495 (PPJK SRMMKNPDT slow Kemaskini — handed back, server-side, low Ruri-action) · QA-260508 · QA-263344 · QA-259914 · QA-247707 · QA-246923. Most are old hold-blocks from backfill; check Redmine + Description before picking.
+2. **CLAUDE.md refines from today** (parked Q1 in todo.md, ready when みや wants to land): (a) "no code comments unless necessary, ask first", (b) FORCED PHASE-EMIT GATES per-fix scope clarification.
+3. **Hook noise audit** (still pending /system-check): convention-check-gate + RecursiveLoopDetector false-positive rate is high. Worth a focused pass.
+4. **etanah_atlas/ + outputs-temp/ + zikxoUIF/** classification: investigate origin + decide stage/gitignore/delete in a future session-cleanup turn.
 
 ## 🎯 Session Recap (for AI restart)
-1. **QA-262755 closed** (etanah `fa5234c452` / `mlk/qa/262755`): SAK family revert (BGN_JNS_KPTSN_PTG_LLS/_TLK). 2-line constant revert + form switched to use the constants + fixed missing `kptsnDO=` on TANGGUH/TOLAK branches. Save + read both proven independently.
-2. **Headline technique unlocked**: 3-state live browser experiment (baseline → patched → undone) for filter-shape proofs. Single DB UPDATE + page reload + JS DOM grep = irrefutable. 5 minutes.
-3. **Browser MCP via Edge SSO** is now in the toolkit. Carian search is the navigation shortcut for teknikal dashboard.
-4. **CLAUDE.md v1.45 (BPMN-first module-scope) + v1.46 (logger-convention under Rubric)** pushed this session to harden Scout discipline (already on origin/main).
+1. **QA-262762 closed** (etanah `f4a73be3cc`): 3 fixes — persist tujuanPengiklanan + populator reads pengiklanan not duplicate-permohonan + invalidate-stored-Borang-on-save (URS_OPLPS-gated, `false` flag).
+2. **Bug C lesson**: mid-quest 2nd/3rd fix is its OWN Scout/Recon/Rubric loop. Re-using earlier emits because "we already did Phase 0 for this quest" is the slip shape that got me. Slip-log entry written + refine queued in todo.md.
+3. **3 harnesses built** to kill recurring deterministic gaps: redmine-sync auto-append (closes the 18-folders-vs-1-block drift root cause), archive-quest (atomic Phase 2 moves), migrate-post-mortems (one-shot historical migration).
+4. **Post-mortems.md retired** (migrated 37 entries → 34 per-quest archive docs; redirect stub left). Step 3.5 of DE retired. KPI now high-bar (only-if-significant-out-of-scope-critical, default skip).
+5. **Auto-skill-on-mistake audit**: KEEP (25% deterministic enforcement rate, 3% prose-only/logged-only — strong signal).
+6. **Commit subject convention**: tugasan = kod, description = action-oriented. Canonical example: `QA #262762 - OPLPS - PB - Tujuan Pengiklanan save + Borang papar maklumat reflect changes`.
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-01 05:10 MPST — QA-262755 closed end-to-end + browser-MCP first end-to-end loop + DE wrap.
+**Memory Type**: RAM | **Last Activity**: 2026-06-01 08:40 MPST — QA-262762 closed + 3 harnesses shipped + 4 protocol refines + DE in progress.
