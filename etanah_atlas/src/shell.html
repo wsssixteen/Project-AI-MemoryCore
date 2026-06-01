@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Etanah Atlas</title>
+<style>
+/* CSS_HERE */
+</style>
+</head>
+<body>
+
+<header class="hdr no-print">
+  <div class="brand">
+    <div class="logo">⛁</div>
+    <div>
+      <h1>Etanah Atlas</h1>
+      <p id="hdr-sub">Loading…</p>
+    </div>
+  </div>
+  <nav class="tabs">
+    <button class="tab active" data-tab="map">Map</button>
+    <button class="tab" data-tab="urusan">Urusan Journey</button>
+    <button class="tab" data-tab="search">Search</button>
+    <button class="tab" data-tab="about">About</button>
+  </nav>
+  <button class="theme-btn" id="theme-btn" aria-label="Toggle theme">◐</button>
+</header>
+
+<main class="app-main">
+
+<section class="view" id="view-map" data-view="map">
+  <div class="map-controls no-print">
+    <div class="ctl">
+      <label>Modul</label>
+      <select id="ctl-modul"></select>
+    </div>
+    <div class="ctl">
+      <label>Urusan</label>
+      <select id="ctl-urusan"><option value="">All (main tables)</option></select>
+    </div>
+    <div class="ctl">
+      <label>Layer</label>
+      <div class="seg" id="ctl-layer">
+        <button data-layer="both" class="seg-btn active">Both</button>
+        <button data-layer="_a_" class="seg-btn">Internal</button>
+        <button data-layer="_p_" class="seg-btn">AWAM/Pra</button>
+      </div>
+    </div>
+    <div class="ctl-actions">
+      <div class="seg" id="ctl-layout-mode" title="Switch between soft bands and process flow swimlanes">
+        <button data-mode="bands" class="seg-btn active">Bands</button>
+        <button data-mode="swimlanes" class="seg-btn">Swimlanes</button>
+      </div>
+      <button class="btn" id="btn-pin" title="Save current layout to this browser">Pin layout</button>
+      <button class="btn" id="btn-reset" title="Reset to auto layout">Reset</button>
+      <button class="btn" id="btn-print-map">Print this Modul ERD</button>
+    </div>
+  </div>
+  <div class="map-help no-print">
+    <span><strong>Click</strong> a card to inspect</span>
+    <span><strong>Double-click</strong> a card to drill into its children</span>
+    <span><strong>Drag</strong> to reposition</span>
+    <span><strong>Pin</strong> saves arrangement · <strong>Reset</strong> auto-arranges</span>
+  </div>
+  <div class="map-legend no-print" id="map-legend"></div>
+  <div class="focus-bar hidden no-print" id="focus-bar"></div>
+  <div class="map-grid">
+    <div class="canvas-wrap" id="canvas-wrap">
+      <svg id="map-svg" viewBox="0 0 1100 720" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="canvas-empty" id="canvas-empty">Loading…</div>
+    </div>
+    <aside class="side-panel" id="side-panel">
+      <div class="panel-hint">
+        <p>Click any table to see its connections and details.</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="view hidden" id="view-urusan" data-view="urusan">
+  <div class="urusan-controls no-print">
+    <div class="ctl">
+      <label>Urusan</label>
+      <select id="urusan-picker"></select>
+    </div>
+    <div class="ctl">
+      <label>Compare with</label>
+      <div class="urusan-compare" id="urusan-compare"></div>
+    </div>
+    <div class="ctl-actions">
+      <button class="btn" id="btn-print-urusan">Print this Urusan Journey</button>
+    </div>
+  </div>
+  <div class="urusan-content" id="urusan-content"></div>
+</section>
+
+<section class="view hidden" id="view-search" data-view="search">
+  <div class="search-controls no-print">
+    <input type="search" id="search-input" placeholder="Type a table name fragment..." autocomplete="off">
+    <div class="search-filters">
+      <label>Modul <select id="search-modul"><option value="">(all)</option></select></label>
+      <label>Layer <select id="search-layer"><option value="">(all)</option><option value="_a_">Internal _a_</option><option value="_p_">AWAM/Pra _p_</option><option value="neither">Neither</option></select></label>
+      <span id="search-count" class="search-count"></span>
+    </div>
+  </div>
+  <div id="search-results" class="search-results"></div>
+</section>
+
+<section class="view hidden" id="view-about" data-view="about">
+  <div class="about-wrap">
+    <h2>About Etanah Atlas</h2>
+    <p class="lede" id="about-totals">Loading…</p>
+    <h3>Modul axis</h3>
+    <p>Each table is assigned to a Modul (business department) based on its prefix. Pelupusan tables use the <code>plp_</code> prefix; Pendaftaran uses <code>dft_</code>; Hasil uses <code>hsl_</code>, and so on. Shared tables (<code>umm_</code>, <code>ind_</code>, <code>rjk_</code>, <code>pcp_</code>) appear in every Modul's view because every Modul uses them.</p>
+    <h3>Internal (_a_) and AWAM (_p_) layers</h3>
+    <p>A system-wide convention: <code>_a_</code> tables belong to the internal officer-facing side (etanah-pelupusan); <code>_p_</code> tables belong to the public applicant portal (etanah-awam). The Layer toggle on the Map view filters by this. Note: <code>_a_</code> does not mean "approved" — it just means the application has been accepted into the internal module; it may still be rejected.</p>
+    <h3>Schema drop-in</h3>
+    <p>Drop a new <code>.sql</code> dump onto the area below to re-parse and refresh the page (client-side, no server). The Modul mapping and urusan flows live in a separate <code>mapping.json</code> that survives schema changes.</p>
+    <div class="dropzone" id="sql-dropzone">
+      <p><strong>Drop a .sql file here</strong> or click to choose</p>
+      <p class="dz-sub">Re-parses tables + FKs in-browser. Curation (modul mapping, urusan flows) stays as configured.</p>
+      <input type="file" id="sql-file" accept=".sql" style="display:none">
+    </div>
+    <h3>Prefix legend</h3>
+    <div id="prefix-legend" class="prefix-legend"></div>
+    <p class="credit">Profile: <span id="about-profile"></span> · Version <span id="about-version"></span> · Last updated <span id="about-updated"></span></p>
+  </div>
+</section>
+
+</main>
+
+<script id="dataset" type="application/json">/* DATA_HERE */</script>
+<script id="mapping-doc" type="application/json">/* MAPPING_HERE */</script>
+<script>
+/* JS_HERE */
+</script>
+
+</body>
+</html>

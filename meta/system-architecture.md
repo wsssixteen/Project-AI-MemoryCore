@@ -82,6 +82,8 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 | `TurnChecklistGate.js` | self | multi-topic prompts (≥3 numbered items OR ≥2 questions) | "✅ This-turn checklist" template | みや (visible) | Predicate update affects multi-topic detection |
 | `quest-resume-preflight.js` | self | bare ticket numbers cross-matching active.txt | Phase 0 preflight checklist | Quest skill resumption | Bare-ticket-format changes need regex update |
 | `scout-completeness-gate.js` | self (NEW 2026-05-28, plan Phase 3) | Scout / Recon trigger phrases ("scout spawn", "running recon", "verify each claim", "100% verify", "universal check", "sibling-structure") | injects 100%-VERIFY clause text + UC9 reminder + required Skill tool invocations list | quest-protocol.md 100%-VERIFY clause (line 545), predicate-box skill, claim-verification skill | Predicate-phrase changes (extending trigger detection) require regex update |
+| `quest-active-grounding.js` | self (NEW 2026-06-01 S4, hooks-as-harness pattern per みや) | every UserPromptSubmit (no phrase match — always evaluates) | injects `🎯 Active quest: QA-X · Scope: <urusan> · Phase: <current_phase> · Local test: <yes\|no>` per active.txt block where `status=active` AND NOT (`phase=1` AND `local_test_confirmed=true`) — silent if no match | open-quest-surfacer.js (SessionStart counterpart), quest workflow, every prompt during active quest | Status-enum changes (INV-3) + phase-aware silence predicate (option b per みや 2026-06-01) require this hook update; registered in settings.json line 115 |
+| `mode-detector.js` | self (NEW 2026-06-01 S5, Item D per みや — mode-scoping enabler) | every UserPromptSubmit | emits `🎯 Mode: <Quest-active\|Discussion>` — same predicate as quest-active-grounding (status=active AND NOT past-testing). Lets downstream hooks scope enforcement to Quest-active mode only | operational-follow-through.js (reads same predicate to scope its warnings), future Debugging-mode hooks (v1.1 deferred) | Mode list expansion (adding Debugging-universal etc.) requires this hook update + downstream consumers |
 
 ### 3.3 PreToolUse Bash (2 hooks)
 
@@ -112,6 +114,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 | `silent-claim-drift-gate.js` | self | "done"/"complete" claims without diff-backing | advisory reminder (Stage 5A) / hard-block (Stage 5B) | Phase 5 enforcement, claim-verification skill | Phase 3 + Phase 5 both extend this hook |
 | `diagnostic-self-heal-gate.js` | self | /verify-shape emit + stalling phrase | self-heal mandate | stalling-detector skill | Predicate changes affect self-heal triggers |
 | `diary-format-gate.js` | self (NEW 2026-05-28, parallel session) | every Stop | validates 3 H2 sections in today's daily-diary entry (Sessions / Index / Closing) | daily-diary template, DE Step 4 | Template-section name changes require this hook update; warn-only (does not block) |
+| `rcrl-emit-check.js` | self (NEW 2026-06-01 S5, RCRL backstop) | every Stop — fires only when active.txt has `status=active` AND turn transcript has Recon-shape emit | warns if RCRL block missing (advisory in v1); bypass via `[skip-rcrl: <reason>]` | CLAUDE.md §10 RCRL primitive Step 0, scout-completeness-gate.js (same family) | Stage 2 flip to `decision:block` deferred until predicate quality observed |
 
 ### 3.6 PostToolUse (1 hook)
 
@@ -187,6 +190,8 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 | `etanah-rahsia-bypass` | etanah-specific need | rahsia document access |
 | `usage-guidance` | user-side helper | usage advice |
 | `video-frames` | video content | frame extraction |
+| `video-trim` (NEW 2026-06-01 S4) | "trim the video" / "trim this video" / "trim my video" / "help me trim" / "video for Redmine" / "trim for upload" / post-testing hand-back with recent ShareX .mp4 | ffmpeg motion-detect cut of idle/loading stretches + tail-trim cursor-to-stop-button + 2 calibration outputs (aggressive/conservative) → highest-numbered Task subfolder + ShareX source delete on verified-success |
+| `redmine-phase1-prefill` (NEW 2026-06-01 S4, manual-invoke only) | "redmine prefill" / "prefill redmine for X" / `/redmine-phase1-prefill` / explicit invocation only — does NOT auto-bind to quest workflow | Claude-in-Chrome MCP driven: navigate Redmine Edit page → fill Status=Resolved + Assignee + %Done=100% + Resolved By (both) + Notes template + Files from highest-numbered Task subfolder → STOP before Submit (みや reviews + submits) |
 | `skill-invocation-discipline` | hook+skill pair | discipline enforcement |
 
 ### 4.5 Skill-invocation contract

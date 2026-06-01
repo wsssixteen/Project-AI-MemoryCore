@@ -19,6 +19,10 @@ Co-Authored-By: Ruri <noreply@anthropic.com>
 Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
 ```
 
+## 🚨 BANNED: dual-version commit message drafts (HARD RULE 2026-06-02 per みや)
+
+When drafting a commit message for review, emit **ONE version only** — the locked subject-only form below. **Banned**: showing "Or split message variant (if you prefer multi-line)" / "long version" / "alternative form" alongside the chosen one. みや: *"the long one is useless, why this kept showing?"*. The short subject-only form IS the convention for etanah repos; offering a multi-line alternative invites picking the wrong one and adds noise. If a body genuinely is needed (rare, MemoryCore-only), emit ONLY that form, not both.
+
 ## etanah repos (etanah-pelupusan, etanah-awam)
 
 Subject-only — **no body, no trailer at all** (per `main/post-mortems.md:99` and the QA #260154 / #260298 / #259428 examples).
