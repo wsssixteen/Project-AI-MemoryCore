@@ -117,6 +117,10 @@
           {
             "type": "command",
             "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\mode-detector.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\domain\\batch-ask\\batch-ask.trigger.hook.js\""
           }
         ]
       }
@@ -161,6 +165,10 @@
           {
             "type": "command",
             "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\convention-check-gate.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\claude-md-edit-guard.js\""
           }
         ]
       }

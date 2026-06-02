@@ -84,6 +84,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 | `scout-completeness-gate.js` | self (NEW 2026-05-28, plan Phase 3) | Scout / Recon trigger phrases ("scout spawn", "running recon", "verify each claim", "100% verify", "universal check", "sibling-structure") | injects 100%-VERIFY clause text + UC9 reminder + required Skill tool invocations list | quest-protocol.md 100%-VERIFY clause (line 545), predicate-box skill, claim-verification skill | Predicate-phrase changes (extending trigger detection) require regex update |
 | `quest-active-grounding.js` | self (NEW 2026-06-01 S4, hooks-as-harness pattern per みや) | every UserPromptSubmit (no phrase match — always evaluates) | injects `🎯 Active quest: QA-X · Scope: <urusan> · Phase: <current_phase> · Local test: <yes\|no>` per active.txt block where `status=active` AND NOT (`phase=1` AND `local_test_confirmed=true`) — silent if no match | open-quest-surfacer.js (SessionStart counterpart), quest workflow, every prompt during active quest | Status-enum changes (INV-3) + phase-aware silence predicate (option b per みや 2026-06-01) require this hook update; registered in settings.json line 115 |
 | `mode-detector.js` | self (NEW 2026-06-01 S5, Item D per みや — mode-scoping enabler) | every UserPromptSubmit | emits `🎯 Mode: <Quest-active\|Discussion>` — same predicate as quest-active-grounding (status=active AND NOT past-testing). Lets downstream hooks scope enforcement to Quest-active mode only | operational-follow-through.js (reads same predicate to scope its warnings), future Debugging-mode hooks (v1.1 deferred) | Mode list expansion (adding Debugging-universal etc.) requires this hook update + downstream consumers |
+| `batch-ask.trigger.hook.js` | self (NEW 2026-06-02, Power: `domain/batch-ask/`) | UserPromptSubmit · regex matches extensive-intent phrases (extensive/exhaustive/thoroughly/sweep/in-one-go/save-time/extensive-logging — 7 family patterns ~40 phrases) | injects mandate: use AskUserQuestion tool for ALL clarifying questions this turn; bans chat-written stalling | みや's workflow during extensive-intent prompts; AskUserQuestion tool | Phrase list grows ONLY with ≥2 observed misses + みや nod (per /system-design trigger-reliability discipline) |
 
 ### 3.3 PreToolUse Bash (2 hooks)
 
@@ -102,6 +103,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 | `meta-edit-gate.js` | self | `meta/*` path edits + (Phase 0 extension) hooks/skills/protocols/state-files | recursive safety + paired-edit predicate | meta-layer audit, architecture-doc-sync | Phase 0 extends this hook for architecture-doc-sync |
 | `edit-scope-gate.js` | self | suspicious delete-unrelated-code patterns | preservation discipline reminder | PRESERVATION DISCIPLINE rule | Pattern-list expansion needs predicate update |
 | `convention-check-gate.js` | self (dual-registered) | Edit/Write to .java / .docx / .json|xml|properties | working-analog-first reminder | etanah-pelupusan code edits, template edits | New file-types may need extension |
+| `claude-md-edit-guard.js` | self (NEW 2026-06-02 — enforces /system-rules Rule 2 merge-in-place) | Edit/Write to CLAUDE.md · /system-rules/SKILL.md · /system-design/SKILL.md | scans for HARD-RULE block opener · Why+QA-NNN narrative · pairs-with cross-ref · How-to-apply restatement · みや verbatim quote inside rule body; warns advisory | /system-rules Rule 2, /system-design Bloat-prevention default; pairs with no current skill (hook-only Power) | Bloat-pattern regex additions per observed misses |
 
 ### 3.5 Stop (6 hooks)
 
@@ -171,7 +173,8 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 
 | Skill | Invocation | Produces | Stakeholders |
 |---|---|---|---|
-| `system-design` | `/system-design` + trigger phrases | structured design output incl. Contract Verification Table (Step 6) | Quest Rubric phase (multi-perspective lens), architectural decisions |
+| `system-rules` | `/system-rules` + trigger phrases (NEW 2026-06-02 — universal background discipline split out from old /system-design) | 5 universal rules: inventory first · merge in place · assess + delete deprecated · clean system value · build with audit logging | Universal disciplines for ANY system; /system-design references these |
+| `system-design` v2.0 (REWRITE 2026-06-02) | `/system-design` + trigger phrases | Agentic-specific design: Power trinity primitive (skill+hook+eval in `domain/<name>/`) · layering doctrine · trigger reliability · decay protocol · rules 6+7 (ship with eval · pick the primitive) · bloat-prevention default | Every new feature/Power we build in our agentic system; pairs with /system-rules (universal) + claude-md-edit-guard.js hook |
 | `etanah-knowledge-graph-build` | quest mid-flow | knowledge graph artifacts | etanah-knowledge layer maintenance |
 | `bankai` | `/bankai` + trigger phrases | autonomous-loop data organization (slip-log consolidation, etc.) | meta-layer maintenance |
 | `auto-skill-on-mistake` | correction signal detection (via auto-skill-trigger.js hook) | refined/new skill OR hook | meta-layer self-improvement |
