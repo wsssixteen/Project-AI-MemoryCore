@@ -20,12 +20,17 @@ notes:
 qa=QA-260508
 quest_start_ts=2026-06-02T08:50:10.915Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\50. QA #260508 - PT-PSBS-MCL - Panel maklumat plot dikeluarkan hakmilik - Tambah medan
-phase=0
-status=hold
-ticket_type=bug
-env=unknown
-issue_one_liner=PT-PSBS-MCL - Panel maklumat plot dikeluarkan hakmilik - Tambah medan
-note=backfilled 2026-06-01 from disk truth; pre-dated redmine-sync auto-append fix
+phase=1
+status=active
+current_phase=Push
+ticket_type=enhancement
+env=UAT
+issue_one_liner=PT-PSBS-MCL - Panel maklumat plot dikeluarkan hakmilik - Tambah medan Pengkelasan Tanah
+branch=mlk/qa/260508
+commit=454e153811
+local_test_confirmed=true
+pushed=2026-06-02
+note=Phase 1 closed 2026-06-02 — branch mlk/qa/260508 pushed; awaiting BA verification on UAT. PT/MCL tested locally with patched data (BANDAR_1 / PEKAN); PSBS Senarai Semakan path covered structurally via shared composite (MCL test transfers).
 
 qa=QA-263344
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\51. QA #263344 - UAT - PRBB - Penyediaan Minit Bebas - Masuk tugasan terus pergi ke langkah 4- Penyediaan

@@ -191,11 +191,25 @@ Two strategy tiers control Word document generation:
 
 | Module | Role | Notes |
 |---|---|---|
-| `etanah-pelupusan` | Primary dev module — Melaka | リドワンさん's main codebase |
-| `etanah-awam` | Shared/common module — owns certain borang/report displays | Not yet synced locally |
-| `etanah-common` | Shared utilities, validation, exception handling | Popup validation lives here |
+| `etanah-pelupusan` | Primary dev module — Melaka pemberi-milikan, pajakan, etc. (PT, PSBS, PLPS, MCL, PLTP, PRZ, etc. urusan) | リドワンさん's main codebase |
+| `etanah-awam` | Shared/common module — owns certain borang/report displays + applicant-portal flows (Siasatan Tanah Pembangunan) | Not yet synced locally |
+| `etanah-common` | Shared utilities, validation, exception handling, **cross-module entity classes** (e.g., `AppLaporanTanah`, `AppLaporanTanahRepository`) + shared DB schema definitions | Popup validation lives here |
+| `etanah-teknikal` | Technical-side module — owns Siasatan Tanah, Maklumat Plot, Laporan Tanah panels filled by JT (Jabatan Teknikal) / technical officers. Writes to `tkl_*` tables (e.g., `tkl_a_laporan_tnh`). **Separate web-app deployment from pelupusan** | Not yet synced locally; pelupusan cannot directly render teknikal UI components |
 
 > ⚠️ Some report displays that appear to be in pelupusan flows are actually rendered by `etanah-awam`. Always check module ownership before investigating report/display bugs.
+
+### Reading "skrin teknikal" in BA briefs — DON'T confuse with pelupusan UI (QA-260508 slip, 2026-06-02)
+
+When a BA brief says **"tarik dari skrin teknikal medan X"** (pull from the teknikal screen the X field), they're naming the **data source location**, NOT asking for a teknikal screen to be embedded in pelupusan. The teknikal screen lives in the `etanah-teknikal` module (separate deployment); pelupusan can only READ the underlying data via:
+- Shared DB tables prefixed `tkl_*` (e.g., `tkl_a_laporan_tnh.kedudukan_tanah`)
+- Cross-module entity classes in `etanah-common` (e.g., `AppLaporanTanah`)
+- Repositories in `etanah-common/.../repository/teknikal/` (e.g., `AppLaporanTanahRepository.findByAplikasi`)
+
+**What BA is saying** when they list a `tkl_*` column like `kedudukan_tanah::json->>'zone'`: that column IS the field officers fill on a teknikal-side screen, and pelupusan should pull a DEFAULT/initial value from there into a pelupusan-side field. **What BA is NOT saying**: "add a Zone display row to pelupusan UI" — unless their screenshot explicitly shows one.
+
+**Rule**: when BA references a teknikal table column as a "source" for a pelupusan-side enhancement, the pelupusan UI gets the enhancement (per Expected #1), and the column is the read-path; do NOT also add a separate display field for the source column unless BA's screenshot shows it.
+
+> **Slip class** (QA-260508 2026-06-02): I added a Zone display field to pelupusan panels after reading "tarik dari skrin teknikal medan Zone" as "display Zone too". BA's screenshot showed only Pengkelasan, no Zone. Correct read was: Zone is the teknikal-side column where Pengkelasan's data lives — pull it into Pengkelasan's default, don't render Zone separately.
 
 ## Reports Team Workflow (Melaka)
 

@@ -94,6 +94,45 @@ These were confirmed from the SQL exports. Never assume otherwise:
 
 ---
 
+## 2c. Entity ↔ Table ↔ JSON Column Quick-Lookup (added 2026-06-02 after QA-260508 wrong-entity-read slip)
+
+> **Why this section exists**: Java variable names like `apt` (AppPermohonanTanah) and `aplp` (AppPelupusan) look similar in code but resolve to **different entities, different tables, different JSON columns**. Both expose `getMaklumatTambahan()`, but the call hits a different `mklmt_tmbhn` / `maklumat_tambahan` column depending on which entity it's on. The slip class this prevents: writing `apt.setMaklumatTambahan(...)` on save and `aplp.getMaklumatTambahan(...)` on read, then wondering why the saved value never shows up.
+>
+> **Verification rule**: before editing any populator/save code that touches a `.getMaklumatTambahan()` / `.set*(...)` chain, look up the variable's declared TYPE (not the variable name), find it in this table, and confirm the table + JSON column actually match between the save site and the read site.
+
+### Entity ↔ table map (verified entries only)
+
+| Java entity class | DB table | JSON column on it | Notes |
+|---|---|---|---|
+| `Aplikasi` | `umm_aplikasi` | (none — spine table) | PK `aplikasi_id`. Holds `id_pengenalan`, `ursn_id`, `pejabat_id`. Join everything via this |
+| `AppPelupusan` | `plp_a_pelupusan` | `maklumat_tambahan` (TEXT, JSON-as-string) | PLU-internal pelupusan-level metadata. One row per aplikasi. Common var names: `aplp`, `appPelupusan`, `aPlp` |
+| `AppPermohonanTanah` | `umm_a_permohonan_tnh` | `mklmt_tmbhn` (TEXT, JSON-as-string, mapped to `getMaklumatTambahan()` in Java) | Per-permohonan-tanah row. Multiple per aplikasi (one per plot/kawasan). Common var names: `apt`, `eachAppMohonTnh`, `appMohontnh`. **This is where `pengkelasanTnh` lives** (QA-260508 save target) |
+| `AppHakmilik` | `umm_a_hkmlk` | `mklmt_tmbhn` (TEXT, JSON-as-string) | Per-hakmilik row linked to aplikasi. Common var names: `ahm`, `ahmTerlibat`, `appHakmilik` |
+| `AppLaporanTanah` | `tkl_a_laporan_tnh` | `kedudukan_tanah` (TEXT, JSON-as-string) + `maklumat_tambahan` (TEXT, JSON-as-string) | **etanah-teknikal module owns** writes; pelupusan reads via `etanah-common/.../repository/teknikal/AppLaporanTanahRepository.findByAplikasi`. Holds Zone, Jalan, Landmark, Dun, PBT, koordinat GIS — all in `kedudukan_tanah` JSON |
+| `MaklumatHakmilik` | `umm_maklumat_hkmlk` (verify) | (read-only snapshot — verify before writing) | Historic hakmilik snapshot at decision time. Common var name: `maklumatHakmilik` |
+| `AppPermitLesen` | `umm_a_permit_lesen` (verify) | `syaratTambahan` (verify) | Used by `populateSyaratKelulusan` chain via `retrieveAppPermitLesen4Aor4B("4A", aplikasi)` |
+
+### Name-similarity trap table (the QA-260508 slip in particular)
+
+| Code pattern | What it touches | Common confusion |
+|---|---|---|
+| `apt.getMaklumatTambahan()` | `umm_a_permohonan_tnh.mklmt_tmbhn` | Looks like `aplp.getMaklumatTambahan()` but is a DIFFERENT table |
+| `aplp.getMaklumatTambahan()` | `plp_a_pelupusan.maklumat_tambahan` | Looks like `apt.getMaklumatTambahan()` but is a DIFFERENT table |
+| `ahm.getMaklumatTambahan()` | `umm_a_hkmlk.mklmt_tmbhn` | Different from both above |
+| `altForZone.getKedudukanTanah()` | `tkl_a_laporan_tnh.kedudukan_tanah` | etanah-teknikal-owned column; only read-accessible from pelupusan via `AppLaporanTanahRepository` |
+
+### Discipline rule that pairs with this table
+
+At every populator/save edit involving any `*.getMaklumatTambahan()`, `*.setMaklumatTambahan()`, or any `*.get*JSON-column*()` call:
+
+1. **Name the entity TYPE explicitly** in chat prose before the edit — not just the variable name. `apt` ≠ `AppPermohonanTanah` as evidence of understanding; the Read or Grep showing `AppPermohonanTanah apt = ...` IS the evidence.
+2. **Cross-reference save↔read tables**. If the save block writes to `apt.setMaklumatTambahan(...)` (`umm_a_permohonan_tnh.mklmt_tmbhn`), the read block on the same field must also pull from `apt` or from a VO populated from `apt` — NOT from a different entity that has a similarly-named column.
+3. **Cascade fallback patterns** (like `kelasTanah` in `populateMaklumatPendaftaranHakmilikList`): one of the fallback rungs typically dereferences the in-memory VO that WAS populated from the save target. When adding a new field's cascade, mirror this — first try the primary source (often `aplp` or `ahm`), then fall through to the VO populated from `apt`, then EMPTY. Missing the VO rung is the silent-blank-on-read slip.
+
+> **Slip class fixed by this section** (QA-260508 2026-06-02): I added Pengkelasan read in `populateMaklumatPendaftaranHakmilikList` reading only from `aplp.getMaklumatTambahan()`. The save block wrote to `apt.getMaklumatTambahan()`. Read source ≠ save target → saved value never displayed in Langkah 4 Senarai Semakan. Fix was adding the `premiumCukaiVO.getPengkelasanTanah()` fallback rung (which IS populated from `apt`).
+
+---
+
 ## 3. Table Prefix Legend (et_main)
 
 | Prefix           | Meaning                                                | Example                                   |
