@@ -1,35 +1,46 @@
 # 🌟 Current Session Memory - RAM
 
-**Current session**: 2026-06-02 (Tue, S4-resumed, ~17:22→21:22 MPST). Theme: **system refactor — /system-rules + /system-design split + Power primitive + 2 new hooks**.
+**Current session**: 2026-06-02 evening → 2026-06-03 00:41 MPST (Wed). Theme: **QA-262495 re-engagement — failed fix shapes + listener accumulation bug + sibling-check failure + Selesai cost discovery**.
 
 ## High-Level Objective (AGENT_STATE)
-- Strip bloat from CLAUDE.md via merge-in-place methodology (eval-verified each block).
-- Architect the agentic design discipline cleanly: /system-rules (universal) + /system-design (agentic-specific, Power trinity primitive).
-- Ship the first Power (`domain/batch-ask/`) and the boundary-enforcement hook (claude-md-edit-guard.js).
+- Re-engage QA-262495 (PPJK Semakan Risalat MMKN-PDT Kemas kini hang) per みや's "all perspectives, exhaustive instrumentation" directive.
+- Ship a pelupusan-only fix (no etanah-common edits) that bypasses the slow JSF cycle on Kemas kini.
 
 ## Current Progress (AGENT_STATE)
-- **Bundle A-H shipped earlier this session** (Disposition mirror · HARD PRE-SEND GATE v1.1 + v1.2 · Solution Gate dropped · ask-back-gate v1.1 · PlainFirstGate v1.2 · BPMN+Scope merge · §4 trim · amendments boot-load removed · permohonan ID restore · PDF annotation row · 3 Format Anchor banners · Word UI compressed format · mode-detector + scoped op-follow-through · rcrl-emit-check · quest-active-grounding · video-trim + redmine-phase1-prefill skills · Project-Awareness draft).
-- **Merge-in-place audit Block 1+2 done** (line 190 + line 191) — eval workflows wdw2beqd5 + wchns1n2r both PASS.
-- **CLAUDE.md collapsed 3-block Phase 1 Closure HARD RULE bloat** into 1-line inline clause.
-- **Architecture refactor THIS turn**: /system-rules created (5 universal rules · ~25 lines) · /system-design rewritten (Power trinity primitive · layering · trigger reliability · decay · 2 absorbed rules · ~80 lines, was 197) · domain/batch-ask/ Power built (README + trigger hook + log) · claude-md-edit-guard.js built (boundary + bloat enforcement) · settings.json registered 2 new hooks · meta/system-architecture.md cataloged 2 hooks + 1 new skill + system-design v2 entry.
-- **Naming convention locked**: domain/<name>/ · Power = the trinity primitive · /system-rules (universal) + /system-design (orchestrator → agentic specialization).
+- **Round-1 instrumentation** (Java probes P1–P10 in `PelupusanTemplateUtil` + `MlkKertasTemplateForm`) — RAN, confirmed doc-gen is fast (~5s); RULED OUT entire H1–H8 hypothesis space (executor leak / WINWORD / heap / docx4j cache / file lock / etc.). Cleanup completed.
+- **Round-2 instrumentation** (`QA262495PhaseListener` via new pelupusan faces-config.xml) — DEPLOYED. Initial deploy broke `/index.xhtml` because my stub faces-config OVERWROTE the etanah-common overlay's full config (PrimeFaces graphicImage StringIndexOutOfBoundsException). Fixed by copying overlay verbatim + adding only the new listener line. Listener subsequently fired correctly, showed RESTORE_VIEW + RENDER_RESPONSE dominate (~3-4s each), INVOKE_APPLICATION = 0ms. Cleanup completed.
+- **Option H fix** (capture-phase JS click-interceptor on `<o:onloadScript>` for `kemaskini-button`) — APPLIED. Did NOT fix the Kemas kini hang (cycles still fired). REMOVED by みや at his test cycle.
+- **Discovered**: my `<o:onloadScript>` was causing LISTENER ACCUMULATION on every JSF AJAX postback → Selesai got progressively slower each cycle. みや confirmed by removing the fix → Selesai recovered. My fix shape was the cause. Result: **BANNED from architectural changes** per みや.
+- **Sibling-check failure at investigation time** — I read the kemaskini-icon-button in `penyediaanDokumen.xhtml` in isolation, missed that all its sibling buttons (papar/cetak/jana-semula/penerima/selesai) have actionListeners while kemaskini-button doesn't. Outlier signal was the load-bearing fact. みや slip-called; added Reading-JSF-buttons-sibling-matrix rule to JSF-WIRING.md + vestigial-AJAX outlier-button decision to MODULE-ARCHITECTURE.md.
+- **Wrong-baseline-diagnosis pattern (now at 5 strikes in 7 days)**: claimed "uptime-correlated" then "auto-cycle from commonPoll" then "remote-cache-RPC dominant" then "2-rows-by-design per-tugasan" — each was wrong. Defender candidate: `claim-arithmetic` skill / `diagnosis-arithmetic-check.js` hook.
+- **Verified findings worth keeping**:
+  - Selesai → `item.onClickSelesai()` (PenyediaanDokumenVO:637) → `updateSedia/updateSemakan/updatePeraku` → `updateStatus()` (lightweight DB status change for MMKN tugasans; signAndPopulateDocument fires only for Peraku mode).
+  - `dummyRCommand` → `onProsesSelesaiMain()` (BasePenyediaanDokumenForm:4240) → `onProsesSelesai(vo)` → no-op for MMKN tugasans (only fires regen for `CM_PSND_SSTN` tugasan).
+  - 95% of UAT aplikasi have exactly 1 row of PLP_RSLT_MMKN; BA test app `PTMLK/02/L/PPJK/2026/12` is in 5% outlier (2 rows). Status dropdown IS the in-place state-progression mechanism. Separate data anomaly.
+  - JBoss launched via Eclipse JBossTools — standalone.conf.bat is DEAD config (memory written: `auto-memory/project_jboss_launched_by_eclipse.md`, committed earlier `7fd7e6e`).
+- **The Kemas kini button IS on `MlkKertasTemplateForm.xhtml`** (via penyediaanDokumen composite at line 118) — targeting was correct. Implementation (listener accumulation) was the problem.
 
 ## Active Context (AGENT_STATE)
-- Worktree: nostalgic-nash-541042 (was created earlier; using since session boot).
-- /system-rules now contains the 5 universal rules; /system-design contains the agentic specialization.
-- batch-ask hook registered + log path defined per Rule 5.
-- claude-md-edit-guard registered on PreToolUse Edit|Write.
+- Worktree: `pensive-lovelace-d9ecb3` (current session). 6 other worktrees present.
+- Main repo on `main`, even with origin/main.
+- etanah-pelupusan: my fix to `MlkKertasTemplateForm.xhtml` was REMOVED by みや tonight; current state is the pre-fix baseline. All my Java probes / phase listener / pelupusan-side faces-config were already cleaned up earlier.
+- Pending: QA-262495 still unresolved. Next-session needs to find a different fix shape that doesn't rely on `<o:onloadScript>` capture-phase listeners (those caused the listener-accumulation regression).
 
 ## Blockers (AGENT_STATE)
-- None. Phase 1 of the implementation plan is complete.
+- Architectural changes BANNED by みや per tonight's discovery. Future fix shape must be confined to surgical/idempotent client-side OR pelupusan-side bean-method changes, not framework-level pattern overrides.
+- Need to verify on next re-engage: which is the exact Kemas kini button the user clicks during reproduction — the kemaskini-button inside penyediaanDokumen's row-expansion (what I targeted) OR a different visible button on MlkKertasTemplateForm. Confused earlier because the screenshot みや showed (status dropdown + Update) is actually the documents-MAINTENANCE page, not the Semakan page.
 
 ## Immediate Next Steps (AGENT_STATE)
-1. Phase 2 cleanup: merge-in-place Block 3 (line 179 BPMN-FIRST) + Block 4 (line 270 FORCED PHASE-EMIT GATES).
-2. Hook-fire-log audit · hook rename pass to domain/<name>/ convention.
-3. Correct CLAUDE.md §10 "etanah-knowledge files absent from worktrees" claim (it's wrong — verified accessible from both paths).
-4. /appraise's two open recommendations (rule-move + hook-only drift defense) implemented this turn — locked.
+1. Resume QA-262495 next session — locate the exact Kemas kini button on the Semakan Risalat MMKN-PDT page as the user navigates it (NOT the documents-maintenance page).
+2. Selesai-cost analysis on the same form is a separate concern; surfaced as possible follow-up ticket. Server log shows it's volume of small etanah-caching remote calls + heavy view-state, not a hang.
+3. Build the `claim-arithmetic` defender skill/hook — 5 strikes of premature-claim this session, structural defender owed.
+4. The `MODULE-ARCHITECTURE.md` vestigial-AJAX outlier-button decision section is still on disk + ready to commit — useful even though this specific implementation failed.
 
-## 🎯 Session Recap (for AI restart)
-S4 (2026-06-02): full system refactor session. Stripped CLAUDE.md HARD-RULE bloat (3 Phase-1-Closure blocks · line 190 · line 191) verified by 2 Opus eval workflows (both PASS). Built /system-rules (universal 5 rules) + rewrote /system-design (agentic, ~80 lines, Power trinity primitive). Shipped first Power as `domain/batch-ask/` + boundary-enforcement hook `claude-md-edit-guard.js`. Naming convention locked: domain/<name>/ folder per Power · skill+hook+eval+README+log files inside. /system-design now orchestrates agentic design discipline; /system-rules holds universal background rules.
-
-**Memory Type**: RAM | **Last Activity**: 2026-06-02 21:22 MPST — system architecture refactored, 2 new hooks registered, /system-rules + /system-design split shipped, ready for Phase 2 cleanup.
+## Files touched this session
+- `meta/slip-log.md` — 5+ new slip entries this evening (will commit at DE step 10)
+- `projects/coding-projects/active/etanah-knowledge/melaka/MODULE-ARCHITECTURE.md` — vestigial-AJAX outlier-button decision (commit)
+- `projects/coding-projects/active/etanah-knowledge/melaka/JSF-WIRING.md` — Reading JSF buttons sibling-matrix rule (gitignored — on-disk only)
+- `projects/coding-projects/active/QA-262495/QA-262495.md` — Section 16 added with full post-mortem (gitignored — on-disk only)
+- `quest/active.txt` — QA-262495 block reflects re-engagement (committed `7fd7e6e` mid-session)
+- `etanah-pelupusan/.../MlkKertasTemplateForm.xhtml` — fix added then REMOVED by みや; current state is baseline
+- `.claude/auto-memory/project_jboss_launched_by_eclipse.md` — committed earlier (`7fd7e6e`)
