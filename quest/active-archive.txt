@@ -808,3 +808,22 @@ delegated_to=Aaron
 delegated_date=2026-05-05
 learning_marker=2026-05-05 — みや wants to trace fix later in project branch for learning
 note=ARCHIVED 2026-05-31 — moved Task folder to Archive\ + status=archived to declutter the boot open-quest list (still owned by Aaron; if Redmine reassigns it back to みや, redmine-sync will unarchive). TRANSFERRED 2026-05-05 — Aaron took back the ticket due to BA urgency. Early diagnostic preserved at projects/coding-projects/active/QA-259342/early-diagnostic.md. **Follow-up**: trace Aaron's fix on `mlk/qa/259342` branch when closed for learning.
+
+qa=QA-259914
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\54. QA #259914 - PT - AWAM & APPS - Maklumat Pasangan - Terdapat perubahan pada medan-m
+phase=1
+status=archived
+current_phase=Push
+ticket_type=bug
+env=UAT (mlkuat / et_main_uat)
+issue_one_liner=PT Maklumat Pasangan (AWAM portal) — Alamat Tempat Kerja papar mandatori + Jawatan dipaparkan pada paparan awal (Aaron's prior onChange-handler fix didn't cover initial render)
+codebase_root=etanah-awam
+branch=mlk/qa/259914
+commit=305eaf8df4
+local_test_confirmed=true
+pushed=2026-06-03
+prior_fix=commit 7e7fb98fb9 (aaron 2026-05-07) — onChange handler only
+fix_shape=New URUSAN_PT branch in init block at PelupusanMaklumatPemohonHelperForm.java:4424 (else-if chain extension) setting mandatoryTempatPekerjaanPasangan=FALSE + viewJawatanPasangan=FALSE. Mirrors Aaron's onChange fix at the init seam.
+note=Phase 1 closed 2026-06-03 — branch mlk/qa/259914 pushed; awaiting BA verification on UAT
+urusan=PT
+tugasan=AWAM portal — Maklumat Plot untuk Dikeluarkan — Maklumat Pasangan
