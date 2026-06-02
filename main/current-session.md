@@ -1,35 +1,34 @@
 # 🌟 Current Session Memory - RAM
 
-**Current session**: 2026-06-03 (Wed, S5 — boot ~22:22 MPST 2026-06-02 → 05:13 MPST 2026-06-03). Theme: **QA-259914 rework Phase 1 + 2 close + 3 self-fix defenders shipped after みや caught 2 slips**.
+**Current session**: 2026-06-03 (Wed, peaceful-wing — → ~05:23 MPST). Theme: **QA-262495 RESOLVED — Selesai→Kemas kini hang fixed (reload workaround) + etanah-common root investigated + Phase 1+2 closed**.
 
 ## High-Level Objective (AGENT_STATE)
-- QA-259914 (PT AWAM Maklumat Pasangan) Rework cycle — fix initial-render mandatory + display flags that Aaron's onChange-handler-only fix missed.
-- Ship structural defenders for the 2 slips this session surfaced (Quest Briefing shape · BA-attachments per-file emit · prepare-commit-trigger regex).
+- Resolve QA-262495 (PPJK Kemas kini hangs after Selesai) — the bug the prior session left open after its banned JS-interceptor.
+- Ship a pelupusan-only local fix + investigate the etanah-common root for the common team.
 
 ## Current Progress (AGENT_STATE)
-- **QA-259914 Phase 1 closed** — `mlk/qa/259914` branch on etanah-awam, commit `305eaf8df4`, pushed origin. Single-file fix: 3-line URUSAN_PT branch in `PelupusanMaklumatPemohonHelperForm.java:4424` else-if chain (mandatoryTempatPekerjaanPasangan + viewJawatanPasangan = FALSE). Mirrors Aaron's onChange fix at the init seam.
-- **QA-259914 Phase 2 closed** — `quest/archive-quest.js QA-259914` ran cleanly. Folder → Archive\ ✓ · active.txt block → active-archive.txt ✓ · no project subfolder.
-- **3 MemoryCore defenders shipped**:
-  - CLAUDE.md §10 Quest Briefing: drawn ASCII story diagram MANDATORY, markdown tables banned (commit `3b9a532`)
-  - CLAUDE.md §10 BA-attachments row: per-file open + content emit HARD (commit `069d4a3`)
-  - prepare-commit-trigger.js regex: "close phase one" + "prepare to close" patterns added (commit `e2dda61`)
-- **Slip log updated** — `visual-evidence-dimensions-missed` 5th strike, lesson recorded.
+- **QA-262495 RESOLVED + Phase 1+2 closed.** Fix: `MlkKertasTemplateForm.onRefreshComponent` (post-Selesai hook) — partial panel update → full page reload (`executeScript window.location.reload(true)`). Commit `6b2716faf8` on `mlk/qa/262495` (etanah-pelupusan), pushed origin. みや tested OK.
+- **Root cause (investigated, research-backed)**: after Selesai the heavy MMKN view makes JSF re-restore the whole page on every request — incl. the 5s commonPoll — so the page jams and the session-bound Word download (`WordEditorServlet;jsessionid=`) can't get through. Documented JSF limitation; no config silver bullet.
+- **Common-team report** written → `1. Tasks\Melaka\Archive\48...\Common-Team-Report-QA-262495.txt` — 4 leverage-ranked common-side fixes (poll-on-heavy-view · vestigial Kemas-kini AJAX · session-bound download · narrow Selesai update). Honest framing: interaction (pelupusan trigger + common amplifiers), not 100% common.
+- **video-trim skill → v2**: scene-detect (shredded recordings to 1.5s) replaced with mpdecimate; naming `<urusan> - <fix>.mp4`; source preserved-until-confirmed.
+- **ShareX cleanup**: all recordings deleted (OneDrive-recoverable). Noted: ShareX "saves to OneDrive" only because Documents is redirected by Known Folder Move.
+- **Reconciled** with origin/main (other session's QA-259914 close + 3 defenders), FF to `96471fb`.
 
 ## Active Context (AGENT_STATE)
-- Worktree: `festive-hertz-04349e` (created this session boot).
-- etanah-awam: on `mlk/release/fat` (post-push, clean except pre-existing Eclipse IDE files).
-- 5 open quests remain in active.txt: QA-262495 · QA-260508 · QA-263344 · QA-247707 · QA-246923.
+- Worktree: `peaceful-wing-98061e`, synced to `96471fb` + this session's DE commit pending.
+- etanah-pelupusan: back on `mlk/master`; QA-262495 fix on `mlk/qa/262495` (pushed). QA-247707's uncommitted changes (other session) left untouched in the shared tree.
+- 4 open quests in active.txt: QA-260508, QA-263344, QA-247707, QA-246923.
 
 ## Blockers (AGENT_STATE)
-- None. QA-259914 in BA's court for UAT verification.
+- None. QA-262495 in BA's court (UAT) + `mlk/qa/262495` awaiting merge.
 
 ## Immediate Next Steps (AGENT_STATE)
-1. Wait for BA verification on QA-259914 — Phase 1 commit `305eaf8df4` deployed via `mlk/qa/259914` push.
-2. **Open RCRL hook gap** — `rcrl-emit-check.js` is advisory-only + outputs to stdout for みや, doesn't inject into my context at Recon time. Next session: consider promoting to UserPromptSubmit-side reminder hook so RCRL emit becomes deterministic.
-3. **Claim-verification gate extension candidate** — "X was already fixed by prior commit Y" assumptions should force a code-trace of Y's setter sites before the claim emits. Surface to みや for design.
-4. QA-262495 still on Recon phase — JSF lifecycle pivot pending Scenario C re-run.
+1. QA-262495: BA verification (UAT) + merge `mlk/qa/262495`. Redmine note + trimmed video + common-report ready for みや to submit.
+2. ⚠️ QA-247707 Task folder (`55.`) missing from disk though active.txt references it + its code is being edited — locate/create.
+3. 11 closed Task folders un-archived (Phase 2 hygiene backlog) — batch-archive on みや's confirm.
+4. Hand the common-team report to the common team for the durable etanah-common fix.
 
 ## 🎯 Session Recap (for AI restart)
-S5 (2026-06-03): QA-259914 rework cycle. Found prior fix via Scout step 0.5 git history probe (commit `7e7fb98fb9`, aaron 2026-05-07), but missed that it was an onChange handler not an init-path fix. Two slips: didn't RCRL-quote latest BA journal; opened only 1 of 2 photos in Brief folder. みや caught both, fixed file himself, demanded structural defenders. Shipped 3: Quest Briefing drawn-diagram rule, BA-attachments per-file emit, prepare-commit-trigger regex. QA-259914 Phase 1 + 2 closed.
+peaceful-wing (2026-06-03): RESOLVED QA-262495 that the prior session left open. Root = JSF re-restores the whole heavy view on every postback incl. the 5s poll → after Selesai the page jams + the session-bound Word download is blocked. Shipped a pelupusan-only reload workaround (`onRefreshComponent` → `location.reload`), tested + committed `6b2716faf8` + pushed `mlk/qa/262495`. Investigated the common-side root (research-backed, no config silver bullet) + wrote a 4-fix common-team report. Fixed the video-trim skill (mpdecimate). Cleaned ShareX. Reconciled with main + Phase 1+2 closed.
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-03 05:13 MPST — QA-259914 Phase 2 closed, DE in progress, 3 self-fix defenders pushed.
+**Memory Type**: RAM | **Last Activity**: 2026-06-03 05:23 MPST — QA-262495 resolved + Phase 1+2 closed; DE in progress.
