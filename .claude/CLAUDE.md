@@ -301,7 +301,37 @@ When working on a project, **always load its project file first** — project fi
 ```
 
    - **🚨 Per-file sibling-diff EMIT LINE** — **the line IS the rule. Substituting equivalent prose ("checked siblings" / "compared template vs PT" / "scanned the panel") = NOT COMPLIANT.** Before building ANY edited file, emit verbatim ONE line: **`<file:line> ← sibling <working file:line>: attrs ✓ · listener-sig ✓ · VO-instance ✓ · lifecycle ✓`** (or name the specific divergence in place of ✓). Building/deploying without the literal line is BANNED. Archived-ticket / compliance / audit mode does NOT exempt this — if a file was edited in the cycle being walked, emit the line citing what WAS diffed. (Hardened 2026-06-01 after v1.46 haiku audit found this rule slipped 75% with paraphrase-substitution + false-compliance claims.)
-   - **📖 Quest Briefing — Layer-1 narrative emit (post-Rubric · on `/quest resume` · on forgot-the-quest recall)** (NEW 2026-06-01 per みや Q1 ask). After Rubric ends (and at every Rubric refresh on rework cycles), emit a **2-column Layer-1 diagram**: LEFT = **BA's story (existing)** verbatim/near-verbatim from the LATEST cycle (per RCRL Step 0 — plain language, no `file:line`, no jargon); RIGHT = **our root-cause completion (new)** — what we found + the fix shape in plain language. Trigger ALSO on: `/quest resume <QA>`, *"what was QA-X about"*, *"remind me about X"*, *"brief me on X"*, *"quest briefing for X"*, bare `QA-X?`, **AND on scope-shift moments — mistake found mid-quest / new findings overturn prior hypothesis / BA-Q answered with surprise / Rubric refresh on rework cycle** (NEW 2026-06-01 S4 per みや: when the picture changes, the solution shape must be reframed; re-emit Quest Briefing with the updated BA-story column + updated root-cause completion column so みや sees the new picture immediately, not a stale one — "if it changes things, we'll need to reframe how we look at the potential solution"). Same shape each trigger — at-a-glance ticket grounding so みや doesn't need to open Redmine. Pairs with `Test Scenario` (`stop-point-summary` skill) which follows it with the testable next-step (Test Scenario + Next ⬜/✓ stay unchanged). **Banned in either column**: `file:line` · class names · SQL · CC-tag · jargon — Layer 1 stays Layer 1; that's what Recon/Rubric tables above carry. (Resolves todo Q1 "focused-overview-layer1-diagram-flow-summary".)
+   - **📖 Quest Briefing — Layer-1 narrative emit, DRAWN STORY DIAGRAM, NOT A TABLE** (NEW 2026-06-01; **hardened 2026-06-02, QA-259914**). Emit an **ASCII-drawn story diagram** with two spines: LEFT = **BA's story (existing)** — story-beats verbatim/near-verbatim from the LATEST cycle (per RCRL Step 0), each beat its own ASCII box, plain language only; RIGHT = **our root-cause completion (new)** — boxes that continue BA's story with what we found + the fix shape. Spines connect with `─────►` at BA's broken-state beat. Triggers: post-Rubric · every Rubric refresh on rework · `/quest resume <QA>` · *"what was QA-X about / brief me on X / remind me about X"* / bare `QA-X?` · scope-shift moments (mistake mid-quest / new findings overturn prior hypothesis / BA-Q answered with surprise) → re-emit with updated beat boxes. **🚨 BANNED in either spine**: markdown tables · prose paragraphs · bullet lists with no drawn shape · `file:line` · class names · SQL · CC-tag · jargon. Layer 1 stays Layer 1.
+
+     **📐 Canonical drawn shape (the literal template — emit a shape LIKE this, not a markdown table):**
+
+```
+   BA'S STORY (existing)                          OUR COMPLETION (new — root cause + fix shape)
+   ──────────────────────                          ──────────────────────────────────────────────
+
+   ┌──────────────────────────────┐
+   │ Beat 1: <BA's opening — what │
+   │ the user/screen/action is>   │
+   └──────────────┬───────────────┘
+                  │
+                  ↓
+   ┌──────────────────────────────┐
+   │ Beat 2: <what happens / what │
+   │ BA sees>                     │
+   └──────────────┬───────────────┘
+                  │
+                  ↓
+   ┌──────────────────────────────┐         ┌────────────────────────────────────────────┐
+   │ ⚠️ Beat 3: <the broken state │ ──────► │ Because: <plain-language root cause —      │
+   │ — BA's complaint>            │         │ what we found, no jargon>                  │
+   └──────────────────────────────┘         └────────────────────┬───────────────────────┘
+                                                                 │
+                                                                 ↓
+                                            ┌────────────────────────────────────────────┐
+                                            │ Fix shape: <what we'll change, in plain    │
+                                            │ everyday language — no class names>        │
+                                            └────────────────────────────────────────────┘
+```
    **Banned**: jumping Scout→Apply; emitting a fix with no Recon/Rubric block this session; "I'll just edit it" without the sibling-citation. **Why this is the cure**: the flow worked pre-trim because each phase forced an inspectable, structured emit (headers, tables, `file:line`) — the structure WAS the discipline. Restore the forced emit and the convention-check can't be skipped. Pairs with the in-file-convention rule (Etanah Non-Negotiables) + the pending quest-phase-gate hook (todo.md) that will enforce this deterministically; until that ships, this boot-loaded rule is the guard.
 
 **📋 Confidence % at server-log review (testing phase, post-fix).** When みや returns with test results + server.log, emit the same Confidence % + "what changed" row — the post-log delta (logger confirmed assumption A · logger contradicted B → fix scope tightened) is a persistent signal みや uses to decide whether to commit/push or rerun.
