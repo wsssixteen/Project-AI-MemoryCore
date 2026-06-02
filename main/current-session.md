@@ -1,36 +1,34 @@
 # 🌟 Current Session Memory - RAM
 
-**Current session**: 2026-06-02 21:39 → 2026-06-03 04:17 MPST (Tue night → Wed). Theme: **QA-247707 cycle-2 rework — full quest Phase 0 through Phase 2 archive; 260795 side-bug surfaced**.
+**Current session**: 2026-06-03 (Wed, peaceful-wing — → ~05:23 MPST). Theme: **QA-262495 RESOLVED — Selesai→Kemas kini hang fixed (reload workaround) + etanah-common root investigated + Phase 1+2 closed**.
 
 ## High-Level Objective (AGENT_STATE)
-- Close QA-247707 (PRZ Risalat MMKN PDT — Item 5.2 wording + PTGM signature block) cycle-2 rework.
-- Apply minimal in-file-convention fixes (no new populator/tag clones).
-- Phase 1 close + Phase 2 archive.
+- Resolve QA-262495 (PPJK Kemas kini hangs after Selesai) — the bug the prior session left open after its banned JS-interceptor.
+- Ship a pelupusan-only local fix + investigate the etanah-common root for the common team.
 
 ## Current Progress (AGENT_STATE)
-- **Phase 0 done** — Recon located mis-bound CC at Item 5.2 (was `keputusanKertasKerjaDO_Lower` → `populateKeputusanPentadbirTanahLower` reading PKP tugasan data, returning both "diluluskan / ditolak"); Issue #2 root cause = `daerahPejabat` missing from PRZ CREATE exclusion list.
-- **Phase 1 Apply done** — 3 edits committed by みや on `mlk/qa/247707` (commit `b6489c3cf7`, pushed origin):
-  - `PelupusanWordCCMethodConstant.java:14302` — extended `populateSyorKeputusanPTG` with tugasan filter (reads `KEY_KEPUTUSAN_SYOR_PDT` on PDT-stage, `KEY_KEPUTUSAN_SYOR_PTG` otherwise)
-  - `TemplateRisalatMMKN_PDT_PRZ.docx` — renamed Item 5.2 CC alias+tag from `keputusanKertasKerjaDO_Lower` → `syorKeputusanPTG` (+ みや bolded the run in Word UI)
-  - `template.config.json` — added `"daerahPejabat"` to PRZ CREATE exclusion (sibling-match BPRZ/PPTPB)
-- **Phase 2 archive done** — folder → `Archive\`, project subfolder → `archive/QA-247707/`, active.txt block cut to active-archive.txt.
-- **Slip caught + corrected mid-Rubric** — proposed new `populateSyorKeputusanPDT_Decision` clone, みや caught the violation of CLAUDE.md:190 (in-file convention). 5th best-practices-not-consulted strike in 30d / 2nd same session (after QA-246923 round-3). Slip-log entry written; structural defender proposal surfaced (PreToolUse Edit hook on `*.java` requiring "extensibility-check" emit before any new `protected Object populateXxx` insertion).
-- **Side issue surfaced** — commit `2db2c696c6` (QA-260795 by Vincent) introduced a parent-child class-init order bug that nulls `PelupusanTugasanConstant.TUGASAN_KEMASUKAN_KEPUTUSAN_MESYUARAT_MAP`. NPE at every JKKT panel render across PRZ/PLP urusan. Temporary in-tree revert applied (NOT in our push) so QA-247707 could be tested. みや stands by — revert NOT yet undone; need to coordinate with Vincent on proper fix or commit a separate `mlk/qa/260795-init-fix`.
+- **QA-262495 RESOLVED + Phase 1+2 closed.** Fix: `MlkKertasTemplateForm.onRefreshComponent` (post-Selesai hook) — partial panel update → full page reload (`executeScript window.location.reload(true)`). Commit `6b2716faf8` on `mlk/qa/262495` (etanah-pelupusan), pushed origin. みや tested OK.
+- **Root cause (investigated, research-backed)**: after Selesai the heavy MMKN view makes JSF re-restore the whole page on every request — incl. the 5s commonPoll — so the page jams and the session-bound Word download (`WordEditorServlet;jsessionid=`) can't get through. Documented JSF limitation; no config silver bullet.
+- **Common-team report** written → `1. Tasks\Melaka\Archive\48...\Common-Team-Report-QA-262495.txt` — 4 leverage-ranked common-side fixes (poll-on-heavy-view · vestigial Kemas-kini AJAX · session-bound download · narrow Selesai update). Honest framing: interaction (pelupusan trigger + common amplifiers), not 100% common.
+- **video-trim skill → v2**: scene-detect (shredded recordings to 1.5s) replaced with mpdecimate; naming `<urusan> - <fix>.mp4`; source preserved-until-confirmed.
+- **ShareX cleanup**: all recordings deleted (OneDrive-recoverable). Noted: ShareX "saves to OneDrive" only because Documents is redirected by Known Folder Move.
+- **Reconciled** with origin/main (other session's QA-259914 close + 3 defenders), FF to `96471fb`.
 
 ## Active Context (AGENT_STATE)
-- Worktree: `beautiful-albattani-aae572` (created this session boot).
-- etanah-pelupusan working tree: 4 modified files un-committed — 3 from 260795 revert (PelupusanTugasanConstant, MlkPelupusanTugasanConstant, PelupusanSearchService) + 1 stale QA-262495 experimental change (MlkKertasTemplateForm.java window.location.reload line). Per みや: leave revert in place for now.
+- Worktree: `peaceful-wing-98061e`, synced to `96471fb` + this session's DE commit pending.
+- etanah-pelupusan: back on `mlk/master`; QA-262495 fix on `mlk/qa/262495` (pushed). QA-247707's uncommitted changes (other session) left untouched in the shared tree.
+- 4 open quests in active.txt: QA-260508, QA-263344, QA-247707, QA-246923.
 
 ## Blockers (AGENT_STATE)
-- None for QA-247707 (archived).
-- 260795 init-bug is a TEAM-WIDE issue affecting all PRZ/PLP risalat generation on local UAT — pending coordination decision (Path B: separate fix-commit + ping Vincent).
+- None. QA-262495 in BA's court (UAT) + `mlk/qa/262495` awaiting merge.
 
 ## Immediate Next Steps (AGENT_STATE)
-1. After みや signals — undo the 260795 in-tree revert (restore the 3 files to origin/mlk/master state).
-2. If みや approves Path B — cut `mlk/qa/260795-init-fix` branch + commit + push + ping Vincent.
-3. Resume QA-262495 (PPJK Kemas kini hang) — Round-2 phase listener instrumentation deployed last session, awaits Scenario C re-run.
+1. QA-262495: BA verification (UAT) + merge `mlk/qa/262495`. Redmine note + trimmed video + common-report ready for みや to submit.
+2. ⚠️ QA-247707 Task folder (`55.`) missing from disk though active.txt references it + its code is being edited — locate/create.
+3. 11 closed Task folders un-archived (Phase 2 hygiene backlog) — batch-archive on みや's confirm.
+4. Hand the common-team report to the common team for the durable etanah-common fix.
 
 ## 🎯 Session Recap (for AI restart)
-2026-06-02 evening → 2026-06-03: full QA-247707 quest cycle in one session — boot → Phase 0 Recon → Phase 1 Apply (with mid-Rubric in-file-convention slip caught + corrected) → Phase 2 archive. Net code change: 3-file diff, +7/-3 lines + 1 JSON entry + 1 .docx CC tag rename. Side-discovery: commit `2db2c696c6` introduced a parent-child class-init NPE affecting all PRZ/PLP risalat across the team — local in-tree revert applied, decision pending on how to surface to Vincent. みや tested + committed + pushed himself.
+peaceful-wing (2026-06-03): RESOLVED QA-262495 that the prior session left open. Root = JSF re-restores the whole heavy view on every postback incl. the 5s poll → after Selesai the page jams + the session-bound Word download is blocked. Shipped a pelupusan-only reload workaround (`onRefreshComponent` → `location.reload`), tested + committed `6b2716faf8` + pushed `mlk/qa/262495`. Investigated the common-side root (research-backed, no config silver bullet) + wrote a 4-fix common-team report. Fixed the video-trim skill (mpdecimate). Cleaned ShareX. Reconciled with main + Phase 1+2 closed.
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-03 04:17 MPST — QA-247707 archived; 260795 revert standing by for undo signal.
+**Memory Type**: RAM | **Last Activity**: 2026-06-03 05:23 MPST — QA-262495 resolved + Phase 1+2 closed; DE in progress.

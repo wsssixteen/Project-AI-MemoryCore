@@ -41,6 +41,8 @@ const TRIGGERS = [
   /\blet'?s commit\b/i,
   /\bclose out (phase 1|the fix)\b/i,
   /\bphase 1 close[- ]?out\b/i,
+  /\b(prepare to |ready to )?close phase (1|one)\b/i,
+  /\bprepare to close\b/i,
 ];
 
 let input = '';

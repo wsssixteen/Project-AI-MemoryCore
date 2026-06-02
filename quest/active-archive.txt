@@ -828,3 +828,49 @@ test_app_uat=PTMLK/03/L/PRZ/2026/4 (aplikasi_id 2959624, AT PRMMKNPDT; Keputusan
 test_user=leenoor36@yahoo.com (NORAIDAH BINTI MOHD NOR)
 scope_anchor=Item 5.2 CC rename (keputusanKertasKerjaDO_Lower → syorKeputusanPTG) + populator tugasan-branch (populateSyorKeputusanPTG reads PDT key on PDT tugasan) + template.config.json PRZ CREATE +daerahPejabat exclusion. NO new populator/tag/dispatch entry (in-file-convention rule).
 note=Phase 1 closed 2026-06-03 — branch mlk/qa/247707 pushed (commit b6489c3cf7 by Ridhwan); awaiting BA verification on UAT. Bold added in Word UI by みや. Local-test had a temporary in-tree revert of commit 2db2c696c6 (QA-260795 static-init NPE) — NOT included in our push; revert still in working tree for QA-262495 testing. PROPOSAL: separate fix-commit on mlk/qa/260795-init-fix to surface to Vincent.
+
+qa=QA-259914
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\54. QA #259914 - PT - AWAM & APPS - Maklumat Pasangan - Terdapat perubahan pada medan-m
+phase=1
+status=archived
+current_phase=Push
+ticket_type=bug
+env=UAT (mlkuat / et_main_uat)
+issue_one_liner=PT Maklumat Pasangan (AWAM portal) — Alamat Tempat Kerja papar mandatori + Jawatan dipaparkan pada paparan awal (Aaron's prior onChange-handler fix didn't cover initial render)
+codebase_root=etanah-awam
+branch=mlk/qa/259914
+commit=305eaf8df4
+local_test_confirmed=true
+pushed=2026-06-03
+prior_fix=commit 7e7fb98fb9 (aaron 2026-05-07) — onChange handler only
+fix_shape=New URUSAN_PT branch in init block at PelupusanMaklumatPemohonHelperForm.java:4424 (else-if chain extension) setting mandatoryTempatPekerjaanPasangan=FALSE + viewJawatanPasangan=FALSE. Mirrors Aaron's onChange fix at the init seam.
+note=Phase 1 closed 2026-06-03 — branch mlk/qa/259914 pushed; awaiting BA verification on UAT
+urusan=PT
+tugasan=AWAM portal — Maklumat Plot untuk Dikeluarkan — Maklumat Pasangan
+
+qa=QA-262495
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\48. QA #262495 - PPJK - Semakan Risalat MMKN-PDT - Klik kemaskini - loading for too lon
+qa_doc=projects/coding-projects/active/QA-262495/QA-262495.md
+phase=1
+status=archived
+ticket_type=bug
+current_phase=Closed (Phase 2)
+local_test_confirmed=true
+branch=mlk/qa/262495
+commit=6b2716faf8
+pushed=2026-06-03
+fix_summary=onRefreshComponent (post-Selesai hook) — partial panel update → full page reload (executeScript window.location.reload). Decouples Kemas kini from the bloated post-Selesai JSF view. Pelupusan-only (no etanah-common edit). Common-side root + 4 ranked fixes in Task folder Common-Team-Report-QA-262495.txt.
+env=UAT (mlkuat / et_main_uat) — per Description Env: MLKUAT.
+priority=hard — confirmed hard; root cause UNCONFIRMED. Re-engaged 2026-06-02 with corrected (session-state-correlated, not uptime-correlated) hypothesis space.
+issue_one_liner=PPJK Semakan Risalat MMKN-PDT (SRMMKNPDT) + 5 sibling MMKN tugasan — Klik Kemas kini hangs 3+ minutes SPECIFICALLY after a Selesai-triggered panel refresh. Round-1 instrumentation (Java probes P1-P10) PROVED: doc-gen code runs healthy (~5s); zero DB activity during stall; entire H1-H8 hypothesis space RULED OUT. **PIVOT 2026-06-02 evening — the slow layer is JSF lifecycle, NOT doc-gen.** Round-2 instrumentation (QA262495PhaseListener via new faces-config.xml) DEPLOYED; awaits Scenario C re-run to identify which JSF phase (RestoreView / ApplyRequestValues / UpdateModelValues / RenderResponse) is the culprit. Decoder table for phase→fix-shape in qa_doc Section 14.
+repro_steps=qa_doc Section 1 — VERBATIM canonical recipe. Summary: 1) browser refresh → Kemas kini ×N OK. 2) Selesai → panel refresh. 3) Kemas kini → HANGS.
+entry_xhtml=src/main/webapp/protected/mlk/common/MlkKertasTemplateForm.xhtml
+slow_path_anchor=NOT doc-gen path — it's JSF lifecycle. The 3-minute stall sits in JSF phases (RestoreView through RenderResponse) BEFORE + AFTER the 5-second bean method. New evidence in server.log: 30+ "Execution time exceeded 3 seconds" warnings from existing JsfLoggerPhaseListener every ~6s, with my P2-entry (processTemplateListConcurrently) only firing 3min 32s after the click started.
+test_app_uat=PTMLK/02/L/PPJK/2026/12 (azimaasaari@yahoo.com, aplikasi_id 2962662, now at PRMMKNPDT). Alternatives: PTMLK/01/L/PPJK/2026/8 (azuan@melaka.gov.my, PRMMKNPDT), PTMLK/01/L/PPJK/2026/6 (nazemza@yahoo.com, PRMMKNPDT). All 6 MMKN tugasan share the slow JSF lifecycle.
+scope_anchor=JSF lifecycle is the slow layer, NOT doc-gen. Three contender mechanisms: HJ-A view-state too heavy (RestoreView/RenderResponse slow), HJ-B lazy-init storm on fresh ViewScoped bean (UpdateModelValues slow), HJ-C expensive EL getters (all phases equally slow). NOT a session-handling issue — view-scope is the suspect, not HttpSession.
+instrumentation_active=Round-1 (Java probes in PelupusanTemplateUtil + MlkKertasTemplateForm, marker QA262495-PROBE) + Round-2 (QA262495PhaseListener + new pelupusan webapp/WEB-INF/faces-config.xml, marker QA262495-PROBE-JSF). Cleanup checklist: qa_doc Section 15. JBoss launched via Eclipse JBossTools — standalone.conf.bat DEAD (see auto-memory/project_jboss_launched_by_eclipse.md). Probes are unconditional (no flag needed).
+related=relates #262699. Precedent QA-262233.
+notes:
+  - 2026-05-29 — Prior hand-back; TOP LEAD reframed to JBoss-restart clue. (Hypothesis space too narrow — see 2026-06-02.)
+  - 2026-06-02 daytime — Re-engaged by みや. Repro captured. H1-H8 hypothesis space generated. Round-1 instrumentation (Java probes) deployed.
+  - 2026-06-02 evening — Round-1 results: doc-gen healthy 5s; entire H1-H8 RULED OUT; pivot to JSF lifecycle. Round-2 (phase listener + faces-config) deployed — initial deploy broke /index.xhtml (PrimeFaces graphicImage StringIndexOutOfBoundsException) because stub faces-config.xml overwrote etanah-common overlay; fixed by copying overlay verbatim + adding only the new listener line. Resume from Section 0 of qa_doc.
