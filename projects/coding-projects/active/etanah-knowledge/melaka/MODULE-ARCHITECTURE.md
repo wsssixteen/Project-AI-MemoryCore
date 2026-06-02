@@ -223,4 +223,58 @@ When a BA brief says **"tarik dari skrin teknikal medan X"** (pull from the tekn
 > リドワンさん has not done Jasper Reports yet (as of 2026-04-03). Treat as unknown territory.
 
 ---
-*Last updated: 2026-04-03*
+
+## Architecture decision — handling vestigial-AJAX outlier buttons (QA-262495, 2026-06-02)
+
+### Pattern
+Most `<et:commandButton>` in this codebase follow the standard JSF chain: **button → AJAX postback → bean/VO method → Hibernate/Spring lifecycle → response → DOM update**. Server-side work is the load-bearing part.
+
+A minority of buttons are **outliers**: they do their real work in `onclick=` (pure JavaScript — e.g. `launchWordEditor`, `window.print`, OS-level URI schemes), yet still carry a JSF AJAX postback with **no `actionListener` / no `action`** — only a token `update=` to a small status dialog. The postback is **vestigial**.
+
+On forms with heavy view-state, the vestigial AJAX still runs the full JSF lifecycle (RestoreView → … → RenderResponse), which can take many seconds. The user perceives "stuck" even though the actual work has already happened client-side.
+
+### The decision
+**For pelupusan forms exhibiting this pattern, the appropriate fix is a form-scoped client-side click-interceptor in `<o:onloadScript>`:**
+
+```xml
+<o:onloadScript><![CDATA[
+    document.addEventListener('click', function(e) {
+        var btn = e.target.closest('[id$="<outlier-button-id>"]');
+        if (!btn) return;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        var origOnclick = btn.getAttribute('onclick');
+        if (origOnclick) {
+            try { new Function(origOnclick).call(btn); }
+            catch (err) { console.error('<context>: onclick failed', err); }
+        }
+        // re-implement any oncomplete side-effects (e.g. PF('xxx-widget').show())
+    }, true);  /* capture phase — runs BEFORE PrimeFaces native handler */
+]]></o:onloadScript>
+```
+
+### Why not other approaches
+
+| Approach | Rejected because |
+|---|---|
+| `ajax="false"` on the button | Button lives in `etanah-common` shared composite — modifying affects every state (SGR/TRG/Melaka); violates TRG-hard-exclusion |
+| Pelupusan-side composite override (drop a tweaked copy into `etanah-pelupusan/.../resources/`) | Maven WAR overlay wins but affects every pelupusan form mounting that composite — broader blast |
+| Skip AJAX server-side (no-op action method) | JSF lifecycle still runs all 6 phases regardless of action presence |
+| **Capture-phase click-interceptor on the affected form (chosen)** | Scope = exactly one form · reversible by removing one tag · doesn't touch shared composites · consistent with the button's existing client-side design intent |
+
+### When to apply
+1. Button has no `actionListener` / no `action` (verify via sibling-matrix per JSF-WIRING.md)
+2. Button's real work is in `onclick=` (pure JS / OS URI scheme / browser-native)
+3. AJAX `update=` target is small status panel, not load-bearing UI
+4. User perceives "stuck" because JSF cycle blocks UI feedback, not because the action itself failed
+
+If any of 1–4 doesn't hold, the AJAX is doing real work and must NOT be bypassed.
+
+### Reversibility
+Removing the `<o:onloadScript>` tag from the affected form restores original behaviour. No data, schema, or shared-component changes.
+
+### Precedent
+First applied: QA-262495 (PPJK Semakan Risalat MMKN-PDT, `MlkKertasTemplateForm.xhtml`, kemaskini-button). Sibling-matrix in JSF-WIRING.md → kemaskini was the only button in penyediaanDokumen action group without an actionListener.
+
+---
+*Last updated: 2026-06-02 — added vestigial-AJAX outlier-button decision (QA-262495)*
