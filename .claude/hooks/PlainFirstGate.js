@@ -52,10 +52,14 @@ process.stdin.on('end', () => {
 
     const context = [
       '',
-      '📖 PlainFirstGate v1.1: explanation prompt detected',
+      '📖 PlainFirstGate v1.2: explanation prompt detected',
+      '',
+      '🚨 v1.2 (2026-06-02 per みや — "Why it kept saying Plain lede?"): DO NOT use the literal label',
+      '"**Plain lede** —" / "PLAIN:" / "Plain prose:" / "Bird\'s-eye:" / any similar meta-marker.',
+      'Just WRITE the plain prose directly as the first sentence. The lede IS the answer, not a labeled section.',
       '',
       'BEFORE any table / code block / file:line citation / technical jargon —',
-      'lead with 1-2 sentences in plain everyday language answering the WHAT and WHY.',
+      'open with 1-2 sentences in plain everyday language answering the WHAT and WHY.',
       '',
       'Then (and only then) follow with the technical/evidence layer below.',
       '',

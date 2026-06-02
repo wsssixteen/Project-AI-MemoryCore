@@ -18,6 +18,7 @@ notes:
   - 2026-05-29 — HANDBACK + TOP LEAD reframed (JBoss-restart clue → server runtime state). Full trail in QA-262495.md ★★ block.
 
 qa=QA-260508
+quest_start_ts=2026-06-02T08:50:10.915Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\50. QA #260508 - PT-PSBS-MCL - Panel maklumat plot dikeluarkan hakmilik - Tambah medan
 phase=0
 status=hold

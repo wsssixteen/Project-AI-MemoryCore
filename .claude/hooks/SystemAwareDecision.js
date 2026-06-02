@@ -32,19 +32,24 @@ process.stdin.on('end', () => {
     // Filter: skip pure-meta prompts about the hook itself (avoid recursion noise)
     if (/route-consult-gate|registry consult/i.test(prompt)) process.exit(0);
 
+    // v1.1 (2026-06-02 per みや — "Route is bloat, takes too much space"): consult
+    // remains MANDATORY but the visible Route emission is RETIRED. Do the registry
+    // scan internally — do NOT emit a visible "Route: ..." line at top of response.
+    // If a skill genuinely needs invocation, invoke it via Skill tool (visible).
+    // If a hook fires, its effect is visible via its own injection — no marker needed.
     const context = [
       '',
-      '⚙️  route-consult-gate: substantive prompt detected — consult registry before responding',
+      '⚙️  route-consult-gate v1.1 (silent): substantive prompt detected.',
       '',
-      'BEFORE composing the response, scan:',
+      'INTERNAL consult before responding (do NOT emit a visible "Route:" line):',
       '  - .claude/skills/  for skills whose description-triggers match this prompt',
-      '  - .claude/hooks/ + settings.local.json  for hooks that should fire on this prompt',
+      '  - .claude/hooks/ + settings.local.json  for hooks that should fire',
       '  - meta/INDEX.md  for relevant meta-layer components',
       '',
-      'AT TOP of response: emit a ROUTE marker showing which skills/hooks (if any) routed this response.',
-      'Format: `Route: <skill-name(s) | hook-name(s) | direct>` — one line, visible, auditable.',
+      'If a skill applies, INVOKE it via Skill tool (that is the visible signal).',
+      'If "direct" (no skill/hook applies): proceed silently — no marker.',
       '',
-      'If "direct" (no skill/hook applies): explicitly state why — confirms registry was consulted, not skipped.',
+      'Banned: emitting a literal "Route: ..." line at top of response (retired 2026-06-02).',
       '',
     ].join('\n');
 
