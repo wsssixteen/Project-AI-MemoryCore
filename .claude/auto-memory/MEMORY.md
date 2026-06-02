@@ -48,6 +48,9 @@
 
 ## User
 - [user_gender.md](user_gender.md) — みや is male; don't default to "she" in diary/narration; no retroactive edits
+
+## Project — Environment
+- [project_jboss_launched_by_eclipse.md](project_jboss_launched_by_eclipse.md) — JBoss EAP 7.4 (E:/Dev/jboss-7.4-plp-melaka) is launched by Eclipse JBossTools; standalone.conf.bat is IGNORED. JVM args must go in Eclipse Server Launch Config → Arguments → VM arguments.
 - [user_career_vision.md](user_career_vision.md) — 3-phase career vision: Personal Excellence → Team Contribution → Company Impact
 - [user_work_environment.md](user_work_environment.md) — Work laptop: Edge + Chrome browsers, Eclipse IDE; Zen Browser is personal only
 - [user_learning_jsf_tracing.md](user_learning_jsf_tracing.md) — Struggling with cross-file tracing + JSF concepts; explain navigation chain WHY not just findings; analogize JSF to OO terms
