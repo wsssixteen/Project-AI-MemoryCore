@@ -64,6 +64,22 @@
 - Child docs: `src/main/resources/template/MLK/references/*.docx`
 
 **Why this matters**: failing to recognize this pattern at Phase 0 costs Cp E/F debugging time when "parent template font change didn't take" or "CC tag in main template renders as literal placeholder". The first read on any template ticket should check whether the affected cell sits inside an injected slot.
+
+### Word populator binding — TEXT mode inherits CC's rPr; VO-array mode embeds its own styles (added 2026-06-03, QA-247707)
+
+**Plain explanation**: A Word content control's runtime appearance (bold / strikethrough / colour) depends on which CC-type the populator returns.
+
+| Populator returns | CC-type set | Where styles come from |
+|---|---|---|
+| `String` | `WordContentControlTypeEnum.TEXT` | The CC's own `<w:rPr>` in the .docx — populator only fills the *text*, never the format |
+| `List<PelupusanWordStyleVO>` | `WordContentControlTypeEnum.PELUPUSAN_WORD_STYLE_VO_ARRAY` | Each VO carries its own `.setBold()` / `.setStrikethrough()` / etc. — overrides the CC's rPr |
+
+**Implication for rebinding** (the QA-247707 case): if you change a CC's tag to a NEW populator that returns TEXT instead of the old VO-array, **inline styles that the old VO baked in (bold, italic, strikethrough) disappear** unless you also set them in the CC's `<w:rPr>` in the .docx. Confirmed example: Item 5.2 in `TemplateRisalatMMKN_PDT_PRZ.docx` lost its bold when rebound from `keputusanKertasKerjaDO_Lower` (VO-array, bold-via-VO) → `syorKeputusanPTG` (TEXT). Fix: bold the run in Word UI so the CC's rPr carries `<w:b/>`.
+
+**Detection**: when rebinding a CC from a `*StyleVOArray` populator to a TEXT populator, verify the CC's run formatting in Word UI matches the previous visual output. The .docx XML's `<w:rPr>` inside the SDT is the truth.
+
+---
+
 ## Layer Map
 
 **The chain** (confirmed end-to-end from QA-260302 + QA-260965 + QA-259759 work):

@@ -808,3 +808,23 @@ delegated_to=Aaron
 delegated_date=2026-05-05
 learning_marker=2026-05-05 — みや wants to trace fix later in project branch for learning
 note=ARCHIVED 2026-05-31 — moved Task folder to Archive\ + status=archived to declutter the boot open-quest list (still owned by Aaron; if Redmine reassigns it back to みや, redmine-sync will unarchive). TRANSFERRED 2026-05-05 — Aaron took back the ticket due to BA urgency. Early diagnostic preserved at projects/coding-projects/active/QA-259342/early-diagnostic.md. **Follow-up**: trace Aaron's fix on `mlk/qa/259342` branch when closed for learning.
+
+qa=QA-247707
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\55. QA #247707 - PRZ - Penambahbaikan Skrin dan Template Risalat MMKN PDT & PTG
+qa_doc=projects/coding-projects/archive/QA-247707/QA-247707.md
+phase=1
+status=archived
+current_phase=Push
+ticket_type=bug
+env=UAT
+branch=mlk/qa/247707
+commit=b6489c3cf73f480fe939ea42fe8092b79e7a9652
+local_test_confirmed=true
+pushed=2026-06-03
+issue_one_liner=PRZ Risalat MMKN PDT — Item 5.2 wording bug (cycle-2 of #247710 & 247707) + PTGM signature block on PDT-side risalat
+urusan=PRZ
+tugasan=PRMMKNPDT
+test_app_uat=PTMLK/03/L/PRZ/2026/4 (aplikasi_id 2959624, AT PRMMKNPDT; KeputusanSyorPDT=true so Item 5.2 rendered "diluluskan" — confirmed green by みや 2026-06-03)
+test_user=leenoor36@yahoo.com (NORAIDAH BINTI MOHD NOR)
+scope_anchor=Item 5.2 CC rename (keputusanKertasKerjaDO_Lower → syorKeputusanPTG) + populator tugasan-branch (populateSyorKeputusanPTG reads PDT key on PDT tugasan) + template.config.json PRZ CREATE +daerahPejabat exclusion. NO new populator/tag/dispatch entry (in-file-convention rule).
+note=Phase 1 closed 2026-06-03 — branch mlk/qa/247707 pushed (commit b6489c3cf7 by Ridhwan); awaiting BA verification on UAT. Bold added in Word UI by みや. Local-test had a temporary in-tree revert of commit 2db2c696c6 (QA-260795 static-init NPE) — NOT included in our push; revert still in working tree for QA-262495 testing. PROPOSAL: separate fix-commit on mlk/qa/260795-init-fix to surface to Vincent.

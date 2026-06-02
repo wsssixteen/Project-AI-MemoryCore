@@ -1,6 +1,7 @@
 active:
 
 qa=QA-262495
+quest_start_ts=2026-06-02T18:36:03.889Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\48. QA #262495 - PPJK - Semakan Risalat MMKN-PDT - Klik kemaskini - loading for too lon
 qa_doc=projects/coding-projects/active/QA-262495/QA-262495.md
 phase=0
@@ -59,15 +60,6 @@ issue_one_liner=Maklumat Pasangan — Terdapat perubahan pada medan-m
 note=backfilled 2026-06-01 from disk truth; pre-dated redmine-sync auto-append fix
 urusan=AWAM & APPS
 tugasan=Maklumat Pasangan
-
-qa=QA-247707
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\55. QA #247707 - PRZ - Penambahbaikan Skrin dan Template Risalat MMKN PDT & PTG
-phase=0
-status=active
-ticket_type=bug
-env=unknown
-issue_one_liner=PRZ - Penambahbaikan Skrin dan Template Risalat MMKN PDT & PTG
-note=backfilled 2026-06-01 from disk truth; pre-dated redmine-sync auto-append fix
 
 qa=QA-246923
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\56. QA #246923 - PLPS - Penyediaan Risalat MMKN PDT-PTG - Isu pada template Risalat MMK
