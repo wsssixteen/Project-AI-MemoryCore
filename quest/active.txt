@@ -12,7 +12,7 @@ env=UAT (mlkuat / et_main_uat) — per Description Env: MLKUAT.
 priority=hard — confirmed hard; root cause UNCONFIRMED after a full day's investigation
 issue_one_liner=PPJK Semakan Risalat MMKN-PDT (SRMMKNPDT) — Klik Kemaskini loads too long. ROOT CAUSE UNCONFIRMED. Document RULED OUT. Slowness is SERVER-SIDE. ★ TOP LEAD: after a JBoss RESTART Kemaskini opens quickly → server runtime state (stuck thread pool / leaked WINWORD / heap), not the doc/code. NEXT: profile long-uptime server; candidate fix = timeout on awaitTermination(Long.MAX_VALUE) + stuck-worker cleanup.
 test_app_uat=PTMLK/02/L/PPJK/2026/12 (shahniza@melaka.gov.my, aplikasi_id 2962662, SRMMKNPDT, role PT, pejabat 3) — already AT bug tugasan, no flowable-alter.
-scope_anchor=Root cause UNCONFIRMED — SERVER-SIDE, not the document. Do NOT chase the document again. Passed back to team (etanah-common runtime concern). Local dirty state to revert: rahsia bypass (.bak_2026-05-28) + QA262495-PROFILE markers in BasePelupusanDokumenForm.
+scope_anchor=Root cause UNCONFIRMED — SERVER-SIDE, not the document. Do NOT chase the document again. Passed back to team (etanah-common runtime concern). Local dirty state previously noted (rahsia bypass .bak_2026-05-28 + QA262495-PROFILE markers in BasePelupusanDokumenForm) was VERIFIED CLEAN on disk 2026-06-03 — no revert needed.
 related=relates #262699. Precedent QA-262233.
 notes:
   - 2026-05-29 — HANDBACK + TOP LEAD reframed (JBoss-restart clue → server runtime state). Full trail in QA-262495.md ★★ block.
@@ -46,7 +46,7 @@ tugasan=Penyediaan Minit Bebas
 qa=QA-259914
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\54. QA #259914 - PT - AWAM & APPS - Maklumat Pasangan - Terdapat perubahan pada medan-m
 phase=0
-status=hold
+status=active
 ticket_type=bug
 env=PT
 issue_one_liner=Maklumat Pasangan — Terdapat perubahan pada medan-m
@@ -57,7 +57,7 @@ tugasan=Maklumat Pasangan
 qa=QA-247707
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\55. QA #247707 - PRZ - Penambahbaikan Skrin dan Template Risalat MMKN PDT & PTG
 phase=0
-status=hold
+status=active
 ticket_type=bug
 env=unknown
 issue_one_liner=PRZ - Penambahbaikan Skrin dan Template Risalat MMKN PDT & PTG
