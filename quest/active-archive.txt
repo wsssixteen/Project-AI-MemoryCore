@@ -916,3 +916,15 @@ commit=d95d0f6a93ffdc74381cb638e6e67954d93f0cde
 local_test_confirmed=true
 pushed=2026-06-02
 note=Phase 1 closed 2026-06-02 — branch mlk/qa/246923 pushed; awaiting BA verification on FAT
+
+## 2026-06-04 - QA-246949 PRBB Rencana JKBB PDT/PTG - archived (Phase 2 close)
+qa=QA-246949
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\1. QA #246949 - PRBB - Penyediaan Rencana JKBB PDT-PTG - Isu pada template Rencana Per
+qa_doc=projects/coding-projects/archive/QA-246949/QA-246949.md
+phase=2
+status=archived
+ticket_type=enhancement
+local_test_confirmed=true
+env=MLK UAT
+urusan=PRBB
+commit=78d3f29292 mlk/master (merged + pushed)
