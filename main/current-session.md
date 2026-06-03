@@ -1,34 +1,35 @@
 # 🌟 Current Session Memory - RAM
 
-**Current session**: 2026-06-03 (Wed, peaceful-wing — → ~05:23 MPST). Theme: **QA-262495 RESOLVED — Selesai→Kemas kini hang fixed (reload workaround) + etanah-common root investigated + Phase 1+2 closed**.
+**Current session**: 2026-06-03 (Wed) — wrap ~08:14 MPST. Theme: **QA-247707 closed + full archive-hygiene sweep + Phase 2 post-mortems + 5 new tickets triaged for next session**.
 
 ## High-Level Objective (AGENT_STATE)
-- Resolve QA-262495 (PPJK Kemas kini hangs after Selesai) — the bug the prior session left open after its banned JS-interceptor.
-- Ship a pelupusan-only local fix + investigate the etanah-common root for the common team.
+- Close out the day: archive everything done since Saturday, write the Phase 2 META that was skipped, triage the next batch of new tickets.
 
 ## Current Progress (AGENT_STATE)
-- **QA-262495 RESOLVED + Phase 1+2 closed.** Fix: `MlkKertasTemplateForm.onRefreshComponent` (post-Selesai hook) — partial panel update → full page reload (`executeScript window.location.reload(true)`). Commit `6b2716faf8` on `mlk/qa/262495` (etanah-pelupusan), pushed origin. みや tested OK.
-- **Root cause (investigated, research-backed)**: after Selesai the heavy MMKN view makes JSF re-restore the whole page on every request — incl. the 5s commonPoll — so the page jams and the session-bound Word download (`WordEditorServlet;jsessionid=`) can't get through. Documented JSF limitation; no config silver bullet.
-- **Common-team report** written → `1. Tasks\Melaka\Archive\48...\Common-Team-Report-QA-262495.txt` — 4 leverage-ranked common-side fixes (poll-on-heavy-view · vestigial Kemas-kini AJAX · session-bound download · narrow Selesai update). Honest framing: interaction (pelupusan trigger + common amplifiers), not 100% common.
-- **video-trim skill → v2**: scene-detect (shredded recordings to 1.5s) replaced with mpdecimate; naming `<urusan> - <fix>.mp4`; source preserved-until-confirmed.
-- **ShareX cleanup**: all recordings deleted (OneDrive-recoverable). Noted: ShareX "saves to OneDrive" only because Documents is redirected by Known Folder Move.
-- **Reconciled** with origin/main (other session's QA-259914 close + 3 defenders), FF to `96471fb`.
+- **QA-247707** (PRZ Risalat MMKN PDT cycle-2) — shipped earlier (commit `b6489c3cf7`, `mlk/qa/247707`), Phase 1+2 closed.
+- **Archive hygiene COMPLETE** — `active.txt` now has **ZERO open quests**. Archived this session: QA-263344 (closed by みや, patch-only), QA-260508, QA-246923 (Phase 2). Plus swept **11 older lingering folders** (258022·258418·259428·260139·260298·260179·260302·260869·260316·260876·262869) — their blocks were already in active-archive; only the physical folders lingered (harness skipped them: blocks had no `task_folder=` field). Moved directly with literal-path handling. `1. Tasks\Melaka\` = only `Archive\` (56 ticket folders).
+- **Phase 2 post-mortems written** (the META layer I'd wrongly skipped — みや caught it): QA-260508 → appended to its archive doc; QA-246923 → new lean archive doc created. Both synthesized from slip-log durable record (Contributing Factors + Carry Forward). QA-263344 = non-event (no Ruri cycle).
+- **5 new tickets triaged (held, NOT retrieved/foldered)** — see next steps for the plan.
+- **みや added CLAUDE.md UNIVERSAL EXPLANATION FLOW rule** (Bottom Line → Table/Drawing → Arrows; skip-don't-reorder; work-content-only, personal replies exempt) — directly addresses my buried-conclusion habit this whole session. APPLY from next reply onward.
 
 ## Active Context (AGENT_STATE)
-- Worktree: `peaceful-wing-98061e`, synced to `96471fb` + this session's DE commit pending.
-- etanah-pelupusan: back on `mlk/master`; QA-262495 fix on `mlk/qa/262495` (pushed). QA-247707's uncommitted changes (other session) left untouched in the shared tree.
-- 4 open quests in active.txt: QA-260508, QA-263344, QA-247707, QA-246923.
+- Worktree: `beautiful-albattani-aae572` (on `main`, 0 behind origin).
+- etanah-pelupusan: みや reverted his branch back to `mlk/master` (260795 temp-revert undone — tree clean).
 
 ## Blockers (AGENT_STATE)
-- None. QA-262495 in BA's court (UAT) + `mlk/qa/262495` awaiting merge.
+- None.
 
-## Immediate Next Steps (AGENT_STATE)
-1. QA-262495: BA verification (UAT) + merge `mlk/qa/262495`. Redmine note + trimmed video + common-report ready for みや to submit.
-2. ⚠️ QA-247707 Task folder (`55.`) missing from disk though active.txt references it + its code is being edited — locate/create.
-3. 11 closed Task folders un-archived (Phase 2 hygiene backlog) — batch-archive on みや's confirm.
-4. Hand the common-team report to the common team for the durable etanah-common fix.
+## Immediate Next Steps (AGENT_STATE) — NEXT SESSION
+1. **Do the 2 easiest new tickets**: **QA-262445** (AWAM/APPS PLPS — rename field label "Aktiviti Perniagaan" → "Jenis Perniagaan" on Maklumat Pemohon when Jenis Pemohon=Syarikat; UAT; screenshot captured — the CUKAI TANAH/PETAK Borang Permohonan form, "Aktiviti Perniagaan" field shows value "GETAH") + **QA-260476** (FAT PLPS Penyediaan Rencana JKKL PDT — Tajuk Risalat not shown langkah 6 + template wording; rides QA-247707 hot context — same Risalat MMKN template family, ayat 5.1/6.1, JKKL).
+2. **QA-260404** = conditional third (sibling of 260476, same app `PTMLK/01/L/PLPS/2026/33`) — its items 2.2.4 + 3.1 + 4.1 are *"tarik dari teknikal"* / Ulasan JT = **etanah-teknikal (not deployed locally)** → likely the gap; if so, fall back to just 262445 + 260476.
+3. **Criticals for a focused day** (don't stack on easy days): QA-260830 (flowable routing Tolak→wrong tugasan) · QA-262852 (OPPJK Jadual Bayaran auto-calc + remove "Penuh" option).
+4. Retrieve screenshots/PDFs for 262445 (done) + 260476 + 260404 before committing the third.
+
+## Open items carried (not blocking)
+- MemoryCore DE commit needs manual `git push origin HEAD:main` if classifier blocks auto-push again.
+- QA-260795 init-bug still Vincent's (getter-fix hypothesis NOT pushed; my root-cause was unconfirmed/build-time — left honestly unsolved).
 
 ## 🎯 Session Recap (for AI restart)
-peaceful-wing (2026-06-03): RESOLVED QA-262495 that the prior session left open. Root = JSF re-restores the whole heavy view on every postback incl. the 5s poll → after Selesai the page jams + the session-bound Word download is blocked. Shipped a pelupusan-only reload workaround (`onRefreshComponent` → `location.reload`), tested + committed `6b2716faf8` + pushed `mlk/qa/262495`. Investigated the common-side root (research-backed, no config silver bullet) + wrote a 4-fix common-team report. Fixed the video-trim skill (mpdecimate). Cleaned ShareX. Reconciled with main + Phase 1+2 closed.
+2026-06-03 wrap: closed QA-247707, then a full archive-hygiene sweep (active.txt → zero open; 3 Phase-2 archives + 11 lingering folders moved → Tasks\Melaka\ clean). Wrote the Phase 2 post-mortems I'd skipped (260508 + 246923, from slip-log). Triaged 5 new tickets; next session do the 2 easiest (262445 rename + 260476 Tajuk Risalat — latter rides 247707 context), 260404 conditional (teknikal gap), 2 Criticals (260830/262852) for later. みや shipped a new CLAUDE.md explanation-flow rule (Bottom Line first) after a session of buried conclusions.
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-03 05:23 MPST — QA-262495 resolved + Phase 1+2 closed; DE in progress.
+**Memory Type**: RAM | **Last Activity**: 2026-06-03 08:14 MPST — day closed out, archive clean, next-session ticket plan set.

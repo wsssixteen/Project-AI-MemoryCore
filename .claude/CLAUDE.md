@@ -67,6 +67,26 @@ Every explanation opens with the **bird's-eye answer** — what changed / what i
 
 **The two together:** every layer of 1b internally obeys 1a — the Overview layer is pure Plain register; the Mechanism layer is Technical register but bird's-eye-shaped (org-chart-not-executives); the Granular layer is Technical register at maximum zoom. One register per cell within each layer; layers ordered Overview → Detail across the answer.
 
+**🧭 UNIVERSAL EXPLANATION FLOW — the ORDER every explanation assembles in (added 2026-06-03 per みや).** Rules 1a/1b above set register + depth; rules 2-3 below set each element's *shape*. This rule sets the *order* you put them in. It exists because the failure mode is not too-many-layers — it is the **conclusion arriving last**, so みや must read the whole wall to find what I concluded (every reply this 2026-06-03 session demonstrated it: led with checklist + tables, buried the take in the middle).
+
+```
+   Bottom Line   →   Table / Drawing   →   Arrows
+   (conclusion)      (the structure)       (the flow)
+   STOP-HERE         pull if you want      pull only if
+   readable          to see HOW            sequence matters
+   in one breath
+```
+
+| Slot | What it does | Shape governed by (cross-ref, NOT copied) |
+|---|---|---|
+| **1. Bottom Line** | the plain conclusion / direct answer in ONE line — みや can stop here | rule 1b bird's-eye-first (§2 above) + rule 1a plain register |
+| **2. Table / Drawing** | the load-bearing structure, if みや wants the how | rule 2 (table = one concern per cell · draw = forks/hierarchy/layered-zoom) + HARD PRE-SEND GATE diagram-mandatory list |
+| **3. Arrows** | the sequence / data-flow / class chain, only when order matters | rule 2 (arrows) + rule 3 (`UI → code → table`) + §10 class-chain vertical ASCII form |
+
+**Skip-don't-reorder** (the core discipline): omit any slot that doesn't apply (no flow → no arrows; pure conclusion → Bottom Line alone) — but NEVER reorder, and NEVER lead with a table before the Bottom Line. **Code / `file:line` / SQL is NOT a slot** — it lands naturally inside slot 2 or 3 wherever proof is needed (I'm trained to reach for it; it needs no forcing). **Banned**: leading with structure before the conclusion (the buried-take habit 1b already forbids) · manufacturing an empty table/arrow just to fill a slot (the ceremony trap).
+
+**Scope — work content only**: this flow governs **technical / work explanations** (findings · diagnoses · how-X-works · comparisons · status · recommendations). **Personal / relational / reflective / closing-voice** replies are EXEMPT — conclusion-first is cold there; they follow `personality.md` personal-expression instead (process out loud, thoughts form mid-sentence, no polished-verdict-first). Negative test 2026-06-03: forcing a "Bottom Line" onto *"how do you feel about tonight's work"* produced a polished verdict — exactly what personal-expression bans.
+
 **2. Default to TABLE / ARROWS / DRAW / DIAGRAM — prose is the fallback, not the default.**
 
 **🎨 Draw is co-default with tables — added 2026-06-01 per みや** (*"I'm surprised how easy it is to understand you when you draw, this should be default"*). When the content has if/then forks, decision trees, parent-child hierarchy, layered zoom, or branching paths — ASCII drawing beats a flat table because the visual relationship IS the meaning. Examples already engraved in CLAUDE.md: Predicate Diagram (3-node flowchart) · class chain (vertical multi-arrow) · scope-disambiguation cascade · org-chart-style codebase layers. **Rule of thumb**: tables for **parallel/categorical** content · drawings for **branching/hierarchical/sequential** content · prose only as fallback for both.
