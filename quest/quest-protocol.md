@@ -693,6 +693,20 @@ After Recon emits PROCEED-TO-RUBRIC, Ruri emits 2-5 fix-shape options for みや
 
 **Why Option E exists**: debugging-playbook "When not to debug" — sometimes the right call is **revert / work-around / rewrite / mitigate-first**. Refinement of existing Rubric, not new workflow. Past tickets where this would have helped: QA-259534 (no fix shipped — passed back to BA after non-repro), QA-258022 (Attempt 2's Java scope creep — Option E "wait for aaron's upstream pull" would have saved a day).
 
+### 🚨 Logic Blast Radius — mandatory Rubric step (added 2026-06-04 per みや, QA-263921)
+
+> **Why**: QA-263921 happened because QA-253053 fixed the *Simpan* scenario but not the *entry* scenario of the same screen (deleted a doc on entry without regenerating → Kemas-kini hung). The **code** blast radius (which urusan/tugasan share the constant/method) would NOT have caught it — the gap was **logic-wise**: the change participates in several action/state paths and was only safe in one.
+
+**The step — mandatory before Apply, alongside the code blast-radius row.** When a fix touches code in a stateful flow (a form lifecycle, a button/action handler, a shared service method), enumerate **every action/state path the change participates in** and verify the fix is SAFE per path:
+
+1. **Inventory the actors** — every entry point that reaches the changed code: page entry/init, each action handler (Simpan / Jana / Selesai / Print / Submit / reload), and any re-entry (`window.location.reload`, a re-`initData`).
+2. **Scenario matrix** — one row per (action × state): `| Scenario | Does the change fire? (guard) | Outcome | Safe? |`. State axes that matter: the guard (urusan/tugasan/mode), whether a stored record exists, whether a prior user edit exists.
+3. **Verify per row** — guard scopes it correctly? idempotent on re-invocation? discards/overwrites anything the user produced? conflicts / double-works with another handler doing the same thing?
+4. **Classify** — `✅ safe` · `⚠️ by-design` (intended but confirm — e.g. "regenerate discards manual edits, matches the ticket intent") · `🚨 unsafe` (blocks Apply until resolved).
+5. **>500-line host file** → spawn a familiar to inventory the action handlers + lifecycle touch-points; Ruri builds the matrix + verdict.
+
+**Banned**: applying a fix to a stateful flow with only the code blast-radius (shared-symbol grep) and no scenario matrix. Code blast radius = "what else shares this symbol"; logic blast radius = "what else *happens* through this change" — **both required**.
+
 ### Phase 0 → Phase 1 autonomous flow (added 2026-05-14 per みや)
 
 **Default = autonomous Discovery → Simulate → Rubric → Apply** without waiting for みや's nod between checkpoints. Scout (Discovery), Recon (Recon wrap-up), and Rubric (Rubric) already run autonomously today; the refinement here is to **continue straight into Apply (apply)** unless one of the explicit STOP gates trips.
@@ -994,6 +1008,16 @@ Update each marker in place as the step completes (⬜ → ✓, or ⏭ + a one-l
 ### The 5 streamlined steps
 
 **Step 1 — Faster-finding (1-2 lines)** — *what would have made this quest faster, with an immediate action artifact*. Phase 1 process note that needs the full arc to make sense. Format: *"Faster: <one-line observation>. Action applied: <one-line concrete edit to skill/protocol/memory/knowledge>."* Per the existing "Mistake → action, not words" hard rule, every faster-finding MUST trigger an applied artifact in the same Phase 2 — not "noted for next time". みや reads this in <15 seconds.
+
+**Step 1b — Fastest-Path Retrospective (added 2026-06-04 per みや, QA-263921)** — the fuller companion to Step 1's one-liner. When the investigation took **>1 wrong turn**, write a `## Fastest Path` block into the quest's `QA-NNNN.md` recording the CLEAN, SHORTEST path that *would* have reached root cause — wrong turns stripped out — so the next similar issue is solved in minutes. **Goal** (みや 2026-06-04): *"a clean, fastest, most efficient way to debug for next time's reference."* The value of a closed quest is not only the fix; it's the **compressed debug path** — recording only the fix loses the "how to get there fast" knowledge, so the next engineer re-walks the same dead-ends.
+
+Format (the `## Fastest Path` block):
+1. **Symptom signature** — the 1-line observable that identifies this bug class next time.
+2. **Fastest path** — the ordered MINIMAL steps to root cause, each naming the exact tool / file / log / command / query. No hypotheses, no wrong turns — only the load-bearing steps, in hindsight order.
+3. **Wrong turns removed** — 1 line each: the dead-ends taken this quest + WHY each was wrong, so they're skipped next time.
+4. **Reusable recipe** — if this is a recurring CLASS (not a one-off), promote the path to `BUG-BESTIARY.md` as a named recipe (symptom → the N-step path).
+
+**Banned**: closing a quest that took >1 wrong turn with only the fix recorded and no Fastest-Path block. The wrong turns ARE the signal — name them so they're never re-walked.
 
 **Step 2 — KPI entry (HIGH-BAR — only-if-significant rule, added 2026-06-01 per みや)** — append to `main/kpi-tracker.md` ONLY IF the quest produced something **significant AND stands out, ESPECIALLY out-of-scope + critical**. Default: SKIP. Rare-by-design — most quests close without a KPI entry. **When to add**: extras you solved beyond ticket scope that have real business value (caught a sibling-urusan bug, found + reported a deferred-critical issue, surfaced an architectural gap), a fix whose blast-radius reached unexpectedly far, or a meta-discovery the team would value at the next upward report. **When NOT to add**: routine bug fix that did exactly what the ticket asked, refactor inside scope, normal-cadence work. **Why** (みや 2026-06-01): the prior "rows as many as feel meaningful, no minimum" rule produced KPI noise — every quest got logged whether or not anything stood out → the tracker stopped being scannable AS a highlight reel. New shape: a row in `kpi-tracker.md` should be a banner moment, not a checkbox. The post-Phase-2 weekend KPI review (`feedback_personal_expression` 2026-05-07 personal todo) only works if the entries ARE the standouts. Format when emitting: 2-column scannable per `kpi-tracker.md` (Column 1 = grep-able identifiers; Column 2 = plain English what we learnt). If skipping: emit one line in chat at Phase 2 — `KPI: skip — routine ticket-scope work, no standout`.
 

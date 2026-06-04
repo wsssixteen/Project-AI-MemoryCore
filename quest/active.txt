@@ -14,8 +14,12 @@ assigned_to_me=2026-06-04
 
 qa=QA-263921
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\59. QA #263921 - PLTP - Penyediaan Risalat MMKN - PDT - Klik Kemaskini - loading for to
-phase=0
-status=hold
+phase=1
+status=active
+current_phase=Apply
+local_test_confirmed=false
+quest_start=2026-06-04
+qa_doc=projects/coding-projects/active/QA-263921/QA-263921.md
 ticket_type=bug
 env=MLKUAT
 issue_one_liner=PLTP - Penyediaan Risalat MMKN - PDT - Klik Kemaskini > loading for too long
