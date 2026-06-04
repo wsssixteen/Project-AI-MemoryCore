@@ -19,6 +19,15 @@
  * at session-end DE. Never removes the current worktree or any dirty/unmerged one
  * (plain `git worktree remove`, no --force, refuses those). Branch -d stays
  * merged-only. DE step 11 (c)/(d)/(e) retired to a pointer here.
+ *
+ * v1.3 2026-06-03 — Worktree content-sync (per みや "C+B"): worktrees check out
+ * only git-TRACKED files, but the confidential work content under projects/ is
+ * gitignored (untracked) — etanah-knowledge/ (incl. flowables-bpmn/ + the .md base),
+ * Etanah-Codebase-Read.md, QA-NNN docs. So a fresh worktree can't see them. Now
+ * mirrors projects/ from the MAIN checkout at boot (additive; robocopy skips
+ * identical files; excludes the 3.9MB database-archive + node_modules + backup junk)
+ * + mirrors quest/active.txt (gitignored runtime state) so boot reads real open quests.
+ * Main stays canonical for writes; the worktree copy is a read mirror.
  */
 const { execSync } = require('child_process');
 const fs = require('fs');
@@ -36,6 +45,26 @@ function run(cmd) {
 try {
   // 1. Prune stale worktree records
   run('git worktree prune');
+
+  // 1.5 Worktree content-sync (v1.3 2026-06-03) — mirror gitignored work content
+  //     from the MAIN checkout into this worktree (only runs inside a linked worktree).
+  try {
+    const gitCommonDir = run('git rev-parse --git-common-dir');
+    const same = (a, b) => path.resolve(a).replace(/\\/g, '/').toLowerCase() === path.resolve(b).replace(/\\/g, '/').toLowerCase();
+    if (gitCommonDir) {
+      const mainRoot = path.dirname(path.resolve(projectRoot, gitCommonDir));
+      if (!same(mainRoot, projectRoot)) {              // we ARE in a linked worktree
+        const srcProjects = path.join(mainRoot, 'projects');
+        if (fs.existsSync(srcProjects)) {
+          run(`robocopy "${srcProjects}" "${path.join(projectRoot, 'projects')}" /E /XD database-archive node_modules /XF "*.bak*" "~$*" /R:0 /W:0 /NFL /NDL /NJH /NJS /NP & exit /b 0`);
+        }
+        const srcActive = path.join(mainRoot, 'quest', 'active.txt');
+        if (fs.existsSync(srcActive)) fs.copyFileSync(srcActive, path.join(projectRoot, 'quest', 'active.txt'));
+      }
+    }
+  } catch (e) {
+    process.stderr.write(`worktree-cleanup-boot content-sync: ${e.message}\n`);
+  }
 
   // 2. Find merged claude/* branches
   const mergedBranches = (run('git branch --merged main') || '').split('\n')
