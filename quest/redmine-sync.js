@@ -211,6 +211,32 @@ function fetchIssueJournals(id) {
     });
 }
 
+// ─── ASSIGNED-TO-ME DATE (added 2026-06-04, work-date drift fix) ──────────────
+// "When the ticket became mine" — distinct from retrieve/quest-start/close.
+// fetchIssues() only pulls tickets CURRENTLY assigned to the API-key user, so the
+// MOST RECENT journal that changed `assigned_to_id` is the moment it became mine.
+// No such journal (assigned at creation) → fall back to issue.created_on.
+// Output is GMT+8 calendar date (matches みや's weekly-sheet day granularity).
+function toGmt8Date(iso) {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return String(iso).substring(0, 10);
+    return new Date(d.getTime() + 8 * 3600 * 1000).toISOString().substring(0, 10);
+}
+
+function extractAssignedToMeDate(journals, issue) {
+    let latest = null;
+    for (const j of journals || []) {
+        const isAssigneeChange = (j.details || []).some(
+            d => d.property === 'attr' && d.name === 'assigned_to_id'
+        );
+        if (isAssigneeChange && j.created_on) {
+            if (!latest || new Date(j.created_on) > new Date(latest)) latest = j.created_on;
+        }
+    }
+    const iso = latest || issue.created_on || null;
+    return iso ? toGmt8Date(iso) : null;
+}
+
 function formatJournalsForHistory(journals) {
     if (!journals || !journals.length) return '(no journal entries)';
     return journals.map(j => {
@@ -312,7 +338,7 @@ async function createTaskFolder(issue, parsed) {
 // active.txt → boot's open-quest-surfacer surfaced only 1 of 18 (correctly reading a wrong source).
 // Now: after every successful createTaskFolder(), shell out to active-cli.js start so the block
 // lands automatically. Failure is logged but never crashes the sync (folder is the real artifact).
-function appendActiveBlock(issue, parsed, taskFolderAbs) {
+function appendActiveBlock(issue, parsed, taskFolderAbs, assignedDate) {
     const f = parseDescriptionFields(issue.description);
     const env = f.env || (issue.subject.split(' - ')[0].trim() || 'unknown');
     const subjectClean = issue.subject.replace(/"/g, "'").substring(0, 140);
@@ -324,6 +350,9 @@ function appendActiveBlock(issue, parsed, taskFolderAbs) {
         `env=${env}`,
         `issue_one_liner=${subjectClean}`,
     ];
+    // assigned_to_me = when the ticket became mine (Redmine journal). Saved at
+    // retrieval; the retrieve/folder-create timestamp itself is deliberately NOT saved.
+    if (assignedDate) fields.push(`assigned_to_me=${assignedDate}`);
     if (f.urusan)  fields.push(`urusan=${f.urusan}`);
     if (f.tugasan) fields.push(`tugasan=${f.tugasan}`);
     try {
@@ -542,15 +571,19 @@ async function runWithCreate() {
             const folder = await createTaskFolder(issue, issue._parsed);
             console.log(`  📁 Created: ${folder}`);
 
+            // Fetch journals ONCE up-front — feeds both the assigned-to-me date and History.txt.
+            const journals = await fetchIssueJournals(issue.id);
+            const assignedDate = extractAssignedToMeDate(journals, issue);
+
             // Append a status=hold Phase-0 block to quest/active.txt so the boot
             // open-quest-surfacer sees it. See appendActiveBlock() header for context.
-            appendActiveBlock(issue, issue._parsed, folder);
+            appendActiveBlock(issue, issue._parsed, folder, assignedDate);
+            if (assignedDate) console.log(`    📅 assigned_to_me=${assignedDate}`);
 
             // Also write History.txt at first create — covers journal entries that already exist
             // for "New"-status tickets (e.g. assignment notes from leads). 2026-05-12 fix: prior
             // behavior only wrote History.txt on re-sync (existing path), leaving net-new tickets
             // without their already-present journal context.
-            const journals = await fetchIssueJournals(issue.id);
             if (journals.length) {
                 writeHistoryFile(path.join(folder, '0. Brief'), journals, {
                     prefix:    issue._parsed.prefix,

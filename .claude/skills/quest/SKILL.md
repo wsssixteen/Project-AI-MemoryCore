@@ -48,17 +48,17 @@ Phase 0 — Accept the Quest (manual steps / what the workflow encodes):
 | 1a | [from ticket] | ⬜ |
 
 5. → Skill: etanah-knowledge-load (with `tier=always` — load 5 always-load layers per plan Phase 2; conditional layers load as `index.md` routes by ticket type + symptom)
-6. Write quest state to `quest/active.txt`:
+6. Write quest state to `quest/active.txt`. The block usually **already exists** (redmine-sync created it at retrieval with `status=hold` + `assigned_to_me=`). **Update it in place** — never recreate (that would drop `assigned_to_me`):
    ```
-   qa=<number>
-   task_folder=<path>
-   qa_doc=projects/coding-projects/active/<number>/QA-<number>.md
-   phase=0
-   status=active
-   ticket_type=<bug|enhancement|cr|requirement>
-   current_phase=Discovery
-   local_test_confirmed=false
+   node quest/active-cli.js update QA-<number> \
+     status=active phase=0 current_phase=Discovery \
+     ticket_type=<bug|enhancement|cr|requirement> \
+     local_test_confirmed=false \
+     quest_start=@now \
+     qa_doc=projects/coding-projects/active/<number>/QA-<number>.md
    ```
+   - `quest_start=@now` — stamps **when work actually begins** (active-cli.js resolves `@now` → local date; `@nowts` for time-of-day). Distinct from `assigned_to_me` (when it became mine) and from the folder-creation time (retrieval — deliberately not tracked).
+   - If no block exists yet (rare — manual quest with no sync), use `start` instead of `update` with the same fields.
 7. Present Issue Checklist to みや — wait for confirmation before touching any code
 
 Only proceed to Phase 1 after explicit confirmation.
@@ -156,6 +156,18 @@ Before any `git commit` on a quest:
 3. **Stop-at-stage gate (MANDATORY in v1 — added 2026-05-21 by みや)**: after `git add`, STOP. Emit the staged file list + the FULL staged diff (`git diff --cached`) + the drafted commit message, and WAIT for みや to review the message. Do NOT run `git commit` until みや explicitly approves the message. No auto-commit in this skill version — the stop is a hard gate, even when みや earlier said "close the ticket". **Why**: commit-message slips (QA-262233 missing urusan-hyphen, QA-260316 wrong subject) all happened when the message went uncommitted-unreviewed; a visible stop at the staged state lets みや catch the message before it is permanent.
 3b. **Work-repo cleanup (MANDATORY — added 2026-05-21 by みや)**: before staging, remove the throwaway artifacts Ruri created in the work repo during Apply — `*.bak*` backups, `*- Copy*` duplicates, orphaned `~$*` Word locks. Ruri's `.docx` backups belong in `outputs-temp/`, never the etanah repo. After cleanup, `git status` shows only the intended fix files + pre-existing unrelated changes — no Ruri-generated junk. **Why** (2026-05-21, QA-262004): Phase 1 close left `- Copy.docx` + 3 `.bak_ruri_*` files in the etanah repo; they were flagged to みや instead of cleaned.
 4. Only then proceed to commit
+
+### Close stamp — `closed=@now` (added 2026-06-04, work-date drift fix)
+
+The moment the quest is actually **done** — status flips to `closed` (Phase 1) — stamp the close date in the SAME `active-cli.js` call:
+
+```
+node quest/active-cli.js update QA-<number> status=closed closed=@now local_test_confirmed=true
+```
+
+- `closed=` is the **universal done-date** — it fires for **data-patch / config / non-git** closes too, where there is no `commit=` to read a date from. For git fixes both `commit=` (code-change date) and `closed=` (done date) coexist.
+- For **rework cycles**, append a cycle-tagged variant rather than overwriting — `closed_cycle2=@now` — so each cycle keeps its own done-date (mirrors `commit_cycle1`/`commit_cycle2`).
+- Phase 2 archive (`quest/archive-quest.js`) does NOT re-stamp — `closed=` is set once at the Phase 1 done-moment and travels with the block into `active-archive.txt`.
 
 ---
 

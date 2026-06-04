@@ -1178,6 +1178,9 @@ At Step 4 Refine pass — every proposed refinement is tagged with `Refines-X` (
 ```
 qa=QA-<NUM>
 task_folder=<path>
+assigned_to_me=<YYYY-MM-DD>    ← when the ticket became mine (Redmine assignee-change journal); set by redmine-sync at retrieval
+quest_start=<YYYY-MM-DD>       ← when work actually BEGINS (/quest start stamps `quest_start=@now`); NOT the retrieval/folder-create time (deliberately untracked)
+closed=<YYYY-MM-DD>            ← universal DONE-date (/quest close stamps `closed=@now`); fires for non-git data-patch/config closes too; cycle variants closed_cycle2= ...
 branch=mlk/qa/<NUM>            ← set at Phase 1 close
 early_diagnostic=<path>        ← optional
 handoff_file=<path>            ← optional (handoff files deprecated — see line 55)
@@ -1185,6 +1188,7 @@ phase=0|1|1-complete|2|2-complete
 local_test_confirmed=true|false
 status=active|hold|delegated|blocked|closed|archived|archived-shipped-by-other
 commit=<SHA>                   ← set at Phase 1 close; must equal git rev-parse HEAD on the ticket branch
+                                 (commit = code-change date · closed = done-date; both coexist for git fixes)
 delegated_to=<name>            ← when status=delegated
 delegated_date=<YYYY-MM-DD>
 blocker=<text>                 ← when status=blocked

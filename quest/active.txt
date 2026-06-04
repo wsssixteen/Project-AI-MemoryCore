@@ -1,1 +1,19 @@
 active:
+
+qa=QA-264006
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\58. QA #264006 - Semua Urusan - Tugasan peranan PT - Nama PT tidak sama dengan PT tugas
+phase=0
+status=hold
+ticket_type=bug
+env=UAT
+issue_one_liner=Semua Urusan - Tugasan peranan PT - Nama PT tidak sama dengan PT tugasan Semakan Kemasukan Maklumat
+assigned_to_me=2026-06-04
+
+qa=QA-263921
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\59. QA #263921 - PLTP - Penyediaan Risalat MMKN - PDT - Klik Kemaskini - loading for to
+phase=0
+status=hold
+ticket_type=bug
+env=MLKUAT
+issue_one_liner=PLTP - Penyediaan Risalat MMKN - PDT - Klik Kemaskini > loading for too long
+assigned_to_me=2026-06-04

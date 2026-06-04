@@ -57,6 +57,23 @@ function renderBlocks(header, blocks) {
 
 function findBlock(blocks, qa) { return blocks.find(b => b.qa === qa) || null; }
 
+// Date-stamp sugar (added 2026-06-04 for the work-date drift fix): a field value of
+//   @now   → local YYYY-MM-DD          (e.g. quest_start=@now, closed=@now)
+//   @nowts → local YYYY-MM-DD HH:mm    (when time-of-day matters)
+// Resolved HERE so the quest skill never has to hand a date string (which the model
+// could fabricate or mis-format). Local time = the machine clock (みや's box = GMT+8).
+function pad2(n) { return String(n).padStart(2, '0'); }
+function nowDate() { const d = new Date(); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; }
+function nowTs()   { const d = new Date(); return `${nowDate()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`; }
+function resolveKv(kv) {
+    const i = kv.indexOf('=');
+    if (i < 0) return kv;
+    const k = kv.slice(0, i), v = kv.slice(i + 1);
+    if (v === '@now')   return `${k}=${nowDate()}`;
+    if (v === '@nowts') return `${k}=${nowTs()}`;
+    return kv;
+}
+
 function writeAtomic(p, content) {
     const tmp = p + '.tmp_' + process.pid;
     fs.writeFileSync(tmp, content);
@@ -71,7 +88,7 @@ function cmdStart(qa, kvs) {
     const lines = [`qa=${qa}`];
     for (const kv of kvs) {
         if (!/^[a-zA-Z_][\w-]*=/.test(kv)) throw new Error(`bad field syntax: ${kv}`);
-        lines.push(kv);
+        lines.push(resolveKv(kv));
     }
     blocks.push({ qa, lines });
     writeAtomic(ACTIVE, renderBlocks(header || 'active:', blocks));
@@ -96,9 +113,10 @@ function cmdUpdate(qa, kvs) {
     const b = findBlock(blocks, qa);
     if (!b) throw new Error(`${qa} not found in active.txt`);
     const updates = new Map();
-    for (const kv of kvs) {
+    for (const rawKv of kvs) {
+        const kv = resolveKv(rawKv);
         const idx = kv.indexOf('=');
-        if (idx < 0) throw new Error(`bad field: ${kv}`);
+        if (idx < 0) throw new Error(`bad field: ${rawKv}`);
         updates.set(kv.slice(0, idx), kv.slice(idx + 1));
     }
     const seen = new Set();
