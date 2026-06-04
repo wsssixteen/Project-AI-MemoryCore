@@ -959,3 +959,9 @@
 {"ts":"2026-06-04T14:02:03.365Z","qa_active":"QA-264006","phase":"1","status":"active","gap_since_prev_minutes":8}
 {"ts":"2026-06-04T14:08:11.011Z","qa_active":"QA-264006","phase":"1","status":"active","gap_since_prev_minutes":6}
 {"ts":"2026-06-04T14:28:43.880Z","qa_active":"QA-264006","phase":"1","status":"active","gap_since_prev_minutes":21}
+{"ts":"2026-06-04T14:37:21.051Z","qa_active":"QA-264006","phase":"1","status":"active","gap_since_prev_minutes":9}
+{"ts":"2026-06-04T14:39:29.928Z","qa_active":"QA-264006","phase":"1","status":"active","gap_since_prev_minutes":2}
+{"ts":"2026-06-04T14:41:08.330Z","qa_active":"QA-264006","phase":"1","status":"active","gap_since_prev_minutes":2}
+{"ts":"2026-06-04T14:47:31.700Z","qa_active":"QA-264006","phase":"1","status":"active","gap_since_prev_minutes":6}
+{"ts":"2026-06-04T14:58:26.909Z","qa_active":"QA-264006","phase":"1","status":"active","gap_since_prev_minutes":11}
+{"ts":"2026-06-04T15:03:30.215Z","qa_active":"QA-264006","phase":"1","status":"active","gap_since_prev_minutes":5}
