@@ -143,6 +143,12 @@ function findExistingFolder(prefix, number) {
 function getNextFolderNumber() {
     if (!fs.existsSync(TASKS_FOLDER)) return 1;
     const entries = fs.readdirSync(TASKS_FOLDER);
+    // Archived tickets keep their numbers — increment from the highest across active + Archive,
+    // else an emptied active folder restarts at 1 and collides with archived #1. (Mirrors findExistingFolder.)
+    const archivePath = path.join(TASKS_FOLDER, 'Archive');
+    if (fs.existsSync(archivePath)) {
+        entries.push(...fs.readdirSync(archivePath));
+    }
     const nums = entries
         .map(e => parseInt(e.split('.')[0]))
         .filter(n => !isNaN(n));
