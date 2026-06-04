@@ -58,19 +58,30 @@ function safeReadJSON(p) {
 }
 
 function collectRegisteredHooks(settings) {
-  // Walk settings.hooks[event][i].hooks[j].command, extract <name>.js from each
+  // Walk settings.hooks[event][i].hooks[j].command, extract the hook's file basename
+  // AND verify the command's REAL path exists on disk. Returns { names, missing }.
+  // Note: [\w.-] (incl. dots) so Power-convention names like `batch-ask.trigger.hook`
+  // are captured whole — NOT truncated to `hook`. And the dangling check uses the
+  // real command path, so hooks living under domain/<name>/ (not .claude/hooks/) are
+  // resolved correctly instead of false-flagging as dangling.
   const names = new Set();
-  if (!settings || !settings.hooks) return names;
+  const missing = new Set();
+  if (!settings || !settings.hooks) return { names, missing };
   for (const event of Object.keys(settings.hooks)) {
     for (const block of settings.hooks[event] || []) {
       for (const h of block.hooks || []) {
         const cmd = h.command || '';
-        const m = cmd.match(/([\w-]+)\.js/);
-        if (m) names.add(m[1]);
+        const m = cmd.match(/([\w.-]+)\.js/);
+        if (!m) continue;
+        names.add(m[1]);
+        // Resolve the real .js path from the command (quoted-with-spaces or bare).
+        const pm = cmd.match(/"([^"]+\.js)"/) || cmd.match(/(\S+\.js)/);
+        const realPath = pm ? pm[1] : null;
+        if (realPath && !fs.existsSync(realPath)) missing.add(m[1]);
       }
     }
   }
-  return names;
+  return { names, missing };
 }
 
 function collectHookFiles(dir) {
@@ -114,8 +125,8 @@ const settings = safeReadJSON(SETTINGS_JSON);
 const settingsLocal = safeReadJSON(SETTINGS_LOCAL);
 const claudeMd = safeRead(CLAUDE_MD);
 
-const registered = collectRegisteredHooks(settings);
-const local = collectRegisteredHooks(settingsLocal);
+const { names: registered, missing: registeredMissing } = collectRegisteredHooks(settings);
+const { names: local } = collectRegisteredHooks(settingsLocal);
 const { names: onDisk, skip } = collectHookFiles(HOOKS_DIR);
 const documented = collectDocumentedHooks(claudeMd, onDisk);
 
@@ -133,8 +144,8 @@ if (ghostHooks.length) {
   findings.push(`   → either register in .claude/settings.json hooks block OR add header comment "// meta-layer-audit: skip-ghost-check" to opt out`);
 }
 
-// CHECK 3 — Dangling registrations (registered, not on disk)
-const dangling = setDiff(registered, onDisk);
+// CHECK 3 — Dangling registrations (registered command path does not exist on disk)
+const dangling = [...registeredMissing];
 if (dangling.length) {
   findings.push(`🚨 DANGLING (${dangling.length}) — registered in settings.json but file missing from disk: ${dangling.join(', ')}`);
   findings.push(`   → hook will fail to run; either restore file OR remove from settings.json`);

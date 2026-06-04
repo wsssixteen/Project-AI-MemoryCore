@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// meta-layer-audit: skip-ghost-check — manual analysis tool, run by hand (node ...), NOT an event hook.
 /**
  * voice-signal-spike.js — Phase 2 voice-signal exploration tool
  *
