@@ -8,3 +8,11 @@
 {"ts":"2026-06-03T10:09:35.925Z","prompt_excerpt":"Also you still haven't given me the scripts to populate all the other cc tags that isn't populated inside the PDF. I already gave you the fucking PDF for you to"}
 {"ts":"2026-06-03T12:26:45.945Z","prompt_excerpt":"Okay stop, just list down in a table what are the things BA requests only. I am sure you can reply quickly without having to investigate"}
 {"ts":"2026-06-03T13:21:57.581Z","prompt_excerpt":"1. Oh I just realised you already gave those permohonan IDs inside Task txt file right? \n2. Update on Test scenarios: \n   1. this is during PRPDT Tugasan: Syor "}
+{"ts":"2026-06-04T07:18:43.736Z","prompt_excerpt":"Can we actually plan by stages not a big refactor in mind? I feel like there are things that can be passed to it like an always on retrieval quests from redmine"}
+{"ts":"2026-06-04T07:18:57.302Z","prompt_excerpt":"Can we actually plan by stages not a big refactor in mind? I feel like there are things that can be passed to it like an always on retrieval quests from redmine"}
+{"ts":"2026-06-04T07:27:57.610Z","prompt_excerpt":"Yeah, let's start with that. What should we change. I honestly do not understand yet what BA meant but maybe we'll get context after checking the file. /quest  "}
+{"ts":"2026-06-04T08:28:27.304Z","prompt_excerpt":"1. 1 minor change I need you to do, QA-NNNN.md will always be needed right? Can we change the instruction so that it gets created after ticket retrieval? After "}
+{"ts":"2026-06-04T08:53:04.004Z","prompt_excerpt":"1. \"the carry-map now forces every PT task to reuse the SKM officer\", unless if the page can choose who they want to send to or actually since it is like a \"new"}
+{"ts":"2026-06-04T10:30:51.272Z","prompt_excerpt":"1. Going back to check your fix, how does PLTP functions prior to our fixes? How do they even send to between users if it was missing before? What do you mean b"}
+{"ts":"2026-06-04T10:43:47.375Z","prompt_excerpt":"1. Can you double check the story diagram isn't bloat? Because I do not see you taking into account the other instructions that I requested to draw diagrams in "}
+{"ts":"2026-06-04T10:56:48.369Z","prompt_excerpt":"<task-notification>\n<task-id>wqeorji7h</task-id>\n<tool-use-id>toolu_01VX6TadtepybidWsSmGrYj5</tool-use-id>\n<output-file>C:\\Users\\Ridhwan\\AppData\\Local\\Temp\\clau"}

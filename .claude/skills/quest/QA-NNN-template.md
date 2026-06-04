@@ -25,6 +25,19 @@
 
 ---
 
+## Ticket Summary (created at retrieval)
+
+> ← write this section AT TICKET RETRIEVAL (`redmine-sync`), as soon as the ticket is understood — BEFORE `/quest start`. Plain-language intro (Layer-1: overview + everyday words; NO file:line, NO jargon) so any later `/quest resume` or *"what was QA-X about"* rebinds to the ticket fast. This is the durable, always-exists anchor — `/quest resume` reads it FIRST.
+
+**What the ticket is about** (1-3 plain sentences): <BA's complaint in everyday words>
+**BA's expected outcome**: <verbatim "Expected" / "Sepatutnya" / "Patut" line>
+**Module / urusan scope (first read)**: <PLP | AWAM | teknikal | common — + urusan codes>
+**Test app(s) from brief**: <permohonan IDs + env>
+**Classification**: <New | Rework (cycle N) | Addition>
+**Created**: <YYYY-MM-DD> at retrieval · **Started**: <not yet / YYYY-MM-DD>
+
+---
+
 ## Context Loading (Discovery)
 
 > ← write this section at Quest accept (`/quest start`). Covers ticket-type classification + etanah-knowledge tiered load + Scout familiar output + etiology check + DOMAIN-GLOSSARY out-loud.

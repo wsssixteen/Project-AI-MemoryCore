@@ -99,7 +99,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 |---|---|---|---|---|
 | `self-gate-impulse.js` | self | impulsive Edits | "pause + verify" reminder | personality.md self-gate discipline | Predicate affects impulse detection |
 | `phase0-artifact-gate.js` | self | Edits during Phase 0 | Phase 0 artifact rules | Quest Phase 0 | Phase 0 rule changes need this hook update |
-| `pre-action-check-gate.js` | self | quest-related path edits | Notes.txt + env-check + PDF reminders | Quest skill, Notes.txt write | Path-pattern changes need predicate update |
+| `pre-action-check-gate.js` | self | quest-related path edits | Notes.txt + env-check + PDF reminders · **Notes-file tool-only DENY (v1.2)** | Quest skill, Notes.txt write, notes.js | Path-pattern changes need predicate update |
 | `meta-edit-gate.js` | self | `meta/*` path edits + (Phase 0 extension) hooks/skills/protocols/state-files | recursive safety + paired-edit predicate | meta-layer audit, architecture-doc-sync | Phase 0 extends this hook for architecture-doc-sync |
 | `edit-scope-gate.js` | self | suspicious delete-unrelated-code patterns | preservation discipline reminder | PRESERVATION DISCIPLINE rule | Pattern-list expansion needs predicate update |
 | `convention-check-gate.js` | self (dual-registered) | Edit/Write to .java / .docx / .json|xml|properties | working-analog-first reminder | etanah-pelupusan code edits, template edits | New file-types may need extension |
@@ -128,6 +128,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 
 - ✅ Phase 0: `meta-edit-gate.js` v1.1 — added paired-edit predicate (system-component edits trigger arch-doc-sync reminder; bypass `[skip-architecture-doc-update: <reason>]`)
 - ✅ Phase 1: `pre-action-check-gate.js` v1.1 — added single-canonical-doc enforcement (blocks edits to sibling files under projects/coding-projects/active/QA-*/ that aren't QA-NNN.md; bypass `[skip-canonical-doc: <reason>]`)
+- ✅ 2026-06-04: `pre-action-check-gate.js` v1.2 — added Notes-file tool-only DENY (hard `permissionDecision: deny` on Write/Edit to `1. Tasks\Melaka\…\1. *.txt` → forces `node quest/notes.js`). Structural defender for `tool-choice-skip` 5th-cluster-strike (QA-264006 Notes hand-write). Merge-in-place into the existing gate (already fired on the Notes path) — no new hook, no new registration. notes.js bypasses (writes via Bash fs, not the Edit/Write tool).
 - ✅ Phase 3: `scout-completeness-gate.js` (NEW, UserPromptSubmit) — injects 100%-VERIFY clause + UC9 sibling-structure-read reminder on Scout/Recon trigger phrases
 - ✅ Phase 5: `silent-claim-drift-gate.js` v1.1 — Stage 5A advisory extensions: (a) scans for `→ Skill: <name>` tokens vs Skill tool calls; (b) scans Recon emits for HYPOTHESIS-vs-VERIFIED ratio (100%-VERIFY check); (c) scans system-component edits vs meta/system-architecture.md edits (arch-doc-sync). All advisory in Stage 5A; Stage 5B (decision:block flip) deferred to future session after observation. Bypass tokens: `[skip-invoke <name>: <reason>]`, `[skip-100-verify: <reason>]`, `[skip-architecture-doc-update: <reason>]`.
 - ⏸ Phase 5 Stage 5B (DEFERRED): `silent-claim-drift-gate.js` flip from `additionalContext` advisory to `hookSpecificOutput.decision: "block"`. Dry-run scenarios at `meta/hook-test-scenarios.md`.

@@ -2,8 +2,11 @@ active:
 
 qa=QA-264006
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\58. QA #264006 - Semua Urusan - Tugasan peranan PT - Nama PT tidak sama dengan PT tugas
-phase=0
-status=hold
+phase=1
+status=active
+current_phase=Apply
+local_test_confirmed=false
+qa_doc=projects/coding-projects/active/QA-264006/QA-264006.md
 ticket_type=bug
 env=UAT
 issue_one_liner=Semua Urusan - Tugasan peranan PT - Nama PT tidak sama dengan PT tugasan Semakan Kemasukan Maklumat

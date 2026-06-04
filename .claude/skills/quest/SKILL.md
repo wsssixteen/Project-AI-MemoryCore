@@ -82,7 +82,7 @@ Only proceed to Phase 1 after explicit confirmation.
 1. Read `quest/active.txt` to find the target quest:
    - If `<QA-number>` arg supplied: match that specific held entry
    - If no arg: pick the single quest with `status=hold` (error if 0 or >1 held)
-2. Restore context — read `QA-<NNN>.md` (the `## 0. Resume Point` block FIRST), then the rest of the doc top-to-bottom (Discovery → Debugging → Code-Review → Apply etc. — single canonical doc means no sibling files to chase)
+2. Restore context — read `QA-<NNN>.md` (the **`## Ticket Summary` block FIRST** — created at retrieval, always exists, rebinds you to what the ticket is about; THEN the `## 0. Resume Point` block), then the rest of the doc top-to-bottom (Discovery → Debugging → Code-Review → Apply etc. — single canonical doc means no sibling files to chase). **Reading `## Ticket Summary` on resume is MANDATORY** — it is the binding anchor that stops a quest being resumed without re-understanding it.
 3. Confirm: "Resuming Quest <QA-number>. Last state: [Resume Point summary]."
 
 ---
@@ -131,6 +131,14 @@ Before emitting ▶ YOUR MOVE, run this gate and emit it as the FIRST lines of t
 | Login present | Any permohonan ID carries its `pengguna_semasa` login (`feedback_pengguna_semasa.md`). Unknown → DB-query it first. |
 
 **Why** (2026-05-21, QA-259339): the Notes.txt auto-write has slipped ≥4 times; per the skill-failure-log ≥3-strike rule the cure is structural, not another trigger phrase. The hand-back (▶ YOUR MOVE) is the single moment all this info is needed, so the gate lives here — Notes.txt / tugasan / WHERE / login become hard preconditions of the emit, checked visibly so a skip leaves a trace.
+
+### QA-NNNN.md persistence — save after EVERY stop (added 2026-06-04 by みや)
+
+At **every** stop / hand-back (each ▶ YOUR MOVE), persist the just-completed phase's findings into `QA-NNNN.md` BEFORE the chat evaporates — whether the stop is a single phase (Recon now, Rubric later) or a combined pass (Recon+Rubric in one go → save once after). Write the matching section: Scout→`Context Loading (Discovery)` · Recon→`Debugging` · Rubric→`Code-Review` · Apply→`Ship — Apply` · test result→`Ship — Verify`.
+
+**Spawn a `general-purpose` familiar to do the write so it does NOT block the main thread** — hand it the phase content + the target section name; it formats + writes per the QA-NNN template while the main thread proceeds to the hand-back. (For a tiny append, an inline Edit is fine — the familiar is to avoid slowing a substantive multi-section write.)
+
+**Why**: the chat summary is lost between sessions; `QA-NNNN.md` is the durable home `/quest resume` reads (its `## Ticket Summary` first). Saving only at `/quest hold` or Phase 2 risks losing a phase's reasoning if the session ends mid-quest. Per-stop save = no lost work. Pairs with the retrieval-time Ticket Summary rule (`save-commands.md`).
 
 ## Improvement Checklist — capture みや's "check-further" pushes (added 2026-05-21 by みや)
 

@@ -33,6 +33,30 @@ process.stdin.on('end', () => {
     const toolInput = data.tool_input || {};
     const filePath = toolInput.file_path || toolInput.path || '';
 
+    // Notes-file tool-only DENY (tool-choice-skip escalation 2026-06-04, QA-264006 — 5th cluster strike).
+    // The Task-folder Notes file `1. <NNN NNN>.txt` (or legacy `1. Notes.txt`) is generated ONLY by
+    // `node quest/notes.js`. Direct Write/Edit hand-writing drifts the locked 3-line format
+    // (banned per quest-protocol.md:421). notes.js writes via Node fs through Bash, bypassing this
+    // Edit|Write tool gate — so this deny ONLY catches direct hand-writes, never notes.js itself.
+    if (/1\.\s?Tasks[\\/]Melaka[\\/].*[\\/]1\.\s[^\\/]*\.txt$/i.test(filePath)) {
+      const reason = [
+        '🚫 Notes file is tool-generated — do NOT Write/Edit it directly.',
+        `   File: ${filePath}`,
+        '   Locked 3-line format; hand-writing drifts it (banned per quest-protocol.md:421 — no env/prose/annotations).',
+        '   Use instead:',
+        '     node quest/notes.js --folder "<Task folder>" --env <UAT|FAT> --urusan <X> --id <permohonan> --user <login> [--reset]',
+        '   (--reset writes entry 1; omit it to append the next numbered entry.)',
+      ].join('\n');
+      process.stdout.write(JSON.stringify({
+        hookSpecificOutput: {
+          hookEventName: 'PreToolUse',
+          permissionDecision: 'deny',
+          permissionDecisionReason: reason,
+        },
+      }));
+      process.exit(0);
+    }
+
     // Quest-related path patterns
     const questPatterns = [
       /1\.\s?Tasks[\\/]Melaka/i,
