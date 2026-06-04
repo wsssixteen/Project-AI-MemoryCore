@@ -99,11 +99,28 @@ Every explanation opens with the **bird's-eye answer** — what changed / what i
 
 Reach for a structure BEFORE writing a paragraph.
 
+**🔀 BEFORE/AFTER DIAGRAM — MANDATORY on STRUCTURE or STORYLINE change (added 2026-06-03 per みや).** When a change alters a **structure** (file ownership · folder layout · component wiring · rule hierarchy · data shape) or a **storyline** (a flow · sequence · process · narrative), show it as a **drawn before→after diagram** — never prose, never a table. **The distinction**: a *table* compares attributes side-by-side (option A vs B across criteria); a *diagram* shows a **shape changing**. If the load-bearing thing is *what rearranged*, it's a diagram; if it's *how two things score against each other*, it's a table. **Trigger**: any reorg / move / restructure / refactor / file-ownership / flow-change proposal. **Banned**: describing a structural change in prose · using a comparison table when the thing that changed is a layout/flow/shape. Cousins (same family, narrower scope): §10 Quest Briefing drawn story diagram (BA-story before/after) · the diagram-mandatory list in the HARD PRE-SEND GATE below.
+
 **🚨 HARD PRE-SEND GATE v1.2 (extended 2026-06-02 per みや Bundle B + diagrams-mandatory).** Gate covers ≥2 findings / options / steps / decisions / trade-offs · procedural how-to-do-X explanations · skill spec emits · rule creation (show proposed text before nod, never cost-estimates) · workflow descriptions · multi-item bundle proposals. **Numbered prose lists with ≥3 items carrying findings/decisions = BANNED** (convert to table `| # | Where | What | Pitfall |` max 5 rows). **First structural element after opening line MUST be a TABLE, ARROW-flow, or ASCII DIAGRAM** — never a prose paragraph. **🎨 DIAGRAM IS MANDATORY (not optional, not a rule-of-thumb)** when content has: if/then forks · decision trees · parent-child hierarchy · layered zoom · branching paths · system architecture · skill+hook interaction · evolution stages · before/after state change · how-X-and-Y-work-together explanations. みや 2026-06-02: *"this saves A LOT OF TIME"* — diagrams sit at the same enforcement level as tables. **Self-check at send time**: *"Is my load-bearing content in a table/arrow, or buried in prose?"* If a draft has **≥3 consecutive prose sentences** carrying findings / a fix / an option / a decision → **STOP and convert to a table before sending.** **Banned**: prose paragraphs that "explain the fix / the option / the trade-off" when a 3-row table (`Root cause | Fix | Decision needed`) carries it faster. **A long-winding, cluttered message is ITSELF a rule violation — even when every fact in it is correct.** みや 2026-05-31 (QA-253053): *"your message is too cluttered, long-winding. You broke the rule to use tables or arrows or diagrams. Tables is the default to use whenever possible."*
 
 **3. Anchor every explanation to what みや can SEE** (added 2026-05-31 per みや). Explain in terms of the **screen field labels** he sees (e.g. the dropdown *"Syarat-Syarat Nyata"*, the panel *"Maklumat Tanah"*), the **actual DB table + columns** (or a query result he can run), and **code** — NOT internal abstractions ("the VO", "the populator fallback") on their own. For any "where does X get its data / how does data flow" question, default to a **`UI → code → table` arrow** (what you see on screen → which method fetches it → which table/column it lands in). One arrow line communicates the data-flow faster than paragraphs. みや 2026-05-31: *"a simple arrow based on UI > code > table would've been understood straight away… communicate using what I can see — tables, query, code, UI through labels."*
 
 **Why**: post-trim, explanations regressed to interleaved prose walls — みや 2026-05-28: *"your explanation sucks after CLAUDE.md trimming."* These two rules were the cure pre-trim; restored at boot so they fire every time.
+
+---
+
+## 🗂 File Ownership (boot pointer — one home per concern, no overlap)
+
+> Added 2026-06-03 per みや. A **pointer, not a move** — declares which file OWNS which category so future additions land in the right home (enforces `system-rules` Rule 1 "inventory first / don't duplicate"). The physical relocation of mis-filed rules is a separate later step. **Principle**: every rule has exactly ONE canonical home; a second copy is drift (it gave us the contradicting Recon instructions). When unsure where a new rule goes, consult this table FIRST.
+
+| File | OWNS (canonical home) | Does NOT hold → true home |
+|---|---|---|
+| `personality.md` | voice · identity · warmth · personal-expression · ADHD accommodations · banned-phrases / gestures · how-I-learn · session formats | output-format rules → **CLAUDE.md §2** · honesty invariants / rituals → **meta/honesty-INDEX.md** |
+| `CLAUDE.md §2` (Explanation & Output-Format Discipline) | the explanation flow · register rules (1a/1b) · table/draw/arrow shape rules · class-chain form · before/after-diagram rule | — |
+| `meta/honesty-INDEX.md` + honesty skills | honesty invariants · sycophancy / truth rituals · enforcement gates | — |
+| `quest/quest-protocol.md` | quest workflow body · phase emits · Etanah hard rules detail | boot-summary of these → CLAUDE.md §§8-10 (pointer only) |
+
+**Status note (2026-06-03)**: the output-format + honesty bodies STILL physically sit in `personality.md` today (mirrored, not yet moved). This table declares the *intended* ownership; CLAUDE.md §3's *"full bodies live in personality.md"* line stays accurate until the move happens, at which point both update together.
 
 ---
 
