@@ -44,8 +44,8 @@ test_app=PTMLK/01/L/RPPLP/2026/15 (aplikasi_id 2963176, UAT)
 
 qa=QA-262762
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\61. QA #262762 - [FAT MCOT ISSUE] OPLPS - Penyediaan Borang 4Ae dan L1e - unable to sim
-phase=0
-status=hold
+phase=1
+status=closed
 ticket_type=bug
 env=UAT
 issue_one_liner=OPLPS - Penyediaan Borang 4Ae dan L1e - "FONT" rework = Maksud Pendudukan should be ALL CAPS (letter-case, not typeface)
@@ -56,6 +56,12 @@ rework=cycle-2 (3. Rework/ FONT.png)
 qa_doc=projects/coding-projects/active/QA-262762/QA-262762.md
 env_note=labeled FAT but test app PTMLK/01/L/OPLPS/2026/3 lives in UAT (FAT has 0 OPLPS apps)
 scout=PelupusanReportMethodConstant.java:1763 missing .toUpperCase() (analog :1769/:1771) · effort S · conf 90%
+local_test_confirmed=true
+current_phase=Closed
+quest_start=2026-06-05
+closed=2026-06-05
+branch=mlk/qa/262762v2
+commit=6313bf322c
 
 qa=QA-255940
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\62. QA #255940 - FAT - PSBS - Semakan Permohonan Lulus (SBTL) - Papar peranan Unit yang salah, unit Pelupusan
@@ -71,3 +77,21 @@ rework=cycle-2 (2. Rework/)
 qa_doc=projects/coding-projects/active/QA-255940/QA-255940.md
 env_note=labeled FAT but test app PTMLK/01/L/PSBS/2026/4 (haiza@) lives in UAT
 scout=BPMN MLK_PLP_PSBS.bpmn20.xml:701-718 + shared MLK_DFT_NOTA_HKMLK · prior fix wrong-axis (office not unit) · effort M · conf 70% · BA-Q: redeployed? + hakmilik=PD?
+
+qa=QA-260508
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\63. QA #260508 - PT-PSBS-MCL - Panel maklumat plot dikeluarkan hakmilik - Tambah medan
+phase=0
+status=active
+current_phase=Discovery
+local_test_confirmed=false
+ticket_type=bug
+env=MLKUAT
+issue_one_liner=PT/PSBS/MCL - Maklumat Tanah > Panel Kadar Cukai Tanah - added Pengkelasan Tanah (zone) field NOT persisted by page-level Simpan/Seterusnya (TAK DISIMPAN)
+assigned_to_me=2026-06-05
+urusan=PT/PSBS/MCL
+tugasan=Maklumat Tanah (Panel Kadar Cukai Tanah / Maklumat Cukai Tanah)
+rework=cycle-2 (3. Rework/ TAK-DISIMPAN.mp4)
+prior_fix=branch mlk/qa/260508 (original add-field fix, shipped 2026-06-02 by Ahmad Ridhwan)
+qa_doc=projects/coding-projects/active/QA-260508/QA-260508.md
+test_app=PTMLK/01/L/MCL/2026/18 (MLKUAT)
+rework_reason=field displays + panel-Simpan persists, but parent-page Simpan/Seterusnya drops it
