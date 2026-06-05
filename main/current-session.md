@@ -21,6 +21,10 @@
 ## Immediate Next Steps (AGENT_STATE) — NEXT SESSION
 - **QA-264006 close item**: run `QA264006-PROBE` on 1 PLPS + 1 PLTP **normal-submit** case → confirm carry-map doesn't mis-assign on an SKM-officer reset → then merge `mlk/qa/264006` → `mlk/master` + Phase 2 (post-mortem / KPI / archive hygiene).
 - Carry-over (untouched): QA-262445 · QA-260476 · QA-260404 · criticals QA-260830 / QA-262852.
+- **🆕 RETRIEVED + SCOUTED 2026-06-05 (3 tickets — `active.txt` status=hold, scout findings inlined there + `QA-NNN.md` docs written; ALL test on UAT despite 2 "FAT" labels — FAT has 0 matching apps)**:
+  - **QA #262762** (OPLPS · **S** · 90% · start first) — "FONT" rework is really letter-**case**: `Maksud Pendudukan` should be ALL CAPS · `PelupusanReportMethodConstant.java:1763` missing `.toUpperCase()` (analog `:1769/:1771`) · test `PTMLK/01/L/OPLPS/2026/3`
+  - **QA #245240** (RPPLP · **M** · 80% · ⭐High prio) — "Bayaran Disyorkan (RM)" no auto-populate from original permohonan + flag too narrow · `PelupusanRayuanHelper.java:332,169`, ×2 tugasans (PRMMKNPDT+PYMBPT), reconcile dup logic in `MlkSemakanPermohonanForm.java:480` · test `PTMLK/01/L/RPPLP/2026/15`
+  - **QA #255940** (PSBS · **M** · 70% · BA-Q first) — wrong unit "(Pelupusan)" vs "(Pendaftaran)" · BPMN `MLK_PLP_PSBS.bpmn20.xml:701-718` + shared `MLK_DFT_NOTA_HKMLK` · prior cycle fixed office-axis not unit-axis · analog QA #246262 · **2 BA-Qs before investing** (prior BPMN redeployed? · hakmilik=PD?) · test `PTMLK/01/L/PSBS/2026/4` (haiza@)
 
 ## 🎯 Session Recap (for AI restart)
 2026-06-05: committed QA-264006 carry-map fix (constant-only, `2a7f9bb7ce` → `origin/mlk/qa/264006`, unmerged). The session was mostly tracing the officer-assignment mechanism: the carry-map (`By Manual PTB`) is set by `PelupusanService.submit()` on every form submit (urusan-agnostic) — refuting the prior "needs a BPMN serviceTask / inert on PLTP/PRBB" finding (workflow `weoplvbix` + my verify of `FlowableTaskListener:94` process-scope read). PYSK runtime proof on app 124. Residual: the change flips 4 working urusans recovery→carry-map (narrow reset edge-case); probe test deferred = verify-before-merge. **Misses this session**: gave wrong flowable-alter stop-checkpoints 3× (didn't re-read the BPMN before answering routing), broke app 124's task list with a bad live `UPDATE` (deactivated wrong row against unverifiable flowable state), committed before re-reading the full QA-264006 doc (missed the 2026-06-04 keep-vs-revert note). Branch unmerged — safe to sit until the probe test.
@@ -38,4 +42,4 @@
 - **Env note**: Smart App Control (Win11) blocks the unsigned `PocWordEditor.exe` → error 4551 — machine issue → DEV-TESTING-HACKS.
 - **Next (QA-263921)**: BUG-BESTIARY pattern #1 update (stale QA-262495 attribution + the recipe) · register `/close-phase` in the skill catalog · Phase 2 archive when Redmine wrapped.
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-05 ~09:50 MPST — **TWO quests Phase-1-closed today** (QA-264006 `hungry-bouman` · QA-263921 `sweet-bell`); both DE'd.
+**Memory Type**: RAM | **Last Activity**: 2026-06-05 ~10:05 MPST — **TWO quests Phase-1-closed today** (QA-264006 `hungry-bouman` · QA-263921 `sweet-bell`); both DE'd. **+ Retrieved + scouted 3 new tickets** (QA #262762 · #245240 · #255940) — all `status=hold`, ready to start (262762 first).

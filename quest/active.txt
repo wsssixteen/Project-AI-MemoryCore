@@ -28,3 +28,46 @@ ticket_type=bug
 env=MLKUAT
 issue_one_liner=PLTP - Penyediaan Risalat MMKN - PDT - Klik Kemaskini > loading for too long
 assigned_to_me=2026-06-04
+
+qa=QA-245240
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\60. QA #245240 - UAT - RPPLP - Penyediaan Risalat MMKN - PDT - Bayaran Yang Disyorkan (RM) tidak auto papar bayar
+phase=0
+status=hold
+ticket_type=bug
+env=MLK UAT
+issue_one_liner=RPPLP - Penyediaan Risalat MMKN PDT - Bayaran Yang Disyorkan (RM) tidak auto papar bayaran daripada id permohonan asal
+assigned_to_me=2026-06-05
+urusan=RPPLP
+tugasan=Penyediaan Risalat MMKN - PDT
+scout=PelupusanRayuanHelper.java:332 (no auto-populate) + :169 (flag too narrow) · ×2 tugasans PRMMKNPDT+PYMBPT · effort M · conf 80%
+test_app=PTMLK/01/L/RPPLP/2026/15 (aplikasi_id 2963176, UAT)
+
+qa=QA-262762
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\61. QA #262762 - [FAT MCOT ISSUE] OPLPS - Penyediaan Borang 4Ae dan L1e - unable to sim
+phase=0
+status=hold
+ticket_type=bug
+env=UAT
+issue_one_liner=OPLPS - Penyediaan Borang 4Ae dan L1e - "FONT" rework = Maksud Pendudukan should be ALL CAPS (letter-case, not typeface)
+assigned_to_me=2026-06-05
+urusan=OPLPS
+tugasan=Penyediaan Borang 4Ae dan L1e
+rework=cycle-2 (3. Rework/ FONT.png)
+qa_doc=projects/coding-projects/active/QA-262762/QA-262762.md
+env_note=labeled FAT but test app PTMLK/01/L/OPLPS/2026/3 lives in UAT (FAT has 0 OPLPS apps)
+scout=PelupusanReportMethodConstant.java:1763 missing .toUpperCase() (analog :1769/:1771) · effort S · conf 90%
+
+qa=QA-255940
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\62. QA #255940 - FAT - PSBS - Semakan Permohonan Lulus (SBTL) - Papar peranan Unit yang salah, unit Pelupusan
+phase=0
+status=hold
+ticket_type=bug
+env=UAT
+issue_one_liner=PSBS - Semakan Permohonan Lulus (SBTL) - papar peranan Unit salah ("(Pelupusan)" vs "(Pendaftaran)")
+assigned_to_me=2026-06-05
+urusan=PSBS
+tugasan=Semakan Permohonan Lulus (SBTL)
+rework=cycle-2 (2. Rework/)
+qa_doc=projects/coding-projects/active/QA-255940/QA-255940.md
+env_note=labeled FAT but test app PTMLK/01/L/PSBS/2026/4 (haiza@) lives in UAT
+scout=BPMN MLK_PLP_PSBS.bpmn20.xml:701-718 + shared MLK_DFT_NOTA_HKMLK · prior fix wrong-axis (office not unit) · effort M · conf 70% · BA-Q: redeployed? + hakmilik=PD?
