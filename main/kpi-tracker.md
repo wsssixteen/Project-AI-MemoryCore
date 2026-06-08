@@ -1,21 +1,13 @@
-# 📊 KPI Tracker — Value-Added Log
+# 📊 KPI Tracker — Highlights Log
 
-> Per Phase 2 closure protocol. Captures per-ticket: time, side-issues solved, business logic learned, skills/patterns built, audit-log entries spawned.
->
-> みや uses this for upward KPI reporting. Reviewed weekly.
+> Simplified 2026-06-08 per みや. Two parts:
+> 1. **Counts (derived, not logged)** — from `quest/active-archive.txt`: tickets closed = count(status ∈ closed/archived), EXCLUDING `delegated` + `archived-shipped-by-other`; rework = of those, `rework=cycle≥2`, split by `rework_cause=our_miss|scope_change`.
+> 2. **Highlights (this file)** — ONLY framework / cross-ticket-impact fixes that changed a lot (e.g. the docx4j Content-Control-inside-Text-Box fix). Routine ticket-scope work is NOT logged here — it's just a count.
 
-## Format per entry
+## Format per highlight
+`### <date> — QA-<num> — <one line: the standout that changed a lot beyond this ticket>`
 
-```
-### <date> — QA-<num> — <one-line title>
-- **Time**: <accept → close duration>
-- **Extras beyond ticket scope**: <side-issues solved / refactors / etc.>
-- **Business logic learned**: <domain knowledge gained>
-- **Skills / patterns built**: <new skill, hook, protocol refinement>
-- **Audit-log / slip entries**: <forge or slip-log refs>
-```
-
-## Entries
+## Highlights
 
 ### 2026-05-31 — QA-259702 — PRU Ringkasan Risalat + Risalat MMKN template corrections
 - **Time**: accept 2026-05-30 → close 2026-05-31 (multi-session)

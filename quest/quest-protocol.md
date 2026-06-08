@@ -999,7 +999,7 @@ Phase 2 MUST begin with a visible 5-row checklist BEFORE the actual content. Eac
 
 Format — single compact line (refined 2026-05-21 by みや — mirrors the DE step-0 line; a mere tracker must not eat space with a full table):
 
-`Phase 2 — QA-<num>:  1 ⬜ Faster-finding · 2 ⬜ KPI · 3 ⬜ Post-mortem · 4 ⬜ Refine · 5 ⬜ Render+archive · 6 ⬜ verify Checklist E`
+`Phase 2 — QA-<num>:  1 ⬜ Faster-finding · 2 ⬜ KPI · 3 ⬜ Refine-receipt · 4 ⬜ Render+archive · 5 ⬜ verify Checklist E`
 
 Update each marker in place as the step completes (⬜ → ✓, or ⏭ + a one-line reason). It is a tracker line, NOT a table — tables are reserved for actual deliverables (the `/verify` Checklist E *output* stays a table because it carries evidence; the Phase 2 step-tracker does not).
 
@@ -1021,9 +1021,9 @@ Format (the `## Fastest Path` block):
 
 **Step 2 — KPI entry (HIGH-BAR — only-if-significant rule, added 2026-06-01 per みや)** — append to `main/kpi-tracker.md` ONLY IF the quest produced something **significant AND stands out, ESPECIALLY out-of-scope + critical**. Default: SKIP. Rare-by-design — most quests close without a KPI entry. **When to add**: extras you solved beyond ticket scope that have real business value (caught a sibling-urusan bug, found + reported a deferred-critical issue, surfaced an architectural gap), a fix whose blast-radius reached unexpectedly far, or a meta-discovery the team would value at the next upward report. **When NOT to add**: routine bug fix that did exactly what the ticket asked, refactor inside scope, normal-cadence work. **Why** (みや 2026-06-01): the prior "rows as many as feel meaningful, no minimum" rule produced KPI noise — every quest got logged whether or not anything stood out → the tracker stopped being scannable AS a highlight reel. New shape: a row in `kpi-tracker.md` should be a banner moment, not a checkbox. The post-Phase-2 weekend KPI review (`feedback_personal_expression` 2026-05-07 personal todo) only works if the entries ARE the standouts. Format when emitting: 2-column scannable per `kpi-tracker.md` (Column 1 = grep-able identifiers; Column 2 = plain English what we learnt). If skipping: emit one line in chat at Phase 2 — `KPI: skip — routine ticket-scope work, no standout`.
 
-**Step 3 — Post-mortem (refined 2026-06-01)** — append a `## Post-Mortem` section directly to the per-quest `projects/coding-projects/archive/<KEY>/<KEY>.md` doc. **META-only**: Contributing Factors (replaces single-root-cause framing per Cook's complex-systems principle when ≥2 conditions converged), Process Notes, Carry Forward todos. **Skip**: root-cause summary (already in Debugging section), class chain (already in Apply section), codebase-knowledge-updated list (those updates already happened in the knowledge files themselves with their own version bumps — don't duplicate). **No longer appends to `main/post-mortems.md`** — that file was migrated 2026-06-01 into per-quest archive docs and is now a redirect stub. Single source of truth = the QA-NNN.md doc.
+**Step 3 — REMOVED (2026-06-08 per みや).** The per-ticket Post-Mortem META was restating the slip-log; its process-learning is already captured by Step 1 (Faster-finding) + Step 1b (Fastest Path). Cross-ticket pattern synthesis (its only unique value) moves to a **weekly slip-log pattern-pass**: a 5-minute review that reads `meta/slip-log.md` running-count and acts ONLY on patterns at ≥3 recurrences (promote to a structural rule/hook). Not a per-quest emit.
 
-**Step 4 — Refine pass** — for each named skill/protocol invoked this quest, ask "what would have made this better?" and emit refinement artifacts. Skills to walk through (explicit list, not "etc"): Scout, Recon, Simulate, Rubric, Apply, Verify, env-check, prepare-commit, KPI tracker, post-mortem template, Refine itself, Domain Expansion ritual. **Output format**: bulleted list with yes/no checkboxes per refinement — みや approves/declines per item. Simple rule changes → ASK once with 2-sentence proposal. Complex/uncertain → park to audit log. Forge log entries promoted here. **Pairs with the action-guarantee on Step 1** — Refine pass artifacts ARE the actions. **Also** — process the quest's `## Improvement Checklist` section (in `QA-NNNN.md` / `early-diagnostic.md`): each captured "check-further" push whose corrected fix ended up working is promoted **automatically** into its fix-category check-set — no separate nod (みや's acceptance of the working fix during the quest WAS the nod, per みや 2026-05-21). One-offs, or pushes whose corrected fix did not pan out, are dropped. The per-quest section is transient — only promoted checks persist.
+**Step 4 — Refine receipt (1 line)** — the autonomous loop (hooks + `auto-skill-on-mistake` + `system-rules` + `system-design`) does the refining in real time; this step just REPORTS the result. Emit one line: `Refine — QA-X: <the rule/skill/hook that changed this quest>` OR `Refine — QA-X: none`. A clean "none" is a valid, expected output — never ceremony. KEEP the `## Improvement Checklist` auto-promotion (that IS the autonomous part): each captured "check-further" push whose corrected fix worked promotes automatically into its fix-category check-set (no separate nod — みや's acceptance of the working fix during the quest WAS the nod). One-offs dropped; per-quest section transient.
 
 ### Refine triggers — universal (extended 2026-05-13)
 
@@ -1231,7 +1231,7 @@ Backwards-compatible: existing `note=` (single-line) entries still work; the `no
 |---|---|
 | `active` | currently being worked — Phase 0 or Phase 1 in flight |
 | `hold` | paused, awaiting next session |
-| `delegated` | a colleague has the ticket (still in flight — they haven't shipped yet) |
+| `delegated` | handed to a colleague. Task folder + active.txt block archived immediately; the per-quest `QA-NNN.md` stays live in `projects/coding-projects/active/` (with a `## Delegated Resolution` section + `learning_marker=`) until みや has reviewed the fix. **EXCLUDED from みや's ticket/throughput counts.** |
 | `blocked` | external dependency stopping Ruri's progress |
 | `closed` | **Phase 1 done** — commit pushed; Phase 2 (post-mortem + KPI + archive) NOT done yet |
 | `archived` | **Phase 2 done by Ruri** — Ruri shipped the fix; post-mortem written, KPI logged, Task folder + project subfolder moved to `Archive/`. **Counts toward Ruri's cadence/KPI.** |
@@ -1241,7 +1241,7 @@ Transition rules: Phase 1 close-out (commit + push + `/verify` Checklist C green
 
 ### Working-memory discipline — active.txt holds OPEN quests only (added 2026-05-28)
 
-`active.txt` is **working memory**, not an archive. It holds ONLY quests whose status ∈ {`active`, `hold`, `blocked`, `delegated`}. The moment a quest reaches a terminal state (`closed` after Phase 1, or `archived` / `archived-shipped-by-other` after Phase 2) its block is **moved out** of `active.txt` into `quest/active-archive.txt` — never left in place.
+`active.txt` is **working memory**, not an archive. It holds ONLY quests whose status ∈ {`active`, `hold`, `blocked`}. (`delegated` archives immediately — Task folder + block move out, QA-NNN.md stays live for review; see status table.) The moment a quest reaches a terminal state (`closed` after Phase 1, or `archived` / `archived-shipped-by-other` after Phase 2) its block is **moved out** of `active.txt` into `quest/active-archive.txt` — never left in place.
 
 **Why**: closed-quest history is long-term *episodic* memory and already lives in its canonical homes — `QA-<NUM>.md` (per-quest record) + `main/post-mortems.md` + `main/kpi-tracker.md`. Leaving terminal blocks in `active.txt` conflates working memory with episodic memory, bloats every SessionStart read (the file had drifted to ~694 lines / ~100 KB / ~50 K tokens before the 2026-05-28 trim), and slows every quest. This is the **same bug class as standing-flags / session-items not clearing after a task completes** — completion must trigger working-memory cleanup, not append-only growth. (Agentic-memory model: working/short-term memory = only what's needed now; closed quests = long-term episodic, stored elsewhere.)
 
@@ -1256,7 +1256,7 @@ Fire as soon as heard, mid-conversation — mutate `active.txt` immediately, sam
 | "pause QA #X" / "hold X" / "park X" | `status=hold`; append `notes: paused <date> — <context>` |
 | "resume X" / "continue X" / "back to X" | `status=active` |
 | "switch to Y" (with X currently active) | Prompt: *"Pause [X]? With what note?"* then mutate both |
-| "X taken by <name>" / "<name> handling X" / "handed to <name>" | `status=delegated`, `delegated_to=<name>`, `delegated_date=<today>`, append context note |
+| "X taken by <name>" / "<name> handling X" / "handed to <name>" | `status=delegated` + `delegated_to=<name>` + `delegated_date=<today>` + `delegated_commit=<sha if known>` + `learning_marker=<reason>`; archive Task folder → `Archive\`; move active.txt block → `active-archive.txt`; KEEP `projects/.../QA-NNN.md` in `active/`. Boot briefing surfaces "N delegated — pending your review". Run `quest/delegate-quest.js <QA>`. |
 | "blocked by Y" / "waiting on Z" | `status=blocked`, `blocker=<text>`, append note |
 | "trace X later" / "want to learn from X's fix" | `learning_marker=<date> — <reason>` |
 | "close X" / "X is done" / "wrap X" — Ruri shipped the fix | Phase 2 post-mortem + `status=archived` + archive Task folder |
