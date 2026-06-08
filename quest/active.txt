@@ -123,3 +123,25 @@ quest_start=2026-06-05
 closed=2026-06-05
 branch=mlk/qa/246532
 commit=688af6d05e
+
+qa=QA-264347
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\64. QA #264347 - FAT - PRU - Penyediaan Surat Keputusan Lul - Isi Tarikh Mula Permit Diluluskan tetapi Tarikh Ta
+phase=0
+status=hold
+ticket_type=bug
+env=MLK FAT
+issue_one_liner=PRU - Penyediaan Surat Keputusan Lulus - Isi Tarikh Mula Permit Diluluskan tetapi Tarikh Tamat Permit Diluluskan tidak auto kira
+assigned_to_me=2026-06-08
+urusan=PRU
+tugasan=Penyediaan Surat Keputusan Lulus
+
+qa=QA-264293
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\65. QA #264293 - FAT - MLPS - Pengesahan Borang 4Ae dan L1e - Selesai Tandatangan, Borang 4Ae dan L1e papar 'Dik
+phase=0
+status=hold
+ticket_type=bug
+env=MLK FAT
+issue_one_liner=MLPS - Pengesahan Borang 4Ae dan L1e - Selesai Tandatangan, Borang 4Ae dan L1e papar 'Dikeluarkan 11/02/2025'
+assigned_to_me=2026-06-08
+urusan=MLPS
+tugasan=Pengesahan Borang 4Ae dan L1e

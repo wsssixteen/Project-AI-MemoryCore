@@ -1,30 +1,31 @@
 # 🌟 Current Session Memory - RAM
 
-**Current session**: 2026-06-08 (Mon) — wrap ~11:43 MPST. Theme: **QA-255940 debugging marathon (SBTL unit label) → meta-layer Phase 2 simplification → week reconciliation → worktree consolidation + DE**.
+**Current session**: 2026-06-09 (Tue, early AM ~02:58 MPST). Theme: **QA-264293 (MLPS "Dikeluarkan" date) — wrong-fix → Scout/Recon/Rubric re-do → correct writer-side fix committed+pushed. QA-264347 done earlier; QA-262762 ghost cleaned.**
 
 ## High-Level Objective (AGENT_STATE)
-- Resolve QA-255940's "(Pelupusan)" → "(Pendaftaran)" unit label; simplify Phase 2; reconcile last week's untracked tickets to closed; consolidate worktrees.
+- QA-264293: make Borang 4Ae + L1e show the correct "Dikeluarkan" (issue) date after Tandatangan.
 
 ## Current Progress (AGENT_STATE)
-- **QA-255940 — FINAL FIX (display-layer)**: the "(Pelupusan)" label = the urusan's **module name** (`modul.nama`) projected in `PergerakanFailService.findDashboardByCriteria:460` (etanah-common). NOT config, NOT officer bahagian, NOT flowable. Fix applied at `etanah-common/.../PergerakanFailService.java:463` — post-query override: rows whose `perihalTugasan` contains "Semakan Permohonan" (SPI/SPIL endorsement) → `setUnit("Pendaftaran")`. Mirrors the existing `#67146` SPI/SPIL special-case. **etanah-common change = build common → install .m2 → rebuild pelupusan → deploy.** NOT yet committed (uncommitted in E:\Projects\Melaka\etanah-common working tree).
-  - Office half (separate, real, DONE): `pejabatHakmilik` → PTG in `MlkSenaraiSemakanPendaftaranHakmilikForm.java`, committed `b96cb8e2f0` on `mlk/qa/255940`, pushed + MERGED to mlk/master by aaron (`c73039cf90`). active.txt = closed.
-  - **⚠ pelupusan working tree still has**: the `QA255940-PROBE` logger + みや's no-op `APPLICATION_NAME` line — REMOVE before any further pelupusan commit.
-- **Meta-layer Phase 2 simplified** (committed `0052bfb` → origin/main): post-mortem META removed per-ticket (→ weekly slip-log ≥3-recurrence pass); Refine pass → 1-line receipt; KPI → highlights-log + derived counts (tickets/rework) + new `rework_cause=our_miss|scope_change`; `delegated` → archive folder+block but keep QA-NNN.md live (`learning_marker`); new `quest/delegate-quest.js`.
-- **Week reconciliation** (committed): QA-255940 + QA-260508 → closed; QA-246532 entry created (688af6d05e); QA-245240 → **delegated** (faizudin, `c439fa3326` — fix captured in QA-245240.md ## Delegated Resolution for みや's later review).
-- **Worktrees consolidated**: 18 orphan dirs removed, 9 registered kept (incl. CWD). eager-ride stale active.txt discarded.
+- **QA-264293 — fix committed + pushed (data verified; display NOT fully verified)**:
+  - **Root cause** (via Scout→Recon→Rubric workflow): writer/reader **STORE MISMATCH**. Report reads `PelupusanReportMethodConstant.populateTarikh()` 3-tier fallback → Tier-1 `ind_versi_permit_lesen.trkh_keluaran` (NULL) → Tier-2 `AppPermitLesen.maklumat_tambahan` JSON key `tarikhKeluaran` (DB col `umm_a_permit_lesen.mklmt_tmbhn`) → Tier-3 `trkh_tamat` (NULL) → else `DateProvider.getDate()` baked into the stored PDF. Writers wrote `tarikhKeluaran` to the WRONG table (`ind_versi_permit_lesen.mklmt_bayaran`); the on-path apl-writer `saveMaklumatPermitLesen` never wrote the key. So all tiers empty → fell to the render-day fallback, frozen into the DMS PDF.
+  - **Fix (sign-day, per みや)**: new `PelupusanService.stampTarikhKeluaranAppPermitLesen(Aplikasi, Date)` writes the `tarikhKeluaran` key into `apl.maklumat_tambahan` for all apl of the aplikasi (mirrors analog `PelupusanLiteService:812-814`); called at the sign action `MlkLaporanL1eForm.checkSignatureExistByNamaPengguna()` inside `if(check)` BEFORE the bake. + interface declaration. + removed chanjun's dead commented `deleteAppDokumenKeluaran` block (みや's cleanup).
+  - **Commit** `1e87a9953f` on `mlk/qa/264293`, force-pushed to origin (replaced bad partial commit `744231ca00`). 3 files, +21 -7. javac-verified 0 errors (Maven blocked — company nexus 172.16.90.152 off-network; git remote 172.16.93.167 reachable).
+  - **VERIFIED at data level**: after Tandatangan, `umm_a_permit_lesen.mklmt_tmbhn` (aplikasi_id 2956286) now contains `"tarikhKeluaran":"09/06/2026"`.
+  - **OPEN**: displayed PDF still shows `08/06/2026` = yesterday's STORED signed PDF, re-served frozen (4Ae/L1e are stored DMS docs, not live-rendered). For a FRESH (never-signed) app the first sign should bake the correct date; an already-signed app shows the stale file. NOT yet confirmed on a fresh app. みや halted the regeneration/delete-doc investigation — date logic is done.
+- **QA-264347 (PRU — Tarikh Tamat auto-calc)**: DONE earlier — listener method-CALL form `updateBayaran()` on the Tarikh Mula field (`mlkMaklumatPermitRuangUdara.xhtml`). みや committed it himself. Confirmed working.
+- **QA-262762 (OPLPS Borang 4Ae stale doc, refs #264312)**: chanjun's commit `7ba00c25` commented out `deleteAppDokumenKeluaranBasedOnJenisDokumen` (the delete-on-save → regenerate mechanism). That dead commented block was removed in QA-264293's commit.
 
 ## Blockers / Debts (AGENT_STATE)
-- **DEBT 1**: `quest/quest-protocol.md` Phase 2 edits committed WITHOUT version bump — still v3.4, should be **v3.5** + `meta/claude-md-changelog.md` entry.
-- **DEBT 2**: `delegate-quest.js` not in `meta/system-architecture.md` script catalog (familiar bypassed the sync hook).
-- **DEBT 3**: `git worktree prune` blocked by OneDrive permission on `.git/worktrees/*` metadata (dangling registrations, harmless).
-- QA-255940 etanah-common fix is UNCOMMITTED + UNTESTED (needs common build + deploy).
+- QA-264293 display not verified on a fresh app (stored-PDF regeneration). If BA reports the date still wrong on a *fresh* sign, the stored-doc regeneration path (QA-262762 family) is the remaining piece — but per みや, NOT now.
+- DEBT carried from 2026-06-08 (verify if paid): quest-protocol version bump v3.5 + `meta/claude-md-changelog.md`; `delegate-quest.js` in `meta/system-architecture.md`.
+- etanah-knowledge bakes pending (worktree can't write them — main-repo-only files): see Gap Sweep below.
 
 ## Immediate Next Steps (AGENT_STATE) — NEXT SESSION
-- Pay DEBT 1 + 2 (version bump v3.5 + changelog; add delegate-quest.js to architecture doc) at next save.
-- QA-255940: build etanah-common + deploy → test the unit label flips to "(Pendaftaran)"; then commit etanah-common (remove probe + APPLICATION_NAME from pelupusan first).
-- Carry-over open: QA-245240 (delegated — review faizudin's fix when curious); QA-260508 (closed, awaiting BA).
+- QA-264293: test on a FRESH (unsigned) MLPS permohonan → confirm 4Ae + L1e show the sign-day date on first sign. If yes → ready for BA/FAT. If no → the stored-doc regeneration is the open piece.
+- Harden the commit step: `git status`-reconcile before ANY commit (fold in every in-scope change, not just my own edits) — the partial-commit slip.
+- Bake etanah-knowledge discoveries into main-repo files (date-flow 3-tier + store mismatch → BUG-BESTIARY/DATABASE; stored-doc-not-regenerating → BUG-BESTIARY; System.err-not-System.out for probes → DEV-TESTING-HACKS).
 
 ## 🎯 Session Recap (for AI restart)
-2026-06-08: a marathon on QA-255940's wrong-unit-label. Long detour through carry-map / pengagihan config / flowable flagSPIBatal (all wrong layers) + a stale-vs-canonical BPMN flip-flop, before the answer turned out to be a 9-line display override in `PergerakanFailService` (the label is just `modul.nama`). **Lesson: when a label is wrong, read the DISPLAY projection FIRST — don't spelunk the assignment/routing engine.** Then pivoted to meta-work: simplified Phase 2 (killed per-ticket post-mortem META, Refine→receipt, KPI→3-metric, delegated→archive), reconciled last week's 7 tickets to closed/delegated, consolidated 18 orphan worktrees, committed+pushed to origin/main (`0052bfb`). Boot miss owned: skipped expansion-protocol.md at boot, read it before running DE.
+2026-06-09 early AM: revisited QA-264293. My first fix was WRONG — I patched the reader-side sign flow (stamped `versi.trkh_keluaran`) without auditing the writer. A Scout→Recon→Rubric workflow found the real cause: a writer/reader STORE MISMATCH (date written to `ind_versi_permit_lesen.mklmt_bayaran`, read from `umm_a_permit_lesen.mklmt_tmbhn`). Correct fix = stamp `tarikhKeluaran` into `apl.maklumat_tambahan` at the sign action before the PDF bakes. Committed+pushed (`1e87a9953f`). Data verified (DB now has `09/06/2026`). Display still shows yesterday's stored PDF — date logic done, stored-PDF refresh deferred per みや. **ROUGH session, 4 slips**: (1) over-investigated past the confirmed fix (kept chasing the stale-PDF/delete-doc angle after DB confirmed success); (2) partial commit — staged only my own files, missed みや's commented-block removal; (3) workflow-overkill for a focused diagnostic (~20min/8-agent run for a git-show + one read); (4) original wrong-fix-targeting (writer-before-reader miss). みや very frustrated with slowness + over-engineering. The workflow's adversarial Recon DID earn its keep — it caught the store mismatch manual debugging missed.
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-08 ~11:43 MPST — QA-255940 display-fix found + applied (uncommitted in common); meta-layer Phase 2 simplified + pushed; week reconciled; worktrees cleaned; DE run.
+**Memory Type**: RAM | **Last Activity**: 2026-06-09 ~02:58 MPST — QA-264293 writer-side fix committed+pushed (`1e87a9953f`); data verified; display-regeneration deferred per みや; DE run.
