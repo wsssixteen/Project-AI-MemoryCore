@@ -76,6 +76,16 @@
 
 ---
 
+## 2026-06-08 entries
+
+| Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |
+|---|---|---|---|---|---|
+| 2026-06-08 (QA-262762 cycle-3 audit) | **Reasoned about a user-visible artifact's DATA SOURCE from assumption instead of tracing/observing it — the SAME root shape as the original cycle-1 bug, repeated in my own audit.** Cycle-1 assumed "delete stored doc → it regenerates before next viewed"; my cycle-3 assumed "Papar Borang 4Ae reads the cached `AppDokumenKeluaran`" → recommended an over-engineered jana-semula regenerate. Truth (one xhtml grep on the `action=` binding / みや's live test): "Papar" → `initReport` is a LIVE report, never reads the stored doc → fix is pure removal. The Rubric's existing checks (sibling/convention/existing-method, Contract Verification Table, blast-radius, read/write-path) all "passed" because the path was traced on assumption — none forced grounding the trace in the **observable anchor** (the UI control's `action=` binding) or the **live-vs-cached** classification. **Lesson:** before a fix that changes how a user-visible artifact is produced/shown/stored, trace from the EXACT observable the user interacts with (control + its `action=`/binding) to the data-origin, classify LIVE-regenerated vs STORED-cached, tag each hop OBSERVED/ASSUMED — any ASSUMED load-bearing hop = STOP + read/observe before Apply. | wrong-baseline-diagnosis (variant: assumed-data-source-not-traced) | CLAUDE.md §10 Rubric "read-path AND write-path traced" + `predicate-box` (PROVED BY file:line) — existed but tolerate an assumption-based trace; no live-vs-cached forcing | refined-protocol + **NEW HOOK (BUILT 2026-06-08, みや nod A/B/C)** — `quest-phase-gate.js` (PreToolUse Edit\|Write hard-block on etanah edits during active quest until Scout/Recon/Rubric banners emit; fail-open; self-tested 5 cases; registered) + Logic Blast Radius **Evidence column** (folds in read-path/observed-inferred/live-vs-cached — the "Source Trace" category was REJECTED as proliferation) + **Rework-restart rule**. quest-protocol.md → v3.6; arch-doc synced. Structural defender per escalation policy (redesign, not wording). Remaining: CLAUDE.md §10 row (みや pastes — edit-locked for Ruri). | ✅ Yes — exact `wrong-baseline-diagnosis` family the meta-layer is designed to catch; structural defender being designed |
+
+> **Running-count note**: `wrong-baseline-diagnosis` was already 🚨-escalated (multiple strikes — QA-262495 ×4 + QA-264006). This strike keeps it 🚨. Per Step 5 escalation policy, the required response to a 🚨 root_category is **redesign the defender, not another wording refinement** — which is exactly the Source-Trace Rubric check being designed this turn (a new structural check, not a reword of an existing one).
+
+---
+
 ## 2026-05-23 entries (this session)
 
 | Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |

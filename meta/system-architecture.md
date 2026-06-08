@@ -39,7 +39,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 
 ## 3. Hook catalog — every hook, owner, dependencies, change-impact
 
-39 unique hook files total, 40 registrations as of 2026-05-28 (convention-check-gate dual-registered on Bash + Edit|Write). Grouped by trigger phase. Includes `diary-format-gate.js` (Stop) + `quest-resume-preflight.js` (UserPromptSubmit) added by 2026-05-28 parallel session.
+40 unique hook files total, 41 registrations as of 2026-06-08 (convention-check-gate dual-registered on Bash + Edit|Write; `quest-phase-gate.js` added 2026-06-08, QA-262762). Grouped by trigger phase. Includes `diary-format-gate.js` (Stop) + `quest-resume-preflight.js` (UserPromptSubmit) added by 2026-05-28 parallel session.
 
 > **⚠️ CORRECTION (2026-05-28, diary-redesign session)** — this catalog predates the diary-redesign hook changes and is STALE on the Stop-hook group. Actual current state:
 > - `diary-format-gate.js` (Phase 1) was **superseded by `de-output-integrity-checker.js`** (Phase 3, config-driven structure + voice-signal checker) and **deleted**.
@@ -93,7 +93,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 | `commit-gate.js` | self | `git commit` commands | message-format check + commit-conventions.md reminder | etanah-pelupusan commits, MemoryCore commits | Commit-conventions changes require predicate update |
 | `convention-check-gate.js` | self | SQL UPDATE/INSERT in Bash + mcp__postgres queries | value-shape convention reminder | data-patch operations | New SQL patterns may need regex extension |
 
-### 3.4 PreToolUse Edit|Write (6 hooks)
+### 3.4 PreToolUse Edit|Write (7 hooks)
 
 | Hook | Owner | Watches | Action | Stakeholders |
 |---|---|---|---|---|
@@ -104,6 +104,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 | `edit-scope-gate.js` | self | suspicious delete-unrelated-code patterns | preservation discipline reminder | PRESERVATION DISCIPLINE rule | Pattern-list expansion needs predicate update |
 | `convention-check-gate.js` | self (dual-registered) | Edit/Write to .java / .docx / .json|xml|properties | working-analog-first reminder | etanah-pelupusan code edits, template edits | New file-types may need extension |
 | `claude-md-edit-guard.js` | self (NEW 2026-06-02 — enforces /system-rules Rule 2 merge-in-place) | Edit/Write to CLAUDE.md · /system-rules/SKILL.md · /system-design/SKILL.md | scans for HARD-RULE block opener · Why+QA-NNN narrative · pairs-with cross-ref · How-to-apply restatement · みや verbatim quote inside rule body; warns advisory | /system-rules Rule 2, /system-design Bloat-prevention default; pairs with no current skill (hook-only Power) | Bloat-pattern regex additions per observed misses |
+| `quest-phase-gate.js` | self (NEW 2026-06-08, QA-262762 — structural defender for the skip-the-phases / fix-on-assumption slip, root_category wrong-baseline-diagnosis 🚨) | Edit/Write to `etanah-*` code/template/config WHILE a `status=active` quest exists | **HARD-BLOCKS** until Scout+Recon+Rubric banners (`═══ SCOUT/RECON/RUBRIC ═══`) appear in the session transcript; bypass `[skip-phase-gate: <reason>]`; **fail-open** (any error → allow) | quest-protocol.md FORCED PHASE-EMIT GATES + banner contract + Logic Blast Radius Evidence column; **first hook to read `transcript_path`** | Checks SHAPE (presence) NOT correctness — that stays Ruri's judgment + みや's glance; marker/predicate changes need regex update. Self-tested 5 cases 2026-06-08 |
 
 ### 3.5 Stop (9 hooks)
 
@@ -368,6 +369,7 @@ Every commit that updates this file appends a row here.
 | 2026-05-28 | v1.4 — `env-check` skill behavior change (§4.4): removed the 2026-05-18 "Mock Cutover 1" UAT-only temporary override (FAT restored); env selection reverted to **ticket-driven** (match BA `Env:` line + permohonan ID env; FAT is a full local implement+test target again); added **Priority 0 `hold` override** (みや saying "hold" at ticket start suppresses the env switch — parallel-session safety); AWAM→`mkit`/UAT special case unchanged. Paired memory updated same turn: `feedback_uat_fat_environments.md` + `MEMORY.md` index line. | みや directive — FAT usable again |
 | 2026-05-31 | v1.6 — **Debug Ritual 6 (loggers, not breakpoints) + prepare-commit Step 2.6**: breakpoints BANNED as a request to みや; runtime confirmation uses extensive loggers (≥3 what-ifs) BUNDLED into the first-pass fix build (one rebuild carries fix + confirmation = 3-4× saving). `prepare-commit-trigger.js` v1.3 adds Step 2.6 (strip `QA<num>-PROBE:` loggers + debug comments before BA-bound commit) — matched pair with Ritual 6. quest-protocol.md triage-ladder breakpoint→logger; CLAUDE.md boot table rows 5+6; personality.md no-asking-back runtime corollary. | みや 2026-05-31 debug-methodology refinement |
 | 2026-05-29 | v1.5 — **`quest-phase0` Workflow-tool engine NEW** (`.claude/workflows/quest-phase0.js`): Quest Phase 0 as a deterministic fan-out (Discovery → etanah-knowledge tiered load → Recon → adversarial Verify for bugs → Synthesize); writes `1. Notes.txt` (canonical format) + QA-NNN.md; scales by ticket_type. Wired into `quest/SKILL.md` `/quest start` (auto-fire + depth-scale). Blast-radius codebaseRoot-keyed — **TRG banned for etanah-pelupusan**, multi-state-aware for etanah-awam. Added to §4.1. | みや: "create the quest workflow" |
+| 2026-06-08 | v1.7 — **`quest/delegate-quest.js` NEW script logged** (atomic delegate + archive: moves Task folder → `Archive\` + active.txt block → `active-archive.txt`, KEEPS per-quest `QA-NNN.md` live in `active/` with `## Delegated Resolution` + `learning_marker=`; `delegated` EXCLUDED from cadence/KPI counts). Shipped in `0052bfb` (Phase 2 simplification) but never reflected here — paid as DEBT 2 this session. Paired with quest-protocol.md **v3.8** stamp (DEBT 1) for the same Phase 2 simplification (Step 3 Post-Mortem META removed → weekly slip-log pass; Step 4 → Refine receipt; `delegated` status redefined). NOTE: no dedicated "script catalog" section exists in this doc — quest CLI scripts (`active-cli.js`, `notes.js`, `redmine-sync.js`, `archive-quest.js`, `migrate-post-mortems.js`, `delegate-quest.js`) are currently tracked only via §9 sync events + incidental hook-row mentions; a §Script-catalog is an open structural question (see §10). | DEBT 1+2 paid at 2026-06-08 boot; architecture-doc-sync paired-update for the quest-protocol v3.8 edit |
 
 ---
 
@@ -381,6 +383,7 @@ Not blocking current execution; tracked for future sessions.
 4. **`auto-skill-trigger.js` upgrade** to detect more trigger phrase categories (design-decision signals, debugging-method signals).
 5. **`/flow-diagram` skill** or `PlainFirstGate` diagram-first extension — みや asked for this multiple times; partially addressed by personality.md:53 + PlainFirstGate but discipline keeps failing.
 6. **Per-turn invariant check** — currently INV-1..INV-6 fire at boot only. Per-turn check would catch mid-session drift but adds overhead.
+7. **Script / CLI catalog section** — this doc catalogs hooks (§3), skills (§4), state files (§5) but NOT the `quest/*.js` CLI scripts (`active-cli.js`, `notes.js`, `redmine-sync.js`, `archive-quest.js`, `migrate-post-mortems.js`, `delegate-quest.js`). They're tracked only via §9 sync events + incidental hook-row mentions, so a new script's omission (e.g. delegate-quest.js — DEBT 2 this session) isn't caught by `meta-layer-audit.js`. Open question: add a dedicated §Script-catalog (owner / invoked-by / reads-writes / change-impact, mirroring §3) and have the audit hook check it, OR keep scripts as sync-event-only. Surfaced 2026-06-08.
 
 ---
 

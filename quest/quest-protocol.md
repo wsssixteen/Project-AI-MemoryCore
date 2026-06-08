@@ -700,12 +700,30 @@ After Recon emits PROCEED-TO-RUBRIC, Ruri emits 2-5 fix-shape options for みや
 **The step — mandatory before Apply, alongside the code blast-radius row.** When a fix touches code in a stateful flow (a form lifecycle, a button/action handler, a shared service method), enumerate **every action/state path the change participates in** and verify the fix is SAFE per path:
 
 1. **Inventory the actors** — every entry point that reaches the changed code: page entry/init, each action handler (Simpan / Jana / Selesai / Print / Submit / reload), and any re-entry (`window.location.reload`, a re-`initData`).
-2. **Scenario matrix** — one row per (action × state): `| Scenario | Does the change fire? (guard) | Outcome | Safe? |`. State axes that matter: the guard (urusan/tugasan/mode), whether a stored record exists, whether a prior user edit exists.
-3. **Verify per row** — guard scopes it correctly? idempotent on re-invocation? discards/overwrites anything the user produced? conflicts / double-works with another handler doing the same thing?
+2. **Scenario matrix** — one row per (action × state): `| Scenario | Does the change fire? (guard) | Outcome | Safe? | Evidence |`. State axes that matter: the guard (urusan/tugasan/mode), whether a stored record exists, whether a prior user edit exists, **and — for any user-visible artifact — whether it is LIVE-regenerated each view or a STORED/cached record** (the live-vs-cached axis; QA-262762's entire bug was assuming a *cached* doc that was actually a *live* report).
+3. **Verify per row — Evidence column is the teeth (added 2026-06-08, QA-262762)** — guard scopes it correctly? idempotent on re-invocation? discards/overwrites anything the user produced? conflicts / double-works with another handler? **Each `Outcome` + `Safe?` verdict MUST be backed by the `Evidence` column: cite the OBSERVED `file:line` (or live test) that proves it. An ASSUMED outcome = 🚨 STOP — go read/observe before Apply.** This one column folds in what used to be three separate, individually-skippable prose checks — *read-path traced · observed-vs-inferred tag · the live-vs-cached question* — into ONE place that fires inside the matrix that actually runs. **Why it matters**: cycle-1 AND the cycle-3 over-engineering both filled a verdict on ASSUMPTION; the Evidence column converts "I think it's safe" into "I read/saw it's safe, or I STOP."
 4. **Classify** — `✅ safe` · `⚠️ by-design` (intended but confirm — e.g. "regenerate discards manual edits, matches the ticket intent") · `🚨 unsafe` (blocks Apply until resolved).
 5. **>500-line host file** → spawn a familiar to inventory the action handlers + lifecycle touch-points; Ruri builds the matrix + verdict.
 
-**Banned**: applying a fix to a stateful flow with only the code blast-radius (shared-symbol grep) and no scenario matrix. Code blast radius = "what else shares this symbol"; logic blast radius = "what else *happens* through this change" — **both required**.
+**Banned**: applying a fix to a stateful flow with only the code blast-radius (shared-symbol grep) and no scenario matrix. Code blast radius = "what else shares this symbol"; logic blast radius = "what else *happens* through this change" — **both required**. Banned: an `Outcome`/`Safe?` verdict with an empty or ASSUMED `Evidence` cell.
+
+### 🚪 Phase-emit banner contract + quest-phase-gate hook (added 2026-06-08, QA-262762)
+
+Each quest phase emit **LEADS with its canonical banner** so the enforcement hook can detect it in the transcript:
+- `═══ SCOUT ═══` · `═══ RECON ═══` · `═══ RUBRIC ═══`
+
+**`quest-phase-gate.js`** (PreToolUse `Edit|Write`) **HARD-BLOCKS** any edit to `etanah-*` code/template/config while a `status=active` quest exists, UNTIL all three banners appear in the session transcript. Bypass: `[skip-phase-gate: <reason>]` (legitimate non-quest / audit edit). **Boundary — what the hook canNOT do**: it verifies the phases EXIST (anti-skip), NOT that their content is correct — tracing data-flow honestly (the Evidence column above) stays Ruri's judgment + みや's glance at the matrix. **Fail-open** by design (any hook error → allow). Self-tested 5 cases 2026-06-08. See `.claude/hooks/quest-phase-gate.js` header.
+
+### 🔁 Rework-restart rule — a failed/surprising test re-enters the loop at the TOP (added 2026-06-08, QA-262762)
+
+When a fix fails its test OR the result surprises us ("changes not reflected", "still broken", "now X broke"), that is **new evidence the original understanding was wrong** — NOT a cue to patch forward. **Demote the quest back to Scout/Recon** with the new evidence, re-derive the data-flow, THEN Rubric → Apply. Patching forward builds the next fix on the same wrong model — the failure mode that took QA-262762 multiple cycles + a colleague's blind revert (#264312).
+
+| Test failed because… | Move |
+|---|---|
+| **Outcome** wrong / surprising (behaviour ≠ prediction) | **Restart at Scout/Recon** — the model is the bug |
+| **Mechanical** slip only (typo / compile error / wrong variable; understanding still holds) | Fix forward, no restart |
+
+Discriminator: **did reality surprise you?** Surprise → re-diagnose from the top. Fumble → fix in place. **Banned**: layering "extra/further fixes" on a behaviourally-failed test without re-entering Scout/Recon.
 
 ### Phase 0 → Phase 1 autonomous flow (added 2026-05-14 per みや)
 
@@ -1271,6 +1289,8 @@ Fire as soon as heard, mid-conversation — mutate `active.txt` immediately, sam
 *Protocol version: 3.4 — 2026-05-25 (absorbed amendments A12 [Notes.txt write is HARD precondition of Recon emit — added to Phase 0] + A15 [closing-words extended to Redmine retrieval / Forge Review / Phase 1 close-out — added to Phase 2 emit section]; both were live rules in claude-md-amendments.md awaiting canonical home; now home. Per みや 2026-05-25.). 3.3 — 2026-05-22 (quest-cluster merge from CLAUDE.md: +Debug Mode Rituals section, +Quest State Transitions table, +extended `active.txt` schema with 6-status set; commit+push rule reconciled to the 2026-05-19 model — Ruri runs commit + push after みや confirms the message, superseding the prior "みや executes" hands-off; Mid-Quest Handoff File reconciled — the separate `handoff-*.md` is deprecated, the Investigation Trail now lives in `QA-<num>.md`; System-Design references repointed to the `system-design` skill).*
 *Protocol version: 3.5 — 2026-05-28 (added "Working-memory discipline — active.txt holds OPEN quests only" subsection: terminal blocks move to `quest/active-archive.txt` via `quest/active-trim.js`; ties active.txt bloat to the standing-flag-not-clearing bug class. Companion action: active.txt trimmed 694→~30 lines; 34 terminal blocks moved to active-archive.txt + 2 dated backups kept.)*
 
+*Protocol version: 3.6 — 2026-06-08 (QA-262762 cycle-3, assumed-data-source slip, root_category wrong-baseline-diagnosis 🚨). Three additions to the Rubric / Logic Blast Radius: (1) **Evidence column** — each `Outcome`/`Safe?` verdict MUST cite OBSERVED file:line or live-test; ASSUMED → 🚨 STOP. Folds read-path-traced + observed-vs-inferred + live-vs-cached into ONE column inside the matrix that runs (subtraction, not addition — no "Source Trace" category, that was rejected as proliferation). (2) **Phase-emit banner contract** (`═══ SCOUT/RECON/RUBRIC ═══`) + **`quest-phase-gate.js`** hook (PreToolUse Edit|Write hard-block on `etanah-*` edits during a `status=active` quest until all 3 banners emit; fail-open; bypass `[skip-phase-gate]`; self-tested 5 cases). (3) **Rework-restart rule** — a behaviourally-failed/surprising test demotes the quest back to Scout/Recon, never patch-forward. NOTE: also retroactively stamps the 2026-06-08 AM Phase-2 simplification edits that landed without a bump — pays DEBT-1.)*
+
 ---
 
 ## Phase 9 v2 (TARGETED — 2026-05-24, Task #22 partial) — Honesty primitive invocations at Hand-back
@@ -1288,6 +1308,8 @@ Fire as soon as heard, mid-conversation — mutate `active.txt` immediately, sam
 **Behaviour for Ruri at Hand-back checkpoint:**
 - Before emitting "▶ YOUR MOVE" block: invoke #1-#3 (always); invoke #4 conditionally; check #5 condition
 - Each invocation produces a visible-gate output in the response — みや can audit what fired
+
+*Protocol version: 3.8 — 2026-06-08 (Phase 2 simplification, committed `0052bfb` — version stamp omitted at commit time, paid as DEBT 1 this session. Changes: **Step 3 (Post-Mortem META) REMOVED** → cross-ticket pattern synthesis moves to a weekly `meta/slip-log.md` pass acting only on ≥3-recurrence patterns; **Step 4 → "Refine receipt" (1 line)** — the autonomous hook/`auto-skill-on-mistake` loop refines in real time, the step just reports (`Refine — QA-X: <changed>` / `none`); Phase 2 step-tracker line 6→5 steps; **KPI** high-bar only-if-significant (default skip). **`delegated` status redefined**: Task folder + active.txt block archived immediately, per-quest `QA-NNN.md` stays live in `active/` with `## Delegated Resolution` + `learning_marker=`, **EXCLUDED from cadence/KPI counts** — run `quest/delegate-quest.js <QA>`; working-memory-discipline + verbal-trigger rows updated to match. Root category for the omission: best-practices-not-consulted / version-bump discipline skip.).*
 
 *Protocol version: 3.7 — 2026-05-30 (Apply item **0.5 "Codebase Convention Check — pre-edit gate"**: a VERB table (USE / INSERT-INTO / UPDATE / COPY-FROM, each with `file:line` cite) that makes new code the last resort, then a placement / naming / comment-density / error-idiom convention-match against the nearest sibling. Recovers the pre-trim "Existing utility sweep + Working precedent" (8-step Tier-1, lost in the 2026-05-22 trim `9d17887`) + adds the never-ruled placement/comment dimensions. References UC9 / Working-analog / Etanah-Codebase-Read.md:61 / feedback_simplify_and_reference.md without restating them. Driven by QA-258004: new helpers dropped under `// Getters and Setters` with verbose comments + too-narrow change-scope — an approach Rubric ran but never a code-convention one. Root category: best-practices-not-consulted.).*
 
