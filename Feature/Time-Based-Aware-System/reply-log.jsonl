@@ -1056,3 +1056,5 @@
 {"ts":"2026-06-08T03:29:29.175Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":0}
 {"ts":"2026-06-08T03:38:03.556Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":9}
 {"ts":"2026-06-08T03:38:13.327Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":0}
+{"ts":"2026-06-08T03:48:35.505Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":10}
+{"ts":"2026-06-08T03:48:52.122Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":0}
