@@ -1,34 +1,27 @@
 # 🌟 Current Session Memory - RAM
 
-**Current session**: 2026-06-10 (Wed) Session 3 — wrap ~20:41 MPST (session limit hit, resets 8:40pm KL). Theme: **QA-262039 cycle-2 Phase-0 — diagnosed both surviving issues (template-only, 0 Java), awaiting みや's nod on the Mukim fix. QA-260508 Fable familiar launched but DIED on the session limit with no findings.**
+**Current session**: 2026-06-11 (Wed→Thu overnight) Session 4 — DE at ~01:56, then OVERNIGHT MAX-EFFORT RUN (みや asleep). Theme: **QA-262027 cycle-2 CLOSED Phase 1 (`a545ef221f` on `mlk/qa/262027v2`); overnight goals = QA-264293 risk analysis + QA-260508 REAL root cause (2 failed fixes — みや furious, rightly).**
 
-## 🚨 READ FIRST IF STARTING A NEW SESSION / PULLING mlk/master (etanah-pelupusan)
-**Latest `mlk/master` is BROKEN in two independent ways (from S2 2026-06-10) — anyone who pulls + builds locally gets an empty "Senarai Dokumen" (Tiada rekod):**
-1. **etanah-common 0.0.748** (`de46bc0eee`, amirul, #264423): moved `filterBasedOnAppTugasanSebelum` into shared `populatePenyediaanDokumenVOList` → strips docs in ALL 23 modes. **Workaround: pin `pom.xml` → `0.0.728-MLK`.**
-2. **template.config.json `:5693`** (`3ec243a4c3`, faizudin, #264309): `"tarikhSignPTG".` period not comma → config fails to parse. **Workaround: `.` → `,`.**
-- Full evidence: `projects/coding-projects/active/QA-262004/MASTER-BROKEN-config-typo.md`. Upstream owners: amirul + faizudin. Still pending report.
+## 🚨 READ FIRST (carried from S2): etanah-common 0.0.748 regression
+- pom pinned `0.0.728-MLK` locally (UNCOMMITTED on purpose — colleague workaround). amirul #264423 (filter in all 23 modes) + faizudin config-comma (now fixed in master via 71446bcaf5). Upstream reports still pending.
 
-## High-Level Objective (AGENT_STATE)
-- Clear the PSBS rework batch (QA-262039 → next QA-262027 → QA-261986 → QA-262004 test→commit). QA-260508 cycle-3 needs fresh investigation.
+## What S3/S4 shipped (2026-06-10 evening → 06-11 ~01:20)
+- **QA-262027 Phase 1 CLOSED**: commit `a545ef221f`, branch `mlk/qa/262027v2`, pushed. 3 files: `PelupusanWordCCMethodConstant.java` (+`tujuanPermohonanPerincian` bare-value populator) + Lulus template (perincian CC + Hasil retag `hasilTahunPertamaWithRM`→`kadarNilaianJPPH` + NoSpacing style + Mukim literal removed + justify soft-break) + Tolak template (justify soft-break only — **Tolak does NOT have perincian/kadar/NoSpacing yet; mirror pass needed if BA reworks Tolak**).
+- Learnings shipped: quest-protocol v3.7 **Template Blast Radius** (CC tag = shared API; tag-consumer scan) + BUG-BESTIARY "CC tag = shared API" + corrected Root-cause-#2 (recursion→inline-CC corruption) + slogan-centering = missing `NoSpacing` style fallback + justify = soft-break-stretch trick (`jc=both` + `<w:br/>` line-end).
+- Data patches (UAT): `umm_a_hkmlk.tujuan_berimilik_lain='bangunan kedai'` on 4770668 (app 2026/1, Tolak) + 4777386 (app 2026/10, Lulus). Patch file: `projects/.../QA-262027/patch-262027-2026-1-perincian.sql`.
+- QA-262039 still Phase-0-done-awaiting-nod (Mukim Option A + Sekatan move) — みや took the template himself; I owe a full reference-diff double-check at his hand-back.
 
-## Current Progress (AGENT_STATE)
-### QA-262039 (PSBS Surat Keputusan Lulus kepada Pemohon) — Phase-0 DONE, awaiting nod
-- **Both cycle-2 issues are TEMPLATE-ONLY** (`TemplateSuratKeputusanLulusPSBS.docx`), 0 Java. Full findings in `projects/coding-projects/active/QA-262039/QA-262039.md` §7.
-  1. **"Mukim Mukim" duplicate** — cycle-1 added a literal "Mukim"/"MUKIM" before `[[bandarPekanMukim]]`, but the field value already carries the prefix (`getNama()` → "Mukim Bukit Katil"). Master: 109/111 names prefixed, 2 bare. **Fix = Option A: remove the literal** (recommended; rejected populator-strip = wrong for Pekan/Bandar + blast radius).
-  2. **Sekatan Kepentingan "tidak selari"** — `[[sekatanKepentingan]]` value para sits outside the value cell → spills to left margin. Fix = move it into the value cell like the Syarat-Nyata row above.
-- **Test app**: PTMLK/01/L/PSBS/2026/10 (aplikasi_id 2963425, UAT). Cycle-1 Notes app was PTMLK/02/L/PSBS/2025/2 @ aizzatyaqilah.95@gmail.com.
-- **NOT applied** — awaiting みや's Option-A nod, then apply both template edits via python/zipfile + regenerate for test.
+## OVERNIGHT TASKS (みや's instruction before sleep — max effort, don't stop)
+1. ✅ DE (this).
+2. **QA-264293** (Aaron: みや's fix "risky" — commit `1e87a9953f` MLPS PB4Ae tarikh Dikeluarkan): find WHY risky, document.
+3. **QA-260508 cycle-3**: find the REAL root cause (field drops on parent-page Simpan/Seterusnya; 2 failed fixes). Background Fable agent tracing (sibling-field end-to-end diff = the key move cycles 1-2 never did). Then: verify its claims adversarially, APPLY the proper fix (taking other methods/urusan/tugasan/DB into account), document in QA-260508.md for tomorrow's learning session.
+4. みや's idea to design (captured in todo.md): efficiency-evals hook — after any performed task, run a "could this be done more efficiently without losing the goal" eval; integrate with system-design/system-rules. Needs his nod on shape.
 
-### QA-260508 (cycle-3) — INVESTIGATION INCOMPLETE
-- Spawned a Fable Explore familiar to find why parent-page Simpan/Seterusnya drops the added Pengkelasan-Tanah field. **Familiar ran 43 tool calls then DIED on the session limit — returned NO usable findings.** Re-run next session. Aaron 2026-06-09: deployed but still failing, possibly our cycle-1/2 change reverted/overwritten or disrupted another flow.
-
-## Immediate Next Steps (AGENT_STATE)
-1. QA-262039: get Option-A nod → apply both template fixes → regenerate → hand to みや for test → Phase 1 commit.
-2. NEXT after 262039: **QA-262027** (sibling — PSBS Surat Keputusan PTG kepada PDT; same "maklumat tak tarik + ejaan + align" shape). (みや's "next" message said 262039 again — assumed typo for 262027; confirm.)
-3. Re-run QA-260508 cycle-3 investigation (familiar died).
-4. QA-262004 rebuild (common 0.0.728) + test → Phase 1 commit on fresh mlk/qa/262004v2. QA-262495 Phase 2 archive still pending.
+## Test data quick-ref
+- QA-262027 Lulus: PTMLK/01/L/PSBS/2026/10 @ nor.aini (PKMMKN) · Tolak: PTMLK/02/L/PSBS/2026/1 @ nor.aini (PKMMKN).
+- QA-260508: PTMLK/01/L/MCL/2026/18 (MLKUAT).
 
 ## 🎯 Session Recap (for AI restart)
-2026-06-10 S3: Briefing → started QA-262039 (みや: "very easy"). Phase-0 nailed both cycle-2 issues as template-only: (1) "Mukim Mukim" = cycle-1's literal-MUKIM addition collides with the field's own prefix (109/111 master records prefixed — confirmed via live DB); (2) Sekatan Kepentingan value paragraph outside the value cell. Recommended Option A (remove literal). Launched a Fable familiar on QA-260508 cycle-3 — it died on the session limit with no findings. Session limit → DE. Good discipline this session: queried live DB to disambiguate the Mukim fix instead of guessing; extracted PDF annotations first; was honest the familiar produced nothing rather than confabulating a 260508 diagnosis.
+2026-06-10/11 S3-S4: QA-262027 cycle-2 went from annotations to closed in one evening — perincian via new bare-value tag (+template-literal parens), Hasil retag to existing kadarNilaianJPPH, NoSpacing style fallback discovered (slogan centering), justify soft-break trick, two template-row rescues via python while みや tired. Slips logged: blast-radius miss (urusan≠template seclusion → Template Blast Radius rule shipped), dropped kadar annotation (extraction≠capture → checklist discipline), show-don't-tell. Overnight: 264293 risk + 260508 real root cause, both documented for morning learning.
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-10 ~20:41 MPST — QA-262039 Phase-0 saved to QA-262039.md §7, awaiting Option-A nod; QA-260508 familiar failed (re-run next session); DE run.
+**Memory Type**: RAM | **Last Activity**: 2026-06-11 ~01:56 — DE mid-run; overnight investigation starting.

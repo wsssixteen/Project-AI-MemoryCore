@@ -32,11 +32,24 @@ import fitz
 doc = fitz.open(pdf_path)
 for pno in range(doc.page_count):
     for a in (doc[pno].annots() or []):
-        print(pno+1, a.type[1], repr(a.info.get("content","")),
+        col = a.colors.get("stroke") or a.colors.get("fill")   # RGB 0-1 tuple
+        print(pno+1, a.type[1], "colour:", col, repr(a.info.get("content","")),
               "under-rect:", repr(doc[pno].get_textbox(a.rect).strip()))
 ```
 
-Capture per annotation: page · type · `content` (the comment body) · the text under its rect. Write the full list into `QA-NNNN.md` as a `## BA PDF Annotations` section.
+Capture per annotation: page · type · **colour** · `content` (the comment body) · the text under its rect. Write the full list into `QA-NNNN.md` as a `## BA PDF Annotations` section.
+
+### 🚦 Highlight colour + un-commented highlights — what is a REQUEST vs an OK-mark (added 2026-06-10 per みや, QA-262004)
+
+A BA highlight is **not automatically a fix request.** Two filters before treating any highlight as scope:
+
+| Signal | Meaning | Action |
+|---|---|---|
+| **GREEN highlight** (stroke ≈ `(0, 1, 0)` / green-ish) | BA's "verified OK / this is correct" marker | **IGNORE — never a requirement.** Do NOT trace or fix it. |
+| Highlight with a **comment** (FreeText / popup text) | the comment IS the ask | act on the comment's instruction |
+| Highlight with **NO comment** (`content==''`), non-green | an emphasis mark, ambiguous | **NOT a request by itself** — surface as BA-Q or pair it with the nearest commented annotation; do NOT invent a fix from it |
+
+**Banned**: turning an un-commented highlight (or worse, a green one) into a code/template change. **Why** (QA-262004 2026-06-10): I saw an un-commented highlight sitting on a lowercase "jalan tandang", decided it meant "make it proper case", and changed a **shared** populator for it — BA never wrote that ask (the only comment in that area was "KM tu jadi", about spacing). みや: *"I didn't see BA requesting me... ignore green."* Fix only what BA highlighted **AND** asked for (cross-ref `feedback_ticket_cadence` "fix only BA-highlighted items"). When a highlight has no comment, its colour + nearest comment decide whether it is scope at all.
 
 ### Word .docx comments + Content Controls
 

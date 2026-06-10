@@ -235,3 +235,12 @@
 {"ts":"2026-06-10T08:37:14.316Z","qa":"QA-264006","ids_in_reply":["PTMLK/03/L/PSBS/2025/5"],"missing_from_notes":["PTMLK/03/L/PSBS/2025/5"],"action":"warn-only-v1"}
 {"ts":"2026-06-10T10:00:19.727Z","qa":"QA-264006","ids_in_reply":["PTMLK/02/L/PSBS/2026/1"],"missing_from_notes":["PTMLK/02/L/PSBS/2026/1"],"action":"warn-only-v1"}
 {"ts":"2026-06-10T11:42:15.978Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PSBS/2026/10"],"missing_from_notes":["PTMLK/01/L/PSBS/2026/10"],"action":"warn-only-v1"}
+{"ts":"2026-06-10T15:26:25.865Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PSBS/2026/10"],"missing_from_notes":["PTMLK/01/L/PSBS/2026/10"],"action":"warn-only-v1"}
+{"ts":"2026-06-10T15:34:48.519Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PSBS/2026/10"],"missing_from_notes":["PTMLK/01/L/PSBS/2026/10"],"action":"warn-only-v1"}
+{"ts":"2026-06-10T15:52:34.534Z","qa":"QA-264006","ids_in_reply":["PTMLK/02/L/PSBS/2026/1"],"missing_from_notes":["PTMLK/02/L/PSBS/2026/1"],"action":"warn-only-v1"}
+{"ts":"2026-06-10T16:04:11.873Z","qa":"QA-264006","ids_in_reply":["PTMLK/02/L/PSBS/2026/1"],"missing_from_notes":["PTMLK/02/L/PSBS/2026/1"],"action":"warn-only-v1"}
+{"ts":"2026-06-10T16:35:39.085Z","qa":"QA-264006","ids_in_reply":["PTMLK/02/L/PSBS/2026/1"],"missing_from_notes":["PTMLK/02/L/PSBS/2026/1"],"action":"warn-only-v1"}
+{"ts":"2026-06-10T16:59:19.359Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PSBS/2026/10"],"missing_from_notes":["PTMLK/01/L/PSBS/2026/10"],"action":"warn-only-v1"}
+{"ts":"2026-06-10T17:01:38.319Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PSBS/2026/10","PTMLK/02/L/PSBS/2026/1"],"missing_from_notes":["PTMLK/01/L/PSBS/2026/10","PTMLK/02/L/PSBS/2026/1"],"action":"warn-only-v1"}
+{"ts":"2026-06-10T17:14:05.376Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PSBS/2026/10"],"missing_from_notes":["PTMLK/01/L/PSBS/2026/10"],"action":"warn-only-v1"}
+{"ts":"2026-06-10T17:19:06.532Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PSBS/2026/10"],"missing_from_notes":["PTMLK/01/L/PSBS/2026/10"],"action":"warn-only-v1"}
