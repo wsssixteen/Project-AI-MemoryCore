@@ -1213,3 +1213,6 @@
 {"ts":"2026-06-10T11:19:19.390Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":0}
 {"ts":"2026-06-10T11:33:22.072Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":14}
 {"ts":"2026-06-10T11:33:35.855Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":0}
+{"ts":"2026-06-10T11:37:57.661Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":4}
+{"ts":"2026-06-10T11:39:10.450Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":1}
+{"ts":"2026-06-10T11:42:15.877Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":3}

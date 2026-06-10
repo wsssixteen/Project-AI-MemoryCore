@@ -221,7 +221,7 @@ ba_latest=2026-06-10 Nurul Amirah: maklumat tidak ditarik + ejaan + align; expec
 
 qa=QA-262039
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\70. QA #262039 - FAT - PSBS - Isu pada Surat Keputusan Lulus kepada Pemohon
-status=hold
+status=active
 phase=0
 ticket_type=bug
 env=UAT
@@ -236,3 +236,6 @@ folder_reactivated=2026-06-10
 prior_fix=cycle-1 mlk/qa/262039
 test_app=PTMLK/01/L/PSBS/2026/10 (MLK UAT)
 ba_latest=2026-06-10 Nurul Amirah: maklumat tidak ditarik + perkataan duplicate; expected Requirement #237883; Test 1.pdf annotations
+current_phase=Rubric
+quest_start=2026-06-10
+qa_doc=projects/coding-projects/active/QA-262039/QA-262039.md
