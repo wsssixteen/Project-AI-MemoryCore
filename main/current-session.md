@@ -1,30 +1,29 @@
 # 🌟 Current Session Memory - RAM
 
-**Current session**: 2026-06-08 (Mon) — wrap ~11:43 MPST. Theme: **QA-255940 debugging marathon (SBTL unit label) → meta-layer Phase 2 simplification → week reconciliation → worktree consolidation + DE**.
+**Current session**: 2026-06-10 (Wed) — wrap ~11:10 MPST. Theme: **QA-262495 resolved — the "recursion fix" was a MISDIAGNOSIS; real bug = inline content-control corrupting the generated Risalat MMKN doc; shipped a one-cell template fix; force-pushed clean branch**.
 
 ## High-Level Objective (AGENT_STATE)
-- Resolve QA-255940's "(Pelupusan)" → "(Pendaftaran)" unit label; simplify Phase 2; reconcile last week's untracked tickets to closed; consolidate worktrees.
+- Finish QA-262495 (PPJK Risalat MMKN "Kemas kini hang"): find the true root cause, ship the minimal correct fix, leave the branch as a clean `mlk/master → mlk/qa/262495v2`.
 
 ## Current Progress (AGENT_STATE)
-- **QA-255940 — FINAL FIX (display-layer)**: the "(Pelupusan)" label = the urusan's **module name** (`modul.nama`) projected in `PergerakanFailService.findDashboardByCriteria:460` (etanah-common). NOT config, NOT officer bahagian, NOT flowable. Fix applied at `etanah-common/.../PergerakanFailService.java:463` — post-query override: rows whose `perihalTugasan` contains "Semakan Permohonan" (SPI/SPIL endorsement) → `setUnit("Pendaftaran")`. Mirrors the existing `#67146` SPI/SPIL special-case. **etanah-common change = build common → install .m2 → rebuild pelupusan → deploy.** NOT yet committed (uncommitted in E:\Projects\Melaka\etanah-common working tree).
-  - Office half (separate, real, DONE): `pejabatHakmilik` → PTG in `MlkSenaraiSemakanPendaftaranHakmilikForm.java`, committed `b96cb8e2f0` on `mlk/qa/255940`, pushed + MERGED to mlk/master by aaron (`c73039cf90`). active.txt = closed.
-  - **⚠ pelupusan working tree still has**: the `QA255940-PROBE` logger + みや's no-op `APPLICATION_NAME` line — REMOVE before any further pelupusan commit.
-- **Meta-layer Phase 2 simplified** (committed `0052bfb` → origin/main): post-mortem META removed per-ticket (→ weekly slip-log ≥3-recurrence pass); Refine pass → 1-line receipt; KPI → highlights-log + derived counts (tickets/rework) + new `rework_cause=our_miss|scope_change`; `delegated` → archive folder+block but keep QA-NNN.md live (`learning_marker`); new `quest/delegate-quest.js`.
-- **Week reconciliation** (committed): QA-255940 + QA-260508 → closed; QA-246532 entry created (688af6d05e); QA-245240 → **delegated** (faizudin, `c439fa3326` — fix captured in QA-245240.md ## Delegated Resolution for みや's later review).
-- **Worktrees consolidated**: 18 orphan dirs removed, 9 registered kept (incl. CWD). eager-ride stale active.txt discarded.
+- **QA-262495 — SHIPPED `ebcfabaf92`** on `mlk/qa/262495v2` (force-with-lease, replaced the old recursion commit `53ad424018`). status=closed, local_test_confirmed=true.
+  - **Real root cause**: in `TemplateRisalatMMKN_PDT_PPJK.docx` the `syaratKelulusan` content control was **inline** (a run-level control inside a `<w:p>` in a table cell). The populator injects a **table** into it. A table inside a paragraph is **invalid WordprocessingML** → Word declares the generated doc "corrupted" (even Open-and-Repair fails) → `PocWordEditor.exe` crashes at `NetOffice.WordApi.Documents.Add` → the "Kemas kini loading forever" symptom. Only manifests at **Perakuan** because that's the stage where syarat actually populates.
+  - **The fix (one cell, one file)**: make the `syaratKelulusan` control **block-level** (own line) + add a **trailing empty paragraph** in the cell (a cell must end with a paragraph, not a table). Verified end-to-end: fixed template opens; simulated generated doc with the real injected table opens; Word save round-trip preserves block-level (self-heal does NOT undo it). Only that one cell changed — 34 other docx parts byte-identical.
+  - **The "recursion fix" (cycle-1, `53ad424018`) was REVERTED** — it was a misdiagnosis (see Slip below). `PelupusanWordEditorUtil.findTableByContentControlTag:639` imports only the bare `Tbl`, never the wrapper tag → a same-named table tag in a referenced .docx **cannot** cause re-trigger recursion. Doc generated in finite time (25ms) = no loop ever existed.
+  - **Blast-radius checked**: of the 5 PPJK Risalat/Ringkasan templates, ONLY `TemplateRisalatMMKN_PDT_PPJK.docx` has the `syaratKelulusan` control (now block, safe). Ringkasan / Syarikat / Tolak templates have no syarat control → structurally immune.
+  - **Regenerate behaviour**: `BasePelupusanDokumenForm.refreshDokumenList` → `updateDocumentListAndProcessTemplateIfNotAvailable(isFirstEntry)` serves a STORED doc if one exists (`:589-596`), else regenerates from template (`:571`). Risalat MMKN regenerates each Kemas kini (new `LAIN-*` id; `umm_a_dok_keluaran.dok_id` NULL). "Jana Semula" forces a clean regen from the fixed template.
 
 ## Blockers / Debts (AGENT_STATE)
-- **DEBT 1**: `quest/quest-protocol.md` Phase 2 edits committed WITHOUT version bump — still v3.4, should be **v3.5** + `meta/claude-md-changelog.md` entry.
-- **DEBT 2**: `delegate-quest.js` not in `meta/system-architecture.md` script catalog (familiar bypassed the sync hook).
-- **DEBT 3**: `git worktree prune` blocked by OneDrive permission on `.git/worktrees/*` metadata (dangling registrations, harmless).
-- QA-255940 etanah-common fix is UNCOMMITTED + UNTESTED (needs common build + deploy).
+- **QA-262495 Phase 2** (archive) not yet run — Task folder + active.txt block still in place. Run `quest/archive-quest.js QA-262495` when みや says.
+- **Carry-over (from 2026-06-08, status unverified this session)**: QA-255940 etanah-common display-fix uncommitted/untested; quest-protocol.md version-bump debt; delegate-quest.js missing from architecture doc.
+- Other open reworks parked at Phase 0: **QA-261986** (PSBS Syarikat Risalat MMKN), **QA-260508** (cycle-3).
 
 ## Immediate Next Steps (AGENT_STATE) — NEXT SESSION
-- Pay DEBT 1 + 2 (version bump v3.5 + changelog; add delegate-quest.js to architecture doc) at next save.
-- QA-255940: build etanah-common + deploy → test the unit label flips to "(Pendaftaran)"; then commit etanah-common (remove probe + APPLICATION_NAME from pelupusan first).
-- Carry-over open: QA-245240 (delegated — review faizudin's fix when curious); QA-260508 (closed, awaiting BA).
+- QA-262495 Phase 2 archive when ready.
+- Decide the **structural defender** for `wrong-baseline-diagnosis` (now 5+ strikes incl. today's misdiagnosis) — surface to みや (see slip-log).
+- Resume QA-261986 / QA-260508 Phase 0.
 
 ## 🎯 Session Recap (for AI restart)
-2026-06-08: a marathon on QA-255940's wrong-unit-label. Long detour through carry-map / pengagihan config / flowable flagSPIBatal (all wrong layers) + a stale-vs-canonical BPMN flip-flop, before the answer turned out to be a 9-line display override in `PergerakanFailService` (the label is just `modul.nama`). **Lesson: when a label is wrong, read the DISPLAY projection FIRST — don't spelunk the assignment/routing engine.** Then pivoted to meta-work: simplified Phase 2 (killed per-ticket post-mortem META, Refine→receipt, KPI→3-metric, delegated→archive), reconciled last week's 7 tickets to closed/delegated, consolidated 18 orphan worktrees, committed+pushed to origin/main (`0052bfb`). Boot miss owned: skipped expansion-protocol.md at boot, read it before running DE.
+2026-06-10: a long, humbling QA-262495 debugging arc. Started by trusting a ChatGPT "circular content-control recursion" diagnosis (and my own earlier acceptance of it) — shipped a "recursion fix" that did nothing real. The actual bug surfaced only after methodical evidence work: reproduced the corrupt generated doc via Word COM (`Documents.Add`/`Open(OpenAndRepair)`), read the Windows Event Log (PocWordEditor.exe Application-Error 1000 + .NET 1026 COMException), and validated the OOXML in python until the defect was pinned — a **table injected into an inline content control** (plus a cell that must end with a paragraph). One-cell template fix; verified by simulation + Word round-trip; reverted the bogus recursion commit; force-with-lease push to a clean `mlk/master → mlk/qa/262495v2`. **Lesson: a diagnosis handed to you (ChatGPT, prior session, even みや) is ONE hypothesis — verify it against the actual mechanism (a cheap code read) BEFORE shipping. The recursion was structurally impossible and one read of `findTableByContentControlTag` would have shown it.** Good habit that finally cracked it: test every hypothesis (NoSpacing→Normal, block-only, block+trailing-p) instead of assuming.
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-08 ~11:43 MPST — QA-255940 display-fix found + applied (uncommitted in common); meta-layer Phase 2 simplified + pushed; week reconciled; worktrees cleaned; DE run.
+**Memory Type**: RAM | **Last Activity**: 2026-06-10 ~11:10 MPST — QA-262495 shipped (`ebcfabaf92`, template fix only, recursion commit reverted + force-pushed); DE run.
