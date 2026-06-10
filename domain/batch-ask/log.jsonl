@@ -30,3 +30,11 @@
 {"ts":"2026-06-05T07:37:47.312Z","prompt_excerpt":"Remove May 12 & round down all the hours. Generate again"}
 {"ts":"2026-06-05T10:06:07.883Z","prompt_excerpt":"1. Can you save all the progress we've made and all the related files so that you on the next session can know where we left off, I want to look further into 25"}
 {"ts":"2026-06-05T17:18:58.347Z","prompt_excerpt":"All the others inside \"MlkPelupusanPegawaiAgihConstant\" uses \"MlkPelupusanTugasanConstant\" or \"PelupusanTugasanConstant\" that points to \"TGS\" (Tugasan). Should "}
+{"ts":"2026-06-08T16:15:48.476Z","prompt_excerpt":"You do know the ticket is that BA is saying the issue is on BOTH A4e & L1e right? So your fixes covers both right? I really hope you fucking performed all the i"}
+{"ts":"2026-06-08T17:37:56.334Z","prompt_excerpt":"<task-notification>\n<task-id>wrv06n71d</task-id>\n<tool-use-id>toolu_016KFWzJjavy18ZsNQdLnb9e</tool-use-id>\n<output-file>C:\\Users\\Ridhwan\\AppData\\Local\\Temp\\clau"}
+{"ts":"2026-06-09T03:33:23.583Z","prompt_excerpt":"please retrieve the latest redmine ticket. It seems there is still an issue with kemaskini loading. please retrieve me a permohonan id from inside MLK_PLP_PPJK "}
+{"ts":"2026-06-09T11:50:17.492Z","prompt_excerpt":"No, I don't know why you kept wanting to change the fundamentals of the system & break every thing. We need to focus on as specific of a fix as possible."}
+{"ts":"2026-06-09T11:51:05.078Z","prompt_excerpt":"No, I don't know why you kept wanting to change the fundamentals of the system & break every thing. We need to focus on as specific of a fix as possible. I thou"}
+{"ts":"2026-06-09T11:51:29.400Z","prompt_excerpt":"No, I don't know why you kept wanting to change the fundamentals of the system & break every thing. We need to focus on as specific of a fix as possible. I thou"}
+{"ts":"2026-06-10T06:27:36.222Z","prompt_excerpt":"can you list all the things you've updated here"}
+{"ts":"2026-06-10T06:27:48.846Z","prompt_excerpt":"can you list all the things you've updated here. For me to use as a chekclist when testing."}

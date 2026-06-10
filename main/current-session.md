@@ -1,29 +1,41 @@
 # 🌟 Current Session Memory - RAM
 
-**Current session**: 2026-06-10 (Wed) — wrap ~11:10 MPST. Theme: **QA-262495 resolved — the "recursion fix" was a MISDIAGNOSIS; real bug = inline content-control corrupting the generated Risalat MMKN doc; shipped a one-cell template fix; force-pushed clean branch**.
+**Current session**: 2026-06-10 (Wed) Session 2 — wrap ~18:42 MPST. Theme: **QA-262004 PSBS Ringkasan Risalat cycle-2 rework — fixes done, but a long marathon chasing an empty document list that turned out to be TWO colleague regressions on mlk/master, not our code**.
+
+## 🚨 READ FIRST IF STARTING A NEW SESSION / PULLING mlk/master (etanah-pelupusan)
+**Latest `mlk/master` is BROKEN in two independent ways — anyone who pulls + builds locally gets an empty "Senarai Dokumen" (Tiada rekod) on every tugasan:**
+1. **etanah-common 0.0.748** (commit `de46bc0eee`, amirul, refs #264423): moved `filterBasedOnAppTugasanSebelum` from `initCetakanMode()` into the shared `populatePenyediaanDokumenVOList` → the previous-tugasan filter now strips docs in ALL 23 modes. **Workaround: pin `pom.xml` → `<etanah.common.version>0.0.728-MLK</etanah.common.version>`** (0.0.728 is in `.m2`, = the version the working UAT server runs).
+2. **template.config.json `:5693`** (commit `3ec243a4c3`, faizudin, QA #264309): `"tarikhSignPTG".` — period not comma → whole config fails to parse. **Workaround: change `.` → `,`.**
+- Both pinned with full evidence in `projects/coding-projects/active/QA-262004/MASTER-BROKEN-config-typo.md`. Upstream owners: amirul (#264423 filter needs mode-scoping) + faizudin (comma).
 
 ## High-Level Objective (AGENT_STATE)
-- Finish QA-262495 (PPJK Risalat MMKN "Kemas kini hang"): find the true root cause, ship the minimal correct fix, leave the branch as a clean `mlk/master → mlk/qa/262495v2`.
+- Close QA-262004 cycle-2: PSBS "Ringkasan Risalat MMKN" template+populator fixes. Test (blocked all session by the master breakage), then Phase 1 commit on a fresh `mlk/qa/262004v2`.
 
-## Current Progress (AGENT_STATE)
-- **QA-262495 — SHIPPED `ebcfabaf92`** on `mlk/qa/262495v2` (force-with-lease, replaced the old recursion commit `53ad424018`). status=closed, local_test_confirmed=true.
-  - **Real root cause**: in `TemplateRisalatMMKN_PDT_PPJK.docx` the `syaratKelulusan` content control was **inline** (a run-level control inside a `<w:p>` in a table cell). The populator injects a **table** into it. A table inside a paragraph is **invalid WordprocessingML** → Word declares the generated doc "corrupted" (even Open-and-Repair fails) → `PocWordEditor.exe` crashes at `NetOffice.WordApi.Documents.Add` → the "Kemas kini loading forever" symptom. Only manifests at **Perakuan** because that's the stage where syarat actually populates.
-  - **The fix (one cell, one file)**: make the `syaratKelulusan` control **block-level** (own line) + add a **trailing empty paragraph** in the cell (a cell must end with a paragraph, not a table). Verified end-to-end: fixed template opens; simulated generated doc with the real injected table opens; Word save round-trip preserves block-level (self-heal does NOT undo it). Only that one cell changed — 34 other docx parts byte-identical.
-  - **The "recursion fix" (cycle-1, `53ad424018`) was REVERTED** — it was a misdiagnosis (see Slip below). `PelupusanWordEditorUtil.findTableByContentControlTag:639` imports only the bare `Tbl`, never the wrapper tag → a same-named table tag in a referenced .docx **cannot** cause re-trigger recursion. Doc generated in finite time (25ms) = no loop ever existed.
-  - **Blast-radius checked**: of the 5 PPJK Risalat/Ringkasan templates, ONLY `TemplateRisalatMMKN_PDT_PPJK.docx` has the `syaratKelulusan` control (now block, safe). Ringkasan / Syarikat / Tolak templates have no syarat control → structurally immune.
-  - **Regenerate behaviour**: `BasePelupusanDokumenForm.refreshDokumenList` → `updateDocumentListAndProcessTemplateIfNotAvailable(isFirstEntry)` serves a STORED doc if one exists (`:589-596`), else regenerates from template (`:571`). Risalat MMKN regenerates each Kemas kini (new `LAIN-*` id; `umm_a_dok_keluaran.dok_id` NULL). "Jana Semula" forces a clean regen from the fixed template.
+## Current Progress (AGENT_STATE) — QA-262004
+- **All fixes APPLIED + on disk (mlk/master working tree, UNCOMMITTED)** — awaiting みや's rebuild+test:
+  - `TemplateRingkasanRisalatPSBS.docx`: Century Gothic 10.5pt · reference alignments/bold · single line-spacing (was double) · widened JT slot 9014→9060 · removed gap (stray tab + shrunk slot para mark) · slot CC retagged `jtRingkasanRisalatPLPS`→`jtRingkasanRisalatPSBS` · (みや's jenisPegangan "Pajakan" CC removal preserved)
+  - `references/JabatanTeknikal.docx`: みや's dedicated `jtRingkasanRisalatPSBS` table + Ruri bolded the Bil(rowNumJT) cell + widened to 9060
+  - `PelupusanWordCCMethodConstant.java`: new constant `TAG_JT_RINGKASAN_RISALAT_PSBS` + registration + dedicated `populateJTRingkasanRisalatPSBS` (arabic `String.valueOf(rowNum++)` — NOT `(rowNum++)` which is an Integer the renderer's `handleText` drops as non-String) + `keepOriginalCase` PSBS branch in `populateJalanKampungTempat` (street-name proper case)
+  - `pom.xml`: common pinned 0.0.748→**0.0.728** (the master-regression workaround above)
+  - `template.config.json`: faizudin comma fix
+- **Branch state**: premature `mlk/qa/262004v2` was created then DELETED (per みや — no branch until test passes). Currently on `mlk/master` (local, uncommitted). At Phase 1 commit time: create `mlk/qa/262004v2` fresh, stage OUR files (NOT pom/config — those are colleague-owned workarounds), commit, push.
+- **Backup** of the 3 core fix files at `%TEMP%\qa262004_backup`.
+
+## Test data (QA-262004, in Notes.txt)
+- `PTMLK/03/L/PSBS/2025/5` (aplikasi 2900183) @ **suraya.wahab@melaka.gov.my** — Penyediaan PRMMKNPTGT, tempoh=99, Lokasi filled. Cleanest test.
+- `PTMLK/02/L/PSBS/2026/1` (aplikasi 2957068) @ **nor.aini@melaka.gov.my** — Perakuan PRRMMKNPTG, 4 JT rows (good numbering test); Lokasi was empty `{}` → **data-patched** (kedudukan_tanah filled, version 3) via `patch-262004-2026-1-lokasi.sql`.
 
 ## Blockers / Debts (AGENT_STATE)
-- **QA-262495 Phase 2** (archive) not yet run — Task folder + active.txt block still in place. Run `quest/archive-quest.js QA-262495` when みや says.
-- **Carry-over (from 2026-06-08, status unverified this session)**: QA-255940 etanah-common display-fix uncommitted/untested; quest-protocol.md version-bump debt; delegate-quest.js missing from architecture doc.
-- Other open reworks parked at Phase 0: **QA-261986** (PSBS Syarikat Risalat MMKN), **QA-260508** (cycle-3).
+- QA-262004 NOT yet tested green (master breakage ate the session) → not committed. Resume at test→commit.
+- QA-262495 Phase 2 archive still pending (from Session 1).
+- Open reworks parked Phase 0: QA-261986, QA-260508 (cycle-3), QA-262027, QA-262039 (folders 67-70 reactivated this session's earlier retrieval).
 
-## Immediate Next Steps (AGENT_STATE) — NEXT SESSION
-- QA-262495 Phase 2 archive when ready.
-- Decide the **structural defender** for `wrong-baseline-diagnosis` (now 5+ strikes incl. today's misdiagnosis) — surface to みや (see slip-log).
-- Resume QA-261986 / QA-260508 Phase 0.
+## Immediate Next Steps (AGENT_STATE)
+- みや rebuilds (common 0.0.728) + tests QA-262004 → if green, Phase 1 commit on fresh mlk/qa/262004v2.
+- Report amirul (#264423) + faizudin (config comma) upstream.
+- QA-262495 Phase 2 archive.
 
 ## 🎯 Session Recap (for AI restart)
-2026-06-10: a long, humbling QA-262495 debugging arc. Started by trusting a ChatGPT "circular content-control recursion" diagnosis (and my own earlier acceptance of it) — shipped a "recursion fix" that did nothing real. The actual bug surfaced only after methodical evidence work: reproduced the corrupt generated doc via Word COM (`Documents.Add`/`Open(OpenAndRepair)`), read the Windows Event Log (PocWordEditor.exe Application-Error 1000 + .NET 1026 COMException), and validated the OOXML in python until the defect was pinned — a **table injected into an inline content control** (plus a cell that must end with a paragraph). One-cell template fix; verified by simulation + Word round-trip; reverted the bogus recursion commit; force-with-lease push to a clean `mlk/master → mlk/qa/262495v2`. **Lesson: a diagnosis handed to you (ChatGPT, prior session, even みや) is ONE hypothesis — verify it against the actual mechanism (a cheap code read) BEFORE shipping. The recursion was structurally impossible and one read of `findTableByContentControlTag` would have shown it.** Good habit that finally cracked it: test every hypothesis (NoSpacing→Normal, block-only, block+trailing-p) instead of assuming.
+2026-06-10 S2: QA-262004 PSBS Ringkasan Risalat cycle-2. Did the template + populator fixes cleanly (fonts, spacing, widths, gap, arabic-bold numbering, street-name case, dedicated PSBS JT method). Then lost hours to an empty document list I chased as infrastructure — config typo, then a wedged debug-suspended JBoss zombie holding :8080 (two of them, 17:29 + 17:44), redeploy races. みや (rightly, with mounting anger) pushed me to BISECT instead of theorise. The bisect + reading the pulled commits found the real root cause: **NOT our code** — two colleague regressions arrived via today's master pull (faizudin's config typo + amirul's etanah-common 0.0.748 commit that moved the prev-tugasan doc filter into the shared list-builder so it strips docs in all modes). Pinned common to 0.0.728 → unblocked. **Lesson (the day's slip): when a symptom appears right after pulling latest master, DIFF ALL PULLED COMMITS against the symptom's code path FIRST — before any environment/infrastructure theory.** Same `wrong-baseline-diagnosis` family as Session 1's QA-262495.
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-10 ~11:10 MPST — QA-262495 shipped (`ebcfabaf92`, template fix only, recursion commit reverted + force-pushed); DE run.
+**Memory Type**: RAM | **Last Activity**: 2026-06-10 ~18:42 MPST — DE run; QA-262004 fixes on disk uncommitted awaiting test; master-breakage workarounds applied + documented.
