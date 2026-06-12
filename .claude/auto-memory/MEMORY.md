@@ -1,6 +1,7 @@
 # Memory Index
 
 ## Feedback
+- [feedback_layered_teaching_format.md](feedback_layered_teaching_format.md) — 5-layer teaching format (story → framework translation → data flow → risk table → code checklist) for any "explain/teach me the system" ask
 - [feedback_full_names.md](feedback_full_names.md) — Always use full file/class/method names, never abbreviate
 - [feedback_self_reference.md](feedback_self_reference.md) — Always use "I" not "it" when referring to myself
 - [feedback_naming_japanese.md](feedback_naming_japanese.md) — Use みや outside work hours even in work mode; Japanese acknowledgments in office context
@@ -38,6 +39,7 @@
 - [feedback_uat_fat_environments.md](feedback_uat_fat_environments.md) — env is ticket-driven (match BA's tested env + permohonan ID env); UAT (mlkuat/et_main_uat) + FAT (mlkfat/etprdmlk/et_main) BOTH valid local implement+test targets (FAT restored 2026-05-28); AWAM tickets ALWAYS on mkit/et_main_mlit regardless; "hold" at ticket start suppresses env switch (parallel-session safety); flowable alter page shifts test apps between tugasan steps
 - [feedback_untracked_confidential.md](feedback_untracked_confidential.md) — Untracked files in main repo (etanah-knowledge, QA-* diagnostics) are intentionally confidential; don't flag or push to commit
 - [feedback_no_extra_comments.md](feedback_no_extra_comments.md) — No commented-out original code; max one explanatory line, only when WHY is non-obvious; confirm with みや before any comment beyond first
+- [feedback_comment_style.md](feedback_comment_style.md) — Short comment style (validated QA-260508): name actual variable names + plain English + cross-ref by literal address; banned "popup VO" / "the check below" / abstract phrasings
 - [feedback_skeptical_of_user_suggestions.md](feedback_skeptical_of_user_suggestions.md) — Be equally skeptical of みや's suggestions; same rigor as challenging own claims; don't validate just because he proposed it
 - [feedback_visual_fidelity_no_excuses.md](feedback_visual_fidelity_no_excuses.md) — Banned excuses for visual-fidelity failures when みや shared rendered evidence; honest framing required
 - [feedback_design_from_architecture.md](feedback_design_from_architecture.md) — Design rules from system architecture (layer matrix), not from last slip; pressure-test against ≥3 past tickets; default 2-tier (universal + per-layer)

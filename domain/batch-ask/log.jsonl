@@ -38,3 +38,13 @@
 {"ts":"2026-06-09T11:51:29.400Z","prompt_excerpt":"No, I don't know why you kept wanting to change the fundamentals of the system & break every thing. We need to focus on as specific of a fix as possible. I thou"}
 {"ts":"2026-06-10T06:27:36.222Z","prompt_excerpt":"can you list all the things you've updated here"}
 {"ts":"2026-06-10T06:27:48.846Z","prompt_excerpt":"can you list all the things you've updated here. For me to use as a chekclist when testing."}
+{"ts":"2026-06-10T18:13:59.788Z","prompt_excerpt":"<task-notification>\n<task-id>ab26bc0c76b4536bb</task-id>\n<tool-use-id>toolu_01Pa2rPstxGWjaWPoznLQKQ7</tool-use-id>\n<output-file>C:\\Users\\Ridhwan\\AppData\\Local\\T"}
+{"ts":"2026-06-11T02:20:19.748Z","prompt_excerpt":"This is a fairly good explanation style & probably good stopping point as well. As always, I want it to be used but you keep skipping/ignoring it. \n\nFor now ple"}
+{"ts":"2026-06-11T03:17:14.907Z","prompt_excerpt":"<task-notification>\n<task-id>wvwd745ru</task-id>\n<tool-use-id>toolu_01JC6BFwqKbaqA8sB8rAagjQ</tool-use-id>\n<output-file>C:\\Users\\Ridhwan\\AppData\\Local\\Temp\\clau"}
+{"ts":"2026-06-11T07:50:35.409Z","prompt_excerpt":"I thought the ticket PT/PSBS/MCL urusan, why are we reducing the scope? Let's see the screens first as well. Properly study through code and or db/flowable for "}
+{"ts":"2026-06-11T12:07:37.275Z","prompt_excerpt":"1. Please don't forget to update Task txt file (\"1. Notes\" or \"1. xxx xxx\"). I think you should summon opun 4.6 to make sure to create a hook for this, you kept"}
+{"ts":"2026-06-12T02:07:22.776Z","prompt_excerpt":"I just tested and it failed, please check thoroughly why. Server logs, code is it in war, etc."}
+{"ts":"2026-06-12T07:33:13.071Z","prompt_excerpt":"can you list down all the fixes done for this ticket? Double check if we have any code changes."}
+{"ts":"2026-06-12T08:39:39.115Z","prompt_excerpt":"<task-notification>\n<task-id>wngo6d3uu</task-id>\n<tool-use-id>toolu_015Dkcb7qAsADxoxJa35pQm3</tool-use-id>\n<output-file>C:\\Users\\Ridhwan\\AppData\\Local\\Temp\\clau"}
+{"ts":"2026-06-12T11:48:39.273Z","prompt_excerpt":"can you now remove all the loggers but add a single line comment at the fix we last added and mention why. Let me check"}
+{"ts":"2026-06-12T12:23:39.843Z","prompt_excerpt":"<task-notification>\n<task-id>a1dec25ab17d9bb5f</task-id>\n<tool-use-id>toolu_01R4Pr7VtZZE6pDLeWaQx6Tt</tool-use-id>\n<output-file>C:\\Users\\Ridhwan\\AppData\\Local\\T"}
