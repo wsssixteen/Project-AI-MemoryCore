@@ -111,6 +111,7 @@ These were confirmed from the SQL exports. Never assume otherwise:
 | `AppLaporanTanah` | `tkl_a_laporan_tnh` | `kedudukan_tanah` (TEXT, JSON-as-string) + `maklumat_tambahan` (TEXT, JSON-as-string) | **etanah-teknikal module owns** writes; pelupusan reads via `etanah-common/.../repository/teknikal/AppLaporanTanahRepository.findByAplikasi`. Holds Zone, Jalan, Landmark, Dun, PBT, koordinat GIS — all in `kedudukan_tanah` JSON |
 | `MaklumatHakmilik` | `umm_maklumat_hkmlk` (verify) | (read-only snapshot — verify before writing) | Historic hakmilik snapshot at decision time. Common var name: `maklumatHakmilik` |
 | `AppPermitLesen` | `umm_a_permit_lesen` (verify) | `syaratTambahan` (verify) | Used by `populateSyaratKelulusan` chain via `retrieveAppPermitLesen4Aor4B("4A", aplikasi)` |
+| `AppMaklumatPremium` | `umm_a_mklmt_premium` (**NOT** `umm_a_maklumat_premium`) | — (typed cols only, no JSON) | MCL cukai panel typed values. Cols: `bayaran_premium`, `bayaran_hkmlk_tetap`, `bayaran_hkmlk_smtr`, `cukai_tnh_baru`. FK `aplikasi_id`. Written by `saveMaklumatMCL(aplikasi, premium, tetap, sementara, denda)` (PelupusanService ~:22065-22105). |
 
 ### Name-similarity trap table (the QA-260508 slip in particular)
 
@@ -128,6 +129,12 @@ At every populator/save edit involving any `*.getMaklumatTambahan()`, `*.setMakl
 1. **Name the entity TYPE explicitly** in chat prose before the edit — not just the variable name. `apt` ≠ `AppPermohonanTanah` as evidence of understanding; the Read or Grep showing `AppPermohonanTanah apt = ...` IS the evidence.
 2. **Cross-reference save↔read tables**. If the save block writes to `apt.setMaklumatTambahan(...)` (`umm_a_permohonan_tnh.mklmt_tmbhn`), the read block on the same field must also pull from `apt` or from a VO populated from `apt` — NOT from a different entity that has a similarly-named column.
 3. **Cascade fallback patterns** (like `kelasTanah` in `populateMaklumatPendaftaranHakmilikList`): one of the fallback rungs typically dereferences the in-memory VO that WAS populated from the save target. When adding a new field's cascade, mirror this — first try the primary source (often `aplp` or `ahm`), then fall through to the VO populated from `apt`, then EMPTY. Missing the VO rung is the silent-blank-on-read slip.
+
+> **⚠️ MCL dual-sink drift (QA-260508 cycle-4b, 2026-06-12)**: for MCL, two separate save methods write overlapping data for the same permohonan:
+> - `saveMaklumatPremiumCukai(aplikasi, vo)` (PelupusanService ~:16543-16726) writes `umm_a_hkmlk.mklmt_tmbhn` + `umm_a_permohonan_tnh` (scalar cols + JSON key `cukaiTanahBaru`). Source: ExcelReaderHelper VO.
+> - `saveMaklumatMCL(aplikasi, premium, tetap, sementara, denda)` (~:22065-22105) writes `umm_a_mklmt_premium` typed cols + `umm_a_permohonan_tnh` JSON key `cukaiTanahBaru`. Source: bean fields.
+>
+> Different in-memory sources can drift: observed `cukai_tnh_baru=1130` in `umm_a_mklmt_premium` vs `cukaiTanahBaru=25` in `umm_a_permohonan_tnh.mklmt_tmbhn` on the same row. **Hibernate no-change UPDATE skip**: when save runs with values identical to the stored row, `last_modified_date` does NOT bump — a non-bumping timestamp after a "successful" save is NOT a failed save.
 
 > **Slip class fixed by this section** (QA-260508 2026-06-02): I added Pengkelasan read in `populateMaklumatPendaftaranHakmilikList` reading only from `aplp.getMaklumatTambahan()`. The save block wrote to `apt.getMaklumatTambahan()`. Read source ≠ save target → saved value never displayed in Langkah 4 Senarai Semakan. Fix was adding the `premiumCukaiVO.getPengkelasanTanah()` fallback rung (which IS populated from `apt`).
 
@@ -269,6 +276,8 @@ FK: `aplikasi_id` → `umm_aplikasi`. Lookup by `id_hkmlk` (varchar, e.g. `04010
 > **Column naming rule:** no `_id` suffix = plain varchar (no join). `_id` suffix = FK.
 
 Key columns: `kegunaan_tnh` (varchar, often empty in migrated data), `kat_id` (FK — kategori, [VERIFY] target table), `jns_tnh_id` (FK — jenis tanah), `mklmt_tmbhn` (JSON dynamic fields).
+
+**MCL `mklmt_tmbhn` keys** (confirmed QA-260508 2026-06-12 via `populatePremiumCukaiSelangor` PelupusanService ~:7697-7731): `premiumString`, `premiumDenda`, `jkklJenisHakmilikTanah`, `premiumNilaianPasaran`. This is where the MCL "Maklumat Hakmilik Baru" panel values live for read-back on init — `PelupusanExcelReaderHelper` reads these keys to populate `premiumVO` at `onKemaskiniTanah()` time.
 
 ### 5.0b `umm_p_hkmlk` — Pra-Hakmilik (AWAM Submission Layer)
 
