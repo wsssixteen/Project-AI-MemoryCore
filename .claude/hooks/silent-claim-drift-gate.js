@@ -26,10 +26,21 @@
  * VERIFIED row (100%-VERIFY binding per Phase 3). Same advisory mode.
  *
  * Also Stage 5A scans for architecture-doc-sync violations: if turn
- * touched a system-component file (.claude/hooks/*.js, .claude/skills/*/SKILL.md,
+ * touched a system-component file (.claude/hooks/ *.js, .claude/skills/<name>/SKILL.md,
  * quest/quest-protocol.md, quest/active.txt, .claude/settings.json) AND
  * meta/system-architecture.md was NOT edited this turn AND bypass token
  * `[skip-architecture-doc-update: ...]` absent → advisory reminder.
+ *
+ * v1.2 2026-06-14 — Extension D (the B2 refine, QA-260508 cycle-4):
+ * severity-downgrade-is-a-claim. Scans for downgrade phrases ("dead code",
+ * "not critical", "not the cause", "harmless"…) co-occurring with a
+ * diagnosis/suspect context BUT with no trace-backing (codegraph_trace /
+ * call-path / file:line cite / minimal-repro) → advisory reminder that a
+ * downgrade is a CLAIM needing the same discharge as an (inferred) tag.
+ * Stage 5A advisory only. Bypass: `[skip-downgrade-claim: <reason>]`.
+ * False-positive cost: may fire when "not critical" is used in legit prose
+ * with the trace given elsewhere in the turn — advisory + bypass absorb it;
+ * narrow before any block-stage flip.
  */
 const CLAIM_PATTERNS = [
   /\b(it'?s|is|are|now) (done|complete|completed|shipped|finished|fixed)\b/i,
@@ -46,6 +57,25 @@ const BACKING_PATTERNS = [
   /\bgit (show|log|diff)\b/i,
   /\bfile_path/i,
   /scope[-_ ]?anchor/i,
+];
+
+// Extension D (v1.2, B2 refine) — severity-downgrade detection.
+// DOWNGRADE = dismissing a previously-flagged suspect.
+const DOWNGRADE_PATTERNS = [
+  /\bdead code\b/i,
+  /\b(not|isn'?t|won'?t be|nothing) (critical|the cause|the bug|an issue|a problem)\b/i,
+  /\b(harmless|no impact|no effect|can (?:be )?ignore[d]?|safe to ignore|doesn'?t matter)\b/i,
+  /\bnot (?:actually )?(?:a |the )?(?:real )?(?:bug|issue|problem|cause)\b/i,
+];
+// Diagnosis/suspect CONTEXT — a downgrade only matters when discussing a suspect.
+const DOWNGRADE_CONTEXT = /\b(bug|suspect|flag(?:ged)?|root cause|shadow|culprit|the line|:\d{2,}|cycle-\d)\b/i;
+// TRACE-backing that discharges the downgrade-claim (the B2 requirement).
+const TRACE_PATTERNS = [
+  /codegraph_(?:trace|callers)/i,
+  /\b(?:init|call)-path\b/i,
+  /\btraced?\b.{0,40}\b(?:path|init|chain|to)\b/i,
+  /\.(?:java|xhtml|docx):\d+/i,
+  /\bminimal[- ]repro\b/i,
 ];
 
 let input = '';
@@ -98,9 +128,16 @@ process.stdin.on('end', () => {
     const archDocBypass = /\[skip-architecture-doc-update\s*:/i.test(text);
     const archDocViolation = editedSystemComponent && !editedArchDoc && !archDocBypass;
 
+    // Extension D: severity-downgrade-is-a-claim (B2 refine)
+    const hasDowngrade = DOWNGRADE_PATTERNS.some(re => re.test(text));
+    const hasDowngradeContext = DOWNGRADE_CONTEXT.test(text);
+    const hasTrace = TRACE_PATTERNS.some(re => re.test(text));
+    const downgradeBypass = /\[skip-downgrade-claim\s*:/i.test(text);
+    const downgradeFire = hasDowngrade && hasDowngradeContext && !hasTrace && !downgradeBypass;
+
     // If none of the conditions trigger, exit silently
     const claimDriftFire = hasClaim && !hasBacking;
-    if (!claimDriftFire && filteredMissing.length === 0 && !verifyShortfall && !archDocViolation) process.exit(0);
+    if (!claimDriftFire && filteredMissing.length === 0 && !verifyShortfall && !archDocViolation && !downgradeFire) process.exit(0);
 
     const reminders = [''];
     if (claimDriftFire) {
@@ -145,6 +182,20 @@ process.stdin.on('end', () => {
         'This turn edited a system component (hook/skill/protocol/state-file/settings.json)',
         'but did NOT edit meta/system-architecture.md. Plan Phase 0 requires paired update.',
         'Bypass: [skip-architecture-doc-update: <reason>] (already in this turn? then ignore).',
+        ''
+      );
+    }
+    if (downgradeFire) {
+      reminders.push(
+        '⚙️  silent-claim-drift-gate (Stage 5A advisory, Ext D): severity-downgrade without trace',
+        '',
+        'You downgraded a flagged suspect ("dead code / not critical / not the cause") with no',
+        'trace-backing in this turn. A downgrade is a CLAIM, not an observation (quest-protocol.md',
+        'B2 refine) — discharge it with a traced path (codegraph_trace / call-path / file:line',
+        'cite) in the SAME emit, OR a みや minimal-repro. Glance-based downgrade is BANNED.',
+        '  Why this fires: QA-260508 cycle-4 — downgraded the :173 denda shadow to "dead code,',
+        '  not critical" with no init-path trace; the repro proved it WAS the cause.',
+        'Bypass: [skip-downgrade-claim: <reason>] for legitimate non-suspect uses of the phrase.',
         ''
       );
     }

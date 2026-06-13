@@ -89,10 +89,10 @@ local_test_confirmed=true
 
 qa=QA-260508
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\63. QA #260508 - PT-PSBS-MCL - Panel maklumat plot dikeluarkan hakmilik - Tambah medan
-phase=0
-status=active
-current_phase=Apply
-local_test_confirmed=false
+phase=1
+status=closed
+current_phase=Closed
+local_test_confirmed=true
 ticket_type=bug
 env=MLKUAT
 issue_one_liner=PT/PSBS/MCL - Maklumat Tanah > Panel Kadar Cukai Tanah - added Pengkelasan Tanah (zone) field NOT persisted by page-level Simpan/Seterusnya (TAK DISIMPAN)
@@ -100,17 +100,17 @@ assigned_to_me=2026-06-09
 urusan=PT/PSBS/MCL
 tugasan=Maklumat Tanah (Panel Kadar Cukai Tanah / Maklumat Cukai Tanah)
 rework=cycle-3
-prior_fix=branch mlk/qa/260508 (original add-field fix, shipped 2026-06-02 by Ahmad Ridhwan)
+prior_fix=cycle-1 mlk/qa/260508 (2026-06-02 Ridhwan) + cycle-2 mlk/qa/260508v2 commit 6127ba2a64 (2026-06-06)
 qa_doc=projects/coding-projects/active/QA-260508/QA-260508.md
 test_app=PTMLK/01/L/MCL/2026/18 (MLKUAT)
 rework_reason=field displays + panel-Simpan persists, but parent-page Simpan/Seterusnya drops it
-commit=6127ba2a64
-branch=mlk/qa/260508v2
-closed=2026-06-06
+commit=1dd6a526e8
+branch=mlk/qa/260508v3
+closed=2026-06-12
 reopened=2026-06-09
 rework_folder=4.Rework
 rework_reason_cycle3=Aaron 2026-06-09: deployed but still issue; possible our changes reverted (disrupted other flow); please retest+check
-rework_cycle3_fix=2 edits uncommitted on mlk/master: PelupusanService remove(:16637) deleted + xhtml rendered-gate MCL; root cause = cycle-1 wrong-writer + cycle-2 stale-VO wipe + ungated mandatory field; full doc QA-260508.md cycle-3
+rework_cycle3_fix=root cause = two-helper split (popup VO Helper A vs Simpan handler Helper B not connected) + page-bean denda init-shadow at :173 leaves this.denda null at gate; fix = wire helpers via setExcelReaderHelperForm + sync popupPremiumVO->bean fields before MCL gate in performCustomSave
 
 qa=QA-246532
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\1. 246532 - Surat Keputusan Tangguh Fix.png

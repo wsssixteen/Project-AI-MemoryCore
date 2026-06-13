@@ -164,8 +164,36 @@ Before flipping `silent-claim-drift-gate.js` to emit `hookSpecificOutput.decisio
 
 ---
 
+## B2 — `silent-claim-drift-gate.js` Extension D (severity-downgrade) dry-runs (2026-06-14)
+
+Advisory-stage. Ran live via `echo '<payload>' | node silent-claim-drift-gate.js`. All passed.
+
+| # | Payload | Expected | Result |
+|---|---|---|---|
+| D1 | downgrade phrase ("dead code, not critical") + suspect context (":173", "bug") + NO trace | FIRE Ext D advisory | ✅ fired |
+| D2 | same + trace present (`codegraph_trace` / `MlkForm.java:173` / "init-path") | silent | ✅ silent |
+| D3 | downgrade + `[skip-downgrade-claim: …]` bypass | silent | ✅ silent |
+| D4 | plain prose, no downgrade | silent | ✅ silent |
+
+Stage-5B flip (advisory→block) deferred — observe advisory noise first. **Note**: fixing Ext D also resurrected the whole hook — it had a pre-existing `*/`-in-comment syntax error in HEAD (B6 finding) and was crashing/fail-open before 2026-06-14.
+
+## B4 — `deploy-proof-gate.js` (NEW) dry-runs (2026-06-14)
+
+Advisory-stage Stop hook. Ran live. All passed.
+
+| # | Payload | Expected | Result |
+|---|---|---|---|
+| P1 | hand-back ("please test") + etanah source edit in payload + NO proof | FIRE advisory | ✅ fired |
+| P2 | same + proof present ("grep QA260508-PROBE" / "Republish") | silent | ✅ silent |
+| P3 | hand-back but NO source edit this session | silent | ✅ silent |
+| P4 | hand-back + edit + `[skip-deploy-proof: …]` bypass | silent | ✅ silent |
+| P5 | `stop_hook_active: true` (anti-loop guard) | silent | ✅ silent |
+
+Stage-5B flip (advisory→exit-2 block) deferred — observe advisory noise first.
+
 ## Update log
 
 | Date | Change | Reason |
 |---|---|---|
 | 2026-05-28 | v1.0 created with 10 scenarios | Plan Phase 5 dry-run requirement |
+| 2026-06-14 | Added B2 Ext D (4 cases) + B4 deploy-proof-gate (5 cases) advisory-stage dry-runs | QA-260508 B1-B5 refactor (ship-with-eval per /system-design Rule 6) |
