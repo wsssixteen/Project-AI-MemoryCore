@@ -11,6 +11,8 @@ In-code comment style that lands for みや (validated on QA-260508 2026-06-12, 
 
 **The rule**: short comments (max 2 lines) that NAME the actual variable names and use plain English between them. NO jargon abstractions ("popup VO", "the check below passes", "data flow"); NO "this/that" without specifics; NO ceremony.
 
+**🚨 Hard rule (QA-264293 2026-06-15): NEVER rewrite, expand, or "improve" みや's own in-code comments.** When editing near a comment he wrote, leave it **verbatim**. His short plain phrasing IS the standard; my rewrites drift robotic + jargon-filled. He reverted my overwrite of his `// 4Ae/L1e "Dikeluarkan" date only on successful sign, otherwise blank` and said: *"DO NOT alter my comments. yours was too robotic & filled with jargons."* If I must add a comment, add my own short one — never touch his.
+
 **Why**: みや 2026-06-12 — *"Why can't you explain just through naming the variable combined with normal human speak?"* Variable names ARE the technical anchor; the surrounding words are just plain English connecting them. Aaron / future readers don't need to decode internal abstractions to know what's happening.
 
 **How to apply**:

@@ -76,6 +76,12 @@
 
 ---
 
+## 2026-06-15 entries
+
+| Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |
+|---|---|---|---|---|---|
+| 2026-06-15 (QA-264293 — みや: "Why does your code look complicated, where does is4B come from?") | **Copied a working analog WHOLESALE into a new branch without pruning the parts that don't apply.** Re-applying the populateTarikh fix onto Cheow's merged structure, I lifted his `is4B = flagAda4B && "LaporanBorang4Be".equals(jasperFile)` ternary + the ①-issued-date read-back chain into my PB4AE branch. But `is4B` is **always false** for the 4Ae/L1e tugasan (it never renders the 4Be jasper) → dead ternary; and the read-back branch hedged a "re-open regenerates the signed doc" case that the BA's own complaint **disproves** (a fixed old date can only be a stored baked PDF, not a live regen). Net: 15 lines where 7 were correct. みや caught it, not me. **lesson:** copying an analog means copying its SHAPE, not every line — for each piece lifted, prove it still applies in the NEW context before keeping it; "simplify = subtract" applies to borrowed code too. | best-practices-not-consulted (simplify/smallest-change existed; analog copied un-pruned) | `feedback_simplify_and_reference.md` ("simplify means SUBTRACT not add"; "scrutinize AI/borrowed code") + CLAUDE.md "smallest change" — existed; fired for finding the analog, not for pruning it | **fixed this turn** (simplified to 7-line `? today : EMPTY`; is4B + read-back removed) + documented WHY (empirical proof) in QA-264293.md §4.3 + skeleton class-chain. Defender candidate: convention-check-gate could add a "for each copied line, is it reachable in this context?" prompt — surface to みや. | ✅ Yes — simplify-family; convention-check-gate covers "find analog" but not "prune analog" |
+
 ## 2026-06-11 entries
 
 | Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |

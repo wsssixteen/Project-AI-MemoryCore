@@ -256,3 +256,24 @@ qa_doc=projects/coding-projects/active/QA-262039/QA-262039.md
 closed_cycle2=2026-06-12
 commit_cycle2=cea2e602bc
 branch_cycle2=mlk/qa/262039v2
+
+qa=QA-264293
+status=closed
+phase=1
+current_phase=Closed
+ticket_type=bug
+env=FAT
+env_note=labeled FAT but tested on UAT (FAT permohonan unusable); test app PTMLK/03/L/MLPS/2026/3 lives in MLKUAT
+urusan=MLPS
+tugasan=Pengesahan Borang 4Ae dan L1e (PB4AE)
+rework=cycle-2
+quest_start=2026-06-15
+local_test_confirmed=true
+test_app=PTMLK/03/L/MLPS/2026/3 (azree@melaka.gov.my, OTP emel, UAT)
+prior_fix=cycle-1 mlk/qa/264293 commit 1e87a9953f (colleague write-side stamp, reverted+replaced)
+qa_doc=projects/coding-projects/active/QA-264293/QA-264293.md
+branch=mlk/qa/264293v2
+commit=c158af1e44
+pushed=2026-06-15
+closed=2026-06-15
+close_note=read-side fix: populateTarikh PB4AE gate (today on action=SIGN, blank otherwise) + removed colleague write-side stamp (PelupusanService+IPelupusanService+MlkLaporanL1eForm); auto-merged clean over 6 upstream commits

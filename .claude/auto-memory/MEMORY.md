@@ -65,3 +65,6 @@
 - [project_task_workflow.md](project_task_workflow.md) — Quest workflow: Accept/Execute/Report/Post-Mortem for formal work tasks; triggers, report generator at quest/
 - [project_qa_255773_spoc.md](project_qa_255773_spoc.md) — Held SPOC mirror-copy ticket; load handoff-255773.md on any SPOC/flowable/pihak_bkptg mention
 - [project_etanah_organize.md](project_etanah_organize.md) — etanah-organize-alpha: multi-phase project to organize etanah-knowledge/melaka into structured guidebook → Phase 2 office-day verification → Phase 3 Claude Design website; activation skill: Bankai 蒼穹宝典 (Sōkyū Hōten / Azure Heaven Codex); alpha-1 complete 2026-05-14 with 115-item ledger at etanah-knowledge/melaka/organize-progress.json
+
+## Reference
+- [reference_etanah_bpmn_source.md](reference_etanah_bpmn_source.md) — Flowable BPMN lives in main-repo etanah-knowledge/.../flowables-bpmn/ (absent from worktrees); read parsed bpmn_flow.json not raw XML; latest at mlit flowable-ui modeler
