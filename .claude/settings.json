@@ -121,6 +121,10 @@
           {
             "type": "command",
             "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\domain\\batch-ask\\batch-ask.trigger.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\domain\\codemap-recon-consult\\codemap-recon-consult.trigger.hook.js\""
           }
         ]
       }
