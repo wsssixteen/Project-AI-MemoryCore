@@ -53,3 +53,8 @@
 {"ts":"2026-06-15T03:20:17.128Z","prompt_excerpt":"1. \"I read the full output directly rather than trusting its \"refuted\" label\", create a universal hook every time you use workflows or familiar or agents or any"}
 {"ts":"2026-06-15T04:18:40.440Z","prompt_excerpt":"1. Did you load up at least all the technology stacks including document generation (docx4j right), jasperreports (though depending on the extent, we will pass "}
 {"ts":"2026-06-15T08:15:54.737Z","prompt_excerpt":"It should cover both then. It shouldn't write anything UNLESS the signature is successful AND it should overwrite if a new signature is performed successfully. "}
+{"ts":"2026-06-16T05:17:31.440Z","prompt_excerpt":"Can we save, domain expansion all the findings so far. We want to start a new phase anyways after simulation, though make sure to save all the findings and prog"}
+{"ts":"2026-06-16T06:24:29.773Z","prompt_excerpt":"1. Refer first photo, I feel like this is for our etanah codemap. What  I mean, evne though we have the document maintenance page as developer, but we don't kno"}
+{"ts":"2026-06-16T06:40:20.547Z","prompt_excerpt":"\"Bottom Line\nYour next-page screenshot matches my DB check exactly — and together they overturn the whole premise. The lampiran are not being lost. They persist"}
+{"ts":"2026-06-16T07:15:38.288Z","prompt_excerpt":"I tried saving using \"Simpan\", now all the documents are missing."}
+{"ts":"2026-06-16T10:34:51.483Z","prompt_excerpt":"1. [[update=\"#{cc.attrs.helperForm.viewCukaiPanel ? 'kadar-cukai-tanah-togglePanel, :msgs' : ':msgs'}\"]] - I only understand the rough logic of your code change"}

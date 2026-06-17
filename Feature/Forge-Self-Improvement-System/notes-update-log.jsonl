@@ -300,3 +300,11 @@
 {"ts":"2026-06-15T09:58:56.455Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/MLPS/2026/2"],"missing_from_notes":["PTMLK/01/L/MLPS/2026/2"],"action":"warn-only-v1"}
 {"ts":"2026-06-15T10:08:13.454Z","qa":"QA-264006","ids_in_reply":["PTMLK/03/L/MLPS/2026/3"],"missing_from_notes":["PTMLK/03/L/MLPS/2026/3"],"action":"warn-only-v1"}
 {"ts":"2026-06-15T10:09:45.498Z","qa":"QA-264006","ids_in_reply":["PTMLK/03/L/MLPS/2026/3"],"missing_from_notes":["PTMLK/03/L/MLPS/2026/3"],"action":"warn-only-v1"}
+{"ts":"2026-06-16T04:11:59.543Z","qa":"QA-264006","ids_in_reply":["PTMLK/02/L/PSBS/2026/3","PTMLK/03/L/PSBS/2026/9","PTMLK/03/L/PSBS/2026/2"],"missing_from_notes":["PTMLK/02/L/PSBS/2026/3","PTMLK/03/L/PSBS/2026/9","PTMLK/03/L/PSBS/2026/2"],"action":"warn-only-v1"}
+{"ts":"2026-06-16T04:28:05.169Z","qa":"QA-264006","ids_in_reply":["PTMLK/03/L/PSBS/2026/9","PTMLK/03/L/PSBS/2026/2"],"missing_from_notes":["PTMLK/03/L/PSBS/2026/9","PTMLK/03/L/PSBS/2026/2"],"action":"warn-only-v1"}
+{"ts":"2026-06-16T04:48:35.177Z","qa":"QA-264006","ids_in_reply":["PTMLK/03/L/PSBS/2026/9"],"missing_from_notes":["PTMLK/03/L/PSBS/2026/9"],"action":"warn-only-v1"}
+{"ts":"2026-06-16T05:52:26.474Z","qa":"QA-264006","ids_in_reply":["PTMLK/03/L/PSBS/2026/9"],"missing_from_notes":["PTMLK/03/L/PSBS/2026/9"],"action":"warn-only-v1"}
+{"ts":"2026-06-16T05:59:10.140Z","qa":"QA-264006","ids_in_reply":["PTMLK/03/L/PSBS/2026/9","PTMLK/03/L/PSBS/2026/2"],"missing_from_notes":["PTMLK/03/L/PSBS/2026/9","PTMLK/03/L/PSBS/2026/2"],"action":"warn-only-v1"}
+{"ts":"2026-06-16T06:14:52.693Z","qa":"QA-264006","ids_in_reply":["PTMLK/03/L/PSBS/2026/9"],"missing_from_notes":["PTMLK/03/L/PSBS/2026/9"],"action":"warn-only-v1"}
+{"ts":"2026-06-16T06:18:33.094Z","qa":"QA-264006","ids_in_reply":["PTMLK/03/L/PSBS/2026/9"],"missing_from_notes":["PTMLK/03/L/PSBS/2026/9"],"action":"warn-only-v1"}
+{"ts":"2026-06-16T07:29:13.863Z","qa":"QA-264006","ids_in_reply":["PTMLK/03/L/PSBS/2026/2","PTMLK/03/L/PSBS/2025/2","PTMLK/03/L/PSBS/2026/9"],"missing_from_notes":["PTMLK/03/L/PSBS/2026/2","PTMLK/03/L/PSBS/2025/2","PTMLK/03/L/PSBS/2026/9"],"action":"warn-only-v1"}

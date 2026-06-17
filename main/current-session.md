@@ -1,30 +1,35 @@
 # Current Session
 
 ## What's loaded
-2026-06-16 13:18 MPST — Opus 4.8 (1M ctx). Fresh boot, **no compaction**. Worktree `vibrant-nightingale-0a9069` (0 behind/ahead origin/main). One session: storage hygiene → closed QA-260508 → built the #6 codemap hook → QA-261517 Phase 0.
+2026-06-17 12:08 MPST — Opus 4.8 (1M ctx). Worktree `charming-jones-cad8e9`. Long, correction-heavy session with one clean win. Resumed QA-261517 → reproduced + diagnosed the original lampiran issue (root cause OPEN, parked) → pivoted to Aaron's SKM stopper → FIXED + shipped it → codemap planning fix → DE.
 
 ## This session arc
-- **Storage hygiene (codemap / atlas):** sized both — `etanah-codemap` 11.2 MB (worktree-only, R1 loss-risk) + `etanah_atlas` 6.3 MB (root-tracked). Discovered `projects/` is gitignored-by-design (confidential). Fix: **copied codemap → main `projects/coding-projects/active/etanah-codemap/`** (60 files, parity-verified, stays gitignored) — R1 resolved. `etanah_atlas` → **HELD (Option C)**: not at loss-risk; its confidential `et_main_uat.sql` (+zip+pyc) is wrongly tracked in git, but the untrack is deferred until the Cowork→here handover decision.
-- **QA-260508 CLOSED:** Redmine confirms it left みや's open-assigned queue → `active.txt status=closed`. (Phase 2 archive still pending with the other ~11 closed blocks.)
-- **#6 codemap-recon-consult hook BUILT** (per みや "make sure new features run through hooks"): routed via `/system-rules` + `/system-design`. Hook-only Power `domain/codemap-recon-consult/` — state-driven off `active.txt current_phase` ∈ {discovery,recon,rubric}, injects a codemap-consult reminder (bpmn_flow module-scope · callgraph_callers blast-radius w/ SootUp blind-spot caveat · codegraph). Tested (fires for QA-261517 Discovery), registered, arch-doc-synced (§3.2 16→17, changelog v1.8). **Live next session** (settings change needs restart). Caught+fixed a split-brain: arch-doc edits had gone to the MAIN path → moved onto the worktree branch, reverted main.
-- **QA-261517 Phase 0** (new ticket, retrieved from Redmine): PSBS / SJTLT / "Lampiran hilang selepas pindaan JT & YB". Re-attempt — Vincent's prior fix (`caa6049`, in master) FAILED. Scout+Recon+Rubric done; bug-site = `JabatanTeknikalHelper:331` documentList gate; **disproved my own re-init hypothesis** (initJabatanTeknikal not called on save postback). Awaiting みや's simulate before fix/logger (his directive: reproduce-first). Full findings → `QA-261517.md`.
+- **QA-261517 (lampiran hilang) — reproduced, root cause OPEN, PARKED.** Walked the full pindaan cycle on UAT (mahaniza@ `/2026/9`, then `/2026/2`). DB+code findings: documents are NOT lost (`skg_dok` rows stay `flag_aktif='Y'`). Every theory was REFUTED via codegraph+DB — write-loss, orphan-by-delete, `generateSurat`-rows-filter, JT-subflow-rebuild all disproven. Reproduction exhausted: `/2026/9`+`/2026/2` are test-healthy, BA's FAT `/2026/3` is gone. Likely **env/build-specific** (BA on MLKFAT common 1.0.16). **NOT fixed.** Authoritative state + do-not-pursue list: `QA-261517.md §0`.
+- **🚑 SKM stopper FIXED + SHIPPED (Aaron-assigned, SEPARATE bug).** `ComponentNotFoundException` on PSBS+SKM Maklumat Tanah: `mlkMaklumatPajakanForm.xhtml` 4 luas inputs fired ajax `update="kadar-cukai-tanah-togglePanel"` but that panel is rendered-out (`viewCukaiPanel=false`) for the SKM-family → orphaned target. Fix (via an **ultracode Workflow**: 3 understand agents → synthesize → 2 adversarial verifiers): guard each `update=` with `#{cc.attrs.helperForm.viewCukaiPanel ? 'kadar-cukai-tanah-togglePanel, :msgs' : ':msgs'}` — the codebase's own EL-ternary convention (prod analog `mlkMaklumatPemohonForm.xhtml:86`). Committed **`4825822212`** on **`mlk/qa/261517v2`**, pushed. ⚠️ Branch ~293 behind origin + that file changed upstream (`Revert #262644`) → merger expects a small **3-way conflict** (resolvable). Not rebased (preserves the locally-tested artifact).
+- **🚨 Redmine honesty:** the commit fixes the *Maklumat Tanah page-load error*, NOT the lampiran-hilang. Don't let the Redmine update imply the lampiran is resolved.
+- **Built `quest-objective-anchor.js`** (UserPromptSubmit hook) — injects the active quest's issue + an anti-drift discipline block (symptom=ground-truth · don't conclude past evidence · cite verification). On the **worktree branch** + registered in worktree `settings.json` → live after the branch merges to main + restart. Built because I drifted/over-concluded repeatedly today.
+- **Reverted** the codemap-recon-consult hook widening (I'd unilaterally broadened its phase-gate to paper over my own hallucinated `AwaitingSimulate` phase) → back to the agreed `{discovery,recon,rubric}` gate. Corrected `current_phase` AwaitingSimulate→**Recon** (canonical enum).
+- **codemap `CONTEXT.md`** — added a **Views table** (every view declares Purpose · How-to-use · Who-it-helps; audience = dev team) + みや's **By-Object-Type/By-Purpose index** view (group all VOs/Helpers/Forms across layers; serves working-analog-first). Fixes the "no purpose-per-page" structuring gap みや flagged.
+- **etanah_atlas HANDOVER:** Cowork is handing the atlas to us — now ours to continue (easier with DB access here). Atlas modified in main tree + new `HANDOVER.md`.
 
 ## Open quests (post-session)
-- **QA-261517** — PSBS SJTLT, Phase 0 done, `current_phase=AwaitingSimulate` (live). qa_doc written; resume from その doc's §0.
+- **QA-261517** — `status=closed` (SKM fix shipped under `mlk/qa/261517v2`); BUT the ORIGINAL lampiran-hilang is UNRESOLVED/parked (root cause OPEN). See `QA-261517.md §0` + `active.txt` `parked_issue=`.
 - QA-245240 — delegated → faizudin.
-- QA-260508 — closed (Redmine-confirmed); Phase 2 archive pending.
 
-## 🚨 At-risk (R1) — status 2026-06-16
-- `etanah-codemap/` — ✅ RESOLVED 2026-06-16: copied worktree→main `projects/coding-projects/active/etanah-codemap/` (60 files / 11.2 MB, parity-verified, stays gitignored-confidential). `beautiful-shaw-cefd83` worktree copy now safe to prune. (Earlier "commit to a safety branch" plan dropped — `projects/` is gitignored by design; committing would leak confidential etanah data.)
-- `etanah_atlas/` — HELD (Option C, 2026-06-16): NOT at loss-risk (tracked + lives in main tree). Git-history confidentiality fix (untrack `et_main_uat.sql` + `.zip` + `.pyc`, then gitignore) DEFERRED until the Cowork→here handover decision lands.
-
-## ▶ NEXT SESSION — CONTINUE STRAIGHT AWAY (みや 2026-06-16)
-**Resume QA-261517 immediately — run the Test Scenario, no re-Recon needed.** It's Phase 0 done, `current_phase=AwaitingSimulate`.
-- **Simulate first** (みや does it on UAT): app `PTMLK/03/L/PSBS/2026/9` (mahaniza@melaka.gov.my), tugasan SJTLT, panel "Ulasan diterima dari Jabatan Teknikal Dan Ulasan YB" (DB-verified: 6 JT rows). Upload a **sample PDF** to a row + fill No.Rujukan/Tarikh/Keputusan + Pindaan=Ya/JT&YB → click **Hantar** (variant A), **Seterusnya** (B), **Simpan-then-Hantar** (C, control). Report which drop the Lampiran.
-- BA's FAT id `/2026/3` is NOT usable; sample PDF is fine (bug = save path, not doc content). **Full step-by-step in `QA-261517.md` §7.**
-- After the repro confirms: fix **C1** (persist Lampiran on upload) or bundle the **C2** logger. Root cause already mapped: documentList gate at `JabatanTeknikalHelper:331`.
+## ▶ NEXT SESSION — deferred / standing-flag items
+| # | Item | Resume at | Status |
+|---|---|---|---|
+| 1 | **QA-261517 lampiran-hilang root cause** | `QA-261517.md §0` (authoritative + do-not-pursue list) | OPEN — reproduction exhausted; likely env/build-specific; needs a live BA repro or a FAT-build check |
+| 2 | **SKM fix merge** | branch `mlk/qa/261517v2` (pushed) | SHIPPED — merger expects a small 3-way conflict on `mlkMaklumatPajakanForm.xhtml` (293-behind); Redmine note must NOT imply lampiran fixed |
+| 3 | **Process-teaching catch-up** | — | OWED — code-syntax layer done; the how-we-got-here process walkthrough still owed |
+| 4 | **"Things I messed up today" follow-through** | — | OWED — explicitly parked by みや; concrete fixes owed (drift, premature conclusions, phase hallucination, structuring) |
+| 5 | **etanah-codemap Phase A UI build** | `etanah-codemap/RESUME.md` + `CONTEXT.md` Views table | PARKED — build the layered UI incl. the new By-Object-Type view; dedicated session |
+| 6 | **etanah_atlas — now OURS** (Cowork handover) | `etanah_atlas/HANDOVER.md` | NEW — continue here; commit handover state; do the confidentiality untrack (`et_main_uat.sql`/.zip/.pyc) |
+| 7 | **objective-anchor hook go-live** | `.claude/hooks/quest-objective-anchor.js` (on branch) | needs branch→main merge + restart to fire |
+| 8 | **Planning-discipline lesson** | via system-design | BAKE — "every proposed artifact = purpose + how-to-use + audience" (the structuring slip) |
+| 9 | **Phase-2 archive** (QA-260508 + ~11 closed blocks) | `active-archive.txt` | PENDING — archive hygiene |
 
 ## 🎯 Session Recap (for AI restart)
-Fresh-boot session, no compaction. Storage hygiene resolved the codemap loss-risk (copied to main projects/, gitignored) + held atlas pending Cowork handover. Closed QA-260508 (Redmine-confirmed). Built the #6 `codemap-recon-consult` Power (state-driven hook, live next session after restart) through system-rules+system-design — and caught a main-vs-worktree split-brain (arch-doc AND diary edited on main path) via the verify step, consolidated both onto the branch. Retrieved + Phase-0'd QA-261517 (PSBS SJTLT Lampiran-drop, a re-attempt over Vincent's failed fix): bug-site is the documentList gate at JabatanTeknikalHelper:331; I disproved my own leading hypothesis via adversarial Recon. **Next: resume QA-261517 straight away → run §7 Test Scenario.** All findings in `QA-261517.md`.
+Long, correction-heavy session. Resumed QA-261517, reproduced the lampiran issue but exhausted reproduction (all theories refuted via codegraph+DB; BA's app gone) → root cause OPEN, parked. Pivoted to Aaron's SKM `ComponentNotFoundException` stopper → fixed it cleanly via an ultracode multi-agent workflow (`viewCukaiPanel`-guarded ajax `update`) → committed `4825822212` on `mlk/qa/261517v2`, pushed (293-behind, merger reconciles). Built `quest-objective-anchor.js` (anti-drift hook) after repeated drift/premature-conclusions; reverted a hasty codemap-hook widening; fixed `current_phase` to canonical `Recon`. Added the Views-with-purpose/audience table to codemap `CONTEXT.md` (+ the by-object-type view). `etanah_atlas` handed over from Cowork → ours. **Next: the deferred-items table above.**
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-16 13:18 MPST — DE wrap (Opus 4.8).
+**Memory Type**: RAM | **Last Activity**: 2026-06-17 12:08 MPST — DE wrap (Opus 4.8, charming-jones worktree).
