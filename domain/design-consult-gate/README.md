@@ -1,4 +1,4 @@
-# Power: design-consult-gate
+# design-consult-gate (hook)
 
 **Contract:** creating or editing a **skill** (`.claude/skills/<x>/SKILL.md`) or a **hook** (`.claude/hooks/<x>.js`, `domain/<x>/<y>.hook.js`) MUST be preceded by invoking BOTH `system-design` AND `system-rules` this session. The gate hard-blocks the edit until both appear in the session transcript.
 
@@ -6,7 +6,7 @@
 |---|---|---|
 | Hook (gate) | `design-consult-gate.gate.hook.js` | PreToolUse `Edit\|Write` — deny if the consult is missing |
 | Log | `log.jsonl` | one line per fire: `allowed` / `blocked` / `bypassed` |
-| Skill | — | none (pure enforcement; hook-only Power) |
+| Skill | — | none (pure enforcement; hook-only) |
 | Eval | — | none yet (add if slip-log later shows the consult still skipped) |
 
 **Why hook-only:** it's deterministic enforcement, no procedure to carry. Per system-design Rule 7.

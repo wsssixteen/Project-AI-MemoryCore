@@ -34,7 +34,7 @@ const path = require('path');
 const REPO_ROOT = 'C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore';
 const ACTIVE_TXT = path.join(REPO_ROOT, 'quest', 'active.txt');
 const LOG = path.resolve(__dirname, 'log.jsonl');
-const INVESTIGATION_PHASES = ['discovery', 'recon', 'rubric'];
+const INVESTIGATION_PHASES = ['discovery', 'recon', 'rubric', 'apply'];
 
 function safeRead(p) { try { return fs.readFileSync(p, 'utf-8'); } catch { return null; } }
 
@@ -98,7 +98,16 @@ process.stdin.on('end', () => {
       '       ⚠️ SootUp blind spot: Java method-refs (util::populateX) invisible (~281/589',
       '          populators missing). A "no callers" result is NOT authoritative — confirm',
       '          with codegraph MCP / Grep before relying on a negative.',
-      '  • codegraph MCP      — live callers/callees (etanah-pelupusan + common indexed)',
+      '  • codegraph MCP      — live callers/callees (etanah-pelupusan + common + AWAM indexed; pass projectPath)',
+      '',
+      '🔧 grep vs codegraph — pick the tool by QUESTION-TYPE (added 2026-06-18):',
+      '  • grep              → "where is this field/string SET or used" (text/field hunt)',
+      '  • codegraph_node    → "whole SHAPE of a class / its members" (one call beats many reads)',
+      '  • codegraph_callers → "WHAT CALLS this / who uses it" (call-edges grep cannot follow)',
+      '  • codegraph_search  → "WHERE does symbol X live / which codebase" (cross-module location)',
+      '  • codegraph_impact  → "what BREAKS if I change this" (blast radius)',
+      '  Use grep for field/string assignment hunts ONLY; reach for codegraph on',
+      '  shape / callers / symbol-location / impact — do NOT grep-substitute those.',
       '',
     ].join('\n');
 

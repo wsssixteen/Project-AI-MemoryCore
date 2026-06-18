@@ -1,4 +1,4 @@
-# Power: show-gate
+# show-gate (hook)
 
 **Contract:** a reply that DISCUSSES a change / comparison / diff / finding / root-cause MUST **show** it — a drawn box-diagram OR the actual code/SQL/diff in a fenced block — not describe it in prose. The Stop hook hard-blocks the turn end otherwise.
 
@@ -6,7 +6,7 @@
 |---|---|---|
 | Hook (discipline) | `show-gate.discipline.hook.js` | Stop — `{"decision":"block"}` when a show-worthy reply shows nothing |
 | Log | `log.jsonl` | one line per fire: `passed` / `blocked` |
-| Skill / Eval | — | none (hook-only Power) |
+| Skill / Eval | — | none (hook-only) |
 
 **Fires when:** last assistant text matches a strong change/compare/finding signal (`before…after`, `vs`, `difference between`, `the root cause/fix is`, `option A/B`, `changed from…to`, `UPDATE…SET`, `SELECT…FROM`, `diff`, `compared to`) **AND** has no box-drawing char **AND** no ``` fence.
 

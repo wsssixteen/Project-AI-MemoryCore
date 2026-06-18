@@ -1,29 +1,34 @@
 # Current Session
 
 ## What's loaded
-2026-06-18 ~13:00 MPST — Opus 4.8. Worktree `distracted-meninsky-04b417`. Office. Long, dense session: closed a quick AWAM fix, retrieved + Phase-0'd 2 new tickets, indexed etanah-awam in codegraph, built 2 new enforcement Powers, and did a patch-script learning pass. Ended with Domain Expansion.
+2026-06-18 ~18:00 MPST — Opus 4.8. Worktree `distracted-meninsky-04b417`. Office. Very long session: shipped 2 AWAM/PLP tickets, ran a deep teaching walkthrough on the 265964 fix, indexed etanah-awam in codegraph, built 2 enforcement hooks, and added 3 CLAUDE.md rules. Two DE passes (the first was premature — work continued well past it).
+
+## ▶▶ NEXT SESSION — START HERE (standing flag)
+**1. PUSH the worktree branch → main (みや, manual).** Everything this session built (2 new hooks, the CLAUDE.md rules, the codegraph tool-split) is committed locally on `claude/distracted-meninsky-04b417` but **unpushed**. Merge to main → the 2 hooks go **live next boot**. `git merge --no-ff claude/distracted-meninsky-04b417` in main → `git push origin main`. *Until this, the hooks are NOT live.*
+**2. Then the big build — AWAM↔PLP binding** (todo.md Q1 standing flag): the small, specific cross-module registry. Route through system-design. *This is the substantive "continue here."*
+**3. Quick housekeeping:** QA-266039 Phase 2 archive (run `close`) · arch-doc sync (add the 2 new hooks to `meta/system-architecture.md`) · always-prepare-commit hook · close-phase caveat (branch-switch-under-live-server, below).
 
 ## This session arc
-- **QA-266039 (AWAM · MLPS · No. Lesen ⓘ example image) — CLOSED.** The hover-tooltip example was a Perak doc (`PTPK/.../Muallim`); BA wanted Melaka. Trace: `AwamMaklumatLesen.xhtml:86-89` `<p:tooltip>` → `<h:graphicImage library="img" name="i-lesen.png">` → file `etanah-awam/src/main/webapp/resources/img/i-lesen.png`. みや swapped the image (Melaka `PTMLK/01/L/OPLPS/2026/4`) + tested OK. Phase 1 closed: commit **`c38bc07a90`** on **`mlk/qa/266039`** (off `mlk/release/fat`, pushed). **Phase 2 archive pending.** `i-lesen-bak.png` backup left untracked in the awam tree (みや can delete).
-- **QA-265964 (DMMLMS migration ↔ AWAM PLPS alignment) — Phase 0 done, NOT applied.** Module = etanah-pelupusan. Fix shape (Scout + DB-verified): (1) rename label "Tujuan Permohonan"→"Kategori Tujuan Permohonan" (`mlkMigrasiMaklumatTanahMLPS.xhtml:277`), (2) rename `#{msg['tujuan.pendudukan']}`→`#{msg['tujuan.permohonan']}` (`:288`), (3) **cascade** the purpose dropdown off the category (model on `PelupusanPermitHelperForm.onChangeKategoriTujuanPermohonan():260-278`). **DB proof**: flat `PLP_TJN_PMH_PLMS` (~20 legacy purposes) ≠ AWAM cascade `PLPS_TNH_KERAJAAN` (12 members matching the screenshot) → cascade is required. **Open**: ⚠️ legacy-values confirm (migration screen for OLD licences — does it need the legacy purposes AWAM's lists drop?) + みや's go to Apply. Due **2026-06-20**. Full doc `QA-265964.md`.
-- **2 new tickets retrieved** via `node quest/redmine-sync.js --create` (66039 High, 65964 Medium). Folders 72 + 73, History.txt + attachments + active.txt blocks created. Both QA-NNN.md docs written.
-- **codegraph: etanah-awam INDEXED** (978 files / 74,366 nodes; tested `AwamMaklumatLesenTabForm`+`AwamLoginForm` resolve; pelupusan+common untouched). **Per-project** — pass `projectPath: "E:\Projects\Melaka\etanah-awam"` per call; re-run `codegraph sync` after awam edits. `.codegraph/codegraph.db` self-gitignored.
-- **2 new Powers built + tested + registered** (live NEXT boot after merge): **design-consult-gate** (PreToolUse Edit|Write — deny skill/hook edits until system-design + system-rules appear in the transcript; deterministic) + **show-gate** (Stop, HARD-BLOCK — discusses a change/compare/finding with no box-diagram/code-block → blocks the turn; `[skip-show-gate]` bypass; ═══/DE/short exempt; fail-open). **self-gate-impulse RETIRED** (unregistered). meta-edit-gate LEFT AS-IS (file header proves it's purpose-built 2026-05-23, NOT a bad-merge artifact — corrected みや's hypothesis with evidence). Both Powers in `domain/<name>/`; registered with main-repo paths in worktree settings.json (JSON validated).
-- **Patch-script learning (ref QA-263344, Aaron's revised):** a DB patch must be env-portable + minimal-footprint — (1) resolve IDs by **kod-subquery**, never a hardcoded PK (`tgsn_id=5134780` is UAT-only → wrong/no row elsewhere); (2) cover **sibling tugasans** (PYMB + SMB); (3) touch **only the fixed column** — for reference/config tables (`ind_*`,`rjk_*`) **don't bump `version`** or audit cols (refines our "bump version+1 on UPDATE" rule, which is transactional-only).
+- **QA-266039 (AWAM · MLPS · No. Lesen ⓘ example image) — CLOSED (Phase 1).** Perak example → Melaka. Commit **`c38bc07a90`** on `mlk/qa/266039` (off `mlk/release/fat`, pushed). ⬜ **Phase 2 archive still pending.**
+- **QA-265964 (DMMLMS migration ↔ AWAM PLPS Tujuan-Permohonan alignment) — FULLY CLOSED + ARCHIVED.** Fix: rename labels ("Kategori Tujuan Permohonan" / "Tujuan Permohonan") + **cascade** field-2's options off the chosen category (replacing the flat `PLP_TJN_PMH_PLMS`), mirroring AWAM's `onChangeKategoriTujuanPermohonan` + fixing the lain-lain `OTHERS` coupling. Tested green, commit **`142c7beccc`** on `mlk/qa/265964` (pushed, awaiting team merge). Archived (folder→Archive\, block→active-archive.txt, project doc→archive\). Full doc `QA-265964.md` (in archive/).
+- **Deep teaching walkthrough** (265964, at みや's request): discovery (URL→file, gated-panel→urusan→composite, `mb`→base-class via inheritance) · trace method (binding-name → grep → assignment → declaring class) · base-vs-child (fix where the member is *declared*; base is `abstract`, 6 concrete subclasses) · `<p:ajax>` follows the dependency · the fix decision (compare→DB-verify→cascade-required→mirror-analog→fix-ripple) · grep-vs-codegraph tool-split · EL `.x` = getter chain.
+- **codegraph: etanah-awam INDEXED** (978 files; per-project — pass `projectPath`; re-run `codegraph sync` after awam edits).
+- **2 new hooks built + tested + registered** (live NEXT boot after merge): **design-consult-gate** (PreToolUse Edit|Write — deny skill/hook edits until system-design + system-rules in the transcript) + **show-gate** (Stop hard-block — discuss a change with no box/code → block; `[skip-show-gate]` bypass; ═══/DE/short exempt; fail-open). **self-gate-impulse retired**. meta-edit-gate left as-is (verified not a bad merge).
+- **3 CLAUDE.md rules added** (per みや): 🏷️ name-by-purpose/mirror-analog (§8) · 🩹 DB-patch portability+minimal-footprint (§9) · 📐 SD = Story Diagram (§2). Plus the **codegraph tool-split** baked into `codemap-recon-consult` (now fires on Apply too).
+- **Learnings**: (a) **branch-switch under a live Eclipse server** reverts working-tree xhtml → open pages throw `IndexOutOfBoundsException` in `AttachedObjectListHolder.restoreState` (stale view-state vs reverted tree) — transient, NOT a fix bug; hard-refresh clears it. (b) patch-script: kod-subquery not hardcoded PK; config tables don't bump version. (c) name a method by what it DOES, not the screen.
 
-## ▶ NEXT SESSION — carry-forward
+## Carry-forward (full)
 | # | Item | State |
 |---|---|---|
-| 1 | **QA-265964 Apply** | Phase 0 done; awaiting みや go + legacy-values confirm. Due 06-20. |
-| 2 | **QA-266039 Phase 2 archive** | `closed`; run `close` again → archive folder + block. |
-| 3 | **arch-doc sync** | add design-consult-gate + show-gate to `meta/system-architecture.md` catalog (bypassed at build to bound the turn). |
-| 4 | **DB-patch rule refine** | reference/config tables → don't bump version + kod-subquery not hardcoded PK; add a patch-script checklist (CLAUDE.md §9 / DATABASE.md). |
-| 5 | **SD abbreviation → CLAUDE.md §2** | add "SD = Story Diagram" + widen the trigger (edit-locked for me — draft text for みや to paste). |
-| 6 | **always-prepare-commit hook** | みや's idea: pre-stage + draft commit during testing so he confirms instantly. Route via system-design. |
-| 7 | **Data-Key Blast Radius** | the 265964/codegraph gap — a shared-reference-data consumer map (which screens bind PLP_KTGR_PRMHNN). |
-| 8 | **split-working-tree caution** | this session edited some files in MAIN tree (auto-memory, slip-log, QA docs) + some in the worktree — reconcile at every commit; prefer one tree per session. |
+| 1 | **Push worktree → main** | ⬜ みや manual — makes the 2 hooks + rules live. DO FIRST. |
+| 2 | **AWAM↔PLP binding** | ⬜ the big build — todo.md standing flag; route via system-design |
+| 3 | **QA-266039 Phase 2 archive** | ⬜ run `close` |
+| 4 | **arch-doc sync** | ⬜ add design-consult-gate + show-gate to `meta/system-architecture.md` |
+| 5 | **always-prepare-commit hook** | ⬜ pre-stage + draft commit during testing; route via system-design |
+| 6 | **close-phase caveat** | ⬜ add "branch-return reverts working-tree under live server → refresh open pages; transient view-state error" to close-phase Phase 1 Step 5 |
+| 7 | **one-tree-per-session** | process note — split edits this session made commits messy |
 
 ## 🎯 Session Recap (for AI restart)
-Closed QA-266039 (AWAM No.Lesen example image Perak→Melaka, commit c38bc07a90). Retrieved + Phase-0'd 2 new tickets (266039 done; 265964 DMMLMS↔AWAM-PLPS label+cascade alignment, DB-verified, awaiting Apply, due 06-20). Indexed etanah-awam in codegraph (per-project). Built + registered 2 Powers — design-consult-gate (consult system-design+system-rules before skill/hook edits) + show-gate (Stop hard-block to SHOW boxed/code); retired self-gate-impulse; left meta-edit-gate (not a bad merge — verified). Patch-script learning from Aaron's revised (kod-subquery + minimal-footprint). **Next: 265964 Apply + the carry-forward table.**
+Shipped QA-266039 (AWAM No.Lesen image, `c38bc07a90`, Phase-2 archive pending) + QA-265964 (DMMLMS↔AWAM Tujuan-Permohonan label+cascade, `142c7beccc`, fully archived). Long teaching walkthrough on 265964 (discovery→fix→JSF). Indexed etanah-awam in codegraph. Built design-consult-gate + show-gate hooks (live next boot after merge); retired self-gate-impulse. Added 3 CLAUDE.md rules + the codegraph tool-split. **NEXT: push worktree→main (hooks go live), then the AWAM↔PLP binding build; quick: 266039 archive + arch-doc sync.**
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-18 ~13:00 MPST — DE wrap (Opus 4.8, distracted-meninsky worktree).
+**Memory Type**: RAM | **Last Activity**: 2026-06-18 ~18:00 MPST — DE (2nd pass) wrap (Opus 4.8, distracted-meninsky worktree).
