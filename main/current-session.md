@@ -4,9 +4,9 @@
 2026-06-18 ~18:00 MPST — Opus 4.8. Worktree `distracted-meninsky-04b417`. Office. Very long session: shipped 2 AWAM/PLP tickets, ran a deep teaching walkthrough on the 265964 fix, indexed etanah-awam in codegraph, built 2 enforcement hooks, and added 3 CLAUDE.md rules. Two DE passes (the first was premature — work continued well past it).
 
 ## ▶▶ NEXT SESSION — START HERE (standing flag)
-**1. PUSH the worktree branch → main (みや, manual).** Everything this session built (2 new hooks, the CLAUDE.md rules, the codegraph tool-split) is committed locally on `claude/distracted-meninsky-04b417` but **unpushed**. Merge to main → the 2 hooks go **live next boot**. `git merge --no-ff claude/distracted-meninsky-04b417` in main → `git push origin main`. *Until this, the hooks are NOT live.*
-**2. Then the big build — AWAM↔PLP binding** (todo.md Q1 standing flag): the small, specific cross-module registry. Route through system-design. *This is the substantive "continue here."*
-**3. Quick housekeeping:** QA-266039 Phase 2 archive (run `close`) · arch-doc sync (add the 2 new hooks to `meta/system-architecture.md`) · always-prepare-commit hook · close-phase caveat (branch-switch-under-live-server, below).
+**0. ✓ DONE this session** — worktree merged + pushed to `origin/main` (`2d69045`); the 2 new hooks + CLAUDE.md rules are LIVE. No push pending.
+**1. The big build — AWAM↔PLP binding** (todo.md Q1 standing flag): the small, specific cross-module registry. Route through system-design. *This is the substantive "continue here."*
+**2. Quick housekeeping:** QA-266039 Phase 2 archive (run `close`) · arch-doc sync (add the 2 new hooks to `meta/system-architecture.md`) · always-prepare-commit hook · close-phase caveat (branch-switch-under-live-server, below).
 
 ## This session arc
 - **QA-266039 (AWAM · MLPS · No. Lesen ⓘ example image) — CLOSED (Phase 1).** Perak example → Melaka. Commit **`c38bc07a90`** on `mlk/qa/266039` (off `mlk/release/fat`, pushed). ⬜ **Phase 2 archive still pending.**
