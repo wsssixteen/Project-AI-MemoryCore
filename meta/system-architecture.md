@@ -98,7 +98,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 
 | Hook | Owner | Watches | Action | Stakeholders |
 |---|---|---|---|---|
-| `self-gate-impulse.js` | self | impulsive Edits | "pause + verify" reminder | personality.md self-gate discipline | Predicate affects impulse detection |
+| `domain/design-consult-gate/design-consult-gate.gate.hook.js` | self (NEW 2026-06-18 — replaces self-gate-impulse for skill/hook creation) | Edit/Write to `.claude/skills/**/SKILL.md` · `.claude/hooks/*.js` · `domain/**/*.hook.js` | **HARD-BLOCK (deny)** until transcript shows BOTH `system-design` + `system-rules` invoked this session; bypass `[skip-design-consult: <reason>]`; fail-open; reads `transcript_path` | system-design + system-rules consult discipline (みや 2026-06-18) | self-gate-impulse.js RETIRED (unregistered 2026-06-18 — WARN-only since 2026-05-20, never enforced) |
 | `phase0-artifact-gate.js` | self | Edits during Phase 0 | Phase 0 artifact rules | Quest Phase 0 | Phase 0 rule changes need this hook update |
 | `pre-action-check-gate.js` | self | quest-related path edits | Notes.txt + env-check + PDF reminders · **Notes-file tool-only DENY (v1.2)** | Quest skill, Notes.txt write, notes.js | Path-pattern changes need predicate update |
 | `meta-edit-gate.js` | self | `meta/*` path edits + (Phase 0 extension) hooks/skills/protocols/state-files | recursive safety + paired-edit predicate | meta-layer audit, architecture-doc-sync | Phase 0 extends this hook for architecture-doc-sync |
@@ -107,7 +107,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 | `claude-md-edit-guard.js` | self (NEW 2026-06-02 — enforces /system-rules Rule 2 merge-in-place) | Edit/Write to CLAUDE.md · /system-rules/SKILL.md · /system-design/SKILL.md | scans for HARD-RULE block opener · Why+QA-NNN narrative · pairs-with cross-ref · How-to-apply restatement · みや verbatim quote inside rule body; warns advisory | /system-rules Rule 2, /system-design Bloat-prevention default; pairs with no current skill (hook-only Power) | Bloat-pattern regex additions per observed misses |
 | `quest-phase-gate.js` | self (NEW 2026-06-08, QA-262762 — structural defender for the skip-the-phases / fix-on-assumption slip, root_category wrong-baseline-diagnosis 🚨) | Edit/Write to `etanah-*` code/template/config WHILE a `status=active` quest exists | **HARD-BLOCKS** until Scout+Recon+Rubric banners (`═══ SCOUT/RECON/RUBRIC ═══`) appear in the session transcript; bypass `[skip-phase-gate: <reason>]`; **fail-open** (any error → allow) | quest-protocol.md FORCED PHASE-EMIT GATES + banner contract + Logic Blast Radius Evidence column; **first hook to read `transcript_path`** | Checks SHAPE (presence) NOT correctness — that stays Ruri's judgment + みや's glance; marker/predicate changes need regex update. Self-tested 5 cases 2026-06-08 |
 
-### 3.5 Stop (9 hooks)
+### 3.5 Stop (10 hooks)
 
 | Hook | Owner | Watches turn-end | Action | Stakeholders |
 |---|---|---|---|---|
@@ -120,6 +120,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 | `diary-format-gate.js` | self (NEW 2026-05-28, parallel session) | every Stop | validates 3 H2 sections in today's daily-diary entry (Sessions / Index / Closing) | daily-diary template, DE Step 4 | Template-section name changes require this hook update; warn-only (does not block) |
 | `rcrl-emit-check.js` | self (NEW 2026-06-01 S5, RCRL backstop) | every Stop — fires only when active.txt has `status=active` AND turn transcript has Recon-shape emit | warns if RCRL block missing (advisory in v1); bypass via `[skip-rcrl: <reason>]` | CLAUDE.md §10 RCRL primitive Step 0, scout-completeness-gate.js (same family) | Stage 2 flip to `decision:block` deferred until predicate quality observed |
 | `quest-knowledge-save-gate.js` | self (NEW 2026-06-03, continuous knowledge-save) | every Stop — fires only when active.txt has `status=active` AND the turn surfaced a discovery signal (root-cause / `@Column` / class-chain / `file:line` / tugasan etc.) AND no save-confirmation phrase present | warns to route the finding NOW: durable → `etanah-knowledge/melaka/<category>.md` (DE Step-7 table), quest-specific → `QA-NNN.md`; warn-only v1 | DE Step-7 sweep (continuous version of it), quest skill, etanah-knowledge files | v1.1 candidate: block Stop if investigation turn surfaced a finding and nothing written; routing table must track DE Step-7 category table |
+| `domain/show-gate/show-gate.discipline.hook.js` | self (NEW 2026-06-18 — SHOW-discipline, per みや "the utmost criteria") | every Stop — reply discusses a change/compare/finding with no box-diagram and no code-block | **HARD-BLOCK (decision:block)** the turn end until a shown artifact present; bypass `[skip-show-gate: <reason>]`; exempt ═══/DE/short(<500); fail-open; reads `transcript_path` | CLAUDE.md §2 diagram-mandatory rule (makes it deterministic) | trigger-signal regex additions per observed misses |
 
 ### 3.6 PostToolUse (1 hook)
 

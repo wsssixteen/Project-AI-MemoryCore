@@ -918,6 +918,7 @@ pushed=2026-06-02
 note=Phase 1 closed 2026-06-02 — branch mlk/qa/246923 pushed; awaiting BA verification on FAT
 
 ## 2026-06-04 - QA-246949 PRBB Rencana JKBB PDT/PTG - archived (Phase 2 close)
+
 qa=QA-246949
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\57. QA #246949 - PRBB - Penyediaan Rencana JKBB PDT-PTG - Isu pada template Rencana Per
 qa_doc=projects/coding-projects/archive/QA-246949/QA-246949.md
@@ -928,3 +929,24 @@ local_test_confirmed=true
 env=MLK UAT
 urusan=PRBB
 commit=78d3f29292 mlk/master (merged + pushed)
+
+qa=QA-265964
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\73. QA #265964 - DMMLMS - Penyediaan dan Semakan Data Migrasi Pelupusan
+phase=1
+status=archived
+ticket_type=enhancement
+env=DMMLMS
+issue_one_liner=DMMLMS - Penyediaan dan Semakan Data Migrasi Pelupusan
+assigned_to_me=2026-06-18
+qa_doc=projects/coding-projects/active/QA-265964/QA-265964.md
+urusan=DMMLMS
+tugasan=Penyediaan Data Migrasi Pelupusan
+scope=PLP-migration (ref AWAM PLPS)
+due=2026-06-20
+note=align Tujuan fields label+SAK-kod to AWAM PLPS; not yet scouted
+current_phase=Closed
+local_test_confirmed=true
+quest_start=2026-06-18
+ship_state=applied-uncommitted: 2 labels + cascade (xhtml ajax + onChangeKategoriTujuanMigrasi + lain-lain OTHERS + category-driven init) on mlkMigrasiMaklumatTanahMLPS.xhtml + BasePelupusanMigrasiForm.java
+commit=142c7beccc
+closed=2026-06-18

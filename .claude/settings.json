@@ -148,7 +148,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\self-gate-impulse.js\""
+            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\domain\\design-consult-gate\\design-consult-gate.gate.hook.js\""
           },
           {
             "type": "command",
@@ -223,6 +223,10 @@
           {
             "type": "command",
             "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\quest-knowledge-save-gate.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\domain\\show-gate\\show-gate.discipline.hook.js\""
           }
         ]
       }

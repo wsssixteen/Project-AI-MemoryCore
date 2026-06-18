@@ -1,35 +1,34 @@
 # Current Session
 
 ## What's loaded
-2026-06-17 12:08 MPST — Opus 4.8 (1M ctx). Worktree `charming-jones-cad8e9`. Long, correction-heavy session with one clean win. Resumed QA-261517 → reproduced + diagnosed the original lampiran issue (root cause OPEN, parked) → pivoted to Aaron's SKM stopper → FIXED + shipped it → codemap planning fix → DE.
+2026-06-18 ~18:00 MPST — Opus 4.8. Worktree `distracted-meninsky-04b417`. Office. Very long session: shipped 2 AWAM/PLP tickets, ran a deep teaching walkthrough on the 265964 fix, indexed etanah-awam in codegraph, built 2 enforcement hooks, and added 3 CLAUDE.md rules. Two DE passes (the first was premature — work continued well past it).
+
+## ▶▶ NEXT SESSION — START HERE (standing flag)
+**1. PUSH the worktree branch → main (みや, manual).** Everything this session built (2 new hooks, the CLAUDE.md rules, the codegraph tool-split) is committed locally on `claude/distracted-meninsky-04b417` but **unpushed**. Merge to main → the 2 hooks go **live next boot**. `git merge --no-ff claude/distracted-meninsky-04b417` in main → `git push origin main`. *Until this, the hooks are NOT live.*
+**2. Then the big build — AWAM↔PLP binding** (todo.md Q1 standing flag): the small, specific cross-module registry. Route through system-design. *This is the substantive "continue here."*
+**3. Quick housekeeping:** QA-266039 Phase 2 archive (run `close`) · arch-doc sync (add the 2 new hooks to `meta/system-architecture.md`) · always-prepare-commit hook · close-phase caveat (branch-switch-under-live-server, below).
 
 ## This session arc
-- **QA-261517 (lampiran hilang) — reproduced, root cause OPEN, PARKED.** Walked the full pindaan cycle on UAT (mahaniza@ `/2026/9`, then `/2026/2`). DB+code findings: documents are NOT lost (`skg_dok` rows stay `flag_aktif='Y'`). Every theory was REFUTED via codegraph+DB — write-loss, orphan-by-delete, `generateSurat`-rows-filter, JT-subflow-rebuild all disproven. Reproduction exhausted: `/2026/9`+`/2026/2` are test-healthy, BA's FAT `/2026/3` is gone. Likely **env/build-specific** (BA on MLKFAT common 1.0.16). **NOT fixed.** Authoritative state + do-not-pursue list: `QA-261517.md §0`.
-- **🚑 SKM stopper FIXED + SHIPPED (Aaron-assigned, SEPARATE bug).** `ComponentNotFoundException` on PSBS+SKM Maklumat Tanah: `mlkMaklumatPajakanForm.xhtml` 4 luas inputs fired ajax `update="kadar-cukai-tanah-togglePanel"` but that panel is rendered-out (`viewCukaiPanel=false`) for the SKM-family → orphaned target. Fix (via an **ultracode Workflow**: 3 understand agents → synthesize → 2 adversarial verifiers): guard each `update=` with `#{cc.attrs.helperForm.viewCukaiPanel ? 'kadar-cukai-tanah-togglePanel, :msgs' : ':msgs'}` — the codebase's own EL-ternary convention (prod analog `mlkMaklumatPemohonForm.xhtml:86`). Committed **`4825822212`** on **`mlk/qa/261517v2`**, pushed. ⚠️ Branch ~293 behind origin + that file changed upstream (`Revert #262644`) → merger expects a small **3-way conflict** (resolvable). Not rebased (preserves the locally-tested artifact).
-- **🚨 Redmine honesty:** the commit fixes the *Maklumat Tanah page-load error*, NOT the lampiran-hilang. Don't let the Redmine update imply the lampiran is resolved.
-- **Built `quest-objective-anchor.js`** (UserPromptSubmit hook) — injects the active quest's issue + an anti-drift discipline block (symptom=ground-truth · don't conclude past evidence · cite verification). On the **worktree branch** + registered in worktree `settings.json` → live after the branch merges to main + restart. Built because I drifted/over-concluded repeatedly today.
-- **Reverted** the codemap-recon-consult hook widening (I'd unilaterally broadened its phase-gate to paper over my own hallucinated `AwaitingSimulate` phase) → back to the agreed `{discovery,recon,rubric}` gate. Corrected `current_phase` AwaitingSimulate→**Recon** (canonical enum).
-- **codemap `CONTEXT.md`** — added a **Views table** (every view declares Purpose · How-to-use · Who-it-helps; audience = dev team) + みや's **By-Object-Type/By-Purpose index** view (group all VOs/Helpers/Forms across layers; serves working-analog-first). Fixes the "no purpose-per-page" structuring gap みや flagged.
-- **etanah_atlas HANDOVER:** Cowork is handing the atlas to us — now ours to continue (easier with DB access here). Atlas modified in main tree + new `HANDOVER.md`.
+- **QA-266039 (AWAM · MLPS · No. Lesen ⓘ example image) — CLOSED (Phase 1).** Perak example → Melaka. Commit **`c38bc07a90`** on `mlk/qa/266039` (off `mlk/release/fat`, pushed). ⬜ **Phase 2 archive still pending.**
+- **QA-265964 (DMMLMS migration ↔ AWAM PLPS Tujuan-Permohonan alignment) — FULLY CLOSED + ARCHIVED.** Fix: rename labels ("Kategori Tujuan Permohonan" / "Tujuan Permohonan") + **cascade** field-2's options off the chosen category (replacing the flat `PLP_TJN_PMH_PLMS`), mirroring AWAM's `onChangeKategoriTujuanPermohonan` + fixing the lain-lain `OTHERS` coupling. Tested green, commit **`142c7beccc`** on `mlk/qa/265964` (pushed, awaiting team merge). Archived (folder→Archive\, block→active-archive.txt, project doc→archive\). Full doc `QA-265964.md` (in archive/).
+- **Deep teaching walkthrough** (265964, at みや's request): discovery (URL→file, gated-panel→urusan→composite, `mb`→base-class via inheritance) · trace method (binding-name → grep → assignment → declaring class) · base-vs-child (fix where the member is *declared*; base is `abstract`, 6 concrete subclasses) · `<p:ajax>` follows the dependency · the fix decision (compare→DB-verify→cascade-required→mirror-analog→fix-ripple) · grep-vs-codegraph tool-split · EL `.x` = getter chain.
+- **codegraph: etanah-awam INDEXED** (978 files; per-project — pass `projectPath`; re-run `codegraph sync` after awam edits).
+- **2 new hooks built + tested + registered** (live NEXT boot after merge): **design-consult-gate** (PreToolUse Edit|Write — deny skill/hook edits until system-design + system-rules in the transcript) + **show-gate** (Stop hard-block — discuss a change with no box/code → block; `[skip-show-gate]` bypass; ═══/DE/short exempt; fail-open). **self-gate-impulse retired**. meta-edit-gate left as-is (verified not a bad merge).
+- **3 CLAUDE.md rules added** (per みや): 🏷️ name-by-purpose/mirror-analog (§8) · 🩹 DB-patch portability+minimal-footprint (§9) · 📐 SD = Story Diagram (§2). Plus the **codegraph tool-split** baked into `codemap-recon-consult` (now fires on Apply too).
+- **Learnings**: (a) **branch-switch under a live Eclipse server** reverts working-tree xhtml → open pages throw `IndexOutOfBoundsException` in `AttachedObjectListHolder.restoreState` (stale view-state vs reverted tree) — transient, NOT a fix bug; hard-refresh clears it. (b) patch-script: kod-subquery not hardcoded PK; config tables don't bump version. (c) name a method by what it DOES, not the screen.
 
-## Open quests (post-session)
-- **QA-261517** — `status=closed` (SKM fix shipped under `mlk/qa/261517v2`); BUT the ORIGINAL lampiran-hilang is UNRESOLVED/parked (root cause OPEN). See `QA-261517.md §0` + `active.txt` `parked_issue=`.
-- QA-245240 — delegated → faizudin.
-
-## ▶ NEXT SESSION — deferred / standing-flag items
-| # | Item | Resume at | Status |
-|---|---|---|---|
-| 1 | **QA-261517 lampiran-hilang root cause** | `QA-261517.md §0` (authoritative + do-not-pursue list) | OPEN — reproduction exhausted; likely env/build-specific; needs a live BA repro or a FAT-build check |
-| 2 | **SKM fix merge** | branch `mlk/qa/261517v2` (pushed) | SHIPPED — merger expects a small 3-way conflict on `mlkMaklumatPajakanForm.xhtml` (293-behind); Redmine note must NOT imply lampiran fixed |
-| 3 | **Process-teaching catch-up** | — | OWED — code-syntax layer done; the how-we-got-here process walkthrough still owed |
-| 4 | **"Things I messed up today" follow-through** | — | OWED — explicitly parked by みや; concrete fixes owed (drift, premature conclusions, phase hallucination, structuring) |
-| 5 | **etanah-codemap Phase A UI build** | `etanah-codemap/RESUME.md` + `CONTEXT.md` Views table | PARKED — build the layered UI incl. the new By-Object-Type view; dedicated session |
-| 6 | **etanah_atlas — now OURS** (Cowork handover) | `etanah_atlas/HANDOVER.md` | NEW — continue here; commit handover state; do the confidentiality untrack (`et_main_uat.sql`/.zip/.pyc) |
-| 7 | **objective-anchor hook go-live** | `.claude/hooks/quest-objective-anchor.js` (on branch) | needs branch→main merge + restart to fire |
-| 8 | **Planning-discipline lesson** | via system-design | BAKE — "every proposed artifact = purpose + how-to-use + audience" (the structuring slip) |
-| 9 | **Phase-2 archive** (QA-260508 + ~11 closed blocks) | `active-archive.txt` | PENDING — archive hygiene |
+## Carry-forward (full)
+| # | Item | State |
+|---|---|---|
+| 1 | **Push worktree → main** | ⬜ みや manual — makes the 2 hooks + rules live. DO FIRST. |
+| 2 | **AWAM↔PLP binding** | ⬜ the big build — todo.md standing flag; route via system-design |
+| 3 | **QA-266039 Phase 2 archive** | ⬜ run `close` |
+| 4 | **arch-doc sync** | ⬜ add design-consult-gate + show-gate to `meta/system-architecture.md` |
+| 5 | **always-prepare-commit hook** | ⬜ pre-stage + draft commit during testing; route via system-design |
+| 6 | **close-phase caveat** | ⬜ add "branch-return reverts working-tree under live server → refresh open pages; transient view-state error" to close-phase Phase 1 Step 5 |
+| 7 | **one-tree-per-session** | process note — split edits this session made commits messy |
 
 ## 🎯 Session Recap (for AI restart)
-Long, correction-heavy session. Resumed QA-261517, reproduced the lampiran issue but exhausted reproduction (all theories refuted via codegraph+DB; BA's app gone) → root cause OPEN, parked. Pivoted to Aaron's SKM `ComponentNotFoundException` stopper → fixed it cleanly via an ultracode multi-agent workflow (`viewCukaiPanel`-guarded ajax `update`) → committed `4825822212` on `mlk/qa/261517v2`, pushed (293-behind, merger reconciles). Built `quest-objective-anchor.js` (anti-drift hook) after repeated drift/premature-conclusions; reverted a hasty codemap-hook widening; fixed `current_phase` to canonical `Recon`. Added the Views-with-purpose/audience table to codemap `CONTEXT.md` (+ the by-object-type view). `etanah_atlas` handed over from Cowork → ours. **Next: the deferred-items table above.**
+Shipped QA-266039 (AWAM No.Lesen image, `c38bc07a90`, Phase-2 archive pending) + QA-265964 (DMMLMS↔AWAM Tujuan-Permohonan label+cascade, `142c7beccc`, fully archived). Long teaching walkthrough on 265964 (discovery→fix→JSF). Indexed etanah-awam in codegraph. Built design-consult-gate + show-gate hooks (live next boot after merge); retired self-gate-impulse. Added 3 CLAUDE.md rules + the codegraph tool-split. **NEXT: push worktree→main (hooks go live), then the AWAM↔PLP binding build; quick: 266039 archive + arch-doc sync.**
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-17 12:08 MPST — DE wrap (Opus 4.8, charming-jones worktree).
+**Memory Type**: RAM | **Last Activity**: 2026-06-18 ~18:00 MPST — DE (2nd pass) wrap (Opus 4.8, distracted-meninsky worktree).
