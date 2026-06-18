@@ -13,6 +13,16 @@ ARGUMENTS: $ARGUMENTS
 
 `Scout (trace the whole class chain, start→end · 100%-verify) → Recon (distrust + verify the Scout, prove it wrong) → Rubric (blast-radius + read sibling code for format/structure/style + emit 2-5 candidate fixes) → Apply`. This loop covers debugging → implementation in one straightforward pass; the phase machinery + skill invocations below **serve** it, never replace it. If a gate gets in the loop's way, the loop wins. Detail: `quest/quest-protocol.md`.
 
+## 📌 Vocabulary — "save everything" in quest context (per みや 2026-06-18)
+
+When みや says **"save everything" / "save the quest" / "save it" / "document the quest"** DURING quest work, it means **persist into the quest's own MD files** — NOT a session save / diary / Domain Expansion. The three homes, in order:
+
+1. **`projects/coding-projects/active/QA-<num>/QA-<num>.md`** — the canonical per-quest doc (primary). Write the section matching the phase that just completed: Scout→`Context Loading (Discovery)` · Recon→`Debugging` · Rubric→`Code-Review` · Apply→`Ship — Apply` · test→`Ship — Verify`.
+2. **Task folder `1. <NNN NNN>.txt`** — test-data only, via `node quest/notes.js` (never hand-write).
+3. **`quest/active.txt`** block — phase/status/scope fields, via `node quest/active-cli.js update`.
+
+See "QA-NNNN.md persistence — save after EVERY stop" below for the full rule. If unsure whether "save" means quest-save vs session-save, the quest context (a ticket is active) defaults to quest-save.
+
 ## /quest start <QA-number> <task-folder-path>
 
 **Phase 0 runs as the `quest-phase0` Workflow (NEW 2026-05-29).** On `/quest start`, after deriving the ticket context, invoke the Workflow tool:
