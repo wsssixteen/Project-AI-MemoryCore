@@ -39,7 +39,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 
 ## 3. Hook catalog — every hook, owner, dependencies, change-impact
 
-40 unique hook files total, 41 registrations as of 2026-06-08 (convention-check-gate dual-registered on Bash + Edit|Write; `quest-phase-gate.js` added 2026-06-08, QA-262762). **2026-06-19**: `codemap-recon-consult.discipline.hook.js` added (Stop — codegraph back-gate) + `convention-check-gate.js` upgraded to v1.2 (Java-blocking); both self-tested 5 cases each. Grouped by trigger phase. Includes `diary-format-gate.js` (Stop) + `quest-resume-preflight.js` (UserPromptSubmit) added by 2026-05-28 parallel session.
+**(Live count + canonical registry: §3.0 auto-registry below — the hand-counts in this paragraph are historical and no longer maintained.)** 40 unique hook files, 41 registrations as of 2026-06-08 (convention-check-gate dual-registered on Bash + Edit|Write; `quest-phase-gate.js` added 2026-06-08, QA-262762). **2026-06-19**: `codemap-recon-consult.discipline.hook.js` added (Stop — codegraph back-gate) + `convention-check-gate.js` upgraded to v1.2 (Java-blocking); both self-tested 5 cases each. Grouped by trigger phase. Includes `diary-format-gate.js` (Stop) + `quest-resume-preflight.js` (UserPromptSubmit) added by 2026-05-28 parallel session.
 
 > **⚠️ CORRECTION (2026-05-28, diary-redesign session)** — this catalog predates the diary-redesign hook changes and is STALE on the Stop-hook group. Actual current state:
 > - `diary-format-gate.js` (Phase 1) was **superseded by `de-output-integrity-checker.js`** (Phase 3, config-driven structure + voice-signal checker) and **deleted**.
@@ -47,6 +47,69 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > - `voice-signal-spike.js` added (standalone read-only calibration tool, NOT a registered hook).
 > - Net Stop-hook registrations: was 6 (Phase 1 added diary-format-gate as 7th) → de-output-integrity-checker replaces it → back to 7 Stop registrations.
 > **A full catalog reconciliation is deferred** (flagged for the future "how best to structure this" session along with the auto-tracking redesign). The hook tables below are otherwise accurate for non-diary hooks.
+
+### 3.0 Registered-hooks registry — AUTO-GENERATED (canonical)
+
+> Generated from `.claude/settings.json` by `meta/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `meta-layer-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node meta/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
+
+<!-- HOOK-REGISTRY:AUTO-START -->
+_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 52 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
+
+| Event | Matcher | Hook | On disk? |
+|---|---|---|---|
+| SessionStart | — | `boot-load-verification.js` | ✓ |
+| SessionStart | — | `boot-required-read-gate.js` | ✓ |
+| SessionStart | — | `evolution-check-trigger.js` | ✓ |
+| SessionStart | — | `meta-layer-audit.js` | ✓ |
+| SessionStart | — | `open-quest-surfacer.js` | ✓ |
+| SessionStart | — | `system-check-trigger.js` | ✓ |
+| SessionStart | — | `worktree-cleanup-boot.js` | ✓ |
+| UserPromptSubmit | — | `auto-skill-trigger.js` | ✓ |
+| UserPromptSubmit | — | `batch-ask.trigger.hook.js` | ✓ |
+| UserPromptSubmit | — | `best-practices-consult-gate.js` | ✓ |
+| UserPromptSubmit | — | `codemap-recon-consult.trigger.hook.js` | ✓ |
+| UserPromptSubmit | — | `domain-expansion-trigger.js` | ✓ |
+| UserPromptSubmit | — | `inventory-first-gate.js` | ✓ |
+| UserPromptSubmit | — | `MemoryClaimGate.js` | ✓ |
+| UserPromptSubmit | — | `mode-detector.js` | ✓ |
+| UserPromptSubmit | — | `PlainFirstGate.js` | ✓ |
+| UserPromptSubmit | — | `prayer-gate.js` | ✓ |
+| UserPromptSubmit | — | `prepare-commit-trigger.js` | ✓ |
+| UserPromptSubmit | — | `prose-default-gate.js` | ✓ |
+| UserPromptSubmit | — | `quest-active-grounding.js` | ✓ |
+| UserPromptSubmit | — | `quest-resume-preflight.js` | ✓ |
+| UserPromptSubmit | — | `scout-completeness-gate.js` | ✓ |
+| UserPromptSubmit | — | `session-items-manager.js` | ✓ |
+| UserPromptSubmit | — | `skill-invocation-discipline-gate.js` | ✓ |
+| UserPromptSubmit | — | `SystemAwareDecision.js` | ✓ |
+| UserPromptSubmit | — | `ticket-gate.js` | ✓ |
+| UserPromptSubmit | — | `TurnChecklistGate.js` | ✓ |
+| UserPromptSubmit | — | `user-side-guardrail.js` | ✓ |
+| UserPromptSubmit | — | `word-ui-vocab-gate.js` | ✓ |
+| PreToolUse | Edit|Write | `claude-md-edit-guard.js` | ✓ |
+| PreToolUse | Bash | `commit-gate.js` | ✓ |
+| PreToolUse | Bash | `convention-check-gate.js` | ✓ |
+| PreToolUse | Edit|Write | `convention-check-gate.js` | ✓ |
+| PreToolUse | Edit|Write | `design-consult-gate.gate.hook.js` | ✓ |
+| PreToolUse | Edit|Write | `edit-scope-gate.js` | ✓ |
+| PreToolUse | Edit|Write | `meta-edit-gate.js` | ✓ |
+| PreToolUse | Edit|Write | `phase0-artifact-gate.js` | ✓ |
+| PreToolUse | Edit|Write | `pre-action-check-gate.js` | ✓ |
+| PreToolUse | Edit|Write | `quest-phase-gate.js` | ✓ |
+| PostToolUse | — | `RecursiveLoopDetector.js` | ✓ |
+| Stop | — | `ask-back-gate.js` | ✓ |
+| Stop | — | `codemap-recon-consult.discipline.hook.js` | ✓ |
+| Stop | — | `de-output-integrity-checker.js` | ✓ |
+| Stop | — | `diagnostic-self-heal-gate.js` | ✓ |
+| Stop | — | `file-list-after-refine.js` | ✓ |
+| Stop | — | `notes-on-test-data.js` | ✓ |
+| Stop | — | `operational-follow-through.js` | ✓ |
+| Stop | — | `quest-knowledge-save-gate.js` | ✓ |
+| Stop | — | `rcrl-emit-check.js` | ✓ |
+| Stop | — | `reply-log.js` | ✓ |
+| Stop | — | `show-gate.discipline.hook.js` | ✓ |
+| Stop | — | `silent-claim-drift-gate.js` | ✓ |
+<!-- HOOK-REGISTRY:AUTO-END -->
 
 ### 3.1 SessionStart (7 hooks)
 
@@ -374,6 +437,7 @@ Every commit that updates this file appends a row here.
 | 2026-05-31 | v1.6 — **Debug Ritual 6 (loggers, not breakpoints) + prepare-commit Step 2.6**: breakpoints BANNED as a request to みや; runtime confirmation uses extensive loggers (≥3 what-ifs) BUNDLED into the first-pass fix build (one rebuild carries fix + confirmation = 3-4× saving). `prepare-commit-trigger.js` v1.3 adds Step 2.6 (strip `QA<num>-PROBE:` loggers + debug comments before BA-bound commit) — matched pair with Ritual 6. quest-protocol.md triage-ladder breakpoint→logger; CLAUDE.md boot table rows 5+6; personality.md no-asking-back runtime corollary. | みや 2026-05-31 debug-methodology refinement |
 | 2026-05-29 | v1.5 — **`quest-phase0` Workflow-tool engine NEW** (`.claude/workflows/quest-phase0.js`): Quest Phase 0 as a deterministic fan-out (Discovery → etanah-knowledge tiered load → Recon → adversarial Verify for bugs → Synthesize); writes `1. Notes.txt` (canonical format) + QA-NNN.md; scales by ticket_type. Wired into `quest/SKILL.md` `/quest start` (auto-fire + depth-scale). Blast-radius codebaseRoot-keyed — **TRG banned for etanah-pelupusan**, multi-state-aware for etanah-awam. Added to §4.1. | みや: "create the quest workflow" |
 | 2026-06-08 | v1.7 — **`quest/delegate-quest.js` NEW script logged** (atomic delegate + archive: moves Task folder → `Archive\` + active.txt block → `active-archive.txt`, KEEPS per-quest `QA-NNN.md` live in `active/` with `## Delegated Resolution` + `learning_marker=`; `delegated` EXCLUDED from cadence/KPI counts). Shipped in `0052bfb` (Phase 2 simplification) but never reflected here — paid as DEBT 2 this session. Paired with quest-protocol.md **v3.8** stamp (DEBT 1) for the same Phase 2 simplification (Step 3 Post-Mortem META removed → weekly slip-log pass; Step 4 → Refine receipt; `delegated` status redefined). NOTE: no dedicated "script catalog" section exists in this doc — quest CLI scripts (`active-cli.js`, `notes.js`, `redmine-sync.js`, `archive-quest.js`, `migrate-post-mortems.js`, `delegate-quest.js`) are currently tracked only via §9 sync events + incidental hook-row mentions; a §Script-catalog is an open structural question (see §10). | DEBT 1+2 paid at 2026-06-08 boot; architecture-doc-sync paired-update for the quest-protocol v3.8 edit |
+| 2026-06-19 | v1.8 — **§3.0 auto-generated hook registry NEW + `meta/sync-hook-catalog.js`**: regenerates the canonical registered-hooks list (Event·Matcher·Hook·on-disk, 52 rows) from `.claude/settings.json` between `<!-- HOOK-REGISTRY:AUTO -->` markers, so the catalog can NEVER drift again — fixes the ~month-long `meta-layer-audit` DOC-DRIFT false alarm (root-caused this session: the audit read CLAUDE.md for a catalog that MOVED here 2026-06-02 + a `.js`-matched-`.json` regex bug). Script is idempotent (no timestamp), has `--check` (exit 1 if stale), runs ON-DEMAND (not a boot hook — start-simple; mutating a doc at boot is risky). §3's intro hand-count demoted to historical; §3.1–§3.7 rich tables kept as semantic commentary. `meta-layer-audit.js` also fixed same session (reads this doc's catalog + `\.js\b` boundary). Routed through /system-rules + /system-design — primitive = maintenance SCRIPT (not a Power), placed in meta/ per the quest/*.js co-location precedent. (Partially addresses the v1.7 "no script-catalog section" open question for meta-scripts.) | みや: "what is system-architecture for… auto-generate the §3 catalog" |
 | 2026-06-16 | v1.8 — **`codemap-recon-consult` Power NEW** (`domain/codemap-recon-consult/`, hook-only): UserPromptSubmit, state-driven off active.txt (`status=active` AND `current_phase` ∈ {discovery,recon,rubric}) → injects codemap-consult reminder (`bpmn_flow.json` module-scope · `callgraph_callers.json` blast-radius w/ SootUp method-ref blind-spot caveat · codegraph MCP). Added to §3.2 (16→17 hooks). Routed /system-rules + /system-design; chosen over extending `scout-completeness-gate` (prompt-triggered → misses autonomous Recon) / `quest-active-grounding` (concern-bleed). Built+tested (fires for QA-261517 Discovery, logs to log.jsonl) + registered in settings.json; live after merge-to-main + Claude Code restart. NOTE global hook totals (§3.0 "40/41") already lag the live boot audit (48→now 49) — pre-existing drift, not introduced here. | みや #6 "make sure all these new features run through hooks when running our quests" |
 
 ---
