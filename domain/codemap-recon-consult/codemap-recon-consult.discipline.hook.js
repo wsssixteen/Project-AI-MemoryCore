@@ -40,10 +40,15 @@ const fs = require('fs');
 const path = require('path');
 
 const REPO_ROOT = 'C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore';
-const ACTIVE_TXT = path.join(REPO_ROOT, 'quest', 'active.txt');
+// env override for eval/self-test only (mirrors archive-quest.js --tasks); defaults to the real file
+const ACTIVE_TXT = process.env.CODEGRAPH_GATE_ACTIVE_TXT || path.join(REPO_ROOT, 'quest', 'active.txt');
 const LOG = path.resolve(__dirname, 'log.jsonl');
 
 const COMPLETION_CLAIM = /every searchable avenue|exhaust\w*\b[\s\S]{0,40}(avenue|search|method|option|investigat)|(avenue|search|method|option)[\s\S]{0,20}exhaust|diagnosis (is |was )?(complete|done|finished)|no further (fact|facts|investigation|searching)|nothing (left|more|else) to (investigate|search|look|check|find)/i;
+// v1.1 2026-06-19 (QA-266215): also fire on a CODE root-cause claim made WITHOUT codegraph —
+// the "matched the symptom's vocabulary, never enumerated the failing action's gates" misdiagnosis.
+const ROOT_CAUSE_CLAIM = /\broot[- ]?cause\b[\s\S]{0,30}\b(is|was|=|:)|the (bug|error|issue|failure|problem) (is|was) caused by|the (real |actual )?cause (is|was)\b/i;
+const CODE_SIGNAL = /\.java\b|\bException\b|\bvalidation\b|\bgetter\b|\b\w+\(\)|:\d{2,4}\b|PropertyNotFound|NullPointer|\bmethod\b/i;
 const EXEMPT = /\[skip-codegraph:|═══|るり結界|Domain Expansion/;
 const CODEGRAPH_CALL = /mcp__codegraph__/;
 
@@ -105,7 +110,9 @@ process.stdin.on('end', () => {
     const text = lastAssistantText(lines);
     if (!text || text.length < 400) process.exit(0);
     if (EXEMPT.test(text)) process.exit(0);
-    if (!COMPLETION_CLAIM.test(text)) process.exit(0);
+    const completionClaim = COMPLETION_CLAIM.test(text);
+    const codeRootCause = ROOT_CAUSE_CLAIM.test(text) && CODE_SIGNAL.test(text);
+    if (!completionClaim && !codeRootCause) process.exit(0);
     if (!questActive()) process.exit(0); // only enforce in quest context
     if (codegraphUsedThisTurn(lines)) { logFire('passed'); process.exit(0); }
 
@@ -113,12 +120,15 @@ process.stdin.on('end', () => {
     process.stdout.write(JSON.stringify({
       decision: 'block',
       reason: [
-        '⛔ codegraph-back-gate: you claimed the diagnosis is complete/exhausted in an active quest,',
-        '   but NO codegraph call ran this turn. codegraph is the mandated tool for:',
-        '     • codegraph_node   — the whole SHAPE of a class / its members',
-        '     • codegraph_search — WHERE a symbol lives / which codebase',
-        '     • codegraph_impact — what BREAKS if you change it (blast radius)',
-        '   Run the relevant codegraph query to back the claim, THEN end the turn.',
+        '⛔ codegraph-back-gate: in an active quest you claimed the diagnosis is complete/exhausted',
+        '   OR named a CODE root cause — with NO codegraph call this turn.',
+        '   The QA-266215 lesson: do NOT name the cause by symptom-vocabulary — ENUMERATE every gate',
+        '   on the failing action + trace from the literal error. codegraph is the mandated tool:',
+        '     • codegraph_callees — every gate / WHAT CALLS the failing action (enumerate, do not name-match)',
+        '     • codegraph_node    — the whole SHAPE of a class / its members',
+        '     • codegraph_search  — WHERE a symbol lives / which codebase',
+        '     • codegraph_impact  — what BREAKS if you change it (blast radius)',
+        '   Run the relevant codegraph query (+ quote the literal error from server.log), THEN end the turn.',
         '   Genuinely a non-code diagnosis (pure .docx / DB-only)? add [skip-codegraph: <reason>].',
       ].join('\n'),
     }));
