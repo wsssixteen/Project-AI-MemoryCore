@@ -97,7 +97,7 @@ If genuinely nothing notable surfaced: write `no proactive items this emit` + 1-
 | Repo | Source-of-truth base | Notes |
 |---|---|---|
 | etanah-pelupusan | **`mlk/master`** | UAT + FAT both use master; differs only by config |
-| etanah-awam | **`mlk/release/fat`** | `mlk/int-env` is stale (2026-03-31). Do NOT base off int-env. |
+| etanah-awam | **`mlk/stag-env`** | **Changed 2026-06-19 per みや** (was `mlk/release/fat`): `mlk/stag-env` is the AWAM **staging integration branch** the `[STAGING] AWAM` tickets are tested against, and where shared fixes land (e.g. QA-262445 `getUrusanKod`, `6e10ab3dc7`). Sync to it at Phase 0, branch off it at Phase 1. `mlk/int-env` is stale (2026-03-31) — do NOT base off int-env. |
 
 **Verification command** (run any time the right base is uncertain):
 ```bash
@@ -109,7 +109,7 @@ The branch with the latest date is the source-of-truth. **DO NOT compare `origin
 2. If branch is `mlk/<type>/<number>` already: skip steps 3-6, jump to step 7 (already on the right branch from earlier session)
 3. If branch is the source-of-truth branch (per Step 0) with modifications: `git stash push -m "<ticket> fix prep"`
 4. **🚨 MANDATORY — DO NOT SKIP (slipped 2026-05-08 QA-260154)**: `git pull --ff-only origin <source-of-truth-branch>` — between stash and branch. Without this, the new branch forks off STALE base. Repeated paraphrase failure: when announcing the prepare-commit sequence in chat, DO NOT summarize as "stash → branch → pop"; that drops the pull. Always say "stash → **pull** → branch → pop → stage" or copy the 9 steps verbatim from this section.
-5. `git checkout -b mlk/<type>/<number>` — type+number from `quest/active.txt` (`qa`/`fat`/`uat`/`fat-or`/`uat-cr`)
+5. `git checkout -b mlk/<type>/<number>` — type+number from `quest/active.txt`. **`<type>` follows the Redmine TRACKER** (added 2026-06-19 per みや, QA-266249): `qa` (QA) · **`internal-issue`** (INTERNAL ISSUE (PERMANENT FIX)) · `fat` · `uat` · `fat-or` · `uat-cr`. Pairs with the commit-subject prefix — QA → `QA #<num>`, INTERNAL ISSUE → `Ref #<num>` (see `.claude/commit-conventions.md`). Example: QA-266249 (INTERNAL ISSUE) → branch `mlk/internal-issue/266249` + commit `Ref #266249 - PT - Fix Keluasan Tanah`.
 6. `git stash pop` — auto-pop. If conflict, `git status` for unmerged paths, **PAUSE and report to みや** (don't auto-resolve)
 7. `git add <each modified file by name>` — stage all the work-in-progress files (NEVER `git add .` or `-A`)
 8. `git status` to verify staged files
@@ -247,7 +247,7 @@ Schema: `et_main` for MLKFAT (`mcp__postgres-mlkfat__query`), `et_main_uat` for 
 **Trigger phrases from みや** (any one): *"passed the ticket"*, *"close phase 1"*, *"wrap [ticket]"*, *"ticket done"*, *"submitted on redmine"* (when paired with a recent commit+push of the same ticket).
 
 After commit + push lands successfully:
-1. `git checkout <main-branch>` on the relevant repo — pelupusan = `mlk/master`, awam = `mlk/release/fat`
+1. `git checkout <main-branch>` on the relevant repo — pelupusan = `mlk/master`, awam = `mlk/stag-env`
 2. `git pull --ff-only origin <main-branch>`
 3. Verify: working tree clean (Eclipse settings exceptions ignored), branch on `<main-branch>`, latest origin tip
 4. **Update `quest/active.txt`**: change/add the ticket's entry with `phase=1-complete`, `status=closed` (per A6 v2 — Phase 1 done, Phase 2 still ahead), `branch=mlk/<type>/<number>`, `commit=`, `verified=`, `commit_sha=`, `pushed=`, `files_changed_phase1=`, `scope_anchor=`, plus any `etiology=` / `db_verification=` / `learning_marker=` / `out_of_scope_held=` fields relevant to the ticket. Move into the right section of active.txt (entry stays in active section until Phase 2 close flips to `archived`).
@@ -290,7 +290,7 @@ EVERY time みや approves "commit push" / "push" / equivalent, BEFORE running `
 4. **Push**
 5. **Push-result report** to みや
 6. **Wait** for みや to submit/pass ticket on Redmine (out of Ruri's scope)
-7. **Phase 1 close-out** — `git checkout <main>` + `git pull --ff-only origin <main>` — `<main>` is per-repo: `mlk/master` (etanah-pelupusan) / `mlk/release/fat` (etanah-awam)
+7. **Phase 1 close-out** — `git checkout <main>` + `git pull --ff-only origin <main>` — `<main>` is per-repo: `mlk/master` (etanah-pelupusan) / `mlk/stag-env` (etanah-awam)
 8. **Update active.txt** — phase=1-complete, status=closed (per A6 v2), branch=, commit=
 9. **Audit-log + protocol updates** — orthogonal, can run any time same session
 
@@ -304,7 +304,7 @@ After Ruri's push lands, **みや submits the ticket on Redmine** — this means
 3. Adds his commit hash + branch name as a Redmine note (typically)
 4. Reassigns to BA/QA tester (e.g. Nurul Amirah Nadiah) for FAT verification
 
-This is **outside Ruri's scope** — Ruri does NOT touch Redmine status. Ruri's role at this point: do Phase 1 close-out (switch to the repo main branch — `mlk/master` pelupusan / `mlk/release/fat` awam — + pull) + update `quest/active.txt` to `phase=1-complete`, `status=closed` (per A6 v2 — Phase 2 will flip to `archived`). Then wait for みや's direction (Phase 2 post-mortem, or next ticket per Ruri's effort-ranked recommendation).
+This is **outside Ruri's scope** — Ruri does NOT touch Redmine status. Ruri's role at this point: do Phase 1 close-out (switch to the repo main branch — `mlk/master` pelupusan / `mlk/stag-env` awam — + pull) + update `quest/active.txt` to `phase=1-complete`, `status=closed` (per A6 v2 — Phase 2 will flip to `archived`). Then wait for みや's direction (Phase 2 post-mortem, or next ticket per Ruri's effort-ranked recommendation).
 
 **On BA acceptance** (later, possibly different session): Phase 2 fires per the existing closure-on-Redmine signals.
 
@@ -467,12 +467,12 @@ BA's reported scope is the boundary. Related issues found during Simulate / inte
 
 Run BEFORE any other tool call (other than time-stamping `Get-Date`). NOT after Word-template lookup. NOT after etanah-knowledge inventory. NOT after Description.txt read. **First. No exceptions.** Skipping these means the ticket starts on stale code or the wrong branch — both surfaced in real slips (2026-05-04 QA #259318 wrong branch; 2026-05-07 QA #259759 master was 2 commits behind: `3b0885b5be Temporarily disable #252285` + `d8b972edd1 #236336` would have been silently missed).
 
-**Step 0a — Branch check + main-branch pull (per-repo, hard rule, added 2026-05-04, REFINED 2026-05-08 per-repo):** Run env-check skill which handles the per-repo main branch + env file verification automatically. Manual fallback if env-check unavailable: in `etanah-pelupusan` the main branch is **`mlk/master`**; in `etanah-awam` the main branch is **`mlk/release/fat`** (NOT mlk/master — awam's main has more recent fixes than master per team release flow). Per-repo:
+**Step 0a — Branch check + main-branch pull (per-repo, hard rule, added 2026-05-04, REFINED 2026-05-08 per-repo):** Run env-check skill which handles the per-repo main branch + env file verification automatically. Manual fallback if env-check unavailable: in `etanah-pelupusan` the main branch is **`mlk/master`**; in `etanah-awam` the baseline is **`mlk/stag-env`** (changed 2026-06-19 per みや — was `mlk/release/fat`; `mlk/stag-env` is the AWAM staging integration branch the `[STAGING]` tickets test against + where shared fixes land). Per-repo:
 ```bash
 # etanah-pelupusan
 git fetch origin mlk/master && git log HEAD..origin/mlk/master --oneline && git branch --show-current && git status --short
-# etanah-awam
-git fetch origin mlk/release/fat && git log HEAD..origin/mlk/release/fat --oneline && git branch --show-current && git status --short
+# etanah-awam  (baseline = mlk/stag-env as of 2026-06-19)
+git fetch origin mlk/stag-env && git log HEAD..origin/mlk/stag-env --oneline && git branch --show-current && git status --short
 ```
 If current branch ≠ main-branch-for-this-repo, stash → checkout main → pull --ff-only → pop. **Surface the diff to みや — what we missed could "kill us" if it touches files in our suspected scope**. **env-check skill** (`.claude/skills/env-check/SKILL.md`) automates the entire per-repo + env-file check + auto-propose-fix flow — invoke at every Discovery entry and Apply entry.
 
@@ -563,7 +563,7 @@ The default Read tool exposes visual page content but NOT the BA's per-annotatio
 
 1. **Spawn a familiar** (Agent with `general-purpose` subagent) — its prompt must include:
    - Ticket #, Task folder path, codebase root (pick by ticket subject — `E:\Projects\Melaka\etanah-pelupusan` for **APPS / PELUPUSAN** = staff-side OR `E:\Projects\Melaka\etanah-awam` for **AWAM** = public/pemohon-side; use proper module names, not informal "officer-side" labels — corrected 2026-05-09 per みや), etanah-knowledge folder path
-   - **Repo branch awareness** (added 2026-05-08): for etanah-pelupusan main branch is `mlk/master`; for etanah-awam main branch is `mlk/release/fat`. Familiar must read code from the correct main branch — claims based on stale branch are unreliable.
+   - **Repo branch awareness** (added 2026-05-08): for etanah-pelupusan main branch is `mlk/master`; for etanah-awam baseline is `mlk/stag-env` (changed 2026-06-19, was `mlk/release/fat`). Familiar must read code from the correct main branch — claims based on stale branch are unreliable.
    - Reference the 5 hard rules for Word-template work (Word-template-first lookup, Word XML run-join, Branch check, PDF annotation extraction, Renderer-side overrides)
    - Output: write `projects/coding-projects/active/QA-<num>/scout.md` (renamed 2026-05-08 from `early-diagnostic.md`; legacy filename remains for closed quests; new scouts use `scout.md`) with sections in this exact order — (1) **Permohonan ID + Env + Tugasan kod** as a TOP-LINE single-line summary (ALWAYS first; みや needs this for simulation; surfaced ABOVE all other tables in Discovery reply too — strengthened 2026-05-08 after slip on QA-260298 where the test data was buried mid-table) — (2) **Gap statement** (added 2026-05-12 — 3 explicit lines: `Expected: <BA's expected behavior verbatim>`, `Observed: <actual behavior from Description.txt>`, `Gap: <the bug — one line>`. Refinement of Description.txt parsing; not a new doc — just 3 explicit lines at top of Scout instead of buried in prose. Anchors every downstream investigation step.) — (3) Ticket scope (verbatim), (4) Urusan/Tugasan/Layer classification (with full urusan-code expansion from `etanah-knowledge/melaka/DOMAIN-GLOSSARY.md` — never paraphrase), (5) Suspected files (with file:line where confidence high), (6) Word template state (CC tags + Item-area context), (7) Candidate populators, (8) Knowledge-file overlap, (9) BA scope_anchor (positive + explicit DO NOT), (10) Test data details (id + tugasan_kod + username inference, expanded from #1), (11) Open questions, (12) Effort estimate, (13) NOT-in-scope list
    - **Observed-vs-inferred tag (added 2026-05-12)**: every file:line claim in Scout output marked with one of two tags — `(observed @ file:line)` when Scout literally read the cited line range and quoted the code, or `(inferred)` when Scout extrapolated from naming/convention/sibling files. The 100%-verify rule already forbids unmarked inference; making the tag explicit makes verification visible. Ruri's adversarial Recon checks every `(inferred)` tag — if it can't be elevated to `(observed)`, it gets demoted to "unknown — needs runtime/みや input".
@@ -802,7 +802,7 @@ If any item fails → STOP gate fires → surface to みや.
 
 **Why**: `mlk/master` may receive upstream commits during みや's local testing window. The fix branch (`mlk/qa/<num>` or `mlk/qa/<num>v2`) is created at Commit prep AFTER `local_test_confirmed=true` — so the branch is cut from the freshest mlk/master state including anything that landed during testing. Cutting the branch at Apply means the fix sits on a snapshot that may be stale by submission time.
 
-**Working tree throughout Apply + Verify**: stays on the repo main branch — `mlk/master` (etanah-pelupusan) / `mlk/release/fat` (etanah-awam). Edits are uncommitted modifications on that working tree. みや tests against this state. **For AWAM tickets, substitute `mlk/release/fat` for every `mlk/master` in this section** (the branch-cut-from-freshest rule is identical, just the branch name differs).
+**Working tree throughout Apply + Verify**: stays on the repo main branch — `mlk/master` (etanah-pelupusan) / `mlk/stag-env` (etanah-awam). Edits are uncommitted modifications on that working tree. みや tests against this state. **For AWAM tickets, substitute `mlk/stag-env` for every `mlk/master` in this section** (the branch-cut-from-freshest rule is identical, just the branch name differs).
 
 **What's banned at Apply**:
 - `git checkout -b mlk/qa/<num>v?` ← creating the fix branch
@@ -1297,7 +1297,7 @@ Fire as soon as heard, mid-conversation — mutate `active.txt` immediately, sam
 *Quest — every ticket is a quest accepted, executed, and reflected upon.*
 *Protocol version: 3.0 — 2026-04-29 (Removed Phase 2 Report — `.docx` generation no longer used. Renumbered: Accept(0) / Execute(1) / Reflect(2). Overview reports like DB ERD prioritized over per-ticket .docx.)*
 *Protocol version: 3.1 — 2026-05-18 (added Phase 0 artifact gate + verify-close re-commit clause after QA-260302 process failures — early-diagnostic never created, state files not reconciled at close).*
-*Protocol version: 3.2 — 2026-05-19 (Phase 1 close-out + branch-cut rules made per-repo — AWAM baseline = `mlk/release/fat`, pelupusan = `mlk/master`; no longer hard-codes `mlk/master`).*
+*Protocol version: 3.8 — 2026-06-19 (per みや, QA-266249: (1) AWAM baseline changed `mlk/release/fat` → **`mlk/stag-env`** (staging integration branch — where `[STAGING] AWAM` tickets test + shared fixes land); (2) added ticket-TRACKER → branch+commit mapping: INTERNAL ISSUE → branch `mlk/internal-issue/<num>` + commit prefix `Ref #<num>`; QA → `mlk/qa/<num>` + `QA #<num>`. Reconciles the stale 3.2 footer — body had advanced via inline rule stamps.) Prior: 3.2 — 2026-05-19 (Phase 1 close-out + branch-cut rules made per-repo, pelupusan = `mlk/master`).*
 *Protocol version: 3.4 — 2026-05-25 (absorbed amendments A12 [Notes.txt write is HARD precondition of Recon emit — added to Phase 0] + A15 [closing-words extended to Redmine retrieval / Forge Review / Phase 1 close-out — added to Phase 2 emit section]; both were live rules in claude-md-amendments.md awaiting canonical home; now home. Per みや 2026-05-25.). 3.3 — 2026-05-22 (quest-cluster merge from CLAUDE.md: +Debug Mode Rituals section, +Quest State Transitions table, +extended `active.txt` schema with 6-status set; commit+push rule reconciled to the 2026-05-19 model — Ruri runs commit + push after みや confirms the message, superseding the prior "みや executes" hands-off; Mid-Quest Handoff File reconciled — the separate `handoff-*.md` is deprecated, the Investigation Trail now lives in `QA-<num>.md`; System-Design references repointed to the `system-design` skill).*
 *Protocol version: 3.5 — 2026-05-28 (added "Working-memory discipline — active.txt holds OPEN quests only" subsection: terminal blocks move to `quest/active-archive.txt` via `quest/active-trim.js`; ties active.txt bloat to the standing-flag-not-clearing bug class. Companion action: active.txt trimmed 694→~30 lines; 34 terminal blocks moved to active-archive.txt + 2 dated backups kept.)*
 

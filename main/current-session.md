@@ -1,34 +1,30 @@
 # Current Session
 
 ## What's loaded
-2026-06-18 ~18:00 MPST — Opus 4.8. Worktree `distracted-meninsky-04b417`. Office. Very long session: shipped 2 AWAM/PLP tickets, ran a deep teaching walkthrough on the 265964 fix, indexed etanah-awam in codegraph, built 2 enforcement hooks, and added 3 CLAUDE.md rules. Two DE passes (the first was premature — work continued well past it).
+2026-06-19 ~15:30 MPST — Opus 4.8. Worktree `unruffled-ramanujan-872526`. Office. Long AWAM session: shipped QA-266249, confirmed QA-266215 was Vincent's, built 2 enforcement hooks, switched AWAM baseline to `mlk/stag-env`, taught the protocol the internal-issue branch + `Ref #` commit conventions.
 
 ## ▶▶ NEXT SESSION — START HERE (standing flag)
-**0. ✓ DONE this session** — worktree merged + pushed to `origin/main` (`2d69045`); the 2 new hooks + CLAUDE.md rules are LIVE. No push pending.
-**1. The big build — AWAM↔PLP binding** (todo.md Q1 standing flag): the small, specific cross-module registry. Route through system-design. *This is the substantive "continue here."*
-**2. Quick housekeeping:** QA-266039 Phase 2 archive (run `close`) · arch-doc sync (add the 2 new hooks to `meta/system-architecture.md`) · always-prepare-commit hook · close-phase caveat (branch-switch-under-live-server, below).
+**1. AWAM↔PLP binding** (todo Q1 standing flag) — still the big build. Route via system-design. *The substantive "continue here."*
+**2. QA-266249** — submit on Redmine (みや's role); fix pushed on `mlk/internal-issue/266249` (`72c0ff16de`), awaiting BA accept. Archived our side.
+**3. QA-266215** — Vincent's (`fc6f6d4ba6`, branch `mlk/internal/266215`, syer-kepentingan validation gating) — **NOT yet merged to stag-env**; watch for it. Our owner-count hypothesis was WRONG. Archived shipped-by-other.
 
 ## This session arc
-- **QA-266039 (AWAM · MLPS · No. Lesen ⓘ example image) — CLOSED (Phase 1).** Perak example → Melaka. Commit **`c38bc07a90`** on `mlk/qa/266039` (off `mlk/release/fat`, pushed). ⬜ **Phase 2 archive still pending.**
-- **QA-265964 (DMMLMS migration ↔ AWAM PLPS Tujuan-Permohonan alignment) — FULLY CLOSED + ARCHIVED.** Fix: rename labels ("Kategori Tujuan Permohonan" / "Tujuan Permohonan") + **cascade** field-2's options off the chosen category (replacing the flat `PLP_TJN_PMH_PLMS`), mirroring AWAM's `onChangeKategoriTujuanPermohonan` + fixing the lain-lain `OTHERS` coupling. Tested green, commit **`142c7beccc`** on `mlk/qa/265964` (pushed, awaiting team merge). Archived (folder→Archive\, block→active-archive.txt, project doc→archive\). Full doc `QA-265964.md` (in archive/).
-- **Deep teaching walkthrough** (265964, at みや's request): discovery (URL→file, gated-panel→urusan→composite, `mb`→base-class via inheritance) · trace method (binding-name → grep → assignment → declaring class) · base-vs-child (fix where the member is *declared*; base is `abstract`, 6 concrete subclasses) · `<p:ajax>` follows the dependency · the fix decision (compare→DB-verify→cascade-required→mirror-analog→fix-ripple) · grep-vs-codegraph tool-split · EL `.x` = getter chain.
-- **codegraph: etanah-awam INDEXED** (978 files; per-project — pass `projectPath`; re-run `codegraph sync` after awam edits).
-- **2 new hooks built + tested + registered** (live NEXT boot after merge): **design-consult-gate** (PreToolUse Edit|Write — deny skill/hook edits until system-design + system-rules in the transcript) + **show-gate** (Stop hard-block — discuss a change with no box/code → block; `[skip-show-gate]` bypass; ═══/DE/short exempt; fail-open). **self-gate-impulse retired**. meta-edit-gate left as-is (verified not a bad merge).
-- **3 CLAUDE.md rules added** (per みや): 🏷️ name-by-purpose/mirror-analog (§8) · 🩹 DB-patch portability+minimal-footprint (§9) · 📐 SD = Story Diagram (§2). Plus the **codegraph tool-split** baked into `codemap-recon-consult` (now fires on Apply too).
-- **Learnings**: (a) **branch-switch under a live Eclipse server** reverts working-tree xhtml → open pages throw `IndexOutOfBoundsException` in `AttachedObjectListHolder.restoreState` (stale view-state vs reverted tree) — transient, NOT a fix bug; hard-refresh clears it. (b) patch-script: kod-subquery not hardcoded PK; config tables don't bump version. (c) name a method by what it DOES, not the screen.
+- **QA-266249 (AWAM · PT · Keluasan Tanah → "8.5E+2") — SHIPPED + ARCHIVED.** A plain text field bound to a `BigDecimal` rendered in sci-notation. Fix: `et:inputText`→`et:inputNumber` (`decimalPlaces="4"`) at `plpMaklumatTanahForm.xhtml:147`, mirroring the working `keluasanPlot` analog. Branch `mlk/internal-issue/266249`, commit `72c0ff16de`, pushed. First ticket on the new internal-issue branch + `Ref #` conventions.
+- **QA-266215 (AWAM · PPTPB · Maklumat Pemohon blocked) — SHIPPED BY VINCENT, not us.** Real cause = syer-kepentingan validation firing when `viewSyerKepentingan=false` (Vincent `fc6f6d4ba6`). **Our deep-dive's owner-count / JENPPM hypothesis was WRONG** — good thing みや had us park it. The `urusanKod` crash hit en route = QA-262445's `getUrusanKod` (also someone else's, on stag-env). Our local `getUrusanKod` + keluasan-on-fat edits reverted/superseded.
+- **2 enforcement hooks built + eval'd (10/10 PASS, live NEXT boot):** `convention-check-gate` **v1.2** (PreToolUse — now BLOCKS a Java edit with no analog cited) + `codemap-recon-consult.discipline` (Stop — BLOCKS an "exhausted/diagnosis-complete" claim with no `codegraph` call this turn). Both built after I claimed "every searchable avenue exhausted" having never run codegraph.
+- **AWAM baseline switched `mlk/release/fat` → `mlk/stag-env`** (staging integration branch). Updated `quest-protocol.md` (8 spots) + `CLAUDE.md §10` branch bullet.
+- **New conventions (per みや):** non-QA trackers → branch `mlk/internal-issue/<num>` + commit prefix `Ref #<num>` (vs QA → `mlk/qa/<num>` + `QA #`). Added to `quest-protocol.md` + `commit-conventions.md`.
 
-## Carry-forward (full)
+## Carry-forward
 | # | Item | State |
 |---|---|---|
-| 1 | **Push worktree → main** | ⬜ みや manual — makes the 2 hooks + rules live. DO FIRST. |
-| 2 | **AWAM↔PLP binding** | ⬜ the big build — todo.md standing flag; route via system-design |
-| 3 | **QA-266039 Phase 2 archive** | ⬜ run `close` |
-| 4 | **arch-doc sync** | ⬜ add design-consult-gate + show-gate to `meta/system-architecture.md` |
-| 5 | **always-prepare-commit hook** | ⬜ pre-stage + draft commit during testing; route via system-design |
-| 6 | **close-phase caveat** | ⬜ add "branch-return reverts working-tree under live server → refresh open pages; transient view-state error" to close-phase Phase 1 Step 5 |
-| 7 | **one-tree-per-session** | process note — split edits this session made commits messy |
+| 1 | **AWAM↔PLP binding** | ⬜ the big build — todo Q1; route via system-design |
+| 2 | QA-266249 Redmine submit | ⬜ みや's role; fix pushed `72c0ff16de` |
+| 3 | QA-266215 — watch Vincent's merge to stag-env | ⬜ his, not ours |
+| 4 | convention-check-gate v1.2 + codegraph back-gate | ✓ live next boot |
+| 5 | **one-tree-per-session** | ⚠️ split edits again (main repo + worktree) → messier DE commit; reconciled via worktree-merge |
 
 ## 🎯 Session Recap (for AI restart)
-Shipped QA-266039 (AWAM No.Lesen image, `c38bc07a90`, Phase-2 archive pending) + QA-265964 (DMMLMS↔AWAM Tujuan-Permohonan label+cascade, `142c7beccc`, fully archived). Long teaching walkthrough on 265964 (discovery→fix→JSF). Indexed etanah-awam in codegraph. Built design-consult-gate + show-gate hooks (live next boot after merge); retired self-gate-impulse. Added 3 CLAUDE.md rules + the codegraph tool-split. **NEXT: push worktree→main (hooks go live), then the AWAM↔PLP binding build; quick: 266039 archive + arch-doc sync.**
+Shipped QA-266249 (AWAM keluasan → `et:inputNumber`, `mlk/internal-issue/266249`, `72c0ff16de`). QA-266215 turned out to be Vincent's (syer-kepentingan validation; our owner-count guess was wrong). Built `convention-check-gate` v1.2 (blocking Java w/o analog) + `codemap-recon-consult` codegraph back-gate (10/10 eval, live next boot) after the "exhausted without codegraph" slip. Switched AWAM baseline → `mlk/stag-env`; added internal-issue branch + `Ref #` commit conventions. Both AWAM quests archived. **NEXT: AWAM↔PLP binding (the big build).**
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-18 ~18:00 MPST — DE (2nd pass) wrap (Opus 4.8, distracted-meninsky worktree).
+**Memory Type**: RAM | **Last Activity**: 2026-06-19 ~15:30 MPST — DE close (Opus 4.8, unruffled-ramanujan worktree).

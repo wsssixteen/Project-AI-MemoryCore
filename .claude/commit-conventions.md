@@ -47,3 +47,14 @@ Subject-only — **no body, no trailer at all** (per `main/post-mortems.md:99` a
 **Why** (みや 2026-05-20): teammates scan commit log by urusan/tugasan; consistent hyphen-segmentation makes the categorical structure visible at a glance. The PRU precedent (`QA #247710 - PRU - Risalat MMKN...`) is the canonical form.
 
 **Banned**: `QA #X - PRZRingkasanRisalat...` (noun-glued) · `QA #X - PRZ Ringkasan ...` (space-only between urusan + description) · `QA #X - AWAM PRZ - ...` (AWAM redundant if urusan already there — per `personality.md` "AWAM as redundant qualifier" ban 2026-05-19) · `QA #X - OPLPS - Penyediaan Borang 4Ae - ...` (tugasan name, not kod — added 2026-06-01) · `QA #X - OPLPS - PB - persist field A + fix field B + invalidate cache C` (mechanical change-list, not action-oriented — added 2026-06-01).
+
+### 🆕 Subject prefix follows the Redmine TRACKER type — `Ref #` for non-QA trackers (HARD RULE, added 2026-06-19 per みや, QA-266249)
+
+The leading token follows the ticket's **Redmine tracker**, not always "QA":
+
+| Tracker | Subject prefix | Branch (see quest-protocol.md Phase 1) |
+|---|---|---|
+| **QA** | `QA #<num> - <URUSAN> - <description>` | `mlk/qa/<num>` |
+| **INTERNAL ISSUE (PERMANENT FIX)** (+ other non-QA trackers) | **`Ref #<num> - <URUSAN> - <description>`** — only the prefix changes from `QA #` to `Ref #`; hyphen-segmentation rules above still apply | `mlk/internal-issue/<num>` |
+
+**Example** (QA-266249 = an INTERNAL ISSUE ticket): `Ref #266249 - PT - Fix Keluasan Tanah` ✓ (the prefix is `Ref #266249`, not `QA #266249`). **Why**: the team tracks these under the INTERNAL ISSUE tracker; the commit log + branch name should reflect the tracker, not force a "QA" label onto a non-QA ticket.
