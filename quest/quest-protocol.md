@@ -84,7 +84,7 @@ If genuinely nothing notable surfaced: write `no proactive items this emit` + 1-
 
 ---
 
-**etanah-knowledge tiered load at Phase 0 (NEW 2026-05-28 per plan Phase 2)**: Quest skill SKILL.md Step 5 invokes `→ Skill: etanah-knowledge-load` (when that skill exists; until then, inline Read tool calls per the tier table). Three tiers:
+**etanah-knowledge tiered load at Phase 0 (NEW 2026-05-28 per plan Phase 2)**: Quest skill SKILL.md Step 5 loads etanah-knowledge **inline** via Read-tool calls per the tier table (there is no `etanah-knowledge-load` skill dir — direct file-reads, or the `quest-phase0` Workflow). Three tiers:
 
 | Tier | Files | When |
 |---|---|---|

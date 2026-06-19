@@ -57,7 +57,7 @@ Phase 0 — Accept the Quest (manual steps / what the workflow encodes):
 |---|---|---|
 | 1a | [from ticket] | ⬜ |
 
-5. → Skill: etanah-knowledge-load (with `tier=always` — load 5 always-load layers per plan Phase 2; conditional layers load as `index.md` routes by ticket type + symptom)
+5. → load etanah-knowledge **inline** (tier=always — read the 5 always-load layers per plan Phase 2; conditional layers load as `index.md` routes by ticket type + symptom). NOT a Skill-tool call — there is no `etanah-knowledge-load` skill dir; the load is a direct file-read (or the `quest-phase0` Workflow).
 6. Write quest state to `quest/active.txt`. The block usually **already exists** (redmine-sync created it at retrieval with `status=hold` + `assigned_to_me=`). **Update it in place** — never recreate (that would drop `assigned_to_me`):
    ```
    node quest/active-cli.js update QA-<number> \
@@ -199,8 +199,8 @@ Quest is a **workflow-type skill, not a one-shot**. Its job is to programmatical
 
 | Phase boundary | Required Skill tool invocations |
 |---|---|
-| `/quest start` Step 5 (Context Loading) | `→ Skill: etanah-knowledge-load` (tier=always) |
-| Discovery emit (Scout familiar output) | `→ Skill: scout` if multi-ticket retrieve mode |
+| `/quest start` Step 5 (Context Loading) | load etanah-knowledge **inline** (tier=always) — direct file-read / `quest-phase0` Workflow, NOT a Skill-tool call |
+| Discovery emit (Scout familiar output) | spawn a **Scout familiar** (Agent) if multi-ticket retrieve mode — Agent-based, NOT a Skill-tool call |
 | Recon emit (per HYPOTHESIS claim) | `→ Skill: predicate-box` (TRUE IF / PROVED BY / FAILED WHEN per claim) |
 | Recon emit (Universal Check 9 sibling-structure read) | inline citation of 2-3 siblings file:line in Recon block; no separate Skill tool call but blocks Recon emit if absent (per Phase 3 scout-completeness-gate.js) |
 | Rubric emit (option-ranking) | `→ Skill: rubric` (currently absorbed into Quest Rubric phase per Phase 4 — slash-trigger still routes to stub) |

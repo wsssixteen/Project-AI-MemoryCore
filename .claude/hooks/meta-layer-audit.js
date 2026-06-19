@@ -46,6 +46,7 @@ const HOOKS_DIR = path.join(REPO_ROOT, '.claude', 'hooks');
 const SETTINGS_JSON = path.join(REPO_ROOT, '.claude', 'settings.json');
 const SETTINGS_LOCAL = path.join(REPO_ROOT, '.claude', 'settings.local.json');
 const CLAUDE_MD = path.join(REPO_ROOT, '.claude', 'CLAUDE.md');
+const SYSTEM_ARCH = path.join(REPO_ROOT, 'meta', 'system-architecture.md'); // canonical hook catalog (moved here 2026-06-02)
 const SELF_NAME = 'meta-layer-audit';
 
 function safeRead(p) {
@@ -100,20 +101,32 @@ function collectHookFiles(dir) {
   return { names, skip };
 }
 
-function collectDocumentedHooks(claudeMd, onDisk) {
-  // Parse the "Triggered enforcement" section of CLAUDE.md, extract all <name>.js
-  // Filter to names that actually exist on disk OR look like our hook convention —
-  // eliminates false positives from prose references like "settings.json", "settings.local.json".
-  if (!claudeMd) return new Set();
-  const section = claudeMd.split(/Triggered enforcement/i)[1];
-  if (!section) return new Set();
-  const stop = section.split(/Atomic primitive skills/i)[0];
-  const raw = new Set();
-  for (const m of stop.matchAll(/([a-zA-Z][\w-]+)\.js/g)) raw.add(m[1]);
-  // Intersect with onDisk — only count names that are actual hook files.
-  // (Belt-and-suspenders: hooks are the only `.js` references that should appear
-  // in this section anyway, so prose like `settings.json` is filtered cleanly.)
-  return new Set([...raw].filter(n => onDisk.has(n)));
+function collectDocumentedHooks(claudeMd, archMd) {
+  // Returns { claimed, cataloged }:
+  //   claimed   = hook names in CLAUDE.md "Triggered enforcement" (a CLAIM the hook is active/registered)
+  //   cataloged = hook names in meta/system-architecture.md (the descriptive CANONICAL catalog)
+  // FIX 2026-06-19 (QA-266215-session, per みや "false alarm for a month+"): the inline CLAUDE.md
+  // catalog was TRIMMED to system-architecture.md on 2026-06-02 to de-bloat CLAUDE.md, but this
+  // audit still read only CLAUDE.md → flagged all ~50 registered hooks as "undocumented" every boot.
+  // TWO bugs fixed: (1) read the catalog from system-architecture.md too; (2) `\.js\b` word-boundary so
+  // ".json" data-file refs (bpmn_flow.json / settings.local.json) are NOT mis-captured as ".js".
+  // The two directions are kept SEPARATE — `claimed` drives "claimed-but-unregistered" (a doc-lie about
+  // an active hook), `cataloged` only contributes to "registered-but-undocumented" (so descriptive
+  // mentions of scripts/data in the arch doc don't create false "claimed" entries).
+  const reJs = /([a-zA-Z][\w.-]+)\.js\b/g;
+  const claimed = new Set();
+  const cataloged = new Set();
+  if (claudeMd) {
+    const section = claudeMd.split(/Triggered enforcement/i)[1];
+    if (section) {
+      const stop = section.split(/Atomic primitive skills/i)[0];
+      for (const m of stop.matchAll(reJs)) claimed.add(m[1]);
+    }
+  }
+  if (archMd) {
+    for (const m of archMd.matchAll(reJs)) cataloged.add(m[1]);
+  }
+  return { claimed, cataloged };
 }
 
 function setDiff(a, b) {
@@ -128,7 +141,8 @@ const claudeMd = safeRead(CLAUDE_MD);
 const { names: registered, missing: registeredMissing } = collectRegisteredHooks(settings);
 const { names: local } = collectRegisteredHooks(settingsLocal);
 const { names: onDisk, skip } = collectHookFiles(HOOKS_DIR);
-const documented = collectDocumentedHooks(claudeMd, onDisk);
+const { claimed: claudeDocumented, cataloged: archDocumented } = collectDocumentedHooks(claudeMd, safeRead(SYSTEM_ARCH));
+const documented = new Set([...claudeDocumented, ...archDocumented]);
 
 const findings = [];
 
@@ -158,8 +172,8 @@ if (local.size > 0) {
 }
 
 // CHECK 5 — Documentation drift (CLAUDE.md vs registered)
-const docOnly = setDiff(documented, registered);
-const regOnly = setDiff(registered, documented);
+const docOnly = setDiff(claudeDocumented, registered);  // CLAUDE.md CLAIMS active but NOT registered (doc-lie); arch catalog excluded — it's descriptive, not a claim
+const regOnly = setDiff(registered, documented);        // registered hook in NEITHER doc — the true "undocumented" signal
 if (docOnly.length) {
   findings.push(`⚠ DOC DRIFT (claimed but unregistered, ${docOnly.length}): ${docOnly.join(', ')}`);
   findings.push(`   → CLAUDE.md says these are active but they're NOT in settings.json. Either register or update doc.`);
