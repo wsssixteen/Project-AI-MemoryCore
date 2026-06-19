@@ -2,34 +2,43 @@
  * convention-check-gate.js — PreToolUse hook (Edit | Write | Bash)
  *
  * Catches the "best-practices-not-consulted" slip in its universal form:
- * before adding/changing ANY artifact (Java code, .docx template,
- * config, SQL data patch), Ruri must check what convention OTHER similar
- * artifacts use — and CITE the analog she checked.
+ * before adding/changing ANY artifact (Java code, .docx template, config, SQL
+ * data patch), Ruri must check what convention OTHER similar artifacts use — and
+ * CITE the analog she checked. Rule: feedback_simplify_and_reference.md.
  *
- * The rule lives in feedback_simplify_and_reference.md ("find working
- * analog first") but kept getting skipped because it was prose-only.
- * 2026-05-25 saw it slip 4+ times in one session (Java populator
- * convention, .docx SDT nesting, data-patch no_kp format, separator
- * choice for syarat list). This hook fires the deterministic reminder
- * at the moment Ruri is about to commit the change.
+ * v1.0 2026-05-25 — built after the QA-262869 no_kp slip.
+ * v1.1 2026-05-26 — registered (PreToolUse Bash + Edit|Write); tightened postgres regex.
+ * v1.2 2026-06-19 — BLOCKING for Java edits (per みや: "ensure 100% you check this
+ *   code convention"). The v1.1 advisory reminder fired but didn't STOP the edit, so
+ *   the convention-check kept getting skipped. Now a .java Edit/Write is DENIED unless
+ *   the session transcript already cites an analog (a "← sibling <file:line>" diff line,
+ *   or sibling/analog/convention/mirror language next to a <file>.<ext>:<line>).
+ *   .docx / config / SQL stay ADVISORY (reminder only) — start-simple per
+ *   /system-rules Rule 4; promote them on evidence. Mirrors quest-phase-gate.js
+ *   deny-pattern: transcript-scan · fail-open · bypass token.
  *
- * Triggers on:
- *   - Edit/Write to .java, .docx, .json, .xml under etanah-pelupusan/src or templates/
- *   - Bash commands containing "UPDATE " or "INSERT INTO " (SQL data patch)
- *   - MCP postgres tool calls (caught via tool_name = mcp__postgres-*)
- *
- * Non-blocking — injects visible-gate reminder. Reminder content
- * adapts to the artifact type (Java / .docx / SQL).
- *
- * Created 2026-05-25 — built in-turn after the QA-262869 no_kp slip.
- * v1.1 2026-05-26 — Promoted to active hooks dir + registered in settings.json
- * (both PreToolUse Bash and PreToolUse Edit|Write). Tightened postgres MCP
- * regex to match exact query tool names (was matching read_resource etc.).
+ *   CAN (shape/presence ~100%): verify an analog WAS cited before a Java edit → kills SKIPPING.
+ *   CANNOT (correctness — stays judgment): verify the cited analog is the RIGHT one.
+ *   Fail-OPEN: transcript unreadable / parse error → advisory only, never block on our bug.
+ *   Bypass: [skip-convention-check: <reason>] anywhere in the session.
+ *   Log: .claude/hooks/convention-check-gate.log.jsonl (per /system-rules Rule 5).
  */
+const fs = require('fs');
+const path = require('path');
+const LOG = path.resolve(__dirname, 'convention-check-gate.log.jsonl');
+
+// Markers proving a convention-check happened this session (any one suffices)
+const ANALOG_CITED = /←\s*sibling|\bsibling\b[^\n]{0,90}\b[\w/.\\-]+\.\w+:\d+|\banalog\b[^\n]{0,90}:\d+|\bconvention\b[^\n]{0,90}:\d+|\bmirror(?:s|ed|ing)?\b[^\n]{0,90}:\d+/i;
+const BYPASS = /\[skip-convention-check:/i;
+
+function logFire(action, detail) {
+  try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), action, detail }) + '\n'); } catch (_) {}
+}
+
 let input = '';
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
-process.stdin.on('data', d => input += d);
+process.stdin.on('data', d => (input += d));
 process.stdin.on('end', () => {
   try {
     const data = JSON.parse(input);
@@ -42,18 +51,11 @@ process.stdin.on('end', () => {
     let kind = null;
     let extra = '';
 
-    // Detect artifact kind
+    // Detect artifact kind (unchanged from v1.1)
     if (toolName === 'Edit' || toolName === 'Write') {
-      if (/\.java$/i.test(filePath)) {
-        kind = 'java';
-        extra = filePath;
-      } else if (/\.docx$/i.test(filePath)) {
-        kind = 'docx';
-        extra = filePath;
-      } else if (/\.(json|xml|properties)$/i.test(filePath) && /(template|resources|config)/i.test(filePath)) {
-        kind = 'config';
-        extra = filePath;
-      }
+      if (/\.java$/i.test(filePath)) { kind = 'java'; extra = filePath; }
+      else if (/\.docx$/i.test(filePath)) { kind = 'docx'; extra = filePath; }
+      else if (/\.(json|xml|properties)$/i.test(filePath) && /(template|resources|config)/i.test(filePath)) { kind = 'config'; extra = filePath; }
     } else if (toolName === 'Bash') {
       if (/\bUPDATE\s+\w+|\bINSERT\s+INTO\s+\w+/i.test(command)) {
         kind = 'sql';
@@ -70,7 +72,6 @@ process.stdin.on('end', () => {
 
     if (!kind) process.exit(0);
 
-    // Build kind-specific reminder
     const checks = {
       java: [
         '  - Have you read at least ONE similar method/populator/class to see the convention?',
@@ -90,8 +91,8 @@ process.stdin.on('end', () => {
       sql: [
         '  - Queried other rows in this table to see the VALUE-FORMAT convention for the column(s) you are setting/inserting?',
         '  - Cited a sample of existing values in the chat prose BEFORE the UPDATE/INSERT?',
-        '  - Audit columns (created_by / last_modified_by) — matches what sibling rows on the same aplikasi use? NEVER ticket-specific or session-specific identifiers.',
-        '  - For UPDATE: prefer omitting audit columns from SET (leave them alone). For INSERT: mirror a sibling row.',
+        '  - Audit columns (created_by / last_modified_by) — matches sibling rows on the same aplikasi? NEVER ticket/session-specific identifiers.',
+        '  - For UPDATE: prefer omitting audit columns from SET. For INSERT: mirror a sibling row.',
         '  - Soft-delete check, FK checks (per data-operation safety rule)?',
       ],
     };
@@ -117,14 +118,48 @@ process.stdin.on('end', () => {
       '',
     ].join('\n');
 
-    const response = {
-      hookSpecificOutput: {
-        hookEventName: 'PreToolUse',
-        additionalContext: context,
-      },
+    const emitAdvisory = () => {
+      process.stdout.write(JSON.stringify({
+        hookSpecificOutput: { hookEventName: 'PreToolUse', additionalContext: context },
+      }));
+      process.exit(0);
     };
-    process.stdout.write(JSON.stringify(response));
-    process.exit(0);
+
+    // ── v1.2 BLOCKING for Java edits ────────────────────────────────────────
+    if (kind === 'java') {
+      let transcript = '';
+      try {
+        transcript = fs.readFileSync(data.transcript_path, 'utf8');
+      } catch (e) {
+        logFire('fail-open', filePath); // can't read transcript → advisory only
+        return emitAdvisory();
+      }
+      if (BYPASS.test(transcript) || ANALOG_CITED.test(transcript)) {
+        logFire('allowed', filePath); // analog citation present → proceed (+ reminder)
+        return emitAdvisory();
+      }
+      logFire('blocked', filePath);
+      process.stdout.write(JSON.stringify({
+        hookSpecificOutput: {
+          hookEventName: 'PreToolUse',
+          permissionDecision: 'deny',
+          permissionDecisionReason: [
+            `🚫 convention-check-gate: Java edit blocked — no analog citation found this session.`,
+            `   File: ${filePath}`,
+            `   Per "find working analog first": BEFORE editing, read >=1 sibling method/class and`,
+            `   CITE it in chat as  <file>.java:<line>  (or the "<- sibling <file:line>" diff line).`,
+            `   This gate checks the citation EXISTS (anti-skip); it does NOT verify it's the right`,
+            `   analog — that stays your judgment.`,
+            `   Legitimate non-analog edit? add [skip-convention-check: <reason>] to your message.`,
+          ].join('\n'),
+        },
+      }));
+      process.exit(0);
+    }
+
+    // docx / config / sql → advisory (unchanged from v1.1)
+    logFire('advisory', kind);
+    emitAdvisory();
   } catch (e) {
     process.exit(0);
   }
