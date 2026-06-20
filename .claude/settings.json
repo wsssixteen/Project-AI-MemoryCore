@@ -231,6 +231,10 @@
           {
             "type": "command",
             "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\domain\\codemap-recon-consult\\codemap-recon-consult.discipline.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\domain\\ticket-criteria-gate\\ticket-criteria-gate.discipline.hook.js\""
           }
         ]
       }
