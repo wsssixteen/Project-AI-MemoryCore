@@ -4,9 +4,9 @@
 2026-06-20 ~17:53 — Opus 4.8. Worktree `stupefied-dhawan-12ffa7`. Long session: shipped a no-ticket staging flowable fix (STG-PPTPB-tujuanTKM), then system-improvement work driven by today's slips.
 
 ## ▶▶ NEXT SESSION — START HERE
-**1. A rework ticket just came in** (みや flagged it) — start there.
-**2. System-index project** (todo Q1 standing flag) — index OUR system (skills/hooks/Powers/protocols) by category for blast-radius; do the `auto-skill-on-mistake → auto-system-upgrade-on-mistake` rename as step 1. Route via system-design. みや wants to design this together, step by step.
-**3. Bug B (STG-PPTPB)** — non-telekom Lulus apps hit Kelulusan gateway `sid-70631659` (reads `kelulusan`, should read `keputusan`). Aaron's Modeler change; awaiting his reply.
+**1. System-index project** (todo Q1) — index OUR system by category for blast-radius; the co-design batch: `auto-skill-on-mistake → auto-system-upgrade-on-mistake` rename + `meta-layer-audit → system-boot-check` rename (fold in `hook-syntax-check`) + any-task→active.txt convention doc + `quest-knowledge-save-gate` v1.1 (warn→block). Design w/ みや step by step. (Rework ticket from 2026-06-20: handled in a separate session.)
+**2. Bug B (STG-PPTPB)** — Kelulusan gateway `sid-70631659` reads `kelulusan`, should read `keputusan`. Aaron's Modeler change; awaiting.
+**3. Hooks live-check** — this session built/fixed: `slip-count-tracker` (new), `silent-claim-drift` Extension D + UN-GHOSTED, `pre-action-check-gate` UN-GHOSTED, `hook-syntax-check` (new SessionStart ghost-defender). All merged to main `f82a074`. LIVE after main's working tree pulls + a CC restart. On next boot, `hook-syntax-check` should report **0 ghosts** once main is current (this session it flagged the main-path lag).
 
 ## This session arc
 - **STG-PPTPB-tujuanTKM (staging, no ticket, from Aaron) — SHIPPED.** `PropertyNotFoundException: tujuanTKM_PI` on PPTPB KDO. Root = regression #260830 (chanjun) handled PLPS only, forgot PPTPB. Took **3 cycles** (missing setter → `_IKLAN` missed `_TELEKOM` → helper `findKodTujuanPermohonanByAplikasi` guarded the wrong field). Fix on `mlk/internal/tujuanTKM_PI` `a78a9885a7` (2 files). Bug B (Kelulusan gateway) → Aaron (Modeler).
