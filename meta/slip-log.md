@@ -78,6 +78,12 @@
 
 ---
 
+## 2026-06-20 entries
+
+| Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |
+|---|---|---|---|---|---|
+| 2026-06-20 (STG-PPTPB-tujuanTKM — みや: "did you verify?" / "I thought we had" repeatedly) | **assume-instead-of-verify-the-full-chain ×3 in one session**: (1) claimed chanjun's PLPS had the same telekom gap WITHOUT checking (false — PPTPB/PLPS are mirror images, telecom-only vs iklan-only); (2) asserted the tujuan kod = PLP_PRTANIAN_TELEKOM from a constant-grep, not the app's actual DB row; (3) fixed surface layers across 3 cycles (setter → _IKLAN→_TELEKOM → helper-guard) instead of tracing data→helper→detection→gateway end-to-end first — each found only when forced to read the DB row / deployed .class / server.log. Plus: treated みや's QUESTIONS about staged items as a DROP instruction (Q-as-instruction conflation). | wrong-baseline-diagnosis (incomplete-trace-presented-as-verified) | CLAUDE.md "100% complete chain check" + over-generalization-check + verify-before-claim — all existed, none enforced at fix-time | **defenders BUILT + eval'd**: `silent-claim-drift` Extension D (agreement/conclusion reflex w/o evidence → advisory; 3/3) + `slip-count-tracker` (auto-count; 3/3) + (bonus) `hook-syntax-check` (SessionStart node --check) which FOUND+FIXED 2 syntax-ghosts (silent-claim-drift + pre-action-check-gate, both dead since 2026-05-28). Full-chain-evidence gate + system-index → next session. | ✅ Yes — the core honesty pattern the meta-layer exists to catch |
+
 ## 2026-06-19 entries
 
 | Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |
