@@ -132,7 +132,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 
 | Hook | Owner | Watches user prompt for | Injects | Stakeholders | Change-impact |
 |---|---|---|---|---|---|
-| `ticket-gate.js` | self | ticket number patterns (QA #N, FAT-OR #N, UAT-CR #N, etc.) | Quest workflow trigger | Quest skill | If ticket format expands, regex update needed |
+| `ticket-gate.js` | self | ticket number patterns (QA #N, FAT-OR #N, UAT-CR #N) + Redmine-retrieval | injects Phase-0 gate checklist; **Row 0 (2026-06-20) = COMPULSORY GIT-STATE CHECK** — baseline-verify + behind-origin count + existing-fix probe (`git branch -a --list "*<#>*"` + `git log --all --grep`) → emit GIT-STATE summary, STOP on existing-fix-by-other/pull-fail/stale-base | Quest skill, Phase-0 git-discipline (CLAUDE.md Quest-Prep-Verification row) | regex update if ticket format expands; Row-0 git-commands per repo baseline |
 | `prayer-gate.js` | self | prayer-time mentions | acknowledgment context | みや | Time-aware-system feature |
 | `auto-skill-trigger.js` | self | correction signals ("you missed", "why didn't you", etc.) + `→ Skill: X` tokens (Phase 5 extension) | invoke skill reminder | auto-skill-on-mistake skill, Layer 2 enforcement | Predicate extension affects which slips get caught |
 | `MemoryClaimGate.js` | self | memory claims that need verification | warning | claim-verification skill | Predicate change affects memory hygiene |

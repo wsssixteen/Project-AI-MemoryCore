@@ -107,7 +107,7 @@ process.stdin.on('end', () => {
       '  2. Clean .bak files: rm any *.bak_* in work repo (per 2026-05-23 rule)',
       '  2.6 STRIP debug instrumentation + cycle-added comments (per 2026-05-31 + 2026-06-20 rules): grep the touched/staged source files for (a) the probe tag `QA<num>-PROBE:`, (b) any LOGGER added THIS cycle, (c) commented-out debug code, (d) any EXPLANATORY COMMENT added THIS cycle -> REMOVE before staging. Pre-existing loggers/comments stay; only strip what was added this cycle. EXCEPTION: keep a comment ONLY if みや explicitly said to keep it this session (e.g. "keep the comment this time"). Default = NO comments pushed.',
       '  3. git stash (preserve working tree)',
-      '  4. git pull --ff-only origin <source-branch>  (MANDATORY — not optional)',
+      '  4. git pull --ff-only origin <source-branch>  (MANDATORY — not optional) — then `git rev-list --count HEAD..origin/<source-branch>` MUST read 0 (confirm not stale); `git ls-remote origin mlk/<type>/<number>` to see first-push vs rework BEFORE staging (Phase-1 git-state probe, added 2026-06-20)',
       '  5. git checkout -b mlk/<type>/<number>  (or [v2/v3] if rework)',
       '  6. git stash pop  (resolve conflicts if any)',
       '  7. git add <specific files only>  (NEVER -A, NEVER .) — staging is its OWN step; NEVER chain `git add && git commit`, and NEVER use `git commit -a/-am/--amend/--all` (commit-gate Check 3a blocks these).',

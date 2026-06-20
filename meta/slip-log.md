@@ -16,7 +16,8 @@
 |---|---|
 | `date` | When the slip occurred (YYYY-MM-DD) |
 | `slip` | One-line description of the missed behaviour |
-| `root_category` | One of: boot-or-required-read-skipped · prose-default-on-lock-signals · inventory-first-miss · agree-bias · best-practices-not-consulted · silent-claim-drift · pre-action-check-skip · stop-instead-of-action · visual-evidence-dimensions-missed · wrong-baseline-diagnosis · tool-choice-skip · knowledge-transfer-incompleteness · scope-breach-silent-expansion · other (specify) |
+| `root_category` | One of: boot-or-required-read-skipped · prose-default-on-lock-signals · inventory-first-miss · agree-bias · best-practices-not-consulted · silent-claim-drift · pre-action-check-skip · stop-instead-of-action · visual-evidence-dimensions-missed · wrong-baseline-diagnosis · tool-choice-skip · knowledge-transfer-incompleteness · scope-breach-silent-expansion · git-stale-base · git-divergence · existing-fix-missed · other (specify) |
+| `stage` | (added 2026-06-20 per みや — git-slip signal was masked under wrong-baseline/tool-choice) When in the journey the slip occurred: Phase-0 · Phase-0-git-probe · Phase-1-prepare-commit · Phase-1-push · Phase-2 · non-quest. Carries the timing signal directly so git/workflow slip clusters are visible without re-reading every entry. |
 | `existing_rule` | Was there a rule that should have prevented this? Cite file:line |
 | `action_taken` | refined-skill · refined-hook · new-skill · new-hook · prose-only (BANNED for v2 — surface as failure) · logged-only |
 | `meta_layer_relevant` | True if this slip is what the meta-layer is designed to catch |

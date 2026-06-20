@@ -1,30 +1,29 @@
 # Current Session
 
 ## What's loaded
-2026-06-20 ~17:53 — Opus 4.8. Worktree `stupefied-dhawan-12ffa7`. Long session: shipped a no-ticket staging flowable fix (STG-PPTPB-tujuanTKM), then system-improvement work driven by today's slips.
+2026-06-20 ~23:55 — Opus 4.8. Worktree `zen-napier-4471cc`. Long session: closed QA-261986 cycle-3 (etanah), then built 4 meta-gates incl. the compulsory Phase-0 git-check, all merged onto origin/main's 7 parallel-session commits.
 
 ## ▶▶ NEXT SESSION — START HERE
-**1. System-index project** (todo Q1) — index OUR system by category for blast-radius; the co-design batch: `auto-skill-on-mistake → auto-system-upgrade-on-mistake` rename + `meta-layer-audit → system-boot-check` rename (fold in `hook-syntax-check`) + any-task→active.txt convention doc + `quest-knowledge-save-gate` v1.1 (warn→block). Design w/ みや step by step. (Rework ticket from 2026-06-20: handled in a separate session.)
-**2. Bug B (STG-PPTPB)** — Kelulusan gateway `sid-70631659` reads `kelulusan`, should read `keputusan`. Aaron's Modeler change; awaiting.
-**3. Hooks live-check** — this session built/fixed: `slip-count-tracker` (new), `silent-claim-drift` Extension D + UN-GHOSTED, `pre-action-check-gate` UN-GHOSTED, `hook-syntax-check` (new SessionStart ghost-defender). All merged to main `f82a074`. LIVE after main's working tree pulls + a CC restart. On next boot, `hook-syntax-check` should report **0 ghosts** once main is current (this session it flagged the main-path lag).
+**1. Push the branch to main (みや's manual boundary)** — `git push origin claude/zen-napier-4471cc:main`. Makes LIVE: `ticket-criteria-gate` (Stop completeness gate), `ticket-gate` Row-0 git-check, comment-strip, minimal-diff, convention-check v1.3. Until pushed, §3.0 registry shows `ticket-criteria-gate` `MISSING` (file at worktree path, not main); after push + main-checkout pull → live + flag self-heals.
+**2. System-index project** (todo Q1, carried from prior session) — index OUR system by category for blast-radius; rename batch (`auto-skill-on-mistake → auto-system-upgrade-on-mistake`, `meta-layer-audit → system-boot-check`). Design w/ みや step by step.
+**3. Bug B (STG-PPTPB)** — Kelulusan gateway `sid-70631659` reads `kelulusan`, should read `keputusan`. Aaron's Modeler change; awaiting.
 
-## This session arc
-- **STG-PPTPB-tujuanTKM (staging, no ticket, from Aaron) — SHIPPED.** `PropertyNotFoundException: tujuanTKM_PI` on PPTPB KDO. Root = regression #260830 (chanjun) handled PLPS only, forgot PPTPB. Took **3 cycles** (missing setter → `_IKLAN` missed `_TELEKOM` → helper `findKodTujuanPermohonanByAplikasi` guarded the wrong field). Fix on `mlk/internal/tujuanTKM_PI` `a78a9885a7` (2 files). Bug B (Kelulusan gateway) → Aaron (Modeler).
-- **Root self-pattern named: assume-instead-of-verify-the-full-chain** — 3 instances (PLPS over-assertion, kod assumption, surface-layer fixing). Found cycle-1c only by reading the actual DB row + deployed `.class` + server.log.
-- **New verified finding: codegraph_callers BLIND to etanah service-locator dispatch** (returns 0; grep authoritative). codegraph_impact over-reports for interface methods (301 for 2 callers).
-- **System-improvement (inventory-first → did NOT proliferate):** corrected the WRONG grep-vs-codegraph guidance in `codemap-recon-consult.trigger.hook.js` (eval node --check PASS). Did NOT build 2 new hooks — coverage already exists (codemap-recon-consult + convention-check-gate + veritas-claim-gate). design-consult-gate blocked my own hook edit until I invoked system-rules (the machinery caught me — good).
-- **Diary 2026-06-20 written.**
+## This session arc (QA-261986 + meta-gates + git-check)
+- **QA-261986 cycle-3 CLOSED (etanah)** — PSBS Risalat MMKN Syarikat: syor→`syorKeputusanPDT` ("Boleh Dipertimbangkan"), §2.2 tempoh→`tempohPajakanDipohon` (92), JPPH NULL-agensi fallback, + **Tolak variant mirrored** (2nd `tempohPajakanAsal`→`tempohPajakanDipohon` + 2nd `keputusanYB`→`syorKeputusanPDT`, proven against live template). Commit `6938e9b656` on `mlk/qa/261986v3` (etanah-pelupusan). **Branch-divergence finding**: the kadar-cukai `ComponentNotFoundException` was aaron's **#239386** (`resolveFirstComponentWithId` on release/1.0.1) vs our QA-261517 guard on master — adopted release's version locally; #239386 supersedes ours on next master↔release sync.
+- **Built (MemoryCore, this worktree):** (a) NEW `ticket-criteria-gate` Power (Stop — blocks done/close claim without a CRITERIA COVERAGE table); (b) comment-strip-at-Phase-1 (`prepare-commit` Step 2.6 v1.5); (c) minimal-diff rule (CLAUDE.md §8); (d) `convention-check-gate` v1.3 (.xhtml fires + IN-FILE-FIRST); (e) **compulsory Phase-0 git-state check** (`ticket-gate` Row 0 + Quest-Prep row) + Phase-1 remote-probe + slip-log `stage`/git sub-cats — from a deep git-check research (QA-260139/261986/266215/262004 evidence).
+- **Merged origin/main** (7 commits, parallel `stupefied-dhawan` session) into the branch — settings.json + active.txt auto-merged, system-architecture.md conflict resolved + §3.0 regenerated (57 regs).
+- **Slip (reinforces carry-forward #5):** AGAIN edited `meta/` in the MAIN working tree mid-worktree-session — **3rd occurrence** (parallel session today + 2026-06-19). Reconciled. The one-tree-per-session defender is overdue.
 
 ## Carry-forward
 | # | Item | State |
 |---|---|---|
-| 1 | Rework ticket (just came in) | ⬜ start next session |
-| 2 | System-index + rename (step 1) | ⬜ todo Q1; route via system-design; design w/ みや |
-| 3 | Bug B — Kelulusan gateway → Aaron Modeler | ⬜ his change; awaiting reply |
-| 4 | etanah-knowledge reliable-growth gap | ⬜ folded into system-index flag (does NOT auto-grow today) |
-| 5 | **one-tree-per-session** | ⚠️ AGAIN edited main-repo path mid-worktree-session (todo.md) — recurring (same as 2026-06-19 #5); reconciled in DE. Candidate defender. |
+| 1 | **Push branch→main** to make this session's gates LIVE | ⬜ みや's manual boundary (classifier blocks auto-push) |
+| 2 | System-index + rename batch | ⬜ todo Q1; design w/ みや |
+| 3 | Bug B — Kelulusan gateway → Aaron Modeler | ⬜ awaiting |
+| 4 | QA-261986 Tolak untested + #239386→master sync | ⬜ Tolak needs a Tolak-app test; #239386 supersedes QA-261517 |
+| 5 | **one-tree-per-session defender** | 🚨 3rd occurrence — overdue; candidate hook |
 
 ## 🎯 Session Recap (for AI restart)
-Shipped STG-PPTPB-tujuanTKM (staging flowable, 3-cycle telekom fix, `mlk/internal/tujuanTKM_PI` `a78a9885a7`); Bug B → Aaron's Modeler. Named my recurring "assume-not-verify-the-full-chain" pattern. Verified codegraph blind to service-locator callers → corrected codemap-recon-consult guidance (inventory-first stopped me adding 2 redundant hooks). Diary written. NEXT: a rework ticket that just came in, then the system-index project (rename as step 1).
+Closed QA-261986 cycle-3 (Tolak+JPPH+syor+tempoh, etanah `6938e9b656`); the kadar-cukai error was aaron's #239386 branch-divergence, not ours. Built `ticket-criteria-gate` (Stop completeness gate) + comment-strip + minimal-diff + convention-check v1.3, then the compulsory Phase-0 git-check (`ticket-gate` Row 0) + Phase-1 remote-probe + slip-log expansion from a git-check research. Merged origin/main's 7 parallel-session commits cleanly. NEXT: みや pushes branch→main to make the gates live, then the system-index project.
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-20 ~17:53 — DE close (Opus 4.8, stupefied-dhawan worktree).
+**Memory Type**: RAM | **Last Activity**: 2026-06-20 ~23:55 — DE close (Opus 4.8, zen-napier-4471cc worktree).
