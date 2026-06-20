@@ -53,13 +53,14 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `meta/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `meta-layer-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node meta/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 52 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 56 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
 | SessionStart | — | `boot-load-verification.js` | ✓ |
 | SessionStart | — | `boot-required-read-gate.js` | ✓ |
 | SessionStart | — | `evolution-check-trigger.js` | ✓ |
+| SessionStart | — | `hook-syntax-check.js` | ✓ |
 | SessionStart | — | `meta-layer-audit.js` | ✓ |
 | SessionStart | — | `open-quest-surfacer.js` | ✓ |
 | SessionStart | — | `system-check-trigger.js` | ✓ |
@@ -86,6 +87,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | UserPromptSubmit | — | `TurnChecklistGate.js` | ✓ |
 | UserPromptSubmit | — | `user-side-guardrail.js` | ✓ |
 | UserPromptSubmit | — | `word-ui-vocab-gate.js` | ✓ |
+| PreToolUse | Bash | `branch-at-apply-gate.js` | ✓ |
 | PreToolUse | Edit|Write | `claude-md-edit-guard.js` | ✓ |
 | PreToolUse | Bash | `commit-gate.js` | ✓ |
 | PreToolUse | Bash | `convention-check-gate.js` | ✓ |
@@ -97,6 +99,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | PreToolUse | Edit|Write | `pre-action-check-gate.js` | ✓ |
 | PreToolUse | Edit|Write | `quest-phase-gate.js` | ✓ |
 | PostToolUse | — | `RecursiveLoopDetector.js` | ✓ |
+| PostToolUse | — | `slip-count-tracker.js` | ✓ |
 | Stop | — | `ask-back-gate.js` | ✓ |
 | Stop | — | `codemap-recon-consult.discipline.hook.js` | ✓ |
 | Stop | — | `de-output-integrity-checker.js` | ✓ |
@@ -109,6 +112,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | Stop | — | `reply-log.js` | ✓ |
 | Stop | — | `show-gate.discipline.hook.js` | ✓ |
 | Stop | — | `silent-claim-drift-gate.js` | ✓ |
+| Stop | — | `veritas-claim-gate.js` | ✓ |
 <!-- HOOK-REGISTRY:AUTO-END -->
 
 ### 3.1 SessionStart (7 hooks)

@@ -144,6 +144,10 @@
           {
             "type": "command",
             "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\convention-check-gate.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\branch-at-apply-gate.js\""
           }
         ]
       },
@@ -207,6 +211,10 @@
           {
             "type": "command",
             "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\silent-claim-drift-gate.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\veritas-claim-gate.js\""
           },
           {
             "type": "command",
