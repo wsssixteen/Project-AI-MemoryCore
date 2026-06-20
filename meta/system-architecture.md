@@ -189,11 +189,12 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | `domain/codemap-recon-consult/codemap-recon-consult.discipline.hook.js` | self (NEW 2026-06-19 — codegraph back-gate, per みや "you failed to use codegraph AGAIN"; the pre-planned promotion named in the trigger-hook header) | every Stop — reply makes a completion/"exhausted" claim AND active.txt status=active AND NO `mcp__codegraph__*` call this turn | **HARD-BLOCK (decision:block)** until codegraph runs; bypass `[skip-codegraph: <reason>]`; exempt ═══/DE/short(<400); fail-open; reads `transcript_path` | codemap-recon-consult front-gate (trigger.hook.js reminder), CLAUDE.md grep-vs-codegraph split | completion-claim regex additions per observed misses; self-tested 5 cases 2026-06-19. **v1.1 2026-06-19 (QA-266215): also fires on a CODE root-cause claim (ROOT_CAUSE_CLAIM + CODE_SIGNAL) made w/o a codegraph call — the owner-count-misdiagnosis defender; `CODEGRAPH_GATE_ACTIVE_TXT` env-override for eval; eval 9/9** |
 | `veritas-claim-gate.js` | self (NEW 2026-06-20 — TRUTH layer; QA-265964 lying root-cause, built via anti-fabrication workflow) | every Stop — reply makes an EXTERNAL-research claim ("I checked GitHub / searched the web") with ZERO search tools this turn, OR a BEHAVIOURAL claim (saves/persists/displays/loads) with no runtime evidence | external-research lie → **HARD-BLOCK**; behavioural-claim → **advisory** (flips to block after a fixture-validated binder + zero-false-positive window); bypass `[skip-veritas: <reason>]`; EXEMPT+FRAME pre-gates (negation/hedge/hand-back/recap → abstain); line-1 `stop_hook_active` exit; fail-OPEN; reads `transcript_path`; ledger `.claude/state/veritas-claim-ledger.jsonl` | silent-claim-drift-gate (completion-verb sibling — veritas covers the behavioural-verb + research-claim hole), show-gate (FORMAT vs TRUTH split), CLAUDE.md §2 | behavioural→block flip gated on validation window; 7/7 fixtures pass 2026-06-20 |
 
-### 3.6 PostToolUse (1 hook)
+### 3.6 PostToolUse (2 hooks)
 
 | Hook | Owner | Watches | Action | Stakeholders |
 |---|---|---|---|---|
 | `RecursiveLoopDetector.js` | self | same-tool + similar-args 3+ times in window | loop warning | Momentum Circuit-Breaker ritual | Window-size + similarity threshold are tunable |
+| `slip-count-tracker.js` | self | Edit/Write to `meta/slip-log.md` (dated entry rows) | append {ts,category} to `meta/slip-counts.jsonl` + emit 7d/30d tally + escalation flag | auto-skill-on-mistake Step 5 | NEW 2026-06-20 (みや item 4). Ledger = source of truth; the markdown count-table is a view |
 
 ### 3.7 Hooks added/changed by plan `cached-floating-hummingbird.md` (executed 2026-05-28)
 
@@ -204,6 +205,12 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 - ✅ Phase 5: `silent-claim-drift-gate.js` v1.1 — Stage 5A advisory extensions: (a) scans for `→ Skill: <name>` tokens vs Skill tool calls; (b) scans Recon emits for HYPOTHESIS-vs-VERIFIED ratio (100%-VERIFY check); (c) scans system-component edits vs meta/system-architecture.md edits (arch-doc-sync). All advisory in Stage 5A; Stage 5B (decision:block flip) deferred to future session after observation. Bypass tokens: `[skip-invoke <name>: <reason>]`, `[skip-100-verify: <reason>]`, `[skip-architecture-doc-update: <reason>]`.
 - ⏸ Phase 5 Stage 5B (DEFERRED): `silent-claim-drift-gate.js` flip from `additionalContext` advisory to `hookSpecificOutput.decision: "block"`. Dry-run scenarios at `meta/hook-test-scenarios.md`.
 - ⏸ `PlainFirstGate.js` hard-block upgrade (DEFERRED to Stage 5B alongside silent-claim-drift)
+
+### 3.8 Changes 2026-06-20 (STG-PPTPB session — みや system-improvement batch)
+- ✅ `slip-count-tracker.js` (NEW, PostToolUse) — auto-maintains slip escalation counts in `meta/slip-counts.jsonl` (was hand-maintained → stale). Eval 3/3.
+- ✅ `silent-claim-drift-gate.js` Extension D — agreement/conclusion reflex ("you're right" / "that's the bug" / "confirmed") with no verification evidence → advisory (assume-not-verify guard; みや item 1). Eval 3/3.
+- 🐛 **`silent-claim-drift-gate.js` was a SYNTAX-GHOST since 2026-05-28** — its v1.1 header comment contained `.claude/skills/*/SKILL.md`; the `*/` closed the block comment early → the file threw on every Stop → never fired (fail-open). `meta-layer-audit` missed it (checks REGISTRATION, not syntax). FIXED (node --check PASS). **Defender candidate**: meta-layer-audit (or a boot step) should `node --check` every registered hook to catch syntax-ghosts (would also have caught the earlier `branch-at-apply-gate` ghost). Flagged in todo.
+- ⏸ DEFERRED to system-index session: rename `meta-layer-audit` → `system-boot-check` (marker-coupled, ~6-8 live files); the `node --check`-all-hooks defender (build with the renamed audit); the any-task-in-active.txt convention doc (CLAUDE.md / quest-protocol).
 
 **Total hook count after Phase 5 Stage 5A**: 40 unique files / 41 registrations (added `scout-completeness-gate.js` to UserPromptSubmit).
 

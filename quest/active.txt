@@ -1,5 +1,21 @@
 active:
 
+qa=STG-PPTPB-tujuanTKM
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\77. Staging Issue -
+phase=1
+status=blocked
+current_phase=Closed (our part) — Bug B pending Aaron (Modeler)
+local_test_confirmed=true
+commit=a78a9885a7
+closed=2026-06-20
+qa_doc=projects/coding-projects/active/STG-PPTPB-tujuanTKM/STG-PPTPB-tujuanTKM.md
+ticket_type=bug
+env=Staging
+issue_one_liner=PPTPB tujuanTKM_PI PropertyNotFoundException (no-ticket, from Aaron) — telecom fix shipped; Bug B → Aaron
+blocker=Bug B: gateway sid-70631659 reads kelulusan, should read keputusan — Aaron's Modeler change
+assigned_to_me=2026-06-20
+note=First non-QA task registered in active.txt per みや's "any task goes in active.txt" convention (2026-06-20)
+
 qa=QA-264006
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\58. QA #264006 - Semua Urusan - Tugasan peranan PT - Nama PT tidak sama dengan PT tugas
 phase=1

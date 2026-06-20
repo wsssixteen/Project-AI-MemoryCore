@@ -26,7 +26,7 @@
  * VERIFIED row (100%-VERIFY binding per Phase 3). Same advisory mode.
  *
  * Also Stage 5A scans for architecture-doc-sync violations: if turn
- * touched a system-component file (.claude/hooks/*.js, .claude/skills/*/SKILL.md,
+ * touched a system-component file (.claude hooks .js, .claude skills SKILL.md,
  * quest/quest-protocol.md, quest/active.txt, .claude/settings.json) AND
  * meta/system-architecture.md was NOT edited this turn AND bypass token
  * `[skip-architecture-doc-update: ...]` absent → advisory reminder.
@@ -46,6 +46,23 @@ const BACKING_PATTERNS = [
   /\bgit (show|log|diff)\b/i,
   /\bfile_path/i,
   /scope[-_ ]?anchor/i,
+];
+
+// Extension D (2026-06-20, みや): agreement / conclusion reflex — "you're right" etc.
+// asserted WITHOUT verification evidence this turn = possible assume-not-verify.
+const AGREEMENT_PATTERNS = [
+  /\byou'?re (right|correct)\b/i,
+  /\b(good catch|that'?s right|that'?s correct|that'?s it|that'?s the (bug|cause|issue|root cause))\b/i,
+  /\b(confirmed|agreed|indeed|absolutely)\b/i,
+];
+const EVIDENCE_PATTERNS = [
+  /"name"\s*:\s*"(Read|Grep|Glob|Bash|PowerShell)"/i,
+  /mcp__postgres.*query|mcp__codegraph/i,
+  /\bSELECT\b[\s\S]{0,80}\bFROM\b/i,
+  /server\.?log/i,
+  /\b[\w./\\-]+\.(java|xhtml|js|xml|json|md)\b[^\n]{0,12}:\d+/i,
+  /\bgit (show|diff|log)\b/i,
+  /\b(verified by reading|read-?back|grep (shows|found|returned|confirms)|node --check|eval PASS)\b/i,
 ];
 
 let input = '';
@@ -100,7 +117,8 @@ process.stdin.on('end', () => {
 
     // If none of the conditions trigger, exit silently
     const claimDriftFire = hasClaim && !hasBacking;
-    if (!claimDriftFire && filteredMissing.length === 0 && !verifyShortfall && !archDocViolation) process.exit(0);
+    const agreementFire = AGREEMENT_PATTERNS.some(re => re.test(text)) && !EVIDENCE_PATTERNS.some(re => re.test(text));
+    if (!claimDriftFire && filteredMissing.length === 0 && !verifyShortfall && !archDocViolation && !agreementFire) process.exit(0);
 
     const reminders = [''];
     if (claimDriftFire) {
@@ -145,6 +163,18 @@ process.stdin.on('end', () => {
         'This turn edited a system component (hook/skill/protocol/state-file/settings.json)',
         'but did NOT edit meta/system-architecture.md. Plan Phase 0 requires paired update.',
         'Bypass: [skip-architecture-doc-update: <reason>] (already in this turn? then ignore).',
+        ''
+      );
+    }
+
+    if (agreementFire) {
+      reminders.push(
+        '⚙️  silent-claim-drift-gate (Extension D — agreement/conclusion reflex): you concluded or agreed',
+        '   ("you\'re right" / "that\'s the bug" / "confirmed") with NO verification evidence this turn.',
+        '',
+        '   Before concluding, confirm it is CORRECT / FACTUAL / JUSTIFIED — read the code, grep, run the',
+        '   query, or reproduce. Reflexive agreement is the assume-not-verify pattern. If you DID verify',
+        '   (or are just acknowledging みや\'s own correct point), ignore. Advisory — does not block.',
         ''
       );
     }
