@@ -16,7 +16,7 @@
  * Iteration: tighten matching as evidence accumulates.
  *
  * v1.1 2026-05-28 — Added single-canonical-doc enforcement (plan Phase 1).
- * Blocks edits to sibling files under projects/coding-projects/active/QA-*/
+ * Blocks edits to sibling files under projects/coding-projects/active/QA-NNN/
  * that aren't QA-NNN.md itself (the canonical doc). Sibling files like
  * early-diagnostic.md / scout-report.md / handoff-XXX.md / class-chain-traces.md
  * / Fix.txt are deprecated for new quests. Pre-2026-05-28 quests retain

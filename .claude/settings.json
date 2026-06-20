@@ -31,6 +31,10 @@
           {
             "type": "command",
             "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\open-quest-surfacer.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\hook-syntax-check.js\""
           }
         ]
       }
@@ -140,6 +144,10 @@
           {
             "type": "command",
             "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\convention-check-gate.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\branch-at-apply-gate.js\""
           }
         ]
       },
@@ -206,6 +214,10 @@
           },
           {
             "type": "command",
+            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\veritas-claim-gate.js\""
+          },
+          {
+            "type": "command",
             "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\diagnostic-self-heal-gate.js\""
           },
           {
@@ -245,6 +257,10 @@
           {
             "type": "command",
             "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\RecursiveLoopDetector.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\slip-count-tracker.js\""
           }
         ]
       }

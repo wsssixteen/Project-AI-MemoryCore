@@ -1,30 +1,30 @@
 # Current Session
 
 ## What's loaded
-2026-06-19 ~15:30 MPST — Opus 4.8. Worktree `unruffled-ramanujan-872526`. Office. Long AWAM session: shipped QA-266249, confirmed QA-266215 was Vincent's, built 2 enforcement hooks, switched AWAM baseline to `mlk/stag-env`, taught the protocol the internal-issue branch + `Ref #` commit conventions.
+2026-06-20 ~17:53 — Opus 4.8. Worktree `stupefied-dhawan-12ffa7`. Long session: shipped a no-ticket staging flowable fix (STG-PPTPB-tujuanTKM), then system-improvement work driven by today's slips.
 
-## ▶▶ NEXT SESSION — START HERE (standing flag)
-**1. AWAM↔PLP binding** (todo Q1 standing flag) — still the big build. Route via system-design. *The substantive "continue here."*
-**2. QA-266249** — submit on Redmine (みや's role); fix pushed on `mlk/internal-issue/266249` (`72c0ff16de`), awaiting BA accept. Archived our side.
-**3. QA-266215** — Vincent's (`fc6f6d4ba6`, branch `mlk/internal/266215`, syer-kepentingan validation gating) — **NOT yet merged to stag-env**; watch for it. Our owner-count hypothesis was WRONG. Archived shipped-by-other.
+## ▶▶ NEXT SESSION — START HERE
+**1. System-index project** (todo Q1) — index OUR system by category for blast-radius; the co-design batch: `auto-skill-on-mistake → auto-system-upgrade-on-mistake` rename + `meta-layer-audit → system-boot-check` rename (fold in `hook-syntax-check`) + any-task→active.txt convention doc + `quest-knowledge-save-gate` v1.1 (warn→block). Design w/ みや step by step. (Rework ticket from 2026-06-20: handled in a separate session.)
+**2. Bug B (STG-PPTPB)** — Kelulusan gateway `sid-70631659` reads `kelulusan`, should read `keputusan`. Aaron's Modeler change; awaiting.
+**3. Hooks live-check** — this session built/fixed: `slip-count-tracker` (new), `silent-claim-drift` Extension D + UN-GHOSTED, `pre-action-check-gate` UN-GHOSTED, `hook-syntax-check` (new SessionStart ghost-defender). All merged to main `f82a074`. LIVE after main's working tree pulls + a CC restart. On next boot, `hook-syntax-check` should report **0 ghosts** once main is current (this session it flagged the main-path lag).
 
 ## This session arc
-- **QA-266249 (AWAM · PT · Keluasan Tanah → "8.5E+2") — SHIPPED + ARCHIVED.** A plain text field bound to a `BigDecimal` rendered in sci-notation. Fix: `et:inputText`→`et:inputNumber` (`decimalPlaces="4"`) at `plpMaklumatTanahForm.xhtml:147`, mirroring the working `keluasanPlot` analog. Branch `mlk/internal-issue/266249`, commit `72c0ff16de`, pushed. First ticket on the new internal-issue branch + `Ref #` conventions.
-- **QA-266215 (AWAM · PPTPB · Maklumat Pemohon blocked) — SHIPPED BY VINCENT, not us.** Real cause = syer-kepentingan validation firing when `viewSyerKepentingan=false` (Vincent `fc6f6d4ba6`). **Our deep-dive's owner-count / JENPPM hypothesis was WRONG** — good thing みや had us park it. The `urusanKod` crash hit en route = QA-262445's `getUrusanKod` (also someone else's, on stag-env). Our local `getUrusanKod` + keluasan-on-fat edits reverted/superseded.
-- **2 enforcement hooks built + eval'd (10/10 PASS, live NEXT boot):** `convention-check-gate` **v1.2** (PreToolUse — now BLOCKS a Java edit with no analog cited) + `codemap-recon-consult.discipline` (Stop — BLOCKS an "exhausted/diagnosis-complete" claim with no `codegraph` call this turn). Both built after I claimed "every searchable avenue exhausted" having never run codegraph.
-- **AWAM baseline switched `mlk/release/fat` → `mlk/stag-env`** (staging integration branch). Updated `quest-protocol.md` (8 spots) + `CLAUDE.md §10` branch bullet.
-- **New conventions (per みや):** non-QA trackers → branch `mlk/internal-issue/<num>` + commit prefix `Ref #<num>` (vs QA → `mlk/qa/<num>` + `QA #`). Added to `quest-protocol.md` + `commit-conventions.md`.
+- **STG-PPTPB-tujuanTKM (staging, no ticket, from Aaron) — SHIPPED.** `PropertyNotFoundException: tujuanTKM_PI` on PPTPB KDO. Root = regression #260830 (chanjun) handled PLPS only, forgot PPTPB. Took **3 cycles** (missing setter → `_IKLAN` missed `_TELEKOM` → helper `findKodTujuanPermohonanByAplikasi` guarded the wrong field). Fix on `mlk/internal/tujuanTKM_PI` `a78a9885a7` (2 files). Bug B (Kelulusan gateway) → Aaron (Modeler).
+- **Root self-pattern named: assume-instead-of-verify-the-full-chain** — 3 instances (PLPS over-assertion, kod assumption, surface-layer fixing). Found cycle-1c only by reading the actual DB row + deployed `.class` + server.log.
+- **New verified finding: codegraph_callers BLIND to etanah service-locator dispatch** (returns 0; grep authoritative). codegraph_impact over-reports for interface methods (301 for 2 callers).
+- **System-improvement (inventory-first → did NOT proliferate):** corrected the WRONG grep-vs-codegraph guidance in `codemap-recon-consult.trigger.hook.js` (eval node --check PASS). Did NOT build 2 new hooks — coverage already exists (codemap-recon-consult + convention-check-gate + veritas-claim-gate). design-consult-gate blocked my own hook edit until I invoked system-rules (the machinery caught me — good).
+- **Diary 2026-06-20 written.**
 
 ## Carry-forward
 | # | Item | State |
 |---|---|---|
-| 1 | **AWAM↔PLP binding** | ⬜ the big build — todo Q1; route via system-design |
-| 2 | QA-266249 Redmine submit | ⬜ みや's role; fix pushed `72c0ff16de` |
-| 3 | QA-266215 — watch Vincent's merge to stag-env | ⬜ his, not ours |
-| 4 | convention-check-gate v1.2 + codegraph back-gate | ✓ live next boot |
-| 5 | **one-tree-per-session** | ⚠️ split edits again (main repo + worktree) → messier DE commit; reconciled via worktree-merge |
+| 1 | Rework ticket (just came in) | ⬜ start next session |
+| 2 | System-index + rename (step 1) | ⬜ todo Q1; route via system-design; design w/ みや |
+| 3 | Bug B — Kelulusan gateway → Aaron Modeler | ⬜ his change; awaiting reply |
+| 4 | etanah-knowledge reliable-growth gap | ⬜ folded into system-index flag (does NOT auto-grow today) |
+| 5 | **one-tree-per-session** | ⚠️ AGAIN edited main-repo path mid-worktree-session (todo.md) — recurring (same as 2026-06-19 #5); reconciled in DE. Candidate defender. |
 
 ## 🎯 Session Recap (for AI restart)
-Shipped QA-266249 (AWAM keluasan → `et:inputNumber`, `mlk/internal-issue/266249`, `72c0ff16de`). QA-266215 turned out to be Vincent's (syer-kepentingan validation; our owner-count guess was wrong). Built `convention-check-gate` v1.2 (blocking Java w/o analog) + `codemap-recon-consult` codegraph back-gate (10/10 eval, live next boot) after the "exhausted without codegraph" slip. Switched AWAM baseline → `mlk/stag-env`; added internal-issue branch + `Ref #` commit conventions. Both AWAM quests archived. **NEXT: AWAM↔PLP binding (the big build).**
+Shipped STG-PPTPB-tujuanTKM (staging flowable, 3-cycle telekom fix, `mlk/internal/tujuanTKM_PI` `a78a9885a7`); Bug B → Aaron's Modeler. Named my recurring "assume-not-verify-the-full-chain" pattern. Verified codegraph blind to service-locator callers → corrected codemap-recon-consult guidance (inventory-first stopped me adding 2 redundant hooks). Diary written. NEXT: a rework ticket that just came in, then the system-index project (rename as step 1).
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-19 ~15:30 MPST — DE close (Opus 4.8, unruffled-ramanujan worktree).
+**Memory Type**: RAM | **Last Activity**: 2026-06-20 ~17:53 — DE close (Opus 4.8, stupefied-dhawan worktree).
