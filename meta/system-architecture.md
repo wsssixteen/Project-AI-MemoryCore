@@ -53,67 +53,69 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `meta/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `meta-layer-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node meta/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 57 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 59 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
-| SessionStart | — | `boot-load-verification.js` | ✓ |
-| SessionStart | — | `boot-required-read-gate.js` | ✓ |
-| SessionStart | — | `evolution-check-trigger.js` | ✓ |
-| SessionStart | — | `hook-syntax-check.js` | ✓ |
-| SessionStart | — | `meta-layer-audit.js` | ✓ |
-| SessionStart | — | `open-quest-surfacer.js` | ✓ |
-| SessionStart | — | `system-check-trigger.js` | ✓ |
-| SessionStart | — | `worktree-cleanup-boot.js` | ✓ |
-| UserPromptSubmit | — | `auto-skill-trigger.js` | ✓ |
-| UserPromptSubmit | — | `batch-ask.trigger.hook.js` | ✓ |
-| UserPromptSubmit | — | `best-practices-consult-gate.js` | ✓ |
-| UserPromptSubmit | — | `codemap-recon-consult.trigger.hook.js` | ✓ |
-| UserPromptSubmit | — | `domain-expansion-trigger.js` | ✓ |
-| UserPromptSubmit | — | `inventory-first-gate.js` | ✓ |
-| UserPromptSubmit | — | `MemoryClaimGate.js` | ✓ |
-| UserPromptSubmit | — | `mode-detector.js` | ✓ |
-| UserPromptSubmit | — | `PlainFirstGate.js` | ✓ |
-| UserPromptSubmit | — | `prayer-gate.js` | ✓ |
-| UserPromptSubmit | — | `prepare-commit-trigger.js` | ✓ |
-| UserPromptSubmit | — | `prose-default-gate.js` | ✓ |
-| UserPromptSubmit | — | `quest-active-grounding.js` | ✓ |
-| UserPromptSubmit | — | `quest-resume-preflight.js` | ✓ |
-| UserPromptSubmit | — | `scout-completeness-gate.js` | ✓ |
-| UserPromptSubmit | — | `session-items-manager.js` | ✓ |
-| UserPromptSubmit | — | `skill-invocation-discipline-gate.js` | ✓ |
-| UserPromptSubmit | — | `SystemAwareDecision.js` | ✓ |
-| UserPromptSubmit | — | `ticket-gate.js` | ✓ |
-| UserPromptSubmit | — | `TurnChecklistGate.js` | ✓ |
-| UserPromptSubmit | — | `user-side-guardrail.js` | ✓ |
-| UserPromptSubmit | — | `word-ui-vocab-gate.js` | ✓ |
-| PreToolUse | Bash | `branch-at-apply-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `claude-md-edit-guard.js` | ✓ |
-| PreToolUse | Bash | `commit-gate.js` | ✓ |
-| PreToolUse | Bash | `convention-check-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `convention-check-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `design-consult-gate.gate.hook.js` | ✓ |
-| PreToolUse | Edit|Write | `edit-scope-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `meta-edit-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `phase0-artifact-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `pre-action-check-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `quest-phase-gate.js` | ✓ |
-| PostToolUse | — | `RecursiveLoopDetector.js` | ✓ |
-| PostToolUse | — | `slip-count-tracker.js` | ✓ |
-| Stop | — | `ask-back-gate.js` | ✓ |
-| Stop | — | `codemap-recon-consult.discipline.hook.js` | ✓ |
-| Stop | — | `de-output-integrity-checker.js` | ✓ |
-| Stop | — | `diagnostic-self-heal-gate.js` | ✓ |
-| Stop | — | `file-list-after-refine.js` | ✓ |
-| Stop | — | `notes-on-test-data.js` | ✓ |
-| Stop | — | `operational-follow-through.js` | ✓ |
-| Stop | — | `quest-knowledge-save-gate.js` | ✓ |
-| Stop | — | `rcrl-emit-check.js` | ✓ |
-| Stop | — | `reply-log.js` | ✓ |
-| Stop | — | `show-gate.discipline.hook.js` | ✓ |
-| Stop | — | `silent-claim-drift-gate.js` | ✓ |
+| SessionStart | — | `boot-load-verification.js` | 🚨 MISSING |
+| SessionStart | — | `boot-required-read-gate.js` | 🚨 MISSING |
+| SessionStart | — | `evolution-check-trigger.js` | 🚨 MISSING |
+| SessionStart | — | `hook-syntax-check.js` | 🚨 MISSING |
+| SessionStart | — | `meta-layer-audit.js` | 🚨 MISSING |
+| SessionStart | — | `open-quest-surfacer.js` | 🚨 MISSING |
+| SessionStart | — | `system-check-trigger.js` | 🚨 MISSING |
+| SessionStart | — | `worktree-cleanup-boot.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `auto-skill-trigger.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `batch-ask.trigger.hook.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `best-practices-consult-gate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `codemap-recon-consult.trigger.hook.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `domain-expansion-trigger.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `inventory-first-gate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `MemoryClaimGate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `mode-detector.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `PlainFirstGate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `prayer-gate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `prepare-commit-trigger.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `prose-default-gate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `quest-active-grounding.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `quest-objective-anchor.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `quest-resume-preflight.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `scout-completeness-gate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `session-items-manager.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `skill-invocation-discipline-gate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `SystemAwareDecision.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `ticket-gate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `TurnChecklistGate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `user-side-guardrail.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `word-ui-vocab-gate.js` | 🚨 MISSING |
+| PreToolUse | Bash | `branch-at-apply-gate.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `claude-md-edit-guard.js` | 🚨 MISSING |
+| PreToolUse | Bash | `commit-gate.js` | 🚨 MISSING |
+| PreToolUse | Bash | `convention-check-gate.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `convention-check-gate.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `design-consult-gate.gate.hook.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `edit-scope-gate.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `meta-edit-gate.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `phase0-artifact-gate.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `pre-action-check-gate.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `quest-phase-gate.js` | 🚨 MISSING |
+| PostToolUse | — | `RecursiveLoopDetector.js` | 🚨 MISSING |
+| PostToolUse | — | `slip-count-tracker.js` | 🚨 MISSING |
+| Stop | — | `ask-back-gate.js` | 🚨 MISSING |
+| Stop | — | `codemap-recon-consult.discipline.hook.js` | 🚨 MISSING |
+| Stop | — | `de-output-integrity-checker.js` | 🚨 MISSING |
+| Stop | — | `deploy-proof-gate.js` | 🚨 MISSING |
+| Stop | — | `diagnostic-self-heal-gate.js` | 🚨 MISSING |
+| Stop | — | `file-list-after-refine.js` | 🚨 MISSING |
+| Stop | — | `notes-on-test-data.js` | 🚨 MISSING |
+| Stop | — | `operational-follow-through.js` | 🚨 MISSING |
+| Stop | — | `quest-knowledge-save-gate.js` | 🚨 MISSING |
+| Stop | — | `rcrl-emit-check.js` | 🚨 MISSING |
+| Stop | — | `reply-log.js` | 🚨 MISSING |
+| Stop | — | `show-gate.discipline.hook.js` | 🚨 MISSING |
+| Stop | — | `silent-claim-drift-gate.js` | 🚨 MISSING |
 | Stop | — | `ticket-criteria-gate.discipline.hook.js` | 🚨 MISSING |
-| Stop | — | `veritas-claim-gate.js` | ✓ |
+| Stop | — | `veritas-claim-gate.js` | 🚨 MISSING |
 <!-- HOOK-REGISTRY:AUTO-END -->
 
 ### 3.1 SessionStart (7 hooks)
