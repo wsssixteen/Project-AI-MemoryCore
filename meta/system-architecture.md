@@ -53,7 +53,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `meta/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `meta-layer-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node meta/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 59 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 60 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
@@ -95,6 +95,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | PreToolUse | Edit|Write | `convention-check-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `design-consult-gate.gate.hook.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `edit-scope-gate.js` | 🚨 MISSING |
+| PreToolUse | Read|Edit|Write | `known-bug-surfacer.hook.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `meta-edit-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `phase0-artifact-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `pre-action-check-gate.js` | 🚨 MISSING |

@@ -191,6 +191,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\quest-phase-gate.js\""
           }
         ]
+      },
+      {
+        "matcher": "Read|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\scan\\known-bug-surfacer.hook.js\""
+          }
+        ]
       }
     ],
     "Stop": [

@@ -79,6 +79,13 @@
 
 ---
 
+## 2026-06-22 entries
+
+| Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |
+|---|---|---|---|---|---|
+| 2026-06-22 (overnight build — みや: "why are your answers so convoluted... unnecessary analogies for something technical they can already see") | **Wrapped concrete/visible IT facts (3 real files) in light-bulb/switch/room analogies** instead of showing the actual paths/values — adds a decode-layer instead of removing one. The SHOW-DON'T-TELL root cause みや has repeated many times. | other (convoluted-explanation / analogy-for-concrete) | personality.md Show-first + CLAUDE.md §2 register rules — existed; didn't ban analogy-for-concrete specifically | lesson captured (diary + current-session); proposed analogy-tripwire — みや to choose rule-only vs rule+hook | ✅ Yes — output-discipline family |
+| 2026-06-22 (×2 same session) | **Edited the MAIN-repo absolute path from inside a worktree session — TWICE** (settings.json, then todo.md cleanup) — recurring carry-forward-#5 (also 2026-06-19/20). Both reverted + redone on the worktree path. | other (one-tree-per-session / main-path-from-worktree) | carry-forward #5 — no deterministic guard | logged-only + **#5 defender OVERDUE** (PreToolUse Write guard: warn when an absolute main-repo path is targeted while the session runs in a worktree) — surfaced to みや | ✅ Yes — recurring; needs the defender |
+
 ## 2026-06-20 entries
 
 | Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |

@@ -1,29 +1,26 @@
 # Current Session
 
 ## What's loaded
-2026-06-20 ~23:55 — Opus 4.8. Worktree `zen-napier-4471cc`. Long session: closed QA-261986 cycle-3 (etanah), then built 4 meta-gates incl. the compulsory Phase-0 git-check, all merged onto origin/main's 7 parallel-session commits.
+2026-06-22 ~01:24 — Opus 4.8. Worktree `nervous-villani-82fe7b`. Marathon housekeeping + overnight feature build, GO-trusted by みや (asleep). Retrieved a saved session, cleaned 21 orphan worktrees, fixed the hook-portability root cause, then built /scan + code-review feature + researched more.
 
 ## ▶▶ NEXT SESSION — START HERE
-**1. Push the branch to main (みや's manual boundary)** — `git push origin claude/zen-napier-4471cc:main`. Makes LIVE: `ticket-criteria-gate` (Stop completeness gate), `ticket-gate` Row-0 git-check, comment-strip, minimal-diff, convention-check v1.3. Until pushed, §3.0 registry shows `ticket-criteria-gate` `MISSING` (file at worktree path, not main); after push + main-checkout pull → live + flag self-heals.
-**2. System-index project** (todo Q1, carried from prior session) — index OUR system by category for blast-radius; rename batch (`auto-skill-on-mistake → auto-system-upgrade-on-mistake`, `meta-layer-audit → system-boot-check`). Design w/ みや step by step.
-**3. Bug B (STG-PPTPB)** — Kelulusan gateway `sid-70631659` reads `kelulusan`, should read `keputusan`. Aaron's Modeler change; awaiting.
+**1. CC RESTART makes things live.** This session's `${CLAUDE_PROJECT_DIR}` settings.json conversion + the new hooks (`known-bug-surfacer`) + 2 new skills (`/scan`, `/review-etanah`) all take effect on your next CC restart. Confirm: boot SessionStart hooks fire normally · `node meta/sync-hook-catalog.js --check` exits 0 · `/scan --setup` says tools OK.
+**2. Pilot the top research proposal** — SchemaCrawler + `hbm2ddl=validate` (DB-schema-aware entity validation) per `meta/research-proposals/2026-06-22-improvement-directions.md`. Kills the DB-fabrication slip class. Research-only so far.
+**3. Verify the seeded known-bug** — `PelupusanLiteService:789` (NPE, both tools flagged). Confirm real → fix, or mark `status:"fixed"` in `domain/scan/known-bugs.jsonl`.
 
-## This session arc (QA-261986 + meta-gates + git-check)
-- **QA-261986 cycle-3 CLOSED (etanah)** — PSBS Risalat MMKN Syarikat: syor→`syorKeputusanPDT` ("Boleh Dipertimbangkan"), §2.2 tempoh→`tempohPajakanDipohon` (92), JPPH NULL-agensi fallback, + **Tolak variant mirrored** (2nd `tempohPajakanAsal`→`tempohPajakanDipohon` + 2nd `keputusanYB`→`syorKeputusanPDT`, proven against live template). Commit `6938e9b656` on `mlk/qa/261986v3` (etanah-pelupusan). **Branch-divergence finding**: the kadar-cukai `ComponentNotFoundException` was aaron's **#239386** (`resolveFirstComponentWithId` on release/1.0.1) vs our QA-261517 guard on master — adopted release's version locally; #239386 supersedes ours on next master↔release sync.
-- **Built (MemoryCore, this worktree):** (a) NEW `ticket-criteria-gate` Power (Stop — blocks done/close claim without a CRITERIA COVERAGE table); (b) comment-strip-at-Phase-1 (`prepare-commit` Step 2.6 v1.5); (c) minimal-diff rule (CLAUDE.md §8); (d) `convention-check-gate` v1.3 (.xhtml fires + IN-FILE-FIRST); (e) **compulsory Phase-0 git-state check** (`ticket-gate` Row 0 + Quest-Prep row) + Phase-1 remote-probe + slip-log `stage`/git sub-cats — from a deep git-check research (QA-260139/261986/266215/262004 evidence).
-- **Merged origin/main** (7 commits, parallel `stupefied-dhawan` session) into the branch — settings.json + active.txt auto-merged, system-architecture.md conflict resolved + §3.0 regenerated (57 regs).
-- **Slip (reinforces carry-forward #5):** AGAIN edited `meta/` in the MAIN working tree mid-worktree-session — **3rd occurrence** (parallel session today + 2026-06-19). Reconciled. The one-tree-per-session defender is overdue.
-
-## Carry-forward
-| # | Item | State |
-|---|---|---|
-| 1 | **Push branch→main** to make this session's gates LIVE | ⬜ みや's manual boundary (classifier blocks auto-push) |
-| 2 | System-index + rename batch | ⬜ todo Q1; design w/ みや |
-| 3 | Bug B — Kelulusan gateway → Aaron Modeler | ⬜ awaiting |
-| 4 | QA-261986 Tolak untested + #239386→master sync | ⬜ Tolak needs a Tolak-app test; #239386 supersedes QA-261517 |
-| 5 | **one-tree-per-session defender** | 🚨 3rd occurrence — overdue; candidate hook |
+## This session arc
+- **Housekeeping**: retrieved zen-napier S3 (QA-261986 cycle-3 rework, now on main); cleaned **21 merged worktrees** (root cause: OneDrive locks + harness recursive-delete guard defeat `git worktree remove` → use script-file `cmd rmdir`); salvaged 3 unmerged branches (2 hooks + diary 06-09) onto main; removed 17 done todos (200→183).
+- **🔑 Hook-portability root-cause FIXED**: all 59 hook paths absolute-main → `${CLAUDE_PROJECT_DIR}` (CC-substituted pre-exec, verified vs docs). Kills the "stale main tree → ghost hooks in every worktree" class. Each worktree now runs its OWN branch's hooks.
+- **Activated 2 salvaged hooks** (quest-objective-anchor, deploy-proof-gate).
+- **NEW Power `/scan`** (`domain/scan/`): PMD (curated bug-ruleset) + SpotBugs (-high dataflow) on etanah Java. Tools at `%LOCALAPPDATA%\etanah-static-analysis`. Selftest PASS; live-caught a real NPE (PelupusanLiteService:789). + `known-bug-surfacer` hook surfaces recorded bugs on file-touch.
+- **NEW Power `/review-etanah`** (`domain/review-etanah/`): orchestrates /scan + built-in /code-review + /security-review with an etanah `REVIEW.md` rulebook (active copy at etanah repo root). Inventory-first — built-ins already existed.
+- **best-practices-consult-gate** extended: "add a feature" → consult /system-rules + /system-design.
+- **superpowers**: stale marketplace index refreshed; confirmed installed + current at 5.1.0.
+- **Research-only** (`meta/research-proposals/2026-06-22-...md`): codebase-memory-mcp = REDUNDANT w/ codegraph (not added, doesn't replace grep); 10 improvement directions → top 4 deep-researched.
+- **Slip (#5 recurred ×2)**: edited the MAIN-repo path from a worktree session twice (settings.json + todo.md) — the recurring carry-forward-#5 pattern. Reverted both; the #5 defender is overdue.
+- **Lesson (みや)**: stop wrapping concrete/visible/IT things in analogies — SHOW the real file/path/value. Convoluted-analogy = the SHOW-DON'T-TELL root cause.
 
 ## 🎯 Session Recap (for AI restart)
-Closed QA-261986 cycle-3 (Tolak+JPPH+syor+tempoh, etanah `6938e9b656`); the kadar-cukai error was aaron's #239386 branch-divergence, not ours. Built `ticket-criteria-gate` (Stop completeness gate) + comment-strip + minimal-diff + convention-check v1.3, then the compulsory Phase-0 git-check (`ticket-gate` Row 0) + Phase-1 remote-probe + slip-log expansion from a git-check research. Merged origin/main's 7 parallel-session commits cleanly. NEXT: みや pushes branch→main to make the gates live, then the system-index project.
+Marathon: housekeeping (retrieved session, cleaned 21 worktrees, fixed `${CLAUDE_PROJECT_DIR}` hook-portability, pruned 17 todos) + overnight feature build (NEW `/scan` static-bug-detection Power — PMD+SpotBugs, caught a real NPE; NEW `/review-etanah` orchestration; "add a feature" rule; superpowers refresh; codebase-memory assessed redundant; 10-way research proposal). All committed + pushed to main. NEXT: CC restart to make it live, then pilot SchemaCrawler DB-validation. Recurring #5 slip (edited main-path from worktree ×2) — defender overdue.
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-20 ~23:55 — DE close (Opus 4.8, zen-napier-4471cc worktree).
+**Memory Type**: RAM | **Last Activity**: 2026-06-22 ~01:24 — DE close (Opus 4.8, nervous-villani worktree).

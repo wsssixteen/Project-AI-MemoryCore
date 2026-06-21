@@ -21,6 +21,8 @@ const TRIGGERS = [
   /\bdesign (a|an|the|our)\b.*\b(skill|hook|system|architecture|pattern)\b/i,
   /\barchitect(ure|ing) (for|on|the)\b/i,
   /\bbuild (a|an|our|the) new (skill|hook|system|architecture|component)\b/i,
+  // みや 2026-06-22: "add a feature" ALWAYS means consult /system-rules + /system-design first.
+  /\b(add|create|build|implement|make)\b[^.\n]{0,25}\b(feature|power|capability)\b/i,
 ];
 
 let input = '';
@@ -37,6 +39,9 @@ process.stdin.on('end', () => {
     const context = [
       '',
       '⚙️  best-practices-consult-gate: design-decision signal detected',
+      '',
+      'If this is an "add a feature / build a Power" ask → invoke /system-rules + /system-design',
+      'FIRST (design-consult-gate hard-blocks the skill/hook edit until both have run this session).',
       '',
       'Before proposing architecture / skill / hook / pattern design:',
       '  1. Read library-items/agent-architecture/claude-code-best-practices.md',
