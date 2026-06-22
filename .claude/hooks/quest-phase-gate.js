@@ -77,6 +77,7 @@ process.stdin.on('end', () => {
 
     // Phase-emit markers (canonical banner + accepted legacy markers)
     const phases = [
+      { name: 'Issue Checklist', re: /Issue Checklist/i },
       { name: 'Scout', re: /═══\s*SCOUT\b|\bSCOUT EMIT\b/i },
       { name: 'Recon', re: /═══\s*RECON\b|\bRECON EMIT\b|Recon Context Re-load/i },
       { name: 'Rubric', re: /═══\s*RUBRIC\b|\bRUBRIC EMIT\b|Logic Blast Radius/i },
