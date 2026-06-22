@@ -6,35 +6,35 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\meta-layer-audit.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\meta-layer-audit.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\boot-load-verification.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\boot-load-verification.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\boot-required-read-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\boot-required-read-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\worktree-cleanup-boot.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\worktree-cleanup-boot.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\evolution-check-trigger.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\evolution-check-trigger.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\system-check-trigger.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\system-check-trigger.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\open-quest-surfacer.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\open-quest-surfacer.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\hook-syntax-check.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\hook-syntax-check.js\""
           }
         ]
       }
@@ -44,91 +44,95 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\ticket-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\ticket-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\quest-resume-preflight.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\quest-resume-preflight.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\prayer-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\prayer-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\auto-skill-trigger.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\auto-skill-trigger.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\MemoryClaimGate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\MemoryClaimGate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\PlainFirstGate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\PlainFirstGate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\inventory-first-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\inventory-first-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\word-ui-vocab-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\word-ui-vocab-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\session-items-manager.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\session-items-manager.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\prose-default-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\prose-default-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\best-practices-consult-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\best-practices-consult-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\user-side-guardrail.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\user-side-guardrail.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\skill-invocation-discipline-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\skill-invocation-discipline-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\domain-expansion-trigger.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\domain-expansion-trigger.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\prepare-commit-trigger.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\prepare-commit-trigger.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\SystemAwareDecision.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\SystemAwareDecision.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\TurnChecklistGate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\TurnChecklistGate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\scout-completeness-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\scout-completeness-gate.js\""
           },       
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\quest-active-grounding.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\quest-active-grounding.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\mode-detector.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\quest-objective-anchor.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\domain\\batch-ask\\batch-ask.trigger.hook.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\mode-detector.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\domain\\codemap-recon-consult\\codemap-recon-consult.trigger.hook.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\batch-ask\\batch-ask.trigger.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\codemap-recon-consult\\codemap-recon-consult.trigger.hook.js\""
           }
         ]
       }
@@ -139,15 +143,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\commit-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\commit-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\convention-check-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\convention-check-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\branch-at-apply-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\branch-at-apply-gate.js\""
           }
         ]
       },
@@ -156,35 +160,44 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\domain\\design-consult-gate\\design-consult-gate.gate.hook.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\design-consult-gate\\design-consult-gate.gate.hook.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\phase0-artifact-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\phase0-artifact-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\pre-action-check-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\pre-action-check-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\meta-edit-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\meta-edit-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\edit-scope-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\edit-scope-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\convention-check-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\convention-check-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\claude-md-edit-guard.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\claude-md-edit-guard.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\quest-phase-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\quest-phase-gate.js\""
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\scan\\known-bug-surfacer.hook.js\""
           }
         ]
       }
@@ -194,55 +207,63 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\reply-log.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\reply-log.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\operational-follow-through.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\operational-follow-through.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\file-list-after-refine.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\file-list-after-refine.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\notes-on-test-data.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\notes-on-test-data.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\silent-claim-drift-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\silent-claim-drift-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\veritas-claim-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\deploy-proof-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\diagnostic-self-heal-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\veritas-claim-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\de-output-integrity-checker.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\diagnostic-self-heal-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\ask-back-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\de-output-integrity-checker.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\ask-back-gate.js\""
           },
 		  {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\rcrl-emit-check.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\rcrl-emit-check.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\quest-knowledge-save-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\quest-knowledge-save-gate.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\domain\\show-gate\\show-gate.discipline.hook.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\show-gate\\show-gate.discipline.hook.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\domain\\codemap-recon-consult\\codemap-recon-consult.discipline.hook.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\codemap-recon-consult\\codemap-recon-consult.discipline.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\ticket-criteria-gate\\ticket-criteria-gate.discipline.hook.js\""
           }
         ]
       }
@@ -252,11 +273,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\RecursiveLoopDetector.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\RecursiveLoopDetector.js\""
           },
           {
             "type": "command",
-            "command": "node \"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\hooks\\slip-count-tracker.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\slip-count-tracker.js\""
           }
         ]
       }

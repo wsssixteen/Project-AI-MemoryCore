@@ -16,6 +16,11 @@
  *   .docx / config / SQL stay ADVISORY (reminder only) — start-simple per
  *   /system-rules Rule 4; promote them on evidence. Mirrors quest-phase-gate.js
  *   deny-pattern: transcript-scan · fail-open · bypass token.
+ * v1.3 2026-06-20 (QA-261986/QA-261517, per みや) — (a) added `jsf` kind so .xhtml
+ *   edits fire the gate (ADVISORY); QA-261517's wrong-approach was an .xhtml edit the
+ *   gate didn't even detect. (b) universal IN-FILE-FIRST line: grep the TARGET FILE for
+ *   its own existing idiom before adding parallel code (gate checked siblings, not the
+ *   target file's own convention).
  *
  *   CAN (shape/presence ~100%): verify an analog WAS cited before a Java edit → kills SKIPPING.
  *   CANNOT (correctness — stays judgment): verify the cited analog is the RIGHT one.
@@ -55,6 +60,7 @@ process.stdin.on('end', () => {
     if (toolName === 'Edit' || toolName === 'Write') {
       if (/\.java$/i.test(filePath)) { kind = 'java'; extra = filePath; }
       else if (/\.docx$/i.test(filePath)) { kind = 'docx'; extra = filePath; }
+      else if (/\.xhtml$/i.test(filePath)) { kind = 'jsf'; extra = filePath; }
       else if (/\.(json|xml|properties)$/i.test(filePath) && /(template|resources|config)/i.test(filePath)) { kind = 'config'; extra = filePath; }
     } else if (toolName === 'Bash') {
       if (/\bUPDATE\s+\w+|\bINSERT\s+INTO\s+\w+/i.test(command)) {
@@ -84,6 +90,11 @@ process.stdin.on('end', () => {
         '  - Compared SDT type (TEXT body vs TABLE body) with where the tag is registered in methodMap?',
         '  - Cited the sibling template + offset/section in the chat prose BEFORE this edit?',
       ],
+      jsf: [
+        '  - 🚨 Grepped the TARGET FILE ITSELF for how it already does this (e.g. resolveFirstComponentWithId, an existing listener/process/update idiom used elsewhere in the SAME file) — reuse it, do NOT invent a new mechanism (QA-261517 slip)?',
+        '  - Read a sibling component/input in the SAME file/panel that works correctly + copied its full wiring (mbb / helper / VO / listener / process / update)?',
+        '  - Cited the sibling component file:line in the chat prose BEFORE this edit?',
+      ],
       config: [
         '  - Read at least ONE existing entry to see the value-shape convention?',
         '  - Cited the example you mirrored?',
@@ -100,6 +111,7 @@ process.stdin.on('end', () => {
     const headline = {
       java: `Edit on Java file — convention-check required first.`,
       docx: `Edit on .docx template — convention-check required first.`,
+      jsf: `Edit on .xhtml/JSF file — convention-check required first.`,
       config: `Edit on config/resource file — convention-check required first.`,
       sql: `SQL UPDATE/INSERT on ${extra} — convention-check required first.`,
     };
@@ -109,6 +121,7 @@ process.stdin.on('end', () => {
       `⚙️  convention-check-gate: ${headline[kind]}`,
       '',
       'Per feedback_simplify_and_reference.md "find working analog first" — universal rule across code/template/data:',
+      '  - 🚨 IN-FILE FIRST (QA-261986/QA-261517): grep the TARGET FILE ITSELF for an existing method/branch/idiom/attribute that already does this — reuse it; do NOT add parallel/new code when the file already has the pattern.',
       ...checks[kind],
       '',
       'If you have NOT done the convention-check this turn: STOP, run the check (Grep/Read/SELECT), CITE the analog in chat prose, THEN proceed with this edit.',

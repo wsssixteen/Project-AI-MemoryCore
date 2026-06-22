@@ -16,7 +16,8 @@
 |---|---|
 | `date` | When the slip occurred (YYYY-MM-DD) |
 | `slip` | One-line description of the missed behaviour |
-| `root_category` | One of: boot-or-required-read-skipped · prose-default-on-lock-signals · inventory-first-miss · agree-bias · best-practices-not-consulted · silent-claim-drift · pre-action-check-skip · stop-instead-of-action · visual-evidence-dimensions-missed · wrong-baseline-diagnosis · tool-choice-skip · knowledge-transfer-incompleteness · scope-breach-silent-expansion · other (specify) |
+| `root_category` | One of: boot-or-required-read-skipped · prose-default-on-lock-signals · inventory-first-miss · agree-bias · best-practices-not-consulted · silent-claim-drift · pre-action-check-skip · stop-instead-of-action · visual-evidence-dimensions-missed · wrong-baseline-diagnosis · tool-choice-skip · knowledge-transfer-incompleteness · scope-breach-silent-expansion · git-stale-base · git-divergence · existing-fix-missed · other (specify) |
+| `stage` | (added 2026-06-20 per みや — git-slip signal was masked under wrong-baseline/tool-choice) When in the journey the slip occurred: Phase-0 · Phase-0-git-probe · Phase-1-prepare-commit · Phase-1-push · Phase-2 · non-quest. Carries the timing signal directly so git/workflow slip clusters are visible without re-reading every entry. |
 | `existing_rule` | Was there a rule that should have prevented this? Cite file:line |
 | `action_taken` | refined-skill · refined-hook · new-skill · new-hook · prose-only (BANNED for v2 — surface as failure) · logged-only |
 | `meta_layer_relevant` | True if this slip is what the meta-layer is designed to catch |
@@ -77,6 +78,13 @@
 | `best-practices-not-consulted` — **2 strikes in 1 session** (immediate threshold per refined Step 5) | Strike 1: Refine Blocks A/B without wording-shape audit (caught by user's "check metric-wise"). Strike 2: dev-testing-hack creation without formal `system-design` Skill-tool invocation (caught by user's "did you go through system-design"). Both are the same shape: applying my own just-refined rules to OTHER work but skipping for components I create in the same turn. | **Structural defender question pending みや's call**: the latest refines (Step 3.6 dual audit + Step 5 tiered thresholds + this running-count table) are SHAPE FIXES on the existing skill. Open question: is wording-fix sufficient, or does best-practices-consult need to become a deterministic hook (PreToolUse on Write to `.claude/skills/`)? Hook would force the audit before any skill-creation Edit fires, eliminating Ruri's self-trigger gap. Surface at next session boot. |
 
 ---
+
+## 2026-06-22 entries
+
+| Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |
+|---|---|---|---|---|---|
+| 2026-06-22 (overnight build — みや: "why are your answers so convoluted... unnecessary analogies for something technical they can already see") | **Wrapped concrete/visible IT facts (3 real files) in light-bulb/switch/room analogies** instead of showing the actual paths/values — adds a decode-layer instead of removing one. The SHOW-DON'T-TELL root cause みや has repeated many times. | other (convoluted-explanation / analogy-for-concrete) | personality.md Show-first + CLAUDE.md §2 register rules — existed; didn't ban analogy-for-concrete specifically | lesson captured (diary + current-session); proposed analogy-tripwire — みや to choose rule-only vs rule+hook | ✅ Yes — output-discipline family |
+| 2026-06-22 (×2 same session) | **Edited the MAIN-repo absolute path from inside a worktree session — TWICE** (settings.json, then todo.md cleanup) — recurring carry-forward-#5 (also 2026-06-19/20). Both reverted + redone on the worktree path. | other (one-tree-per-session / main-path-from-worktree) | carry-forward #5 — no deterministic guard | logged-only + **#5 defender OVERDUE** (PreToolUse Write guard: warn when an absolute main-repo path is targeted while the session runs in a worktree) — surfaced to みや | ✅ Yes — recurring; needs the defender |
 
 ## 2026-06-20 entries
 

@@ -1,2 +1,7 @@
 {"ts":"2026-06-18T04:51:37.809Z","file":"x/.claude/hooks/foo.js","action":"allowed"}
 {"ts":"2026-06-18T04:51:37.896Z","file":"x/.claude/hooks/foo.js","action":"blocked","detail":"system-design + system-rules"}
+{"ts":"2026-06-21T17:13:25.093Z","file":"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\worktrees\\nervous-villani-82fe7b\\.claude\\skills\\scan\\SKILL.md","action":"bypassed"}
+{"ts":"2026-06-21T17:14:05.367Z","file":"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\worktrees\\nervous-villani-82fe7b\\domain\\scan\\known-bug-surfacer.hook.js","action":"bypassed"}
+{"ts":"2026-06-21T17:17:05.440Z","file":"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\worktrees\\nervous-villani-82fe7b\\.claude\\skills\\review-etanah\\SKILL.md","action":"bypassed"}
+{"ts":"2026-06-21T17:21:29.624Z","file":"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\worktrees\\nervous-villani-82fe7b\\.claude\\hooks\\best-practices-consult-gate.js","action":"bypassed"}
+{"ts":"2026-06-21T17:21:42.395Z","file":"C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\worktrees\\nervous-villani-82fe7b\\.claude\\hooks\\best-practices-consult-gate.js","action":"bypassed"}

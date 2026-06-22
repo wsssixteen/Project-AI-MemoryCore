@@ -7,6 +7,7 @@
 **1. QA-266503 Phase 1 close** — fix VERIFIED on UAT, quest files saved. PENDING: strip `[QA-266503-A/B/C]` dev-comments, then prepare-commit (STOP at staging for みや approval). Then Phase 2 archive hygiene.
 **2. Decide on D (SortByLatestDate)** — verified NOT needed for issues 1/2; keep or revert before commit (みや's call).
 **3. Raise the dup-original migration bug as its OWN Redmine ticket** — 2× `versi_dok=0` (MIGRATOR_KTPN_LMS); UAT rows 7876/7927, staging 5033/5068. Scope unknown (possibly widespread) → own ticket + data cleanup.
+**Carry from overnight 06-22 (nervous-villani, still pending)**: CC-restart makes `/scan` + `/review-etanah` + new hooks live · pilot SchemaCrawler + `hbm2ddl=validate` (`meta/research-proposals/2026-06-22`) · verify seeded known-bug `PelupusanLiteService:789` NPE (`domain/scan/known-bugs.jsonl`).
 
 ## This session arc
 - **QA-266503 (MLPS Borang 4Ae; staging ticket, tested on UAT) — FIX VERIFIED, Phase-1-ready.** Two symptoms: (1) a PLPS record leaked into the Borang renewal list; (2) a real MLPS renewal DELETED on Simpan (row 7928 lost — confirmed live via DB). ROOT = a DUPLICATED original (two `versi_dok=0` rows from MIGRATOR_KTPN_LMS).

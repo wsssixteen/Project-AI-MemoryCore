@@ -10,6 +10,11 @@
  *  - State lookup is now per-QA (not last-block-wins).
  *  - Reminder upgraded with: independent enumeration, utility sweep,
  *    working-analog compare, cross-reference chase.
+ * Refined 2026-06-20 (per みや — compulsory git-check research): added Row 0
+ *  GIT-STATE CHECK (baseline-verify + behind-origin count + existing-fix probe)
+ *  as the FIRST Phase-0 row. Evidence: QA-260139 stale-base, QA-261986 ~293-behind
+ *  base, QA-266215 existing-fix-missed. Prose git-discipline decayed (prompt-driven);
+ *  injecting it deterministically here makes the Phase-0 git-check compulsory.
  */
 
 const fs = require('fs');
@@ -81,6 +86,8 @@ process.stdin.on('end', () => {
         ``,
         `MANDATORY — emit the Phase-0 gate checklist FIRST as ✓/⬜ rows (a skipped item must be VISIBLE):`,
         ``,
+        `0. ⬜ **🚨 GIT-STATE CHECK (Phase-0, COMPULSORY — run even if it returns nothing)** — \`git status\` + \`git branch --show-current\`; if NOT on the repo baseline (\`mlk/master\` pelupusan · \`mlk/stag-env\` AWAM) → stash → checkout baseline → \`git pull --ff-only origin <baseline>\` → pop (STOP if the pull fails — unknown commits). Then \`git rev-list --count HEAD..origin/<baseline>\` (behind-count). **Existing-fix probe**: \`git branch -a --list "*${qaNum}*"\` + \`git log --all --grep="#${qaNum}" --format="%h %ci %an %s"\`. **Emit a GIT-STATE summary** (branch · behind-count · existing-fix? · ticket-keyword log hits for context). **STOP + surface** if a fix exists under another author, the baseline pull fails, or behind-count is large (stale base).`,
+        ``,
         `1. ⬜ Task folder loaded — \`handoff_file\` from active.txt OR ask みや for path. Read every file in \`0. Brief/\` (Description, History, every PDF/docx/photo).`,
         `2. ⬜ **Issue Checklist created at quest creation** in \`projects/coding-projects/active/QA-${qaNum}/QA-${qaNum}.md\` — from PRIMARY SOURCES (BA Description + History + attachments). NOT copied from Scout. Scout's diagnostic is DIFFED against this. List GROWS through Recon/Apply/Test; out-of-scope findings get explicit OOS rows. **Enumerate ALL** (every BA-numbered item, every gate-writer, every OR-bypass, every data-axis branch) — see \`checklist\` skill "Enumeration completeness".`,
         `3. ⬜ **Existing-utility sweep** — grep for existing helpers/constants/sets/templates BEFORE proposing custom ones. Applies even when みや says "create our own X" — flag the existing util first.`,
@@ -88,7 +95,7 @@ process.stdin.on('end', () => {
         `5. ⬜ **Cross-reference chase** — if Description/History references other tickets (Requirement #NNNNN, relates #, refs, "rujuk ... tic ini"), spawn the background cross-ref agent per \`quest/cross-ref-agent.md\` (non-blocking; ONE agent for the batch, sequential, browser MCP).`,
         `6. ⬜ **Recon block** emitted — Universal Checks 1-8 with file:line evidence per row.`,
         ``,
-        `Do NOT propose fixes / commit / open codebase files for editing until rows 1-6 are ✓ or have explicit deferrals (OOS / BA-Q / not-applicable + reason).`
+        `Do NOT propose fixes / commit / open codebase files for editing until rows 0-6 are ✓ or have explicit deferrals (OOS / BA-Q / not-applicable + reason). Row 0 (git-state) is the FIRST thing — before reading the Task folder.`
       ].join('\n');
     } else {
       // Redmine retrieval — no specific ticket yet

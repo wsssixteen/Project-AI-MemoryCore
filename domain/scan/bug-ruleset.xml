@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<ruleset name="etanah-bug-scan"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+  <description>
+    Bug-focused PMD ruleset for the /scan Power. Real defect patterns only — NO
+    style/naming/formatting noise (the default quickstart was ~90% noise on etanah).
+    Each rule here was kept because it maps to a real bug-class seen in etanah:
+    resource leaks, NPE-order, locale-casing (template work), broken control flow.
+  </description>
+
+  <!-- The error-prone category = "this is probably a bug" (CloseResource,
+       UseLocaleWithCaseConversions, AssignmentInOperand, NonExhaustiveSwitch,
+       BrokenNullCheck, MisplacedNullCheck, EmptyCatchBlock, etc.) minus a few
+       noisy stylistic members. -->
+  <rule ref="category/java/errorprone.xml">
+    <exclude name="AvoidLiteralsInIfCondition"/>
+    <exclude name="AvoidDuplicateLiterals"/>
+    <exclude name="AvoidFieldNameMatchingMethodName"/>
+    <exclude name="AvoidFieldNameMatchingTypeName"/>
+    <exclude name="DataflowAnomalyAnalysis"/>
+    <exclude name="NullAssignment"/>
+    <exclude name="AvoidDecimalLiteralsInBigDecimalConstructor"/>
+    <exclude name="DoNotTerminateVM"/>
+    <exclude name="CompareObjectsWithEquals"/>
+  </rule>
+
+  <!-- NPE-order: str.equals("literal") is NPE-prone; "literal".equals(str) is safe. -->
+  <rule ref="category/java/bestpractices.xml/LiteralsFirstInComparisons"/>
+  <!-- A formal parameter never read is often a forgotten wiring / copy-paste leftover. -->
+  <rule ref="category/java/bestpractices.xml/UnusedFormalParameter"/>
+  <!-- Concurrency defects (double-checked locking, non-atomic on volatile, etc.). -->
+  <rule ref="category/java/multithreading.xml"/>
+</ruleset>

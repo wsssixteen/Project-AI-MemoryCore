@@ -53,66 +53,70 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `meta/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `meta-layer-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node meta/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 56 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 60 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
-| SessionStart | — | `boot-load-verification.js` | ✓ |
-| SessionStart | — | `boot-required-read-gate.js` | ✓ |
-| SessionStart | — | `evolution-check-trigger.js` | ✓ |
-| SessionStart | — | `hook-syntax-check.js` | ✓ |
-| SessionStart | — | `meta-layer-audit.js` | ✓ |
-| SessionStart | — | `open-quest-surfacer.js` | ✓ |
-| SessionStart | — | `system-check-trigger.js` | ✓ |
-| SessionStart | — | `worktree-cleanup-boot.js` | ✓ |
-| UserPromptSubmit | — | `auto-skill-trigger.js` | ✓ |
-| UserPromptSubmit | — | `batch-ask.trigger.hook.js` | ✓ |
-| UserPromptSubmit | — | `best-practices-consult-gate.js` | ✓ |
-| UserPromptSubmit | — | `codemap-recon-consult.trigger.hook.js` | ✓ |
-| UserPromptSubmit | — | `domain-expansion-trigger.js` | ✓ |
-| UserPromptSubmit | — | `inventory-first-gate.js` | ✓ |
-| UserPromptSubmit | — | `MemoryClaimGate.js` | ✓ |
-| UserPromptSubmit | — | `mode-detector.js` | ✓ |
-| UserPromptSubmit | — | `PlainFirstGate.js` | ✓ |
-| UserPromptSubmit | — | `prayer-gate.js` | ✓ |
-| UserPromptSubmit | — | `prepare-commit-trigger.js` | ✓ |
-| UserPromptSubmit | — | `prose-default-gate.js` | ✓ |
-| UserPromptSubmit | — | `quest-active-grounding.js` | ✓ |
-| UserPromptSubmit | — | `quest-resume-preflight.js` | ✓ |
-| UserPromptSubmit | — | `scout-completeness-gate.js` | ✓ |
-| UserPromptSubmit | — | `session-items-manager.js` | ✓ |
-| UserPromptSubmit | — | `skill-invocation-discipline-gate.js` | ✓ |
-| UserPromptSubmit | — | `SystemAwareDecision.js` | ✓ |
-| UserPromptSubmit | — | `ticket-gate.js` | ✓ |
-| UserPromptSubmit | — | `TurnChecklistGate.js` | ✓ |
-| UserPromptSubmit | — | `user-side-guardrail.js` | ✓ |
-| UserPromptSubmit | — | `word-ui-vocab-gate.js` | ✓ |
-| PreToolUse | Bash | `branch-at-apply-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `claude-md-edit-guard.js` | ✓ |
-| PreToolUse | Bash | `commit-gate.js` | ✓ |
-| PreToolUse | Bash | `convention-check-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `convention-check-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `design-consult-gate.gate.hook.js` | ✓ |
-| PreToolUse | Edit|Write | `edit-scope-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `meta-edit-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `phase0-artifact-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `pre-action-check-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `quest-phase-gate.js` | ✓ |
-| PostToolUse | — | `RecursiveLoopDetector.js` | ✓ |
-| PostToolUse | — | `slip-count-tracker.js` | ✓ |
-| Stop | — | `ask-back-gate.js` | ✓ |
-| Stop | — | `codemap-recon-consult.discipline.hook.js` | ✓ |
-| Stop | — | `de-output-integrity-checker.js` | ✓ |
-| Stop | — | `diagnostic-self-heal-gate.js` | ✓ |
-| Stop | — | `file-list-after-refine.js` | ✓ |
-| Stop | — | `notes-on-test-data.js` | ✓ |
-| Stop | — | `operational-follow-through.js` | ✓ |
-| Stop | — | `quest-knowledge-save-gate.js` | ✓ |
-| Stop | — | `rcrl-emit-check.js` | ✓ |
-| Stop | — | `reply-log.js` | ✓ |
-| Stop | — | `show-gate.discipline.hook.js` | ✓ |
-| Stop | — | `silent-claim-drift-gate.js` | ✓ |
-| Stop | — | `veritas-claim-gate.js` | ✓ |
+| SessionStart | — | `boot-load-verification.js` | 🚨 MISSING |
+| SessionStart | — | `boot-required-read-gate.js` | 🚨 MISSING |
+| SessionStart | — | `evolution-check-trigger.js` | 🚨 MISSING |
+| SessionStart | — | `hook-syntax-check.js` | 🚨 MISSING |
+| SessionStart | — | `meta-layer-audit.js` | 🚨 MISSING |
+| SessionStart | — | `open-quest-surfacer.js` | 🚨 MISSING |
+| SessionStart | — | `system-check-trigger.js` | 🚨 MISSING |
+| SessionStart | — | `worktree-cleanup-boot.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `auto-skill-trigger.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `batch-ask.trigger.hook.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `best-practices-consult-gate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `codemap-recon-consult.trigger.hook.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `domain-expansion-trigger.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `inventory-first-gate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `MemoryClaimGate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `mode-detector.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `PlainFirstGate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `prayer-gate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `prepare-commit-trigger.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `prose-default-gate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `quest-active-grounding.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `quest-objective-anchor.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `quest-resume-preflight.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `scout-completeness-gate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `session-items-manager.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `skill-invocation-discipline-gate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `SystemAwareDecision.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `ticket-gate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `TurnChecklistGate.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `user-side-guardrail.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `word-ui-vocab-gate.js` | 🚨 MISSING |
+| PreToolUse | Bash | `branch-at-apply-gate.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `claude-md-edit-guard.js` | 🚨 MISSING |
+| PreToolUse | Bash | `commit-gate.js` | 🚨 MISSING |
+| PreToolUse | Bash | `convention-check-gate.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `convention-check-gate.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `design-consult-gate.gate.hook.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `edit-scope-gate.js` | 🚨 MISSING |
+| PreToolUse | Read|Edit|Write | `known-bug-surfacer.hook.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `meta-edit-gate.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `phase0-artifact-gate.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `pre-action-check-gate.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `quest-phase-gate.js` | 🚨 MISSING |
+| PostToolUse | — | `RecursiveLoopDetector.js` | 🚨 MISSING |
+| PostToolUse | — | `slip-count-tracker.js` | 🚨 MISSING |
+| Stop | — | `ask-back-gate.js` | 🚨 MISSING |
+| Stop | — | `codemap-recon-consult.discipline.hook.js` | 🚨 MISSING |
+| Stop | — | `de-output-integrity-checker.js` | 🚨 MISSING |
+| Stop | — | `deploy-proof-gate.js` | 🚨 MISSING |
+| Stop | — | `diagnostic-self-heal-gate.js` | 🚨 MISSING |
+| Stop | — | `file-list-after-refine.js` | 🚨 MISSING |
+| Stop | — | `notes-on-test-data.js` | 🚨 MISSING |
+| Stop | — | `operational-follow-through.js` | 🚨 MISSING |
+| Stop | — | `quest-knowledge-save-gate.js` | 🚨 MISSING |
+| Stop | — | `rcrl-emit-check.js` | 🚨 MISSING |
+| Stop | — | `reply-log.js` | 🚨 MISSING |
+| Stop | — | `show-gate.discipline.hook.js` | 🚨 MISSING |
+| Stop | — | `silent-claim-drift-gate.js` | 🚨 MISSING |
+| Stop | — | `ticket-criteria-gate.discipline.hook.js` | 🚨 MISSING |
+| Stop | — | `veritas-claim-gate.js` | 🚨 MISSING |
 <!-- HOOK-REGISTRY:AUTO-END -->
 
 ### 3.1 SessionStart (7 hooks)
@@ -131,7 +135,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 
 | Hook | Owner | Watches user prompt for | Injects | Stakeholders | Change-impact |
 |---|---|---|---|---|---|
-| `ticket-gate.js` | self | ticket number patterns (QA #N, FAT-OR #N, UAT-CR #N, etc.) | Quest workflow trigger | Quest skill | If ticket format expands, regex update needed |
+| `ticket-gate.js` | self | ticket number patterns (QA #N, FAT-OR #N, UAT-CR #N) + Redmine-retrieval | injects Phase-0 gate checklist; **Row 0 (2026-06-20) = COMPULSORY GIT-STATE CHECK** — baseline-verify + behind-origin count + existing-fix probe (`git branch -a --list "*<#>*"` + `git log --all --grep`) → emit GIT-STATE summary, STOP on existing-fix-by-other/pull-fail/stale-base | Quest skill, Phase-0 git-discipline (CLAUDE.md Quest-Prep-Verification row) | regex update if ticket format expands; Row-0 git-commands per repo baseline |
 | `prayer-gate.js` | self | prayer-time mentions | acknowledgment context | みや | Time-aware-system feature |
 | `auto-skill-trigger.js` | self | correction signals ("you missed", "why didn't you", etc.) + `→ Skill: X` tokens (Phase 5 extension) | invoke skill reminder | auto-skill-on-mistake skill, Layer 2 enforcement | Predicate extension affects which slips get caught |
 | `MemoryClaimGate.js` | self | memory claims that need verification | warning | claim-verification skill | Predicate change affects memory hygiene |
@@ -144,7 +148,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | `user-side-guardrail.js` | self | みや's banned input shapes | guardrail warning | user-side-INDEX | Adding banned shapes requires this hook update |
 | `skill-invocation-discipline-gate.js` | self | みや referencing a skill by name | mandatory invoke-via-Skill-tool reminder | Skill tool, every skill | Predicate update affects skill-name detection |
 | `domain-expansion-trigger.js` | self | DE session-end trigger phrases ("/save all", "wrap up the day", etc.) | 12-step DE sequence | DE protocol (expansion-protocol.md) | Trigger-phrase changes affect DE firing |
-| `prepare-commit-trigger.js` | self | Phase 1 close-out trigger phrases | 12-step prepare-commit sequence | quest-protocol.md Phase 1 close-out | Step changes affect the close-out sequence |
+| `prepare-commit-trigger.js` | self | Phase 1 close-out trigger phrases | 12-step prepare-commit sequence (Step 2.6 v1.5 2026-06-20 strips cycle-added comments too, unless みや says keep) | quest-protocol.md Phase 1 close-out | Step changes affect the close-out sequence |
 | `SystemAwareDecision.js` | self | substantive prompts (always-consult-registry meta-trigger) | "scan skills/hooks/INDEX before responding" reminder | every skill + hook + INDEX file | If new registry layer added, this hook needs to scan it |
 | `TurnChecklistGate.js` | self | multi-topic prompts (≥3 numbered items OR ≥2 questions) | "✅ This-turn checklist" template | みや (visible) | Predicate update affects multi-topic detection |
 | `quest-resume-preflight.js` | self | bare ticket numbers cross-matching active.txt | Phase 0 preflight checklist | Quest skill resumption | Bare-ticket-format changes need regex update |
@@ -171,11 +175,11 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | `pre-action-check-gate.js` | self | quest-related path edits | Notes.txt + env-check + PDF reminders · **Notes-file tool-only DENY (v1.2)** | Quest skill, Notes.txt write, notes.js | Path-pattern changes need predicate update |
 | `meta-edit-gate.js` | self | `meta/*` path edits + (Phase 0 extension) hooks/skills/protocols/state-files | recursive safety + paired-edit predicate | meta-layer audit, architecture-doc-sync | Phase 0 extends this hook for architecture-doc-sync |
 | `edit-scope-gate.js` | self | suspicious delete-unrelated-code patterns | preservation discipline reminder | PRESERVATION DISCIPLINE rule | Pattern-list expansion needs predicate update |
-| `convention-check-gate.js` | self (dual-registered; v1.2 2026-06-19 BLOCKING for Java) | Edit/Write to .java / .docx / .json|xml|properties | **Java: HARD-BLOCK (deny)** unless an analog is cited this session (bypass `[skip-convention-check:]`, fail-open); .docx/config still advisory reminder | etanah-pelupusan code edits, template edits | SQL/.docx promote-to-block on evidence; self-tested 5 cases 2026-06-19 |
+| `convention-check-gate.js` | self (dual-registered; v1.3 2026-06-20 — Java BLOCKING, +jsf/.xhtml ADVISORY, +IN-FILE-FIRST) | Edit/Write to .java / .docx / .xhtml / .json|xml|properties | **Java: HARD-BLOCK (deny)** unless an analog is cited this session (bypass `[skip-convention-check:]`, fail-open); **.xhtml/.docx/config advisory** reminder + universal **IN-FILE-FIRST** check (grep the TARGET FILE's own idiom before parallel code — QA-261517) | etanah-pelupusan code/JSF edits, template edits | jsf/SQL/.docx promote-to-block on evidence; Java self-tested 5 cases 2026-06-19 |
 | `claude-md-edit-guard.js` | self (NEW 2026-06-02 — enforces /system-rules Rule 2 merge-in-place) | Edit/Write to CLAUDE.md · /system-rules/SKILL.md · /system-design/SKILL.md | scans for HARD-RULE block opener · Why+QA-NNN narrative · pairs-with cross-ref · How-to-apply restatement · みや verbatim quote inside rule body; warns advisory | /system-rules Rule 2, /system-design Bloat-prevention default; pairs with no current skill (hook-only Power) | Bloat-pattern regex additions per observed misses |
 | `quest-phase-gate.js` | self (NEW 2026-06-08, QA-262762 — structural defender for the skip-the-phases / fix-on-assumption slip, root_category wrong-baseline-diagnosis 🚨) | Edit/Write to `etanah-*` code/template/config WHILE a `status=active` quest exists | **HARD-BLOCKS** until Scout+Recon+Rubric banners (`═══ SCOUT/RECON/RUBRIC ═══`) appear in the session transcript; bypass `[skip-phase-gate: <reason>]`; **fail-open** (any error → allow) | quest-protocol.md FORCED PHASE-EMIT GATES + banner contract + Logic Blast Radius Evidence column; **first hook to read `transcript_path`** | Checks SHAPE (presence) NOT correctness — that stays Ruri's judgment + みや's glance; marker/predicate changes need regex update. Self-tested 5 cases 2026-06-08 |
 
-### 3.5 Stop (13 hooks)
+### 3.5 Stop (14 hooks)
 
 | Hook | Owner | Watches turn-end | Action | Stakeholders |
 |---|---|---|---|---|
@@ -192,6 +196,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | `domain/show-gate/show-gate.discipline.hook.js` | self (NEW 2026-06-18 — SHOW-discipline, per みや "the utmost criteria") | every Stop — reply discusses a change/compare/finding with no box-diagram and no code-block | **HARD-BLOCK (decision:block)** the turn end until a shown artifact present; bypass `[skip-show-gate: <reason>]`; exempt ═══/DE/short(<500); fail-open; reads `transcript_path` | CLAUDE.md §2 diagram-mandatory rule (makes it deterministic) | trigger-signal regex additions per observed misses |
 | `domain/codemap-recon-consult/codemap-recon-consult.discipline.hook.js` | self (NEW 2026-06-19 — codegraph back-gate, per みや "you failed to use codegraph AGAIN"; the pre-planned promotion named in the trigger-hook header) | every Stop — reply makes a completion/"exhausted" claim AND active.txt status=active AND NO `mcp__codegraph__*` call this turn | **HARD-BLOCK (decision:block)** until codegraph runs; bypass `[skip-codegraph: <reason>]`; exempt ═══/DE/short(<400); fail-open; reads `transcript_path` | codemap-recon-consult front-gate (trigger.hook.js reminder), CLAUDE.md grep-vs-codegraph split | completion-claim regex additions per observed misses; self-tested 5 cases 2026-06-19. **v1.1 2026-06-19 (QA-266215): also fires on a CODE root-cause claim (ROOT_CAUSE_CLAIM + CODE_SIGNAL) made w/o a codegraph call — the owner-count-misdiagnosis defender; `CODEGRAPH_GATE_ACTIVE_TXT` env-override for eval; eval 9/9** |
 | `veritas-claim-gate.js` | self (NEW 2026-06-20 — TRUTH layer; QA-265964 lying root-cause, built via anti-fabrication workflow) | every Stop — reply makes an EXTERNAL-research claim ("I checked GitHub / searched the web") with ZERO search tools this turn, OR a BEHAVIOURAL claim (saves/persists/displays/loads) with no runtime evidence | external-research lie → **HARD-BLOCK**; behavioural-claim → **advisory** (flips to block after a fixture-validated binder + zero-false-positive window); bypass `[skip-veritas: <reason>]`; EXEMPT+FRAME pre-gates (negation/hedge/hand-back/recap → abstain); line-1 `stop_hook_active` exit; fail-OPEN; reads `transcript_path`; ledger `.claude/state/veritas-claim-ledger.jsonl` | silent-claim-drift-gate (completion-verb sibling — veritas covers the behavioural-verb + research-claim hole), show-gate (FORMAT vs TRUTH split), CLAUDE.md §2 | behavioural→block flip gated on validation window; 7/7 fixtures pass 2026-06-20 |
+| `domain/ticket-criteria-gate/ticket-criteria-gate.discipline.hook.js` | self (NEW 2026-06-20 — ticket-criteria COMPLETENESS, per みや QA-261986 "much more critical than the test stop hook") | every Stop — (A) reply makes a done/close/ready-to-test claim + ticket ref, not hedged; (B) reply emits an Issue Checklist | (A) **HARD-BLOCK** unless a `CRITERIA COVERAGE` table + ≥1 evidence token present (each BA criterion needs file:line / test / DB read-back / みや-confirmed, no bare ✓); (B) **advisory** if the checklist cites no BA source; bypass `[skip-criteria-gate: <reason>]`; line-1 `stop_hook_active`; fail-OPEN; reads `transcript_path` | veritas-claim-gate (per-claim TRUTH vs full COVERAGE), Rubric BA-Expected Alignment (Apply-time vs done-time), /verify Checklist C — complements, not duplicates | CAN: table+evidence shape ~100%; CANNOT: evidence valid / criteria exhaustive / unknown bug found. Check B flips to block + per-row parsing on evidence; eval-vs-past-tickets deferred. Built in worktree zen-napier-4471cc — pending merge to main (§3.0 registry shows MISSING until then) |
 
 ### 3.6 PostToolUse (2 hooks)
 
