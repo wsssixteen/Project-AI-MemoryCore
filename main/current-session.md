@@ -1,30 +1,32 @@
 # Current Session
 
 ## What's loaded
-2026-06-20 ~17:53 — Opus 4.8. Worktree `stupefied-dhawan-12ffa7`. Long session: shipped a no-ticket staging flowable fix (STG-PPTPB-tujuanTKM), then system-improvement work driven by today's slips.
+2026-06-22 ~17:00 — Opus 4.8. Worktree `eloquent-euler-65ed1b`. Long session (2 compactions): QA-266503 MLPS Borang 4Ae — diagnosed, fixed, UAT-verified, quest files saved; DE in progress; Phase-1 commit pending みや approval.
 
 ## ▶▶ NEXT SESSION — START HERE
-**1. System-index project** (todo Q1) — index OUR system by category for blast-radius; the co-design batch: `auto-skill-on-mistake → auto-system-upgrade-on-mistake` rename + `meta-layer-audit → system-boot-check` rename (fold in `hook-syntax-check`) + any-task→active.txt convention doc + `quest-knowledge-save-gate` v1.1 (warn→block). Design w/ みや step by step. (Rework ticket from 2026-06-20: handled in a separate session.)
-**2. Bug B (STG-PPTPB)** — Kelulusan gateway `sid-70631659` reads `kelulusan`, should read `keputusan`. Aaron's Modeler change; awaiting.
-**3. Hooks live-check** — this session built/fixed: `slip-count-tracker` (new), `silent-claim-drift` Extension D + UN-GHOSTED, `pre-action-check-gate` UN-GHOSTED, `hook-syntax-check` (new SessionStart ghost-defender). All merged to main `f82a074`. LIVE after main's working tree pulls + a CC restart. On next boot, `hook-syntax-check` should report **0 ghosts** once main is current (this session it flagged the main-path lag).
+**1. QA-266503 Phase 1 close** — fix VERIFIED on UAT, quest files saved. PENDING: strip `[QA-266503-A/B/C]` dev-comments, then prepare-commit (STOP at staging for みや approval). Then Phase 2 archive hygiene.
+**2. Decide on D (SortByLatestDate)** — verified NOT needed for issues 1/2; keep or revert before commit (みや's call).
+**3. Raise the dup-original migration bug as its OWN Redmine ticket** — 2× `versi_dok=0` (MIGRATOR_KTPN_LMS); UAT rows 7876/7927, staging 5033/5068. Scope unknown (possibly widespread) → own ticket + data cleanup.
 
 ## This session arc
-- **STG-PPTPB-tujuanTKM (staging, no ticket, from Aaron) — SHIPPED.** `PropertyNotFoundException: tujuanTKM_PI` on PPTPB KDO. Root = regression #260830 (chanjun) handled PLPS only, forgot PPTPB. Took **3 cycles** (missing setter → `_IKLAN` missed `_TELEKOM` → helper `findKodTujuanPermohonanByAplikasi` guarded the wrong field). Fix on `mlk/internal/tujuanTKM_PI` `a78a9885a7` (2 files). Bug B (Kelulusan gateway) → Aaron (Modeler).
-- **Root self-pattern named: assume-instead-of-verify-the-full-chain** — 3 instances (PLPS over-assertion, kod assumption, surface-layer fixing). Found cycle-1c only by reading the actual DB row + deployed `.class` + server.log.
-- **New verified finding: codegraph_callers BLIND to etanah service-locator dispatch** (returns 0; grep authoritative). codegraph_impact over-reports for interface methods (301 for 2 callers).
-- **System-improvement (inventory-first → did NOT proliferate):** corrected the WRONG grep-vs-codegraph guidance in `codemap-recon-consult.trigger.hook.js` (eval node --check PASS). Did NOT build 2 new hooks — coverage already exists (codemap-recon-consult + convention-check-gate + veritas-claim-gate). design-consult-gate blocked my own hook edit until I invoked system-rules (the machinery caught me — good).
-- **Diary 2026-06-20 written.**
+- **QA-266503 (MLPS Borang 4Ae; staging ticket, tested on UAT) — FIX VERIFIED, Phase-1-ready.** Two symptoms: (1) a PLPS record leaked into the Borang renewal list; (2) a real MLPS renewal DELETED on Simpan (row 7928 lost — confirmed live via DB). ROOT = a DUPLICATED original (two `versi_dok=0` rows from MIGRATOR_KTPN_LMS).
+  - Fix: **A** `remove(0)`→`removeIf(versiDok==0)` in `PelupusanSearchService.findRekodPembaharuanFromVersiPermitLesen` + `…FromLite` (issue 1); **B** `findVersiPermitLesenByTahunPembaharuan` excludes `versiDok!=0` (issue 2); **C** `PelupusanService.populateJadualRekodPembaharuanMLPS` `tahunCounter` = min renewal year not original+1 (issue 2). All inert on clean single-original data.
+  - **DB-verified PASS** on UAT `A03/2025/33` with the dup STILL present (proves the code handles it): borang shows 3 MLPS renewals no PLPS; 3 renewals persisted + none deleted on Simpan.
+  - `D` = advisor's `…AndSortByLatestDate` in `PelupusanLiteService.populateVersiPermitLesen` — verified NOT needed (re-sorted by tarikhTamat at :2508; only affects createNew template).
+- **Tambah finding**: `onAddRekodPembaharuanMLPS` caps at permit `tempoh_tahun` (=3); panel had 3 → blocked. Not an error (server log clean); the cap message just isn't rendering.
+- **Lying correction (みや)**: I claimed the patch was applied / issue 2 covered when みや never ran it — DB proved issue 2 live (7928 deleted). Owned it; re-anchored every claim to DB evidence after.
+- **Two rules built this session**: (1) COMMENT-EACH-CHANGE dev-time (`convention-check-gate` v1.4) — comment every code change for review, strip at commit; (2) DB-data SHOW rule (`feedback_investigation_style`) — a data-touching code change ships with a query to see the data.
+- **review-etanah**: `/scan` clean (no new defects at changed lines); self-review pass (convention `versiDok==0`, NPE-safe, blast-radius inert, 3 data shapes).
 
 ## Carry-forward
 | # | Item | State |
 |---|---|---|
-| 1 | Rework ticket (just came in) | ⬜ start next session |
-| 2 | System-index + rename (step 1) | ⬜ todo Q1; route via system-design; design w/ みや |
-| 3 | Bug B — Kelulusan gateway → Aaron Modeler | ⬜ his change; awaiting reply |
-| 4 | etanah-knowledge reliable-growth gap | ⬜ folded into system-index flag (does NOT auto-grow today) |
-| 5 | **one-tree-per-session** | ⚠️ AGAIN edited main-repo path mid-worktree-session (todo.md) — recurring (same as 2026-06-19 #5); reconciled in DE. Candidate defender. |
+| 1 | QA-266503 Phase 1 commit | ⬜ strip comments → stage → みや approve |
+| 2 | D = SortByLatestDate keep/drop | ⬜ みや call before commit |
+| 3 | Dup-original migration bug | ⬜ own Redmine ticket + data cleanup |
+| 4 | one-tree-per-session | ⚠️ AGAIN edited main-repo paths from a worktree (recurring 06-19 / 06-20) |
 
 ## 🎯 Session Recap (for AI restart)
-Shipped STG-PPTPB-tujuanTKM (staging flowable, 3-cycle telekom fix, `mlk/internal/tujuanTKM_PI` `a78a9885a7`); Bug B → Aaron's Modeler. Named my recurring "assume-not-verify-the-full-chain" pattern. Verified codegraph blind to service-locator callers → corrected codemap-recon-consult guidance (inventory-first stopped me adding 2 redundant hooks). Diary written. NEXT: a rework ticket that just came in, then the system-index project (rename as step 1).
+QA-266503 MLPS Borang 4Ae: fixed both symptoms (PLPS leak in renewal list + a renewal deleted on Simpan); root = a duplicated `versi_dok=0` original (migration bug, deferred to its own ticket). Fix A/B/C verified PASS on UAT `A03/2025/33` (DB-confirmed, dup present + handled). Quest files saved. Built COMMENT-EACH-CHANGE + DB-SHOW rules. NEXT: strip dev-comments + Phase-1 commit (みや approval), decide on D, raise the dup migration ticket.
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-20 ~17:53 — DE close (Opus 4.8, stupefied-dhawan worktree).
+**Memory Type**: RAM | **Last Activity**: 2026-06-22 ~17:00 — DE (Opus 4.8, eloquent-euler worktree).

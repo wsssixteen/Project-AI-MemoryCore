@@ -17,7 +17,7 @@
 - [feedback_investigation_style.md](feedback_investigation_style.md) — Reasoning/chain-of-thought goes at the END as a tracing summary, not inline mid-explanation
 - [feedback_verify_before_claim.md](feedback_verify_before_claim.md) — Re-read code before asserting; hold positions backed by line evidence; one passing test is inconclusive
 - [feedback_knowledgebase_during_debug.md](feedback_knowledgebase_during_debug.md) — Every debug/scan session must produce knowledgebase entries + consider retrieval improvements
-- [feedback_daily_commit.md](feedback_daily_commit.md) — Auto-commit at save all; never auto-push, みや pushes manually
+- [feedback_daily_commit.md](feedback_daily_commit.md) — MemoryCore: commit+push+merge is DEFAULT (auto, never re-ask — git history is the undo, per みや 2026-06-20); etanah ticket commits stay gated
 - [feedback_check_archives.md](feedback_check_archives.md) — Always check archive folders for past tickets/projects/quests before asking
 - [feedback_fix_txt_structure.md](feedback_fix_txt_structure.md) — Fix.txt stays compact: chain + root cause + applied fix + verification only; exclude speculative/ruled-out sections
 - [feedback_predicate_before_fix.md](feedback_predicate_before_fix.md) — Before proposing code, state the predicate that must hold + cite file:line evidence; no test requests without it

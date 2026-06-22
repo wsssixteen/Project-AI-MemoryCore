@@ -337,3 +337,17 @@ source_branch=mlk/release/fat
 fix_applied=i-lesen.png swapped to Melaka by miya; i-lesen-bak.png backup created (do not commit)
 commit=c38bc07a90
 closed=2026-06-18
+
+qa=QA-266503
+status=active
+phase=0
+current_phase=Phase1-ready-test-PASSED
+ticket_type=bug
+env=MLKSTG
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\78. INTERNAL ISSUE (PERMANENT FIX) #266503 - MLKSTG - MLPS - Penyediaan Borang 4Ae dan L1e - Klik butang Simpan, borang output papar rekod pemb
+qa_doc=projects/coding-projects/active/QA-266503/QA-266503.md
+issue_one_liner=MLPS Borang4Ae: PLPS leak in renewal list (issue1) + 2024 MLPS renewal DELETED on Simpan (issue2, LIVE - row 7928 lost)
+local_test_confirmed=true
+test_result=BOTH PASS on UAT A03/2025/33 (DB-verified, dup still present): borang shows 3 MLPS renewals no PLPS (issue1); 3 renewals persisted+not-deleted on Simpan (issue2)
+fix_final=A removeIf(versiDok==0) findRekodPembaharuan+FromLite; B findVersiByTahun excl versiDok!=0; C year-walk tahunCounter=min-renewal-year; D SortByLatestDate(advisor,NOT-needed)
+dup_deferred=2x versi_dok=0 MIGRATOR_KTPN_LMS (UAT 7876/7927, stg 5033/5068) = separate migration ticket
