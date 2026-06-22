@@ -345,15 +345,18 @@ commit=c38bc07a90
 closed=2026-06-18
 
 qa=QA-266503
-status=active
+status=blocked
 phase=0
-current_phase=Phase1-ready-test-PASSED
+current_phase=issue1-CLOSED-3512e0df8a · issue2-BLOCKED-runtime-probe-next
 ticket_type=bug
 env=MLKSTG
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\78. INTERNAL ISSUE (PERMANENT FIX) #266503 - MLKSTG - MLPS - Penyediaan Borang 4Ae dan L1e - Klik butang Simpan, borang output papar rekod pemb
 qa_doc=projects/coding-projects/active/QA-266503/QA-266503.md
 issue_one_liner=MLPS Borang4Ae: PLPS leak in renewal list (issue1) + 2024 MLPS renewal DELETED on Simpan (issue2, LIVE - row 7928 lost)
-local_test_confirmed=true
-test_result=BOTH PASS on UAT A03/2025/33 (DB-verified, dup still present): borang shows 3 MLPS renewals no PLPS (issue1); 3 renewals persisted+not-deleted on Simpan (issue2)
+local_test_confirmed=false
+test_result=ISSUE1 (PLPS leak) verified on UAT for versi_dok=0 shape (borang 3, no PLPS). ISSUE2 NOT verified - my UAT test used no-collision data (renewals 2025/26/27); the real test = repro-issue2-patch.sql (creates 2024 collision) + Simpan, NOT yet run. Fix does not touch save-delete (populateVersiPermitLesen:2562-2564) my own Recon named as root. Risk: fix keys on versi_dok==0 but save scrambles versi_dok (:2547) - needs BA staging chain to confirm original is still v0
 fix_final=A removeIf(versiDok==0) findRekodPembaharuan+FromLite; B findVersiByTahun excl versiDok!=0; C year-walk tahunCounter=min-renewal-year; D SortByLatestDate(advisor,NOT-needed)
 dup_deferred=2x versi_dok=0 MIGRATOR_KTPN_LMS (UAT 7876/7927, stg 5033/5068) = separate migration ticket
+branch=mlk/internal-issue/266503
+issue2_status=UNRESOLVED: panel (MlkPenyediaanBorang4AeL1eForm @ViewScoped) shows 3 rows excl patched 99002024; output=year-walk(floor2025) but code=FromLite — contradiction unresolved statically. NEXT=probe logger (code in chat/issue2-test-scenario.md) to find population path. cache/JSON/permit ruled out.
+flag_migrator_dup=OWN TICKET NEEDED: 2x versi_dok=0 from MIGRATOR_KTPN_LMS (UAT 7876/7927 permit7457; stg 5033/5068) = root of both symptoms; scope unknown, needs count-query + cleanup patch
