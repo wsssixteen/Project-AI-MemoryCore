@@ -42,10 +42,12 @@ process.stdin.on('end', () => {
     }
 
     const broken = [];
+    const ROOT = process.env.CLAUDE_PROJECT_DIR || path.join(__dirname, '..', '..');
     for (const p of cmds) {
-      if (!fs.existsSync(p)) { broken.push(`${path.basename(p)} — MISSING FILE (path ghost)`); continue; }
+      const resolved = p.replace(/\$\{CLAUDE_PROJECT_DIR\}/g, ROOT);   // CC substitutes this at run-time; the audit must too
+      if (!fs.existsSync(resolved)) { broken.push(`${path.basename(p)} — MISSING FILE (path ghost)`); continue; }
       try {
-        execFileSync('node', ['--check', p], { stdio: 'pipe' });
+        execFileSync('node', ['--check', resolved], { stdio: 'pipe' });
       } catch (e) {
         const err = (e.stderr ? e.stderr.toString() : e.message) || '';
         const line = err.split('\n').find(l => /Error|Unexpected|SyntaxError/.test(l)) || 'parse error';

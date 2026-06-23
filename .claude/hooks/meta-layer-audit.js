@@ -77,7 +77,8 @@ function collectRegisteredHooks(settings) {
         names.add(m[1]);
         // Resolve the real .js path from the command (quoted-with-spaces or bare).
         const pm = cmd.match(/"([^"]+\.js)"/) || cmd.match(/(\S+\.js)/);
-        const realPath = pm ? pm[1] : null;
+        // CC substitutes ${CLAUDE_PROJECT_DIR} at run-time; the audit must too, or every hook reads as "missing".
+        const realPath = pm ? pm[1].replace(/\$\{CLAUDE_PROJECT_DIR\}/g, process.env.CLAUDE_PROJECT_DIR || path.join(__dirname, '..', '..')) : null;
         if (realPath && !fs.existsSync(realPath)) missing.add(m[1]);
       }
     }
