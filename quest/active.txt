@@ -360,3 +360,16 @@ dup_deferred=2x versi_dok=0 MIGRATOR_KTPN_LMS (UAT 7876/7927, stg 5033/5068) = s
 branch=mlk/internal-issue/266503
 issue2_status=UNRESOLVED: panel (MlkPenyediaanBorang4AeL1eForm @ViewScoped) shows 3 rows excl patched 99002024; output=year-walk(floor2025) but code=FromLite — contradiction unresolved statically. NEXT=probe logger (code in chat/issue2-test-scenario.md) to find population path. cache/JSON/permit ruled out.
 flag_migrator_dup=OWN TICKET NEEDED: 2x versi_dok=0 from MIGRATOR_KTPN_LMS (UAT 7876/7927 permit7457; stg 5033/5068) = root of both symptoms; scope unknown, needs count-query + cleanup patch
+
+qa=MIGRATOR-DUP-V0
+status=hold
+phase=0
+ticket_type=bug-migration
+env=UAT+staging
+quest_start_ts=2026-06-23
+qa_doc=projects/coding-projects/active/migrator-dup-v0/scout.md
+issue_one_liner=Duplicate versi_dok=0 (2 originals/permit) — 2 origins: external migration scripts (MIGRATOR_KTPN_PRU/LMS/MS_C7, NOT in app repo) + app OPLPS issuance PelupusanLiteService:2265 (sets versiDok=0 with NO existingVersi guard); drives both QA-266503 symptoms
+scope=5 same-permit_lesen_id dups in UAT (12816 ×10 KTPN_PRU; 12498/12558/12596 KTPN_LMS; 7457 human) + 114 permit-numbers with dup-record v0 (separate artifact)
+scout_status=Phase-0 Scout+Recon DONE — OPLPS guard-gap VERIFIED (PelupusanLiteService:2264-2265 unconditional vs guarded OMLPS :2259-2262); H1 (caused permit 7457 human dup) = HYPOTHESIS, un-traced
+next_step=Recon: name method @PelupusanLiteService:2180-2275 + grep callers to settle H1; draft dedup-cleanup patch (5 same-permit first, 114 dup-records follow-up); raise own Redmine ticket
+related=QA-266503 (deferred sibling; its removeIf(versiDok==0) caters safely regardless of origin)
