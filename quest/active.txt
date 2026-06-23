@@ -376,3 +376,23 @@ scout_status=Phase-0 Scout+Recon DONE — OPLPS guard-gap VERIFIED (PelupusanLit
 next_step=Recon: name method @PelupusanLiteService:2180-2275 + grep callers to settle H1; draft dedup-cleanup patch (5 same-permit first, 114 dup-records follow-up); raise own Redmine ticket
 related=QA-266503 (deferred sibling; its removeIf(versiDok==0) caters safely regardless of origin)
 related_261626=SAME-AREA / likely DUPLICATE of #261626 (faizudin, active to 2026-06-20, origin/mlk/qa/261626). 261626 fixes the SAME rekod-pembaharuan missing/deleted-on-Simpan in the SAME method populateVersiPermitLesen — 9909350e67 removed '||currentYear' from the year-match + added isEmpty guard (ALREADY in current code). f27239d2cc/150c17874c touch MlkUtilitiPengeluaranLesenPermitForm. ACTION: reconcile with faizudin before more issue-2 work; 266503 may be a dup.
+
+qa=QA-239386
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\79. REQUIREMENT #239386 - PLP - Maklumat Permohonan Terperinci in Carian Pintas
+phase=0
+status=active
+mode=dev
+current_phase=Apply (Step 1 PT — langkah-build SQL ready, awaiting みや live test)
+ticket_type=requirement
+env=UAT
+scope=PLP (etanah-pelupusan)
+urusan=ALL-MPT (12 main + 8 UTIL)
+issue_one_liner=MPT (Maklumat Permohonan Terperinci) read-only viewer via Carian Pintas — per-urusan ind_langkah rollout; shared base-class MPT-guards already on mlk/release/1.0.0
+assigned_to_me=2026-06-23
+quest_start=2026-06-23
+qa_doc=projects/coding-projects/active/QA-239386/QA-239386.md
+reference_branch=mlk/reqirement/239386 (aaron; merged to mlk/master + mlk/release/1.0.0)
+grounding=VERIFIED — mechanism: shared MPT-mode guards (BasePelupusanForm:132/134/696 + BasePelupusanDokumenForm:184/226/848) live on release/1.0.0; per-urusan work = ind_langkah only. DB state: PSBS done · PLTP flag-wrong (editable Y->N) · 17 wrong-langkah (Siasatan rows) · UPS empty
+test_app=PTMLK/01/L/PT/2025/30 (aplikasi_id 2897315, advanced/panels-populated; MPT tugasan-less -> Carian Pintas, any PT officer)
+build_baseline=mlk/release/1.0.0
+next=run QA-239386.md §3.2 langkah-build SQL (PT first) -> open test_app as MPT -> report 6 tabs (watch JT = prime NPE)

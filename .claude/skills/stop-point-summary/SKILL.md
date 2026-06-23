@@ -1,6 +1,6 @@
 ---
 name: stop-point-summary
-description: Use when stopping at ANY point — task done, phase boundary, blocker, or "where are we / what's next" — to emit a complete stage summary so みや is never left hanging. Title varies by stage ("Test Scenario" at testing hand-back, "Recon Summary", "Blocked — Awaiting X", etc.). Triggers — "Test Scenario", "where are we", "where are we at", "what's next", "summary", "are we done", "status", any task-completion or hand-back. NOT "Test Data" (= the bare test-data-echo skill).
+description: Use when stopping at ANY point — task done, phase boundary, blocker, or "where are we / what's next" — to emit a complete stage summary so みや is never left hanging. Title varies by stage ("Test Scenario" at testing hand-back, "Recon Summary", "Blocked — Awaiting X", etc.). Triggers — "Kowalski", "Kowalski analysis", "Kowalski options", "Kowalski next steps", "Test Scenario", "where are we", "where are we at", "what's next", "summary", "are we done", "status", any task-completion or hand-back. NOT "Test Data" (= the bare test-data-echo skill). ("Kowalski" = みや's named alias for the next-steps emit — Madagascar "Kowalski, analysis"; when he says it, show the clear next-steps table.)
 ---
 
 # stop-point-summary — never leave みや hanging at a stop

@@ -15,6 +15,15 @@
  *  as the FIRST Phase-0 row. Evidence: QA-260139 stale-base, QA-261986 ~293-behind
  *  base, QA-266215 existing-fix-missed. Prose git-discipline decayed (prompt-driven);
  *  injecting it deterministically here makes the Phase-0 git-check compulsory.
+ * Refined 2026-06-23 (per みや — REQUIREMENT #239386 checklist non-fire): (1) Signal A
+ *  broadened beyond QA/FAT/UAT to also match REQUIREMENT/REQ/CR/Redmine/ticket/issue
+ *  numbers — a bare "REQUIREMENT #239386" / "Redmine #239386" previously matched
+ *  NEITHER signal, so NO checklist fired on engagement. (2) Added MODE classification
+ *  (debug | development) as Phase-0 row 0.5 — dev mode sets a forward Goal+Plan
+ *  (writing-plans PLAN.md for big features; QA-NNNN.md "## Goal & Plan" for small).
+ *  Decouples the requirement-checklist from /quest start: it now fires on ANY ticket
+ *  engagement, not only formal quest-start. Consulted system-design + system-rules
+ *  (Rule 1 inventory-first → extend this hook, not a new Power).
  */
 
 const fs = require('fs');
@@ -48,10 +57,14 @@ process.stdin.on('end', () => {
     const input = JSON.parse(inputData);
     const prompt = input.prompt || '';
 
-    // Signal A — ticket-number mention (QA/FAT/UAT family)
-    const qaMatch = prompt.match(/\b(?:QA|FAT-OR|UAT-CR|FAT|UAT)\s*#?\s*(\d{4,})\b/i);
+    // Signal A — ticket-number mention. Broadened 2026-06-23: a Redmine REQUIREMENT
+    // (e.g. "REQUIREMENT #239386" / "Redmine #239386" / "ticket 239386") previously
+    // matched no signal → no checklist fired. Ticket-context keyword + 4+ digit number.
+    const qaMatch = prompt.match(/\b(?:QA|FAT-OR|UAT-CR|FAT|UAT|REQUIREMENT|REQ|CR|Redmine|ticket|issue)\s*#?\s*(\d{4,})\b/i);
     // Signal B — Redmine-retrieval phrase (no specific ticket yet)
-    const redmineRetrieval = /\b(Read\s+Redmine|retrieve\s+(tickets|new\s+quests|quests|tickets\s+from\s+(the\s+)?Redmine|quests\s+from\s+(the\s+)?Redmine)|check\s+(new\s+)?(tickets|redmine|quests)|pull\s+(redmine|new\s+quests|quests\s+from\s+(the\s+)?Redmine)|redmine\s+sync|sync\s+Redmine|fetch\s+(tickets|new\s+quests|quests)|any\s+new\s+(tickets|quests|ones)|look\s+(up|for)\s+new\s+(tickets|quests)|import\s+(tickets|quests)|load\s+Redmine)\b/i.test(prompt);
+    // Broadened 2026-06-23: the verb and noun need not be adjacent — "retrieve the latest
+    // redmine ticket" (the exact #239386 phrase) previously matched no alternative.
+    const redmineRetrieval = /\b(Read\s+Redmine|retrieve\s+(tickets|new\s+quests|quests|tickets\s+from\s+(the\s+)?Redmine|quests\s+from\s+(the\s+)?Redmine)|check\s+(new\s+)?(tickets|redmine|quests)|pull\s+(redmine|new\s+quests|quests\s+from\s+(the\s+)?Redmine)|redmine\s+sync|sync\s+Redmine|fetch\s+(tickets|new\s+quests|quests)|any\s+new\s+(tickets|quests|ones)|look\s+(up|for)\s+new\s+(tickets|quests)|import\s+(tickets|quests)|load\s+Redmine|(?:retrieve|fetch|pull|grab|get|read|check|load|sync)\s+(?:the\s+|a\s+|my\s+|all\s+|any\s+)?(?:latest\s+|newest\s+|new\s+|recent\s+|next\s+|last\s+)?(?:redmine\s+)?(?:ticket|quest|issue)s?)\b/i.test(prompt);
 
     if (!qaMatch && !redmineRetrieval) process.exit(0);
 
@@ -88,6 +101,8 @@ process.stdin.on('end', () => {
         ``,
         `0. ⬜ **🚨 GIT-STATE CHECK (Phase-0, COMPULSORY — run even if it returns nothing)** — \`git status\` + \`git branch --show-current\`; if NOT on the repo baseline (\`mlk/master\` pelupusan · \`mlk/stag-env\` AWAM) → stash → checkout baseline → \`git pull --ff-only origin <baseline>\` → pop (STOP if the pull fails — unknown commits). Then \`git rev-list --count HEAD..origin/<baseline>\` (behind-count). **Existing-fix probe**: \`git branch -a --list "*${qaNum}*"\` + \`git log --all --grep="#${qaNum}" --format="%h %ci %an %s"\`. **Emit a GIT-STATE summary** (branch · behind-count · existing-fix? · ticket-keyword log hits for context). **STOP + surface** if a fix exists under another author, the baseline pull fails, or behind-count is large (stale base).`,
         ``,
+        `0.5 ⬜ **CLASSIFY MODE — debug | development** — auto-infer (bug → debug · requirement/enhancement/feature/CR → development), STATE it in ONE line, みや confirms/overrides. Persist \`mode=\` in active.txt. If **development**: set a forward GOAL — produce a Goal+Plan (a \`PLAN.md\` via the \`writing-plans\` skill for a big multi-session feature; a \`## Goal & Plan\` section in \`QA-${qaNum}.md\` for a small one). A real goal, NOT just progress notes.`,
+        ``,
         `1. ⬜ Task folder loaded — \`handoff_file\` from active.txt OR ask みや for path. Read every file in \`0. Brief/\` (Description, History, every PDF/docx/photo).`,
         `2. ⬜ **Issue Checklist created at quest creation** in \`projects/coding-projects/active/QA-${qaNum}/QA-${qaNum}.md\` — from PRIMARY SOURCES (BA Description + History + attachments). NOT copied from Scout. Scout's diagnostic is DIFFED against this. List GROWS through Recon/Apply/Test; out-of-scope findings get explicit OOS rows. **Enumerate ALL** (every BA-numbered item, every gate-writer, every OR-bypass, every data-axis branch) — see \`checklist\` skill "Enumeration completeness".`,
         `3. ⬜ **Existing-utility sweep** — grep for existing helpers/constants/sets/templates BEFORE proposing custom ones. Applies even when みや says "create our own X" — flag the existing util first.`,
@@ -95,7 +110,7 @@ process.stdin.on('end', () => {
         `5. ⬜ **Cross-reference chase** — if Description/History references other tickets (Requirement #NNNNN, relates #, refs, "rujuk ... tic ini"), spawn the background cross-ref agent per \`quest/cross-ref-agent.md\` (non-blocking; ONE agent for the batch, sequential, browser MCP).`,
         `6. ⬜ **Recon block** emitted — Universal Checks 1-8 with file:line evidence per row.`,
         ``,
-        `Do NOT propose fixes / commit / open codebase files for editing until rows 0-6 are ✓ or have explicit deferrals (OOS / BA-Q / not-applicable + reason). Row 0 (git-state) is the FIRST thing — before reading the Task folder.`
+        `Do NOT propose fixes / commit / open codebase files for editing until rows 0-6 (incl. 0.5 MODE) are ✓ or have explicit deferrals (OOS / BA-Q / not-applicable + reason). Row 0 (git-state) is the FIRST thing — before reading the Task folder.`
       ].join('\n');
     } else {
       // Redmine retrieval — no specific ticket yet
