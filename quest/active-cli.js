@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // active-cli.js — token-zero CRUD over quest/active.txt + quest/active-archive.txt
-// Blocks = `qa=QA-NNNN` ... blank-line separator. No header/footer/index to maintain.
+// Blocks = `qa=<id>` ... blank-line separator (id = QA-NNNN or any provisional id like
+// MIGRATOR-DUP-V0 / STG-PPTPB-tujuanTKM). No header/footer/index to maintain.
 //
 // Subcommands:
 //   start   <QA> <field=val> [field=val ...]   append a new block to active.txt
@@ -29,10 +30,13 @@ function parseBlocks(text) {
     const blocks = [];
     let cur = null;
     for (const line of lines) {
-        const isQaHead = /^qa=QA-\d+/.test(line);
-        if (isQaHead) {
+        // A block head is any `qa=<id>` line. The id is the first non-whitespace
+        // token — matching the full id set `start` accepts (QA-####, MIGRATOR-DUP-V0,
+        // STG-PPTPB-tujuanTKM, …), not just QA-numbers. Keeps update/read/archive in
+        // sync with start for no-ticket / provisional-id quests.
+        const m = line.match(/^qa=(\S+)/);
+        if (m) {
             if (cur) blocks.push(cur);
-            const m = line.match(/^qa=(QA-\d+)/);
             cur = { qa: m[1], lines: [line] };
         } else if (cur) {
             cur.lines.push(line);
