@@ -72,3 +72,7 @@ Arrow-flow formats:
 - **Plain narrative** → prose (1-2 sentences before any structure)
 
 **Why** (2026-05-13 みや): *"I thought I already asked you to add this to the highest level. To always use tables & diagrams (which includes arrows/flows aside from the ASCII draw thingy) as often as possible, as in many situation as you can."* The class-chain arrow style (`A → B → C`) was praised earlier and partially adopted, but only for code tracing. Generalising: arrow-flows apply to ANY sequence/order/dispatch explanation, not just code paths.
+
+## 🆕 DB-data SHOW rule — a data-touching code change MUST come with a query (added 2026-06-22 by みや)
+
+**MANDATORY**: whenever I discuss or make a code change that reads / writes / filters / matches / deletes DATA (e.g. `filteredVplList.removeIf(v -> v.getVersiDok() == 0)`), I MUST also provide a **runnable SQL query** that shows WHERE that data lives + the columns involved, so みや can inspect the actual rows. **Why**: みや sees code diffs in SourceTree (highlighted), but DB state is INVISIBLE there — he needs to be told exactly what to query to see the versions / the filtered column / related records. **How to apply**: alongside the change, emit a `SELECT … FROM <schema>.<table> … WHERE <key> ORDER BY …` that surfaces the exact rows the code operates on. **Banned**: discussing a data-touching code change with no companion query. This is the runnable form of the §3 `UI → code → table` arrow (the "table" leg made executable).

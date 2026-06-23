@@ -34,6 +34,10 @@
  * added. Bypass is one line — acceptable.
  *
  * Created 2026-06-19 per みや, routed through /system-design + /system-rules.
+ * v1.2 2026-06-22 (QA-266503): added UI-path branch — a root-cause for a UI-rendered symptom
+ *   (panel/screen "papar/hilang") with NO .xhtml render-path cite is blocked (codegraph is blind to
+ *   JSF EL bindings; only the .xhtml proves the UI→bean→method chain). Kills the wrong-form / render-
+ *   method flip-flop slip (claimed the year-walk renders the panel without reading the .xhtml).
  */
 'use strict';
 const fs = require('fs');
@@ -51,6 +55,12 @@ const ROOT_CAUSE_CLAIM = /\broot[- ]?cause\b[\s\S]{0,30}\b(is|was|=|:)|the (bug|
 const CODE_SIGNAL = /\.java\b|\bException\b|\bvalidation\b|\bgetter\b|\b\w+\(\)|:\d{2,4}\b|PropertyNotFound|NullPointer|\bmethod\b/i;
 const EXEMPT = /\[skip-codegraph:|═══|るり結界|Domain Expansion/;
 const CODEGRAPH_CALL = /mcp__codegraph__/;
+// v1.2 2026-06-22 (QA-266503): UI render-path grounding. A root-cause for a UI-rendered symptom
+// (panel/screen "papar/hilang") claimed WITHOUT citing the .xhtml render path. Today's slip: claimed
+// which method renders the "Rekod Pembaharuan" panel, flip-flopped 3x, edited the WRONG form — never
+// read the .xhtml binding. codegraph cannot see JSF EL bindings; only the .xhtml does.
+const UI_SYMPTOM = /\b(panel|skrin|screen|borang|dropdown|rekod pembaharuan)\b|\bpapar\b|\bhilang\b|tidak papar|not (shown|displayed?|appearing)|does ?n'?t (show|display|appear)|screenshot/i;
+const XHTML_CITE = /\.xhtml\b/i;
 
 function readLines(p) {
   try { return fs.readFileSync(p, 'utf8').split(/\r?\n/).filter(Boolean); } catch (_) { return null; }
@@ -112,8 +122,34 @@ process.stdin.on('end', () => {
     if (EXEMPT.test(text)) process.exit(0);
     const completionClaim = COMPLETION_CLAIM.test(text);
     const codeRootCause = ROOT_CAUSE_CLAIM.test(text) && CODE_SIGNAL.test(text);
-    if (!completionClaim && !codeRootCause) process.exit(0);
+    const uiRootCause = ROOT_CAUSE_CLAIM.test(text) && UI_SYMPTOM.test(text); // v1.2 2026-06-22
+    if (!completionClaim && !codeRootCause && !uiRootCause) process.exit(0);
     if (!questActive()) process.exit(0); // only enforce in quest context
+
+    // v1.2 (QA-266503) — UI render-path grounding takes precedence: a UI symptom grounds in the
+    // .xhtml render path, not codegraph (which is blind to JSF EL bindings).
+    if (uiRootCause) {
+      if (!XHTML_CITE.test(text)) {
+        logFire('blocked-uipath');
+        process.stdout.write(JSON.stringify({
+          decision: 'block',
+          reason: [
+            '⛔ codegraph-back-gate (UI-path): you named a root cause for a UI-rendered symptom',
+            '   (panel/screen "papar/hilang") WITHOUT confirming which .xhtml renders it.',
+            '   QA-266503 lesson: I flip-flopped on the render method + edited the WRONG form because I',
+            '   never read the JSF binding. codegraph cannot see EL bindings — the .xhtml can.',
+            '   Confirm the UI→bean→method chain from the file: grep the panel label/red-text → the',
+            '   .xhtml component → its value="#{...}" binding + populate/action method → THEN name the',
+            '   path, citing the .xhtml.',
+            '   Genuinely not a UI render-path claim? add [skip-codegraph: <reason>].',
+          ].join('\n'),
+        }));
+        process.exit(0);
+      }
+      logFire('passed-uipath');
+      process.exit(0);
+    }
+
     if (codegraphUsedThisTurn(lines)) { logFire('passed'); process.exit(0); }
 
     logFire('blocked');

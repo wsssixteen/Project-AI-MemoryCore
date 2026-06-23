@@ -21,6 +21,9 @@
  *   gate didn't even detect. (b) universal IN-FILE-FIRST line: grep the TARGET FILE for
  *   its own existing idiom before adding parallel code (gate checked siblings, not the
  *   target file's own convention).
+ * v1.4 2026-06-22 (per みや) — added COMMENT-EACH-CHANGE dev-time reminder to the advisory
+ *   context: comment every add/delete so みや can review at a glance; stripped at commit by
+ *   prepare-commit-trigger Step 2.6. Pairs with that strip + no_extra_comments (committed code).
  *
  *   CAN (shape/presence ~100%): verify an analog WAS cited before a Java edit → kills SKIPPING.
  *   CANNOT (correctness — stays judgment): verify the cited analog is the RIGHT one.
@@ -122,6 +125,7 @@ process.stdin.on('end', () => {
       '',
       'Per feedback_simplify_and_reference.md "find working analog first" — universal rule across code/template/data:',
       '  - 🚨 IN-FILE FIRST (QA-261986/QA-261517): grep the TARGET FILE ITSELF for an existing method/branch/idiom/attribute that already does this — reuse it; do NOT add parallel/new code when the file already has the pattern.',
+      '  - 💬 COMMENT-EACH-CHANGE (dev-time, per みや 2026-06-22): put a short explanatory comment on EVERY addition/deletion so みや can review what it does at a glance. Dev-only — prepare-commit-trigger Step 2.6 STRIPS them before commit; no_extra_comments governs COMMITTED code only.',
       ...checks[kind],
       '',
       'If you have NOT done the convention-check this turn: STOP, run the check (Grep/Read/SELECT), CITE the analog in chat prose, THEN proceed with this edit.',

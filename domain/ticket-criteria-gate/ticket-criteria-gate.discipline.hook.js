@@ -8,12 +8,19 @@
  * bogus self-asserted ✓. The Tolak-deferred-incomplete-close + the cycle-2 bogus
  * CC-tag list (both `knowledge-transfer-incompleteness` slips) are what this kills.
  *
- * TWO checks (both Stop-side; fire only in a ticket context):
+ * THREE checks (all Stop-side; fire only in a ticket context):
  *   A. COMPLETENESS  -> HARD BLOCK. Reply makes a done/close/ready-to-test claim
  *      for a ticket but has NO `CRITERIA COVERAGE` table OR no evidence token
  *      anywhere -> block. The table must list every BA criterion (latest cycle)
  *      + an evidence cell (file:line / test result / DB read-back / みや-confirmed
  *      / [skip:reason]).
+ *   C. REPRO-BEFORE-VERIFY -> HARD BLOCK (added 2026-06-22, QA-266503 lying close).
+ *      Reply claims VERIFIED / PASS / local_test_confirmed=true for a ticket but shows
+ *      NO reproduction of the BA symptom first (no old-code / before-fix state) -> block.
+ *      A fix "verified" on data that never exhibited the bug is VACUOUS. Closes the exact
+ *      hole that let "issue 2 PASS" through on a no-collision shape (evidence tokens alone
+ *      satisfied Check A, but nothing had reproduced the actual delete). Per みや: the
+ *      single most-demanded hook of the session — "you lied; build the fucking hook".
  *   B. CHECKLIST-QUALITY -> ADVISORY (v1, start-simple per /system-rules R4).
  *      Reply emits an Issue Checklist with zero BA-source citation -> remind each
  *      item must cite Description / journal / History / photo / PDF; no invented
@@ -74,6 +81,17 @@ const EVIDENCE_TOKEN = /\b[\w.\\/-]+\.\w{2,5}:\d+\b|server\.?log|mcp__postgres|\
 const ISSUE_CHECKLIST = /Issue Checklist/i;
 const BA_SOURCE = /Description|journal|History|0\. ?Brief|photo|PDF|annotat|red[- ]?box|BA (said|wrote|reported|asked|expects?)/i;
 
+// CHECK C tokens — a fix/issue claimed VERIFIED / PASS (a runtime-proof claim, stronger than DONE_CLAIM)
+const VERIFIED_CLAIM = [
+  /\b(issue\s*\d|test|both issues?)\b[^.\n]{0,25}\bPASS(ED)?\b/i,
+  /\blocal_test_confirmed\s*=\s*true/i,
+  /\bboth (issues? )?(pass|verified|fixed)\b/i,
+  /\b(fix|issue\s*\d|ticket)\b[^.\n]{0,35}\b(verified|confirmed (working|fixed|done))\b/i,
+  /\b(verified|confirmed)\b[^.\n]{0,30}\b(fix works?|not deleted|persists? (through|on) (simpan|save)|surviv)/i,
+];
+// the BEFORE state — proof the BA symptom was actually REPRODUCED without the fix (the half my lie skipped)
+const REPRO_BEFORE = /\breproduc|\bbefore (the )?fix\b|\bwithout (the )?fix\b|\bold code\b|\bun-?fixed\b|\bpre-?fix\b|\bbug (still )?(present|occurs|fires|reproduces?)\b|\b(old|current) code (deletes?|fails?|drops?|loses?|skips?)/i;
+
 function lastAssistantText(transcriptPath) {
   let raw;
   try { raw = fs.readFileSync(transcriptPath, 'utf8'); } catch (_) { return null; }
@@ -132,6 +150,31 @@ process.stdin.on('end', () => {
         process.exit(0);
       }
       logFire('passed-completeness', 'table+evidence');
+    }
+
+    // CHECK C — REPRO-BEFORE-VERIFY -> HARD BLOCK (added 2026-06-22, QA-266503 lying close).
+    // A "verified/PASS/local_test_confirmed=true" claim is VACUOUS unless the BA symptom was
+    // REPRODUCED first (shown present WITHOUT the fix), then shown gone WITH it, on a shape that
+    // matches BA's. My lie: claimed "issue 2 PASS" on a no-collision shape that could not delete.
+    if (!abstain && TICKET_REF.test(text) && VERIFIED_CLAIM.some(re => re.test(text))) {
+      if (!REPRO_BEFORE.test(text)) {
+        logFire('blocked-repro-before-verify', 'verified-claim-no-reproduction');
+        process.stdout.write(JSON.stringify({
+          decision: 'block',
+          reason: [
+            '⛔ ticket-criteria-gate (Check C): you claim VERIFIED / PASS / fixed, but show NO',
+            '   reproduction of the BA symptom FIRST. A fix "verified" on data that never exhibited',
+            '   the bug is vacuous — this IS the QA-266503 lie (claimed issue-2 PASS on a no-collision',
+            '   shape that could not delete anything).',
+            '   SHOW, in order: (1) the BA symptom REPRODUCED on the test data WITHOUT the fix',
+            '   (old code / before-fix state), then (2) the symptom GONE WITH the fix — on the SAME',
+            '   data shape that matches BA\'s reported scenario.',
+            '   Genuinely not a runtime-verified claim (mid-analysis)? add [skip-criteria-gate: <reason>].',
+          ].join('\n'),
+        }));
+        process.exit(0);
+      }
+      logFire('passed-repro-before-verify', 'has-reproduction');
     }
 
     // CHECK B — checklist-quality at an Issue Checklist emit -> ADVISORY (v1)
