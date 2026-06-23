@@ -38,6 +38,10 @@
  *   (panel/screen "papar/hilang") with NO .xhtml render-path cite is blocked (codegraph is blind to
  *   JSF EL bindings; only the .xhtml proves the UI→bean→method chain). Kills the wrong-form / render-
  *   method flip-flop slip (claimed the year-walk renders the panel without reading the .xhtml).
+ * v1.3 2026-06-23 (QA-266503): added GIT-HISTORY branch — MANDATORY existing-fix/regression/related-
+ *   ticket probe (git log --grep / -- <file>) before ANY Scout/Recon conclusion in an active quest.
+ *   Closes the slip where #261626 (faizudin) was already fixing the SAME bug in the SAME method and I
+ *   never git-grepped the ticket. Fires before the codegraph + UI-path branches.
  */
 'use strict';
 const fs = require('fs');
@@ -53,7 +57,7 @@ const COMPLETION_CLAIM = /every searchable avenue|exhaust\w*\b[\s\S]{0,40}(avenu
 // the "matched the symptom's vocabulary, never enumerated the failing action's gates" misdiagnosis.
 const ROOT_CAUSE_CLAIM = /\broot[- ]?cause\b[\s\S]{0,30}\b(is|was|=|:)|the (bug|error|issue|failure|problem) (is|was) caused by|the (real |actual )?cause (is|was)\b/i;
 const CODE_SIGNAL = /\.java\b|\bException\b|\bvalidation\b|\bgetter\b|\b\w+\(\)|:\d{2,4}\b|PropertyNotFound|NullPointer|\bmethod\b/i;
-const EXEMPT = /\[skip-codegraph:|═══|るり結界|Domain Expansion/;
+const EXEMPT = /\[skip-codegraph:|\[skip-git-history:|═══|るり結界|Domain Expansion/;
 const CODEGRAPH_CALL = /mcp__codegraph__/;
 // v1.2 2026-06-22 (QA-266503): UI render-path grounding. A root-cause for a UI-rendered symptom
 // (panel/screen "papar/hilang") claimed WITHOUT citing the .xhtml render path. Today's slip: claimed
@@ -61,6 +65,10 @@ const CODEGRAPH_CALL = /mcp__codegraph__/;
 // read the .xhtml binding. codegraph cannot see JSF EL bindings; only the .xhtml does.
 const UI_SYMPTOM = /\b(panel|skrin|screen|borang|dropdown|rekod pembaharuan)\b|\bpapar\b|\bhilang\b|tidak papar|not (shown|displayed?|appearing)|does ?n'?t (show|display|appear)|screenshot/i;
 const XHTML_CITE = /\.xhtml\b/i;
+// v1.3 2026-06-23 (QA-266503): GIT-HISTORY probe mandatory at Scout/Recon (existing-fix / regression /
+// related-ticket check). #261626 fixed the SAME bug — one `git log --grep` on day 1 would have caught it.
+const GIT_HISTORY_CALL = /\bgit\b[^"\n]{0,30}\b(log|blame)\b|--grep|\bgit\b[^"\n]{0,30}show[^"\n]{0,20}--stat/i;
+const TOOL_LINE = /tool_use|"command"|"name":\s*"(PowerShell|Bash)"/;
 
 function readLines(p) {
   try { return fs.readFileSync(p, 'utf8').split(/\r?\n/).filter(Boolean); } catch (_) { return null; }
@@ -101,6 +109,23 @@ function codegraphUsedThisTurn(lines) {
   return false;
 }
 
+// did a git-history probe (log / --grep / blame / show --stat) run in a tool call this turn?
+function gitHistoryUsedThisTurn(lines) {
+  let turnStart = 0;
+  for (let i = lines.length - 1; i >= 0; i--) {
+    let obj; try { obj = JSON.parse(lines[i]); } catch (_) { continue; }
+    const msg = obj.message || obj;
+    if ((msg.role || obj.type) !== 'user') continue;
+    const c = msg.content;
+    const hasText = typeof c === 'string' || (Array.isArray(c) && c.some(b => b && b.type === 'text'));
+    if (hasText) { turnStart = i; break; }
+  }
+  for (let i = turnStart + 1; i < lines.length; i++) {
+    if (TOOL_LINE.test(lines[i]) && GIT_HISTORY_CALL.test(lines[i])) return true;
+  }
+  return false;
+}
+
 function logFire(action) {
   try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), gate: 'codegraph-back', action }) + '\n'); } catch (_) {}
 }
@@ -125,6 +150,28 @@ process.stdin.on('end', () => {
     const uiRootCause = ROOT_CAUSE_CLAIM.test(text) && UI_SYMPTOM.test(text); // v1.2 2026-06-22
     if (!completionClaim && !codeRootCause && !uiRootCause) process.exit(0);
     if (!questActive()) process.exit(0); // only enforce in quest context
+
+    // v1.3 (QA-266503) — GIT-HISTORY probe MANDATORY before any Scout/Recon conclusion (existing-fix /
+    // regression / related-ticket check). Fires first, for ALL claim types. #261626 was already fixing
+    // the SAME bug in the SAME method; one `git log --grep` on day 1 would have caught it.
+    if (!gitHistoryUsedThisTurn(lines)) {
+      logFire('blocked-git-history');
+      process.stdout.write(JSON.stringify({
+        decision: 'block',
+        reason: [
+          '⛔ codegraph-back-gate (git-history): in an active quest you reached a root-cause / Scout /',
+          '   Recon conclusion with NO git-history probe this turn — the existing-fix / regression /',
+          '   related-ticket check. QA-266503: #261626 (faizudin) was already fixing the SAME bug in the',
+          '   SAME method; one `git log --grep` on day 1 would have shown it.',
+          '   Run BEFORE concluding, then end the turn:',
+          '     • git log --all --grep="<ticket#>"          — is someone already fixing this?',
+          '     • git log --oneline -20 -- <suspect file>    — recent commits often ARE the regression',
+          '     • git log -1 --format=%B <SHA>               — read the related fix',
+          '   Genuinely not an investigation turn / already probed earlier? add [skip-git-history: <reason>].',
+        ].join('\n'),
+      }));
+      process.exit(0);
+    }
 
     // v1.2 (QA-266503) — UI render-path grounding takes precedence: a UI symptom grounds in the
     // .xhtml render path, not codegraph (which is blind to JSF EL bindings).
