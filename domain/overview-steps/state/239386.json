@@ -1,0 +1,9 @@
+{
+  "ticket": "#239386 MPT",
+  "steps": [
+    { "n": 1, "label": "Patch base-6 langkah (L1-6) per urusan", "status": "partial" },
+    { "n": 2, "label": "Add per-urusan L7-10 (from flowables + BA)", "status": "todo" },
+    { "n": 3, "label": "Hide nav buttons (Hantar/Simpan/Isi Semula)", "status": "todo" },
+    { "n": 4, "label": "Verify each screen renders read-only; patch NPEs (Jabatan Teknikal)", "status": "todo" }
+  ]
+}
