@@ -1,6 +1,6 @@
 ---
 name: stop-point-summary
-description: Use when stopping at ANY point — task done, phase boundary, blocker, or "where are we / what's next" — to emit a complete stage summary so みや is never left hanging. Title varies by stage ("Test Scenario" at testing hand-back, "Recon Summary", "Blocked — Awaiting X", etc.). Triggers — "Kowalski", "Kowalski analysis", "Kowalski options", "Kowalski next steps", "Test Scenario", "where are we", "where are we at", "what's next", "summary", "are we done", "status", any task-completion or hand-back. NOT "Test Data" (= the bare test-data-echo skill). ("Kowalski" = みや's named alias for the next-steps emit — Madagascar "Kowalski, analysis"; when he says it, show the clear next-steps table.)
+description: Use when stopping at ANY point — task done, phase boundary, blocker, or "where are we / what's next" — to emit a complete stage summary so みや is never left hanging. Title varies by stage ("Test Scenario" at testing hand-back, "Recon Summary", "Blocked — Awaiting X", etc.). Triggers — "Kowalski", "Kowalski analysis", "Kowalski options", "Kowalski next steps", "Test Scenario", "where are we", "where are we at", "what's next", "summary", "are we done", "status", any task-completion or hand-back. NOT "Test Data" (= the bare test-data-echo skill). ("Kowalski" = みや's named alias for the next-steps emit — Madagascar "Kowalski, analysis". FORMAT = TABLES, never arrow-flow: Layer-1 overview table (`Step | Action | What`) + Layer-2 specific-step table (`Field | Value`). Use 2 layers on a first-time/complex step; 1 table otherwise. See "Kowalski format" below.)
 ---
 
 # stop-point-summary — never leave みや hanging at a stop
@@ -22,6 +22,27 @@ At ANY point work pauses, emit a **Stop-Point Summary**: a stage-titled block th
     **Next:** ✓ done <what> / ⬜ pending <specific action> — <who does it>
 
 The **Notes** and **Next** lines are mandatory — they are what make it a *summary*, not a data dump. The title NAMES the stage.
+
+## Kowalski format (the next-steps emit)
+
+"Kowalski" / "Kowalski analysis" → emit the next steps as **TABLES, never arrow-flow** (みや 2026-06-23). Two layers on a first-time or complex step; one table otherwise.
+
+**Layer 1 — overview** (the whole flow, so みや sees the shape):
+
+| Step | Action | What |
+|---|---|---|
+| 1 | `<verb>` | `<plain what>` |
+
+**Layer 2 — the specific next step** (what to do right now):
+
+| Field | Value |
+|---|---|
+| What we change | ... |
+| Where (SQL/file) | ... |
+| Open / expect | ... |
+| Undo / risk | ... |
+
+**Banned:** arrow-flow (`A → B → C`) for a Kowalski emit — tables only. One concern per cell.
 
 ## Title by stage
 

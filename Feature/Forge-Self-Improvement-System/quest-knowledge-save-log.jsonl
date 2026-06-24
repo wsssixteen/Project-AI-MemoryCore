@@ -251,3 +251,12 @@
 {"ts":"2026-06-16T09:50:13.042Z","qa":"QA-261517","phase":"Recon","action":"warn-only-v1"}
 {"ts":"2026-06-16T10:18:58.045Z","qa":"QA-261517","phase":"Recon","action":"warn-only-v1"}
 {"ts":"2026-06-16T10:40:39.856Z","qa":"QA-261517","phase":"Recon","action":"warn-only-v1"}
+{"ts":"2026-06-23T09:26:44.752Z","qa":"QA-239386","phase":"Apply","action":"warn-only-v1"}
+{"ts":"2026-06-23T09:48:01.841Z","qa":"QA-239386","phase":"Apply","action":"warn-only-v1"}
+{"ts":"2026-06-23T10:43:17.612Z","qa":"QA-239386","phase":"Apply","action":"warn-only-v1"}
+{"ts":"2026-06-23T10:50:07.196Z","qa":"QA-239386","phase":"Apply","action":"warn-only-v1"}
+{"ts":"2026-06-23T11:19:35.786Z","qa":"QA-239386","phase":"Apply","action":"warn-only-v1"}
+{"ts":"2026-06-23T13:56:16.110Z","qa":"QA-239386","phase":"Apply","action":"warn-only-v1"}
+{"ts":"2026-06-23T14:00:35.630Z","qa":"QA-239386","phase":"Apply","action":"warn-only-v1"}
+{"ts":"2026-06-23T15:39:40.996Z","qa":"QA-239386","phase":"Apply","action":"warn-only-v1"}
+{"ts":"2026-06-23T15:56:12.617Z","qa":"QA-239386","phase":"Apply","action":"warn-only-v1"}

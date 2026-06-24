@@ -308,3 +308,12 @@
 {"ts":"2026-06-16T06:14:52.693Z","qa":"QA-264006","ids_in_reply":["PTMLK/03/L/PSBS/2026/9"],"missing_from_notes":["PTMLK/03/L/PSBS/2026/9"],"action":"warn-only-v1"}
 {"ts":"2026-06-16T06:18:33.094Z","qa":"QA-264006","ids_in_reply":["PTMLK/03/L/PSBS/2026/9"],"missing_from_notes":["PTMLK/03/L/PSBS/2026/9"],"action":"warn-only-v1"}
 {"ts":"2026-06-16T07:29:13.863Z","qa":"QA-264006","ids_in_reply":["PTMLK/03/L/PSBS/2026/2","PTMLK/03/L/PSBS/2025/2","PTMLK/03/L/PSBS/2026/9"],"missing_from_notes":["PTMLK/03/L/PSBS/2026/2","PTMLK/03/L/PSBS/2025/2","PTMLK/03/L/PSBS/2026/9"],"action":"warn-only-v1"}
+{"ts":"2026-06-23T07:15:38.791Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PT/2026/140"],"missing_from_notes":["PTMLK/01/L/PT/2026/140"],"action":"warn-only-v1"}
+{"ts":"2026-06-23T08:42:00.235Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PT/2026/140"],"missing_from_notes":["PTMLK/01/L/PT/2026/140"],"action":"warn-only-v1"}
+{"ts":"2026-06-23T09:07:01.061Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PT/2025/30"],"missing_from_notes":["PTMLK/01/L/PT/2025/30"],"action":"warn-only-v1"}
+{"ts":"2026-06-23T09:08:04.236Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PT/2025/30"],"missing_from_notes":["PTMLK/01/L/PT/2025/30"],"action":"warn-only-v1"}
+{"ts":"2026-06-23T09:08:37.324Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PT/2025/30"],"missing_from_notes":["PTMLK/01/L/PT/2025/30"],"action":"warn-only-v1"}
+{"ts":"2026-06-23T09:26:44.643Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PT/2025/30"],"missing_from_notes":["PTMLK/01/L/PT/2025/30"],"action":"warn-only-v1"}
+{"ts":"2026-06-23T09:48:01.716Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PSBS/2026/14","PTMLK/01/L/PT/2025/30"],"missing_from_notes":["PTMLK/01/L/PSBS/2026/14","PTMLK/01/L/PT/2025/30"],"action":"warn-only-v1"}
+{"ts":"2026-06-23T09:49:06.335Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PT/2025/30"],"missing_from_notes":["PTMLK/01/L/PT/2025/30"],"action":"warn-only-v1"}
+{"ts":"2026-06-23T10:43:17.539Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PT/2025/30"],"missing_from_notes":["PTMLK/01/L/PT/2025/30"],"action":"warn-only-v1"}
