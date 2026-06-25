@@ -1,9 +1,9 @@
 {
   "ticket": "#239386 MPT",
   "steps": [
-    { "n": 1, "label": "Patch base-6 langkah (L1-6) per urusan", "status": "partial" },
-    { "n": 2, "label": "Add per-urusan L7-10 (from flowables + BA)", "status": "todo" },
-    { "n": 3, "label": "Hide nav buttons (Hantar/Simpan/Isi Semula)", "status": "todo" },
-    { "n": 4, "label": "Verify each screen renders read-only; patch NPEs (Jabatan Teknikal)", "status": "todo" }
+    { "n": 1, "label": "Patch base-6 langkah (L1-6) per urusan, view-only", "status": "done" },
+    { "n": 2, "label": "Add per-urusan L7-10 (L9/L10 screens resolved; L7/L8 + O* pending Aaron)", "status": "partial" },
+    { "n": 3, "label": "View-only enforcement (L6 shows Tambah/Hapus — confirm hide-all vs block-Save w/ Aaron)", "status": "todo" },
+    { "n": 4, "label": "Verify each screen renders read-only in MPT mode; patch NPEs (PSBS L1+L6 OK; rest + new L9/L10 screens pending)", "status": "partial" }
   ]
 }

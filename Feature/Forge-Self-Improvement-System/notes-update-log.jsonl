@@ -317,3 +317,7 @@
 {"ts":"2026-06-23T09:48:01.716Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PSBS/2026/14","PTMLK/01/L/PT/2025/30"],"missing_from_notes":["PTMLK/01/L/PSBS/2026/14","PTMLK/01/L/PT/2025/30"],"action":"warn-only-v1"}
 {"ts":"2026-06-23T09:49:06.335Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PT/2025/30"],"missing_from_notes":["PTMLK/01/L/PT/2025/30"],"action":"warn-only-v1"}
 {"ts":"2026-06-23T10:43:17.539Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PT/2025/30"],"missing_from_notes":["PTMLK/01/L/PT/2025/30"],"action":"warn-only-v1"}
+{"ts":"2026-06-24T07:05:56.553Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PT/2026/140","PTMLK/02/L/OPPTPB/2026/7"],"missing_from_notes":["PTMLK/01/L/PT/2026/140","PTMLK/02/L/OPPTPB/2026/7"],"action":"warn-only-v1"}
+{"ts":"2026-06-24T08:33:09.665Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PSBS/2026/14"],"missing_from_notes":["PTMLK/01/L/PSBS/2026/14"],"action":"warn-only-v1"}
+{"ts":"2026-06-24T09:30:44.984Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PSBS/2026/14"],"missing_from_notes":["PTMLK/01/L/PSBS/2026/14"],"action":"warn-only-v1"}
+{"ts":"2026-06-24T10:21:24.128Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PLTP/2026/12","PTMLK/02/L/PLTP/2026/16"],"missing_from_notes":["PTMLK/01/L/PLTP/2026/12","PTMLK/02/L/PLTP/2026/16"],"action":"warn-only-v1"}
