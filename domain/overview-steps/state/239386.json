@@ -1,9 +1,24 @@
 {
   "ticket": "#239386 MPT",
   "steps": [
-    { "n": 1, "label": "Patch base-6 langkah (L1-6) per urusan, view-only", "status": "done" },
-    { "n": 2, "label": "Add per-urusan L7-10 (L9/L10 screens resolved; L7/L8 + O* pending Aaron)", "status": "partial" },
-    { "n": 3, "label": "View-only enforcement (L6 shows Tambah/Hapus — confirm hide-all vs block-Save w/ Aaron)", "status": "todo" },
-    { "n": 4, "label": "Verify each screen renders read-only in MPT mode; patch NPEs (PSBS L1+L6 OK; rest + new L9/L10 screens pending)", "status": "partial" }
+    { "n": 1, "label": "Patch base-6 langkah (L1-6) view-only — ALL 20 urusan", "status": "done" },
+    { "n": 2, "label": "Chalk-back L7-L10 per screen-ownership (Aaron-confirmed); Patch.sql Section C built — RUN pending", "status": "partial" },
+    { "n": 3, "label": "NPE — Aaron ALREADY fixed (9343ca20bc, 20/06); UAT redeploy pending (deploy lag, UAT=19/06 build)", "status": "partial" },
+    { "n": 4, "label": "Re-test L7-L10 render read-only post-redeploy (L8/L9/L10 runtime-UNtested)", "status": "todo" },
+    { "n": 5, "label": "Confirm w/ Aaron — PSBS chalk-back (patch adds L7/L8) + O* urusan L9 display screen", "status": "todo" }
+  ],
+  "refs": [
+    "239386-MPT-Patch.sql (A base-6 / B PLTP-flagfix(RAN) / C chalk-back L7-L10)",
+    "239386-NPE-findings.txt (root cause + Aaron fix 9343ca20bc + deploy-lag)",
+    "239386-screen-id-trace.sql (how screen IDs derived)",
+    "239386 - MPT Java Files x Urusan.xlsx (13 Java classes per screen x urusan)",
+    "239386 - MPT Progress Checklist.xlsx (Progress + L7-L10 sheets)",
+    "MPT-checklist.txt (per-langkah, Redmine)",
+    "GUIDE-A §1.3 (data-driven screen model: ind_skrin catalog <- ind_langkah tabs -> ind_tgsn -> ind_ursn)"
+  ],
+  "key_facts": [
+    "Screen->urusan link is DERIVED via ind_langkah (skrin_id + tgsn_id) -> ind_tgsn (ursn_id) -> ind_ursn; ind_skrin has NO urusan column.",
+    "L7=PLP_MNCM L8=PLP_BYRN_LSN L9=PLP_B4AE/EE/CE/DE L10=PLP_MN_WARTA. L1 (CommonSenaraiSemakanForm) is in etanah-COMMON; rest in etanah-pelupusan.",
+    "PLTP flag-fix RAN + verified (8/8 view-only)."
   ]
 }

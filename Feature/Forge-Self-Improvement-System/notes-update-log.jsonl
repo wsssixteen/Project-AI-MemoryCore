@@ -321,3 +321,4 @@
 {"ts":"2026-06-24T08:33:09.665Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PSBS/2026/14"],"missing_from_notes":["PTMLK/01/L/PSBS/2026/14"],"action":"warn-only-v1"}
 {"ts":"2026-06-24T09:30:44.984Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PSBS/2026/14"],"missing_from_notes":["PTMLK/01/L/PSBS/2026/14"],"action":"warn-only-v1"}
 {"ts":"2026-06-24T10:21:24.128Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PLTP/2026/12","PTMLK/02/L/PLTP/2026/16"],"missing_from_notes":["PTMLK/01/L/PLTP/2026/12","PTMLK/02/L/PLTP/2026/16"],"action":"warn-only-v1"}
+{"ts":"2026-06-25T03:07:36.313Z","qa":"QA-264006","ids_in_reply":["PTMLK/01/L/PLTP/2026/12"],"missing_from_notes":["PTMLK/01/L/PLTP/2026/12"],"action":"warn-only-v1"}

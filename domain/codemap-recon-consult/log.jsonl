@@ -12,3 +12,5 @@
 {"ts":"2026-06-16T10:53:36.173Z","fired_for":["QA-261517:Recon"]}
 {"ts":"2026-06-19T03:53:41.447Z","gate":"codegraph-back","action":"blocked"}
 {"ts":"2026-06-19T03:53:41.531Z","gate":"codegraph-back","action":"passed"}
+{"ts":"2026-06-25T06:24:56.346Z","fired_for":["QA-267382:Discovery"]}
+{"ts":"2026-06-25T12:11:57.482Z","fired_for":["QA-267382:Discovery"]}

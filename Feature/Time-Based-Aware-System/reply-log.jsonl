@@ -1653,3 +1653,15 @@
 {"ts":"2026-06-25T02:16:34.653Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":11}
 {"ts":"2026-06-25T02:16:58.019Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":0}
 {"ts":"2026-06-25T02:17:13.627Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":0}
+{"ts":"2026-06-25T03:04:39.346Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":47}
+{"ts":"2026-06-25T03:07:36.238Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":3}
+{"ts":"2026-06-25T03:08:12.268Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":1}
+{"ts":"2026-06-25T03:54:23.278Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":46}
+{"ts":"2026-06-25T03:54:49.303Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":0}
+{"ts":"2026-06-25T04:07:04.492Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":12}
+{"ts":"2026-06-25T04:07:26.786Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":0}
+{"ts":"2026-06-25T06:14:14.588Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":127}
+{"ts":"2026-06-25T06:26:30.610Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":12}
+{"ts":"2026-06-25T06:28:13.107Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":2}
+{"ts":"2026-06-25T06:28:23.276Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":0}
+{"ts":"2026-06-25T06:28:39.469Z","qa_active":"QA-264006","phase":"1","status":"closed","gap_since_prev_minutes":0}
