@@ -38,4 +38,10 @@
 ## 🎯 Session Recap (for AI restart)
 #239386 MPT, day 3. Chalk-back rule cracks L7-L10 (mechanical, per screen-ownership). The NPE was already fixed by Aaron 20/06 — UAT just runs a stale 19/06 build (deploy lag). Buttons/view-only = Aaron's base classes. L1-6 + PLTP flag-fix DONE. Chalk-back Patch.sql ready. Remaining = redeploy UAT → run Section C → re-test L7-L10 → confirm PSBS/O\* w/ Aaron. ~75%. This session also: logged shared-base-edit-untested-subclass slip (strike 2, ⚠️ — tested only PSBS, assumed shared screens; PLTP L7/L8 NPE caught it); fixed notes.js regex (REQUIREMENT folders).
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-25 10:58 — DE close (Opus 4.8, unruffled-merkle worktree).
+### Continued 2026-06-25 (PM)
+- Taught the **data-driven screen architecture** (saved to GUIDE-A §1.3): `ind_skrin` = screen catalog (no urusan col) · `ind_langkah` = the tabs (skrin_id + tgsn_id) · screen→urusan is DERIVED via `ind_langkah → ind_tgsn → ind_ursn`. One screen = many tabs (screen 1148 used by 140 langkah / 13 urusan).
+- Listed **all 13 MPT Java classes** per screen × urusan → `239386 - MPT Java Files x Urusan.xlsx` (verified via Glob; L1 `CommonSenaraiSemakanForm` is in etanah-COMMON, L9 Borang split across lesen/permit/perizaban packages).
+- Verified Aaron's NPE guard is physically in `MlkMuatNaikCabutanMinitForm.java:445-447`. みや running the **local deploy** to confirm the fix end-to-end (deploy-lag theory).
+- Persistent quest checklist lives in `domain/overview-steps/state/239386.json` (shows every turn until 100%).
+
+**Memory Type**: RAM | **Last Activity**: 2026-06-25 (PM) — DE close + branch→main merge (Opus 4.8, unruffled-merkle worktree).

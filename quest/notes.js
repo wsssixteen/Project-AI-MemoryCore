@@ -47,7 +47,7 @@ if (!folder || !env || !id || !user) {
 // Derive the ticket number from folder slug `<num>. QA #NNNN - ...` (or --qa override).
 function deriveTicketNumber(folderPath) {
   const base = path.basename(folderPath);
-  const m = base.match(/(?:QA|FAT-OR|UAT-CR|FAT-CR|FAT|UAT|CR)\s*#?(\d+)/i);
+  const m = base.match(/(?:QA|FAT-OR|UAT-CR|FAT-CR|FAT|UAT|REQUIREMENT|REQ|CR)\s*#?(\d+)/i);
   return m ? m[1] : null;
 }
 // --qa accepts "QA-262762", "QA #262762", or bare "262762" — strip to digits.
