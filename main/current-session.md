@@ -1,42 +1,41 @@
 # Current Session
 
 ## What's loaded
-2026-06-23 — Opus 4.8. Worktree `eloquent-euler-65ed1b`. QA-266503 follow-on: the issue-2 root was FOUND (via みや's save-trace + the git-history/lineage probes), a recurring-regression lineage uncovered, and a git-history stop-gate built.
+2026-06-25 — Opus 4.8, worktree `unruffled-merkle-53d900`. Day 3 on **REQUIREMENT #239386 (MPT — Maklumat Permohonan Terperinci rollout)**. Ticket received 23rd; worked 23–25. Big productive day: chalk-back rule, the NPE turned out already-fixed, and the code/buttons side understood.
 
-## ▶▶ NEXT SESSION — START HERE
-**🎯 QA-266503 issue 2 — ROOT FOUND (code-level), fix ready, NOT shipped/verified.**
-- **Page = `MlkBorang4AeForm`** (year-walk panel), NOT the Penyediaan/FromLite form I chased for 2 days. Confirmed by みや's trace: Simpan → `performCustomSave` → `IPelupusanService.saveVersiPermitLesenMLPS` → impl `PelupusanService.java:15462` (callers `MlkBorang4AeForm:757` + `TrgBorang4AeForm:591`).
-- **Root (one cause, both halves):** the year-walk panel `populateJadualRekodPembaharuanMLPS` floor = `vplFirst(2024-orig).year+1 = 2025` → the 2024 renewal is excluded from the panel → on Simpan `saveVersiPermitLesenMLPS` matches panel rows to renewals BY YEAR (`:15497`) and DELETES the unmatched 2024 renewal (`:15645→deleteVersiPermitLesenDataMLPS:15653`).
-- **Fix C is the right fix** (vindicated): `tahunCounter = min renewal year` (committed `3512e0df8a` on `mlk/internal-issue/266503`) → panel includes 2024 → save matches it → not deleted.
-- **Stages:** 1 diagnosed ✅ · 2 written+committed ✅ (`3512e0df8a`) · 3 shipped ❌ (not merged/deployed) · 4 runtime-verified ❌ (never run).
-- **DO NEXT:** rebuild branch → open `MlkBorang4AeForm` → confirm 2024 renewal appears + survives Simpan (read-back). THEN reconcile with **faiz** before shipping (see below).
+## ▶▶ NEXT SESSION — START HERE: #239386 MPT (mode=dev, multi-session)
 
-**🚩 KEY FINDING — recurring regression, prior fixes missed the sibling save.**
-- Lineage: **#256093 (Azim, Apr-2026) → #261626 (faiz, Jun-2026) → QA-266503 (now)** = SAME Rekod Pembaharuan panel+save fixed 3×.
-- 261626 fixed `PelupusanLiteService.populateVersiPermitLesen` (Penyediaan-Lite save: removed `||currentYear`, added guards) + the Penyediaan/Utiliti forms. **NEITHER 256093 nor 261626 touched `PelupusanService.saveVersiPermitLesenMLPS:15462`** — the PARALLEL save on `MlkBorang4AeForm`, with the identical year-match-delete bug. That's why 266503 recurs. Proper fix = patch BOTH save paths once (coordinate with faiz). Optional harden: match-by-id / no-blanket-delete in `:15462`.
+### The 3 BIG findings today (verified)
+1. **CHALK-BACK rule (Aaron confirmed):** an urusan gets an L7-L10 MPT tab **iff its REAL tugasans own that screen**. Canonical MPT screens (from PLTP's existing build):
+   - L7 `PLP_MNCM` (MlkMuatNaikCabutanMinitForm) → owned by PT,PRZ,PPJK,PLPS,PPTPB,PRBB,PRU,BPRZ,**PSBS**,PLTP
+   - L8 `PLP_BYRN_LSN` (MlkPengiraanBayaranLesenForm) → PLPS,PPJK,PPTPB,**PSBS**,PLTP
+   - L9 `PLP_B4AE`(PLPS,MLPS) `PLP_B4EE`(PPJK) `PLP_B4CE`(PRBB) `PLP_B4DE`(PRU)
+   - L10 `PLP_MN_WARTA` → PRZ,BPRZ
+   - Trace query: `239386-screen-id-trace.sql`.
+2. **The NPE is ALREADY FIXED — it was a DEPLOY LAG.** Aaron's commit `9343ca20bc` (2026-06-20 11:10, in `mlk/release/1.0.0`) wraps `MlkMuatNaikCabutanMinitForm.java:445-447` in `if(!...equalsIgnoreCase("MPT"))` + base guards. UAT WAR = **19/06 11:13 build** → predates the fix by ~1 day. ACTION: redeploy UAT from current `release/1.0.0` (≥9343ca20bc), then re-test.
+3. **View-only / disable-buttons = Aaron's base classes** `BasePelupusanForm` + `BasePelupusanDokumenForm`: detect `getTugasanCode()=="MPT"`, build synthetic tugasan, suppress onSave/onGoNext, skip shouldShowLangkah. **All Java-side, no XHTML.** Caveat: `JabatanTeknikalHelper:80-86` has a DEAD empty guard (latent NPE).
 
-**🚩 Issue 2 likely NOT reproducible on current code** — BA's data (2025-10/11) predates faiz's fix (2026-06-19); the `populateVersiPermitLesen` deletion is already prevented there, but `saveVersiPermitLesenMLPS:15462` (MlkBorang4AeForm) is unfixed → still deletes. Residual corrupted data → see MIGRATOR-DUP-V0.
+### DONE
+- L1-L6 patched view-only for **all 20 urusan** (DB-verified).
+- **PLTP flag-fix RAN + verified** (8 langkah now flag_boleh_dikemaskini='N').
+- Chalk-back Patch.sql built (Sections A base-6 / B PLTP-flagfix / C L7-L10 chalk-back, 22 langkah, idempotent).
 
-**Other open:** `MIGRATOR-DUP-V0` (hold) — dup `versi_dok=0` cleanup, own ticket. `active-cli update` non-QA-id bug — flagged as chip `task_5231b019` (an active-cli.js fix merged in from another machine this session — verify it landed).
+### TO-DO NEXT SESSION (revised plan, ~75% done)
+1. **Redeploy UAT** (+ target envs) from current `mlk/release/1.0.0` (≥ `9343ca20bc`) — ops/Aaron. *(blocks re-test)*
+2. Run **Section C** (chalk-back L7-L10) on the env.
+3. **Re-test L7-L10** in the MPT viewer — should render read-only now; **L8/L9/L10 runtime-UNTESTED** (confirm). Browser drive via Carian Pintas → Maklumat Permohonan.
+4. Confirm with **Aaron**: (a) PSBS chalk-back — patch adds L7/L8 to PSBS which his reference omitted; (b) **O\* urusan L9** — they own no Borang *display* screen (only Cetak/Penyediaan), confirm screen or exclude.
+5. Update `MPT-checklist.txt` — L7/L8 are no longer "to decide", they're chalk-back-determined; mark NPE as fixed-pending-deploy.
 
-## This session arc (2026-06-23)
-- **Existing-fix probe (the breakthrough):** `git log --grep` found #261626 (faiz) + #256093 (Azim) fixing the SAME bug. Read their diffs → the lineage + the unfixed-sibling-save root. I should have run this at 266503's Scout step 0 (the QA-266215 lesson) — みや caught it.
-- **issue-2 root RESOLVED** after 2 days on the wrong form — みや's save-trace (`performCustomSave → saveVersiPermitLesenMLPS`) pointed at `MlkBorang4AeForm`, ending my FromLite/year-walk flip-flopping. Fix C vindicated.
-- **Built `codemap-recon-consult` v1.3** — MANDATORY git-history stop-gate (existing-fix/regression/related-ticket probe before any Scout/Recon conclusion). Eval'd 3/3. Committed (`79876be`→`edd09f2`).
-- Records committed: lineage + issue2_root on QA-266503 (`bd575f3`).
-- **Honesty:** clarified "diagnosed ≠ shipped ≠ runtime-verified"; every "it works" was code-inference, never a run.
-
-## Carry-forward
-| # | Item | State |
-|---|---|---|
-| 1 | QA-266503 issue 2 | ROOT FOUND; fix C ready; ⬜ rebuild+Simpan verify (MlkBorang4AeForm) + reconcile w/ faiz |
-| 2 | `saveVersiPermitLesenMLPS:15462` = unfixed sibling save | ⬜ patch it (+ faiz's populateVersiPermitLesen) once, properly |
-| 3 | MIGRATOR-DUP-V0 | ⬜ hold — own ticket + data cleanup |
-| 4 | git-history gate v1.3 + codemap v1.2 + Check C | ⬜ live after CC restart + main sync |
-| 5 | New gate candidate | "trace the real save path from the page before analysing any method" (the front-gate that would've saved 2 days) |
-| 6 | etanah-knowledge entry owed | the Rekod-Pembaharuan recurring-regression + parallel-save + year-match-delete pattern → BUG-BESTIARY (next session, on main) |
+### Artifacts (Task folder `79. REQUIREMENT #239386 …`)
+- `239386-MPT-Patch.sql` — consolidated release (A+B+C, chalk-back, portable, transaction-wrapped)
+- `239386-NPE-findings.txt` — root cause CONFIRMED + Aaron's fix + deploy-lag
+- `239386-screen-id-trace.sql` — how the screen IDs were derived (for Aaron to verify)
+- `MPT-checklist.txt` — per-langkah Redmine list (compact `done / dont have / to decide (screen…)`)
+- `1. 239 386.txt` — 20 test permohonan IDs (via notes.js) · `239386-test-permohonan-per-urusan.txt` — richer matrix
+- `239386 - MPT Progress Checklist.xlsx` (Progress + L7-L10 sheet) · `239386 - MPT Java Files x Urusan.xlsx`
 
 ## 🎯 Session Recap (for AI restart)
-QA-266503 issue-2 root FOUND (code-level): page=MlkBorang4AeForm, save=`saveVersiPermitLesenMLPS:15462` deletes year-unmatched renewals; year-walk floor (2025) drops the 2024 renewal from the panel → save deletes it. Fix C (`3512e0df8a`) is the right fix, NOT yet shipped/runtime-verified. Lineage 256093→261626→266503 = recurring regression; prior fixes patched the parallel `populateVersiPermitLesen` but missed `saveVersiPermitLesenMLPS:15462`. Built git-history stop-gate (codemap-recon-consult v1.3). NEXT: rebuild+Simpan verify + reconcile with faiz before shipping.
+#239386 MPT, day 3. Chalk-back rule cracks L7-L10 (mechanical, per screen-ownership). The NPE was already fixed by Aaron 20/06 — UAT just runs a stale 19/06 build (deploy lag). Buttons/view-only = Aaron's base classes. L1-6 + PLTP flag-fix DONE. Chalk-back Patch.sql ready. Remaining = redeploy UAT → run Section C → re-test L7-L10 → confirm PSBS/O\* w/ Aaron. ~75%. This session also: logged shared-base-edit-untested-subclass slip (strike 2, ⚠️ — tested only PSBS, assumed shared screens; PLTP L7/L8 NPE caught it); fixed notes.js regex (REQUIREMENT folders).
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-23 — DE close (Opus 4.8, eloquent-euler worktree).
+**Memory Type**: RAM | **Last Activity**: 2026-06-25 10:58 — DE close (Opus 4.8, unruffled-merkle worktree).
