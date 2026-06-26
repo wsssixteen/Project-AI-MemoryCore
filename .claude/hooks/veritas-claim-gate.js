@@ -178,6 +178,34 @@ process.stdin.on('end', () => {
       process.exit(0);
     }
 
+    // CHECK 3 — SYMPTOM-DOWNGRADE -> ADVISORY (built 2026-06-25, QA-267382)
+    //   The hole CHECK 2 missed: a claim can be "VERIFIED" against real evidence
+    //   that proves a DIFFERENT proposition than the BA's reported symptom.
+    //   Slip: BA annotation "Tarik pelan yang salah - expected pelan public upload"
+    //   (= WRONG plan) was downgraded to "just resized" + stamped VERIFIED, backed
+    //   by a DB row that only proved which doc the code pulls - not that it matched
+    //   what the public uploaded. Fires when a reply RULES OUT / DOWNGRADES a
+    //   reported symptom to a lesser/cosmetic cause with a conclusion verb.
+    const CONCLUSION_VERB = /\b(VERIFIED|ruled out|root cause|confirmed|it'?s (not|actually)|turns out|rule[ds]? out)\b/i;
+    const DOWNGRADE_PHRASE = /\b(ruled out|not (a |the )?(wrong|different)|it'?s (the )?(correct|right)( image| plan| one| doc)|just (a |the )?(resiz|size|scal|cosmetic|format)|only (a |the )?(size|cosmetic|format|resiz)|not the symptom|right (image|plan|doc).{0,20}(wrong|distorted|resiz))\b/i;
+    if (!framed && CONCLUSION_VERB.test(text) && DOWNGRADE_PHRASE.test(text)) {
+      logLedger('symptom-downgrade-advisory', text);
+      process.stdout.write(JSON.stringify({
+        hookSpecificOutput: {
+          hookEventName: 'Stop',
+          additionalContext: [
+            '⚙️  veritas-gate CHECK 3 (ADVISORY — symptom-grounding): you RULED OUT / DOWNGRADED a reported',
+            '   symptom to a lesser cause (resize / cosmetic / "right one, wrong size") AND stamped a conclusion verb.',
+            '   STOP: re-read the BA / みや symptom VERBATIM (the screenshot annotation, the journal line, the exact words).',
+            '   Does your evidence verify the BA\'s ACTUAL stated symptom — or a DIFFERENT proposition you find easier to prove?',
+            '   A DB row proving "the code pulls doc X" does NOT prove "doc X is what the BA says is missing/wrong".',
+            '   Quote the BA\'s exact words + reconcile your evidence against THEM before concluding. Ground truth is the symptom.',
+          ].join('\n'),
+        },
+      }));
+      process.exit(0);
+    }
+
     process.exit(0);
   } catch (e) {
     process.exit(0); // fail-OPEN

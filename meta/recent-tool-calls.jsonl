@@ -1,10 +1,10 @@
-{"ts":"2026-06-23T00:43:53.296Z","fingerprint":"PowerShell::::::{\"command\":\"$bat = \\\"C:\\\\Users\\\\Ridhwan\\\\AppData\\\\Local\\\\etanah-static-analysis\\\\schemacrawler-17.11"}
-{"ts":"2026-06-23T00:45:12.525Z","fingerprint":"PowerShell::::::{\"command\":\"$tools = \\\"C:\\\\Users\\\\Ridhwan\\\\AppData\\\\Local\\\\etanah-static-analysis\\\"\\n$zip = \\\"$tools"}
-{"ts":"2026-06-23T00:46:27.559Z","fingerprint":"PowerShell::::::{\"command\":\"$tools = \\\"C:\\\\Users\\\\Ridhwan\\\\AppData\\\\Local\\\\etanah-static-analysis\\\"\\n$conn = ((Get-C"}
-{"ts":"2026-06-23T00:48:18.829Z","fingerprint":"PowerShell::::::{\"command\":\"$conn = ((Get-Content \\\"C:\\\\Users\\\\Ridhwan\\\\.claude.json\\\" -Raw | ConvertFrom-Json).mcpS"}
-{"ts":"2026-06-23T00:48:19.008Z","fingerprint":"ToolSearch::::::{\"query\":\"select:mcp__postgres-mlkuat__query\",\"max_results\":3}"}
-{"ts":"2026-06-23T00:48:59.149Z","fingerprint":"mcp__postgres-mlkuat__query::::::{\"sql\":\"SELECT 'table_privileges' AS check, privilege_type, count(*) AS n FROM information_schema.ro"}
-{"ts":"2026-06-23T00:55:49.366Z","fingerprint":"ToolSearch::::::{\"query\":\"select:TaskList\",\"max_results\":3}"}
-{"ts":"2026-06-23T00:56:20.589Z","fingerprint":"PowerShell::::::{\"command\":\"$wt = \\\"C:\\\\Users\\\\Ridhwan\\\\OneDrive - Pymsoft Sdn Bhd\\\\0. AI\\\\Project-AI-MemoryCore\\\\.c"}
-{"ts":"2026-06-23T00:56:39.707Z","fingerprint":"TaskList::::::{}"}
-{"ts":"2026-06-23T00:57:19.071Z","fingerprint":"Edit::C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\worktrees\\nervous-villani-82fe7b\\meta\\known-gaps.md::::{\"file_path\":\"C:\\\\Users\\\\Ridhwan\\\\OneDrive - Pymsoft Sdn Bhd\\\\0. AI\\\\Project-AI-MemoryCore\\\\.claude\\"}
+{"ts":"2026-06-26T03:24:38.617Z","fingerprint":"mcp__postgres-mlkuat__query::::::{\"sql\":\"SELECT p_smkn_id, kod, nama_dok, p_hkmlk_id, bil_terima, catatan\\nFROM et_main_uat.umm_p_smk"}
+{"ts":"2026-06-26T03:24:39.350Z","fingerprint":"mcp__postgres-mlkuat__query::::::{\"sql\":\"SELECT a_dok_kmskn_id, kod_dok, nama_dok, jns_dok_id, created_by FROM et_main_uat.umm_a_dok_"}
+{"ts":"2026-06-26T03:25:32.648Z","fingerprint":"mcp__postgres-mlkuat__query::::::{\"sql\":\"-- Step 3: skg_dok under the PTAP pra-doc (p_smkn_id = 18043)\\nSELECT sak.kod AS medan, d.me"}
+{"ts":"2026-06-26T03:25:33.970Z","fingerprint":"mcp__postgres-mlkuat__query::::::{\"sql\":\"-- Step 4: the PLP app kemasukan for pra-2686 (= aplikasi 2892713)\\nSELECT a_dok_kmskn_id, k"}
+{"ts":"2026-06-26T03:25:34.647Z","fingerprint":"mcp__postgres-mlkuat__query::::::{\"sql\":\"-- does 3383406 exist in UAT at all?\\nSELECT aplikasi_id, id_pengenalan, ursn_id FROM et_mai"}
+{"ts":"2026-06-26T03:26:21.007Z","fingerprint":"mcp__postgres-mlkuat__query::::::{\"sql\":\"-- Step 5: what sits under the PTAP app kemasukan (273525) — what the surat would read\\nSELE"}
+{"ts":"2026-06-26T03:47:24.008Z","fingerprint":"PowerShell::::::{\"command\":\"Get-Date -Format \\\"yyyy-MM-dd HH:mm:ss dddd\\\"; Write-Output \\\"---BRANCH---\\\"; git branch"}
+{"ts":"2026-06-26T03:50:28.375Z","fingerprint":"Write::C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\daily-diary\\current\\2026-06-26.md::::{\"file_path\":\"C:\\\\Users\\\\Ridhwan\\\\OneDrive - Pymsoft Sdn Bhd\\\\0. AI\\\\Project-AI-MemoryCore\\\\daily-di"}
+{"ts":"2026-06-26T03:50:36.303Z","fingerprint":"Read::C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\main\\current-session.md::::{\"file_path\":\"C:\\\\Users\\\\Ridhwan\\\\OneDrive - Pymsoft Sdn Bhd\\\\0. AI\\\\Project-AI-MemoryCore\\\\main\\\\cu"}
+{"ts":"2026-06-26T03:51:11.801Z","fingerprint":"Write::C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\main\\current-session.md::::{\"file_path\":\"C:\\\\Users\\\\Ridhwan\\\\OneDrive - Pymsoft Sdn Bhd\\\\0. AI\\\\Project-AI-MemoryCore\\\\main\\\\cu"}
