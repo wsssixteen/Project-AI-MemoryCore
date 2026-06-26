@@ -376,3 +376,26 @@ scout_status=Phase-0 Scout+Recon DONE — OPLPS guard-gap VERIFIED (PelupusanLit
 next_step=Recon: name method @PelupusanLiteService:2180-2275 + grep callers to settle H1; draft dedup-cleanup patch (5 same-permit first, 114 dup-records follow-up); raise own Redmine ticket
 related=QA-266503 (deferred sibling; its removeIf(versiDok==0) caters safely regardless of origin)
 related_261626=SAME-AREA / likely DUPLICATE of #261626 (faizudin, active to 2026-06-20, origin/mlk/qa/261626). 261626 fixes the SAME rekod-pembaharuan missing/deleted-on-Simpan in the SAME method populateVersiPermitLesen — 9909350e67 removed '||currentYear' from the year-match + added isEmpty guard (ALREADY in current code). f27239d2cc/150c17874c touch MlkUtilitiPengeluaranLesenPermitForm. ACTION: reconcile with faizudin before more issue-2 work; 266503 may be a dup.
+
+qa=QA-267382
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\80. ESOKONGAN #267382 - Urusan PLPS - Isu paparan footer dan pelan pada surat jabatan teknikal
+phase=1
+status=closed
+commit=05e631671e
+branch=mlk/esokongan/267382
+local_test_confirmed=2026-06-27
+ticket_type=bug
+env=MLKSTG
+issue_one_liner=Urusan PLPS - Isu paparan footer dan pelan pada surat jabatan teknikal
+assigned_to_me=2026-06-25
+current_phase=Recon-pelan-STAGING-VERIFIED
+quest_start=2026-06-25
+urusan=PLPS
+qa_doc=projects/coding-projects/active/QA-267382/QA-267382.md
+tugasan=PSJT Penyediaan Surat JT dan Ulasan YB
+screen=MlkSuratTemplateForm.xhtml (PLP_STMPLT)
+scope_anchor=PLPS Surat JT (SRTJK) doc render: #5 pelan resize PelupusanWordCCMethodConstant:19122 (525x500 no aspect); #3/#4 footer+pagenum FO ignores titlePg (PelupusanTemplateUtil:351); #1 jawi PTG-skip gate :337/342; #2 ID-permohonan pg2+ = new add
+recon_finding=template TemplateSuratJabatanTeknikal.docx structurally CORRECT: 2 sects titlePg=ON, default hdr=idPermohonan + ftr=PAGE, first hdr=headerSurat1(letterhead) + ftr=footerSurat1(motto); #2/#3/#4 = FO ignores titlePg (pg2+ renders first-page h/f) = render not template; #5 pelan Java; #1 jawi code/DMS
+pelan_root_cause=CORRECTED (prior resize-VERIFIED was WRONG - overrode BA annotation Tarik pelan yang salah). Symptom = WRONG plan shown vs public upload. Source kod IS correct (helsa@ uploaded LMP_PLN 331868; surat pulls LMP_PLN). Bug = render-path. STRONG candidate (code-verified, NOT runtime): retrieveImageByte uses DocumentRepository.findByMedanAndMedanPk (UNORDERED, no versi/aktif filter) + docs.get(0) -> arbitrary/old Document version; sibling version-aware queries exist unused (:31/:50/:65). H-page PDF-page1 secondary. Document entity = domain.dms.Document (separate DMS datasource, NOT in et_main_uat - cannot count versions from mlkuat MCP). Needs DMS version-count + uploaded-vs-rendered file compare (miya). Fix dir: use active/latest-versi query
+pelan_trace_a=DONE: public uploads via AWAM (saveDocumentDownloadVOByMedan:3073, pra Document medanPk=PraSemakan.id). Generic AWAM->PLP re-link SKIPPED for pelupusan (AwamPendaftaranService:4242). Pelupusan-specific binding = PelupusanSpocService.populateDocumentList:1347 (spoc flowable mlkPelupusanSpocIntegrationService) re-links praDoc.setMedanPk(appDokumenKemasukan.id):1367. TWO code-defects: D1 re-link ONLY if appDocumentList isEmpty (:1363) -> pre-existing doc => public upload never linked => wrong plan shown; D2 re-links ALL pra docs no version/sumber filter (:1365) -> multiple Documents => surat get(0) mispicks. MECHANISM verified; which fired for helsa = needs DMS Document rows (unreachable). Fix sides: read-side surat active/latest query vs write-side migration guard
+pelan_staging=VERIFIED on staging et_main_stg1 aplikasi 3383406 (=/2026/3 BA actual env). LMP_PLN kemasukan a_dok_kmskn_id=4183688. Under UMM_A_DOK_KMSKN EXACTLY ONE row = aimaneka36 plan.pdf versi3 draft (public upload) => get(0) NOT ambiguous, source selection CORRECT. 2 KELUARAN rows = DHK.pdf SYSTEM (different medan, surat never reads). Prior mlkuat investigation was WRONG ENV (helsa/2954411). Wrong-pelan is DOWNSTREAM of selection: plan.pdf is PDF -> PelupusanUtil.convertPdfFileBytesToImageFileBytes page-1-only + populatePelanAsalImageMLK:19122 resize 525x500. Candidates A) multi-page PDF wrong page B) resize distortion. Decisive next = inspect plan.pdf pages.

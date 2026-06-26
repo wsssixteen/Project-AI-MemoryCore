@@ -59,3 +59,5 @@
 {"ts":"2026-06-16T07:15:38.288Z","prompt_excerpt":"I tried saving using \"Simpan\", now all the documents are missing."}
 {"ts":"2026-06-16T10:34:51.483Z","prompt_excerpt":"1. [[update=\"#{cc.attrs.helperForm.viewCukaiPanel ? 'kadar-cukai-tanah-togglePanel, :msgs' : ':msgs'}\"]] - I only understand the rough logic of your code change"}
 {"ts":"2026-06-21T16:54:04.999Z","prompt_excerpt":"1. Please build \"/scan\", then advice where it typically runs, when to use it. Also, importantly since we do not want to make unnecessary changes, THIS is eactly"}
+{"ts":"2026-06-26T14:20:49.379Z","prompt_excerpt":"CommonSenaraiSemakanForm.xhtml was the page I used to upload. Check this first while I try to delete all the templates and try to regenerate new."}
+{"ts":"2026-06-26T14:35:10.109Z","prompt_excerpt":"1. Photo 1: Btw I tried deleting all the documents generated. I tried generating a new one. I checked the \"temp\" folder to check the word document before it is "}
