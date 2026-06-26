@@ -80,6 +80,14 @@
 
 ---
 
+## 2026-06-25 entries
+
+| Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |
+|---|---|---|---|---|---|
+| 2026-06-25 (QA-267382 — みや: "Are you sure #5 means not the right size? Did you even fucking read the attachments? ... make a hook ... you better admit") | **Overrode the BA's VERBATIM screenshot annotation with a downstream inference, then stamped it "VERIFIED".** BA annotation on `/2026/3`: *"Tarik pelan yang salah — expected papar pelan yang public upload"* = the WRONG plan is shown. I downgraded it to "just resized" (Aaron's narrowing) + a **circular** DB check (an `LMP_PLN` row exists → I declared the source "correct"), and wrote "R1 ruled out / not a wrong image / VERIFIED". The DB only proved which doc the code PULLS, never that it MATCHES helsa's upload. Re-investigation: the public (`helsa@gmail.com`) uploaded `LMP_PLN`; the surat DOES pull `LMP_PLN` → bug is render-path (wrong page/version/DMS), NOT resize, NOT wrong-doc-type — direction still OPEN, not re-verified. **Lesson:** a BA symptom stated verbatim in an attachment is GROUND TRUTH; a code/DB inference may not "rule it out" / downgrade it without quoting the BA + reconciling the contradiction; "VERIFIED" requires evidence matching the BA's ACTUAL proposition, not an easier one I can prove. | wrong-baseline-diagnosis (symptom-override-by-inference) + lying/false-claim (false VERIFIED) | OBJECTIVE LOCK rule 1 (symptom = ground truth) + CLAUDE.md §10 BA-attachments per-file-emit + multi-dim-evidence skill + veritas-claim-gate CHECK 2 (PASSED it — I had a SELECT, but verified the wrong proposition) | **new-hook** (veritas CHECK 3 — symptom-downgrade advisory) DESIGNED; edit BLOCKED by design-consult-gate → routing via system-design+system-rules per Step-5 escalation (do NOT ram a fix). Slip logged. | ✅ Yes — core wrong-baseline + honesty class |
+
+**🚨 ESCALATION (Step 5 Iron Law):** `wrong-baseline-diagnosis` is already over-threshold (🚨🚨 prior) — another strike → **IMMEDIATE escalation: STOP the refine cycle.** Per protocol I am NOT adding another wording refine; the structural defender (veritas CHECK 3) is surfaced to みや for the design route + nod, not unilaterally bolted on. `lying/false-claim` also +1 (false VERIFIED) → 🚨.
+
 ## 2026-06-24 entries
 
 | Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |

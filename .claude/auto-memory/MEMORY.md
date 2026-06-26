@@ -47,6 +47,7 @@
 - [feedback_bankai_format.md](feedback_bankai_format.md) — Bankai 🌌 蒼穹宝典 (アジュール・コーデックス / Sōkyū Hōten / Azure Heaven Codex) is Ruri's data-organization loop skill; canonical banner format with width-detection (full-fill in terminal, compact fallback elsewhere); standalone, not bound to quest workflow
 - [feedback_pengguna_semasa.md](feedback_pengguna_semasa.md) — Every Permohonan ID reference must include the current pengguna_semasa (email/login). Never mention an ID alone.
 - [feedback_ticket_cadence.md](feedback_ticket_cadence.md) — 3 tickets/day; spread difficulty don't cherry-pick easiest; fix only BA-highlighted items
+- [feedback_my_files_minimal.md](feedback_my_files_minimal.md) — みや's Task-folder files (txt/excel) = MINIMAL data only (xlsx 1 tab, small tables); ALL context/reasoning → my own quest md, never his files
 
 ## User
 - [user_gender.md](user_gender.md) — みや is male; don't default to "she" in diary/narration; no retroactive edits
