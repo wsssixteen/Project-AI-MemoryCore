@@ -12,3 +12,17 @@
 {"ts":"2026-06-16T10:53:36.173Z","fired_for":["QA-261517:Recon"]}
 {"ts":"2026-06-19T03:53:41.447Z","gate":"codegraph-back","action":"blocked"}
 {"ts":"2026-06-19T03:53:41.531Z","gate":"codegraph-back","action":"passed"}
+{"ts":"2026-06-25T12:28:10.223Z","fired_for":["QA-267382:Discovery"]}
+{"ts":"2026-06-25T13:37:23.835Z","fired_for":["QA-267382:Recon-template-verified"]}
+{"ts":"2026-06-25T13:44:51.546Z","fired_for":["QA-267382:Recon-pelan-rootcause-VERIFIED"]}
+{"ts":"2026-06-25T13:45:08.717Z","fired_for":["QA-267382:Recon-pelan-rootcause-VERIFIED"]}
+{"ts":"2026-06-25T16:46:05.009Z","fired_for":["QA-267382:Recon-pelan-CORRECTED"]}
+{"ts":"2026-06-26T01:29:05.843Z","fired_for":["QA-267382:Recon-pelan-CORRECTED"]}
+{"ts":"2026-06-26T01:55:38.193Z","fired_for":["QA-267382:Recon-pelan-CORRECTED"]}
+{"ts":"2026-06-26T02:27:52.536Z","fired_for":["QA-267382:Recon-pelan-binding-TRACED"]}
+{"ts":"2026-06-26T03:15:52.066Z","fired_for":["QA-267382:Recon-pelan-binding-TRACED"]}
+{"ts":"2026-06-26T03:23:44.607Z","fired_for":["QA-267382:Recon-pelan-binding-TRACED"]}
+{"ts":"2026-06-26T03:29:02.419Z","fired_for":["QA-267382:Recon-pelan-binding-TRACED"]}
+{"ts":"2026-06-26T03:29:20.184Z","fired_for":["QA-267382:Recon-pelan-binding-TRACED"]}
+{"ts":"2026-06-26T03:29:55.104Z","fired_for":["QA-267382:Recon-pelan-binding-TRACED"]}
+{"ts":"2026-06-26T03:46:38.560Z","fired_for":["QA-267382:Recon-pelan-binding-TRACED"]}

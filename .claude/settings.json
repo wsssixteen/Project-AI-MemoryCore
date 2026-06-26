@@ -264,6 +264,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\ticket-criteria-gate\\ticket-criteria-gate.discipline.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\ba-understanding-table\\ba-understanding-table.discipline.hook.js\""
           }
         ]
       }

@@ -203,6 +203,16 @@ Update mechanism: v1 = Ruri updates manually as part of Step 5. v1.1 = `slip-cou
 | "Per-skill count is enough; root_category is double work" | Per-skill misses cross-skill design failures (today: 2 different skill creations failed for `best-practices-not-consulted`). Both axes mandatory. |
 | "12 days is the protocol" | 12 days was wrong. The refined protocol is in-session / 7-day. みや: "even 3 sessions is unacceptable." |
 
+### Step 5.5 — Skill-card table (MANDATORY emit on every skill/feature build — added 2026-06-26, みや)
+
+At any skill / hook / Power / feature build (the Step 3a/3b/3c/4 emit), ALWAYS show this table — one row per component built:
+
+| Skill / feature | What it solves | How it works |
+|---|---|---|
+| `<name>` | <the slip / gap it closes, plain language> | <trigger → action → enforcement layer (hook / skill / advisory)> |
+
+みや reads this to know at a glance what each component IS without opening it. **Banned:** shipping a skill / hook / Power without its skill-card row in the same turn.
+
 ### Step 6 — Visible report
 
 Emit a 3-line summary at the END of the chat response that triggered this skill:
