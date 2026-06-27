@@ -16,6 +16,7 @@
 - [feedback_knowledgebase_tiers.md](feedback_knowledgebase_tiers.md) — Remind みや when second-tier info should be saved to knowledgebase; don't skip silently
 - [feedback_investigation_style.md](feedback_investigation_style.md) — Reasoning/chain-of-thought goes at the END as a tracing summary, not inline mid-explanation
 - [feedback_verify_before_claim.md](feedback_verify_before_claim.md) — Re-read code before asserting; hold positions backed by line evidence; one passing test is inconclusive
+- [feedback_stale_handoff_verify.md](feedback_stale_handoff_verify.md) — Verify current-session.md/handoff against git + active.txt at boot; a mid-frustration handoff can state the OPPOSITE of truth (QA-267382 boot briefing)
 - [feedback_measure_before_verdict.md](feedback_measure_before_verdict.md) — Never call output "low-res"/"compressed" from a guess; measure (DPI=px÷inches) or reproduce; みや's rendered screenshot is ground truth
 - [feedback_knowledgebase_during_debug.md](feedback_knowledgebase_during_debug.md) — Every debug/scan session must produce knowledgebase entries + consider retrieval improvements
 - [feedback_daily_commit.md](feedback_daily_commit.md) — MemoryCore: commit+push+merge is DEFAULT (auto, never re-ask — git history is the undo, per みや 2026-06-20); etanah ticket commits stay gated
@@ -64,6 +65,7 @@
 - [project_planning_threads.md](project_planning_threads.md) — Organized planning threads from 2026-03-21; resume from A2
 - [project_aunt_slides.md](project_aunt_slides.md) — Future project: help aunt with presentations using Claude + Marp
 - [project_onedrive_migration.md](project_onedrive_migration.md) — Auto-memory syncs via OneDrive; autoMemoryDirectory setup per machine
+- [project_onedrive_branch_refs.md](project_onedrive_branch_refs.md) — Deleted claude/* branches can reappear (OneDrive re-syncs .git/refs); not a failure — surfacer flags it, re-delete after git-cherry check
 - [project_task_workflow.md](project_task_workflow.md) — Quest workflow: Accept/Execute/Report/Post-Mortem for formal work tasks; triggers, report generator at quest/
 - [project_qa_255773_spoc.md](project_qa_255773_spoc.md) — Held SPOC mirror-copy ticket; load handoff-255773.md on any SPOC/flowable/pihak_bkptg mention
 - [project_etanah_organize.md](project_etanah_organize.md) — etanah-organize-alpha: multi-phase project to organize etanah-knowledge/melaka into structured guidebook → Phase 2 office-day verification → Phase 3 Claude Design website; activation skill: Bankai 蒼穹宝典 (Sōkyū Hōten / Azure Heaven Codex); alpha-1 complete 2026-05-14 with 115-item ledger at etanah-knowledge/melaka/organize-progress.json
