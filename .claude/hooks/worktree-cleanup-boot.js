@@ -71,6 +71,31 @@ try {
     .map(s => s.trim().replace(/^\*\s*/, ''))
     .filter(b => /^claude\//.test(b));
 
+  // 2.5 STRANDED-WORKTREE SURFACER (v1.4 2026-06-27) — the DETECT side of the
+  //     worktree-retrieval gap. This hook auto-cleans MERGED branches; nothing
+  //     flagged UNMERGED ones, so stranded quest work (phase-1 close commits, built
+  //     Powers) sat unretrieved for days (QA-267382: 6 branches). For every NON-merged
+  //     claude/* branch (excluding the current one), count commits NOT on main by
+  //     patch-id (git cherry "+"); surface the list to stderr. Surface-ONLY — never
+  //     auto-merges/deletes unmerged work (content-guard); /worktree-retrieve acts.
+  try {
+    const rawLines = (run('git branch --list "claude/*"') || '').split('\n').filter(Boolean);
+    const stranded = [];
+    for (const raw of rawLines) {
+      const checkedOut = /^[*+]/.test(raw.trim());          // * = this worktree · + = another worktree → active, skip
+      const b = raw.trim().replace(/^[*+]\s*/, '');
+      if (checkedOut || mergedBranches.includes(b)) continue;
+      const cherry = run(`git cherry main "${b}"`) || '';
+      const ahead = cherry.split('\n').filter(l => l.startsWith('+ ')).length;
+      if (ahead > 0) stranded.push(`${b} (+${ahead} unmerged)`);
+    }
+    if (stranded.length > 0) {
+      process.stderr.write(`⚠️ STRANDED WORKTREE WORK — ${stranded.length} unmerged claude/* branch(es) with commits NOT on main:\n   ${stranded.join('\n   ')}\n   → run /worktree-retrieve to survey + salvage to main, or delete if superseded.\n`);
+    }
+  } catch (e) {
+    process.stderr.write(`worktree-cleanup-boot stranded-surfacer: ${e.message}\n`);
+  }
+
   if (mergedBranches.length === 0) process.exit(0);
   const mergedSet = new Set(mergedBranches);
 
