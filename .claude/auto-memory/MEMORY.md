@@ -16,6 +16,7 @@
 - [feedback_knowledgebase_tiers.md](feedback_knowledgebase_tiers.md) — Remind みや when second-tier info should be saved to knowledgebase; don't skip silently
 - [feedback_investigation_style.md](feedback_investigation_style.md) — Reasoning/chain-of-thought goes at the END as a tracing summary, not inline mid-explanation
 - [feedback_verify_before_claim.md](feedback_verify_before_claim.md) — Re-read code before asserting; hold positions backed by line evidence; one passing test is inconclusive
+- [feedback_measure_before_verdict.md](feedback_measure_before_verdict.md) — Never call output "low-res"/"compressed" from a guess; measure (DPI=px÷inches) or reproduce; みや's rendered screenshot is ground truth
 - [feedback_knowledgebase_during_debug.md](feedback_knowledgebase_during_debug.md) — Every debug/scan session must produce knowledgebase entries + consider retrieval improvements
 - [feedback_daily_commit.md](feedback_daily_commit.md) — MemoryCore: commit+push+merge is DEFAULT (auto, never re-ask — git history is the undo, per みや 2026-06-20); etanah ticket commits stay gated
 - [feedback_check_archives.md](feedback_check_archives.md) — Always check archive folders for past tickets/projects/quests before asking

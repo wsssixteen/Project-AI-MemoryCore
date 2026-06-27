@@ -1,34 +1,25 @@
 # Current Session
 
 ## What's loaded
-2026-06-26 — Opus 4.8, worktree `musing-leakey-e9d464`. Long, fraught session on **QA-267382 (eSOKONGAN — PLPS Surat Jabatan Teknikal)**. I traced the pelan deeply and built 3 defenders — but I **repeatedly over-claimed root causes that the data then refuted**, and ended by backtracking to a framing みや had already rejected. みや ended the session angry; reset + DE requested, fresh start next.
+2026-06-27 — Opus 4.8, worktree `elated-wright-f10139`. **Worktree-retrieval + skill-mining session.** Consolidated stranded work from 6 unmerged session-branches into main, then mined the retrieved learnings for quest-improvement skill candidates.
 
-## ▶▶ NEXT SESSION — START HERE: QA-267382 (RE-ANCHOR — do NOT re-assert "resize")
+## ▶▶ NEXT SESSION — START HERE
 
-### Honest state (per みや's + BA's exact words, NOT my theories)
-- **BA symptom (GROUND TRUTH):** "Tarik pelan yang salah — expected papar pelan yang public upload" + footer/header/page-number items #1–#4.
-- **VERIFIED (data):** the pelan **SOURCE is correct** — the surat reads the public's actual upload. `skg_dok`: under `UMM_A_DOK_KMSKN` + the LMP_PLN kemasukan id, exactly ONE row = the public's doc (helsa /2026/3 → 331868 → `PELAN LOKASI TANAH.jpg`; syafiq pra-2686 → app 2892713 → 273525 → his pdf). **No get(0) mispick, no orphan, no migration defect — every hypothesis I floated was refuted by data.**
-- **CONTESTED / UNRESOLVED — the actual pelan root cause.** Aaron said "right plan, resized incorrectly" (`PelupusanWordCCMethodConstant.populatePelanAsalImageMLK():19122` hardcoded 525×500). **みや REJECTED the resize framing.** I wrongly backtracked to resize at the end → みや furious. **DO NOT re-assert resize. Ask みや what HE believes the issue is before theorizing.**
-- **#1–#4 (footer/header/page-numbers):** みや handling (Word/render). Finding: `TemplateSuratJabatanTeknikal.docx` is structurally correct (titlePg · `idPermohonan` in default header · `PAGE` in default footer); #2/#3/#4 likely FO/titlePg render (`Docx4J.save FLAG_EXPORT_PREFER_XSL`).
+### Just done this session (worktree retrieval → main)
+- **QA-267382 is CLOSED** (the 06-26 `current-session.md` was a stale, mid-frustration draft that wrongly said "re-anchor / don't assert resize"). Phase-1 fix shipped `05e631671e` on `mlk/esokongan/267382` (pelan JBIG2 decoder + footer/render). Retrieved the close + 2 new CLAUDE rules from `claude/nostalgic-stonebraker-37a8b1`.
+- **2 new CLAUDE.md v1.53 rules** retrieved to main:
+  - 🧩 **Structured-Separated Problem / Cause / Fix** labeled lines (`Cause:` / `Fix:`, chains joined by ` > `) — §2.
+  - 🌿 **General branch derive-rule** `mlk/<tracker-lowercased>/<num>` (ESOKONGAN→`mlk/esokongan/`) — commit-conventions.md v1.2.
+- **3 anti-slip Powers brought to main as FILES (NOT registered)** from `claude/unruffled-merkle-53d900`: `domain/attachment-context/`, `domain/verify-basis-gate/`, `domain/terse-gate/`. Eval-for-overlap (vs show-gate) pending before live registration — みや's call.
+- **4 superseded branches deleted** (content already on main): eloquent-euler, charming-jones, great-cori, gallant-tharp. `unruffled-merkle` KEPT (holds #239386 MPT detail).
 
-### Built this session (activate next restart)
-- **3 defenders** (routed through system-design + system-rules): `ba-understanding-table` Power (Stop hook — pre-Phase-0 `BA said | my understanding` table) · `veritas-claim-gate` CHECK 3 (symptom-downgrade advisory) · `auto-skill-on-mistake` Step 5.5 (skill-card `name|solves|how` mandate). node --check PASS, registered.
-- **Staging DB MCP** `postgres-mlkstg` added to `~/.claude.json` (`postgresql://et_main_stg1:etanah123@172.30.12.202:5444/mlkstg`).
-- **PROPOSED, NOT built — BUILD NEXT:** `template-trace-structure` hook. みや wants MANDATORY order: template → CC tag → `PelupusanWordCCMethodConstant` → method → urusan branch → `retrieveImageByte`, AND a **class name on EVERY `file:line`** (recurring slip: "you show lines but forget which class").
+### STILL PENDING — #239386 MPT (Requirement, multi-session, ~75%)
+Freshest state lives in `claude/unruffled-merkle-53d900:main/current-session.md` (06-25). Chalk-back rule cracks L7-L10; NPE already fixed by Aaron (deploy lag); buttons/view-only = base classes. Remaining: redeploy UAT → run Patch.sql Section C → re-test L7-L10 → confirm PSBS/O* with Aaron. Task folder `79.`.
 
-### Key DB schema learned (→ DATABASE.md gap-sweep)
-- **`skg_dok` = the Document entity table** (NOT a separate unreachable DMS datasource — only file BYTES are in DMS via `id_dok`). Cols: `dok_id, medan_id, medan_pk_id, a_dok_kmskn_id, a_dok_keluaran_id, versi_dok, flag_aktif, flag_draf, id_dok, jns_fail, nama_fail, sumber_id`.
-- **Doc chain:** `umm_p_aplikasi` (PraAplikasi) → `umm_p_smkn` (PraSemakan, `_p_`=AWAM) → `skg_dok` (medan=`UMM_P_SMKN`, medan_pk_id=`p_smkn_id`) → [submit: `PelupusanSpocService.populateDocumentList():1367` re-links medan→`UMM_A_DOK_KMSKN`, medan_pk_id→`a_dok_kmskn_id`] → `umm_a_dok_kmskn` → surat reads `skg_dok` by (`UMM_A_DOK_KMSKN`, `a_dok_kmskn_id`).
-- **medan codes** (`rjk_senarai_ahli_kumpulan`): 1131=`UMM_A_DOK_KELUARAN`, 1149=`UMM_A_DOK_KMSKN`.
-- **MIGRATOR docs** (`MIGRATOR_L_VDOC`/`MIGRATOR_CON`) sit under `UMM_A_DOK_KELUARAN` — NOT the surat's read medan.
-
-### #239386 MPT — STILL PENDING (prior session, untouched today)
-Redeploy UAT → run Section C → re-test L7-L10 → confirm PSBS/O* with Aaron. ~75%. Task folder `79.`.
-
-### Process lesson (me)
-Textbook over-claim spiral: I asserted "there's an issue" (resize → wrong-source → get(0)-mispick → orphan-doc) across ~10 turns, each refuted by the next evidence, never concluding "no issue / I don't know." みや: *"you said there's an issue without being clear about it."* Re-anchor to ground truth + みや's read BEFORE theorizing.
+### Goal 2 (this session) — skill candidates for quest improvement
+See the session's chat emit. Candidates surfaced from the retrieved Powers + conventions (terse-gate/verify-basis-gate overlap audit, Problem/Cause/Fix as a skill-or-rule, esokongan branch auto-derive, worktree-retrieval-as-a-skill). Decide build/skip next.
 
 ## 🎯 Session Recap (for AI restart)
-QA-267382 PLPS Surat JT. Pelan source VERIFIED correct (`skg_dok`). Root cause CONTESTED — Aaron=resize, みや REJECTED resize, unresolved. I over-claimed repeatedly + rabbit-holed; みや ended angry, wants fresh start. Built 3 hooks + staging MCP. `template-trace-structure` hook + class-naming = build next. **Re-anchor to BA's exact words + ask みや's read before theorizing — do NOT re-assert resize.** #239386 MPT still pending.
+Retrieved all stranded worktree work into main: QA-267382 **closed** (fix `05e631671e`) + 2 CLAUDE v1.53 rules + 3 Power files (held for overlap-eval). 4 dead branches pruned; `unruffled-merkle` kept for #239386. #239386 MPT still ~75% pending. Goal 2 = skill-mining the retrieved learnings (in progress).
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-26 11:47 — DE close (Opus 4.8, musing-leakey worktree).
+**Memory Type**: RAM | **Last Activity**: 2026-06-27 — worktree retrieval to main (Opus 4.8, elated-wright worktree).
