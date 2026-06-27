@@ -133,6 +133,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\codemap-recon-consult\\codemap-recon-consult.trigger.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\attachment-context\\attachment-context.trigger.hook.js\""
           }
         ]
       }
@@ -268,6 +272,14 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\ba-understanding-table\\ba-understanding-table.discipline.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\terse-gate\\terse-gate.discipline.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\verify-basis-gate\\verify-basis-gate.discipline.hook.js\""
           }
         ]
       }
