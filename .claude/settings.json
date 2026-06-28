@@ -215,6 +215,10 @@
           },
           {
             "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\quest-doc-freshness\\quest-doc-freshness.discipline.hook.js\""
+          },
+          {
+            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\operational-follow-through.js\""
           },
           {

@@ -133,6 +133,8 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 
 > **Power: checklist-reactivate** (2026-06-28) — NOT a SessionStart hook. Resumability TRIO: `/checklist` persists `## Next-Steps Checklist` in the qa_doc → `domain/checklist-reactivate/checklist-show.js <QA>` (reactivate) at `/quest resume` → `domain/checklist-reactivate/resume-readiness.js [QA]` (VERIFY — deterministic cold-resume check) at `/quest hold` + DE Step 12.6. Boot stays lean (/system-design Rule 8 trigger-timing). Replaces the ad-hoc familiar cold-resume test.
 
+> **Power: quest-doc-freshness** (2026-06-28) — Stop hook `domain/quest-doc-freshness/quest-doc-freshness.discipline.hook.js`. After each reply during an `active` quest, flags if the reply looks state-changing but the qa_doc wasn't written this turn → nudge to spawn a familiar to persist. The deterministic trigger for the QA-NNNN.md "save after every stop" rule; REPORT-ONLY; detect(hook)→write(familiar). Same save-gap class as resume-readiness, caught DURING the work.
+
 ### 3.2 UserPromptSubmit (17 hooks)
 
 | Hook | Owner | Watches user prompt for | Injects | Stakeholders | Change-impact |
