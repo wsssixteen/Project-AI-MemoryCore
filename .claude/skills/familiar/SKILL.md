@@ -29,12 +29,12 @@ I use the Agent tool with subagent_type="Explore" for codebase reading tasks.
 
 Pass `model` explicitly — an omitted model inherits the session's most expensive one (Opus), which silently defeats tiering.
 
-| Familiar's job | Model | Output status |
+| Familiar's job | Model | What I do with its output |
 |---|---|---|
-| Retrieval / large-file read / transcription — raw quotes, no judgment | `haiku` (cheap) | enters as **HYPOTHESIS** — Recon must re-verify |
-| Scout class-chain TRACE · adversarial Recon · Rubric option-pick | capable (inherit / `opus`) | judgment work — **never** tier down |
+| Retrieval ONLY — large-file read / verbatim quotes / codegraph-grep results / transcription | `haiku` (cheap) | raw/**UNVERIFIED data** — Haiku makes NO judgment; **I** (capable) form + re-verify any conclusion from it before trusting it |
+| Scout class-chain TRACE · adversarial Recon · Rubric option-pick — all judgment | capable (inherit / `opus`) | the decisions live here — **never** tier down |
 
-**Banned:** a cheap-tier familiar emitting a conclusion as VERIFIED, or owning the Scout-trace / Recon / Rubric judgment. Cheap = retrieve raw; capable = judge.
+**Banned:** giving a cheap familiar ANY decision — picking a root cause, classifying tugasan/scope, forming a conclusion, or tagging anything VERIFIED. Cheap = **fetch raw bytes**; capable = **judge**. The "unverified" status is the controller's trust-tag on the raw data, not a task the cheap model performs.
 
 ### Bulk file-handoff (added 2026-06-28 — superpowers v6 file-handoff)
 
