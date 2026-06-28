@@ -81,9 +81,10 @@ Only proceed to Phase 1 after explicit confirmation.
    - If `<QA-number>` arg supplied: match that specific entry
    - If no arg: pick the single quest with `status=active` (error if 0 or >1 active)
 2. Update state: `status=hold`; append `held_reason=<date+time> — <context + みや's stated intent>`
-3. **Write a "Resume Point" block into `QA-<NNN>.md`** — section `## 0. Resume Point` at the top of the doc. Must cover: current phase, what IS done, what is NOT done, open decisions, first-step-on-resume, and any みや-stated intent (e.g. "wants a fresh re-read from start"). The chat summary evaporates; `QA-<NNN>.md` is the durable home the next-session briefing reads.
-4. Summarise where we left off in one paragraph
-5. Confirm: "Quest <QA-number> is on hold. Run `/quest resume [<QA-number>]` to return to it."
+3. **Write a "Resume Point" block into `QA-<NNN>.md`** — section `## 0. Resume Point` at the top of the doc. Must cover: current phase, what IS done, what is NOT done, open decisions, first-step-on-resume, and any みや-stated intent. **🆕 COLD-READER SELF-CONTAINMENT (2026-06-28)**: write it for a session with ZERO context — every reference must resolve cold. Include: test permohonan ID + login (`test-data-echo`), **FULL file paths not tail-fragments** (`MlkPengiraanBayaranLesenForm.xhtml:33`, NOT `L8:33` — `feedback_full_names`), branch + env, the exact next action, and the build/deploy step. The curse-of-knowledge trap: anything still live in this session's memory feels resolved to you but is MISSING to the cold reader.
+4. **Verify cold-resumability** — run `node domain/checklist-reactivate/resume-readiness.js <QA>`; fill any `✗` row in the qa_doc BEFORE confirming the hold (deterministic check — replaces the ad-hoc familiar cold-resume test).
+5. Summarise where we left off in one paragraph
+6. Confirm: "Quest <QA-number> is on hold. Run `/quest resume [<QA-number>]` to return to it."
 
 ---
 
@@ -93,7 +94,8 @@ Only proceed to Phase 1 after explicit confirmation.
    - If `<QA-number>` arg supplied: match that specific held entry
    - If no arg: pick the single quest with `status=hold` (error if 0 or >1 held)
 2. Restore context — read `QA-<NNN>.md` (the **`## Ticket Summary` block FIRST** — created at retrieval, always exists, rebinds you to what the ticket is about; THEN the `## 0. Resume Point` block), then the rest of the doc top-to-bottom (Discovery → Debugging → Code-Review → Apply etc. — single canonical doc means no sibling files to chase). **Reading `## Ticket Summary` on resume is MANDATORY** — it is the binding anchor that stops a quest being resumed without re-understanding it.
-3. Confirm: "Resuming Quest <QA-number>. Last state: [Resume Point summary]."
+3. **Surface the live checklist** — run `node domain/checklist-reactivate/checklist-show.js <QA>` to print the persisted `## Next-Steps Checklist` open rows (the *reactivate* half of the checklist-reactivate Power; `/checklist` is the *persist* half). Fires HERE at resume, NOT at SessionStart — boot stays lean (open-quest-surfacer already gives boot awareness).
+4. Confirm: "Resuming Quest <QA-number>. Last state: [Resume Point summary] · <N> open checklist items."
 
 ---
 

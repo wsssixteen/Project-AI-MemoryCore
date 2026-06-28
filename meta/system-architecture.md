@@ -131,6 +131,8 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | `system-check-trigger.js` | self | 30-day system-check elapsed | reminder | system-check skill | Similar to evolution-check |
 | `open-quest-surfacer.js` | self | `quest/active.txt` entries with status ∈ {active, hold, blocked, delegated} | "📌 OPEN QUESTS" list at boot | Quest workflow resumption | Status-enum changes (INV-3) require this hook update |
 
+> **Power: checklist-reactivate** (2026-06-28) — NOT a SessionStart hook. Resumability TRIO: `/checklist` persists `## Next-Steps Checklist` in the qa_doc → `domain/checklist-reactivate/checklist-show.js <QA>` (reactivate) at `/quest resume` → `domain/checklist-reactivate/resume-readiness.js [QA]` (VERIFY — deterministic cold-resume check) at `/quest hold` + DE Step 12.6. Boot stays lean (/system-design Rule 8 trigger-timing). Replaces the ad-hoc familiar cold-resume test.
+
 ### 3.2 UserPromptSubmit (17 hooks)
 
 | Hook | Owner | Watches user prompt for | Injects | Stakeholders | Change-impact |

@@ -58,6 +58,8 @@ Components fade if unused. Periodic audit (per /system-rules Rule 3): check hook
 
 7. **Pick the primitive — hook-only / skill-only / hook+skill / full trinity** — justify the chosen layer. Don't ship full trinity when hook-only suffices (premature ceremony per /system-rules Rule 4 "start simple"). Add layers when evidence demands.
 
+8. **Specify the trigger MOMENT — fire at the precise point of need, not the broadest event** (みや 2026-06-28). Every Power's design MUST name WHEN/WHERE it fires and justify it is the LEANEST trigger that catches the need. SessionStart + every-UserPromptSubmit are the broadest, highest-bloat events — default to a NARROWER trigger (a specific skill step like `/quest resume`, or a UserPromptSubmit guarded by a tight predicate) unless the behaviour genuinely must run every boot/turn. **Test**: "would this be just as effective firing only at the moment X actually happens?" → if yes, trigger at X, not at boot. **Why**: checklist-reactivate first shipped as a SessionStart hook → dumped every quest's checklist at every boot = bloat; the right trigger was `/quest resume` (the moment you re-engage a ticket). Complements Rule 7 — Rule 7 picks the LAYER, this picks the TIMING.
+
 ## Bloat-prevention default
 
 When refining any `/skill` or CLAUDE.md content: apply `/system-rules` Rule 2 (merge in place). The `claude-md-edit-guard.js` hook enforces this deterministically on edits to CLAUDE.md / /system-rules / /system-design.

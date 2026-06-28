@@ -154,6 +154,16 @@ After Step 12's `/verify` Checklist D goes green, run a **meta-audit** pass befo
 
 ---
 
+## Step 12.6 — Resume-readiness sweep (added 2026-06-28 per みや)
+
+Before the closing banner, run `node domain/checklist-reactivate/resume-readiness.js` (no arg = all open quests). It deterministically checks every open quest's `qa_doc` is **cold-resume-complete** — active.txt fields + Resume Point + test permohonan ID + login + Next-Steps Checklist + full file path + build/deploy step. Any `✗` or `🔴 unreadable` → fill the qa_doc gap BEFORE close, OR surface it in the Handoff Block (Step 13) if it can't be filled this session.
+
+**Why** (みや 2026-06-28): a familiar cold-resume test found 3 gaps in a saved qa_doc (no test-app ID, abbreviated `L8:33` paths, no build step) — the curse-of-knowledge: the doc was written for a context-sharing reader, not a cold one. DE previously had NO qa_doc resume-check, so those gaps would survive session-end untouched. This sweep is the standing fix — the familiar cold-resume test as a deterministic gate. Third leg of the resumability trio: `/checklist` persists → `checklist-show.js` reactivates → `resume-readiness.js` verifies.
+
+**Banned:** declaring DE closed with an open quest's qa_doc carrying unfilled `✗` resume-gaps + no Handoff note.
+
+---
+
 ## Step 13 — Handoff Block — tiered (added 2026-05-24 evening; tiered 2026-05-26 after session-end overload slip)
 
 **Default is SILENCE.** A PARTIAL ⚠ step does NOT automatically warrant a Handoff Block. The criterion is *blocked work or stranded state* — not *anything that could be cleaner*.
