@@ -238,6 +238,11 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 
 **Total hook count after Phase 5 Stage 5A**: 40 unique files / 41 registrations (added `scout-completeness-gate.js` to UserPromptSubmit).
 
+### 3.11 Changes 2026-06-28 (superpowers v6.0.3 upgrade + quest orchestration integration — みや GO)
+- ✅ **superpowers upgraded 5.1.0 → 6.0.3** via `claude plugin update` (restart-required to load). v6 = SDD single task-reviewer (~50% fewer tokens), vendor-neutral vocabulary, plans Global-Constraints/Interfaces, `.superpowers/sdd/` scratch paths. No skill renamed/removed.
+- ✅ **Quest orchestration integration** (skill/protocol layer, **NO new hooks** — promote-on-observed-slip per /system-design Rule 7; building a hook in a worktree would hit the 2026-06-20 ghost-hook trap). Eval baseline: `wf_a90c9945` (3 closed quests, adversarially verified — the verify pass caught its own fabricated token %; net = tokens saved-but-unmeasured, speed marginal, **accuracy SAME only with guards**). (a) `.claude/skills/familiar/SKILL.md` — model-tiering (`haiku` retrieval = HYPOTHESIS; capable for Scout-trace/Recon/Rubric) + bulk file-handoff to scratchpad. (b) `quest/quest-protocol.md` Phase-1 Execute — "Subagent orchestration" subsection (#1 file-handoff bulk-only · #2 tiering · #3 one-dispatch-N-emits · failure/rollback · Phase-1 sequential fence · KEEP Recon + #7-rejection). (c) `domain/terse-gate/README.md` — #6 ≤1-line inter-tool narration folded in (not a new rule).
+- ⚠️ **Pending みや**: CLAUDE.md boot-summary pointer + version bump (edit-blocked for Ruri); session restart to load 6.0.3.
+
 ---
 
 ## 4. Skill catalog — every skill, invocation trigger, stakeholders

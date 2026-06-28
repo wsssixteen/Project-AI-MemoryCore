@@ -681,6 +681,23 @@ Stashed: YES/NO — describe if yes
 - Note files involved and whether compilation is required
 - Do not wrap up until explicitly asked
 
+### Subagent orchestration — superpowers v6.0.3 integration (added 2026-06-28 per みや, eval `wf_a90c9945`)
+
+Four orchestration techniques borrowed from superpowers SDD, each SCOPED so it never collides with the forced-phase-emit / show-gate / veritas audit surface. **Promotion path**: these ship at skill/protocol layer (~80%); the FIRST observed slip on any one promotes it to a registered hook (per `system-design` "promote on observed slip, not pre-emptively"). Eval baseline + the safe-scope reasoning: `wf_a90c9945` (3 closed quests, adversarially verified).
+
+| # | Technique | Rule | Scope-fence (the Banned) |
+|---|---|---|---|
+| #1 | **File-handoff** | bulk artifacts (>500-line familiar reads, Phase-1 `git diff` dumps) → familiar writes a scratchpad file, controller holds path + 1-line status (wired in `.claude/skills/familiar/SKILL.md`). | NEVER move a gated audit emit (Scout/Recon/Rubric/sibling-diff/RCRL/SD) to a file — show-gate/veritas/quest-phase-gate scan the transcript; a file-only emit starves them. Scratchpad ONLY, never confidential main-tree paths (absent in worktrees). No new manifest — status → existing active.txt block. |
+| #2 | **Model-tiering** | cheap (`haiku`) familiars for retrieval; capable for Scout-trace/Recon/Rubric (wired in `familiar/SKILL.md`). | cheap output enters as HYPOTHESIS; a cheap model NEVER owns judgment — the QA-260139 paraphrase-a-dispatch-table slip is exactly what a cheap Scout commits, and there is NO unit-test backstop (みや's manual test is the gate). |
+| #3 | **One-fixer** | if Apply dispatches a fix subagent, ONE dispatch carries the COMPLETE findings list — not one fixer per finding. | the one fixer STILL emits the per-file sibling-diff line + in-file-convention grep PER FILE it touches (one dispatch, N audit emits), carrying PRESERVATION + DEAD-BRANCH-AUDIT + minimal-diff verbatim. **Gate behind no-behavioural-surprise**: a surprising test demotes to Scout/Recon (Rework-restart), never fan out more forward fixes. |
+| #6 | **Terse narration** | ≤1 line between tool calls — folded into the `terse-gate` Power, NOT a new rule. | the ≤1-line rule is for mechanical inter-tool chatter; gated audit emits + §2 explanation-flow are EXEMPT. |
+
+**Failure / rollback paths**: cheap-tier familiar errors → retry on capable tier · handoff file missing/stale → STOP + surface (never silent re-read) · partial one-fixer batch → revert-all-or-none. Hook into the Momentum Circuit-Breaker (restart-at-Scout).
+
+**Phase-1 fence**: #2 parallel familiars + #3 one-fixer are **Phase-0 / Apply tools ONLY** — the Phase-1 close-out stays strictly sequential per the order-of-operations rule (line 306).
+
+**KEEP (non-negotiable)**: adversarial Recon ("distrust the Scout, prove it WRONG") + the rejection of superpowers' single-reviewer collapse (#7). Coupled to #2 — Recon is irreducible judgment, never tier it down.
+
 ### 🎯 Error-symptom root cause — trace from the ERROR, not the theme (HARD RULE, added 2026-06-19 per みや, QA-266215 misdiagnosis)
 
 **When the symptom is an error / blocker / "ralat → tak boleh proceed":** the BA's words describe the SCENARIO, not the failing check. Picking the validation whose NAME matches the symptom's vocabulary is how QA-266215 went wrong — I grabbed `onCheckingMaklumatKetuanpunyaanHakmilik` because the scenario said "owner/ketuanpunyaan"; the REAL cause was a **syer-kepentingan validation** firing when `viewSyerKepentingan=false` (Vincent `fc6f6d4ba6`). Before naming a root cause for an error-symptom, run this 4-step:

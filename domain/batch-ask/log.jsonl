@@ -59,3 +59,6 @@
 {"ts":"2026-06-16T07:15:38.288Z","prompt_excerpt":"I tried saving using \"Simpan\", now all the documents are missing."}
 {"ts":"2026-06-16T10:34:51.483Z","prompt_excerpt":"1. [[update=\"#{cc.attrs.helperForm.viewCukaiPanel ? 'kadar-cukai-tanah-togglePanel, :msgs' : ':msgs'}\"]] - I only understand the rough logic of your code change"}
 {"ts":"2026-06-21T16:54:04.999Z","prompt_excerpt":"1. Please build \"/scan\", then advice where it typically runs, when to use it. Also, importantly since we do not want to make unnecessary changes, THIS is eactly"}
+{"ts":"2026-06-28T05:50:13.444Z","prompt_excerpt":"/goal Check our \"/superpowers\" skill, check if we've updated to the latest version. Then explain to me in depth. Then perform a /deep-research where applicable "}
+{"ts":"2026-06-28T06:26:13.009Z","prompt_excerpt":"1. Explain further about #1 file-handoff.\n2. Keep recon, we need adversarial right? Please confirm.\n3. Agreed on 7. \n4. Please run a double check & analysis on "}
+{"ts":"2026-06-28T06:38:53.405Z","prompt_excerpt":"<task-notification>\n<task-id>wmyasuwee</task-id>\n<tool-use-id>toolu_01PY8crDS8KK1Fm1cuRCt26E</tool-use-id>\n<output-file>C:\\Users\\Ridhwan\\AppData\\Local\\Temp\\clau"}

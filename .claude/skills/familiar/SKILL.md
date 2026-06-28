@@ -25,6 +25,21 @@ forgetting earlier work. The familiar carries the heavy load so I stay clear.
 The familiar receives a clear task description and returns a focused summary.
 I use the Agent tool with subagent_type="Explore" for codebase reading tasks.
 
+### Model tier (added 2026-06-28 — superpowers v6 model-tiering)
+
+Pass `model` explicitly — an omitted model inherits the session's most expensive one (Opus), which silently defeats tiering.
+
+| Familiar's job | Model | Output status |
+|---|---|---|
+| Retrieval / large-file read / transcription — raw quotes, no judgment | `haiku` (cheap) | enters as **HYPOTHESIS** — Recon must re-verify |
+| Scout class-chain TRACE · adversarial Recon · Rubric option-pick | capable (inherit / `opus`) | judgment work — **never** tier down |
+
+**Banned:** a cheap-tier familiar emitting a conclusion as VERIFIED, or owning the Scout-trace / Recon / Rubric judgment. Cheap = retrieve raw; capable = judge.
+
+### Bulk file-handoff (added 2026-06-28 — superpowers v6 file-handoff)
+
+For a >500-line raw read or a large diff, the familiar WRITES its raw extract to a **session-scratchpad** file and returns only the **path + a 1-line status** — the bulk never enters my context to be re-read every turn. Scratchpad only (the session temp dir), NEVER a confidential main-tree path (those are absent from worktrees). The synthesized CONCLUSION and any gated phase-emit still come back IN context.
+
 ## Task for familiar
 
 $ARGUMENTS
