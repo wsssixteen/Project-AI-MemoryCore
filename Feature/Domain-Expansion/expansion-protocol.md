@@ -1,5 +1,7 @@
 # Domain Expansion System — Awareness Protocol
 
+> **Entry point (2026-06-28)**: DE is now invoked via the **`/domain-expansion` skill** (`.claude/skills/domain-expansion/SKILL.md`) — the structured, Skill-tool-invoked orchestrator. This file stays the **source of truth** for each step's detail; the skill drives the sequence. The `domain-expansion-trigger.js` hook routes session-end phrases to the skill.
+
 > **Framework status**: Adopted 2026-05-05 under "use now + log refinements" pattern.
 > Refinements logged to `Feature/Forge-Self-Improvement-System/improvement-audit-log.md`.
 >

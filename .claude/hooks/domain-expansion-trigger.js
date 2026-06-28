@@ -78,9 +78,9 @@ process.stdin.on('end', () => {
 
     const context = [
       '',
-      '⚙️  domain-expansion-trigger: session-end signal detected → FIRE DE ritual',
+      '⚙️  domain-expansion-trigger: session-end signal detected → INVOKE the /domain-expansion skill (Skill tool). That IS the ritual — the skill drives the full sequence (Step 0 banner → 13, incl 12.5 meta-audit + 12.6 resume-readiness). Do NOT freelance the steps inline.',
       '',
-      'Mandatory DE 12-step sequence per expansion-protocol.md:',
+      'The banner + step list below are the canonical reference the skill emits (kept here so the sacred banner can never be reconstructed from memory):',
       '',
       '(0) MANDATORY FIRST: emit the DE opening banner EXACTLY as the canonical text below — COPY it verbatim, do NOT reconstruct from memory or invent variants. The name is sacred (per feedback_domain_expansion_format.md); 蒼穹/Sōkyū/瑠璃-kanji/ドメイン展開 variants are CONFABULATIONS, never canon.',
       '',
