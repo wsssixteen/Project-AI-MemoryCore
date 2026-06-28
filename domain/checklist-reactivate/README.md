@@ -7,11 +7,12 @@
 ## What it does
 Surfaces the **persisted Next-Steps Checklist** of a quest at the moment you resume it, so a continued session immediately sees "what's next" instead of re-deriving it item-by-item.
 
-## The two halves (a combination)
-| Half | Component | Role |
+## The resumability trio
+| Leg | Component | Role |
 |---|---|---|
 | **Persist** | `/checklist` skill | writes + maintains a `## Next-Steps Checklist` table inside each task's qa_doc (`projects/coding-projects/active/<KEY>/<KEY>.md`) |
-| **Reactivate** | this CLI | READS that section + prints the still-open rows when invoked at `/quest resume` |
+| **Reactivate** | `checklist-show.js` | READS that section + prints the still-open rows when invoked at `/quest resume` |
+| **Verify** | `resume-readiness.js` | deterministic **cold-resume check** — flags any open quest whose qa_doc can't be resumed with ZERO context (missing test-app ID, abbreviated paths, no build step, etc.). Runs at `/quest hold` + DE Step 12.6 — replaces the ad-hoc familiar cold-resume test. |
 
 ## Contract
 - **Invoked**: by the `/quest` skill's resume step → `node domain/checklist-reactivate/checklist-show.js <QA>` (optional QA arg; no arg = all open quests).
@@ -19,8 +20,9 @@ Surfaces the **persisted Next-Steps Checklist** of a quest at the moment you res
 - **Graceful**: prints "No persisted Next-Steps Checklist" when the quest has none.
 
 ## Files
-- `checklist-show.js` — the quest-resume CLI
-- `log.jsonl` — one `{ts, via, filter, quests, items}` line per run (system-rules Rule 5)
+- `checklist-show.js` — the quest-resume CLI (reactivate leg)
+- `resume-readiness.js` — the cold-resume verifier (verify leg); `node resume-readiness.js [QA]`
+- `log.jsonl` — one line per run (`via` field distinguishes the two), system-rules Rule 5
 
 ## Inventory note (system-rules Rule 1)
 Complements `open-quest-surfacer.js` (boot one-liner per open quest) — does NOT duplicate it; this adds the checklist depth, on demand at resume.
