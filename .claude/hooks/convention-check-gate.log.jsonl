@@ -2,3 +2,4 @@
 {"ts":"2026-06-19T03:53:41.031Z","action":"allowed","detail":"E:\\X\\Foo.java"}
 {"ts":"2026-06-19T03:53:41.122Z","action":"allowed","detail":"E:\\X\\Foo.java"}
 {"ts":"2026-06-19T03:53:41.207Z","action":"fail-open","detail":"E:\\X\\Foo.java"}
+{"ts":"2026-06-28T06:12:28.351Z","action":"advisory","detail":"sql"}

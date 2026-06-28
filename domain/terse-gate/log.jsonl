@@ -24,3 +24,9 @@
 {"ts":"2026-06-25T04:07:04.883Z","action":"blocked","heavy":7}
 {"ts":"2026-06-25T06:14:14.927Z","action":"passed","heavy":1}
 {"ts":"2026-06-25T06:26:30.979Z","action":"passed","heavy":2}
+{"ts":"2026-06-28T05:34:02.900Z","action":"passed","heavy":1}
+{"ts":"2026-06-28T05:54:01.169Z","action":"passed","heavy":1}
+{"ts":"2026-06-28T05:57:02.459Z","action":"passed","heavy":5}
+{"ts":"2026-06-28T06:15:27.456Z","action":"passed","heavy":4}
+{"ts":"2026-06-28T06:31:30.262Z","action":"passed","heavy":1}
+{"ts":"2026-06-28T06:40:59.687Z","action":"passed","heavy":4}
