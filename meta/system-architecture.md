@@ -135,6 +135,8 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 
 > **Power: quest-doc-freshness** (2026-06-28) — Stop hook `domain/quest-doc-freshness/quest-doc-freshness.discipline.hook.js`. After each reply during an `active` quest, flags if the reply looks state-changing but the qa_doc wasn't written this turn → nudge to spawn a familiar to persist. The deterministic trigger for the QA-NNNN.md "save after every stop" rule; REPORT-ONLY; detect(hook)→write(familiar). Same save-gap class as resume-readiness, caught DURING the work.
 
+> **Skill: domain-expansion** (2026-06-28) — DE is now a Skill-tool-invoked orchestrator (`.claude/skills/domain-expansion/SKILL.md`), not just a protocol + trigger-hook. `domain-expansion-trigger.js` routes session-end phrases → invoke the skill (no longer freelances steps inline). Detail stays in `expansion-protocol.md` (source of truth). Raises DE execution from model-driven (freelance-able) → skill-invoked (the skill-invocation-discipline gate enforces actual invocation).
+
 ### 3.2 UserPromptSubmit (17 hooks)
 
 | Hook | Owner | Watches user prompt for | Injects | Stakeholders | Change-impact |
