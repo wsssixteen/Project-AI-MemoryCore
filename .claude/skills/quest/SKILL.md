@@ -93,7 +93,8 @@ Only proceed to Phase 1 after explicit confirmation.
    - If `<QA-number>` arg supplied: match that specific held entry
    - If no arg: pick the single quest with `status=hold` (error if 0 or >1 held)
 2. Restore context — read `QA-<NNN>.md` (the **`## Ticket Summary` block FIRST** — created at retrieval, always exists, rebinds you to what the ticket is about; THEN the `## 0. Resume Point` block), then the rest of the doc top-to-bottom (Discovery → Debugging → Code-Review → Apply etc. — single canonical doc means no sibling files to chase). **Reading `## Ticket Summary` on resume is MANDATORY** — it is the binding anchor that stops a quest being resumed without re-understanding it.
-3. Confirm: "Resuming Quest <QA-number>. Last state: [Resume Point summary]."
+3. **Surface the live checklist** — run `node domain/checklist-reactivate/checklist-show.js <QA>` to print the persisted `## Next-Steps Checklist` open rows (the *reactivate* half of the checklist-reactivate Power; `/checklist` is the *persist* half). Fires HERE at resume, NOT at SessionStart — boot stays lean (open-quest-surfacer already gives boot awareness).
+4. Confirm: "Resuming Quest <QA-number>. Last state: [Resume Point summary] · <N> open checklist items."
 
 ---
 

@@ -119,7 +119,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | Stop | — | `veritas-claim-gate.js` | 🚨 MISSING |
 <!-- HOOK-REGISTRY:AUTO-END -->
 
-### 3.1 SessionStart (8 hooks)
+### 3.1 SessionStart (7 hooks)
 
 | Hook | Owner | Watches | Injects/Blocks | Stakeholders (downstream) | Change-impact |
 |---|---|---|---|---|---|
@@ -130,7 +130,8 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | `evolution-check-trigger.js` | self | model-ID change + 30-day evolution elapsed | reminder | evolution-protocol.md procedure | Schedule changes affect when evolution runs |
 | `system-check-trigger.js` | self | 30-day system-check elapsed | reminder | system-check skill | Similar to evolution-check |
 | `open-quest-surfacer.js` | self | `quest/active.txt` entries with status ∈ {active, hold, blocked, delegated} | "📌 OPEN QUESTS" list at boot | Quest workflow resumption | Status-enum changes (INV-3) require this hook update |
-| `domain/checklist-reactivate/checklist-reactivate.boot.hook.js` (Power, 2026-06-28) | self | open quests' qa_doc `## Next-Steps Checklist` section | "📋 ACTIVE CHECKLISTS" open-items list at boot (report-only, fail-open) | Quest resumption — cross-session checklist persistence | Pairs with `/checklist` skill (persist half); reads `qa_doc=` path |
+
+> **Power: checklist-reactivate** (2026-06-28) — NOT a SessionStart hook. CLI `domain/checklist-reactivate/checklist-show.js <QA>` invoked by the `/quest` skill at **resume** (boot stays lean). Surfaces the qa_doc `## Next-Steps Checklist` open rows. Persist half = `/checklist` skill. Rationale: /system-design Rule 8 (trigger-timing — fire at the moment of need, not the broadest event).
 
 ### 3.2 UserPromptSubmit (17 hooks)
 

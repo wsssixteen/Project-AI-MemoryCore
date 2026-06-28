@@ -34,10 +34,6 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\checklist-reactivate\\checklist-reactivate.boot.hook.js\""
-          },
-          {
-            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\hook-syntax-check.js\""
           }
         ]
