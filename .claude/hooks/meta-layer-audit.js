@@ -247,7 +247,19 @@ try {
 
 // INV-5: every ticket_type= value in active.txt is in canonical enum
 try {
-  const ENUM_TYPE = new Set(['bug', 'enhancement', 'cr', 'requirement']);
+  // 2026-06-28 (みや via Redmine tracker survey): added `bug-migration` for data drift
+  // caused by external migrator scripts (e.g. MIGRATOR_KTPN_PRU/LMS/MS_C7) — no native
+  // Redmine tracker, distinct from app-code bugs. Existing 4 buckets already cover every
+  // Redmine tracker in the e-Tanah Melaka project:
+  //   bug         ← QA · Defect · Issue · Internal Issue · App Dev Issue · *-OR family
+  //                 (FAT-OR/UAT-OR/PAT-OR/iRTFAT/etc.) · eSOKONGAN/eSOKONGAN-TRNG/-UTL/-NR
+  //                 · ePRA_SOKONGAN · Internal Issue (PROD)
+  //   enhancement ← Feature · Development
+  //   cr          ← CR family (PAT-CR/FAT-CR/UAT-CR/CF-CR/eSOKONGAN-CR/*-CRO/CR-Before-GL/
+  //                 CR-After-GL/Internal Issue (PROD-CR))
+  //   requirement ← Requirement · Requirements · Urusan · BA
+  //   bug-migration ← external-migrator data drift (NO native tracker)
+  const ENUM_TYPE = new Set(['bug', 'enhancement', 'cr', 'requirement', 'bug-migration']);
   const activeTxt = safeRead(ACTIVE_TXT);
   if (activeTxt) {
     const typeValues = [...activeTxt.matchAll(/^ticket_type=([^\s\n]+)/gm)].map(m => m[1].trim().toLowerCase());
@@ -256,7 +268,7 @@ try {
       const counts = nonCanonical.reduce((a, v) => (a[v] = (a[v] || 0) + 1, a), {});
       const parts = Object.entries(counts).map(([k, n]) => `${k}(×${n})`).join(', ');
       invFindings.push(`ℹ INV-5 (ticket_type= enum): non-canonical values: ${parts}`);
-      invFindings.push(`   → canonical: bug|enhancement|cr|requirement`);
+      invFindings.push(`   → canonical: bug|enhancement|cr|requirement|bug-migration`);
     }
   }
 } catch (e) { /* swallow */ }
