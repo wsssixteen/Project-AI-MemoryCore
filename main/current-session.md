@@ -1,25 +1,37 @@
 # Current Session
 
 ## What's loaded
-2026-06-27 — Opus 4.8, worktree `elated-wright-f10139`. **Worktree-retrieval + skill-mining session.** Consolidated stranded work from 6 unmerged session-branches into main, then mined the retrieved learnings for quest-improvement skill candidates.
+2026-06-29 — Opus 4.8, main repo working tree (`intelligent-bhabha` worktree was pruned mid-session; operating from main directly). **MPT runtime-rollout session + #267382 template follow-up.** Drove #239386 MPT from 75% → 21/21 cells confirmed rendering on local through 7 coordinated code fixes, then handled an in-flight #267382 footer-line template fix.
 
 ## ▶▶ NEXT SESSION — START HERE
 
-### Just done this session (worktree retrieval → main)
-- **QA-267382 is CLOSED** (the 06-26 `current-session.md` was a stale, mid-frustration draft that wrongly said "re-anchor / don't assert resize"). Phase-1 fix shipped `05e631671e` on `mlk/esokongan/267382` (pelan JBIG2 decoder + footer/render). Retrieved the close + 2 new CLAUDE rules from `claude/nostalgic-stonebraker-37a8b1`.
-- **2 new CLAUDE.md v1.53 rules** retrieved to main:
-  - 🧩 **Structured-Separated Problem / Cause / Fix** labeled lines (`Cause:` / `Fix:`, chains joined by ` > `) — §2.
-  - 🌿 **General branch derive-rule** `mlk/<tracker-lowercased>/<num>` (ESOKONGAN→`mlk/esokongan/`) — commit-conventions.md v1.2.
-- **3 anti-slip Powers brought to main as FILES (NOT registered)** from `claude/unruffled-merkle-53d900`: `domain/attachment-context/`, `domain/verify-basis-gate/`, `domain/terse-gate/`. Eval-for-overlap (vs show-gate) pending before live registration — みや's call.
-- **4 superseded branches deleted** (content already on main): eloquent-euler, charming-jones, great-cori, gallant-tharp. `unruffled-merkle` KEPT (holds #239386 MPT detail).
+### #239386 MPT (THE big win — code fix complete, ready for next phase)
+**All 21 L7–L10 cells now render** locally (verified by みや through 5+ rebuild/test cycles today):
+- PLTP L7 · PT L7 · PRZ L7+L10 · PPJK L7+L8+L9 · PLPS L7+L8+L9 · PSBS L7+L8 · MLPS L9 · PRBB L7+L9 · BPRZ L7+L10 · PPTPB L7+L8 · PRU L7+L9 = 21 green.
+- Code fixes shipped (still uncommitted on `mlk/release/1.0.0`, 12 files):
+  - `BasePelupusanForm.java:110` — added `isMpt()` getter (JSF EL accessor)
+  - `BasePelupusanDokumenForm.java:241` — guard `populateSemakanMaklumatTindakan` on `!MPT` (fixes TransientObjectException)
+  - `MlkMuatNaikCabutanMinitForm.java:399` — TOP early-return (fixes `calculateBayaran` NPE on null `panjang`)
+  - `MlkBorang4AeForm.java:139` — TOP early-return (fixes `initRunningNumber` NPE on null permit)
+  - `MlkBorang4CeForm.java:112` — added `isKelulusanJKBBPTG()` getter + TOP early-return + `setPrbbViewOnlyAll(TRUE)`
+  - `MlkBorang4DeForm.java:98` — added `viewIsipaduPermitPRU` getter + TOP early-return + `setDisable(true)`
+  - `MlkMuatNaikWartaForm.java:184` — end-of-init MPT-force flags
+  - 7 JSF sites across 5 xhtml files: `mode="1"` → `mode="#{mb.mpt ? 2 : 1}"`
 
-### STILL PENDING — #239386 MPT (Requirement, multi-session, ~75%)
-Freshest state lives in `claude/unruffled-merkle-53d900:main/current-session.md` (06-25). Chalk-back rule cracks L7-L10; NPE already fixed by Aaron (deploy lag); buttons/view-only = base classes. Remaining: redeploy UAT → run Patch.sql Section C → re-test L7-L10 → confirm PSBS/O* with Aaron. Task folder `79.`.
+### NEXT PHASE (#239386 picks up here)
+**Disable-verification sweep** — for EACH of the 21 confirmed-rendering cells, click into the MPT viewer + walk the visible controls. Find any Tambah/Hapus/Padam/Simpan/Hantar/Muatnaik button OR editable input that should be disabled but isn't, then add `rendered="#{!mb.mpt}"` / `disabled="#{mb.mpt}"` on those specific controls.
+Test apps in Notes file (`1. Tasks\Melaka\79. …\1. 239 386.txt`): PSBS/PLPS/PLTP/PRZ/PPJK/BPRZ/PRU/etc.
 
-### Goal 2 (this session) — skill candidates for quest improvement
-See the session's chat emit. Candidates surfaced from the retrieved Powers + conventions (terse-gate/verify-basis-gate overlap audit, Problem/Cause/Fix as a skill-or-rule, esokongan branch auto-derive, worktree-retrieval-as-a-skill). Decide build/skip next.
+### #267382 (ESOKONGAN — template line fix shipped today)
+Follow-up commit `b1a24880c2` on `origin/mlk/esokongan/267382`: removed leftover horizontal Line shape from `TemplateSuratJabatanTeknikal.docx` footers (footer1.xml + footer4.xml). みや handled the Word UI deletion; I verified + committed. active.txt block updated with `commit_followup=b1a24880c2`.
+
+### Systems built/refined this session
+- **Branch + env**: prepped `mlk/release/1.0.0` for #239386 (`env-check` skill); recovered Aaron's stash + verified `9343ca20bc` base
+- **resume-readiness verifier** (`domain/checklist-reactivate/resume-readiness.js`) used multiple times this session — caught gaps in qa_doc before each potential hand-off
+- **Cold-resume self-containment clause** in `/quest hold` step now demonstrated working
+- **DE invoked as `/domain-expansion` skill** for the first time tonight (per the 2026-06-28 skill conversion)
 
 ## 🎯 Session Recap (for AI restart)
-Retrieved all stranded worktree work into main: QA-267382 **closed** (fix `05e631671e`) + 2 CLAUDE v1.53 rules + 3 Power files (held for overlap-eval). 4 dead branches pruned; `unruffled-merkle` kept for #239386. #239386 MPT still ~75% pending. Goal 2 = skill-mining the retrieved learnings (in progress).
+**#239386 MPT: 21/21 cells rendering**, 12 files uncommitted on `mlk/release/1.0.0` ready for next-phase disable-verification sweep. **#267382 template line removed + shipped** `b1a24880c2`. Today's debugging pattern was 7 cycles of (build → みや tests cell → error screenshot → grep code at exact stack line → guard or getter → repeat), netting 4 distinct bug shapes (Hibernate transient, EL property gap ×2, init-time NPE ×2, hardcoded JSF mode flag).
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-27 — worktree retrieval to main (Opus 4.8, elated-wright worktree).
+**Memory Type**: RAM | **Last Activity**: 2026-06-29 — MPT code rollout to 21/21 + #267382 template line fix.

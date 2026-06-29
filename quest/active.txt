@@ -400,12 +400,14 @@ recon_finding=template TemplateSuratJabatanTeknikal.docx structurally CORRECT: 2
 pelan_root_cause=CORRECTED (prior resize-VERIFIED was WRONG - overrode BA annotation Tarik pelan yang salah). Symptom = WRONG plan shown vs public upload. Source kod IS correct (helsa@ uploaded LMP_PLN 331868; surat pulls LMP_PLN). Bug = render-path. STRONG candidate (code-verified, NOT runtime): retrieveImageByte uses DocumentRepository.findByMedanAndMedanPk (UNORDERED, no versi/aktif filter) + docs.get(0) -> arbitrary/old Document version; sibling version-aware queries exist unused (:31/:50/:65). H-page PDF-page1 secondary. Document entity = domain.dms.Document (separate DMS datasource, NOT in et_main_uat - cannot count versions from mlkuat MCP). Needs DMS version-count + uploaded-vs-rendered file compare (miya). Fix dir: use active/latest-versi query
 pelan_trace_a=DONE: public uploads via AWAM (saveDocumentDownloadVOByMedan:3073, pra Document medanPk=PraSemakan.id). Generic AWAM->PLP re-link SKIPPED for pelupusan (AwamPendaftaranService:4242). Pelupusan-specific binding = PelupusanSpocService.populateDocumentList:1347 (spoc flowable mlkPelupusanSpocIntegrationService) re-links praDoc.setMedanPk(appDokumenKemasukan.id):1367. TWO code-defects: D1 re-link ONLY if appDocumentList isEmpty (:1363) -> pre-existing doc => public upload never linked => wrong plan shown; D2 re-links ALL pra docs no version/sumber filter (:1365) -> multiple Documents => surat get(0) mispicks. MECHANISM verified; which fired for helsa = needs DMS Document rows (unreachable). Fix sides: read-side surat active/latest query vs write-side migration guard
 pelan_staging=VERIFIED on staging et_main_stg1 aplikasi 3383406 (=/2026/3 BA actual env). LMP_PLN kemasukan a_dok_kmskn_id=4183688. Under UMM_A_DOK_KMSKN EXACTLY ONE row = aimaneka36 plan.pdf versi3 draft (public upload) => get(0) NOT ambiguous, source selection CORRECT. 2 KELUARAN rows = DHK.pdf SYSTEM (different medan, surat never reads). Prior mlkuat investigation was WRONG ENV (helsa/2954411). Wrong-pelan is DOWNSTREAM of selection: plan.pdf is PDF -> PelupusanUtil.convertPdfFileBytesToImageFileBytes page-1-only + populatePelanAsalImageMLK:19122 resize 525x500. Candidates A) multi-page PDF wrong page B) resize distortion. Decisive next = inspect plan.pdf pages.
+commit_followup=b1a24880c2
+followup_note=2026-06-29 — Buang garisan tambahan pada footer surat JT (TemplateSuratJabatanTeknikal.docx removed line shapes from footer1.xml + footer4.xml)
 
 qa=239386
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\79. REQUIREMENT #239386 - PLP - Maklumat Permohonan Terperinci in Carian Pintas
 status=active
 phase=1
-current_phase=Apply (editable-controls code fix) — DB langkah DONE, branch prepped on mlk/release/1.0.0, audit DONE
+current_phase=Apply (19/21 cells rendering · PRU L7+L9 retest pending · NEXT=disable-verification sweep)
 ticket_type=requirement
 env=UAT
 urusan=ALL-20-PLP
