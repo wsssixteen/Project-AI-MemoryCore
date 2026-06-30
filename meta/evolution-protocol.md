@@ -45,10 +45,10 @@ Recursive through meta-design-router:
 ## State
 
 ```yaml
-last-evolution-check: 2026-05-23  # set on Phase 1 (this file's creation)
-next-elapsed-check-due: 2026-06-22  # +30 days
+last-evolution-check: 2026-06-30  # reset by みや 2026-06-30 — no new Anthropic model news, only a Claude Code release rumored; skipped full deep-research run
+next-elapsed-check-due: 2026-07-30  # +30 days
 last-model-id-seen: claude-opus-4-7[1m]  # current session model
-research-file-last-updated: 2026-05-23
+research-file-last-updated: 2026-05-23  # research file itself NOT re-run; only the cadence stamp reset
 research-file-path: library-items/agent-architecture/claude-code-best-practices.md
 
 # Added 2026-05-24 — system-check cadence (paired skill: .claude/skills/system-check/SKILL.md)

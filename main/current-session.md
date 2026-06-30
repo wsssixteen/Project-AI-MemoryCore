@@ -1,37 +1,37 @@
 # Current Session
 
 ## What's loaded
-2026-06-29 — Opus 4.8, main repo working tree (`intelligent-bhabha` worktree was pruned mid-session; operating from main directly). **MPT runtime-rollout session + #267382 template follow-up.** Drove #239386 MPT from 75% → 21/21 cells confirmed rendering on local through 7 coordinated code fixes, then handled an in-flight #267382 footer-line template fix.
+2026-06-30 — Opus 4.7, worktree `claude/exciting-fermi-530ce0`. **QA-267976 Phase 0 + hook v1.1 refinement.** Brought ESOKONGAN #267976 (PT Surat JPPH header/footer multi-page issue) live from retrieval to fully-verified Phase 0 with all 5 BA issues' root causes pinpointed; mid-quest みや caught a scope-contraction slip + mandated a new rule → refined `quest-objective-anchor.js` v1.1 (BA-verbatim Issue+Expected extraction from History.txt + Rule 4 "no scope-contraction without verbatim-counter-quote"). **NO CODE APPLIED** for QA-267976 — みや holding implementation for a later session.
 
 ## ▶▶ NEXT SESSION — START HERE
 
-### #239386 MPT (THE big win — code fix complete, ready for next phase)
-**All 21 L7–L10 cells now render** locally (verified by みや through 5+ rebuild/test cycles today):
-- PLTP L7 · PT L7 · PRZ L7+L10 · PPJK L7+L8+L9 · PLPS L7+L8+L9 · PSBS L7+L8 · MLPS L9 · PRBB L7+L9 · BPRZ L7+L10 · PPTPB L7+L8 · PRU L7+L9 = 21 green.
-- Code fixes shipped (still uncommitted on `mlk/release/1.0.0`, 12 files):
-  - `BasePelupusanForm.java:110` — added `isMpt()` getter (JSF EL accessor)
-  - `BasePelupusanDokumenForm.java:241` — guard `populateSemakanMaklumatTindakan` on `!MPT` (fixes TransientObjectException)
-  - `MlkMuatNaikCabutanMinitForm.java:399` — TOP early-return (fixes `calculateBayaran` NPE on null `panjang`)
-  - `MlkBorang4AeForm.java:139` — TOP early-return (fixes `initRunningNumber` NPE on null permit)
-  - `MlkBorang4CeForm.java:112` — added `isKelulusanJKBBPTG()` getter + TOP early-return + `setPrbbViewOnlyAll(TRUE)`
-  - `MlkBorang4DeForm.java:98` — added `viewIsipaduPermitPRU` getter + TOP early-return + `setDisable(true)`
-  - `MlkMuatNaikWartaForm.java:184` — end-of-init MPT-force flags
-  - 7 JSF sites across 5 xhtml files: `mode="1"` → `mode="#{mb.mpt ? 2 : 1}"`
+### QA-267976 (FRESHLY LIVE — read this first if resuming THIS ticket)
+**Phase 0 complete, awaiting みや's scope nod for Apply.** Full doc + cold-resume Resume Point: [QA-267976.md](../projects/coding-projects/active/QA-267976/QA-267976.md).
 
-### NEXT PHASE (#239386 picks up here)
-**Disable-verification sweep** — for EACH of the 21 confirmed-rendering cells, click into the MPT viewer + walk the visible controls. Find any Tambah/Hapus/Padam/Simpan/Hantar/Muatnaik button OR editable input that should be disabled but isn't, then add `rendered="#{!mb.mpt}"` / `disabled="#{mb.mpt}"` on those specific controls.
-Test apps in Notes file (`1. Tasks\Melaka\79. …\1. 239 386.txt`): PSBS/PLPS/PLTP/PRZ/PPJK/BPRZ/PRU/etc.
+**5 BA issues, all root-caused, no deferrals:**
+1. Header+footer pg2+ (template — no `<w:titlePg/>`)
+2. ID Permohonan missing pg2+ (template — no CC for it; `idPermohonan` populator exists `:892`)
+3. Page-num missing pg2+ (template — no PAGE field SDT)
+4. `<Maklumat Pengguna>` literal showing (CONFIG — `SN_JPPH.STATUS_PENYEDIAAN_SEDIA` excludes the tag in `template.config.json`)
+5. Jana Semula → duplicate (CODE — `PelupusanHelper.onJana():396-403` OR-chain missing JPPH tugasan whitelist entry)
 
-### #267382 (ESOKONGAN — template line fix shipped today)
-Follow-up commit `b1a24880c2` on `origin/mlk/esokongan/267382`: removed leftover horizontal Line shape from `TemplateSuratJabatanTeknikal.docx` footers (footer1.xml + footer4.xml). みや handled the Word UI deletion; I verified + committed. active.txt block updated with `commit_followup=b1a24880c2`.
+**3 files to edit on Apply** (all paths absolute, all named in QA-267976.md):
+- `E:\Projects\Melaka\etanah-pelupusan\src\main\resources\template\MLK\TemplateSuratNilaianJPPHPT.docx` (Python zipfile rewrite — restructure sectPr + add header2/footer2 parts)
+- `E:\Projects\Melaka\etanah-pelupusan\src\main\resources\config\MLK\template.config.json` (remove `"maklumatPengguna"` from SN_JPPH SEDIA excluded list)
+- `E:\Projects\Melaka\etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\helper\PelupusanHelper.java` (add `|| PelupusanTugasanConstant.TGSN_SRT_NILAIAN_JPPH_LIST.contains(kodTugasan)` to onJana OR-chain)
+
+**Pre-Apply checks MANDATED** (from QA-267976.md Code-Review section): codegraph_callers on `PelupusanHelper.onJana()` + grep JPPH JenisDokumen handlers + read `onJanaUpdate():532+` for scope comparison — BEFORE the Java edit.
+
+**Test data**: PROD = `PTMLK/02/L/PT/2026/1`, Staging = `PTMLK/03/L/PT/2026/9`, tugasan `PYSNJPPH`, login TBD. Branch plan at Commit: `mlk/esokongan/267976` off `mlk/master` (CURRENT repo branch is `mlk/requirement/239386` for みや's MPT work — DO NOT branch from there).
+
+### #239386 MPT (UNCHANGED FROM YESTERDAY — still みや's primary focus)
+21/21 cells rendering locally. 12 files uncommitted on `mlk/release/1.0.0`. Next phase = **disable-verification sweep** (walk each MPT cell, add `rendered="#{!mb.mpt}"` / `disabled="#{mb.mpt}"` to any Tambah/Hapus/Simpan/Hantar/Muatnaik that should be locked). Test apps in `1. Tasks\Melaka\79. …\1. 239 386.txt`. No code change this session — みや's local env still set up for this ticket.
 
 ### Systems built/refined this session
-- **Branch + env**: prepped `mlk/release/1.0.0` for #239386 (`env-check` skill); recovered Aaron's stash + verified `9343ca20bc` base
-- **resume-readiness verifier** (`domain/checklist-reactivate/resume-readiness.js`) used multiple times this session — caught gaps in qa_doc before each potential hand-off
-- **Cold-resume self-containment clause** in `/quest hold` step now demonstrated working
-- **DE invoked as `/domain-expansion` skill** for the first time tonight (per the 2026-06-28 skill conversion)
+- **`quest-objective-anchor.js` v1.1** (`.claude/hooks/`) — pulls BA's verbatim Issue+Expected from `<task_folder>/0. Brief/History.txt`'s latest cycle and surfaces them every quest-active turn under the active.txt paraphrase. Adds Rule 4: any scope-contraction of a BA-listed numbered issue MUST verbatim-quote it + ask みや for explicit nod (even if みや himself proposes the contraction). Audit log → `domain/quest-objective-anchor/log.jsonl`. Routed through system-design + system-rules per discipline. Eval = dry-fire showed both active quests' verbatim 5 issues+5 expected surfaced correctly.
+- **2 slips logged** (for next slip-log save): (a) scope-contraction without verbatim-counter-quote on QA-267976 → defender = hook v1.1 + Rule 4 shipped same turn; (b) premature ▶ YOUR MOVE while own confidence column showed pending — cure was to complete the verifications first, then re-emit.
 
 ## 🎯 Session Recap (for AI restart)
-**#239386 MPT: 21/21 cells rendering**, 12 files uncommitted on `mlk/release/1.0.0` ready for next-phase disable-verification sweep. **#267382 template line removed + shipped** `b1a24880c2`. Today's debugging pattern was 7 cycles of (build → みや tests cell → error screenshot → grep code at exact stack line → guard or getter → repeat), netting 4 distinct bug shapes (Hibernate transient, EL property gap ×2, init-time NPE ×2, hardcoded JSF mode flag).
+**QA-267976 Phase 0 fully verified** (5 issues, 3 layers — template + config + code — all fix points pinpointed, no asterisks). Mid-quest caught a scope-contraction slip → hook v1.1 + Rule 4 shipped as the structural defender. **Zero code applied** — みや holding implementation for later. #239386 untouched this session. Today's pattern: each time みや caught a slip, the fix was deterministic — quote-back rule, then pre-emit-self-check.
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-29 — MPT code rollout to 21/21 + #267382 template line fix.
+**Memory Type**: RAM | **Last Activity**: 2026-06-30 — QA-267976 Phase 0 (no Apply) + hook v1.1 (BA-verbatim extraction + Rule 4).

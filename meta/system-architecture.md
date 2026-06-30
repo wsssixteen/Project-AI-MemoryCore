@@ -208,12 +208,13 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | `domain/terse-gate/terse-gate.discipline.hook.js` | self (NEW 2026-06-27, Power: `domain/terse-gate/`, retrieved from `unruffled-merkle` — みや 2026-06-24 "you're still blabbering stupidly") | every Stop — heavy prose lines (>150 chars, non-table, non-diagram, outside code fences) ≥6 in reply | **HARD-BLOCK** (decision:block) — "convert to tables/diagrams"; exempt short(<800)/═══/DE/personal; bypass `[skip-terse: <reason>]`; fail-OPEN | show-gate sibling (FORMAT discipline: show-gate fires on change/finding signals; terse-gate fires on verbosity regardless of content), CLAUDE.md §2 HARD PRE-SEND GATE | Heavy-line threshold tunable per false-positive observation; superpowers v6.0.3 #6 home (≤1-line narration folded here) |
 | `domain/verify-basis-gate/verify-basis-gate.discipline.hook.js` | self (NEW 2026-06-27, Power: `domain/verify-basis-gate/`, retrieved from `unruffled-merkle`) | every Stop — reply makes a BEHAVIOURAL claim (saves/persists/displays/loads/works) with no verifying tool-call this turn (DB read-back, grep, code read) | **advisory** at v1: flag claim + ask for basis citation; bypass `[skip-verify-basis: <reason>]`; fail-OPEN | veritas-claim-gate sibling (veritas covers external-research lies + behavioural-block; verify-basis covers behavioural-advisory at finer granularity), silent-claim-drift-gate (completion-verb sibling) | v1.1: behavioural→block after fixture-validated binder window |
 
-### 3.6 PostToolUse (2 hooks)
+### 3.6 PostToolUse (3 hooks)
 
 | Hook | Owner | Watches | Action | Stakeholders |
 |---|---|---|---|---|
 | `RecursiveLoopDetector.js` | self | same-tool + similar-args 3+ times in window | loop warning | Momentum Circuit-Breaker ritual | Window-size + similarity threshold are tunable |
 | `slip-count-tracker.js` | self | Edit/Write to `meta/slip-log.md` (dated entry rows) | append {ts,category} to `meta/slip-counts.jsonl` + emit 7d/30d tally + escalation flag | auto-skill-on-mistake Step 5 | NEW 2026-06-20 (みや item 4). Ledger = source of truth; the markdown count-table is a view |
+| `domain/stop-point-todo-table/stop-point-todo-table.discipline.hook.js` | self (NEW 2026-06-30 per みや — option A) | matcher Edit\|Write\|NotebookEdit on code files (.java/.xhtml/.xml/.js/.py/.sql/.html/.css/.sh/.bat/.ps1 etc.) | advisory — inject reminder context: "emit 'what to do next' table (Ruri's part / みや's part) before stopping" | stop-point-summary skill (carries the procedure); pairs with show-gate (FORMAT) | bypass `[skip-stop-point-todo: <reason>]`; fail-OPEN |
 
 ### 3.7 Hooks added/changed by plan `cached-floating-hummingbird.md` (executed 2026-05-28)
 

@@ -300,6 +300,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\slip-count-tracker.js\""
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\stop-point-todo-table\\stop-point-todo-table.discipline.hook.js\""
+          }
+        ]
       }
     ]
   }

@@ -50,6 +50,9 @@
 - [feedback_pengguna_semasa.md](feedback_pengguna_semasa.md) — Every Permohonan ID reference must include the current pengguna_semasa (email/login). Never mention an ID alone.
 - [feedback_ticket_cadence.md](feedback_ticket_cadence.md) — 3 tickets/day; spread difficulty don't cherry-pick easiest; fix only BA-highlighted items
 - [feedback_my_files_minimal.md](feedback_my_files_minimal.md) — みや's Task-folder files (txt/excel) = MINIMAL data only (xlsx 1 tab, small tables); ALL context/reasoning → my own quest md, never his files
+- [feedback_locator_single_cell.md](feedback_locator_single_cell.md) — file:line / class:line in ONE cell, never split "File" + "Line" columns. Same rule: drop parens bloat from cells ("PLPS (any urusan reaches L3)" → "PLPS")
+- [feedback_no_names_in_comments.md](feedback_no_names_in_comments.md) — code comments NEVER reference a person (みや/Aaron/Vincent/anyone), session dates, or server.log timestamps. Only WHAT the code does + technical WHY. Strip before staging.
+- [feedback_stay_in_module.md](feedback_stay_in_module.md) — default scope = etanah-pelupusan/src ONLY. Cross-module suggestions (etanah-common patches, overlay-mirror overrides, global infra CSS/JS) BANNED unless みや opens scope. A survey question ≠ permission to enumerate out-of-scope options. Pre-answer self-grep for red flags.
 
 ## User
 - [user_gender.md](user_gender.md) — みや is male; don't default to "she" in diary/narration; no retroactive edits
