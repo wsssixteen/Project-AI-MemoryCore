@@ -1,37 +1,33 @@
 # Current Session
 
 ## What's loaded
-2026-06-30 — Opus 4.7, worktree `claude/exciting-fermi-530ce0`. **QA-267976 Phase 0 + hook v1.1 refinement.** Brought ESOKONGAN #267976 (PT Surat JPPH header/footer multi-page issue) live from retrieval to fully-verified Phase 0 with all 5 BA issues' root causes pinpointed; mid-quest みや caught a scope-contraction slip + mandated a new rule → refined `quest-objective-anchor.js` v1.1 (BA-verbatim Issue+Expected extraction from History.txt + Rule 4 "no scope-contraction without verbatim-counter-quote"). **NO CODE APPLIED** for QA-267976 — みや holding implementation for a later session.
+2026-07-01 — Opus 4.7, worktree `claude/exciting-fermi-530ce0`. **QA-267976 held for next session + learn-from-fix skill v1 shipped + QA-268170 standing flag.** Continuation of yesterday's QA-267976 Phase 0 quest (held, no Apply per みや). Today's work centered on system-level growth: new `learn-from-fix` skill for extracting lessons from colleagues' closed fixes, plus QA-268170 standing flag for when a colleague ships that fix.
 
 ## ▶▶ NEXT SESSION — START HERE
 
-### QA-267976 (FRESHLY LIVE — read this first if resuming THIS ticket)
-**Phase 0 complete, awaiting みや's scope nod for Apply.** Full doc + cold-resume Resume Point: [QA-267976.md](../projects/coding-projects/active/QA-267976/QA-267976.md).
+### QA-267976 (HELD — Phase 0 complete, awaiting scope nod)
+Ticket held 2026-07-01. Full cold-resume Resume Point in [QA-267976.md](../projects/coding-projects/active/QA-267976/QA-267976.md). Resume-readiness verifier passes 7/7 (re-verified this DE). **First step on resume**: read QA-267976.md Resume Point + Ticket Summary + Code-Review sections; then ask みや for scope nod. No code changes needed to resume — nothing was applied.
 
-**5 BA issues, all root-caused, no deferrals:**
-1. Header+footer pg2+ (template — no `<w:titlePg/>`)
-2. ID Permohonan missing pg2+ (template — no CC for it; `idPermohonan` populator exists `:892`)
-3. Page-num missing pg2+ (template — no PAGE field SDT)
-4. `<Maklumat Pengguna>` literal showing (CONFIG — `SN_JPPH.STATUS_PENYEDIAAN_SEDIA` excludes the tag in `template.config.json`)
-5. Jana Semula → duplicate (CODE — `PelupusanHelper.onJana():396-403` OR-chain missing JPPH tugasan whitelist entry)
+3 files to edit on Apply (still absolute paths, still on `E:\Projects\Melaka\etanah-pelupusan`):
+- `src/main/resources/template/MLK/TemplateSuratNilaianJPPHPT.docx` (issues #1+#2+#3 — Python zipfile restructure)
+- `src/main/resources/config/MLK/template.config.json` (issue #4 — remove `"maklumatPengguna"` from SN_JPPH SEDIA excluded_content_control_list)
+- `src/main/java/my/gov/etanah/pelupusan/helper/PelupusanHelper.java` (issue #5 — add `|| TGSN_SRT_NILAIAN_JPPH_LIST.contains(kodTugasan)` to `onJana():396-403` OR-chain)
 
-**3 files to edit on Apply** (all paths absolute, all named in QA-267976.md):
-- `E:\Projects\Melaka\etanah-pelupusan\src\main\resources\template\MLK\TemplateSuratNilaianJPPHPT.docx` (Python zipfile rewrite — restructure sectPr + add header2/footer2 parts)
-- `E:\Projects\Melaka\etanah-pelupusan\src\main\resources\config\MLK\template.config.json` (remove `"maklumatPengguna"` from SN_JPPH SEDIA excluded list)
-- `E:\Projects\Melaka\etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\helper\PelupusanHelper.java` (add `|| PelupusanTugasanConstant.TGSN_SRT_NILAIAN_JPPH_LIST.contains(kodTugasan)` to onJana OR-chain)
+Branch plan at Commit: `mlk/esokongan/267976` off `mlk/master` (NOT off `mlk/requirement/239386`).
 
-**Pre-Apply checks MANDATED** (from QA-267976.md Code-Review section): codegraph_callers on `PelupusanHelper.onJana()` + grep JPPH JenisDokumen handlers + read `onJanaUpdate():532+` for scope comparison — BEFORE the Java edit.
+### QA-268170 (DELEGATED — first live target for learn-from-fix)
+Passed to a colleague 2026-06-30. `learning_marker=true` in active.txt. When the colleague's fix commit lands (watch `git log --grep "#268170"` on etanah-pelupusan + etanah-awam) + Redmine ticket closes, invoke `learn-from-fix 268170` to extract the 5-section learning + propose edits to BUG-BESTIARY.md.
 
-**Test data**: PROD = `PTMLK/02/L/PT/2026/1`, Staging = `PTMLK/03/L/PT/2026/9`, tugasan `PYSNJPPH`, login TBD. Branch plan at Commit: `mlk/esokongan/267976` off `mlk/master` (CURRENT repo branch is `mlk/requirement/239386` for みや's MPT work — DO NOT branch from there).
+### #239386 MPT (UNCHANGED — みや's own next-session pickup)
+21/21 cells rendering. 12 files uncommitted on `mlk/release/1.0.0`. Next phase = disable-verification sweep per yesterday's session-memory.
 
-### #239386 MPT (UNCHANGED FROM YESTERDAY — still みや's primary focus)
-21/21 cells rendering locally. 12 files uncommitted on `mlk/release/1.0.0`. Next phase = **disable-verification sweep** (walk each MPT cell, add `rendered="#{!mb.mpt}"` / `disabled="#{mb.mpt}"` to any Tambah/Hapus/Simpan/Hantar/Muatnaik that should be locked). Test apps in `1. Tasks\Melaka\79. …\1. 239 386.txt`. No code change this session — みや's local env still set up for this ticket.
-
-### Systems built/refined this session
-- **`quest-objective-anchor.js` v1.1** (`.claude/hooks/`) — pulls BA's verbatim Issue+Expected from `<task_folder>/0. Brief/History.txt`'s latest cycle and surfaces them every quest-active turn under the active.txt paraphrase. Adds Rule 4: any scope-contraction of a BA-listed numbered issue MUST verbatim-quote it + ask みや for explicit nod (even if みや himself proposes the contraction). Audit log → `domain/quest-objective-anchor/log.jsonl`. Routed through system-design + system-rules per discipline. Eval = dry-fire showed both active quests' verbatim 5 issues+5 expected surfaced correctly.
-- **2 slips logged** (for next slip-log save): (a) scope-contraction without verbatim-counter-quote on QA-267976 → defender = hook v1.1 + Rule 4 shipped same turn; (b) premature ▶ YOUR MOVE while own confidence column showed pending — cure was to complete the verifications first, then re-emit.
+### Systems shipped this session
+- **`learn-from-fix` skill** (`.claude/skills/learn-from-fix/SKILL.md`) — extracts 5-section structured lesson from a closed ticket's git commit + Redmine History; proposes edits to `etanah-knowledge/melaka/BUG-BESTIARY.md` (primary). Manual invoke only. Plan: `Feature/Learn-From-Others-Fixes/plan-v1.md`. Registered in `meta/system-architecture.md §4.4`. Audit log: `domain/learn-from-fix/log.jsonl`. Q1-Q4 answers baked into plan.
+- **QA-268170 standing flag** (`main/todo.md` Q1 top row 🎓 LEARN STANDING FLAG) — first live test target for learn-from-fix once colleague ships.
+- **CLAUDE.md §2 TABLE FOCUS RULE** (added by みや 2026-06-30, committed this session) — every table max 2 concerns (columns of distinct concern excl. #/index); 3+ concerns → SPLIT into 2 single-purpose tables.
+- **CLAUDE.md §9 verify-SELECT rule** (added by みや 2026-07-01) — verification SELECTs project TRUE stored column values, never derived stand-ins (BOOL_OR / COUNT-only aggregates banned). Enforced by convention-check-gate.js SQL branch (advisory).
 
 ## 🎯 Session Recap (for AI restart)
-**QA-267976 Phase 0 fully verified** (5 issues, 3 layers — template + config + code — all fix points pinpointed, no asterisks). Mid-quest caught a scope-contraction slip → hook v1.1 + Rule 4 shipped as the structural defender. **Zero code applied** — みや holding implementation for later. #239386 untouched this session. Today's pattern: each time みや caught a slip, the fix was deterministic — quote-back rule, then pre-emit-self-check.
+QA-267976 held after Phase 0 completion (all 5 BA issues root-caused, 3 fix files identified, zero code applied per みや). Shipped `learn-from-fix` skill v1 for capturing lessons from colleagues' closed fixes — first target = QA-268170 (delegated today). Two new HARD RULES in CLAUDE.md (TABLE FOCUS + verify-SELECT). No etanah code changes.
 
-**Memory Type**: RAM | **Last Activity**: 2026-06-30 — QA-267976 Phase 0 (no Apply) + hook v1.1 (BA-verbatim extraction + Rule 4).
+**Memory Type**: RAM | **Last Activity**: 2026-07-01 — QA-267976 held for next session + learn-from-fix skill shipped.
