@@ -30,7 +30,20 @@ Passed to a colleague 2026-06-30. `learning_marker=true` in active.txt. When the
 - **CLAUDE.md §2 TABLE FOCUS RULE** (added by みや 2026-06-30, committed this session) — every table max 2 concerns (columns of distinct concern excl. #/index); 3+ concerns → SPLIT into 2 single-purpose tables.
 - **CLAUDE.md §9 verify-SELECT rule** (added by みや 2026-07-01) — verification SELECTs project TRUE stored column values, never derived stand-ins (BOOL_OR / COUNT-only aggregates banned). Enforced by convention-check-gate.js SQL branch (advisory).
 
-## 🎯 Session Recap (for AI restart)
-QA-267976 held after Phase 0 completion (all 5 BA issues root-caused, 3 fix files identified, zero code applied per みや). Shipped `learn-from-fix` skill v1 for capturing lessons from colleagues' closed fixes — first target = QA-268170 (delegated today). Two new HARD RULES in CLAUDE.md (TABLE FOCUS + verify-SELECT). No etanah code changes.
+### Session 3 (worktree `claude/clever-heisenberg-351506`, ~11:55 MPST) — QA-268170 save + evolution-check reset
 
-**Memory Type**: RAM | **Last Activity**: 2026-07-01 — QA-267976 held for next session + learn-from-fix skill shipped.
+Short quest-intake session that overlapped with the exciting-fermi worktree's DE. From this worktree's angle:
+- `redmine-sync.js --create` fetched #268170 (new ticket that day); the redmine-sync run also downloaded 1 attachment + wrote History.txt.
+- Ran Stage 1 of a 14-stage Phase-0 audit plan (the compulsory git-state check): found `etanah-pelupusan` on `mlk/requirement/239386` 44-behind `mlk/master` with 14 uncommitted files (yesterday's MPT WIP — since re-baselined by the parallel worktree), `etanah-awam` on `master` 16,382-behind `mlk/stag-env`. No existing-fix by colleague yet on either repo. Emitted a git-state STOP with options A/B/C for みや.
+- Between the Stage 1 emit and みや's reply, the parallel worktree wrote `delegated_to=colleague-TBD` + `learning_marker=true` into active.txt for QA-268170. Pivoted from "fix it" to "watch-and-learn" arc.
+- Wrote `projects/coding-projects/active/QA-268170/QA-268170.md` — light state-anchor with Ticket Summary + cold-resumable Resume Point + watch-signals table.
+- Updated active.txt QA-268170 block via `active-cli.js update` → added `held_reason` + `qa_doc` pointer (preserves the parallel worktree's `delegated_to` / `learning_marker=true` fields).
+- **Evolution-check cadence reset** — no new Anthropic model news, only a Claude Code release rumored; `meta/evolution-protocol.md` state stamps updated `last-evolution-check: 2026-06-30` / `next-elapsed-check-due: 2026-07-30`. Deep-research NOT re-run (cadence-only reset). Model-ID unchanged.
+- **`/goal refine our gap`** — surfaced by みや on QA-268170 Stage 1: the `tracker=` (Redmine, drives branch name `mlk/<tracker>/<num>`) vs `ticket_type=` (work-shape: bug/enhancement/cr/requirement) fields both legitimately read as "type". Added as a todo Q1 row: refine target = `quest/quest-protocol.md` + `quest/active-cli.js` docs, possibly rename `ticket_type=` → `work_type=`. Route through `system-design`.
+- **Hook feedback (non-blocking)** — `convention-check-gate` false-positive on `node quest/active-cli.js update QA-268170` (pattern-matched "update QA" as SQL UPDATE). Gate should scope on `mcp__postgres*` MCP calls / `SQL:` prefix, not the word "update" in Bash args. Minor refine, noted but not filed.
+- **No etanah code touched** this worktree either.
+
+## 🎯 Session Recap (for AI restart)
+Two worktrees ran DE this day. `exciting-fermi-530ce0`: held QA-267976 after Phase 0 + shipped `learn-from-fix` skill v1 + delegated QA-268170 + 2 new CLAUDE.md rules + #239386 base rebased with today's WIP stashed. `clever-heisenberg-351506` (this one): retrieved #268170, ran Stage 1 git-state, detected the parallel delegation, saved QA-268170.md cold-resumable + reset evolution-check cadence + logged tracker/ticket_type refine gap. Combined next-session priority: resume #239386 (`git stash pop` → rebuild → test PRZ L3), then watch for QA-268170 colleague fix, then #267976 scope-nod.
+
+**Memory Type**: RAM | **Last Activity**: 2026-07-01 — 2 concurrent worktree DEs; QA-267976 held + learn-from-fix skill shipped (exciting-fermi) + QA-268170 saved cold-resumable + evolution-check reset (clever-heisenberg).
