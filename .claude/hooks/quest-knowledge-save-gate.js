@@ -44,6 +44,11 @@ const CATEGORY_TABLE = [
 // Signals that a durable finding was likely surfaced this turn.
 const DISCOVERY_RX = /root cause|the chain|class chain|@Column|@Table|populator|tugasan|langkah|ind_skrin|ind_langkah|\bBPMN\b|callActivity|userTask|turns out|it turns out|discovered that|the bug is|because the |selectOneMenu|listener=|aplikasi_id|\b[A-Z][A-Za-z]+\.(java|xhtml)\b|:\d{2,4}\b/;
 
+// v2 (2026-07-01, per みや /goal): also fire at every phase-emit + hand-back, not only on a
+// discovery signal — so the QA-doc is saved after EVERY quest stop, not just discovery turns.
+const PHASE_EMIT_RX = /Scout emit|Recon emit|Rubric emit|Recon Context Re-load|Quest Briefing|Predicate Diagram|sibling-diff|Apply[^\n]{0,40}(done|applied|complete)/i;
+const HANDBACK_RX = /▶ YOUR MOVE|YOUR MOVE —|Waiting on you for|hand-?back/i;
+
 // Phrases that mean Ruri already persisted this turn → don't nag.
 const ALREADY_SAVED_RX = /saved to|wrote to|appended to|written into|→ (DATABASE|MODULE-ARCHITECTURE|JSF-WIRING|FLOWABLE-WORKFLOWS|DOMAIN-GLOSSARY|BUG-BESTIARY|DEFERRED-CRITICAL|TEST-PERMOHONAN|FRONTEND-PATTERNS|URUSAN-FLOW|PERANAN-MAP|QA-\d+)\.md|updated QA-\d+\.md|etanah-knowledge\/melaka\//;
 
@@ -78,7 +83,7 @@ process.stdin.on('end', () => {
     const active = getActiveQuest();
     if (!active) process.exit(0);
 
-    if (!DISCOVERY_RX.test(text)) process.exit(0);        // no finding this turn
+    if (!(DISCOVERY_RX.test(text) || PHASE_EMIT_RX.test(text) || HANDBACK_RX.test(text))) process.exit(0); // no finding / phase-emit / hand-back this turn
     if (ALREADY_SAVED_RX.test(text)) process.exit(0);     // already persisted this turn
 
     const qaDocPath = active.qaDoc

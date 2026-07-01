@@ -188,6 +188,10 @@
           },
           {
             "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\no-code-comments-gate.js\""
+          },
+          {
+            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\claude-md-edit-guard.js\""
           },
           {
@@ -284,6 +288,18 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\verify-basis-gate\\verify-basis-gate.discipline.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\full-address-trace-gate.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\auto-commit-docs.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\de-run-verify.js\""
           }
         ]
       }

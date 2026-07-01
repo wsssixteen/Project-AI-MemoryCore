@@ -251,3 +251,5 @@
 {"ts":"2026-06-16T09:50:13.042Z","qa":"QA-261517","phase":"Recon","action":"warn-only-v1"}
 {"ts":"2026-06-16T10:18:58.045Z","qa":"QA-261517","phase":"Recon","action":"warn-only-v1"}
 {"ts":"2026-06-16T10:40:39.856Z","qa":"QA-261517","phase":"Recon","action":"warn-only-v1"}
+{"ts":"2026-07-01T09:29:36.876Z","qa":"QA-267976","phase":"Apply-ALL-5-applied-verified_#5=regenerateNewDocument-scope-fix_NEXT-rebuild-test","action":"warn-only-v1"}
+{"ts":"2026-07-01T09:34:33.845Z","qa":"QA-267976","phase":"Apply-ALL-5-applied-verified_#5=regenerateNewDocument-scope-fix_NEXT-rebuild-test","action":"warn-only-v1"}

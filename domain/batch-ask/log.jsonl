@@ -62,3 +62,6 @@
 {"ts":"2026-06-28T05:50:13.444Z","prompt_excerpt":"/goal Check our \"/superpowers\" skill, check if we've updated to the latest version. Then explain to me in depth. Then perform a /deep-research where applicable "}
 {"ts":"2026-06-28T06:26:13.009Z","prompt_excerpt":"1. Explain further about #1 file-handoff.\n2. Keep recon, we need adversarial right? Please confirm.\n3. Agreed on 7. \n4. Please run a double check & analysis on "}
 {"ts":"2026-06-28T06:38:53.405Z","prompt_excerpt":"<task-notification>\n<task-id>wmyasuwee</task-id>\n<tool-use-id>toolu_01PY8crDS8KK1Fm1cuRCt26E</tool-use-id>\n<output-file>C:\\Users\\Ridhwan\\AppData\\Local\\Temp\\clau"}
+{"ts":"2026-07-01T07:49:45.141Z","prompt_excerpt":"1. I am testing the duplicate fix, all the template fixes are working. Please update /checklist for this quest. \n2. While at that please explain in depth and cl"}
+{"ts":"2026-07-01T09:46:26.863Z","prompt_excerpt":"I forgot what I asked you to do during phase 2. Can you list down & tell me the process, including hooks & phrases if any. Do extensive checking."}
+{"ts":"2026-07-01T09:49:19.556Z","prompt_excerpt":"Secondly, /goal I've been thinking about asking you to save/update straight away every step for our quest. There should be a hook for that. There should also be"}
