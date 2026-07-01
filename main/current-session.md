@@ -18,8 +18,11 @@ Branch plan at Commit: `mlk/esokongan/267976` off `mlk/master` (NOT off `mlk/req
 ### QA-268170 (DELEGATED — first live target for learn-from-fix)
 Passed to a colleague 2026-06-30. `learning_marker=true` in active.txt. When the colleague's fix commit lands (watch `git log --grep "#268170"` on etanah-pelupusan + etanah-awam) + Redmine ticket closes, invoke `learn-from-fix 268170` to extract the 5-section learning + propose edits to BUG-BESTIARY.md.
 
-### #239386 MPT (UNCHANGED — みや's own next-session pickup)
-21/21 cells rendering. 12 files uncommitted on `mlk/release/1.0.0`. Next phase = disable-verification sweep per yesterday's session-memory.
+### #239386 MPT (UPDATED 2026-07-01 Session 2 — NOT unchanged; major work done)
+**BASE CHANGED** `mlk/release/1.0.0` → **`mlk/master`**. Branch migrated: old → `mlk/requirement/239386-deprecated` (remote); NEW `mlk/requirement/239386` from `mlk/master` = commit `035d4419fb` (tested 21-cell baseline, cherry-picked) + today's WIP **stashed** (`stash@{0}` on etanah repo: initMode refactor + disable sweep + empty-VO + L1 override).
+- **The bug fixed today**: PRZ rendered duplicate "Maklumat Plot Untuk Dikeluarkan Hakmilik" panels + editable fields — caused by MY initMode early-return forcing view-flags TRUE + `return`, bypassing per-urusan logic. Fixed: run per-urusan logic, overlay `mode=2` at end (`MlkMaklumatTanahPemberimilikanForm.java:450,580`).
+- **Full state + Failed-Paths ledger + open decisions** (nama chalk-back; 4 other early-returns at same risk): [239386.md](../projects/coding-projects/active/239386/239386.md) Resume Point 2026-07-01.
+- **Resume**: `git stash pop` on etanah `mlk/requirement/239386` → rebuild → test PRZ L3 (duplicate panels gone?) → retest disable cells → decide nama chalk-back.
 
 ### Systems shipped this session
 - **`learn-from-fix` skill** (`.claude/skills/learn-from-fix/SKILL.md`) — extracts 5-section structured lesson from a closed ticket's git commit + Redmine History; proposes edits to `etanah-knowledge/melaka/BUG-BESTIARY.md` (primary). Manual invoke only. Plan: `Feature/Learn-From-Others-Fixes/plan-v1.md`. Registered in `meta/system-architecture.md §4.4`. Audit log: `domain/learn-from-fix/log.jsonl`. Q1-Q4 answers baked into plan.
