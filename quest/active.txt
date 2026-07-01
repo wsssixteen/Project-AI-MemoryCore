@@ -453,3 +453,4 @@ learning_marker=true
 note=Passed to colleague 2026-06-30 — WATCH for the fix deploy + git commit ref; run the learn-from-others plan (todo.md Q1) on it to extract lessons
 held_reason=2026-07-01 — delegated to colleague; Ruri role = watch-and-learn per learning_marker=true; Stage-1 git-state check ran this session (pelupusan 44-behind mlk/master with 14 uncommitted #239386 files; awam 16382-behind mlk/stag-env); no existing-fix by colleague yet on either repo
 qa_doc=projects/coding-projects/active/QA-268170/QA-268170.md
+branch=n/a-delegated
