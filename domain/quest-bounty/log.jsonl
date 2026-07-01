@@ -1,3 +1,0 @@
-{"_seed": true, "note": "quest-bounty audit log — one JSON line per bounty run: {qa, harvests:{quest,system,knowledge}, refinement:'<proposed|none>', banked_sha}. Created 2026-07-01."}
-{"qa":"QA-267976","grandfathered":true,"note":"archived 2026-07-01 before quest-bounty existed - no harvest was possible"}
-{"qa":"QA-268322","ts":"2026-07-02","harvests":{"quest":true,"system":true,"knowledge":"candidate"},"refinement":"verify-code-mapping-before-derived-DB-value","banked":"via-DE"}
