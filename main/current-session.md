@@ -1,19 +1,20 @@
 # Current Session
 
 ## What's loaded
-2026-07-01 — Opus 4.7, worktree `claude/exciting-fermi-530ce0`. **QA-267976 held for next session + learn-from-fix skill v1 shipped + QA-268170 standing flag.** Continuation of yesterday's QA-267976 Phase 0 quest (held, no Apply per みや). Today's work centered on system-level growth: new `learn-from-fix` skill for extracting lessons from colleagues' closed fixes, plus QA-268170 standing flag for when a colleague ships that fix.
+2026-07-01 22:22 — **QA-267976 Phase 1 CLOSED (all 5 issues tested OK by みや) + 3 MemoryCore auto-save/DE-guard hooks built.** The Surat Nilaian JPPH letter ticket shipped: commit `e308200402` on `mlk/esokongan/267976`, pushed to origin, `local_test_confirmed=true`. Then built three Stop-hooks for みや's /goal (auto-commit docs at Stop · DE no-miss guard · quest-save-every-stop v2), committed `f02844d`.
 
 ## ▶▶ NEXT SESSION — START HERE
 
-### QA-267976 (HELD — Phase 0 complete, awaiting scope nod)
-Ticket held 2026-07-01. Full cold-resume Resume Point in [QA-267976.md](../projects/coding-projects/active/QA-267976/QA-267976.md). Resume-readiness verifier passes 7/7 (re-verified this DE). **First step on resume**: read QA-267976.md Resume Point + Ticket Summary + Code-Review sections; then ask みや for scope nod. No code changes needed to resume — nothing was applied.
+### QA-267976 (CLOSED — Phase 1 shipped, Phase 2 archived at DE)
+Phase 1 closed 2026-07-01. Commit `e308200402`, branch `mlk/esokongan/267976`, pushed. All 5 BA issues tested OK by みや (DB `aplikasi_id 3398793` shows 3 rows stable, `SN_JPPH=Peraku`, no duplicate). No open code WIP — shipped. Phase 2 archive hygiene done at session-end DE. Full record + Fastest Path in [QA-267976.md](../projects/coding-projects/active/QA-267976/QA-267976.md).
 
-3 files to edit on Apply (still absolute paths, still on `E:\Projects\Melaka\etanah-pelupusan`):
-- `src/main/resources/template/MLK/TemplateSuratNilaianJPPHPT.docx` (issues #1+#2+#3 — Python zipfile restructure)
-- `src/main/resources/config/MLK/template.config.json` (issue #4 — remove `"maklumatPengguna"` from SN_JPPH SEDIA excluded_content_control_list)
-- `src/main/java/my/gov/etanah/pelupusan/helper/PelupusanHelper.java` (issue #5 — add `|| TGSN_SRT_NILAIAN_JPPH_LIST.contains(kodTugasan)` to `onJana():396-403` OR-chain)
+The 5 issues + fixes: #1-3 header/footer/ID/page-number on pg2+ → `TemplateSuratNilaianJPPHPT.docx` (added `w:titlePg` + first/default header/footer split, new header2/footer2 mirrored from the shipped QA-267382 Surat JT template). #4 Maklumat Pengguna format → removed `"maklumatPengguna"` from the SN_JPPH SEDIA `excluded_content_control_list` in `template.config.json` (near-non-issue — `<Nama Pegawai>` placeholder is designed to stay empty until officer signs). #5 duplicate on Jana Semula → `BasePelupusanDokumenForm.java` (new field `janaSemulaKodDokumen`; `regenerateNewDocument` captures clicked doc kod; `overridePenyediaanList` adds scoped `templateList.removeIf` so regenerate only touches the CLICKED document).
 
-Branch plan at Commit: `mlk/esokongan/267976` off `mlk/master` (NOT off `mlk/requirement/239386`).
+### New this session — 3 MemoryCore Stop-hooks (commit `f02844d`) — ACTIVATE NEXT SESSION
+- `auto-commit-docs.js` (+`auto-commit-worker.js`) — background commit+push of tracked MemoryCore docs at Stop; MemoryCore-only, etanah hard-guarded, templated msg v1.
+- `de-run-verify.js` — warns if a session wraps without Domain Expansion running (closes the DE full-skip hole).
+- `quest-knowledge-save-gate.js` v2 — now fires on phase-emit + hand-back, not only discovery.
+(Also earlier this session: `no-code-comments-gate.js` + `full-address-trace-gate.js` hooks + a personality.md full-address-trace rule + a convention-check-gate no-comments line.)
 
 ### QA-268170 (DELEGATED — first live target for learn-from-fix)
 Passed to a colleague 2026-06-30. `learning_marker=true` in active.txt. When the colleague's fix commit lands (watch `git log --grep "#268170"` on etanah-pelupusan + etanah-awam) + Redmine ticket closes, invoke `learn-from-fix 268170` to extract the 5-section learning + propose edits to BUG-BESTIARY.md.
@@ -44,6 +45,6 @@ Short quest-intake session that overlapped with the exciting-fermi worktree's DE
 - **No etanah code touched** this worktree either.
 
 ## 🎯 Session Recap (for AI restart)
-Two worktrees ran DE this day. `exciting-fermi-530ce0`: held QA-267976 after Phase 0 + shipped `learn-from-fix` skill v1 + delegated QA-268170 + 2 new CLAUDE.md rules + #239386 base rebased with today's WIP stashed. `clever-heisenberg-351506` (this one): retrieved #268170, ran Stage 1 git-state, detected the parallel delegation, saved QA-268170.md cold-resumable + reset evolution-check cadence + logged tracker/ticket_type refine gap. Combined next-session priority: resume #239386 (`git stash pop` → rebuild → test PRZ L3), then watch for QA-268170 colleague fix, then #267976 scope-nod.
+QA-267976 Phase 1 closed (commit `e308200402`, branch `mlk/esokongan/267976`, all 5 issues tested OK by みや). Built 3 MemoryCore hooks (`auto-commit-docs`, `de-run-verify`, `quest-knowledge-save-gate` v2) committed `f02844d` — activate next session. QA-267976 Phase 2 archive done at session-end DE. No open code WIP for 267976 (shipped). Still-open threads from prior sessions: resume #239386 (`git stash pop` → rebuild → test PRZ L3); watch for QA-268170 colleague fix (learn-from-fix target).
 
-**Memory Type**: RAM | **Last Activity**: 2026-07-01 — 2 concurrent worktree DEs; QA-267976 held + learn-from-fix skill shipped (exciting-fermi) + QA-268170 saved cold-resumable + evolution-check reset (clever-heisenberg).
+**Memory Type**: RAM | **Last Activity**: 2026-07-01 22:22 — QA-267976 Phase 1 closed (e308200402, all 5 issues tested OK) + 3 MemoryCore auto-save/DE-guard hooks built (f02844d).
