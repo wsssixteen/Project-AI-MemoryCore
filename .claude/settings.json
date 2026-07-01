@@ -329,6 +329,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\stop-point-todo-table\\stop-point-todo-table.discipline.hook.js\""
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\quest-bounty\\quest-bounty.hook.js\""
+          }
+        ]
       }
     ]
   }
