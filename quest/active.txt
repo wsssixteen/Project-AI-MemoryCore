@@ -438,22 +438,6 @@ held_reason=2026-07-01 — delegated to colleague; Ruri role = watch-and-learn p
 qa_doc=projects/coding-projects/active/QA-268170/QA-268170.md
 branch=n/a-delegated
 
-qa=QA-268322
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\84. INTERNAL ISSUE #268322 - MCL - SKM - Maklumat Pemohon - Permohonan syarikat tapi papar panel ma
-phase=1
-status=closed
-ticket_type=bug
-env=Staging
-issue_one_liner=MCL - SKM - Maklumat Pemohon - Permohonan syarikat tapi papar panel maklumat tanggungan
-assigned_to_me=2026-07-01
-current_phase=Commit
-local_test_confirmed=true
-quest_start=2026-07-01
-qa_doc=projects/coding-projects/active/QA-268322/QA-268322.md
-closed=2026-07-01
-commit=762672f8c1
-branch=mlk/internal-issue/268322
-
 qa=QA-268273
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\85. INTERNAL ISSUE (PERMANENT FIX) #268273 - Awam - Klik kemaskini pada draf permohonan - system direct ke langkah
 phase=0

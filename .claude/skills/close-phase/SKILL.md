@@ -2,7 +2,7 @@
 name: close-phase
 description: Stage-aware quest close — the keyword "close" advances a quest to its NEXT closing stage. Phase 1 (active → closed) branches + commits + pushes the fix and sets status=closed; Phase 2 (closed → archived) runs the Phase 2 emit + archives the folder/block and sets status=archived. Triggers — "/close-phase", "/close", "close", "close phase", "close-out", "close the quest", "close X", "phase 1 close", "phase 2", "archive X" (when already closed), "wrap X", "bounty X". The skill detects the quest's current status and runs the matching stage. Built 2026-06-05 after the QA-263921 close slip (silent deviation from the pull-before-branch sequence) — a skill runs the sequence in a FIXED order so a step can't be dropped.
 argument-hint: "[<QA-number>]"
-allowed-tools: Read, Glob, Bash, Edit, Write
+allowed-tools: Read, Glob, Bash, Edit, Write, Skill
 ---
 
 # close-phase — Stage-aware quest close
@@ -63,7 +63,7 @@ archived                              --close-->   (no-op: already archived)
 
 ## Phase 2 archive  (status == closed  →  archived)
 
-**Visible Phase 2 step line:** `Phase 2 — QA-<num>: 1 ⬜ Faster-finding · 1b ⬜ Fastest-Path · 2 ⬜ KPI · 3 ⬜ Post-mortem · 4 ⬜ Refine · 5 ⬜ Archive · 6 ⬜ /verify`
+**Visible Phase 2 step line:** `Phase 2 — QA-<num>: 1 ⬜ Faster-finding · 1b ⬜ Fastest-Path · 2 ⬜ KPI · 3 ⬜ Post-mortem · 4 ⬜ Refine · 5 ⬜ Archive · 5b ⬜ Bounty · 6 ⬜ /verify`
 
 1. **Phase 2 emit** (the 5 streamlined steps — `quest/quest-protocol.md` Phase 2, each emitted inline, not just ticked):
    - **Step 1 — Faster-finding** (1-2 lines + the applied artifact).
@@ -73,7 +73,8 @@ archived                              --close-->   (no-op: already archived)
    - **Step 4 — Refine pass** (skill/protocol refinements; promote the Improvement Checklist).
 2. **🚨 Archive hygiene — run the atomic mover:** `node quest/archive-quest.js QA-<num>` — moves the Task folder → `Archive\`, the active.txt block → `active-archive.txt` (status=archived + task_folder repointed), and the project subfolder → `archive\` if present. Use `-LiteralPath` semantics for `[FAT]`-bracketed folder names (the script handles this).
 3. **Emit the visible gate:** `Archive hygiene — QA-<num>: folder→Archive\ ✓ · active.txt block→active-archive.txt ✓ · project subfolder <✓|⬜ no-archive-dir>`.
-4. **`/verify` Checklist E** — confirm every Phase 2 step + the archive moves fired.
+4. **⛏ Harvest + bank — invoke `quest-bounty`** (Skill tool): harvest the quest doc + any system improvements made this quest + new etanah-knowledge, mine ONE refinement (dimension catalog + un-actioned slip-log clusters), then commit/push/merge the **MemoryCore** spoils to main — NEVER the etanah repos (their fix is a teammate-merged PR). See `.claude/skills/quest-bounty/SKILL.md`.
+5. **`/verify` Checklist E** — confirm every Phase 2 step + the archive moves fired.
 
 **The quest is now `archived`. Done.**
 
