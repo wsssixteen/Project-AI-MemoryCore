@@ -132,7 +132,7 @@ process.stdin.on('end', () => {
       '',
       'Per feedback_simplify_and_reference.md "find working analog first" — universal rule across code/template/data:',
       '  - 🚨 IN-FILE FIRST (QA-261986/QA-261517): grep the TARGET FILE ITSELF for an existing method/branch/idiom/attribute that already does this — reuse it; do NOT add parallel/new code when the file already has the pattern.',
-      '  - 💬 COMMENT-EACH-CHANGE (dev-time, per みや 2026-06-22): put a short explanatory comment on EVERY addition/deletion so みや can review what it does at a glance. Dev-only — prepare-commit-trigger Step 2.6 STRIPS them before commit; no_extra_comments governs COMMITTED code only.',
+      '  - 🚫 NO COMMENTS in code unless みや requests it (per みや 2026-07-01, reversing the 2026-06-22 comment-each-change rule) — enforced by no-code-comments-gate.js. If a comment is genuinely needed, ask first; keep it concise + layman.',
       ...checks[kind],
       '',
       'If you have NOT done the convention-check this turn: STOP, run the check (Grep/Read/SELECT), CITE the analog in chat prose, THEN proceed with this edit.',

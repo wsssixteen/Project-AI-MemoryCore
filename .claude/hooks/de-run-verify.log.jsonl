@@ -1,0 +1,2 @@
+{"ts":"2026-07-01T10:34:44.702Z","action":"warn","reason":"wrap-without-de"}
+{"ts":"2026-07-01T10:34:44.836Z","action":"ok","reason":"de-ran-before-wrap"}

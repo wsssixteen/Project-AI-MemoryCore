@@ -424,14 +424,14 @@ base_branch=mlk/master
 qa=QA-267976
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\82. ESOKONGAN #267976 - Urusan PT - Surat JPPH papar header dan footer untuk semua page
 phase=0
-status=hold
+status=active
 ticket_type=bug
 env=MLKSTG
 issue_one_liner=Surat JPPH papar header+footer on pg2+, missing ID-permohonan+page-num, Maklumat Pengguna placeholder unfilled, dup on Jana Semula
 assigned_to_me=2026-06-30
-current_phase=Phase 0 complete (no Apply); held for another session per みや 2026-07-01
-local_test_confirmed=false
-quest_start=2026-06-30
+current_phase=Apply-ALL-5-applied-verified_#5=regenerateNewDocument-scope-fix_NEXT-rebuild-test
+local_test_confirmed=true
+quest_start=2026-07-01
 qa_doc=projects/coding-projects/active/QA-267976/QA-267976.md
 urusan=PT
 tugasan=Penyediaan Surat JPPH
@@ -454,3 +454,21 @@ note=Passed to colleague 2026-06-30 — WATCH for the fix deploy + git commit re
 held_reason=2026-07-01 — delegated to colleague; Ruri role = watch-and-learn per learning_marker=true; Stage-1 git-state check ran this session (pelupusan 44-behind mlk/master with 14 uncommitted #239386 files; awam 16382-behind mlk/stag-env); no existing-fix by colleague yet on either repo
 qa_doc=projects/coding-projects/active/QA-268170/QA-268170.md
 branch=n/a-delegated
+
+qa=QA-268322
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\84. INTERNAL ISSUE #268322 - MCL - SKM - Maklumat Pemohon - Permohonan syarikat tapi papar panel ma
+phase=0
+status=hold
+ticket_type=bug
+env=Staging
+issue_one_liner=MCL - SKM - Maklumat Pemohon - Permohonan syarikat tapi papar panel maklumat tanggungan
+assigned_to_me=2026-07-01
+
+qa=QA-268273
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\85. INTERNAL ISSUE (PERMANENT FIX) #268273 - Awam - Klik kemaskini pada draf permohonan - system direct ke langkah
+phase=0
+status=hold
+ticket_type=bug
+env=Awam Staging
+issue_one_liner=Awam - Klik kemaskini pada draf permohonan > system direct ke langkah maklumat tanah
+assigned_to_me=2026-06-30
