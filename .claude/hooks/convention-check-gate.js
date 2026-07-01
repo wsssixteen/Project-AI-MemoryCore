@@ -24,6 +24,11 @@
  * v1.4 2026-06-22 (per みや) — added COMMENT-EACH-CHANGE dev-time reminder to the advisory
  *   context: comment every add/delete so みや can review at a glance; stripped at commit by
  *   prepare-commit-trigger Step 2.6. Pairs with that strip + no_extra_comments (committed code).
+ * v1.5 2026-07-01 (per みや, #239386 per-urusan patch) — (a) fire on `.sql` file Edit/Write
+ *   (kind='sql', ADVISORY) so writing a patch SCRIPT triggers the checks, not only running an
+ *   UPDATE/INSERT. (b) added VERIFY-SELECT-shows-TRUE-values line to the sql checks: a verify
+ *   SELECT must project raw column values, never a derived BOOL_OR/COUNT/CASE stand-in that hides
+ *   the truth. Rule home: CLAUDE.md §9 Database & Entity Resolution.
  *
  *   CAN (shape/presence ~100%): verify an analog WAS cited before a Java edit → kills SKIPPING.
  *   CANNOT (correctness — stays judgment): verify the cited analog is the RIGHT one.
@@ -64,6 +69,7 @@ process.stdin.on('end', () => {
       if (/\.java$/i.test(filePath)) { kind = 'java'; extra = filePath; }
       else if (/\.docx$/i.test(filePath)) { kind = 'docx'; extra = filePath; }
       else if (/\.xhtml$/i.test(filePath)) { kind = 'jsf'; extra = filePath; }
+      else if (/\.sql$/i.test(filePath)) { kind = 'sql'; extra = filePath; } // v1.5: writing a patch SCRIPT fires the sql checks (advisory)
       else if (/\.(json|xml|properties)$/i.test(filePath) && /(template|resources|config)/i.test(filePath)) { kind = 'config'; extra = filePath; }
     } else if (toolName === 'Bash') {
       if (/\bUPDATE\s+\w+|\bINSERT\s+INTO\s+\w+/i.test(command)) {
@@ -108,6 +114,7 @@ process.stdin.on('end', () => {
         '  - Audit columns (created_by / last_modified_by) — matches sibling rows on the same aplikasi? NEVER ticket/session-specific identifiers.',
         '  - For UPDATE: prefer omitting audit columns from SET. For INSERT: mirror a sibling row.',
         '  - Soft-delete check, FK checks (per data-operation safety rule)?',
+        '  - 🔍 VERIFY-SELECT shows TRUE column values (flag_*, kod_skrin, skrin_id) one row per record — NOT a derived stand-in (BOOL_OR/COUNT/CASE that hides the raw value). OK to run per-key (swap the kod). Ref CLAUDE.md §9.',
       ],
     };
 

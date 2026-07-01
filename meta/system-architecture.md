@@ -170,7 +170,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | Hook | Owner | Watches | Action | Stakeholders |
 |---|---|---|---|---|
 | `commit-gate.js` | self | `git commit` commands | message-format check + commit-conventions.md reminder | etanah-pelupusan commits, MemoryCore commits | Commit-conventions changes require predicate update |
-| `convention-check-gate.js` | self | SQL UPDATE/INSERT in Bash + mcp__postgres queries | value-shape convention reminder | data-patch operations | New SQL patterns may need regex extension |
+| `convention-check-gate.js` | self (v1.5 2026-07-01) | Edit/Write on .java (BLOCK) · .docx / .xhtml / .sql / config (advisory) + SQL UPDATE/INSERT in Bash + mcp__postgres queries | find-working-analog convention reminder; **v1.5**: `.sql` file-write fires the sql checks + VERIFY-SELECT-shows-TRUE-values line (no BOOL_OR/COUNT/CASE stand-ins) | data-patch operations, all code edits | Rule home for verify-true-values: CLAUDE.md §9 |
 | `branch-at-apply-gate.js` | self (NEW 2026-06-19 branch-at-Apply ban defender; **un-ghosted 2026-06-20** — file had been written to the worktree hooks dir while settings.json points at the MAIN path → never fired; now copied to main path) | `git checkout/branch/switch` on a work repo while the active quest is pre-Commit | block + force-surface (base-branch decisions are みや's; branch ops are Commit-prep only, never Apply) | quest Phase-1 close, CLAUDE.md branch-at-Apply ban | one-shot flag bypass `.claude/state/base-branch-approved-<QA>.flag` |
 
 ### 3.4 PreToolUse Edit|Write (7 hooks)
@@ -314,6 +314,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | `video-frames` | video content | frame extraction |
 | `video-trim` (NEW 2026-06-01 S4) | "trim the video" / "trim this video" / "trim my video" / "help me trim" / "video for Redmine" / "trim for upload" / post-testing hand-back with recent ShareX .mp4 | ffmpeg motion-detect cut of idle/loading stretches + tail-trim cursor-to-stop-button + 2 calibration outputs (aggressive/conservative) → highest-numbered Task subfolder + ShareX source delete on verified-success |
 | `redmine-phase1-prefill` (NEW 2026-06-01 S4, manual-invoke only) | "redmine prefill" / "prefill redmine for X" / `/redmine-phase1-prefill` / explicit invocation only — does NOT auto-bind to quest workflow | Claude-in-Chrome MCP driven: navigate Redmine Edit page → fill Status=Resolved + Assignee + %Done=100% + Resolved By (both) + Notes template + Files from highest-numbered Task subfolder → STOP before Submit (みや reviews + submits) |
+| `learn-from-fix` (NEW 2026-06-30, manual-invoke only) | "learn from <ticket>" / "learn from commit <SHA>" / "extract lessons from <ticket>" / `/learn-from-fix <ticket>` — no auto-fire | 5-section structured extract from a closed ticket's git commit + Redmine History.txt (identity / root cause / fix shape / learnable factors / reuse potential) + proposed edits to `etanah-knowledge/melaka/BUG-BESTIARY.md` (primary) + secondary knowledge files. Propose + apply after nod (v1); promote to direct-apply after 3 clean runs. Audit log: `domain/learn-from-fix/log.jsonl`. Plan: `Feature/Learn-From-Others-Fixes/plan-v1.md` |
 | `skill-invocation-discipline` | hook+skill pair | discipline enforcement |
 
 ### 4.5 Skill-invocation contract
