@@ -54,7 +54,7 @@ Components fade if unused. Periodic audit (per /system-rules Rule 3): check hook
 
 ## Two agentic-specific rules (moved here from /system-rules)
 
-6. **Ship with eval when behavior reliability matters** — new Power ships with `eval.workflow.js` that scores its behavior. PASS/FAIL baseline. Re-run when refactoring touches the Power. Demonstrated this session: line 190 + line 191 merge-in-place trims scored PASS via workflows `wdw2beqd5` + `wchns1n2r`.
+6. **Ship with eval — and RUN it before shipping (HARD pre-ship gate, strengthened 2026-07-02 per みや)** — a new Power / hook is **NOT shipped until its `eval.workflow.js` — or, for a trivial hook, a one-run SMOKE-TEST (register it, trigger it once, confirm it does what it claims AND does not misfire) — has been RUN and PASSED this session.** **Registering a hook in `settings.json` with zero eval AND zero smoke-test is BANNED.** No eval-run = not shipped, even when the code reads correct — code-exists ≠ behaviour-verified (same principle as `veritas-claim-gate`). Re-run the eval when refactoring touches the Power. **Why hardened**: `auto-commit-docs.js` was registered 2026-07-01 with neither an eval nor a smoke-test; on Windows it flashed a cmd window every turn (no `windowsHide`) and committed telemetry logs as junk — both defects a single smoke-run would have caught. It cost a full incident + a retirement (`system-architecture.md §3.13`).
 
 7. **Pick the primitive — hook-only / skill-only / hook+skill / full trinity** — justify the chosen layer. Don't ship full trinity when hook-only suffices (premature ceremony per /system-rules Rule 4 "start simple"). Add layers when evidence demands.
 
@@ -65,3 +65,5 @@ Components fade if unused. Periodic audit (per /system-rules Rule 3): check hook
 When refining any `/skill` or CLAUDE.md content: apply `/system-rules` Rule 2 (merge in place). The `claude-md-edit-guard.js` hook enforces this deterministically on edits to CLAUDE.md / /system-rules / /system-design.
 
 *Version 2.0 — 2026-06-02. Complete rewrite. Old version (197 lines mixed universal + agentic) split into /system-rules (universal background) + this (agentic-specific specialization). Naming convention "Power" locked per みや 2026-06-02.*
+
+*Version 2.1 — 2026-07-02. Rule 6 hardened into a HARD pre-ship gate: a hook's eval OR a one-run smoke-test MUST be run + PASS before it is registered in settings.json. Per みや after the `auto-commit-docs` no-eval incident (shipped 2026-07-01, retired 2026-07-02).*
