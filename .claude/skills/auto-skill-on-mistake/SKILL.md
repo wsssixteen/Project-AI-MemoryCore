@@ -140,6 +140,10 @@ Any row with **✗** → revise wording BEFORE Step 4 emit. **⚠️** rows surf
 
 If the missed behaviour can fire deterministically — e.g. "after every Edit to source code, run X check" — write the corresponding hook script under `.claude/hooks/<name>.js` and register it in `.claude/settings.local.json`. Hooks bypass the model and fire 100% of the time.
 
+### Step 4.5 — Fire-on-the-trigger (added 2026-07-03, audit E10 — C-walk pattern #4, 2 strikes)
+
+The refined/created skill or hook MUST be invoked/exercised on the VERY ticket/turn that triggered the refinement, in the SAME session — a defender built but not fired on its own trigger case is unvalidated. QA-262004 (annotations skill built same session, not run on the ticket) + QA-262039 (checklist refined same session, not invoked on the ticket) are the proof strikes. Emit: `Fire-on-trigger: <component> exercised on <ticket/case> ✓` or the explicit reason it cannot be (e.g. ticket already closed).
+
 ### Step 5 — Failure log entry + tiered escalation (refined 2026-05-25 — "12 days unacceptable" slip)
 
 ## The Iron Law
