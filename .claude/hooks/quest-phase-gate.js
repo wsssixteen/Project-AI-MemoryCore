@@ -83,7 +83,23 @@ process.stdin.on('end', () => {
       { name: 'Rubric', re: /═══\s*RUBRIC\b|\bRUBRIC EMIT\b|Logic Blast Radius/i },
     ];
     const missing = phases.filter(p => !p.re.test(transcript)).map(p => p.name);
-    if (missing.length === 0) process.exit(0); // full loop emitted → allow
+    if (missing.length === 0) {
+      // v2 (2026-07-03, audit E2+E3): phases exist — run the two ADVISORY checks that
+      // QA-268273 proved the phases alone don't cover. Advisory v1 (promote-on-slip).
+      const base = path.basename(filePath).replace(/\.[^.]+$/, '');
+      const advisories = [];
+      // E3 — mechanism git-history: the fix-file's own history read this session?
+      const mechRe = new RegExp('(git log[^\\n]{0,120}' + base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '|MECHANISM-HISTORY:[^\\n]{0,80}' + base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'i');
+      if (!mechRe.test(transcript)) advisories.push(
+        `E3 mechanism-history: no \`git log -- ...${base}...\` evidence this session — recent commits on THIS file often ARE the mechanism (QA-268273: 25 sibling commits unseen). Run it + read the matched tickets BEFORE relying on the Rubric.`);
+      // E2 — entry-point proof: for UI-reachable code, is the handler binding proven?
+      if (/\.(java|xhtml)$/i.test(filePath) && !/ENTRY-POINT(-PROOF)?:/i.test(transcript)) advisories.push(
+        `E2 entry-point proof: no \`ENTRY-POINT:\` line this session — grep the BA-screenshot page's xhtml for the ACTUAL action/listener binding and emit \`ENTRY-POINT: <page.xhtml:line> -> <Class.method()>\` (QA-268273 fix-1 patched the wrong handler).`);
+      if (advisories.length === 0) process.exit(0);
+      process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: 'PreToolUse',
+        additionalContext: '\n⚠️  quest-phase-gate v2 (ADVISORY — edit allowed):\n' + advisories.map(a => '   • ' + a).join('\n') + '\n' } }));
+      process.exit(0);
+    }
 
     const reason = [
       `🚫 quest-phase-gate: missing phase emit(s) this session → ${missing.join(', ')}`,
