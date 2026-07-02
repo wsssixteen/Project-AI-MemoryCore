@@ -108,18 +108,18 @@ SAME layer margins + flow, on the REAL files. **Title in the top border = real f
 
 *(A chain that WRITES to the DB keeps going past BEAN → SERVICE → ENTITY → DB; the final box is the `table` name, and the touched `@Column`s:line sit inside the ENTITY box above it.)*
 
-## Variants for non-linear shapes (v1.3 — validated by the 2026-07-02 etanah eval)
-The linear spine holds for genuine top→bottom flows (render pipelines, deploy→invoke→persist). Where the FORK **is** the architecture, use a variant:
+## Variants for non-linear shapes (v1.4 — pruned; kept minimal)
+The linear spine holds for genuine top→bottom flows. Where the FORK **is** the architecture, only these exist:
 
-- **Hub-and-spoke** (data model, e.g. the `aplikasi_id` join): ONE hub box — put multiple keys of the *same row* as separate BODY lines, do NOT split into two boxes — then a single fan-out connector `┬` splitting to `├/┼/┤` into a ROW of **fixed-width equal** spoke boxes with **short aliases**; a footnote maps aliases → full table names (so boxes never wrap + break their borders). Waive "one dominant spine" — the fan IS the spine.
-- **Containment frame** (a module that WRAPS the flow, e.g. COMMON hosting the engine AND the base classes the spine extends): draw the module as an OUTER dotted frame `┌┄ MODULE ┄┐ … └┄┄┘` enclosing the spine — not as two disconnected top/bottom boxes.
-- **Peer fork** (N≥3 co-equal branches into another module): side-box lists them as an N-key list + a `PEER — co-equal, not subordinate` label (+ `not deployed local` for teknikal).
-- **Back-edge / re-entrant** (recursion, or same sub-process called N×): a `↺ re-enters <box>` / `↺ called N× at stages A/B/C` tag ON the connector or side-box — never a floating back-arrow.
-- **Two-column left margin**: LAYER tag + MODULE tag; leave the module cell blank when a layer has no home module (e.g. Flowable's ENGINE).
-- **Sanctioned fork glyph**: `┈┈►` into a dotted side-box is legal (exempt from the no-floating-arrow rule).
-- **Relation-verb connectors**: when a layer is a lookup TABLE not a call site (e.g. the tag→populator map), the connector text may be a relation-word (`indexed by` / `looked up in`), not only a flow-verb.
+- **Hub-and-spoke** (data model, e.g. the `aplikasi_id` join): ONE hub box (multiple keys of the *same row* = separate BODY lines, never two boxes) → a single fan-out connector `┬` → `├/┼/┤` → a ROW of **fixed-width equal** spoke boxes with **short aliases**; a footnote maps aliases → full table names so nothing wraps. The fan IS the spine.
+- **Peer fork** (a co-equal branch into another module, e.g. teknikal callouts): ONE labelled **dotted side-box** off the spine via `┈┈►` (sanctioned — exempt from the no-floating-arrow rule). List N callActivities as an N-key list; tag `PEER · not deployed local`. A same-sub-process-called-N× goes as a `↺ called N× at :a/:b/:c` line INSIDE that side-box — never a floating back-arrow.
+- Connector text may be a relation-word (`indexed by` / `looked up in`) when a layer is a lookup TABLE, not a call site.
 
-Otherwise (a single occasional detour off a real spine): keep ONE dominant top→bottom spine + a labelled dotted side-box, tagging the module in the left margin.
+## 🚫 ONE CATEGORIZATION PER PLACE (the anti-nesting law — HARD)
+A categorization (module / layer / file-class) lives in **EXACTLY ONE slot** — the box HEADER **or** the left margin — **never both, and never re-encoded as an outer / containment frame.**
+- If a MODULE is the box header (`etanah-awam`), "module" is BANNED from the left margin and from any outer frame. The same module reused as a header at several spine nodes is fine — that is still one slot.
+- The left margin is only for a categorization NOT already in the header (header = file `StatusPermohonanForm.java`, margin = layer `UI`). If the header already IS the categorization, drop the margin.
+- **BANNED:** nested / containment boxes (a box inside a box) · the same categorization in 2+ places · adding ANY element not in this template. When unsure — REMOVE. The whole vocabulary is: a flat spine of headed boxes + connectors + at most one dotted fork side-box.
 
 ## Pre-emit RENDER SELF-CHECK (mandatory — the "broken diagram" guard)
 Before emitting, eyeball the ASCII and confirm ALL:
@@ -144,4 +144,4 @@ Skill-only Power (on-demand output; no MUST-fire trigger → no hook, per system
 ## Design provenance
 Format via a 3-candidate + judge Workflow (`wf_5c0231fb`): winner = layered-margins + typed-verbs (B), grafted with zero-prose Diagram 2 (A) + banners/legend (C).
 
-*Version 1.3 — 2026-07-02. Added 7 non-linear VARIANTS (hub-and-spoke, containment frame, peer fork, back-edge/re-entrant tag, two-column margin, sanctioned fork glyph, relation-verb connectors) after an eval (`wf_bb56a336`, 4 etanah architectures + judge) returned NEEDS-REFINEMENT: the linear spine held for render-pipeline + Flowable but broke for the hub-and-spoke DB model + module fan-out, where the forks ARE the architecture. v1.2 = longer connectors; v1.1 = box-format fix; v1.0 = initial build.*
+*Version 1.4 — 2026-07-02. PRUNED the over-added variants (cut containment-frame + two-column margin) and added the **ONE-CATEGORIZATION-PER-PLACE** anti-nesting law, after みや flagged the multi-module render as still-broken — "module" was re-encoded 3× (outer frame + margin tag + box header). Lesson: simplify means SUBTRACT, not add. Kept: hub-and-spoke + one dotted peer-fork side-box. v1.3 = 7 variants (over-added) from the etanah eval; v1.2 = longer connectors; v1.1 = box-format fix; v1.0 = initial build.*
