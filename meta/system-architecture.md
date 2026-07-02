@@ -53,7 +53,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `meta/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `meta-layer-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node meta/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 73 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 71 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
@@ -81,10 +81,10 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | UserPromptSubmit | — | `quest-active-grounding.js` | 🚨 MISSING |
 | UserPromptSubmit | — | `quest-objective-anchor.js` | 🚨 MISSING |
 | UserPromptSubmit | — | `quest-resume-preflight.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `route-consult-gate.js` | 🚨 MISSING |
 | UserPromptSubmit | — | `scout-completeness-gate.js` | 🚨 MISSING |
 | UserPromptSubmit | — | `session-items-manager.js` | 🚨 MISSING |
 | UserPromptSubmit | — | `skill-invocation-discipline-gate.js` | 🚨 MISSING |
-| UserPromptSubmit | — | `SystemAwareDecision.js` | 🚨 MISSING |
 | UserPromptSubmit | — | `ticket-gate.js` | 🚨 MISSING |
 | UserPromptSubmit | — | `TurnChecklistGate.js` | 🚨 MISSING |
 | UserPromptSubmit | — | `user-side-guardrail.js` | 🚨 MISSING |
@@ -100,7 +100,6 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | PreToolUse | Edit|Write | `logic-blast-radius-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `meta-edit-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `no-code-comments-gate.js` | 🚨 MISSING |
-| PreToolUse | Edit|Write | `phase0-artifact-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `pre-action-check-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `quest-phase-gate.js` | 🚨 MISSING |
 | PostToolUse | Bash | `quest-bounty.hook.js` | 🚨 MISSING |
@@ -115,7 +114,6 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | Stop | — | `deploy-proof-gate.js` | 🚨 MISSING |
 | Stop | — | `diagnostic-self-heal-gate.js` | 🚨 MISSING |
 | Stop | — | `discipline.hook.js` | 🚨 MISSING |
-| Stop | — | `file-list-after-refine.js` | 🚨 MISSING |
 | Stop | — | `full-address-trace-gate.js` | 🚨 MISSING |
 | Stop | — | `notes-on-test-data.js` | 🚨 MISSING |
 | Stop | — | `operational-follow-through.js` | 🚨 MISSING |
@@ -280,6 +278,15 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 - ❌ **RETIRED Stop hook `auto-commit-docs.js` + worker `auto-commit-worker.js`** (unregistered from `settings.json` + files deleted). Per-turn background commit+push flashed a cmd window every turn on Windows (git spawned with no `windowsHide`) and committed hook-telemetry `*.log.jsonl` as junk every turn. **Save path reverted to the normal method: Domain Expansion / save-all at session end** (one git run, no per-turn noise). Telemetry logs + state files added to `.gitignore` so save-all won't re-add them.
 - 🩹 **Root slip**: the hook was shipped 2026-07-01 **with no eval and no smoke-test** — a bypass of §3-doctrine Rule 6. Both defects (missing `windowsHide`, tracked telemetry) would have surfaced in a single smoke-run. Rule 6 hardened this session into a **pre-ship gate** (`.claude/skills/system-design/SKILL.md`) + logged in `skill-failure-log.md`.
 - Net Stop-hook delta: **−1** (`auto-commit-docs.js` removed; `de-run-verify.js` stays). §3.5 count 19 → 18; regenerate §3.0 via `node meta/sync-hook-catalog.js`.
+
+### 3.14 Change 2026-07-03 (quest-system-audit Phase E9 — retire pass, みや full nod)
+- ❌ **RETIRED `phase0-artifact-gate.js`** (PreToolUse Edit|Write) — keyed on `early-diagnostic.md`, an artifact superseded by canonical `QA-<n>.md` + the quest-phase0 Workflow; its `\Z` regex was broken anyway. Paired fix: `verify` Checklist A4 now cites `QA-<n>.md`.
+- ❌ **RETIRED `file-list-after-refine.js`** (Stop) — A7 ceremony guard; concern covered by DE manifest + git status.
+- ❌ **RETIRED `rubric` skill** (redirect-stub) — its own auto-decay date (2026-06-07) was 26 days past.
+- ❌ **DELETED `domain/learn-from-fix/` (empty) + `domain/overview-steps/`** (only orphan `state/239386.json`, zero references — git history preserves it).
+- 🔁 **RENAMED `SystemAwareDecision.js` → `route-consult-gate.js` v2.0** — the file's own header always said route-consult-gate (filename≠behavior drift). Trigger narrowed per Rule 8 (floor 80 chars · skip slash-commands/ack-openers), emit trimmed 13→3 lines per cost-efficiency v2. Smoke-tested 3/3 (fires substantive · skips ack · skips slash) BEFORE registration swap — Rule 6 compliant.
+- Provenance: [quest-system-audit](../projects/coding-projects/active/quest-system-audit/quest-system-audit.md) Phase B verdicts + B6 adversarial review (2 of 7 retire proposals overturned: this rename instead of deletion; edit-scope-gate merge rejected).
+- Net delta: UserPromptSubmit −0 (rename) · PreToolUse(Edit|Write) −1 · Stop −1 · skills −1 · domain folders −2. Regenerate §3.0 via `node meta/sync-hook-catalog.js`.
 
 ---
 

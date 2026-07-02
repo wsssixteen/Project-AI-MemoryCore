@@ -104,7 +104,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\SystemAwareDecision.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\route-consult-gate.js\""
           },
           {
             "type": "command",
@@ -168,10 +168,6 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\phase0-artifact-gate.js\""
-          },
-          {
-            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\pre-action-check-gate.js\""
           },
           {
@@ -228,10 +224,6 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\operational-follow-through.js\""
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\file-list-after-refine.js\""
           },
           {
             "type": "command",

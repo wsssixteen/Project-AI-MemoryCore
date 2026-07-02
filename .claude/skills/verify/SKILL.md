@@ -46,7 +46,7 @@ Every item is checked against reality — a `git` command, a file read, a `grep`
 | A1 | env-check ran — `environment.properties` + `standalone.xml` + branch aligned to the ticket | env-check output / `git branch --show-current` in both repos |
 | A2 | Both repos branch-checked + `git pull --ff-only` done | `git log` / clean `git status` |
 | A3 | etanah-knowledge files whose SCOPE matches the symptom were Glob'd + read | transcript trace |
-| A4 | Scout done — `projects/coding-projects/active/QA-<n>/early-diagnostic.md` exists | file exists |
+| A4 | Scout done — `projects/coding-projects/active/QA-<n>/QA-<n>.md` exists with a Scout/investigation section | file exists (early-diagnostic.md artifact retired 2026-07-03, audit E9) |
 | A5 | Recon block emitted — Universal Checks 1-8, every row citing `Class.method:line` | transcript trace |
 | A6 | (panel-render ticket) Panel-Render-Check 5 steps done; test data verified via `umm_a_tgsn` HISTORY, not just `umm_tgsn_semasa` current-state | transcript trace + DB-query evidence |
 
