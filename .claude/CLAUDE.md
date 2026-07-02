@@ -217,7 +217,7 @@ Token-discipline rules — see `.claude/cost-efficiency.md` (routed out of CLAUD
 **Delegation-plan table columns**: stage · # agents · model · effort · output schema · expected token band.
 
 **Mandatory disciplines**:
-1. **Scout inline first** — enumerate the work-list (Glob/ls) BEFORE fan-out; batch it; schema-force every reader's output (prose returns BANNED for readers).
+1. **Scout inline first** — enumerate the work-list BEFORE fan-out using the cheapest PRE-BUILT index that already holds it: Glob/ls for files · **codegraph MCP** for symbols/callers · pre-parsed codemap JSONs (`bpmn_flow.json` / `callgraph_callers.json` / `doc_catalog.json`) for Etanah structures — never raw-read what an index already answers (pre-parse-once). Batch it; schema-force every reader's output (prose returns BANNED for readers).
 2. **Resume-not-rerun** — on ANY mid-flight failure (usage limit / crash / edit), resume the SAME runId: journaled results replay free; only failed agents re-run. Relaunching from scratch = BANNED. Patch ONLY the failed call-sites — editing a completed call's prompt/opts busts its cache and re-buys it.
 3. **Usage-limit strategy** — a limit hit mid-flight makes the cache the asset: wait for reset, then resume the remainder on cheaper models; never restart.
 4. **Controller verifies** — cheap-model outputs are DATA, not truth: the main loop spot-checks counts + sample rows against disk before reporting anything as fact.
