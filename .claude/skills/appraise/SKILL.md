@@ -15,7 +15,7 @@ allowed-tools: Read, Grep, Glob, Bash
 |---|---|---|
 | **A — Appraise** | name the subject's load-bearing assumptions + their evidence AGE (stale evidence = finding) + the silent-failure mode (how it fails with no error) | 3-row table |
 | **S — Scrutinize** | per claim/rule: verdict `proven / plausible-keep / stale-drop / unverified-soften` — each backed by a cite, test result, or observation | per-claim table |
-| **C — Check-missing** | gap sweep vs TODAY's reality: what does the subject not cover that current work already needed? each gap cites the incident that proves it | gap table (`# · gap · proven by`) |
+| **C — Check-missing** | THREE lenses (per みや 2026-07-02): (a) **absent** — what the subject doesn't cover that current work already needed; (b) **under-utilized** — what we ALREADY OWN (tool/index/rule) that the subject fails to fully use; (c) **broader** — angles never considered at all. Each finding cites the incident/asset that proves it | gap table (`# · lens · gap · proven by`) |
 | **R — Refine** | APPLY the refine in place (merge-in-place, pointers not duplicates per File Ownership) + version-stamp + commit; show the change table | edited file + verdict |
 
 **Verdict line**: `PROCEED / PROCEED WITH CAUTION / STOP AND RETHINK` + 1 sentence.
