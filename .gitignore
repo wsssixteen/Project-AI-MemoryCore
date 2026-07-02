@@ -23,3 +23,14 @@ Feature/Time-Based-Aware-System/prayer-state.json
 
 # Pre-prune backups — local safety net, not for the repo
 backups/
+
+# Hook telemetry / fire-logs — ephemeral, rewritten as hooks fire every turn.
+# Were tracked by mistake → auto-commit-docs committed+pushed them every turn (junk + cmd flashes).
+# Kept tracked (curated data, NOT logs): domain/scan/known-bugs.jsonl · meta/slip-counts.jsonl
+.claude/hooks/*.log.jsonl
+.claude/state/veritas-claim-ledger.jsonl
+domain/*/log.jsonl
+Feature/Forge-Self-Improvement-System/*-log.jsonl
+Feature/Time-Based-Aware-System/reply-log.jsonl
+Feature/Time-Based-Aware-System/reply-log-state.json
+meta/recent-tool-calls.jsonl

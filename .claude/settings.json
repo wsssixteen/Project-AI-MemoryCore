@@ -299,10 +299,6 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\auto-commit-docs.js\""
-          },
-          {
-            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\de-run-verify.js\""
           }
         ]
