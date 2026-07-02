@@ -116,7 +116,7 @@ SAME layer margins + flow, on the REAL files. **Title in the top border = real f
 - **Left margin** = exactly **ONE categorization type per diagram** (layer `UI/BEAN/SERVICE/ENTITY/DB` for in-module flows · module `AWAM/PLP/TEKNIKAL/COMMON` for cross-module flows). A categorization lives ONLY in the margin — never as a header, never as an outer frame, never duplicated anywhere.
 - **Box body** = D1: one terse does-line · D2: `method()` / `var` with `:line` ONLY, zero prose. Explanations ride the connector.
 - **Connector vocabulary is CLOSED**: `┬ │ ▼` (+ `├ ┼ ┤` for a fan-out). **NOTHING else** — no `┈┈►`, no invented glyphs, no floating/side arrows, no outer frames, no nested boxes. If an element is not specified in this file, it is BANNED; when unsure — REMOVE.
-- **Other-module / not-deployed step** (e.g. a teknikal callout): a **DOTTED-border box ON the spine** (`┌┄ MLK_TKL_*.bpmn20.xml ┄┐`), connected with the same `┬ │ ▼`. The dotted border IS the marker — no side placement, no special arrow. Re-entry = a `↺ called N× at :a/:b/:c` body line inside it.
+- **Other-module / not-deployed step** (e.g. a teknikal callout): a **DOTTED-border box ON the spine**, connected with the same `┬ │ ▼`. The dotted border IS the marker — no side placement, no special arrow. **ALL FOUR borders dotted — `┌┄ … ┄┐` top · `┆` sides · `└┄ … ┄┘` bottom — NEVER mixed** (solid-top + dotted-sides is broken). No ⚠/focus marker on it unless that box is the actual bug node. Re-entry = a `↺ called N× at :a/:b/:c` body line inside it.
 
 ## Variants for non-linear shapes (kept minimal)
 - **Hub-and-spoke** (data model, e.g. the `aplikasi_id` join): ONE hub box (multiple keys of the *same row* = separate BODY lines, never two boxes) → a single fan-out connector `┬` → `├/┼/┤` → a ROW of **fixed-width equal** spoke boxes with **short aliases**; a footnote maps aliases → full table names so nothing wraps. The fan IS the spine.
@@ -130,6 +130,7 @@ Before emitting, eyeball the ASCII and confirm ALL:
 - [ ] NO arrow after the last box — the flow ends
 - [ ] Diagram 2 boxes are `method:line` only (zero prose); explanations are on connectors; one ⚠ + a wrong-outcome final box
 - [ ] **D2 headers are real file/class names** (no module/layer as header); margin carries ONE categorization type; **only `┬ │ ▼ ├ ┼ ┤` connectors** appear anywhere
+- [ ] a dotted box has **ALL FOUR borders dotted** (`┌┄ ┆ └┄`), never solid-top/dotted-sides; **no stray marker floats in the margin** (⚠ only on a real bug node, inline with the tag)
 - [ ] pastes clean, ≤ ~72 cols, no wrap
 
 A broken render is a rule break even if the content is right. Fix it before sending.
@@ -145,5 +146,7 @@ Skill-only Power (on-demand output; no MUST-fire trigger → no hook, per system
 
 ## Design provenance
 Format via a 3-candidate + judge Workflow (`wf_5c0231fb`): winner = layered-margins + typed-verbs (B), grafted with zero-prose Diagram 2 (A) + banners/legend (C).
+
+*Version 1.6 — 2026-07-02 (FINAL refinement). A dotted (other-module) box must have **ALL FOUR borders dotted** — mixed solid-top/dotted-sides is broken — and **no stray focus marker floats in the margin** (⚠ only on a real bug node, inline). Per みや's flag of residual teknikal-box breakage.*
 
 *Version 1.5 — 2026-07-02. Added the 🧱 FUNDAMENTALS block as the sole derivation source, after two spec-drift slips in one day: (a) v1.3 invented a `┈┈►` fork glyph and self-labelled it "sanctioned" despite the template ban on unspecified elements; (b) v1.4 codified module-as-box-header, overwriting the founding spec (D2 headers = file names). Connector vocabulary now CLOSED (`┬ │ ▼ ├ ┼ ┤`); other-module steps = dotted box ON the spine. Root cause: refining from my last render instead of from みや's original spec. v1.4 = pruned variants + anti-nesting; v1.3 = 7 variants (over-added); v1.2 = longer connectors; v1.1 = box-format fix; v1.0 = initial build.*
