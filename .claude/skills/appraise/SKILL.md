@@ -1,71 +1,41 @@
 ---
 name: appraise
-description: Socratic plan stress-test — interrogate weak points across Assumption / Scope / Evidence axes. Triggers — "/appraise", "appraise this", "scrutinize", "stress-test the plan", "pressure-test", "interrogate the proposal", "weigh this approach", "challenge this plan", before committing to any implementation, architectural decision, or multi-step change.
+description: Use when a plan/rule/file/approach needs review before commitment — the ASCR loop (Appraise · Scrutinize · Check-missing · Refine), self-answered with evidence. Triggers — "/appraise", "appraise this", "scrutinize", "check if there's anything missing", "refine it", "go through X and refine", "stress-test the plan", "pressure-test", "challenge this plan".
 allowed-tools: Read, Grep, Glob, Bash
 ---
 
-# /appraise — Socratic Plan Interrogation
+# /appraise — ASCR Review Loop
 
-> Stress-test a plan, proposal, or approach by systematically interrogating its weak points.
-> Use before committing to any implementation, architectural decision, or multi-step change.
+> Appraise · Scrutinize · Check-missing · Refine — run on a plan, rule-file, skill, or approach BEFORE committing to it.
+> Simplified 2026-07-02 per みや from the 9-question Socratic protocol: the 4-verb loop is the default; the old axes survive as the Scrutinize vocabulary.
 
----
+## The loop (self-answered — evidence per cell, never questions back at みや)
 
-## What This Skill Does
+| Step | What I do | Output shape |
+|---|---|---|
+| **A — Appraise** | name the subject's load-bearing assumptions + their evidence AGE (stale evidence = finding) + the silent-failure mode (how it fails with no error) | 3-row table |
+| **S — Scrutinize** | per claim/rule: verdict `proven / plausible-keep / stale-drop / unverified-soften` — each backed by a cite, test result, or observation | per-claim table |
+| **C — Check-missing** | gap sweep vs TODAY's reality: what does the subject not cover that current work already needed? each gap cites the incident that proves it | gap table (`# · gap · proven by`) |
+| **R — Refine** | APPLY the refine in place (merge-in-place, pointers not duplicates per File Ownership) + version-stamp + commit; show the change table | edited file + verdict |
 
-When みや types `/appraise [subject]`, I run a structured interrogation of the current plan or the subject provided. I ask branching questions across three axes, then summarize what held up and what needs revisiting.
+**Verdict line**: `PROCEED / PROCEED WITH CAUTION / STOP AND RETHINK` + 1 sentence.
 
-**Goal**: surface hidden assumptions, scope creep, missing failure modes, and weak justifications — before they become bugs or wasted effort.
+## Scrutinize vocabulary (the old 3 axes, kept as checklists — consult, don't recite)
 
----
-
-## Interrogation Protocol
-
-### Axis 1 — Assumption Audit (3 questions)
-1. What is the single most load-bearing assumption in this plan? What happens if it's wrong?
-2. Is there evidence that this assumption holds — or is it pattern-matching from a similar-looking problem?
-3. What would need to be true for this plan to fail silently (i.e., no error, but wrong behavior)?
-
-### Axis 2 — Scope & Blast Radius (3 questions)
-1. What is explicitly in scope? What is implicitly assumed to be in scope but not stated?
-2. What existing behavior could this break that we haven't explicitly checked?
-   - **Code changes**: grep for the modified class/method — who else calls it? Which XHTML pages bind to the variable being changed? Which urusan/tugasan contexts trigger this code path?
-   - **DB/data changes**: grep for the group/table code being modified — which Java classes load it? Does it appear in etanah-awam (applicant-facing) as well as etanah-pelupusan (officer-facing)? Shared reference data affects all modules that read it.
-3. Is there a smaller/simpler version of this change that achieves 80% of the goal with 20% of the risk?
-
-### Axis 3 — Evidence Quality (3 questions)
-1. For each key claim: is it "proven" (breakpoint/test/query confirmed) or "hypothesis/theory/likely"?
-2. Which step has the weakest evidence? What would make it stronger?
-3. If みや had to explain this plan to a colleague in 2 sentences — what would he say? Does that match what we're actually doing?
-
----
-
-## Output Format
-
-```
-## /appraise — [Plan/Subject Name]
-
-### What held up
-- [bullet per strong point — brief]
-
-### What needs revisiting
-- [bullet per weak point — with specific concern]
-
-### Verdict
-[One of: PROCEED / PROCEED WITH CAUTION / STOP AND RETHINK]
-[1–2 sentence summary of the key risk]
-```
-
----
+| Axis | Checks |
+|---|---|
+| Assumptions | most load-bearing? evidence current or pattern-matched? silent-failure mode? |
+| Scope & blast radius | explicit vs implied scope · who else calls/reads the thing (grep callers · XHTML bindings · urusan/tugasan contexts · cross-module etanah-awam↔pelupusan shared refs) · is there an 80/20 smaller version? |
+| Evidence quality | per claim: proven (test/query/breakpoint) vs hypothesis · weakest step · does the 2-sentence colleague-summary match what it actually does? |
 
 ## Rules
 
-- Ask the 9 questions, not all at once — group by axis, wait for みや to engage, then continue
-- Banned vocabulary during appraise: "this should work", "it's straightforward", "obviously", "of course"
-- If みや says "just do it" during appraise: flag the unresolved questions, then proceed
-- For quick one-off decisions: compress to 3 questions (one per axis) + one-line verdict
+- Self-answer everything with evidence — asking みや the 9 questions is the OLD mode; only surface a question if it is a genuine みや-decision (destructive / preference / external fact)
+- Banned vocabulary: "this should work", "it's straightforward", "obviously", "of course"
+- R (Refine) is part of the loop by default — an appraisal that ends without applying (or explicitly parking) the refine is incomplete
+- Quick mode: for a small decision, compress to 1 row per step + verdict line
 
 ---
 
-*Skill version: 1.1 — created 2026-04-20; blast-radius expanded 2026-04-24 (DB group consumers + cross-module check); salvaged into main 2026-05-19 from stranded branch gifted-bartik-41d152*
+*Skill version: 2.0 — 2026-07-02 per みや: restructured to ASCR 4-verb loop, self-answered; validated live on `.claude/cost-efficiency.md` v2 refine. Prior: 1.1 (9-question Socratic interrogation, created 2026-04-20, blast-radius expanded 2026-04-24, salvaged 2026-05-19).*
 *Invoked via: `/appraise` or `/appraise <subject>`*
