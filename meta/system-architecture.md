@@ -287,6 +287,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 - 🔁 **RENAMED `SystemAwareDecision.js` → `route-consult-gate.js` v2.0** — the file's own header always said route-consult-gate (filename≠behavior drift). Trigger narrowed per Rule 8 (floor 80 chars · skip slash-commands/ack-openers), emit trimmed 13→3 lines per cost-efficiency v2. Smoke-tested 3/3 (fires substantive · skips ack · skips slash) BEFORE registration swap — Rule 6 compliant.
 - Provenance: [quest-system-audit](../projects/coding-projects/active/quest-system-audit/quest-system-audit.md) Phase B verdicts + B6 adversarial review (2 of 7 retire proposals overturned: this rename instead of deletion; edit-scope-gate merge rejected).
 - Net delta: UserPromptSubmit −0 (rename) · PreToolUse(Edit|Write) −1 · Stop −1 · skills −1 · domain folders −2. Regenerate §3.0 via `node meta/sync-hook-catalog.js`.
+- ➕ **E5 SHIP-CHECK added to `hook-syntax-check.js`** (same audit batch): every registered hook file must be git-tracked (`git ls-files --error-unmatch`; only exit-1 counts as untracked — transient git errors fail-open). Closes the A1 class (registration-committed/file-uncommitted worktree ghost, seen twice). Smoke-tested both directions (silent when healthy · exactly-1 flag when planted).
 
 ---
 

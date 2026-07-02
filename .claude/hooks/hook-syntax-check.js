@@ -53,6 +53,14 @@ process.stdin.on('end', () => {
         const line = err.split('\n').find(l => /Error|Unexpected|SyntaxError/.test(l)) || 'parse error';
         broken.push(`${path.basename(p)} — ${line.trim().slice(0, 110)}`);
       }
+      // SHIP-CHECK (2026-07-03, audit E5 — the A1 class, seen twice): a registered hook whose
+      // FILE is not git-tracked ships the registration but not the file → other checkouts run a ghost.
+      try {
+        execFileSync('git', ['ls-files', '--error-unmatch', resolved], { stdio: 'pipe', cwd: ROOT });
+      } catch (e) {
+        // ONLY exit 1 = genuinely untracked; other failures (index lock, transient) fail-open
+        if (e.status === 1) broken.push(`${path.basename(p)} — SHIP-CHECK: registered but NOT git-tracked (git add + commit it — registration propagates, file won't)`);
+      }
     }
     if (broken.length === 0) process.exit(0);   // all parse → silent
 
