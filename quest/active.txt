@@ -440,13 +440,13 @@ branch=n/a-delegated
 
 qa=QA-268273
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\85. INTERNAL ISSUE (PERMANENT FIX) #268273 - Awam - Klik kemaskini pada draf permohonan - system direct ke langkah
-phase=0
+phase=1
 status=active
 ticket_type=bug
 env=Awam Staging
 issue_one_liner=Awam - Klik kemaskini pada draf permohonan > system direct ke langkah maklumat tanah
 assigned_to_me=2026-06-30
-current_phase=Recon
+current_phase=Apply
 local_test_confirmed=false
 quest_start=2026-07-01
 qa_doc=projects/coding-projects/active/QA-268273/QA-268273.md

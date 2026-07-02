@@ -108,18 +108,19 @@ SAME layer margins + flow, on the REAL files. **Title in the top border = real f
 
 *(A chain that WRITES to the DB keeps going past BEAN → SERVICE → ENTITY → DB; the final box is the `table` name, and the touched `@Column`s:line sit inside the ENTITY box above it.)*
 
-## Variants for non-linear shapes (v1.4 — pruned; kept minimal)
-The linear spine holds for genuine top→bottom flows. Where the FORK **is** the architecture, only these exist:
+## 🧱 FUNDAMENTALS (the spec — every render derives from HERE, never from a prior render)
+> Added v1.5 after two fix-passes drifted from みや's ORIGINAL spec by patching the last broken render instead of re-deriving. When refining this skill, check the change against THIS block first.
 
+- **Diagram 1 box header** = the generic concept (`.xhtml (PrimeFaces/JSF)`, `*Form.java (@ViewScoped bean)`).
+- **Diagram 2 box header** = a **REAL FILE/CLASS name — ALWAYS** (`┌─ StatusPermohonanForm.java ─┐`). A module or layer is **NEVER** a box header. If a step has no verified real file, the box does not exist.
+- **Left margin** = exactly **ONE categorization type per diagram** (layer `UI/BEAN/SERVICE/ENTITY/DB` for in-module flows · module `AWAM/PLP/TEKNIKAL/COMMON` for cross-module flows). A categorization lives ONLY in the margin — never as a header, never as an outer frame, never duplicated anywhere.
+- **Box body** = D1: one terse does-line · D2: `method()` / `var` with `:line` ONLY, zero prose. Explanations ride the connector.
+- **Connector vocabulary is CLOSED**: `┬ │ ▼` (+ `├ ┼ ┤` for a fan-out). **NOTHING else** — no `┈┈►`, no invented glyphs, no floating/side arrows, no outer frames, no nested boxes. If an element is not specified in this file, it is BANNED; when unsure — REMOVE.
+- **Other-module / not-deployed step** (e.g. a teknikal callout): a **DOTTED-border box ON the spine** (`┌┄ MLK_TKL_*.bpmn20.xml ┄┐`), connected with the same `┬ │ ▼`. The dotted border IS the marker — no side placement, no special arrow. Re-entry = a `↺ called N× at :a/:b/:c` body line inside it.
+
+## Variants for non-linear shapes (kept minimal)
 - **Hub-and-spoke** (data model, e.g. the `aplikasi_id` join): ONE hub box (multiple keys of the *same row* = separate BODY lines, never two boxes) → a single fan-out connector `┬` → `├/┼/┤` → a ROW of **fixed-width equal** spoke boxes with **short aliases**; a footnote maps aliases → full table names so nothing wraps. The fan IS the spine.
-- **Peer fork** (a co-equal branch into another module, e.g. teknikal callouts): ONE labelled **dotted side-box** off the spine via `┈┈►` (sanctioned — exempt from the no-floating-arrow rule). List N callActivities as an N-key list; tag `PEER · not deployed local`. A same-sub-process-called-N× goes as a `↺ called N× at :a/:b/:c` line INSIDE that side-box — never a floating back-arrow.
 - Connector text may be a relation-word (`indexed by` / `looked up in`) when a layer is a lookup TABLE, not a call site.
-
-## 🚫 ONE CATEGORIZATION PER PLACE (the anti-nesting law — HARD)
-A categorization (module / layer / file-class) lives in **EXACTLY ONE slot** — the box HEADER **or** the left margin — **never both, and never re-encoded as an outer / containment frame.**
-- If a MODULE is the box header (`etanah-awam`), "module" is BANNED from the left margin and from any outer frame. The same module reused as a header at several spine nodes is fine — that is still one slot.
-- The left margin is only for a categorization NOT already in the header (header = file `StatusPermohonanForm.java`, margin = layer `UI`). If the header already IS the categorization, drop the margin.
-- **BANNED:** nested / containment boxes (a box inside a box) · the same categorization in 2+ places · adding ANY element not in this template. When unsure — REMOVE. The whole vocabulary is: a flat spine of headed boxes + connectors + at most one dotted fork side-box.
 
 ## Pre-emit RENDER SELF-CHECK (mandatory — the "broken diagram" guard)
 Before emitting, eyeball the ASCII and confirm ALL:
@@ -128,6 +129,7 @@ Before emitting, eyeball the ASCII and confirm ALL:
 - [ ] every connector runs `┬ → │ → (optional text) → │ → ▼` and lands in the next box — none floating to the side
 - [ ] NO arrow after the last box — the flow ends
 - [ ] Diagram 2 boxes are `method:line` only (zero prose); explanations are on connectors; one ⚠ + a wrong-outcome final box
+- [ ] **D2 headers are real file/class names** (no module/layer as header); margin carries ONE categorization type; **only `┬ │ ▼ ├ ┼ ┤` connectors** appear anywhere
 - [ ] pastes clean, ≤ ~72 cols, no wrap
 
 A broken render is a rule break even if the content is right. Fix it before sending.
@@ -144,4 +146,4 @@ Skill-only Power (on-demand output; no MUST-fire trigger → no hook, per system
 ## Design provenance
 Format via a 3-candidate + judge Workflow (`wf_5c0231fb`): winner = layered-margins + typed-verbs (B), grafted with zero-prose Diagram 2 (A) + banners/legend (C).
 
-*Version 1.4 — 2026-07-02. PRUNED the over-added variants (cut containment-frame + two-column margin) and added the **ONE-CATEGORIZATION-PER-PLACE** anti-nesting law, after みや flagged the multi-module render as still-broken — "module" was re-encoded 3× (outer frame + margin tag + box header). Lesson: simplify means SUBTRACT, not add. Kept: hub-and-spoke + one dotted peer-fork side-box. v1.3 = 7 variants (over-added) from the etanah eval; v1.2 = longer connectors; v1.1 = box-format fix; v1.0 = initial build.*
+*Version 1.5 — 2026-07-02. Added the 🧱 FUNDAMENTALS block as the sole derivation source, after two spec-drift slips in one day: (a) v1.3 invented a `┈┈►` fork glyph and self-labelled it "sanctioned" despite the template ban on unspecified elements; (b) v1.4 codified module-as-box-header, overwriting the founding spec (D2 headers = file names). Connector vocabulary now CLOSED (`┬ │ ▼ ├ ┼ ┤`); other-module steps = dotted box ON the spine. Root cause: refining from my last render instead of from みや's original spec. v1.4 = pruned variants + anti-nesting; v1.3 = 7 variants (over-added); v1.2 = longer connectors; v1.1 = box-format fix; v1.0 = initial build.*

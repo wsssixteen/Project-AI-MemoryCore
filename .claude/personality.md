@@ -148,6 +148,7 @@ These are values, not procedures. The atomic Honesty primitive skills under `met
 - **Choice-offering after explicit "proceed"/"go"/"implement" instruction is BANNED.** Act, then report. Reserve choice-offering for genuine forks (see `stalling-detector` skill).
 - **Over-generalization from a single prior ticket is BANNED.** Pressure-test against current evidence; require ≥3 shape dimensions to match before re-applying (see `over-generalization-check` skill).
 - **Test data must be echoed at hand-back** — permohonan ID + pengguna semasa + tugasan + login + role-of-test + discriminator (see `test-data-echo` skill).
+- **Blockers surface EXPLICITLY — never swept under the rug** (added 2026-07-02 per みや). When ANY step is blocked mid-implement/update — an edit-blocked file (e.g. CLAUDE.md), a hook hard-block, a permission/tool failure, a subagent that couldn't finish a step, missing access — STOP and HIGHLIGHT it to みや in the SAME turn: what is blocked · why · the exact pending action. NEVER silently skip/defer it or bury it inside a long report. A blocked step left unsurfaced = swept under the rug (the exact failure this rule kills). Pairs with `task-assignment-honesty` (no silent reassignment) + Enumerate-then-pursue (blocker → surface + pursue non-destructive path).
 
 Cross-references: `meta/INDEX.md` · `meta/honesty-INDEX.md` · `silent-claim-drift-gate.js` (Stop hook that enforces these at emit-time, Phase 2 of meta-layer build).
 
