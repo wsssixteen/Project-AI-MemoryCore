@@ -108,8 +108,18 @@ SAME layer margins + flow, on the REAL files. **Title in the top border = real f
 
 *(A chain that WRITES to the DB keeps going past BEAN → SERVICE → ENTITY → DB; the final box is the `table` name, and the touched `@Column`s:line sit inside the ENTITY box above it.)*
 
-## Non-linear architectures (config-binding, workflow-routing, module-fan-out)
-Not every etanah architecture is a straight call-chain. Keep ONE dominant top→bottom spine, and park the branches as **labelled dotted side-boxes** off the spine (like the `FLOW` box above). Examples: a config file that BINDS a tag to a populator (config → binder → populator → output); a Flowable BPMN whose CallActivity forks to a `MLK_TKL_*` teknikal sub-flow (draw the fork as a dotted side-box tagged `teknikal`); a cross-module hop (mark the layer margin with the module: `AWAM` / `PLP` / `TEKNIKAL` / `COMMON`). The spine is the main path; forks are dotted.
+## Variants for non-linear shapes (v1.3 — validated by the 2026-07-02 etanah eval)
+The linear spine holds for genuine top→bottom flows (render pipelines, deploy→invoke→persist). Where the FORK **is** the architecture, use a variant:
+
+- **Hub-and-spoke** (data model, e.g. the `aplikasi_id` join): ONE hub box — put multiple keys of the *same row* as separate BODY lines, do NOT split into two boxes — then a single fan-out connector `┬` splitting to `├/┼/┤` into a ROW of **fixed-width equal** spoke boxes with **short aliases**; a footnote maps aliases → full table names (so boxes never wrap + break their borders). Waive "one dominant spine" — the fan IS the spine.
+- **Containment frame** (a module that WRAPS the flow, e.g. COMMON hosting the engine AND the base classes the spine extends): draw the module as an OUTER dotted frame `┌┄ MODULE ┄┐ … └┄┄┘` enclosing the spine — not as two disconnected top/bottom boxes.
+- **Peer fork** (N≥3 co-equal branches into another module): side-box lists them as an N-key list + a `PEER — co-equal, not subordinate` label (+ `not deployed local` for teknikal).
+- **Back-edge / re-entrant** (recursion, or same sub-process called N×): a `↺ re-enters <box>` / `↺ called N× at stages A/B/C` tag ON the connector or side-box — never a floating back-arrow.
+- **Two-column left margin**: LAYER tag + MODULE tag; leave the module cell blank when a layer has no home module (e.g. Flowable's ENGINE).
+- **Sanctioned fork glyph**: `┈┈►` into a dotted side-box is legal (exempt from the no-floating-arrow rule).
+- **Relation-verb connectors**: when a layer is a lookup TABLE not a call site (e.g. the tag→populator map), the connector text may be a relation-word (`indexed by` / `looked up in`), not only a flow-verb.
+
+Otherwise (a single occasional detour off a real spine): keep ONE dominant top→bottom spine + a labelled dotted side-box, tagging the module in the left margin.
 
 ## Pre-emit RENDER SELF-CHECK (mandatory — the "broken diagram" guard)
 Before emitting, eyeball the ASCII and confirm ALL:
@@ -134,4 +144,4 @@ Skill-only Power (on-demand output; no MUST-fire trigger → no hook, per system
 ## Design provenance
 Format via a 3-candidate + judge Workflow (`wf_5c0231fb`): winner = layered-margins + typed-verbs (B), grafted with zero-prose Diagram 2 (A) + banners/legend (C).
 
-*Version 1.2 — 2026-07-02. Lengthened the connector so a transition explanation can ride the arrow (boxes stay zero-prose) + added the non-linear-architecture guidance (dotted side-boxes for config-binding / Flowable forks / module fan-out), per みや. v1.1 = box-format fix; v1.0 = initial build.*
+*Version 1.3 — 2026-07-02. Added 7 non-linear VARIANTS (hub-and-spoke, containment frame, peer fork, back-edge/re-entrant tag, two-column margin, sanctioned fork glyph, relation-verb connectors) after an eval (`wf_bb56a336`, 4 etanah architectures + judge) returned NEEDS-REFINEMENT: the linear spine held for render-pipeline + Flowable but broke for the hub-and-spoke DB model + module fan-out, where the forks ARE the architecture. v1.2 = longer connectors; v1.1 = box-format fix; v1.0 = initial build.*
