@@ -53,7 +53,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `meta/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `meta-layer-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node meta/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 71 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 75 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
@@ -74,6 +74,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | UserPromptSubmit | — | `inventory-first-gate.js` | 🚨 MISSING |
 | UserPromptSubmit | — | `MemoryClaimGate.js` | 🚨 MISSING |
 | UserPromptSubmit | — | `mode-detector.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `multi-dim-evidence-gate.js` | 🚨 MISSING |
 | UserPromptSubmit | — | `PlainFirstGate.js` | 🚨 MISSING |
 | UserPromptSubmit | — | `prayer-gate.js` | 🚨 MISSING |
 | UserPromptSubmit | — | `prepare-commit-trigger.js` | 🚨 MISSING |
@@ -102,6 +103,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | PreToolUse | Edit|Write | `no-code-comments-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `pre-action-check-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `quest-phase-gate.js` | 🚨 MISSING |
+| PostToolUse | Grep | `grep-rubric-gate.js` | 🚨 MISSING |
 | PostToolUse | Bash | `quest-bounty.hook.js` | 🚨 MISSING |
 | PostToolUse | — | `RecursiveLoopDetector.js` | 🚨 MISSING |
 | PostToolUse | — | `slip-count-tracker.js` | 🚨 MISSING |
@@ -117,6 +119,8 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | Stop | — | `full-address-trace-gate.js` | 🚨 MISSING |
 | Stop | — | `notes-on-test-data.js` | 🚨 MISSING |
 | Stop | — | `operational-follow-through.js` | 🚨 MISSING |
+| Stop | — | `over-generalization-gate.js` | 🚨 MISSING |
+| Stop | — | `predicate-box-gate.js` | 🚨 MISSING |
 | Stop | — | `quest-context-load-gate.js` | 🚨 MISSING |
 | Stop | — | `quest-doc-freshness.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `quest-knowledge-save-gate.js` | 🚨 MISSING |
@@ -288,6 +292,9 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 - Provenance: [quest-system-audit](../projects/coding-projects/active/quest-system-audit/quest-system-audit.md) Phase B verdicts + B6 adversarial review (2 of 7 retire proposals overturned: this rename instead of deletion; edit-scope-gate merge rejected).
 - Net delta: UserPromptSubmit −0 (rename) · PreToolUse(Edit|Write) −1 · Stop −1 · skills −1 · domain folders −2. Regenerate §3.0 via `node meta/sync-hook-catalog.js`.
 - ➕ **quest-phase-gate v2 (E2+E3)**: after the blocking phase-emit check passes, two ADVISORY checks fire on etanah edits during an active quest — **E3 mechanism-history** (transcript must show `git log -- <edited file>` evidence — QA-268273's 25 unseen sibling commits) and **E2 entry-point proof** (`ENTRY-POINT: <page.xhtml:line> -> <Class.method()>` line required for .java/.xhtml — QA-268273 fix-1 patched the wrong handler). Advisory-first per promote-on-observed-slip; smoke-tested 3/3 (deny-regression · both advisories · silent-with-evidence). CLAUDE.md v1.57 pairs: Rubric row (h) CODE-LOGIC scenario matrix (E4) + Recon Cheapest-falsifier-first (E1).
+- ➕ **E7 batch (4 new hooks + 1 extension, all smoke-tested fire+silent before registration)**: `predicate-box-gate.js` (Stop — etanah edit in active quest with no ASSUMPTION+FALSIFIER diagram) · `over-generalization-gate.js` (Stop — broad-quantifier claim with no enumeration evidence) · `multi-dim-evidence-gate.js` (UserPromptSubmit — visual-evidence prompt → open-every-Brief-file reminder) · `grep-rubric-gate.js` (PostToolUse Grep — unscoped content-mode grep nudge) · `pre-action-check-gate.js` +scope-anchor-echo advisory. Controller smoke caught 2 builder defects pre-registration (stdin-as-transcript in both Stop hooks + a hardcoded repo root) — Delegation-Economy controller-verifies discipline working as designed. Deferred (zero slip-links, Rule 7): checklist/evaluator-optimizer/git-health/sycophancy hooks.
+- ➕ **E8 batch (4 procedure skills for existing gates)**: `logic-blast-radius` · `quest-objective-anchor` · `quest-knowledge-save` · `pre-action-check` SKILL.md files.
+- ➕ **E12 phrase-registry**: `meta/phrase-registry.js` generates `meta/phrase-registry.md` — one table over the 4 trigger-phrase scatter-homes (skills · hook regexes · CLAUDE.md tables · feedback memories).
 - ➕ **E10 fire-on-trigger** (`auto-skill-on-mistake` Step 4.5): a defender built mid-session MUST be exercised on its own triggering ticket same-session. **E13 Phase-2 knowledge-distill gate** (CLAUDE.md v1.58 §Phase-2 step 4): bestiary/post-mortem writes only at verified Phase-2 close.
 - ➕ **E5 SHIP-CHECK added to `hook-syntax-check.js`** (same audit batch): every registered hook file must be git-tracked (`git ls-files --error-unmatch`; only exit-1 counts as untracked — transient git errors fail-open). Closes the A1 class (registration-committed/file-uncommitted worktree ghost, seen twice). Smoke-tested both directions (silent when healthy · exactly-1 flag when planted).
 

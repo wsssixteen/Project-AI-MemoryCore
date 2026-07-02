@@ -22,7 +22,49 @@
  * / Fix.txt are deprecated for new quests. Pre-2026-05-28 quests retain
  * their multi-file pattern (no migration); the gate only fires on new
  * quest folders.
+ *
+ * v1.2 2026-07-03 — Added SCOPE-ANCHOR ECHO advisory. When the edited path
+ * is quest-related AND the in-focus active block in quest/active.txt carries
+ * a scope_anchor= field, and this turn's transcript does NOT contain that
+ * scope_anchor value verbatim, append an advisory line reminding to re-anchor
+ * before editing. Catches scope drift (a wrong-baseline variant) — the
+ * scope-anchor-echo skill exists but is unenforced. Advisory only, never
+ * blocks. Bypass: not needed (advisory, no deny).
  */
+const fs = require('fs');
+const path = require('path');
+
+const REPO_ROOT = 'C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore';
+const ACTIVE_TXT = path.join(REPO_ROOT, 'quest', 'active.txt');
+
+function safeRead(p) {
+  try { return fs.readFileSync(p, 'utf-8'); } catch { return null; }
+}
+
+// Returns the scope_anchor= value from the FIRST block with status=active,
+// or null if no active block / no scope_anchor field. Blocks are separated
+// by blank-line-delimited groups; a block "starts" at a qa= line.
+function getActiveScopeAnchor() {
+  const text = safeRead(ACTIVE_TXT);
+  if (!text) return null;
+  const blocks = text.split(/\n\s*\n/); // blank-line separated
+  for (const block of blocks) {
+    if (/^\s*status=active\b/m.test(block)) {
+      const m = block.match(/^\s*scope_anchor=(.+)$/m);
+      if (m) return m[1].trim();
+    }
+  }
+  return null;
+}
+
+// Best-effort read of the session transcript (JSONL) so far, via the
+// transcript_path field PreToolUse payloads carry. Returns raw text
+// (not parsed) — good enough for a substring/verbatim-echo check.
+function readTranscript(transcriptPath) {
+  if (!transcriptPath) return '';
+  try { return fs.readFileSync(transcriptPath, 'utf-8'); } catch { return ''; }
+}
+
 let input = '';
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
@@ -99,6 +141,20 @@ process.stdin.on('end', () => {
 
     if (!isQuestPath && !isDeprecatedSibling) process.exit(0);
 
+    // v1.2 SCOPE-ANCHOR ECHO advisory: if the in-focus active block has a
+    // scope_anchor= field and this session's transcript hasn't echoed that
+    // value verbatim, add a one-line reminder. Fail-open on any read error.
+    let scopeAnchorLine = '';
+    try {
+      const anchor = getActiveScopeAnchor();
+      if (anchor) {
+        const transcript = readTranscript(data.transcript_path);
+        if (!transcript || !transcript.includes(anchor)) {
+          scopeAnchorLine = `  ⚠ scope_anchor '${anchor}' not echoed this session — re-anchor before editing.`;
+        }
+      }
+    } catch (e) { /* fail-open */ }
+
     // Inject reminder
     const context = [
       '',
@@ -113,6 +169,7 @@ process.stdin.on('end', () => {
       '',
       'If any "NO" — fire the relevant check BEFORE proceeding with this edit.',
       canonicalDocReminder,
+      scopeAnchorLine,
     ].join('\n');
 
     // Use hookSpecificOutput.additionalContext for PreToolUse advisory

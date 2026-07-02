@@ -137,6 +137,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\attachment-context\\attachment-context.trigger.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\multi-dim-evidence-gate.js\""
           }
         ]
       }
@@ -299,6 +303,14 @@
           },
           {
             "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\predicate-box-gate.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\over-generalization-gate.js\""
+          },
+          {
+            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\de-run-verify.js\""
           }
         ]
@@ -332,6 +344,15 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\quest-bounty\\quest-bounty.hook.js\""
+          }
+        ]
+      },
+      {
+        "matcher": "Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\grep-rubric-gate.js\""
           }
         ]
       }
