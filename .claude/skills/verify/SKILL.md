@@ -70,7 +70,7 @@ For ticket `QA-<n>`, identify the repo from `active.txt`, then:
 | C3 | Commit landed on the ticket branch | `git log --oneline -1 mlk/qa/<n>` → SHA + subject |
 | C4 | Push succeeded — local SHA == origin SHA | `git ls-remote origin mlk/qa/<n>` |
 | C5 | Remote branch discoverable by teammates | `git ls-remote origin mlk/qa/<n>` non-empty |
-| C6 | Repo returned to `mlk/master` (pelupusan) / `mlk/release/fat` (awam), at origin tip | `git branch --show-current` + `git fetch` ahead-count == 0 |
+| C6 | Repo returned to `mlk/master` (pelupusan) / `mlk/master` (awam), at origin tip | `git branch --show-current` + `git fetch` ahead-count == 0 |
 | C7 | `active.txt` updated — `phase=1-complete`, `commit=<SHA>`, `status=` set | `grep -A8 "^qa=QA-<n>" quest/active.txt` |
 
 ### Checklist D — DE close-out (added 2026-05-20 per みや)

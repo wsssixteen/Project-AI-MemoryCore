@@ -59,6 +59,6 @@ The leading token follows the ticket's **Redmine tracker**, not always "QA":
 | **ESOKONGAN** (eS tickets) — added 2026-06-27 per みや, QA-267382 | `Ref #<num> - <URUSAN> - <TUGASAN> - <description>` (non-QA → `Ref #`) | **`mlk/esokongan/<num>`** |
 | **other non-QA trackers** | `Ref #<num> - ...` | `mlk/<tracker-lowercased>/<num>` |
 
-**🌿 GENERAL BRANCH RULE (derive, don't ask): branch = `mlk/<tracker-type-lowercased>/<num>`.** QA→`mlk/qa/`, ESOKONGAN→`mlk/esokongan/`, INTERNAL ISSUE→`mlk/internal-issue/`. Read the Redmine tracker at Phase 0; pick the branch prefix from it automatically. (AWAM tickets still target `mlk/stag-env` per quest-protocol — that's an integration branch, not a per-ticket branch.)
+**🌿 GENERAL BRANCH RULE (derive, don't ask): branch = `mlk/<tracker-type-lowercased>/<num>`.** QA→`mlk/qa/`, ESOKONGAN→`mlk/esokongan/`, INTERNAL ISSUE→`mlk/internal-issue/`. Read the Redmine tracker at Phase 0; pick the branch prefix from it automatically. (AWAM local base = `mlk/master` per quest-protocol — local-test only, no commit/push; the per-ticket branch `mlk/<tracker>/<num>` merges downstream to `mlk/stag-env`/`mlk/mlit`, which are integration/staging targets, not the base.)
 
 **Example** (QA-266249 = an INTERNAL ISSUE ticket): `Ref #266249 - PT - Fix Keluasan Tanah` ✓ (the prefix is `Ref #266249`, not `QA #266249`). **Why**: the team tracks these under the INTERNAL ISSUE tracker; the commit log + branch name should reflect the tracker, not force a "QA" label onto a non-QA ticket.

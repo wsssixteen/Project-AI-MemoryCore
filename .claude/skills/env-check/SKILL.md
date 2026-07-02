@@ -26,7 +26,7 @@ When invoked, env-check:
    - `E:\Dev\jboss-7.4-plp-melaka\standalone\configuration\standalone.xml` — `etanahDS` `<connection-url>` (the ONE that changes; Audit/DMS/DS3 stay on mkit always — env-agnostic)
    - Branch on relevant repo:
      - `etanah-pelupusan` main = `mlk/master` (SAME branch for both UAT and FAT; only env config differs)
-     - `etanah-awam` main = `mlk/release/fat` (confirmed on remote + accessible 2026-05-19; `mlk/release/uat` was used as a fallback 2026-05-13→18 ONLY because `mlk/release/fat` access had not yet been granted — that access is now resolved, so `mlk/release/fat` is the AWAM baseline for env prep, branch-out, and closure)
+     - `etanah-awam` main = `mlk/master` (corrected 2026-07-02 per みや — AWAM mirrors PLP: `mlk/master` is the local base for env prep + local test, BANNED from commit/push; branch to `mlk/<tracker>/<num>` for commit/push; `mlk/stag-env`/`mlk/mlit` are downstream staging/integration targets, NOT the base. Was wrongly `mlk/stag-env` 2026-06-19 / `mlk/release/fat` before.)
    - Currently deployed WAR in `E:\Dev\jboss-7.4-plp-melaka\standalone\deployments\` — flags whether a module switch is needed
 
 3. **Runs `git pull --ff-only origin <main-branch>` on the involved repo(s)** (added 2026-05-14 by みや after QA-260965 slip): non-skippable. If pull fails due to dirty working tree → surface error + propose `git stash` (only when there's mid-fix work to preserve) or discard. If pull fails non-fast-forward → surface conflict, do NOT auto-merge. **Why baked into env-check, not separate**: 2026-05-07 QA-260154 + 2026-05-14 QA-260965 both slipped on this two-rule split (branch-check ran, pull skipped). One skill, one flow.
@@ -71,7 +71,7 @@ All 3 candidate datasources are PERMANENTLY PRESENT in standalone.xml. **Switchi
 |---|---|---|---|---|---|
 | **pelupusan + FAT** | `etprdmlk@172.30.17.104:5444 / et_main` | `https://etanah-app.melaka.gov.my/etanah-cas` (FAT) | etanah-pelupusan @ `mlk/master` | etanah-pelupusan.war | ✅ **DEFAULT** — most tickets come from FAT |
 | pelupusan + UAT | `mlkuat@172.30.59.185:5444 / et_main_uat` | `http://172.30.59.150/etanah-cas` (UAT) | etanah-pelupusan @ `mlk/master` | etanah-pelupusan.war | Only when FAT lacks test data, OR BA states UAT in ticket |
-| **awam + UAT** | `mkit@172.16.100.197:5444 / et_main_mlit` | `http://172.30.59.150/etanah-cas` (UAT) | etanah-awam @ `mlk/release/fat` | etanah-awam.war | All AWAM tickets (FAT/UAT both tested here) |
+| **awam + UAT** | `mkit@172.16.100.197:5444 / et_main_mlit` | `http://172.30.59.150/etanah-cas` (UAT) | etanah-awam @ `mlk/master` | etanah-awam.war | All AWAM tickets (local base mlk/master; downstream = stag-env/mlit) |
 | awam + FAT | **N/A** — FAT-AWAM not exposed for local testing | | | | |
 
 **Switch mechanic** (verified against current standalone.xml lines 193-235 on 2026-05-11):

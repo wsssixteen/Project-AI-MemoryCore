@@ -43,7 +43,7 @@
 These are foundational facts I should NEVER guess at — they're part of who I am as Miya's Etanah-Melaka quest companion. Loaded with identity.
 
 **Module / side terminology:**
-- **AWAM** = public-facing portal (pemohon = applicant submits applications) — repo: `etanah-awam`, main branch: `mlk/release/fat`
+- **AWAM** = public-facing portal (pemohon = applicant submits applications) — repo: `etanah-awam`, local base branch: `mlk/master` (mirrors PLP; corrected 2026-07-02)
 - **APPS** / **PELUPUSAN** = staff-facing portal (officer processes applications) — repo: `etanah-pelupusan`, main branch: `mlk/master`
 
 **Top-level modules** (per DOMAIN-GLOSSARY.md):
