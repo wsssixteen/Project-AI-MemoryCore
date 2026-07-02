@@ -748,7 +748,9 @@ After Recon emits PROCEED-TO-RUBRIC, Ruri emits 2-5 fix-shape options for みや
 
 **Why Option E exists**: debugging-playbook "When not to debug" — sometimes the right call is **revert / work-around / rewrite / mitigate-first**. Refinement of existing Rubric, not new workflow. Past tickets where this would have helped: QA-259534 (no fix shipped — passed back to BA after non-repro), QA-258022 (Attempt 2's Java scope creep — Option E "wait for aaron's upstream pull" would have saved a day).
 
-### 🚨 Logic Blast Radius — mandatory Rubric step (added 2026-06-04 per みや, QA-263921)
+### 🚨 Logic Blast Radius — mandatory Rubric step (added 2026-06-04 per みや, QA-263921) · ENFORCED by `logic-blast-radius-gate.js` (2026-07-02, QA-268273)
+
+> **Now a deterministic gate** (per みや 2026-07-02): `logic-blast-radius-gate.js` (PreToolUse Edit|Write) HARD-BLOCKS an edit to an etanah stateful-flow `.java` file (`*Form|Bean|Handler|Helper|Service|Controller|Manager.java`) during an active quest until this session has emitted a LOGIC BLAST RADIUS scenario matrix (banner `═══ LOGIC BLAST RADIUS ═══`, or the phrase + `Safe?`/`Evidence` columns). Was prose-only/model-run before (didn't fire reliably — QA-268273 itself skipped the formal matrix). Sibling of `quest-phase-gate.js` for the *logic* dimension; presence-check only (not correctness); fail-open; bypass `[skip-logic-blast: <reason>]`.
 
 > **Why**: QA-263921 happened because QA-253053 fixed the *Simpan* scenario but not the *entry* scenario of the same screen (deleted a doc on entry without regenerating → Kemas-kini hung). The **code** blast radius (which urusan/tugasan share the constant/method) would NOT have caught it — the gap was **logic-wise**: the change participates in several action/state paths and was only safe in one.
 

@@ -100,6 +100,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | PreToolUse | Edit|Write | `phase0-artifact-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `pre-action-check-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `quest-phase-gate.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `logic-blast-radius-gate.js` | ✅ built+registered 2026-07-02 (QA-268273) — Logic Blast Radius matrix gate for etanah stateful-flow `.java` edits; sibling of quest-phase-gate |
 | PostToolUse | — | `RecursiveLoopDetector.js` | 🚨 MISSING |
 | PostToolUse | — | `slip-count-tracker.js` | 🚨 MISSING |
 | Stop | — | `ask-back-gate.js` | 🚨 MISSING |
