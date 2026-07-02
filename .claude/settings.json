@@ -197,6 +197,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\quest-phase-gate.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\logic-blast-radius-gate.js\""
           }
         ]
       },
@@ -264,6 +268,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\quest-knowledge-save-gate.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\quest-context-load-gate.js\""
           },
           {
             "type": "command",
