@@ -77,12 +77,12 @@ process.stdin.on('end', () => {
     // Bypass token
     if (/\[skip-logic-blast:/i.test(transcript)) process.exit(0);
 
-    // Logic-Blast-Radius marker: canonical banner OR phrase + matrix columns
+    // Logic-Blast-Radius marker: the BANNER only (box-char ═══ or ASCII === form).
+    // Banner-only by design — NOT a loose phrase match: "logic blast radius" +
+    // "Evidence"/"Safe?" appear in normal /verify output + meta-discussion, which would
+    // false-PASS the gate. Requiring the banner means the matrix was deliberately emitted.
     const hasLogicMatrix =
-      /═══\s*LOGIC[\s-]*BLAST[\s-]*RADIUS\b/i.test(transcript) ||
-      (/logic\s*blast\s*radius/i.test(transcript) &&
-        /\bEvidence\b/i.test(transcript) &&
-        /\bSafe\??\b/i.test(transcript));
+      /(?:═══|===)\s*LOGIC[\s-]*BLAST[\s-]*RADIUS/i.test(transcript);
     if (hasLogicMatrix) process.exit(0); // logic matrix emitted → allow
 
     const reason = [
