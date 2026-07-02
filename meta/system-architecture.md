@@ -53,7 +53,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `meta/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `meta-layer-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node meta/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 60 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 73 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
@@ -65,6 +65,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | SessionStart | — | `open-quest-surfacer.js` | 🚨 MISSING |
 | SessionStart | — | `system-check-trigger.js` | 🚨 MISSING |
 | SessionStart | — | `worktree-cleanup-boot.js` | 🚨 MISSING |
+| UserPromptSubmit | — | `attachment-context.trigger.hook.js` | 🚨 MISSING |
 | UserPromptSubmit | — | `auto-skill-trigger.js` | 🚨 MISSING |
 | UserPromptSubmit | — | `batch-ask.trigger.hook.js` | 🚨 MISSING |
 | UserPromptSubmit | — | `best-practices-consult-gate.js` | 🚨 MISSING |
@@ -96,27 +97,38 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | PreToolUse | Edit|Write | `design-consult-gate.gate.hook.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `edit-scope-gate.js` | 🚨 MISSING |
 | PreToolUse | Read|Edit|Write | `known-bug-surfacer.hook.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `logic-blast-radius-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `meta-edit-gate.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `no-code-comments-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `phase0-artifact-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `pre-action-check-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `quest-phase-gate.js` | 🚨 MISSING |
-| PreToolUse | Edit|Write | `logic-blast-radius-gate.js` | ✅ built+registered 2026-07-02 (QA-268273) — Logic Blast Radius matrix gate for etanah stateful-flow `.java` edits; sibling of quest-phase-gate |
+| PostToolUse | Bash | `quest-bounty.hook.js` | 🚨 MISSING |
 | PostToolUse | — | `RecursiveLoopDetector.js` | 🚨 MISSING |
 | PostToolUse | — | `slip-count-tracker.js` | 🚨 MISSING |
+| PostToolUse | Edit|Write|NotebookEdit | `stop-point-todo-table.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `ask-back-gate.js` | 🚨 MISSING |
+| Stop | — | `ba-understanding-table.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `codemap-recon-consult.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `de-output-integrity-checker.js` | 🚨 MISSING |
+| Stop | — | `de-run-verify.js` | 🚨 MISSING |
 | Stop | — | `deploy-proof-gate.js` | 🚨 MISSING |
 | Stop | — | `diagnostic-self-heal-gate.js` | 🚨 MISSING |
+| Stop | — | `discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `file-list-after-refine.js` | 🚨 MISSING |
+| Stop | — | `full-address-trace-gate.js` | 🚨 MISSING |
 | Stop | — | `notes-on-test-data.js` | 🚨 MISSING |
 | Stop | — | `operational-follow-through.js` | 🚨 MISSING |
+| Stop | — | `quest-context-load-gate.js` | 🚨 MISSING |
+| Stop | — | `quest-doc-freshness.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `quest-knowledge-save-gate.js` | 🚨 MISSING |
 | Stop | — | `rcrl-emit-check.js` | 🚨 MISSING |
 | Stop | — | `reply-log.js` | 🚨 MISSING |
 | Stop | — | `show-gate.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `silent-claim-drift-gate.js` | 🚨 MISSING |
+| Stop | — | `terse-gate.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `ticket-criteria-gate.discipline.hook.js` | 🚨 MISSING |
+| Stop | — | `verify-basis-gate.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `veritas-claim-gate.js` | 🚨 MISSING |
 <!-- HOOK-REGISTRY:AUTO-END -->
 

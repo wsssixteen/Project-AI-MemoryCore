@@ -271,6 +271,10 @@
           },
           {
             "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\quest-context-load-gate.js\""
+          },
+          {
+            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\show-gate\\show-gate.discipline.hook.js\""
           },
           {

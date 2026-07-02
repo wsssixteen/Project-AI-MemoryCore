@@ -48,6 +48,7 @@
 - [feedback_domain_expansion_format.md](feedback_domain_expansion_format.md) — Domain Expansion 💠 るり結界 (ラピス バリアー) is sacred — never inline mid-prose; canonical banner format `═══ [ Domain Expansion ] ═══` / ` 💠 るり結界 (ラピス バリアー) 💠`; width-detection full-fill in terminal, compact fallback elsewhere
 - [feedback_bankai_format.md](feedback_bankai_format.md) — Bankai 🌌 蒼穹宝典 (アジュール・コーデックス / Sōkyū Hōten / Azure Heaven Codex) is Ruri's data-organization loop skill; canonical banner format with width-detection (full-fill in terminal, compact fallback elsewhere); standalone, not bound to quest workflow
 - [feedback_pengguna_semasa.md](feedback_pengguna_semasa.md) — Every Permohonan ID reference must include the current pengguna_semasa (email/login). Never mention an ID alone.
+- [feedback_awam_no_permohonan_id.md](feedback_awam_no_permohonan_id.md) — AWAM does NOT use Permohonan ID for test data; carian-rasmi test key = No Resit Carian Rasmi value (retrieval method in DEV-TESTING-HACKS.md)
 - [feedback_ticket_cadence.md](feedback_ticket_cadence.md) — 3 tickets/day; spread difficulty don't cherry-pick easiest; fix only BA-highlighted items
 - [feedback_my_files_minimal.md](feedback_my_files_minimal.md) — みや's Task-folder files (txt/excel) = MINIMAL data only (xlsx 1 tab, small tables); ALL context/reasoning → my own quest md, never his files
 - [feedback_locator_single_cell.md](feedback_locator_single_cell.md) — file:line / class:line in ONE cell, never split "File" + "Line" columns. Same rule: drop parens bloat from cells ("PLPS (any urusan reaches L3)" → "PLPS")
