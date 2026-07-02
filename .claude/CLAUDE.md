@@ -204,6 +204,26 @@ When designing or evaluating any system component — see the `system-design` sk
 
 Token-discipline rules — see `.claude/cost-efficiency.md` (routed out of CLAUDE.md 2026-05-22).
 
+### 🎛️ Delegation Economy — model-tiering for multi-agent work (ALWAYS-ON, added 2026-07-02 per みや)
+
+**Before ANY multi-agent fan-out (Workflow / Agent fleet): emit a 1-table DELEGATION PLAN, and every subagent runs the CHEAPEST model that is ENOUGH for its task shape.** Quality comes from the plan + forced output schema + controller verification — never from defaulting the whole fleet to the session model.
+
+| Task shape | Model | Effort |
+|---|---|---|
+| Mechanical retrieval / extraction (read files → structured rows, zero judgment) | `haiku` | `low` |
+| Synthesis / table-assembly / doc-writing from provided data | `sonnet` | `medium` |
+| Adversarial verify · root-cause judgment · final verdicts | session model (opus-tier) | per stakes |
+
+**Delegation-plan table columns**: stage · # agents · model · effort · output schema · expected token band.
+
+**Mandatory disciplines**:
+1. **Scout inline first** — enumerate the work-list (Glob/ls) BEFORE fan-out; batch it; schema-force every reader's output (prose returns BANNED for readers).
+2. **Resume-not-rerun** — on ANY mid-flight failure (usage limit / crash / edit), resume the SAME runId: journaled results replay free; only failed agents re-run. Relaunching from scratch = BANNED. Patch ONLY the failed call-sites — editing a completed call's prompt/opts busts its cache and re-buys it.
+3. **Usage-limit strategy** — a limit hit mid-flight makes the cache the asset: wait for reset, then resume the remainder on cheaper models; never restart.
+4. **Controller verifies** — cheap-model outputs are DATA, not truth: the main loop spot-checks counts + sample rows against disk before reporting anything as fact.
+
+**Why (2026-07-02, quest-system-audit Phase A)**: run 1 defaulted all 23 agents to the session model → 2.1M subagent tokens burned and died at the 5-hour usage limit with the synthesis unwritten; the strategic resume (103/121 results replayed from cache + `haiku` readers + `sonnet` synthesizer) finished the identical job for 0.79M. Same output quality, ~⅓ the cost — the only difference was the plan.
+
 ---
 
 ## 💾 Save Commands Reference
@@ -541,7 +561,7 @@ One-time per machine — see `.claude/new-machine-setup.md` (routed out of CLAUD
 
 ## 📜 Version history
 
-**Current**: v1.54 (2026-06-28 — §10 Subagent-orchestration pointer: superpowers v6.0.3 integration — model-tiering + bulk file-handoff + one-dispatch-N-emits + terse narration at skill/protocol layer, NO new hooks, KEEP Recon + #7-reject; per みや, eval `wf_a90c9945`). **Prev**: v1.53 (2026-06-27 — §2 Structured-Separated Problem/Cause/Fix explanation shape + commit-conventions ESOKONGAN→`mlk/esokongan/<num>` branch mapping + general `mlk/<tracker>/<num>` derive-rule; per みや QA-267382). **Recent**: v1.52 (2026-06-20 — compulsory Phase-0 git-state check) · v1.51 (2026-06-20 — §8 Minimal-diff + `convention-check-gate`) · v1.50 (2026-06-19 — AWAM baseline → `mlk/stag-env`). **Full history**: see `meta/claude-md-changelog.md` (all v1.29 → current with rationale per version + the version-bump discipline rule).
+**Current**: v1.55 (2026-07-02 — §Cost-Efficiency: Delegation Economy always-on rule — mandatory DELEGATION PLAN + cheapest-model-that-is-ENOUGH tiering (haiku retrieval / sonnet synthesis / opus-tier verify) + resume-not-rerun + controller-verifies; per みや after quest-system-audit Phase A: 2.1M-token limit crash vs 0.79M strategic resume, same quality). **Prev**: v1.54 (2026-06-28 — §10 Subagent-orchestration pointer: superpowers v6.0.3 integration — model-tiering + bulk file-handoff + one-dispatch-N-emits + terse narration at skill/protocol layer, NO new hooks, KEEP Recon + #7-reject; per みや, eval `wf_a90c9945`). **Recent**: v1.53 (2026-06-27 — §2 Structured-Separated Problem/Cause/Fix shape + ESOKONGAN branch mapping) · v1.52 (2026-06-20 — compulsory Phase-0 git-state check) · v1.51 (2026-06-20 — §8 Minimal-diff + `convention-check-gate`) · v1.50 (2026-06-19 — AWAM baseline → `mlk/stag-env`). **Full history**: see `meta/claude-md-changelog.md` (all v1.29 → current with rationale per version + the version-bump discipline rule).
 
 **Version-bump discipline (always-on)**: every Refine Block / hard-rule addition to a protocol file MUST update the file's Version + Last Updated stamp in the same edit pass AND add a full entry to `meta/claude-md-changelog.md`. Version is a single-integer increment per protocol revision (1.6 → 1.7). Audit-log entries alone don't surface protocol drift; the version stamp + the changelog do.
 
