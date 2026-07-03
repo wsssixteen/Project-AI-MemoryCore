@@ -405,9 +405,10 @@ followup_note=2026-06-29 — Buang garisan tambahan pada footer surat JT (Templa
 
 qa=239386
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\79. REQUIREMENT #239386 - PLP - Maklumat Permohonan Terperinci in Carian Pintas
-status=active
+status=hold
+held_reason=2026-07-03 per miya — focus eSokongan + internal-issue tickets first; WIP committed d6af8adda0 + pushed; UAT DB down
 phase=1
-current_phase=Apply — base changed to mlk/master; new branch has baseline 035d4419fb (tested 21-cell) + today WIP uncommitted (initMode refactor + disable sweep + empty-VO); NEXT=rebuild+test PRZ L3 duplicate-panel fix
+current_phase=Apply-HELD — WIP committed d6af8adda0 (initMode refactor + disable sweep + empty-VO + L1 override) on baseline 035d4419fb; scripts corrected+expanded 07-03 (Reset/Evidence/Precheck/derivation); NEXT on resume=env-check→UAT, rebuild+test PRZ L3 (xlsx row 10a), then Evidence→Reset→Patch when DB back
 ticket_type=requirement
 env=UAT
 urusan=ALL-20-PLP
@@ -415,6 +416,7 @@ issue_one_liner=MPT read-only viewer rollout, 20 PLP urusan — DB langkah done;
 assigned_to_me=2026-06-23
 quest_start=2026-06-25
 qa_doc=projects/coding-projects/active/239386/239386.md
+master_checklist=239386.md §0 MASTER CHECKLIST — re-verify EVERY row at every re-engagement + phase boundary (R1-R9 · Q1-Q3 · H1-H3)
 branch=mlk/requirement/239386
 local_test_confirmed=false
 note=Requirement (multi-session). FULL CONTEXT + Next-Steps Checklist in qa_doc. Branch base mlk/release/1.0.0 (Aaron). Env UAT et_main_uat.
@@ -453,3 +455,32 @@ commit=5bf8156bcf
 branch=mlk/internal-issue/268273
 closed=2026-07-02
 qa_doc=projects/coding-projects/active/QA-268273/QA-268273.md
+
+qa=QA-268637
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\86. ESOKONGAN #268637 - Urusan PRBB - Surat Ulasan YB - pelan pada lampiran surat YB shrink
+phase=0
+status=active
+ticket_type=bug
+env=Urusan PRBB
+issue_one_liner=Urusan PRBB - Surat Ulasan YB > pelan pada lampiran surat YB shrink
+assigned_to_me=2026-07-03
+tugasan=Penyediaan Surat Jabatan Teknikal dan Ulasan YB
+current_phase=Rubric done — fix chosen (mirror 267382 sizing block into populatePelanAsalImageCMCCMLK:19188), HELD pre-Apply per miya
+local_test_confirmed=false
+quest_start=2026-07-03
+qa_doc=projects/coding-projects/active/QA-268637/QA-268637.md
+scout=populatePelanAsalImageCMCCMLK:19188 hardcode 525x500 (pre-267382 shape); analog populatePelanAsalImageMLK:19110 fixed 05e631671e; blast=TemplateSuratYB+_PPTPB only; conf 90%
+
+qa=QA-268415
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\87. INTERNAL ISSUE (PERMANENT FIX) #268415 - PRZ - Penyediaan Surat Jabatan Teknikal dan Ulasan YB - Butang Jana Se
+phase=0
+status=active
+ticket_type=bug
+env=MLKSTAGING
+issue_one_liner=PRZ - Penyediaan Surat Jabatan Teknikal dan Ulasan YB - Butang Jana Semula - Selepas Klik - Alamat JT Tidak Dipaparkan Dan Dokumen-Dokumen T
+assigned_to_me=2026-07-02
+tugasan=Penyediaan Surat Jabatan Teknikal dan Ulasan YB
+current_phase=Discovery
+local_test_confirmed=false
+quest_start=2026-07-03
+qa_doc=projects/coding-projects/active/QA-268415/QA-268415.md
