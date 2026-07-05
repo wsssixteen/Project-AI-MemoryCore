@@ -2,6 +2,23 @@
 # active.txt is WORKING MEMORY (open quests only). Canonical long-term homes remain
 # QA-NNN.md + main/post-mortems.md + main/kpi-tracker.md; these blocks are a pointer-grade mirror.
 
+# ---- archived 2026-06-29 (salvaged to main 2026-07-05 from stranded worktree amazing-bassi-262cd1) ----
+
+qa=ADHOC-0402DIS2025000170
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\81. ADHOC - PROD - 0402DIS2025000170 - Reset status to Awalan
+phase=closed-immediately
+status=closed
+ticket_type=adhoc-patch
+env=PROD (et_main)
+local_test_confirmed=n/a (PROD direct patch, no local repro)
+patch_shipped=2026-06-29 ~11:32 by みや via WhatsApp — `UPDATE et_main.umm_aplikasi SET status_proses='Awalan', status_awam='Sedang Diproses' WHERE id_pengenalan='0402DIS2025000170'; -- 1 row updated`
+issue_one_liner=Forwarded WhatsApp request: "Hi @Alex Pymsoft can help to patch this id 0402DIS2025000170, status fail jadi Awalan". Row had status_proses='Diselesaikan Diluar e-Tanah' + status_awam='Sila Hubungi Pejabat'; reverted to canonical AWAM creation triple (status_keputusan was already Awalan).
+permohonan_id=0402DIS2025000170 (PROD AWAM; ursn_id=42; pejabat_id=3 = Pejabat Daerah Dan Tanah Jasin, Melaka)
+mirror_envs=UAT et_main_uat aplikasi_id=2911870 (same broken state); STG et_main_stg1 aplikasi_id=3351763 (same broken state) — みや's call whether to mirror-patch
+stage_match_verdict=⚠️ revert-shape, safe-on-orphan-row (0 umm_a_tgsn / 0 umm_aliran_kerja / 0 dok rows for aplikasi_id=2911870 in UAT mirror; row is bare/seeded, dates=NULL, version=0). Empirical confidence 85% (PROD auth-blocked at the time so PROD shape inferred from UAT/STG mirror).
+system_improvements_spawned=CLAUDE.md §9 patch rule hardened + Stage-Match Block + expected-outcome annotation (landed as v1.62 on main 2026-07-05); NEW Features domain/patch-script-gate/ (Stop, 2 advisory checks) + domain/prod-db-confirm/ (PreToolUse PROD permission-ask); postgres-mlkprod-pg pgEdge MCP added to ~/.claude.json (et_read read-only); raw postgres-mlkuat MCP retired (pgEdge -pg verified); slip-log entry patch-script scope-creep
+note=First ADHOC entry in active-archive.txt — naming convention `qa=ADHOC-<perm_id>` chosen since no Redmine ticket. みや 2026-06-29: "please create like a new task folder... XX. ADHOC ..., let the number be the incremental Task folder number at the front".
+
 # ---- archived 2026-05-28 (moved from active.txt by active-trim.js) ----
 
 qa=QA-262786
