@@ -307,12 +307,49 @@ if (invFindings.length > 0) {
   findings.push(...invFindings);
 }
 
+// CHECK 6 — Eval-less block-capable hooks (retrofit radar, 2026-07-05).
+// A hook that can BLOCK a turn but ships no eval is the exact shape that let
+// boot-required-read-gate cry wolf undetected for weeks. system-design Rule 6
+// mandates eval-before-ship for NEW hooks; this surfaces pre-Rule-6 stragglers
+// so the class is boot-visible, never hidden. Advisory ℹ — never blocks boot,
+// and a clean boot stays "PASS" (this is a one-line count, not a finding).
+const evalLess = [];
+try {
+  const BLOCK_RE = /decision\s*:\s*['"]block['"]|process\.exit\(2\)/;
+  const seenPaths = new Set();
+  if (settings && settings.hooks) {
+    for (const event of Object.keys(settings.hooks)) {
+      for (const block of settings.hooks[event] || []) {
+        for (const h of block.hooks || []) {
+          const cmd = h.command || '';
+          const pm = cmd.match(/"([^"]+\.js)"/) || cmd.match(/(\S+\.js)/);
+          if (!pm) continue;
+          const realPath = pm[1].replace(/\$\{CLAUDE_PROJECT_DIR\}/g, REPO_ROOT);
+          if (seenPaths.has(realPath)) continue;
+          seenPaths.add(realPath);
+          const src = safeRead(realPath);
+          if (!src || !BLOCK_RE.test(src)) continue;   // only hooks that can block a turn
+          const dir = path.dirname(realPath);
+          const base = path.basename(realPath).replace(/\.js$/, '');
+          let hasEval = fs.existsSync(path.join(dir, base + '.eval.js'));
+          if (!hasEval) { try { hasEval = fs.readdirSync(dir).some(f => /eval/i.test(f)); } catch {} }
+          if (!hasEval) evalLess.push(base);
+        }
+      }
+    }
+  }
+} catch (e) { /* swallow */ }
+const evalLine = evalLess.length
+  ? `   ℹ eval-coverage: ${evalLess.length} block-capable hook(s) lack an eval (retrofit backlog, Rule 6) — ${evalLess.slice(0, 6).join(', ')}${evalLess.length > 6 ? ', …' : ''}`
+  : null;
+
 // ─── Output ─────────────────────────────────────────────────────────
 if (findings.length === 0) {
   process.stdout.write([
     '',
     '🛡  meta-layer-audit: PASS — hook-registration integrity + INV-1..INV-6 verified.',
     `   ${onDisk.size} on disk · ${registered.size} registered · ${documented.size} documented · 0 ghosts · 0 dangling · 0 doc drift · 0 invariant violations`,
+    ...(evalLine ? [evalLine] : []),
     ''
   ].join('\n'));
   process.exit(0);
@@ -325,6 +362,7 @@ process.stdout.write([
   ...findings.map(f => '  ' + f),
   '',
   `Snapshot: ${onDisk.size} hook files · ${registered.size} registered · ${documented.size} documented · ${skip.size} opted-out`,
+  ...(evalLine ? [evalLine] : []),
   '',
   '(advisory — does not block boot. See .claude/hooks/meta-layer-audit.js for the audit rules.)',
   ''
