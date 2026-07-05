@@ -1,0 +1,96 @@
+/**
+ * prod-db-confirm.discipline.hook.js — PreToolUse hook
+ * Power: domain/prod-db-confirm/  (hook-only — no skill, no eval)
+ *
+ * PURPOSE (per みや 2026-06-29 — granting Ruri PROD read-only via pgEdge):
+ *
+ * Every call to `mcp__postgres-mlkprod-pg__*` MUST be みや-permissioned.
+ * Defence-in-depth on top of pgEdge's server-level read-only role + the
+ * narrowed `et_read` DB user:
+ *   (1) Forces `permissionDecision: "ask"` so the harness prompts みや
+ *       on EVERY PROD touch (even if a settings.local.json `allow` slips in)
+ *   (2) Audit-logs every PROD tool call (which tool · args · timestamp)
+ *       to `domain/prod-db-confirm/log.jsonl` — searchable trail
+ *   (3) Injects a visible `🚨 PROD DB ACCESS` banner so the call is
+ *       impossible to miss in the harness UI
+ *
+ * SCOPE: only `mcp__postgres-mlkprod-pg__*` tools. UAT/FAT/STG/mlit are
+ *   auto-allow per the existing settings — they were never gated and the
+ *   blast radius is bounded (test/staging data).
+ *
+ * SAFETY: never blocks of its own accord (returns `permissionDecision: "ask"`
+ *   — the harness asks みや). Fail-OPEN on any parse error. No state.
+ *
+ * Layer choice (/system-design R7): HOOK-ONLY PreToolUse. No skill (no
+ *   procedure to invoke); no eval (the test = it intercepts every PROD call,
+ *   verifiable by reading log.jsonl).
+ * Trigger MOMENT (/system-design R8): PreToolUse — the precise point of need.
+ *   Stop-side would log AFTER the call already ran; SessionStart wouldn't
+ *   guard mid-session use. PreToolUse on the specific tool-name pattern is
+ *   the leanest correct trigger.
+ *
+ * Created 2026-06-29 per みや: "please build a stophook to only check on my
+ * permission" — implemented as PreToolUse permission-ask (the canonical CC
+ * primitive for "gate this tool call") plus audit logging.
+ */
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const LOG = path.resolve(__dirname, 'log.jsonl');
+
+// Tool-name pattern: any pgEdge tool on the PROD MCP server
+const PROD_TOOL = /^mcp__postgres-mlkprod-pg__/;
+
+function logFire(action, payload) {
+  try {
+    fs.appendFileSync(LOG, JSON.stringify({
+      ts: new Date().toISOString(),
+      action,
+      ...payload,
+    }) + '\n');
+  } catch (_) {}
+}
+
+let input = '';
+process.stdin.resume();
+process.stdin.setEncoding('utf8');
+process.stdin.on('data', d => input += d);
+process.stdin.on('end', () => {
+  try {
+    const data = JSON.parse(input);
+
+    const toolName = data.tool_name || '';
+    if (!PROD_TOOL.test(toolName)) {
+      process.exit(0);                                  // not a PROD tool — pass through
+    }
+
+    // PROD tool detected — audit log + force harness ask
+    const args = data.tool_input || {};
+    const previewSql = String(args.query || args.sql || args.table || '').slice(0, 240);
+
+    logFire('prod-tool-intercept', {
+      tool: toolName,
+      sql_preview: previewSql,
+    });
+
+    process.stdout.write(JSON.stringify({
+      hookSpecificOutput: {
+        hookEventName: 'PreToolUse',
+        permissionDecision: 'ask',
+        permissionDecisionReason: [
+          '🚨 PROD DB ACCESS — confirm intent',
+          `   Tool:  ${toolName}`,
+          `   Args:  ${previewSql || '(no query/sql/table arg)'}`,
+          '   Role:  et_read (read-only enforced at DB-user level)',
+          '   Host:  172.30.17.104:5444  db=etprdmlk',
+          '   Audit: domain/prod-db-confirm/log.jsonl',
+          '',
+          '   Approve only if you intend to query LIVE PRODUCTION.',
+        ].join('\n'),
+      },
+    }));
+    process.exit(0);
+  } catch (e) {
+    process.exit(0); // fail-OPEN
+  }
+});

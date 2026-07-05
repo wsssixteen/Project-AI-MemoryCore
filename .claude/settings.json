@@ -212,6 +212,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\scan\\known-bug-surfacer.hook.js\""
           }
         ]
+      },
+      {
+        "matcher": "mcp__postgres-mlkprod-pg__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\prod-db-confirm\\prod-db-confirm.discipline.hook.js\""
+          }
+        ]
       }
     ],
     "Stop": [
@@ -292,6 +301,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\verify-basis-gate\\verify-basis-gate.discipline.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\patch-script-gate\\patch-script-gate.discipline.hook.js\""
           },
           {
             "type": "command",

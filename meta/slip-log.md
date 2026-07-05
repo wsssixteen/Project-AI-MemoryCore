@@ -81,6 +81,12 @@
 
 ---
 
+## 2026-06-29 entries (salvaged to main 2026-07-05 from stranded worktree amazing-bassi-262cd1)
+
+| Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |
+|---|---|---|---|---|---|
+| 2026-06-29 (PROD patch `0402DIS2025000170`, surfaced by みや's WhatsApp screenshot of his own minimum-bar patch) | **Patch-script scope-creep — bundled `version = version + 1` proactively into the UPDATE for `umm_aplikasi`, plus a verbose 6-section ceremonial wrapper (BEFORE-SELECT / BEGIN / UPDATE / AFTER-SELECT / explicit ROLLBACK / banner comments).** Treated the prior rule (3) "transactional-rows OK to bump version" as a license. みや's actual sent patch was the minimum bar: `UPDATE … SET 2 columns WHERE id_pengenalan = '…'; -- 1 row updated` — no version bump, no transaction wrapper, no banner. And it ended with `-- 1 row updated` annotation, which my draft was missing entirely. **Lesson:** "ONLY UPDATE WHAT IS REQUIRED" applies to PATCH SCRIPTS too — additions like version-bumps + transaction wrappers feel like "best practice" but are scope-creep that bury the actual change; expected-outcome annotation is the verification mechanism + has been the convention here all along (the colleague's `-- 7 rows.` in the same screenshot). Minimum-bar > apparent-thoroughness. | patch-script scope-creep / minimal-footprint-violation (sub-class of "bookkeeping-overhead-on-patches") | CLAUDE.md §9 Patch-script rule (3) — prior carve-out *"bump `version`+1 on UPDATE rule is TRANSACTIONAL-rows only"* read as permissive license, when the broader principle was minimal-footprint | **(A)** CLAUDE.md §9 rule (3) **HARDENED**: carve-out withdrawn — no `version+1` proactively even on transactional rows unless `version` IS the fix. **(B)** NEW §9 rule (4) Stage-Match Block (derive stage → locate code owner → verdict ✓/⚠️/🚨) + rule (5) expected-outcome annotation `-- N rows {updated\|deleted\|inserted}` MANDATORY. **(C)** Patch checklist extended 4→6 items. **(D)** NEW Feature `domain/patch-script-gate/` Stop hook (advisory v1, 2 checks). **(E)** CLAUDE.md → v1.62 on main (was v1.55/v1.56 in the stranded worktree numbering) + changelog entry. Routed through /system-design + /system-rules per design-consult-gate. | ✅ Yes — produced rule hardening + 2 new Features + checklist extension |
+
 ## 2026-07-02 entries
 
 | Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |
