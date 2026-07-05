@@ -1,21 +1,23 @@
 # Current Session
 
 ## What's loaded
-2026-07-03 — **#239386 MPT audit + park day.** Phase-1 audit ran end-to-end (spec vs scripts vs DB vs code): found + fixed the STALE Patch.sql (re-inserted the deleted PLTP L8 → guard-DELETE added; Section A → all-20 self-contained; BOOL_OR verify → raw values). 4 new SQL artifacts (Reset / Langkah-Evidence / MLIT-Precheck / INSERT-derivation-v2) + `screen-feature-guide.md` (skrin/langkah teaching doc) + §0 MASTER CHECKLIST in 239386.md (R1-R9 · Q1-Q3 · H1-H3). WIP **committed `d6af8adda0` + pushed** to `mlk/requirement/239386`. Quest → **HOLD** per みや: focus shifts to eSokongan + internal-issue tickets. Three new delivery rules engraved: CLAUDE.md v1.60 (unqualified SQL for みや) + v1.61 (raw-first, no AS/functions) + quest-bounty hook v1.1 (defer-first, no boot harvests).
+2026-07-05 — **Monthly budgeting app v2 (personal project, NOT etanah).** A long side-session building out みや's `Monthly` web app (`C:\Users\vice4\Documents\7. Code Projects\12. Monthly\Deploy`, a single-file `index.html`, hosted on **GitHub Pages** at https://wsssixteen.github.io/monthly/). Shipped v2 end-to-end + deployed: math-in-Amount (`20*30`), Balance tracking, ongoing/partial-spending rows (cadence daily/weekly/X + times-paid, capped at N, `Update: [input] / N set`), Paid toggle, promote+undo, delete+undo, SKBBK + auto-estimated PCB (with "Not Applicable" + override), auto-save (`⟳ Auto Saved` vs `✓ Saved`), Restart button, and a mobile pass (hide Notes, collapse deductions when Include off, Item:Amount 70:30 / 60:40 with badge, double-click-to-select). All committed + pushed to `wsssixteen/monthly` main across ~6 commits (`9b461df` → `ce9361a`); README still TODO.
 
 ## ▶▶ NEXT SESSION — START HERE
 
-### Focus per みや (2026-07-03): eSokongan + internal-issue tickets
-- **QA-268637** (ESOKONGAN, PRBB Surat Ulasan YB pelan shrink) — Rubric done, fix chosen (mirror 267382 sizing block into `populatePelanAsalImageCMCCMLK:19188`), **HELD pre-Apply awaiting みや's go** (parallel-session quest; check its qa_doc first)
-- **QA-266503** (internal-issue, MLPS Borang4Ae) — issue1 closed; issue2 root FOUND code-level (`saveVersiPermitLesenMLKS year-match delete`, Fix C ready) — runtime confirm next; reconcile with faizudin #261626 (MIGRATOR-DUP-V0 sibling)
+### Quest work (unchanged — this session did ZERO quest/etanah work)
+- **#239386** (MPT, ON HOLD) — resume recipe untouched from 2026-07-03: [239386.md](../projects/coding-projects/active/239386/239386.md) §0 MASTER CHECKLIST. env-check→UAT · rebuild+test PRZ L3 (xlsx row 10a) · Evidence→Reset→Patch → open all urusan · Q1 PSBS + Q2 nama → Aaron.
+- **Focus per みや (2026-07-03)**: eSokongan + internal-issue tickets — **QA-268637** (ESOKONGAN PRBB pelan shrink, Rubric done, HELD pre-Apply) · **QA-266503** (internal MLPS Borang4Ae issue2 root found, runtime-confirm next).
+- **Bounty pending** (flagged at this session's boot, never harvested — non-quest session): QA-267976, QA-268322 (both closed 2026-07-01). Run `/quest-bounty` at next quest engagement.
 
-### #239386 (ON HOLD — resume recipe)
-Full state: [239386.md](../projects/coding-projects/active/239386/239386.md) Resume Point 2026-07-03 + §0 MASTER CHECKLIST. Short: env-check→UAT · rebuild+test PRZ L3 (xlsx row 10a) · DB back → Evidence→Reset→Patch → open all urusan · Q1 PSBS + Q2 nama → Aaron.
+### Monthly app (personal — optional follow-ups)
+- README.md for the repo (みや asked, deferred until he says go).
+- Open product calls he may revisit: real MTD/PCB formula (current is a rough ~3× over-estimate); weekly-installments now `floor(days/7)`=4.
 
-### Environment blockers (checked 07-03)
-UAT DB `172.30.59.185:5444` DOWN (app server .150 fine) · mlit MCP read-blocked (`et_reporting` zero grants on `et_main_mlit`) · FAT MCP wrong password (pgEdge todo #48) · local standalone.xml still on MLIT.
+### Environment blockers (from 07-03, likely still true)
+UAT DB `172.30.59.185:5444` down · mlit MCP read-blocked · FAT MCP wrong password · local standalone.xml on MLIT.
 
 ## 🎯 Session Recap (for AI restart)
-Boot → corrected the boot-plague (quest-bounty hook v1.1 defer-first + once-per-session). #239386 phase-by-phase review per みや: branch verified (new master-based `mlk/requirement/239386`, fork `3901c0432f` + our `035d4419fb`), stash popped clean (16 files + L1 override). Haiku readers extracted spec (BA langkah journal) + all 3 SQL scripts; controller spot-check caught **Patch.sql line 99 re-inserting the deleted PLTP L8** — the day's key finding. Fixed both patch scripts; built Reset/Evidence/Precheck/derivation scripts through みや's teaching loop (reverse-engineering method: DB narrows candidates → jsf_view bridge → CODE decides via URS_-branch/who-mounts tests → render confirms; `BaseBpmForm.navigateToLangkah():2652` = the verified nav hop). Excel checklist amended (PSBS TBC-Aaron, stale code rows, row 10a). Ended: WIP committed `d6af8adda0` + pushed, quest held, focus → eSokongan/internal-issue.
+Boot → `/ruri` greeting (fixed the ruri-skill's fresh-session boot gap early on). Entire session went to the **Monthly** personal web app v2, driven turn-by-turn by みや. Built + verified each feature live in a Preview server, then deployed to GitHub Pages. Big recurring friction: I misread みや's UI/spatial specs several times (the ongoing-spend popover took many rage cycles) and — the key systemic miss — I kept **holding commits "for review"** while みや was reviewing **on his phone**, which can't reach localhost, so he kept seeing the stale deployed version and thought I was removing the Notes-hide fix. Fixed the mental model: deploy each round when the reviewer is on the live URL. Ended calm — みや thanked me and asked for Domain Expansion.
 
-**Memory Type**: RAM | **Last Activity**: 2026-07-03 — #239386 parked (committed+pushed); next = QA-268637 apply-decision + QA-266503 issue2 runtime confirm.
+**Memory Type**: RAM | **Last Activity**: 2026-07-05 — Monthly app v2 done + deployed (`ce9361a`); quest work untouched (239386 held, eSokongan/internal tickets + 2 bounties pending).
