@@ -455,21 +455,3 @@ commit=5bf8156bcf
 branch=mlk/internal-issue/268273
 closed=2026-07-02
 qa_doc=projects/coding-projects/active/QA-268273/QA-268273.md
-
-qa=QA-268637
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\86. ESOKONGAN #268637 - Urusan PRBB - Surat Ulasan YB - pelan pada lampiran surat YB shrink
-phase=1
-status=closed
-ticket_type=bug
-env=Urusan PRBB
-issue_one_liner=Urusan PRBB - Surat Ulasan YB > pelan pada lampiran surat YB shrink
-assigned_to_me=2026-07-03
-tugasan=Penyediaan Surat Jabatan Teknikal dan Ulasan YB
-current_phase=Closed
-local_test_confirmed=true
-quest_start=2026-07-03
-qa_doc=projects/coding-projects/active/QA-268637/QA-268637.md
-scout=populatePelanAsalImageCMCCMLK:19188 hardcode 525x500 (pre-267382 shape); analog populatePelanAsalImageMLK:19110 fixed 05e631671e; blast=TemplateSuratYB+_PPTPB only; conf 90%
-closed=2026-07-05
-commit=9bdaef1791
-branch=mlk/esokongan/268637
