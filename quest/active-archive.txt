@@ -1046,3 +1046,20 @@ qa_doc=projects/coding-projects/archive/QA-268322/QA-268322.md
 closed=2026-07-01
 commit=762672f8c1
 branch=mlk/internal-issue/268322
+
+# ---- archived 2026-07-06 (moved from active.txt — closed ~2026-06-26 per みや) ----
+
+qa=QA-266503
+status=archived
+phase=0
+current_phase=issue1-CLOSED-3512e0df8a · issue2-BLOCKED-runtime-probe-next
+ticket_type=bug
+env=MLKSTG
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\78. INTERNAL ISSUE (PERMANENT FIX) #266503 - MLKSTG - MLPS - Penyediaan Borang 4Ae dan L1e - Klik butang Simpan, borang output papar rekod pemb
+qa_doc=projects/coding-projects/active/QA-266503/QA-266503.md
+issue_one_liner=MLPS Borang4Ae: PLPS leak in renewal list (issue1) + 2024 MLPS renewal DELETED on Simpan (issue2, LIVE - row 7928 lost)
+branch=mlk/internal-issue/266503
+closed=2026-06-26
+issue2_root_FOUND=code-level RESOLVED: page=MlkBorang4AeForm year-walk; save=PelupusanService.saveVersiPermitLesenMLPS:15462 matches by YEAR and deletes unmatched (:15645-15653). Root = populateJadualRekodPembaharuanMLPS floor=vplFirst+1=2025 excludes 2024 renewal -> save deletes it. Fix C (tahunCounter=min-renewal-year) correct. 261626/256093 fixed sibling save populateVersiPermitLesen but NEVER saveVersiPermitLesenMLPS:15462 = unfixed sibling = why 266503 recurs.
+fix_lineage=RECURRING REGRESSION (3x): #256093 (Azim ORIGINAL) -> #261626 (faiz, populateVersiPermitLesen year-match) -> QA-266503. Same Rekod Pembaharuan panel+save fixed 3x. Reconcile with Azim+faiz on future recurrence.
+dup_deferred=2x versi_dok=0 MIGRATOR_KTPN_LMS (UAT 7876/7927, stg 5033/5068) = separate migration ticket (MIGRATOR-DUP-V0 sibling)
