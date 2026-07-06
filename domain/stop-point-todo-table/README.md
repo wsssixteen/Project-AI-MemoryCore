@@ -1,13 +1,14 @@
-# stop-point-todo-table — auto-reminder after code edits
+# stop-point-todo-table — RETIRED 2026-07-06
 
-**What**: PostToolUse hook fires after every Edit/Write/NotebookEdit on a code file. Injects a context line reminding Ruri to emit a "what to do next" table (Ruri's part | みや's part) before stopping.
+**Status**: RETIRED. Subsumed by `domain/stop-point-summary/`.
 
-**Why**: みや asked for ALWAYS-share-TODO-table after code implementations. The `stop-point-summary` skill already carries the procedure — but it's triggered, not auto-fired. This hook closes the gap.
+**Why retired**:
+1. PostToolUse advisory only fired after code Edit/Write — missed non-Edit substantive turns.
+2. Free-text bypass `[skip-stop-point-todo: <reason>]` was abused ("mid-implementation" / "3 more steps pending" / "will summarize later"), producing replies with NO summary at all.
+3. Advisory reminder is skipped when in a hurry.
 
-**Scope**: code files only — `.java .xhtml .xml .js .ts .py .sql .html .css .sh .bat .ps1` etc. Skips docs / state / config writes (those don't need a test cycle).
+**Replacement**: `domain/stop-point-summary/` — Stop hook, HARD BLOCK on any substantive turn without a summary, whitelist-enum bypass (no free-text). See `domain/stop-point-summary/README.md`.
 
-**Bypass**: include `[skip-stop-point-todo: <reason>]` anywhere in the reply.
+**Files kept for git history**; not registered in `settings.json` anymore.
 
-**Mode**: ADVISORY — injects reminder context, doesn't block. Pair-skill is `stop-point-summary`.
-
-**Created**: 2026-06-30 per みや — Option A of three proposed shapes (A=PostToolUse soft / B=Stop hard-block / C=skill-only). みや picked A implicitly by approving the hook-build; can flip to B by extending this same hook with stop-blocking later.
+Rule 6 v1.2 spec preservation on retirement: prior spec (advisory reminder after code Edit) ⊂ new spec (hard block on any substantive turn). Nothing dropped, scope expanded.

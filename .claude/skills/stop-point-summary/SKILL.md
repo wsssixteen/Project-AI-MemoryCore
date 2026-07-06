@@ -53,6 +53,47 @@ Reuse `test-data-echo` for the data rows, then add the rest:
 + **Notes:** what is NOT covered by this fix · errors to expect that are NOT the fix (e.g. a pre-existing NPE)
 + **Next:** who tests · what closes next
 
+## Micro-Summary variant (for mid-work stops that are NOT full phase boundaries)
+
+Not every stop is a full phase close. When work is mid-flight (single Edit inside a larger fix, small research finding, one file read that answered the question) but the reply IS substantive (tool_use ≥ 1 OR ≥ 300 chars), a **Micro-Summary** satisfies the rule without the ceremony of a full stage-titled block.
+
+**Shape** — literally three lines:
+
+    Micro-Summary: <one line what changed> · <one line how to act> · <one line what next>
+
+**When to pick Full vs Micro**:
+
+| Stop shape | Use |
+|---|---|
+| Task done · phase boundary · hand-back · blocker · "where are we" · testing | **Full form** (`## ▶ <Stage Title>` block) |
+| Mid-implementation Edit · single research answer · quick file look-up | **Micro-Summary** (3-line inline) |
+
+Micro is NOT a ceremony bypass — it is still a summary, still names what changed and what's next. The bypass token below is for cases where NEITHER form fits.
+
+## Bypass — WHITELIST ENUM (enforced by hook)
+
+If the reply genuinely has no substance, use ONE of these five reasons — **no free-text**:
+
+```
+[skip-stop-point-summary: pure-ack|question-only|error-only|de-mode|closing-voice]
+```
+
+| Reason | When |
+|---|---|
+| `pure-ack` | one-word acknowledgment ("noted", "ok") |
+| `question-only` | reply is a single clarifying question, no substance |
+| `error-only` | reply reports a hard error / tool failure only |
+| `de-mode` | Domain Expansion / closing ritual |
+| `closing-voice` | personal / relational / reflective reply |
+
+**Banned bypass reasons** (these are the abuse patterns the hook is designed to reject):
+
+- ❌ `mid-implementation` — a mid-implementation stop STILL needs a Micro-Summary
+- ❌ `3 more steps pending` — the stop that just happened deserves the summary, not the deferred one
+- ❌ `will summarize later` — defer is the exact "left hanging" failure
+
+If a reply has any of the failure-mode reasons in mind, the correct action is to emit a **Micro-Summary**, not to bypass.
+
 ## "Test Data" is DIFFERENT
 
 `Test Data` alone → the bare 3-field `test-data-echo` (ID / login / tugasan). `Test Scenario` → this full stage summary. Do not conflate the two.
@@ -63,6 +104,7 @@ Reuse `test-data-echo` for the data rows, then add the rest:
 - Emitting findings/results without a **Next** line → incomplete.
 - Inventing ad-hoc titles ("Test recipe") → use the stage title from the table above.
 - Dumping the table with no **Notes** → the notes are the summary.
+- Reaching for `[skip-stop-point-summary: mid-implementation]` → that's the abuse. Emit Micro-Summary instead.
 
 ## Excuse | Reality
 
@@ -71,11 +113,14 @@ Reuse `test-data-echo` for the data rows, then add the rest:
 | "The task is obviously done, no summary needed" | A stop without where-we-are + what-next IS the "left hanging" failure みや named |
 | "I gave the data, that's enough" | Data ≠ summary. Notes + Next + stage-title are what he asked for |
 | "I'll summarize if he asks" | He shouldn't have to ask — emit at every stop |
+| "I'm mid-implementation, will summarize at the end" | The current stop deserves a Micro-Summary now. Emit it. |
 
-## Hook candidate (v1.1)
+## Enforcement
 
-`operational-follow-through.js` (Stop hook) could mandate this shape deterministically. Deferred to v1.1; today this is the skill + the always-on `personality.md` rule.
+Enforced by `domain/stop-point-summary/stop-point-summary.discipline.hook.js` (Stop hook, HARD BLOCK). See `domain/stop-point-summary/README.md` for the full contract, detection signals, and retirement notice for the old `stop-point-todo-table` advisory hook (subsumed 2026-07-06).
 
 ## History
 
-Created 2026-05-30 by みや. He liked the QA-259702 "Test recipe" (complete table + notes) but wanted (a) a better name — **Test Scenario** for the testing hand-back, (b) it generalized to EVERY stop point with a stage-varying title, (c) it as the standing format so he is never left hanging. Distinct from the bare `test-data-echo` ("Test Data").
+- **2026-05-30** — Created by みや after QA-259702 "Test recipe" (Full form).
+- **2026-06-30** — Companion `stop-point-todo-table` PostToolUse advisory hook added (fired only after code Edit).
+- **2026-07-06** — Old hook RETIRED (free-text bypass abuse). New `stop-point-summary` Stop hook HARD-BLOCKS every substantive turn without a summary. Whitelist enum bypass. Micro-Summary variant added for mid-work stops.
