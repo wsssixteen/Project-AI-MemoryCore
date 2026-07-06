@@ -1112,6 +1112,24 @@ Format (the `## Fastest Path` block):
 
 **Step 4 — Refine receipt (1 line)** — the autonomous loop (hooks + `auto-skill-on-mistake` + `system-rules` + `system-design`) does the refining in real time; this step just REPORTS the result. Emit one line: `Refine — QA-X: <the rule/skill/hook that changed this quest>` OR `Refine — QA-X: none`. A clean "none" is a valid, expected output — never ceremony. KEEP the `## Improvement Checklist` auto-promotion (that IS the autonomous part): each captured "check-further" push whose corrected fix worked promotes automatically into its fix-category check-set (no separate nod — みや's acceptance of the working fix during the quest WAS the nod). One-offs dropped; per-quest section transient.
 
+### 🚨 Rule — Quest's todo / deferrals-capture (added 2026-07-06 per みや, QA-268415)
+
+**Any deferral surfaced DURING the quest MUST be captured STRAIGHT AWAY into `QA-<n>.md` `## Deferred to follow-up` section — never at Phase 2, never at close.** Types of deferrals to capture (non-exhaustive):
+
+- Out-of-BA-scope fixes flagged for a follow-up ticket (e.g. general utility fix discovered while chasing a specific BA symptom)
+- Known future gaps documented in Recon but not fixed (e.g. "if urusan X ever needs behaviour Y, this override path is missing Z")
+- Protocol / skill / tooling improvements surfaced but deferred to a dedicated pass
+- Learning items みや mentions during the quest (Java idiom deep-dives, framework internals, DB semantics)
+- Any "I'll do this later" said or implied
+
+**Format** — `## Deferred to follow-up` section with a `| # | Deferral | Home |` table. Each row's Home column MUST be concrete: an actual ticket ID, a `main/todo.md` Q-tier entry, a queued protocol/skill edit line, or an in-doc note WITH a surfacing-trigger. **Banned**: orphan rows with no home; "will decide later" placeholder homes.
+
+**Phase 2 verify (folded into Checklist E)**: enumerate every deferral in `QA-<n>.md § Deferred` → confirm each row's Home resolves (ticket exists, todo.md row visible, protocol edit committed or queued). Missing home = 🔴 → block Phase 2 close until captured.
+
+**StopGate**: `quest-deferrals-gate.discipline.hook` — fires at Phase 2 close-out signal + `close-phase` invocation. Reads `QA-<n>.md` for a `## Deferred to follow-up` section; if absent OR any row lacks a Home cell → blocks Phase 2 with an actionable list of missing captures. Build queued in `main/todo.md` Q1.
+
+**Why** (2026-07-06, QA-268415 Phase 1 close): several items surfaced during the quest (out-of-scope PelupusanUtil.java fix, known future PT-Lampiran-A gap, class-chain protocol update, Java DI learning ask) sat only in chat memory — I "remembered" them at close but only because みや asked. Deferrals held only in chat evaporate at compaction / new session; the qa_doc is the durable home. STRAIGHT-AWAY capture makes each deferral audit-visible; the StopGate makes silent-drop impossible.
+
 ### Refine triggers — universal (extended 2026-05-13)
 
 Refine is the universal engine "extract improvement from observation." Triggers (entry points):
