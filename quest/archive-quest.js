@@ -194,11 +194,64 @@ function main() {
         }
     }
 
+    // ── Step 4: append quest-bounty log line — ATOMIC 100%-coverage step ──
+    // Per みや 2026-07-06 (QA-268415 session): fold the log-line write INTO
+    // archive so the bounty receipt is written 100% of the time. If the qa_doc
+    // has a `## Bounty` section, log `qa_doc_has_bounty:true` — real harvest.
+    // If not, log `false` — a stub the reader can grep for later manual /quest-bounty.
+    // Skip on true no-op re-runs so log lines don't duplicate.
+    let bountyState; // 'harvested' | 'stub' | 'skip-no-op' | 'dry' | 'error'
+    const isNoOp = blockState === 'already-archived' &&
+                   (folderState === 'already-archived' || folderState === 'no-folder') &&
+                   (projectState === 'already-archived' || projectState === 'none');
+    if (dryRun) {
+        console.log(`  [dry] Step 4: would append quest-bounty log line for ${qa}`);
+        bountyState = 'dry';
+    } else if (isNoOp) {
+        console.log(`  ⏭ Step 4: no-op archive (all steps already archived) — no log line`);
+        bountyState = 'skip-no-op';
+    } else {
+        try {
+            const qaDocInArchive = path.join(projectArchive, `${qa}.md`);
+            const qaDocInActive  = path.join(projectActive,  `${qa}.md`);
+            const qaDocPath = fs.existsSync(qaDocInArchive) ? qaDocInArchive
+                            : fs.existsSync(qaDocInActive)  ? qaDocInActive
+                            : null;
+            let hasBounty = false;
+            if (qaDocPath) {
+                const doc = fs.readFileSync(qaDocPath, 'utf8');
+                hasBounty = /^## Bounty/m.test(doc);
+            }
+            const logDir  = path.join(REPO_ROOT, 'domain', 'quest-bounty');
+            const logPath = path.join(logDir, 'log.jsonl');
+            fs.mkdirSync(logDir, { recursive: true });
+            const entry = {
+                ts: new Date().toISOString(),
+                qa,
+                archive_atomic: true,
+                qa_doc_has_bounty: hasBounty,
+                commit: commit || getField(block, 'commit') || null,
+                branch: branch || getField(block, 'branch') || null,
+            };
+            fs.appendFileSync(logPath, JSON.stringify(entry) + '\n');
+            bountyState = hasBounty ? 'harvested' : 'stub';
+            console.log(`  ✓ Step 4: bounty log line appended (qa_doc_has_bounty=${hasBounty})`);
+            if (!hasBounty) {
+                console.log(`     ⚠ qa_doc has no ## Bounty section — grep the log for '"qa_doc_has_bounty":false' to find quests still owing a harvest`);
+            }
+        } catch (e) {
+            // Fail-open: log-write failure must not block a successful archive
+            console.error(`  ❌ Step 4 FAILED (fail-open — archive itself succeeded): ${e.message}`);
+            bountyState = 'error';
+        }
+    }
+
     // ── Emit the hygiene line in CLAUDE.md v1.39 canonical format ─────────
     const folderIcon  = folderState === 'moved' ? '✓' : folderState === 'already-archived' ? '✓ (was already)' : '⬜';
     const blockIcon   = blockState === 'archived' ? '✓' : blockState === 'already-archived' ? '✓ (was already)' : blockState === 'dry' ? '[dry]' : '⬜';
     const projectIcon = projectState === 'moved' ? '✓' : projectState === 'already-archived' ? '✓ (was already)' : projectState === 'dry' ? '[dry]' : '⬜ no-project-subfolder';
-    console.log(`\n📦 Archive hygiene — ${qa}: folder→Archive\\ ${folderIcon} · active.txt block→active-archive.txt ${blockIcon} · project subfolder ${projectIcon}\n`);
+    const bountyIcon  = bountyState === 'harvested' ? '✓' : bountyState === 'stub' ? '⚠ stub' : bountyState === 'skip-no-op' ? '⏭' : bountyState === 'dry' ? '[dry]' : bountyState === 'error' ? '❌' : '⬜';
+    console.log(`\n📦 Archive hygiene — ${qa}: folder→Archive\\ ${folderIcon} · active.txt block→active-archive.txt ${blockIcon} · project subfolder ${projectIcon} · bounty log ${bountyIcon}\n`);
 }
 
 main();
