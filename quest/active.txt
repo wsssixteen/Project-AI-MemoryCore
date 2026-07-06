@@ -455,3 +455,14 @@ commit=5bf8156bcf
 branch=mlk/internal-issue/268273
 closed=2026-07-02
 qa_doc=projects/coding-projects/active/QA-268273/QA-268273.md
+
+qa=QA-269169
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\88. ESOKONGAN #269169 - Pelupusan - PLPS -  pelan lokasi papar pelan lama
+phase=0
+status=hold
+ticket_type=bug
+env=Pelupusan > PLPS >  pelan lokasi papar pelan lama
+issue_one_liner=Pelupusan > PLPS >  pelan lokasi papar pelan lama
+assigned_to_me=2026-07-06
+urusan=PLPS
+tugasan=Penyediaan Surat JT

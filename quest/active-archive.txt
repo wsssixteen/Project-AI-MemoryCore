@@ -1099,3 +1099,24 @@ closed=2026-06-26
 issue2_root_FOUND=code-level RESOLVED: page=MlkBorang4AeForm year-walk; save=PelupusanService.saveVersiPermitLesenMLPS:15462 matches by YEAR and deletes unmatched (:15645-15653). Root = populateJadualRekodPembaharuanMLPS floor=vplFirst+1=2025 excludes 2024 renewal -> save deletes it. Fix C (tahunCounter=min-renewal-year) correct. 261626/256093 fixed sibling save populateVersiPermitLesen but NEVER saveVersiPermitLesenMLPS:15462 = unfixed sibling = why 266503 recurs.
 fix_lineage=RECURRING REGRESSION (3x): #256093 (Azim ORIGINAL) -> #261626 (faiz, populateVersiPermitLesen year-match) -> QA-266503. Same Rekod Pembaharuan panel+save fixed 3x. Reconcile with Azim+faiz on future recurrence.
 dup_deferred=2x versi_dok=0 MIGRATOR_KTPN_LMS (UAT 7876/7927, stg 5033/5068) = separate migration ticket (MIGRATOR-DUP-V0 sibling)
+
+qa=QA-268883
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\89. ESOKONGAN #268883 - Dokumen Penyediaan Surat Jabatan Teknikal dan Ulasan YB
+phase=1
+status=archived
+ticket_type=bug
+env=MLKSTG
+issue_one_liner=PSJT Surat JT + Ulasan YB - AWAM multi-page PDF upload renders only page 1 (any urusan)
+assigned_to_me=2026-07-06
+urusan=PRZ
+tugasan=Penyediaan Surat Jabatan Teknikal dan Ulasan YB
+current_phase=Closed
+local_test_confirmed=true
+branch=mlk/esokongan/268883
+quest_start=2026-07-06
+test_app=PTMLK/03/L/PRZ/2026/1 (3386104) + PTMLK/03/L/PRZ/2026/2 (3389252) — stg2 et_main_stg2, both at PSJT, pengguna_semasa NOOR FADZILAH BINTI MOHD YUSOFF (nfadzilah@, pengguna_id 4770, pejabat 4/kod 03)
+scope_anchor=multi-page PDF render per-page on own Word page + 268637-mirror caps (19cm/25cm) + createDrawing helper for alignment consistency with proven IMAGE-type path
+scout=PelupusanUtil.convertPdfFileBytesToImageFileBytes:800-812 renderer.renderImageWithDPI(0,300) hardcodes page 0; siblings PelupusanUtil.convertPdfToImages:1326-1343 + mergeImages:1348-1375 + scaleToFitA4Strict:1407 already exist; blast=7 callers via PelupusanUtil.retrieveImageByte:746-798; BA PDF 3 pages 0 annots; conf 85%
+commit=cc23fc3763
+pushed=2026-07-06
+closed=2026-07-06
