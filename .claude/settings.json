@@ -232,6 +232,10 @@
           },
           {
             "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\stop-point-summary\\stop-point-summary.discipline.hook.js\""
+          },
+          {
+            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\quest-doc-freshness\\quest-doc-freshness.discipline.hook.js\""
           },
           {
@@ -316,7 +320,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\full-address-trace-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\full-address-trace-gate\\full-address-trace-gate.discipline.hook.js\""
           },
           {
             "type": "command",
@@ -343,15 +347,6 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\slip-count-tracker.js\""
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write|NotebookEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\stop-point-todo-table\\stop-point-todo-table.discipline.hook.js\""
           }
         ]
       },
