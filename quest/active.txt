@@ -129,22 +129,6 @@ rework_folder=4.Rework
 rework_reason_cycle3=Aaron 2026-06-09: deployed but still issue; possible our changes reverted (disrupted other flow); please retest+check
 rework_cycle3_fix=2 edits uncommitted on mlk/master: PelupusanService remove(:16637) deleted + xhtml rendered-gate MCL; root cause = cycle-1 wrong-writer + cycle-2 stale-VO wipe + ungated mandatory field; full doc QA-260508.md cycle-3
 
-qa=QA-246532
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\1. 246532 - Surat Keputusan Tangguh Fix.png
-phase=1
-status=closed
-ticket_type=bug
-env=UAT
-issue_one_liner=Surat Maklumbalas Tangguh - template fix (.docx)
-assigned_to_me=2026-06-05
-tugasan=Penyediaan Surat Maklumbalas Tangguh
-local_test_confirmed=true
-current_phase=Closed
-quest_start=2026-06-05
-closed=2026-06-05
-branch=mlk/qa/246532
-commit=688af6d05e
-
 qa=QA-262495
 status=closed
 phase=1
