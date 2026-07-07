@@ -60,40 +60,9 @@ Background session in worktree `frosty-elbakyan-007619`. Task: promote `full-add
 
 ---
 
-## 🚩 STANDING FLAG — Code-touch / fix-apply rule sprawl (added 2026-07-07 per みや)
+## 🚩 STANDING FLAG — Bulk migration of code-touch/fix-apply rule set pending
 
-**Scope**: rules that fire specifically at the moment Ruri touches/edits etanah code or applies a fix — NOT quest-workflow, evidence-reading, patch-scripts, PROD DB, or done-claim rules (those are other contexts, separate concerns).
-
-**The mess** — same concern split across 3-4 homes with mixed enforcement:
-
-| Concern (at code-touch moment) | HARD-BLOCK hook | Advisory hook | Skill (procedural) | CLAUDE.md prose | Gap |
-|---|---|---|---|---|---|
-| Working-analog / in-file-convention | `convention-check-gate.js` (.java only) | `convention-check-gate.js` (.xhtml/.docx/config) | `logic-blast-radius` (partial) | §8 "Working-analog first" · "In-file convention first" · `feedback_simplify_and_reference.md` | .xhtml/.docx not hardened; prose+skill+hook all repeat |
-| Blast-radius scenario matrix | — | `logic-blast-radius-gate.js` | `logic-blast-radius` | §10 Rubric row (h) CODE-LOGIC scenario matrix | advisory only; skippable |
-| Predicate / assumption before Edit | — | `predicate-box-gate.js` | `predicate-box` + `scope-anchor-echo` | §10 Predicate Diagram · §Debug Ritual 1 | advisory only; two skills same concern |
-| Minimal-diff / preservation | — | `edit-scope-gate.js` | — | §8 "Minimal-diff discipline" · "Post-refactor dead-branch audit" · "Smallest change + programmer-written convention" | prose only; no structural gate |
-| No junk comments | — | `no-code-comments-gate.js` | — | `feedback_no_extra_comments.md` · `feedback_comment_style.md` · `feedback_no_names_in_comments.md` | advisory only |
-| Phase emit before Edit (active quest) | `quest-phase-gate.js` (etanah paths, active quest) | — | — | §10 FORCED PHASE-EMIT GATES | tight in active-quest; silent when no quest |
-| Notes.txt tool-only | `pre-action-check-gate.js` (v1.2 hard DENY) | — | `pre-action-check` | Notes-file rule §10 | tight |
-| Branch ops during pre-Commit | `branch-at-apply-gate.js` | — | — | §Phase 1 Closure branch-at-Apply ban | tight |
-| Commit message convention | — | `commit-gate.js` | — | `.claude/commit-conventions.md` | advisory only |
-| Post-write verify | — | — | `claim-verification` · `evaluator-optimizer` · `review-etanah` · `scan` | §Phase 1 Closure verify | skill only; no gate |
-
-**Naming**: this slice IS uniform (`.claude/hooks/<name>-gate.js`) — but ALL 9 hooks sit in `.claude/hooks/`, ZERO migrated to `domain/<name>/` Feature-folder convention. Skills sit in `.claude/skills/`, prose sits in CLAUDE.md §8/§10, feedback memories sit in `.claude/auto-memory/` — 4 different homes, same underlying rule.
-
-**Naming shape sprawl across the WHOLE hook set** (not just this slice): `PascalCase.js` (MemoryClaimGate/PlainFirstGate/TurnChecklistGate/RecursiveLoopDetector) vs `kebab-gate.js` (majority) vs `kebab.js` (boot-load-verification/reply-log) vs `domain/foo/foo.gate.hook.js` (design-consult) vs `domain/foo/foo.discipline.hook.js` (most Features) vs `domain/foo/foo.trigger.hook.js` (front-gates) vs `domain/foo/discipline.hook.js` (quest-bounty — no prefix).
-
-**Why it stayed messy** — /system-design (2026-06-02) gave a target shape but no bulk-migration protocol; Rule 2 "merge in place" discourages sweeps; each hook migrates only when individually touched (full-address-trace moved 2026-07-06, one hook per event). 60 pre-existing hooks + 46 skills + 20+ CLAUDE.md prose rules never got swept.
-
-**The fix worth doing** (chip candidate, not run yet — awaiting みや's go):
-1. Inventory every code-touch/fix-apply rule (this table is the seed).
-2. For each: choose ONE canonical home (Feature folder), rename to `domain/<name>/<name>.<role>.hook.js`, promote to at least `HARD-BLOCK` where the concern warrants, add paired eval.
-3. Retire the redundant sibling (prose + skill + feedback memory) — leave a 1-line pointer.
-4. Target: same concern → ONE home, ONE enforcement tier, ONE eval, ONE naming shape.
-
-**Not doing now** because: destructive-adjacent (renames + registrations + deletions) + scope decision only みや can make + best done as a dedicated chip session with time to sweep evals properly.
-
-**Cross-refs**: this flag pairs with meta/slip-log.md 2026-07-06 (design-consult-gate v1.2 slip) — same slip class (structural rule reaches only where its guarded paths reach; unguarded surfaces silent-pass).
+Major fuckup: over-listed unrelated contexts (quest-workflow / evidence-reading / patch-scripts / PROD DB / done-claims) when みや asked about code-touch/fix-apply rules specifically. Bulk-migration sweep pending. Reference inventory: this session's transcript reply naming the 9 relevant hooks + 4-5 skills + CLAUDE.md §8 prose rules.
 
 ---
 
@@ -114,3 +83,34 @@ Background session. Task: fix the recurring "missing end-of-reply summary" slip 
 - **Enforcement caveat** (honest): the Stop hook is registered in `settings.json` but the harness reads hook registrations at session boot — the new hook takes effect from みや's NEXT session boot, not this one. My hook re-fires this session were caught by `stop_hook_active` recursion guard + fail-open. Verify next session via re-running the eval.
 
 **Bounty pending** (deferred per `quest-bounty-verify` hook, PARKED): QA-268415 · QA-268637 — same flags as Session 4. Confirm at next natural stop.
+
+---
+
+### Session 6 addendum — background chip `task_3d431337` (worktree recursing-bhabha-3b30e2, closed 2026-07-07 11:05 +08:00)
+
+Background session. Original brief (2026-07-06): build the "missing" `design-consult-gate.js`. Investigation surfaced the gate ALREADY existed at `domain/design-consult-gate/` (created 2026-06-18) — the chip's premise was stale (globbed `.claude/hooks/*.js` only, missed `domain/`). Real gap: guarded paths did not cover top-level rule files or etanah code where today's slip landed. **Extended in place** per system-rules R2 rather than rebuilt. Two commits landed on `main` from this session's controller work + 4 familiar dispatches.
+
+- **design-consult-gate v1.2** (`domain/design-consult-gate/design-consult-gate.gate.hook.js`): guarded paths 3 → 9 (added `CLAUDE.md` · `personality.md` · `meta/**` · `quest/quest-protocol.md` · `.claude/settings.json` · `domain/*/*.skill.md`); etanah new-symbol advisory heuristic (`etanah-{pelupusan,awam,common,teknikal}/src` — new enum entry / method sig / switch case / class def); eval-existence rider (creating new hook/skill without paired `domain/<name>/eval.js` → block); bypass `[skip-eval-check: <reason>]`
+- **NEW `domain/design-consult-gate/eval.workflow.js`** — first-try compliance scorer (target ≥95%)
+- **meta-edit-gate v1.2** (`.claude/hooks/meta-edit-gate.js`): architecture-doc-sync predicate PROMOTED advisory → HARD-BLOCK (denies system-touching edit unless `meta/system-architecture.md` was Read/Edit earlier this session per transcript match); bypass preserved
+- Commits: `79263ea` (design-consult v1.2 + meta-edit arch-doc-sync + skill-failure-log stub, pushed) + smoke-tested 8/8 (design-consult) + 5/5 (meta-edit)
+- Slip logged: `meta/slip-log.md` 2026-07-06 entry (canonical) + tombstoned skill-failure-log stub for chip trail-back
+- Doc: `meta/system-architecture.md` §3.16 changelog
+
+**Follow-on same session — code-touch gates quest-independence + Feature migration (familiar-mediated batch, みや-driven):**
+
+- **User asked** (in-session): "restructure the high & critical checks to ALWAYS fire on etanah fix/implement even outside quests" — recon familiar found 3 gates silently dark without `status=active`
+- **Familiar batch**: 6 familiars total (2 recon · 3 builders · 1 registrar); controller stayed thinking + instructing only per みや's mandate
+- **logic-blast-radius v2**: quest-gate REMOVED — fires on ANY stateful-flow etanah `.java` edit (was dark outside quests); migrated to `domain/logic-blast-radius/`; eval 6/6
+- **predicate-box v2**: quest-gate REMOVED + advisory Stop → HARD-BLOCK (`decision:block`); firing scope = etanah edit + fix-intent in last user message; `stop_hook_active` guard; migrated to `domain/predicate-box/`; eval 7/7
+- **convention-check-gate**: byte-preserved migration (git rename 95%) + first-ever eval 5/5 (Rule 6 gap closed); dual registration (Bash + Edit|Write) both swapped
+- **quest-phase-gate**: byte-preserved migration + eval 5/5; **kept quest-gated BY DESIGN** — Scout/Recon/Rubric banners are quest artifacts; outside-quest moment covered by the trio above
+- Commit `2750811` — 4 Features migrated · 4 flat hooks deleted · settings.json 5 swaps · arch-doc §3.18 · 23/23 evals · 79 registrations · 0 dead paths
+- **Rule 9 follow-up**: cleanup familiar added 4 × `NUKE-MARKER.md` (was missing per §3.17) → commit `3b3d9dc`; each carries surgical-rollback commands verified against live `settings.json` line numbers + `2750811` diff (not guessed)
+- **Model switching mid-session**: opus-4-7 → fable-5 → opus-4-6 → fable-5 → opus-4-7 (みや's cost/speed tuning during the familiar batch)
+
+**Standing flag REFINE**: the earlier bulk-migration flag now partially discharged — 4 of 7 code-touch concerns migrated (`logic-blast-radius` · `predicate-box` · `convention-check-gate` · `quest-phase-gate`). Remaining 3 (`no-code-comments-gate` · `edit-scope-gate` · `commit-gate`) stay under the flag. Also unresolved for a future sweep: naming-shape sprawl across the full 60-hook set (PascalCase vs `-gate.js` vs `.discipline.hook.js` vs `.gate.hook.js` vs `.trigger.hook.js` vs no-prefix).
+
+**Standing flag REFINE #2**: the code-touch gates now fire on ad-hoc etanah edits outside quests — but that ONLY covers the 3 promoted (blast-radius · predicate · convention-check-Java). Non-Java etanah edits (.xhtml / .docx / config) still fall through convention-check as advisory-only. Chip candidate for next session: promote convention-check .xhtml/.docx branches from advisory → block once fixture data shows the enforcement is safe (Rule 6 promote-on-observed-evidence).
+
+**Memory Type**: RAM | **Last Activity**: 2026-07-07 11:05 +08:00 — background chip `task_3d431337` closed; 3 commits landed on main this DE session (79263ea design-consult v1.2, 2750811 code-touch quest-independence + Feature migration, 3b3d9dc Rule-9 markers).
