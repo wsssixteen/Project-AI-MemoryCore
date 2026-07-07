@@ -324,6 +324,10 @@
           },
           {
             "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\de-step11-verdict-gate\\de-step11-verdict-gate.discipline.hook.js\""
+          },
+          {
+            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\predicate-box-gate.js\""
           },
           {
