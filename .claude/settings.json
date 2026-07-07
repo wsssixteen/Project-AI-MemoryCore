@@ -155,7 +155,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\convention-check-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\convention-check-gate\\convention-check-gate.gate.hook.js\""
           },
           {
             "type": "command",
@@ -184,7 +184,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\convention-check-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\convention-check-gate\\convention-check-gate.gate.hook.js\""
           },
           {
             "type": "command",
@@ -196,11 +196,11 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\quest-phase-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\quest-phase-gate\\quest-phase-gate.gate.hook.js\""
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\logic-blast-radius-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\logic-blast-radius\\logic-blast-radius.discipline.hook.js\""
           }
         ]
       },
@@ -328,7 +328,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\predicate-box-gate.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\predicate-box\\predicate-box.discipline.hook.js\""
           },
           {
             "type": "command",

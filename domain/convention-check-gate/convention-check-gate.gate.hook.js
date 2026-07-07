@@ -1,5 +1,10 @@
 /**
- * convention-check-gate.js — PreToolUse hook (Edit | Write | Bash)
+ * convention-check-gate.gate.hook.js — PreToolUse hook (Edit | Write | Bash)
+ *
+ * RELOCATED 2026-07-07 from .claude/hooks/convention-check-gate.js into the
+ * domain/convention-check-gate/ Feature folder. v1.5 behavior preserved
+ * byte-for-byte; the ONLY code change is the log path (now log.jsonl beside
+ * this file) plus this header note.
  *
  * Catches the "best-practices-not-consulted" slip in its universal form:
  * before adding/changing ANY artifact (Java code, .docx template, config, SQL
@@ -34,11 +39,11 @@
  *   CANNOT (correctness — stays judgment): verify the cited analog is the RIGHT one.
  *   Fail-OPEN: transcript unreadable / parse error → advisory only, never block on our bug.
  *   Bypass: [skip-convention-check: <reason>] anywhere in the session.
- *   Log: .claude/hooks/convention-check-gate.log.jsonl (per /system-rules Rule 5).
+ *   Log: log.jsonl beside this file (per /system-rules Rule 5).
  */
 const fs = require('fs');
 const path = require('path');
-const LOG = path.resolve(__dirname, 'convention-check-gate.log.jsonl');
+const LOG = path.resolve(__dirname, 'log.jsonl');
 
 // Markers proving a convention-check happened this session (any one suffices)
 const ANALOG_CITED = /←\s*sibling|\bsibling\b[^\n]{0,90}\b[\w/.\\-]+\.\w+:\d+|\banalog\b[^\n]{0,90}:\d+|\bconvention\b[^\n]{0,90}:\d+|\bmirror(?:s|ed|ing)?\b[^\n]{0,90}:\d+/i;

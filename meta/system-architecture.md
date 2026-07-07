@@ -53,7 +53,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `meta/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `meta-layer-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node meta/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 75 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — do NOT hand-edit. 79 hook registrations across 5 events. Re-run after any settings.json hook change (`node meta/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
@@ -93,42 +93,45 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 | PreToolUse | Bash | `branch-at-apply-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `claude-md-edit-guard.js` | 🚨 MISSING |
 | PreToolUse | Bash | `commit-gate.js` | 🚨 MISSING |
-| PreToolUse | Bash | `convention-check-gate.js` | 🚨 MISSING |
-| PreToolUse | Edit|Write | `convention-check-gate.js` | 🚨 MISSING |
+| PreToolUse | Bash | `convention-check-gate.gate.hook.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `convention-check-gate.gate.hook.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `design-consult-gate.gate.hook.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `edit-scope-gate.js` | 🚨 MISSING |
 | PreToolUse | Read|Edit|Write | `known-bug-surfacer.hook.js` | 🚨 MISSING |
-| PreToolUse | Edit|Write | `logic-blast-radius-gate.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `logic-blast-radius.discipline.hook.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `meta-edit-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `no-code-comments-gate.js` | 🚨 MISSING |
 | PreToolUse | Edit|Write | `pre-action-check-gate.js` | 🚨 MISSING |
-| PreToolUse | Edit|Write | `quest-phase-gate.js` | 🚨 MISSING |
+| PreToolUse | mcp__postgres-mlkprod-pg__.* | `prod-db-confirm.discipline.hook.js` | 🚨 MISSING |
+| PreToolUse | Edit|Write | `quest-phase-gate.gate.hook.js` | 🚨 MISSING |
 | PostToolUse | Grep | `grep-rubric-gate.js` | 🚨 MISSING |
 | PostToolUse | Bash | `quest-bounty.hook.js` | 🚨 MISSING |
 | PostToolUse | — | `RecursiveLoopDetector.js` | 🚨 MISSING |
 | PostToolUse | — | `slip-count-tracker.js` | 🚨 MISSING |
-| ~~PostToolUse~~ | ~~Edit\|Write\|NotebookEdit~~ | ~~`stop-point-todo-table.discipline.hook.js`~~ | RETIRED 2026-07-06 — subsumed by `domain/stop-point-summary/stop-point-summary.discipline.hook.js` (Stop hook, hard-block, whitelist bypass) |
-| Stop | — | `domain/stop-point-summary/stop-point-summary.discipline.hook.js` | 🚨 NEW 2026-07-06 |
 | Stop | — | `ask-back-gate.js` | 🚨 MISSING |
 | Stop | — | `ba-understanding-table.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `codemap-recon-consult.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `de-output-integrity-checker.js` | 🚨 MISSING |
 | Stop | — | `de-run-verify.js` | 🚨 MISSING |
+| Stop | — | `de-step11-verdict-gate.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `deploy-proof-gate.js` | 🚨 MISSING |
 | Stop | — | `diagnostic-self-heal-gate.js` | 🚨 MISSING |
 | Stop | — | `discipline.hook.js` | 🚨 MISSING |
-| Stop | — | `full-address-trace-gate.js` | 🚨 MISSING |
+| Stop | — | `full-address-trace-gate.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `notes-on-test-data.js` | 🚨 MISSING |
 | Stop | — | `operational-follow-through.js` | 🚨 MISSING |
 | Stop | — | `over-generalization-gate.js` | 🚨 MISSING |
-| Stop | — | `predicate-box-gate.js` | 🚨 MISSING |
+| Stop | — | `patch-script-gate.discipline.hook.js` | 🚨 MISSING |
+| Stop | — | `predicate-box.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `quest-context-load-gate.js` | 🚨 MISSING |
+| Stop | — | `quest-deferrals-gate.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `quest-doc-freshness.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `quest-knowledge-save-gate.js` | 🚨 MISSING |
 | Stop | — | `rcrl-emit-check.js` | 🚨 MISSING |
 | Stop | — | `reply-log.js` | 🚨 MISSING |
 | Stop | — | `show-gate.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `silent-claim-drift-gate.js` | 🚨 MISSING |
+| Stop | — | `stop-point-summary.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `terse-gate.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `ticket-criteria-gate.discipline.hook.js` | 🚨 MISSING |
 | Stop | — | `verify-basis-gate.discipline.hook.js` | 🚨 MISSING |
@@ -351,6 +354,15 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 - 📐 **Enforcement pairing**: Rule 6 v1.2 hook fixture-eval SHOULD add a `nuke-marker-present` assertion so a new Feature without a marker fails ship-check the same way a hook without an eval does. Deferred to a follow-on hook extension (not in this ship).
 - 📝 Per みや after `stop-point-summary` ship: rollback state was scattered across 4 files (Feature folder + settings.json + arch doc + skill-failure-log). One NUKE-MARKER file centralizes it. Same-day trigger: *"add like for newly created skills/hooks a marking. I can straight away nuke it if it turned out very bad due to your stupid implementation."*
 - Net delta: 0 new hook/skill registrations; +1 new rule (`/system-design` v2.3); +1 new file (`domain/stop-point-summary/NUKE-MARKER.md`).
+
+### 3.18 Change 2026-07-07 (code-touch gates quest-independence + Feature migration — familiar-built batch)
+
+- 🔁 **logic-blast-radius-gate v2**: quest-gate REMOVED (was dark outside quests) — fires on ANY stateful-flow etanah .java Edit; migrated to `domain/logic-blast-radius/`; eval 6/6.
+- 🔁 **predicate-box-gate v2**: quest-gate REMOVED + advisory PROMOTED to `decision:block`; firing scope = etanah edit + fix-intent in last user message; `stop_hook_active` guard; migrated to `domain/predicate-box/`; eval 7/7.
+- 🔁 **convention-check-gate**: behavior unchanged (v1.5 byte-preserved), migrated to `domain/convention-check-gate/` + first-ever eval 5/5; dual registration (Bash + Edit|Write) both swapped; legacy log stays at `.claude/hooks/`.
+- 🔁 **quest-phase-gate**: behavior unchanged, quest-gated BY DESIGN (Scout/Recon/Rubric banners are quest artifacts; outside-quest coverage = the trio above); migrated to `domain/quest-phase-gate/` + eval 5/5; NOTE: resolves repo root via `path.resolve(__dirname,'..','..')` — depth-2 invariant, do not nest deeper.
+- 🩹 **Why**: みや 2026-07-07 — *"checks must ALWAYS fire when I ask to apply fix or implement etanah code, even outside quests"*; recon found 3 gates silently dark without `status=active`.
+- Built by 3 builder familiars + this registrar (controller-only parent).
 
 ---
 

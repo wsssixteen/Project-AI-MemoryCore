@@ -1,5 +1,11 @@
 /**
- * quest-phase-gate.js — PreToolUse hook (Edit | Write)
+ * quest-phase-gate.gate.hook.js — PreToolUse hook (Edit | Write)
+ *
+ * RELOCATED 2026-07-07 from .claude/hooks/quest-phase-gate.js into the
+ * domain/quest-phase-gate/ Feature folder. Behavior unchanged; the ONLY code
+ * changes are (a) a log.jsonl fire log beside this file (blocked / allowed /
+ * bypassed) and (b) this header note. active.txt resolution is untouched:
+ * two levels up from this file = repo root, same depth as the old location.
  *
  * HARD-BLOCK: forbids editing etanah code/template/config DURING AN ACTIVE QUEST
  * until this session has emitted the Scout, Recon, AND Rubric phase banners.
@@ -37,6 +43,11 @@
  */
 const fs = require('fs');
 const path = require('path');
+const LOG = path.resolve(__dirname, 'log.jsonl');
+
+function logFire(action, detail) {
+  try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), action, detail }) + '\n'); } catch (_) {}
+}
 
 let input = '';
 process.stdin.resume();
@@ -73,7 +84,10 @@ process.stdin.on('end', () => {
     }
 
     // Bypass token
-    if (/\[skip-phase-gate:/i.test(transcript)) process.exit(0);
+    if (/\[skip-phase-gate:/i.test(transcript)) {
+      logFire('bypassed', filePath);
+      process.exit(0);
+    }
 
     // Phase-emit markers (canonical banner + accepted legacy markers)
     const phases = [
@@ -84,6 +98,7 @@ process.stdin.on('end', () => {
     ];
     const missing = phases.filter(p => !p.re.test(transcript)).map(p => p.name);
     if (missing.length === 0) {
+      logFire('allowed', filePath);
       // v2 (2026-07-03, audit E2+E3): phases exist — run the two ADVISORY checks that
       // QA-268273 proved the phases alone don't cover. Advisory v1 (promote-on-slip).
       const base = path.basename(filePath).replace(/\.[^.]+$/, '');
@@ -114,6 +129,7 @@ process.stdin.on('end', () => {
       '   Legitimate non-quest / audit edit? add [skip-phase-gate: <reason>] to your message.',
     ].join('\n');
 
+    logFire('blocked', filePath);
     process.stdout.write(
       JSON.stringify({
         hookSpecificOutput: {
