@@ -57,3 +57,60 @@ Background session in worktree `frosty-elbakyan-007619`. Task: promote `full-add
 - **Correction from みや at close**: "background session ≠ no-DE" — each spawned session owns its own DE. Framing corrected inline; DE ran properly this turn. Same correction applies to the other 2 background-spawned sessions still open.
 
 **Bounty pending** (deferred, flagged at session end): QA-268415 · QA-268637 — quest-bounty verify hook surfaced no bounty log line at the top of this session; parent DE handled QA-268883/268637/268415 bounties per Bounty state above, so those flags may be stale-view artifacts. Confirm at next natural stop.
+
+---
+
+## 🚩 STANDING FLAG — Code-touch / fix-apply rule sprawl (added 2026-07-07 per みや)
+
+**Scope**: rules that fire specifically at the moment Ruri touches/edits etanah code or applies a fix — NOT quest-workflow, evidence-reading, patch-scripts, PROD DB, or done-claim rules (those are other contexts, separate concerns).
+
+**The mess** — same concern split across 3-4 homes with mixed enforcement:
+
+| Concern (at code-touch moment) | HARD-BLOCK hook | Advisory hook | Skill (procedural) | CLAUDE.md prose | Gap |
+|---|---|---|---|---|---|
+| Working-analog / in-file-convention | `convention-check-gate.js` (.java only) | `convention-check-gate.js` (.xhtml/.docx/config) | `logic-blast-radius` (partial) | §8 "Working-analog first" · "In-file convention first" · `feedback_simplify_and_reference.md` | .xhtml/.docx not hardened; prose+skill+hook all repeat |
+| Blast-radius scenario matrix | — | `logic-blast-radius-gate.js` | `logic-blast-radius` | §10 Rubric row (h) CODE-LOGIC scenario matrix | advisory only; skippable |
+| Predicate / assumption before Edit | — | `predicate-box-gate.js` | `predicate-box` + `scope-anchor-echo` | §10 Predicate Diagram · §Debug Ritual 1 | advisory only; two skills same concern |
+| Minimal-diff / preservation | — | `edit-scope-gate.js` | — | §8 "Minimal-diff discipline" · "Post-refactor dead-branch audit" · "Smallest change + programmer-written convention" | prose only; no structural gate |
+| No junk comments | — | `no-code-comments-gate.js` | — | `feedback_no_extra_comments.md` · `feedback_comment_style.md` · `feedback_no_names_in_comments.md` | advisory only |
+| Phase emit before Edit (active quest) | `quest-phase-gate.js` (etanah paths, active quest) | — | — | §10 FORCED PHASE-EMIT GATES | tight in active-quest; silent when no quest |
+| Notes.txt tool-only | `pre-action-check-gate.js` (v1.2 hard DENY) | — | `pre-action-check` | Notes-file rule §10 | tight |
+| Branch ops during pre-Commit | `branch-at-apply-gate.js` | — | — | §Phase 1 Closure branch-at-Apply ban | tight |
+| Commit message convention | — | `commit-gate.js` | — | `.claude/commit-conventions.md` | advisory only |
+| Post-write verify | — | — | `claim-verification` · `evaluator-optimizer` · `review-etanah` · `scan` | §Phase 1 Closure verify | skill only; no gate |
+
+**Naming**: this slice IS uniform (`.claude/hooks/<name>-gate.js`) — but ALL 9 hooks sit in `.claude/hooks/`, ZERO migrated to `domain/<name>/` Feature-folder convention. Skills sit in `.claude/skills/`, prose sits in CLAUDE.md §8/§10, feedback memories sit in `.claude/auto-memory/` — 4 different homes, same underlying rule.
+
+**Naming shape sprawl across the WHOLE hook set** (not just this slice): `PascalCase.js` (MemoryClaimGate/PlainFirstGate/TurnChecklistGate/RecursiveLoopDetector) vs `kebab-gate.js` (majority) vs `kebab.js` (boot-load-verification/reply-log) vs `domain/foo/foo.gate.hook.js` (design-consult) vs `domain/foo/foo.discipline.hook.js` (most Features) vs `domain/foo/foo.trigger.hook.js` (front-gates) vs `domain/foo/discipline.hook.js` (quest-bounty — no prefix).
+
+**Why it stayed messy** — /system-design (2026-06-02) gave a target shape but no bulk-migration protocol; Rule 2 "merge in place" discourages sweeps; each hook migrates only when individually touched (full-address-trace moved 2026-07-06, one hook per event). 60 pre-existing hooks + 46 skills + 20+ CLAUDE.md prose rules never got swept.
+
+**The fix worth doing** (chip candidate, not run yet — awaiting みや's go):
+1. Inventory every code-touch/fix-apply rule (this table is the seed).
+2. For each: choose ONE canonical home (Feature folder), rename to `domain/<name>/<name>.<role>.hook.js`, promote to at least `HARD-BLOCK` where the concern warrants, add paired eval.
+3. Retire the redundant sibling (prose + skill + feedback memory) — leave a 1-line pointer.
+4. Target: same concern → ONE home, ONE enforcement tier, ONE eval, ONE naming shape.
+
+**Not doing now** because: destructive-adjacent (renames + registrations + deletions) + scope decision only みや can make + best done as a dedicated chip session with time to sweep evals properly.
+
+**Cross-refs**: this flag pairs with meta/slip-log.md 2026-07-06 (design-consult-gate v1.2 slip) — same slip class (structural rule reaches only where its guarded paths reach; unguarded surfaces silent-pass).
+
+---
+
+### Session 5 addendum — background chip `task_a49b65ac` (worktree hopeful-haslett-ec8bf5, closed 2026-07-07 10:20 +08:00)
+
+Background session. Task: fix the recurring "missing end-of-reply summary" slip — Ruri had been abusing `[skip-stop-point-todo: <reason>]` bypass with "mid-implementation" / "3 more steps pending" excuses. Baseline scan: **24.9% substantive-turn compliance (154/618)** across last 15 transcripts. All edits landed on `main` (commits `90e961d` + `b3da67e`) via absolute-path Writes to the main-repo tree. Worktree branch `claude/hopeful-haslett-ec8bf5` carries no unique work — safe to prune.
+
+- **Feature folder**: `domain/stop-point-summary/{stop-point-summary.discipline.hook.js, eval.js, README.md, NUKE-MARKER.md}`
+- **Retired**: `domain/stop-point-todo-table/` — README tombstone points to new location (old spec ⊂ new spec, nothing dropped per Rule 6 v1.2 spec preservation)
+- **Skill refined**: `.claude/skills/stop-point-summary/SKILL.md` — Micro-Summary 3-line variant + banned bypass docs + enforcement section
+- **Shape verdict** (routed through /system-design + /system-rules): **Option B+C hybrid** — Stop hook fires on every reply + hard-block on substantive turn without summary + whitelist enum bypass (`pure-ack|question-only|error-only|de-mode|closing-voice`) — free-text reasons REJECTED (that was the abuse pattern)
+- **Rule 6 v1.2**: 7-case fixture smoke-test PASS (fire+effect checks cleared); baseline eval 24.9% documented on ship
+- **Target**: ≥95% first-try compliance next session — verify via `node "domain/stop-point-summary/eval.js" --limit=15`
+- **NEW Rule 9** (this session): `/system-design` v2.2 → v2.3 adds HARD RULE that every new Feature folder MUST ship a `NUKE-MARKER.md` with 5 fields (Created / Session / Files / Rollback / Retire date). Retro-applied to `domain/stop-point-summary/NUKE-MARKER.md`. Retire date 2026-08-05 (Created + 30d). Grep test: `grep -rl "NUKE-MARKER" domain/` returns every not-yet-trusted Feature.
+- **Slip logged** in `Feature/Forge-Self-Improvement-System/skill-failure-log.md` (also parallel-swept into commit `031f8c6`)
+- **Doc**: `meta/system-architecture.md` §3.5 rows 110-111 (retirement of old + new hook row) + §3.17 changelog for Rule 9
+- **Commits**: `90e961d` (Feature + retirement + skill refinement, pushed to `origin/main`) + `b3da67e` (Rule 9 + NUKE-MARKER, pushed)
+- **Enforcement caveat** (honest): the Stop hook is registered in `settings.json` but the harness reads hook registrations at session boot — the new hook takes effect from みや's NEXT session boot, not this one. My hook re-fires this session were caught by `stop_hook_active` recursion guard + fail-open. Verify next session via re-running the eval.
+
+**Bounty pending** (deferred per `quest-bounty-verify` hook, PARKED): QA-268415 · QA-268637 — same flags as Session 4. Confirm at next natural stop.
