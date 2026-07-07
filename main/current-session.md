@@ -41,3 +41,19 @@ Staging **et_main_stg2**. MCP role has NO grant — use `%TEMP%\claude\stg2q\q.j
 Three-part day. **Sessions 1+2 covered earlier** (see §2). **Session 3 (this DE)**: fresh /goal for QA-268883 → worktree pulled to `d7ca494` → Redmine sync retrieved 2 new tickets (#268883 + #269169) → committed to 268883 (multi-page PDF on Surat JT · any urusan · PRZ tested) → Phase 0 (BA-said table + Notes.txt + BPMN scope confirm + PDF page count via PyMuPDF) → **Iteration 1** merged into one tall image (rejected — tiny thumbnails) → **Iteration 2B** built framework extension `IMAGE_MULTIPAGE` (5 files, ~204 LOC) → tested, "small" complaint → **resize + 268637-mirror caps** (populator numeric bump 17→19cm/20→25cm to match staging-shipped 268637 state) → **createDrawing swap** (fixed the sibling-choice error — was `createDrawingGambarBesar` which uses Besar-family sizing) → BA-decide instruction from miya → Phase 1 commit `cc23fc3763` → miya-approved → push origin → Phase 2 archive (folder + block + project subfolder + bounty). **Session slips**: 5 wrong turns catalogued in QA-268883.md §4.7 Fastest Path retrospective (sibling-choice-by-name / baseline-drift blind spot / DPI speculation before mtime-check / assumed A4-landscape before reading pgSz / didn't read 268637 diff only its scope). Full-address gate slip repeated 8+ times → chip `task_ea8c95a8` spawned. End-of-reply summary mandate slip → chip `task_a49b65ac`. Missing `design-consult-gate.js` (referenced in `best-practices-consult-gate.js:43` but never built) → chip `task_3d431337`. Chip 3d431337 appears to have completed while I worked (git status shows the file modifications).
 
 **Memory Type**: RAM | **Last Activity**: 2026-07-06 23:02 — QA-268883 Phase 2 archive complete · commit `cc23fc3763` · 3 background chips spawned for repeated system-gate slips.
+
+---
+
+### Session 4 addendum — background chip `task_ea8c95a8` (closed 2026-07-07 10:06 +08:00)
+
+Background session in worktree `frosty-elbakyan-007619`. Task: promote `full-address-trace-gate` from advisory → BLOCKING + relocate to Feature folder + eval. Shape verdict via /system-design + /system-rules: **hook-only, no pre-emit skill** (R7 — pre-emit skill duplicates what `decision:block` already achieves). All edits landed on `main` (commit `031f8c6`, pushed to `origin/main`) because tools used absolute paths pointing at the main working tree. Worktree branch `claude/frosty-elbakyan-007619` carries no unique work — safe to prune.
+
+- **Feature folder**: `domain/full-address-trace-gate/{full-address-trace-gate.discipline.hook.js, README.md, eval.js}`
+- **Baseline (pre-promotion)**: 49.2% first-try compliance over last 20 sessions (94/191 trace-shape turns · 97 would-block)
+- **Target**: ≥95% first-try compliance next session — verify via `node domain/full-address-trace-gate/eval.js --transcript-only --sessions=20`
+- **Rule 6 v1.2**: fixture eval 10/10 PASS (spec preservation + fire check + effect check)
+- **Slip logged** in `Feature/Forge-Self-Improvement-System/skill-failure-log.md`
+- **Doc**: `meta/system-architecture.md` §3.5 row added (Stop 20→21) + §3.15 changelog
+- **Correction from みや at close**: "background session ≠ no-DE" — each spawned session owns its own DE. Framing corrected inline; DE ran properly this turn. Same correction applies to the other 2 background-spawned sessions still open.
+
+**Bounty pending** (deferred, flagged at session end): QA-268415 · QA-268637 — quest-bounty verify hook surfaced no bounty log line at the top of this session; parent DE handled QA-268883/268637/268415 bounties per Bounty state above, so those flags may be stale-view artifacts. Confirm at next natural stop.
