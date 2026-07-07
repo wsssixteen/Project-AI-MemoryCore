@@ -67,6 +67,32 @@ Components fade if unused. Periodic audit (per /system-rules Rule 3): check hook
 
 8. **Specify the trigger MOMENT — fire at the precise point of need, not the broadest event** (みや 2026-06-28). Every Feature's design MUST name WHEN/WHERE it fires and justify it is the LEANEST trigger that catches the need. SessionStart + every-UserPromptSubmit are the broadest, highest-bloat events — default to a NARROWER trigger (a specific skill step like `/quest resume`, or a UserPromptSubmit guarded by a tight predicate) unless the behaviour genuinely must run every boot/turn. **Test**: "would this be just as effective firing only at the moment X actually happens?" → if yes, trigger at X, not at boot. **Why**: checklist-reactivate first shipped as a SessionStart hook → dumped every quest's checklist at every boot = bloat; the right trigger was `/quest resume` (the moment you re-engage a ticket). Complements Rule 7 — Rule 7 picks the LAYER, this picks the TIMING.
 
+9. **🚨 Nuke-marker on newly-created Features — every new Feature ships a `NUKE-MARKER.md` file** (HARD RULE, added 2026-07-07 per みや). Every new Feature folder (`domain/<name>/`) created in a session MUST include a `NUKE-MARKER.md` at the folder root before the commit lands. **Purpose**: みや can nuke a bad Feature in one grep + one command, without hunting through `settings.json` + `meta/system-architecture.md` + cross-refs to find every trace. New = untrusted; the marker IS the trust ledger.
+
+   **Required content** (5 fields, table form):
+
+   ```
+   # NUKE-MARKER — <feature-name>
+
+   | Field | Value |
+   |---|---|
+   | Created  | YYYY-MM-DD |
+   | Session  | one-line what triggered this Feature (root symptom, quest ID, or user ask) |
+   | Files    | every file this Feature added (folder + settings.json entry + doc-catalog rows) |
+   | Rollback | exact commands: `rm -rf <folder>` + `settings.json` entries to remove + `git revert <SHA>` |
+   | Retire   | YYYY-MM-DD (default: creation + 30 days) — remove this file if Feature has fired ≥1× in window AND no rollback |
+   ```
+
+   **Enforcement**:
+   - Grep test: `grep -rl "NUKE-MARKER" domain/` returns every Feature not yet trusted. Zero results = whole `domain/` catalog has aged into trusted.
+   - Rule 6 v1.2 hook fixture-eval SHOULD add a `nuke-marker-present` assertion (a Feature folder without a `NUKE-MARKER.md` is a build defect — same tier as missing eval).
+   - `system-rules` Rule 5 (audit logging) pairs: `NUKE-MARKER.md` (human rollback recipe) + `log.jsonl` (fire-history evidence) → decide retirement together at Domain Expansion Step 6 (Forge review).
+   - Retirement happens automatically at Domain Expansion once all three retire-conditions hold (creation ≥ 30d ago AND `log.jsonl` shows ≥ 1 fire AND no rollback event) — the marker file is deleted, the Feature is trusted, catalog moves on.
+
+   **Banned**: shipping a new Feature without the marker (loud detection at Rule 6 v1.2 fire-check) · deleting a marker before the 30-day + 1-fire condition holds (premature trust) · writing the marker AFTER commit (must land in the same commit that adds the Feature).
+
+   **Why**: `stop-point-summary` shipped in commit `90e961d` with settings.json entry + skill refinement + architecture-doc row + skill-failure-log row scattered across 4 files. If it turns out to hard-block correctly-shaped replies, みや currently has to grep-and-delete across those 4 places to reverse it. One `NUKE-MARKER.md` = one grep + one `cat` + one paste of the rollback block into the shell. Grace period is 30 days because that's the DE cadence used for other decay-audits — Feature has to prove it fires + isn't rolled back within one meta-audit cycle.
+
 ## Bloat-prevention default
 
 When refining any `/skill` or CLAUDE.md content: apply `/system-rules` Rule 2 (merge in place). The `claude-md-edit-guard.js` hook enforces this deterministically on edits to CLAUDE.md / /system-rules / /system-design.
@@ -76,3 +102,5 @@ When refining any `/skill` or CLAUDE.md content: apply `/system-rules` Rule 2 (m
 *Version 2.1 — 2026-07-02. Rule 6 hardened into a HARD pre-ship gate: a hook's eval OR a one-run smoke-test MUST be run + PASS before it is registered in settings.json. Per みや after the `auto-commit-docs` no-eval incident (shipped 2026-07-01, retired 2026-07-02).*
 
 *Version 2.2 — 2026-07-06. Rule 6 → v1.2: gate extended to PHRASE REFINEMENTS of existing skills/hooks/protocols/rules — three checks (spec-preservation diff into the version-stamp entry · fire check via fixture eval · effect check asserting rendered output). Per みや (QA-268415 session, after the speak-in-categories rule was found fragmented into 4-7 framings by repeated re-saves). Spec-preservation self-check on THIS edit: all 5 v1.1 specs preserved (pre-ship eval mandate · settings.json-registration ban · code-exists≠verified · re-run-on-refactor · auto-commit-docs why); zero dropped.*
+
+*Version 2.3 — 2026-07-07. Rule 9 added: HARD RULE that every new Feature ships a `NUKE-MARKER.md` at the folder root — grep-findable rollback recipe with 5 fields (Created / Session / Files / Rollback / Retire date). Grace period 30 days; marker auto-removes at Domain Expansion when the Feature has fired ≥1× AND no rollback. Per みや after the `stop-point-summary` ship (commit `90e961d` scattered rollback state across 4 files — one `NUKE-MARKER.md` would centralize it). Retro-applied to `domain/stop-point-summary/NUKE-MARKER.md` same commit. Spec-preservation self-check on THIS edit: all Version 2.2 specs preserved (Rules 6/7/8 unchanged); Rule 9 is additive.*

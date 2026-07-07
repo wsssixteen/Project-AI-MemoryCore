@@ -334,6 +334,15 @@ _AUTO-GENERATED from `.claude/settings.json` by `meta/sync-hook-catalog.js` — 
 - 📝 Slip logged in `meta/slip-log.md` (canonical per skill-failure-log tombstone).
 - Net delta: 0 new registrations (both hooks pre-existing); +1 new file `eval.workflow.js`; §3.4 catalog row for `design-consult-gate` should note extended guarded paths + eval rider at next regen.
 
+### 3.17 Change 2026-07-07 (system-design Rule 9 — NUKE-MARKER on new Features)
+
+- ➕ **NEW `/system-design` Rule 9 (HARD)**: every new Feature folder (`domain/<name>/`) MUST ship a `NUKE-MARKER.md` at the folder root before the commit lands. Content: 5 fields (Created / Session / Files / Rollback / Retire date). Purpose: みや can nuke a bad Feature in one grep (`grep -rl "NUKE-MARKER" domain/`) + one `cat`-and-paste of the rollback block, without hunting through `settings.json` + `meta/system-architecture.md` + cross-refs.
+- ➕ **Grace period 30 days** — the marker auto-removes at Domain Expansion when three retire-conditions hold: (a) `log.jsonl` shows ≥ 1 fire in the window, (b) creation date + 30 days has passed, (c) no rollback event on the ship commit. When all three hold, marker is deleted, Feature graduates to trusted.
+- ➕ **RETRO-APPLIED to `domain/stop-point-summary/NUKE-MARKER.md`** in the same commit (Feature shipped 2026-07-06 as commit `90e961d`). Retire date 2026-08-05.
+- 📐 **Enforcement pairing**: Rule 6 v1.2 hook fixture-eval SHOULD add a `nuke-marker-present` assertion so a new Feature without a marker fails ship-check the same way a hook without an eval does. Deferred to a follow-on hook extension (not in this ship).
+- 📝 Per みや after `stop-point-summary` ship: rollback state was scattered across 4 files (Feature folder + settings.json + arch doc + skill-failure-log). One NUKE-MARKER file centralizes it. Same-day trigger: *"add like for newly created skills/hooks a marking. I can straight away nuke it if it turned out very bad due to your stupid implementation."*
+- Net delta: 0 new hook/skill registrations; +1 new rule (`/system-design` v2.3); +1 new file (`domain/stop-point-summary/NUKE-MARKER.md`).
+
 ---
 
 ## 4. Skill catalog — every skill, invocation trigger, stakeholders
