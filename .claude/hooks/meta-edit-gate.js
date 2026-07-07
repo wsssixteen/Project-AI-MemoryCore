@@ -6,8 +6,7 @@
  * meta-layer-related skills/hooks) and surfaces a verification step:
  * was meta-design-router invoked first?
  *
- * Doesn't HARD block (would over-fire on legitimate plan-mode edits etc.).
- * Emits visible-gate reminder so みや can spot bypass attempts.
+ * Advisory on meta-layer paths (won't over-fire on legitimate plan-mode edits).
  *
  * Created 2026-05-23 — Phase 6 of meta-layer build.
  * Origin: Stage 5 recursive-safety requirement — meta-layer must apply
@@ -15,10 +14,18 @@
  *
  * v1.1 2026-05-28 — Added architecture-doc-sync predicate (Phase 0 of plan
  * cached-floating-hummingbird.md). Fires when editing hooks / skills / quest
- * protocol / state files / settings.json AND meta/system-architecture.md
- * has NOT been Read this session AND NOT being edited this same turn.
- * Bypass: include `[skip-architecture-doc-update: <reason>]` in conversation.
+ * protocol / state files / settings.json.
+ *
+ * v1.2 2026-07-06 — architecture-doc-sync predicate PROMOTED from advisory to
+ * HARD-BLOCK. A system-touching edit is denied unless `meta/system-architecture.md`
+ * was Read or Edit'd earlier in the same session (evidenced in transcript) OR
+ * the bypass token is present. Root slip: 5 framework files shipped without any
+ * architecture-doc entry, silent drift for weeks. Bypass PRESERVED:
+ *   [skip-architecture-doc-update: <reason>]
  */
+'use strict';
+const fs = require('fs');
+
 let input = '';
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
@@ -42,11 +49,11 @@ process.stdin.on('end', () => {
     const isMetaPath = metaPathPatterns.some(re => re.test(filePath));
 
     // v1.1 architecture-doc-sync predicate: fires when editing system-touching files
-    // (hooks/skills/quest-protocol/state-files/settings.json) without paired update to
-    // meta/system-architecture.md. Per plan cached-floating-hummingbird.md Phase 0.
+    // (hooks/skills/quest-protocol/state-files/settings.json)
     const systemTouchingPatterns = [
       /[\\/]\.claude[\\/]hooks[\\/].+\.js$/i,            // any hook
       /[\\/]\.claude[\\/]skills[\\/][^\\/]+[\\/]SKILL\.md$/i,  // any skill SKILL.md
+      /[\\/]domain[\\/][^\\/]+[\\/].+\.hook\.js$/i,      // any Feature hook
       /[\\/]quest[\\/]quest-protocol\.md$/i,             // quest protocol
       /[\\/]quest[\\/]active\.txt$/i,                    // quest state
       /[\\/]\.claude[\\/]settings\.json$/i,              // hook registration
@@ -54,23 +61,39 @@ process.stdin.on('end', () => {
     const isSystemTouching = systemTouchingPatterns.some(re => re.test(filePath));
     const isArchDocItself = /[\\/]meta[\\/]system-architecture\.md$/i.test(filePath);
 
-    // Architecture-doc-sync ONLY fires for system-touching paths (NOT for meta/* general edits)
-    // and NOT when the file being edited IS system-architecture.md itself
-    let archDocReminder = '';
-    if (isSystemTouching && !isArchDocItself) {
-      archDocReminder = [
-        '',
-        '🔗 architecture-doc-sync: this edit touches a system component (hook/skill/protocol/state-file).',
-        '   PAIRED UPDATE REQUIRED: `meta/system-architecture.md` should be updated in the same turn',
-        '   to reflect this change (hook catalog / skill catalog / reverse-lookup index / change log).',
-        '   Bypass: include `[skip-architecture-doc-update: <reason>]` in your message for legitimate',
-        '   edge cases (trivial rename / comment-only fix / hot-fix mid-incident).',
-        '',
-      ].join('\n');
-    }
-
     if (!isMetaPath && !isSystemTouching) process.exit(0);
 
+    // v1.2: HARD-BLOCK arch-doc-sync when a system-touching edit lacks proof that
+    // meta/system-architecture.md was consulted this session.
+    if (isSystemTouching && !isArchDocItself) {
+      let convo = '';
+      try { convo = fs.readFileSync(data.transcript_path || '', 'utf8'); } catch (_) { convo = ''; }
+
+      const bypass = /\[skip-architecture-doc-update:/i.test(convo);
+      // Detect a Read or Edit tool call earlier this session that touched system-architecture.md.
+      // Transcript stores tool_use blocks as JSON — match on file_path fragment.
+      const archTouched = /system-architecture\.md/i.test(convo);
+
+      if (!bypass && !archTouched) {
+        const reason = [
+          '⛔ meta-edit-gate (arch-doc-sync v1.2): system-component edit denied.',
+          `   Path: ${filePath}`,
+          '   `meta/system-architecture.md` has NOT been Read or Edited this session,',
+          '   so this edit would drift the living catalog silently.',
+          '',
+          '   → Read `meta/system-architecture.md` first (skim the affected §3.x catalog',
+          '     row) OR include the paired update in this same turn.',
+          '   → Bypass for genuine edge cases (trivial rename, comment-only fix, hot-fix):',
+          '     `[skip-architecture-doc-update: <reason>]`',
+        ].join('\n');
+        process.stdout.write(JSON.stringify({
+          hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: reason },
+        }));
+        process.exit(0);
+      }
+    }
+
+    // Advisory reminder for meta-layer edits (unchanged)
     const context = [
       '',
       '⚙️  meta-edit-gate: edit on meta-layer path detected',
@@ -83,14 +106,13 @@ process.stdin.on('end', () => {
       '  1. Was meta-design-router invoked in this conversation?',
       '  2. Did Step 0 (inventory) confirm the change is correct shape?',
       '  3. Did Step 3.5 (best-practices) check the library-items reference?',
-      '  4. Is this edit logged in skill-failure-log if it\'s a refinement from a slip?',
+      '  4. Is this edit logged in slip-log if it\'s a refinement from a slip?',
       '',
       'If ANY answer is "no" — pause and route through meta-design-router first.',
       'If all "yes" — proceed; the edit will also fire other gates (claim-verification at done-time).',
-      archDocReminder,
+      '',
     ].join('\n');
 
-    // Advisory feedback via PreToolUse additionalContext
     const response = {
       hookSpecificOutput: {
         hookEventName: 'PreToolUse',

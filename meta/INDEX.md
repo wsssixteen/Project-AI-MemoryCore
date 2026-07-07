@@ -42,7 +42,8 @@ LAYER 5 — State                     (current data)       → quest/active.txt,
 | `library-items/agent-architecture/claude-code-best-practices.md` | Knowledge layer | Read by meta-design-router Step 3.5 (best-practices check) before deciding hook/skill/CLAUDE.md |
 | `personality.md` — Honesty Invariants section (Phase 4) | Identity layer | Always-on values that complement the Honesty atomic skills (triggered) |
 | `.claude/skills/meta-design-router/SKILL.md` | Capabilities layer | The skill that runs the inventory → system-design → best-practices → skill/hook decision loop |
-| `.claude/hooks/meta-edit-gate.js` (Phase 6) | Capabilities layer | PreToolUse hook on `meta/*` paths — gates edits to meta-layer itself; recursive safety |
+| `.claude/hooks/meta-edit-gate.js` (Phase 6, v1.2 2026-07-06) | Capabilities layer | PreToolUse hook on `meta/*` paths — advisory reminder + HARD-BLOCK arch-doc-sync predicate (deny if system-touching edit lacks `meta/system-architecture.md` Read/Edit this session) |
+| `domain/design-consult-gate/design-consult-gate.gate.hook.js` (v1.2 2026-07-06) | Capabilities layer | PreToolUse Edit\|Write hook — HARD-BLOCKS edits to skills/hooks/CLAUDE.md/personality.md/meta/**/quest-protocol/settings.json unless `/system-design` + `/system-rules` invoked this session; eval-existence rider blocks new hook/skill without paired `domain/<name>/eval.js`; advisory-only on etanah new-symbol additions |
 | `Feature/Domain-Expansion/expansion-protocol.md` (Phase 6) | Workflow layer | Extended with `meta-audit` step (Step 12.5) covering hook-fire reliability + cross-ref validity + component-liveness |
 | `Feature/Forge-Self-Improvement-System/skill-failure-log.md` (Phase 6 extension) | Knowledge layer | Extended schema with skill-load counter for invocation-reliability tracking |
 | `CLAUDE.md` (Phase 9) | Boot Config layer | Adds Layer 1 reference: "Meta-layer: see `meta/INDEX.md`" |

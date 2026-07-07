@@ -81,6 +81,14 @@
 
 ---
 
+## 2026-07-06 entries
+
+| Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |
+|---|---|---|---|---|---|
+| 2026-07-06 (QA-268883 — background task retro-diagnosis) | **Built 5 framework files with ZERO `/system-design` invocation.** Files: enum entry in `WordContentControlTypeEnum.java`, 2 util methods in `PelupusanUtil.java`, dispatcher case + handler in `PelupusanTemplateUtil.java`, helper in `PelupusanWordEditorUtil.java`, populator flip in `PelupusanWordCCMethodConstant.java`. Each is a genuine framework addition (new enum value / new switch case / new methods) that should have routed through `/system-design` + `/system-rules`; none did. Zero eval attached. | best-practices-not-consulted (design-consult gap on system-shape edits to non-hook/skill paths) | `domain/design-consult-gate/design-consult-gate.gate.hook.js` existed (2026-06-18) but guarded ONLY `.claude/skills/`/`.claude/hooks/`/`domain/**.hook.js` — did NOT cover etanah code additions or CLAUDE.md / personality.md / meta/** / quest-protocol.md / settings.json. | design-consult-gate v1.2 (background task, this session): guarded-paths 3→9 + etanah new-symbol advisory heuristic + eval-existence rider + meta-edit-gate arch-doc-sync PROMOTED to hard-block. Smoke-tested 8/8 + 5/5 (fire + effect checks per Rule 6 v1.2). Cross-ref: `meta/system-architecture.md` §3.16. `Feature/Forge-Self-Improvement-System/skill-failure-log.md` gets a stub cross-ref for chip trail-back. lesson: a hard-block gate fails silently on any path it doesn't guard; extending guard-paths costs one regex each and closes an entire slip class. | ✅ Yes — design-consult family, structural defender promoted |
+
+---
+
 ## 2026-07-05 entries
 
 | Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |
