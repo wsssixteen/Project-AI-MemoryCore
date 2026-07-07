@@ -1099,3 +1099,29 @@ closed=2026-06-26
 issue2_root_FOUND=code-level RESOLVED: page=MlkBorang4AeForm year-walk; save=PelupusanService.saveVersiPermitLesenMLPS:15462 matches by YEAR and deletes unmatched (:15645-15653). Root = populateJadualRekodPembaharuanMLPS floor=vplFirst+1=2025 excludes 2024 renewal -> save deletes it. Fix C (tahunCounter=min-renewal-year) correct. 261626/256093 fixed sibling save populateVersiPermitLesen but NEVER saveVersiPermitLesenMLPS:15462 = unfixed sibling = why 266503 recurs.
 fix_lineage=RECURRING REGRESSION (3x): #256093 (Azim ORIGINAL) -> #261626 (faiz, populateVersiPermitLesen year-match) -> QA-266503. Same Rekod Pembaharuan panel+save fixed 3x. Reconcile with Azim+faiz on future recurrence.
 dup_deferred=2x versi_dok=0 MIGRATOR_KTPN_LMS (UAT 7876/7927, stg 5033/5068) = separate migration ticket (MIGRATOR-DUP-V0 sibling)
+
+qa=QA-269169
+status=archived
+phase=1
+current_phase=Closed
+ticket_type=bug
+env=MLKSTG
+urusan=PLPS
+tugasan=Penyediaan Surat JT dan YB
+local_test_confirmed=true
+quest_start=2026-07-07
+assigned_to_me=2026-07-06
+scope=ALL urusan Pelupusan — pelan lokasi selector on Surat JT/YB/JPPH
+test_app_stg=PTMLK/01/L/PLPS/2026/17 (MLKSTG et_main_stg2)
+original_ba_app=PTMLK/02/L/PLPS/2026/8
+qa_doc=projects/coding-projects/archive/QA-269169/QA-269169.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\88. ESOKONGAN #269169 - Pelupusan - PLPS -  pelan lokasi papar pelan lama
+related=QA-267382,QA-268883
+scope_anchor=pelan-selector-side — QA-267382 identified retrieveImageByte findByMedanAndMedanPk unordered+get(0), sibling version-aware queries at :31/:50/:65 exist unused; not shipped for 267382 (render-side fix took priority); 269169 is the multi-doc+delete-flag manifestation
+issue_one_liner=PLPS Surat JT/YB/JPPH render OLD deleted pelan lokasi instead of new active one — selector-side sibling-version-aware fix (recurrence of QA-267382 selection-side finding)
+scout=PelupusanUtil.retrieveImageByte:773 unordered findByMedanAndMedanPk + docs.get(0) → wrong doc; sibling findByMedanAndMedanPkDesc exists (DocumentRepository:81-83)
+fix_applied=PelupusanUtil.java:773-784 findByMedanAndMedanPk → findByMedanAndMedanPkDesc; 5 substantive line changes; uncommitted on mlk/master
+closed=2026-07-07
+branch=mlk/esokongan/269169
+commit=7cec206130
+pushed=2026-07-07

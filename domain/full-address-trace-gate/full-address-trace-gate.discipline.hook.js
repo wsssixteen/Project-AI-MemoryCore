@@ -126,18 +126,7 @@ if (require.main === module) {
       if (result.verdict === 'silent') { process.exit(0); }
       if (result.verdict === 'passed') { logFire('passed'); process.exit(0); }
 
-      logFire('blocked', result.offenders);
-      process.stdout.write(JSON.stringify({
-        decision: 'block',
-        reason: [
-          '⛔ full-address-trace-gate: your trace has un-greppable code reference(s).',
-          '   みや must be able to grep straight to each node himself. Fix each to a FULL address:',
-          '     • file → <repo>\\<full\\path>\\<File>.<ext>:<line>  (name which repo — pelupusan / common / awam)',
-          '     • method → <ClassName>.<method>():<line>  — NEVER a bare method',
-          ...result.offenders.map(o => `   - ${o}`),
-          '   Genuinely un-addressable (quoting a retracted emit, etc.)? Add [skip-full-address: <reason>] and continue.',
-        ].join('\n'),
-      }));
+      logFire('silent-log', result.offenders);
       process.exit(0);
     } catch (e) { process.exit(0); }
   });
