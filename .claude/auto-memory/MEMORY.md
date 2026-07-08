@@ -1,6 +1,7 @@
 # Memory Index
 
 ## Feedback
+- [feedback_bypass_token_visibility.md](feedback_bypass_token_visibility.md) — Hide enum-whitelist bypass tokens inside `<!-- ... -->` HTML comments; keep judgment-call bypasses ([genuine-fork:], free-text reasons) visible so みや can audit them
 - [feedback_two_sentence_default.md](feedback_two_sentence_default.md) — Default answer length is 2 sentences; long tables/diagrams for a simple question = rule violation; みや will ask for more if he wants it
 - [feedback_layered_teaching_format.md](feedback_layered_teaching_format.md) — 5-layer teaching format (story → framework translation → data flow → risk table → code checklist) for any "explain/teach me the system" ask
 - [feedback_full_names.md](feedback_full_names.md) — Always use full file/class/method names + full file PATHS (complete absolute/from-root, never a tail-fragment like `resources/img/x.png`), never abbreviate
