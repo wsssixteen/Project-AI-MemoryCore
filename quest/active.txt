@@ -455,3 +455,17 @@ commit=5bf8156bcf
 branch=mlk/internal-issue/268273
 closed=2026-07-02
 qa_doc=projects/coding-projects/active/QA-268273/QA-268273.md
+
+qa=QA-259112
+task_folder=C:/Users/Ridhwan/OneDrive - Pymsoft Sdn Bhd/1. Tasks/Melaka/91. CR - AFTER GO LIVE #259112 - 11. Semua urusan JKKL - Penambahbaikkan untuk Perakuan Pentadbir Tanah
+phase=1
+status=hold
+current_phase=Apply-complete
+ticket_type=cr
+env=STG
+local_test_confirmed=false
+quest_start=2026-07-08
+qa_doc=projects/coding-projects/active/QA-259112/QA-259112.md
+urusan=PLPS/PRU/PT/PPJK/BPRZ
+scope=JKKL_PDT_screens_all_5_urusan
+issue_one_liner=Semua urusan JKKL - Penambahbaikkan Perakuan Pentadbir Tanah Daerah: add Syor + Ulasan + Jana on PYRJKKLPDT (view-only on SR/PR); template 5.1 populated from ulasanPegawaiPDT + 5.2 removed
