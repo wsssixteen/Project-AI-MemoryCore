@@ -469,3 +469,22 @@ qa_doc=projects/coding-projects/active/QA-259112/QA-259112.md
 urusan=PLPS/PRU/PT/PPJK/BPRZ
 scope=JKKL_PDT_screens_all_5_urusan
 issue_one_liner=Semua urusan JKKL - Penambahbaikkan Perakuan Pentadbir Tanah Daerah: add Syor + Ulasan + Jana on PYRJKKLPDT (view-only on SR/PR); template 5.1 populated from ulasanPegawaiPDT + 5.2 removed
+
+qa=QA-269437
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\90. ESOKONGAN #269437 - Pelupusan - OPRBB - Papar Tarikh Salah pada Borang 4Ce
+phase=1
+current_phase=Apply-uncommitted-stashed
+status=hold
+ticket_type=bug
+env=MLKSTG
+urusan=OPRBB
+tugasan=Penyediaan Borang 4Ce
+local_test_confirmed=false
+qa_doc=projects/coding-projects/active/QA-269437/QA-269437.md
+issue_one_liner=OPRBB Borang 4Ce - Simpan resets tarikh tamat permit + Borang 4Ce papar tarikh lama; fix = 3-line null-guard on initData:109 calculateTarikhTamat call
+test_app=PTMLK/02/L/OPRBB/2026/1
+assigned_to_me=2026-07-07
+quest_start=2026-07-08
+branch=mlk/master (stash@{0}, no branch yet — branch at commit prep)
+stash_ref=stash@{0}: On mlk/master: QA-269437 Apply-uncommitted — MlkPenyediaanBorang4CeP1eForm.java:109 tarikhAkhirPermit null-guard
+held_reason=2026-07-08 context-switch to QA-268637 cycle-3 rework per みや; then Domain Expansion — resume with git stash pop of stash@{0} in etanah-pelupusan repo on mlk/master
