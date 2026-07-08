@@ -13,12 +13,25 @@
 
 ## ▶▶ NEXT SESSION — START HERE
 
-### QA-269437 (OPRBB Borang 4Ce) — held with stash, resume-ready
+### 🔴 PRIORITY — pair-fix #268883 + #269169 (Aaron-linked reworks, time-critical)
+- Aaron confirmed 07-07 09:53 (#268883): *"same issue with #269169, please adjust"*
+- Aaron 07-07 09:51 (#269169): *"possible error when using your new query, because it is possible that for some other document that uses this, they uploaded 2 same pictures at the same time. or at least 2 files, as seen in attached image. so i need you to find an alternative way to get the latest."*
+- Both tickets sit in reworked-archive folders — need to be un-archived + re-opened at start of next session
+  - #268883: `1. Tasks\Melaka\Archive\89. ESOKONGAN #268883 - Dokumen Penyediaan Surat Jabatan Teknikal dan Ulasan YB\` (History.txt refreshed 07-07 09:53)
+  - #269169: `1. Tasks\Melaka\Archive\88. ESOKONGAN #269169 - Pelupusan - PLPS -  pelan lokasi papar pelan lama\` (History.txt refreshed 07-07 09:51)
+- **Fix shape needed**: unified deterministic "get-latest" query strategy for `retrieveImageByte` path — current query uses `findByMedanAndMedanPk` with non-deterministic ordering when 2 files share the same created_date. Alternatives: `ORDER BY created_date DESC, id DESC LIMIT 1` (id-tiebreak) · `versi_dok DESC` · `flag_aktif='Y' AND versi_dok = MAX` · sumber-column filter · content-hash dedup
+- **First step on resume**: (1) redmine-sync `--create` (may auto-unarchive) · (2) restore active.txt blocks (currently in `active-archive.txt`) · (3) read `QA-268883.md` + `QA-269169.md` for prior fix context · (4) `git log --oneline` the fix branches `mlk/esokongan/268883` + `mlk/esokongan/269169` to inspect prior queries · (5) design the unified strategy · (6) apply to one branch (fresh v2 fork) covering both tickets
+- Prior branches: `mlk/esokongan/268883` (Ridhwan) · `mlk/esokongan/269169` (Ridhwan)
+- Env: MLKSTG (both) · test apps: `PTMLK/01/L/PLPS/2026/17` (Nurul Amirah simulated for #269169) · #268883's original test data in its brief attachments
+- Time-critical per みや (2026-07-08): due-dates on both tickets; pair-fix + single deploy is fastest close
+
+### QA-269437 (OPRBB Borang 4Ce) — held with stash, DEFER to session AFTER the pair-fix
 - `stash@{0}: On mlk/master: QA-269437 Apply-uncommitted — MlkPenyediaanBorang4CeP1eForm.java:109 tarikhAkhirPermit null-guard` (in etanah-pelupusan repo)
-- **First step on resume**: `cd E:/Projects/Melaka/etanah-pelupusan && git checkout mlk/master && git stash pop stash@{0}` → local Maven build → deploy WAR to stg2 → run test scenario in `QA-269437.md` §Ship-Verify
+- Resume path when picked up: `cd E:/Projects/Melaka/etanah-pelupusan && git checkout mlk/master && git stash pop stash@{0}` → local Maven build → deploy WAR to stg2 → run test scenario in `QA-269437.md` §Ship-Verify
 - Test app: `PTMLK/02/L/OPRBB/2026/1` (stg2, Nurhafizah simulated)
 - Notes.txt already populated with login TBD (use your own stg2 login)
 - Full quest doc: `projects/coding-projects/active/QA-269437/QA-269437.md`
+- Small scope (3-line null-guard, ready to test), safe to hold behind the pair-fix
 
 ### QA-259112 (CR JKKL PDT) — background chip Apply-complete, awaiting your test
 - Chip `task_5206edd1` shipped uncommitted work; 6 files in etanah-pelupusan working tree
