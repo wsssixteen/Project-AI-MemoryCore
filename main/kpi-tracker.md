@@ -9,6 +9,13 @@
 
 ## Highlights
 
+### 2026-07-09 — QA-269437 — OPRBB Borang 4Ce — Papar tarikh salah + cross-urusan orphan-dokumen fix
+- **Time**: accept 2026-07-08 → close 2026-07-09 12:43 (~2 sessions, overnight)
+- **Extras beyond ticket scope**: **cross-urusan orphan-dokumen fix** at `PelupusanReportUtil.processReport():288-291` — nullify `appDokumenKeluaran` when `getDocument()==null` so `updateCurrentActionIfNotAvailable` reclassifies to CREATE → regen fires with populators. Fixes the "status=PERAKU + dok_id=NULL" orphan blocking Papar regen for ALL 20 urusans-with-CREATE (per 25-entry `report.config.json` audit); SIGN-only urusans (5 entries) unchanged. Bidirectional tempoh↔tarikh_akhir auto-recompute listener added as bundled bonus after みや caught the deferral slip
+- **Business logic learned**: OPRBB Borang 4Ce dual-branch on `jenisBahanBatuan.kod` — JB_TNH = editable inputDateTime, non-JB_TNH = readonly compute; `PLP_PRBB_TEMPOH_HARI`/`_BULAN` kods shared between PRBB + OPRBB; `PelupusanReportUtil` fork (`processReport():292-311`) served stale Jasper cache for orphans; pg-node returns `null` for Oracle-style timestamp strings unless cast to `::text`
+- **Skills / patterns built**: `feedback_bundling_before_defer.md` — Rubric row (g) BA-ask deferrals must emit BUNDLING QUESTION for みや upfront; boot-loaded via MEMORY.md
+- **Audit-log / slip entries**: v1 orphan-fix regressed (currentAction=PERAKU into regen → empty params → blank borang) because I stopped tracing at the fork instead of following into `processInputParameter():412`; second slip = unilateral deferral of auto-recompute-tempoh forced testing in two rounds instead of one
+
 ### 2026-05-31 — QA-259702 — PRU Ringkasan Risalat + Risalat MMKN template corrections
 - **Time**: accept 2026-05-30 → close 2026-05-31 (multi-session)
 - **Extras beyond ticket scope**: traced all 12 CC-tag populators to source (proved data-driven, zero code bugs) — reusable map saved in QA-259702.md; noRujukanSuratJT + tanahTek diagnosed (fixed by みや in Word UI)
