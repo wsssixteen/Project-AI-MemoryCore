@@ -1251,3 +1251,22 @@
 {"ts":"2026-07-12T19:12:06.677Z","hook":"crash-child","event":"EvalEvent","mode":"wrap","exit":1,"blocked":false,"dur_ms":107}
 {"ts":"2026-07-12T19:12:06.788Z","hook":"does-not-exist","event":"EvalEvent","mode":"wrap","exit":0,"blocked":false,"dur_ms":2,"error":"target-missing: C:\\Users\\vice4\\AppData\\Local\\Temp\\hook-runtime-eval-xfLTbj\\does-not-exist.js"}
 {"ts":"2026-07-12T19:12:06.825Z","hook":"eval-runner","event":"EvalSuite","mode":"suite","exit":0,"blocked":false,"total":24,"green":24,"red":0,"skipped":0}
+{"ts":"2026-07-12T19:12:08.245Z","hook":"RecursiveLoopDetector","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":109}
+{"ts":"2026-07-12T19:12:08.246Z","hook":"slip-count-tracker","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":104}
+{"ts":"2026-07-12T19:12:29.029Z","hook":"RecursiveLoopDetector","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":112}
+{"ts":"2026-07-12T19:12:29.029Z","hook":"slip-count-tracker","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":104}
+{"ts":"2026-07-12T19:12:44.322Z","hook":"slip-count-tracker","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":111}
+{"ts":"2026-07-12T19:12:44.331Z","hook":"RecursiveLoopDetector","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":126}
+{"ts":"2026-07-12T19:13:06.230Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T19:13:06.250Z","hook":"edit-scope-gate","event":"PreToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":184}
+{"ts":"2026-07-12T19:13:06.265Z","hook":"convention-check-gate.gate.hook","event":"PreToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":181}
+{"ts":"2026-07-12T19:13:06.266Z","hook":"no-code-comments-gate","event":"PreToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":169}
+{"ts":"2026-07-12T19:13:06.341Z","hook":"claude-md-edit-guard","event":"PreToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":173}
+{"ts":"2026-07-12T19:13:06.385Z","hook":"quest-phase-gate.gate.hook","event":"PreToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":174}
+{"ts":"2026-07-12T19:13:06.405Z","hook":"logic-blast-radius.discipline.hook","event":"PreToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":177}
+{"ts":"2026-07-12T19:13:06.419Z","hook":"known-bug-surfacer.hook","event":"PreToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":167}
+{"ts":"2026-07-12T19:13:06.420Z","hook":"design-consult-gate.gate.hook","event":"PreToolUse","mode":"bundle","exit":0,"blocked":false,"dur_ms":179}
+{"ts":"2026-07-12T19:13:06.449Z","hook":"pre-action-check-gate","event":"PreToolUse","mode":"bundle","exit":0,"blocked":false,"dur_ms":163}
+{"ts":"2026-07-12T19:13:06.487Z","hook":"meta-edit-gate","event":"PreToolUse","mode":"bundle","exit":0,"blocked":false,"dur_ms":175}
+{"ts":"2026-07-12T19:13:06.968Z","hook":"slip-count-tracker","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":118}
+{"ts":"2026-07-12T19:13:06.969Z","hook":"RecursiveLoopDetector","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":126}
