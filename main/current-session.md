@@ -30,6 +30,12 @@ Continuation from summarized transcript. Two bugs + one bundled UX fix shipped a
 
 ## ▶▶ NEXT SESSION — START HERE
 
+### 🧊 STANDING FLAG — NEW-GUARD FREEZE (external-audit work order, declared 2026-07-12)
+- In effect until Phase 1 (telemetry + eval-runner) is **GREEN** with artifact evidence.
+- Slips still logged normally; "Action taken" may ONLY be: telemetry · eval fixture · consolidation · deletion — **NEVER a new hook/skill/rule**.
+- Carry this flag forward at every DE current-session rewrite until lifted with みや.
+- Work-order state: P0.1 ✓ `de25818` · P0.2 ✓ `439386d` · P0.3+P0.4 this commit · next = Phase 1 (K6 telemetry + K3 runtime → K7 forge → R2 eval-runner).
+
 ### 🟢 QA-269437 — SHIPPED + ARCHIVED
 Fix `75cb5446ed` on `mlk/esokongan/269437` (pushed). Phase 2 fully archived: folder → `Archive\90.`, project subfolder → `archive/QA-269437/`, active.txt block → `active-archive.txt`. Bounty NOT auto-logged this cycle (skip if BA hasn't tested on stg deploy yet).
 
