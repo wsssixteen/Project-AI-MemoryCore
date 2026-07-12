@@ -34,7 +34,7 @@ Continuation from summarized transcript. Two bugs + one bundled UX fix shipped a
 - In effect until Phase 1 (telemetry + eval-runner) is **GREEN** with artifact evidence.
 - Slips still logged normally; "Action taken" may ONLY be: telemetry · eval fixture · consolidation · deletion — **NEVER a new hook/skill/rule**.
 - Carry this flag forward at every DE current-session rewrite until lifted with みや.
-- Work-order state: P0.1 ✓ `de25818` · P0.2 ✓ `439386d` · P0.3+P0.4 this commit · next = Phase 1 (K6 telemetry + K3 runtime → K7 forge → R2 eval-runner).
+- Work-order state (2026-07-13 overnight sprint COMPLETE): Phases 0+1+2(conservative)+3(in-repo) ALL LANDED — 15 commits `de25818`→`164d122`; suite 24/24 GREEN; 1,314 telemetry rows; CLAUDE.md 582→260 (v1.65); registrations 80→74; quest-survival proven (ticket-gate bare-number live-fire + all quest evals green). Full evidence: `external-audit/2026-07-12-walkthrough-ledger.md` §FINAL STATUS. **Freeze stays ON until みや lifts it** (Phase-1-green artifacts exist). Morning decision items: freeze lift · boot-bundle cutover cadence · ≤200 diet timing · 3 unregistered hooks (registry) · 18 stale active.txt blocks.
 
 ### 🟢 QA-269437 — SHIPPED + ARCHIVED
 Fix `75cb5446ed` on `mlk/esokongan/269437` (pushed). Phase 2 fully archived: folder → `Archive\90.`, project subfolder → `archive/QA-269437/`, active.txt block → `active-archive.txt`. Bounty NOT auto-logged this cycle (skip if BA hasn't tested on stg deploy yet).

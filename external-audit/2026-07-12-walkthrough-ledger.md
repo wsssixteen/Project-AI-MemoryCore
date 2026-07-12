@@ -49,6 +49,25 @@
 | Baseline measured (slips/week by category · boot tokens · registration count · みや-catch count trailing 2wk) | pending — capture before first consolidation |
 | CLAUDE.md shrink = LAST, only after JIT loading proven by telemetry + full line-parity report (nothing-lost table per みや) | pending |
 
+## OVERNIGHT SPRINT — FINAL STATUS 2026-07-13 (§4.2 table, artifact per row — never prose claims)
+
+| §4.2 gate row | Status | Artifact |
+|---|---|---|
+| Phase-0 commits landed | ✅ | `de25818` · `439386d` · `994f9cf` · `897b72d` |
+| Telemetry has real entries from real turns | ✅ | `meta/telemetry/hook-fires.jsonl` — **1,314 rows**; production fires incl. component-birth-gate 104 fires / 8 blocks, familiar-nudge 65 |
+| eval-runner runs + green | ✅ | **24/24 GREEN** full suite (final run 2026-07-13 03:14) |
+| Guard freeze respected | ✅ | every component born = plan-specified infra, through the forge, echo+nod in `meta/registry.jsonl`; freeze LIFT = みや's call |
+| Baseline measured | ✅ | 23 slips/14d by category · みや-catch 18/14d · registrations 80→74 · boot prose 75.3K→60.6K tok (shadow bundle 2,397) — this section + slip-dashboard |
+
+| Phase | Landed (commit) |
+|---|---|
+| 1 COMPLETE | hook-runtime+telemetry `b152ad4` · forge `e9e70db` · birth-gate `383192c` · eval-runner `ce46ecf` · report+fleet-wrap `66f0f32` · fixtures+state-check `818a11d` |
+| 2 COMPLETE (conservative) | registry `2ac1838` · merges 80→69 `0e2d6b9` · boot-shadow+slips-v2 `fca0c30` · C6 + C5 `4174616` · **CLAUDE.md 582→260 + spec `74004fd`** |
+| 3 in-repo COMPLETE | 5 check bodies + ticket-gate bare-number refine + runbook + pilot doc `862a617` · correction `164d122` |
+| Deferred (home named) | ≤200-line diet (after JIT telemetry) · boot-bundle cutover (1wk shadow) · K2 jsonl cutover · deeper advisory bundling to ≤45 · SchemaCrawler run (work machine) · pgvector/miyazaki/skill-grading (post-sprint per operator params) — all in main/todo.md |
+
+**Quest-survival proof**: ticket-gate fires on bare "269939" (live, full Phase-0 checklist) + prefixed ✓ · quest skill +51KB absorbed content (3 marker groups verified) · quest-phase-gate/deferrals/predicate/blast-radius evals all green in suite · state-check strict exit 0 · boot chain smoked post-shrink. **Bonus**: the refine CLOSED a pre-existing gap — bare numbers were documented-but-never-implemented in the hook.
+
 ## Standing conditions (binding)
 
 - Explanations to みや: story diagrams + tables ONLY
