@@ -22,3 +22,18 @@
 
 - **Proactive**: If multiple items were mentioned at session start and not all addressed → ask before saving: *"Should I add the unfinished ones to todo?"*
 - **Save sweep**: At every `save` — check working memory for unresolved deferred items not yet in `todo.md`, add them automatically.
+
+---
+
+## Memory & plugin commands (moved from master-memory.md 2026-07-12 — external-audit P0.3 parity relocation)
+
+> Implementations live in the **ruri-skills plugin** (machine-level install; repo source `plugins/ruri-skills/`). This table is the repo-side reference.
+
+| Command | What happens |
+|---|---|
+| `save library` / `load library` / `search library` | Knowledge-library save (dupe-check first) / load / search — `ruri-skills:library` skill |
+| `save diary` / `review diary` | Write today's diary entry / read recent — `daily-diary/` per `daily-diary/diary-format.md` |
+| `recall [topic]` / `check history` | Diary search — full trigger list canonical in `main/main-memory.md` (Memory Recall section) |
+| `copy plan` / `append plan` / `resume plan` | Plan-execution lifecycle — `ruri-skills:work-plan` skill |
+| `commit` / `push` | Structured commit / commit+push — `ruri-skills:auto-commit` skill |
+| `new coding project [name]` / `load project [name]` / `save project` / `list projects` | Project lifecycle under `projects/` |
