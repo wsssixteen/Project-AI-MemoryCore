@@ -53,7 +53,8 @@ for (const event of Object.keys(hooks)) {
       const nm = cmd.match(/([\w.-]+)\.js/);
       if (!nm) continue;
       const pm = cmd.match(/"([^"]+\.js)"/) || cmd.match(/(\S+\.js)/);
-      const realPath = pm ? pm[1] : null;
+      let realPath = pm ? pm[1] : null;
+      if (realPath) realPath = realPath.replace(/\$\{CLAUDE_PROJECT_DIR\}/g, REPO_ROOT);
       rows.push({ event, matcher, name: nm[1], exists: realPath ? fs.existsSync(realPath) : false });
     }
   }
