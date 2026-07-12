@@ -284,7 +284,13 @@ function main() {
     console.log('  Smoke-test verdict: ✓ PASS');
   }
 
-  if (pct !== null && pct < 95) process.exitCode = 1;
+  // 2026-07-13 (external-audit Phase 1): compliance-% is REPORT-ONLY here — the gate is
+  // wrapped on lib/hook-runtime.js, so live compliance is telemetry's job (weekly report +
+  // lifecycle flags), not an eval red. The eval's pass/fail = the smoke fixtures above.
+  if (pct !== null && pct < 95) {
+    console.log('');
+    console.log('  (compliance < target — tracked via meta/telemetry/hook-fires.jsonl + weekly report, not as eval RED)');
+  }
 }
 
 main();

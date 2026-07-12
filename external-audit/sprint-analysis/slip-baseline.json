@@ -1,0 +1,88 @@
+{
+  "last14d_by_category": [
+    {
+      "category": "best-practices-not-consulted",
+      "count": 4
+    },
+    {
+      "category": "other",
+      "count": 2
+    },
+    {
+      "category": "knowledge-transfer-incompleteness",
+      "count": 2
+    },
+    {
+      "category": "premature-handback-with-own-pending-checks",
+      "count": 1
+    },
+    {
+      "category": "hook-nudge-overrode-pause-instruction",
+      "count": 1
+    },
+    {
+      "category": "scope-contraction-without-verbatim-counter-quote",
+      "count": 1
+    },
+    {
+      "category": "verify-before-claim variant",
+      "count": 1
+    },
+    {
+      "category": "complete-before-deliver violation",
+      "count": 1
+    },
+    {
+      "category": "patch-script scope-creep / minimal-footprint-violation",
+      "count": 1
+    },
+    {
+      "category": "output-format-clutter",
+      "count": 1
+    },
+    {
+      "category": "full-address-trace-gate compliance-repeat",
+      "count": 1
+    },
+    {
+      "category": "protocol-nudge-overrode-user-instruction",
+      "count": 1
+    },
+    {
+      "category": "workflow-gap",
+      "count": 1
+    },
+    {
+      "category": "wrong-baseline-diagnosis",
+      "count": 1
+    },
+    {
+      "category": "visual-fidelity / output-not-self-verified",
+      "count": 1
+    },
+    {
+      "category": "hook-design-gap",
+      "count": 1
+    },
+    {
+      "category": "scope-anchor-drift",
+      "count": 1
+    },
+    {
+      "category": "spec-drift / fundamentals-overwritten",
+      "count": 1
+    }
+  ],
+  "total_entries_14d": 23,
+  "miya_catch_count_14d": 18,
+  "miya_catch_method": "Grep for literal patterns in dated entries (2026-06-29 to 2026-07-13): 'みや caught' (5 matches) + 'みや:' (11 matches) + 'caught it' (2 matches)",
+  "escalation_categories": [
+    "stop-instead-of-action",
+    "tool-choice-skip / server.log path delegated (4th strike)",
+    "wrong-baseline-diagnosis (premature-complex-hypothesis variant)",
+    "wrong-baseline-diagnosis (4th strike — same session, network-cost overshoot)",
+    "ghost-hook-recreated (variant of 2026-05-25 fifteen-ghost-hooks 🚨)",
+    "tool-choice-skip (Notes-file hand-write + format-bloat variant)",
+    "wrong-baseline-diagnosis (incomplete-trace-presented-as-verified)"
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "hooks": [
+    {
+      "file": "domain/verify-basis-gate/verify-basis-gate.discipline.hook.js",
+      "event": "Stop (registered .claude/settings.json line 307, direct node call, not wrapped)",
+      "block_mechanism": "decision-json (process.stdout.write({decision:'block',reason:...}); line 61-70)",
+      "trigger_summary": "Last assistant text (since last user msg) matches BASIS regex (\"I checked/read/verified/confirmed the flowable/bpmn/code/db/...\" or \"from workflow evidence\" or \"per the flowable\") AND zero tool_use blocks appear in the assistant turn AND no [skip-verify-basis:] bypass present.",
+      "stdin_shape": "JSON on stdin: {transcript_path, stop_hook_active}. Hook reads the transcript JSONL file at transcript_path itself; parses lines after the last user-role message, counts tool_use blocks, captures the last text block.",
+      "fixture_trigger_input": "stdin: {\"transcript_path\":\"C:/tmp/fixture-verify-basis-trigger.jsonl\",\"stop_hook_active\":false}. Transcript file content (JSONL, one JSON object per line): a user message line, then ONE assistant message line whose content array is [{\"type\":\"text\",\"text\":\"I checked the flowable and confirmed the BPMN routes to pelupusan.\"}] — no tool_use block anywhere in the assistant turn.",
+      "fixture_clean_input": "Same stdin shape pointing at fixture-verify-basis-clean.jsonl. Transcript: user line, then assistant line whose content array has a {\"type\":\"tool_use\",\"name\":\"Read\",...} block BEFORE the text block {\"type\":\"text\",\"text\":\"I checked the flowable and confirmed the BPMN routes to pelupusan.\"} (tools>0 -> passes at line 59). Alternative clean fixture: same text but containing literal \"[skip-verify-basis: verified last turn]\".",
+      "existing_eval": "none"
+    },
+    {
+      "file": "domain/ticket-criteria-gate/ticket-criteria-gate.discipline.hook.js",
+      "event": "Stop (registered .claude/settings.json line 295, direct node call)",
+      "block_mechanism": "decision-json for Check A (completeness, line 138) and Check C (repro-before-verify, line 162); Check B is advisory (hookSpecificOutput/additionalContext, line 183)",
+      "trigger_summary": "Text length>=300, not EXEMPT/ABSTAIN. Check A: text has a ticket ref (QA-####/FAT-/UAT-/PTMLK) + a DONE_CLAIM phrase (\"fix is done\", \"ready to test\", \"closing the ticket\", etc.) but is missing a 'CRITERIA COVERAGE' table OR an evidence token (file:line, SELECT..FROM, server.log, local_test_confirmed, etc.) -> block. Check C: text has a ticket ref + a VERIFIED_CLAIM (\"PASS\", \"local_test_confirmed=true\", \"verified\") but has NO REPRO_BEFORE phrase (\"reproduced\", \"before the fix\", \"old code fails\") -> block.",
+      "stdin_shape": "{transcript_path, stop_hook_active} — reads transcript file, extracts only the last assistant text block.",
+      "fixture_trigger_input": "stdin {\"transcript_path\":\".../fixture-tcg-trigger.jsonl\",\"stop_hook_active\":false}. Transcript: assistant text (>=300 chars) reading e.g. \"QA-268888 — the fix is done, I only need you to test it now. The listener attribute now matches the sibling dropdown so the value should persist correctly on save. This closes out the remaining scope for this cycle.\" — contains ticket ref + DONE_CLAIM, but NO 'CRITERIA COVERAGE' string and no file:line/SELECT/server.log token anywhere.",
+      "fixture_clean_input": "Same shape, transcript assistant text includes ticket ref + DONE_CLAIM PLUS a literal 'CRITERIA COVERAGE' heading followed by a markdown table row containing a file:line evidence cell, e.g. '| BA criterion | Addressed? | Evidence |\\n| dropdown persists | yes | MlkForm.java:214 |'. Alternative clean fixture: text says 'not yet done, still pending BA confirmation' (ABSTAIN pattern) with a ticket ref.",
+      "existing_eval": "none (header note line 46 says 'eval.workflow.js (eval-vs-past-tickets) = deferred to a later phase per みや' — explicitly deferred, never built)"
+    },
+    {
+      "file": "domain/terse-gate/terse-gate.discipline.hook.js",
+      "event": "Stop (registered .claude/settings.json line 303, invoked via lib/hook-runtime.js --wrap ... Stop)",
+      "block_mechanism": "decision-json (line 62-70)",
+      "trigger_summary": "Last assistant text length>=800, not EXEMPT ([skip-terse:] / ═══ / るり結界 / Domain Expansion). After stripping ``` code fences, count trimmed lines >150 chars that do NOT start with '|' (table row) and contain no box/arrow chars (┌┐└┘├┤┬┴┼─│→↓►). heavy>=6 -> block.",
+      "stdin_shape": "{transcript_path, stop_hook_active} passed through by lib/hook-runtime.js wrapper to this hook unchanged; reads transcript file for last assistant text.",
+      "fixture_trigger_input": "stdin {\"transcript_path\":\".../fixture-terse-trigger.jsonl\",\"stop_hook_active\":false}. Transcript assistant text = 6+ separate prose paragraphs, each a single line >150 characters of plain sentences (no leading '|', no box-drawing chars, not inside a code fence), total text length >800 chars.",
+      "fixture_clean_input": "Same stdin shape; transcript assistant text >800 chars but the long-line content is reformatted as markdown table rows (each line starts with '|') or contains box/arrow characters (┌─┐/→), OR text contains '[skip-terse: personal reflection]'.",
+      "existing_eval": "none"
+    },
+    {
+      "file": "domain/show-gate/show-gate.discipline.hook.js",
+      "event": "Stop (registered .claude/settings.json line 287, invoked via lib/hook-runtime.js --wrap ... Stop)",
+      "block_mechanism": "decision-json (line 96-104)",
+      "trigger_summary": "Last assistant text length>=500, not EXEMPT, contains NO box-drawing chars and NO ``` fence, AND matches a SHOW_SIGNALS regex (e.g. 'before...after', 'the root cause is', 'option a/b', 'vs.', 'diff', 'compared to', an UPDATE...SET or SELECT...FROM snippet) -> block.",
+      "stdin_shape": "{transcript_path, stop_hook_active} — reads transcript for last assistant text only.",
+      "fixture_trigger_input": "stdin {\"transcript_path\":\".../fixture-show-trigger.jsonl\",\"stop_hook_active\":false}. Transcript assistant text (>=500 chars) containing prose like 'The root cause is a missing listener attribute. Before the change the dropdown had no ajax wiring; after copying the sibling's structure it now fires correctly and the value persists on save, compared to the previous broken behaviour.' — no code fence, no box characters anywhere in the reply.",
+      "fixture_clean_input": "Same stdin shape; identical narrative text but wrapped with an actual ``` code block showing the diff, OR containing box-drawing characters (a drawn ┌─┐ diagram), OR containing '[skip-show-gate: nothing to show]'.",
+      "existing_eval": "none as a *.js/*.eval.js replay harness — folder contains only domain/show-gate/eval-2026-07-03.md, a manual prose eval note, not an automated fixture file"
+    },
+    {
+      "file": "domain/codemap-recon-consult/codemap-recon-consult.discipline.hook.js",
+      "event": "Stop (registered .claude/settings.json line 291, direct node call; back-gate sibling of the UserPromptSubmit codemap-recon-consult.trigger.hook.js which is advisory-only)",
+      "block_mechanism": "decision-json, 3 separate block sites: git-history branch (line 159), UI-path branch (line 181), codegraph branch (line 203)",
+      "trigger_summary": "Text>=400 chars, not EXEMPT, quest/active.txt has a status=active block (path hardcoded to REPO_ROOT main-repo location unless CODEGRAPH_GATE_ACTIVE_TXT env var overrides it), AND (a completion/exhausted claim OR a CODE root-cause claim with a .java/Exception/method signal OR a UI root-cause claim with a panel/papar/hilang signal). Git-history branch fires FIRST for all claim types if no git log/blame/--grep tool call ran this turn. If UI-symptom, additionally requires an .xhtml cite. Otherwise requires an mcp__codegraph__* tool_use this turn.",
+      "stdin_shape": "{transcript_path, stop_hook_active}. Also reads quest/active.txt directly off disk (REPO_ROOT hardcoded to 'C:\\\\Users\\\\Ridhwan\\\\OneDrive - Pymsoft Sdn Bhd\\\\0. AI\\\\Project-AI-MemoryCore\\\\quest\\\\active.txt' unless CODEGRAPH_GATE_ACTIVE_TXT env override) for status=active, and scans transcript tool_use lines since the last real user prompt for git-log / codegraph calls.",
+      "fixture_trigger_input": "stdin {\"transcript_path\":\".../fixture-codemap-trigger.jsonl\",\"stop_hook_active\":false}; env CODEGRAPH_GATE_ACTIVE_TXT pointed at a fixture active.txt containing 'qa=QA-268888\\nstatus=active'. Transcript: assistant text (>=400 chars) 'The root cause is a NullPointerException thrown in MlkSemakanForm.java():214 because the getter returns null before validation.' with NO tool_use line matching git log/blame/--grep anywhere in the turn.",
+      "fixture_clean_input": "Same stdin/env, but the transcript's tool_use list for this turn includes a Bash/PowerShell call whose command contains 'git log --oneline -20 -- MlkSemakanForm.java' (satisfies git-history branch) AND either a mcp__codegraph__* tool_use (satisfies codegraph branch) or the text includes '[skip-codegraph: pure DB diagnosis]'.",
+      "existing_eval": "none as a *.js/*.eval.js replay harness — folder contains only domain/codemap-recon-consult/eval-2026-07-03.md, a manual prose eval note, not an automated fixture file"
+    },
+    {
+      "file": ".claude/hooks/veritas-claim-gate.js",
+      "event": "Stop (registered .claude/settings.json line 259, direct node call)",
+      "block_mechanism": "decision-json for Check 1 (external-research lie, line 149); Checks 2 and 3 are advisory only (hookSpecificOutput/additionalContext, lines 165 and 193)",
+      "trigger_summary": "Turn text length>=300, not EXEMPT/FRAME_ABSTAIN (negation/hedge/hand-back/recap frames abstain). Check 1 (HARD BLOCK): text claims an external lookup ('I checked GitHub', 'I searched the web', 'I did research') AND none of the turn's tool_use names match WebSearch/WebFetch/ToolSearch/mcp__*search|fetch|web*, and no Bash/PowerShell command matches gh/git ls-remote/curl/wget/npm view|search|info.",
+      "stdin_shape": "{transcript_path, stop_hook_active}. Hook reads the transcript, isolates the assistant turn since the last REAL user message (excludes tool_result-only user turns), and collects tool_use names + bash/powershell commands plus the last text block.",
+      "fixture_trigger_input": "stdin {\"transcript_path\":\".../fixture-veritas-trigger.jsonl\",\"stop_hook_active\":false}. Transcript: real user message, then an assistant turn whose ONLY tool_use is {\"type\":\"tool_use\",\"name\":\"Read\",...} (no WebSearch/WebFetch/ToolSearch, no Bash gh/curl/npm command), and whose text block (>=300 chars) states 'I checked GitHub and confirmed this library already supports the JBIG2 codec, so no extra dependency is required here.'",
+      "fixture_clean_input": "Same shape; transcript identical text but the assistant turn's tool_use list includes {\"name\":\"WebSearch\",...} (or a Bash tool_use with command 'gh api ...'), OR the text is reframed with a hedge ('I think I checked GitHub...') or contains '[skip-veritas: recap of earlier WebSearch]'.",
+      "existing_eval": "none"
+    },
+    {
+      "file": ".claude/hooks/silent-claim-drift-gate.js",
+      "event": "Stop (registered .claude/settings.json line 251, direct node call)",
+      "block_mechanism": "NONE ACTUALLY — this file is advisory-only (process.stdout.write({hookSpecificOutput:{hookEventName:'Stop', additionalContext:...}}) at line 185-191; it never emits decision:'block' and never calls process.exit(2). The grep hit on 'decision' matched only comment prose at lines 21 and 145 (\"Stage 5B flip to decision:'block' is a separate later commit\") describing a FUTURE change that has not shipped. Flagging this discrepancy: the task's minimum-coverage list names silent-claim-drift-gate as block-capable, but as currently written it is not.",
+      "trigger_summary": "(Advisory conditions, not blocking) fires reminders when: a done/complete/shipped claim appears with no diff-backing token; a '→ Skill: <name>' token appears with no matching Skill tool_use; HYPOTHESIS mentions outnumber VERIFIED mentions >2:1 in a Recon-shaped reply; a system-component file was edited without a paired meta/system-architecture.md edit; or an agreement phrase ('you're right'/'confirmed') appears with no evidence pattern.",
+      "stdin_shape": "Reads the entire stdin payload JSON.stringify(data) as one text blob (not just transcript-derived text) and regex-scans the whole payload string — a broader, less precise scan than the other Stop hooks.",
+      "fixture_trigger_input": "stdin: any Stop payload JSON whose stringified form contains e.g. \"I've completed the fix\" with no nearby 'diff'/'commit <sha>'/'file_path'/'scope-anchor' token — produces an advisory additionalContext, not a block.",
+      "fixture_clean_input": "Same shape but the payload also contains a 'file_path' or 'commit <sha>' token near the completion claim, or omits the completion phrase entirely — no additionalContext emitted.",
+      "existing_eval": "none"
+    },
+    {
+      "file": ".claude/hooks/commit-gate.js",
+      "event": "PreToolUse, matcher: Bash (registered .claude/settings.json line 154)",
+      "block_mechanism": "decision-json via blockCommit() helper (console.log({decision:'block',reason}); line 79-82), 4 distinct block sites (checks 1, 2, 3a, 3b)",
+      "trigger_summary": "tool_name=Bash, command matches /git\\s+commit/, cwd is NOT inside the MemoryCore repo. Resolves target quest by QA number in the command (or falls back to the active/commit-ready block in quest/active.txt). Blocks if: (1) local_test_confirmed != 'true'; (2) the QA's project .md file has any '[ ]' unchecked item; (3a) command combines staging+commit (git add ... && git commit, or -a/-am/--amend/--all flags); (3b) no one-shot .claude/state/commit-approved-<QA>.flag exists (consumed on pass).",
+      "stdin_shape": "{tool_name, tool_input:{command}} — no transcript read at all; reads quest/active.txt, the QA project .md file, and the approval flag file directly off disk relative to process.cwd().",
+      "fixture_trigger_input": "stdin {\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"git commit -m \\\"QA #268888 fix listener wiring\\\"\"}} run with cwd set to a work repo (e.g. E:/Projects/Melaka/etanah-pelupusan, NOT under the MemoryCore project root) and quest/active.txt containing a block 'qa=QA-268888\\nstatus=active\\nlocal_test_confirmed=false'.",
+      "fixture_clean_input": "Same stdin/cwd, but active.txt block has 'local_test_confirmed=true', the QA-268888 project .md has zero '[ ]' unchecked lines, the command is a plain 'git commit -m \"...\"' (no git add, no -a/-am/--amend/--all), and .claude/state/commit-approved-QA-268888.flag exists on disk before the call.",
+      "existing_eval": "none"
+    },
+    {
+      "file": ".claude/hooks/branch-at-apply-gate.js",
+      "event": "PreToolUse, matcher: Bash (registered .claude/settings.json line 162)",
+      "block_mechanism": "decision-json via block() helper (console.log({decision:'block',reason}); line 80, fired at line 115)",
+      "trigger_summary": "tool_name=Bash, command is a git branch SWITCH or CREATE (git switch, git checkout -b/-B/--orphan, git branch <name> [not list/delete/move], or git checkout <bare-branch-ref>) — excludes file-restore (git checkout -- file) and listing/delete forms. Repo target (git -C <path> or cwd) is NOT the MemoryCore repo. quest/active.txt has an active, non-terminal-status block whose current_phase is NOT in CLOSING_PHASES (Commit/Push/Closed/Close/Wrap/Closed-Phase1). No .claude/state/base-branch-approved-<QA>.flag exists (consumed on pass).",
+      "stdin_shape": "{tool_name, tool_input:{command}} — no transcript read; reads quest/active.txt and the approval flag file directly off disk.",
+      "fixture_trigger_input": "stdin {\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"git checkout -b mlk/qa/268888\"}} run with cwd set to a work repo (e.g. E:/Projects/Melaka/etanah-pelupusan) and quest/active.txt containing 'qa=QA-268888\\nstatus=active\\ncurrent_phase=Apply'.",
+      "fixture_clean_input": "Same stdin/cwd, but active.txt block has 'current_phase=Commit' (a CLOSING_PHASES value), OR .claude/state/base-branch-approved-QA-268888.flag exists on disk before the call, OR the git command targets the MemoryCore repo itself (git -C <MemoryCore path> checkout -b ...).",
+      "existing_eval": "none"
+    }
+  ]
+}

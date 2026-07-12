@@ -16,3 +16,25 @@
 {"ts":"2026-07-12T18:36:17.425Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
 {"ts":"2026-07-12T18:36:17.543Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
 {"ts":"2026-07-12T18:36:17.665Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":3}
+{"ts":"2026-07-12T18:37:43.245Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T18:37:55.558Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T18:37:55.676Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":2,"blocked":true,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T18:37:55.795Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T18:37:55.913Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T18:37:56.025Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T18:38:02.829Z","hook":"pass-child","event":"EvalEvent","mode":"wrap","exit":0,"blocked":false,"dur_ms":121}
+{"ts":"2026-07-12T18:38:03.077Z","hook":"block-child","event":"EvalEvent","mode":"wrap","exit":2,"blocked":true,"dur_ms":117}
+{"ts":"2026-07-12T18:38:03.325Z","hook":"crash-child","event":"EvalEvent","mode":"wrap","exit":1,"blocked":false,"dur_ms":122}
+{"ts":"2026-07-12T18:38:03.453Z","hook":"does-not-exist","event":"EvalEvent","mode":"wrap","exit":0,"blocked":false,"dur_ms":1,"error":"target-missing: C:\\Users\\vice4\\AppData\\Local\\Temp\\hook-runtime-eval-AixZOK\\does-not-exist.js"}
+{"ts":"2026-07-12T18:38:03.492Z","hook":"eval-runner","event":"EvalSuite","mode":"suite","exit":1,"blocked":false,"total":11,"green":10,"red":1,"skipped":0}
+{"ts":"2026-07-12T18:38:43.367Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":3}
+{"ts":"2026-07-12T18:39:01.465Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":1}
+{"ts":"2026-07-12T18:39:01.571Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":2,"blocked":true,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T18:39:01.677Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T18:39:01.783Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T18:39:01.885Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T18:39:07.578Z","hook":"pass-child","event":"EvalEvent","mode":"wrap","exit":0,"blocked":false,"dur_ms":106}
+{"ts":"2026-07-12T18:39:07.788Z","hook":"block-child","event":"EvalEvent","mode":"wrap","exit":2,"blocked":true,"dur_ms":102}
+{"ts":"2026-07-12T18:39:08.001Z","hook":"crash-child","event":"EvalEvent","mode":"wrap","exit":1,"blocked":false,"dur_ms":106}
+{"ts":"2026-07-12T18:39:08.109Z","hook":"does-not-exist","event":"EvalEvent","mode":"wrap","exit":0,"blocked":false,"dur_ms":1,"error":"target-missing: C:\\Users\\vice4\\AppData\\Local\\Temp\\hook-runtime-eval-3Tqf4t\\does-not-exist.js"}
+{"ts":"2026-07-12T18:39:08.143Z","hook":"eval-runner","event":"EvalSuite","mode":"suite","exit":0,"blocked":false,"total":11,"green":11,"red":0,"skipped":0}
