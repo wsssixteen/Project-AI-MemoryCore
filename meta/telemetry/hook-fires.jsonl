@@ -1,0 +1,5 @@
+{"ts":"2026-07-12T18:17:30.801Z","hook":"pass-child","event":"EvalEvent","mode":"wrap","exit":0,"blocked":false,"dur_ms":102}
+{"ts":"2026-07-12T18:17:31.011Z","hook":"block-child","event":"EvalEvent","mode":"wrap","exit":2,"blocked":true,"dur_ms":104}
+{"ts":"2026-07-12T18:17:31.226Z","hook":"crash-child","event":"EvalEvent","mode":"wrap","exit":1,"blocked":false,"dur_ms":102}
+{"ts":"2026-07-12T18:17:31.332Z","hook":"does-not-exist","event":"EvalEvent","mode":"wrap","exit":0,"blocked":false,"dur_ms":2,"error":"target-missing: C:\\Users\\vice4\\AppData\\Local\\Temp\\hook-runtime-eval-6lB1Bd\\does-not-exist.js"}
+{"ts":"2026-07-12T18:18:30.162Z","hook":"show-gate.discipline.hook","event":"Stop","mode":"wrap","exit":0,"blocked":false,"dur_ms":107}

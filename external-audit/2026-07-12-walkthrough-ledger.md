@@ -20,14 +20,26 @@
 | P0.3 master-memory boot removal | ACCEPT-MODIFIED (move-then-tombstone) | this commit (CLAUDE.md v1.64) | Parity map in changelog v1.64: commands → save-commands.md · plugin install → new-machine-setup.md Step 2 (gap the audit missed) · recall triggers already canonical in main-memory · boot-load-verification.js updated + smoke-fired clean (+ sanctioned amendments-drop) |
 | P0.4 new-guard freeze declared | ACCEPT | this commit | `main/current-session.md` Standing Flag 🧊; carry-forward rule at every DE rewrite until Phase 1 green |
 
-## Phase 1 — NEXT (target ≤1 week)
+## Operator parameters (みや, 2026-07-12 — binding, supersede earlier pacing caution)
 
-| Item | Status | Notes |
+| Parameter | Value |
+|---|---|
+| Pacing | **Dedicated sprint 3–5 days**, tickets paused; Day 1: P0 + runtime+telemetry · Day 2: forge + eval-runner + fixtures · Days 3–4: boot diet + merges + CLAUDE.md shrink (shadow boot) · Day 5: SchemaCrawler pilot + §4.2 status table |
+| Forge autonomy | echo + nod ALWAYS (create AND refine); no auto-apply; revisit after 30d clean telemetry |
+| North star (30d) | ticket throughput — prefer latency/boot/debug-time cuts; defer pgvector, miyazaki sync, full skill-fixture coverage to post-sprint |
+| Naming | "Power" → "Feature" from now; registry uses Feature day one |
+
+## Phase 1 — IN PROGRESS (sprint Day 1 done)
+
+| Item | Status | Evidence |
 |---|---|---|
-| K6 telemetry + K3 gate-runtime (`lib/hook-runtime.js` + `meta/telemetry/hook-fires.jsonl`) | queued — next dedicated session | first kernel piece; one piece per dedicated session (addendum amendment 3, approved) |
-| K7 forge scaffolder | queued — immediately after K6+K3 | binding insert (handoff addendum block); everything after is born through it |
-| R2 eval-runner + replay fixtures (🚨 classes + 7 eval-less block-capable hooks) | queued | quest-machinery fixtures = the migration's safety net みや prioritized |
-| Weekly generated report + lifecycle policy | queued | after telemetry has real entries |
+| K6 telemetry + K3 runtime (`lib/hook-runtime.js`, wrap + native modes, fail-open) | ✅ built + eval green | `lib/hook-runtime.eval.js` **10/10 PASS** (pass/block/crash/missing fixtures); settings.json re-validated as JSON |
+| Pilot migration (3 noisiest Stop gates wrapped: stop-point-summary · show-gate · terse-gate) | ✅ wired | settings.json :235/:287/:303; smoke: wrapped show-gate exit 0, 107ms, telemetry row appended |
+| `meta/telemetry/hook-fires.jsonl` | ✅ **first real entries ever** | replaces the tombstoned hook-fire-log.md graveyard |
+| K7 forge scaffolder (echo+nod, refine-first, routing questionnaire) | ⬜ Day 2 | binding: before any other component |
+| R2 eval-runner + replay fixtures (🚨 classes + 7 eval-less block-capable) | ⬜ Day 2 | quest-machinery fixtures = みや's priority |
+| Telemetry report (on-demand + session-close + weekly) + lifecycle policy | ⬜ Day 2–3 | needs a day of real entries first |
+| Remaining hook migration onto runtime (75 wraps) | ⬜ incremental | generated settings.json comes with K4 registry |
 
 ## Phase 2+ — approved, gated
 
