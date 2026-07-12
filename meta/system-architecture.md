@@ -13,7 +13,7 @@ The system exists to cure ONE recurring pattern Agent 1 named **"trust-the-impul
 
 The cure is NOT more documentation (already tried — failed). The cure is **deterministic gates at the moment of weakness** — Edit-time, emit-time, Stop-time — that make impulse-skip structurally impossible without an explicit, audit-visible bypass.
 
-Three layers of enforcement compose this cure:
+Three layers of enforcement compose this cure (an enforcement-SEVERITY ladder — NOT a system layer model; the canonical system model is `meta/INDEX.md`'s 6 layers, per external-audit C6 2026-07-13):
 - **Layer 1 (inline instruction)**: protocol files contain `→ Skill: <name>` tokens at every phase boundary where a sub-skill MUST fire. Visible to Ruri when she reads the source.
 - **Layer 2 (hook reminder)**: when Ruri's response contains a `→ Skill: <name>` token OR user prompt triggers a phrase, a hook injects advisory context "invoke this skill via Skill tool now".
 - **Layer 3 (Stop-hook hard-block)**: at turn-end, scan transcript — if reminder fired AND no Skill tool call to that name appeared AND no bypass token in message → emit `decision: "block"`, refuse turn-end.
