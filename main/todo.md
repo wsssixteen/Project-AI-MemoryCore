@@ -193,3 +193,11 @@
 ---
 
 *Last updated: 2026-06-21 (housekeeping - removed 17 done/closed entries)*
+
+## Carried forward from project_planning_threads.md (archived 2026-07-13, external-audit C5 — agent disagreement caveat honored)
+- [ ] C7: Validation step for Gemini outputs (was "NEXT DISCUSSION")
+- [ ] C8: Session-notes promotion workflow
+- [ ] Career planning dump from Claude Desktop (deferred)
+- [ ] Good practices from Claude's creator — REMIND MIYA (deferred)
+- [ ] Fallback if Gemini restricted — codebase-reading-time note (deferred)
+- [ ] Session-notes promotion in cheatsheet — after C8 (deferred)

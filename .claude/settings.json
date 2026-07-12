@@ -205,6 +205,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\prod-db-confirm\\prod-db-confirm.discipline.hook.js\" PreToolUse"
           }
         ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\familiar-nudge\\\\familiar-nudge.check.hook.js\""
+          }
+        ]
       }
     ],
     "Stop": [
@@ -297,6 +306,18 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\dispatch-hooks.js\" --manifest \"domain/bundles/stop-reply-shape.json\" --event Stop"
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\delegation-plan-presence\\\\delegation-plan-presence.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\falsifier-ran-check\\\\falsifier-ran-check.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\citation-cross-check\\\\citation-cross-check.check.hook.js\""
           }
         ]
       }
@@ -329,6 +350,15 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\grep-rubric-gate.js\" PostToolUse"
+          }
+        ]
+      },
+      {
+        "matcher": "Task|Agent|Workflow",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\spawn-telemetry\\\\spawn-telemetry.check.hook.js\""
           }
         ]
       }
