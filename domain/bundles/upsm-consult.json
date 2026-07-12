@@ -1,0 +1,5 @@
+{ "name": "upsm-consult", "children": [
+  ".claude/hooks/route-consult-gate.js",
+  "domain/codemap-recon-consult/codemap-recon-consult.trigger.hook.js",
+  ".claude/hooks/skill-invocation-discipline-gate.js"
+] }
