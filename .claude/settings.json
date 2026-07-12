@@ -113,7 +113,7 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\scout-completeness-gate.js\""
-          },       
+          },
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\quest-active-grounding.js\""
@@ -201,6 +201,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\logic-blast-radius\\logic-blast-radius.discipline.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\component-birth-gate\\\\component-birth-gate.check.hook.js\""
           }
         ]
       },
@@ -270,7 +274,7 @@
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\ask-back-gate.js\""
           },
-		  {
+          {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\rcrl-emit-check.js\""
           },

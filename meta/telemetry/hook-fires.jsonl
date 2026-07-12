@@ -3,3 +3,16 @@
 {"ts":"2026-07-12T18:17:31.226Z","hook":"crash-child","event":"EvalEvent","mode":"wrap","exit":1,"blocked":false,"dur_ms":102}
 {"ts":"2026-07-12T18:17:31.332Z","hook":"does-not-exist","event":"EvalEvent","mode":"wrap","exit":0,"blocked":false,"dur_ms":2,"error":"target-missing: C:\\Users\\vice4\\AppData\\Local\\Temp\\hook-runtime-eval-6lB1Bd\\does-not-exist.js"}
 {"ts":"2026-07-12T18:18:30.162Z","hook":"show-gate.discipline.hook","event":"Stop","mode":"wrap","exit":0,"blocked":false,"dur_ms":107}
+{"ts":"2026-07-12T18:19:52.146Z","hook":"stop-point-summary.discipline.hook","event":"Stop","mode":"wrap","exit":0,"blocked":false,"dur_ms":792}
+{"ts":"2026-07-12T18:19:52.264Z","hook":"show-gate.discipline.hook","event":"Stop","mode":"wrap","exit":0,"blocked":false,"dur_ms":347}
+{"ts":"2026-07-12T18:19:52.453Z","hook":"terse-gate.discipline.hook","event":"Stop","mode":"wrap","exit":0,"blocked":false,"dur_ms":355}
+{"ts":"2026-07-12T18:34:36.110Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T18:34:36.251Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":1}
+{"ts":"2026-07-12T18:34:36.267Z","hook":"forge","event":"Forge","mode":"forge-new","component":"component-birth-gate","kind":"check","exit":0,"blocked":false}
+{"ts":"2026-07-12T18:35:50.173Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T18:35:59.403Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T18:36:17.168Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T18:36:17.297Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":2,"blocked":true,"bypassed":false,"dur_ms":3}
+{"ts":"2026-07-12T18:36:17.425Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T18:36:17.543Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-12T18:36:17.665Z","hook":"component-birth-gate","event":"PreToolUse","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":3}
