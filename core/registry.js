@@ -29,6 +29,23 @@ const registrations = new Map(); // hookName -> {events:[], wrapped}
 for (const [event, blocks] of Object.entries(settings.hooks || {})) {
   for (const b of blocks) for (const h of b.hooks || []) {
     const cmd = h.command || '';
+    // bundle dispatcher: expand manifest children as registered '✓ bundled(<name>)'
+    if (cmd.includes('dispatch-hooks.js')) {
+      const mm = cmd.match(/--manifest\s+"([^"]+)"/);
+      if (mm) {
+        try {
+          const man = JSON.parse(fs.readFileSync(path.join(ROOT, mm[1]), 'utf8'));
+          for (const child of man.children || []) {
+            const key = path.basename(child).replace(/\.js$/, '');
+            const e = registrations.get(key) || { events: [], wrapped: false, bundle: man.name };
+            if (!e.events.includes(event)) e.events.push(event);
+            e.bundle = man.name;
+            registrations.set(key, e);
+          }
+        } catch (_) {}
+      }
+      continue;
+    }
     const names = cmd.match(/([\w.-]+)\.js/g) || [];
     const target = names[names.length - 1]; // wrap form: last .js is the real hook
     if (!target || target === 'hook-runtime.js') continue;
@@ -96,7 +113,7 @@ for (const name of [...allHookNames].sort()) {
   hookRows.push({
     name: short,
     events: reg ? reg.events.join('+') : '—',
-    registered: reg ? (reg.wrapped ? '✓ wrapped' : '✓ direct') : '🔶 NOT registered',
+    registered: reg ? (reg.bundle ? '✓ bundled(' + reg.bundle + ')' : (reg.wrapped ? '✓ wrapped' : '✓ direct')) : '🔶 NOT registered',
     onDisk: file ? '✓' : '🚨 GHOST (registered, no file)',
     evals: file && file.evals.length ? file.evals.length + ' ✓' : '—',
     lastFire: fireTs ? fireTs.slice(0, 16) : '—',
