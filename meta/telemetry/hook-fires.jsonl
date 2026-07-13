@@ -3877,3 +3877,9 @@
 {"ts":"2026-07-13T08:00:15.951Z","hook":"branch-at-apply-gate","event":"PreToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":74}
 {"ts":"2026-07-13T08:00:18.698Z","hook":"RecursiveLoopDetector","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":100}
 {"ts":"2026-07-13T08:00:18.698Z","hook":"slip-count-tracker","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":96}
+{"ts":"2026-07-13T08:00:22.716Z","hook":"quest-bounty.hook","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":4113}
+{"ts":"2026-07-13T08:00:29.836Z","hook":"commit-gate","event":"PreToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":121}
+{"ts":"2026-07-13T08:00:29.836Z","hook":"branch-at-apply-gate","event":"PreToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":119}
+{"ts":"2026-07-13T08:00:29.860Z","hook":"convention-check-gate.gate.hook","event":"PreToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":133}
+{"ts":"2026-07-13T08:00:32.646Z","hook":"slip-count-tracker","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":94}
+{"ts":"2026-07-13T08:00:32.660Z","hook":"RecursiveLoopDetector","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":107}
