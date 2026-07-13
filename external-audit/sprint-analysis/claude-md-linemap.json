@@ -1,0 +1,212 @@
+{
+  "sections": [
+    {
+      "heading": "Session Boot Order",
+      "lines": "8-24",
+      "approx_line_count": 17,
+      "disposition": "keep-in-core",
+      "target": "stays in CLAUDE.md",
+      "notes": "Contains the boot-load verification MANDATORY rule (line ~20) whose entire enforcement mechanism IS being read at CLAUDE.md boot — moving it elsewhere would remove the only place that forces Steps 1-4 to be read. ONLY home."
+    },
+    {
+      "heading": "Disposition — Always-On (5 rules)",
+      "lines": "25-36",
+      "approx_line_count": 12,
+      "disposition": "keep-in-core",
+      "target": "stays in CLAUDE.md (mirrored from personality.md)",
+      "notes": "File itself states canonical bodies live in personality.md and this is a mirror 'so it boot-loads reliably'; already-elsewhere in spirit but mirror is intentional per file's own text (line 27) — do not delete the personality.md copy when trimming this mirror."
+    },
+    {
+      "heading": "Explanation & Output-Format Discipline (§2, incl. Rule1a/1b, Universal Flow, Table/Draw defaults, Gate)",
+      "lines": "37-123",
+      "approx_line_count": 87,
+      "disposition": "move-reply-spec",
+      "target": ".claude/reply-spec.md (or personality.md per File-Ownership table line 131 'CLAUDE.md §2 OWNS this — output-format rules')",
+      "notes": "Largest single-topic block (87 lines). File-Ownership table (line 131) already declares CLAUDE.md §2 as canonical home for this content, so a straight move needs that table's target cell updated in the same edit. The HARD PRE-SEND GATE and diagram-mandatory list are enforcement text referenced by name elsewhere (Quest Rubric emits cite 'per §2 HARD PRE-SEND GATE') — any move must keep a stable anchor/pointer name so those cross-refs don't dangle."
+    },
+    {
+      "heading": "File Ownership (boot pointer table)",
+      "lines": "124-138",
+      "approx_line_count": 15,
+      "disposition": "keep-in-core",
+      "target": "stays in CLAUDE.md",
+      "notes": "This IS the pointer/inventory mechanism itself (per system-rules 'inventory first'); moving it out defeats its purpose. Must be updated in lockstep if §2 or personality content physically relocates (line 135 'Status note' already flags the body/table mismatch)."
+    },
+    {
+      "heading": "Project: AI MemoryCore + File Structure subsection",
+      "lines": "139-172",
+      "approx_line_count": 34,
+      "disposition": "pointer-only",
+      "target": "README.md or RURI-NOTEBOOK.md (file structure diagram is descriptive, not a live rule)",
+      "notes": "Pure directory-tree documentation, no enforced rule; safe to shrink to a 1-2 line pointer with no parity risk."
+    },
+    {
+      "heading": "Meta-Layer (Constitution)",
+      "lines": "173-198",
+      "approx_line_count": 26,
+      "disposition": "pointer-only",
+      "target": "meta/INDEX.md and meta/system-architecture.md (both already named as canonical in the section's own text, lines 177 and 181)",
+      "notes": "Section already says 'full catalog... lives in meta/system-architecture.md §3' — this section is largely already a pointer; can shrink further with low risk."
+    },
+    {
+      "heading": "System-Design Discipline",
+      "lines": "199-204",
+      "approx_line_count": 6,
+      "disposition": "already-elsewhere",
+      "target": ".claude/skills/system-design/SKILL.md (named explicitly at line 201)",
+      "notes": "Section text itself says 'Routed out of CLAUDE.md 2026-05-22' — already a pointer stub."
+    },
+    {
+      "heading": "Cost Efficiency Rules (parent) + Delegation Economy subsection",
+      "lines": "205-230",
+      "approx_line_count": 26,
+      "disposition": "keep-in-core",
+      "target": "parent stub (205-208) is already-elsewhere pointing to .claude/cost-efficiency.md; but Delegation Economy subsection (209-230) is an ALWAYS-ON rule with no other cited home",
+      "notes": "FLAG: Delegation Economy (209-230, ~22 lines) has no canonical file named anywhere in the doc — its only home is CLAUDE.md. Moving it without creating/naming a target file would silently lose this always-on multi-agent-fanout rule. Parent lines 205-208 alone are already-elsewhere (cost-efficiency.md)."
+    },
+    {
+      "heading": "Save Commands Reference",
+      "lines": "231-236",
+      "approx_line_count": 6,
+      "disposition": "already-elsewhere",
+      "target": ".claude/save-commands.md (named at line 233)",
+      "notes": "Already a pointer stub, zero risk."
+    },
+    {
+      "heading": "Active Project Rules (incl. Etanah Non-Negotiable Rules)",
+      "lines": "237-282",
+      "approx_line_count": 46,
+      "disposition": "pointer-only",
+      "target": "projects/coding-projects/active/Etanah-Codebase-Read.md (named as canonical at line 239) — but see notes",
+      "notes": "FLAG: text explicitly says this inline block is 'the trigger-time summary of the most critical non-negotiables... restored 2026-05-25 — decomposition cite was prose-only, target file is not auto-loaded; redundant with Etanah-Codebase-Read.md by design.' The BPMN-first module-scope rule (lines ~247-263) was previously lost when decomposed out and only recovered by re-inlining here. Moving this to a skill risks the exact prior failure unless the skill is guaranteed to fire on every Etanah-scoped ticket (mirrors the Quest trigger table risk below)."
+    },
+    {
+      "heading": "Database & Entity Resolution",
+      "lines": "283-310",
+      "approx_line_count": 28,
+      "disposition": "move-quest-skill",
+      "target": ".claude/skills/quest/SKILL.md (DB-discipline subsection) or a paired etanah-knowledge/DATABASE.md pointer",
+      "notes": "Etanah/DB-specific operational rules (schema-qualify, spine table, symptom→screen lookup, patch-script rules) overlap with quest workflow; candidate to fold into the quest skill alongside §10. No unique-only-home rule identified here beyond the schema-prefix distinction (chat-delivered vs MCP-executed) at lines ~299-302 — flag that nuance for parity."
+    },
+    {
+      "heading": "⚔️ Quest Workflow — Core Methodology intro",
+      "lines": "311-323",
+      "approx_line_count": 13,
+      "disposition": "move-quest-skill",
+      "target": ".claude/skills/quest/SKILL.md",
+      "notes": "The Scout→Recon→Rubric→Apply engine statement; low risk if moved verbatim, this is prose description not a gate."
+    },
+    {
+      "heading": "Quest Workflow — Canonical Phase Emit Template + vertical class-chain ASCII form",
+      "lines": "325-354",
+      "approx_line_count": 30,
+      "disposition": "move-quest-skill",
+      "target": ".claude/skills/quest/SKILL.md",
+      "notes": "Referenced by name ('per the Canonical Phase Emit Template') from Scout/Recon/Rubric emit rules further down — must move as one unit with those references intact."
+    },
+    {
+      "heading": "Quest Workflow — Forced Phase-Emit Gates (Scout/Recon/RCRL/Rubric/Predicate Diagram/sibling-diff line/Quest Briefing diagram)",
+      "lines": "356-421",
+      "approx_line_count": 66,
+      "disposition": "move-quest-skill",
+      "target": ".claude/skills/quest/SKILL.md",
+      "notes": "Largest sub-block in Quest Workflow. Contains multiple HARD-labeled rules (RCRL Step 0, per-file sibling-diff emit line, Quest Briefing drawn-diagram rule) each with their own 'why' failure-story (QA-259702, QA-246923, QA-259914) — these narratives justify why the rule is HARD; archiving the why-story separately from the rule risks the rule being read as optional. Keep rule+why paired wherever it lands."
+    },
+    {
+      "heading": "Quest Workflow — Confidence % + Protocol file pointer",
+      "lines": "422-428",
+      "approx_line_count": 7,
+      "disposition": "move-quest-skill",
+      "target": "quest/quest-protocol.md (already named at line 428 as the full-detail home)",
+      "notes": "Already substantially a pointer; low risk."
+    },
+    {
+      "heading": "Quest Workflow — Triggers table + non-negotiable trigger-time rules",
+      "lines": "430-457",
+      "approx_line_count": 28,
+      "disposition": "move-quest-skill",
+      "target": ".claude/skills/quest/SKILL.md (description-triggers section)",
+      "notes": "FLAG (highest risk in this file): this table is what makes a bare ticket number like '262233' auto-activate Quest without an explicit '/quest' invocation. Skills fire on description-match, not guaranteed bare-number recognition unless the skill's own trigger-phrase list (already present per system-reminder skill catalog for 'quest') fully replicates this table. Text explicitly says this was 'restored 2026-05-25 after the decomposition lost the bare-ticket-number coverage' — i.e. this exact move previously caused a real regression. Do not move without verifying the quest skill's description string covers every row."
+    },
+    {
+      "heading": "Quest Workflow — Quest Preparation Verification table + Scope-category reference",
+      "lines": "458-486",
+      "approx_line_count": 29,
+      "disposition": "move-quest-skill",
+      "target": ".claude/skills/quest/SKILL.md",
+      "notes": "Contains the BPMN-first module-scope Scout-step-0 gate (line 486) which cross-refs the Active-Project-Rules BPMN rule (237-282) — keep both halves consistent if either moves."
+    },
+    {
+      "heading": "Quest Workflow — Quest trigger-time essentials (etanah-knowledge tiers, Notes.txt format, canonical task-state SQL, Permohonan ID hierarchy, codebase root/blast-radius)",
+      "lines": "488-519",
+      "approx_line_count": 32,
+      "disposition": "move-quest-skill",
+      "target": ".claude/skills/quest/SKILL.md",
+      "notes": "Text itself says this is deliberately redundant with quest-protocol.md 'so it's in context during quest design/discussion, not only at /quest start' (line 488) — moving it fully out without a compensating always-fire mechanism reintroduces the paraphrase-error failure mode it was built to prevent."
+    },
+    {
+      "heading": "Quest Workflow — Quest Phase-0 workflow note + Skills list",
+      "lines": "520-525",
+      "approx_line_count": 6,
+      "disposition": "move-quest-skill",
+      "target": ".claude/skills/quest/SKILL.md",
+      "notes": "Low risk, short pointer-style content."
+    },
+    {
+      "heading": "Debug Mode Rituals",
+      "lines": "526-531",
+      "approx_line_count": 6,
+      "disposition": "already-elsewhere",
+      "target": "quest/quest-protocol.md:822-890 (named explicitly at line 528)",
+      "notes": "Section text says it was '⏭ COLLAPSED 2026-06-01' with each ritual's live home already cross-referenced into §10 Quest Workflow — this stub can shrink to almost nothing."
+    },
+    {
+      "heading": "Commit message attribution",
+      "lines": "532-537",
+      "approx_line_count": 6,
+      "disposition": "already-elsewhere",
+      "target": ".claude/commit-conventions.md (named at line 534)",
+      "notes": "Already a pointer stub, zero risk."
+    },
+    {
+      "heading": "Phase 1 Closure — Git Sequence",
+      "lines": "538-543",
+      "approx_line_count": 6,
+      "disposition": "move-quest-skill",
+      "target": "quest/quest-protocol.md Phase 1 close-out section (named at line 540) + .claude/skills/quest/SKILL.md",
+      "notes": "Already mostly a pointer; safe to fold into quest skill."
+    },
+    {
+      "heading": "Phase 2 Closure — Archive Hygiene (MANDATORY)",
+      "lines": "544-558",
+      "approx_line_count": 15,
+      "disposition": "keep-in-core",
+      "target": "stays in CLAUDE.md (boot-loaded) — do NOT demote to skill-only",
+      "notes": "FLAG (second-highest risk): section's own text explains it was 'boot-loaded here because it lived ONLY in quest-protocol.md — a NON-boot-loaded home, so it was silently skipped repeatedly (QA-258004, QA-262039, QA-260302).' This is direct, documented evidence that moving this rule out of CLAUDE.md into a skill/protocol-only file previously caused repeated real failures. If moved for the line-count diet, an equally-forceful always-fire mechanism (e.g. a Stop-hook gate) must replace the boot-load guarantee, or this should stay in core."
+    },
+    {
+      "heading": "New Machine Setup",
+      "lines": "559-564",
+      "approx_line_count": 6,
+      "disposition": "already-elsewhere",
+      "target": ".claude/new-machine-setup.md (named at line 561)",
+      "notes": "Already a pointer stub, zero risk."
+    },
+    {
+      "heading": "Available Skills (list)",
+      "lines": "565-575",
+      "approx_line_count": 11,
+      "disposition": "keep-in-core",
+      "target": "stays in CLAUDE.md",
+      "notes": "Short reference list of skill invocations + the Historical-reference note about the emptied claude-md-amendments.md file (line 574) which itself flags a paired-update TODO for boot-required-read-gate.js — keep visible so that TODO isn't lost."
+    },
+    {
+      "heading": "Version history",
+      "lines": "576-582",
+      "approx_line_count": 7,
+      "disposition": "keep-in-core",
+      "target": "stays in CLAUDE.md",
+      "notes": "Version-bump discipline paragraph (last line) is an always-on rule with no other stated home — its ONLY home is CLAUDE.md ('Version is a single-integer increment... Audit-log entries alone don't surface protocol drift; the version stamp + the changelog do'). Full historical entries could move to meta/claude-md-changelog.md (already named as the detail file) but the CURRENT version stamp + the discipline rule itself must stay in core."
+    }
+  ]
+}

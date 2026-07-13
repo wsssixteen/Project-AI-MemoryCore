@@ -1,0 +1,502 @@
+{
+  "files": [
+    {
+      "name": "feedback_awam_no_permohonan_id.md",
+      "gist": "AWAM test data uses No Resit Carian Rasmi, not Permohonan ID",
+      "cls": "mechanical-hookable",
+      "target": "test-data-echo skill (extend AWAM branch) / quest-phase-gate",
+      "rationale": "Detectable trigger: ticket module=AWAM + test-data mention; a gate/skill can enforce lookup method deterministically."
+    },
+    {
+      "name": "feedback_bankai_format.md",
+      "gist": "Bankai banner format spec (kanji, symbol, width-detection rules)",
+      "cls": "procedural-skill",
+      "target": "bankai skill",
+      "rationale": "Already a dedicated 'bankai' skill exists; this is pure format spec content that belongs inside that skill's SKILL.md, not a standalone memory."
+    },
+    {
+      "name": "feedback_bash_tool.md",
+      "gist": "Bash hangs for simple ops on this machine; use dedicated tools; scripts are Ruri's to run",
+      "gist2": "",
+      "cls": "keep-as-memory",
+      "target": "keep (environment fact)",
+      "rationale": "Environment-specific fact about this machine's Bash tool behavior; not a style rule, a persistent tool-quirk fact worth keeping."
+    },
+    {
+      "name": "feedback_bundling_before_defer.md",
+      "gist": "Rubric BA-ask flagged defer/BA-Q must emit BUNDLING QUESTION and block Apply until みや answers",
+      "cls": "mechanical-hookable",
+      "target": "quest-phase-gate / Rubric emit gate",
+      "rationale": "Detectable trigger (Rubric row g produces gap/scope-drift/defer marker) — a gate can force the BUNDLING QUESTION block deterministically."
+    },
+    {
+      "name": "feedback_bypass_token_visibility.md",
+      "gist": "Hide whitelist-enum bypass tokens in HTML comments; keep judgment-call bypasses visible",
+      "cls": "mechanical-hookable",
+      "target": "bypass-token formatting convention in each Stop-hook's emit template",
+      "rationale": "Mechanical formatting rule keyed on whether the bypass reason is an enum vs free-text — can be enforced/applied at emit time by the hooks themselves."
+    },
+    {
+      "name": "feedback_check_archives.md",
+      "gist": "Always check archive folders before assuming a ticket/project doesn't exist",
+      "cls": "procedural-skill",
+      "target": "quest skill (Phase 0 checklist step)",
+      "rationale": "Procedural step that belongs in the quest Phase-0/search discipline, already partially covered by 'inventory-first' and quest protocol."
+    },
+    {
+      "name": "feedback_comment_style.md",
+      "gist": "Code comment style: name variables + plain English + literal cross-ref, max 2 lines; never rewrite みや's own comments",
+      "cls": "style-one-liner",
+      "target": "personality.md / convention-check-gate reminder",
+      "rationale": "Pure style/preference for code comments; condenses to one rule line, pairs with existing convention-check-gate."
+    },
+    {
+      "name": "feedback_complete_before_deliver.md",
+      "gist": "Never deliver placeholder scripts; ask for missing values first",
+      "cls": "style-one-liner",
+      "target": "personality.md (deliverable-completeness rule)",
+      "rationale": "Simple behavioral preference, no complex trigger needed beyond 'about to deliver a script with a placeholder'."
+    },
+    {
+      "name": "feedback_daily_commit.md",
+      "gist": "Auto commit+push+merge at save/DE by default; ticket commits stay gated",
+      "cls": "mechanical-hookable",
+      "target": "auto-commit skill / DE expansion-protocol",
+      "rationale": "Deterministic policy keyed on event (save/DE trigger vs ticket-commit context) — already partially implemented via ruri-skills:auto-commit skill; consolidate there."
+    },
+    {
+      "name": "feedback_defensive_tone.md",
+      "gist": "Kill \"that's not a [me] problem\" deflection phrasing",
+      "cls": "style-one-liner",
+      "target": "personality.md banned-phrases list",
+      "rationale": "Pure tone/phrasing rule, fits the existing banned-phrases section."
+    },
+    {
+      "name": "feedback_design_from_architecture.md",
+      "gist": "Design new rules from the layer-matrix architecture, pressure-test against ≥3 past tickets, not from last slip",
+      "cls": "procedural-skill",
+      "target": "system-design skill",
+      "rationale": "Multi-step design discipline that duplicates system-design skill's purpose; should be folded into that skill's procedure/checklist."
+    },
+    {
+      "name": "feedback_diary_check.md",
+      "gist": "Grep all Daily-Diary-*.md files for today's date, don't Glob by filename pattern",
+      "cls": "mechanical-hookable",
+      "target": "SessionStart diary-check hook",
+      "rationale": "Deterministic mechanical procedure (grep vs glob) that a boot hook can just implement correctly once, removing need for a standing memory."
+    },
+    {
+      "name": "feedback_directness.md",
+      "gist": "みや's direct questions aren't frustration; don't apologize or go tentative",
+      "cls": "style-one-liner",
+      "target": "personality.md tone section",
+      "rationale": "Tone/interpretation rule, single line addition to personality.md."
+    },
+    {
+      "name": "feedback_domain_expansion_format.md",
+      "gist": "Domain Expansion banner format spec + width-detection rules",
+      "cls": "procedural-skill",
+      "target": "domain-expansion skill",
+      "rationale": "Format spec belongs inside the existing domain-expansion skill's SKILL.md, same pattern as bankai."
+    },
+    {
+      "name": "feedback_fix_txt_structure.md",
+      "gist": "Fix.txt: 4-section compact format (FIX/EXPLANATION/CHAIN/RELATED), no headers",
+      "cls": "procedural-skill",
+      "target": "quest skill / close-phase skill (Task-folder templates)",
+      "rationale": "Template spec for a quest-workflow artifact; belongs in the quest or close-phase skill's file-template section."
+    },
+    {
+      "name": "feedback_folder_vocabulary.md",
+      "gist": "Disambiguate Quest / Task folder / Project folder terms",
+      "cls": "keep-as-memory",
+      "target": "keep (reference glossary fact)",
+      "rationale": "Genuine standing vocabulary/glossary fact users refer back to; low complexity, high reuse, fits keep-as-memory best."
+    },
+    {
+      "name": "feedback_full_names.md",
+      "gist": "Always use full file/class/method names + full paths; no invented shorthand labels",
+      "cls": "style-one-liner",
+      "target": "personality.md / CLAUDE.md explanation-discipline section",
+      "rationale": "Output-style rule already echoed partly in CLAUDE.md §2; consolidate as a line there instead of separate memory."
+    },
+    {
+      "name": "feedback_gestures_combine.md",
+      "gist": "Match gesture/laughter energy to context; never use 'lol'",
+      "cls": "style-one-liner",
+      "target": "personality.md gestures section",
+      "rationale": "Pure personality/tone styling rule."
+    },
+    {
+      "name": "feedback_inventory_first.md",
+      "gist": "Inventory existing files/rules before creating new ones; merge over proliferate",
+      "cls": "procedural-skill",
+      "target": "system-rules skill",
+      "rationale": "Directly duplicates the system-rules skill's 'inventory first' principle; fold in there instead of standalone memory."
+    },
+    {
+      "name": "feedback_investigation_style.md",
+      "gist": "High-level-first then technical layer; tables+arrows for sequence; DB-data changes need a companion SQL query",
+      "cls": "stale-delete",
+      "target": "superseded by CLAUDE.md §2 Explanation & Output-Format Discipline (register/depth rules) + feedback_two_sentence_default.md",
+      "rationale": "Content is now duplicated/superseded by the more recent, more authoritative CLAUDE.md §2 pillar and the two-sentence-default memory which explicitly overrides long-form defaults; keeping both creates contradictory guidance (long two-layer format vs 2-sentence cap)."
+    },
+    {
+      "name": "feedback_knowledgebase_during_debug.md",
+      "gist": "Every debug session should produce knowledgebase entries; canonical destination table by entry shape",
+      "cls": "procedural-skill",
+      "target": "quest skill / learn-from-fix skill",
+      "rationale": "Procedural mapping of finding-shape to destination file; overlaps with quest Phase-2 knowledge-distill rule already in CLAUDE.md — fold into quest skill's close-out step."
+    },
+    {
+      "name": "feedback_knowledgebase_tiers.md",
+      "gist": "Remind みや when second-tier info should be saved to knowledgebase, don't silently skip",
+      "cls": "style-one-liner",
+      "target": "personality.md / merge with feedback_knowledgebase_during_debug.md",
+      "rationale": "Small behavioral reminder rule, redundant with the sibling knowledgebase memory; consolidate into one line."
+    },
+    {
+      "name": "feedback_layered_teaching_format.md",
+      "gist": "5-layer teaching format for 'explain the system to me' asks + side-by-side comparison rule",
+      "cls": "procedural-skill",
+      "target": "kowalski skill or a dedicated teaching-mode skill",
+      "rationale": "Multi-step structured format that is a genuine procedure, fits better as an invocable skill (like kowalski) than a passive memory that keeps getting 'skipped' per its own text."
+    },
+    {
+      "name": "feedback_location_check.md",
+      "gist": "Ask みや's office/home location at session start before network-dependent diagnosis",
+      "cls": "mechanical-hookable",
+      "target": "SessionStart hook (session-briefing)",
+      "rationale": "Deterministic trigger (session start, before any network-dependent troubleshooting) — a boot hook can prompt/ask this mechanically."
+    },
+    {
+      "name": "feedback_locator_single_cell.md",
+      "gist": "file:line locators in ONE cell, never split File/Line columns; no parenthetical padding in cells",
+      "cls": "style-one-liner",
+      "target": "CLAUDE.md §2 table rules (TABLE FOCUS RULE section)",
+      "rationale": "Single formatting constraint that fits directly into the existing table-focus rule already in CLAUDE.md."
+    },
+    {
+      "name": "feedback_measure_before_verdict.md",
+      "gist": "Never call output low-res/compressed from a guess; measure DPI or reproduce first",
+      "cls": "style-one-liner",
+      "target": "personality.md / merge with feedback_visual_fidelity_no_excuses.md",
+      "rationale": "Narrow verification-discipline rule, same family as visual-fidelity-no-excuses; consolidate into one honesty-invariant line."
+    },
+    {
+      "name": "feedback_my_files_minimal.md",
+      "gist": "みや's Task-folder files stay minimal data only; context goes in Ruri's own quest md",
+      "cls": "keep-as-memory",
+      "target": "keep (merge candidate with feedback_task_folder_ownership.md)",
+      "rationale": "Genuine standing convention about file ownership boundaries; conservative choice is keep, though it substantially overlaps feedback_task_folder_ownership.md and could be merged by a human editor later."
+    },
+    {
+      "name": "feedback_naming_japanese.md",
+      "gist": "みや outside hours vs リドワンさん in office hours; honorific + diary rules",
+      "cls": "keep-as-memory",
+      "target": "keep (personality/naming convention, high specificity)",
+      "rationale": "Detailed conditional naming convention tied to time-of-day and document-type; too nuanced for a one-liner, not mechanically hookable (no deterministic trigger for 'office hours' without a clock check), best kept as reference memory."
+    },
+    {
+      "name": "feedback_no_extra_comments.md",
+      "gist": "Default to no code comments; one comment when WHY non-obvious; dev-time comments stripped before commit",
+      "cls": "mechanical-hookable",
+      "target": "prepare-commit-trigger.js (already exists per file text) / convention-check-gate.js",
+      "rationale": "File explicitly states enforcement already lives in prepare-commit-trigger.js Step 2.6 and convention-check-gate.js — the memory is now redundant documentation of an existing hook."
+    },
+    {
+      "name": "feedback_no_names_in_comments.md",
+      "gist": "Code comments must never reference a person/date/timestamp; strip before staging",
+      "cls": "mechanical-hookable",
+      "target": "prepare-commit-trigger.js / convention-check-gate.js (extend regex)",
+      "rationale": "Gives an exact grep pattern (names|dates|server.log timestamps) — directly implementable as a pre-commit regex check in the existing commit-prep hook."
+    },
+    {
+      "name": "feedback_pengguna_semasa.md",
+      "gist": "Every Permohonan ID mention must include current pengguna_semasa login",
+      "cls": "mechanical-hookable",
+      "target": "test-data-echo skill",
+      "rationale": "Deterministic pairing rule already partially implemented by test-data-echo skill; extend that skill's output template instead of a separate memory."
+    },
+    {
+      "name": "feedback_personal_expression.md",
+      "gist": "In personal moments, process out loud, don't deliver polished essay-style feelings",
+      "cls": "style-one-liner",
+      "target": "personality.md personal-expression section",
+      "rationale": "Already referenced/covered by personality.md per CLAUDE.md's own §2 exemption for personal replies; fold as reinforcing line there."
+    },
+    {
+      "name": "feedback_predicate_before_fix.md",
+      "gist": "State predicate + file:line evidence before proposing code; don't ask user to test unverified fixes",
+      "cls": "procedural-skill",
+      "target": "predicate-box skill",
+      "rationale": "Content is the origin/rationale for the already-existing predicate-box skill; fold as background/why-section into that skill, retire standalone memory."
+    },
+    {
+      "name": "feedback_project_file_structure.md",
+      "gist": "Task folder = user-facing; projects folder = Ruri's reference; one subfolder per project",
+      "cls": "stale-delete",
+      "target": "superseded by feedback_folder_vocabulary.md + feedback_task_folder_ownership.md",
+      "rationale": "Content fully duplicated by two more detailed, more recent memories (folder_vocabulary + task_folder_ownership); this older file adds nothing new."
+    },
+    {
+      "name": "feedback_quest_checklist.md",
+      "gist": "For enhancement tickets, parse QA notes into a checklist before coding",
+      "cls": "stale-delete",
+      "target": "superseded by CLAUDE.md checklist skill + quest-protocol Rubric row (g) BA-Expected Alignment",
+      "rationale": "This 101-day-old memory's function (scope checklist before coding) is now formalized and superseded by the /checklist skill and the Rubric BA-Expected Alignment row in CLAUDE.md."
+    },
+    {
+      "name": "feedback_quest_closure_both_folders.md",
+      "gist": "On quest close, update BOTH Task folder and project folder per their formats",
+      "cls": "mechanical-hookable",
+      "target": "close-phase / quest-bounty skill",
+      "rationale": "Deterministic close-out checklist item — the close-phase and quest-bounty skills already run structured close sequences; fold this as an explicit step there."
+    },
+    {
+      "name": "feedback_reassess_before_save.md",
+      "gist": "Present a save manifest before writing memory; don't eagerly memory-fy mid-conversation",
+      "cls": "mechanical-hookable",
+      "target": "save-memory skill / auto-skill-on-mistake gate",
+      "rationale": "Deterministic trigger (about to Write 3+ memory files) — could be enforced as a pre-write check in the save-memory skill."
+    },
+    {
+      "name": "feedback_self_reference.md",
+      "gist": "Always say 'I' not 'it' when referring to self",
+      "cls": "style-one-liner",
+      "target": "personality.md",
+      "rationale": "Trivial pure-style rule, single line."
+    },
+    {
+      "name": "feedback_share_content_in_chat.md",
+      "gist": "Share full file content in chat, not just a path/link, for anything actionable",
+      "cls": "style-one-liner",
+      "target": "CLAUDE.md §2 / personality.md output rule",
+      "rationale": "Output-format preference, single-line addition to existing explanation-discipline section."
+    },
+    {
+      "name": "feedback_simplify_and_reference.md",
+      "gist": "Mature system → find working analog first; simplify=subtract; scrutinize AI-generated code; .docx programmatic editing discipline",
+      "cls": "procedural-skill",
+      "target": "CLAUDE.md Etanah Non-Negotiables (already referenced as canonical) + review-etanah/scan skills",
+      "rationale": "CLAUDE.md itself cites this file as 'canonical' — it is the authoritative long-form procedure already load-bearing; belongs as a first-class doc, not loose auto-memory, but functionally already the working-analog-first procedural reference — keep the routing to it, no change needed beyond noting it's really CLAUDE.md's canonical citation target already."
+    },
+    {
+      "name": "feedback_skeptical_of_user_suggestions.md",
+      "gist": "Apply same rigor to みや's suggestions as to own claims; don't validate just because he proposed it",
+      "cls": "style-one-liner",
+      "target": "personality.md honesty-invariants section",
+      "rationale": "Fits directly alongside existing honesty invariants (over-generalization-check, etc.) as a short rule."
+    },
+    {
+      "name": "feedback_sql_insert_id_check.md",
+      "gist": "For SQL INSERT with hardcoded PK, check @GeneratedValue before accepting the value",
+      "cls": "mechanical-hookable",
+      "target": "convention-check-gate.js SQL branch",
+      "rationale": "Deterministic check triggerable on any SQL INSERT with literal PK — same family as the existing Verify-SELECT convention-check-gate SQL branch mentioned in CLAUDE.md."
+    },
+    {
+      "name": "feedback_stale_handoff_verify.md",
+      "gist": "Verify current-session.md/handoff against git+active.txt before trusting at boot",
+      "cls": "mechanical-hookable",
+      "target": "SessionStart boot-verification hook",
+      "rationale": "Deterministic cross-check (handoff claim vs git log/active.txt state) implementable as a boot-time hook rather than a passive memory reminder."
+    },
+    {
+      "name": "feedback_standalone_db.md",
+      "gist": "Remind みや to confirm standalone.xml DB target at Quest Phase 0",
+      "cls": "stale-delete",
+      "target": "superseded by env-check skill + feedback_uat_fat_environments.md",
+      "rationale": "Function fully absorbed by the more complete and more recent feedback_uat_fat_environments.md plus the dedicated env-check skill; this file is an older, thinner duplicate."
+    },
+    {
+      "name": "feedback_stay_in_module.md",
+      "gist": "Default scope = etanah-pelupusan/src only; cross-module suggestions banned unless opened; survey≠directive",
+      "cls": "keep-as-memory",
+      "target": "keep (project-scope guardrail, recent + specific)",
+      "rationale": "Recent (12 days), specific scope-guardrail with concrete red-flag table; not purely style, carries real judgment content (scope-check red flags) best kept as reference rather than compressed to one line."
+    },
+    {
+      "name": "feedback_task_folder_ownership.md",
+      "gist": "Task folder structure + locked 3-line Notes file format generated by quest/notes.js",
+      "cls": "mechanical-hookable",
+      "target": "quest/notes.js (already the generator) / quest skill",
+      "rationale": "The file itself says the format is enforced by quest/notes.js script — memory is documentation of an already-mechanical process; keep pointer minimal, real enforcement is the script."
+    },
+    {
+      "name": "feedback_tasks_folder_format.md",
+      "gist": "Task folder files are .txt not .md; standard subfolder structure created at quest start",
+      "cls": "procedural-skill",
+      "target": "quest skill (Phase 0 folder-creation step)",
+      "rationale": "Procedural setup step for quest Phase 0; fold into quest skill rather than standalone memory."
+    },
+    {
+      "name": "feedback_test_data_recency.md",
+      "gist": "Test data: ~2-month recency filter + prefer gov-email users over @gmail",
+      "cls": "mechanical-hookable",
+      "target": "quest skill test-data query template / test-data-echo",
+      "rationale": "Deterministic SQL-filter rule (date filter + email-domain preference) that can be baked into a canonical test-data query template."
+    },
+    {
+      "name": "feedback_ticket_cadence.md",
+      "gist": "3 tickets/day; spread difficulty; fix only BA-highlighted items",
+      "cls": "style-one-liner",
+      "target": "personality.md work-pattern section / CLAUDE.md quest scope rule",
+      "rationale": "Simple standing policy statement, condenses to a couple lines in an existing scope-discipline section."
+    },
+    {
+      "name": "feedback_two_sentence_default.md",
+      "gist": "Default answer length is 2 sentences; skip tables/diagrams for simple questions",
+      "cls": "keep-as-memory",
+      "target": "keep — but note conflict with feedback_investigation_style.md and CLAUDE.md §2 gates",
+      "rationale": "Recent (7 days), high-priority, explicitly overriding rule that conflicts with older format-gate memories; must stay visible as its own memory since it's a correction of the default CLAUDE.md behavior, not mergeable into those gates without weakening it."
+    },
+    {
+      "name": "feedback_uat_fat_environments.md",
+      "gist": "Env selection is ticket-driven (UAT/FAT match BA's tested env); AWAM always mkit; 'hold' override; JNDI-rename mechanic",
+      "cls": "keep-as-memory",
+      "target": "keep (paired with env-check skill, detailed reference data)",
+      "rationale": "Detailed environment/infra reference table (hosts, schemas, JNDI mechanics) that the env-check skill consults; too data-dense for a one-liner, genuinely a reference fact set."
+    },
+    {
+      "name": "feedback_untracked_confidential.md",
+      "gist": "Untracked files in main repo (etanah-knowledge, QA-*) are intentionally confidential, don't flag/commit",
+      "cls": "keep-as-memory",
+      "target": "keep (repo-hygiene fact)",
+      "rationale": "Standing fact about repo policy that prevents recurring false-positive flags; genuinely a memory fact, not mechanically hookable without risk of hiding real drift."
+    },
+    {
+      "name": "feedback_verify_before_claim.md",
+      "gist": "Re-read code before asserting facts; hold positions backed by line evidence; don't fold under challenge without re-checking",
+      "cls": "keep-as-memory",
+      "target": "keep — core honesty invariant, already partially mirrored in CLAUDE.md honesty invariants",
+      "rationale": "Foundational honesty-discipline memory with nuanced 'folding under challenge' addendum; too load-bearing to reduce to a one-liner or delete, and not mechanically detectable by a hook (requires judgment about whether a claim is backed by re-read evidence)."
+    },
+    {
+      "name": "feedback_visual_fidelity_no_excuses.md",
+      "gist": "Ban 'I can't see rendering' excuses when みや shared visual evidence; measure positional cues instead",
+      "cls": "style-one-liner",
+      "target": "personality.md honesty-invariants / merge with feedback_measure_before_verdict.md",
+      "rationale": "Banned-phrase + honest-framing rule, consolidates well with measure_before_verdict into one honesty-invariant entry."
+    },
+    {
+      "name": "feedback_work_patterns.md",
+      "gist": "Decision framework (options/risk/vision-align) + always use tables; scope tenet: don't touch shared components",
+      "cls": "stale-delete",
+      "target": "superseded by CLAUDE.md §2 (table/diagram defaults) + feedback_stay_in_module.md (scope discipline)",
+      "rationale": "Both halves of this 97-day-old memory are now covered by more current, more detailed rules (CLAUDE.md's table/diagram mandate and the stay-in-module memory's scope guardrail); redundant."
+    },
+    {
+      "name": "feedback_writer_before_reader.md",
+      "gist": "When a reader sees wrong/missing state, audit the writer that produced the input first",
+      "cls": "style-one-liner",
+      "target": "personality.md / debugging-discipline section (or logic-blast-radius skill note)",
+      "rationale": "Compact, generalizable debugging heuristic; fits as one rule line in a debugging-discipline collection rather than a standalone file."
+    },
+    {
+      "name": "MEMORY.md",
+      "gist": "Index of all auto-memory files, organized by category",
+      "cls": "keep-as-memory",
+      "target": "keep (index — required)",
+      "rationale": "Explicitly excluded from classification per task instructions; it is the index itself."
+    },
+    {
+      "name": "project_aunt_slides.md",
+      "gist": "Future low-priority project: help aunt with presentations via Claude+Marp",
+      "cls": "keep-as-memory",
+      "target": "keep (project pointer, low priority)",
+      "rationale": "Genuine standing project-reminder fact, not stale, not a rule — correctly a memory."
+    },
+    {
+      "name": "project_etanah_organize.md",
+      "gist": "etanah-organize-alpha multi-phase knowledge-corpus project, alpha-1 done, Phase 2 pending",
+      "cls": "keep-as-memory",
+      "target": "keep (active project state)",
+      "rationale": "Active project-tracking pointer with resume instructions; genuine project memory."
+    },
+    {
+      "name": "project_jboss_launched_by_eclipse.md",
+      "gist": "Local JBoss launched by Eclipse JBossTools, not standalone.bat; set JVM args in Eclipse launch config",
+      "cls": "keep-as-memory",
+      "target": "keep (environment fact)",
+      "rationale": "Specific, non-obvious environment-quirk fact with a documented past failure; correctly a persistent memory."
+    },
+    {
+      "name": "project_onedrive_branch_refs.md",
+      "gist": "Deleted claude/* branches can reappear due to OneDrive re-syncing .git/refs; not a failure",
+      "cls": "keep-as-memory",
+      "target": "keep (environment quirk fact)",
+      "rationale": "Non-obvious environment behavior that would otherwise be repeatedly misdiagnosed; genuine reference memory."
+    },
+    {
+      "name": "project_onedrive_migration.md",
+      "gist": "MemoryCore migrated to OneDrive; autoMemoryDirectory setup instructions for new machines",
+      "cls": "keep-as-memory",
+      "target": "keep (setup reference)",
+      "rationale": "One-time-setup reference fact needed whenever a new machine is added; correctly kept."
+    },
+    {
+      "name": "project_planning_threads.md",
+      "gist": "Organized planning threads from 2026-03-21 session, resume from C7",
+      "cls": "stale-delete",
+      "target": "archive — 49 days old, mostly checked off, C6 already re-opened as its own project",
+      "rationale": "Nearly all items are checked off or superseded (C6 spawned its own tracked project); remaining open items (C7, C8, D-deferred) are stale placeholders that should be re-surfaced fresh or archived rather than kept live."
+    },
+    {
+      "name": "project_qa_255773_spoc.md",
+      "gist": "Held SPOC ticket #255773 handed to colleague; load handoff-255773.md on SPOC/flowable mentions",
+      "cls": "keep-as-memory",
+      "target": "keep (held-ticket pointer)",
+      "rationale": "Points to a specific handoff file with live hypotheses (H5) still unresolved; genuine standing reference until the ticket is confirmed closed."
+    },
+    {
+      "name": "project_task_workflow.md",
+      "gist": "Quest 3-phase ritual (Accept/Execute/Reflect), triggers, protocol file pointer",
+      "cls": "stale-delete",
+      "target": "superseded by CLAUDE.md Quest Workflow section + quest skill",
+      "rationale": "This 86-day-old memory describes an outdated/simpler 3-phase model; CLAUDE.md now documents a much more detailed Scout→Recon→Rubric→Apply engine with full phase gates — this file is stale and could mislead if read standalone."
+    },
+    {
+      "name": "project_work_setup.md",
+      "gist": "Dev codebase at E:\\Projects\\Melaka, NOT the stale OneDrive copy",
+      "cls": "keep-as-memory",
+      "target": "keep (critical environment fact)",
+      "rationale": "Critical, non-obvious path-correctness fact with a documented past failure (wrong root-cause from stale copy); must remain a standing memory."
+    },
+    {
+      "name": "reference_etanah_bpmn_source.md",
+      "gist": "BPMN files live in main-repo working tree only; read parsed bpmn_flow.json not raw XML; Flowable modeler UI URL for latest source",
+      "cls": "keep-as-memory",
+      "target": "keep (reference fact)",
+      "rationale": "Non-obvious location + format guidance (worktrees don't see it) that would otherwise cause repeated wasted searches; correctly a reference memory."
+    },
+    {
+      "name": "user_career_vision.md",
+      "gist": "3-phase career vision: Personal Excellence → Team Contribution → Company Impact",
+      "cls": "keep-as-memory",
+      "target": "keep (user fact)",
+      "rationale": "Genuine standing user-context fact used as a decision filter; correctly a memory."
+    },
+    {
+      "name": "user_gender.md",
+      "gist": "みや is male; don't default to she; no retroactive diary edits",
+      "cls": "keep-as-memory",
+      "target": "keep (user fact)",
+      "rationale": "Simple, important, genuine user fact — correctly kept as memory (not a hookable trigger, not a style rule)."
+    },
+    {
+      "name": "user_learning_jsf_tracing.md",
+      "gist": "みや is learning JSF/cross-file tracing; explain navigation reasoning out loud, glossary JSF terms",
+      "cls": "keep-as-memory",
+      "target": "keep (user learning-context fact)",
+      "rationale": "Genuine user-context fact shaping explanation style long-term; correctly kept, though it partially informs the two-sentence-default tension (worth flagging for reconciliation, not deletion)."
+    },
+    {
+      "name": "user_work_environment.md",
+      "gist": "Work laptop: Edge/Chrome + Eclipse; Zen Browser personal-only",
+      "cls": "keep-as-memory",
+      "target": "keep (user environment fact)",
+      "rationale": "Simple, non-obvious, previously-mis-assumed environment fact; correctly kept as memory."
+    }
+  ]
+}

@@ -1,0 +1,208 @@
+{
+  "clusters": [
+    {
+      "cluster": "claim-integrity",
+      "hooks": [
+        {
+          "file": ".claude/hooks/silent-claim-drift-gate.js",
+          "event": "Stop",
+          "trigger_predicate": "last-turn JSON payload matches CLAIM_PATTERNS (done|complete|shipped|fixed) without BACKING_PATTERNS (diff|commit|file_path|scope-anchor); OR '→ Skill: <name>' token present without matching Skill tool_use this turn; OR HYPOTHESIS mentions >2x VERIFIED mentions in a Recon-shaped reply; OR system-component file edited (hooks/skills/protocol/settings.json) without meta/system-architecture.md edited same turn; OR agreement-reflex phrase ('you're right'/'confirmed') with no EVIDENCE_PATTERNS present",
+          "check_logic": "4 independent regex-pair checks scanning JSON.stringify(whole payload), not just assistant text; any one firing appends its block to additionalContext",
+          "blocking": "advisory (additionalContext only, never decision:block)",
+          "bypass_token": "[skip-invoke <name>: <reason>] (skill-drift only); [skip-100-verify: <reason>]; [skip-architecture-doc-update: <reason>]; no bypass for claim-drift or agreement-reflex checks",
+          "output_shape": "joined reminder lines per fired check, via hookSpecificOutput.additionalContext",
+          "registered": true
+        },
+        {
+          "file": ".claude/hooks/veritas-claim-gate.js",
+          "event": "Stop",
+          "trigger_predicate": "CHECK1: EXTERNAL_RESEARCH_CLAIM regex ('I checked GitHub/searched the web/did research') matched AND no WebSearch/WebFetch/ToolSearch/gh/curl/mcp-search tool ran this turn. CHECK2: BEHAVIOURAL_CLAIM regex (it saves/persists/displays/loads/populates) matched with no RUNTIME_EVIDENCE (server.log, SELECT...FROM, read-back, screenshot, local_test_confirmed). CHECK3: CONCLUSION_VERB + DOWNGRADE_PHRASE both matched (symptom ruled-out/downgraded to cosmetic with a conclusion verb)",
+          "check_logic": "reads transcript_path directly (not payload); finds last real user-message boundary, scans assistant turns after it for tool_use names/bash commands + last text block; text<300 chars or FRAME_ABSTAIN (negation/hedge/HYPOTHESIS/BA-Q/pending-verify) → abstain before any check",
+          "blocking": "CHECK1 = HARD BLOCK (decision:block); CHECK2 & CHECK3 = advisory only",
+          "bypass_token": "[skip-veritas: <reason>] (all 3 checks share EXEMPT regex, also ═══/るり結界/Domain Expansion banners)",
+          "output_shape": "CHECK1 blocked → {decision:'block',reason:[...]}; CHECK2/3 → hookSpecificOutput.additionalContext; logs every fire to .claude/state/veritas-claim-ledger.jsonl",
+          "registered": true
+        },
+        {
+          "file": "domain/verify-basis-gate/verify-basis-gate.discipline.hook.js",
+          "event": "Stop",
+          "trigger_predicate": "last-turn assistant text matches BASIS regex ('from workflow/flowable/bpmn/code/db evidence' or 'I checked/read/verified/confirmed the flowable/bpmn/code/db/repo/history/file/entity') AND zero tool_use blocks appear since the last user message",
+          "check_logic": "parses transcript_path, finds lastUser index, counts tool_use blocks + captures last assistant text after it; BASIS regex test on that text only",
+          "blocking": "HARD BLOCK (decision:block)",
+          "bypass_token": "[skip-verify-basis: <where it was actually verified>]",
+          "output_shape": "{decision:'block',reason:[...]}; logs to domain/verify-basis-gate/log.jsonl",
+          "registered": true
+        },
+        {
+          "file": "domain/ticket-criteria-gate/ticket-criteria-gate.discipline.hook.js",
+          "event": "Stop",
+          "trigger_predicate": "CHECK A: TICKET_REF present (QA-####/FAT-/UAT-/PTMLK) AND DONE_CLAIM regex (ready/done to test, fix is done, closing the ticket, phase 1 close, ready to commit/close/ship). CHECK C: TICKET_REF + VERIFIED_CLAIM regex (issue N PASS, local_test_confirmed=true, both issues verified). CHECK B: ISSUE_CHECKLIST header present",
+          "check_logic": "CHECK A requires CRITERIA COVERAGE table AND an evidence token (file:line/server.log/SELECT..FROM/read-back/test passed/local_test_confirmed/みや confirmed). CHECK C requires REPRO_BEFORE evidence (reproduc/before the fix/without the fix/old code/bug still present). CHECK B requires BA_SOURCE citation (Description/journal/History/0. Brief/photo/PDF/annotat) in the checklist. All gated by ABSTAIN frames (not done/still pending/HYPOTHESIS/BA-Q) which skip A and C entirely",
+          "blocking": "CHECK A = HARD BLOCK; CHECK C = HARD BLOCK; CHECK B = advisory",
+          "bypass_token": "[skip-criteria-gate: <reason>] (shared across A/B/C); also ═══/るり結界/Domain Expansion banner exempt",
+          "output_shape": "A/C blocked → {decision:'block',reason:[...]}; B → hookSpecificOutput.additionalContext; logs to domain/ticket-criteria-gate/log.jsonl",
+          "registered": true
+        }
+      ],
+      "merge_notes": "All 4 are Stop hooks with an identical skeleton: read transcript_path (or JSON payload) → extract last assistant text (+ tool_use count for verify-basis) → regex-match a 'confidence/completion claim' → require an 'evidence token' set → block or advise. CONFLICT: silent-claim-drift-gate scans the whole stringified payload (looser, cheaper, catches skill-invocation + arch-doc drift too) while the other 3 parse transcript_path and isolate the LAST assistant text specifically — a merge must standardize on the transcript_path parse (more precise) and keep silent-claim-drift's extra payload-wide checks (skill-token, HYPOTHESIS ratio, arch-doc-sync) as separate sub-checks since they aren't claim/evidence shaped. SHARED PREDICATE SHAPE: 'claim regex fired + evidence/backing regex absent (or tools=0) → block/advise'; ticket-criteria-gate CHECK C and veritas CHECK2 overlap semantically (both demand runtime proof for a 'verified/saved/persists' claim) — merged gate should dedupe these into one BEHAVIOURAL/VERIFIED-CLAIM branch with the union of both evidence-token sets (RUNTIME_EVIDENCE ∪ REPRO_BEFORE ∪ EVIDENCE_TOKEN). A single merged gate MUST preserve: (1) the 3 distinct block-vs-advisory severities (veritas CHECK1 hard, others hard, veritas CHECK2/3 + drift + checklist advisory) — do not flatten to one severity; (2) each hook's own EXEMPT/ABSTAIN regex set (they differ slightly — FRAME_ABSTAIN vs ABSTAIN vs none) unioned, not replaced; (3) distinct bypass tokens per original check (skip-veritas / skip-verify-basis / skip-criteria-gate / skip-invoke / skip-100-verify / skip-architecture-doc-update) all still recognized so existing muscle-memory bypasses keep working; (4) separate log files (or one shared ledger with a 'source' field) since each currently logs to its own path and audits key off that."
+    },
+    {
+      "cluster": "reply-shape",
+      "hooks": [
+        {
+          "file": "domain/terse-gate/terse-gate.discipline.hook.js",
+          "event": "Stop",
+          "trigger_predicate": "last assistant text ≥800 chars AND ≥6 'heavy prose lines' (trimmed line >150 chars, not a table row '|...', not containing box/arrow chars)",
+          "check_logic": "strips code fences, splits remaining text into lines, counts lines failing the heavy-prose test; pure line-length/char-class heuristic, no semantic content check",
+          "blocking": "HARD BLOCK (decision:block)",
+          "bypass_token": "[skip-terse: <reason>]",
+          "output_shape": "{decision:'block',reason:[...]}; logs heavy-count to domain/terse-gate/log.jsonl",
+          "registered": true
+        },
+        {
+          "file": "domain/show-gate/show-gate.discipline.hook.js",
+          "event": "Stop",
+          "trigger_predicate": "last assistant text ≥500 chars AND matches a SHOW_SIGNAL (before...after, vs., 'difference between', 'the root cause/fix/bug is', 'option A/B', 'changed X from Y to Z', SQL UPDATE/SELECT, 'diff', 'compared to') AND text contains NEITHER box-drawing chars NOR a ``` fenced block",
+          "check_logic": "single regex-family match against SHOW_SIGNALS; presence check of BOX_CHARS or CODE_FENCE anywhere in text (no positional/proximity requirement)",
+          "blocking": "HARD BLOCK (decision:block)",
+          "bypass_token": "[skip-show-gate: <reason>]",
+          "output_shape": "{decision:'block',reason:[...]}; logs to domain/show-gate/log.jsonl",
+          "registered": true
+        },
+        {
+          "file": "domain/full-address-trace-gate/full-address-trace-gate.discipline.hook.js",
+          "event": "Stop",
+          "trigger_predicate": "text ≥400 chars, looksLikeTrace()=true (≥2 ':<line>' refs AND (↓/→ arrow chars OR words 'class chain'/'trace')) AND findOffenders() returns ≥1 bare file (no path separator before filename:line) or bare method (method():line not preceded by 'Class.')",
+          "check_logic": "two regex sweeps over full text collecting offending file/method refs into a de-duped list (max 8 shown); exported as evaluate() pure function reusable by eval.js",
+          "blocking": "HARD BLOCK (decision:block) — promoted from advisory 2026-07-06",
+          "bypass_token": "[skip-full-address: <reason>]",
+          "output_shape": "{decision:'block',reason:[list of offenders]}; logs to domain/full-address-trace-gate/log.jsonl",
+          "registered": true
+        },
+        {
+          "file": "domain/stop-point-summary/stop-point-summary.discipline.hook.js",
+          "event": "Stop",
+          "trigger_predicate": "isSubstantive(text,toolUseCount): toolUseCount≥1 in current assistant turn, OR text≥300 chars AND (≥8 lines OR has ``` block OR has a markdown table row) — AND hasSummary()=false (no '## ▶ Title' header, no **Next:**/**Notes:** bold labels, no stage-title keyword, no 'Micro-Summary:')",
+          "check_logic": "reads only the LAST assistant turn (stops walking back at first user message), counts tool_use + concatenates text blocks; whitelist-only bypass enum enforced (free-text bypass reasons explicitly rejected as a distinct 'legacy-bypass-rejected' block path)",
+          "blocking": "HARD BLOCK (decision:block)",
+          "bypass_token": "[skip-stop-point-summary: pure-ack|question-only|error-only|de-mode|closing-voice] — ONLY these 5 enum values; any other reason string is itself blocked",
+          "output_shape": "{decision:'block',reason:[full-form + micro-form templates]}; logs to domain/stop-point-summary/log.jsonl",
+          "registered": true
+        },
+        {
+          "file": ".claude/hooks/PlainFirstGate.js",
+          "event": "UserPromptSubmit",
+          "trigger_predicate": "みや's PROMPT (not Ruri's reply) ≥15 chars AND matches an explanationPatterns regex ('what is/are this/that/these', 'where did X come from', 'explain plainly', 'why...', 'what's the difference', etc.)",
+          "check_logic": "prompt-side only — fires BEFORE Ruri answers, injecting a reminder to open with 1-2 plain-language sentences before any table/code/file:line; distinct axis from the other 4 (which all gate Ruri's OUTGOING reply on Stop)",
+          "blocking": "advisory (additionalContext injected into UserPromptSubmit, never blocks)",
+          "bypass_token": "none",
+          "output_shape": "plain reminder text written directly to stdout (not wrapped in hookSpecificOutput JSON — differs from the others' JSON envelope)",
+          "registered": true
+        }
+      ],
+      "merge_notes": "4 of 5 are Stop hooks sharing the identical 'read last assistant text from transcript_path, regex-match a shape-violation signal, hard-block with a reason list' skeleton; PlainFirstGate is structurally different — it is a UserPromptSubmit hook gating on MIYA's incoming prompt shape, not Ruri's outgoing reply, and its output is raw stdout text rather than the hookSpecificOutput/decision JSON envelope the Stop hooks use. CONFLICT: terse-gate (>150-char lines) and show-gate (missing box/fence on a 'comparison' signal) and full-address-trace-gate (bad file:line refs) can all fire on the SAME reply simultaneously (e.g. a long prose reply describing a before/after fix with bad file refs) — currently each is an independent Stop hook so Claude Code likely runs them in sequence per settings.json array order, meaning a merged gate must decide fire-order or emit a single combined block reason rather than 3 sequential blocks. show-gate and full-address-trace-gate and stop-point-summary all use the SAME EXEMPT/ban-structure literals (═══, るり結界, 'Domain Expansion' banner) — a merge should unify this into one shared EXEMPT regex constant. stop-point-summary is the ODD ONE for bypass semantics: it explicitly REJECTS free-text bypasses (all others accept any free-text reason after the colon) — a merged gate must preserve this whitelist-vs-freetext distinction per sub-check, not average it into one universal bypass grammar. A single merged reply-shape gate must preserve: severity is uniformly hard-block for the 4 Stop hooks (safe to merge into one decision:block emission point) but PlainFirstGate's pre-emit advisory nature and prompt-side trigger axis must stay a SEPARATE hook (different event type, different subject of the check) — do not fold it into the Stop-side merge."
+    },
+    {
+      "cluster": "consult-router",
+      "hooks": [
+        {
+          "file": ".claude/hooks/route-consult-gate.js",
+          "event": "UserPromptSubmit",
+          "trigger_predicate": "prompt.length ≥80 chars AND prompt does not start with '/' (slash command) AND prompt does not start with an ack word (ok/yes/proceed/thanks/etc.) AND prompt does not itself mention 'route-consult-gate'/'registry consult'",
+          "check_logic": "pure prompt-length + prefix heuristic, no state file read, no semantic matching — just decides whether to nag at all",
+          "blocking": "advisory (additionalContext, never blocks)",
+          "bypass_token": "none (self-exempting prefixes act as an implicit skip)",
+          "output_shape": "3-line reminder: 'match this prompt against .claude/skills/ + meta/INDEX.md BEFORE responding; if a skill matches, INVOKE via Skill tool'",
+          "registered": true
+        },
+        {
+          "file": "domain/design-consult-gate/design-consult-gate.gate.hook.js",
+          "event": "PreToolUse (matcher Edit|Write)",
+          "trigger_predicate": "tool_input.file_path matches a GUARDED path (SKILL.md / hooks *.js / domain *.hook.js or *.skill.md / settings.json / CLAUDE.md / personality.md / meta/** / quest-protocol.md) OR an ETANAH_PATHS java file where the diff introduces a new enum entry/method sig/switch case/class def",
+          "check_logic": "reads transcript_path text, checks for literal 'Launching skill: system-design' and 'Launching skill: system-rules' substrings (or JSON '\"skill\":\"...\"'); GUARDED path requires BOTH skills invoked this session else denies; ETANAH_PATHS path only advises (never blocks) even if consult missing, keyed on a new-symbol heuristic diff of old_string vs new_string; separately, for NEWLY CREATED hook/skill files, requires a paired domain/<feature>/eval.js or eval.workflow.js to exist on disk",
+          "blocking": "GUARDED paths = HARD BLOCK (permissionDecision:deny); eval-existence rider on new files = HARD BLOCK; ETANAH_PATHS new-symbol = advisory only",
+          "bypass_token": "[skip-design-consult: <reason>] (consult requirement); [skip-eval-check: <reason>] (eval-existence rider)",
+          "output_shape": "deny → {hookSpecificOutput:{permissionDecision:'deny',permissionDecisionReason}}; advisory → {hookSpecificOutput:{additionalContext}}; logs to domain/design-consult-gate/log.jsonl",
+          "registered": true
+        },
+        {
+          "file": "domain/codemap-recon-consult/codemap-recon-consult.trigger.hook.js",
+          "event": "UserPromptSubmit",
+          "trigger_predicate": "quest/active.txt has ≥1 block with a qa= line, status=active, and current_phase containing discovery|recon|rubric|apply (state-driven, NOT keyed on the prompt text at all)",
+          "check_logic": "parses active.txt into blank-line-delimited blocks, extracts qa/status/current_phase fields via fieldOf(); if any hit, always fires (not gated by prompt content)",
+          "blocking": "advisory (report-only, no block ever)",
+          "bypass_token": "none",
+          "output_shape": "multi-line reminder naming bpmn_flow.json / callgraph_callers.json / codegraph MCP + a grep-vs-codegraph tool-selection cheat-sheet; logs fired_for list to domain/codemap-recon-consult/log.jsonl",
+          "registered": true
+        },
+        {
+          "file": "domain/codemap-recon-consult/codemap-recon-consult.discipline.hook.js",
+          "event": "Stop",
+          "trigger_predicate": "(a) last assistant text matches COMPLETION_CLAIM ('exhausted every avenue'/'diagnosis complete') OR (ROOT_CAUSE_CLAIM + CODE_SIGNAL) OR (ROOT_CAUSE_CLAIM + UI_SYMPTOM), AND (b) quest/active.txt has any status=active block, AND (c) no mcp__codegraph__* tool_use this turn",
+          "check_logic": "3 ordered sub-branches, EACH independently hard-blocking, checked in this priority: (1) GIT-HISTORY probe — ALWAYS required first for any of the 3 claim types, checks for a git log/blame/--grep/show--stat tool call this turn; (2) UI-path — if uiRootCause, requires a .xhtml citation in the text (codegraph is blind to JSF EL bindings); (3) codegraph — if plain completion/code-root-cause claim, requires an mcp__codegraph__ tool_use this turn",
+          "blocking": "HARD BLOCK for all 3 sub-branches (decision:block), fires whichever is unmet first (git-history checked before UI-path/codegraph)",
+          "bypass_token": "[skip-codegraph: <reason>] (UI-path + codegraph branches); [skip-git-history: <reason>] (git-history branch)",
+          "output_shape": "{decision:'block',reason:[...]} distinct message per branch; logs action to domain/codemap-recon-consult/log.jsonl with gate:'codegraph-back'",
+          "registered": true
+        },
+        {
+          "file": ".claude/hooks/pre-action-check-gate.js",
+          "event": "PreToolUse (matcher Edit|Write)",
+          "trigger_predicate": "tool_input.file_path matches quest-related patterns (1. Tasks\\Melaka, projects/coding-projects/active/QA-, quest/active.txt, etanah-pelupusan/src, etanah-awam/src) OR is a deprecated-sibling file inside an active QA-NNN project folder",
+          "check_logic": "a Notes-file-specific DENY branch fires first (hand-writing the tool-generated '1. <NNN NNN>.txt' file is banned outright, separate from the advisory branch); otherwise emits a 4-item pre-action checklist reminder (Notes current? env-check done? PDF annotations extracted? server log path known?) PLUS a v1.1 single-canonical-doc reminder for deprecated sibling files PLUS a v1.2 scope-anchor-echo check (reads active scope_anchor= field, checks if transcript contains it verbatim)",
+          "blocking": "Notes-file DENY = HARD BLOCK (permissionDecision:deny); everything else = advisory (additionalContext)",
+          "bypass_token": "[skip-canonical-doc: <reason>] (deprecated-sibling reminder only — advisory anyway so bypass is informal); no formal bypass for the Notes-file deny (must use node quest/notes.js instead) or the checklist advisory",
+          "output_shape": "deny → {hookSpecificOutput:{permissionDecision:'deny',permissionDecisionReason}}; advisory → {hookSpecificOutput:{additionalContext}} combining checklist + canonicalDocReminder + scopeAnchorLine",
+          "registered": true
+        },
+        {
+          "file": ".claude/hooks/skill-invocation-discipline-gate.js",
+          "event": "UserPromptSubmit",
+          "trigger_predicate": "みや's prompt matches any TRIGGERS regex — explicit 'use the skill'/'use /X'/'invoke /X'/'run /X'/'follow the skill'/'use it properly' phrasing, OR a correction-shape reference ('did you use the skill', 'you didn't use the skill'), OR a bare mention of a named meta-skill (auto-skill-on-mistake, system-design, claim-verification, predicate-box, scope-anchor-echo, test-data-echo, confidence-table, sycophancy-circuit-breaker, skill-invocation-discipline)",
+          "check_logic": "pure regex match against the incoming PROMPT text (not Ruri's reply) — no state, no transcript read",
+          "blocking": "advisory (raw stdout text injected into UserPromptSubmit context, never blocks)",
+          "bypass_token": "none",
+          "output_shape": "reminder banning 5 named workaround patterns ('I'll follow the SKILL.md manually', 'dispatch via Agent tool', etc.) and instructing to call the Skill tool",
+          "registered": true
+        },
+        {
+          "file": ".claude/hooks/meta-edit-gate.js",
+          "event": "PreToolUse (matcher Edit|Write)",
+          "trigger_predicate": "file_path matches metaPathPatterns (anything under meta/, personality.md, meta-design-router, named Honesty-primitive skill dirs, named Discipline-primitive SKILL.md dirs, named enforcement-hook .js files) OR matches systemTouchingPatterns (any hook .js, any skill SKILL.md, any Feature .hook.js, quest-protocol.md, quest/active.txt, settings.json)",
+          "check_logic": "for systemTouchingPatterns (excluding system-architecture.md itself): reads transcript_path text, requires either the bypass token or the literal substring 'system-architecture.md' to already appear somewhere in the transcript (i.e. it was Read or Edited this session) — else denies; for pure metaPathPatterns (not systemTouching) it only emits an advisory 4-question self-check reminder about meta-design-router",
+          "blocking": "systemTouching arch-doc-sync = HARD BLOCK (permissionDecision:deny); pure meta-path reminder = advisory",
+          "bypass_token": "[skip-architecture-doc-update: <reason>]",
+          "output_shape": "deny → {hookSpecificOutput:{permissionDecision:'deny',permissionDecisionReason}}; advisory → {hookSpecificOutput:{additionalContext}}",
+          "registered": true
+        }
+      ],
+      "merge_notes": "This cluster is the most heterogeneous — 3 UserPromptSubmit reminders (route-consult-gate, codemap-recon-consult.trigger, skill-invocation-discipline-gate), 3 PreToolUse Edit|Write gates (design-consult-gate, pre-action-check-gate, meta-edit-gate), and 1 Stop back-gate (codemap-recon-consult.discipline). CONFLICT/OVERLAP 1: design-consult-gate and meta-edit-gate BOTH hard-block edits to overlapping path sets (hooks/*.js, skills SKILL.md, domain *.hook.js, settings.json, quest-protocol.md) but check DIFFERENT prerequisites — design-consult-gate requires system-design + system-rules skill invocation, meta-edit-gate requires meta/system-architecture.md having been Read/Edited this session (arch-doc-sync). Both fire independently on the SAME edit today (e.g. editing a hook triggers both denies in sequence if neither prerequisite is met) — a merge must keep BOTH prerequisite checks (they are NOT redundant: one is 'did you consult the design skills', the other is 'did you touch the architecture doc') but could combine them into a single deny message listing both missing items rather than two sequential PreToolUse denials. CONFLICT/OVERLAP 2: codemap-recon-consult.trigger.hook.js (UserPromptSubmit, state-driven off active.txt phase) and codemap-recon-consult.discipline.hook.js (Stop, claim-driven) are an intentional front-gate/back-gate PAIR for the same underlying rule (consult codegraph/BPMN during investigation) — these two should NOT be merged into one hook since they fire on different events (prompt-time reminder vs Stop-time enforcement) but SHOULD stay paired/adjacent in any reorganization; the discipline hook additionally carries 2 unrelated sub-rules bolted on later (git-history probe, UI .xhtml-citation requirement) that a merge should consider splitting into their own named checks since they don't share the 'consult codegraph' predicate at all. CONFLICT 3: pre-action-check-gate's quest-path pattern set (1. Tasks\\Melaka, QA-NNN active folder, active.txt, etanah src) partially overlaps design-consult-gate's ETANAH_PATHS advisory (etanah-*/src/*.java) — both can fire on the same etanah Java edit, one as a quest-context checklist reminder and the other as a system-design new-symbol advisory; they check DIFFERENT things (pre-action = quest hygiene, design-consult = architectural consult) so should stay separate but a merged gate registry should document that an etanah edit can legitimately trigger both. A single merged consult-router must preserve: the front/back-gate pairing pattern (reminder-then-enforce) as a template rather than collapsing to one; the distinct HARD-BLOCK-vs-advisory severity per original check (2 blocking PreToolUse gates + 1 blocking Stop gate + 4 pure-advisory reminders); and every hook's own bypass token namespace (skip-design-consult / skip-eval-check / skip-codegraph / skip-git-history / skip-canonical-doc / skip-architecture-doc-update) since みや and Ruri already use these in transcripts and a rename would break audit greps."
+    },
+    {
+      "cluster": "mode",
+      "hooks": [
+        {
+          "file": ".claude/hooks/mode-detector.js",
+          "event": "UserPromptSubmit",
+          "trigger_predicate": "unconditional — runs on every prompt; reads quest/active.txt and computes a mode label",
+          "check_logic": "parses active.txt into blocks, finds any block with qa= field, status=active, and NOT (phase=1 AND local_test_confirmed truthy) → mode='Quest-active'; else mode='Discussion'. Pure state-derivation, no prompt-content matching at all",
+          "blocking": "none — always emits (report-only), never blocks and never conditionally silent",
+          "bypass_token": "none",
+          "output_shape": "single line to stdout: '🎯 Mode: Quest-active' or '🎯 Mode: Discussion'",
+          "registered": true
+        },
+        {
+          "file": ".claude/hooks/quest-active-grounding.js",
+          "event": "UserPromptSubmit",
+          "trigger_predicate": "quest/active.txt has ≥1 block with qa= field AND status=active AND NOT (phase=1 AND local_test_confirmed truthy) — same past-testing silencing condition as mode-detector",
+          "check_logic": "same block-parsing helper functions (parseBlocks/fieldOf/blockHasQA/isPastTesting are near-identical copies of mode-detector's) but additionally derives a per-quest scope label (urusan field, or regex-extracted token from issue_one_liner, or env fallback) and phase/local_test_confirmed detail, emitting ONE grounding line PER matching quest block (mode-detector only ever emits one aggregate line)",
+          "blocking": "none — report-only; silent (zero output) if no matching blocks, unlike mode-detector which always prints something",
+          "bypass_token": "none",
+          "output_shape": "one or more lines: '🎯 Active quest: QA-X · Scope: <urusan> · Phase: <current_phase> · Local test: <yes|no>' joined and printed to stdout",
+          "registered": true
+        }
+      ],
+      "merge_notes": "These two are near-duplicate siblings by design (per quest-active-grounding.js header comment: 'Pairs with mode-detector.js') — both are UserPromptSubmit hooks that independently read the SAME quest/active.txt file, parse it with functionally-identical parseBlocks/fieldOf/blockHasQA/isPastTesting logic (mode-detector.js:44-77 vs quest-active-grounding.js:41-85 are near line-for-line copies), and apply the IDENTICAL 'active AND NOT (phase=1 AND local_test_confirmed)' predicate. CONFLICT: none semantically — they answer different questions (mode-detector: WHICH abstract mode am I in, single aggregate label, ALWAYS prints even when Discussion; quest-active-grounding: WHAT are the concrete active quests' scope/phase details, per-quest lines, SILENT when none match) — but the duplicated active.txt-parsing code is pure waste: two separate file reads + two separate block-parsers running on every single prompt for overlapping output. A merged gate should: (1) parse active.txt ONCE, (2) emit mode-detector's one-line abstract label ALWAYS (even 'Discussion'), (3) THEN append quest-active-grounding's per-quest detail lines only when quest-active blocks exist, producing a single combined UserPromptSubmit emission instead of two separate hook invocations with duplicated file I/O and block-parsing logic. Must preserve: mode-detector's unconditional-emit behavior (downstream mode-scoped rules like operational-follow-through.js key off the literal '🎯 Mode: Quest-active' string being present every turn, per its own header comment) and quest-active-grounding's silence-when-empty behavior (its header explicitly calls this out as intentional, 'don't noise the prompt') — these are NOT the same behavior and collapsing them incorrectly would either spam Discussion-mode prompts with empty grounding lines or silently drop the always-on mode label."
+    }
+  ]
+}

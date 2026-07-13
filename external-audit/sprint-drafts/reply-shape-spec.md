@@ -1,0 +1,56 @@
+# Reply Shape Spec (canonical — audit R4)
+
+> Supersedes `.claude/CLAUDE.md` §2 "Explanation & Output-Format Discipline" as the enforcement source. CLAUDE.md §2 becomes a pointer to this file (see Precedence note, §4). Sources: CLAUDE.md §2 (lines ~37-120) · `external-audit/sprint-analysis/cluster-merge-analysis.json` reply-shape cluster · `external-audit/sprint-analysis/claude-md-linemap.json`.
+
+---
+
+## 1. The Pillar
+
+**SHOW, DON'T EXPLAIN.** Tables + story diagrams carry the load; prose gets ONE short sentence per point — or TWO when splitting a layman sentence from a technical sentence. Never explain in a paragraph what a table row or diagram box can carry. Every rule below serves this pillar.
+
+Two orthogonal register/depth rules sit under the pillar and apply inside every shape chosen from §2's table:
+
+- **1a. One register per container** — Plain (natural words, conclusion, metaphor) and Technical (`file:line`, class/method names, SQL, column values) never share a sentence, bullet, cell, or comment. Banned: prose paragraphs with embedded `file:line` jumbles; cells mixing "what + how + where"; metaphors standing in for technical fact.
+- **1b. Bird's-eye first, granular last** — every reply opens with the plain conclusion, then (if needed) mechanism/actors (class-chain, panel labels, `UI → code → table`), then (only if precise location IS the load-bearing fact) exact `file:line` / SQL / quoted code. Never open with a class name or `file:line`; never firehose all depths into the first paragraph.
+
+---
+
+## 2. Reply Situation → Required Shape → Hard Budget
+
+| Reply situation | Required shape | Hard budget |
+|---|---|---|
+| **Normal answer** (status, quick fact, direct question) | Bottom Line (plain, one line) only; add Table/Arrows only if みや asks for the how | ≤2 sentences default; no table unless ≥2 parallel items exist |
+| **New finding / root cause / mechanism** | Bottom Line → **boxed Story Diagram (SD)** (`┌─┐│└─┘`, chronological top→bottom, contrast FORKS at decision point, never stacked copies) — no `file:line`/class/SQL inside the boxes | Short words, few sentences; diagram/arrow/table first, prose only if genuinely needed |
+| **≥2-option comparison / before-after / structural or storyline change** | Boxed SD (structure/shape changing) — **never a table** for a shape-change; a table is only for attribute-vs-attribute scoring | SD boxes only; no prose paragraph substituting for the diagram |
+| **How-to / procedural explanation (≥2 steps/decisions/trade-offs)** | Table first (`# / Where / What / Pitfall`, max 5 rows) or Arrow-flow; **never** a numbered prose list ≥3 items | First structural element after the opening line MUST be table/arrow/diagram — zero prose paragraphs before it |
+| **Quest phase emit (Scout / Recon / Rubric)** | Canonical 4-part template: Description (1 plain sentence) → Table (load-bearing content) → Arrows (vertical class-chain, when applicable) → Summary (1-3 lines, next-step action) | Table is mandatory per phase; Arrows omit-only-if-no-flow; Summary ≤3 lines |
+| **Personal / relational / reflective / closing-voice** | EXEMPT from Bottom-Line-first and from this table entirely — follow `personality.md` personal-expression (process out loud, verdict forms mid-sentence) | No forced conclusion-first; no SD; no table |
+
+**Skip-don't-reorder**: omit any slot in a shape that doesn't apply (no flow → no arrows; pure conclusion → Bottom Line alone) — but never reorder, and never lead with a table/diagram before the Bottom Line. Manufacturing an empty table/arrow/SD just to fill a slot is banned (the ceremony trap).
+
+**Table Focus Rule**: every table answers ONE question with at most TWO axes (columns of distinct concern, not counting #/index). ≥3 concerns in one table → SPLIT into 2 single-purpose tables.
+
+---
+
+## 3. Mechanical Floor — the 4 Stop Gates
+
+Each gate reads the last assistant turn from `transcript_path`, tests one predicate, and hard-blocks if it fires. All four are `Stop` event hooks.
+
+| Gate (file) | Exact predicate | Bypass token |
+|---|---|---|
+| **terse-gate** (`domain/terse-gate/terse-gate.discipline.hook.js`) | Last assistant text **≥800 chars** AND **≥6 heavy-prose lines** (a line counts as heavy if, after stripping code fences, its trimmed length is **>150 chars** and it is not a table row `\|...\|` and contains no box/arrow chars) | `[skip-terse: <reason>]` |
+| **show-gate** (`domain/show-gate/show-gate.discipline.hook.js`) | Last assistant text **≥500 chars** AND matches a SHOW_SIGNAL (`before...after`, `vs.`, "difference between", "the root cause/fix/bug is", "option A/B", "changed X from Y to Z", SQL UPDATE/SELECT, "diff", "compared to") AND the text contains **neither** box-drawing characters **nor** a fenced ` ``` ` block | `[skip-show-gate: <reason>]` |
+| **full-address-trace-gate** (`domain/full-address-trace-gate/full-address-trace-gate.discipline.hook.js`) | Text **≥400 chars**, looks like a trace (`≥2 ':<line>' refs` AND (↓/→ arrow chars OR the words "class chain"/"trace")), AND at least one offending bare reference exists — a bare file (no path separator before `filename:line`) or a bare method (`method():line` not preceded by `Class.`) | `[skip-full-address: <reason>]` |
+| **stop-point-summary** (`domain/stop-point-summary/stop-point-summary.discipline.hook.js`) | `isSubstantive` = true (≥1 tool_use this turn, OR text ≥300 chars AND (≥8 lines OR a ``` block OR a markdown table row)) AND `hasSummary` = false (no `## ▶ Title` header, no **Next:**/**Notes:** bold labels, no stage-title keyword, no "Micro-Summary:") | `[skip-stop-point-summary: pure-ack\|question-only\|error-only\|de-mode\|closing-voice]` — **whitelist-only**, any other free-text reason is itself rejected |
+
+**Severity**: all 4 are hard blocks (`decision:'block'`) — none of the four is advisory. `stop-point-summary` is the odd one on bypass grammar: it rejects free-text reasons where the other three accept any free-text string after the colon; do not average this into one universal bypass grammar.
+
+**Fire order / co-occurrence**: `terse-gate`, `show-gate`, and `full-address-trace-gate` can all fire on the same reply (e.g. a long prose before/after writeup with bad `file:line` refs) — they run independently in `settings.json` array order; each block is separate, not merged into one combined reason.
+
+**Sibling axis (not part of this file's scope but noted for completeness)**: `PlainFirstGate.js` is a `UserPromptSubmit` hook gating みや's incoming prompt shape (advisory, raw-stdout, no bypass token) — a different event/subject than the four Stop gates above; it stays a separate hook, not folded into this spec's enforcement.
+
+---
+
+## 4. Precedence Note
+
+This file (`external-audit/sprint-drafts/reply-shape-spec.md`, destined for a permanent canonical path e.g. `.claude/reply-spec.md`) is the **canonical** source for reply-shape rules. `.claude/CLAUDE.md` §2 "Explanation & Output-Format Discipline" becomes a **pointer only**: its always-on mirror status (so the rule boot-loads every session) is preserved, but the full rule bodies, the gate predicate table, and the situation→shape table live HERE — CLAUDE.md must not carry a second full copy (per the File Ownership table's own "one canonical home" principle). Any future edit to a predicate, budget, or bypass token is made in this file first; CLAUDE.md's pointer text is updated only if the pointer's own summary line goes stale.

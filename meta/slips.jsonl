@@ -1,0 +1,1 @@
+{"ts":"2026-07-12T19:13:28.289Z","category":"smoke-side-effect-on-real-state","qa":null,"guard_expected":"ticket-gate eval isolation","guard_fired":false,"evidence":"commit 862a617 quest_start_ts stamp on QA-269939","action":"stamp removed; eval now uses TICKET_GATE_ACTIVE_TXT override + byte-identical guard (F5) so future smokes cannot touch real state","caught_by":"self"}

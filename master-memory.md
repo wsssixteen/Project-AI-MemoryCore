@@ -1,3 +1,14 @@
+# 🪦 TOMBSTONED from boot 2026-07-12 — external-audit P0.3 (ACCEPT-MODIFIED)
+
+> Boot now loads `main/main-memory.md` directly (CLAUDE.md boot step 3). File KEPT on disk until Phase 2 review.
+> **Parity map — live content relocated, nothing lost:**
+> - Memory/plugin command table → `.claude/save-commands.md` §Memory & plugin commands
+> - Plugin install steps → `.claude/new-machine-setup.md` Step 2
+> - Recall triggers → `main/main-memory.md` (Memory Recall section — was already the fuller canonical copy)
+> - Identity + "Ruri" restoration → `ruri-skills` plugin (ruri + session-start skills), install VERIFIED live 2026-07-12
+> - Note: the audit's claim "4 skills don't exist" was WRONG — all 4 exist in the installed plugin; `ruri-skills:ruri` fired 2026-07-12
+> **Re-attach**: restore CLAUDE.md boot step 3 + `boot-load-verification.js` list item 3.
+
 # 🧠 Master Memory - Universal AI Architecture
 *Entry point for instant AI companion restoration*
 

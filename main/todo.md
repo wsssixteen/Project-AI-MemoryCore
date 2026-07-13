@@ -193,3 +193,18 @@
 ---
 
 *Last updated: 2026-06-21 (housekeeping - removed 17 done/closed entries)*
+
+## Carried forward from project_planning_threads.md (archived 2026-07-13, external-audit C5 — agent disagreement caveat honored)
+- [ ] C7: Validation step for Gemini outputs (was "NEXT DISCUSSION")
+- [ ] C8: Session-notes promotion workflow
+- [ ] Career planning dump from Claude Desktop (deferred)
+- [ ] Good practices from Claude's creator — REMIND MIYA (deferred)
+- [ ] Fallback if Gemini restricted — codebase-reading-time note (deferred)
+- [ ] Session-notes promotion in cheatsheet — after C8 (deferred)
+
+## External-audit follow-ups (booked 2026-07-13, overnight sprint)
+- [ ] Next external audit — monthly cadence: **2026-08-11** (fresh-context Fable 5; this sprint ledger = baseline) · quarterly cross-model ~2026-10
+- [ ] SchemaCrawler pilot — work machine + download nod needed; recipe ready at meta/schemacrawler-pilot.md
+- [ ] Boot-bundle cutover decision — after ~1 week shadow agreement (core/boot.js vs prose boot)
+- [ ] Forge v2: refine-path support for legacy .claude/hooks components (found during ticket-gate refine)
+- [ ] Skill grading (N4): extend spawn-telemetry to Skill invocations

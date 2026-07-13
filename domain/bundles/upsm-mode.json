@@ -1,0 +1,4 @@
+{ "name": "upsm-mode", "children": [
+  ".claude/hooks/mode-detector.js",
+  ".claude/hooks/quest-active-grounding.js"
+] }

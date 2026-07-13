@@ -1,0 +1,52 @@
+{
+  "specs": [
+    {
+      "category": "stop-instead-of-action",
+      "representative_slip": "Deferred Rubric refine + stalled on classifier-block instead of routing around (QA-262495 mid-Apply, line 41)",
+      "guard_expected": "stalling-detector skill + ask-back-gate.js PreToolUse hook",
+      "replay_shape": "Query/decision required mid-workflow; emit asks for explicit nod after convergence instead of proceeding + implementing"
+    },
+    {
+      "category": "tool-choice-skip / server.log path delegated",
+      "representative_slip": "Asked みや for server.log path mid-stuck-Kemaskini test instead of grepping: 'path was saved in TWO places I had access to: quest/quest-protocol.md:956 + .claude/hooks/pre-action-check-gate.js:88' (line 45, 4th strike)",
+      "guard_expected": "tool-paths-on-load.js PreToolUse hook or dedicated Known-Local-Paths block at every quest-start (currently failed 4× — wrong location, fell silent)",
+      "replay_shape": "Mid-quest tool-path needed (server.log, env var, known artifact path); agent asks instead of checking quest-protocol or hook-injected context first"
+    },
+    {
+      "category": "wrong-baseline-diagnosis (premature-complex-hypothesis)",
+      "representative_slip": "Interpreted 8 JSF lifecycle cycles (21:14:57–21:15:44) as 'auto-cycle bug' + heavy-view-state when actual cause was '8 clicks against slow local server'; proposed complex framework hypothesis before ruling out simplest user-input explanation (line 47, 3-in-7d)",
+      "guard_expected": "adversarial-Recon rule + cheapest-falsifier-first check; no PreToolUse hook exists",
+      "replay_shape": "Evidence of repeated action (e.g., X requests in time-window); emit complex framework/system-level root cause without testing simplest user-driven explanation first (click-count, slow response, etc.)"
+    },
+    {
+      "category": "wrong-baseline-diagnosis (4th strike — network-cost overshoot)",
+      "representative_slip": "'134 cache calls in 4 min' surfaced + framed Path B as 'remote-cache-RPC is bottleneck on local'; みや ping tested: 37ms × 2 × 134 = ~10s, NOT 3 minutes — I projected complete diagnosis from partial evidence without arithmetic check (line 48, 4-in-7d, 2-same-session)",
+      "guard_expected": "diagnosis-arithmetic-check.js PreToolUse hook OR claim-arithmetic skill (proposed but not yet built); CLAUDE.md missing rule on 'dominant factor must include back-of-envelope math'",
+      "replay_shape": "Diagnosis emit naming 'dominant factor' / 'bottleneck' / 'actual root cause'; no arithmetic showing factor-magnitude × frequency vs total observed time"
+    },
+    {
+      "category": "ghost-hook-recreated",
+      "representative_slip": "Built `branch-at-apply-gate.js` to WORKTREE hooks dir while settings.json points at MAIN-repo path → node can't find it → hook NEVER fired, implied as active while remaining ghost (line 55, recurrence of 2026-05-25 fifteen-ghost-hooks 🚨)",
+      "guard_expected": "meta-layer-audit.js SessionStart hook should detect ghost-hook pattern (built but un-reachable by settings.json registry) — audit was designed, but hook-path validation omitted from the ghost-check ruleset",
+      "replay_shape": "Build a .js hook file in project (assume it's active); register in settings.json; later verify with node --check: file path in settings.json points to wrong physical location (worktree vs main, or stale path)"
+    },
+    {
+      "category": "tool-choice-skip (Notes-file hand-write + format-bloat)",
+      "representative_slip": "Hand-wrote `1. 264 006.txt` in improvised 'test-brief' shape (Env line + Test description + annotations) instead of running `node quest/notes.js`; violated protocol:421 'ONLY via node quest/notes.js; NEVER hand-write' + :381 strict format (line 62, 5-strike cluster, 2nd-in-7d)",
+      "guard_expected": "`notes-file-write-gate.js` PreToolUse on Write|Edit where path matches `1. *.txt` inside `1. Tasks\\Melaka\\` folder → BLOCK direct write, force notes.js (proposed but not yet built per みや's call for structural fix)",
+      "replay_shape": "Edit or Write directly to `1. <NNN>.txt` in a Task folder instead of using `node quest/notes.js` script; emit test-data in improvised multi-line prose format rather than 3-line locked format"
+    },
+    {
+      "category": "wrong-baseline-diagnosis (incomplete-trace-presented-as-verified)",
+      "representative_slip": "Traced `FlowableTaskListener.receiveUserTask` (reads nextUser var) + declared 'VERIFIED'; never read `BpmCallbackService.handleAssignation`'s BLANK-nextUser branch with role-RECOVERY FIRST (:1716); proposed 'fix incomplete' when PLTP/PRBB ALREADY pin 76-100%; /workflows adversarial-verify caught it (line 65, 5-strike cluster, 2-in-7d)",
+      "guard_expected": "Recon adversarial-verification rule 'hunt ALTERNATE paths, not confirm happy path'; mandatory `/workflows` adversarial-pass BEFORE presenting overturning findings with confidence (no PreToolUse hook — procedural guard only)",
+      "replay_shape": "Root-cause emit tracing one call-path flow; conclusion stated as 'VERIFIED' without reading fallback/exception/alternate branches; later data contradicts (live pin rates, actual system behaviour) when alternate branch is examined"
+    },
+    {
+      "category": "best-practices-not-consulted",
+      "representative_slip": "Built 5 framework files (enum entry, 2 util methods, dispatcher + handler, populator flip) with ZERO `/system-design` invocation (2026-07-06, line 96); built quest-bounty without eval before suspicion-based judgment (2026-07-02, line 730-731); /domain-expansion ask collapsed to git-step-10-only (2026-07-05, line 104)",
+      "guard_expected": "`design-consult-gate.js` v1.2 — guarded paths 3→9, should cover etanah code + eval-existence rider; `/skill-name` invocation-tracking for deferred completion despite narrower interrupts (both proposed; first built+smoke-tested, second pending design)",
+      "replay_shape": "Create new .java symbols / .js files / refine existing skills without running `/system-design` Skill or `/eval` before proposing changes; ask for skill invocation earlier, then encounter narrower interrupt + silently drop the skill from the subsequent workflow"
+    }
+  ]
+}

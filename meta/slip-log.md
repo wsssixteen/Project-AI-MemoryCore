@@ -1,3 +1,9 @@
+# 🧊 Consolidated Slip Log — FROZEN AS ARCHIVE 2026-07-13 (external-audit C7)
+
+> **New slips**: `node core/slips.js add --category <c> [--guard-expected <hook> --guard-fired true|false --evidence <link> --caught-by miya|self|gate]` → `meta/slips.jsonl` + generated `meta/slip-dashboard.md`.
+> "Did the guard fire when the slip happened?" is now a QUERY (guard_expected/guard_fired fields), not an essay.
+> This file remains for history + the boot escalation-table read (top tables stay accurate as of freeze date).
+
 # Consolidated Slip Log — Meta-Layer Canonical Home
 
 > **Episodic Memory pattern (added 2026-05-24, Task #30 stub)** — per Reflexion-style pattern (Audit 5 industry recommendation): every slip entry should include a 1-paragraph "lesson" — the takeaway in plain language. SessionStart hook should consult recent lessons (last 30 days) for context. **Stub status**: convention added here; hook implementation deferred (per Task #30 — needs SessionStart hook that reads last-30-day slip-log entries and surfaces lesson summary). Going forward: every NEW slip-log entry includes a `lesson:` line in the row, ≤1 sentence, plain language.
