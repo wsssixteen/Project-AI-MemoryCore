@@ -476,6 +476,7 @@ stash_commit_pointer=66c77a313e
 stash_pop_target=mlk/master
 populator_reverted=PelupusanWordCCMethodConstant.java
 stash_ref_note=drifted-from-{0}-2026-07-08-to-{1}-when-269918-stashed-on-top; identify by message not position
+branch=none-yet-pop-stash-onto-mlk/master-then-create-mlk/cr/259112-at-commit-time
 
 qa=269169
 phase=1
