@@ -29,3 +29,6 @@ The system was re-architected in one night: measurement (telemetry on all 80 hoo
 **Verification habit that paid**: blind fact-measurement BEFORE engaging the audit (2 auditor errors found); parity-verify BEFORE every cut (May-trim never repeated).
 
 **Memory Type**: RAM | **Last Activity**: 2026-07-13 08:40 +0800 — Domain Expansion in progress.
+
+### 📱 EVERY OTHER DEVICE — pull before next session (added 2026-07-13 per みや item 5)
+`origin/main = 5b79a1c` (audit sprint merged). A device booting on an older main runs the OLD system — pull FIRST.

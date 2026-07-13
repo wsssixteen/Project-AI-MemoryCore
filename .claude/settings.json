@@ -318,6 +318,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\citation-cross-check\\\\citation-cross-check.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\deliverable-lands-on-main\\\\deliverable-lands-on-main.check.hook.js\""
           }
         ]
       }
