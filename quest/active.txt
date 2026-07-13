@@ -1,21 +1,5 @@
 active:
 
-qa=STG-PPTPB-tujuanTKM
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\77. Staging Issue -
-phase=1
-status=blocked
-current_phase=Closed (our part) — Bug B pending Aaron (Modeler)
-local_test_confirmed=true
-commit=a78a9885a7
-closed=2026-06-20
-qa_doc=projects/coding-projects/active/STG-PPTPB-tujuanTKM/STG-PPTPB-tujuanTKM.md
-ticket_type=bug
-env=Staging
-issue_one_liner=PPTPB tujuanTKM_PI PropertyNotFoundException (no-ticket, from Aaron) — telecom fix shipped; Bug B → Aaron
-blocker=Bug B: gateway sid-70631659 reads kelulusan, should read keputusan — Aaron's Modeler change
-assigned_to_me=2026-06-20
-note=First non-QA task registered in active.txt per みや's "any task goes in active.txt" convention (2026-06-20)
-
 qa=QA-264006
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\58. QA #264006 - Semua Urusan - Tugasan peranan PT - Nama PT tidak sama dengan PT tugas
 phase=1
@@ -558,3 +542,35 @@ commit=11876e879c
 branch=mlk/internal-issue/269918
 closed=2026-07-13
 bundled_269437=partial revert of Ref #269437 (PelupusanReportUtil.java:288 wipe-hunk removed — was root cause of dup rows + SIGN action destruction); 269437 screen-side changes (tempoh auto-recalc, calculateTarikhTamat) remain shipped; 269437 rework needed for tarikh-on-borang staleness
+
+qa=QA-270052
+quest_start_ts=2026-07-13T06:08:56.367Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\95. INTERNAL ISSUE #270052 - PLTP - Semakan Keputusan Mesyuarat MMK dan Surat Maklumat Keputusan -
+phase=0
+status=hold
+ticket_type=bug
+env=MLK Staging
+issue_one_liner=PLTP - Semakan Keputusan Mesyuarat MMK dan Surat Maklumat Keputusan - Surat Keputusan PTG ke PDT - Klik selesai > Logo berubah tempat
+assigned_to_me=2026-07-13
+tugasan=Semakan Keputusan Mesyuarat MMK dan Surat Maklumat Keputusan
+
+qa=QA-270003
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\96. INTERNAL ISSUE #270003 - PRBB - Penyediaan Surat Keputusan Lulus - Papar pejabat PTG (senario k
+phase=1
+status=closed
+ticket_type=bug
+env=MLKSTG
+issue_one_liner=PRBB - Penyediaan Surat Keputusan Lulus - Papar pejabat PTG (senario kelulusan PTG)
+assigned_to_me=2026-07-13
+current_phase=Closed
+local_test_confirmed=true
+quest_start=2026-07-13
+qa_doc=projects/coding-projects/active/QA-270003/QA-270003.md
+urusan=PRBB
+tugasan=PYSK
+scope_anchor=PGSKPDT→PYSK-pejabat-routing-kelulusan-PTG-scenario
+base_branch=mlk/master
+commit=abfd588440
+branch=mlk/internal-issue/270003
+pushed=2026-07-13
+closed=2026-07-13
