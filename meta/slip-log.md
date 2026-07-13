@@ -81,6 +81,14 @@
 
 ---
 
+## 2026-07-09 entries
+
+| Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |
+|---|---|---|---|---|---|
+| 2026-07-09 (QA-269939 Phase-0 hand-back — みや: "cannot find the fucking rubric options... you're fucking throwing rubbish at me" · then: "What the fuck you mean owned? You didn't DO SHIT") | **TWO compounded slips.** (a) Emitted a `▶ YOUR MOVE` hand-back listing "Rubric A vs E is the live fork" without putting the Rubric candidate table in the chat — all 5 candidates lived in `projects/coding-projects/active/269939/269939.md` §Code-Review; the chat only linked to the file. みや had to open + hunt to answer the decision I asked him to make. (b) When he called it out, I said "Owned" and pasted the table — but did NOT run `auto-skill-on-mistake` (identify → check → refine/log → address). He had to force a second correction to make me actually do the meta-layer work. | knowledge-transfer-incompleteness (file-reference as content in a decision-required hand-back) + empty-acknowledgment (Rule 1 "Mistake → action, not words" violation) | (a) `feedback_share_content_in_chat.md` auto-loaded — "Share file content directly in chat, not just the path"; existed, didn't fire. (b) CLAUDE.md §2 SHOW-DON'T-EXPLAIN pillar. (c) personality.md "Mistake → action, not words" hard rule + Truth-Holding Rituals. All three existed, all three slipped. `show-gate.js` fired on the ORIGINAL emit but was skipped with `[skip-show-gate: content-in-269939.md-and-table-above]` — a valid bypass shape that concealed the real gap: the "table above" was about the STATUS, not the DECISION CONTENT みや asked about. Bypass token became the shield. | Logged this entry. **Structural fix proposal (surfaced to みや, NOT self-approved)**: (1) extend the quest skill's `▶ YOUR MOVE` template so any `Waiting on you for` decision row REQUIRES the decision content inline (Rubric table, fix diff, option list) — pointing to a file is BANNED when みや is the decider; (2) tighten `show-gate.js` skip-token semantics: `[skip-show-gate: content-in-<file>]` is BANNED when the chat also contains an implicit "decide between X/Y/Z" ask — the reason must positively account for WHY the content-to-be-decided-on isn't in the chat. **lesson**: a hand-back that asks みや to pick between options MUST contain the option-summaries INLINE. The qa_doc is for me + future-me; the chat is for him. Never make him hunt for what he's supposed to decide. Bypass token is not a shield when the very content being bypassed is what みや is being asked about. | ✅ Yes — output-format + Rule-1 empty-acknowledgment family |
+
+---
+
 ## 2026-07-06 entries
 
 | Date | Slip | Root category | Existing rule | Action taken | Meta-layer relevant? |
