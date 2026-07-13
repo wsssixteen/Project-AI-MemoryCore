@@ -470,11 +470,12 @@ urusan=PLPS/PRU/PT/PPJK/BPRZ
 scope=JKKL_PDT_screens_all_5_urusan
 issue_one_liner=Semua urusan JKKL - Penambahbaikkan Perakuan Pentadbir Tanah Daerah: add Syor + Ulasan + Jana on PYRJKKLPDT (view-only on SR/PR); template 5.1 populated from ulasanPegawaiPDT + 5.2 removed
 held_reason=2026-07-08 — Ruri Apply-complete but populator file (PelupusanWordCCMethodConstant.java changes) REVERTED by miya to push eSokongan #268637; remaining 5 files STASHED so miya can close 2 other tickets in another session
-stash_ref=stash@{0}
+stash_ref=stash@{1}
 stash_from_branch=mlk/esokongan/268637v2
 stash_commit_pointer=66c77a313e
 stash_pop_target=mlk/master
 populator_reverted=PelupusanWordCCMethodConstant.java
+stash_ref_note=drifted-from-{0}-2026-07-08-to-{1}-when-269918-stashed-on-top; identify by message not position
 
 qa=269169
 phase=1

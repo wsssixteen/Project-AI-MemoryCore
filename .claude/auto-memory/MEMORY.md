@@ -49,6 +49,7 @@
 - [feedback_reassess_before_save.md](feedback_reassess_before_save.md) — Present save manifest before writing memory; don't eagerly memory-fy mid-conversation
 - [feedback_sql_insert_id_check.md](feedback_sql_insert_id_check.md) — SQL INSERT with hardcoded PK: verify @GeneratedValue before accepting; nextval() if sequence-managed
 - [feedback_stale_handoff_verify.md](feedback_stale_handoff_verify.md) — Verify current-session/handoff against git + active.txt at boot; a mid-frustration handoff can state the OPPOSITE of truth
+- [feedback_stash_ref_stability.md](feedback_stash_ref_stability.md) — For cross-session persistence, identify git stashes by descriptive-message grep, not `stash@{N}` position — position drifts every time a new stash lands on top
 - [feedback_task_folder_ownership.md](feedback_task_folder_ownership.md) — Task folder: `0. Brief/` (みや's) + Notes file (blank for みや); my investigation → project subfolder only
 - [feedback_test_data_recency.md](feedback_test_data_recency.md) — Test data: ~2-month recency + prefer active gov-email users over @gmail
 - [feedback_bankai_format.md](feedback_bankai_format.md) — Bankai 🌌 蒼穹宝典 banner format (width-detection full-fill in terminal, compact fallback)
