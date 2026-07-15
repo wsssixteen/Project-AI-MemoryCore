@@ -129,6 +129,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\dispatch-hooks.js\" --manifest \"domain/bundles/upsm-mode.json\" --event UserPromptSubmit"
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\reask\\\\reask.check.hook.js\""
           }
         ]
       }
@@ -185,6 +189,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\dispatch-hooks.js\" --manifest \"domain/bundles/pretool-editwrite-gates.json\" --event PreToolUse"
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\pre-code-check\\\\pre-code-check.check.hook.js\""
           }
         ]
       },

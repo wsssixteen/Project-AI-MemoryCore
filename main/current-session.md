@@ -43,3 +43,17 @@
 
 ### 📱 EVERY OTHER DEVICE — pull before next session (added 2026-07-13 per みや item 5)
 `origin/main = 5b79a1c` (audit sprint merged). A device booting on an older main runs the OLD system — pull FIRST.
+
+---
+## 🎯 Session Recap 2026-07-15 (QA-270052 shipped)
+
+**Duration**: full day (~14 hours from prior night's compact — spanned QA-270052 fix journey v2→v3→v4→v5).
+**Landed**: QA-270052 Phase 1 closed — commits `3f0847663c` (main fix, 113+ lines) + `dc634bae16` (comment refinements), branch `mlk/internal-issue/270052` pushed. active.txt block appended with status=closed.
+**Fix shape**: post-save rematch of `header2.xml` r:embed values in etanah-pelupusan — `E:\Projects\Melaka\etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\util\word\PelupusanTemplateUtil.java` (`rematchHeaderImageContentControls()` + `buildExpectedHeaderImageBytesByCellName()`). Verified across 3 test cycles.
+**Root cause** (deterministic per みや's every-cycle reproduction): docx4j's `RelationshipsPart` serialisation reshuffles rId→target mapping on each `Docx4J.save`. Genuine root fix belongs in etanah-common — `E:\Projects\Melaka\etanah-common\src\main\java\my\gov\etanah\common\util\CommonDocx4jUtil.java` — `CommonDocx4jUtil.insertImageForContentControlInHeader()`:579. Handoff filed at `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\95. INTERNAL ISSUE #270052 ... \HANDOFF-etanah-common-team.md` — Options A/B/C/D (D = replace hardcoded docPrId=1, cNvPrId=2 with per-call AtomicInteger, ChatGPT-surfaced angle みや extended the .md with).
+**Phase 2**: NOT run (per みや — "not going to archive first, tricky fix"). Task folder + active.txt block STAY in place. Post-mortem + archive when みや says archive.
+**Deferred**: HANDOFF-etanah-common-team.md waits on みや forwarding to etanah-common team; on their fix ship, delete `rematchHeaderImageContentControls` + `buildExpectedHeaderImageBytesByCellName` from PelupusanTemplateUtil.
+**System upgrades this session**: see below §.
+**Next session pickup**: QA-269918 still active (per active.txt); Redmine ticket update for QA-270052 pending (via `/redmine-phase1-prefill` or manual).
+
+**Memory Type**: RAM | **Last Activity**: 2026-07-15

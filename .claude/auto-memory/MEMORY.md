@@ -5,6 +5,7 @@
 > `external-audit/sprint-drafts/auto-memory-plan.md`.
 
 ## Feedback
+- [feedback_agent_execute_in_quest.md](feedback_agent_execute_in_quest.md) — In active quest / goal-driven context: any non-destructive action helping the goal = JUST DO IT (agent, not chatbot); destructive ops still need explicit greenlight
 - [feedback_bash_tool.md](feedback_bash_tool.md) — Bash tool hangs in みや's Windows env; use Glob/Read/Grep/PowerShell instead
 - [feedback_folder_vocabulary.md](feedback_folder_vocabulary.md) — Quest (protocol) vs Task folder (Windows ticket folder) vs Project folder (ongoing project folder)
 - [feedback_my_files_minimal.md](feedback_my_files_minimal.md) — みや's Task-folder files (txt/excel) = MINIMAL data only (xlsx 1 tab, small tables); ALL context/reasoning → my own quest md, never his files
@@ -12,6 +13,8 @@
 - [feedback_stay_in_module.md](feedback_stay_in_module.md) — default scope = etanah-pelupusan/src ONLY. Cross-module suggestions BANNED unless みや opens scope. A survey question ≠ permission to enumerate out-of-scope options. Pre-answer self-grep for red flags.
 - [feedback_two_sentence_default.md](feedback_two_sentence_default.md) — Default answer length is 2 sentences; long tables/diagrams for a simple question = rule violation; みや will ask for more if he wants it
 - [feedback_uat_fat_environments.md](feedback_uat_fat_environments.md) — env is ticket-driven (match BA's tested env + permohonan ID env); UAT (mlkuat/et_main_uat) + FAT (mlkfat/etprdmlk/et_main) BOTH valid local targets; AWAM tickets ALWAYS on mkit/et_main_mlit; "hold" at ticket start suppresses env switch; flowable alter page shifts test apps between tugasan steps
+- [feedback_staging_schema_stg2.md](feedback_staging_schema_stg2.md) — 🚨 Melaka STG schema is `et_main_stg2` NOT stg1; mcp postgres-mlkstg misconfigured for weeks (fixed 2026-07-14 .claude.json:2655); verify `SELECT current_schema()` returns stg2 before trusting any staging query
+- [feedback_show_diagram_for_issues.md](feedback_show_diagram_for_issues.md) — When explaining WHERE an issue lives, LEAD with ASCII story diagram (working-path vs broken-path, boxed FullClass.method():line nodes, arrows carry data, ? at suspects); NEVER prose-walk a flow — surfaced 2026-07-14 amira-dropdown after prose explanations were called "bad explanation"
 - [feedback_untracked_confidential.md](feedback_untracked_confidential.md) — Untracked files in main repo (etanah-knowledge, QA-* diagnostics) are intentionally confidential; don't flag or push to commit
 - [feedback_verify_before_claim.md](feedback_verify_before_claim.md) — Re-read code before asserting; hold positions backed by line evidence; one passing test is inconclusive
 
