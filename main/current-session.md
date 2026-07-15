@@ -1,59 +1,34 @@
 # Current Session
 
 ## What's loaded
-2026-07-13 (Mon) — **Session 3 late-day pop-in: QA-259112 stash-drift update + Domain Expansion.** (Session 1 was the audit sprint; Session 2 was the PRBB close-out; see diary.)
+2026-07-15 (Wed) — **QA-269918 Rework cycle-2 Phase 0 + learning extraction + first Sonnet-delegated Domain Expansion (partial-fail).**
 
-みや returned from ~5-day gap (had asked to hold QA-259112 on 2026-07-08 to close eSokongan #268637 first). This session did a quick state check + drift fixup + full DE — no code work on the ticket.
+### QA-269918 state as of end-of-session
+- **Status**: `active` phase 0 (cycle-2 reactivated); `local_test_confirmed=false`.
+- **Classification**: Rework cycle-2 codebase-conflict shape (NOT new-symptom). Aaron's message: *"ive already changed part of your changes because of another ticket, please pull the latest code changes from master. or branch mlk/internal/270123. and see if your changes still work."*
+- **Aaron's #270123 impact**: his `!isSaveIntoAppDokumenKeluaran` gate on `PelupusanReportUtil.java:289` supersedes my cycle-1 revert. SIGN path skips wipe (my revert redundant); CREATE path keeps 269437's intended wipe (preserved).
+- **Recommended cycle-2 fix-shape** (pending みや nod): leanest 2-file merge — KEEP `BasePelupusanForm.java:649` numThreads=1 + `MlkLaporanP1eForm.java` resilient finders; DROP the Util revert (take master's version).
+- **Test app**: `PTMLK/01/L/PRBB/2026/5` (aplikasi_id 3399887, staging `et_main_stg2`) at PB4CE, m.ikram@melaka.gov.my — ready to retest without flowable-alter.
+- **Test strategies proposed** (unresolved — みや has NOT picked A/B/C): A test stag-env as-is (cheapest, may reveal Aaron's fix alone suffices), B local build, C push+deploy.
+- **Redmine status**: みや replied + likely closed (not re-synced into active.txt this session).
 
-### QA-259112 state as of end-of-session
-- **Status**: `hold` — Apply-complete but STASHED; never built, never tested (`local_test_confirmed=false`).
-- **Stash**: identify by descriptive message `"QA-259112 Approach C WIP — 5 files (populator REVERTED by miya for eSokongan #268637 — needs re-apply on resume). Stashed FROM mlk/esokongan/268637v2 @ 66c77a313e. Pop onto mlk/master for baseline resume."` — position drifted `stash@{0}` → `stash@{1}` (new stash `269918` landed on top 2026-07-13). Position may drift again; message is the anchor.
-- **🚨 Populator NOT in stash** — `PelupusanWordCCMethodConstant.java` changes reverted by miya to push eSokongan #268637. Re-apply recipe (exact method body + insertion points) sits in `projects/coding-projects/active/QA-259112/QA-259112.md § 0. Resume Point`.
-- **First step on resume**: `git stash list | grep "QA-259112 Approach C"` → identify current position → `git stash pop stash@{N}` on `mlk/master` → re-apply populator → env-check STG → pick test app → build → Tests 1-5 → commit.
-
-### 🧊 STANDING FLAG — NEW-GUARD FREEZE (external-audit work order, declared 2026-07-12)
-- Phase-1-green artifacts ALL EXIST (telemetry 1,314+ rows · eval-runner 24/24 · report 3 cadences) — **lift = みや's explicit call, still pending.**
-- Until lifted: slip actions = telemetry · eval fixture · consolidation · deletion ONLY. New components ONLY through `core/forge.js` (birth-gate hard-blocks the rest).
-- Carry this flag forward at every DE rewrite.
-
-### ⚠️ STANDING FLAG — BOOT SYSTEM CHANGED (first boot on the new shape is THE test)
-- CLAUDE.md is v1.65 (260 lines, 4 sections → pointers). Quest content JIT-fires via ticket-gate (bare numbers now included + pinned). Reply-shape spec: `.claude/reply-shape-spec.md`. personality.md v1.9 (§Distilled one-liners). master-memory tombstoned; boot loads `main/main-memory.md` direct.
-- If ANYTHING feels missing at next boot → `git tag pre-phase2-baseline` = full rollback floor; per-piece revert recipes in commit messages.
-
-### ⚠️ FLAG — Orphan worktree observed (2026-07-13 18:08)
-- This session ran inside `.claude/worktrees/epic-jepsen-6da429` which is **not in `git worktree list`** (main-repo's worktrees registry knows only `jovial-morse-2d5bad` + `recover-ruri-841bf4-c9ec16`). SessionStart's `worktree-cleanup-boot.js` did not remove this one — likely because it's already orphaned (git no longer tracks the pointer).
-- Impact = zero this session (all edits used absolute main-repo paths; nothing was written to the orphan tree). Cleanup on next boot: `Remove-Item -Recurse -Force ".claude/worktrees/epic-jepsen-6da429"` from main repo if directory still present.
+### ⚠️ FLAG — Sonnet-delegated DE partial-fail (this session)
+- First live run of Delegation Economy on a DE close. Steps 2/4/5/6 (content writes) delegated to sonnet familiar OK at ~112k subagent tokens. Steps 9/10 (git ops) delegated to a second sonnet familiar which hit a merge conflict on `hook-fires.jsonl` + tried to resolve autonomously for 16 tool calls before みや interrupted.
+- Lessons: (a) task-shape too shallow for sonnet — mechanical file writes are haiku-tier per the delegation table, not sonnet-tier; (b) no "stop-on-conflict" fallback in the delegation prompt; (c) sonnet's `git checkout --ours` during stash-pop conflict reverted todo.md's 2 parked entries + current-session.md + diary to pre-merge (empty) content — had to reconstruct from Opus context; (d) the parallel-session's d407b9e commit was already on origin/main from an earlier same-day parallel QA-270052 DE, and merging it in confused the stash state.
+- Net cost: probably neutral or slight net loss vs full-Opus DE — pattern needs refinement before next use. Parked in todo.md observation.
 
 ## ▶▶ NEXT SESSION — START HERE
 
-1. **QA-259112 pickup available** — 9-step resume checklist in `QA-259112.md § 0. Resume Point`. Requires: pop stash by message-match, re-apply populator, env-check STG, build + Tests 1-5.
-2. **New tickets retrieved** (from Session 2 backlog) — preliminary assessment done, みや chooses which to start.
-3. **みや's 4 morning decisions still pending**: freeze lift? · boot-bundle cutover cadence · 18 stale active.txt blocks sweep · 3 unregistered hook files.
-4. Deferred build queue: C4 skills refactor · close.js DE-recomposition · K2 migration · K5 lifecycle module.
-5. **Cleanup**: orphan worktree `epic-jepsen-6da429` (see flag above).
+1. **QA-269918 cycle-2 decisions pending**: (a) fix-shape leanest-2-file vs full-3-file; (b) test strategy A/B/C; (c) confirm what was replied on Redmine → update active.txt.
+2. **New Q1 candidate rule** in `main/todo.md`: "Narrowest-impact fix" (blast-radius minimization umbrella) — pending みや name-lock + framing pick A/B/C + system-design route.
+3. **New Q1 candidate knowledge doc** in `main/todo.md`: `BORANG-PELAN-LESEN-FAMILY.md` (3 families corrected from earlier proposal's 2) — pending みや build-nod.
+4. **Delegation Economy DE-refinement**: if the pattern is worth keeping, refine per lessons above (task-shape → haiku, stop-on-conflict fallback, cross-worktree/main-repo scope awareness).
 
 ## 🎯 Session Recap (for AI restart)
 
-**Duration** (this session): 2026-07-13 ~18:00 → 18:08 (very short — state-check + drift-fixup + DE).
-**Duration** (full day): Session 1 audit sprint (12-13 overnight) → Session 2 PRBB close (12:16-12:30) → Session 3 QA-259112 update + DE (18:00-18:08).
-**Landed this session**: `active.txt` QA-259112 block updated (stash_ref `{0}`→`{1}` + stash_ref_note) · `QA-259112.md § 0. Resume Point` updated (drift note added) · this file updated · diary Session 3 appended.
-**Mode**: quick update session + DE — no code work.
+**Duration** (this session): 2026-07-15 ~12:35 → ~16:15 +0800 (~3.5 hours).
+**Landed this session** (in commits): `QA-269918.md` cycle-2 section appended · `main/todo.md` Q1 gained 2 parked entries (Narrowest-impact rule + Borang/Pelan/Lesen family knowledge) · `quest/active.txt` cycle-2 reactivation · daily-diary/2026-07-15.md Session 2 appended · this current-session.md updated.
+**NOT landed** (per みや "save usage, don't build"): the Narrowest-impact rule itself + the family knowledge file + resolving QA-269918 fix-shape.
+**Mode**: Discussion + Quest-active on QA-269918 → learning-extraction + Sonnet-delegated DE (partial-fail).
 
-**Memory Type**: RAM | **Last Activity**: 2026-07-13 18:08 +0800
-
-### 📱 EVERY OTHER DEVICE — pull before next session (added 2026-07-13 per みや item 5)
-`origin/main = 5b79a1c` (audit sprint merged). A device booting on an older main runs the OLD system — pull FIRST.
-
----
-## 🎯 Session Recap 2026-07-15 (QA-270052 shipped)
-
-**Duration**: full day (~14 hours from prior night's compact — spanned QA-270052 fix journey v2→v3→v4→v5).
-**Landed**: QA-270052 Phase 1 closed — commits `3f0847663c` (main fix, 113+ lines) + `dc634bae16` (comment refinements), branch `mlk/internal-issue/270052` pushed. active.txt block appended with status=closed.
-**Fix shape**: post-save rematch of `header2.xml` r:embed values in etanah-pelupusan — `E:\Projects\Melaka\etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\util\word\PelupusanTemplateUtil.java` (`rematchHeaderImageContentControls()` + `buildExpectedHeaderImageBytesByCellName()`). Verified across 3 test cycles.
-**Root cause** (deterministic per みや's every-cycle reproduction): docx4j's `RelationshipsPart` serialisation reshuffles rId→target mapping on each `Docx4J.save`. Genuine root fix belongs in etanah-common — `E:\Projects\Melaka\etanah-common\src\main\java\my\gov\etanah\common\util\CommonDocx4jUtil.java` — `CommonDocx4jUtil.insertImageForContentControlInHeader()`:579. Handoff filed at `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\95. INTERNAL ISSUE #270052 ... \HANDOFF-etanah-common-team.md` — Options A/B/C/D (D = replace hardcoded docPrId=1, cNvPrId=2 with per-call AtomicInteger, ChatGPT-surfaced angle みや extended the .md with).
-**Phase 2**: NOT run (per みや — "not going to archive first, tricky fix"). Task folder + active.txt block STAY in place. Post-mortem + archive when みや says archive.
-**Deferred**: HANDOFF-etanah-common-team.md waits on みや forwarding to etanah-common team; on their fix ship, delete `rematchHeaderImageContentControls` + `buildExpectedHeaderImageBytesByCellName` from PelupusanTemplateUtil.
-**System upgrades this session**: see below §.
-**Next session pickup**: QA-269918 still active (per active.txt); Redmine ticket update for QA-270052 pending (via `/redmine-phase1-prefill` or manual).
-
-**Memory Type**: RAM | **Last Activity**: 2026-07-15
+**Memory Type**: RAM | **Last Activity**: 2026-07-15 ~16:15 +0800
