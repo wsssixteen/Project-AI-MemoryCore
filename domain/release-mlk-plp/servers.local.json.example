@@ -1,0 +1,5 @@
+{
+  "_note": "Copy to servers.local.json (GITIGNORED) and fill the real internal endpoints. Never commit the filled file.",
+  "build": { "host": "<build-server-ip>", "user": "<ssh-user>", "dir": "<build-scripts-dir>", "script": "./build-pelupusan.sh", "choice": "stag" },
+  "deploy": { "host": "<deploy-server-ip>", "user": "<ssh-user>", "dir": "<deploy-scripts-dir>", "script": "./deploy-pelupusan.sh" }
+}

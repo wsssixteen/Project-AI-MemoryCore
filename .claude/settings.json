@@ -133,6 +133,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\reask\\\\reask.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\release-mlk-plp-ask\\\\release-mlk-plp-ask.check.hook.js\""
           }
         ]
       }
@@ -152,6 +156,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\branch-at-apply-gate.js\" PreToolUse"
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\release-mlk-plp-push-gate\\\\release-mlk-plp-push-gate.check.hook.js\""
           }
         ]
       },

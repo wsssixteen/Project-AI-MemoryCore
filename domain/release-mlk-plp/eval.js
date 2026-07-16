@@ -1,0 +1,112 @@
+#!/usr/bin/env node
+// eval.js — end-to-end eval for release-prep.js on a SCRATCH repo (never the real etanah repo).
+// Fixture: bare origin named etanah-pelupusan.git (passes the PLP-identity guard) + 3 ticket
+// branches — 1001 clean add · 1002 edits a.txt · 1003 edits a.txt differently = planted conflict.
+// Asserts every guard: bad release name · missing branch · push-before-verify · stop-on-conflict
+// · merge-continue resume · verify table · push lands on origin.
+'use strict';
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const { spawnSync } = require('child_process');
+
+const SCRIPT = path.join(__dirname, 'release-prep.js');
+const results = [];
+function check(n, c, d) { results.push({ n, pass: !!c, d }); }
+
+const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'rmp-eval-'));
+const bare = path.join(tmp, 'origin', 'etanah-pelupusan.git');
+const work = path.join(tmp, 'etanah-pelupusan');
+const stateDir = path.join(tmp, 'state');
+const env = { ...process.env, RELEASE_MLK_PLP_STATE_DIR: stateDir };
+
+function sh(cwd, cmd, args) {
+  const r = spawnSync(cmd, args, { cwd, encoding: 'utf8' });
+  if (r.status !== 0) throw new Error(`${cmd} ${args.join(' ')} failed in ${cwd}:\n${r.stderr || r.stdout}`);
+  return r.stdout.trim();
+}
+function git(args, cwd) { return sh(cwd || work, 'git', args); }
+function prep(args) {
+  return spawnSync(process.execPath, [SCRIPT, ...args, '--repo', work], { encoding: 'utf8', env, timeout: 60000 });
+}
+function prepNoRepo(args) {
+  return spawnSync(process.execPath, [SCRIPT, ...args], { encoding: 'utf8', env, timeout: 60000 });
+}
+
+try {
+  // ---- fixture ----
+  fs.mkdirSync(path.dirname(bare), { recursive: true });
+  sh(tmp, 'git', ['init', '--bare', bare]);
+  sh(tmp, 'git', ['clone', bare, work]);
+  git(['config', 'user.email', 'eval@local']); git(['config', 'user.name', 'eval']);
+  git(['checkout', '-b', 'mlk/master']);
+  fs.writeFileSync(path.join(work, 'a.txt'), 'line1\n');
+  git(['add', '.']); git(['commit', '-m', 'base']); git(['push', 'origin', 'mlk/master']);
+  git(['checkout', '-b', 'mlk/internal-issue/1001']);
+  fs.writeFileSync(path.join(work, 'b.txt'), 'ticket-1001\n');
+  git(['add', '.']); git(['commit', '-m', '#1001']); git(['push', 'origin', 'mlk/internal-issue/1001']);
+  git(['checkout', 'mlk/master']); git(['checkout', '-b', 'mlk/qa/1002']);
+  fs.writeFileSync(path.join(work, 'a.txt'), 'line1-qa\n');
+  git(['add', '.']); git(['commit', '-m', '#1002']); git(['push', 'origin', 'mlk/qa/1002']);
+  git(['checkout', 'mlk/master']); git(['checkout', '-b', 'mlk/esokongan/1003']);
+  fs.writeFileSync(path.join(work, 'a.txt'), 'line1-eso\n');
+  git(['add', '.']); git(['commit', '-m', '#1003']); git(['push', 'origin', 'mlk/esokongan/1003']);
+  git(['checkout', 'mlk/master']);
+
+  const TICKETS = '1001=mlk/internal-issue/1001,1002=mlk/qa/1002,1003=mlk/esokongan/1003';
+
+  // T1: bad release name refused
+  let r = prep(['init', '--release', 'fat', '--tickets', TICKETS]);
+  check('T1 bad release name refused', r.status !== 0 && /--release must be like/.test(r.stderr), 'exit=' + r.status);
+
+  // T2: missing ticket branch → all-or-nothing preflight fail (exit 2)
+  r = prep(['init', '--release', '9.9.9', '--tickets', TICKETS + ',9999=mlk/qa/9999']);
+  check('T2 missing branch fails preflight', r.status === 2 && /do NOT exist on origin/.test(r.stderr), 'exit=' + r.status);
+
+  // T3: good init → planned + plan table
+  r = prep(['init', '--release', '9.9.9', '--tickets', TICKETS]);
+  check('T3 init passes preflight', r.status === 0 && /PREFLIGHT PASSED/.test(r.stdout), 'exit=' + r.status + ' ' + r.stderr.slice(0, 120));
+
+  // T4: push at phase=planned → refused
+  r = prepNoRepo(['push', '--release', '9.9.9']);
+  check('T4 push before verify refused', r.status === 2 && /PUSH REFUSED/.test(r.stderr), 'exit=' + r.status);
+
+  // T5: branch off fresh mlk/master
+  r = prepNoRepo(['branch', '--release', '9.9.9']);
+  check('T5 release branch created', r.status === 0 && git(['branch', '--show-current']) === 'mlk/release/9.9.9', 'exit=' + r.status + ' ' + r.stderr.slice(0, 120));
+
+  // T6: merge stops dead on the planted conflict (#1003), after 1001+1002 merged
+  r = prepNoRepo(['merge', '--release', '9.9.9']);
+  check('T6 conflict stops merge (exit 2)', r.status === 2 && /CONFLICT on #1003/.test(r.stderr) && /a\.txt/.test(r.stderr), 'exit=' + r.status);
+
+  // T7: resolve + merge-continue resumes and finishes
+  fs.writeFileSync(path.join(work, 'a.txt'), 'line1-resolved\n');
+  git(['add', 'a.txt']);
+  r = prepNoRepo(['merge-continue', '--release', '9.9.9']);
+  check('T7 merge-continue finishes (phase=merged)', r.status === 0 && /all ticket branches merged/.test(r.stdout), 'exit=' + r.status + ' ' + r.stderr.slice(0, 120));
+
+  // T8: verify — all tickets contained, table emitted
+  r = prepNoRepo(['verify', '--release', '9.9.9']);
+  check('T8 verify green table', r.status === 0 && /\| #1003 \| mlk\/esokongan\/1003 \| 0 \| ✓ \|/.test(r.stdout), 'exit=' + r.status + ' ' + r.stdout.slice(-200));
+
+  // T9: push lands the branch on origin
+  r = prepNoRepo(['push', '--release', '9.9.9']);
+  const onOrigin = git(['ls-remote', '--heads', 'origin', 'mlk/release/9.9.9']) !== '';
+  check('T9 push lands on origin', r.status === 0 && onOrigin, 'exit=' + r.status + ' onOrigin=' + onOrigin);
+
+  // T10: PLP-only guard — repo whose origin is NOT etanah-pelupusan is refused
+  const alien = path.join(tmp, 'alien');
+  sh(tmp, 'git', ['init', '--bare', path.join(tmp, 'origin', 'etanah-awam.git')]);
+  sh(tmp, 'git', ['clone', path.join(tmp, 'origin', 'etanah-awam.git'), alien]);
+  r = spawnSync(process.execPath, [SCRIPT, 'init', '--release', '1.1.1', '--tickets', '1=x', '--repo', alien], { encoding: 'utf8', env, timeout: 60000 });
+  check('T10 non-PLP repo refused', r.status !== 0 && /PLP-ONLY GUARD/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr.slice(0, 120));
+} catch (e) {
+  check('FIXTURE setup/run crashed', false, e.message.slice(0, 300));
+}
+
+try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {}
+
+let failed = 0;
+for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
+console.log('\nrelease-mlk-plp eval (release-prep.js): ' + (results.length - failed) + '/' + results.length + ' green');
+process.exit(failed ? 1 : 0);
