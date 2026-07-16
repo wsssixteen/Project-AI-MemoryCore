@@ -232,9 +232,44 @@ function cmdVerify(a) {
   console.log(`\n✅ verified at ${st.headSha.slice(0, 10)} · phase=verified · next: [V3 nod] then \`push\``);
 }
 
+// Bump etanah-pelupusan's OWN <version> in pom.xml (never parent, never plugin).
+// Pattern anchor: the <version> line directly following <artifactId>etanah-pelupusan</artifactId>.
+// Matches Ridhwan's manual bump commit a99194b02e on origin/mlk/release/1.0.9 verbatim.
+function cmdBumpVersion(a) {
+  const st = loadState(a.release);
+  if (st.phase !== 'verified' && st.phase !== 'bumped') die(`BUMP REFUSED — phase is ${st.phase}, expected verified/bumped (run verify first)`, 2);
+  ensureRepo(st.repo);
+  ensureOnBranch(st.repo, st.branch);
+  const pomPath = path.join(st.repo, 'pom.xml');
+  const pom = fs.readFileSync(pomPath, 'utf8');
+  const re = /(<artifactId>etanah-pelupusan<\/artifactId>\s*\r?\n\s*<version>)([^<]+)(<\/version>)/;
+  const m = pom.match(re);
+  if (!m) die('could not find etanah-pelupusan <version> tag in pom.xml');
+  if (m[2] === st.release) {
+    console.log(`· pom.xml already at ${st.release} — skipping bump commit`);
+    st.phase = 'bumped';
+    saveState(st);
+    log('bump-version', st.release, 'noop', st.headSha);
+    return;
+  }
+  const before = m[2];
+  fs.writeFileSync(pomPath, pom.replace(re, `$1${st.release}$3`));
+  const diff = git(st.repo, ['diff', '--stat', 'pom.xml']);
+  if (!/pom\.xml\s*\|\s*2\s*\+\+/.test(diff.stdout) && !/pom\.xml\s*\|\s*2\s/.test(diff.stdout)) {
+    die(`pom.xml edit produced unexpected diff:\n${diff.stdout}`);
+  }
+  git(st.repo, ['add', 'pom.xml']);
+  git(st.repo, ['commit', '-m', `pelupusan version: ${st.release}`]);
+  st.headSha = gitOut(st.repo, ['rev-parse', 'HEAD']);
+  st.phase = 'bumped';
+  saveState(st);
+  log('bump-version', st.release, 'ok', { from: before, to: st.release, headSha: st.headSha });
+  console.log(`✅ pom.xml bumped ${before} → ${st.release} + committed (${st.headSha.slice(0, 10)}) · phase=bumped · next: \`push\``);
+}
+
 function cmdPush(a) {
   const st = loadState(a.release);
-  if (st.phase !== 'verified') die(`PUSH REFUSED — phase is ${st.phase}, expected verified (run verify first)`, 2);
+  if (st.phase !== 'verified' && st.phase !== 'bumped') die(`PUSH REFUSED — phase is ${st.phase}, expected verified/bumped (run verify [+ bump-version] first)`, 2);
   if (!BRANCH_RE.test(st.branch)) die(`PUSH REFUSED — branch "${st.branch}" fails the release pattern`, 2);
   ensureRepo(st.repo);
   ensureOnBranch(st.repo, st.branch);
@@ -257,8 +292,9 @@ const a = parseArgs(process.argv.slice(2));
 const cmd = a._[0];
 const commands = {
   init: cmdInit, branch: cmdBranch, merge: cmdMerge,
-  'merge-continue': cmdMergeContinue, verify: cmdVerify, push: cmdPush, status: cmdStatus,
+  'merge-continue': cmdMergeContinue, verify: cmdVerify,
+  'bump-version': cmdBumpVersion, push: cmdPush, status: cmdStatus,
 };
-if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|merge|merge-continue|verify|push|status> --release <ver> [...]`);
+if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|merge|merge-continue|verify|bump-version|push|status> --release <ver> [...]`);
 if (cmd !== 'init' && !a.release) die('--release required');
 commands[cmd](a);

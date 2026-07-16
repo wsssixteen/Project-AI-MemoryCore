@@ -12,7 +12,7 @@ description: Melaka Pelupusan (PLP) release preparation + deploy pipeline — br
 ## Pipeline (7 stop-points; NEVER skip forward past an un-nodded 🛑)
 
 ```
-PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3) → PUSH
+PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3) → BUMP-VERSION → PUSH
         → BUILD(V4 go · V5 success) → DEPLOY(V6 go) → SHEET(V7 submit)
 ```
 
@@ -29,7 +29,14 @@ PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3) → PUSH
    | Requirement | `mlk/requirement/<num>` |
    ⚠️ Rework variants exist (`v2`/`v3` suffix) — pick the LATEST shipped one per active.txt /
    Redmine; when ambiguous, surface both and ask at V1.
-3. Emit the plan table (ticket · branch · exists-on-origin ✓) → **🛑 V1: みや nods**.
+3. **READ THE WHOLE TICKET — NO FILTERED READS.** Fetch description + EVERY journal note
+   FULL-TEXT + the attachments list (`?include=journals,attachments`). Keyword-regex or
+   truncated reads are BANNED — devs share fix files / branches / commits inside the
+   conversation and as attachments. (Slip 2026-07-16: filtered read missed exactly this.)
+4. **PLP-only applies to the INVESTIGATION too.** A fix not found in `etanah-pelupusan` is
+   simply NOT in this release — mark it out-of-module, surface at V1, move on. Hunting
+   sibling repos (common/awam/teknikal) is BANNED. (Slip 2026-07-16, みや correction.)
+5. Emit the plan table (ticket · branch · exists-on-origin ✓) → **🛑 V1: みや nods**.
 
 ## Phase B — BRANCH + MERGE + VERIFY + PUSH (script; repo `E:\Projects\Melaka\etanah-pelupusan`)
 
@@ -41,6 +48,12 @@ node domain/release-mlk-plp/release-prep.js merge  --release <ver>
 node domain/release-mlk-plp/release-prep.js merge-continue --release <ver>
 node domain/release-mlk-plp/release-prep.js verify --release <ver>   # ✓-table
 #   🛑 V3: みや nods the verify table
+node domain/release-mlk-plp/release-prep.js bump-version --release <ver>
+#     bumps <version> under <artifactId>etanah-pelupusan</artifactId> in pom.xml
+#     and commits "pelupusan version: <ver>" — mirrors past bumps (1.0.7 · 1.0.8 · 1.0.9)
+#     idempotent: re-running when pom already at <ver> is a no-op.
+#     ⚠️ common-artifact bump (e.g. "common version increase to: 1.0.129-MLK") remains MANUAL
+#        via cherry-pick from Aaron's upstream commit — this Feature only owns the pelupusan bump.
 node domain/release-mlk-plp/release-prep.js push   --release <ver>
 ```
 

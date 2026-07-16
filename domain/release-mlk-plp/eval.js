@@ -41,6 +41,8 @@ try {
   git(['config', 'user.email', 'eval@local']); git(['config', 'user.name', 'eval']);
   git(['checkout', '-b', 'mlk/master']);
   fs.writeFileSync(path.join(work, 'a.txt'), 'line1\n');
+  fs.writeFileSync(path.join(work, 'pom.xml'),
+    '<project>\n\t<parent><artifactId>etanah-base-pom</artifactId><version>3.0.0</version></parent>\n\t<artifactId>etanah-pelupusan</artifactId>\n\t<version>0.0.1</version>\n</project>\n');
   git(['add', '.']); git(['commit', '-m', 'base']); git(['push', 'origin', 'mlk/master']);
   git(['checkout', '-b', 'mlk/internal-issue/1001']);
   fs.writeFileSync(path.join(work, 'b.txt'), 'ticket-1001\n');
@@ -88,6 +90,18 @@ try {
   // T8: verify — all tickets contained, table emitted
   r = prepNoRepo(['verify', '--release', '9.9.9']);
   check('T8 verify green table', r.status === 0 && /\| #1003 \| mlk\/esokongan\/1003 \| 0 \| ✓ \|/.test(r.stdout), 'exit=' + r.status + ' ' + r.stdout.slice(-200));
+
+  // T8b: push refused before bump when phase=verified? NO — verified is still an allowed push phase (bump-version is optional).
+  //      This test proves the bump step CAN run + produces the "pelupusan version: <ver>" commit.
+  r = prepNoRepo(['bump-version', '--release', '9.9.9']);
+  const pomAfter = fs.readFileSync(path.join(work, 'pom.xml'), 'utf8');
+  const bumpMsg = git(['log', '-1', '--format=%s']);
+  check('T8b bump-version rewrites pom + commits', r.status === 0 && /<version>9\.9\.9<\/version>/.test(pomAfter) && bumpMsg === 'pelupusan version: 9.9.9', 'exit=' + r.status + ' msg=' + bumpMsg);
+
+  // T8c: second bump = noop (idempotent)
+  r = prepNoRepo(['bump-version', '--release', '9.9.9']);
+  const bumpMsg2 = git(['log', '-1', '--format=%s']);
+  check('T8c bump-version idempotent (no extra commit)', r.status === 0 && bumpMsg2 === 'pelupusan version: 9.9.9', 'exit=' + r.status);
 
   // T9: push lands the branch on origin
   r = prepNoRepo(['push', '--release', '9.9.9']);
