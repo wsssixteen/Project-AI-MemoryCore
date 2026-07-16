@@ -9,7 +9,7 @@ const path = require('path');
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
 const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
 
-const TRIGGER = /(prepare|create|start|buat|sediakan)[^\n.]{0,40}\brelease\b|\brelease\s+branch\b|\bdeploy\s+pelupusan\b|\bplanned\s+release\s+melaka\b|\bmlk\/release\/\d/i;
+const TRIGGER = /(prepare|create|start|buat|sediakan)[^\n.]{0,40}\brelease\b|\brelease\s+branch\b|\bdeploy\s+pelupusan\b|\bplanned\s+release\s+melaka\b|\bmlk\/release\/\d|\bbaseline\b/i;
 const NEGATIVE = /release\s+notes?\b/i;
 
 runHook({ name: 'release-mlk-plp-ask', event: 'UserPromptSubmit' }, (input) => {

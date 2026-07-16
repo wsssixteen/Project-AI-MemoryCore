@@ -31,6 +31,10 @@ check('F4 unrelated prompt silent', r.status === 0 && r.stdout.trim() === '', 's
 r = run('can you write the release notes for last sprint');
 check('F5 release-notes chatter silent', r.status === 0 && r.stdout.trim() === '', 'stdout=' + r.stdout.slice(0, 60));
 
+// F6: "Baseline" — みや's company term for this workflow (added 2026-07-16) → fires
+r = run('let us start the Baseline for 1.0.10');
+check('F6 "baseline" fires', /release-mlk-plp/.test(r.stdout), 'stdout=' + r.stdout.slice(0, 60));
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
 console.log('\nrelease-mlk-plp-ask.eval: ' + (results.length - failed) + '/' + results.length + ' green');
