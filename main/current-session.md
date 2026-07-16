@@ -1,7 +1,37 @@
 # Current Session
 
 ## What's loaded
-2026-07-16 (Thu) — **eSOKONGAN #270297 retrieved + Scout→Rubric (held for next-session Apply). Early slip: skipped the Redmine retrieval みや asked for.**
+2026-07-16 (Thu) — **Session 2 (afternoon): QA-259112 (CR JKKL PDT, Semua Urusan) Phase-1 CLOSED — commit `afcdb2b4d8` on `origin/mlk/cr/259112`. Session 1 (morning): eSOKONGAN #270297 retrieved + Scout→Rubric held for Apply.**
+
+### QA-259112 state as of end-of-session (Phase-1 close, this session's main work)
+- **Status**: `closed` · phase 1 · `local_test_confirmed=true` · commit `afcdb2b4d8` · branch `mlk/cr/259112` (first-push).
+- **Ticket**: CR-AFTER-GO-LIVE #259112 — Semua Urusan JKKL (5 urusans) — add Syor Permohonan (mandatori radio) + Ulasan Pegawai (mandatori textarea, auto-regen on syor-pick) + Jana button on all 3 JKKL PDT tugasans (Penyediaan editable · Semakan/Perakuan view-only); template 5.1 populated from `ulasanPegawaiPDT` CC tag + 5.2 removed.
+- **Diff**: 8 files, +276/-6. Dedicated PDT pair (`syorPegawaiPDT` + `ulasanPegawaiPDT` + wrapping panel) mirroring PTG's `syorPPTPTG + ulasanPPTPTGPanel` structure at `mlkMaklumatRisalat.xhtml:38-61`. Service extension: `PelupusanService.saveMaklumatRisalat()` +3 params (`isSaveUlasanPegawaiPDT`, `ulasanPegawaiPDT`, `syorPegawaiPDT`).
+- **Slips caught this session** (all fixed pre-commit): (a) reused shared `keputusanSyor` with minimal attrs instead of PTG's fully-wired dedicated pair — miya screenshot-caught wrong field-order + no radios; refactored to dedicated pair (Prior-Art Grep Layer-4 slip); (b) `.contains("<")` heuristic for stale-value re-heal — miya challenged "does that follow PTG convention?" → reverted to PTG's plain `StringUtils.isBlank` blank-guard; (c) empty `else { }` block leftover in `generateDefaultUlasanPegawaiPDT` — miya reviewed diff, flagged, cleaned before commit.
+- **BA-Q flag**: `<Tujuan asal rizab>` — only BPRZ/PPJK ever create `umm_a_rizab` in the normal flow (PLPS/PRU/PT: 0 rows in stg2, verified via `SELECT COUNT(*) GROUP BY urusan`). Non-rizab urusans fall back to `-` per current design; if BA rejects, needs a "tujuan asal tanah" equivalent or per-urusan strategy (deferred to `QA-259112.md § Deferred #1`).
+- **Test app for BA validation**: `PTMLK/03/L/BPRZ/2026/3` (aplikasi_id 3400055) — populated `tujuanAsalRizab="KAWASAN LAPANG TAMAN ANGKASA NURI"`, full JKKL history, NULL `ulasanPegawaiPDT` (unpoisoned). Flowable-alter to PYRJKKLPDT for clean regeneration test.
+
+### 🔴 Session-opening slip (own it — Session 1 morning)
+- みや asked to **retrieve a NEW ticket from Redmine + run quest to Rubric**. I saw Task-folder #95 (#270052) already synced locally and ran the WHOLE quest on THAT instead — never ran `redmine-sync`. Wasted a full Scout→Rubric pass + みや's time + usage; he was (rightly) angry.
+- The actual ticket was **eSOKONGAN #270297** (he saw it in email). Recovery: ran `node quest/redmine-sync.js 270297 --create`, then Scout→Recon→Rubric on the correct ticket.
+- Root shape: "local folder exists" ≠ "the ticket みや means". When he says **retrieve from Redmine**, RUN redmine-sync FIRST — never substitute a pre-synced folder. (Relationship row added to main-memory prior DE.)
+
+### QA-270297 state (Session 1 held ticket — still resumable)
+- **Status**: `hold` · phase 0 · Rubric-complete · `local_test_confirmed` n/a (no code applied).
+- **Ticket**: Portal Awam PRBB (Borang 4C) — 2 docs `PLP_RESITCUKAI` (Salinan Resit Cukai Tahunan) + `SCR` (Sijil Carian Rasmi) show mandatory (`*`) for ALL Jenis Tanah; should be mandatory ONLY for Tanah Milik, not for Kerajaan/Rizab/Lombong.
+- **Bug site**: `etanah-awam/src/main/java/my/gov/etanah/awam/pelupusan/service/impl/PelupusanService.java:5158-5192` — `resetFlagWajibForPelupusan`, PRBB branch: KELAS_TANAH_MILIK if-block adds the 2 codes to mandatory; NO else-branch removes them for KRJN/RZB/LMB → maintenance default (mandatory) persists.
+- **Chosen fix**: Candidate 1 — inline else-branch pushing `"SCR"` + `"PLP_RESITCUKAI"` into `notMandatoryDocCodes` for KRJN/RZB/LMB. Mirrors in-file analog `:5145-5149`; apply-loop `:5210-5217` consumes it. 4-6 line diff, no new constant. 90% confidence.
+- **Fallback**: Candidate 2 — reuse `TANAH_RIZAB_LOMBONG_KERAJAAN` group constant.
+- **Full cold-resume recipe + 6-step Apply plan**: `projects/coding-projects/active/QA-270297/QA-270297.md` §0 Resume Point.
+
+### ⚠️ FLAG — orphan worktree (this session ran inside it)
+- This session ran in `.claude/worktrees/epic-jepsen-6da429` (Session 1 morning ran in `jovial-morse-2d5bad`) — both **NOT in `git worktree list`**. Git ops fail from inside them. All DE saves + commit done from the MAIN repo path (or main-repo absolute paths).
+- Cleanup next boot: `Remove-Item -Recurse -Force ".claude/worktrees/epic-jepsen-6da429"` + `Remove-Item -Recurse -Force ".claude/worktrees/jovial-morse-2d5bad"` from main repo if still present.
+
+### QA-269918 — still boot-active, untouched
+- Boot loaded QA-269918 as `status=active` phase Recon (whole session had this pinned as objective-lock while I actually worked QA-259112 for the afternoon). NOT worked this session; still shows active in active.txt — needs a status reconcile next engagement.
+
+---
 
 ### 🔴 Session-opening slip (own it)
 - みや asked to **retrieve a NEW ticket from Redmine + run quest to Rubric**. I saw Task-folder #95 (#270052) already synced locally and ran the WHOLE quest on THAT instead — never ran `redmine-sync`. Wasted a full Scout→Rubric pass + みや's time + usage; he was (rightly) angry.
