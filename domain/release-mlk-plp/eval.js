@@ -103,6 +103,34 @@ try {
   const bumpMsg2 = git(['log', '-1', '--format=%s']);
   check('T8c bump-version idempotent (no extra commit)', r.status === 0 && bumpMsg2 === 'pelupusan version: 9.9.9', 'exit=' + r.status);
 
+  // ---- counter-rail (DON'Ts) ----
+  // T8d: ONLY pom.xml may change — a dirty tree at bump time is refused, nothing committed
+  git(['checkout', '-b', 'tmp/counter-rail']); git(['checkout', 'mlk/release/9.9.9']);
+  fs.writeFileSync(path.join(work, 'pom.xml'),
+    fs.readFileSync(path.join(work, 'pom.xml'), 'utf8').replace('<version>9.9.9</version>', '<version>9.9.8</version>'));
+  git(['add', 'pom.xml']); git(['commit', '-m', 'test: rewind pom to 9.9.8']);
+  fs.writeFileSync(path.join(work, 'stray.txt'), 'a fix I was never supposed to make\n');
+  const stateFile = path.join(stateDir, 'release-9.9.9.json');
+  let stJson = JSON.parse(fs.readFileSync(stateFile, 'utf8')); stJson.phase = 'verified';
+  fs.writeFileSync(stateFile, JSON.stringify(stJson));
+  r = prepNoRepo(['bump-version', '--release', '9.9.9']);
+  const headStill = git(['log', '-1', '--format=%s']);
+  check('T8d dirty tree (stray file) refuses bump', r.status === 2 && /working tree must be clean/.test(r.stderr) && headStill === 'test: rewind pom to 9.9.8', 'exit=' + r.status + ' head=' + headStill);
+  fs.rmSync(path.join(work, 'stray.txt'));
+
+  // T8e: an uncommitted parent-version tweak in pom.xml (DON'T #3) is refused — nothing committed
+  fs.writeFileSync(path.join(work, 'pom.xml'),
+    fs.readFileSync(path.join(work, 'pom.xml'), 'utf8').replace('<version>3.0.0</version>', '<version>3.0.1</version>'));
+  r = prepNoRepo(['bump-version', '--release', '9.9.9']);
+  check('T8e pre-dirtied pom (parent version) refuses bump, nothing committed',
+    r.status === 2 && git(['log', '-1', '--format=%s']) === 'test: rewind pom to 9.9.8',
+    'exit=' + r.status + ' stderr=' + r.stderr.slice(0, 100));
+  git(['checkout', '--', 'pom.xml']); // operator reverts their stray edit
+
+  // T8f: clean tree + only the version line → bump proceeds (the established DO still works)
+  r = prepNoRepo(['bump-version', '--release', '9.9.9']);
+  check('T8f clean single-line bump still passes', r.status === 0 && git(['log', '-1', '--format=%s']) === 'pelupusan version: 9.9.9', 'exit=' + r.status + ' ' + r.stderr.slice(0, 100));
+
   // T9: push lands the branch on origin
   r = prepNoRepo(['push', '--release', '9.9.9']);
   const onOrigin = git(['ls-remote', '--heads', 'origin', 'mlk/release/9.9.9']) !== '';

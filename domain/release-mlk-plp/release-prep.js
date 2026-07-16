@@ -253,10 +253,28 @@ function cmdBumpVersion(a) {
     return;
   }
   const before = m[2];
+  // Counter-rail (DON'Ts #1/#2/#3): the ONLY established edit is this one number.
+  // Anything else in the tree = someone did something not on the pipeline page -> REFUSE.
+  const dirtyBefore = gitOut(st.repo, ['status', '--porcelain']);
+  if (dirtyBefore) die(`BUMP REFUSED — working tree must be clean before the bump; found:\n${dirtyBefore}`, 2);
   fs.writeFileSync(pomPath, pom.replace(re, `$1${st.release}$3`));
-  const diff = git(st.repo, ['diff', '--stat', 'pom.xml']);
-  if (!/pom\.xml\s*\|\s*2\s*\+\+/.test(diff.stdout) && !/pom\.xml\s*\|\s*2\s/.test(diff.stdout)) {
-    die(`pom.xml edit produced unexpected diff:\n${diff.stdout}`);
+  // Assert the produced diff is EXACTLY: 1 file (pom.xml) · 1 removed line · 1 added line ·
+  // both being the etanah-pelupusan <version> line · old->new is the expected number pair.
+  const files = gitOut(st.repo, ['diff', '--name-only']).split('\n').filter(Boolean);
+  if (files.length !== 1 || files[0] !== 'pom.xml') {
+    git(st.repo, ['checkout', '--', '.'], true);
+    die(`BUMP REFUSED — edit touched files other than pom.xml (reverted): ${files.join(', ')}`, 2);
+  }
+  const body = gitOut(st.repo, ['diff', '-U0', '--', 'pom.xml']).split('\n');
+  const strip = l => l.slice(1).trim(); // drop the +/- marker, then the indentation
+  const removed = body.filter(l => /^-[^-]/.test(l));
+  const added = body.filter(l => /^\+[^+]/.test(l));
+  const okShape = removed.length === 1 && added.length === 1
+    && strip(removed[0]) === `<version>${before}</version>`
+    && strip(added[0]) === `<version>${st.release}</version>`;
+  if (!okShape) {
+    git(st.repo, ['checkout', '--', 'pom.xml'], true);
+    die(`BUMP REFUSED — diff is not a clean single version-line change (reverted).\nremoved: ${JSON.stringify(removed)}\nadded:   ${JSON.stringify(added)}`, 2);
   }
   git(st.repo, ['add', 'pom.xml']);
   git(st.repo, ['commit', '-m', `pelupusan version: ${st.release}`]);

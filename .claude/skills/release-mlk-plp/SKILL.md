@@ -89,6 +89,31 @@ Quote the literal success message (deploy-proof rule).
 Open the release Google Sheet (URL in the BAQA message / bookmarks) via browser, prefill the
 row (version · date · tickets · status). **🛑 V7: みや reviews; submit/commit only on his nod.**
 
+## 🚫 DON'Ts — the counter-rail (added 2026-07-16 per みや)
+
+> **THE RULE: DO NOTHING EXCEPT WHAT IS ESTABLISHED ABOVE.**
+> A release is an ASSEMBLY job, not a fixing job. Every phase has an exact established action;
+> anything outside that list is BANNED — even when it looks helpful, even when it's one line,
+> even when I'm confident. If a step feels needed but isn't on this page: STOP and ask みや.
+> Enforced structurally by `domain/release-mlk-plp-scope-gate/` (blocks the edit, not just warns).
+
+| # | DON'T | Why (established DO instead) |
+|---|---|---|
+| 1 | **DON'T touch any file other than `pom.xml`** during a release | The ONLY established edit is the version bump. No fixes, no cleanups, no "while I'm here". |
+| 2 | **DON'T change anything in `pom.xml` except the `x.y.z` under `<artifactId>etanah-pelupusan</artifactId>`** | Not the parent version · not plugin versions · not dependencies · not `<properties>`. Exactly 1 line, exactly the number. |
+| 3 | **DON'T bump the common/parent artifact version** | That's Aaron's upstream cherry-pick (`common version increase to: <ver>-MLK`). Out of this Feature's ownership. |
+| 4 | **DON'T touch any repo other than `etanah-pelupusan`** | awam/teknikal/common are out of scope — for the DEPLOY *and* the investigation. |
+| 5 | **DON'T hunt for a fix that isn't in `etanah-pelupusan`** | No branch here = not in this release. Mark out-of-module at V1 and move on. Sibling-repo hunts are BANNED. |
+| 6 | **DON'T write/author/fix code during a release** | Zero authored code. A missing fix is the ticket-owner's job, on their own branch, through Quest. |
+| 7 | **DON'T resolve a conflict without みや's nod** | Script stops at V2; I propose, he decides. Auto-resolve is BANNED. |
+| 8 | **DON'T run ad-hoc git** | Every branch/merge/verify/bump/push goes through `release-prep.js`. |
+| 9 | **DON'T skip a stop-point because it "obviously passes"** | V1-V7 are みや's, not mine. No forward-skipping past an un-nodded 🛑. |
+| 10 | **DON'T type/store/commit the server password** | SSH keys only; it lives in みや's vault, never in this repo. |
+| 11 | **DON'T claim build/deploy success without the quoted log line** | Deploy-proof rule — no quote, no claim. |
+| 12 | **DON'T submit the Google Sheet** | Prefill only; V7 submit is みや's click. |
+
+**Scope test before ANY action during a release** — if the answer to *"is this exact action written in Phase A-E above?"* is anything but a plain **yes**, it is a DON'T.
+
 ## Hard rules
 
 - **PLP-only** — etanah-awam/teknikal/common are OUT of scope for this skill.

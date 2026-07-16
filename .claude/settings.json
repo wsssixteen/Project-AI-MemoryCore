@@ -201,6 +201,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\pre-code-check\\\\pre-code-check.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\release-mlk-plp-scope-gate\\\\release-mlk-plp-scope-gate.check.hook.js\""
           }
         ]
       },
