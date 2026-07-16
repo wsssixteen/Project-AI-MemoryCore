@@ -604,3 +604,4 @@ quest_start=2026-07-14
 issue_one_liner=Portal Awam PRBB - SCR + PLP_RESITCUKAI mandatori untuk semua Jenis Tanah - patut non-mandatori untuk Kerajaan/Rizab/Lombong
 scout=PelupusanService.java:5158-5192 PRBB branch missing else for KRJN/RZB/LMB - analog :5142-5149 - 90pct conf - Cand 1 chosen
 held_reason=2026-07-16 DE — Scout+Recon+Rubric done, Cand 1 chosen; miya to pick Cand 1 vs 2 + Apply next session; first-step-on-resume in qa_doc S0
+branch=none-yet-mlk/esokongan/270297-at-commit
