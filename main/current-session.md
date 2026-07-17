@@ -1,7 +1,36 @@
 # Current Session
 
 ## What's loaded
-2026-07-17 (Friday, long-running session) — **#239386 MPT: env settled on mlit, patch dry-run PASSED, DB infra cleaned, all naming decided.** Marathon session spanning 07-06 → 07-17 (kept alive per みや — a previous save/restart lost context). Everything of record lives in [239386.md](../projects/coding-projects/active/239386/239386.md) **§0j–§0n** — §0n is the session-close block with the full resume sequence.
+2026-07-17 (Friday) — **TWO concurrent sessions closed. (1) #239386 MPT** env settled on mlit, patch dry-run PASSED, DB infra cleaned, naming decided. **(2) Baseline** — the PLP release workflow — built, scope-locked, 70/70 evals green, on branch `claude/pelupusan-release-script-861710` **awaiting merge to main on みや's word**.
+
+---
+
+## 🆕 Baseline (release-mlk-plp) — Session 2, 2026-07-17 evening
+
+**Status**: BUILT + final · branch `claude/pelupusan-release-script-861710` (pushed; **NOT yet on main** — みや said "we'll merge to main after we finalize this").
+
+**What it is**: みや's company term for the release run. Ruri **prepares**; みや **runs** build/deploy/sheet.
+```
+RECON → BRANCH → MERGE(V2 conflict) → VERIFY(V3) → [BUMP-COMMON → VERIFY] → BUMP-VERSION → PUSH → hand-off CARD
+```
+**Components (4, forge-born, in `meta/registry.jsonl`)**: `.claude/skills/release-mlk-plp/SKILL.md` · `domain/release-mlk-plp/` (release-prep.js · redmine-recon.js · eval.js 26 · eval-recon.js 19 · NUKE-MARKER) · `domain/release-mlk-plp-ask/` (6) · `domain/release-mlk-plp-push-gate/` (8) · `domain/release-mlk-plp-scope-gate/` (11). **70/70 fixtures green.**
+
+**Gitignored configs (exist on this machine, `.example` twins committed)**: `domain/release-mlk-plp/servers.local.json` (build/deploy hosts) · `redmine.local.json` (host + API key).
+
+**Three delivery mechanisms Baseline now sees** (all learned the hard way, all みや-caught):
+| Mechanism | Verdict | Why git alone is blind |
+|---|---|---|
+| ticket branch | `CODE-BRANCH` | — |
+| SQL attachment | `SQL-PATCH` | #269802 `sql.txt` = the whole fix; git never shows it |
+| common bump | `COMMON-VER` | `d19b0b2b0a` lives ONLY on release/1.0.9; **master never delivers it** |
+| under a related ticket | `VIA-RELATED` | #270952 → #270253 → "use common 1.0.129-MLK" |
+| nothing anywhere | `NO-EVIDENCE` | → 🚨 Ask-BA row, never a silent pass |
+
+**1.0.9 is DONE** (deployed to stag by みや; sheet written; Task folder `98. RELEASE 1.0.9 - Pelupusan (Stag)` + `1. Fix\#269802 sql.txt` saved).
+
+**NEXT on resume**: (1) merge this branch → main on みや's nod; (2) first real run = **1.0.10** when BAQA posts it, supervised end-to-end; (3) deferred: `baseline-*` folder rename · decouple already done (`set-tickets`) · third-delivery-channel sweep.
+
+---
 
 ## ▶▶ NEXT SESSION — START HERE
 
