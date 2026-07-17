@@ -10,6 +10,36 @@
 
 ---
 
+## v1.67 — 2026-07-17
+
+**Two new §8 Etanah non-negotiables + one environment retirement. All per みや during #239386.**
+
+### 1. 🚫 NO JOIN in any script handed to みや
+
+**Rule**: resolve ids by **kod-subquery**, one table per line, so the table-to-table path is readable at a glance. Applies to **both** evidence SELECTs **and** INSERT/UPDATE id-resolution. Hardcoded PKs stay banned. `SELECT *` acceptable for now.
+
+**Origin**: みや asked *"add a rule to BAN you from JOINING tables when providing scripts. Only give line by line scripts so that I can see from what table to what table."* Then, when asked to scope it, answered: *"Investigation/evidence scripts only, as for inserts or updates, please follow convention from the example Aaron fixed for us. Do you remember what ticket I asked you to learn from?"* — **QA-263344**. That ticket's rule (already in §9: *"resolve IDs by kod-subquery, NEVER a hardcoded PK"*) IS the convention for inserts/updates. So the two halves of his answer converge on one rule: kod-subquery everywhere, no JOIN.
+
+**Why**: a JOIN hides which table a value came from. みや reads these scripts to trace the data path himself; the join collapses that trace.
+
+**Enforcement**: `domain/convention-check-gate/convention-check-gate.gate.hook.js` **v1.6** — PreToolUse, BLOCKS on `.sql` Write/Edit whose body contains a JOIN (`INNER|LEFT|RIGHT|FULL|CROSS|NATURAL`/`OUTER` variants). Strips `--` and `/* */` comments first, so a JOIN mentioned in prose doesn't trip it. Bypass `[skip-convention-check: <reason>]`. Added as an extension of the existing gate (which already had a `.sql` branch from v1.5) rather than a new hook — per inventory-first. Behavioural tests: 5/5 pass (JOIN→deny · kod-subquery→allow · JOIN-in-comment→allow · LEFT OUTER JOIN→deny · bypass→allow).
+
+### 2. 🚫 Task folder = deliverables + みや's files ONLY; ask before adding any file/folder
+
+**Rule**: default contents are `0. Brief/` · `1. Simulate/` · `2. Fix/` · `1. <NNN NNN>.txt` · the xlsx · one patch + one reset + one evidence script. Anything beyond needs みや's nod first. All context/findings/questions/reasoning → the quest MD. Comments inside deliverables: clinical · formal · general · very short · only if necessary — labels suffice 99% of the time. Banned in deliverables: person names · session dates · log timestamps · monologue.
+
+**Origin**: みや — *"there should be a rule inside Task folder as well, to ask me first if not try to avoid creating & growing the number of files & folders… Only clinical, formal, general, very short sentences are allowed if you want to comment AND ONLY IF NECESSARY. Labels are enough 99% of the time."* Framed explicitly as the sibling of the existing one-quest-MD discipline.
+
+**Why**: 239386's Task folder grew to 13 files. 7 carried names (Aaron/Lyanna/"Miya asked…"), session dates, or monologue — these ship to other people in the company. One (`239386-MPT-Patch-per-urusan.sql`) was actively dangerous: a superseded script that silently reverts the canonical patch's labels if run after it. Cleaned same session: 26 comment replacements + 2 header rewrites; final grep for names/dates/schemas across all 8 `.sql` = zero hits. Slip logged via `core/slips.js` category `no-names-in-comments`, caught-by miya.
+
+### 3. 🪦 UAT DECOMMISSIONED — `feedback_uat_fat_environments` rewritten
+
+**Change**: みや — *"UAT has been decommissioned. No confirmed environment yet."* The memory previously taught ticket-driven UAT/FAT selection with UAT as the read-only investigation default; every clause routing to UAT is now retired. New content: UAT (`mlkuat`/`et_main_uat`/172.30.59.185) is 🪦 gone; **no confirmed replacement**; **ASK みや before assuming a target** is now mandatory, not optional. Reachable today: STG (`mlkstg`/`et_main_stg2`, MCP `postgres-mlkstg`, verified `SELECT current_schema()` → `et_main_stg2`). FAT MCP auth failing. Flagged the downstream breakage: `/env-check`'s UAT branch, the "AWAM always mkit/UAT" claim, and any quest doc/script naming `et_main_uat`.
+
+**Paired updates**: `MEMORY.md` index line · `quest/active.txt` 239386 block (`env=TBD-ask-miya`) · 11 edits across the five 239386 project docs (delegated, haiku) marking UAT statements historical rather than deleting the evidence. Related memory: `feedback_staging_schema_stg2` (stg2 NOT stg1).
+
+---
+
 ## Version-bump discipline (always-on rule, kept in CLAUDE.md proper)
 
 Every Refine Block / hard-rule addition to a protocol file MUST update the file's Version + Last Updated stamp in the same edit pass + add a full entry to this changelog file. Version is a single-integer increment per protocol revision (1.6 → 1.7). Audit-log entries alone don't surface protocol drift; the version stamp + this changelog do.

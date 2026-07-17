@@ -120,6 +120,8 @@ process.stdin.on('end', () => {
         '  - For UPDATE: prefer omitting audit columns from SET. For INSERT: mirror a sibling row.',
         '  - Soft-delete check, FK checks (per data-operation safety rule)?',
         '  - 🔍 VERIFY-SELECT shows TRUE column values (flag_*, kod_skrin, skrin_id) one row per record — NOT a derived stand-in (BOOL_OR/COUNT/CASE that hides the raw value). OK to run per-key (swap the kod). Ref CLAUDE.md §9.',
+        '  - 🚫 NO JOIN (v1.6, per みや 2026-07-17, ref QA-263344 = the script Aaron rewrote for us). Resolve ids by KOD-SUBQUERY, one table per line, so the table-to-table path is readable. Applies to BOTH evidence SELECTs and INSERT/UPDATE id-resolution. Still banned: hardcoded PKs. `SELECT *` is fine for now.',
+        '  - ✂️ SPACE + NOISE (v1.7, per みや 2026-07-17): (a) NO naming/step comments (`-- STEP 3`, `-- get the urusan id`, `-- URUSAN: PT`) — the SQL says it; (b) results comment goes at the END of the query (`-- 20 rows`), not above it; (c) `IN (...)` takes LITERAL ids straight, not a subquery, when the list is <=10 items; (d) no comment at all when the statement is self-evident. Readable at first glance is the goal — QA-263344.',
       ],
     };
 
@@ -184,6 +186,45 @@ process.stdin.on('end', () => {
         },
       }));
       process.exit(0);
+    }
+
+    // ── v1.6 BLOCKING: no JOIN in .sql handed to みや ───────────────────────
+    // Ref QA-263344 (the script Aaron rewrote for us) — resolve ids by kod-subquery,
+    // one table per line, so the table-to-table path is readable. Hardcoded PKs stay banned.
+    if (kind === 'sql' && /\.sql$/i.test(filePath || '')) {
+      const body = String(
+        (data.tool_input && (data.tool_input.content || data.tool_input.new_string)) || ''
+      );
+      // strip -- line comments and /* */ blocks so a JOIN mentioned in prose doesn't trip it
+      const code = body.replace(/--[^\n]*/g, '').replace(/\/\*[\s\S]*?\*\//g, '');
+      const JOIN_RE = /\b(?:INNER|LEFT|RIGHT|FULL|CROSS|NATURAL)?\s*(?:OUTER\s+)?JOIN\b/i;
+      let transcript = '';
+      try { transcript = fs.readFileSync(data.transcript_path, 'utf8'); } catch (e) { /* fail-open */ }
+      if (JOIN_RE.test(code) && !BYPASS.test(transcript) && !BYPASS.test(body)) {
+        logFire('blocked-join', filePath);
+        process.stdout.write(JSON.stringify({
+          hookSpecificOutput: {
+            hookEventName: 'PreToolUse',
+            permissionDecision: 'deny',
+            permissionDecisionReason: [
+              `🚫 convention-check-gate v1.6: JOIN found in a .sql handed to みや — BANNED.`,
+              `   File: ${filePath}`,
+              `   Rule (per みや 2026-07-17, ref QA-263344 = the script Aaron rewrote for us):`,
+              `   resolve ids by KOD-SUBQUERY, one table per line, so the table-to-table path is readable.`,
+              ``,
+              `   Instead of:  ... FROM ind_langkah l JOIN ind_tgsn t ON t.tgsn_id = l.tgsn_id ...`,
+              `   Write:       WHERE tgsn_id = (SELECT tgsn_id FROM ind_tgsn`,
+              `                                 WHERE kod = 'MPT'`,
+              `                                   AND ursn_id = (SELECT ursn_id FROM ind_ursn WHERE kod = 'PT'))`,
+              ``,
+              `   Applies to BOTH evidence SELECTs and INSERT/UPDATE id-resolution.`,
+              `   Still banned: hardcoded PKs.  \`SELECT *\` is fine for now.`,
+              `   Genuinely need a JOIN? add [skip-convention-check: <reason>] and say why in chat.`,
+            ].join('\n'),
+          },
+        }));
+        process.exit(0);
+      }
     }
 
     // docx / config / sql → advisory (unchanged from v1.1)

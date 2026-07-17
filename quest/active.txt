@@ -405,12 +405,12 @@ followup_note=2026-06-29 — Buang garisan tambahan pada footer surat JT (Templa
 
 qa=239386
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\79. REQUIREMENT #239386 - PLP - Maklumat Permohonan Terperinci in Carian Pintas
-status=hold
-held_reason=2026-07-03 per miya — focus eSokongan + internal-issue tickets first; WIP committed d6af8adda0 + pushed; UAT DB down
+status=active
+held_reason=(unheld 2026-07-17 — mlit confirmed as test env)
 phase=1
-current_phase=Apply-HELD — WIP committed d6af8adda0 (initMode refactor + disable sweep + empty-VO + L1 override) on baseline 035d4419fb; scripts corrected+expanded 07-03 (Reset/Evidence/Precheck/derivation); NEXT on resume=env-check→UAT, rebuild+test PRZ L3 (xlsx row 10a), then Evidence→Reset→Patch when DB back
+current_phase=Apply — patch DRY-RUN PASSED on mlit (141 inserts, 0 errors, rolled back); NEXT=restart Claude Code, real patch run (COMMIT), fresh branch off mlk/master + pop stash@{0}, build+deploy, derive mlit test data (notes file all-UAT = stale; 7 urusan zero apps), test PRZ L3
 ticket_type=requirement
-env=UAT
+env=mlit (mkit/et_main_mlit) — CONFIRMED by miya 2026-07-17; UAT decommissioned; FAT deleted
 urusan=ALL-20-PLP
 issue_one_liner=MPT read-only viewer rollout, 20 PLP urusan — DB langkah done; editable-controls code fix (7 hardcoded mode=1 sites + base isMpt) pending build/test
 assigned_to_me=2026-06-23
@@ -419,7 +419,7 @@ qa_doc=projects/coding-projects/active/239386/239386.md
 master_checklist=239386.md §0 MASTER CHECKLIST — re-verify EVERY row at every re-engagement + phase boundary (R1-R9 · Q1-Q3 · H1-H3)
 branch=mlk/requirement/239386
 local_test_confirmed=false
-note=Requirement (multi-session). FULL CONTEXT + Next-Steps Checklist in qa_doc. Branch base mlk/release/1.0.0 (Aaron). Env UAT et_main_uat.
+note=Requirement (multi-session). FULL CONTEXT qa_doc §0n (2026-07-17 session close: env/db-cleanup/dry-run/naming-final). Branch base mlk/master; old branch kept as proof. Task folder = numbered set 0/1/2 + notes + checklist + xlsx.
 commit_partial=1313e97cc8
 base_branch=mlk/master
 
@@ -548,8 +548,8 @@ closed=2026-07-13
 qa=QA-269918
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\94. INTERNAL ISSUE #269918 - PRBB - Pengesahan Borang 4Ce dan P1e - Cop PDT hilang selepas selesai
 phase=0
-status=active
-current_phase=Recon
+status=closed
+current_phase=Resolved-on-Redmine — assignee->BA Nurul Amirah, no longer miya's open work
 local_test_confirmed=false
 ticket_type=bug
 env=Staging
@@ -566,6 +566,7 @@ rework=cycle-2
 rework_folder=3.Rework
 folder_reactivated=2026-07-15
 rework_reason=aaron-2026-07-15:270123-partial-changes-verify-my-fix-still-works
+close_note=Reconciled by Ruri 2026-07-17 boot: Redmine #269918 status=Resolved, assignee=Nurul Amirah Nadiah, updated 2026-07-16 — absent from assigned_to_id=me&status_id=open queue. Cycle-2 rework (aaron 270123 verify) superseded. Was stale-active in active.txt since 07-09.
 
 qa=QA-270052
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\95. INTERNAL ISSUE #270052 - PLTP - Semakan Keputusan Mesyuarat MMK dan Surat Maklumat Keputusan -
@@ -591,9 +592,9 @@ handoff=HANDOFF-etanah-common-team.md in task folder (Options A-D for etanah-com
 
 qa=QA-270297
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\97. ESOKONGAN #270297 - Portal Awam - PRBB - Tidak Mendatori Dokumen Sokongan
-status=hold
-phase=0
-current_phase=Rubric-complete-awaiting-candidate-pick
+status=closed
+phase=1
+current_phase=Resolved-on-Redmine — Aaron deployed to int-env, BA testing
 qa_doc=projects/coding-projects/active/QA-270297/QA-270297.md
 ticket_type=bug
 env=MLKSTG
@@ -604,4 +605,17 @@ quest_start=2026-07-14
 issue_one_liner=Portal Awam PRBB - SCR + PLP_RESITCUKAI mandatori untuk semua Jenis Tanah - patut non-mandatori untuk Kerajaan/Rizab/Lombong
 scout=PelupusanService.java:5158-5192 PRBB branch missing else for KRJN/RZB/LMB - analog :5142-5149 - 90pct conf - Cand 1 chosen
 held_reason=2026-07-16 DE — Scout+Recon+Rubric done, Cand 1 chosen; miya to pick Cand 1 vs 2 + Apply next session; first-step-on-resume in qa_doc S0
-branch=none-yet-mlk/esokongan/270297-at-commit
+branch=mlk/esokongan/270297
+commit=8c0b6607d3
+closed=2026-07-16
+local_test_confirmed=true
+close_note=Applied+pushed by miya himself 2026-07-16 15:50+0800 (after session end) using this quest's Rubric Candidate 1; merged to mlk/int-env 165f31c667; Redmine Resolved, done=100, assignee->BA Nurul Amirah 2026-07-17. Reconciled by Ruri 2026-07-17 boot from Redmine API + git.
+
+qa=QA-271049
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\99. INTERNAL ISSUE #271049 - PLTP - Langkah Maklumat Tanah missing panel Maklumat Risalat for few t
+phase=0
+status=hold
+ticket_type=bug
+env=MLK Staging
+issue_one_liner=PLTP - Langkah Maklumat Tanah missing panel Maklumat Risalat for few tugasan
+assigned_to_me=2026-07-17

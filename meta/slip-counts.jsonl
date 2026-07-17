@@ -6,3 +6,6 @@
 {"ts":"2026-07-14T02:27:27.596Z","category":"silent-claim-drift"}
 {"ts":"2026-07-14T02:27:30.434Z","category":"best-practices-not-consulted"}
 {"ts":"2026-07-15T09:55:49.261Z","category":"prior-art-grep-layer-gap"}
+{"ts":"2026-07-16T14:56:09.988Z","category":"no-names-in-comments"}
+{"ts":"2026-07-17T11:07:22.587Z","category":"reask/verbose"}
+{"ts":"2026-07-17T11:31:46.746Z","category":"assume-not-verify"}
