@@ -12,9 +12,17 @@ description: Melaka Pelupusan (PLP) release preparation + deploy pipeline — br
 ## Pipeline (7 stop-points; NEVER skip forward past an un-nodded 🛑)
 
 ```
-PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3) → BUMP-VERSION → PUSH
+PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3) → [BUMP-COMMON → VERIFY] → BUMP-VERSION → PUSH
         → BUILD(V4 go · V5 success) → DEPLOY(V6 go) → SHEET(V7 submit)
+                                       └─ only if recon says COMMON-VER + bump not on release
 ```
+
+**A release branch is NOT just merges.** It carries up to 3 kinds of content:
+| Content | How it lands | Comes from mlk/master? |
+|---|---|---|
+| Ticket fixes | `merge` the ticket branch | yes (the branches exist there) |
+| `<etanah.common.version>` bump | **commit on the release branch** (`bump-common`) | **NO — master keeps the old value** |
+| `<version>` module bump | **commit on the release branch** (`bump-version`) | **NO — master keeps the previous release's number** |
 
 ## Phase A — PLAN (my judgment; source = みや's pasted message/photo)
 
@@ -94,12 +102,17 @@ node domain/release-mlk-plp/release-prep.js merge  --release <ver>
 node domain/release-mlk-plp/release-prep.js merge-continue --release <ver>
 node domain/release-mlk-plp/release-prep.js verify --release <ver>   # ✓-table
 #   🛑 V3: みや nods the verify table
+
+#   ── BUMP-COMMON — ONLY when recon returned COMMON-VER with the bump NOT on the release ──
+node domain/release-mlk-plp/release-prep.js bump-common --release <ver> --common 1.0.129-MLK
+#     ONE pom line: <etanah.common.version>; commits "common version increase to: <x>-MLK".
+#     ⚠️ The --common value comes from redmine-recon's COMMON-VER verdict — NEVER invented.
+#     ⚠️ This RESETS phase to merged → re-run `verify` before push (the eval pins this).
+
+node domain/release-mlk-plp/release-prep.js verify --release <ver>   # again, if common bumped
 node domain/release-mlk-plp/release-prep.js bump-version --release <ver>
-#     bumps <version> under <artifactId>etanah-pelupusan</artifactId> in pom.xml
-#     and commits "pelupusan version: <ver>" — mirrors past bumps (1.0.7 · 1.0.8 · 1.0.9)
-#     idempotent: re-running when pom already at <ver> is a no-op.
-#     ⚠️ common-artifact bump (e.g. "common version increase to: 1.0.129-MLK") remains MANUAL
-#        via cherry-pick from Aaron's upstream commit — this Feature only owns the pelupusan bump.
+#     bumps <version> under <artifactId>etanah-pelupusan</artifactId>; commits
+#     "pelupusan version: <ver>" — mirrors 1.0.7 · 1.0.8 · 1.0.9. Idempotent.
 node domain/release-mlk-plp/release-prep.js push   --release <ver>
 ```
 
@@ -145,9 +158,10 @@ row (version · date · tickets · status). **🛑 V7: みや reviews; submit/co
 
 | # | DON'T | Why (established DO instead) |
 |---|---|---|
-| 1 | **DON'T touch any file other than `pom.xml`** during a release | The ONLY established edit is the version bump. No fixes, no cleanups, no "while I'm here". |
-| 2 | **DON'T change anything in `pom.xml` except the `x.y.z` under `<artifactId>etanah-pelupusan</artifactId>`** | Not the parent version · not plugin versions · not dependencies · not `<properties>`. Exactly 1 line, exactly the number. |
-| 3 | **DON'T bump the common/parent artifact version** | That's Aaron's upstream cherry-pick (`common version increase to: <ver>-MLK`). Out of this Feature's ownership. |
+| 1 | **DON'T touch any file other than `pom.xml`** during a release | The ONLY established edits are the two version bumps. No fixes, no cleanups, no "while I'm here". |
+| 2 | **DON'T change any `pom.xml` line except the two bump lines** | Ours: `<version>` under `<artifactId>etanah-pelupusan</artifactId>` (`bump-version`) and `<etanah.common.version>` (`bump-common`). Each is a single diff-asserted line, run via the script — never a hand-edit. |
+| 3 | **DON'T touch the `etanah-common` REPO or cut a common release** | Fixing/releasing common is the common-team's (amirul/Aaron). ⚠️ CORRECTED 2026-07-16: bumping `<etanah.common.version>` in *pelupusan's own pom, on the release branch*, IS an established Baseline step — see Phase B `bump-common`. Only the common repo itself is off-limits. |
+| 3b | **DON'T touch the parent/plugin/dependency versions** | Only two lines are ever ours: `<version>` under `<artifactId>etanah-pelupusan</artifactId>`, and `<etanah.common.version>`. Both are diff-asserted. |
 | 4 | **DON'T touch any repo other than `etanah-pelupusan`** | awam/teknikal/common are out of scope — for the DEPLOY *and* the investigation. |
 | 5 | **DON'T hunt for a fix that isn't in `etanah-pelupusan`** | No branch here = not in this release. Mark out-of-module at V1 and move on. Sibling-repo hunts are BANNED. |
 | 6 | **DON'T write/author/fix code during a release** | Zero authored code. A missing fix is the ticket-owner's job, on their own branch, through Quest. |

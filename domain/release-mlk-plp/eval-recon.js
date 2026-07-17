@@ -46,15 +46,21 @@ check('C10 branch AND sql → CODE+SQL (the SQL half must NOT be swallowed by th
 check('C10b code-only → NOT a sheet entry (SQL field stays empty)',
   classify({ branch: 'mlk/qa/1', sqlAttachments: [] }).sheetEntry === false, '');
 
-check('C11 replay #270952: common-ver + bump already on release → nothing to merge, no BA ask',
+check('C11 replay #270952: common-ver + bump already on release → nothing to do, no BA ask',
   (() => { const v = classify({ branch: '', sqlAttachments: [], commonVersion: '1.0.129-MLK',
       commonBumpOnRelease: 'd19b0b2b0a common version increase to: 1.0.129-MLK', related: [270253] });
-    return v.verdict === 'COMMON-VER' && v.askBa === false && /already shipped via common/.test(v.action); })(),
-  'must recognise a fix that shipped via the common bump');
+    return v.verdict === 'COMMON-VER' && v.askBa === false && /already committed on the release branch/.test(v.action); })(),
+  'must recognise a fix already delivered by a common bump present on the release branch');
 
-check('C12 common-ver but bump MISSING from release → ask',
+check('C12 common-ver, bump MISSING from release → an ACTION (bump-common), not a question',
   (() => { const v = classify({ branch: '', sqlAttachments: [], commonVersion: '1.0.130-MLK', commonBumpOnRelease: '', related: [] });
-    return v.verdict === 'COMMON-VER' && v.askBa === true; })(), '');
+    return v.verdict === 'COMMON-VER' && v.commonBumpNeeded === '1.0.130-MLK'
+      && /bump-common --common 1\.0\.130-MLK/.test(v.action) && /NOT on the release branch/.test(v.detail); })(),
+  'a missing common bump must name the exact command — master never delivers it');
+
+check('C12b common-ver already on release → no action, no bump needed',
+  (() => { const v = classify({ branch: '', sqlAttachments: [], commonVersion: '1.0.129-MLK', commonBumpOnRelease: 'd19b0b2b0a common version increase to: 1.0.129-MLK', related: [] });
+    return v.commonBumpNeeded === '' && v.askBa === false; })(), '');
 
 check('C13 relation only → VIA-RELATED + ask',
   (() => { const v = classify({ branch: '', sqlAttachments: [], related: [270253] });

@@ -42,7 +42,9 @@ try {
   git(['checkout', '-b', 'mlk/master']);
   fs.writeFileSync(path.join(work, 'a.txt'), 'line1\n');
   fs.writeFileSync(path.join(work, 'pom.xml'),
-    '<project>\n\t<parent><artifactId>etanah-base-pom</artifactId><version>3.0.0</version></parent>\n\t<artifactId>etanah-pelupusan</artifactId>\n\t<version>0.0.1</version>\n</project>\n');
+    '<project>\n\t<parent><artifactId>etanah-base-pom</artifactId><version>3.0.0</version></parent>\n'
+    + '\t<artifactId>etanah-pelupusan</artifactId>\n\t<version>0.0.1</version>\n'
+    + '\t<properties>\n\t\t<etanah.common.version>1.0.71-MLK</etanah.common.version>\n\t</properties>\n</project>\n');
   git(['add', '.']); git(['commit', '-m', 'base']); git(['push', 'origin', 'mlk/master']);
   git(['checkout', '-b', 'mlk/internal-issue/1001']);
   fs.writeFileSync(path.join(work, 'b.txt'), 'ticket-1001\n');
@@ -90,6 +92,31 @@ try {
   // T8: verify — all tickets contained, table emitted
   r = prepNoRepo(['verify', '--release', '9.9.9']);
   check('T8 verify green table', r.status === 0 && /\| #1003 \| mlk\/esokongan\/1003 \| 0 \| ✓ \|/.test(r.stdout), 'exit=' + r.status + ' ' + r.stdout.slice(-200));
+
+  // ---- common bump (REPLAY of the #270952 / 1.0.9 mechanism) ----
+  // Verified 2026-07-16: the common bump lives ONLY on the release branch, never on mlk/master.
+  // A release branched fresh off master therefore starts WITHOUT the common fix.
+  const pomOf = () => fs.readFileSync(path.join(work, 'pom.xml'), 'utf8');
+  check('T8x0 fresh release branch inherits master OLD common (the gap this step fills)',
+    /<etanah\.common\.version>1\.0\.71-MLK<\/etanah\.common\.version>/.test(pomOf()), 'pom lacks the old common marker');
+
+  r = prepNoRepo(['bump-common', '--release', '9.9.9', '--common', '1.0.129']);
+  check('T8x1 malformed --common refused', r.status === 2 && /must look like/.test(r.stderr), 'exit=' + r.status);
+
+  r = prepNoRepo(['bump-common', '--release', '9.9.9', '--common', '1.0.129-MLK']);
+  check('T8x2 common bumped + committed with aaron message shape',
+    r.status === 0 && /<etanah\.common\.version>1\.0\.129-MLK<\/etanah\.common\.version>/.test(pomOf())
+    && git(['log', '-1', '--format=%s']) === 'common version increase to: 1.0.129-MLK',
+    'exit=' + r.status + ' head=' + git(['log', '-1', '--format=%s']));
+
+  check('T8x3 common bump did NOT touch the pelupusan version', /<version>0\.0\.1<\/version>/.test(pomOf()), 'scope containment');
+
+  r = prepNoRepo(['push', '--release', '9.9.9']);
+  check('T8x4 push refused after common bump until re-verify', r.status === 2 && /PUSH REFUSED/.test(r.stderr), 'exit=' + r.status);
+  prepNoRepo(['verify', '--release', '9.9.9']);
+
+  r = prepNoRepo(['bump-common', '--release', '9.9.9', '--common', '1.0.129-MLK']);
+  check('T8x5 bump-common idempotent', r.status === 0 && /already at/.test(r.stdout), 'exit=' + r.status);
 
   // T8b: push refused before bump when phase=verified? NO — verified is still an allowed push phase (bump-version is optional).
   //      This test proves the bump step CAN run + produces the "pelupusan version: <ver>" commit.

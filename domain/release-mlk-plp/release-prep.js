@@ -285,6 +285,61 @@ function cmdBumpVersion(a) {
   console.log(`✅ pom.xml bumped ${before} → ${st.release} + committed (${st.headSha.slice(0, 10)}) · phase=bumped · next: \`push\``);
 }
 
+// Bump <etanah.common.version> ON THE RELEASE BRANCH — a real Baseline step, not Aaron-only.
+// VERIFIED 2026-07-16 (みや's Q): the common bump does NOT flow from mlk/master. Proof —
+//   git branch -r --contains d19b0b2b0a  -> ONLY origin/mlk/release/1.0.9
+//   origin/mlk/master pom still reads 1.0.71-MLK; release/1.0.9 reads 1.0.129-MLK
+// So a release branched fresh off mlk/master starts WITHOUT the common fix; whoever runs the
+// Baseline must add this commit or the release silently ships without it (#270952's whole fix).
+// SCOPE: this touches ONE line in etanah-pelupusan's pom. It NEVER touches the etanah-common
+// repo or cuts a common release — that remains Aaron/common-team's (DON'T #3, narrowed).
+// The --common value should come from redmine-recon's COMMON-VER verdict, never invented.
+function cmdBumpCommon(a) {
+  const st = loadState(a.release);
+  if (!['merged', 'verified', 'bumped'].includes(st.phase)) die(`BUMP-COMMON REFUSED — phase is ${st.phase}, expected merged/verified/bumped`, 2);
+  const want = a.common;
+  if (!want || !/^\d+\.\d+\.\d+[\w.-]*-MLK$/.test(want)) die(`--common must look like 1.0.129-MLK (got "${want}")`, 2);
+  ensureRepo(st.repo);
+  ensureOnBranch(st.repo, st.branch);
+  const pomPath = path.join(st.repo, 'pom.xml');
+  const pom = fs.readFileSync(pomPath, 'utf8');
+  const re = /(<etanah\.common\.version>)([^<]+)(<\/etanah\.common\.version>)/;
+  const m = pom.match(re);
+  if (!m) die('could not find <etanah.common.version> in pom.xml');
+  if (m[2] === want) {
+    console.log(`· common already at ${want} — skipping`);
+    log('bump-common', st.release, 'noop', want);
+    return;
+  }
+  const before = m[2];
+  const dirty = gitOut(st.repo, ['status', '--porcelain']);
+  if (dirty) die(`BUMP-COMMON REFUSED — working tree must be clean; found:\n${dirty}`, 2);
+  fs.writeFileSync(pomPath, pom.replace(re, `$1${want}$3`));
+  // Same counter-rail as bump-version: exactly 1 file, exactly the common-version line.
+  const files = gitOut(st.repo, ['diff', '--name-only']).split('\n').filter(Boolean);
+  if (files.length !== 1 || files[0] !== 'pom.xml') {
+    git(st.repo, ['checkout', '--', '.'], true);
+    die(`BUMP-COMMON REFUSED — touched files other than pom.xml (reverted): ${files.join(', ')}`, 2);
+  }
+  const body = gitOut(st.repo, ['diff', '-U0', '--', 'pom.xml']).split('\n');
+  const strip = l => l.slice(1).trim();
+  const removed = body.filter(l => /^-[^-]/.test(l));
+  const added = body.filter(l => /^\+[^+]/.test(l));
+  const ok = removed.length === 1 && added.length === 1
+    && strip(removed[0]) === `<etanah.common.version>${before}</etanah.common.version>`
+    && strip(added[0]) === `<etanah.common.version>${want}</etanah.common.version>`;
+  if (!ok) {
+    git(st.repo, ['checkout', '--', 'pom.xml'], true);
+    die(`BUMP-COMMON REFUSED — not a clean single common-version change (reverted).\nremoved: ${JSON.stringify(removed)}\nadded:   ${JSON.stringify(added)}`, 2);
+  }
+  git(st.repo, ['add', 'pom.xml']);
+  git(st.repo, ['commit', '-m', `common version increase to: ${want}`]); // mirrors aaron's d19b0b2b0a
+  if (st.phase === 'verified' || st.phase === 'bumped') { st.phase = 'merged'; st.headSha = null; } // re-verify required
+  saveState(st);
+  log('bump-common', st.release, 'ok', { from: before, to: want });
+  console.log(`✅ common ${before} → ${want} + committed · phase=${st.phase} · re-run \`verify\` next`);
+}
+
 function cmdPush(a) {
   const st = loadState(a.release);
   if (st.phase !== 'verified' && st.phase !== 'bumped') die(`PUSH REFUSED — phase is ${st.phase}, expected verified/bumped (run verify [+ bump-version] first)`, 2);
@@ -311,8 +366,9 @@ const cmd = a._[0];
 const commands = {
   init: cmdInit, branch: cmdBranch, merge: cmdMerge,
   'merge-continue': cmdMergeContinue, verify: cmdVerify,
-  'bump-version': cmdBumpVersion, push: cmdPush, status: cmdStatus,
+  'bump-common': cmdBumpCommon, 'bump-version': cmdBumpVersion,
+  push: cmdPush, status: cmdStatus,
 };
-if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|merge|merge-continue|verify|bump-version|push|status> --release <ver> [...]`);
+if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|merge|merge-continue|verify|bump-common|bump-version|push|status> --release <ver> [...]`);
 if (cmd !== 'init' && !a.release) die('--release required');
 commands[cmd](a);

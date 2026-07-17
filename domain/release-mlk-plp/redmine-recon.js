@@ -118,13 +118,23 @@ function classify(ev) {
   if (hasSql) {
     return { verdict: 'SQL-PATCH', action: 'NOT a git merge — SQL must be run on the target DB', detail: flags.join(' · '), askBa: false, sheetEntry: true };
   }
+  // COMMON-VER: the fix ships via etanah-common, consumed by a <etanah.common.version> bump
+  // COMMITTED ON THE RELEASE BRANCH. Verified 2026-07-16: that bump never flows from
+  // mlk/master (d19b0b2b0a existed ONLY on release/1.0.9; master still read 1.0.71-MLK),
+  // so a fresh branch-off starts WITHOUT it — this is an ACTION, not an FYI.
   if (ev.commonVersion) {
-    const onRelease = ev.commonBumpOnRelease
-      ? `common bump ALREADY on release (${ev.commonBumpOnRelease})`
-      : 'common bump NOT found on release branch';
+    if (ev.commonBumpOnRelease) {
+      return {
+        verdict: 'COMMON-VER', action: 'nothing to do — bump already committed on the release branch',
+        detail: `needs common ${ev.commonVersion} · present (${ev.commonBumpOnRelease})`,
+        askBa: false, sheetEntry: false, commonBumpNeeded: '',
+      };
+    }
     return {
-      verdict: 'COMMON-VER', action: ev.commonBumpOnRelease ? 'nothing to merge — already shipped via common' : `ensure common ${ev.commonVersion} bump lands on the release`,
-      detail: `needs common ${ev.commonVersion} · ${onRelease}`, askBa: !ev.commonBumpOnRelease,
+      verdict: 'COMMON-VER',
+      action: `run: release-prep.js bump-common --common ${ev.commonVersion}`,
+      detail: `needs common ${ev.commonVersion} · NOT on the release branch (master keeps the old value — it will NOT arrive by itself)`,
+      askBa: false, sheetEntry: false, commonBumpNeeded: ev.commonVersion,
     };
   }
   if (ev.related && ev.related.length) {
