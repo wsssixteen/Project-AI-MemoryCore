@@ -1,8 +1,9 @@
 # release-mlk-plp — Melaka Pelupusan release pipeline (Feature contract)
 
-**One line**: branch `mlk/release/<ver>` off fresh `mlk/master`, merge ticket branches with
-stop-on-conflict, verify every ticket's commits landed, push — then SSH build + deploy + Sheet log,
-with 7 みや stop-points (V1-V7). PLP-only; duplicate as `release-<state>-<module>` for expansion.
+**One line**: Redmine-recon every ticket → branch `mlk/release/<ver>` off fresh `mlk/master` →
+merge with stop-on-conflict → verify → bump common+module version → push → hand みや a reminder
+card. **Baseline PREPARES; みや runs build/deploy/sheet** (scope-locked 2026-07-16 — no SSH,
+no keys). Stop-points V1-V3. PLP-only; duplicate as `release-<state>-<module>` for expansion.
 
 | Piece | File | Fires |
 |---|---|---|
@@ -22,7 +23,8 @@ with 7 みや stop-points (V1-V7). PLP-only; duplicate as `release-<state>-<modu
 **Hard guards (DOs side)**: PLP-only origin check · release regex `mlk/release/x.y[.z]` · clean-tree ·
 ff-only baseline pull · all-ticket-branches-exist preflight · stop-on-conflict (never auto-resolve)
 · verify-before-push (HEAD-pinned) · manual-push gate (fail-closed on missing state, bypass token
-`RELEASE_GATE_BYPASS` visible in transcript) · SSH by key only — the password is never typed by Ruri.
+`RELEASE_GATE_BYPASS` visible in transcript). Build/deploy/sheet are みや's — Ruri never ssh's,
+so the server password is needed nowhere and stored nowhere.
 
 **Counter-rail (DON'Ts side, みや 2026-07-16 — "DO NOTHING EXCEPT WHAT WE'VE ESTABLISHED")**:
 a release ASSEMBLES branches; it never authors or fixes code. Three enforcement layers —

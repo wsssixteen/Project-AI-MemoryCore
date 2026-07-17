@@ -1,6 +1,6 @@
 ---
 name: release-mlk-plp
-description: Melaka Pelupusan (PLP) release preparation + deploy pipeline — branch mlk/release/<ver> from mlk/master, merge ticket branches, verify, push, SSH build + deploy (endpoints in gitignored servers.local.json), Google Sheet log. 7 みや stop-points V1-V7. Triggers — "prepare release", "release branch", "deploy pelupusan", "release <x.y.z>", pasted BAQA "Planned Release Melaka" message/photo, "/release-mlk-plp".
+description: Baseline — Melaka Pelupusan (PLP) release PREPARATION. Redmine evidence recon (branch/SQL/common/related verdicts), branch mlk/release/<ver> off mlk/master, merge ticket branches, verify, bump common+module version, push, then hand みや a reminder card for build/deploy/sheet (he runs those). Stop-points V1-V3. Triggers — "baseline", "prepare release", "release branch", "deploy pelupusan", "release <x.y.z>", pasted BAQA "Planned Release Melaka" message/photo, "/release-mlk-plp".
 ---
 
 # release-mlk-plp — PLP release pipeline (state-specific: Melaka · Pelupusan ONLY)
@@ -12,9 +12,10 @@ description: Melaka Pelupusan (PLP) release preparation + deploy pipeline — br
 ## Pipeline (7 stop-points; NEVER skip forward past an un-nodded 🛑)
 
 ```
-PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3) → [BUMP-COMMON → VERIFY] → BUMP-VERSION → PUSH
-        → BUILD(V4 go · V5 success) → DEPLOY(V6 go) → SHEET(V7 submit)
-                                       └─ only if recon says COMMON-VER + bump not on release
+── RURI (prepare) ──────────────────────────────────────────────  ── みや (run) ──
+PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3)
+         → [BUMP-COMMON → VERIFY] → BUMP-VERSION → PUSH → CARD →  BUILD → DEPLOY → SHEET
+              └─ only if recon says COMMON-VER + bump not on release
 ```
 
 **A release branch is NOT just merges.** It carries up to 3 kinds of content:
@@ -122,33 +123,40 @@ Guards live IN the script (PLP-only origin check · clean tree · ff-only pull �
 preflight · stop-on-conflict · HEAD-pinned push) — do not re-implement them ad hoc.
 The `release-mlk-plp-push-gate` hook additionally blocks any MANUAL `git push` of a release ref.
 
-## Phase C — BUILD (ssh, key-auth; password typing by me is BANNED)
+## Phases C-E — HAND-OFF (みや runs these himself; SCOPE-LOCKED 2026-07-16 per みや)
 
-**🛑 V4: みや says "build".** Read `domain/release-mlk-plp/servers.local.json` (GITIGNORED —
-holds host/user/dir; copy from `.example` on a new machine) → `build` block:
+> **Baseline's deliverable ENDS at a pushed, correct release branch + a ready sheet line.**
+> みや: *"I'm okay with running those simple steps myself, we just need to prepare the release
+> properly."* Ruri does NOT ssh, does NOT deploy, does NOT touch the Sheet. No SSH keys needed
+> — that whole dependency is retired. **My job at C-E = emit the REMINDER CARD below, filled in.**
 
-```powershell
-ssh <build.user>@<build.host> "cd <build.dir> && echo <build.choice> | <build.script> mlk/release/<ver>"
+**Emit this card verbatim (values substituted) once `push` succeeds — then STOP.**
+
+```
+Baseline <ver> — branch ready ✓ pushed ✓   Your steps:
+
+C · BUILD    ssh app@<build.host>
+             cd build-scripts17/
+             ./build-pelupusan.sh mlk/release/<ver>
+             choose: stag          → wait for BUILD SUCCESS
+
+D · DEPLOY   (exit the build session first)
+             ssh app@<deploy.host>
+             cd deployment-scripts/stag/
+             ./deploy-pelupusan.sh → wait for success message
+
+E · SHEET    <sheet-url>  — Developer section:
+             Common Version: <common>   Module Version: <ver>
+             Branch Name: mlk/release/<ver>
+             SQL name with ticket number: <recon's sheet line, or leave empty>
 ```
 
-- FIRST RUN: probe whether the script accepts piped `stag`; if not, run interactively WITH みや.
-- Stream/quote the actual output. **🛑 V5**: quote the literal BUILD SUCCESS line — no quote, no claim.
-- Build fails → read the log, diagnose, propose (my call); fixes go back through Phase B rules.
-
-## Phase D — DEPLOY (ssh, key-auth; only after V5)
-
-**🛑 V6: みや says "deploy".** Same config → `deploy` block:
-
-```powershell
-ssh <deploy.user>@<deploy.host> "cd <deploy.dir> && <deploy.script>"
-```
-
-Quote the literal success message (deploy-proof rule).
-
-## Phase E — SHEET
-
-Open the release Google Sheet (URL in the BAQA message / bookmarks) via browser, prefill the
-row (version · date · tickets · status). **🛑 V7: みや reviews; submit/commit only on his nod.**
+- Host values come from `domain/release-mlk-plp/servers.local.json` (GITIGNORED; `.example` twin
+  committed). Never print the password — it isn't stored anywhere in this repo.
+- **Build fails?** みや pastes the error → I diagnose (my call) → any fix re-enters Phase B rules
+  (its own ticket + branch; the scope-gate still blocks stray edits).
+- **Banned**: claiming a build/deploy succeeded — I never see the output unless みや pastes it.
+  If he pastes it, the deploy-proof rule applies: quote the literal line or make no claim.
 
 ## 🚫 DON'Ts — the counter-rail (added 2026-07-16 per みや)
 
@@ -170,9 +178,9 @@ row (version · date · tickets · status). **🛑 V7: みや reviews; submit/co
 | 7 | **DON'T resolve a conflict without みや's nod** | Script stops at V2; I propose, he decides. Auto-resolve is BANNED. |
 | 8 | **DON'T run ad-hoc git** | Every branch/merge/verify/bump/push goes through `release-prep.js`. |
 | 9 | **DON'T skip a stop-point because it "obviously passes"** | V1-V7 are みや's, not mine. No forward-skipping past an un-nodded 🛑. |
-| 10 | **DON'T type/store/commit the server password** | SSH keys only; it lives in みや's vault, never in this repo. |
-| 11 | **DON'T claim build/deploy success without the quoted log line** | Deploy-proof rule — no quote, no claim. |
-| 12 | **DON'T submit the Google Sheet** | Prefill only; V7 submit is みや's click. |
+| 10 | **DON'T ssh, build, deploy, or touch the Sheet** | SCOPE-LOCKED 2026-07-16: those are みや's steps. My output is the reminder card. The password is never typed/stored/committed — it isn't needed at all now. |
+| 11 | **DON'T claim build/deploy success** | I never see the output. If みや pastes it: quote the literal line or make no claim (deploy-proof rule). |
+| 12 | **DON'T carry on past `push` + the card** | Baseline's deliverable ends there. |
 
 **Scope test before ANY action during a release** — if the answer to *"is this exact action written in Phase A-E above?"* is anything but a plain **yes**, it is a DON'T.
 
