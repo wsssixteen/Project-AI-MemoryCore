@@ -16,3 +16,6 @@
 {"ts":"2026-07-17T07:44:13.490Z","category":"wrong-negative-conclusion"}
 {"ts":"2026-07-17T11:21:57.776Z","category":"retrieval-trigger-literal-action-miss"}
 {"ts":"2026-07-17T11:22:08.566Z","category":"log-gap-diary-claims-unlogged-slip"}
+{"ts":"2026-07-16T14:56:09.988Z","category":"no-names-in-comments"}
+{"ts":"2026-07-17T11:07:22.587Z","category":"reask/verbose"}
+{"ts":"2026-07-17T11:31:46.746Z","category":"assume-not-verify"}

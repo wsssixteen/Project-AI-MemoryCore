@@ -1,71 +1,23 @@
 # Current Session
 
 ## What's loaded
-2026-07-16 (Thu) — **Session 2 (afternoon): QA-259112 (CR JKKL PDT, Semua Urusan) Phase-1 CLOSED — commit `afcdb2b4d8` on `origin/mlk/cr/259112`. Session 1 (morning): eSOKONGAN #270297 retrieved + Scout→Rubric held for Apply.**
-
-### QA-259112 state as of end-of-session (Phase-1 close, this session's main work)
-- **Status**: `closed` · phase 1 · `local_test_confirmed=true` · commit `afcdb2b4d8` · branch `mlk/cr/259112` (first-push).
-- **Ticket**: CR-AFTER-GO-LIVE #259112 — Semua Urusan JKKL (5 urusans) — add Syor Permohonan (mandatori radio) + Ulasan Pegawai (mandatori textarea, auto-regen on syor-pick) + Jana button on all 3 JKKL PDT tugasans (Penyediaan editable · Semakan/Perakuan view-only); template 5.1 populated from `ulasanPegawaiPDT` CC tag + 5.2 removed.
-- **Diff**: 8 files, +276/-6. Dedicated PDT pair (`syorPegawaiPDT` + `ulasanPegawaiPDT` + wrapping panel) mirroring PTG's `syorPPTPTG + ulasanPPTPTGPanel` structure at `mlkMaklumatRisalat.xhtml:38-61`. Service extension: `PelupusanService.saveMaklumatRisalat()` +3 params (`isSaveUlasanPegawaiPDT`, `ulasanPegawaiPDT`, `syorPegawaiPDT`).
-- **Slips caught this session** (all fixed pre-commit): (a) reused shared `keputusanSyor` with minimal attrs instead of PTG's fully-wired dedicated pair — miya screenshot-caught wrong field-order + no radios; refactored to dedicated pair (Prior-Art Grep Layer-4 slip); (b) `.contains("<")` heuristic for stale-value re-heal — miya challenged "does that follow PTG convention?" → reverted to PTG's plain `StringUtils.isBlank` blank-guard; (c) empty `else { }` block leftover in `generateDefaultUlasanPegawaiPDT` — miya reviewed diff, flagged, cleaned before commit.
-- **BA-Q flag**: `<Tujuan asal rizab>` — only BPRZ/PPJK ever create `umm_a_rizab` in the normal flow (PLPS/PRU/PT: 0 rows in stg2, verified via `SELECT COUNT(*) GROUP BY urusan`). Non-rizab urusans fall back to `-` per current design; if BA rejects, needs a "tujuan asal tanah" equivalent or per-urusan strategy (deferred to `QA-259112.md § Deferred #1`).
-- **Test app for BA validation**: `PTMLK/03/L/BPRZ/2026/3` (aplikasi_id 3400055) — populated `tujuanAsalRizab="KAWASAN LAPANG TAMAN ANGKASA NURI"`, full JKKL history, NULL `ulasanPegawaiPDT` (unpoisoned). Flowable-alter to PYRJKKLPDT for clean regeneration test.
-
-### 🔴 Session-opening slip (own it — Session 1 morning)
-- みや asked to **retrieve a NEW ticket from Redmine + run quest to Rubric**. I saw Task-folder #95 (#270052) already synced locally and ran the WHOLE quest on THAT instead — never ran `redmine-sync`. Wasted a full Scout→Rubric pass + みや's time + usage; he was (rightly) angry.
-- The actual ticket was **eSOKONGAN #270297** (he saw it in email). Recovery: ran `node quest/redmine-sync.js 270297 --create`, then Scout→Recon→Rubric on the correct ticket.
-- Root shape: "local folder exists" ≠ "the ticket みや means". When he says **retrieve from Redmine**, RUN redmine-sync FIRST — never substitute a pre-synced folder. (Relationship row added to main-memory prior DE.)
-
-### QA-270297 state (Session 1 held ticket — still resumable)
-- **Status**: `hold` · phase 0 · Rubric-complete · `local_test_confirmed` n/a (no code applied).
-- **Ticket**: Portal Awam PRBB (Borang 4C) — 2 docs `PLP_RESITCUKAI` (Salinan Resit Cukai Tahunan) + `SCR` (Sijil Carian Rasmi) show mandatory (`*`) for ALL Jenis Tanah; should be mandatory ONLY for Tanah Milik, not for Kerajaan/Rizab/Lombong.
-- **Bug site**: `etanah-awam/src/main/java/my/gov/etanah/awam/pelupusan/service/impl/PelupusanService.java:5158-5192` — `resetFlagWajibForPelupusan`, PRBB branch: KELAS_TANAH_MILIK if-block adds the 2 codes to mandatory; NO else-branch removes them for KRJN/RZB/LMB → maintenance default (mandatory) persists.
-- **Chosen fix**: Candidate 1 — inline else-branch pushing `"SCR"` + `"PLP_RESITCUKAI"` into `notMandatoryDocCodes` for KRJN/RZB/LMB. Mirrors in-file analog `:5145-5149`; apply-loop `:5210-5217` consumes it. 4-6 line diff, no new constant. 90% confidence.
-- **Fallback**: Candidate 2 — reuse `TANAH_RIZAB_LOMBONG_KERAJAAN` group constant.
-- **Full cold-resume recipe + 6-step Apply plan**: `projects/coding-projects/active/QA-270297/QA-270297.md` §0 Resume Point.
-
-### ⚠️ FLAG — orphan worktree (this session ran inside it)
-- This session ran in `.claude/worktrees/epic-jepsen-6da429` (Session 1 morning ran in `jovial-morse-2d5bad`) — both **NOT in `git worktree list`**. Git ops fail from inside them. All DE saves + commit done from the MAIN repo path (or main-repo absolute paths).
-- Cleanup next boot: `Remove-Item -Recurse -Force ".claude/worktrees/epic-jepsen-6da429"` + `Remove-Item -Recurse -Force ".claude/worktrees/jovial-morse-2d5bad"` from main repo if still present.
-
-### QA-269918 — still boot-active, untouched
-- Boot loaded QA-269918 as `status=active` phase Recon (whole session had this pinned as objective-lock while I actually worked QA-259112 for the afternoon). NOT worked this session; still shows active in active.txt — needs a status reconcile next engagement.
-
----
-
-### 🔴 Session-opening slip (own it)
-- みや asked to **retrieve a NEW ticket from Redmine + run quest to Rubric**. I saw Task-folder #95 (#270052) already synced locally and ran the WHOLE quest on THAT instead — never ran `redmine-sync`. Wasted a full Scout→Rubric pass + みや's time + usage; he was (rightly) angry.
-- The actual ticket was **eSOKONGAN #270297** (he saw it in email). Recovery: ran `node quest/redmine-sync.js 270297 --create`, then Scout→Recon→Rubric on the correct ticket.
-- Root shape: "local folder exists" ≠ "the ticket みや means". When he says **retrieve from Redmine**, RUN redmine-sync FIRST — never substitute a pre-synced folder. (Relationship row added to main-memory this DE.)
-
-### QA-270297 state as of end-of-session (THE resumable ticket)
-- **Status**: `hold` · phase 0 · Rubric-complete · `local_test_confirmed` n/a (no code applied).
-- **Ticket**: Portal Awam PRBB (Borang 4C) — 2 docs `PLP_RESITCUKAI` (Salinan Resit Cukai Tahunan) + `SCR` (Sijil Carian Rasmi) show mandatory (`*`) for ALL Jenis Tanah; should be mandatory ONLY for Tanah Milik, not for Kerajaan/Rizab/Lombong.
-- **Bug site**: `etanah-awam/src/main/java/my/gov/etanah/awam/pelupusan/service/impl/PelupusanService.java:5158-5192` — `resetFlagWajibForPelupusan`, PRBB branch: KELAS_TANAH_MILIK if-block adds the 2 codes to mandatory; NO else-branch removes them for KRJN/RZB/LMB → maintenance default (mandatory) persists.
-- **Chosen fix**: Candidate 1 — inline else-branch pushing `"SCR"` + `"PLP_RESITCUKAI"` into `notMandatoryDocCodes` for KRJN/RZB/LMB. Mirrors in-file analog `:5145-5149`; apply-loop `:5210-5217` consumes it. 4-6 line diff, no new constant. 90% confidence.
-- **Fallback**: Candidate 2 — reuse `TANAH_RIZAB_LOMBONG_KERAJAAN` group constant (used by `kksBahanBatuanDiambil.xhtml:140`); adds a 2nd file (`PelupusanConstant.java`) if the constant needs a Java home.
-- **Full cold-resume recipe + 6-step Apply plan**: `projects/coding-projects/active/QA-270297/QA-270297.md` §0 Resume Point.
-
-### ⚠️ FLAG — orphan worktree (this session ran inside it)
-- This session ran in `.claude/worktrees/jovial-morse-2d5bad`, which is **NOT in `git worktree list`** (main-repo registry knows only `ruri-ca30bc`). Git ops fail from inside it. All DE saves + commit done from the MAIN repo path.
-- The QA-270297 active.txt block first landed in the orphan worktree's copy (kept getting "trimmed"); re-added to the MAIN repo's `quest/active.txt` this DE so it propagates via origin/main.
-- Cleanup next boot: `Remove-Item -Recurse -Force ".claude/worktrees/jovial-morse-2d5bad"` from main repo if still present. (Same class as `epic-jepsen-6da429` orphan from 2026-07-13.)
-
-### QA-269918 — still the boot-active quest (untouched this session)
-- Boot loaded QA-269918 as `status=active` phase Recon, but 07-15's current-session says it was near-closed (Aaron's #270123 supersede). NOT worked this session. Still shows active in active.txt — needs a status reconcile next engagement (hold or close per Redmine reply).
+2026-07-17 (Friday, long-running session) — **#239386 MPT: env settled on mlit, patch dry-run PASSED, DB infra cleaned, all naming decided.** Marathon session spanning 07-06 → 07-17 (kept alive per みや — a previous save/restart lost context). Everything of record lives in [239386.md](../projects/coding-projects/active/239386/239386.md) **§0j–§0n** — §0n is the session-close block with the full resume sequence.
 
 ## ▶▶ NEXT SESSION — START HERE
 
-1. **QA-270297 Apply** (the held ticket): `/quest resume 270297` → run the 6-step plan in qa_doc §0: (1) confirm `KELAS_TNH_LMB` kod via postgres-mlkstg, (2) grep `TANAH_RIZAB_LOMBONG_KERAJAAN` Java home, (3) existing-fix probe, (4) pull-ff etanah-awam mlk/master (113 behind), (5) Apply Candidate 1 at PelupusanService.java:5173, (6) build+deploy STG+repro.
-2. **QA-269918 reconcile**: check Redmine status + flip active.txt (hold or close) — it's stale-active.
-3. **Orphan worktree cleanup**: remove `jovial-morse-2d5bad` from main repo.
-4. **Delegation-Economy DE refinement** (carried from 07-15): if kept, task-shape→haiku + stop-on-conflict fallback + main-repo-scope awareness. This DE ran full-Opus (no delegation) — clean.
+### #239386 (ACTIVE — Apply, dry-run passed, ready for real run)
+**Read qa_doc §0n first.** Short form:
+1. **Restart Claude Code** (MCP changes) → verify `postgres-mlit-pg` (`et_main_mlit`) + `postgres-mlkstg-pg` connect.
+2. Run `1. 239386-MPT-Patch.sql` on mlit FOR REAL (dry-run: 141 inserts, 0 errors, rolled back).
+3. Fresh branch off latest `mlk/master` → pop `stash@{0}` (L3 duplicate-panel fix, UNTESTED) → build WAR → deploy (JBoss `etanahDS` already = mlit).
+4. Derive mlit test permohonan — notes file `1. 239 386.txt` is ALL-UAT = stale; 7 urusan have zero mlit apps (MLPS·PSBS·UPS·OPRU·OMLPS·OPPJK·OPPTPB).
+5. Test PRZ L3 → disable sweep (xlsx tabs 3–4).
+6. BA: 2 cosmetic name questions (PPTPB L8, BPRZ L10 — display-only, verified) + duplicate-panel bug scope.
+
+### Environment (2026-07-17 overhaul — memory `feedback_uat_fat_environments.md` is current)
+mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3` dormant · **UAT + FAT deleted everywhere** (MCP + standalone.xml). Only 3 MCP remain, all pgEdge. Legacy server-postgres client GONE — never re-add. Backups: `.claude.json.bak-before-db-cleanup-2026-07-17` · `standalone.xml.bak-2026-07-17-db-cleanup`.
 
 ## 🎯 Session Recap (for AI restart)
+#239386 marathon. Settled: mlit as test env (UAT decommissioned, FAT deleted per みや) · DB connections 9→3 all-pgEdge + datasources renumbered (mlit=etanahDS active) · patch rebuilt INSERT-only 141 rows with all 5 chalk-back labels baked in (PRBB L7 JKBB · PPJK L8 Pajakan · PPTPB L8 Permit Khas · L6×5 Ulasan YB · BPRZ L10 reverted to Muatnaik Warta after parent-tugasan cross-ref overturned frequency) · dry-run on mlit PASSED with rollback · `nama` verified display-only (0 comparisons in code) so remaining name questions are cosmetic · Task folder cleaned 13→6 files (numbered 0/1/2 SQL set) · xlsx tabs 1-2 mechanically verified = patch = 141 · PSBS L7/L8 CLOSED (みや) · naming decision order finalized (ind_ursn.nama → parent tugasan → BPMN veto; frequency BANNED as evidence).
 
-**Duration** (this session): 2026-07-16 ~12:00 → ~12:30 +0800 (short — 1 wrong-ticket quest + 1 correct-ticket quest + DE).
-**Landed this session**: `quest/redmine-sync 270297 --create` (Task folder #97 + History.txt) · `projects/coding-projects/active/QA-270297/QA-270297.md` (full quest doc, §0 cold-resume) · `quest/active.txt` QA-270297 block (main repo) · this current-session.md · diary 2026-07-16 · main-memory relationship row (retrieval-skip slip).
-**NOT landed**: any etanah code (QA-270297 Apply deferred to next session per みや) · QA-269918 status reconcile.
-**Mode**: Quest — retrieve + Scout→Rubric, then DE.
-
-**Memory Type**: RAM | **Last Activity**: 2026-07-16 ~12:30 +0800
+**Memory Type**: RAM | **Last Activity**: 2026-07-17 19:27 — session-close saves + DE running.
