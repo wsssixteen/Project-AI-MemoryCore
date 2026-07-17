@@ -163,6 +163,20 @@ try {
   const onOrigin = git(['ls-remote', '--heads', 'origin', 'mlk/release/9.9.9']) !== '';
   check('T9 push lands on origin', r.status === 0 && onOrigin, 'exit=' + r.status + ' onOrigin=' + onOrigin);
 
+  // ---- decoupled branch-out (2026-07-16 per miya: cut the branch while recon still runs) ----
+  git(['checkout', 'mlk/master']);
+  r = prep(['init', '--release', '8.8.8']);
+  check('T11 init without tickets passes (branch-first flow)', r.status === 0 && /no tickets yet/.test(r.stdout), 'exit=' + r.status + ' ' + r.stderr.slice(0, 120));
+  r = prepNoRepo(['branch', '--release', '8.8.8']);
+  check('T12 branch cut before merge list exists', r.status === 0 && git(['branch', '--show-current']) === 'mlk/release/8.8.8', 'exit=' + r.status + ' ' + r.stderr.slice(0, 120));
+  r = prepNoRepo(['merge', '--release', '8.8.8']);
+  check('T13 merge refused until set-tickets', r.status === 2 && /no tickets set/.test(r.stderr), 'exit=' + r.status);
+  r = prepNoRepo(['set-tickets', '--release', '8.8.8', '--tickets', '9999=mlk/qa/9999']);
+  check('T14 set-tickets rejects missing branch (all-or-nothing)', r.status === 2 && /do NOT exist/.test(r.stderr), 'exit=' + r.status);
+  r = prepNoRepo(['set-tickets', '--release', '8.8.8', '--tickets', '1001=mlk/internal-issue/1001']);
+  const mergeAfter = prepNoRepo(['merge', '--release', '8.8.8']);
+  check('T15 set-tickets accepts + merge proceeds', r.status === 0 && mergeAfter.status === 0, 'set=' + r.status + ' merge=' + mergeAfter.status + ' ' + mergeAfter.stderr.slice(0, 120));
+
   // T10: PLP-only guard — repo whose origin is NOT etanah-pelupusan is refused
   const alien = path.join(tmp, 'alien');
   sh(tmp, 'git', ['init', '--bare', path.join(tmp, 'origin', 'etanah-awam.git')]);

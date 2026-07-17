@@ -95,8 +95,10 @@ PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3) → [BUMP-COMMON �
 ## Phase B — BRANCH + MERGE + VERIFY + PUSH (script; repo `E:\Projects\Melaka\etanah-pelupusan`)
 
 ```powershell
-node domain/release-mlk-plp/release-prep.js init   --release <ver> --tickets "<n>=<branch>,..."
-node domain/release-mlk-plp/release-prep.js branch --release <ver>
+node domain/release-mlk-plp/release-prep.js init   --release <ver>   # --tickets OPTIONAL here
+node domain/release-mlk-plp/release-prep.js branch --release <ver>   # may run DURING recon — branch needs only fresh mlk/master
+node domain/release-mlk-plp/release-prep.js set-tickets --release <ver> --tickets "<n>=<branch>,..."
+#   ↑ after 🛑 V1 — same all-or-nothing preflight as init, just deferred; merge refuses until this ran
 node domain/release-mlk-plp/release-prep.js merge  --release <ver>
 #   conflict? script exits 2 + lists files → I propose resolution → 🛑 V2 nod → resolve + git add
 node domain/release-mlk-plp/release-prep.js merge-continue --release <ver>

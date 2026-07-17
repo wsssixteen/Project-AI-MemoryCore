@@ -102,6 +102,14 @@ function unmergedFiles(repo) {
   return gitOut(repo, ['diff', '--name-only', '--diff-filter=U']).split('\n').filter(Boolean);
 }
 
+function parseTickets(spec) {
+  return spec.split(',').map(t => {
+    const [ticket, src] = t.split('=').map(s => s.trim());
+    if (!ticket || !src) die(`bad ticket entry "${t}" — use <ticket>=<branch>`);
+    return { ticket, src, merged: false };
+  });
+}
+
 function cmdInit(a) {
   const release = a.release;
   if (!release || !RELEASE_RE.test(release)) die(`--release must be like 1.0.9 (got "${release}")`);
@@ -110,12 +118,9 @@ function cmdInit(a) {
   const repo = a.repo || DEFAULT_REPO;
   ensureRepo(repo);
   ensureClean(repo);
-  if (!a.tickets) die('--tickets required, e.g. "269802=mlk/internal-issue/269802,269939=mlk/internal-issue/269939"');
-  const tickets = a.tickets.split(',').map(t => {
-    const [ticket, src] = t.split('=').map(s => s.trim());
-    if (!ticket || !src) die(`bad ticket entry "${t}" — use <ticket>=<branch>`);
-    return { ticket, src, merged: false };
-  });
+  // --tickets is OPTIONAL here (2026-07-16 per miya): the branch needs only fresh mlk/master,
+  // so it can be cut while recon still decides the merge list — tickets land via `set-tickets`.
+  const tickets = a.tickets ? parseTickets(a.tickets) : [];
 
   console.log('· fetching origin…');
   git(repo, ['fetch', 'origin', '--prune']);
@@ -134,10 +139,41 @@ function cmdInit(a) {
   saveState(st);
   log('init', release, 'ok');
   console.log(`\n✅ PREFLIGHT PASSED — plan for ${branch} (repo: ${repo})`);
+  if (tickets.length) {
+    console.log('| Ticket | Source branch | On origin |');
+    console.log('|---|---|---|');
+    tickets.forEach(t => console.log(`| #${t.ticket} | ${t.src} | ✓ |`));
+    console.log('\nphase=planned · next: [V1 nod] then `branch`');
+  } else {
+    console.log('no tickets yet — `branch` may run now (branch needs only mlk/master); set the merge list later via `set-tickets` [V1 nod].');
+  }
+}
+
+// Set/replace the merge list AFTER init/branch — lets the branch be cut while recon still
+// runs (2026-07-16 per miya). Same all-or-nothing preflight as init, just deferred; only
+// editable before any merge has landed.
+function cmdSetTickets(a) {
+  const st = loadState(a.release);
+  if (st.phase !== 'planned' && st.phase !== 'branched') {
+    die(`SET-TICKETS REFUSED — phase is ${st.phase}; the merge list is only editable before merging starts`, 2);
+  }
+  if (!a.tickets) die('--tickets required, e.g. "269939=mlk/internal-issue/269939,..."');
+  ensureRepo(st.repo);
+  const tickets = parseTickets(a.tickets);
+  git(st.repo, ['fetch', 'origin', '--prune']);
+  const missing = tickets.filter(t => !remoteBranchExists(st.repo, t.src));
+  if (missing.length) {
+    die('PREFLIGHT FAIL — these ticket branches do NOT exist on origin (all-or-nothing rule):\n'
+      + missing.map(t => `   ${t.ticket} -> ${t.src}`).join('\n'), 2);
+  }
+  st.tickets = tickets;
+  saveState(st);
+  log('set-tickets', st.release, 'ok', tickets.map(t => t.src));
+  console.log(`✅ merge list set — ${tickets.length} ticket(s)`);
   console.log('| Ticket | Source branch | On origin |');
   console.log('|---|---|---|');
   tickets.forEach(t => console.log(`| #${t.ticket} | ${t.src} | ✓ |`));
-  console.log('\nphase=planned · next: [V1 nod] then `branch`');
+  console.log('\nnext: `merge`');
 }
 
 function cmdBranch(a) {
@@ -187,6 +223,7 @@ function doMergeLoop(st) {
 function cmdMerge(a) {
   const st = loadState(a.release);
   if (st.phase !== 'branched' && st.phase !== 'merging') die(`phase is ${st.phase}, expected branched/merging`);
+  if (!st.tickets.length) die('no tickets set — run `set-tickets --release ' + st.release + ' --tickets "..."` first (V1)', 2);
   ensureRepo(st.repo);
   ensureOnBranch(st.repo, st.branch);
   if (mergeInProgress(st.repo)) die('a merge is already in progress — resolve it and run `merge-continue`', 2);
@@ -364,11 +401,11 @@ function cmdStatus(a) {
 const a = parseArgs(process.argv.slice(2));
 const cmd = a._[0];
 const commands = {
-  init: cmdInit, branch: cmdBranch, merge: cmdMerge,
+  init: cmdInit, branch: cmdBranch, 'set-tickets': cmdSetTickets, merge: cmdMerge,
   'merge-continue': cmdMergeContinue, verify: cmdVerify,
   'bump-common': cmdBumpCommon, 'bump-version': cmdBumpVersion,
   push: cmdPush, status: cmdStatus,
 };
-if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|merge|merge-continue|verify|bump-common|bump-version|push|status> --release <ver> [...]`);
+if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|set-tickets|merge|merge-continue|verify|bump-common|bump-version|push|status> --release <ver> [...]`);
 if (cmd !== 'init' && !a.release) die('--release required');
 commands[cmd](a);
