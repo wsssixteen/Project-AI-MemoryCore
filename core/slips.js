@@ -49,7 +49,17 @@ if (cmd === 'add') {
 }
 
 function spawnDashboard() {
-  const rows = readJsonl(FILE).concat(readJsonl(LEGACY).map(r => ({ ...r, _legacy: true })));
+  // DEDUPE on concat (fixed 2026-07-17, みや caught the inflated headline): every slip added
+  // since slips.jsonl was born (C7, 2026-07-12) is written to BOTH files by `add` below, so a
+  // plain concat counted those rows TWICE — the dashboard read 29 total / 14d 27 when the truth
+  // was 16 / 14. LEGACY still contributes its 3 pre-C7 rows, which live nowhere else.
+  // Key on ts+category: `add` stamps a fresh ISO ts per row, so collisions are the same row.
+  const primary = readJsonl(FILE);
+  const seen = new Set(primary.map(r => `${r.ts}|${r.category}`));
+  const legacyOnly = readJsonl(LEGACY)
+    .filter(r => !seen.has(`${r.ts}|${r.category}`))
+    .map(r => ({ ...r, _legacy: true }));
+  const rows = primary.concat(legacyOnly);
   const d14 = rows.filter(r => Date.parse(r.ts) >= Date.now() - 14 * 86400000);
   const byCat = {};
   for (const r of d14) byCat[r.category] = (byCat[r.category] || 0) + 1;
