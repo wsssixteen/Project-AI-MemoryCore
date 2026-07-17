@@ -6,13 +6,16 @@ with 7 みや stop-points (V1-V7). PLP-only; duplicate as `release-<state>-<modu
 
 | Piece | File | Fires |
 |---|---|---|
-| Orchestrator skill | `.claude/skills/release-mlk-plp/SKILL.md` | Skill tool — "prepare release" / BAQA message |
+| Orchestrator skill | `.claude/skills/release-mlk-plp/SKILL.md` | Skill tool — "prepare release" / "baseline" / BAQA message |
+| **Evidence recon script** | `domain/release-mlk-plp/redmine-recon.js` | Phase A step 3 (MANDATORY) — reads every Redmine channel + git, verdicts each ticket, emits the Ask-BA table |
 | Git mechanics script | `domain/release-mlk-plp/release-prep.js` | invoked by the skill, one subcommand per phase |
 | Prompt trigger | `domain/release-mlk-plp-ask/*.check.hook.js` | UserPromptSubmit (advisory → invoke skill) |
 | Push guard | `domain/release-mlk-plp-push-gate/*.check.hook.js` | PreToolUse Bash — blocks raw release pushes |
 | **Scope counter-rail** | `domain/release-mlk-plp-scope-gate/*.check.hook.js` | PreToolUse Edit\|Write — blocks ANY etanah-pelupusan edit while a release is in flight |
 | Eval (script, e2e) | `domain/release-mlk-plp/eval.js` | scratch repo + planted conflict + counter-rail — 15 fixtures |
-| Evals (hooks) | sibling folders' `*.eval.js` | 8 (push) + 5 (ask) + 11 (scope) fixtures |
+| Eval (recon) | `domain/release-mlk-plp/eval-recon.js` | offline verdict matrix + the 2 real 2026-07-16 misses — 17 fixtures |
+| Evals (hooks) | sibling folders' `*.eval.js` | 8 (push) + 6 (ask) + 11 (scope) fixtures |
+| Config (gitignored) | `servers.local.json` · `redmine.local.json` | infra endpoints + API key — `.example` twins are committed |
 | State | `domain/release-mlk-plp/state/release-<ver>.json` | phase ledger: planned→branched→merged→verified→pushed |
 | Log | `log.jsonl` (each folder) | per command / per hook fire |
 

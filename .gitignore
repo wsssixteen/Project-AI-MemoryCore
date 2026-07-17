@@ -24,8 +24,9 @@ Feature/Time-Based-Aware-System/prayer-state.json
 # Pre-prune backups — local safety net, not for the repo
 backups/
 
-# release-mlk-plp — server endpoints + release run-state are internal infra, never for the public repo
+# release-mlk-plp — server endpoints + redmine key + release run-state are internal infra, never for the public repo
 domain/release-mlk-plp/servers.local.json
+domain/release-mlk-plp/redmine.local.json
 domain/release-mlk-plp/state/
 
 # Hook telemetry / fire-logs — ephemeral, rewritten as hooks fire every turn.

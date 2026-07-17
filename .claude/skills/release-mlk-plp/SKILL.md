@@ -29,14 +29,42 @@ PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3) → BUMP-VERSION �
    | Requirement | `mlk/requirement/<num>` |
    ⚠️ Rework variants exist (`v2`/`v3` suffix) — pick the LATEST shipped one per active.txt /
    Redmine; when ambiguous, surface both and ask at V1.
-3. **READ THE WHOLE TICKET — NO FILTERED READS.** Fetch description + EVERY journal note
-   FULL-TEXT + the attachments list (`?include=journals,attachments`). Keyword-regex or
-   truncated reads are BANNED — devs share fix files / branches / commits inside the
-   conversation and as attachments. (Slip 2026-07-16: filtered read missed exactly this.)
-4. **PLP-only applies to the INVESTIGATION too.** A fix not found in `etanah-pelupusan` is
+3. **RUN THE RECON SCRIPT — never eyeball Redmine by hand** (MANDATORY, 2026-07-16):
+
+   ```powershell
+   node domain/release-mlk-plp/redmine-recon.js --tickets <n,n,n> --release <ver>
+   ```
+
+   It reads EVERY evidence channel (description · all journals full-text · attachments +
+   their bodies · relations · parent · fixed_version · custom fields) + probes git, and
+   returns a verdict per ticket. Hand-reading is BANNED — that is what missed both misses below.
+
+   | Verdict | Meaning | Action |
+   |---|---|---|
+   | `CODE-BRANCH` | branch on origin | merge (normal path) |
+   | `CODE+SQL` | ⚠️ code **and** a SQL script | merge AND flag the SQL — the merge does NOT carry it |
+   | `SQL-PATCH` | ⚠️ SQL-only fix | **git can never deliver this** — BA/DBA runs it; ask who + which env |
+   | `COMMON-VER` | fix shipped via `etanah-common <x>-MLK` | check the bump commit is on the release; if present → nothing to merge |
+   | `VIA-RELATED` | evidence lives on a related/parent ticket | follow that ticket |
+   | `NO-EVIDENCE` | 🚨 nothing anywhere | **ask BA — never release on a guess** |
+
+   **The script's 🛑 Ask-BA table goes to みや verbatim** — those are his actions, not mine to resolve.
+
+4. **A git-only check is structurally blind — this is a HARD rule, not a preference** (2026-07-16,
+   both proven on release 1.0.9):
+   - `#269802` carried attachment `#269802 sql.txt` (`UPDATE ind_tgsn it set nama = …`) — a
+     **SQL-only fix**. Git showed nothing; I reported "no branch → exclude?". A code-only
+     check can NEVER see a DB fix.
+   - `#270952` had `relations → #270253`, whose journal said *"use common 1.0.129-MLK onward"*,
+     and `release/1.0.9` already carried `d19b0b2b0a common version increase to: 1.0.129-MLK`.
+     It had **already shipped**; I reported it as missing.
+5. **PLP-only applies to the INVESTIGATION too.** A fix not found in `etanah-pelupusan` is
    simply NOT in this release — mark it out-of-module, surface at V1, move on. Hunting
    sibling repos (common/awam/teknikal) is BANNED. (Slip 2026-07-16, みや correction.)
-5. Emit the plan table (ticket · branch · exists-on-origin ✓) → **🛑 V1: みや nods**.
+   ⚠️ Nuance: reading a related ticket's *Redmine text* to learn WHY there's no branch is
+   recon, not hunting — the script's one-hop follow does exactly this and stops there.
+6. Emit the plan table (ticket · verdict · branch · action) + the Ask-BA table →
+   **🛑 V1: みや nods**.
 
 ## Phase B — BRANCH + MERGE + VERIFY + PUSH (script; repo `E:\Projects\Melaka\etanah-pelupusan`)
 

@@ -1,0 +1,6 @@
+{
+  "_note": "Copy to redmine.local.json (GITIGNORED) and fill. Never commit the filled file — it holds an API key.",
+  "host": "<redmine-host-ip>",
+  "port": 80,
+  "apiKey": "<your-redmine-api-key>"
+}
