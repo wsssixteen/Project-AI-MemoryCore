@@ -107,14 +107,16 @@ function classify(ev) {
   else if (ev.sqlTalk) flags.push('sql mentioned in ticket text');
   const hasSql = flags.length > 0;
 
+  // sheetEntry = "goes in みや's Google Sheet SQL field", NOT a question to answer.
+  // askBa = a genuine unknown that blocks the release until みや/BA answers.
   if (ev.branch && hasSql) {
-    return { verdict: 'CODE+SQL', action: `merge ${ev.branch} AND deliver the SQL separately`, detail: flags.join(' · '), askBa: true };
+    return { verdict: 'CODE+SQL', action: `merge ${ev.branch} AND deliver the SQL separately`, detail: flags.join(' · '), askBa: false, sheetEntry: true };
   }
   if (ev.branch) {
-    return { verdict: 'CODE-BRANCH', action: `merge ${ev.branch}`, detail: 'branch on origin', askBa: false };
+    return { verdict: 'CODE-BRANCH', action: `merge ${ev.branch}`, detail: 'branch on origin', askBa: false, sheetEntry: false };
   }
   if (hasSql) {
-    return { verdict: 'SQL-PATCH', action: 'NOT a git merge — SQL must be run on the target DB', detail: flags.join(' · '), askBa: true };
+    return { verdict: 'SQL-PATCH', action: 'NOT a git merge — SQL must be run on the target DB', detail: flags.join(' · '), askBa: false, sheetEntry: true };
   }
   if (ev.commonVersion) {
     const onRelease = ev.commonBumpOnRelease
@@ -234,16 +236,32 @@ async function main() {
     console.log(`| #${r.id} | ${r.tracker || '-'} | ${icon} ${r.verdict} | ${(r.detail || '').replace(/\|/g, '/')} | ${(r.action || '').replace(/\|/g, '/')} |`);
   }
 
+  // SQL scripts → みや's Google Sheet "Developer section" line. He only needs ticket + filename;
+  // he writes it up himself (みや 2026-07-16: "we only need to mention the ticket name & the
+  // file name... you only need to notify if there are scripts in the ticket").
+  // Sheet field format: `SQL name with ticket number:  #269802, #269802 sql.txt`
+  const sqlRows = rows.filter(r => r.sqlAttachments && r.sqlAttachments.length);
+  if (sqlRows.length) {
+    console.log('\n## 📄 SQL scripts — for the Google Sheet\n');
+    console.log('| Ticket | SQL file |');
+    console.log('|---|---|');
+    for (const r of sqlRows) for (const f of r.sqlAttachments) console.log(`| #${r.id} | ${f} |`);
+    const line = sqlRows.flatMap(r => r.sqlAttachments.map(f => `#${r.id}, ${f}`)).join(' · ');
+    console.log(`\nSheet line → \`SQL name with ticket number:  ${line}\``);
+  } else {
+    console.log('\n## 📄 SQL scripts — for the Google Sheet\n\n_None in this release — leave the sheet\'s SQL field empty._');
+  }
+
+  // Genuine questions only. SQL presence is NOT a question — it is a sheet entry (above).
   const asks = rows.filter(r => r.askBa);
   if (asks.length) {
     console.log('\n## 🛑 Ask BA / みや before releasing\n');
     console.log('| # | Subject | What to ask |');
     console.log('|---|---|---|');
     for (const r of asks) {
-      const q = r.verdict === 'SQL-PATCH' ? `SQL-only fix (${r.sqlAttachments.join(', ')}) — has this SQL been run on the target env? Who runs it for PROD?`
-        : r.verdict === 'CODE+SQL' ? `Carries BOTH code + SQL (${r.sqlAttachments.join(', ')}) — confirm the SQL is delivered alongside the merge.`
-        : r.verdict === 'COMMON-VER' ? `Fix lives in etanah-common ${r.commonVersion} — confirm that common bump is in this release.`
+      const q = r.verdict === 'COMMON-VER' ? `Fix lives in etanah-common ${r.commonVersion} — that bump is NOT on the release branch; confirm it lands.`
         : r.verdict === 'VIA-RELATED' ? `No own branch; related to ${r.related.join(', ')} — is it covered by that ticket, or was a branch never pushed?`
+        : r.verdict === 'CODE-BRANCH' ? 'Fix found only as an unlabelled commit (no branch) — confirm it is the intended fix.'
         : r.verdict === 'ERROR' ? 'Redmine fetch failed — check the ticket manually.'
         : 'No fix evidence ANYWHERE (no branch/commit/SQL/common/relation) — was this fixed without git+Redmine, or listed by mistake?';
       console.log(`| #${r.id} | ${(r.subject || '').replace(/\|/g, '/').slice(0, 60)} | ${q} |`);

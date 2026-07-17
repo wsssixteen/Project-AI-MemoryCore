@@ -45,6 +45,7 @@ PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3) → BUMP-VERSION �
    | `CODE+SQL` | ⚠️ code **and** a SQL script | merge AND flag the SQL — the merge does NOT carry it |
    | `SQL-PATCH` | ⚠️ SQL-only fix | **git can never deliver this** — BA/DBA runs it; ask who + which env |
    | `COMMON-VER` | fix shipped via `etanah-common <x>-MLK` | check the bump commit is on the release; if present → nothing to merge |
+   | *(SQL rows)* | → 📄 **Google Sheet table**, not a question | みや writes `SQL name with ticket number: #<n>, <file>` himself |
    | `VIA-RELATED` | evidence lives on a related/parent ticket | follow that ticket |
    | `NO-EVIDENCE` | 🚨 nothing anywhere | **ask BA — never release on a guess** |
 
@@ -58,6 +59,23 @@ PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3) → BUMP-VERSION �
    - `#270952` had `relations → #270253`, whose journal said *"use common 1.0.129-MLK onward"*,
      and `release/1.0.9` already carried `d19b0b2b0a common version increase to: 1.0.129-MLK`.
      It had **already shipped**; I reported it as missing.
+
+   **The common-delivery mechanism** (verified 2026-07-16, the #270952 chain — a PLP release
+   carries common fixes without any PLP branch):
+
+   ```
+   etanah-common  854ef22796 "refs #270253"  → KadPengenalanUtil.java: maxlength 20→40
+                  c7d10d682e "1.0.129-MLK"   → common cuts a release
+   etanah-pelupusan  d19b0b2b0a on mlk/release/1.0.9  → pom.xml ONE line:
+        - <etanah.common.version>1.0.71-MLK</etanah.common.version>
+        + <etanah.common.version>1.0.129-MLK</etanah.common.version>
+   ```
+
+   A shared util (`etanah-common`) serves APPS **and** AWAM, so its fix is consumed via a
+   **dependency bump**, never a merge — and each module redeploys separately (hence
+   BA's *"applied to APPS only, AWAM still occur same issue"*). `COMMON-VER` is therefore a
+   NORMAL, correct release state — not a gap. The common bump itself is Aaron's to make
+   (DON'T #3); Baseline only verifies it is present on the release branch.
 5. **PLP-only applies to the INVESTIGATION too.** A fix not found in `etanah-pelupusan` is
    simply NOT in this release — mark it out-of-module, surface at V1, move on. Hunting
    sibling repos (common/awam/teknikal) is BANNED. (Slip 2026-07-16, みや correction.)

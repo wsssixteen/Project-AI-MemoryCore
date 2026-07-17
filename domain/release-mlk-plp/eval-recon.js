@@ -33,15 +33,18 @@ check('C7 prose without SQL is NOT flagged (no false positive)',
 check('C8 branch only → CODE-BRANCH',
   classify({ branch: 'mlk/internal-issue/269939', sqlAttachments: [] }).verdict === 'CODE-BRANCH', '');
 
-check('C9 replay #269802: sql attachment, no branch → SQL-PATCH + askBa',
+check('C9 replay #269802: sql attachment, no branch → SQL-PATCH, sheetEntry not a question',
   (() => { const v = classify({ branch: '', sqlAttachments: ['#269802 sql.txt'] });
-    return v.verdict === 'SQL-PATCH' && v.askBa === true && /NOT a git merge/.test(v.action); })(),
-  'a SQL-only fix must never be reported as mergeable');
+    return v.verdict === 'SQL-PATCH' && v.sheetEntry === true && v.askBa === false && /NOT a git merge/.test(v.action); })(),
+  'a SQL-only fix must never be reported as mergeable; it routes to the Google Sheet, not the ask-list');
 
 check('C10 branch AND sql → CODE+SQL (the SQL half must NOT be swallowed by the merge)',
   (() => { const v = classify({ branch: 'mlk/qa/1', sqlAttachments: ['fix.sql'] });
-    return v.verdict === 'CODE+SQL' && v.askBa === true && /deliver the SQL separately/.test(v.action); })(),
+    return v.verdict === 'CODE+SQL' && v.sheetEntry === true && /deliver the SQL separately/.test(v.action); })(),
   'miya red flag: code fix present must not hide an accompanying SQL fix');
+
+check('C10b code-only → NOT a sheet entry (SQL field stays empty)',
+  classify({ branch: 'mlk/qa/1', sqlAttachments: [] }).sheetEntry === false, '');
 
 check('C11 replay #270952: common-ver + bump already on release → nothing to merge, no BA ask',
   (() => { const v = classify({ branch: '', sqlAttachments: [], commonVersion: '1.0.129-MLK',
