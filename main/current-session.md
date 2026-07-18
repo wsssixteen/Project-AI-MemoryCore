@@ -1,5 +1,33 @@
 # Current Session
 
+## 🆕 Monthly app — v3 UI/UX pass (2026-07-17 evening → 07-18 late night)
+
+**Not etanah.** みや's personal budgeting app — single-file `index.html`, GitHub Pages.
+**Repo**: `C:\Users\vice4\Documents\7. Code Projects\12. Monthly\Deploy` → github.com/wsssixteen/monthly (`main`, clean, pushed).
+**Note**: this repo lives OUTSIDE MemoryCore; the worktree only carries the launch.json + slip rows.
+
+**Shipped this session — 6 commits `ce9361a` → `2fb49ba`:**
+| Commit | What |
+|---|---|
+| `79dc551` | ⏻ per-category power toggle (excluded from Grand Total/Surplus/Balance, persists as `disabled`) · Workshop auto-save fix · **fresh-boot bug**: `loadAuto()` early-returns never set `appLoaded` → first-time users had NO auto-save all session (`finishFreshBoot()`) |
+| `2147ab2` | Header buttons grouped (`.header-btns`) · uniform small-button sizing · power lit-when-ON |
+| `975cd18` | Save button retired · Add Category ↔ Restart swap · collapse-aware ⏻/x swap · **SKBBK → override input** |
+| `ce420ec` | "Saved" msg · live SKBBK phase rate via `skbbkRate()` · mobile del→cadence popover |
+| `be1bd76` | Fade Saved flash · popover "Delete" + widths · tap-safe `@media (hover:hover)` · auto first row on new category |
+| `fd9c9db` + `2fb49ba` | Popover width pinned UA-proof · Restart colour revert · mobile declutter (subtitles/PCB hint/`span.pct`) · **power icon → inline SVG** (U+23FB missing on phone fonts) |
+
+**SKBBK research (familiar, sonnet ~76k tok) — ALL CONFIRMED**: 0.75% Jun 2026–May 2028 → 1.00% (yrs 3-5) → 1.25% (yr 6+) · RM6,000 ceiling · voluntary for LOCAL workers per 8 Jul 2026 Cabinet (foreign still mandatory; opt-out window 13 Jul–31 Aug 2026) · PERKESO uses a **bracket table** (max RM44.65 ≠ raw RM45.00) → estimate stays overridable. Date-aware `skbbkRate()` means no manual bump at phase change.
+
+**Open / parked (みや's call):**
+1. **Budgeting Workshop #3** — my rec: replace Breakdown with a **Yearly planner** (roadtax/insurance/raya → auto monthly set-aside). Savings-tracker idea WITHDRAWN (tracking ≠ the app's plan-ahead vibe).
+2. **Storage step 1** — `navigator.storage.persist()` + Add-to-Home-Screen (free, no backend); **Supabase** as the v3 real backend when friend-data must survive. Not built.
+3. `≡` vs `☰` menu glyph — awaiting verdict.
+4. Whether to drop the SKBBK % entirely (kept for now; it's PERKESO's official published rate).
+
+**App rules re-learned**: propose-then-build (project CLAUDE.md) · mobile-only = strictly inside `@media (max-width:600px)` · **deploy EVERY round** (みや reviews on phone).
+
+---
+
 ## What's loaded
 2026-07-17 (Friday) — **TWO concurrent sessions closed. (1) #239386 MPT** env settled on mlit, patch dry-run PASSED, DB infra cleaned, naming decided. **(2) Baseline** — the PLP release workflow — built, scope-locked, 70/70 evals green, on branch `claude/pelupusan-release-script-861710` **awaiting merge to main on みや's word**.
 
@@ -49,4 +77,4 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 ## 🎯 Session Recap (for AI restart)
 #239386 marathon. Settled: mlit as test env (UAT decommissioned, FAT deleted per みや) · DB connections 9→3 all-pgEdge + datasources renumbered (mlit=etanahDS active) · patch rebuilt INSERT-only 141 rows with all 5 chalk-back labels baked in (PRBB L7 JKBB · PPJK L8 Pajakan · PPTPB L8 Permit Khas · L6×5 Ulasan YB · BPRZ L10 reverted to Muatnaik Warta after parent-tugasan cross-ref overturned frequency) · dry-run on mlit PASSED with rollback · `nama` verified display-only (0 comparisons in code) so remaining name questions are cosmetic · Task folder cleaned 13→6 files (numbered 0/1/2 SQL set) · xlsx tabs 1-2 mechanically verified = patch = 141 · PSBS L7/L8 CLOSED (みや) · naming decision order finalized (ind_ursn.nama → parent tugasan → BPMN veto; frequency BANNED as evidence).
 
-**Memory Type**: RAM | **Last Activity**: 2026-07-17 19:27 — session-close saves + DE running.
+**Memory Type**: RAM | **Last Activity**: 2026-07-18 23:14 — Monthly v3 UI/UX session close + DE running. (Prev: 2026-07-17 19:27 — #239386 + Baseline closes.)

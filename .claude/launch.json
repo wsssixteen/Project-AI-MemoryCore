@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "monthly-preview",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8123", "--directory", "C:\\Users\\vice4\\Documents\\7. Code Projects\\12. Monthly\\Deploy"],
+      "port": 8123
+    }
+  ]
+}
