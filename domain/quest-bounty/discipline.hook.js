@@ -22,6 +22,12 @@
  * for other work. A missed bounty is NEVER boot-urgent — it only needs to run at the next
  * Phase-2 close / DE / an explicit go. So: (a) the message now says PARK IT (1-line flag),
  * never "run it now"; (b) a session-scoped marker file caps it at one emit per session.
+ *
+ * v1.2 (2026-07-03): worktree-aware clear-signal. log.jsonl is gitignored (main working
+ * tree only, OneDrive-synced) — a worktree session's CLAUDE_PROJECT_DIR points at
+ * .claude/worktrees/<name>, so the hook resolved log.jsonl to a nonexistent path and
+ * re-flagged quests whose harvest was already logged. Resolve log.jsonl against the
+ * main repo root derived by stripping the worktree suffix from ROOT.
  */
 const fs = require('fs');
 const path = require('path');
@@ -35,8 +41,10 @@ process.stdin.on('data', (d) => (input += d));
 process.stdin.on('end', () => {
   try {
     const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
+    // log.jsonl is gitignored (main working tree only) — strip a worktree suffix so the clear-signal resolves
+    const MAIN_ROOT = ROOT.replace(/[\\\/]\.claude[\\\/]worktrees[\\\/][^\\\/]+[\\\/]?$/, '');
     const archTxt = path.join(ROOT, 'quest', 'active-archive.txt');
-    const logFile = path.join(ROOT, 'domain', 'quest-bounty', 'log.jsonl');
+    const logFile = path.join(MAIN_ROOT, 'domain', 'quest-bounty', 'log.jsonl');
     if (!fs.existsSync(archTxt)) { process.exit(0); }
 
     // v1.1 once-per-session cap: one advisory per session, then silent.

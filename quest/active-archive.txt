@@ -1127,3 +1127,43 @@ rework_cause=scope_change (design refinement — Tempoh→Tarikh one-way is desi
 kpi_entry=main/kpi-tracker.md#2026-07-09-QA-269437
 post_mortem=projects/coding-projects/archive/QA-269437/QA-269437.md#Post-Mortem
 rework_addendum=projects/coding-projects/archive/QA-269437/QA-269437.md#Rework-2026-07-09-PM
+
+# ---- archived 2026-07-13 ----
+
+qa=STG-PPTPB-tujuanTKM
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\77. Staging Issue -
+phase=1
+status=closed
+current_phase=Closed
+local_test_confirmed=true
+commit=a78a9885a7
+closed=2026-06-20
+final_close=2026-07-13
+qa_doc=projects/coding-projects/active/STG-PPTPB-tujuanTKM/STG-PPTPB-tujuanTKM.md
+ticket_type=bug
+env=Staging
+issue_one_liner=PPTPB tujuanTKM_PI PropertyNotFoundException (no-ticket, from Aaron) — telecom fix shipped; Bug B → Aaron
+blocker_resolved=Bug B: gateway sid-70631659 kelulusan→keputusan — Aaron completed the Modeler change
+assigned_to_me=2026-06-20
+note=First non-QA task registered in active.txt per みや's "any task goes in active.txt" convention (2026-06-20). Held as blocked until 2026-07-13 when みや confirmed Aaron's Modeler fix landed and the ticket is fully closed.
+
+qa=QA-270003
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\96. INTERNAL ISSUE #270003 - PRBB - Penyediaan Surat Keputusan Lulus - Papar pejabat PTG (senario k
+phase=1
+status=archived
+ticket_type=bug
+env=MLKSTG
+issue_one_liner=PRBB - Penyediaan Surat Keputusan Lulus - Papar pejabat PTG (senario kelulusan PTG)
+assigned_to_me=2026-07-13
+current_phase=Closed
+local_test_confirmed=true
+quest_start=2026-07-13
+qa_doc=projects/coding-projects/archive/QA-270003/QA-270003.md
+urusan=PRBB
+tugasan=PYSK
+scope_anchor=PGSKPDT→PYSK-pejabat-routing-kelulusan-PTG-scenario
+base_branch=mlk/master
+commit=abfd588440
+branch=mlk/internal-issue/270003
+pushed=2026-07-13
+closed=2026-07-13
