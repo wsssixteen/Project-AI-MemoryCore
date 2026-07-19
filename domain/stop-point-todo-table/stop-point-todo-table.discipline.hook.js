@@ -1,3 +1,4 @@
+// meta-layer-audit: skip-ghost-check — SUPERSEDED by stop-point-summary HARD Stop-gate (same job, deterministic); kept unregistered to avoid PostToolUse pileup. Decision 2026-07-19 system-check Task #2.
 /**
  * stop-point-todo-table.discipline.hook.js — PostToolUse hook on Edit | Write | NotebookEdit
  *

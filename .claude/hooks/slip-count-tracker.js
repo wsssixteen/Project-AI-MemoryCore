@@ -64,17 +64,23 @@ process.stdin.on('end', () => {
     const data = JSON.parse(input);
     const toolName = data.tool_name || '';
     const ti = data.tool_input || {};
-    const filePath = ti.file_path || ti.path || '';
-    if (!/slip-log\.md$/i.test(filePath)) process.exit(0);
 
-    const cats = parseCategories(addedText(toolName, ti));
-    if (cats.length === 0) process.exit(0);                     // edit touched no new dated entry
-
-    const nowIso = new Date().toISOString();
-    try {
-      fs.mkdirSync(path.dirname(LEDGER), { recursive: true });
-      fs.appendFileSync(LEDGER, cats.map(c => JSON.stringify({ ts: nowIso, category: c })).join('\n') + '\n');
-    } catch (_) {}
+    // v2 RETARGET (2026-07-19 system-check Task #1): slip-log.md froze 2026-07-13; the live
+    // pipeline is `node core/slips.js add` (Bash) → meta/slips.jsonl. Fire on THAT command;
+    // slips.js already appends both ledgers + regenerates the dashboard, so this hook's sole
+    // remaining job is the rolling 7d/30d escalation tally the old version emitted.
+    let cats = [];
+    if (toolName === 'Bash' && /core[\\\/]slips\.js\s+add/.test(String(ti.command || ''))) {
+      const m = String(ti.command || '').match(/--category\s+"?([\w\/-]+)"?/);
+      if (m) cats = [m[1].toLowerCase()];
+    } else {
+      // legacy path kept for archive edits (rare, e.g. history corrections)
+      const filePath = ti.file_path || ti.path || '';
+      if (!/slip-log\.md$/i.test(filePath)) process.exit(0);
+      cats = parseCategories(addedText(toolName, ti));
+    }
+    if (cats.length === 0) process.exit(0);
+    // NOTE: no append here in the Bash path — core/slips.js already wrote both ledgers.
 
     // Roll up the ledger for the categories just added
     let ledger = [];
@@ -84,7 +90,7 @@ process.stdin.on('end', () => {
     } catch (_) {}
     const d7 = daysAgo(7), d30 = daysAgo(30);
 
-    const lines = ['', '⚙️  slip-count-tracker: logged ' + cats.length + ' slip-categor' + (cats.length === 1 ? 'y' : 'ies') + ' → meta/slip-counts.jsonl', ''];
+    const lines = ['', '⚙️  slip-count-tracker: rolling tally for ' + cats.length + ' slip-categor' + (cats.length === 1 ? 'y' : 'ies') + ' (ledger: meta/slips.jsonl via core/slips.js)', ''];
     for (const c of cats) {
       const entries = ledger.filter(e => e.category === c);
       const n7 = entries.filter(e => new Date(e.ts) >= d7).length;

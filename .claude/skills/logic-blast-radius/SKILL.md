@@ -1,6 +1,6 @@
 ---
 name: logic-blast-radius
-description: Use when about to Edit a stateful-flow etanah .java file (Form/Bean/Handler/Helper/Service/Controller/Manager) during an active quest — enumerate every action×state path the change touches before editing. Trigger phrases — "blast radius", "logic blast radius", "scenario matrix", "init() fix", "stateful flow", "does this fire on every click", "what else calls this", "state x trigger matrix". Structural defender = logic-blast-radius-gate.js PreToolUse hook, which HARD-BLOCKS the Edit until this matrix's banner appears in-session. Built 2026-07-02 (QA-268273).
+description: Use when about to Edit a stateful-flow etanah .java file (Form/Bean/Handler/Helper/Service/Controller/Manager) during an active quest — enumerate every action×state path the change touches before editing. Trigger phrases — "blast radius", "logic blast radius", "scenario matrix", "init() fix", "stateful flow", "does this fire on every click", "what else calls this", "state x trigger matrix". ⚠️ ADVISORY-ONLY today — the planned logic-blast-radius-gate.js PreToolUse hook was NEVER BUILT (ghost-claim corrected 2026-07-19 system-check); the discipline relies on this skill firing. Built 2026-07-02 (QA-268273).
 metadata:
   type: discipline-primitive
   sub-layer: discipline
@@ -11,7 +11,7 @@ metadata:
 
 ## What the banner is
 
-`logic-blast-radius-gate.js` blocks any Edit/Write to an etanah `*Form|Bean|Handler|Helper|Service|Controller|Manager.java` path while `quest/active.txt` has `status=active`, UNLESS this session's transcript already contains the literal banner `═══ LOGIC BLAST RADIUS ═══` (or ASCII `===` form). It checks the matrix **exists** (anti-skip) — it does NOT verify the matrix is complete or correct. That judgment stays on Ruri + みや.
+⚠️ **PLANNED, NOT BUILT** (corrected 2026-07-19 — system-check found the gate file exists nowhere in the repo; this section described intent as fact for 17 days): the DESIGN was — `logic-blast-radius-gate.js` blocks any Edit/Write to an etanah `*Form|Bean|Handler|Helper|Service|Controller|Manager.java` path while `quest/active.txt` has `status=active`, UNLESS this session's transcript already contains the literal banner `═══ LOGIC BLAST RADIUS ═══` (or ASCII `===` form) — existence-check only, completeness stays on Ruri + みや. Until the gate is built, emitting the banner before such edits is skill-discipline, not enforced.
 
 ## When this fires
 
@@ -64,10 +64,10 @@ The matrix surfaced the ✗ rows the original 1-scenario fix never considered �
 
 ## Cross-references
 
-- `.claude/hooks/logic-blast-radius-gate.js` — the PreToolUse hook enforcing this
+- ~~`.claude/hooks/logic-blast-radius-gate.js`~~ — PLANNED gate, never built (see ⚠️ above); build-candidate if the skill alone keeps slipping
 - `quest/quest-protocol.md` "🚨 Logic Blast Radius" — Rubric row (h) origin
 - `.claude/skills/predicate-box/SKILL.md` — sibling primitive for single-assumption pre-edit proof; this skill is the multi-path scenario-matrix version for stateful-flow classes specifically
 
 ---
 
-*Discipline primitive skill. Built 2026-07-02 (QA-268273) as the structural procedure paired with `logic-blast-radius-gate.js`.*
+*Discipline primitive skill. Built 2026-07-02 (QA-268273) as the structural procedure; its planned gate pair was never built (corrected 2026-07-19).*
