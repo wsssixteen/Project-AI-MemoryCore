@@ -141,6 +141,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\release-mlk-plp-ask\\\\release-mlk-plp-ask.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\retrieve-sync-gate\\\\retrieve-sync-gate.check.hook.js\""
           }
         ]
       }

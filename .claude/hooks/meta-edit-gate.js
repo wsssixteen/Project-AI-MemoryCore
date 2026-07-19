@@ -107,6 +107,8 @@ process.stdin.on('end', () => {
       '  2. Did Step 0 (inventory) confirm the change is correct shape?',
       '  3. Did Step 3.5 (best-practices) check the library-items reference?',
       '  4. Is this edit logged in slip-log if it\'s a refinement from a slip?',
+      '  5. If refining FROM an audit-log row: was meta/system-architecture.md consulted',
+      '     AND the EXPECTED RESULT stated in bullets in-turn? (log rows are thin — miya 2026-07-19)',
       '',
       'If ANY answer is "no" — pause and route through meta-design-router first.',
       'If all "yes" — proceed; the edit will also fire other gates (claim-verification at done-time).',

@@ -195,6 +195,9 @@ function forgeNew() {
     // 7. registry + telemetry + rollback recipe
     append(REGISTRY, { ts: new Date().toISOString(), name, kind, event, files: created.map(f => path.relative(ROOT, f)), lifecycle: 'created', route, route_why: routeWhy, trigger, action, replay, nod, collisions_overridden: override || null });
     append(TELEMETRY, { ts: new Date().toISOString(), hook: 'forge', event: 'Forge', mode: 'forge-new', component: name, kind, exit: 0, blocked: false });
+    // Auto-ledger the birth as a type=upgrade Slip Ledger row (weekly-audit feed) — 2026-07-19
+    // scour refinement #3. Expected result: registry rows ⊆ upgrade rows, zero manual memory.
+    append(path.join(ROOT, 'meta', 'slips.jsonl'), { ts: new Date().toISOString(), type: 'upgrade', category: 'forge/new-' + kind, qa: null, guard_expected: null, guard_fired: null, evidence: name + ' born via forge: ' + (action || '').slice(0, 140), action: null, caught_by: 'forge' });
     log('ROLLBACK recipe: delete ' + created.map(f => path.relative(ROOT, f)).join(' + ') + (rollback.length ? ' · ' + rollback.join(' · ') : '') + ' · remove registry.jsonl line for "' + name + '"');
     log('BORN ✓ ' + name + ' (' + kind + ') — lifecycle: created');
   } catch (e) {

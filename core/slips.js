@@ -33,6 +33,11 @@ if (cmd === 'add') {
     guard_expected: arg('guard-expected') || null,
     guard_fired: arg('guard-fired') === 'true' ? true : (arg('guard-fired') === 'false' ? false : null),
     evidence: arg('evidence') || null,
+    // WHY --situation (miya 2026-07-19): rows are written on-the-fly and read weeks later at
+    // audit time — evidence says WHAT went wrong, situation says the FRAME (quest/session/phase
+    // + trigger). Without it, audit-time refinement reconstructs the frame by guessing — the
+    // exact failure that produced implement-from-stale-intent-no-appraise.
+    situation: arg('situation') || null,
     action: arg('action') || null,
     caught_by: arg('caught-by') || null,
   };

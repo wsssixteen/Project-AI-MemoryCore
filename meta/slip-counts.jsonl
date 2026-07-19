@@ -30,3 +30,8 @@
 {"ts":"2026-07-19T04:48:50.856Z","category":"system-check/run-2"}
 {"ts":"2026-07-19T04:53:58.993Z","category":"implement-from-stale-intent-no-appraise"}
 {"ts":"2026-07-19T04:53:59.091Z","category":"de-diary-capture-miss"}
+{"ts":"2026-07-19T05:30:04.664Z","category":"stop-without-next-step"}
+{"ts":"2026-07-19T05:49:23.801Z","category":"refine-from-thin-log-no-architecture-consult"}
+{"ts":"2026-07-19T05:49:23.896Z","category":"reask/buried-answer"}
+{"ts":"2026-07-19T06:01:18.839Z","category":"forge/new-check"}
+{"ts":"2026-07-19T06:02:12.099Z","category":"ledger/situation-field"}
