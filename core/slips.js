@@ -63,8 +63,10 @@ function spawnDashboard() {
   const allRows = primary.concat(legacyOnly);
   // type split (2026-07-19): 'feedback' rows are preference/praise guidance, NOT mistakes — kept out of slip counts
   const fbRows = allRows.filter(r => r.type === 'feedback');
-  const rows = allRows.filter(r => r.type !== 'feedback');
+  const upRows = allRows.filter(r => r.type === 'upgrade'); // system upgrades/refinements — weekly-audit feed (miya 2026-06-20 wider intent + 2026-07-19)
+  const rows = allRows.filter(r => r.type !== 'feedback' && r.type !== 'upgrade');
   const fb14 = fbRows.filter(r => Date.parse(r.ts) >= Date.now() - 14 * 86400000);
+  const up14 = upRows.filter(r => Date.parse(r.ts) >= Date.now() - 14 * 86400000);
   const d14 = rows.filter(r => Date.parse(r.ts) >= Date.now() - 14 * 86400000);
   const byCat = {};
   for (const r of d14) byCat[r.category] = (byCat[r.category] || 0) + 1;
@@ -88,6 +90,12 @@ function spawnDashboard() {
       '## Feedback (14d — preferences/praise, not mistakes; type=feedback)',
       '', '| ts | category | evidence |', '|---|---|---|',
       ...fb14.map(r => `| ${r.ts.slice(0, 10)} | ${r.category} | ${r.evidence || '—'} |`),
+      '',
+    ] : []),
+    ...(up14.length ? [
+      '## System upgrades (14d — refinements/builds shipped; type=upgrade — the weekly-audit feed)',
+      '', '| ts | category | evidence |', '|---|---|---|',
+      ...up14.map(r => `| ${r.ts.slice(0, 10)} | ${r.category} | ${r.evidence || '—'} |`),
       '',
     ] : []),
   ].join('\n');

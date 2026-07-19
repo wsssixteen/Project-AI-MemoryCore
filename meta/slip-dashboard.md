@@ -44,3 +44,10 @@ _Historical archive: `meta/slip-log.md` (frozen 2026-07-13) · baseline 2026-07-
 | ts | category | evidence |
 |---|---|---|
 | 2026-07-19 | naming/slip-ledger | miya 2026-07-19: the slip log needs a name that identifies what it does - named Slip Ledger |
+| 2026-07-19 | ledger/capture-system-upgrades | miya 2026-07-19 (recalling a few-days-ago exchange never captured): ledger should capture system upgrades too, auditable weekly, possibly automated/skill; combine-vs-separate settled = ONE typed ledger |
+
+## System upgrades (14d — refinements/builds shipped; type=upgrade — the weekly-audit feed)
+
+| ts | category | evidence |
+|---|---|---|
+| 2026-07-19 | system-check/run-2 | weekly audit 2026-07-19: GHOST-HOOKS-2 16-file fix + meta-layer-audit parser fix (54 false ghosts) + slip-count-tracker v2 + overview-steps registered + capture-at-the-moment + typed ledger (slip/feedback/upgrade) |
