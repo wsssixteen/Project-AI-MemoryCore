@@ -28,3 +28,5 @@
 {"ts":"2026-07-19T04:33:42.375Z","category":"ghost-claim-skill-vs-disk"}
 {"ts":"2026-07-19T04:48:18.386Z","category":"ledger/capture-system-upgrades"}
 {"ts":"2026-07-19T04:48:50.856Z","category":"system-check/run-2"}
+{"ts":"2026-07-19T04:53:58.993Z","category":"implement-from-stale-intent-no-appraise"}
+{"ts":"2026-07-19T04:53:59.091Z","category":"de-diary-capture-miss"}
