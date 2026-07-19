@@ -72,14 +72,34 @@ function collectRegisteredHooks(settings) {
     for (const block of settings.hooks[event] || []) {
       for (const h of block.hooks || []) {
         const cmd = h.command || '';
-        const m = cmd.match(/([\w.-]+)\.js/);
-        if (!m) continue;
-        names.add(m[1]);
-        // Resolve the real .js path from the command (quoted-with-spaces or bare).
-        const pm = cmd.match(/"([^"]+\.js)"/) || cmd.match(/(\S+\.js)/);
-        // CC substitutes ${CLAUDE_PROJECT_DIR} at run-time; the audit must too, or every hook reads as "missing".
-        const realPath = pm ? pm[1].replace(/\$\{CLAUDE_PROJECT_DIR\}/g, process.env.CLAUDE_PROJECT_DIR || path.join(__dirname, '..', '..')) : null;
-        if (realPath && !fs.existsSync(realPath)) missing.add(m[1]);
+        const subst = (p) => p.replace(/\$\{CLAUDE_PROJECT_DIR\}/g, process.env.CLAUDE_PROJECT_DIR || path.join(__dirname, '..', '..'));
+        // 2026-07-19 fix (system-check): the old first-match regex grabbed hook-runtime.js /
+        // dispatch-hooks.js as the "name" for every wrapped/bundled entry → ~54 false ghosts.
+        // Style A — hook-runtime wrap: real hook is the --wrap argument.
+        const wrap = cmd.match(/--wrap\s+"([^"]+\.js)"/);
+        // Style B — bundle dispatch: real hooks are the manifest's children[].
+        const manifest = cmd.match(/--manifest\s+"([^"]+\.json)"/);
+        if (manifest) {
+          const mPath = path.isAbsolute(subst(manifest[1])) ? subst(manifest[1]) : path.join(REPO_ROOT, manifest[1]);
+          const mj = safeReadJSON(mPath);
+          const children = (mj && (mj.children || mj.hooks)) || [];
+          for (const c of children) {
+            const cPath = typeof c === 'string' ? c : (c.path || c.file || '');
+            const cName = path.basename(cPath, '.js');
+            if (!cName) continue;
+            names.add(cName);
+            const abs = path.isAbsolute(cPath) ? cPath : path.join(REPO_ROOT, cPath);
+            if (!fs.existsSync(abs)) missing.add(cName);
+          }
+          continue;
+        }
+        const pm = wrap || cmd.match(/"([^"]+\.js)"/) || cmd.match(/(\S+\.js)/);
+        if (!pm) continue;
+        const realPath = subst(pm[1]);
+        // Skip the runtime wrapper itself if it somehow matched bare
+        if (path.basename(realPath) === 'hook-runtime.js' || path.basename(realPath) === 'dispatch-hooks.js') continue;
+        names.add(path.basename(realPath, '.js'));
+        if (!fs.existsSync(realPath)) missing.add(path.basename(realPath, '.js'));
       }
     }
   }

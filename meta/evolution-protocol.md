@@ -52,7 +52,7 @@ research-file-last-updated: 2026-05-23  # research file itself NOT re-run; only 
 research-file-path: library-items/agent-architecture/claude-code-best-practices.md
 
 # Added 2026-05-24 — system-check cadence (paired skill: .claude/skills/system-check/SKILL.md)
-last-system-check: 2026-05-24  # first run = this session's 5-parallel-audit
+last-system-check: 2026-07-19  # run 2 — weekly-audit Step 1; 5 familiars (sonnet-tiered); headline: meta-layer-audit self-regression (54 false ghosts) found+fixed same run
 next-system-check-due: 2026-06-23  # +30 days
 system-check-cadence-days: 30  # calibrate over first 3 runs
 last-system-check-findings-count: 35  # surfaced critical+high+medium gaps

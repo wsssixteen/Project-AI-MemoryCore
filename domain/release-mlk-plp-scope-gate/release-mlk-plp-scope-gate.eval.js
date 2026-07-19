@@ -68,7 +68,7 @@ check('F7 no release in flight: quest edits pass', r.status === 0, 'exit=' + r.s
 
 // F8: non-pelupusan file mid-release → not our business (MemoryCore edits etc.)
 setPhase('1.0.9', 'merged');
-r = run(edit('C:\\Users\\Ridhwan\\OneDrive\\0. AI\\Project-AI-MemoryCore\\main\\todo.md'));
+r = run(edit(require('path').join(__dirname, '..', '..', 'main', 'todo.md'))); // machine-independent (GHOST-HOOKS-2 straggler, 2026-07-19)
 check('F8 non-pelupusan path ignored', r.status === 0, 'exit=' + r.status);
 
 // F9: bypass token → allowed (auditable in transcript)

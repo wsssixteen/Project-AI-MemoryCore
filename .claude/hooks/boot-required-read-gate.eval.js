@@ -1,3 +1,4 @@
+// meta-layer-audit: skip-ghost-check — eval harness, run by hand, NOT an event hook (marked 2026-07-19 system-check)
 /**
  * boot-required-read-gate.eval.js — runnable eval for the fixed resolver.
  * Run:  node .claude/hooks/boot-required-read-gate.eval.js   (exit 0 = PASS)

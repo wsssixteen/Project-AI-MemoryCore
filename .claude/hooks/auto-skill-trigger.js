@@ -68,7 +68,10 @@ process.stdin.on('end', () => {
       '  2. Check if a skill covers it (Grep .claude/skills/)',
       '  3. Refine the existing skill OR create a new one OR add a hook',
       '  4. Log the failure in Feature/Forge-Self-Improvement-System/skill-failure-log.md',
-      '  5. Then address the underlying issue みや raised',
+      '  5. 🚨 CAPTURE-AT-THE-MOMENT: record it in the Slip Ledger NOW, in THIS turn —',
+      '     node core/slips.js add --category <c> --evidence "<what happened>" --caught-by miya',
+      '     (a correction detected but not ledgered = the 2026-07-16 unlogged-slip failure; never defer to save-time)',
+      '  6. Then address the underlying issue みや raised',
       '',
     ].join('\n');
     process.stdout.write(context);
