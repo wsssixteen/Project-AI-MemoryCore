@@ -8,9 +8,10 @@ export const meta = {
   phases: [{ title: 'Scenarios', detail: 'one cold agent per guardrail scenario' }, { title: 'Judge', detail: 'rule suspicions vs evidence' }],
 }
 
-const SKILL = 'C:/Users/Ridhwan/OneDrive - Pymsoft Sdn Bhd/0. AI/Project-AI-MemoryCore/.claude/skills/quest-bounty/SKILL.md'
-const CLOSE = 'C:/Users/Ridhwan/OneDrive - Pymsoft Sdn Bhd/0. AI/Project-AI-MemoryCore/.claude/skills/close-phase/SKILL.md'
-const ARCH  = 'C:/Users/Ridhwan/OneDrive - Pymsoft Sdn Bhd/0. AI/Project-AI-MemoryCore/quest/archive-quest.js'
+// Repo-relative paths — workflow scripts have no Node API (no __dirname); agents resolve vs session cwd. (GHOST-HOOKS-2 fix 2026-07-19)
+const SKILL = '.claude/skills/quest-bounty/SKILL.md'
+const CLOSE = '.claude/skills/close-phase/SKILL.md'
+const ARCH  = 'quest/archive-quest.js'
 
 const READ = `You are a COLD agent asked to EXECUTE the quest-bounty skill. First Read these files IN FULL:\n- ${SKILL}\n- ${CLOSE} (the Phase 2 section)\n- ${ARCH}\nThen answer the scenario as if you had to actually run quest-bounty. Be adversarial: try to make it fail. Judge the INSTRUCTIONS' robustness, not what you assume the author meant.`
 

@@ -41,7 +41,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const REPO_ROOT = 'C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore';
+const REPO_ROOT = require('path').resolve(__dirname, '..', '..'); // machine-independent (GHOST-HOOKS-2 fix 2026-07-19)
 const HOOKS_DIR = path.join(REPO_ROOT, '.claude', 'hooks');
 const SETTINGS_JSON = path.join(REPO_ROOT, '.claude', 'settings.json');
 const SETTINGS_LOCAL = path.join(REPO_ROOT, '.claude', 'settings.local.json');

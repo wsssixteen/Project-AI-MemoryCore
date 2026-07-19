@@ -39,7 +39,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const REPO_ROOT = 'C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore';
+const REPO_ROOT = require('path').resolve(__dirname, '..', '..'); // machine-independent (GHOST-HOOKS-2 fix 2026-07-19)
 const ACTIVE_TXT = path.join(REPO_ROOT, 'quest', 'active.txt');
 
 function safeRead(p) {

@@ -13,7 +13,7 @@ const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
-const TASKS_FOLDER = 'C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\1. Tasks\\Melaka';
+const TASKS_FOLDER = require('path').join(require('os').homedir(), 'OneDrive - Pymsoft Sdn Bhd', '1. Tasks', 'Melaka'); // machine-independent (GHOST-HOOKS-2 fix 2026-07-19)
 const CLI = path.join(__dirname, 'active-cli.js');
 const DRY = process.argv.includes('--dry-run');
 

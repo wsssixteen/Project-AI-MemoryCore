@@ -30,7 +30,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const REPO_ROOT = path.resolve(__dirname, '..');
-const DEFAULT_TASKS = 'C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\1. Tasks\\Melaka';
+const DEFAULT_TASKS = require('path').join(require('os').homedir(), 'OneDrive - Pymsoft Sdn Bhd', '1. Tasks', 'Melaka'); // machine-independent (GHOST-HOOKS-2 fix 2026-07-19)
 const ARCHIVE_SUBFOLDER = 'Archive';
 const PROJECT_ACTIVE  = path.join(REPO_ROOT, 'projects', 'coding-projects', 'active');
 const PROJECT_ARCHIVE = path.join(REPO_ROOT, 'projects', 'coding-projects', 'archive');

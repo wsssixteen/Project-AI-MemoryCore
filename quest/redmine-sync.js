@@ -12,7 +12,7 @@ const { execFileSync } = require('child_process');
 
 const REDMINE_BASE  = 'http://172.16.90.169/redmine';
 const REDMINE_KEY   = '9565c21aa6cd9672fd3c7c2c7fec4c934c2f7c66';
-const TASKS_FOLDER  = 'C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\1. Tasks\\Melaka';
+const TASKS_FOLDER  = require('path').join(require('os').homedir(), 'OneDrive - Pymsoft Sdn Bhd', '1. Tasks', 'Melaka'); // machine-independent (GHOST-HOOKS-2 fix 2026-07-19)
 const POLL_INTERVAL_MINUTES = 15;
 
 // Known env prefixes — order matters (longer matches first)
