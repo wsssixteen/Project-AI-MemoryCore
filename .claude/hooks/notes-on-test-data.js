@@ -36,6 +36,14 @@ process.stdin.on('end', () => {
     const text = JSON.stringify(data);
 
     const ids = [...text.matchAll(/PTMLK\/[0-9]+\/[A-Z]\/[A-Z]+\/[0-9]+\/[0-9]+/g)].map(m => m[0]);
+
+    // v1.2 (2026-07-20): No Resit Carian Rasmi is test data too. AWAM urusan that start at
+    // CarianRasmiHakmilikForm (PSBS/PLTP/MCL/PPTPB/PRBB, CRHM*) REQUIRE one, and BA never
+    // supplies it — it must be derived from the DB and recorded like a permohonan ID.
+    // Format: YYMMDD + office-code + running (e.g. 260707BSAT00337).
+    // Rule + query + working receipt: etanah-knowledge/melaka/TEST-PERMOHONAN-INDEX.md
+    //   § No Resit Carian Rasmi (7 validations).
+    ids.push(...[...text.matchAll(/\b\d{6}[A-Z]{2,6}\d{4,6}\b/g)].map(m => m[0]));
     const unique = [...new Set(ids)];
     if (unique.length === 0) process.exit(0);
 

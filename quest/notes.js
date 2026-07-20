@@ -39,8 +39,15 @@ const id = arg('id');
 const user = arg('user');
 const qaOverride = arg('qa');
 
-if (!folder || !env || !id || !user) {
-  console.error('ERROR: --folder, --env, --id and --user are required.');
+// --simple (per みや 2026-07-20): 2-line entries `N) <urusan>` + `<id>` only.
+// For multi-urusan test sweeps where env is uniform and login is not yet known —
+// the env/login lines are noise when 20 urusan sit in one list.
+// --blank: header with an EMPTY id line (urusan has no permohonan in this env).
+const simple = hasFlag('simple');
+const blank = hasFlag('blank');
+
+if (!folder || (!simple && (!env || !id || !user)) || (simple && !urusan) || (simple && !id && !blank)) {
+  console.error('ERROR: --folder required; default mode needs --env --id --user; --simple needs --urusan and (--id or --blank).');
   process.exit(1);
 }
 
@@ -75,8 +82,12 @@ if (!hasFlag('reset') && fs.existsSync(notesPath)) {
 }
 
 const n = (existing ? (existing.match(/^\d+\)/gm) || []).length : 0) + 1;
-const header = n + ') ' + [env, urusan, tugasan, langkah].filter((s) => s && s.trim()).join(' - ');
-const entry = header + '\n' + id + '\n' + user;
+const header = simple
+  ? n + ') ' + urusan
+  : n + ') ' + [env, urusan, tugasan, langkah].filter((s) => s && s.trim()).join(' - ');
+const entry = simple
+  ? header + '\n' + (blank ? '' : id)
+  : header + '\n' + id + '\n' + user;
 const out = (existing ? existing + '\n\n' + entry : entry) + '\n';
 
 fs.writeFileSync(notesPath, out, 'utf8');

@@ -54,6 +54,7 @@ process.stdin.on('end', () => {
       /[\\/]\.claude[\\/]hooks[\\/].+\.js$/i,            // any hook
       /[\\/]\.claude[\\/]skills[\\/][^\\/]+[\\/]SKILL\.md$/i,  // any skill SKILL.md
       /[\\/]domain[\\/][^\\/]+[\\/].+\.hook\.js$/i,      // any Feature hook
+      /[\\/]\.claude[\\/]hooks[\\/].+\.js$/i,            // v1.3: core hooks — the LARGEST hook dir was uncovered, so edits there fell through to advisory-only and landed before design (2026-07-20)
       /[\\/]quest[\\/]quest-protocol\.md$/i,             // quest protocol
       /[\\/]quest[\\/]active\.txt$/i,                    // quest state
       /[\\/]\.claude[\\/]settings\.json$/i,              // hook registration
