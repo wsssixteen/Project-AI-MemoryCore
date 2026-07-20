@@ -410,7 +410,7 @@ task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\79. REQU
 status=active
 held_reason=(unheld 2026-07-17 — mlit confirmed as test env)
 phase=1
-current_phase=Apply — patch DRY-RUN PASSED on mlit (141 inserts, 0 errors, rolled back); NEXT=restart Claude Code, real patch run (COMMIT), fresh branch off mlk/master + pop stash@{0}, build+deploy, derive mlit test data (notes file all-UAT = stale; 7 urusan zero apps), test PRZ L3
+current_phase=Apply — CODE COMMITTED+PUSHED 2026-07-21 (ebcbf5ab24, 43 files, one commit) to mlk/requirement/239386 (fresh off mlk/master @ a99194b02e; old branch renamed -reference). Comment-strip done (12 stripped, 4 short compute-guards kept). NEXT=build WAR + deploy + runtime-walk 20-urusan read-only matrix (みや's step; I can't run JSF). Patch already run live on mlit (141 langkah)
 ticket_type=requirement
 env=mlit (mkit/et_main_mlit) — CONFIRMED by miya 2026-07-17; UAT decommissioned; FAT deleted
 urusan=ALL-20-PLP
@@ -422,7 +422,8 @@ master_checklist=239386.md §0 MASTER CHECKLIST — re-verify EVERY row at every
 branch=mlk/requirement/239386
 local_test_confirmed=false
 note=Requirement (multi-session). FULL CONTEXT qa_doc §0n (2026-07-17 session close: env/db-cleanup/dry-run/naming-final). Branch base mlk/master; old branch kept as proof. Task folder = numbered set 0/1/2 + notes + checklist + xlsx.
-commit_partial=1313e97cc8
+commit=ebcbf5ab24
+commit_partial=1313e97cc8-SUPERSEDED
 base_branch=mlk/master
 
 qa=QA-268170

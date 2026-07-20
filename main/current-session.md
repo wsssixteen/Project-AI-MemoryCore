@@ -1,5 +1,16 @@
 # Current Session
 
+## 2026-07-21 (Tuesday, morning) — #239386 Phase-1 commit + push
+
+**Quest 239386 — Apply → COMMITTED + PUSHED.** The full MPT read-only sweep committed as ONE commit and pushed to the branch. Runtime build/walk remains みや's step.
+
+- **Branch hygiene**: existing `mlk/requirement/239386` was stale (based on `release/1.0.3`, **60 behind** master) → renamed `-reference` (kept as proof), old remote deleted; typo branch `mlk/reqirement/239386` left alone (みや). Fresh `mlk/requirement/239386` cut off `mlk/master` @ `a99194b02e` (1.0.9).
+- **Comment-strip**: 16 `#239386` comments → **12 stripped, 4 short compute-guards kept**. `:2015` (`MlkMuatNaikCabutanMinitForm.calculateSewaTahunanDanPajakan` PPJK gate) reworded short+honest — it's an UNCONDITIONAL MPT skip, NOT data-aware like its 3 siblings (`|| field != null`). Method is internally null-guarded (`:3785/:3789/:3797`) so no crash, but **PPJK sewa/pajakan may render blank in MPT**. Data-aware upgrade DEFERRED to みや's test-walk.
+- **Commit**: `ebcbf5ab24` — *"Ref #239386 - readonly-page, disable-panels, hide disable buttons (Simpan/Tambah/Hapus)."* — 43 files (+313/−112), `.settings` excluded. Pushed to `origin/mlk/requirement/239386`. **mlk/master untouched.**
+- **4-commit split declined (twice-asked)**: ② (Java + L1 new xhtml) is file-separable, but ③ panels / ④ buttons **interleave line-by-line** in ~7 shared xhtml; per-line hunk-edit (`git add -p → e`) is interactive-only → not safely doable non-interactively. みや gave the single-commit fallback message.
+- **L1 clarified**: both L1 files (`PelupusanCommonSenaraiSemakanForm.java` + WAR overlay `protected/common/CommonSenaraiSemakanForm.xhtml`) live in **etanah-pelupusan**, not common — safe to commit; needed for read-only (without them L1 stays editable + writes on Seterusnya) but NOT needed to avoid a crash.
+- **Post-commit**: etanah repo returned to `mlk/master` per `/goal`.
+
 ## 2026-07-21 (Tuesday, marathon into early AM) — #239386 MPT read-only: FULL editable-controls sweep
 
 **Quest 239386 — Apply. ALL MPT read-only CODE done across 14 screens / 45 files; NOT built/tested (runtime verify = みや's, I can't run JSF).**
@@ -169,4 +180,4 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 ## 🎯 Session Recap (for AI restart)
 #239386 marathon. Settled: mlit as test env (UAT decommissioned, FAT deleted per みや) · DB connections 9→3 all-pgEdge + datasources renumbered (mlit=etanahDS active) · patch rebuilt INSERT-only 141 rows with all 5 chalk-back labels baked in (PRBB L7 JKBB · PPJK L8 Pajakan · PPTPB L8 Permit Khas · L6×5 Ulasan YB · BPRZ L10 reverted to Muatnaik Warta after parent-tugasan cross-ref overturned frequency) · dry-run on mlit PASSED with rollback · `nama` verified display-only (0 comparisons in code) so remaining name questions are cosmetic · Task folder cleaned 13→6 files (numbered 0/1/2 SQL set) · xlsx tabs 1-2 mechanically verified = patch = 141 · PSBS L7/L8 CLOSED (みや) · naming decision order finalized (ind_ursn.nama → parent tugasan → BPMN veto; frequency BANNED as evidence).
 
-**Memory Type**: RAM | **Last Activity**: 2026-07-21 05:51 — #239386 MPT full editable-controls sweep done (14 screens/45 files, lint-clean), 4-branch split handover written, hard session. (Prev: 2026-07-20 14:05 — Baseline 1.0.10 to stag.)
+**Memory Type**: RAM | **Last Activity**: 2026-07-21 06:57 — #239386 Phase-1 COMMITTED+PUSHED (ebcbf5ab24, 43 files, one commit) to mlk/requirement/239386; comment-strip done; etanah repo back on mlk/master. Runtime build/walk = みや's open step. (Prev: 2026-07-21 05:51 — full editable-controls sweep.)
