@@ -1,5 +1,36 @@
 # Current Session
 
+## 2026-07-20 (Monday) — #239386 MPT langkah testing + carian-rasmi knowledge + system corrections
+
+**Quest 239386 — Apply phase, testing in progress.**
+- **Patch RUN for real on mlit** by みや (141 langkah). Working tree = `mlk/master` + 21 modified + 1 new (`protected/common/`), **uncommitted by design** so every line stays visible in the IDE diff.
+- **Langkah render check UNDERWAY.** みや tests each urusan, reports ONLY problems. Checklist order = PSBS·PLTP·PT·MCL·PRZ·PPJK·PLPS·MLPS·PRBB·BPRZ·PRU·PPTPB·UPS·UPP·OPLPS·OMLPS·OPRBB·OPRU·OPPJK·OPPTPB. **Nothing reported yet.**
+- 🚨 **Category B is the concern**: langkah fine on server but BROKEN with our code = regression we caused. (Category A = broken on server, fine with ours = expected.)
+- **Riskiest line**: `MlkMaklumatTanahPemberimilikanForm.xhtml:110` — plot-panel gate flipped from exclusion (`ne PSBS/PLTP/MCL`, 17 urusan) to inclusion (`eq URS_PT`, 1 urusan). Removes the panel from 16 urusan; never verified whether any legitimately need it. **First suspect for any Category-B report.**
+- 4 early-returns (4Ae/4Ce/4De/MuatNaikCabutanMinit) skip real init in MPT — each sets view flags first, so "renders empty" ≠ "renders correctly".
+
+**Task notes file rewritten** — `1. 239 386.txt` now 20 entries in checklist order, mlit IDs, 2-line format (`N) URUSAN` + id), blanks for the 6 urusan with no mlit permohonan (MLPS·UPS·OMLPS·OPRU·OPPJK·OPPTPB). Old UAT-only file scrapped.
+
+**AWAM carian-rasmi — new knowledge domain.** Establishing a PSBS test permohonan on AWAM/mlit took 4 rounds of failed receipts; all 7 validations now documented.
+- ✅ **WORKING receipt: `260707BSAT00337`** (HSD · `040102HSD00092449` · 16.57 ha) — みや-confirmed.
+- Saved: `etanah-knowledge/melaka/TEST-PERMOHONAN-INDEX.md` § No Resit Carian Rasmi (V1-V7 + query + known-bad table) · `DOMAIN-GLOSSARY.md` (jenis-hakmilik groups) · `index.md` (knowledge-first rule).
+
+**System changes (2026-07-20)**
+| Change | State |
+|---|---|
+| `notes-on-test-data.js` v1.2 — detects No Resit (`\d{6}[A-Z]{2,6}\d{4,6}`), 9-case fixture | ✅ shipped |
+| `quest/notes.js` `--simple` / `--blank` — 2-line notes entries | ✅ shipped |
+| CLAUDE.md — KNOWLEDGE-FIRST rule + AWAM No-Resit Phase-0 prose | ✅ shipped |
+| `meta-edit-gate` v1.3 | ❌ **REVERTED — was a false diagnosis** (see below) |
+
+🚨 **Open system gap (real, unfixed)**: `meta-edit-gate.js` hard-deny is conditional on `archTouched` — a **whole-transcript regex** for `system-architecture.md`. Any earlier mention (even an unrelated read) disarms the deny for the entire session. That is why a `ticket-gate.js` edit landed on the advisory branch. Tightening it (proximity or edit-only match) = open design item.
+
+🚨 **Audit gap (found, unfixed)**: nothing records system *modifications*. `registry.jsonl` is births-only (`lifecycle: created` ×11, written by `core/forge.js`); no hook writes a change-log on meta edits. Proposed shape: `lifecycle: "modified"` rows on meta-path edits. Needs design routing.
+
+**Parked**: No-Resit Phase-0 gate row in `ticket-gate.js` (prose exists in CLAUDE.md; deterministic row not built — `notes-on-test-data` v1.2 covers the Stop side instead).
+
+---
+
 ## 🆕 Baseline 1.0.10 — FIRST supervised end-to-end run (2026-07-20, Monday)
 
 **Shipped**: PLP release 1.0.10 prepared, pushed, built and deployed to **stag** — confirmed live at 12:37:04.
