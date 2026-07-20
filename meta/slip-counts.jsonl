@@ -40,3 +40,7 @@
 {"ts":"2026-07-19T07:21:34.122Z","category":"install/i-have-adhd-plugin"}
 {"ts":"2026-07-19T14:37:10.287Z","category":"delegation-cost-blowup-canned-workflow"}
 {"ts":"2026-07-19T15:39:42.411Z","category":"spend-guard/two-layer"}
+{"ts":"2026-07-20T04:35:45.522Z","category":"machine-local-config-not-portable"}
+{"ts":"2026-07-20T04:38:22.413Z","category":"emit-shape-not-copyable"}
+{"ts":"2026-07-20T04:51:28.862Z","category":"emit-shape-not-copyable"}
+{"ts":"2026-07-20T04:51:28.939Z","category":"verification-gap-artifact-provenance"}

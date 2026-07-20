@@ -130,26 +130,59 @@ The `release-mlk-plp-push-gate` hook additionally blocks any MANUAL `git push` o
 > properly."* Ruri does NOT ssh, does NOT deploy, does NOT touch the Sheet. No SSH keys needed
 > — that whole dependency is retired. **My job at C-E = emit the REMINDER CARD below, filled in.**
 
-**Emit this card verbatim (values substituted) once `push` succeeds — then STOP.**
+**Emit this card (values substituted) once `push` succeeds — then STOP.**
 
-```
-Baseline <ver> — branch ready ✓ pushed ✓   Your steps:
+🚨 **NO CODE FENCES ANYWHERE IN THE CARD — plain text lines only** (2026-07-20 per みや, corrected
+twice in one release). First shape was one big fence: *"do not share inside this thing, it is hard
+to copy line by line"* — one copy button for fifteen lines. Second shape was one fence per command;
+still rejected: *"Again, stop using that code block, just showing it in lines in your normal text."*
+**The rule**: every command is a normal text line with the command in `inline backticks`. No ``` at
+all. Labels and "wait for X" notes are ordinary sentences. Sheet values go in a TABLE (per-cell
+copy). A fenced block in a hand-off card is now a slip shape — `emit-shape-not-copyable`.
 
-C · BUILD    ssh app@<build.host>
-             cd build-scripts17/
-             ./build-pelupusan.sh mlk/release/<ver>
-             choose: stag          → wait for BUILD SUCCESS
+**Card shape:**
 
-D · DEPLOY   (exit the build session first)
-             ssh app@<deploy.host>
-             cd deployment-scripts/stag/
-             ./deploy-pelupusan.sh → wait for success message
+Baseline <ver> — branch ready ✓ pushed ✓ (<sha>)
 
-E · SHEET    <sheet-url>  — Developer section:
-             Common Version: <common>   Module Version: <ver>
-             Branch Name: mlk/release/<ver>
-             SQL name with ticket number: <recon's sheet line, or leave empty>
-```
+🚨 **NEVER start an inline command with `./`** (2026-07-20 per みや). The renderer auto-linkifies a
+leading `./`, so `./deploy-pelupusan.sh` becomes a hyperlink and copying it drags link markup along.
+**Use the `bash <script>` form instead** — `bash deploy-pelupusan.sh` is identical to run and copies
+clean. Same for any other leading-dot path in a command line. Slip shape: `emit-shape-not-copyable`.
+
+**C · BUILD** — run on the build server:
+1. `ssh app@<build.host>`
+2. `cd build-scripts17/`
+3. `bash build-pelupusan.sh mlk/release/<ver>`
+4. choose `stag`, then wait for BUILD SUCCESS.
+5. **Before closing the session, copy the checkout line the build prints** (the commit SHA it built
+   from) and paste it back — see the SHA-match check below.
+
+**D · DEPLOY** — exit the build session first, then:
+1. `ssh app@<deploy.host>`
+2. `cd deployment-scripts/stag/`
+3. `bash deploy-pelupusan.sh`, then wait for the success message.
+
+### 🚨 V6b — BUILD-SHA MATCH (added 2026-07-20 per みや; the hole his question found)
+
+The deployed footer's `Module Version` + `Git Branch` **cannot distinguish the pre-merge commit from
+the merged one** — the version bump commit and the post-merge commit sit on the same branch with the
+same version string, so a STALE CHECKOUT on the build server renders an identical, entirely
+convincing footer while shipping ZERO fixes. Release 1.0.10 proof: `e85bb92a4a` (pom bump, no
+tickets) and `f3c8497a0a` (all three merged) both display `1.0.10` / `mlk/release/1.0.10`.
+
+**The check**: after BUILD, みや pastes the build log's checkout/commit line; Ruri compares that SHA
+against the release branch HEAD recorded in `state/release-<ver>.json` (`headSha`, set at push).
+Match → the artifact provably carries the merges. Mismatch or absent → 🚨 STOP and re-build; never
+infer it from the version footer, and never from "we pushed before building".
+
+**E · SHEET** — <sheet-url>, Developer section:
+
+| Field | Value |
+|---|---|
+| Common Version | `<common>` |
+| Module Version | `<ver>` |
+| Branch Name | `mlk/release/<ver>` |
+| SQL name with ticket number | `<recon's sheet line, or leave empty>` |
 
 - Host values come from `domain/release-mlk-plp/servers.local.json` (GITIGNORED; `.example` twin
   committed). Never print the password — it isn't stored anywhere in this repo.

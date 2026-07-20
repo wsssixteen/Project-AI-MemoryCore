@@ -1,5 +1,42 @@
 # Current Session
 
+## 🆕 Baseline 1.0.10 — FIRST supervised end-to-end run (2026-07-20, Monday)
+
+**Shipped**: PLP release 1.0.10 prepared, pushed, built and deployed to **stag** — confirmed live at 12:37:04.
+
+| Stage | Result |
+|---|---|
+| Recon | `redmine-recon.js --tickets 270727,271145,271146` |
+| Merge | 3 branches, **zero conflicts** |
+| Verify | 0 commits missing from all three |
+| Push | `mlk/release/1.0.10` @ **`f3c8497a0a`** |
+| Build/Deploy | みや ran both; footer shows Module 1.0.10 · Git Branch mlk/release/1.0.10 · Common 1.0.129-MLK · `et_main_stg2` |
+
+**Tickets** (all Verified MLIT before release, all `fixed_version=1.0.10`):
+| # | Branch | Subject |
+|---|---|---|
+| #270727 | `mlk/internal/270727` ⚠️ tracker-prefix deviation | PLTP hyperlink kosong / butiran hilang selepas Tambah |
+| #271145 | `mlk/esokongan/271145` | PLPS kemaskini syarat tidak berjaya |
+| #271146 | `mlk/internal-issue/271146` | PLTP/BPRZ/PT Jana Semula — alamat JT tidak dipaparkan |
+
+Not in scope: #271173 (AWAM twin of #270727 — different repo). No SQL this release; common untouched.
+
+**Two recon-script defects found by the git probe** (both would have mis-shaped the release):
+1. #270727 returned `VIA-RELATED` + an Ask-BA row — the branch existed all along under `mlk/internal/`, not the tracker-derived `mlk/esokongan/`. Tracker-prefix mapping is too rigid.
+2. #271146 returned `COMMON-VER` demanding a bump to `0.0.640-MLK` — that string appears **nowhere** in the ticket; its stated common is `1.0.129-MLK`, already in the pom. Regex false positive that would have caused a wrong pom edit.
+
+**Preflight hole**: `release-prep.js cmdInit()` refuses any pre-existing release branch (`:128` origin / `:129` local) with no `--adopt-existing` path. みや had already created + pushed the branch, so `init` was locked out; resolved by hand-writing `state/release-1.0.10.json` at `phase=branched` (his choice from a 3-option popup) — every guard after preflight still ran.
+
+**🚨 The most valuable finding — `verification-gap-artifact-provenance`** (みや's question, not any check of mine): the deployed footer **cannot prove the merges shipped**. `e85bb92a4a` (pom bump, zero tickets) and `f3c8497a0a` (all merged) render an identical Module Version + Git Branch. A stale build-server checkout would look exactly like success. Fixed as **V6b BUILD-SHA MATCH** in the skill: compare the build log's checkout SHA against the release HEAD; absent or mismatched → STOP and rebuild.
+
+**Card emit-shape corrected 3× in one session** (`emit-shape-not-copyable` ×2 rows): one big fence → one fence per command → **no fences at all**, plain numbered lines with inline backticks. Final sub-rule: never lead an inline command with `./` (the renderer linkifies it) — use `bash <script>`.
+
+**Machine-portability slip**: `servers.local.json` is gitignored, so the build/deploy hosts みや gave once on vice4 never reached this laptop and the card rendered blank. Fixed on-disk **and** durably via `.claude/auto-memory/reference_baseline_release_servers.md` (build `172.16.100.162` · deploy `172.30.12.203` · user `app`).
+
+**Open for みや**: (1) fill the Sheet's Developer section; (2) BAQA retests all 3 on stag; (3) design call — should `servers.local.json` be committed (it holds no secret, only internal IPs) or should the skill read the memory file as fallback; (4) `--adopt-existing` flag for `release-prep.js`.
+
+---
+
 ## 🆕 Monthly app — v3 UI/UX pass (2026-07-17 evening → 07-18 late night)
 
 **Not etanah.** みや's personal budgeting app — single-file `index.html`, GitHub Pages.
@@ -85,4 +122,4 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 ## 🎯 Session Recap (for AI restart)
 #239386 marathon. Settled: mlit as test env (UAT decommissioned, FAT deleted per みや) · DB connections 9→3 all-pgEdge + datasources renumbered (mlit=etanahDS active) · patch rebuilt INSERT-only 141 rows with all 5 chalk-back labels baked in (PRBB L7 JKBB · PPJK L8 Pajakan · PPTPB L8 Permit Khas · L6×5 Ulasan YB · BPRZ L10 reverted to Muatnaik Warta after parent-tugasan cross-ref overturned frequency) · dry-run on mlit PASSED with rollback · `nama` verified display-only (0 comparisons in code) so remaining name questions are cosmetic · Task folder cleaned 13→6 files (numbered 0/1/2 SQL set) · xlsx tabs 1-2 mechanically verified = patch = 141 · PSBS L7/L8 CLOSED (みや) · naming decision order finalized (ind_ursn.nama → parent tugasan → BPMN veto; frequency BANNED as evidence).
 
-**Memory Type**: RAM | **Last Activity**: 2026-07-18 23:14 — Monthly v3 UI/UX session close + DE running. (Prev: 2026-07-17 19:27 — #239386 + Baseline closes.)
+**Memory Type**: RAM | **Last Activity**: 2026-07-20 14:05 — Baseline 1.0.10 shipped to stag (first supervised run) + DE. (Prev: 2026-07-18 23:14 — Monthly v3 UI/UX close.)
