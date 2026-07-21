@@ -615,6 +615,7 @@ local_test_confirmed=true
 close_note=Applied+pushed by miya himself 2026-07-16 15:50+0800 (after session end) using this quest's Rubric Candidate 1; merged to mlk/int-env 165f31c667; Redmine Resolved, done=100, assignee->BA Nurul Amirah 2026-07-17. Reconciled by Ruri 2026-07-17 boot from Redmine API + git.
 
 qa=QA-271049
+quest_start_ts=2026-07-21T01:01:52.221Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\99. INTERNAL ISSUE #271049 - PLTP - Langkah Maklumat Tanah missing panel Maklumat Risalat for few t
 phase=0
 status=hold
