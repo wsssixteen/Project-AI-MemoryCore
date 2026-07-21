@@ -635,6 +635,7 @@ assigned_to_me=2026-07-20
 current_phase=Rubric-done
 urusan=BPRZ
 quest_start=2026-07-21
+qa_doc=projects/coding-projects/active/QA-270900/QA-270900.md
 
 qa=QA-265537
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\101. QA #265537 - MLKFAT - MLPS - Penyediaan Borang 4Ae dan L1e - Maklumat bagi medan Bandar yang telah dikemaskini
@@ -648,3 +649,4 @@ urusan=MLPS
 tugasan=Penyediaan Borang 4Ae dan L1e
 current_phase=Rubric-done
 quest_start=2026-07-21
+qa_doc=projects/coding-projects/active/QA-265537/QA-265537.md
