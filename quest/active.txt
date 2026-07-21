@@ -634,7 +634,7 @@ task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\100. INT
 phase=0
 status=active
 ticket_type=bug
-env=MLK Staging
+env=MLK Staging et_main_stg2
 issue_one_liner=BPRZ - Penyediaan/Semakan/Peraku Surat Makluman ke Pemohon - Issue pada paparan status dokumen dan peranan
 assigned_to_me=2026-07-20
 current_phase=Rubric-RERUN+AUDITED 2026-07-21 — PartB READY: SET peranan=NULL (NOT empty-string; analog PSMW IS NULL; corpus 8452 NULL vs 22 empty) for BPRZ SSMW; override BpmCallbackService.handleAssignation():782; audit conf 85pct. PartA: template.config.json PLP_BPRZ_SRTPEMOHON missing SEDIA+PEMBETULAN (70pct, no logger)
@@ -642,13 +642,15 @@ urusan=BPRZ
 quest_start=2026-07-21
 qa_doc=projects/coding-projects/active/QA-270900/QA-270900.md
 start_first=2026-07-21 miya pick — START HERE next session; Part B SQL ready (SET peranan=NULL), Part A config edit
+branch=n/a-data-patch-plus-config
+test_app=PTMLK/02/L/BPRZ/2026/3 (aplikasi_id 3401289; SSMW a_tgsn 2718712 OPEN+UNASSIGNED; siblings faridmajid@melaka.gov.my PYSMW, nazli@melaka.gov.my PSMW)
 
 qa=QA-265537
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\101. QA #265537 - MLKFAT - MLPS - Penyediaan Borang 4Ae dan L1e - Maklumat bagi medan Bandar yang telah dikemaskini
 phase=0
 status=hold
 ticket_type=bug
-env=MLKFAT
+env=MLK Staging et_main_stg2
 issue_one_liner=MLPS - Penyediaan Borang 4Ae dan L1e - Maklumat bagi medan Bandar yang telah dikemaskini semasa AWAM tidak papar di APPS
 assigned_to_me=2026-07-20
 urusan=MLPS
@@ -656,3 +658,4 @@ tugasan=Penyediaan Borang 4Ae dan L1e
 current_phase=Rubric-RERUN+AUDITED 2026-07-21 — bandar_id FKs rjk_senarai_ahli_kumpulan (NOT ind_bandar_pekan_mukim); id30=kod2002 nama-EMPTY inactive. AUDIT OVERTURN: sak30 SYSTEMIC 191312 APP rows vs only 4 rows on correct id29 = legacy default NOT one bad write. Fix is 3-part: AWAM guard + APPS read-tolerance + data cleanup. AWAM-only REJECTED (fixes 0 existing rows). C5 mechanism was WRONG: copyAlamatToAppPihakBerkepentingan is unconditional straight copy, no null-write
 quest_start=2026-07-21
 qa_doc=projects/coding-projects/active/QA-265537/QA-265537.md
+branch=n/a-pre-apply
