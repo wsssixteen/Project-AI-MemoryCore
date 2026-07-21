@@ -42,7 +42,7 @@ const { spawnSync } = require('child_process');
 
 const DEFAULT_REPO = 'E:\\Projects\\Melaka\\etanah-pelupusan';
 const TRACKER_BRANCH = {
-  'qa': 'mlk/qa', 'internal issue': 'mlk/internal-issue', 'internal': 'mlk/internal',
+  'qa': 'mlk/qa', 'internal issue': 'mlk/internal', 'internal': 'mlk/internal',
   'esokongan': 'mlk/esokongan', 'cr': 'mlk/cr', 'cr - after go live': 'mlk/cr',
   'requirement': 'mlk/requirement', 'training': 'mlk/internal', 'development': 'mlk/development',
 };

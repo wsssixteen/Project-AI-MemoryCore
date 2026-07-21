@@ -616,17 +616,19 @@ close_note=Applied+pushed by miya himself 2026-07-16 15:50+0800 (after session e
 
 qa=QA-271049
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\99. INTERNAL ISSUE #271049 - PLTP - Langkah Maklumat Tanah missing panel Maklumat Risalat for few t
-phase=0
+phase=1
 status=active
 ticket_type=bug
 env=MLK Staging
 issue_one_liner=PLTP - Langkah Maklumat Tanah missing panel Maklumat Risalat for few tugasan
 assigned_to_me=2026-07-17
-current_phase=Apply-applied-uncommitted-on-mlk/master (3 files, PLTP-scoped; global-list route audited NO-GO)
+current_phase=Phase-1 close in progress - staged, awaiting commit approval
 quest_start=2026-07-21
 qa_doc=projects/coding-projects/active/QA-271049/QA-271049.md
 urusan=PLTP
 test_app=PTMLK/03/L/PLTP/2026/4 (asikin@melaka.gov.my, PYSTP, aplikasi_id 3400281, stg2)
+local_test_confirmed=true
+branch=mlk/internal/271049
 
 qa=QA-270900
 quest_start_ts=2026-07-20T23:29:39.937Z

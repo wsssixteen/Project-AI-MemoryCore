@@ -1,6 +1,8 @@
 # Commit Conventions
 
 > Routed out of CLAUDE.md 2026-05-22 (decomposition).
+> *Version: 1.3 | Last updated: 2026-07-21 — INTERNAL ISSUE branch prefix corrected `mlk/internal-issue/` → **`mlk/internal/`** (retired the old form; new branches only, existing pushed branches untouched), per みや (#271049). Evidence: Baseline 1.0.10 recon found the team already using `mlk/internal/270727`.*
+>
 > *Version: 1.2 | Last updated: 2026-06-27 — added ESOKONGAN tracker → `mlk/esokongan/<num>` branch + the general `mlk/<tracker>/<num>` derive-rule, per みや (QA-267382).*
 
 ## MemoryCore repo (`Project-AI-MemoryCore`)
@@ -55,10 +57,12 @@ The leading token follows the ticket's **Redmine tracker**, not always "QA":
 | Tracker | Subject prefix | Branch (see quest-protocol.md Phase 1) |
 |---|---|---|
 | **QA** | `QA #<num> - <URUSAN> - <description>` | `mlk/qa/<num>` |
-| **INTERNAL ISSUE (PERMANENT FIX)** | **`Ref #<num> - <URUSAN> - <description>`** — only the prefix changes from `QA #` to `Ref #`; hyphen-segmentation rules above still apply | `mlk/internal-issue/<num>` |
+| **INTERNAL ISSUE (PERMANENT FIX)** | **`Ref #<num> - <URUSAN> - <description>`** — only the prefix changes from `QA #` to `Ref #`; hyphen-segmentation rules above still apply | **`mlk/internal/<num>`** (🚨 2026-07-21 per みや — NOT `mlk/internal-issue/`) |
 | **ESOKONGAN** (eS tickets) — added 2026-06-27 per みや, QA-267382 | `Ref #<num> - <URUSAN> - <TUGASAN> - <description>` (non-QA → `Ref #`) | **`mlk/esokongan/<num>`** |
 | **other non-QA trackers** | `Ref #<num> - ...` | `mlk/<tracker-lowercased>/<num>` |
 
-**🌿 GENERAL BRANCH RULE (derive, don't ask): branch = `mlk/<tracker-type-lowercased>/<num>`.** QA→`mlk/qa/`, ESOKONGAN→`mlk/esokongan/`, INTERNAL ISSUE→`mlk/internal-issue/`. Read the Redmine tracker at Phase 0; pick the branch prefix from it automatically. (AWAM local base = `mlk/master` per quest-protocol — local-test only, no commit/push; the per-ticket branch `mlk/<tracker>/<num>` merges downstream to `mlk/stag-env`/`mlk/mlit`, which are integration/staging targets, not the base.)
+**🌿 GENERAL BRANCH RULE (derive, don't ask): branch = `mlk/<tracker-type-lowercased>/<num>`.** QA→`mlk/qa/`, ESOKONGAN→`mlk/esokongan/`, **INTERNAL ISSUE→`mlk/internal/`** (exception to the literal-lowercase derive — the tracker is "INTERNAL ISSUE" but the branch segment is `internal`, NOT `internal-issue`; hard rule 2026-07-21 per みや). Read the Redmine tracker at Phase 0; pick the branch prefix from it automatically.
+
+**🚨 `mlk/internal-issue/` is RETIRED (2026-07-21 per みや).** Use `mlk/internal/<num>` only. **Why**: the team already ships INTERNAL ISSUE fixes under `mlk/internal/` — the Baseline 1.0.10 release recon (2026-07-20) found #270727 on `mlk/internal/270727` and our tracker-derived guess of `mlk/esokongan/` missed it entirely, returning a false `VIA-RELATED` + an Ask-BA row. Our convention was the one out of step, not the team's. Pre-existing branches already pushed as `mlk/internal-issue/*` (e.g. 266503, 268273, 269918, 269939, 271146) are left alone — this governs new branches only. (AWAM local base = `mlk/master` per quest-protocol — local-test only, no commit/push; the per-ticket branch `mlk/<tracker>/<num>` merges downstream to `mlk/stag-env`/`mlk/mlit`, which are integration/staging targets, not the base.)
 
 **Example** (QA-266249 = an INTERNAL ISSUE ticket): `Ref #266249 - PT - Fix Keluasan Tanah` ✓ (the prefix is `Ref #266249`, not `QA #266249`). **Why**: the team tracks these under the INTERNAL ISSUE tracker; the commit log + branch name should reflect the tracker, not force a "QA" label onto a non-QA ticket.

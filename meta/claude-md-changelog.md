@@ -10,6 +10,27 @@
 
 ---
 
+## commit-conventions.md v1.3 — 2026-07-21
+
+**INTERNAL ISSUE branch prefix corrected: `mlk/internal-issue/` → `mlk/internal/`.** Per みや during #271049.
+
+**Change**: the tracker→branch derive-rule now maps INTERNAL ISSUE (PERMANENT FIX) to **`mlk/internal/<num>`**. `mlk/internal-issue/` is RETIRED for new branches; branches already pushed under the old form (266503, 268273, 269918, 269939, 271146) are left untouched.
+
+**Why**: our convention was out of step with the team, not the reverse. The Baseline 1.0.10 release recon (2026-07-20) found ticket #270727 shipping on `mlk/internal/270727` while our tracker-derived guess looked for `mlk/esokongan/` — the recon returned a false `VIA-RELATED` verdict plus an Ask-BA row for a branch that existed all along. That miss is logged as `release-pipeline-missing-step` / tracker-prefix deviation.
+
+**Files updated in the same pass** (all three, so the rule can't half-apply):
+| File | Change |
+|---|---|
+| `.claude/commit-conventions.md` | tracker table row + GENERAL BRANCH RULE + retirement note; version 1.2 → 1.3 |
+| `quest/quest-protocol.md` | Phase-1 close-out step 5 `<type>` list: `internal-issue` → `internal` |
+| `domain/release-mlk-plp/redmine-recon.js:45` | `TRACKER_BRANCH['internal issue']` → `'mlk/internal'` — **the functional fix**; this map is what produced the #270727 miss |
+
+**Left alone deliberately**: `domain/release-mlk-plp/eval.js` + `release-prep.js` occurrences are self-consistent test fixtures / usage examples (they create the very branch they then assert on), so rewriting them would churn evals without changing behaviour.
+
+**First use**: #271049 branches as `mlk/internal/271049`.
+
+---
+
 ## v1.67 — 2026-07-17
 
 **Two new §8 Etanah non-negotiables + one environment retirement. All per みや during #239386.**
