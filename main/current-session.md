@@ -1,5 +1,19 @@
 # Current Session
 
+## 2026-07-21 (Tuesday, morning) — Retrieve + Rubric two new tickets (#270900, #265537)
+
+**Goal-driven session (3 /goals): retrieve new Redmine tickets → quest to Rubric ONLY (no code) → brief start-first → resume-265537-to-Rubric deep dive → DE.** (Concurrent with the #239386 dedicated session below.)
+
+- **Retrieved 2 NEW tickets** via `redmine-sync.js --create`: **#270900** (BPRZ) + **#265537** (MLPS). Task folders created; qa_docs written (`projects/…/QA-270900/`, `QA-265537/` — gitignored-confidential, persist via OneDrive).
+- **#270900 BPRZ** — Rubric done. **Part B VERIFIED (90%)**: `ind_tgsn.peranan` for BPRZ SSMW (tgsn_id 14822) = `'KPT'`; sibling PRZ SSMW = `'KPT-PPD'`; fix = DATA patch to `'-KPT-PPD-KPPD-'` (format already in the column). **Part A (65%)**: Peraku regenerates BARU doc instead of reusing SEDIA — `BasePelupusanDokumenForm.updateDocumentListAndProcessTemplateIfNotAvailable():603-654` filters by `currentTugasan`; needs runtime logger probe.
+- **#265537 MLPS** — Rubric done (65%, residue open). **ROOT CAUSE (verified in code)**: Surat-vs-Berdaftar column asymmetry in `etanah-common/InputAlamat.java` — AWAM save `copyAlamatToPraPihakBerkepentingan():180` writes SURAT cols (`bandar_srt_*`); the App copy `copyAlamatToAppPihakBerkepentingan():168` writes BERDAFTAR cols (`bandar_daftar_*`); PLP Borang 4Ae reads SURAT (`bandar_id/bandar_lain`). faizudin's fix `59d819bb80` bridged two already-stale App columns → still fails. Later `fa73a9ae1d COT#265787` unrelated. **DB proof** (et_main_stg2, aplikasi_id 3401636): App bandar_id=30 (stale "Bandar Bukit Baru"), Pra 0 rows. **Residue**: MLPS-renewal AWAM Bandar edit lands in a Pra-by-NoLesen or profile individu, not p_aplikasi_id — trace `maklumatPemohonHelperForm` MLPS save target before Cand 1 (read-side) vs 2 (propagation).
+- **みや id-name hunt confirmed**: `alamatSuratPemilik` ✓ (MlkBorang4AeForm.xhtml:85, reusable); `newPemohonDialog` = generic; `pemilikForm_abbMb` + `PelupusanEMohonForm.xhtml` = don't exist (real AWAM file = `plpMaklumatPemohon.xhtml`).
+- **Start-first**: #270900 (easiest — Part B config patch), then #265537. **#270900 starts in a dedicated session** per みや. Both qa_docs carry a 🔁 NEXT-START NOTE: run one more Rubric course before Apply.
+
+**NEXT**: start **#270900** dedicated — Part B config patch first (confirm KPPD is 3rd role), then Part A runtime probe. #265537 held for the residue Recon hop.
+
+---
+
 ## 2026-07-21 (Tuesday, morning) — #239386 Phase-1 commit + push
 
 **Quest 239386 — Apply → COMMITTED + PUSHED.** The full MPT read-only sweep committed as ONE commit and pushed to the branch. Runtime build/walk remains みや's step.
