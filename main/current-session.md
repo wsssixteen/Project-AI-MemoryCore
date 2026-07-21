@@ -10,7 +10,8 @@
 - **みや id-name hunt confirmed**: `alamatSuratPemilik` ✓ (MlkBorang4AeForm.xhtml:85, reusable); `newPemohonDialog` = generic; `pemilikForm_abbMb` + `PelupusanEMohonForm.xhtml` = don't exist (real AWAM file = `plpMaklumatPemohon.xhtml`).
 - **Start-first**: #270900 (easiest — Part B config patch), then #265537. **#270900 starts in a dedicated session** per みや. Both qa_docs carry a 🔁 NEXT-START NOTE: run one more Rubric course before Apply.
 
-**NEXT**: start **#270900** dedicated — Part B config patch first (confirm KPPD is 3rd role), then Part A runtime probe. #265537 held for the residue Recon hop.
+**NEXT SESSION FOCUS (みや, 2026-07-21) → INTERNAL ISSUE #271049 (PLTP — Langkah Maklumat Tanah missing panel Maklumat Risalat for few tugasan)**. みや's read: likely the easiest of the open set — only missing panels for certain skrins/screens (probably a `tugasan→skrin`/langkah render or config gap, not deep logic). It is `status=hold` phase-0, **not yet scouted** — start with `/quest resume 271049` (or full Phase-0), run Scout→Recon→Rubric. Task folder `99. INTERNAL ISSUE #271049 …`, env MLK Staging (`et_main_stg2`).
+- Held behind it: **#270900** (BPRZ — Part B config patch ready, Part A runtime probe) and **#265537** (MLPS — Rubric-held, residue Recon hop) — both carry a 🔁 re-run-Rubric note.
 
 ---
 
