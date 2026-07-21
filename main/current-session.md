@@ -1,12 +1,121 @@
 # Current Session
 
+## ▶▶ NEXT SESSION — START HERE: **#270900 (BPRZ)** — みや's explicit pick, 2026-07-21
+
+**Read `projects/coding-projects/active/QA-270900/QA-270900.md` first.** Rubric re-run AND
+adversarial audit are both COMPLETE — the ticket is Apply-ready with corrected SQL.
+
+**First action (10 min, no build, no WAR):**
+
+```sql
+SELECT count(*) FROM ind_ursn WHERE kod = 'BPRZ';        -- cardinality pre-check, expect 1
+
+SELECT tgsn_id, kod, nama, peranan                        -- evidence BEFORE
+FROM ind_tgsn
+WHERE kod IN ('PYSMW','SSMW','PSMW')
+  AND ursn_id = (SELECT ursn_id FROM ind_ursn WHERE kod = 'BPRZ');
+
+UPDATE ind_tgsn                                           -- 1 row updated
+SET peranan = NULL
+WHERE kod = 'SSMW'
+  AND ursn_id = (SELECT ursn_id FROM ind_ursn WHERE kod = 'BPRZ');
+```
+
+🚨 **`NULL`, not `''`** — the audit caught this. Analog `BPRZ.PSMW` IS NULL; corpus is 8,452 NULL
+vs 22 empty-string out of 16,837. Empty string would still fix the ticket but enters `!= null`
+pengagihan branches (`CommonPengagihanSemulaForm:743`, `KonfigurasiTugasanVO:282`,
+`KonfigurasiRoundRobinBerkumpulanForm:358-361`) carrying an empty role.
+
+**Then Part A** (same session, config-only, no Java): add `STATUS_PENYEDIAAN_SEDIA` +
+`STATUS_PENYEDIAAN_PEMBETULAN` to PYSMW/SSMW and `+SEMAK` to PSMW in the
+`PLP_BPRZ_SRTPEMOHON` block of
+`E:\Projects\Melaka\etanah-pelupusan\src\main\resources\config\MLK\template.config.json:8804-8828`.
+Falsifies cleanly: if Peraku still regenerates a BARU doc, cause moves to the ADK-insert path.
+
+**Env**: MLK Staging `et_main_stg2` · test app `PTMLK/02/L/BPRZ/2026/3` (aplikasi_id **3401289**).
+**Build/deploy**: Part B none · Part A = WAR rebuild + JBoss deploy (みや's step).
+
+---
+
+## 2026-07-21 (Tuesday, late morning) — Independent re-investigation + adversarial audit of #270900 + #265537
+
+**Goal-driven session (3 /goals): load quest MDs → 2 blind familiars re-quest each ticket to
+Rubric → compare vs our findings → update docs → 2 restricted Fable auditors → DE.**
+みや ran #271049 concurrently in another session.
+
+**4 subagents total, 2 rounds.** Round 1 = 2 blind investigators (opus, low) barred from reading
+our qa_docs. Round 2 = 2 adversarial auditors (Fable 5, low, `Explore` type = structurally no
+Agent tool, read-only; workflows/builds/unbounded-search banned in-prompt).
+
+**Both rounds found real defects in OUR work. Every refutation re-verified by me before acceptance.**
+
+### #270900 BPRZ
+- **Mechanism found (we never had it)**: `ind_tgsn.peranan` unconditionally overrides the BPMN role
+  at `etanah-common\...\BpmCallbackService.java`, `handleAssignation():207`, block `:782`.
+- **Working analog in the SAME urusan**: `BPRZ.PSMW` has NULL peranan → BPMN role reaches
+  `peranan_semasa` verbatim as `-PPD-KPPD-PTNH-`. VERIFIED on aplikasi 3401289.
+- **Fix changed**: write-in `-KPT-PPD-KPPD-` → **BLANK the column**. Then audit changed it again:
+  **`NULL`, not `''`**.
+- **Format claim was wrong in BOTH directions** — stored values are MIXED (`PT` 1494 unwrapped,
+  `-PT-` 291 wrapped); padding at `:785-791` is idempotent, so format is a non-issue.
+- **Part A upgraded, logger no longer needed**: `template.config.json` `PLP_BPRZ_SRTPEMOHON` lists
+  NO `SEDIA` / `PEMBETULAN` for any of the 3 tugasan; corpus convention carries them (×108/×84).
+  Duplicate ADK rows VERIFIED (8480498 + 8480502, both status 1976).
+- Audit caveat: override is not "final" — re-set branches at `:2123 / :2140 / :2169` (none fire for BPRZ/MLK).
+
+### #265537 MLPS — root cause overturned, then the fix SIDE overturned
+- **Our reference-table read was wrong**: `bandar_id` / `bandar_daftar_id` FK to
+  `rjk_senarai_ahli_kumpulan`, NOT `ind_bandar_pekan_mukim`. Both tables happen to hold an id 29
+  AND 30 — a coincidence that made the wrong read look plausible.
+- **id 30 = kod `2002`, `nama` EMPTY, `flag_aktif='N'`** ⇒ blank dropdown label; and kod ≠ `2001`
+  leaves `adalahBandarLain` false ⇒ the Bandar Lain row never renders.
+- **Old residue CLOSED**: the Pra row exists — `umm_p_pihak_bkptg` id 11014, keyed
+  `p_aplikasi_id=13224` (not the app id). Berdaftar pair CORRECT (29/'MELAKAA'), surat pair BAD (30).
+- **Then the audit killed "AWAM-only"**: sak 30 is in **191,312** `bandar_daftar_id` rows +
+  15,564 `bandar_id` rows, while the CORRECT id 29 appears in **4**. Origin check:
+  `MIGRATOR_MS_A3` 29,332 + other `MIGRATOR_*` families, **but also live officer writes as recent
+  as 2026-07-21** (`aidayu@melaka.gov.my`). ⇒ **three-part fix mandatory**: AWAM guard + APPS
+  read-side tolerance + data cleanup. Neither half alone works.
+- **My C5 claim was fiction**: `copyAlamatToAppPihakBerkepentingan():168-178` is an unconditional
+  straight copy — no `adalahBandarLain` gate, no `setBandarBerdaftarLain(null)` anywhere.
+- faizudin's `59d819bb80` IS deployed in `mlk/release/1.0.9`; it only fills BLANK targets
+  (`if bandar == null`), so a non-null-garbage bandar bypasses it. Not a deploy miss.
+- Cross-ref: same `MIGRATOR_*` origin family as quest **MIGRATOR-DUP-V0**.
+
+**Docs corrected**: `QA-270900.md`, `QA-265537.md` (superseded text kept under `<details>`, never
+deleted), `quest/active.txt` both `current_phase` lines.
+
+**Method note that worked**: giving familiars ticket ground-truth + tool discipline but withholding
+our conclusions produced genuine convergence-and-divergence rather than an echo. Round 2's value was
+concentrated in the 2-3 claims I flagged as "most likely wrong" and told them to spend budget on.
+
+---
+
 ## 2026-07-21 (Tuesday, morning) — Retrieve + Rubric two new tickets (#270900, #265537)
 
 **Goal-driven session (3 /goals): retrieve new Redmine tickets → quest to Rubric ONLY (no code) → brief start-first → resume-265537-to-Rubric deep dive → DE.** (Concurrent with the #239386 dedicated session below.)
 
 - **Retrieved 2 NEW tickets** via `redmine-sync.js --create`: **#270900** (BPRZ) + **#265537** (MLPS). Task folders created; qa_docs written (`projects/…/QA-270900/`, `QA-265537/` — gitignored-confidential, persist via OneDrive).
-- **#270900 BPRZ** — Rubric done. **Part B VERIFIED (90%)**: `ind_tgsn.peranan` for BPRZ SSMW (tgsn_id 14822) = `'KPT'`; sibling PRZ SSMW = `'KPT-PPD'`; fix = DATA patch to `'-KPT-PPD-KPPD-'` (format already in the column). **Part A (65%)**: Peraku regenerates BARU doc instead of reusing SEDIA — `BasePelupusanDokumenForm.updateDocumentListAndProcessTemplateIfNotAvailable():603-654` filters by `currentTugasan`; needs runtime logger probe.
-- **#265537 MLPS** — Rubric done (65%, residue open). **ROOT CAUSE (verified in code)**: Surat-vs-Berdaftar column asymmetry in `etanah-common/InputAlamat.java` — AWAM save `copyAlamatToPraPihakBerkepentingan():180` writes SURAT cols (`bandar_srt_*`); the App copy `copyAlamatToAppPihakBerkepentingan():168` writes BERDAFTAR cols (`bandar_daftar_*`); PLP Borang 4Ae reads SURAT (`bandar_id/bandar_lain`). faizudin's fix `59d819bb80` bridged two already-stale App columns → still fails. Later `fa73a9ae1d COT#265787` unrelated. **DB proof** (et_main_stg2, aplikasi_id 3401636): App bandar_id=30 (stale "Bandar Bukit Baru"), Pra 0 rows. **Residue**: MLPS-renewal AWAM Bandar edit lands in a Pra-by-NoLesen or profile individu, not p_aplikasi_id — trace `maklumatPemohonHelperForm` MLPS save target before Cand 1 (read-side) vs 2 (propagation).
+> 🚨 **THE TWO BULLETS BELOW ARE SUPERSEDED** by the late-morning re-investigation + audit
+> (section above). Kept for history — do NOT act on them. Both root causes changed.
+
+- ~~**#270900 BPRZ**~~ — SUPERSEDED. *(Was: fix = DATA patch to `'-KPT-PPD-KPPD-'`; Part A needs a
+  runtime logger.)* **Now**: fix = `SET peranan = NULL` (the write-in was the wrong shape and the
+  format claim was wrong); Part A = a `template.config.json` status gap, **no logger needed**.
+  Original text: Part B VERIFIED (90%): `ind_tgsn.peranan` for BPRZ SSMW (tgsn_id 14822) = `'KPT'`;
+  sibling PRZ SSMW = `'KPT-PPD'`; fix = DATA patch to `'-KPT-PPD-KPPD-'`. Part A (65%):
+  `BasePelupusanDokumenForm.updateDocumentListAndProcessTemplateIfNotAvailable():603-654` filters
+  by `currentTugasan`; needs runtime logger probe.
+- ~~**#265537 MLPS**~~ — SUPERSEDED. *(Was: Surat-vs-Berdaftar column asymmetry; App holds a stale
+  but valid town "Bandar Bukit Baru"; 0 Pra rows.)* **Now**: `bandar_id` FKs to
+  `rjk_senarai_ahli_kumpulan` **not** `ind_bandar_pekan_mukim` — id 30 is a garbage row
+  (kod 2002, nama EMPTY, inactive); the Pra row DOES exist (id 11014, `p_aplikasi_id=13224`); and
+  sak 30 is **systemic** (191k rows), so the fix is three-part, not an APPS read-side patch.
+  Original text: ROOT CAUSE (verified in code): Surat-vs-Berdaftar column asymmetry in
+  `etanah-common/InputAlamat.java` — AWAM save `copyAlamatToPraPihakBerkepentingan():180` writes
+  SURAT cols; the App copy `copyAlamatToAppPihakBerkepentingan():168` writes BERDAFTAR cols; PLP
+  Borang 4Ae reads SURAT. DB proof (et_main_stg2, aplikasi_id 3401636): App bandar_id=30 (stale
+  "Bandar Bukit Baru"), Pra 0 rows. Residue: trace `maklumatPemohonHelperForm` MLPS save target.
 - **みや id-name hunt confirmed**: `alamatSuratPemilik` ✓ (MlkBorang4AeForm.xhtml:85, reusable); `newPemohonDialog` = generic; `pemilikForm_abbMb` + `PelupusanEMohonForm.xhtml` = don't exist (real AWAM file = `plpMaklumatPemohon.xhtml`).
 - **Start-first**: #270900 (easiest — Part B config patch), then #265537. **#270900 starts in a dedicated session** per みや. Both qa_docs carry a 🔁 NEXT-START NOTE: run one more Rubric course before Apply.
 
@@ -195,4 +304,4 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 ## 🎯 Session Recap (for AI restart)
 #239386 marathon. Settled: mlit as test env (UAT decommissioned, FAT deleted per みや) · DB connections 9→3 all-pgEdge + datasources renumbered (mlit=etanahDS active) · patch rebuilt INSERT-only 141 rows with all 5 chalk-back labels baked in (PRBB L7 JKBB · PPJK L8 Pajakan · PPTPB L8 Permit Khas · L6×5 Ulasan YB · BPRZ L10 reverted to Muatnaik Warta after parent-tugasan cross-ref overturned frequency) · dry-run on mlit PASSED with rollback · `nama` verified display-only (0 comparisons in code) so remaining name questions are cosmetic · Task folder cleaned 13→6 files (numbered 0/1/2 SQL set) · xlsx tabs 1-2 mechanically verified = patch = 141 · PSBS L7/L8 CLOSED (みや) · naming decision order finalized (ind_ursn.nama → parent tugasan → BPMN veto; frequency BANNED as evidence).
 
-**Memory Type**: RAM | **Last Activity**: 2026-07-21 06:57 — #239386 Phase-1 COMMITTED+PUSHED (ebcbf5ab24, 43 files, one commit) to mlk/requirement/239386; comment-strip done; etanah repo back on mlk/master. Runtime build/walk = みや's open step. (Prev: 2026-07-21 05:51 — full editable-controls sweep.)
+**Memory Type**: RAM | **Last Activity**: 2026-07-21 12:08 — blind re-investigation + adversarial audit of #270900 + #265537; both qa_docs corrected (270900 SQL empty-string->NULL; 265537 root cause + fix-side overturned, sak30 systemic 191k rows). NEXT SESSION = #270900 (miya pick).

@@ -49,3 +49,8 @@
 {"ts":"2026-07-20T07:10:54.909Z","category":"assume-not-verify"}
 {"ts":"2026-07-20T23:03:55.269Z","category":"save-integrity"}
 {"ts":"2026-07-21T00:37:48.077Z","category":"assume-not-verify"}
+{"ts":"2026-07-21T03:48:14.328Z","category":"assume-not-verify"}
+{"ts":"2026-07-21T03:54:39.863Z","category":"filtered-evidence-read"}
+{"ts":"2026-07-21T04:11:46.951Z","category":"assume-not-verify"}
+{"ts":"2026-07-21T04:12:01.000Z","category":"fabricated-citation"}
+{"ts":"2026-07-21T04:12:01.125Z","category":"assume-not-verify"}
