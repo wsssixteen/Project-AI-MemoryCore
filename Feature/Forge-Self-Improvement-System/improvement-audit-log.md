@@ -383,4 +383,27 @@
 - [x] 2026-05-19 | **`/appraise` v1.1 salvaged** | `.claude/skills/appraise/SKILL.md` | status=applied | file edit | Stranded branch `gifted-bartik-41d152` held the only unsalvaged content across 24 branches — appraise SKILL.md v1.1 (Axis 2 blast-radius bullets: code-caller check + DB cross-module awam/pelupusan check). Re-applied + version bumped. Found via agent content-audit after the verdict-by-commit-message slip.
 - [x] 2026-05-19 | **MemoryCore `main` reconciliation + branch cleanup** | git (`main` → `7061266`) | status=applied | git ops | `main` was 8 commits behind (CLAUDE.md v1.11 vs v1.16); fast-forwarded. 23 stale local + 9 remote branches deleted after content-verification (all `--merged` or audited). 2 stale worktrees deregistered. Root cause: DE never reconciled worktree→main — fixed by step 11 above.
 
+- [ ] 2026-07-21 | **🚨 PHASE-2 EXECUTION AUDIT — the boot-loaded Phase-2 Closure rule is being skipped at scale** | `quest/active.txt` · `quest/active-archive.txt` · `1. Tasks/Melaka/` | status=finding-raised-needs-みや-decision | measured evidence below | みや asked at #271049 Phase-2: *"audit how it runs based on if we did any audits for phase 2 these past few weeks"*.
+
+  **First: were there any Phase-2 audits in the past weeks? NO.** Every Phase-2 entry in this log is dated **2026-05-12/13** (post-mortem format slim, emit-format rules, Letter→Quest Postscript, side-observations table). Nothing since — a ~10-week gap. So the honest answer to みや's framing is that Phase 2 has had *zero* audit attention in the window he asked about.
+
+  **Second: how is Phase 2 actually running? Largely NOT.** Measured 2026-07-21:
+  | Metric | Value | Expected |
+  |---|---|---|
+  | Blocks at `status=closed` sitting in `active.txt` (Phase-1 done, Phase-2 never run) | **24** (23 after #271049) | ~0 — closed blocks belong in `active-archive.txt` |
+  | Blocks at `status=archived` in `active.txt` | 0 | 0 ✓ (correct, they should be moved out) |
+  | Last dated section in `active-archive.txt` | **2026-07-13** | rolling |
+  | Task folders still in `1. Tasks/Melaka/` root | 33 | only OPEN quests |
+  | Task folders in `Archive/` | 63 | growing per close |
+
+  Stranded closed quests: QA-264006 · QA-263921 · QA-262762 · QA-255940 · QA-260508 · QA-246532 · QA-262495 · QA-261986 · QA-262004 · QA-262027 · QA-262039 · QA-264293 · QA-261517 · QA-266039 · QA-267382 · QA-268273 · QA-259112 · 269169 · 268883 · QA-269939 · QA-269918 · QA-270052 · QA-270297.
+
+  **Root cause is NOT tooling.** `quest/archive-quest.js` works — it ran 4/4 clean on #271049 today (folder→Archive ✓ · project subfolder ✓ · block→active-archive ✓ · bounty log ✓), and it has a `--dry-run` that correctly previewed every step. The gap is **invocation**: Phase 1 close feels like "done", so Phase 2 never gets triggered. This is precisely the failure `.claude/CLAUDE.md` §Phase-2 Closure was boot-loaded to prevent (it cites QA-258004, QA-262039, QA-260302 as prior instances) — the rule is boot-loaded, documented, and still skipped 23 times.
+
+  **Why the existing guard doesn't fire**: the rule is *prose in CLAUDE.md*, and the only deterministic component (`archive-quest.js`) must be invoked by me. There is no Stop/SessionStart hook that notices "N quests are closed-but-unarchived". Same anti-pattern as the ghost-hooks finding (2026-05-25) and the "prose doesn't fire" lesson behind `PlainFirstGate`.
+
+  **Proposed fix (NOT built — needs みや's nod on shape)**: a SessionStart surfacer that counts `status=closed` blocks in `active.txt` and emits a Standing Flag when >0, naming them — mirroring the existing `open-quest-surfacer`. Cheap, deterministic, and turns an invisible backlog into a boot-visible one. **Second decision for みや**: whether to bulk-archive the 23 stranded quests in one pass (`archive-quest.js` per QA, dry-run first) or leave them.
+
+- [ ] 2026-07-21 | **Branch convention corrected — `mlk/internal-issue/` → `mlk/internal/`** | `.claude/commit-conventions.md` v1.3 · `quest/quest-protocol.md` · `domain/release-mlk-plp/redmine-recon.js:45` | status=applied | 3-file edit + changelog entry | みや at #271049. Our tracker-derive rule was out of step with the team, not the reverse: the Baseline 1.0.10 recon (2026-07-20) found #270727 on `mlk/internal/270727` while our map looked for `mlk/esokongan/`, producing a false `VIA-RELATED` verdict + a needless Ask-BA row. Functional fix is `redmine-recon.js:45` `TRACKER_BRANCH['internal issue']`. First branch under the new form: `mlk/internal/271049`.
+
 *(empty — みや signs off here)*

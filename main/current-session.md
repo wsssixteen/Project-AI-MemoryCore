@@ -37,6 +37,24 @@ Falsifies cleanly: if Peraku still regenerates a BARU doc, cause moves to the AD
 
 ---
 
+## 2026-07-21 (Tuesday, afternoon) — #271049 full quest: Scout → Rubric → Apply → Phase 1 → Phase 2 CLOSED
+
+**Whole ticket start-to-archive in one session** (the concurrent session みや mentions above ran #270900/#265537). PLTP *Langkah Maklumat Tanah* was missing the **Maklumat Risalat** panel for 3 tugasan families. Commit **`2335a86ea5`** on **`mlk/internal/271049`** (pushed, verified) · 3 files / +25 lines / purely additive · みや-tested "all test passed" · **Phase 2 archived 4/4 clean**.
+
+- **Root cause**: panel gated on `MlkPelupusanTugasanConstant.TGSN_SHOW_MKLMT_RISALAT_LIST:280`; the 9 kods absent → `showMaklumatRisalat=FALSE` → `<c:if>` drops it at `MlkMaklumatTanahPemberimilikanForm.xhtml:51`.
+- **Fix (PLTP-scoped)**: new `TGSN_SHOW_MKLMT_RISALAT_PLTP_LIST` (9 kods) + enable in the existing `URS_PLTP` branch (`MlkMaklumatTanahPemberimilikanForm.java:526-529`), mirroring the MCL analog `:480-486`. Editability from `MlkPelupusanDokumenConstant.getExpectedStatus()` → **editable at KKMMKN/PYSTP/PYSKN5A (PENYEDIAAN), read-only at the 6 Semakan/Peraku**.
+- **Parallel familiar** (opus, low) hit the same root cause blind; **audit agent vetoed** みや's global-list route — 6 of 9 kods would light up **RPPLP** via `MlkSemakanPermohonanForm` (no `URS_RPPLP` guard, unlike Pemberimilikan `:576-578`). I re-verified before acting.
+- **みや was right 3× where I was wrong**: editable-at-Penyediaan · `read+write-path` was NOT display-only (real save `onSaveMaklumatRisalatPanel():1247` ← Simpan `:1241` → `save():1302`) · enum access should use Form-layer `getExpectedStatus()`. **Slips**: `assume-not-verify` (🚨 now 4-in-7d, ESCALATED) + `filtered-evidence-read`. Root pattern = **I stop surveying too early** (concluded a convention from 1 of 11 siblings).
+- **⚠️ Open finding**: BA's Expected says *"any tugasan yang ada langkah Maklumat Tanah"* — on stg2, **108** PLTP tugasan have that langkah, **all** render via this one form, only **21** show the panel → **87 still don't**. Not actioned; scope call for みや/BA. Recorded in the archived qa_doc.
+
+**Convention changed**: INTERNAL ISSUE branches → **`mlk/internal/<num>`** (retired `mlk/internal-issue/`). `.claude/commit-conventions.md` v1.3 · `quest/quest-protocol.md` · **`domain/release-mlk-plp/redmine-recon.js:45`** (the functional map behind the #270727 miss in the 1.0.10 recon) + changelog entry.
+
+**🚨 Phase-2 audit (みや asked for it)**: there had been **no** Phase-2 audit in the past weeks — every audit-log Phase-2 entry dates to **2026-05-13** (~10-week gap). And Phase 2 itself largely wasn't running: **24 quests sat at `status=closed` in active.txt with Phase 2 never run** (23 after #271049), last `active-archive.txt` section 2026-07-13, 33 Task folders still in the Melaka root. **Tooling is fine** — `archive-quest.js` ran 4/4 clean. The gap is *invocation*: Phase 1 feels like done. Proposed (unbuilt, needs みや's nod): a SessionStart surfacer flagging closed-but-unarchived quests, mirroring `open-quest-surfacer`. Full entry in `improvement-audit-log.md`.
+
+**Next session = #270900** per みや — see the START HERE block at the top of this file (that block is the concurrent session's, and its `peranan = NULL` fix supersedes the earlier `-KPT-PPD-KPPD-` write-in plan).
+
+---
+
 ## 2026-07-21 (Tuesday, late morning) — Independent re-investigation + adversarial audit of #270900 + #265537
 
 **Goal-driven session (3 /goals): load quest MDs → 2 blind familiars re-quest each ticket to
