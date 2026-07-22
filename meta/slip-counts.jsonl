@@ -54,3 +54,5 @@
 {"ts":"2026-07-21T04:11:46.951Z","category":"assume-not-verify"}
 {"ts":"2026-07-21T04:12:01.000Z","category":"fabricated-citation"}
 {"ts":"2026-07-21T04:12:01.125Z","category":"assume-not-verify"}
+{"ts":"2026-07-22T06:37:28.035Z","category":"filtered-evidence-read"}
+{"ts":"2026-07-22T06:51:36.005Z","category":"subagent-verdict-not-mechanism-verified"}

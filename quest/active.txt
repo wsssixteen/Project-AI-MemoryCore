@@ -617,19 +617,22 @@ close_note=Applied+pushed by miya himself 2026-07-16 15:50+0800 (after session e
 qa=QA-270900
 quest_start_ts=2026-07-20T23:29:39.937Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\100. INTERNAL ISSUE #270900 - BPRZ - Penyediaan-Semakan-Peraku Surat Makluman ke Pemohon - Issue pad
-phase=0
-status=active
+phase=1
+status=closed
 ticket_type=bug
 env=MLK Staging et_main_stg2
 issue_one_liner=BPRZ - Penyediaan/Semakan/Peraku Surat Makluman ke Pemohon - Issue pada paparan status dokumen dan peranan
 assigned_to_me=2026-07-20
-current_phase=Apply 2026-07-22 (late). PartB VERIFIED WORKING via DB read-back: umm_a_tgsn 2720467 created 13:45 shows peranan_semasa=-KPT-KPPD-PPD- and pengguna 6093 shahniza (the PPD miya picked); settled by miya via Kemaskini Tugasan UI, no patch run. PartA FIX REPLACED: the afterSubmitSuccess status-clear edit was WRONG (fired at Peraku submit, BARU is created at Peraku open) and was REVERTED; correct fix = +2 lines in MlkSuratTemplateForm.overridePenyediaanList():2590-2594 adding TGS_PENGESAHAN_SURAT_MAKLUMAN_KE_PEMOHON to the existing URS_BPRZ re-fetch branch (prior art 7459958f70 fixes #254641 duplicate dok). Mechanism: DokumenKeluaranService:327-330 Peraku fetch omits SEDIA -> initPerakuanMode():2512 empty -> initNewDokumenList -> BARU. NEXT=miya Clean+Republish; NO clean fixture exists (3401289 has 2 pre-existing SEDIA rows, 3400859 already past Peraku)
+current_phase=Phase 1 CLOSED 2026-07-22. Commit 46604841f7 on mlk/internal/270900 (pushed, remote SHA verified), 1 file +2 lines: MlkSuratTemplateForm.overridePenyediaanList():2590-2594 adds TGS_PENGESAHAN_SURAT_MAKLUMAN_KE_PEMOHON to the existing URS_BPRZ SEDIA-refetch branch. PartB (peranan) already live via miya Kemaskini Tugasan UI + VERIFIED in DB (umm_a_tgsn 2720467 = -KPT-KPPD-PPD- + pengguna 6093 shahniza). 🔴 local_test_confirmed=FALSE - miya ordered the commit before the runtime walk; Peraku doc-carry still needs Clean+Republish test and NO clean fixture exists on stg2. OPEN: agihanKepada dead BPM variable = own ticket
 urusan=BPRZ
 quest_start=2026-07-21
 qa_doc=projects/coding-projects/active/QA-270900/QA-270900.md
 start_first=2026-07-21 miya pick — START HERE next session; Part B SQL ready (SET peranan=NULL), Part A config edit
-branch=n/a-data-patch-plus-config
+branch=mlk/internal/270900
 test_app=PTMLK/02/L/BPRZ/2026/3 aplikasi_id 3401289 (PartB verified, shahniza@melaka.gov.my) | PTMLK/01/L/BPRZ/2026/1 aplikasi_id 3400859 PSMW m.ikram@melaka.gov.my (PartA candidate, 1 doc only)
+closed=2026-07-22
+commit=46604841f7
+local_test_confirmed=false
 
 qa=QA-265537
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\101. QA #265537 - MLKFAT - MLPS - Penyediaan Borang 4Ae dan L1e - Maklumat bagi medan Bandar yang telah dikemaskini

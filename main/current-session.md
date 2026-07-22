@@ -1,39 +1,72 @@
 # Current Session
 
-## ▶▶ NEXT SESSION — START HERE: **#270900 (BPRZ)** — みや's explicit pick, 2026-07-21
+## ▶▶ NEXT SESSION — START HERE: **#270900 Phase 2** (archive) + the untested half
 
-**Read `projects/coding-projects/active/QA-270900/QA-270900.md` first.** Rubric re-run AND
-adversarial audit are both COMPLETE — the ticket is Apply-ready with corrected SQL.
+**#270900 Phase 1 CLOSED 2026-07-22** — commit `46604841f7` on `mlk/internal/270900` (pushed,
+remote SHA verified). The 07-21 SQL plan in the old START-HERE block is **obsolete**: みや fixed
+peranan himself through the Kemaskini Tugasan UI, so no patch was ever run.
 
-**First action (10 min, no build, no WAR):**
+**Two things remain:**
 
-```sql
-SELECT count(*) FROM ind_ursn WHERE kod = 'BPRZ';        -- cardinality pre-check, expect 1
+1. 🔴 **Part A is shipped but UNTESTED** (`local_test_confirmed=false`). みや must Eclipse →
+   Project → Clean on `etanah-pelupusan` → Republish, then walk Penyediaan → Semakan → **Peraku**:
+   expect the previous letter at status **Sedia** (not a new BARU), and after a Pembetulan
+   send-back expect **one** letter at **Pembetulan**.
+   ⚠️ **No clean fixture exists on stg2** — `PTMLK/02/L/BPRZ/2026/3` carries 2 pre-existing SEDIA
+   rows (8480498, 8480502) that will show regardless; `PTMLK/01/L/BPRZ/2026/1` (3400859,
+   `m.ikram@melaka.gov.my`) is already past Peraku. A genuinely fresh Penyediaan→Peraku walk is
+   what proves it. Fallback if it fails: the `ad4b1eec0a` config shape (add
+   `STATUS_PENYEDIAAN_SEDIA` to the PSMW entry of `PLP_BPRZ_SRTPEMOHON`).
+2. **Phase 2 archive hygiene** — folder → `Archive\`, active.txt block → `active-archive.txt`,
+   and delete the never-run `2. Fix\1. 270900-peranan-SSMW-BPRZ.sql` unless みや wants it kept.
 
-SELECT tgsn_id, kod, nama, peranan                        -- evidence BEFORE
-FROM ind_tgsn
-WHERE kod IN ('PYSMW','SSMW','PSMW')
-  AND ursn_id = (SELECT ursn_id FROM ind_ursn WHERE kod = 'BPRZ');
+**Read `projects/coding-projects/active/QA-270900/QA-270900.md`** — § *Deferred to follow-up*
+(7 rows) and § *Ship — Apply* carry everything.
 
-UPDATE ind_tgsn                                           -- 1 row updated
-SET peranan = NULL
-WHERE kod = 'SSMW'
-  AND ursn_id = (SELECT ursn_id FROM ind_ursn WHERE kod = 'BPRZ');
-```
+---
 
-🚨 **`NULL`, not `''`** — the audit caught this. Analog `BPRZ.PSMW` IS NULL; corpus is 8,452 NULL
-vs 22 empty-string out of 16,837. Empty string would still fix the ticket but enters `!= null`
-pengagihan branches (`CommonPengagihanSemulaForm:743`, `KonfigurasiTugasanVO:282`,
-`KonfigurasiRoundRobinBerkumpulanForm:358-361`) carrying an empty role.
+## 2026-07-22 (Wednesday) — #270900 BPRZ: both halves resolved, Phase 1 closed
 
-**Then Part A** (same session, config-only, no Java): add `STATUS_PENYEDIAAN_SEDIA` +
-`STATUS_PENYEDIAAN_PEMBETULAN` to PYSMW/SSMW and `+SEMAK` to PSMW in the
-`PLP_BPRZ_SRTPEMOHON` block of
-`E:\Projects\Melaka\etanah-pelupusan\src\main\resources\config\MLK\template.config.json:8804-8828`.
-Falsifies cleanly: if Peraku still regenerates a BARU doc, cause moves to the ADK-insert path.
+**The day's arc**: brief みや plainly → BA correction via WhatsApp overturned my reading → 5 Fable
+familiars → peranan closed by みや in the config UI → document fix written, **reverted**, rewritten
+→ Phase 1 commit.
 
-**Env**: MLK Staging `et_main_stg2` · test app `PTMLK/02/L/BPRZ/2026/3` (aplikasi_id **3401289**).
-**Build/deploy**: Part B none · Part A = WAR rebuild + JBoss deploy (みや's step).
+### Part B — peranan (CLOSED + VERIFIED)
+- **Root cause chain** (every line controller-verified): `ind_tgsn` 14822 `peranan='KPT'` (typed by
+  `admin` 2023-10-16 18:09, version 1) → `BpmCallbackService.handleAssignation():783` forces
+  `rolePadded='-KPT-'` → `:1737-1746` builds the KPT member list and **discards the officer's
+  PPD/KPPD pick** (`nextUser=null`) → `:2117` guard false → `pengguna_semasa_id` NULL.
+- **Corpus proof**: SSMW/BPRZ = 6 tasks / 1 assigned; every blank-or-wide sibling = 100% assigned.
+- **みや fixed it via Kemaskini Tugasan UI** (added Penolong Pegawai Daerah + Ketua Penolong Pegawai
+  Daerah). **VERIFIED in DB**: `umm_a_tgsn` 2720467 (13:45:28) → `-KPT-KPPD-PPD-`, pengguna 6093 =
+  `shahniza@melaka.gov.my` — the exact PPD he picked. No patch run; the `.sql` I wrote is redundant.
+
+### Part A — document carry (SHIPPED, UNTESTED)
+- **Mechanism**: `DokumenKeluaranService.findSemakOrPerakuOrPembetulanStatusDokumenByAplikasi():327-330`
+  omits `SEDIA` → `BasePenyediaanDokumenForm.initPerakuanMode():2512` gets an empty list →
+  `initNewDokumenList()` → a fresh **BARU** doc. The Penyediaan fetch (`:169-171` = BARU/SEDIA/
+  PEMBETULAN) then lists the stuck SEDIA row **and** the new PEMBETULAN row ⇒ BA's "two documents".
+- **🚨 I nearly shipped the wrong fix.** First attempt added a status-clearing branch to
+  `BasePelupusanDokumenForm.afterSubmitSuccess()` — it fires at Peraku *submit*, but the BARU doc is
+  created at Peraku *open*. Reverted. Caught only by reading the two loaders instead of trusting the
+  familiar's verdict.
+- **Correct fix (+2 lines)**: `MlkSuratTemplateForm.overridePenyediaanList():2590-2594` — added
+  `TGS_PENGESAHAN_SURAT_MAKLUMAN_KE_PEMOHON` to an **existing `URS_BPRZ` re-fetch branch** built by
+  `7459958f70 "fixes #254641 - duplicate dok"`. Same class, same urusan, same defect family.
+- **Commit** `46604841f7` — *"Ref #270900 - BPRZ - Surat Makluman kepada Pemohon - Fix dokumen
+  statuses."* (みや's wording), branch `mlk/internal/270900`, 1 file +2/−0.
+
+### Delegation
+5 Fable familiars, `Explore` type, low effort, each one narrow question, banned from sub-agents and
+Workflow. F2 and F4 produced the real catches; F3's "form never repopulates" theory was wrong and
+F5's fix verdict was wrong — **both caught by my own verification**, which is the whole point of the
+controller-verifies rule.
+
+### System
+Two Q1 todo rows added per みや: **ticket-brief comprehension gate** (this ticket is the fixture —
+my A2 read was wrong until a WhatsApp correction that never reached Redmine) and the **delegation
+safety template** (1 narrow familiar · fable/low · reachable goal · ban sub-agents+workflows ·
+forced schema · controller verifies) for the weekly system audit.
 
 ---
 
