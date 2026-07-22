@@ -54,6 +54,9 @@ r = run('lets start with 90003');
 check('F6 PRBB injects the No-Resit row 7', /7\. ⬜ .*No-Resit urusan detected \(PRBB\)/.test(r.stdout), (r.stdout || '').slice(0, 120));
 check('F6 row names the derive method + notes.js', /TEST-PERMOHONAN-INDEX/.test(r.stdout) && /notes\.js/.test(r.stdout), '');
 check('F6 row warns module is etanah-awam', /etanah-awam/.test(r.stdout), '');
+// The row must NOT assert AWAM as fact — a no-resit urusan can be a staff-side ticket.
+check('F6 row makes みや settle AWAM-vs-APPS first', /Which side is this ticket/.test(r.stdout), '');
+check('F6 row offers a staff-side N/A escape hatch', /N\/A — staff-side/.test(r.stdout), '');
 check('F6 closing line extends to rows 0-6+7', /rows 0-6\+7/.test(r.stdout), '');
 
 // F7 non-no-resit urusan (PRZ) must NOT get the row — no false injection

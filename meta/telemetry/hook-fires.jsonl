@@ -14579,3 +14579,12 @@
 {"ts":"2026-07-22T07:43:54.146Z","hook":"awam-no-resit-gate","event":"Stop","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":1}
 {"ts":"2026-07-22T07:43:54.210Z","hook":"awam-no-resit-gate","event":"Stop","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
 {"ts":"2026-07-22T07:43:54.274Z","hook":"awam-no-resit-gate","event":"Stop","mode":"native","exit":2,"blocked":true,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-22T08:24:04.796Z","hook":"awam-no-resit-gate","event":"Stop","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-22T08:24:04.878Z","hook":"awam-no-resit-gate","event":"Stop","mode":"native","exit":2,"blocked":true,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-22T08:24:04.967Z","hook":"awam-no-resit-gate","event":"Stop","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-22T08:24:05.049Z","hook":"awam-no-resit-gate","event":"Stop","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-22T08:24:05.135Z","hook":"awam-no-resit-gate","event":"Stop","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-22T08:24:05.226Z","hook":"awam-no-resit-gate","event":"Stop","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":1}
+{"ts":"2026-07-22T08:24:05.325Z","hook":"awam-no-resit-gate","event":"Stop","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":1}
+{"ts":"2026-07-22T08:24:05.421Z","hook":"awam-no-resit-gate","event":"Stop","mode":"native","exit":0,"blocked":false,"bypassed":false,"dur_ms":2}
+{"ts":"2026-07-22T08:24:05.513Z","hook":"awam-no-resit-gate","event":"Stop","mode":"native","exit":2,"blocked":true,"bypassed":false,"dur_ms":2}
