@@ -363,6 +363,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\deliverable-lands-on-main\\\\deliverable-lands-on-main.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\awam-no-resit-gate\\\\awam-no-resit-gate.check.hook.js\""
           }
         ]
       }
