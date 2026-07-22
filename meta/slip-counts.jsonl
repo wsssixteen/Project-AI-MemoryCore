@@ -56,3 +56,7 @@
 {"ts":"2026-07-21T04:12:01.125Z","category":"assume-not-verify"}
 {"ts":"2026-07-22T06:37:28.035Z","category":"filtered-evidence-read"}
 {"ts":"2026-07-22T06:51:36.005Z","category":"subagent-verdict-not-mechanism-verified"}
+{"ts":"2026-07-22T07:37:45.477Z","category":"assume-not-verify"}
+{"ts":"2026-07-22T07:37:45.562Z","category":"reask/redundant"}
+{"ts":"2026-07-22T07:56:36.054Z","category":"assume-not-verify"}
+{"ts":"2026-07-22T08:07:59.498Z","category":"assume-not-verify"}

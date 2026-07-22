@@ -29,6 +29,11 @@ const OPEN_STATUSES = new Set(['active', 'hold', 'blocked', 'delegated']);
 const FILTER_QA = (process.argv[2] || '').trim().replace(/^QA-?/i, '');
 
 const PERMOHONAN_RE = /PT[A-Z]{3}\/\d{2}\/[A-Z]\/[A-Z0-9]+\/\d{4}\/\d+/;       // PTMLK/01/L/PSBS/2026/14
+// AWAM quests have NO Permohonan ID by design — the test key is login + p_aplikasi_id
+// (DEV-TESTING-HACKS.md:106). Before 2026-07-22 this check was structurally unpassable for
+// every AWAM quest, producing a permanent false ✗ (QA-271721). Accept the AWAM shape too.
+const AWAM_ID_RE = /\bp[_ ]?aplikasi[_ ]?id\b[^\n]{0,40}?\d{3,}/i;             // p_aplikasi_id 13089
+const TESTDATA_NA_RE = /_no test data[^_\n]*_|_test data n\/a[^_\n]*_/i;       // explicit, justified n/a
 const EMAIL_RE = /[\w.+-]+@[\w.-]+\.\w+|\b\w+@gov\.my\b/;
 const BUILD_RE = /\b(build|deploy|redeploy|mvn|maven|\.war\b|jboss|compile)\b/i;
 const FULLPATH_RE = /\.(java|xhtml|js|xml|docx|json)\b/i;                       // a real file ref, not "L8:33"
@@ -53,7 +58,7 @@ function checkQuest(qa, block, doc) {
   const c = [];
   c.push(['active.txt: status+qa_doc+branch+env', ['status', 'qa_doc', 'branch', 'env'].every(k => fieldOf(block, k))]);
   c.push(['qa_doc: ## Resume Point section', /^##\s.*resume point/im.test(doc)]);
-  c.push(['qa_doc: test permohonan ID present', PERMOHONAN_RE.test(doc)]);
+  c.push(['qa_doc: test permohonan ID present', PERMOHONAN_RE.test(doc) || AWAM_ID_RE.test(doc) || TESTDATA_NA_RE.test(doc)]);
   c.push(['qa_doc: login/email for test app', EMAIL_RE.test(doc)]);
   c.push(['qa_doc: Next-Steps Checklist present', /^##\s.*next[- ]?steps?\s+checklist/im.test(doc)]);
   c.push(['qa_doc: full file path (not abbrev)', FULLPATH_RE.test(doc)]);

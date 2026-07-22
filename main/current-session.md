@@ -23,6 +23,50 @@ peranan himself through the Kemaskini Tugasan UI, so no patch was ever run.
 **Read `projects/coding-projects/active/QA-270900/QA-270900.md`** — § *Deferred to follow-up*
 (7 rows) and § *Ship — Apply* carry everything.
 
+> ℹ️ **#271721 needs nothing** — delegated 2026-07-22 to **Nurhidayati Abdul Razak** (Reports team);
+> our working tree is clean. Do not re-open it. See the section below.
+
+---
+
+## 2026-07-22 (Wednesday, afternoon) — ESOKONGAN #271721 PRBB + two Features built
+
+**Arc**: retrieve → Rubric → Apply → **wrong owner discovered** → delegated. Along the way みや
+caught two systemic gaps and both are now closed with deterministic gates.
+
+### #271721 — PRBB "Tidak Papar Ratusan" → DELEGATED
+- Symptom: Borang Permohonan prints `180000.00`; BA wants `180,000`.
+- **Layer = Jasper, repo = `etanah-awam`** (not pelupusan — the instinctive wrong guess).
+- Chain: `awamPerakuanTab.xhtml:129` "Jana Semula" → `AwamPerakuanTabForm.onGoTabPerakuan():63`
+  → `AwamCommonReportService.getPelupusanReport():4624` → `PelupusanReportService.getPlpLaporanPermohonanPRBB():370`
+  → `printReportUsingSQL():378` → `PlpLaporanPermohonanPRBB_Sub01.jrxml:800`.
+- **Why not ours** — `…Sub01.jrxml:366` sources `KUANTITI_DIPOHON` as a **SQL alias inside the jrxml**,
+  and `BaseReportService.printReportUsingSQL():459` takes **no `JRDataSource`**. No Java lever exists.
+  A colleague first assumed a Java-side fix; line 366 settled it.
+- **Delegated to Nurhidayati Abdul Razak (Reports team)**. Handover patch: `…Sub01.jrxml:800` →
+  `new java.text.DecimalFormat("#,###.##")`. Our local edit **reverted**; tree clean.
+- Scope journey worth remembering: I proposed 3 sites → re-verify after the AWAM pull found **6** →
+  みや cut it to **`:800` only**. My extra 5 were `LUAS_DIPOHON` convention-alignment BA never asked for.
+
+### Two Features built (both forge-born, both green)
+| Feature | Type | Eval | Why |
+|---|---|---|---|
+| `brief` | skill-only | 10/10 contract checks | start-of-work orientation had no procedure; format law was already hook-enforced by `show-gate` + `terse-gate`, so **no new hook** |
+| `awam-no-resit-gate` | Stop hook | 9/9 | blocks an AWAM hand-back on PLTP/PSBS/MCL/PPTPB/PRBB with no No Resit |
+| `ticket-gate` row 7 | refine | 18/18 | injects the No-Resit requirement at **intake**, read from `active.txt urusan=` |
+
+### 🐛 Real latent bug found in `ticket-gate.js`
+`\Z` is **not a JavaScript anchor** — it matched a literal `Z`, so the **last block** in `active.txt`
+never parsed (all fields empty, `quest_start_ts` never stamped). Fixed at 2 sites via a plain split.
+
+### Knowledge banked
+- `etanah-knowledge/melaka/JASPER-REPORTS.md` (new, indexed) — the SQL-vs-datasource ownership fork.
+- `.claude/auto-memory/reference_jasper_field_sources.md` (new, indexed).
+
+### Slips (5, all ledgered)
+`assume-not-verify` ×3 · `filtered-evidence-read` · `reask/redundant`. The costly one: I ran a whole
+Test Scenario for an AWAM carian-rasmi urusan **without deriving the No Resit**, despite the rule
+being boot-loaded in CLAUDE.md — because it was prose only and the gate row was parked.
+
 ---
 
 ## 2026-07-22 (Wednesday) — #270900 BPRZ: both halves resolved, Phase 1 closed
