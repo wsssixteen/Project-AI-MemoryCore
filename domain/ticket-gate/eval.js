@@ -14,7 +14,12 @@ const HOOK = path.join(ROOT, '.claude', 'hooks', 'ticket-gate.js');
 const REAL_ACTIVE = path.join(ROOT, 'quest', 'active.txt');
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'ticket-gate-eval-'));
 const FIXTURE = path.join(TMP, 'active.txt');
-fs.writeFileSync(FIXTURE, 'active:\n\nqa=QA-90001\nstatus=hold\nphase=0\n\nqa=90002\nstatus=hold\nphase=0\n');
+fs.writeFileSync(FIXTURE,
+  'active:\n\nqa=QA-90001\nstatus=hold\nphase=0\n' +
+  '\nqa=90002\nstatus=hold\nphase=0\n' +
+  // 90003 = AWAM no-resit urusan (the #271721 shape) · 90004 = non-no-resit urusan
+  '\nqa=90003\nstatus=hold\nphase=0\nurusan=PRBB\nissue_one_liner=Pelupusan - PRBB - Tidak Papar Ratusan\n' +
+  '\nqa=90004\nstatus=hold\nphase=0\nurusan=PRZ\nissue_one_liner=PRZ - Bil Mesyuarat\n');
 
 const realHashBefore = crypto.createHash('sha1').update(fs.readFileSync(REAL_ACTIVE)).digest('hex');
 
@@ -43,6 +48,22 @@ check('F3 unknown bare number silent', r.status === 0 && !(r.stdout || '').trim(
 // F4 no signal stays silent
 r = run('good morning, how are we doing');
 check('F4 no signal silent', r.status === 0 && !(r.stdout || '').trim(), '');
+
+// F6 AWAM no-resit urusan (PRBB) injects row 7 — the #271721 replay
+r = run('lets start with 90003');
+check('F6 PRBB injects the No-Resit row 7', /7\. ⬜ .*No-Resit urusan detected \(PRBB\)/.test(r.stdout), (r.stdout || '').slice(0, 120));
+check('F6 row names the derive method + notes.js', /TEST-PERMOHONAN-INDEX/.test(r.stdout) && /notes\.js/.test(r.stdout), '');
+check('F6 row warns module is etanah-awam', /etanah-awam/.test(r.stdout), '');
+check('F6 closing line extends to rows 0-6+7', /rows 0-6\+7/.test(r.stdout), '');
+
+// F7 non-no-resit urusan (PRZ) must NOT get the row — no false injection
+r = run('lets start with 90004');
+check('F7 PRZ does NOT inject the No-Resit row', /QUEST GATE/.test(r.stdout) && !/No-Resit urusan detected/.test(r.stdout), (r.stdout || '').slice(0, 120));
+check('F7 PRZ closing line stays rows 0-6', /rows 0-6 are/.test(r.stdout), '');
+
+// F8 word-boundary: PRZ must not match inside PRBB and vice versa
+r = run('QA 90001 please');
+check('F8 urusan-less block injects nothing', !/No-Resit urusan detected/.test(r.stdout), '');
 
 // F5 real active.txt untouched by the whole eval
 const realHashAfter = crypto.createHash('sha1').update(fs.readFileSync(REAL_ACTIVE)).digest('hex');

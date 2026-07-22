@@ -39,6 +39,25 @@ function readQAState(qaNum) {
   return state;
 }
 
+// ── AWAM No-Resit detection (added 2026-07-22, #271721) ──────────────────────
+// The 5 PLP urusan whose AWAM flow starts at CarianRasmiHakmilikForm and therefore
+// REQUIRE a No Resit Carian Rasmi as test data. Source of truth:
+// etanah-awam\...\consent\web\form\CarianRasmiHakmilikForm.java URUSAN_CARIAN_RASMI :107-119.
+// Why this row exists: #271721 (PRBB) ran Phase 0 → Apply → a full Test Scenario with no
+// receipt. The rule was CLAUDE.md prose only; this makes it fire at ticket-read, the same
+// way the permohonan-ID requirement already fires for Pelupusan tickets.
+const NO_RESIT_URUSAN = ['PLTP', 'PSBS', 'MCL', 'PPTPB', 'PRBB'];
+
+// urusan comes from active.txt (redmine-sync writes `urusan=`); the one-liner is the fallback
+// for a ticket synced before that field existed.
+function noResitRow(state) {
+  const hay = `${state.urusan || ''} ${state.issue_one_liner || ''}`.toUpperCase();
+  const hit = NO_RESIT_URUSAN.filter(u => new RegExp(`\\b${u}\\b`).test(hay));
+  if (!hit.length) return null;
+  const u = hit[0];
+  return `7. ⬜ **🚨 AWAM No-Resit urusan detected (${hit.join('/')}) — DERIVE THE No Resit Carian Rasmi NOW** — ${u} starts at \`CarianRasmiHakmilikForm.xhtml\`; みや cannot open the permohonan without a receipt and BA never supplies one. It is ONE query away — do NOT hand back asking for it. Method + the 7 validations: \`etanah-knowledge/melaka/TEST-PERMOHONAN-INDEX.md\` § *No Resit Carian Rasmi* (V3 <6 months · V4 jenis-hakmilik allow-list for PSBS/PLTP · V6 no cukai arrears · V7 not Batal). Write it into the Task notes file: \`node quest/notes.js --folder "<Task folder>" --qa ${state.qa || '<n>'} --env <env> --urusan ${u} --id "No Resit: <no_resit>" --user "<login>"\`. **Also confirm the module** — an AWAM ticket's fix usually lives in \`etanah-awam\`, NOT \`etanah-pelupusan\`. Enforced at hand-back by \`domain/awam-no-resit-gate\`.`;
+}
+
 let inputData = '';
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
@@ -109,8 +128,9 @@ process.stdin.on('end', () => {
         `4. ⬜ **Working-analog compare** — sibling templates / sibling urusan classes / sibling beans. Identify the canonical pattern BEFORE recommending tags/methods.`,
         `5. ⬜ **Cross-reference chase** — if Description/History references other tickets (Requirement #NNNNN, relates #, refs, "rujuk ... tic ini"), spawn the background cross-ref agent per \`quest/cross-ref-agent.md\` (non-blocking; ONE agent for the batch, sequential, browser MCP).`,
         `6. ⬜ **Recon block** emitted — Universal Checks 1-8 with file:line evidence per row.`,
+        ...(noResitRow(state) ? [noResitRow(state)] : []),
         ``,
-        `Do NOT propose fixes / commit / open codebase files for editing until rows 0-6 are ✓ or have explicit deferrals (OOS / BA-Q / not-applicable + reason). Row 0 (git-state) is the FIRST thing — before reading the Task folder.`
+        `Do NOT propose fixes / commit / open codebase files for editing until rows 0-6${noResitRow(state) ? '+7' : ''} are ✓ or have explicit deferrals (OOS / BA-Q / not-applicable + reason). Row 0 (git-state) is the FIRST thing — before reading the Task folder.`
       ].join('\n');
     } else {
       // Redmine retrieval — no specific ticket yet
