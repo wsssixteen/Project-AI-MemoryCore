@@ -65,6 +65,20 @@ check('F7 PRZ closing line stays rows 0-6', /rows 0-6 are/.test(r.stdout), '');
 r = run('QA 90001 please');
 check('F8 urusan-less block injects nothing', !/No-Resit urusan detected/.test(r.stdout), '');
 
+// F9 🐛 LAST-BLOCK REGRESSION (found live 2026-07-22): the terminator used `\Z`, which JS treats
+// as a literal "Z", so the final block in active.txt never matched and ALL its fields read empty.
+// 90005 is deliberately the last block in the fixture and carries a no-resit urusan.
+// NOTE: must stay phase=0/status=hold — a past-Phase-0 quest exits silently by design (:103).
+fs.appendFileSync(FIXTURE, '\nqa=90005\nstatus=hold\nphase=0\nurusan=PSBS\nissue_one_liner=PSBS - last block in file\n');
+r = run('lets start with 90005');
+check('F9 LAST block parses (status read from the block)', /status=hold/.test(r.stdout), (r.stdout || '').slice(0, 140));
+check('F9 LAST block injects the No-Resit row', /No-Resit urusan detected \(PSBS\)/.test(r.stdout), (r.stdout || '').slice(0, 140));
+
+// F10 past-Phase-0 quest stays silent even when it IS a no-resit urusan (no nag after Phase 0)
+fs.appendFileSync(FIXTURE, '\nqa=90006\nstatus=active\nphase=1\nurusan=PRBB\nissue_one_liner=PRBB - past phase 0\n');
+r = run('lets start with 90006');
+check('F10 past-Phase-0 no-resit quest stays silent', r.status === 0 && !(r.stdout || '').trim(), (r.stdout || '').slice(0, 100));
+
 // F5 real active.txt untouched by the whole eval
 const realHashAfter = crypto.createHash('sha1').update(fs.readFileSync(REAL_ACTIVE)).digest('hex');
 check('F5 real quest/active.txt byte-identical', realHashBefore === realHashAfter, '');

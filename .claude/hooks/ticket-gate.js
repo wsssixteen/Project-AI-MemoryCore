@@ -28,11 +28,16 @@ function readQAState(qaNum) {
   const state = { qa: qaNum, phase: '', status: 'idle', local_test_confirmed: 'false' };
   if (!fs.existsSync(activePath)) return state;
   const text = fs.readFileSync(activePath, 'utf8');
-  // Find the block starting with qa=QA-<num> (with or without zero-pad) and ending at next qa= or EOF.
-  const re = new RegExp(`^qa=(?:QA-)?${qaNum}\\b[\\s\\S]*?(?=^qa=|\\Z)`, 'm');
-  const m = text.match(re);
-  if (!m) return state;
-  m[0].split('\n').forEach(l => {
+  // Find the block starting with qa=QA-<num> (with or without zero-pad), ending at the next qa=.
+  // 🐛 FIXED 2026-07-22 (#271721): the old one-regex form terminated on `\Z`, which JavaScript
+  // does NOT support as an end-of-input anchor — it matched a LITERAL "Z". The LAST block in
+  // active.txt therefore never matched, and every field (phase/status/urusan/…) came back empty.
+  // Rewritten as a plain split: no exotic anchors, last block behaves like any other.
+  const blocks = text.split(/^(?=qa=)/m);
+  const head = new RegExp(`^qa=(?:QA-)?${qaNum}\\b`);
+  const block = blocks.find(b => head.test(b));
+  if (!block) return state;
+  block.split('\n').forEach(l => {
     const idx = l.indexOf('=');
     if (idx > -1) state[l.substring(0, idx).trim()] = l.substring(idx + 1).trim();
   });
@@ -103,10 +108,12 @@ process.stdin.on('end', () => {
       if (!state.quest_start_ts) {
         try {
           const text = fs.readFileSync(activePath, 'utf8');
-          const blockRe = new RegExp('(^qa=(?:QA-)?' + qaNum + '\\b[\\s\\S]*?)(?=^qa=|\\Z)', 'm');
-          const m = text.match(blockRe);
-          if (m) {
-            const oldBlock = m[1];
+          // Same `\Z` bug as readQAState (fixed 2026-07-22): JS has no \Z anchor, so the LAST
+          // block never matched and quest_start_ts was silently never written for it.
+          const blocks = text.split(/^(?=qa=)/m);
+          const head = new RegExp('^qa=(?:QA-)?' + qaNum + '\\b');
+          const oldBlock = blocks.find(b => head.test(b));
+          if (oldBlock) {
             const ts = new Date().toISOString();
             // Insert quest_start_ts= line right after the qa= header line
             const newBlock = oldBlock.replace(/^(qa=QA-\d+\s*\n)/m, '$1quest_start_ts=' + ts + '\n');
@@ -150,6 +157,7 @@ process.stdin.on('end', () => {
     process.exit(0);
 
   } catch (e) {
+    if (process.env.TICKET_GATE_DEBUG) console.error('ticket-gate THROW:', e.stack);
     process.exit(0); // never block on error
   }
 });
