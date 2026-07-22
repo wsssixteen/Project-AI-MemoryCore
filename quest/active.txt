@@ -623,7 +623,7 @@ ticket_type=bug
 env=MLK Staging et_main_stg2
 issue_one_liner=BPRZ - Penyediaan/Semakan/Peraku Surat Makluman ke Pemohon - Issue pada paparan status dokumen dan peranan
 assigned_to_me=2026-07-20
-current_phase=Phase 1 CLOSED 2026-07-22. Commit 46604841f7 on mlk/internal/270900 (pushed, remote SHA verified), 1 file +2 lines: MlkSuratTemplateForm.overridePenyediaanList():2590-2594 adds TGS_PENGESAHAN_SURAT_MAKLUMAN_KE_PEMOHON to the existing URS_BPRZ SEDIA-refetch branch. PartB (peranan) already live via miya Kemaskini Tugasan UI + VERIFIED in DB (umm_a_tgsn 2720467 = -KPT-KPPD-PPD- + pengguna 6093 shahniza). 🔴 local_test_confirmed=FALSE - miya ordered the commit before the runtime walk; Peraku doc-carry still needs Clean+Republish test and NO clean fixture exists on stg2. OPEN: agihanKepada dead BPM variable = own ticket
+current_phase=Phase 1 CLOSED + TEST PASSED 2026-07-22 (miya confirmed: 'the test was successful, ticket status is close for us'). Commit 46604841f7 on mlk/internal/270900 (pushed, remote SHA verified), 1 file +2 lines: MlkSuratTemplateForm.overridePenyediaanList():2590-2594 adds TGS_PENGESAHAN_SURAT_MAKLUMAN_KE_PEMOHON to the existing URS_BPRZ SEDIA-refetch branch. PartB (peranan) live via miya Kemaskini Tugasan UI + VERIFIED in DB (umm_a_tgsn 2720467 = -KPT-KPPD-PPD-, pengguna 6093 shahniza). Runtime walk PASSED - the no-clean-fixture concern did not block. REMAINING: Phase 2 archive hygiene only. OPEN follow-up: agihanKepada dead BPM variable = own ticket.
 urusan=BPRZ
 quest_start=2026-07-21
 qa_doc=projects/coding-projects/active/QA-270900/QA-270900.md
@@ -632,7 +632,7 @@ branch=mlk/internal/270900
 test_app=PTMLK/02/L/BPRZ/2026/3 aplikasi_id 3401289 (PartB verified, shahniza@melaka.gov.my) | PTMLK/01/L/BPRZ/2026/1 aplikasi_id 3400859 PSMW m.ikram@melaka.gov.my (PartA candidate, 1 doc only)
 closed=2026-07-22
 commit=46604841f7
-local_test_confirmed=false
+local_test_confirmed=true
 
 qa=QA-265537
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\101. QA #265537 - MLKFAT - MLPS - Penyediaan Borang 4Ae dan L1e - Maklumat bagi medan Bandar yang telah dikemaskini
@@ -659,7 +659,7 @@ issue_one_liner=Pelupusan - PRBB - Tidak Papar Ratusan
 assigned_to_me=2026-07-21
 urusan=PRBB
 qa_doc=projects/coding-projects/active/QA-271721/QA-271721.md
-current_phase=DELEGATED to Nurhidayati Abdul Razak (Reports team) 2026-07-22. Root cause jrxml-internal: PlpLaporanPermohonanPRBB_Sub01.jrxml:366 sources KUANTITI_DIPOHON as a SQL alias; report filled by BaseReportService.printReportUsingSQL():459 which takes no JRDataSource, so NO Java lever exists. Handover patch for her: Sub01.jrxml:800 wrap in new java.text.DecimalFormat('#,###.##') -> 180,000 (pattern per BA annotation examples, no decimals). Our local edit REVERTED; etanah-awam working tree clean. Test data if she needs it: stg2 p_aplikasi_id 13089, login aizatmaziz@gmail.com, No Resit 260722BSAT00049. Knowledge: etanah-knowledge/melaka/JASPER-REPORTS.md + auto-memory/reference_jasper_field_sources.md.
+current_phase=DELEGATED to Nurhidayati Abdul Razak (Reports team) 2026-07-22. NO FIX FROM OUR SIDE - miya 2026-07-22: 'no fixes for jrxml. Drop it.' Nothing pending, nothing to resume, no branch, no commit. Root cause is jrxml-internal: PlpLaporanPermohonanPRBB_Sub01.jrxml:366 sources KUANTITI_DIPOHON as a SQL alias and BaseReportService.printReportUsingSQL():459 takes no JRDataSource, so no Java lever exists. Our local edit was reverted; both etanah repos verified clean of any .jrxml change. Knowledge kept: etanah-knowledge/melaka/JASPER-REPORTS.md + auto-memory/reference_jasper_field_sources.md.
 branch=none-yet-uncommitted-on-mlk/master
 delegated_to=Nurhidayati Abdul Razak (Reports team)
 delegated_date=2026-07-22
