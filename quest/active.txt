@@ -652,12 +652,14 @@ branch=n/a-pre-apply
 qa=QA-271721
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\102. ESOKONGAN #271721 - Pelupusan - PRBB - Tidak Papar Ratusan
 phase=1
-status=active
+status=delegated
 ticket_type=bug
 env=stg2 (etanahDS active per standalone.xml:213-214) - mlit is etanahDS2
 issue_one_liner=Pelupusan - PRBB - Tidak Papar Ratusan
 assigned_to_me=2026-07-21
 urusan=PRBB
 qa_doc=projects/coding-projects/active/QA-271721/QA-271721.md
-current_phase=APPLIED 2026-07-22, SCOPE CUT TO LINE 800 ONLY per miya. etanah-awam mlk/master @ 26394da65e, UNCOMMITTED. ONE edit: src\main\resources\reports\state\MLK\PlpLaporanPermohonanPRBB_Sub01.jrxml:800 KUANTITI_DIPOHON wrapped in new java.text.DecimalFormat(#,###.##) -> 180,000 (drops .00 per BA annotation). Diff +1/-1, XML parses. The 5 LUAS sites (:1015 :1077 :1138 :1199 :1260) REVERTED to raw - miya scoped to 800 only. TEST: stg2 p_aplikasi_id 13089, login aizatmaziz@gmail.com, No Resit 260722BSAT00049, click Jana Semula, item 2 must read 180,000 METER PADU. NEXT = miya build AWAM WAR + deploy + test, then Phase 1 branch mlk/esokongan/271721.
+current_phase=DELEGATED to Reports team 2026-07-22. Root cause is a jrxml-internal SQL field: PlpLaporanPermohonanPRBB_Sub01.jrxml:366 ', P_PL.KUANTITI_DIPOHON AS KUANTITI_DIPOHON' - the report is filled by BaseReportService.printReportUsingSQL():459 which runs the jrxml's OWN queryString over a Connection and accepts only \{} params, so NO Java layer can format the value. Colleague initially thought a Java-side fix existed; line 366 settled it. Candidate fix handed over: jrxml:800 wrap in new java.text.DecimalFormat('#,###.##') (pattern per BA annotation examples which carry no decimals). Local edit at :800 still uncommitted on etanah-awam mlk/master - REVERT it if Reports team owns the change. Knowledge saved: .claude/auto-memory/reference_jasper_field_sources.md
 branch=none-yet-uncommitted-on-mlk/master
+delegated_to=Reports team
+delegated_date=2026-07-22

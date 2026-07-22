@@ -39,6 +39,7 @@
 ## Reference
 - [reference_baseline_release_servers.md](reference_baseline_release_servers.md) — Baseline build server 172.16.100.162 · deploy 172.30.12.203 · ssh user `app`; the gitignored servers.local.json does NOT travel between machines, this does
 - [reference_etanah_bpmn_source.md](reference_etanah_bpmn_source.md) — Flowable BPMN lives in main-repo etanah-knowledge/.../flowables-bpmn/ (absent from worktrees); read parsed bpmn_flow.json not raw XML; latest at mlit flowable-ui modeler
+- [reference_jasper_field_sources.md](reference_jasper_field_sources.md) — Jasper `$F{}` from SQL-in-jrxml (`printReportUsingSQL`) vs Java datasource (`printReport`/`printReportUsingDataSource`) — decides whether a report fix is ours or the Reports team's; #271721 settled by jrxml:366
 
 ## Deferred — post-sprint forge work (still LIVE rules; see auto-memory-plan.md Table 4)
 - [feedback_awam_no_permohonan_id.md](feedback_awam_no_permohonan_id.md) — AWAM has no Permohonan ID test data; carian-rasmi key = No Resit Carian Rasmi (DEV-TESTING-HACKS.md)
