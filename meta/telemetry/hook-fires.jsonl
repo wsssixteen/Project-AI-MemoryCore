@@ -14557,3 +14557,4 @@
 {"ts":"2026-07-22T04:25:48.324Z","hook":"meta-layer-audit","event":"SessionStart","mode":"wrap","exit":0,"blocked":false,"dur_ms":537}
 {"ts":"2026-07-22T04:25:50.214Z","hook":"worktree-cleanup-boot","event":"SessionStart","mode":"wrap","exit":0,"blocked":false,"dur_ms":2730}
 {"ts":"2026-07-22T04:25:51.683Z","hook":"hook-syntax-check","event":"SessionStart","mode":"wrap","exit":0,"blocked":false,"dur_ms":4319}
+{"ts":"2026-07-22T06:33:39.082Z","hook":"forge","event":"Forge","mode":"forge-new","component":"brief","kind":"skill","exit":0,"blocked":false}
