@@ -635,6 +635,7 @@ commit=46604841f7
 local_test_confirmed=true
 
 qa=QA-265537
+quest_start_ts=2026-07-22T16:02:33.420Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\101. QA #265537 - MLKFAT - MLPS - Penyediaan Borang 4Ae dan L1e - Maklumat bagi medan Bandar yang telah dikemaskini
 phase=0
 status=hold
@@ -644,7 +645,7 @@ issue_one_liner=MLPS - Penyediaan Borang 4Ae dan L1e - Maklumat bagi medan Banda
 assigned_to_me=2026-07-20
 urusan=MLPS
 tugasan=Penyediaan Borang 4Ae dan L1e
-current_phase=Rubric-RERUN+AUDITED 2026-07-21 — bandar_id FKs rjk_senarai_ahli_kumpulan (NOT ind_bandar_pekan_mukim); id30=kod2002 nama-EMPTY inactive. AUDIT OVERTURN: sak30 SYSTEMIC 191312 APP rows vs only 4 rows on correct id29 = legacy default NOT one bad write. Fix is 3-part: AWAM guard + APPS read-tolerance + data cleanup. AWAM-only REJECTED (fixes 0 existing rows). C5 mechanism was WRONG: copyAlamatToAppPihakBerkepentingan is unconditional straight copy, no null-write
+current_phase=SESSION-CLOSE 2026-07-23: Rubric AUDITED (Fable 3-familiar audit + 5-round appraisal + 53-file blast-radius workflow). NO CODE YET. Fix locked: (ii) display-only nameless tolerance 4 sites -> (i) AWAM write-guard + inverted-clear fix onChangeBandar():380-382/:392-394 -> (iii) mandatory cleanup 191k. Blast radius benign; RTB/Bantahan screens on regression walk. NEXT SESSION FIRST ACTION: /brief with simulate-the-issue story diagram (miya ask), then sequencing nod, then Apply draft + Candidate-D one-row STG falsifier patch + test. qa_doc Resume Point rewritten + Deferred-to-follow-up added.
 quest_start=2026-07-21
 qa_doc=projects/coding-projects/active/QA-265537/QA-265537.md
 branch=n/a-pre-apply

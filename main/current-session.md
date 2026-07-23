@@ -1,24 +1,54 @@
 # Current Session
 
-## ▶▶ NEXT SESSION — START HERE: **#270900 Phase 2** (archive) + the untested half
+## ▶▶ NEXT SESSION — START HERE: **QA-265537 Apply prep** (みや's pick) + #270900 Phase 2 archive
 
-**#270900 Phase 1 CLOSED 2026-07-22** — commit `46604841f7` on `mlk/internal/270900` (pushed,
-remote SHA verified). The 07-21 SQL plan in the old START-HERE block is **obsolete**: みや fixed
+**QA-265537 (MLPS Bandar blank)** — Rubric fully AUDITED 2026-07-22/23, NO code yet.
+**FIRST ACTION**: emit `/brief` with a **simulate-the-issue story diagram** (みや asked for exactly
+this), then his sequencing nod, then Apply draft + Candidate-D one-row STG falsifier patch + test.
+Read `projects/coding-projects/active/QA-265537/QA-265537.md` § *0. Resume Point* — it carries the
+locked 3-part fix (4 tolerance sites · write-guard + inverted-clear fix · mandatory cleanup), test
+data (PTMLK/01/L/MLPS/2026/7 · `nizalarif@melaka.gov.my` · PYB4AE · et_main_stg2), and the standing
+caution (screen-claims need screenshot/DB citations — the fabrication slip lives in § SCREENSHOT OVERTURN).
+
+---
+
+## 2026-07-22→23 (Tue night→Wed early AM) — QA-265537 resumed: audit → fabrication caught → 5-round appraisal → workflow sweep
+
+**Arc**: /quest resume → OPEN-1 "answered" → Fable audit plan (3 familiars) → **みや caught a
+fabrication** (I invented "she had nothing to re-pick" without opening ANY of the 11 screenshots;
+`AWAM - Test 4.png` shows she picked LAIN-LAIN and saved) → full lie-accounting → 5-round
+adversarial appraisal (1 familiar/round) → blast-radius Workflow (first real Workflow use, 53 files).
+
+- **Where the truth landed**: garbage sak-30 rows are migrator-born; APPS renders them blank via the
+  4-site copy-paste fallback family; **NEW DEFECT found+verified**: inverted-clear in
+  `InputAddressRegisteredAndMailingComponentHelper.onChangeBandar():380-382/:392-394` (etanah-common) —
+  clears bandarLain when picking LAIN-LAIN, keeps stale when moving off. Her exact click sequence
+  stays 60% (best-fit). Issue 2 = downstream-only 70%.
+- **Blast radius (Workflow `qa265537-blast-radius-sweep`)**: 54 rows / 50 clean; fix-A label-only
+  everywhere; fix-B touches Helper screens + 2 pelupusan VOs (RTB/Bantahan regression). Controller
+  catch: sweep's InputAlamatVO inverted-clear flag was WRONG (flag-only method).
+- **Slips**: `assume-not-verify` (fabricated-runtime-story, みや-caught, ESCALATED 11/7d) — 2 audit-log
+  entries added (fabrication + guards-fired-only-after); fix candidates = evidence-class gate
+  ("user saw X" needs image/DB citation) + resume-path must re-run BA-attachments per-file emit.
+- **#270900**: flag closed — みや confirmed test PASSED; only Phase 2 archive remains.
+- **#271721**: delegated to Nurhidayati Abdul Razak (Reports team); needs nothing.
+
+---
+
+## ▶▶ ALSO PENDING: **#270900 Phase 2** (archive only)
+
+**#270900 Phase 1 CLOSED + TESTED 2026-07-22** — commit `46604841f7` on `mlk/internal/270900`
+(pushed, remote SHA verified). ✅ **Part A runtime-walk PASSED** — みや confirmed *"the test was
+successful, ticket status is close for us"*; `local_test_confirmed=true`. The no-clean-fixture
+concern did not block. The 07-21 SQL plan in the old START-HERE block is **obsolete**: みや fixed
 peranan himself through the Kemaskini Tugasan UI, so no patch was ever run.
 
-**Two things remain:**
+**One thing remains:**
 
-1. 🔴 **Part A is shipped but UNTESTED** (`local_test_confirmed=false`). みや must Eclipse →
-   Project → Clean on `etanah-pelupusan` → Republish, then walk Penyediaan → Semakan → **Peraku**:
-   expect the previous letter at status **Sedia** (not a new BARU), and after a Pembetulan
-   send-back expect **one** letter at **Pembetulan**.
-   ⚠️ **No clean fixture exists on stg2** — `PTMLK/02/L/BPRZ/2026/3` carries 2 pre-existing SEDIA
-   rows (8480498, 8480502) that will show regardless; `PTMLK/01/L/BPRZ/2026/1` (3400859,
-   `m.ikram@melaka.gov.my`) is already past Peraku. A genuinely fresh Penyediaan→Peraku walk is
-   what proves it. Fallback if it fails: the `ad4b1eec0a` config shape (add
-   `STATUS_PENYEDIAAN_SEDIA` to the PSMW entry of `PLP_BPRZ_SRTPEMOHON`).
-2. **Phase 2 archive hygiene** — folder → `Archive\`, active.txt block → `active-archive.txt`,
+1. **Phase 2 archive hygiene** — folder → `Archive\`, active.txt block → `active-archive.txt`,
    and delete the never-run `2. Fix\1. 270900-peranan-SSMW-BPRZ.sql` unless みや wants it kept.
+
+**Open follow-up (own ticket)**: `agihanKepada` dead BPM variable.
 
 **Read `projects/coding-projects/active/QA-270900/QA-270900.md`** — § *Deferred to follow-up*
 (7 rows) and § *Ship — Apply* carry everything.
@@ -399,4 +429,4 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 ## 🎯 Session Recap (for AI restart)
 #239386 marathon. Settled: mlit as test env (UAT decommissioned, FAT deleted per みや) · DB connections 9→3 all-pgEdge + datasources renumbered (mlit=etanahDS active) · patch rebuilt INSERT-only 141 rows with all 5 chalk-back labels baked in (PRBB L7 JKBB · PPJK L8 Pajakan · PPTPB L8 Permit Khas · L6×5 Ulasan YB · BPRZ L10 reverted to Muatnaik Warta after parent-tugasan cross-ref overturned frequency) · dry-run on mlit PASSED with rollback · `nama` verified display-only (0 comparisons in code) so remaining name questions are cosmetic · Task folder cleaned 13→6 files (numbered 0/1/2 SQL set) · xlsx tabs 1-2 mechanically verified = patch = 141 · PSBS L7/L8 CLOSED (みや) · naming decision order finalized (ind_ursn.nama → parent tugasan → BPMN veto; frequency BANNED as evidence).
 
-**Memory Type**: RAM | **Last Activity**: 2026-07-21 12:08 — blind re-investigation + adversarial audit of #270900 + #265537; both qa_docs corrected (270900 SQL empty-string->NULL; 265537 root cause + fix-side overturned, sak30 systemic 191k rows). NEXT SESSION = #270900 (miya pick).
+**Memory Type**: RAM | **Last Activity**: 2026-07-23 01:15 — QA-265537 Rubric fully audited (Fable audit + 5-round appraisal + 53-file blast-radius Workflow); fabrication slip caught by みや and accounted; fix locked 3-part + inverted-clear addition; NO code yet. NEXT SESSION = QA-265537 /brief simulate-story → sequencing nod → Apply + test.
