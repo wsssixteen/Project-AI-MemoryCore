@@ -1,6 +1,42 @@
 # Current Session
 
-## ▶▶ NEXT SESSION — START HERE: **QA-265537 Apply prep** (みや's pick) + #270900 Phase 2 archive
+## ▶▶ NEXT SESSION — START HERE: **QA-271985 (MLPS) — my recommended start**
+
+**3 new eSOKONGAN tickets retrieved + quested to Rubric 2026-07-24 (1 Opus familiar each). RANKED:**
+
+1. **▶ QA-271985 — MLPS Borang 4Ae/L1e: nama pemohon + tujuan blank + fi RM null** — **START HERE**.
+   The only one that is a genuine ownable code fix in **our** module (etanah-pelupusan Java, you
+   deploy it yourself). 3 sub-defects in `PelupusanReportMethodConstant.java` (A nama 70% · B tujuan
+   60% · C fi 75%). Rec fix = additive report-only fallbacks, zero save-path risk. **First action:**
+   run the 3 verify SELECTs in the qa_doc against stg2/stg1/mlit to confirm the null columns +
+   fallback source, THEN Apply. Difficulty **M**. qa_doc: `projects/…/active/QA-271985/QA-271985.md`.
+2. **QA-271918 — PT pasangan warganegara prints Malaysia not Singapura** — diagnosis is the cleanest
+   (95%, DB-reproduced: 1-token jrxml join fix `PlpLaporanJadual1P2_Sub03.jrxml:148`
+   `PB.WARGANEGARA_ID → UP.WARGANEGARA_ID`), **but it's jrxml** → decide fix-ourselves vs delegate to
+   Reports team (Nurhidayati) per the #271721 "no fixes for jrxml" precedent. Ownership call first.
+3. **QA-272181 — PT "Sedang Dikemaskini" popup hangs** — ~85% a **prod DATA** issue: the prod document
+   is ~65 MB so the save-back push never arrives and the dialog never closes. Fix = regenerate the
+   bloated prod doc (needs BA/your auth); optional UI-timeout hardening in `internal.js`. Little code.
+
+All 3 qa_docs + active.txt blocks are cold-resume ready. **Also still pending** (older threads,
+untouched today): QA-265537 Apply-prep (MLPS Bandar) · #270900 Phase 2 archive.
+
+---
+
+## 2026-07-24 (Thu night) — 3 new eSOKONGAN tickets retrieved + quested to Rubric via 3 Opus familiars
+
+みや asked: retrieve #271985/#272181/#271918 from Redmine, one Opus familiar per ticket (no Fable, no
+Ultracode/Max/Extra/High), full quest to Rubric, save findings, rank, then DE with commit+push+merge.
+
+- **Retrieved** via `redmine-sync.js 271985 --create` (one run picked up all 3). Folders 103/104/105.
+- **3 Opus familiars, one ticket each**, Scout→Recon→Rubric, banned from sub-agents/Workflow. All
+  wrote qa_docs (104–124 lines each). Controller-verified the files exist + enriched active.txt blocks.
+- **Findings** (see ranking block above). #271918's familiar found + consolidated a prior-session
+  QA-271918.md that had reached the identical root cause.
+- **Slip watch**: all 3 flagged DB-verify still pending (postgres MCP not loaded in familiar sessions);
+  #271985 + #271918 root causes are code-VERIFIED, #271918 also DB-reproduced from the 07-23 pass.
+
+---
 
 ## 2026-07-23 (Thu PM) — Baseline release Pelupusan 1.0.11 (prepared + deployed)
 
@@ -443,4 +479,4 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 ## 🎯 Session Recap (for AI restart)
 #239386 marathon. Settled: mlit as test env (UAT decommissioned, FAT deleted per みや) · DB connections 9→3 all-pgEdge + datasources renumbered (mlit=etanahDS active) · patch rebuilt INSERT-only 141 rows with all 5 chalk-back labels baked in (PRBB L7 JKBB · PPJK L8 Pajakan · PPTPB L8 Permit Khas · L6×5 Ulasan YB · BPRZ L10 reverted to Muatnaik Warta after parent-tugasan cross-ref overturned frequency) · dry-run on mlit PASSED with rollback · `nama` verified display-only (0 comparisons in code) so remaining name questions are cosmetic · Task folder cleaned 13→6 files (numbered 0/1/2 SQL set) · xlsx tabs 1-2 mechanically verified = patch = 141 · PSBS L7/L8 CLOSED (みや) · naming decision order finalized (ind_ursn.nama → parent tugasan → BPMN veto; frequency BANNED as evidence).
 
-**Memory Type**: RAM | **Last Activity**: 2026-07-23 01:15 — QA-265537 Rubric fully audited (Fable audit + 5-round appraisal + 53-file blast-radius Workflow); fabrication slip caught by みや and accounted; fix locked 3-part + inverted-clear addition; NO code yet. NEXT SESSION = QA-265537 /brief simulate-story → sequencing nod → Apply + test.
+**Memory Type**: RAM | **Last Activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).

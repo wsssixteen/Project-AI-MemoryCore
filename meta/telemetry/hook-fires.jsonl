@@ -17476,3 +17476,11 @@
 {"ts":"2026-07-23T14:55:58.292Z","hook":"boot-required-read-gate","event":"SessionStart","mode":"wrap","exit":0,"blocked":false,"dur_ms":385}
 {"ts":"2026-07-23T14:56:00.394Z","hook":"worktree-cleanup-boot","event":"SessionStart","mode":"wrap","exit":0,"blocked":false,"dur_ms":2506}
 {"ts":"2026-07-23T14:56:00.854Z","hook":"hook-syntax-check","event":"SessionStart","mode":"wrap","exit":0,"blocked":false,"dur_ms":2739}
+{"ts":"2026-07-23T15:00:40.332Z","hook":"evolution-check-trigger","event":"SessionStart","mode":"wrap","exit":0,"blocked":false,"dur_ms":217}
+{"ts":"2026-07-23T15:00:40.534Z","hook":"open-quest-surfacer","event":"SessionStart","mode":"wrap","exit":0,"blocked":false,"dur_ms":321}
+{"ts":"2026-07-23T15:00:40.670Z","hook":"boot-load-verification","event":"SessionStart","mode":"wrap","exit":0,"blocked":false,"dur_ms":362}
+{"ts":"2026-07-23T15:00:40.679Z","hook":"system-check-trigger","event":"SessionStart","mode":"wrap","exit":0,"blocked":false,"dur_ms":323}
+{"ts":"2026-07-23T15:00:40.759Z","hook":"meta-layer-audit","event":"SessionStart","mode":"wrap","exit":0,"blocked":false,"dur_ms":519}
+{"ts":"2026-07-23T15:00:40.881Z","hook":"boot-required-read-gate","event":"SessionStart","mode":"wrap","exit":0,"blocked":false,"dur_ms":549}
+{"ts":"2026-07-23T15:00:42.528Z","hook":"worktree-cleanup-boot","event":"SessionStart","mode":"wrap","exit":0,"blocked":false,"dur_ms":2438}
+{"ts":"2026-07-23T15:00:43.311Z","hook":"hook-syntax-check","event":"SessionStart","mode":"wrap","exit":0,"blocked":false,"dur_ms":3233}

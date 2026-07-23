@@ -664,3 +664,49 @@ current_phase=DELEGATED to Nurhidayati Abdul Razak (Reports team) 2026-07-22. NO
 branch=none-yet-uncommitted-on-mlk/master
 delegated_to=Nurhidayati Abdul Razak (Reports team)
 delegated_date=2026-07-22
+
+qa=QA-272181
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\104. ESOKONGAN #272181 - Pelupusan - PT - Popup Sedang Kemaskini tak tutup selepas kemaskini wo
+phase=0
+status=hold
+ticket_type=bug
+env=Pelupusan (etanah-common word-editor flow) - prod Module 1.0.10 / Common 1.0.129-MLK
+issue_one_liner=Pelupusan - PT - Popup "Sedang Dikemaskini" tak tutup selepas kemaskini word editor
+assigned_to_me=2026-07-23
+urusan=PT
+tugasan=Penyediaan Surat JT dan Ulasan YB (PSJT)
+qa_doc=projects/coding-projects/active/QA-272181/QA-272181.md
+test_app=PTMLK/03/L/PT/2026/16 (pengguna nfadzilah@melaka.gov.my; documentIds LAIN-36707859 / LAIN-36722760)
+current_phase=Rubric done (Opus familiar 2026-07-24). ROOT CAUSE ~85%: "Sedang Dikemaskini" dialog (kemaskiniWordEditor.xhtml:20-23 closable=false) closes ONLY via internal.js:1212-1219 handleWordEditorMessage -> hide(), which fires ONLY on the post-save push at end of WordEditorServlet.doPost:116-133. Prod doc is ~65 MB (executor.log.txt:50) -> save-back too slow -> push never arrives -> dialog hangs. Verdict=PRIMARILY DATA (BA proved staging regen of same ID = no issue). Fix cand1=regen/replace bloated prod docs LAIN-36707859/LAIN-36722760 (data op, needs miya/BA auth, NO code). Optional hardening=client-side timeout fallback in internal.js. Difficulty S(data)/M(if code hardening). BA-Qs: how doc hit 65MB / want UI timeout bundled / confirm prod-DMS byte size.
+difficulty=S-data (M if UI hardening)
+
+qa=QA-271985
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\105. ESOKONGAN #271985 - Pelupusan - MLPS - Nama Pemohon dan Tujuan Tidak Papar
+phase=0
+status=hold
+ticket_type=bug
+env=Pelupusan MLPS (etanah-pelupusan, local/deployable)
+issue_one_liner=MLPS Borang 4Ae/L1e - Nama Pemohon + Tujuan blank on counter-submission (serahan kaunter); Fi papar RM null on pengecualian (want RM0)
+assigned_to_me=2026-07-22
+urusan=MLPS
+tugasan=Penyediaan Borang 4Ae dan L1e (MlkPenyediaanBorang4AeL1eForm)
+qa_doc=projects/coding-projects/active/QA-271985/QA-271985.md
+test_app=PTMLK/02/L/MLPS/2026/1 (No lesen M 026; login nurulazura@melaka.gov.my; schema UNCONFIRMED - verify SELECTs in qa_doc)
+current_phase=Rubric done (Opus familiar 2026-07-24). Code-VERIFIED, DB-pending (postgres MCP not loaded). 3 sub-defects in PelupusanReportMethodConstant.java: (A ~70%) Nama pemohon blank - populateNamaPemohon:388 returns "-" when pemohonList empty; renewal save populateAppPihakBerkepentinganLite (PelupusanLiteService.java:389-420) deletes+recreates pihak rows only if pemohon!=null -> 0 rows on counter renewal. (B ~60%) Tujuan blank - populateTujuanPermohonan MLPS branch :1881 reads null apt.getTujuanPermohonan (writer :553-554). (C ~75%) Fi RM null - populateFi MLPS branch :1004-1023 no RM0 fallback for exemption (analog 4Be/4Ce :970 has it). REC FIX=additive report-only fallbacks (A1+B1+C1) in PelupusanReportMethodConstant.java (fall back to permit-lesen holder for nama/tujuan; "0.00" on exemption) - zero save-path risk. Difficulty M. BA-Qs: nama/tujuan inherited-from-licence vs captured-at-counter / RM0 vs RM0.00 / doc-only vs stored-data.
+difficulty=M
+next_action=run the 3 verify SELECTs vs stg2/stg1/mlit to confirm null columns + fallback source exists, THEN Apply additive fallbacks
+
+qa=QA-271918
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\103. ESOKONGAN #271918 - Pelupusan - PT - Maklumat Pasangan Tidak Sama pada Warganegara
+phase=0
+status=hold
+ticket_type=bug
+env=etanah-awam MLK (Jasper jrxml, SQL-in-report)
+issue_one_liner=PT Borang Permohonan - pasangan warganegara prints Malaysia though AWAM saved Singapura (shared PT/PSBS/MCL report)
+assigned_to_me=2026-07-23
+urusan=PT
+qa_doc=projects/coding-projects/active/QA-271918/QA-271918.md
+test_app=p_aplikasi_id 13829 (AWAM draft; applicant aizatmaziz@gmail.com; pasangan tanggungan id 499 no_kp 880808-08-8883); schema et_main_stg2
+current_phase=Rubric done (Opus familiar 2026-07-24, consolidated with prior 07-23 pass). ROOT CAUSE 95% (code + DB-reproduced): etanah-awam reports/state/MLK/PlpLaporanJadual1P2_Sub03.jrxml:148 pasangan Warganegara join reads PB.WARGANEGARA_ID (PB=UMM_P_PIHAK_BKPTG=applicant) instead of UP.WARGANEGARA_ID (UP=UMM_P_TANGGUNGAN=pasangan). Sibling joins Bangsa :147 + Pekerjaan :149 correctly use UP -> which is why Bangsa prints right, Warganegara wrong. 3 working analogs use UMM_P_TANGGUNGAN.WARGANEGARA_ID (Sub04:57, PLPS_Sub01:85, KPW_Sub01:178). FIX=1-token :148 PB.WARGANEGARA_ID -> UP.WARGANEGARA_ID (fixes PT/PSBS/MCL; only MLK copy affected). Difficulty S.
+difficulty=S
+ownership_fork=jrxml - decide fix-ourselves vs delegate to Reports team (Nurhidayati) per #271721 "no fixes for jrxml" precedent; needs miya call before Apply
