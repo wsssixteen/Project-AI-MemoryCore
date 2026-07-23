@@ -2,6 +2,20 @@
 
 ## ▶▶ NEXT SESSION — START HERE: **QA-265537 Apply prep** (みや's pick) + #270900 Phase 2 archive
 
+## 2026-07-23 (Thu PM) — Baseline release Pelupusan 1.0.11 (prepared + deployed)
+
+Ran `release-mlk-plp` end-to-end: `mlk/release/1.0.11` off `mlk/master` (f3c8497a0a) → HEAD
+`a992b86e04`, pushed. 6 tickets all CODE-BRANCH merged clean (0 conflicts): eSOKONGAN #271639 ·
+Internal #270800 · eSOKONGAN #270665/#271398/#271234/#271211. Common `1.0.143-MLK` (arrived via a
+ticket merge) · module `1.0.10→1.0.11`. **No SQL scripts** — verified twice (recon + live Redmine-API
+attachment sweep, 51 files). みや built + deployed to STG; footer confirmed all versions match.
+- **Learning**: eSOKONGAN #271639's fix lives on `mlk/internal/271639`, NOT `mlk/esokongan/` —
+  tracker→branch shape is a hint, ls-remote verify is truth.
+- **V6b caveat**: version footer can't distinguish pre-merge bump commit from merged HEAD; only a
+  build-log-SHA vs pushed-HEAD match proves a fresh build. Not blocking — footer values all matched.
+
+---
+
 **QA-265537 (MLPS Bandar blank)** — Rubric fully AUDITED 2026-07-22/23, NO code yet.
 **FIRST ACTION**: emit `/brief` with a **simulate-the-issue story diagram** (みや asked for exactly
 this), then his sequencing nod, then Apply draft + Candidate-D one-row STG falsifier patch + test.

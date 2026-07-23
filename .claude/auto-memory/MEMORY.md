@@ -39,6 +39,7 @@
 ## Reference
 - [reference_baseline_release_servers.md](reference_baseline_release_servers.md) — Baseline build server 172.16.100.162 · deploy 172.30.12.203 · ssh user `app`; the gitignored servers.local.json does NOT travel between machines, this does
 - [reference_etanah_bpmn_source.md](reference_etanah_bpmn_source.md) — Flowable BPMN lives in main-repo etanah-knowledge/.../flowables-bpmn/ (absent from worktrees); read parsed bpmn_flow.json not raw XML; latest at mlit flowable-ui modeler
+- [reference_esokongan_branch_shape.md](reference_esokongan_branch_shape.md) — eSOKONGAN release tickets don't always live on mlk/esokongan/<num> (#271639 was mlk/internal/); ls-remote verify every branch, tracker→shape is only a hint
 - [reference_jasper_field_sources.md](reference_jasper_field_sources.md) — Jasper `$F{}` from SQL-in-jrxml (`printReportUsingSQL`) vs Java datasource (`printReport`/`printReportUsingDataSource`) — decides whether a report fix is ours or the Reports team's; #271721 settled by jrxml:366
 
 ## Deferred — post-sprint forge work (still LIVE rules; see auto-memory-plan.md Table 4)
