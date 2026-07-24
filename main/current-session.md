@@ -1,5 +1,36 @@
 # Current Session
 
+## 2026-07-24 (Friday PM) — Baseline release Pelupusan 1.0.12 (prepared + handed off)
+
+Ran `release-mlk-plp` end-to-end for the 24/7 planned release. **Branch `mlk/release/1.0.12` pushed
+@ `b874b4e2b1`**, off `mlk/master` @ `a992b86e04`. Build/deploy/sheet = みや's steps (card emitted).
+
+- **The listed ticket had no branch of its own.** Recon returned `VIA-RELATED` for Internal Issue
+  **#272302** → related **#270916** (eSOKONGAN), whose `mlk/esokongan/270916` was unmerged everywhere.
+  **みや confirmed**: *"The 270916 ticket is under awam even though the fix had both awam and
+  pelupusan. So it is okay, for our side yeah we put it under this ticket's release."*
+  → one merge, 3 commits, 7 files (+50/−13), **0 conflicts · 0 commits missing**.
+- **Version commit** `b874b4e2b1` *"pelupusan version: 1.0.12"*. Common untouched at `1.0.143-MLK`
+  (already on master). **No SQL** this release — sheet SQL field stays empty.
+- **Ordering settled (みや's Q)**: bump-version stays LAST. His reasoning (version stamp should follow
+  the new code) + the mechanical one (bump-first makes every ticket merge risk a pom-line conflict;
+  bump-last leaves the tip as a clean one-line stamp). No skill change needed — pipeline already does this.
+
+**Two preflight frictions recurred — both known, both still unfixed in the tooling:**
+1. **`release-prep.js init` has no `--adopt-existing`** (the 1.0.10 hole). みや had already hand-cut a
+   local `mlk/release/1.0.12` at master HEAD + hand-edited the pom bump. Resolved by reverting his two
+   uncommitted files and `git branch -d` on the empty branch (verified 0 unique commits, never pushed),
+   then letting the script re-cut identically. Zero loss — but a flag would have avoided the manoeuvre.
+2. **`redmine.local.json` + `servers.local.json` were absent from this worktree AND the main repo** —
+   gitignored, so they never travel. Found in old worktrees (`ruri-baseline-7879c5` / `ruri-6f679c`)
+   and copied into both. Same `machine-local-config-not-portable` class as the 07-20 servers slip.
+
+**Pending on みや**: C·BUILD (`172.16.100.162`) → paste the checkout SHA for **V6b** (must equal
+`b874b4e2b1`) → D·DEPLOY (`172.30.12.203`) → E·SHEET (Common `1.0.143-MLK` · Module `1.0.12` ·
+Branch `mlk/release/1.0.12` · SQL empty).
+
+---
+
 ## ▶▶ NEXT SESSION — START HERE: **QA-271985 (MLPS) — my recommended start**
 
 **3 new eSOKONGAN tickets retrieved + quested to Rubric 2026-07-24 (1 Opus familiar each). RANKED:**
@@ -479,4 +510,6 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 ## 🎯 Session Recap (for AI restart)
 #239386 marathon. Settled: mlit as test env (UAT decommissioned, FAT deleted per みや) · DB connections 9→3 all-pgEdge + datasources renumbered (mlit=etanahDS active) · patch rebuilt INSERT-only 141 rows with all 5 chalk-back labels baked in (PRBB L7 JKBB · PPJK L8 Pajakan · PPTPB L8 Permit Khas · L6×5 Ulasan YB · BPRZ L10 reverted to Muatnaik Warta after parent-tugasan cross-ref overturned frequency) · dry-run on mlit PASSED with rollback · `nama` verified display-only (0 comparisons in code) so remaining name questions are cosmetic · Task folder cleaned 13→6 files (numbered 0/1/2 SQL set) · xlsx tabs 1-2 mechanically verified = patch = 141 · PSBS L7/L8 CLOSED (みや) · naming decision order finalized (ind_ursn.nama → parent tugasan → BPMN veto; frequency BANNED as evidence).
 
-**Memory Type**: RAM | **Last Activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+**Memory Type**: RAM | **Last Activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA. NEXT SESSION = **QA-271985** unless the release needs attention.
+
+**Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).

@@ -62,3 +62,5 @@
 {"ts":"2026-07-22T08:07:59.498Z","category":"assume-not-verify"}
 {"ts":"2026-07-22T16:02:58.038Z","category":"assume-not-verify"}
 {"ts":"2026-07-23T14:55:53.231Z","category":"reask/verbose"}
+{"ts":"2026-07-24T09:44:08.897Z","category":"machine-local-config-not-portable"}
+{"ts":"2026-07-24T09:44:08.988Z","category":"known-friction-worked-around-not-fixed"}
