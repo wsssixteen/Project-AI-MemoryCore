@@ -632,6 +632,76 @@ WHERE rt.proc_inst_id_ = '<proc_inst_id from above>';
 | `senarai_ahli_kumpulan` | DMS lookup values                         |
 | `tag`                   | Document tags                             |
 
+### 9.1 Finding a document's PHYSICAL FILE PATH on the server
+
+The question "where is the actual file for this document?" crosses **two schemas**: `et_main`
+holds the application-side pointer, `et_dms` holds the storage record. The path itself lives in
+**`dokumen_revision.lokasi_fail`** — nowhere else.
+
+```
+umm_aplikasi.aplikasi_id
+        │
+        ▼  (aplikasi_id)
+umm_a_dok_keluaran          ← generated/output docs   (umm_a_dok_kmskn = uploaded/input docs)
+        │
+        ▼  (its PK lands in skg_dok.medan_pk_id)
+et_main.skg_dok             ← storage bridge; carries the human-readable id_dok
+        │  id_dok = 'LAIN-36645957'
+        ▼
+et_dms.dokumen              ← id_dokumen = that same string  →  dokumen_id
+        │
+        ▼  (dokumen_id)
+et_dms.dokumen_revision     ← lokasi_fail = THE PATH, one row per versi
+```
+
+**Ready queries** (run connected to the target schema):
+
+```sql
+SELECT * FROM umm_a_dok_keluaran WHERE aplikasi_id = 3400577;
+
+SELECT * FROM skg_dok WHERE medan_pk_id = 8520809 ORDER BY dok_id DESC;
+
+SELECT * FROM et_dms_stg1.dokumen WHERE id_dokumen = 'LAIN-36645957';
+
+SELECT * FROM et_dms_stg1.dokumen_revision WHERE dokumen_id = 40963183;
+```
+
+**Key columns** (DDL-verified — `et_main_mlit.sql:17751`, `et_dms_mlit.sql:207` / `:237`):
+
+| Table | Column | Meaning |
+|---|---|---|
+| `skg_dok` | `medan_pk_id` | PK of the OWNING row; `medan_id` says which table it points at (polymorphic pair — indexed together as `idx_sd_medanid_medanpkid`) |
+| `skg_dok` | `a_dok_keluaran_id` / `a_dok_kmskn_id` | direct FKs to the output / input doc row — either may be NULL |
+| `skg_dok` | `id_dok` | the `LAIN-nnnnnnnn` string · UNIQUE (`uk_sd_doc_id`) · **the join key into DMS** |
+| `skg_dok` | `versi_dok`, `flag_aktif`, `flag_draf` | version + active/draft flags (see the `versi_dok=0` duplicate trap, quest MIGRATOR-DUP-V0) |
+| `dokumen` | `id_dokumen` | matches `skg_dok.id_dok` · UNIQUE (`uk_dok_id_dokumen`) |
+| `dokumen` | `versi_terkini` | current version number — pair with `dokumen_revision.versi` to pick the live row |
+| `dokumen_revision` | **`lokasi_fail`** | **the server file path** |
+| `dokumen_revision` | `lokasi_fail_pdf`, `lokasi_fail_png` | rendered derivatives, nullable |
+| `dokumen_revision` | `versi`, `saiz_fail_byte`, `mime_type`, `hash_code` | version · size · type · integrity |
+
+**Path shape on the server** — `/home/app/etanah/files/dms/SISTEM-FAIL/<KELUARAN|KEMASUKAN>/<kategori>/<YYYY>/<MM>/<id_dokumen>_<versi>.main`
+
+Verified examples (ESOKONGAN #272096, stg1):
+
+| Permohonan | Path |
+|---|---|
+| PTMLK/03/L/PT/2026/10 | `/home/app/etanah/files/dms/SISTEM-FAIL/KELUARAN/LAIN-LAIN/2026/07/LAIN-36645957_1.main` |
+| PTMLK/03/L/PT/2026/6 | `…/2026/07/LAIN-36646097_1.main` |
+| PTMLK/03/L/PT/2026/4 | `…/2026/07/LAIN-36649014_1.main` |
+
+**Notes**
+- `_1` in the filename is the **`versi`**, not a sequence — a re-saved doc gets `_2`, and the old
+  `_1` file stays on disk. When a ticket says "wrong/old document shown", compare revisions.
+- `.main` is the raw stored artifact (the .docx bytes); the `_pdf`/`_png` columns hold the
+  converted views.
+- The DMS schema is a **separate datasource** from `et_main` — a query joining across the two in
+  one statement will not run from the app's connection. Query them separately.
+- Schema suffix follows the environment: `et_dms_stg1` / `et_dms_stg2` / `et_dms_mlit`.
+
+*Source: ESOKONGAN #272096, 2026-07-24 — chain + live paths supplied by みや; column names
+cross-verified against the DDL archive.*
+
 ---
 
 ## 10. Common Joins Reference
