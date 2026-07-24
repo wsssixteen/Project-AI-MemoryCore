@@ -11,13 +11,13 @@
 {"ts":"2026-07-16T07:36:28.468Z","category":"filtered-evidence-read"}
 {"ts":"2026-07-16T14:03:34.101Z","category":"release-pipeline-missing-step"}
 {"ts":"2026-07-16T14:33:34.966Z","category":"reask/verbose"}
+{"ts":"2026-07-16T14:56:09.988Z","category":"no-names-in-comments"}
 {"ts":"2026-07-17T02:19:21.363Z","category":"redmine-evidence-channel-blind"}
 {"ts":"2026-07-17T03:10:59.963Z","category":"release-step-missing-from-design"}
 {"ts":"2026-07-17T07:44:13.490Z","category":"wrong-negative-conclusion"}
+{"ts":"2026-07-17T11:07:22.587Z","category":"reask/verbose"}
 {"ts":"2026-07-17T11:21:57.776Z","category":"retrieval-trigger-literal-action-miss"}
 {"ts":"2026-07-17T11:22:08.566Z","category":"log-gap-diary-claims-unlogged-slip"}
-{"ts":"2026-07-16T14:56:09.988Z","category":"no-names-in-comments"}
-{"ts":"2026-07-17T11:07:22.587Z","category":"reask/verbose"}
 {"ts":"2026-07-17T11:31:46.746Z","category":"assume-not-verify"}
 {"ts":"2026-07-18T10:27:10.236Z","category":"leftover-artifact-after-feature-retire"}
 {"ts":"2026-07-18T10:27:10.342Z","category":"reask/rephrase-check"}
@@ -40,11 +40,11 @@
 {"ts":"2026-07-19T07:21:34.122Z","category":"install/i-have-adhd-plugin"}
 {"ts":"2026-07-19T14:37:10.287Z","category":"delegation-cost-blowup-canned-workflow"}
 {"ts":"2026-07-19T15:39:42.411Z","category":"spend-guard/two-layer"}
+{"ts":"2026-07-20T03:49:40.122Z","category":"assume-not-verify"}
 {"ts":"2026-07-20T04:35:45.522Z","category":"machine-local-config-not-portable"}
 {"ts":"2026-07-20T04:38:22.413Z","category":"emit-shape-not-copyable"}
 {"ts":"2026-07-20T04:51:28.862Z","category":"emit-shape-not-copyable"}
 {"ts":"2026-07-20T04:51:28.939Z","category":"verification-gap-artifact-provenance"}
-{"ts":"2026-07-20T03:49:40.122Z","category":"assume-not-verify"}
 {"ts":"2026-07-20T06:55:53.511Z","category":"build-before-design"}
 {"ts":"2026-07-20T07:10:54.909Z","category":"assume-not-verify"}
 {"ts":"2026-07-20T23:03:55.269Z","category":"save-integrity"}
@@ -62,3 +62,7 @@
 {"ts":"2026-07-22T08:07:59.498Z","category":"assume-not-verify"}
 {"ts":"2026-07-22T16:02:58.038Z","category":"assume-not-verify"}
 {"ts":"2026-07-23T14:55:53.231Z","category":"reask/verbose"}
+{"ts":"2026-07-24T04:17:38.336Z","category":"filtered-evidence-read"}
+{"ts":"2026-07-24T12:24:15.079Z","category":"stop-instead-of-action"}
+{"ts":"2026-07-24T12:41:20.275Z","category":"stop-instead-of-action"}
+{"ts":"2026-07-24T12:41:20.418Z","category":"knowledgebase-not-written"}
