@@ -54,6 +54,49 @@ untouched today): QA-265537 Apply-prep (MLPS Bandar) · #270900 Phase 2 archive.
 
 ---
 
+## 2026-07-24 (Thu evening, CONCURRENT session) — QA-265537: root cause OVERTURNED to a TRANSFER bug, then blocked by a local-deploy failure
+
+**Two outcomes: a real diagnostic breakthrough, and ~1 hour lost to a JBoss/Eclipse deploy fight.**
+
+### The breakthrough — BA's Issue 1 is a TRANSFER bug, not display
+みや pushed back hard on my display-tolerance fix (*"BA didn't test the blank option, they chose
+LAIN-LAIN"*), and he was right — my 6 edits were cosmetic and could never make the typed
+`Bandar Lain` text appear. One Opus familiar + my own DB reads settled it on **fresh stg1 data**
+(`PTMLK/01/L/MLPS/2026/2`, aplikasi 3417685, created 14:54 that day):
+
+```
+PRA 23656   bandar 29 + 'MELAKA BANDAR BERSEJARAH'   srt 30 + same text
+APP 5542657 bandar_id 30 + NULL                      bandar_daftar_id 29 + NULL
+```
+⇒ AWAM **saves the registered bandar correctly**; the Pra→App transfer carries the **surat** id (30)
+into `bandar_id` and **drops BOTH `bandar_lain` texts**. Two defects, both reproduced on fresh data.
+The inversion is visible in `etanah-common\...\form\InputAlamat.java` — the `InputAlamat(Pra)`
+constructor `:118-123` reads `getBandarSurat()`, and `copyAlamatToAppPihakBerkepentingan():174-175`
+writes it into the **berdaftar** columns. The exact submission writer is still un-pinned (logger job).
+
+### The deploy fight (unsolved — blocks all runtime testing)
+Eclipse m2e-wtp's `web-resources/` staging contains only `META-INF`, so the etanah-common WAR overlay
+never merges → the deployed war lacks `jboss-deployment-structure.xml` (**Hibernate NoClassDefFound**)
+**and 98 of 111 taglib files** (the `et:form` composite → `@form` ComponentNotFoundException).
+Maven CLI builds a correct war; every attempt to stage it fought Eclipse. **My errors**: swapped a
+packaged war into an exploded deployment, then advised removing the Eclipse module — which deleted
+the deployment entirely (the 404). Full state + recommended recovery: qa_doc § SESSION-END.
+
+### Banked
+- `etanah-knowledge/melaka/DEV-TESTING-HACKS.md` — the whole deploy-failure playbook, incl. *"みや has
+  ALREADY tried Maven Update / Clean / Republish"*; `index.md` now routes to it (it was unlisted, which
+  is exactly why I re-diagnosed from scratch).
+- `TEST-PERMOHONAN-INDEX.md` — **No. Lesen derivation** for AWAM MLPS/OPLPS renewal entry (sibling to
+  the No-Resit rule), + the intake rule.
+- Env traps fixed: `toolchains.xml:109` colleague's JDK → `C:\Program Files\Java\jdk-17`; **use
+  Maven 3.9.9** (`.m2_etanah`), never `which mvn` (3.8.2, wrong repo).
+- todo Q1: **みや's Reply Construction Spec** (verbatim) — concise, load-bearing, tables, `*DO THIS*` block.
+- Slips: `filtered-evidence-read` (fixed cosmetic not BA's symptom, ESCALATED 3/7d) ·
+  `stop-instead-of-action` (had the shell, made みや run commands, ESCALATED 2/7d) ·
+  `knowledgebase-not-written` (recurring deploy failure never written down).
+
+---
+
 ## 2026-07-24 (Thu night) — 3 new eSOKONGAN tickets retrieved + quested to Rubric via 3 Opus familiars
 
 みや asked: retrieve #271985/#272181/#271918 from Redmine, one Opus familiar per ticket (no Fable, no
