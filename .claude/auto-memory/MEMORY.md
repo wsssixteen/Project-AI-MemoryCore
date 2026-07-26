@@ -18,6 +18,7 @@
 - [feedback_show_diagram_for_issues.md](feedback_show_diagram_for_issues.md) — When explaining WHERE an issue lives, LEAD with ASCII story diagram (working-path vs broken-path, boxed FullClass.method():line nodes, arrows carry data, ? at suspects); NEVER prose-walk a flow — surfaced 2026-07-14 amira-dropdown after prose explanations were called "bad explanation"
 - [feedback_untracked_confidential.md](feedback_untracked_confidential.md) — Untracked files in main repo (etanah-knowledge, QA-* diagnostics) are intentionally confidential; don't flag or push to commit
 - [feedback_verify_before_claim.md](feedback_verify_before_claim.md) — Re-read code before asserting; hold positions backed by line evidence; one passing test is inconclusive
+- [feedback_fix_dont_reroute.md](feedback_fix_dont_reroute.md) — 🚨 Broken thing reported → FIX IT; never hand him a new workflow that dodges it, never suggest Maven Update/Clean/republish (he's always tried them)
 
 ## User
 - [user_career_vision.md](user_career_vision.md) — 3-phase career vision: Personal Excellence → Team Contribution → Company Impact
@@ -26,6 +27,7 @@
 - [user_work_environment.md](user_work_environment.md) — Work laptop: Edge + Chrome browsers, Eclipse IDE; Zen Browser is personal only
 
 ## Project — Environment
+- [project_local_deploy_hibernate_overlay.md](project_local_deploy_hibernate_overlay.md) — 🚨 Local deploy fails w/ `ClassNotFoundException org.hibernate.HibernateException` (or Spring `HttpRequestHandlerServlet`) → `jboss-deployment-structure.xml` missing from deployed war; lives ONLY in etanah-common overlay via `M2_REPO`. Read DEV-TESTING-HACKS.md FIRST
 - [project_jboss_launched_by_eclipse.md](project_jboss_launched_by_eclipse.md) — JBoss EAP 7.4 (E:/Dev/jboss-7.4-plp-melaka) launched by Eclipse JBossTools; standalone.conf.bat IGNORED; JVM args go in Eclipse Server Launch Config → VM arguments
 - [project_work_setup.md](project_work_setup.md) — Dev codebase at E:\Projects\Melaka (NOT OneDrive copy which is stale)
 - [project_onedrive_migration.md](project_onedrive_migration.md) — Auto-memory syncs via OneDrive; autoMemoryDirectory setup per machine

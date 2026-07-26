@@ -1,5 +1,43 @@
 # Current Session
 
+## 2026-07-24 (Fri night) → 07-26 — 🚨 etanah-awam LOCAL DEPLOY OUTAGE + knowledge hardening
+
+**~2h lost. Second occurrence of the same bug in one day. The knowledge file already had the answer
+and was never opened.** Fix applied + closed deterministically.
+
+- **Root cause (VERIFIED)**: `WEB-INF/jboss-deployment-structure.xml` absent from the DEPLOYED war.
+  It declares `<module name="org.hibernate"/>` and lives **ONLY in the etanah-common WAR overlay**,
+  resolved through Eclipse's `M2_REPO` → was pointing at `E:\Dev\.m2` (near-empty; `1.0.143` folder
+  absent, `1.0.141` only a `.lastUpdated` marker) instead of `E:\Dev\.m2_etanah` (8.47 GB).
+  Overlay contributes 0 files → **558 files missing** from the publish → Hibernate never requested.
+  Sibling signature from the same break: Spring `HttpRequestHandlerServlet` when `WEB-INF/lib` = 0 jars.
+- **PERMANENT FIX (applied)**: copied `jboss-deployment-structure.xml` into
+  `etanah-awam/src/main/webapp/WEB-INF/` (new, untracked in the etanah repo). ⚠️ **`etanah-pelupusan`
+  has NO source copy — the same failure is still armed there.**
+- **Hibernate is a JBoss MODULE, never a Maven dependency** — `dependency:tree`/POM greps are a trap.
+- **Not a version clash**: pelupusan `1.0.143-MLK` + awam `1.0.141-MLK` coexist fine in `.m2_etanah`;
+  one shared `M2_REPO` was the single point of failure (answers みや's "conflicting etanah-common?").
+- **Nexus**: `172.16.90.169:80` LIVE (Maven 3.9.9 settings) · `172.16.90.152:8081` DEAD (Maven 3.8.2
+  settings). A sources download stuck at 1% = talking to `.152`; it can never finish, cancel it.
+- **I edited** `E:\Dev\apache-maven-3.8.2\conf\settings.xml` (mirror → `.169`, localRepository →
+  `.m2_etanah`; backup `settings.xml.bak-2026-07-24`). Did NOT touch `.m2` contents or etanah-common.
+- **Datasource note**: bare `etanahDS` = `172.30.12.202:5444/mlkstg` → **`et_main_stg1`**, NOT mlit.
+  `etanahDS3` = mlit (`et_main_mlit`) — where the #239386 patch lives. Memory said mlit was the bare
+  name; that is now stale.
+
+**Knowledge closed deterministically (the real fix):**
+| Artifact | State |
+|---|---|
+| `etanah-knowledge/melaka/DEV-TESTING-HACKS.md` § **SECOND OCCURRENCE** | permanent fix + M2_REPO mechanism + 2-command diagnosis + banned moves |
+| `domain/local-deploy-gate/` (forge-born, UserPromptSubmit) | **10/10 eval** — fires on the stack trace AND on "cannot start my local server"; silent on unrelated work |
+| auto-memory `project_local_deploy_hibernate_overlay` + `feedback_fix_dont_reroute` | both indexed in MEMORY.md |
+| slips | `knowledge-file-existed-but-not-consulted` · `fix-replaced-by-new-workflow` |
+
+**Behavioural lesson (ledgered)**: when he reports something broken, FIX IT — do not hand him a new
+workflow that dodges it, and never suggest Maven Update / Clean / republish (he has always tried them).
+
+---
+
 ## 2026-07-24 (Friday PM) — Baseline release Pelupusan 1.0.12 (prepared + handed off)
 
 Ran `release-mlk-plp` end-to-end for the 24/7 planned release. **Branch `mlk/release/1.0.12` pushed
@@ -553,6 +591,8 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 ## 🎯 Session Recap (for AI restart)
 #239386 marathon. Settled: mlit as test env (UAT decommissioned, FAT deleted per みや) · DB connections 9→3 all-pgEdge + datasources renumbered (mlit=etanahDS active) · patch rebuilt INSERT-only 141 rows with all 5 chalk-back labels baked in (PRBB L7 JKBB · PPJK L8 Pajakan · PPTPB L8 Permit Khas · L6×5 Ulasan YB · BPRZ L10 reverted to Muatnaik Warta after parent-tugasan cross-ref overturned frequency) · dry-run on mlit PASSED with rollback · `nama` verified display-only (0 comparisons in code) so remaining name questions are cosmetic · Task folder cleaned 13→6 files (numbered 0/1/2 SQL set) · xlsx tabs 1-2 mechanically verified = patch = 141 · PSBS L7/L8 CLOSED (みや) · naming decision order finalized (ind_ursn.nama → parent tugasan → BPMN veto; frequency BANNED as evidence).
 
-**Memory Type**: RAM | **Last Activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA. NEXT SESSION = **QA-271985** unless the release needs attention.
+**Memory Type**: RAM | **Last Activity**: 2026-07-26 — etanah-awam local deploy outage RESOLVED (missing `jboss-deployment-structure.xml` from the etanah-common overlay; permanent fix = source copy) + knowledge hardened into DEV-TESTING-HACKS.md, 2 auto-memories, and the new `local-deploy-gate` hook (10/10). ⚠️ `etanah-pelupusan` still unhardened. NEXT SESSION = **QA-271985**.
+
+**Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
