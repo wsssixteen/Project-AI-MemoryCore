@@ -82,6 +82,14 @@ fs.appendFileSync(FIXTURE, '\nqa=90006\nstatus=active\nphase=1\nurusan=PRBB\niss
 r = run('lets start with 90006');
 check('F10 past-Phase-0 no-resit quest stays silent', r.status === 0 && !(r.stdout || '').trim(), (r.stdout || '').slice(0, 100));
 
+// F11 LATEST-STATE row (added 2026-07-27, stale-conversation slip): every Phase-0 injection must
+// demand the journal-timeline table + OPEN/ALREADY-SOLVED classification + DO-NOT-RESOLVE list.
+r = run('QA 90001 please');
+check('F11 LATEST-STATE row 1b injected', /1b\. ⬜ .*LATEST-STATE/.test(r.stdout), (r.stdout || '').slice(0, 140));
+check('F11 row demands the journal-timeline table', /journal-timeline table/.test(r.stdout) && /date · author · assignee-change/.test(r.stdout), '');
+check('F11 row demands OPEN vs ALREADY-SOLVED + DO-NOT-RESOLVE', /ALREADY-SOLVED/.test(r.stdout) && /DO-NOT-RESOLVE/.test(r.stdout), '');
+check('F11 row bans scouting a solved issue', /scouting an issue solved earlier in the thread/.test(r.stdout), '');
+
 // F5 real active.txt untouched by the whole eval
 const realHashAfter = crypto.createHash('sha1').update(fs.readFileSync(REAL_ACTIVE)).digest('hex');
 check('F5 real quest/active.txt byte-identical', realHashBefore === realHashAfter, '');

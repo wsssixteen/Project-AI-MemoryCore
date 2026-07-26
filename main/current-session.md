@@ -1,5 +1,28 @@
 # Current Session
 
+## 2026-07-27 (Mon 01:20→03:00) — Quest-state cleanup + 3-WAVE OPUS AUDIT of the 4 Redmine-open tickets
+
+**みや's night session. Two angry corrections → cleanup; then his 3-iteration orchestration plan ran clean end-to-end (12 Opus-max familiars, ~2.0M subagent tokens, 3 Workflow waves, controller-verified between waves).**
+
+### Corrections (both ledgered)
+- `stale-quest-state-not-reconciled-with-redmine` — I surfaced 10 "open" quests from active.txt; only 4 were Redmine-open. tujuanTKM (solved, he'd said so repeatedly) + MIGRATOR-DUP-V0 (not a ticket, drop forever) cut to active-archive; #266503/#268170/#245240/#271721 archived (Redmine Closed/Verified/reassigned). **active.txt is working memory — Redmine is truth.**
+- `stale-conversation-read-solved-issue-reattempted` — his Phase-0 improvement built SAME SESSION: **LATEST-STATE FIRST** row (quest SKILL.md + ticket-gate.js row 1b + eval F11, 22/22 green).
+
+### The 3-wave audit (W1 objective / W2 blind-recon / W3 residual-close + qa_doc rewrite)
+| Ticket | Headline result |
+|---|---|
+| **271985** | BA 07-23 entry = 4-issue set; our Rubric C1 Fi fix was **INVERTED** (RM250 not RM0); a whole panel+Rekod issue was missing; roots now 93-96% DB-verified on stg1; fix = 5 additive edits/4 files, **isMelaka() gate mandatory** (TRG uses URS_MLPS!); blocker = 265537 probe dirtying MlkBorang4AeForm.java |
+| **271918** | 99% — 1-token jrxml:148 PB→UP; blast radius flipped twice, settled by MY read: **PT+PSBS+MCL** all merge Jadual1P2 (Borang197:709 / Jadual18A:744); Pekerjaan:149 = dead join; due **07-29**; ownership call = miya |
+| **272181** | Verdict MIXED: doc anomalous (75%) + code amplifier 95% VERIFIED — close signal is a 5s **POLL** (eventBus commented out) with a **60s silent discard** (CommonPollComponent:53-71) → "never closes" is structural; build+DB confounds CLOSED; prod evidence pack drafted for miya |
+| **272127** | 100% template-static; exact edit list: RencanaPT −31 ¶ / SuratKeputusanLulusPRBB −9 ¶; P0109 carries sectPr = DO-NOT-DELETE; preview IS valid verification (print-vs-preview overturned); scope call (siblings/eDoket) = miya |
+
+All 4 qa_docs rewritten by W3 familiars (superseded text kept under details), active.txt updated, #272127 intake done (folder 107, notes file filled). **#239386 disposition still open** (Redmine Resolved/Aaron, but build+runtime-walk never done — miya never answered; left untouched).
+
+### Infra incident (recovered)
+Worktree `ruri-16bcab` lost its git registration MID-SESSION (07-19 orphan class, likely concurrent-session boot prune) — all saves landed directly on main; 4 worktree-edited files copied over, evals re-run green; branch `claude/ruri-16bcab` (3 bounty snapshots) ours-merged.
+
+---
+
 ## 2026-07-24 (Fri night) → 07-26 — 🚨 etanah-awam LOCAL DEPLOY OUTAGE + knowledge hardening
 
 **~2h lost. Second occurrence of the same bug in one day. The knowledge file already had the answer
@@ -591,7 +614,9 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 ## 🎯 Session Recap (for AI restart)
 #239386 marathon. Settled: mlit as test env (UAT decommissioned, FAT deleted per みや) · DB connections 9→3 all-pgEdge + datasources renumbered (mlit=etanahDS active) · patch rebuilt INSERT-only 141 rows with all 5 chalk-back labels baked in (PRBB L7 JKBB · PPJK L8 Pajakan · PPTPB L8 Permit Khas · L6×5 Ulasan YB · BPRZ L10 reverted to Muatnaik Warta after parent-tugasan cross-ref overturned frequency) · dry-run on mlit PASSED with rollback · `nama` verified display-only (0 comparisons in code) so remaining name questions are cosmetic · Task folder cleaned 13→6 files (numbered 0/1/2 SQL set) · xlsx tabs 1-2 mechanically verified = patch = 141 · PSBS L7/L8 CLOSED (みや) · naming decision order finalized (ind_ursn.nama → parent tugasan → BPMN veto; frequency BANNED as evidence).
 
-**Memory Type**: RAM | **Last Activity**: 2026-07-26 — etanah-awam local deploy outage RESOLVED (missing `jboss-deployment-structure.xml` from the etanah-common overlay; permanent fix = source copy) + knowledge hardened into DEV-TESTING-HACKS.md, 2 auto-memories, and the new `local-deploy-gate` hook (10/10). ⚠️ `etanah-pelupusan` still unhardened. NEXT SESSION = **QA-271985**.
+**Memory Type**: RAM | **Last Activity**: 2026-07-27 03:00 — quest-state cleanup (6 stale entries archived; active.txt = Redmine-open truth: 271985/271918/272181/272127 + 239386-disposition-pending) + 3-wave Opus audit COMPLETE: all 4 tickets at verified Rubric with corrected qa_docs. NEXT = みや's calls: 271985 gate-scope nod + stash 265537 probe → Apply · 271918 ownership (due 07-29!) · 272181 prod evidence pack · 272127 sibling scope.
+
+**Prev activity**: 2026-07-26 — etanah-awam local deploy outage RESOLVED (missing `jboss-deployment-structure.xml` from the etanah-common overlay; permanent fix = source copy) + knowledge hardened into DEV-TESTING-HACKS.md, 2 auto-memories, and the new `local-deploy-gate` hook (10/10). ⚠️ `etanah-pelupusan` still unhardened.
 
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 

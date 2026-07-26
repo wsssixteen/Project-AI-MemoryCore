@@ -1185,3 +1185,87 @@ local_test_confirmed=true
 branch=mlk/internal/271049
 closed=2026-07-21
 commit=2335a86ea5
+
+qa=QA-268170
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\83. INTERNAL ISSUE (PERMANENT FIX) #268170 - Awam-Apps - Pelupusan - Senarai dokumen bagi salinan sijil kelahiran p
+phase=0
+status=archived
+ticket_type=bug
+env=Awam/Apps
+issue_one_liner=Awam/Apps - Pelupusan - Senarai dokumen bagi salinan sijil kelahiran pasangan papar mandatori walaupun status bujang
+assigned_to_me=2026-06-30
+urusan=PT
+delegated_to=colleague-TBD
+delegated_date=2026-07-01
+learning_marker=true
+note=Passed to colleague 2026-06-30 — WATCH for the fix deploy + git commit ref; run the learn-from-others plan (todo.md Q1) on it to extract lessons
+held_reason=2026-07-01 — delegated to colleague; Ruri role = watch-and-learn per learning_marker=true; Stage-1 git-state check ran this session (pelupusan 44-behind mlk/master with 14 uncommitted #239386 files; awam 16382-behind mlk/stag-env); no existing-fix by colleague yet on either repo
+qa_doc=projects/coding-projects/archive/QA-268170/QA-268170.md
+branch=n/a-delegated
+
+qa=QA-245240
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\60. QA #245240 - UAT - RPPLP - Penyediaan Risalat MMKN - PDT - Bayaran Yang Disyorkan (RM) tidak auto papar bayar
+phase=0
+status=archived
+ticket_type=bug
+env=MLK UAT
+issue_one_liner=RPPLP - Penyediaan Risalat MMKN PDT - Bayaran Yang Disyorkan (RM) tidak auto papar bayaran daripada id permohonan asal
+assigned_to_me=2026-06-05
+urusan=RPPLP
+tugasan=Penyediaan Risalat MMKN - PDT
+scout=PelupusanRayuanHelper.java:332 (no auto-populate) + :169 (flag too narrow) · ×2 tugasans PRMMKNPDT+PYMBPT · effort M · conf 80%
+test_app=PTMLK/01/L/RPPLP/2026/15 (aplikasi_id 2963176, UAT)
+delegated_to=faizudin
+delegated_commit=c439fa3326
+delegated_date=2026-06-05
+qa_doc=projects/coding-projects/archive/QA-245240/QA-245240.md
+
+qa=QA-271721
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\102. ESOKONGAN #271721 - Pelupusan - PRBB - Tidak Papar Ratusan
+phase=1
+status=archived
+ticket_type=bug
+env=stg2 (etanahDS active per standalone.xml:213-214) - mlit is etanahDS2
+issue_one_liner=Pelupusan - PRBB - Tidak Papar Ratusan
+assigned_to_me=2026-07-21
+urusan=PRBB
+qa_doc=projects/coding-projects/archive/QA-271721/QA-271721.md
+current_phase=DELEGATED to Nurhidayati Abdul Razak (Reports team) 2026-07-22. NO FIX FROM OUR SIDE - miya 2026-07-22: 'no fixes for jrxml. Drop it.' Nothing pending, nothing to resume, no branch, no commit. Root cause is jrxml-internal: PlpLaporanPermohonanPRBB_Sub01.jrxml:366 sources KUANTITI_DIPOHON as a SQL alias and BaseReportService.printReportUsingSQL():459 takes no JRDataSource, so no Java lever exists. Our local edit was reverted; both etanah repos verified clean of any .jrxml change. Knowledge kept: etanah-knowledge/melaka/JASPER-REPORTS.md + auto-memory/reference_jasper_field_sources.md.
+branch=none-yet-uncommitted-on-mlk/master
+delegated_to=Nurhidayati Abdul Razak (Reports team)
+delegated_date=2026-07-22
+
+
+## Archived 2026-07-27 — not Redmine-open (miya directive)
+
+qa=STG-PPTPB-tujuanTKM
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\77. Staging Issue -
+phase=1
+status=blocked
+branch=n/a-our-part-closed-a78a9885a7
+current_phase=Closed (our part) — Bug B pending Aaron (Modeler)
+local_test_confirmed=true
+commit=a78a9885a7
+closed=2026-06-20
+qa_doc=projects/coding-projects/active/STG-PPTPB-tujuanTKM/STG-PPTPB-tujuanTKM.md
+ticket_type=bug
+env=Staging
+issue_one_liner=PPTPB tujuanTKM_PI PropertyNotFoundException (no-ticket, from Aaron) — telecom fix shipped; Bug B → Aaron
+blocker=Bug B: gateway sid-70631659 reads kelulusan, should read keputusan — Aaron's Modeler change
+assigned_to_me=2026-06-20
+note=First non-QA task registered in active.txt per みや's "any task goes in active.txt" convention (2026-06-20)
+
+qa=MIGRATOR-DUP-V0
+status=hold
+phase=0
+branch=n/a-analysis-quest
+ticket_type=bug-migration
+env=UAT+staging
+quest_start_ts=2026-06-23
+qa_doc=projects/coding-projects/active/migrator-dup-v0/scout.md
+issue_one_liner=Duplicate versi_dok=0 (2 originals/permit) — 2 origins: external migration scripts (MIGRATOR_KTPN_PRU/LMS/MS_C7, NOT in app repo) + app OPLPS issuance PelupusanLiteService:2265 (sets versiDok=0 with NO existingVersi guard); drives both QA-266503 symptoms
+scope=5 same-permit_lesen_id dups in UAT (12816 ×10 KTPN_PRU; 12498/12558/12596 KTPN_LMS; 7457 human) + 114 permit-numbers with dup-record v0 (separate artifact)
+scout_status=Phase-0 Scout+Recon DONE — OPLPS guard-gap VERIFIED (PelupusanLiteService:2264-2265 unconditional vs guarded OMLPS :2259-2262); H1 (caused permit 7457 human dup) = HYPOTHESIS, un-traced
+next_step=Recon: name method @PelupusanLiteService:2180-2275 + grep callers to settle H1; draft dedup-cleanup patch (5 same-permit first, 114 dup-records follow-up); raise own Redmine ticket
+related=QA-266503 (deferred sibling; its removeIf(versiDok==0) caters safely regardless of origin)
+related_261626=SAME-AREA / likely DUPLICATE of #261626 (faizudin, active to 2026-06-20, origin/mlk/qa/261626). 261626 fixes the SAME rekod-pembaharuan missing/deleted-on-Simpan in the SAME method populateVersiPermitLesen — 9909350e67 removed '||currentYear' from the year-match + added isEmpty guard (ALREADY in current code). f27239d2cc/150c17874c touch MlkUtilitiPengeluaranLesenPermitForm. ACTION: reconcile with faizudin before more issue-2 work; 266503 may be a dup.

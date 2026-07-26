@@ -1,22 +1,5 @@
 active:
 
-qa=STG-PPTPB-tujuanTKM
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\77. Staging Issue -
-phase=1
-status=blocked
-branch=n/a-our-part-closed-a78a9885a7
-current_phase=Closed (our part) — Bug B pending Aaron (Modeler)
-local_test_confirmed=true
-commit=a78a9885a7
-closed=2026-06-20
-qa_doc=projects/coding-projects/active/STG-PPTPB-tujuanTKM/STG-PPTPB-tujuanTKM.md
-ticket_type=bug
-env=Staging
-issue_one_liner=PPTPB tujuanTKM_PI PropertyNotFoundException (no-ticket, from Aaron) — telecom fix shipped; Bug B → Aaron
-blocker=Bug B: gateway sid-70631659 reads kelulusan, should read keputusan — Aaron's Modeler change
-assigned_to_me=2026-06-20
-note=First non-QA task registered in active.txt per みや's "any task goes in active.txt" convention (2026-06-20)
-
 qa=QA-264006
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\58. QA #264006 - Semua Urusan - Tugasan peranan PT - Nama PT tidak sama dengan PT tugas
 phase=1
@@ -45,22 +28,6 @@ ticket_type=bug
 env=MLKUAT
 issue_one_liner=PLTP - Penyediaan Risalat MMKN - PDT - Klik Kemaskini > loading for too long
 assigned_to_me=2026-06-04
-
-qa=QA-245240
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\60. QA #245240 - UAT - RPPLP - Penyediaan Risalat MMKN - PDT - Bayaran Yang Disyorkan (RM) tidak auto papar bayar
-phase=0
-status=delegated
-ticket_type=bug
-env=MLK UAT
-issue_one_liner=RPPLP - Penyediaan Risalat MMKN PDT - Bayaran Yang Disyorkan (RM) tidak auto papar bayaran daripada id permohonan asal
-assigned_to_me=2026-06-05
-urusan=RPPLP
-tugasan=Penyediaan Risalat MMKN - PDT
-scout=PelupusanRayuanHelper.java:332 (no auto-populate) + :169 (flag too narrow) · ×2 tugasans PRMMKNPDT+PYMBPT · effort M · conf 80%
-test_app=PTMLK/01/L/RPPLP/2026/15 (aplikasi_id 2963176, UAT)
-delegated_to=faizudin
-delegated_commit=c439fa3326
-delegated_date=2026-06-05
 
 qa=QA-262762
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\61. QA #262762 - [FAT MCOT ISSUE] OPLPS - Penyediaan Borang 4Ae dan L1e - unable to sim
@@ -345,40 +312,6 @@ fix_applied=i-lesen.png swapped to Melaka by miya; i-lesen-bak.png backup create
 commit=c38bc07a90
 closed=2026-06-18
 
-qa=QA-266503
-status=blocked
-phase=0
-current_phase=issue1-CLOSED-3512e0df8a · issue2-BLOCKED-runtime-probe-next
-ticket_type=bug
-env=MLKSTG
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\78. INTERNAL ISSUE (PERMANENT FIX) #266503 - MLKSTG - MLPS - Penyediaan Borang 4Ae dan L1e - Klik butang Simpan, borang output papar rekod pemb
-qa_doc=projects/coding-projects/active/QA-266503/QA-266503.md
-issue_one_liner=MLPS Borang4Ae: PLPS leak in renewal list (issue1) + 2024 MLPS renewal DELETED on Simpan (issue2, LIVE - row 7928 lost)
-local_test_confirmed=false
-test_result=ISSUE1 (PLPS leak) verified on UAT for versi_dok=0 shape (borang 3, no PLPS). ISSUE2 NOT verified - my UAT test used no-collision data (renewals 2025/26/27); the real test = repro-issue2-patch.sql (creates 2024 collision) + Simpan, NOT yet run. Fix does not touch save-delete (populateVersiPermitLesen:2562-2564) my own Recon named as root. Risk: fix keys on versi_dok==0 but save scrambles versi_dok (:2547) - needs BA staging chain to confirm original is still v0
-fix_final=A removeIf(versiDok==0) findRekodPembaharuan+FromLite; B findVersiByTahun excl versiDok!=0; C year-walk tahunCounter=min-renewal-year; D SortByLatestDate(advisor,NOT-needed)
-dup_deferred=2x versi_dok=0 MIGRATOR_KTPN_LMS (UAT 7876/7927, stg 5033/5068) = separate migration ticket
-branch=mlk/internal-issue/266503
-issue2_status=UNRESOLVED: panel (MlkPenyediaanBorang4AeL1eForm @ViewScoped) shows 3 rows excl patched 99002024; output=year-walk(floor2025) but code=FromLite — contradiction unresolved statically. NEXT=probe logger (code in chat/issue2-test-scenario.md) to find population path. cache/JSON/permit ruled out.
-flag_migrator_dup=OWN TICKET NEEDED: 2x versi_dok=0 from MIGRATOR_KTPN_LMS (UAT 7876/7927 permit7457; stg 5033/5068) = root of both symptoms; scope unknown, needs count-query + cleanup patch
-fix_lineage=RECURRING REGRESSION (3x): #256093 (Azim, Apr-2026, ORIGINAL — MlkPenyediaanBorang4AeL1eForm 52L + mlkMaklumatRekodPembaharuanLite.xhtml + Utiliti form; ADDED the initJadualRekodPembaharuan cache-guard) -> #261626 (faiz, Jun-2026, re-fix populateVersiPermitLesen year-match + PemegangPermitLesen) -> QA-266503 (now). Same Rekod Pembaharuan panel+save fixed 3x. Root-cause goldmine = 256093+261626 Redmine discussions+diffs. Reconcile with Azim+faiz, don't solve from scratch.
-issue2_root_FOUND=RESOLVED (code-level): page=MlkBorang4AeForm (year-walk), NOT Penyediaan/FromLite. Save=PelupusanService.saveVersiPermitLesenMLPS:15462 — matches panel rows to renewals BY YEAR (:15497), deletes unmatched via deleteVersiPermitLesenDataMLPS (:15645-15653). ONE root: year-walk panel populateJadualRekodPembaharuanMLPS floor=vplFirst(2024-orig)+1=2025 excludes the 2024 renewal -> not in rekodVOList -> save deletes it. FIX C (tahunCounter=min-renewal-year) IS correct. KEY: 261626/256093 fixed the PARALLEL save populateVersiPermitLesen but NEVER saveVersiPermitLesenMLPS:15462 = the unfixed sibling = why 266503 recurs. Optional harden: match-by-id / no-blanket-delete in :15462.
-
-qa=MIGRATOR-DUP-V0
-status=hold
-phase=0
-branch=n/a-analysis-quest
-ticket_type=bug-migration
-env=UAT+staging
-quest_start_ts=2026-06-23
-qa_doc=projects/coding-projects/active/migrator-dup-v0/scout.md
-issue_one_liner=Duplicate versi_dok=0 (2 originals/permit) — 2 origins: external migration scripts (MIGRATOR_KTPN_PRU/LMS/MS_C7, NOT in app repo) + app OPLPS issuance PelupusanLiteService:2265 (sets versiDok=0 with NO existingVersi guard); drives both QA-266503 symptoms
-scope=5 same-permit_lesen_id dups in UAT (12816 ×10 KTPN_PRU; 12498/12558/12596 KTPN_LMS; 7457 human) + 114 permit-numbers with dup-record v0 (separate artifact)
-scout_status=Phase-0 Scout+Recon DONE — OPLPS guard-gap VERIFIED (PelupusanLiteService:2264-2265 unconditional vs guarded OMLPS :2259-2262); H1 (caused permit 7457 human dup) = HYPOTHESIS, un-traced
-next_step=Recon: name method @PelupusanLiteService:2180-2275 + grep callers to settle H1; draft dedup-cleanup patch (5 same-permit first, 114 dup-records follow-up); raise own Redmine ticket
-related=QA-266503 (deferred sibling; its removeIf(versiDok==0) caters safely regardless of origin)
-related_261626=SAME-AREA / likely DUPLICATE of #261626 (faizudin, active to 2026-06-20, origin/mlk/qa/261626). 261626 fixes the SAME rekod-pembaharuan missing/deleted-on-Simpan in the SAME method populateVersiPermitLesen — 9909350e67 removed '||currentYear' from the year-match + added isEmpty guard (ALREADY in current code). f27239d2cc/150c17874c touch MlkUtilitiPengeluaranLesenPermitForm. ACTION: reconcile with faizudin before more issue-2 work; 266503 may be a dup.
-
 qa=QA-267382
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\80. ESOKONGAN #267382 - Urusan PLPS - Isu paparan footer dan pelan pada surat jabatan teknikal
 phase=1
@@ -425,23 +358,6 @@ note=Requirement (multi-session). FULL CONTEXT qa_doc §0n (2026-07-17 session c
 commit=ebcbf5ab24
 commit_partial=1313e97cc8-SUPERSEDED
 base_branch=mlk/master
-
-qa=QA-268170
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\83. INTERNAL ISSUE (PERMANENT FIX) #268170 - Awam-Apps - Pelupusan - Senarai dokumen bagi salinan sijil kelahiran p
-phase=0
-status=hold
-ticket_type=bug
-env=Awam/Apps
-issue_one_liner=Awam/Apps - Pelupusan - Senarai dokumen bagi salinan sijil kelahiran pasangan papar mandatori walaupun status bujang
-assigned_to_me=2026-06-30
-urusan=PT
-delegated_to=colleague-TBD
-delegated_date=2026-07-01
-learning_marker=true
-note=Passed to colleague 2026-06-30 — WATCH for the fix deploy + git commit ref; run the learn-from-others plan (todo.md Q1) on it to extract lessons
-held_reason=2026-07-01 — delegated to colleague; Ruri role = watch-and-learn per learning_marker=true; Stage-1 git-state check ran this session (pelupusan 44-behind mlk/master with 14 uncommitted #239386 files; awam 16382-behind mlk/stag-env); no existing-fix by colleague yet on either repo
-qa_doc=projects/coding-projects/active/QA-268170/QA-268170.md
-branch=n/a-delegated
 
 qa=QA-268273
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\85. INTERNAL ISSUE (PERMANENT FIX) #268273 - Awam - Klik kemaskini pada draf permohonan - system direct ke langkah
@@ -650,21 +566,6 @@ quest_start=2026-07-21
 qa_doc=projects/coding-projects/active/QA-265537/QA-265537.md
 branch=n/a-pre-apply
 
-qa=QA-271721
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\102. ESOKONGAN #271721 - Pelupusan - PRBB - Tidak Papar Ratusan
-phase=1
-status=delegated
-ticket_type=bug
-env=stg2 (etanahDS active per standalone.xml:213-214) - mlit is etanahDS2
-issue_one_liner=Pelupusan - PRBB - Tidak Papar Ratusan
-assigned_to_me=2026-07-21
-urusan=PRBB
-qa_doc=projects/coding-projects/active/QA-271721/QA-271721.md
-current_phase=DELEGATED to Nurhidayati Abdul Razak (Reports team) 2026-07-22. NO FIX FROM OUR SIDE - miya 2026-07-22: 'no fixes for jrxml. Drop it.' Nothing pending, nothing to resume, no branch, no commit. Root cause is jrxml-internal: PlpLaporanPermohonanPRBB_Sub01.jrxml:366 sources KUANTITI_DIPOHON as a SQL alias and BaseReportService.printReportUsingSQL():459 takes no JRDataSource, so no Java lever exists. Our local edit was reverted; both etanah repos verified clean of any .jrxml change. Knowledge kept: etanah-knowledge/melaka/JASPER-REPORTS.md + auto-memory/reference_jasper_field_sources.md.
-branch=none-yet-uncommitted-on-mlk/master
-delegated_to=Nurhidayati Abdul Razak (Reports team)
-delegated_date=2026-07-22
-
 qa=QA-272181
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\104. ESOKONGAN #272181 - Pelupusan - PT - Popup Sedang Kemaskini tak tutup selepas kemaskini wo
 phase=0
@@ -677,9 +578,10 @@ urusan=PT
 tugasan=Penyediaan Surat JT dan Ulasan YB (PSJT)
 qa_doc=projects/coding-projects/active/QA-272181/QA-272181.md
 test_app=PTMLK/03/L/PT/2026/16 (pengguna nfadzilah@melaka.gov.my; documentIds LAIN-36707859 / LAIN-36722760)
-current_phase=Rubric done (Opus familiar 2026-07-24). ROOT CAUSE ~85%: "Sedang Dikemaskini" dialog (kemaskiniWordEditor.xhtml:20-23 closable=false) closes ONLY via internal.js:1212-1219 handleWordEditorMessage -> hide(), which fires ONLY on the post-save push at end of WordEditorServlet.doPost:116-133. Prod doc is ~65 MB (executor.log.txt:50) -> save-back too slow -> push never arrives -> dialog hangs. Verdict=PRIMARILY DATA (BA proved staging regen of same ID = no issue). Fix cand1=regen/replace bloated prod docs LAIN-36707859/LAIN-36722760 (data op, needs miya/BA auth, NO code). Optional hardening=client-side timeout fallback in internal.js. Difficulty S(data)/M(if code hardening). BA-Qs: how doc hit 65MB / want UI timeout bundled / confirm prod-DMS byte size.
+current_phase=Diagnosis COMPLETE via 3-wave audit 2026-07-27 - answers BA question (is the prod doc wrong?): YES doc anomalous (2 docs 65142888/65142889 bytes, 75pct trigger) AND code turns oversize into permanent hang (95pct VERIFIED: close signal is a 5s POLL not push - CommonPushNotificationUtil eventBus commented out; CommonPollComponent.onPoll:53-71 silently DISCARDS the close signal if >60s old; doPost materializes upload 2x + dead temp write :109-114). Build-version + DB-version confounds CLOSED (git diff 1.0.129->1.0.143 touches zero flow files; V_DOMAIN frozen 2021). PROD EVIDENCE PACK drafted in qa_doc (server.log greps wanda2 + skg_dok SELECT, unqualified/no-JOIN) - miya runs. Fixes gated on R2 greps; regen needs auth.
 difficulty=S-data (M if UI hardening)
 branch=n/a-pre-apply-data-issue
+next_action=miya: run the prod evidence pack (qa_doc) - server.log greps + skg_dok SELECT; then regen auth + R7 bundling decision
 
 qa=QA-271985
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\105. ESOKONGAN #271985 - Pelupusan - MLPS - Nama Pemohon dan Tujuan Tidak Papar
@@ -693,9 +595,9 @@ urusan=MLPS
 tugasan=Penyediaan Borang 4Ae dan L1e (MlkPenyediaanBorang4AeL1eForm)
 qa_doc=projects/coding-projects/active/QA-271985/QA-271985.md
 test_app=PTMLK/02/L/MLPS/2026/1 (No lesen M 026; login nurulazura@melaka.gov.my; schema UNCONFIRMED - verify SELECTs in qa_doc)
-current_phase=Rubric done (Opus familiar 2026-07-24). Code-VERIFIED, DB-pending (postgres MCP not loaded). 3 sub-defects in PelupusanReportMethodConstant.java: (A ~70%) Nama pemohon blank - populateNamaPemohon:388 returns "-" when pemohonList empty; renewal save populateAppPihakBerkepentinganLite (PelupusanLiteService.java:389-420) deletes+recreates pihak rows only if pemohon!=null -> 0 rows on counter renewal. (B ~60%) Tujuan blank - populateTujuanPermohonan MLPS branch :1881 reads null apt.getTujuanPermohonan (writer :553-554). (C ~75%) Fi RM null - populateFi MLPS branch :1004-1023 no RM0 fallback for exemption (analog 4Be/4Ce :970 has it). REC FIX=additive report-only fallbacks (A1+B1+C1) in PelupusanReportMethodConstant.java (fall back to permit-lesen holder for nama/tujuan; "0.00" on exemption) - zero save-path risk. Difficulty M. BA-Qs: nama/tujuan inherited-from-licence vs captured-at-counter / RM0 vs RM0.00 / doc-only vs stored-data.
+current_phase=Rubric COMPLETE via 3-wave audit 2026-07-27 (W1 objective + W2 blind recon + W3 residual-close; all mechanisms controller-verified). BA 07-23 4-ISSUE SET supersedes old A/B/C framing. Root causes VERIFIED 93-96pct w/ et_main_stg1 DB: I1 tujuan wrong-column/wrong-table reads (value lives on umm_a_permit_lesen 15527; panel misses TUJUAN_PERMOHONAN_ID because :418 PLPS-gate, report reads empty umm_a_permohonan_tnh) · I2 pengecualian never netted (MlkBorang4AeForm:211 + PelupusanService:16028 + :712; analog :948-950) · I3 full exemption empties fee map -> :922 gate -> :1051 null (fix: byrnFiList, 4Be/4Ce analog :970; OLD C1 RM0 fix INVERTED - never apply) · I4 flag_pemohon=N migrator row filtered at param:273 (real exposure ~2 MLPS apps; 367 legacy PLPS = do NOT patch). FIX=5 additive edits/4 files; shared-file edits MUST carry isMelaka() gate (TRG uses URS_MLPS - verified :271/:310/:493/:561). BA-Q: perincian for Lain-lain. BLOCKER: dirty tree - QA-265537 probe in MlkBorang4AeForm.java must be stashed before Apply. Full spec qa_doc.
 difficulty=M
-next_action=run the 3 verify SELECTs vs stg2/stg1/mlit to confirm null columns + fallback source exists, THEN Apply additive fallbacks
+next_action=miya: O2 gate-scope nod + stash 265537 probe -> Apply the 5-edit spec from qa_doc
 branch=n/a-pre-apply
 
 qa=QA-271918
@@ -709,7 +611,21 @@ assigned_to_me=2026-07-23
 urusan=PT
 qa_doc=projects/coding-projects/active/QA-271918/QA-271918.md
 test_app=p_aplikasi_id 13829 (AWAM draft; applicant aizatmaziz@gmail.com; pasangan tanggungan id 499 no_kp 880808-08-8883); schema et_main_stg2
-current_phase=Rubric done (Opus familiar 2026-07-24, consolidated with prior 07-23 pass). ROOT CAUSE 95% (code + DB-reproduced): etanah-awam reports/state/MLK/PlpLaporanJadual1P2_Sub03.jrxml:148 pasangan Warganegara join reads PB.WARGANEGARA_ID (PB=UMM_P_PIHAK_BKPTG=applicant) instead of UP.WARGANEGARA_ID (UP=UMM_P_TANGGUNGAN=pasangan). Sibling joins Bangsa :147 + Pekerjaan :149 correctly use UP -> which is why Bangsa prints right, Warganegara wrong. 3 working analogs use UMM_P_TANGGUNGAN.WARGANEGARA_ID (Sub04:57, PLPS_Sub01:85, KPW_Sub01:178). FIX=1-token :148 PB.WARGANEGARA_ID -> UP.WARGANEGARA_ID (fixes PT/PSBS/MCL; only MLK copy affected). Difficulty S.
+current_phase=Rubric COMPLETE via 3-wave audit 2026-07-27. Root cause 99pct VERIFIED: PlpLaporanJadual1P2_Sub03.jrxml:148 joins SAK_WG on PB.WARGANEGARA_ID (applicant) not UP.WARGANEGARA_ID (pasangan); 1-token fix. Blast radius CORRECTED TWICE and settled by controller read: PT+PSBS+MCL all reach Sub03 (getPlpLaporanBorang197:709 + getPlpLaporanJadual18A:744 merge getPlpLaporanJadual1P2) - one fix heals all three. Pekerjaan :149 is a DEAD JOIN (not an analog). DB falsifier re-verified stg2 (tanggungan 499 = Singapura 8293 vs PB Malaysia 2557). Handover note drafted in qa_doc. DUE 2026-07-29.
 difficulty=S
 ownership_fork=jrxml - decide fix-ourselves vs delegate to Reports team (Nurhidayati) per #271721 "no fixes for jrxml" precedent; needs miya call before Apply
 branch=n/a-pre-apply-ownership-fork
+next_action=miya: ownership call (fix jrxml ourselves vs delegate to Reports team; owner name unconfirmed in thread) - then 1-token Apply or handover
+
+qa=QA-272127
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\107. ESOKONGAN #272127 - Pelupusan - PRBB - Penyediaan Rencana Pentadbir Tanah dan Cetakan Doku
+phase=0
+status=hold
+ticket_type=bug
+env=Pelupusan > PRBB > Penyediaan Rencana Pentadbir Tanah dan Cetakan Dokumen Papar Spacing di Tandatangan
+issue_one_liner=Pelupusan > PRBB > Penyediaan Rencana Pentadbir Tanah dan Cetakan Dokumen Papar Spacing di Tandatangan
+assigned_to_me=2026-07-24
+tugasan=Cetakan Dokumen
+next_action=miya: sibling-scope call (A: 2 files only / B: +eDoket / C: all 6) -> I apply the deletions via python zipfile -> Cetakan preview check
+
+current_phase=Rubric COMPLETE via 3-wave audit 2026-07-27. 100pct TEMPLATE-STATIC (populator does no paragraph math). Exact edit list in qa_doc: TemplateRencanaPT.docx delete 31 w:p in 7 groups (186->155; P0109 sectPr DO-NOT-DELETE) + TemplateSuratKeputusanLulusPRBB.docx delete 9 w:p (77->68). Scope LOCKED whitespace-only (BA expected files leave page geometry + table flags untouched; user norlina pre-approved 5.2/6.2 removal). Print-vs-preview OVERTURNED - PDF.js preview already shows spill = valid verification surface (renderer Aspose 24.10). Logo-bertukar NOT the 270052 family (body w:ind paragraphs) - BA-Q drafted. Residuals: runtime render proof + sibling-template scope (miya).

@@ -10,6 +10,14 @@
 
 ---
 
+## quest/SKILL.md + ticket-gate.js — LATEST-STATE FIRST row — 2026-07-27
+
+Per みや (planning turn, 2026-07-27): *"scrutinize & double check the redmine what the ticket wants … take note if the ticket has previous issue that has been solved so that we do not try to solve an issue that has been solved … it has happened a few times you're trying to solve an old issue when the ticket has a long conversation and you didn't even take into account the dates and time and who it is assigned to."* Slip: `stale-conversation-read-solved-issue-reattempted` (ledgered same turn).
+
+- **`.claude/skills/quest/SKILL.md`** §Quest Preparation Verification: new mandatory row **🚨 LATEST-STATE FIRST** — before Scout, emit the journal-timeline table from History.txt (`date · author · assignee-change · issue raised/solved`, oldest→newest), classify every issue OPEN vs ALREADY-SOLVED (cite the proving journal date), emit solved set as DO-NOT-RESOLVE list; fix targets = latest open issues only, newest entries supersede the Description. Banned: scouting an issue solved earlier in the thread.
+- **`.claude/hooks/ticket-gate.js`**: deterministic row **1b** injected in the Phase-0 gate checklist (same content, enforcement side).
+- **`domain/ticket-gate/eval.js`**: +4 fixtures (F11) — row injected · timeline-table demanded · OPEN/SOLVED + DO-NOT-RESOLVE demanded · solved-issue-scouting ban present. **22/22 green.**
+
 ## commit-conventions.md v1.3 — 2026-07-21
 
 **INTERNAL ISSUE branch prefix corrected: `mlk/internal-issue/` → `mlk/internal/`.** Per みや during #271049.
