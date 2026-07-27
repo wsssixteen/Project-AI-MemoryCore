@@ -18,6 +18,29 @@
 
 *`main/todo.md` is independent — items persist until confirmed done. Does not affect `current-session.md`.*
 
+---
+
+## 📅 Retrieval output shape — RANK BY THE 3-DAY RULE (MANDATORY, added 2026-07-27 by みや)
+
+Applies to **every** Redmine-retrieval trigger in the table above (row: *Redmine retrieval triggers*). The retrieval report is not an unordered dump — it is a **ranked table**.
+
+**みや's words (2026-07-27)**: *"you will then list them in a table while showing priority by day passed. That is the priority compared to how easy it is (that is by request)."*
+
+| Rule | Detail |
+|---|---|
+| **Ranking axis** | `days_elapsed = today − start_date`, **descending** — the ticket whose start date is oldest goes first |
+| **The constraint** | *"We need to finish those tickets within 3 days"* ⇒ `internal_deadline = start_date + 3 days` |
+| **Data source** | LIVE Redmine API — `issues.json?assigned_to_id=me&status_id=open&limit=50` returns `start_date` + `due_date`. **Never** read dates from `active.txt` (working memory, rots) |
+| **Show both rulers** | Redmine's own `due_date` next to the internal +3d, because they disagree (Redmine grants ~7-12 days) |
+| **Tie-break** | nearer `due_date` |
+| **Difficulty** | a SECONDARY column, **only when みや asks**. Never the primary sort, never a silent "quickest win" reorder |
+| **Reconcile first** | drop anything Redmine shows closed / reassigned before listing (2026-07-27 slip `stale-quest-state-not-reconciled-with-redmine`: 6 of 10 "open" quests were dead) |
+
+**Required columns**: `# · Subject (short) · Start · +3d · Redmine due · Days left · State`.
+Mark 🔴 past internal deadline · ⚠️ hitting it today.
+
+Same rule governs the Session Briefing — canonical spec: `Feature/Session-Briefing-System/session-briefing.md` § *Open-ticket ranking — THE 3-DAY RULE*.
+
 **Fallback rules:**
 
 - **Proactive**: If multiple items were mentioned at session start and not all addressed → ask before saving: *"Should I add the unfinished ones to todo?"*

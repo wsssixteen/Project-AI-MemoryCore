@@ -61,9 +61,33 @@ If all worktree cleanup runs cleanly: NO standing flag. みや shouldn't see wor
 
 ---
 
+## 📅 Open-ticket ranking — THE 3-DAY RULE (MANDATORY, added 2026-07-27 by みや)
+
+**Every briefing that lists open tickets MUST rank them by DAYS ELAPSED SINCE `start_date`, not by difficulty and not by active.txt order.** みや's standing constraint: *"We need to finish those tickets within 3 days."*
+
+**Mechanics:**
+
+| Step | What |
+|---|---|
+| 1 | Pull `start_date` + `due_date` live from the Redmine API — `issues.json?assigned_to_id=me&status_id=open&limit=50` returns both fields. NEVER take dates from `active.txt` (it is working memory and rots) |
+| 2 | Compute `days_elapsed = today − start_date` and `internal_deadline = start_date + 3 days` |
+| 3 | Rank **descending by `days_elapsed`** — oldest start = highest priority |
+| 4 | Show Redmine's own `due_date` alongside, because the two rulers disagree (Redmine typically grants 7-12 days; the 3-day rule is tighter) |
+| 5 | Break ties on the nearer `due_date` |
+
+**Required columns**: `# · Subject (short) · Start · +3d (internal) · Redmine due · Days left · State`.
+Mark rows past their internal deadline 🔴 and rows hitting it today ⚠️.
+
+**Difficulty is NOT the ranking axis.** Effort/ease may be shown as a SECONDARY column **only when みや asks for it** — his words: *"That is the priority compared to how easy it is (that is by request)."* Never reorder by "quickest win" unprompted.
+
+**Reconcile against Redmine before showing the list** — a ticket closed/reassigned on Redmine must not appear (see the 2026-07-27 `stale-quest-state-not-reconciled-with-redmine` slip: 6 of 10 "open" quests were dead).
+
+---
+
 ## Rules
 
 - Run `date` to get current time — always timestamp the briefing
+- **Rank any open-ticket list by the 3-day rule above** — live Redmine `start_date`, descending by days elapsed
 - Read `quest/active.txt` for quest status
 - Read `main/current-session.md` → Session Recap section for "where we left off"
 - Read `main/todo.md` → Q1 section for top priority
