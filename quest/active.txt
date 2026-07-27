@@ -340,7 +340,7 @@ followup_note=2026-06-29 — Buang garisan tambahan pada footer surat JT (Templa
 
 qa=239386
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\79. REQUIREMENT #239386 - PLP - Maklumat Permohonan Terperinci in Carian Pintas
-status=active
+status=closed
 held_reason=(unheld 2026-07-17 — mlit confirmed as test env)
 phase=1
 current_phase=Apply — CODE COMMITTED+PUSHED 2026-07-21 (ebcbf5ab24, 43 files, one commit) to mlk/requirement/239386 (fresh off mlk/master @ a99194b02e; old branch renamed -reference). Comment-strip done (12 stripped, 4 short compute-guards kept). NEXT=build WAR + deploy + runtime-walk 20-urusan read-only matrix (みや's step; I can't run JSF). Patch already run live on mlit (141 langkah)
@@ -358,6 +358,8 @@ note=Requirement (multi-session). FULL CONTEXT qa_doc §0n (2026-07-17 session c
 commit=ebcbf5ab24
 commit_partial=1313e97cc8-SUPERSEDED
 base_branch=mlk/master
+closed=2026-07-27
+close_note=RECONCILED from Redmine 2026-07-27: status=Resolved, done=100, assignee=Aaron Loh Zhi Yong since 2026-07-21 09:20. Absent from assigned_to_id=me&status_id=open queue. Code was committed+pushed ebcbf5ab24 on mlk/requirement/239386; runtime 20-urusan walk never done by us but the ticket left our plate. Was stale-active in active.txt since 07-21.
 
 qa=QA-268273
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\85. INTERNAL ISSUE (PERMANENT FIX) #268273 - Awam - Klik kemaskini pada draf permohonan - system direct ke langkah
@@ -553,7 +555,7 @@ local_test_confirmed=true
 qa=QA-265537
 quest_start_ts=2026-07-22T16:02:33.420Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\101. QA #265537 - MLKFAT - MLPS - Penyediaan Borang 4Ae dan L1e - Maklumat bagi medan Bandar yang telah dikemaskini
-phase=1
+phase=0
 status=closed
 ticket_type=bug
 env=MLK Staging et_main_stg2
@@ -561,20 +563,18 @@ issue_one_liner=MLPS - Penyediaan Borang 4Ae dan L1e - Maklumat bagi medan Banda
 assigned_to_me=2026-07-20
 urusan=MLPS
 tugasan=Penyediaan Borang 4Ae dan L1e
-current_phase=Closed
+current_phase=BLOCKED ON LOCAL DEPLOY 2026-07-24 (session end). Root cause FOUND + DB-verified: TRANSFER bug - AWAM saves registered bandar correctly to Pra (29+text) but App row gets surat 30 AND both bandar_lain texts DROPPED (fresh permohonan PTMLK/01/L/MLPS/2026/2 aplikasi 3417685 on STG1 proves it: PRA 23656 = 29/MELAKA BANDAR BERSEJARAH + srt 30/same; APP 5542657 = bandar_id 30 + NULL, daftar 29 + NULL). 6 uncommitted edits in etanah-common + etanah-awam are the OLD display-tolerance direction (candidate 4 = REJECTED by familiar) + 2 loggers - decide keep vs revert. DEPLOY BLOCKER: Eclipse m2e-wtp web-resources has only META-INF so etanah-common overlay never merges - war missing jboss-deployment-structure.xml (org.hibernate) AND 98/111 taglib files (et:form) - miya already tried Maven update/clean/republish. Maven CLI build WORKS (3.9.9 + toolchains fixed). NEXT SESSION: fix deploy first via Eclipse Maven Update Project with Force Update AND Clean projects ticked; see qa_doc SESSION-END + DEV-TESTING-HACKS.md
 quest_start=2026-07-21
 qa_doc=projects/coding-projects/active/QA-265537/QA-265537.md
-branch=mlk/qa/265537v2
+branch=n/a-pre-apply
 closed=2026-07-27
-commit=b66b12236b
-branch_awam=mlk/qa/265537
-commit_awam=e38f1e3f81
-close_note=Phase 1 closed 2026-07-27 on miya's explicit no-test waiver (D1 runtime-evidenced via probes, D2 compile+static only, SPOC transfer untestable locally). Two-repo fix: awam PelupusanService.savePemohon surat bandar sourced from entity alamat + BandarSuratLain set; pelupusan PelupusanSpocService transfer carries bandar_daftar_lain + alamatPemohon.bandarLain. BA retest = D2 first runtime execution.
+close_note=RECONCILED from Redmine 2026-07-27: Resolved, done=100, assignee=Aaron Loh Zhi Yong (07:41). TRANSFER-bug diagnosis stands in qa_doc; local deploy blocker moot now.
 
 qa=QA-272181
+quest_start_ts=2026-07-27T09:02:45.172Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\104. ESOKONGAN #272181 - Pelupusan - PT - Popup Sedang Kemaskini tak tutup selepas kemaskini wo
 phase=0
-status=hold
+status=closed
 ticket_type=bug
 env=Pelupusan (etanah-common word-editor flow) - prod Module 1.0.10 / Common 1.0.129-MLK
 issue_one_liner=Pelupusan - PT - Popup "Sedang Dikemaskini" tak tutup selepas kemaskini word editor
@@ -583,15 +583,17 @@ urusan=PT
 tugasan=Penyediaan Surat JT dan Ulasan YB (PSJT)
 qa_doc=projects/coding-projects/active/QA-272181/QA-272181.md
 test_app=PTMLK/03/L/PT/2026/16 (pengguna nfadzilah@melaka.gov.my; documentIds LAIN-36707859 / LAIN-36722760)
-current_phase=Diagnosis COMPLETE via 3-wave audit 2026-07-27 - answers BA question (is the prod doc wrong?): YES doc anomalous (2 docs 65142888/65142889 bytes, 75pct trigger) AND code turns oversize into permanent hang (95pct VERIFIED: close signal is a 5s POLL not push - CommonPushNotificationUtil eventBus commented out; CommonPollComponent.onPoll:53-71 silently DISCARDS the close signal if >60s old; doPost materializes upload 2x + dead temp write :109-114). Build-version + DB-version confounds CLOSED (git diff 1.0.129->1.0.143 touches zero flow files; V_DOMAIN frozen 2021). PROD EVIDENCE PACK drafted in qa_doc (server.log greps wanda2 + skg_dok SELECT, unqualified/no-JOIN) - miya runs. Fixes gated on R2 greps; regen needs auth.
+current_phase=Diagnosis 2026-07-27 s2: NULL-pdf hypothesis REFUTED (97pct of stg1+stg2 revisions are NULL; that filename 14/15 NULL; 0 code refs; git 13b05a37ed REVERTED the aspose docx-to-pdf step 2025-10-21 so no-PDF is BY DESIGN). 60s-discard DOWNGRADED - CommonPushNotificationDTO.<init>():67 stamps date AFTER the upload at WordEditorServlet.doPost():116, so slow upload does not eat the window. New leading HYPOTHESIS (unverified): doPost throws before :123 (2x 62MB via fileItem.get() at :112 and :116 + dead temp write :109-114) so no DTO is ever created = permanent hang. STAGING REPRO FIXTURE FOUND: et_dms_stg1 revision 40998912 SuratJabatanTeknikal.docx 65142888 bytes = prod byte-identical, so prod access NOT required. miya staging sim PASSED (negative control, dialog closed 8s) because loaded docs were the 0.15MB LAIN-36718512/513/514 which are structurally clean.
 difficulty=S-data (M if UI hardening)
 branch=n/a-pre-apply-data-issue
 next_action=miya: run the prod evidence pack (qa_doc) - server.log greps + skg_dok SELECT; then regen auth + R7 bundling decision
+closed=2026-07-27
+close_note=RECONCILED from Redmine 2026-07-27: status=In Progress, assignee=Nurhafizah Hasan (BA) 09:37 - handed back to BA. Our diagnosis banked in qa_doc: NULL lokasi_fail_pdf REFUTED 4 ways; real mechanism = close signal born at WordEditorServlet.doPost():123 AFTER the 62MB DMS upload; staging repro fixture et_dms_stg1 rev 40998912.
 
 qa=QA-271985
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\105. ESOKONGAN #271985 - Pelupusan - MLPS - Nama Pemohon dan Tujuan Tidak Papar
-phase=0
-status=hold
+phase=1
+status=closed
 ticket_type=bug
 env=Pelupusan MLPS (etanah-pelupusan, local/deployable)
 issue_one_liner=MLPS Borang 4Ae/L1e - Nama Pemohon + Tujuan blank on counter-submission (serahan kaunter); Fi papar RM null on pengecualian (want RM0)
@@ -600,15 +602,23 @@ urusan=MLPS
 tugasan=Penyediaan Borang 4Ae dan L1e (MlkPenyediaanBorang4AeL1eForm)
 qa_doc=projects/coding-projects/active/QA-271985/QA-271985.md
 test_app=PTMLK/02/L/MLPS/2026/1 (No lesen M 026; login nurulazura@melaka.gov.my; schema UNCONFIRMED - verify SELECTs in qa_doc)
-current_phase=Rubric COMPLETE via 3-wave audit 2026-07-27 (W1 objective + W2 blind recon + W3 residual-close; all mechanisms controller-verified). BA 07-23 4-ISSUE SET supersedes old A/B/C framing. Root causes VERIFIED 93-96pct w/ et_main_stg1 DB: I1 tujuan wrong-column/wrong-table reads (value lives on umm_a_permit_lesen 15527; panel misses TUJUAN_PERMOHONAN_ID because :418 PLPS-gate, report reads empty umm_a_permohonan_tnh) · I2 pengecualian never netted (MlkBorang4AeForm:211 + PelupusanService:16028 + :712; analog :948-950) · I3 full exemption empties fee map -> :922 gate -> :1051 null (fix: byrnFiList, 4Be/4Ce analog :970; OLD C1 RM0 fix INVERTED - never apply) · I4 flag_pemohon=N migrator row filtered at param:273 (real exposure ~2 MLPS apps; 367 legacy PLPS = do NOT patch). FIX=5 additive edits/4 files; shared-file edits MUST carry isMelaka() gate (TRG uses URS_MLPS - verified :271/:310/:493/:561). BA-Q: perincian for Lain-lain. BLOCKER: dirty tree - QA-265537 probe in MlkBorang4AeForm.java must be stashed before Apply. Full spec qa_doc.
+current_phase=Closed
 difficulty=M
 next_action=miya: O2 gate-scope nod + stash 265537 probe -> Apply the 5-edit spec from qa_doc
-branch=n/a-pre-apply
+branch=mlk/esokongan/271985
+local_test_confirmed=true
+fix4_gate=isMelaka+URS_MLPS (tightened 2026-07-27 after miya challenge; parameter.pemohonList has exactly 3 consumers PelupusanReportMethodConstant.java:391/:400/:415 - grep-verified; gate removes the arbitrary apbList.get(0) exposure on multi-party non-MLPS apps)
+diff_state=57 insertions 0 deletions across 4 files, mvn -o compile EXIT 0, uncommitted on mlk/master
+commit=ac60993732
+pushed=2026-07-27
+closed=2026-07-27
+close_note=Phase 1 closed. 4 files +57/-0: MlkBorang4AeForm (Fix1a tujuan fallback in initMklmtTanah + Fix2a net pengecualian URS_MLPS-gated) - PelupusanReportMethodConstant (import IConfigurationService + Fix1b tujuan rung isMelaka + Fix3 Fi bare-return byrnFiList isMelaka+URS_MLPS) - PelupusanService (Fix2b net pengecualian isMelaka) - PelupusanTemplateReportMethodParameter (import + Fix4 pemohon fallback isMelaka+URS_MLPS). Remote SHA ac6099373202cb89046f78e99445bb96f694db80 verified == local HEAD. Excluded: .settings (pre-existing Eclipse churn) + untracked jboss-deployment-structure.xml (QA-265537 deploy fix). Jasper binding VERIFIED: page-1 Fi = LaporanBorang4Ae.jrxml:480 RM+P_FI <- methods.put P_FI :167 <- populateFi (Fix3); page-2 Pembaharuan Fi = LaporanBorang4Ae_Sub02.jrxml:79 field fiByrn <- setFiByrn :16028 (Fix2b) - independent bindings so BA Expected#2 (0) and Expected#3 (RM250) do not conflict. OPEN for Phase 2: O1 bare LAIN-LAIN no perincian stored (BA-Q) - O2 Fix2b also reaches MlkPengiraanBayaranLesenForm:220 not named by BA.
 
 qa=QA-271918
+quest_start_ts=2026-07-27T07:45:12.138Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\103. ESOKONGAN #271918 - Pelupusan - PT - Maklumat Pasangan Tidak Sama pada Warganegara
 phase=0
-status=hold
+status=delegated
 ticket_type=bug
 env=etanah-awam MLK (Jasper jrxml, SQL-in-report)
 issue_one_liner=PT Borang Permohonan - pasangan warganegara prints Malaysia though AWAM saved Singapura (shared PT/PSBS/MCL report)
@@ -621,6 +631,9 @@ difficulty=S
 ownership_fork=jrxml - decide fix-ourselves vs delegate to Reports team (Nurhidayati) per #271721 "no fixes for jrxml" precedent; needs miya call before Apply
 branch=n/a-pre-apply-ownership-fork
 next_action=miya: ownership call (fix jrxml ourselves vs delegate to Reports team; owner name unconfirmed in thread) - then 1-token Apply or handover
+delegated_to=Noor Dayana (Redmine assignee 2026-07-27 09:38)
+delegated_date=2026-07-27
+close_note=RECONCILED from Redmine 2026-07-27: status=New, done=0, assignee=Noor Dayana. NOT Nurfatin Auni and NOT Nurhayati Abdul Razak - both earlier names were wrong. Handover content (1-token jrxml fix PlpLaporanJadual1P2_Sub03.jrxml:148 PB->UP, 6 affected stg1 records, PT+PSBS+MCL blast radius) is in qa_doc ready to send. DUE 2026-07-29.
 
 qa=QA-272127
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\107. ESOKONGAN #272127 - Pelupusan - PRBB - Penyediaan Rencana Pentadbir Tanah dan Cetakan Doku
@@ -634,3 +647,39 @@ tugasan=Cetakan Dokumen
 next_action=miya: sibling-scope call (A: 2 files only / B: +eDoket / C: all 6) -> I apply the deletions via python zipfile -> Cetakan preview check
 
 current_phase=Rubric COMPLETE via 3-wave audit 2026-07-27. 100pct TEMPLATE-STATIC (populator does no paragraph math). Exact edit list in qa_doc: TemplateRencanaPT.docx delete 31 w:p in 7 groups (186->155; P0109 sectPr DO-NOT-DELETE) + TemplateSuratKeputusanLulusPRBB.docx delete 9 w:p (77->68). Scope LOCKED whitespace-only (BA expected files leave page geometry + table flags untouched; user norlina pre-approved 5.2/6.2 removal). Print-vs-preview OVERTURNED - PDF.js preview already shows spill = valid verification surface (renderer Aspose 24.10). Logo-bertukar NOT the 270052 family (body w:ind paragraphs) - BA-Q drafted. Residuals: runtime render proof + sibling-template scope (miya).
+
+qa=QA-272527
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\108. ESOKONGAN #272527 - Pelupusan - Kecilkan Margin Spacing Footer
+phase=0
+status=hold
+ticket_type=bug
+env=Pelupusan > Kecilkan Margin Spacing Footer
+issue_one_liner=Pelupusan > Kecilkan Margin Spacing Footer
+assigned_to_me=2026-07-27
+
+qa=QA-272499
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\109. ESOKONGAN #272499 - Utiliti Pembatalan Permohonan - Ralat selepas klik Cari
+phase=0
+status=hold
+ticket_type=bug
+env=Utiliti Pembatalan Permohonan > Ralat selepas klik Cari
+issue_one_liner=Utiliti Pembatalan Permohonan > Ralat selepas klik Cari
+assigned_to_me=2026-07-27
+
+qa=QA-272378
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\110. ESOKONGAN #272378 - Pelupusan - PPJK - Semakan Kemasukan Maklumat - Isu no. lot allow untu
+phase=0
+status=hold
+ticket_type=bug
+env=Pelupusan > PPJK > Semakan Kemasukan Maklumat > Isu no. lot allow untuk diubah di kemaskini maklumat tanah
+issue_one_liner=Pelupusan > PPJK > Semakan Kemasukan Maklumat > Isu no. lot allow untuk diubah di kemaskini maklumat tanah
+assigned_to_me=2026-07-27
+
+qa=QA-272329
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\111. ESOKONGAN #272329 - Pelupusan - PRBB - Semakan Kemasukan Maklumat - Kod negeri di ID Hakmi
+phase=0
+status=hold
+ticket_type=bug
+env=Pelupusan > PRBB > Semakan Kemasukan Maklumat > Kod negeri di ID Hakmilik papar 11
+issue_one_liner=Pelupusan > PRBB > Semakan Kemasukan Maklumat > Kod negeri di ID Hakmilik papar 11
+assigned_to_me=2026-07-27

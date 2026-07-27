@@ -62,19 +62,19 @@
 {"ts":"2026-07-22T08:07:59.498Z","category":"assume-not-verify"}
 {"ts":"2026-07-22T16:02:58.038Z","category":"assume-not-verify"}
 {"ts":"2026-07-23T14:55:53.231Z","category":"reask/verbose"}
-<<<<<<< HEAD
 {"ts":"2026-07-24T09:44:08.897Z","category":"machine-local-config-not-portable"}
 {"ts":"2026-07-24T09:44:08.988Z","category":"known-friction-worked-around-not-fixed"}
 {"ts":"2026-07-26T09:33:38.097Z","category":"knowledge-file-existed-but-not-consulted"}
 {"ts":"2026-07-26T09:33:38.242Z","category":"fix-replaced-by-new-workflow"}
-=======
 {"ts":"2026-07-24T04:17:38.336Z","category":"filtered-evidence-read"}
 {"ts":"2026-07-24T12:24:15.079Z","category":"stop-instead-of-action"}
 {"ts":"2026-07-24T12:41:20.275Z","category":"stop-instead-of-action"}
 {"ts":"2026-07-24T12:41:20.418Z","category":"knowledgebase-not-written"}
->>>>>>> origin/main
 {"ts":"2026-07-26T17:33:17.087Z","category":"stale-quest-state-not-reconciled-with-redmine"}
 {"ts":"2026-07-26T17:49:57.671Z","category":"stale-conversation-read-solved-issue-reattempted"}
+{"ts":"2026-07-27T08:01:59.925Z","category":"assume-not-verify"}
+{"ts":"2026-07-27T12:22:20.622Z","category":"filtered-evidence-read"}
+{"ts":"2026-07-27T12:27:34.156Z","category":"gate-satisfied-syntactically-not-substantively"}
 {"ts":"2026-07-27T01:14:06.760Z","category":"git-state-check-skipped-phase0"}
 {"ts":"2026-07-27T04:20:45.616Z","category":"single-layer-logger-forces-repeat-build-cycles"}
 {"ts":"2026-07-27T11:24:28.425Z","category":"ticket-source-skipped"}
