@@ -5,6 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 5b990e88-e651-4fb8-a4b2-ada2f1c383dd
+  modified: 2026-07-27T13:02:28.638Z
 ---
 
 # Two-sentence default
@@ -20,5 +21,6 @@ Rule: when みや asks a question that is answerable in ~2 sentences, ANSWER IN 
 - If みや wants deeper, he WILL ask. Answering deeper unasked = wasted his time.
 - Applies to explanation / why / clarification questions. Code diffs, stack traces, and multi-step procedures can be longer — but the surrounding prose still stays terse.
 - **Reply-length self-check before emit**: is this reply >2 sentences of prose? If yes, is a table/diagram/multi-step genuinely required (code emit, multi-file change, live findings) or am I padding? If padding — cut to 2 sentences.
+- 🚨 **Answer the question ASKED, not the one imagined** (2026-07-27, みや shouting again). He asked *"what are the name of the numbers I should ask my colleague?"* — the answer was two words, **"IP address"**. I emitted a drafted colleague message plus a terminology taxonomy. Before emitting, re-read his literal sentence and name the single thing it asks for; if that thing is a word or a number, the reply is that word or number. A correct answer wrapped in scaffolding still wastes his time.
 
 Pairs with [[feedback_investigation_style]] · [[feedback_bite_sized_first]] · CLAUDE.md §2 SHOW-DON'T-EXPLAIN pillar (1-sentence prose max cap). This memory PROMOTES that cap to a bootload-time reminder because CLAUDE.md's cap kept slipping in practice.
