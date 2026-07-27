@@ -1,5 +1,46 @@
 # Current Session
 
+## 2026-07-27 (Mon, day → 21:15) — QA-271985 SHIPPED · QA-271918 delegated · 3-DAY RULE built · Redmine reconciled 10→5
+
+**Two tickets off the plate, one new always-on rule, and two みや-caught slips of the same family (satisfying a rule's form while skipping its substance).**
+
+### ▶▶ NEXT SESSION — START HERE: the 5 open tickets, ranked by the 3-DAY RULE
+
+Open queue is now **5** (was 10). Ranked by days elapsed since Redmine `start_date` — **re-pull live at boot, do not trust these numbers**:
+
+| # | Ticket | Start | +3d | Redmine due | Elapsed | State |
+|---|---|---|---|---|---|---|
+| 1 | **272127** PRBB Rencana PT spacing | 07-23 | 🔴 07-26 | 08-03 | 4d | Rubric 100%, exact ¶ delete list ready — **fastest close** |
+| 2 | 272378 PPJK no. lot editable | 07-24 | ⚠️ 07-27 | 08-05 | 3d | 🆕 not scouted |
+| 3 | 272329 PRBB kod negeri papar 11 | 07-24 | ⚠️ 07-27 | 08-04 | 3d | 🆕 not scouted |
+| 4 | 272499 Utiliti Pembatalan ralat | 07-27 | 07-30 | 08-05 | 0d | 🆕 **stack trace attached** — cheap diagnosis |
+| 5 | 272527 Footer margin spacing | 07-27 | 07-30 | 08-05 | 0d | 🆕 ⚠️ **cross-module** (Pembangunan/Pelupusan/Consent/Pengambilan) — needs scope call |
+
+**272127 is the recommended start**: only one past its internal deadline, and the work is already specced — `TemplateRencanaPT.docx` delete 31 `w:p` in 7 groups (186→155, **P0109 carries sectPr, DO NOT DELETE**) + `TemplateSuratKeputusanLulusPRBB.docx` delete 9 `w:p` (77→68). Open item: sibling-template scope (A: 2 files / B: +eDoket / C: all 6) — みや's call. I apply via python zipfile.
+
+### Shipped this session
+- **QA-271985** — `ac60993732` on `mlk/esokongan/271985`, 4 files **+57/−0**, `mvn -o compile` EXIT 0, remote SHA verified. Redmine → Resolved/100%/Aaron. 5 fixes: tujuan panel + tujuan report rung + pengecualian netting ×2 + Fi bare-return + pemohon fallback. Every shared-file edit gated `isMelaka()`, and `URS_MLPS` where TRG also uses that urusan code.
+- **QA-271918** — delegated (Redmine assignee **Noor Dayana**; the Reports-team fixer of the sibling #271721 was **Nurfatin Auni**, NOT the "Nurhidayati" my note claimed). Handover block ready in qa_doc: 1-token `PlpLaporanJadual1P2_Sub03.jrxml:148` `PB.`→`UP.`, 6 affected stg1 records, PT+PSBS+MCL blast radius. **Due 07-29.**
+
+### Reconciled against Redmine (live API — do this every boot)
+239386, QA-265537, QA-272181, 271721, 270900 are all **Resolved or back with BA** — off our plate. active.txt updated for each with the Redmine evidence in `close_note`.
+
+### System changes
+- **3-DAY RULE** (commit `17a0ed2`) — open-ticket lists rank DESCENDING by days since `start_date`; internal deadline = start + 3d shown against Redmine's own due; difficulty secondary, ON REQUEST only; reconcile against Redmine before showing. Lives in `session-briefing.md` § + `save-commands.md` § **and is injected at SessionStart by `open-quest-surfacer.js`** so it is not prose-only.
+- todo Q1 — **CODE-CHECK ticks must carry evidence**; this session is the eval fixture.
+- `feedback_staging_schema_stg2.md` — "default to stg2" clause deleted, live pointer = **stg1**.
+
+### Open items carried
+| Item | Where |
+|---|---|
+| O1 — bare `LAIN-LAIN`, no perincian stored | QA-271985 § Deferred (BA-Q) |
+| O2/O3 — Fix 2b reaches `MlkPengiraanBayaranLesenForm:220`; `PelupusanService` netting lacks the `URS_MLPS` gate its siblings have | QA-271985 § Deferred |
+| R5 — `populateFi()` `get(0)` picks oldest `VersiPermitLesen` | own ticket, QA-271985 § Deferred |
+| QA-271985 Phase 2 archive | not run |
+| Legacy `.claude/hooks/` components can't be forged or eval'd | slip ledger; needs design routing |
+
+---
+
 ## 2026-07-27 (Mon 18:30→21:10, CONCURRENT session) — Side quest: PRU Agihan Kepada blank + BA's tangguh-ticket question
 
 **No code changed. Two BA-side questions answered with evidence; knowledge banked.**
