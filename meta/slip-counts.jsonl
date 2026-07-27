@@ -75,3 +75,6 @@
 >>>>>>> origin/main
 {"ts":"2026-07-26T17:33:17.087Z","category":"stale-quest-state-not-reconciled-with-redmine"}
 {"ts":"2026-07-26T17:49:57.671Z","category":"stale-conversation-read-solved-issue-reattempted"}
+{"ts":"2026-07-27T08:01:59.925Z","category":"assume-not-verify"}
+{"ts":"2026-07-27T12:22:20.622Z","category":"filtered-evidence-read"}
+{"ts":"2026-07-27T12:27:34.156Z","category":"gate-satisfied-syntactically-not-substantively"}
