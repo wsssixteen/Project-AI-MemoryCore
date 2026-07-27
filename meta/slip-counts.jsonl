@@ -78,3 +78,7 @@
 {"ts":"2026-07-27T01:14:06.760Z","category":"git-state-check-skipped-phase0"}
 {"ts":"2026-07-27T04:20:45.616Z","category":"single-layer-logger-forces-repeat-build-cycles"}
 {"ts":"2026-07-27T11:24:28.425Z","category":"ticket-source-skipped"}
+{"ts":"2026-07-27T13:08:25.783Z","category":"ba-facing-reply-as-dev-report"}
+{"ts":"2026-07-27T13:08:25.887Z","category":"reask/verbose"}
+{"ts":"2026-07-27T13:11:07.714Z","category":"worktree-stranded-delivery"}
+{"ts":"2026-07-27T13:11:07.798Z","category":"ghost-component-dark-on-this-machine"}

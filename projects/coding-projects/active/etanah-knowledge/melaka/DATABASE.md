@@ -918,3 +918,37 @@ WHERE ajt.aplikasi_id = <your_aplikasi_id>;
 
 *Source: TDD SQL exports — et_main_mlit.sql (30,325 lines), et_flowable_mlit.sql, et_sistem_mlit.sql (553 lines), et_dms_mlit.sql*
 *Generated March 2026. Update this file when new schema facts are confirmed.*
+
+---
+
+## 15. Capaian Pengguna — "capaian penuh" vs per-urusan rows (2026-07-27, PRU Agihan Kepada blank)
+
+**Access can be stored in TWO shapes, and most readers only understand one.**
+
+| Shape | `pcp_capaian_modul.flag_capaian_penuh` | `pcp_capaian_ursn` rows | Seen by Agihan Kepada? |
+|---|---|---|---|
+| A — per-urusan ticked | `N` | one per urusan (typ. 29) | ✅ yes |
+| B — "capaian penuh" ticked | `Y` | **0** | ❌ no |
+
+Chain: `pcp_capaian_pengguna` → `pcp_peranan_modul` (peranan + pejabat + modul) → `pcp_capaian_modul` → `pcp_capaian_jns_ursn` → `pcp_capaian_ursn` → `ind_ursn`.
+
+**Symptom**: an officer who plainly has the role shows nowhere in an Agihan Kepada / next-user dropdown.
+**Cause**: `PlpCapaianPenggunaRepository.findCapaianPenggunaByPerananKodListAndModulIdAndFlagAktifAndUrusanAndFlagCapaianPenuh():27-36`
+(`etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\repository\PlpCapaianPenggunaRepository.java`) INNER JOINs through
+`CapaianJenisUrusan → CapaianUrusan → Urusan` and **never reads `CapaianModul.adalahCapaianPenuh`** — Shape B has no rows to join.
+
+**Immediate fix (no deploy)**: in the UAM capaian screen, untick "Capaian Penuh" on the Modul row → save → tick the urusan one by one → save. Verified working 2026-07-27 on `amira@melaka.gov.my`.
+
+**Ready check** (run connected to the target schema):
+```sql
+SELECT * FROM pcp_capaian_modul WHERE capaian_pengguna_id IN (SELECT capaian_pengguna_id FROM pcp_capaian_pengguna WHERE pengguna_id = (SELECT pengguna_id FROM pcp_pengguna WHERE nama_pengguna = '<login>'));
+```
+`flag_capaian_penuh = 'Y'` with no `pcp_capaian_ursn` rows underneath = the invisible shape.
+
+**Gotchas**
+- `pcp_pengguna.flag_aktif` is `'Y'`/`'N'` **char**, not boolean — `= true` returns 0 rows and looks like "no active users".
+- Jenis-urusan-level `pcp_capaian_jns_ursn.flag_capaian_penuh` exists but is `'N'` on all 965 PLP rows (stg1) — only the modul-level flag matters in practice.
+- stg1 exposure when found: 26 active PLP users across 12 peranan in Shape B.
+- The auto-assignment engine uses a **looser** check — `CapaianPenggunaRepository.findByModulUrusanPejabatPengguna():158-160`
+  (`etanah-common\src\main\java\my\gov\etanah\common\repository\pengguna\CapaianPenggunaRepository.java`), modul+peranan+pejabat only —
+  so a Shape-B officer can be auto-assigned a task yet cannot be picked manually. That asymmetry is the argument the strict read is the defect.

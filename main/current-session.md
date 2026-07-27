@@ -1,5 +1,35 @@
 # Current Session
 
+## 2026-07-27 (Mon 18:30→21:10, CONCURRENT session) — Side quest: PRU Agihan Kepada blank + BA's tangguh-ticket question
+
+**No code changed. Two BA-side questions answered with evidence; knowledge banked.**
+
+### 1. PRU Agihan Kepada dropdown blank (stg1) — SOLVED, data-side
+`PTMLK/01/L/PRU/2026/1` @ `muhammadshafiq@melaka.gov.my`, tugasan KKMMKN, pejabat **PTG (id 1)**.
+Keputusan=Tangguh ⇒ code wants `{KPT}` (`MlkPelupusanPegawaiAgihService.retrievePerananPegawaiAgih():485-493`).
+The one KPT at PTG — `amira@melaka.gov.my` — was stored as **"capaian penuh"** (`pcp_capaian_modul.flag_capaian_penuh='Y'`,
+**0** `pcp_capaian_ursn` rows), and `PlpCapaianPenggunaRepository:27-36` INNER JOINs through those rows without ever
+reading `adalahCapaianPenuh` ⇒ invisible. みや untick-saved then re-ticked per urusan; DB re-read confirms
+`capaian_modul 9904`, penuh=N, 29 ursn rows incl. PRU, and the replicated query now returns her. Runtime confirm = his screen.
+- **Latent defect, NOT raised**: the repository ignores the flag → 26 active PLP users on stg1 are invisible to *every*
+  agihan dropdown + `PelupusanNotificationService:228`. Proposed 1-method diff (LEFT JOINs + `OR cm.adalahCapaianPenuh = true`)
+  is unapplied/untested and reaches 3 TRG utiliti forms — みや's call whether it becomes a ticket.
+- Knowledge: **DATABASE.md §15** (shapes table, ready query, the `flag_aktif='Y'`-is-char trap, the looser
+  `CapaianPenggunaRepository.findByModulUrusanPejabatPengguna():158-160` analog) + BUG-BESTIARY pointer + index.md route.
+
+### 2. BA: is eSOKONGAN #272574 related to Requirement #242553? — YES (mechanism, not a Redmine link)
+PLPS has ONE `PYSKT` "Penyediaan Maklumbalas Tangguh", hard-routed `pejabatKod=00` (PTG) at
+`MLK_PLP_PLPS.bpmn20.xml:318` with **4** inbound flows — #242553's bertindih path is one of them. It binds to
+`TemplateMaklumbalasTangguhPTGOnly.docx` (`template.config.json:7813-7861`), so a PDT officer gets the PTG letter.
+`PLP_SRTTNGGHPDT` exists in MLIT but has 0 matches in template.config.json. Needs a PDT tugasan kod + template block.
+**Owner = Aaron Loh** (#272574 assigned to him), not us. Knowledge: FLOWABLE-WORKFLOWS.md new section.
+
+### Slips (2, ledgered)
+`ba-facing-reply-as-dev-report` (NEW category — answered a BA's question with tables + BPMN + repo paths; he needed a
+sendable plain-Malay message; auto-memory `feedback_ba_facing_reply_plain` written) · `reask/verbose`.
+
+---
+
 ## 2026-07-27 (Mon 08:39→21:00) — QA-265537 SOLVED + Phase 1 closed across TWO repos
 
 **Full day. AWAM local env resurrected from a broken deployment, repo pulled 39 commits behind, root cause

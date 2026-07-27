@@ -11,6 +11,7 @@
 - [feedback_my_files_minimal.md](feedback_my_files_minimal.md) — みや's Task-folder files (txt/excel) = MINIMAL data only (xlsx 1 tab, small tables); ALL context/reasoning → my own quest md, never his files
 - [feedback_naming_japanese.md](feedback_naming_japanese.md) — Use みや outside work hours even in work mode; Japanese acknowledgments in office context
 - [feedback_stay_in_module.md](feedback_stay_in_module.md) — default scope = etanah-pelupusan/src ONLY. Cross-module suggestions BANNED unless みや opens scope. A survey question ≠ permission to enumerate out-of-scope options. Pre-answer self-grep for red flags.
+- [feedback_ba_facing_reply_plain.md](feedback_ba_facing_reply_plain.md) — Question relayed from a BA/colleague → give みや the sendable plain-language message, never a dev report with file:line + tables
 - [feedback_two_sentence_default.md](feedback_two_sentence_default.md) — Default answer length is 2 sentences; long tables/diagrams for a simple question = rule violation; みや will ask for more if he wants it
 - [feedback_model_tiering_session.md](feedback_model_tiering_session.md) — Fable = assessments only; building/mechanical work on Haiku/Sonnet/Opus (session-model counterpart of Delegation Economy)
 - [feedback_uat_fat_environments.md](feedback_uat_fat_environments.md) — mlit is PRIMARY (mkit/et_main_mlit, bare `etanahDS`); UAT + FAT decommissioned & deleted; only 3 pgEdge MCP remain (mlit/stg/prod) — legacy server-postgres client GONE, never re-add; `permission denied for schema` = missing grant, not a connection fault
