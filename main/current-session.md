@@ -1,5 +1,79 @@
 # Current Session
 
+## 2026-07-27 (Mon evening ~19:30→21:00) — #271721 AWAM env-deploy + the `/deploy` skill built
+
+**Not a quest. An ops session that exposed a whole undocumented workflow, and closed it with a skill.**
+#271721 was previously delegated to Nurhidayati (Reports team) — she committed the jrxml fix to
+`mlk/esokongan/271721` and asked みや to merge + deploy it.
+
+### What was actually shipped
+| Branch | Merge SHA | Deployed |
+|---|---|---|
+| `mlk/stag-env` | `96bcf18809` | ✅ みや built + deployed (`BUILD SUCCESS` 18:43) |
+| `mlk/int-env` | `4d771452e0` | ⬜ pending — steps handed over |
+
+Delta on both = 1 file, `PlpLaporanPermohonanPRBB_Sub01.jrxml` (+41/−23), clean `ort` merge,
+`--no-ff`, team message format. `mlk/esokongan/271721` left alive for khaihantan's release pull.
+
+### 🔴 The slip that cost the session — `ticket-source-skipped` (ledgered, みや-caught)
+I derived the merge targets from **git-history convention** and never opened the Redmine ticket.
+The ticket said verbatim: *"merge into mlk/int-env and mlk/stag-env branch and deploy the changes
+in MLIT and MLKSTAG - Awam."* I did stag only. みや found it himself by reading Redmine.
+**Latest-state-first applies to the TICKET TEXT, not just quest state.**
+
+### The AWAM branch topology (investigated, now documented)
+- **Nothing ever merges into `mlk/master`** — 0 direct merges in the entire history. `mlk/master` is
+  a label equal to the last cut release tip (`mlk/master` ≡ `mlk/release/1.4.1` ≡ `e355940ec5`).
+- **Three sinks, a FORK not a chain**: a ticket branch merges independently into `mlk/int-env`
+  (→MLIT), `mlk/stag-env` (→MLKSTAG), and `mlk/release/<ver>` (→master by fast-forward).
+  `release` pulls from the **ticket branch**, never from stag-env. Proof: `272076` merged to both on
+  07-24 from the same source (`0bda3077a2` stag / `925797bd83` release).
+- **Who**: devs merge to stag/int themselves (14 names); khaihantan (30) + shahrul.nizam (4) own
+  release. Cadence ≈ one release cut per working day (1.3.7 07-20 → 1.5.0 bumped 07-27).
+- 🚨 **Nothing is missed by *git* — the safety net is Redmine.** 15 branches sit in stag-env with no
+  release at all, oldest `internal/267326` at 33 days. That is why `release-mlk-plp` opens with
+  Redmine recon rather than a git diff.
+
+### Repo hygiene (etanah-awam, all verified before deleting)
+Local `mlk/stag-env` was 167 ahead / 417 behind — reset to origin. Patch-level check first:
+50 local-only non-merge commits → 42 unique by patch-id → 34 reachable from some remote branch →
+the last 8 = 4 tickets already on remote stag-env **and** master via their own branches
+(266481/266482/267137/266956), 2 superseded version bumps, 1 revert + 1 re-commit. **Nothing lost.**
+Also deleted `mlk/internal-issue/268273` (みや's `5bf8156bcf` is on remote as `5074f1f02c`), pruned
+4 stale `trg/eSokongan-cr/*` refs. Safety tags left: `ruri/backup-stag-env-20260727`,
+`ruri/backup-268273-local-20260727`.
+
+### `/deploy` skill — BUILT (forge-born, 20/20 eval)
+みや: *"I want something quick! Fast! reference. Not a conversation."*
+`/deploy <stag|internal> <awam|plp> <ticket|branch>` → I merge + push, then emit a numbered ssh card.
+**Straight-push, no nod gate** — justified because env branches have zero backflow to `mlk/master`,
+so `git revert -m 1 <sha>` fully undoes; every run tags `ruri/pre-<env>-<ticket>` first.
+
+**The deploy routes (only 2 IPs exist)** — from みや's colleague, confirmed against mirage1 `ls`:
+| Env | Route |
+|---|---|
+| internal/mlit | `172.16.100.162` → `deployment-scripts/mlit/` → `./deploy-<module>.sh` → branch prompt. **Build+deploy = ONE function.** |
+| staging | build `172.16.100.162` `build-scripts17/` env=`stag`; then deploy `172.30.12.203` `deployment-scripts/stag/` |
+
+The build script's env menu is `pat/uat/stag/train/prod/hotfix` — **no `int`/`mlit` option**, because
+internal never uses the build script. `172.16.100.197:5444` is the mlit DB, never an ssh target.
+
+### Open / unresolved
+- ⬜ **MLIT deploy of `mlk/int-env` @ `4d771452e0`** — みや's step, card handed over.
+- ⬜ **#271721 not on any Redmine planned-release list** — env branches never reach `mlk/master`.
+- ⚠️ **Unfinished trace**: the jrxml lives in `etanah-awam/src/main/resources/reports/state/MLK/` but
+  **no AWAM Java references `PlpLaporanPermohonanPRBB`**, and it does not exist in etanah-pelupusan.
+  Which module actually renders it was never settled (みや interrupted the check). Worth closing
+  before trusting an AWAM-only deploy.
+- ⚠️ OneDrive conflict copies are proliferating in the main repo (`*-miyazaki*` — 14 untracked files).
+
+### Behavioural
+みや was angry twice: once when I answered a one-word question ("what's the term for the number?" →
+**IP address**) with a wall of text and a drafted colleague message, and once at the ticket-source
+slip. Both are the same failure: I answered the question I imagined instead of the one asked.
+
+---
+
 ## 2026-07-27 (Mon 01:20→03:00) — Quest-state cleanup + 3-WAVE OPUS AUDIT of the 4 Redmine-open tickets
 
 **みや's night session. Two angry corrections → cleanup; then his 3-iteration orchestration plan ran clean end-to-end (12 Opus-max familiars, ~2.0M subagent tokens, 3 Workflow waves, controller-verified between waves).**

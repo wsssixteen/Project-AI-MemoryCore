@@ -75,3 +75,6 @@
 >>>>>>> origin/main
 {"ts":"2026-07-26T17:33:17.087Z","category":"stale-quest-state-not-reconciled-with-redmine"}
 {"ts":"2026-07-26T17:49:57.671Z","category":"stale-conversation-read-solved-issue-reattempted"}
+{"ts":"2026-07-27T01:14:06.760Z","category":"git-state-check-skipped-phase0"}
+{"ts":"2026-07-27T04:20:45.616Z","category":"single-layer-logger-forces-repeat-build-cycles"}
+{"ts":"2026-07-27T11:24:28.425Z","category":"ticket-source-skipped"}

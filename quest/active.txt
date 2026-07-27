@@ -553,18 +553,23 @@ local_test_confirmed=true
 qa=QA-265537
 quest_start_ts=2026-07-22T16:02:33.420Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\101. QA #265537 - MLKFAT - MLPS - Penyediaan Borang 4Ae dan L1e - Maklumat bagi medan Bandar yang telah dikemaskini
-phase=0
-status=hold
+phase=1
+status=closed
 ticket_type=bug
 env=MLK Staging et_main_stg2
 issue_one_liner=MLPS - Penyediaan Borang 4Ae dan L1e - Maklumat bagi medan Bandar yang telah dikemaskini semasa AWAM tidak papar di APPS
 assigned_to_me=2026-07-20
 urusan=MLPS
 tugasan=Penyediaan Borang 4Ae dan L1e
-current_phase=BLOCKED ON LOCAL DEPLOY 2026-07-24 (session end). Root cause FOUND + DB-verified: TRANSFER bug - AWAM saves registered bandar correctly to Pra (29+text) but App row gets surat 30 AND both bandar_lain texts DROPPED (fresh permohonan PTMLK/01/L/MLPS/2026/2 aplikasi 3417685 on STG1 proves it: PRA 23656 = 29/MELAKA BANDAR BERSEJARAH + srt 30/same; APP 5542657 = bandar_id 30 + NULL, daftar 29 + NULL). 6 uncommitted edits in etanah-common + etanah-awam are the OLD display-tolerance direction (candidate 4 = REJECTED by familiar) + 2 loggers - decide keep vs revert. DEPLOY BLOCKER: Eclipse m2e-wtp web-resources has only META-INF so etanah-common overlay never merges - war missing jboss-deployment-structure.xml (org.hibernate) AND 98/111 taglib files (et:form) - miya already tried Maven update/clean/republish. Maven CLI build WORKS (3.9.9 + toolchains fixed). NEXT SESSION: fix deploy first via Eclipse Maven Update Project with Force Update AND Clean projects ticked; see qa_doc SESSION-END + DEV-TESTING-HACKS.md
+current_phase=Closed
 quest_start=2026-07-21
 qa_doc=projects/coding-projects/active/QA-265537/QA-265537.md
-branch=n/a-pre-apply
+branch=mlk/qa/265537v2
+closed=2026-07-27
+commit=b66b12236b
+branch_awam=mlk/qa/265537
+commit_awam=e38f1e3f81
+close_note=Phase 1 closed 2026-07-27 on miya's explicit no-test waiver (D1 runtime-evidenced via probes, D2 compile+static only, SPOC transfer untestable locally). Two-repo fix: awam PelupusanService.savePemohon surat bandar sourced from entity alamat + BandarSuratLain set; pelupusan PelupusanSpocService transfer carries bandar_daftar_lain + alamatPemohon.bandarLain. BA retest = D2 first runtime execution.
 
 qa=QA-272181
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\104. ESOKONGAN #272181 - Pelupusan - PT - Popup Sedang Kemaskini tak tutup selepas kemaskini wo
