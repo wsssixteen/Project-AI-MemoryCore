@@ -692,31 +692,6 @@ current_phase=BLOCKED ON ONE GREP 2026-07-28. Failure CLASS verified: JSF partia
 next_action=miya: grep server.log for the WRAPPED FacesException (FaceletPartialStateManagementStrategy:380-386 builds PARTIAL_STATE_ERROR_RESTORING_ID with the failing client id as its argument; the BA error page prints root-cause only). staging 172.30.12.177 @ 27-07-2026 10:53:41 / PROD 172.30.11.105 @ 09:45:25. Then test matrix rows 1-3 in qa_doc.
 blocker=server.log client id + fresh-page repro (does a junk ID on a hard-refreshed page also error? if yes = environmental, hand back)
 
-qa=QA-272378
-quest_start_ts=2026-07-28T15:46:07.912Z
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\110. ESOKONGAN #272378 - Pelupusan - PPJK - Semakan Kemasukan Maklumat - Isu no. lot allow untu
-phase=1
-status=closed
-ticket_type=bug
-env=Pelupusan > PPJK > Semakan Kemasukan Maklumat > Isu no. lot allow untuk diubah di kemaskini maklumat tanah
-issue_one_liner=Pelupusan > PPJK > Semakan Kemasukan Maklumat > Isu no. lot allow untuk diubah di kemaskini maklumat tanah
-assigned_to_me=2026-07-27
-qa_doc=projects/coding-projects/active/QA-272378/QA-272378.md
-branch=mlk/esokongan/272378
-wave_docs=QA-272378-wave3.md (blind) + QA-272378-audit.md (adversarial)
-urusan=PPJK
-tugasan=Semakan Kemasukan Maklumat (SKM)
-test_app=PTMLK/01/L/PPJK/2026/4 (nurhidayati@melaka.gov.my, pengguna_id 6435; aplikasi_id 3417868, a_tgsn_id 2753033, peranan -PT-; et_main_stg1). Land row umm_a_permohonan_tnh:38914 no_lot=1880 version=0
-scope=BA latest note WIDENS beyond the subject: 7 fields view-only (Negeri/Daerah/BPM/Seksyen/DUN/Tempat/No.Lot-PT) - Negeri ALREADY view-only at mlkMaklumatTanahV3.xhtml:46-50, so 6 change. No. Lot Bersebelahan STAYS EDITABLE (AWAM keeps it at plpMaklumatTanahRizab.xhtml:277-289)
-current_phase=Closed
-fix_spec=3 files 16 lines additive. (1) mlkMaklumatTanahV3.xhtml:24 add composite:attribute isPPJK default=false; inputs :59,:75,:87,:100,:119,:123 + outputs :62,:78,:90,:101,:126 + Tempat :107 viewOnly= and :111 mode; (2) MlkMaklumatPerizabanForm.xhtml:68 add isPPJK=#{isPPJK} (getter exists .java:1101-1103, computed at xhtml:23); (3) mlkMaklumatPerizabanBody.xhtml:60 same param (rayuan call site - MlkMaklumatTanahRayuanForm.java:93-96 isRizabPage() LISTS PPJK)
-traps=13 render ELs NOT 12 - do NOT touch the isMandatory ELs at :53/:68 (they are the red asterisk, formField.xhtml:69-76; flipping them diverges from the BA screenshot). EL clause must go INSIDE the condition BEFORE the ? - appending after ?true:false is a syntax error. Blast radius 1 of 379 langkah rows (skrin_id 1373: BPRZ 172 / PRZ 147 / PPJK 60; PPJK has NO KM tugasan - DB verified). No config/DB lever exists (MLK tugasan.config.json is 2 bytes {})
-out_of_scope=the video also shows the edit not persisting after 'Telah disimpan!' - BA did NOT report that; do not drift into a save bug
-next_action=miya: apply the 16-line edit (no runtime prerequisite) - then bundling Q on Bersebelahan/Sempadan + the rayuan call site
-local_test_confirmed=true
-commit=edb05b3b57
-closed=2026-07-29
-
 qa=QA-272329
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\111. ESOKONGAN #272329 - Pelupusan - PRBB - Semakan Kemasukan Maklumat - Kod negeri di ID Hakmi
 phase=0
