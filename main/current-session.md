@@ -1,5 +1,100 @@
 # Current Session
 
+## 2026-07-27 night → 2026-07-28 09:16 — 🌊 THE SWEEP: 5 tickets × 4 waves × 19 Opus familiars
+
+**みや's contract, verbatim**: *"summon a familiar each, ONE Opus medium, to reach each open tickets that we have yet to start to PROPERLY understand the issue. I am tired you kept getting it wrong that I had to do this."* Then quest-to-Rubric, then another round, then an audit each, then — *"THIS IS THE MOST CRITICAL"* — an audit of how we do this and how to trigger it with one word next time.
+
+### ▶▶ NEXT SESSION — START HERE: the queue みや locked
+
+**Do them in this order. He said "stick to that queue".**
+
+| # | Ticket | Root cause | Fix | Conf | State |
+|---|---|---|---|---|---|
+| 1 | **272329** PRBB kod negeri 11 | `PelupusanExcelReaderHelper.onChangeTarafTanah2():1412` builds `new PelupusanHakmilikVO()` with **no companion `setNegeri`** — 8 of the other 9 sites have it; VO default is `"11"` (Terengganu) | **+1 line, 1 file** | 90% | READY |
+| 2 | **272378** PPJK fields editable | `mlkMaklumatTanahV3.xhtml:41-42` `ui:param` **shadows** the caller's `tugasanMode` → every bean-side fix is inert | 3 files, **16 lines** | 91% | READY |
+| 3 | **272127** PRBB Rencana spacing | surplus empty paragraphs, **template-static** (populator does no ¶ math) | −36 ¶ + −9 ¶ | high | READY — scope call pending |
+| 4 | 272499 Utiliti Pembatalan ralat | **JSF view-state restore**; zero app frames, `onCari()` never runs | unknown | 70% | **BLOCKED — 1 grep** |
+| 5 | 272527 Footer margin | images are **not a valid before/after** — the badge image itself was swapped | n/a | — | **BLOCKED — BA** |
+
+**The exact edit for #1** (byte-identical to the analog at `:4211` in the same class):
+```java
+:1412   maklumatTanahVO.setHkmlkVO(new PelupusanHakmilikVO());   // unchanged
+:1413 + maklumatTanahVO.getHkmlkVO().setNegeri(NegeriConfig.getInstance().getCurrentNegeri().getKodSakNegeri());
+```
+Falsifier before applying (10 s, no build): with Tanah Milik selected, change **Daerah** without touching Negeri → stays `11` confirms it; shows `04` refutes it.
+
+**The unblock for #4** — JSF wraps the failure in a second exception carrying the failing component's client id; the BA's page shows only the root cause:
+```bash
+grep -n -B2 -A6 "PARTIAL_STATE_ERROR_RESTORING_ID" server.log   # staging 27-07-2026 10:53:41 · PROD 09:45:25
+```
+
+### Per-ticket detail — every ticket has 3-4 docs now
+
+| Ticket | qa_doc | wave-3 | audit |
+|---|---|---|---|
+| 272127 | `QA-272127.md` | `QA-272127-wave2.md` (blind) | `QA-272127-audit.md` |
+| 272378 | `QA-272378.md` | `QA-272378-wave3.md` (blind) | `QA-272378-audit.md` |
+| 272329 | `QA-272329.md` | `QA-272329-wave3.md` (blind) | `QA-272329-audit.md` |
+| 272499 | `QA-272499.md` | `QA-272499-wave3.md` (blind) | `QA-272499-audit.md` |
+| 272527 | `QA-272527.md` | `QA-272527-wave3.md` | `QA-272527-audit.md` |
+
+All under `projects/coding-projects/active/<QA-num>/`.
+
+### 🚨 Traps the audits caught — these would have shipped wrong
+
+| Ticket | What we were about to get wrong |
+|---|---|
+| 272127 | **eDoket twins are NOT identical** — they swap `Buku kupon` for `Sistem e-Doket`, shifting in-table indices; copying the delete list would remove the WRONG paragraphs. eDoket is **live** on stg1. Also both earlier passes **missed 5 deletions** (`3, 7, 15, 38, 115`) and disagreed on the count (31 vs 18 → reconciled to **36**, because they counted different things). |
+| 272378 | Flipping the `isMandatory` expressions would **silently drop the red asterisks** the BA's own screenshot keeps · the EL clause must go **inside** the condition before the `?` (else syntax error) · a **second call site** (rayuan) needs the same param · pass A **miscounted** 12 vs the real 13 render ELs. |
+| 272329 | The tempting 1-line VO-default fix **breaks TRG** (`"11"` is *correct* there). The proposed second edit at `:4534` is **redundant** — it restores an object, not a literal. View-only alone would be a **mask**. |
+| 272499 | The #270916 regression lead is **dead** (both changed lines are runtime `rendered=`, cannot change tree shape). Shipping a 70% xhtml edit into `mlk/release/1.0.12` would be guessing with a release branch. |
+| 272527 | Badge aspect was measured off the **fallback** image — off by ~0.83 cm. The trailing ¶ lever is worth **0.00 cm** (sits outside the SDT, never copied). `footerSurat2` is killed by the BA's own `Expected.jpeg` (motto stays). **2 of 4 offices have no badge at all** and print 5.5 × 2.07 cm of blank white. |
+
+### 🚨 Step 5 — the automation audit landed in FIVE places (みや: don't forget the rest)
+
+| # | Location | What it holds |
+|---|---|---|
+| 1 | `projects/coding-projects/active/multi-ticket-sweep/DESIGN.md` | the `/sweep` design — skill-only, explicit trigger, 4-wave ladder, skip rules, 10-assertion eval contract |
+| 2 | `projects/coding-projects/active/multi-ticket-sweep/PRIOR-ART.md` | 16 prior attempts, the inventory verdict, the 16 constraints |
+| 3 | `Feature/Forge-Self-Improvement-System/improvement-audit-log.md` | 2 entries (sweep design · Stop-bundle structural finding) |
+| 4 | `main/todo.md` Q1 | 2 rows (BUILD `/sweep` · orchestration-mode gate fix) |
+| 5 | `.claude/auto-memory/reference_multi_ticket_sweep.md` | the locator that ties all five together |
+
+**Headline**: 16 prior attempts since 2026-05-04; **every success hand-specified by みや**, every attempt to make it reusable became a todo row. **Five unbuilt orchestration rows (35 · 37 · 39 · 69 · 136), zero shipped multi-item components.** The parts all exist; the **assembly** is absent. `bankai` is a near-fit (wrong corpus model), `system-check` fans out over lenses not a list, `quest`'s "multi-ticket retrieve mode" is a **dangling reference**, and **`/loop` is a harness skill we have never used or assessed**.
+
+### 🚨 Structural finding — the Stop bundle assumes the main loop writes code
+
+During an orchestration-only turn I edit **nothing**, yet ~6 Stop gates judge the **relayed familiar text** as if it were my own code work.
+
+| Hook | Behaviour | Status |
+|---|---|---|
+| `predicate-box` | **hard-blocked a turn with zero edits** — matches an etanah path + edit-verbs against the RAW TRANSCRIPT; its 07-07 v2 promoted advisory→block, making it reachable | observed |
+| `show-gate` | blocked a wave summary (pure findings, nothing to draw) | observed |
+| `full-address-trace-gate` | blocked the **controller's** turn because a **familiar** wrote a bare filename | observed |
+| `RecursiveLoopDetector` | fired 4× in one research pass — a sweep is definitionally repeated-shape calls | observed |
+| `codemap-recon-consult` · `quest-context-load-gate` | predicted false-fires (delegated codegraph; single in-focus quest) | predicted |
+
+Fix candidate = a session-scoped `orchestration-mode` flag, **a refine of the bundle, not a new Feature**. Must scope to orchestration turns only — the same gates fired *correctly* on みや-facing turns this session.
+
+### What worked in the wave design (keep this)
+
+- **Every audit changed the shipping answer** rather than blessing it — 5 for 5.
+- **Blind passes** (facts in-prompt, sibling-file writes) converged independently on 272329 and 272378, and **conflicted** on 272499 — the conflict was the signal.
+- **Skip rules earn the savings**: 272127 skipped W3 (already had 2 independent passes) ≈ 150k tokens saved; 272527's W3 was retargeted at residuals instead of a blind repeat, and it closed the badge number that blocked every candidate.
+- **Cost**: 19 familiars, ~2.9M subagent tokens, ~3 h wall-clock, zero corrections from みや during the run.
+
+### Open / carried
+
+| Item | Where |
+|---|---|
+| 272127 scope call — 2 files or 4 (eDoket live) | みや |
+| 272527 — 7 BA questions; key = which office/date produced `expected.png` | BA |
+| 272499 — server.log grep, then decide code-vs-environmental | みや |
+| Build `/sweep` + the orchestration-mode gate fix | todo Q1 |
+| QA-271985 Phase 2 archive | not run |
+
+---
+
 ## 2026-07-27 (Mon, day → 21:15) — QA-271985 SHIPPED · QA-271918 delegated · 3-DAY RULE built · Redmine reconciled 10→5
 
 **Two tickets off the plate, one new always-on rule, and two みや-caught slips of the same family (satisfying a rule's form while skipping its substance).**
