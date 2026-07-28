@@ -47,6 +47,7 @@ DE steps: 1 ⬜ · 2 ⬜ · 3 ⬜ · 4 ⬜ · 5 ⬜ · 6 ⬜ · 7 ⬜ · 8 ⬜ �
 | Domain / Malay terminology / urusan codes / business rules | `DOMAIN-GLOSSARY.md` |
 | Bug patterns / recurring slip shapes | `BUG-BESTIARY.md` |
 | Deferred-known issues we can't fix yet | `DEFERRED-CRITICAL-ISSUES.md` |
+| **Ad-hoc ask answered this session that is NOT one of our tickets** — BA/colleague question, a screen issue みや hit mid-session, a side finding surfaced while working something else | **`ADHOC-REGISTER.md`** (added 2026-07-28 per みや — *"That is why I kept asking you to save known issues, adhoc issues BA asked us to check"*). ⚠️ **The row should already exist** — the register is written at the MOMENT of the ask, not at DE. If DE is the first time it is being written, that is itself a capture miss: write the row AND log a `knowledgebase-not-written` slip. |
 | Test data findings / verified permohonan-tugasan-user tuples | `TEST-PERMOHONAN-INDEX.md` |
 | Frontend / UX patterns / asymmetries / mode-binding conventions | `FRONTEND-PATTERNS.md` |
 | Urusan-specific flow / cross-state patterns | `URUSAN-FLOW.md` / `PERANAN-MAP.md` |

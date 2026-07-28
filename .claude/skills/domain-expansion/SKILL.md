@@ -36,7 +36,7 @@ Then the step-line (update ⬜→✓ in place as each completes; `⏭ + one-line
 | 4 | Append `daily-diary/<date>.md` (3-section template) |
 | 5 | Forge log review — surface L1→L2 promotions as QUESTIONS to みや |
 | 6 | Observation log review — promote T1→T2 if recurring |
-| 7 | **Gap Sweep** + etanah-knowledge sweep |
+| 7 | **Gap Sweep** + etanah-knowledge sweep — incl. **`ADHOC-REGISTER.md`**: every non-ticket ask answered this session (BA/colleague question · screen issue みや hit · side finding) must already have a row. Writing it *here* for the first time = capture miss ⇒ write it AND log `knowledgebase-not-written` |
 | 8 | Closing words to みや (**fenced code block**) |
 | 9 | Change manifest (`git status` touched files) |
 | 10 | **Auto-commit + push** (worktree branch + main FF) |
