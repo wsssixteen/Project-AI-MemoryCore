@@ -43,21 +43,27 @@ const QUEST_START_RE = /\/quest\s+(?:start|resume)|\b(?:start(?:ing)?\s+(?:a\s+)
 const RETRIEVAL_RE = /\b(?:read\s+redmine|retrieve\s+(?:the\s+)?ticket|redmine[-\s]?sync|sync\s+redmine|new\s+ticket)\b/i;
 const BYPASS_RE = /\[skip-adhoc-register:\s*[^\]]+\]/i;
 
-// A register row is a markdown table row of >= 9 cells whose first cell is a number.
-// OPEN means the last (Ticket) cell reads exactly `none`.
+// Register schema (canonical, authored by the 2026-07-28 session):
+//   | # | Date | Asked by | The ask | Conclusion | Evidence lives at | Status |
+// Row id is A1/A2/... (or a bare number). Statuses: ANSWERED · OPEN · OWNED-ELSEWHERE · LATENT.
+// Surface only OPEN and LATENT — those are the two the register's own Review-cadence section says to
+// cross-check at Phase 0. ANSWERED / OWNED-ELSEWHERE owe us nothing.
+const STILL_OWED_RE = /\b(OPEN|LATENT)\b/;
+
 function parseOpenRows(md) {
   const out = [];
   for (const line of md.split(/\r?\n/)) {
     const t = line.trim();
     if (!t.startsWith('|')) continue;
     const cells = t.split('|').slice(1, -1).map(c => c.trim());
-    if (cells.length < 9) continue;
-    if (!/^\d+$/.test(cells[0])) continue;
-    if (cells[8].replace(/[`*]/g, '').toLowerCase() !== 'none') continue;
+    if (cells.length < 7) continue;
+    if (!/^[A-Z]?\d+$/.test(cells[0])) continue;        // skips header + separator rows
+    const status = cells[6].replace(/[`*]/g, '');
+    if (!STILL_OWED_RE.test(status)) continue;
     out.push({
-      n: cells[0], date: cells[1], symptom: cells[3],
-      area: cells[4], verdict: cells[5], conf: cells[6],
-      doc: cells[7].replace(/[`]/g, ''),
+      n: cells[0], date: cells[1], askedBy: cells[2],
+      ask: cells[3], conclusion: cells[4],
+      doc: cells[5].replace(/[`]/g, ''), status,
     });
   }
   return out;
@@ -106,23 +112,23 @@ runHook({ name: 'adhoc-register', event: 'UserPromptSubmit' }, (input) => {
   if (!rows.length) return { fired: false };
 
   const lines = [
-    '🔎 adhoc-register: ' + rows.length + ' OPEN pending issue(s) already investigated but not yet ticketed.',
+    '🔎 adhoc-register: ' + rows.length + ' ad-hoc row(s) still owed (OPEN / LATENT) — already investigated, no ticket of ours.',
     '   🚨 MANDATORY at Phase 0 — compare THIS ticket against every row below:',
     '',
   ];
   for (const r of rows) {
-    lines.push('   [' + r.n + '] ' + r.date + ' · ' + clip(r.area, 60) + ' · conf ' + r.conf);
-    lines.push('       symptom : ' + clip(r.symptom, 150));
-    lines.push('       verdict : ' + clip(r.verdict, 150));
-    lines.push('       findings: ' + r.doc);
+    lines.push('   [' + r.n + '] ' + r.date + ' · asked by ' + clip(r.askedBy, 40) + ' · ' + clip(r.status, 60));
+    lines.push('       ask       : ' + clip(r.ask, 150));
+    lines.push('       conclusion: ' + clip(r.conclusion, 200));
+    lines.push('       evidence  : ' + r.doc);
     lines.push('');
   }
   lines.push('   ON MATCH — do this instead of re-investigating:');
-  lines.push('     1. Say so explicitly: "this is pending row [N], already diagnosed at <conf>".');
-  lines.push('     2. Set that row\'s Ticket cell to the ticket number in ADHOC-REGISTER.md.');
-  lines.push('     3. Fold the findings doc into the quest doc; START at the phase the row reached,');
+  lines.push('     1. Say so explicitly: "this is ad-hoc row [N], already concluded — starting from <phase>".');
+  lines.push('     2. Update that row IN THE SAME TURN: append the ticket number and move Status on.');
+  lines.push('     3. Fold the evidence doc into the quest doc; START at the phase the row reached,');
   lines.push('        not at Scout. Re-running Recon on a solved mechanism wastes miya\'s time.');
-  lines.push('   ON NO MATCH — state "no pending-register match" once, then proceed normally.');
+  lines.push('   ON NO MATCH — state "no ad-hoc register match" once, then proceed normally.');
   lines.push('   Bypass: [skip-adhoc-register: <reason>]');
 
   return { fired: true, contextOut: lines.join('\n') + '\n' };

@@ -4,8 +4,16 @@
 
 ## What it does
 
-Fires on a ticket signal in みや's prompt, reads `ADHOC-REGISTER.md`, and injects every **OPEN** row
-(`Ticket` cell = `none`) **before** Phase 0 runs — with the mandatory compare-and-promote instruction.
+Fires on a ticket signal in みや's prompt, reads `ADHOC-REGISTER.md`, and injects every **still-owed**
+row (`Status` = `OPEN` or `LATENT`) **before** Phase 0 runs — with the mandatory compare-and-promote
+instruction. `ANSWERED` and `OWNED-ELSEWHERE` rows are skipped; they owe us nothing.
+
+Schema it parses (7 columns, authored by the 2026-07-28 session — the hook was adapted to the file,
+not the other way round):
+
+```
+| # | Date | Asked by | The ask | Conclusion | Evidence lives at | Status |
+```
 
 | | |
 |---|---|
@@ -43,7 +51,8 @@ would go stale.
 | **Silent when nothing is open** | No ceremony on ordinary ticket work — `fired: false` when the register has zero `none` rows. |
 | **Loud when the file is missing** | The ghost-reference case must never be silent again (fixture F10). |
 | **Resolves toward the MAIN repo** | `projects/` is gitignored and absent from worktrees, so `ROOT/projects/...` misses when running in a worktree. The hook walks up past `.claude/worktrees` to find the real file (verified live). |
-| **Register, not queue** | Rows are never cleared for staleness. An un-ticketed known issue is knowledge. Only two exits: promoted to a ticket number, or marked `n/a`. |
+| **Register, not queue** | Rows are never cleared for staleness. An un-ticketed known issue is knowledge. A row moves Status (`OPEN` → `ANSWERED` / `OWNED-ELSEWHERE`, or gains a ticket number) — it is never deleted. |
+| **Adopted the existing schema** | Two sessions built this the same night. The 2026-07-28 session's file was richer (status vocabulary, 5 backfilled rows, review cadence) and came first, so the hook was rewritten to parse THAT file rather than imposing mine. See the incident below. |
 | **Trigger-overlap override** | Collided with `retrieve-sync-gate` / `brief` / `local-deploy-gate` on trigger only — none of them reads a pending register. Merging would put two unrelated concerns in one check. Reason recorded in `meta/registry.jsonl`. |
 
 ## Bug the eval caught during the build
@@ -51,3 +60,17 @@ would go stale.
 `QUEST_START_RE` began as `/\b(?:\/quest\s+...)/` — `\b` before a `/` can never match at string
 start, because `/` is not a word character. `/quest start` silently failed to trigger. Fixture F4
 caught it; the leading `\b` was moved inside the alternation.
+
+## Incident during the build — I overwrote the other session's register
+
+Two concurrent sessions were told to build this on the same night. The 2026-07-28 session created
+`ADHOC-REGISTER.md` with 5 backfilled rows at 21:32. A `find` from this session at ~01:30 returned
+nothing — OneDrive had not surfaced it into this view — so I created the file from scratch at 01:36
+and **clobbered theirs**. Because `projects/` is gitignored, git could not warn me and could not
+restore it.
+
+Recovered intact from `.claude/worktrees/ruri-195f96/`, then their version was reinstated as canonical
+and my row appended as `A6`. Logged as `overwrote-concurrent-session-work`.
+
+**The standing lesson**: in a gitignored tree, absence on my view is not absence in fact. Check the
+sibling worktrees before creating a file a concurrent session may already own.

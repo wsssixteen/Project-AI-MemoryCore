@@ -28,13 +28,17 @@ const HOOK = path.join(__dirname, 'adhoc-register.check.hook.js');
 const REL = path.join('projects', 'coding-projects', 'active', 'etanah-knowledge', 'melaka', 'ADHOC-REGISTER.md');
 const REAL_ROOT = path.resolve(__dirname, '..', '..');
 
+// Canonical schema (authored by the 2026-07-28 session):
+//   | # | Date | Asked by | The ask | Conclusion | Evidence lives at | Status |
+// Statuses: ANSWERED · OPEN · OWNED-ELSEWHERE · LATENT. Only OPEN + LATENT are still owed.
 const HEADER = [
-  '| # | Date | Source | Symptom (searchable) | Urusan / Area | Verdict | Conf | Findings doc | Ticket |',
-  '|---|---|---|---|---|---|---|---|---|',
+  '| # | Date | Asked by | The ask | Conclusion | Evidence lives at | Status |',
+  '|---|---|---|---|---|---|---|',
 ].join('\n');
-const ROW_OPEN = '| 1 | 2026-07-28 | BA PDTJ | hakmilik lain radio flips to TIADA with 2 pemohon | PLTP SKM | app-scoped flag written from a per-pemohon VO | 93% | `x/FINDINGS.md` | none |';
-const ROW_PROMOTED = '| 2 | 2026-07-20 | BA | footer margin too wide | Pelupusan surat | template-static | high | `y/FINDINGS.md` | 272527 |';
-const ROW_NA = '| 3 | 2026-07-22 | miya | PRU agihan dropdown blank | PRU KKMMKN | data — capaian penuh | 100% | `z/FINDINGS.md` | n/a |';
+const ROW_OPEN = '| A6 | 2026-07-28 | miya (from BA PDTJ) | hakmilik lain radio flips to TIADA with 2 pemohon | app-scoped flag written from a per-pemohon VO; PLTP SKM | `x/FINDINGS.md` | `OPEN` — BA to raise the ticket |';
+const ROW_LATENT = '| A3 | 2026-07-27 | (surfaced by A2) | agihan repository ignores the capaian-penuh flag | 26 active PLP users invisible to every agihan dropdown | `DATABASE.md §15` | `LATENT` — miya to decide |';
+const ROW_ANSWERED = '| A2 | 2026-07-27 | miya | PRU agihan dropdown blank | SOLVED data-side, capaian penuh re-ticked | `DATABASE.md §15` | `ANSWERED` |';
+const ROW_ELSEWHERE = '| A1 | 2026-07-27 | miya | is 272574 related to 242553 | YES by mechanism, footer margin owned by Aaron | `FLOWABLE-WORKFLOWS.md` | `OWNED-ELSEWHERE` |';
 
 function makeRoot(registerBody /* string | null */) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'adhoc-reg-'));
@@ -58,8 +62,8 @@ function run(root, prompt) {
   return { out: (r.stdout || '') + (r.stderr || ''), status: r.status };
 }
 
-const withOpen = makeRoot([HEADER, ROW_OPEN, ROW_PROMOTED, ROW_NA].join('\n'));
-const noOpen = makeRoot([HEADER, ROW_PROMOTED, ROW_NA].join('\n'));
+const withOpen = makeRoot([HEADER, ROW_OPEN, ROW_LATENT, ROW_ANSWERED, ROW_ELSEWHERE].join('\n'));
+const noOpen = makeRoot([HEADER, ROW_ANSWERED, ROW_ELSEWHERE].join('\n'));
 const missing = makeRoot(null);
 
 const results = [];
@@ -70,29 +74,32 @@ let r = spawnSync(process.execPath, [HOOK, 'UserPromptSubmit'], { input: '{}', e
 check('F1 clean input exits 0 (no false block)', r.status === 0, 'exit=' + r.status);
 
 const cases = [
-  { id: 'F2 REPLAY prefixed ticket + open row surfaces it', root: withOpen,
+  { id: 'F2 REPLAY prefixed ticket + OPEN row surfaces it', root: withOpen,
     prompt: 'lets look at eSOKONGAN #272611 now',
-    want: ['adhoc-register', 'hakmilik lain', 'MANDATORY'], notWant: [] },
+    want: ['adhoc-register', 'hakmilik lain', 'MANDATORY', 'A6'], notWant: [] },
   { id: 'F3 bare ticket number fires', root: withOpen, prompt: 'start 272611',
-    want: ['adhoc-register', 'PLTP SKM'], notWant: [] },
+    want: ['adhoc-register', 'per-pemohon VO'], notWant: [] },
   { id: 'F4 quest-start phrase fires', root: withOpen, prompt: '/quest start',
-    want: ['adhoc-register', 'OPEN pending issue'], notWant: [] },
+    want: ['adhoc-register', 'still owed'], notWant: [] },
   { id: 'F5 redmine-retrieval phrase fires', root: withOpen, prompt: 'read redmine please',
     want: ['adhoc-register'], notWant: [] },
   { id: 'F6 no ticket signal is SILENT', root: withOpen, prompt: 'what is the weather like today',
     want: [], notWant: ['adhoc-register'] },
-  { id: 'F7 zero open rows is SILENT', root: noOpen, prompt: 'lets look at eSOKONGAN #272611 now',
+  { id: 'F7 only ANSWERED/OWNED-ELSEWHERE rows is SILENT', root: noOpen,
+    prompt: 'lets look at eSOKONGAN #272611 now',
     want: [], notWant: ['adhoc-register'] },
-  { id: 'F8 promoted row not surfaced', root: withOpen, prompt: 'start 272611',
-    want: [], notWant: ['footer margin'] },
-  { id: 'F9 n/a row not surfaced', root: withOpen, prompt: 'start 272611',
-    want: [], notWant: ['agihan dropdown'] },
+  { id: 'F8 ANSWERED row not surfaced', root: withOpen, prompt: 'start 272611',
+    want: [], notWant: ['SOLVED data-side'] },
+  { id: 'F9 OWNED-ELSEWHERE row not surfaced', root: withOpen, prompt: 'start 272611',
+    want: [], notWant: ['YES by mechanism'] },
   { id: 'F10 missing register warns loudly', root: missing, prompt: 'start 272611',
     want: ['NOT FOUND', 'ADHOC-REGISTER.md'], notWant: [] },
   { id: 'F11 bypass honoured', root: withOpen, prompt: 'start 272611 [skip-adhoc-register: unrelated area]',
     want: [], notWant: ['adhoc-register'] },
   { id: 'F12 promote instruction always present', root: withOpen, prompt: 'start 272611',
-    want: ['Ticket cell'], notWant: [] },
+    want: ['append the ticket number'], notWant: [] },
+  { id: 'F13 LATENT row IS surfaced (still owed)', root: withOpen, prompt: 'start 272611',
+    want: ['A3', 'capaian-penuh'], notWant: [] },
 ];
 
 for (const c of cases) {
