@@ -1313,6 +1313,7 @@ blocker=BA answers + scope call (JT-only 3 files / +JPPH 8 / shared fragment 72 
 local_test_confirmed=true
 commit=70598eb8cd
 closed=2026-07-29
+
 qa=QA-272127
 quest_start_ts=2026-07-28T07:19:53.171Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\107. ESOKONGAN #272127 - Pelupusan - PRBB - Penyediaan Rencana Pentadbir Tanah dan Cetakan Doku
@@ -1361,3 +1362,26 @@ next_action=miya: run the Daerah falsifier, then apply the one line
 local_test_confirmed=true
 commit=a4bf4379a2
 closed=2026-07-28
+
+qa=QA-272499
+local_test_confirmed=true
+branch=mlk/esokongan/272499
+commit=edc6482952
+pushed=2026-07-29
+closed=2026-07-29
+quest_start_ts=2026-07-28T13:16:03.397Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\109. ESOKONGAN #272499 - Utiliti Pembatalan Permohonan - Ralat selepas klik Cari
+phase=1
+status=archived
+current_phase=Phase 1 CLOSED 2026-07-29 - commit edc6482952 on mlk/esokongan/272499 (pushed, remote SHA verified), 1 file / 10 deletions. miya confirmed test successful on STG1 as nshazwani@melaka.gov.my with PTMLK/02/L/MCL/2026/3. REMAINING: Phase 2 archive hygiene only.
+ticket_type=bug
+env=Utiliti Pembatalan Permohonan > Ralat selepas klik Cari
+issue_one_liner=Utiliti Pembatalan Permohonan > Ralat selepas klik Cari
+assigned_to_me=2026-07-27
+qa_doc=projects/coding-projects/archive/QA-272499/QA-272499.md
+branch=n/a-pre-apply
+wave_docs=QA-272499-wave3.md (blind) + QA-272499-audit.md (adjudicating)
+test_app=PTMLK/02/L/MCL/2026/3 (norzaida@melaka.gov.my; aplikasi_id 3411621, ursn_id 26230, pejabat_id 3, status Awalan; et_main_stg1) - reproduces on PROD and STAGING
+current_phase=BLOCKED ON ONE GREP 2026-07-28. Failure CLASS verified: JSF partial-state-saving VIEW-RESTORE failure - IndexOutOfBounds Index 0 length 0 at AttachedObjectListHolder.restoreState:146 during RestoreViewPhase, ZERO application frames, so BasePembatalanPermohonanForm.onCari():125-149 NEVER RUNS. Not a data bug (DB rows healthy). Audit CONFIRMED pass A (formMode flip at mlkMaklumatPemohon.xhtml:56-57 feeding :126/:147/:206/:222, all inside p:tabView pemohonTabView :115-265 = the subtree the trace walks) and REFUTED pass B's #270916 regression lead (both changed lines are runtime rendered=, cannot change tree shape). NOT CLOSABLE FROM CODE ALONE - do NOT ship a 70pct xhtml edit into mlk/release/1.0.12.
+next_action=miya: grep server.log for the WRAPPED FacesException (FaceletPartialStateManagementStrategy:380-386 builds PARTIAL_STATE_ERROR_RESTORING_ID with the failing client id as its argument; the BA error page prints root-cause only). staging 172.30.12.177 @ 27-07-2026 10:53:41 / PROD 172.30.11.105 @ 09:45:25. Then test matrix rows 1-3 in qa_doc.
+blocker=server.log client id + fresh-page repro (does a junk ID on a hard-refreshed page also error? if yes = environmental, hand back)

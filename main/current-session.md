@@ -1,5 +1,79 @@
 # Current Session
 
+## 2026-07-27 10:15 → 2026-07-29 02:20 — QA-272499 closed Phase 1+2 · a 3-fault local-deploy saga · adhoc quest born
+
+**Two threads. One shipped a ticket end-to-end; the other repaired みや's local JBoss three times and
+still does not know why it breaks.**
+
+### ▶▶ NEXT SESSION — nothing blocking; two parked threads
+
+1. **Adhoc `ADHOC-local-deploy-publish`** — the only real open question: *why does the Eclipse publish
+   drop 558 files?* Next probe is the Eclipse `.metadata\.log` at publish time
+   (workspace `C:\Users\Ridhwan\eclipse-workspace`), **not another theory**. Task folder 111,
+   full doc `projects/coding-projects/active/ADHOC-local-deploy-publish/ADHOC-local-deploy-publish.md`.
+2. **みや decision owed**: `etanah-awam\pom.xml` sits locally at `1.0.143-MLK`, uncommitted; committed
+   baseline is `1.0.141-MLK` (`71f14a9faf`). That divergence caused fault 3. Commit or revert —
+   and if reverting, ONLY `pom.xml` + `.settings\org.eclipse.wst.common.component`, because the
+   QA-265537 edits share that working tree.
+
+---
+
+### QA-272499 — Utiliti Pembatalan Permohonan, Ralat selepas klik Cari · **CLOSED Phase 1 + 2**
+
+Commit **`edc6482952`** on `mlk/esokongan/272499` (pushed, remote SHA verified) · 1 file / 10 deletions ·
+みや tested on STG1 as `nshazwani@melaka.gov.my` with `PTMLK/02/L/MCL/2026/3` → pass.
+
+**The diagnosis moved twice, and both moves matter.**
+
+| Stage | Claim | Fate |
+|---|---|---|
+| Concurrent session Wave 1-3 | IndexOutOfBounds in `RestoreViewPhase`, zero application frames, "find which component" | correct but incomplete — it is the *aftershock* |
+| My first theory | JSF view-state eviction, `numberOfViewsInSession=3` | ❌ **REFUTED** by my own data |
+| Actual root cause | `javax.el.PropertyNotFoundException` on `keputusanMMKN`, fired **one second earlier** | ✅ 19 PROD occurrences over 07-23/24/27 |
+
+The pairing was the whole proof — PROD 09:45:**24** → 09:45:**25** (ref 191184); STG1 id 20284 11:03:**43**
+→ 20285 11:03:**44**. Found by querying the exception table directly:
+`et_sistem.pt_application_ex_entity` on PROD, `et_sistem_stg1.…` on STG1 — **the ID Rujukan on the
+Ralat dialog is that table's primary key.** That route is worth remembering; it turned a screenshot
+into a full stack trace in one query.
+
+**Mechanism**: `MlkUtilitiPembatalanPermohonanForm.xhtml:68-70` rendered a PRBB-only panel for every
+urusan outside an 8-item exclusion list (MCL is not in it) and passed `mbb="#{mb}"` — the cancellation
+bean — into `mlkMaklumatUrusanForm.xhtml:54`, which reads `#{cc.attrs.mbb.keputusanMMKN}`.
+
+**Both of my first two fix options were wrong**, and the count is what killed them: the composite reads
+**6** `cc.attrs.mbb.*` properties and the bean has **1**. So the panel could never render for *any*
+urusan, PRBB included — an `isPRBB` gate would simply have moved the crash. Fix = remove the call.
+Provenance: `4ad219d0f5` 2025-04-28 "Add JSF View for Melaka" — a wholesale TRG→MLK view copy. The TRG
+original at `…\protected\trg\utiliti\UtilitiPembatalanPermohonanForm.xhtml:67-74` carries the identical
+defect, untouched (out of Melaka scope).
+
+**Also settled**: "Tidak Dijumpai" is not absence — `PembatalanPermohonanService.java:116` filters on
+the **session office**, and the app is `pejabat_id` 3 = Jasin. A PTG login can never find it.
+
+---
+
+### The local-deploy saga — three faults in one afternoon, all repaired, cause still unknown
+
+Eclipse's **build** is correct every time. The **publish to JBoss is lossy and additive**.
+
+```
+built    E:\Projects\Melaka\etanah-awam\target\etanah-awam    8,937 files · taglib 111 ✅
+deployed …\standalone\deployments\etanah-awam.war             558 missing · taglib 13 ❌ · +1 stale jar
+```
+
+| # | Symptom | Cause | Repair |
+|---|---|---|---|
+| 1 | `MavenProjectUtil.appVersionMap` null → `webUtil` bean fails | war `META-INF` empty, no `maven/**/pom.properties` | restored 3 files |
+| 2 | `ComponentNotFoundException "@form"` | 558 files missing incl. 98 taglib → `et:form` unresolved | copied the 558 |
+| 3 | `WELD-001414` ambiguous `guestPreferences` | `etanah-common` **1.0.141 + 1.0.143** both in `WEB-INF\lib` | moved the stale jar out |
+
+**558 is the same count as 2026-07-24** — third occurrence of one family, now measured rather than
+theorised. I re-derived the M2_REPO story that had already been withdrawn on 07-26; it was refuted
+again when `target\m2e-wtp\overlays` turned out to hold **both** overlay wars, expanded.
+
+---
+
 ## 2026-07-28 16:24 → 2026-07-29 01:20 (CONCURRENT session) — BA-relayed PLTP defect diagnosed to Apply-ready, no ticket number yet
 
 **No code applied. One BA question answered end-to-end, root cause proven against code + live DB, fix drafted, parked awaiting the ticket number みや asked the BA to raise.**
