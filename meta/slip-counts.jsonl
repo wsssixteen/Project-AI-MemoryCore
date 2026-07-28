@@ -96,3 +96,4 @@
 {"ts":"2026-07-28T17:17:42.125Z","category":"machine-local-config-not-portable"}
 {"ts":"2026-07-28T17:17:42.188Z","category":"worktree-stranded-delivery"}
 {"ts":"2026-07-28T17:43:15.738Z","category":"knowledgebase-not-written"}
+{"ts":"2026-07-28T17:58:16.225Z","category":"overwrote-concurrent-session-work"}
