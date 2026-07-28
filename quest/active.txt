@@ -656,25 +656,6 @@ next_action=miya: sibling-scope call (A: 2 files only / B: +eDoket twins (they a
 
 current_phase=Rubric COMPLETE via 3-wave audit 2026-07-27. 100pct TEMPLATE-STATIC (populator does no paragraph math). Exact edit list in qa_doc: TemplateRencanaPT.docx delete 31 w:p in 7 groups (186->155; P0109 sectPr DO-NOT-DELETE) + TemplateSuratKeputusanLulusPRBB.docx delete 9 w:p (77->68). Scope LOCKED whitespace-only (BA expected files leave page geometry + table flags untouched; user norlina pre-approved 5.2/6.2 removal). Print-vs-preview OVERTURNED - PDF.js preview already shows spill = valid verification surface (renderer Aspose 24.10). Logo-bertukar NOT the 270052 family (body w:ind paragraphs) - BA-Q drafted. Residuals: runtime render proof + sibling-template scope (miya).
 
-qa=QA-272527
-quest_start_ts=2026-07-28T13:26:46.652Z
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\108. ESOKONGAN #272527 - Pelupusan - Kecilkan Margin Spacing Footer
-phase=1
-status=closed
-ticket_type=bug
-env=Pelupusan > Kecilkan Margin Spacing Footer
-issue_one_liner=Pelupusan > Kecilkan Margin Spacing Footer
-assigned_to_me=2026-07-27
-qa_doc=projects/coding-projects/active/QA-272527/QA-272527.md
-branch=mlk/esokongan/272527
-wave_docs=QA-272527-wave3.md (residual-closing) + QA-272527-audit.md (adversarial)
-current_phase=Closed
-next_action=miya: 7 BA questions in qa_doc - the unblocking one is which permohonan/office/env/date produced expected.png
-blocker=BA answers + scope call (JT-only 3 files / +JPPH 8 / shared fragment 72 / all-4-modules UNDELIVERABLE - only awam+common+pelupusan checked out)
-local_test_confirmed=true
-commit=70598eb8cd
-closed=2026-07-29
-
 qa=QA-272499
 quest_start_ts=2026-07-28T13:16:03.397Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\109. ESOKONGAN #272499 - Utiliti Pembatalan Permohonan - Ralat selepas klik Cari
