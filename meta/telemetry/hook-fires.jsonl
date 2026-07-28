@@ -32030,3 +32030,7 @@
 {"ts":"2026-07-28T16:58:59.098Z","hook":"convention-check-gate.gate.hook","event":"PreToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":75}
 {"ts":"2026-07-28T16:58:59.103Z","hook":"branch-at-apply-gate","event":"PreToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":74}
 {"ts":"2026-07-28T16:58:59.103Z","hook":"commit-gate","event":"PreToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":75}
+{"ts":"2026-07-28T17:05:00.824Z","hook":"slip-count-tracker","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":67}
+{"ts":"2026-07-28T17:05:00.826Z","hook":"RecursiveLoopDetector","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":69}
+{"ts":"2026-07-28T17:05:15.500Z","hook":"slip-count-tracker","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":64}
+{"ts":"2026-07-28T17:05:15.503Z","hook":"RecursiveLoopDetector","event":"PostToolUse","mode":"wrap","exit":0,"blocked":false,"dur_ms":68}
