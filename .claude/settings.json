@@ -153,6 +153,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\local-deploy-gate\\\\local-deploy-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\adhoc-register\\\\adhoc-register.check.hook.js\""
           }
         ]
       }
