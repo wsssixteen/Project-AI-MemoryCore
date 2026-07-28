@@ -393,6 +393,53 @@ function cmdPush(a) {
   console.log(`✅ ${st.branch} pushed to origin (${head.slice(0, 10)}) · phase=pushed · next: BUILD (V4)`);
 }
 
+// Phase F — land the release on mlk/master AFTER BAQA baseline testing passes (V8).
+// PLP-ONLY. etanah-awam never merges to mlk/master (0 direct merges in its history); pelupusan
+// does, and it is OURS to run — not the release owner's. Established 2026-07-28 per みや after
+// 1.0.12 sat unmerged until Aaron fast-forwarded it himself (7a31a9a431, authored by aaron).
+// Shape is FAST-FORWARD, matching every prior release: origin/mlk/master === the release tip.
+function cmdMergeToMaster(a) {
+  const st = loadState(a.release);
+  if (st.phase !== 'pushed' && st.phase !== 'merged-to-master') die(`MERGE-TO-MASTER REFUSED — phase is ${st.phase}, expected pushed (the release branch must be on origin first)`, 2);
+  if (!BRANCH_RE.test(st.branch)) die(`MERGE-TO-MASTER REFUSED — branch "${st.branch}" fails the release pattern`, 2);
+  // presence-check, not truthiness: parseArgs eats the next token as a value, so a bare
+  // `--ba-approved` stores undefined — `in` makes the flag work with or without a value.
+  if (!('ba-approved' in a)) die('MERGE-TO-MASTER REFUSED — 🛑 V8: pass --ba-approved only after みや confirms BAQA baseline testing PASSED. Deploy success is NOT testing success.', 2);
+  ensureRepo(st.repo);
+  git(st.repo, ['fetch', 'origin', '--prune']);
+  if (!remoteBranchExists(st.repo, st.branch)) die(`${st.branch} is not on origin — run \`push\` first`, 2);
+
+  // Dirty tree is TOLERATED (みや routinely has ticket work in flight) but ONLY when no dirty
+  // path intersects the release delta — otherwise the checkout would clobber or refuse.
+  const dirty = gitOut(st.repo, ['status', '--porcelain']).split('\n').filter(Boolean)
+    .map(l => l.slice(3).trim()).filter(Boolean);
+  const delta = gitOut(st.repo, ['diff', '--name-only', `origin/mlk/master...origin/${st.branch}`]).split('\n').filter(Boolean);
+  const clash = dirty.filter(f => delta.includes(f));
+  if (clash.length) die(`MERGE-TO-MASTER REFUSED — uncommitted changes collide with the release delta:\n  ${clash.join('\n  ')}\ncommit, stash, or revert those first`, 2);
+
+  const releaseTip = gitOut(st.repo, ['rev-parse', `origin/${st.branch}`]);
+  if (st.headSha && releaseTip !== st.headSha) die(`MERGE-TO-MASTER REFUSED — origin/${st.branch} (${releaseTip.slice(0, 10)}) != the pushed head (${st.headSha.slice(0, 10)}); someone moved the release branch`, 2);
+
+  git(st.repo, ['checkout', 'mlk/master']);
+  git(st.repo, ['merge', '--ff-only', 'origin/mlk/master']);
+  const masterBefore = gitOut(st.repo, ['rev-parse', 'HEAD']);
+  const tag = `ruri/pre-master-merge-${st.release}`;
+  git(st.repo, ['tag', '-f', tag, masterBefore]);            // local undo point
+  git(st.repo, ['merge', '--ff-only', `origin/${st.branch}`]); // FF only — a non-FF means master drifted; stop and think
+  git(st.repo, ['push', 'origin', 'mlk/master']);
+
+  const remoteMaster = gitOut(st.repo, ['ls-remote', 'origin', 'refs/heads/mlk/master']).split(/\s+/)[0];
+  if (remoteMaster !== releaseTip) die(`push reported success but origin/mlk/master reads ${remoteMaster.slice(0, 10)}, expected ${releaseTip.slice(0, 10)} — investigate`);
+
+  st.phase = 'merged-to-master';
+  st.masterSha = remoteMaster;
+  st.masterMergedFrom = masterBefore;
+  saveState(st);
+  log('merge-to-master', st.release, 'ok', { from: masterBefore, to: remoteMaster });
+  console.log(`✅ mlk/master ${masterBefore.slice(0, 10)} → ${remoteMaster.slice(0, 10)} (ff from ${st.branch}) + pushed`);
+  console.log(`   undo point: tag ${tag} @ ${masterBefore.slice(0, 10)} (local) · phase=merged-to-master · release COMPLETE`);
+}
+
 function cmdStatus(a) {
   const st = loadState(a.release);
   console.log(JSON.stringify(st, null, 2));
@@ -404,8 +451,8 @@ const commands = {
   init: cmdInit, branch: cmdBranch, 'set-tickets': cmdSetTickets, merge: cmdMerge,
   'merge-continue': cmdMergeContinue, verify: cmdVerify,
   'bump-common': cmdBumpCommon, 'bump-version': cmdBumpVersion,
-  push: cmdPush, status: cmdStatus,
+  push: cmdPush, 'merge-to-master': cmdMergeToMaster, status: cmdStatus,
 };
-if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|set-tickets|merge|merge-continue|verify|bump-common|bump-version|push|status> --release <ver> [...]`);
+if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|set-tickets|merge|merge-continue|verify|bump-common|bump-version|push|merge-to-master|status> --release <ver> [...]`);
 if (cmd !== 'init' && !a.release) die('--release required');
 commands[cmd](a);

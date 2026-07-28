@@ -1,5 +1,120 @@
 # Current Session
 
+## 2026-07-28 16:24 → 2026-07-29 01:20 (CONCURRENT session) — BA-relayed PLTP defect diagnosed to Apply-ready, no ticket number yet
+
+**No code applied. One BA question answered end-to-end, root cause proven against code + live DB, fix drafted, parked awaiting the ticket number みや asked the BA to raise.**
+
+### ▶▶ NEXT SESSION — the moment the BA's ticket number lands
+
+1. `node quest/redmine-sync.js <n> --create`
+2. Open **`projects/coding-projects/active/PENDING-TICKET-pltp-hakmilik-lain/FINDINGS.md`** (MAIN repo — `projects/` is gitignored, so it does NOT travel via git; it syncs via OneDrive)
+3. It is **Apply-ready** — do NOT re-run Phase 0. Rename the folder to the ticket number, fold the content into `QA-<n>.md`, write the notes file via `node quest/notes.js`.
+4. Two things must happen before the edit: the blast-radius grep (§6) and the logic-matrix (re-entry).
+
+Also indexed in **`main/todo.md` Q1** as the `🎫 AWAITING TICKET №` row — the full diagnosis is inline there too, so a boot that reads only todo.md still gets everything.
+
+### The defect (VERIFIED 93%)
+
+PLTP, *"Adakah pemohon mempunyai hakmilik lain di Melaka"* flips to TIADA on pemohon 1 after pemohon 2 is saved as TIADA. The Ada/Tiada answer has **one storage slot per application**, not one per pemohon.
+
+| Side | Full address | Line |
+|---|---|---|
+| WRITE | `etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\service\impl\PelupusanService.java:1398-1402` — in `PelupusanService.savePemohon():999` | `appPlp.setFlagSudahMemilikiTanah(pemohonVO.getSudahMemilikiTanahFlag())` |
+| READ | `etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\helper\PelupusanMaklumatPemohonHelper.java:1908-1910` — in `PelupusanMaklumatPemohonHelper.initPemohon():1825` | `fetchFirst()` by `aplikasi.id`, **hoisted above** the pemohon loop at `:1912`; fanned to every pemohon at `:2220-2224` |
+| Storage | `plp_a_pelupusan.flag_sudah_memiliki_tnh` | 1 row per `aplikasi_id` — `GROUP BY aplikasi_id HAVING count(*)>1` → **0 rows** on `et_main_stg2` |
+| Render gate | `etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\helper\PelupusanMaklumatPemohonHelper.java:2306` | reads the clobbered flag → panel renders empty |
+
+**The rows are not lost** — keyed to the person at `...\PelupusanService.java:1472-1473`; the only delete is `PelupusanService.deleteAppHakmilikLainById():1900`, reachable solely from the row-level Hapus button.
+
+**AWAM carries the identical latent defect**: `etanah-awam\src\main\java\my\gov\etanah\awam\pelupusan\service\impl\PelupusanService.java:1223` + `etanah-awam\src\main\java\my\gov\etanah\awam\pelupusan\web\form\PelupusanMaklumatPemohonHelperForm.java:2965`, storage `plp_p_pelupusan.flag_sudah_memiliki_tnh`.
+
+**NOT #270727 reopening.** #270727 is Closed, PROD-released 20/07, verified with this very user (`faridmajid@melaka.gov.my`) 21/07 02:07. Aaron's two commits (`cb4b7b38d2`, `221eb4578f`) fixed its two issues and they stay fixed. Every one of its test scenarios used **one pemohon**, which is exactly why the shared slot never surfaced.
+
+### Fix drafted — 3 additive hunks, Candidate 1
+
+Per-pemohon `maklumat_tambahan` JSON via `DynamicFieldUtil`, with an `else if` fallback to the legacy app-level flag so **no data migration** is needed. Full code in FINDINGS.md §5. In-system analogs: `...\PelupusanMaklumatPemohonHelper.java:2203-2215` (two other per-pemohon keys on the same field) and `etanah-awam\src\main\java\my\gov\etanah\awam\pembangunan\service\impl\PembangunanService.java:8306` (`mappingSudahMemilikiTanahFlag` — the sibling module already solved this per-pemohon via JSON).
+
+### Test data
+`PTMLK/02/L/PLTP/2026/2` @ `faridmajid@melaka.gov.my` · PLTP **SKM** · PDT Jasin · **PROD** (`etanah-app.melaka.gov.my`, Module 1.0.12) · same ID also on `et_main_stg2`. BA video `C:\Users\Ridhwan\Desktop\270727.mp4` — uncommitted binary, attach it to the new ticket.
+
+### Two frictions hit this session (both new, both worth fixing)
+
+| # | Friction | Detail |
+|---|---|---|
+| 1 | **Git refused every repo mid-session** — `dubious ownership` | The Windows account this shell runs as changed from `PJNBRIDHWAN\Ridhwan` to `AzureAD\AHMADRIDHWANANUAR` (`whoami` confirms). Boot-time git worked; DE-time git did not. Fixed by `git config --global --add safe.directory` for the worktree, the main repo, and both etanah repos. **This will recur on every machine/account switch** — candidate for `new-machine-setup.md` + a boot probe. |
+| 2 | **`projects/` is gitignored — a findings doc written into the WORKTREE would have died** | I wrote FINDINGS.md into the worktree first. `git check-ignore` showed `.gitignore:9 projects/`, so it would never commit, and the worktree is auto-removed at next boot by `worktree-cleanup-boot.js`. Relocated to the MAIN repo path, where OneDrive carries it. Same class as the ledgered `worktree-stranded-delivery` slip. |
+
+### Concurrent-session collision (handled)
+Another session ran DE for 2026-07-28 and pushed 10 commits while this one was live — it **shipped QA-272127 and QA-272329** and archived them. Merged `origin/main` in; two conflicts, both additive, union-resolved: `main/todo.md` (kept my row + both of its rows) and `meta/telemetry/hook-fires.jsonl` (markers stripped, both blocks kept). Its diary entry for today already has Sessions 1-2, so mine appended as Session 3.
+
+### Slip
+`reask/rephrase-check` — みや had to ask *"so basically … right? Yes or no only"* to get a crisp answer out of a reply that had buried the yes/no under tables. His follow-ups then had to pull the column name and the fix out one at a time.
+
+---
+
+## 2026-07-28 (Tue, 09:26 → 23:15) — QA-272127 + QA-272329 SHIPPED & ARCHIVED · the ticket-read gate hole found
+
+**Two tickets closed end-to-end. Four slips, all みや-caught. One structural finding he asked for by name.**
+
+### ▶▶ NEXT SESSION — START HERE
+
+Open queue is **3** (was 5). Re-pull `start_date` live from Redmine before ranking — do not trust these.
+
+| # | Ticket | State | First action |
+|---|---|---|---|
+| 1 | **272378** PPJK no. lot editable | Rubric done, 91%, **not started** | 3 xhtml / 16 lines, all specced in `QA-272378-audit.md`. Test app **PTMLK/01/L/PPJK/2026/6 @ nurhidayati@melaka.gov.my** (SKM). 🚨 touches `mlkMaklumatTanahV3.xhtml`, a composite with **13 call sites** — audit confirms the other 11 stay byte-identical via `default="false"` |
+| 2 | 272499 Utiliti Pembatalan ralat | **BLOCKED — 1 grep** | `grep -n -B2 -A6 "PARTIAL_STATE_ERROR_RESTORING_ID" server.log` (staging 27-07 10:53:41 · PROD 09:45:25). JSF view-state restore, zero app frames |
+| 3 | 272527 Footer margin | **BLOCKED — BA** | 7 questions open; key = which office/date produced `expected.png`. Badge was measured off the fallback image, off by 0.83 cm |
+
+### Shipped + archived this session
+
+| Ticket | Branch · commit | Contents |
+|---|---|---|
+| **272127** | `mlk/esokongan/272127` · `58e34c30a4` | 3 templates: RencanaPT 55848→56058 · RencanaPTSyarikat 56628→57927 · SuratKeputusanLulusPRBB 38330→36780. Template-static fix, みや edited in Word. eDoket twins OUT of scope per みや |
+| **272329** | `mlk/esokongan/272329` · `a4bf4379a2` | `PelupusanExcelReaderHelper.java:1413` +1 (negeri seed) · `mlkButiranPermohonanTanahForm.xhtml` viewOnly + style |
+
+Both remote-SHA-verified, `local_test_confirmed=true`, Task folders → `Archive\`, blocks → `active-archive.txt`, project subfolders → `archive/`, Bounty sections written.
+
+### 🚨 The structural finding — みや asked for the root cause, not another rule
+
+**Ticket-source reading is triggered by みや's wording and satisfied by my own assertion. It is never a verified precondition of an edit.**
+
+| Layer | Why it stayed silent on 272329 |
+|---|---|
+| `.claude\hooks\ticket-gate.js:76-95` | injects the Phase-0 checklist only when **みや's prompt** carries a ticket number / Redmine phrase. He asked me to *pick* a ticket → no number → early exit |
+| `ticket-gate.js:133` LATEST-STATE row | reachable only via the above, and it is injected text — nothing verifies compliance |
+| `pre-code-check` | blocks the Edit until a CODE-CHECK line **exists**; all 15 rows are self-typed glyphs, no row for "read this ticket's History.txt" |
+| quest Phase 0 | never ran — I went from "bundle a fix" straight to Edit |
+
+**Replacement designed, NOT built** (みや: check before implementing): one machine-verified row — block an Edit under `etanah-*/src` when a ticket is derivable AND no Read opened that ticket's `History.txt` this session; **replaces** the self-asserted `BA-expected` glyph rather than stacking. Five fail-open risks + eval fixture (this session) in `main/todo.md` Q1.
+
+Same family, also in todo Q1 this session: **Stop hooks fire after the reply**, so every correction costs a full re-emit — his own diagnosis, verbatim.
+
+### Knowledge banked (the reason "we've done this before" will work)
+
+| File | Content |
+|---|---|
+| `etanah-knowledge/melaka/JSF-WIRING.md` § `et:formField` ↔ child component-type contract | no `viewOnly` ⇒ formField emits `p:outputLabel for=` + `p:message for=` at the child id ⇒ child MUST be an input. Display-only decision table · readonly/disabled/outputText submission table · **zero `my.gov.etanah` frames = tree-shape, not app logic** |
+| `etanah-knowledge/melaka/WORD-TEMPLATE-RENDERING.md` **(NEW — discharges a todo Q1 row)** | 4 twins per document via `flageDoket` × `jnsPemohon`, with the DB query for each selector · spacing-is-template-static diagnosis order · twins are NOT byte-parallel · `sectPr` paragraph must never be deleted · no-rebuild deploy path |
+| `index.md` | routes added for both |
+
+### Environment notes (verified tonight)
+
+- Local = **stg1** throughout: `etanahDS` → `172.30.12.202:5444/mlkstg?currentSchema=et_main_stg1`, DMS `et_dms_stg1`, sistem `et_sistem_stg1`, cas.url `etanah-appstg`
+- `.docx` needs **no restart** (exploded WAR, copy + re-Jana) · `.xhtml` **does** (`web.xml` sets neither `PROJECT_STAGE` nor `FACELETS_REFRESH_PERIOD`)
+- 🚨 **Git ownership broke mid-session** on MemoryCore: `.git` owned by `PJNBRIDHWAN/Ridhwan`, current user `AzureAD/AHMADRIDHWANANUAR`. Worked around per-command with `git -c safe.directory=*`. **Not fixed globally** — will recur next session
+- 🚨 **Split-brain writes**: some files landed in the main repo path, others in the worktree. Consolidated by hand at DE. `projects/` is gitignored in the main repo (`.gitignore:9`) but tracked in the worktree
+
+### Open, unticketed
+
+| Item | Detail |
+|---|---|
+| `PTMLK/03/L/PRBB/2026/1` dead-ended | PRPT went Selesai 20:34, **no successor tugasan row created**. Cause never established |
+| `JabatanTeknikalHelper` DMS crash | `saveAppDokumenKemasukanVOUlasanJabatanTeknikal():367-393` calls DMS `create()` with `docVo.getInput()` unconditionally → *"file bytes is null or empty!"* re-saving an existing JT attachment. Blocks KKPT on 3400128. Pre-existing, **not ours**, not raised |
+| OneDrive `-miyazaki` conflict copies | ~20 untracked in the main repo, growing since 07-27 |
+
+---
+
 ## 2026-07-27 night → 2026-07-28 09:16 — 🌊 THE SWEEP: 5 tickets × 4 waves × 19 Opus familiars
 
 **みや's contract, verbatim**: *"summon a familiar each, ONE Opus medium, to reach each open tickets that we have yet to start to PROPERLY understand the issue. I am tired you kept getting it wrong that I had to do this."* Then quest-to-Rubric, then another round, then an audit each, then — *"THIS IS THE MOST CRITICAL"* — an audit of how we do this and how to trigger it with one word next time.
