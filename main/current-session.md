@@ -1,5 +1,58 @@
 # Current Session
 
+## 2026-07-29 01:39 → 02:55 — 🚨 SUBSCRIPTION PAUSE: QA-272574 handoff pack built · ledgers reconciled
+
+**みや is unsubscribing from Claude for a while. This session's output is a survival pack, not a fix.**
+
+### ▶▶ IF I COME BACK — read this first
+
+| # | Thing | State |
+|---|---|---|
+| 1 | **QA-272574** is the ONLY open ticket | Rubric complete, 78%, **nothing applied, no branch** |
+| 2 | Handoff pack | `1. Tasks\Melaka\112. …\START-HERE.md` + `QA-272574-HANDOFF.md` (OneDrive, NOT this repo) |
+| 3 | Blocking question | みや → BA/Aaron: **can a new task be added to the PLPS Flowable workflow?** Yes → Option A (78%). No → Option B (55%) |
+| 4 | Open adhoc | `ADHOC-local-deploy-publish` — why Eclipse publish drops 558 files. Unanswered after 3 occurrences |
+
+### What was built
+
+Two documents in Task folder 112, written to survive without me:
+
+| File | For | Shape |
+|---|---|---|
+| `START-HERE.md` | みや | one-page: decision gate → 2 checklists → test steps → 5 traps → deploy fix → paste-prompt for another AI |
+| `QA-272574-HANDOFF.md` | **any AI, zero context** | 14 parts. Explains what e-Tanah is, defines 6 Malay terms, explains PDT vs PTG, quotes every code snippet + SQL inline so it works with **no repo access**. Part 14 carries our working rules |
+
+**みや's correction that forced the rewrite**: *"please take into account the other AI might not know
+anything about our system. All the things that you load at start, or your access to codebase — the AI
+does not know anything."* Draft 1 opened with a config block and said "copy the Rencana JKKL analog"
+without defining *urusan*. Everything boot-loaded is invisible to me and therefore un-handed-over.
+
+### Verified this session (2 claims moved)
+
+| Claim | Was | Actually |
+|---|---|---|
+| BA's *"PLP_SRTTNGGHPDT already added in MLIT"* | read as "district side half-built" | MLIT has the **document type** only. **No district tugasan exists in any environment** — `ind_tgsn` PLPS still holds only `PYSKT`/`PSKT`/`PSSPTGT` |
+| Java edit site | one map, `:286-287` | **Two near-identical maps**: `TGS_TO_JNS_DOK_MAP:234` (ours) and `TGS_TO_JNS_DOK_MAP_PRU:306` whose `:348-349` map the same codes for urusan PRU. **Do not edit the PRU one** |
+
+### Repairs
+
+- **272574 had NO block in `active.txt`** and its 3 qa_docs existed only inside worktree
+  `ruri-195f96` — `projects/` is gitignored, so they had never travelled. Copied to this worktree +
+  main repo; block rebuilt. **They survive via OneDrive, not git.**
+- **271918** → closed+archived (Redmine: Noor Dayana since 07-27)
+- **272499** → closed+archived (みや closed it; Redmine Resolved/100%/Aaron)
+- Merge with `main` hit 4 conflicts, same parallel-session shape as last night — **each side had kept
+  exactly what the other archived**. Resolved: archive is durable truth (ours was a strict superset),
+  append-only ledgers unioned, `active.txt` cut to genuinely-open only. **2 open blocks left, matching
+  Redmine exactly.**
+
+### Test data for 272574
+
+`PTMLK/01/L/PLPS/2026/6` · aplikasi_id `3384879` · `sanarimah@melaka.gov.my` · `et_main_stg1` ·
+tugasan `PYSKT` · pejabat_id 2 (PDT Melaka Tengah) · screen `MlkSuratTemplateForm.xhtml`, langkah 5
+
+---
+
 ## 2026-07-27 10:15 → 2026-07-29 02:20 — QA-272499 closed Phase 1+2 · a 3-fault local-deploy saga · adhoc quest born
 
 **Two threads. One shipped a ticket end-to-end; the other repaired みや's local JBoss three times and

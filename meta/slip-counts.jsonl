@@ -100,3 +100,5 @@
 {"ts":"2026-07-28T18:24:49.920Z","category":"assume-not-verify"}
 {"ts":"2026-07-28T18:24:49.991Z","category":"assume-not-verify"}
 {"ts":"2026-07-28T18:24:50.056Z","category":"reask/verbose"}
+{"ts":"2026-07-28T18:51:40.720Z","category":"assume-shared-context"}
+{"ts":"2026-07-28T18:51:40.796Z","category":"stale-quest-state-not-reconciled-with-redmine"}
