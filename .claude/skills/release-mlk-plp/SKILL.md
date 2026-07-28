@@ -191,6 +191,49 @@ infer it from the version footer, and never from "we pushed before building".
 - **Banned**: claiming a build/deploy succeeded — I never see the output unless みや pastes it.
   If he pastes it, the deploy-proof rule applies: quote the literal line or make no claim.
 
+## Phase F — MERGE TO `mlk/master` after BA sign-off (PLP-ONLY; added 2026-07-28 per みや)
+
+**The release does NOT end at the pushed branch. It ends on `mlk/master` — and that merge is OURS.**
+
+```
+mlk/release/<ver>  ──push──▶ origin
+        │
+        ├─ BUILD + DEPLOY (みや) ──▶ BAQA baseline testing
+        │                                    │
+        │                          ✅ confirmed successful
+        │                                    ▼
+        └────────── merge ──────────▶ mlk/master        ← WE do this, gated on BA's confirmation
+```
+
+**Run it through the script — no hand-run git** (built 2026-07-28, same session as the slip):
+
+```powershell
+node domain/release-mlk-plp/release-prep.js merge-to-master --release <ver> --ba-approved
+```
+
+It refuses unless `phase=pushed`, re-fetches, asserts `origin/mlk/release/<ver>` still equals the
+pushed head, tolerates a dirty tree **only** when no dirty path intersects the release delta,
+tags `ruri/pre-master-merge-<ver>` at the pre-merge master SHA, fast-forwards, pushes, then
+re-reads `origin/mlk/master` and fails loudly if it isn't the release tip.
+
+| Gate | Rule |
+|---|---|
+| 🛑 **V8** | Merge to `mlk/master` ONLY after みや confirms BAQA's baseline testing PASSED. No confirmation → no merge, no matter how green the build looked. Enforced: the command dies without `--ba-approved`. |
+| Who | **Us** (みや + Ruri) for `etanah-pelupusan`. |
+| Never | Do NOT merge on "deploy succeeded" — deploy success ≠ testing success. |
+
+🚨 **This is where AWAM and PLP DIVERGE — do not carry one repo's topology onto the other:**
+
+| | `etanah-pelupusan` (PLP) | `etanah-awam` (AWAM) |
+|---|---|---|
+| Who merges to `mlk/master` | **we do**, after BA sign-off | **nobody** — 0 direct merges in history; `mlk/master` is a label equal to the last release tip |
+| Release owner | us | khaihantan / shahrul.nizam pull the ticket branch into `mlk/release/<ver>` |
+| Env branches | — | `mlk/int-env` / `mlk/stag-env`, forks not a chain |
+
+**Why this section exists** (2026-07-28, みや correction): I told him "the release→master merge is khaihantan's step, after testing" during Baseline 1.1.0. That is the **AWAM** topology, learned on 2026-07-27 and applied to Pelupusan without re-checking. Slip class: `over-generalization` — a fact verified in one repo restated as fact in a sibling repo. The repo is the discriminator; state it before stating the owner.
+
+---
+
 ## 🚫 DON'Ts — the counter-rail (added 2026-07-16 per みや)
 
 > **THE RULE: DO NOTHING EXCEPT WHAT IS ESTABLISHED ABOVE.**
