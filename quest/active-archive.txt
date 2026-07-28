@@ -1269,3 +1269,52 @@ scout_status=Phase-0 Scout+Recon DONE — OPLPS guard-gap VERIFIED (PelupusanLit
 next_step=Recon: name method @PelupusanLiteService:2180-2275 + grep callers to settle H1; draft dedup-cleanup patch (5 same-permit first, 114 dup-records follow-up); raise own Redmine ticket
 related=QA-266503 (deferred sibling; its removeIf(versiDok==0) caters safely regardless of origin)
 related_261626=SAME-AREA / likely DUPLICATE of #261626 (faizudin, active to 2026-06-20, origin/mlk/qa/261626). 261626 fixes the SAME rekod-pembaharuan missing/deleted-on-Simpan in the SAME method populateVersiPermitLesen — 9909350e67 removed '||currentYear' from the year-match + added isEmpty guard (ALREADY in current code). f27239d2cc/150c17874c touch MlkUtilitiPengeluaranLesenPermitForm. ACTION: reconcile with faizudin before more issue-2 work; 266503 may be a dup.
+
+qa=QA-272127
+quest_start_ts=2026-07-28T07:19:53.171Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\107. ESOKONGAN #272127 - Pelupusan - PRBB - Penyediaan Rencana Pentadbir Tanah dan Cetakan Doku
+phase=1
+status=archived
+ticket_type=bug
+env=Pelupusan > PRBB > Penyediaan Rencana Pentadbir Tanah dan Cetakan Dokumen Papar Spacing di Tandatangan
+issue_one_liner=Pelupusan > PRBB > Penyediaan Rencana Pentadbir Tanah dan Cetakan Dokumen Papar Spacing di Tandatangan
+assigned_to_me=2026-07-24
+tugasan=Cetakan Dokumen
+qa_doc=projects/coding-projects/archive/QA-272127/QA-272127.md
+branch=mlk/esokongan/272127
+wave_docs=QA-272127-wave2.md (blind independent) + QA-272127-audit.md (reconciling)
+audit_2026_07_28=COUNT RECONCILED - the earlier 31 and the blind pass's 18 were counting DIFFERENT THINGS (all w:p incl. table cells vs top-level body children). AUTHORITATIVE: TemplateRencanaPT.docx 186->150 = 36 deletions (tbl5.2 labels 51,56,61,66,71 + values 74,81,88 / above-ADO 99 / tbl6.2 labels 118,123,128,133,138,157 + values 141,147,154 / run 165-169 / trailing 178-185 / PLUS 5 BOTH PASSES MISSED at 3,7,15,38,115). TemplateSuratKeputusanLulusPRBB.docx 77->68 = 9 at 2,7,51,62,67,69,70,76,77. DO-NOT-DELETE: P0109 (carries sectPr, A4->Letter) + P0110 + P0011 + P0012 in rencana; P0071 <Sign pegawai> in surat.
+audit_refutations=(1) eDoket twins are NOT byte-identical - TemplateRencanaPTeDoket.docx DROPS 'Buku kupon' and ADDS 'Sistem e-Doket', so in-table indices SHIFT (…93 not 88; …155,159 not 157,154). Totals coincide at 186/31 which is what fooled both passes. COPYING THE DELETE LIST WOULD DELETE THE WRONG PARAGRAPHS. (2) eDoket is LIVE - et_main_stg1.umm_a_permit_lesen has flagUsingeDoket='Ya' on aplikasi_id 3417610 (PRBB, created 2026-07-23). (3) The '<Sign pegawai> deleted in the BA expected' trap is REFUTED - that paragraph P0074 CONTAINS a w:drawing (the signature image). Real artifacts to not copy: rencana P0011/P0012 conditional CC lines, P0046 blanked, surat address paras folded 3->2. (4) #267382 docx4j-FO worry does NOT transfer - PelupusanTemplateUtil.java:351 builds FOSettings and never uses it; :355 is Docx4J.save writing a .docx; preview PDF is DMS getAsPDF.
+residual_risk=surat may STILL spill (7 of 9 deletions sit above the block; block height is dominated by the signature image, unmeasurable from a JPEG) / a local rebuild may not change the preview - the PDF is rendered by the DMS off-box, so the TUGASAN MUST BE RE-RUN, not the stored doc reopened / page-1 'too many space' only partly closes - most of that band is the runtime-injected letterhead this fix does not touch (say so in the Redmine note) / 'logo bertukar tempat' remains BA-Q, no supplied image annotates a logo
+verification=rebuild -> re-run the tugasan (fresh doc) -> Cetakan Dokumen -> surat page counter must read '2 of 2', not '3 of 3'
+next_action=miya: sibling-scope call (A: 2 files only / B: +eDoket twins (they are LIVE and need their OWN derived list) / C: all 6) -> I apply the deletions via python zipfile -> Cetakan preview check
+
+current_phase=Closed
+local_test_confirmed=true
+commit=58e34c30a4
+closed=2026-07-28
+
+qa=QA-272329
+quest_start_ts=2026-07-28T12:54:50.557Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\111. ESOKONGAN #272329 - Pelupusan - PRBB - Semakan Kemasukan Maklumat - Kod negeri di ID Hakmi
+phase=1
+status=archived
+ticket_type=bug
+env=Pelupusan > PRBB > Semakan Kemasukan Maklumat > Kod negeri di ID Hakmilik papar 11
+issue_one_liner=Pelupusan > PRBB > Semakan Kemasukan Maklumat > Kod negeri di ID Hakmilik papar 11
+assigned_to_me=2026-07-27
+qa_doc=projects/coding-projects/archive/QA-272329/QA-272329.md
+branch=mlk/esokongan/272329
+wave_docs=QA-272329-wave3.md (blind) + QA-272329-audit.md (adversarial)
+urusan=PRBB
+tugasan=Semakan Kemasukan Maklumat (SKM), scenario Perserahan Kaunter
+test_app=PTMLK/01/L/PRBB/2026/10 (SaffuanH@melaka.gov.my; aplikasi_id 3408167, ursn 45, pejabat 2, Awalan; et_main_stg1). umm_a_permohonan_tnh = 0 rows (matches empty grid)
+current_phase=Closed
+fix_spec=ONE LINE, ONE FILE. Insert as new :1413 (12-space indent), leaving :1412 byte-for-byte: maklumatTanahVO.getHkmlkVO().setNegeri(NegeriConfig.getInstance().getCurrentNegeri().getKodSakNegeri()); -- byte-identical to the analog at :4211. NOT the NegeriConfig.getInstance().getKodSakNegeri() overload (NegeriConfig.java:157) - that is not the established form.
+kill_shots_passed=KS-1 NegeriConfig is NOT inert: et_main_stg1.rjk_parameter_sistem NEGERI='Melaka' -> ConfigurationService:33 -> NegeriEnum.java:9 MELAKA -> NEGERI_MLK="04". KS-2 the third writer at onSearchIDHakmilik():4529-4534 restores an OBJECT not a literal, so once :1412 is correct the restored VO is correct -> ONE EDIT, NOT TWO (the proposed :4534 hardening is redundant and violates minimal-diff).
+traps=do NOT change PelupusanHakmilikVO.java:31 "11"->"04" - "11" is CORRECT for TRG (which is why this survived a year) and that VO is shared. The NegeriConfig-driven write is TRG-NEUTRAL by construction (TRG already runs the identical expression at :4211/:4237 on the same screens). View-only ALONE would be a MASK - it pins the render to a bean still holding 11 and removes the user's only workaround; order is non-negotiable, fix first, view-only second (BA-Q, note-only ask).
+falsifier=10 seconds, no build: with Tanah Milik selected, change DAERAH without touching Negeri. Stays 11 => confirmed (-> 97pct). Shows 04 => refuted (-> under 30pct).
+next_action=miya: run the Daerah falsifier, then apply the one line
+local_test_confirmed=true
+commit=a4bf4379a2
+closed=2026-07-28
