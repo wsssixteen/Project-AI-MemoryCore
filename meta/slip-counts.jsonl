@@ -92,3 +92,11 @@
 {"ts":"2026-07-28T12:55:10.399Z","category":"filtered-evidence-read"}
 {"ts":"2026-07-28T14:53:05.498Z","category":"commit-without-message-approval"}
 {"ts":"2026-07-28T16:53:12.753Z","category":"de-closed-with-incomplete-step10"}
+{"ts":"2026-07-28T17:17:42.061Z","category":"reask/rephrase-check"}
+{"ts":"2026-07-28T17:17:42.125Z","category":"machine-local-config-not-portable"}
+{"ts":"2026-07-28T17:17:42.188Z","category":"worktree-stranded-delivery"}
+{"ts":"2026-07-28T17:43:15.738Z","category":"knowledgebase-not-written"}
+{"ts":"2026-07-28T17:58:16.225Z","category":"overwrote-concurrent-session-work"}
+{"ts":"2026-07-28T18:24:49.920Z","category":"assume-not-verify"}
+{"ts":"2026-07-28T18:24:49.991Z","category":"assume-not-verify"}
+{"ts":"2026-07-28T18:24:50.056Z","category":"reask/verbose"}

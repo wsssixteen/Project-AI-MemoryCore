@@ -1,5 +1,128 @@
 # Current Session
 
+## 2026-07-27 10:15 → 2026-07-29 02:20 — QA-272499 closed Phase 1+2 · a 3-fault local-deploy saga · adhoc quest born
+
+**Two threads. One shipped a ticket end-to-end; the other repaired みや's local JBoss three times and
+still does not know why it breaks.**
+
+### ▶▶ NEXT SESSION — nothing blocking; two parked threads
+
+1. **Adhoc `ADHOC-local-deploy-publish`** — the only real open question: *why does the Eclipse publish
+   drop 558 files?* Next probe is the Eclipse `.metadata\.log` at publish time
+   (workspace `C:\Users\Ridhwan\eclipse-workspace`), **not another theory**. Task folder 111,
+   full doc `projects/coding-projects/active/ADHOC-local-deploy-publish/ADHOC-local-deploy-publish.md`.
+2. **みや decision owed**: `etanah-awam\pom.xml` sits locally at `1.0.143-MLK`, uncommitted; committed
+   baseline is `1.0.141-MLK` (`71f14a9faf`). That divergence caused fault 3. Commit or revert —
+   and if reverting, ONLY `pom.xml` + `.settings\org.eclipse.wst.common.component`, because the
+   QA-265537 edits share that working tree.
+
+---
+
+### QA-272499 — Utiliti Pembatalan Permohonan, Ralat selepas klik Cari · **CLOSED Phase 1 + 2**
+
+Commit **`edc6482952`** on `mlk/esokongan/272499` (pushed, remote SHA verified) · 1 file / 10 deletions ·
+みや tested on STG1 as `nshazwani@melaka.gov.my` with `PTMLK/02/L/MCL/2026/3` → pass.
+
+**The diagnosis moved twice, and both moves matter.**
+
+| Stage | Claim | Fate |
+|---|---|---|
+| Concurrent session Wave 1-3 | IndexOutOfBounds in `RestoreViewPhase`, zero application frames, "find which component" | correct but incomplete — it is the *aftershock* |
+| My first theory | JSF view-state eviction, `numberOfViewsInSession=3` | ❌ **REFUTED** by my own data |
+| Actual root cause | `javax.el.PropertyNotFoundException` on `keputusanMMKN`, fired **one second earlier** | ✅ 19 PROD occurrences over 07-23/24/27 |
+
+The pairing was the whole proof — PROD 09:45:**24** → 09:45:**25** (ref 191184); STG1 id 20284 11:03:**43**
+→ 20285 11:03:**44**. Found by querying the exception table directly:
+`et_sistem.pt_application_ex_entity` on PROD, `et_sistem_stg1.…` on STG1 — **the ID Rujukan on the
+Ralat dialog is that table's primary key.** That route is worth remembering; it turned a screenshot
+into a full stack trace in one query.
+
+**Mechanism**: `MlkUtilitiPembatalanPermohonanForm.xhtml:68-70` rendered a PRBB-only panel for every
+urusan outside an 8-item exclusion list (MCL is not in it) and passed `mbb="#{mb}"` — the cancellation
+bean — into `mlkMaklumatUrusanForm.xhtml:54`, which reads `#{cc.attrs.mbb.keputusanMMKN}`.
+
+**Both of my first two fix options were wrong**, and the count is what killed them: the composite reads
+**6** `cc.attrs.mbb.*` properties and the bean has **1**. So the panel could never render for *any*
+urusan, PRBB included — an `isPRBB` gate would simply have moved the crash. Fix = remove the call.
+Provenance: `4ad219d0f5` 2025-04-28 "Add JSF View for Melaka" — a wholesale TRG→MLK view copy. The TRG
+original at `…\protected\trg\utiliti\UtilitiPembatalanPermohonanForm.xhtml:67-74` carries the identical
+defect, untouched (out of Melaka scope).
+
+**Also settled**: "Tidak Dijumpai" is not absence — `PembatalanPermohonanService.java:116` filters on
+the **session office**, and the app is `pejabat_id` 3 = Jasin. A PTG login can never find it.
+
+---
+
+### The local-deploy saga — three faults in one afternoon, all repaired, cause still unknown
+
+Eclipse's **build** is correct every time. The **publish to JBoss is lossy and additive**.
+
+```
+built    E:\Projects\Melaka\etanah-awam\target\etanah-awam    8,937 files · taglib 111 ✅
+deployed …\standalone\deployments\etanah-awam.war             558 missing · taglib 13 ❌ · +1 stale jar
+```
+
+| # | Symptom | Cause | Repair |
+|---|---|---|---|
+| 1 | `MavenProjectUtil.appVersionMap` null → `webUtil` bean fails | war `META-INF` empty, no `maven/**/pom.properties` | restored 3 files |
+| 2 | `ComponentNotFoundException "@form"` | 558 files missing incl. 98 taglib → `et:form` unresolved | copied the 558 |
+| 3 | `WELD-001414` ambiguous `guestPreferences` | `etanah-common` **1.0.141 + 1.0.143** both in `WEB-INF\lib` | moved the stale jar out |
+
+**558 is the same count as 2026-07-24** — third occurrence of one family, now measured rather than
+theorised. I re-derived the M2_REPO story that had already been withdrawn on 07-26; it was refuted
+again when `target\m2e-wtp\overlays` turned out to hold **both** overlay wars, expanded.
+
+---
+
+## 2026-07-28 16:24 → 2026-07-29 01:20 (CONCURRENT session) — BA-relayed PLTP defect diagnosed to Apply-ready, no ticket number yet
+
+**No code applied. One BA question answered end-to-end, root cause proven against code + live DB, fix drafted, parked awaiting the ticket number みや asked the BA to raise.**
+
+### ▶▶ NEXT SESSION — the moment the BA's ticket number lands
+
+1. `node quest/redmine-sync.js <n> --create`
+2. Open **`projects/coding-projects/active/PENDING-TICKET-pltp-hakmilik-lain/FINDINGS.md`** (MAIN repo — `projects/` is gitignored, so it does NOT travel via git; it syncs via OneDrive)
+3. It is **Apply-ready** — do NOT re-run Phase 0. Rename the folder to the ticket number, fold the content into `QA-<n>.md`, write the notes file via `node quest/notes.js`.
+4. Two things must happen before the edit: the blast-radius grep (§6) and the logic-matrix (re-entry).
+
+Also indexed in **`main/todo.md` Q1** as the `🎫 AWAITING TICKET №` row — the full diagnosis is inline there too, so a boot that reads only todo.md still gets everything.
+
+### The defect (VERIFIED 93%)
+
+PLTP, *"Adakah pemohon mempunyai hakmilik lain di Melaka"* flips to TIADA on pemohon 1 after pemohon 2 is saved as TIADA. The Ada/Tiada answer has **one storage slot per application**, not one per pemohon.
+
+| Side | Full address | Line |
+|---|---|---|
+| WRITE | `etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\service\impl\PelupusanService.java:1398-1402` — in `PelupusanService.savePemohon():999` | `appPlp.setFlagSudahMemilikiTanah(pemohonVO.getSudahMemilikiTanahFlag())` |
+| READ | `etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\helper\PelupusanMaklumatPemohonHelper.java:1908-1910` — in `PelupusanMaklumatPemohonHelper.initPemohon():1825` | `fetchFirst()` by `aplikasi.id`, **hoisted above** the pemohon loop at `:1912`; fanned to every pemohon at `:2220-2224` |
+| Storage | `plp_a_pelupusan.flag_sudah_memiliki_tnh` | 1 row per `aplikasi_id` — `GROUP BY aplikasi_id HAVING count(*)>1` → **0 rows** on `et_main_stg2` |
+| Render gate | `etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\helper\PelupusanMaklumatPemohonHelper.java:2306` | reads the clobbered flag → panel renders empty |
+
+**The rows are not lost** — keyed to the person at `...\PelupusanService.java:1472-1473`; the only delete is `PelupusanService.deleteAppHakmilikLainById():1900`, reachable solely from the row-level Hapus button.
+
+**AWAM carries the identical latent defect**: `etanah-awam\src\main\java\my\gov\etanah\awam\pelupusan\service\impl\PelupusanService.java:1223` + `etanah-awam\src\main\java\my\gov\etanah\awam\pelupusan\web\form\PelupusanMaklumatPemohonHelperForm.java:2965`, storage `plp_p_pelupusan.flag_sudah_memiliki_tnh`.
+
+**NOT #270727 reopening.** #270727 is Closed, PROD-released 20/07, verified with this very user (`faridmajid@melaka.gov.my`) 21/07 02:07. Aaron's two commits (`cb4b7b38d2`, `221eb4578f`) fixed its two issues and they stay fixed. Every one of its test scenarios used **one pemohon**, which is exactly why the shared slot never surfaced.
+
+### Fix drafted — 3 additive hunks, Candidate 1
+
+Per-pemohon `maklumat_tambahan` JSON via `DynamicFieldUtil`, with an `else if` fallback to the legacy app-level flag so **no data migration** is needed. Full code in FINDINGS.md §5. In-system analogs: `...\PelupusanMaklumatPemohonHelper.java:2203-2215` (two other per-pemohon keys on the same field) and `etanah-awam\src\main\java\my\gov\etanah\awam\pembangunan\service\impl\PembangunanService.java:8306` (`mappingSudahMemilikiTanahFlag` — the sibling module already solved this per-pemohon via JSON).
+
+### Test data
+`PTMLK/02/L/PLTP/2026/2` @ `faridmajid@melaka.gov.my` · PLTP **SKM** · PDT Jasin · **PROD** (`etanah-app.melaka.gov.my`, Module 1.0.12) · same ID also on `et_main_stg2`. BA video `C:\Users\Ridhwan\Desktop\270727.mp4` — uncommitted binary, attach it to the new ticket.
+
+### Two frictions hit this session (both new, both worth fixing)
+
+| # | Friction | Detail |
+|---|---|---|
+| 1 | **Git refused every repo mid-session** — `dubious ownership` | The Windows account this shell runs as changed from `PJNBRIDHWAN\Ridhwan` to `AzureAD\AHMADRIDHWANANUAR` (`whoami` confirms). Boot-time git worked; DE-time git did not. Fixed by `git config --global --add safe.directory` for the worktree, the main repo, and both etanah repos. **This will recur on every machine/account switch** — candidate for `new-machine-setup.md` + a boot probe. |
+| 2 | **`projects/` is gitignored — a findings doc written into the WORKTREE would have died** | I wrote FINDINGS.md into the worktree first. `git check-ignore` showed `.gitignore:9 projects/`, so it would never commit, and the worktree is auto-removed at next boot by `worktree-cleanup-boot.js`. Relocated to the MAIN repo path, where OneDrive carries it. Same class as the ledgered `worktree-stranded-delivery` slip. |
+
+### Concurrent-session collision (handled)
+Another session ran DE for 2026-07-28 and pushed 10 commits while this one was live — it **shipped QA-272127 and QA-272329** and archived them. Merged `origin/main` in; two conflicts, both additive, union-resolved: `main/todo.md` (kept my row + both of its rows) and `meta/telemetry/hook-fires.jsonl` (markers stripped, both blocks kept). Its diary entry for today already has Sessions 1-2, so mine appended as Session 3.
+
+### Slip
+`reask/rephrase-check` — みや had to ask *"so basically … right? Yes or no only"* to get a crisp answer out of a reply that had buried the yes/no under tables. His follow-ups then had to pull the column name and the fix out one at a time.
 ## 2026-07-28 19:41 → 2026-07-29 01:11 (CONCURRENT session) — QA-272378 + QA-272527 SHIPPED & ARCHIVED · 272574 taken to 4 waves · ADHOC register built
 
 **Two tickets closed end-to-end and archived. One 4-wave investigation banked without applying anything. One new knowledge system. Two みや-caught slips, both mine, both structural.**
