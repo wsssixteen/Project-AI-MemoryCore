@@ -1,5 +1,65 @@
 # Current Session
 
+## 2026-07-28 19:41 → 2026-07-29 01:11 (CONCURRENT session) — QA-272378 + QA-272527 SHIPPED & ARCHIVED · 272574 taken to 4 waves · ADHOC register built
+
+**Two tickets closed end-to-end and archived. One 4-wave investigation banked without applying anything. One new knowledge system. Two みや-caught slips, both mine, both structural.**
+
+### ▶▶ NEXT SESSION — START HERE
+
+みや: *"we'll start with 2 other tickets in the next session."* Open queue after tonight is **3**.
+
+| # | Ticket | State | First action |
+|---|---|---|---|
+| 1 | **272574** PLPS Maklumbalas Tangguh papar surat salah | W1–W4 complete, **70%**, nothing applied | **Ask the BA first**: reuse `PLP_SRTMKLMBLS` / `PLP_SRTKPDPMHN` instead of inventing a new kod? That answer changes the whole build |
+| 2 | **272499** Utiliti Pembatalan ralat | 70%, blocked on ONE command | `grep -n -B2 -A6 "PARTIAL_STATE_ERROR_RESTORING_ID" server.log` — staging 27-07 10:53:41 / PROD 09:45:25. Test ID `PTMLK/02/L/MCL/2026/3` (aplikasi 3411621) |
+| 3 | 272181 · 271918 · older | see active.txt | — |
+
+### Shipped
+
+| Ticket | Commit | Branch | Files |
+|---|---|---|---|
+| **Ref #272378** PPJK SKM — land fields view-only | `edb05b3b57` | `mlk/esokongan/272378` | 3 files, +16/−15 |
+| **Ref #272527** footer spacing surat JT | `70598eb8cd` | `mlk/esokongan/272527` | 1 `.docx`, page setup only |
+
+Both **tested by みや**, Phase 1 closed, Phase 2 archived, Bounty sections written.
+
+- **272378**: `isPPJK` composite attribute + 13 render gates. Root cause was `mlkMaklumatTanahV3.xhtml:41-42` — a `ui:param` **shadowing the composite's own `tugasanMode` attribute**, which made every bean-side fix inert. Scope locked to AWAM parity (6 fields; Bersebelahan + Sempadan stay editable; `isMandatory` asterisks preserved).
+- **272527**: **page setup, not paragraph spacing** — `w:pgMar` bottom 2.0→1.5 cm, footer-from-edge 1.27→**1.1 cm** (みや set the final 1.1 in Word himself after 1.0 read too tight). Only Section 0's first-page footer carries `footerSurat1`, so one section was the complete fix — his deduction, confirmed by XML after.
+
+### 272574 — 4 waves, adjudicated, NOT applied
+
+W1 understand → W2 quest → W3 blind → W4 adversarial. **W2 and W3 conflicted on the fix layer at identical 72% confidence**; W4 settled it.
+
+| | Verdict |
+|---|---|
+| Fix layer | **W2 wins** — BPMN + Java + config + new `.docx` + DB reference rows, **70%** |
+| Why W3 lost | Its `urusanList` split cannot separate two tugasan **inside the same urusan** — PTG (`KKMMKN`) and PDT (`PYSKT`) are both PLPS. `TemplateConfig.java:518` keys on `kodUrusan + kodTugasan` only |
+| Cheaper fallback | **55%** — one new `extraParam` reading the predecessor tugasan kod (3/3 deterministic on stg1). Java, but no BPMN, no ref data |
+| Regression or gap | **Never-existed gap** for PLPS. **PRBB is broken the same way and there it IS a regression** (`10f1e7e7a1` orphaned its template) — candidate for its own ticket |
+| `PLP_SRTTNGGHPDT` | **Absent everywhere** — the BA's two-kod premise is wrong |
+
+Docs: `QA-272574.md` · `-wave3.md` · `-audit.md`.
+
+### System changes
+
+| Artifact | What |
+|---|---|
+| **`etanah-knowledge/melaka/ADHOC-REGISTER.md`** | **NEW** — non-ticket asks (BA questions, mid-session screen issues, side findings): what was asked · what we concluded · what's still owed. 5 rows backfilled. Wired into `index.md` (Phase-0 mandatory) + DE Step 7 in **both** `expansion-protocol.md` and the DE skill |
+| `BUG-BESTIARY.md` | Masked-DB-failure pattern — a `String.concat` NPE in `WebUtil.addEncryptedParamValueForAccessControl` is the **error handler failing**, not the page named in the trace |
+| `todo.md` Q1 | Test-batching rule — always suggest which tickets can share one local deploy; **batch size 2**, and that ceiling is conditioned on *undisturbed, outside office hours* |
+
+### Slips (both みや-caught, both ledgered)
+
+- **`assume-not-verify`** — identified the `footerSurat1` SDT with a regex that swallowed a neighbouring element, never read its `<w:tag>`, and edited `footer1` + `footer4` (the page-number footers). **Cost みや a full build-test cycle.** The one-line check that prevents it: read the tag before touching any SDT.
+- **`stop-instead-of-action`** — diagnosed a masked DB-drop correctly, then ended the turn with *"I haven't verified the connection recovered"* instead of running the one MCP ping that answers it. He had to ask.
+- Also logged: `finding-buried-in-sibling-doc` (272499's MCL finding lived only in `-wave3.md`), `knowledgebase-not-written` (no ADHOC home existed), `reask/verbose` ×2.
+
+### The merge (worth reading if it recurs)
+
+A concurrent session shipped 272127 + 272329 the same evening. `main` diverged; the merge hit **7 conflicts**. Resolution: each side's `active.txt` had kept exactly the quests the *other* session archived — verified all four sit in `active-archive.txt` once, then cut them, leaving 272574 as the only genuinely open quest. Append-only ledgers unioned; `slip-dashboard.md` regenerated (80 rows); `todo.md` kept **both** new rows. **Two aborted attempts first** — `meta/telemetry/hook-fires.jsonl` is rewritten by hooks every turn, so it must be committed and merged in a single command.
+
+---
+
 ## 2026-07-28 (Tue, 09:26 → 23:15) — QA-272127 + QA-272329 SHIPPED & ARCHIVED · the ticket-read gate hole found
 
 **Two tickets closed end-to-end. Four slips, all みや-caught. One structural finding he asked for by name.**
