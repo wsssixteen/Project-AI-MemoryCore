@@ -57,6 +57,20 @@ Format: short bullet per gap with a one-line "what to do" suggestion. みや dec
 
 ---
 
+## 🚨 STEP 10 — COMMIT + PUSH + MERGE IS AN EXPLICIT ORDER (hard rule, 2026-07-28 per みや)
+
+**みや, verbatim**: *"MAKE IT FUCKING EXPLICIT ORDER TO COMMIT, PUSH & MERGE WHEN FINISHING DOMAIN EXPANSION!!!!"*
+
+Every DE ends with **all three, SHA-verified**: (1) `git add -A` + commit (every path, authorship is not a filter) · (2) `git push origin HEAD` · (3) `git push origin HEAD:main` — **the merge**. Verify by emitting local `HEAD` and `git ls-remote origin refs/heads/main` and showing they match; "push succeeded" without the remote SHA is not evidence.
+
+**Banned**: emitting the closing banner with step 10 at anything but ✓ · downgrading a failed push/merge into a Handoff Block and closing DE anyway · treating "auto-commit + push" as advisory.
+
+**On failure — RETRY, don't hand back.** A changed Windows user breaks both `safe.directory` and the credential store: use `git -c safe.directory=*` and retry. Only after retries genuinely fail does it become a Handoff — and **DE stays OPEN**, banner withheld.
+
+**Why** (2026-07-28, slip `de-closed-with-incomplete-step10`): a transient GitHub credential error under a switched Windows account was narrated into a Handoff line and the closing banner emitted anyway. One retry the next turn succeeded on the first attempt. Full rule + failure-mode table: `.claude/skills/domain-expansion/SKILL.md`.
+
+---
+
 ## DE Banner Format — hardcoded 2026-05-13 by みや
 
 **Opening banner** (emit verbatim at the start of every DE ritual, BEFORE step 1 of the 10-step list):
