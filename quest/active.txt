@@ -1,5 +1,25 @@
 active:
 
+qa=QA-272527
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\108. ESOKONGAN #272527 - Pelupusan - Kecilkan Margin Spacing Footer
+phase=1
+status=closed
+current_phase=Closed
+ticket_type=bug
+env=int-env
+urusan=Semua Urusan
+issue_one_liner=Pelupusan - Kecilkan Margin Spacing Footer - cycle 2 (JT PPTPB + JT Ulangan + JPPH x5 + YB x2)
+rework=cycle-2
+quest_start=2026-07-30
+closed=2026-07-31
+branch=mlk/esokongan/272527v2
+commit=ac8e9ba316
+int_env_merge=ab799cf630
+local_test_confirmed=true
+qa_doc=projects/coding-projects/active/QA-272527/QA-272527.md
+scope_anchor=PAGE 1 ONLY - page 2+ trailing sections at 1134/720 are OUT OF SCOPE, do not re-raise
+conflict_note=TemplateSuratNilaianJPPH_PLTP_PSBS.docx conflicted with int-env 272651 pelanCC; resolved keeping pelanCC + applying our pgMar. WILL RECUR when 272651 merges to master
+
 qa=QA-264006
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\58. QA #264006 - Semua Urusan - Tugasan peranan PT - Nama PT tidak sama dengan PT tugas
 phase=1
@@ -614,33 +634,39 @@ pushed=2026-07-27
 closed=2026-07-27
 close_note=Phase 1 closed. 4 files +57/-0: MlkBorang4AeForm (Fix1a tujuan fallback in initMklmtTanah + Fix2a net pengecualian URS_MLPS-gated) - PelupusanReportMethodConstant (import IConfigurationService + Fix1b tujuan rung isMelaka + Fix3 Fi bare-return byrnFiList isMelaka+URS_MLPS) - PelupusanService (Fix2b net pengecualian isMelaka) - PelupusanTemplateReportMethodParameter (import + Fix4 pemohon fallback isMelaka+URS_MLPS). Remote SHA ac6099373202cb89046f78e99445bb96f694db80 verified == local HEAD. Excluded: .settings (pre-existing Eclipse churn) + untracked jboss-deployment-structure.xml (QA-265537 deploy fix). Jasper binding VERIFIED: page-1 Fi = LaporanBorang4Ae.jrxml:480 RM+P_FI <- methods.put P_FI :167 <- populateFi (Fix3); page-2 Pembaharuan Fi = LaporanBorang4Ae_Sub02.jrxml:79 field fiByrn <- setFiByrn :16028 (Fix2b) - independent bindings so BA Expected#2 (0) and Expected#3 (RM250) do not conflict. OPEN for Phase 2: O1 bare LAIN-LAIN no perincian stored (BA-Q) - O2 Fix2b also reaches MlkPengiraanBayaranLesenForm:220 not named by BA.
 
-qa=ADHOC-local-deploy-publish
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\111. ADHOC - Local Deploy - Eclipse publish drops files and leaves stale jar
+qa=QA-271918
+quest_start_ts=2026-07-27T07:45:12.138Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\103. ESOKONGAN #271918 - Pelupusan - PT - Maklumat Pasangan Tidak Sama pada Warganegara
 phase=0
-status=hold
-ticket_type=adhoc
-env=local dev - etanah-awam on JBoss EAP 7.4 (E:\Dev\jboss-7.4-plp-melaka)
-issue_one_liner=Eclipse publish to JBoss is lossy (dropped 558 files incl 98 taglib) and additive (left stale etanah-common 1.0.141 jar) - 3 crashes in one session, all repaired, root cause of the file loss still unknown
-assigned_to_me=2026-07-27
-quest_start=2026-07-27
-qa_doc=projects/coding-projects/active/ADHOC-local-deploy-publish/ADHOC-local-deploy-publish.md
-branch=n/a-no-code-change
-current_phase=Repaired by hand, deployment now matches build. Faults: (1) META-INF empty -> MavenProjectUtil.appVersionMap NPE (2) 558 files missing -> et:form unresolved -> @form ComponentNotFoundException (3) duplicate etanah-common jars 1.0.141+1.0.143 -> GuestPreferences twice -> WELD-001414. REFUTED: M2_REPO/overlay theory (both overlays expanded correctly) - do not re-derive.
-next_action=ruri: read Eclipse .metadata\.log for publish-time errors (workspace C:\Users\Ridhwan\eclipse-workspace) - the WHY of the file loss is still unknown after 3 occurrences. Then fold into DEV-TESTING-HACKS.md as third occurrence, reframed as 'publish is lossy + additive'.
-blocker=miya decision - etanah-awam pom.xml locally 1.0.143-MLK uncommitted vs committed baseline 1.0.141-MLK (commit 71f14a9faf); this divergence caused fault 3. Commit or revert (revert ONLY pom.xml + .settings/org.eclipse.wst.common.component - QA-265537 edits share that tree).
-related=QA-272499 (the Ralat being tested when this surfaced)
+status=delegated
+ticket_type=bug
+env=etanah-awam MLK (Jasper jrxml, SQL-in-report)
+issue_one_liner=PT Borang Permohonan - pasangan warganegara prints Malaysia though AWAM saved Singapura (shared PT/PSBS/MCL report)
+assigned_to_me=2026-07-23
+urusan=PT
+qa_doc=projects/coding-projects/active/QA-271918/QA-271918.md
+test_app=p_aplikasi_id 13829 (AWAM draft; applicant aizatmaziz@gmail.com; pasangan tanggungan id 499 no_kp 880808-08-8883); schema et_main_stg2
+current_phase=Rubric COMPLETE via 3-wave audit 2026-07-27. Root cause 99pct VERIFIED: PlpLaporanJadual1P2_Sub03.jrxml:148 joins SAK_WG on PB.WARGANEGARA_ID (applicant) not UP.WARGANEGARA_ID (pasangan); 1-token fix. Blast radius CORRECTED TWICE and settled by controller read: PT+PSBS+MCL all reach Sub03 (getPlpLaporanBorang197:709 + getPlpLaporanJadual18A:744 merge getPlpLaporanJadual1P2) - one fix heals all three. Pekerjaan :149 is a DEAD JOIN (not an analog). DB falsifier re-verified stg2 (tanggungan 499 = Singapura 8293 vs PB Malaysia 2557). Handover note drafted in qa_doc. DUE 2026-07-29.
+difficulty=S
+ownership_fork=jrxml - decide fix-ourselves vs delegate to Reports team (Nurhidayati) per #271721 "no fixes for jrxml" precedent; needs miya call before Apply
+branch=n/a-pre-apply-ownership-fork
+next_action=miya: ownership call (fix jrxml ourselves vs delegate to Reports team; owner name unconfirmed in thread) - then 1-token Apply or handover
+delegated_to=Noor Dayana (Redmine assignee 2026-07-27 09:38)
+delegated_date=2026-07-27
+close_note=RECONCILED from Redmine 2026-07-27: status=New, done=0, assignee=Noor Dayana. NOT Nurfatin Auni and NOT Nurhayati Abdul Razak - both earlier names were wrong. Handover content (1-token jrxml fix PlpLaporanJadual1P2_Sub03.jrxml:148 PB->UP, 6 affected stg1 records, PT+PSBS+MCL blast radius) is in qa_doc ready to send. DUE 2026-07-29.
 
 qa=QA-272574
-status=active
+quest_start_ts=2026-07-28T11:53:31.156Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\112. ESOKONGAN #272574 - Pelupusan - PLPS  - Penyediaan Maklumbalas Tangguh - Papar surat salah
 phase=0
-current_phase=Rubric-complete-W1-W4-nothing-applied
+status=hold
 ticket_type=bug
 env=MLK Staging et_main_stg1
+issue_one_liner=Pelupusan > PLPS  > Penyediaan Maklumbalas Tangguh > Papar surat salah
+assigned_to_me=2026-07-28
+current_phase=W1-W4 COMPLETE 2026-07-28. Fix layer ADJUDICATED = BPMN+Java+config+docx+DB ref rows, 70% (W3 config-only REFUTED: PTG+PDT variants both inside urusan PLPS). Fallback 55% = new extraParam on predecessor tugasan kod (Java only). Never-existed gap, not regression. PRBB broken same way = separate ticket. BA-Q before building: reuse PLP_SRTMKLMBLS or PLP_SRTKPDPMHN instead of a new kod? Docs: QA-272574.md + -wave3.md + -audit.md
+qa_doc=projects/coding-projects/active/QA-272574/QA-272574.md
+branch=n/a-pre-apply
 urusan=PLPS
 tugasan=PYSKT
-assigned_to_me=2026-07-27
-quest_start=2026-07-29
-local_test_confirmed=false
-branch=n/a-pre-apply
-qa_doc=projects/coding-projects/active/QA-272574/QA-272574.md
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\112. ESOKONGAN #272574 - Pelupusan - PLPS  - Penyediaan Maklumbalas Tangguh - Papar surat salah
+test_app=PTMLK/01/L/PLPS/2026/6 aplikasi_id 3384879 @ sanarimah@melaka.gov.my (PYSKT, pejabat_id 2 = PDT)

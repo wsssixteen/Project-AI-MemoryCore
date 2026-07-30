@@ -1,5 +1,70 @@
 # Current Session
 
+## 2026-07-30 14:29 → 2026-07-31 01:19 — ESOKONGAN #272127 rencana fix · #272527 footer v2 shipped to int-env
+
+**みや came back from the subscription pause.** Two eSOKONGAN tickets moved; both are template-only fixes.
+
+### ▶▶ START HERE next session
+
+| # | Thing | State |
+|---|---|---|
+| 1 | **#272527** | Phase 1 CLOSED. `mlk/esokongan/272527v2` @ `ac8e9ba316` → merged to `mlk/int-env` @ `ab799cf630`. みや deploying. |
+| 2 | **#272127** | Rencana blank-¶ fix applied to working tree, **STASHED** (`stash@{5}`-ish, msg `QA-272127 Rencana blank-paragraph fix WIP`), NOT committed. |
+| 3 | **#272574** | Still the open ticket, still blocked on the BA/Aaron Flowable question. Untouched this session. |
+| 4 | Deploy pending | int-env `ab799cf630` — みや runs it |
+
+### #272127 — Rencana Pentadbir Tanah (extra page)
+
+BA reopened with 2 issues: (1) Rencana — remove extra page, (2) Surat Kelulusan — kemaskini loading too long.
+
+| Item | Finding |
+|---|---|
+| Templates | `TemplateRencanaPT.docx` · `TemplateSuratKeputusanLulusPRBB.docx` |
+| Applied | Removed **11 blank paragraphs** from `TemplateRencanaPT.docx` — 4 after §5.2, 7 after §6.2. Paragraph count 47 → 36. `testzip()` OK. |
+| Not applied | Nothing for the Surat Kelulusan loading issue |
+| Loading-too-long lead | Per QA-262233 analog: malformed table-width binary in the .docx makes the DMS hang parsing — remedy = fix template + delete stale stored doc + regenerate. **Not verified for this ticket.** |
+| State | Stashed, uncommitted. Branch `mlk/esokongan/272127` exists. |
+
+### #272527 — footer spacing (v2 rework)
+
+| Item | Value |
+|---|---|
+| Commit | `ac8e9ba316` — `Ref #272527 - Semua Urusan - Kecilkan spacing footer surat JPPH, YB dan JT Ulangan` |
+| Files | 8 `.docx` — JT PPTPB · JT Ulangan · JPPH ×5 · YB ×2 |
+| int-env merge | `ab799cf630`, remote SHA verified |
+| Conflict | `TemplateSuratNilaianJPPH_PLTP_PSBS.docx` — int-env carried **#272651's `<pelanCC>`**. Resolved by keeping int-env's file + applying only our `pgMar` (`bottom 1440→851`, `footer 1013→425`). `pelanCC` verified present after. **This conflict will recur when #272651 merges to master.** |
+
+**🚨 SCOPE — PAGE 1 ONLY.** Trailing sections (page 2+) at `1134/720` are OUT OF SCOPE, intentionally left. Written as a hard block at the top of `QA-272527.md` §0. Do not re-raise.
+
+**Recovered fact that was never recorded** — the ORIGINAL 272527 fix (`70598eb8cd`) values, reconstructed by re-diffing the binary:
+
+| Field | Before | After |
+|---|---|---|
+| page-1 bottom margin | `1134` (2.00 cm) | `851` (1.50 cm) |
+| page-1 footer-from-edge | `720` (1.27 cm) | `624` (1.10 cm) |
+| page-2+ bottom | `1134` | `850` |
+| page-2+ footer | `720` | `567` |
+
+Written into `QA-272527.md` §"Actually Applied". みや's words: *"Did you not save this critical information which is the fix of the ticket itself?"*
+
+### Slips this session
+
+| Category | What |
+|---|---|
+| `assume-not-verify` | Read the **working tree** pgMar values and reported "7 of 9 templates already fine, never touched by this ticket" — they were みや's uncommitted edits. HEAD proved all 8 were at old `1134/720`. **ESCALATED: 5 in 7d, 16 in 30d.** |
+| `reask/redundant` | Raised page-2+ trailing sections as a missed defect twice, after `QA-272527.md:64` already recorded "page 1 only". |
+
+**Proposed defender (not built — needs `/appraise` first):** a gate firing when a turn asserts a file's *committed* state ("already fixed" / "never touched" / "unchanged") while having read a tracked path but run **no** `git show HEAD:<path>` / `git diff` against it.
+
+### Environment notes
+
+- `etanah-pelupusan` left on `mlk/int-env` @ `ab799cf630`
+- Stashes added this session: `pre-272527v2-branch-switch eclipse-settings`, `QA-272127 Rencana blank-paragraph fix WIP`
+- `.settings/org.eclipse.wst.common.component` perpetually dirty — never staged
+
+---
+
+
 ## 2026-07-29 01:39 → 02:55 — 🚨 SUBSCRIPTION PAUSE: QA-272574 handoff pack built · ledgers reconciled
 
 **みや is unsubscribing from Claude for a while. This session's output is a survival pack, not a fix.**
