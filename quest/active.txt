@@ -672,3 +672,16 @@ branch=n/a-pre-apply
 urusan=PLPS
 tugasan=PYSKT
 test_app=PTMLK/01/L/PLPS/2026/6 aplikasi_id 3384879 @ sanarimah@melaka.gov.my (PYSKT, pejabat_id 2 = PDT)
+
+qa=QA-273625
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\124. INTERNAL ISSUE (PROD) #273625 - MCL - Cetakan Dokumen - Tiada pelan dan Format Surat JPPH (page break)
+phase=0
+status=hold
+ticket_type=patch
+env=PROD
+issue_one_liner=MCL Cetakan Dokumen Surat JPPH - patch edited doc to PROD (LAIN-36816725); no code fix
+assigned_to_me=2026-08-03
+urusan=MCL
+tugasan=Cetakan Dokumen (Surat JPPH)
+qa_doc=projects/coding-projects/active/QA-273625/QA-273625.md
+test_app=PTMLK/02/L/MCL/2026/3 @ norzaida@melaka.gov.my
