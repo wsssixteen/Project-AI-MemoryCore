@@ -41,3 +41,4 @@ Feature/Forge-Self-Improvement-System/*-log.jsonl
 Feature/Time-Based-Aware-System/reply-log.jsonl
 Feature/Time-Based-Aware-System/reply-log-state.json
 meta/recent-tool-calls.jsonl
+system/telemetry/hook-fires.jsonl
