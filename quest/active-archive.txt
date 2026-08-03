@@ -1418,3 +1418,25 @@ issue_one_liner=PRBB - PRPT - Rencana + Surat Keputusan Lulus - Fix spacing untu
 closed=2026-07-30
 commit=2cd853046c
 note=cycle-2 close record; cycle-1 block (58e34c30a4) is above at its own dated section
+
+## ── Archived 2026-08-03 (delegated to Aaron) ──
+
+qa=QA-272574
+quest_start_ts=2026-07-28T11:53:31.156Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\112. ESOKONGAN #272574 - Pelupusan - PLPS  - Penyediaan Maklumbalas Tangguh - Papar surat salah
+phase=0
+status=archived
+held_reason=2026-08-03 miya: ticket complexity — initially his own session, then delegated; superseded by Aaron takeover same day (see close_note)
+ticket_type=bug
+env=MLK Staging et_main_stg1
+issue_one_liner=Pelupusan > PLPS  > Penyediaan Maklumbalas Tangguh > Papar surat salah
+assigned_to_me=2026-07-28
+current_phase=W1-W4 COMPLETE 2026-07-28. Fix layer ADJUDICATED = BPMN+Java+config+docx+DB ref rows, 70% (W3 config-only REFUTED: PTG+PDT variants both inside urusan PLPS). Fallback 55% = new extraParam on predecessor tugasan kod (Java only). Never-existed gap, not regression. PRBB broken same way = separate ticket. BA-Q before building: reuse PLP_SRTMKLMBLS or PLP_SRTKPDPMHN instead of a new kod? Docs: QA-272574.md + -wave3.md + -audit.md
+qa_doc=projects/coding-projects/archive/QA-272574/QA-272574.md
+branch=n/a-pre-apply
+urusan=PLPS
+tugasan=PYSKT
+test_app=PTMLK/01/L/PLPS/2026/6 aplikasi_id 3384879 @ sanarimah@melaka.gov.my (PYSKT, pejabat_id 2 = PDT)
+delegated_to=Aaron Loh Zhi Yong (Redmine assignee 2026-08-03 03:52)
+closed=2026-08-03
+close_note=RECONCILED from Redmine 2026-08-03: In Progress, assignee Aaron Loh Zhi Yong. Our full direction+verification pack (miya's chosen design, code/BPMN verification, stg1 DB facts) is banked in qa_doc sections D/D2/D3 - ready to hand over or resume if it returns.

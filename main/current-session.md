@@ -42,6 +42,47 @@ Bare **"file path" / "location" / "lokasi fail" + a document name** (surat/pelan
 
 ---
 
+## 2026-08-03 10:30 → 12:35 — ⚔️ 7-TICKET FLEET SWEEP — all 4 due-08-07 targets EXECUTION-READY · live DB access won
+
+**Session shape: みや's /goal-driven delegation session. 14 Opus familiars total (7 blind quests → 4 deepening → 2 focused + 1 mechanical), controller-verified. Mid-session breakthrough: I can now run postgres myself (psycopg2 + creds from ~/.claude.json — the MCP servers aren't loaded in-session but the credentials are on disk; runner = scratchpad pg_query.py, classifier allows after miya's explicit instruction). Every DB falsifier closed live.**
+
+### ▶▶ NEXT SESSION — START HERE — THE ROUNDS PLAN (miya-approved shape 2026-08-03, supersedes any earlier batch table)
+
+| Round | Tickets | Action |
+|---|---|---|
+| **1 — anytime, no deploy** | **272982 solo** 🔴 PRIORITY | Run the patch script (restore KRJN/LAIN names + fresh `_SM`/`_STR` kods + re-point 29 PROD rows), verify with evidence SELECT, send jrxml handover pack → Jasper Reports team |
+| **2** | **272867 + 272943** combined | One pelupusan build/deploy: 272867's 3 hunks (FINDINGS.md §5) + 272943's 150-DPI/JPEG swap (`PelupusanUtil.convertPdfFileBytesToImageList():935-948` → reuse `convertPdfToImages():1506` idioms). Test: PLTP SKM two-pemohon walk + PPJK Kemaskini regenerate |
+| **3** | **272881 + 273201** combined | One pelupusan deploy: 272881 additive PLPS whitelist arm in `BasePelupusanForm.onChangeTindakanKeputusan` after `:541` (C5 95%) · 273201 capaian repository fix — run S1/S2 falsifiers FIRST (pg runner works) |
+| **4** | **273294 solo** | PT branch in `verifyCurrentLangkah`; test blank-field Hantar blocked |
+| **5** | **273300 solo** (etanah-awam) | C′ fix (+14 lines drafted; candidate C proven UNSAFE, replaced); test icon hidden until signed |
+
+### Ticket state (all qa_docs carry EXECUTION PACK sections + live-DB evidence)
+
+| Ticket | Conf | Root cause (verified) |
+|---|---|---|
+| 272867 (= adhoc A6 → ticketed) | 93% | per-aplikasi flag clobber; blast-radius + logic-matrix closed 2026-08-03 |
+| 272881 | **95% (C5)** | init repopulate runs with null keputusan; `BasePelupusanForm:530-545` whitelist has NO PLPS arm; radio disabled because doc status = `STATUS_PENYEDIAAN_PEMBETULAN` (DB row 8548333). C1/A3/C2 all falsified live. |
+| 272943 | 92% | OUR 07-08 regression (`42a0a7d226`); D1 live: >20MB docs 3→16 after 07-08, max 74.3MB |
+| 272982 | **100% + PRIORITY** | stg2+PROD: KRJN/LAIN rows RELABELLED "Kepunyaan Suami/Isteri" by MIGRATOR_ET 2026-01-16; 19+10 PROD rows affected; stg1 = reference shape (_SM 42610/_STR 42611). Ours = patch script; jrxml CASE → Reports team (fork settled by miya). |
+| 273201 (adhoc A3 → surfaced) | 90% hold | capaian-penuh repository defect; S1/S2 pre-build falsifiers pending |
+| 273294 | 90% hold | no PT branch in `verifyCurrentLangkah():1841-1934` |
+| 273300 | 95/92% hold | AWAM dashboard publishes unsigned letter; C′ fix drafted; blast-radius matrix closed (12 urusan × 2 kods safe) |
+
+### System facts won this session
+- **DB self-serve**: `scratchpad/pg_query.py` reads pgedge creds from `~/.claude.json` (4 envs); PROD needs `et_main.` prefix (et_read defaults to public). Column truths: `umm_aplikasi.id_pengenalan` (NOT id_permohonan) · `umm_a_tgsn.a_tgsn_id/tdkn_oleh` · `rjk_senarai_ahli_kumpulan.status` breaks under a sptb05 view quirk — omit it.
+- Slip ledgered: `stop-instead-of-action` (claimed "can't run SQL" without checking creds on disk — miya-caught, the 07-24 lesson repeated).
+- 272574: miya → then Aaron (Redmine 03:52); archived by both sessions, merge union-resolved.
+- 271918 delegated (Noor Dayana). Deadlines: all 8 tickets were past +3d internal; due dates 08-05 → 08-11.
+
+---
+
+## 2026-08-03 (cont.) — #272574 delegated to Aaron · archived
+
+- **Direction verified + banked** — QA-272574.md sections D (みや's chosen direction), D2 (code+BPMN verification: dead-code trap in `TamatAplikasiServiceTask`, live analog `MlkSuratTemplateForm.overridePostSubmitMethod():2424-2453`), D3 (stg1 DB facts: `status_tugasan` Gantung=8 vs `catatan` Gantung=453). PDT-level kods `PYSKTPDT`/`PSKPDT` exist nowhere → new BPMN needed.
+- **Ticket passed to Aaron Loh Zhi Yong** per Redmine 2026-08-03 03:52 (status *In Progress*). Reconciled, not resolved by us.
+- **Archive hygiene done** — `qa=QA-272574` block cut from `quest/active.txt` → `quest/active-archive.txt` under `## ── Archived 2026-08-03 (delegated to Aaron) ──` with `status=closed` · `delegated_to` · `closed` · `close_note`. Task folder already sat in `1. Tasks\Melaka\Archive\112. ESOKONGAN #272574 …` (verified, no move needed); `task_folder=` updated to the Archive path.
+- **Remaining in active.txt**: one non-closed block — `QA-271918` (`status=delegated`, jrxml fix handed to Noor Dayana 2026-07-27). Every other block is `status=closed`.
+
 ## 2026-08-03 09:44 → ~13:00 — 🧹 ORPHANED-WORKTREE SALVAGE — past week's 3 stranded session-lines merged to main
 
 **みや switched Claude accounts last week; several sessions couldn't push. Confirmed 11 orphaned
