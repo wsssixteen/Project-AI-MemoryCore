@@ -26,6 +26,49 @@ wrong-env test data (stg2 record for stg1 session, 4th env blunder) · wrong per
 
 ---
 
+## 2026-08-03 15:40 → 18:50 — 🩹 #273625 MCL Surat JPPH patch + BUILT the /patch-mlk-doc skill I should have had
+
+**A patch-only PROD ticket. The work was one query; the lesson was that I re-explored the DMS schema
+for a lookup みや had already handed me the tables for — and had already asked me to make a skill for.
+Fixed at the root: `/patch-mlk-doc` born + eval, memory written, trigger broadened to bare
+"file path / location of <doc>" asks.**
+
+### Deliverable — #273625 (PROD, MCL, PTMLK/02/L/MCL/2026/3)
+| Field | Value |
+|---|---|
+| Doc | Surat Nilaian JPPH · id_dokumen LAIN-36816725 · rev 41110560 · versi 5 active |
+| File to replace | `/home/app/etanah/files/dms/SISTEM-FAIL/KELUARAN/LAIN-LAIN/2026/08/LAIN-36816725_1.main` |
+| PDF-null (after infra) | `UPDATE ET_DMS.DOKUMEN_REVISION SET LOKASI_FAIL_PDF=NULL WHERE DOKUMEN_REVISION_ID=41110560;` -- 1 row updated |
+| Deliverable file | `124…#273625…/2. Fix/PATCH-REQUEST-273625.txt` |
+
+**Data spine (verified):** `et_main.umm_a_dok_keluaran → skg_dok (medan_pk_id) → et_dms.dokumen (id_dokumen LAIN-<n>) → et_dms.dokumen_revision (lokasi_fail / lokasi_fail_pdf)`. Latest active = highest `sd.versi_dok`, `flag_aktif='Y'`.
+
+### Built this session
+| Artifact | State |
+|---|---|
+| `/patch-mlk-doc` skill | Born via forge · `.claude/skills/patch-mlk-doc/SKILL.md` |
+| `domain/patch-mlk-doc/eval.js` | PASS 15/15 (guards the 2 tables, join spine, both deliverables, order-guard, ref values) |
+| `reference_dms_document_patch.md` | Memory + MEMORY.md index |
+| Scaffolding | Task folder 124 · notes file · `QA-273625.md` · active.txt block (ticket_type=patch) |
+
+### Trigger broadened (per みや)
+Bare **"file path" / "location" / "lokasi fail" + a document name** (surat/pelan/any) → auto-run the locator, return `lokasi_fail` of latest active revision, no id asked. NOT limited to patch tickets.
+
+### Two findings surfaced
+- **Newly-forged skills are invisible to same-session familiars** — a haiku Explore couldn't load `patch-mlk-doc` (skill list is fixed at subagent spawn). Test-via-familiar only works next session, or run in the main loop.
+- **A delegated familiar needs the locator query handed inline** — schema alone wasn't enough for it to reconstruct the join spine.
+
+### Slip (みや-caught)
+`re-explore-known-lookup` / assume-not-verify family — re-derived a schema みや had already given me + a skill he'd already requested. Root-fixed (skill built), not just apologised.
+
+### ▶▶ NEXT SESSION
+- #273625 is data-only, no code, no branch. みや forwards STEP 1 to infra (staging first) then STEP 2 to patching team.
+- Optional: trace the staging DMS equivalent for a dry-run (different LAIN id on stg1/stg2).
+- **Bounty QA-272574 still pending** (flagged by quest-bounty-verify; 272574 is status=hold, not genuinely closed by us).
+
+---
+
+## 2026-08-03 10:30 → 12:35 — ⚔️ 7-TICKET FLEET SWEEP — all 4 due-08-07 targets EXECUTION-READY · live DB access won
 
 **Session shape: みや's /goal-driven delegation session. 14 Opus familiars total (7 blind quests → 4 deepening → 2 focused + 1 mechanical), controller-verified. Mid-session breakthrough: I can now run postgres myself (psycopg2 + creds from ~/.claude.json — the MCP servers aren't loaded in-session but the credentials are on disk; runner = scratchpad pg_query.py, classifier allows after miya's explicit instruction). Every DB falsifier closed live.**
 
