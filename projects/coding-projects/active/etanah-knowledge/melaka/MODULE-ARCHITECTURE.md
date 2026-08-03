@@ -322,3 +322,30 @@ First applied: QA-262495 (PPJK Semakan Risalat MMKN-PDT, `MlkKertasTemplateForm.
 
 ---
 *Last updated: 2026-06-02 — added vestigial-AJAX outlier-button decision (QA-262495)*
+
+---
+
+## 🚨 The two pelupusan Form hierarchies are SIBLINGS, not parent/child (2026-08-04, QA-272881/273201)
+
+`BasePelupusanDokumenForm` does **NOT** extend `BasePelupusanForm`. The names imply a chain; the code
+does not have one. Read the `extends` clause before ever writing `super.` or patching a "shared" base.
+
+```
+MlkKertasTemplateForm                          (etanah-pelupusan :102)
+  └─ BasePelupusanDokumenForm                  (etanah-pelupusan :114)
+       └─ BasePenyediaanDokumenForm            (etanah-common    :173)
+            └─ BaseBpmForm                     (etanah-common    :197)
+                 └─ BaseEtanahForm
+
+BasePelupusanForm                              (etanah-pelupusan :77)
+  └─ BaseBpmForm                               ← SIBLING BRANCH, never on the DokumenForm path
+```
+
+**Consequence**: `super.onChangeTindakanKeputusan(...)` from `BasePelupusanDokumenForm:1353` resolves to
+**`BaseBpmForm.onChangeTindakanKeputusan():3090`** (etanah-common), never to `BasePelupusanForm:514`.
+Anything you add to `BasePelupusanForm:530-546` is **unreachable** from any `*DokumenForm` screen.
+
+**How this was proven** (not inferred): four `LOGGER.error` probes in one build — two in
+`BasePelupusanDokumenForm`, two in `BasePelupusanForm`. The DokumenForm pair fired; the
+BasePelupusanForm pair never did, despite being present in the deployed `.class`. Cost: a whole
+session building fixes into dead code. Now enforced by the `hierarchy` check in `pre-code-check`.
