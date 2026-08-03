@@ -1,5 +1,92 @@
 # Current Session
 
+## 2026-07-31 15:40 → 2026-08-03 09:17 — 🚀 BASELINE 1.3.0 SHIPPED end-to-end · 5 tickets · master merged
+
+**First full Baseline run that reached `mlk/master`.** Release prepared, built+deployed by みや, BAQA
+passed, master merged and pushed. Also the session where I turned one non-issue into five turns of his
+time and got sworn at twice for it.
+
+### ▶▶ START HERE next session
+
+| # | Thing | State |
+|---|---|---|
+| 1 | **Release 1.3.0** | ✅ COMPLETE. `origin/mlk/master` = `origin/mlk/release/1.3.0` = `fdfddc602b` |
+| 2 | **#272574** | Still the only open ticket. Untouched. Blocked on the BA/Aaron Flowable question — draft message is in this session's history |
+| 3 | Sheet | みや filling the Developer section on version 11337 |
+| 4 | Phase 2 bounty | NOT run — 272378 · 272527 · and all five 1.3.0 tickets |
+
+### Release 1.3.0 — the record
+
+| Item | Value |
+|---|---|
+| Branch | `mlk/release/1.3.0` off `mlk/master` @ `50f1ee085d` |
+| Final SHA | `fdfddc602b` — release, local master, origin master ALL equal |
+| Tickets | #272378 · #271985 · #272127 · #272527 · #259112 (CR) |
+| Module version | `1.2.0` → `1.3.0` (`5e462aa67f`) |
+| Common version | `1.0.143-MLK` — unchanged, no bump owed |
+| Delta | 30 files: 13 `.docx` · 11 `.java` · 5 `.xhtml` · 1 `pom.xml` |
+| SQL / BPMN / config JSON | **zero of each** |
+| Deployed | stg1 (`et_main_stg1`), footer confirmed Module 1.3.0 / Common 1.0.143-MLK |
+
+**A fix landed mid-flight**: after my push at `5e462aa67f`, みや added `e00e8adc0c` (#271985 tujuan
+lesen migrasi) and merged it. BAQA tested `fdfddc602b`, so V6b is closed — but `release-prep.js`
+**deadlocked**: `merge-to-master` refused (`origin release != recorded headSha`) and neither `verify`
+nor `push` would re-pin because `phase=pushed`. No `--adopt-moved-head` path exists. Pushed with
+plain git after みや explicitly instructed it.
+
+### The SQL non-issue — five turns, two rages, one command that would have killed it
+
+`redmine-recon.js` followed #259112's **relation** to closed ticket **#252786** and surfaced its
+attachment `FAT-CR #252786.sql`. I carried that row through the plan table, the hand-off card, and
+the Sheet values.
+
+| Turn | What I said |
+|---|---|
+| 1 | "flag the SQL — BA/DBA must run it" |
+| 2 | read the Apr-27 journal → "not owed, leave the Sheet cell **empty**" |
+| 3 | みや: *"The SQL we'll only mention it in the sheet"* → I wrote an **unconditional always-record** rule and handed him `#259112, #252786:FAT-CR #252786.sql` |
+| 4 | みや: *"why this?"* → I offered him A/B options instead of settling it |
+| 5 | みや: *"does that closed ticket under our current baseline?"* → **`mlk/fat-cr/252786` merged long ago, nothing in the delta** |
+
+みや: *"why the fuck are you including it in our baseline out of nowhere?"* — correct. The killing
+check is one command and belongs BEFORE the row is ever mentioned:
+`git log --oneline origin/<owning-branch> --not mlk/release/<ver>` — empty = already in baseline = noise.
+
+### Slips (all みや-caught)
+
+| Category | What |
+|---|---|
+| `filtered-evidence-read` | suppressed the recon SQL row on my own relevance judgment |
+| `recommendation-oscillation` | **NEW** — two opposite recommendations on one Sheet cell inside an hour, neither grounded in the release delta |
+| `reask/verbose` | *"can you speak briefly"* — after a 9-row table for a one-line answer |
+
+### System changes — `.claude/skills/release-mlk-plp/SKILL.md`, 3 edits
+
+1. **B2 · CONFIRM THE MERGES** — みや asked for this by name (no SourceTree):
+   `git -C E:\Projects\Melaka\etanah-pelupusan log --oneline --merges mlk/master..mlk/release/<ver>` —
+   one merge commit per ticket, runs from any directory. Now in every future card.
+2. **Kill-check before surfacing any recon SQL row** — owning ticket already in baseline ⇒ drop
+   silently, never mention.
+3. **Sheet SQL cell test** — *does THIS release's delta require the script?* Plus a ban on pasting
+   recon's internal `#<owner>:<file>` notation (that prefix means "attached to ticket #owner", it is
+   NOT part of the filename).
+
+### Environment / git notes
+
+- **`redmine.local.json` + `servers.local.json` were missing in this worktree again** — copied from
+  the main repo. 4th occurrence of `machine-local-config-not-portable`. `quest/redmine.local.json`
+  is STILL absent everywhere, so the 3-DAY RULE boot ranking ran unreconciled.
+- **SourceTree Push read 46, master read 25** — the gap was `mlk/requirement/239386-deprecated`
+  tracking `origin/mlk/requirement/239386` (the LIVE branch) instead of its own `-deprecated` remote.
+  Phantom 21. Repointed with `--set-upstream-to`. 🚨 Had he hit the toolbar Push button, it would
+  have overwritten the live 239386 branch.
+- `.settings/org.eclipse.wst.common.component` stashed as `pre-1.3.0-release eclipse-settings`.
+- **Correction to the block below**: #272127 was **committed and pushed** (`2cd853046c` on
+  `mlk/esokongan/272127v2`), NOT stashed. `stash@{6}` is the superseded WIP.
+
+---
+
+
 ## 2026-07-30 14:29 → 2026-07-31 01:19 — ESOKONGAN #272127 rencana fix · #272527 footer v2 shipped to int-env
 
 **みや came back from the subscription pause.** Two eSOKONGAN tickets moved; both are template-only fixes.
