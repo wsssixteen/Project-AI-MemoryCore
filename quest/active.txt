@@ -666,7 +666,7 @@ ticket_type=bug
 env=MLK Staging et_main_stg1
 issue_one_liner=Pelupusan > PLPS  > Penyediaan Maklumbalas Tangguh > Papar surat salah
 assigned_to_me=2026-07-28
-current_phase=W1-W4 COMPLETE 2026-07-28. Fix layer ADJUDICATED = BPMN+Java+config+docx+DB ref rows, 70% (W3 config-only REFUTED: PTG+PDT variants both inside urusan PLPS). Fallback 55% = new extraParam on predecessor tugasan kod (Java only). Never-existed gap, not regression. PRBB broken same way = separate ticket. BA-Q before building: reuse PLP_SRTMKLMBLS or PLP_SRTKPDPMHN instead of a new kod? Docs: QA-272574.md + -wave3.md + -audit.md
+current_phase=DIRECTION SET by miya 2026-08-03 (qa_doc §D, verbatim): analog = permohonan bertindih TamatAplikasiService (message to AWAM after PSKPDT + set Tangguh); hook candidate MlkKertasTemplateForm.overridePostSubmitMethod() on Hantar at PSKPDT; follow MlkSuratTemplateForm.overridePostSubmitMethod() PT+PLPS logic; Gantung -> umm_a_tgsn.status_tugasan (miya lean, over catatan_tgsn_strusnya). FLOW: PJTLT > Pindaan Tidak > Kpts Awal Tangguh > PYSKTPDT > Pembetulan y/t > PSKPDT > Gantung > [UNDECIDED: PT proceeds?] > cancels=>PJTLT / proceeds=>PYSTP. DB ref env stg1. Prior W1-W4 (70%/55% fork + BA-Q reuse-kod) superseded as working plan, kept in qa_doc
 qa_doc=projects/coding-projects/active/QA-272574/QA-272574.md
 branch=n/a-pre-apply
 urusan=PLPS
