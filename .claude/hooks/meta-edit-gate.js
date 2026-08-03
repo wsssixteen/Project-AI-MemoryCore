@@ -93,6 +93,43 @@ process.stdin.on('end', () => {
       }
     }
 
+    // v1.3 2026-08-04 — meta-layer branch PROMOTED from advisory to HARD-BLOCK.
+    // Root slip (`built-without-system-design`, miya-caught): this gate asked "Was
+    // meta-design-router invoked?" on two settings.json edits in one session and I proceeded
+    // both times. An advisory question against a model that rationalises is decoration. The
+    // wrong shape shipped (a boot-time down-the-line checker + a new domain/ folder) for
+    // something that belonged as ~40 lines inside an existing file. Now the edit is DENIED
+    // unless the turn shows a design consult or carries the explicit bypass.
+    {
+      let convo2 = '';
+      try { convo2 = fs.readFileSync(data.transcript_path || '', 'utf8'); } catch (_) { convo2 = ''; }
+      const consulted = /(meta-design-router|system-design|auto-skill-on-mistake|system-rules)/i.test(convo2);
+      const bypass2 = /\[skip-design-consult:/i.test(convo2);
+      if (!consulted && !bypass2) {
+        const reason = [
+          '⛔ meta-edit-gate: meta-layer edit BLOCKED — no design consult in this turn.',
+          `   Path: ${filePath}`,
+          '',
+          '   A meta-layer change (hook / skill / settings / meta-*) must be SHAPED before it is',
+          '   written. Invoke `system-design` (or `meta-design-router`) and do Step 0 INVENTORY:',
+          '     • does an existing file/hook/skill already own this concern? (refine > create)',
+          '     • is this the right TRIGGER POINT — boot, moment-of-change, or both?',
+          '     • what is the EXPECTED RESULT, in bullets, before any code?',
+          '',
+          '   2026-08-04: skipping this shipped a boot-time checker + a new domain/ folder for',
+          '   something that was ~40 lines inside quest/active-cli.js. miya: "WANTING TO BLOAT',
+          '   THE SYSTEM AND MAKING MY LIFE MISERABLE."',
+          '',
+          '   Genuinely not a design change (typo / doc-only / revert)? Add:',
+          '     `[skip-design-consult: <reason>]`',
+        ].join('\n');
+        process.stdout.write(JSON.stringify({
+          hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: reason },
+        }));
+        process.exit(0);
+      }
+    }
+
     // Advisory reminder for meta-layer edits (unchanged)
     const context = [
       '',

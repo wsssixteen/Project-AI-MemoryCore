@@ -123,6 +123,14 @@ function main() {
   }
   console.log('   → Surface these in Session Briefing Standing Flags. If briefing omits any, that is a 🔴 verify failure.');
   console.log(RANK_RULE);
+
+  // 2026-08-04: catch drift caused OUTSIDE active-cli (someone resolves/reassigns on Redmine while
+  // we sleep). ~0.4s measured for 3 quests in parallel. The primary capture points are in
+  // active-cli.js start/update/archive; this is the safety net, not the mechanism.
+  try {
+    require(require('path').join(__dirname, '..', '..', 'quest', 'redmine-status-check'))
+      .checkAll(open.map(q => ({ qa: q.qa, status: String(q.status).split(' ')[0] })));
+  } catch (_) { /* never let a boot check break boot */ }
 }
 
 try { main(); } catch (e) {

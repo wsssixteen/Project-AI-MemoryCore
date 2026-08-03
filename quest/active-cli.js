@@ -13,6 +13,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const redmineCheck = require('./redmine-status-check');
 
 const REPO_ROOT = path.resolve(__dirname, '..');
 // Resolved lazily inside main() so that --file/--archive CLI overrides apply BEFORE first use.
@@ -97,6 +98,8 @@ function cmdStart(qa, kvs) {
     blocks.push({ qa, lines });
     writeAtomic(ACTIVE, renderBlocks(header || 'active:', blocks));
     console.log(`✓ start ${qa} → ${ACTIVE} (block has ${lines.length} lines)`);
+    const startStatus = (lines.find(l => l.startsWith('status=')) || 'status=active').slice(7);
+    redmineCheck.checkOne(qa, startStatus, 'start');
 }
 
 function cmdRead(qa) {
@@ -144,45 +147,7 @@ function cmdUpdate(qa, kvs) {
     // properly"). So the check fires HERE, the instant a status changes, and nowhere else.
     // Why it exists: 2026-08-04 boot surfaced 4 quests that were Resolved/Closed or reassigned
     // to someone else, so he was shown other people's tickets as his open work.
-    if (updates.has('status')) verifyStatusAgainstRedmine(qa, updates.get('status'));
-}
-
-// Report-only: prints a divergence warning, never throws, never blocks the write.
-function verifyStatusAgainstRedmine(qa, newStatus) {
-    const num = (String(qa).match(/(\d{5,})/) || [])[1];
-    if (!num) return;
-    const OPEN = new Set(['active', 'hold', 'blocked', 'delegated']);
-    const DONE_ON_REDMINE = new Set(['Resolved', 'Closed', 'Rejected']);
-    const OWNER = 'Ahmad Ridhwan Anuar';
-
-    const req = require('http').get({
-        host: '172.16.90.169',
-        path: `/redmine/issues/${num}.json`,
-        headers: { 'X-Redmine-API-Key': '9565c21aa6cd9672fd3c7c2c7fec4c934c2f7c66' },
-        timeout: 6000,
-    }, res => {
-        let d = '';
-        res.on('data', c => d += c);
-        res.on('end', () => {
-            let i;
-            try { i = JSON.parse(d).issue; } catch (_) { return; }
-            if (!i) return;
-            const rStatus = i.status && i.status.name;
-            const rAssignee = i.assigned_to ? i.assigned_to.name : 'NONE';
-            const staysOpen = OPEN.has(newStatus);
-            const doneThere = DONE_ON_REDMINE.has(rStatus);
-            const reassigned = rAssignee !== OWNER && rAssignee !== 'NONE';
-
-            if (staysOpen && (doneThere || reassigned)) {
-                console.log(`🚨 REDMINE DIVERGENCE — ${qa} set to '${newStatus}' but Redmine says: ${rStatus} · ${rAssignee} · ${i.done_ratio}%`);
-                console.log(`   This is NOT miya's open work. Close it instead, or boot will surface someone else's ticket at him.`);
-            } else if (!staysOpen && !doneThere && !reassigned) {
-                console.log(`ℹ️  ${qa} closed locally but Redmine still shows: ${rStatus} · ${rAssignee} · ${i.done_ratio}% — update Redmine too.`);
-            }
-        });
-    });
-    req.on('error', () => {});
-    req.on('timeout', () => req.destroy());
+    if (updates.has('status')) redmineCheck.checkOne(qa, updates.get('status'), 'update');
 }
 
 function cmdArchive(qa) {
@@ -200,6 +165,8 @@ function cmdArchive(qa) {
     writeAtomic(ACTIVE,  renderBlocks(aHeader || 'active:', remaining));
     writeAtomic(ARCHIVE, renderBlocks(archHeader, archBlocks));
     console.log(`✓ archive ${qa} → cut from active.txt (${remaining.length} remain), appended to active-archive.txt (${archBlocks.length} total)`);
+    const archStatus = (b.lines.find(l => l.startsWith('status=')) || 'status=closed').slice(7);
+    redmineCheck.checkOne(qa, archStatus, 'archive');
 }
 
 // ─── Main ────────────────────────────────────────────────────────────────────
