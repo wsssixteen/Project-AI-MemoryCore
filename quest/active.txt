@@ -661,8 +661,8 @@ close_note=RECONCILED from Redmine 2026-07-27: status=New, done=0, assignee=Noor
 qa=QA-272867
 quest_start_ts=2026-08-03T04:22:11.552Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\116. ESOKONGAN #272867 - Pelupusan - PLTP - Maklumat Hilang selepas Click Tidak
-phase=1
-status=closed
+phase=0
+status=active
 ticket_type=bug
 env=ESOKONGAN (etanah-pelupusan + etanah-awam twin; branch mlk/release/1.0.12, Module 1.0.12, Common 1.0.143-MLK)
 issue_one_liner=PLTP Maklumat Hakmilik Dimiliki - Ada/Tiada flag stored per-APLIKASI not per-PEMOHON, so saving pemohon 2 as Tiada clobbers pemohon 1 Ada and hides his rows
@@ -670,15 +670,12 @@ assigned_to_me=2026-08-03
 urusan=PLTP
 tugasan=SKM - Semakan Kemasukan Maklumat (peranan PT)
 qa_doc=projects/coding-projects/active/QA-272867/QA-272867.md
-test_app=PTMLK/02/L/PLTP/2026/5
-current_phase=Closed
-branch=mlk/esokongan/272867
-closed=2026-08-03
-local_test_confirmed=true
-commit=76be0e9fe4
-commit_awam=be6b178c48
+test_app=PTMLK/02/L/PLTP/2026/2 (login faridmajid@melaka.gov.my, PDTJ; pemohon LEE BOO TIONG 581029-04-5199 + LEE MING LOONG 880325-10-5125; hakmilik 040205PM00000576); staging repro PTMLK/02/L/PLTP/2026/5 (login not stated)
+current_phase=EXECUTION-READY 93pct - fix drafted as 3 additive hunks in projects/coding-projects/active/PENDING-TICKET-pltp-hakmilik-lain/FINDINGS.md section 5 (PelupusanConstant KEY_SUDAH_MEMILIKI_TANAH + PelupusanService.savePemohon jsonObject.addProperty + PelupusanMaklumatPemohonHelper:2220-2224 DynamicFieldUtil read with aplikasi-level fallback). Blast-radius grep + logic-matrix CLOSED 2026-08-03 (qa_doc Pre-execution closure: 2 composite consumers - regression-walk MlkKemasukanPerizabanForm screen; SPOC copy :1118 covered by legacy fallback). AWAM twin = separate follow-up. Remaining: BA-Qs only.
+branch=n/a-pre-apply
 
 qa=QA-272881
+quest_start_ts=2026-08-03T16:52:48.662Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\115. ESOKONGAN #272881 - Pelupusan - PLPS  - Tiada medan agihan kepada dan ralat bila tekan han
 phase=0
 status=active
@@ -690,13 +687,13 @@ urusan=PLPS
 tugasan=SRMMKNPDT - Semakan Risalat MMKN - PDT
 qa_doc=projects/coding-projects/active/QA-272881/QA-272881.md
 test_app=PTMLK/01/L/PLPS/2026/3 (pengguna nurul.izza@melaka.gov.my, Penolong Pegawai Daerah); STG error ID Rujukan 22323
-current_phase=EXECUTION-READY 95pct - C5 CONFIRMED (qa_doc Final mechanism + Residue result 2026-08-03): init-time repopulate runs with null keputusan and BasePelupusanForm:530-545 flagRepopulate whitelist has NO PLPS arm; keputusan radio disabled because Risalat MMKN doc status = STATUS_PENYEDIAAN_PEMBETULAN (DB-verified 8548333). Fix = additive whitelist arm after :541 (analogs :531-538) + C3 gateway default companion. C1/A3/C2 all closed. Issue 3 (file bytes null) separate BA-Q.
+current_phase=APPLIED 2026-08-03 - unified fix with 273201: BasePelupusanForm.onChangeTindakanKeputusan +2 additive whitelist arms after :540 (PLPS+SRMMKNPDT, PRBB+KKPT). Uncommitted on mlk/master. Candidate6 adalahPembetulan REFUTED as primary (0 of 40+ callers pass it; Refresh path :335 works unconditionally). BA issue 3 file-bytes-null NOT closed - separate C6 at JabatanTeknikalHelper:391. NEXT=miya Eclipse build+deploy+test
 branch=n/a-pre-apply
 
 qa=QA-272943
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\114. ESOKONGAN #272943 - Pelupusan - PPJK - Kemaskini Surat Jabatan Teknikal Dan Ulasan YB Load
-phase=1
-status=closed
+phase=0
+status=active
 ticket_type=bug
 env=ESOKONGAN (etanah-app.melaka.gov.my, instance wanda2; branch mlk/release/1.1.0, Module 1.1.0, Common 1.0.143-MLK)
 issue_one_liner=PPJK Surat Jabatan Teknikal - Sedang Dikemaskini modal never closes because the generated docx is 74.4MB (300-DPI PNG pelan rasters embedded verbatim) and blows past the 60s poll window that carries the only close signal
@@ -705,17 +702,14 @@ urusan=PPJK
 tugasan=PGSJT - Pengesahan Surat Jabatan Teknikal dan Ulasan YB
 qa_doc=projects/coding-projects/active/QA-272943/QA-272943.md
 test_app=PTMLK/01/L/PPJK/2026/1 (pengguna nurul.izza@melaka.gov.my, PDTMT; document LAIN-36741916 = 74,432,892 bytes, downloaded 7x on 2026-07-29; session 6KBK2102S-...wanda2)
-current_phase=Closed
-branch=mlk/esokongan/272943
-closed=2026-08-03
-local_test_confirmed=true
-commit=cea66b57ad
+current_phase=Rubric-complete-execution-ready (92pct) - fix = PelupusanUtil.convertPdfFileBytesToImageList():935-948 render at 150 DPI + reuse existing scaleToFitA4Strict():1577 + writeJpeg(0.7f):1550, same treatment for rotateIfLandscape():951-982. Regression provenance VERIFIED (our commits 42a0a7d226 / 427051e711, 2026-07-08/09) and D1 live-DB confirmed it. Pre-execution: BA-Q1 (what pelan is attached) + BA-Q4 (150 DPI print-quality sign-off) + bundling nod.
+branch=n/a-pre-apply
 
 qa=QA-272982
 quest_start_ts=2026-08-03T04:21:51.968Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\113. ESOKONGAN #272982 - Pelupusan - Portral Awam - PT - Maklumat Pemohon Bertukar
-phase=1
-status=closed
+phase=0
+status=active
 ticket_type=bug
 env=MLKSTG (etanah-awam on mlk/master @ e5a6f7c16f "1.5.0"; Jasper jrxml + SAK reference data, schemas et_main_stg2 / et_main_stg1)
 issue_one_liner=AWAM PT Borang Jadual 1 item e - screen binds SAK NAMA but the report CASE decides on SAK KOD, so relabelled rows print majikan for Kepunyaan Suami (stg2) or nothing struck at all (stg1 fresh kods)
@@ -724,16 +718,14 @@ urusan=PT
 tugasan=Portal Awam - langkah Maklumat Pemohon (no officer-side tugasan)
 qa_doc=projects/coding-projects/active/QA-272982/QA-272982.md
 test_app=AWAM pra-permohonan keyed on UMM_P_APLIKASI.P_APLIKASI_ID (no Permohonan ID before submission); SAK group PLP_RMH_DDKI; specific p_aplikasi_id + login not stated
-current_phase=Closed
-branch=n/a-data-patch-plus-reports-team-handover
-closed=2026-08-03
-local_test_confirmed=true
-close_note=Phase 1 closed 2026-08-03: stg2 patch run by miya (PROD pending); jrxml half to Reports (Nurhidayati Abdul Razak) via PlpLaporanJadual1P2_Sub03 - line 66.sql; scripts in Task folder 113
+current_phase=EXECUTION-READY 100pct + PRIORITY (miya 2026-08-03) - MECHANISM VERIFIED by live DB incl PROD (KRJN relabelled by MIGRATOR_ET 2026-01-16; 19+10 affected umm_p_pihak_bkptg rows on PROD; _SM/_STR absent from PROD). Ownership fork SETTLED: (1) OUR patch script first (restore names + fresh kods + re-point rows), (2) jrxml CASE half handed to Jasper Reports team with our derivation. Remaining: BA-Q1 statutory enumeration (rides the handover).
+branch=n/a-pre-apply
 
 qa=QA-273201
+quest_start_ts=2026-08-03T16:57:54.717Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\119. ESOKONGAN #273201 - Pelupusan - PRBB  - Keputusan Pentadbir Tanah - Tiada medan agihan kep
 phase=0
-status=hold
+status=active
 ticket_type=bug
 env=MLKSTG (schema et_main_stg1, branch mlk/release/1.2.0, Module 1.2.0; PROD-reported too) - etanah-pelupusan
 issue_one_liner=PRBB Keputusan Pentadbir Tanah - Agihan Kepada field absent (empty officer list overrides adaPegawaiAgih) so agihanKKPT stays blank and gateway sid-39A4210F throws FlowableException on Hantar
@@ -742,7 +734,7 @@ urusan=PRBB
 tugasan=KKPT - Keputusan Pentadbir Tanah (peranan PTNH, PDTMT)
 qa_doc=projects/coding-projects/active/QA-273201/QA-273201.md
 test_app=PROD PTMLK/01/L/PRBB/2026/12 + /21 (m.ikram@melaka.gov.my, PDTMT); STG repro PTMLK/01/L/PRBB/2026/26 on et_main_stg1 (login not stated); exception row pt_application_ex_entity id 199824 (et_sistem_stg1)
-current_phase=Rubric 90pct - Deepening pass 2026-08-03 stands: Candidate 1 (loosen PlpCapaianPenggunaRepository.java:27-36 to honour CapaianModul.adalahCapaianPenuh) is the only live mechanism; old Candidate 2 falsified to 0pct; 272881 C1 structurally excluded here. GATE: 272881 live-DB result weakens blanket-invisibility, so S1/S1b/S2 for the PRBB/PTNH roles at PDTMT remain the pre-execution falsifier - do not build until they run.
+current_phase=APPLIED+CORRECTED 2026-08-03. BasePelupusanForm:534-546 existing PRBB Sets.newHashSet EXTENDED to 10 kods covering BA REMARK (History.txt:38-43) verbatim: KKPT SRPDT PPTPRBB SRJKBBPDT SRJKBBPTG PRJKBBPDT PRJKBBPTG + SRPT. CORRECTION: first pass used TGS_PERAKUAN_PENTADBIR_TANAH (PPT) which has NO row under PRBB - right kod is PPTPRBB (ind_tgsn 5134409, arm :171 gives KPT/PPD/KPPD/PT vs PPT arm :169 KPT/PPD/KPPD). JKBB PTG variants were missing, now added. Mapping keyed on ind_tgsn.nama not constant names. Diff +11/-1 uncommitted mlk/master. NEXT=miya Eclipse build+deploy+test
 branch=n/a-pre-apply
 
 qa=QA-273294

@@ -33,6 +33,33 @@ const INTAKE = /\b(Description\.txt|History\.txt|0\.\s*Brief|attachment|annotati
 // required table: a header row pairing BA's words with my understanding
 const BA_TABLE = /\|[^|\n]*\bBA\b[^|\n]*\|[^|\n]*\b(underst|reading|interpret|my take)/i;
 
+// v1.1 (2026-08-03, QA-273201 — ticket-source-skipped escalated 7d=2): a BA table built from a GREP
+// is worse than none — it reads authoritative while silently missing journal entries. Require proof
+// the ticket text was READ IN FULL this session: a Read tool call on History.txt/Description.txt, or
+// a `cat` of it with no pattern filter. A grep/Select-String/-A/-B/head over History.txt does NOT count.
+function ticketTextWasReadInFull(transcriptPath) {
+  let raw;
+  try { raw = fs.readFileSync(transcriptPath, 'utf8'); } catch (_) { return true; } // unreadable -> don't block
+  const TICKET_FILE = /(History|Description)\.txt/i;
+  const FILTERED = /\b(grep|rg|Select-String|findstr|head\b|tail\b|sed\b|awk\b)/i;
+  for (const line of raw.split(/\r?\n/)) {
+    if (!line) continue;
+    let o; try { o = JSON.parse(line); } catch (_) { continue; }
+    const m = o.message || o;
+    const c = m && m.content;
+    if (!Array.isArray(c)) continue;
+    for (const b of c) {
+      if (!b || b.type !== 'tool_use' || !b.input) continue;
+      if (b.name === 'Read' && TICKET_FILE.test(String(b.input.file_path || ''))) return true;
+      if ((b.name === 'Bash' || b.name === 'PowerShell')) {
+        const cmd = String(b.input.command || '');
+        if (TICKET_FILE.test(cmd) && !FILTERED.test(cmd)) return true;
+      }
+    }
+  }
+  return false;
+}
+
 function readLastAssistantText(transcriptPath) {
   let raw;
   try { raw = fs.readFileSync(transcriptPath, 'utf8'); } catch (_) { return null; }
@@ -67,7 +94,25 @@ process.stdin.on('end', () => {
     if (!text || text.length < 600) process.exit(0);
     if (EXEMPT.test(text)) process.exit(0);
     if (!TICKET.test(text) || !INTAKE.test(text)) process.exit(0); // not a quest-intake turn
-    if (BA_TABLE.test(text)) process.exit(0);                       // table present -> good
+    if (BA_TABLE.test(text)) {
+      if (ticketTextWasReadInFull(data.transcript_path || '')) process.exit(0); // table + full read -> good
+      try { fs.appendFileSync(LEDGER, JSON.stringify({ ts: new Date().toISOString(), kind: 'ba-table-from-filtered-read' }) + '\n'); } catch (_) {}
+      process.stdout.write(JSON.stringify({
+        decision: 'block',
+        reason: [
+          '⛔ ba-understanding-table v1.1: BA table emitted, but the ticket text was never READ IN FULL this session.',
+          '   Only filtered access (grep / Select-String / head / -A -B) to History.txt / Description.txt was found.',
+          '   A table built from a grep reads authoritative while silently missing journal entries —',
+          '   QA-273201: grepping the REMARK block hid the entry naming the tested tugasan (SRPT + KKPT)',
+          '   and the trigger scenario ("Tindakan = Pembetulan > Klik butang Selesai"), which produced two',
+          '   false statements to miya and a fix aimed at the wrong trigger.',
+          '   FIX: Read the whole 0. Brief/History.txt (and Description.txt), then rebuild the table',
+          '   with ONE ROW PER JOURNAL ENTRY + one row per attachment.',
+          '   Genuinely not a ticket-intake turn -> [skip-ba-table: <reason>].',
+        ].join('\n'),
+      }));
+      process.exit(0);
+    }
     try { fs.appendFileSync(LEDGER, JSON.stringify({ ts: new Date().toISOString(), kind: 'ba-table-missing' }) + '\n'); } catch (_) {}
     process.stdout.write(JSON.stringify({
       hookSpecificOutput: {

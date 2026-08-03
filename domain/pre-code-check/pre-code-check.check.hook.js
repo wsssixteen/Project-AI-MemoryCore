@@ -29,10 +29,11 @@ const REQUIRED_CHECKS = [
   'analog', 'in-file', 'sibling', 'existing-reuse', 'name-by-purpose',
   'minimal-diff', 'logic-matrix', 'blast-radius', 'predicate', 'falsifier',
   'read+write-path', 'BA-expected', 'full-address', 'sibling-diff', 'necessity', 'all-writers',
+  'kod-resolution', 'prior-fix', 'hierarchy',
 ];
 const CONFIDENCE_RX = /\bconfidence\s+\d+\s*%/i;
 
-const EVIDENCE_CHECKS = ['analog', 'existing-reuse', 'blast-radius', 'read+write-path', 'falsifier', 'necessity', 'all-writers'];
+const EVIDENCE_CHECKS = ['analog', 'existing-reuse', 'blast-radius', 'read+write-path', 'falsifier', 'necessity', 'all-writers', 'kod-resolution', 'prior-fix', 'hierarchy'];
 const EVIDENCE_MIN = 12;
 
 // v1.2: a ✓ on BA-expected must cite an OBSERVATION (something read/queried/rendered), never a
@@ -88,7 +89,7 @@ runHook({ name: 'pre-code-check', event: 'PreToolUse' }, (input) => {
       blockReason: [
         '⛔ pre-code-check: etanah code Edit blocked — no CODE-CHECK emit line in this turn.',
         '   File: ' + filePath,
-        '   Emit ONE compact line before the Edit, all 15 checks with ✓ or ✗(reason):',
+        '   Emit ONE compact line before the Edit, all 17 checks with ✓ or ✗(reason):',
         '',
         '     CODE-CHECK: analog ✓ · in-file ✓ · sibling ✓ · existing-reuse ✓ · name-by-purpose ✓',
         '              · minimal-diff ✓ · logic-matrix ✓ · blast-radius ✓ · predicate ✓ · falsifier ✓',
@@ -146,6 +147,21 @@ runHook({ name: 'pre-code-check', event: 'PreToolUse' }, (input) => {
         '     blast-radius    ✓(grepped <symbol> -> N call-sites: <file:line>, ...)',
         '     read+write-path ✓(<Class.method():line> persists it) | ✓(grepped <getter> -> 0 persisters)',
         '     falsifier       ✓(the record shape that would break this + how it differs from the one you tested)',
+        '     hierarchy       ✓(for ANY super./override/inherited-field claim: quote the actual EXTENDS',
+        '                       chain you READ, class:line each hop — e.g. MlkKertasTemplateForm:102 ->',
+        '                       BasePelupusanDokumenForm:114 -> BasePenyediaanDokumenForm:173 -> BaseBpmForm:197)',
+        '                     | ✗(N/A — edit touches no inherited member)',
+        '                       QA-273201: assumed BasePelupusanDokumenForm extends BasePelupusanForm from the',
+        '                       NAMES. It does not. The whitelist I patched was unreachable dead code.',
+        '     prior-fix       ✓(git log --grep + -S on the SYMPTOM words, not the file — quote the SHA and',
+        '                       what it did, or "0 hits") — QA-273201: f33f8632d8 says verbatim "Agihan Kepada',
+        '                       field not populate after user click button Selesai on Senarai Dokumen Panel",',
+        '                       the same bug already solved via onRefreshComponent(); two fixes were built on',
+        '                       paths the BA never uses because this search was skipped.',
+        '     kod-resolution  ✓(each kod/urusan/status literal resolved via the REFERENCE TABLE row you read —',
+        '                       ind_tgsn.nama / ind_ursn.nama / rjk_* — quote kod + pk, e.g.',
+        '                       "Perakuan Pentadbir Tanah" -> PPTPRBB, ind_tgsn 5134409, ursn_id 45)',
+        '                     | ✗(N/A — change keys on no kod/urusan/status literal)',
         '   A ✓ you cannot cite is a guess. Go run the grep/query first.',
       );
     }

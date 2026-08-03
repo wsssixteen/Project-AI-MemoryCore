@@ -28,10 +28,25 @@ function runHookWith(input) {
   return { status: r.status, stdout: r.stdout || '', stderr: r.stderr || '', blocked, combined };
 }
 
-const FULL_CHECK_LINE = 'CODE-CHECK: analog ✓ · in-file ✓ · sibling ✓ · existing-reuse ✓ · name-by-purpose ✓ · minimal-diff ✓ · logic-matrix ✓ · blast-radius ✓ · predicate ✓ · falsifier ✓ · read+write-path ✓ · BA-expected ✓ · full-address ✓ · sibling-diff ✓ · confidence 85%';
-const CROSS_JUSTIFIED = 'CODE-CHECK: analog ✗(novel defensive helper) · in-file ✓ · sibling ✓ · existing-reuse ✓ · name-by-purpose ✓ · minimal-diff ✓ · logic-matrix ✓ · blast-radius ✓ · predicate ✓ · falsifier ✓ · read+write-path ✓ · BA-expected ✓ · full-address ✓ · sibling-diff ✓ · confidence 85%';
-const CROSS_BARE = 'CODE-CHECK: analog ✗ · in-file ✓ · sibling ✓ · existing-reuse ✓ · name-by-purpose ✓ · minimal-diff ✓ · logic-matrix ✓ · blast-radius ✓ · predicate ✓ · falsifier ✓ · read+write-path ✓ · BA-expected ✓ · full-address ✓ · sibling-diff ✓ · confidence 85%';
+const EV = {
+  analog: 'analog ✓(BasePelupusanForm.java:534 same-shape arm)',
+  existingReuse: 'existing-reuse ✓(grepped flagRepopulate -> reused :530/:543)',
+  blastRadius: 'blast-radius ✓(grepped onChangeTindakanKeputusan -> 30 call-sites)',
+  readWrite: 'read+write-path ✓(PelupusanPegawaiAgihService:126 persists it)',
+  falsifier: 'falsifier ✓(a task whose peranan_semasa misses the arm test)',
+  necessity: 'necessity ✓(each kod maps to one BA-named tugasan)',
+  allWriters: 'all-writers ✗(N/A — control-flow arm, no value guarded)',
+  kodResolution: 'kod-resolution ✓(Perakuan Pentadbir Tanah -> PPTPRBB, ind_tgsn 5134409)',
+  hierarchy: 'hierarchy ✓(MlkKertasTemplateForm:102 -> BasePelupusanDokumenForm:114 -> BaseBpmForm:197)',
+  priorFix: 'prior-fix ✓(git log --grep Agihan Kepada -> f33f8632d8 onRefreshComponent)',
+};
+const TAIL = ` · in-file ✓ · sibling ✓ · ${EV.existingReuse} · name-by-purpose ✓ · minimal-diff ✓ · logic-matrix ✓ · ${EV.blastRadius} · predicate ✓ · ${EV.falsifier} · ${EV.readWrite} · BA-expected ✓(observed History.txt:38-43) · full-address ✓ · sibling-diff ✓ · ${EV.necessity} · ${EV.allWriters} · ${EV.kodResolution} · ${EV.priorFix} · ${EV.hierarchy} · confidence 85%`;
+
+const FULL_CHECK_LINE = `CODE-CHECK: ${EV.analog}${TAIL}`;
+const CROSS_JUSTIFIED = `CODE-CHECK: analog ✗(novel defensive helper)${TAIL}`;
+const CROSS_BARE = `CODE-CHECK: analog ✗${TAIL}`;
 const MISSING_CHECKS = 'CODE-CHECK: analog ✓ · in-file ✓ · sibling ✓ · confidence 85%';
+const BARE_KOD_RESOLUTION = `CODE-CHECK: ${EV.analog}${TAIL.replace(EV.kodResolution, 'kod-resolution ✓')}`;
 
 // F1: non-etanah path → allow (no fire)
 let r = runHookWith({ tool_input: { file_path: 'C:/tmp/some-random-file.txt' }, transcript_path: makeTranscript('doing an edit') });
@@ -64,6 +79,10 @@ check('F7 etanah .xhtml without CODE-CHECK → BLOCK', r.blocked, 'blocked=' + r
 // F8: [skip-pre-code-check: <reason>] bypass → allow
 r = runHookWith({ tool_input: { file_path: 'E:/Projects/Melaka/etanah-pelupusan/src/main/java/foo.java' }, transcript_path: makeTranscript('[skip-pre-code-check: rename-only]\napplying rename') });
 check('F8 bypass token → allow', !r.blocked, 'blocked=' + r.blocked);
+
+// F10: kod-resolution present but bare ✓ (no reference-table citation) → block
+r = runHookWith({ tool_input: { file_path: 'E:/Projects/Melaka/etanah-pelupusan/src/main/java/foo.java' }, transcript_path: makeTranscript(BARE_KOD_RESOLUTION + '\napplying fix') });
+check('F10 bare kod-resolution ✓ → BLOCK', r.blocked && /kod-resolution/i.test(r.combined), 'blocked=' + r.blocked);
 
 // F9: empty stdin → no crash, no block
 r = spawnSync(process.execPath, [HOOK], { input: '', encoding: 'utf8', timeout: 30000, env: process.env });
