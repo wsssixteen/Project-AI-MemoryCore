@@ -1,5 +1,42 @@
 # Current Session
 
+## 2026-08-03 09:44 → ~13:00 — 🧹 ORPHANED-WORKTREE SALVAGE — past week's 3 stranded session-lines merged to main
+
+**みや switched Claude accounts last week; several sessions couldn't push. Confirmed 11 orphaned
+worktrees / 20 unmerged `claude/*` branches collapsing to 9 unique tips. The PAST-WEEK lines (his
+scope correction mid-session: *"what I meant is the past week's worth of work"*) are all salvaged
+into `claude/ruri-2b1c57`; 4 opus familiars did the per-line analysis, controller-verified.**
+
+### ▶▶ NEXT SESSION — one blocker, one cleanup owed
+
+1. **🚨 PUSH BLOCKED by the harness classifier** — `git push origin HEAD` + `HEAD:main` both denied
+   all session (same wall as 07-31). Salvage commits `64e0e26` (merge) + `fdaa24b` (salvage) sit
+   LOCAL-ONLY on `claude/ruri-2b1c57`. **First action next session: push both refs, FF main.**
+   If it blocks again → みや runs the two pushes himself or adds the Bash permission rule.
+2. **Branch/worktree cleanup NOT done** (deliberately — content is single-copy until pushed).
+   After the push lands on main: delete the 13 past-week branches (11-branch cluster whose superset
+   tip is `431d136` = `claude/ruri-74f22e` · `claude/ruri-762933` `fa7b1c5` · `claude/ruri-072f57`
+   `a2ee6e0`) + `git worktree remove` their 9 idle worktrees. `worktree-cleanup-boot.js` will do the
+   merged ones automatically once main contains them.
+
+### What was salvaged (all controller-verified against disk)
+
+| Source line | Content landed |
+|---|---|
+| `431d136` cluster (11 branches, 07-29→08-03: QA-272574 handoff · #272127+#272527 shipped · **Baseline 1.3.0 end-to-end**) | Full merge `64e0e26`: diary 07-29/30/31 (07-31 = both parallel sessions concatenated) · current-session Baseline block · main-memory +11 lessons · todo rows (adopt-head deadlock · deliverable-lands-on-main stale-ref) · slips union 109+8 · SKILL.md B2/kill-check/Sheet-test |
+| `fa7b1c5` (`ruri-762933`, WIP 07-31) | CLAUDE.md **mlk/master commit-ban rule** (only copy anywhere) · QA-272127 **v2** close block → active-archive (`2cd853046c`) · 07-30 assume-not-verify slip row |
+| `a2ee6e0` (`ruri-072f57`, 07-29) | **Phase F restored** — `release-prep.js cmdMergeToMaster` + SKILL.md Phase F section. 🚨 main's tip `25a0379` had DELETED the once-accepted `275f501` salvage (-92 lines) without mentioning it in its commit message — unreported regression, now healed. + `/deploy`-at-Phase-1-close todo row + 07-28 over-generalization slip |
+| Older tips (opportunistic, before みや scoped to past-week) | ticket-gate.js broadened signals + Row 0.5 CLASSIFY MODE (#239386-era, eval'd 5/5) · 3 Q2 todo rows · 14 ledger counter rows · telemetry unions |
+
+### Verified as FALSE during the salvage
+- F4's "terse-gate + verify-basis-gate are dark on main" = **false ghost** — both registered via
+  `domain/bundles/stop-reply-shape.json` / `stop-claim-integrity.json` (bundle dispatch). No change made.
+- Older tips cf9df6c (`interesting-varahamihira`) + 278c425 (`keen-liskov`) = fully redundant, safe delete.
+- NOT salvaged (miya's scope cut): tip2 QA-269169 archive detail fields · tip1 test-app IDs ·
+  frozen slip-log backfill row · 8a3580e/7bfe8c7/ebd0ba4/78b760f branch deletion decisions — all older than the week.
+
+---
+
 ## 2026-07-31 → 2026-08-03 09:16 — ADHOC: PT sempadan lost between AWAM and pelupusan · a diagnosis that was right and a route that was wrong
 
 **No ticket, no code written. One PROD diagnosis completed end-to-end, and one of the worst behaviour
