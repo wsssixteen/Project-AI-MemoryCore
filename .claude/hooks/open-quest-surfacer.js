@@ -128,8 +128,12 @@ function main() {
   // we sleep). ~0.4s measured for 3 quests in parallel. The primary capture points are in
   // active-cli.js start/update/archive; this is the safety net, not the mechanism.
   try {
-    require(require('path').join(__dirname, '..', '..', 'quest', 'redmine-status-check'))
-      .checkAll(open.map(q => ({ qa: q.qa, status: String(q.status).split(' ')[0] })));
+    const rsc = require(require('path').join(__dirname, '..', '..', 'quest', 'redmine-status-check'));
+    rsc.checkAll(open.map(q => ({ qa: q.qa, status: String(q.status).split(' ')[0] })));
+    // 2026-08-04: the REVERSE direction. checkAll can only judge blocks that exist; it is blind to
+    // a ticket assigned on Redmine that was never added locally. On 2026-08-04 boot that blindness
+    // reported 3 open quests when 8 were assigned — an undercount hides miya's own work.
+    rsc.checkMissing(open.map(q => q.qa));
   } catch (_) { /* never let a boot check break boot */ }
 }
 
