@@ -656,19 +656,3 @@ next_action=miya: ownership call (fix jrxml ourselves vs delegate to Reports tea
 delegated_to=Noor Dayana (Redmine assignee 2026-07-27 09:38)
 delegated_date=2026-07-27
 close_note=RECONCILED from Redmine 2026-07-27: status=New, done=0, assignee=Noor Dayana. NOT Nurfatin Auni and NOT Nurhayati Abdul Razak - both earlier names were wrong. Handover content (1-token jrxml fix PlpLaporanJadual1P2_Sub03.jrxml:148 PB->UP, 6 affected stg1 records, PT+PSBS+MCL blast radius) is in qa_doc ready to send. DUE 2026-07-29.
-
-qa=QA-272574
-quest_start_ts=2026-07-28T11:53:31.156Z
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\112. ESOKONGAN #272574 - Pelupusan - PLPS  - Penyediaan Maklumbalas Tangguh - Papar surat salah
-phase=0
-status=hold
-ticket_type=bug
-env=MLK Staging et_main_stg1
-issue_one_liner=Pelupusan > PLPS  > Penyediaan Maklumbalas Tangguh > Papar surat salah
-assigned_to_me=2026-07-28
-current_phase=DIRECTION SET by miya 2026-08-03 (qa_doc §D, verbatim): analog = permohonan bertindih TamatAplikasiService (message to AWAM after PSKPDT + set Tangguh); hook candidate MlkKertasTemplateForm.overridePostSubmitMethod() on Hantar at PSKPDT; follow MlkSuratTemplateForm.overridePostSubmitMethod() PT+PLPS logic; Gantung -> umm_a_tgsn.status_tugasan (miya lean, over catatan_tgsn_strusnya). FLOW: PJTLT > Pindaan Tidak > Kpts Awal Tangguh > PYSKTPDT > Pembetulan y/t > PSKPDT > Gantung > [UNDECIDED: PT proceeds?] > cancels=>PJTLT / proceeds=>PYSTP. DB ref env stg1. Prior W1-W4 (70%/55% fork + BA-Q reuse-kod) superseded as working plan, kept in qa_doc
-qa_doc=projects/coding-projects/active/QA-272574/QA-272574.md
-branch=n/a-pre-apply
-urusan=PLPS
-tugasan=PYSKT
-test_app=PTMLK/01/L/PLPS/2026/6 aplikasi_id 3384879 @ sanarimah@melaka.gov.my (PYSKT, pejabat_id 2 = PDT)

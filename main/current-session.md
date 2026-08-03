@@ -1,5 +1,12 @@
 # Current Session
 
+## 2026-08-03 (cont.) — #272574 delegated to Aaron · archived
+
+- **Direction verified + banked** — QA-272574.md sections D (みや's chosen direction), D2 (code+BPMN verification: dead-code trap in `TamatAplikasiServiceTask`, live analog `MlkSuratTemplateForm.overridePostSubmitMethod():2424-2453`), D3 (stg1 DB facts: `status_tugasan` Gantung=8 vs `catatan` Gantung=453). PDT-level kods `PYSKTPDT`/`PSKPDT` exist nowhere → new BPMN needed.
+- **Ticket passed to Aaron Loh Zhi Yong** per Redmine 2026-08-03 03:52 (status *In Progress*). Reconciled, not resolved by us.
+- **Archive hygiene done** — `qa=QA-272574` block cut from `quest/active.txt` → `quest/active-archive.txt` under `## ── Archived 2026-08-03 (delegated to Aaron) ──` with `status=closed` · `delegated_to` · `closed` · `close_note`. Task folder already sat in `1. Tasks\Melaka\Archive\112. ESOKONGAN #272574 …` (verified, no move needed); `task_folder=` updated to the Archive path.
+- **Remaining in active.txt**: one non-closed block — `QA-271918` (`status=delegated`, jrxml fix handed to Noor Dayana 2026-07-27). Every other block is `status=closed`.
+
 ## 2026-08-03 09:44 → ~13:00 — 🧹 ORPHANED-WORKTREE SALVAGE — past week's 3 stranded session-lines merged to main
 
 **みや switched Claude accounts last week; several sessions couldn't push. Confirmed 11 orphaned
