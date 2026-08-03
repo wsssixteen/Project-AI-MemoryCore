@@ -30,24 +30,6 @@ claude plugin add --local plugins/ruri-skills
 - Skill format reference: `plugins/ruri-skills/skill-format.md`
 - Verify: type `Ruri` in a fresh session — the `ruri-skills:ruri` skill should fire
 
-## Step 2b — Git `safe.directory` (needed after ANY Windows-account change, not only a new machine)
-
-> Added 2026-07-29. Hit live mid-session: every `git` command in every repo failed with `fatal: detected dubious ownership in repository`, because the account the shell runs as had changed from `PJNBRIDHWAN\Ridhwan` to `AzureAD\AHMADRIDHWANANUAR` while the `.git` directories were still owned by the old SID. Boot-time git worked; DE-time git did not — so it can strike *inside* a session, not just at setup.
-
-**Symptom**: `fatal: detected dubious ownership in repository at '<path>'` naming two different owners.
-**Diagnose**: `whoami` — compare against the "owned by" line in the error.
-
-```
-git config --global --add safe.directory "C:/Users/Ridhwan/OneDrive - Pymsoft Sdn Bhd/0. AI/Project-AI-MemoryCore"
-git config --global --add safe.directory "E:/Projects/Melaka/etanah-pelupusan"
-git config --global --add safe.directory "E:/Projects/Melaka/etanah-awam"
-git config --global --add safe.directory "E:/Projects/Melaka/etanah-common"
-```
-
-- Worktrees under `.claude/worktrees/<name>` need their **own** entry each — the parent exception does not cover them.
-- Forward slashes, quoted (the paths contain spaces and a dot-prefixed segment).
-- This is per-account in `~/.gitconfig`, so it does NOT sync with the project folder — same class as Step 2.
-
 ## Step 3 — Done
 
 Everything else (personality, memory, session, permissions, project rules) is in the project folder and already synced.

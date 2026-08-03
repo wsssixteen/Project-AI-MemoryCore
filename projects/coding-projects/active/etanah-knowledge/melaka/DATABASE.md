@@ -952,3 +952,74 @@ SELECT * FROM pcp_capaian_modul WHERE capaian_pengguna_id IN (SELECT capaian_pen
 - The auto-assignment engine uses a **looser** check — `CapaianPenggunaRepository.findByModulUrusanPejabatPengguna():158-160`
   (`etanah-common\src\main\java\my\gov\etanah\common\repository\pengguna\CapaianPenggunaRepository.java`), modul+peranan+pejabat only —
   so a Shape-B officer can be auto-assigned a task yet cannot be picked manually. That asymmetry is the argument the strict read is the defect.
+
+---
+
+## 16. AWAM → pelupusan land data: the `mklmt_tmbhn` JSON spine (2026-07-31, ADHOC PT sempadan)
+
+**Scope**: how Portal Awam land data reaches the officer side, and why the dedicated sempadan tables are a trap.
+
+### 16.1 The two sides
+
+| Side | Table | Written by |
+|---|---|---|
+| AWAM (pra) | `umm_p_hkmlk` · `umm_p_permohonan_tnh` | the applicant's own login (gmail etc.) |
+| Officer (app) | `umm_a_hkmlk` · `umm_a_permohonan_tnh` | `SYSTEM` when the intake service task inserts it; the officer's login when the counter path creates it first |
+
+Spine: `umm_aplikasi.aplikasi_id` ↔ `umm_p_aplikasi.aplikasi_id` → `umm_p_hkmlk.p_aplikasi_id`.
+`umm_aplikasi.id_pengenalan` holds the `PTMLK/...` string (there is **no** `no_permohonan` column).
+
+### 16.2 🚨 `umm_a_hkmlk_sempadan` / `umm_p_hkmlk_sempadan` are DEAD tables
+
+**0 rows schema-wide on PROD `et_main` and on `et_main_stg1`.** They look like the obvious home for
+Utara/Selatan/Timur/Barat and they are not. Sempadan lives in the **`mklmt_tmbhn` JSON**:
+
+```
+{"refData":true,"sempadanList":"[{\"Utara\":\"13093\"},{\"Selatan\":\"13154\"},{\"Timur\":\"13103\"},{\"Barat\":\"13101\"}]"}
+```
+
+Sibling keys in the same column: `jarakDari`, `totalLuas`, `appHakmilikID`, `pilihanPremium`,
+`formulaPremium`, `premiumString`, `premiumDenda`, `premiumNilaianPasaran`, `jkklJenisHakmilikTanah`.
+Constant is `PelupusanConstant.KEY_SEMPADAN_LIST` (`= "sempadanList"`, `PelupusanConstant.java:444`).
+
+### 16.3 The transfer happens on ONE line, behind a gate
+
+`etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\service\impl\PelupusanSpocService.java:241`
+`BeanUtil.copyProperties(phm, ahm, "id")` — the only code that moves `maklumatTambahan` from pra to app.
+Gated at `:234` on `CollectionUtils.isEmpty(ahmList)`, reached from `SpocIntegrationServiceTask.process():70`
+(Flowable service task ⇒ `created_by = SYSTEM`).
+
+`com.puncaktanah.utils.BeanUtil.copyProperties()` ignores only `id` / `createdBy` / `version` /
+`createdDate` / `lastModifiedBy` / `lastModifiedDate` + `Collection` fields — so `maklumatTambahan`
+IS in scope whenever it runs. Source: `E:\Dev\.m2_etanah\com\puncaktanah\puncak-tanah\2.1.27\puncak-tanah-2.1.27-sources.jar`.
+
+### 16.4 Payment channel decides whether the copy runs
+
+`hsl_bayaran_fi.created_by` is the discriminator — an `@melaka.gov.my` creator means counter payment.
+Counter payment creates `umm_a_hkmlk` in the officer's session **before** the workflow exists, so the
+gate is false and the copy never runs. PROD census over PT applications whose AWAM row carries sempadan:
+
+| Paid | has sempadan | missing |
+|---|---|---|
+| Online | 27 | 10 |
+| At SPOC counter | 4 | 36 |
+
+Ordering probe — compare `umm_a_hkmlk.created_date` against `min(umm_aliran_kerja.created_date)` for the
+same `aplikasi_id`; a row that predates the workflow was written by a human session, not the service task.
+
+### 16.5 Reports read the AWAM side directly
+
+`PlpLaporanJadual1P2_Sub01.jrxml:119-126` (and `Sub03`) do
+`JSON_VALUE(JSON_VALUE(PH.MKLMT_TMBHN,'$.sempadanList'),'$.Utara')` — straight off the pra table. **A
+report showing a value proves nothing about the officer-side row**; that asymmetry is exactly what made
+the 2026-07-31 ticket look impossible ("Jadual 1 ada, skrin tiada").
+
+### 16.6 Screen-writer signature (useful for provenance)
+
+`PelupusanService.populateSempadanTanahListIntoJson():4687` returns `StringUtils.EMPTY`, never null — so
+an officer screen-save always leaves `"sempadanList":""` plus a `jarakDari` sibling. On PROD both counts
+are **0**, i.e. the pelupusan Maklumat Tanah screen has never written this field. Use the presence of
+`""`-vs-array, and of `jarakDari`, to tell which writer produced any given row.
+
+**Full case**: `projects/coding-projects/active/PENDING-TICKET-pt-sempadan-awam/FINDINGS.md` ·
+register `ADHOC-REGISTER.md` A8.

@@ -100,3 +100,7 @@
 {"ts":"2026-07-28T18:24:49.920Z","category":"assume-not-verify"}
 {"ts":"2026-07-28T18:24:49.991Z","category":"assume-not-verify"}
 {"ts":"2026-07-28T18:24:50.056Z","category":"reask/verbose"}
+{"ts":"2026-07-31T10:22:26.263Z","category":"assume-not-verify"}
+{"ts":"2026-07-31T13:50:19.916Z","category":"infer-instead-of-ask-the-reporter"}
+{"ts":"2026-07-31T13:50:31.414Z","category":"assume-not-verify"}
+{"ts":"2026-07-31T13:50:47.901Z","category":"reask/verbose"}

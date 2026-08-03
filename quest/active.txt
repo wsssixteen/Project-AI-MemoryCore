@@ -605,14 +605,16 @@ test_app=PTMLK/02/L/MLPS/2026/1 (No lesen M 026; login nurulazura@melaka.gov.my;
 current_phase=Closed
 difficulty=M
 next_action=miya: O2 gate-scope nod + stash 265537 probe -> Apply the 5-edit spec from qa_doc
-branch=mlk/esokongan/271985
+branch=mlk/esokongan/271985v2
 local_test_confirmed=true
 fix4_gate=isMelaka+URS_MLPS (tightened 2026-07-27 after miya challenge; parameter.pemohonList has exactly 3 consumers PelupusanReportMethodConstant.java:391/:400/:415 - grep-verified; gate removes the arbitrary apbList.get(0) exposure on multi-party non-MLPS apps)
 diff_state=57 insertions 0 deletions across 4 files, mvn -o compile EXIT 0, uncommitted on mlk/master
 commit=ac60993732
-pushed=2026-07-27
-closed=2026-07-27
+pushed=2026-07-31
+closed=2026-07-31
 close_note=Phase 1 closed. 4 files +57/-0: MlkBorang4AeForm (Fix1a tujuan fallback in initMklmtTanah + Fix2a net pengecualian URS_MLPS-gated) - PelupusanReportMethodConstant (import IConfigurationService + Fix1b tujuan rung isMelaka + Fix3 Fi bare-return byrnFiList isMelaka+URS_MLPS) - PelupusanService (Fix2b net pengecualian isMelaka) - PelupusanTemplateReportMethodParameter (import + Fix4 pemohon fallback isMelaka+URS_MLPS). Remote SHA ac6099373202cb89046f78e99445bb96f694db80 verified == local HEAD. Excluded: .settings (pre-existing Eclipse churn) + untracked jboss-deployment-structure.xml (QA-265537 deploy fix). Jasper binding VERIFIED: page-1 Fi = LaporanBorang4Ae.jrxml:480 RM+P_FI <- methods.put P_FI :167 <- populateFi (Fix3); page-2 Pembaharuan Fi = LaporanBorang4Ae_Sub02.jrxml:79 field fiByrn <- setFiByrn :16028 (Fix2b) - independent bindings so BA Expected#2 (0) and Expected#3 (RM250) do not conflict. OPEN for Phase 2: O1 bare LAIN-LAIN no perincian stored (BA-Q) - O2 Fix2b also reaches MlkPengiraanBayaranLesenForm:220 not named by BA.
+commit_cycle1=ac60993732
+commit_cycle2=678355690d
 
 qa=QA-271918
 quest_start_ts=2026-07-27T07:45:12.138Z
