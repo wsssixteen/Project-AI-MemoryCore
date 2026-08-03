@@ -1,5 +1,25 @@
 active:
 
+qa=QA-272527
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\108. ESOKONGAN #272527 - Pelupusan - Kecilkan Margin Spacing Footer
+phase=1
+status=closed
+current_phase=Closed
+ticket_type=bug
+env=int-env
+urusan=Semua Urusan
+issue_one_liner=Pelupusan - Kecilkan Margin Spacing Footer - cycle 2 (JT PPTPB + JT Ulangan + JPPH x5 + YB x2)
+rework=cycle-2
+quest_start=2026-07-30
+closed=2026-07-31
+branch=mlk/esokongan/272527v2
+commit=ac8e9ba316
+int_env_merge=ab799cf630
+local_test_confirmed=true
+qa_doc=projects/coding-projects/active/QA-272527/QA-272527.md
+scope_anchor=PAGE 1 ONLY - page 2+ trailing sections at 1134/720 are OUT OF SCOPE, do not re-raise
+conflict_note=TemplateSuratNilaianJPPH_PLTP_PSBS.docx conflicted with int-env 272651 pelanCC; resolved keeping pelanCC + applying our pgMar. WILL RECUR when 272651 merges to master
+
 qa=QA-264006
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\58. QA #264006 - Semua Urusan - Tugasan peranan PT - Nama PT tidak sama dengan PT tugas
 phase=1
