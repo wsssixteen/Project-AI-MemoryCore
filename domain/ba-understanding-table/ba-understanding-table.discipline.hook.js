@@ -20,7 +20,7 @@
  *   bypass [skip-ba-table: <reason>].
  *
  * Ledger: domain/ba-understanding-table/log.jsonl  (per system-rules Rule 5)
- * meta-layer-audit: registered in settings.json Stop at the ${CLAUDE_PROJECT_DIR} path.
+ * system-audit: registered in settings.json Stop at the ${CLAUDE_PROJECT_DIR} path.
  */
 'use strict';
 const fs = require('fs');

@@ -2,7 +2,7 @@
  * system-check-trigger.js — SessionStart hook
  *
  * Mirrors evolution-check-trigger.js pattern for the system-check skill.
- * Reads meta/evolution-protocol.md for `last-system-check` timestamp;
+ * Reads system/evolution-protocol.md for `last-system-check` timestamp;
  * if >30 days elapsed, surfaces flag at boot.
  *
  * Created 2026-05-24 — paired with .claude/skills/system-check/SKILL.md.
@@ -17,7 +17,7 @@ const CADENCE_DAYS = 30;
 
 try {
   if (!fs.existsSync(PROTOCOL_FILE)) {
-    process.exit(0);  // meta-layer not yet built; silent
+    process.exit(0);  // system-layer not yet built; silent
   }
 
   const content = fs.readFileSync(PROTOCOL_FILE, 'utf8');
@@ -29,7 +29,7 @@ try {
     // Never run before — flag the absence
     const lines = [
       '',
-      '⚙️  system-check-trigger: ⚠️ no `last-system-check` recorded in meta/evolution-protocol.md',
+      '⚙️  system-check-trigger: ⚠️ no `last-system-check` recorded in system/evolution-protocol.md',
       '',
       'system-check has never been run. Recommend running this session to establish baseline.',
       'Invoke: "/system-check" or "audit the system" or "deep audit"',

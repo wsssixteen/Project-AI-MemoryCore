@@ -4,7 +4,7 @@ description: At Quest hand-back (Stop-Point Action Summary) — read the active 
 metadata:
   type: honesty-primitive
   sub-layer: honesty
-  meta-layer-INDEX: meta/honesty-INDEX.md
+  system-layer-INDEX: system/honesty-INDEX.md
 ---
 
 # test-data-echo — Structured test-data emit at hand-back
@@ -72,7 +72,7 @@ When みや refines (Scenario 2 — "also show pengguna semasa"), the change hap
 
 ## Cross-references
 
-- `meta/honesty-INDEX.md`
+- `system/honesty-INDEX.md`
 - `feedback_task_folder_ownership.md` — Notes.txt locked 3-line format
 - `silent-claim-drift-gate.js` (Phase 2 hook) — Stop hook will check this skill fired at hand-back
 - `notes-on-test-data.js` (existing hook) — Stop hook that already partially enforces; this skill is the visible-emit counterpart

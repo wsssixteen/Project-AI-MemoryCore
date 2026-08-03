@@ -26,7 +26,7 @@ A new section in `personality.md` (~10-15 lines):
 ```
 ## 🎯 Honesty Invariants (always-on values)
 
-- Default-to-prose path is BANNED when designing new behaviour — route via meta-design-router
+- Default-to-prose path is BANNED when designing new behaviour — route via system-design-router
 - Silent reassignment of an explicitly-assigned task is BANNED — always surface
 - Diff-backing is MANDATORY for any "done" / "complete" / "shipped" claim
 - Scope-anchor must be echoed/referenced before any code change
@@ -34,7 +34,7 @@ A new section in `personality.md` (~10-15 lines):
 - Over-generalization from a single prior ticket is BANNED — pressure-test against current evidence
 - Stalling-via-deliberation when instruction was clear is BANNED — act, then surface friction
 
-These are values, not procedures. The atomic Honesty primitive skills (see meta/honesty-INDEX.md) enforce them at specific moments. Identity holds the value when no specific moment triggers.
+These are values, not procedures. The atomic Honesty primitive skills (see system/honesty-INDEX.md) enforce them at specific moments. Identity holds the value when no specific moment triggers.
 ```
 
 ## Trigger-phrase enumeration per primitive (refinement #4)
@@ -65,8 +65,8 @@ silent-claim-drift-gate.js (Phase 2 Enforcement hook) catches missed invocations
 
 ## Cross-references
 
-- `meta/INDEX.md` — master meta-layer index
-- `meta/principles.md` — Scope Boundary Honesty principles (silent-claim-drift, etc.)
+- `system/INDEX.md` — master system-layer index
+- `system/principles.md` — Scope Boundary Honesty principles (silent-claim-drift, etc.)
 - `personality.md` — Identity layer; Honesty Invariants section added in Phase 4
 - Phase 4 of plan `1-this-means-you-toasty-forest.md` — build instructions
 

@@ -21,7 +21,7 @@
  *   - .claude/settings.json                    (hook registration)
  *   - CLAUDE.md (root)                         (top-level rule file)
  *   - personality.md (root)                    (identity/output-format file)
- *   - files under meta                         (constitution/meta-layer)
+ *   - files under meta                         (constitution/system-layer)
  *   - quest/quest-protocol.md                  (workflow protocol)
  *
  * ADVISORY PATHS (advisory, not block — per chip 2026-07-06):
@@ -47,12 +47,12 @@
  *
  * Created 2026-06-18 per みや, routed through /system-design + /system-rules.
  * Extended 2026-07-06 per みや background task — added CLAUDE.md / personality.md
- *   / meta/** / quest-protocol / settings.json guards + eval-existence rider
+ *   / system/** / quest-protocol / settings.json guards + eval-existence rider
  *   + etanah new-symbol advisory. Root slip: 5 framework files (enum entry, 2 util
  *   methods, dispatcher case, handler, populator flip) built with ZERO system-design
  *   invocation because guarded paths did not cover etanah code.
  *
- * meta-layer-audit: registered in settings.json PreToolUse:Edit|Write array.
+ * system-audit: registered in settings.json PreToolUse:Edit|Write array.
  */
 'use strict';
 const fs = require('fs');

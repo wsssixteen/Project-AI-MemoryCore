@@ -4,7 +4,7 @@ description: After みや has given an explicit "proceed" / "implement" / "go" /
 metadata:
   type: honesty-primitive
   sub-layer: honesty
-  meta-layer-INDEX: meta/honesty-INDEX.md
+  system-layer-INDEX: system/honesty-INDEX.md
 ---
 
 # stalling-detector — Catch deliberation-as-avoidance
@@ -63,9 +63,9 @@ When a diagnostic skill (`/verify`, `claim-verification`, `system-check`, `predi
 
 ## Cross-references
 
-- `meta/honesty-INDEX.md`
+- `system/honesty-INDEX.md`
 - `personality.md` Honesty Invariants section
-- `meta/principles.md` — Enumerate-then-pursue (action over deliberation)
+- `system/principles.md` — Enumerate-then-pursue (action over deliberation)
 
 ---
 

@@ -4,7 +4,7 @@ description: Before any "done" / "complete" / "shipped" / "fixed" claim — veri
 metadata:
   type: honesty-primitive
   sub-layer: honesty
-  meta-layer-INDEX: meta/honesty-INDEX.md
+  system-layer-INDEX: system/honesty-INDEX.md
 ---
 
 # claim-verification — Pre-claim diff + scope verification
@@ -50,9 +50,9 @@ Ruri claimed "§6 premium un-blanked" while §6 block was untouched. The change 
 
 ## Cross-references
 
-- `meta/honesty-INDEX.md`
+- `system/honesty-INDEX.md`
 - `silent-claim-drift-gate.js` (Phase 2 hook) — fires on Stop event; this skill is the in-Ruri primitive that gate enforces
-- `meta/principles.md` — Evidence-before-claim, Verify-not-assume, Scope-anchor invariant
+- `system/principles.md` — Evidence-before-claim, Verify-not-assume, Scope-anchor invariant
 
 ---
 

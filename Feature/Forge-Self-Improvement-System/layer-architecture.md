@@ -1,8 +1,8 @@
 # 🪦 Layer Architecture — TOMBSTONED 2026-07-13 (external-audit C6: one layer model)
 
-> **Canonical layer model = `meta/INDEX.md` (6-layer: Identity → Constitution → Boot → Capabilities → Knowledge → State).**
+> **Canonical layer model = `system/INDEX.md` (6-layer: Identity → Constitution → Boot → Capabilities → Knowledge → State).**
 > This file's 10-layer model (L0 + 9 operational) is RETIRED — three competing layer models were doc-drift (audit RC6).
-> `meta/system-architecture.md`'s "3 layers" is an ENFORCEMENT-severity ladder (inline → reminder → hard-block), not a system model — clarified there.
+> `system/system-architecture.md`'s "3 layers" is an ENFORCEMENT-severity ladder (inline → reminder → hard-block), not a system model — clarified there.
 > Component inventory + reliability tracking now lives in the generated `REGISTRY.md` (K4). Kept for history; do not extend.
 
 # Layer Architecture — Ruri's System Stack

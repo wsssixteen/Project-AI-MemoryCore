@@ -4,7 +4,7 @@ description: Check git repo health + auto-fix safe issues silently at Quest Phas
 metadata:
   type: discipline-primitive
   sub-layer: discipline
-  meta-layer-INDEX: meta/discipline-INDEX.md
+  system-layer-INDEX: system/discipline-INDEX.md
 ---
 
 # git-health — Pre-flight git repo sanity check with auto-fix

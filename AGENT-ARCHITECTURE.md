@@ -96,7 +96,7 @@ A claim without an artifact is a hypothesis. You holding this line is what train
 |---|---|
 | What's open right now | `quest/active.txt` (⏳ `quests.jsonl`) |
 | What happened, day by day | `daily-diary/current/` |
-| What went wrong, categorized | `meta/slip-log.md` (⏳ `slips.jsonl` + dashboard) |
+| What went wrong, categorized | `system/slip-log.md` (⏳ `slips.jsonl` + dashboard) |
 | What the system promises | `.claude/CLAUDE.md` (shrinking to a manifest) |
 | What actually exists | ⏳ `REGISTRY.md` (generated) — until then, trust `settings.json` + disk over any hand-written index |
 | The improvement plan | `external-audit/` |

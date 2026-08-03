@@ -14,7 +14,7 @@ Before flipping `silent-claim-drift-gate.js` to emit `hookSpecificOutput.decisio
 
 - [ ] All 10 scenarios below produce the expected outcome
 - [ ] At least 1 session of Stage 5A advisory-mode observation has happened
-- [ ] False-positive rate (advisory reminders that should NOT have fired) is acceptable — log them in `meta/slip-log.md` if seen
+- [ ] False-positive rate (advisory reminders that should NOT have fired) is acceptable — log them in `system/slip-log.md` if seen
 - [ ] False-negative rate (missing reminders that SHOULD have fired) is acceptable
 - [ ] Bypass token `[skip-invoke <name>: <reason>]` regex is tight (no false bypass via partial matches)
 
@@ -143,7 +143,7 @@ Before flipping `silent-claim-drift-gate.js` to emit `hookSpecificOutput.decisio
 
 **Turn shape**:
 - Tool calls: Edit on `.claude/hooks/foo.js`
-- Tool calls: NO Edit on `meta/system-architecture.md`
+- Tool calls: NO Edit on `system/system-architecture.md`
 - Response message: no `[skip-architecture-doc-update: ...]` bypass
 
 **Expected outcome (5A)**: advisory reminder — paired-edit required.

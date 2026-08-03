@@ -38,7 +38,7 @@
  *   EXEMPT token + hand-back/closing/hedge frames abstain · bypass [skip-criteria-gate:].
  * Log: domain/ticket-criteria-gate/log.jsonl.
  *
- * meta-layer-audit: registered in settings.json Stop array at the MAIN-repo path;
+ * system-audit: registered in settings.json Stop array at the MAIN-repo path;
  *   built in worktree zen-napier-4471cc 2026-06-20 — goes LIVE on merge to main
  *   (pending-merge until the file lands at the main path).
  *

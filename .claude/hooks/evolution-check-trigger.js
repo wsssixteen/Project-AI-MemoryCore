@@ -1,11 +1,11 @@
 /**
  * evolution-check-trigger.js — SessionStart hook
  *
- * Phase 7 of meta-layer build (2026-05-23). v1 minimum: emits a reminder
+ * Phase 7 of system-layer build (2026-05-23). v1 minimum: emits a reminder
  * about evolution-check status at boot. v2 will do actual date-math +
  * model-ID change detection.
  *
- * Reads meta/evolution-protocol.md state for last-evolution-check date.
+ * Reads system/evolution-protocol.md state for last-evolution-check date.
  * If >30 days elapsed, surfaces flag. Else emits silent confirmation.
  */
 const fs = require('fs');
@@ -16,7 +16,7 @@ const PROTOCOL_FILE = path.join(PROJECT_ROOT, 'meta', 'evolution-protocol.md');
 
 try {
   if (!fs.existsSync(PROTOCOL_FILE)) {
-    process.exit(0);  // meta-layer not yet built; silent
+    process.exit(0);  // system-layer not yet built; silent
   }
 
   const content = fs.readFileSync(PROTOCOL_FILE, 'utf8');
@@ -41,7 +41,7 @@ try {
       '',
       'Anthropic may have shipped new features (hooks / skills / tools) since.',
       'Invoke evolution-check skill manually: "check Anthropic updates" / "evolution check"',
-      'See meta/evolution-protocol.md',
+      'See system/evolution-protocol.md',
       '',
     ];
     process.stdout.write(lines.join('\n'));

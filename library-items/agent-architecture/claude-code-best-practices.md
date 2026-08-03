@@ -1,9 +1,9 @@
 # Claude Code Best Practices — Anthropic-Recommended Patterns
 
-> **Saved:** 2026-05-23 (Phase 1 of meta-layer build)
+> **Saved:** 2026-05-23 (Phase 1 of system-layer build)
 > **Source:** Deep-research pass via general-purpose subagent. Sources: docs.claude.com, anthropic.com/engineering, github.com/anthropics/{claude-code, claude-agent-sdk-python, skills, anthropic-cookbook}, Claude Code CHANGELOG through May 2026
-> **Last researched:** 2026-05-23 — re-verify freshness if >60 days old (per meta-layer Stage 6 evolution-check)
-> **Referenced by:** `meta/INDEX.md` · `meta/principles.md` · meta-design-router skill (Step 3.5 best-practices check)
+> **Last researched:** 2026-05-23 — re-verify freshness if >60 days old (per system-layer Stage 6 evolution-check)
+> **Referenced by:** `system/INDEX.md` · `system/principles.md` · system-design-router skill (Step 3.5 best-practices check)
 
 ---
 

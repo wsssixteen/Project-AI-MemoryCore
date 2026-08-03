@@ -2,7 +2,7 @@
 
 > **Status (2026-05-25)**: All amendments absorbed into canonical homes. This file's lifecycle goal — *"When the CLAUDE.md refactor lands, みや absorbs these into the new slim CLAUDE.md and this file is emptied"* — is now complete. File kept as the historical disposition log; no active amendments remain.
 >
-> **Going forward**: Do NOT append new amendments here. Per `personality.md` Honesty Invariants + the meta-design-router workflow, any new behavioural rule routes through System-Design → canonical home (CLAUDE.md / quest-protocol.md / personality.md / commit-conventions.md / skill SKILL.md / hook). The "edit-blocked-CLAUDE.md" workaround that birthed this file is no longer needed (CLAUDE.md editable as of 2026-05-22).
+> **Going forward**: Do NOT append new amendments here. Per `personality.md` Honesty Invariants + the system-design-router workflow, any new behavioural rule routes through System-Design → canonical home (CLAUDE.md / quest-protocol.md / personality.md / commit-conventions.md / skill SKILL.md / hook). The "edit-blocked-CLAUDE.md" workaround that birthed this file is no longer needed (CLAUDE.md editable as of 2026-05-22).
 
 ---
 

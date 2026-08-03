@@ -15,7 +15,7 @@
  * Injects a context block forcing Ruri to invoke via Skill tool — not manual
  * SKILL.md execution, not subagent dispatch, not programmatic recreation.
  *
- * Created 2026-05-25 — Phase 9 of meta-layer build. Source slips:
+ * Created 2026-05-25 — Phase 9 of system-layer build. Source slips:
  *   - 2026-05-25 /understand shortcut (manual SKILL.md execution + Agent
  *     dispatch instead of Skill tool)
  *   - 2026-05-25 self-violation within turn-of-creation (treated
@@ -23,7 +23,7 @@
  *
  * Pairs with: skill-invocation-discipline SKILL.md (the procedure doc this
  * hook references), auto-skill-trigger.js (correction-signal detection),
- * meta-edit-gate.js (recursive-safety for meta-layer skills).
+ * system-edit-gate.js (recursive-safety for system-layer skills).
  */
 const TRIGGERS = [
   // Explicit "use the skill" patterns — generic skill reference

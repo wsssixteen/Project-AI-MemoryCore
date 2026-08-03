@@ -4,7 +4,7 @@ description: Use when about to Edit a stateful-flow etanah .java file (Form/Bean
 metadata:
   type: discipline-primitive
   sub-layer: discipline
-  meta-layer-INDEX: meta/discipline-INDEX.md
+  system-layer-INDEX: system/discipline-INDEX.md
 ---
 
 # logic-blast-radius — scenario-matrix gate for stateful-flow edits

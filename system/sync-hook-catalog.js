@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // sync-hook-catalog.js — regenerate the canonical registered-hooks registry in
-// meta/system-architecture.md from .claude/settings.json (the source of truth).
+// system/system-architecture.md from .claude/settings.json (the source of truth).
 //
 // WHY (2026-06-19, QA-266215 session): the §3 hook catalog was hand-maintained → it
-// drifted out of sync with settings.json → meta-layer-audit's DOC-DRIFT check
+// drifted out of sync with settings.json → system-audit's DOC-DRIFT check
 // false-alarmed on ~50 hooks for over a month. This script makes the REGISTRY section
 // AUTO-GENERATED so it can never drift; the rich §3.1+ prose tables stay hand-written
 // for the semantic detail (Owner / Action / why-fragile) that a registry can't carry.
@@ -11,7 +11,7 @@
 // PRIMITIVE (per /system-design Rule 7): a maintenance SCRIPT, not a Power — no skill
 // (nothing to invoke), no hook (run ON-DEMAND, not at boot — mutating a doc at boot is
 // risky), no eval.workflow (correctness = "output matches settings.json", verified by
-// running it). Lives in meta/ beside the doc it maintains, mirroring the quest/*.js
+// running it). Lives in system/ beside the doc it maintains, mirroring the quest/*.js
 // co-location precedent (util scripts live with the state they maintain).
 //
 // INSTRUMENT (per /system-rules Rule 5): prints a one-line summary to stdout each run
@@ -19,8 +19,8 @@
 // log.jsonl; a persistent log for a manual on-demand generator is overkill / Rule 4).
 //
 // USAGE:
-//   node meta/sync-hook-catalog.js          — regenerate the §3.0 registry block in place
-//   node meta/sync-hook-catalog.js --check  — exit 1 if the block is stale (CI-style), no write
+//   node system/sync-hook-catalog.js          — regenerate the §3.0 registry block in place
+//   node system/sync-hook-catalog.js --check  — exit 1 if the block is stale (CI-style), no write
 //
 // IDEMPOTENT: no timestamp embedded, so re-running with an unchanged settings.json
 // produces byte-identical output → no spurious git diff.
@@ -68,7 +68,7 @@ rows.sort((a, b) => {
 
 const events = [...new Set(rows.map(r => r.event))];
 const body = [
-  `_AUTO-GENERATED from \`.claude/settings.json\` by \`meta/sync-hook-catalog.js\` — do NOT hand-edit. ${rows.length} hook registrations across ${events.length} events. Re-run after any settings.json hook change (\`node meta/sync-hook-catalog.js\`)._`,
+  `_AUTO-GENERATED from \`.claude/settings.json\` by \`system/sync-hook-catalog.js\` — do NOT hand-edit. ${rows.length} hook registrations across ${events.length} events. Re-run after any settings.json hook change (\`node system/sync-hook-catalog.js\`)._`,
   '',
   '| Event | Matcher | Hook | On disk? |',
   '|---|---|---|---|',
@@ -87,7 +87,7 @@ const re = new RegExp(esc(START) + '[\\s\\S]*?' + esc(END));
 const updated = doc.replace(re, block);
 
 if (process.argv.includes('--check')) {
-  if (updated !== doc) { console.error('sync-hook-catalog: registry is STALE — run `node meta/sync-hook-catalog.js` to regenerate.'); process.exit(1); }
+  if (updated !== doc) { console.error('sync-hook-catalog: registry is STALE — run `node system/sync-hook-catalog.js` to regenerate.'); process.exit(1); }
   console.log('sync-hook-catalog: registry up to date (' + rows.length + ' hooks).');
   process.exit(0);
 }

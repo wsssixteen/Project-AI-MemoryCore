@@ -6,7 +6,7 @@
 |---|---|
 | Created | 2026-07-07 |
 | Session | Familiar-built batch (commit `2750811`). Root symptom: みや 2026-07-07 — *"checks must ALWAYS fire when I ask to apply fix or implement etanah code, even outside quests"*; recon found the v1 gate silently dark without `status=active`. v2 = quest-gate REMOVED + advisory PROMOTED to `decision:block`; firing scope = etanah edit + fix-intent in last user message; `stop_hook_active` guard. |
-| Files | (a) `domain/predicate-box/predicate-box.discipline.hook.js` (Stop hook, v2 blocking) · (b) `domain/predicate-box/eval.js` (7/7 fixtures) · (c) `domain/predicate-box/README.md` (contract) · (d) `domain/predicate-box/log.jsonl` (fire log) · (e) `.claude/settings.json` `Stop` array entry pointing to hook · (f) `meta/system-architecture.md` §3.18 row · (g) DELETED legacy `.claude/hooks/predicate-box-gate.js` (v1, advisory + quest-gated) |
+| Files | (a) `domain/predicate-box/predicate-box.discipline.hook.js` (Stop hook, v2 blocking) · (b) `domain/predicate-box/eval.js` (7/7 fixtures) · (c) `domain/predicate-box/README.md` (contract) · (d) `domain/predicate-box/log.jsonl` (fire log) · (e) `.claude/settings.json` `Stop` array entry pointing to hook · (f) `system/system-architecture.md` §3.18 row · (g) DELETED legacy `.claude/hooks/predicate-box-gate.js` (v1, advisory + quest-gated) |
 | Rollback | See block below |
 | Retire | 2026-08-06 (Created + 30 days). Remove this file at DE if `domain/predicate-box/log.jsonl` shows ≥ 1 fire in the window AND no rollback event. |
 
@@ -30,7 +30,7 @@ git show 2750811^:.claude/hooks/predicate-box-gate.js > .claude/hooks/predicate-
 
 # 4. DO NOT blind git revert 2750811 — it is a SHARED ship commit carrying 4 Features
 #    (logic-blast-radius + predicate-box + convention-check-gate + quest-phase-gate)
-#    plus settings.json + meta/system-architecture.md edits. Inspect first:
+#    plus settings.json + system/system-architecture.md edits. Inspect first:
 git show 2750811 --stat
 # Only revert if ALL FOUR Features are being nuked together.
 

@@ -6,7 +6,7 @@
 |---|---|
 | Created | 2026-07-14 |
 | Session | みや in-session ask 2026-07-14 during QA-270052: after I skipped convention-check / sibling-check / logic-check twice + shipped a bug-named hardcoded fix, みや demanded a system that ENFORCES pre-code-change discipline before any etanah source Edit. |
-| Files | (a) `domain/pre-code-check/pre-code-check.check.hook.js` (PreToolUse Edit/Write hook) · (b) `domain/pre-code-check/pre-code-check.eval.js` (9-fixture eval) · (c) `domain/pre-code-check/log.jsonl` (auto-created) · (d) `.claude/settings.json` PreToolUse Edit\|Write entry · (e) `meta/registry.jsonl` line for "pre-code-check" |
+| Files | (a) `domain/pre-code-check/pre-code-check.check.hook.js` (PreToolUse Edit/Write hook) · (b) `domain/pre-code-check/pre-code-check.eval.js` (9-fixture eval) · (c) `domain/pre-code-check/log.jsonl` (auto-created) · (d) `.claude/settings.json` PreToolUse Edit\|Write entry · (e) `system/registry.jsonl` line for "pre-code-check" |
 | Rollback | See block below |
 | Retire | 2026-08-13 (Created + 30 days). Remove this file at DE if `domain/pre-code-check/log.jsonl` shows ≥ 1 fire in the window AND no rollback event. |
 
@@ -22,7 +22,7 @@ rm -rf domain/pre-code-check/
 #    from the "PreToolUse" > matcher "Edit|Write" > "hooks" array.
 
 # 3. Remove registry line
-grep -v '"name":"pre-code-check"' meta/registry.jsonl > meta/registry.jsonl.tmp && mv meta/registry.jsonl.tmp meta/registry.jsonl
+grep -v '"name":"pre-code-check"' system/registry.jsonl > system/registry.jsonl.tmp && mv system/registry.jsonl.tmp system/registry.jsonl
 
 # 4. Revert the ship commit
 git log --oneline | grep -i "pre-code-check"  # find ship SHA

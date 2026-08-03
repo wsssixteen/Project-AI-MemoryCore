@@ -22,8 +22,8 @@
 ## Store
 
 - Hook writes fires to `domain/reask/log.jsonl` (audit trail per `/system-rules` Rule 5).
-- Slips logged via `node core/slips.js add --category reask/<axis>` land in `meta/slips.jsonl` alongside all other slips (single-store per `/system-rules` Rule 1 — inventory first).
-- Dashboard view: filter `meta/slip-dashboard.md` for `reask/*` categories (or extend `core/slips.js` with `--group reask` filter later — deferred Phase-2 enhancement).
+- Slips logged via `node core/slips.js add --category reask/<axis>` land in `system/slips.jsonl` alongside all other slips (single-store per `/system-rules` Rule 1 — inventory first).
+- Dashboard view: filter `system/slip-dashboard.md` for `reask/*` categories (or extend `core/slips.js` with `--group reask` filter later — deferred Phase-2 enhancement).
 
 ## NOT this Feature
 
@@ -42,4 +42,4 @@ See `NUKE-MARKER.md`.
 
 ## Born via
 
-`node core/forge.js new check reask --event UserPromptSubmit ...` on 2026-07-14. Registry entry in `meta/registry.jsonl`.
+`node core/forge.js new check reask --event UserPromptSubmit ...` on 2026-07-14. Registry entry in `system/registry.jsonl`.

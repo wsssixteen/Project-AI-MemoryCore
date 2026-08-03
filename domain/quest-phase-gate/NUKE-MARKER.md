@@ -6,7 +6,7 @@
 |---|---|
 | Created | 2026-07-07 (MIGRATED — behavior unchanged; hook previously at `.claude/hooks/quest-phase-gate.js`) |
 | Session | Familiar-built batch (commit `2750811`). Migration to `domain/` per trinity convention + eval. Quest-gated BY DESIGN (Scout/Recon/Rubric banners are quest artifacts; outside-quest coverage = logic-blast-radius + predicate-box + convention-check-gate). Code changes at migration: `log.jsonl` fire log beside the hook + repo-root resolve via `path.resolve(__dirname,'..','..')` — depth-2 invariant, do NOT nest the folder deeper. |
-| Files | (a) `domain/quest-phase-gate/quest-phase-gate.gate.hook.js` (git-renamed from `.claude/hooks/quest-phase-gate.js`) · (b) `domain/quest-phase-gate/eval.js` (5/5 fixtures) · (c) `domain/quest-phase-gate/README.md` (contract) · (d) `domain/quest-phase-gate/log.jsonl` (auto-created on first fire) · (e) `.claude/settings.json` PreToolUse `Edit\|Write` entry pointing to hook · (f) `meta/system-architecture.md` §3.18 row |
+| Files | (a) `domain/quest-phase-gate/quest-phase-gate.gate.hook.js` (git-renamed from `.claude/hooks/quest-phase-gate.js`) · (b) `domain/quest-phase-gate/eval.js` (5/5 fixtures) · (c) `domain/quest-phase-gate/README.md` (contract) · (d) `domain/quest-phase-gate/log.jsonl` (auto-created on first fire) · (e) `.claude/settings.json` PreToolUse `Edit\|Write` entry pointing to hook · (f) `system/system-architecture.md` §3.18 row |
 | Rollback | See block below |
 | Retire | 2026-08-06 (Created + 30 days). Remove this file at DE if `domain/quest-phase-gate/log.jsonl` shows ≥ 1 fire in the window AND no rollback event. |
 
@@ -30,7 +30,7 @@ git show 2750811^:.claude/hooks/quest-phase-gate.js > .claude/hooks/quest-phase-
 
 # 4. DO NOT blind git revert 2750811 — it is a SHARED ship commit carrying 4 Features
 #    (logic-blast-radius + predicate-box + convention-check-gate + quest-phase-gate)
-#    plus settings.json + meta/system-architecture.md edits. Inspect first:
+#    plus settings.json + system/system-architecture.md edits. Inspect first:
 git show 2750811 --stat
 # Only revert if ALL FOUR Features are being nuked together.
 

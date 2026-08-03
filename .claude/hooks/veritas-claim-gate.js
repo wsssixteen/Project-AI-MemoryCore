@@ -40,7 +40,7 @@
  * Ledger: .claude/state/veritas-claim-ledger.jsonl (one line per fire) — feeds the
  *   validation window that gates the behavioural-advisory -> block flip.
  *
- * meta-layer-audit: this .js MUST be registered in settings.json Stop array at the
+ * system-audit: this .js MUST be registered in settings.json Stop array at the
  *   MAIN-repo path or it is a ghost. (Built after discovering branch-at-apply-gate.js
  *   was itself a ghost — file in worktree, path in settings pointed at main.)
  */

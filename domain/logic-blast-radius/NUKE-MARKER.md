@@ -6,7 +6,7 @@
 |---|---|
 | Created | 2026-07-07 |
 | Session | Familiar-built batch (commit `2750811`). Root symptom: みや 2026-07-07 — *"checks must ALWAYS fire when I ask to apply fix or implement etanah code, even outside quests"*; recon found the v1 gate silently dark without `status=active`. v2 = quest-gate REMOVED — fires on ANY stateful-flow etanah .java Edit. |
-| Files | (a) `domain/logic-blast-radius/logic-blast-radius.discipline.hook.js` (PreToolUse Edit\|Write hook, v2) · (b) `domain/logic-blast-radius/eval.js` (6/6 fixtures) · (c) `domain/logic-blast-radius/README.md` (contract) · (d) `domain/logic-blast-radius/log.jsonl` (auto-created on first fire) · (e) `.claude/settings.json` PreToolUse `Edit\|Write` entry pointing to hook · (f) `meta/system-architecture.md` §3.18 row · (g) DELETED legacy `.claude/hooks/logic-blast-radius-gate.js` (v1, quest-gated) |
+| Files | (a) `domain/logic-blast-radius/logic-blast-radius.discipline.hook.js` (PreToolUse Edit\|Write hook, v2) · (b) `domain/logic-blast-radius/eval.js` (6/6 fixtures) · (c) `domain/logic-blast-radius/README.md` (contract) · (d) `domain/logic-blast-radius/log.jsonl` (auto-created on first fire) · (e) `.claude/settings.json` PreToolUse `Edit\|Write` entry pointing to hook · (f) `system/system-architecture.md` §3.18 row · (g) DELETED legacy `.claude/hooks/logic-blast-radius-gate.js` (v1, quest-gated) |
 | Rollback | See block below |
 | Retire | 2026-08-06 (Created + 30 days). Remove this file at DE if `domain/logic-blast-radius/log.jsonl` shows ≥ 1 fire in the window AND no rollback event. |
 
@@ -30,7 +30,7 @@ git show 2750811^:.claude/hooks/logic-blast-radius-gate.js > .claude/hooks/logic
 
 # 4. DO NOT blind git revert 2750811 — it is a SHARED ship commit carrying 4 Features
 #    (logic-blast-radius + predicate-box + convention-check-gate + quest-phase-gate)
-#    plus settings.json + meta/system-architecture.md edits. Inspect first:
+#    plus settings.json + system/system-architecture.md edits. Inspect first:
 git show 2750811 --stat
 # Only revert if ALL FOUR Features are being nuked together.
 

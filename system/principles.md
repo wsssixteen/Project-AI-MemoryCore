@@ -1,7 +1,7 @@
-# Meta-Layer Principles — Classified Inventory
+# System-Layer Principles — Classified Inventory
 
 > **Source:** Synthesized 2026-05-23 by Explore agent from `personality.md`, `.claude/auto-memory/feedback_*.md` (56 files), `CLAUDE.md`, `quest/quest-protocol.md`, `Feature/Forge-Self-Improvement-System/improvement-audit-log.md`, `Feature/Domain-Expansion/expansion-protocol.md`, `skill-failure-log.md`.
-> **Used by:** meta-design-router Step 3.5 (best-practices check) consults this file to identify which existing principle a new behaviour relates to.
+> **Used by:** system-design-router Step 3.5 (best-practices check) consults this file to identify which existing principle a new behaviour relates to.
 
 ---
 
@@ -27,7 +27,7 @@ Every structured work declares Goal · Guardrails · Grounded before execution. 
 
 ## ⭐ The 6 ORIGINAL PROTO-META-LAYER PRINCIPLES (highest priority)
 
-These are the principles that govern HOW OTHER PRINCIPLES are designed, checked, and enforced. They form the backbone of the meta-layer.
+These are the principles that govern HOW OTHER PRINCIPLES are designed, checked, and enforced. They form the backbone of the system-layer.
 
 | # | Principle | Statement | Evidence source |
 |---|---|---|---|
@@ -127,7 +127,7 @@ These are the principles that govern HOW OTHER PRINCIPLES are designed, checked,
 | "Ask みや before acting" (inclusive) vs "Enumerate-then-pursue autonomously" (ownership) | Distinction: destructive paths → ask; non-destructive → pursue |
 | "Preserve unrelated context" vs "Dead-branch cleanup after refactor" | Explicit categorization — preservation covers untouched context; cleanup covers variant-specific dead branches newly created by the refactor |
 
-## Principles stated but NOT enforced (candidates for meta-layer hooks/skills)
+## Principles stated but NOT enforced (candidates for system-layer hooks/skills)
 
 ~15 principles currently fail to fire reliably (prose-only, no skill/hook backing):
 - inventory-first
@@ -146,8 +146,8 @@ These are the principles that govern HOW OTHER PRINCIPLES are designed, checked,
 - prose→skill escalation (meta-principle itself fails)
 - continuous-improvement-via-DE
 
-These are highest-priority candidates for meta-layer elevation in Phases 3 (Discipline primitives) and 4 (Honesty primitives + identity section).
+These are highest-priority candidates for system-layer elevation in Phases 3 (Discipline primitives) and 4 (Honesty primitives + identity section).
 
 ---
 
-*Maintained by meta-design-router. Refined when new principles surface from slips or research.*
+*Maintained by system-design-router. Refined when new principles surface from slips or research.*

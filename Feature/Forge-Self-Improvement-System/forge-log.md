@@ -1,8 +1,8 @@
-# 🪦 DETACHED 2026-05-31 — Canonical home is meta/slip-log.md (per Q2 prune-not-delete audit). Historical entries below kept for archival; new entries route to meta/slip-log.md via auto-skill-on-mistake Step 5. Re-attach: remove this header + restore the source file's boot/INDEX wiring.
+# 🪦 DETACHED 2026-05-31 — Canonical home is system/slip-log.md (per Q2 prune-not-delete audit). Historical entries below kept for archival; new entries route to system/slip-log.md via auto-skill-on-mistake Step 5. Re-attach: remove this header + restore the source file's boot/INDEX wiring.
 
 # Forge — Self-Improvement Log
 
-> **🪦 TOMBSTONE (2026-05-24, Phase 8 complete — Task #20):** This file is no longer the canonical home for NEW Forge entries. The new home is **`meta/slip-log.md`** under the meta-layer's INDEX. Historical entries below remain for reference and have been Bankai-migrated 2026-05-23 (see meta/slip-log.md "Historical migrated entries" section). For NEW Forge/slip records → append to `meta/slip-log.md` instead.
+> **🪦 TOMBSTONE (2026-05-24, Phase 8 complete — Task #20):** This file is no longer the canonical home for NEW Forge entries. The new home is **`system/slip-log.md`** under the system-layer's INDEX. Historical entries below remain for reference and have been Bankai-migrated 2026-05-23 (see system/slip-log.md "Historical migrated entries" section). For NEW Forge/slip records → append to `system/slip-log.md` instead.
 >
 > ---
 >

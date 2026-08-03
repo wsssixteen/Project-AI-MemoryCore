@@ -6,7 +6,7 @@
 |---|---|
 | Created | 2026-07-14 |
 | Session | みや in-session ask 2026-07-14: "I want to create something like a slip-log but for when every time I had to ask you to explain again". Root symptom = reply-clarity failures where the answer was IN the reply but みや still had to ask. |
-| Files | (a) `domain/reask/reask.check.hook.js` (UserPromptSubmit check, born via forge) · (b) `domain/reask/reask.eval.js` (10-fixture replay eval) · (c) `domain/reask/README.md` (contract) · (d) `domain/reask/log.jsonl` (auto-created on first fire) · (e) `.claude/settings.json` UserPromptSubmit entry · (f) `meta/registry.jsonl` line for "reask" |
+| Files | (a) `domain/reask/reask.check.hook.js` (UserPromptSubmit check, born via forge) · (b) `domain/reask/reask.eval.js` (10-fixture replay eval) · (c) `domain/reask/README.md` (contract) · (d) `domain/reask/log.jsonl` (auto-created on first fire) · (e) `.claude/settings.json` UserPromptSubmit entry · (f) `system/registry.jsonl` line for "reask" |
 | Rollback | See block below |
 | Retire | 2026-08-13 (Created + 30 days). Remove this file at DE if `domain/reask/log.jsonl` shows ≥ 1 fire AND no rollback event on the ship commit. |
 
@@ -22,10 +22,10 @@ rm -rf domain/reask/
 #    from the "UserPromptSubmit" > first "hooks" array.
 
 # 3. Remove the registry line
-grep -v '"name":"reask"' meta/registry.jsonl > meta/registry.jsonl.tmp && mv meta/registry.jsonl.tmp meta/registry.jsonl
+grep -v '"name":"reask"' system/registry.jsonl > system/registry.jsonl.tmp && mv system/registry.jsonl.tmp system/registry.jsonl
 
 # 4. (Optional) Purge reask/* slip entries already logged
-grep -v '"reask/' meta/slips.jsonl > meta/slips.jsonl.tmp && mv meta/slips.jsonl.tmp meta/slips.jsonl
+grep -v '"reask/' system/slips.jsonl > system/slips.jsonl.tmp && mv system/slips.jsonl.tmp system/slips.jsonl
 node core/slips.js dashboard  # regenerate
 
 # 5. Revert the ship commit
@@ -47,7 +47,7 @@ git revert <SHA>
 | Metric | Value |
 |---|---|
 | Baseline | 0 reask slips logged (Feature didn't exist pre-2026-07-14) |
-| Target at 30-day retire check | ≥ 1 fire in `log.jsonl` · ≥ 1 slip entry in `meta/slips.jsonl` with `reask/*` category |
+| Target at 30-day retire check | ≥ 1 fire in `log.jsonl` · ≥ 1 slip entry in `system/slips.jsonl` with `reask/*` category |
 | Smoke-test at ship | 10/10 fixtures PASS (verified 2026-07-14) |
 
 ## Trust ledger

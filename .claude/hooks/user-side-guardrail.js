@@ -6,8 +6,8 @@
  * push Ruri into clunky designs — and surfaces "are you sure this triggers
  * a design pass?" + offers shape options to みや BEFORE Ruri acts.
  *
- * Created 2026-05-23 — Phase 5 of meta-layer build.
- * Origin: みや's Stage 3d insight — meta-layer needs guardrails on HOW
+ * Created 2026-05-23 — Phase 5 of system-layer build.
+ * Origin: みや's Stage 3d insight — system-layer needs guardrails on HOW
  * he uses Ruri, not just guardrails on Ruri's behavior.
  *
  * Pattern: detect intent (new-structure / lock-rule / direct-instruction),
@@ -53,14 +53,14 @@ process.stdin.on('end', () => {
 
     if (kinds.includes('new-structure')) {
       lines.push('  📁 NEW STRUCTURE intent:');
-      lines.push('     - Have you checked meta/INDEX.md for an existing layer that could cover this?');
+      lines.push('     - Have you checked system/INDEX.md for an existing layer that could cover this?');
       lines.push('     - Could an existing component be EXTENDED instead of CREATED?');
       lines.push('     - inventory-first principle: merge > proliferate');
       lines.push('');
     }
     if (kinds.includes('lock-rule')) {
       lines.push('  🔒 LOCK-RULE intent:');
-      lines.push('     - This will route through meta-design-router (skill or hook decision)');
+      lines.push('     - This will route through system-design-router (skill or hook decision)');
       lines.push('     - Decision criteria: MUST fire → hook · Conditional → skill · Judgment → CLAUDE.md/personality.md');
       lines.push('     - Cite the slip evidence so the gate fires for a real pattern, not a single observation');
       lines.push('');
@@ -69,7 +69,7 @@ process.stdin.on('end', () => {
       lines.push('  ⚠️ DIRECT-PROSE intent (highest-risk):');
       lines.push('     - "Add to CLAUDE.md / personality.md / new feedback file" = the prose-doesn\'t-fire trap');
       lines.push('     - Default-to-prose path is BANNED unless the rule is genuinely judgment/style only');
-      lines.push('     - Route through meta-design-router instead — Ruri will propose the right shape');
+      lines.push('     - Route through system-design-router instead — Ruri will propose the right shape');
       lines.push('');
     }
 

@@ -88,9 +88,9 @@ Surface inline: "Industry pattern X says Y; we're aligned/diverging because Z." 
 
 ### 3.6b — Wording-shape audit (MANDATORY for ALL skill / always-on-rule changes — NO scope exemption)
 
-**Trigger**: every refine or new emit touching `.claude/skills/*/SKILL.md`, `.claude/CLAUDE.md`, `personality.md`, `claude-md-amendments.md`, `quest/quest-protocol.md`, `meta/*`, or any always-on-rule file. **No "small refine" bypass.**
+**Trigger**: every refine or new emit touching `.claude/skills/*/SKILL.md`, `.claude/CLAUDE.md`, `personality.md`, `claude-md-amendments.md`, `quest/quest-protocol.md`, `system/*`, or any always-on-rule file. **No "small refine" bypass.**
 
-**Why no scope exemption**: compliance research (Meincke et al. 2025, N=28,000 LLM conversations) shows wording loaded with Authority / Commitment / Scarcity principles lifts agent compliance from **33% → 72%** on the same semantic content. Every refine compounds. Skipping the audit on "small" changes silently bleeds 2.2× effectiveness across the meta-layer — the exact failure mode that caused this Step 3.6 refine.
+**Why no scope exemption**: compliance research (Meincke et al. 2025, N=28,000 LLM conversations) shows wording loaded with Authority / Commitment / Scarcity principles lifts agent compliance from **33% → 72%** on the same semantic content. Every refine compounds. Skipping the audit on "small" changes silently bleeds 2.2× effectiveness across the system-layer — the exact failure mode that caused this Step 3.6 refine.
 
 **Required consult sources**:
 - `library-items/agent-architecture/claude-code-best-practices.md` Section A — Anthropic-official skill authoring: description ≤500 chars preferred (1024 hard cap) · lead with "Use when X" · NEVER summarize workflow in description · progressive disclosure · 500-line body ceiling
@@ -152,7 +152,7 @@ The refined/created skill or hook MUST be invoked/exercised on the VERY ticket/t
 NO SLIP CLOSES WITHOUT SLIP-LOG ENTRY + RUNNING-COUNT TABLE UPDATE
 ```
 
-Every Step 5 invocation MUST (a) append a row to `meta/slip-log.md` (the canonical home — `Feature/Forge-Self-Improvement-System/skill-failure-log.md` is tombstoned), (b) increment the running-count table at the TOP of `meta/slip-log.md` by BOTH `root_category` AND `skill_path`, (c) check the tiered escalation thresholds below + emit the escalation banner if any threshold tripped.
+Every Step 5 invocation MUST (a) append a row to `system/slip-log.md` (the canonical home — `Feature/Forge-Self-Improvement-System/skill-failure-log.md` is tombstoned), (b) increment the running-count table at the TOP of `system/slip-log.md` by BOTH `root_category` AND `skill_path`, (c) check the tiered escalation thresholds below + emit the escalation banner if any threshold tripped.
 
 **Violating the letter of this step is violating the spirit of this step.**
 
@@ -167,15 +167,15 @@ Every Step 5 invocation MUST (a) append a row to `meta/slip-log.md` (the canonic
 
 ### Slip-log entry format (canonical)
 
-Append to `meta/slip-log.md` under the current date's section:
+Append to `system/slip-log.md` under the current date's section:
 
 ```
-| YYYY-MM-DD (context) | <slip, 1 paragraph + Lesson:> | <root_category from schema enum> | <existing_rule cited file:line> | <action: refined-skill / new-skill / new-hook / refined-hook> | <meta-layer-relevant: ✅ Yes / ⚠️ Partial / ❌ No> |
+| YYYY-MM-DD (context) | <slip, 1 paragraph + Lesson:> | <root_category from schema enum> | <existing_rule cited file:line> | <action: refined-skill / new-skill / new-hook / refined-hook> | <system-layer-relevant: ✅ Yes / ⚠️ Partial / ❌ No> |
 ```
 
 ### Running-count table (auto-readable, updated every entry)
 
-At the top of `meta/slip-log.md` (after the Schema section), maintain a table:
+At the top of `system/slip-log.md` (after the Schema section), maintain a table:
 
 | Root category | Last 30 days | Last 7 days | This session | Status |
 |---|---|---|---|---|
@@ -183,7 +183,7 @@ At the top of `meta/slip-log.md` (after the Schema section), maintain a table:
 
 **Status icons** — `✓` = no recent strikes · `⚠️` = at-threshold (warning) · `🚨` = over-threshold (escalation triggered).
 
-Update mechanism: v1 = Ruri updates manually as part of Step 5. v1.1 = `slip-count-tracker.js` PostToolUse hook on Edit/Write of `meta/slip-log.md` parses the appended row, increments counts, rewrites the table. v1.1 deferred until first proven need.
+Update mechanism: v1 = Ruri updates manually as part of Step 5. v1.1 = `slip-count-tracker.js` PostToolUse hook on Edit/Write of `system/slip-log.md` parses the appended row, increments counts, rewrites the table. v1.1 deferred until first proven need.
 
 ### Red Flags — STOP if you catch yourself thinking:
 
@@ -229,7 +229,7 @@ Auto-skill ✓ — <missed behaviour>
 
 ## Failure-rate tracking format
 
-**Canonical home**: `meta/slip-log.md` (replaced `Feature/Forge-Self-Improvement-System/skill-failure-log.md` per Phase 8 tombstone).
+**Canonical home**: `system/slip-log.md` (replaced `Feature/Forge-Self-Improvement-System/skill-failure-log.md` per Phase 8 tombstone).
 
 Format: appended-only entries + running-count table at top (per Step 5 refined 2026-05-25). Counts maintained by both `root_category` and `skill_path`. Tiered escalation thresholds fire automatically at write-time:
 - 🚨 2 strikes same session → immediate STOP + surface
@@ -256,4 +256,4 @@ Format: appended-only entries + running-count table at top (per Step 5 refined 2
 
 *Version: 2 | Last updated: 2026-05-25 — Step 3.6 promoted from `Comparative-systems check` (architectural-only content audit) to `Best-Practices Consult` (dual audit: 3.6a content + 3.6b wording-shape, latter mandatory for ALL skill/rule changes with no scope exemption). Refine triggered by 99%-compliance-lift slip 2026-05-25 — bypass via "small refine" scope was the structural gap. Modeled Authority-loaded forcing-functions (Iron Law + Red Flags + Excuse table) inside the refine itself to demonstrate the wording-shape the new step requires.*
 
-*Version: 3 | Last updated: 2026-05-25 (same day) — Step 5 refined: tiered escalation thresholds replace 3-in-14-days flat (now: 2-in-session = IMMEDIATE escalate; 2-in-7-days = same-day; 3-in-14-days retained for legacy). Counts now by BOTH root_category AND skill_path. Running-count table mandated at top of `meta/slip-log.md` (canonical home; skill-failure-log.md is tombstoned). Authority-loaded styling + Red Flags + Excuse table added per Step 3.6b. Refine triggered by 2-strikes-in-one-session on best-practices-not-consulted today; みや: "even 3 sessions is unacceptable."*
+*Version: 3 | Last updated: 2026-05-25 (same day) — Step 5 refined: tiered escalation thresholds replace 3-in-14-days flat (now: 2-in-session = IMMEDIATE escalate; 2-in-7-days = same-day; 3-in-14-days retained for legacy). Counts now by BOTH root_category AND skill_path. Running-count table mandated at top of `system/slip-log.md` (canonical home; skill-failure-log.md is tombstoned). Authority-loaded styling + Red Flags + Excuse table added per Step 3.6b. Refine triggered by 2-strikes-in-one-session on best-practices-not-consulted today; みや: "even 3 sessions is unacceptable."*

@@ -27,7 +27,7 @@
     {
       "category": "ghost-hook-recreated",
       "representative_slip": "Built `branch-at-apply-gate.js` to WORKTREE hooks dir while settings.json points at MAIN-repo path → node can't find it → hook NEVER fired, implied as active while remaining ghost (line 55, recurrence of 2026-05-25 fifteen-ghost-hooks 🚨)",
-      "guard_expected": "meta-layer-audit.js SessionStart hook should detect ghost-hook pattern (built but un-reachable by settings.json registry) — audit was designed, but hook-path validation omitted from the ghost-check ruleset",
+      "guard_expected": "system-audit.js SessionStart hook should detect ghost-hook pattern (built but un-reachable by settings.json registry) — audit was designed, but hook-path validation omitted from the ghost-check ruleset",
       "replay_shape": "Build a .js hook file in project (assume it's active); register in settings.json; later verify with node --check: file path in settings.json points to wrong physical location (worktree vs main, or stale path)"
     },
     {

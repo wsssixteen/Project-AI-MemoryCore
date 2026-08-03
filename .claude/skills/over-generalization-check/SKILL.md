@@ -4,7 +4,7 @@ description: Don't apply a prior-ticket lesson without verifying the current tic
 metadata:
   type: honesty-primitive
   sub-layer: honesty
-  meta-layer-INDEX: meta/honesty-INDEX.md
+  system-layer-INDEX: system/honesty-INDEX.md
 ---
 
 # over-generalization-check — Verify shape match before reapplying lessons
@@ -53,8 +53,8 @@ APPLY?: ✓ ≥3 match | ⚠️ <2 match — investigate fresh
 
 ## Cross-references
 
-- `meta/honesty-INDEX.md`
-- `meta/principles.md` — Over-generalization-from-single-ticket-lesson principle (Honesty Invariant)
+- `system/honesty-INDEX.md`
+- `system/principles.md` — Over-generalization-from-single-ticket-lesson principle (Honesty Invariant)
 - `feedback_simplify_and_reference.md` rule 5a — "QA-262370 caution" framing banned
 
 ---

@@ -9,7 +9,7 @@
  * Future entries to CONFIG (Phase 3+ rollouts):
  *
  *   - main/current-session.md  → AGENT_STATE required sections
- *   - meta/slip-log.md         → entry shape integrity
+ *   - system/slip-log.md         → entry shape integrity
  *   - main/post-mortems.md     → per-entry header structure
  *   - main/kpi-tracker.md      → per-entry header structure
  *

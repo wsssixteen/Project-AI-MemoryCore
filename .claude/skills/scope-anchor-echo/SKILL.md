@@ -4,7 +4,7 @@ description: Echo the scope-anchor reference (from quest/active.txt scope_anchor
 metadata:
   type: honesty-primitive
   sub-layer: honesty
-  meta-layer-INDEX: meta/honesty-INDEX.md
+  system-layer-INDEX: system/honesty-INDEX.md
 ---
 
 # scope-anchor-echo — Visible scope reference at edit-time
@@ -50,9 +50,9 @@ Fits scope?: ✓ yes / ⚠️ drift — <why>
 
 ## Cross-references
 
-- `meta/honesty-INDEX.md`
+- `system/honesty-INDEX.md`
 - `claim-verification` skill (pairs with this — claim-verification cites scope-anchor at done-time; scope-anchor-echo cites it at edit-time)
-- `meta/principles.md` — Honesty Invariants
+- `system/principles.md` — Honesty Invariants
 
 ---
 

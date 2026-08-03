@@ -12,7 +12,7 @@
  * reminder.
  *
 
- * Created 2026-05-23 — Phase 2 of meta-layer build.
+ * Created 2026-05-23 — Phase 2 of system-layer build.
  * Iteration: tighten matching as evidence accumulates.
  *
  * v1.1 2026-05-28 — Added single-canonical-doc enforcement (plan Phase 1).

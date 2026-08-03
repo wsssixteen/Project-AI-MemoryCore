@@ -12,9 +12,9 @@ Ruri — an external audit of MemoryCore was completed on 2026-07-11 by a fresh-
 1. **Every numbered finding/recommendation gets exactly one of two responses:**
    - `ACCEPT` — followed by an implementation plan entry (phase, files, eval).
    - `REJECT` — followed by **artifact evidence**: a file path + line range, a telemetry/log line, a diff, or a replay-eval result that disproves the finding. 
-   **BANNED:** rejecting or deferring a finding by asserting a practice/guard "already exists" or "already handles this." Existence is not the claim under test — *effectiveness* is. To count as evidence that something "already works," you must show it FIRED on a relevant occasion in the last 14 days AND the targeted slip class did not recur after (cite `meta/slip-log.md` rows + fire evidence). If you cannot show that, the finding stands.
+   **BANNED:** rejecting or deferring a finding by asserting a practice/guard "already exists" or "already handles this." Existence is not the claim under test — *effectiveness* is. To count as evidence that something "already works," you must show it FIRED on a relevant occasion in the last 14 days AND the targeted slip class did not recur after (cite `system/slip-log.md` rows + fire evidence). If you cannot show that, the finding stands.
 2. **This is not an attack to defend against.** The auditor read your logs sympathetically; the strengths (taxonomy discipline, Iron Law, known-gaps register, honest self-logging) are named in §0. Treat findings as free QA from an instance with no context debt.
-3. **New-guard freeze is in effect** from the moment you read this until Phase 1 (telemetry + eval-runner) is green. If a slip occurs during the freeze: log it in the slip-log as usual, but the "Action taken" may only be *telemetry, an eval fixture, a consolidation, or a deletion* — not a new hook/skill/rule. (This is the audit's R1 and your own Iron Law applied to the meta-layer itself.)
+3. **New-guard freeze is in effect** from the moment you read this until Phase 1 (telemetry + eval-runner) is green. If a slip occurs during the freeze: log it in the slip-log as usual, but the "Action taken" may only be *telemetry, an eval fixture, a consolidation, or a deletion* — not a new hook/skill/rule. (This is the audit's R1 and your own Iron Law applied to the system-layer itself.)
 4. **Measure before and after.** Before Phase 2 (consolidation), record baseline: slips/week by category (from slip-counts + slip-log), boot token estimate (sum of boot-set file sizes /4), registration count, and みや-catch count for the trailing 2 weeks. Re-measure after each phase. If a consolidation makes a number worse, say so plainly and roll back — the rollback recipe pattern (NUKE-MARKER) applies.
 5. **Scope integrity.** Do not silently expand or shrink this work order. If you believe a step is wrong for reasons the auditor couldn't see, surface it to みや as a decision item with your evidence — do not quietly substitute your own plan.
 6. **Everything lands in git** with per-phase commits; the weekly report (Phase 1 onward) is a generated file, not prose you write from memory.
@@ -29,16 +29,16 @@ Ruri — an external audit of MemoryCore was completed on 2026-07-11 by a fresh-
 ## Work order
 
 **Phase 0 — today, before any other work (≈1 hour):**
-- Fix `meta/sync-hook-catalog.js`: expand `${CLAUDE_PROJECT_DIR}` to the resolved repo root before `fs.existsSync` (currently 79/79 hooks report false 🚨 MISSING). Regenerate §3.0. Commit.
-- Edit CLAUDE.md boot order: the slip-surface step reads `meta/slip-counts.jsonl` escalations only — never `meta/slip-log.md` (255KB).
+- Fix `system/sync-hook-catalog.js`: expand `${CLAUDE_PROJECT_DIR}` to the resolved repo root before `fs.existsSync` (currently 79/79 hooks report false 🚨 MISSING). Regenerate §3.0. Commit.
+- Edit CLAUDE.md boot order: the slip-surface step reads `system/slip-counts.jsonl` escalations only — never `system/slip-log.md` (255KB).
 - Remove `master-memory.md` from the boot chain (it asserts 4 skills that don't exist; its content is superseded). Keep the file on disk, tombstoned with the standard 🪦 header, until Phase 2.
 - Declare the new-guard freeze in `main/current-session.md` Standing Flags.
 
 > **Addendum 2026-07-12** (`external-audit/2026-07-12-addendum-build-pipeline.md`) — binding: the forge scaffolder (K7) is built immediately after the hook-runtime + telemetry, BEFORE any other component is created. From that point, every new hook/check/skill — including kernel pieces — is born through `core/forge.js` (atomic: scaffold + syntax-check + registration + eval + smoke-fire + registry entry). Direct creation outside the forge is hard-blocked. Also binding: before starting Phase 2, emit the status table from addendum §4.2 with artifact evidence per row.
 
 **Phase 1 — see (target ≤1 week):**
-- Build `lib/hook-runtime.js` (stdin parse, fail-open wrapper, project-root resolution, telemetry append) and migrate hooks onto it incrementally — telemetry line per evaluation: `{ts, hook, event, fired, blocked, bypassed, bypass_token}` to `meta/telemetry/hook-fires.jsonl`.
-- Build the parked `eval-runner.js`; add replay fixtures for every 🚨 slip category and for the 7 eval-less block-capable hooks flagged by meta-layer-audit CHECK 6.
+- Build `lib/hook-runtime.js` (stdin parse, fail-open wrapper, project-root resolution, telemetry append) and migrate hooks onto it incrementally — telemetry line per evaluation: `{ts, hook, event, fired, blocked, bypassed, bypass_token}` to `system/telemetry/hook-fires.jsonl`.
+- Build the parked `eval-runner.js`; add replay fixtures for every 🚨 slip category and for the 7 eval-less block-capable hooks flagged by system-audit CHECK 6.
 - Stand up the generated telemetry report with three cadences: **on demand** (any moment みya asks: "print the telemetry summary"), **auto at session close** (one screen: fires, blocks, bypasses, slips today, contingency status), and a **weekly roll-up** used only for trends, tripwires, and the consolidation pass. みや works daily, all day — the weekly view is for statistics, never the only view.
 - Eval cadence likewise: affected evals run **immediately on any component change** (the forge does this at birth), the **full suite runs at session close** (seconds), weekly is only the trend line.
 - Adopt the lifecycle policy: advisory <80% compliance over 20 fires → flag for promotion; 0 fires in 30 days → flag for retirement; both flags surface at the weekly consolidation pass, decided with みや.

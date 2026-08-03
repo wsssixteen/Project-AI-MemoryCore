@@ -103,7 +103,7 @@ The heart of the plan. Every learn-from-fix run produces THIS shape (skill enfor
 |---|---|
 | Would this fix pattern have accelerated a past OUR ticket? (grep past QA-NNNN.md for similar symptom keywords) | Note the historical parallel in the extract's cross-ref |
 | Should this become a Debug Profile check-item? (Debug Profile = per-category BUG-BESTIARY section — todo.md Q2 pending) | Queue as a Debug Profile addition |
-| Should a hook be built to detect this symptom-class going forward? | Route through meta-design-router; log to slip-log as "learning-triggered defender candidate" |
+| Should a hook be built to detect this symptom-class going forward? | Route through system-design-router; log to slip-log as "learning-triggered defender candidate" |
 
 ---
 
@@ -194,8 +194,8 @@ Skill ships ONLY after PASS on both:
 | 4 | Write `eval.workflow.js` — score extract quality on QA-267382 + QA-245240 |
 | 5 | Run eval; iterate skill until PASS on both |
 | 6 | Create empty `etanah-knowledge/melaka/LEARNED-FROM-COLLEAGUES.md` header |
-| 7 | Register skill in the meta-layer INDEX (`meta/INDEX.md`) |
-| 8 | Update `meta/system-architecture.md` with the new Power |
+| 7 | Register skill in the system-layer INDEX (`system/INDEX.md`) |
+| 8 | Update `system/system-architecture.md` with the new Power |
 
 **Estimated size**: 1 skill file + 1 template + 1 log dir + 1 eval workflow + 1 new knowledge file. Small. Single-session buildable after nod.
 

@@ -4,8 +4,8 @@
 |---|---|
 | Created | 2026-07-22 |
 | Session | みや `/goal` item 4 — *"build what failed this"*. ESOKONGAN #271721: a PRBB AWAM ticket ran Phase 0 → Rubric → Apply → a full Test Scenario emit with **no No Resit Carian Rasmi**. みや was testing whether I would derive it automatically. I did not. |
-| Files | `domain/awam-no-resit-gate/awam-no-resit-gate.check.hook.js` · `awam-no-resit-gate.eval.js` · `README.md` · `NUKE-MARKER.md` · `log.jsonl` · `.claude/settings.json` Stop entry (~line 369) · one `meta/registry.jsonl` row |
-| Rollback | `rm -rf domain/awam-no-resit-gate` · remove the Stop entry from `.claude/settings.json` matching `awam-no-resit-gate` · delete the `"awam-no-resit-gate"` line from `meta/registry.jsonl` · `git revert <SHA>` |
+| Files | `domain/awam-no-resit-gate/awam-no-resit-gate.check.hook.js` · `awam-no-resit-gate.eval.js` · `README.md` · `NUKE-MARKER.md` · `log.jsonl` · `.claude/settings.json` Stop entry (~line 369) · one `system/registry.jsonl` row |
+| Rollback | `rm -rf domain/awam-no-resit-gate` · remove the Stop entry from `.claude/settings.json` matching `awam-no-resit-gate` · delete the `"awam-no-resit-gate"` line from `system/registry.jsonl` · `git revert <SHA>` |
 | Retire | 2026-08-21 (creation + 30d) — delete if it has fired ≥1× and no rollback |
 
 ## Root cause it kills

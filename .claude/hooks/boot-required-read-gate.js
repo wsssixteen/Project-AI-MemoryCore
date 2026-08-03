@@ -5,7 +5,7 @@
  * extracts every backtick-wrapped file reference, and verifies each resolves
  * on disk. Surfaces ⚠️ for any GENUINELY-broken pointer.
  *
- * Created 2026-05-23 — Phase 2 of meta-layer build.
+ * Created 2026-05-23 — Phase 2 of system-layer build.
  * Rewritten 2026-07-05 — resolver was basename-only (checked <root>/name + raw
  *   ref, no subdir walk) → 95% false-positive rate (42 flagged, ~40 present in
  *   subdirs). Now: recursive relpath+basename index, placeholder-skip, and an

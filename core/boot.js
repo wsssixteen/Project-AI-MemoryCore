@@ -2,7 +2,7 @@
 /**
  * core/boot.js — K1: deterministic boot assembler (SHADOW MODE — external-audit blueprint).
  * Assembles the context bundle a session boot NEEDS, enforces the ≤25K-token budget,
- * and (in shadow) writes it to meta/telemetry/boot-bundle-preview.md for comparison
+ * and (in shadow) writes it to system/telemetry/boot-bundle-preview.md for comparison
  * against the live prose boot. Cutover only after shadow agreement — NOT wired tonight.
  *
  * Bundle: profile card · open-quest summary (state-check) · todo Q1 head · slip escalations
@@ -23,7 +23,7 @@ function readSafe(f, cap) {
 
 // 1. profile card (regenerate for freshness)
 spawnSync(process.execPath, [path.join(ROOT, 'core', 'profile-card.js')], { env: { ...process.env, CLAUDE_PROJECT_DIR: ROOT } });
-const profile = readSafe('meta/profile-card.md');
+const profile = readSafe('system/profile-card.md');
 
 // 2. open quests via state-check --json
 let quests = '(state-check unavailable)';
@@ -54,7 +54,7 @@ const q1 = (() => {
 
 // 4. slip escalations — TOP tables only (stop at first dated entries header)
 const slipTop = (() => {
-  const raw = readSafe('meta/slip-log.md', 12000);
+  const raw = readSafe('system/slip-log.md', 12000);
   const stop = raw.search(/^## 20\d\d-.*entries/m);
   const top = stop > 0 ? raw.slice(0, stop) : raw;
   return top.split(/\r?\n/).filter(l => l.includes('🚨')).slice(0, 15).join('\n') || '(no escalation rows)';

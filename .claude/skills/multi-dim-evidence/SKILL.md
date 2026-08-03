@@ -4,7 +4,7 @@ description: Read BA-provided screenshots / PDFs / annotated drawings across ALL
 metadata:
   type: discipline-primitive
   sub-layer: discipline
-  meta-layer-INDEX: meta/discipline-INDEX.md
+  system-layer-INDEX: system/discipline-INDEX.md
 ---
 
 # multi-dim-evidence — Multi-dimensional BA visual reading
@@ -49,9 +49,9 @@ BA drew the dropdown INSIDE the "Kadar Nilaian smp/sehektar(RM)" column space (n
 
 ## Cross-references
 
-- `meta/discipline-INDEX.md`
+- `system/discipline-INDEX.md`
 - `personality.md` Communication: DO (2026-05-14 entry — original prose rule)
-- `meta/principles.md` — Multi-dimensional-evidence principle
+- `system/principles.md` — Multi-dimensional-evidence principle
 - `annotations` skill — pairs with this; annotations skill extracts PDF Annot data, multi-dim-evidence interprets it across dimensions
 
 ---

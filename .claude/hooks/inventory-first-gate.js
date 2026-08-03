@@ -4,10 +4,10 @@
  * Catches the "inventory-first-miss" slip category (7 occurrences in
  * 14-day baseline — proposed new folders/files/skills without checking
  * existing layers first). Detects new-structure-proposal phrases in
- * みや's prompt → injects reminder to inventory existing meta/INDEX
+ * みや's prompt → injects reminder to inventory existing system/INDEX
  * before proposing anything new.
  *
- * Created 2026-05-23 — Phase 2 of meta-layer build.
+ * Created 2026-05-23 — Phase 2 of system-layer build.
  * Source slip: 2026-05-23 — proposed `references/` folder when library-items/
  * already had the saved-knowledge pattern. The feedback_inventory_first.md
  * rule existed (auto-loaded) but didn't fire.
@@ -47,7 +47,7 @@ process.stdin.on('end', () => {
       '⚙️  inventory-first-gate: new-structure proposal detected',
       '',
       'Before designing or proposing new structure (folder / file / skill / hook):',
-      '  1. Read meta/INDEX.md + relevant sub-INDEX (discipline/honesty/enforcement/user-side)',
+      '  1. Read system/INDEX.md + relevant sub-INDEX (discipline/honesty/enforcement/user-side)',
       '  2. Read existing nearby files in the candidate target layer',
       '  3. Ask: does an existing component cover this? Can it be EXTENDED instead of CREATED?',
       '  4. Only propose new if inventory genuinely returns "no fit"',

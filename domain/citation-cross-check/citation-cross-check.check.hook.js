@@ -5,7 +5,7 @@
 //          (e.g. `MlkKertasTemplateForm.java:211`), but at least one cited BASENAME
 //          was never touched by a Read/Grep/Glob tool_use since the last user message.
 // ACTION: SILENT advisory — never writes to stdout, never blocks. Fired events are
-//          recorded as a telemetry row (meta/telemetry/hook-fires.jsonl) carrying the
+//          recorded as a telemetry row (system/telemetry/hook-fires.jsonl) carrying the
 //          unbacked citations + a spawn_tool suggestion (re-verify via Read/Grep).
 // Lifecycle: created (narrow trigger — widen only with confirmed-fire evidence).
 'use strict';

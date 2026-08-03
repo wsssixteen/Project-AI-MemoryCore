@@ -62,7 +62,7 @@ Cross-reference: this doc summarizes; the canonical source is still `main/todo.m
 - **Dependencies**: None. **This is Q1, not Q2 — execute first.**
 
 ### ~~5. Plan "readability is part of simplify" rule properly~~ | DROPPED 2026-05-26
-**Reason**: Ghost-skill audit (2026-05-26) confirmed `/simplify` never existed as a project skill, in `~/.claude/plugins/marketplaces/`, or in any Anthropic-published marketplace. The harness-skill assumption in this section was wrong from the start. Readability concept already lives canonically in `auto-memory/feedback_simplify_and_reference.md` (auto-loaded); no separate skill home is needed. If the concept ever earns its own skill, route it through the `meta-design-router` workflow per current CLAUDE.md Honesty Invariants.
+**Reason**: Ghost-skill audit (2026-05-26) confirmed `/simplify` never existed as a project skill, in `~/.claude/plugins/marketplaces/`, or in any Anthropic-published marketplace. The harness-skill assumption in this section was wrong from the start. Readability concept already lives canonically in `auto-memory/feedback_simplify_and_reference.md` (auto-loaded); no separate skill home is needed. If the concept ever earns its own skill, route it through the `system-design-router` workflow per current CLAUDE.md Honesty Invariants.
 
 ### 6. Class chain / call flow for Lite SMB Pembetulan | S
 - **Entry Point**: `projects/coding-projects/active/QA-258022/DEBUGGING-WALKTHROUGH.md` + `LITE-URUSAN-SEMAKAN-FLOW.md`

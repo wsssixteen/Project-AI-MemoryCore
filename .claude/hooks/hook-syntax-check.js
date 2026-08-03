@@ -3,16 +3,16 @@
  *
  * WHY (2026-06-20): silent-claim-drift-gate.js was a SYNTAX-GHOST for ~3 weeks —
  *   registered in settings.json but it threw on every invocation (a comment-closing
- *   sequence inside a header comment broke the file). meta-layer-audit checks
+ *   sequence inside a header comment broke the file). system-audit checks
  *   REGISTRATION, not SYNTAX, so it never noticed; a broken hook fails-OPEN (looks
  *   active, does nothing). branch-at-apply-gate had a sibling (path) ghost.
  *
  * WHAT: at SessionStart, parse .claude/settings.json, collect every registered
  *   `node "<path>.js"` hook command, run `node --check` on each, and REPORT any
  *   that are MISSING or FAIL to parse. Silent when all parse. Closes the
- *   syntax-ghost class that meta-layer-audit cannot see.
+ *   syntax-ghost class that system-audit cannot see.
  *
- * Standalone for now (no dependency on the pending meta-layer-audit → system-boot-check
+ * Standalone for now (no dependency on the pending system-audit → system-boot-check
  *   rename); folds into system-boot-check when that rename ships. Hook-only Power.
  *   Fail-OPEN on any error. v1 checks ALL hooks (~50 node spawns, a few seconds at
  *   boot); v1.1 candidate: mtime-cache to skip unchanged files.

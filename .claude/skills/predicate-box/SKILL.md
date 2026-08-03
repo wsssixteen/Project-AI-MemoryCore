@@ -4,7 +4,7 @@ description: Before any code Edit while debugging — emit a TRUE IF / PROVED BY
 metadata:
   type: discipline-primitive
   sub-layer: discipline
-  meta-layer-INDEX: meta/discipline-INDEX.md
+  system-layer-INDEX: system/discipline-INDEX.md
 ---
 
 # predicate-box — Pre-Edit assumption + proof emission
@@ -51,9 +51,9 @@ FAILED WHEN: <what symptom emerges if predicate is false>
 
 ## Cross-references
 
-- `meta/discipline-INDEX.md`
+- `system/discipline-INDEX.md`
 - `quest/quest-protocol.md` Debug Mode Rituals section — original home (this skill is the hoisted atomic version)
-- `meta/principles.md` — Evidence-before-claim, Verify-not-assume
+- `system/principles.md` — Evidence-before-claim, Verify-not-assume
 
 ---
 

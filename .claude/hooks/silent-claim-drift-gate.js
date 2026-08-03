@@ -10,7 +10,7 @@
  * emits a visible-gate reminder (advisory, does NOT block — would trip on
  * legitimate uses; Ruri sees the reminder and self-corrects).
  *
- * Created 2026-05-23 — Phase 2 of meta-layer build.
+ * Created 2026-05-23 — Phase 2 of system-layer build.
  * Source slips: QA-261986 (silent §6 reassignment claim, 2026-05-22) +
  * earlier session "done" claims without diff-backing.
  *
@@ -28,7 +28,7 @@
  * Also Stage 5A scans for architecture-doc-sync violations: if turn
  * touched a system-component file (.claude hooks .js, .claude skills SKILL.md,
  * quest/quest-protocol.md, quest/active.txt, .claude/settings.json) AND
- * meta/system-architecture.md was NOT edited this turn AND bypass token
+ * system/system-architecture.md was NOT edited this turn AND bypass token
  * `[skip-architecture-doc-update: ...]` absent → advisory reminder.
  */
 const CLAIM_PATTERNS = [
@@ -161,7 +161,7 @@ process.stdin.on('end', () => {
         '⚙️  silent-claim-drift-gate (Stage 5A advisory): architecture-doc-sync violation',
         '',
         'This turn edited a system component (hook/skill/protocol/state-file/settings.json)',
-        'but did NOT edit meta/system-architecture.md. Plan Phase 0 requires paired update.',
+        'but did NOT edit system/system-architecture.md. Plan Phase 0 requires paired update.',
         'Bypass: [skip-architecture-doc-update: <reason>] (already in this turn? then ignore).',
         ''
       );

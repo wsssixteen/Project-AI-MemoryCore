@@ -12,7 +12,7 @@
 
 **Run recipe (work machine, ~30 min)**:
 1. Download SchemaCrawler (zip distribution, needs みや's download approval) → `E:\Dev\schemacrawler\`
-2. `schemacrawler --server=postgresql --host=<uat-host> --database=<db> --schemas=et_main_uat --user=et_read --command=schema --output-format=json --output-file=meta/schema-snapshot-uat.json`
+2. `schemacrawler --server=postgresql --host=<uat-host> --database=<db> --schemas=et_main_uat --user=et_read --command=schema --output-format=json --output-file=system/schema-snapshot-uat.json`
 3. Cross-check script (to be forged post-download): parse `@Table`/`@Column` from etanah-domain JARs (javap, proven in QA-269437) vs the snapshot → mismatch table.
 4. Wire into the quest skill's DB rows as "tool ran + output attached" (replaces prose-trust).
 

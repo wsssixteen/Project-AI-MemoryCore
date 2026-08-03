@@ -246,8 +246,8 @@ Co-Authored-By: Ruri <noreply@anthropic.com>
 
 **Post-mortem entry** (write to `main/post-mortems.md` AND summarize here):
 - What went well: <bullets>
-- What slipped: <bullets — also log to `meta/slip-log.md` with `lesson:` field>
-- What changed in the meta-layer because of this quest: <bullets>
+- What slipped: <bullets — also log to `system/slip-log.md` with `lesson:` field>
+- What changed in the system-layer because of this quest: <bullets>
 
 **KPI entry** (write to `main/kpi-tracker.md` AND summarize here):
 - Effort: <estimated hours>

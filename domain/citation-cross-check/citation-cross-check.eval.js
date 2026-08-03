@@ -4,7 +4,7 @@
 // JSONL file itself, finds the last assistant text + the Read/Grep/Glob tool_use inputs
 // since the last user message, and — for a trace-shaped reply (Scout/Recon/class-chain)
 // citing >=2 file:line locations where >=1 basename was never touched — logs a SILENT
-// telemetry row (spawn_tool + unbacked_citations) to meta/telemetry/hook-fires.jsonl.
+// telemetry row (spawn_tool + unbacked_citations) to system/telemetry/hook-fires.jsonl.
 // Never writes to stdout. Never blocks.
 'use strict';
 const fs = require('fs');

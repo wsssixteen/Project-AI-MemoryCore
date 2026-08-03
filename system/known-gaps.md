@@ -2,7 +2,7 @@
 
 > Created 2026-06-22 per みや, after he pressed: *"I do not know what other things you lied about and what other gaps are being lied about. We cannot make improvements on things we do not know and do not log."*
 >
-> **The distinction this file exists to make:** a GAP (not knowing something) is normal and forgivable. The LIE is asserting a plausible guess **as a verified fact** to paper over the gap — then defending it when challenged. `meta/slip-log.md` logs the *instances*; this file logs the *underlying blind spots* so we stop treating each as a one-off and see the one shape.
+> **The distinction this file exists to make:** a GAP (not knowing something) is normal and forgivable. The LIE is asserting a plausible guess **as a verified fact** to paper over the gap — then defending it when challenged. `system/slip-log.md` logs the *instances*; this file logs the *underlying blind spots* so we stop treating each as a one-off and see the one shape.
 >
 > **The always-on rule this enables:** when I hit a row below and don't have the closing verification in hand → I FLAG it ("I don't have X — this is HYPOTHESIS until I query/probe") and DO the verification. Asserting through a known gap is BANNED. Enforced by `veritas-claim-gate` (behavioural/research claims) + the Recon HYPOTHESIS/VERIFIED labels; this register is the explicit list they check against.
 

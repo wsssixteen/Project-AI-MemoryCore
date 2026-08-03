@@ -4,8 +4,8 @@
 |---|---|
 | Created | 2026-07-22 |
 | Session | みや `/goal` item 2 — *"create for FEATURE called Brief… use only story diagrams, tables, and bullet points that has short sentences to explain"*. Gap found at inventory: `show-gate` + `terse-gate` already enforce the FORMAT; nothing defined a start-of-work brief's CONTENT. |
-| Files | `.claude/skills/brief/SKILL.md` · `domain/brief/eval.js` · `domain/brief/README.md` · `domain/brief/NUKE-MARKER.md` · `domain/brief/log.jsonl` · one `meta/registry.jsonl` row (`name: "brief"`, lifecycle `created`) |
-| Rollback | `rm -rf ".claude/skills/brief" "domain/brief"` · delete the `"brief"` line from `meta/registry.jsonl` · **no `settings.json` entry to remove — skill-only, zero hooks registered** · `git revert <SHA of the brief commit>` |
+| Files | `.claude/skills/brief/SKILL.md` · `domain/brief/eval.js` · `domain/brief/README.md` · `domain/brief/NUKE-MARKER.md` · `domain/brief/log.jsonl` · one `system/registry.jsonl` row (`name: "brief"`, lifecycle `created`) |
+| Rollback | `rm -rf ".claude/skills/brief" "domain/brief"` · delete the `"brief"` line from `system/registry.jsonl` · **no `settings.json` entry to remove — skill-only, zero hooks registered** · `git revert <SHA of the brief commit>` |
 | Retire | 2026-08-21 (creation + 30d) — delete this file if `/brief` has fired ≥1× in the window AND no rollback |
 
 ## Why this is skill-only (the decision worth auditing)

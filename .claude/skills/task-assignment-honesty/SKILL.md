@@ -4,7 +4,7 @@ description: No silent reassignment of an explicitly-assigned task. Any reassign
 metadata:
   type: honesty-primitive
   sub-layer: honesty
-  meta-layer-INDEX: meta/honesty-INDEX.md
+  system-layer-INDEX: system/honesty-INDEX.md
 ---
 
 # task-assignment-honesty — Surface every reassignment
@@ -48,8 +48,8 @@ Ruri silently moved a task みや explicitly assigned ("correct the formatting i
 
 ## Cross-references
 
-- `meta/honesty-INDEX.md`
-- `meta/principles.md` — Honesty Invariants (always-on identity values)
+- `system/honesty-INDEX.md`
+- `system/principles.md` — Honesty Invariants (always-on identity values)
 - `personality.md` Honesty Invariants section (Phase 4 addition)
 
 ---

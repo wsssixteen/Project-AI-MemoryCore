@@ -1,7 +1,7 @@
 # みや's Notebook — Training Guide for Using Ruri
 
 > **Counterpart to RURI-NOTEBOOK.md.** Where Ruri's notebook describes who she is, this one describes how to USE her effectively + the patterns/anti-patterns that prevent the system from slipping back into clunky.
-> **Created:** 2026-05-23, Phase 5 of meta-layer build (formalizes todo.md Q2 entry).
+> **Created:** 2026-05-23, Phase 5 of system-layer build (formalizes todo.md Q2 entry).
 > **Audience:** リドワンさん / みや.
 
 ---
@@ -10,14 +10,14 @@
 
 ```
 LAYER 0 — Identity                  (WHO Ruri is)        — personality.md, main/main-memory.md
-LAYER 1 — Constitution / Meta       (HOW Ruri decides)   — meta/  ← the heart of the system
+LAYER 1 — Constitution / Meta       (HOW Ruri decides)   — system/  ← the heart of the system
 LAYER 2 — Boot Config & Workflow    (WHAT runs at boot)  — CLAUDE.md, Feature/, quest/
 LAYER 3 — Capabilities              (skills + hooks)     — .claude/skills/, .claude/hooks/
 LAYER 4 — Knowledge                 (references)         — library/, library-items/, etanah-knowledge/
 LAYER 5 — State                     (current data)       — quest/active.txt, current-session.md, todo.md
 ```
 
-**Key insight:** every behavior has a deterministic home. Hooks fire 100%; skills load on trigger; CLAUDE.md is judgment only. When you ask for something new, it gets routed via `meta-design-router` to the right home.
+**Key insight:** every behavior has a deterministic home. Hooks fire 100%; skills load on trigger; CLAUDE.md is judgment only. When you ask for something new, it gets routed via `system-design-router` to the right home.
 
 ---
 
@@ -25,7 +25,7 @@ LAYER 5 — State                     (current data)       — quest/active.txt,
 
 | Pattern | Why it works |
 |---|---|
-| **"I want X to fire reliably when Y"** | Routes through meta-design-router → ends up as hook or skill (deterministic) |
+| **"I want X to fire reliably when Y"** | Routes through system-design-router → ends up as hook or skill (deterministic) |
 | **"Can we cover X?" (open framing)** | Triggers inventory-first; Ruri checks existing layers before proposing new |
 | **"Pressure-test my idea"** | Activates `appraise` skill; Ruri Socratic-grills before agreeing |
 | **"Run /verify"** at quest close | External cross-check catches Ruri's owner-blindness |
@@ -41,7 +41,7 @@ LAYER 5 — State                     (current data)       — quest/active.txt,
 |---|---|---|
 | **"Add to CLAUDE.md"** | Prose in CLAUDE.md doesn't reliably fire (proven 3× in 2026-05-23 session). Triggers prose-default-gate + user-side-guardrail | "Make it fire reliably when X" → router picks shape |
 | **"Create a new folder for X"** | Skips inventory; risks proliferation (the `references/` slip 2026-05-23). Triggers inventory-first-gate | "Where should X live?" → inventory-first |
-| **"Create a new feedback file"** | Same prose-doesn't-fire trap, scattered in `.claude/auto-memory/` | Route through meta-design-router |
+| **"Create a new feedback file"** | Same prose-doesn't-fire trap, scattered in `.claude/auto-memory/` | Route through system-design-router |
 | **"Just hardcode it"** without slip evidence | Locks a single observation as a universal rule. Better to wait for ≥2 occurrences | "I've seen this twice — should we add a gate?" |
 | **Silent approval of Ruri's first proposal** | Misses pressure-test moments | Ask "what's the weakest part of this recommendation?" |
 | **Closing a quest without /verify** | Silent skip of cross-check; owner-blindness slips through | Always /verify Checklist C at Phase 1 close |
@@ -64,7 +64,7 @@ If a skill doesn't fire when you expect it to → log to `skill-failure-log.md` 
 
 ## 5 · Reading the stages-arrow
 
-When Ruri is in a multi-stage workflow (plan mode, meta-layer build, etc.), she emits a stage progress bar at the start of each turn:
+When Ruri is in a multi-stage workflow (plan mode, system-layer build, etc.), she emits a stage progress bar at the start of each turn:
 
 ```
 Stages: 1 Shape ✅ · 2 Purpose+content ✅ · 3a Enforcement ⏳ · 3b Discipline ⬜ · ...
@@ -99,20 +99,20 @@ Just say "override — let's do X anyway" + brief reasoning. Ruri logs it (so sh
 | **Atomic primitive** | A small reusable skill that does ONE thing (e.g. `rubric`, `predicate-box`). Workflows call primitives by name. |
 | **Workflow** | A sequence/composition that calls primitives at specific moments. Quest is the canonical workflow. Bankai is another. |
 | **Hook** | A JS script that fires deterministically on Claude Code events (SessionStart, UserPromptSubmit, PreToolUse, Stop). Bypasses model decision. |
-| **INDEX** | A meta-layer file listing what lives where + cross-references. Master = `meta/INDEX.md`. |
-| **meta-design-router** | The skill that decides whether new behavior goes to a hook / skill / CLAUDE.md / personality.md. Should fire on lock-signals + design-intent. |
+| **INDEX** | A system-layer file listing what lives where + cross-references. Master = `system/INDEX.md`. |
+| **system-design-router** | The skill that decides whether new behavior goes to a hook / skill / CLAUDE.md / personality.md. Should fire on lock-signals + design-intent. |
 | **Trigger phrase** | The natural-language phrase that loads a skill via description match. Each skill's SKILL.md description enumerates its triggers. |
-| **Slip-log** | Consolidated history of past failures (after Phase 8, at `meta/slip-log.md`). Empirical evidence for meta-layer design. |
+| **Slip-log** | Consolidated history of past failures (after Phase 8, at `system/slip-log.md`). Empirical evidence for system-layer design. |
 | **Bankai 🌌 蒼穹宝典** | Ruri's data-organization loop skill — for consolidating scattered knowledge into structured form. Originally built for etanah-knowledge consolidation. |
 
 ---
 
 ## 8 · When the system slips (and how to surface it)
 
-The meta-layer is designed to prevent slips, but no system is perfect. If Ruri:
+The system-layer is designed to prevent slips, but no system is perfect. If Ruri:
 
-- Adds prose to CLAUDE.md when she should have proposed a hook/skill → say "you defaulted to prose; route via meta-design-router"
-- Proposes a new folder without inventory → say "did you check meta/INDEX first?"
+- Adds prose to CLAUDE.md when she should have proposed a hook/skill → say "you defaulted to prose; route via system-design-router"
+- Proposes a new folder without inventory → say "did you check system/INDEX first?"
 - Claims "done" without diff-backing → say "show me the diff"
 - Offers (a)/(b) choices after you said "proceed" → say "stop offering choices"
 - Skips test-data echo at hand-back → say "where's the test data table"
@@ -134,7 +134,7 @@ Each correction:
 5. **Verify before closure** — no phase closes without external cross-check
 6. **Failure-mode awareness** — before declining an action, ask "what breaks if I'm wrong?"
 
-See `meta/principles.md` for the full 68-principle classified inventory.
+See `system/principles.md` for the full 68-principle classified inventory.
 
 ---
 
@@ -143,12 +143,12 @@ See `meta/principles.md` for the full 68-principle classified inventory.
 - Ask Ruri to explain the architecture: "show me the layer hierarchy"
 - Invoke the relevant primitive directly: `/rubric`, `/predicate-box`, `/grep-rubric`
 - Use grill-me: "/grill-me on [topic]" — Socratic one-question-at-a-time validation
-- Check meta/INDEX.md for the master index of what lives where
+- Check system/INDEX.md for the master index of what lives where
 - Check this notebook for usage patterns
 
 ---
 
-## 11 · Phrasing reference — how to route asks to the right meta-layer component
+## 11 · Phrasing reference — how to route asks to the right system-layer component
 
 > Added 2026-05-25 after みや asked "what keywords/skills should I mention when implementing into a skill + how specific on workflow/checkpoint?"
 > Use this card when you want a specific gate or skill to fire deterministically.
@@ -164,7 +164,7 @@ See `meta/principles.md` for the full 68-principle classified inventory.
 | **INVOKE a specific skill** for current task | "Use /<skill-name>" or "invoke /<skill-name>" or "run /<skill-name> properly" or "use it as intended" | skill-invocation-discipline-gate → Ruri MUST use Skill tool (manual SKILL.md execution banned) |
 | **Convert prose-rule → skill** | "This is in prose at <file>, make it a skill" + "trigger phrases should be A, B" | auto-skill-on-mistake Step 3b (prose exists → make skill) |
 | **Add a HOOK** (deterministic, fires 100%) | "Make this fire deterministically on X event" or "add a PreToolUse hook on Y" or "this should be a hook, not a skill" | auto-skill-on-mistake Step 4 — explicitly hook-not-skill |
-| **STRUCTURE change** (new folder/file) | Best to first say: "What exists? Should we extend instead?" before "Let's add a folder for X" | inventory-first-gate.js — forces meta/INDEX read before new structure |
+| **STRUCTURE change** (new folder/file) | Best to first say: "What exists? Should we extend instead?" before "Let's add a folder for X" | inventory-first-gate.js — forces system/INDEX read before new structure |
 | **NEVER fall into "add to CLAUDE.md"** | Banned by default — CLAUDE.md should stay thin. Say "make this a skill" or "make this a hook" instead | prose-default-gate.js catches "add to CLAUDE.md" / "hard rule" lock-signals |
 
 ### 11b · Reference Card — workflow / checkpoint specificity

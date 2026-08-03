@@ -142,7 +142,7 @@ md.push('| Skill | Eval fixtures |');
 md.push('|---|---|');
 for (const s of skills.sort((a, b) => a.name.localeCompare(b.name))) md.push(`| ${s.name} | ${s.evals.length ? s.evals.join(', ') : '—'} |`);
 md.push('');
-md.push('## Scripts (core/ lib/ quest/ meta/) (' + scripts.length + ')');
+md.push('## Scripts (core/ lib/ quest/ system/) (' + scripts.length + ')');
 md.push('');
 md.push('| Script | Eval twin |');
 md.push('|---|---|');

@@ -6,7 +6,7 @@
 |---|---|
 | Created | 2026-07-07 (MIGRATED — v1.5 behavior byte-preserved; hook itself shipped 2026-06-20 at `.claude/hooks/convention-check-gate.js`) |
 | Session | Familiar-built batch (commit `2750811`). Migration to `domain/` per trinity convention + first-ever eval; only code change is the log path (now `log.jsonl` beside the hook). Legacy log stays at `.claude/hooks/`. |
-| Files | (a) `domain/convention-check-gate/convention-check-gate.gate.hook.js` (git-renamed from `.claude/hooks/convention-check-gate.js`, v1.5 behavior) · (b) `domain/convention-check-gate/eval.js` (5/5 fixtures, first-ever) · (c) `domain/convention-check-gate/README.md` (contract) · (d) `domain/convention-check-gate/log.jsonl` (auto-created on first fire) · (e) `.claude/settings.json` DUAL registration — PreToolUse `Bash` entry + PreToolUse `Edit\|Write` entry, both pointing to hook · (f) `meta/system-architecture.md` §3.18 row |
+| Files | (a) `domain/convention-check-gate/convention-check-gate.gate.hook.js` (git-renamed from `.claude/hooks/convention-check-gate.js`, v1.5 behavior) · (b) `domain/convention-check-gate/eval.js` (5/5 fixtures, first-ever) · (c) `domain/convention-check-gate/README.md` (contract) · (d) `domain/convention-check-gate/log.jsonl` (auto-created on first fire) · (e) `.claude/settings.json` DUAL registration — PreToolUse `Bash` entry + PreToolUse `Edit\|Write` entry, both pointing to hook · (f) `system/system-architecture.md` §3.18 row |
 | Rollback | See block below |
 | Retire | 2026-08-06 (Created + 30 days). Remove this file at DE if `domain/convention-check-gate/log.jsonl` shows ≥ 1 fire in the window AND no rollback event. |
 
@@ -30,7 +30,7 @@ git show 2750811^:.claude/hooks/convention-check-gate.js > .claude/hooks/convent
 
 # 4. DO NOT blind git revert 2750811 — it is a SHARED ship commit carrying 4 Features
 #    (logic-blast-radius + predicate-box + convention-check-gate + quest-phase-gate)
-#    plus settings.json + meta/system-architecture.md edits. Inspect first:
+#    plus settings.json + system/system-architecture.md edits. Inspect first:
 git show 2750811 --stat
 # Only revert if ALL FOUR Features are being nuked together.
 

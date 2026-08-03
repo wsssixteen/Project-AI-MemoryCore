@@ -56,7 +56,7 @@
  *   conversation context — no narrower predicate reliably wraps them, and
  *   UserPromptSubmit can't see the assistant's output.
  *
- * meta-layer-audit: registered in settings.json Stop array.
+ * system-audit: registered in settings.json Stop array.
  * Created 2026-06-29 per みや; routed through /system-design + /system-rules.
  */
 'use strict';

@@ -148,7 +148,7 @@ Then stop.
 
 Skill-only Feature: no hook, no `settings.json` entry.
 Nuke: `rm -rf .claude/skills/deploy/ domain/deploy/` · remove the `registry.jsonl` line for
-`deploy` · revert the `meta/system-architecture.md` §4.4 row.
+`deploy` · revert the `system/system-architecture.md` §4.4 row.
 Eval: `node domain/deploy/eval.js`.
 
 ## Origin

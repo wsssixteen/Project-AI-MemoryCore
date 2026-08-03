@@ -3,7 +3,7 @@
  * core/profile-card.js — C2: generate the 2-3KB boot profile card from main/main-memory.md.
  * The card replaces the 80KB main-memory read at boot (once shadow-proven); the full file
  * becomes on-demand episodic archive. Deterministic extraction — same input, same card.
- * USAGE: node core/profile-card.js   → writes meta/profile-card.md, prints sizes.
+ * USAGE: node core/profile-card.js   → writes system/profile-card.md, prints sizes.
  */
 'use strict';
 const fs = require('fs');
@@ -56,4 +56,4 @@ const card = [
 
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, card);
-console.log(`profile-card: ${card.length} bytes (source ${src.length} bytes → ${(card.length / src.length * 100).toFixed(1)}%) → meta/profile-card.md`);
+console.log(`profile-card: ${card.length} bytes (source ${src.length} bytes → ${(card.length / src.length * 100).toFixed(1)}%) → system/profile-card.md`);

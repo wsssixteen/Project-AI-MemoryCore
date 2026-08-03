@@ -4,7 +4,7 @@ description: When proposing ≥2 substantive items requiring みや's nod in a s
 metadata:
   type: discipline-primitive
   sub-layer: discipline
-  meta-layer-INDEX: meta/discipline-INDEX.md
+  system-layer-INDEX: system/discipline-INDEX.md
 ---
 
 # confidence-table — Multi-item proposal confidence audit
@@ -52,9 +52,9 @@ metadata:
 
 ## Cross-references
 
-- `meta/discipline-INDEX.md`
+- `system/discipline-INDEX.md`
 - `personality.md` Communication: DO (2026-05-13 entry — original rule with みや's framing)
-- `meta/principles.md` — Confidence-Assessment-table principle
+- `system/principles.md` — Confidence-Assessment-table principle
 - `rubric` skill — pairs with this; rubric evaluates candidates, confidence-table proposes the chosen ones to みや with auditable backing
 
 ---

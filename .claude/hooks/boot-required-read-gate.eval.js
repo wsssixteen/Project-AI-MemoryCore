@@ -1,4 +1,4 @@
-// meta-layer-audit: skip-ghost-check — eval harness, run by hand, NOT an event hook (marked 2026-07-19 system-check)
+// system-audit: skip-ghost-check — eval harness, run by hand, NOT an event hook (marked 2026-07-19 system-check)
 /**
  * boot-required-read-gate.eval.js — runnable eval for the fixed resolver.
  * Run:  node .claude/hooks/boot-required-read-gate.eval.js   (exit 0 = PASS)
@@ -23,7 +23,7 @@ function check(name, cond) {
 // 1. Subdir + path-prefixed refs resolve (these are all tracked + present).
 const good = resolveRefs(new Set([
   'Feature/Domain-Expansion/expansion-protocol.md',   // relpath, 2 deep
-  'meta/discipline-INDEX.md',                          // relpath, 1 deep
+  'system/discipline-INDEX.md',                          // relpath, 1 deep
   'personality.md',                                    // bare basename in .claude/
   'quest-protocol.md',                                 // bare basename in quest/
 ]), ROOT);

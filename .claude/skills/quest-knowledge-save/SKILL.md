@@ -4,7 +4,7 @@ description: Use when a discovery/root-cause/mechanism surfaces mid-quest and it
 metadata:
   type: discipline-primitive
   sub-layer: discipline
-  meta-layer-INDEX: meta/discipline-INDEX.md
+  system-layer-INDEX: system/discipline-INDEX.md
 ---
 
 # quest-knowledge-save — mid-quest persistence procedure

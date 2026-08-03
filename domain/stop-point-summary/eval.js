@@ -289,7 +289,7 @@ function main() {
   // lifecycle flags), not an eval red. The eval's pass/fail = the smoke fixtures above.
   if (pct !== null && pct < 95) {
     console.log('');
-    console.log('  (compliance < target — tracked via meta/telemetry/hook-fires.jsonl + weekly report, not as eval RED)');
+    console.log('  (compliance < target — tracked via system/telemetry/hook-fires.jsonl + weekly report, not as eval RED)');
   }
 }
 

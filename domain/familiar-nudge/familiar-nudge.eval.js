@@ -41,13 +41,13 @@ const smallFile = makeFile('small.txt', 'just a few short lines\nline2\nline3\n'
 r = run(smallFile);
 check('F3a small clean file does not fire', r.status === 0 && (r.stdout || '') === '', 'exit=' + r.status + ' stdout=' + JSON.stringify(r.stdout));
 
-// F3b: EDGE CASE — a large file (>50KB) but under an EXCLUDED path (meta/telemetry) → must NOT fire
+// F3b: EDGE CASE — a large file (>50KB) but under an EXCLUDED path (system/telemetry) → must NOT fire
 const telemetryDir = path.join(os.tmpdir(), 'meta', 'telemetry');
 fs.mkdirSync(telemetryDir, { recursive: true });
 const telemetryFile = path.join(telemetryDir, 'hook-fires.jsonl');
 fs.writeFileSync(telemetryFile, 'x'.repeat(60 * 1024));
 r = run(telemetryFile);
-check('F3b large file under meta/telemetry/ excluded — does not fire', r.status === 0 && (r.stdout || '') === '', 'exit=' + r.status + ' stdout=' + JSON.stringify(r.stdout));
+check('F3b large file under system/telemetry/ excluded — does not fire', r.status === 0 && (r.stdout || '') === '', 'exit=' + r.status + ' stdout=' + JSON.stringify(r.stdout));
 
 // F3c: EDGE CASE — nonexistent file_path → must NOT fire (no crash, no throw on statSync)
 r = run(path.join(os.tmpdir(), 'this-file-does-not-exist-' + Date.now() + '.txt'));

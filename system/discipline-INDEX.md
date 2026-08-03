@@ -51,8 +51,8 @@ This is the **primitives-are-callable** pattern (Stage 3b insight). Refining a p
 
 ## Cross-references
 
-- `meta/INDEX.md` — master meta-layer index
-- `meta/principles.md` — the underlying Evidence Discipline + supporting principles (full classified list)
+- `system/INDEX.md` — master system-layer index
+- `system/principles.md` — the underlying Evidence Discipline + supporting principles (full classified list)
 - Phase 3 of plan `1-this-means-you-toasty-forest.md` — build instructions
 - `quest/quest-protocol.md` (to be updated Phase 3) — workflows will reference these primitives by name
 

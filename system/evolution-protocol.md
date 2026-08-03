@@ -1,6 +1,6 @@
-# Evolution Protocol — How the Meta-Layer Self-Updates
+# Evolution Protocol — How the System-Layer Self-Updates
 
-> **Purpose:** When Anthropic ships new features (new hook events, new skill primitives, new tools, new models) OR LLM research community advances OR new agent-design patterns surface — the meta-layer detects + ingests + proposes updates to keep our setup aligned. Rare-but-high-stakes per Stage 6 reasoning.
+> **Purpose:** When Anthropic ships new features (new hook events, new skill primitives, new tools, new models) OR LLM research community advances OR new agent-design patterns surface — the system-layer detects + ingests + proposes updates to keep our setup aligned. Rare-but-high-stakes per Stage 6 reasoning.
 >
 > **Status:** Phase 1 placeholder ✅ (this file describes the design). Phase 7 implements the SessionStart hook extension + manual-invoke skill.
 
@@ -32,12 +32,12 @@ Either auto-trigger surfaces a flag in the boot briefing. みや decides when to
 
 ## Process — what evolution-check does when invoked
 
-Recursive through meta-design-router:
+Recursive through system-design-router:
 
 1. **Re-run deep-research** on Anthropic best-practices (similar to 2026-05-23 research pass via general-purpose subagent)
 2. **Diff against saved reference**: compare new findings to `library-items/agent-architecture/claude-code-best-practices.md`
-3. **For each new finding**: route through `meta-design-router` (the meta-layer's own decision loop applies to its own evolution — recursive correctness)
-4. **Each proposed refactor**: goes through Stage 5's `meta-edit-gate.js` PreToolUse hook (Phase 6)
+3. **For each new finding**: route through `system-design-router` (the system-layer's own decision loop applies to its own evolution — recursive correctness)
+4. **Each proposed refactor**: goes through Stage 5's `system-edit-gate.js` PreToolUse hook (Phase 6)
 5. **みや approves**: updates ship via standard Edit/Write
 6. **Update the saved best-practices file**: replace `Last researched:` timestamp + add new findings sections
 7. **Update `last-evolution-check` timestamp** below
@@ -52,7 +52,7 @@ research-file-last-updated: 2026-05-23  # research file itself NOT re-run; only 
 research-file-path: library-items/agent-architecture/claude-code-best-practices.md
 
 # Added 2026-05-24 — system-check cadence (paired skill: .claude/skills/system-check/SKILL.md)
-last-system-check: 2026-07-19  # run 2 — weekly-audit Step 1; 5 familiars (sonnet-tiered); headline: meta-layer-audit self-regression (54 false ghosts) found+fixed same run
+last-system-check: 2026-07-19  # run 2 — weekly-audit Step 1; 5 familiars (sonnet-tiered); headline: system-audit self-regression (54 false ghosts) found+fixed same run
 next-system-check-due: 2026-06-23  # +30 days
 system-check-cadence-days: 30  # calibrate over first 3 runs
 last-system-check-findings-count: 35  # surfaced critical+high+medium gaps
@@ -68,7 +68,7 @@ last-system-check-findings-count: 35  # surfaced critical+high+medium gaps
 
 ## Cross-references
 
-- `meta/INDEX.md` — master meta-layer index
+- `system/INDEX.md` — master system-layer index
 - `library-items/agent-architecture/claude-code-best-practices.md` — the reference file this protocol maintains
 - `.claude/hooks/boot-load-verification.js` (Phase 7 extension target) — the trigger mechanism
 - Phase 7 of plan `1-this-means-you-toasty-forest.md` — build instructions

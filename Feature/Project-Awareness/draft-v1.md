@@ -35,13 +35,13 @@ current_focus=PLPS RisalatMMKN template
 notes=quest QA-247707 in flight; etanah-knowledge cross-references being updated
 
 project=memorycore-system
-type=meta-layer
+type=system-layer
 status=hold
 current_focus=Quest Briefing primitive + video-trim skill
 notes=Session 4 design sprint; resumes next session for Track 2/3
 ```
 
-Fields: `project=` (slug), `type=` (etanah-codebase / meta-layer / side-project / portfolio), `status=` (active / hold / blocked / closed), `current_focus=` (one-line), `notes=` (multi-line).
+Fields: `project=` (slug), `type=` (etanah-codebase / system-layer / side-project / portfolio), `status=` (active / hold / blocked / closed), `current_focus=` (one-line), `notes=` (multi-line).
 
 ## Hook behaviour
 
@@ -69,7 +69,7 @@ Both deferred until project-awareness hook ships and is exercised.
 |---|---|---|
 | Q1 | Where does `projects/active-projects.txt` live exactly? Root `projects/` or new `projects/state/`? | Root `projects/` (matches quest/ sibling) |
 | Q2 | What triggers `status=active` → `status=hold`? Manual command, or auto on Nday inactivity? | Manual via `/project hold X` for v1; auto-decay for v1.1 |
-| Q3 | Should the hook also emit when on Etanah pelupusan work but the file says active project is meta-layer? (mismatch warning) | Yes — emit advisory mismatch line per session-items-manager pattern |
+| Q3 | Should the hook also emit when on Etanah pelupusan work but the file says active project is system-layer? (mismatch warning) | Yes — emit advisory mismatch line per session-items-manager pattern |
 | Q4 | Naming — `project-active-grounding.js` (parallels `quest-active-grounding`) or `active-project-surfacer.js` (parallels `open-quest-surfacer`)? | Use the ACTIVE-grounding suffix to signal UserPromptSubmit (vs SessionStart surfacer) |
 
 ## Next steps to ship
@@ -78,7 +78,7 @@ Both deferred until project-awareness hook ships and is exercised.
 2. Create `projects/active-projects.txt` with the 2 known active projects (Etanah work + MemoryCore meta)
 3. Build `.claude/hooks/project-active-grounding.js` (mirror `quest-active-grounding.js` shape)
 4. Register in `.claude/settings.json` (UserPromptSubmit hooks array) — みや approves permission
-5. Add to `meta/system-architecture.md` §3.2
+5. Add to `system/system-architecture.md` §3.2
 
 ## History
 

@@ -53,7 +53,7 @@ would go stale.
 | **Resolves toward the MAIN repo** | `projects/` is gitignored and absent from worktrees, so `ROOT/projects/...` misses when running in a worktree. The hook walks up past `.claude/worktrees` to find the real file (verified live). |
 | **Register, not queue** | Rows are never cleared for staleness. An un-ticketed known issue is knowledge. A row moves Status (`OPEN` → `ANSWERED` / `OWNED-ELSEWHERE`, or gains a ticket number) — it is never deleted. |
 | **Adopted the existing schema** | Two sessions built this the same night. The 2026-07-28 session's file was richer (status vocabulary, 5 backfilled rows, review cadence) and came first, so the hook was rewritten to parse THAT file rather than imposing mine. See the incident below. |
-| **Trigger-overlap override** | Collided with `retrieve-sync-gate` / `brief` / `local-deploy-gate` on trigger only — none of them reads a pending register. Merging would put two unrelated concerns in one check. Reason recorded in `meta/registry.jsonl`. |
+| **Trigger-overlap override** | Collided with `retrieve-sync-gate` / `brief` / `local-deploy-gate` on trigger only — none of them reads a pending register. Merging would put two unrelated concerns in one check. Reason recorded in `system/registry.jsonl`. |
 
 ## Bug the eval caught during the build
 

@@ -10,7 +10,7 @@
 |---|---|---|
 | Skill (procedure) | `.claude/skills/quest-bounty/SKILL.md` | ✅ shipped 2026-07-01 |
 | Trigger (wiring) | `close-phase` SKILL.md Phase 2 step 4 (invokes quest-bounty) | ✅ wired 2026-07-01 |
-| State flag | `meta/slip-log.md` schema `bounty_actioned` | ✅ added 2026-07-01 |
+| State flag | `system/slip-log.md` schema `bounty_actioned` | ✅ added 2026-07-01 |
 | Audit log | `domain/quest-bounty/log.jsonl` | ✅ this folder |
 | Discipline hook (verify it ran at archive) | `domain/quest-bounty/discipline.hook.js` | ⬜ pending |
 | Eval (score a bounty run) | `domain/quest-bounty/eval.workflow.js` | ⬜ pending |

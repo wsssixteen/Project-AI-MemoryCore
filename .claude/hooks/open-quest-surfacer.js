@@ -17,7 +17,7 @@
  *   claimed enforcement that wasn't deterministic. Cure: convert the
  *   attention-dependent rule into a hook that fires every boot.
  *
- * Pairs with: meta-layer-audit.js (Layer 0 audit), boot-load-verification.js,
+ * Pairs with: system-audit.js (Layer 0 audit), boot-load-verification.js,
  *   silent-claim-drift-gate.js (same "deterministic gate beats prose" pattern).
  *
  * v1: REPORT-ONLY — emits to stdout, never blocks boot.

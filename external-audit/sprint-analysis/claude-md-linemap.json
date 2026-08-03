@@ -41,12 +41,12 @@
       "notes": "Pure directory-tree documentation, no enforced rule; safe to shrink to a 1-2 line pointer with no parity risk."
     },
     {
-      "heading": "Meta-Layer (Constitution)",
+      "heading": "System-Layer (Constitution)",
       "lines": "173-198",
       "approx_line_count": 26,
       "disposition": "pointer-only",
-      "target": "meta/INDEX.md and meta/system-architecture.md (both already named as canonical in the section's own text, lines 177 and 181)",
-      "notes": "Section already says 'full catalog... lives in meta/system-architecture.md §3' — this section is largely already a pointer; can shrink further with low risk."
+      "target": "system/INDEX.md and system/system-architecture.md (both already named as canonical in the section's own text, lines 177 and 181)",
+      "notes": "Section already says 'full catalog... lives in system/system-architecture.md §3' — this section is largely already a pointer; can shrink further with low risk."
     },
     {
       "heading": "System-Design Discipline",
@@ -206,7 +206,7 @@
       "approx_line_count": 7,
       "disposition": "keep-in-core",
       "target": "stays in CLAUDE.md",
-      "notes": "Version-bump discipline paragraph (last line) is an always-on rule with no other stated home — its ONLY home is CLAUDE.md ('Version is a single-integer increment... Audit-log entries alone don't surface protocol drift; the version stamp + the changelog do'). Full historical entries could move to meta/claude-md-changelog.md (already named as the detail file) but the CURRENT version stamp + the discipline rule itself must stay in core."
+      "notes": "Version-bump discipline paragraph (last line) is an always-on rule with no other stated home — its ONLY home is CLAUDE.md ('Version is a single-integer increment... Audit-log entries alone don't surface protocol drift; the version stamp + the changelog do'). Full historical entries could move to system/claude-md-changelog.md (already named as the detail file) but the CURRENT version stamp + the discipline rule itself must stay in core."
     }
   ]
 }

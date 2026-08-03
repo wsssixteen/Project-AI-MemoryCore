@@ -4,7 +4,7 @@ description: Guidance for みや on patterns + triggers + anti-patterns when usi
 metadata:
   type: user-side-primitive
   sub-layer: user-side
-  meta-layer-INDEX: meta/user-side-INDEX.md
+  system-layer-INDEX: system/user-side-INDEX.md
 ---
 
 # usage-guidance — How to use Ruri effectively
@@ -19,7 +19,7 @@ metadata:
 ## Steps
 
 1. **Identify the topic** — what is みや trying to accomplish?
-2. **Map to meta-layer or workflow primitive** — which skill / hook / sub-layer is relevant?
+2. **Map to system-layer or workflow primitive** — which skill / hook / sub-layer is relevant?
 3. **State the recommended pattern** — how to phrase or invoke to get reliable behavior
 4. **State anti-patterns** — what to avoid + why
 5. **Reference MIYA-NOTEBOOK.md** for fuller treatment
@@ -30,7 +30,7 @@ metadata:
 ═══ USAGE GUIDANCE ═══
 
 TOPIC: <what みや is trying to do>
-RELEVANT LAYER: <meta-design-router / specific skill / specific hook>
+RELEVANT LAYER: <system-design-router / specific skill / specific hook>
 RECOMMENDED PATTERN: <how to phrase or invoke>
 ANTI-PATTERN: <what to avoid>
 DEEPER: see MIYA-NOTEBOOK.md section <X>
@@ -42,7 +42,7 @@ DEEPER: see MIYA-NOTEBOOK.md section <X>
 
 | Topic | Recommended pattern | Anti-pattern |
 |---|---|---|
-| Adding a new behavior rule | "I want X to fire when Y" → routes through meta-design-router | "Add to CLAUDE.md" → trips prose-default-gate |
+| Adding a new behavior rule | "I want X to fire when Y" → routes through system-design-router | "Add to CLAUDE.md" → trips prose-default-gate |
 | Proposing new structure | "Can we cover X?" → triggers inventory-first | "Create a new folder for X" without inventory |
 | Asking for clarification | Direct question or "explain X to me" | Multi-step Socratic if you just want an answer |
 | Testing the system | Invoke a skill by trigger phrase OR explicit `/skill-name` | Hope Ruri picks the skill from context |
@@ -50,10 +50,10 @@ DEEPER: see MIYA-NOTEBOOK.md section <X>
 
 ## Cross-references
 
-- `meta/user-side-INDEX.md`
+- `system/user-side-INDEX.md`
 - `MIYA-NOTEBOOK.md` — full training doc
 - `user-side-guardrail.js` hook — fires automatically on design-intent prompts; this skill is the manual on-demand counterpart
-- `meta/INDEX.md` — layer hierarchy reference
+- `system/INDEX.md` — layer hierarchy reference
 
 ---
 

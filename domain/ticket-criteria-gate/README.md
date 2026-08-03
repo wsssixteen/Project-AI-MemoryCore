@@ -38,7 +38,7 @@ Same gate; the criteria are the **latest-cycle** BA asks (per RCRL), not the ori
 `stop_hook_active` anti-loop (line 1) · fail-OPEN on parse error · EXEMPT token + hedge/closing frames abstain · bypass `[skip-criteria-gate: <reason>]`.
 
 ## Registration
-`.claude/settings.json` Stop array, MAIN-repo absolute path. Built in worktree `zen-napier-4471cc` 2026-06-20 — goes **LIVE on merge to main** (pending-merge until the file lands at the main path; the meta-layer-audit flag until then is expected).
+`.claude/settings.json` Stop array, MAIN-repo absolute path. Built in worktree `zen-napier-4471cc` 2026-06-20 — goes **LIVE on merge to main** (pending-merge until the file lands at the main path; the system-audit flag until then is expected).
 
 ## Lifecycle
 - **v1 (now)**: Check A blocking · Check B advisory.

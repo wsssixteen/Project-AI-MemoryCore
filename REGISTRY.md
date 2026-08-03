@@ -46,8 +46,8 @@ _Health: 0 ghost(s) · 4 unregistered file(s) · 67 hook(s) without eval pins ·
 | inventory-first-gate | UserPromptSubmit | ✓ wrapped | ✓ | — | — | pre-forge |
 | known-bug-surfacer.hook | PreToolUse | ✓ wrapped | ✓ | — | 2026-07-12T19:11 | pre-forge |
 | logic-blast-radius | PreToolUse | ✓ wrapped | ✓ | 1 ✓ | 2026-07-12T19:11 | pre-forge |
-| meta-edit-gate | PreToolUse | ✓ bundled(pretool-editwrite-gates) | ✓ | — | 2026-07-12T19:11 | pre-forge |
-| meta-layer-audit | SessionStart | ✓ wrapped | ✓ | — | — | pre-forge |
+| system-edit-gate | PreToolUse | ✓ bundled(pretool-editwrite-gates) | ✓ | — | 2026-07-12T19:11 | pre-forge |
+| system-audit | SessionStart | ✓ wrapped | ✓ | — | — | pre-forge |
 | mode-detector | UserPromptSubmit | ✓ bundled(upsm-mode) | ✓ | — | 2026-07-12T19:07 | pre-forge |
 | multi-dim-evidence-gate | UserPromptSubmit | ✓ wrapped | ✓ | — | — | pre-forge |
 | no-code-comments-gate | PreToolUse | ✓ wrapped | ✓ | — | 2026-07-12T19:11 | pre-forge |
@@ -148,7 +148,7 @@ _Health: 0 ghost(s) · 4 unregistered file(s) · 67 hook(s) without eval pins ·
 | video-trim | — |
 | worktree-retrieve | — |
 
-## Scripts (core/ lib/ quest/ meta/) (24)
+## Scripts (core/ lib/ quest/ system/) (24)
 
 | Script | Eval twin |
 |---|---|
@@ -165,8 +165,8 @@ _Health: 0 ghost(s) · 4 unregistered file(s) · 67 hook(s) without eval pins ·
 | lib/shrink-claude-md.js | — |
 | lib/telemetry-report.js | — |
 | lib/wrap-all-hooks.js | — |
-| meta/phrase-registry.js | — |
-| meta/sync-hook-catalog.js | — |
+| system/phrase-registry.js | — |
+| system/sync-hook-catalog.js | — |
 | quest/active-cli.js | — |
 | quest/active-trim.js | — |
 | quest/archive-quest.js | ✓ |

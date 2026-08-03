@@ -1,7 +1,7 @@
 /**
- * meta-layer-audit.js — SessionStart hook
+ * system-audit.js — SessionStart hook
  *
- * Layer 0 structural-integrity audit of the meta-layer. Fires at every
+ * Layer 0 structural-integrity audit of the system-layer. Fires at every
  * session boot to surface drifts between:
  *   - hook files on disk (.claude/hooks/*.js)
  *   - registered hooks (.claude/settings.json hooks block)
@@ -9,7 +9,7 @@
  *   - scope-split rule (settings.local.json should NOT have hooks block)
  *
  * Why this exists (the slip it prevents):
- *   2026-05-25 audit discovered 7 of 8 meta-layer hooks documented in
+ *   2026-05-25 audit discovered 7 of 8 system-layer hooks documented in
  *   CLAUDE.md were never registered in settings.json — "ghost hooks"
  *   that never fired. The hooks existed as files, the documentation
  *   claimed they were active, but the actual harness didn't run them.
@@ -24,7 +24,7 @@
  *
  * Failure modes considered:
  *   - False positives on experimental hooks → opt-out via header comment
- *     `// meta-layer-audit: skip-ghost-check` in the hook file
+ *     `// system-audit: skip-ghost-check` in the hook file
  *   - Self-skip risk → recursive self-check (this hook verifies its own
  *     registration as the first check)
  *
@@ -32,7 +32,7 @@
  * Automation candidacy at v2+ after ≥3 cycles with みや's approval.
  *
  * v1.1 2026-05-28 — Phase 0 of plan cached-floating-hummingbird.md:
- * extended with INV-1..INV-6 invariants check per meta/system-architecture.md
+ * extended with INV-1..INV-6 invariants check per system/system-architecture.md
  * Section 6. New checks: status= canonical enum (INV-3), → Skill: tokens
  * resolve to existing skill dirs (INV-4), ticket_type= canonical enum (INV-5),
  * CLAUDE.md "see X.md" references resolve (INV-6). INV-1 + INV-2 already
@@ -46,8 +46,8 @@ const HOOKS_DIR = path.join(REPO_ROOT, '.claude', 'hooks');
 const SETTINGS_JSON = path.join(REPO_ROOT, '.claude', 'settings.json');
 const SETTINGS_LOCAL = path.join(REPO_ROOT, '.claude', 'settings.local.json');
 const CLAUDE_MD = path.join(REPO_ROOT, '.claude', 'CLAUDE.md');
-const SYSTEM_ARCH = path.join(REPO_ROOT, 'meta', 'system-architecture.md'); // canonical hook catalog (moved here 2026-06-02)
-const SELF_NAME = 'meta-layer-audit';
+const SYSTEM_ARCH = path.join(REPO_ROOT, 'system', 'system-architecture.md'); // canonical hook catalog (moved here 2026-06-02)
+const SELF_NAME = 'system-audit';
 
 function safeRead(p) {
   try { return fs.readFileSync(p, 'utf-8'); } catch { return null; }
@@ -116,7 +116,7 @@ function collectHookFiles(dir) {
       const base = fn.replace(/\.js$/, '');
       names.add(base);
       const body = safeRead(path.join(dir, fn)) || '';
-      if (/\bmeta-layer-audit:\s*skip-ghost-check\b/.test(body)) skip.add(base);
+      if (/\bsystem-audit:\s*skip-ghost-check\b/.test(body)) skip.add(base);
     }
   } catch {}
   return { names, skip };
@@ -125,7 +125,7 @@ function collectHookFiles(dir) {
 function collectDocumentedHooks(claudeMd, archMd) {
   // Returns { claimed, cataloged }:
   //   claimed   = hook names in CLAUDE.md "Triggered enforcement" (a CLAIM the hook is active/registered)
-  //   cataloged = hook names in meta/system-architecture.md (the descriptive CANONICAL catalog)
+  //   cataloged = hook names in system/system-architecture.md (the descriptive CANONICAL catalog)
   // FIX 2026-06-19 (QA-266215-session, per みや "false alarm for a month+"): the inline CLAUDE.md
   // catalog was TRIMMED to system-architecture.md on 2026-06-02 to de-bloat CLAUDE.md, but this
   // audit still read only CLAUDE.md → flagged all ~50 registered hooks as "undocumented" every boot.
@@ -176,7 +176,7 @@ if (!registered.has(SELF_NAME)) {
 const ghostHooks = setDiff(onDisk, registered).filter(n => !skip.has(n) && n !== SELF_NAME);
 if (ghostHooks.length) {
   findings.push(`⚠ GHOST HOOKS (${ghostHooks.length}) — file exists but NOT registered in settings.json: ${ghostHooks.join(', ')}`);
-  findings.push(`   → either register in .claude/settings.json hooks block OR add header comment "// meta-layer-audit: skip-ghost-check" to opt out`);
+  findings.push(`   → either register in .claude/settings.json hooks block OR add header comment "// system-audit: skip-ghost-check" to opt out`);
 }
 
 // CHECK 3 — Dangling registrations (registered command path does not exist on disk)
@@ -367,7 +367,7 @@ const evalLine = evalLess.length
 if (findings.length === 0) {
   process.stdout.write([
     '',
-    '🛡  meta-layer-audit: PASS — hook-registration integrity + INV-1..INV-6 verified.',
+    '🛡  system-audit: PASS — hook-registration integrity + INV-1..INV-6 verified.',
     `   ${onDisk.size} on disk · ${registered.size} registered · ${documented.size} documented · 0 ghosts · 0 dangling · 0 doc drift · 0 invariant violations`,
     ...(evalLine ? [evalLine] : []),
     ''
@@ -377,14 +377,14 @@ if (findings.length === 0) {
 
 process.stdout.write([
   '',
-  '🛡  meta-layer-audit findings (Layer 0 structural integrity):',
+  '🛡  system-audit findings (Layer 0 structural integrity):',
   '',
   ...findings.map(f => '  ' + f),
   '',
   `Snapshot: ${onDisk.size} hook files · ${registered.size} registered · ${documented.size} documented · ${skip.size} opted-out`,
   ...(evalLine ? [evalLine] : []),
   '',
-  '(advisory — does not block boot. See .claude/hooks/meta-layer-audit.js for the audit rules.)',
+  '(advisory — does not block boot. See .claude/hooks/system-audit.js for the audit rules.)',
   ''
 ].join('\n'));
 process.exit(0);

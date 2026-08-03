@@ -1,10 +1,10 @@
 ---
 name: grep-rubric
-description: After every investigative grep that will inform a fix decision — emit a 3-line box stating what the matches PROVE, what they CANNOT see (negative space), and the NEXT step. Use after running Grep/ripgrep for code investigation, dependency-finding, or call-site enumeration. Triggers — "grep rubric", "after grep show what it proves", "what does this grep mean", "what's missing from this grep", "negative space", "grep proves what", "grep judgment". NEW skill (Phase 3 of meta-layer build) — previously prose-only in improvement-audit-log.md 2026-05-06, now elevated to atomic primitive per みや's hard rule.
+description: After every investigative grep that will inform a fix decision — emit a 3-line box stating what the matches PROVE, what they CANNOT see (negative space), and the NEXT step. Use after running Grep/ripgrep for code investigation, dependency-finding, or call-site enumeration. Triggers — "grep rubric", "after grep show what it proves", "what does this grep mean", "what's missing from this grep", "negative space", "grep proves what", "grep judgment". NEW skill (Phase 3 of system-layer build) — previously prose-only in improvement-audit-log.md 2026-05-06, now elevated to atomic primitive per みや's hard rule.
 metadata:
   type: discipline-primitive
   sub-layer: discipline
-  meta-layer-INDEX: meta/discipline-INDEX.md
+  system-layer-INDEX: system/discipline-INDEX.md
 ---
 
 # grep-rubric — Post-grep judgment box
@@ -46,9 +46,9 @@ Next:     <decision: proceed / broaden / pivot — one line>
 
 ## Cross-references
 
-- `meta/discipline-INDEX.md`
+- `system/discipline-INDEX.md`
 - `improvement-audit-log.md` 2026-05-06 entry (original prose rule from みや)
-- `meta/principles.md` — Evidence-before-claim + Verify-not-assume
+- `system/principles.md` — Evidence-before-claim + Verify-not-assume
 
 ---
 

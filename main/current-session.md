@@ -51,7 +51,7 @@ approve the message first. He asked *"why are you still awaiting"* and I read fr
 Deleted `mlk/esokongan/272881` @ `6e1398d173` local+remote, redid under his exact wording.
 
 **Gates shipped** (all eval'd): `pre-code-check` +3 — `kod-resolution`, `prior-fix`, `hierarchy`
-(10/10) · `meta-edit-gate` **v1.3 now BLOCKS** meta edits without a design consult (3/3) ·
+(10/10) · `system-edit-gate` **v1.3 now BLOCKS** meta edits without a design consult (3/3) ·
 `redmine-sync.downloadFile` v2 · `ba-understanding-table` v1.1.
 
 **Slips**: `assume-not-verify` (30d=22 🚨) · `ticket-source-skipped` · `prior-fix-not-searched` ·
@@ -606,7 +606,7 @@ Per-pemohon `maklumat_tambahan` JSON via `DynamicFieldUtil`, with an `else if` f
 | 2 | **`projects/` is gitignored — a findings doc written into the WORKTREE would have died** | I wrote FINDINGS.md into the worktree first. `git check-ignore` showed `.gitignore:9 projects/`, so it would never commit, and the worktree is auto-removed at next boot by `worktree-cleanup-boot.js`. Relocated to the MAIN repo path, where OneDrive carries it. Same class as the ledgered `worktree-stranded-delivery` slip. |
 
 ### Concurrent-session collision (handled)
-Another session ran DE for 2026-07-28 and pushed 10 commits while this one was live — it **shipped QA-272127 and QA-272329** and archived them. Merged `origin/main` in; two conflicts, both additive, union-resolved: `main/todo.md` (kept my row + both of its rows) and `meta/telemetry/hook-fires.jsonl` (markers stripped, both blocks kept). Its diary entry for today already has Sessions 1-2, so mine appended as Session 3.
+Another session ran DE for 2026-07-28 and pushed 10 commits while this one was live — it **shipped QA-272127 and QA-272329** and archived them. Merged `origin/main` in; two conflicts, both additive, union-resolved: `main/todo.md` (kept my row + both of its rows) and `system/telemetry/hook-fires.jsonl` (markers stripped, both blocks kept). Its diary entry for today already has Sessions 1-2, so mine appended as Session 3.
 
 ### Slip
 `reask/rephrase-check` — みや had to ask *"so basically … right? Yes or no only"* to get a crisp answer out of a reply that had buried the yes/no under tables. His follow-ups then had to pull the column name and the fix out one at a time.
@@ -666,7 +666,7 @@ Docs: `QA-272574.md` · `-wave3.md` · `-audit.md`.
 
 ### The merge (worth reading if it recurs)
 
-A concurrent session shipped 272127 + 272329 the same evening. `main` diverged; the merge hit **7 conflicts**. Resolution: each side's `active.txt` had kept exactly the quests the *other* session archived — verified all four sit in `active-archive.txt` once, then cut them, leaving 272574 as the only genuinely open quest. Append-only ledgers unioned; `slip-dashboard.md` regenerated (80 rows); `todo.md` kept **both** new rows. **Two aborted attempts first** — `meta/telemetry/hook-fires.jsonl` is rewritten by hooks every turn, so it must be committed and merged in a single command.
+A concurrent session shipped 272127 + 272329 the same evening. `main` diverged; the merge hit **7 conflicts**. Resolution: each side's `active.txt` had kept exactly the quests the *other* session archived — verified all four sit in `active-archive.txt` once, then cut them, leaving 272574 as the only genuinely open quest. Append-only ledgers unioned; `slip-dashboard.md` regenerated (80 rows); `todo.md` kept **both** new rows. **Two aborted attempts first** — `system/telemetry/hook-fires.jsonl` is rewritten by hooks every turn, so it must be committed and merged in a single command.
 
 ---
 
@@ -1524,9 +1524,9 @@ concentrated in the 2-3 claims I flagged as "most likely wrong" and told them to
 | `notes-on-test-data.js` v1.2 — detects No Resit (`\d{6}[A-Z]{2,6}\d{4,6}`), 9-case fixture | ✅ shipped |
 | `quest/notes.js` `--simple` / `--blank` — 2-line notes entries | ✅ shipped |
 | CLAUDE.md — KNOWLEDGE-FIRST rule + AWAM No-Resit Phase-0 prose | ✅ shipped |
-| `meta-edit-gate` v1.3 | ❌ **REVERTED — was a false diagnosis** (see below) |
+| `system-edit-gate` v1.3 | ❌ **REVERTED — was a false diagnosis** (see below) |
 
-🚨 **Open system gap (real, unfixed)**: `meta-edit-gate.js` hard-deny is conditional on `archTouched` — a **whole-transcript regex** for `system-architecture.md`. Any earlier mention (even an unrelated read) disarms the deny for the entire session. That is why a `ticket-gate.js` edit landed on the advisory branch. Tightening it (proximity or edit-only match) = open design item.
+🚨 **Open system gap (real, unfixed)**: `system-edit-gate.js` hard-deny is conditional on `archTouched` — a **whole-transcript regex** for `system-architecture.md`. Any earlier mention (even an unrelated read) disarms the deny for the entire session. That is why a `ticket-gate.js` edit landed on the advisory branch. Tightening it (proximity or edit-only match) = open design item.
 
 🚨 **Audit gap (found, unfixed)**: nothing records system *modifications*. `registry.jsonl` is births-only (`lifecycle: created` ×11, written by `core/forge.js`); no hook writes a change-log on meta edits. Proposed shape: `lifecycle: "modified"` rows on meta-path edits. Needs design routing.
 
@@ -1612,7 +1612,7 @@ Not in scope: #271173 (AWAM twin of #270727 — different repo). No SQL this rel
 ```
 RECON → BRANCH → MERGE(V2 conflict) → VERIFY(V3) → [BUMP-COMMON → VERIFY] → BUMP-VERSION → PUSH → hand-off CARD
 ```
-**Components (4, forge-born, in `meta/registry.jsonl`)**: `.claude/skills/release-mlk-plp/SKILL.md` · `domain/release-mlk-plp/` (release-prep.js · redmine-recon.js · eval.js 26 · eval-recon.js 19 · NUKE-MARKER) · `domain/release-mlk-plp-ask/` (6) · `domain/release-mlk-plp-push-gate/` (8) · `domain/release-mlk-plp-scope-gate/` (11). **70/70 fixtures green.**
+**Components (4, forge-born, in `system/registry.jsonl`)**: `.claude/skills/release-mlk-plp/SKILL.md` · `domain/release-mlk-plp/` (release-prep.js · redmine-recon.js · eval.js 26 · eval-recon.js 19 · NUKE-MARKER) · `domain/release-mlk-plp-ask/` (6) · `domain/release-mlk-plp-push-gate/` (8) · `domain/release-mlk-plp-scope-gate/` (11). **70/70 fixtures green.**
 
 **Gitignored configs (exist on this machine, `.example` twins committed)**: `domain/release-mlk-plp/servers.local.json` (build/deploy hosts) · `redmine.local.json` (host + API key).
 

@@ -1,13 +1,13 @@
 /**
- * slip-count-tracker.js — PostToolUse hook (Edit | Write on meta/slip-log.md)
+ * slip-count-tracker.js — PostToolUse hook (Edit | Write on system/slip-log.md)
  *
  * WHY (みや 2026-06-20, item 4): the slip-log running-count table is hand-maintained
  *   → stale (its header still said "this session 2026-06-01"). みや's wider intent:
  *   the slip-log is our general WORKFLOW-AUDIT tracker (not just feature slips) and
  *   the count must be accurate without me remembering to update a markdown table.
  *
- * WHAT: when a new slip ENTRY row is appended to meta/slip-log.md, record
- *   {ts, categories[]} to meta/slip-counts.jsonl (the machine source-of-truth),
+ * WHAT: when a new slip ENTRY row is appended to system/slip-log.md, record
+ *   {ts, categories[]} to system/slip-counts.jsonl (the machine source-of-truth),
  *   then emit the rolling 7-day / 30-day tally per root_category and FLAG any
  *   category at/over the escalation threshold (>=2 in 7 days). The markdown
  *   running-count table becomes a VIEW of this ledger; the ledger is the truth.
@@ -66,7 +66,7 @@ process.stdin.on('end', () => {
     const ti = data.tool_input || {};
 
     // v2 RETARGET (2026-07-19 system-check Task #1): slip-log.md froze 2026-07-13; the live
-    // pipeline is `node core/slips.js add` (Bash) → meta/slips.jsonl. Fire on THAT command;
+    // pipeline is `node core/slips.js add` (Bash) → system/slips.jsonl. Fire on THAT command;
     // slips.js already appends both ledgers + regenerates the dashboard, so this hook's sole
     // remaining job is the rolling 7d/30d escalation tally the old version emitted.
     let cats = [];
@@ -90,7 +90,7 @@ process.stdin.on('end', () => {
     } catch (_) {}
     const d7 = daysAgo(7), d30 = daysAgo(30);
 
-    const lines = ['', '⚙️  slip-count-tracker: rolling tally for ' + cats.length + ' slip-categor' + (cats.length === 1 ? 'y' : 'ies') + ' (ledger: meta/slips.jsonl via core/slips.js)', ''];
+    const lines = ['', '⚙️  slip-count-tracker: rolling tally for ' + cats.length + ' slip-categor' + (cats.length === 1 ? 'y' : 'ies') + ' (ledger: system/slips.jsonl via core/slips.js)', ''];
     for (const c of cats) {
       const entries = ledger.filter(e => e.category === c);
       const n7 = entries.filter(e => new Date(e.ts) >= d7).length;

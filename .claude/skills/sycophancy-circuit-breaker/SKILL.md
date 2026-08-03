@@ -4,7 +4,7 @@ description: Before declining a system-change offer (move a folder, document a t
 metadata:
   type: discipline-primitive
   sub-layer: discipline
-  meta-layer-INDEX: meta/discipline-INDEX.md
+  system-layer-INDEX: system/discipline-INDEX.md
 ---
 
 # sycophancy-circuit-breaker — Pre-decline failure-mode emission
@@ -48,10 +48,10 @@ Dismissed みや's offer to move `Flowables/Melaka/` into the project. Folder st
 
 ## Cross-references
 
-- `meta/discipline-INDEX.md`
+- `system/discipline-INDEX.md`
 - `personality.md` Truth-Holding Rituals (Ritual S — original home)
 - `Feature/Forge-Self-Improvement-System/sycophancy-violations.md` — violation log
-- `meta/principles.md` — Failure-mode-awareness (proto-meta-layer #6)
+- `system/principles.md` — Failure-mode-awareness (proto-system-layer #6)
 
 ---
 

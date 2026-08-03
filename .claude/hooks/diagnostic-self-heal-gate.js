@@ -15,7 +15,7 @@
  * instead of asking permission. Advisory; does NOT block (would over-fire
  * on legitimate destructive-action gating).
  *
- * Created 2026-05-25 — Phase 9 of meta-layer build.
+ * Created 2026-05-25 — Phase 9 of system-layer build.
  * Source slip: 2026-05-25 Z13 — /verify reported stale observations doc
  * counts; instead of self-healing the non-destructive doc reconciliation,
  * Ruri emitted "Need your go to fix Z13". みや: "What is issue Z13? Can

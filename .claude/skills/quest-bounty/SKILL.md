@@ -29,7 +29,7 @@ close-phase runs `archive-quest.js` **before** this skill, and that script **mov
 Confirm the resolved `qa_doc` (Step 0) is complete for a cold reader: final state, Fastest-Path block (if >1 wrong turn), test-data tuple, commit SHA. Fill any gap now. (This is the durable record; everything else references it.)
 
 ### Step 2 — Harvest SYSTEM improvements
-List every skill / hook / rule / protocol **refined or created during this quest** (grep the session for edits to `.claude/skills/`, `.claude/hooks/`, `meta/`, `CLAUDE.md`, `quest/`). Write them into a `## Bounty` block in `QA-<num>.md` — one line each: `<component> — <what changed> — <why (which slip/gap)>`.
+List every skill / hook / rule / protocol **refined or created during this quest** (grep the session for edits to `.claude/skills/`, `.claude/hooks/`, `system/`, `CLAUDE.md`, `quest/`). Write them into a `## Bounty` block in `QA-<num>.md` — one line each: `<component> — <what changed> — <why (which slip/gap)>`.
 
 ### Step 3 — Harvest ETANAH-KNOWLEDGE
 Any new pattern discovered this quest lands in its owning knowledge file (per the Gap-Sweep category table): `BUG-BESTIARY.md` (bug/slip pattern) · `DATABASE.md` (schema/query) · `JSF-WIRING.md` · `FLOWABLE-WORKFLOWS.md` · `DOMAIN-GLOSSARY.md` · etc. Emit one line per entry written, or `knowledge: none new`.
@@ -48,7 +48,7 @@ Scan **both** axes, pick the SINGLE highest-value item, propose ONE defender:
 | **DB / codebase reading** | Entity-first, verify-SELECT (⚠️ gap: verify code-mapping before trusting a derived DB value) | test-data / hand-back | test-data-echo, stop-point-summary |
 | scope discipline | scope-anchor-echo | tool choice | codemap-recon-consult |
 
-**(b) Un-actioned slip-log clusters** — read `meta/slip-log.md` running-count; consider ONLY rows/clusters **without** `bounty_actioned`. Prefer the highest count / over-threshold (🚨/⚠️) cluster; on a count-tie prefer 🚨 over ⚠️, then the most-recent occurrence.
+**(b) Un-actioned slip-log clusters** — read `system/slip-log.md` running-count; consider ONLY rows/clusters **without** `bounty_actioned`. Prefer the highest count / over-threshold (🚨/⚠️) cluster; on a count-tie prefer 🚨 over ⚠️, then the most-recent occurrence.
 
 Then emit ONE proposal via the standard shape (route the actual build through `auto-skill-on-mistake` / `system-design` — do NOT build inside this skill):
 
@@ -93,7 +93,7 @@ FF-only on main; on divergence, surface + merge before retry. Emit `Banked — Q
 - **Redmine is みや's** — this skill never touches Redmine.
 - **Audit log** (system-rules Rule 5): `domain/quest-bounty/log.jsonl` — one JSON line per bounty run (`{qa, harvests:{quest,system,knowledge}, refinement:<proposed|none>, banked_sha}`).
 - **Eval** (system-design Rule 6): `domain/quest-bounty/eval.workflow.js` scores a bounty run (all 3 harvests emitted · ≤1 refinement · MemoryCore-only push · slip rows stamped). Ship/refresh with any change to this skill. **Status 2026-07-01: eval'd** (`wf_3c67b23f`, robustness = mixed) — 4/6 guardrails PASS; 2 GAPs (firing-reliability, coverage). Cheap fixes applied same day; the structural must-fix (deterministic verify-hook) remains pending (todo.md). Not 100%-reliable until that hook ships.
-- **Pairs with**: `close-phase` (invokes this at Phase 2) · `auto-skill-on-mistake` / `system-design` (builds the proposed refinement) · `meta/slip-log.md` (`bounty_actioned` flag).
+- **Pairs with**: `close-phase` (invokes this at Phase 2) · `auto-skill-on-mistake` / `system-design` (builds the proposed refinement) · `system/slip-log.md` (`bounty_actioned` flag).
 - **⚠️ Coverage gap (eval-found, `wf_3c67b23f`)**: fires ONLY at Phase 2 — a quest that stays `held`/`blocked` and never archives is NEVER harvested. Domain Expansion is **not** a twin for this (DE commits session-end MemoryCore changes but has no per-quest Step-4 synthesis). Until a DE-side `bounty-deferred: QA-<num>` line ships for parked quests, their per-quest refinement evaporates.
 
 ## Skill History

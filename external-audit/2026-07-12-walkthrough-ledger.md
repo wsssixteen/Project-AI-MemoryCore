@@ -35,7 +35,7 @@
 |---|---|---|
 | K6 telemetry + K3 runtime (`lib/hook-runtime.js`, wrap + native modes, fail-open) | ✅ built + eval green | `lib/hook-runtime.eval.js` **10/10 PASS** (pass/block/crash/missing fixtures); settings.json re-validated as JSON |
 | Pilot migration (3 noisiest Stop gates wrapped: stop-point-summary · show-gate · terse-gate) | ✅ wired | settings.json :235/:287/:303; smoke: wrapped show-gate exit 0, 107ms, telemetry row appended |
-| `meta/telemetry/hook-fires.jsonl` | ✅ **first real entries ever** | replaces the tombstoned hook-fire-log.md graveyard |
+| `system/telemetry/hook-fires.jsonl` | ✅ **first real entries ever** | replaces the tombstoned hook-fire-log.md graveyard |
 | K7 forge scaffolder (echo+nod, refine-first, routing questionnaire) | ⬜ Day 2 | binding: before any other component |
 | R2 eval-runner + replay fixtures (🚨 classes + 7 eval-less block-capable) | ⬜ Day 2 | quest-machinery fixtures = みや's priority |
 | Telemetry report (on-demand + session-close + weekly) + lifecycle policy | ⬜ Day 2–3 | needs a day of real entries first |
@@ -54,9 +54,9 @@
 | §4.2 gate row | Status | Artifact |
 |---|---|---|
 | Phase-0 commits landed | ✅ | `de25818` · `439386d` · `994f9cf` · `897b72d` |
-| Telemetry has real entries from real turns | ✅ | `meta/telemetry/hook-fires.jsonl` — **1,314 rows**; production fires incl. component-birth-gate 104 fires / 8 blocks, familiar-nudge 65 |
+| Telemetry has real entries from real turns | ✅ | `system/telemetry/hook-fires.jsonl` — **1,314 rows**; production fires incl. component-birth-gate 104 fires / 8 blocks, familiar-nudge 65 |
 | eval-runner runs + green | ✅ | **24/24 GREEN** full suite (final run 2026-07-13 03:14) |
-| Guard freeze respected | ✅ | every component born = plan-specified infra, through the forge, echo+nod in `meta/registry.jsonl`; freeze LIFT = みや's call |
+| Guard freeze respected | ✅ | every component born = plan-specified infra, through the forge, echo+nod in `system/registry.jsonl`; freeze LIFT = みや's call |
 | Baseline measured | ✅ | 23 slips/14d by category · みや-catch 18/14d · registrations 80→74 · boot prose 75.3K→60.6K tok (shadow bundle 2,397) — this section + slip-dashboard |
 
 | Phase | Landed (commit) |

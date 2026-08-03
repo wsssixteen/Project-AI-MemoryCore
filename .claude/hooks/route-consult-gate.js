@@ -11,7 +11,7 @@
  *   Goal:       Force internal registry consultation before substantive emission
  *   Guardrails: floor 80 chars · skip slash-commands, ack-openers, self-referential;
  *               3-line advisory, never blocking
- *   Grounded:   .claude/skills/ + meta/INDEX.md
+ *   Grounded:   .claude/skills/ + system/INDEX.md
  */
 let input = '';
 process.stdin.resume();
@@ -29,7 +29,7 @@ process.stdin.on('end', () => {
 
     process.stdout.write([
       '',
-      '⚙️  route-consult v2 (silent): match this prompt against .claude/skills/ descriptions + meta/INDEX.md BEFORE responding.',
+      '⚙️  route-consult v2 (silent): match this prompt against .claude/skills/ descriptions + system/INDEX.md BEFORE responding.',
       'If a skill matches → INVOKE via Skill tool (the only visible signal). No literal "Route:" line (retired 2026-06-02).',
       '',
     ].join('\n'));

@@ -1,4 +1,4 @@
-// meta-layer-audit: skip-ghost-check — RETIRED 2026-06-18 (superseded by design-consult-gate + convention-check-gate v1.2); file kept as historical reference, intentionally NOT registered in settings.json. The skip-marker stops the boot audit re-flagging it as a ghost every session.
+// system-audit: skip-ghost-check — RETIRED 2026-06-18 (superseded by design-consult-gate + convention-check-gate v1.2); file kept as historical reference, intentionally NOT registered in settings.json. The skip-marker stops the boot audit re-flagging it as a ghost every session.
 /**
  * self-gate-impulse.js — PreToolUse hook (matcher: Edit|Write)
  *

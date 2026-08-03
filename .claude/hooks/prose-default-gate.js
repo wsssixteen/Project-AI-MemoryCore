@@ -6,11 +6,11 @@
  * straight to CLAUDE.md prose addition instead of being routed through
  * skill/hook decision).
  *
- * Detects lock-signal phrases → injects reminder to invoke meta-design-router
+ * Detects lock-signal phrases → injects reminder to invoke system-design-router
  * (the skill that runs inventory → system-design → best-practices → skill/hook
  * decision loop) BEFORE adding any prose to CLAUDE.md / feedback_*.md / amendments.
  *
- * Created 2026-05-23 — Phase 2 of meta-layer build.
+ * Created 2026-05-23 — Phase 2 of system-layer build.
  * Pairs with: auto-skill-trigger.js (correction signals) — this is the
  * proactive-design counterpart.
  */
@@ -48,8 +48,8 @@ process.stdin.on('end', () => {
       '',
       '⚙️  prose-default-gate: lock-signal detected ("hardcode" / "hard rule" / "always" / similar)',
       '',
-      'Default-to-prose path is BANNED. Route through meta-design-router:',
-      '  Step 0 — inventory existing (meta/INDEX.md + sub-indexes; can existing component be extended?)',
+      'Default-to-prose path is BANNED. Route through system-design-router:',
+      '  Step 0 — inventory existing (system/INDEX.md + sub-indexes; can existing component be extended?)',
       '  Step 1 — identify behaviour (correction / proactive-design / structure-proposal mode)',
       '  Step 3.5 — best-practices check (library-items/agent-architecture/claude-code-best-practices.md)',
       '     → MUST fire deterministically? → hook',

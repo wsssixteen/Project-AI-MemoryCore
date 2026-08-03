@@ -4,7 +4,7 @@ description: After writing or modifying code — automatically validate via test
 metadata:
   type: discipline-primitive
   sub-layer: discipline
-  meta-layer-INDEX: meta/discipline-INDEX.md
+  system-layer-INDEX: system/discipline-INDEX.md
   trifecta:
     goal: Never ship code without test-pass evidence in the same emission
     guardrails: Cap retries (3); if 3 failed iterations → escalate to みや with stack trace, don't loop forever
@@ -57,7 +57,7 @@ EVALUATE: <command> → <PASS/FAIL>
 
 ## Cross-references
 
-- `meta/discipline-INDEX.md`
+- `system/discipline-INDEX.md`
 - `predicate-box` skill (sibling — predicate-box = pre-Edit; this = post-Edit)
 - `quest/quest-protocol.md` Apply checkpoint
 

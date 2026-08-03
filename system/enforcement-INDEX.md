@@ -15,7 +15,7 @@
 | 1 | `boot-required-read-gate.js` | SessionStart | `.claude/hooks/` | Gate every "see X.md" pointer in CLAUDE.md — verify each is Read at boot. Extends existing `boot-load-verification.js` discipline | ⬜ Phase 2 |
 | 2 | `pre-action-check-gate.js` | PreToolUse (Edit/Write/Bash) | `.claude/hooks/` | Notes.txt write + env-check + PDF annotation extraction + server log read — gate each before relevant actions | ⬜ Phase 2 |
 | 3 | `inventory-first-gate.js` | UserPromptSubmit | `.claude/hooks/` | Detect new-structure-proposal signals ("let's add a folder", "new file for X", "create a new module") → inject inventory-check guidance before Ruri acts | ⬜ Phase 2 |
-| 4 | `prose-default-gate.js` | UserPromptSubmit | `.claude/hooks/` | Detect lock-signal phrases ("hardcode it", "make it a hard rule", "always X", "never miss this") → inject "invoke meta-design-router" instruction | ⬜ Phase 2 |
+| 4 | `prose-default-gate.js` | UserPromptSubmit | `.claude/hooks/` | Detect lock-signal phrases ("hardcode it", "make it a hard rule", "always X", "never miss this") → inject "invoke system-design-router" instruction | ⬜ Phase 2 |
 | 5 | `silent-claim-drift-gate.js` | Stop | `.claude/hooks/` | Block "done" / "complete" / "shipped" claims unless preceded by claim-verification (diff-backing) + scope-anchor-echo + test-data-echo (if Quest context) | ⬜ Phase 2 |
 | 6 | `best-practices-consult-gate.js` | UserPromptSubmit OR PreToolUse | `.claude/hooks/` | Detect design-decision signals ("how should we", "design X", "what's the right shape") → inject reference to library-items/agent-architecture/claude-code-best-practices.md | ⬜ Phase 2 |
 
@@ -58,7 +58,7 @@ PreToolUse        ──→ commit-gate.js (existing — git commit only)
                   ──→ ticket-gate.js (existing)
                   ──→ pre-action-check-gate.js (NEW — Edit/Write/Bash actions)
                   ──→ self-gate-impulse.js (existing)
-                  ──→ meta-edit-gate.js (NEW Phase 6 — meta/* paths)
+                  ──→ system-edit-gate.js (NEW Phase 6 — system/* paths)
 
 Stop              ──→ silent-claim-drift-gate.js (NEW Phase 2)
 ```
@@ -70,7 +70,7 @@ Per `library-items/agent-architecture/claude-code-best-practices.md` Section B:
 - **PreToolUse blocking**: prefer JSON `hookSpecificOutput.permissionDecision: "deny"` over exit-code-2 (GH issue #24327 — exit-2 can stop instead of feeding feedback)
 - **PostToolUse blocking**: top-level `{"decision":"block","reason":"..."}`
 - **Stop blocking**: same as PostToolUse top-level shape
-- **Logging**: each hook writes to `meta/hook-fire-log.md` (Phase 6) for self-enforcement eval
+- **Logging**: each hook writes to `system/hook-fire-log.md` (Phase 6) for self-enforcement eval
 
 ## Trigger-phrase enumeration per UserPromptSubmit hook (refinement #4)
 
@@ -82,7 +82,7 @@ Per `library-items/agent-architecture/claude-code-best-practices.md` Section B:
 
 ## Cross-references
 
-- `meta/INDEX.md` — master meta-layer index
+- `system/INDEX.md` — master system-layer index
 - `library-items/agent-architecture/claude-code-best-practices.md` — Sections A (Skills) + B (Hooks) for spec details
 - Phase 2 of plan `1-this-means-you-toasty-forest.md` — build instructions + ordering testing pass
 - `.claude/settings.local.json` — hooks registered here

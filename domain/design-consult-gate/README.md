@@ -20,4 +20,4 @@
 **False-positive cost:** a trivial skill/hook edit is blocked until the consult or the bypass token. Accepted — skill/hook creation is exactly where the consult must not be skipped.
 
 **History:**
-- 2026-06-18 — created per みや. Routed through system-design + system-rules. Replaces the advisory consult-reminder in `meta-edit-gate.js` (which only named the placeholder `meta-design-router`, never blocked) and the WARN-only `self-gate-impulse.js` for the skill/hook case. `self-gate-impulse` retired the same day to avoid double-fire on these paths.
+- 2026-06-18 — created per みや. Routed through system-design + system-rules. Replaces the advisory consult-reminder in `system-edit-gate.js` (which only named the placeholder `system-design-router`, never blocked) and the WARN-only `self-gate-impulse.js` for the skill/hook case. `self-gate-impulse` retired the same day to avoid double-fire on these paths.

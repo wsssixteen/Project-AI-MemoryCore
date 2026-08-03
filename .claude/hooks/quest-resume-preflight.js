@@ -127,7 +127,7 @@ process.stdin.on('end', () => {
 
     lines.push(`Banned until checklist clears: code-analysis tool calls, fix-shape proposals, BA-reply drafts, SQL on test data.`);
     lines.push(`Per CLAUDE.md "Re-engagement load before any judgement" hard rule + quest-protocol.md Re-engagement section.`);
-    lines.push(`This hook restored 2026-05-25 after QA-262233 cycle-2 quest-protocol-skip slip — see meta/slip-log.md.`);
+    lines.push(`This hook restored 2026-05-25 after QA-262233 cycle-2 quest-protocol-skip slip — see system/slip-log.md.`);
 
     console.log(JSON.stringify({ additionalContext: lines.join('\n') }));
     process.exit(0);
