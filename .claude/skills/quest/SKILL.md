@@ -283,6 +283,15 @@ When Quest skill calls Skill tool for a sub-skill and the call FAILS (skill not 
 
 **Per-phase reference**: Scout emit, Recon emit, and Rubric emit each follow this template. If the shape is missing, the phase did not run. The auditor (you or any reviewer) scores compliance against the 4 parts.
 
+**🚨 LABEL → KOD RESOLUTION TABLE — mandatory in the Recon emit whenever the ticket names a tugasan / urusan / status in HUMAN WORDS (added 2026-08-03 per みや, QA-273201).** A BA writes screen labels, never kods. Resolving those labels to Java constants **by name resemblance is BANNED** — the constant whose name reads closest is routinely the wrong one. Resolve every label through the **reference table** and emit the mapping:
+
+| BA's words (verbatim + `file:line` of the ticket text) | `ind_tgsn.nama` / `ind_ursn.nama` | kod | pk | role-arm / consumer verified at |
+|---|---|---|---|---|
+
+**Rules**: (a) one row per BA-named item, quoting the ticket, not a summary of it; (b) the kod comes from the DB row you actually read, with its pk; (c) if a label maps to **more than one** kod (PDT/PTG variants, per-urusan twins), emit **every** candidate and state which are in scope — never silently pick one; (d) a label with no matching reference row is a BA-Q, not a guess.
+
+**Why**: QA-273201 — BA's *"Perakuan Pentadbir Tanah"* was mapped to `TGS_PERAKUAN_PENTADBIR_TANAH` (`"PPT"`) purely because the constant name matched the words. `PPT` has **no row under PRBB at all**; the real kod is `PPTPRBB` (`ind_tgsn` 5134409), and the two carry *different* role sets (`{KPT,PPD,KPPD}` vs `{KPT,PPD,KPPD,PT}`). The same slip dropped `SRJKBBPTG` / `PRJKBBPTG` because BA's label carried no PDT/PTG suffix. Shipped, it would have looked like a fix and changed nothing on that tugasan. Enforced deterministically at edit-time by the `kod-resolution` row in `pre-code-check` (eval F10).
+
 **Class chain — vertical ASCII form (canonical for Arrows part of the template).** Horizontal `A → B → C → D` doesn't fit ≥3 hops on screen; the canonical shape is vertical with multi-line arrows + annotation in parens for each hop:
 
 ```

@@ -175,7 +175,12 @@ function fetchAttachments(id) {
     });
 }
 
-function downloadFile(contentUrl, destPath) {
+// v2 (2026-08-03, QA-273201): the old version piped ANY response — including a 404 body — into the
+// destination file and then resolve()d, so a failed attachment was indistinguishable from a good one.
+// Result: 'eSOKONGAN #273201 - Semakan.mp4' (10,104,585 bytes on Redmine) never landed in 0. Brief/,
+// the sync printed no error, and the ticket's evidence base was silently incomplete.
+// Now: status-code checked, byte-size verified against Redmine's filesize, failures reported.
+function downloadFile(contentUrl, destPath, expectedSize) {
     return new Promise(resolve => {
         const urlPath = contentUrl.replace(/^https?:\/\/[^/]+/, '');
         const options = {
@@ -184,10 +189,24 @@ function downloadFile(contentUrl, destPath) {
             headers: { 'X-Redmine-API-Key': REDMINE_KEY }
         };
         const file = fs.createWriteStream(destPath);
+        const fail = (why) => {
+            try { file.close(); } catch (_) {}
+            fs.unlink(destPath, () => {});
+            resolve({ ok: false, why });
+        };
         http.get(options, res => {
+            if (res.statusCode !== 200) { res.resume(); return fail(`HTTP ${res.statusCode}`); }
             res.pipe(file);
-            file.on('finish', () => { file.close(); resolve(); });
-        }).on('error', () => { file.close(); fs.unlink(destPath, () => {}); resolve(); });
+            file.on('finish', () => {
+                file.close();
+                let bytes = 0;
+                try { bytes = fs.statSync(destPath).size; } catch (_) { return fail('not written'); }
+                if (expectedSize && bytes !== expectedSize) {
+                    return fail(`size ${bytes} != redmine ${expectedSize}`);
+                }
+                resolve({ ok: true, bytes });
+            });
+        }).on('error', e => fail(e.message));
     });
 }
 
@@ -346,11 +365,17 @@ async function createTaskFolder(issue, parsed) {
 
     // Attachments — download into 0. Brief/
     const attachments = await fetchAttachments(issue.id);
+    const attFailed = [];
     for (const att of attachments) {
         if (!att.content_url || !att.filename) continue;
         const destPath = path.join(folder, '0. Brief', att.filename);
-        await downloadFile(att.content_url, destPath);
-        console.log(`    ⬇️  ${att.filename}`);
+        const r = await downloadFile(att.content_url, destPath, att.filesize);
+        if (r.ok) console.log(`    ⬇️  ${att.filename} (${r.bytes} bytes)`);
+        else { attFailed.push(`${att.filename} — ${r.why}`); console.log(`    ❌ ${att.filename} — ${r.why}`); }
+    }
+    if (attFailed.length) {
+        console.log(`\n    🚨 ${attFailed.length}/${attachments.length} ATTACHMENT(S) MISSING from 0. Brief/ — the folder is NOT the full ticket:`);
+        attFailed.forEach(f => console.log(`       • ${f}`));
     }
 
     return folder;
@@ -443,8 +468,9 @@ async function downloadNewAttachments(destFolder, issueId, knownFilenames) {
         if (!att.content_url || !att.filename) continue;
         if (known.has(att.filename)) continue;
         const destPath = path.join(destFolder, att.filename);
-        await downloadFile(att.content_url, destPath);
-        downloaded.push(att.filename);
+        const r = await downloadFile(att.content_url, destPath, att.filesize);
+        if (r.ok) downloaded.push(att.filename);
+        else console.log(`    ❌ ${att.filename} — ${r.why} (NOT downloaded)`);
     }
     return downloaded;
 }

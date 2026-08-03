@@ -641,7 +641,7 @@ qa=QA-271918
 quest_start_ts=2026-07-27T07:45:12.138Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\103. ESOKONGAN #271918 - Pelupusan - PT - Maklumat Pasangan Tidak Sama pada Warganegara
 phase=0
-status=delegated
+status=closed
 ticket_type=bug
 env=etanah-awam MLK (Jasper jrxml, SQL-in-report)
 issue_one_liner=PT Borang Permohonan - pasangan warganegara prints Malaysia though AWAM saved Singapura (shared PT/PSBS/MCL report)
@@ -656,7 +656,8 @@ branch=n/a-pre-apply-ownership-fork
 next_action=miya: ownership call (fix jrxml ourselves vs delegate to Reports team; owner name unconfirmed in thread) - then 1-token Apply or handover
 delegated_to=Noor Dayana (Redmine assignee 2026-07-27 09:38)
 delegated_date=2026-07-27
-close_note=RECONCILED from Redmine 2026-07-27: status=New, done=0, assignee=Noor Dayana. NOT Nurfatin Auni and NOT Nurhayati Abdul Razak - both earlier names were wrong. Handover content (1-token jrxml fix PlpLaporanJadual1P2_Sub03.jrxml:148 PB->UP, 6 affected stg1 records, PT+PSBS+MCL blast radius) is in qa_doc ready to send. DUE 2026-07-29.
+close_note=RECONCILED from Redmine 2026-08-04 DE: status=Closed, done=100, assignee=Muhammad Shafiq Mohd Yohani. Not our work - jrxml fix was handed to Reports team. Was stale-delegated in active.txt.
+closed=2026-08-04
 
 qa=QA-272867
 quest_start_ts=2026-08-03T04:22:11.552Z
@@ -680,8 +681,8 @@ commit_awam=be6b178c48
 
 qa=QA-272881
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\115. ESOKONGAN #272881 - Pelupusan - PLPS  - Tiada medan agihan kepada dan ralat bila tekan han
-phase=0
-status=active
+phase=1
+status=closed
 ticket_type=bug
 env=PROD (etanah-app) reproduced on STG (etanah-appstg, Common 1.0.143-MLK) - etanah-pelupusan
 issue_one_liner=PLPS Semakan Risalat MMKN-PDT - Agihan Kepada dropdown not rendered, and Hantar throws FlowableException on gateway sid-241081E1 (plus a separate STG "file bytes is null or empty!" error)
@@ -690,8 +691,11 @@ urusan=PLPS
 tugasan=SRMMKNPDT - Semakan Risalat MMKN - PDT
 qa_doc=projects/coding-projects/active/QA-272881/QA-272881.md
 test_app=PTMLK/01/L/PLPS/2026/3 (pengguna nurul.izza@melaka.gov.my, Penolong Pegawai Daerah); STG error ID Rujukan 22323
-current_phase=EXECUTION-READY 95pct - C5 CONFIRMED (qa_doc Final mechanism + Residue result 2026-08-03): init-time repopulate runs with null keputusan and BasePelupusanForm:530-545 flagRepopulate whitelist has NO PLPS arm; keputusan radio disabled because Risalat MMKN doc status = STATUS_PENYEDIAAN_PEMBETULAN (DB-verified 8548333). Fix = additive whitelist arm after :541 (analogs :531-538) + C3 gateway default companion. C1/A3/C2 all closed. Issue 3 (file bytes null) separate BA-Q.
-branch=n/a-pre-apply
+current_phase=Closed (Phase 1) 2026-08-04 - fix RELEASED UNDER TICKET 273201 (miya decision), commit bd827a1bb6 on mlk/esokongan/273201. ALL 3 BA ISSUES VERIFIED on PTMLK/01/L/PLPS/2026/7 sanarimah@: field renders, Hantar clean, routed to umm_a_tgsn 2756076 PRMMKNPDT -PT- Baru 00:28:28. Fixes: MlkKertasTemplateForm.initData():298 onRepopulatePegawaiAgih() before initViewFlags(); JabatanTeknikalHelper.saveAppDokumenKemasukanVOUlasanJabatanTeknikal():366 skip docVo with null/empty getInput(). Shared screen with 273201 DB-proven (ind_skrin PLP_KTMPLT). NOTE: earlier unapproved commit 6e1398d173 on mlk/esokongan/272881 DELETED local+remote.
+branch=mlk/esokongan/273201
+local_test_confirmed=true
+commit=bd827a1bb6
+bundled_with=273201
 
 qa=QA-272943
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\114. ESOKONGAN #272943 - Pelupusan - PPJK - Kemaskini Surat Jabatan Teknikal Dan Ulasan YB Load
@@ -732,8 +736,8 @@ close_note=Phase 1 closed 2026-08-03: stg2 patch run by miya (PROD pending); jrx
 
 qa=QA-273201
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\119. ESOKONGAN #273201 - Pelupusan - PRBB  - Keputusan Pentadbir Tanah - Tiada medan agihan kep
-phase=0
-status=hold
+phase=1
+status=closed
 ticket_type=bug
 env=MLKSTG (schema et_main_stg1, branch mlk/release/1.2.0, Module 1.2.0; PROD-reported too) - etanah-pelupusan
 issue_one_liner=PRBB Keputusan Pentadbir Tanah - Agihan Kepada field absent (empty officer list overrides adaPegawaiAgih) so agihanKKPT stays blank and gateway sid-39A4210F throws FlowableException on Hantar
@@ -742,8 +746,11 @@ urusan=PRBB
 tugasan=KKPT - Keputusan Pentadbir Tanah (peranan PTNH, PDTMT)
 qa_doc=projects/coding-projects/active/QA-273201/QA-273201.md
 test_app=PROD PTMLK/01/L/PRBB/2026/12 + /21 (m.ikram@melaka.gov.my, PDTMT); STG repro PTMLK/01/L/PRBB/2026/26 on et_main_stg1 (login not stated); exception row pt_application_ex_entity id 199824 (et_sistem_stg1)
-current_phase=Rubric 90pct - Deepening pass 2026-08-03 stands: Candidate 1 (loosen PlpCapaianPenggunaRepository.java:27-36 to honour CapaianModul.adalahCapaianPenuh) is the only live mechanism; old Candidate 2 falsified to 0pct; 272881 C1 structurally excluded here. GATE: 272881 live-DB result weakens blanket-invisibility, so S1/S1b/S2 for the PRBB/PTNH roles at PDTMT remain the pre-execution falsifier - do not build until they run.
-branch=n/a-pre-apply
+current_phase=Closed (Phase 1) 2026-08-04 - RELEASE TICKET for the shared fix (miya decision). commit bd827a1bb6 on mlk/esokongan/273201, remote SHA verified, 2 files +5/-0. Fixes: MlkKertasTemplateForm.initData():298 onRepopulatePegawaiAgih() before initViewFlags(); JabatanTeknikalHelper.saveAppDokumenKemasukanVOUlasanJabatanTeknikal():366 skip docVo with null/empty getInput(). TESTED PTMLK/01/L/PRBB/2026/26 m.ikram@ tugasan SRPT: field rendered, Hantar clean, routed to umm_a_tgsn 2756077 SRPT Baru nurul.izza@. GAP: headline tugasan KKPT NOT walked - same class+screen DB-proven (ind_skrin PLP_KTMPLT) but render on KKPT INFERRED; untested fixture PTMLK/03/L/PRBB/2026/2 sabrina@ peranan -PTNH-. NOTE: an earlier unapproved commit 6e1398d173 on branch mlk/esokongan/272881 was DELETED local+remote before this one.
+branch=mlk/esokongan/273201
+commit=bd827a1bb6
+local_test_confirmed=true
+bundled_with=272881
 
 qa=QA-273294
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\118. ESOKONGAN #273294 - Pelupusan - PT - Checking Sistem Untuk Mandatorikan Maklumat Tanah
