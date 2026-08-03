@@ -13,8 +13,8 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..');
-const FILE = path.join(ROOT, 'meta', 'slips.jsonl');
-const DASH = path.join(ROOT, 'meta', 'slip-dashboard.md');
+const FILE = path.join(ROOT, 'system', 'slips.jsonl');
+const DASH = path.join(ROOT, 'system', 'slip-dashboard.md');
 const LEGACY = path.join(ROOT, 'meta', 'slip-counts.jsonl');
 
 function arg(name) { const i = process.argv.indexOf('--' + name); return i > 0 ? process.argv[i + 1] : undefined; }
