@@ -40,7 +40,10 @@ runHook({ name: 'deliverable-lands-on-main', event: 'Stop' }, (input) => {
   try {
     branch = process.env.DLOM_BRANCH || execSync('git -C "' + ROOT + '" branch --show-current', { encoding: 'utf8', timeout: 10000 }).trim();
     ahead = process.env.DLOM_AHEAD != null ? parseInt(process.env.DLOM_AHEAD, 10)
-      : parseInt(execSync('git -C "' + ROOT + '" rev-list --count main..HEAD', { encoding: 'utf8', timeout: 10000 }).trim(), 10);
+      : parseInt(execSync('git -C "' + ROOT + '" rev-list --count origin/main..HEAD', { encoding: 'utf8', timeout: 10000 }).trim(), 10);
+    // v1.1 (2026-08-03): compare origin/main, never the local main ref — a worktree session
+    // never moves local main, so the old target false-blocked EVERY correctly-merged DE close
+    // (todo Q1 row, found 2026-07-31; fired again tonight after main was already pushed).
   } catch (_) { return { fired: false }; } // fail-open on any git error
 
   if (branch === 'main' || !(ahead > 0)) return { fired: false };

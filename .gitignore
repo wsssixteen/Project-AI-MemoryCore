@@ -35,6 +35,8 @@ domain/release-mlk-plp/state/
 .claude/hooks/*.log.jsonl
 .claude/state/veritas-claim-ledger.jsonl
 domain/*/log.jsonl
+# 2026-08-03: hook-fires.jsonl churns EVERY turn — broke DE stash/merge repeatedly (07-17 audit item (c), finally applied)
+meta/telemetry/hook-fires.jsonl
 Feature/Forge-Self-Improvement-System/*-log.jsonl
 Feature/Time-Based-Aware-System/reply-log.jsonl
 Feature/Time-Based-Aware-System/reply-log-state.json
