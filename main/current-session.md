@@ -4,14 +4,15 @@
 
 **Session shape: みや's /goal-driven delegation session. 14 Opus familiars total (7 blind quests → 4 deepening → 2 focused + 1 mechanical), controller-verified. Mid-session breakthrough: I can now run postgres myself (psycopg2 + creds from ~/.claude.json — the MCP servers aren't loaded in-session but the credentials are on disk; runner = scratchpad pg_query.py, classifier allows after miya's explicit instruction). Every DB falsifier closed live.**
 
-### ▶▶ NEXT SESSION — START HERE (miya: "start executing in another session")
+### ▶▶ NEXT SESSION — START HERE — THE ROUNDS PLAN (miya-approved shape 2026-08-03, supersedes any earlier batch table)
 
-| Batch | Tickets | First action |
+| Round | Tickets | Action |
 |---|---|---|
-| **This session** | **272867 + 272943** (one pelupusan deploy covers both) | Apply 272867's 3 hunks (FINDINGS.md §5) + 272943's 150-DPI/JPEG swap (`PelupusanUtil.convertPdfFileBytesToImageList():935-948` → reuse `convertPdfToImages():1506` idioms) |
-| +1 | **272881 + 273201** | 272881: additive PLPS whitelist arm in `BasePelupusanForm.onChangeTindakanKeputusan` after `:541` (C5 95%, DB-confirmed) · 273201: run S1/S2 falsifiers first (my pg runner works now) |
-| +2 | **273294 + 272982-data** | 273294 PT branch in `verifyCurrentLangkah` · 272982 patch script (PRIORITY per miya — then jrxml half → Jasper Reports team handover) |
-| +3 | **273300** solo (etanah-awam) | C′ fix (+14 lines drafted in qa_doc — first candidate C proven UNSAFE and replaced) |
+| **1 — anytime, no deploy** | **272982 solo** 🔴 PRIORITY | Run the patch script (restore KRJN/LAIN names + fresh `_SM`/`_STR` kods + re-point 29 PROD rows), verify with evidence SELECT, send jrxml handover pack → Jasper Reports team |
+| **2** | **272867 + 272943** combined | One pelupusan build/deploy: 272867's 3 hunks (FINDINGS.md §5) + 272943's 150-DPI/JPEG swap (`PelupusanUtil.convertPdfFileBytesToImageList():935-948` → reuse `convertPdfToImages():1506` idioms). Test: PLTP SKM two-pemohon walk + PPJK Kemaskini regenerate |
+| **3** | **272881 + 273201** combined | One pelupusan deploy: 272881 additive PLPS whitelist arm in `BasePelupusanForm.onChangeTindakanKeputusan` after `:541` (C5 95%) · 273201 capaian repository fix — run S1/S2 falsifiers FIRST (pg runner works) |
+| **4** | **273294 solo** | PT branch in `verifyCurrentLangkah`; test blank-field Hantar blocked |
+| **5** | **273300 solo** (etanah-awam) | C′ fix (+14 lines drafted; candidate C proven UNSAFE, replaced); test icon hidden until signed |
 
 ### Ticket state (all qa_docs carry EXECUTION PACK sections + live-DB evidence)
 
