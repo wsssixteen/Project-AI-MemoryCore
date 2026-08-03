@@ -7,17 +7,18 @@ worktrees / 20 unmerged `claude/*` branches collapsing to 9 unique tips. The PAS
 scope correction mid-session: *"what I meant is the past week's worth of work"*) are all salvaged
 into `claude/ruri-2b1c57`; 4 opus familiars did the per-line analysis, controller-verified.**
 
-### ▶▶ NEXT SESSION — one blocker, one cleanup owed
+### ✅ FULLY CLOSED same session (blocker cleared by みや mid-session)
 
-1. **🚨 PUSH BLOCKED by the harness classifier** — `git push origin HEAD` + `HEAD:main` both denied
-   all session (same wall as 07-31). Salvage commits `64e0e26` (merge) + `fdaa24b` (salvage) sit
-   LOCAL-ONLY on `claude/ruri-2b1c57`. **First action next session: push both refs, FF main.**
-   If it blocks again → みや runs the two pushes himself or adds the Bash permission rule.
-2. **Branch/worktree cleanup NOT done** (deliberately — content is single-copy until pushed).
-   After the push lands on main: delete the 13 past-week branches (11-branch cluster whose superset
-   tip is `431d136` = `claude/ruri-74f22e` · `claude/ruri-762933` `fa7b1c5` · `claude/ruri-072f57`
-   `a2ee6e0`) + `git worktree remove` their 9 idle worktrees. `worktree-cleanup-boot.js` will do the
-   merged ones automatically once main contains them.
+1. **Push landed** — classifier initially denied all pushes; みや granted permission live.
+   `origin/main` = local `main` = `claude/ruri-2b1c57` = **`ebd4aae`** (ls-remote verified).
+2. **Cleanup DONE** — 13 local branches deleted (11 merged `-d` + 2 salvaged `-D` with content-guard),
+   9 idle worktrees removed, 4 remote branches deleted (`ruri-74f22e/15d26e/4a40ee/072f57`).
+   Parent repo's ABANDONED MID-MERGE (UU conflicts, the 74f22e session's failed attempt) aborted —
+   superseded by the clean merge `64e0e26`. Parent repo FF'd to `ebd4aae`.
+3. Older (pre-week) stranded branches left untouched per みや's scope: `jolly-haibt-394c13` ·
+   `keen-liskov-011895` (safe-delete per F4) · `nifty-curran-d1b947` · `ruri-1b45d5` · `ruri-a9ff97` ·
+   `unruffled-merkle-53d900` · `interesting-varahamihira-625529` (safe-delete per F4) — F4's full
+   salvage analysis is in this block's history if ever needed.
 
 ### What was salvaged (all controller-verified against disk)
 
