@@ -1,8 +1,20 @@
 {"ts":"2026-06-21T17:26:45.449Z","category":"other"}
+{"ts":"2026-06-23T04:35:49.726Z","category":"other"}
+{"ts":"2026-06-23T06:52:39.054Z","category":"inventory-first-miss"}
+{"ts":"2026-06-23T08:40:51.990Z","category":"knowledge-transfer-incompleteness"}
+{"ts":"2026-06-23T10:42:44.373Z","category":"other"}
+{"ts":"2026-06-24T02:50:04.172Z","category":"lying/false-claim"}
+{"ts":"2026-06-24T10:28:02.695Z","category":"shared-base-edit-untested-subclass"}
 {"ts":"2026-06-25T13:53:49.214Z","category":"wrong-baseline-diagnosis  + lying/false-claim"}
+{"ts":"2026-07-05T17:16:05.519Z","category":"best-practices-not-consulted  + tool-choice-skip"}
+{"ts":"2026-07-05T17:16:05.519Z","category":"best-practices-not-consulted"}
+{"ts":"2026-07-05T17:16:05.519Z","category":"knowledge-transfer-incompleteness"}
+{"ts":"2026-07-05T17:16:05.519Z","category":"output-format-clutter"}
 {"ts":"2026-07-07T02:01:39.233Z","category":"best-practices-not-consulted"}
 {"ts":"2026-07-12T19:13:28.289Z","category":"smoke-side-effect-on-real-state"}
 {"ts":"2026-07-13T01:15:23.919Z","category":"worktree-stranded-delivery"}
+{"ts":"2026-07-13T08:01:16.003Z","category":"insufficient-verification"}
+{"ts":"2026-07-13T08:18:03.925Z","category":"phase-2-distill-skipped"}
 {"ts":"2026-07-14T02:27:27.596Z","category":"silent-claim-drift"}
 {"ts":"2026-07-14T02:27:30.434Z","category":"best-practices-not-consulted"}
 {"ts":"2026-07-15T09:55:49.261Z","category":"prior-art-grep-layer-gap"}
@@ -83,6 +95,7 @@
 {"ts":"2026-07-27T13:11:07.714Z","category":"worktree-stranded-delivery"}
 {"ts":"2026-07-27T13:11:07.798Z","category":"ghost-component-dark-on-this-machine"}
 {"ts":"2026-07-28T07:20:22.475Z","category":"recommendation-contradicts-own-ranking"}
+{"ts":"2026-07-28T08:00:13.207Z","category":"over-generalization"}
 {"ts":"2026-07-28T09:55:21.221Z","category":"stop-gate-forces-full-reemit"}
 {"ts":"2026-07-28T11:53:49.271Z","category":"reask/verbose"}
 {"ts":"2026-07-28T12:55:10.399Z","category":"filtered-evidence-read"}
@@ -102,6 +115,7 @@
 {"ts":"2026-07-28T18:24:50.056Z","category":"reask/verbose"}
 {"ts":"2026-07-28T18:51:40.720Z","category":"assume-shared-context"}
 {"ts":"2026-07-28T18:51:40.796Z","category":"stale-quest-state-not-reconciled-with-redmine"}
+{"ts":"2026-07-30T15:04:02.990Z","category":"assume-not-verify"}
 {"ts":"2026-07-30T17:11:17.634Z","category":"assume-not-verify"}
 {"ts":"2026-07-30T17:14:47.661Z","category":"reask/redundant"}
 {"ts":"2026-07-31T07:52:31.586Z","category":"filtered-evidence-read"}

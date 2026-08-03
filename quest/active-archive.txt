@@ -1404,3 +1404,17 @@ blocker=miya fix-shape decision only. Repro note: search filters on SESSION OFFI
 latent_finding=MlkUtilitiPembatalanPermohonanForm.xhtml:53/:65/:80 reference #{isPSB} which is never defined (declared param is isPSBP at :35) - always evaluates empty. Separate, not this bug.
 closed=2026-07-29
 close_note=Closed by miya 2026-07-29; Redmine live confirms Resolved/100pct/assignee=Aaron Loh Zhi Yong
+
+## ── Salvaged 2026-08-03 from stranded branch claude/ruri-762933 (fa7b1c5) ──
+
+qa=QA-272127
+status=closed
+phase=1
+current_phase=Closed
+local_test_confirmed=true
+ticket_type=bug
+branch=mlk/esokongan/272127v2
+issue_one_liner=PRBB - PRPT - Rencana + Surat Keputusan Lulus - Fix spacing untuk tandatangan satu page
+closed=2026-07-30
+commit=2cd853046c
+note=cycle-2 close record; cycle-1 block (58e34c30a4) is above at its own dated section
