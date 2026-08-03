@@ -1363,25 +1363,44 @@ local_test_confirmed=true
 commit=a4bf4379a2
 closed=2026-07-28
 
-qa=QA-272499
-local_test_confirmed=true
-branch=mlk/esokongan/272499
-commit=edc6482952
-pushed=2026-07-29
+qa=QA-271918
+quest_start_ts=2026-07-27T07:45:12.138Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\103. ESOKONGAN #271918 - Pelupusan - PT - Maklumat Pasangan Tidak Sama pada Warganegara
+phase=0
+status=closed
+ticket_type=bug
+env=etanah-awam MLK (Jasper jrxml, SQL-in-report)
+issue_one_liner=PT Borang Permohonan - pasangan warganegara prints Malaysia though AWAM saved Singapura (shared PT/PSBS/MCL report)
+assigned_to_me=2026-07-23
+urusan=PT
+qa_doc=projects/coding-projects/active/QA-271918/QA-271918.md
+test_app=p_aplikasi_id 13829 (AWAM draft; applicant aizatmaziz@gmail.com; pasangan tanggungan id 499 no_kp 880808-08-8883); schema et_main_stg2
+current_phase=Rubric COMPLETE via 3-wave audit 2026-07-27. Root cause 99pct VERIFIED: PlpLaporanJadual1P2_Sub03.jrxml:148 joins SAK_WG on PB.WARGANEGARA_ID (applicant) not UP.WARGANEGARA_ID (pasangan); 1-token fix. Blast radius CORRECTED TWICE and settled by controller read: PT+PSBS+MCL all reach Sub03 (getPlpLaporanBorang197:709 + getPlpLaporanJadual18A:744 merge getPlpLaporanJadual1P2) - one fix heals all three. Pekerjaan :149 is a DEAD JOIN (not an analog). DB falsifier re-verified stg2 (tanggungan 499 = Singapura 8293 vs PB Malaysia 2557). Handover note drafted in qa_doc. DUE 2026-07-29.
+difficulty=S
+ownership_fork=jrxml - decide fix-ourselves vs delegate to Reports team (Nurhidayati) per #271721 "no fixes for jrxml" precedent; needs miya call before Apply
+branch=n/a-pre-apply-ownership-fork
+next_action=miya: ownership call (fix jrxml ourselves vs delegate to Reports team; owner name unconfirmed in thread) - then 1-token Apply or handover
+delegated_to=Noor Dayana (Redmine assignee 2026-07-27 09:38)
+delegated_date=2026-07-27
+close_note=RECONCILED-live-Redmine-2026-07-29-0140-absent-from-assigned_to_id=me-status_id=open-queue-(total=2:272574,272499)-assignee-Noor-Dayana-since-07-27;handover-content-in-qa_doc-ready-to-send;due-07-29-is-HERS-not-ours
 closed=2026-07-29
-quest_start_ts=2026-07-28T13:16:03.397Z
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\109. ESOKONGAN #272499 - Utiliti Pembatalan Permohonan - Ralat selepas klik Cari
-phase=1
-status=archived
-current_phase=Phase 1 CLOSED 2026-07-29 - commit edc6482952 on mlk/esokongan/272499 (pushed, remote SHA verified), 1 file / 10 deletions. miya confirmed test successful on STG1 as nshazwani@melaka.gov.my with PTMLK/02/L/MCL/2026/3. REMAINING: Phase 2 archive hygiene only.
+
+qa=QA-272499
+quest_start_ts=2026-07-28T18:36:28.798Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\109. ESOKONGAN #272499 - Utiliti Pembatalan Permohonan - Ralat selepas klik Cari
+phase=0
+status=closed
 ticket_type=bug
 env=Utiliti Pembatalan Permohonan > Ralat selepas klik Cari
 issue_one_liner=Utiliti Pembatalan Permohonan > Ralat selepas klik Cari
 assigned_to_me=2026-07-27
-qa_doc=projects/coding-projects/archive/QA-272499/QA-272499.md
+qa_doc=projects/coding-projects/active/QA-272499/QA-272499.md
 branch=n/a-pre-apply
 wave_docs=QA-272499-wave3.md (blind) + QA-272499-audit.md (adjudicating)
 test_app=PTMLK/02/L/MCL/2026/3 (norzaida@melaka.gov.my; aplikasi_id 3411621, ursn_id 26230, pejabat_id 3, status Awalan; et_main_stg1) - reproduces on PROD and STAGING
-current_phase=BLOCKED ON ONE GREP 2026-07-28. Failure CLASS verified: JSF partial-state-saving VIEW-RESTORE failure - IndexOutOfBounds Index 0 length 0 at AttachedObjectListHolder.restoreState:146 during RestoreViewPhase, ZERO application frames, so BasePembatalanPermohonanForm.onCari():125-149 NEVER RUNS. Not a data bug (DB rows healthy). Audit CONFIRMED pass A (formMode flip at mlkMaklumatPemohon.xhtml:56-57 feeding :126/:147/:206/:222, all inside p:tabView pemohonTabView :115-265 = the subtree the trace walks) and REFUTED pass B's #270916 regression lead (both changed lines are runtime rendered=, cannot change tree shape). NOT CLOSABLE FROM CODE ALONE - do NOT ship a 70pct xhtml edit into mlk/release/1.0.12.
-next_action=miya: grep server.log for the WRAPPED FacesException (FaceletPartialStateManagementStrategy:380-386 builds PARTIAL_STATE_ERROR_RESTORING_ID with the failing client id as its argument; the BA error page prints root-cause only). staging 172.30.12.177 @ 27-07-2026 10:53:41 / PROD 172.30.11.105 @ 09:45:25. Then test matrix rows 1-3 in qa_doc.
-blocker=server.log client id + fresh-page repro (does a junk ID on a hard-refreshed page also error? if yes = environmental, hand back)
+current_phase=ROOT CAUSE FOUND 2026-07-27 (concurrent session) - see qa_doc §0b. The IndexOutOfBounds in RestoreViewPhase is the AFTERSHOCK; the primary is javax.el.PropertyNotFoundException 'keputusanMMKN' fired ONE SECOND EARLIER (PROD 09:45:24 -> 09:45:25 ref 191184; STG1 id 20284 11:03:43 -> 20285 11:03:44). PROD count 19 (8 on 07-23, 9 on 07-24, 2 on 07-27). Mechanism: MlkUtilitiPembatalanPermohonanForm.xhtml:68-70 renders the PRBB-only panel for every urusan OUTSIDE an 8-item exclusion list (MCL is not in it) and passes mbb=#{mb} = the Pembatalan bean into mlkMaklumatUrusanForm.xhtml:54/:58 which reads cc.attrs.mbb.keputusanMMKN - a property that bean does not have. The earlier view-state-eviction / numberOfViewsInSession theory is REFUTED. The grep-server.log blocker is CLOSED - no longer needed.
+next_action=miya: choose fix 1 (add MCL + audit all reaching urusan into the exclusion at MlkUtilitiPembatalanPermohonanForm.xhtml:69) or fix 2 (flip to rendered=#{isPRBB}, matches the panel's own id + isPRBB=true attribute, but confirm no non-PRBB urusan legitimately uses it). Then Apply. No source file edited yet.
+blocker=miya fix-shape decision only. Repro note: search filters on SESSION OFFICE (PembatalanPermohonanService.java:116) - app 3411621 is pejabat_id 3 = Jasin (kod 02), so a PTG login returns 'Tidak Dijumpai'; log in as a Jasin user (nabillah@ / atiqahyusni@ / zeety@ melaka.gov.my on STG1).
+latent_finding=MlkUtilitiPembatalanPermohonanForm.xhtml:53/:65/:80 reference #{isPSB} which is never defined (declared param is isPSBP at :35) - always evaluates empty. Separate, not this bug.
+closed=2026-07-29
+close_note=Closed by miya 2026-07-29; Redmine live confirms Resolved/100pct/assignee=Aaron Loh Zhi Yong

@@ -55,6 +55,46 @@ PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3)
    | `SQL-PATCH` | ⚠️ SQL-only fix | **git can never deliver this** — BA/DBA runs it; ask who + which env |
    | `COMMON-VER` | fix shipped via `etanah-common <x>-MLK` | check the bump commit is on the release; if present → nothing to merge |
    | *(SQL rows)* | → 📄 **Google Sheet table**, not a question | みや writes `SQL name with ticket number: #<n>, <file>` himself |
+
+   🚨 **KILL a recon SQL row BEFORE showing it to みや if its owning ticket is already in the
+   baseline** (2026-07-31, release 1.3.0). A recon row reached via `relations` can point at a ticket
+   whose code merged months ago. **Run this first — one command, before the row is ever mentioned:**
+
+   `git log --oneline origin/<owning-ticket-branch> --not mlk/release/<ver>`
+
+   Empty output = already in the baseline = **the row is noise. Drop it silently. Do NOT surface it,
+   do NOT put it in the plan table, do NOT ask みや about it.** Only a SQL whose owning ticket is
+   NEW to this release is ever mentioned. **Why**: 1.3.0 — I carried `FAT-CR #252786.sql` through the
+   plan table, the hand-off card, and the Sheet values across five separate turns. `mlk/fat-cr/252786`
+   had been merged long before 1.3.0 and contributed nothing to the delta. みや: *"why the fuck are
+   you including it in our baseline out of nowhere?"* Correct answer was to never raise it.
+
+   🚨 **The Sheet's SQL cell — what goes in, and the ONE test** (2026-07-31, release 1.3.0, after I
+   got this wrong in BOTH directions in one hour).
+
+   **The test: does THIS release's delta require the script to be run?** Answer from the release diff
+   + the owning ticket's own evidence — never from the recon row alone.
+
+   | Case | Cell |
+   |---|---|
+   | A release ticket ships/needs a SQL | `#<ticket>, <filename>` — one line per SQL |
+   | Recon row came via a **relation to a CLOSED ticket**, script already run, 0 `.sql` in the release diff | **empty** |
+
+   **ALWAYS SURFACE the recon row to みや with its evidence** (owning ticket · status · upload date ·
+   the journal line about where it ran · whether the release diff contains any `.sql`) — then state a
+   verdict. **Banned**: silently dropping a recon SQL row · pasting the recon's internal
+   `#<owner>:<file>` notation into the Sheet (the `#<owner>:` prefix means *"attached to ticket
+   #<owner>"*, it is NOT part of the filename) · writing our ticket number in front of a file that
+   hangs off a different, closed ticket.
+
+   **Why** (1.3.0): recon flagged `#252786:FAT-CR #252786.sql` under #259112. First I read the Apr-27
+   journal (*"Script run at uat, fat, and it environment"*), judged it stale, and told みや leave the
+   cell empty — he corrected: *"The SQL we'll only mention it in the sheet."* I then over-corrected
+   into an unconditional always-record rule and handed him the literal string
+   `#259112, #252786:FAT-CR #252786.sql`, which reads as though #259112 shipped that script. He asked
+   *"why this?"* — and the honest answer was that 1.3.0 contains **zero** `.sql` files. **The lesson
+   is not "record more" or "record less": it is that a manifest cell must describe THIS release, and I
+   must show the evidence and give a verdict instead of oscillating between suppressing and pasting.**
    | `VIA-RELATED` | evidence lives on a related/parent ticket | follow that ticket |
    | `NO-EVIDENCE` | 🚨 nothing anywhere | **ask BA — never release on a guess** |
 
@@ -148,6 +188,17 @@ Baseline <ver> — branch ready ✓ pushed ✓ (<sha>)
 leading `./`, so `./deploy-pelupusan.sh` becomes a hyperlink and copying it drags link markup along.
 **Use the `bash <script>` form instead** — `bash deploy-pelupusan.sh` is identical to run and copies
 clean. Same for any other leading-dot path in a command line. Slip shape: `emit-shape-not-copyable`.
+
+**B2 · CONFIRM THE MERGES (みや's own 10-second check, added 2026-07-31 per みや)** — one line,
+runs from ANY directory, PowerShell or Git Bash, no `cd` needed (`-C` sets the repo):
+
+`git -C E:\Projects\Melaka\etanah-pelupusan log --oneline --merges mlk/master..mlk/release/<ver>`
+
+It prints ONE merge commit per ticket branch — the fastest read of "did all N actually land". みや
+asked for this by name because SourceTree is unavailable and he wants to eyeball the release himself
+before spending a build cycle. **Always include this line in the card, above C · BUILD.** Expected =
+as many lines as tickets; a short list means a branch is missing, and the per-ticket
+`git log --oneline origin/<branch> --not mlk/release/<ver>` (empty output = merged) tells you which.
 
 **C · BUILD** — run on the build server:
 1. `ssh app@<build.host>`

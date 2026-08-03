@@ -75,6 +75,211 @@ Both mean redesign the defender, not reword the rule. Full analysis:
 
 ---
 
+## 2026-07-31 15:40 → 2026-08-03 09:17 — 🚀 BASELINE 1.3.0 SHIPPED end-to-end · 5 tickets · master merged
+
+**First full Baseline run that reached `mlk/master`.** Release prepared, built+deployed by みや, BAQA
+passed, master merged and pushed. Also the session where I turned one non-issue into five turns of his
+time and got sworn at twice for it.
+
+### ▶▶ START HERE next session
+
+| # | Thing | State |
+|---|---|---|
+| 1 | **Release 1.3.0** | ✅ COMPLETE. `origin/mlk/master` = `origin/mlk/release/1.3.0` = `fdfddc602b` |
+| 2 | **#272574** | Still the only open ticket. Untouched. Blocked on the BA/Aaron Flowable question — draft message is in this session's history |
+| 3 | Sheet | みや filling the Developer section on version 11337 |
+| 4 | Phase 2 bounty | NOT run — 272378 · 272527 · and all five 1.3.0 tickets |
+
+### Release 1.3.0 — the record
+
+| Item | Value |
+|---|---|
+| Branch | `mlk/release/1.3.0` off `mlk/master` @ `50f1ee085d` |
+| Final SHA | `fdfddc602b` — release, local master, origin master ALL equal |
+| Tickets | #272378 · #271985 · #272127 · #272527 · #259112 (CR) |
+| Module version | `1.2.0` → `1.3.0` (`5e462aa67f`) |
+| Common version | `1.0.143-MLK` — unchanged, no bump owed |
+| Delta | 30 files: 13 `.docx` · 11 `.java` · 5 `.xhtml` · 1 `pom.xml` |
+| SQL / BPMN / config JSON | **zero of each** |
+| Deployed | stg1 (`et_main_stg1`), footer confirmed Module 1.3.0 / Common 1.0.143-MLK |
+
+**A fix landed mid-flight**: after my push at `5e462aa67f`, みや added `e00e8adc0c` (#271985 tujuan
+lesen migrasi) and merged it. BAQA tested `fdfddc602b`, so V6b is closed — but `release-prep.js`
+**deadlocked**: `merge-to-master` refused (`origin release != recorded headSha`) and neither `verify`
+nor `push` would re-pin because `phase=pushed`. No `--adopt-moved-head` path exists. Pushed with
+plain git after みや explicitly instructed it.
+
+### The SQL non-issue — five turns, two rages, one command that would have killed it
+
+`redmine-recon.js` followed #259112's **relation** to closed ticket **#252786** and surfaced its
+attachment `FAT-CR #252786.sql`. I carried that row through the plan table, the hand-off card, and
+the Sheet values.
+
+| Turn | What I said |
+|---|---|
+| 1 | "flag the SQL — BA/DBA must run it" |
+| 2 | read the Apr-27 journal → "not owed, leave the Sheet cell **empty**" |
+| 3 | みや: *"The SQL we'll only mention it in the sheet"* → I wrote an **unconditional always-record** rule and handed him `#259112, #252786:FAT-CR #252786.sql` |
+| 4 | みや: *"why this?"* → I offered him A/B options instead of settling it |
+| 5 | みや: *"does that closed ticket under our current baseline?"* → **`mlk/fat-cr/252786` merged long ago, nothing in the delta** |
+
+みや: *"why the fuck are you including it in our baseline out of nowhere?"* — correct. The killing
+check is one command and belongs BEFORE the row is ever mentioned:
+`git log --oneline origin/<owning-branch> --not mlk/release/<ver>` — empty = already in baseline = noise.
+
+### Slips (all みや-caught)
+
+| Category | What |
+|---|---|
+| `filtered-evidence-read` | suppressed the recon SQL row on my own relevance judgment |
+| `recommendation-oscillation` | **NEW** — two opposite recommendations on one Sheet cell inside an hour, neither grounded in the release delta |
+| `reask/verbose` | *"can you speak briefly"* — after a 9-row table for a one-line answer |
+
+### System changes — `.claude/skills/release-mlk-plp/SKILL.md`, 3 edits
+
+1. **B2 · CONFIRM THE MERGES** — みや asked for this by name (no SourceTree):
+   `git -C E:\Projects\Melaka\etanah-pelupusan log --oneline --merges mlk/master..mlk/release/<ver>` —
+   one merge commit per ticket, runs from any directory. Now in every future card.
+2. **Kill-check before surfacing any recon SQL row** — owning ticket already in baseline ⇒ drop
+   silently, never mention.
+3. **Sheet SQL cell test** — *does THIS release's delta require the script?* Plus a ban on pasting
+   recon's internal `#<owner>:<file>` notation (that prefix means "attached to ticket #owner", it is
+   NOT part of the filename).
+
+### Environment / git notes
+
+- **`redmine.local.json` + `servers.local.json` were missing in this worktree again** — copied from
+  the main repo. 4th occurrence of `machine-local-config-not-portable`. `quest/redmine.local.json`
+  is STILL absent everywhere, so the 3-DAY RULE boot ranking ran unreconciled.
+- **SourceTree Push read 46, master read 25** — the gap was `mlk/requirement/239386-deprecated`
+  tracking `origin/mlk/requirement/239386` (the LIVE branch) instead of its own `-deprecated` remote.
+  Phantom 21. Repointed with `--set-upstream-to`. 🚨 Had he hit the toolbar Push button, it would
+  have overwritten the live 239386 branch.
+- `.settings/org.eclipse.wst.common.component` stashed as `pre-1.3.0-release eclipse-settings`.
+- **Correction to the block below**: #272127 was **committed and pushed** (`2cd853046c` on
+  `mlk/esokongan/272127v2`), NOT stashed. `stash@{6}` is the superseded WIP.
+
+---
+
+
+## 2026-07-30 14:29 → 2026-07-31 01:19 — ESOKONGAN #272127 rencana fix · #272527 footer v2 shipped to int-env
+
+**みや came back from the subscription pause.** Two eSOKONGAN tickets moved; both are template-only fixes.
+
+### ▶▶ START HERE next session
+
+| # | Thing | State |
+|---|---|---|
+| 1 | **#272527** | Phase 1 CLOSED. `mlk/esokongan/272527v2` @ `ac8e9ba316` → merged to `mlk/int-env` @ `ab799cf630`. みや deploying. |
+| 2 | **#272127** | Rencana blank-¶ fix applied to working tree, **STASHED** (`stash@{5}`-ish, msg `QA-272127 Rencana blank-paragraph fix WIP`), NOT committed. |
+| 3 | **#272574** | Still the open ticket, still blocked on the BA/Aaron Flowable question. Untouched this session. |
+| 4 | Deploy pending | int-env `ab799cf630` — みや runs it |
+
+### #272127 — Rencana Pentadbir Tanah (extra page)
+
+BA reopened with 2 issues: (1) Rencana — remove extra page, (2) Surat Kelulusan — kemaskini loading too long.
+
+| Item | Finding |
+|---|---|
+| Templates | `TemplateRencanaPT.docx` · `TemplateSuratKeputusanLulusPRBB.docx` |
+| Applied | Removed **11 blank paragraphs** from `TemplateRencanaPT.docx` — 4 after §5.2, 7 after §6.2. Paragraph count 47 → 36. `testzip()` OK. |
+| Not applied | Nothing for the Surat Kelulusan loading issue |
+| Loading-too-long lead | Per QA-262233 analog: malformed table-width binary in the .docx makes the DMS hang parsing — remedy = fix template + delete stale stored doc + regenerate. **Not verified for this ticket.** |
+| State | Stashed, uncommitted. Branch `mlk/esokongan/272127` exists. |
+
+### #272527 — footer spacing (v2 rework)
+
+| Item | Value |
+|---|---|
+| Commit | `ac8e9ba316` — `Ref #272527 - Semua Urusan - Kecilkan spacing footer surat JPPH, YB dan JT Ulangan` |
+| Files | 8 `.docx` — JT PPTPB · JT Ulangan · JPPH ×5 · YB ×2 |
+| int-env merge | `ab799cf630`, remote SHA verified |
+| Conflict | `TemplateSuratNilaianJPPH_PLTP_PSBS.docx` — int-env carried **#272651's `<pelanCC>`**. Resolved by keeping int-env's file + applying only our `pgMar` (`bottom 1440→851`, `footer 1013→425`). `pelanCC` verified present after. **This conflict will recur when #272651 merges to master.** |
+
+**🚨 SCOPE — PAGE 1 ONLY.** Trailing sections (page 2+) at `1134/720` are OUT OF SCOPE, intentionally left. Written as a hard block at the top of `QA-272527.md` §0. Do not re-raise.
+
+**Recovered fact that was never recorded** — the ORIGINAL 272527 fix (`70598eb8cd`) values, reconstructed by re-diffing the binary:
+
+| Field | Before | After |
+|---|---|---|
+| page-1 bottom margin | `1134` (2.00 cm) | `851` (1.50 cm) |
+| page-1 footer-from-edge | `720` (1.27 cm) | `624` (1.10 cm) |
+| page-2+ bottom | `1134` | `850` |
+| page-2+ footer | `720` | `567` |
+
+Written into `QA-272527.md` §"Actually Applied". みや's words: *"Did you not save this critical information which is the fix of the ticket itself?"*
+
+### Slips this session
+
+| Category | What |
+|---|---|
+| `assume-not-verify` | Read the **working tree** pgMar values and reported "7 of 9 templates already fine, never touched by this ticket" — they were みや's uncommitted edits. HEAD proved all 8 were at old `1134/720`. **ESCALATED: 5 in 7d, 16 in 30d.** |
+| `reask/redundant` | Raised page-2+ trailing sections as a missed defect twice, after `QA-272527.md:64` already recorded "page 1 only". |
+
+**Proposed defender (not built — needs `/appraise` first):** a gate firing when a turn asserts a file's *committed* state ("already fixed" / "never touched" / "unchanged") while having read a tracked path but run **no** `git show HEAD:<path>` / `git diff` against it.
+
+### Environment notes
+
+- `etanah-pelupusan` left on `mlk/int-env` @ `ab799cf630`
+- Stashes added this session: `pre-272527v2-branch-switch eclipse-settings`, `QA-272127 Rencana blank-paragraph fix WIP`
+- `.settings/org.eclipse.wst.common.component` perpetually dirty — never staged
+
+---
+
+
+## 2026-07-29 01:39 → 02:55 — 🚨 SUBSCRIPTION PAUSE: QA-272574 handoff pack built · ledgers reconciled
+
+**みや is unsubscribing from Claude for a while. This session's output is a survival pack, not a fix.**
+
+### ▶▶ IF I COME BACK — read this first
+
+| # | Thing | State |
+|---|---|---|
+| 1 | **QA-272574** is the ONLY open ticket | Rubric complete, 78%, **nothing applied, no branch** |
+| 2 | Handoff pack | `1. Tasks\Melaka\112. …\START-HERE.md` + `QA-272574-HANDOFF.md` (OneDrive, NOT this repo) |
+| 3 | Blocking question | みや → BA/Aaron: **can a new task be added to the PLPS Flowable workflow?** Yes → Option A (78%). No → Option B (55%) |
+| 4 | Open adhoc | `ADHOC-local-deploy-publish` — why Eclipse publish drops 558 files. Unanswered after 3 occurrences |
+
+### What was built
+
+Two documents in Task folder 112, written to survive without me:
+
+| File | For | Shape |
+|---|---|---|
+| `START-HERE.md` | みや | one-page: decision gate → 2 checklists → test steps → 5 traps → deploy fix → paste-prompt for another AI |
+| `QA-272574-HANDOFF.md` | **any AI, zero context** | 14 parts. Explains what e-Tanah is, defines 6 Malay terms, explains PDT vs PTG, quotes every code snippet + SQL inline so it works with **no repo access**. Part 14 carries our working rules |
+
+**みや's correction that forced the rewrite**: *"please take into account the other AI might not know
+anything about our system. All the things that you load at start, or your access to codebase — the AI
+does not know anything."* Draft 1 opened with a config block and said "copy the Rencana JKKL analog"
+without defining *urusan*. Everything boot-loaded is invisible to me and therefore un-handed-over.
+
+### Verified this session (2 claims moved)
+
+| Claim | Was | Actually |
+|---|---|---|
+| BA's *"PLP_SRTTNGGHPDT already added in MLIT"* | read as "district side half-built" | MLIT has the **document type** only. **No district tugasan exists in any environment** — `ind_tgsn` PLPS still holds only `PYSKT`/`PSKT`/`PSSPTGT` |
+| Java edit site | one map, `:286-287` | **Two near-identical maps**: `TGS_TO_JNS_DOK_MAP:234` (ours) and `TGS_TO_JNS_DOK_MAP_PRU:306` whose `:348-349` map the same codes for urusan PRU. **Do not edit the PRU one** |
+
+### Repairs
+
+- **272574 had NO block in `active.txt`** and its 3 qa_docs existed only inside worktree
+  `ruri-195f96` — `projects/` is gitignored, so they had never travelled. Copied to this worktree +
+  main repo; block rebuilt. **They survive via OneDrive, not git.**
+- **271918** → closed+archived (Redmine: Noor Dayana since 07-27)
+- **272499** → closed+archived (みや closed it; Redmine Resolved/100%/Aaron)
+- Merge with `main` hit 4 conflicts, same parallel-session shape as last night — **each side had kept
+  exactly what the other archived**. Resolved: archive is durable truth (ours was a strict superset),
+  append-only ledgers unioned, `active.txt` cut to genuinely-open only. **2 open blocks left, matching
+  Redmine exactly.**
+
+### Test data for 272574
+
+`PTMLK/01/L/PLPS/2026/6` · aplikasi_id `3384879` · `sanarimah@melaka.gov.my` · `et_main_stg1` ·
+tugasan `PYSKT` · pejabat_id 2 (PDT Melaka Tengah) · screen `MlkSuratTemplateForm.xhtml`, langkah 5
+
+---
+
 ## 2026-07-27 10:15 → 2026-07-29 02:20 — QA-272499 closed Phase 1+2 · a 3-fault local-deploy saga · adhoc quest born
 
 **Two threads. One shipped a ticket end-to-end; the other repaired みや's local JBoss three times and
