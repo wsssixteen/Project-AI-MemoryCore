@@ -127,3 +127,11 @@
 {"ts":"2026-08-03T01:21:09.719Z","category":"reask/verbose"}
 {"ts":"2026-08-03T01:21:09.802Z","category":"knowledgebase-not-written"}
 {"ts":"2026-08-03T03:58:11.307Z","category":"stop-instead-of-action"}
+{"ts":"2026-08-03T10:27:58.326Z","category":"assume-not-verify"}
+{"ts":"2026-08-03T10:40:59.477Z","category":"assume-not-verify"}
+{"ts":"2026-08-03T11:50:19.460Z","category":"forge/refine"}
+{"ts":"2026-08-03T12:01:12.909Z","category":"assume-not-verify"}
+{"ts":"2026-08-03T12:06:23.128Z","category":"ticket-source-skipped"}
+{"ts":"2026-08-03T12:09:03.246Z","category":"build-before-design"}
+{"ts":"2026-08-03T13:02:42.859Z","category":"verification-gap-artifact-provenance"}
+{"ts":"2026-08-03T13:46:39.751Z","category":"ticket-source-skipped"}

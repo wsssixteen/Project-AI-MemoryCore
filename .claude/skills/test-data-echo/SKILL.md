@@ -18,6 +18,21 @@ metadata:
 
 ## Steps
 
+0. **🚨 SOURCE GATE (v1.1, 2026-08-03, miya — 4 wrong-env/wrong-id test-data emits in ONE day, QA-272867/272943):**
+   Test data may ONLY be emitted after BOTH anchors, run THIS turn (or cited from earlier THIS session):
+   - **(a) History-first**: re-read the ticket's LATEST journal in `0. Brief\History.txt` — if the BA
+     named a Permohonan ID / env / steps there, THAT is the test data; a doc-pack or memory record
+     NEVER overrides it (2026-08-03: BA's journal gave `PTMLK/02/L/PLTP/2026/5` @ Staging; I emitted
+     `/2026/2` from the execution pack anyway — 4th blunder of the day).
+   - **(b) Live-env anchor**: name the CURRENT live schema (stg1/stg2/mlit — ask or read, never default;
+     `feedback_staging_schema_stg2.md` pointer rule) AND verify the ID exists there with one
+     `umm_aplikasi` read + its `umm_a_tgsn` state, echoed as `<ID> = aplikasi_id <n> · <tugasan> <status> @ <login>`.
+   - **(c) Record-readiness (added same day — the pemohon-2 crash)**: the test record must be able to
+     TRAVERSE the code path the test exercises — query the child rows the screen's init needs and check
+     the links/FKs are non-null (2026-08-03 QA-272867: BA's stub pemohon had `pihak_bkptg_id` NULL →
+     `PelupusanMaklumatPemohonHelper.initPemohon()` address build crashed the whole test; one SELECT
+     would have caught it before miya's build). Emit what was checked: `record-readiness ✓(<rows/links read>)`.
+   **BANNED**: emitting any Permohonan ID whose env-existence + task-state was not read live this session.
 1. **Read** the active Task folder's `1. <NNN NNN>.txt` (legacy `1. Notes.txt`) — locked 3-line format per `feedback_task_folder_ownership.md`
 2. **Parse** the verified test data — permohonan ID + login email + tugasan code
 3. **Add context** — pengguna semasa (the login user's display name if recallable), tugasan name, peranan, env target (UAT/FAT/mkit)

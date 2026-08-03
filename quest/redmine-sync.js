@@ -260,16 +260,41 @@ function formatJournalsForHistory(journals) {
     }).join('\n\n');
 }
 
+// v1.1 (2026-08-03, miya, QA-272867 wrong-test-data root cause): BA-given IDs live in journals and
+// keep getting outranked by doc-pack records. Scan journals (LATEST first) for permohonan IDs +
+// env words; surface them at the TOP of History.txt and on stdout so intake cannot bury them.
+const PERMOHONAN_RX = /PT[A-Z]{3}\/\d{2}\/[A-Z]\/[A-Z]+\/\d{4}\/\d+/g;
+const ENV_RX = /\b(staging|stg1|stg2|prod|production|mlit|uat|fat)\b/i;
+function extractBaGivenTestData(journals) {
+    const rows = [];
+    for (const j of [...(journals || [])].reverse()) {
+        const notes = j.notes || '';
+        const ids = notes.match(PERMOHONAN_RX);
+        if (!ids) continue;
+        const env = (notes.match(ENV_RX) || [])[0] || '';
+        for (const id of new Set(ids)) {
+            rows.push(`${id}${env ? ' @ ' + env : ''} — ${(j.created_on || '').slice(0, 10)} by ${j.user?.name || 'Unknown'}`);
+        }
+    }
+    return rows;
+}
+
 function writeHistoryFile(briefFolder, journals, issueMeta) {
+    const baGiven = extractBaGivenTestData(journals);
     const header = [
         `Redmine ticket journal — synced ${new Date().toISOString()}`,
         `Issue: ${issueMeta.prefix} #${issueMeta.number} — ${issueMeta.subject}`,
         `Status: ${issueMeta.status} | Last updated: ${issueMeta.updated_on || ''}`,
+        ...(baGiven.length ? [
+            '🚨 BA-GIVEN TEST DATA (from journals, LATEST first — this OUTRANKS any doc/pack/memory record):',
+            ...baGiven.map(r => '   ' + r),
+        ] : []),
         '─'.repeat(70),
         '',
     ].join('\n');
     const body = formatJournalsForHistory(journals);
     fs.writeFileSync(path.join(briefFolder, 'History.txt'), header + body + '\n');
+    if (baGiven.length) console.log('🚨 BA-GIVEN TEST DATA (latest first):\n' + baGiven.map(r => '   ' + r).join('\n'));
 }
 
 async function updateExistingTicketHistory(issue) {
