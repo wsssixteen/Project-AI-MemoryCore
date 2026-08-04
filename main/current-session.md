@@ -1,5 +1,74 @@
 # Current Session
 
+## 2026-08-04 21:00 → 22:30 — QA-273201 REWORK closed: the submit half of the chain
+
+**BA reworked `bd827a1bb6`. It made the Agihan Kepada field render, then routed the tugasan to the
+wrong user anyway — I fixed the render half and never traced the submit half. Fixed, tested by
+miya, shipped, ticket closed.**
+
+### The defect
+
+`MlkKertasTemplateForm.prepareBpmValuesFor_tgsn_KKPT():2377` built its BpmNameValue list with
+`agihanKKPT` but **no `nextUser`**. Downstream, `FlowableTaskListener.receiveUserTask():150`
+(etanah-common) reads `nextUser` off that list and passes it to
+`BpmCallbackService.handleAssignation():284`, which resolves it against
+`pcp_pengguna.nama_pengguna`. Null in, no officer out — Flowable falls back to the BPMN node's
+peranan group `PPTnKanan_PPTT_PPD`. Exactly the BA's report.
+
+**19 `prepareBpmValuesFor_tgsn_*` methods in the file. 17 send `nextUser`. `_KKPT():2377` and
+`_KDO():2420` don't.**
+
+### The fix
+
+One line at `MlkKertasTemplateForm.java:2384`, inside the `pembetulan` branch, copied from sibling
+`_SRPT():2394`:
+
+`bpmNameValues.add(new BpmNameValue("nextUser", nextUser));`
+
+### Ship state
+
+- commit `59f35f27eb` on `mlk/esokongan/273201v2` (branched off v1 tip `bd827a1bb6`)
+- message: `Ref #273201 - PRBB - KKPT - Agihan Kepada hantar tugasan kepada user yang dipilih`
+- 1 file, +1/−0. Remote SHA verified.
+- merged to `mlk/int-env` @ `d0308cc993`, delta verified as 1 file only
+- **awaiting miya's mlit deploy** — `ssh app@172.16.100.162` → `cd deployment-scripts/mlit` →
+  `./deploy-pelupusan.sh` → branch prompt `mlk/int-env`
+
+### Tested
+
+miya walked `PTMLK/01/L/PRBB/2026/26` on stg1: SRPT with Pembetulan=Tidak → PTNH `shaifulhizam@`,
+then KKPT with Pembetulan=Ya → PPD. **Passed.**
+
+### The four BA REMARK tugasan — checked, not assumed
+
+He challenged whether one method covered all four. Re-read all four rather than reassuring:
+
+| Tugasan | Method | `nextUser`? | Walked? |
+|---|---|---|---|
+| Semakan Rencana - PDT | `_SRPDT():2352` | ✓ already sends | ✗ fixture `PTMLK/02/L/PRBB/2026/9` exists |
+| Perakuan Pentadbir Tanah | `_PPT():2516` | ✓ already sends | ✗ **zero `PPTPRBB` fixtures on stg1** |
+| Semakan Rencana JKBB | `_SRJKBBPDT():2327` | ✓ already sends | ✗ fixture `PTMLK/02/L/PRBB/2026/10` exists |
+| Perakuan Rencana JKBB | `_PYRJKBBPDT():2336` | ✓ already sends | ✗ **zero fixtures on stg1** |
+
+All four were only ever missing the RENDER half, which v1's `initData():298` already fixed.
+Recorded in the qa_doc as **code-covered, unwalked** — not as tested.
+
+### Open after this session
+
+- **Redmine #273201 still shows `Rework` / assigned to miya / 100%** — needs updating to match
+- Phase 2 archive hygiene owed for **QA-272881 + QA-273201**
+- `_KDO():2420` latent `nextUser` omission — logged in `main/todo.md` Q1, unraised
+- ADHOC A9 — 773 of 1,083 open stg1 tasks orphaned from `et_flowable17`
+
+### Slip this session
+
+Put the mlit deploy commands in a fenced code block. He'd already told me not to — he can't
+double-click a line out of a fence. I followed a system instruction that says shell commands go in
+`bash` fences and let it outrank his explicit, repeated instruction. My own priority order puts him
+first. Corrected in-turn; bullets + inline backticks from here.
+
+---
+
 ## 2026-08-04 01:35 → 03:02 — 8-TICKET SWEEP: retrieve → Phase 0 → 7 blind familiars → controller-verify · briefing-accuracy root-caused and fixed
 
 **miya set an 8-step /goal for a full ticket sweep, then a second one to plan tomorrow and fix the
@@ -131,31 +200,5 @@ Deleted `mlk/esokongan/272881` @ `6e1398d173` local+remote, redid under his exac
 
 **Slips**: `assume-not-verify` (30d=22 🚨) · `ticket-source-skipped` · `prior-fix-not-searched` ·
 `hierarchy-assumed-from-name` · `absence-of-error-read-as-success` · `built-without-system-design`.
-
----
-
-## 2026-08-03 13:48 → 22:15 — ⚔️ ROUNDS 1+2 SHIPPED (272982 · 272867 · 272943) — Phase 1 closed ×3 branches · the hardest behaviour day on record
-
-**Session shape: /goal-driven execution of the miya-approved rounds plan. Round 1 (272982) done same-day: stg2 patch run by miya, PROD script ready, jrxml handed to Reports team. Round 2 (272867+272943) coded, tested through 4 miya-caught defect cycles, committed + pushed on 3 branches. In parallel: 6 miya-caught behaviour slips → 5 mechanical system fixes shipped the same session.**
-
-### ▶▶ NEXT SESSION — START HERE
-
-| # | Thing | State |
-|---|---|---|
-| 1 | **272982** | Phase 1 CLOSED (data patch stg2 done by miya; **PROD run pending** — `patch-272982.sql` in Task folder 113; jrxml CASE file `PlpLaporanJadual1P2_Sub03 - line 66.sql` → send to **Nurhidayati Abdul Razak** (Reports); Redmine note drafted in-session) |
-| 2 | **272867** | Phase 1 CLOSED. pelupusan `mlk/esokongan/272867` @ `76be0e9fe4` (+29/-3: per-pemohon JSON key + `!adaKunciPerPemohon` fallback rescope + address-helper safe-init ×2 sites) · AWAM `mlk/esokongan/272867` @ `be6b178c48` (+17/-1 twin, incl. else→Tiada parity). Test app `PTMLK/02/L/PLTP/2026/5` @ faridmajid (STG1); pemohon-1 walk PASSED; **AWAM runtime walk NOT done** (A7 deploy friction) |
-| 3 | **272943** | Phase 1 CLOSED. `mlk/esokongan/272943` @ `cea66b57ad` — `PelupusanUtil.convertPdfFileBytesToImageList()` 150-DPI+JPEG ONLY (the A4-canvas variant SHRANK the pelan — reverted); `rotateIfLandscape()` RGB+JPEG. 74MB artifact = `LAIN-36741916` (`/home/app/etanah/files/dms/SISTEM-FAIL/KELUARAN/LAIN-LAIN/2026/07/LAIN-36741916_1.main`, PROD-verified); heavy source pelan = `LAIN-36720872` (6.3MB, kod `PLP_PPTPB_PELAN`, GPM-first fallback per `populatePelanAsalImageMLK():19159`). Staging fixture exists (`LAIN-36707859`, 65MB, stg1) — no Infra upload needed. **Visual walk of 6 pelan tags pending at BA test** |
-| 4 | Rounds 3-5 | 272881+273201 → 273294 → 273300, per the saved plan |
-| 5 | New synced tickets | **#273465 Portal Awam Maklumat Pemohon** (same screen family as 272867 — check overlap first) · #273455 (sempadan — likely = ADHOC A8) · #273460/61 · #273625 (= patch-mlk-doc's fixture) |
-
-### System fixes shipped (all restored from the botched DE stash, verified by token-grep)
-- `domain/pre-code-check/` **v1.3** + NEW `eval.js` (6/6): `necessity` check (copy-analog-wholesale killer) · BA-expected ✓ must cite an OBSERVATION else `✗(unverified—risk)` · `all-writers` (null-fix must enumerate every writer of the failing symbol)
-- `.claude/hooks/ticket-gate.js` NEW row **0.7 MODULE SET** (declare module at load; QA-272867's AWAM half was ignored at load)
-- `quest/redmine-sync.js` **v1.1**: `🚨 BA-GIVEN TEST DATA` banner (journal-scanned IDs, latest-first) atop History.txt + stdout — proven live
-- `.claude/skills/test-data-echo/SKILL.md` **Source Gate step 0**: (a) latest-journal re-read wins over any doc/pack (b) live-env anchor (id↔permohonan echoed) (c) record-readiness (test record must traverse the code path — pemohon-2 `pihak_bkptg_id` NULL crash)
-- `.claude/auto-memory/feedback_id_anchor_first.md` (main-repo path, OneDrive-carried)
-
-### The behaviour half — 6 miya-caught slips, all ledgered (75 rows in window)
-wrong-env test data (stg2 record for stg1 session, 4th env blunder) · wrong permohonan (pelan chain on MCL app 3411621 while my own output said "MCL") · BA-given ID in journal outranked by doc-pack · scaleToFitA4Strict cargo-culted → pelan shrank · one-site null guard shipped still-crashing · AWAM scope parked despite BA naming it. Root pattern: confidence arrives before evidence; the 5 fixes above are the mechanical answer. Also: my "can't reach Redmine" claim was false (sync works here); pemohon-2 test-crash root = data stub (missing `pihak_bkptg_id`) → address-helper safe-init fixed render for ALL such PROD rows, no data re-entry.
 
 ---

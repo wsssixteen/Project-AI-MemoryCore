@@ -16,6 +16,7 @@
 - [feedback_model_tiering_session.md](feedback_model_tiering_session.md) — Fable = assessments only; building/mechanical work on Haiku/Sonnet/Opus (session-model counterpart of Delegation Economy)
 - [feedback_uat_fat_environments.md](feedback_uat_fat_environments.md) — mlit is PRIMARY (mkit/et_main_mlit, bare `etanahDS`); UAT + FAT decommissioned & deleted; only 3 pgEdge MCP remain (mlit/stg/prod) — legacy server-postgres client GONE, never re-add; `permission denied for schema` = missing grant, not a connection fault
 - [feedback_staging_schema_stg2.md](feedback_staging_schema_stg2.md) — 🚨 Melaka STG has TWO live schemas (et_main_stg2 default + et_main_stg1); miya switches between them. Servers: postgres-mlkstg-pg=stg2, postgres-mlkstg1-pg=stg1 (added 2026-07-23). Schema set by LOGIN USER — `SELECT current_schema()` first, echo which you used
+- [feedback_commands_never_fenced.md](feedback_commands_never_fenced.md) — 🚨 Commands miya must RUN go one-per-line as plain bullets with inline backticks; NEVER a code fence (he copies one at a time, can't double-click out of a fence) — 3rd strike 2026-08-04
 - [feedback_show_diagram_for_issues.md](feedback_show_diagram_for_issues.md) — When explaining WHERE an issue lives, LEAD with ASCII story diagram (working-path vs broken-path, boxed FullClass.method():line nodes, arrows carry data, ? at suspects); NEVER prose-walk a flow — surfaced 2026-07-14 amira-dropdown after prose explanations were called "bad explanation"
 - [feedback_untracked_confidential.md](feedback_untracked_confidential.md) — Untracked files in main repo (etanah-knowledge, QA-* diagnostics) are intentionally confidential; don't flag or push to commit
 - [feedback_verify_before_claim.md](feedback_verify_before_claim.md) — Re-read code before asserting; hold positions backed by line evidence; one passing test is inconclusive
@@ -63,6 +64,7 @@
 - [feedback_sql_insert_id_check.md](feedback_sql_insert_id_check.md) — SQL INSERT with hardcoded PK: verify @GeneratedValue before accepting; nextval() if sequence-managed
 - [feedback_stale_handoff_verify.md](feedback_stale_handoff_verify.md) — Verify current-session/handoff against git + active.txt at boot; a mid-frustration handoff can state the OPPOSITE of truth
 - [feedback_stash_ref_stability.md](feedback_stash_ref_stability.md) — For cross-session persistence, identify git stashes by descriptive-message grep, not `stash@{N}` position — position drifts every time a new stash lands on top
+- [feedback_stash_naming_convention.md](feedback_stash_naming_convention.md) — Stash messages are `stash <ticket-number>` and nothing else; one ticket per stash, find by message grep, context lives in the quest MD
 - [feedback_task_folder_ownership.md](feedback_task_folder_ownership.md) — Task folder: `0. Brief/` (みや's) + Notes file (blank for みや); my investigation → project subfolder only
 - [feedback_test_data_recency.md](feedback_test_data_recency.md) — Test data: ~2-month recency + prefer active gov-email users over @gmail
 - [feedback_bankai_format.md](feedback_bankai_format.md) — Bankai 🌌 蒼穹宝典 banner format (width-detection full-fill in terminal, compact fallback)

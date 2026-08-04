@@ -16,7 +16,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
-const BUFFER_FILE = path.join(PROJECT_ROOT, 'meta', 'recent-tool-calls.jsonl');
+const BUFFER_FILE = path.join(PROJECT_ROOT, 'system', 'recent-tool-calls.jsonl');
 const WINDOW_SIZE = 10;
 const REPEAT_THRESHOLD = 3;
 
