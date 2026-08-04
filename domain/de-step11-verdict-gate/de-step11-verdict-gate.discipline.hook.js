@@ -74,6 +74,16 @@ function getGitStatus() {
   }
   try {
     const cwd = process.env.CLAUDE_PROJECT_DIR || process.cwd();
+    // v1.1 2026-08-05 (みや — recurring "Archive session with uncommitted changes?" dialog):
+    // PERSIST a refreshed index before reading status. OneDrive rewrites mtimes all session
+    // (and worktree-cleanup-boot's robocopy does it at boot), so tracked files go stat-dirty
+    // and get reported " M" with a byte-identical blob and an EMPTY diff. `git status` alone
+    // refreshes only IN MEMORY and may not write the index back — so the next reader (the
+    // session-archive dialog) sees the phantom rows again and offers to discard changes that
+    // do not exist. `update-index --refresh` re-hashes the stat-dirty entries and WRITES the
+    // result, so both this gate and the dialog read the truth.
+    // Cannot lose real work: a genuinely modified file keeps its " M" (its hash differs).
+    try { execSync('git update-index --refresh', { cwd, stdio: 'ignore', timeout: 5000 }); } catch (_) {}
     return execSync('git status --porcelain', { cwd, encoding: 'utf8', timeout: 5000 });
   } catch (_) {
     return null;
