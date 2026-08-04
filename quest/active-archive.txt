@@ -1440,3 +1440,30 @@ test_app=PTMLK/01/L/PLPS/2026/6 aplikasi_id 3384879 @ sanarimah@melaka.gov.my (P
 delegated_to=Aaron Loh Zhi Yong (Redmine assignee 2026-08-03 03:52)
 closed=2026-08-03
 close_note=RECONCILED from Redmine 2026-08-03: In Progress, assignee Aaron Loh Zhi Yong. Our full direction+verification pack (miya's chosen design, code/BPMN verification, stg1 DB facts) is banked in qa_doc sections D/D2/D3 - ready to hand over or resume if it returns.
+
+qa=QA-273294
+quest_start_ts=2026-08-04T10:53:17.193Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\118. ESOKONGAN #273294 - Pelupusan - PT - Checking Sistem Untuk Mandatorikan Maklumat Tanah
+phase=1
+status=archived
+ticket_type=bug
+env=MLKSTG (schema et_main_stg1, branch mlk/release/1.2.0, Module 1.2.0) - etanah-pelupusan
+issue_one_liner=PT SKM Maklumat Tanah - no mandatory validation, so Keluasan Tanah / Tujuan Permohonan / at-least-one-plot can be left blank and the tugasan still sends on (plus Perserahan Kaunter values not carried into SKM)
+assigned_to_me=2026-08-03
+urusan=PT
+tugasan=SKM - Semakan Kemasukan Maklumat (langkah Maklumat Tanah)
+qa_doc=projects/coding-projects/archive/QA-273294/QA-273294.md
+test_app=PTMLK/01/L/PT/2026/17 @ MLKSTG et_main_stg1, tugasan SKM, langkah Maklumat Tanah - BA-given 2026-07-30 by Nurul Amirah Nadiah (this OUTRANKS the "not stated" the 08-03 doc recorded; original Description cites PTMLK/01/L/PT/2026/10 @ nurul.izza@melaka.gov.my)
+ba_issue_count=2 - BA numbered TWO issues, not one. (1) Tujuan Permohonan + Perincian Tujuan Permohonan chosen at Perserahan Kaunter do not carry into SKM. (2) tugasan can be sent on with mandatory fields blank (Keluasan Tanah, Tujuan Permohonan, Jenis Pembangunan/Komponen, at-least-one plot record). Issue 1 must NOT be dropped.
+sibling_flag=Issue 1 is the SAME SHAPE as QA-273455 - AWAM/counter-submission data not reaching the officer screen. Check whether one root cause covers both before scoping either.
+current_phase=Closed
+branch=mlk/esokongan/273294
+miya_decision_2026_08_04=FENCE=SKM-only (URS_PT + TGS_SEMAKAN_KEMASUKAN_MAKLUMAT). LEGACY=accept, no companion patch, officers key the 11 in. ISSUE-1=BUNDLE BOTH into this ticket - miya said 'bundle both but I will confirm it later. PLEASE REMEMBER THIS.' => build issue-2 now, PREPARE issue-1 (Candidate C retargeted to PelupusanSpocService.populateAppPermohonanTanahList kaunter else-branch :900/:940-976/:1033), but DO NOT COMMIT the bundle until miya gives the final confirm. Re-surface this at every resume and at Phase-1 close.
+root_cause_2026_08_04=ISSUE-2 verifyCurrentLangkah():1841 has no PT branch, falls to return true :1934. ISSUE-1 REWRITTEN: no pra-to-app carrier for tujuanBerimilik exists at all (only 2 app-side writers, both screen-save VO reads: PelupusanService:4479 and :16518). Real defect = asymmetry inside populateMaklumatTanahVOListFromAppHakmilik():5088 - luasDipohon HAS a pra fallback at :5181-5186, selectedTujuanPermohonan set unconditionally from app at :5142 with NONE. Evidence: 11 of 26 live SKM apps have pra tujuan 847/849 and app NULL; the 15 with values have app==pra (officer re-keyed). REFUTED: counter-only story, transfer-lost, A8 payment discriminator (untestable, zero bayaran rows), not-yet-saved (8 Baru have it 8 dont), umm_a_permohonan_tnh as the column. Issues cannot be split - issue 2 blocks Hantar on a field issue 1 renders blank.
+fence_decision=SKM ONLY - miya 2026-08-04, re-confirmed AFTER seeing pelupusan 1.jpeg (same blank fields at Penyediaan Laporan Pelukis Pelan) and the Description header (Semakan Jabatan Teknikal Laporan Tanah dan Pelan MMKN). His reasoning: every permohonan must pass SKM first, so gating there stops blanks reaching any downstream tugasan. DB trail on 3419005 confirms order PK -> SKM -> PSJT.
+fence_correction_2026_08_04=miya-caught: SUBMIT-only was DEAD CODE on the Maklumat Tanah langkah. navigationPanel.xhtml:199 renders Seterusnya only when hasNextPage=true and :225 renders Hantar only when hasNextPage=false - mutually exclusive - and Maklumat Tanah is NOT the last langkah, so it never shows Hantar. Corrected fence = (SUBMIT || GO_NEXT) && URS_PT && SKM. SAVE deliberately excluded so Simpan still saves partial work. Button map: Seterusnya->onGoNext->GO_NEXT (BasePelupusanForm:700), Simpan->onSave->SAVE (:366), Hantar->onSubmit->SUBMIT (:1939).
+fence_final_2026_08_04=FINAL: enum check REMOVED entirely. Fence = URS_PT && SKM only, so ALL THREE buttons are gated - Simpan (SAVE), Seterusnya (GO_NEXT), Hantar (SUBMIT). My earlier SAVE-exclusion was wrong: BA Expected #2 verbatim says 'perlu ada checking untuk isi medan-medan tersebut' = checking on the FIELDS, not on one button. Matches the file's own convention - the 6 sibling branches at :1846 :1871 :1895 :1906 :1917 :1923 none test actionEnum. Cost miya a build+test cycle.
+closed=2026-08-04
+local_test_confirmed=true
+commit=efaee778db
+close_note=Phase 1 closed 2026-08-04. 2 files +45/-0 on mlk/esokongan/273294 off mlk/master (behind 0), remote SHA efaee778dbd963e6083694986f02a92d51039e45 == local HEAD. Issue 1 (Tujuan tarik dari Perserahan Kaunter): pra fallback in PelupusanService.populateMaklumatTanahVOListFromAppHakmilik at :5150 mirroring the luas fallback :5181-5186. Issue 2 (checking mandatori): additive branch in MlkMaklumatTanahPemberimilikanForm.verifyCurrentLangkah before return true, fenced URS_PT + SKM with NO actionEnum test so Simpan AND Seterusnya AND Hantar all block - miya tested and confirmed.
