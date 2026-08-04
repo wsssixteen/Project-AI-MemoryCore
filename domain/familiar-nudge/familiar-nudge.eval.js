@@ -42,7 +42,7 @@ r = run(smallFile);
 check('F3a small clean file does not fire', r.status === 0 && (r.stdout || '') === '', 'exit=' + r.status + ' stdout=' + JSON.stringify(r.stdout));
 
 // F3b: EDGE CASE — a large file (>50KB) but under an EXCLUDED path (system/telemetry) → must NOT fire
-const telemetryDir = path.join(os.tmpdir(), 'meta', 'telemetry');
+const telemetryDir = path.join(os.tmpdir(), 'system', 'telemetry');
 fs.mkdirSync(telemetryDir, { recursive: true });
 const telemetryFile = path.join(telemetryDir, 'hook-fires.jsonl');
 fs.writeFileSync(telemetryFile, 'x'.repeat(60 * 1024));

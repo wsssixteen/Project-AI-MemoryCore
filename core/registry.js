@@ -79,13 +79,13 @@ for (const dir of safeList(path.join(ROOT, 'domain'), d => d.isDirectory())) {
 }
 
 // --- telemetry last-fire ---
-const fires = readJsonl(path.join(ROOT, 'meta', 'telemetry', 'hook-fires.jsonl'));
+const fires = readJsonl(path.join(ROOT, 'system', 'telemetry', 'hook-fires.jsonl'));
 const lastFire = new Map();
 for (const r of fires) if (r.hook) lastFire.set(r.hook, r.ts);
 
 // --- lifecycle events from forge registry ---
 const lifecycle = new Map();
-for (const r of readJsonl(path.join(ROOT, 'meta', 'registry.jsonl'))) if (r.name && r.lifecycle) lifecycle.set(r.name, r.lifecycle);
+for (const r of readJsonl(path.join(ROOT, 'system', 'registry.jsonl'))) if (r.name && r.lifecycle) lifecycle.set(r.name, r.lifecycle);
 
 // --- skills ---
 const skills = safeList(path.join(ROOT, '.claude', 'skills'), d => d.isDirectory()).map(d => {
@@ -95,7 +95,7 @@ const skills = safeList(path.join(ROOT, '.claude', 'skills'), d => d.isDirectory
 
 // --- core/lib scripts ---
 const scripts = [];
-for (const dir of ['core', 'lib', 'quest', 'meta']) {
+for (const dir of ['core', 'lib', 'quest', 'system']) {
   for (const e of safeList(path.join(ROOT, dir), d => d.isFile() && d.name.endsWith('.js') && !d.name.includes('.eval.'))) {
     const evalTwin = fs.existsSync(path.join(ROOT, dir, e.name.replace(/\.js$/, '.eval.js')));
     scripts.push({ file: dir + '/' + e.name, eval: evalTwin });

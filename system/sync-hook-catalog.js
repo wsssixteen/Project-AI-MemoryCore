@@ -31,7 +31,7 @@ const path = require('path');
 
 const REPO_ROOT = path.resolve(__dirname, '..');
 const SETTINGS = path.join(REPO_ROOT, '.claude', 'settings.json');
-const ARCH_DOC = path.join(REPO_ROOT, 'meta', 'system-architecture.md');
+const ARCH_DOC = path.join(REPO_ROOT, 'system', 'system-architecture.md');
 const START = '<!-- HOOK-REGISTRY:AUTO-START -->';
 const END = '<!-- HOOK-REGISTRY:AUTO-END -->';
 const EVENT_ORDER = ['SessionStart', 'UserPromptSubmit', 'PreToolUse', 'PostToolUse', 'Stop'];

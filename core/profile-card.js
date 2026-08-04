@@ -11,7 +11,7 @@ const path = require('path');
 
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..');
 const SRC = path.join(ROOT, 'main', 'main-memory.md');
-const OUT = path.join(ROOT, 'meta', 'profile-card.md');
+const OUT = path.join(ROOT, 'system', 'profile-card.md');
 
 const src = fs.readFileSync(SRC, 'utf8');
 const lines = src.split(/\r?\n/);

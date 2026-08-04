@@ -73,5 +73,15 @@ check('271721 int-env miss recorded', /271721[\s\S]{0,200}int-env/.test(src));
 check('release scope excluded', /Not a release[\s\S]{0,120}release-mlk-plp/.test(src));
 check('no-success-claim rule present', /Never claim build\/deploy succeeded/i.test(src));
 
+// --- 9. copyable emit shape (v1.1, 2026-08-04) ---------------------------
+// Third `emit-shape-not-copyable` strike: the card had been spec'd INSIDE a code
+// fence, so miya got one copy button for the whole block instead of one line per
+// command. Assert the ban is stated AND that section 5 carries no fence.
+check('no-fence rule stated in section 5', /NEVER put the commands in a code fence/i.test(src));
+check('one-command-per-line rule stated', /One command per line/i.test(src));
+const sec5 = (src.split(/^## 5 [\s\S]*?$/m)[1] || '').split(/^## 6 /m)[0] || '';
+check('section 5 contains no code fence', !/```/.test(sec5));
+check('deploy commands emitted as bullets', /^- `ssh app@172\.16\.100\.162`$/m.test(src));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail === 0 ? 0 : 1);

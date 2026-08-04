@@ -47,6 +47,74 @@ not observed. What broke the cycle was measuring something physical (file bytes)
 Logged `assume-not-verify`. Also: I stopped once claiming a capability wall (loggers, MLIT DB) that was
 not real — the goal hook caught it, and both turned out to be reachable via a diagnostic branch and a
 direct JDBC connection using the JBoss datasource credentials.
+## 2026-08-04 21:00 → 22:30 — QA-273201 REWORK closed: the submit half of the chain
+
+**BA reworked `bd827a1bb6`. It made the Agihan Kepada field render, then routed the tugasan to the
+wrong user anyway — I fixed the render half and never traced the submit half. Fixed, tested by
+miya, shipped, ticket closed.**
+
+### The defect
+
+`MlkKertasTemplateForm.prepareBpmValuesFor_tgsn_KKPT():2377` built its BpmNameValue list with
+`agihanKKPT` but **no `nextUser`**. Downstream, `FlowableTaskListener.receiveUserTask():150`
+(etanah-common) reads `nextUser` off that list and passes it to
+`BpmCallbackService.handleAssignation():284`, which resolves it against
+`pcp_pengguna.nama_pengguna`. Null in, no officer out — Flowable falls back to the BPMN node's
+peranan group `PPTnKanan_PPTT_PPD`. Exactly the BA's report.
+
+**19 `prepareBpmValuesFor_tgsn_*` methods in the file. 17 send `nextUser`. `_KKPT():2377` and
+`_KDO():2420` don't.**
+
+### The fix
+
+One line at `MlkKertasTemplateForm.java:2384`, inside the `pembetulan` branch, copied from sibling
+`_SRPT():2394`:
+
+`bpmNameValues.add(new BpmNameValue("nextUser", nextUser));`
+
+### Ship state
+
+- commit `59f35f27eb` on `mlk/esokongan/273201v2` (branched off v1 tip `bd827a1bb6`)
+- message: `Ref #273201 - PRBB - KKPT - Agihan Kepada hantar tugasan kepada user yang dipilih`
+- 1 file, +1/−0. Remote SHA verified.
+- merged to `mlk/int-env` @ `d0308cc993`, delta verified as 1 file only
+- **awaiting miya's mlit deploy** — `ssh app@172.16.100.162` → `cd deployment-scripts/mlit` →
+  `./deploy-pelupusan.sh` → branch prompt `mlk/int-env`
+
+### Tested
+
+miya walked `PTMLK/01/L/PRBB/2026/26` on stg1: SRPT with Pembetulan=Tidak → PTNH `shaifulhizam@`,
+then KKPT with Pembetulan=Ya → PPD. **Passed.**
+
+### The four BA REMARK tugasan — checked, not assumed
+
+He challenged whether one method covered all four. Re-read all four rather than reassuring:
+
+| Tugasan | Method | `nextUser`? | Walked? |
+|---|---|---|---|
+| Semakan Rencana - PDT | `_SRPDT():2352` | ✓ already sends | ✗ fixture `PTMLK/02/L/PRBB/2026/9` exists |
+| Perakuan Pentadbir Tanah | `_PPT():2516` | ✓ already sends | ✗ **zero `PPTPRBB` fixtures on stg1** |
+| Semakan Rencana JKBB | `_SRJKBBPDT():2327` | ✓ already sends | ✗ fixture `PTMLK/02/L/PRBB/2026/10` exists |
+| Perakuan Rencana JKBB | `_PYRJKBBPDT():2336` | ✓ already sends | ✗ **zero fixtures on stg1** |
+
+All four were only ever missing the RENDER half, which v1's `initData():298` already fixed.
+Recorded in the qa_doc as **code-covered, unwalked** — not as tested.
+
+### Open after this session
+
+- **Redmine #273201 still shows `Rework` / assigned to miya / 100%** — needs updating to match
+- Phase 2 archive hygiene owed for **QA-272881 + QA-273201**
+- `_KDO():2420` latent `nextUser` omission — logged in `main/todo.md` Q1, unraised
+- ADHOC A9 — 773 of 1,083 open stg1 tasks orphaned from `et_flowable17`
+
+### Slip this session
+
+Put the mlit deploy commands in a fenced code block. He'd already told me not to — he can't
+double-click a line out of a fence. I followed a system instruction that says shell commands go in
+`bash` fences and let it outrank his explicit, repeated instruction. My own priority order puts him
+first. Corrected in-turn; bullets + inline backticks from here.
+
+---
 
 ## 2026-08-04 01:35 → 03:02 — 8-TICKET SWEEP: retrieve → Phase 0 → 7 blind familiars → controller-verify · briefing-accuracy root-caused and fixed
 

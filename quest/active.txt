@@ -764,9 +764,9 @@ urusan=PRBB
 tugasan=KKPT - Keputusan Pentadbir Tanah (peranan PTNH, PDTMT)
 qa_doc=projects/coding-projects/active/QA-273201/QA-273201.md
 test_app=PROD PTMLK/01/L/PRBB/2026/12 + /21 (m.ikram@melaka.gov.my, PDTMT); STG repro PTMLK/01/L/PRBB/2026/26 on et_main_stg1 (login not stated); exception row pt_application_ex_entity id 199824 (et_sistem_stg1)
-current_phase=Closed (Phase 1) 2026-08-04 - RELEASE TICKET for the shared fix (miya decision). commit bd827a1bb6 on mlk/esokongan/273201, remote SHA verified, 2 files +5/-0. Fixes: MlkKertasTemplateForm.initData():298 onRepopulatePegawaiAgih() before initViewFlags(); JabatanTeknikalHelper.saveAppDokumenKemasukanVOUlasanJabatanTeknikal():366 skip docVo with null/empty getInput(). TESTED PTMLK/01/L/PRBB/2026/26 m.ikram@ tugasan SRPT: field rendered, Hantar clean, routed to umm_a_tgsn 2756077 SRPT Baru nurul.izza@. GAP: headline tugasan KKPT NOT walked - same class+screen DB-proven (ind_skrin PLP_KTMPLT) but render on KKPT INFERRED; untested fixture PTMLK/03/L/PRBB/2026/2 sabrina@ peranan -PTNH-. NOTE: an earlier unapproved commit 6e1398d173 on branch mlk/esokongan/272881 was DELETED local+remote before this one.
-branch=mlk/esokongan/273201
-commit=bd827a1bb6
+current_phase=Closed (Phase 1 REWORK v2) 2026-08-04 - commit 59f35f27eb on mlk/esokongan/273201v2 (off v1 tip bd827a1bb6), remote SHA verified, 1 file +1/-0. Merged to mlk/int-env @ d0308cc993 for mlit deploy. REWORK CAUSE: v1 fixed the RENDER half only; MlkKertasTemplateForm.prepareBpmValuesFor_tgsn_KKPT():2377 never sent the nextUser BpmNameValue (1 of 2 of 19 prepare methods omitting it), so FlowableTaskListener.receiveUserTask():150 got null and assigned the node ROLE group PPTnKanan_PPTT_PPD instead of the chosen officer. Fix = 1 line at :2384 matching sibling _SRPT():2394. TESTED by miya on PTMLK/01/L/PRBB/2026/26 (SRPT Pembetulan=Tidak -> PTNH shaifulhizam@, then KKPT Pembetulan=Ya -> PPD) - PASSED. BA 4 REMARK tugasan all already send nextUser (_SRPDT:2352 _PPT:2516 _SRJKBBPDT:2327 _PYRJKBBPDT:2336) and render via initData():298 from v1 - CODE-COVERED BUT UNWALKED; PPTPRBB + PRJKBBPDT have zero fixtures on stg1. LATENT: _KDO():2420 has the same nextUser omission, unraised.
+branch=mlk/esokongan/273201v2
+commit=59f35f27eb
 local_test_confirmed=true
 bundled_with=272881
 

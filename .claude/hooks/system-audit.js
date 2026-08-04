@@ -303,7 +303,7 @@ try {
       const candidates = [
         path.join(REPO_ROOT, ref),
         path.join(REPO_ROOT, '.claude', ref),
-        path.join(REPO_ROOT, 'meta', ref),
+        path.join(REPO_ROOT, 'system', ref),
       ];
       if (!candidates.some(p => fs.existsSync(p))) {
         brokenRefs.push(ref);

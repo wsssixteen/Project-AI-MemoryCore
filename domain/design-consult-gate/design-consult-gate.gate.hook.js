@@ -68,7 +68,7 @@ const GUARDED = [
   /[\\/]\.claude[\\/]settings\.json$/i,
   /[\\/]CLAUDE\.md$/i,
   /[\\/]personality\.md$/i,
-  /[\\/]meta[\\/][^\\/]+/i,
+  /[\\/]system[\\/][^\\/]+/i,
   /[\\/]quest[\\/]quest-protocol\.md$/i,
 ];
 

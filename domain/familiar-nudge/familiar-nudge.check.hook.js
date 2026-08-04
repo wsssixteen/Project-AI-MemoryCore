@@ -14,7 +14,7 @@ const LINE_COUNT_THRESHOLD = 500;
 const LINE_COUNT_SCAN_MIN = 20 * 1024; // only bother counting lines once file is >20KB
 
 function isExcluded(normFp) {
-  return /\/meta\/telemetry\//.test(normFp) || /\/node_modules\//.test(normFp);
+  return /\/system\/telemetry\//.test(normFp) || /\/node_modules\//.test(normFp);
 }
 
 function countLines(fp) {

@@ -45,3 +45,25 @@ system/telemetry/hook-fires.jsonl
 
 # core/session-trim.js safety backup — regenerated on every --apply, never a deliverable
 main/current-session.md.bak
+
+# OneDrive machine-conflict copies — "<name>-<MACHINE>.<ext>" / "<name>-<MACHINE>-<n>.<ext>".
+# OneDrive forks a second file whenever two machines write the same path; these are never
+# authored content. 2026-08-04: `git add -A system/` swept 53k lines of hook-fires-miyazaki-3/-4
+# into a commit. The existing rules only named the exact filename, not the conflict variants.
+*-miyazaki.jsonl
+*-miyazaki-[0-9].jsonl
+*-miyazaki.md
+*-miyazaki.js
+*-miyazaki.json
+*-miyazaki.txt
+*-PJNBRidhwan.jsonl
+*-PJNBRidhwan.md
+*-PJNBRidhwan.json
+*-PJNBRidhwan.txt
+
+# Written by RecursiveLoopDetector on EVERY tool call — same churn class as hook-fires.jsonl.
+# Moved meta/ -> system/ in a4516fd, so the old ignore rule no longer covered it.
+system/recent-tool-calls.jsonl
+
+# Once-per-session state marker written by quest-bounty-verify; regenerated, never content.
+domain/quest-bounty/.verify-notified
