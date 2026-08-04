@@ -148,3 +148,5 @@
 {"ts":"2026-08-04T14:32:29.448Z","category":"system-instruction-over-user-instruction"}
 {"ts":"2026-08-04T14:33:16.541Z","category":"emit-shape-not-copyable"}
 {"ts":"2026-08-04T14:42:34.919Z","category":"rename-sweep-incomplete"}
+{"ts":"2026-08-04T03:12:02.606Z","category":"names-in-git-artifacts"}
+{"ts":"2026-08-04T13:27:37.027Z","category":"flowable-contract-not-traced"}
