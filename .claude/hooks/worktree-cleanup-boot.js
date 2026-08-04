@@ -104,9 +104,9 @@ try {
     const rawLines = (run('git branch --list "claude/*"') || '').split('\n').filter(Boolean);
     const stranded = [];
     for (const raw of rawLines) {
-      const checkedOut = /^[*+]/.test(raw.trim());          // * = this worktree · + = another worktree → active, skip
+      const isCurrent = /^\*/.test(raw.trim());             // * = THIS worktree only → skip
       const b = raw.trim().replace(/^[*+]\s*/, '');
-      if (checkedOut || mergedBranches.includes(b)) continue;
+      if (isCurrent || mergedBranches.includes(b)) continue;
       const cherry = run(`git cherry main "${b}"`) || '';
       const ahead = cherry.split('\n').filter(l => l.startsWith('+ ')).length;
       if (ahead > 0) stranded.push(`${b} (+${ahead} unmerged)`);
@@ -116,6 +116,38 @@ try {
     }
   } catch (e) {
     process.stderr.write(`worktree-cleanup-boot stranded-surfacer: ${e.message}\n`);
+  }
+
+  // 2.6 UNCOMMITTED-WORK SURFACER (v1.5 2026-08-05) — 2.5 only sees COMMITTED work.
+  //     A worktree can hold hours of edits that were never committed at all, and step 3
+  //     silently refuses to remove those worktrees without saying they exist. Found the
+  //     hard way: two worktrees held a day's uncommitted rules + a whole new skill.
+  //     NOISE FILTER — a file counts only if it is untracked, or its diff is non-empty
+  //     (`--shortstat` is blank for CRLF-only churn, which six worktrees show constantly).
+  try {
+    const norm0 = p => path.resolve(p).replace(/\\/g, '/').toLowerCase();
+    const NOISE = /(^|\/)(meta\/telemetry\/|node_modules\/|\.verify-notified$|slip-dashboard\.md$|slips?\.jsonl$|slip-counts\.jsonl$|quest\/active\.txt$)/;
+    const wtList = (run('git worktree list --porcelain') || '').split('\n');
+    const paths = wtList.filter(l => l.startsWith('worktree ')).map(l => l.slice(9).trim());
+    const dirty = [];
+    for (const wt of paths) {
+      if (norm0(wt) === norm0(projectRoot)) continue;                  // never report ourselves
+      const st = (run(`git -C "${wt}" status --porcelain`) || '').split('\n').filter(Boolean);
+      const real = [];
+      for (const line of st) {
+        const file = line.slice(3).trim().replace(/^"|"$/g, '');
+        if (NOISE.test(file)) continue;
+        if (line.startsWith('??')) { real.push(file); continue; }      // untracked always counts
+        const stat = run(`git -C "${wt}" diff --shortstat -- "${file}"`) || '';
+        if (stat.trim()) real.push(file);                              // blank => line-endings only
+      }
+      if (real.length) dirty.push(`${path.basename(wt)}: ${real.length} file(s) — ${real.slice(0, 4).join(', ')}${real.length > 4 ? ', …' : ''}`);
+    }
+    if (dirty.length) {
+      process.stderr.write(`⚠️ UNCOMMITTED WORKTREE WORK — ${dirty.length} worktree(s) hold edits committed NOWHERE:\n   ${dirty.join('\n   ')}\n   → salvage before it is lost; these worktrees are never auto-removed and were previously never reported.\n`);
+    }
+  } catch (e) {
+    process.stderr.write(`worktree-cleanup-boot uncommitted-surfacer: ${e.message}\n`);
   }
 
   if (mergedBranches.length === 0) process.exit(0);

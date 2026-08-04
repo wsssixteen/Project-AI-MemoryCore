@@ -35,19 +35,15 @@ domain/release-mlk-plp/state/
 .claude/hooks/*.log.jsonl
 .claude/state/veritas-claim-ledger.jsonl
 domain/*/log.jsonl
-# 2026-08-03: hook-fires.jsonl churns EVERY turn — broke DE stash/merge repeatedly (07-17 audit item (c), finally applied)
 Feature/Forge-Self-Improvement-System/*-log.jsonl
 Feature/Time-Based-Aware-System/reply-log.jsonl
 Feature/Time-Based-Aware-System/reply-log-state.json
 system/telemetry/hook-fires.jsonl
 
-# 2026-08-05: meta/ is a REGENERATED RUNTIME DIR, ignored WHOLESALE.
-# After the meta/ -> system/ rename the curated ledgers live in system/ (slips.jsonl,
-# slip-dashboard.md, registry.jsonl, telemetry/). Whatever recreates itself under meta/ is
-# churn: recent-tool-calls.jsonl, slip-counts.jsonl, telemetry/hook-fires.jsonl.
-# The old line-34 note "kept tracked: meta/slip-counts.jsonl" was stale — that file is no
-# longer tracked anywhere, so it surfaced as ?? on EVERY session-archive dialog.
-# Per-file entries replaced by the directory rule so a NEW churn file cannot leak through.
+# 2026-08-05: meta/ is a REGENERATED RUNTIME DIR — ignored WHOLESALE. After the meta/ -> system/
+# rename the curated ledgers live in system/; anything that recreates itself under meta/ is churn
+# (recent-tool-calls.jsonl, slip-counts.jsonl, telemetry/hook-fires.jsonl). The directory rule
+# replaces the per-file entries so a NEW churn file cannot leak through.
 meta/
 
 # core/session-trim.js safety backup — regenerated on every --apply, never a deliverable
