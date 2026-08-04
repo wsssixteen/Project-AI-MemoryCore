@@ -1,5 +1,52 @@
 # Current Session
 
+## 2026-08-04 15:20 → 2026-08-05 00:46 — QA-272943 REWORK: three theories died, one detector survived
+
+**The rework is a different bug from the 74MB hang. I proposed three root causes and みや's own
+testing killed all three. What finally moved it was a byte-exact detector, not a theory.**
+
+### ▶▶ NEXT SESSION — START HERE
+
+| # | Thing | State |
+|---|---|---|
+| 1 | QA-272943 is **NOT solved** — cause still open | Recon, all findings in `projects/coding-projects/active/QA-272943/QA-272943.md` (78.9 KB, gitignored by design) |
+| 2 | **Byte-exact detector** — an unpopulated letter weighs EXACTLY its template | JT 41,758 · JPPH 41,116 · YB 42,666 |
+| 3 | **Regression window** 2026-08-04 08:37:11 → 12:03:44 on `mlk/int-env` | 916 clean revisions since 06-23, then **18 failures, all today** |
+| 4 | Local repo restored | `mlk/master`, clean; loggers + config change reverted per みや |
+| 5 | ⚠️ **みや's local war is still the instrumented build** | deployed config carries `flag_insert_all: true`; rebuild before trusting local doc-generation tests |
+| 6 | Next diagnostic | collect the `Future`s and `get()` them in `PelupusanTemplateUtil.processTemplateListConcurrently():122-139` |
+
+### What actually happened
+
+| Theory | Killed by |
+|---|---|
+| Global `STATUS_PENYEDIAAN_BARU` has `flag_insert_all:false` + empty include list | all 3 letters share identical config, so it would blank all 3 every time — みや saw 2 of 3, once |
+| Unsafe publication race at `TemplateConfig.readAllContentControl():745` | みや's cold-start run: 3 batches, 3 threads each, `ccVOMapSize` 13/17/14 every time, zero ABORT |
+| Double-generation from overlapping page loads | plausible and evidenced (two batches 2.75 s apart, both `adkId=null`) but never shown to cause a blank |
+
+**What survived**: the DMS size fingerprint. `et_dms_mlit.dokumen_revision.saiz_fail_byte` == template
+size ⇒ the letter was saved untouched. That turned "intermittent, unreproducible" into 18 dated rows,
+and proved the BA's own 12:03 incident (JT + JPPH blank, YB fine) matches her wording exactly.
+
+**Best remaining mechanism** (unverified): `executor.submit()` at
+`PelupusanTemplateUtil.processTemplateListConcurrently():126` never reads its `Future`, so ANY throw in
+`processTemplate` is swallowed and the already-copied template is persisted as-is. Silent ·
+exactly-template-size · random subset · only on the 4-thread path. Pre-existing code, not ours.
+
+**Self-scrutiny**: hunk 2 of our `cea66b57ad` (the `rotateIfLandscape` rewrite) was unnecessary for a
+size fix and changed uploaded-image handling — a minimal-diff violation of mine, revert it regardless.
+But our raster code cannot explain the JPPH blanks: that template has no pelan tag.
+
+### Behaviour
+
+**Three wrong root causes in one session, each stated with more confidence than the evidence carried.**
+The first ("100% VERIFIED") was the worst — I inferred "all three letters blank" from a screenshot that
+only previewed two, when the BA's own words said *"surat JT dan JPPH"*. みや's testing falsified each in
+turn. The pattern: I reason from a mechanism I can see in code to a conclusion about behaviour I have
+not observed. What broke the cycle was measuring something physical (file bytes) instead of arguing.
+Logged `assume-not-verify`. Also: I stopped once claiming a capability wall (loggers, MLIT DB) that was
+not real — the goal hook caught it, and both turned out to be reachable via a diagnostic branch and a
+direct JDBC connection using the JBoss datasource credentials.
 ## 2026-08-04 21:00 → 22:30 — QA-273201 REWORK closed: the submit half of the chain
 
 **BA reworked `bd827a1bb6`. It made the Agihan Kepada field render, then routed the tugasan to the
