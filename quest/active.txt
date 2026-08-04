@@ -770,23 +770,6 @@ commit=91e22e486f
 local_test_confirmed=false
 bundled_with=272881
 
-qa=QA-273294
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\118. ESOKONGAN #273294 - Pelupusan - PT - Checking Sistem Untuk Mandatorikan Maklumat Tanah
-phase=0
-status=hold
-ticket_type=bug
-env=MLKSTG (schema et_main_stg1, branch mlk/release/1.2.0, Module 1.2.0) - etanah-pelupusan
-issue_one_liner=PT SKM Maklumat Tanah - no mandatory validation, so Keluasan Tanah / Tujuan Permohonan / at-least-one-plot can be left blank and the tugasan still sends on (plus Perserahan Kaunter values not carried into SKM)
-assigned_to_me=2026-08-03
-urusan=PT
-tugasan=SKM - Semakan Kemasukan Maklumat (langkah Maklumat Tanah)
-qa_doc=projects/coding-projects/active/QA-273294/QA-273294.md
-test_app=PTMLK/01/L/PT/2026/17 @ MLKSTG et_main_stg1, tugasan SKM, langkah Maklumat Tanah - BA-given 2026-07-30 by Nurul Amirah Nadiah (this OUTRANKS the "not stated" the 08-03 doc recorded; original Description cites PTMLK/01/L/PT/2026/10 @ nurul.izza@melaka.gov.my)
-ba_issue_count=2 - BA numbered TWO issues, not one. (1) Tujuan Permohonan + Perincian Tujuan Permohonan chosen at Perserahan Kaunter do not carry into SKM. (2) tugasan can be sent on with mandatory fields blank (Keluasan Tanah, Tujuan Permohonan, Jenis Pembangunan/Komponen, at-least-one plot record). Issue 1 must NOT be dropped.
-sibling_flag=Issue 1 is the SAME SHAPE as QA-273455 - AWAM/counter-submission data not reaching the officer screen. Check whether one root cause covers both before scoping either.
-current_phase=Rubric 90pct - missing-validation VERIFIED for 2a (Keluasan Tanah + Tujuan Permohonan) and 2b (plot list non-empty + namaKawasanTerlibat); working analog located in etanah-awam PelupusanPermohonanTanahTab.java:1158-1172 per BA refer-AWAM remark. Issue 1 (data-carry from Perserahan Kaunter) read side verified correct, write side upstream and out of workspace.
-branch=n/a-pre-apply
-
 qa=QA-273300
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\117. ESOKONGAN #273300 - Pelupusan - PRBB - Public terima Surat Keputusan Lulus tanpa Tandatang
 phase=0
