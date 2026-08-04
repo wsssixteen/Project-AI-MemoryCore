@@ -755,7 +755,7 @@ close_note=Phase 1 closed 2026-08-03: stg2 patch run by miya (PROD pending); jrx
 qa=QA-273201
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\119. ESOKONGAN #273201 - Pelupusan - PRBB  - Keputusan Pentadbir Tanah - Tiada medan agihan kep
 phase=1
-status=active
+status=closed
 ticket_type=bug
 env=MLKSTG (schema et_main_stg1, branch mlk/release/1.2.0, Module 1.2.0; PROD-reported too) - etanah-pelupusan
 issue_one_liner=PRBB Keputusan Pentadbir Tanah - Agihan Kepada field absent (empty officer list overrides adaPegawaiAgih) so agihanKKPT stays blank and gateway sid-39A4210F throws FlowableException on Hantar
@@ -767,8 +767,11 @@ test_app=PROD PTMLK/01/L/PRBB/2026/12 + /21 (m.ikram@melaka.gov.my, PDTMT); STG 
 current_phase=Closed (Phase 1 REWORK v2) 2026-08-04 - commit 59f35f27eb on mlk/esokongan/273201v2 (off v1 tip bd827a1bb6), remote SHA verified, 1 file +1/-0. Merged to mlk/int-env @ d0308cc993 for mlit deploy. REWORK CAUSE: v1 fixed the RENDER half only; MlkKertasTemplateForm.prepareBpmValuesFor_tgsn_KKPT():2377 never sent the nextUser BpmNameValue (1 of 2 of 19 prepare methods omitting it), so FlowableTaskListener.receiveUserTask():150 got null and assigned the node ROLE group PPTnKanan_PPTT_PPD instead of the chosen officer. Fix = 1 line at :2384 matching sibling _SRPT():2394. TESTED by miya on PTMLK/01/L/PRBB/2026/26 (SRPT Pembetulan=Tidak -> PTNH shaifulhizam@, then KKPT Pembetulan=Ya -> PPD) - PASSED. BA 4 REMARK tugasan all already send nextUser (_SRPDT:2352 _PPT:2516 _SRJKBBPDT:2327 _PYRJKBBPDT:2336) and render via initData():298 from v1 - CODE-COVERED BUT UNWALKED; PPTPRBB + PRJKBBPDT have zero fixtures on stg1. LATENT: _KDO():2420 has the same nextUser omission, unraised.
 branch=mlk/esokongan/273201v3
 commit=91e22e486f
-local_test_confirmed=false
+local_test_confirmed=true
 bundled_with=272881
+closed=2026-08-05
+int_env_merge=440827f18d
+close_note=Cycle-3 PASSED on mlit 2026-08-05. Screenshot evidence: PTMLK/01/L/PRBB/2026/22, tugasan Semakan Rencana Pentadbir Tanah, user HADIFAIZAL BIN HARUN (PPTT), Pembetulan=Ya, Agihan Kepada dropdown lists PPTnKanan-KAMAROLZAMAN BIN MD NOH, PPTT-HADIFAIZAL BIN HARUN, PT-MUHAMMAD SAFFUAN BIN HASHIM. Matches BA expected: papar PT, PPTnKanan, PPTT. Was PT only. Fix: MlkPelupusanPegawaiAgihService.java:542 Arrays.asList(PT) to Arrays.asList(PT,PPTnKanan,PPTT). 1 file +1/-1, commit 91e22e486f on mlk/esokongan/273201v3, merged mlk/int-env @ 440827f18d. Rule written to PERANAN-MAP.md 5a: KELENGKAPAN_YA agihan list is every role strictly BELOW the ceiling of the tugasan node peranan group; node 12.0 is PPTnKanan_PPTT_PPD so ceiling PPD, below = PPTT PPTnKanan PT. Confirmed 4/4 across KKPT:519 PRJKBBPDT:550 SRPT-laneA:536 SRPT-laneB:542.
 
 qa=QA-273300
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\117. ESOKONGAN #273300 - Pelupusan - PRBB - Public terima Surat Keputusan Lulus tanpa Tandatang
