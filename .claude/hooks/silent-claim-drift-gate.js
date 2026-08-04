@@ -111,7 +111,7 @@ process.stdin.on('end', () => {
 
     // Extension C: architecture-doc-sync — system-component edit without arch-doc edit
     const editedSystemComponent = /tool_input.{0,200}(\.claude[\\\/]hooks[\\\/]\w+\.js|\.claude[\\\/]skills[\\\/][^"\\\/]+[\\\/]SKILL\.md|quest[\\\/]quest-protocol\.md|quest[\\\/]active\.txt|\.claude[\\\/]settings\.json)/i.test(text);
-    const editedArchDoc = /tool_input.{0,200}meta[\\\/]system-architecture\.md/i.test(text);
+    const editedArchDoc = /tool_input.{0,200}system[\\\/]system-architecture\.md/i.test(text);
     const archDocBypass = /\[skip-architecture-doc-update\s*:/i.test(text);
     const archDocViolation = editedSystemComponent && !editedArchDoc && !archDocBypass;
 

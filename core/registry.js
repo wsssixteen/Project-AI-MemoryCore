@@ -95,7 +95,7 @@ const skills = safeList(path.join(ROOT, '.claude', 'skills'), d => d.isDirectory
 
 // --- core/lib scripts ---
 const scripts = [];
-for (const dir of ['core', 'lib', 'quest', 'meta']) {
+for (const dir of ['core', 'lib', 'quest', 'system']) {
   for (const e of safeList(path.join(ROOT, dir), d => d.isFile() && d.name.endsWith('.js') && !d.name.includes('.eval.'))) {
     const evalTwin = fs.existsSync(path.join(ROOT, dir, e.name.replace(/\.js$/, '.eval.js')));
     scripts.push({ file: dir + '/' + e.name, eval: evalTwin });
