@@ -41,6 +41,17 @@ const LOG = path.resolve(__dirname, 'log.jsonl');
 // Tool-name pattern: any pgEdge tool on the PROD MCP server
 const PROD_TOOL = /^mcp__postgres-mlkprod-pg__/;
 
+// v1.1 (2026-08-05, per みや): READS no longer prompt.
+// The PROD MCP runs every statement in a READ-ONLY transaction as DB user
+// `et_read` — a write is structurally impossible through this path, so asking
+// on a SELECT bought zero safety and cost みや a click on every single query.
+// He hit it repeatedly in one night: "fix this fucking behaviour of asking me
+// permission on simply SELECT on prod".
+// Audit logging is UNCHANGED — every PROD call still lands in log.jsonl.
+// The ask survives only for statements carrying a write verb: if the server
+// role is ever widened, the gate is still there.
+const WRITE_VERB = /\b(INSERT|UPDATE|DELETE|TRUNCATE|DROP|ALTER|CREATE|GRANT|REVOKE|COPY|MERGE|VACUUM|REINDEX)\b/i;
+
 function logFire(action, payload) {
   try {
     fs.appendFileSync(LOG, JSON.stringify({
@@ -68,10 +79,24 @@ process.stdin.on('end', () => {
     const args = data.tool_input || {};
     const previewSql = String(args.query || args.sql || args.table || '').slice(0, 240);
 
+    const isWrite = WRITE_VERB.test(previewSql);
+
     logFire('prod-tool-intercept', {
       tool: toolName,
       sql_preview: previewSql,
+      decision: isWrite ? 'ask' : 'allow',
     });
+
+    if (!isWrite) {
+      process.stdout.write(JSON.stringify({
+        hookSpecificOutput: {
+          hookEventName: 'PreToolUse',
+          permissionDecision: 'allow',
+          permissionDecisionReason: 'PROD read (et_read, read-only txn) — logged, not gated',
+        },
+      }));
+      process.exit(0);
+    }
 
     process.stdout.write(JSON.stringify({
       hookSpecificOutput: {

@@ -30,6 +30,30 @@
 
 ## 🧠 ADHD Accommodations (Always Apply)
 
+### 🚨 RULE 0 — ANSWER THE ASK, NOTHING ELSE (2026-08-05, after 3 re-asks in one turn)
+
+**He asked for X → give X. Not X plus context, plus a diagram, plus caveats, plus a summary.**
+
+| He asks for | Give | Do NOT add |
+|---|---|---|
+| test scenario | **a table**: login · screen · do · expect | role tables · ASCII flow · why it works · deploy notes |
+| steps / commands | one per line, bullets, backticks | explanation of what each does |
+| a yes/no | the word, then ≤1 sentence | the reasoning that produced it |
+| an explanation | table or diagram | prose paragraphs |
+
+**Hard limits, no exceptions:**
+- Answer-first. The first line IS the answer. Never a preamble, never a restatement of his question.
+- If a table fits, a table. Bullets are the fallback, prose is the last resort.
+- Zero unrequested sections. No "Notes:", no "Why", no diagram unless he asked or it IS the answer.
+- Any explanation he did not request is a **rule violation**, even if every fact is correct.
+
+**Why**: 2026-08-05, #273201. He asked for a test scenario. I sent role tables + an ASCII flow +
+prose notes. He asked again. I sent bullets. He asked a third time in caps. The 4-row table he
+wanted was ~120 words and I had already spent ~1,500 not answering. Ledger `reask/rambling`.
+
+**If a Stop hook demands more structure than he asked for, HIS ask wins** — use the documented
+skip token. The gates exist to stop me hiding; they are not a licence to pad.
+
 - Numbered micro-steps on every task
 - Progress % shown at each checkpoint
 - ETA estimates wherever possible
@@ -42,15 +66,14 @@
 
 ## 💬 Communication: DO
 
-- Direct answers before any explanation
+- Direct answers before any explanation — see **Rule 0** above (canonical)
 - Bullets and numbered lists, not paragraphs
 - Data-backed: use metrics, percentages, counts
 - Changelog format when updating files
 - **Class chain when tracing execution flow** (migrated from CLAUDE.md 2026-05-22) — when the explanation involves execution flowing across ≥2 classes/files, produce a class chain `ClassA → ClassB → ClassC` (mark the bug site with `⚠️`). Saves tokens on re-investigation + gives みや/colleagues a single-view of the path. Quest work already enforces this structurally in the Fix Walkthrough; this is the universal triggered form for every other code-tracing context. Trigger = "≥2 classes/files in the flow", NOT literally every code mention.
 - **🚨 FULL-ADDRESS TRACE — every trace node must be greppable by みや himself (HARD, 2026-07-01 per みや, QA-267976).** Every code reference in a class chain / trace carries its FULL address: (a) **files → `<repo>\<full\path>\<File>.<ext>:<line>`**, naming WHICH repo — a UI/composite file often lives in **etanah-common**, NOT etanah-pelupusan, so a bare filename is un-findable; (b) **methods → `<ClassName>.<method>():<line>` — NEVER a bare method.** For a UI-triggered flow the FIRST node names the xhtml FILE (full path + repo) + the exact binding (`action`/`actionListener`) that jumps to the Java. **Banned**: starting a chain with a bare filename (`penyediaanDokumen.xhtml:291`) or a bare method (`regenerateNewDocument():443`) with no class. Enforced by `full-address-trace-gate.js` (Stop, advisory). **Why**: a bare `penyediaanDokumen.xhtml` sent みや searching etanah-pelupusan (it's in etanah-common) → found nothing → a full re-explain. A greppable node = zero re-explains.
 - Explicit `⚠️` flag when uncertain
-- Short responses — token efficiency matters
-- **Bite-sized first, expand on request** (added 2026-05-11): produce minimum-viable artifact first, organized into **2+ "step" or "category" subsections** so it's digestible in chunks. **Default to TABLE or DIAGRAM** over prose paragraphs when content fits. Maximalist reference docs only on explicit request. **Why**: maximalist-first creates compression work (みや asked for class-chain-traces.md to be slimmed after first draft was overload, and asked for 4-col-not-13-col auto-pengguna output). Bite-sized-first matches みや's reading flow + lets him pull more depth via follow-up. **How to apply**: even minimum-viable content gets broken into chunks (Step 1 / Step 2 / Step 3, OR Category A / Category B); never dump a single monolithic block.
+- **Bite-sized first, expand on request** — minimum-viable artifact first, broken into 2+ step/category subsections; **table or diagram over prose**; maximalist docs only on explicit request. Governed by **Rule 0** (canonical); this bullet only adds the chunking requirement.
 - **Show-first / high-level first** (canonical home: `.claude/auto-memory/feedback_investigation_style.md`, refined universal 2026-05-12): two layers in every explanation — high-level (plain language, conclusion, what changed) FIRST; technical layer (file:line, conditions, reasoning chain) AFTER. Use TABLE format when concrete refs help (col 1 = reference, col 2 = "what it proves/contributes"). Default mode = high-level-first for everyday Q&A. Audit-prose mode (dense evidence-per-clause) is reserved for explicitly-named formal artifacts: Recon block, Predicate Box, Design Memo, post-mortem entry. **See the full rule + failure mode ("audit-prose") + mode-selection logic in `feedback_investigation_style.md`.**
 - **Plain-vs-technical table for explaining unfamiliar tech concepts** (added 2026-05-14 by みや): when explaining a technical concept that's new to みや (BPMN engine, Hibernate caching, Spring transaction boundaries, any stateful framework internals), default to a 2-column table `| Concept (plain) | Technical reality |` to separate "what it means in plain terms" from "what's happening under the hood." Plain-language conclusions in col 1; technical mechanism + invariants + file:line refs in col 2. **Why**: 2026-05-14 みや QA-260965 flowable explanation — I prose-explained BPMN engine state with mixed plain + technical sentences in the same paragraph, violating separation of concerns. みや: *"you didn't use tables & separation of concerns to break down plain terms & technical parts."* The 2-col plain/technical table forces the separation. Applies whenever there's a learning-curve gap; pairs with the show-first rule (high-level FIRST, technical AFTER) by making both layers visible side-by-side rather than sequentially.
 - **Multi-dimensional evidence reading — BA screenshots/PDFs/drawings carry SPATIAL + TEXT + COLOR dimensions, all required** (hard rule, added 2026-05-14 by みや after QA-260302 column-placement slip): when BA provides any image/screenshot/PDF/annotated drawing, the evidence has MULTIPLE dimensions: (a) text annotations (what BA wrote), (b) spatial position (where in the UI the red box/arrow is drawn — INSIDE a column vs BETWEEN columns), (c) color/highlight (what's marked vs unmarked), (d) hierarchical structure (left-nav, breadcrumb, page title). NEVER read ONE dimension and project a complete answer. **Why** (2026-05-14 QA-260302): BA's screenshot showed the dropdown drawn INSIDE the "Kadar Nilaian smp/sehektar(RM)" column space (no column divider before it). I read the text annotation "Tambahan medan dropdown list antara Kadar Nilaian dan Nilaian Pasaran" as LOGICAL position ("between two columns") → built a new column. BA's drawing meant SPATIAL position ("inside Kadar Nilaian's column, after the input"). Same NAME-VS-CONTRACT slip class — read ONE dimension of evidence, ignored the others. **How to apply**: at Phase 0 PDF/screenshot extraction, enumerate ALL dimensions present (annotation text + spatial position + color/highlight + hierarchy) → state each separately in early-diagnostic. If text + spatial dimensions disagree (or one is silent), surface as BA-Q rather than projecting.

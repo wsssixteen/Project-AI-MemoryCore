@@ -28,6 +28,14 @@
  * identical files; excludes the 3.9MB database-archive + node_modules + backup junk)
  * + mirrors quest/active.txt (gitignored runtime state) so boot reads real open quests.
  * Main stays canonical for writes; the worktree copy is a read mirror.
+ *
+ * v1.4 2026-08-05 — Stat-cache refresh (step 1.6), per みや after the
+ * "Archive session with uncommitted changes?" dialog recurred across several sessions.
+ * v1.3's robocopy is what CAUSED it: touching mtimes on tracked files under projects/
+ * makes git report them " M" with an EMPTY diff. Step 1.6 runs
+ * `git update-index --refresh` right after the sync so the phantom rows never reach
+ * the dialog. Paired with `.gitignore` now ignoring `meta/` wholesale (the third
+ * phantom row was meta/slip-counts.jsonl, an orphan left by the meta/ -> system/ rename).
  */
 const { execSync } = require('child_process');
 const fs = require('fs');
@@ -66,6 +74,20 @@ try {
     process.stderr.write(`worktree-cleanup-boot content-sync: ${e.message}\n`);
   }
 
+  // 1.6 Stat-cache refresh (v1.4 2026-08-05, みや — recurring session-archive dialog).
+  //     Step 1.5's robocopy rewrites mtimes on files under projects/ EVERY boot. A few of
+  //     those are git-TRACKED (projects/ is gitignored today, but files added before that
+  //     rule stay tracked — e.g. etanah-knowledge/melaka/DATABASE.md and
+  //     projects/coding-projects/active/salvage-2026-05-26/convention-check-gate.js).
+  //     Git compares mtime+size first, sees the fresh mtime, and reports " M" even though
+  //     the content is byte-identical (blob hash matches; `git diff` is EMPTY).
+  //     Those phantom rows are what the "Archive session with uncommitted changes?" dialog
+  //     counted, session after session, threatening to discard changes that did not exist.
+  //     `git update-index --refresh` re-hashes the suspect entries and drops the false rows.
+  //     Cheap (only re-hashes stat-dirty paths), and it can NEVER discard real work:
+  //     a genuinely modified file keeps its " M" because its hash differs.
+  run('git update-index --refresh');
+
   // 2. Find merged claude/* branches
   const mergedBranches = (run('git branch --merged main') || '').split('\n')
     .map(s => s.trim().replace(/^\*\s*/, ''))
@@ -82,9 +104,9 @@ try {
     const rawLines = (run('git branch --list "claude/*"') || '').split('\n').filter(Boolean);
     const stranded = [];
     for (const raw of rawLines) {
-      const checkedOut = /^[*+]/.test(raw.trim());          // * = this worktree · + = another worktree → active, skip
+      const isCurrent = /^\*/.test(raw.trim());             // * = THIS worktree only → skip
       const b = raw.trim().replace(/^[*+]\s*/, '');
-      if (checkedOut || mergedBranches.includes(b)) continue;
+      if (isCurrent || mergedBranches.includes(b)) continue;
       const cherry = run(`git cherry main "${b}"`) || '';
       const ahead = cherry.split('\n').filter(l => l.startsWith('+ ')).length;
       if (ahead > 0) stranded.push(`${b} (+${ahead} unmerged)`);
@@ -94,6 +116,38 @@ try {
     }
   } catch (e) {
     process.stderr.write(`worktree-cleanup-boot stranded-surfacer: ${e.message}\n`);
+  }
+
+  // 2.6 UNCOMMITTED-WORK SURFACER (v1.5 2026-08-05) — 2.5 only sees COMMITTED work.
+  //     A worktree can hold hours of edits that were never committed at all, and step 3
+  //     silently refuses to remove those worktrees without saying they exist. Found the
+  //     hard way: two worktrees held a day's uncommitted rules + a whole new skill.
+  //     NOISE FILTER — a file counts only if it is untracked, or its diff is non-empty
+  //     (`--shortstat` is blank for CRLF-only churn, which six worktrees show constantly).
+  try {
+    const norm0 = p => path.resolve(p).replace(/\\/g, '/').toLowerCase();
+    const NOISE = /(^|\/)(meta\/telemetry\/|node_modules\/|\.verify-notified$|slip-dashboard\.md$|slips?\.jsonl$|slip-counts\.jsonl$|quest\/active\.txt$)/;
+    const wtList = (run('git worktree list --porcelain') || '').split('\n');
+    const paths = wtList.filter(l => l.startsWith('worktree ')).map(l => l.slice(9).trim());
+    const dirty = [];
+    for (const wt of paths) {
+      if (norm0(wt) === norm0(projectRoot)) continue;                  // never report ourselves
+      const st = (run(`git -C "${wt}" status --porcelain`) || '').split('\n').filter(Boolean);
+      const real = [];
+      for (const line of st) {
+        const file = line.slice(3).trim().replace(/^"|"$/g, '');
+        if (NOISE.test(file)) continue;
+        if (line.startsWith('??')) { real.push(file); continue; }      // untracked always counts
+        const stat = run(`git -C "${wt}" diff --shortstat -- "${file}"`) || '';
+        if (stat.trim()) real.push(file);                              // blank => line-endings only
+      }
+      if (real.length) dirty.push(`${path.basename(wt)}: ${real.length} file(s) — ${real.slice(0, 4).join(', ')}${real.length > 4 ? ', …' : ''}`);
+    }
+    if (dirty.length) {
+      process.stderr.write(`⚠️ UNCOMMITTED WORKTREE WORK — ${dirty.length} worktree(s) hold edits committed NOWHERE:\n   ${dirty.join('\n   ')}\n   → salvage before it is lost; these worktrees are never auto-removed and were previously never reported.\n`);
+    }
+  } catch (e) {
+    process.stderr.write(`worktree-cleanup-boot uncommitted-surfacer: ${e.message}\n`);
   }
 
   if (mergedBranches.length === 0) process.exit(0);
