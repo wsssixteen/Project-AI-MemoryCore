@@ -1,5 +1,25 @@
 active:
 
+qa=QA-272527
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\108. ESOKONGAN #272527 - Pelupusan - Kecilkan Margin Spacing Footer
+phase=1
+status=closed
+current_phase=Closed
+ticket_type=bug
+env=int-env
+urusan=Semua Urusan
+issue_one_liner=Pelupusan - Kecilkan Margin Spacing Footer - cycle 2 (JT PPTPB + JT Ulangan + JPPH x5 + YB x2)
+rework=cycle-2
+quest_start=2026-07-30
+closed=2026-07-31
+branch=mlk/esokongan/272527v2
+commit=ac8e9ba316
+int_env_merge=ab799cf630
+local_test_confirmed=true
+qa_doc=projects/coding-projects/active/QA-272527/QA-272527.md
+scope_anchor=PAGE 1 ONLY - page 2+ trailing sections at 1134/720 are OUT OF SCOPE, do not re-raise
+conflict_note=TemplateSuratNilaianJPPH_PLTP_PSBS.docx conflicted with int-env 272651 pelanCC; resolved keeping pelanCC + applying our pgMar. WILL RECUR when 272651 merges to master
+
 qa=QA-264006
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\58. QA #264006 - Semua Urusan - Tugasan peranan PT - Nama PT tidak sama dengan PT tugas
 phase=1
@@ -29,6 +49,27 @@ env=MLKUAT
 issue_one_liner=PLTP - Penyediaan Risalat MMKN - PDT - Klik Kemaskini > loading for too long
 assigned_to_me=2026-06-04
 
+qa=QA-262762
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\61. QA #262762 - [FAT MCOT ISSUE] OPLPS - Penyediaan Borang 4Ae dan L1e - unable to sim
+phase=1
+status=closed
+ticket_type=bug
+env=UAT
+issue_one_liner=OPLPS - Penyediaan Borang 4Ae dan L1e - "FONT" rework = Maksud Pendudukan should be ALL CAPS (letter-case, not typeface)
+assigned_to_me=2026-06-05
+urusan=OPLPS
+tugasan=Penyediaan Borang 4Ae dan L1e
+rework=cycle-2 (3. Rework/ FONT.png)
+qa_doc=projects/coding-projects/active/QA-262762/QA-262762.md
+env_note=labeled FAT but test app PTMLK/01/L/OPLPS/2026/3 lives in UAT (FAT has 0 OPLPS apps)
+scout=PelupusanReportMethodConstant.java:1763 missing .toUpperCase() (analog :1769/:1771) · effort S · conf 90%
+local_test_confirmed=true
+current_phase=Closed
+quest_start=2026-06-05
+closed=2026-06-05
+branch=mlk/qa/262762v2
+commit=6313bf322c
+
 qa=QA-255940
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\62. QA #255940 - FAT - PSBS - Semakan Permohonan Lulus (SBTL) - Papar peranan Unit yang salah, unit Pelupusan
 phase=1
@@ -50,6 +91,32 @@ branch=mlk/qa/255940
 closed=2026-06-06
 local_test_confirmed=true
 
+qa=QA-260508
+quest_start_ts=2026-06-12T04:14:27.378Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\63. QA #260508 - PT-PSBS-MCL - Panel maklumat plot dikeluarkan hakmilik - Tambah medan
+phase=0
+status=closed
+current_phase=Apply
+local_test_confirmed=false
+ticket_type=bug
+env=MLKUAT
+issue_one_liner=PT/PSBS/MCL - Maklumat Tanah > Panel Kadar Cukai Tanah - added Pengkelasan Tanah (zone) field NOT persisted by page-level Simpan/Seterusnya (TAK DISIMPAN)
+assigned_to_me=2026-06-09
+urusan=PT/PSBS/MCL
+tugasan=Maklumat Tanah (Panel Kadar Cukai Tanah / Maklumat Cukai Tanah)
+rework=cycle-3
+prior_fix=branch mlk/qa/260508 (original add-field fix, shipped 2026-06-02 by Ahmad Ridhwan)
+qa_doc=projects/coding-projects/active/QA-260508/QA-260508.md
+test_app=PTMLK/01/L/MCL/2026/18 (MLKUAT)
+rework_reason=field displays + panel-Simpan persists, but parent-page Simpan/Seterusnya drops it
+commit=6127ba2a64
+branch=mlk/qa/260508v2
+closed=2026-06-06
+reopened=2026-06-09
+rework_folder=4.Rework
+rework_reason_cycle3=Aaron 2026-06-09: deployed but still issue; possible our changes reverted (disrupted other flow); please retest+check
+rework_cycle3_fix=2 edits uncommitted on mlk/master: PelupusanService remove(:16637) deleted + xhtml rendered-gate MCL; root cause = cycle-1 wrong-writer + cycle-2 stale-VO wipe + ungated mandatory field; full doc QA-260508.md cycle-3
+
 qa=QA-246532
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\1. 246532 - Surat Keputusan Tangguh Fix.png
 phase=1
@@ -65,6 +132,140 @@ quest_start=2026-06-05
 closed=2026-06-05
 branch=mlk/qa/246532
 commit=688af6d05e
+
+qa=QA-262495
+status=closed
+phase=1
+current_phase=Closed
+ticket_type=bug
+env=UAT
+urusan=PPJK
+tugasan=PPT - Perakuan Pentadbir Tanah
+rework=cycle-2
+reopened=2026-06-09
+assigned_to_me=2026-06-09
+quest_start=2026-06-09
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\66. QA #262495 - PPJK - Semakan Risalat MMKN-PDT - Klik kemaskini - loading for too lon
+qa_doc=projects/coding-projects/active/QA-262495/QA-262495.md
+scope_anchor=TEMPLATE-ONLY (Aaron mandate, prior code fix reverted); external-doc-imported-into-CC; hang only Risalat MMKN + only Perakuan (PPT) stage
+test_app_fat=PTMLK/01/L/PPJK/2026/1 (shaifulhizam@melaka.gov.my, PPT, aplikasi_id 3372133)
+test_app_uat=PTMLK/01/L/PPJK/2025/35 (nor.aini@melaka.gov.my, PRRMMKNPTG, 2902675) | miya-on PTMLK/01/L/PPJK/2026/11 (norhaslinda.r@, PRMMKNPTG, 2962418)
+ba_latest=2026-06-09 Nurhafizah: PPT Kemas kini loading lama; Penyediaan/Semakan PDT OK. Aaron: template-only, usually external doc imported into CC
+rework_folder=3.Rework
+folder_reactivated=2026-06-09
+local_test_confirmed=true
+commit=ebcfabaf92
+closed=2026-06-10
+branch=mlk/qa/262495v2
+template_fix=applied-uncommitted-TemplateRisalatMMKN_PDT_PPJK-syaratKelulusan-inline-to-block-plus-trailing-p
+ship_state=SHIPPED-template-fix-only_recursion-fix-reverted-as-misdiagnosis
+
+qa=QA-261986
+quest_start_ts=2026-06-12T18:46:02.048Z
+status=closed
+phase=0
+current_phase=Apply
+local_test_confirmed=true
+branch=mlk/qa/261986v2
+commit=a8bc2c4f2f
+pushed=2026-06-13
+closed=2026-06-20
+ticket_type=bug
+env=MLKSTG
+urusan=PSBS
+tugasan=Risalat MMKN PSBS - Syarikat variant
+rework=cycle-3
+reopened=2026-06-20
+assigned_to_me=2026-06-09
+quest_start=2026-06-20
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\67. QA #261986 - FAT - PSBS - Isu pada Risalat MMKN
+qa_doc=projects/coding-projects/active/QA-261986/QA-261986.md
+test_app_uat=PTMLK/01/L/PSBS/2026/10
+prior_fix=cycle-1 mlk/qa/261986 commit d2aa36240b (Individu template fixes)
+issue_one_liner=PSBS Risalat MMKN Jenis Pemohon=Syarikat - same issues as Individu (data tak tertarik, numbering, font, align, template) per Req #237880
+scope_anchor=extend cycle-1 Individu Risalat MMKN fixes to Syarikat variant (TemplateRisalatMMKNSyarikat_PDT_PSBS_*.docx + Syarikat populators)
+ba_latest=2026-06-09 Nurul Amirah: Syarikat template same issues as Individu; refer 'QA #261986 - Syarikat.pdf'
+cycle2_shipped=commit a8bc2c4f2f mlk/qa/261986v2: 6 files. Syarikat Lulus (tahun + director-list CC senaraiAhliLembagaPengarah + 1-section header + §6 block), Syarikat Tolak (premium-words CC + director-list CC + JT->PSBS + dup-Lembaga + 1-section header), Individu Lulus (1-section header), JabatanTeknikal.docx (§3 unbold+indent), additionalJKKLParagraph.docx (§6 block + jenisNoKP), Java (director populator + §6 name title-case + jenisNoKP cell). DB test-data patches (tempoh/premium/sempadan/ADUN) NOT committed. Phase 2 (archive) pending.
+rework_folder=4. Rework
+folder_reactivated=2026-06-20
+test_app_stg=PTMLK/03/L/PSBS/2026/1
+scout_cycle3=tags+populators+deploy ALL verified present (Lulus 81/56, Tolak 69/49; populators registered 1068-1071; fix in release1.0.0 merged 06-15); failing cluster JPPH-valuation/formula/premium-words/syor all read stored maklumatTambahan JSON -> data-side not tag-side; needs mlkstg DB to confirm persistence
+db_confirmed_cycle3=staging et_main_stg1 aplikasi 3378633: JPPH nilaiPasaran=220 kadarNilaian=200 (saved 06-19 14:24, before BA 17:35 test) + formulaPremium + premiumString=36.30 (permohonan_tnh saved 06-20) + KeputusanSyor=true ALL PRESENT; fix in release/1.0.1 since 06-15; doc blank => stale render or war-not-redeployed, NOT data/code; syor diluluskan-vs-BoleDipertimbangkan = BA-Q
+commit_cycle3=6938e9b656
+
+qa=QA-262004
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\68. QA #262004 - FAT - PSBS - Isu pada Ringkasan Risalat
+status=closed
+phase=1
+current_phase=Closed
+ticket_type=bug
+env=UAT
+urusan=PSBS
+tugasan=Ringkasan Risalat (PSBS)
+rework=cycle-2
+reopened=2026-06-09
+assigned_to_me=2026-06-09
+quest_start=2026-06-10
+local_test_confirmed=true
+rework_folder=3.Rework
+folder_reactivated=2026-06-10
+prior_fix=cycle-1 mlk/qa/262004
+test_app=PTMLK/01/L/PSBS/2026/10 (MLK UAT)
+ba_latest=2026-06-09 Nurul Amirah: template tidak sama seperti expected Requirement #237880; Test 1.pdf annotations
+qa_doc=projects/coding-projects/active/QA-262004/QA-262004.md
+scout=CG21 template in repo + populateJalanKampungTempat PSBS-scoped case fix applied; awaiting miya build+test; pending: BA reply 0-Tahun + KM-tu-jadi BA-Q
+branch=mlk/qa/262004v2
+reconcile_note=2026-06-10: deleted premature mlk/qa/262004v2; on clean mlk/master af51853b54 + 3 fix files (restored from backup) + 1-comma config typo fix (faizudin master still broken)
+commit=71446bcaf5
+closed=2026-06-10
+close_note=cycle-2 shipped 71446bcaf5 (4 files incl faizudin config comma #264309 folded in per miya, force-with-lease); pom 0.0.728 pin + config comma remain LOCAL workarounds for amirul #264423 + faizudin #264309 master breakage
+
+qa=QA-262027
+quest_start_ts=2026-06-10T17:42:51.590Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\69. QA #262027 - FAT - PSBS - Isu pada Surat Keputusan PTG kepada PDT
+status=closed
+phase=0
+ticket_type=bug
+env=UAT
+urusan=PSBS
+tugasan=Surat Keputusan PTG kepada PDT
+rework=cycle-2
+reopened=2026-06-10
+assigned_to_me=2026-06-10
+local_test_confirmed=true
+rework_folder=3.Rework
+folder_reactivated=2026-06-10
+prior_fix=cycle-1 mlk/qa/262027
+test_app=PTMLK/01/L/PSBS/2026/10 (MLK UAT)
+ba_latest=2026-06-10 Nurul Amirah: maklumat tidak ditarik + ejaan + align; expected Requirement #237882; Test 1.pdf annotations
+current_phase=Closed
+commit=a545ef221f
+closed=2026-06-11
+branch=mlk/qa/262027v2
+
+qa=QA-262039
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\70. QA #262039 - FAT - PSBS - Isu pada Surat Keputusan Lulus kepada Pemohon
+status=closed
+phase=1
+ticket_type=bug
+env=UAT
+urusan=PSBS
+tugasan=Surat Keputusan Lulus kepada Pemohon
+rework=cycle-2
+reopened=2026-06-10
+assigned_to_me=2026-06-10
+local_test_confirmed=true
+rework_folder=3.Rework
+folder_reactivated=2026-06-10
+prior_fix=cycle-1 mlk/qa/262039
+test_app=PTMLK/01/L/PSBS/2026/10 (MLK UAT)
+ba_latest=2026-06-10 Nurul Amirah: maklumat tidak ditarik + perkataan duplicate; expected Requirement #237883; Test 1.pdf annotations
+current_phase=Closed-Phase1
+quest_start=2026-06-10
+qa_doc=projects/coding-projects/active/QA-262039/QA-262039.md
+closed_cycle2=2026-06-12
+commit_cycle2=cea2e602bc
+branch_cycle2=mlk/qa/262039v2
 
 qa=QA-264293
 status=closed
@@ -352,6 +553,40 @@ closed=2026-07-16
 local_test_confirmed=true
 close_note=Applied+pushed by miya himself 2026-07-16 15:50+0800 (after session end) using this quest's Rubric Candidate 1; merged to mlk/int-env 165f31c667; Redmine Resolved, done=100, assignee->BA Nurul Amirah 2026-07-17. Reconciled by Ruri 2026-07-17 boot from Redmine API + git.
 
+qa=QA-270900
+quest_start_ts=2026-07-20T23:29:39.937Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\100. INTERNAL ISSUE #270900 - BPRZ - Penyediaan-Semakan-Peraku Surat Makluman ke Pemohon - Issue pad
+phase=0
+status=closed
+rework=cycle-2
+reopened=2026-08-03
+rework_folder=3. Rework
+redmine_status=Rework | start 2026-07-16 | no due date | tracker Internal Issue (verified live 2026-08-04) | reassigned to me 2026-08-03 03:23 by Nurhafizah Hasan
+rework_reason=Nurhafizah 2026-08-03 tested @ MLIT (et_main_mlit) on PTMLK/02/L/BPRZ/2026/1 - Semakan Surat Makluman ke Pemohon STILL papar peranan KPT sahaja. BA states the full expected peranan set for all 3 tugasan: Penyediaan=PT, Semakan=KPT/PPD/KPPD, Peraku=PPD/KPPD/PTNH
+rework_test_app=PTMLK/02/L/BPRZ/2026/1 @ MLIT (et_main_mlit) - BA-given 2026-08-03, OUTRANKS the cycle-1 stg2 fixture
+prior_close=cycle-1 closed 2026-07-22 commit 46604841f7 (Part A doc-version fix, code); Part B peranan was fixed by miya via Kemaskini Tugasan UI on et_main_stg2 ONLY - config change never applied to et_main_mlit, which is the leading cycle-2 hypothesis
+cycle1_status_fields_preserved_below=true
+cycle2_root_cause=VERIFIED 2026-08-04 - NOT a code bug. ind_tgsn.peranan is an OVERRIDE, not the source: BpmCallbackService.handleAssignation():782-794 (etanah-common) replaces the BPMN-supplied role ONLY when peranan is non-empty. MLK_PLP_BPRZ.bpmn20.xml already carries the correct sets at :176 PYSMW=PT, :181 SSMW=KPT_PPD_KPPD, :186 PSMW=PPD_KPPD_PTNH. On et_main_mlit row tgsn_id 14822 SSMW = 'KPT' OVERRIDES the correct BPMN value -> BA sees KPT only. ONE row is wrong.
+cycle2_correction=my first pass this session wrongly called PSMW's NULL peranan a second defect needing setting. WRONG - NULL means no override so the BPMN's PPD_KPPD_PTNH flows through; PSMW is the WORKING ANALOG. Corrected after a blind familiar surfaced the override mechanism and I verified it in source.
+cycle2_next_action=miya's call. RECOMMENDED: CLEAR the override (blank peranan) on et_main_mlit.ind_tgsn tgsn_id 14822 via Kemaskini Tugasan UI - 2026-07-22 precedent, reversible, one field, no code, no deploy. Clearing makes the version-controlled BPMN the single source of truth; writing a value re-creates the per-environment drift that caused this rework. Delimiter question is MOOT - :785-791 pads either shape idempotently.
+cycle2_open_hypothesis=peranan may be frozen into umm_a_tgsn.peranan_semasa at task creation (familiar cited :805 -> AppTugasanService.createAppTugasan():211; I read :805 but NOT the service). If so, applications already sitting at SSMW keep the stale role and need a re-route or data touch - settle before calling this fixed.
+cycle2_standing_risk=cycle 1 was closed by a maintenance-UI edit in ONE schema and that is exactly why it came back. et_main_stg2 still carries the KPT-KPPD-PPD override; PROD unchecked. Clearing on mlit alone repeats the mistake in the other direction.
+ticket_type=bug
+env=MLK Staging et_main_stg2
+issue_one_liner=BPRZ - Penyediaan/Semakan/Peraku Surat Makluman ke Pemohon - Issue pada paparan status dokumen dan peranan
+assigned_to_me=2026-07-20
+current_phase=Phase 1 CLOSED + TEST PASSED 2026-07-22 (miya confirmed: 'the test was successful, ticket status is close for us'). Commit 46604841f7 on mlk/internal/270900 (pushed, remote SHA verified), 1 file +2 lines: MlkSuratTemplateForm.overridePenyediaanList():2590-2594 adds TGS_PENGESAHAN_SURAT_MAKLUMAN_KE_PEMOHON to the existing URS_BPRZ SEDIA-refetch branch. PartB (peranan) live via miya Kemaskini Tugasan UI + VERIFIED in DB (umm_a_tgsn 2720467 = -KPT-KPPD-PPD-, pengguna 6093 shahniza). Runtime walk PASSED - the no-clean-fixture concern did not block. REMAINING: Phase 2 archive hygiene only. OPEN follow-up: agihanKepada dead BPM variable = own ticket.
+urusan=BPRZ
+quest_start=2026-07-21
+qa_doc=projects/coding-projects/active/QA-270900/QA-270900.md
+start_first=2026-07-21 miya pick — START HERE next session; Part B SQL ready (SET peranan=NULL), Part A config edit
+branch=mlk/internal/270900
+test_app=PTMLK/02/L/BPRZ/2026/3 aplikasi_id 3401289 (PartB verified, shahniza@melaka.gov.my) | PTMLK/01/L/BPRZ/2026/1 aplikasi_id 3400859 PSMW m.ikram@melaka.gov.my (PartA candidate, 1 doc only)
+closed=2026-08-04
+commit=46604841f7
+local_test_confirmed=true
+close_note=RECONCILED from live Redmine 2026-08-04 15:20 - absent from assigned_to_id=me and status_id=open; Resolved, Nurhafizah Hasan, 100pct. Cycle-2 root cause banked in qa_doc: ind_tgsn.peranan is an OVERRIDE (BpmCallbackService.handleAssignation():782-794); mlit row 14822 SSMW=KPT overrides correct BPMN. Recommended fix (clear the override) never applied by us.
+
 qa=QA-265537
 quest_start_ts=2026-07-22T16:02:33.420Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\101. QA #265537 - MLKFAT - MLPS - Penyediaan Borang 4Ae dan L1e - Maklumat bagi medan Bandar yang telah dikemaskini
@@ -415,6 +650,28 @@ closed=2026-07-31
 close_note=Phase 1 closed. 4 files +57/-0: MlkBorang4AeForm (Fix1a tujuan fallback in initMklmtTanah + Fix2a net pengecualian URS_MLPS-gated) - PelupusanReportMethodConstant (import IConfigurationService + Fix1b tujuan rung isMelaka + Fix3 Fi bare-return byrnFiList isMelaka+URS_MLPS) - PelupusanService (Fix2b net pengecualian isMelaka) - PelupusanTemplateReportMethodParameter (import + Fix4 pemohon fallback isMelaka+URS_MLPS). Remote SHA ac6099373202cb89046f78e99445bb96f694db80 verified == local HEAD. Excluded: .settings (pre-existing Eclipse churn) + untracked jboss-deployment-structure.xml (QA-265537 deploy fix). Jasper binding VERIFIED: page-1 Fi = LaporanBorang4Ae.jrxml:480 RM+P_FI <- methods.put P_FI :167 <- populateFi (Fix3); page-2 Pembaharuan Fi = LaporanBorang4Ae_Sub02.jrxml:79 field fiByrn <- setFiByrn :16028 (Fix2b) - independent bindings so BA Expected#2 (0) and Expected#3 (RM250) do not conflict. OPEN for Phase 2: O1 bare LAIN-LAIN no perincian stored (BA-Q) - O2 Fix2b also reaches MlkPengiraanBayaranLesenForm:220 not named by BA.
 commit_cycle1=ac60993732
 commit_cycle2=678355690d
+
+qa=QA-271918
+quest_start_ts=2026-07-27T07:45:12.138Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\103. ESOKONGAN #271918 - Pelupusan - PT - Maklumat Pasangan Tidak Sama pada Warganegara
+phase=0
+status=closed
+ticket_type=bug
+env=etanah-awam MLK (Jasper jrxml, SQL-in-report)
+issue_one_liner=PT Borang Permohonan - pasangan warganegara prints Malaysia though AWAM saved Singapura (shared PT/PSBS/MCL report)
+assigned_to_me=2026-07-23
+urusan=PT
+qa_doc=projects/coding-projects/active/QA-271918/QA-271918.md
+test_app=p_aplikasi_id 13829 (AWAM draft; applicant aizatmaziz@gmail.com; pasangan tanggungan id 499 no_kp 880808-08-8883); schema et_main_stg2
+current_phase=Rubric COMPLETE via 3-wave audit 2026-07-27. Root cause 99pct VERIFIED: PlpLaporanJadual1P2_Sub03.jrxml:148 joins SAK_WG on PB.WARGANEGARA_ID (applicant) not UP.WARGANEGARA_ID (pasangan); 1-token fix. Blast radius CORRECTED TWICE and settled by controller read: PT+PSBS+MCL all reach Sub03 (getPlpLaporanBorang197:709 + getPlpLaporanJadual18A:744 merge getPlpLaporanJadual1P2) - one fix heals all three. Pekerjaan :149 is a DEAD JOIN (not an analog). DB falsifier re-verified stg2 (tanggungan 499 = Singapura 8293 vs PB Malaysia 2557). Handover note drafted in qa_doc. DUE 2026-07-29.
+difficulty=S
+ownership_fork=jrxml - decide fix-ourselves vs delegate to Reports team (Nurhidayati) per #271721 "no fixes for jrxml" precedent; needs miya call before Apply
+branch=n/a-pre-apply-ownership-fork
+next_action=miya: ownership call (fix jrxml ourselves vs delegate to Reports team; owner name unconfirmed in thread) - then 1-token Apply or handover
+delegated_to=Noor Dayana (Redmine assignee 2026-07-27 09:38)
+delegated_date=2026-07-27
+close_note=RECONCILED from Redmine 2026-08-04 DE: status=Closed, done=100, assignee=Muhammad Shafiq Mohd Yohani. Not our work - jrxml fix was handed to Reports team. Was stale-delegated in active.txt.
+closed=2026-08-04
 
 qa=QA-272867
 quest_start_ts=2026-08-03T04:22:11.552Z
@@ -498,7 +755,7 @@ close_note=Phase 1 closed 2026-08-03: stg2 patch run by miya (PROD pending); jrx
 qa=QA-273201
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\119. ESOKONGAN #273201 - Pelupusan - PRBB  - Keputusan Pentadbir Tanah - Tiada medan agihan kep
 phase=1
-status=closed
+status=active
 ticket_type=bug
 env=MLKSTG (schema et_main_stg1, branch mlk/release/1.2.0, Module 1.2.0; PROD-reported too) - etanah-pelupusan
 issue_one_liner=PRBB Keputusan Pentadbir Tanah - Agihan Kepada field absent (empty officer list overrides adaPegawaiAgih) so agihanKKPT stays blank and gateway sid-39A4210F throws FlowableException on Hantar
@@ -508,10 +765,27 @@ tugasan=KKPT - Keputusan Pentadbir Tanah (peranan PTNH, PDTMT)
 qa_doc=projects/coding-projects/active/QA-273201/QA-273201.md
 test_app=PROD PTMLK/01/L/PRBB/2026/12 + /21 (m.ikram@melaka.gov.my, PDTMT); STG repro PTMLK/01/L/PRBB/2026/26 on et_main_stg1 (login not stated); exception row pt_application_ex_entity id 199824 (et_sistem_stg1)
 current_phase=Closed (Phase 1 REWORK v2) 2026-08-04 - commit 59f35f27eb on mlk/esokongan/273201v2 (off v1 tip bd827a1bb6), remote SHA verified, 1 file +1/-0. Merged to mlk/int-env @ d0308cc993 for mlit deploy. REWORK CAUSE: v1 fixed the RENDER half only; MlkKertasTemplateForm.prepareBpmValuesFor_tgsn_KKPT():2377 never sent the nextUser BpmNameValue (1 of 2 of 19 prepare methods omitting it), so FlowableTaskListener.receiveUserTask():150 got null and assigned the node ROLE group PPTnKanan_PPTT_PPD instead of the chosen officer. Fix = 1 line at :2384 matching sibling _SRPT():2394. TESTED by miya on PTMLK/01/L/PRBB/2026/26 (SRPT Pembetulan=Tidak -> PTNH shaifulhizam@, then KKPT Pembetulan=Ya -> PPD) - PASSED. BA 4 REMARK tugasan all already send nextUser (_SRPDT:2352 _PPT:2516 _SRJKBBPDT:2327 _PYRJKBBPDT:2336) and render via initData():298 from v1 - CODE-COVERED BUT UNWALKED; PPTPRBB + PRJKBBPDT have zero fixtures on stg1. LATENT: _KDO():2420 has the same nextUser omission, unraised.
-branch=mlk/esokongan/273201v2
-commit=59f35f27eb
-local_test_confirmed=true
+branch=mlk/esokongan/273201v3
+commit=91e22e486f
+local_test_confirmed=false
 bundled_with=272881
+
+qa=QA-273294
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\118. ESOKONGAN #273294 - Pelupusan - PT - Checking Sistem Untuk Mandatorikan Maklumat Tanah
+phase=0
+status=hold
+ticket_type=bug
+env=MLKSTG (schema et_main_stg1, branch mlk/release/1.2.0, Module 1.2.0) - etanah-pelupusan
+issue_one_liner=PT SKM Maklumat Tanah - no mandatory validation, so Keluasan Tanah / Tujuan Permohonan / at-least-one-plot can be left blank and the tugasan still sends on (plus Perserahan Kaunter values not carried into SKM)
+assigned_to_me=2026-08-03
+urusan=PT
+tugasan=SKM - Semakan Kemasukan Maklumat (langkah Maklumat Tanah)
+qa_doc=projects/coding-projects/active/QA-273294/QA-273294.md
+test_app=PTMLK/01/L/PT/2026/17 @ MLKSTG et_main_stg1, tugasan SKM, langkah Maklumat Tanah - BA-given 2026-07-30 by Nurul Amirah Nadiah (this OUTRANKS the "not stated" the 08-03 doc recorded; original Description cites PTMLK/01/L/PT/2026/10 @ nurul.izza@melaka.gov.my)
+ba_issue_count=2 - BA numbered TWO issues, not one. (1) Tujuan Permohonan + Perincian Tujuan Permohonan chosen at Perserahan Kaunter do not carry into SKM. (2) tugasan can be sent on with mandatory fields blank (Keluasan Tanah, Tujuan Permohonan, Jenis Pembangunan/Komponen, at-least-one plot record). Issue 1 must NOT be dropped.
+sibling_flag=Issue 1 is the SAME SHAPE as QA-273455 - AWAM/counter-submission data not reaching the officer screen. Check whether one root cause covers both before scoping either.
+current_phase=Rubric 90pct - missing-validation VERIFIED for 2a (Keluasan Tanah + Tujuan Permohonan) and 2b (plot list non-empty + namaKawasanTerlibat); working analog located in etanah-awam PelupusanPermohonanTanahTab.java:1158-1172 per BA refer-AWAM remark. Issue 1 (data-carry from Perserahan Kaunter) read side verified correct, write side upstream and out of workspace.
+branch=n/a-pre-apply
 
 qa=QA-273300
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\117. ESOKONGAN #273300 - Pelupusan - PRBB - Public terima Surat Keputusan Lulus tanpa Tandatang
@@ -527,9 +801,7 @@ qa_doc=projects/coding-projects/active/QA-273300/QA-273300.md
 test_app=PTMLK/02/L/PRBB/2026/1 (PDTJ, live complaint); BA-simulated PTMLK/02/L/PRBB/2026/11
 current_phase=Rubric 90pct - AWAM has zero signing gate for MODUL_PELUPUSAN (confirmed by code); unsigned PDF confirmed from the attached artifact literal placeholders. Module scope VERIFIED etanah-awam, not etanah-teknikal.
 branch=n/a-pre-apply
-urusan=PLPS
-tugasan=PYSKT
-test_app=PTMLK/01/L/PLPS/2026/6 aplikasi_id 3384879 @ sanarimah@melaka.gov.my (PYSKT, pejabat_id 2 = PDT)
+redmine_status=New | start 2026-07-30 | due 2026-08-11 | tracker eSOKONGAN (verified live 2026-08-04)
 
 qa=QA-273625
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\124. INTERNAL ISSUE (PROD) #273625 - MCL - Cetakan Dokumen - Tiada pelan dan Format Surat JPPH (page break)
