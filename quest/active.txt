@@ -783,6 +783,7 @@ current_phase=Rubric 90pct - missing-validation VERIFIED for 2a (Keluasan Tanah 
 branch=n/a-pre-apply
 
 qa=QA-273300
+quest_start_ts=2026-08-04T16:22:09.039Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\117. ESOKONGAN #273300 - Pelupusan - PRBB - Public terima Surat Keputusan Lulus tanpa Tandatang
 phase=0
 status=hold
@@ -881,3 +882,37 @@ redmine_status=New | start 2026-07-31 | due 2026-08-12 | tracker eSOKONGAN (veri
 scope=AWAM (etanah-awam) - the only AWAM-module ticket in this batch
 overlap_flag=Same screen family as QA-272867 (AWAM/pelupusan Maklumat Pemohon twin) - check for overlap before scoping
 branch=n/a-pre-apply
+
+qa=QA-273921
+quest_start_ts=2026-08-04T17:34:44.014Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\125. ESOKONGAN #273921 - PDTJ - PPTPB - Papar Loading ''Sedang Kemaskini'' Lama
+phase=0
+status=hold
+ticket_type=bug
+env=PDTJ > PPTPB > Papar Loading ''Sedang Kemaskini'' Lama
+issue_one_liner=PDTJ > PPTPB > Papar Loading ''Sedang Kemaskini'' Lama
+assigned_to_me=2026-08-04
+tugasan=Penyediaan Kertas Pertimbangan Pentadbir Tanah
+
+qa=QA-273919
+quest_start_ts=2026-08-04T16:48:41.163Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\126. ESOKONGAN #273919 - AWAM - PPJK - Labelling urusan papar Maklumat Pembatalan Perizaban
+phase=0
+status=hold
+ticket_type=bug
+env=AWAM > PPJK : Labelling urusan papar Maklumat Pembatalan Perizaban
+issue_one_liner=AWAM > PPJK : Labelling urusan papar Maklumat Pembatalan Perizaban
+assigned_to_me=2026-08-04
+urusan=PPJK
+
+qa=QA-273621
+quest_start_ts=2026-08-04T18:36:55.451Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\127. ESOKONGAN #273621 - MLPS - Cetakan Dokumen - Tiada pelan L1e
+phase=0
+status=hold
+ticket_type=bug
+env=MLPS > Cetakan Dokumen > Tiada pelan L1e
+issue_one_liner=MLPS > Cetakan Dokumen > Tiada pelan L1e
+assigned_to_me=2026-08-03
+urusan=MLPS - Membaharui Lesen Pendudukan Sementara
+tugasan=Cetakan Dokumen

@@ -420,5 +420,29 @@
         ]
       }
     ]
+  },
+  "permissions": {
+    "allow": [
+      "mcp__postgres-mlit-pg__query_database",
+      "mcp__postgres-mlit-pg__count_rows",
+      "mcp__postgres-mlit-pg__get_schema_info",
+      "mcp__postgres-mlit-pg__execute_explain",
+      "mcp__postgres-mlit-pg__read_resource",
+      "mcp__postgres-mlkstg-pg__query_database",
+      "mcp__postgres-mlkstg-pg__count_rows",
+      "mcp__postgres-mlkstg-pg__get_schema_info",
+      "mcp__postgres-mlkstg-pg__execute_explain",
+      "mcp__postgres-mlkstg-pg__read_resource",
+      "mcp__postgres-mlkstg1-pg__query_database",
+      "mcp__postgres-mlkstg1-pg__count_rows",
+      "mcp__postgres-mlkstg1-pg__get_schema_info",
+      "mcp__postgres-mlkstg1-pg__execute_explain",
+      "mcp__postgres-mlkstg1-pg__read_resource",
+      "mcp__postgres-mlkprod-pg__query_database",
+      "mcp__postgres-mlkprod-pg__count_rows",
+      "mcp__postgres-mlkprod-pg__get_schema_info",
+      "mcp__postgres-mlkprod-pg__execute_explain",
+      "mcp__postgres-mlkprod-pg__read_resource"
+    ]
   }
 }
