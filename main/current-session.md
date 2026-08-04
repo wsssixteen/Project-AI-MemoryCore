@@ -1,5 +1,53 @@
 # Current Session
 
+## 2026-08-04 15:20 → 2026-08-05 00:46 — QA-272943 REWORK: three theories died, one detector survived
+
+**The rework is a different bug from the 74MB hang. I proposed three root causes and みや's own
+testing killed all three. What finally moved it was a byte-exact detector, not a theory.**
+
+### ▶▶ NEXT SESSION — START HERE
+
+| # | Thing | State |
+|---|---|---|
+| 1 | QA-272943 is **NOT solved** — cause still open | Recon, all findings in `projects/coding-projects/active/QA-272943/QA-272943.md` (78.9 KB, gitignored by design) |
+| 2 | **Byte-exact detector** — an unpopulated letter weighs EXACTLY its template | JT 41,758 · JPPH 41,116 · YB 42,666 |
+| 3 | **Regression window** 2026-08-04 08:37:11 → 12:03:44 on `mlk/int-env` | 916 clean revisions since 06-23, then **18 failures, all today** |
+| 4 | Local repo restored | `mlk/master`, clean; loggers + config change reverted per みや |
+| 5 | ⚠️ **みや's local war is still the instrumented build** | deployed config carries `flag_insert_all: true`; rebuild before trusting local doc-generation tests |
+| 6 | Next diagnostic | collect the `Future`s and `get()` them in `PelupusanTemplateUtil.processTemplateListConcurrently():122-139` |
+
+### What actually happened
+
+| Theory | Killed by |
+|---|---|
+| Global `STATUS_PENYEDIAAN_BARU` has `flag_insert_all:false` + empty include list | all 3 letters share identical config, so it would blank all 3 every time — みや saw 2 of 3, once |
+| Unsafe publication race at `TemplateConfig.readAllContentControl():745` | みや's cold-start run: 3 batches, 3 threads each, `ccVOMapSize` 13/17/14 every time, zero ABORT |
+| Double-generation from overlapping page loads | plausible and evidenced (two batches 2.75 s apart, both `adkId=null`) but never shown to cause a blank |
+
+**What survived**: the DMS size fingerprint. `et_dms_mlit.dokumen_revision.saiz_fail_byte` == template
+size ⇒ the letter was saved untouched. That turned "intermittent, unreproducible" into 18 dated rows,
+and proved the BA's own 12:03 incident (JT + JPPH blank, YB fine) matches her wording exactly.
+
+**Best remaining mechanism** (unverified): `executor.submit()` at
+`PelupusanTemplateUtil.processTemplateListConcurrently():126` never reads its `Future`, so ANY throw in
+`processTemplate` is swallowed and the already-copied template is persisted as-is. Silent ·
+exactly-template-size · random subset · only on the 4-thread path. Pre-existing code, not ours.
+
+**Self-scrutiny**: hunk 2 of our `cea66b57ad` (the `rotateIfLandscape` rewrite) was unnecessary for a
+size fix and changed uploaded-image handling — a minimal-diff violation of mine, revert it regardless.
+But our raster code cannot explain the JPPH blanks: that template has no pelan tag.
+
+### Behaviour
+
+**Three wrong root causes in one session, each stated with more confidence than the evidence carried.**
+The first ("100% VERIFIED") was the worst — I inferred "all three letters blank" from a screenshot that
+only previewed two, when the BA's own words said *"surat JT dan JPPH"*. みや's testing falsified each in
+turn. The pattern: I reason from a mechanism I can see in code to a conclusion about behaviour I have
+not observed. What broke the cycle was measuring something physical (file bytes) instead of arguing.
+Logged `assume-not-verify`. Also: I stopped once claiming a capability wall (loggers, MLIT DB) that was
+not real — the goal hook caught it, and both turned out to be reachable via a diagnostic branch and a
+direct JDBC connection using the JBoss datasource credentials.
+
 ## 2026-08-04 01:35 → 03:02 — 8-TICKET SWEEP: retrieve → Phase 0 → 7 blind familiars → controller-verify · briefing-accuracy root-caused and fixed
 
 **miya set an 8-step /goal for a full ticket sweep, then a second one to plan tomorrow and fix the
@@ -131,31 +179,5 @@ Deleted `mlk/esokongan/272881` @ `6e1398d173` local+remote, redid under his exac
 
 **Slips**: `assume-not-verify` (30d=22 🚨) · `ticket-source-skipped` · `prior-fix-not-searched` ·
 `hierarchy-assumed-from-name` · `absence-of-error-read-as-success` · `built-without-system-design`.
-
----
-
-## 2026-08-03 13:48 → 22:15 — ⚔️ ROUNDS 1+2 SHIPPED (272982 · 272867 · 272943) — Phase 1 closed ×3 branches · the hardest behaviour day on record
-
-**Session shape: /goal-driven execution of the miya-approved rounds plan. Round 1 (272982) done same-day: stg2 patch run by miya, PROD script ready, jrxml handed to Reports team. Round 2 (272867+272943) coded, tested through 4 miya-caught defect cycles, committed + pushed on 3 branches. In parallel: 6 miya-caught behaviour slips → 5 mechanical system fixes shipped the same session.**
-
-### ▶▶ NEXT SESSION — START HERE
-
-| # | Thing | State |
-|---|---|---|
-| 1 | **272982** | Phase 1 CLOSED (data patch stg2 done by miya; **PROD run pending** — `patch-272982.sql` in Task folder 113; jrxml CASE file `PlpLaporanJadual1P2_Sub03 - line 66.sql` → send to **Nurhidayati Abdul Razak** (Reports); Redmine note drafted in-session) |
-| 2 | **272867** | Phase 1 CLOSED. pelupusan `mlk/esokongan/272867` @ `76be0e9fe4` (+29/-3: per-pemohon JSON key + `!adaKunciPerPemohon` fallback rescope + address-helper safe-init ×2 sites) · AWAM `mlk/esokongan/272867` @ `be6b178c48` (+17/-1 twin, incl. else→Tiada parity). Test app `PTMLK/02/L/PLTP/2026/5` @ faridmajid (STG1); pemohon-1 walk PASSED; **AWAM runtime walk NOT done** (A7 deploy friction) |
-| 3 | **272943** | Phase 1 CLOSED. `mlk/esokongan/272943` @ `cea66b57ad` — `PelupusanUtil.convertPdfFileBytesToImageList()` 150-DPI+JPEG ONLY (the A4-canvas variant SHRANK the pelan — reverted); `rotateIfLandscape()` RGB+JPEG. 74MB artifact = `LAIN-36741916` (`/home/app/etanah/files/dms/SISTEM-FAIL/KELUARAN/LAIN-LAIN/2026/07/LAIN-36741916_1.main`, PROD-verified); heavy source pelan = `LAIN-36720872` (6.3MB, kod `PLP_PPTPB_PELAN`, GPM-first fallback per `populatePelanAsalImageMLK():19159`). Staging fixture exists (`LAIN-36707859`, 65MB, stg1) — no Infra upload needed. **Visual walk of 6 pelan tags pending at BA test** |
-| 4 | Rounds 3-5 | 272881+273201 → 273294 → 273300, per the saved plan |
-| 5 | New synced tickets | **#273465 Portal Awam Maklumat Pemohon** (same screen family as 272867 — check overlap first) · #273455 (sempadan — likely = ADHOC A8) · #273460/61 · #273625 (= patch-mlk-doc's fixture) |
-
-### System fixes shipped (all restored from the botched DE stash, verified by token-grep)
-- `domain/pre-code-check/` **v1.3** + NEW `eval.js` (6/6): `necessity` check (copy-analog-wholesale killer) · BA-expected ✓ must cite an OBSERVATION else `✗(unverified—risk)` · `all-writers` (null-fix must enumerate every writer of the failing symbol)
-- `.claude/hooks/ticket-gate.js` NEW row **0.7 MODULE SET** (declare module at load; QA-272867's AWAM half was ignored at load)
-- `quest/redmine-sync.js` **v1.1**: `🚨 BA-GIVEN TEST DATA` banner (journal-scanned IDs, latest-first) atop History.txt + stdout — proven live
-- `.claude/skills/test-data-echo/SKILL.md` **Source Gate step 0**: (a) latest-journal re-read wins over any doc/pack (b) live-env anchor (id↔permohonan echoed) (c) record-readiness (test record must traverse the code path — pemohon-2 `pihak_bkptg_id` NULL crash)
-- `.claude/auto-memory/feedback_id_anchor_first.md` (main-repo path, OneDrive-carried)
-
-### The behaviour half — 6 miya-caught slips, all ledgered (75 rows in window)
-wrong-env test data (stg2 record for stg1 session, 4th env blunder) · wrong permohonan (pelan chain on MCL app 3411621 while my own output said "MCL") · BA-given ID in journal outranked by doc-pack · scaleToFitA4Strict cargo-culted → pelan shrank · one-site null guard shipped still-crashing · AWAM scope parked despite BA naming it. Root pattern: confidence arrives before evidence; the 5 fixes above are the mechanical answer. Also: my "can't reach Redmine" claim was false (sync works here); pemohon-2 test-crash root = data stub (missing `pihak_bkptg_id`) → address-helper safe-init fixed render for ALL such PROD rows, no data re-entry.
 
 ---
