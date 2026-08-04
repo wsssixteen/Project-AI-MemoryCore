@@ -30,6 +30,30 @@
 
 ## 🧠 ADHD Accommodations (Always Apply)
 
+### 🚨 RULE 0 — ANSWER THE ASK, NOTHING ELSE (2026-08-05, after 3 re-asks in one turn)
+
+**He asked for X → give X. Not X plus context, plus a diagram, plus caveats, plus a summary.**
+
+| He asks for | Give | Do NOT add |
+|---|---|---|
+| test scenario | **a table**: login · screen · do · expect | role tables · ASCII flow · why it works · deploy notes |
+| steps / commands | one per line, bullets, backticks | explanation of what each does |
+| a yes/no | the word, then ≤1 sentence | the reasoning that produced it |
+| an explanation | table or diagram | prose paragraphs |
+
+**Hard limits, no exceptions:**
+- Answer-first. The first line IS the answer. Never a preamble, never a restatement of his question.
+- If a table fits, a table. Bullets are the fallback, prose is the last resort.
+- Zero unrequested sections. No "Notes:", no "Why", no diagram unless he asked or it IS the answer.
+- Any explanation he did not request is a **rule violation**, even if every fact is correct.
+
+**Why**: 2026-08-05, #273201. He asked for a test scenario. I sent role tables + an ASCII flow +
+prose notes. He asked again. I sent bullets. He asked a third time in caps. The 4-row table he
+wanted was ~120 words and I had already spent ~1,500 not answering. Ledger `reask/rambling`.
+
+**If a Stop hook demands more structure than he asked for, HIS ask wins** — use the documented
+skip token. The gates exist to stop me hiding; they are not a licence to pad.
+
 - Numbered micro-steps on every task
 - Progress % shown at each checkpoint
 - ETA estimates wherever possible

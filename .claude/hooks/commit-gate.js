@@ -44,7 +44,13 @@ function parseBlocks() {
 // (commit message / branch token), else the commit-ready active block.
 function pickTargetState(cmd) {
   const blocks = parseBlocks();
-  const m = cmd.match(/\bQA[ _#/-]*(\d{4,})\b/i);
+  // v2 (2026-08-05): the old pattern required a literal "QA", but the etanah commit
+  // convention is `Ref #<num>` and branches are `mlk/<tracker>/<num>` — so a real commit
+  // NEVER matched and the gate always fell through to guessing from active.txt.
+  const m = cmd.match(/\bQA[ _#/-]*(\d{4,})\b/i)
+    || cmd.match(/\bRef\s*#\s*(\d{4,})\b/i)
+    || cmd.match(/\bmlk\/[a-z-]+\/(\d{4,})/i)
+    || cmd.match(/#(\d{6})\b/);
   let chosen = null;
   if (m) chosen = blocks.find(o => o.qa === `QA-${m[1]}`);
   if (!chosen) {
@@ -93,12 +99,47 @@ process.stdin.on('end', () => {
     const cmd = (input.tool_input && input.tool_input.command) || '';
     if (!/git\s+commit/.test(cmd)) process.exit(0);
 
-    // Skip gate for commits inside the MemoryCore repo itself (system commits)
-    const cwd = process.cwd().replace(/\\/g, '/');
-    const memoryRoot = projectRoot.replace(/\\/g, '/');
-    if (cwd.startsWith(memoryRoot)) process.exit(0);
+    // v2 (2026-08-05, miya, #273201 v3): this gate had been DARK SINCE IT WAS WRITTEN.
+    // The old code read process.cwd() — the HOOK's cwd — which is ALWAYS the MemoryCore
+    // project dir because that is where hooks execute. So `cwd.startsWith(memoryRoot)` was
+    // always true and the hook exited before checks 1/2/3a/3b ever evaluated. Every etanah
+    // commit passed unchecked, including tonight's unapproved 91e22e486f.
+    // The MemoryCore skip must key off the COMMAND'S TARGET REPO (`cd <path> && git commit`),
+    // never the hook's own cwd.
+    const memoryRoot = projectRoot.replace(/\\/g, '/').toLowerCase();
+    const cdMatch = cmd.match(/cd\s+["']?([^"'&|;]+)["']?\s*&&/);
+    const targetRepo = (cdMatch ? cdMatch[1] : process.cwd()).replace(/\\/g, '/').trim().toLowerCase();
+    if (targetRepo.startsWith(memoryRoot)) process.exit(0);   // genuine MemoryCore system commit
 
+    // v2: checks 3a/3b are UNCONDITIONAL on any work-repo commit. Per みや 2026-08-05:
+    // "Whatever the fuck it is if I don't mention always stop at the fucking staging.
+    //  Don't fucking simply commit." Quest resolution must NEVER be able to switch them off —
+    // the old `if (state.qa === 'none' || state.status === 'idle') process.exit(0)` did exactly
+    // that whenever the quest was closed/archived or the QA could not be matched.
     const state = pickTargetState(cmd);
+
+    // Check 3a: staging must be a SEPARATE step (stop-at-staging) — ALWAYS
+    const combinedStage = /git\s+add\b/.test(cmd);
+    const autoStage = /git\s+commit\s+-[a-z]*a[a-z]*\b/i.test(cmd)
+      || /git\s+commit\b[^"']*\s--(amend|all)\b/i.test(cmd);
+    if (combinedStage || autoStage) {
+      blockCommit(`⚔️ COMMIT BLOCKED — ${state.qa}\n\nSTOP AT STAGING. Stage separately ( git add <files> ), show みや the staged diff + the drafted message, THEN commit in its own call.\nBanned: \`git add … && git commit\`, \`git commit -a/-am\`, \`--amend\`, \`--all\`.`);
+    }
+
+    // Check 3b: みや approved THIS commit message (one-shot flag) — ALWAYS
+    const anyFlag = (() => {
+      const dir = path.join(projectRoot, '.claude', 'state');
+      try { return fs.readdirSync(dir).filter(f => /^commit-approved-.*\.flag$/.test(f)); } catch (e) { return []; }
+    })();
+    const namedFlag = path.join(projectRoot, '.claude', 'state', `commit-approved-${state.qa}.flag`);
+    const useFlag = fs.existsSync(namedFlag) ? namedFlag
+      : (anyFlag.length === 1 ? path.join(projectRoot, '.claude', 'state', anyFlag[0]) : null);
+    if (!useFlag) {
+      blockCommit(`⚔️ COMMIT BLOCKED — ${state.qa}\n\nNo approval on record for this commit MESSAGE.\nShow みや: (1) \`git diff --cached\`   (2) the drafted commit message, verbatim.\nHe replies with an approval phrase → that writes a one-shot flag → this gate opens for exactly ONE commit.\n\nDefault when he has said nothing: STOP AT STAGING. Never "simply commit".`);
+    }
+    try { fs.unlinkSync(useFlag); } catch (e) {}  // consume — next commit needs fresh approval
+
+    // Quest-specific checks below only apply when a quest was actually resolved.
     if (state.qa === 'none' || state.status === 'idle') process.exit(0);
 
     // Check 1: local test confirmed
@@ -112,20 +153,7 @@ process.stdin.on('end', () => {
       blockCommit(`⚔️ COMMIT BLOCKED — ${state.qa}\n\nChecklist has unchecked [ ] items.\nComplete all items [x] first.\nFile: ${projectFile}`);
     }
 
-    // Check 3a: staging must be a SEPARATE step (stop-at-staging)
-    const combinedStage = /git\s+add\b/.test(cmd);
-    const autoStage = /git\s+commit\s+-[a-z]*a[a-z]*\b/i.test(cmd)            // -a / -am / -ma as the leading flag
-      || /git\s+commit\b[^"']*\s--(amend|all)\b/i.test(cmd);                  // --amend / --all (outside a quoted message)
-    if (combinedStage || autoStage) {
-      blockCommit(`⚔️ COMMIT BLOCKED — ${state.qa}\n\nPhase 1 closure must STOP AT STAGING.\nStage separately ( git add <files> ), show みや the staged diff + drafted message, THEN commit in its own call.\nBanned here: \`git add … && git commit\`, \`git commit -a/-am\`, \`--amend\`, \`--all\`.`);
-    }
-
-    // Check 3b: みや reviewed + approved (one-shot flag)
-    const flagPath = path.join(projectRoot, '.claude', 'state', `commit-approved-${state.qa}.flag`);
-    if (!fs.existsSync(flagPath)) {
-      blockCommit(`⚔️ COMMIT BLOCKED — ${state.qa}\n\nNo review-approval on record.\nShow みや: (1) \`git diff --cached\`   (2) the drafted commit message.\nThen みや says an approval phrase ("commit approved" / "go ahead commit") → that writes the one-shot flag → this gate opens for exactly one commit.`);
-    }
-    try { fs.unlinkSync(flagPath); } catch (e) {}  // consume — next commit needs fresh approval
+    // (3a/3b moved ABOVE the quest-resolution guard in v2 — they are unconditional now.)
 
     process.exit(0);
   } catch (e) {
