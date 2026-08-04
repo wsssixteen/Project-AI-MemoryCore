@@ -14,7 +14,7 @@ const { spawnSync } = require('child_process');
 
 const HOOK = path.join(__dirname, 'citation-cross-check.check.hook.js');
 const REPO_ROOT = path.resolve(__dirname, '..', '..');
-const TELEMETRY_FILE = path.join(REPO_ROOT, 'meta', 'telemetry', 'hook-fires.jsonl');
+const TELEMETRY_FILE = path.join(REPO_ROOT, 'system', 'telemetry', 'hook-fires.jsonl');
 const results = [];
 function check(n, c, d) { results.push({ n, pass: !!c, d }); }
 

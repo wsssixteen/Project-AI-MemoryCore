@@ -79,13 +79,13 @@ for (const dir of safeList(path.join(ROOT, 'domain'), d => d.isDirectory())) {
 }
 
 // --- telemetry last-fire ---
-const fires = readJsonl(path.join(ROOT, 'meta', 'telemetry', 'hook-fires.jsonl'));
+const fires = readJsonl(path.join(ROOT, 'system', 'telemetry', 'hook-fires.jsonl'));
 const lastFire = new Map();
 for (const r of fires) if (r.hook) lastFire.set(r.hook, r.ts);
 
 // --- lifecycle events from forge registry ---
 const lifecycle = new Map();
-for (const r of readJsonl(path.join(ROOT, 'meta', 'registry.jsonl'))) if (r.name && r.lifecycle) lifecycle.set(r.name, r.lifecycle);
+for (const r of readJsonl(path.join(ROOT, 'system', 'registry.jsonl'))) if (r.name && r.lifecycle) lifecycle.set(r.name, r.lifecycle);
 
 // --- skills ---
 const skills = safeList(path.join(ROOT, '.claude', 'skills'), d => d.isDirectory()).map(d => {

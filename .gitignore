@@ -42,3 +42,6 @@ Feature/Time-Based-Aware-System/reply-log.jsonl
 Feature/Time-Based-Aware-System/reply-log-state.json
 meta/recent-tool-calls.jsonl
 system/telemetry/hook-fires.jsonl
+
+# core/session-trim.js safety backup — regenerated on every --apply, never a deliverable
+main/current-session.md.bak

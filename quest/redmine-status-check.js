@@ -87,4 +87,64 @@ async function checkAll(quests) {
   if (unknown.length) console.log(`   ⚠️  Redmine unreachable for ${unknown.length} quest(s) — status unverified (VPN/offline?)`);
 }
 
-module.exports = { checkOne, checkAll, OPEN_STATUSES };
+// ── Reverse direction: assigned to miya on Redmine but NOT open in active.txt ────────────────
+//
+// WHY (2026-08-04, miya: "session briefing breaks every time and is inaccurate"): checkAll only
+// verifies blocks that ALREADY EXIST locally. It structurally cannot see a ticket that was never
+// added. That morning boot reported "3 open quests" while Redmine had 8 assigned-open — the 4
+// newest had qa_docs on disk but no active.txt block, and #270900 had been reopened to Rework
+// while its local block still said status=closed. Both classes are invisible to checkAll.
+//
+// An UNDERCOUNT is worse than the overcount checkAll already catches: an overcount shows him
+// someone else's ticket and he notices; an undercount silently hides his own work.
+function fetchAssignedOpen() {
+  return new Promise(resolve => {
+    const req = http.get({
+      host: REDMINE_HOST,
+      path: '/redmine/issues.json?assigned_to_id=me&status_id=open&limit=50',
+      headers: { 'X-Redmine-API-Key': REDMINE_KEY },
+      timeout: 6000,
+    }, res => {
+      let d = '';
+      res.on('data', c => d += c);
+      res.on('end', () => {
+        try {
+          const issues = JSON.parse(d).issues || [];
+          resolve(issues.map(i => ({
+            num: String(i.id),
+            subject: i.subject || '',
+            tracker: i.tracker ? i.tracker.name : '',
+            status: i.status ? i.status.name : '',
+            start: i.start_date || null,
+            due: i.due_date || null,
+          })));
+        } catch (_) { resolve(null); }
+      });
+    });
+    req.on('error', () => resolve(null));
+    req.on('timeout', () => { req.destroy(); resolve(null); });
+  });
+}
+
+// localOpenQa: array of qa strings already surfaced as OPEN (e.g. ['QA-273294','270900']).
+// Report-only, same contract as checkAll — prints, never throws, silent on network failure.
+async function checkMissing(localOpenQa) {
+  const live = await fetchAssignedOpen();
+  if (!live) return; // unreachable — checkAll already warns about that
+  const have = new Set((localOpenQa || []).map(q => numOf(q)).filter(Boolean).map(String));
+  const missing = live.filter(i => !have.has(i.num));
+  if (!missing.length) {
+    console.log(`   ✅ Redmine coverage: all ${live.length} assigned-open ticket(s) have an open block in active.txt.`);
+    return;
+  }
+  console.log(`🚨 MISSING FROM active.txt — ${missing.length}/${live.length} ticket(s) assigned-open on Redmine have NO open local block:`);
+  for (const m of missing) {
+    const days = m.start ? Math.floor((Date.now() - Date.parse(m.start)) / 86400000) : '?';
+    console.log(`   #${m.num} [${m.tracker} · ${m.status}] start=${m.start || '—'} (${days}d) due=${m.due || '—'} — ${m.subject.slice(0, 90)}`);
+  }
+  console.log('   → These are miya\'s open work and the briefing MUST include them. Retrieve + open a block:');
+  console.log('     node quest/redmine-sync.js <num>   then   node quest/active-cli.js start <QA> ...');
+  console.log('   → A briefing that omits any of these is a 🔴 verify failure (undercount hides his own work).');
+}
+
+module.exports = { checkOne, checkAll, checkMissing, fetchAssignedOpen, OPEN_STATUSES };

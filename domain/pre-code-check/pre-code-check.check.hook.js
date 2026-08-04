@@ -29,11 +29,11 @@ const REQUIRED_CHECKS = [
   'analog', 'in-file', 'sibling', 'existing-reuse', 'name-by-purpose',
   'minimal-diff', 'logic-matrix', 'blast-radius', 'predicate', 'falsifier',
   'read+write-path', 'BA-expected', 'full-address', 'sibling-diff', 'necessity', 'all-writers',
-  'kod-resolution', 'prior-fix', 'hierarchy',
+  'kod-resolution', 'prior-fix', 'hierarchy', 'flowable-contract',
 ];
 const CONFIDENCE_RX = /\bconfidence\s+\d+\s*%/i;
 
-const EVIDENCE_CHECKS = ['analog', 'existing-reuse', 'blast-radius', 'read+write-path', 'falsifier', 'necessity', 'all-writers', 'kod-resolution', 'prior-fix', 'hierarchy'];
+const EVIDENCE_CHECKS = ['analog', 'existing-reuse', 'blast-radius', 'read+write-path', 'falsifier', 'necessity', 'all-writers', 'kod-resolution', 'prior-fix', 'hierarchy', 'flowable-contract'];
 const EVIDENCE_MIN = 12;
 
 // v1.2: a ✓ on BA-expected must cite an OBSERVATION (something read/queried/rendered), never a
@@ -147,6 +147,14 @@ runHook({ name: 'pre-code-check', event: 'PreToolUse' }, (input) => {
         '     blast-radius    ✓(grepped <symbol> -> N call-sites: <file:line>, ...)',
         '     read+write-path ✓(<Class.method():line> persists it) | ✓(grepped <getter> -> 0 persisters)',
         '     falsifier       ✓(the record shape that would break this + how it differs from the one you tested)',
+        '     flowable-contract ✓(for ANY tugasan/BPM-submit edit: name the BpmNameValues the form SENDS',
+        '                       and what CONSUMES them — quote the prepareBpmValuesFor_tgsn_<KOD>() line AND',
+        '                       the reader, e.g. FlowableTaskListener.receiveUserTask():150. Compare against a',
+        '                       SIBLING tugasan that works.) | ✗(N/A — edit does not touch a tugasan submit path)',
+        '                       QA-273201: fixed the RENDER half, never traced the SUBMIT half —',
+        '                       prepareBpmValuesFor_tgsn_KKPT():2376 omits nextUser (1 of 2 of 19), so the',
+        '                       listener got null and assigned the ROLE group instead of the chosen officer.',
+        '                       A rendering fix is only half a tugasan fix. BA reworked the ticket.',
         '     hierarchy       ✓(for ANY super./override/inherited-field claim: quote the actual EXTENDS',
         '                       chain you READ, class:line each hop — e.g. MlkKertasTemplateForm:102 ->',
         '                       BasePelupusanDokumenForm:114 -> BasePenyediaanDokumenForm:173 -> BaseBpmForm:197)',
