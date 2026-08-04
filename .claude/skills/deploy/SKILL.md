@@ -98,34 +98,38 @@ the release path, and `git revert -m 1 <sha>` undoes it additively. Precedent: `
 
 ---
 
-## 5 · The card — emit verbatim, values substituted, only the requested env
+## 5 · The card — values substituted, only the requested env
 
-```
-DEPLOY — <ticket> → <env>
+🚨 **NEVER put the commands in a code fence, a table cell, or any single multi-line block.**
+みや copies them into a terminal **one at a time** and cannot double-click a line out of a fence.
+**One command per line, as a plain markdown bullet, with the command in single backticks.**
+No leading `./`-as-link, no numbering that glues to the command, no wrapping.
+(Third strike 2026-08-04 — see `emit-shape-not-copyable` in `system/slips.jsonl`.)
 
-  merged   <ticket-branch>
-        →  <base> @ <merge-sha>
-  delta    <n> file(s): <filenames>
-  revert   git revert -m 1 <merge-sha> && git push origin HEAD:<base>
+**Header** (plain lines, no fence):
 
-── INTERNAL ──────────────────────────────
-1  ssh app@172.16.100.162
-2  cd deployment-scripts/mlit
-3  ./deploy-<module>.sh
-4  branch prompt →  mlk/int-env
-5  wait for success message
+**DEPLOY — <ticket> → <env>**
+- merged `<ticket-branch>` → `<base>` @ `<merge-sha>`
+- delta `<n>` file(s): `<filenames>`
+- revert `git revert -m 1 <merge-sha> && git push origin HEAD:<base>`
 
-── STAGING ───────────────────────────────
-1  ssh app@172.16.100.162
-2  cd build-scripts17
-3  ./build-<module>.sh mlk/stag-env
-4  env prompt →  stag
-5  wait for BUILD SUCCESS, then exit
-6  ssh app@172.30.12.203
-7  cd deployment-scripts/stag
-8  ./deploy-<module>.sh
-9  wait for success message
-```
+**INTERNAL** — emit exactly these bullets:
+- `ssh app@172.16.100.162`
+- `cd deployment-scripts/mlit`
+- `./deploy-<module>.sh`
+- at the branch prompt: `mlk/int-env`
+- wait for the success message
+
+**STAGING** — emit exactly these bullets:
+- `ssh app@172.16.100.162`
+- `cd build-scripts17`
+- `./build-<module>.sh mlk/stag-env`
+- at the env prompt: `stag`
+- wait for BUILD SUCCESS, then `exit`
+- `ssh app@172.30.12.203`
+- `cd deployment-scripts/stag`
+- `./deploy-<module>.sh`
+- wait for the success message
 
 Then stop.
 
@@ -150,6 +154,22 @@ Skill-only Feature: no hook, no `settings.json` entry.
 Nuke: `rm -rf .claude/skills/deploy/ domain/deploy/` · remove the `registry.jsonl` line for
 `deploy` · revert the `system/system-architecture.md` §4.4 row.
 Eval: `node domain/deploy/eval.js`.
+
+## Version
+
+**v1.1 — 2026-08-04.** §5 card container changed from a single code fence to plain per-command
+bullets with inline backticks; added the explicit no-fence rule at the top of §5.
+**Why**: `emit-shape-not-copyable`, third occurrence (prior two: the baseline 1.0.10 hand-off card,
+and `./deploy-pelupusan.sh` auto-linkifying). みや copies commands one at a time and a fence gives
+one copy button for the whole block. The skill spec itself was mandating the banned shape, so the
+slip would have recurred on every future `/deploy` regardless of intent.
+**Spec-preservation diff (Rule 6 v1.2 check a)**: header fields (merged / delta / revert) PRESERVED ·
+INTERNAL 5 steps PRESERVED verbatim · STAGING 9 steps PRESERVED verbatim · "Then stop" PRESERVED ·
+§6 hard rules UNTOUCHED. **Zero specs dropped** — only the container changed.
+**Fire + effect check (b, c)**: `node domain/deploy/eval.js` re-run this session, result recorded
+in the DE change manifest.
+
+*v1.0 — 2026-07-27. Built during #271721.*
 
 ## Origin
 

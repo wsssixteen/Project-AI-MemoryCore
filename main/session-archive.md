@@ -4,6 +4,32 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-03 13:48 → 22:15 — ⚔️ ROUNDS 1+2 SHIPPED (272982 · 272867 · 272943) — Phase 1 closed ×3 branches · the hardest behaviour day on record
+
+**Session shape: /goal-driven execution of the miya-approved rounds plan. Round 1 (272982) done same-day: stg2 patch run by miya, PROD script ready, jrxml handed to Reports team. Round 2 (272867+272943) coded, tested through 4 miya-caught defect cycles, committed + pushed on 3 branches. In parallel: 6 miya-caught behaviour slips → 5 mechanical system fixes shipped the same session.**
+
+### ▶▶ NEXT SESSION — START HERE
+
+| # | Thing | State |
+|---|---|---|
+| 1 | **272982** | Phase 1 CLOSED (data patch stg2 done by miya; **PROD run pending** — `patch-272982.sql` in Task folder 113; jrxml CASE file `PlpLaporanJadual1P2_Sub03 - line 66.sql` → send to **Nurhidayati Abdul Razak** (Reports); Redmine note drafted in-session) |
+| 2 | **272867** | Phase 1 CLOSED. pelupusan `mlk/esokongan/272867` @ `76be0e9fe4` (+29/-3: per-pemohon JSON key + `!adaKunciPerPemohon` fallback rescope + address-helper safe-init ×2 sites) · AWAM `mlk/esokongan/272867` @ `be6b178c48` (+17/-1 twin, incl. else→Tiada parity). Test app `PTMLK/02/L/PLTP/2026/5` @ faridmajid (STG1); pemohon-1 walk PASSED; **AWAM runtime walk NOT done** (A7 deploy friction) |
+| 3 | **272943** | Phase 1 CLOSED. `mlk/esokongan/272943` @ `cea66b57ad` — `PelupusanUtil.convertPdfFileBytesToImageList()` 150-DPI+JPEG ONLY (the A4-canvas variant SHRANK the pelan — reverted); `rotateIfLandscape()` RGB+JPEG. 74MB artifact = `LAIN-36741916` (`/home/app/etanah/files/dms/SISTEM-FAIL/KELUARAN/LAIN-LAIN/2026/07/LAIN-36741916_1.main`, PROD-verified); heavy source pelan = `LAIN-36720872` (6.3MB, kod `PLP_PPTPB_PELAN`, GPM-first fallback per `populatePelanAsalImageMLK():19159`). Staging fixture exists (`LAIN-36707859`, 65MB, stg1) — no Infra upload needed. **Visual walk of 6 pelan tags pending at BA test** |
+| 4 | Rounds 3-5 | 272881+273201 → 273294 → 273300, per the saved plan |
+| 5 | New synced tickets | **#273465 Portal Awam Maklumat Pemohon** (same screen family as 272867 — check overlap first) · #273455 (sempadan — likely = ADHOC A8) · #273460/61 · #273625 (= patch-mlk-doc's fixture) |
+
+### System fixes shipped (all restored from the botched DE stash, verified by token-grep)
+- `domain/pre-code-check/` **v1.3** + NEW `eval.js` (6/6): `necessity` check (copy-analog-wholesale killer) · BA-expected ✓ must cite an OBSERVATION else `✗(unverified—risk)` · `all-writers` (null-fix must enumerate every writer of the failing symbol)
+- `.claude/hooks/ticket-gate.js` NEW row **0.7 MODULE SET** (declare module at load; QA-272867's AWAM half was ignored at load)
+- `quest/redmine-sync.js` **v1.1**: `🚨 BA-GIVEN TEST DATA` banner (journal-scanned IDs, latest-first) atop History.txt + stdout — proven live
+- `.claude/skills/test-data-echo/SKILL.md` **Source Gate step 0**: (a) latest-journal re-read wins over any doc/pack (b) live-env anchor (id↔permohonan echoed) (c) record-readiness (test record must traverse the code path — pemohon-2 `pihak_bkptg_id` NULL crash)
+- `.claude/auto-memory/feedback_id_anchor_first.md` (main-repo path, OneDrive-carried)
+
+### The behaviour half — 6 miya-caught slips, all ledgered (75 rows in window)
+wrong-env test data (stg2 record for stg1 session, 4th env blunder) · wrong permohonan (pelan chain on MCL app 3411621 while my own output said "MCL") · BA-given ID in journal outranked by doc-pack · scaleToFitA4Strict cargo-culted → pelan shrank · one-site null guard shipped still-crashing · AWAM scope parked despite BA naming it. Root pattern: confidence arrives before evidence; the 5 fixes above are the mechanical answer. Also: my "can't reach Redmine" claim was false (sync works here); pemohon-2 test-crash root = data stub (missing `pihak_bkptg_id`) → address-helper safe-init fixed render for ALL such PROD rows, no data re-entry.
+
+---
+
 ## 2026-08-03 15:40 → 18:50 — 🩹 #273625 MCL Surat JPPH patch + BUILT the /patch-mlk-doc skill I should have had
 
 **A patch-only PROD ticket. The work was one query; the lesson was that I re-explored the DMS schema
@@ -1580,4 +1606,5 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 

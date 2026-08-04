@@ -39,7 +39,7 @@ check('F1 eval file born', fs.existsSync(path.join(TMP, 'domain', 'probe-check',
 let settings = {};
 try { settings = JSON.parse(fs.readFileSync(path.join(TMP, '.claude', 'settings.json'), 'utf8')); } catch (e) { check('F1 settings still valid JSON', false, e.message); }
 check('F1 registered under Stop', JSON.stringify(settings).includes('probe-check'), '');
-check('F1 registry line', fs.existsSync(path.join(TMP, 'meta', 'registry.jsonl')) && fs.readFileSync(path.join(TMP, 'meta', 'registry.jsonl'), 'utf8').includes('"probe-check"'), '');
+check('F1 registry line', fs.existsSync(path.join(TMP, 'system', 'registry.jsonl')) && fs.readFileSync(path.join(TMP, 'system', 'registry.jsonl'), 'utf8').includes('"probe-check"'), '');
 check('F1 echo emitted', /ECHO\s+Trigger: when eval probe trigger/.test(r.stdout), r.stdout.slice(0, 120));
 
 // F2 — collision → refine-first

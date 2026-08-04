@@ -38,9 +38,10 @@ const EV = {
   allWriters: 'all-writers ✗(N/A — control-flow arm, no value guarded)',
   kodResolution: 'kod-resolution ✓(Perakuan Pentadbir Tanah -> PPTPRBB, ind_tgsn 5134409)',
   hierarchy: 'hierarchy ✓(MlkKertasTemplateForm:102 -> BasePelupusanDokumenForm:114 -> BaseBpmForm:197)',
+  flowable: 'flowable-contract ✓(prepareBpmValuesFor_tgsn_KKPT():2376 sends agihanKKPT only; FlowableTaskListener:150 reads nextUser)',
   priorFix: 'prior-fix ✓(git log --grep Agihan Kepada -> f33f8632d8 onRefreshComponent)',
 };
-const TAIL = ` · in-file ✓ · sibling ✓ · ${EV.existingReuse} · name-by-purpose ✓ · minimal-diff ✓ · logic-matrix ✓ · ${EV.blastRadius} · predicate ✓ · ${EV.falsifier} · ${EV.readWrite} · BA-expected ✓(observed History.txt:38-43) · full-address ✓ · sibling-diff ✓ · ${EV.necessity} · ${EV.allWriters} · ${EV.kodResolution} · ${EV.priorFix} · ${EV.hierarchy} · confidence 85%`;
+const TAIL = ` · in-file ✓ · sibling ✓ · ${EV.existingReuse} · name-by-purpose ✓ · minimal-diff ✓ · logic-matrix ✓ · ${EV.blastRadius} · predicate ✓ · ${EV.falsifier} · ${EV.readWrite} · BA-expected ✓(observed History.txt:38-43) · full-address ✓ · sibling-diff ✓ · ${EV.necessity} · ${EV.allWriters} · ${EV.kodResolution} · ${EV.priorFix} · ${EV.hierarchy} · ${EV.flowable} · confidence 85%`;
 
 const FULL_CHECK_LINE = `CODE-CHECK: ${EV.analog}${TAIL}`;
 const CROSS_JUSTIFIED = `CODE-CHECK: analog ✗(novel defensive helper)${TAIL}`;

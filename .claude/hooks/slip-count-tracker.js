@@ -27,7 +27,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
-const LEDGER = path.join(PROJECT_ROOT, 'meta', 'slip-counts.jsonl');
+const LEDGER = path.join(PROJECT_ROOT, 'system', 'slip-counts.jsonl');
 const DATE_CELL = /^\d{4}-\d{2}-\d{2}/;            // col-1 date ⇒ this is a slip ENTRY row
 const SEVEN_DAY_ESCALATION = 2;
 
