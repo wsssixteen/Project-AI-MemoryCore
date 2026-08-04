@@ -52,6 +52,35 @@ decommissioned UAT/FAT) · `CLAUDE_CODE_SUBAGENT_MODEL=sonnet` cleared — it ha
 every `model: opus` I passed.
 
 **Slips**: `reask/rambling` · `reask/verbose` · `handed-miya-a-query-i-could-run`.
+
+### Built AFTER the DE close — DE Step 7.5 IMPROVEMENT SWEEP (commit `087b009`)
+
+miya, on having to ask for the improvement assessment two goals running: *"add this rule into our
+domain expansion. So that I don't have to always tell you to SPECIFICALLY try to search for points to
+improve our agentic system, our workflows, our debugging efficiency & accuracy, our etanah issues
+solving, our sweep."*
+
+| Piece | Where |
+|---|---|
+| **Step 7.5**, mandatory every DE, five fixed axes — A1 agentic system · A2 quest workflow · A3 debugging efficiency+accuracy · A4 etanah issue-solving · A5 sweep/file-sweep | `Feature/Domain-Expansion/expansion-protocol.md` §Step 7.5 |
+| step wired into the orchestrator table **and** the step-line so it actually fires | `.claude/skills/domain-expansion/SKILL.md` |
+| **`type=proposal`** lane — ideas get ruled on, not admired | `core/slips.js` → `slip-dashboard.md` § 💡 Open proposals (verified rendering at `:91`) |
+
+Output contract: **(a)** a dated assessment under `system/` with a concrete instance per claim, and
+**(b)** brainstormed proposals each naming its **eval case**. An axis with nothing to report is stated,
+never silent. Weekly audit rules each proposal BUILD/DROP/DEFER; **unruled >14 days is itself a
+finding** — the 2026-07-22 parked-enforcement-row failure.
+
+Design note: proposals got their own type rather than reusing `upgrade`, because `upgrade` means
+*shipped* — an idea filed there is invisible as an open decision, which is exactly how the No-Resit
+row sat parked for two days.
+
+**7 proposals filed** from this session. Highest-yield is A5 (evidence-manifest gate) — the mechanical
+form of the multi-dimensional-evidence rule that has existed as prose since 2026-05-14 and was ignored
+tonight on the one ticket where the image was decisive.
+
+⚠️ **Sequencing note for the next audit**: this work landed *after* the DE close-out, so DE's own
+Step 7.5 never ran on the session that created it. First real firing is next DE.
 ## 2026-08-04 22:33 → 2026-08-05 03:30 — QA-273300: THREE gates, two of them shipped wrong, third one verified
 
 **I shipped a wrong fix to two env branches, then a second wrong fix, before adversarial familiars
