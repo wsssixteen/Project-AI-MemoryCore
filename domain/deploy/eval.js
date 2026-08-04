@@ -59,7 +59,7 @@ check('awam maps to deploy-awam.sh', /`awam`.*deploy-awam\.sh/s.test(src));
 check('plp maps to deploy-pelupusan.sh', /`plp`.*deploy-pelupusan\.sh/s.test(src));
 
 // --- 6. git safety rails --------------------------------------------------
-check('recovery tag step present', /git tag -f ruri\/pre-<env>-<ticket>/.test(src));
+check('recovery tag step present', /git tag -f pre-<env>-<ticket>/.test(src));
 check('revert recipe present', /git revert -m 1/.test(src));
 check('bans checking out stale local env branch', /Never\*{0,2}\s*check out the local/i.test(src));
 check('already-merged guard present', /merge-base --is-ancestor/.test(src));
@@ -73,15 +73,16 @@ check('271721 int-env miss recorded', /271721[\s\S]{0,200}int-env/.test(src));
 check('release scope excluded', /Not a release[\s\S]{0,120}release-mlk-plp/.test(src));
 check('no-success-claim rule present', /Never claim build\/deploy succeeded/i.test(src));
 
-// --- 9. copyable emit shape (v1.1, 2026-08-04) ---------------------------
-// Third `emit-shape-not-copyable` strike: the card had been spec'd INSIDE a code
-// fence, so miya got one copy button for the whole block instead of one line per
-// command. Assert the ban is stated AND that section 5 carries no fence.
-check('no-fence rule stated in section 5', /NEVER put the commands in a code fence/i.test(src));
-check('one-command-per-line rule stated', /One command per line/i.test(src));
-const sec5 = (src.split(/^## 5 [\s\S]*?$/m)[1] || '').split(/^## 6 /m)[0] || '';
-check('section 5 contains no code fence', !/```/.test(sec5));
-check('deploy commands emitted as bullets', /^- `ssh app@172\.16\.100\.162`$/m.test(src));
-
+// --- 9. copyable emit shape (v1.2, 2026-08-05) ---------------------------
+// CORRECTED. v1.1 asserted 'no fences at all, plain bullets' - an over-correction.
+// miya's words were 'hard to just double click and copy EACH command': one ```bash
+// block PER command gives each its own copy button and satisfies that; ONE big fence
+// wrapping the whole card does not. The skill moved to the per-command form from
+// another worktree and this eval was still asserting the old rule - it went 24/24 to
+// 19/5, which is the eval doing its job.
+check('ban on wrapping the WHOLE card in one block', /NEVER wrap the whole card in one code block/i.test(src));
+check('one-block-per-command rule stated', /own .{0,4}```bash.{0,4} block/i.test(src));
+check('prose lines stay unfenced', /never fenced/i.test(src));
+check('local catch-up: checkout then pull', /git checkout <base>/.test(src) && /git pull --ff-only origin <base>/.test(src));
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail === 0 ? 0 : 1);

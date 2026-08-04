@@ -1029,3 +1029,71 @@ register `ADHOC-REGISTER.md` A8.
 - The pgEdge MCP server DEFINITIONS in `C:\Users\Ridhwan\.claude.json` carry full env creds (PGHOST/PGPORT/PGDATABASE/PGUSER/PGPASSWORD) for all 4 envs (mlit / mlkstg stg2-user / mlkstg stg1-user / prod et_read). When the MCP tools are not loaded in a session, `psycopg2` (installed) + a stdin-SQL runner reads them directly — see session scratchpad pattern `pg_query.py` (read-only session, echoes `current_schema()` per the stg1/stg2 rule).
 - Column truths verified live: the PTMLK permohonan id lives in **`umm_aplikasi.id_pengenalan`** (there is NO `id_permohonan` on umm_aplikasi) · `umm_a_tgsn` PK = `a_tgsn_id`, actor = `tdkn_oleh`, office = `pejabat_id` · selecting `status` on `rjk_senarai_ahli_kumpulan` can throw `schema "sptb05" does not exist` (view/trigger quirk) — omit that column.
 - PROD: `et_read` default schema is `public` — qualify `et_main.` on every table (staging users default to their own schema; みや-handed scripts stay unqualified as always).
+
+---
+
+## 17. Surat Keputusan lifecycle — document status vs tugasan (added 2026-08-05, QA-273300)
+
+Three wrong gates were built on guesses about this before it was measured. Do not re-derive it.
+
+### 17.1 The ladder
+
+`PYSK` (penyediaan) → `SSK` (semakan) → `PSSK` (peraku) → `PTBUT2` (pengagihan/hand-over) → `CT_BSC_PLP` (cetakan)
+
+Per-urusan variants of the same three-step head — kods taken from `template.config.json` tugasanList,
+NOT from name resemblance:
+
+| Ladder | Penyediaan | Semakan | **Peraku** | Urusan |
+|---|---|---|---|---|
+| Lulus | `PYSK` | `SSK` | **`PSSK`** | PRZ · RPPLP · PPTPB · PPJK · PRBB · PLPS |
+| Lulus (N5A) | `PYSKN5A` | `SSKN5A` | **`PSKN5A`** | PT · PLTP · MCL · PSBS |
+| Tolak | `PYSTP` | `SSTP` | **`PSTP`** | PLPS · PRU · PRBB · PPJK · BPRZ · RPPLP · PT · PLTP · PRZ · MCL · PPTPB · PSBS |
+
+**Cetakan is ONE universal kod for all of them: `CT_BSC_PLP`** (`PelupusanTugasanConstant.java:330`),
+reached via `<callActivity calledElement="MLK_PLP_SUB_UPN">`.
+
+### 17.2 🚨 `CT_BSC_PLP` is SHARED and runs MANY times per application
+
+It is not "the Cetakan for this letter" — a flow calls the same sub-process from several points
+(PPJK 5× · PRZ 4× · PLPS/PRBB/PRU/PPTPB 3×). Real rows: mlit `PTMLK/02/L/PLPS/2026/2` printed
+**2026-07-01 and 2026-07-09**; `PTMLK/02/L/BPRZ/2026/1` printed **07-22 and 08-03**.
+
+**Consequence**: "does a completed `CT_BSC_PLP` exist" is TRUE weeks before the Surat Keputusan is
+even written. To mean "printed *this* letter", require a completed `CT_BSC_PLP` whose `trkh_mula`
+is **after** the latest completed peraku tugasan.
+
+### 17.3 `umm_a_dok_keluaran.status_id` — when each value is actually written
+
+| Status | Written at | Note |
+|---|---|---|
+| `STATUS_PENYEDIAAN_BARU` | ADK creation, during penyediaan | |
+| `STATUS_PENYEDIAAN_SEDIA` / `_SEMAK` | penyediaan / semakan | |
+| `STATUS_PENYEDIAAN_PERAKU` | when the officer clicks Peraku — **tugasan still open** | not "peraku finished" |
+| **`NULL`** | when the peraku tugasan **completes** — **BEFORE cetakan** | ⚠️ NOT "released". mlit `8507340` last_modified `01:54:14` inside the PSSK window `01:53:41–01:54:27`; `CT_BSC_PLP` only started `01:54:47`. `NULL` is also the status of never-status-managed legacy rows |
+| `STATUS_PENYEDIAAN_CETAK` / `_SELESAI` | **zero rows ever** in Melaka PROD for `SRT_KPTSN_PLP` · `SRT_KPTSN_TLK` · `S_TLK` · `S_TLK_RGKS` · `SRT_KPTSN_LLS` | `BasePenyediaanDokumenForm.onCetakSemua():436-438` writes CETAK but not for these kinds |
+
+**So the status column alone can never express "after cetakan".** It tops out at peraku.
+
+### 17.4 `A_TGSN_ID` exists in the table and is NOT mapped in the entity
+
+`umm_a_dok_keluaran.a_tgsn_id` holds the owning tugasan (NULL while in penyediaan; set to the
+semak/peraku tugasan afterwards) — a genuine per-document link, verified 25/25 rows on stg1.
+**But `AppDokumenKeluaran` in `etanah-domain 1.0.4-MLK` does not map it** (it maps `STATUS_ID`,
+`JNS_DOK_ID`, `DOK_ID` + 11 other joins; no `A_TGSN_ID`, no `getAppTugasan()`). Any Java fix needing
+it requires an `etanah-domain` change — another team's artifact. Read entities from the sources jar:
+`E:\Dev\.m2_etanah\my\gov\etanah\etanah-domain\<ver>\etanah-domain-<ver>-sources.jar`.
+
+### 17.5 `AppTugasan` fields that DO exist
+
+`tarikhMula` ← `@Column("TRKH_MULA")` · `adalahAktif` · `getTugasan().getKod()`.
+⚠️ **`a_tgsn_id` order does NOT match `trkh_mula` order** — 3 stg1 applications have tasks whose row
+ids run out of chronological sequence. Never use the id as a time proxy; use `tarikhMula`.
+
+### 17.6 Which urusan even reach cetakan
+
+22 of 34 modul-PLP urusan define `CT_BSC_PLP` in `ind_tgsn`. The 12 without are utilities and
+JKKT-rayuan variants (`UPL` · `UPP` · `UPS_PLP` · `USP` · `UKBA` · `PS` · `PPDB` · `RHHLL` · `RKPJL`
+· `RLKJL` · `RMTJL` · `RMTL`) — and **none of them carries a governed Surat Keputusan document** on
+mlit, stg1 or PROD. Cetakan-less letters that DO exist (PTS, TMAMG) belong to modules **BGN** and
+**DFT**, which never enter the AWAM `MODUL_PELUPUSAN` branch. So a cetakan-completed gate does not
+strand anyone — checked, not assumed.

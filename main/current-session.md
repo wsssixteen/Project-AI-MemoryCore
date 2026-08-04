@@ -52,6 +52,129 @@ decommissioned UAT/FAT) · `CLAUDE_CODE_SUBAGENT_MODEL=sonnet` cleared — it ha
 every `model: opus` I passed.
 
 **Slips**: `reask/rambling` · `reask/verbose` · `handed-miya-a-query-i-could-run`.
+## 2026-08-04 22:33 → 2026-08-05 03:30 — QA-273300: THREE gates, two of them shipped wrong, third one verified
+
+**I shipped a wrong fix to two env branches, then a second wrong fix, before adversarial familiars
+and みや's own questions forced the third. The third is data-validated. The night cost him his sleep.**
+
+### ▶▶ NEXT SESSION — START HERE
+
+| # | Thing | State |
+|---|---|---|
+| 1 | `QA-273300` Phase 1 closed | commit `ea59cbecee` · `int-env dbbac70260` · `stag-env d9f03a22c8`, all remote-verified |
+| 2 | **NOT COMPILED** | no JDK 8 on this machine (`E:\Java\java8` in the toolchain does not exist; only `C:\Program Files\Java\jdk-17`). The mlit build is the first compile |
+| 3 | Deploy owed | `./deploy-awam.sh` on `172.16.100.162` → `deployment-scripts/mlit`, branch prompt `mlk/int-env` |
+| 4 | Test fixtures | AWAM `samsiah.j85@gmail.com` · `/24` icon HIDE · `/25` icon SHOW |
+| 5 | ⚠️ **Those two fixtures cannot distinguish v1 from v3** | neither sits in the leak window. A true differential fixture is stg1 ADK `8546214` or `8549168` |
+| 6 | Phase 2 owed | archive hygiene + bounty for 273300 |
+
+### The fix, and why the first two were wrong
+
+BA's Expected: *"Ikon Surat Keputusan akan papar di AWAM selepas selesai tugasan Cetakan Dokumen …
+dan … latest version with sign iaitu … yang telah user Peraku."*
+
+| Gate | Predicate | Why it died |
+|---|---|---|
+| v1 `c7c19c538f` | hide while any ladder tugasan is **active** | leaks during `PTBUT2`, the hand-over step between peraku and cetakan — nothing of mine is active there |
+| v2 (unshipped) | require **a** completed `CT_BSC_PLP` | `CT_BSC_PLP` is a SHARED multi-instance tugasan — mlit `PLPS/2026/2` printed 07-01 *and* 07-09, so an earlier print opened the gate weeks early |
+| **v3 `ea59cbecee`** | latest completed peraku (`PSSK`/`PSTP`/`PSKN5A`) **AND** a completed `CT_BSC_PLP` whose `trkh_mula` is **after** it **AND** status ∈ {PERAKU, CETAK, SELESAI, null} | validated: stg1 25/25 rows incl. `8546214`/`8549168` (cetakan predates peraku → now hide); mlit `/24` HIDE, `/25` SHOW |
+
+The three peraku kods came from `template.config.json` tugasanList, not from name resemblance —
+they cover all 13 urusan that produce these letters.
+
+### The adversarial round — his instruction, and it worked
+
+3 opus familiars, ~440k tokens, one narrow question each. All three refuted the approach.
+Two findings held under my re-verification (multi-instance cetakan; the status allow-list is inert —
+`CETAK`/`SELESAI` have **zero** rows ever written in prod). **One over-claimed**: "rejection letters
+hidden forever" — prod says the only modul-PLP urusan with these letters is PRBB, which *does* define
+cetakan. Controller-verification caught the subagent, exactly as the 07-22 lesson says it must.
+
+Three further defects I caught myself before writing code: the application-level fallback cannot tell
+"flow has no cetakan" from "cetakan hasn't happened yet"; row-id is not a safe ordering proxy (3 stg1
+apps run out of order); and `A_TGSN_ID` is **unmapped** in `etanah-domain 1.0.4-MLK`, which killed the
+elegant per-document design outright.
+
+### Behaviour — the expensive part
+
+Slips logged this session: `reask/redundant` (asked him to choose a gate point BA had already stated
+verbatim, and which my own doc had already marked answered) · `worktree-stranded-delivery` (wrote the
+whole verification pass into the main-repo copy of the qa_doc while running in a worktree — caught by
+`quest-deferrals-gate`, not by me) · `name-in-artifact` (`ruri/` prefix on a git tag) ·
+`deploy-steps-missing-local-pull` (his local env branch was **55 commits behind**; my card would have
+had him deploy a branch without the fix) · `predicate-weaker-than-requirement` ·
+`correlation-read-as-mechanism` · `application-scoped-predicate-for-document-scoped-requirement`.
+
+Also: I merged onto `mlk/master` because I ran `git merge` without checking that the preceding
+`git checkout -B` had aborted. Undone, never pushed — but that is the second time this session that
+not reading an exit code cost something.
+
+Fixed at source, not just logged: `/deploy` skill (name prefix, one-command-per-block card, mandatory
+local checkout+pull, and the env-catches-up-to-master delta is no longer treated as a blocker) ·
+session-briefing + save-commands + `open-quest-surfacer` (the `Days` column is a bare number; `+3d`
+and `Days left` are banned columns).
+## 2026-08-05 01:00 → 03:30 — QA-273201 cycle-3 CLOSED (screenshot-verified) + three opus audits + four system fixes
+
+**BA's issue 2 fixed, tested by miya on mlit, closed. Then three opus familiars audited the fix
+adversarially; one predicted a fourth rework, and I disproved it with a code+DB trace.**
+
+### The fix
+
+`MlkPelupusanPegawaiAgihService.java:542` — `Arrays.asList("PT")` → `Arrays.asList("PT","PPTnKanan","PPTT")`.
+1 file +1/−1, commit `91e22e486f` on `mlk/esokongan/273201v3`, merged `mlk/int-env` @ `440827f18d`.
+
+**Screenshot PASS** — `PTMLK/01/L/PRBB/2026/22`, SRPT, HADIFAIZAL BIN HARUN (PPTT), Pembetulan=Ya,
+dropdown listed `PPTnKanan - KAMAROLZAMAN` · `PPTT - HADIFAIZAL` · `PT - MUHAMMAD SAFFUAN`.
+Exactly BA's *"papar PT, PPTnKanan, PPTT"*. Was PT only.
+
+### The rule — CORRECTED twice in one session
+
+| version | rule | fate |
+|---|---|---|
+| v1 (mine, ~01:30) | "everything below the ceiling of the node's peranan group" | **falsified** by `PPTPRBB:173` |
+| v2 (both familiars, independently) | **the list must match the SUCCESSOR NODE's peranan** — what the BPMN can actually route to | holds 5/5 incl. PPTPRBB |
+
+Written to `PERANAN-MAP.md` §5a-NEW; the old §5a marked SUPERSEDED, not deleted.
+
+### The predicted 4th rework — disproved
+
+Familiar #2: lane B's successor (node 11.0 `PRPT`) accepts only `PT`, so `BpmCallbackService.java:1746`
+would null `nextUser` and misroute — cycle 2's bug again. It flagged this as its own single unverified
+assumption.
+
+**Disproved.** The rejection at `:1736` is guarded by `StringUtils.isNotBlank(pejabatKod)`:
+- `prepareBpmValuesFor_tgsn_SRPT():2396` sends only `pembetulanSRPT`, `nextUser`, `agihanSRPT`
+- `CommonBPMServiceClient.java:660` sets `PEJABAT_KOD` only for modul `PEMBANGUNAN` + `KMPB_BGN`
+- the five methods that do set it never run on this lane — verified against `/22`'s real task history:
+  `SKM→PTBUT→PLPP→SDU→PLT→SDS→PJTLT→PRPT→SRPT→KKPT`
+
+Guard is false → check skipped → pick survives. **Latent trap, not a live bug.**
+
+### Open, evidence-backed, NOT raised
+
+| # | Item | Evidence |
+|---|---|---|
+| 1 | `PPTPRBB:173` offers unroutable `KPT`, missing `PPTnKanan`·`PPTT` | gateway `sid-F6A5933F` routes KPPD·PT·PPTnKanan·PPD·PPTT; `KPT` appears nowhere in `MLK_PLP_PRBB` |
+| 2 | BPMN `sid-829CFE97` tests `agihanPRPDT=="PTT"` — typo for `"PPTT"` | `:525` offers `PPTT`, no `default=` → the FlowableException in this ticket's own subject |
+| 3 | BA's cycle-1 REMARK (4 tugasan, Kelulusan **PTG** + **JKBB**) never walked by anyone | every cycle tested Kelulusan **DO** only |
+| 4 | The original FlowableException (ticket subject) never explicitly closed by BA | in subject + `SkrinRalat.jpeg`; not mentioned by her after 07-30 |
+
+### System fixes shipped this session
+
+| fix | why |
+|---|---|
+| `commit-gate` v2 | **was dark since written** — read `process.cwd()`, always the MemoryCore dir, so the MemoryCore-skip branch always fired and checks 1/2/3a/3b never ran. Every etanah commit passed unchecked. |
+| `redmine-sync` v7 | attachment pass lived only in `runWithCreate()`; plain sync downloaded NOTHING. 273201 had 12 attachments, 8 on disk. |
+| `knowledge-first-gate` | born via forge; blocks etanah source reads until an `etanah-knowledge/melaka/*.md` is read this session. Eval 10/10 — F3/F5 caught the hook returning `reason` where runtime writes `blockReason` (silent blocker). |
+| `pre-code-check` v1.4 | ambiguous `hierarchy` check split into `class-chain` + `peranan-map`; the latter needs a `PERANAN-MAP.md:<line>` citation |
+| personality Rule 0 | answer the ask, nothing else; folded 3 duplicate framings into it |
+
+### What cost him the night
+
+I skipped `etanah-knowledge/` on all three passes of this ticket. `PERANAN-MAP.md` §4/§5 documented
+this exact service the whole time. He ended up stating the hierarchy rule himself. I also briefed him
+on the ticket having never opened 4 of its 12 attachments, and gave a wrong test user twice before
+the DB told me who actually held the task.
 
 ---
 
