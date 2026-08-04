@@ -64,3 +64,6 @@ main/current-session.md.bak
 # Written by RecursiveLoopDetector on EVERY tool call — same churn class as hook-fires.jsonl.
 # Moved meta/ -> system/ in a4516fd, so the old ignore rule no longer covered it.
 system/recent-tool-calls.jsonl
+
+# Once-per-session state marker written by quest-bounty-verify; regenerated, never content.
+domain/quest-bounty/.verify-notified
