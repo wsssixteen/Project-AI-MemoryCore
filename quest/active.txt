@@ -772,8 +772,8 @@ bundled_with=272881
 
 qa=QA-273300
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\117. ESOKONGAN #273300 - Pelupusan - PRBB - Public terima Surat Keputusan Lulus tanpa Tandatang
-phase=0
-status=hold
+phase=1
+status=closed
 ticket_type=bug
 env=MLKSTG (DB user et_main_stg1, branch mlk/release/1.2.0) - fix module etanah-awam (read side)
 issue_one_liner=PRBB Surat Keputusan Lulus icon appears in AWAM as soon as PYSK generates it, so the public downloads the unsigned CREATE version still carrying Sign-pegawai / Nama-Pegawai placeholders before peraku at PSSK
@@ -782,9 +782,12 @@ urusan=PRBB
 tugasan=43.0 Penyediaan Surat Keputusan Lulus (PYSK); expected gate after 44.0 PSSK / 45.0 CT_BSC_PLP
 qa_doc=projects/coding-projects/active/QA-273300/QA-273300.md
 test_app=PTMLK/02/L/PRBB/2026/1 (PDTJ, live complaint); BA-simulated PTMLK/02/L/PRBB/2026/11
-current_phase=Rubric 90pct - AWAM has zero signing gate for MODUL_PELUPUSAN (confirmed by code); unsigned PDF confirmed from the attached artifact literal placeholders. Module scope VERIFIED etanah-awam, not etanah-teknikal.
-branch=n/a-pre-apply
+current_phase=Phase 1 CLOSED 2026-08-05 (v3 - THIRD gate this session; v1 and v2 both refuted). Commit ea59cbecee on mlk/esokongan/273300, remote SHA verified; merged to mlk/int-env dbbac70260 and mlk/stag-env d9f03a22c8, both ancestry-verified. 1 file +16/-5 AwamDashboardVO.java:514. GATE = latest completed peraku (PSSK/PSTP/PSKN5A, kods from template.config.json) AND a completed CT_BSC_PLP whose trkh_mula is AFTER it AND status in {PERAKU,CETAK,SELESAI,null}; all wrapped in isMlk so TRG untouched. WHY v1/v2 died: v1 hid only while a ladder tugasan was ACTIVE so it leaked during PTBUT2 between peraku and cetakan; v2 required merely that some CT_BSC_PLP existed, but cetakan is a SHARED multi-instance tugasan (mlit PLPS/2026/2 printed 07-01 and 07-09) so an earlier print opened the gate weeks early. Refuted by 3 opus familiars + my own re-verification. VALIDATED at data level: stg1 25/25 rows correct incl 8546214 and 8549168 which have cetakan PREDATING peraku and now hide; mlit /24 HIDE + /25 SHOW. NOT COMPILED - no JDK8 on the machine, first compile is the mlit build. NOTE the two BA fixtures cannot distinguish v1 from v3 (neither sits in the PTBUT2 gap); a true differential fixture is stg1 8546214/8549168.
+branch=mlk/esokongan/273300
 redmine_status=New | start 2026-07-30 | due 2026-08-11 | tracker eSOKONGAN (verified live 2026-08-04)
+closed=2026-08-05
+local_test_confirmed=partial
+commit=ea59cbecee
 
 qa=QA-273625
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\124. INTERNAL ISSUE (PROD) #273625 - MCL - Cetakan Dokumen - Tiada pelan dan Format Surat JPPH (page break)
