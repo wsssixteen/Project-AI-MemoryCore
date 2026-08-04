@@ -61,6 +61,70 @@ Fixed at source, not just logged: `/deploy` skill (name prefix, one-command-per-
 local checkout+pull, and the env-catches-up-to-master delta is no longer treated as a blocker) ·
 session-briefing + save-commands + `open-quest-surfacer` (the `Days` column is a bare number; `+3d`
 and `Days left` are banned columns).
+## 2026-08-05 01:00 → 03:30 — QA-273201 cycle-3 CLOSED (screenshot-verified) + three opus audits + four system fixes
+
+**BA's issue 2 fixed, tested by miya on mlit, closed. Then three opus familiars audited the fix
+adversarially; one predicted a fourth rework, and I disproved it with a code+DB trace.**
+
+### The fix
+
+`MlkPelupusanPegawaiAgihService.java:542` — `Arrays.asList("PT")` → `Arrays.asList("PT","PPTnKanan","PPTT")`.
+1 file +1/−1, commit `91e22e486f` on `mlk/esokongan/273201v3`, merged `mlk/int-env` @ `440827f18d`.
+
+**Screenshot PASS** — `PTMLK/01/L/PRBB/2026/22`, SRPT, HADIFAIZAL BIN HARUN (PPTT), Pembetulan=Ya,
+dropdown listed `PPTnKanan - KAMAROLZAMAN` · `PPTT - HADIFAIZAL` · `PT - MUHAMMAD SAFFUAN`.
+Exactly BA's *"papar PT, PPTnKanan, PPTT"*. Was PT only.
+
+### The rule — CORRECTED twice in one session
+
+| version | rule | fate |
+|---|---|---|
+| v1 (mine, ~01:30) | "everything below the ceiling of the node's peranan group" | **falsified** by `PPTPRBB:173` |
+| v2 (both familiars, independently) | **the list must match the SUCCESSOR NODE's peranan** — what the BPMN can actually route to | holds 5/5 incl. PPTPRBB |
+
+Written to `PERANAN-MAP.md` §5a-NEW; the old §5a marked SUPERSEDED, not deleted.
+
+### The predicted 4th rework — disproved
+
+Familiar #2: lane B's successor (node 11.0 `PRPT`) accepts only `PT`, so `BpmCallbackService.java:1746`
+would null `nextUser` and misroute — cycle 2's bug again. It flagged this as its own single unverified
+assumption.
+
+**Disproved.** The rejection at `:1736` is guarded by `StringUtils.isNotBlank(pejabatKod)`:
+- `prepareBpmValuesFor_tgsn_SRPT():2396` sends only `pembetulanSRPT`, `nextUser`, `agihanSRPT`
+- `CommonBPMServiceClient.java:660` sets `PEJABAT_KOD` only for modul `PEMBANGUNAN` + `KMPB_BGN`
+- the five methods that do set it never run on this lane — verified against `/22`'s real task history:
+  `SKM→PTBUT→PLPP→SDU→PLT→SDS→PJTLT→PRPT→SRPT→KKPT`
+
+Guard is false → check skipped → pick survives. **Latent trap, not a live bug.**
+
+### Open, evidence-backed, NOT raised
+
+| # | Item | Evidence |
+|---|---|---|
+| 1 | `PPTPRBB:173` offers unroutable `KPT`, missing `PPTnKanan`·`PPTT` | gateway `sid-F6A5933F` routes KPPD·PT·PPTnKanan·PPD·PPTT; `KPT` appears nowhere in `MLK_PLP_PRBB` |
+| 2 | BPMN `sid-829CFE97` tests `agihanPRPDT=="PTT"` — typo for `"PPTT"` | `:525` offers `PPTT`, no `default=` → the FlowableException in this ticket's own subject |
+| 3 | BA's cycle-1 REMARK (4 tugasan, Kelulusan **PTG** + **JKBB**) never walked by anyone | every cycle tested Kelulusan **DO** only |
+| 4 | The original FlowableException (ticket subject) never explicitly closed by BA | in subject + `SkrinRalat.jpeg`; not mentioned by her after 07-30 |
+
+### System fixes shipped this session
+
+| fix | why |
+|---|---|
+| `commit-gate` v2 | **was dark since written** — read `process.cwd()`, always the MemoryCore dir, so the MemoryCore-skip branch always fired and checks 1/2/3a/3b never ran. Every etanah commit passed unchecked. |
+| `redmine-sync` v7 | attachment pass lived only in `runWithCreate()`; plain sync downloaded NOTHING. 273201 had 12 attachments, 8 on disk. |
+| `knowledge-first-gate` | born via forge; blocks etanah source reads until an `etanah-knowledge/melaka/*.md` is read this session. Eval 10/10 — F3/F5 caught the hook returning `reason` where runtime writes `blockReason` (silent blocker). |
+| `pre-code-check` v1.4 | ambiguous `hierarchy` check split into `class-chain` + `peranan-map`; the latter needs a `PERANAN-MAP.md:<line>` citation |
+| personality Rule 0 | answer the ask, nothing else; folded 3 duplicate framings into it |
+
+### What cost him the night
+
+I skipped `etanah-knowledge/` on all three passes of this ticket. `PERANAN-MAP.md` §4/§5 documented
+this exact service the whole time. He ended up stating the hierarchy rule himself. I also briefed him
+on the ticket having never opened 4 of its 12 attachments, and gave a wrong test user twice before
+the DB told me who actually held the task.
+
+---
 
 ## 2026-08-04 11:37 → 2026-08-05 00:50 — QA-273294 + QA-273461 shipped · the worst behaviour day on record
 
