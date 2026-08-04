@@ -263,6 +263,14 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\agent-spend-gate\\\\agent-spend-gate.check.hook.js\""
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\knowledge-first-gate\\\\knowledge-first-gate.check.hook.js\""
+          }
+        ]
       }
     ],
     "Stop": [
