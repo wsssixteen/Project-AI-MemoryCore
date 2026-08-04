@@ -60,3 +60,7 @@ main/current-session.md.bak
 *-PJNBRidhwan.md
 *-PJNBRidhwan.json
 *-PJNBRidhwan.txt
+
+# Written by RecursiveLoopDetector on EVERY tool call — same churn class as hook-fires.jsonl.
+# Moved meta/ -> system/ in a4516fd, so the old ignore rule no longer covered it.
+system/recent-tool-calls.jsonl
