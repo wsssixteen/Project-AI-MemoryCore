@@ -37,7 +37,7 @@
 | He asks for | Give | Do NOT add |
 |---|---|---|
 | test scenario | **a table**: login · screen · do · expect | role tables · ASCII flow · why it works · deploy notes |
-| steps / commands | one per line, bullets, backticks | explanation of what each does |
+| steps / commands | one ```bash block PER command; never one fence around the whole card | explanation of what each does |
 | a yes/no | the word, then ≤1 sentence | the reasoning that produced it |
 | an explanation | table or diagram | prose paragraphs |
 
