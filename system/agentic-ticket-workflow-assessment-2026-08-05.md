@@ -156,5 +156,49 @@ writing). P1 addresses this directly; it is the single highest-yield change on t
 
 ---
 
+---
+
+## 6. This is now a standing DE step — not a one-off
+
+みや, 2026-08-05: *"add this rule into our domain expansion. So that I don't have to always tell you to
+SPECIFICALLY try to search for points to improve our agentic system, our workflows, our debugging
+efficiency & accuracy, our etanah issues solving, our sweep."*
+
+Built the same session:
+
+| Piece | Where |
+|---|---|
+| **DE Step 7.5 — Improvement Sweep**, five fixed axes, mandatory every DE | `Feature/Domain-Expansion/expansion-protocol.md` §Step 7.5 |
+| step wired into the orchestrator + step-line | `.claude/skills/domain-expansion/SKILL.md` |
+| **`type=proposal`** lane so ideas are *ruled on*, not admired | `core/slips.js` → `system/slip-dashboard.md` § 💡 Open proposals |
+
+**The five axes** (sweep all, every time; an empty axis is stated, never silent):
+**A1** agentic system · **A2** quest workflow · **A3** debugging efficiency + accuracy ·
+**A4** etanah issue-solving · **A5** sweep / file sweep.
+
+**Why a separate `proposal` type rather than reusing `upgrade`**: `upgrade` means *shipped*. An idea
+filed as shipped is invisible as an open decision — which is exactly the failure that cost two days on
+2026-07-22, when an enforcement row was written "parked" and nobody ruled on it. The dashboard now
+states the escalation explicitly: **a proposal older than 14 days with no ruling is itself a finding.**
+
+### Tonight's brainstorm — 7 rows filed for the weekly audit
+
+| Axis | Proposal | Eval case |
+|---|---|---|
+| A5 | Evidence-manifest gate — block a Recon whose `0. Brief/` has unopened files | 273919's annotated PNG |
+| A3 | Scope declaration on every statistic (unit + filter inline) | 9091 rows vs 17 applications |
+| A2 | Doc-authority header when sibling docs exist | 273919's contradicting `-independent.md` |
+| A3 | CODE-CHECK tick split: `cited` vs `mechanism` | `:1350` passes one, fails the other |
+| A4 | Name-vs-contract check before asserting a convention from an identifier | `adalahMigrasi` |
+| A1 | Agent-subtree accounting — notification ≠ subtree complete | 3 orphans, 40 min |
+| A1 | `/sweep` exits on **verdict stability**, not pass-count | 273621 moved in all 4 passes |
+
+**The quality bar that matters most**: prefer mechanical over prose. The multi-dimensional-evidence
+rule has existed as prose since 2026-05-14 and was ignored tonight on the one ticket where the image
+was decisive. A5 is the mechanical version of that same rule, and it is the highest-yield row here.
+
+---
+
 *Cross-refs: `system/slips.jsonl` (this session's rows) · `.claude/CLAUDE.md` §Delegation Economy ·
-`main/todo.md` Q1 `/sweep` · `Feature/Forge-Self-Improvement-System/improvement-audit-log.md` (detached 2026-05-31).*
+`main/todo.md` Q1 `/sweep` · `Feature/Domain-Expansion/expansion-protocol.md` §Step 7.5 ·
+`Feature/Forge-Self-Improvement-System/improvement-audit-log.md` (detached 2026-05-31).*

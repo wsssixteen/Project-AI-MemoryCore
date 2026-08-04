@@ -69,9 +69,14 @@ function spawnDashboard() {
   // type split (2026-07-19): 'feedback' rows are preference/praise guidance, NOT mistakes — kept out of slip counts
   const fbRows = allRows.filter(r => r.type === 'feedback');
   const upRows = allRows.filter(r => r.type === 'upgrade'); // system upgrades/refinements — weekly-audit feed (miya 2026-06-20 wider intent + 2026-07-19)
-  const rows = allRows.filter(r => r.type !== 'feedback' && r.type !== 'upgrade');
+  // 'proposal' rows (2026-08-05, miya): ideas raised by the DE Improvement Sweep that are NOT yet
+  // built. They get their own lane so the weekly audit can see "what we thought of and have not
+  // acted on" separately from "what shipped". Mixing them into type=upgrade would read as done.
+  const propRows = allRows.filter(r => r.type === 'proposal');
+  const rows = allRows.filter(r => r.type !== 'feedback' && r.type !== 'upgrade' && r.type !== 'proposal');
   const fb14 = fbRows.filter(r => Date.parse(r.ts) >= Date.now() - 14 * 86400000);
   const up14 = upRows.filter(r => Date.parse(r.ts) >= Date.now() - 14 * 86400000);
+  const prop14 = propRows.filter(r => Date.parse(r.ts) >= Date.now() - 14 * 86400000);
   const d14 = rows.filter(r => Date.parse(r.ts) >= Date.now() - 14 * 86400000);
   const byCat = {};
   for (const r of d14) byCat[r.category] = (byCat[r.category] || 0) + 1;
@@ -101,6 +106,15 @@ function spawnDashboard() {
       '## System upgrades (14d — refinements/builds shipped; type=upgrade — the weekly-audit feed)',
       '', '| ts | category | evidence |', '|---|---|---|',
       ...up14.map(r => `| ${r.ts.slice(0, 10)} | ${r.category} | ${r.evidence || '—'} |`),
+      '',
+    ] : []),
+    ...(prop14.length ? [
+      '## 💡 Open proposals (14d — raised by the DE Improvement Sweep, NOT yet built; type=proposal)',
+      '',
+      '_Weekly audit: rule on each — BUILD / DROP / DEFER-with-date. A proposal older than 14d that',
+      'has never been ruled on is itself a finding (the "parked enforcement row" failure, 2026-07-22)._',
+      '', '| ts | axis | proposal |', '|---|---|---|',
+      ...prop14.map(r => `| ${r.ts.slice(0, 10)} | ${r.category} | ${r.evidence || '—'} |`),
       '',
     ] : []),
   ].join('\n');

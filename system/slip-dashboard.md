@@ -87,3 +87,19 @@ _Historical archive: `system/slip-log.md` (frozen 2026-07-13) · baseline 2026-0
 | 2026-08-03 | forge/new-skill | patch-mlk-doc born via forge: produce (1) infra file-replace request with the exact lokasi_fail .main path and (2) the LOKASI_FAIL_PDF=NULL update on the latest active re |
 | 2026-08-03 | forge/refine | pre-code-check v1.2: NEW required+evidence check 'necessity' (every hunk maps to the defect, analog-copied extras stripped) + BA-expected tick must cite an observation else written as unverified-cross; smoke 2/2 (272943 shipping line BLOCKS, honest line PASSES) |
 | 2026-08-04 | forge/new-check | knowledge-first-gate born via forge: BLOCK until at least one etanah-knowledge/melaka/*.md has been read THIS session; block message names the specific knowledge file for that p |
+| 2026-08-04 | de-improvement-sweep | DE Step 7.5 Improvement Sweep built (5 axes, mandatory) + core/slips.js type=proposal lane + dashboard section; 7 proposals filed. Reason: miya had to ask for the assessment explicitly two goals running. |
+
+## 💡 Open proposals (14d — raised by the DE Improvement Sweep, NOT yet built; type=proposal)
+
+_Weekly audit: rule on each — BUILD / DROP / DEFER-with-date. A proposal older than 14d that
+has never been ruled on is itself a finding (the "parked enforcement row" failure, 2026-07-22)._
+
+| ts | axis | proposal |
+|---|---|---|
+| 2026-08-04 | A5 | Evidence-manifest gate: block any Recon emit on a ticket whose 0. Brief/ has unopened files - one line per file INCLUDING images/video, 'NOT OPENED' if not. EVAL: 273919 - must block a Recon that never opened the annotated PNG that settled the ticket. |
+| 2026-08-04 | A3 | Scope-declaration on statistics: every count carries unit+filter inline ('17 applications, PT, PROD, public-submitted' not '9091 rows'). EVAL: 273455 - 9091/3 vs 17/9 must be distinguishable at a glance. |
+| 2026-08-04 | A2 | Doc-authority header: if QA-*-independent.md or -audit.md exists, main qa_doc must open with THIS FILE IS AUTHORITATIVE + input list. Deterministic: Test-Path + grep. EVAL: 273919 - -independent.md still bolded a recommendation the main doc had withdrawn. |
+| 2026-08-04 | A3 | Split CODE-CHECK tick into cited-vs-mechanism: 'cited (file:line)' and 'mechanism (what I traced to prove this line makes THIS symptom)'. EVAL: 273460 - :1350 passes cited, fails mechanism. |
+| 2026-08-04 | A4 | Name-vs-contract check before asserting a codebase convention from an identifier - READ its definition first. EVAL: 273621 - adalahMigrasi is {DMPRBB,DMPRU,DMPRZ}, a Daftar-Masuk urusan list, not 'is migrated'; a whole fix-inversion was built on the name. |
+| 2026-08-04 | A1 | Agent-subtree accounting: a parent's completion notification is not subtree completion. Track spawned children, report subtree state, kill orphans whose parent already reported. EVAL: 3 agents ran 40min past readership tonight; miya caught it from the Running panel. |
+| 2026-08-04 | A1 | /sweep stability criterion: exit on VERDICT STABILITY (unchanged across 2 consecutive passes), not on a fixed pass-count. EVAL: 273621's diagnosis moved in all 4 passes and nothing raised a hand; 273919 needed only 2. |

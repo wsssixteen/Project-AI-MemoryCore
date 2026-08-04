@@ -138,6 +138,62 @@ Every refinement to this protocol — whether a rule tweak, signal added/removed
 
 ---
 
+## Step 7.5 — IMPROVEMENT SWEEP (added 2026-08-05 per みや — MANDATORY, never optional)
+
+> **みや's instruction, verbatim**: *"add this rule into our domain expansion. So that I don't have to
+> always tell you to SPECIFICALLY try to search for points to improve our agentic system, our workflows,
+> our debugging efficiency & accuracy, our etanah issues solving, our sweep. Add into it you will
+> brainstorm to give suggestions in the save as well for ideas on how to improve that will be assessed
+> as well during weekly audit."*
+
+**Why this is its own step and not part of Gap Sweep (7)**: Gap Sweep is *retrospective* — it asks
+"what surfaced this session that didn't bake into a rule". Step 7.5 is *forward-looking and
+axis-driven* — it asks, against five fixed axes every time, "what would make the NEXT session better",
+including ideas nothing this session forced. Folding it into 7 is how it would decay into "nothing
+surfaced today".
+
+### The five axes — sweep EVERY one, every DE. Never silently skip an axis.
+
+| # | Axis | The question to actually answer |
+|---|---|---|
+| A1 | **Agentic system** | delegation shape, model tiering, fan-out contracts, controller verification, agent lifecycle/spend. What did the fleet do badly or wastefully? |
+| A2 | **Quest workflow** | Phase 0 → Scout → Recon → Rubric → Apply. Which phase let something through, or cost time it shouldn't have? |
+| A3 | **Debugging efficiency + accuracy** | how many build/test cycles did a diagnosis cost みや, and what would have collapsed that? Which claim turned out wrong and what evidence class would have caught it sooner? |
+| A4 | **Etanah issue-solving** | knowledge gaps, analog-finding, module/scope traps, test-data derivation, BA-comprehension. |
+| A5 | **Sweep / file sweep** | `0. Brief/` reading discipline (text vs image vs video), multi-ticket sweep shape, retrieval, evidence manifests. |
+
+### Required output — two parts, both written, not just spoken
+
+**(a) ASSESSMENT** — what this session actually showed, measured, with the instance that proves each
+point. Append to (or create) `system/agentic-ticket-workflow-assessment-<YYYY-MM-DD>.md`. Name failure
+classes; each class carries the concrete instance. **Banned**: aspirational prose with no instance.
+
+**(b) BRAINSTORM** — forward ideas, including ones this session did not force. Each idea gets a row in
+the weekly-audit feed so it is actually ruled on rather than admired:
+
+```
+node core/slips.js add --type proposal --category <A1|A2|A3|A4|A5> --evidence "<idea + its eval case>" --caught-by self
+```
+
+These surface in `system/slip-dashboard.md` under **💡 Open proposals**. The weekly audit rules each
+one **BUILD / DROP / DEFER-with-date**. A proposal sitting unruled for >14 days is itself a finding —
+that is the "parked enforcement row" failure (2026-07-22, the No-Resit gate that cost two days).
+
+### Quality bar
+
+- An idea must name its **eval case** — the concrete situation that would prove it works. No eval case
+  means it is a wish, not a proposal.
+- Prefer **mechanical** over prose: a hook that counts something beats a rule that asks me to remember.
+  Tonight's proof — the multi-dimensional-evidence rule existed as prose since 2026-05-14 and was
+  ignored on the one ticket where the image was decisive.
+- Say plainly when an axis genuinely yielded nothing: `A3 ⏭ no debugging this session`. Silence on an
+  axis is banned; an honest empty is fine.
+
+**Banned**: closing DE with Step 7.5 unrun · assessment written but no proposal rows logged · proposals
+logged with no eval case · skipping an axis without an explicit one-line reason.
+
+---
+
 ## Step 12.5 — meta-audit (added 2026-05-23, Phase 6 of system-layer build)
 
 After Step 12's `/verify` Checklist D goes green, run a **meta-audit** pass before declaring DE closed. Covers the system-layer's recursive-safety concerns (Stage 5 self-enforcement).
@@ -216,6 +272,8 @@ Before emitting the closing banner — read `.claude/state/session-items.md` "Ac
 **Pre-add gate** (referenced from `.claude/state/session-items.md`): before ANY addition to session-items, check (1) could Ruri fix this in-turn → FIX NOW don't add, (2) is it todo.md material → add there instead, (3) is it standing-flag material → add there instead. Only genuine cross-turn-within-session pending items go to session-items.
 
 ---
+
+*Updated 2026-08-05 — **Step 7.5 IMPROVEMENT SWEEP added (MANDATORY)** per みや: five fixed axes (A1 agentic system · A2 quest workflow · A3 debugging efficiency+accuracy · A4 etanah issue-solving · A5 sweep/file-sweep), swept every DE, producing (a) a dated assessment under `system/` with a concrete instance per claim and (b) brainstormed proposals logged via `core/slips.js --type proposal` into the new 💡 Open proposals lane of `slip-dashboard.md` for weekly-audit ruling. Paired `core/slips.js` change: `type=proposal` split out of the slip counts and given its own dashboard section, because filing an idea as `upgrade` reads as shipped and makes an open decision invisible (the 2026-07-22 parked-enforcement-row failure). Rationale: みや had to ask for this assessment explicitly two goals running — a thing he must repeatedly request is a missing step, not a missing effort.*
 
 *Created: 2026-05-05 | Protocol owner: Ruri | Review at every Forge Review until L4 stabilization*
 *Updated 2026-05-23 — added Step 12.5 meta-audit (Phase 6 of system-layer build)*
