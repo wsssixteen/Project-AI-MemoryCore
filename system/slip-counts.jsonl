@@ -159,3 +159,4 @@
 {"ts": "2026-08-04T14:56:56.411Z", "category": "code-logic-not-traced-guarded-one-callsite"}
 {"ts": "2026-08-04T15:44:11.178Z", "category": "asserted-code-behaviour-before-reading-it"}
 {"ts":"2026-08-04T17:36:32.405Z","category":"worktree-uncommitted-work-unsurfaced"}
+{"ts":"2026-08-04T17:47:21.323Z","category":"eval-passed-against-a-hook-that-could-never-fire"}
