@@ -180,7 +180,22 @@ function fetchAttachments(id) {
 // Result: 'eSOKONGAN #273201 - Semakan.mp4' (10,104,585 bytes on Redmine) never landed in 0. Brief/,
 // the sync printed no error, and the ticket's evidence base was silently incomplete.
 // Now: status-code checked, byte-size verified against Redmine's filesize, failures reported.
-function downloadFile(contentUrl, destPath, expectedSize) {
+// v3 (2026-08-05): bounded retry. A 46.7MB video (attachment 985431) died with ECONNRESET
+// mid-stream and succeeded on the very next attempt — a single-shot download turns a transient
+// socket reset into a permanently missing piece of BA evidence. 3 attempts, 1.5s apart; the
+// size check below is what makes a retry safe (a truncated file fails and is deleted).
+async function downloadFile(contentUrl, destPath, expectedSize) {
+    let last = { ok: false, why: 'not attempted' };
+    for (let attempt = 1; attempt <= 3; attempt++) {
+        last = await downloadFileOnce(contentUrl, destPath, expectedSize);
+        if (last.ok) return last;
+        if (/HTTP 4\d\d/.test(last.why || '')) return last; // 404/403 won't fix itself
+        if (attempt < 3) await new Promise(r => setTimeout(r, 1500));
+    }
+    return { ...last, why: `${last.why} (after 3 attempts)` };
+}
+
+function downloadFileOnce(contentUrl, destPath, expectedSize) {
     return new Promise(resolve => {
         const urlPath = contentUrl.replace(/^https?:\/\/[^/]+/, '');
         const options = {
@@ -595,6 +610,37 @@ async function syncJournalsForExisting(results) {
     }
 }
 
+// v7 (2026-08-05): attachment sync for EXISTING tickets, extracted so it runs on the plain
+// `node quest/redmine-sync.js <num>` path too. Until today this logic lived ONLY inside
+// runWithCreate(), so a plain sync — the exact form retrieve-sync-gate tells you to run —
+// refreshed History.txt and downloaded NOTHING. 273201: API had 12 attachments, disk had 8,
+// and the run reported success. Ruri briefed みや on a ticket whose BA evidence videos had
+// never been fetched. Idempotent: `known` skips anything already on disk.
+async function syncAttachmentsForExisting(results) {
+    for (const issue of results.rework) {
+        if (!issue._existing) continue;
+        const ticketFullPath = path.join(TASKS_FOLDER, issue._existing);
+        if (!fs.existsSync(ticketFullPath)) continue;
+        const entries = fs.readdirSync(ticketFullPath);
+        const reworkEntries = entries
+            .map(e => { const m = e.match(/^(\d+)\.\s*(Rework|New)\s*$/i); return m ? { name: e, num: parseInt(m[1]) } : null; })
+            .filter(Boolean)
+            .sort((a, b) => b.num - a.num);
+        const targetSubfolder = reworkEntries.length
+            ? path.join(ticketFullPath, reworkEntries[0].name)
+            : path.join(ticketFullPath, '0. Brief');
+        const known = new Set();
+        for (const e of entries) {
+            const sub = path.join(ticketFullPath, e);
+            try { if (fs.statSync(sub).isDirectory()) fs.readdirSync(sub).forEach(f => known.add(f)); } catch (_) {}
+        }
+        const downloaded = await downloadNewAttachments(targetSubfolder, issue.id, Array.from(known));
+        for (const f of downloaded) {
+            console.log(`    ⬇️  ${f} → ${path.basename(targetSubfolder)}/`);
+        }
+    }
+}
+
 async function run() {
     try {
         const issues = await fetchIssues();
@@ -602,6 +648,7 @@ async function run() {
         const results = classifyIssues(issues);
         printReport(results);
         await syncJournalsForExisting(results);
+        await syncAttachmentsForExisting(results);
 
         if (results.new.length) {
             console.log('\n  Run with --create to auto-create Task folders for new tickets.\n');
@@ -653,12 +700,19 @@ async function runWithCreate() {
             // Rework transitions and decide whether to add a new subfolder.
             const journals = await fetchIssueJournals(issue.id);
             const result = await addStatusFolder(issue._existing, issue._status, journals);
-            if (!result) continue;
-            if (result.unarchived) {
+            // v7 (2026-08-05): do NOT `continue` on a null result. addStatusFolder returns
+            // null whenever it decides no new subfolder is needed — which is the NORMAL case
+            // on a re-sync. The old `if (!result) continue;` skipped the attachment pass
+            // below along with it, so a BA who added evidence WITHOUT triggering a new rework
+            // cycle had her files silently withheld while the run still reported success.
+            // Caught 2026-08-05 on 273201: API listed 12 attachments, disk had 8; the 4
+            // missing were the BA's three latest videos + one earlier. Ruri briefed みや on
+            // the ticket having never seen the BA's own evidence.
+            if (result && result.unarchived) {
                 console.log(`  ↩️  Unarchived: ${issue._existing} → ${result.folderRelPath}`);
                 issue._existing = result.folderRelPath; // so subsequent history-update writes to the correct (active) path
             }
-            if (result.statusFolderPath) {
+            if (result && result.statusFolderPath) {
                 console.log(`  🔁 Status folder added: ${result.statusFolderPath}`);
             }
             // v6 (2026-05-20): ALWAYS run attachment-download on rework — even when no NEW
@@ -666,7 +720,13 @@ async function runWithCreate() {
             // was truthy, so on a re-sync (folder already counted) journal attachments leaked
             // through. Caught at QA-260876: 3. Rework was created in run-1 but ulasan.png +
             // 2026-05-20_093455.png never downloaded — みや had to fetch them manually.
-            if ((issue._status || '').toLowerCase().trim() === 'rework') {
+            // v7 (2026-08-05): status gate REMOVED. This used to require status === 'rework',
+            // so a BA adding evidence to a ticket sitting at any other status (Feedback, In
+            // Progress, Resolved) had it silently withheld. Attachment sync is per-FILE and
+            // idempotent — `known` already prevents re-downloads — so there is no cost to
+            // running it on every existing ticket, and the cost of NOT running it is briefing
+            // みや on evidence nobody has seen.
+            {
                 const ticketFullPath = path.join(TASKS_FOLDER, issue._existing);
                 if (fs.existsSync(ticketFullPath)) {
                     // Find the LATEST `N. Rework` (or `N. New`) subfolder — the active cycle's home.
@@ -675,9 +735,12 @@ async function runWithCreate() {
                         .map(e => { const m = e.match(/^(\d+)\.\s*(Rework|New)\s*$/i); return m ? { name: e, num: parseInt(m[1]) } : null; })
                         .filter(Boolean)
                         .sort((a, b) => b.num - a.num);
+                    // v7 (2026-08-05): `result` can now be null (no new subfolder needed), so
+                    // the old `result.statusFolderPath` fallback would throw. Final fallback is
+                    // `0. Brief` — a ticket with no rework subfolder keeps its evidence there.
                     const targetSubfolder = reworkEntries.length
                         ? path.join(ticketFullPath, reworkEntries[0].name)
-                        : result.statusFolderPath; // fall back to the just-created one
+                        : (result && result.statusFolderPath) || path.join(ticketFullPath, '0. Brief');
                     if (targetSubfolder) {
                         // `known` = every file already present anywhere under the ticket folder
                         // (0. Brief + every status subfolder) so we never re-download.
