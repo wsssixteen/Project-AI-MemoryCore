@@ -36,8 +36,9 @@ Applies to **every** Redmine-retrieval trigger in the table above (row: *Redmine
 | **Difficulty** | a SECONDARY column, **only when みや asks**. Never the primary sort, never a silent "quickest win" reorder |
 | **Reconcile first** | drop anything Redmine shows closed / reassigned before listing (2026-07-27 slip `stale-quest-state-not-reconciled-with-redmine`: 6 of 10 "open" quests were dead) |
 
-**Required columns**: `# · Subject (short) · Start · +3d · Redmine due · Days left · State`.
+**Required columns**: `# · Subject (short) · Start · Days · Redmine due · State`.
 Mark 🔴 past internal deadline · ⚠️ hitting it today.
+**`Days` = days elapsed, BARE NUMBER only.** `+3d` and `Days left` are BANNED columns (みや 2026-08-04) — see the canonical spec for why.
 
 Same rule governs the Session Briefing — canonical spec: `Feature/Session-Briefing-System/session-briefing.md` § *Open-ticket ranking — THE 3-DAY RULE*.
 

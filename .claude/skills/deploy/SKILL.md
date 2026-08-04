@@ -83,13 +83,25 @@ the release path, and `git revert -m 1 <sha>` undoes it additively. Precedent: `
 2. **Already-merged guard** — `git merge-base --is-ancestor origin/<ticket-branch> origin/<base>`
    passes → skip to the card, one line saying so.
 3. Stash tracked modifications only — `git stash push -m "ruri-<ticket>-<env>" -- <paths>`
-4. `git tag -f ruri/pre-<env>-<ticket> origin/<base>` ← recovery anchor
-5. `git checkout -B ruri/<env>merge-<ticket> origin/<base>`
+4. `git tag -f pre-<env>-<ticket> origin/<base>` ← recovery anchor
+5. `git checkout -B <env>merge-<ticket> origin/<base>`
+
+   🚨 **Git artefact names carry the TICKET NUMBER ONLY — never a person/agent name** (みや 2026-08-05).
+   Banned prefix: `ruri/` (and any other name) on tags, temp branches, stashes. Same rule as the
+   stash convention (`stash <ticket-number>` and nothing else) and the no-names-in-deliverables rule.
    **Never** check out the local `mlk/stag-env` / `mlk/int-env` — they go stale (local stag-env
    was 167 ahead / 417 behind on 2026-07-27). Always fresh off `origin/<base>`.
 6. `git merge --no-ff origin/<ticket-branch> -m "Merge remote-tracking branch 'remotes/origin/<ticket-branch>' into <base>"`
    — team message format, match it exactly.
-7. `git diff --stat origin/<base> HEAD` → must be only the ticket's files. Anything else: stop.
+7. **Verify the TICKET's own contribution** — `git diff --stat HEAD^1 HEAD` → must be only the
+   ticket's files. Anything else: stop.
+
+   🚨 **Do NOT stop because `origin/<base>..HEAD` shows extra files** (みや 2026-08-05). An env
+   branch sits BEHIND `mlk/master`, so every master-based ticket branch legitimately carries
+   master's accumulated delta with it — pom bumps, other people's commits, whatever landed since
+   the env branch last caught up. **That is what an integration branch IS.** Treating it as a
+   blocker turns a routine merge into a fake decision and wastes みや's time. Report the catch-up
+   as one line (`env also catches up to master: <n> file(s)`), do not gate on it.
 8. `git push origin HEAD:<base>`
 9. `git fetch origin <base>` then re-check ancestry against `origin/<base>` → must be true.
 10. `git checkout <original-branch>` · `git branch -D ruri/<env>merge-<ticket>` · `git stash pop`
@@ -98,34 +110,52 @@ the release path, and `git revert -m 1 <sha>` undoes it additively. Precedent: `
 
 ---
 
-## 5 · The card — emit verbatim, values substituted, only the requested env
+## 5 · The card — ONE COMMAND PER FENCED BLOCK
 
-```
-DEPLOY — <ticket> → <env>
+🚨 **NEVER wrap the whole card in one code block** (みや 2026-08-05, 4th correction of this same
+shape — see the 2026-07-20 hand-off-card lesson in `main/main-memory.md`). He runs these steps
+**one at a time in a terminal**; a single big fence forces him to hand-select each line out of a
+block he can only copy whole. Every runnable command gets **its own ` ```bash ` block** — the app
+renders a copy/Run button per block. Prose lines (waits, prompts) stay plain text, never fenced.
 
-  merged   <ticket-branch>
-        →  <base> @ <merge-sha>
-  delta    <n> file(s): <filenames>
-  revert   git revert -m 1 <merge-sha> && git push origin HEAD:<base>
+Header lines (merged / delta / revert) are plain text too — the revert command gets its own block.
 
-── INTERNAL ──────────────────────────────
-1  ssh app@172.16.100.162
-2  cd deployment-scripts/mlit
-3  ./deploy-<module>.sh
-4  branch prompt →  mlk/int-env
-5  wait for success message
+Emit only the requested env. Shape:
 
-── STAGING ───────────────────────────────
-1  ssh app@172.16.100.162
-2  cd build-scripts17
-3  ./build-<module>.sh mlk/stag-env
-4  env prompt →  stag
-5  wait for BUILD SUCCESS, then exit
-6  ssh app@172.30.12.203
-7  cd deployment-scripts/stag
-8  ./deploy-<module>.sh
-9  wait for success message
-```
+    DEPLOY — <ticket> → <env>
+    merged  <ticket-branch> → <base> @ <merge-sha>
+    delta   <n> file(s): <filenames>
+
+    🚨 **The card ALWAYS opens with みや's local catch-up — checkout THEN pull** (みや 2026-08-05).
+    His local env branch is a stale tracking ref (measured 55 commits behind on 2026-08-05); a bare
+    `git checkout mlk/int-env` hands him a branch WITHOUT the fix he is about to deploy. If tracked
+    files block the switch, first check whether their content already matches the target branch —
+    if it does, `git checkout -- <files>` is lossless and goes in as step 1.
+
+    ```bash
+    git checkout <base>
+    ```
+    ```bash
+    git pull --ff-only origin <base>
+    ```
+    ```bash
+    ssh app@172.16.100.162
+    ```
+    **2.** go to the build scripts
+    ```bash
+    cd build-scripts17
+    ```
+    **3.** build
+    ```bash
+    ./build-<module>.sh mlk/stag-env
+    ```
+    **4.** at the env prompt choose `stag`, wait for BUILD SUCCESS, then `exit`
+    ... (one block per command, continuing through the deploy host)
+
+    Revert if needed:
+    ```bash
+    git revert -m 1 <merge-sha> && git push origin HEAD:<base>
+    ```
 
 Then stop.
 

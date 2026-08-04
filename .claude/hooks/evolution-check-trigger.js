@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
-const PROTOCOL_FILE = path.join(PROJECT_ROOT, 'meta', 'evolution-protocol.md');
+const PROTOCOL_FILE = path.join(PROJECT_ROOT, 'system', 'evolution-protocol.md');
 
 try {
   if (!fs.existsSync(PROTOCOL_FILE)) {

@@ -89,7 +89,7 @@ const bundle = [
 
 const tokens = Math.round(bundle.length / 4);
 const status = tokens <= BUDGET_TOKENS ? '✓ within budget' : '🚨 OVER BUDGET';
-const OUT = path.join(ROOT, 'meta', 'telemetry', 'boot-bundle-preview.md');
+const OUT = path.join(ROOT, 'system', 'telemetry', 'boot-bundle-preview.md');
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, bundle);
 

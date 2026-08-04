@@ -29,11 +29,11 @@ const REQUIRED_CHECKS = [
   'analog', 'in-file', 'sibling', 'existing-reuse', 'name-by-purpose',
   'minimal-diff', 'logic-matrix', 'blast-radius', 'predicate', 'falsifier',
   'read+write-path', 'BA-expected', 'full-address', 'sibling-diff', 'necessity', 'all-writers',
-  'kod-resolution', 'prior-fix', 'hierarchy',
+  'kod-resolution', 'prior-fix', 'class-chain', 'peranan-map', 'flowable-contract',
 ];
 const CONFIDENCE_RX = /\bconfidence\s+\d+\s*%/i;
 
-const EVIDENCE_CHECKS = ['analog', 'existing-reuse', 'blast-radius', 'read+write-path', 'falsifier', 'necessity', 'all-writers', 'kod-resolution', 'prior-fix', 'hierarchy'];
+const EVIDENCE_CHECKS = ['analog', 'existing-reuse', 'blast-radius', 'read+write-path', 'falsifier', 'necessity', 'all-writers', 'kod-resolution', 'prior-fix', 'class-chain', 'peranan-map', 'flowable-contract'];
 const EVIDENCE_MIN = 12;
 
 // v1.2: a ✓ on BA-expected must cite an OBSERVATION (something read/queried/rendered), never a
@@ -147,12 +147,30 @@ runHook({ name: 'pre-code-check', event: 'PreToolUse' }, (input) => {
         '     blast-radius    ✓(grepped <symbol> -> N call-sites: <file:line>, ...)',
         '     read+write-path ✓(<Class.method():line> persists it) | ✓(grepped <getter> -> 0 persisters)',
         '     falsifier       ✓(the record shape that would break this + how it differs from the one you tested)',
-        '     hierarchy       ✓(for ANY super./override/inherited-field claim: quote the actual EXTENDS',
+        '     flowable-contract ✓(for ANY tugasan/BPM-submit edit: name the BpmNameValues the form SENDS',
+        '                       and what CONSUMES them — quote the prepareBpmValuesFor_tgsn_<KOD>() line AND',
+        '                       the reader, e.g. FlowableTaskListener.receiveUserTask():150. Compare against a',
+        '                       SIBLING tugasan that works.) | ✗(N/A — edit does not touch a tugasan submit path)',
+        '                       QA-273201: fixed the RENDER half, never traced the SUBMIT half —',
+        '                       prepareBpmValuesFor_tgsn_KKPT():2376 omits nextUser (1 of 2 of 19), so the',
+        '                       listener got null and assigned the ROLE group instead of the chosen officer.',
+        '                       A rendering fix is only half a tugasan fix. BA reworked the ticket.',
+        '     class-chain     ✓(for ANY super./override/inherited-field claim: quote the actual EXTENDS',
         '                       chain you READ, class:line each hop — e.g. MlkKertasTemplateForm:102 ->',
         '                       BasePelupusanDokumenForm:114 -> BasePenyediaanDokumenForm:173 -> BaseBpmForm:197)',
         '                     | ✗(N/A — edit touches no inherited member)',
         '                       QA-273201: assumed BasePelupusanDokumenForm extends BasePelupusanForm from the',
         '                       NAMES. It does not. The whitelist I patched was unreachable dead code.',
+        '     peranan-map     ✓(fix touches roles / agihan / capaian / tugasan-routing? Then CITE',
+        '                       etanah-knowledge/melaka/PERANAN-MAP.md:<line> — the FILE, read THIS session.',
+        '                       A role code you recognise is not a role code you verified.)',
+        '                     | ✗(N/A — <why this fix cannot touch roles>)',
+        '                       #273201 rework-2: went straight to code 3 sessions running. PERANAN-MAP.md',
+        '                       sections 4-5 already documented this exact service. Unread, PPTT reads like a',
+        '                       typo for PPTNT — they are two DIFFERENT live roles (30290 vs 18503). Shipping',
+        '                       the wrong one resolves to zero users and reworks the ticket a third time.',
+        '                       This check exists because a check literally named hierarchy PASSED on the bad',
+        '                       fix — satisfied with a Java class chain while the role chain went unread.',
         '     prior-fix       ✓(git log --grep + -S on the SYMPTOM words, not the file — quote the SHA and',
         '                       what it did, or "0 hits") — QA-273201: f33f8632d8 says verbatim "Agihan Kepada',
         '                       field not populate after user click button Selesai on Senarai Dokumen Panel",',

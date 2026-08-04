@@ -1,0 +1,8 @@
+{"ts":"2026-08-04T07:17:36.056Z","category":"ticket-source-skipped"}
+{"ts":"2026-08-04T07:17:36.188Z","category":"brief-not-delivered"}
+{"ts":"2026-08-04T09:26:10.357Z","category":"git-history-probe-deferred-to-end"}
+{"ts":"2026-08-04T10:11:15.863Z","category":"enum-picked-from-intent-not-from-rendered-button"}
+{"ts":"2026-08-04T12:15:28.527Z","category":"asked-instead-of-reading-the-ticket"}
+{"ts":"2026-08-04T12:15:28.674Z","category":"reask/redundant"}
+{"ts":"2026-08-04T14:56:56.411Z","category":"code-logic-not-traced-guarded-one-callsite"}
+{"ts":"2026-08-04T15:44:11.178Z","category":"asserted-code-behaviour-before-reading-it"}

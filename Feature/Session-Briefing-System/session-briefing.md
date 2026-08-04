@@ -75,8 +75,15 @@ If all worktree cleanup runs cleanly: NO standing flag. みや shouldn't see wor
 | 4 | Show Redmine's own `due_date` alongside, because the two rulers disagree (Redmine typically grants 7-12 days; the 3-day rule is tighter) |
 | 5 | Break ties on the nearer `due_date` |
 
-**Required columns**: `# · Subject (short) · Start · +3d (internal) · Redmine due · Days left · State`.
+**Required columns**: `# · Subject (short) · Start · Days · Redmine due · State`.
 Mark rows past their internal deadline 🔴 and rows hitting it today ⚠️.
+
+**Column discipline (HARD, added 2026-08-04 per みや)**:
+- **`Days` = `days_elapsed`, and the cell holds a BARE NUMBER — nothing else.** No `d` suffix, no date, no "past", no arrow. The 🔴/⚠️ marker rides the row, not the number.
+- **`+3d` column is BANNED** — the internal deadline is `Start + 3`, derivable at a glance from `Days` (any row where `Days ≥ 3` is past it). Printing the computed date was an eyesore that duplicated what `Days` already says.
+- **`Days left` column is BANNED** — it silently mixed rulers (it read as "days until Redmine due" while every other column served the 3-day rule), so it said "8 days left" on a row that was already past its internal deadline. Contradictory, and it made the table argue with itself.
+
+**Why**: みや 2026-08-04 — *"Column Days left doesn't make any sense… '+3d' is an eyesore, just put 'Days' to show how many days have passed, the items inside that columns can ONLY be numbers."*
 
 **Difficulty is NOT the ranking axis.** Effort/ease may be shown as a SECONDARY column **only when みや asks for it** — his words: *"That is the priority compared to how easy it is (that is by request)."* Never reorder by "quickest win" unprompted.
 
