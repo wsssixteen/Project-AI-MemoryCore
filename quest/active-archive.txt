@@ -1440,3 +1440,27 @@ test_app=PTMLK/01/L/PLPS/2026/6 aplikasi_id 3384879 @ sanarimah@melaka.gov.my (P
 delegated_to=Aaron Loh Zhi Yong (Redmine assignee 2026-08-03 03:52)
 closed=2026-08-03
 close_note=RECONCILED from Redmine 2026-08-03: In Progress, assignee Aaron Loh Zhi Yong. Our full direction+verification pack (miya's chosen design, code/BPMN verification, stg1 DB facts) is banked in qa_doc sections D/D2/D3 - ready to hand over or resume if it returns.
+
+qa=QA-270900
+quest_start_ts=2026-07-20T23:29:39.937Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\100. INTERNAL ISSUE #270900 - BPRZ - Penyediaan-Semakan-Peraku Surat Makluman ke Pemohon - Issue pad
+phase=1
+status=archived
+ticket_type=bug
+env=mlit
+issue_one_liner=BPRZ - Penyediaan/Semakan/Peraku Surat Makluman ke Pemohon - Issue pada paparan status dokumen dan peranan
+assigned_to_me=2026-07-20
+current_phase=Phase 1 CLOSED cycle-2 2026-08-04 - VERIFIED PASS by DB read-back. Data-only fix, no code, no commit, no build. mlit ind_tgsn 14822 SSMW peranan KPT -> KPT-KPPD-PPD (miya ran the patch). New SSMW task umm_a_tgsn 2730603 created 15:05:47 stamped -KPT-KPPD-PPD- with pengguna 6093 shahniza@melaka.gov.my; umm_tgsn_semasa 74613 matches. Both halves of BA complaint closed (3 roles display + officer auto-assigned). OPEN: PROD et_main same wrong row, 0 tasks affected - deferral row 8 needs miya call.
+urusan=BPRZ
+quest_start=2026-07-21
+qa_doc=projects/coding-projects/archive/QA-270900/QA-270900.md
+start_first=2026-07-21 miya pick — START HERE next session; Part B SQL ready (SET peranan=NULL), Part A config edit
+branch=mlk/internal/270900
+test_app=PTMLK/02/L/BPRZ/2026/3 aplikasi_id 3401289 (PartB verified, shahniza@melaka.gov.my) | PTMLK/01/L/BPRZ/2026/1 aplikasi_id 3400859 PSMW m.ikram@melaka.gov.my (PartA candidate, 1 doc only)
+closed=2026-07-22
+commit=46604841f7
+local_test_confirmed=true
+rework=cycle-2
+reopened=2026-08-03
+test_app_mlit=PTMLK/02/L/BPRZ/2026/1 - only shahniza@melaka.gov.my (PPD) + nazli@melaka.gov.my (KPPD) hold BPRZ capaian at Jasin; no KPT holder does
+closed_cycle2=2026-08-04

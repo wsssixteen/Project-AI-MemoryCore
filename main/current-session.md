@@ -1,5 +1,69 @@
 # Current Session
 
+## 2026-08-04 10:44 → 15:20 — ⚔️ QA-270900 cycle-2 CLOSED (Phase 1 + 2) · data-only fix, DB-verified · two slips cured mechanically
+
+**One reference row on mlit was the whole ticket. The diagnosis was right first time; what cost みや
+his patience was my test design — I never told him which state the fix fires in, so a correct fix
+read as a failure.**
+
+### ▶▶ NEXT SESSION — START HERE
+
+| # | Thing | State |
+|---|---|---|
+| 1 | **QA-270900 CLOSED + ARCHIVED** | cycle-2 data-only. `ind_tgsn` 14822 mlit `KPT` → `KPT-KPPD-PPD`. Verified: `umm_a_tgsn` **2730603** = `-KPT-KPPD-PPD-` + pengguna 6093 shahniza@; `umm_tgsn_semasa` **74613** matches |
+| 2 | ⚠️ **PROD owes the same row** | `et_main.ind_tgsn` 14822 = `KPT`, untouched since 2023-10-16. **0 tasks affected today.** Deferral row 8 — needs みや's call: own ticket or fold into a release. Patch ready: Task folder `4. MLIT Patch\2. …sql` |
+| 3 | Open quests now **7** | 273294 · 273300 · 273625 · 273455 · 273460 · 273461 · 273465 |
+| 4 | Owed | Phase 2 hygiene for **272881 + 273201**; bounty for **QA-272574** |
+| 5 | Redmine | みや updates #270900 himself (was `Rework`, assigned to him) |
+
+### The ticket
+
+BA (Nurhafizah, 08-03) retested at **MLIT** on `PTMLK/02/L/BPRZ/2026/1`: *"Papar peranan KPT sahaja"*.
+Root cause: the Kemaskini Tugasan fix みや made on **stg2** on 22 July was **environment-local** and
+never reached mlit. Proven by a 92-row BPRZ cross-environment diff → **exactly one divergence**, row
+14822. Two alternative override sources eliminated by data (`ind_pejabat_tgsn` blank on all 15 rows;
+BPMN already declares `KPT_PPD_KPPD` and is bypassed while the DB value is non-empty).
+
+Chain read end-to-end, every node at source: `ind_tgsn` → `BpmCallbackService.handleAssignation():782-791`
+→ `umm_a_tgsn.peranan_semasa` → `umm_tgsn_semasa.peranan` → `PergerakanFailService.onSearchPeranan2():1115`
+→ `PergerakanFailForm.xhtml:201` (all etanah-common).
+
+No code, no build, no commit — cycle 1's `46604841f7` had already shipped and Aaron merged it to
+`mlk/int-env` as `a83aceb241` on 07-29.
+
+### Behaviour — two slips, both cured mechanically
+
+**1. `ticket-source-skipped` (repeat of 08-03).** Read `History.txt` only; never opened
+`Description.txt` or either `0. Brief` attachment. みや: *"skipping reading latest BA issue (NOT LATEST
+MESSAGE IN HISTORY) AND its attachments. MANDATORY."*
+Root cause found: `domain/ba-understanding-table` **v1.1 accepted `History.txt` OR `Description.txt`** —
+that `or` is the hole; the gate went green with a primary source unread.
+→ **v1.2**: requires BOTH .txt files AND **every attachment** in `0. Brief/` + any `N. Rework|Addition`
+folder, enumerated from the active quest's `task_folder` on disk. NEW `eval.js`, **5/5**, RED proven
+first. It correctly discovered all 5 real sources including the `.mp4` I never watched.
+
+**2. `test-precondition-not-stated` (new category).** A Pembetulan moved the flow back to Penyediaan
+between his test and mine; he saw `-PT-` on PYSMW and concluded the fix failed. That row was *correct*
+(BA's spec: Penyediaan = PT). My Test Scenario never stated the precondition (SSMW must be the ACTIVE
+tugasan) or the not-a-result (another tugasan showing its own role disproves nothing).
+→ `.claude/skills/stop-point-summary/SKILL.md` Test Scenario variant now carries two **MANDATORY**
+rows: **PRECONDITION** and **NOT-A-RESULT**.
+
+### Knowledge banked
+
+`etanah-knowledge/melaka/PERANAN-MAP.md` gained two structural sections: **§ Peranan lifecycle**
+(`ind_tgsn.peranan` read ONCE at task creation; both downstream tables are stamped copies; screens
+render the dashboard row; repair via Pengagihan Semula whose `:2524` equality guard forces
+config-first ordering) and **§ Reference-config does not propagate between environments** (diff the
+row across schemas before re-opening code; audit columns reveal UI-write vs SQL-write). Also corrected
+a documented value there: stg2 holds `KPT-KPPD-PPD`, not `KPT-PPD-KPPD`.
+
+### Confirmed in passing
+
+The `meta/` orphan reappeared with **only** ephemeral churn (`recent-tool-calls`, `slip-counts`,
+`telemetry/hook-fires`) — matches Q1 category (c). The real ledgers now correctly write to `system/`
+after this morning's repoint. Q1 row stands; deliberately not swept.
+
 ## 2026-08-04 01:35 → 03:02 — 8-TICKET SWEEP: retrieve → Phase 0 → 7 blind familiars → controller-verify · briefing-accuracy root-caused and fixed
 
 **miya set an 8-step /goal for a full ticket sweep, then a second one to plan tomorrow and fix the
@@ -131,31 +195,5 @@ Deleted `mlk/esokongan/272881` @ `6e1398d173` local+remote, redid under his exac
 
 **Slips**: `assume-not-verify` (30d=22 🚨) · `ticket-source-skipped` · `prior-fix-not-searched` ·
 `hierarchy-assumed-from-name` · `absence-of-error-read-as-success` · `built-without-system-design`.
-
----
-
-## 2026-08-03 13:48 → 22:15 — ⚔️ ROUNDS 1+2 SHIPPED (272982 · 272867 · 272943) — Phase 1 closed ×3 branches · the hardest behaviour day on record
-
-**Session shape: /goal-driven execution of the miya-approved rounds plan. Round 1 (272982) done same-day: stg2 patch run by miya, PROD script ready, jrxml handed to Reports team. Round 2 (272867+272943) coded, tested through 4 miya-caught defect cycles, committed + pushed on 3 branches. In parallel: 6 miya-caught behaviour slips → 5 mechanical system fixes shipped the same session.**
-
-### ▶▶ NEXT SESSION — START HERE
-
-| # | Thing | State |
-|---|---|---|
-| 1 | **272982** | Phase 1 CLOSED (data patch stg2 done by miya; **PROD run pending** — `patch-272982.sql` in Task folder 113; jrxml CASE file `PlpLaporanJadual1P2_Sub03 - line 66.sql` → send to **Nurhidayati Abdul Razak** (Reports); Redmine note drafted in-session) |
-| 2 | **272867** | Phase 1 CLOSED. pelupusan `mlk/esokongan/272867` @ `76be0e9fe4` (+29/-3: per-pemohon JSON key + `!adaKunciPerPemohon` fallback rescope + address-helper safe-init ×2 sites) · AWAM `mlk/esokongan/272867` @ `be6b178c48` (+17/-1 twin, incl. else→Tiada parity). Test app `PTMLK/02/L/PLTP/2026/5` @ faridmajid (STG1); pemohon-1 walk PASSED; **AWAM runtime walk NOT done** (A7 deploy friction) |
-| 3 | **272943** | Phase 1 CLOSED. `mlk/esokongan/272943` @ `cea66b57ad` — `PelupusanUtil.convertPdfFileBytesToImageList()` 150-DPI+JPEG ONLY (the A4-canvas variant SHRANK the pelan — reverted); `rotateIfLandscape()` RGB+JPEG. 74MB artifact = `LAIN-36741916` (`/home/app/etanah/files/dms/SISTEM-FAIL/KELUARAN/LAIN-LAIN/2026/07/LAIN-36741916_1.main`, PROD-verified); heavy source pelan = `LAIN-36720872` (6.3MB, kod `PLP_PPTPB_PELAN`, GPM-first fallback per `populatePelanAsalImageMLK():19159`). Staging fixture exists (`LAIN-36707859`, 65MB, stg1) — no Infra upload needed. **Visual walk of 6 pelan tags pending at BA test** |
-| 4 | Rounds 3-5 | 272881+273201 → 273294 → 273300, per the saved plan |
-| 5 | New synced tickets | **#273465 Portal Awam Maklumat Pemohon** (same screen family as 272867 — check overlap first) · #273455 (sempadan — likely = ADHOC A8) · #273460/61 · #273625 (= patch-mlk-doc's fixture) |
-
-### System fixes shipped (all restored from the botched DE stash, verified by token-grep)
-- `domain/pre-code-check/` **v1.3** + NEW `eval.js` (6/6): `necessity` check (copy-analog-wholesale killer) · BA-expected ✓ must cite an OBSERVATION else `✗(unverified—risk)` · `all-writers` (null-fix must enumerate every writer of the failing symbol)
-- `.claude/hooks/ticket-gate.js` NEW row **0.7 MODULE SET** (declare module at load; QA-272867's AWAM half was ignored at load)
-- `quest/redmine-sync.js` **v1.1**: `🚨 BA-GIVEN TEST DATA` banner (journal-scanned IDs, latest-first) atop History.txt + stdout — proven live
-- `.claude/skills/test-data-echo/SKILL.md` **Source Gate step 0**: (a) latest-journal re-read wins over any doc/pack (b) live-env anchor (id↔permohonan echoed) (c) record-readiness (test record must traverse the code path — pemohon-2 `pihak_bkptg_id` NULL crash)
-- `.claude/auto-memory/feedback_id_anchor_first.md` (main-repo path, OneDrive-carried)
-
-### The behaviour half — 6 miya-caught slips, all ledgered (75 rows in window)
-wrong-env test data (stg2 record for stg1 session, 4th env blunder) · wrong permohonan (pelan chain on MCL app 3411621 while my own output said "MCL") · BA-given ID in journal outranked by doc-pack · scaleToFitA4Strict cargo-culted → pelan shrank · one-site null guard shipped still-crashing · AWAM scope parked despite BA naming it. Root pattern: confidence arrives before evidence; the 5 fixes above are the mechanical answer. Also: my "can't reach Redmine" claim was false (sync works here); pemohon-2 test-crash root = data stub (missing `pihak_bkptg_id`) → address-helper safe-init fixed render for ALL such PROD rows, no data re-entry.
 
 ---
