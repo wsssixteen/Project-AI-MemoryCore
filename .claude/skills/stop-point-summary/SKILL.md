@@ -49,9 +49,28 @@ Reuse `test-data-echo` for the data rows, then add the rest:
 | Role / pejabat | `<peranan>` / `<pejabat>` |
 | What to check | per-item, what to look at |
 | Discriminator | why THIS app — what makes it the right/only one |
+| **🚨 PRECONDITION — the state the record must be in** | the EXACT state that makes this test meaningful (which tugasan must be ACTIVE, which status, which row must exist and when it was created). **MANDATORY** |
+| **🚨 NOT-A-RESULT — what does NOT disprove the fix** | name the states where the fix is *not exercised*, and say plainly that seeing the old/other value there proves nothing. **MANDATORY** |
 
 + **Notes:** what is NOT covered by this fix · errors to expect that are NOT the fix (e.g. a pre-existing NPE)
 + **Next:** who tests · what closes next
+
+### Why the last two rows are MANDATORY (2026-08-04, QA-270900 cycle-2 — みや)
+
+A config fix on a reference row (`ind_tgsn.peranan`) is read **only at task creation**. みや applied it,
+opened Pergerakan Fail, saw the *Penyediaan* tugasan showing one role, and reasonably concluded the fix
+had done nothing — because my Test Scenario never said **which tugasan had to be active for the check to
+mean anything**, nor that a different tugasan showing its own correct role is **not** a failure signal.
+The flow had been sent back to Penyediaan by a Pembetulan between his test and mine.
+
+The fix was in fact correct: the next SSMW task (`umm_a_tgsn` 2730603) stamped `-KPT-KPPD-PPD-` with the
+officer assigned. The whole exchange was a *test-design* failure on my side, not a diagnosis failure.
+
+**The rule**: whenever a fix only manifests under a specific record state — a newly created row, a
+particular tugasan, a status transition, a fresh session — the hand-back MUST state the precondition and
+the not-a-result explicitly. Banned: a Test Scenario that lists what to look at without saying what state
+the record must be in, when the fix is state-gated. Same family as the "deploy to where the reviewer
+actually looks" lesson — here it is *test at the state the fix actually fires*.
 
 ## Micro-Summary variant (for mid-work stops that are NOT full phase boundaries)
 

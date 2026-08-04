@@ -31,17 +31,20 @@ domain/release-mlk-plp/state/
 
 # Hook telemetry / fire-logs — ephemeral, rewritten as hooks fire every turn.
 # Were tracked by mistake → auto-commit-docs committed+pushed them every turn (junk + cmd flashes).
-# Kept tracked (curated data, NOT logs): domain/scan/known-bugs.jsonl · meta/slip-counts.jsonl
+# Kept tracked (curated data, NOT logs): domain/scan/known-bugs.jsonl · system/slip-counts.jsonl
 .claude/hooks/*.log.jsonl
 .claude/state/veritas-claim-ledger.jsonl
 domain/*/log.jsonl
-# 2026-08-03: hook-fires.jsonl churns EVERY turn — broke DE stash/merge repeatedly (07-17 audit item (c), finally applied)
-meta/telemetry/hook-fires.jsonl
 Feature/Forge-Self-Improvement-System/*-log.jsonl
 Feature/Time-Based-Aware-System/reply-log.jsonl
 Feature/Time-Based-Aware-System/reply-log-state.json
-meta/recent-tool-calls.jsonl
 system/telemetry/hook-fires.jsonl
+
+# 2026-08-05: meta/ is a REGENERATED RUNTIME DIR — ignored WHOLESALE. After the meta/ -> system/
+# rename the curated ledgers live in system/; anything that recreates itself under meta/ is churn
+# (recent-tool-calls.jsonl, slip-counts.jsonl, telemetry/hook-fires.jsonl). The directory rule
+# replaces the per-file entries so a NEW churn file cannot leak through.
+meta/
 
 # core/session-trim.js safety backup — regenerated on every --apply, never a deliverable
 main/current-session.md.bak

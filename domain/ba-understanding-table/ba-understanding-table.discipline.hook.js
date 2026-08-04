@@ -15,6 +15,10 @@
  *   Advisory now; flips to block once the ledger validates low false-positive.
  *   Front gate = a line in ticket-gate.js Phase-0 injection (announces the mandate).
  *
+ * v1.2 (2026-08-04, QA-270900 cycle-2, miya MANDATORY): require BOTH Description.txt AND History.txt
+ *   AND every attachment in 0. Brief/ + any N. Rework|Addition folder of the active quest. v1.1's
+ *   `History OR Description` accepted one and let the other stay unopened — the exact hole this fell through.
+ *
  * SAFETY: stop_hook_active guard (anti-loop, line 1); fail-OPEN on any parse error;
  *   only fires when BOTH ticket + intake signals present (not on ordinary turns);
  *   bypass [skip-ba-table: <reason>].
@@ -37,11 +41,17 @@ const BA_TABLE = /\|[^|\n]*\bBA\b[^|\n]*\|[^|\n]*\b(underst|reading|interpret|my
 // is worse than none — it reads authoritative while silently missing journal entries. Require proof
 // the ticket text was READ IN FULL this session: a Read tool call on History.txt/Description.txt, or
 // a `cat` of it with no pattern filter. A grep/Select-String/-A/-B/head over History.txt does NOT count.
-function ticketTextWasReadInFull(transcriptPath) {
+// v1.2 (2026-08-04, QA-270900 cycle-2 — ticket-source-skipped repeat, miya-caught + MANDATORY):
+// v1.1 accepted History.txt OR Description.txt. That `or` IS the hole: I read History.txt, the gate
+// went green, and Description.txt + BOTH 0. Brief attachments were never opened all session.
+// miya: "skipping reading latest BA issue (NOT LATEST MESSAGE IN HISTORY) AND its attachments".
+// The BA ISSUE lives in Description.txt; History.txt is only the journal on top of it. Require BOTH,
+// and require every attachment in 0. Brief/ + any rework folder to have been actually opened.
+function unreadTicketSources(transcriptPath) {
   let raw;
-  try { raw = fs.readFileSync(transcriptPath, 'utf8'); } catch (_) { return true; } // unreadable -> don't block
-  const TICKET_FILE = /(History|Description)\.txt/i;
+  try { raw = fs.readFileSync(transcriptPath, 'utf8'); } catch (_) { return []; } // unreadable -> don't block
   const FILTERED = /\b(grep|rg|Select-String|findstr|head\b|tail\b|sed\b|awk\b)/i;
+  const opened = new Set();
   for (const line of raw.split(/\r?\n/)) {
     if (!line) continue;
     let o; try { o = JSON.parse(line); } catch (_) { continue; }
@@ -50,14 +60,47 @@ function ticketTextWasReadInFull(transcriptPath) {
     if (!Array.isArray(c)) continue;
     for (const b of c) {
       if (!b || b.type !== 'tool_use' || !b.input) continue;
-      if (b.name === 'Read' && TICKET_FILE.test(String(b.input.file_path || ''))) return true;
-      if ((b.name === 'Bash' || b.name === 'PowerShell')) {
+      if (b.name === 'Read') opened.add(path.basename(String(b.input.file_path || '')).toLowerCase());
+      else if (b.name === 'Bash' || b.name === 'PowerShell') {
         const cmd = String(b.input.command || '');
-        if (TICKET_FILE.test(cmd) && !FILTERED.test(cmd)) return true;
+        if (FILTERED.test(cmd)) continue; // a grep is not a read
+        for (const f of requiredSourceFiles()) {
+          if (cmd.toLowerCase().includes(f.toLowerCase())) opened.add(f.toLowerCase());
+        }
       }
     }
   }
-  return false;
+  return requiredSourceFiles().filter(f => !opened.has(f.toLowerCase()));
+}
+
+// Enumerate the ACTIVE quest's primary BA sources from disk: 0. Brief/* plus any "N. Rework"/"N. Addition"
+// folder (a rework cycle's screenshot is a primary source too). Falls back to the two .txt names when the
+// task folder cannot be resolved, so the gate degrades to v1.1 behaviour rather than failing open silently.
+let _cachedRequired = null;
+function requiredSourceFiles() {
+  if (_cachedRequired) return _cachedRequired;
+  const fallback = ['Description.txt', 'History.txt'];
+  try {
+    let root = __dirname;
+    while (root !== path.dirname(root) && !fs.existsSync(path.join(root, 'quest', 'active.txt'))) root = path.dirname(root);
+    const activePath = path.join(root, 'quest', 'active.txt');
+    if (!fs.existsSync(activePath)) { _cachedRequired = fallback; return _cachedRequired; }
+    const blocks = fs.readFileSync(activePath, 'utf8').split(/\n\s*\n/);
+    const live = blocks.filter(b => /^\s*status=active\s*$/m.test(b));
+    const folders = live.map(b => (b.match(/^task_folder=(.+)$/m) || [])[1]).filter(Boolean);
+    const files = new Set(fallback);
+    for (const tf of folders) {
+      for (const sub of ['0. Brief'].concat(
+        (fs.existsSync(tf) ? fs.readdirSync(tf) : []).filter(d => /^\d+\.\s*(Rework|Addition)/i.test(d))
+      )) {
+        const dir = path.join(tf, sub);
+        if (!fs.existsSync(dir)) continue;
+        for (const f of fs.readdirSync(dir)) if (!f.startsWith('~$')) files.add(f);
+      }
+    }
+    _cachedRequired = [...files];
+  } catch (_) { _cachedRequired = fallback; }
+  return _cachedRequired;
 }
 
 function readLastAssistantText(transcriptPath) {
@@ -95,19 +138,23 @@ process.stdin.on('end', () => {
     if (EXEMPT.test(text)) process.exit(0);
     if (!TICKET.test(text) || !INTAKE.test(text)) process.exit(0); // not a quest-intake turn
     if (BA_TABLE.test(text)) {
-      if (ticketTextWasReadInFull(data.transcript_path || '')) process.exit(0); // table + full read -> good
-      try { fs.appendFileSync(LEDGER, JSON.stringify({ ts: new Date().toISOString(), kind: 'ba-table-from-filtered-read' }) + '\n'); } catch (_) {}
+      const unread = unreadTicketSources(data.transcript_path || '');
+      if (!unread.length) process.exit(0); // table + every source opened -> good
+      try { fs.appendFileSync(LEDGER, JSON.stringify({ ts: new Date().toISOString(), kind: 'ba-source-unread', unread }) + '\n'); } catch (_) {}
       process.stdout.write(JSON.stringify({
         decision: 'block',
         reason: [
-          '⛔ ba-understanding-table v1.1: BA table emitted, but the ticket text was never READ IN FULL this session.',
-          '   Only filtered access (grep / Select-String / head / -A -B) to History.txt / Description.txt was found.',
-          '   A table built from a grep reads authoritative while silently missing journal entries —',
-          '   QA-273201: grepping the REMARK block hid the entry naming the tested tugasan (SRPT + KKPT)',
-          '   and the trigger scenario ("Tindakan = Pembetulan > Klik butang Selesai"), which produced two',
-          '   false statements to miya and a fix aimed at the wrong trigger.',
-          '   FIX: Read the whole 0. Brief/History.txt (and Description.txt), then rebuild the table',
-          '   with ONE ROW PER JOURNAL ENTRY + one row per attachment.',
+          '⛔ ba-understanding-table v1.2: BA table emitted, but these PRIMARY BA SOURCES were never opened this session:',
+          ...unread.map(f => `     • ${f}`),
+          '   Open EVERY one (Read for text/images; the annotations skill for PDFs), then rebuild the table',
+          '   with ONE ROW PER JOURNAL ENTRY + ONE ROW PER ATTACHMENT.',
+          '   A grep / Select-String / head does NOT count as reading.',
+          '',
+          '   🚨 Description.txt is the BA ISSUE. History.txt is only the journal on top of it.',
+          '   Reading one is NOT reading the other — that `or` was the v1.1 hole (QA-270900 cycle-2, miya:',
+          '   "skipping reading latest BA issue (NOT LATEST MESSAGE IN HISTORY) AND its attachments. MANDATORY").',
+          '   Prior cost — QA-273201: grepping the REMARK block hid the entry naming the tested tugasan',
+          '   (SRPT + KKPT) and the trigger scenario, producing two false statements to miya.',
           '   Genuinely not a ticket-intake turn -> [skip-ba-table: <reason>].',
         ].join('\n'),
       }));

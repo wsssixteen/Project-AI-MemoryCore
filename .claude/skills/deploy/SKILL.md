@@ -83,13 +83,25 @@ the release path, and `git revert -m 1 <sha>` undoes it additively. Precedent: `
 2. **Already-merged guard** — `git merge-base --is-ancestor origin/<ticket-branch> origin/<base>`
    passes → skip to the card, one line saying so.
 3. Stash tracked modifications only — `git stash push -m "ruri-<ticket>-<env>" -- <paths>`
-4. `git tag -f ruri/pre-<env>-<ticket> origin/<base>` ← recovery anchor
-5. `git checkout -B ruri/<env>merge-<ticket> origin/<base>`
+4. `git tag -f pre-<env>-<ticket> origin/<base>` ← recovery anchor
+5. `git checkout -B <env>merge-<ticket> origin/<base>`
+
+   🚨 **Git artefact names carry the TICKET NUMBER ONLY — never a person/agent name** (みや 2026-08-05).
+   Banned prefix: `ruri/` (and any other name) on tags, temp branches, stashes. Same rule as the
+   stash convention (`stash <ticket-number>` and nothing else) and the no-names-in-deliverables rule.
    **Never** check out the local `mlk/stag-env` / `mlk/int-env` — they go stale (local stag-env
    was 167 ahead / 417 behind on 2026-07-27). Always fresh off `origin/<base>`.
 6. `git merge --no-ff origin/<ticket-branch> -m "Merge remote-tracking branch 'remotes/origin/<ticket-branch>' into <base>"`
    — team message format, match it exactly.
-7. `git diff --stat origin/<base> HEAD` → must be only the ticket's files. Anything else: stop.
+7. **Verify the TICKET's own contribution** — `git diff --stat HEAD^1 HEAD` → must be only the
+   ticket's files. Anything else: stop.
+
+   🚨 **Do NOT stop because `origin/<base>..HEAD` shows extra files** (みや 2026-08-05). An env
+   branch sits BEHIND `mlk/master`, so every master-based ticket branch legitimately carries
+   master's accumulated delta with it — pom bumps, other people's commits, whatever landed since
+   the env branch last caught up. **That is what an integration branch IS.** Treating it as a
+   blocker turns a routine merge into a fake decision and wastes みや's time. Report the catch-up
+   as one line (`env also catches up to master: <n> file(s)`), do not gate on it.
 8. `git push origin HEAD:<base>`
 9. `git fetch origin <base>` then re-check ancestry against `origin/<base>` → must be true.
 10. `git checkout <original-branch>` · `git branch -D ruri/<env>merge-<ticket>` · `git stash pop`
@@ -98,38 +110,52 @@ the release path, and `git revert -m 1 <sha>` undoes it additively. Precedent: `
 
 ---
 
-## 5 · The card — values substituted, only the requested env
+## 5 · The card — ONE COMMAND PER FENCED BLOCK
 
-🚨 **NEVER put the commands in a code fence, a table cell, or any single multi-line block.**
-みや copies them into a terminal **one at a time** and cannot double-click a line out of a fence.
-**One command per line, as a plain markdown bullet, with the command in single backticks.**
-No leading `./`-as-link, no numbering that glues to the command, no wrapping.
-(Third strike 2026-08-04 — see `emit-shape-not-copyable` in `system/slips.jsonl`.)
+🚨 **NEVER wrap the whole card in one code block** (みや 2026-08-05, 4th correction of this same
+shape — see the 2026-07-20 hand-off-card lesson in `main/main-memory.md`). He runs these steps
+**one at a time in a terminal**; a single big fence forces him to hand-select each line out of a
+block he can only copy whole. Every runnable command gets **its own ` ```bash ` block** — the app
+renders a copy/Run button per block. Prose lines (waits, prompts) stay plain text, never fenced.
 
-**Header** (plain lines, no fence):
+Header lines (merged / delta / revert) are plain text too — the revert command gets its own block.
 
-**DEPLOY — <ticket> → <env>**
-- merged `<ticket-branch>` → `<base>` @ `<merge-sha>`
-- delta `<n>` file(s): `<filenames>`
-- revert `git revert -m 1 <merge-sha> && git push origin HEAD:<base>`
+Emit only the requested env. Shape:
 
-**INTERNAL** — emit exactly these bullets:
-- `ssh app@172.16.100.162`
-- `cd deployment-scripts/mlit`
-- `./deploy-<module>.sh`
-- at the branch prompt: `mlk/int-env`
-- wait for the success message
+    DEPLOY — <ticket> → <env>
+    merged  <ticket-branch> → <base> @ <merge-sha>
+    delta   <n> file(s): <filenames>
 
-**STAGING** — emit exactly these bullets:
-- `ssh app@172.16.100.162`
-- `cd build-scripts17`
-- `./build-<module>.sh mlk/stag-env`
-- at the env prompt: `stag`
-- wait for BUILD SUCCESS, then `exit`
-- `ssh app@172.30.12.203`
-- `cd deployment-scripts/stag`
-- `./deploy-<module>.sh`
-- wait for the success message
+    🚨 **The card ALWAYS opens with みや's local catch-up — checkout THEN pull** (みや 2026-08-05).
+    His local env branch is a stale tracking ref (measured 55 commits behind on 2026-08-05); a bare
+    `git checkout mlk/int-env` hands him a branch WITHOUT the fix he is about to deploy. If tracked
+    files block the switch, first check whether their content already matches the target branch —
+    if it does, `git checkout -- <files>` is lossless and goes in as step 1.
+
+    ```bash
+    git checkout <base>
+    ```
+    ```bash
+    git pull --ff-only origin <base>
+    ```
+    ```bash
+    ssh app@172.16.100.162
+    ```
+    **2.** go to the build scripts
+    ```bash
+    cd build-scripts17
+    ```
+    **3.** build
+    ```bash
+    ./build-<module>.sh mlk/stag-env
+    ```
+    **4.** at the env prompt choose `stag`, wait for BUILD SUCCESS, then `exit`
+    ... (one block per command, continuing through the deploy host)
+
+    Revert if needed:
+    ```bash
+    git revert -m 1 <merge-sha> && git push origin HEAD:<base>
+    ```
 
 Then stop.
 
@@ -154,22 +180,6 @@ Skill-only Feature: no hook, no `settings.json` entry.
 Nuke: `rm -rf .claude/skills/deploy/ domain/deploy/` · remove the `registry.jsonl` line for
 `deploy` · revert the `system/system-architecture.md` §4.4 row.
 Eval: `node domain/deploy/eval.js`.
-
-## Version
-
-**v1.1 — 2026-08-04.** §5 card container changed from a single code fence to plain per-command
-bullets with inline backticks; added the explicit no-fence rule at the top of §5.
-**Why**: `emit-shape-not-copyable`, third occurrence (prior two: the baseline 1.0.10 hand-off card,
-and `./deploy-pelupusan.sh` auto-linkifying). みや copies commands one at a time and a fence gives
-one copy button for the whole block. The skill spec itself was mandating the banned shape, so the
-slip would have recurred on every future `/deploy` regardless of intent.
-**Spec-preservation diff (Rule 6 v1.2 check a)**: header fields (merged / delta / revert) PRESERVED ·
-INTERNAL 5 steps PRESERVED verbatim · STAGING 9 steps PRESERVED verbatim · "Then stop" PRESERVED ·
-§6 hard rules UNTOUCHED. **Zero specs dropped** — only the container changed.
-**Fire + effect check (b, c)**: `node domain/deploy/eval.js` re-run this session, result recorded
-in the DE change manifest.
-
-*v1.0 — 2026-07-27. Built during #271721.*
 
 ## Origin
 
