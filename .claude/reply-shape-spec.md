@@ -51,6 +51,45 @@ Each gate reads the last assistant turn from `transcript_path`, tests one predic
 
 ---
 
+## 3b. 🚨 Commands miya has to RUN are never fenced (added 2026-08-04 — third strike)
+
+**Any command intended for miya to copy into a terminal is emitted as a plain markdown bullet,
+one command per line, command in single backticks. NEVER inside a code fence, NEVER inside a table
+cell, NEVER as one multi-line block.**
+
+**Why**: he copies commands **one at a time**. A fence renders as a single block with one copy
+button — he cannot double-click a line out of it. He has said so three times.
+
+| Occurrence | What was fenced | Ledger |
+|---|---|---|
+| 1 | Baseline 1.0.10 hand-off card — 15 lines, one fence, one copy button | `emit-shape-not-copyable` |
+| 2 | `./deploy-pelupusan.sh` auto-linkified by the leading `./` even in backticks | `emit-shape-not-copyable` |
+| 3 (2026-08-04) | mlit deploy card for QA-273201 fenced as ```` ```bash ```` | `emit-shape-not-copyable` |
+
+**Correct shape**:
+- `ssh app@172.16.100.162`
+- `cd deployment-scripts/mlit`
+- at the branch prompt: `mlk/int-env`
+
+**Banned**: a ```` ```bash ```` block containing steps · numbering glued to the command
+(`1 ssh app@…` — the number gets selected too) · a leading `./` outside backticks (auto-linkifies) ·
+wrapping one command across two lines.
+
+**Precedence**: the Claude Code harness instruction *"put shell commands in a ```bash fence so the
+app adds a Run button"* is **overridden** by this rule. `using-superpowers` §Instruction Priority is
+explicit — the user's explicit instructions outrank default system-prompt behaviour. This is the
+exact inversion that produced strike 3: the harness rule was followed over みや's standing one.
+
+**Not covered by this rule**: code shown for *reading* (a Java diff, a JSF snippet, an SQL script he
+will save to a file) — those stay fenced. The test is **"will he type/paste this into a shell?"**
+
+**Enforcement**: spec'd in `.claude/skills/deploy/SKILL.md` §5 (v1.1) and asserted by
+`domain/deploy/eval.js` checks 21-24 (negative control verified 2026-08-04 — reintroducing a fence
+fails the eval). No Stop hook yet; a general `command-fence-gate` is the natural next promotion if a
+fourth strike lands.
+
+---
+
 ## 4. Precedence Note
 
 This file (`external-audit/sprint-drafts/reply-shape-spec.md`, destined for a permanent canonical path e.g. `.claude/reply-spec.md`) is the **canonical** source for reply-shape rules. `.claude/CLAUDE.md` §2 "Explanation & Output-Format Discipline" becomes a **pointer only**: its always-on mirror status (so the rule boot-loads every session) is preserved, but the full rule bodies, the gate predicate table, and the situation→shape table live HERE — CLAUDE.md must not carry a second full copy (per the File Ownership table's own "one canonical home" principle). Any future edit to a predicate, budget, or bypass token is made in this file first; CLAUDE.md's pointer text is updated only if the pointer's own summary line goes stale.

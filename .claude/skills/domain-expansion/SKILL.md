@@ -31,7 +31,8 @@ Then the step-line (update ⬜→✓ in place as each completes; `⏭ + one-line
 | # | Step |
 |---|---|
 | 1 | `Get-Date` timestamp |
-| 2 | Update `main/current-session.md` (Last Activity + Working Memory + Recap) |
+| 2 | Update `main/current-session.md` (Last Activity + Working Memory + Recap), **then run `node core/session-trim.js --apply`** |
+| 2b | ⚠️ **The trim is not optional.** `main/session-format.md:57` caps session memory at 500 lines; nothing enforced it and the file reached **1665 lines / 135 KB**. Boot step 5 reads this file to build the Session Briefing, and past ~25k tokens the Read tool **truncates** — so boot silently saw a partial file and the briefing was built on partial context. That is the "briefing breaks every time / is inaccurate" symptom (みや, 2026-08-04). Trimming at DE close is what keeps the next boot honest. Older blocks move to `main/session-archive.md`; nothing is ever deleted. |
 | 3 | Update `main/main-memory.md` relationship section if patterns surfaced |
 | 4 | Append `daily-diary/<date>.md` (3-section template) |
 | 5 | Forge log review — surface L1→L2 promotions as QUESTIONS to みや |
