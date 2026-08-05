@@ -712,6 +712,7 @@ commit=bd827a1bb6
 bundled_with=273201
 
 qa=QA-272943
+quest_start_ts=2026-08-05T13:13:58.827Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\114. ESOKONGAN #272943 - Pelupusan - PPJK - Kemaskini Surat Jabatan Teknikal Dan Ulasan YB Load
 phase=0
 status=closed
@@ -829,6 +830,7 @@ test_app=PTMLK/02/L/PT/2026/14 @ nurhafizah@melaka.gov.my (PROD, original report
 redmine_status=New | start 2026-07-31 | due 2026-08-12 | tracker eSOKONGAN (verified live 2026-08-04)
 prior_art=THIS IS ADHOC A8 NOW TICKETED - full diagnosis already banked at projects/coding-projects/active/PENDING-TICKET-pt-sempadan-awam/FINDINGS.md (233 lines, 5 theories killed). BA journal 2026-07-31 independently confirms the discriminator we found: mohon Awam + bayar Kaunter = data lost.
 branch=n/a-pre-apply
+board_state=Phase 0
 
 qa=QA-273460
 quest_start_ts=2026-08-04T19:22:32.640Z
@@ -850,6 +852,7 @@ overlap_scope_caution=Sub-issue 2 maps cleanly. Sub-issues 1 (ulasan lost after 
 branch=n/a-pre-apply
 
 qa=QA-273461
+quest_start_ts=2026-08-05T12:33:02.351Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\121. ESOKONGAN #273461 - Pelupusan - OPLPS - Running Number Lesen Tidak Sama Dengan Running Num
 phase=0
 status=closed
@@ -895,17 +898,25 @@ env=PDTJ > PPTPB > Papar Loading ''Sedang Kemaskini'' Lama
 issue_one_liner=PDTJ > PPTPB > Papar Loading ''Sedang Kemaskini'' Lama
 assigned_to_me=2026-08-04
 tugasan=Penyediaan Kertas Pertimbangan Pentadbir Tanah
+board_state=Rubric
 
 qa=QA-273919
 quest_start_ts=2026-08-04T16:48:41.163Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\126. ESOKONGAN #273919 - AWAM - PPJK - Labelling urusan papar Maklumat Pembatalan Perizaban
-phase=0
-status=hold
+phase=1
+status=closed
 ticket_type=bug
 env=AWAM > PPJK : Labelling urusan papar Maklumat Pembatalan Perizaban
 issue_one_liner=AWAM > PPJK : Labelling urusan papar Maklumat Pembatalan Perizaban
 assigned_to_me=2026-08-04
 urusan=PPJK
+board_state=Closed
+local_test_confirmed=true
+branch=mlk/esokongan/273919
+current_phase=Closed
+commit=434f4ae4af
+int_env_merge=ed595a9018
+closed=2026-08-05
 
 qa=QA-273621
 quest_start_ts=2026-08-04T18:36:55.451Z
@@ -920,3 +931,22 @@ urusan=MLPS - Membaharui Lesen Pendudukan Sementara
 tugasan=Cetakan Dokumen
 closed=2026-08-05
 close_note=RECONCILED from Redmine 2026-08-05 - New, Arkan Haryo Wibisono, 0%. Not our work.
+
+qa=QA-274136
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\128. ESOKONGAN #274136 - Pelupusan - Portal Awam - PT - Tak boleh simpan maklumat Modal Dibenar
+phase=0
+status=hold
+ticket_type=bug
+env=Pelupusan
+issue_one_liner=Pelupusan - Portal Awam > PT > Tak boleh simpan maklumat Modal Dibenarkan dan Modal Berbayar
+assigned_to_me=2026-08-05
+
+qa=QA-274046
+quest_start_ts=2026-08-05T13:32:02.657Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\129. ESOKONGAN #274046 - Pelupusan - PRBB - Papar Sedang Kemaskini Lama
+phase=0
+status=hold
+ticket_type=bug
+env=Pelupusan > PRBB > Papar Sedang Kemaskini Lama
+issue_one_liner=Pelupusan > PRBB > Papar Sedang Kemaskini Lama
+assigned_to_me=2026-08-05
