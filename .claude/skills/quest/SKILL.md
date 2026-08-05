@@ -185,6 +185,55 @@ Before any `git commit` on a quest:
 3b. **Work-repo cleanup (MANDATORY — added 2026-05-21 by みや)**: before staging, remove the throwaway artifacts Ruri created in the work repo during Apply — `*.bak*` backups, `*- Copy*` duplicates, orphaned `~$*` Word locks. Ruri's `.docx` backups belong in `outputs-temp/`, never the etanah repo. After cleanup, `git status` shows only the intended fix files + pre-existing unrelated changes — no Ruri-generated junk. **Why** (2026-05-21, QA-262004): Phase 1 close left `- Copy.docx` + 3 `.bak_ruri_*` files in the etanah repo; they were flagged to みや instead of cleaned.
 4. Only then proceed to commit
 
+### 🌐 ENV-PARITY row — MANDATORY at Phase 1 close for any DB/config deliverable (added 2026-08-05 per みや)
+
+**Fires when** the fix includes ANY of: a `.sql` script · a reference/config table edit (`ind_*`,
+`rjk_*`, `kod_*`) · a Kemaskini-Tugasan / maintenance-screen change · a flowable (BPMN) change.
+
+**Why**: a config change applied in ONE schema is invisible everywhere else, and nothing records
+where it is still owed. QA-270900 cycle-1 was closed by a maintenance-UI edit on `et_main_stg2`
+alone — it came back as cycle-2 because `et_main_mlit` never got it, and on 2026-08-05 PROD was
+found still on the pre-fix value weeks later. みや: *"this probably could've been prevented if we
+pasted the flowable and sql ticket name + script name."*
+
+**Emit this table, and paste it into the Redmine close note:**
+
+| Env | Schema | Current value | Script owed? |
+|---|---|---|---|
+| MLIT | `et_main_mlit` | `<queried>` | ✓ / ⬜ |
+| Staging | *(live pointer — `feedback_staging_schema_stg2.md`)* | `<queried>` | ✓ / ⬜ |
+| PROD | `et_main` | `<queried>` | ✓ / ⬜ |
+
+**Rules:**
+- **I run the SELECTs** — all four MCP servers are mine (`feedback_never_hand_miya_a_query`). Only the
+  write is みや's / the patching team's.
+- **Query, never infer.** A row is `<queried>` or it is not in the table.
+- **Blast radius**: for a transactional-table touch, also count in-flight rows (`umm_a_tgsn` etc.)
+  that would keep a stale value; state `0` explicitly when there are none.
+- **The Redmine close note carries three things**, so nobody has to re-derive them later:
+  `flowable path` · `#<ticket>, <script filename>` · this ENV-PARITY table.
+- **Banned**: closing a config/SQL ticket with only one env verified, or with the script named
+  nowhere in the ticket.
+
+### 🏷️ Scripts are `.sql` — ALWAYS (added 2026-08-05 per みや)
+
+**Every script created during a quest is written as `#<ticket>.sql`.** Never `.txt`.
+
+| Rule | Detail |
+|---|---|
+| Extension | `.sql` — so it opens with syntax highlighting instead of as plain text |
+| Name | `#<ticket>.sql` — one file per ticket, greppable from the ticket number alone |
+| Combine | multiple statements for one ticket go in ONE file; do not split |
+| Existing files | keep their real names — the ticket/Sheet must name what is actually attached |
+
+みや: *"please make it mandatory we always create `.sql` during quest itself. So that it is user
+friendly when they open the file."* This **supersedes** the `#<ticket> sql.txt` shape recorded
+earlier the same day in `release-mlk-plp` §E2 (that was read off an older attachment, `#269802
+sql.txt`); `.sql` wins for anything we author from now on.
+
+Content rules unchanged and still binding: no JOIN · kod-subquery id resolution · no schema prefix ·
+RAW-FIRST · expected-outcome annotation (`-- N rows updated`).
+
 ### Close stamp — `closed=@now` (added 2026-06-04, work-date drift fix)
 
 The moment the quest is actually **done** — status flips to `closed` (Phase 1) — stamp the close date in the SAME `active-cli.js` call:

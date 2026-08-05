@@ -173,3 +173,17 @@
 {"ts":"2026-08-04T20:05:58.781Z","category":"A1"}
 {"ts":"2026-08-04T20:05:58.892Z","category":"A1"}
 {"ts":"2026-08-04T20:07:05.184Z","category":"de-improvement-sweep"}
+{"ts":"2026-08-05T08:15:44.832Z","category":"commit-message-missing-ticket-number"}
+{"ts":"2026-08-05T08:15:44.907Z","category":"sql-delivery-not-verified-on-target-env"}
+{"ts":"2026-08-05T09:57:55.134Z","category":"worktree-stranded-delivery"}
+{"ts":"2026-08-05T10:14:15.045Z","category":"env-parity-not-checked-at-close"}
+{"ts":"2026-08-05T10:33:58.315Z","category":"reask/redundant"}
+{"ts":"2026-08-05T14:10:59.239Z","category":"A1"}
+{"ts":"2026-08-05T14:10:59.309Z","category":"A1"}
+{"ts":"2026-08-05T14:10:59.379Z","category":"A2"}
+{"ts":"2026-08-05T14:10:59.451Z","category":"A2"}
+{"ts":"2026-08-05T14:10:59.522Z","category":"A3"}
+{"ts":"2026-08-05T14:10:59.605Z","category":"A4"}
+{"ts":"2026-08-05T14:10:59.679Z","category":"A4"}
+{"ts":"2026-08-05T14:10:59.754Z","category":"A5"}
+{"ts":"2026-08-05T14:10:59.825Z","category":"A5"}

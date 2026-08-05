@@ -100,6 +100,31 @@ PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3)
 
    **The script's 🛑 Ask-BA table goes to みや verbatim** — those are his actions, not mine to resolve.
 
+3b. 🚨 **EVERY `CODE+SQL` / `SQL-PATCH` row gets VERIFIED ON THE TARGET ENV BEFORE the hand-off card
+   — automatically, never on みや's prompting** (added 2026-08-05 per みや, release 1.3.1).
+
+   **Why**: recon flagged #270900 and #272574 as CODE+SQL and I carried both to the Sheet line and
+   stopped there. みや had to ask *"please check if I need to run the scripts in staging"* — a
+   question I hold the tools to answer. Ledger: `sql-delivery-not-verified-on-target-env`.
+
+   **The 4 steps, run per SQL row, at Phase A — not later:**
+
+   | # | Step | How |
+   |---|---|---|
+   | 1 | READ the script | Redmine attachment via API, or the file みや names. Never guess its content. |
+   | 2 | Derive its OBSERVABLE post-state | the row(s)/column(s) it writes — e.g. `ind_tgsn.peranan` for kod X, or "2 new tugasan exist" |
+   | 3 | Query the **BA-verified env** (usually `mlit`) | this is the reference — it is the state BA signed off on |
+   | 4 | Query the **staging schema** | see `.claude/auto-memory/feedback_staging_schema_stg2.md` for WHICH schema is live — never default, read the pointer |
+
+   **Emit a per-script verdict table**: `Ticket · script · BA-env state · staging state · run on staging?`
+
+   **Also state the BLAST RADIUS** when the script contains a loop/`DO` block — count the rows it will
+   touch beyond the obvious ones, with a query. (1.3.1: #272574's `DO` block back-filled **112**
+   pre-existing `ind_pejabat_tgsn` gaps across 94 PLPS tugasan, on top of the 14 for its 2 new
+   tugasan. That number belongs in front of みや before he runs it, not after.)
+
+   **I run the SELECTs myself** — `feedback_never_hand_miya_a_query`. Only the write is his.
+
 4. **A git-only check is structurally blind — this is a HARD rule, not a preference** (2026-07-16,
    both proven on release 1.0.9):
    - `#269802` carried attachment `#269802 sql.txt` (`UPDATE ind_tgsn it set nama = …`) — a
@@ -147,9 +172,11 @@ node domain/release-mlk-plp/release-prep.js verify --release <ver>   # ✓-table
 #   🛑 V3: みや nods the verify table
 
 #   ── BUMP-COMMON — ONLY when recon returned COMMON-VER with the bump NOT on the release ──
-node domain/release-mlk-plp/release-prep.js bump-common --release <ver> --common 1.0.129-MLK
-#     ONE pom line: <etanah.common.version>; commits "common version increase to: <x>-MLK".
+node domain/release-mlk-plp/release-prep.js bump-common --release <ver> --common 1.0.129-MLK --ticket <n>
+#     ONE pom line: <etanah.common.version>; commits "#<n>: common version increase to: <x>-MLK".
 #     ⚠️ The --common value comes from redmine-recon's COMMON-VER verdict — NEVER invented.
+#     ⚠️ --ticket is REQUIRED (the COMMON-VER ticket). The script refuses without it — see
+#        §Commit-subject convention below.
 #     ⚠️ This RESETS phase to merged → re-run `verify` before push (the eval pins this).
 
 node domain/release-mlk-plp/release-prep.js verify --release <ver>   # again, if common bumped
@@ -233,7 +260,59 @@ infer it from the version footer, and never from "we pushed before building".
 | Common Version | `<common>` |
 | Module Version | `<ver>` |
 | Branch Name | `mlk/release/<ver>` |
-| SQL name with ticket number | `<recon's sheet line, or leave empty>` |
+| Dependency pendaftaran | (for Tukarganti & Pendaftaran only) |
+| Flowable Diagram | see §E2 — omit the whole field when the release ships no BPMN |
+| SQL name with ticket number | see §E2 — omit when the release ships no SQL |
+
+### E2 · POST-DEPLOY COMMENT — emit ON みや's "deploy successful" (added 2026-08-05 per みや)
+
+**Trigger**: みや confirms the deploy succeeded. Not before — the values describe what landed.
+**Output**: exactly two fields, nothing else. He pastes them into the Sheet's Developer section.
+
+```
+Flowable Diagram:
+sftp://ftpuser@172.16.90.169
+"/home/ftpuser/files/flowable-diagrams/Melaka/<YYYY-MM-DD>/Pelupusan/<bpmn-file-name>"
+SQL name with ticket number:
+#<ticket>, <script-file-name>
+```
+
+**Deterministic derivation — no field is invented:**
+
+| Slot | Source | Rule |
+|---|---|---|
+| `<YYYY-MM-DD>` | the **deploy date** | zero-padded ISO, e.g. `2026-08-05`. Never a range, never `DD-MM`. |
+| `<bpmn-file-name>` | the **ticket's own BPMN attachment filename**, verbatim | e.g. `MLK_PLP_PLPS.bpmn20.xml`. Never the MLIT copy's name if they differ — the ticket's attachment is the release deliverable (proven 2026-08-05: MLIT ran an unreleased v6 while the ticket + staging ran v5). |
+| `#<ticket>` | the ticket that OWNS the script | from recon's `CODE+SQL` / `SQL-PATCH` verdict |
+| `<script-file-name>` | the **actual attachment filename**, verbatim | what a reader must search Redmine for. Not the convention name if the real file differs. |
+
+**One line per artifact.** Two SQLs → two lines, each `#<ticket>, <file>`.
+
+**Omit a field entirely when the release has none** — an empty `Flowable Diagram:` label is noise, and a
+fabricated path is worse (2026-07-31: a stale SQL row carried through five turns because it was never
+tested for relevance).
+
+### 🏷️ SQL script naming convention — `#<ticket>.sql`
+
+> **Canonical home: the quest skill** (`.claude/skills/quest/SKILL.md` §Scripts are `.sql`). Scripts are
+> authored during the quest, not at release time — this section is the release-side pointer.
+
+**Every SQL we author is named `#<ticket>.sql`.** One file per ticket. The Sheet cell becomes
+mechanical: `#<ticket>, #<ticket>.sql`.
+
+| Good | Bad | Why bad |
+|---|---|---|
+| `#270900.sql` | `2. 270900-peranan-SSMW-BPRZ.sql` | leading index + description; unguessable from the ticket number |
+| `#272574.sql` | `#272574_updated.txt` | "updated" is a state, not a name — and `.txt` opens without syntax highlighting |
+
+**`.sql`, never `.txt`** (みや 2026-08-05) — the person opening it should get a SQL file, not a text
+blob. This supersedes the `#<ticket> sql.txt` shape read off the older `#269802 sql.txt` attachment.
+
+**Already-attached files keep their real names** — the Sheet must name what is actually in Redmine.
+The convention governs scripts **we** create from now on.
+
+**Multiple scripts for one ticket** (rare): `#<ticket>.sql` stays the single deliverable — combine,
+do not split. If they genuinely cannot combine, ask みや before inventing a suffix.
 
 - Host values come from `domain/release-mlk-plp/servers.local.json` (GITIGNORED; `.example` twin
   committed). Never print the password — it isn't stored anywhere in this repo.
@@ -310,6 +389,27 @@ re-reads `origin/mlk/master` and fails loudly if it isn't the release tip.
 | 12 | **DON'T carry on past `push` + the card** | Baseline's deliverable ends there. |
 
 **Scope test before ANY action during a release** — if the answer to *"is this exact action written in Phase A-E above?"* is anything but a plain **yes**, it is a DON'T.
+
+## 🏷️ Commit-subject convention — TICKET NUMBER FIRST (HARD, added 2026-08-05 per みや)
+
+**Every commit subject leads with the ticket number**: `#<ticket>: <what changed>`.
+
+| Commit | Subject |
+|---|---|
+| common bump | `#273731: common version increase to: 1.1.12-MLK` |
+| module bump | `#<ticket>: pelupusan version: 1.3.1` — or bare when the release owns no ticket |
+
+みや's reason: *"Knowing WHY (the ticket number) we make changes is helpful."* A bare
+`common version increase to: 1.1.12-MLK` in `git log` forces a reader to go hunting for which
+ticket demanded it; the prefix answers it in the same line.
+
+**Enforced, not remembered** — `release-prep.js cmdBumpCommon` **refuses** without `--ticket <num>`
+(3/3 behavioural tests: missing → refuse · non-numeric → refuse · valid → passes). `bump-version`
+takes `--ticket` optionally and **prints** the omission rather than being silent about it.
+
+**Scope**: this is the release pipeline's own commits. Merge commits keep git's default subject, and
+cherry-picked ticket commits keep the original author's message verbatim (that IS the ticket's own
+message and already names the ticket).
 
 ## Hard rules
 

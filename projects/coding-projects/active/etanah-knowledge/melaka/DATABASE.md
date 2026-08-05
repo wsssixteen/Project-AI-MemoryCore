@@ -1097,3 +1097,63 @@ JKKT-rayuan variants (`UPL` · `UPP` · `UPS_PLP` · `USP` · `UKBA` · `PS` · 
 mlit, stg1 or PROD. Cetakan-less letters that DO exist (PTS, TMAMG) belong to modules **BGN** and
 **DFT**, which never enter the AWAM `MODUL_PELUPUSAN` branch. So a cetakan-completed gate does not
 strand anyone — checked, not assumed.
+
+---
+
+## 18. Flowable (BPMN) — which schema, and which version is deployed
+
+*Added 2026-08-05 (Baseline 1.3.1). Three queries failed before this was written down; all three
+were WRONG QUERIES, not a broken DB.*
+
+### 18.1 Flowable lives in its OWN schema — and the name is not env-suffixed everywhere
+
+| Env | Main schema | **Flowable schema** |
+|---|---|---|
+| mlit | `et_main_mlit` | `et_flowable_mlit` |
+| staging (stg1) | `et_main_stg1` | **`et_flowable17`** ← NOT `et_flowable_stg1` |
+| PROD | `et_main` | *(unrecorded — fill on first use)* |
+
+🚨 `et_main_<env>.act_re_procdef` **does not exist** anywhere. The `relation does not exist` error
+means wrong schema, never a connection fault. When in doubt:
+
+```sql
+SELECT table_schema FROM information_schema.tables WHERE table_name = 'act_re_procdef';
+```
+
+### 18.2 Canonical query — which BPMN version is live, and does it contain marker X
+
+```sql
+SELECT p.version_, d.deploy_time_, octet_length(b.bytes_) AS bytes,
+       position('<marker string>' in convert_from(b.bytes_, 'UTF8')) AS marker_pos
+FROM   <flowable_schema>.act_re_procdef p,
+       <flowable_schema>.act_re_deployment d,
+       <flowable_schema>.act_ge_bytearray b
+WHERE  p.deployment_id_ = d.id_
+  AND  b.deployment_id_ = p.deployment_id_
+  AND  b.name_          = p.resource_name_
+  AND  p.key_           = 'MLK_PLP_<URUSAN>'
+ORDER  BY p.version_ DESC;
+```
+
+Two traps this closes:
+
+| Trap | Detail |
+|---|---|
+| `deployment_id_` ≠ the UUID inside `procdef.id_` | `id_` reads `MLK_PLP_PLPS:6:48485f8c-…` — that suffix is the **procdef's own** uuid. Joining on it returns 0 rows. Use the `deployment_id_` column. |
+| `b.name_` filter | join on `p.resource_name_`, not a `LIKE '%URUSAN%'` guess — the bytearray row carries other resources too. |
+| `deploy_time_` | already a `timestamp`. `to_timestamp(deploy_time_/1000)` throws — it is not epoch millis. |
+
+`octet_length(bytes_)` matches the on-disk file size **byte for byte**, so it identifies which local
+copy is deployed without reading the XML.
+
+### 18.3 A deployed version is not a released version
+
+Flowable deployments are additive and versioned: deploying vN+1 leaves running instances on their
+old definition and routes only new ones to the new. So **the newest version on an env says nothing
+about what belongs in a release.** MLIT in particular carries unreleased work.
+
+The release deliverable is `(the ticket's own BPMN attachment)` ∩ `(what the BA-tested env ran)` —
+never "newest on any env". **2026-08-05 proof**: `MLK_PLP_PLPS` v6 (452,783 B, loop-back to PJTLT,
+comment citing Requirement #242553 which has `fixed_version = NONE`) was live on mlit at 14:31,
+while the #272574 attachment and stg1 both carried v5 (451,836 B, terminal `endEvent "Tamat"`) —
+and BA's PASS was recorded against v5.

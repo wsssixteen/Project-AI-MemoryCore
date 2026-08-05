@@ -756,7 +756,7 @@ close_note=Phase 1 closed 2026-08-03: stg2 patch run by miya (PROD pending); jrx
 qa=QA-273201
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\119. ESOKONGAN #273201 - Pelupusan - PRBB  - Keputusan Pentadbir Tanah - Tiada medan agihan kep
 phase=1
-status=closed
+status=active
 ticket_type=bug
 env=MLKSTG (schema et_main_stg1, branch mlk/release/1.2.0, Module 1.2.0; PROD-reported too) - etanah-pelupusan
 issue_one_liner=PRBB Keputusan Pentadbir Tanah - Agihan Kepada field absent (empty officer list overrides adaPegawaiAgih) so agihanKKPT stays blank and gateway sid-39A4210F throws FlowableException on Hantar
@@ -765,7 +765,7 @@ urusan=PRBB
 tugasan=KKPT - Keputusan Pentadbir Tanah (peranan PTNH, PDTMT)
 qa_doc=projects/coding-projects/active/QA-273201/QA-273201.md
 test_app=PROD PTMLK/01/L/PRBB/2026/12 + /21 (m.ikram@melaka.gov.my, PDTMT); STG repro PTMLK/01/L/PRBB/2026/26 on et_main_stg1 (login not stated); exception row pt_application_ex_entity id 199824 (et_sistem_stg1)
-current_phase=Closed (Phase 1 REWORK v2) 2026-08-04 - commit 59f35f27eb on mlk/esokongan/273201v2 (off v1 tip bd827a1bb6), remote SHA verified, 1 file +1/-0. Merged to mlk/int-env @ d0308cc993 for mlit deploy. REWORK CAUSE: v1 fixed the RENDER half only; MlkKertasTemplateForm.prepareBpmValuesFor_tgsn_KKPT():2377 never sent the nextUser BpmNameValue (1 of 2 of 19 prepare methods omitting it), so FlowableTaskListener.receiveUserTask():150 got null and assigned the node ROLE group PPTnKanan_PPTT_PPD instead of the chosen officer. Fix = 1 line at :2384 matching sibling _SRPT():2394. TESTED by miya on PTMLK/01/L/PRBB/2026/26 (SRPT Pembetulan=Tidak -> PTNH shaifulhizam@, then KKPT Pembetulan=Ya -> PPD) - PASSED. BA 4 REMARK tugasan all already send nextUser (_SRPDT:2352 _PPT:2516 _SRJKBBPDT:2327 _PYRJKBBPDT:2336) and render via initData():298 from v1 - CODE-COVERED BUT UNWALKED; PPTPRBB + PRJKBBPDT have zero fixtures on stg1. LATENT: _KDO():2420 has the same nextUser omission, unraised.
+current_phase=REWORK cycle-4 OPEN - Mira 2026-08-05 05:56Z on MLKIT PTMLK/01/L/PRBB/2026/22: SRPT Agihan Kepada papar PT+PPTnKanan+PPTT+PPD, expected PT+PPTnKanan+PPTT (PPD must not list itself)
 branch=mlk/esokongan/273201v3
 commit=91e22e486f
 local_test_confirmed=true
@@ -773,6 +773,11 @@ bundled_with=272881
 closed=2026-08-05
 int_env_merge=440827f18d
 close_note=Cycle-3 PASSED on mlit 2026-08-05. Screenshot evidence: PTMLK/01/L/PRBB/2026/22, tugasan Semakan Rencana Pentadbir Tanah, user HADIFAIZAL BIN HARUN (PPTT), Pembetulan=Ya, Agihan Kepada dropdown lists PPTnKanan-KAMAROLZAMAN BIN MD NOH, PPTT-HADIFAIZAL BIN HARUN, PT-MUHAMMAD SAFFUAN BIN HASHIM. Matches BA expected: papar PT, PPTnKanan, PPTT. Was PT only. Fix: MlkPelupusanPegawaiAgihService.java:542 Arrays.asList(PT) to Arrays.asList(PT,PPTnKanan,PPTT). 1 file +1/-1, commit 91e22e486f on mlk/esokongan/273201v3, merged mlk/int-env @ 440827f18d. Rule written to PERANAN-MAP.md 5a: KELENGKAPAN_YA agihan list is every role strictly BELOW the ceiling of the tugasan node peranan group; node 12.0 is PPTnKanan_PPTT_PPD so ceiling PPD, below = PPTT PPTnKanan PT. Confirmed 4/4 across KKPT:519 PRJKBBPDT:550 SRPT-laneA:536 SRPT-laneB:542.
+rework=cycle-4
+reopened=2026-08-05
+cycle4_mechanism=VERIFIED from mlit rows. TWO SRPT nodes exist (code comment MlkPelupusanPegawaiAgihService.java:532-533 says so): node A peranan_semasa -KPPD-PPD- and node B -PPTnKanan-PPTT-PPD-. Dispatch keys on perananSemasa.contains(KPPD) at :534. a_tgsn 2730819 (-KPPD-PPD-, held by nurul.izza=PPD, 13:40:51Z) hits arm :536 which returns PPD,PPTnKanan,PPTT,PT - exactly Miras screenshot. Our cycle-3 edit was :542 (node B arm) and was verified on hadifaizal=PPTT which is node B. Wrong arm tested.
+cycle4_root_cause=peranan_semasa is the NODE role group, NOT the acting users role. PROOF: a_tgsn 2730819 and 2730686 both read -KPPD-PPD- but were held by PPD (nurul.izza) and KPPD (m.ikram) respectively. Any static list keyed on that string is wrong for one of the two holders. This is the arm-level class defect, not a value typo.
+redmine_status=Rework | assignee flipped 1311->1119 (Nurul Amirah) at 2026-08-05 06:15Z - NOT on miya queue at that moment | done=100 | fixed_version set by Anis 06:04Z then removed 06:15Z
 
 qa=QA-273300
 quest_start_ts=2026-08-04T16:22:09.039Z

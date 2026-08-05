@@ -314,7 +314,12 @@ function cmdBumpVersion(a) {
     die(`BUMP REFUSED — diff is not a clean single version-line change (reverted).\nremoved: ${JSON.stringify(removed)}\nadded:   ${JSON.stringify(added)}`, 2);
   }
   git(st.repo, ['add', 'pom.xml']);
-  git(st.repo, ['commit', '-m', `pelupusan version: ${st.release}`]);
+  // Ticket-first subject per miya 2026-08-05. The module bump serves the release itself, so a
+  // ticket is optional here — when none is given the bare subject is kept and the omission is
+  // printed, never silent.
+  const verSubject = a.ticket ? `#${a.ticket}: pelupusan version: ${st.release}` : `pelupusan version: ${st.release}`;
+  if (!a.ticket) console.log('· note: no --ticket given — module bump committed without a ticket prefix');
+  git(st.repo, ['commit', '-m', verSubject]);
   st.headSha = gitOut(st.repo, ['rev-parse', 'HEAD']);
   st.phase = 'bumped';
   saveState(st);
@@ -336,6 +341,10 @@ function cmdBumpCommon(a) {
   if (!['merged', 'verified', 'bumped'].includes(st.phase)) die(`BUMP-COMMON REFUSED — phase is ${st.phase}, expected merged/verified/bumped`, 2);
   const want = a.common;
   if (!want || !/^\d+\.\d+\.\d+[\w.-]*-MLK$/.test(want)) die(`--common must look like 1.0.129-MLK (got "${want}")`, 2);
+  // Commit subjects lead with the ticket number so the WHY is readable from `git log` alone
+  // (miya 2026-08-05, release 1.3.1 — the bump shipped as a bare "common version increase to:").
+  // The ticket is the COMMON-VER ticket from redmine-recon; it is never invented.
+  if (!a.ticket || !/^\d{5,}$/.test(String(a.ticket))) die(`--ticket <num> is REQUIRED — the COMMON-VER ticket this bump serves (got "${a.ticket}")`, 2);
   ensureRepo(st.repo);
   ensureOnBranch(st.repo, st.branch);
   const pomPath = path.join(st.repo, 'pom.xml');
@@ -370,7 +379,7 @@ function cmdBumpCommon(a) {
     die(`BUMP-COMMON REFUSED — not a clean single common-version change (reverted).\nremoved: ${JSON.stringify(removed)}\nadded:   ${JSON.stringify(added)}`, 2);
   }
   git(st.repo, ['add', 'pom.xml']);
-  git(st.repo, ['commit', '-m', `common version increase to: ${want}`]); // mirrors aaron's d19b0b2b0a
+  git(st.repo, ['commit', '-m', `#${a.ticket}: common version increase to: ${want}`]); // mirrors aaron's d19b0b2b0a
   if (st.phase === 'verified' || st.phase === 'bumped') { st.phase = 'merged'; st.headSha = null; } // re-verify required
   saveState(st);
   log('bump-common', st.release, 'ok', { from: before, to: want });
