@@ -1,5 +1,64 @@
 # Current Session
 
+## 2026-08-06 01:58 → 02:54 — THE SWEEP CONTRACT GOT DECIDED, AND THE ANSWER TO 273455 HAD BEEN ON DISK FOR FOUR DAYS
+
+**miya asked me to settle how we run a multi-ticket sweep — how many loops, what the familiars are
+told, whether they self-appraise — then run it over all 8 open tickets. The contract I chose put the
+controller's own reading FIRST, and that is what surfaced the night's biggest finding: the diagnosis
+for 273455 was already written in our knowledge base on 2026-07-31, and a 20-familiar four-pass sweep
+on 08-04 had still recorded it "blocked on discovery".**
+
+### ▶▶ NEXT SESSION — START HERE
+
+| Ticket | State | First step on resume |
+|---|---|---|
+| **273455** | 88% · fix shape agreed | Build fix 1 only (`PelupusanSpocService.java:254` backfill). Read `DATABASE.md §16` first — corrected this session |
+| **273461** | 90% · **reopened** | Guard **both** `MlkPengiraanBayaranLesenForm.java:647` AND `:648` with `URS_PLPS`. Answer Anis: shared sequence is correct, only timing moves |
+| **273621** | 90% · two defects in series | `GP_L1E` fallback **plus** PDF→image conversion. Kod fix alone swaps one blank for another |
+| **274136** | 80/70% · **new** | 2-minute check first: View Source the AWAM dialog for two inputs named `…modalDibenarkanPemilik`. Fix order is load-bearing |
+| **273837** | 92% · blocked | Patch derived; the script write was denied by the classifier — needs miya's call |
+| **273921** | 78% · template theory SURVIVES | Needs 3 named server-log lines to pick the lane |
+| **273460** | UNSTABLE | Test the `tindakan.config.json:698` array fix FIRST. The L1 fix was disqualified as harmful **and** a no-op |
+
+### The contract I chose, and why
+
+| Question | Decision | Rested on |
+|---|---|---|
+| loops | **2 lenses + controller adjudication**, 3rd only on instability | 08-05: four passes ran because four were specified; #273621 flipped in all four and nothing noticed |
+| lenses | L1 DERIVE (blind) → L2 REFUTE (named claims to kill) → I adjudicate with a real read/query | every material catch came from a reader who could not see the prior reasoning |
+| `/appraise` | **never by the deriving familiar** — self-appraisal audits the reasoning that produced the error | 07-21 |
+| effort | Opus **low** (his spec) ⇒ *more* scaffolding: named files, named queries, forced schema | Delegation Economy |
+| ticket reading | **mine, before any spawn** | 08-05: decisive artifact was a non-text file on half the tickets |
+
+11 agents instead of ~20. 6 of 6 derivations produced a line-backed mechanism.
+
+### What the passes actually changed
+
+| Ticket | Was | Is |
+|---|---|---|
+| 273455 | "blocked on pinning the write site" | `DATABASE.md §16` had it since 07-31 — **including this ticket's own `13093/13154/13103/13101`**. Second defect found, then its attribution killed: the reported row is human-created, so the clobber explains 11 of 47 losses, not this one |
+| 273461 | fix = move the generation | scope settled by BA's **08-05** reply (shared sequence is correct); guard must cover `:648` too; the line was added deliberately by tcting for PPTPB |
+| 273621 | "kod confounded with format" (candidate) | **proven, and it is two defects in series** — kod fix alone leaves the same blank box |
+| 274136 | my comma theory | **REFUTED** by a DB counter-example. Real cause: two JSF inputs bound to the same property, plus a missing `remove()`. Shipping the `remove()` first would have **destroyed data** |
+| 273460 | re-enable the commented block | **HARMFUL and a no-op** — reverts faizudin's #265094 and the mechanism it claims is false on that path. Cheaper candidate: a config value that is a bare string where siblings are arrays |
+| 273921 | executor log "falsifies" the template theory | **my error** — a launcher starting is not Word opening the file. The theory survives; the log is consistent with it |
+
+### Behaviour
+
+**My own blind-pass ban swallowed the knowledge base.** I banned `projects/coding-projects/active/`
+to hide our qa_docs; `etanah-knowledge/` lives inside it. Same prompt, opposite reactions: one
+familiar skipped knowledge and said so, another read it and filed a contamination disclosure.
+
+**I logged a slip from an unadjudicated agent claim** — banked "the patch script destroys issued
+licences" as fact; the refuter read the rows and found premature artifacts with NULL validity.
+Corrected in the ledger. Controller-verifies applies to the ledger too.
+
+**A PROD patch script write was denied by the harness classifier.** Surfaced, not worked around.
+
+**Slips**: `knowledge-file-existed-but-not-consulted` · `blind-pass-ban-swallowed-knowledge-folder` ·
+`gate-has-an-opt-out-that-is-free` · `patch-script-targets-live-records` (later corrected) ·
+`logged-a-slip-from-an-unadjudicated-agent-claim`. **8 proposals** filed to the weekly-audit lane.
+
 ## 2026-08-05 11:51 → 22:15 — THE BOARD GOT BUILT, 273919 SHIPPED, AND THE 51 MB FILE GOT MEASURED
 
 **Most of the day went into making the open-ticket list something that loads the same way every
@@ -148,65 +207,3 @@ tonight on the one ticket where the image was decisive.
 
 ⚠️ **Sequencing note for the next audit**: this work landed *after* the DE close-out, so DE's own
 Step 7.5 never ran on the session that created it. First real firing is next DE.
-
-## 2026-08-04 22:33 → 2026-08-05 03:30 — QA-273300: THREE gates, two of them shipped wrong, third one verified
-
-**I shipped a wrong fix to two env branches, then a second wrong fix, before adversarial familiars
-and みや's own questions forced the third. The third is data-validated. The night cost him his sleep.**
-
-### ▶▶ NEXT SESSION — START HERE
-
-| # | Thing | State |
-|---|---|---|
-| 1 | `QA-273300` Phase 1 closed | commit `ea59cbecee` · `int-env dbbac70260` · `stag-env d9f03a22c8`, all remote-verified |
-| 2 | **NOT COMPILED** | no JDK 8 on this machine (`E:\Java\java8` in the toolchain does not exist; only `C:\Program Files\Java\jdk-17`). The mlit build is the first compile |
-| 3 | Deploy owed | `./deploy-awam.sh` on `172.16.100.162` → `deployment-scripts/mlit`, branch prompt `mlk/int-env` |
-| 4 | Test fixtures | AWAM `samsiah.j85@gmail.com` · `/24` icon HIDE · `/25` icon SHOW |
-| 5 | ⚠️ **Those two fixtures cannot distinguish v1 from v3** | neither sits in the leak window. A true differential fixture is stg1 ADK `8546214` or `8549168` |
-| 6 | Phase 2 owed | archive hygiene + bounty for 273300 |
-
-### The fix, and why the first two were wrong
-
-BA's Expected: *"Ikon Surat Keputusan akan papar di AWAM selepas selesai tugasan Cetakan Dokumen …
-dan … latest version with sign iaitu … yang telah user Peraku."*
-
-| Gate | Predicate | Why it died |
-|---|---|---|
-| v1 `c7c19c538f` | hide while any ladder tugasan is **active** | leaks during `PTBUT2`, the hand-over step between peraku and cetakan — nothing of mine is active there |
-| v2 (unshipped) | require **a** completed `CT_BSC_PLP` | `CT_BSC_PLP` is a SHARED multi-instance tugasan — mlit `PLPS/2026/2` printed 07-01 *and* 07-09, so an earlier print opened the gate weeks early |
-| **v3 `ea59cbecee`** | latest completed peraku (`PSSK`/`PSTP`/`PSKN5A`) **AND** a completed `CT_BSC_PLP` whose `trkh_mula` is **after** it **AND** status ∈ {PERAKU, CETAK, SELESAI, null} | validated: stg1 25/25 rows incl. `8546214`/`8549168` (cetakan predates peraku → now hide); mlit `/24` HIDE, `/25` SHOW |
-
-The three peraku kods came from `template.config.json` tugasanList, not from name resemblance —
-they cover all 13 urusan that produce these letters.
-
-### The adversarial round — his instruction, and it worked
-
-3 opus familiars, ~440k tokens, one narrow question each. All three refuted the approach.
-Two findings held under my re-verification (multi-instance cetakan; the status allow-list is inert —
-`CETAK`/`SELESAI` have **zero** rows ever written in prod). **One over-claimed**: "rejection letters
-hidden forever" — prod says the only modul-PLP urusan with these letters is PRBB, which *does* define
-cetakan. Controller-verification caught the subagent, exactly as the 07-22 lesson says it must.
-
-Three further defects I caught myself before writing code: the application-level fallback cannot tell
-"flow has no cetakan" from "cetakan hasn't happened yet"; row-id is not a safe ordering proxy (3 stg1
-apps run out of order); and `A_TGSN_ID` is **unmapped** in `etanah-domain 1.0.4-MLK`, which killed the
-elegant per-document design outright.
-
-### Behaviour — the expensive part
-
-Slips logged this session: `reask/redundant` (asked him to choose a gate point BA had already stated
-verbatim, and which my own doc had already marked answered) · `worktree-stranded-delivery` (wrote the
-whole verification pass into the main-repo copy of the qa_doc while running in a worktree — caught by
-`quest-deferrals-gate`, not by me) · `name-in-artifact` (`ruri/` prefix on a git tag) ·
-`deploy-steps-missing-local-pull` (his local env branch was **55 commits behind**; my card would have
-had him deploy a branch without the fix) · `predicate-weaker-than-requirement` ·
-`correlation-read-as-mechanism` · `application-scoped-predicate-for-document-scoped-requirement`.
-
-Also: I merged onto `mlk/master` because I ran `git merge` without checking that the preceding
-`git checkout -B` had aborted. Undone, never pushed — but that is the second time this session that
-not reading an exit code cost something.
-
-Fixed at source, not just logged: `/deploy` skill (name prefix, one-command-per-block card, mandatory
-local checkout+pull, and the env-catches-up-to-master delta is no longer treated as a blocker) ·
-session-briefing + save-commands + `open-quest-surfacer` (the `Days` column is a bare number; `+3d`
-and `Days left` are banned columns).
