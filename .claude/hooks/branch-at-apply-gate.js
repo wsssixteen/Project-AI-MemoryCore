@@ -34,7 +34,7 @@ const stateDir = path.join(projectRoot, '.claude', 'state');
 const logPath = path.join(stateDir, 'branch-at-apply-gate.log.jsonl');
 
 // Phases at/after which branch ops ARE legitimate (Commit-prep onward).
-const CLOSING_PHASES = ['Commit', 'Push', 'Closed', 'Close', 'Wrap', 'Closed-Phase1'];
+const CLOSING_PHASES = ['Commit-prep', 'Commit', 'Push', 'Closed', 'Close', 'Wrap', 'Closed-Phase1'];
 const TERMINAL_STATUS = ['closed', 'archived'];
 
 function logDecision(obj) {
@@ -90,18 +90,32 @@ process.stdin.on('end', () => {
     const cmd = (input.tool_input && input.tool_input.command) || '';
     if (!/\bgit\b/.test(cmd)) process.exit(0);
     if (!isBranchSwitchOrCreate(cmd)) process.exit(0);
+    // The /deploy env-merge creates a throwaway integration branch (int-envmerge-<n> /
+    // stagmerge-<n>) off origin/<env>. That is not the slip this gate guards — the slip was
+    // checking out a TICKET FIX branch mid-Apply. Deploys also run AFTER the quest is closed,
+    // so no active quest can vouch for them.
+    if (/\b(int-env|stag)merge-\d+\b/.test(cmd)) process.exit(0);
 
     // Exempt the MemoryCore repo itself (worktree/branch management is fine).
     const memoryRoot = projectRoot.replace(/\\/g, '/');
     if (repoTarget(cmd).startsWith(memoryRoot)) process.exit(0);
 
-    // Find an active quest in a pre-Commit phase.
+    // Find the active quests, and let a legitimate close through.
+    // Sessions routinely hold several active quests at once, so picking the FIRST one
+    // blocked whichever quest was actually being closed (2026-08-06: QA-273621 was at
+    // Commit-prep and the gate cited QA-273201, mid-rework, as the reason).
     const blocks = parseBlocks();
-    const active = blocks.find(o => o.status === 'active' && !TERMINAL_STATUS.includes(o.status));
-    if (!active) process.exit(0);
+    const actives = blocks.filter(o => o.status === 'active' && !TERMINAL_STATUS.includes(o.status));
+    if (!actives.length) process.exit(0);
+    // If ANY active quest has reached a closing phase, a branch op is legitimate — another
+    // quest sitting mid-Apply is not evidence that THIS branch op is the silent-checkout slip.
+    const closing = actives.find(o => CLOSING_PHASES.includes((o.current_phase || '').trim()));
+    if (closing) {
+      logDecision({ ts: new Date().toISOString(), qa: closing.qa, phase: (closing.current_phase || '').trim(), cmd: cmd.slice(0, 200), decision: 'allow-closing-phase' });
+      process.exit(0);
+    }
+    const active = actives[0];
     const phase = (active.current_phase || '').trim();
-    const isClosing = CLOSING_PHASES.includes(phase);
-    if (isClosing) process.exit(0);
 
     // One-shot bypass: みや-approved base branch.
     const flagPath = path.join(stateDir, `base-branch-approved-${active.qa}.flag`);

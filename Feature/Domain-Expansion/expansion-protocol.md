@@ -194,6 +194,48 @@ logged with no eval case · skipping an axis without an explicit one-line reason
 
 ---
 
+## Step 2b — SAVE EVERY QUEST TOUCHED THIS SESSION (added 2026-08-06 per みや — MANDATORY)
+
+> **みや's instruction**: *"1. save everything about this ticket. 2. perform domain expansion… 4. improve
+> domain expansion so that I don't have to write all of this."*
+
+**Why this is its own step**: DE persists the SESSION (step 2 `current-session.md`) and the DAY (step 4
+diary) — and never the **ticket**. The quest doc is the file the next session of that quest actually
+opens, and nothing in the 18-step ritual wrote it. So みや had to name it by hand every close. Proposed
+2026-07-20 in `todo.md` Q1 after he asked *"did you save 239386's progress into its quest md?"* — answer
+was no — and broadened 2026-07-21 to every quest touched, not just the one marked `active`. Built here.
+
+**The failure it kills is specific and was demonstrated the same day**: on 2026-08-06 the resume contract
+found commit `8bd34da47c` — a fix for #273461, pushed two days earlier — while that ticket's own qa_doc
+still read *"Phase 0 only. No code changed."* A quest doc that is never written at close does not merely
+go stale; it comes to assert the opposite of what happened.
+
+### What runs
+
+For **every** quest whose `qa_doc` was touched this session, or whose `active.txt` block has
+`status ∈ {active, hold, blocked, delegated}` and which moved at all, append a dated block covering:
+
+| Row | Content |
+|---|---|
+| Phase / status | where it now sits, in the canonical enum |
+| What moved | commit SHA + branch + env merge if it shipped; findings if it did not |
+| Delivery channels | 🚨 name **every** channel, including the ones git cannot see — a SQL/doc **attachment on Redmine** is invisible to branch-based release recon (#269802 2026-07-17, #273461 2026-08-06) |
+| Resume point | the exact next action, cold-reader complete |
+| Deferrals | the `## Deferred to follow-up` table, every row with a Home |
+
+**Then reconcile the copies.** A qa_doc under `projects/` exists in BOTH the main repo and the worktree,
+and hooks read the **worktree** copy while the durable content lives in **main**. Writing one and not the
+other is why the deferrals gate reported a section as missing on 2026-08-06 that had in fact been
+written. Sync them in this step, not at commit time.
+
+**Verified by**: step 12.6 `resume-readiness.js` — 2b is the WRITE, 12.6 is the READ-BACK. A `✗` there
+means 2b did not actually run for that quest.
+
+**Banned**: closing DE with a quest that moved this session and whose qa_doc carries no entry for it ·
+writing only one of the two copies · `⏭` without naming the quest and why it genuinely did not move.
+
+---
+
 ## Step 12.5 — meta-audit (added 2026-05-23, Phase 6 of system-layer build)
 
 After Step 12's `/verify` Checklist D goes green, run a **meta-audit** pass before declaring DE closed. Covers the system-layer's recursive-safety concerns (Stage 5 self-enforcement).

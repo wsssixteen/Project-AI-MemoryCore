@@ -985,9 +985,41 @@ Constant is `PelupusanConstant.KEY_SEMPADAN_LIST` (`= "sempadanList"`, `Pelupusa
 ### 16.3 The transfer happens on ONE line, behind a gate
 
 `etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\service\impl\PelupusanSpocService.java:241`
-`BeanUtil.copyProperties(phm, ahm, "id")` — the only code that moves `maklumatTambahan` from pra to app.
-Gated at `:234` on `CollectionUtils.isEmpty(ahmList)`, reached from `SpocIntegrationServiceTask.process():70`
-(Flowable service task ⇒ `created_by = SYSTEM`).
+`BeanUtil.copyProperties(phm, ahm, "id")` — the only **pra→app** carrier of `maklumatTambahan`.
+Gated at `:235` on `praAplikasi != null && CollectionUtils.isEmpty(ahmList)`, reached from
+`SpocIntegrationServiceTask.process():70` (Flowable service task ⇒ `created_by = SYSTEM`).
+
+> **Corrected 2026-08-06** (#273455, two independent passes). Two fixes to the original wording:
+> the gate is at `:235`, not `:234`; and *"the only code that moves maklumatTambahan"* is true only
+> of the pra→app direction. **Four app-side writers also touch `umm_a_hkmlk.mklmt_tmbhn`**:
+> `PelupusanService.java:4514` (appends `refData`), `:4951`, **`:4997`**, `:6615`.
+>
+> `:4997` is destructive — see §16.3b.
+
+### 16.3b The second defect: the app-side clobber (added 2026-08-06)
+
+`PelupusanService.saveMaklumatPlotIntoPermohonanTanah()` builds a JSON object that is emptied at
+`:4836` (`jsonObject.entrySet().clear()`, reached because `:4835 isBlank(apt.getMaklumatTambahan())`
+is always true for the freshly-constructed `AppPermohonanTanah` at `:4771`), then overwrites the
+whole column at `:4997`. Any `sempadanList` / `jarakDari` already present is destroyed. `luas`
+survives because it is a separate column, which is what produces the *partial*-loss shape
+(keluasan present, sempadan blank).
+
+Reachable for PT — callers `PelupusanExcelReaderHelper.onUploadJadualPlot():1889` (explicit `URS_PT`
+handling at `:1882`) and `onSaveMaklumatPlot():2642`; no guard excludes PT.
+
+**Scope it correctly before fixing it.** On PROD, of the PT applications whose AWAM row carries
+`sempadanList`:
+
+| `umm_a_hkmlk` written by | kept | lost |
+|---|---|---|
+| `SYSTEM` (service task ran) | 32 | 11 ← the clobber |
+| human session (counter created the row first) | 3 | **36** ← the gate |
+
+The clobber explains **11 of 47** losses. The gate explains 36. `PTMLK/02/L/PT/2026/14` — the ticket's
+own row — is `created_by = zeety@melaka.gov.my`, i.e. **human**: the clobber did run on it, but there
+was never a copied `sempadanList` for it to destroy. A fix that only repairs `:4997` misses the
+reported case and 77% of the population.
 
 `com.puncaktanah.utils.BeanUtil.copyProperties()` ignores only `id` / `createdBy` / `version` /
 `createdDate` / `lastModifiedBy` / `lastModifiedDate` + `Collection` fields — so `maklumatTambahan`
@@ -1016,7 +1048,7 @@ the 2026-07-31 ticket look impossible ("Jadual 1 ada, skrin tiada").
 
 ### 16.6 Screen-writer signature (useful for provenance)
 
-`PelupusanService.populateSempadanTanahListIntoJson():4687` returns `StringUtils.EMPTY`, never null — so
+`PelupusanService.populateSempadanTanahListIntoJson():4692` returns `StringUtils.EMPTY`, never null — so
 an officer screen-save always leaves `"sempadanList":""` plus a `jarakDari` sibling. On PROD both counts
 are **0**, i.e. the pelupusan Maklumat Tanah screen has never written this field. Use the presence of
 `""`-vs-array, and of `jarakDari`, to tell which writer produced any given row.
@@ -1097,3 +1129,252 @@ JKKT-rayuan variants (`UPL` · `UPP` · `UPS_PLP` · `USP` · `UKBA` · `PS` · 
 mlit, stg1 or PROD. Cetakan-less letters that DO exist (PTS, TMAMG) belong to modules **BGN** and
 **DFT**, which never enter the AWAM `MODUL_PELUPUSAN` branch. So a cetakan-completed gate does not
 strand anyone — checked, not assumed.
+
+---
+
+## §16 — There is NO application→DMS foreign key (verified 2026-08-05, PROD)
+
+Finding a generated document's DMS row **cannot be done by joining from the application**. All four
+candidate links are empty on PROD:
+
+| Candidate | State |
+|---|---|
+| `et_main.umm_a_dok_keluaran.dok_id` | NULL on every row checked (aplikasi 3396320, 3427027) |
+| `et_main.skg_dok.a_dok_keluaran_id` | NULL for the rows that matter — 15.1M rows total, 5.95M carry an ADK id, but not these |
+| `et_dms.dokumen.folder_id` | NULL |
+| `et_dms.dokumen_tag` | zero rows for the documents checked |
+
+**What works instead** — get the DMS id from OUTSIDE the DB, then query forwards:
+
+1. The BA's `executor.log` in `0. Brief/` carries it — `grep -oE "LAIN-[0-9]+"` (274046: 24 hits of
+   `LAIN-36832946`).
+2. Then: `et_dms.dokumen` (`id_dokumen` = `LAIN-…`) → `et_dms.dokumen_revision` for
+   `nama_fail` · `saiz_fail_byte` · `versi` · `lokasi_fail` · `lokasi_fail_pdf`.
+
+**File path shape** (identical on PROD and stg1):
+`/home/app/etanah/files/dms/SISTEM-FAIL/KELUARAN/LAIN-LAIN/<YYYY>/<MM>/LAIN-<id>_1.main`
+(the `.pdf` sibling is the same path + `.pdf`).
+
+**Consequence for infra requests**: a PROD→staging file load can name the PROD path exactly, but the
+STAGING target id is only obtainable after the document exists on staging — i.e. have the officer
+regenerate there first, then overwrite that file.
+
+## §17 — 🚨 CORRECTED — the permohonan ID **is** stored: `umm_aplikasi.id_pengenalan`
+
+> An earlier version of this section claimed no permohonan-ID column exists. **That was WRONG**,
+> written 2026-08-05 and refuted the same night. The error: the column list was read,
+> `id_pengenalan` was seen, and the NAME was assumed to mean IC/passport. It was never opened.
+> Name-vs-contract — the same failure class as 2026-08-04.
+
+```sql
+SELECT id_pengenalan FROM et_main.umm_aplikasi WHERE aplikasi_id = 3398208;
+--> PTMLK/02/L/PT/2026/3
+```
+
+Join straight through it — no timestamp matching, no inference:
+
+```sql
+-- permohonan ID -> application
+SELECT * FROM et_main.umm_aplikasi WHERE id_pengenalan = 'PTMLK/02/L/PT/2026/3';
+
+-- sejarah pengagihan -> application
+--   umm_sejarah_pengagihan.id_permohonan = umm_aplikasi.id_pengenalan
+--   written by CommonPengagihanTugasanHelper.java:119
+--     setIdPermohonan(aplikasi.getIdPengenalan())
+--   and PengagihanTugasanService.java:2547 (abbreviated to 30 chars)
+```
+
+**Every urusan has one**, including utilities and carian — only the format differs:
+
+| Urusan kind | Example |
+|---|---|
+| Pelupusan / PT / utilities | `PTMLK/02/L/PT/2026/3` · `PTMLK/02/L/UPP/2026/2` |
+| Carian rasmi (CRHM) | `02CR2659/2026` |
+
+**Running number source**: `et_main.sis_no_turutan.no_turutan`, keyed
+`kodPejabat+kodUnit+kodUrusan+year` (e.g. `02LPT2026`). Incremented under pessimistic lock in
+`etanah-pelupusan\...\util\PelupusanUtil.java:301-323` (`runningNumberPessimisticLock`),
+formatted at `PelupusanUtil.java:325-343` (`populateIdPermohonan`).
+
+**Not the link** — empty on real rows: `no_rujukan_fail`, `no_fail`, `turutan`.
+
+## §17b — stg1 is a PROD refresh
+
+`PTMLK/02/L/PPTPB/2026/1` is **not stored** — `umm_aplikasi` has no `id_permohonan`, and `turutan`
+is NULL. The string appears only in `umm_notifikasi.id_permohonan`,
+`umm_sejarah_pengagihan.id_permohonan` and the `dok_kutipan_*` tables — none of which carry
+`aplikasi_id`, so neither is a usable bridge.
+
+**The shortcut**: `aplikasi_id` is IDENTICAL between PROD and stg1 (stg1 is a refresh). Verified
+2026-08-05 — `3396320` on both, same `ursn`, same `pejabat`, same `created_date` to the second. So
+resolve the id on PROD (where the document trail leads), then query stg1 with the same number.
+
+⚠️ An application created AFTER the refresh exists on PROD only — `3427027` (274046, created
+2026-08-04) has zero `umm_a_tgsn` rows on stg1.
+---
+
+## 18. Flowable (BPMN) — which schema, and which version is deployed
+
+*Added 2026-08-05 (Baseline 1.3.1). Three queries failed before this was written down; all three
+were WRONG QUERIES, not a broken DB.*
+
+### 18.1 Flowable lives in its OWN schema — and the name is not env-suffixed everywhere
+
+| Env | Main schema | **Flowable schema** |
+|---|---|---|
+| mlit | `et_main_mlit` | `et_flowable_mlit` |
+| staging (stg1) | `et_main_stg1` | **`et_flowable17`** ← NOT `et_flowable_stg1` |
+| PROD | `et_main` | *(unrecorded — fill on first use)* |
+
+🚨 `et_main_<env>.act_re_procdef` **does not exist** anywhere. The `relation does not exist` error
+means wrong schema, never a connection fault. When in doubt:
+
+```sql
+SELECT table_schema FROM information_schema.tables WHERE table_name = 'act_re_procdef';
+```
+
+### 18.2 Canonical query — which BPMN version is live, and does it contain marker X
+
+```sql
+SELECT p.version_, d.deploy_time_, octet_length(b.bytes_) AS bytes,
+       position('<marker string>' in convert_from(b.bytes_, 'UTF8')) AS marker_pos
+FROM   <flowable_schema>.act_re_procdef p,
+       <flowable_schema>.act_re_deployment d,
+       <flowable_schema>.act_ge_bytearray b
+WHERE  p.deployment_id_ = d.id_
+  AND  b.deployment_id_ = p.deployment_id_
+  AND  b.name_          = p.resource_name_
+  AND  p.key_           = 'MLK_PLP_<URUSAN>'
+ORDER  BY p.version_ DESC;
+```
+
+Two traps this closes:
+
+| Trap | Detail |
+|---|---|
+| `deployment_id_` ≠ the UUID inside `procdef.id_` | `id_` reads `MLK_PLP_PLPS:6:48485f8c-…` — that suffix is the **procdef's own** uuid. Joining on it returns 0 rows. Use the `deployment_id_` column. |
+| `b.name_` filter | join on `p.resource_name_`, not a `LIKE '%URUSAN%'` guess — the bytearray row carries other resources too. |
+| `deploy_time_` | already a `timestamp`. `to_timestamp(deploy_time_/1000)` throws — it is not epoch millis. |
+
+`octet_length(bytes_)` matches the on-disk file size **byte for byte**, so it identifies which local
+copy is deployed without reading the XML.
+
+### 18.3 A deployed version is not a released version
+
+Flowable deployments are additive and versioned: deploying vN+1 leaves running instances on their
+old definition and routes only new ones to the new. So **the newest version on an env says nothing
+about what belongs in a release.** MLIT in particular carries unreleased work.
+
+The release deliverable is `(the ticket's own BPMN attachment)` ∩ `(what the BA-tested env ran)` —
+never "newest on any env". **2026-08-05 proof**: `MLK_PLP_PLPS` v6 (452,783 B, loop-back to PJTLT,
+comment citing Requirement #242553 which has `fixed_version = NONE`) was live on mlit at 14:31,
+while the #272574 attachment and stg1 both carried v5 (451,836 B, terminal `endEvent "Tamat"`) —
+and BA's PASS was recorded against v5.
+
+---
+
+## §18 — `rjk_agensi` has DUPLICATE names — never `= (SELECT agensi_id … WHERE nama = …)`
+
+Verified 2026-08-06 on PROD, the hard way: a patch failed with
+`ERROR 21000: more than one row returned by a subquery used as an expression`.
+
+```
+agensi_id  nama_agensi                     alamat        organisasi_id
+    6      MAJLIS PERBANDARAN ALOR GAJAH   Lebuh AMJ,        1104
+    8      MAJLIS PERBANDARAN ALOR GAJAH   Lebuh AMJ,        1106
+```
+
+Identical name AND identical address; only `organisasi_id` differs.
+
+**Rules**
+1. Resolve an agency by the row already on the application, not by name:
+   `WHERE a_jabatan_teknikal_id = (SELECT … FROM umm_a_jabatan_teknikal WHERE aplikasi_id = … AND agensi_id IN (…))`
+2. If you must go by name, use `IN`, never `=`.
+3. `count(*)` EVERY scalar subquery against a reference table before shipping — checking only the
+   ones that look risky is how this one shipped.
+
+**Near-duplicates that are NOT the same row** (name differs, so exact-match is safe but
+easy to pick wrong — resolve by ADDRESS against the BA's document):
+
+| id | nama_agensi | note |
+|---|---|---|
+| 24 | `JABATAN PERANCANGAN BANDAR DAN DESA, MELAKA` | the real one for PDT Jasin work |
+| 9 | `JABATAN PERANCANGAN BANDAR DAN DESA NEGERI MELAKA` | decoy |
+| 53 | `JABATAN PERANCANGAN BANDAR ` | decoy, trailing space |
+
+⚠️ **Trailing spaces are common**: `PEGAWAI PENYELARAS ` and `JABATAN PERANCANGAN BANDAR ` both carry
+one. Always `trim(nama_agensi)`.
+
+## §19 — `umm_a_jabatan_teknikal`: what a restored row needs
+
+Table has **no unique constraint** on `(aplikasi_id, agensi_id)` — a re-run silently duplicates.
+Always guard an INSERT with `AND NOT EXISTS (…)`.
+
+| Column | Value for a restored row | Why |
+|---|---|---|
+| `a_jabatan_teknikal_id` | `nextval('seq_a_jabatan_teknikal')` | sequence is in sync with `max(id)` — verified 2026-08-06 (6716 = 6716). Never hardcode |
+| `created_by` / `last_modified_by` | the application owner's login | mirror a sibling row; never a session/ticket fingerprint |
+| `version` | `0` | new row; siblings sit at 38/39 from repeated edits |
+| `flag_perlu_perakuan` | `'N'` | column default, matches siblings |
+| `a_dok_keluaran_id` | the Surat Pentadbiran JT ADK on that application | all JT rows on one application share it |
+| `mklmt_tmbhn` | copy a sibling's JSON verbatim | see the flag notes below |
+| `keputusan_id`, `no_rujukan`, `trkh_ulasan`, `ulasan` | **leave NULL** | 97% of the table's 6,333 rows are null here — they fill only when the agency submits its ulasan |
+
+**The `mklmt_tmbhn` flags** —
+`{"flagSurat":"true","appTugasan":"SKM","generateSurat":"TIDAK","flagBolehMasukkanUlasan":"true","flagKemasukanDari":"DARI_UTILITI"}`
+
+- `generateSurat` — 🚨 **display gate**. `PelupusanHelper.java:210-214` sets `generatedJT` when the
+  value is `TIDAK`, then **removes the row from the list** if the current tugasan is in
+  `TGSN_JBTN_TEKNIKAL_DAN_YB_LIST` (`PelupusanTugasanConstant.java:502-503` = PSJT + PGSJT).
+  Blank defaults to `TIDAK` at `PelupusanSearchService.java:1349`. Population: 564 TIDAK · 142 YA ·
+  355 unflagged. On any other tugasan it does not bite.
+- `appTugasan` — `SKM` makes the row view-only at SJTLT/PJTLT (`PelupusanSearchService.java:1352-1358`).
+- `flagKemasukanDari` — `DARI_UTILITI` is the default written by
+  `JabatanTeknikalHelper.java:323-328` when blank.
+
+## §20 — Permit/Lesen tables: 99.6% of PROD rows are MIGRATED, not generated (2026-08-06, #273461)
+
+Any query shaped "applications holding a No Lesen" is dominated by the June-2026 migration. Counting
+before scripting is the difference between a 3-row patch and erasing the historical TOL register.
+
+| Group | `created_by` | PLPS rows w/ number | Format |
+|---|---|---|---|
+| Migrated register | `MIGRATOR_KTPN_LMS` · `_JASIN` · `_ALOR_GAJAH` · `MIGRATOR_PERMIT` · `MIGRATOR_MOHON_PLP` · `MIGRATOR_WARTA` | **746** | `M 003` · `192055` · `00000001` · `102812/1` |
+| Generated by the app | `SYSTEM` or the officer's login | **3** | `A<pejabat>/<year>/<n>` |
+
+**Discriminators that hold** — generated: `no_permit_lesen LIKE 'A%'`; never issued:
+`trkh_mula IS NULL AND trkh_akhir IS NULL`.
+**Discriminator that does NOT hold** — `created_by='SYSTEM'`. The same code path stamps the officer's
+login when a person drives it (OPLPS rows carry `nizalarif@`, `nurulazura@`). Incidental, not semantic.
+
+### Reference graph — exactly 4 tables, zero declared FKs
+
+```
+umm_a_permit_lesen.versi_permit_lesen_id ──► ind_versi_permit_lesen.versi_permit_lesen_id
+                                                        │ permit_lesen_id
+                                                        ▼
+umm_a_permit_lesen.no_permit_lesen ──(by value)──► ind_permit_lesen.permit_lesen_id
+                                                        ▲ permit_lesen_id
+                                            ind_mklmt_tnh_permit_lesen
+```
+
+`information_schema` returns **0 foreign keys** for `ind_permit_lesen` / `ind_versi_permit_lesen` —
+find referencing tables by COLUMN NAME (`permit_lesen_id`, `versi_permit_lesen_id`), never by FK.
+Safe clear order: NULL the app row's number+versi first, then delete children, then the induk row.
+
+### The running number is shared across FOUR urusan
+
+`PelupusanPermitLesenNumberService.retrieveRunningNumberCode():335-341` — `PLPS`, `OPLPS`, `MLPS`,
+`OMLPS` share one counter keyed `<kodPejabat>4AE<year>`, so the licence number never tracks the
+permohonan running number. BA Anis confirmed this is CORRECT, 2026-08-05 on #273461.
+
+### Where each urusan allocates
+
+| Urusan | Screen | Tugasan |
+|---|---|---|
+| OPLPS / OMLPS | `MlkPenyediaanBorang4AeL1eForm.initRunningNumber():226` | `PB` |
+| PLPS / MLPS | `MlkBorang4AeForm.initRunningNumber():313-331` (skrin 1150) | `PYB4AE` |
+
+⚠️ `PYB4AE` has **never occurred in PROD** — 0 of 38 PLPS tugasan ever recorded; the deepest PLPS
+reaches is `PRMMKNPDT`. Skrin 338 `PLP_BYRN_LSN` (Pengiraan Bayaran Lesen) mounts on **44 langkah /
+4 urusan**: PLPS 21 · PPTPB 17 · PPJK 3 · PSBS 3 — and never on PYB4AE/PB4AE.
