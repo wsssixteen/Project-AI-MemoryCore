@@ -179,6 +179,23 @@
 {"ts":"2026-08-05T14:09:45.710Z","category":"A5"}
 {"ts":"2026-08-05T14:09:45.779Z","category":"A4"}
 {"ts":"2026-08-05T14:09:45.847Z","category":"A3"}
+<<<<<<< HEAD
 {"ts":"2026-08-06T02:33:35.835Z","category":"knowledge-file-existed-but-not-consulted"}
 {"ts":"2026-08-06T02:33:35.991Z","category":"name-vs-contract"}
 {"ts":"2026-08-06T03:21:37.362Z","category":"filtered-evidence-read"}
+=======
+{"ts":"2026-08-05T18:36:49.337Z","category":"knowledge-file-existed-but-not-consulted"}
+{"ts":"2026-08-05T18:36:49.430Z","category":"blind-pass-ban-swallowed-knowledge-folder"}
+{"ts":"2026-08-05T18:36:49.519Z","category":"gate-has-an-opt-out-that-is-free"}
+{"ts":"2026-08-05T18:36:49.595Z","category":"patch-script-targets-live-records"}
+{"ts":"2026-08-05T18:42:03.899Z","category":"A4"}
+{"ts":"2026-08-05T18:42:03.971Z","category":"A4"}
+{"ts":"2026-08-05T18:42:04.050Z","category":"A1"}
+{"ts":"2026-08-05T18:42:04.130Z","category":"A2"}
+{"ts":"2026-08-05T18:42:04.244Z","category":"A2"}
+{"ts":"2026-08-05T18:42:04.336Z","category":"A5"}
+{"ts":"2026-08-05T18:42:04.448Z","category":"A5"}
+{"ts":"2026-08-05T18:42:04.574Z","category":"A1"}
+{"ts":"2026-08-05T18:44:41.965Z","category":"logged-a-slip-from-an-unadjudicated-agent-claim"}
+{"ts":"2026-08-06T00:28:00.077Z","category":"A1"}
+>>>>>>> origin/main
