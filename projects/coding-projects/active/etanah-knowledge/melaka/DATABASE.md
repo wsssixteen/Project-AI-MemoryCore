@@ -1159,7 +1159,46 @@ candidate links are empty on PROD:
 STAGING target id is only obtainable after the document exists on staging — i.e. have the officer
 regenerate there first, then overwrite that file.
 
-## §17 — `umm_aplikasi` has no permohonan-ID column; stg1 is a PROD refresh
+## §17 — 🚨 CORRECTED — the permohonan ID **is** stored: `umm_aplikasi.id_pengenalan`
+
+> An earlier version of this section claimed no permohonan-ID column exists. **That was WRONG**,
+> written 2026-08-05 and refuted the same night. The error: the column list was read,
+> `id_pengenalan` was seen, and the NAME was assumed to mean IC/passport. It was never opened.
+> Name-vs-contract — the same failure class as 2026-08-04.
+
+```sql
+SELECT id_pengenalan FROM et_main.umm_aplikasi WHERE aplikasi_id = 3398208;
+--> PTMLK/02/L/PT/2026/3
+```
+
+Join straight through it — no timestamp matching, no inference:
+
+```sql
+-- permohonan ID -> application
+SELECT * FROM et_main.umm_aplikasi WHERE id_pengenalan = 'PTMLK/02/L/PT/2026/3';
+
+-- sejarah pengagihan -> application
+--   umm_sejarah_pengagihan.id_permohonan = umm_aplikasi.id_pengenalan
+--   written by CommonPengagihanTugasanHelper.java:119
+--     setIdPermohonan(aplikasi.getIdPengenalan())
+--   and PengagihanTugasanService.java:2547 (abbreviated to 30 chars)
+```
+
+**Every urusan has one**, including utilities and carian — only the format differs:
+
+| Urusan kind | Example |
+|---|---|
+| Pelupusan / PT / utilities | `PTMLK/02/L/PT/2026/3` · `PTMLK/02/L/UPP/2026/2` |
+| Carian rasmi (CRHM) | `02CR2659/2026` |
+
+**Running number source**: `et_main.sis_no_turutan.no_turutan`, keyed
+`kodPejabat+kodUnit+kodUrusan+year` (e.g. `02LPT2026`). Incremented under pessimistic lock in
+`etanah-pelupusan\...\util\PelupusanUtil.java:301-323` (`runningNumberPessimisticLock`),
+formatted at `PelupusanUtil.java:325-343` (`populateIdPermohonan`).
+
+**Not the link** — empty on real rows: `no_rujukan_fail`, `no_fail`, `turutan`.
+
+## §17b — stg1 is a PROD refresh
 
 `PTMLK/02/L/PPTPB/2026/1` is **not stored** — `umm_aplikasi` has no `id_permohonan`, and `turutan`
 is NULL. The string appears only in `umm_notifikasi.id_permohonan`,
@@ -1231,3 +1270,64 @@ never "newest on any env". **2026-08-05 proof**: `MLK_PLP_PLPS` v6 (452,783 B, l
 comment citing Requirement #242553 which has `fixed_version = NONE`) was live on mlit at 14:31,
 while the #272574 attachment and stg1 both carried v5 (451,836 B, terminal `endEvent "Tamat"`) —
 and BA's PASS was recorded against v5.
+
+---
+
+## §18 — `rjk_agensi` has DUPLICATE names — never `= (SELECT agensi_id … WHERE nama = …)`
+
+Verified 2026-08-06 on PROD, the hard way: a patch failed with
+`ERROR 21000: more than one row returned by a subquery used as an expression`.
+
+```
+agensi_id  nama_agensi                     alamat        organisasi_id
+    6      MAJLIS PERBANDARAN ALOR GAJAH   Lebuh AMJ,        1104
+    8      MAJLIS PERBANDARAN ALOR GAJAH   Lebuh AMJ,        1106
+```
+
+Identical name AND identical address; only `organisasi_id` differs.
+
+**Rules**
+1. Resolve an agency by the row already on the application, not by name:
+   `WHERE a_jabatan_teknikal_id = (SELECT … FROM umm_a_jabatan_teknikal WHERE aplikasi_id = … AND agensi_id IN (…))`
+2. If you must go by name, use `IN`, never `=`.
+3. `count(*)` EVERY scalar subquery against a reference table before shipping — checking only the
+   ones that look risky is how this one shipped.
+
+**Near-duplicates that are NOT the same row** (name differs, so exact-match is safe but
+easy to pick wrong — resolve by ADDRESS against the BA's document):
+
+| id | nama_agensi | note |
+|---|---|---|
+| 24 | `JABATAN PERANCANGAN BANDAR DAN DESA, MELAKA` | the real one for PDT Jasin work |
+| 9 | `JABATAN PERANCANGAN BANDAR DAN DESA NEGERI MELAKA` | decoy |
+| 53 | `JABATAN PERANCANGAN BANDAR ` | decoy, trailing space |
+
+⚠️ **Trailing spaces are common**: `PEGAWAI PENYELARAS ` and `JABATAN PERANCANGAN BANDAR ` both carry
+one. Always `trim(nama_agensi)`.
+
+## §19 — `umm_a_jabatan_teknikal`: what a restored row needs
+
+Table has **no unique constraint** on `(aplikasi_id, agensi_id)` — a re-run silently duplicates.
+Always guard an INSERT with `AND NOT EXISTS (…)`.
+
+| Column | Value for a restored row | Why |
+|---|---|---|
+| `a_jabatan_teknikal_id` | `nextval('seq_a_jabatan_teknikal')` | sequence is in sync with `max(id)` — verified 2026-08-06 (6716 = 6716). Never hardcode |
+| `created_by` / `last_modified_by` | the application owner's login | mirror a sibling row; never a session/ticket fingerprint |
+| `version` | `0` | new row; siblings sit at 38/39 from repeated edits |
+| `flag_perlu_perakuan` | `'N'` | column default, matches siblings |
+| `a_dok_keluaran_id` | the Surat Pentadbiran JT ADK on that application | all JT rows on one application share it |
+| `mklmt_tmbhn` | copy a sibling's JSON verbatim | see the flag notes below |
+| `keputusan_id`, `no_rujukan`, `trkh_ulasan`, `ulasan` | **leave NULL** | 97% of the table's 6,333 rows are null here — they fill only when the agency submits its ulasan |
+
+**The `mklmt_tmbhn` flags** —
+`{"flagSurat":"true","appTugasan":"SKM","generateSurat":"TIDAK","flagBolehMasukkanUlasan":"true","flagKemasukanDari":"DARI_UTILITI"}`
+
+- `generateSurat` — 🚨 **display gate**. `PelupusanHelper.java:210-214` sets `generatedJT` when the
+  value is `TIDAK`, then **removes the row from the list** if the current tugasan is in
+  `TGSN_JBTN_TEKNIKAL_DAN_YB_LIST` (`PelupusanTugasanConstant.java:502-503` = PSJT + PGSJT).
+  Blank defaults to `TIDAK` at `PelupusanSearchService.java:1349`. Population: 564 TIDAK · 142 YA ·
+  355 unflagged. On any other tugasan it does not bite.
+- `appTugasan` — `SKM` makes the row view-only at SJTLT/PJTLT (`PelupusanSearchService.java:1352-1358`).
+- `flagKemasukanDari` — `DARI_UTILITI` is the default written by
+  `JabatanTeknikalHelper.java:323-328` when blank.

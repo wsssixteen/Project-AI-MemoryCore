@@ -79,3 +79,88 @@ MlkSuratTemplateForm.initData() :184
 
 ---
 *Last updated: 2026-03-24 (initial structure)*
+
+---
+
+## Gantung blocks tugasan ENTRY — `status_proses` is a hard gate, not a label (2026-08-06, PROD)
+
+**Symptom the officer sees**: the tugasan row IS in Senarai Tugasan, green and selectable, but
+clicking it shows a yellow **Perhatian — "Permohonan ini digantung sementara menunggu keputusan
+permohonan"** and the screen never opens.
+
+**The gate** — `etanah-common\src\main\java\my\gov\etanah\common\notification\service\impl\DashboardService.java:1829-1851`:
+
+```java
+if (!MODUL_PENDAFTARAN.equals(modulKod)
+    && StringUtils.isNotBlank(statusProses)
+    && StatusProsesConstant.GANTUNG.equalsIgnoreCase(statusProses)   // <-- the gate
+    && StringUtils.isNotBlank(taskCode)
+    && !StringUtils.contains(taskCode, "PTB")) {
+        MessageUtil.addFacesMessage("Perhatian", "Permohonan ini digantung sementara ...");
+        return;                                  // HARD RETURN - langkah never opens
+}
+```
+
+The `return` is the point. `umm_aplikasi.status_proses = 'Gantung'` **prevents entry** into any
+non-Pendaftaran tugasan whose taskCode does not contain `PTB`. Do not dismiss it as a display value.
+
+### How an application gets stranded there
+
+```
+UPP (Utiliti Pembatalan Permohonan) started on the parent
+  MlkUtilitiPembatalanPermohonanForm.java:52
+  -> BasePembatalanPermohonanForm.java:259-262
+  -> CommonService.processGantungAplikasi():631   CommonService.java:652  SET Gantung
+
+...officer completes only KMPPP (Kemasukan Maklumat Pembatalan) and the UPP flow ENDS
+   (status Tamat / keputusan Batal) without reaching CommonMaklumanPembatalanForm
+
+  -> CommonService.processDalamProsesAplikasi():709  CommonService.java:719  NEVER RUNS
+  -> parent stays Gantung forever
+```
+
+**The clearer** is `CommonService.processDalamProsesAplikasi():709` (sets `statusProses` +
+`statusKeputusan` + re-activates AppTugasan). Reachable from only three triggers, ALL on the
+pembatalan flow: `CommonMaklumanPembatalanForm.java:732` / `:907`,
+`PembatalanPermohonanService.processPembatalan():416`,
+`ProcessBatalTarikBalikService.process():151`.
+
+### Why the init-alter page cannot fix it
+
+`InitiateBPMFlowableForm.bypassPermohonan():1022` works by `submitBpmOutcome(task)` — it completes an
+EXISTING task. Once the UPP application is `Tamat`, there is no task left to submit, so the clearer
+is unreachable. Re-initiating the flow on the PARENT creates another tugasan row and still writes
+nothing to `status_proses` (that bean has no path to the column).
+
+### Diagnosis recipe — no login needed
+
+| Question | Query |
+|---|---|
+| stuck? | `SELECT status_proses, status_keputusan, version FROM umm_aplikasi WHERE id_pengenalan = '<PTMLK/...>';` |
+| live task? | `SELECT a_tgsn_id, flag_aktif, status_tugasan, id_bpm_task FROM umm_a_tgsn WHERE aplikasi_id = (...) AND status_tugasan <> 'Selesai';` |
+| which flow? | `SELECT aliran_kerja_id, process_instance_id, created_by, created_date FROM umm_aliran_kerja WHERE aplikasi_id = ...;` |
+| who holds it? | `SELECT nama, nama_pengguna FROM pcp_pengguna WHERE pengguna_id = <pengguna_semasa_id>;` |
+| which UPP suspended it? | match `umm_a_tgsn.last_modified_date` on the suspended row against the UPP application's `created_date` — they are the SAME SECOND |
+
+**Two live `umm_aliran_kerja` rows on one application** = the flow was re-initiated. The old
+`process_instance_id` may still be live in the Flowable engine, which is a SEPARATE datasource — no
+`ACT_*` tables exist in the eTanah DB, so engine state cannot be checked from SQL.
+
+### Fix
+
+Revert-shape, single column, idempotent:
+
+```sql
+UPDATE umm_aplikasi
+SET    status_proses = 'Awalan'
+WHERE  id_pengenalan = '<PTMLK/...>'
+AND    status_proses = 'Gantung';
+-- 1 row updated
+```
+
+`Awalan` not `Dalam Proses`: `status_keputusan` stays `Awalan` (it never became Gantung), and
+`Dalam Proses` appears on 2 rows in all of PROD vs `Awalan` on 9,335 of 9,347 PT applications.
+Do NOT bump `version` — a running app may hold the entity at its current version.
+
+**Companion check before patching**: the suspended tugasan row is usually already `flag_aktif='N'`
+and a fresh active row already exists, so no companion write is needed. Verify, do not assume.
