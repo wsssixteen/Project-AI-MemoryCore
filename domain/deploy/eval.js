@@ -83,6 +83,61 @@ check('no-success-claim rule present', /Never claim build\/deploy succeeded/i.te
 check('ban on wrapping the WHOLE card in one block', /NEVER wrap the whole card in one code block/i.test(src));
 check('one-block-per-command rule stated', /own .{0,4}```bash.{0,4} block/i.test(src));
 check('prose lines stay unfenced', /never fenced/i.test(src));
-check('local catch-up: checkout then pull', /git checkout <base>/.test(src) && /git pull --ff-only origin <base>/.test(src));
+// v1.3 (2026-08-06): the local catch-up steps were RETIRED by a concurrent session — the
+// build/deploy scripts clone from origin ON THE SERVER, so みや's local checkout plays no part
+// in a deploy and those two commands were dead steps in every card. Eval now asserts the
+// retirement, not the old rule. (Same shape as the v1.2 correction above: when the skill moves,
+// a stale assertion firing is the eval working, not the skill being wrong.)
+check('local catch-up retired, with reason', /local\s+working copy plays no part in a deploy/i.test(src));
+check('dead steps named explicitly', /dead steps/i.test(src));
+// --- 10. training lane + merge order (v1.1, 2026-08-06, #273938) ---------
+// Eval case: /deploy training plp 273938 must NOT emit an env-branch merge, and any
+// int-env merge must refuse a release-laden training tip. Both failed live on 08-06:
+// a tip-based ancestry test invented a docx conflict for a merge already done.
+check('training row in env table', /`training`.*`train`/.test(src));
+check('mlk/training prefix listed', /mlk\/training\//.test(src));
+check('no train-env branch stated', /no \*{0,2}`?mlk\/train-env`?\*{0,2}/i.test(src));
+check('merge ORDER rule stated', /training[\s\S]{0,80}int-env[\s\S]{0,200}FIRST|int-env \*{0,2}FIRST/i.test(src));
+check('order rationale: release lineage poisons int-env', /whole release lineage/i.test(src));
+check('Aaron precedent SHAs recorded', /ce1198818c[\s\S]{0,400}609f83bcb5/.test(src));
+check('int-env receives ONLY ticket fixes', /ONLY the ticket.{0,3}s fixes/i.test(src));
+
+// --- 11. ancestry probe correction --------------------------------------
+check('guard tests fix commits not tip', /FIX COMMITS, never the branch TIP/i.test(src));
+check('slip named', /ancestry-checked-one-direction/.test(src));
+
+// --- 12. deploy-failure triage (v1.1) ------------------------------------
+// Eval case: given a log ending 'Invalid WAR structure (WEB-INF missing)', the skill must
+// route to the FIRST failure (clone), not the last line.
+check('top-down triage rule', /read the log TOP-DOWN/i.test(src));
+check('cascade symptom named', /Invalid WAR structure/.test(src));
+check('index-pack transient documented', /invalid index-pack output/.test(src));
+check('storage falsifiers recorded', /df -i \/home\/app/.test(src));
+check('benign noise listed', /mkdir: .{0,3} File exists/.test(src));
+
+// --- 12b. training pipeline shape (v1.2, 2026-08-06) ---------------------
+// Eval case: Aaron rejected the one-host mltg route the same day it was written.
+// The skill must (a) declare training as build-here-deploy-elsewhere, (b) refuse to
+// name a deploy host it does not have, (c) mark mltg refuted so it is never re-guessed.
+// v1.2: the host is now SOURCED from the architecture sheet, not unknown and not guessed.
+check('training deploy VM recorded', /172\.30\.12\.152/.test(src));
+check('training app tier recorded', /172\.30\.12\.126-128/.test(src));
+check('mlit app node recorded', /Fudge1[\s\S]{0,40}172\.16\.100\.49/.test(src));
+check('folder name still flagged unconfirmed', /folder .{0,4} name unconfirmed|folder name is not/i.test(src));
+check('env-architecture doc linked', /ENV-ARCHITECTURE\.md/.test(src));
+check('training is two hosts not one function', /TWO hosts, like staging, NOT one function/i.test(src));
+check('mltg guess marked refuted', /mltg[\s\S]{0,80}refuted/i.test(src));
+check('ban on guessing a deploy host', /Never guess a deploy host/i.test(src));
+check('Aaron verbatim correction recorded', /No no[\s\S]{0,120}another IP/i.test(src));
+
+// --- 12c. attribution hygiene -------------------------------------------
+// Eval case: do not present Ruri's inference as a colleague's instruction.
+check('order rule attributed as inference', /Ruri.{0,3}s inference/i.test(src));
+check('who-said-what table present', /do not quote me as quoting Aaron/i.test(src));
+
+// --- 13. third IP -------------------------------------------------------
+check('fudge1 app server recorded', /172\.16\.100\.49[\s\S]{0,80}fudge1/.test(src));
+check('ruri has no ssh key', /Permission denied \(publickey\)/.test(src));
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail === 0 ? 0 : 1);

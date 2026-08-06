@@ -233,3 +233,12 @@
 {"ts":"2026-08-06T13:35:43.474Z","category":"A3"}
 {"ts":"2026-08-06T13:35:43.533Z","category":"A4"}
 {"ts":"2026-08-06T13:35:43.591Z","category":"A1"}
+{"ts":"2026-08-06T03:32:50.814Z","category":"ancestry-checked-one-direction"}
+{"ts":"2026-08-06T03:32:50.931Z","category":"read-last-line-not-first-failure"}
+{"ts":"2026-08-06T03:42:04.046Z","category":"guessed-infra-path-from-folder-name"}
+{"ts":"2026-08-06T13:48:04.215Z","category":"de-merge-union-check"}
+{"ts":"2026-08-06T13:52:53.153Z","category":"A2"}
+{"ts":"2026-08-06T13:52:53.274Z","category":"A3"}
+{"ts":"2026-08-06T13:52:53.436Z","category":"A1"}
+{"ts":"2026-08-06T13:52:53.557Z","category":"A5"}
+{"ts":"2026-08-06T13:52:53.677Z","category":"A4"}

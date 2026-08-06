@@ -131,59 +131,60 @@ skill edit earlier in the session — hit twice in one evening.
 hardcode it? We know the conditions already right?"* Rewriting it by predicate also killed a bad
 condition of mine — `created_by='SYSTEM'` is incidental, the same code path stamps the officer's login.
 
-## 2026-08-06 — A PROD PATCH SHIPPED, AND EVERY CLAIM I MADE ABOUT IT WAS WRONG ONCE FIRST
+## 2026-08-06 10:34 → 21:45 — A DEPLOY THAT NEEDED NO MERGE, AND THE SERVER MAP WE NEVER HAD
 
-**#273837 is patched and verified on PROD. Getting there took four separate corrections, three of
-them みや's, and the adversarial familiars refuted 3 of my 4 load-bearing claims from yesterday.
-The patch itself is one DELETE and one INSERT.**
+**#273938 went to mlit and the whole job was two ssh sessions — Aaron had already done both merges
+the evening before, and I spent the morning inventing a conflict for a merge that was finished.
+Then みや handed me the architecture sheet and the deploy skill finally has real hosts in it.**
 
-### ▶▶ NEXT SESSION — START HERE
+### ▶▶ NEXT SESSION — START HERE (this thread)
 
-| Priority | Ticket | State | First step on resume |
-|---|---|---|---|
-| **1** | **273956** | Nothing started — the other patch ticket | BA asks for a **workflow rollback**, not a data patch: alter `PTMLK/03/L/PRBB/2026/10` back to *Penyediaan Surat JT dan Ulasan YB*, reset the doc, then patch 5 JT + 1 YB. BA gave the agency **kods** (6002, JPDSNM, MBAG, 6021, 1888) — better than 273837 where I resolved by address. The unit change METRIK TAN → METER PADU is the **officer's own UI work afterwards**, not ours |
-| **2** | **273921** | Rubric, Apply-ready | Same application as the 273837 patch — retest on the repaired data. Word: `syaratKelulusan` control onto its own paragraph, then delete + regenerate |
-| **3** | **273461** | Phase 0, 90% | Guard `etanah-pelupusan\...\web\form\utiliti\mlk\MlkPengiraanBayaranLesenForm.java:647` **and** `:648` with a `URS_PLPS` check. ⚠️ paths from the concurrent session's notes, unverified by me |
-| **4** | **274136** | Phase 0, active | Two defects, **order matters** — `remove()` first would destroy data |
-| — | **273919** | Shipped | Deploy card owed: `ssh app@172.16.100.162` → `cd deployment-scripts/mlit` → `./deploy-awam.sh` → branch `mlk/int-env` |
-| — | **ADHOC A9** | Handed to infra | Gantung patch on `PTMLK/02/L/PT/2026/3`; then shahniza opens the tugasan and clicks Hantar |
-
-### #273837 — what shipped
-
-```
-umm_a_jabatan_teknikal, aplikasi_id 3396320   (PTMLK/02/L/PPTPB/2026/1)
-
-  before  5439 Jasin(29899) · 5441 Alor Gajah(—) · 5442 TNB(—) · 5443 Pertanian(29896)
-          5440 MISSING FROM THE SEQUENCE  ← the officer's accidental delete
-
-  after   5439 · 5442 · 5443 · 6717 Pegawai Penyelaras · 6718 JPBD · 6719 JKR
-          6 rows, matching Idris's list
-```
-
-Applied 2026-08-06 17:20:08 PROD. `created_by = norlina@melaka.gov.my`, no session fingerprint.
-
-### The four corrections, in order
-
-| # | What I said | What was true |
+| Item | State | First step on resume |
 |---|---|---|
-| 1 | "Cetakan Dokumen" = the printed document, so the document is correct and the data is stale | **みや**: it is a **tugasan** (`CT_BSC_PLP`, `tgsn_id 5134766`), Selesai 2026-07-01 12:28. Two *screens* disagreed, not document-vs-data |
-| 2 | "Regenerate the letters" as step 3 | Harmful — PSJT is `Selesai`/`flag_aktif=N` so it is unreachable, and regenerating before the patch would destroy the only correct copy |
-| 3 | "The SQL is verified, send it" | `ERROR 21000` — `rjk_agensi` holds **two** rows named `MAJLIS PERBANDARAN ALOR GAJAH` (agensi 6 org 1104, agensi 8 org 1106). I had checked uniqueness on the INSERT's three names and **not** on the DELETE's scalar subquery |
-| 4 | "Nothing functional gates on Gantung — display only" | `DashboardService.java:1829-1851` **early-returns**, so the langkah never opens. My grep had `\| head -20` and the 20 visible lines were all constant declarations |
+| **273938 training** | build+deploy NOT run | `./build-pelupusan.sh mlk/training/273938` → env `train` → deploy on `172.30.12.152`; **`ls ~/deployment-scripts/` there first** — folder name unconfirmed |
+| **273938 mlit** | ✅ deployed on 2nd attempt | add to the Redmine planned-release list |
+| `deploy` skill | v1.2, eval 52/52 | — |
 
-Every one of those was caught by みや noticing, not by a gate.
+### The merge order — Aaron's lanes, my inference
 
-### Yesterday's claims, audited by 4 opus familiars
+```
+① mlk/training/<ticket> ──▶ mlk/int-env             (ticket fix ONLY)
+② mlk/release/<x.y.z>   ──▶ mlk/training/<ticket>   (baseline joins the ticket branch)
 
-| Claim | Verdict |
-|---|---|
-| Mukim = Rim not Kesang | ✅ CONFIRMED — but my evidence was a frequency coincidence; the real proof is `HakmilikFormatUtil.java:342-352` + the `ind_hkmlk` FK |
-| Permohonan ID not stored, recovered by timestamp-matching | ❌ **premise destroyed** — `umm_aplikasi.id_pengenalan` holds it verbatim, and `DATABASE.md:970` **already said so** |
-| Init-alter page cannot touch `status_proses` | ❌ REFUTED — it can, via `bypassPermohonan()` → BPMN service task → `processDalamProsesAplikasi()` |
-| The two PNGs are orphans, explaining the 51 MB | ❌ REFUTED — my regex assumed `Id=` before `Target=`; the file has them reversed |
+② before ① poisons int-env with the whole release lineage.
+Aaron: ce1198818c 16:08 (①)  →  609f83bcb5 16:21 (②)
+```
+
+Aaron stated each lane separately and never ordered them. The ordering is **my** inference from his
+timestamps plus the conflict I reproduced — written into the skill labelled as such, not as his words.
+
+### The server map — `etanah-knowledge/melaka/ENV-ARCHITECTURE.md` (new)
+
+Read from the `ETANAH ARCHITECTURE - MLK` sheet, our modules only.
+
+| Env | Pelupusan app tier | Deploy VM |
+|---|---|---|
+| mlit | Fudge1 `172.16.100.49` | `172.16.100.162` · `deployment-scripts/mlit` |
+| training | Eto1/2/3 `172.30.12.126-128` | **Reus1 `172.30.12.152`** |
+| staging | Radome1/2/3 `172.30.12.176-178` | `172.30.12.203` · `deployment-scripts/stag` |
+
+Training schemas sit on the **staging DB host**: `172.30.12.202:5444/mlkstg?currentSchema=et_main_trn`.
+One word separates `trn` from `stg1` on the same connection.
 
 ### Behaviour
 
-**The `id_pengenalan` miss is the worst of the day.** `DATABASE.md` documented it at two places before I started; I never opened the file, spent ~8 queries getting the opposite answer, told みや three of four applications "have no permohonan ID" (all four do), then wrote the **contradicting** claim into that same file during yesterday's DE. Corrected, and the section now opens with why it was wrong.
+**I checked ancestry one direction.** Reported #273938 "not in int-env" from a `merge-base` test on
+the branch TIP — which had grown a release merge *after* int-env took the fix. Both fix commits were
+already there. I then built an A/B/C plan to resolve a binary `.docx` conflict for a merge that never
+needed to happen. みや caught it: *"those tickets are missed?"* Skill §4 now probes fix commits.
 
-**Slips**: `knowledge-file-existed-but-not-consulted` · `name-vs-contract` · `filtered-evidence-read`.
+**I read the deploy log bottom-up.** Took `Invalid WAR structure (WEB-INF missing)` as the thing to
+explain when the first failure — `git clone` dying at `index-pack` — sat ten lines above. Then
+asserted disk-full with no evidence; his `df -h` showed 83G free. Skill §7 is now a top-down triage table.
+
+**I guessed infrastructure from an `ls`.** `deployment-scripts/mltg` became "the training deploy
+folder" because it was the only training-shaped name in a listing, and I shipped it into two files
+behind a thin ⚠️. Aaron: *"No no. build in 172.16.100.162. Then deploy in another IP."*
+
+**Slips**: `ancestry-checked-one-direction` · `read-last-line-not-first-failure` ·
+`guessed-infra-path-from-folder-name`.

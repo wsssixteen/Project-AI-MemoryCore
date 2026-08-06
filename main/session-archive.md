@@ -4,6 +4,63 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-06 — A PROD PATCH SHIPPED, AND EVERY CLAIM I MADE ABOUT IT WAS WRONG ONCE FIRST
+
+**#273837 is patched and verified on PROD. Getting there took four separate corrections, three of
+them みや's, and the adversarial familiars refuted 3 of my 4 load-bearing claims from yesterday.
+The patch itself is one DELETE and one INSERT.**
+
+### ▶▶ NEXT SESSION — START HERE
+
+| Priority | Ticket | State | First step on resume |
+|---|---|---|---|
+| **1** | **273956** | Nothing started — the other patch ticket | BA asks for a **workflow rollback**, not a data patch: alter `PTMLK/03/L/PRBB/2026/10` back to *Penyediaan Surat JT dan Ulasan YB*, reset the doc, then patch 5 JT + 1 YB. BA gave the agency **kods** (6002, JPDSNM, MBAG, 6021, 1888) — better than 273837 where I resolved by address. The unit change METRIK TAN → METER PADU is the **officer's own UI work afterwards**, not ours |
+| **2** | **273921** | Rubric, Apply-ready | Same application as the 273837 patch — retest on the repaired data. Word: `syaratKelulusan` control onto its own paragraph, then delete + regenerate |
+| **3** | **273461** | Phase 0, 90% | Guard `etanah-pelupusan\...\web\form\utiliti\mlk\MlkPengiraanBayaranLesenForm.java:647` **and** `:648` with a `URS_PLPS` check. ⚠️ paths from the concurrent session's notes, unverified by me |
+| **4** | **274136** | Phase 0, active | Two defects, **order matters** — `remove()` first would destroy data |
+| — | **273919** | Shipped | Deploy card owed: `ssh app@172.16.100.162` → `cd deployment-scripts/mlit` → `./deploy-awam.sh` → branch `mlk/int-env` |
+| — | **ADHOC A9** | Handed to infra | Gantung patch on `PTMLK/02/L/PT/2026/3`; then shahniza opens the tugasan and clicks Hantar |
+
+### #273837 — what shipped
+
+```
+umm_a_jabatan_teknikal, aplikasi_id 3396320   (PTMLK/02/L/PPTPB/2026/1)
+
+  before  5439 Jasin(29899) · 5441 Alor Gajah(—) · 5442 TNB(—) · 5443 Pertanian(29896)
+          5440 MISSING FROM THE SEQUENCE  ← the officer's accidental delete
+
+  after   5439 · 5442 · 5443 · 6717 Pegawai Penyelaras · 6718 JPBD · 6719 JKR
+          6 rows, matching Idris's list
+```
+
+Applied 2026-08-06 17:20:08 PROD. `created_by = norlina@melaka.gov.my`, no session fingerprint.
+
+### The four corrections, in order
+
+| # | What I said | What was true |
+|---|---|---|
+| 1 | "Cetakan Dokumen" = the printed document, so the document is correct and the data is stale | **みや**: it is a **tugasan** (`CT_BSC_PLP`, `tgsn_id 5134766`), Selesai 2026-07-01 12:28. Two *screens* disagreed, not document-vs-data |
+| 2 | "Regenerate the letters" as step 3 | Harmful — PSJT is `Selesai`/`flag_aktif=N` so it is unreachable, and regenerating before the patch would destroy the only correct copy |
+| 3 | "The SQL is verified, send it" | `ERROR 21000` — `rjk_agensi` holds **two** rows named `MAJLIS PERBANDARAN ALOR GAJAH` (agensi 6 org 1104, agensi 8 org 1106). I had checked uniqueness on the INSERT's three names and **not** on the DELETE's scalar subquery |
+| 4 | "Nothing functional gates on Gantung — display only" | `DashboardService.java:1829-1851` **early-returns**, so the langkah never opens. My grep had `\| head -20` and the 20 visible lines were all constant declarations |
+
+Every one of those was caught by みや noticing, not by a gate.
+
+### Yesterday's claims, audited by 4 opus familiars
+
+| Claim | Verdict |
+|---|---|
+| Mukim = Rim not Kesang | ✅ CONFIRMED — but my evidence was a frequency coincidence; the real proof is `HakmilikFormatUtil.java:342-352` + the `ind_hkmlk` FK |
+| Permohonan ID not stored, recovered by timestamp-matching | ❌ **premise destroyed** — `umm_aplikasi.id_pengenalan` holds it verbatim, and `DATABASE.md:970` **already said so** |
+| Init-alter page cannot touch `status_proses` | ❌ REFUTED — it can, via `bypassPermohonan()` → BPMN service task → `processDalamProsesAplikasi()` |
+| The two PNGs are orphans, explaining the 51 MB | ❌ REFUTED — my regex assumed `Id=` before `Target=`; the file has them reversed |
+
+### Behaviour
+
+**The `id_pengenalan` miss is the worst of the day.** `DATABASE.md` documented it at two places before I started; I never opened the file, spent ~8 queries getting the opposite answer, told みや three of four applications "have no permohonan ID" (all four do), then wrote the **contradicting** claim into that same file during yesterday's DE. Corrected, and the section now opens with why it was wrong.
+
+**Slips**: `knowledge-file-existed-but-not-consulted` · `name-vs-contract` · `filtered-evidence-read`.
+
 ## 2026-08-05 11:51 → 22:15 — THE BOARD GOT BUILT, 273919 SHIPPED, AND THE 51 MB FILE GOT MEASURED
 
 **Most of the day went into making the open-ticket list something that loads the same way every
@@ -2887,6 +2944,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
