@@ -201,3 +201,4 @@
 {"ts":"2026-08-06T09:53:47.991Z","category":"test-scenario-wrong-base"}
 {"ts":"2026-08-06T11:07:50.333Z","category":"verified-on-wrong-base"}
 {"ts":"2026-08-06T11:48:56.508Z","category":"de-conflict-resolved"}
+{"ts":"2026-08-06T11:51:31.956Z","category":"overwritten-by-concurrent-session"}
