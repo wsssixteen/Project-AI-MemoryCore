@@ -1159,7 +1159,46 @@ candidate links are empty on PROD:
 STAGING target id is only obtainable after the document exists on staging — i.e. have the officer
 regenerate there first, then overwrite that file.
 
-## §17 — `umm_aplikasi` has no permohonan-ID column; stg1 is a PROD refresh
+## §17 — 🚨 CORRECTED — the permohonan ID **is** stored: `umm_aplikasi.id_pengenalan`
+
+> An earlier version of this section claimed no permohonan-ID column exists. **That was WRONG**,
+> written 2026-08-05 and refuted the same night. The error: the column list was read,
+> `id_pengenalan` was seen, and the NAME was assumed to mean IC/passport. It was never opened.
+> Name-vs-contract — the same failure class as 2026-08-04.
+
+```sql
+SELECT id_pengenalan FROM et_main.umm_aplikasi WHERE aplikasi_id = 3398208;
+--> PTMLK/02/L/PT/2026/3
+```
+
+Join straight through it — no timestamp matching, no inference:
+
+```sql
+-- permohonan ID -> application
+SELECT * FROM et_main.umm_aplikasi WHERE id_pengenalan = 'PTMLK/02/L/PT/2026/3';
+
+-- sejarah pengagihan -> application
+--   umm_sejarah_pengagihan.id_permohonan = umm_aplikasi.id_pengenalan
+--   written by CommonPengagihanTugasanHelper.java:119
+--     setIdPermohonan(aplikasi.getIdPengenalan())
+--   and PengagihanTugasanService.java:2547 (abbreviated to 30 chars)
+```
+
+**Every urusan has one**, including utilities and carian — only the format differs:
+
+| Urusan kind | Example |
+|---|---|
+| Pelupusan / PT / utilities | `PTMLK/02/L/PT/2026/3` · `PTMLK/02/L/UPP/2026/2` |
+| Carian rasmi (CRHM) | `02CR2659/2026` |
+
+**Running number source**: `et_main.sis_no_turutan.no_turutan`, keyed
+`kodPejabat+kodUnit+kodUrusan+year` (e.g. `02LPT2026`). Incremented under pessimistic lock in
+`etanah-pelupusan\...\util\PelupusanUtil.java:301-323` (`runningNumberPessimisticLock`),
+formatted at `PelupusanUtil.java:325-343` (`populateIdPermohonan`).
+
+**Not the link** — empty on real rows: `no_rujukan_fail`, `no_fail`, `turutan`.
+
+## §17b — stg1 is a PROD refresh
 
 `PTMLK/02/L/PPTPB/2026/1` is **not stored** — `umm_aplikasi` has no `id_permohonan`, and `turutan`
 is NULL. The string appears only in `umm_notifikasi.id_permohonan`,
