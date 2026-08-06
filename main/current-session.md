@@ -1,69 +1,127 @@
 # Current Session
 
-## 2026-08-06 01:58 → 02:54 — THE SWEEP CONTRACT GOT DECIDED, AND THE ANSWER TO 273455 HAD BEEN ON DISK FOR FOUR DAYS
+## 2026-08-06 17:51 → 19:4x — 273461 CLOSED, AND THE RESUME RULE CAUGHT A SHIPPED FIX I DID NOT KNOW EXISTED
 
-**miya asked me to settle how we run a multi-ticket sweep — how many loops, what the familiars are
-told, whether they self-appraise — then run it over all 8 open tickets. The contract I chose put the
-controller's own reading FIRST, and that is what surfaced the night's biggest finding: the diagnosis
-for 273455 was already written in our knowledge base on 2026-07-31, and a 20-familiar four-pass sweep
-on 08-04 had still recorded it "blocked on discovery".**
+**One ticket end-to-end: quest → fix → commit → deploy → patch handed to the release team. The rule
+みや asked for at the start of the session paid for itself on its first run, and a census of PROD
+stopped a patch that would have erased 746 migrated licences.**
 
 ### ▶▶ NEXT SESSION — START HERE
 
-| Ticket | State | First step on resume |
+| Priority | Ticket | State | First step on resume |
+|---|---|---|---|
+| — | **273461** | **Phase 1 closed** · `93bf7168b4` · int-env `67e49daecd` | Phase 2 archive only. At release: confirm the release team ran `patch-273461.sql`, then re-verify PROD |
+| **1** | **273455** | Phase 0 — **fix already in みや's working tree, uncommitted** | `PelupusanService.java` carries a PT sempadan fallback (praHakmilik → VO when App sempadan empty). Not mine; audit it, then quest it properly |
+| **2** | **273460** | Phase 0 | needs the TRG blast-radius check |
+| **3** | 273465 · 273707 · 273921 · 273956 · 274136 · 274182 · 274318 | not drafted | board ranks by working-days elapsed |
+
+### What shipped — 273461
+
+```
+MlkPengiraanBayaranLesenForm.performCustomSave():646-650
+    if (!PelupusanUrusanConstant.URS_PLPS.equals(urusanCode)) { …allocate + promote… }
+
+code → mlk/esokongan/273461 @ 93bf7168b4 → mlk/int-env @ 67e49daecd
+data → patch-273461.sql attached to Redmine (release team runs it) — git CANNOT see this channel
+```
+
+### The three findings that mattered
+
+| # | Finding | How it surfaced |
 |---|---|---|
-| **273455** | 88% · fix shape agreed | Build fix 1 only (`PelupusanSpocService.java:254` backfill). Read `DATABASE.md §16` first — corrected this session |
-| **273461** | 90% · **reopened** | Guard **both** `MlkPengiraanBayaranLesenForm.java:647` AND `:648` with `URS_PLPS`. Answer Anis: shared sequence is correct, only timing moves |
-| **273621** | 90% · two defects in series | `GP_L1E` fallback **plus** PDF→image conversion. Kod fix alone swaps one blank for another |
-| **274136** | 80/70% · **new** | 2-minute check first: View Source the AWAM dialog for two inputs named `…modalDibenarkanPemilik`. Fix order is load-bearing |
-| **273837** | 92% · blocked | Patch derived; the script write was denied by the classifier — needs miya's call |
-| **273921** | 78% · template theory SURVIVES | Needs 3 named server-log lines to pick the lane |
-| **273460** | UNSTABLE | Test the `tindakan.config.json:698` array fix FIRST. The L1 fix was disqualified as harmful **and** a no-op |
+| 1 | A fix for this ticket was **already committed and pushed** (`8bd34da47c`, 08-04) — the qa_doc said *"Phase 0 only. No code changed."* | the new resume rule's existing-fix probe, on its first run |
+| 2 | The shipped guard carried an **unreachable** `\|\| PYB4AE` arm — PROD shows skrin 338 mounts on 21 PLPS tugasan, never on PYB4AE | one `ind_langkah` query |
+| 3 | "PLPS holds a No Lesen and never reached 4Ae" = **749 rows, 746 of them migrated legacy** (`MIGRATOR_*`, formats `M 003` / `192055`). Real scope: 3 | census before scripting, not after |
 
-### The contract I chose, and why
-
-| Question | Decision | Rested on |
-|---|---|---|
-| loops | **2 lenses + controller adjudication**, 3rd only on instability | 08-05: four passes ran because four were specified; #273621 flipped in all four and nothing noticed |
-| lenses | L1 DERIVE (blind) → L2 REFUTE (named claims to kill) → I adjudicate with a real read/query | every material catch came from a reader who could not see the prior reasoning |
-| `/appraise` | **never by the deriving familiar** — self-appraisal audits the reasoning that produced the error | 07-21 |
-| effort | Opus **low** (his spec) ⇒ *more* scaffolding: named files, named queries, forced schema | Delegation Economy |
-| ticket reading | **mine, before any spawn** | 08-05: decisive artifact was a non-text file on half the tickets |
-
-11 agents instead of ~20. 6 of 6 derivations produced a line-backed mechanism.
-
-### What the passes actually changed
-
-| Ticket | Was | Is |
-|---|---|---|
-| 273455 | "blocked on pinning the write site" | `DATABASE.md §16` had it since 07-31 — **including this ticket's own `13093/13154/13103/13101`**. Second defect found, then its attribution killed: the reported row is human-created, so the clobber explains 11 of 47 losses, not this one |
-| 273461 | fix = move the generation | scope settled by BA's **08-05** reply (shared sequence is correct); guard must cover `:648` too; the line was added deliberately by tcting for PPTPB |
-| 273621 | "kod confounded with format" (candidate) | **proven, and it is two defects in series** — kod fix alone leaves the same blank box |
-| 274136 | my comma theory | **REFUTED** by a DB counter-example. Real cause: two JSF inputs bound to the same property, plus a missing `remove()`. Shipping the `remove()` first would have **destroyed data** |
-| 273460 | re-enable the commented block | **HARMFUL and a no-op** — reverts faizudin's #265094 and the mechanism it claims is false on that path. Cheaper candidate: a config value that is a bare string where siblings are arrays |
-| 273921 | executor log "falsifies" the template theory | **my error** — a launcher starting is not Word opening the file. The theory survives; the log is consistent with it |
+Also: `PYB4AE` has **never occurred in PROD** — 0 of 38 PLPS tugasan ever recorded. The fix is right per
+BA, but PLPS carries no No Lesen until the workflow first runs that far. Recorded as a deferral.
 
 ### Behaviour
 
-**My own blind-pass ban swallowed the knowledge base.** I banned `projects/coding-projects/active/`
-to hide our qa_docs; `etanah-knowledge/` lives inside it. Same prompt, opposite reactions: one
-familiar skipped knowledge and said so, another read it and filed a contamination disclosure.
+**Two emit-shape corrections in one turn on the same card.** The deploy card opened with two local git
+steps a server-side deploy never reads (*"your commands seems useless"*), then the evidence block was a
+table + commit log + code fence when he wanted `mlk/xxx/xxx → branch`. Same family as the 07-20 hand-off
+card. Both fixed in `deploy/SKILL.md`; slip `emit-shape-not-copyable`.
 
-**I logged a slip from an unadjudicated agent claim** — banked "the patch script destroys issued
-licences" as fact; the refuter read the rows and found premature artifacts with NULL validity.
-Corrected in the ledger. Controller-verifies applies to the ledger too.
+**My own manifest tool false-flagged our uploads.** `ticket-load-verify.js` only searched `0. Brief/`, so
+the patch script and test video in `2. Fix/` failed its integrity check as ghost attachments. Fixed to
+search the whole task folder. Slip `ticket-source-skipped`.
 
-**A PROD patch script write was denied by the harness classifier.** Surfaced, not worked around.
+**Two copies of the same qa_doc.** I edited the durable main-repo one; the deferrals gate reads the
+worktree's, which was a stale 08:25 snapshot. Same `${CLAUDE_PROJECT_DIR}`-is-the-worktree trap as the
+skill edit earlier in the session — hit twice in one evening.
 
-**Slips**: `knowledge-file-existed-but-not-consulted` · `blind-pass-ban-swallowed-knowledge-folder` ·
-`gate-has-an-opt-out-that-is-free` · `patch-script-targets-live-records` (later corrected) ·
-`logged-a-slip-from-an-unadjudicated-agent-claim`. **8 proposals** filed to the weekly-audit lane.
+**He asked for conditions, not literals.** The patch was a hardcoded 3-number list; he asked *"can we not
+hardcode it? We know the conditions already right?"* Rewriting it by predicate also killed a bad
+condition of mine — `created_by='SYSTEM'` is incidental, the same code path stamps the officer's login.
+
+## 2026-08-06 — A PROD PATCH SHIPPED, AND EVERY CLAIM I MADE ABOUT IT WAS WRONG ONCE FIRST
+
+**#273837 is patched and verified on PROD. Getting there took four separate corrections, three of
+them みや's, and the adversarial familiars refuted 3 of my 4 load-bearing claims from yesterday.
+The patch itself is one DELETE and one INSERT.**
+
+### ▶▶ NEXT SESSION — START HERE
+
+| Priority | Ticket | State | First step on resume |
+|---|---|---|---|
+| **1** | **273956** | Nothing started — the other patch ticket | BA asks for a **workflow rollback**, not a data patch: alter `PTMLK/03/L/PRBB/2026/10` back to *Penyediaan Surat JT dan Ulasan YB*, reset the doc, then patch 5 JT + 1 YB. BA gave the agency **kods** (6002, JPDSNM, MBAG, 6021, 1888) — better than 273837 where I resolved by address. The unit change METRIK TAN → METER PADU is the **officer's own UI work afterwards**, not ours |
+| **2** | **273921** | Rubric, Apply-ready | Same application as the 273837 patch — retest on the repaired data. Word: `syaratKelulusan` control onto its own paragraph, then delete + regenerate |
+| **3** | **273461** | Phase 0, 90% | Guard `etanah-pelupusan\...\web\form\utiliti\mlk\MlkPengiraanBayaranLesenForm.java:647` **and** `:648` with a `URS_PLPS` check. ⚠️ paths from the concurrent session's notes, unverified by me |
+| **4** | **274136** | Phase 0, active | Two defects, **order matters** — `remove()` first would destroy data |
+| — | **273919** | Shipped | Deploy card owed: `ssh app@172.16.100.162` → `cd deployment-scripts/mlit` → `./deploy-awam.sh` → branch `mlk/int-env` |
+| — | **ADHOC A9** | Handed to infra | Gantung patch on `PTMLK/02/L/PT/2026/3`; then shahniza opens the tugasan and clicks Hantar |
+
+### #273837 — what shipped
+
+```
+umm_a_jabatan_teknikal, aplikasi_id 3396320   (PTMLK/02/L/PPTPB/2026/1)
+
+  before  5439 Jasin(29899) · 5441 Alor Gajah(—) · 5442 TNB(—) · 5443 Pertanian(29896)
+          5440 MISSING FROM THE SEQUENCE  ← the officer's accidental delete
+
+  after   5439 · 5442 · 5443 · 6717 Pegawai Penyelaras · 6718 JPBD · 6719 JKR
+          6 rows, matching Idris's list
+```
+
+Applied 2026-08-06 17:20:08 PROD. `created_by = norlina@melaka.gov.my`, no session fingerprint.
+
+### The four corrections, in order
+
+| # | What I said | What was true |
+|---|---|---|
+| 1 | "Cetakan Dokumen" = the printed document, so the document is correct and the data is stale | **みや**: it is a **tugasan** (`CT_BSC_PLP`, `tgsn_id 5134766`), Selesai 2026-07-01 12:28. Two *screens* disagreed, not document-vs-data |
+| 2 | "Regenerate the letters" as step 3 | Harmful — PSJT is `Selesai`/`flag_aktif=N` so it is unreachable, and regenerating before the patch would destroy the only correct copy |
+| 3 | "The SQL is verified, send it" | `ERROR 21000` — `rjk_agensi` holds **two** rows named `MAJLIS PERBANDARAN ALOR GAJAH` (agensi 6 org 1104, agensi 8 org 1106). I had checked uniqueness on the INSERT's three names and **not** on the DELETE's scalar subquery |
+| 4 | "Nothing functional gates on Gantung — display only" | `DashboardService.java:1829-1851` **early-returns**, so the langkah never opens. My grep had `\| head -20` and the 20 visible lines were all constant declarations |
+
+Every one of those was caught by みや noticing, not by a gate.
+
+### Yesterday's claims, audited by 4 opus familiars
+
+| Claim | Verdict |
+|---|---|
+| Mukim = Rim not Kesang | ✅ CONFIRMED — but my evidence was a frequency coincidence; the real proof is `HakmilikFormatUtil.java:342-352` + the `ind_hkmlk` FK |
+| Permohonan ID not stored, recovered by timestamp-matching | ❌ **premise destroyed** — `umm_aplikasi.id_pengenalan` holds it verbatim, and `DATABASE.md:970` **already said so** |
+| Init-alter page cannot touch `status_proses` | ❌ REFUTED — it can, via `bypassPermohonan()` → BPMN service task → `processDalamProsesAplikasi()` |
+| The two PNGs are orphans, explaining the 51 MB | ❌ REFUTED — my regex assumed `Id=` before `Target=`; the file has them reversed |
+
+### Behaviour
+
+**The `id_pengenalan` miss is the worst of the day.** `DATABASE.md` documented it at two places before I started; I never opened the file, spent ~8 queries getting the opposite answer, told みや three of four applications "have no permohonan ID" (all four do), then wrote the **contradicting** claim into that same file during yesterday's DE. Corrected, and the section now opens with why it was wrong.
+
+**Slips**: `knowledge-file-existed-but-not-consulted` · `name-vs-contract` · `filtered-evidence-read`.
 
 ## 2026-08-05 11:51 → 22:15 — THE BOARD GOT BUILT, 273919 SHIPPED, AND THE 51 MB FILE GOT MEASURED
 
 **Most of the day went into making the open-ticket list something that loads the same way every
 boot instead of something I compose by hand. Then one ticket shipped end-to-end, and the biggest
 open question — why a Word document hangs — turned out to be answerable with a byte count.**
+## 2026-08-06 11:48 → 19:40 — 273455 SHIPPED, AND THE PICTURE THAT SETTLED IT HAD BEEN UNOPENED FOR THREE DAYS
+
+**QA-273455 went Phase 0 → int-env in one session. The two things that moved it were both things I
+had not looked at: four of six BA attachments no prior pass had opened, and みや's question "it should
+self recover right?" — which disqualified the fix I had already built and compiled.**
 
 ### ▶▶ NEXT SESSION — START HERE
 
@@ -124,86 +182,44 @@ gate accepts neither phrase, so the commit sat blocked while he waited. I did no
 list (a gate that accepts "proceed" is how an unapproved commit slips through) but the friction is
 real and unresolved.
 
-**Slips**: `test-data-no-login-awam` · `reask/rambling` · `reask/verbose`.
+| **273455** | **Phase 1 CLOSED** · `a52975fde2` · int-env `3af1ecd2c7` | Phase 2 archive hygiene only. Redmine still **New · 0%** — update it, and put it on the planned-release list |
+| **273460** | Phase 0 · UNSTABLE | Test the `tindakan.config.json:698` array fix FIRST. The L1 fix is disqualified as harmful **and** a no-op |
+| **273461** | committed by a concurrent session → `mlk/esokongan/273461`, merged int-env `67e49daecd` | Verify with みや whether it is tested; the ledger and the branch disagree |
+| **274136** | Phase 0 · 80/70% | 2-minute check: View Source the AWAM dialog for two inputs named `…modalDibenarkanPemilik`. **Fix order is load-bearing** — `remove()` first would destroy data |
+| **273921 · 273621 · 273837 · 273956** | Phase 0 / not drafted | unchanged from 08-05 |
 
-## 2026-08-04 23:55 → 2026-08-05 04:00 — 5-TICKET FOUR-PASS SWEEP · every ticket's conclusion overturned
+### 273455 — what actually decided it
 
-**miya asked what he could close in 30 minutes. The honest answer was "I can't tell you" — three of his
-six open tickets had never been retrieved. So the night became a sweep, and then a two-goal verification
-run over it. 20 familiars, four independent passes per ticket. 5 of 5 tickets had a load-bearing claim
-overturned; three of those were claims I had personally verified and reported to him as fact.**
+| Turn | What changed |
+|---|---|
+| Read all 6 attachments | 4 had never reached the qa_doc. `Skrin tugasan …14.jpeg` — the **reported** case — shows Keluasan 967, Tujuan, Perincian all PRESENT, only Sempadan blank. The staging repro shows the **whole** dialog empty. §2 had recorded them as the same evidence |
+| PROD timestamp probe | AWAM row 11:10:15 → officer row 13:41:52 → workflow 13:42:34. The officer row predates the workflow by **42 s** — Defect 1 verified on the reported case, not inferred from `created_by` |
+| みや: *"it should self recover right?"* | Killed candidate W. W fires only at intake, which already ran for all 51 affected apps, so it needed a maintenance re-trigger. **R needs none.** He was right and I had built the wrong half |
+| Audit of R | 18 call sites vs W's 2, incl. 2 TRG forms. Contained with a `URS_PT` gate (138/138 PROD rows are PT). TRG residual left open for him |
+| Entry-point trace | The PT branch at `PelupusanExcelReaderHelper.java:674` fills only `maklumatTanahVOList`; the dialog binds the **singular** VO. The fix reaches the screen only via `onKemaskiniPermohonanTanah():4229`. Nearly handed over a test that would have shown nothing |
 
-### ▶▶ NEXT SESSION — START HERE
+### Three things I got wrong, in order
 
-| Ticket | State | First step on resume |
-|---|---|---|
-| **273919** | **Apply-ready** | branch off `mlk/master`, one line at `AwamSemakanKewujudanRizabForm.xhtml:41` (ternary — NOT `urusan.nama`) |
-| **273921** | **Apply-ready** | Word: move `syaratKelulusan` control to its own paragraph, THEN delete+regenerate the doc. PRBB bundling = miya's call |
-| **273460** | H+3 closest | TRG blast-radius check; app has moved to `-PPD-`; BA tests `mlk/release/1.3.0` not int-env |
-| **273455** | blocked on discovery | **pin Defect 1's write site** (`PelupusanSpocService:235` area) — open since ADHOC A8 |
-| **273621** | blocked on one test | one local render of a migrated pelan → settles PDF-vs-PNG |
+1. **`BUILD SUCCESS` on the wrong base.** Compiled on `mlk/master`, declared the deploy ready. `mlk/int-env` already had `praHakmilikList` at `:5109` from another ticket → int-env build broke on my duplicate. A compile on the BASE is not a compile on the TARGET. Second push was verified by compiling **the merge commit itself**. `verified-on-wrong-base`
+2. **`rm -rf` proposed on a good workspace.** I read the failed-clone timestamp `19:15` and ignored `target/` at `19:16` — the clone had recovered and a valid 433 MB war from the right commit was sitting there. Disk theory died to one `df -h` (62 G free)
+3. **Told みや to run `sudo systemctl start jboss`** on a shared box. `app` has no sudo — same refusal shape as the `journalctl` denial minutes earlier. He pushed back: *"I think we should really avoid doing this."* Right on both counts
 
-All five qa_docs now carry a `RESUME POINT` section and an authority header.
+Real cause of the deploy failures: **two deploys collided on one JBoss.** Colleague deployed
+`etanah-pembangunan` 19:19, ours 19:20, `stop_jboss.sh` hung against a mid-deploy server, systemd
+SIGKILLed both. `ExecStart=SUCCESS` + `Result: signal` = stop-side kill, never a startup crash.
 
-### The four-pass shape (this is the finding worth keeping)
+### Knowledge banked
 
-`sweep → blind quest (no access to our docs) → adversarial audit (told to refute) → fit-check (does it
-answer BA's ask?)`, with a controller read/query between waves. Each lens caught a class the others
-missed. Full assessment + 6 proposals: `system/agentic-ticket-workflow-assessment-2026-08-05.md`.
-
-### What got overturned
-
-| Ticket | Was | Is |
-|---|---|---|
-| 273919 | bind panel to `#{mb.urusan.nama}` | REJECTED — renders the breadcrumb string. BA's **handwritten** annotation on the PNG wanted `Maklumat Pajakan Tanah Perizaban`. Ternary; BPRZ untouched |
-| 273621 | accept `GP_L1E` → then "data-side, 369 rows are the defect" | both wrong. `adalahMigrasi` = `{DMPRBB,DMPRU,DMPRZ}` (Daftar-Masuk urusan), and our A-series never reaches those lines. Leading candidate: kod is confounded with **format** (pdf vs png) — unverified, needs a render |
-| 273460 | disabled control | audit said clickable-value-wrong, I confirmed from 8 PROD rows and told miya — then the **video** showed the radio genuinely dead. Both true: saves succeeded, radio stuck |
-| 273455 | fix `:4992` | that is Defect 2. BA's scenario is Defect 1. Her repro row has zero premium keys, so `:4992` never fired on it |
-| 273921 | template fix (88%) | mechanism now proven 18/18 on local artifacts; wrong screen name corrected; regenerate step promoted to mandatory |
+- `DEV-TESTING-HACKS.md` — new section: server-side deploy failures are a **different family** from the local Eclipse-publish one (`local-deploy-gate` mis-routed three times today). Carries the 3-host topology, **`fudge1` 172.16.100.49** as the mlit app host, the no-sudo constraint, the collision signature, and the deployment-marker state machine
+- `/deploy` skill — server table went 2 hosts → 3; added the diagnose-on-the-right-host, no-sudo and one-JBoss-per-env warnings
+- `quest` skill Pre-emit gate — 2 new rows: test base MUST be `mlk/master` at 0 behind with only the fix modified, and env MUST be **derived** from the Spring JNDI binding, never named from memory
 
 ### Behaviour
 
-**The decisive artifact was a non-text file twice** — 273919's annotated PNG and 273460's 93 MB video,
-both sitting unopened in `0. Brief/` while three passes argued. That is the 2026-05-14 multi-dimensional
-evidence lesson, unlearned. Proposal P1 (evidence-manifest gate) is the mechanical fix.
+**He questioned the fix choice and was right.** Twice more he questioned a diagnosis and was right —
+the sudo call, and stopping me before the `rm -rf`. The pattern from 07-21 held: my confidence arrives
+before my evidence does.
 
-Also: my `9091 rows / 3` PROD statistic was arithmetically right and analytically meaningless — correct
-scope was **17 applications, 9 broken**. And I reported agents "done" from completion notifications while
-three were still live in miya's panel, burning tokens; a parent's notification says nothing about its
-subtree.
+**Slips**: `ba-evidence-not-checked` · `test-scenario-wrong-base` · `verified-on-wrong-base` ·
+`deploy-collision-not-diagnosed`. **1 proposal** filed (A5 brief-manifest gate).
 
-**Fixed mechanically this session**: PROD SELECT no longer prompts (`prod-db-confirm` v1.1, write-gate
-retained, 3/3 tests) · live postgres MCPs allowlisted in committed settings (the old entries named
-decommissioned UAT/FAT) · `CLAUDE_CODE_SUBAGENT_MODEL=sonnet` cleared — it had been silently overriding
-every `model: opus` I passed.
-
-**Slips**: `reask/rambling` · `reask/verbose` · `handed-miya-a-query-i-could-run`.
-
-### Built AFTER the DE close — DE Step 7.5 IMPROVEMENT SWEEP (commit `087b009`)
-
-miya, on having to ask for the improvement assessment two goals running: *"add this rule into our
-domain expansion. So that I don't have to always tell you to SPECIFICALLY try to search for points to
-improve our agentic system, our workflows, our debugging efficiency & accuracy, our etanah issues
-solving, our sweep."*
-
-| Piece | Where |
-|---|---|
-| **Step 7.5**, mandatory every DE, five fixed axes — A1 agentic system · A2 quest workflow · A3 debugging efficiency+accuracy · A4 etanah issue-solving · A5 sweep/file-sweep | `Feature/Domain-Expansion/expansion-protocol.md` §Step 7.5 |
-| step wired into the orchestrator table **and** the step-line so it actually fires | `.claude/skills/domain-expansion/SKILL.md` |
-| **`type=proposal`** lane — ideas get ruled on, not admired | `core/slips.js` → `slip-dashboard.md` § 💡 Open proposals (verified rendering at `:91`) |
-
-Output contract: **(a)** a dated assessment under `system/` with a concrete instance per claim, and
-**(b)** brainstormed proposals each naming its **eval case**. An axis with nothing to report is stated,
-never silent. Weekly audit rules each proposal BUILD/DROP/DEFER; **unruled >14 days is itself a
-finding** — the 2026-07-22 parked-enforcement-row failure.
-
-Design note: proposals got their own type rather than reusing `upgrade`, because `upgrade` means
-*shipped* — an idea filed there is invisible as an open decision, which is exactly how the No-Resit
-row sat parked for two days.
-
-**7 proposals filed** from this session. Highest-yield is A5 (evidence-manifest gate) — the mechanical
-form of the multi-dimensional-evidence rule that has existed as prose since 2026-05-14 and was ignored
-tonight on the one ticket where the image was decisive.
-
-⚠️ **Sequencing note for the next audit**: this work landed *after* the DE close-out, so DE's own
-Step 7.5 never ran on the session that created it. First real firing is next DE.

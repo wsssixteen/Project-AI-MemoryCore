@@ -167,3 +167,98 @@ Ledger: `gate-has-an-opt-out-that-is-free`.
 
 *Companion: `agentic-ticket-workflow-assessment-2026-08-05.md` (four-pass run) ·
 `-2026-08-05b.md` (solo day-shift). Proposals filed to `system/slips.jsonl` as `type=proposal`.*
+
+---
+
+# Session 2 sweep — 09:22 → 12:21, QA-273621 shipped end-to-end
+
+> Solo, no fan-out. Phase 0 verify → Apply → Phase 1 close → int-env merge → みや deployed.
+
+## A1 — Agentic system
+
+**⏭ No fan-out this session.** All main-loop; the Delegation Economy had nothing to govern. Recording
+the honest empty rather than inventing a finding. (The controller-verifies discipline *did* pay off, but
+against my own prior session's doc, not an agent's — that belongs to A3.)
+
+## A2 — Quest workflow
+
+**The prepare-commit sequence lets a gate fire on a state the sequence never sets.**
+`prepare-commit-trigger` lists the `local_test_confirmed` pre-check as step 1 and `checkout -b` as step
+5, but nothing sets `current_phase=Commit-prep`. So the branch step ran while active.txt still read
+`current_phase=Apply` and `branch-at-apply-gate` blocked a correct action. I got through only by setting
+the phase by hand.
+
+**`branch-at-apply-gate` had two defects hostile to every multi-quest close.** (a)
+`blocks.find(o => o.status === 'active')` takes the FIRST active quest — with three active it cited
+QA-273201, mid-rework, as the reason QA-273621 could not branch. (b) `CLOSING_PHASES` omitted the
+literal `'Commit-prep'` while the file header promises "Commit-prep onward". Both fixed, plus an
+exemption for `/deploy`'s throwaway `int-envmerge-<n>` branch (a deploy runs after close, so no active
+quest can ever vouch for it). **Negative case unproven** — I did not confirm it still blocks a genuine
+mid-Apply checkout, since that needs zero closing quests and I would not mutate live state to stage it.
+
+**Phase 2 correctly NOT run**: deployed but Redmine still `New`/0%; archiving before the ticket leaves
+our plate is the incomplete-close slip inverted.
+
+## A3 — Debugging efficiency + accuracy
+
+**One wasted build cycle, and the diagnosis was not the cause.** The fix worked on his first real
+build. What cost him was my saying "build + deploy" when a compile plus an Eclipse file-copy does not
+reload a class: deployed bytecode carried the fix (`GP_L1E` inlined, class mtime 11:20:08) while the JVM
+still held the 09:58:30 class — proven by the log requesting only `GPTOL` with no redeploy event.
+
+**I read log NOISE as mechanism, twice in one turn.** Five minutes of `ERROR … Execution time exceeded
+3 seconds` looked like a hang; every line was `CommonPollComponent … took 0 ms`. Then I named my own fix
+prime suspect for the empty panel, which two greps of the same log refuted. **Evidence class that would
+have caught it first**: before attributing any symptom to my change, prove the change is RUNNING
+(deployed-bytecode check + redeploy-event check) — I ran both, but only after asserting.
+
+**Measurement beat argument.** `34,724` bytes blank vs `60,862,037` populated on the same record is the
+entire before/after; the raster measured `68,202,892`. One `find -printf` replaced a debate.
+
+**I matched a commit by its subject.** `cea66b57ad` = *"Adjust DPI untuk pelan"*, so I asserted it
+changed our method; it changed `:941`/`:1498`, ours is `:814`. Same turn I claimed it was absent from
+`mlk/master` — present. My `-S` pickaxe only detects occurrence-COUNT changes, so `300`→`150` was
+structurally invisible to that search.
+
+## A4 — Etanah issue-solving
+
+**"Two defects in series" deserves a name.** Fixing the lookup alone swaps one blank band for another,
+because the found artefact is in a format the consumer cannot use. Generalisation: when a fix makes a
+MISSING artefact present, separately verify its FORMAT against what the consumer accepts. Verified today
+— `skg_dok.jns_fail = application/pdf`, `lokasi_fail_png` empty, GPTOL arm 10/10 `image/png`.
+
+**A knowledge file described environments dead for three weeks.** `env-check` still named FAT
+(`etprdmlk/et_main`) and UAT (`mlkuat/et_main_uat`) as switch targets, and claimed the DMS/Audit
+sidecars are "env-agnostic … always mkit" when the live machine reads `et_dms_stg1` / `et_sistem_stg1`.
+Cure built: `quest/env-switch.js` reads the machine instead of remembering it (eval 10/10, byte-for-byte
+round-trip).
+
+**A predicted binary conflict recurred exactly as recorded.** QA-272527's block said *"WILL RECUR when
+272651 merges to master"* — it did, on this int-env merge, and the note turned an investigation into a
+3-command decision. Resolution was forced, not chosen: `#272651` is int-env-only, so taking master's
+side would have deleted a colleague's work.
+
+## A5 — Sweep / file sweep
+
+**I never opened the ticket's `0. Brief/` binaries myself this session.** The `.jpeg` and the 65 s
+`.mp4` were read by last night's pass; I carried that extraction forward and marked those two rows
+"⚠️ from the qa_doc's earlier extraction". Marking it is the only thing that makes it defensible — but
+2026-08-05's lesson is that only a picture testifies about what the officer could SEE, and the
+re-engagement rule says re-load, not re-use. `Description.txt` and `History.txt` I did read verbatim.
+
+**The BA-understanding table fired only because a Stop hook asked.** I reached Apply, staged, and closed
+Phase 1 before emitting it. On a RESUMED ticket nothing forces it — `ticket-gate` keys on みや naming a
+number at intake. Same shape as the 2026-07-28 lesson: a rule that fires on HIS words cannot fire when I
+pick up the work.
+
+---
+
+## Proposals filed (Session 2)
+
+| axis | proposal | eval case |
+|---|---|---|
+| A2 | `prepare-commit` sets `current_phase=Commit-prep` as an explicit numbered step before the branch step | this transcript: the branch op must not need a manual phase edit |
+| A2 | `branch-at-apply-gate` negative-case eval on fixture `active.txt` files | mid-Apply + zero closing quests must BLOCK; a Commit-prep quest must PASS |
+| A3 | `is-my-change-running` probe before attributing a symptom to my own edit | the 11:44 empty-panel turn: bytecode + redeploy-event check must precede attribution |
+| A4 | live-pointer discipline for any doc describing machine state | `env-check`'s FAT/UAT table must be unreadable-as-current once the env is gone |
+| A5 | re-engagement binary re-read on a RESUMED ticket, not only first intake | this session: the `.jpeg`/`.mp4` rows must be my own reads |

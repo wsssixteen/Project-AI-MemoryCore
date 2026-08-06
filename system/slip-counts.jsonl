@@ -179,11 +179,9 @@
 {"ts":"2026-08-05T14:09:45.710Z","category":"A5"}
 {"ts":"2026-08-05T14:09:45.779Z","category":"A4"}
 {"ts":"2026-08-05T14:09:45.847Z","category":"A3"}
-<<<<<<< HEAD
 {"ts":"2026-08-06T02:33:35.835Z","category":"knowledge-file-existed-but-not-consulted"}
 {"ts":"2026-08-06T02:33:35.991Z","category":"name-vs-contract"}
 {"ts":"2026-08-06T03:21:37.362Z","category":"filtered-evidence-read"}
-=======
 {"ts":"2026-08-05T18:36:49.337Z","category":"knowledge-file-existed-but-not-consulted"}
 {"ts":"2026-08-05T18:36:49.430Z","category":"blind-pass-ban-swallowed-knowledge-folder"}
 {"ts":"2026-08-05T18:36:49.519Z","category":"gate-has-an-opt-out-that-is-free"}
@@ -198,5 +196,31 @@
 {"ts":"2026-08-05T18:42:04.574Z","category":"A1"}
 {"ts":"2026-08-05T18:44:41.965Z","category":"logged-a-slip-from-an-unadjudicated-agent-claim"}
 {"ts":"2026-08-06T00:28:00.077Z","category":"A1"}
->>>>>>> origin/main
-{"ts":"2026-08-06T09:27:24.994Z","category":"over-corrected-discarded-valid-evidence"}
+{"ts":"2026-08-06T01:54:12.510Z","category":"stale-doc-described-decommissioned-env"}
+{"ts":"2026-08-06T04:27:09.860Z","category":"gate-selected-wrong-quest"}
+{"ts":"2026-08-06T04:27:10.230Z","category":"edited-wrong-copy-main-vs-worktree"}
+{"ts":"2026-08-06T04:27:10.370Z","category":"commit-matched-by-subject-not-diff"}
+{"ts":"2026-08-06T04:27:10.502Z","category":"log-noise-read-as-mechanism"}
+{"ts":"2026-08-06T04:27:10.642Z","category":"over-pursued-adjacent-finding"}
+{"ts":"2026-08-06T04:29:08.810Z","category":"A2"}
+{"ts":"2026-08-06T04:29:08.918Z","category":"A2"}
+{"ts":"2026-08-06T04:29:09.021Z","category":"A3"}
+{"ts":"2026-08-06T04:29:09.115Z","category":"A4"}
+{"ts":"2026-08-06T04:29:09.216Z","category":"A5"}
+{"ts":"2026-08-06T09:44:24.642Z","category":"A2"}
+{"ts":"2026-08-06T09:44:24.725Z","category":"A3"}
+{"ts":"2026-08-06T09:44:24.811Z","category":"A4"}
+{"ts":"2026-08-06T09:44:24.915Z","category":"A4"}
+{"ts":"2026-08-06T09:44:25.004Z","category":"A1"}
+{"ts":"2026-08-06T10:43:34.286Z","category":"emit-shape-not-copyable"}
+{"ts":"2026-08-06T11:14:20.676Z","category":"ticket-source-skipped"}
+{"ts":"2026-08-06T11:46:34.634Z","category":"A2"}
+{"ts":"2026-08-06T11:46:34.715Z","category":"A1"}
+{"ts":"2026-08-06T11:46:34.794Z","category":"A4"}
+{"ts":"2026-08-06T04:39:42.129Z","category":"ba-evidence-not-checked"}
+{"ts":"2026-08-06T04:39:52.867Z","category":"A5"}
+{"ts":"2026-08-06T09:53:47.991Z","category":"test-scenario-wrong-base"}
+{"ts":"2026-08-06T11:07:50.333Z","category":"verified-on-wrong-base"}
+{"ts":"2026-08-06T11:48:56.508Z","category":"de-conflict-resolved"}
+{"ts":"2026-08-06T11:51:31.956Z","category":"overwritten-by-concurrent-session"}
+{"ts":"2026-08-06T11:53:40.253Z","category":"A3"}

@@ -93,6 +93,21 @@ Only proceed to Phase 1 after explicit confirmation.
 1. Read `quest/active.txt` to find the target quest:
    - If `<QA-number>` arg supplied: match that specific held entry
    - If no arg: pick the single quest with `status=hold` (error if 0 or >1 held)
+
+1a. **🚨 REDMINE FIRST — RETRIEVE, then READ ALL OF IT, before the quest MD is opened (HARD RULE, added 2026-08-06 per みや).** The ticket is the source of truth; `QA-<NNN>.md` is a **derived artifact** that only knows what its writer knew on the day. Resuming into the doc first is how a superseded theory survives — the doc reads as settled and the newer BA journal never gets weighed. Order is not negotiable:
+
+   | # | Step | Command / emit |
+   |---|---|---|
+   | i | **Re-sync from Redmine — ALWAYS, even if the folder already exists on disk.** A folder on disk is NOT the ticket. | `node quest/redmine-sync.js <num>` |
+   | ii | **Print the load manifest** — enumerates every journal entry + every attachment + the Description from the synced files, numbered `A1..An` / `C1..Cn`. Exit 2 = integrity problem (journal names an attachment missing from disk · History.txt older than the ticket's `Last updated`) → **fix before continuing** | `node quest/ticket-load-verify.js <num>` |
+   | iii | **Echo the contract** — one line per `A<n>` conversation (author · date · what they said), one line per `C<n>` attachment (image = what is VISIBLE, pdf = annotation count via the `annotations` skill), plus the Description's `Isu` + `Expected` **verbatim**. The manifest states the required counts; a missing echo is a skipped read, not a shortened reply | inline emit |
+   | iv | **THEN** open `QA-<NNN>.md` (`## Ticket Summary` first, then `## 0. Resume Point`, then top-to-bottom) | Read |
+   | v | **RECONCILE — mandatory table**, one row per doc claim the ticket touches: `\| doc claim \| ticket says \| HOLDS / SUPERSEDED / CONTRADICTED \|`. Then state the verdict in one line: **theory solidified** (every claim HOLDS) or **theory revised** (name what changed and what it does to the fix shape) | inline emit |
+
+   **Banned**: resuming from the qa_doc without a fresh sync · reading only the newest journal ("I know the rest") · skipping an attachment because its filename doesn't match the current theory · calling a theory solid when the reconcile table has an un-adjudicated row.
+
+   **Why** (みや 2026-08-06, so `/quest resume <num>` is reliable): three separate proofs in two weeks that my derived artifacts rot while the ticket stays true — the 07-27 board built from `active.txt` (6 of 10 "open" quests dead), the 08-03 execution pack that outranked a BA-given ID sitting in the journal I had synced myself, the 08-06 `DATABASE.md` answer four days old that twenty familiars walked past. Same family as *"retrieve from Redmine means RUN redmine-sync"* (07-16) and *"I trust the derived artifact over the source"* (07-28).
+
 2. Restore context — read `QA-<NNN>.md` (the **`## Ticket Summary` block FIRST** — created at retrieval, always exists, rebinds you to what the ticket is about; THEN the `## 0. Resume Point` block), then the rest of the doc top-to-bottom (Discovery → Debugging → Code-Review → Apply etc. — single canonical doc means no sibling files to chase). **Reading `## Ticket Summary` on resume is MANDATORY** — it is the binding anchor that stops a quest being resumed without re-understanding it.
 3. **Surface the live checklist** — run `node domain/checklist-reactivate/checklist-show.js <QA>` to print the persisted `## Next-Steps Checklist` open rows (the *reactivate* half of the checklist-reactivate Power; `/checklist` is the *persist* half). Fires HERE at resume, NOT at SessionStart — boot stays lean (open-quest-surfacer already gives boot awareness).
 4. **🚨 GIT-STATE CHECK — COMPULSORY ON RESUME, not only on `/quest start` (added 2026-07-27 per みや, QA-265537).** For EVERY repo the quest touches (`etanah-pelupusan` / `etanah-awam` / `etanah-common` — read them off the qa_doc's file table, not from memory), run and EMIT:
@@ -149,6 +164,16 @@ Before emitting ▶ YOUR MOVE, run this gate and emit it as the FIRST lines of t
 | Tugasan named | Every test/simulate instruction names the specific **tugasan** — not just the document/screen. みや needs to know where in the workflow to go. Omitting it = the same failure as a blank Notes.txt. |
 | Flag states WHERE — human-findable | Every flag / ⚠️ / caveat states a location みや can actually FIND: the file path PLUS, for a document, the visible **searchable text** + page number. NEVER cite an internal machine ID (Word `paraId`, SDT `id`, XML attribute) — みや cannot search those in Word. Say "the line reading '<visible text>' on page N", not "paragraph 78F8C270". |
 | Login present | Any permohonan ID carries its `pengguna_semasa` login (`feedback_pengguna_semasa.md`). Unknown → DB-query it first. |
+| 🚨 **Test base = `mlk/master` + our fix, nothing else** (added 2026-08-06 per みや, QA-273455) | Before handing over ANY test scenario, run and EMIT: `git branch --show-current` · `git status --short` · `git rev-list --count HEAD..origin/<baseline>`. The branch MUST be the repo's baseline **`mlk/master`** (pelupusan AND awam), behind-count **0**, and the ONLY modified files this quest's fix. **Not on it → move BEFORE emitting**: `git stash push -m "stash <ticket>" -- <fix files>` → `git checkout mlk/master` → `git pull --ff-only` → `git stash pop`. **Banned**: emitting a test scenario from `mlk/int-env` / `mlk/stag-env` / a ticket branch / a base whose behind-count was never measured. |
+| 🚨 **Env named + DERIVED, never assumed** (added 2026-08-06 per みや, QA-273455) | The test scenario names the schema the local app will actually hit, and cites how it was derived — the Spring JNDI binding (`etanah-common\src\main\resources\spring\applicationContext-main.xml` → `java:jboss/datasources/<pool>`) resolved against `E:\Dev\jboss-7.4-plp-melaka\standalone\configuration\standalone.xml`. **Banned**: naming an env from memory, from `active.txt`, or from the ticket's `Env:` line — those say where the BA tested, not where みや's build will read. The test permohonan MUST come from that same schema. |
+
+**Why the two rows above** (2026-08-06, QA-273455): the hand-back named a test app derived from `et_main_mlit` while the repo sat on `mlk/int-env`. Both were wrong for the same reason — a test scenario asserts *"run this against this base"*, and neither half had been measured. The env was settled only by reading the JNDI binding (it resolves to `et_main_stg1`, not mlit); the branch was caught by みや. Testing on `int-env` also means a pass proves nothing about `mlk/master`, which is what the fix branches from at Phase 1.
+
+> ⚠️ These two rows were written once on 2026-08-06 and **lost** when a concurrent session's commit
+> (`88b925f`) overwrote the main-repo working copy before they were committed. Re-applied the same
+> evening from the worktree. If they go missing again, that is the same class — check
+> `git log -- .claude/skills/quest/SKILL.md` for a competing commit rather than assuming they were
+> never written.
 
 **Why** (2026-05-21, QA-259339): the Notes.txt auto-write has slipped ≥4 times; per the skill-failure-log ≥3-strike rule the cure is structural, not another trigger phrase. The hand-back (▶ YOUR MOVE) is the single moment all this info is needed, so the gate lives here — Notes.txt / tugasan / WHERE / login become hard preconditions of the emit, checked visibly so a skip leaves a trace.
 
