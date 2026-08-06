@@ -197,3 +197,13 @@
 {"ts":"2026-08-05T18:44:41.965Z","category":"logged-a-slip-from-an-unadjudicated-agent-claim"}
 {"ts":"2026-08-06T00:28:00.077Z","category":"A1"}
 {"ts":"2026-08-06T01:54:12.510Z","category":"stale-doc-described-decommissioned-env"}
+{"ts":"2026-08-06T04:27:09.860Z","category":"gate-selected-wrong-quest"}
+{"ts":"2026-08-06T04:27:10.230Z","category":"edited-wrong-copy-main-vs-worktree"}
+{"ts":"2026-08-06T04:27:10.370Z","category":"commit-matched-by-subject-not-diff"}
+{"ts":"2026-08-06T04:27:10.502Z","category":"log-noise-read-as-mechanism"}
+{"ts":"2026-08-06T04:27:10.642Z","category":"over-pursued-adjacent-finding"}
+{"ts":"2026-08-06T04:29:08.810Z","category":"A2"}
+{"ts":"2026-08-06T04:29:08.918Z","category":"A2"}
+{"ts":"2026-08-06T04:29:09.021Z","category":"A3"}
+{"ts":"2026-08-06T04:29:09.115Z","category":"A4"}
+{"ts":"2026-08-06T04:29:09.216Z","category":"A5"}

@@ -1,5 +1,100 @@
 # Current Session
 
+## 2026-08-06 09:22 → 12:21 — 273621 SHIPPED, AND THE TWO GATES THAT WERE SUPPOSED TO PROTECT THE CLOSE BLOCKED IT INSTEAD
+
+**One ticket end-to-end: verified last night's diagnosis myself, applied a two-part fix, closed Phase 1,
+merged to int-env, and miya deployed. The fix was right. What cost the most time was my own
+enforcement — a gate that judged the wrong quest, and my habit of editing the main-repo copy of a
+file whose live copy is in the worktree.**
+
+### ▶▶ NEXT SESSION — START HERE
+
+| Ticket | State | First step on resume |
+|---|---|---|
+| **273621** | **Phase 1 CLOSED · deployed int-env** | Phase 2 archive only, after Redmine goes Resolved. Redmine was still `New`/0% at close — needs the status update (`redmine prefill 273621` drives the form to the Submit button) |
+| **273455** | 88% · fix shape agreed | Build fix 1 only, `PelupusanSpocService.java:254` backfill. Read `DATABASE.md §16` first |
+| **273460** | UNSTABLE | Test the `tindakan.config.json:698` array fix FIRST |
+| **273461** | 90% · reopened | Guard **both** `MlkPengiraanBayaranLesenForm.java:647` and `:648` with `URS_PLPS` |
+| **274136** | 80/70% | View Source the AWAM dialog for two inputs named `…modalDibenarkanPemilik`. Fix order is load-bearing |
+| **273921 · 273837 · 273956** | held | unchanged from 08-05 |
+
+### 273621 — what shipped
+
+`etanah-pelupusan\...\constant\PelupusanReportMethodConstant.java`, 1 file +17/-1, commit
+`9d045f55ec` on `mlk/esokongan/273621`, int-env merge `303f61073c`, deployed by miya.
+
+Two defects in series, both required:
+
+```
+migrated licence -> pelan filed under GP_L1E (464), code asks GPTOL (466)  -> not found
+                 -> even when found, blob is application/pdf              -> Jasper can't place it
+```
+
+Before/after on the same record (`PTMLK/02/L/MLPS/2026/8`, aplikasi 3419780, stg1):
+`34,724 bytes` blank → `60,862,037 bytes` with the plan embedded.
+
+### The three things I verified that last night's doc had wrong
+
+| Doc said | Truth |
+|---|---|
+| converter called at `:794 / :888 / :1453` | ONE caller, `:794` |
+| `/2026/8` "does not exist" | exists on **stg1** (3419780); absent only from mlit |
+| mime was fit-check-only, unverified | **VERIFIED** — `skg_dok.jns_fail = application/pdf`, `lokasi_fail_png` empty, GPTOL arm 10/10 png |
+
+Also closed the residual I had flagged: the two active `skg_dok` rows on `medan_pk 3195662` are not
+ambiguous — FK `fk_sd_medan_id` → `rjk_senarai_ahli_kumpulan`, where 1131 = `UMM_A_DOK_KELUARAN`
+(the pelan) and 1149 = `UMM_A_DOK_KMSKN` (a receipt the filter excludes).
+
+### Deferred with miya's word: the 58 MB report
+
+`PelupusanUtil.java:814` renders single-page at 300 DPI; `:941` and `:1498` are 150, set by
+`cea66b57ad` (#272943) which never touched `:814`. Same shape as **#274046**, the PROD ticket where a
+51 MB document spins forever. I had the one-line fix applied and reverted it on his instruction —
+*"that fix will be covered later on."*
+
+### Built: `quest/env-switch.js`
+
+Env switching was prose in the env-check skill, so its mapping table still named FAT
+(`etprdmlk/et_main`) and UAT (`mlkuat/et_main_uat`) — both decommissioned 2026-07-17 — while the
+machine had moved to stg1/stg2/mlit/trn. The script reads the machine instead of remembering it.
+Eval 10/10 including a byte-for-byte round-trip. Per miya, env setup is now ONE step with
+test-scenario prep: the moment a query confirms which schema holds the data, set the env.
+
+It also caught a false claim in that skill: *"Audit/DMS stay on mkit always — env-agnostic"* is wrong;
+both sidecars read `et_dms_stg1` / `et_sistem_stg1`, so a cross-env switch can silently read the wrong
+document store.
+
+### Behaviour
+
+**A gate judged the wrong quest and blocked the close twice.** `branch-at-apply-gate.js` picked
+`blocks.find(status==='active')` — the FIRST active quest — and cited QA-273201, mid-rework, as the
+reason I could not branch for 273621. Its `CLOSING_PHASES` also omitted the literal `'Commit-prep'`
+while its own header says "Commit-prep onward". Fixed both, plus an exemption for the deploy's
+throwaway `int-envmerge-<n>` branch. The negative case is still unproven.
+
+**I edited the main-repo copy of a hook whose live copy is the worktree's.** Twice today, same shape:
+the skills edits and then the hook. `${CLAUDE_PROJECT_DIR}` is the worktree; a main-repo edit is
+invisible to the running session. Cost two blocked turns before I noticed.
+
+**I read a green log as a hang, then a hang as my fix.** The `Execution time exceeded 3 seconds` lines
+were `CommonPollComponent` heartbeats (`took 0 ms`). And when miya's local showed no document at all,
+I said my fix was the prime suspect — the log's `GPTOL`-only lookup and the absent redeploy proved the
+JVM had never loaded my class. Both corrected inside the turn, but the first instinct was wrong twice.
+
+**I matched a commit by its subject line instead of its line numbers.** `cea66b57ad` says "Adjust DPI
+untuk pelan" so I asserted it changed our method. It changed `:941`/`:1498`. Then I claimed it was not
+in `mlk/master`; it is. Two wrong statements about one commit in one turn, both from not reading the
+diff I already had.
+
+**Concurrent-session divergence again.** `origin/main` had moved 2 commits; the merge conflicted on
+`quest/active.txt` and the three slip ledgers. Resolution was per-hunk on merits — their 273201
+reconciliation is newer, my 273621 block is authoritative, their new 274136/ADHOC blocks are additive
+— and the ledgers unioned losslessly (208 rows, 0 malformed, no duplicate ts).
+
+**Slips**: `stale-doc-described-decommissioned-env` · `gate-selected-wrong-quest` ·
+`edited-wrong-copy-main-vs-worktree` · `commit-matched-by-subject-not-diff` ·
+`log-noise-read-as-mechanism`.
+
 ## 2026-08-06 01:58 → 02:54 — THE SWEEP CONTRACT GOT DECIDED, AND THE ANSWER TO 273455 HAD BEEN ON DISK FOR FOUR DAYS
 
 **miya asked me to settle how we run a multi-ticket sweep — how many loops, what the familiars are
@@ -125,85 +220,3 @@ list (a gate that accepts "proceed" is how an unapproved commit slips through) b
 real and unresolved.
 
 **Slips**: `test-data-no-login-awam` · `reask/rambling` · `reask/verbose`.
-
-## 2026-08-04 23:55 → 2026-08-05 04:00 — 5-TICKET FOUR-PASS SWEEP · every ticket's conclusion overturned
-
-**miya asked what he could close in 30 minutes. The honest answer was "I can't tell you" — three of his
-six open tickets had never been retrieved. So the night became a sweep, and then a two-goal verification
-run over it. 20 familiars, four independent passes per ticket. 5 of 5 tickets had a load-bearing claim
-overturned; three of those were claims I had personally verified and reported to him as fact.**
-
-### ▶▶ NEXT SESSION — START HERE
-
-| Ticket | State | First step on resume |
-|---|---|---|
-| **273919** | **Apply-ready** | branch off `mlk/master`, one line at `AwamSemakanKewujudanRizabForm.xhtml:41` (ternary — NOT `urusan.nama`) |
-| **273921** | **Apply-ready** | Word: move `syaratKelulusan` control to its own paragraph, THEN delete+regenerate the doc. PRBB bundling = miya's call |
-| **273460** | H+3 closest | TRG blast-radius check; app has moved to `-PPD-`; BA tests `mlk/release/1.3.0` not int-env |
-| **273455** | blocked on discovery | **pin Defect 1's write site** (`PelupusanSpocService:235` area) — open since ADHOC A8 |
-| **273621** | blocked on one test | one local render of a migrated pelan → settles PDF-vs-PNG |
-
-All five qa_docs now carry a `RESUME POINT` section and an authority header.
-
-### The four-pass shape (this is the finding worth keeping)
-
-`sweep → blind quest (no access to our docs) → adversarial audit (told to refute) → fit-check (does it
-answer BA's ask?)`, with a controller read/query between waves. Each lens caught a class the others
-missed. Full assessment + 6 proposals: `system/agentic-ticket-workflow-assessment-2026-08-05.md`.
-
-### What got overturned
-
-| Ticket | Was | Is |
-|---|---|---|
-| 273919 | bind panel to `#{mb.urusan.nama}` | REJECTED — renders the breadcrumb string. BA's **handwritten** annotation on the PNG wanted `Maklumat Pajakan Tanah Perizaban`. Ternary; BPRZ untouched |
-| 273621 | accept `GP_L1E` → then "data-side, 369 rows are the defect" | both wrong. `adalahMigrasi` = `{DMPRBB,DMPRU,DMPRZ}` (Daftar-Masuk urusan), and our A-series never reaches those lines. Leading candidate: kod is confounded with **format** (pdf vs png) — unverified, needs a render |
-| 273460 | disabled control | audit said clickable-value-wrong, I confirmed from 8 PROD rows and told miya — then the **video** showed the radio genuinely dead. Both true: saves succeeded, radio stuck |
-| 273455 | fix `:4992` | that is Defect 2. BA's scenario is Defect 1. Her repro row has zero premium keys, so `:4992` never fired on it |
-| 273921 | template fix (88%) | mechanism now proven 18/18 on local artifacts; wrong screen name corrected; regenerate step promoted to mandatory |
-
-### Behaviour
-
-**The decisive artifact was a non-text file twice** — 273919's annotated PNG and 273460's 93 MB video,
-both sitting unopened in `0. Brief/` while three passes argued. That is the 2026-05-14 multi-dimensional
-evidence lesson, unlearned. Proposal P1 (evidence-manifest gate) is the mechanical fix.
-
-Also: my `9091 rows / 3` PROD statistic was arithmetically right and analytically meaningless — correct
-scope was **17 applications, 9 broken**. And I reported agents "done" from completion notifications while
-three were still live in miya's panel, burning tokens; a parent's notification says nothing about its
-subtree.
-
-**Fixed mechanically this session**: PROD SELECT no longer prompts (`prod-db-confirm` v1.1, write-gate
-retained, 3/3 tests) · live postgres MCPs allowlisted in committed settings (the old entries named
-decommissioned UAT/FAT) · `CLAUDE_CODE_SUBAGENT_MODEL=sonnet` cleared — it had been silently overriding
-every `model: opus` I passed.
-
-**Slips**: `reask/rambling` · `reask/verbose` · `handed-miya-a-query-i-could-run`.
-
-### Built AFTER the DE close — DE Step 7.5 IMPROVEMENT SWEEP (commit `087b009`)
-
-miya, on having to ask for the improvement assessment two goals running: *"add this rule into our
-domain expansion. So that I don't have to always tell you to SPECIFICALLY try to search for points to
-improve our agentic system, our workflows, our debugging efficiency & accuracy, our etanah issues
-solving, our sweep."*
-
-| Piece | Where |
-|---|---|
-| **Step 7.5**, mandatory every DE, five fixed axes — A1 agentic system · A2 quest workflow · A3 debugging efficiency+accuracy · A4 etanah issue-solving · A5 sweep/file-sweep | `Feature/Domain-Expansion/expansion-protocol.md` §Step 7.5 |
-| step wired into the orchestrator table **and** the step-line so it actually fires | `.claude/skills/domain-expansion/SKILL.md` |
-| **`type=proposal`** lane — ideas get ruled on, not admired | `core/slips.js` → `slip-dashboard.md` § 💡 Open proposals (verified rendering at `:91`) |
-
-Output contract: **(a)** a dated assessment under `system/` with a concrete instance per claim, and
-**(b)** brainstormed proposals each naming its **eval case**. An axis with nothing to report is stated,
-never silent. Weekly audit rules each proposal BUILD/DROP/DEFER; **unruled >14 days is itself a
-finding** — the 2026-07-22 parked-enforcement-row failure.
-
-Design note: proposals got their own type rather than reusing `upgrade`, because `upgrade` means
-*shipped* — an idea filed there is invisible as an open decision, which is exactly how the No-Resit
-row sat parked for two days.
-
-**7 proposals filed** from this session. Highest-yield is A5 (evidence-manifest gate) — the mechanical
-form of the multi-dimensional-evidence rule that has existed as prose since 2026-05-14 and was ignored
-tonight on the one ticket where the image was decisive.
-
-⚠️ **Sequencing note for the next audit**: this work landed *after* the DE close-out, so DE's own
-Step 7.5 never ran on the session that created it. First real firing is next DE.
