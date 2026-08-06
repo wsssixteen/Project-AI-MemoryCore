@@ -1033,14 +1033,16 @@ issue_one_liner=Pelupusan - PRBB - Tukarkan Unit METRIK TAN kepada METER PADU
 assigned_to_me=2026-08-06
 urusan=PRBB
 tugasan=Cetakan Dokumen
-current_phase=Patch prepared - awaiting miya to run on PROD
+current_phase=Patch APPLIED + verified on PROD 2026-08-06 - both status_id NULL, audit cols untouched. Handed to samsiah for regenerate + unit edit.
 test_app=PTMLK/03/L/PRBB/2026/10 aplikasi 3424732 (samsiah_jaamat@melaka.gov.my, PSJT a_tgsn 2778330 Baru/aktif)
 scope_anchor=doc-status only: umm_a_dok_keluaran SRTJK 1978 + PLP_SRT_YB 1979 -> NULL. JT rows already correct (6 rows, all 5 agensi + YB present, keputusan/ulasan NULL) - NO JT patch needed. Unit edit is officer UI work.
 qa_doc=projects/coding-projects/active/QA-273956/QA-273956.md
 patch_script=1. Tasks\Melaka\134. ...\patch-273956.sql - 2 rows, status_id 1978/1979 -> NULL, reversible
 analog=aplikasi 3424434 - identical SKM>PSJT>PGSJT>PSJT>PGSJT>CT_BSC_PLP path, 6 JT rows NOT duplicated, same a_dok_keluaran_id, versi_terakhir climbed 3->6/12, both docs ended NULL
+patch_applied=2026-08-06
 
 qa=QA-273707
+quest_start_ts=2026-08-06T14:06:24.003Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\135. ESOKONGAN #273707 - Teknikal - PT - Penyediaan Laporan Pelukis Pelan - Papar -No record fo
 phase=0
 status=hold
