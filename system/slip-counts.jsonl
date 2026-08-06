@@ -224,3 +224,12 @@
 {"ts":"2026-08-06T11:48:56.508Z","category":"de-conflict-resolved"}
 {"ts":"2026-08-06T11:51:31.956Z","category":"overwritten-by-concurrent-session"}
 {"ts":"2026-08-06T11:53:40.253Z","category":"A3"}
+{"ts":"2026-08-06T13:33:26.829Z","category":"state-field-written-untrue"}
+{"ts":"2026-08-06T13:33:48.315Z","category":"tested-wrong-environment"}
+{"ts":"2026-08-06T13:33:48.388Z","category":"measurement-window-closed-too-early"}
+{"ts":"2026-08-06T13:33:48.447Z","category":"claimed-logged-but-never-written"}
+{"ts":"2026-08-06T13:35:43.354Z","category":"A2"}
+{"ts":"2026-08-06T13:35:43.416Z","category":"A2"}
+{"ts":"2026-08-06T13:35:43.474Z","category":"A3"}
+{"ts":"2026-08-06T13:35:43.533Z","category":"A4"}
+{"ts":"2026-08-06T13:35:43.591Z","category":"A1"}
