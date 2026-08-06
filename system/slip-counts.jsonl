@@ -212,3 +212,15 @@
 {"ts":"2026-08-06T09:44:24.811Z","category":"A4"}
 {"ts":"2026-08-06T09:44:24.915Z","category":"A4"}
 {"ts":"2026-08-06T09:44:25.004Z","category":"A1"}
+{"ts":"2026-08-06T10:43:34.286Z","category":"emit-shape-not-copyable"}
+{"ts":"2026-08-06T11:14:20.676Z","category":"ticket-source-skipped"}
+{"ts":"2026-08-06T11:46:34.634Z","category":"A2"}
+{"ts":"2026-08-06T11:46:34.715Z","category":"A1"}
+{"ts":"2026-08-06T11:46:34.794Z","category":"A4"}
+{"ts":"2026-08-06T04:39:42.129Z","category":"ba-evidence-not-checked"}
+{"ts":"2026-08-06T04:39:52.867Z","category":"A5"}
+{"ts":"2026-08-06T09:53:47.991Z","category":"test-scenario-wrong-base"}
+{"ts":"2026-08-06T11:07:50.333Z","category":"verified-on-wrong-base"}
+{"ts":"2026-08-06T11:48:56.508Z","category":"de-conflict-resolved"}
+{"ts":"2026-08-06T11:51:31.956Z","category":"overwritten-by-concurrent-session"}
+{"ts":"2026-08-06T11:53:40.253Z","category":"A3"}

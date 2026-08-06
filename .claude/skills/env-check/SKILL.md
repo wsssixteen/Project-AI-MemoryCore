@@ -63,9 +63,64 @@ When invoked, env-check:
 | `switch env to UAT` / `switch to UAT awam` | Same as above for UAT/awam |
 | `switch to <repo>` (same env) | Branch-only switch, verify env files match |
 
-## Mapping (per ticket scope) — confirmed 2026-05-11 (2nd-pass after みや's JNDI-rename clarification)
+## 🚨 DETERMINISTIC SWITCHER — `quest/env-switch.js` (built 2026-08-06 per みや)
 
-All 3 candidate datasources are PERMANENTLY PRESENT in standalone.xml. **Switching envs is a JNDI-rename, not a URL swap**: whichever should be active gets jndi-name + pool-name = `etanahDS` (no suffix); the other two get `etanahDS2` and `etanahDS3` suffixes (assignment between 2/3 is arbitrary).
+**Do not hand-edit `standalone.xml` or `environment.properties`, and do not read them to answer
+"which env are we on".** Run the script — it reads the machine instead of remembering it:
+
+- `node quest/env-switch.js` — report the active env + every parked datasource + both sidecars + the live `cas.url`. Read-only.
+- `node quest/env-switch.js --to <stg1|stg2|mlit>` — apply the switch.
+- `node quest/env-switch.js --to <target> --dry` — show the edits without writing.
+
+Already-on-target is a no-op that says so (and states no restart is needed). Backups of both files
+land in `%TEMP%\claude\env-switch-backups\` before any write. Eval: `node domain/env-switch/eval.js` (10/10,
+including a byte-for-byte round-trip — that assertion is what makes it safe to point at the live config).
+
+**Why a script**: this section previously carried a hand-maintained mapping table naming FAT
+(`etprdmlk/et_main`) and UAT (`mlkuat/et_main_uat`). Both were decommissioned 2026-07-17 while the
+machine moved on to stg1/stg2/mlit/trn — so the table confidently described environments that no
+longer exist. Prose about machine state rots; a reader does not.
+
+### 🚨 SET THE ENV THE MOMENT THE TEST DATA IS CONFIRMED (HARD, added 2026-08-06 per みや)
+
+**Test-scenario prep and env setup are ONE step, not two.** The instant a query confirms which schema
+holds the usable permohonan, run `--to <that schema>` — before emitting the Test Scenario, not after
+みや asks. The hand-back must then carry an env line stating the active schema and whether a restart
+is required.
+
+**Order (non-negotiable)**: confirm the data in a schema → `env-switch --to <schema>` → emit Test
+Scenario. **Banned**: handing over a permohonan ID from schema A while the app points at schema B —
+that is the 2026-07-27 slip where みや was told his env was mlit when it was `et_main_stg1`.
+
+**Prefer the schema that is ALREADY active** when more than one holds a valid repro: a switch costs a
+JBoss stop + tmp/data purge + start. Only switch when the already-active schema genuinely lacks the
+data, or BA's own case lives elsewhere and fidelity matters more than the restart.
+
+### The mechanic (verified against the live file 2026-08-06)
+
+The ACTIVE datasource is the one whose `jndi-name` **and** `pool-name` are the **bare `etanahDS`**.
+Every other candidate parks a numeric suffix. Switching exchanges the suffix between the outgoing
+block and the target block — みや's words: *"if I want to switch to mlit I will move the '3' to stg1's
+jndi-name and pool-name."*
+
+| Datasource | Schema | State on 2026-08-06 |
+|---|---|---|
+| `etanahDS` | `et_main_stg1` | **ACTIVE** |
+| `etanahDS2` | `et_main_stg2` | parked |
+| `etanahDS3` | `et_main_mlit` | parked |
+| `etanahDS4` | `et_main_trn` | parked (no CAS host mapped — script refuses this target) |
+
+**Sidecars — `etanahDMSDS` + `etanahAuditDS` do NOT move.** The old note here claimed they "stay on
+mkit always — env-agnostic"; that is **false** on the current machine, where they read
+`et_dms_stg1` / `et_sistem_stg1`, i.e. they are pinned to stg1. The script therefore *reports* them and
+flags a mismatch after any switch rather than editing them. **Judgement call it forces**: switching
+`etanahDS` to mlit leaves document reads pointing at `et_dms_stg1`. For QA-273621 that happened to be
+harmless (both `LAIN-5854162` and `LAIN-5854192` resolve in `et_dms_stg1`), but a ticket whose blob
+exists in only one DMS would silently read the wrong store — check before trusting a cross-env test.
+
+## Mapping (historical — FAT/UAT decommissioned 2026-07-17, kept for reading old quest docs)
+
+Superseded by the table above. **Switching envs is a JNDI-rename, not a URL swap**: whichever should be active gets jndi-name + pool-name = `etanahDS` (no suffix); the others get numeric suffixes (assignment among them is arbitrary).
 
 | Ticket scope | Which DS becomes `etanahDS` (active) | cas.url | Repo + branch | WAR deployed | Default? |
 |---|---|---|---|---|---|
@@ -112,7 +167,21 @@ If `current_user = et_reporting`, OR the probe errors `permission denied for sch
 
 **Why** (2026-05-30): pulled `PTMLK/01/L/PRU/2026/15` from the et_reporting snapshot; it didn't exist in みや's live FAT → wasted his time. Never trust a FAT/UAT query without confirming live-schema access first.
 
-## CAS URL switch mechanic (rule, 2026-05-11)
+## CAS URL switch mechanic — current hosts (2026-08-06)
+
+`quest/env-switch.js` owns this; the rule below is why it toggles rather than rewrites.
+
+| Target schema | Uncommented `cas.url` line |
+|---|---|
+| `et_main_stg1` · `et_main_stg2` | `cas.url=https\://etanah-appstg.melaka.gov.my/etanah-cas` |
+| `et_main_mlit` | `cas.url=https\://mlit.melaka.gov.my/etanah-cas` |
+
+All MLK lines coexist; switching moves the `#` marker only, never the URL text, and the `\:` escape
+must survive (Java properties format). Exactly one `cas.url` may be uncommented — the eval asserts it.
+TRG lines (`tgit.terengganu.gov.my`, `apptgstg`, `172.16.100.41`) and every `proxy.url` are OUT of
+scope and must be left byte-identical.
+
+## CAS URL switch mechanic (historical — FAT/UAT hosts, decommissioned 2026-07-17)
 
 The two MLK `cas.url` lines coexist in `environment.properties`; switching is done by toggling the `#` comment marker, NOT by editing the URL text. Both UAT (AWAM and PLP) use the same UAT CAS URL.
 
@@ -208,4 +277,6 @@ Continuous improvement entries land in `Feature/Forge-Self-Improvement-System/fo
 
 *Created: 2026-05-08 | Author: みや (proposed) + Ruri (drafted) | First quest applied: TBD*
 *Last updated: 2026-05-20 — added Known-local-paths block so Phase 0 stops asking for stable infrastructure paths mid-investigation.*
+*Last updated: 2026-08-06 (v1.3) — **DETERMINISTIC SWITCHER**: built `quest/env-switch.js` + `domain/env-switch/eval.js` (10/10). Per みや: env setup now happens the moment the test data's schema is confirmed, as ONE step with test-scenario prep, not a later ask. Corrected three stale claims that had rotted since the 2026-07-17 UAT/FAT decommission: (1) the mapping table named `etprdmlk/et_main` + `mlkuat/et_main_uat`, neither of which exists — real set is stg1/stg2/mlit/trn; (2) the CAS hosts were the FAT/UAT pair — real pair is `etanah-appstg` (stg1+stg2) and `mlit.melaka.gov.my`; (3) the note "Audit/DMS/DS3 stay on mkit always — env-agnostic" was FALSE — on the live machine both sidecars read `et_dms_stg1` / `et_sistem_stg1`, so they are pinned to stg1 and a cross-env switch can silently read the wrong DMS. Both old sections retained below marked historical, for reading old quest docs. Surfaced during QA-273621.*
+
 *Last updated: 2026-05-28 — FAT RESTORED: removed the 2026-05-18 UAT-only "Mock Cutover 1" temporary override; env selection is ticket-driven again (match BA's tested env + permohonan ID env; FAT is a full local implement+test target). Added Priority 0 `hold` override — みや saying "hold" at ticket start suppresses the env switch to protect parallel sessions. AWAM→mkit/UAT special case unchanged (みや confirmed). Paired memory: `.claude/auto-memory/feedback_uat_fat_environments.md`.*

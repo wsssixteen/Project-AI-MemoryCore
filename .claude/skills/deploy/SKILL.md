@@ -33,16 +33,36 @@ Multiple matches → list them, stop. Zero matches → say so, stop.
 
 ---
 
-## 2 · Servers — only two IPs exist
+## 2 · Servers — THREE hosts (the third was missing until 2026-08-06)
 
 | Host | Alias | Holds |
 |---|---|---|
-| `172.16.100.162` | `mirage1` | `build-scripts17/` **and** `deployment-scripts/` (`common` `hotfix` `mlit` `mlitdm` `mltg` `warfiles`) |
+| `172.16.100.162` | `mirage1` | `build-scripts17/` **and** `deployment-scripts/` (`common` `hotfix` `mlit` `mlitdm` `mltg` `warfiles`); clones into `/home/app/git/MLK/<module>` |
+| **`172.16.100.49`** | **`fudge1`** | **the mlit APP host — JBoss actually runs HERE.** `JBOSS_HOME=/home/app/jboss`, unit `/etc/systemd/system/jboss.service`. `deploy-*.sh` sshes here to stop/copy/start |
 | `172.30.12.203` | — | `deployment-scripts/stag/` |
 
-ssh user for both: `app`.
+ssh user for all three: `app`.
 
 `172.16.100.197:5444` is the mlit database — never an ssh target.
+
+🚨 **Diagnose on the RIGHT host.** mirage1 has its own long-dead `jboss.service` (`status=127`,
+missing `start_jboss.sh`, failed since 06:00) that has nothing to do with any deploy, and no
+`server.log` at all. Checking JBoss state on mirage1 returns a red herring — read the shell prompt
+hostname first. Found 2026-08-06 (#273455) when a `systemctl status` on mirage1 was nearly diagnosed
+as our deploy failure.
+
+🚨 **`app` has NO sudo.** Verified refusals 2026-08-06: `journalctl -xeu jboss.service` (mirage1),
+`systemctl start jboss.service` (fudge1). `systemctl status` works unprivileged; start/stop and
+journalctl do not. **Never put a `sudo` command in a card** — the script owns the restart through its
+own path. Recovery from any failed deploy = re-run the script.
+
+🚨 **One JBoss serves every module on mlit.** Two `deploy-*.sh` runs a minute apart SIGKILL each other:
+the second one's `stop_jboss.sh` cannot finish while JBoss is mid-deploying the first war, systemd
+times out and kills both, and neither module deploys. Signature in `systemctl status`:
+`ExecStart code=exited, status=0/SUCCESS` **plus** `ExecStop code=killed, signal=KILL` — a stop-side
+kill, NOT a startup crash. Check `/home/app/jboss/standalone/deployments/` markers
+(`.dodeploy` queued · `.isdeploying` killed mid-deploy · `.deployed` done · `.failed` errored) before
+theorising. If it recurs, the answer is coordination in the team channel, not another re-run.
 
 ---
 
@@ -126,18 +146,25 @@ Emit only the requested env. Shape:
     merged  <ticket-branch> → <base> @ <merge-sha>
     delta   <n> file(s): <filenames>
 
-    🚨 **The card ALWAYS opens with みや's local catch-up — checkout THEN pull** (みや 2026-08-05).
-    His local env branch is a stale tracking ref (measured 55 commits behind on 2026-08-05); a bare
-    `git checkout mlk/int-env` hands him a branch WITHOUT the fix he is about to deploy. If tracked
-    files block the switch, first check whether their content already matches the target branch —
-    if it does, `git checkout -- <files>` is lossless and goes in as step 1.
+    🚨 **The card OPENS AT `ssh` — no local git steps** (みや 2026-08-06, superseding the 2026-08-05
+    local-catch-up rule). The build+deploy scripts pull from **origin** on the server; みや's local
+    working copy plays no part in a deploy, so `git checkout <base>` / `git pull` are dead steps he
+    has to read past. His words: *"your commands seems useless… better you just show evidence of the
+    branch being created remotely through push and evidence of the merge to int-env and the steps
+    can straight away show starting with ssh app…"*
 
-    ```bash
-    git checkout <base>
-    ```
-    ```bash
-    git pull --ff-only origin <base>
-    ```
+    **What replaces them: ONE evidence LINE above the card** (みや 2026-08-06, second correction in
+    the same turn) — verified with `git ls-remote` (not local refs), rendered as:
+
+        mlk/<tracker>/<num> @ <sha> → <base> @ <merge-sha>
+
+    **Banned in the evidence**: a What/Remote-ref/SHA table · the commit log · the fix's source
+    lines · anything wrapped in a fence. He asked for *"a simple `mlk/xxx/xxx <arrow> <branch>`"*.
+    The verification still runs in full — only the emit shrinks to one line.
+
+    *(The 2026-08-05 rule was right about its own case — a HAND-OFF card where みや builds locally.
+    It was wrong to generalise to server-side deploys.)*
+
     ```bash
     ssh app@172.16.100.162
     ```

@@ -164,3 +164,67 @@ Do NOT bump `version` — a running app may hold the entity at its current versi
 
 **Companion check before patching**: the suspended tugasan row is usually already `flag_aktif='N'`
 and a fresh active row already exists, so no companion write is needed. Verify, do not assume.
+
+---
+
+## PT Maklumat Tanah — the officer render chain, and why the LIST is not the DIALOG (2026-08-06, #273455)
+
+**Screen**: `etanah-pelupusan\src\main\webapp\protected\mlk\common\MlkMaklumatTanahPemberimilikanForm.xhtml`
+(the URL BA screenshots show). Appears at SKM, PSJT, PGSJT — the langkah is shared, so a fix here
+lands on every tugasan that mounts it.
+
+```
+MlkMaklumatTanahPemberimilikanForm.xhtml
+      |
+      v  page load
+PelupusanExcelReaderHelper.java:672-674          <- URS_PT branch
+      |    :646-652 PSBS branch ALSO copies list.get(0) into maklumatTanahVO
+      |    :672-674 PT branch does NOT. It fills maklumatTanahVOList ONLY.
+      v
+PelupusanService.populateMaklumatTanahVOListFromAppHakmilik():5093
+      |    :5103 praAplikasi resolved
+      |    :5105-5107 praMohonTanahList = PraPermohonanTanah   <- NOT PraHakmilik
+      |    :5124 vo.setSempadanTanahList(populateSempadanJsonIntoVO(app row))
+      v
+populateSempadanJsonIntoVO():4335
+      |    :4341 sempadanList key present -> parse the array
+      |    :4373 key ABSENT -> populateMaklumatSempadanTanahVODirect():13116
+      |         which needs legacy keys smpdnUtara/smpdnSelatan/smpdnTimur/smpdnBarat
+      |         -> those keys do not exist on modern rows -> EMPTY LIST
+      v
+officer clicks "Kemas kini" on the lot row
+      |
+      v
+PelupusanExcelReaderHelper.onKemaskiniPermohonanTanah():4229
+      |    :4235-4236 maklumatTanahVO = tanahVO   <- REFERENCE assignment, not a copy
+      |    :4242-4243 if row list non-empty -> copy into maklumatTanahVO
+      |    :4244 else -> fall back to the legacy smpdn* keys
+      v
+mlkMaklumatTanahV3.xhtml:244
+      #{cc.attrs.helperForm.maklumatTanahVO.sempadanTanahList}
+```
+
+### The three traps
+
+1. **The dialog binds the SINGULAR `maklumatTanahVO`, not the list.** For PT nothing copies list ->
+   VO at page load (`:674`), so anything you inject into the list rows is invisible **until the officer
+   clicks Kemas kini**. A test scenario that says "open the panel" will show nothing and read as a
+   failed fix. Always instruct the row click.
+2. **`maklumatTanahVO = tanahVO` at `:4235` is a reference, not a copy** — so edits in the dialog
+   mutate the list element directly. That is why the save works: `onSimpanTanah():3646` swaps the VO
+   back into the list at `:3660-3664` and the PT branch at `:3675-3677` persists the whole list via
+   `PelupusanService.saveMaklumatTanahVOIntoAppHakmilik():4434` -> `:4510` -> `:4518-4519`.
+3. **An empty sempadan list is a real signal, not a default.** `populateSempadanJsonIntoVO` returns
+   empty only when BOTH the `sempadanList` key and the legacy `smpdn*` keys are absent — which is
+   exactly the counter-paid shape. `CollectionUtils.isEmpty(vo.getSempadanTanahList())` is therefore a
+   safe guard for a read-side fallback.
+
+### Blast radius of that populate method
+
+**18 call sites** — 6x `PelupusanWordCCMethodConstant` (Word populators), 2x
+`PelupusanExcelReaderHelper` (`:648` PSBS, `:674` PT), `PelupusanService:3780`, the interface, and
+**2 TRG forms** (`web\form\common\trg\TrgSenaraiHakmilikTerlibatForm.java:57` and
+`TrgKemasukanMaklumatLautForm.java:112`). TRG is hard-excluded from Melaka work, so any change here
+needs an urusan gate. `PelupusanService` has **no** `PraHakmilik` access of its own by default — only
+`PraHakmilikLain` is imported; the repository accessor exists on the locator
+(`PelupusanSpocService.java:236` uses it) but the import must be added.

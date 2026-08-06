@@ -5,10 +5,12 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 8704a5d4-6d61-456c-8842-fb7235288a7b
-  modified: 2026-07-27T08:01:50.212Z
+  modified: 2026-08-05T08:17:56.425Z
 ---
 
 **CURRENT STAGING TARGET = `et_main_stg1`** — stated by みや 2026-07-27 (*"I already asked you to fix your memory it is stg1 currently"*). This line is the live pointer; update it the moment he says otherwise, in the same turn he says it.
+
+**Re-confirmed 2026-08-05** (Baseline 1.3.1): both release SQL scripts (#270900, #272574) were verified-then-run against `et_main_stg1` and matched `et_main_mlit` exactly. みや the same day: *"stg1 or stg2 depends on our master memory which I will ask you to setup from time to time if we change"* — i.e. THIS pointer is the sanctioned mechanism. Any release/baseline SQL check reads this line first and never infers the schema from habit or from the last server used.
 
 **There is NO default schema.** Melaka staging runs TWO live main schemas on the same host/db (`172.30.12.202:5444` / `mlkstg`): `et_main_stg1` and `et_main_stg2`. Schema is dictated by the LOGIN USER (`et_main_stg1` → schema et_main_stg1; `et_main_stg2` → schema et_main_stg2), same password `etanah123`.
 
