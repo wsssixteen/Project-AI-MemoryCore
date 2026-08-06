@@ -117,6 +117,11 @@ Every one of those was caught by みや noticing, not by a gate.
 **Most of the day went into making the open-ticket list something that loads the same way every
 boot instead of something I compose by hand. Then one ticket shipped end-to-end, and the biggest
 open question — why a Word document hangs — turned out to be answerable with a byte count.**
+## 2026-08-06 11:48 → 19:40 — 273455 SHIPPED, AND THE PICTURE THAT SETTLED IT HAD BEEN UNOPENED FOR THREE DAYS
+
+**QA-273455 went Phase 0 → int-env in one session. The two things that moved it were both things I
+had not looked at: four of six BA attachments no prior pass had opened, and みや's question "it should
+self recover right?" — which disqualified the fix I had already built and compiled.**
 
 ### ▶▶ NEXT SESSION — START HERE
 
@@ -177,4 +182,44 @@ gate accepts neither phrase, so the commit sat blocked while he waited. I did no
 list (a gate that accepts "proceed" is how an unapproved commit slips through) but the friction is
 real and unresolved.
 
-**Slips**: `test-data-no-login-awam` · `reask/rambling` · `reask/verbose`.
+| **273455** | **Phase 1 CLOSED** · `a52975fde2` · int-env `3af1ecd2c7` | Phase 2 archive hygiene only. Redmine still **New · 0%** — update it, and put it on the planned-release list |
+| **273460** | Phase 0 · UNSTABLE | Test the `tindakan.config.json:698` array fix FIRST. The L1 fix is disqualified as harmful **and** a no-op |
+| **273461** | committed by a concurrent session → `mlk/esokongan/273461`, merged int-env `67e49daecd` | Verify with みや whether it is tested; the ledger and the branch disagree |
+| **274136** | Phase 0 · 80/70% | 2-minute check: View Source the AWAM dialog for two inputs named `…modalDibenarkanPemilik`. **Fix order is load-bearing** — `remove()` first would destroy data |
+| **273921 · 273621 · 273837 · 273956** | Phase 0 / not drafted | unchanged from 08-05 |
+
+### 273455 — what actually decided it
+
+| Turn | What changed |
+|---|---|
+| Read all 6 attachments | 4 had never reached the qa_doc. `Skrin tugasan …14.jpeg` — the **reported** case — shows Keluasan 967, Tujuan, Perincian all PRESENT, only Sempadan blank. The staging repro shows the **whole** dialog empty. §2 had recorded them as the same evidence |
+| PROD timestamp probe | AWAM row 11:10:15 → officer row 13:41:52 → workflow 13:42:34. The officer row predates the workflow by **42 s** — Defect 1 verified on the reported case, not inferred from `created_by` |
+| みや: *"it should self recover right?"* | Killed candidate W. W fires only at intake, which already ran for all 51 affected apps, so it needed a maintenance re-trigger. **R needs none.** He was right and I had built the wrong half |
+| Audit of R | 18 call sites vs W's 2, incl. 2 TRG forms. Contained with a `URS_PT` gate (138/138 PROD rows are PT). TRG residual left open for him |
+| Entry-point trace | The PT branch at `PelupusanExcelReaderHelper.java:674` fills only `maklumatTanahVOList`; the dialog binds the **singular** VO. The fix reaches the screen only via `onKemaskiniPermohonanTanah():4229`. Nearly handed over a test that would have shown nothing |
+
+### Three things I got wrong, in order
+
+1. **`BUILD SUCCESS` on the wrong base.** Compiled on `mlk/master`, declared the deploy ready. `mlk/int-env` already had `praHakmilikList` at `:5109` from another ticket → int-env build broke on my duplicate. A compile on the BASE is not a compile on the TARGET. Second push was verified by compiling **the merge commit itself**. `verified-on-wrong-base`
+2. **`rm -rf` proposed on a good workspace.** I read the failed-clone timestamp `19:15` and ignored `target/` at `19:16` — the clone had recovered and a valid 433 MB war from the right commit was sitting there. Disk theory died to one `df -h` (62 G free)
+3. **Told みや to run `sudo systemctl start jboss`** on a shared box. `app` has no sudo — same refusal shape as the `journalctl` denial minutes earlier. He pushed back: *"I think we should really avoid doing this."* Right on both counts
+
+Real cause of the deploy failures: **two deploys collided on one JBoss.** Colleague deployed
+`etanah-pembangunan` 19:19, ours 19:20, `stop_jboss.sh` hung against a mid-deploy server, systemd
+SIGKILLed both. `ExecStart=SUCCESS` + `Result: signal` = stop-side kill, never a startup crash.
+
+### Knowledge banked
+
+- `DEV-TESTING-HACKS.md` — new section: server-side deploy failures are a **different family** from the local Eclipse-publish one (`local-deploy-gate` mis-routed three times today). Carries the 3-host topology, **`fudge1` 172.16.100.49** as the mlit app host, the no-sudo constraint, the collision signature, and the deployment-marker state machine
+- `/deploy` skill — server table went 2 hosts → 3; added the diagnose-on-the-right-host, no-sudo and one-JBoss-per-env warnings
+- `quest` skill Pre-emit gate — 2 new rows: test base MUST be `mlk/master` at 0 behind with only the fix modified, and env MUST be **derived** from the Spring JNDI binding, never named from memory
+
+### Behaviour
+
+**He questioned the fix choice and was right.** Twice more he questioned a diagnosis and was right —
+the sudo call, and stopping me before the `rm -rf`. The pattern from 07-21 held: my confidence arrives
+before my evidence does.
+
+**Slips**: `ba-evidence-not-checked` · `test-scenario-wrong-base` · `verified-on-wrong-base` ·
+`deploy-collision-not-diagnosed`. **1 proposal** filed (A5 brief-manifest gate).
+

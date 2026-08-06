@@ -381,6 +381,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\awam-no-resit-gate\\\\awam-no-resit-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\test-scenario-login-gate\\\\test-scenario-login-gate.check.hook.js\""
           }
         ]
       }

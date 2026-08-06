@@ -36,20 +36,36 @@ const OPEN_STATUSES = new Set(['active', 'hold', 'blocked', 'delegated']);
 // session-briefing.md because a rule that depends on me re-reading a spec file
 // is a wish, not a rule (same cure as this hook's own origin story above).
 const RANK_RULE = [
-  '   ── 📅 3-DAY RULE — how to rank this list (miya 2026-07-27) ──',
-  '   1. Pull start_date + due_date LIVE from Redmine:',
-  '      issues.json?assigned_to_id=me&status_id=open&limit=50',
-  '      NEVER take dates from active.txt — it is working memory and it rots.',
-  '   2. days_elapsed = today - start_date · internal_deadline = start_date + 3 days',
-  '   3. Rank DESCENDING by days_elapsed (oldest start = do first). Tie-break on nearer due_date.',
-  '   4. Table columns: # · Subject · Start · Days · Redmine due · State',
-  '      Days = days_elapsed, BARE NUMBER only (no "d", no date, no text).',
-  '      BANNED columns: "+3d" and "Days left" (miya 2026-08-04).',
-  '      Mark rows past the internal deadline, and rows hitting it today.',
+  '   ── 📅 3-DAY RULE — how to shape this list (miya 2026-07-27, revised 2026-08-05) ──',
+  '   The LIVE board below is printed by quest/redmine-board.js. It is the source for the',
+  '   briefing table. active.txt is working memory and it rots — NEVER take dates from it.',
+  '   1. Scope (miya 2026-08-05): every OPEN Melaka ticket on tracker eSOKONGAN + every',
+  '      Internal Issue variant + Data Patching (PROD), Module Pelupusan OR Awam-Pelupusan,',
+  '      REGARDLESS of assignee — he tracks colleagues\' tickets too.',
+  '   2. Rank DESCENDING by days elapsed since start_date. Tie-break on nearer due date.',
+  '   3. Columns for HIS rows: # · Days · Deadline · Redmine due · Subject · State.',
+  '      Days = bare number. Deadline = the plain word overdue/today/ok.',
+  '      BANNED: a Start column · "+3d" · "Days left" · glyph markers like "past".',
+  '      State is the only column I fill by hand — from active.txt + the qa_doc.',
+  '   4. Colleagues\' rows go in a second tracking table: # · Tracker · Status · Assignee · Subject.',
   '   5. Difficulty/ease is NOT the sort axis — secondary column ON REQUEST only.',
-  '   6. Reconcile against Redmine BEFORE showing: drop anything closed/reassigned there.',
   '   Specs: Feature/Session-Briefing-System/session-briefing.md · .claude/save-commands.md',
 ].join('\n');
+
+function printLiveBoard() {
+  // Run the board at boot rather than telling the model to run it. A boot step that
+  // depends on me remembering to run a command is a wish, not a step (2026-07-22).
+  try {
+    const { execFileSync } = require('child_process');
+    const script = path.join(REPO_ROOT, 'quest', 'redmine-board.js');
+    if (!fs.existsSync(script)) return;
+    const out = execFileSync(process.execPath, [script], { encoding: 'utf-8', timeout: 30000 });
+    console.log('\n📋 LIVE REDMINE BOARD (Melaka Pelupusan — all trackers, all assignees):\n');
+    console.log(out.trimEnd());
+  } catch (e) {
+    console.log(`⚠️  live board unavailable (${e.message.split('\n')[0]}) — fall back to quest/active.txt`);
+  }
+}
 
 function safeRead(p) {
   try { return fs.readFileSync(p, 'utf-8'); } catch { return null; }
@@ -125,6 +141,7 @@ function main() {
   }
   console.log('   → Surface these in Session Briefing Standing Flags. If briefing omits any, that is a 🔴 verify failure.');
   console.log(RANK_RULE);
+  printLiveBoard();
 
   // 2026-08-04: catch drift caused OUTSIDE active-cli (someone resolves/reassigns on Redmine while
   // we sleep). ~0.4s measured for 3 quests in parallel. The primary capture points are in

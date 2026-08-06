@@ -69,21 +69,40 @@ If all worktree cleanup runs cleanly: NO standing flag. みや shouldn't see wor
 
 | Step | What |
 |---|---|
-| 1 | Pull `start_date` + `due_date` live from the Redmine API — `issues.json?assigned_to_id=me&status_id=open&limit=50` returns both fields. NEVER take dates from `active.txt` (it is working memory and rots) |
+| 1 | The board is printed AT BOOT by `quest/redmine-board.js`, executed from `open-quest-surfacer.js`. Do not hand-query — read the board. NEVER take dates from `active.txt` (it is working memory and rots) |
 | 2 | Compute `days_elapsed = today − start_date` and `internal_deadline = start_date + 3 days` |
 | 3 | Rank **descending by `days_elapsed`** — oldest start = highest priority |
 | 4 | Show Redmine's own `due_date` alongside, because the two rulers disagree (Redmine typically grants 7-12 days; the 3-day rule is tighter) |
 | 5 | Break ties on the nearer `due_date` |
 
-**Required columns**: `# · Subject (short) · Start · Days · Redmine due · State`.
-Mark rows past their internal deadline 🔴 and rows hitting it today ⚠️.
+**Scope of the board (HARD, added 2026-08-05 per みや)** — `assigned_to_id=me` alone is too narrow:
 
-**Column discipline (HARD, added 2026-08-04 per みや)**:
-- **`Days` = `days_elapsed`, and the cell holds a BARE NUMBER — nothing else.** No `d` suffix, no date, no "past", no arrow. The 🔴/⚠️ marker rides the row, not the number.
-- **`+3d` column is BANNED** — the internal deadline is `Start + 3`, derivable at a glance from `Days` (any row where `Days ≥ 3` is past it). Printing the computed date was an eyesore that duplicated what `Days` already says.
-- **`Days left` column is BANNED** — it silently mixed rulers (it read as "days until Redmine due" while every other column served the 3-day rule), so it said "8 days left" on a row that was already past its internal deadline. Contradictory, and it made the table argue with itself.
+| Axis | Value |
+|---|---|
+| Project | `helpdesk_melaka` (includes subprojects) |
+| Trackers | eSOKONGAN (51) · Internal Issue (53) · Internal Issue PROD-CR (63) · Data Patching PROD (64) · Internal Issue PROD (71) · Internal Issue Permanent Fix (77) · Internal Issue MA Fix (79) |
+| Module | `cf_17=Pelupusan` **OR** `cf_77=Awam Pelupusan` **OR** `assigned_to_id=me` — unioned by id |
+| Status | open |
+| Assignee | **any** — みや tracks colleagues' tickets: *"even if the name is under someone else, I need to keep track"* |
 
-**Why**: みや 2026-08-04 — *"Column Days left doesn't make any sense… '+3d' is an eyesore, just put 'Days' to show how many days have passed, the items inside that columns can ONLY be numbers."*
+The `assigned_to_id=me` arm is a safety net, not a duplicate: #273919 is `Module=Awam` and a pure Pelupusan filter dropped one of his own Apply-ready tickets.
+
+**Two tables, both rendered ENTIRELY by the script — nothing hand-typed** (みや 2026-08-05: *"I need to make the table deterministic so that it will CONSISTENTLY load the same way"*). Paste the script's output; do not re-derive a cell:
+- **Mine** — `# · Days · Due date · Subject · State`, ranked.
+- **Tracking** — `# · Tracker · Status · Assignee · Train · Subject`, colleagues' rows, no ranking.
+- **Excluded line** — every row removed by a filter is named by number underneath.
+
+**`State` vocabulary** — short, from `quest/active.txt`, never prose: `Not drafted` (no block yet — みや's term is "draft") · `Phase 0` / `Phase 1` (from `phase=`) · or whatever `board_state=` says (`Rubric`, `Apply-ready`, …). `board_state=` is the one field to update when a quest moves.
+
+**Column discipline (HARD, 2026-08-04 + 2026-08-05 per みや)**:
+- **`Days` holds a BARE NUMBER — nothing else.** No `d` suffix, no date, no "past", no arrow.
+- **`Deadline` column is BANNED** (2026-08-05) — `Days` already says it; the overdue/ok word was noise.
+- **`Start` column is BANNED** (2026-08-05) — `Days` already carries it.
+- **Say `Due date`, never "Redmine due"** (2026-08-05) — there is only one due date on the table.
+- **`+3d` column is BANNED** — derivable from `Days`; printing it duplicated what `Days` says.
+- **`Days left` column is BANNED** — it mixed rulers (read as "days until Redmine due" while every other column served the 3-day rule), so the table argued with itself.
+
+**Why**: みや 2026-08-04 — *"Column Days left doesn't make any sense… '+3d' is an eyesore, just put 'Days' to show how many days have passed, the items inside that columns can ONLY be numbers."* Extended 2026-08-05: *"In Redmine it is showing unnecessary columns. I prefer the way you rank them."*
 
 **Difficulty is NOT the ranking axis.** Effort/ease may be shown as a SECONDARY column **only when みや asks for it** — his words: *"That is the priority compared to how easy it is (that is by request)."* Never reorder by "quickest win" unprompted.
 
