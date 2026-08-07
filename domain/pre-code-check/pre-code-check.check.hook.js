@@ -30,10 +30,11 @@ const REQUIRED_CHECKS = [
   'minimal-diff', 'logic-matrix', 'blast-radius', 'predicate', 'falsifier',
   'read+write-path', 'BA-expected', 'full-address', 'sibling-diff', 'necessity', 'all-writers',
   'kod-resolution', 'prior-fix', 'class-chain', 'peranan-map', 'flowable-contract',
+  'fallback-precedence',
 ];
 const CONFIDENCE_RX = /\bconfidence\s+\d+\s*%/i;
 
-const EVIDENCE_CHECKS = ['analog', 'existing-reuse', 'blast-radius', 'read+write-path', 'falsifier', 'necessity', 'all-writers', 'kod-resolution', 'prior-fix', 'class-chain', 'peranan-map', 'flowable-contract'];
+const EVIDENCE_CHECKS = ['analog', 'existing-reuse', 'blast-radius', 'read+write-path', 'falsifier', 'necessity', 'all-writers', 'kod-resolution', 'prior-fix', 'class-chain', 'peranan-map', 'flowable-contract', 'fallback-precedence'];
 const EVIDENCE_MIN = 12;
 
 // v1.2: a ✓ on BA-expected must cite an OBSERVATION (something read/queried/rendered), never a
@@ -180,6 +181,17 @@ runHook({ name: 'pre-code-check', event: 'PreToolUse' }, (input) => {
         '                       ind_tgsn.nama / ind_ursn.nama / rjk_* — quote kod + pk, e.g.',
         '                       "Perakuan Pentadbir Tanah" -> PPTPRBB, ind_tgsn 5134409, ursn_id 45)',
         '                     | ✗(N/A — change keys on no kod/urusan/status literal)',
+        '     fallback-precedence ✓(for ANY fallback / default / if-empty-then-other-source branch, state all THREE:',
+        '                       (a) PRIMARY READ FIRST — cite the line that assigns the real value before the guard',
+        '                       (b) GUARD ON ABSENCE — the condition tests the primary being null/blank, never the',
+        '                           fallback being present, so a real value is never overwritten',
+        '                       (c) DELIBERATE-EMPTY — say what happens when the USER intentionally clears the',
+        '                           field. A fallback cannot tell "never filled" from "emptied on purpose", so it',
+        '                           will resurrect the old value on next load. Name that, or prove the UI cannot',
+        '                           produce an empty. "It only fills blanks" is NOT an answer to (c).)',
+        '                     | ✗(N/A — no fallback/default branch in this diff)',
+        '                       2026-08-07 #273455: ten fallback guards shipped and the deliberate-clear case was',
+        '                       surfaced only because みや asked. (a) and (b) were sound; (c) was never considered.',
         '   A ✓ you cannot cite is a guess. Go run the grep/query first.',
       );
     }

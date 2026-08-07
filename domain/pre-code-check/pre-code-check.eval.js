@@ -41,8 +41,12 @@ const EV = {
   perananMap: 'peranan-map ✓(PERANAN-MAP.md:99 PPTnKanan 1530 · :101 PPTT 30290 ≠ PPTNT 18503)',
   flowable: 'flowable-contract ✓(prepareBpmValuesFor_tgsn_KKPT():2376 sends agihanKKPT only; FlowableTaskListener:150 reads nextUser)',
   priorFix: 'prior-fix ✓(git log --grep Agihan Kepada -> f33f8632d8 onRefreshComponent)',
+  // v1.4 2026-08-07 (#273455). Adding a REQUIRED_CHECK without extending this map turns the
+  // whole eval RED, and a red eval makes core/forge.js refuse every future refine — which is
+  // exactly how the five 2026-08-04 checks froze this component until today.
+  fallbackPrecedence: 'fallback-precedence ✓(a: vo.setLuasDipohon(ahkm.getLuas()):5162 assigns primary first; b: guard vo.getLuasDipohon()==null never overwrites a real value; c: deliberate-clear re-shows the pra value next load — cannot distinguish never-filled from emptied)',
 };
-const TAIL = ` · in-file ✓ · sibling ✓ · ${EV.existingReuse} · name-by-purpose ✓ · minimal-diff ✓ · logic-matrix ✓ · ${EV.blastRadius} · predicate ✓ · ${EV.falsifier} · ${EV.readWrite} · BA-expected ✓(observed History.txt:38-43) · full-address ✓ · sibling-diff ✓ · ${EV.necessity} · ${EV.allWriters} · ${EV.kodResolution} · ${EV.priorFix} · ${EV.classChain} · ${EV.perananMap} · ${EV.flowable} · confidence 85%`;
+const TAIL = ` · in-file ✓ · sibling ✓ · ${EV.existingReuse} · name-by-purpose ✓ · minimal-diff ✓ · logic-matrix ✓ · ${EV.blastRadius} · predicate ✓ · ${EV.falsifier} · ${EV.readWrite} · BA-expected ✓(observed History.txt:38-43) · full-address ✓ · sibling-diff ✓ · ${EV.necessity} · ${EV.allWriters} · ${EV.kodResolution} · ${EV.priorFix} · ${EV.classChain} · ${EV.perananMap} · ${EV.flowable} · ${EV.fallbackPrecedence} · confidence 85%`;
 
 const FULL_CHECK_LINE = `CODE-CHECK: ${EV.analog}${TAIL}`;
 const CROSS_JUSTIFIED = `CODE-CHECK: analog ✗(novel defensive helper)${TAIL}`;
