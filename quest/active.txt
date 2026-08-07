@@ -1046,6 +1046,7 @@ qa_doc=projects/coding-projects/active/QA-273956/QA-273956.md
 patch_script=1. Tasks\Melaka\134. ...\patch-273956.sql - 2 rows, status_id 1978/1979 -> NULL, reversible
 analog=aplikasi 3424434 - identical SKM>PSJT>PGSJT>PSJT>PGSJT>CT_BSC_PLP path, 6 JT rows NOT duplicated, same a_dok_keluaran_id, versi_terakhir climbed 3->6/12, both docs ended NULL
 patch_applied=2026-08-06
+branch=n/a-data-patch-no-code
 
 qa=QA-273707
 quest_start_ts=2026-08-06T14:06:24.003Z
