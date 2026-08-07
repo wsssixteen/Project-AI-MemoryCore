@@ -4,6 +4,64 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-06 10:34 → 21:45 — A DEPLOY THAT NEEDED NO MERGE, AND THE SERVER MAP WE NEVER HAD
+
+**#273938 went to mlit and the whole job was two ssh sessions — Aaron had already done both merges
+the evening before, and I spent the morning inventing a conflict for a merge that was finished.
+Then みや handed me the architecture sheet and the deploy skill finally has real hosts in it.**
+
+### ▶▶ NEXT SESSION — START HERE (this thread)
+
+| Item | State | First step on resume |
+|---|---|---|
+| **273938 training** | build+deploy NOT run | `./build-pelupusan.sh mlk/training/273938` → env `train` → deploy on `172.30.12.152`; **`ls ~/deployment-scripts/` there first** — folder name unconfirmed |
+| **273938 mlit** | ✅ deployed on 2nd attempt | add to the Redmine planned-release list |
+| `deploy` skill | v1.2, eval 52/52 | — |
+
+### The merge order — Aaron's lanes, my inference
+
+```
+① mlk/training/<ticket> ──▶ mlk/int-env             (ticket fix ONLY)
+② mlk/release/<x.y.z>   ──▶ mlk/training/<ticket>   (baseline joins the ticket branch)
+
+② before ① poisons int-env with the whole release lineage.
+Aaron: ce1198818c 16:08 (①)  →  609f83bcb5 16:21 (②)
+```
+
+Aaron stated each lane separately and never ordered them. The ordering is **my** inference from his
+timestamps plus the conflict I reproduced — written into the skill labelled as such, not as his words.
+
+### The server map — `etanah-knowledge/melaka/ENV-ARCHITECTURE.md` (new)
+
+Read from the `ETANAH ARCHITECTURE - MLK` sheet, our modules only.
+
+| Env | Pelupusan app tier | Deploy VM |
+|---|---|---|
+| mlit | Fudge1 `172.16.100.49` | `172.16.100.162` · `deployment-scripts/mlit` |
+| training | Eto1/2/3 `172.30.12.126-128` | **Reus1 `172.30.12.152`** |
+| staging | Radome1/2/3 `172.30.12.176-178` | `172.30.12.203` · `deployment-scripts/stag` |
+
+Training schemas sit on the **staging DB host**: `172.30.12.202:5444/mlkstg?currentSchema=et_main_trn`.
+One word separates `trn` from `stg1` on the same connection.
+
+### Behaviour
+
+**I checked ancestry one direction.** Reported #273938 "not in int-env" from a `merge-base` test on
+the branch TIP — which had grown a release merge *after* int-env took the fix. Both fix commits were
+already there. I then built an A/B/C plan to resolve a binary `.docx` conflict for a merge that never
+needed to happen. みや caught it: *"those tickets are missed?"* Skill §4 now probes fix commits.
+
+**I read the deploy log bottom-up.** Took `Invalid WAR structure (WEB-INF missing)` as the thing to
+explain when the first failure — `git clone` dying at `index-pack` — sat ten lines above. Then
+asserted disk-full with no evidence; his `df -h` showed 83G free. Skill §7 is now a top-down triage table.
+
+**I guessed infrastructure from an `ls`.** `deployment-scripts/mltg` became "the training deploy
+folder" because it was the only training-shaped name in a listing, and I shipped it into two files
+behind a thin ⚠️. Aaron: *"No no. build in 172.16.100.162. Then deploy in another IP."*
+
+**Slips**: `ancestry-checked-one-direction` · `read-last-line-not-first-failure` ·
+`guessed-infra-path-from-folder-name`.
+
 ## 2026-08-06 — A PROD PATCH SHIPPED, AND EVERY CLAIM I MADE ABOUT IT WAS WRONG ONCE FIRST
 
 **#273837 is patched and verified on PROD. Getting there took four separate corrections, three of
@@ -2944,6 +3002,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

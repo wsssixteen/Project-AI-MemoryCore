@@ -242,3 +242,11 @@
 {"ts":"2026-08-06T13:52:53.436Z","category":"A1"}
 {"ts":"2026-08-06T13:52:53.557Z","category":"A5"}
 {"ts":"2026-08-06T13:52:53.677Z","category":"A4"}
+{"ts":"2026-08-07T01:13:10.439Z","category":"scope-too-narrow-for-the-ask"}
+{"ts":"2026-08-07T01:13:10.556Z","category":"save-claimed-from-exit-code-not-artifact"}
+{"ts":"2026-08-07T01:13:10.670Z","category":"instruction-order-inverted"}
+{"ts":"2026-08-07T01:14:35.658Z","category":"A2"}
+{"ts":"2026-08-07T01:14:35.760Z","category":"A1"}
+{"ts":"2026-08-07T01:14:35.885Z","category":"A3"}
+{"ts":"2026-08-07T01:14:36.015Z","category":"A5"}
+{"ts":"2026-08-07T01:14:36.143Z","category":"A1"}

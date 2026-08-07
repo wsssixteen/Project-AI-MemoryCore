@@ -1,5 +1,73 @@
 # Current Session
 
+## 2026-08-06 19:41 → 2026-08-07 09:0x — SIX TICKETS TAKEN TO RUBRIC, AND I BROKE THREE OF THE FAMILIARS' OWN ARGUMENTS
+
+**A PROD patch shipped on 273956, and the whole open board moved from "not drafted" to Rubric with
+named fix sites. The controller re-check earned its keep: three of six familiar conclusions needed
+correcting, one of them fatally.**
+
+### ▶▶ NEXT SESSION — START HERE
+
+| Priority | Ticket | State | First step on resume |
+|---|---|---|---|
+| **1** | **274136** | Rubric, 97% | **Live on PRODUCTION.** 7 additive lines, 2 files, `etanah-awam`. Blocked ONLY on BA-Q: should *"Jumlah Modal Bumiputera Yang Dibenarkan (RM)"* show on Melaka PT Syarikat at all? Fix order **C3 then C4** — reversed arms a delete hazard on PSBS |
+| **2** | **274182** | Rubric, 97% | ~10 lines in `PelupusanReportMethodConstant.getPelanIntoFilePath():2027`. ⚠️ BA's cleanup ask ALONE produces a **blank pelan** — code fix first, then the 4-row delete |
+| **3** | **273460** | Rubric, 88% | Reorder 2 lines at `BasePelupusanDokumenForm.java:1357-1366`. Blocked on BA-Q: radio locked-showing-Ya, or clickable? |
+| 4 | 273707 | Rubric, 65% | Run the DTO-URL falsifier FIRST — the row also has `no_lot`/`no_upi` NULL, so the daerah patch may not fix GIS at all |
+| 5 | 273921 | evidence broken | Settle: do the other 7 run-level templates have syarat rows and still work? If yes the OOXML theory is dead |
+| 6 | 274318 | blocked | `etanah-common`, not pelupusan. Fix would silently no-op — `findAgensiByOrganisasiKod` returns null on Melaka |
+| — | 273956 | **SHIPPED** | PROD patch applied + verified. Handed to samsiah. Watch `versi_terakhir` 3 → 4 as the regeneration signal |
+
+### 273956 — shipped end-to-end
+
+`PTMLK/03/L/PRBB/2026/10` · aplikasi 3424732 · samsiah_jaamat@melaka.gov.my
+
+BA asked for three things; only one was real:
+
+| BA's ask | Verdict |
+|---|---|
+| Roll back to PSJT | already done by miya (tugasan 2778330 live) |
+| Reset dokumen | **needed** — 2 rows, `status_id` 1978/1979 → NULL |
+| Patch JT/YB status | **not needed** — all 5 agensi + YB already intact, `keputusan`/`ulasan` already NULL |
+
+Two of miya's questions moved this from plausible to proven:
+
+- *"do we REALLY not have to patch/delete the letters?"* → forced the code read. `JOIN adk.status s` is an
+  INNER join, so a NULL-status row vanishes from every finder → template survives → regenerates.
+  `appTugasan` appears only in the SELECT projection, **never the WHERE** — so the rollback alone would
+  still have served the stale Peraku letter. The patch was load-bearing, and my original justification
+  (a population census) was the weaker argument.
+- *"what if the user doesn't jana semula?"* → there IS no Jana button; regeneration fires on screen open.
+  Which exposed an **ordering trap my own hand-off had backwards**: unit edit MUST precede opening the
+  Surat screen, or the wrong-unit letter regenerates, stores at BARU, and sticks. BA's own note had the
+  right order; I had inverted it.
+
+### The six-quest batch — what the controller caught
+
+| Ticket | Familiar said | Truth |
+|---|---|---|
+| 274182 | same family as 269169/267382 | **NEW mechanism** — Jasper chain, not Word. (I had seeded that wrong hint from memory) |
+| 273460 | fix `bd827a1bb6` is on master + 1.3.1 only | **already on `mlk/int-env`** — defect D closes on a deploy |
+| 273460 | test login sanarimah | **nurul.izza@melaka.gov.my** — sanarimah's rows are both Selesai |
+| 273921 | 8 templates, 7 block-level, only PPTPB odd | **16 templates, 8 run-level.** One global populator registration at `:865` means shape alone cannot discriminate. Not implement-ready |
+| 274136 | prior session's `:732`/`:794` | **`:720`/`:782`** — a +6…+12 drift ran through every prior address |
+| 274318 | pelupusan or common? | **common** — source exists only there |
+
+Verified myself: 9,363 PT rows / exactly 1 NULL `daerah_id` · 5 GPTOL containers with MAX landing on the
+wrong one · the duplicate EL read directly off both lines · `git branch --contains` · `find` for the
+Common source.
+
+### Behaviour
+
+**The sweep I ran first was not the sweep he asked for.** I scoped 8 familiars to "READ pass only — do
+NOT trace code", got 8 tidy summaries, and presented a board still showing Phase 0 everywhere. His
+reply: *"I thought you've done ticket sweep why are all those tickets still phase 0?"* — correct. A
+sweep that cannot change a ticket's phase is an inventory, not a sweep. The re-run with six Opus
+familiars at full Scout→Recon→Rubric is what he meant the first time.
+
+**Slips**: `scope-too-narrow-for-the-ask` · `assume-not-verify` (the 274182 family hint, given from
+memory and wrong) · `instruction-order-inverted` (the 273956 hand-off).
+
 ## 2026-08-06 19:5x → 21:3x — 273465 PHASE 1 CLOSED: A PRIMEFACES QUEUE JAM, PROVEN ON THE LIVE PAGE
 
 **The buttons were not slow. The ajax queue was permanently jammed, and PrimeFaces will not dispatch
@@ -130,61 +198,3 @@ skill edit earlier in the session — hit twice in one evening.
 **He asked for conditions, not literals.** The patch was a hardcoded 3-number list; he asked *"can we not
 hardcode it? We know the conditions already right?"* Rewriting it by predicate also killed a bad
 condition of mine — `created_by='SYSTEM'` is incidental, the same code path stamps the officer's login.
-
-## 2026-08-06 10:34 → 21:45 — A DEPLOY THAT NEEDED NO MERGE, AND THE SERVER MAP WE NEVER HAD
-
-**#273938 went to mlit and the whole job was two ssh sessions — Aaron had already done both merges
-the evening before, and I spent the morning inventing a conflict for a merge that was finished.
-Then みや handed me the architecture sheet and the deploy skill finally has real hosts in it.**
-
-### ▶▶ NEXT SESSION — START HERE (this thread)
-
-| Item | State | First step on resume |
-|---|---|---|
-| **273938 training** | build+deploy NOT run | `./build-pelupusan.sh mlk/training/273938` → env `train` → deploy on `172.30.12.152`; **`ls ~/deployment-scripts/` there first** — folder name unconfirmed |
-| **273938 mlit** | ✅ deployed on 2nd attempt | add to the Redmine planned-release list |
-| `deploy` skill | v1.2, eval 52/52 | — |
-
-### The merge order — Aaron's lanes, my inference
-
-```
-① mlk/training/<ticket> ──▶ mlk/int-env             (ticket fix ONLY)
-② mlk/release/<x.y.z>   ──▶ mlk/training/<ticket>   (baseline joins the ticket branch)
-
-② before ① poisons int-env with the whole release lineage.
-Aaron: ce1198818c 16:08 (①)  →  609f83bcb5 16:21 (②)
-```
-
-Aaron stated each lane separately and never ordered them. The ordering is **my** inference from his
-timestamps plus the conflict I reproduced — written into the skill labelled as such, not as his words.
-
-### The server map — `etanah-knowledge/melaka/ENV-ARCHITECTURE.md` (new)
-
-Read from the `ETANAH ARCHITECTURE - MLK` sheet, our modules only.
-
-| Env | Pelupusan app tier | Deploy VM |
-|---|---|---|
-| mlit | Fudge1 `172.16.100.49` | `172.16.100.162` · `deployment-scripts/mlit` |
-| training | Eto1/2/3 `172.30.12.126-128` | **Reus1 `172.30.12.152`** |
-| staging | Radome1/2/3 `172.30.12.176-178` | `172.30.12.203` · `deployment-scripts/stag` |
-
-Training schemas sit on the **staging DB host**: `172.30.12.202:5444/mlkstg?currentSchema=et_main_trn`.
-One word separates `trn` from `stg1` on the same connection.
-
-### Behaviour
-
-**I checked ancestry one direction.** Reported #273938 "not in int-env" from a `merge-base` test on
-the branch TIP — which had grown a release merge *after* int-env took the fix. Both fix commits were
-already there. I then built an A/B/C plan to resolve a binary `.docx` conflict for a merge that never
-needed to happen. みや caught it: *"those tickets are missed?"* Skill §4 now probes fix commits.
-
-**I read the deploy log bottom-up.** Took `Invalid WAR structure (WEB-INF missing)` as the thing to
-explain when the first failure — `git clone` dying at `index-pack` — sat ten lines above. Then
-asserted disk-full with no evidence; his `df -h` showed 83G free. Skill §7 is now a top-down triage table.
-
-**I guessed infrastructure from an `ls`.** `deployment-scripts/mltg` became "the training deploy
-folder" because it was the only training-shaped name in a listing, and I shipped it into two files
-behind a thin ⚠️. Aaron: *"No no. build in 172.16.100.162. Then deploy in another IP."*
-
-**Slips**: `ancestry-checked-one-direction` · `read-last-line-not-first-failure` ·
-`guessed-infra-path-from-folder-name`.
