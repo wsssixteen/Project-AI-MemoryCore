@@ -834,18 +834,23 @@ qa_doc=projects/coding-projects/active/QA-273455/QA-273455.md
 test_app=PTMLK/02/L/PT/2026/14 @ nurhafizah@melaka.gov.my (PROD, original report) | PTMLK/03/L/PT/2026/38 @ Staging (BA repro 2026-07-31, mohon-Awam-bayar-Kaunter) | PTMLK/02/L/PT/2026/18 @ PROD (BA control, NO issue)
 redmine_status=New | start 2026-07-31 | due 2026-08-12 | tracker eSOKONGAN (verified live 2026-08-04)
 prior_art=THIS IS ADHOC A8 NOW TICKETED - full diagnosis already banked at projects/coding-projects/active/PENDING-TICKET-pt-sempadan-awam/FINDINGS.md (233 lines, 5 theories killed). BA journal 2026-07-31 independently confirms the discriminator we found: mohon Awam + bayar Kaunter = data lost.
-branch=mlk/esokongan/273455
-current_phase=Closed
-local_test_confirmed=true
+branch=mlk/esokongan/273455v2
+current_phase=Cycle-2 shipped to int-env 52a130c08a - awaiting miya deploy + Fizah retest
+local_test_confirmed=false
 test_app_mlit=PTMLK/03/L/PT/2026/5 aplikasi 3385370 idTransaksi 03PT2026000002 @ zilawati@melaka.gov.my (PGSJT, Dalam Tindakan)
 test_app_stg1=PTMLK/03/L/PT/2026/38 aplikasi 3419368 idTransaksi 03PT2026000042 @ nfadzilah@melaka.gov.my (SKM, Dalam Tindakan) - BA own repro, on the DB local etanahDS binds
 local_db=et_main_stg1 via bare etanahDS (applicationContext-main.xml:78 + standalone.xml)
 test_base=mlk/master @ 0 behind origin, fix uncommitted (56 lines, 1 file) - moved off mlk/int-env 2026-08-06 per miya
 fix_shape=R read-side fallback, URS_PT-gated, PelupusanService.populateMaklumatTanahVOListFromAppHakmilik():5124-5140
-open_decision=TRG residual - method is called by TrgSenaraiHakmilikTerlibatForm:57 + TrgKemasukanMaklumatLautForm:112; URS_PT gate contains it unless a TRG PT app exists
+open_decision=TRG residual now doubled - TrgSenaraiHakmilikTerlibatForm.java:57 + TrgKemasukanMaklumatLautForm.java:112 call the patched method and the guard now admits PSBS too; unanswered since 2026-08-06
 closed=2026-08-06
-commit=a52975fde2
-int_env_merge=3af1ecd2c7
+commit=211eabfe4b
+int_env_merge=52a130c08a
+close_note=RECONCILED from live Redmine 2026-08-06 19:56 - Resolved, Nurhafizah Hasan, 100pct, absent from assigned_to_id=me&status_id=open
+rework=cycle-2
+reopened=2026-08-07
+rework_reason=Nurhafizah 2026-08-07 00:47Z tested @ MLIT PTMLK/02/L/PT/2026/12 (Module 1.3.1, branch mlk/int-env): sempadan fix CONFIRMED WORKING (Utara 12 Selatan 24 Timur 36 visible in Kemas kini dialog) but Keluasan Tanah empty+mandatory blocks Simpan. BA expectation widened to all Awam-entered fields. luas is a separate column not in mklmt_tmbhn - needs own trace
+rework_test_app=PTMLK/02/L/PT/2026/12 @ MLIT (et_main_mlit) - BA-given 2026-08-07
 
 qa=QA-273460
 quest_start_ts=2026-08-04T19:22:32.640Z

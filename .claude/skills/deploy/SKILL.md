@@ -89,12 +89,12 @@ build + deploy = ONE function          build + deploy = TWO steps, TWO hosts
 
 ssh app@172.16.100.162                 ssh app@172.16.100.162
 cd deployment-scripts/mlit             cd build-scripts17
-./deploy-<module>.sh                   ./build-<module>.sh mlk/stag-env
+sh deploy-<module>.sh                   sh build-<module>.sh mlk/stag-env
    → branch prompt → mlk/int-env          → env prompt → stag
                                        (exit)
                                        ssh app@172.30.12.203
                                        cd deployment-scripts/stag
-                                       ./deploy-<module>.sh
+                                       sh deploy-<module>.sh
 ```
 
 ⚠️ `build-<module>.sh`'s env menu is `pat/uat/stag/train/prod/hotfix` — there is
@@ -230,6 +230,12 @@ renders a copy/Run button per block. Prose lines (waits, prompts) stay plain tex
 
 Header lines (merged / delta / revert) are plain text too — the revert command gets its own block.
 
+🚨 **NEVER write a script with a leading `./` in the card** (みや 2026-08-07, second time — the
+2026-07-20 hand-off-card lesson names this same `./` linkify). The renderer turns `./name.sh` into a
+hyperlink **even inside backticks**, so みや gets a link where he needs a command. Write
+`sh deploy-<module>.sh` / `sh build-<module>.sh <branch>` — identical behaviour for a shell script,
+no leading `./`, no linkify. Applies to every runnable line in the card, not just the deploy step.
+
 Emit only the requested env. Shape:
 
     DEPLOY — <ticket> → <env>
@@ -264,7 +270,7 @@ Emit only the requested env. Shape:
     ```
     **3.** build
     ```bash
-    ./build-<module>.sh mlk/stag-env
+    sh build-<module>.sh mlk/stag-env
     ```
     **4.** at the env prompt choose `stag`, wait for BUILD SUCCESS, then `exit`
     ... (one block per command, continuing through the deploy host)

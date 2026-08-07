@@ -4,6 +4,61 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-06 17:51 → 19:4x — 273461 CLOSED, AND THE RESUME RULE CAUGHT A SHIPPED FIX I DID NOT KNOW EXISTED
+
+**One ticket end-to-end: quest → fix → commit → deploy → patch handed to the release team. The rule
+みや asked for at the start of the session paid for itself on its first run, and a census of PROD
+stopped a patch that would have erased 746 migrated licences.**
+
+### ▶▶ NEXT SESSION — START HERE
+
+| Priority | Ticket | State | First step on resume |
+|---|---|---|---|
+| — | **273461** | **Phase 1 closed** · `93bf7168b4` · int-env `67e49daecd` | Phase 2 archive only. At release: confirm the release team ran `patch-273461.sql`, then re-verify PROD |
+| **1** | **273455** | Phase 0 — **fix already in みや's working tree, uncommitted** | `PelupusanService.java` carries a PT sempadan fallback (praHakmilik → VO when App sempadan empty). Not mine; audit it, then quest it properly |
+| **2** | **273460** | Phase 0 | needs the TRG blast-radius check |
+| **3** | 273465 · 273707 · 273921 · 273956 · 274136 · 274182 · 274318 | not drafted | board ranks by working-days elapsed |
+
+### What shipped — 273461
+
+```
+MlkPengiraanBayaranLesenForm.performCustomSave():646-650
+    if (!PelupusanUrusanConstant.URS_PLPS.equals(urusanCode)) { …allocate + promote… }
+
+code → mlk/esokongan/273461 @ 93bf7168b4 → mlk/int-env @ 67e49daecd
+data → patch-273461.sql attached to Redmine (release team runs it) — git CANNOT see this channel
+```
+
+### The three findings that mattered
+
+| # | Finding | How it surfaced |
+|---|---|---|
+| 1 | A fix for this ticket was **already committed and pushed** (`8bd34da47c`, 08-04) — the qa_doc said *"Phase 0 only. No code changed."* | the new resume rule's existing-fix probe, on its first run |
+| 2 | The shipped guard carried an **unreachable** `\|\| PYB4AE` arm — PROD shows skrin 338 mounts on 21 PLPS tugasan, never on PYB4AE | one `ind_langkah` query |
+| 3 | "PLPS holds a No Lesen and never reached 4Ae" = **749 rows, 746 of them migrated legacy** (`MIGRATOR_*`, formats `M 003` / `192055`). Real scope: 3 | census before scripting, not after |
+
+Also: `PYB4AE` has **never occurred in PROD** — 0 of 38 PLPS tugasan ever recorded. The fix is right per
+BA, but PLPS carries no No Lesen until the workflow first runs that far. Recorded as a deferral.
+
+### Behaviour
+
+**Two emit-shape corrections in one turn on the same card.** The deploy card opened with two local git
+steps a server-side deploy never reads (*"your commands seems useless"*), then the evidence block was a
+table + commit log + code fence when he wanted `mlk/xxx/xxx → branch`. Same family as the 07-20 hand-off
+card. Both fixed in `deploy/SKILL.md`; slip `emit-shape-not-copyable`.
+
+**My own manifest tool false-flagged our uploads.** `ticket-load-verify.js` only searched `0. Brief/`, so
+the patch script and test video in `2. Fix/` failed its integrity check as ghost attachments. Fixed to
+search the whole task folder. Slip `ticket-source-skipped`.
+
+**Two copies of the same qa_doc.** I edited the durable main-repo one; the deferrals gate reads the
+worktree's, which was a stale 08:25 snapshot. Same `${CLAUDE_PROJECT_DIR}`-is-the-worktree trap as the
+skill edit earlier in the session — hit twice in one evening.
+
+**He asked for conditions, not literals.** The patch was a hardcoded 3-number list; he asked *"can we not
+hardcode it? We know the conditions already right?"* Rewriting it by predicate also killed a bad
+condition of mine — `created_by='SYSTEM'` is incidental, the same code path stamps the officer's login.
+
 ## 2026-08-06 10:34 → 21:45 — A DEPLOY THAT NEEDED NO MERGE, AND THE SERVER MAP WE NEVER HAD
 
 **#273938 went to mlit and the whole job was two ssh sessions — Aaron had already done both merges
@@ -3002,6 +3057,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

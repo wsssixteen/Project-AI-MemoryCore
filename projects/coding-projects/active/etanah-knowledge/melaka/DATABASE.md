@@ -1053,6 +1053,81 @@ an officer screen-save always leaves `"sempadanList":""` plus a `jarakDari` sibl
 are **0**, i.e. the pelupusan Maklumat Tanah screen has never written this field. Use the presence of
 `""`-vs-array, and of `jarakDari`, to tell which writer produced any given row.
 
+### 16.7 🚨 `umm_p_hkmlk` is NOT the only sempadan home — two tables, two urusan families (2026-08-07)
+
+§16.1–16.6 describe the **hakmilik** spine. That is only half the picture, and counting sempadan on
+`umm_p_hkmlk` alone under-reports it. The AWAM save forks by urusan at
+`etanah-awam\src\main\java\my\gov\etanah\awam\pelupusan\web\form\PelupusanPermohonanTanahTab.java:686`
+(`NEGERI_MLK` branch):
+
+| Urusan | Writer | Table |
+|---|---|---|
+| `URSN_PT` · `URSN_PSBS` | `PelupusanService.saveMaklumatTanahVOIntoPraHakmilik():3639` → write `:3745` | `umm_p_hkmlk.mklmt_tmbhn` |
+| `default` (PLPS · MCL · PPTPB · PRZ · …) | `PelupusanService.saveMaklumatTanahVOIntoPermohonanTanah():9880` → writes `:9953` / `:10011` | `umm_p_permohonan_tnh.mklmt_tmbhn` |
+
+Both writers are in `etanah-awam\src\main\java\my\gov\etanah\awam\pelupusan\service\impl\PelupusanService.java`.
+The sempadan write inside `saveMaklumatTanahVOIntoPraHakmilik` is **unconditional** — no urusan gate
+there; the gating is entirely in the tab's switch.
+
+**PROD census 2026-08-07** — pra rows carrying real (non-`""`) `sempadanList`:
+
+| Table | Urusan | Rows | Officer side lost |
+|---|---|---|---|
+| `umm_p_hkmlk` | PT | 93 | 47 of 47 apps affected per §16.4 |
+| `umm_p_permohonan_tnh` | PLPS 47 · MCL 37 · PPTPB 16 · PRZ 2 | 102 | **0 of 102** |
+
+**Consequence for #273455's fix**: the `URS_PT` gate on
+`etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\service\impl\PelupusanService.java`
+`PelupusanService.populateMaklumatTanahVOListFromAppHakmilik():5093` is correct — but *not* because
+other urusan lack sempadan. They have it, in the other table, and it transfers cleanly (0/102 lost).
+**PSBS is the only other urusan on the hakmilik path**; it has 0 public records on Melaka PROD today,
+so the exposure is latent, not live.
+
+⚠️ **Unread**: *why* the `umm_p_permohonan_tnh` copy survives the counter-payment gate that
+`umm_p_hkmlk` fails. Outcome measured, mechanism not traced. Do not assert one without reading it.
+
+### 16.8 The counter-payment gate loses EIGHT fields, not just sempadan (2026-08-07, #273455 cycle 2)
+
+`PelupusanSpocService.populateAppHakmilikList():241` copies the whole bean, so when the `:235` gate is
+false **nothing** transfers — sempadan was simply the first field a BA happened to report.
+
+PROD census, PT+PSBS, counter arm (47 apps). **The online arm loses 0 of 44 on every field**, which
+makes payment channel the clean discriminator for the entire set, not just for sempadan:
+
+| Column | Screen label (`mlkMaklumatTanahV3.xhtml`) | Filled in Awam | Lost |
+|---|---|---|---|
+| `mklmt_tmbhn` → `sempadanList` | Sempadan | 49 | **46** |
+| `tujuan_berimilik_id` | Tujuan Permohonan | 49 | **38** |
+| `unit_luas_id` | Keluasan Tanah — unit | 49 | **38** |
+| `luas` | Keluasan Tanah | 46 | **36** |
+| `tujuan_berimilik_lain` | Perincian Tujuan Permohonan | 30 | **23** |
+| `lokasi` | Tempat / Wilayah / Lokasi | 19 | **17** |
+| `jns_rujukan_lokasi_id` | No. Lot Bersebelahan — jenis | 15 | **14** |
+| `no_rujukan_lokasi` | No. Lot Bersebelahan — no | 14 | **13** |
+| `no_lot` · `unit_lot_id` | No. Lot/PT | 47 | 5 each |
+| `bandar_dipohon_id` | Bandar/Pekan/Mukim | 49 | **0** |
+
+**Never filled in Awam — do not "fix" these**: `seksyen_id` · `no_pelan` · `keterangan_lain` ·
+`flag_tanah_haram` · JSON keys `dun` and `jarakDari` (all 0). `jarakDari` is written *only* by the
+officer's save, which corroborates the writer signature in §16.6.
+
+🚨 **`luas` lives in TWO pra tables and they disagree.** `umm_p_hkmlk.luas` vs
+`umm_p_permohonan_tnh.luas_dipohon` differ on **3 of 96** PT applications. The officer column is
+`umm_a_hkmlk.luas`, so **hakmilik → hakmilik is the correct mapping**. Commit `d17d708282` read the
+permohonan-tanah row and was corrected in `2af86aa5e2`.
+
+### 16.9 Self-heal CONFIRMED — the fallback persists on the officer's next save (2026-08-07)
+
+Recorded in §16.3 / #273455 cycle 1 as a hypothesis; now **observed**. On mlit, `umm_a_hkmlk` row
+5906364 (`PTMLK/02/L/PT/2026/12`, aplikasi 3408031) reached `version = 2` at `2026-08-07T08:43:42Z`
+under `sitihanum@melaka.gov.my`, carrying a `sempadanList` the pra→app copy never wrote.
+
+**Why that proves it**: `luas` was still NULL on the same row. `BeanUtil.copyProperties` would have
+carried `luas` if it had run, so the copy did not run — leaving the read-side fallback plus
+`PelupusanService.saveMaklumatTanahVOIntoAppHakmilik():4434` as the only path those values could have
+taken. A read-side display fix therefore repairs the stored row too, on first Simpan; no data patch
+is needed for this defect class.
+
 **Full case**: `projects/coding-projects/active/PENDING-TICKET-pt-sempadan-awam/FINDINGS.md` ·
 register `ADHOC-REGISTER.md` A8.
 
