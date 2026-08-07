@@ -71,52 +71,14 @@ rather than a git diff.
 
 ---
 
-## 5. Deploy routes
+## 5. Deploy routes — only 2 IPs exist
 
 | Host | Alias | Holds |
 |---|---|---|
 | `172.16.100.162` | `mirage1` | `build-scripts17/` **and** `deployment-scripts/` (`common` `hotfix` `mlit` `mlitdm` `mltg` `warfiles`) |
 | `172.30.12.203` | — | `deployment-scripts/stag/` |
-| `172.16.100.49` | `fudge1` | **mlit APP server** — `mirage1` ssh's in to stop JBoss, copy the war, restart, verify (added 2026-08-06 from a #273938 deploy log; the earlier "only 2 IPs exist" heading was wrong) |
 
-ssh user: `app`. Ruri has no key — `Permission denied (publickey)` verified 2026-08-06.
-
-### 5a. TRAINING — third lane, and the merge order matters (added 2026-08-06, #273938)
-
-There is **no `mlk/train-env`**. Training builds straight from `mlk/training/<ticket>`, so that
-branch must carry the ticket fix **and** the release baseline. `mlk/int-env` must carry the ticket
-delta and nothing else. Only one order satisfies both:
-
-```
-① mlk/training/<ticket> ──merge──▶ mlk/int-env        (ticket fix only)
-② mlk/release/<x.y.z>   ──merge──▶ mlk/training/<ticket>   (baseline joins the ticket branch)
-
-do ② before ① → int-env inherits the whole release lineage: pom bump, other tickets,
-                 binary templates → conflicts unrelated to your ticket
-```
-
-Precedent — Aaron, #273938, 2026-08-05: `ce1198818c` (① 16:08) then `609f83bcb5` (② 16:21).
-Proven 2026-08-06: merging the post-② tip into int-env conflicts on
-`TemplateSuratNilaianJPPH_PLTP_PSBS.docx`, a binary no ticket commit touches.
-
-**Attribution**: Aaron stated each lane's requirement separately (*"merge the latest release branch
-into the training branch before you deploy"* · *"internal — just merge the training branch into the
-int-env branch"*). The **ordering between the lanes is Ruri's inference** from his timestamps plus
-the reproduced conflict — mechanically sound, but not his words.
-
-**Training pipeline = TWO hosts, like staging.** Aaron 2026-08-06, rejecting the one-host guess:
-*"No no. build in 172.16.100.162. Then deploy in another IP. I have to go find. I'll give to you
-after lunch."*
-
-```
-build   ssh app@172.16.100.162 → build-scripts17 → ./build-<module>.sh mlk/training/<ticket>
-                                                 → env prompt: train
-deploy  ssh app@<UNKNOWN IP — awaiting Aaron 2026-08-06>
-        cd deployment-scripts/<UNKNOWN folder> → ./deploy-<module>.sh
-```
-
-⚠️ `deployment-scripts/mltg/` was a **guess and is refuted** — Aaron said the deploy is on another
-IP. Never emit a training deploy host until he supplies it.
+ssh user: `app`.
 
 ```
 INTERNAL (mlit)                        STAGING (stag)

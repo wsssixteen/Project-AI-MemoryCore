@@ -756,7 +756,7 @@ close_note=Phase 1 closed 2026-08-03: stg2 patch run by miya (PROD pending); jrx
 qa=QA-273201
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\119. ESOKONGAN #273201 - Pelupusan - PRBB  - Keputusan Pentadbir Tanah - Tiada medan agihan kep
 phase=1
-status=closed
+status=active
 ticket_type=bug
 env=MLKSTG (schema et_main_stg1, branch mlk/release/1.2.0, Module 1.2.0; PROD-reported too) - etanah-pelupusan
 issue_one_liner=PRBB Keputusan Pentadbir Tanah - Agihan Kepada field absent (empty officer list overrides adaPegawaiAgih) so agihanKKPT stays blank and gateway sid-39A4210F throws FlowableException on Hantar
@@ -770,9 +770,9 @@ branch=mlk/esokongan/273201v3
 commit=91e22e486f
 local_test_confirmed=true
 bundled_with=272881
-closed=2026-08-06
+closed=2026-08-05
 int_env_merge=440827f18d
-close_note=RECONCILED from Redmine 2026-08-06: Pending User, assignee Amila Qistina Rohizat, done=100 - absent from assigned_to_id=me and status_id=open
+close_note=RECONCILED from Redmine 2026-08-06: Ready in PROD, 100pct, assignee ITSO Melaka Admin.
 close_note_detail=Cycle-3 PASSED on mlit 2026-08-05. PTMLK/01/L/PRBB/2026/22, tugasan Semakan Rencana Pentadbir Tanah, HADIFAIZAL BIN HARUN (PPTT), Pembetulan=Ya; Agihan Kepada listed PPTnKanan/PPTT/PT (was PT only). Fix MlkPelupusanPegawaiAgihService.java:542 Arrays.asList(PT) -> Arrays.asList(PT,PPTnKanan,PPTT); commit 91e22e486f on mlk/esokongan/273201v3, int-env 440827f18d. Rule in PERANAN-MAP.md 5a: KELENGKAPAN_YA agihan list = every role strictly BELOW the tugasan node peranan ceiling; confirmed 4/4 at KKPT:519 PRJKBBPDT:550 SRPT-laneA:536 SRPT-laneB:542.
 rework=cycle-4
 reopened=2026-08-05
@@ -834,23 +834,18 @@ qa_doc=projects/coding-projects/active/QA-273455/QA-273455.md
 test_app=PTMLK/02/L/PT/2026/14 @ nurhafizah@melaka.gov.my (PROD, original report) | PTMLK/03/L/PT/2026/38 @ Staging (BA repro 2026-07-31, mohon-Awam-bayar-Kaunter) | PTMLK/02/L/PT/2026/18 @ PROD (BA control, NO issue)
 redmine_status=New | start 2026-07-31 | due 2026-08-12 | tracker eSOKONGAN (verified live 2026-08-04)
 prior_art=THIS IS ADHOC A8 NOW TICKETED - full diagnosis already banked at projects/coding-projects/active/PENDING-TICKET-pt-sempadan-awam/FINDINGS.md (233 lines, 5 theories killed). BA journal 2026-07-31 independently confirms the discriminator we found: mohon Awam + bayar Kaunter = data lost.
-branch=mlk/esokongan/273455v2
-current_phase=Cycle-2 shipped to int-env 52a130c08a - awaiting miya deploy + Fizah retest
-local_test_confirmed=false
+branch=mlk/esokongan/273455
+current_phase=Closed
+local_test_confirmed=true
 test_app_mlit=PTMLK/03/L/PT/2026/5 aplikasi 3385370 idTransaksi 03PT2026000002 @ zilawati@melaka.gov.my (PGSJT, Dalam Tindakan)
 test_app_stg1=PTMLK/03/L/PT/2026/38 aplikasi 3419368 idTransaksi 03PT2026000042 @ nfadzilah@melaka.gov.my (SKM, Dalam Tindakan) - BA own repro, on the DB local etanahDS binds
 local_db=et_main_stg1 via bare etanahDS (applicationContext-main.xml:78 + standalone.xml)
 test_base=mlk/master @ 0 behind origin, fix uncommitted (56 lines, 1 file) - moved off mlk/int-env 2026-08-06 per miya
 fix_shape=R read-side fallback, URS_PT-gated, PelupusanService.populateMaklumatTanahVOListFromAppHakmilik():5124-5140
-open_decision=TRG residual now doubled - TrgSenaraiHakmilikTerlibatForm.java:57 + TrgKemasukanMaklumatLautForm.java:112 call the patched method and the guard now admits PSBS too; unanswered since 2026-08-06
+open_decision=TRG residual - method is called by TrgSenaraiHakmilikTerlibatForm:57 + TrgKemasukanMaklumatLautForm:112; URS_PT gate contains it unless a TRG PT app exists
 closed=2026-08-06
-commit=211eabfe4b
-int_env_merge=52a130c08a
-close_note=RECONCILED from live Redmine 2026-08-06 19:56 - Resolved, Nurhafizah Hasan, 100pct, absent from assigned_to_id=me&status_id=open
-rework=cycle-2
-reopened=2026-08-07
-rework_reason=Nurhafizah 2026-08-07 00:47Z tested @ MLIT PTMLK/02/L/PT/2026/12 (Module 1.3.1, branch mlk/int-env): sempadan fix CONFIRMED WORKING (Utara 12 Selatan 24 Timur 36 visible in Kemas kini dialog) but Keluasan Tanah empty+mandatory blocks Simpan. BA expectation widened to all Awam-entered fields. luas is a separate column not in mklmt_tmbhn - needs own trace
-rework_test_app=PTMLK/02/L/PT/2026/12 @ MLIT (et_main_mlit) - BA-given 2026-08-07
+commit=a52975fde2
+int_env_merge=3af1ecd2c7
 
 qa=QA-273460
 quest_start_ts=2026-08-04T19:22:32.640Z
@@ -900,9 +895,8 @@ sql_patch=patch-273461.sql attached to Redmine 2026-08-06 11:11 — release team
 test_evidence=video attached to Redmine 2026-08-06 10:43 (journal A9)
 
 qa=QA-273465
-quest_start_ts=2026-08-06T11:55:54.368Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\120. ESOKONGAN #273465 - Pelupusan - Portal Awam - Maklumat Pemohon
-phase=1
+phase=0
 status=closed
 ticket_type=bug
 env=PROD Awam (BA reproduced on PROD) - etanah-awam
@@ -915,14 +909,7 @@ test_app=none given - AWAM pra-permohonan, no Permohonan ID before submission; B
 redmine_status=New | start 2026-07-31 | due 2026-08-12 | tracker eSOKONGAN (verified live 2026-08-04)
 scope=AWAM (etanah-awam) - the only AWAM-module ticket in this batch
 overlap_flag=Same screen family as QA-272867 (AWAM/pelupusan Maklumat Pemohon twin) - check for overlap before scoping
-branch=mlk/esokongan/273465
-current_phase=Ship-Verify
-commit=fadebbcbce
-local_test_confirmed=false
-deployed=mlk/int-env@c69f932ad5
-closed=2026-08-06
-redmine_assignee=miya - In Progress, flipped by him 2026-08-06 06:06 (verified by the parallel 273956 session; supersedes the qa_doc note naming Faizudin)
-close_note=Phase 1 closed on miya instruction 2026-08-06. Commit fadebbcbce pushed to origin/mlk/esokongan/273465; merged c69f932ad5 into origin/mlk/int-env. local_test_confirmed stays FALSE - no deployed build has been exercised yet; verification deferred to the mlit run. Runtime coverage 1 of 87 AWAM pages. WAF-to-throw causal link NOT proven. DEVIATION: QA273465-PROBE console channels intentionally shipped (step 2.6 default is strip) - they are the only PROD diagnostic for the unproven WAF path; say the word and I strip them.
+branch=n/a-pre-apply
 
 qa=QA-273921
 quest_start_ts=2026-08-04T17:34:44.014Z
@@ -939,14 +926,12 @@ qa=QA-273919
 quest_start_ts=2026-08-04T16:48:41.163Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\126. ESOKONGAN #273919 - AWAM - PPJK - Labelling urusan papar Maklumat Pembatalan Perizaban
 phase=0
-status=closed
+status=hold
 ticket_type=bug
 env=AWAM > PPJK : Labelling urusan papar Maklumat Pembatalan Perizaban
 issue_one_liner=AWAM > PPJK : Labelling urusan papar Maklumat Pembatalan Perizaban
 assigned_to_me=2026-08-04
 urusan=PPJK
-closed=2026-08-06
-close_note=RECONCILED from Redmine 2026-08-06: Verified, assignee Nurul Amirah Nadiah, done=100 - fix shipped 434f4ae4af, int-env ed595a9018
 
 qa=QA-273621
 quest_start_ts=2026-08-04T18:36:55.451Z
@@ -972,7 +957,6 @@ int_env_merge=303f61073c
 deployed_int_env=2026-08-06
 
 qa=QA-274136
-quest_start_ts=2026-08-06T11:56:10.123Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\128. ESOKONGAN #274136 - Pelupusan - Portal Awam - PT - Tak boleh simpan maklumat Modal Dibenar
 qa_doc=projects/coding-projects/active/QA-274136/QA-274136.md
 issue_one_liner=AWAM PT Maklumat Pemohon - Modal Dibenarkan not saved; blanked Modal Berbayar still shows old value
@@ -982,16 +966,18 @@ branch=n/a-pre-apply
 qa=ADHOC-PT-2026-3
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\131. ADHOC - PROD - PTMLK-02-L-PT-2026-3 - Gantung blocks tugasan entry
 phase=0
-status=hold
+status=closed
 ticket_type=adhoc
 env=PROD
 urusan=PT
 adhoc_register_row=A9
 board_state=Handed to infra
-issue_one_liner=PT PTMLK/02/L/PT/2026/3 aplikasi 3398208 - status_proses Gantung blocks tugasan ENTRY via DashboardService.java:1829-1851 early-return; one-column revert-shape UPDATE to Awalan handed to infra 2026-08-06
+issue_one_liner=PT PTMLK/02/L/PT/2026/3 aplikasi 3398208 - ROOT CAUSE FOUND IN LOG: engine had no task 18762781. wanda2 server.log 15:16:11,874 WARN FlowableService 'Cannot find task with id 18762781: FlowableObjectNotFoundException'; BpmCallbackService.handleCompletion() marked tugasan Selesai anyway 2ms later and logged 'Submitted bpm'; CommonNotifikasiTugasanService retried 5x over 25s 'no next tugasan'. Identical to PTMLK/01/L/PLPS/2026/3 orphan 2026-08-04. Zero active tugasan so Pergerakan Fail hits DATA_NOT_FOUND at PergerakanFailForm.onSearch():598-612
 test_app=PTMLK/02/L/PT/2026/3 @ shahniza@melaka.gov.my (SITI SHAHNIZA BINTI HASMADI, pengguna 6093), tugasan SJTLT a_tgsn_id 2754287
-open_risk=Two umm_aliran_kerja rows (4394/process 15100510 original, 15915/process 17555001 SYSTEM re-init 2026-07-24 00:33); Flowable is a separate datasource so engine state is not SQL-checkable. Confirm by shahniza opening the tugasan then clicking Hantar
+open_risk=Log evidence saved: pt3-ids.txt (25 lines, the decisive one) + pt3-wanda1.txt + pt3-wanda2.txt in Task folder. UNKNOWN: whether task 18762781 was EVER in the engine and whether process 17555001 is dead - needs act_hi_taskinst WHERE id_, act_hi_procinst end_act_id_/delete_reason_, act_ru_execution. et_read still lacks USAGE on et_flowable17 (verified has_schema_privilege=false); grant request + evidence-PT-2026-3.sql (15 queries) with infra. Server-side cleanup owed: rm ~/pt3-*.txt on 172.30.11.222 as dev
 branch=n/a-data-patch
+closed=2026-08-07
+close_note=Original Gantung scope SHIPPED - status_proses=Awalan applied by nazli 2026-08-06 11:34, flow advanced 4 further steps. The later stall is a DIFFERENT defect now tracked as QA-274510 (ESOKONGAN #274510)
 
 qa=QA-273837
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\130. DATA PATCHING (PROD) #273837 - Pelupusan - PPTPB - Pathcing Nama Jabatan di Surat YBJT
@@ -1013,52 +999,17 @@ do_not=Do NOT Jana Semula Surat Pentadbiran JT or Surat Ulasan YB - versi 1 (202
 phase2_owed=archive Task folder 130. -> Archive\ + move this block to active-archive.txt once BA confirms
 branch=n/a-data-patch
 
-qa=QA-274318
-quest_start_ts=2026-08-06T11:56:39.945Z
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\132. ESOKONGAN #274318 - Pelupusan - Kemaskini Jabatan Teknikal dan JPPH tidak Tepat
-phase=0
-status=hold
-ticket_type=bug
-env=Pelupusan > Kemaskini Jabatan Teknikal dan JPPH tidak Tepat
-issue_one_liner=Pelupusan > Kemaskini Jabatan Teknikal dan JPPH tidak Tepat
-assigned_to_me=2026-08-06
-
-qa=QA-274182
-quest_start_ts=2026-08-06T11:56:23.286Z
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\133. INTERNAL ISSUE (PROD) #274182 - Pelupusan - OPLPS - Borang 4Ae - Papar Pelan Lama
-phase=0
-status=hold
-ticket_type=bug
-env=Pelupusan > OPLPS > Borang 4Ae > Papar Pelan Lama
-issue_one_liner=Pelupusan > OPLPS > Borang 4Ae > Papar Pelan Lama
-assigned_to_me=2026-08-06
-
-qa=QA-273956
-quest_start_ts=2026-08-06T11:55:42.395Z
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\134. INTERNAL ISSUE (PROD) #273956 - Pelupusan - PRBB - Tukarkan Unit METRIK TAN kepada METER PADU
-phase=0
-status=active
+qa=QA-274510
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\136. ESOKONGAN #274510 - Pelupusan - PT - ID Permohonan tidak Masuk ke User
+phase=1
+status=closed
 ticket_type=bug
 env=PROD
-issue_one_liner=Pelupusan - PRBB - Tukarkan Unit METRIK TAN kepada METER PADU
-assigned_to_me=2026-08-06
-urusan=PRBB
-tugasan=Cetakan Dokumen
-current_phase=Patch APPLIED + verified on PROD 2026-08-06 - both status_id NULL, audit cols untouched. Handed to samsiah for regenerate + unit edit.
-test_app=PTMLK/03/L/PRBB/2026/10 aplikasi 3424732 (samsiah_jaamat@melaka.gov.my, PSJT a_tgsn 2778330 Baru/aktif)
-scope_anchor=doc-status only: umm_a_dok_keluaran SRTJK 1978 + PLP_SRT_YB 1979 -> NULL. JT rows already correct (6 rows, all 5 agensi + YB present, keputusan/ulasan NULL) - NO JT patch needed. Unit edit is officer UI work.
-qa_doc=projects/coding-projects/active/QA-273956/QA-273956.md
-patch_script=1. Tasks\Melaka\134. ...\patch-273956.sql - 2 rows, status_id 1978/1979 -> NULL, reversible
-analog=aplikasi 3424434 - identical SKM>PSJT>PGSJT>PSJT>PGSJT>CT_BSC_PLP path, 6 JT rows NOT duplicated, same a_dok_keluaran_id, versi_terakhir climbed 3->6/12, both docs ended NULL
-patch_applied=2026-08-06
-branch=n/a-data-patch-no-code
-
-qa=QA-273707
-quest_start_ts=2026-08-06T14:06:24.003Z
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\135. ESOKONGAN #273707 - Teknikal - PT - Penyediaan Laporan Pelukis Pelan - Papar -No record fo
-phase=0
-status=hold
-ticket_type=bug
-env=Teknikal > PT > Penyediaan Laporan Pelukis Pelan > Papar "No record found for kod daerah 00 in Melaka" bila klik GIS
-issue_one_liner=Teknikal > PT > Penyediaan Laporan Pelukis Pelan > Papar 'No record found for kod daerah 00 in Melaka' bila klik GIS
-assigned_to_me=2026-08-06
+issue_one_liner=PT PTMLK/02/L/PT/2026/3 aplikasi 3398208 - CADO chose pembetulan so PYMB should have returned to sitihanum, but engine had no task 18762781. wanda2 server.log 15:16:11,874 WARN FlowableService FlowableObjectNotFoundException 'Cannot find task with id 18762781'; BpmCallbackService.handleCompletion() marked Selesai 2ms later; CommonNotifikasiTugasanService retried 5x/25s 'no next tugasan'. Zero active tugasan so Pergerakan Fail hits DATA_NOT_FOUND at PergerakanFailForm.onSearch():598-612. Same orphan class as PTMLK/01/L/PLPS/2026/3 2026-08-04
+assigned_to_me=2026-08-07
+urusan=PT
+test_app=PTMLK/02/L/PT/2026/3 @ sitihanum@melaka.gov.my expected (no active tugasan - flow stalled); last actor nazli@melaka.gov.my SMB a_tgsn_id 2776753; aplikasi_id 3398208
+open_risk=PROD FIX APPLIED 2026-08-07 23:46:59 via InitiateBPMFlowableForm 'Initiate & Alter in one click' (Reset Vars=No, Insert Default=Yes, target PYMB). Screen: 'Alter Flow Flowable / true / Success Alter'. VERIFIED in et_main: umm_tgsn_semasa 115172 = PYMB, -PT-, sitihanum@melaka.gov.my (BA Expected satisfied); umm_a_tgsn 2780452 PYMB Baru flag_aktif=Y id_bpm_task 18870548 aliran_kerja 22764 pengguna_semasa_id 5949. Was: 0 dashboard rows, 18 a_tgsn all Selesai, lost task 18762781. NOT YET VERIFIED: engine act_ru_task on PROD (et_read still denied USAGE on et_flowable17) - closing evidence must be sitihanum opening AND clicking Hantar successfully, plus no FlowableObjectNotFoundException in wanda1/wanda2 server.log after her submit. Rehearsal precedent stg2 PTMLK/01/L/PT/2026/3: identical run produced a live act_ru_task and hafizahkasim could open the screen. REMAINING: sitihanum test -> BA Nurhafizah retest -> close. SEPARATE: 88/90 Aug PROD apps share this orphan shape (~13/day) - root cause of WHY the engine loses tasks is still unfixed
+closed=2026-08-08
+branch=n/a-data-patch
+close_note=PROD data-fix shipped via InitiateBPMFlowableForm 'Initiate & Alter' 2026-08-07 23:46:59 - no code change, no branch. VERIFIED et_main: umm_tgsn_semasa 115172 PYMB -PT- sitihanum@melaka.gov.my; umm_a_tgsn 2780452 PYMB Baru flag_aktif=Y id_bpm_task 18870548 aliran_kerja 22764. BA Expected 'Permohonan masuk ke tugasan dashboard sitihanum@melaka.gov.my' SATISFIED. Redmine no longer lists 274510 as assigned-open. RESIDUAL: PROD act_ru_task unverifiable (et_read denied USAGE on et_flowable17); sitihanum Hantar + BA retest are the runtime proof. OPEN SEPARATELY: 88/90 Aug PROD apps share this orphan shape (~13/day) - root cause of engine task loss NOT fixed
