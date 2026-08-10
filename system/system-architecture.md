@@ -53,89 +53,99 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `system/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `system-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node system/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 79 hook registrations across 5 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 89 hook registrations across 5 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
-| SessionStart | — | `boot-load-verification.js` | ✓ |
-| SessionStart | — | `boot-required-read-gate.js` | ✓ |
-| SessionStart | — | `evolution-check-trigger.js` | ✓ |
-| SessionStart | — | `hook-syntax-check.js` | ✓ |
-| SessionStart | — | `system-audit.js` | ✓ |
-| SessionStart | — | `open-quest-surfacer.js` | ✓ |
-| SessionStart | — | `system-check-trigger.js` | ✓ |
-| SessionStart | — | `worktree-cleanup-boot.js` | ✓ |
-| UserPromptSubmit | — | `attachment-context.trigger.hook.js` | ✓ |
-| UserPromptSubmit | — | `auto-skill-trigger.js` | ✓ |
-| UserPromptSubmit | — | `batch-ask.trigger.hook.js` | ✓ |
-| UserPromptSubmit | — | `best-practices-consult-gate.js` | ✓ |
-| UserPromptSubmit | — | `codemap-recon-consult.trigger.hook.js` | ✓ |
-| UserPromptSubmit | — | `domain-expansion-trigger.js` | ✓ |
-| UserPromptSubmit | — | `inventory-first-gate.js` | ✓ |
-| UserPromptSubmit | — | `MemoryClaimGate.js` | ✓ |
-| UserPromptSubmit | — | `mode-detector.js` | ✓ |
-| UserPromptSubmit | — | `multi-dim-evidence-gate.js` | ✓ |
-| UserPromptSubmit | — | `PlainFirstGate.js` | ✓ |
-| UserPromptSubmit | — | `prayer-gate.js` | ✓ |
-| UserPromptSubmit | — | `prepare-commit-trigger.js` | ✓ |
-| UserPromptSubmit | — | `prose-default-gate.js` | ✓ |
-| UserPromptSubmit | — | `quest-active-grounding.js` | ✓ |
-| UserPromptSubmit | — | `quest-objective-anchor.js` | ✓ |
-| UserPromptSubmit | — | `quest-resume-preflight.js` | ✓ |
-| UserPromptSubmit | — | `route-consult-gate.js` | ✓ |
-| UserPromptSubmit | — | `scout-completeness-gate.js` | ✓ |
-| UserPromptSubmit | — | `session-items-manager.js` | ✓ |
-| UserPromptSubmit | — | `skill-invocation-discipline-gate.js` | ✓ |
-| UserPromptSubmit | — | `ticket-gate.js` | ✓ |
-| UserPromptSubmit | — | `TurnChecklistGate.js` | ✓ |
-| UserPromptSubmit | — | `user-side-guardrail.js` | ✓ |
-| UserPromptSubmit | — | `word-ui-vocab-gate.js` | ✓ |
-| PreToolUse | Bash | `branch-at-apply-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `claude-md-edit-guard.js` | ✓ |
-| PreToolUse | Bash | `commit-gate.js` | ✓ |
-| PreToolUse | Bash | `convention-check-gate.gate.hook.js` | ✓ |
-| PreToolUse | Edit|Write | `convention-check-gate.gate.hook.js` | ✓ |
-| PreToolUse | Edit|Write | `design-consult-gate.gate.hook.js` | ✓ |
-| PreToolUse | Edit|Write | `edit-scope-gate.js` | ✓ |
-| PreToolUse | Read|Edit|Write | `known-bug-surfacer.hook.js` | ✓ |
-| PreToolUse | Edit|Write | `logic-blast-radius.discipline.hook.js` | ✓ |
-| PreToolUse | Edit|Write | `system-edit-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `no-code-comments-gate.js` | ✓ |
-| PreToolUse | Edit|Write | `pre-action-check-gate.js` | ✓ |
-| PreToolUse | mcp__postgres-mlkprod-pg__.* | `prod-db-confirm.discipline.hook.js` | ✓ |
-| PreToolUse | Edit|Write | `quest-phase-gate.gate.hook.js` | ✓ |
-| PostToolUse | Grep | `grep-rubric-gate.js` | ✓ |
-| PostToolUse | Bash | `quest-bounty.hook.js` | ✓ |
-| PostToolUse | — | `RecursiveLoopDetector.js` | ✓ |
-| PostToolUse | — | `slip-count-tracker.js` | ✓ |
-| Stop | — | `ask-back-gate.js` | ✓ |
-| Stop | — | `ba-understanding-table.discipline.hook.js` | ✓ |
-| Stop | — | `codemap-recon-consult.discipline.hook.js` | ✓ |
-| Stop | — | `de-output-integrity-checker.js` | ✓ |
-| Stop | — | `de-run-verify.js` | ✓ |
-| Stop | — | `de-step11-verdict-gate.discipline.hook.js` | ✓ |
-| Stop | — | `deploy-proof-gate.js` | ✓ |
-| Stop | — | `diagnostic-self-heal-gate.js` | ✓ |
-| Stop | — | `discipline.hook.js` | ✓ |
-| Stop | — | `full-address-trace-gate.discipline.hook.js` | ✓ |
-| Stop | — | `notes-on-test-data.js` | ✓ |
-| Stop | — | `operational-follow-through.js` | ✓ |
-| Stop | — | `over-generalization-gate.js` | ✓ |
-| Stop | — | `patch-script-gate.discipline.hook.js` | ✓ |
-| Stop | — | `predicate-box.discipline.hook.js` | ✓ |
-| Stop | — | `quest-context-load-gate.js` | ✓ |
-| Stop | — | `quest-deferrals-gate.discipline.hook.js` | ✓ |
-| Stop | — | `quest-doc-freshness.discipline.hook.js` | ✓ |
-| Stop | — | `quest-knowledge-save-gate.js` | ✓ |
-| Stop | — | `rcrl-emit-check.js` | ✓ |
-| Stop | — | `reply-log.js` | ✓ |
-| Stop | — | `show-gate.discipline.hook.js` | ✓ |
-| Stop | — | `silent-claim-drift-gate.js` | ✓ |
-| Stop | — | `stop-point-summary.discipline.hook.js` | ✓ |
-| Stop | — | `terse-gate.discipline.hook.js` | ✓ |
-| Stop | — | `ticket-criteria-gate.discipline.hook.js` | ✓ |
-| Stop | — | `verify-basis-gate.discipline.hook.js` | ✓ |
-| Stop | — | `veritas-claim-gate.js` | ✓ |
+| SessionStart | — | `hook-runtime.js` | ✓ |
+| SessionStart | — | `hook-runtime.js` | ✓ |
+| SessionStart | — | `hook-runtime.js` | ✓ |
+| SessionStart | — | `hook-runtime.js` | ✓ |
+| SessionStart | — | `hook-runtime.js` | ✓ |
+| SessionStart | — | `hook-runtime.js` | ✓ |
+| SessionStart | — | `hook-runtime.js` | ✓ |
+| SessionStart | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `adhoc-register.check.hook.js` | ✓ |
+| UserPromptSubmit | — | `dispatch-hooks.js` | ✓ |
+| UserPromptSubmit | — | `dispatch-hooks.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `local-deploy-gate.check.hook.js` | ✓ |
+| UserPromptSubmit | — | `reask.check.hook.js` | ✓ |
+| UserPromptSubmit | — | `release-mlk-plp-ask.check.hook.js` | ✓ |
+| UserPromptSubmit | — | `retrieve-sync-gate.check.hook.js` | ✓ |
+| PreToolUse | Agent|Workflow | `agent-spend-gate.check.hook.js` | ✓ |
+| PreToolUse | Edit|Write | `component-birth-gate.check.hook.js` | ✓ |
+| PreToolUse | Edit|Write | `dispatch-hooks.js` | ✓ |
+| PreToolUse | Read | `familiar-nudge.check.hook.js` | ✓ |
+| PreToolUse | Bash | `hook-runtime.js` | ✓ |
+| PreToolUse | Bash | `hook-runtime.js` | ✓ |
+| PreToolUse | Bash | `hook-runtime.js` | ✓ |
+| PreToolUse | Edit|Write | `hook-runtime.js` | ✓ |
+| PreToolUse | Edit|Write | `hook-runtime.js` | ✓ |
+| PreToolUse | Edit|Write | `hook-runtime.js` | ✓ |
+| PreToolUse | Edit|Write | `hook-runtime.js` | ✓ |
+| PreToolUse | Edit|Write | `hook-runtime.js` | ✓ |
+| PreToolUse | Edit|Write | `hook-runtime.js` | ✓ |
+| PreToolUse | Read|Edit|Write | `hook-runtime.js` | ✓ |
+| PreToolUse | mcp__postgres-mlkprod-pg__.* | `hook-runtime.js` | ✓ |
+| PreToolUse | — | `knowledge-first-gate.check.hook.js` | ✓ |
+| PreToolUse | Edit|Write | `pre-code-check.check.hook.js` | ✓ |
+| PreToolUse | Bash | `release-mlk-plp-push-gate.check.hook.js` | ✓ |
+| PreToolUse | Edit|Write | `release-mlk-plp-scope-gate.check.hook.js` | ✓ |
+| PostToolUse | — | `hook-runtime.js` | ✓ |
+| PostToolUse | — | `hook-runtime.js` | ✓ |
+| PostToolUse | Bash | `hook-runtime.js` | ✓ |
+| PostToolUse | Grep | `hook-runtime.js` | ✓ |
+| PostToolUse | Task|Agent|Workflow | `spawn-telemetry.check.hook.js` | ✓ |
+| Stop | — | `awam-no-resit-gate.check.hook.js` | ✓ |
+| Stop | — | `citation-cross-check.check.hook.js` | ✓ |
+| Stop | — | `delegation-plan-presence.check.hook.js` | ✓ |
+| Stop | — | `deliverable-lands-on-main.check.hook.js` | ✓ |
+| Stop | — | `dispatch-hooks.js` | ✓ |
+| Stop | — | `dispatch-hooks.js` | ✓ |
+| Stop | — | `falsifier-ran-check.check.hook.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `hook-runtime.js` | ✓ |
+| Stop | — | `scope-claim-census.check.hook.js` | ✓ |
+| Stop | — | `test-scenario-login-gate.check.hook.js` | ✓ |
 <!-- HOOK-REGISTRY:AUTO-END -->
 
 ### 3.1 SessionStart (7 hooks)
@@ -417,7 +427,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | `familiar` | `/familiar <file>` | sub-agent read + summary for big files |
 | `checklist` | `/checklist` | universal task checklist for quest phase boundaries |
 | `annotations` | `/annotations` | PDF annotation extraction |
-| `git-health` | `/git-health` | 3-tier safety git check |
+| `git-health` | `/git-health` | 3-tier safety git check. Tier-1 case-collision recipe is 3-part (refspec → stale-ref delete → two-fetch verify) as of v1.1 2026-08-10 — refspec alone leaves `incorrect old value provided`. Procedure detail + applied exclusion lists: `etanah-knowledge/melaka/GIT-REPO-HYGIENE.md` |
 | `system-check` | 30-day boot trigger | system audit |
 | `etanah-rahsia-bypass` | etanah-specific need | rahsia document access |
 | `usage-guidance` | user-side helper | usage advice |

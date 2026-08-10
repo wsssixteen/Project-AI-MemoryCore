@@ -27,7 +27,7 @@ Run these as `git` commands; if they reveal a fixable issue, fix it without aski
 
 | Check | Detection | Auto-fix |
 |---|---|---|
-| Fetch dry-run failure | `git fetch --prune --dry-run origin 2>&1` returns case-collision error | Identify the colliding ref pair; add negative refspec `^refs/heads/<ref>` via `git config --add remote.origin.fetch` for the variant deemed non-canonical (capital-case typically wins as non-canonical when lowercase exists) |
+| Fetch dry-run failure | `git fetch --prune --dry-run origin 2>&1` returns case-collision error | Run the **3-part** case-collision recipe below. A negative refspec alone does NOT fix it. |
 | Broken worktree metadata | `git worktree list` shows path that doesn't exist | `git worktree prune` |
 | Object pack bloat | `git count-objects -v` shows `count > 6700` loose objects | `git gc --auto` |
 | Stale local branches | `git branch --merged main` returns branches AND each is NOT `main` / current / has no upstream | List for confirmation (Tier 2) — not auto-delete |
@@ -61,6 +61,20 @@ find ~ -name "eclipse.ini" 2>/dev/null | head -1 | xargs cat 2>/dev/null | head 
 ```
 
 If Eclipse detected — **DO NOT recommend `git refs migrate --ref-format=reftable`** even if it would resolve a case-collision. Use the negative-refspec workaround (Tier 1) instead. The reftable format breaks EGit/JGit versions before 6.5 → project shows as `.invalid` in Eclipse.
+
+**For the Melaka repos this pre-check is already settled**: `etanah-pelupusan` and `etanah-awam` are developed in Eclipse (`project_jboss_launched_by_eclipse`), so reftable is permanently banned there — skip the detection and go straight to the 3-part recipe.
+
+### Tier-1 case-collision recipe — 3 parts, all mandatory
+
+Full procedure, worked example and the applied exclusion lists live in
+`projects/coding-projects/active/etanah-knowledge/melaka/GIT-REPO-HYGIENE.md` §1. In short:
+
+1. **Enumerate** the colliding refs — never guess which folders collide:
+   `git for-each-ref --format="%(refname:lstrip=3)" refs/remotes/origin` grouped case-insensitively, keep groups with count > 1.
+2. **Exclude** the minority casing — `git config --add remote.origin.fetch "^refs/heads/<folder>/*"`. Use a folder glob when the whole folder is foreign; an **exact ref** when the collision is one dead branch inside a folder still in use, so future branches there still fetch.
+3. **Delete the stale refs** — `git update-ref -d <each excluded ref still stored locally>`. **This part is the one that gets skipped.** `packed-refs` is a single text file and stays case-sensitive even on a case-insensitive filesystem, so the old entries survive step 2 and the next fetch fails with `incorrect old value provided` instead.
+
+**Verify by fetching twice.** The second fetch must produce **no output** and exit 0 — one clean fetch is not proof, it may simply have had updates to apply.
 
 ## Steps
 
@@ -115,7 +129,8 @@ At Quest Phase 0:
 - `.claude/skills/env-check/SKILL.md` — sibling pre-flight skill (env config); git-health runs after.
 - `Feature/Domain-Expansion/expansion-protocol.md` — DE Step 11 worktree cleanup overlaps; git-health detects but defers worktree-remove to Tier 2 (DE Step 11 handles the actual remove).
 - Past incidents: 2026-05-25 case-collision (`sgr/eSokonganCR` vs `sgr/esokonganCR`) — Tier 1 would have caught + fixed. Reftable migration that broke Eclipse — Eclipse pre-check now blocks this exact recovery path.
+- `projects/coding-projects/active/etanah-knowledge/melaka/GIT-REPO-HYGIENE.md` §1 — the full case-collision procedure + the exclusion lists applied to both Melaka repos on 2026-08-10.
 
 ---
 
-*Version: 1.0 | Last updated: 2026-05-25 — built per Design Memo applied via system-design v1.1. v1 confirmation discipline: Tier 1 auto-fix prompts a one-line confirm for first 3 cycles before going truly silent. Eclipse pre-check encoded from 2026-05-25 lesson.*
+*Version: 1.1 | Last updated: 2026-08-10 — Tier-1 case-collision row expanded into the 3-part recipe (enumerate → exclude → delete stale refs) + two-fetch verification, and the Eclipse pre-check marked pre-settled for the Melaka repos. **Why**: the v1.0 recipe stopped at the negative refspec, which is genuinely insufficient — applying it to `etanah-awam` left `error: fetching ref … failed: incorrect old value provided` because `packed-refs` keeps case-sensitive entries the config change cannot reach. A v1.0-following run would have reported a fix that still errored. **Spec-preservation diff (system-design Rule 6 v1.2a)**: all v1.0 specs preserved — 3-tier model, silent-if-clean, Eclipse reftable ban, Tier-2 prompt set, Tier-3 surfaces, v1-confirm discipline, Quest Phase 0 integration, the does-NOT-do list; zero dropped. Additive only. **Fire + effect check (6b/6c)**: no fixture eval exists (skill-only Feature, no hook) — validated instead by a live end-to-end run this session on both `etanah-awam` (22 exclusions, 48 stale refs) and `etanah-pelupusan` (1 exclusion, 1 stale ref), each verified by two consecutive fetches where the second produced no output and exit 0.*
