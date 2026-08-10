@@ -23,7 +23,9 @@
  *   semantic, enforced by self-discipline + みや review; this hook only
  *   enforces the mechanical annotation check.
  *
- * TWO checks (advisory v1, per /system-rules R4 — both flip to block once validated):
+ * THREE checks (advisory v1, per /system-rules R4 — flip to block once validated):
+ *   CHECK 3 — reviewer-obvious safe: broad LIKE '%' in a handed DELETE/UPDATE → recommend
+ *     pinned IN ('v1','v2',…) + a leading BEFORE SELECT (added 2026-08-10 per みや, #273461).
  *   CHECK 1 — Expected-outcome annotation:
  *   - Reply contains a SQL DML statement (UPDATE … SET / DELETE FROM / INSERT INTO)
  *     inside a fenced code block
@@ -83,6 +85,12 @@ const TXN_TABLE_UPDATE = /```[\w]*\s*[\s\S]*?\bUPDATE\s+(?:[\w]+\.)?(?:umm_aplik
 
 // Stage-Match marker — either the block heading, or the explicit N/A token.
 const STAGE_MATCH_MARKER = /Stage-Match\s+Block|stage-match\s+block|⏭\s*N\/A\s*[—-]?\s*reference\s+table/i;
+
+// CHECK 3 — reviewer-obvious safe (added 2026-08-10 per みや, #273461 delete audit).
+// A handed DELETE/UPDATE whose target WHERE uses a broad LIKE '...%' pattern READS as
+// unsafe to a reviewer even when logically bounded. Safe-by-construction that reads as
+// safe (pinned IN ('v1','v2',…) + a leading BEFORE SELECT) beats safe-by-prior-check.
+const BROAD_LIKE_IN_DML = /```[\w]*\s*[\s\S]*?(?:\bDELETE\s+FROM\b|\bUPDATE\s+[\w."`]+\s+SET\b)[\s\S]*?\bLIKE\s+'[^']*%'[\s\S]*?```/i;
 
 function lastAssistantText(transcriptPath) {
   let raw;
@@ -160,8 +168,25 @@ process.stdin.on('end', () => {
       logFire('advisory-no-stage-match', 'txn-table-update-no-block');
     }
 
+    // CHECK 3 — reviewer-obvious safe (broad LIKE '%' in a handed DELETE/UPDATE)
+    if (BROAD_LIKE_IN_DML.test(text)) {
+      advisories.push([
+        '⚙️  patch-script-gate CHECK 3 — reviewer-obvious safe.',
+        '   Your DELETE/UPDATE targets rows with a broad `LIKE \'...%\'` pattern — it reads as',
+        '   UNSAFE to a reviewer even when logically bounded (per みや, #273461). A critical/PROD',
+        '   script must LOOK safe at a glance, like readable code — safe-by-construction beats',
+        '   safe-by-prior-check.',
+        '   Rewrite to:',
+        '     1. pinned named values → WHERE <col> IN (\'v1\',\'v2\',\'v3\')  (not LIKE \'x%\')',
+        '     2. a leading BEFORE SELECT that shows the exact rows before any mutation',
+        '     3. simple readable guards; do not bury safety in an opaque NOT IN (SELECT …)',
+        '   Ref: feedback_readable_safe_script.md.',
+      ].join('\n'));
+      logFire('advisory-broad-like', 'dml-broad-like-not-pinned');
+    }
+
     if (advisories.length === 0) {
-      // both checks passed (or neither triggered)
+      // all checks passed (or none triggered)
       if (hasSqlDml) logFire('passed-check1', 'sql-dml-with-outcome');
       if (hasTxnUpdate) logFire('passed-check2', 'txn-update-with-stage-match');
       process.exit(0);
