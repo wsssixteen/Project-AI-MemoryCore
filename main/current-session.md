@@ -1,5 +1,39 @@
 # Current Session
 
+## 2026-08-10 09:1x — 273455 AFTERMATH: HIS FOUR QUESTIONS FOUND WHAT MY RUBRIC HAS NO ROW FOR
+
+**Append to the 08-07 block below. No code shipped. The fix was already on `mlk/int-env`; today was
+the aftermath analysis I should have run before calling it done.**
+
+### ▶▶ NEXT SESSION — START HERE
+
+| Priority | Ticket | State | First step |
+|---|---|---|---|
+| **1** | **273460** | Phase 0 · oldest open, due 12 Aug | TRG blast-radius check |
+| — | **273455** | shipped `mlk/int-env` @ `52a130c08a` | ⬜ **UNDECIDED: 29 apps / 170 letters already generated hold the blank values.** Regeneration path untraced |
+| — | board | 273707 · 273921 · 273956 · 274136 · 274318 · 274532 | 274136 + 274532 have no local block yet |
+
+### What his four questions found
+
+| He asked | Answer | I had not looked |
+|---|---|---|
+| *"is there permohonan with defects"* | **58** on PROD (61 app-hakmilik rows) of 95 Awam PT/PSBS | ✗ |
+| *"does our fix cater permohonan past SKM"* | **35 already past SKM**; 12 of 13 tugasan mount the panel; the fix has **no tugasan condition** | ✗ |
+| *"what happens to already generated"* | **29 apps · 170 `umm_a_dok_keluaran` rows** keep the blanks — a file, not a view | ✗ |
+| *"that regression is only for clearing right"* | correct — verified in `PelupusanService.saveMaklumatTanahVOIntoAppHakmilik():4412`, all 10 fields written | partially |
+
+Every one was DB-answerable before I shipped. All four were queries. He ran them by asking.
+
+### Built
+
+- `pre-code-check` **v1.4** — new required `fallback-precedence` row: primary-read-first · guard-on-absence · **what happens when the user deliberately empties the field**. `"It only fills blanks"` explicitly rejected as an answer. Evals 10/10 + 10/10, RED first.
+- 🚨 **The forge had been refusing every refine on `pre-code-check` since 2026-08-04** — `GOOD_PREFIX` never gained the five checks added that day, so the eval sat red and `core/forge.js` blocked all refinement. Three days dark. Fixed, with a comment in both evals.
+
+### Open
+
+- **29 applications with letters already on file** — nobody has ruled on whether BA must re-jana. Downstream of a close I already called done.
+- Staging fixtures pulled for BA (`PTMLK/01/L/PT/2026/13` best) but **the fix is not on `mlk/stag-env`** — merge + deploy there, or give her an mlit app instead.
+- Proposed **AFTERMATH block** for the Rubric (5 rows: population · progression · artifacts · self-heal-vs-patch · reverse regression) — `todo.md` Q1, routed through `system-design` before building.
 ## 2026-08-10 09:16 — ADHOC: THE FETCH ERROR THAT WAS NEVER AN ERROR (both Melaka repos fixed)
 
 **No ticket, no quest touched. みや asked why a fetch error keeps appearing and why retrying is
