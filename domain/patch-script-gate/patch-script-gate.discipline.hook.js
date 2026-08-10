@@ -23,9 +23,12 @@
  *   semantic, enforced by self-discipline + みや review; this hook only
  *   enforces the mechanical annotation check.
  *
- * THREE checks (advisory v1, per /system-rules R4 — flip to block once validated):
+ * FOUR checks (advisory v1, per /system-rules R4 — flip to block once validated):
  *   CHECK 3 — reviewer-obvious safe: broad LIKE '%' in a handed DELETE/UPDATE → recommend
  *     pinned IN ('v1','v2',…) + a leading BEFORE SELECT (added 2026-08-10 per みや, #273461).
+ *   CHECK 4 — never delete registry/master ind_* tables (an ind_ row = succeeded to daftar,
+ *     permanent; Aaron #273461). Fires on DELETE FROM ind_*; bypass [skip-ind-delete: <reason>].
+ *   Eval: node domain/patch-script-gate/eval.js (15 fixtures, all green 2026-08-10).
  *   CHECK 1 — Expected-outcome annotation:
  *   - Reply contains a SQL DML statement (UPDATE … SET / DELETE FROM / INSERT INTO)
  *     inside a fenced code block
@@ -90,7 +93,13 @@ const STAGE_MATCH_MARKER = /Stage-Match\s+Block|stage-match\s+block|⏭\s*N\/A\s
 // A handed DELETE/UPDATE whose target WHERE uses a broad LIKE '...%' pattern READS as
 // unsafe to a reviewer even when logically bounded. Safe-by-construction that reads as
 // safe (pinned IN ('v1','v2',…) + a leading BEFORE SELECT) beats safe-by-prior-check.
-const BROAD_LIKE_IN_DML = /```[\w]*\s*[\s\S]*?(?:\bDELETE\s+FROM\b|\bUPDATE\s+[\w."`]+\s+SET\b)[\s\S]*?\bLIKE\s+'[^']*%'[\s\S]*?```/i;
+const BROAD_LIKE_IN_DML = /```[\w]*\s*[\s\S]*?(?:\bDELETE\s+FROM\b|\bUPDATE\s+[\w."`]+\s+SET\b)[\s\S]*?\bLIKE\s+'[^']*%[^']*'[\s\S]*?```/i;
+
+// CHECK 4 — never delete registry/master tables (added 2026-08-10 per みや, #273461 / Aaron).
+// An `ind_*` row = a record that succeeded to daftar and is PERMANENT; deleting it destroys
+// registered data with almost no legitimate reason. Fires on a DELETE FROM ind_* in a fence.
+const DELETE_FROM_IND = /```[\w]*\s*[\s\S]*?\bDELETE\s+FROM\s+(?:[\w]+\.)?ind_[\w]+/i;
+const IND_DELETE_EXEMPT = /\[skip-ind-delete:/;
 
 function lastAssistantText(transcriptPath) {
   let raw;
@@ -183,6 +192,20 @@ process.stdin.on('end', () => {
         '   Ref: feedback_readable_safe_script.md.',
       ].join('\n'));
       logFire('advisory-broad-like', 'dml-broad-like-not-pinned');
+    }
+
+    // CHECK 4 — never delete registry/master ind_* tables (pillar)
+    if (DELETE_FROM_IND.test(text) && !IND_DELETE_EXEMPT.test(text)) {
+      advisories.push([
+        '⚙️  patch-script-gate CHECK 4 — 🚨 DELETE on an ind_* (registry/master) table.',
+        '   An `ind_*` row = a record that succeeded to daftar and is PERMANENT (Aaron, #273461).',
+        '   Deleting `ind_permit_lesen` / any `ind_*` destroys registered data — almost NEVER correct.',
+        '   Do NOT delete it. If the accidental-shell case truly needs it, confirm with a senior dev',
+        '   AND use the pinned + `trkh_mula IS NULL` + orphan-guarded form, then bypass with',
+        '   [skip-ind-delete: <reason + who approved>].',
+        '   Default: reset the application side (umm_a_*) only; leave the registry intact.',
+      ].join('\n'));
+      logFire('advisory-ind-delete', 'delete-from-ind-registry');
     }
 
     if (advisories.length === 0) {
