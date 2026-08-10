@@ -74,6 +74,36 @@ check('F9 any melaka knowledge file clears the gate', !r.blocked, 'blocked=' + r
 r = run({ tool_input: { file_path: 'E:/Projects/Melaka/etanah-pelupusan/src/main/resources/config/MLK/tugasan.config.json' }, transcript_path: makeTranscript('config peek') });
 check('F10 etanah .json → no fire', !r.blocked, 'blocked=' + r.blocked);
 
+// --- v2 FLOWABLE-CHANGE branch (#274510, miya 2026-08-07) ---
+const FKN = 'reading projects/coding-projects/active/etanah-knowledge/melaka/FLOWABLE-KNOWLEDGE.md first';
+
+// F11: .sql touching umm_a_tgsn with no FLOWABLE-KNOWLEDGE read → BLOCK
+r = run({ tool_input: { file_path: 'C:/Tasks/patch-274510.sql', content: 'UPDATE umm_a_tgsn SET flag_aktif = ...' }, transcript_path: makeTranscript('writing the patch') });
+check('F11 flowable .sql, no deep-doc read → BLOCK', r.status === 2, 'status=' + r.status);
+
+// F12: the block names FLOWABLE-KNOWLEDGE.md
+check('F12 flowable block names FLOWABLE-KNOWLEDGE.md', /FLOWABLE-KNOWLEDGE\.md/.test(r.combined), r.combined.slice(0, 140));
+
+// F13: same .sql AFTER reading FLOWABLE-KNOWLEDGE.md → allow
+r = run({ tool_input: { file_path: 'C:/Tasks/patch-274510.sql', content: 'UPDATE umm_a_tgsn SET flag_aktif = ...' }, transcript_path: makeTranscript(FKN + '\nnow the patch') });
+check('F13 flowable .sql after deep-doc read → allow', r.status !== 2, 'status=' + r.status);
+
+// F14: a .bpmn20.xml edit with no deep-doc read → BLOCK
+r = run({ tool_input: { file_path: 'E:/Projects/Melaka/.../MLK_PLP_PT.bpmn20.xml', new_string: '<userTask .../>' }, transcript_path: makeTranscript('tweaking the bpmn') });
+check('F14 .bpmn edit, no deep-doc read → BLOCK', r.status === 2, 'status=' + r.status);
+
+// F15: a generic knowledge read must NOT clear the flowable branch (needs the specific doc)
+r = run({ tool_input: { file_path: 'C:/Tasks/patch-274510.sql', content: 'DELETE FROM umm_tgsn_semasa WHERE ...' }, transcript_path: makeTranscript('read etanah-knowledge/melaka/DATABASE.md earlier\nnow the patch') });
+check('F15 generic knowledge does NOT clear flowable branch', r.status === 2, 'status=' + r.status);
+
+// F16: flowable-core source file → BLOCK on the deep doc
+r = run({ tool_input: { file_path: 'E:/Projects/Melaka/etanah-pelupusan/src/main/java/my/gov/etanah/pelupusan/web/form/internal/InitiateBPMFlowableForm.java' }, transcript_path: makeTranscript('opening the alter form') });
+check('F16 flowable-core .java → BLOCK on deep doc', r.status === 2, 'status=' + r.status);
+
+// F17: a plain .sql NOT touching flowable → no fire
+r = run({ tool_input: { file_path: 'C:/Tasks/evidence-plain.sql', content: 'SELECT * FROM ind_urusan' }, transcript_path: makeTranscript('unrelated query') });
+check('F17 non-flowable .sql → no fire', r.status !== 2, 'status=' + r.status);
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
 console.log('\nknowledge-first-gate.eval: ' + (results.length - failed) + '/' + results.length + ' green');

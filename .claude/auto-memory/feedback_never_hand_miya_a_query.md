@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: f4866946-15b3-4424-8145-4b7ce2a52bd2
-  modified: 2026-08-04T18:34:46.804Z
+  modified: 2026-08-10T01:17:53.517Z
 ---
 
 🚨 **I run the query. Miya does not.** Handing him a `SELECT` to paste and run is BANNED when I
@@ -15,6 +15,19 @@ hold a Postgres MCP that reaches the schema — and I reach effectively all of t
 
 The only legitimate hand-offs left: a **write** (INSERT/UPDATE/DELETE patch script he must approve
 and run), or a schema I genuinely cannot reach (e.g. a DMS datasource with no MCP).
+
+🚨 **And when the hand-off IS legitimate, it is a `.sql` FILE — never queries pasted into chat.**
+Write it into the Task folder as the one sanctioned evidence/patch script (`evidence-<key>.sql` /
+`patch-<key>.sql`, per the folder-contents rule), unqualified, no JOIN, complete values — then point
+him at the path. He forwards a file; he does not reassemble fenced blocks into one.
+**Why** (2026-08-07, ESOKONGAN #274510): I listed four Flowable queries as separate chat fences for
+infra to run. miya: *"We cannot access those parts of DB, please remember to always prepare a
+script."* Chat blocks are for him to READ; a script is what actually gets forwarded and run.
+
+🚨 **Verify every hand-off script against a live catalog before it leaves.** Same ticket, same day:
+the script reached infra with `proc_inst_id_` on four Flowable job tables whose real column is
+`process_instance_id_`, and died on their first statement — while stg1 carried the identical schema
+and was never consulted. `domain/sql-schema-verify/` now blocks on this mechanically.
 
 **Why** (2026-08-05, miya, verbatim): *"it's fucking annoying you kept asking me for SELECT queries
 every single fucking time. Not helping you're a fucker that kept making the wrong queries."* Two

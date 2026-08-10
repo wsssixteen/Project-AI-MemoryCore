@@ -21,6 +21,7 @@
 - [feedback_untracked_confidential.md](feedback_untracked_confidential.md) — Untracked files in main repo (etanah-knowledge, QA-* diagnostics) are intentionally confidential; don't flag or push to commit
 - [feedback_verify_before_claim.md](feedback_verify_before_claim.md) — Re-read code before asserting; hold positions backed by line evidence; one passing test is inconclusive
 - [feedback_fix_dont_reroute.md](feedback_fix_dont_reroute.md) — 🚨 Broken thing reported → FIX IT; never hand him a new workflow that dodges it, never suggest Maven Update/Clean/republish (he's always tried them)
+- [feedback_full_path_always.md](feedback_full_path_always.md) — 🚨 Every file named gets its FULL absolute path in plain text; markdown links to Task/projects folders are dead because they resolve against the worktree cwd — not OneDrive's fault
 - [feedback_never_hand_miya_a_query.md](feedback_never_hand_miya_a_query.md) — 🚨 Never hand miya a SELECT to run — I hold mlit/stg1/stg2/prod MCP access, so I run it; only writes and unreachable schemas get handed over
 
 ## User

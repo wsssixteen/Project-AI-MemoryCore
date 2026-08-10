@@ -389,6 +389,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\scope-claim-census\\\\scope-claim-census.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\sql-schema-verify\\\\sql-schema-verify.check.hook.js\""
           }
         ]
       }
