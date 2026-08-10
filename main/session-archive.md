@@ -4,6 +4,17 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-10 16:11 — Session Recap (PLPS NPE #273461v2 + PRBB YB #273956)
+
+**Tickets moved:**
+- #273956 (PRBB YB, PROD): patch-273956.sql EXTENDED with generateSurat TIDAK→YA (req c — JT/YB re-select unblock). Doc-status patch (req b) alone insufficient. Verified stg2. Passed to BA. YB Ngwe master data clean.
+- #273461 (PLPS Jana NPE): rework v2. Root cause = #261049 unguarded vpl × #273461 PLPS permit-defer. Fix PelupusanService.java:17026 `if(vpl==null) continue`. Commit 1437ae12ac / branch mlk/esokongan/273461v2 / merged int-env f92c89a3ab. Test PASS (PTMLK/01/L/PLPS/2026/34, mkit, muhammadshafiq). Blast radius 19. PENDING: internal deploy run + planned-release list.
+- QA-273460: untouched (phase 0).
+
+**MemoryCore changes:** logic-blast-radius v1.1 (DATA-SUPPLY BLAST RADIUS check); quest/SKILL.md:539 + quest-protocol.md:149 (return-to-mlk/master = LAST step after int-env merge, gated on git branch --show-current); slip logged (phase-close).
+
+**Repo state:** etanah on mlk/master (returned). .settings churn stashed ("post-273461v2 return to master").
+
 ## 2026-08-06 19:56 → 2026-08-07 10:37 — 273455 CYCLE-2 SHIPPED, AND A CENSUS ON THE WRONG TABLE COST HIM FOUR CHALLENGES
 
 **BA reopened 273455 the morning after we closed it. The new defect was one field; the census
@@ -3287,6 +3298,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

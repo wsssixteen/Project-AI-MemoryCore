@@ -1,6 +1,6 @@
 ---
 name: logic-blast-radius
-description: Use when about to Edit a stateful-flow etanah .java file (Form/Bean/Handler/Helper/Service/Controller/Manager) during an active quest — enumerate every action×state path the change touches before editing. Trigger phrases — "blast radius", "logic blast radius", "scenario matrix", "init() fix", "stateful flow", "does this fire on every click", "what else calls this", "state x trigger matrix". ⚠️ ADVISORY-ONLY today — the planned logic-blast-radius-gate.js PreToolUse hook was NEVER BUILT (ghost-claim corrected 2026-07-19 system-check); the discipline relies on this skill firing. Built 2026-07-02 (QA-268273).
+description: Use when about to Edit a stateful-flow etanah .java file (Form/Bean/Handler/Helper/Service/Controller/Manager) during an active quest — enumerate every action×state path the change touches before editing. Trigger phrases — "blast radius", "logic blast radius", "scenario matrix", "init() fix", "stateful flow", "does this fire on every click", "what else calls this", "state x trigger matrix", "data-supply blast radius", "skip stops creating data", "if (!URS_X) skip", "downstream consumer null". ⚠️ ADVISORY-ONLY today — the planned logic-blast-radius-gate.js PreToolUse hook was NEVER BUILT (ghost-claim corrected 2026-07-19 system-check); the discipline relies on this skill firing. Built 2026-07-02 (QA-268273).
 metadata:
   type: discipline-primitive
   sub-layer: discipline
@@ -52,6 +52,33 @@ Every `Outcome`/`Safe?` cell MUST cite an OBSERVED `file:line` or a live test/lo
 
 The matrix surfaced the ✗ rows the original 1-scenario fix never considered — Batal and the postback path were never traced before the edit shipped.
 
+## Reverse direction — a skip/guard that STOPS producing data (added 2026-08-10, #261049×#273461)
+
+The matrix above catches "does my change fire on paths I didn't intend?" This catches the **inverse**: "does my change STOP writing data that something downstream assumes exists?"
+
+**Fires when a diff**: adds `if (!URS_X){ create/populate/save }` (or any `if`/early-`return` that gates a create), removes a setter/save call, or narrows when a field/row gets written. A skip that removes data creation just **moves the crash downstream** — it is as dangerous as a null-deref.
+
+**Rule**: enumerate every DOWNSTREAM consumer that READS the now-unwritten field/row, and confirm each null-guards it. One row per reader, each cell an OBSERVED `Class.method():line`.
+
+```
+═══ DATA-SUPPLY BLAST RADIUS ═══
+| Field/row no longer written (by this skip) | Downstream reader Class.method():line | Guards null? | Safe? | Evidence |
+|---|---|---|---|---|
+| <col/row> for <urusan/state>              | <Class.method():line>                 | Y/N          | ✓/✗/⚠ | <file:line> |
+```
+
+**Worked example — #261049 × #273461 (PLPS Jana NPE)**:
+
+```
+═══ DATA-SUPPLY BLAST RADIUS ═══
+| Field no longer written                         | Downstream reader                                                    | Guards null? | Safe? | Evidence |
+|---|---|---|---|---|
+| umm_a_permit_lesen.versi_permit_lesen_id (PLPS) | PelupusanService.saveMaklumatPermitLesen():17026 vpl.getPermitLesen() | N | ✗ | PelupusanService.java:17028 NPE |
+| umm_a_permit_lesen.no_permit_lesen (PLPS)       | (same method, permit lookup null → enters vpl branch)                | N | ✗ | PelupusanService.java:17022 |
+```
+
+`#273461` wrapped `saveNoPermitLesen` + `saveMaklumatPermitToInduk` in `if (!URS_PLPS)` (`MlkPengiraanBayaranLesenForm.java:644`) → for PLPS those fields stop being written → the one downstream reader (`saveMaklumatPermitLesen`, unguarded since `#261049`) NPEs. That reader was never enumerated when the skip shipped. **Check: any `if (!URS_X)` around a create/save demands a grep of every reader of what it stopped writing.**
+
 ## Bypass
 
 `[skip-logic-blast: <reason>]` anywhere in the session — for a genuinely non-stateful change wrongly matched by the filename pattern, or an audit/compliance walkthrough. Visible in transcript; not silent.
@@ -71,3 +98,5 @@ The matrix surfaced the ✗ rows the original 1-scenario fix never considered �
 ---
 
 *Discipline primitive skill. Built 2026-07-02 (QA-268273) as the structural procedure; its planned gate pair was never built (corrected 2026-07-19).*
+
+*v1.1 — 2026-08-10. Added "Reverse direction — a skip/guard that STOPS producing data" (DATA-SUPPLY BLAST RADIUS matrix) + trigger phrases, from the #261049×#273461 PLPS Jana NPE (an `if (!URS_PLPS)` skip stopped writing `versi_permit_lesen_id`/`no_permit_lesen`; a downstream `saveMaklumatPermitLesen` deref NPE'd for ~19 PLPS permohonan). Merge-in-place per system-rules R1/R2 — extends the sibling, no new Feature. Spec-preservation: all v1.0 content (forward matrix, worked example, bypass, cross-refs) preserved; addition only.*

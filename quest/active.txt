@@ -899,6 +899,7 @@ commit=93bf7168b4
 superseded_commit=8bd34da47c
 sql_patch=patch-273461.sql attached to Redmine 2026-08-06 11:11 — release team runs it at release; NOT in git
 test_evidence=video attached to Redmine 2026-08-06 10:43 (journal A9)
+rework_v2=2026-08-10 — PLPS Jana Surat Keputusan NPE (SIDE-EFFECT of #273461's own fix). saveMaklumatPermitLesen NPE'd: #273461 deferred permit creation for PLPS (MlkPengiraanBayaranLesenForm.java:644 if(!URS_PLPS)) → versi_permit_lesen_id null → permit==null fallback (unguarded since #261049) derefs null vpl. FIX: PelupusanService.java:17026 if(vpl==null) continue. Branch mlk/esokongan/273461v2, commit 1437ae12ac, merged mlk/int-env @ f92c89a3ab (both pushed). Local test PASS — PTMLK/01/L/PLPS/2026/34 (mkit, muhammadshafiq@melaka.gov.my, tugasan KKMMKN). Blast radius 19 PLPS on mlit. Test env = mkit (permohonan NOT on stg2). PENDING (miya): run internal deploy (deployment-scripts/mlit sh deploy-pelupusan.sh → mlk/int-env) + add #273461 to Redmine planned-release list.
 
 qa=QA-273465
 quest_start_ts=2026-08-06T11:55:54.368Z
@@ -1066,6 +1067,7 @@ patch_applied=2026-08-06
 branch=n/a-data-patch-no-code
 closed=2026-08-10
 close_note=RECONCILED from live Redmine 2026-08-10 - Ready in PROD, Muhammad Shafiq Mohd Yohani, 100pct
+update_2026-08-10=EXTENDED patch-273956.sql — request (c) "patch JT+YB status so user can choose again" DID need a patch (supersedes line 1062). Root cause: umm_a_jabatan_teknikal.mklmt_tmbhn."generateSurat"="TIDAK" → PelupusanHelper.java:210-213 sets generatedJT=true → iterator.remove() drops the row from the JT+YB list at PSJT, so YB Ngwe (agensi 51) + 5 JT are hidden/un-re-selectable ("YB tidak papar"). Read from mklmt_tmbhn at PelupusanSearchService.java:1349 (blank defaults TIDAK). Doc status_id=NULL patch (b) does NOT touch this. Added UPDATE umm_a_jabatan_teknikal SET mklmt_tmbhn=REPLACE(...'"generateSurat":"TIDAK"'->'"YA"') WHERE aplikasi + LIKE TIDAK (6 rows). Verified stg2: 6 flipped, user re-selected + regenerated both Surat. YB Ngwe master data (rjk_senarai_ahli_kumpulan 38692) CLEAN. Passed to BA (Mira/Fizah). #273461 = related-module, NOT duplicate.
 
 qa=QA-273707
 quest_start_ts=2026-08-06T14:06:24.003Z

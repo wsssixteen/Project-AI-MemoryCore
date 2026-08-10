@@ -536,7 +536,9 @@ One straightforward pass covers debugging → implementation. Be as straightforw
 
 ### Phase 1 Closure — Git Sequence
 
-The ordered `pull → checkout -b → stage → commit → push → /verify → checkout mlk/master → pull --ff-only → update active.txt (via quest/active-cli.js — never ask, status=closed at Phase 1, archived at Phase 2 per canonical enum)` close-out sequence — see `quest/quest-protocol.md` → Phase 1 close-out + the **Commit + Push hard rule** + the **branch-at-Apply ban** (line 757 — branch creation is at Commit prep, never at Apply). Runs ONLY after `local_test_confirmed=true`. Durable fix in flight = `/branch-and-push` script (todo.md Q2).
+The ordered `pull → checkout -b → stage → commit → push → /verify → [merge → mlk/int-env + push int-env, when the ticket deploys to internal] → 🚨 checkout mlk/master (LAST) → pull --ff-only → update active.txt (via quest/active-cli.js — never ask, status=closed at Phase 1, archived at Phase 2 per canonical enum)` close-out sequence — see `quest/quest-protocol.md` → Phase 1 close-out + the **Commit + Push hard rule** + the **branch-at-Apply ban** (line 757 — branch creation is at Commit prep, never at Apply). Runs ONLY after `local_test_confirmed=true`. Durable fix in flight = `/branch-and-push` script (todo.md Q2).
+
+**🚨 Return-to-`mlk/master` is the LAST step and is NON-OPTIONAL — added 2026-08-10 per みや (kept failing after the int-env merge).** The `git merge … → mlk/int-env` step **leaves the repo checked out ON `mlk/int-env`**, so "return to master" is no longer a no-op you can skip — it is the one step that silently dropped every time we added the int-env deploy. After `git push origin mlk/int-env`, ALWAYS: `git checkout mlk/master` → `git pull --ff-only`. Verify with `git branch --show-current` = `mlk/master` before declaring the close done. **Banned**: ending a Phase-1 close/merge on `mlk/int-env` or the ticket branch.
 
 ---
 

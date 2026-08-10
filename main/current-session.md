@@ -124,3 +124,5 @@ fetch fails with `incorrect old value provided`. `git update-ref -d` on each is 
 
 - **Stash held, not applied** — `stash@{0}` "stale worktree reversions pre-DE 2026-08-10 (OneDrive lag vs dfbc544)". Four files in this worktree were OLDER than `origin/main` and would have reverted QA-273201/QA-273455 state plus the ENV-ARCHITECTURE + TRAINING-lane knowledge rows. Stashed rather than committed or discarded. **Do not pop it** — its `index.md` predates the GIT-REPO-HYGIENE row added today. Drop it once confirmed.
 - The pelupusan `259112` casing pair is resolved: both branches were fully merged into `mlk/master`, 0 ahead. Aaron's `mlk/CR/259112` (07-31) superseded みや's `mlk/cr/259112` (07-16). Excluded by exact ref, not folder glob, so future lowercase `mlk/cr/` branches still fetch.
+
+---
