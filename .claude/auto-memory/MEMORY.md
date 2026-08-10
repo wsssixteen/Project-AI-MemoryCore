@@ -22,6 +22,7 @@
 - [feedback_verify_before_claim.md](feedback_verify_before_claim.md) — Re-read code before asserting; hold positions backed by line evidence; one passing test is inconclusive
 - [feedback_fix_dont_reroute.md](feedback_fix_dont_reroute.md) — 🚨 Broken thing reported → FIX IT; never hand him a new workflow that dodges it, never suggest Maven Update/Clean/republish (he's always tried them)
 - [feedback_full_path_always.md](feedback_full_path_always.md) — 🚨 Every file named gets its FULL absolute path in plain text; markdown links to Task/projects folders are dead because they resolve against the worktree cwd — not OneDrive's fault
+- [feedback_no_name_in_branches.md](feedback_no_name_in_branches.md) — 🚨 BANNED — never put my name ("ruri"/any form) in a git ref (branch OR tag), even local-only safety/checkpoint refs; rely on reflog, name by purpose
 - [feedback_never_hand_miya_a_query.md](feedback_never_hand_miya_a_query.md) — 🚨 Never hand miya a SELECT to run — I hold mlit/stg1/stg2/prod MCP access, so I run it; only writes and unreachable schemas get handed over
 
 ## User
@@ -49,6 +50,7 @@
 - [reference_melaka_env_deploy_paths.md](reference_melaka_env_deploy_paths.md) — Melaka env-deploy routes: internal/mlit = ONE function on 172.16.100.162 deployment-scripts/mlit; staging = build .162 then deploy 172.30.12.203; only 2 IPs; use `/deploy`
 - [reference_multi_ticket_sweep.md](reference_multi_ticket_sweep.md) — the `/sweep` design + evidence lives in FIVE places (DESIGN · PRIOR-ART · audit log ×2 · todo Q1 ×2 · current-session); cite all five, never just todo
 - [reference_dms_document_patch.md](reference_dms_document_patch.md) — DMS document-patch tickets (replace generated Surat in PROD) = proven one-shot lookup via /patch-mlk-doc skill; never re-explore et_dms; 2-part (infra replaces .main → patching team nulls LOKASI_FAIL_PDF on latest active revision)
+- [reference_qa246512_containment.md](reference_qa246512_containment.md) — #246512 PPJK/PTG template fixes are in master + all releases 1.1.0→1.3.1 + int-env; BUT the 06-26 "missing points PTG template ppjk" commit was REVERTED same day → that change is live nowhere
 - [reference_jasper_field_sources.md](reference_jasper_field_sources.md) — Jasper `$F{}` from SQL-in-jrxml (`printReportUsingSQL`) vs Java datasource (`printReport`/`printReportUsingDataSource`) — decides whether a report fix is ours or the Reports team's; #271721 settled by jrxml:366
 
 ## Deferred — post-sprint forge work (still LIVE rules; see auto-memory-plan.md Table 4)

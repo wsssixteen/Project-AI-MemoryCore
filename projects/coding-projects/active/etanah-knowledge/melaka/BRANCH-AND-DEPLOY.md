@@ -153,6 +153,40 @@ See [[reference_esokongan_branch_shape]] — #271639 lived on `mlk/internal/`.
 
 ---
 
+## 7. WHEN release content reaches `mlk/stag-env` — the post-baseline catch-up
+
+Verified against `etanah-pelupusan` full history 2026-08-10. Day-to-day, staging gets individual
+**ticket-branch** merges exactly like int-env (§2). But **after each baseline release is built,
+aaron performs one catch-up merge into `mlk/stag-env`** that brings the whole release baseline —
+in one of two equivalent forms:
+
+- merge `origin/mlk/release/<ver>` directly, **or**
+- merge `mlk/master` (which by then equals the release tip — §1)
+
+`mlk/int-env` is **never** the source — 0 int-env→stag-env merges exist in either repo's history.
+
+| Release baseline | Version bumped | Catch-up into stag-env | Lag | Form |
+|---|---|---|---|---|
+| 1.0.10 | 2026-07-20 | `36c0ccd724` 07-22 aaron | +2d | merge `mlk/master` (`^2` ≡ 1.0.10 content) |
+| 1.1.0 | 2026-07-28 | `d8572d45cb` 07-29 aaron | +1d | merge `origin/mlk/release/1.1.0` directly |
+| 1.3.0 | 2026-07-31 | `a2200467ca` 08-04 aaron | +4d (weekend) | merge `mlk/master` (`^2` ≡ 1.3.0 content) |
+
+- Not every release gets its own catch-up: 1.2.0 (07-29) had none — its content rode in with the
+  later master catch-up. 1.3.1 (bumped 08-05) sat un-caught-up until **2026-08-10**, when it was
+  merged `mlk/master`→`mlk/stag-env` (`44ee353632`, +5d) — bringing common **1.0.143-MLK → 1.1.12-MLK**.
+- To identify what a catch-up brought: `git rev-parse <merge-sha>^2` then `git log -1` on it —
+  the 2nd parent is always a recognizable release-baseline state.
+- `etanah-awam` shows the same shape: stag-env's first-parent chain passes through release lines,
+  with `mlk/master` catch-ups (e.g. faris 06-25).
+
+**For our pipeline (miya 2026-08-10)**: after a `release-mlk-plp` baseline completes, the missing
+follow-up step is `merge mlk/master → mlk/stag-env` + stag build/deploy (§5). ⚠️ A common-version
+bump in the catch-up means staging needs that common built/available too, or the module build/boot
+can hit an `avalonTemplate parse error` (int-env precedent `fa1fb3aea2`). To be built into the
+release/deploy tooling.
+
+---
+
 **Origin**: #271721 (2026-07-27). The route had to be re-derived from git history mid-session
 because nothing documented it; the derivation then missed `mlk/int-env` because the Redmine ticket
 was never read. The ticket said *"merge into mlk/int-env and mlk/stag-env branch and deploy the
