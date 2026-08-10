@@ -423,7 +423,7 @@ function cmdMergeToMaster(a) {
   git(st.repo, ['checkout', 'mlk/master']);
   git(st.repo, ['merge', '--ff-only', 'origin/mlk/master']);
   const masterBefore = gitOut(st.repo, ['rev-parse', 'HEAD']);
-  const tag = `ruri/pre-master-merge-${st.release}`;
+  const tag = `mlk/pre-master-merge/${st.release}`;
   git(st.repo, ['tag', '-f', tag, masterBefore]);            // local undo point
   git(st.repo, ['merge', '--ff-only', `origin/${st.branch}`]); // FF only — a non-FF means master drifted; stop and think
   git(st.repo, ['push', 'origin', 'mlk/master']);

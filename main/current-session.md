@@ -1,5 +1,37 @@
 # Current Session
 
+## 2026-08-10 (eve) — BASELINE PELUPUSAN 1.3.2 PREPARED + #273461 SURGICALLY REMOVED + MERGED TO mlk/master
+
+**Assembled the 1.3.2 release (10 tickets → then #273461 pulled at BA's call → 9), pushed, and
+fast-forwarded `mlk/master`. The #273461 removal was surgical (revert its two merges) not a rebuild,
+to preserve the already-tested branch. Also purged a `ruri/` git-tag name from the release tooling.**
+
+### Baseline 1.3.2 — final state
+
+| | |
+|---|---|
+| Release branch | `mlk/release/1.3.2` tip `76934aefd3` |
+| `mlk/master` | fast-forwarded `9ddeb07406 → 76934aefd3` + pushed (verified: `origin/mlk/master` == tip) |
+| Final contents (9) | 272613, 273938, 273455v2, 273460, 273294, 273291, 273621, 272696, 274455 |
+| #273461 (OPLPS running-number) | **REMOVED** — reverted merges `3b745e987f` (v3) + `51115b644a` (v2); its 3 files back to non-273461 state, #273455/#273294 intact (verified in throwaway worktree) |
+| SQL | `patch-273461.sql` pulled from the Sheet with #273461; do NOT run in prod (ran on stg2 only) |
+| Undo point | tag `mlk/pre-master-merge/1.3.2` @ `9ddeb07406` (local) |
+
+### Mechanics worth not re-deriving
+
+- **Adding a ticket to an already-pushed release**: the script has no re-open command → append the ticket to `state/release-<ver>.json` + set `phase=branched`, re-run `merge`/`verify`/`push`. The new merge descends from the pushed tip so the push stays a fast-forward (did this for #274455).
+- **Removing one ticket from a tested/deployed release**: revert its merge commit(s) in a throwaway `git worktree` (never touch みや's active checkout), verify only that ticket's files reverted + siblings survive, then FF-push. Preferred over rebuild because it keeps every other ticket's merge byte-identical (testing continuity).
+- **`release-prep.js` merge is `--no-ff` per ticket** — that "messy" per-ticket-lane graph on master is the intended shape (matches 1.3.0/1.3.1) AND is what made the #273461 revert clean.
+- **`ruri/` in a git ref is banned** (みや: "feels not safe") — release tooling tag renamed `ruri/pre-master-merge-<ver>` → `mlk/pre-master-merge/<ver>` (`release-prep.js:426`, `SKILL.md:267`).
+
+### ▶▶ NEXT SESSION — nothing pending on the baseline
+
+Release 1.3.2 is complete on `mlk/master`. Optional: close/archive the release. The active quests
+(QA-273460 PLPS phase-0, QA-273621 MLPS Recon-reopen) were NOT touched this session — resume via the
+274510 block's table below for the other open work.
+
+---
+
 ## 2026-08-07 15:26 → 2026-08-10 — 274510 PT FLOWABLE ORPHAN REPAIRED IN PROD
 
 **A BA inquiry became a PROD workflow repair. The Flowable engine had lost a task; eTanah marked it
@@ -83,46 +115,3 @@ Every one was DB-answerable before I shipped. All four were queries. He ran them
 - **29 applications with letters already on file** — nobody has ruled on whether BA must re-jana. Downstream of a close I already called done.
 - Staging fixtures pulled for BA (`PTMLK/01/L/PT/2026/13` best) but **the fix is not on `mlk/stag-env`** — merge + deploy there, or give her an mlit app instead.
 - Proposed **AFTERMATH block** for the Rubric (5 rows: population · progression · artifacts · self-heal-vs-patch · reverse regression) — `todo.md` Q1, routed through `system-design` before building.
-
-## 2026-08-10 09:16 — ADHOC: THE FETCH ERROR THAT WAS NEVER AN ERROR (both Melaka repos fixed)
-
-**No ticket, no quest touched. みや asked why a fetch error keeps appearing and why retrying is
-always fine. It is a Windows case-insensitivity collision across 17 mixed-case remote folders —
-harmless, and now permanently excluded in both repos. Verified: two consecutive fetches, second
-one silent, exit 0.**
-
-### ▶▶ NEXT SESSION — START HERE
-
-| Priority | Ticket | State | First step on resume |
-|---|---|---|---|
-| **1** | **273460** | Phase 0 · oldest open, due 12 Aug | needs the TRG blast-radius check (unchanged — this session did not touch it) |
-| 2 | 273707 · 273921 · 274136 · 274182 · 274318 | see the 08-07 block below | board ranks by working-days elapsed |
-| — | 274136 | **not in active.txt** | boot surfacer flagged it as assigned-open on Redmine with no local block |
-
-### What was fixed
-
-| repo | change | verification |
-|---|---|---|
-| `etanah-awam` | 22 negative refspecs + 48 stale remote-tracking refs deleted (3,416 → 3,371) | fetch ×2, second silent, exit 0 |
-| `etanah-pelupusan` | `^refs/heads/mlk/cr/259112` + that 1 stale ref deleted | 0 collisions remain, exit 0 |
-
-Config backups: `%TEMP%\awam-fetch-refspec-backup.txt` · `%TEMP%\plp-fetch-refspec-backup.txt`.
-Rollback = `git config --unset-all remote.origin.fetch` then re-add `+refs/heads/*:refs/remotes/origin/*`.
-
-**The mechanism**, so it is not re-derived: remote is case-sensitive, his disk is not, so
-`trg/esokongan-CR/` and `trg/esokongan-cr/` are one folder locally. Git keeps one casing, reports
-the other's branches deleted, re-creates them under the survivor. Nothing lost — the error fires
-*after* the useful work, which is why his branch switch always worked and a retry looked like a fix.
-Banked in full at `etanah-knowledge/melaka/GIT-REPO-HYGIENE.md` §1.
-
-**The step that nearly got missed**: a negative refspec alone is not enough. `packed-refs` is a
-single text file and stays case-sensitive, so stale entries survive the config change and the next
-fetch fails with `incorrect old value provided`. `git update-ref -d` on each is mandatory. The
-`git-health` skill's v1.0 recipe stopped at the refspec — corrected to v1.1.
-
-### Working memory
-
-- **Stash held, not applied** — `stash@{0}` "stale worktree reversions pre-DE 2026-08-10 (OneDrive lag vs dfbc544)". Four files in this worktree were OLDER than `origin/main` and would have reverted QA-273201/QA-273455 state plus the ENV-ARCHITECTURE + TRAINING-lane knowledge rows. Stashed rather than committed or discarded. **Do not pop it** — its `index.md` predates the GIT-REPO-HYGIENE row added today. Drop it once confirmed.
-- The pelupusan `259112` casing pair is resolved: both branches were fully merged into `mlk/master`, 0 ahead. Aaron's `mlk/CR/259112` (07-31) superseded みや's `mlk/cr/259112` (07-16). Excluded by exact ref, not folder glob, so future lowercase `mlk/cr/` branches still fetch.
-
----
