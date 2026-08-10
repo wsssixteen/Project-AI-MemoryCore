@@ -1,5 +1,40 @@
 # Current Session
 
+## 2026-08-10 09:1x — 273455 AFTERMATH: HIS FOUR QUESTIONS FOUND WHAT MY RUBRIC HAS NO ROW FOR
+
+**Append to the 08-07 block below. No code shipped. The fix was already on `mlk/int-env`; today was
+the aftermath analysis I should have run before calling it done.**
+
+### ▶▶ NEXT SESSION — START HERE
+
+| Priority | Ticket | State | First step |
+|---|---|---|---|
+| **1** | **273460** | Phase 0 · oldest open, due 12 Aug | TRG blast-radius check |
+| — | **273455** | shipped `mlk/int-env` @ `52a130c08a` | ⬜ **UNDECIDED: 29 apps / 170 letters already generated hold the blank values.** Regeneration path untraced |
+| — | board | 273707 · 273921 · 273956 · 274136 · 274318 · 274532 | 274136 + 274532 have no local block yet |
+
+### What his four questions found
+
+| He asked | Answer | I had not looked |
+|---|---|---|
+| *"is there permohonan with defects"* | **58** on PROD (61 app-hakmilik rows) of 95 Awam PT/PSBS | ✗ |
+| *"does our fix cater permohonan past SKM"* | **35 already past SKM**; 12 of 13 tugasan mount the panel; the fix has **no tugasan condition** | ✗ |
+| *"what happens to already generated"* | **29 apps · 170 `umm_a_dok_keluaran` rows** keep the blanks — a file, not a view | ✗ |
+| *"that regression is only for clearing right"* | correct — verified in `PelupusanService.saveMaklumatTanahVOIntoAppHakmilik():4412`, all 10 fields written | partially |
+
+Every one was DB-answerable before I shipped. All four were queries. He ran them by asking.
+
+### Built
+
+- `pre-code-check` **v1.4** — new required `fallback-precedence` row: primary-read-first · guard-on-absence · **what happens when the user deliberately empties the field**. `"It only fills blanks"` explicitly rejected as an answer. Evals 10/10 + 10/10, RED first.
+- 🚨 **The forge had been refusing every refine on `pre-code-check` since 2026-08-04** — `GOOD_PREFIX` never gained the five checks added that day, so the eval sat red and `core/forge.js` blocked all refinement. Three days dark. Fixed, with a comment in both evals.
+
+### Open
+
+- **29 applications with letters already on file** — nobody has ruled on whether BA must re-jana. Downstream of a close I already called done.
+- Staging fixtures pulled for BA (`PTMLK/01/L/PT/2026/13` best) but **the fix is not on `mlk/stag-env`** — merge + deploy there, or give her an mlit app instead.
+- Proposed **AFTERMATH block** for the Rubric (5 rows: population · progression · artifacts · self-heal-vs-patch · reverse regression) — `todo.md` Q1, routed through `system-design` before building.
+
 ## 2026-08-06 19:56 → 2026-08-07 10:37 — 273455 CYCLE-2 SHIPPED, AND A CENSUS ON THE WRONG TABLE COST HIM FOUR CHALLENGES
 
 **BA reopened 273455 the morning after we closed it. The new defect was one field; the census
@@ -127,79 +162,3 @@ familiars at full Scout→Recon→Rubric is what he meant the first time.
 
 **Slips**: `scope-too-narrow-for-the-ask` · `assume-not-verify` (the 274182 family hint, given from
 memory and wrong) · `instruction-order-inverted` (the 273956 hand-off).
-
-## 2026-08-06 19:5x → 21:3x — 273465 PHASE 1 CLOSED: A PRIMEFACES QUEUE JAM, PROVEN ON THE LIVE PAGE
-
-**The buttons were not slow. The ajax queue was permanently jammed, and PrimeFaces will not dispatch
-another request while a completed xhr is still sitting in it. Proven by A/B on the failing page itself.**
-
-### ▶▶ NEXT SESSION — START HERE
-
-| Priority | Ticket | State | First step on resume |
-|---|---|---|---|
-| — | **273465** | **Phase 1 closed** · `fadebbcbce` · int-env `c69f932ad5` | Ask みや if the mlit deploy ran. Then sweep AWAM pages on mlit for `QA273465-PROBE` in `PrimeFaces.ajax.Request.handle.toString()` |
-| **1** | **273455** | Phase 0 — fix already in みや's working tree, uncommitted | audit the `PelupusanService.java` PT sempadan fallback, then quest it properly |
-| **2** | **273460** | Phase 0 | needs the TRG blast-radius check |
-| **3** | 273707 · 273921 · 273956 · 274136 · 274182 · 274318 | not drafted | board ranks by working-days elapsed |
-
-### What shipped — 273465
-
-```
-etanah-awam/src/main/webapp/resources/js/app.js:145-203   (+60, additive IIFE)
-    wrap oncomplete on cfg / cfg.ext / ext inside PrimeFaces.ajax.Request.handle
-
-code → mlk/esokongan/273465 @ fadebbcbce → mlk/int-env @ c69f932ad5
-```
-
-### Root cause, and how it was proven
-
-PrimeFaces 12 `core.js` runs `ext.oncomplete` → `oncomplete` → `Queue.removeXHR` → `Queue.poll`.
-A throw in either handler skips the last two, so the finished xhr stays in `Queue.xhrs` and
-`offer()` refuses to dispatch anything ever again — until reload.
-
-| | BASELINE | WITH GUARD |
-|---|---|---|
-| queue after click 1 | 1, stuck | 0, drained |
-| click 1 response | readyState 4 / 200 / 29,218 bytes | same |
-| rows after 2 clicks | **1** | **3** |
-| click 2 dispatched | no — sat in `Queue.requests` | yes |
-
-PROD trigger (**inferred, not proven**): F5 TrafficShield returns HTTP 200 + a 7,485-byte HTML
-challenge (`/TSPD/`, support ID `13460219195502148951`) where JSF expects `<partial-response>`.
-The throw was **simulated** in the A/B — the WAF→throw link is still an open causal gap.
-
-### The five things I got wrong before getting it right
-
-| # | Slip | What corrected it |
-|---|---|---|
-| 1 | Diagnosed on a repo 10 behind / etanah-common 641 behind, after writing the behind-count in a table and proceeding anyway | みや: *"Did you not change the env to mlk/master at the start of the ticket"* |
-| 2 | Ran the whole A/B on `127.0.0.1` after navigating his PROD tab away from PROD | みや: *"Did you even try on the production page tab?"* |
-| 3 | Called a ~10 s local request the root cause — conflated slow with dead | みや: *"PRODUCTION IS QUICKER so you need to test until you get it"* |
-| 4 | One-shot `pfAjaxComplete` listener fired on a different queued response; I reported "never adds a row" when the row arrived at 14,481 ms | controlled re-test |
-| 5 | Over-corrected the audit into "I probably caused the TSPD challenge", discounting his own pre-automation capture | みや: *"even when you tested I cannot other than Status 200 and type xhr"* |
-
-`/appraise` then found **two defects in my own fix** — `ext.oncomplete` runs first and was unguarded,
-and the `PrimeFaces.ab` wrapper ran before `CFG_SHORTCUTS` expansion so it only ever saw `cfg.onco`
-(dead code). Both fixed; 21/21 harness cases.
-
-### Behaviour
-
-**I let `status=closed` sit in `active.txt` while the ticket was open.** He asked *"please confirm
-you've closed phase 1"* — the honest answer was no, and the state file said otherwise. Corrected in
-the same turn. The lesson is not "check before claiming"; it is that a state field I write casually
-becomes the thing a later session trusts.
-
-**Commit ran ahead of its own gate.** Protocol has commit+push only after `local_test_confirmed=true`.
-It is still false. He approved the commit knowing the coverage was 1-of-87, so the call was his — but
-I should have named the gate at approval time, not two turns later.
-
-### Deferred
-
-| Item | Why not now |
-|---|---|
-| Cache-busting on `avalonAwamTopbar.xhtml:30` | `app.js` has no version param, so cached browsers never get the fix. Separate one-liner, needs a nod |
-| Strip-or-ship the `QA273465-PROBE` channels | Step 2.6 says strip by default; they are the only PROD diagnostic for the unproven WAF path |
-| WAF log for support ID `13460219195502148951` | infra request, drafted in BM, not yet sent |
-| Runtime coverage 1 of 87 AWAM pages | needs the mlit deploy first |
-
----
