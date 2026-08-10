@@ -417,7 +417,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | `familiar` | `/familiar <file>` | sub-agent read + summary for big files |
 | `checklist` | `/checklist` | universal task checklist for quest phase boundaries |
 | `annotations` | `/annotations` | PDF annotation extraction |
-| `git-health` | `/git-health` | 3-tier safety git check |
+| `git-health` | `/git-health` | 3-tier safety git check. Tier-1 case-collision recipe is 3-part (refspec → stale-ref delete → two-fetch verify) as of v1.1 2026-08-10 — refspec alone leaves `incorrect old value provided`. Procedure detail + applied exclusion lists: `etanah-knowledge/melaka/GIT-REPO-HYGIENE.md` |
 | `system-check` | 30-day boot trigger | system audit |
 | `etanah-rahsia-bypass` | etanah-specific need | rahsia document access |
 | `usage-guidance` | user-side helper | usage advice |
