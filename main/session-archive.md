@@ -4,6 +4,82 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-06 19:5x → 21:3x — 273465 PHASE 1 CLOSED: A PRIMEFACES QUEUE JAM, PROVEN ON THE LIVE PAGE
+
+**The buttons were not slow. The ajax queue was permanently jammed, and PrimeFaces will not dispatch
+another request while a completed xhr is still sitting in it. Proven by A/B on the failing page itself.**
+
+### ▶▶ NEXT SESSION — START HERE
+
+| Priority | Ticket | State | First step on resume |
+|---|---|---|---|
+| — | **273465** | **Phase 1 closed** · `fadebbcbce` · int-env `c69f932ad5` | Ask みや if the mlit deploy ran. Then sweep AWAM pages on mlit for `QA273465-PROBE` in `PrimeFaces.ajax.Request.handle.toString()` |
+| **1** | **273455** | Phase 0 — fix already in みや's working tree, uncommitted | audit the `PelupusanService.java` PT sempadan fallback, then quest it properly |
+| **2** | **273460** | Phase 0 | needs the TRG blast-radius check |
+| **3** | 273707 · 273921 · 273956 · 274136 · 274182 · 274318 | not drafted | board ranks by working-days elapsed |
+
+### What shipped — 273465
+
+```
+etanah-awam/src/main/webapp/resources/js/app.js:145-203   (+60, additive IIFE)
+    wrap oncomplete on cfg / cfg.ext / ext inside PrimeFaces.ajax.Request.handle
+
+code → mlk/esokongan/273465 @ fadebbcbce → mlk/int-env @ c69f932ad5
+```
+
+### Root cause, and how it was proven
+
+PrimeFaces 12 `core.js` runs `ext.oncomplete` → `oncomplete` → `Queue.removeXHR` → `Queue.poll`.
+A throw in either handler skips the last two, so the finished xhr stays in `Queue.xhrs` and
+`offer()` refuses to dispatch anything ever again — until reload.
+
+| | BASELINE | WITH GUARD |
+|---|---|---|
+| queue after click 1 | 1, stuck | 0, drained |
+| click 1 response | readyState 4 / 200 / 29,218 bytes | same |
+| rows after 2 clicks | **1** | **3** |
+| click 2 dispatched | no — sat in `Queue.requests` | yes |
+
+PROD trigger (**inferred, not proven**): F5 TrafficShield returns HTTP 200 + a 7,485-byte HTML
+challenge (`/TSPD/`, support ID `13460219195502148951`) where JSF expects `<partial-response>`.
+The throw was **simulated** in the A/B — the WAF→throw link is still an open causal gap.
+
+### The five things I got wrong before getting it right
+
+| # | Slip | What corrected it |
+|---|---|---|
+| 1 | Diagnosed on a repo 10 behind / etanah-common 641 behind, after writing the behind-count in a table and proceeding anyway | みや: *"Did you not change the env to mlk/master at the start of the ticket"* |
+| 2 | Ran the whole A/B on `127.0.0.1` after navigating his PROD tab away from PROD | みや: *"Did you even try on the production page tab?"* |
+| 3 | Called a ~10 s local request the root cause — conflated slow with dead | みや: *"PRODUCTION IS QUICKER so you need to test until you get it"* |
+| 4 | One-shot `pfAjaxComplete` listener fired on a different queued response; I reported "never adds a row" when the row arrived at 14,481 ms | controlled re-test |
+| 5 | Over-corrected the audit into "I probably caused the TSPD challenge", discounting his own pre-automation capture | みや: *"even when you tested I cannot other than Status 200 and type xhr"* |
+
+`/appraise` then found **two defects in my own fix** — `ext.oncomplete` runs first and was unguarded,
+and the `PrimeFaces.ab` wrapper ran before `CFG_SHORTCUTS` expansion so it only ever saw `cfg.onco`
+(dead code). Both fixed; 21/21 harness cases.
+
+### Behaviour
+
+**I let `status=closed` sit in `active.txt` while the ticket was open.** He asked *"please confirm
+you've closed phase 1"* — the honest answer was no, and the state file said otherwise. Corrected in
+the same turn. The lesson is not "check before claiming"; it is that a state field I write casually
+becomes the thing a later session trusts.
+
+**Commit ran ahead of its own gate.** Protocol has commit+push only after `local_test_confirmed=true`.
+It is still false. He approved the commit knowing the coverage was 1-of-87, so the call was his — but
+I should have named the gate at approval time, not two turns later.
+
+### Deferred
+
+| Item | Why not now |
+|---|---|
+| Cache-busting on `avalonAwamTopbar.xhtml:30` | `app.js` has no version param, so cached browsers never get the fix. Separate one-liner, needs a nod |
+| Strip-or-ship the `QA273465-PROBE` channels | Step 2.6 says strip by default; they are the only PROD diagnostic for the unproven WAF path |
+| WAF log for support ID `13460219195502148951` | infra request, drafted in BM, not yet sent |
+| Runtime coverage 1 of 87 AWAM pages | needs the mlit deploy first |
+
+---
+
 ## 2026-08-06 17:51 → 19:4x — 273461 CLOSED, AND THE RESUME RULE CAUGHT A SHIPPED FIX I DID NOT KNOW EXISTED
 
 **One ticket end-to-end: quest → fix → commit → deploy → patch handed to the release team. The rule
@@ -3057,6 +3133,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
