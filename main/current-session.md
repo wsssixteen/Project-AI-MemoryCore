@@ -17,6 +17,34 @@
 | item | why | where |
 |---|---|---|
 | `/deploy` auto-fallback to ticket-only cherry-pick | full-merge drags master delta into stale int-env → conflict on unrelated files; skill only *detects* drift, no auto-fallback | refine `.claude/skills/deploy` §4: when already-merged guard shows other-ticket files / pom bump / non-ticket conflict → cherry-pick the fix commit(s) |
+## 2026-08-11 — QA-273621 TEST-SETUP settled + reset method CORRECTED + 3 memories banked
+
+**みや drove the flowable-alter + document-reset setup to re-test the L1e fix. Two corrections landed:
+the test-reset is deleting docs via a maintenance tool (NOT the flow auto-delete I inferred, NOT
+#273956's SQL), and I cold-re-read banked flowable mechanics instead of trusting them. Both banked as
+memories. No code fix this session — the L1e fix is already shipped (int-env, commit `9d045f55ec`).**
+
+### QA-273621 test-setup (env = stg2, aplikasi 3416909, PDT Jasin)
+
+| Piece | Answer | Evidence |
+|---|---|---|
+| Flowable alter | Initiate & Alter → **PYB4AE** (Penyediaan 4Ae dan L1e), Reset Vars = No | FLOWABLE-KNOWLEDGE §6 |
+| `pejabatKod` | insert **02** | MLPS procs 6/6 carry it (stg2 engine); also set on submit `prepareBpmValues:198` |
+| `permohonanDari` | **leave blank** | 0 MLPS procs carry it (stg2 engine); only TRG/surat flows use it |
+| `pembetulan` / `adaSpoc` | keep true | pembetulan routes correction loop; adaSpoc re-derived on submit |
+| **Test-reset** | **delete related docs via `PelupusanMaintenanceForm.xhtml`** (per みや) | ⚠️ delete-scope not yet code-verified |
+
+### Corrections banked (memories)
+- `reference_pelupusan_doc_reset_tool` — reset = delete docs via maintenance tool; NOT status_id=NULL (that's #273956 template-letters), NOT `overridePostSubmitMethod:207-211` auto-delete (my over-assertion).
+- `feedback_ticket_type_vocab_tracking` — tag each ticket a TYPE + track per-individual wording; stay provisional (みや: "you're new").
+- `feedback_banked_knowledge_change_check` — trust banked etanah-knowledge at 100%; re-read source only after a cheap `git log` change-check.
+- 2 slips logged (assume-not-verify, banked-knowledge-not-trusted; both caught-by みや).
+
+### ▶▶ NEXT SESSION — QA-273621
+Fix is shipped to int-env (`9d045f55ec`). Test path: alter to PYB4AE (vars above) → delete docs via `PelupusanMaintenanceForm.xhtml` → re-open L1e screen, pelan should embed. Confirm the maintenance-tool delete scope (read its bean) to firm the provisional memory → verified. qa_doc §0-NEW carries the detail.
+
+---
+
 ## 2026-08-10 (eve) — BASELINE PELUPUSAN 1.3.2 PREPARED + #273461 SURGICALLY REMOVED + MERGED TO mlk/master
 
 **Assembled the 1.3.2 release (10 tickets → then #273461 pulled at BA's call → 9), pushed, and
@@ -97,38 +125,3 @@ discarding 26 staged files + untracked components. No committed work was lost �
 | Full architecture | `etanah-knowledge/melaka/FLOWABLE-KNOWLEDGE.md` (gitignored, OneDrive-carried) |
 
 ---
-
-## 2026-08-10 09:1x — 273455 AFTERMATH: HIS FOUR QUESTIONS FOUND WHAT MY RUBRIC HAS NO ROW FOR
-
-**Append to the 08-07 block below. No code shipped. The fix was already on `mlk/int-env`; today was
-the aftermath analysis I should have run before calling it done.**
-
-### ▶▶ NEXT SESSION — START HERE
-
-| Priority | Ticket | State | First step |
-|---|---|---|---|
-| **1** | **273460** | Phase 0 · oldest open, due 12 Aug | TRG blast-radius check |
-| — | **273455** | shipped `mlk/int-env` @ `52a130c08a` | ⬜ **UNDECIDED: 29 apps / 170 letters already generated hold the blank values.** Regeneration path untraced |
-| — | board | 273707 · 273921 · 273956 · 274136 · 274318 · 274532 | 274136 + 274532 have no local block yet |
-
-### What his four questions found
-
-| He asked | Answer | I had not looked |
-|---|---|---|
-| *"is there permohonan with defects"* | **58** on PROD (61 app-hakmilik rows) of 95 Awam PT/PSBS | ✗ |
-| *"does our fix cater permohonan past SKM"* | **35 already past SKM**; 12 of 13 tugasan mount the panel; the fix has **no tugasan condition** | ✗ |
-| *"what happens to already generated"* | **29 apps · 170 `umm_a_dok_keluaran` rows** keep the blanks — a file, not a view | ✗ |
-| *"that regression is only for clearing right"* | correct — verified in `PelupusanService.saveMaklumatTanahVOIntoAppHakmilik():4412`, all 10 fields written | partially |
-
-Every one was DB-answerable before I shipped. All four were queries. He ran them by asking.
-
-### Built
-
-- `pre-code-check` **v1.4** — new required `fallback-precedence` row: primary-read-first · guard-on-absence · **what happens when the user deliberately empties the field**. `"It only fills blanks"` explicitly rejected as an answer. Evals 10/10 + 10/10, RED first.
-- 🚨 **The forge had been refusing every refine on `pre-code-check` since 2026-08-04** — `GOOD_PREFIX` never gained the five checks added that day, so the eval sat red and `core/forge.js` blocked all refinement. Three days dark. Fixed, with a comment in both evals.
-
-### Open
-
-- **29 applications with letters already on file** — nobody has ruled on whether BA must re-jana. Downstream of a close I already called done.
-- Staging fixtures pulled for BA (`PTMLK/01/L/PT/2026/13` best) but **the fix is not on `mlk/stag-env`** — merge + deploy there, or give her an mlit app instead.
-- Proposed **AFTERMATH block** for the Rubric (5 rows: population · progression · artifacts · self-heal-vs-patch · reverse regression) — `todo.md` Q1, routed through `system-design` before building.
