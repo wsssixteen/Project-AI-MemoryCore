@@ -264,7 +264,7 @@ node domain/release-mlk-plp/release-prep.js merge-to-master --release <ver> --ba
 
 It refuses unless `phase=pushed`, re-fetches, asserts `origin/mlk/release/<ver>` still equals the
 pushed head, tolerates a dirty tree **only** when no dirty path intersects the release delta,
-tags `ruri/pre-master-merge-<ver>` at the pre-merge master SHA, fast-forwards, pushes, then
+tags `mlk/pre-master-merge/<ver>` at the pre-merge master SHA, fast-forwards, pushes, then
 re-reads `origin/mlk/master` and fails loudly if it isn't the release tip.
 
 | Gate | Rule |
