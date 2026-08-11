@@ -1,5 +1,23 @@
 # Current Session
 
+## 2026-08-11 — QA-273921 PPTPB "Sedang Kemaskini" — CLEAN RE-INVESTIGATION → SHIPPED → ARCHIVED
+
+**Quest QA-273921 (ESOKONGAN · PPTPB · Penyediaan Kertas Pertimbangan Pentadbir Tanah) — CLOSED + ARCHIVED.**
+
+- **Phase/status**: archived. Phase 1 closed + Phase 2 archived same session.
+- **Root cause (VERIFIED — clean-room workflow `wf_b1d13023-19f` 11 agents + Fable adversarial audit, both convergent; matched the prior `-audit` doc at 97%)**: generated `KertasPertimbanganPentadbirTanah_PPTPB.docx` was schema-invalid — CCs `syaratKelulusan` + `tanahDimilikiTable` were RUN-level (inline) and their populators inject `<w:tbl>` → `<w:tbl>` in `<w:p>` → Word/PocWordEditor refuses to open → `closable=false` "Sedang Dikemaskini" modal never dismissed → hangs. NOT slow doc-gen. `#271211` = false analog (Surat JT/YB templates only); true twin = QA-262495.
+- **Fix**: template-only, 1 file — both CCs inline→block (miya did tanahDimilikiTable manually in Word; I scripted syaratKelulusan). Populators untouched.
+- **What moved**: commit `af78b2a970` on `mlk/esokongan/273921` (pushed) · deployed `mlk/int-env` @ `e857065a21` (ticket-only cherry-pick — full merge conflicted on unrelated `TemplateSuratNilaianJPPH_PLTP_PSBS.docx`) · miya deployed to internal + confirmed.
+- **Delivery channels**: git branch (pushed) · int-env (deployed) · **NOT yet on Redmine planned-release list** (miya's step). Redmine ticket still "In Progress" — miya updates.
+- **Test**: PASS on MLKSTG (norlina@melaka.gov.my, PTMLK/02/L/PPTPB/2026/1, Jana Semula → Kemas kini → Word opens).
+- **Knowledge banked**: `etanah-knowledge/melaka/WORD-TEMPLATE-RENDERING.md §4` (inline-CC+TABLE→invalid-docx→spinner-hang: mechanism + detection recipe + fix + dormant-until-data & Jana-Semula traps) + index route. Propagated to MAIN repo (worktree projects/ is gitignored).
+- **Resume point**: DONE. Only follow-up = the `/deploy` cherry-pick auto-fallback refine (below).
+
+### `## Deferred to follow-up`
+| item | why | where |
+|---|---|---|
+| `/deploy` auto-fallback to ticket-only cherry-pick | full-merge drags master delta into stale int-env → conflict on unrelated files; skill only *detects* drift, no auto-fallback | refine `.claude/skills/deploy` §4: when already-merged guard shows other-ticket files / pom bump / non-ticket conflict → cherry-pick the fix commit(s) |
+
 ## 2026-08-07 15:26 → 2026-08-10 — 274510 PT FLOWABLE ORPHAN REPAIRED IN PROD
 
 **A BA inquiry became a PROD workflow repair. The Flowable engine had lost a task; eTanah marked it
@@ -83,46 +101,3 @@ Every one was DB-answerable before I shipped. All four were queries. He ran them
 - **29 applications with letters already on file** — nobody has ruled on whether BA must re-jana. Downstream of a close I already called done.
 - Staging fixtures pulled for BA (`PTMLK/01/L/PT/2026/13` best) but **the fix is not on `mlk/stag-env`** — merge + deploy there, or give her an mlit app instead.
 - Proposed **AFTERMATH block** for the Rubric (5 rows: population · progression · artifacts · self-heal-vs-patch · reverse regression) — `todo.md` Q1, routed through `system-design` before building.
-
-## 2026-08-10 09:16 — ADHOC: THE FETCH ERROR THAT WAS NEVER AN ERROR (both Melaka repos fixed)
-
-**No ticket, no quest touched. みや asked why a fetch error keeps appearing and why retrying is
-always fine. It is a Windows case-insensitivity collision across 17 mixed-case remote folders —
-harmless, and now permanently excluded in both repos. Verified: two consecutive fetches, second
-one silent, exit 0.**
-
-### ▶▶ NEXT SESSION — START HERE
-
-| Priority | Ticket | State | First step on resume |
-|---|---|---|---|
-| **1** | **273460** | Phase 0 · oldest open, due 12 Aug | needs the TRG blast-radius check (unchanged — this session did not touch it) |
-| 2 | 273707 · 273921 · 274136 · 274182 · 274318 | see the 08-07 block below | board ranks by working-days elapsed |
-| — | 274136 | **not in active.txt** | boot surfacer flagged it as assigned-open on Redmine with no local block |
-
-### What was fixed
-
-| repo | change | verification |
-|---|---|---|
-| `etanah-awam` | 22 negative refspecs + 48 stale remote-tracking refs deleted (3,416 → 3,371) | fetch ×2, second silent, exit 0 |
-| `etanah-pelupusan` | `^refs/heads/mlk/cr/259112` + that 1 stale ref deleted | 0 collisions remain, exit 0 |
-
-Config backups: `%TEMP%\awam-fetch-refspec-backup.txt` · `%TEMP%\plp-fetch-refspec-backup.txt`.
-Rollback = `git config --unset-all remote.origin.fetch` then re-add `+refs/heads/*:refs/remotes/origin/*`.
-
-**The mechanism**, so it is not re-derived: remote is case-sensitive, his disk is not, so
-`trg/esokongan-CR/` and `trg/esokongan-cr/` are one folder locally. Git keeps one casing, reports
-the other's branches deleted, re-creates them under the survivor. Nothing lost — the error fires
-*after* the useful work, which is why his branch switch always worked and a retry looked like a fix.
-Banked in full at `etanah-knowledge/melaka/GIT-REPO-HYGIENE.md` §1.
-
-**The step that nearly got missed**: a negative refspec alone is not enough. `packed-refs` is a
-single text file and stays case-sensitive, so stale entries survive the config change and the next
-fetch fails with `incorrect old value provided`. `git update-ref -d` on each is mandatory. The
-`git-health` skill's v1.0 recipe stopped at the refspec — corrected to v1.1.
-
-### Working memory
-
-- **Stash held, not applied** — `stash@{0}` "stale worktree reversions pre-DE 2026-08-10 (OneDrive lag vs dfbc544)". Four files in this worktree were OLDER than `origin/main` and would have reverted QA-273201/QA-273455 state plus the ENV-ARCHITECTURE + TRAINING-lane knowledge rows. Stashed rather than committed or discarded. **Do not pop it** — its `index.md` predates the GIT-REPO-HYGIENE row added today. Drop it once confirmed.
-- The pelupusan `259112` casing pair is resolved: both branches were fully merged into `mlk/master`, 0 ahead. Aaron's `mlk/CR/259112` (07-31) superseded みや's `mlk/cr/259112` (07-16). Excluded by exact ref, not folder glob, so future lowercase `mlk/cr/` branches still fetch.
-
----

@@ -1436,6 +1436,7 @@ closed=2026-08-04
 local_test_confirmed=true
 commit=efaee778db
 close_note=Phase 1 closed 2026-08-04. 2 files +45/-0 on mlk/esokongan/273294 off mlk/master (behind 0), remote SHA efaee778dbd963e6083694986f02a92d51039e45 == local HEAD. Issue 1 (Tujuan tarik dari Perserahan Kaunter): pra fallback in PelupusanService.populateMaklumatTanahVOListFromAppHakmilik at :5150 mirroring the luas fallback :5181-5186. Issue 2 (checking mandatori): additive branch in MlkMaklumatTanahPemberimilikanForm.verifyCurrentLangkah before return true, fenced URS_PT + SKM with NO actionEnum test so Simpan AND Seterusnya AND Hantar all block - miya tested and confirmed.
+
 qa=QA-270900
 quest_start_ts=2026-07-20T23:29:39.937Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\100. INTERNAL ISSUE #270900 - BPRZ - Penyediaan-Semakan-Peraku Surat Makluman ke Pemohon - Issue pad
@@ -1459,3 +1460,19 @@ rework=cycle-2
 reopened=2026-08-03
 test_app_mlit=PTMLK/02/L/BPRZ/2026/1 - only shahniza@melaka.gov.my (PPD) + nazli@melaka.gov.my (KPPD) hold BPRZ capaian at Jasin; no KPT holder does
 closed_cycle2=2026-08-04
+
+qa=QA-273921
+quest_start_ts=2026-08-04T17:34:44.014Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\125. ESOKONGAN #273921 - PDTJ - PPTPB - Papar Loading ''Sedang Kemaskini'' Lama
+phase=0
+status=closed
+ticket_type=bug
+env=PDTJ > PPTPB > Papar Loading ''Sedang Kemaskini'' Lama
+issue_one_liner=PDTJ > PPTPB > Papar Loading ''Sedang Kemaskini'' Lama
+assigned_to_me=2026-08-04
+tugasan=Penyediaan Kertas Pertimbangan Pentadbir Tanah
+current_phase=Closed-Phase1
+local_test_confirmed=true
+closed=2026-08-11
+commit=af78b2a970
+branch=mlk/esokongan/273921

@@ -925,22 +925,6 @@ closed=2026-08-06
 redmine_assignee=miya - In Progress, flipped by him 2026-08-06 06:06 (verified by the parallel 273956 session; supersedes the qa_doc note naming Faizudin)
 close_note=Phase 1 closed on miya instruction 2026-08-06. Commit fadebbcbce pushed to origin/mlk/esokongan/273465; merged c69f932ad5 into origin/mlk/int-env. local_test_confirmed stays FALSE - no deployed build has been exercised yet; verification deferred to the mlit run. Runtime coverage 1 of 87 AWAM pages. WAF-to-throw causal link NOT proven. DEVIATION: QA273465-PROBE console channels intentionally shipped (step 2.6 default is strip) - they are the only PROD diagnostic for the unproven WAF path; say the word and I strip them.
 
-qa=QA-273921
-quest_start_ts=2026-08-04T17:34:44.014Z
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\125. ESOKONGAN #273921 - PDTJ - PPTPB - Papar Loading ''Sedang Kemaskini'' Lama
-phase=0
-status=closed
-ticket_type=bug
-env=PDTJ > PPTPB > Papar Loading ''Sedang Kemaskini'' Lama
-issue_one_liner=PDTJ > PPTPB > Papar Loading ''Sedang Kemaskini'' Lama
-assigned_to_me=2026-08-04
-tugasan=Penyediaan Kertas Pertimbangan Pentadbir Tanah
-current_phase=Closed-Phase1
-local_test_confirmed=true
-closed=2026-08-11
-commit=af78b2a970
-branch=mlk/esokongan/273921
-
 qa=QA-273919
 quest_start_ts=2026-08-04T16:48:41.163Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\126. ESOKONGAN #273919 - AWAM - PPJK - Labelling urusan papar Maklumat Pembatalan Perizaban
