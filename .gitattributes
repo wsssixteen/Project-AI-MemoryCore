@@ -1,0 +1,10 @@
+# Append-only ledgers — auto-union on merge so concurrent same-day DE sessions
+# don't line-conflict. Order-independent appends; union = both sides kept.
+# (Added 2026-08-12 per de-speed-quality-assessment — DE close hit ~10 git
+#  attempts / 3 pull rounds fighting these exact files.)
+system/slips.jsonl        merge=union
+system/slip-counts.jsonl  merge=union
+main/session-archive.md   merge=union
+
+# system/slip-dashboard.md is GENERATED from slips.jsonl — regenerate after a
+# merge (`node core/slips.js dashboard`), never hand-merge it.
