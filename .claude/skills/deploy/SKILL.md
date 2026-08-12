@@ -220,6 +220,33 @@ the release path, and `git revert -m 1 <sha>` undoes it additively. Precedent: `
 
 ---
 
+## 4b · Common-side fix — no ticket branch, bump the version PIN (ticket-first message) 🚨
+
+When the fix lives in **etanah-common** (or any dependency module), there is **no `mlk/<tracker>/<num>`
+pelupusan/awam branch to merge** — the deployable change is the **`${etanah.common.version}` pin** in
+the module pom on the env branch. The common team ships the fix as a released version
+(e.g. `1.1.24-MLK.beta.patch2` on `origin/mlk/beta`); the module just needs to point at it.
+
+Sequence (isolated worktree so みや's live checkout is untouched):
+1. **Verify the released version carries the fix + is a superset** — `git -C etanah-common show
+   origin/mlk/beta:pom.xml` (version) + `git -C etanah-common log --oneline origin/mlk/beta` — confirm
+   the ticket's merge is in it AND the branch is a linear superset of the version int-env currently
+   pins (so no other internal ticket's fix is dropped). If it's a side-patch, not a superset → STOP,
+   flag to the common team.
+2. `git -C <module> worktree add -b intenv-<num> <tmpdir> origin/<base>`
+3. Edit ONLY the `<etanah.common.version>` line → the released version.
+4. **🚨 Ticket-first commit message** (みや 2026-08-12): `Ref #<num>: bump etanah-common to <ver> for <env>`.
+   Banned: a bare `Bump etanah-common version to <ver>` with no ticket ref — every version-pin bump
+   must be greppable to the ticket that needed it. (The pre-2026-08-12 int-env bumps had no ref;
+   that is the gap this rule closes.)
+5. `git -C <tmpdir> push origin HEAD:<base>` → then `git worktree remove <tmpdir>` + delete the temp branch.
+6. Evidence line: `#<num> common bump → <base> @ <sha>  (common now <ver>)`. Then the card.
+
+**Rule 4 (zero authored code) carve-out**: a `${...version}` pin is config, not logic — this bump is
+in-scope for deploy. Editing any `.java`/`.xhtml` is not.
+
+---
+
 ## 5 · The card — ONE COMMAND PER FENCED BLOCK
 
 🚨 **NEVER wrap the whole card in one code block** (みや 2026-08-05, 4th correction of this same

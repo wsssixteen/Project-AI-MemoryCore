@@ -236,6 +236,9 @@
 {"ts":"2026-08-10T01:22:39.267Z","category":"A4"}
 {"ts":"2026-08-10T01:22:39.526Z","category":"A2"}
 {"ts":"2026-08-10T01:59:59.294Z","category":"redundant-safety-ref"}
+{"ts":"2026-08-12T02:09:38.547Z","category":"stop-instead-of-action"}
+{"ts":"2026-08-12T02:15:47.919Z","category":"reask/redundant"}
+{"ts":"2026-08-12T11:48:23.241Z","category":"A4"}
 {"ts":"2026-08-10T08:10:47.490Z","category":"phase-close"}
 {"ts":"2026-08-10T08:13:56.581Z","category":"A1"}
 {"ts":"2026-08-10T08:13:56.764Z","category":"A2"}
