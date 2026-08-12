@@ -33,6 +33,9 @@ const cases = [
   { name: 'EN: check whose module / from common', args: ['--text', 'Please check whose module this is, might be from common.'], expectCode: 2, expectContains: ['CROSS-MODULE'] },
   { name: 'Malay: luar skop, rujuk kepada common', args: ['--text', 'Ni luar skop pelupusan, rujuk kepada team common.'], expectCode: 2, expectContains: ['CROSS-MODULE'] },
   { name: 'EN: forward to reports team', args: ['--text', 'This looks like a report layout bug — forward to reports team.'], expectCode: 2, expectContains: ['CROSS-MODULE'] },
+  // false-positive regressions (real-ticket testing 2026-08-12): the session-info footer is NOT a cross-module signal
+  { name: 'FP: Common Version footer alone → clean', args: ['--text', 'PLPS surat tarikh salah.\nCommon Version : 1.0.143-MLK\nDB Version : 1.0.143-MLK\nModule Version : 1.3.1'], expectCode: 0, expectContains: ['clean'] },
+  { name: 'FP: real common-team ask → flag', args: ['--text', 'hi common need your help with this, please assist.'], expectCode: 2, expectContains: ['CROSS-MODULE'] },
 ];
 
 let pass = 0;

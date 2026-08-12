@@ -130,8 +130,32 @@ PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3)
    sibling repos (common/awam/teknikal) is BANNED. (Slip 2026-07-16, みや correction.)
    ⚠️ Nuance: reading a related ticket's *Redmine text* to learn WHY there's no branch is
    recon, not hunting — the script's one-hop follow does exactly this and stops there.
-6. Emit the plan table (ticket · verdict · branch · action) + the Ask-BA table →
-   **🛑 V1: みや nods**.
+5.5 **🚨 PER-TICKET COMPLETENESS AUDIT — MANDATORY, run for EVERY ticket before V1** (added 2026-08-12
+   after the #273461 miss: shipped 1 of 3 files by reconstructing a reverted fix from its LATEST branch
+   only). A ticket's fix can be **STACKED across rework branches (v1/v2/v3)** and a revert wipes the whole
+   footprint — the latest branch alone is NEVER proof of completeness.
+
+   ```powershell
+   node domain/release-mlk-plp/audit-ticket.js <num> <ver>
+   ```
+
+   It surfaces, per ticket: every rework branch · whether the ticket was **REVERTED** on master · the
+   **ancestor-trap** (a branch whose merge is a silent no-op) · and **content coverage** (are the branch's
+   blobs actually in the release). **Order of trust:**
+   1. **GREP the quest-MD branch ledger FIRST** (`projects/coding-projects/*/QA-<num>.md` → "Branch ledger")
+      — if a prior session recorded which branch is canonical / which are wrong, use it. Cheaper than git.
+   2. Then run `audit-ticket`. Any 🚨 STACKED / 🚨 REVERTED / ❌ MISSING → **reconstruct the COMPLETE
+      footprint** (`git diff <pre-revert-sha> <post-revert>`), build ONE canonical branch, and re-audit
+      until every changed file shows **✅ all blobs match** in the release.
+   3. **Write the ledger back** to the quest MD (branches · canonical one · deletion candidates · footprint)
+      so the next baseline greps instead of re-deriving. **Delete superseded/wrong branches** (miya's rule)
+      once the canonical branch is confirmed on master — a wrong branch left alive is the next v2/v3 trap.
+
+   **Banned**: declaring a ticket ready on "a named branch merged" — readiness is **content coverage of the
+   complete footprint**, proven by `audit-ticket`, never by branch-reachability alone.
+
+6. Emit the plan table (ticket · verdict · branch · action) + the **audit-ticket verdict per ticket** +
+   the Ask-BA table → **🛑 V1: みや nods**.
 
 ## Phase B — BRANCH + MERGE + VERIFY + PUSH (script; repo `E:\Projects\Melaka\etanah-pelupusan`)
 

@@ -15,14 +15,21 @@ const path = require('path');
 // People word "is this common / pass it over" many ways (EN + Malay). Keep expanding as new phrasings appear.
 const CROSS_MODULE = [
   ['our-issue-or-Common',    /\b(our issue or common|is this (our|a|an?) common|issue (is )?from common|common issue|from (the )?common team|isu common|masalah common)\b/i],
-  ['pass/forward to team',   /\b(pass (this )?ti?c|pass (to|kepada|ke)|boleh pass|can pass this|forward (to|kepada|ke)|hantar (ke|kepada)|refer (to|kepada)|rujuk (kepada|ke)|assign (to|kepada) (common|another))\b/i],
-  ['not our domain/scope',   /\b(not our (domain|module|scope|issue|problem|side)|bukan (isu|masalah|scope|skop)? ?(kita|kami)|luar (skop|scope)|out of (our )?scope|di luar)\b/i],
+  ['pass/forward to team',   /\b(pass (this )?ti?c|boleh pass (this )?ti?c|forward (to|kepada) (common|the \w+ team|another)|hantar (ke|kepada) (common|team)|refer (to|kepada) (common|the \w+ team)|assign (to|kepada) (common|another))\b/i],
+  ['not our domain/scope',   /\b(not our (domain|module|scope|issue|problem|side)|bukan (isu|masalah|scope|skop)? ?(kita|kami)|luar (skop|scope)|out of (our )?scope|di luar (skop|scope))\b/i],
   ['whose/which module',     /\b(which module|whose (issue|module|ticket)|modul (mana|siapa)|siapa punya|is this (yours|ours|from us)|check (dulu )?(sama ada|whether|if this is)|semak (dulu )?(sama ada|jika|kalau))\b/i],
   ['cross-module / shared',  /\b(cross[- ]?module|merentas modul|shared (module|screen|code|component)|dikongsi|common (module|code|screen|component))\b/i],
-  ['team handoff name',      /\b(common team|reports? team|teknikal team|avalon team|team (lain|common|reports?))\b/i],
+  ['team handoff name',      /\b(common team|reports? team|teknikal team|avalon team)\b/i],
   ['utiliti (often common)', /\butiliti\b/i],
-  ['bare "common" mention',  /\bcommon\b/i],
+  // "common" only in a real handoff/ownership context — NOT "Common Version:" (stripped) nor generic "need help"
+  ['common addressed',       /\b(common (issue|team|module|code|side|problem|component|please|assist|punya)|(from|to|is this|is it) (the )?common|hi,? common|salam,? common)\b/i],
 ];
+
+// Session-info footer lines every ticket carries — these are metadata, never a cross-module signal.
+const NOISE = /^\s*(Common|Domain|DB|Module)\s+Version\s*:|^\s*(Session|Instance)\s*Id\s*:|^\s*DB\s+Username\s*:|^\s*Git\s+Branch\s*:|^\s*Tarikh\s+Kemaskini\s*:/i;
+function stripNoise(text) {
+  return text.split(/\r?\n/).filter(ln => !NOISE.test(ln)).join('\n');
+}
 const PRIORITY = [
   ['PROD/live',   /\b(PROD(UCTION)?|live env|di prod|dalam prod|on prod)\b/i],
   ['urgent',      /\b(urgent|segera|ASAP|secepat|kritikal|critical|emergency|kecemasan|penting)\b/i],
@@ -61,7 +68,7 @@ function hits(text, table) {
   return found;
 }
 
-const text = loadText();
+const text = stripNoise(loadText());
 const cm = hits(text, CROSS_MODULE);
 const pr = hits(text, PRIORITY);
 
