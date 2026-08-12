@@ -22,6 +22,15 @@
 
 All app nodes: port `8080`, JBoss 7.4 & JDK 17.
 
+> 🚨 **AWAM portal ≠ apps/internal — SEPARATE WARs, SEPARATE public hosts, INDEPENDENT baselines** (learned 2026-08-12, ad-hoc A12).
+> The `Public URL` column above (`etanah-appstg.melaka.gov.my`) is the **apps/internal** surface (pelupusan staff, `etanah-pelupusan`).
+> The **AWAM portal** (applicant self-service, `etanah-awam` WAR) is a **different host**: STG = `etanah-stg.melaka.gov.my`,
+> MLKIT = `etanahmlit.melaka.gov.my` (Cocoa1, §2), PROD = its own `etanah-*` host. These are deployed as **separate WARs** and can
+> run **different `mlk/release/x.y.z` baselines at the same time**. **Diagnostic rule**: when a field displays on the staff app but
+> NOT the AWAM portal (or vice-versa) for the **same DB row**, suspect **deployed-version skew between the two WARs FIRST** — read
+> EACH surface's own version panel (`Domain / DB / Common / Module Version` + `Git Branch`), do not assume "the baseline" is one thing.
+> The URL **host prefix** (`etanah-stg` vs `etanah-appstg`) identifies the WAR; the `.xhtml` path only identifies the form.
+
 ---
 
 ## 2. MLKIT (internal / mlit)

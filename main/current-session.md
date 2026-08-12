@@ -81,6 +81,21 @@ Release 1.3.2 is complete on `mlk/master`. Optional: close/archive the release. 
 - **Also this session**: bumped etanah-common `1.1.12→1.1.17-MLK` on `mlk/int-env` for MLKIT (colleague request, commit `c7030ca0cb`, pelupusan).
 - **Resume point**: DONE for coding. Left: Phase 2 archive (folder→Archive, active.txt block→active-archive); みや deploys int-env + adds to Redmine planned-release.
 - **Slip this session**: `wrong-target-edit-caught` — python first edited the guard at 4708 (wrong method) not 7734; caught by `git diff` before commit, reverted + re-applied at the correct `populateTarikhSemasa`. No bad code shipped.
+## 2026-08-12 — ADHOC A12: AWAM PRBB Pengalaman Kerja "Tiada rekod" (STG)
+
+**Ad-hoc DB check for みや (not a ticket). SURIA BINTI MAHAT / IC 850917-04-5544 / et_main_stg2 / urusan PRBB.**
+AWAM portal (`etanah-stg`) shows "Tiada rekod" for pengalaman kerja; pelupusan staff app (`etanah-appstg`,
+release/1.6.0) shows 4 rows. **DB verdict: data INTACT** — every PRBB app of SURIA has rows (`3431666`=4,
+`3431370`=3, `3418106`=2), all `version=0`, unchanged on deploy day. App 3431666's 4 rows written
+`created_by=samsiah_jaamat@melaka.gov.my` (STAFF, 17:42), NOT the AWAM applicant → AWAM session never populated.
+Fill = CR #252099 `b018a2924b`, gate `melaka && URSN_PRBB` (load `initPengalamanKerjaList():7688`; Next
+`onNextPbTab():5561`→`findExistingPengalamanKerjaList():12636`). `etanah-awam release/1.6.0` CONTAINS the fill
+(merge-base ancestor=0) → root cause bounded to **AWAM WAR version skew** (`etanah-stg` older/different than
+`etanah-appstg`) OR `isMelaka()` false (`:470`). No fix commit + no new row post-17:42 → any "fixed" = redeploy, unconfirmed.
+
+**Saved:** task `142. ADHOC - AWAM - PRBB...` · `ADHOC-REGISTER.md` A12 · `ENV-ARCHITECTURE.md §1` · memory
+`feedback_url_host_identifies_war`. **Learning:** URL host prefix = WAR; path = form.
+**NEXT:** AWAM-portal re-test producing an applicant-created (`@gmail`) pengalaman row + capture AWAM `etanah-stg` version panel.
 
 ---
 

@@ -29,6 +29,31 @@ memories. No code fix this session — the L1e fix is already shipped (int-env, 
 
 ### ▶▶ NEXT SESSION — QA-273621
 Fix is shipped to int-env (`9d045f55ec`). Test path: alter to PYB4AE (vars above) → delete docs via `PelupusanMaintenanceForm.xhtml` → re-open L1e screen, pelan should embed. Confirm the maintenance-tool delete scope (read its bean) to firm the provisional memory → verified. qa_doc §0-NEW carries the detail.
+## Session 2026-08-12 — ADHOC A12: AWAM PRBB Pengalaman Kerja "Tiada rekod" (STG)
+
+**Ad-hoc DB check for みや (not a ticket). SURIA BINTI MAHAT / IC 850917-04-5544 / et_main_stg2 / urusan PRBB.**
+AWAM portal (`etanah-stg`) shows "Tiada rekod" for pengalaman kerja bahan batuan; pelupusan staff app
+(`etanah-appstg`, release/1.6.0) shows **4 rows**. **DB verdict: data INTACT** — every PRBB app of SURIA has rows
+(`3431666`=4, `3431370`=3, `3418106`=2), all `version=0`, unchanged on deploy day. App 3431666's 4 rows written
+`created_by=samsiah_jaamat@melaka.gov.my` (STAFF, 17:42), NOT the AWAM applicant (`samsiah.j85@gmail.com`) →
+AWAM session never populated; the staff side did.
+
+Fill = CR **#252099** `b018a2924b`, gate `melaka && URSN_PRBB`, 2 paths: load `initPengalamanKerjaList():7688` →
+`populatePengalamanKerjaListByPraPihakBerkepentingan():12886`; Next `onNextPbTab():5561` →
+`findExistingPengalamanKerjaList():12636`. `etanah-awam origin/mlk/release/1.6.0` **CONTAINS** the fill
+(merge-base ancestor=0) → root cause bounded to **AWAM WAR version skew** (`etanah-stg` older/different baseline
+than `etanah-appstg`) OR `isMelaka()` false (`:470`). Re-check 08-12: no fix commit, no new pengalaman row
+post-17:42 → any "fixed" = WAR redeploy, **unconfirmed**.
+
+**Saved:** task folder `142. ADHOC - AWAM - PRBB...\ADHOC-awam-pengalaman-kerja.md` · `ADHOC-REGISTER.md` A12 ·
+`ENV-ARCHITECTURE.md §1` (etanah-stg vs etanah-appstg WAR split) · memory `feedback_url_host_identifies_war`.
+
+**Learning (agentic):** the URL **host prefix** identifies the WAR/deployable; two screenshots from different hosts
+= different deployments. Extends `feedback_watch_video_url_first` (path = form; host = WAR).
+
+### ▶▶ NEXT — ADHOC A12
+Owed: AWAM-portal re-test producing an **applicant-created** (`@gmail`) pengalaman row + capture the AWAM
+`etanah-stg` version panel to confirm/deny version skew vs the pelupusan WAR.
 
 ---
 
