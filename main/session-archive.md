@@ -4,6 +4,38 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-10 (eve) — BASELINE PELUPUSAN 1.3.2 PREPARED + #273461 SURGICALLY REMOVED + MERGED TO mlk/master
+
+**Assembled the 1.3.2 release (10 tickets → then #273461 pulled at BA's call → 9), pushed, and
+fast-forwarded `mlk/master`. The #273461 removal was surgical (revert its two merges) not a rebuild,
+to preserve the already-tested branch. Also purged a `ruri/` git-tag name from the release tooling.**
+
+### Baseline 1.3.2 — final state
+
+| | |
+|---|---|
+| Release branch | `mlk/release/1.3.2` tip `76934aefd3` |
+| `mlk/master` | fast-forwarded `9ddeb07406 → 76934aefd3` + pushed (verified: `origin/mlk/master` == tip) |
+| Final contents (9) | 272613, 273938, 273455v2, 273460, 273294, 273291, 273621, 272696, 274455 |
+| #273461 (OPLPS running-number) | **REMOVED** — reverted merges `3b745e987f` (v3) + `51115b644a` (v2); its 3 files back to non-273461 state, #273455/#273294 intact (verified in throwaway worktree) |
+| SQL | `patch-273461.sql` pulled from the Sheet with #273461; do NOT run in prod (ran on stg2 only) |
+| Undo point | tag `mlk/pre-master-merge/1.3.2` @ `9ddeb07406` (local) |
+
+### Mechanics worth not re-deriving
+
+- **Adding a ticket to an already-pushed release**: the script has no re-open command → append the ticket to `state/release-<ver>.json` + set `phase=branched`, re-run `merge`/`verify`/`push`. The new merge descends from the pushed tip so the push stays a fast-forward (did this for #274455).
+- **Removing one ticket from a tested/deployed release**: revert its merge commit(s) in a throwaway `git worktree` (never touch みや's active checkout), verify only that ticket's files reverted + siblings survive, then FF-push. Preferred over rebuild because it keeps every other ticket's merge byte-identical (testing continuity).
+- **`release-prep.js` merge is `--no-ff` per ticket** — that "messy" per-ticket-lane graph on master is the intended shape (matches 1.3.0/1.3.1) AND is what made the #273461 revert clean.
+- **`ruri/` in a git ref is banned** (みや: "feels not safe") — release tooling tag renamed `ruri/pre-master-merge-<ver>` → `mlk/pre-master-merge/<ver>` (`release-prep.js:426`, `SKILL.md:267`).
+
+### ▶▶ NEXT SESSION — nothing pending on the baseline
+
+Release 1.3.2 is complete on `mlk/master`. Optional: close/archive the release. The active quests
+(QA-273460 PLPS phase-0, QA-273621 MLPS Recon-reopen) were NOT touched this session — resume via the
+274510 block's table below for the other open work.
+
+---
+
 ## 2026-08-07 15:26 → 2026-08-10 — 274510 PT FLOWABLE ORPHAN REPAIRED IN PROD
 
 **A BA inquiry became a PROD workflow repair. The Flowable engine had lost a task; eTanah marked it

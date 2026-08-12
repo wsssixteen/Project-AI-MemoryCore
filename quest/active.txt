@@ -930,6 +930,8 @@ quest_start_ts=2026-08-04T17:34:44.014Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\125. ESOKONGAN #273921 - PDTJ - PPTPB - Papar Loading ''Sedang Kemaskini'' Lama
 phase=1
 status=closed
+phase=0
+status=active
 ticket_type=bug
 env=PDTJ > PPTPB > Papar Loading ''Sedang Kemaskini'' Lama
 issue_one_liner=PDTJ > PPTPB > Papar Loading ''Sedang Kemaskini'' Lama
@@ -939,6 +941,8 @@ current_phase=Ship-Verify
 local_test_confirmed=false
 closed=2026-08-12
 qa_doc=projects/coding-projects/active/QA-273921/QA-273921.md
+current_phase=Recon-reopen
+local_test_confirmed=false
 
 qa=QA-273919
 quest_start_ts=2026-08-04T16:48:41.163Z
