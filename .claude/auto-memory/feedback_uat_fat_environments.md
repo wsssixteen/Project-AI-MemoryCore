@@ -3,7 +3,10 @@ name: Etanah environments — mlit is PRIMARY; UAT + FAT decommissioned; only pg
 description: 🚨 As of 2026-07-17 only 3 DB connections exist, all pgEdge (postgres-mlit-pg / postgres-mlkstg-pg / postgres-mlkprod-pg). UAT and FAT are DECOMMISSIONED and deleted from .claude.json + standalone.xml. mlit (mkit/et_main_mlit) is the primary target and holds the bare etanahDS. STG (mlkstg/et_main_stg2) is etanahDS2. Training is etanahDS3, dormant. The legacy @modelcontextprotocol/server-postgres client is GONE — never re-add it.
 type: feedback
 originSessionId: 9a250643-8b07-48d4-8408-3e2fb4b02911
+modified: 2026-08-10T02:25:16.971Z
 ---
+> 🚨 **LIVE DATA-WORK TARGET (2026-08-10) = STG2 (`et_main_stg2`), server `postgres-mlkstg-pg`.** みや: *"WE HAVE SWITCHED TO STG2 FOR NOW."* "mlit is PRIMARY" below is stale for data/patch work — do NOT default to mlit for queries or patches. mlit remains only the local **app-deploy/JBoss** env. The authoritative live pointer is [[feedback_staging_schema_stg2]]; read it before any staging query. (I slipped on this 2026-08-10 — queried mlit out of habit off this file's "PRIMARY" line.)
+
 **Environments as of 2026-07-17** (per みや — UAT decommissioned, FAT deleted, mlit is the focus):
 
 | Env | Host / DB / Schema | MCP (pgEdge only) | Datasource |

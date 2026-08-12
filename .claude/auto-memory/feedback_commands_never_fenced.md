@@ -1,35 +1,35 @@
 ---
 name: feedback_commands_never_fenced
-description: "Commands miya must RUN go one-per-line as plain bullets with inline backticks — never in a code fence, table cell, or multi-line block"
+description: "Commands miya must RUN go as ONE ```bash fenced block PER command (each renders its own Run + copy-icon button) — never one fence wrapping several, never bare inline-backtick bullets"
 metadata: 
   node_type: memory
   type: feedback
   originSessionId: d6846f88-8934-4164-a6b6-3afccb489b73
-  modified: 2026-08-04T14:36:39.579Z
+  modified: 2026-08-12T07:33:39.908Z
 ---
 
-Any command intended for みや to copy into a terminal is emitted as a **plain markdown bullet, one
-command per line, command in single backticks**. Never inside a code fence, never in a table cell,
-never as one multi-line block.
-
-**Why**: he copies commands into the terminal **one at a time**. A fence renders as a single block
-with one copy button — he cannot double-click a line out of it. He has now said so three times
-(baseline 1.0.10 hand-off card · `./deploy-pelupusan.sh` auto-linkifying · the QA-273201 mlit deploy
-card on 2026-08-04). Ledger category `emit-shape-not-copyable`.
+🚨 **REVERSED 2026-08-12 (baseline 1.3.3 hand-off).** miya: *"I want to change from using `` to using
+the quotes where I can choose to run or just a single click copy since it has that copy icon."* Each
+command miya runs goes in its **own ```bash fenced block** — the app renders a **Run button + copy
+icon** per block, so it's single-click to run or copy. This is what CLAUDE.md Rule 0 always said
+(*"one ```bash block PER command… NEVER one fence wrapping the whole card"*); the prior version of
+THIS memory contradicted Rule 0 and is now retired.
 
 **How to apply**:
-- Correct: `- \`ssh app@172.16.100.162\`` then `- \`cd deployment-scripts/mlit\`` on the next bullet.
-- Banned: a ```` ```bash ```` block of steps · numbering glued to the command (`1 ssh app@…` — the
-  number gets selected too) · a leading `./` outside backticks (auto-linkifies) · one command
-  wrapped across two lines.
-- **Not covered**: code shown for *reading* — a Java diff, a JSF snippet, an SQL script he will save
-  to a file. Those stay fenced. The test is **"will he type or paste this into a shell?"**
-- **Precedence**: the Claude Code harness instruction *"put shell commands in a ```bash fence so the
-  app adds a Run button"* is OVERRIDDEN by this. User instructions outrank default system-prompt
-  behaviour — that inversion is exactly what caused strike 3.
+- Correct: one ` ```bash ` block per command, one command inside each — the block carries the button.
+- Banned: **one fence wrapping MULTIPLE commands** (only one button → can't run/copy individually —
+  this was the real 2026-07/08 complaint, misread as "no fences") · **bare inline-backtick bullets**
+  (`- \`ssh …\`` — no button, must hand-select — superseded 2026-08-12) · numbering glued to the
+  command · a leading `./` (auto-linkifies — use `bash <script>`).
+- **Not covered**: code shown for *reading* — a Java diff, JSF snippet, an SQL script he saves to a
+  file. The test stays **"will he type/paste/RUN this in a shell?"** → own fenced block.
 
-Canonical spec: `.claude/reply-shape-spec.md` §3b. Enforced for deploy cards by
-`.claude/skills/deploy/SKILL.md` §5 (v1.1) + `domain/deploy/eval.js` checks 21-24.
+**Why the flip**: the earlier "one at a time" pain was a SINGLE fence around many commands (one
+button). Per-command fences fix both at once — each is separately runnable/copyable AND single-click.
+
+Canonical spec: `.claude/reply-shape-spec.md` §3b + `.claude/skills/deploy/SKILL.md` §5 +
+`domain/deploy/eval.js` checks 21-24 + `.claude/skills/release-mlk-plp/SKILL.md` card section — all
+still carry the OLD no-fence rule and need the same flip (follow-up sweep).
 
 Related: [[feedback_two_sentence_default]] · [[feedback_ba_facing_reply_plain]] ·
 [[feedback_show_diagram_for_issues]]

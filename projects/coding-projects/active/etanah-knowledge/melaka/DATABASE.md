@@ -1453,3 +1453,35 @@ permohonan running number. BA Anis confirmed this is CORRECT, 2026-08-05 on #273
 ⚠️ `PYB4AE` has **never occurred in PROD** — 0 of 38 PLPS tugasan ever recorded; the deepest PLPS
 reaches is `PRMMKNPDT`. Skrin 338 `PLP_BYRN_LSN` (Pengiraan Bayaran Lesen) mounts on **44 langkah /
 4 urusan**: PLPS 21 · PPTPB 17 · PPJK 3 · PSBS 3 — and never on PYB4AE/PB4AE.
+
+---
+
+## Locating a PLU app by its permohonan reference (`PTMLK/01/L/PT/2026/13`) — the ref is NOT stored
+
+🚨 **The human-readable No. Permohonan is RUNTIME-GENERATED, not persisted as one string.** Searching
+for it as a column value returns 0 rows by design → do NOT conclude "the app isn't on PROD" from that.
+(2026-08-10, #273707 — a familiar searched `umm_p_aplikasi.no_rujukan_permohonan` for the reference,
+got 0, and falsely reported the app absent from PROD. The app was there.)
+
+**Two traps that produce the false negative:**
+- `umm_aplikasi` (the spine) has **no reference-string column** at all (checked all 43 cols).
+- `umm_p_aplikasi.no_rujukan_permohonan` exists BUT that table is **SPOC/awam pra-aplikasi only** —
+  staff-submitted PT/PLU apps are not in it (0 PT/2026 rows on PROD).
+
+**Decode the reference** `PTMLK / 01 / L / PT / 2026 / 13`:
+`<pejabat kod>` / `<daerah kod>` / L / `<urusan kod>` / `<year>` / `<running no>`.
+- pejabat `01` = `ind_pejabat.kod='01'` → pejabat_id 2 (Pejabat Daerah Dan Tanah Melaka Tengah)
+- urusan `PT` = `ind_ursn.kod='PT'` → ursn_id 51
+- running-no `13` is generated per (pejabat, urusan, year); not reliably stored as a queryable literal.
+
+**How to actually locate the app on PROD** — by stored components or by the defect signature, never by
+the reference string:
+```sql
+-- by defect signature (best when the ticket describes a data anomaly):
+SELECT pt.aplikasi_id, pt.bandar_pekan_mukim_id, pt.daerah_id, a.pejabat_id, a.status_proses
+FROM et_main.umm_a_permohonan_tnh pt
+JOIN et_main.umm_aplikasi a ON a.aplikasi_id = pt.aplikasi_id
+WHERE a.ursn_id = 51 AND pt.daerah_id IS NULL AND pt.bandar_pekan_mukim_id IS NOT NULL;
+```
+Staging (`et_main_stg1/2`) is a **prod clone**, so an aplikasi_id found on staging usually exists on
+PROD with the same id — confirm on PROD rather than labelling a staging find "staging-only".

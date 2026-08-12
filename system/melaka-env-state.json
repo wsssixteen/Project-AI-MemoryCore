@@ -1,0 +1,15 @@
+{
+  "_purpose": "Single machine-readable pointer for which Melaka staging schema is live. Written by miya-switch phrases, read by staging-schema-tracker.js at every env-prep / test-scenario prompt. NO default — this file IS the truth. Prose mirror: .claude/auto-memory/feedback_staging_schema_stg2.md (keep in sync).",
+  "melaka_staging_schema": "stg2",
+  "schema_name": "et_main_stg2",
+  "schema_user": "et_main_stg2",
+  "mcp_server": "postgres-mlkstg-pg",
+  "standalone_datasource": "etanahDS",
+  "standalone_path": "E:/Dev/jboss-7.4-plp-melaka/standalone/configuration/standalone.xml",
+  "updated": "2026-08-10",
+  "source": "miya",
+  "history": [
+    { "schema": "stg1", "from": "2026-07-27" },
+    { "schema": "stg2", "from": "2026-08-10" }
+  ]
+}
