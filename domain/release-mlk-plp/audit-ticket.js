@@ -81,8 +81,22 @@ for (const r of rows) {
   console.log(`| ${r.b} | ${r.trap ? '🚨 YES' : 'no'} | ${r.files.length}: ${r.files.map(f=>f.split('/').pop()).join(', ') || '—'} | ${r.covered==null?'—':(r.covered?'✅ all blobs match':'❌ MISSING')} |`);
 }
 
-const verdict = (reverted || stacked || anyUncovered)
-  ? '🚨 DO NOT trust a single branch merge — reconstruct the complete footprint + content-verify the release'
+// ---- ledger enforcement (deterministic guarantee the stack is classified in the quest MD) ----
+let ledgerOk = true;
+try {
+  const { checkTicket } = require('../../quest/branch-ledger-check.js');
+  const lc = checkTicket(num, { repo: REPO });
+  ledgerOk = lc.ok;
+  if (lc.stacked) {
+    console.log(`\n### branch-ledger (quest MD: ${lc.mdPath ? require('path').basename(lc.mdPath) : '🚨 NOT FOUND'})`);
+    for (const b of lc.branches) console.log(`  ${lc.rows[b] || '🚨 UNCLASSIFIED'.padEnd(9)}  ${b}`);
+    if (lc.missing.length) console.log(`  🚨 classify these before V1: ${lc.missing.join(', ')}`);
+    if (lc.negativesAlive.length) console.log(`  🗑️  delete (tagged -NEGATIVE, still on origin): ${lc.negativesAlive.join(', ')}`);
+  }
+} catch (e) { console.log(`\n(ledger check skipped: ${e.message})`); }
+
+const verdict = (reverted || stacked || anyUncovered || !ledgerOk)
+  ? '🚨 DO NOT trust a single branch merge — reconstruct the complete footprint, content-verify the release, and classify every branch in the quest-MD ledger'
   : '✅ single clean branch — normal merge path';
 console.log(`\n**verdict:** ${verdict}\n`);
-process.exit(anyUncovered ? 1 : 0);
+process.exit((anyUncovered || !ledgerOk) ? 1 : 0);

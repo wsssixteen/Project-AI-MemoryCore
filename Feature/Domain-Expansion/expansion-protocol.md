@@ -228,6 +228,15 @@ and hooks read the **worktree** copy while the durable content lives in **main**
 other is why the deferrals gate reported a section as missing on 2026-08-06 that had in fact been
 written. Sync them in this step, not at commit time.
 
+**🚨 Branch-ledger sweep (added 2026-08-13 per みや, after the #273461 baseline miss)** — run
+`node quest/branch-ledger-check.js --all`. It reads `active.txt` for every OPEN quest, and for any whose
+fix is **STACKED across rework branches** (`…/<num>vN`), FAILS unless each branch is classified in the
+quest MD's Branch ledger (`branch — TAG — note`; TAG ∈ `+ADD ~CHANGE *CANONICAL -NEGATIVE`). Any 🚨 →
+classify before closing DE. This is the session-close half of the guarantee; the baseline half is
+`audit-ticket.js` at release Phase A. **Why**: the branch-note can't rely on memory — git always knows the
+vN branches exist, so a tool that reads git and blocks is the only real guarantee. `-NEGATIVE` branches
+still on origin are surfaced for deletion (a wrong branch left alive is the next v2/v3 trap).
+
 **Verified by**: step 12.6 `resume-readiness.js` — 2b is the WRITE, 12.6 is the READ-BACK. A `✗` there
 means 2b did not actually run for that quest.
 
