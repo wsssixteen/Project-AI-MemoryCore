@@ -1,5 +1,33 @@
 # Current Session
 
+## 2026-08-13 — BASELINE Pelupusan 1.3.3 SHIPPED (+ #273461 recovery) + branch-ledger mechanism built
+
+**Baseline 1.3.3 — COMPLETE, on `mlk/master` @ `377580ef71`** (ff-merged after BAQA passed). 4 tickets:
+#273461 · #273921 (miya's v2) · #274838 (Aaron's commit → `mlk/training/274838`) · #268510. Undo tag
+`mlk/pre-master-merge/1.3.3` @ `76934aef`. Common 1.1.12-MLK, no SQL. Deployed stg2 (build .162 → deploy .203).
+
+**🚨 The miss + recovery**: for #273461 I cherry-picked only the v3 guard → shipped 1 of 3 files; miya
+deployed the incomplete build and caught it. #273461's fix was STACKED v1→v2→v3 (3 files), all merged
+into 1.3.2 then REVERTED — reconstructing from the latest branch alone guarantees the miss. Rebuilt
+`273461v4` = all 3 commits (byte-verified vs pre-revert `3b745e987f`), re-merged, force-pushed release,
+V8 to master. Slips `release-partial-fix` + `inventory-first`.
+
+**Mechanism built + committed (`d2fd977` on main, pushed)**:
+- `domain/release-mlk-plp/audit-ticket.js` — per-ticket completeness at baseline Phase A (rework-branch
+  enum · REVERTED scan · ancestor-trap · content-verify vs release). Wired into SKILL.md step 5.5.
+- `quest/branch-ledger-check.js` (+ `.eval.js` 13/13) — deterministic guarantee every stacked ticket is
+  CLASSIFIED in its quest MD (`branch — TAG — note`; enum `+ADD ~CHANGE *CANONICAL -NEGATIVE`). Reads git,
+  so memory can't skip it. `--all` sweeps open quests at DE close (wired into expansion-protocol Step 2b).
+- Ledgers written: `QA-273461.md`, `QA-273921.md` (gitignored → disk/OneDrive). Memory
+  `feedback_commands_never_fenced` REVERSED (per-command ```bash fences now, for the Run/copy button).
+
+**Resume/next**: (1) miya's nod to DELETE superseded branches `273461` `273461v2` `273461v3` `273921`
+(all `-NEGATIVE`, still on origin). (2) miya to pick from the 20→9+3 baseline-hardening list (rest beyond
+audit-ticket/ledger). (3) Phase 2 archive hygiene for the 4 baseline tickets.
+
+**⚠️ Concurrent-session note**: 15 live worktrees + a sibling ran a DE today (`d0e0e60`/`2397347`, 274318
+work) — I scoped THIS save to append-only (no worktree-close, no `git add -A`) to avoid clobbering siblings.
+
 ## 2026-08-12 — QA-273921 PPTPB Kertas nested-table fix SHIPPED + template-quest awareness built
 
 **Root cause (byte-verified): `tanahDimilikiTable` CC sits inside a table cell, bound to a TABLE populator → populating with owner data makes a nested table (tbl-in-tc) whose docx4j Table Properties are invalid → Word auto-repairs but e-Tanah's server renderer hangs on "Sedang Kemaskini". Passed internal because that test app had 0 owners (populator falls back to TEXT when empty).**
