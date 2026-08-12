@@ -1,5 +1,21 @@
 # Current Session
 
+## 2026-08-12 — QA-274532 PLTP Surat Nilaian JPPH — SHIPPED (Phase 1 closed + int-env deployed)
+
+**Two-issue ESOKONGAN ticket fixed end-to-end: date-blank-after-Jana-Semula (Java guard) + title over-spacing (docx). Local test PASS, committed, pushed, merged to int-env preserving int-env's newer template.**
+
+- **Phase/status**: closed (Phase 1). Phase 2 archive pending.
+- **Root causes (both VERIFIED)**: (1) Date — `PelupusanWordCCMethodConstant.populateTarikhSemasa()` guard (QA #233948 regression, commit `885a990388`) blanks the Gregorian `tarikhSemasa` whenever the app has any `STATUS_PENYEDIAAN_PEMBETULAN` doc; Jana Semula flips the SN_JPPH doc to pembetulan → date blanks. Hijri `tarikhMasihi` has no guard → the video's Tarikh-blank / Bersamaan-shown asymmetry. (2) Title — template title paragraph `w:jc=both` (justified) stretched the bold multi-line title.
+- **Fix**: (1) Java — `&& !StringUtils.equals(PelupusanConstant.SRT_SN_JPPH, templateProperty.getKodDokumen())` added to the guard (exempts JPPH letter only; in-file convention = `populateFooterSurat1():11799`). (2) docx — title paragraph `both→left` (body/slogan untouched; slogan = separate Training ticket, out of scope per みや + BA).
+- **What moved**: commit `63bf558ed3` on `mlk/esokongan/274532` (first push) · merged to `mlk/int-env` @ `051469ef00`. int-env's template carries a `pelanCC` control master lacks → resolved by taking int-env's docx + re-applying our title fix on it (pelanCC preserved, verified).
+- **Delivery channels**: git branch (pushed) · int-env (merge pushed; みや deploys via `deployment-scripts/mlit` → `deploy-pelupusan.sh` → `mlk/int-env`) · NOT yet on Redmine planned-release list (みや's step).
+- **Test**: PASS (みや local — PTMLK/02/L/PLTP/2026/4, faridmajid@melaka.gov.my — title no gaps, Tarikh shows after Jana Semula).
+- **Also this session**: bumped etanah-common `1.1.12→1.1.17-MLK` on `mlk/int-env` for MLKIT (colleague request, commit `c7030ca0cb`, pelupusan).
+- **Resume point**: DONE for coding. Left: Phase 2 archive (folder→Archive, active.txt block→active-archive); みや deploys int-env + adds to Redmine planned-release.
+- **Slip this session**: `wrong-target-edit-caught` — python first edited the guard at 4708 (wrong method) not 7734; caught by `git diff` before commit, reverted + re-applied at the correct `populateTarikhSemasa`. No bad code shipped.
+
+---
+
 ## 2026-08-12 — QA-265537 etanah-common display-tolerance edits REMOVED (confirmed unused)
 
 **みや spotted two uncommitted `etanah-common` files on `mlk/master` and asked whether they were a
@@ -34,31 +50,3 @@ removed them.**
 | item | why | where |
 |---|---|---|
 | `/deploy` auto-fallback to ticket-only cherry-pick | full-merge drags master delta into stale int-env → conflict on unrelated files; skill only *detects* drift, no auto-fallback | refine `.claude/skills/deploy` §4: when already-merged guard shows other-ticket files / pom bump / non-ticket conflict → cherry-pick the fix commit(s) |
-
-## 2026-08-11 — QA-273621 TEST-SETUP settled + reset method CORRECTED + 3 memories banked
-
-**みや drove the flowable-alter + document-reset setup to re-test the L1e fix. Two corrections landed:
-the test-reset is deleting docs via a maintenance tool (NOT the flow auto-delete I inferred, NOT
-#273956's SQL), and I cold-re-read banked flowable mechanics instead of trusting them. Both banked as
-memories. No code fix this session — the L1e fix is already shipped (int-env, commit `9d045f55ec`).**
-
-### QA-273621 test-setup (env = stg2, aplikasi 3416909, PDT Jasin)
-
-| Piece | Answer | Evidence |
-|---|---|---|
-| Flowable alter | Initiate & Alter → **PYB4AE** (Penyediaan 4Ae dan L1e), Reset Vars = No | FLOWABLE-KNOWLEDGE §6 |
-| `pejabatKod` | insert **02** | MLPS procs 6/6 carry it (stg2 engine); also set on submit `prepareBpmValues:198` |
-| `permohonanDari` | **leave blank** | 0 MLPS procs carry it (stg2 engine); only TRG/surat flows use it |
-| `pembetulan` / `adaSpoc` | keep true | pembetulan routes correction loop; adaSpoc re-derived on submit |
-| **Test-reset** | **delete related docs via `PelupusanMaintenanceForm.xhtml`** (per みや) | ⚠️ delete-scope not yet code-verified |
-
-### Corrections banked (memories)
-- `reference_pelupusan_doc_reset_tool` — reset = delete docs via maintenance tool; NOT status_id=NULL (that's #273956 template-letters), NOT `overridePostSubmitMethod:207-211` auto-delete (my over-assertion).
-- `feedback_ticket_type_vocab_tracking` — tag each ticket a TYPE + track per-individual wording; stay provisional (みや: "you're new").
-- `feedback_banked_knowledge_change_check` — trust banked etanah-knowledge at 100%; re-read source only after a cheap `git log` change-check.
-- 2 slips logged (assume-not-verify, banked-knowledge-not-trusted; both caught-by みや).
-
-### ▶▶ NEXT SESSION — QA-273621
-Fix is shipped to int-env (`9d045f55ec`). Test path: alter to PYB4AE (vars above) → delete docs via `PelupusanMaintenanceForm.xhtml` → re-open L1e screen, pelan should embed. Confirm the maintenance-tool delete scope (read its bean) to firm the provisional memory → verified. qa_doc §0-NEW carries the detail.
-
----
