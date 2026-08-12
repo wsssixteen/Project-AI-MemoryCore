@@ -598,7 +598,7 @@ issue_one_liner=MLPS - Penyediaan Borang 4Ae dan L1e - Maklumat bagi medan Banda
 assigned_to_me=2026-07-20
 urusan=MLPS
 tugasan=Penyediaan Borang 4Ae dan L1e
-current_phase=BLOCKED ON LOCAL DEPLOY 2026-07-24 (session end). Root cause FOUND + DB-verified: TRANSFER bug - AWAM saves registered bandar correctly to Pra (29+text) but App row gets surat 30 AND both bandar_lain texts DROPPED (fresh permohonan PTMLK/01/L/MLPS/2026/2 aplikasi 3417685 on STG1 proves it: PRA 23656 = 29/MELAKA BANDAR BERSEJARAH + srt 30/same; APP 5542657 = bandar_id 30 + NULL, daftar 29 + NULL). 6 uncommitted edits in etanah-common + etanah-awam are the OLD display-tolerance direction (candidate 4 = REJECTED by familiar) + 2 loggers - decide keep vs revert. DEPLOY BLOCKER: Eclipse m2e-wtp web-resources has only META-INF so etanah-common overlay never merges - war missing jboss-deployment-structure.xml (org.hibernate) AND 98/111 taglib files (et:form) - miya already tried Maven update/clean/republish. Maven CLI build WORKS (3.9.9 + toolchains fixed). NEXT SESSION: fix deploy first via Eclipse Maven Update Project with Force Update AND Clean projects ticked; see qa_doc SESSION-END + DEV-TESTING-HACKS.md
+current_phase=RESOLVED (Aaron Loh, Redmine 100%). 2026-08-12: rejected common display-tolerance edits (candidate 4) REMOVED per miya - git checkout revert of InputAlamat.java + InputAddressRegisteredAndMailingComponentHelper.java on etanah-common mlk/master + git stash drop 'stash 265537' (commit a616e777e3, reflog-recoverable). Code side clean across all 3 repos; shipped fix = awam save-path e38f1e3f81. See qa_doc 2026-08-12 block.
 quest_start=2026-07-21
 qa_doc=projects/coding-projects/active/QA-265537/QA-265537.md
 branch=n/a-pre-apply
@@ -925,6 +925,19 @@ closed=2026-08-06
 redmine_assignee=miya - In Progress, flipped by him 2026-08-06 06:06 (verified by the parallel 273956 session; supersedes the qa_doc note naming Faizudin)
 close_note=Phase 1 closed on miya instruction 2026-08-06. Commit fadebbcbce pushed to origin/mlk/esokongan/273465; merged c69f932ad5 into origin/mlk/int-env. local_test_confirmed stays FALSE - no deployed build has been exercised yet; verification deferred to the mlit run. Runtime coverage 1 of 87 AWAM pages. WAF-to-throw causal link NOT proven. DEVIATION: QA273465-PROBE console channels intentionally shipped (step 2.6 default is strip) - they are the only PROD diagnostic for the unproven WAF path; say the word and I strip them.
 
+qa=QA-273921
+quest_start_ts=2026-08-04T17:34:44.014Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\125. ESOKONGAN #273921 - PDTJ - PPTPB - Papar Loading ''Sedang Kemaskini'' Lama
+phase=0
+status=active
+ticket_type=bug
+env=PDTJ > PPTPB > Papar Loading ''Sedang Kemaskini'' Lama
+issue_one_liner=PDTJ > PPTPB > Papar Loading ''Sedang Kemaskini'' Lama
+assigned_to_me=2026-08-04
+tugasan=Penyediaan Kertas Pertimbangan Pentadbir Tanah
+current_phase=Recon-reopen
+local_test_confirmed=false
+
 qa=QA-273919
 quest_start_ts=2026-08-04T16:48:41.163Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\126. ESOKONGAN #273919 - AWAM - PPJK - Labelling urusan papar Maklumat Pembatalan Perizaban
@@ -952,7 +965,6 @@ tugasan=Cetakan Dokumen
 closed=2026-08-06
 close_note=REOPENED 2026-08-06 - the 08-05 'not our work' reconcile was WRONG; live Redmine board has it on miya, open, due 12 Aug
 current_phase=Recon-reopen
-current_phase=Test-setup ready (stg2): fix shipped int-env 9d045f55ec; reset=delete docs via PelupusanMaintenanceForm.xhtml
 local_test_confirmed=false
 quest_start=2026-08-06
 qa_doc=projects/coding-projects/active/QA-273621/QA-273621.md
@@ -1080,3 +1092,39 @@ branch=n/a-data-patch
 test_app=PTMLK/02/L/PT/2026/3 @ sitihanum@melaka.gov.my (aplikasi 3398208, PDT Jasin)
 issue_one_liner=PT PTMLK/02/L/PT/2026/3 - engine lost task 18762781, handleCompletion marked Selesai anyway, no successor tugasan; zero active tugasan so Pergerakan Fail showed tiada rekod
 close_note=PROD data-fix via InitiateBPMFlowableForm Initiate-and-Alter to PYMB, 2026-08-07 23:46:59. No code, no branch. VERIFIED: umm_tgsn_semasa 115172 PYMB -PT- sitihanum; umm_a_tgsn 2780452 flag_aktif=Y id_bpm_task 18870548; umm_aliran_kerja 22764. BA Expected satisfied. Rehearsed on stg2 PTMLK/01/L/PT/2026/3 (also an orphan) where act_ru_task 7022569 came back alive. RESIDUAL: PROD act_ru_task unverifiable (et_read denied USAGE on et_flowable17); sitihanum Hantar + BA retest are the runtime proof. OPEN SEPARATELY: 88/90 Aug PROD apps share this orphan shape
+
+qa=QA-274914
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\139. ESOKONGAN #274914 - Pelupusan - PPTPB - 1) Tugsan Pembetulan Tidak Ke PT 2) No Lot Papar B
+phase=0
+status=hold
+ticket_type=bug
+env=Pelupusan > PPTPB > 1) Tugsan Pembetulan Tidak Ke PT 2) No Lot Papar Berbeza
+issue_one_liner=Pelupusan > PPTPB > 1) Tugsan Pembetulan Tidak Ke PT 2) No Lot Papar Berbeza
+assigned_to_me=2026-08-11
+
+qa=QA-274745
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\140. INTERNAL ISSUE #274745 - MLKIT - PT - SKM - Maklumat bagi Tujuan Permohonan dan Perincian Tuju
+phase=0
+status=hold
+ticket_type=bug
+env=MLKIT
+issue_one_liner=PT - SKM - Maklumat bagi Tujuan Permohonan dan Perincian Tujuan Permohonan telah dipilih semasa tugasan Perserahan Kaunter tetapi maklumat y
+assigned_to_me=2026-08-10
+urusan=PT
+tugasan=SKM
+
+qa=QA-274740
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\141. INTERNAL ISSUE (PROD) #274740 - Pelupusan - PPTPB - Alamat salah pada Surat JT
+phase=0
+status=active
+ticket_type=patch
+env=Pelupusan
+issue_one_liner=Pelupusan - PPTPB - Alamat salah pada Surat JT
+assigned_to_me=2026-08-10
+urusan=PPTPB
+tugasan=Cetakan Dokumen
+current_phase=Recon-done
+local_test_confirmed=false
+quest_start=2026-08-12
+qa_doc=projects/coding-projects/active/QA-274740/QA-274740.md
+scout=PROD patch ALREADY DONE 2026-08-12 ~10:10 by ammar@ptsb (PSJT rollback + dok_keluaran 0 rows + 6 JT/YB rows a_dok_keluaran_id cleared); residue = confirm ownership + close
