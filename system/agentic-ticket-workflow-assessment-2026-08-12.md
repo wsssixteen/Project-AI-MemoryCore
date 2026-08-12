@@ -55,3 +55,18 @@ Session shape: full single-ticket arc — Phase 0 (video + code + DB) → fix (J
 1. **DE base-sync helper** — one script for 0b: detect worktree-behind-main + dirty tracked files, run stash→FF→pop, and auto-resolve an `active.txt` conflict where one side is empty (keep-both). Eval: this DE's 6-step manual reconcile on a one-block trivial conflict.
 2. **DE-open worktree-drift scan** — at DE-open, list modified files NOT authored this session (OneDrive re-sync artifacts like the index.md deletion) and force a keep/revert decision up front, not at commit. Eval: index.md PERMIT-LESEN deletion re-surfaced twice mid-DE.
 3. **RecursiveLoopDetector DE-exemption** — during a DE the detector should key on command identity, not "similar args", or suppress during known git-sequence phases. Eval: 7 distinct git ops flagged as a loop this DE.
+
+---
+
+## Domain Expansion — self-observation (2026-08-12, session-end, per みや)
+
+**How this DE actually ran — speed + quality findings, each with the concrete instance:**
+
+| # | Observation | Instance this DE | Improvement |
+|---|---|---|---|
+| DE-1 | DE ran content steps on a repo that was silently mid-merge | main repo had `MERGE_HEAD` (QA-273921 close-race) + 7 unmerged files; discovered only at step 10, after ~6 diagnostic calls | **Step 0b must FIRST `Test-Path .git/MERGE_HEAD` + count unmerged; if mid-merge → STOP + surface in ONE line**, never run content saves on a conflicted tree |
+| DE-2 | Two-tree split (worktree vs main) made the commit target ambiguous | my edits landed in the MAIN repo working tree; hooks wrote active.txt/slips to the WORKTREE; reconciling cost several calls | Step 0b should emit a **tree map**: `main: <n tracked> · worktree: <n tracked>` so the commit target is unambiguous up front |
+| DE-3 | Git forensics looped (RecursiveLoopDetector fired 4×) | piecemeal `git status`/marker checks across calls | **one consolidated `git-state snapshot` script** (branch · behind · MERGE_HEAD · unmerged · my-files-present) run ONCE at DE start replaces the piecemeal probing |
+| DE-4 | Blocker-surfacing worked well | I stopped + used AskUserQuestion instead of blindly completing another quest's merge → no data loss | keep: mid-merge = STOP + ask, never auto-resolve append/log files |
+
+**Speed verdict**: the DE itself was slowed almost entirely by the pre-existing git conflict, not by the content steps. A deterministic mid-merge guard at step 0b would have turned ~10 minutes of forensics into one surfaced line.
