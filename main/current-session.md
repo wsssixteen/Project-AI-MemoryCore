@@ -67,3 +67,6 @@ to preserve the already-tested branch. Also purged a `ruri/` git-tag name from t
 Release 1.3.2 is complete on `mlk/master`. Optional: close/archive the release. The active quests
 (QA-273460 PLPS phase-0, QA-273621 MLPS Recon-reopen) were NOT touched this session — resume via the
 274510 block's table below for the other open work.
+
+### Session recap 2026-08-13 (post-274318 defenders)
+Hardened auto-skill Step 4.5 -> a defender is NOT done until an eval RUNS on the exact miss + output pasted (banned: verbal "exercised ok"). Built cross-module-intake scanner (domain/cross-module-intake/scan.js + eval.js), real-ticket-tested on 64 Melaka Pelupusan tickets: false positives 25->0 (stripped Common-Version session footer, dropped generic "need help" + bare directionals), 8 true-positive flags incl #274318. Committed 3cdc7eb + 68ec3b9. NEXT: wire scan.js into ticket-gate.js for auto-fire at intake.
