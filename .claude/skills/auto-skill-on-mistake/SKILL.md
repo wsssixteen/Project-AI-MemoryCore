@@ -140,9 +140,32 @@ Any row with **✗** → revise wording BEFORE Step 4 emit. **⚠️** rows surf
 
 If the missed behaviour can fire deterministically — e.g. "after every Edit to source code, run X check" — write the corresponding hook script under `.claude/hooks/<name>.js` and register it in `.claude/settings.local.json`. Hooks bypass the model and fire 100% of the time.
 
-### Step 4.5 — Fire-on-the-trigger (added 2026-07-03, audit E10 — C-walk pattern #4, 2 strikes)
+### Step 4.5 — Fire-on-the-trigger = an EXECUTED eval on the miss, NEVER a verbal claim 🚨 (hardened 2026-08-12 per みや)
 
-The refined/created skill or hook MUST be invoked/exercised on the VERY ticket/turn that triggered the refinement, in the SAME session — a defender built but not fired on its own trigger case is unvalidated. QA-262004 (annotations skill built same session, not run on the ticket) + QA-262039 (checklist refined same session, not invoked on the ticket) are the proof strikes. Emit: `Fire-on-trigger: <component> exercised on <ticket/case> ✓` or the explicit reason it cannot be (e.g. ticket already closed).
+## The Iron Law
+
+```
+A DEFENDER IS NOT DONE UNTIL YOU HAVE RUN AN EVAL THAT REPRODUCES THE EXACT FAILING CASE
+AND PASTED ITS REAL OUTPUT THIS TURN.
+```
+
+A written `Fire-on-trigger: <component> exercised ✓` with no executed output is **BANNED** — that is the claim-not-execute hole. **2026-08-12**: I built a memory + a *deferred proposal*, wrote "exercised on QA-274318 ✓", and shipped nothing runnable; みや had to demand *"RUN THE FUCKING EVAL"*. The phrase-trigger fired and produced no proof — because this step let me narrate instead of run.
+
+**Mandatory on EVERY defender build — no exceptions:**
+1. Build the defender as **runnable code with its own `eval.js`** (a text/keyword scan, a hook, a script). A memory MAY accompany it, but **a memory + a "proposal" is NOT a defender** — it is prose that doesn't fire, the exact pattern these slips are about.
+2. The eval MUST contain the **precise case that failed**, now asserting PASS (e.g. run the scanner on the very ticket folder), plus ≥1 negative case.
+3. **RUN it THIS turn** — `node <feature>/eval.js` — and **PASTE the real stdout** (`N/N passed` + the failing-case line visible). No output pasted = step not done.
+4. Only after the pasted green output: emit the skill-card + Step 6 report.
+
+### Red Flags — STOP if you catch yourself:
+- writing "exercised on <ticket> ✓" without a command having run this turn
+- logging a `--type proposal` **instead of** building + running the defender (proposal is for FUTURE ideas, never a substitute for the fix みや just asked for)
+- "I'll wire/eval it at the weekly audit / next session" — the eval runs NOW, on the miss
+- "it's obviously correct, no need to run it" — the original bug was also "obvious"
+
+If the case genuinely can't be reproduced (ticket data gone), say exactly why and build the eval on a **captured text fixture** of the BA words instead — still executed, still pasted.
+
+**Precedent**: QA-262004 (annotations skill built, not run) + QA-262039 (checklist refined, not invoked) + 2026-08-12 (cross-module scanner claimed, not eval'd until demanded).
 
 ### Step 5 — Failure log entry + tiered escalation (refined 2026-05-25 — "12 days unacceptable" slip)
 

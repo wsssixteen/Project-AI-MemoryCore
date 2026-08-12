@@ -28,6 +28,11 @@ const cases = [
     expectCode: 0,
     expectContains: ['PRIORITY'],
   },
+  // wording variations — different people phrase "is this common / pass it" differently
+  { name: 'Malay: boleh pass ke common team', args: ['--text', 'Boleh pass ke common team tak? Rasa macam bukan scope kita.'], expectCode: 2, expectContains: ['CROSS-MODULE'] },
+  { name: 'EN: check whose module / from common', args: ['--text', 'Please check whose module this is, might be from common.'], expectCode: 2, expectContains: ['CROSS-MODULE'] },
+  { name: 'Malay: luar skop, rujuk kepada common', args: ['--text', 'Ni luar skop pelupusan, rujuk kepada team common.'], expectCode: 2, expectContains: ['CROSS-MODULE'] },
+  { name: 'EN: forward to reports team', args: ['--text', 'This looks like a report layout bug — forward to reports team.'], expectCode: 2, expectContains: ['CROSS-MODULE'] },
 ];
 
 let pass = 0;

@@ -12,17 +12,22 @@ const fs = require('fs');
 const path = require('path');
 
 // Each signal: a label + a regex. Match => quote the line it hit.
+// People word "is this common / pass it over" many ways (EN + Malay). Keep expanding as new phrasings appear.
 const CROSS_MODULE = [
-  ['BA asks our-vs-Common',   /\b(our issue or common|issue (is )?from common|common issue|is this .*common)\b/i],
-  ['BA says pass to team',    /\b(pass (this )?tic|pass to \w+|boleh pass|can pass this)\b/i],
-  ['not our domain',          /\b(not our (domain|module|scope)|bukan .*(kita|kami))\b/i],
-  ['utiliti screen (often common)', /\butiliti\b/i],
-  ['module keyword: common',  /\bcommon\b/i],
+  ['our-issue-or-Common',    /\b(our issue or common|is this (our|a|an?) common|issue (is )?from common|common issue|from (the )?common team|isu common|masalah common)\b/i],
+  ['pass/forward to team',   /\b(pass (this )?ti?c|pass (to|kepada|ke)|boleh pass|can pass this|forward (to|kepada|ke)|hantar (ke|kepada)|refer (to|kepada)|rujuk (kepada|ke)|assign (to|kepada) (common|another))\b/i],
+  ['not our domain/scope',   /\b(not our (domain|module|scope|issue|problem|side)|bukan (isu|masalah|scope|skop)? ?(kita|kami)|luar (skop|scope)|out of (our )?scope|di luar)\b/i],
+  ['whose/which module',     /\b(which module|whose (issue|module|ticket)|modul (mana|siapa)|siapa punya|is this (yours|ours|from us)|check (dulu )?(sama ada|whether|if this is)|semak (dulu )?(sama ada|jika|kalau))\b/i],
+  ['cross-module / shared',  /\b(cross[- ]?module|merentas modul|shared (module|screen|code|component)|dikongsi|common (module|code|screen|component))\b/i],
+  ['team handoff name',      /\b(common team|reports? team|teknikal team|avalon team|team (lain|common|reports?))\b/i],
+  ['utiliti (often common)', /\butiliti\b/i],
+  ['bare "common" mention',  /\bcommon\b/i],
 ];
 const PRIORITY = [
-  ['PROD',   /\bPROD(UCTION)?\b/],
-  ['urgent', /\b(urgent|segera|ASAP|secepat)\b/i],
-  ['priority', /\bpriorit(y|i)\b/i],
+  ['PROD/live',   /\b(PROD(UCTION)?|live env|di prod|dalam prod|on prod)\b/i],
+  ['urgent',      /\b(urgent|segera|ASAP|secepat|kritikal|critical|emergency|kecemasan|penting)\b/i],
+  ['priority',    /\b(priorit(y|i)|keutamaan|high[- ]?priority|P[12]\b|severity|sev ?[12])\b/i],
+  ['deadline',    /\b(deadline|due (today|tomorrow|by)|hari ini|by end of|EOD)\b/i],
 ];
 
 function arg(name) {
