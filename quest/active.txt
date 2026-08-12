@@ -1134,3 +1134,20 @@ local_test_confirmed=false
 quest_start=2026-08-12
 qa_doc=projects/coding-projects/active/QA-274740/QA-274740.md
 scout=PROD patch ALREADY DONE 2026-08-12 ~10:10 by ammar@ptsb (PSJT rollback + dok_keluaran 0 rows + 6 JT/YB rows a_dok_keluaran_id cleared); residue = confirm ownership + close
+
+qa=QA-274532
+quest_start_ts=2026-08-12T06:58:11.496Z
+status=closed
+phase=1
+current_phase=Apply-done
+ticket_type=bug
+scope=PLTP
+local_test_confirmed=true
+quest_start=2026-08-12
+assigned_to_me=2026-08-12
+qa_doc=projects/coding-projects/active/274532/QA-274532.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\137. ESOKONGAN #274532 - Pelupusan - PLTP - Surat Nilaian JPPH Tarikh dan Banyak Spacing
+subject=Pelupusan > PLTP > Surat Nilaian JPPH Tarikh dan Banyak Spacing
+closed=2026-08-12
+commit=63bf558ed3
+branch=mlk/esokongan/274532
