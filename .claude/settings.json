@@ -155,6 +155,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\adhoc-register\\\\adhoc-register.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\adhoc-paste-detector\\\\adhoc-paste-detector.check.hook.js\""
           }
         ]
       }

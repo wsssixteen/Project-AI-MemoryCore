@@ -90,6 +90,8 @@ _Historical archive: `system/slip-log.md` (frozen 2026-07-13) · baseline 2026-0
 | release-partial-fix | 1 |
 | inventory-first | 1 |
 | A4 | 1 |
+| verification | 1 |
+| workflow-scaffold-miss | 1 |
 | system-instruction-over-user-instruction | 1 |
 | de-merge-marker | 1 |
 
@@ -97,6 +99,7 @@ _Historical archive: `system/slip-log.md` (frozen 2026-07-13) · baseline 2026-0
 
 | ts | category | guard expected | fired? | evidence |
 |---|---|---|---|---|
+| 2026-08-13 | workflow-scaffold-miss | adhoc-paste-scaffold-gate | 🚨 NO | BA pasted structured ticket format (PDTAG/Urusan/Tugasan/Id/User) multiple times; I answered inline but never auto-created the ADHOC scaffold (task folder + active.txt block + register row + doc) the way a Redmine retrieval or /quest start does. miya: 'you should automatically create an adhoc ticket'. |
 
 ## System upgrades (14d — refinements/builds shipped; type=upgrade — the weekly-audit feed)
 
@@ -113,6 +116,7 @@ _Historical archive: `system/slip-log.md` (frozen 2026-07-13) · baseline 2026-0
 | 2026-08-13 | forge/new-check | attempt-before-blocked-gate born via forge: BLOCK (exit 2) unless the actual operation was run and its failure output quoted via [verified-blocked: ...] |
 | 2026-08-13 | forge/new-check | branch-guard born via forge: block if the repo current branch is not its trunk base (mlk/master; spoc-hasil=master), unless [skip-branch-check:] |
 | 2026-08-13 | forge/new-check | deploy-guard born via forge: BLOCK — enforce the deploy convention: put a ticket fix on an env branch by merge --no-ff of the ticket branch and STOP on conflict; never c |
+| 2026-08-13 | forge/new-check | adhoc-paste-detector born via forge: inject the MANDATORY ADHOC-scaffold procedure (task folder + active.txt block + ADHOC-REGISTER row + qa_doc) so the issue is captured like a |
 
 ## 💡 Open proposals (14d — raised by the DE Improvement Sweep, NOT yet built; type=proposal)
 
@@ -226,3 +230,6 @@ has never been ruled on is itself a finding (the "parked enforcement row" failur
 | 2026-08-12 | A1 | orchestration-mode flag (DESIGN sec9) still unbuilt: RecursiveLoopDetector + grep-rubric-gate + predicate-box evaluate sweep controller turns as code-work. Eval: 2026-08-13 sweep 3 loop-fires + 2 grep-gate fires. |
 | 2026-08-13 | A2 | Binary .docx template fix silently lost across an env-branch merge (QA-274532: mlk/int-env kept jc=left while master had jc=both). Built quest/verify-docx-across-refs.ps1 but it is not wired. Proposal: add a Phase-1 close mandatory row that runs the destination-branch docx verify for EVERY .docx touched, per env branch merged, and blocks the shipped claim on a diff. Eval case: QA-274532 cycle-2 (int-env dropped justify). |
 | 2026-08-13 | A3 | A docx template fix verified by XML-diff shipped a pagination regression (QA-274532: titlePg + first-page footer moved the kop to page 2). XML cannot see visual layout. Proposal: the binary-template verify must FLAG any sectPr/titlePg/headerReference/footerReference delta as 'requires visual render check' and block a shipped/ready-to-test claim until miya render-confirms. Eval case: QA-274532 cycle-2 (titlePg header displacement). |
+| 2026-08-13 | A3 | Candidate-stated-as-fact: cited PelupusanService:2337/2517 as 'the fix line' when it was a grep hit, not a traced writer (it was actually the Ruang Udara path). Proposal: when a fix file:line is derived from grep ALONE (no traced caller/writer chain or DB proof), it MUST be tagged 'grep-candidate — unverified' in the emit. Eval case: a Recon emit citing a bare file:line with no 'traced via'/'proved by' clause → advisory flag. Pairs with full-address-trace-gate. |
+| 2026-08-13 | A1 | notes.js mangles ADHOC-* ids: --qa ADHOC-PPTPB-2026-1 produced filename '1. 2 026.txt' (digit-extract regex splits '2026'). Proposal: notes.js should use the full --qa token as the filename stem when it is non-numeric (ADHOC-*, MIGRATOR-*). Eval case: node quest/notes.js --qa ADHOC-X-2026-1 → file '1. ADHOC-X-2026-1.txt'. |
+| 2026-08-13 | A2 | forge new check born the component (hook+eval+registered) but did NOT emit NUKE-MARKER.md or README.md — Rule 9 mandates NUKE-MARKER for every new Feature. I had to hand-create both. Proposal: forge new should scaffold a NUKE-MARKER.md stub (5 fields pre-filled from --trigger/--nod) + README stub. Eval case: node core/forge.js new check X → ls domain/X/NUKE-MARKER.md exists. |
