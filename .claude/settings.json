@@ -267,6 +267,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\knowledge-first-gate\\\\knowledge-first-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\branch-guard\\\\branch-guard.check.hook.js\""
           }
         ]
       }
