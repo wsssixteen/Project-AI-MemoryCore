@@ -271,6 +271,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\branch-guard\\\\branch-guard.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\deploy-guard\\\\deploy-guard.check.hook.js\""
           }
         ]
       }
