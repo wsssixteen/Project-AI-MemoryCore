@@ -106,7 +106,8 @@ process.stdin.on('end', () => {
     // commit passed unchecked, including tonight's unapproved 91e22e486f.
     // The MemoryCore skip must key off the COMMAND'S TARGET REPO (`cd <path> && git commit`),
     // never the hook's own cwd.
-    const memoryRoot = projectRoot.replace(/\\/g, '/').toLowerCase();
+    const memoryRoot = projectRoot.replace(/\\/g, '/').toLowerCase()
+      .replace(/\/\.claude\/worktrees\/[^/]+$/, '');   // worktree session: recognize the true MemoryCore root
     const cdMatch = cmd.match(/cd\s+["']?([^"'&|;]+)["']?\s*&&/);
     const targetRepo = (cdMatch ? cdMatch[1] : process.cwd()).replace(/\\/g, '/').trim().toLowerCase();
     if (targetRepo.startsWith(memoryRoot)) process.exit(0);   // genuine MemoryCore system commit
