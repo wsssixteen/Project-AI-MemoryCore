@@ -53,7 +53,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `system/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `system-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node system/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 89 hook registrations across 5 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 92 hook registrations across 5 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
@@ -65,6 +65,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | SessionStart | — | `hook-runtime.js` | ✓ |
 | SessionStart | — | `hook-runtime.js` | ✓ |
 | SessionStart | — | `hook-runtime.js` | ✓ |
+| UserPromptSubmit | — | `adhoc-paste-detector.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `adhoc-register.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `dispatch-hooks.js` | ✓ |
 | UserPromptSubmit | — | `dispatch-hooks.js` | ✓ |
@@ -117,6 +118,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | PostToolUse | Bash | `hook-runtime.js` | ✓ |
 | PostToolUse | Grep | `hook-runtime.js` | ✓ |
 | PostToolUse | Task|Agent|Workflow | `spawn-telemetry.check.hook.js` | ✓ |
+| Stop | — | `attempt-before-blocked-gate.check.hook.js` | ✓ |
 | Stop | — | `awam-no-resit-gate.check.hook.js` | ✓ |
 | Stop | — | `citation-cross-check.check.hook.js` | ✓ |
 | Stop | — | `delegation-plan-presence.check.hook.js` | ✓ |
@@ -145,6 +147,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | Stop | — | `hook-runtime.js` | ✓ |
 | Stop | — | `hook-runtime.js` | ✓ |
 | Stop | — | `scope-claim-census.check.hook.js` | ✓ |
+| Stop | — | `sql-schema-verify.check.hook.js` | ✓ |
 | Stop | — | `test-scenario-login-gate.check.hook.js` | ✓ |
 <!-- HOOK-REGISTRY:AUTO-END -->
 
