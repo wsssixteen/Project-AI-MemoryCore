@@ -283,3 +283,8 @@
 {"ts":"2026-08-12T16:32:49.506Z","category":"A1"}
 {"ts":"2026-08-12T17:20:41.585Z","category":"release-partial-fix"}
 {"ts":"2026-08-12T17:20:41.705Z","category":"inventory-first"}
+{"ts":"2026-08-12T17:35:36.705Z","category":"A5"}
+{"ts":"2026-08-12T17:35:36.869Z","category":"A1"}
+{"ts":"2026-08-12T17:35:37.017Z","category":"A1"}
+{"ts":"2026-08-12T17:35:37.180Z","category":"A1"}
+{"ts":"2026-08-13T03:49:47.400Z","category":"assume-not-verify"}

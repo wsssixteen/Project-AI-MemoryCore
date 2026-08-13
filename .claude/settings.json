@@ -393,6 +393,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\sql-schema-verify\\\\sql-schema-verify.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\attempt-before-blocked-gate\\\\attempt-before-blocked-gate.check.hook.js\""
           }
         ]
       }
