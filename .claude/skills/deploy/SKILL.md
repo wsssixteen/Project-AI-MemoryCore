@@ -263,6 +263,13 @@ hyperlink **even inside backticks**, so みや gets a link where he needs a comm
 `sh deploy-<module>.sh` / `sh build-<module>.sh <branch>` — identical behaviour for a shell script,
 no leading `./`, no linkify. Applies to every runnable line in the card, not just the deploy step.
 
+🚨 **A VALUE みや types AT a prompt gets its OWN fenced block, never inline backticks** (みや 2026-08-14,
+2nd ask). The branch name he pastes at the `deploy-*.sh` branch prompt (`mlk/int-env`) and the env
+choice at the `build-*.sh` menu (`stag`) are things he COPIES into the shell — inline backticks give
+no copy button, so he hand-selects them. Emit each as a plain fenced block under a one-line "paste at
+the prompt:". Banned: "at the branch prompt choose `mlk/int-env`" (inline). Same test as a command:
+will he paste it into the shell? → own fenced block.
+
 Emit only the requested env. Shape:
 
     DEPLOY — <ticket> → <env>
@@ -299,8 +306,12 @@ Emit only the requested env. Shape:
     ```bash
     sh build-<module>.sh mlk/stag-env
     ```
-    **4.** at the env prompt choose `stag`, wait for BUILD SUCCESS, then `exit`
-    ... (one block per command, continuing through the deploy host)
+    **4.** at the env prompt, paste:
+    ```
+    stag
+    ```
+    wait for BUILD SUCCESS, then `exit`
+    ... (one block per command; the branch/env VALUE always gets its own fenced block, never inline)
 
     Revert if needed:
     ```bash
