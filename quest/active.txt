@@ -1196,3 +1196,45 @@ task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\146. ADH
 test_app=PROD PTMLK/03/L/PPTPB/2026/4 aplikasi 3413241 (eddie@melaka.gov.my); 2nd PTMLK/01/L/PPTPB/2026/6 aplikasi 3431713
 current_phase=Recon-done (DB-proven root, code fix site not pinned)
 issue_one_liner=PPTPB Teknikal Laporan Pelukis Pelan papar Negeri SELANGOR + daerah/bandar kosong. ROOT (DB-proven): daerah/bandar tak captured di AWAM portal land entry -> umm_p_permohonan_tnh blank -> pra->app copy carries blank into umm_a_permohonan_tnh -> Teknikal grid defaults Selangor. Correct=bandar 87 Padang Sebang/Alor Gajah/Melaka in ind_hkmlk. 2/20 recent PPTPB blank. seksyen blank=normal. AWAM save PelupusanService.java:2160-2164 copies VO no hakmilik fallback; exact PPTPB method+why-empty NOT pinned (needs portal repro). Refuted: QA-273707 dup, patch-not-organic, master-empty. Maybe related QA-274740.
+
+qa=QA-275500
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\147. ESOKONGAN #275500 - Pelupusan - PLTP - Tajuk Pada Risalat Hanya Papar Satu Pemohon Sehaja
+phase=0
+status=active
+ticket_type=bug
+env=Pelupusan > PLTP > Tajuk Pada Risalat Hanya Papar Satu Pemohon Sehaja
+issue_one_liner=Pelupusan > PLTP > Tajuk Pada Risalat Hanya Papar Satu Pemohon Sehaja
+assigned_to_me=2026-08-14
+current_phase=Rubric
+quest_start=2026-08-14
+qa_doc=projects/coding-projects/active/QA-275500/QA-275500.md
+
+qa=QA-275456
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\148. ESOKONGAN #275456 - Pelupusan - PPTPB - Maklumat Tanah Tidak Lengkap pada Maklumat Pemohon
+phase=0
+status=active
+ticket_type=bug
+env=Pelupusan
+issue_one_liner=Pelupusan - PPTPB - Maklumat Tanah Tidak Lengkap pada Maklumat Pemohon
+assigned_to_me=2026-08-13
+urusan=PPTPB
+tugasan=Penyediaan Laporan Pelukis Pelan
+current_phase=Recon-done
+quest_start=2026-08-14
+qa_doc=projects/coding-projects/active/QA-275456/QA-275456.md
+
+qa=ADHOC-MLPS-2026-1
+status=active
+phase=0
+ticket_type=adhoc
+env=PROD
+urusan=MLPS
+tugasan=Penyediaan Borang 4Ae dan L1e
+adhoc_register_row=A14
+quest_start=2026-08-14
+local_test_confirmed=false
+qa_doc=projects/coding-projects/active/ADHOC-mlps-borang-l1e-tempat-pelan/ADHOC-mlps-borang-l1e-tempat-pelan.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\149. ADHOC - PDTJ - MLPS - Borang 4Ae L1e - Tempat papar PT bukan dash + Pelan minta melintang
+test_app=PROD PTMLK/02/L/MLPS/2026/2 aplikasi 3436359 (nurulazura@melaka.gov.my, PT, PYB4AE)
+current_phase=Recon-done both issues
+issue_one_liner=MLPS Borang 4Ae/L1e PDTJ nurulazura. Issue1 Tempat papar PT 1735 (panel+L1e) sepatutnya dash: VERIFIED migrated data - MIGRATOR_KTPN_LMS_JASIN wrote ind_mklmt_tnh_permit_lesen 4456.tempat=PT+no_lot; MLPS renewal copies to umm_a_permohonan_tnh 44393.tempat; display CORRECT. Scale 48 migrated rows tempat=PT||no_lot. Fix=data patch (miya call). Issue2 pelan minta melintang: populatePelanAsalImageMLK PelupusanWordCCMethodConstant.java:19088 fits 19x23cm portrait box; landscape needs template/rotation, precedent 268883 c3 427051e711. Repo on int-env not master.

@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: d6846f88-8934-4164-a6b6-3afccb489b73
-  modified: 2026-08-12T07:33:39.908Z
+  modified: 2026-08-14T03:25:54.935Z
 ---
 
 🚨 **REVERSED 2026-08-12 (baseline 1.3.3 hand-off).** miya: *"I want to change from using `` to using
@@ -21,6 +21,11 @@ THIS memory contradicted Rule 0 and is now retired.
   this was the real 2026-07/08 complaint, misread as "no fences") · **bare inline-backtick bullets**
   (`- \`ssh …\`` — no button, must hand-select — superseded 2026-08-12) · numbering glued to the
   command · a leading `./` (auto-linkifies — use `bash <script>`).
+- **🚨 Prompt-input VALUES count too** (2026-08-14, 2nd ask): a value miya types/pastes AT a script
+  prompt — a branch name (`mlk/int-env`), an env choice (`stag`) — goes in its OWN fenced block, NEVER
+  inline backticks. Same test as a command: he pastes it into the shell, so it needs the copy button.
+  Banned: "at the branch prompt choose `mlk/int-env`" (inline). Correct: a plain fenced block holding
+  just `mlk/int-env` under a one-line "paste at the prompt:".
 - **Not covered**: code shown for *reading* — a Java diff, JSF snippet, an SQL script he saves to a
   file. The test stays **"will he type/paste/RUN this in a shell?"** → own fenced block.
 

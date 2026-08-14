@@ -1,5 +1,27 @@
 # Current Session
 
+## 2026-08-14 — Worktree-sweep retrieval + quest 2 new tickets (275456 fold, 275500 Phase 0)
+
+**Session shape: retrieve → check Redmine updates → /quest 2 new tickets → save → DE. Autonomous /goal.**
+
+### Retrieval (worktree-retrieve)
+- The 08-13 sweep docs are NOT stranded — OneDrive replicated the gitignored `projects/` dir, so main holds all qa_docs (274532/274914/275009/275152/274740 + ADHOCs). `git cherry` branches all share main HEAD.
+- Surfaced post-sweep Redmine updates: **275009** gained relations `#274461` + `#233646` (08-14) and its real scope is **3 issues** not 2 (sweep missed the Jana-button-removal + framed template-sign-count as "jawatan salah"); **274532** re-opened 08-14 (extra blank page mid-Surat JPPH). Board grew to 7 mine (275500/275505/275501 new).
+
+### Quested 2 new tickets
+- **275456** = ad-hoc **A13 / ADHOC-PPTPB-2026-1** (identical permohonan `PTMLK/03/L/PPTPB/2026/4` @ eddie, same symptom). **Folded, not re-Scouted** — Recon-done, DB-proven. Root: daerah/bandar never captured at AWAM land entry → `umm_p_permohonan_tnh` blank → pra→app copy → Teknikal defaults Selangor. Register row A13 updated `TICKETED → #275456`. qa_doc written.
+- **275500** = PLTP Risalat **tajuk papar satu pemohon sahaja** (app `PTMLK/02/L/PLTP/2026/6` @ faridmajid). Phase 0 → Rubric **90%**. Root (direct read): every `generateDefaultRisalat<URUSAN>` in `PelupusanService.java` builds pemohon from **`apbList.get(0)`** — first pihak berkepentingan only; PLTP at `:14151`, tajuk string `:14225`. **No multi-pemohon analog exists** among the 6 builders → fix is new join-logic (1→as-is, 2→` DAN `, >2→comma + ` dan ` before last). Blast radius: all 6 urusan share the bug (BA confirms general). qa_doc written, active.txt active, notes written.
+
+### Saved
+qa_docs `QA-275456.md` + `QA-275500.md` (durable main path) · active.txt both active · notes both · ADHOC-REGISTER A13 row.
+
+### ▶▶ NEXT
+- 275500 Apply (on `mlk/master`): add `buildSenaraiPemohonRisalat` helper + rewrite `:14225`; confirm >2 casing ("dan" lc) w/ BA; regen to verify; offer sibling-urusan blast-radius fix.
+- 275456: portal repro to pin AWAM save method · data-patch 3413241 (+3431713) on nod · confirm QA-274740 relation.
+- Still open on board: 274914 (BPMN, nearest deadline 20 Aug), 275009 (3-issue rewrite), 275152 (commit existing guard), 275505 + 275501 (not drafted).
+
+---
+
 ## 2026-08-13 (274532 rework) — PLTP Surat Nilaian JPPH tajuk justify: int-env merge had dropped the fix
 
 **Rework cycle 2, heated. Root cause: the 08-12 justify fix survived on master/ticket but a binary `.docx` merge into `mlk/int-env` kept int-env's copy (`jc=left`) — and BA tests on int-env.**
