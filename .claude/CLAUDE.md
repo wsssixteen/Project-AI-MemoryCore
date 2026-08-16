@@ -270,7 +270,7 @@ One-time per machine — see `.claude/new-machine-setup.md` (routed out of CLAUD
 - `/env-check` — verify/switch local env state (etanahv3 config + standalone.xml + repo branch)
 - `/verify` — universal workflow-checkpoint verification (Phase 0 / Apply-done / Phase 1 close-out / DE Checklist D)
 
-**Historical reference**: `.claude/claude-md-amendments.md` — 🪦 DELETED 2026-08-16 (tombstone sweep, per みや): emptied 2026-05-25, boot-load removed 2026-06-02, zero live readers at deletion; recoverable via git history. Same sweep deleted 8 sibling tombstones (master-memory (file deleted 2026-08-16) · improvement-audit-log/skill-failure-log/debug-ritual-violations/sycophancy-violations/layer-architecture/forge-log under Feature/Forge-Self-Improvement-System/ · system/hook-fire-log.md).
+**Historical reference**: claude-md-amendments (file deleted 2026-08-16) — 🪦 DELETED 2026-08-16 (tombstone sweep, per みや): emptied 2026-05-25, boot-load removed 2026-06-02, zero live readers at deletion; recoverable via git history. Same sweep deleted 8 sibling tombstones (master-memory (file deleted 2026-08-16) · improvement-audit-log/skill-failure-log/debug-ritual-violations/sycophancy-violations/layer-architecture/forge-log under Feature/Forge-Self-Improvement-System/ · system/hook-fire-log.md).
 
 ## 📜 Version history
 
