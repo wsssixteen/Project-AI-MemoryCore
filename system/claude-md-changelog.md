@@ -165,3 +165,6 @@ Added 2026-05-13 per みや.
 
 ## v1.70 — 2026-08-16
 **§File Ownership +1 row: Operation-run outputs.** Root cause miya named directly: "This seems like a gap in your judgement where you create something new... Is it because you don't know the workflow of when we're auditing something?" — correct: the File Ownership table covered rules and quests but NOT where an audit/sweep/bulk-run documents itself, so each operation invented a home (external-audit/ 2026-07-11, domain/quest-bounty/runs/ 2026-08-16). New rule: session narrative → current-session.md + diary; per-item findings → that item's own doc/ledger; consolidated standalone report ONLY on explicit ask. Pairs with feedback_no_on_the_fly_artifacts + the on-the-fly-artifact-shape slip.
+
+## v1.71 — 2026-08-16
+**§Version-bump discipline gains the assembled UPDATE-PIPELINE pointer** → `domain/claude-md-watch/README.md`: the complete CLAUDE.md change ceremony (change-checklist → trim-guard harness → mandatory adversarial pass for deletions → byte-parity moves → gate battery → watch registration with SHA-anchored rollback + per-boot self-alert). Assembles the 2026-08-16 weekend-audit builds into one referenced procedure. Additive pointer only.
