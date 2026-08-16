@@ -37,6 +37,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\hook-syntax-check.js\" SessionStart"
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\claude-md-watch\\\\claude-md-watch.check.hook.js\""
           }
         ]
       }
