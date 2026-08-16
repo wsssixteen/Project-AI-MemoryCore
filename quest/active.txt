@@ -925,19 +925,6 @@ qa_doc=projects/coding-projects/active/QA-273921/QA-273921.md
 current_phase=Recon-reopen
 local_test_confirmed=false
 
-qa=QA-273919
-quest_start_ts=2026-08-04T16:48:41.163Z
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\126. ESOKONGAN #273919 - AWAM - PPJK - Labelling urusan papar Maklumat Pembatalan Perizaban
-phase=0
-status=closed
-ticket_type=bug
-env=AWAM > PPJK : Labelling urusan papar Maklumat Pembatalan Perizaban
-issue_one_liner=AWAM > PPJK : Labelling urusan papar Maklumat Pembatalan Perizaban
-assigned_to_me=2026-08-04
-urusan=PPJK
-closed=2026-08-06
-close_note=RECONCILED from Redmine 2026-08-06: Verified, assignee Nurul Amirah Nadiah, done=100 - fix shipped 434f4ae4af, int-env ed595a9018
-
 qa=QA-274136
 quest_start_ts=2026-08-06T11:56:10.123Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\128. ESOKONGAN #274136 - Pelupusan - Portal Awam - PT - Tak boleh simpan maklumat Modal Dibenar

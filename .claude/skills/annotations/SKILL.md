@@ -1,6 +1,6 @@
 ---
 name: annotations
-description: Extract every annotation layer from BA-provided files before trusting them — PDF Annot objects (FreeText comments, highlights, sticky notes), Word .docx review comments, and SDT alias/tag metadata. Trigger at Quest Phase 0 / before Recon, or manually with "check annotations", "read the annotations", "extract annotations", "did you check the annotations", whenever a .pdf or .docx is in a ticket's 0. Brief/.
+description: Extract every annotation layer from BA-provided files before trusting them — PDF Annot objects (FreeText comments, highlights, sticky notes), Word .docx review comments, SDT alias/tag metadata, AND hand-annotated screenshots (.png/.jpg with red boxes / arrows / handwriting — open and READ the image, the markup often settles what the text journal leaves open; QA-273919's deciding evidence was a handwritten .png). Trigger at Quest Phase 0 / before Recon, or manually with "check annotations", "read the annotations", "extract annotations", "did you check the annotations", whenever a .pdf, .docx, .png or .jpg is in a ticket's 0. Brief/.
 ---
 
 # annotations — Extract every annotation layer
