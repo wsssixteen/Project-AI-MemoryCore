@@ -156,3 +156,6 @@ Added 2026-05-13 per みや.
 ---
 
 *Pre-v1.29 history: see `git log -- .claude/CLAUDE.md` for older commits and their messages.*
+
+## v1.68 — 2026-08-16
+**§Cost Efficiency / Delegation Economy — Claude 5 tier refresh + Haiku ban.** Per みや's direct audit ask ("is it okay for us to NOT use Haiku? … even when retrieving it will need judgement"): the 3-tier model table (haiku retrieval / sonnet synthesis / opus verify) becomes 2-tier — **floor = Sonnet 5** for all delegated read/synthesis work, session model for verify/judgment. Rationale: (1) retrieval DOES carry judgment (inclusion, stop-point, intent) — the 2026-07-20 partial-trace case proves the failure class on even strong models; (2) a silently-partial retrieval is undetectable (observability negative-space hole, named in the 2026-08-16 weekend audit); (3) Sonnet 5's permanent $2/$10 pricing (2026-08-10) removes the savings argument. Spec preservation: all other Delegation Economy disciplines (delegation plan, resume-not-rerun, schema-forcing, controller-verifies) unchanged; only the model-tier rows changed. Ships with the 2026-08-16 evolution-check digest adoption (#4).
