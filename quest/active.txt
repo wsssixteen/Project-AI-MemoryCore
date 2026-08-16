@@ -1031,7 +1031,7 @@ ticket_type=bug
 env=Pelupusan > Kemaskini Jabatan Teknikal dan JPPH tidak Tepat
 issue_one_liner=Pelupusan > Kemaskini Jabatan Teknikal dan JPPH tidak Tepat
 assigned_to_me=2026-08-06
-current_phase=Delegated to etanah-common team
+current_phase=Delegated to etanah-common team; patch4 (1.1.24-MLK.beta.patch4, org-kod JPPH exclusion) shipped to mlk/int-env @ 0774903d4b 2026-08-14; awaits miya deploy+verify then close
 delegated_to=etanah-common team
 delegated_date=2026-08-12
 local_test_confirmed=true
@@ -1141,7 +1141,7 @@ issue_one_liner=Pelupusan - PPTPB - Alamat salah pada Surat JT
 assigned_to_me=2026-08-10
 urusan=PPTPB
 tugasan=Cetakan Dokumen
-current_phase=Recon-done
+current_phase=Recon-done - PATCH STILL OWED: ammar did 2/3, generateSurat TIDAK on all 6 rows (VERIFIED-DB); patch-274740.sql flip->YA awaits miya PROD run. Corrected 2026-08-15 (prior 'confirm+close' was wrong)
 local_test_confirmed=false
 quest_start=2026-08-12
 qa_doc=projects/coding-projects/active/QA-274740/QA-274740.md
@@ -1164,6 +1164,7 @@ closed=2026-08-13
 commit=63bf558ed3
 branch=mlk/esokongan/274532
 commit_cycle2=44ad939ef5
+commit_cycle3=2562117448 (mlk/esokongan/274532v3 'Fix spacing' -> int-env c56b7c9ced; INT-ENV-ONLY re-apply on Aaron divergent docx; release path = original 63bf558ed3; branch ledger in qa_doc)
 
 qa=ADHOC-PRBB-2026-1
 phase=0
@@ -1175,7 +1176,7 @@ adhoc_register_row=A12
 quest_start=2026-08-13
 local_test_confirmed=false
 qa_doc=projects/coding-projects/active/ADHOC-prbb-4ce-bandar-npe/ADHOC-prbb-4ce-bandar-npe.md
-issue_one_liner=PRBB Penyediaan Borang 4Ce dan P1e - NPE clicking tugasan (PROD ID Rujukan 254883). MlkBorang4CeForm.initMklmtPemegangLesen():367 null getBandarBerdaftar() (bandar_daftar_id null); twin :369. Origin: copy/entry gap on 2 apps 2026-07-10 (foreign-negara REFUTED - applicant Malaysian, address filled on 20 other apps). Patch handed: fill 5523923 real address negeri 1480/bandar 3597/poskod 75250. Code fix pending. Family A10/A11/#275152.
+issue_one_liner=PRBB Penyediaan Borang 4Ce dan P1e - NPE clicking tugasan (PROD ID Rujukan 254883). MlkBorang4CeForm.initMklmtPemegangLesen():367 null getBandarBerdaftar() (bandar_daftar_id null); twin :369. Origin CONFIRMED: manual-pemohon entry path stores IC/name/phone only, no IC->account address backfill (apps 3408179/3408184; foreign-negara REFUTED, applicant Malaysian). Patch handed: fill 5523923 real address negeri 1480/bandar 3597/poskod 75250. Code null-guard pending. Family A10/A11/#275152.
 test_app=PROD PTMLK/01/L/PRBB/2026/11 aplikasi 3408179 pihak 5523923 (SaffuanH@melaka.gov.my); STG regression aplikasi 3431688 @ PYB4CE et_main_stg2
 branch=n/a-pre-apply
 current_phase=Data-patch handed (みや patching first); code fix pending
@@ -1205,7 +1206,7 @@ ticket_type=bug
 env=ESOKONGAN
 issue_one_liner=Pelupusan > PLTP > Tajuk Pada Risalat Hanya Papar Satu Pemohon Sehaja
 assigned_to_me=2026-08-14
-current_phase=Rubric
+current_phase=Apply - code applied UNCOMMITTED on mlk/master (captured cross-session 2026-08-15 from Easy-ticket tab); helper buildSenaraiPemohonRisalat + query flag_permohon filter; needs commit to mlk/esokongan/275500 on nod; not built/tested
 quest_start=2026-08-14
 qa_doc=projects/coding-projects/active/QA-275500/QA-275500.md
 branch=mlk/master
@@ -1226,7 +1227,7 @@ qa_doc=projects/coding-projects/active/QA-275456/QA-275456.md
 branch=mlk/master
 
 qa=ADHOC-MLPS-2026-1
-status=active
+status=hold
 phase=0
 ticket_type=adhoc
 env=PROD
@@ -1238,5 +1239,33 @@ local_test_confirmed=false
 qa_doc=projects/coding-projects/active/ADHOC-mlps-borang-l1e-tempat-pelan/ADHOC-mlps-borang-l1e-tempat-pelan.md
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\149. ADHOC - PDTJ - MLPS - Borang 4Ae L1e - Tempat papar PT bukan dash + Pelan minta melintang
 test_app=PROD PTMLK/02/L/MLPS/2026/2 aplikasi 3436359 (nurulazura@melaka.gov.my, PT, PYB4AE)
-current_phase=Recon-done both issues
-issue_one_liner=MLPS Borang 4Ae/L1e PDTJ nurulazura. Issue1 Tempat papar PT 1735 (panel+L1e) sepatutnya dash: VERIFIED migrated data - MIGRATOR_KTPN_LMS_JASIN wrote ind_mklmt_tnh_permit_lesen 4456.tempat=PT+no_lot; MLPS renewal copies to umm_a_permohonan_tnh 44393.tempat; display CORRECT. Scale 48 migrated rows tempat=PT||no_lot. Fix=data patch (miya call). Issue2 pelan minta melintang: populatePelanAsalImageMLK PelupusanWordCCMethodConstant.java:19088 fits 19x23cm portrait box; landscape needs template/rotation, precedent 268883 c3 427051e711. Repo on int-env not master.
+current_phase=Issue2 fix FOUND (officer-rotate via PDFRotationUtil.rotatePDF, safe; auto-rotate unreliable). Issue1 patch ready. Awaiting quest-start + repro for Issue2 wire-in site.
+issue_one_liner=MLPS Borang 4Ae/L1e PDTJ nurulazura. Issue1 Tempat=PT 1735 (panel MlkBorang4AeForm.xhtml:141 + L1e) VERIFIED migrated data (ind_mklmt_tnh_permit_lesen 4456 MIGRATOR_KTPN_LMS_JASIN -> umm_a_permohonan_tnh 44393). Patch READY: SET tempat=dash WHERE aplikasi_id 3436359 (miya scope=this-app). Issue2 pelan melintang: L1e is JASPER LaporanPelan.jrxml (504x360 landscape frame, RetainShape, NO rotate); Q3=SOURCE PORTRAIT not rotateIfLandscape (word-CC path). No orientation metadata read -> no safe auto-rotate. Repo on stag-env not master.
+held_reason=2026-08-14 — diagnosis+extensive-read complete, Issue1 patch ready (tempat=dash row 44393), Issue2 source-portrait no-safe-rotate; awaiting ticket# to rename ADHOC->QA and run runbook. Resume Point in qa_doc S0.
+redmine_ticket=275587
+tracker=Internal Issue (PROD)
+redmine_subject=Pelupusan > MLPS > 1) Tukar No PT ke dash  2) Rotate Pelan
+redmine_url=http://172.16.90.169/redmine/issues/275587
+
+qa=ADHOC-PPTPB-2026-2
+phase=0
+ticket_type=adhoc
+env=PROD
+urusan=PPTPB
+adhoc_register_row=A15
+qa_doc=projects/coding-projects/active/ADHOC-pptpb-alorgajah-jt-delete/ADHOC-pptpb-alorgajah-jt-delete.md
+test_app=PTMLK/02/L/PPTPB/2026/2 aplikasi 3399008 PROD (Awalan)
+current_phase=Delete-prep - NOT run; awaiting miya (original issue + target env + correct Alor-Gajah agensi_id)
+issue_one_liner=PPTPB Alor Gajah JT-row delete prep on PTMLK/02/L/PPTPB/2026/2 (aplikasi 3399008 PROD). No ticket. Same class as CLOSED #273837 but different app. 🚨 agensi_id 8 = Alor Gajah on stg2 but JKR-Negeri-Melaka on PROD - re-resolve agensi_id on target schema before any DELETE. Delete NOT run (6 JT rows present). Original issue statement needs retrieval from tab.
+
+qa=QA-275319
+status=closed
+phase=1
+current_phase=Closed - flow re-altered to correct tugasan (miya)
+ticket_type=bug
+env=PROD
+urusan=PRBB
+closed=2026-08-13
+qa_doc=projects/coding-projects/active/QA-275319/QA-275319.md
+test_app=PTMLK/03/L/PRBB/2026/10 aplikasi 3424732 samsiah_jaamat@ PROD
+issue_one_liner=PRBB Flow Tugasan kepada PTB - after #273956 pembetulan the case went to PRPDT, BA expected PLPP first; re-initiate placed token at PRPDT-branch JT step. SOLVED - flow re-altered (miya). RECONCILED Redmine Closed/Shafiq/100. Block restored to main 2026-08-15 (was worktree-only)
