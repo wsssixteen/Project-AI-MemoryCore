@@ -79,8 +79,12 @@ function makeWorkspace({ qa, hasBounty, alsoArchived }) {
     return { root, tasksRoot, taskFolderPath };
 }
 
-function runArchive({ root, qa, tasksRoot, dryRun = false }) {
+function runArchive({ root, qa, tasksRoot, dryRun = false, allowStub = true }) {
+    // 2026-08-16 contract change: Step -1 HARVEST GATE refuses no-bounty archives unless
+    // --allow-stub. Fixtures default to the audited-stub path (the new shape of the old
+    // stub flow); test 8 asserts the refusal itself with allowStub=false.
     const args = [path.join(root, 'quest', 'archive-quest.js'), qa, '--tasks', tasksRoot];
+    if (allowStub) args.push('--allow-stub', 'eval-fixture');
     if (dryRun) args.push('--dry-run');
     const r = spawnSync('node', args, { encoding: 'utf8', timeout: 15000, cwd: root });
     return { stdout: r.stdout || '', stderr: r.stderr || '', exit: r.status };
@@ -179,6 +183,19 @@ const tests = [
             return {
                 pass: log.length === 1 && r2.exit === 0,
                 got: `linesAfter2Runs=${log.length} exit2=${r2.exit}`,
+            };
+        },
+    },
+    {
+        name: '8. NEW CONTRACT: no bounty + NO --allow-stub → HARVEST GATE refuses exit 3 + refusal log line',
+        setup: () => makeWorkspace({ qa: 'QA-900008', hasBounty: false, alsoArchived: false }),
+        assert: (ws) => {
+            const r = runArchive({ ...ws, qa: 'QA-900008', allowStub: false });
+            const log = readLog(ws.root);
+            const refusal = log.find(l => l.gate === 'harvest-gate' && l.action === 'refused');
+            return {
+                pass: r.exit === 3 && !!refusal && refusal.qa === 'QA-900008',
+                got: `exit=${r.exit} refusalLogged=${!!refusal}`,
             };
         },
     },
