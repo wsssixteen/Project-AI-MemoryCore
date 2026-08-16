@@ -28,3 +28,6 @@
 {"kind":"tick","id":"wmsvx5736","ts":"2026-08-16T16:49:17.073Z","sessions_left":-3}
 {"kind":"tick","id":"wmsvxqglj","ts":"2026-08-16T16:49:17.074Z","sessions_left":-3}
 {"kind":"tick","id":"wmsvzl99k","ts":"2026-08-16T16:49:17.074Z","sessions_left":1}
+{"kind":"resolve","id":"wmsvx56op","ts":"2026-08-16T16:54:38.769Z","verdict":"ok","note":"sweep DELEGATION PLAN 2026-08-17: W1=sonnet, W2/W3/W4=session model - zero haiku rows; v1.68 tier table held","rollback_sha":"d800c1664eaa1b4452f46e9adc950ba1458910e5","target":".claude/CLAUDE.md"}
+{"kind":"resolve","id":"wmsvx56vo","ts":"2026-08-16T16:54:38.883Z","verdict":"ok","note":"grand-audit artifacts landed in domain/pre-code-check/ (Feature home), sweep outputs in per-ticket qa_docs - zero new folder shapes invented across 3 major operations","rollback_sha":"d800c1664eaa1b4452f46e9adc950ba1458910e5","target":".claude/CLAUDE.md"}
+{"kind":"resolve","id":"wmsvxqglj","ts":"2026-08-16T16:54:38.999Z","verdict":"ok","note":"grep README.md for save-protocol/backups/qwt: 0 hits; no doc references deleted paths","rollback_sha":"facee33c288de674719d15564e0bfee86f84ac74","target":"README.md"}
