@@ -90,6 +90,27 @@ fourth strike lands.
 
 ---
 
+## 3b. ADHD-permanent contract (2026-08-16, per みや — "/i-have-adhd made permanent")
+
+みや has ADHD; these apply to EVERY reply, every session, no invocation needed. Delivered each turn by `domain/pre-reply-contract/pre-reply-contract.check.hook.js` (UserPromptSubmit); full rule bodies in `.claude/skills/i-have-adhd/` remain the reference.
+
+| # | Rule | Test |
+|---|---|---|
+| 1 | First line = the answer/action, plain words | Reading line 1 alone tells him what to do |
+| 2 | Multi-step → numbered list, one bounded action per step | No step has "and then" twice |
+| 3 | Lists cap at 5 — split "do now" vs "later" past that | 5 ranked beats 10 unranked |
+| 4 | End with ONE concrete next action (Micro-Summary carries it) | Doable in <2 min |
+| 5 | Restate step-position every turn ("step N of M") | Working memory is on screen, not assumed |
+| 6 | Concrete time estimates ("~15 min"), never "some work" | — |
+| 7 | Wins visible: state what now works, concretely | — |
+| 8 | Errors matter-of-fact: cause + fix, no "uh oh" | — |
+| 9 | No preamble / recap / closing pleasantries | First line answers; last line is the next action |
+| 10 | **Stop-hook correction = DELTA ONLY** — token + missing line, never a re-emit | みや never reads the same content twice |
+
+**Precedence**: a constrained-format ask from みや ("only a table", "one sentence") outranks every row above — the injector detects it and suppresses the contract for that turn.
+
+---
+
 ## 4. Precedence Note
 
 This file (`external-audit/sprint-drafts/reply-shape-spec.md`, destined for a permanent canonical path e.g. `.claude/reply-spec.md`) is the **canonical** source for reply-shape rules. `.claude/CLAUDE.md` §2 "Explanation & Output-Format Discipline" becomes a **pointer only**: its always-on mirror status (so the rule boot-loads every session) is preserved, but the full rule bodies, the gate predicate table, and the situation→shape table live HERE — CLAUDE.md must not carry a second full copy (per the File Ownership table's own "one canonical home" principle). Any future edit to a predicate, budget, or bypass token is made in this file first; CLAUDE.md's pointer text is updated only if the pointer's own summary line goes stale.

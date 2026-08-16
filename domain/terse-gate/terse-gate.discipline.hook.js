@@ -66,6 +66,7 @@ process.stdin.on('end', () => {
         '   Convert the load-bearing content to TABLES / DIAGRAMS / short bullets (one concern per cell).',
         '   A long-winding message is itself a rule violation even when every fact is correct.',
         '   Genuinely must be prose (personal / closing voice)? Add [skip-terse: <reason>].',
+        '   ⚡ DELTA ONLY: みや already read the reply above — output the fix/token in 1-2 lines; do NOT re-emit the reply.',
       ].join('\n'),
     }));
     process.exit(0);

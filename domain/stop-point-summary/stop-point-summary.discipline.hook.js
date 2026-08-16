@@ -171,6 +171,7 @@ process.stdin.on('end', () => {
         '   Genuinely no substance? Use ONLY one of these (whitelist enum):',
         '     [skip-stop-point-summary: pure-ack|question-only|error-only|de-mode|closing-voice]',
         '   Free-text reasons are REJECTED — they are the abuse pattern this Feature kills.',
+        '   ⚡ DELTA ONLY: みや already read the reply above — output just the Micro-Summary line (or token); do NOT re-emit the reply.',
       ].join('\n'),
     }));
     process.exit(0);
