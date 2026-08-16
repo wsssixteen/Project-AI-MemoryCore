@@ -300,3 +300,8 @@
 {"ts":"2026-08-14T06:53:09.851Z","category":"A3"}
 {"ts":"2026-08-14T06:53:09.941Z","category":"A5"}
 {"ts":"2026-08-16T09:00:16.817Z","category":"surprise-turn-mid-decision"}
+{"ts":"2026-08-16T10:56:42.312Z","category":"proposal-branch-ledger-content-hash"}
+{"ts":"2026-08-16T10:56:42.448Z","category":"proposal-db-first-before-rubric"}
+{"ts":"2026-08-16T10:56:42.589Z","category":"proposal-lifecycle-trigger-first"}
+{"ts":"2026-08-16T10:56:42.714Z","category":"proposal-compile-merge-commit"}
+{"ts":"2026-08-16T10:56:42.839Z","category":"proposal-mechanism-claim-verification"}
