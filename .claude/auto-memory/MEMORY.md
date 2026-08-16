@@ -2,7 +2,7 @@
 
 > Regenerated 2026-07-13 (external-audit C5). 22 keep + 26 deferred = 48 live files; 23 archived to `archive/`
 > (7 superseded + 16 one-liners folded into `personality.md` §Distilled one-liners). Plan + parity:
-> `external-audit/sprint-drafts/auto-memory-plan.md`.
+> `projects/coding-projects/archive/external-audit-2026-07/sprint-drafts/auto-memory-plan.md`.
 
 ## Feedback
 - [feedback_agent_execute_in_quest.md](feedback_agent_execute_in_quest.md) — In active quest / goal-driven context: any non-destructive action helping the goal = JUST DO IT (agent, not chatbot); destructive ops still need explicit greenlight
