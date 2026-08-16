@@ -34,14 +34,16 @@ runHook({ name: 'pre-reply-contract', event: 'UserPromptSubmit' }, (input) => {
   }
 
   // Default: the condensed permanent contract (fixed short text — no per-turn growth).
-  // Canonical rule bodies: .claude/reply-shape-spec.md §ADHD-permanent.
+  // v2 "blend" 2026-08-16 per みや pick: C-spec DO-THIS block + bullets-first + caveman
+  // never-drop guardrail + fake-savings ban. Canonical: .claude/reply-shape-spec.md §3b.
   return { fired: true, blocked: false, contextOut: [
-    '📐 pre-reply-contract (permanent ADHD shape — compose RIGHT the first time):',
-    '   · First line = the answer/action in plain words. No preamble, no recap, no closers.',
-    '   · Multi-step → numbered list, one bounded action per step, ≤5 items (split do-now vs later).',
-    '   · Every code/file cite = FULL address <repo>\\<full\\path>\\File.ext:line, never bare.',
-    '   · Substantive stop → end with Micro-Summary: what changed · how to act · what next.',
-    '   · Restate step-position every turn (step N of M); state visible wins concretely.',
-    '   · If a Stop hook still blocks: correction = DELTA ONLY (token + missing line) — NEVER re-emit the reply.',
+    '📐 pre-reply-contract v2-blend (permanent — compose RIGHT the first time):',
+    '   · First line = the answer in plain words. No preamble, recap, closers.',
+    '   · Break everything into SHORT bullets/numbered steps — one fact per line, ≤5 per list. Tables for data; story diagram for flows.',
+    '   · Load-bearing words only: understanding > concision > grammar. NEVER drop not/never/no/only, numbers, units, exact errors.',
+    '   · No fake savings: no invented abbreviations (cfg/impl), no decorative symbols — full word is cheaper AND clearer.',
+    '   · Code/file cites = FULL address <repo>\\<path>\\File.ext:line.',
+    '   · End with *DO THIS*: numbered next actions for みや, priority-first + spell out reply options on decisions. Omit only when no user action.',
+    '   · Stop-hook correction = DELTA ONLY (token + missing line) — NEVER re-emit the reply.',
   ].join('\n') + '\n' };
 });
