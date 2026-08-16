@@ -2323,6 +2323,7 @@ test_app=PTMLK/03/L/PRBB/2026/10 aplikasi 3424732 samsiah_jaamat@ PROD
 issue_one_liner=PRBB Flow Tugasan kepada PTB - after #273956 pembetulan the case went to PRPDT, BA expected PLPP first; re-initiate placed token at PRPDT-branch JT step. SOLVED - flow re-altered (miya). RECONCILED Redmine Closed/Shafiq/100. Block restored to main 2026-08-15 (was worktree-only)
 
 # duplicate-resolution 2026-08-16: SECOND copy from active.txt (fields may be newer than the first archive entry above)
+
 qa=QA-272527
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\108. ESOKONGAN #272527 - Pelupusan - Kecilkan Margin Spacing Footer
 phase=1
@@ -2344,6 +2345,7 @@ scope_anchor=PAGE 1 ONLY - page 2+ trailing sections at 1134/720 are OUT OF SCOP
 conflict_note=TemplateSuratNilaianJPPH_PLTP_PSBS.docx conflicted with int-env 272651 pelanCC; resolved keeping pelanCC + applying our pgMar. WILL RECUR when 272651 merges to master
 
 # duplicate-resolution 2026-08-16: SECOND copy from active.txt (fields may be newer than the first archive entry above)
+
 qa=QA-262762
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\61. QA #262762 - [FAT MCOT ISSUE] OPLPS - Penyediaan Borang 4Ae dan L1e - unable to sim
 phase=1
@@ -2366,6 +2368,7 @@ branch=mlk/qa/262762v2
 commit=6313bf322c
 
 # duplicate-resolution 2026-08-16: SECOND copy from active.txt (fields may be newer than the first archive entry above)
+
 qa=QA-260508
 quest_start_ts=2026-06-12T04:14:27.378Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\63. QA #260508 - PT-PSBS-MCL - Panel maklumat plot dikeluarkan hakmilik - Tambah medan
@@ -2393,6 +2396,7 @@ rework_reason_cycle3=Aaron 2026-06-09: deployed but still issue; possible our ch
 rework_cycle3_fix=2 edits uncommitted on mlk/master: PelupusanService remove(:16637) deleted + xhtml rendered-gate MCL; root cause = cycle-1 wrong-writer + cycle-2 stale-VO wipe + ungated mandatory field; full doc QA-260508.md cycle-3
 
 # duplicate-resolution 2026-08-16: SECOND copy from active.txt (fields may be newer than the first archive entry above)
+
 qa=QA-262495
 status=closed
 phase=1
@@ -2421,6 +2425,7 @@ template_fix=applied-uncommitted-TemplateRisalatMMKN_PDT_PPJK-syaratKelulusan-in
 ship_state=SHIPPED-template-fix-only_recursion-fix-reverted-as-misdiagnosis
 
 # duplicate-resolution 2026-08-16: SECOND copy from active.txt (fields may be newer than the first archive entry above)
+
 qa=QA-261986
 quest_start_ts=2026-06-12T18:46:02.048Z
 status=closed
@@ -2455,6 +2460,7 @@ db_confirmed_cycle3=staging et_main_stg1 aplikasi 3378633: JPPH nilaiPasaran=220
 commit_cycle3=6938e9b656
 
 # duplicate-resolution 2026-08-16: SECOND copy from active.txt (fields may be newer than the first archive entry above)
+
 qa=QA-262004
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\68. QA #262004 - FAT - PSBS - Isu pada Ringkasan Risalat
 status=closed
@@ -2483,6 +2489,7 @@ closed=2026-06-10
 close_note=cycle-2 shipped 71446bcaf5 (4 files incl faizudin config comma #264309 folded in per miya, force-with-lease); pom 0.0.728 pin + config comma remain LOCAL workarounds for amirul #264423 + faizudin #264309 master breakage
 
 # duplicate-resolution 2026-08-16: SECOND copy from active.txt (fields may be newer than the first archive entry above)
+
 qa=QA-262027
 quest_start_ts=2026-06-10T17:42:51.590Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\69. QA #262027 - FAT - PSBS - Isu pada Surat Keputusan PTG kepada PDT
@@ -2507,6 +2514,7 @@ closed=2026-06-11
 branch=mlk/qa/262027v2
 
 # duplicate-resolution 2026-08-16: SECOND copy from active.txt (fields may be newer than the first archive entry above)
+
 qa=QA-262039
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\70. QA #262039 - FAT - PSBS - Isu pada Surat Keputusan Lulus kepada Pemohon
 status=closed
@@ -2532,6 +2540,7 @@ commit_cycle2=cea2e602bc
 branch_cycle2=mlk/qa/262039v2
 
 # duplicate-resolution 2026-08-16: SECOND copy from active.txt (fields may be newer than the first archive entry above)
+
 qa=QA-270900
 quest_start_ts=2026-07-20T23:29:39.937Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\100. INTERNAL ISSUE #270900 - BPRZ - Penyediaan-Semakan-Peraku Surat Makluman ke Pemohon - Issue pad
@@ -2567,6 +2576,7 @@ local_test_confirmed=true
 close_note=RECONCILED from live Redmine 2026-08-04 15:20 - absent from assigned_to_id=me and status_id=open; Resolved, Nurhafizah Hasan, 100pct. Cycle-2 root cause banked in qa_doc: ind_tgsn.peranan is an OVERRIDE (BpmCallbackService.handleAssignation():782-794); mlit row 14822 SSMW=KPT overrides correct BPMN. Recommended fix (clear the override) never applied by us.
 
 # duplicate-resolution 2026-08-16: SECOND copy from active.txt (fields may be newer than the first archive entry above)
+
 qa=QA-271918
 quest_start_ts=2026-07-27T07:45:12.138Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\103. ESOKONGAN #271918 - Pelupusan - PT - Maklumat Pasangan Tidak Sama pada Warganegara
@@ -2590,6 +2600,7 @@ close_note=RECONCILED from Redmine 2026-08-04 DE: status=Closed, done=100, assig
 closed=2026-08-04
 
 # duplicate-resolution 2026-08-16: SECOND copy from active.txt (fields may be newer than the first archive entry above)
+
 qa=QA-273921
 quest_start_ts=2026-08-04T17:34:44.014Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\125. ESOKONGAN #273921 - PDTJ - PPTPB - Papar Loading ''Sedang Kemaskini'' Lama
@@ -2608,3 +2619,14 @@ closed=2026-08-12
 qa_doc=projects/coding-projects/active/QA-273921/QA-273921.md
 current_phase=Recon-reopen
 local_test_confirmed=false
+
+qa=QA-274136
+quest_start_ts=2026-08-06T11:56:10.123Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\128. ESOKONGAN #274136 - Pelupusan - Portal Awam - PT - Tak boleh simpan maklumat Modal Dibenar
+qa_doc=projects/coding-projects/active/QA-274136/QA-274136.md
+issue_one_liner=AWAM PT Maklumat Pemohon - Modal Dibenarkan not saved; blanked Modal Berbayar still shows old value
+current_phase=Phase 0 - TWO defects. 1) duplicate JSF binding: plpMaklumatPemohonTerperinci.xhtml:732 AND :794 both bind pemohon.modalDibenarkan. 2) missing jsonObject.remove() before PelupusanService:866. FIX ORDER MATTERS - remove() first would DESTROY data.
+branch=n/a-pre-apply
+status=closed
+closed=2026-08-16
+close_note=Redmine Closed; shipped 8098454df4 (scope-overshoot flagged to miya); back-harvested 2026-08-16 (bestiary+recipes+proposal)

@@ -1,13 +1,5 @@
 active:
 
-qa=QA-274136
-quest_start_ts=2026-08-06T11:56:10.123Z
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\128. ESOKONGAN #274136 - Pelupusan - Portal Awam - PT - Tak boleh simpan maklumat Modal Dibenar
-qa_doc=projects/coding-projects/active/QA-274136/QA-274136.md
-issue_one_liner=AWAM PT Maklumat Pemohon - Modal Dibenarkan not saved; blanked Modal Berbayar still shows old value
-current_phase=Phase 0 - TWO defects. 1) duplicate JSF binding: plpMaklumatPemohonTerperinci.xhtml:732 AND :794 both bind pemohon.modalDibenarkan. 2) missing jsonObject.remove() before PelupusanService:866. FIX ORDER MATTERS - remove() first would DESTROY data.
-branch=n/a-pre-apply
-
 qa=ADHOC-PT-2026-3
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\131. ADHOC - PROD - PTMLK-02-L-PT-2026-3 - Gantung blocks tugasan entry
 phase=0
@@ -152,6 +144,7 @@ qa_doc=projects/coding-projects/active/ADHOC-pptpb-alorgajah-jt-delete/ADHOC-ppt
 test_app=PTMLK/02/L/PPTPB/2026/2 aplikasi 3399008 PROD (Awalan)
 current_phase=Delete-prep - NOT run; awaiting miya (original issue + target env + correct Alor-Gajah agensi_id)
 issue_one_liner=PPTPB Alor Gajah JT-row delete prep on PTMLK/02/L/PPTPB/2026/2 (aplikasi 3399008 PROD). No ticket. Same class as CLOSED #273837 but different app. 🚨 agensi_id 8 = Alor Gajah on stg2 but JKR-Negeri-Melaka on PROD - re-resolve agensi_id on target schema before any DELETE. Delete NOT run (6 JT rows present). Original issue statement needs retrieval from tab.
+status=hold
 
 qa=QA-275587
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\150. INTERNAL ISSUE (PROD) #275587 - Pelupusan - MLPS - 1) Tukar No PT. ke ''--  2) Rotate Pelan
