@@ -167,6 +167,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\pre-reply-contract\\\\pre-reply-contract.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\bug-db\\\\bug-db.check.hook.js\""
           }
         ]
       }
