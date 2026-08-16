@@ -44,18 +44,40 @@ catch (e) { fail('cannot read/parse ' + SETTINGS + ' — ' + e.message); }
 const hooks = settings.hooks || {};
 
 // Collect one row per registered hook: { event, matcher, name, exists }
+// 2026-08-16 FIX — the old first-`.js`-match named every wrapped entry `hook-runtime`
+// (64/94 rows were garbage; the 9-hook DOC-DRIFT at boot came from here). Same defect
+// class system-audit.js fixed 2026-07-19; extraction now mirrors that hook's logic:
+// --wrap "X.js" → X · --manifest "Y.json" → one row per bundle child · else first
+// quoted .js that is not the runtime/dispatcher itself.
+const subst = (p) => p.replace(/\$\{CLAUDE_PROJECT_DIR\}/g, REPO_ROOT);
 const rows = [];
 for (const event of Object.keys(hooks)) {
   for (const block of hooks[event] || []) {
     const matcher = block.matcher || '';
     for (const h of block.hooks || []) {
       const cmd = h.command || '';
-      const nm = cmd.match(/([\w.-]+)\.js/);
-      if (!nm) continue;
-      const pm = cmd.match(/"([^"]+\.js)"/) || cmd.match(/(\S+\.js)/);
-      let realPath = pm ? pm[1] : null;
-      if (realPath) realPath = realPath.replace(/\$\{CLAUDE_PROJECT_DIR\}/g, REPO_ROOT);
-      rows.push({ event, matcher, name: nm[1], exists: realPath ? fs.existsSync(realPath) : false });
+      const wrap = cmd.match(/--wrap\s+"([^"]+\.js)"/);
+      const manifest = cmd.match(/--manifest\s+"([^"]+\.json)"/);
+      if (manifest) {
+        // Bundle: expand children so each member hook is a real registry row.
+        let children = [];
+        try { children = JSON.parse(fs.readFileSync(subst(manifest[1]), 'utf8')).children || []; }
+        catch (e) { /* unreadable manifest → fall through to one bundle row */ }
+        if (children.length) {
+          for (const c of children) {
+            const cPath = subst(c.replace(/\//g, path.sep));
+            const abs = path.isAbsolute(cPath) ? cPath : path.join(REPO_ROOT, cPath);
+            rows.push({ event, matcher, name: path.basename(abs) + ' (bundle ' + path.basename(manifest[1], '.json') + ')', exists: fs.existsSync(abs) });
+          }
+          continue;
+        }
+      }
+      const pm = wrap || cmd.match(/"([^"]+\.js)"/) || cmd.match(/(\S+\.js)/);
+      if (!pm) continue;
+      const realPath = subst(pm[1]);
+      const base = path.basename(realPath);
+      if (base === 'hook-runtime.js' || base === 'dispatch-hooks.js') continue; // runtime matched bare, no target found
+      rows.push({ event, matcher, name: path.basename(realPath), exists: fs.existsSync(realPath) });
     }
   }
 }
@@ -72,7 +94,7 @@ const body = [
   '',
   '| Event | Matcher | Hook | On disk? |',
   '|---|---|---|---|',
-  ...rows.map(r => `| ${r.event} | ${r.matcher || '—'} | \`${r.name}.js\` | ${r.exists ? '✓' : '🚨 MISSING'} |`),
+  ...rows.map(r => `| ${r.event} | ${r.matcher || '—'} | \`${r.name}\` | ${r.exists ? '✓' : '🚨 MISSING'} |`),
 ].join('\n');
 const block = START + '\n' + body + '\n' + END;
 
