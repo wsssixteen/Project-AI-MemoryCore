@@ -1,0 +1,3 @@
+{"eval":"domain/staging-schema-tracker/eval.js","reason":"FEATURE-INCOMPLETE: hook file never built (0 registrations, no .claude/hooks file) — eval shipped 2026-08-10 ahead of its component; build-or-retire decision queued","since":"2026-08-16"}
+{"eval":"domain/list-redmine/eval.js","reason":"ENV-DEPENDENT: needs live Redmine (VPN); run on office network — not a code defect","since":"2026-08-16"}
+{"eval":"quest/archive-quest.eval.js","reason":"REPAIR-QUEUED: bd74380 REPO_ROOT walk-up broke temp-workspace fixtures (pre-dates 2026-08-16 gate; baseline-proven); repair specced in todo Eval-battery row","since":"2026-08-16"}
