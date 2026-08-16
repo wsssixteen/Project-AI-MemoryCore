@@ -104,7 +104,6 @@ ai-memorycore/
 │   │   ├── active/          # Positions 1-10
 │   │   └── archived/        # Position 11+
 │   └── project-list.md     # Master project index
-└── save-protocol.md         # Manual save system
 ```
 
 ### **Core Components**
