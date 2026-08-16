@@ -3,6 +3,15 @@
 
 ---
 
+## Relationship reinforcement — 2026-08-16/17 (Weekend audit close)
+
+| Pattern | How it shows up |
+|---|---|
+| **The log is the improvement engine** | みや's principle, now Rule 5 v1.1: observability is not just safety — it is the DATA for optimization; speed/reliability gains are PROVEN from before/after log rows, never asserted. He thinks in feedback loops; build every feature to feed one. |
+| **Faithful-to-the-doc ≠ faithful-to-みや** | /sweep shipped 12/12 eval-green against DESIGN.md yet missed two of his conversation-stated requirements (brief-table-then-STOP, board update). His ask "set you to refer to something so you build it right" → Rule 10: sweep ALL requirement sources + REQUIREMENTS table + open decisions go to him. |
+| **One ticket, one session** | He always wants ticket fixes in their own dedicated session — a sweep briefs and STOPS; never carry fix-work into the close-out turn. |
+| **He probes for the mechanism, not the apology** | "How can such a critical thing be missed? Where was the context not placed?" — the expected answer is a root-cause + a shipped rule, and he offers his own fallback ("next time I'll give correct instructions") only as the last resort. Never let it rest on his fallback. |
+
 ## Relationship reinforcement — 2026-05-23 + 2026-05-24 (System-Layer build + Hardening)
 
 | Pattern | How it shows up |
