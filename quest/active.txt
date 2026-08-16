@@ -87,7 +87,7 @@ issue_one_liner=PPTPB Teknikal Laporan Pelukis Pelan papar Negeri SELANGOR + dae
 
 qa=QA-275500
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\147. ESOKONGAN #275500 - Pelupusan - PLTP - Tajuk Pada Risalat Hanya Papar Satu Pemohon Sehaja
-phase=0
+phase=Apply - fix UNCOMMITTED on mlk/master; W4 audit CONFIRMED direction, 4 doc claims corrected (QA-275500-audit.md); commit to mlk/esokongan/275500 on nod
 status=active
 ticket_type=bug
 env=ESOKONGAN
@@ -100,7 +100,7 @@ branch=mlk/master
 
 qa=QA-275456
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\148. ESOKONGAN #275456 - Pelupusan - PPTPB - Maklumat Tanah Tidak Lengkap pada Maklumat Pemohon
-phase=0
+phase=0 - W3 blind + W4 audit done (2026-08-17): SPLIT leaning W3 + regression-commit finding - read QA-275456-audit.md first; fix in own session
 status=active
 ticket_type=bug
 env=ESOKONGAN
@@ -149,7 +149,7 @@ branch=none
 
 qa=QA-275587
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\150. INTERNAL ISSUE (PROD) #275587 - Pelupusan - MLPS - 1) Tukar No PT. ke ''--  2) Rotate Pelan
-phase=0
+phase=0 - Recon+Rubric done via sweep W1+W2 (2026-08-17); qa_doc ready; fix in own session
 status=hold
 ticket_type=bug
 env=Pelupusan > MLPS > 1) Tukar No PT. ke ''-"  2) Rotate Pelan
@@ -158,7 +158,7 @@ assigned_to_me=2026-08-14
 
 qa=QA-275505
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\151. ESOKONGAN #275505 - Pelupusan - PPTPB - 1) Tanah Rizab tidak masuk dalam Jadual  2) Keadaa
-phase=0
+phase=0 - Recon+Rubric done via sweep W1+W2 (2026-08-17); qa_doc ready; fix in own session
 status=hold
 ticket_type=bug
 env=Pelupusan > PPTPB > 1) Tanah Rizab tidak masuk dalam Jadual  2) Keadaan Tanah papar Blank
@@ -167,7 +167,7 @@ assigned_to_me=2026-08-14
 
 qa=QA-275501
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\152. INTERNAL ISSUE (PROD) #275501 - Pelupusan - PRBB - Papar ralat bila klik pada tugasan di dashboard
-phase=0
+phase=0 - Recon+Rubric done via sweep W1+W2 (2026-08-17); A12 family; data patch + null-guard direction ready; fix in own session
 status=hold
 ticket_type=bug
 env=Pelupusan > PRBB > Papar ralat bila klik pada tugasan di dashboard
@@ -176,7 +176,7 @@ assigned_to_me=2026-08-14
 
 qa=QA-275009
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\144. ESOKONGAN #275009 - Pelupusan - Tugasan - Semakan-Pengesahan Minit Bebas- Tidak papar meda
-phase=0
+phase=0 - W3 blind + W4 audit done (2026-08-17): W3 CONFIRMED W2 REFUTED - read QA-275009-audit.md first; fix in own session
 status=active
 ticket_type=bug
 env=ESOKONGAN
@@ -189,7 +189,7 @@ quest_start=2026-08-16
 
 qa=QA-275152
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\143. ESOKONGAN #275152 - Pelupusan - Awam - Sistem Papar Ralat
-phase=0
+phase=0 - W3 blind + W4 audit done (2026-08-17): CONFIRMED both waves; fix in own session
 status=active
 ticket_type=bug
 env=ESOKONGAN

@@ -36,6 +36,8 @@ check('10 Task folder untouchable', /No file is ever written into any Task folde
 check('11 orch flag: 4h TTL + delete at close + suppression telemetry check', /TTL of a FEW HOURS \(4h\)/i.test(s) && /DELETE the flag at sweep close/i.test(s) && /orch-suppressed/.test(s));
 // standing constraints
 check('12 never Fable · Apply not owned · distill only at Phase-2', /NEVER fable/i.test(s) && /Apply is NOT part of the sweep/i.test(s) && /ONLY at Phase-2 close/i.test(s));
+// miya 2026-08-17: sweep ends with the brief table and STOPS; fixes get their own sessions; board updated
+check('13 brief-table-then-STOP + own-session rule + active.txt phase update', /the table IS the close; then STOP/i.test(s) && /OWN dedicated session/i.test(s) && /active-cli\.js update/.test(s));
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' ' + x.d)); }

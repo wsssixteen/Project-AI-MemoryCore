@@ -83,6 +83,7 @@ Clause 5 exists because on 2026-07-24 three DB verifies stranded — familiars h
 1. Delete `system/orchestration-mode.flag`.
 2. Observability check: grep `orch-suppressed` rows in `system/telemetry/hook-fires.jsonl` — report count + which gates stood down (zero rows when no gate would have misfired is a valid result).
 3. Append run ledger row to `domain/sweep/log.jsonl`: `{ts, tickets[], waves_run, skips[], agents, verified_lines, resumed}`.
-4. Report table to miya: ticket · waves run · skip rule applied · verdict/next-action. **Apply is NOT part of the sweep** — it stays a deliberate per-ticket act.
+4. Report table to miya: ticket · waves run · skip rule applied · verdict/next-action — **the table IS the close; then STOP** (miya 2026-08-17). No fix continuation, no "commit X now" prompts, no audit walk-throughs in the same breath — **every ticket's fix happens in its OWN dedicated session**, resumed from its qa_doc. **Apply is NOT part of the sweep** — it stays a deliberate per-ticket act.
+5. Before the table: update every swept quest's `phase=` in active.txt (`node quest/active-cli.js update QA-<n> phase="..."`) so the next session's boot board reflects the sweep — the qa_doc alone is not the board.
 
 > Fixture: domain/sweep/eval.js asserts the 10-row contract of DESIGN.md §8 against this file + the run ledger.
