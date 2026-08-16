@@ -1532,3 +1532,17 @@ issue_one_liner=Teknikal > PT > Penyediaan Laporan Pelukis Pelan > Papar 'No rec
 assigned_to_me=2026-08-06
 closed=2026-08-16
 close_note=RECONCILED from Redmine: Pending User, reassigned to Amila Qistina (100%). No longer miya's row. Board-truth sweep 2026-08-16.
+
+qa=QA-274510
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\136. ESOKONGAN #274510 - Pelupusan - PT - ID Permohonan tidak Masuk ke User
+env=PROD
+urusan=PT
+ticket_type=adhoc
+status=closed
+phase=1
+closed=2026-08-08
+local_test_confirmed=true
+branch=n/a-data-patch
+test_app=PTMLK/02/L/PT/2026/3 @ sitihanum@melaka.gov.my (aplikasi 3398208, PDT Jasin)
+issue_one_liner=PT PTMLK/02/L/PT/2026/3 - engine lost task 18762781, handleCompletion marked Selesai anyway, no successor tugasan; zero active tugasan so Pergerakan Fail showed tiada rekod
+close_note=PROD data-fix via InitiateBPMFlowableForm Initiate-and-Alter to PYMB, 2026-08-07 23:46:59. No code, no branch. VERIFIED: umm_tgsn_semasa 115172 PYMB -PT- sitihanum; umm_a_tgsn 2780452 flag_aktif=Y id_bpm_task 18870548; umm_aliran_kerja 22764. BA Expected satisfied. Rehearsed on stg2 PTMLK/01/L/PT/2026/3 (also an orphan) where act_ru_task 7022569 came back alive. RESIDUAL: PROD act_ru_task unverifiable (et_read denied USAGE on et_flowable17); sitihanum Hantar + BA retest are the runtime proof. OPEN SEPARATELY: 88/90 Aug PROD apps share this orphan shape

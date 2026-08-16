@@ -120,6 +120,8 @@ function main() {
             console.error(`\n⛔ Step -1 HARVEST GATE: ${qa} has no harvest section (## Bounty / ## Phase-2 bounty) in its qa_doc${gateDocPath ? ` (${gateDocPath})` : ' (no qa_doc found at all)'}.`);
             console.error(`   Run /quest-bounty (or the bulk harvest) FIRST, then archive.`);
             console.error(`   Genuinely nothing to harvest? Re-run with: --allow-stub "<why>" — the reason is logged for audit.`);
+            // Observability: a REFUSAL is an event — log it so the liveness/audit lane sees the gate working.
+            try { fs.appendFileSync(path.join(REPO_ROOT, 'domain', 'quest-bounty', 'log.jsonl'), JSON.stringify({ ts: new Date().toISOString(), qa, gate: 'harvest-gate', action: 'refused' }) + '\n'); } catch (_) {}
             process.exit(3);
         }
         if (!gateHasBounty && allowStubReason !== null && !allowStubReason.trim()) {

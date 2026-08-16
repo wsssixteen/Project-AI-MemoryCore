@@ -31,7 +31,13 @@ try {
 // 2. harvest evidence: log rows + qa_doc sections
 const logged = new Set();
 for (const line of safeRead(path.join(__dirname, 'log.jsonl')).split('\n').filter(Boolean)) {
-  try { const r = JSON.parse(line); if (r.qa) logged.add(r.qa); } catch (_) {}
+  try {
+    const r = JSON.parse(line);
+    if (!r.qa) continue;
+    if (r.action === 'refused') continue;                      // a gate refusal is NOT harvest evidence
+    if (r.archive_atomic && r.qa_doc_has_bounty === false) continue; // stub receipt — harvest still owed
+    logged.add(r.qa);
+  } catch (_) {}
 }
 function docHasBounty(qa) {
   for (const dir of ['archive', 'active']) {
