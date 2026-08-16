@@ -46,7 +46,10 @@ const EV = {
   // exactly how the five 2026-08-04 checks froze this component until today.
   fallbackPrecedence: 'fallback-precedence ✓(a: vo.setLuasDipohon(ahkm.getLuas()):5162 assigns primary first; b: guard vo.getLuasDipohon()==null never overwrites a real value; c: deliberate-clear re-shows the pra value next load — cannot distinguish never-filled from emptied)',
 };
-const TAIL = ` · in-file ✓ · sibling ✓ · ${EV.existingReuse} · name-by-purpose ✓ · minimal-diff ✓ · logic-matrix ✓ · ${EV.blastRadius} · predicate ✓ · ${EV.falsifier} · ${EV.readWrite} · BA-expected ✓(observed History.txt:38-43) · full-address ✓ · sibling-diff ✓ · ${EV.necessity} · ${EV.allWriters} · ${EV.kodResolution} · ${EV.priorFix} · ${EV.classChain} · ${EV.perananMap} · ${EV.flowable} · ${EV.fallbackPrecedence} · confidence 85%`;
+// v1.5 2026-08-16 (grand-audit): sibling + sibling-diff are now EVIDENCE_CHECKS — fixtures carry citations.
+const EV_SIBLING = 'sibling ✓(MlkBorangHakmilikForm.xhtml:141 fully-wired dropdown read this session)';
+const EV_SIBLING_DIFF = 'sibling-diff ✓(vs MlkBorangHakmilikForm: attrs ✓ listener-sig ✓ VO-instance ✓ lifecycle ✓)';
+const TAIL = ` · in-file ✓ · ${EV_SIBLING} · ${EV.existingReuse} · name-by-purpose ✓ · minimal-diff ✓ · logic-matrix ✓ · ${EV.blastRadius} · predicate ✓ · ${EV.falsifier} · ${EV.readWrite} · BA-expected ✓(observed History.txt:38-43) · full-address ✓ · ${EV_SIBLING_DIFF} · ${EV.necessity} · ${EV.allWriters} · ${EV.kodResolution} · ${EV.priorFix} · ${EV.classChain} · ${EV.perananMap} · ${EV.flowable} · ${EV.fallbackPrecedence} · confidence 85%`;
 
 const FULL_CHECK_LINE = `CODE-CHECK: ${EV.analog}${TAIL}`;
 const CROSS_JUSTIFIED = `CODE-CHECK: analog ✗(novel defensive helper)${TAIL}`;
@@ -89,6 +92,23 @@ check('F8 bypass token → allow', !r.blocked, 'blocked=' + r.blocked);
 // F10: kod-resolution present but bare ✓ (no reference-table citation) → block
 r = runHookWith({ tool_input: { file_path: 'E:/Projects/Melaka/etanah-pelupusan/src/main/java/foo.java' }, transcript_path: makeTranscript(BARE_KOD_RESOLUTION + '\napplying fix') });
 check('F10 bare kod-resolution ✓ → BLOCK', r.blocked && /kod-resolution/i.test(r.combined), 'blocked=' + r.blocked);
+
+// F11 (v1.5): bare `sibling ✓` (no citation) → block naming sibling
+r = runHookWith({ tool_input: { file_path: 'E:/Projects/Melaka/etanah-pelupusan/src/main/java/foo.java' }, transcript_path: makeTranscript(FULL_CHECK_LINE.replace(EV_SIBLING, 'sibling ✓') + '\napplying fix') });
+check('F11 bare sibling ✓ → BLOCK (259112 guard)', r.blocked && /sibling/i.test(r.combined), 'blocked=' + r.blocked);
+
+// F12 (v1.5): docx-template — reduced row set (no flow rows) → allow
+const DOCX_LINE = `CODE-CHECK: ${EV.analog} · in-file ✓ · ${EV_SIBLING} · ${EV.existingReuse} · name-by-purpose ✓ · minimal-diff ✓ · ${EV.falsifier} · BA-expected ✓(observed rendered PDF Task folder) · full-address ✓ · ${EV_SIBLING_DIFF} · ${EV.necessity} · ${EV.kodResolution} · ${EV.priorFix} · confidence 85%`;
+r = runHookWith({ tool_input: { file_path: 'E:/Projects/Melaka/etanah-pelupusan/src/main/resources/template/MLK_PLP_L1E.docx' }, transcript_path: makeTranscript(DOCX_LINE + '\napplying fix') });
+check('F12 docx-template reduced row set (no flow rows) → allow', !r.blocked, 'blocked=' + r.blocked + ' ' + r.combined.slice(0, 200));
+
+// F13 (v1.5): config-json path now FIRES — no CODE-CHECK line → block
+r = runHookWith({ tool_input: { file_path: 'E:/Projects/Melaka/etanah-pelupusan/src/main/resources/tindakan.config.json' }, transcript_path: makeTranscript('editing config') });
+check('F13 config-json without CODE-CHECK → BLOCK (c38bc07a90 gap closed)', r.blocked, 'blocked=' + r.blocked);
+
+// F14 (v1.5): plain .java still requires the FULL 22-row set — docx-reduced line on .java → block
+r = runHookWith({ tool_input: { file_path: 'E:/Projects/Melaka/etanah-pelupusan/src/main/java/foo.java' }, transcript_path: makeTranscript(DOCX_LINE + '\napplying fix') });
+check('F14 reduced line on plain .java → BLOCK (spec preserved)', r.blocked, 'blocked=' + r.blocked);
 
 // F9: empty stdin → no crash, no block
 r = spawnSync(process.execPath, [HOOK], { input: '', encoding: 'utf8', timeout: 30000, env: process.env });
