@@ -5,3 +5,21 @@
 {"kind":"watch","id":"wmsvx56vo","ts":"2026-08-16T14:47:16.500Z","target":".claude/CLAUDE.md","observe":"v1.70 Operation-run outputs row: next audit/sweep/bulk operation writes to designed homes only - NO new folder/file shape invented","sessions_left":3,"rollback_sha":"d800c1664eaa1b4452f46e9adc950ba1458910e5"}
 {"kind":"watch","id":"wmsvx5736","ts":"2026-08-16T14:47:16.770Z","target":"Feature/Domain-Expansion/expansion-protocol.md","observe":"next DE run: Step 2b emits Uncommitted-work + Pending-nods rows for every touched quest, and 12.5 runs liveness --summary + bounty-debt check without referencing deleted log files","sessions_left":2,"rollback_sha":"ca631eb80fbe38c6b828cbffda98539616800595"}
 {"kind":"watch","id":"wmsvxqglj","ts":"2026-08-16T15:03:48.871Z","target":"README.md","observe":"README tree after save-protocol removal: next session confirm no doc references the deleted save-protocol.md/backups/qwt paths anywhere new","sessions_left":2,"rollback_sha":"facee33c288de674719d15564e0bfee86f84ac74"}
+{"kind":"tick","id":"wmsvx56op","ts":"2026-08-16T15:13:25.836Z","sessions_left":2}
+{"kind":"tick","id":"wmsvx56vo","ts":"2026-08-16T15:13:25.839Z","sessions_left":2}
+{"kind":"tick","id":"wmsvx5736","ts":"2026-08-16T15:13:25.842Z","sessions_left":1}
+{"kind":"tick","id":"wmsvxqglj","ts":"2026-08-16T15:13:25.843Z","sessions_left":1}
+{"kind":"tick","id":"wmsvx56op","ts":"2026-08-16T15:29:25.457Z","sessions_left":1}
+{"kind":"tick","id":"wmsvx56vo","ts":"2026-08-16T15:29:25.459Z","sessions_left":1}
+{"kind":"tick","id":"wmsvx5736","ts":"2026-08-16T15:29:25.460Z","sessions_left":0}
+{"kind":"tick","id":"wmsvxqglj","ts":"2026-08-16T15:29:25.461Z","sessions_left":0}
+{"kind":"tick","id":"wmsvx56op","ts":"2026-08-16T15:54:33.074Z","sessions_left":0}
+{"kind":"tick","id":"wmsvx56vo","ts":"2026-08-16T15:54:33.076Z","sessions_left":0}
+{"kind":"tick","id":"wmsvx5736","ts":"2026-08-16T15:54:33.076Z","sessions_left":-1}
+{"kind":"tick","id":"wmsvxqglj","ts":"2026-08-16T15:54:33.077Z","sessions_left":-1}
+{"kind":"watch","id":"wmsvzl99k","ts":"2026-08-16T15:55:45.320Z","target":"domain/pre-code-check/pre-code-check.check.hook.js","observe":"v1.5 type-gating: next etanah .docx/.json edit passes with reduced row set + cited sibling; next plain .java edit still demands full 22 rows","sessions_left":3,"rollback_sha":"eab499fb76a580d2d5ad8627a4821426e7630aca"}
+{"kind":"tick","id":"wmsvx56op","ts":"2026-08-16T16:27:14.194Z","sessions_left":-1}
+{"kind":"tick","id":"wmsvx56vo","ts":"2026-08-16T16:27:14.195Z","sessions_left":-1}
+{"kind":"tick","id":"wmsvx5736","ts":"2026-08-16T16:27:14.195Z","sessions_left":-2}
+{"kind":"tick","id":"wmsvxqglj","ts":"2026-08-16T16:27:14.196Z","sessions_left":-2}
+{"kind":"tick","id":"wmsvzl99k","ts":"2026-08-16T16:27:14.196Z","sessions_left":2}

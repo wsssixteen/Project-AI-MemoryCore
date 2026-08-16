@@ -16,6 +16,21 @@
 //   ✓ must cite an OBSERVATION (OBSERVATION_TOKEN_RX) — a prediction ("appearance unchanged") must be
 //   written ✗(unverified — <risk>) so unknowns are visible BEFORE miya's build. Smoke: the 272943
 //   shipping line blocks on both; honest line passes. v1.0/v1.1 specs preserved.
+// v1.5 (2026-08-16, grand-audit wf_097d9bae — 13 agents, 10 angles vs 183-commit census):
+//   (a) TYPE-GATED rows — docx-template (31/163 fixes = 19%) and *Constant.java populators were
+//       forced through stateful-flow rows (logic-matrix/peranan-map/flowable-contract...) that have
+//       nothing to bind to in a CC-tag change; that structurally invited fabricated-but-passing
+//       evidence. Each change-type now gets only the rows that apply (TYPE_DROP below).
+//   (b) config-json (.json) added to the trigger — a config fix shipped ungated (c38bc07a90/266039).
+//   (c) sibling + sibling-diff moved INTO EVIDENCE_CHECKS — a bare ✓ passed while the exact failure
+//       they exist to stop shipped (#259112: wrong-shape analog, miya caught wrong wiring).
+//   COVERAGE NOTE: .sql is DELIBERATELY absent — SQL patch scripts never land in git (handed to miya
+//   unqualified) and are governed by the patch-script-gate/convention-check-gate/prod-db-confirm
+//   family, not this hook. `etanah-teknikal` in the path regex never fires today (module not checked
+//   out locally) — kept because it costs nothing and covers a future checkout.
+//   Spec preservation: all v1.0-v1.4 specs intact for plain .java/.xhtml (row set unchanged there);
+//   drops are TYPE-SCOPED only. Finding 5 (intake-phase BPMN gate + prior-fix per-ticket memoization)
+//   deferred → proposal slip.
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -23,7 +38,7 @@ const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..
 const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
 const LOG = path.join(__dirname, 'log.jsonl');
 
-const ETANAH_PATH = /[\\\/]etanah-(pelupusan|common|awam|teknikal)[\\\/].+\.(java|xhtml|docx)$/i;
+const ETANAH_PATH = /[\\\/]etanah-(pelupusan|common|awam|teknikal)[\\\/].+\.(java|xhtml|docx|json)$/i;
 
 const REQUIRED_CHECKS = [
   'analog', 'in-file', 'sibling', 'existing-reuse', 'name-by-purpose',
@@ -34,8 +49,23 @@ const REQUIRED_CHECKS = [
 ];
 const CONFIDENCE_RX = /\bconfidence\s+\d+\s*%/i;
 
-const EVIDENCE_CHECKS = ['analog', 'existing-reuse', 'blast-radius', 'read+write-path', 'falsifier', 'necessity', 'all-writers', 'kod-resolution', 'prior-fix', 'class-chain', 'peranan-map', 'flowable-contract', 'fallback-precedence'];
+const EVIDENCE_CHECKS = ['analog', 'sibling', 'sibling-diff', 'existing-reuse', 'blast-radius', 'read+write-path', 'falsifier', 'necessity', 'all-writers', 'kod-resolution', 'prior-fix', 'class-chain', 'peranan-map', 'flowable-contract', 'fallback-precedence'];
 const EVIDENCE_MIN = 12;
+
+// v1.5 type-gating: rows that DON'T apply to a change-type are dropped from its required set.
+// A dropped row may still appear in the line (ignored) — absence is no longer a block for that type.
+function changeType(fp) {
+  if (/\.docx$/i.test(fp)) return 'docx-template';
+  if (/\.json$/i.test(fp)) return 'config-json';
+  if (/Constant\.java$/i.test(fp)) return 'constant-populator';
+  return 'code';
+}
+const TYPE_DROP = {
+  'docx-template': ['logic-matrix', 'blast-radius', 'class-chain', 'all-writers', 'peranan-map', 'flowable-contract', 'read+write-path', 'fallback-precedence', 'predicate'],
+  'config-json': ['logic-matrix', 'class-chain', 'all-writers', 'read+write-path', 'predicate', 'fallback-precedence', 'flowable-contract'],
+  'constant-populator': ['peranan-map', 'flowable-contract'],
+  'code': [],
+};
 
 // v1.2: a ✓ on BA-expected must cite an OBSERVATION (something read/queried/rendered), never a
 // prediction ("appearance unchanged", "should work"). If the outcome is only observable after a
@@ -82,15 +112,18 @@ runHook({ name: 'pre-code-check', event: 'PreToolUse' }, (input) => {
   const text = readLastAssistantTurn(data.transcript_path || '');
   if (!text) { log({ action: 'no-transcript', file: filePath }); return { fired: false }; }
 
+  const type = changeType(filePath);
+  const REQUIRED = REQUIRED_CHECKS.filter(n => !TYPE_DROP[type].includes(n));
+
   const codeCheckMatch = text.match(/CODE-CHECK:\s*([^\n]+)/i);
   if (!codeCheckMatch) {
-    log({ action: 'blocked-missing-emit', file: filePath });
+    log({ action: 'blocked-missing-emit', file: filePath, type });
     return {
       fired: true, blocked: true,
       blockReason: [
         '⛔ pre-code-check: etanah code Edit blocked — no CODE-CHECK emit line in this turn.',
-        '   File: ' + filePath,
-        '   Emit ONE compact line before the Edit, all 17 checks with ✓ or ✗(reason):',
+        '   File: ' + filePath + '  (change-type: ' + type + ' → ' + REQUIRED.length + ' rows apply)',
+        '   Emit ONE compact line before the Edit, the ' + REQUIRED.length + ' applicable checks with ✓ or ✗(reason):',
         '',
         '     CODE-CHECK: analog ✓ · in-file ✓ · sibling ✓ · existing-reuse ✓ · name-by-purpose ✓',
         '              · minimal-diff ✓ · logic-matrix ✓ · blast-radius ✓ · predicate ✓ · falsifier ✓',
@@ -116,7 +149,7 @@ runHook({ name: 'pre-code-check', event: 'PreToolUse' }, (input) => {
   const bareCross = [];
   const bareEvidence = [];
   const predictionTick = [];
-  for (const name of REQUIRED_CHECKS) {
+  for (const name of REQUIRED) {
     const escaped = name.replace(/[.+*?^$()[\]{}|\\]/g, '\\$&');
     const rx = new RegExp(escaped + '\\s*([✓✗])(\\s*\\(([^)]+)\\))?', 'i');
     const m = line.match(rx);
@@ -128,7 +161,7 @@ runHook({ name: 'pre-code-check', event: 'PreToolUse' }, (input) => {
   if (!CONFIDENCE_RX.test(line)) missing.push('confidence <N>%');
 
   if (missing.length > 0 || bareCross.length > 0 || bareEvidence.length > 0 || predictionTick.length > 0) {
-    log({ action: 'blocked-malformed', file: filePath, missing, bareCross, bareEvidence, predictionTick });
+    log({ action: 'blocked-malformed', file: filePath, type, missing, bareCross, bareEvidence, predictionTick });
     const reasons = [];
     if (missing.length > 0) reasons.push('   Missing check names: ' + missing.join(', '));
     if (bareCross.length > 0) reasons.push('   ✗ without justification: ' + bareCross.join(', ') + ' — add "(reason)" after each ✗');
@@ -143,7 +176,12 @@ runHook({ name: 'pre-code-check', event: 'PreToolUse' }, (input) => {
       reasons.push(
         '   Bare glyph on judgment-bearing check(s): ' + bareEvidence.join(', '),
         '   These MUST carry evidence in parentheses — what you READ, not what you believe:',
-        '     analog          ✓(<file:line> of the code you copied the shape from)',
+        '     analog          ✓(<file:line> of the code you copied the shape from — NAME its operation',
+        '                       SHAPE too, e.g. root-level vs array-scoped: #259112 cited a real line whose',
+        '                       shape did not match and the wrong-wired fix shipped)',
+        '     sibling         ✓(<working sibling file:line> actually read this session — a bare ✓ here',
+        '                       is how #259112 reused a minimal-attrs formField over the fully-wired one)',
+        '     sibling-diff    ✓(vs <sibling>: attrs ✓ · listener-sig ✓ · VO-instance ✓ · lifecycle ✓ — or name the divergence)',
         '     existing-reuse  ✓(grepped <symbol> -> reused <Class.method():line>) | ✓(grepped <symbol> -> 0 existing resolvers)',
         '     blast-radius    ✓(grepped <symbol> -> N call-sites: <file:line>, ...)',
         '     read+write-path ✓(<Class.method():line> persists it) | ✓(grepped <getter> -> 0 persisters)',
@@ -201,7 +239,7 @@ runHook({ name: 'pre-code-check', event: 'PreToolUse' }, (input) => {
         '⛔ pre-code-check: CODE-CHECK line present but malformed.',
         '   File: ' + filePath,
         ...reasons,
-        '   Full expected list: ' + REQUIRED_CHECKS.join(' · '),
+        '   Full expected list (' + type + '): ' + REQUIRED.join(' · '),
       ].join('\n'),
     };
   }

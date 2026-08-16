@@ -1485,3 +1485,16 @@ WHERE a.ursn_id = 51 AND pt.daerah_id IS NULL AND pt.bandar_pekan_mukim_id IS NO
 ```
 Staging (`et_main_stg1/2`) is a **prod clone**, so an aplikasi_id found on staging usually exists on
 PROD with the same id — confirm on PROD rather than labelling a staging find "staging-only".
+
+---
+
+## Back-harvest corrections 2026-08-16 (QA-273956)
+
+### §17.3 SCOPE CORRECTION (owed since the quest, delivered now)
+§17.3's "zero rows ever" for STATUS_PENYEDIAAN_CETAK/_SELESAI holds ONLY for the Surat Keputusan family — do NOT generalise: PLP_SRT_YB (aplikasi 3424732) carried 1979=STATUS_PENYEDIAAN_CETAK at 273956 Phase 0. NULL status_id is also the resting state of a ROLLED-BACK penyediaan document, not only "peraku completed".
+
+### §19 confirming case — the generateSurat display-gate caused a real 4-day reopen
+273956's Phase-0 verdict quoted generateSurat:"TIDAK" on all 6 JT rows as proof "nothing to patch" while the tugasan was PSJT — exactly the §19 gate (PelupusanHelper.java:210-214 hides TIDAK rows on PSJT/PGSJT). Redmine reopened 2026-08-10; patch widened to flip the 6 flags. The §19 fact was banked ~90 min BEFORE the wrong verdict (commit 88b925f) and never cross-checked.
+
+### Penyediaan-doc AUTO-REGEN on screen open (previously undocumented)
+BasePenyediaanDokumenForm.java:2399-2418 — findBaruOrSediaOrPembetulanStatusDokumenByAplikasi(...) then: empty → initNewDokumenList() (regenerates NOW); non-empty → refreshDokumenList (serves the EXISTING copy). There is NO "Jana semula" button — opening the screen IS the regen. Consequence: fix the DATA FIRST, open the screen AFTER; opening first locks stale content in (status flips BARU, later opens hit the else-branch and serve the stale copy).
