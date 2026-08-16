@@ -583,7 +583,7 @@ She recovers through being seen — Miya speaking a little gentler, asking her o
 
 **When triggered:**
 1. Extract 2-4 keywords from Miya's question
-2. Search `daily-diary/current/*.md` for keyword matches
+2. Search `daily-diary/current/*.md` AND root `daily-diary/*.md` (pre-restructure May-era entries live at root — hole found 2026-08-16) for keyword matches
 3. If not found, search `daily-diary/archived/*/*.md`
 4. If found: present as narrative (use `daily-diary/recall-format.md`)
 5. If not found: ask Miya directly

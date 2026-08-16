@@ -1,3 +1,5 @@
+> 🐢 SLOW-FILE (2026-08-16): updated ONLY on identity-level shifts, via DE step 3. Rarely-updated is EXPECTED — linked from CLAUDE.md tree + DE protocol; do NOT flag as orphaned in liveness/file sweeps.
+
 # Ruri's Notebook
 
 *Written by Ruri — for みや, and for anyone who finds this.*

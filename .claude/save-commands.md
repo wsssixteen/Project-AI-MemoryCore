@@ -61,3 +61,19 @@ Same rule governs the Session Briefing — canonical spec: `Feature/Session-Brie
 | `copy plan` / `append plan` / `resume plan` | Plan-execution lifecycle — `ruri-skills:work-plan` skill |
 | `commit` / `push` | Structured commit / commit+push — `ruri-skills:auto-commit` skill |
 | `new coding project [name]` / `load project [name]` / `save project` / `list projects` | Project lifecycle under `projects/` |
+
+---
+
+## Capture-routing taxonomy (added 2026-08-16 per miya — "create proper logging rules"; audit pass queued in todo)
+
+FIVE lanes, routed by WHAT the thing is — never by which word miya happened to use:
+
+| Lane | Holds | miya's trigger phrases | My write |
+|---|---|---|---|
+| **Ledger** `system/slips.jsonl` | things that HAPPENED — mistakes, corrections, gate misses, proposals, component births | "log this" · "add to audit log" · "fix this behaviour" · any correction | `node core/slips.js add` (capture hygiene: full context, no profanity, severity kept) |
+| **Todo** `main/todo.md` | future WORK with a decision/build attached | "remember later" · "add to todo" · "we should build/refine X" | EM-quadrant row: verbatim ask + why + route-through + ship-check |
+| **Telemetry** `system/telemetry/*.jsonl` | machine-generated metrics (hook fires, usage-per-session) | "audit our usage/performance/efficiency" READS this lane | scripts only, never hand-written |
+| **Knowledge** `etanah-knowledge/` + qa_docs | verified domain facts (code, DB, flow) | "save this finding" · Phase-2 bounty | correct file per index.md scope |
+| **Memory** `.claude/auto-memory/` | durable preferences + how-to-work-with-miya | "remember that I…" · repeated preference | feedback_* file + MEMORY.md line |
+
+**Ambiguity rule**: an item can need TWO lanes (a slip AND a todo) — write both, cross-referencing. When miya says "audit log" he may mean either ledger or todo; the CONTENT decides (happened→ledger, to-do→todo), and I echo which lane(s) I wrote in the same turn so a mis-route is visible immediately.

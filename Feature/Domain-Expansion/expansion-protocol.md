@@ -222,6 +222,8 @@ For **every** quest whose `qa_doc` was touched this session, or whose `active.tx
 | Delivery channels | 🚨 name **every** channel, including the ones git cannot see — a SQL/doc **attachment on Redmine** is invisible to branch-based release recon (#269802 2026-07-17, #273461 2026-08-06) |
 | Resume point | the exact next action, cold-reader complete |
 | Deferrals | the `## Deferred to follow-up` table, every row with a Home |
+| 🚨 Uncommitted work (added 2026-08-16, per みや "critical details for quest to continue another session pose a risk") | any code/script sitting UNCOMMITTED anywhere: repo + branch + file path + what it does + what it awaits. The 275500 lesson: a fix uncommitted on `mlk/master` survived only because a hook banner happened to carry it — the qa_doc, not a banner, must own it |
+| Pending nods | every open decision みや hasn't answered yet, verbatim options |
 
 **Then reconcile the copies.** A qa_doc under `projects/` exists in BOTH the main repo and the worktree,
 and hooks read the **worktree** copy while the durable content lives in **main**. Writing one and not the
@@ -249,13 +251,12 @@ writing only one of the two copies · `⏭` without naming the quest and why it 
 
 After Step 12's `/verify` Checklist D goes green, run a **meta-audit** pass before declaring DE closed. Covers the system-layer's recursive-safety concerns (Stage 5 self-enforcement).
 
-| Sub-check | What it verifies | How |
+| Sub-check | What it verifies | How (sources re-pointed 2026-08-16 — hook-fire-log.md + skill-failure-log.md DELETED in tombstone sweep) |
 |---|---|---|
-| **Hook-fire reliability** | Each system-layer hook fired the expected number of times this session | Count fires in `system/hook-fire-log.md` per hook; flag any zero-fire enforcement hook |
+| **Hook-fire reliability + component-liveness** | Registered components actually fire; silent ones surfaced | `node lib/liveness-report.js --summary` — one line; if 🚨 count > 0, read `system/liveness-dashboard.md` flags. ⚠️ bare-registered hooks (e.g. `system-edit-gate`) are invisible to telemetry — a flag on one of those means "unobservable", not "dead" (wrap-all fix pending) |
 | **Cross-reference validity** | Every link in `system/INDEX.md` + sub-indexes resolves to an existing file | Glob each cited path; flag broken links |
-| **Component-liveness** | Every file under `system/` + every system-layer skill / hook has at least one trigger or workflow that fires it | Read each component's "When this fires" section + match to actual triggers; flag orphans |
-| **Meta-edit-gate not dark** | `system-edit-gate.js` fired in last 2 sessions (refinement #5 fallback) | Grep last 2 sessions' hook-fire-log for `system-edit-gate`; raise standing flag if dark |
-| **Skill-load counter** | Each Discipline + Honesty + User-side skill loaded on its triggers (extended skill-failure-log schema) | Read `skill-failure-log.md` skill-load section; flag any skill with zero loads despite trigger phrases appearing |
+| **Bounty debt** (added 2026-08-16 per みや "truly reflecting the bounty part") | No quest closed/archived this session without its bounty harvest | Compare this session's `status→closed/archived` flips against `domain/quest-bounty/log.jsonl`; any missing → run `/quest-bounty` or surface as Standing Flag |
+| **Skill-load counter** | ⏸ NO SOURCE since 2026-08-16 — skill invocations are unlogged (named observability hole) | Suspended until the Skill-tool PostToolUse logger ships; do not fake this check |
 
 **Output:** silent if all sub-checks pass; one inline table surfaced ABOVE the DE closing banner only when ≥1 sub-check fails — `| Sub-check | Status | Detail |`.
 
@@ -327,7 +328,7 @@ Before emitting the closing banner — read `.claude/state/session-items.md` "Ac
 *Updated 2026-08-05 — **Step 7.5 IMPROVEMENT SWEEP added (MANDATORY)** per みや: five fixed axes (A1 agentic system · A2 quest workflow · A3 debugging efficiency+accuracy · A4 etanah issue-solving · A5 sweep/file-sweep), swept every DE, producing (a) a dated assessment under `system/` with a concrete instance per claim and (b) brainstormed proposals logged via `core/slips.js --type proposal` into the new 💡 Open proposals lane of `slip-dashboard.md` for weekly-audit ruling. Paired `core/slips.js` change: `type=proposal` split out of the slip counts and given its own dashboard section, because filing an idea as `upgrade` reads as shipped and makes an open decision invisible (the 2026-07-22 parked-enforcement-row failure). Rationale: みや had to ask for this assessment explicitly two goals running — a thing he must repeatedly request is a missing step, not a missing effort.*
 
 *Created: 2026-05-05 | Protocol owner: Ruri | Review at every Forge Review until L4 stabilization*
-*Updated 2026-05-23 — added Step 12.5 meta-audit (Phase 6 of system-layer build)*
+*Updated 2026-08-16 — Step 2b +2 rows (Uncommitted-work · Pending-nods, the 275500 lesson) · Step 12.5 re-pointed onto live sources (liveness-report + slips.jsonl; deleted hook-fire-log/skill-failure-log refs fixed) + Bounty-debt sub-check + skill-load check honestly SUSPENDED. Prev: 2026-05-23 Step 12.5 added.*
 *Updated 2026-05-24 evening — added Step 13 Handoff Block (post-Round-3 slip)*
 *Updated 2026-05-22 — added step (0b) worktree/branch sync check (みや): detect worktree-vs-main + pull origin/main early if a worktree branch is behind. Earlier 2026-05-22 — signals #2/#3 (Quest State Transitions + active.txt schema) de-duplicated to a cross-ref; canonical home is now `quest/quest-protocol.md` (quest-cluster decomposition).*
 *Last updated: 2026-05-30 — Step 11 (Worktree & branch close): retired sub-parts (c) Sweep stale worktrees / (d) Delete merged stale branches / (e) current-worktree flag — that cleanup now runs AUTOMATICALLY + SILENTLY at SessionStart via `worktree-cleanup-boot.js` (v1.2, which now also removes merged `claude/*` worktree directories, not just branches). DE retains only (a) verify-main-current + (b) salvage-unmerged-content. Per みや: a deterministic SessionStart hook fires 100% of the time and keeps session-end lean.*

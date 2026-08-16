@@ -98,8 +98,39 @@ function main() {
     const branch = branchIdx >= 0 ? args[branchIdx + 1] : null;
     const tasksIdx = args.indexOf('--tasks');
     const tasksRoot = tasksIdx >= 0 ? args[tasksIdx + 1] : DEFAULT_TASKS;
+    const allowStubIdx = args.indexOf('--allow-stub');
+    const allowStubReason = allowStubIdx >= 0 ? (args[allowStubIdx + 1] || '') : null;
 
     console.log(`\n📦 Archive harness — ${qa}${dryRun ? ' (DRY-RUN)' : ''}\n   Tasks root: ${tasksRoot}`);
+
+    // ── Step -1: HARVEST GATE (2026-08-16, per みや — "archive without harvest must be
+    // mechanically impossible"; slip archive-without-harvest, 35-quest debt). An archive
+    // may not proceed unless the qa_doc carries a harvest section (## Bounty or
+    // ## Phase-2 bounty) OR the operator passes --allow-stub "<reason>" (reason mandatory,
+    // logged in the Step-4 receipt for audit). Dry-run reports but does not block.
+    {
+        const pArchive = path.join(REPO_ROOT, 'projects', 'coding-projects', 'archive', qa);
+        const pActive  = path.join(REPO_ROOT, 'projects', 'coding-projects', 'active', qa);
+        // Check EVERY existing copy — qa_docs can exist in BOTH archive and active with
+        // divergent content (caught by this gate's own eval, fixture b, 2026-08-16).
+        const gateDocPaths = [path.join(pArchive, `${qa}.md`), path.join(pActive, `${qa}.md`)].filter(p => fs.existsSync(p));
+        const gateDocPath = gateDocPaths[0] || null;
+        const gateHasBounty = gateDocPaths.some(p => /^## (Phase-2 )?[Bb]ounty/m.test(fs.readFileSync(p, 'utf8')));
+        if (!gateHasBounty && allowStubReason === null && !dryRun) {
+            console.error(`\n⛔ Step -1 HARVEST GATE: ${qa} has no harvest section (## Bounty / ## Phase-2 bounty) in its qa_doc${gateDocPath ? ` (${gateDocPath})` : ' (no qa_doc found at all)'}.`);
+            console.error(`   Run /quest-bounty (or the bulk harvest) FIRST, then archive.`);
+            console.error(`   Genuinely nothing to harvest? Re-run with: --allow-stub "<why>" — the reason is logged for audit.`);
+            // Observability: a REFUSAL is an event — log it so the liveness/audit lane sees the gate working.
+            try { fs.appendFileSync(path.join(REPO_ROOT, 'domain', 'quest-bounty', 'log.jsonl'), JSON.stringify({ ts: new Date().toISOString(), qa, gate: 'harvest-gate', action: 'refused' }) + '\n'); } catch (_) {}
+            process.exit(3);
+        }
+        if (!gateHasBounty && allowStubReason !== null && !allowStubReason.trim()) {
+            console.error(`\n⛔ Step -1: --allow-stub requires a non-empty reason.`);
+            process.exit(3);
+        }
+        if (!gateHasBounty && dryRun) console.log(`  [dry] Step -1: HARVEST GATE would BLOCK (no harvest section${allowStubReason ? '; --allow-stub present' : ''})`);
+        else console.log(`  ✓ Step -1: harvest gate ${gateHasBounty ? 'passed (harvest section found)' : `bypassed (--allow-stub: ${allowStubReason})`}`);
+    }
 
     // ── Step 0: locate the block (may already be archived) ─────────────────
     const block = readActiveTxtBlock(qa);
@@ -220,7 +251,7 @@ function main() {
             let hasBounty = false;
             if (qaDocPath) {
                 const doc = fs.readFileSync(qaDocPath, 'utf8');
-                hasBounty = /^## Bounty/m.test(doc);
+                hasBounty = /^## (Phase-2 )?[Bb]ounty/m.test(doc);
             }
             const logDir  = path.join(REPO_ROOT, 'domain', 'quest-bounty');
             const logPath = path.join(logDir, 'log.jsonl');
@@ -232,6 +263,7 @@ function main() {
                 qa_doc_has_bounty: hasBounty,
                 commit: commit || getField(block, 'commit') || null,
                 branch: branch || getField(block, 'branch') || null,
+                allow_stub_reason: (!hasBounty && allowStubReason) ? allowStubReason : undefined,
             };
             fs.appendFileSync(logPath, JSON.stringify(entry) + '\n');
             bountyState = hasBounty ? 'harvested' : 'stub';

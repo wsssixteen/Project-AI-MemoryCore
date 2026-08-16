@@ -136,6 +136,7 @@ if (require.main === module) {
           '     • method → <ClassName>.<method>():<line>  — NEVER a bare method',
           ...result.offenders.map(o => `   - ${o}`),
           '   Genuinely un-addressable (quoting a retracted emit, etc.)? Add [skip-full-address: <reason>] and continue.',
+          '   ⚡ DELTA ONLY: みや already read the reply above — output just the corrected full address(es), 1 line each; do NOT re-emit the reply.',
         ].join('\n'),
       }));
       process.exit(0);

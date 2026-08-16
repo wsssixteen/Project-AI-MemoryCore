@@ -175,7 +175,9 @@ If the case genuinely can't be reproduced (ticket data gone), say exactly why an
 NO SLIP CLOSES WITHOUT SLIP-LOG ENTRY + RUNNING-COUNT TABLE UPDATE
 ```
 
-Every Step 5 invocation MUST (a) append a row to `system/slip-log.md` (the canonical home — `Feature/Forge-Self-Improvement-System/skill-failure-log.md` is tombstoned), (b) increment the running-count table at the TOP of `system/slip-log.md` by BOTH `root_category` AND `skill_path`, (c) check the tiered escalation thresholds below + emit the escalation banner if any threshold tripped.
+Every Step 5 invocation MUST (a) append a row via `node core/slips.js add …` (canonical since 2026-07-13 — `system/slip-log.md` is a FROZEN archive; this line previously mis-pointed there, corrected 2026-08-16), (b) let `core/slips.js` regenerate the dashboard counts, (c) check the tiered escalation thresholds below + emit the escalation banner if any threshold tripped.
+
+**Capture hygiene (added 2026-08-16 per みや)**: the ledger `evidence` field records みや's correction with FULL context (what was asked · what I did wrong · the rule violated) but PARAPHRASED PROFESSIONALLY — quote his meaning, never his curse words; profanity is stripped, the severity is kept ("2nd ask", "escalated"). みや's plain trigger for this whole pipeline is simply saying **"fix this behaviour"** (or any correction phrase in the description) — no forge/command knowledge needed on his side; forge is only invoked at Step 4 when a new DEFENDER component is warranted, not for the capture itself.
 
 **Violating the letter of this step is violating the spirit of this step.**
 

@@ -26,3 +26,19 @@ The system was **capture-rich, synthesis-poor**: `auto-skill-on-mistake` + `slip
 | `close-phase` | mechanics of advancing a quest active→closed→archived |
 | Domain Expansion | session-end save (all quests + diary + memory) |
 | **quest-bounty** | per-quest value harvest + ONE mined refinement, at Phase 2 |
+
+## Standing auto-harvest schema (2026-08-16, per miya — "you should already know what to gather; automated & agreed upon")
+
+At EVERY Phase-2 close (single or bulk), I gather these WITHOUT asking, from the quest's verified findings only:
+
+| # | Category | Goes to |
+|---|---|---|
+| 1 | Mechanism/bug pattern (root cause shape, reusable trap) | BUG-BESTIARY.md |
+| 2 | Working analog used (the sibling code the fix mirrored) | BUG-BESTIARY.md or FRONTEND-PATTERNS/relevant file |
+| 3 | Flow/engine facts (Flowable, assignation, routing) | FLOWABLE-KNOWLEDGE.md |
+| 4 | Test data (permohonan + login + env + coverage gaps) | TEST-PERMOHONAN-INDEX.md |
+| 5 | Patch-script discriminators + false-alarm patterns | BUG-BESTIARY.md |
+| 6 | Office/kod/vocab facts (PDTJ=PDT Jasin etc.) | DOMAIN-GLOSSARY.md |
+| 7 | Deferrals + 5-line post-mortem + ONE refinement proposal | qa_doc + slips type=proposal |
+
+Rule: verified-evidence only (E13); each entry cites file:line/SQL/SHA; mid-quest capture via quest-knowledge-save routes to the same table.

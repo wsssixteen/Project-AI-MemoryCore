@@ -2,7 +2,7 @@
 
 > Regenerated 2026-07-13 (external-audit C5). 22 keep + 26 deferred = 48 live files; 23 archived to `archive/`
 > (7 superseded + 16 one-liners folded into `personality.md` §Distilled one-liners). Plan + parity:
-> `external-audit/sprint-drafts/auto-memory-plan.md`.
+> `projects/coding-projects/archive/external-audit-2026-07/sprint-drafts/auto-memory-plan.md`.
 
 ## Feedback
 - [feedback_agent_execute_in_quest.md](feedback_agent_execute_in_quest.md) — In active quest / goal-driven context: any non-destructive action helping the goal = JUST DO IT (agent, not chatbot); destructive ops still need explicit greenlight
@@ -34,6 +34,9 @@
 - [feedback_cross_module_handoff_artifact.md](feedback_cross_module_handoff_artifact.md) — Fix in a module we don't own (etanah-common) or "pass to X team / not our domain / cross-module" → produce a handoff artifact WITH before-code commented above new-code in-file (recipient compares before/after up-down); deliver in Task 2. Fix/; comments allowed here [comment-ok]
 - [feedback_cross_module_alert_at_intake.md](feedback_cross_module_alert_at_intake.md) — 🚨 At ticket RETRIEVAL + Phase 0, scan Description+History for CROSS-MODULE (our issue or Common / pass to team / utiliti-screen) + PRIORITY (PROD/urgent) signals → flag LOUDLY as the FIRST line of quest MD; NEVER write "ownable-<module>" before confirming the screen's repo by file location (QA-274318 cost days: ignored BA's "our issue or Common?")
 - [feedback_template_ticket_data_patch.md](feedback_template_ticket_data_patch.md) — 🚨 Template .docx ticket where a CC renders DATA → fixing the tag is only half; ALSO hand miya a raw VERIFY SELECT of the CC's data rows + a PATCH script if test data is thin (multi-row case), + state the coverage gap. Banned: shipping a data-rendering CC fix with no data script (QA-273921)
+- [feedback_delta_correction_on_stop_block.md](feedback_delta_correction_on_stop_block.md) — 🚨 Stop-hook block → emit ONLY the delta (token + one-line fix), never re-emit the reply; hook noise never narrated (miya 2026-08-16, 2nd ask after 2026-07-28)
+- [feedback_no_on_the_fly_artifacts.md](feedback_no_on_the_fly_artifacts.md) — 🚨 BANNED: new file/folder shapes in MemoryCore outside designed homes without miya nod (bulk ≠ new artifact shape) (miya 2026-08-16)
+- [feedback_hold_background_results.md](feedback_hold_background_results.md) — 🚨 Non-urgent background results HOLD until miya's next message; fold in, never a surprise reply with new decision material (miya 2026-08-16)
 - [feedback_attempt_before_claiming_blocked.md](feedback_attempt_before_claiming_blocked.md) — 🚨 NEVER declare blocked/can't/unavailable/missing-config from a PROXY check (ls a config file, the loaded-tool roster) — RUN the actual operation first; absence of a proxy ≠ absence of capability; only the op's real failure output is valid evidence. Enforced by `domain/attempt-before-blocked-gate` (Stop, BLOCKS; bypass `[verified-blocked: <cmd> -> <error>]`). Built 2026-08-13 after #275009/275152 false-"blocked" (assume-not-verify 30d=25 🚨)
 
 ## User

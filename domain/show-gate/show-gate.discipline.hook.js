@@ -100,6 +100,7 @@ process.stdin.on('end', () => {
         '   Add the actual content — a drawn box-diagram (┌─┐ │ └─┘) OR the real code/SQL/diff in a ``` block —',
         '   so what is being discussed is visible, not described. Then end the turn.',
         '   Genuinely nothing to show? Add [skip-show-gate: <reason>] and continue.',
+        '   ⚡ DELTA ONLY: みや already read the reply above — output ONLY the missing content block; do NOT re-emit the reply.',
       ].join('\n'),
     }));
     process.exit(0);

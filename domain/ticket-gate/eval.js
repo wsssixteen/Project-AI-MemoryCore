@@ -57,12 +57,12 @@ check('F6 row warns module is etanah-awam', /etanah-awam/.test(r.stdout), '');
 // The row must NOT assert AWAM as fact — a no-resit urusan can be a staff-side ticket.
 check('F6 row makes みや settle AWAM-vs-APPS first', /Which side is this ticket/.test(r.stdout), '');
 check('F6 row offers a staff-side N/A escape hatch', /N\/A — staff-side/.test(r.stdout), '');
-check('F6 closing line extends to rows 0-6+7', /rows 0-6\+7/.test(r.stdout), '');
+check('F6 closing line extends to rows 0-6+7', /rows 0-6[^+\n]*\+7/.test(r.stdout), '');
 
 // F7 non-no-resit urusan (PRZ) must NOT get the row — no false injection
 r = run('lets start with 90004');
 check('F7 PRZ does NOT inject the No-Resit row', /QUEST GATE/.test(r.stdout) && !/No-Resit urusan detected/.test(r.stdout), (r.stdout || '').slice(0, 120));
-check('F7 PRZ closing line stays rows 0-6', /rows 0-6 are/.test(r.stdout), '');
+check('F7 PRZ closing line stays rows 0-6', /rows 0-6[^+]*are/.test(r.stdout), '');
 
 // F8 word-boundary: PRZ must not match inside PRBB and vice versa
 r = run('QA 90001 please');
