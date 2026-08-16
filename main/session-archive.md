@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-17 (post-midnight continuation of weekend audit)
+- **Goal chain closed**: CODE-CHECK v1.5 (7 grand-audit defects fixed: type-gated rows docx/config/populator, .json trigger, sibling evidence-gated) + self-audit `domain/pre-code-check/audit.js` (5 invariants, mutation-proven) — miya never re-specifies the CODE-CHECK audit again.
+- **/sweep BUILT + FIRST LIVE RUN**: forge-born skill, contract eval 13/13. Run wf_02fdd970: 13/13 familiars, 0 errors, 1.78M tokens, 22 min. 275505/275501/275587 → Recon+Rubric done; 275009/275152/275456 → W3 blind + W4 audit (275009: W3 CONFIRMED W2 REFUTED; 275456: SPLIT + regression-commit finding); 275500 fix audited (direction CONFIRMED, 4 doc claims corrected). 274914 skip rule fired. Orch flag lifecycle proven (3 suppressions logged, flag deleted).
+- **bug-db BUILT** (miya nod): structured bestiary index (17 patterns) + lookup + Phase-0 injection hook on ticket mention, eval 6/6.
+- **test-data-db BUILT** (goal item 1): structured TEST-PERMOHONAN index (30+ entries), live-state-rule-first output, eval 5/5.
+- **Rules shipped from miya's corrections**: system-rules v1.1 (log = optimization dataset, proven-not-asserted) · system-design v2.4 Rule 10 (requirements-conformance: sweep ALL sources, REQUIREMENTS table, open decisions ask miya — root cause of sweep close-out miss) · sweep skill: brief-table-then-STOP + fixes-in-own-sessions + board update at close.
+- **Battery 65/65 + 3 quarantined.** Board: 7 swept quest phases updated in active.txt.
+- **Miya tomorrow**: solve tickets one per session — boot board names which audit/qa_doc to read first per ticket. 275500 commit to mlk/esokongan/275500 awaits his nod. patch-274740.sql + ADHOC-PRBB patch still his PROD runs.
+
 ## 2026-08-13 (sweep session) — 5-ticket sweep → Rubric + attempt-before-blocked-gate built & pushed
 
 **Heated session. Full multi-ticket sweep to Rubric; built a mechanical ban for the false-"blocked" slip; pushed to main.**
@@ -3735,6 +3744,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

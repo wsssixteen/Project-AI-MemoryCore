@@ -141,6 +141,7 @@ _Historical archive: `system/slip-log.md` (frozen 2026-07-13) · baseline 2026-0
 | 2026-08-16 | forge/new-check | claude-md-watch born via forge: reads system/claude-md-watchlist.jsonl (written by lib/watch.js add at change-time); emits each ACTIVE watch: what was changed, what to obse |
 | 2026-08-16 | forge/new-skill | sweep born via forge: multi-ticket multi-wave familiar sweep: orchestration flag TTL 4h -> Redmine-first board -> skip rules -> DELEGATION PLAN -> W1-W4 ladder wi |
 | 2026-08-16 | forge/new-check | bug-db born via forge: match prompt words against structured bug index (built from BUG-BESTIARY.md) and inject top-3 similar past bugs at Phase 0 so debugging star |
+| 2026-08-16 | forge/new-script | test-data-db born via forge: structured index over TEST-PERMOHONAN-INDEX.md: per-urusan test-data recipes + No-Resit derivation + staleness flags; output always leads wi |
 
 ## 💡 Open proposals (14d — raised by the DE Improvement Sweep, NOT yet built; type=proposal)
 
@@ -260,3 +261,6 @@ has never been ruled on is itself a finding (the "parked enforcement row" failur
 | 2026-08-14 | A3 | branch-guard blocks READ (not just Edit/Write) on etanah repos when off mlk/master; cost 2 round-trips reading PelupusanService.java for 275500 Phase-0 while repo sat on mlk/int-env (where miya works). Fix: guard should only fire on Edit|Write, never Read. Eval: a Read of an etanah .java on a non-master branch passes; Edit/Write still blocks. |
 | 2026-08-14 | A5 | Recursive Get-ChildItem over the whole MemoryCore OneDrive tree times out at 2min when hunting a ticket-number file. Proposal: a find-ticket-file helper (or documented discipline) that searches ONLY projects/coding-projects/active + 1.Tasks/Melaka. Eval: ticket-number file lookup returns in <5s scoped to those dirs vs 120s timeout on root recurse. |
 | 2026-08-16 | A2 | grand-audit finding 5: move BPMN module-scope check to an INTAKE gate (ticket-gate style, before Scout) + memoize prior-fix git-log per ticket instead of re-demanding every Edit; eval case: intake fixture where MLK_TKL callActivity ticket blocks Scout emit |
+| 2026-08-16 | A1 | requirements-gate: extend component-birth-gate/forge ship path to BLOCK when no REQUIREMENTS table (requirement->source->encoding) was emitted in-turn for a from-design build; eval case: forge new with design-doc arg blocks without table, passes with it |
+| 2026-08-16 | A5 | sweep report table gains a gaps column aggregating every familiar's gaps[] (no silent caps); W1 prompt pre-checks ffmpeg/python-cv and reports capability; eval case: contract eval asserts gaps column mandate in SKILL.md step 7 |
+| 2026-08-16 | A4 | any fix built cross-session (like 275500 captured from Easy-ticket tab) gets a W4-style adversarial audit BEFORE commit-nod is requested; eval case: quest skill Phase-1 gate checks for -audit.md when qa_doc says fix captured cross-session |
