@@ -137,7 +137,7 @@ redmine_url=http://172.16.90.169/redmine/issues/275587
 qa=ADHOC-PPTPB-2026-2
 phase=0
 ticket_type=adhoc
-env=PROD
+env=PROD et_main
 urusan=PPTPB
 adhoc_register_row=A15
 qa_doc=projects/coding-projects/active/ADHOC-pptpb-alorgajah-jt-delete/ADHOC-pptpb-alorgajah-jt-delete.md
@@ -145,6 +145,7 @@ test_app=PTMLK/02/L/PPTPB/2026/2 aplikasi 3399008 PROD (Awalan)
 current_phase=Delete-prep - NOT run; awaiting miya (original issue + target env + correct Alor-Gajah agensi_id)
 issue_one_liner=PPTPB Alor Gajah JT-row delete prep on PTMLK/02/L/PPTPB/2026/2 (aplikasi 3399008 PROD). No ticket. Same class as CLOSED #273837 but different app. 🚨 agensi_id 8 = Alor Gajah on stg2 but JKR-Negeri-Melaka on PROD - re-resolve agensi_id on target schema before any DELETE. Delete NOT run (6 JT rows present). Original issue statement needs retrieval from tab.
 status=hold
+branch=none
 
 qa=QA-275587
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\150. INTERNAL ISSUE (PROD) #275587 - Pelupusan - MLPS - 1) Tukar No PT. ke ''--  2) Rotate Pelan
