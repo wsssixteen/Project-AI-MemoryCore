@@ -1,11 +1,17 @@
-# Agentic ticket-workflow assessment — 2026-08-17 (DE 7.5, post-midnight session)
+# Agentic / Ticket-Workflow Assessment — 2026-08-17
 
-| Axis | Assessment (concrete instance) |
-|---|---|
-| A1 agentic system | Rule 10 (requirements-conformance) shipped but is PROSE — the sweep-build miss proves prose rules leak. Mechanical follow-up proposed below. Instance: /sweep 12/12 eval-green yet missing 2 conversation-only requirements. |
-| A2 quest workflow | Phase-0 awareness became mechanical: bug-db injection (eval 6/6) fires on ticket mention; 7 swept quests carry resume points + phase fields — tomorrow's one-ticket-one-session flow is board-driven. Instance: QA-275009 board row names its audit file first. |
-| A3 debugging efficiency | test-data-db kills the recurring live-task-state re-derivation cost (eval 5/5, output leads with the live-state rule). Instance: PPTPB lookup returns recipe + staleness in <1s vs a fresh SQL derivation cycle. |
-| A4 etanah issue-solving | W4 adversarial audits changed conclusions on 3 of 4 audited tickets (275009 W2 REFUTED; 275456 save-site claim REFUTED + regression-commit found; 275500 4 doc claims corrected). Two-independent-passes + refute-don't-agree is now proven on real tickets, not just theory. |
-| A5 sweep | First live run green (13/13, 0 errors, 22 min) BUT W1 video handling is best-effort: familiars listed videos in gaps[] and no frame extraction was verified. Controller did not surface a gaps column in the report table — silent-cap risk. |
+> Session: ADHOC PLTP pemohon-missing (dropped, deploy-window one-off). Light session, one investigation.
+> Five-axis improvement sweep (DE step 7.5). Each claim carries a concrete instance from THIS session.
 
-Proposals logged via core/slips.js (each with eval case): see 💡 Open proposals in slip-dashboard.
+| Axis | Assessment | Concrete instance this session | Action |
+|---|---|---|---|
+| **A1 — agentic system** | 🔴 Multiple `domain/*/*.hook.js` fail silently with "No stderr output" — a whole class of hooks non-functional this session, some BLOCKING. | `agent-spend-gate` (PreToolUse Agent) blocked BOTH scaffold-delegate dispatches; `awam-no-resit-gate`, `test-scenario-login-gate`, `scope-claim-census` errored in the Stop bundle. | **Proposal A1 logged** — boot-time hook smoke-test (run each hook with no-op payload, flag non-emitters). |
+| **A2 — quest workflow** | 🟠 The mandated delegate-scaffold path (`feedback_adhoc_scaffold_delegate`) has NO fallback when Agent dispatch is blocked → scaffold silently skipped. | ADHOC-PLTP got no active.txt block / Task folder; only survived because it was a droppable one-off captured in ADHOC-REGISTER. | **Proposal A2 logged** — inline minimal-scaffold fallback when Agent dispatch fails. |
+| **A3 — debugging efficiency + accuracy** | 🟠 Premature scope-claim on too small a sample; separately, one stalling slip. | Claimed "PLTP regression started today" off 2 rows read at different moments (one mid-transition) — retracted when `created_by=SYSTEM` + the twin catching up unwound it. Stalling: asked permission for a self-runnable code trace. | Slip `stalling` logged (miya-caught). Discipline: read `created_by`/timing before scoping a cause; a "regression" needs a stable sample. Covered by existing verify-before-claim + diary — no new hook (would duplicate). |
+| **A4 — etanah issue-solving** | 🟢 Reusable diagnostic banked; one knowledge gap. | Deploy-window flowable entry-freeze (proc stuck `applicationName=etanah-awam`, no `aplikasiId`) is a distinct signature from the §7 born-orphan class; not yet in FLOWABLE-KNOWLEDGE.md. | **Proposal A4 logged** — add as a FLOWABLE-KNOWLEDGE §7 sub-variant. Root already banked in ADHOC-REGISTER A16. |
+| **A5 — sweep / file sweep** | ⏭ No sweep run this session (single ad-hoc investigation, no multi-ticket/file sweep). | — | — |
+
+## Summary
+- **Load-bearing finding**: A1 broken hooks — a class of enforcement is silently off, and one (`agent-spend-gate`) actively blocks a mandated workflow. Highest-value follow-up.
+- 3 proposals logged to `slip-dashboard.md` → 💡 Open proposals (A1, A2, A4) for weekly BUILD/DROP/DEFER.
+- 1 slip logged (`stalling`).
