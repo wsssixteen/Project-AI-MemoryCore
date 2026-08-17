@@ -33,11 +33,13 @@ task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\139. ESO
 phase=1
 status=blocked
 ticket_type=bug
-env=Pelupusan > PPTPB > 1) Tugsan Pembetulan Tidak Ke PT 2) No Lot Papar Berbeza
+env=MLKSTG et_main_stg2 (Flowable modeler on mlit.melaka.gov.my)
 issue_one_liner=Pelupusan > PPTPB > 1) Tugsan Pembetulan Tidak Ke PT 2) No Lot Papar Berbeza
 assigned_to_me=2026-08-11
 blocker=BA-CONFIRMATION-PENDING (2026-08-17): fix APPLIED+VERIFIED (BPMN out-map, miya modeler) + sent to BA. NOT closed - 2 user confirmations: (1) Isu1 post-SKM return-to-PenyediaanLaporanTanah vs macam-biasa; (2) Isu2 label Charting-Mohon=Penyediaan-Laporan-Pelukis-Pelan. Fix unaffected by both. Resume: QA-274914.md #0. Test PTMLK/02/L/PPTPB/2026/3 @shahniza + /4 @m.azlan, both SJTLT stg2; needs deploy+reset.
 local_test_confirmed=false
+qa_doc=projects/coding-projects/active/QA-274914/QA-274914.md
+branch=none - BPMN modeler model (not git); reference copy in Task 2. Fix
 
 qa=QA-274740
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\141. INTERNAL ISSUE (PROD) #274740 - Pelupusan - PPTPB - Alamat salah pada Surat JT
@@ -187,7 +189,7 @@ assigned_to_me=2026-08-14
 qa=QA-275009
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\144. ESOKONGAN #275009 - Pelupusan - Tugasan - Semakan-Pengesahan Minit Bebas- Tidak papar meda
 phase=0 - W5 blind re-derivation (2026-08-17) CONFIRMS W4 audit on all 3 issues; BLOCKED on 2 BA-Qs (239236-conflict for Issue 1; PRBB+first-slot-jawatan for Issue 3); no fix built
-status=active
+status=closed
 phase=Phase 1 CLOSED - int-env tested green (Issue 1 Syor + Issue 2 Jana + 3a KPPD-block + 3b first-slot-PPD + docx keepNext). Branch mlk/esokongan/275009: code ab66f29808 + docx 12c6e6121b, pushed. int-env deploy tested. Prod release (release-mlk-plp off master) PENDING.
 status=closed
 ticket_type=bug
