@@ -329,3 +329,17 @@
 {"ts":"2026-08-17T02:42:29.242Z","category":"workflow-discipline"}
 {"ts":"2026-08-17T12:57:04.461Z","category":"A2"}
 {"ts":"2026-08-17T12:57:04.575Z","category":"A4"}
+{"ts":"2026-08-17T07:43:10.041Z","category":"evidence-read"}
+{"ts":"2026-08-17T08:33:47.473Z","category":"stalling"}
+{"ts":"2026-08-17T09:00:23.296Z","category":"A1"}
+{"ts":"2026-08-17T09:00:23.406Z","category":"A2"}
+{"ts":"2026-08-17T09:00:23.516Z","category":"A4"}
+{"ts":"2026-08-17T03:44:57.250Z","category":"verify-gap"}
+{"ts":"2026-08-17T12:06:43.479Z","category":"A4"}
+{"ts":"2026-08-17T09:46:10.838Z","category":"premature-scope-escalation"}
+{"ts":"2026-08-17T10:13:58.914Z","category":"assume-not-verify"}
+{"ts":"2026-08-17T12:21:47.813Z","category":"A2"}
+{"ts":"2026-08-17T12:21:47.956Z","category":"A4"}
+{"ts":"2026-08-17T12:21:48.092Z","category":"reask/verbose"}
+{"ts":"2026-08-17T12:42:47.212Z","category":"process"}
+{"ts":"2026-08-17T12:43:59.764Z","category":"A5"}

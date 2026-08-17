@@ -67,15 +67,20 @@ check('no "Redmine due" wording', () => !/Redmine due/.test(base));
 check('no Start column', () => !/\|\s*Start\s*\|/.test(base));
 check('no "+3d" or "Days left"', () => !/\+3d|Days left/.test(base));
 
+// Scope Mine-table assertions to the Mine block. The board may prepend a
+// QUICK-WIN / steal-risk banner (domain/steal-risk-flag) whose rows share the
+// generic `| id | ... |` shape; parsing the whole output would mis-read those.
+const mineTable = (base.split('### Mine')[1] || '').split(/^_|^###/m)[0];
+
 // 6. Dates carry no year — "12 Aug", not "2026-08-12".
 check('due dates are day + short month, no year', () => {
-    const cells = [...base.matchAll(/^\| \d+ \| [\d—]+ \| ([^|]+) \|/gm)].map(m => m[1].trim());
+    const cells = [...mineTable.matchAll(/^\| \d+ \| [\d—]+ \| ([^|]+) \|/gm)].map(m => m[1].trim());
     return cells.length > 0 && cells.every(c => c === '—' || /^\d{1,2} [A-Z][a-z]{2}$/.test(c));
 });
 
 // 7. Every row carries a State from the fixed vocabulary — never blank, never prose.
 check('every State cell is short and non-empty', () => {
-    const states = [...base.matchAll(/^\| \d+ \|.*\| ([^|]+) \|$/gm)].map(m => m[1].trim());
+    const states = [...mineTable.matchAll(/^\| \d+ \|.*\| ([^|]+) \|$/gm)].map(m => m[1].trim());
     return states.length > 0 && states.every(s => s.length > 0 && s.length <= 24);
 });
 

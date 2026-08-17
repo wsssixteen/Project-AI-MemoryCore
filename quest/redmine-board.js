@@ -19,6 +19,8 @@ const http = require('http');
 const fs   = require('fs');
 const path = require('path');
 
+const { renderStealBanner } = require('../domain/steal-risk-flag/steal-risk');
+
 const ACTIVE_TXT = path.join(__dirname, 'active.txt');
 
 const REDMINE_BASE = 'http://172.16.90.169/redmine';
@@ -265,6 +267,13 @@ async function main() {
         console.log(JSON.stringify({ mine, others, dropped, offProject }, null, 2));
         return;
     }
+    // QUICK-WIN / steal-risk banner ABOVE the age-ranked table: a diagnosed patch
+    // sitting idle is the cheapest KPI on the board and losable to whoever applies
+    // it first (275587 was stolen this way, 2026-08-17). Silent when nothing
+    // qualifies. Grab-risk beats age — that is why it prints first.
+    const stealBanner = renderStealBanner(mine);
+    if (stealBanner) { console.log(stealBanner); console.log(''); }
+
     // Default is MINE ONLY (miya 2026-08-05: "present to me ONLY my list").
     // The colleagues' table is still built — ask for it with --tracking.
     console.log(renderMine(mine));
