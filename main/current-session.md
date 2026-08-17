@@ -50,3 +50,4 @@ miya: pasting the field-format should AUTO-create an ADHOC scaffold like a Redmi
 Portal repro to pin the code fix site · data-patch 3413241 (+3431713) on miya nod · Redmine# if ticketed · confirm/deny QA-274740 relation.
 
 ---
+- **Post-DE addendum (asked by miya)**: session model discovered = Fable 5 (remote Desktop setting), NOT Opus — commit trailer is boilerplate. feedback_model_tiering_session audited+rewritten (Fable = judgment tier incl. PLANNING; Haiku dropped; session model named in first briefing line) `cd061c3`. Todo Q2: audit all remaining auto-memory files `fc365b8`. Slip: post-close changes went unrecorded until miya asked.
