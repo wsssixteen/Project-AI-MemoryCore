@@ -1,5 +1,28 @@
 # Current Session
 
+## 2026-08-17 — Baseline Melaka Pelupusan 1.3.4 + Common 1.1.17-MLK (via release-mlk-plp skill)
+
+**Session shape: BAQA pasted "Planned Release Melaka 17/8" → release-mlk-plp pipeline → prepared, pushed, BA-confirmed successful → DE. Worktree `melaka-baseline-deploy-1d5c45`.**
+
+### Release prepared + PUSHED
+- Branch **`mlk/release/1.3.4`** off `mlk/master` (`377580ef71`), pushed HEAD **`ce1ccd6e30`**. Common `1.1.12-MLK → 1.1.17-MLK`, module `1.3.3 → 1.3.4` (pom.xml only).
+- 5 tickets merged: #272130, #274532, #274745, #271442 (Training→internal branch), #273979. verify = 0 commits missing all rows.
+- **BA-confirmed baseline test SUCCESSFUL** (miya, 2026-08-17).
+
+### #274532 — the catch (recon guess overridden by verified ledger, then ledger itself corrected)
+- Recon script suggested merge **v3**; quest ledger said ship **base**; BOTH were partly wrong. Correct = **base's Java + v3's docx**.
+- Verified: base Java `PelupusanWordCCMethodConstant.java` (+2/-1) exists ONLY in base; v3 has ONLY the docx. base's docx PREDATES Aaron #274838 → shipping it alone reverts Aaron's footer/pelanCC.
+- Aaron **#274455 (1.3.2) + #274838 (1.3.3) ARE on `mlk/master`** now (git-verified `692432a707` is ANCESTOR of v3) → v3 docx sits on master's formatting = correct release docx.
+- Merged base → docx binary-conflict → resolved by `git checkout ...274532v3 -- <docx>` (blob `152be7dc` MATCH ✓). v2 unusable (branched off int-env, 35 files).
+- **Corrected the stale `QA-274532.md` ledger** (was "v2/v3 NOT for release" — now "base Java + v3 docx", git-evidence inline).
+
+### ▶▶ NEXT / owed
+- ⬜ **etanah Phase F DEFERRED** — `merge-to-master --ba-approved` refused: etanah tree is on branch `mlk/esokongan/275009` with LIVE uncommitted QA-275500 work (concurrent session). Did NOT stash/checkout a live tree. Run when 275009 tree is clean/committed.
+- ⬜ **QA-275500 stash** — parked twice under `stash@{1}` msg `275500` (+ `stash@{0}` eclipse churn) at baseline start; a second live copy is now on branch 275009. Reconcile before popping.
+- ⬜ V6b build-SHA match was skipped — superseded by BA's successful-test confirmation (stronger evidence than the footer proxy).
+
+---
+
 ## 2026-08-14 — Worktree-sweep retrieval + quest 2 new tickets (275456 fold, 275500 Phase 0)
 
 **Session shape: retrieve → check Redmine updates → /quest 2 new tickets → save → DE. Autonomous /goal.**
@@ -31,23 +54,3 @@ qa_docs `QA-275456.md` + `QA-275500.md` (durable main path) · active.txt both a
 - **Base-branch deviation (miya flagged)**: I branched v2 off `int-env` (not master) to keep Aaron's content → it's an int-env-only patch; release path = original `mlk/esokongan/274532` (already `jc=both`).
 - **Prevention built**: `quest/verify-docx-across-refs.ps1` — destination-branch binary-template verify (proves bytes, NOT pagination — pair with a render check).
 - **Phase 1 CLOSED**, local test PASS (miya, MLIT `PTMLK/02/L/PLTP/2026/3`). ⚠️ Redmine still `Rework` — needs status update + planned-release listing.
-
-## 2026-08-13 (ADHOC session) — PPTPB Teknikal-Selangor DB-proven + ADHOC scaffold + adhoc-paste-detector built
-
-**BA (eddie@melaka.gov.my) pasted a screen issue in the PDTAG/Urusan/Tugasan/Id/User format (no Redmine#). Diagnosed to ground truth, then scaffolded it as an ADHOC + built a hook so the paste auto-scaffolds next time.**
-
-### The issue — ADHOC-PPTPB-2026-1 (register A13)
-PPTPB Teknikal `Penyediaan Laporan Pelukis Pelan` "Maklumat Permohonan" grid shows **Negeri=SELANGOR** + blank daerah/bandar/seksyen for `PTMLK/03/L/PPTPB/2026/4` (aplikasi 3413241, PROD).
-**Root cause DB-PROVEN**: daerah+bandar never captured at AWAM applicant land entry → `umm_p_permohonan_tnh` (p_aplikasi 18677) blank → generic pra→app copy carries blank into `umm_a_permohonan_tnh` → Teknikal grid defaults Selangor. Proven both ways across 5 rows (blank portal→blank app; populated→populated). Correct = bandar 87 Padang Sebang/Alor Gajah/Melaka (`ind_hkmlk`). 2/20 recent PPTPB blank; seksyen blank=normal (mukim). AWAM save `etanah-awam\...\PelupusanService.java:2160-2164` copies VO with no hakmilik fallback.
-**Overclaims caught by miya + retracted**: `:2337/2517` as fix line (=Ruang Udara path); QA-273707 as dup (that's urusan PT). **Refuted**: patch-not-organic (5 version-0/SYSTEM), master-empty-at-app-time.
-**Open**: exact PPTPB save method + why-VO-empty NOT pinned (needs portal repro). Data-patch + code fix NOT applied. Maybe related **QA-274740** (PPTPB alamat salah Surat JT).
-qa_doc: `projects/coding-projects/active/ADHOC-pptpb-teknikal-location-blank/…md` · task folder `146. ADHOC - PROD - PPTPB - …` · active.txt `ADHOC-PPTPB-2026-1`.
-
-### Built — adhoc-paste-detector (Feature, forge-born)
-miya: pasting the field-format should AUTO-create an ADHOC scaffold like a Redmine retrieval, and it wasn't. Slip `workflow-scaffold-miss` logged. Built `domain/adhoc-paste-detector/` (UserPromptSubmit, hook-only) — detects ≥3 field-labels + permohonan-id + no ticket# → injects the 4-step scaffold procedure. Eval **7/7**, NUKE-MARKER + README, registered `settings.json`, catalog synced (92 hooks). Retire 2026-09-12.
-
-### ▶▶ NEXT (this ADHOC)
-Portal repro to pin the code fix site · data-patch 3413241 (+3431713) on miya nod · Redmine# if ticketed · confirm/deny QA-274740 relation.
-
----
-- **Post-DE addendum (asked by miya)**: session model discovered = Fable 5 (remote Desktop setting), NOT Opus — commit trailer is boilerplate. feedback_model_tiering_session audited+rewritten (Fable = judgment tier incl. PLANNING; Haiku dropped; session model named in first briefing line) `cd061c3`. Todo Q2: audit all remaining auto-memory files `fc365b8`. Slip: post-close changes went unrecorded until miya asked.
