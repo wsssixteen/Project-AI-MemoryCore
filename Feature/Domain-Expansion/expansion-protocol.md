@@ -225,6 +225,21 @@ For **every** quest whose `qa_doc` was touched this session, or whose `active.tx
 | 🚨 Uncommitted work (added 2026-08-16, per みや "critical details for quest to continue another session pose a risk") | any code/script sitting UNCOMMITTED anywhere: repo + branch + file path + what it does + what it awaits. The 275500 lesson: a fix uncommitted on `mlk/master` survived only because a hook banner happened to carry it — the qa_doc, not a banner, must own it |
 | Pending nods | every open decision みや hasn't answered yet, verbatim options |
 
+**🚨 EXTRA-ROBUST SAVE for a NOT-YET-CLOSED quest (added 2026-08-17 per みや, QA-274914 — the BA-confirmation-pending case).** When a quest is saved in ANY non-closed state — especially **`blocked` / awaiting-BA / awaiting-user-confirmation / hold-for-external** — the save is held to a HIGHER bar than a normal touch, because we WILL revisit cold and the quest is NOT finished. The `## 0. Resume Point` block MUST make a zero-context session resume at full speed. Mandatory rows, each cold-reader complete:
+
+| Row | What it must carry |
+|---|---|
+| One-line status | plain sentence: what is done · what is pending · who we are waiting on |
+| The fix (exact) | the precise change + WHERE it lives (repo file `path:line` OR "live model in modeler, id `sid-…`, field X") + a reference copy path if the change is not in git |
+| Why it works | 1-2 sentences mechanism, so the fix is not re-derived cold |
+| Proof already banked | the queries/reads/file:line that PROVED it — with "do NOT re-derive cold, re-run only to confirm" |
+| Next actions on resume | ordered, concrete, first-step-executable (incl. the re-sync command) |
+| 🚨 Open external confirmations | EACH pending BA/user/3rd-party question **verbatim**, + what each answer would change (and explicitly: does it alter THIS fix or spawn a separate one) |
+| Test data | permohonan ID + aplikasi_id + login + current tugasan/state + env, per app |
+| Deploy / reset prerequisites | anything that must happen before a re-test (publish, migrate, init-alter/pindaan) |
+
+**Banned for a not-yet-closed save**: a Resume Point that only says "awaiting X" without the fix location + proof + verbatim open questions · leaving the pending external question paraphrased-from-memory · omitting the reference-copy path when the change lives outside git (a modeler model, a Redmine attachment). **Why** (2026-08-17, QA-274914): the PPTPB fix shipped to BA but BA needs 2 further user confirmations before close; みや: *"I need you to be up to speed like you are right now… be extra robust when we're saving a quest that is not closed yet."* A closed quest can lean on git history; an OPEN one that lives partly outside git (here, a Flowable modeler model) has no other durable memory than this block.
+
 **Then reconcile the copies.** A qa_doc under `projects/` exists in BOTH the main repo and the worktree,
 and hooks read the **worktree** copy while the durable content lives in **main**. Writing one and not the
 other is why the deferrals gate reported a section as missing on 2026-08-06 that had in fact been
@@ -326,6 +341,8 @@ Before emitting the closing banner — read `.claude/state/session-items.md` "Ac
 ---
 
 *Updated 2026-08-05 — **Step 7.5 IMPROVEMENT SWEEP added (MANDATORY)** per みや: five fixed axes (A1 agentic system · A2 quest workflow · A3 debugging efficiency+accuracy · A4 etanah issue-solving · A5 sweep/file-sweep), swept every DE, producing (a) a dated assessment under `system/` with a concrete instance per claim and (b) brainstormed proposals logged via `core/slips.js --type proposal` into the new 💡 Open proposals lane of `slip-dashboard.md` for weekly-audit ruling. Paired `core/slips.js` change: `type=proposal` split out of the slip counts and given its own dashboard section, because filing an idea as `upgrade` reads as shipped and makes an open decision invisible (the 2026-07-22 parked-enforcement-row failure). Rationale: みや had to ask for this assessment explicitly two goals running — a thing he must repeatedly request is a missing step, not a missing effort.*
+
+*Updated 2026-08-17 — Step 2b: **EXTRA-ROBUST SAVE for a NOT-YET-CLOSED quest** (per みや, QA-274914 BA-confirmation-pending) — a blocked/awaiting-BA/hold-for-external save is held to a higher bar: the `## 0. Resume Point` must carry fix-location + why-it-works + banked-proof + verbatim open external confirmations + test data + deploy/reset prerequisites, cold-reader complete; banned to paraphrase the pending question or omit the reference-copy path when the change lives outside git (modeler model / Redmine attachment).*
 
 *Created: 2026-05-05 | Protocol owner: Ruri | Review at every Forge Review until L4 stabilization*
 *Updated 2026-08-16 — Step 2b +2 rows (Uncommitted-work · Pending-nods, the 275500 lesson) · Step 12.5 re-pointed onto live sources (liveness-report + slips.jsonl; deleted hook-fire-log/skill-failure-log refs fixed) + Bounty-debt sub-check + skill-load check honestly SUSPENDED. Prev: 2026-05-23 Step 12.5 added.*

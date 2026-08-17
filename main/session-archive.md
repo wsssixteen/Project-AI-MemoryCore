@@ -4,6 +4,36 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-13 (274532 rework) — PLTP Surat Nilaian JPPH tajuk justify: int-env merge had dropped the fix
+
+**Rework cycle 2, heated. Root cause: the 08-12 justify fix survived on master/ticket but a binary `.docx` merge into `mlk/int-env` kept int-env's copy (`jc=left`) — and BA tests on int-env.**
+
+- **Diagnosis**: extracted `<w:jc>` per git ref → master/ticket=`both`, int-env=`left`. int-env template diverges 206 lines (Aaron **#274455/#274838** footer/SLOGAN content) — surfaced those as the clash source for miya↔BA.
+- **My verify miss (slip logged, category=verification)**: miya's footer-blanking via `<w:titlePg/>` moved the kop to page 2; I verified by XML-diff and called it "clean" — **XML-diff cannot see pagination**. miya caught it on render, re-fixed. Final `44ad939ef5` on `mlk/esokongan/274532v2` → int-env `c78bdd729c`.
+- **Base-branch deviation (miya flagged)**: I branched v2 off `int-env` (not master) to keep Aaron's content → it's an int-env-only patch; release path = original `mlk/esokongan/274532` (already `jc=both`).
+- **Prevention built**: `quest/verify-docx-across-refs.ps1` — destination-branch binary-template verify (proves bytes, NOT pagination — pair with a render check).
+- **Phase 1 CLOSED**, local test PASS (miya, MLIT `PTMLK/02/L/PLTP/2026/3`). ⚠️ Redmine still `Rework` — needs status update + planned-release listing.
+
+## 2026-08-13 (ADHOC session) — PPTPB Teknikal-Selangor DB-proven + ADHOC scaffold + adhoc-paste-detector built
+
+**BA (eddie@melaka.gov.my) pasted a screen issue in the PDTAG/Urusan/Tugasan/Id/User format (no Redmine#). Diagnosed to ground truth, then scaffolded it as an ADHOC + built a hook so the paste auto-scaffolds next time.**
+
+### The issue — ADHOC-PPTPB-2026-1 (register A13)
+PPTPB Teknikal `Penyediaan Laporan Pelukis Pelan` "Maklumat Permohonan" grid shows **Negeri=SELANGOR** + blank daerah/bandar/seksyen for `PTMLK/03/L/PPTPB/2026/4` (aplikasi 3413241, PROD).
+**Root cause DB-PROVEN**: daerah+bandar never captured at AWAM applicant land entry → `umm_p_permohonan_tnh` (p_aplikasi 18677) blank → generic pra→app copy carries blank into `umm_a_permohonan_tnh` → Teknikal grid defaults Selangor. Proven both ways across 5 rows (blank portal→blank app; populated→populated). Correct = bandar 87 Padang Sebang/Alor Gajah/Melaka (`ind_hkmlk`). 2/20 recent PPTPB blank; seksyen blank=normal (mukim). AWAM save `etanah-awam\...\PelupusanService.java:2160-2164` copies VO with no hakmilik fallback.
+**Overclaims caught by miya + retracted**: `:2337/2517` as fix line (=Ruang Udara path); QA-273707 as dup (that's urusan PT). **Refuted**: patch-not-organic (5 version-0/SYSTEM), master-empty-at-app-time.
+**Open**: exact PPTPB save method + why-VO-empty NOT pinned (needs portal repro). Data-patch + code fix NOT applied. Maybe related **QA-274740** (PPTPB alamat salah Surat JT).
+qa_doc: `projects/coding-projects/active/ADHOC-pptpb-teknikal-location-blank/…md` · task folder `146. ADHOC - PROD - PPTPB - …` · active.txt `ADHOC-PPTPB-2026-1`.
+
+### Built — adhoc-paste-detector (Feature, forge-born)
+miya: pasting the field-format should AUTO-create an ADHOC scaffold like a Redmine retrieval, and it wasn't. Slip `workflow-scaffold-miss` logged. Built `domain/adhoc-paste-detector/` (UserPromptSubmit, hook-only) — detects ≥3 field-labels + permohonan-id + no ticket# → injects the 4-step scaffold procedure. Eval **7/7**, NUKE-MARKER + README, registered `settings.json`, catalog synced (92 hooks). Retire 2026-09-12.
+
+### ▶▶ NEXT (this ADHOC)
+Portal repro to pin the code fix site · data-patch 3413241 (+3431713) on miya nod · Redmine# if ticketed · confirm/deny QA-274740 relation.
+
+---
+- **Post-DE addendum (asked by miya)**: session model discovered = Fable 5 (remote Desktop setting), NOT Opus — commit trailer is boilerplate. feedback_model_tiering_session audited+rewritten (Fable = judgment tier incl. PLANNING; Haiku dropped; session model named in first briefing line) `cd061c3`. Todo Q2: audit all remaining auto-memory files `fc365b8`. Slip: post-close changes went unrecorded until miya asked.
+
 ## 2026-08-17 (post-midnight continuation of weekend audit)
 - **Goal chain closed**: CODE-CHECK v1.5 (7 grand-audit defects fixed: type-gated rows docx/config/populator, .json trigger, sibling evidence-gated) + self-audit `domain/pre-code-check/audit.js` (5 invariants, mutation-proven) — miya never re-specifies the CODE-CHECK audit again.
 - **/sweep BUILT + FIRST LIVE RUN**: forge-born skill, contract eval 13/13. Run wf_02fdd970: 13/13 familiars, 0 errors, 1.78M tokens, 22 min. 275505/275501/275587 → Recon+Rubric done; 275009/275152/275456 → W3 blind + W4 audit (275009: W3 CONFIRMED W2 REFUTED; 275456: SPLIT + regression-commit finding); 275500 fix audited (direction CONFIRMED, 4 doc claims corrected). 274914 skip rule fired. Orch flag lifecycle proven (3 suppressions logged, flag deleted).
@@ -3744,6 +3774,8 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
+
 
 
 
