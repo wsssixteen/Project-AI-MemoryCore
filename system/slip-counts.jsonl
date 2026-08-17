@@ -334,3 +334,8 @@
 {"ts":"2026-08-17T09:00:23.516Z","category":"A4"}
 {"ts":"2026-08-17T03:44:57.250Z","category":"verify-gap"}
 {"ts":"2026-08-17T12:06:43.479Z","category":"A4"}
+{"ts":"2026-08-17T09:46:10.838Z","category":"premature-scope-escalation"}
+{"ts":"2026-08-17T10:13:58.914Z","category":"assume-not-verify"}
+{"ts":"2026-08-17T12:21:47.813Z","category":"A2"}
+{"ts":"2026-08-17T12:21:47.956Z","category":"A4"}
+{"ts":"2026-08-17T12:21:48.092Z","category":"reask/verbose"}

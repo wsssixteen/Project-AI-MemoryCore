@@ -1,17 +1,24 @@
-# Agentic / Ticket-Workflow Assessment — 2026-08-17
+# Agentic / Ticket-Workflow Assessment — 2026-08-17 (Session 2, QA-274914)
 
-> Session: ADHOC PLTP pemohon-missing (dropped, deploy-window one-off). Light session, one investigation.
-> Five-axis improvement sweep (DE step 7.5). Each claim carries a concrete instance from THIS session.
+> Improvement Sweep (DE Step 7.5). Five fixed axes; each claim carries its concrete instance.
 
-| Axis | Assessment | Concrete instance this session | Action |
-|---|---|---|---|
-| **A1 — agentic system** | 🔴 Multiple `domain/*/*.hook.js` fail silently with "No stderr output" — a whole class of hooks non-functional this session, some BLOCKING. | `agent-spend-gate` (PreToolUse Agent) blocked BOTH scaffold-delegate dispatches; `awam-no-resit-gate`, `test-scenario-login-gate`, `scope-claim-census` errored in the Stop bundle. | **Proposal A1 logged** — boot-time hook smoke-test (run each hook with no-op payload, flag non-emitters). |
-| **A2 — quest workflow** | 🟠 The mandated delegate-scaffold path (`feedback_adhoc_scaffold_delegate`) has NO fallback when Agent dispatch is blocked → scaffold silently skipped. | ADHOC-PLTP got no active.txt block / Task folder; only survived because it was a droppable one-off captured in ADHOC-REGISTER. | **Proposal A2 logged** — inline minimal-scaffold fallback when Agent dispatch fails. |
-| **A3 — debugging efficiency + accuracy** | 🟠 Premature scope-claim on too small a sample; separately, one stalling slip. | Claimed "PLTP regression started today" off 2 rows read at different moments (one mid-transition) — retracted when `created_by=SYSTEM` + the twin catching up unwound it. Stalling: asked permission for a self-runnable code trace. | Slip `stalling` logged (miya-caught). Discipline: read `created_by`/timing before scoping a cause; a "regression" needs a stable sample. Covered by existing verify-before-claim + diary — no new hook (would duplicate). |
-| **A4 — etanah issue-solving** | 🟢 Reusable diagnostic banked; one knowledge gap. | Deploy-window flowable entry-freeze (proc stuck `applicationName=etanah-awam`, no `aplikasiId`) is a distinct signature from the §7 born-orphan class; not yet in FLOWABLE-KNOWLEDGE.md. | **Proposal A4 logged** — add as a FLOWABLE-KNOWLEDGE §7 sub-variant. Root already banked in ADHOC-REGISTER A16. |
-| **A5 — sweep / file sweep** | ⏭ No sweep run this session (single ad-hoc investigation, no multi-ticket/file sweep). | — | — |
+## A1 — Agentic system
+⏭ Mostly no fan-out this session (single-ticket, main-loop only). One data point: the BPMN multi-urusan sweep ran as inline PowerShell XML-parsing, not a subagent — correct call, the work-list was 4 files and a regex, cheaper inline than a fleet. No delegation waste.
 
-## Summary
-- **Load-bearing finding**: A1 broken hooks — a class of enforcement is silently off, and one (`agent-spend-gate`) actively blocks a mandated workflow. Highest-value follow-up.
-- 3 proposals logged to `slip-dashboard.md` → 💡 Open proposals (A1, A2, A4) for weekly BUILD/DROP/DEFER.
-- 1 slip logged (`stalling`).
+## A2 — Quest workflow
+**Finding — file-level instance-count OVER-REPORTS blast radius; per-instance flow-trace is the real check.** Instance: my first PPTPB multi-urusan scan counted every `MLK_TKL_ST` callActivity missing the `pembetulanPP` out-map and flagged PLTP (3), PRZ (4), BPRZ (8) as "same-class suspects." A proper per-instance trace (BFS 4 hops from each missing instance to any `pembetulanPP`-reading gateway) cleared ALL of them — only the instance feeding the gateway matters, and each urusan's operative instance already had the map. A file-level count would have sent us editing 3 innocent models. The blind re-derivation (resume rule 1b) is what forced the recheck.
+
+**Worked well**: resume-rule-1b blind re-derivation confirmed the sweep doc's 95% without anchoring to it; live `act_hi_varinst` query settled child-vs-parent in one shot.
+
+## A3 — Debugging efficiency + accuracy
+Efficient: root cause re-confirmed with 1 BPMN read + 2 engine queries; zero build cycles (BPMN model change, no compile). No falsifier round-trips cost miya time. The fix's correctness for BOTH jenis was provable from the gateway conditions + the live KM/PLPP split before any deploy.
+
+## A4 — Etanah issue-solving
+**Knowledge gap worth banking**: the "callActivity in/out parameter propagation" as a Flowable bug-class — a value set inside a `MLK_TKL_*` child that a parent gateway reads must have a matching `<flowable:out>` on the parent callActivity, or the parent reads a stale value. Not currently in FLOWABLE-KNOWLEDGE.md. Deferred to a knowledge-write (not mid-quest per the distill-at-close rule; this quest is not closed, so it waits until close).
+
+## A5 — Sweep / file-sweep
+Relied on the 08-13 sweep's prior video reads (URL-bar screen identity) rather than re-extracting frames — acceptable since the fix layer (BPMN routing) didn't hinge on the video, and the URL identity was already banked. BA images C3/C4 re-read this session (task-history + Lot 167 charting) to confirm criteria coverage. No gap.
+
+## Proposals logged (weekly-audit feed)
+1. A2 — per-instance-flow-trace gate for "apply to all urusan" scope claims (eval: 274914 file-count over-flag).
+2. A4 — bank BPMN callActivity in/out-param propagation bug-class to FLOWABLE-KNOWLEDGE.md at 274914 close (eval: next flowable routing bug checks out-param propagation first).
