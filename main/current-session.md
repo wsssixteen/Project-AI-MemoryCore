@@ -1,5 +1,21 @@
 # Current Session
 
+## 2026-08-17 (S3) — steal-risk-flag built (275587 KPI-loss post-mortem → board defender)
+
+**Session shape: miya "we lost KPI on 275587 — it was patch-only, taken over because we were too slow; highlight this next time + suggest how" → auto-skill-on-mistake → built the QUICK-WIN/steal-risk board banner → DE → merge to main + archive. Worktree `claude/ticket-275587-process-1d7235`.**
+
+### What moved
+- **New feature `domain/steal-risk-flag/`** — pure detector + banner (`steal-risk.js`), 16/16 eval (`steal-risk.eval.js`, lead fixture = the 275587 miss), README. Wired into `quest/redmine-board.js` `main()`: `renderStealBanner(mine)` prints a **QUICK-WIN · steal-risk** banner ABOVE the age-ranked table whenever a diagnosed patch sits idle (Data Patching tracker OR State says Recon+Rubric done/qa_doc ready/fix in own session, AND not yet mid-Apply). Live smoke: correctly flagged 275152/275456/275505/275501.
+- `domain/list-redmine/eval.js` — scoped its Mine-table checks (#6/#7) to the Mine block so the new banner rows aren't mis-parsed. Net eval unchanged vs HEAD baseline (11/13; 2 fails pre-date me — stale ≤24 State check + closed adopted tickets 273837/273956; spawned a task chip for them).
+- Commit `569028e` on branch; merged origin/main (6 DE commits) in cleanly.
+- Slip logged (`process`, 7d=1) + memory `feedback_quick_patch_steal_risk` (OneDrive auto-memory).
+
+### The lesson (banked)
+- **Grab-risk beats age.** A diagnosed patch-only ticket left idle is the cheapest, most losable KPI on the board. 275587 was Recon+Rubric-done on hold → a colleague applied it → Redmine Resolved under another name, 0% done. The board ranked by age only; nothing flagged the patch as losable. The banner is the proactive leg; `redmine-status-check.js` is the reactive leg.
+
+### ▶▶ NEXT
+- Nothing owed on this feature. Optional follow-up chip open: fix the 2 stale `list-redmine` eval checks so a red eval can't mask a real regression.
+
 ## 2026-08-17 (S2) — QA-274318 deploy: common patch4 → patch6 → patch7 int-env bumps + verify-gap slip
 
 **Session shape: miya "deploy latest fixes from 274318" → verify int-env pin → (missed: check Redmine) → miya supplied patch6 then patch7 → bump+push each → DE. Worktree `claude/deploy-fixes-274318-d51a82`.**
@@ -14,6 +30,7 @@
 
 ### ▶▶ NEXT
 - miya runs mlit deploy card (`mlk/int-env`, patch7) + verifies utiliti Kemaskini Ulasan JT/JPPH → Jabatan Teknikal shows no JPPH agency / no blank row → then flip QA-274318 `closed`.
+
 ## 2026-08-17 — QA-274914 PPTPB pembetulan mis-route: DIAGNOSED → FIXED (BPMN) → sent to BA (confirmation-pending)
 
 **Session shape: /quest start 274914 (nearest-due, 20 Aug) → blind re-verify the sweep doc → BPMN one-line fix applied by miya in Flowable modeler → verified → BA message + test scenario → /goal meticulous-save + DE.**
@@ -36,49 +53,5 @@
 
 ### ▶▶ NEXT (274914)
 - On BA answers → if "return to Penyediaan Laporan Tanah" = a SECOND BPMN change (redirect SKM exit `sid-DC02FA30`); else no change. Deploy model + reset both apps to re-test.
-
----
-
-## 2026-08-17 — ADHOC PLTP pemohon-missing (deploy-window one-off, DROPPED) + stalling slip
-
-**Session shape: miya screenshot → "why Pemohon missing in APPS after AWAM" → DB investigation → wrong-then-corrected diagnosis → close/Phase 2 → DE. Worktree, autonomous /goal DE.**
-
-### The issue — ADHOC-REGISTER A16 (no ticket, no scaffold)
-- PLTP `PTMLK/02/L/PLTP/2026/7` (aplikasi **3432494**) @ applicant `nurulzalika@gmail.com`, staging `etanah-appstg` / `et_main_stg2`, tugasan Semakan Kemasukan Maklumat: Maklumat Pemohon panel empty ("Tiada rekod").
-- **Root cause (VERIFIED, then dropped): transient DEPLOY-WINDOW one-off — NOT a code bug, NOT PLTP-wide.** Applicant EXISTS in AWAM (`umm_p_pihak_bkptg` p_aplikasi 34964, 1 row flag_pemohon='Y', HASSAN AZHARI BIN JAAPAR); APPS `umm_a_pihak_bkptg`=0. Pemohon copied by async **SYSTEM** step ~30-60s post-Hantar (all urusan). Flowable proof: proc **7975189** froze at AWAM entry (vars only applicationName=etanah-awam + urusan + aliranKerjaId, **no aplikasiId, no routing**); twin **7975206** (aplikasi 3432499=PLTP/8, SAME applicant, 16:17 warm server) fully transitioned → aplikasiId set → copied fine. Submitted ~16:03-16:04, **seconds after server up 16:02:52** (deploy) → async executor not warm → transition job never fired.
-- **Retracted mid-session (miya deploy-context hint)**: my earlier "PLTP regression started today" claim — wrong (artifact of checking 3432499 mid-transition). Also refuted: row corruption (full-row t::text read OK both), flowable deadletter (0), @Scheduled poller (only ClearEBayaranMap). `sptb05` projection error = staging-replica quirk, not corruption.
-- **Disposition**: dropped per miya (one-off; BA's other permohonan + PLTP/8 fine). App 3432494 frozen before pelupusan flow = dead test data. Register row A16 `ANSWERED`, nothing owed.
-
-### Slips this session
-- **stalling** (caught by miya): mid-investigation I stopped to ask "say the word and I'll trace the code" for a code trace I hold the tools to do — asked permission + summarized instead of continuing. ask-back-gate flagged it; miya: "the code trace is something I can do myself... stopping half-way... wasted your time summarizing." Logged via core/slips.js.
-
-### System health finding (see Improvement Sweep)
-- **Multiple domain hooks errored "No stderr output" this session**: `agent-spend-gate` (PreToolUse Agent — BLOCKED both scaffold-delegate attempts, so ADHOC-PLTP was never scaffolded), plus Stop-bundle hooks `awam-no-resit-gate`, `test-scenario-login-gate`, `scope-claim-census`. Pattern = several `domain/*/*.hook.js` failing to emit. The agent-spend-gate failure has real cost: it silently blocks the mandated delegate-scaffold path (feedback_adhoc_scaffold_delegate).
-
-### ▶▶ NEXT
-- Optional: diagnose why `agent-spend-gate` + siblings error "No stderr output" (blocks Agent dispatch / Stop bundle) — surfaced as DE proposal.
-- Nothing owed on the PLTP adhoc.
-
----
-
-## 2026-08-14 — Worktree-sweep retrieval + quest 2 new tickets (275456 fold, 275500 Phase 0)
-
-**Session shape: retrieve → check Redmine updates → /quest 2 new tickets → save → DE. Autonomous /goal.**
-
-### Retrieval (worktree-retrieve)
-- The 08-13 sweep docs are NOT stranded — OneDrive replicated the gitignored `projects/` dir, so main holds all qa_docs (274532/274914/275009/275152/274740 + ADHOCs). `git cherry` branches all share main HEAD.
-- Surfaced post-sweep Redmine updates: **275009** gained relations `#274461` + `#233646` (08-14) and its real scope is **3 issues** not 2 (sweep missed the Jana-button-removal + framed template-sign-count as "jawatan salah"); **274532** re-opened 08-14 (extra blank page mid-Surat JPPH). Board grew to 7 mine (275500/275505/275501 new).
-
-### Quested 2 new tickets
-- **275456** = ad-hoc **A13 / ADHOC-PPTPB-2026-1** (identical permohonan `PTMLK/03/L/PPTPB/2026/4` @ eddie, same symptom). **Folded, not re-Scouted** — Recon-done, DB-proven. Root: daerah/bandar never captured at AWAM land entry → `umm_p_permohonan_tnh` blank → pra→app copy → Teknikal defaults Selangor. Register row A13 updated `TICKETED → #275456`. qa_doc written.
-- **275500** = PLTP Risalat **tajuk papar satu pemohon sahaja** (app `PTMLK/02/L/PLTP/2026/6` @ faridmajid). Phase 0 → Rubric **90%**. Root (direct read): every `generateDefaultRisalat<URUSAN>` in `PelupusanService.java` builds pemohon from **`apbList.get(0)`** — first pihak berkepentingan only; PLTP at `:14151`, tajuk string `:14225`. **No multi-pemohon analog exists** among the 6 builders → fix is new join-logic (1→as-is, 2→` DAN `, >2→comma + ` dan ` before last). Blast radius: all 6 urusan share the bug (BA confirms general). qa_doc written, active.txt active, notes written.
-
-### Saved
-qa_docs `QA-275456.md` + `QA-275500.md` (durable main path) · active.txt both active · notes both · ADHOC-REGISTER A13 row.
-
-### ▶▶ NEXT
-- 275500 Apply (on `mlk/master`): add `buildSenaraiPemohonRisalat` helper + rewrite `:14225`; confirm >2 casing ("dan" lc) w/ BA; regen to verify; offer sibling-urusan blast-radius fix.
-- 275456: portal repro to pin AWAM save method · data-patch 3413241 (+3431713) on nod · confirm QA-274740 relation.
-- Still open on board: 274914 (BPMN, nearest deadline 20 Aug), 275009 (3-issue rewrite), 275152 (commit existing guard), 275505 + 275501 (not drafted).
 
 ---
