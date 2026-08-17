@@ -349,3 +349,18 @@ Anything you add to `BasePelupusanForm:530-546` is **unreachable** from any `*Do
 `BasePelupusanDokumenForm`, two in `BasePelupusanForm`. The DokumenForm pair fired; the
 BasePelupusanForm pair never did, despite being present in the deployed `.class`. Cost: a whole
 session building fixes into dead code. Now enforced by the `hierarchy` check in `pre-code-check`.
+
+## Minit Bebas — 3 types + signature-block mechanism (QA-275009, 2026-08-17)
+
+**3 types (DB-confirmed, et_main_stg2.ind_tgsn — same tugasan kods PYMB/SMB/PMB but different nama/template):**
+1. **Standard Minit Bebas** — 10 urusan (BPRZ, MCL, PLPS, PLTP, PPJK, PPTPB, PRU, PRZ, PSBS, PT). nama "Penyediaan/Semakan/Pengesahan Minit Bebas". Template `TemplateMinitBebasKPPD.docx`. This is the common one.
+2. **Minit Bebas dan Syor SO (Ganti Hari)** — PRBB only. nama "…dan Syor SO", tugasan-3 = **Perakuan** (not Pengesahan). Own template `TemplateMinitBebasPRBB.docx` + own syor path (`initGantiHariSyorFields`, Vincent #263302). PRBB shares PYMB/SMB/PMB kods → code MUST gate on `isPRBB`/`URS_PRBB`, kod alone can't separate it.
+3. **Minit Bebas Pentadbir Tanah** — RPPLP only. Own kods PYMBPT/SMBPT/PMBPT (auto-excluded from `TGS_MINIT_BEBAS_LIST`).
+
+**3-signature mechanism (KertasMinitBebas via TemplateMinitBebasKPPD.docx):**
+- Slot 1 = PPD (static CCs `signPegawaiSemak`/`namaPegawaiSemak`, resolved from `getSemasaPengguna()`).
+- Slot 2 = KPPD, Slot 3 = PTNH → injected via EXTERNAL_CONTENT_CONTROL `maklumatPenggunaMBKPPD` / `maklumatPenggunaMBPTNH`; the injected block content lives in `references/MaklumatPemohon.docx` (sections tagged by those CC names).
+- 3rd signature (KPPD) appears only when the SMB officer ACTED as KPPD. The role must be resolved from the tugasan chain (`listPeranan.contains("KPPD")` from Dashboard peranan), NOT the officer's utama peranan (`mainPeranan` = KPPT for many) — that was the 2-sign bug.
+- First-slot overwrite: on a later officer's regenerate, slot-1 nama/sign are preserved by the guard `if (TGS_SEMAKAN_MINIT_BEBAS && namaJawatan.equals("KPPD")) return null;` — same listPeranan-vs-utama root.
+
+**int-env divergence trap (verified 2026-08-17):** int-env refactored these 4 populators to a helper `getJawatanUtama()` (uses listPeranan.contains — already correct) via #221364; master + release branches still INLINE. A master-based ticket fix to these methods CONFLICTS on merge to int-env → re-apply/cherry-pick, never full-merge. Release (off master) is clean.
