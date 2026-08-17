@@ -2,6 +2,23 @@
 # active.txt is WORKING MEMORY (open quests only). Canonical long-term homes remain
 # QA-NNN.md + main/post-mortems.md + main/kpi-tracker.md; these blocks are a pointer-grade mirror.
 
+# ---- archived 2026-08-17 ----
+
+qa=ADHOC-PPTPB-2026-3
+phase=Diagnosed
+ticket_type=adhoc
+env=MLIT / STAGING / PROD (flowable BPMN)
+urusan=PPTPB
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\ADHOC-PPTPB-2026-3 - PPTPB Hantar FlowableException
+test_app=PTMLK/03/L/PPTPB/2026/1 aplikasi 3399570 MLIT (Awalan)
+current_phase=Archived
+issue_one_liner=PPTPB klik Hantar papar FlowableException - exclusive gateway "Kelulusan" (sid-70631659) no default flow + branches on var kelulusan (holds JNS_KELULUSAN_DO) not keputusan boolean. MLIT engine=v5 BUGGY; STAGING engine=v7 FIXED (2026-06-20); PROD=flowable SQL-blocked, provided file buggy-shaped, needs admin-UI check. Fix file Downloads\MLK_PLP_PPTPB.bpmn20.xml matches staging v7 business logic.
+status=archived
+branch=none
+closed=2026-08-17
+close_note=BA-confirmed solved. Fix=MLIT BPMN redeploy Kelulusan gateway (add default + branch keputusan not kelulusan). STAGING already v7-fixed; PROD needs admin-UI check.
+knowledge_banked=FLOWABLE-KNOWLEDGE.md §10.1 (exclusive-gateway no-default failure mode + diagnose recipe)
+
 # ---- archived 2026-06-29 (salvaged to main 2026-07-05 from stranded worktree amazing-bassi-262cd1) ----
 
 qa=ADHOC-0402DIS2025000170
