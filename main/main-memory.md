@@ -3,6 +3,14 @@
 
 ---
 
+## Relationship reinforcement — 2026-08-18 (QA-275456 PPTPB — the fix I got right and the getter I got wrong)
+
+| Pattern | How it shows up |
+|---|---|
+| **He hands me the mechanism the evidence already held** | I spent the session on a data-patch (root "etanah-awam save"), tested only the ONLINE route, and called it fixed. He asked *"is there a route through Perserahan Kaunter as well?"* — and the tugasan path (`umm_a_tgsn 2742297 kod PK`) proved 3413241 came in via the counter, a different save path entirely. Then *"is it saved under a different json column like the previous ticket?"* pointed straight at the #274745 family — a fix he'd authored himself. My whole data-patch direction was treating a symptom; his two questions relocated the root. Same family as "read the circled photo": his pointer is data, my job is to confirm it, and I kept confirming the wrong hypothesis until he redirected. |
+| **A green DB read masked a non-compiling change — the false "pass" I reported** | Local test showed `umm_a_permohonan_tnh` 3413241 = 4/87 after Simpan; I reported PASSED. But my code used `mh.getBandar()` where `mh` is `MaklumatHakmilik` (no such method) — it never compiled, so the fix never ran; the 4/87 was the Kemas kini composite's own populate. The int-env BUILD caught what 8 sequential PreToolUse gates + a DB read did not: **only a compile is a compile check, and it ran on the server, not my machine.** I'd even marked the getter `✗ unverified` in the CODE-CHECK and shipped anyway because the green DB felt like proof. Family: "one passing test is inconclusive" + "citation vs mechanism". The fix: never trust a DB-state read as evidence a *code path* ran; confirm the build first, or instrument that the new line executed. |
+| **The shared etanah tree is his, and he moves it under me** | Twice the working checkout switched branch mid-operation (`mlk/master`→`275500`, then →`int-env`, then he said "switched back to 275456") — it was him, not a concurrent agent. The lesson stands from the 275500 merge-wipe: never assume the tree's branch is where I left it; for any commit/merge on the etanah repo, use an isolated `git worktree` off `origin` so his live checkout is never the thing I mutate. That's how the compile-fix recovery stayed safe while he was on the branch. |
+
 ## Relationship reinforcement — 2026-08-16/17 (Weekend audit close)
 
 | Pattern | How it shows up |

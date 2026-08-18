@@ -111,18 +111,21 @@ close_note=Phase 1 CLOSED. Fix mlk/esokongan/275500 @ 39415a5276 (PelupusanServi
 
 qa=QA-275456
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\148. ESOKONGAN #275456 - Pelupusan - PPTPB - Maklumat Tanah Tidak Lengkap pada Maklumat Pemohon
-phase=0 - W3 blind + W4 audit done (2026-08-17): SPLIT leaning W3 + regression-commit finding - read QA-275456-audit.md first; fix in own session
-status=active
+phase=1
+status=closed
 ticket_type=bug
 env=ESOKONGAN
 issue_one_liner=Pelupusan - PPTPB - Maklumat Tanah Tidak Lengkap pada Maklumat Pemohon
 assigned_to_me=2026-08-13
 urusan=PPTPB
 tugasan=Penyediaan Laporan Pelukis Pelan
-current_phase=Recon-done + attachments ledgered + URL-CONFIRMED cross-module (symptom /etanah-teknikal/AvalonLaporanPelukisPelanForm; root etanah-awam save) + data-patch primary fix ready; awaiting miya BA-Q decision + PROD patch nod (2026-08-18 focus session)
+current_phase=Phase1-CLOSED 2026-08-18. ROOT (CORRECTED this session): counter/Perserahan-Kaunter permohonan — SKM Maklumat Tanah populate reads ahkm.getBandarPekanMukim() (=bandar_id NULL for counter), no hakmilik-master fallback → daerah/bandar blank → Teknikal SELANGOR. (NOT etanah-awam, NOT online — online populates fine.) FIX: PelupusanService.java:5242 fallback to mh.getBandar()+.getDaerah() when null (analog #274745). Local test PASSED: stg2 umm_a_permohonan_tnh 3413241 daerah_id 4/bandar 87 after SKM Simpan. Data-patch NO LONGER needed (code self-heals). Deploy int-env + BA test PENDING.
 quest_start=2026-08-14
 qa_doc=projects/coding-projects/active/QA-275456/QA-275456.md
-branch=mlk/master
+branch=mlk/esokongan/275456
+commit=dca45ce6ca
+local_test_confirmed=true
+closed=2026-08-18
 
 qa=ADHOC-MLPS-2026-1
 status=hold
