@@ -1,5 +1,30 @@
 # Current Session
 
+## 2026-08-18 — Ticket triage + plan; focus QA-275456 (PPTPB location blank)
+
+**Session shape: boot → "plan today's tickets" → triage board → focus QA-275456 this session, others deferred to own sessions → save/commit/push/merge to main.**
+
+### Plan set today
+- **Focus THIS session: QA-275456** (PPTPB Maklumat Permohonan papar SELANGOR / land location blank).
+- Other tickets → **each in its OWN session** (miya's "one ticket, one session"):
+  - 275152 (AWAM Sistem Papar Ralat) · 275505 (PPTPB Tanah Rizab/Keadaan Blank) · 275501 (PRBB dashboard ralat) — diagnosed, apply-only, steal-risk.
+  - 275475 (PLPS Tiada Rekod Bayaran) — **RETRIEVED today** (folder 153, active.txt hold, 14 journal entries); undrafted, own session.
+  - 275500 (PLTP Tajuk Risalat) — already **Phase 1 CLOSED + tested**; Phase 2 (release list + archive) only. qa_doc banner-reconciled today (was stale "uncommitted/untested").
+
+### QA-275456 — evidence hardened this session
+- **All 4 `0. Brief/` attachments opened + ledgered** (attachment-ledger gate).
+- 🚨 **URL-PROVEN cross-module**: symptom screen = `etanah-app.melaka.gov.my/etanah-teknikal/protected/avalon/AvalonLaporanPelukisPelanForm.xhtml` (etanah-teknikal, not deployed locally). Maklumat Pemohon = `/etanah-pelupusan/protected/mlk/common/MlkMaklumatPemohonForm.xhtml`.
+- **Nuance**: BA's "real address shown" = applicant MAILING address (Durian Tunggal/Melaka); the blank is the LAND location (Alor Gajah/Padang Sebang) — different fields.
+- Hakmilik popup confirms source: Daerah 03-Alor Gajah, Bandar 16-Mukim Padang Sebang → validates patch daerah_id=4 / bpm_id=87.
+- **Fix direction**: data-patch (primary, PROD write — miya nod) clears the teknikal symptom without touching teknikal; awam code-harden optional (needs portal repro + #262624 read).
+
+### ▶▶ NEXT (275456, this session)
+- ⬜ miya decision: send BA scope-Q (all ~2/20 blank vs this app) / patch this app only / full quest.
+- ⬜ On nod: prep data-patch script (umm_a + umm_p, keyed by id_pengenalan) for aplikasi 3413241 (+ verify 2nd app on target env).
+- Standing rule captured: BA-clarification + cross-module = always-checked at intake (`feedback_cross_module_alert_at_intake.md`).
+
+---
+
 ## 2026-08-17 — Baseline Melaka Pelupusan 1.3.4 + Common 1.1.17-MLK (via release-mlk-plp skill)
 
 **Session shape: BAQA pasted "Planned Release Melaka 17/8" → release-mlk-plp pipeline → prepared, pushed, BA-confirmed successful → DE. Worktree `melaka-baseline-deploy-1d5c45`.**
