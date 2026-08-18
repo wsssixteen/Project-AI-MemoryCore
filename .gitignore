@@ -70,3 +70,6 @@ system/recent-tool-calls.jsonl
 
 # Once-per-session state marker written by quest-bounty-verify; regenerated, never content.
 domain/quest-bounty/.verify-notified
+
+# compile-gate session-local compile markers — regenerated, never content
+.claude/state/compile-ok-*.json

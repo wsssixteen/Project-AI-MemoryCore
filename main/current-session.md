@@ -53,7 +53,17 @@
 - Merged base → docx binary-conflict → resolved by `git checkout ...274532v3 -- <docx>` (blob `152be7dc` MATCH ✓). v2 unusable (branched off int-env, 35 files).
 - **Corrected the stale `QA-274532.md` ledger** (was "v2/v3 NOT for release" — now "base Java + v3 docx", git-evidence inline).
 
+### 2026-08-18 (late) — compile-gate built + proven (session close)
+- **Trigger**: QA-275456 `mh.getBandar()` shipped without compiling → int-env BUILD failed on server → mlit down. みや: "make the build mandatory before commit & deploy."
+- **Built** `domain/compile-gate/` — PreToolUse Bash hook: `git commit` inside an etanah repo (cwd = etanah-pelupusan/awam/common) BLOCKS unless `compile-check.js verify <module>` is green + current. Bypass `[skip-compile-gate:]`.
+- **compile-check.js**: `run <module>` (background `mvn -o -q -t <toolchains> compile` → green marker) + `verify` (marker green AND no `.java` newer than marker ts).
+- **Toolchains fix**: my shell has NO JDK 8/11 at `E:\Java\java8`/`java11` — `domain/compile-gate/toolchains.xml` maps `1.8`+`11` → `C:\Program Files\Java\jdk-17`, passed via `mvn -t` (never touches ~/.m2).
+- **Proven**: eval 7/7 · live-block · staleness · full `run→BUILD SUCCESS→marker→verify exit 0` (task b7kxhflxe). Committed to main `8ff0ed6` (gate) + `fd5d0f1` (toolchains fix).
+- **Memory**: `reference_compile_gate_local_build`.
+
 ### ▶▶ NEXT / owed
+- ⬜ **QA-275456 (own session)** — re-deploy int-env (fix now on `mlk/master` + `mlk/int-env`) + re-verify the page actually heals (efficacy UNVERIFIED — BA to test); add #275456 to Redmine planned-release list.
+- ⬜ **A1 active.txt clobber** — per-block merge for concurrent-worktree writes (proposal logged in slips.jsonl).
 - ⬜ **etanah Phase F DEFERRED** — `merge-to-master --ba-approved` refused: etanah tree is on branch `mlk/esokongan/275009` with LIVE uncommitted QA-275500 work (concurrent session). Did NOT stash/checkout a live tree. Run when 275009 tree is clean/committed.
 - ⬜ **QA-275500 stash** — parked twice under `stash@{1}` msg `275500` (+ `stash@{0}` eclipse churn) at baseline start; a second live copy is now on branch 275009. Reconcile before popping.
 - ⬜ V6b build-SHA match was skipped — superseded by BA's successful-test confirmation (stronger evidence than the footer proxy).
