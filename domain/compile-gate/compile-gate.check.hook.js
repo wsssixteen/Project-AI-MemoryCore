@@ -24,7 +24,7 @@ const GITC_RX = /git\s+-C\s+["']?([^"'&|;]*etanah-(pelupusan|awam|common))["']?/
 // -> block:null   (an etanah-repo commit — caller must run verify)
 function decide(command, turnText) {
   const cmd = String(command || '');
-  if (!/git\s+commit/.test(cmd)) return { block: false };
+  if (!/\bgit\b[^&|;]*\bcommit\b/.test(cmd)) return { block: false };   // git … commit (allows `git -C <path> commit`)
   const m = cmd.match(CD_RX) || cmd.match(GITC_RX);
   if (!m) return { block: false };
   const mod = `etanah-${m[2].toLowerCase()}`;
