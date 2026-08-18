@@ -228,4 +228,4 @@ scope=Semua-urusan/teknikal-Charting-Mohon
 ticket_type=bug
 local_test_confirmed=false
 qa_doc=projects/coding-projects/active/QA-265414/QA-265414.md
-note=check-only STG re-check; flowable fix confirmed deployed+correct; tolakPermohonan false/null not true; suspect teknikal SemakanUlasanSyorForm not emitting flag for PLPS+PT (verified only PPTPB); AWAITING confirm Ya selected
+note=FINAL (STG+IT DB-proven): PT/26 real teknikal bug - officer picked Ya (umm_keputusan 904) but SemakanUlasanSyorForm never sets flowable tolakPermohonan=true -> default route Penyediaan Laporan Tanah. PLPS works (904->true->Perakuan). PLPS/25 = no Ya recorded (blank), needs BA re-test. Owner=teknikal(Amirul), not us. Redmine 265414 already Closed.
