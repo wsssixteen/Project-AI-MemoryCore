@@ -58,8 +58,12 @@ if (!mod || !MODULES[mod]) {
 
 if (cmd === 'run') {
   try {
-    console.log(`compile-gate: running 'mvn -o -q compile' in ${MODULES[mod]} ...`);
-    execSync('mvn -o -q compile', { cwd: MODULES[mod], stdio: 'inherit' });
+    // -t maps the etanah build's JDK 1.8 + 11 toolchains to an available JDK (Ruri's shell has no
+    // JDK 8 at E:\Java\java8, only a JRE 8 + JDK 17). Passed per-invocation so miya's global ~/.m2
+    // is never touched. Compiles source-8/11 on JDK 17 — enough to catch `cannot find symbol`.
+    const TC = path.join(__dirname, 'toolchains.xml');
+    console.log(`compile-gate: running 'mvn -o -q -t <toolchains> compile' in ${MODULES[mod]} ...`);
+    execSync(`mvn -o -q -t "${TC}" compile`, { cwd: MODULES[mod], stdio: 'inherit' });
     fs.mkdirSync(STATE, { recursive: true });
     fs.writeFileSync(markerPath(mod), JSON.stringify({ ok: true, ts: Date.now(), mod }, null, 2));
     console.log(`compile-gate: ✅ BUILD SUCCESS recorded for ${mod}`);
