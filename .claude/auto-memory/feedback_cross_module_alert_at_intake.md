@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: bb314863-3a57-4f05-a939-94f49cf121c3
-  modified: 2026-08-12T14:49:38.095Z
+  modified: 2026-08-18T02:02:06.745Z
 ---
 
 🚨 **The moment a ticket is retrieved / read / a quest MD is started, SCAN the Description + History for two things and surface them LOUDER than anything else — before any investigation.**
@@ -16,6 +16,8 @@ metadata:
 - **Rule**: when a cross-module signal fires, the FIRST thing to confirm is **which repo owns the screen** — locate the `.xhtml` (Glob across etanah-pelupusan / etanah-common / etanah-awam; a `target/…/overlays/etanah-common-*.war/` hit = common) BEFORE deep-tracing any one module. **Banned**: writing "ownable-<module>" in the quest MD before the screen's repo is confirmed by file location.
 
 **2. PRIORITY signal → flag at the top.** "PROD" / "urgent" / "segera" / "ASAP" / near due-date / "priority" → mark it in the ticket list + quest MD so the important one isn't buried.
+
+**3. BA-CLARIFICATION-NEEDED → surface ASAP so みや can ask BA immediately** (added 2026-08-18 per みや). At intake/Phase 0, if the fix depends on any answer only BA can give (ambiguous expected output, scope = one app vs all affected, which record is the real one, intent behind a requirement), DRAFT the question and hand it to みや up-front — do NOT sit on it until Apply. **Why** (みや 2026-08-18): a BA round-trip has multi-day latency, so an unasked question discovered late stalls the whole ticket; the same urgency as the cross-module alert (#1). みや: *"if we need to ask clarifications from BA, we need to do it as quickly as possible. The same if it involves other modules… Put these 2 factors as priority and always checked."* → **Both #1 (cross-module) and #3 (BA-clarification) are ALWAYS-CHECKED at intake, every ticket, and surfaced together as the first decision for みや.**
 
 **Emit shape**: the quest MD's FIRST line (and the ticket-list row) carries `🚨 CROSS-MODULE? <signal quoted>` and/or `⏫ PRIORITY <reason>` — or an explicit `module: <confirmed-repo> · priority: normal` when the scan is clean. Silence is banned; an explicit "clean" is the only valid empty.
 
