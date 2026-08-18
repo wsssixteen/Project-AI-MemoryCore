@@ -111,18 +111,22 @@ close_note=REWORK closed 2026-08-18. BA Nurhafizah 08-18: >2-pemohon separator m
 
 qa=QA-275456
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\148. ESOKONGAN #275456 - Pelupusan - PPTPB - Maklumat Tanah Tidak Lengkap pada Maklumat Pemohon
-phase=0 - W3 blind + W4 audit done (2026-08-17): SPLIT leaning W3 + regression-commit finding - read QA-275456-audit.md first; fix in own session
-status=active
+phase=1
+status=closed
 ticket_type=bug
 env=ESOKONGAN
 issue_one_liner=Pelupusan - PPTPB - Maklumat Tanah Tidak Lengkap pada Maklumat Pemohon
 assigned_to_me=2026-08-13
 urusan=PPTPB
 tugasan=Penyediaan Laporan Pelukis Pelan
-current_phase=Recon-done
+current_phase=Phase1-CLOSED 2026-08-18 (efficacy UNVERIFIED). ROOT (corrected): Perserahan-Kaunter permohonan — SKM Maklumat Tanah populate reads ahkm.getBandarPekanMukim() (=bandar_id NULL for counter), no hakmilik-master fallback → daerah/bandar blank → Teknikal SELANGOR. FIX: PelupusanService.java:5242 fetch Hakmilik.getBandar() fallback (analog :4113/:4122, #274745 family). First attempt mh.getBandar() FAILED compile (MaklumatHakmilik has none) → mlit down → corrected via isolated worktree. Local "4/87 pass" was FALSE POSITIVE (never compiled). Owed: re-deploy int-env + re-verify fix efficacy; Redmine planned-release list.
 quest_start=2026-08-14
 qa_doc=projects/coding-projects/active/QA-275456/QA-275456.md
-branch=mlk/master
+branch=mlk/esokongan/275456
+commit=b2c70a7ba5
+int_env_merge=1ca36e97ad
+local_test_confirmed=false
+closed=2026-08-18
 
 qa=ADHOC-MLPS-2026-1
 status=hold
