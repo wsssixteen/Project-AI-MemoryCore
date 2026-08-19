@@ -1,5 +1,28 @@
 # Current Session
 
+## 2026-08-19 — #275501 PRBB NPE patch script + patch-ticket-intake defender + SCRIPT-CHECK gate fix
+
+**Session shape: miya "help with 275501, prepare patch script for stg + FIX the patch-ticket detection" → prepared patch → built intake defender → miya corrected (SCRIPT-CHECK not invoked / quest not loaded / trace-me / DE-check). Worktree claude/patch-script-275501-69b14a.**
+
+### What moved
+- **Patch script** `1. Tasks\Melaka\152. …#275501\patch-275501-stg.sql` — fill blank Alamat Berdaftar on stg2 pihak 5523923 (`PTMLK/01/L/PRBB/2026/11`), unqualified, before-SELECT→UPDATE(idempotent)→after-SELECT. SCRIPT-CHECK 5/5 (run late, after miya's correction). Columns verified live vs mlit information_schema. **stg2 MCP was NOT connected this session** — miya runs it.
+- **#275501 = ADHOC A12** (register updated `TICKETED → #275501`). Root: `MlkBorang4CeForm.initMklmtPemegangLesen():367` derefs `getBandarBerdaftar().getNama()` while `bandar_daftar_id` NULL.
+- **New Feature `domain/patch-ticket-intake-flag/`** (worktree) — INTAKE scanner: reads a ticket's 0. Brief/ → if BA asks for a data patch, ticket-gate prepends 🩹 PATCH-TICKET do-first banner. eval 7/7 + hook smoke green. Wired in `.claude\hooks\ticket-gate.js`. Complements steal-risk-flag (post-diagnosis leg).
+- **SCRIPT-CHECK gate fix** — `domain\convention-check-gate\convention-check-gate.gate.hook.js` sql-branch now emits the SCRIPT-CHECK 5-rule requirement on every `.sql` DML write (the ghost `script-check` skill never fired — 0 registrations, absent from roster). ⚠️ THIS EDIT LANDED IN THE MAIN REPO, not the worktree (accidental).
+
+### Slips logged (process ×2)
+- Patch-ticket not detected/acted at intake (built intake defender).
+- SCRIPT-CHECK not invoked on the patch (root: ghost skill; fixed at convention-gate).
+
+### 🚨 DE state / git mess (surfaced, NOT auto-merged)
+- main repo: 13 behind origin/main; carries UNRELATED uncommitted QA-275009 work incl `?? .claude/skills/script-check/` (the ghost skill — built prior session, DE ran, never committed/registered). `commit-approved-QA-275009.flag` present.
+- My work split: Feature+ticket-gate wiring in WORKTREE; convention-gate SCRIPT-CHECK edit in MAIN. Needs consolidation before any main merge. Held for miya.
+
+### ▶▶ NEXT
+- miya: run patch-275501-stg.sql on stg2; decide commit of the 2 defenders; decide main-repo QA-275009 consolidation. 2nd BA ask (Maklumat Tapak blank) needs stg2 trace.
+
+---
+
 ## 2026-08-18 — QA-275475 PLPS "Tiada Rekod Bayaran/Resit" (flowable StaleObjectStateException) → fixed + int-env + Phase 1 closed
 
 **Session shape: /quest resume 275475 (fresh retrieve — not drafted, absent from active.txt) → Scout+Recon+Rubric → fix applied + build-verified → commit + int-env deploy → miya ran fresh PLPS submit (works) → 100% data-loss verification → Phase 1 close → DE. Worktree claude/quest-275475-resume-5aa23e.**
