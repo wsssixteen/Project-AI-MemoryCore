@@ -68,6 +68,7 @@
 - [project_etanah_organize.md](project_etanah_organize.md) — etanah-organize-alpha: organize etanah-knowledge/melaka into guidebook → Phase 2 office-day verification → Phase 3 website; activation: Bankai 蒼穹宝典; alpha-1 complete 2026-05-14 (115-item ledger)
 
 ## Reference
+- [reference_selangor_oracle_slt.md](reference_selangor_oracle_slt.md) — Selangor Etanah = Oracle (service SLIT, 172.16.93.32:1521, schema ET_MAIN_DEV) via oracle-slt MCP; python-oracledb thin + pin mcp<2; code at E:\Projects\Selangor\etanah-pelupusan (branch master, codegraph is Melaka-only)
 - [reference_baseline_release_servers.md](reference_baseline_release_servers.md) — Baseline build server 172.16.100.162 · deploy 172.30.12.203 · ssh user `app`; the gitignored servers.local.json does NOT travel between machines, this does
 - [reference_etanah_bpmn_source.md](reference_etanah_bpmn_source.md) — Flowable BPMN lives in main-repo etanah-knowledge/.../flowables-bpmn/ (absent from worktrees); read parsed bpmn_flow.json not raw XML; latest at mlit flowable-ui modeler
 - [reference_esokongan_branch_shape.md](reference_esokongan_branch_shape.md) — eSOKONGAN release tickets don't always live on mlk/esokongan/<num> (#271639 was mlk/internal/); ls-remote verify every branch, tracker→shape is only a hint
