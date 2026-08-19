@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: d6846f88-8934-4164-a6b6-3afccb489b73
-  modified: 2026-08-14T03:25:54.935Z
+  modified: 2026-08-19T07:29:46.419Z
 ---
 
 🚨 **REVERSED 2026-08-12 (baseline 1.3.3 hand-off).** miya: *"I want to change from using `` to using
@@ -33,8 +33,12 @@ THIS memory contradicted Rule 0 and is now retired.
 button). Per-command fences fix both at once — each is separately runnable/copyable AND single-click.
 
 Canonical spec: `.claude/reply-shape-spec.md` §3b + `.claude/skills/deploy/SKILL.md` §5 +
-`domain/deploy/eval.js` checks 21-24 + `.claude/skills/release-mlk-plp/SKILL.md` card section — all
-still carry the OLD no-fence rule and need the same flip (follow-up sweep).
+`domain/deploy/eval.js` checks 21-24 + `.claude/skills/release-mlk-plp/SKILL.md` card section.
+🚨 **2026-08-19: the release-mlk-plp card section IS NOW FLIPPED** (it had carried the OLD no-fence
+rule and this memory's 2026-08-12 note flagged it for a follow-up sweep that NEVER ran — so baseline
+1.3.5's hand-off card shipped inline-backtick commands and miya raged, ~10th ask). STILL TO SWEEP
+(verify next time each is touched): `reply-shape-spec.md` §3b · `deploy/SKILL.md` §5 · `deploy/eval.js`
+checks 21-24 — confirm each says one-```bash-block-per-command, not the old inline/no-fence rule.
 
 Related: [[feedback_two_sentence_default]] · [[feedback_ba_facing_reply_plain]] ·
 [[feedback_show_diagram_for_issues]]

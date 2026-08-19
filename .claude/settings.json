@@ -41,6 +41,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\claude-md-watch\\\\claude-md-watch.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\adhoc-lifecycle\\\\adhoc-lifecycle.check.hook.js\""
           }
         ]
       }
@@ -171,6 +175,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\bug-db\\\\bug-db.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\feature-creation\\\\feature-creation.check.hook.js\""
           }
         ]
       }
@@ -429,6 +437,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\attachment-ledger-gate\\\\attachment-ledger-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\template-cc-preflight\\\\template-cc-preflight.check.hook.js\""
           }
         ]
       }

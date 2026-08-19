@@ -30,6 +30,30 @@ const path = require('path');
 const projectRoot = path.join(__dirname, '..', '..');
 const activePath = process.env.TICKET_GATE_ACTIVE_TXT || path.join(projectRoot, 'quest', 'active.txt'); // env override = eval-fixture path (same convention as CODEGRAPH_GATE_ACTIVE_TXT)
 
+// INTAKE patch-ticket detection (2026-08-19, #275501): read the ticket's 0. Brief/ text
+// and, if the BA is asking for a data patch, fire a do-first banner. Complements
+// steal-risk-flag, which only fires AFTER diagnosis off board State phrases.
+const patchIntakeDir = path.join(projectRoot, 'domain', 'patch-ticket-intake-flag');
+let renderPatchIntakeFlag = () => '';
+let detectPatchRequest = () => ({ isPatch: false, signal: null });
+try { ({ renderPatchIntakeFlag, detectPatchRequest } = require(path.join(patchIntakeDir, 'patch-intake'))); } catch (e) { /* never block */ }
+
+function readBriefText(taskFolder) {
+  if (!taskFolder) return '';
+  let out = '';
+  for (const f of ['Description.txt', 'History.txt']) {
+    try { out += '\n' + fs.readFileSync(path.join(taskFolder, '0. Brief', f), 'utf8'); } catch (e) { /* file absent */ }
+  }
+  return out;
+}
+
+function logPatchIntake(qaNum, signal) {
+  try {
+    fs.appendFileSync(path.join(patchIntakeDir, 'log.jsonl'),
+      JSON.stringify({ ts: new Date().toISOString(), qa: qaNum, outcome: 'fired', signal }) + '\n');
+  } catch (e) { /* never block */ }
+}
+
 // Per-QA block lookup — active.txt has many qa=QA-NNNN blocks; find the one for `qaNum`.
 function readQAState(qaNum) {
   const state = { qa: qaNum, phase: '', status: 'idle', local_test_confirmed: 'false' };
@@ -131,7 +155,11 @@ process.stdin.on('end', () => {
         } catch (e) { /* never block */ }
       }
 
+      const patchFlag = renderPatchIntakeFlag(readBriefText(state.task_folder), `QA-${qaNum}`);
+      if (patchFlag) logPatchIntake(qaNum, detectPatchRequest(readBriefText(state.task_folder)).signal);
+
       context = [
+        ...(patchFlag ? [patchFlag, ``] : []),
         `⚔️ QUEST GATE — QA #${qaNum} detected (state: phase=${state.phase || 'none'}, status=${state.status}).`,
         ``,
         `MANDATORY — emit the Phase-0 gate checklist FIRST as ✓/⬜ rows (a skipped item must be VISIBLE):`,

@@ -106,10 +106,14 @@ process.stdin.on('end', () => {
     // commit passed unchecked, including tonight's unapproved 91e22e486f.
     // The MemoryCore skip must key off the COMMAND'S TARGET REPO (`cd <path> && git commit`),
     // never the hook's own cwd.
-    const memoryRoot = projectRoot.replace(/\\/g, '/').toLowerCase()
-      .replace(/\/\.claude\/worktrees\/[^/]+$/, '');   // worktree session: recognize the true MemoryCore root
+    // Normalize MSYS/git-bash drive form (`/c/users/…`) to Windows form (`c:/users/…`)
+    // so `cd /c/…` and `cd C:/…` compare equal. Without this, a MemoryCore self-commit
+    // issued with a `/c/` path missed the exemption and was wrongly gated (2026-08-19).
+    const normDrive = p => p.replace(/^\/([a-z])\//, '$1:/');
+    const memoryRoot = normDrive(projectRoot.replace(/\\/g, '/').toLowerCase()
+      .replace(/\/\.claude\/worktrees\/[^/]+$/, ''));   // worktree session: recognize the true MemoryCore root
     const cdMatch = cmd.match(/cd\s+["']?([^"'&|;]+)["']?\s*&&/);
-    const targetRepo = (cdMatch ? cdMatch[1] : process.cwd()).replace(/\\/g, '/').trim().toLowerCase();
+    const targetRepo = normDrive((cdMatch ? cdMatch[1] : process.cwd()).replace(/\\/g, '/').trim().toLowerCase());
     if (targetRepo.startsWith(memoryRoot)) process.exit(0);   // genuine MemoryCore system commit
 
     // v2: checks 3a/3b are UNCONDITIONAL on any work-repo commit. Per みや 2026-08-05:
