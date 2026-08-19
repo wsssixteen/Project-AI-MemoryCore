@@ -114,6 +114,7 @@ process.stdin.on('end', () => {
         '  - Cited the example you mirrored?',
       ],
       sql: [
+        '  - 🚨 SCRIPT-CHECK (5-rule pre-flight, MANDATORY before handing any SQL mutation — `.claude/skills/script-check/SKILL.md`): emit the line `SCRIPT-CHECK — rule 1 <expected-outcome annotation> · rule 2 <Stage-Match | ⏭ ref> · rule 3 <reviewer-obvious safe> · rule 4 <no ind_* DELETE> · rule 5 <display/read column = `<col>`, verified via grep/DB>`. Rule 5 is the one that bit us (QA-275009): confirm WHICH column the UI/code READS before patching.',
         '  - Queried other rows in this table to see the VALUE-FORMAT convention for the column(s) you are setting/inserting?',
         '  - Cited a sample of existing values in the chat prose BEFORE the UPDATE/INSERT?',
         '  - Audit columns (created_by / last_modified_by) — matches sibling rows on the same aplikasi? NEVER ticket/session-specific identifiers.',
