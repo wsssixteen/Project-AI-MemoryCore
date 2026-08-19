@@ -338,6 +338,24 @@ re-reads `origin/mlk/master` and fails loudly if it isn't the release tip.
 
 **Scope test before ANY action during a release** — if the answer to *"is this exact action written in Phase A-E above?"* is anything but a plain **yes**, it is a DON'T.
 
+## 🧨 FAILURE-MODE CHECKLIST (2026-08-19 post-incident audit — run EVERY release, emit ✓ per row)
+
+> Born from the 1.3.5 incident (wrong common shipped · 1.3.4 stranded off master · prod regressed).
+> Gated items live in release-prep.js (`runCompatGate` · `assertMasterReflectsPrevRelease`) +
+> `unmerged-release-boot.js` (SessionStart). These rows are the NON-gated judgment checks:
+
+| ✓ | Check |
+|---|---|
+| ⬜ | **Terminology verbatim**: any version-change commit message / Sheet line mirrors the repo's ESTABLISHED wording — `git log --oneline -5 -S "<etanah.common.version>"` and copy the exact verb (Aaron's `common version increase to:`); みや's Sheet format `#<ticket>: <established word>`. NEVER invent synonyms (bump/set/revert) |
+| ⬜ | **Undo tag before ANY force-push**: `git tag mlk/prod-<ver> <deployed-sha>` + push the tag FIRST — a released SHA must never exist only in a build log |
+| ⬜ | **pom conflict resolution shown as diff** for みや's nod before committing any merge that touched pom.xml |
+| ⬜ | **Post-deploy footer check**: Domain / DB / Common / Module lines all = expected values (extends V6b — version alone can lie about domain) |
+| ⬜ | **Build target named explicitly** in the hand-off card (stag / prod), never "choose the env" |
+| ⬜ | **Worktree preflight**: `redmine.local.json` + `servers.local.json` + `domain/compile-gate/` copied from main repo before Phase A (recurring friction, 3rd occurrence 2026-08-19) |
+| ⬜ | **Local `mvn compile` green on the FINAL tree before push** — show the `BUILD SUCCESS` line, not an exit code |
+
+**Deferred builds (todo)**: `status --verify` (state-vs-origin drift, I hand-edited state 2× on 2026-08-19) · extend `release-mlk-plp-push-gate` to block manual `git push origin mlk/master` (V8 breach class).
+
 ## Hard rules
 
 - **PLP-only** — etanah-awam/teknikal/common are OUT of scope for this skill.
