@@ -165,3 +165,16 @@
 - **Base-branch deviation (miya flagged)**: I branched v2 off `int-env` (not master) to keep Aaron's content → it's an int-env-only patch; release path = original `mlk/esokongan/274532` (already `jc=both`).
 - **Prevention built**: `quest/verify-docx-across-refs.ps1` — destination-branch binary-template verify (proves bytes, NOT pagination — pair with a render check).
 - **Phase 1 CLOSED**, local test PASS (miya, MLIT `PTMLK/02/L/PLTP/2026/3`). ⚠️ Redmine still `Rework` — needs status update + planned-release listing.
+
+---
+
+## 2026-08-19 (ADHOC-PT-2026-4) — PT SKM "Seterusnya" NPE = pelupusan-staff twin of QA-275152
+
+**BA-relayed adhoc (video `PT ralat.mp4`), MLKSTG, PT `PTMLK/02/L/PT/2026/26` (apl 3432839) @ NUR HAFIZAH BINTI SABRI, tugasan SKM.**
+
+- **Root cause (code+DB, 100%)**: clicking Seterusnya loads `MlkMaklumatPemohonForm` → `PelupusanMaklumatPemohonHelper.initPemohon():2194` runs `ttJson.get(KEY_TEMPAT_TINGGAL_ALAMAT).getAsString()` UNguarded, while sibling `tahunDari`/`tahunHingga` at `:2196-2205` ARE guarded. NPE when a `tempatTinggalList` residence row lacks the `tempatTinggalAlamat` key.
+- **DB proof (et_main_stg2)**: `umm_a_pihak_bkptg` a_pihak_bkptg_id 5571527 (ARIFF), `mklmt_tmbhn -> tempatTinggalList` = `[{}]` (blank residence row).
+- **miya's Q — is it QA-275475?** NO (proven): 275475 touched only `PelupusanService.java` (11-line pejabatPermohonan dead-write); NPE line last changed 2026-02-19 UAT-CR #237723.
+- **Family**: same root/urusan as **QA-275152** (AWAM "Sistem Papar Ralat") + ad-hoc A10. QA-275152's fix is the AWAM file `PelupusanMaklumatPemohonHelperForm.java:2855` → does NOT cover this pelupusan file. Register row **A19**.
+- **Delivered**: qa_doc `ADHOC-PT-2026-4/ADHOC-PT-2026-4.md` · A19 register row · handoff `Task 156\2. Fix\HANDOFF - ADHOC-PT-2026-4 (merge into QA-275152).md` (before/after code inline) · data-unblock + revert-to-`[{}]` scripts (pinned 5571527; MCP read-only, miya runs). Address reference `5, JLN` from the row's own `alamat`.
+- **Status**: diagnosed, awaiting Redmine # (bundle under QA-275152). Code guard `:2194` + build/repro owed.

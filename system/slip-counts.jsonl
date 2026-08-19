@@ -351,3 +351,11 @@
 {"ts":"2026-08-17T12:53:52.908Z","category":"A1"}
 {"ts":"2026-08-17T12:42:47.212Z","category":"process"}
 {"ts":"2026-08-17T12:43:59.764Z","category":"A5"}
+{"ts":"2026-08-18T09:55:35.721Z","category":"assume-not-verify"}
+{"ts":"2026-08-19T04:34:18.302Z","category":"housekeeping/memorycore-drift"}
+{"ts":"2026-08-19T04:43:43.262Z","category":"communication/unglossed-internal-reference"}
+{"ts":"2026-08-19T06:27:58.176Z","category":"process"}
+{"ts":"2026-08-19T06:36:08.821Z","category":"process"}
+{"ts":"2026-08-19T06:42:09.097Z","category":"A1"}
+{"ts":"2026-08-19T13:37:18.416Z","category":"A1"}
+{"ts":"2026-08-19T13:37:18.543Z","category":"A4"}
