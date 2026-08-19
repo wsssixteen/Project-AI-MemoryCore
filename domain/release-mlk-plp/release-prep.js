@@ -442,7 +442,11 @@ function cmdBumpCommon(a) {
     die(`BUMP-COMMON REFUSED — not a clean single common-version change (reverted).\nremoved: ${JSON.stringify(removed)}\nadded:   ${JSON.stringify(added)}`, 2);
   }
   git(st.repo, ['add', 'pom.xml']);
-  git(st.repo, ['commit', '-m', `common version set to: ${want} (from ${before})`]); // direction-neutral; upgrade OR downgrade
+  // Terminology-verbatim rule (2026-08-19): mirror the repo's ESTABLISHED wording, never invent.
+  // Upgrade → Aaron's exact phrase (d19b0b2b0a); downgrade → miya-approved "revert to" (2026-08-19).
+  const verb = cmpVer(want, before) >= 0 ? `common version increase to: ${want}`
+                                         : `common version revert to: ${want} (from ${before})`;
+  git(st.repo, ['commit', '-m', verb]);
   if (st.phase === 'verified' || st.phase === 'bumped') { st.phase = 'merged'; st.headSha = null; } // re-verify required
   saveState(st);
   log('bump-common', st.release, 'ok', { from: before, to: want });
@@ -515,6 +519,24 @@ function cmdMergeToMaster(a) {
 function cmdStatus(a) {
   const st = loadState(a.release);
   console.log(JSON.stringify(st, null, 2));
+  // --verify (2026-08-19, post-1.3.5 incident): state is a CACHE of git truth and was hand-edited
+  // twice during the incident. Compare against live origin refs; drift = loud flag, exit 2.
+  if (!('verify' in a)) return;
+  ensureRepo(st.repo);
+  git(st.repo, ['fetch', 'origin', '--quiet'], true);
+  const problems = [];
+  const remoteTip = (git(st.repo, ['rev-parse', `origin/${st.branch}`], true).stdout || '').trim();
+  if (!remoteTip) problems.push(`origin/${st.branch} does not exist`);
+  else if (st.headSha && remoteTip !== st.headSha) problems.push(`state headSha ${String(st.headSha).slice(0, 10)} != origin/${st.branch} ${remoteTip.slice(0, 10)}`);
+  if (st.phase === 'merged-to-master') {
+    const inMaster = git(st.repo, ['merge-base', '--is-ancestor', `origin/${st.branch}`, 'origin/mlk/master'], true).status === 0;
+    if (!inMaster) problems.push(`phase=merged-to-master but origin/${st.branch} is NOT an ancestor of origin/mlk/master`);
+  }
+  if (problems.length) {
+    console.error(`\n🚨 STATE-VS-GIT DRIFT:\n  - ${problems.join('\n  - ')}\nThe state file is stale or hand-edited — reconcile it against git truth before running any command.`);
+    process.exit(2);
+  }
+  console.log('\n✅ state matches origin (headSha + phase ancestry verified)');
 }
 
 const a = parseArgs(process.argv.slice(2));
