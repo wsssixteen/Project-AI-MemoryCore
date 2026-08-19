@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- compile-gate local toolchains — maps the etanah build's JDK-1.8 toolchain requirement to an
+     available JDK so `mvn compile` can run in Ruri's shell (which has no JDK 8 at E:\Java\java8,
+     only a JRE 8 + JDK 17). Passed via `mvn -t <this>` so it NEVER touches miya's global ~/.m2.
+     Purpose = catch compile errors (cannot find symbol) pre-commit; not a production build. -->
+<toolchains>
+  <toolchain>
+    <type>jdk</type>
+    <provides>
+      <version>1.8</version>
+    </provides>
+    <configuration>
+      <jdkHome>C:\Program Files\Java\jdk-17</jdkHome>
+    </configuration>
+  </toolchain>
+  <toolchain>
+    <type>jdk</type>
+    <provides>
+      <version>11</version>
+    </provides>
+    <configuration>
+      <jdkHome>C:\Program Files\Java\jdk-17</jdkHome>
+    </configuration>
+  </toolchain>
+</toolchains>
