@@ -184,6 +184,16 @@ assigned_to_me=2026-08-14
 current_phase=Apply
 notes=2026-08-19: bundled fix with QA-276181 (same template, release under 275505). Java fixes applied (populateKeadaanTanah + populateLuasSyor); template edit BLOCKED by open Word instance (miya has TemplateKertasPertimbanganPentadbirTanah_PPTPB.docx open)
 
+qa=QA-275501
+quest_start_ts=2026-08-19T06:18:13.700Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\152. INTERNAL ISSUE (PROD) #275501 - Pelupusan - PRBB - Papar ralat bila klik pada tugasan di dashboard
+phase=0 - Recon+Rubric done (sweep W1+W2 2026-08-17); A12 family. 2026-08-19: STG patch script prepared (patch-275501-stg.sql, SCRIPT-CHECK 5/5, columns live-verified vs mlit). Owed: miya run on stg2 (MCP down this session) -> PROD; code null-guard :367/:369; 2nd BA ask (Maklumat Tapak blank) needs stg2 trace
+status=hold
+ticket_type=bug
+env=Pelupusan > PRBB > Papar ralat bila klik pada tugasan di dashboard
+issue_one_liner=Pelupusan > PRBB > Papar ralat bila klik pada tugasan di dashboard
+assigned_to_me=2026-08-14
+
 qa=QA-275009
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\144. ESOKONGAN #275009 - Pelupusan - Tugasan - Semakan-Pengesahan Minit Bebas- Tidak papar meda
 phase=0 - W5 blind re-derivation (2026-08-17) CONFIRMS W4 audit on all 3 issues; BLOCKED on 2 BA-Qs (239236-conflict for Issue 1; PRBB+first-slot-jawatan for Issue 3); no fix built
