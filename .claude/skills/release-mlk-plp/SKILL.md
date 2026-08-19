@@ -171,10 +171,18 @@ node domain/release-mlk-plp/release-prep.js verify --release <ver>   # ✓-table
 #   🛑 V3: みや nods the verify table
 
 #   ── BUMP-COMMON — ONLY when recon returned COMMON-VER with the bump NOT on the release ──
-node domain/release-mlk-plp/release-prep.js bump-common --release <ver> --common 1.0.129-MLK
-#     ONE pom line: <etanah.common.version>; commits "common version increase to: <x>-MLK".
-#     ⚠️ The --common value comes from redmine-recon's COMMON-VER verdict — NEVER invented.
+node domain/release-mlk-plp/release-prep.js bump-common --release <ver> --common 1.0.129-MLK --db-domain <DB V_DOMAIN>
+#     ONE pom line: <etanah.common.version>; commits "common version set to: <x> (from <y>)" (direction-neutral).
+#     🚨 VERSION-COMPAT GATE (added 2026-08-19, runCompatGate): BLOCKS unless the target common's
+#        transitive etanah-domain ≤ DB V_DOMAIN AND matches the PREVIOUS release's domain. So:
+#        --db-domain = SELECT nilai_parameter FROM rjk_parameter_sistem WHERE kod='V_DOMAIN' (per env).
+#        The --common value is NOT trusted from recon/BA-word alone — the gate validates it. Override an
+#        intentional domain change with --domain-ack "<reason>".  (root cause: 1.3.5 shipped 1.2.1/domain 1.0.5 > DB 1.0.4)
 #     ⚠️ This RESETS phase to merged → re-run `verify` before push (the eval pins this).
+# 🚨 STALE-MASTER GATE (added 2026-08-19, at `branch`): REFUSES if the previous release branch is NOT an
+#    ancestor of origin/mlk/master — i.e. its Phase-F merge-back was skipped and master is stale. Fix = run
+#    `merge-to-master --release <prev> --ba-approved` first, or override with --stale-master-ack "<reason>".
+#    (root cause of 1.3.5: 1.3.4 never merged to master → branched off 1.3.3-era master, lost 1.1.17 + 5 tickets.)
 
 node domain/release-mlk-plp/release-prep.js verify --release <ver>   # again, if common bumped
 node domain/release-mlk-plp/release-prep.js bump-version --release <ver>
@@ -196,22 +204,17 @@ The `release-mlk-plp-push-gate` hook additionally blocks any MANUAL `git push` o
 
 **Emit this card (values substituted) once `push` succeeds — then STOP.**
 
-🚨 **NO CODE FENCES ANYWHERE IN THE CARD — plain text lines only** (2026-07-20 per みや, corrected
-twice in one release). First shape was one big fence: *"do not share inside this thing, it is hard
-to copy line by line"* — one copy button for fifteen lines. Second shape was one fence per command;
-still rejected: *"Again, stop using that code block, just showing it in lines in your normal text."*
-**The rule**: every command is a normal text line with the command in `inline backticks`. No ``` at
-all. Labels and "wait for X" notes are ordinary sentences. Sheet values go in a TABLE (per-cell
-copy). A fenced block in a hand-off card is now a slip shape — `emit-shape-not-copyable`.
+🚨 **EVERY command that みや RUNS goes in its OWN ```bash fenced block — one command per block, so each gets its own copy/run button** (CORRECTED 2026-08-19 per みや, ~10th ask; supersedes the 2026-07-20 "no fences / inline backticks" rule, which was WRONG for THIS app — its fenced `bash` blocks render a copy button). **The rule**:
+- One command → one ```bash block. NEVER one fence wrapping multiple commands (that gives one button for many lines — the original complaint). NEVER plain inline backticks for a run-command (no button — the current complaint).
+- Labels, "wait for X" notes, and prose stay as ordinary text lines OUTSIDE the fences.
+- Sheet values go in a TABLE (per-cell copy).
+- A run-command NOT in its own ```bash block is the slip shape `emit-shape-not-copyable`.
 
 **Card shape:**
 
 Baseline <ver> — branch ready ✓ pushed ✓ (<sha>)
 
-🚨 **NEVER start an inline command with `./`** (2026-07-20 per みや). The renderer auto-linkifies a
-leading `./`, so `./deploy-pelupusan.sh` becomes a hyperlink and copying it drags link markup along.
-**Use the `bash <script>` form instead** — `bash deploy-pelupusan.sh` is identical to run and copies
-clean. Same for any other leading-dot path in a command line. Slip shape: `emit-shape-not-copyable`.
+🚨 **NEVER start a command with `./`** (2026-07-20 per みや) — the renderer auto-linkifies a leading `./`, dragging link markup into the copy. Use the `bash <script>` form (`bash deploy-pelupusan.sh`), identical to run, copies clean. Same for any other leading-dot path.
 
 **B2 · CONFIRM THE MERGES (みや's own 10-second check, added 2026-07-31 per みや)** — one line,
 runs from ANY directory, PowerShell or Git Bash, no `cd` needed (`-C` sets the repo):
