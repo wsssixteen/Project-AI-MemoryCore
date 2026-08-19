@@ -468,6 +468,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\spawn-telemetry\\\\spawn-telemetry.check.hook.js\""
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\bpmn-check\\\\bpmn-check.check.hook.js\""
+          }
+        ]
       }
     ]
   },

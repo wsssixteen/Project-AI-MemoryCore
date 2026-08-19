@@ -351,3 +351,8 @@
 {"ts":"2026-08-17T12:53:52.908Z","category":"A1"}
 {"ts":"2026-08-17T12:42:47.212Z","category":"process"}
 {"ts":"2026-08-17T12:43:59.764Z","category":"A5"}
+{"ts":"2026-08-19T04:05:17.042Z","category":"bpmn-var-semantics-unproven"}
+{"ts":"2026-08-19T04:05:17.174Z","category":"analog-outranked-ba-verbatim"}
+{"ts":"2026-08-19T04:05:17.342Z","category":"bare-el-null-crash"}
+{"ts":"2026-08-19T04:05:17.537Z","category":"bpmn-check-born"}
+{"ts":"2026-08-19T04:25:58.702Z","category":"tugasan-resolution-skipped"}
