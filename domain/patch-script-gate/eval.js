@@ -15,8 +15,17 @@ try { fs.mkdirSync(TMP, { recursive: true }); } catch (_) {}
 const PAD = ' padding'.repeat(30); // clear the hook's 200-char short-reply guard
 const SM = '\nStage-Match Block: revert-shape.'; // satisfies CHECK 2
 
-// Each fixture: reply text + which checks SHOULD fire (c1 outcome, c2 stage-match, c3 broad-LIKE, c4 ind_-delete).
+// Each fixture: reply text + which checks SHOULD fire (c1 outcome, c2 stage-match, c3 broad-LIKE, c4 ind_-delete, c5 display-col).
+const ANN = '\n-- 1 row updated'; // satisfies CHECK 1 so c5 fixtures isolate CHECK 5
 const F = [
+  // CHECK 5 — display-column verification (the QA-275009 perihal miss)
+  { n: 'ind nama only (THE MISS, c5)', c5: true,  t: "```sql\nUPDATE ind_tgsn SET nama = 'Semakan Minit Bebas' WHERE tgsn_id = 5134754 AND kod = 'SMB';" + ANN + "\n```" },
+  { n: 'rjk label only (c5)',          c5: true,  t: "```sql\nUPDATE rjk_negeri SET nama = 'MELAKA' WHERE negeri_id = 4;" + ANN + "\n```" },
+  { n: 'ind nama+perihal both (safe)', c5: false, t: "```sql\nUPDATE ind_tgsn SET nama = 'Semakan Minit Bebas', perihal = 'Semakan Minit Bebas' WHERE tgsn_id = 5134754;" + ANN + "\n```" },
+  { n: 'ind nama + verify marker',     c5: false, t: "The grid reads perihal — verified.\n```sql\nUPDATE ind_tgsn SET nama = 'Semakan Minit Bebas' WHERE tgsn_id = 5134754;" + ANN + "\n```" },
+  { n: 'ind nama + skip-display token', c5: false, t: "```sql\nUPDATE ind_tgsn SET nama = 'X' WHERE tgsn_id = 5134754;" + ANN + "\n```\n[skip-display-col: grid reads nama, grepped xhtml]" },
+  { n: 'ind non-label col (turutan)',  c5: false, t: "```sql\nUPDATE ind_tgsn SET turutan = 5 WHERE tgsn_id = 5134754;" + ANN + "\n```" },
+  { n: 'umm_a nama (not ref, c5 off)', c5: false, t: "```sql\nUPDATE umm_a_pihak_bkptg SET nama = 'X' WHERE a_pihak_bkptg_id = 1;" + ANN + "\n```\nStage-Match Block: revert-shape." },
   // CHECK 3 — broad LIKE (also c4 because target is ind_*)
   { n: 'DELETE ind LIKE A%',          c3: true,  c4: true, t: "```sql\nDELETE FROM ind_permit_lesen WHERE no_permit_lesen LIKE 'A%';\n-- 3 rows deleted\n```" + SM },
   { n: 'DELETE ind LIKE %2026',       c3: true,  c4: true, t: "```sql\nDELETE FROM ind_versi_permit_lesen WHERE kod LIKE '%2026';\n-- 1 rows deleted\n```" + SM },
@@ -51,11 +60,11 @@ function runHook(text) {
 let pass = 0, fail = 0; const rows = [];
 for (const f of F) {
   const out = runHook(f.t + PAD);
-  const got = { c1: /CHECK 1/.test(out), c2: /CHECK 2/.test(out), c3: /CHECK 3/.test(out), c4: /CHECK 4/.test(out) };
-  const exp = { c1: !!f.c1, c2: !!f.c2, c3: !!f.c3, c4: !!f.c4 };
-  const ok = ['c1', 'c2', 'c3', 'c4'].every(k => got[k] === exp[k]);
+  const got = { c1: /CHECK 1/.test(out), c2: /CHECK 2/.test(out), c3: /CHECK 3/.test(out), c4: /CHECK 4/.test(out), c5: /CHECK 5/.test(out) };
+  const exp = { c1: !!f.c1, c2: !!f.c2, c3: !!f.c3, c4: !!f.c4, c5: !!f.c5 };
+  const ok = ['c1', 'c2', 'c3', 'c4', 'c5'].every(k => got[k] === exp[k]);
   ok ? pass++ : fail++;
-  rows.push(`${ok ? 'PASS' : 'FAIL'}  ${f.n.padEnd(28)}  exp[${['c1','c2','c3','c4'].map(k => k + '=' + (+exp[k])).join(' ')}]  got[${['c1','c2','c3','c4'].map(k => k + '=' + (+got[k])).join(' ')}]`);
+  rows.push(`${ok ? 'PASS' : 'FAIL'}  ${f.n.padEnd(28)}  exp[${['c1','c2','c3','c4','c5'].map(k => k + '=' + (+exp[k])).join(' ')}]  got[${['c1','c2','c3','c4','c5'].map(k => k + '=' + (+got[k])).join(' ')}]`);
 }
 console.log(rows.join('\n'));
 console.log(`\n${pass}/${pass + fail} passed` + (fail ? `  — ${fail} FAILED` : '  — ALL GREEN'));

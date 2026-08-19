@@ -1,5 +1,51 @@
 # Current Session
 
+## 2026-08-19 — Selangor Oracle MCP built + Selangor upload-not-reflect investigation (side-task, no Melaka quest)
+
+**Session shape: miya "create a db connection for oracle — Selangor project" → built oracle-slt MCP (proven live) → "retrieve a working CAS login" → pulled users, no shared default password → "where do I check Selangor pelupusan code" → mapped Selangor+Terengganu checkouts → colleague upload issue (Selangor SenaraiSemakPTGForm "tak reflect, no error") → traced code, ranked suspects → DE. Worktree claude/oracle-db-etanah-selangor-5f9c75.**
+
+### Oracle MCP `oracle-slt` — BUILT + PROVEN LIVE
+- Target: Selangor Etanah Oracle **19.3.0**, host `172.16.93.32:1521`, service **SLIT**, schema **ET_MAIN_DEV**, user `et_main_dev` / `etanah123` (same convention as Melaka).
+- Stack: `python-oracledb` THIN mode (no Oracle client) + `mcp<2` (FastMCP). mcp 2.0 removed `mcp.server.fastmcp` → pinned `<2`.
+- Files: `C:\Users\Ridhwan\AppData\Local\oracle-mcp\server.py` (+ venv beside). Tools: `query_database`, `get_schema_info`, `list_tables`.
+- Registered in `C:\Users\Ridhwan\.claude.json` mcpServers as `oracle-slt` (backup `.claude.json.bak_pre_oracle_slt_add_2026-08-18`).
+- ✅ CONFIRMED live: connectivity test returned schema/db, count query `pcp_pengguna flag_aktif='Y'` = 231565; MCP tools loaded this session (mcp__oracle-slt__* appeared after resume).
+
+### Selangor CAS login retrieval (pcp_pengguna)
+- Login col = `NAMA_PENGGUNA`; active-internal filter `flag_aktif='Y' AND flag_capaian_dalaman='Y'`. `admin` account active (2026-08-18).
+- ⚠️ NO shared default password — each `kata_laluan2` hash unique (top hash shared by only 2). Cannot hand a password; needs miya's known admin pw OR a reset (hash algo unconfirmed).
+
+### Selangor + Terengganu checkouts (NEW knowledge)
+- `E:\Projects\Selangor\etanah-pelupusan` — branch `master`, remote `ssh://git@172.16.93.167/etanah-pelupusan`, only pelupusan checked out (no common/awam). Trunk base = plain `master` (NOT mlk/master — branch-guard hook false-positives here).
+- `E:\Projects\Terengganu\etanah-pelupusan` also present. TRG stays hard-excluded.
+
+### Colleague upload issue — Selangor `SenaraiSemakPTGForm` "boleh upload tapi tak reflect, no error"
+- Screenshot was Terengganu (`tgit.terengganu.gov.my/etanah-pelupusan/.../SenaraiSemakPTGForm.xhtml`); miya redirected → check Selangor's same form.
+- VERIFIED (code): upload handler `E:\Projects\Selangor\etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\web\form\common\SenaraiSemakPTGForm.java:185-213` adds downloadVo to `senaraiSuratVO.getDocumentList()` at :212 UNCONDITIONALLY (DMS `create()` :207 return only sets tempId → DMS failure would NOT cause "tak reflect").
+- SUSPECTS (HYPOTHESIS, not repro'd): (1) `SenaraiSemakPTGForm.xhtml:24` `rowKey="#{item}"` + `PelupusanSuratVO` (`vo\PelupusanSuratVO.java:14`)→`BaseFileUploadVO` (Melaka common `BaseFileUploadVO.java:68`) has NO equals/hashCode = identity → row match breaks if `initSenaraiDokumen():217` re-fires on postback. (2) `immediate="true"` on auto fileUpload skips phases before `update=":suratTable"`.
+- NEXT: needs LIVE repro (Selangor app + login) to pick suspect; or fast diff vs working Melaka `MlkSenaraiSemakPTGForm.xhtml`. No fix applied.
+## 2026-08-19 — PPJK warta display adhoc (A18) + adhoc-lifecycle feature build + system-design Rule 11
+
+**Session shape: miya screen-report (PPJK e-Mohon warta papar 1 rekod) → code+DB trace → adhoc A18/ADHOC-PPJK-2026-1 → long planning arc on adhoc reconciliation → built domain/adhoc-lifecycle (the archiver) → system-design Rule 11 (state-awareness) → DE. Worktree claude/warta-85-display-issue-14b1ef.**
+
+### ADHOC-PPJK-2026-1 (A18) — PPJK e-Mohon Senarai Warta papar 1 rekod
+- Symptom: No.Warta NO.85/29-03-2007 → e-Mohon papar 1 (Lot 7324), Carian Pintas papar 2 (Lot 7263+7324).
+- Root (code+DB, 100%): `et_main.ind_rizab` 2 rows (1553/7263 PA25659, 1554/7324 PA25661, both SR_KTKUASA Y). Repository `AwamRizabRepository.java:18` returns List; **BUG** `PelupusanService.findMaklumatPerizabanVOByNoWartaAndTarikhWarta():10232-10285` for-loop reassigns `vo` each iteration, `return vo` = last only. Form `AwamSemakanKewujudanRizabForm.onSearchWarta():60-76` adds single VO.
+- Downstream: `onGoNext():89-96` saves only `maklumatWartaVOList.get(0)` → **BA-Q owed**: 1 vs multi lot per permohonan (decides fix scope). Baseline mlk/master d9441886b8. qa_doc: ADHOC-ppjk-warta-single-record/.
+- Owed: BA raises ticket → append # to A18; answer BA-Q; then code fix (return List) + build/repro.
+
+### Built: domain/adhoc-lifecycle/ (the adhoc-register ACT side / the parked archiver)
+- CLI match/promote/archive/unarchive/sweep + Door B weekly SessionStart surfacer (boot not DE — Rule 8). 14/14 eval green; live-smoke matched A18 by warta on real register.
+- Match keys: permohonan/aplikasi (exact) → warta+tarikh pair → lesen/resit/hakmilik/kp. Never deletes; all moves reversible via unarchive. Ships log.jsonl (Rule 5) + NUKE-MARKER (Rule 9) + STATE-SCOPE:yes (Rule 11).
+- Standard header `## Issue Summary` + `## Match Keys` added to register doc + retrofit into PPJK doc (the join column Door A reads).
+
+### system-design Rule 11 (state/tenant-awareness)
+- Any Feature touching a per-state artifact must parameterize the state + emit a README STATE-SCOPE line. Trigger: `adhoc-register.check.hook.js:26` hardcodes the melaka register path. SKILL.md v2.5.
+
+### Housekeeping audit (banked to slips.jsonl)
+- active/ has 104 dirs (≥6 closed, never archived) · 158 worktrees unpruned · main/ dupes (current-session ×3, todo ×3). Root: no atomic archiver → adhoc-lifecycle now supplies it.
+- 3 slips: housekeeping/memorycore-drift · communication/unglossed-internal-reference (miya banned bare "A18") · feature proposal.
+
 ## 2026-08-19 — QA-275505+276181 bundled Apply (template + populators) · 2 forge features · QA-275501 Phase 2
 
 **Session shape: morning briefing/plan → /quest resume 275505 + Phase 0 276181 (bundle, release under 275505) → 2 Java fixes applied compile-green → template edits BLOCKED by miya's open Word → feature ask → forge-birthed template-cc-preflight + feature-creation (evals 5/5+5/5) → 275501 Phase 1+2 close+archive → DE. Worktree claude/todays-tickets-planning-938f04.**
@@ -40,24 +86,3 @@
 
 ### ▶▶ NEXT (ADHOC-OPRBB-2026-1)
 - Under another Redmine ticket (number TBD by miya). When numbered: link + do the code fix at PelupusanLiteService.java:1080 + backfill 4 remaining OPRBB rows. Archived 2026-08-19.
-
----
-
-## 2026-08-18 — QA-275475 PLPS "Tiada Rekod Bayaran/Resit" (flowable StaleObjectStateException) → fixed + int-env + Phase 1 closed
-
-**Session shape: /quest resume 275475 (fresh retrieve — not drafted, absent from active.txt) → Scout+Recon+Rubric → fix applied + build-verified → commit + int-env deploy → miya ran fresh PLPS submit (works) → 100% data-loss verification → Phase 1 close → DE. Worktree claude/quest-275475-resume-5aa23e.**
-
-### The issue (issue #2 ONLY — Anis routed to miya)
-- ESOKONGAN #275475: PLPS `PTMLK/02/L/PLPS/2026/17` "Tidak Papar No Resit" in Carian Dokumen. Dev Hasil (Nor Sakinah) traced: data saved until BayaranFi only, flowable submit failed with `StaleObjectStateException` on `Aplikasi#3433478`. **Issue #1 (batal /17) = Hasil team, NOT ours.**
-
-### Root cause (VERIFIED code)
-- Flowable serviceTask `mlkPelupusanPermohonanService` (`MLK_PLP_PLPS.bpmn20.xml:102`, targets etanah-pelupusan) → `MlkPelupusanPermohonanServiceTask.process():28` → `PelupusanService.populatePejabatPermohonanAplikasi():8651` did `crudService.save(aplikasi)` at `:8672` — an UNNECESSARY write of the derived key `pjbtPermohonan` into `mklmt_tmbhn`. A concurrent tx bumped the Aplikasi version → `StaleObjectStateException` → flowable submit rollback → no receipt row → "Tiada Rekod Bayaran". **NOT AWAM code** (miya asked — the AWAM handoff is the separate `:6` `mlkSpocIntegrationService` serviceTask).
-
-### Fix (commit `9b2d222` → int-env `ddca103`)
-- Removed dead-write block `etanah-pelupusan\...\PelupusanService.java:8663-8672` (−11 lines). Method now computes+returns pejabat only. `mvn compile` = BUILD SUCCESS (pom needs a **JDK17** toolchain, not JDK8 — the `E:\Java\java8` error was a stale global toolchains ref). Branch `mlk/esokongan/275475` → merged `mlk/int-env` `ddca103` (delta = only PelupusanService.java).
-
-### Verification (miya /goal, 100%)
-- miya ran fresh PLPS `PTMLK/01/L/PLPS/2026/40` (3408548), receipt `260818BSAT00020` — **No. Resit shows**. Data-loss: `2026/40` `mklmt_tmbhn={"adalahe2e":true}` vs siblings `{"adalahe2e":true,"pjbtPermohonan":"PDT"}` — differs by EXACTLY the one derived key. `pjbtPermohonan` = **0 readers** across 4 repos (grep: 2 constant defs only, both write-only; the write is a recomputable cache of office PTG/PDT). **No PLPS data lost.**
-
-### ▶▶ NEXT (275475)
-- Phase 2 (later): Redmine #275475 → Resolved + planned-release list (int-env only, NOT master); archive folder+block. Redmine still In Progress (our code side done; BA verification pending). Root-cause comment for user (miya-approved shape): "two system processes update the same record at the same instant → DB lock clash (race condition) → submission fails; fix removes the redundant update."
