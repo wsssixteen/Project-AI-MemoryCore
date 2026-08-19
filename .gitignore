@@ -73,3 +73,15 @@ domain/quest-bounty/.verify-notified
 
 # compile-gate session-local compile markers — regenerated, never content
 .claude/state/compile-ok-*.json
+
+# ── OneDrive/worktree churn fix (2026-08-19, per みや after repeated archive friction) ──
+# The repo lives INSIDE OneDrive with ~30 concurrent worktrees. These three files are
+# machine-written every boot/session (not hand-authored) and were the perennial "M ..."
+# lines blocking every archive + causing lost-block merges. OneDrive already syncs their
+# content across machines; git-tracking them on top just creates the conflict. Untracked =
+# they never surface at commit again. Durable quest truth = Redmine + per-quest qa_docs;
+# active.txt is working memory that "rots" by design (open-quest-surfacer rebuilds from Redmine).
+# slip-dashboard.md regenerates via `node core/slips.js dashboard`; watchlist.jsonl is boot telemetry.
+quest/active.txt
+system/claude-md-watchlist.jsonl
+system/slip-dashboard.md
