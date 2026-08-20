@@ -1,5 +1,22 @@
 # Current Session
 
+## 2026-08-20 — "Finish all in-progress tickets": PPTPB bundle (275505+276181+276182) + PT NPE (276422) CLOSED + deployed to int-env
+
+**Session Recap for next start**: 4 tickets closed + deployed to `mlk/int-env` (BA testing). Branches pushed: `mlk/esokongan/275505` (eae4c59d0a — 275505+276181+276182 doc: Jenis Tanah CC move + Keadaan tanah populate + Meter Persegi + Arial 11 + remove `<ID PERMOHONAN>`), `mlk/esokongan/276182` (d15563430e Tajuk-luas stage-aware code + **6db3725b0c backward-compat overload**), `mlk/internal/276422` (cdb242bf09 PT SKM NPE null-guard). int-env tip `e5d2994b73`. **NOT on mlk/master** — Redmine planned-release list still owed for all 4.
+
+### What shipped (per ticket)
+- **275505** PPTPB Kertas Pertimbangan: (Java) `PelupusanWordCCMethodConstant.populateKeadaanTanah:3175` delegate to `populateTanahTek` + prefix "tanah "; (docx) 4 `status<Arah>` CCs moved from No.Lot/PT cell → Jenis Tanah 2700-dxa cell.
+- **276181** PPTPB: (Java) `populateLuasSyor:15224` unit `.toUpperCase()` → `PelupusanUtil.captializeOnlyAllFirstLetter` (→ "Meter Persegi"); (docx) styles.xml docDefaults Times→Arial + Normal sz 24→22 (Arial 11).
+- **276182** PPTPB Tajuk Risalat: (docx) removed literal `<ID PERMOHONAN>` para; (Java) `MlkMaklumatTanahLesenPendudukanForm.initMaklumatRisalat` placeholder-only refresh + extracted `generateDefaultRisalatByUrusan()`; `generateDefaultRisalatPPTPB` made stage-aware (`useDipohonLuas` = tugasan==SKM → dipohon; PKPPT/PRMMKNPDT onward → siasatan/disyor).
+- **276422** PT SKM Seterusnya NPE: `PelupusanMaklumatPemohonHelper.initPemohon:2192` null-guard on `KEY_TEMPAT_TINGGAL_ALAMAT` (= ADHOC-PT-2026-4).
+
+### Load-bearing lessons this session
+- **compile-gate caught a would-be mlit outage**: int-env had a 2nd caller `MlkKertasTemplateForm.java:1729` (4-arg `generateDefaultRisalatPPTPB`) that master lacks; my breaking 5-arg signature change failed the int-env build. Fix = additive **4-arg overload** (default `false`=disyor, correct for the doc-gen caller) — added to the 276182 branch too so master stays consistent. A blind push would have taken mlit down (QA-275456 class).
+- **cherry-pick, not merge, for a diverged int-env** (878 ahead / 18 behind master): merge dragged in unrelated `MlkSuratTemplateForm`/`pom.xml` conflicts from the master-catch-up delta; cherry-picking our 4 commits applied only our changes clean.
+- **board = Redmine first, not active.txt**: opened by listing ~14 "open" from active.txt incl. Redmine-closed 274740; miya caught it. Banked `feedback_board_from_redmine_first.md`.
+- **stray hunk in a recovered stash**: `stash@{0}` (275505 Java) carried an undocumented `SRT_SN_JPPH` filter removal at `:7811` — miya caught it in the diff; reverted to HEAD.
+- commit-approval flag failed to auto-write (approval fired before `local_test_confirmed` set) → recorded manually per branch.
+
 ## 2026-08-19 — QA-274914 Phase 1 close (eSOKONGAN PPTPB Pembetulan → all 12 BPMN) + bpmn-check verify
 
 **Resume QA-274914 → triple-check all 12 fix-folder BPMN via bpmn-check → PSBS out-map gap found+fixed+reverified → PRBB PROD-safety confirmed → Phase 1 close → DE. Worktree `ticket-274914-ba-alignment-b14884`.**
