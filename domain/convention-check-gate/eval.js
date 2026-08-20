@@ -32,6 +32,7 @@ function runHook(inputObj) {
     input: JSON.stringify(inputObj),
     encoding: 'utf8',
     timeout: 15000,
+    env: { ...process.env, CLAUDE_PROJECT_DIR: path.resolve(__dirname, '..', '..') }, // lib resolution for the sandboxed copy (2026-08-21)
   });
   let out = null;
   if (r.stdout && r.stdout.trim()) {
@@ -75,7 +76,10 @@ const results = [];
 
 // ── Fixture 3: same + bypass token → allow ──
 {
-  const t = writeTranscript('t3.txt', 'audit context. [skip-convention-check: test] proceeding.\n');
+  // new bypass contract (2026-08-21): token counts only in current-turn ASSISTANT text (JSONL)
+  const t = writeTranscript('t3.txt',
+    JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'text', text: 'do it' }] } }) + '\n' +
+    JSON.stringify({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'text', text: 'audit context. [skip-convention-check: test] proceeding.' }] } }) + '\n');
   const r = runHook({ tool_name: 'Edit', tool_input: { file_path: JAVA_FILE }, transcript_path: t });
   const hso = r.out && r.out.hookSpecificOutput;
   const pass = !!(hso && !hso.permissionDecision &&

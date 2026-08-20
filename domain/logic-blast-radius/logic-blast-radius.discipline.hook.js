@@ -81,8 +81,8 @@ process.stdin.on('end', () => {
       process.exit(0);
     }
 
-    // Bypass token
-    if (/\[skip-logic-blast:/i.test(transcript)) {
+    // Bypass token — current-turn assistant text only (2026-08-21 self-disarm fix)
+    if ((function(){ try { return require((process.env.CLAUDE_PROJECT_DIR || require('path').resolve(__dirname, '..', '..')) + '/lib/bypass-scope.js').bypassInCurrentTurn; } catch (_) { return function () { return false; }; } })()(data.transcript_path, /\[skip-logic-blast:/i)) {
       logFire('bypassed', { file: filePath });
       process.exit(0);
     }

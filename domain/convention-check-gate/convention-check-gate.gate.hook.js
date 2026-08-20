@@ -48,6 +48,7 @@ const LOG = path.resolve(__dirname, 'log.jsonl');
 // Markers proving a convention-check happened this session (any one suffices)
 const ANALOG_CITED = /←\s*sibling|\bsibling\b[^\n]{0,90}\b[\w/.\\-]+\.\w+:\d+|\banalog\b[^\n]{0,90}:\d+|\bconvention\b[^\n]{0,90}:\d+|\bmirror(?:s|ed|ing)?\b[^\n]{0,90}:\d+/i;
 const BYPASS = /\[skip-convention-check:/i;
+let bypassInCurrentTurn; try { bypassInCurrentTurn = require((process.env.CLAUDE_PROJECT_DIR || require('path').resolve(__dirname, '..', '..')) + '/lib/bypass-scope.js').bypassInCurrentTurn; } catch (_) { bypassInCurrentTurn = function () { return false; }; } // env-first + fail-CLOSED (bypass ignored if lib unreachable) — 2026-08-21 self-disarm fix
 
 function logFire(action, detail) {
   try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), action, detail }) + '\n'); } catch (_) {}
@@ -166,7 +167,7 @@ process.stdin.on('end', () => {
         logFire('fail-open', filePath); // can't read transcript → advisory only
         return emitAdvisory();
       }
-      if (BYPASS.test(transcript) || ANALOG_CITED.test(transcript)) {
+      if (bypassInCurrentTurn(data.transcript_path, BYPASS) || ANALOG_CITED.test(transcript)) {
         logFire('allowed', filePath); // analog citation present → proceed (+ reminder)
         return emitAdvisory();
       }
@@ -201,7 +202,7 @@ process.stdin.on('end', () => {
       const JOIN_RE = /\b(?:INNER|LEFT|RIGHT|FULL|CROSS|NATURAL)?\s*(?:OUTER\s+)?JOIN\b/i;
       let transcript = '';
       try { transcript = fs.readFileSync(data.transcript_path, 'utf8'); } catch (e) { /* fail-open */ }
-      if (JOIN_RE.test(code) && !BYPASS.test(transcript) && !BYPASS.test(body)) {
+      if (JOIN_RE.test(code) && !bypassInCurrentTurn(data.transcript_path, BYPASS) && !BYPASS.test(body)) {
         logFire('blocked-join', filePath);
         process.stdout.write(JSON.stringify({
           hookSpecificOutput: {

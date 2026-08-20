@@ -81,7 +81,8 @@ process.stdin.on('end', () => {
     let transcript = '';
     try { transcript = fs.readFileSync(data.transcript_path, 'utf8'); } catch { process.exit(0); }
 
-    if (/\[skip-context-load:/i.test(transcript)) process.exit(0);
+    // current-turn assistant text only (2026-08-21 self-disarm fix)
+    if ((function(){ try { return require((process.env.CLAUDE_PROJECT_DIR || require('path').resolve(__dirname, '..', '..')) + '/lib/bypass-scope.js').bypassInCurrentTurn; } catch (_) { return function () { return false; }; } })()(data.transcript_path, /\[skip-context-load:/i)) process.exit(0);
 
     const active = inFocusOpenQuest(parseAllBlocks(), transcript);
     if (!active || !active.qa) process.exit(0);

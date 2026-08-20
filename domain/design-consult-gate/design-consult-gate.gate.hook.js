@@ -130,6 +130,10 @@ function detectNewSymbol(oldStr, newStr) {
   return newSyms.length ? newSyms.join(', ') : null;
 }
 
+// Bypass tokens are only valid when *I deliberately write them* — an ASSISTANT text
+// block in the CURRENT turn. Shared primitive (2026-08-21 self-disarm fix, 8 gates).
+let bypassInCurrentTurn; try { bypassInCurrentTurn = require((process.env.CLAUDE_PROJECT_DIR || require('path').resolve(__dirname, '..', '..')) + '/lib/bypass-scope.js').bypassInCurrentTurn; } catch (_) { bypassInCurrentTurn = function () { return false; }; } // env-first + fail-CLOSED (bypass ignored if lib unreachable) — 2026-08-21 self-disarm fix
+
 let input = '';
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
@@ -144,7 +148,7 @@ process.stdin.on('end', () => {
 
     if (!isGuarded && !isEtanah) process.exit(0);
 
-    // Read transcript for skill invocations + bypass tokens
+    // Read transcript for skill invocations (session-wide by design)
     let convo = '';
     try { convo = fs.readFileSync(data.transcript_path || '', 'utf8'); } catch (_) { convo = ''; }
 
@@ -152,7 +156,7 @@ process.stdin.on('end', () => {
     const hasSD = convo.includes('Launching skill: system-design') || /"skill"\s*:\s*"system-design"/.test(convo);
     const hasSR = convo.includes('Launching skill: system-rules')  || /"skill"\s*:\s*"system-rules"/.test(convo);
     const consultOk = hasSD && hasSR;
-    const bypassConsult = /\[skip-design-consult:/i.test(convo);
+    const bypassConsult = bypassInCurrentTurn(data.transcript_path, /\[skip-design-consult:/i);
 
     // ====== HARD-BLOCK path branch ======
     if (isGuarded) {
@@ -180,7 +184,7 @@ process.stdin.on('end', () => {
         let isNewFile = false;
         try { fs.statSync(filePath); } catch (_) { isNewFile = true; }
         if (isNewFile) {
-          const bypassEval = /\[skip-eval-check:/i.test(convo);
+          const bypassEval = bypassInCurrentTurn(data.transcript_path, /\[skip-eval-check:/i);
           if (!evalCheck.evalFound && !bypassEval) {
             logFire(filePath, 'blocked-eval', `no eval for feature=${evalCheck.feature}`);
             const reason = [

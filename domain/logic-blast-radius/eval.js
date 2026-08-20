@@ -44,9 +44,11 @@ const T_WITH_BANNER = makeTranscript(
   't-with-banner.txt',
   'Rubric complete.\n═══ LOGIC BLAST RADIUS ═══\n| Scenario | Change fires? | Outcome | Safe? | Evidence |\n| init | yes | ok | yes | Form.java:42 |\n'
 );
+// new bypass contract (2026-08-21): token counts only in current-turn ASSISTANT text (JSONL)
 const T_WITH_BYPASS = makeTranscript(
   't-with-bypass.txt',
-  'Audit-mode edit ahead. [skip-logic-blast: test] Proceeding with the compliance edit.'
+  JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'text', text: 'edit it' }] } }) + '\n' +
+  JSON.stringify({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'text', text: 'Audit-mode edit ahead. [skip-logic-blast: test] Proceeding with the compliance edit.' }] } })
 );
 const T_NO_BANNER_2 = makeTranscript(
   't-no-banner-2.txt',

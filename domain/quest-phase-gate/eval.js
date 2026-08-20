@@ -36,6 +36,7 @@ function runHook(inputObj) {
     input: JSON.stringify(inputObj),
     encoding: 'utf8',
     timeout: 15000,
+    env: { ...process.env, CLAUDE_PROJECT_DIR: path.resolve(__dirname, '..', '..') }, // lib resolution for the sandboxed copy (2026-08-21)
   });
   let out = null;
   if (r.stdout && r.stdout.trim()) {
@@ -90,7 +91,10 @@ const results = [];
 // ── Fixture 3: same as 1 + bypass token → allow ──
 {
   setActive(ACTIVE_BLOCK);
-  const t = writeTranscript('t3.txt', 'audit walk-through. [skip-phase-gate: test] continuing.\n');
+  // new bypass contract (2026-08-21): token counts only in current-turn ASSISTANT text (JSONL)
+  const t = writeTranscript('t3.txt',
+    JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'text', text: 'walk through' }] } }) + '\n' +
+    JSON.stringify({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'text', text: 'audit walk-through. [skip-phase-gate: test] continuing.' }] } }) + '\n');
   const r = runHook({ tool_name: 'Edit', tool_input: { file_path: ETANAH_JAVA }, transcript_path: t });
   const pass = r.status === 0 && r.stdout.trim() === '' && lastLogAction() === 'bypassed';
   results.push({ name: '3. same + [skip-phase-gate: test] -> allow', pass });

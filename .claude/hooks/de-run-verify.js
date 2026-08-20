@@ -48,7 +48,8 @@ process.stdin.on('end', () => {
     const data = JSON.parse(input || '{}');
     let transcript = '';
     try { transcript = fs.readFileSync(data.transcript_path, 'utf8'); } catch (_) { return process.exit(0); }
-    if (BYPASS.test(transcript)) return process.exit(0);
+    // current-turn assistant text only (2026-08-21 self-disarm fix)
+    if ((function(){ try { return require((process.env.CLAUDE_PROJECT_DIR || require('path').resolve(__dirname, '..', '..')) + '/lib/bypass-scope.js').bypassInCurrentTurn; } catch (_) { return function () { return false; }; } })()(data.transcript_path, BYPASS)) return process.exit(0);
 
     // Collect the LAST user message text + all assistant text.
     let lastUser = '';

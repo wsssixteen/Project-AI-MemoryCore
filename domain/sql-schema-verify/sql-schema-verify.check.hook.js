@@ -43,7 +43,8 @@ process.stdin.on('end', () => {
     if (!transcriptPath || !fs.existsSync(transcriptPath)) process.exit(0);
 
     const raw = fs.readFileSync(transcriptPath, 'utf8');
-    if (BYPASS.test(raw)) { logFire('bypass', 'token present'); process.exit(0); }
+    // current-turn assistant text only (2026-08-21 self-disarm fix)
+    if ((function(){ try { return require((process.env.CLAUDE_PROJECT_DIR || require('path').resolve(__dirname, '..', '..')) + '/lib/bypass-scope.js').bypassInCurrentTurn; } catch (_) { return function () { return false; }; } })()(transcriptPath, BYPASS)) { logFire('bypass', 'token present'); process.exit(0); }
 
     // Every .sql this session touched that lives in a Task folder — the hand-off surface.
     const touched = new Set();

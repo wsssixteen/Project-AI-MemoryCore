@@ -409,3 +409,7 @@
 {"ts":"2026-08-20T13:32:34.967Z","category":"A1"}
 {"ts":"2026-08-20T13:32:35.115Z","category":"A3"}
 {"ts":"2026-08-20T13:37:28.908Z","category":"A1"}
+{"ts":"2026-08-20T16:24:14.775Z","category":"incomplete-protocol-coverage"}
+{"ts":"2026-08-20T16:29:20.085Z","category":"feature-shipped-without-system-design-pass"}
+{"ts":"2026-08-20T16:50:55.152Z","category":"observability-retrofit-incomplete"}
+{"ts":"2026-08-20T16:50:55.321Z","category":"design-gate-path-hole"}

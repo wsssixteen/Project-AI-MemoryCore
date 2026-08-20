@@ -69,7 +69,8 @@ process.stdin.on('end', () => {
       let convo = '';
       try { convo = fs.readFileSync(data.transcript_path || '', 'utf8'); } catch (_) { convo = ''; }
 
-      const bypass = /\[skip-architecture-doc-update:/i.test(convo);
+      // current-turn assistant text only (2026-08-21 self-disarm fix)
+      const bypass = (function(){ try { return require((process.env.CLAUDE_PROJECT_DIR || require('path').resolve(__dirname, '..', '..')) + '/lib/bypass-scope.js').bypassInCurrentTurn; } catch (_) { return function () { return false; }; } })()(data.transcript_path, /\[skip-architecture-doc-update:/i);
       // Detect a Read or Edit tool call earlier this session that touched system-architecture.md.
       // Transcript stores tool_use blocks as JSON — match on file_path fragment.
       const archTouched = /system-architecture\.md/i.test(convo);
@@ -104,7 +105,8 @@ process.stdin.on('end', () => {
       let convo2 = '';
       try { convo2 = fs.readFileSync(data.transcript_path || '', 'utf8'); } catch (_) { convo2 = ''; }
       const consulted = /(system-design-router|system-design|auto-skill-on-mistake|system-rules)/i.test(convo2);
-      const bypass2 = /\[skip-design-consult:/i.test(convo2);
+      // current-turn assistant text only (2026-08-21 self-disarm fix)
+      const bypass2 = (function(){ try { return require((process.env.CLAUDE_PROJECT_DIR || require('path').resolve(__dirname, '..', '..')) + '/lib/bypass-scope.js').bypassInCurrentTurn; } catch (_) { return function () { return false; }; } })()(data.transcript_path, /\[skip-design-consult:/i);
       if (!consulted && !bypass2) {
         const reason = [
           '⛔ system-edit-gate: system-layer edit BLOCKED — no design consult in this turn.',
