@@ -22,6 +22,14 @@ const path = require('path');
 const REPO = 'E:\\Projects\\Melaka\\etanah-pelupusan';
 const STATE_DIR = path.join(__dirname, 'state');
 
+// HISTORICAL ALLOWLIST (triaged 2026-08-20, miya's cleanup ask): releases that predate the
+// Phase-F merge-back rule (ours since 2026-07-28) and were content-verified SUPERSEDED —
+// every unique commit either content-matches master, shipped via a later release (255170→
+// master ×4, 268883→1.0.8v2/v3, 270091 file diff empty) or is parked by design (239386 →
+// requirement/239386-deprecated). Branches kept for provenance; commits reachable via
+// int-env/stag-env. Do NOT add post-1.3.4 releases here — those must actually merge.
+const HISTORICAL_SUPERSEDED = new Set(['1.0.0', '1.0.7']);
+
 function git(args) {
   const r = spawnSync('git', ['-C', REPO, ...args], { encoding: 'utf8' });
   return { ok: r.status === 0, out: (r.stdout || '').trim() };
@@ -32,7 +40,8 @@ function main() {
   const branches = git(['branch', '-r', '--format=%(refname:short)']);
   if (!branches.ok) return;
   const releases = branches.out.split('\n').map(s => s.trim())
-    .filter(b => /^origin\/mlk\/release\/\d+\.\d+\.\d+$/.test(b));
+    .filter(b => /^origin\/mlk\/release\/\d+\.\d+\.\d+$/.test(b))
+    .filter(b => !HISTORICAL_SUPERSEDED.has(b.split('/').pop()));
   const unmerged = [];
   for (const b of releases) {
     const anc = spawnSync('git', ['-C', REPO, 'merge-base', '--is-ancestor', b, 'origin/mlk/master'], { encoding: 'utf8' });
