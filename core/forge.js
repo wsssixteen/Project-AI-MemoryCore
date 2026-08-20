@@ -91,6 +91,29 @@ console.log('\\n${name}.eval: ' + (results.length - failed) + '/' + results.leng
 process.exit(failed ? 1 : 0);
 `;
 }
+function nukeMarkerTemplate(name, createdFiles, event) {
+  const today = new Date().toISOString().slice(0, 10);
+  const retire = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
+  const files = createdFiles.map(f => path.relative(ROOT, f)).join(' · ');
+  return '# NUKE-MARKER — ' + name + '\n\n' +
+    '| Field | Value |\n|---|---|\n' +
+    '| Created  | ' + today + ' |\n' +
+    '| Session  | TODO(forge): one-line root symptom / quest ID / user ask that triggered this Feature |\n' +
+    '| Files    | ' + files + ' · README.md · settings.json ' + (event || '') + ' entry · system/registry.jsonl line |\n' +
+    '| Rollback | `rm -rf domain/' + name + '` · remove the settings.json entry · remove the registry.jsonl line · `git revert <birth-SHA>` |\n' +
+    '| Retire   | ' + retire + ' — remove this file if the Feature fired >=1x in log.jsonl AND no rollback |\n';
+}
+
+function readmeTemplate(name, event, trigger, action) {
+  return '# ' + name + '\n\n' +
+    '**What fires when**: ' + (event || 'n/a') + ' — ' + trigger + '\n\n' +
+    '**Contract**: ' + action + '\n\n' +
+    '**Layer choice (Rule 7)**: TODO(forge): hook-only | skill-only | hook+skill — justify.\n\n' +
+    '**Trigger moment (Rule 8)**: TODO(forge): justify this is the LEANEST trigger.\n\n' +
+    '**Observability**: every fire appends to `domain/' + name + '/log.jsonl` — TODO(forge): state what each line carries so an audit can read the fire history.\n\n' +
+    '**state-scoped**: TODO(forge, Rule 11): `yes, keyed by <X>` | `no, state-agnostic`.\n';
+}
+
 function skillTemplate(name, trigger, action) {
   return `# ${name} — born via core/forge.js\n\nTRIGGER: ${trigger}\n\nACTION (procedure):\n\n1. TODO(forge): fill the procedure steps.\n\n> Fixture: see ${name}.eval.md — input scenario → expected emit shape.\n`;
 }
@@ -166,6 +189,13 @@ function forgeNew() {
       evalPath = path.join(dir, name + '.eval.js');
       fs.writeFileSync(mainPath, checkTemplate(name, event, trigger, action)); created.push(mainPath);
       fs.writeFileSync(evalPath, checkEvalTemplate(name, replay)); created.push(evalPath);
+      // system-design Rules 9 + 11: NUKE-MARKER + README born WITH the Feature, never after
+      // (2026-08-21: de-close-gate shipped without either — forge scaffolded only hook+eval,
+      //  so finishing forge FELT like finishing system-design. Now the scaffold carries them.)
+      const nukePath = path.join(dir, 'NUKE-MARKER.md');
+      const readmePath = path.join(dir, 'README.md');
+      fs.writeFileSync(nukePath, nukeMarkerTemplate(name, created, event)); created.push(nukePath);
+      fs.writeFileSync(readmePath, readmeTemplate(name, event, trigger, action)); created.push(readmePath);
       // 3. syntax
       for (const f of [mainPath, evalPath]) {
         const c = spawnSync(process.execPath, ['--check', f], { encoding: 'utf8' });
