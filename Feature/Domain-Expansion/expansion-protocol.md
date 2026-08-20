@@ -259,6 +259,15 @@ still on origin are surfaced for deletion (a wrong branch left alive is the next
 **Verified by**: step 12.6 `resume-readiness.js` — 2b is the WRITE, 12.6 is the READ-BACK. A `✗` there
 means 2b did not actually run for that quest.
 
+**🚨 ENFORCED (2026-08-21) — `domain/de-close-gate/`**: the blockless-ticket hole is closed by a Stop
+hook at the DE-close banner. It BLOCKS close when (C1) any ticket id worked on this session (tool-call
+signal or ≥5 assistant mentions) has NO block in `quest/active.txt`/`active-archive.txt` — the exact
+QA-276182 failure of 2026-08-20 where step 2b (model memory) forgot the quest and 12.6 could not see it
+(it only iterates existing blocks); (C2) `resume-readiness.js` did not run this session (log.jsonl
+freshness ≤12h); (C3) `main/current-session.md` exceeds 500 lines (trim skipped). Bypass
+`[skip-de-close-gate: <reason>]`. Eval 8/8. Per みや 2026-08-21: *"if there are not critical part,
+MAKE THEM CRITICAL."*
+
 **Banned**: closing DE with a quest that moved this session and whose qa_doc carries no entry for it ·
 writing only one of the two copies · `⏭` without naming the quest and why it genuinely did not move.
 
@@ -343,6 +352,8 @@ Before emitting the closing banner — read `.claude/state/session-items.md` "Ac
 ---
 
 *Updated 2026-08-05 — **Step 7.5 IMPROVEMENT SWEEP added (MANDATORY)** per みや: five fixed axes (A1 agentic system · A2 quest workflow · A3 debugging efficiency+accuracy · A4 etanah issue-solving · A5 sweep/file-sweep), swept every DE, producing (a) a dated assessment under `system/` with a concrete instance per claim and (b) brainstormed proposals logged via `core/slips.js --type proposal` into the new 💡 Open proposals lane of `slip-dashboard.md` for weekly-audit ruling. Paired `core/slips.js` change: `type=proposal` split out of the slip counts and given its own dashboard section, because filing an idea as `upgrade` reads as shipped and makes an open decision invisible (the 2026-07-22 parked-enforcement-row failure). Rationale: みや had to ask for this assessment explicitly two goals running — a thing he must repeatedly request is a missing step, not a missing effort.*
+
+*Updated 2026-08-21 — Step 2b + 12.6 + step-2 trim now DETERMINISTIC via `domain/de-close-gate/` (Stop, BLOCKS): C1 blockless-ticket (QA-276182 replay) · C2 resume-readiness-ran · C3 session-trim-ran. Per みや's DE audit directive "MAKE THEM CRITICAL".*
 
 *Updated 2026-08-17 — Step 2b: **EXTRA-ROBUST SAVE for a NOT-YET-CLOSED quest** (per みや, QA-274914 BA-confirmation-pending) — a blocked/awaiting-BA/hold-for-external save is held to a higher bar: the `## 0. Resume Point` must carry fix-location + why-it-works + banked-proof + verbatim open external confirmations + test data + deploy/reset prerequisites, cold-reader complete; banned to paraphrase the pending question or omit the reference-copy path when the change lives outside git (modeler model / Redmine attachment).*
 
