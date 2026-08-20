@@ -116,6 +116,18 @@ process.stdin.on('end', () => {
     const targetRepo = normDrive((cdMatch ? cdMatch[1] : process.cwd()).replace(/\\/g, '/').trim().toLowerCase());
     if (targetRepo.startsWith(memoryRoot)) process.exit(0);   // genuine MemoryCore system commit
 
+    // Check 0 (2026-08-20, per みや): work-repo commit message must be PLAIN ENGLISH.
+    // No ";", no arrows ("->"), no "|", and no dash-separator beyond the "Ref #NNN - MODULE - "
+    // prefix (at most two " - "). Join clauses with "and" or "+". Say what changed in simple words.
+    const msgMatch = cmd.match(/-m\s+(["'])([\s\S]*?)\1/);
+    const msg = msgMatch ? msgMatch[2] : '';
+    if (msg) {
+      const dashSeps = (msg.match(/ - /g) || []).length;
+      if (/;/.test(msg) || /--?>/.test(msg) || /\|/.test(msg) || dashSeps > 2) {
+        blockCommit(`⚔️ COMMIT MESSAGE — plain English please.\n\nBanned: ";", arrows ("->"), "|", and dash-separators beyond the "Ref #<num> - <MODULE> - " prefix.\nJoin clauses with "and" or "+". Say what changed, in simple words.\nGot: ${msg}`);
+      }
+    }
+
     // v2: checks 3a/3b are UNCONDITIONAL on any work-repo commit. Per みや 2026-08-05:
     // "Whatever the fuck it is if I don't mention always stop at the fucking staging.
     //  Don't fucking simply commit." Quest resolution must NEVER be able to switch them off —
