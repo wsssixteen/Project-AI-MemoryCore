@@ -1,5 +1,15 @@
 # Current Session
 
+## 2026-08-19 — QA-274914 Phase 1 close (eSOKONGAN PPTPB Pembetulan → all 12 BPMN) + bpmn-check verify
+
+**Resume QA-274914 → triple-check all 12 fix-folder BPMN via bpmn-check → PSBS out-map gap found+fixed+reverified → PRBB PROD-safety confirmed → Phase 1 close → DE. Worktree `ticket-274914-ba-alignment-b14884`.**
+
+- **All 12 BPMN clean**: fix-vs-deployed-base delta (271020 corpus) → 0 new errors + 0 new C5/C7 from the Pembetulan edit. `domain/bpmn-check/bpmn-check.js`.
+- **PSBS was the one real gap**: gate-feeding `MLK_TKL_ST` didn't out-map `pembetulanPP` (the original ticket bug class). miya added the `<flowable:out>` row in modeler; re-check → C7 cleared, 0 new. Structure was already built (gateway + dedicated `(Pembetulan)` task + KM arm) — no new gateway needed.
+- **out-map is per-gate-feeding-ST, not per-ST**: PPTPB (BA-passed) carries it on 1 of 2 STs; PSBS was the sole miss.
+- **PRBB PROD-safe**: CR #263302 absent (`sid-B4276481` absent; `sid-F4F9ED6F`=JKBB task CR *removes* still present = pre-CR base). miya confirmed PROD = "Fix MCOT Stopper".
+- Closed QA-274914 Phase 1 (branch=none, BPMN via modeler). New memory `feedback_status_ask_ultra_concise.md`. Merged origin/main into worktree (registry union + slip-dashboard delete) before this DE commit.
+
 ## 2026-08-19 — Selangor Oracle MCP built + Selangor upload-not-reflect investigation (side-task, no Melaka quest)
 
 **Session shape: miya "create a db connection for oracle — Selangor project" → built oracle-slt MCP (proven live) → "retrieve a working CAS login" → pulled users, no shared default password → "where do I check Selangor pelupusan code" → mapped Selangor+Terengganu checkouts → colleague upload issue (Selangor SenaraiSemakPTGForm "tak reflect, no error") → traced code, ranked suspects → DE. Worktree claude/oracle-db-etanah-selangor-5f9c75.**
@@ -24,6 +34,7 @@
 - VERIFIED (code): upload handler `E:\Projects\Selangor\etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\web\form\common\SenaraiSemakPTGForm.java:185-213` adds downloadVo to `senaraiSuratVO.getDocumentList()` at :212 UNCONDITIONALLY (DMS `create()` :207 return only sets tempId → DMS failure would NOT cause "tak reflect").
 - SUSPECTS (HYPOTHESIS, not repro'd): (1) `SenaraiSemakPTGForm.xhtml:24` `rowKey="#{item}"` + `PelupusanSuratVO` (`vo\PelupusanSuratVO.java:14`)→`BaseFileUploadVO` (Melaka common `BaseFileUploadVO.java:68`) has NO equals/hashCode = identity → row match breaks if `initSenaraiDokumen():217` re-fires on postback. (2) `immediate="true"` on auto fileUpload skips phases before `update=":suratTable"`.
 - NEXT: needs LIVE repro (Selangor app + login) to pick suspect; or fast diff vs working Melaka `MlkSenaraiSemakPTGForm.xhtml`. No fix applied.
+
 ## 2026-08-19 — PPJK warta display adhoc (A18) + adhoc-lifecycle feature build + system-design Rule 11
 
 **Session shape: miya screen-report (PPJK e-Mohon warta papar 1 rekod) → code+DB trace → adhoc A18/ADHOC-PPJK-2026-1 → long planning arc on adhoc reconciliation → built domain/adhoc-lifecycle (the archiver) → system-design Rule 11 (state-awareness) → DE. Worktree claude/warta-85-display-issue-14b1ef.**
@@ -45,44 +56,3 @@
 ### Housekeeping audit (banked to slips.jsonl)
 - active/ has 104 dirs (≥6 closed, never archived) · 158 worktrees unpruned · main/ dupes (current-session ×3, todo ×3). Root: no atomic archiver → adhoc-lifecycle now supplies it.
 - 3 slips: housekeeping/memorycore-drift · communication/unglossed-internal-reference (miya banned bare "A18") · feature proposal.
-
-## 2026-08-19 — QA-275505+276181 bundled Apply (template + populators) · 2 forge features · QA-275501 Phase 2
-
-**Session shape: morning briefing/plan → /quest resume 275505 + Phase 0 276181 (bundle, release under 275505) → 2 Java fixes applied compile-green → template edits BLOCKED by miya's open Word → feature ask → forge-birthed template-cc-preflight + feature-creation (evals 5/5+5/5) → 275501 Phase 1+2 close+archive → DE. Worktree claude/todays-tickets-planning-938f04.**
-
-### QA-275505 (+QA-276181 bundled — BA Nurhafizah: "prolly can fix in 1 ticket"; release under 275505)
-- Same doc: `TemplateKertasPertimbanganPentadbirTanah_PPTPB.docx` (PKPPT). Test: PTMLK/02/L/PPTPB/2026/2 (3399008) @ norlina@melaka.gov.my, stg2 (local etanahDS→et_main_stg2), app LIVE at PKPPT.
-- **Applied (uncommitted, mlk/master, compile BUILD SUCCESS via jdk17 toolchains)**: `PelupusanWordCCMethodConstant.java:3174` populateKeadaanTanah (empty-key bug → delegates populateTanahTek + "tanah " prefix) · `:15210` populateLuasSyor `.toUpperCase()` → captializeOnlyAllFirstLetter ("Meter Persegi").
-- **⚠️ 3 template edits QUEUED — file locked by miya's open Word (PID 26144)**: move 4 status<Arah> CCs to Jenis Tanah cell (mirror sibling) · styles docDefaults Times→Arial 11 (mixed-font root: populated runs carry no rPr) · remove dead `<ID PERMOHONAN>`. Script dry-run-verified: re-run scratchpad `fix_template.py` after Word closes.
-- CC-PREFLIGHT (new discipline): 49 tags · 0 unmapped · fix-relevant data VERIFIED present (tkl_a_laporan_tnh 47 flags · 4× "Tanah Rizab" taraf_tnh 4259); YB/jabatan ulasan empty = screen-fillable, no patch needed.
-- NEXT: miya closes Word → I apply template → rebuild → Jana Semula check (2.2.3 sentence · Tanah Rizab column · Meter Persegi · Arial 11 · no placeholder) → commit `mlk/esokongan/275505` (Ref both tickets).
-
-### Features born (forge, per miya "create this feature")
-- `domain/template-cc-preflight/` — preflight.js CLI (tag→populator map, dependency-free zip read) + Stop advisory hook + quest-skill Pre-emit row. Eval 5/5. First run caught its own parser gap (literal-key puts :935-945).
-- `domain/feature-creation/` — "create/update/refine feature" keyword → injects the 9-step birth pipeline. Eval 5/5.
-
-### QA-275501 (Phase 1+2 CLOSED+ARCHIVED per miya — patch passed back to client on Redmine)
-- = ad-hoc A12/ADHOC-PRBB-2026-1 ticket form (same NPE MlkBorang4CeForm:367, ID Rujukan 254883). Data-patch route, no git. Register A12 → TICKETED->CLOSED. Bestiary entry: manual-pemohon missing-address NPE family. **Code null-guard leg stays OPEN with ADHOC-PRBB-2026-1.**
-
-### System health
-- awam-no-resit-gate errored 2× ("No stderr output") — recurring hook-runtime error class.
-- compile-gate EXISTS on main (merged in at DE 0b) — the earlier "missing" read was pre-merge; memory reference_compile_gate_local_build is VALID again.
-
-## 2026-08-19 — ADHOC-OPRBB-2026-1 OPRBB Kuantiti Diluluskan tak papar (Carian Pintas + AWAM) → diagnosed + patch handed + archived (under another ticket)
-
-**Session shape: adhoc from screenshots (OPRBB permit qty display) → DB spine (mlit) → root cause pinned inline (Agent tool blocked by erroring hook) → data patch handed → miya: under another ticket → Phase 2 archive + DE. Worktree claude/oprbb-quantity-display-issue-95483d.**
-
-### The issue
-- OPRBB permit C02/2026/5 (PTMLK/02/L/OPRBB/2026/5, aplikasi 3408554, mlit, "Ganti Hari"): "Kuantiti Diluluskan" = 0.00 in Carian Pintas grid + blank in AWAM "Maklumat Permohonan" popup; shows 55000 Ketul correctly in permit "Maklumat Jadual" + Borang 4Ce.
-
-### Root cause (VERIFIED code + DB)
-- OPRBB save writes approved qty to `kuantiti_pengeluaran` only, never `kuantiti_dilulus`: `etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\service\impl\PelupusanLiteService.java:1080` (URS_OPRBB branch, `setKuantitiPengeluaran(kuantitiAmbil)`, no `setKuantitiDilulus`).
-- Broken surfaces read `kuantiti_dilulus` (AWAM `PenguatkuasaanService.java:1747`; staff `PelupusanMaklumatPermitLesenHelper.java:1110`). Working analog PRBB fills `kuantiti_dilulus` (`PelupusanService.java:2810`).
-- DB: all 5 OPRBB permits have `kuantiti_dilulus` null, `kuantiti_pengeluaran` filled. Systematic, not one-off.
-
-### Delivered
-- Data patch `projects/coding-projects/archive/ADHOC-OPRBB-2026-1/patch-oprbb-kuantiti-dilulus.sql` (aplikasi 3408554; self-column copy pengeluaran->dilulus + unit; idempotent `IS NULL` guard; before/after SELECT).
-- Code fix (add `setKuantitiDilulus` in OPRBB branch) + backfill of remaining 4 rows deferred to owning ticket.
-
-### ▶▶ NEXT (ADHOC-OPRBB-2026-1)
-- Under another Redmine ticket (number TBD by miya). When numbered: link + do the code fix at PelupusanLiteService.java:1080 + backfill 4 remaining OPRBB rows. Archived 2026-08-19.
