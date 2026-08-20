@@ -14,6 +14,14 @@
 - Slip logged (convention): commit messages ignored team format (`AWAM` caps + over-segmented; convention = `Ref #<n> - <Urusan|Awam> - <action>`).
 
 **Improvable gate frictions (7.5 proposals logged)**: compile-gate marker main-repo-vs-worktree path · compile-gate `"commit"` substring false-positive on echo · branch-at-Apply gate mis-scoped to unrelated QA-274740.
+## 2026-08-20 (late) — Flowable knowledge lookup: which Java class sends permohonan id to next tugasan
+
+**Session shape: single knowledge Q ("what Java class makes Flowable send the permohonan id to the next tugasan?") → answered from banked FLOWABLE-KNOWLEDGE.md §4/§5 → miya asked for a handover → wrote one to scratchpad. No quest moved, no repo code changed. Worktree `flowable-permohonan-id-tugasan-0b7480`.**
+
+- **Answer (banked, not re-derived)**: permohonan id rides the Flowable process var `aliranKerjaId` (→ `umm_aliran_kerja.aplikasi_id`), NOT a raw value. Chain: `CommonBPMServiceClient.startProcess():105` sets var at `:208` → BPMN `<userTask>` `create`-listener fires `FlowableTaskListener.receiveUserTask():62` (`etanah-common\src\main\java\my\com\marcus\etanah\common\flowable\FlowableTaskListener.java`) → `BpmCallbackService.handleAssignationSynchronized():201` (`etanah-common\...\service\BpmCallbackService.java`) → `AppTugasanService.createAppTugasan():806` writes the next `umm_a_tgsn` row linked back via `aliranKerjaId`. Class miya asked for = **`FlowableTaskListener`**; class that materializes the next tugasan = **`BpmCallbackService`**.
+- **Source**: `projects\coding-projects\active\etanah-knowledge\melaka\FLOWABLE-KNOWLEDGE.md` §4 (lifecycle L85-116) + §5 (variables L121-134), verified stg1 process 6912622 (PT). Line numbers are the knowledge doc's; etanah Java source lives at `E:\Projects\Melaka` (absent from this worktree).
+- Handover written to scratchpad (temp, not repo): `HANDOVER-flowable-permohonan-id-to-next-tugasan.md`.
+- Bounty pending (unrelated, from boot): QA-275501 — park until next natural stop.
 
 ## 2026-08-20 — "Finish all in-progress tickets": PPTPB bundle (275505+276181+276182) + PT NPE (276422) CLOSED + deployed to int-env
 
