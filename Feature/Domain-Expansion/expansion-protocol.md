@@ -283,6 +283,7 @@ After Step 12's `/verify` Checklist D goes green, run a **meta-audit** pass befo
 | **Cross-reference validity** | Every link in `system/INDEX.md` + sub-indexes resolves to an existing file | Glob each cited path; flag broken links |
 | **Bounty debt** (added 2026-08-16 per みや "truly reflecting the bounty part") | No quest closed/archived this session without its bounty harvest | Compare this session's `status→closed/archived` flips against `domain/quest-bounty/log.jsonl`; any missing → run `/quest-bounty` or surface as Standing Flag |
 | **Skill-load counter** | ⏸ NO SOURCE since 2026-08-16 — skill invocations are unlogged (named observability hole) | Suspended until the Skill-tool PostToolUse logger ships; do not fake this check |
+| **Feature census** (added 2026-08-21 per みや "audit DE to see if it includes features being created") | Every feature born/changed this session is PROPER (registered · eval · README · observable) and the estate dashboard is current | `node lib/feature-census.js` — regenerates `system/feature-census.md`; surface the summary line (total · gaps · ghosts). A GHOST count > 0 or a gap on a component born THIS session = fix before close |
 
 **Output:** silent if all sub-checks pass; one inline table surfaced ABOVE the DE closing banner only when ≥1 sub-check fails — `| Sub-check | Status | Detail |`.
 

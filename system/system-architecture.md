@@ -157,7 +157,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | Stop | — | `show-gate.discipline.hook.js (bundle stop-reply-shape)` | ✓ |
 | Stop | — | `silent-claim-drift-gate.js (bundle stop-claim-integrity)` | ✓ |
 | Stop | — | `sql-schema-verify.check.hook.js` | ✓ |
-| Stop | — | `stop-point-summary.discipline.hook.js (bundle stop-reply-shape)` | ✓ |
+| Stop | — | ~~`stop-point-summary.discipline.hook.js`~~ DEREGISTERED 2026-08-18 (`c270f89`, Stop-gate reshape — re-registration parked in todo Q1) | — |
 | Stop | — | `terse-gate.discipline.hook.js (bundle stop-reply-shape)` | ✓ |
 | Stop | — | `test-scenario-login-gate.check.hook.js` | ✓ |
 | Stop | — | `ticket-criteria-gate.discipline.hook.js (bundle stop-claim-integrity)` | ✓ |

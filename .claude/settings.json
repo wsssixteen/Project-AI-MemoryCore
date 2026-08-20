@@ -449,7 +449,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\attempt-before-blocked-gate\\\\attempt-before-blocked-gate.check.hook.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\attempt-before-blocked-gate\\attempt-before-blocked-gate.check.hook.js\" Stop"
           },
           {
             "type": "command",

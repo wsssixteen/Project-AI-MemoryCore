@@ -85,6 +85,21 @@ check('F1 clean input exits 0 (no false block)', r.status === 0, 'exit=' + r.sta
 // F2: TODO(forge) — replace with the CONCRETE replay-case stdin; assert fired/blocked as intended.
 check('F2 replay-case fixture present (stub passes until implemented)', true, 'stub');
 
+// ═══ ADVERSARIAL SCENARIOS — system-design Rule 12 (2026-08-21): enumerate >=10 OPPOSING /
+// OUT-OF-SPEC scenarios BEFORE shipping; verdict each: handled | fixture-added | accepted-risk.
+// Encode the credible ones as fixtures below. Classes to mine (invent more):
+//   1. own help/bypass text appearing in the transcript (the 9-gate self-disarm bug)
+//   2. malformed JSON stdin / empty transcript / plain-text transcript
+//   3. worktree vs main repo path resolution (__dirname vs CLAUDE_PROJECT_DIR)
+//   4. eval-sandbox copy of the hook (lib not adjacent)
+//   5. bundle dispatch vs direct registration (stdout JSON forwarding)
+//   6. two concurrent sessions / stale dual-copy files
+//   7. dependency file deleted or renamed
+//   8. bypass token in an OLD turn / echoed by another hook
+//   9. huge transcript (multi-MB) — timeout / memory
+//  10. the simplest user instruction the feature could invert or lose
+// TODO(forge): verdicts + fixtures — ship is NOT done while this block is unresolved.
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
 console.log('\\n${name}.eval: ' + (results.length - failed) + '/' + results.length + ' green');

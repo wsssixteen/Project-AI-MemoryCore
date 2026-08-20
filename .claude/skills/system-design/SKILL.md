@@ -106,6 +106,16 @@ Components fade if unused. Periodic audit (per /system-rules Rule 3): check hook
    - **Today's exception is allowed but must be RECORDED**: shipping Melaka-only now is fine when Perak is not real yet — but the hardcode is logged as a known state-coupling (in the README STATE-SCOPE line) so the future Perak build finds it in one grep, not by surprise.
    - **Why**: `adhoc-register.check.hook.js:26` hardcodes `...\melaka\ADHOC-REGISTER.md`. Correct for today, but nothing recorded that Perak needs a second register + a state-aware path — so the coupling is invisible until it breaks. A one-line STATE-SCOPE verdict at build time makes every state-coupling grep-findable before it bites. Slip category: `state-coupling-unrecorded`.
 
+12. **🚨 ≥10 adversarial scenarios at every Feature birth/refinement — think OUTSIDE the spec before shipping** (HARD RULE, added 2026-08-21 per みや). An eval that only replays the happy path + the founding slip proves the Feature works when the world behaves. Before shipping ANY feature (skill, hook, gate, script), enumerate **at least 10 OPPOSING and OUT-OF-SPEC scenarios** — inputs and situations the spec never mentions — and give each a one-line verdict: `handled` / `fixture-added` / `accepted-risk: <why>`. Candidate classes (pick what fits, invent more):
+   - hostile/self-referential text — the trigger or bypass token appearing in the gate's OWN output, quoted docs, or pasted logs (**the 2026-08-21 self-disarm bug**: 9 gates permanently disarmed by their own help text — one adversarial question at birth would have caught it)
+   - malformed/empty inputs — bad JSON stdin, missing transcript, plain-text transcript, huge transcript
+   - execution-context shifts — worktree vs main repo (`__dirname` ≠ CLAUDE_PROJECT_DIR), eval sandbox copies, bundle dispatch vs direct registration, missing env vars, cross-machine paths
+   - state races — two concurrent sessions, append-only file conflicts, stale copies of dual-copy files
+   - lifecycle — what happens when the Feature's dependency is deleted/renamed/unregistered; who notices when THIS Feature dies silently
+   - abuse of the escape hatch — free-text bypass reasons, bypass in old turns, bypass echoed by another hook
+   - **user-instruction reversal** — the simplest instruction the Feature could invert or lose (みや's example: the deploy/baseline skills that lost fixes on a plain "merge the fixes into master")
+   At least the credible ones become **eval fixtures**, not prose. **Banned**: shipping with fewer than 10 scenarios enumerated · scenarios that are all restatements of the happy path · "accepted-risk" without the why.
+
 ## Bloat-prevention default
 
 When refining any `/skill` or CLAUDE.md content: apply `/system-rules` Rule 2 (merge in place). The `claude-md-edit-guard.js` hook enforces this deterministically on edits to CLAUDE.md / /system-rules / /system-design.
@@ -115,6 +125,8 @@ When refining any `/skill` or CLAUDE.md content: apply `/system-rules` Rule 2 (m
 *Version 2.1 — 2026-07-02. Rule 6 hardened into a HARD pre-ship gate: a hook's eval OR a one-run smoke-test MUST be run + PASS before it is registered in settings.json. Per みや after the `auto-commit-docs` no-eval incident (shipped 2026-07-01, retired 2026-07-02).*
 
 *Version 2.2 — 2026-07-06. Rule 6 → v1.2: gate extended to PHRASE REFINEMENTS of existing skills/hooks/protocols/rules — three checks (spec-preservation diff into the version-stamp entry · fire check via fixture eval · effect check asserting rendered output). Per みや (QA-268415 session, after the speak-in-categories rule was found fragmented into 4-7 framings by repeated re-saves). Spec-preservation self-check on THIS edit: all 5 v1.1 specs preserved (pre-ship eval mandate · settings.json-registration ban · code-exists≠verified · re-run-on-refactor · auto-commit-docs why); zero dropped.*
+
+*Version 2.6 — 2026-08-21. Rule 12 added per みや: ≥10 adversarial / out-of-spec scenarios enumerated at every Feature birth or refinement, each with a handled / fixture-added / accepted-risk verdict, credible ones encoded as eval fixtures. Root cause: the bypass-token self-disarm bug (9 gates disarmed by their own help text, found 2026-08-21) and the deploy/baseline skills that lost fixes on a plain merge instruction — both are exactly the class a birth-time adversarial pass catches. Paired: core/forge.js eval template now carries the 10-scenario stub. Spec-preservation: Rules 6-11 untouched; additive.*
 
 *Version 2.5 — 2026-08-19. Rule 11 added per みや: state/tenant-awareness check at design time — any Feature touching a per-state artifact (register/knowledge/schema/deploy/test-data) must parameterize the state, name the second-state mechanism, and emit a one-line STATE-SCOPE verdict in its README; Melaka-only-today is allowed but the hardcode must be recorded so the Perak build finds it in one grep. Root cause: `adhoc-register.check.hook.js:26` hardcodes the melaka register path with nothing recording the coupling. Spec-preservation: Rules 6-10 untouched; additive.*
 

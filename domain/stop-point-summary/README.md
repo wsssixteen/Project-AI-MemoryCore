@@ -1,5 +1,10 @@
 # stop-point-summary — Feature contract
 
+> **DEREGISTERED 2026-08-18** (commit `c270f89`, per the Stop-gate-reshape-around-/goal plan —
+> `main/session-archive.md:4379`: demote to no-goal sessions once /goal owns don't-stop-early).
+> Conditional re-registration is parked in `main/todo.md` Q1 "Stop-gate reshape around /goal".
+> Files + eval stay in place for that re-registration; recorded 2026-08-21 (feature-census ghost audit).
+
 **Scope**: enforce the personality.md rule "📌 Stop-Point Summary at EVERY stop — never leave みや hanging" at emit-time via a hard-blocking Stop hook.
 
 ## Pieces
