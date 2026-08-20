@@ -44,6 +44,10 @@
           },
           {
             "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\release-mlk-plp\\unmerged-release-boot.js\" SessionStart"
+          },
+          {
+            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\adhoc-lifecycle\\\\adhoc-lifecycle.check.hook.js\""
           }
         ]
@@ -199,6 +203,15 @@
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\branch-at-apply-gate.js\" PreToolUse"
           },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\release-mlk-plp-push-gate\\\\release-mlk-plp-push-gate.check.hook.js\""
+          }
+        ]
+      },
+      {
+        "matcher": "PowerShell",
+        "hooks": [
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\release-mlk-plp-push-gate\\\\release-mlk-plp-push-gate.check.hook.js\""

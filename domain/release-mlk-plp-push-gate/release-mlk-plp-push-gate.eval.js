@@ -54,6 +54,25 @@ check('F7 bypass token passes', r.status === 0, 'exit=' + r.status);
 r = run({ tool_name: 'Edit', tool_input: { file_path: 'x' } });
 check('F8 non-Bash tool ignored', r.status === 0, 'exit=' + r.status);
 
+// ── v2 cases (2026-08-19/20, baseline-1.3.5 incident) ──
+function pwsh(command) { return { tool_name: 'PowerShell', tool_input: { command } }; }
+
+// F9: PowerShell tool is inspected too (the incident's manual pushes used PowerShell)
+r = run(pwsh('git push origin mlk/release/1.0.9'));
+check('F9 PowerShell release push (phase=verified) passes like Bash', r.status === 0, 'exit=' + r.status);
+
+// F10: `git -C <path> push` form matches (original /git\s+push/ was blind to it since birth)
+r = run(pwsh('git -C E:\\x\\etanah-pelupusan push --force-with-lease origin mlk/release/8.8.8'));
+check('F10 git -C form with no state blocks', r.status === 2 && /no pipeline state/.test(r.stderr), 'exit=' + r.status);
+
+// F11: manual mlk/master push BANNED regardless of state (V8: master moves only via merge-to-master)
+r = run(pwsh('git -C E:\\x\\etanah-pelupusan push origin mlk/master'));
+check('F11 manual mlk/master push blocks', r.status === 2 && /mlk\/master is BANNED/.test(r.stderr), 'exit=' + r.status);
+
+// F12: MemoryCore-style push untouched by the master ban
+r = run(pwsh('git push origin HEAD:main'));
+check('F12 HEAD:main push ignored', r.status === 0, 'exit=' + r.status);
+
 try { fs.rmSync(stateDir, { recursive: true, force: true }); } catch (_) {}
 
 let failed = 0;

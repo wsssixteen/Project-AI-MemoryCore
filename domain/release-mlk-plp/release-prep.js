@@ -65,6 +65,76 @@ function parseArgs(argv) {
   return out;
 }
 
+// ── Universal version-compat gate (added 2026-08-19 after the 1.3.5 common-version incident) ──
+// A common bump is NEVER trusted on a human's word (BA chat / recon verdict). Two invariants,
+// checked from git (+ optional DB), enforced BEFORE the pom is touched:
+//   (1) DOMAIN ≤ DB  — target common's transitive etanah-domain must be ≤ the deploy DB's V_DOMAIN
+//                      (rjk_parameter_sistem.kod='V_DOMAIN'); supply via --db-domain <x-MLK>.
+//   (2) CONTINUITY   — target common's etanah-domain must match the PREVIOUS release branch's,
+//                      because the previous release was DEPLOYED + validated against that DB.
+// Root cause it prevents: 1.3.5 shipped common 1.2.1 (domain 1.0.5) vs DB 1.0.4 → release blocked;
+// the correct common was 1.1.17-MLK (domain 1.0.4), what release 1.3.4 shipped.
+function verParts(v) { const m = String(v).match(/^(\d+(?:\.\d+)*)/); return m ? m[1].split('.').map(Number) : [0]; }
+function cmpVer(a, b) { const pa = verParts(a), pb = verParts(b), n = Math.max(pa.length, pb.length); for (let i = 0; i < n; i++) { const x = pa[i] || 0, y = pb[i] || 0; if (x !== y) return x - y; } return 0; }
+function commonRepoOf(pelupusanRepo) { return path.join(path.dirname(pelupusanRepo), 'etanah-common'); }
+function domainOfCommonVersion(commonRepo, commonVer) {
+  if (!commonVer || !fs.existsSync(commonRepo)) return null;
+  const sha = (git(commonRepo, ['log', '--all', '-1', '--format=%H', '-S', `<version>${commonVer}</version>`, '--', 'pom.xml'], true).stdout || '').trim();
+  if (!sha) return null;
+  const pom = git(commonRepo, ['show', `${sha}:pom.xml`], true).stdout || '';
+  const m = pom.match(/etanah-domain<\/artifactId>\s*<version>\s*([^<\s]+)/);
+  return m ? m[1].trim() : null;
+}
+function prevReleaseCommon(repo, curVer) {
+  const rel = /^origin\/mlk\/release\/(\d+\.\d+\.\d+)$/;
+  const cand = (git(repo, ['branch', '-r', '--format=%(refname:short)'], true).stdout || '')
+    .split('\n').map(s => s.trim()).map(b => { const m = b.match(rel); return m ? { b, v: m[1] } : null; }).filter(Boolean)
+    .filter(x => cmpVer(x.v, curVer) < 0).sort((a, b) => cmpVer(b.v, a.v));
+  if (!cand.length) return null;
+  const prev = cand[0];
+  const pom = git(repo, ['show', `${prev.b}:pom.xml`], true).stdout || '';
+  const m = pom.match(/<etanah\.common\.version>([^<]+)<\/etanah\.common\.version>/);
+  return { release: prev.v, common: m ? m[1].trim() : null };
+}
+function runCompatGate(st, want, a) {
+  const commonRepo = commonRepoOf(st.repo);
+  const wantDomain = domainOfCommonVersion(commonRepo, want);
+  const prev = prevReleaseCommon(st.repo, st.release);
+  const prevDomain = prev ? domainOfCommonVersion(commonRepo, prev.common) : null;
+  const dbDomain = a['db-domain'] || null;
+  const ack = a['domain-ack'];
+  console.log(`· compat: target common ${want} → etanah-domain ${wantDomain || '?? (unresolved — cannot verify)'}`);
+  if (prev) console.log(`· compat: previous release ${prev.release} → common ${prev.common} → etanah-domain ${prevDomain || '??'}`);
+  if (dbDomain) console.log(`· compat: DB V_DOMAIN = ${dbDomain}`);
+  const problems = [];
+  if (dbDomain && wantDomain && cmpVer(wantDomain, dbDomain) > 0)
+    problems.push(`domain(${want})=${wantDomain} is NEWER than DB V_DOMAIN=${dbDomain} → the release WILL be blocked (domain must be ≤ DB)`);
+  if (prevDomain && wantDomain && wantDomain !== prevDomain)
+    problems.push(`domain CHANGES vs previous release ${prev.release}: was ${prevDomain} (common ${prev.common}), now ${wantDomain} (common ${want})`);
+  if (problems.length && !ack)
+    die(`BUMP-COMMON REFUSED — version-compat gate:\n  - ${problems.join('\n  - ')}\n` +
+        `Fix: pick a common whose etanah-domain ≤ DB and matches the previous release, OR pass --domain-ack "<reason>" to override intentionally.`, 2);
+  if (problems.length && ack) console.log(`⚠️  compat problems OVERRIDDEN by --domain-ack "${ack}"`);
+}
+
+// ── Stale-master detector (added 2026-08-19 — the ROOT cause of the 1.3.5 common drift) ──
+// Every baseline branches off mlk/master. If the PREVIOUS release's merge-to-master (Phase F)
+// was skipped, master is STALE and branching silently drops that release's common version AND
+// its ticket fixes. Root incident: 1.3.4 (common 1.1.17 + 5 tickets) was never merged to master,
+// so 1.3.5 branched off 1.3.3-era master (common 1.1.12) and re-derived the common from scratch.
+function assertMasterReflectsPrevRelease(st, a) {
+  const prev = prevReleaseCommon(st.repo, st.release);
+  if (!prev) { console.log('· prev-release check: no earlier release branch — nothing to reconcile'); return; }
+  const inMaster = git(st.repo, ['merge-base', '--is-ancestor', `origin/mlk/release/${prev.release}`, 'origin/mlk/master'], true).status === 0;
+  if (inMaster) { console.log(`· prev-release check: ${prev.release} IS in master ✓ (common ${prev.common})`); return; }
+  const msg = `BRANCH REFUSED — previous release ${prev.release} is NOT merged into origin/mlk/master.\n` +
+    `  Master is STALE: branching here silently DROPS ${prev.release}'s content (common ${prev.common} + its ticket fixes).\n` +
+    `  Fix: run \`merge-to-master --release ${prev.release} --ba-approved\` first (Phase F), then re-run branch.\n` +
+    `  Override only if you KNOW master is intentionally ahead: --stale-master-ack "<reason>".`;
+  if (a && a['stale-master-ack']) { console.log(`⚠️  STALE MASTER overridden by --stale-master-ack "${a['stale-master-ack']}"`); return; }
+  die(msg, 2);
+}
+
 function statePath(release) { return path.join(STATE_DIR, `release-${release}.json`); }
 function loadState(release) {
   const p = statePath(release);
@@ -184,6 +254,7 @@ function cmdBranch(a) {
   git(st.repo, ['checkout', 'mlk/master']);
   git(st.repo, ['fetch', 'origin']);
   git(st.repo, ['merge', '--ff-only', 'origin/mlk/master']);
+  assertMasterReflectsPrevRelease(st, a);   // ── stale-master detector: prev release MUST be in master ──
   git(st.repo, ['checkout', '-b', st.branch]);
   st.phase = 'branched';
   saveState(st);
@@ -349,6 +420,7 @@ function cmdBumpCommon(a) {
     return;
   }
   const before = m[2];
+  runCompatGate(st, want, a);   // ── universal version-compat gate (domain ≤ DB + continuity) ──
   const dirty = gitOut(st.repo, ['status', '--porcelain']);
   if (dirty) die(`BUMP-COMMON REFUSED — working tree must be clean; found:\n${dirty}`, 2);
   fs.writeFileSync(pomPath, pom.replace(re, `$1${want}$3`));
@@ -370,7 +442,11 @@ function cmdBumpCommon(a) {
     die(`BUMP-COMMON REFUSED — not a clean single common-version change (reverted).\nremoved: ${JSON.stringify(removed)}\nadded:   ${JSON.stringify(added)}`, 2);
   }
   git(st.repo, ['add', 'pom.xml']);
-  git(st.repo, ['commit', '-m', `common version increase to: ${want}`]); // mirrors aaron's d19b0b2b0a
+  // Terminology-verbatim rule (2026-08-19): mirror the repo's ESTABLISHED wording, never invent.
+  // Upgrade → Aaron's exact phrase (d19b0b2b0a); downgrade → miya-approved "revert to" (2026-08-19).
+  const verb = cmpVer(want, before) >= 0 ? `common version increase to: ${want}`
+                                         : `common version revert to: ${want} (from ${before})`;
+  git(st.repo, ['commit', '-m', verb]);
   if (st.phase === 'verified' || st.phase === 'bumped') { st.phase = 'merged'; st.headSha = null; } // re-verify required
   saveState(st);
   log('bump-common', st.release, 'ok', { from: before, to: want });
@@ -443,6 +519,24 @@ function cmdMergeToMaster(a) {
 function cmdStatus(a) {
   const st = loadState(a.release);
   console.log(JSON.stringify(st, null, 2));
+  // --verify (2026-08-19, post-1.3.5 incident): state is a CACHE of git truth and was hand-edited
+  // twice during the incident. Compare against live origin refs; drift = loud flag, exit 2.
+  if (!('verify' in a)) return;
+  ensureRepo(st.repo);
+  git(st.repo, ['fetch', 'origin', '--quiet'], true);
+  const problems = [];
+  const remoteTip = (git(st.repo, ['rev-parse', `origin/${st.branch}`], true).stdout || '').trim();
+  if (!remoteTip) problems.push(`origin/${st.branch} does not exist`);
+  else if (st.headSha && remoteTip !== st.headSha) problems.push(`state headSha ${String(st.headSha).slice(0, 10)} != origin/${st.branch} ${remoteTip.slice(0, 10)}`);
+  if (st.phase === 'merged-to-master') {
+    const inMaster = git(st.repo, ['merge-base', '--is-ancestor', `origin/${st.branch}`, 'origin/mlk/master'], true).status === 0;
+    if (!inMaster) problems.push(`phase=merged-to-master but origin/${st.branch} is NOT an ancestor of origin/mlk/master`);
+  }
+  if (problems.length) {
+    console.error(`\n🚨 STATE-VS-GIT DRIFT:\n  - ${problems.join('\n  - ')}\nThe state file is stale or hand-edited — reconcile it against git truth before running any command.`);
+    process.exit(2);
+  }
+  console.log('\n✅ state matches origin (headSha + phase ancestry verified)');
 }
 
 const a = parseArgs(process.argv.slice(2));

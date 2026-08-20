@@ -23,14 +23,29 @@ const GOOD_VER = /^\d+\.\d+(\.\d+)?$/;
 
 runHook({ name: 'release-mlk-plp-push-gate', event: 'PreToolUse' }, (input) => {
   let data = {}; try { data = JSON.parse(input || '{}'); } catch (_) {}
-  if ((data.tool_name || '') !== 'Bash') return { fired: false };
+  // v2 (2026-08-19): PowerShell added — the 1.3.5 incident's manual pushes ran through the
+  // PowerShell tool and sailed past the Bash-only check. Same command field on both tools.
+  const tool = data.tool_name || '';
+  if (tool !== 'Bash' && tool !== 'PowerShell') return { fired: false };
   const cmd = (data.tool_input && data.tool_input.command) || '';
-  if (!/git\s+push/.test(cmd)) return { fired: false };
-  const m = REF_RE.exec(cmd);
-  if (!m) return { fired: false };
+  // v2 fix (2026-08-19): /git\s+push/ NEVER matched `git -C <path> push ...` — the form every
+  // manual push actually uses. The gate was blind since birth. Now: git … push on one line.
+  if (!/\bgit\b[^\r\n|;&]*\bpush\b/.test(cmd)) return { fired: false };
   if (/RELEASE_GATE_BYPASS/.test(cmd)) {
     return { fired: true, blocked: false, bypassed: true, bypassToken: 'RELEASE_GATE_BYPASS' };
   }
+  // v2 (2026-08-19): manual mlk/master push on etanah-pelupusan is BANNED — master moves ONLY
+  // via release-prep.js merge-to-master --ba-approved (V8). Its child-process git never passes
+  // through tool hooks, so ANY mlk/master push seen here is a manual breach (the 1.3.5 class:
+  // hand-merged to master without BA pass). MemoryCore pushes (main/claude/*) are untouched.
+  if (/\bgit\b[^\r\n|;&]*\bpush\b[^\r\n|;&]*\bmlk\/master\b/.test(cmd)) {
+    return {
+      fired: true, blocked: true,
+      blockReason: '⛔ release-mlk-plp-push-gate v2: manual push of mlk/master is BANNED — master moves only via release-prep.js merge-to-master --release <ver> --ba-approved (V8: BA baseline pass first). Bypass: RELEASE_GATE_BYPASS in the command.',
+    };
+  }
+  const m = REF_RE.exec(cmd);
+  if (!m) return { fired: false };
   const ver = m[1];
   if (!GOOD_VER.test(ver)) {
     return {
