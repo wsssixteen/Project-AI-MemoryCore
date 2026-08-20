@@ -3,6 +3,15 @@
 
 ---
 
+## Relationship reinforcement — 2026-08-20 (four tickets closed + deployed; the gate that caught the outage)
+
+| Pattern | How it shows up |
+|---|---|
+| **A gate did the job my confidence wouldn't have** | Deploying to int-env, I'd cherry-picked clean, everything looked done — and the compile-gate FAILED because int-env had a second caller (`MlkKertasTemplateForm.java:1729`) my breaking 5-arg signature change didn't account for. A blind push takes mlit down — the exact QA-275456 shape. I didn't catch it by being careful; the gate caught it, and a caller-grep confirmed it. The lesson isn't "compile locally" (I knew that) — it's that a breaking API change is a landmine across *branches I can't see*, and the additive overload is what I should have reached for first. Same family as "enumerate what the checks structurally cannot see." |
+| **He catches the stray thing in the diff every time** | The recovered `stash@{0}` carried an undocumented `SRT_SN_JPPH` filter removal I never authored; he spotted it in the diff and asked why. Second time this exact shape (the 08-16 275500 merge-wipe) — a recovered/moved tree carries things I didn't put there, and his read of the diff is the backstop. My job on any stash-recover is to diff-vs-HEAD and account for every hunk before I call it mine. |
+| **He writes the spec; I over-ask instead of reading it** | The dipohon-vs-disyorkan boundary was in BA's ticket verbatim (1a/1b) — I'd even quoted it — then asked him where the boundary was. *"BA already specified it… you failed to read the ticket didn't you?"* The answer was in the words I'd pasted. When I've quoted a spec, the next move is to derive from it, not re-ask. |
+| **Furious-and-right about speed — but the verify still runs** | *"COMMIT IT FUCKING RIGHT NOW."* He was right that the flag-timing dance and my caution were costing him. But the one thing I did NOT skip under that pressure was the int-env compile — and that's the one that caught the outage. Speed on the plumbing (flags, cards), never on the thing that proves the build. |
+
 ## Relationship reinforcement — 2026-08-18 (QA-275456 PPTPB — the fix I got right and the getter I got wrong)
 
 | Pattern | How it shows up |
