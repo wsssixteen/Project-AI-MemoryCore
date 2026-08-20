@@ -1,5 +1,32 @@
 # Current Session
 
+## 2026-08-19/20 — Baseline 1.3.5 + PROD-regression incident + recovery + release-gate hardening
+
+**Session shape: BAQA baseline ask (7 tickets, Pelupusan 1.3.5 + Common "1.2.1-MLK") → prepared+pushed → release team BLOCKED deploy (Domain 1.0.5 > DB 1.0.4) → common reverted (wrong target 1.1.24 → correct 1.1.17 per release/1.3.4) → DISCOVERED 1.3.4 never merged to master → 1.3.5 shipped to PROD missing 1.3.4's 5 fixes (live regression) → recovery merge (miya's sequence: 1.3.4 in FIRST) → pushed cde4ed3ab9 → audit loop closed every gate hole. Worktree pelupusan-baseline-deploy-1acf39.**
+
+### Release 1.3.5 — FINAL STATE
+- `origin/mlk/master` = `origin/mlk/release/1.3.5` = **`cde4ed3ab9`** — ALL 10 tickets (1.3.5's: #274318-via-common · #275009 · #275500 · #276004 · #275475 · #275456 [#274914 flowable-only, excluded] + 1.3.4's restored: #273979 · #271442 · #274745 · #274532 · #272130) + common **1.1.17-MLK** (= domain 1.0.4 = DB V_DOMAIN) + module 1.3.5.
+- Local `mvn compile` BUILD SUCCESS on `cde4ed3ab9` (569 sources, JDK-17 toolchain). miya ALSO built it on the LOCAL server successfully (check-build only).
+- 🚨 **PROD REDEPLOY PENDING**: prod still runs old `3aec2cab01` (missing 1.3.4's 5 fixes — live regression until redeployed). Undo tag `mlk/prod-1.3.5` @ `3aec2cab01` pushed. Next: server build `mlk/release/1.3.5` → checkout SHA must = `cde4ed3ab9` → release team redeploys → BA smoke-test one 1.3.4 fix (#274532 tarikh) + one 1.3.5 fix.
+- Sheet: Common `1.1.17-MLK` · Module `1.3.5` · Branch `mlk/release/1.3.5` · SQL cell empty.
+
+### Incident root causes (both mine)
+1. **1.3.4's Phase-F merge-to-master skipped** (2026-08-17) → master stale at 1.3.3-era → 1.3.5 branched without 1.3.4.
+2. **Common set from BA's chat word** (1.2.1) with zero validation → domain 1.0.5 > DB 1.0.4 → deploy blocked. Correct = 1.1.17 (what release/1.3.4 shipped; common 1.1.17 + 1.1.24 BOTH ship domain 1.0.4; #274318 = the ticket needing the bump; common 1.1.17 was released for #272295).
+
+### Gates built + PROVEN this session (all eval-pinned, commits 67c7a03 · 7e21e91 · 016b7df)
+- `runCompatGate` (bump-common): BLOCKS common whose etanah-domain > DB `V_DOMAIN` (rjk_parameter_sistem kod V_DOMAIN) or ≠ prev release's domain; `--db-domain`/`--domain-ack`.
+- `assertMasterReflectsPrevRelease` (branch): BLOCKS baseline off stale master; `--stale-master-ack`.
+- `unmerged-release-boot.js` (SessionStart, registered): screams until every release branch ∈ master. **First run found stranded `release/1.0.0` (15 files) + `release/1.0.7` (6 files) — TRIAGE PENDING on miya's word.**
+- push-gate v2: PowerShell tool inspected + manual `mlk/master` push BANNED + fixed birth-defect regex (`git -C … push` never matched). Eval 12/12.
+- `status --verify`: state-vs-origin drift (state was hand-edited 2× during incident).
+- bump-common commit verb direction-aware: `increase to` (Aaron's exact) / `revert to` (miya's). Skill: 20-failure-mode audit → 7-row FAILURE-MODE CHECKLIST (terminology-verbatim · undo-tag-before-force-push · pom-diff nod · footer check · explicit build target · worktree preflight · visible BUILD SUCCESS).
+
+### Also this session
+- Agihan-Kepada BA question (PT PYMB Jasin): traced to capaian — `MlkPelupusanPegawaiAgihService.java:268-273` targets PPD; 9-join capaian query → 0 users with urusan PT at Jasin (m.azlan had PRBB/PPTPB only); miya patched capaian to test then a change landed (created_by admin 18:34) — NOT a baseline bug, NOT 275475 (pjbtPermohonan has 0 readers). ⚠️ my first two answers (config table / "no active PPD") were WRONG and retracted — flag_aktif is 'Y'/'N' not boolean.
+- ADHOC-PT-2026-4 (PT SKM Seterusnya NPE, twin of #275152): folder 156, patch preserved in `2. Fix\`, active.txt block written, branch mlk/esokongan/275152 deleted per miya (separate ticket pending from BA).
+- Slips logged: release/stale-master-version-drift · instruction/substituted-own-plan (3× repeats forced) · evidence/thin-proof · release/invented-terminology · reask/redundant ×2 · evidence/thin-proof; principle #7 (state-continuity verified at boundary) added to system/principles.md.
+
 ## 2026-08-19 — QA-274914 Phase 1 close (eSOKONGAN PPTPB Pembetulan → all 12 BPMN) + bpmn-check verify
 
 **Resume QA-274914 → triple-check all 12 fix-folder BPMN via bpmn-check → PSBS out-map gap found+fixed+reverified → PRBB PROD-safety confirmed → Phase 1 close → DE. Worktree `ticket-274914-ba-alignment-b14884`.**
@@ -34,25 +61,3 @@
 - VERIFIED (code): upload handler `E:\Projects\Selangor\etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\web\form\common\SenaraiSemakPTGForm.java:185-213` adds downloadVo to `senaraiSuratVO.getDocumentList()` at :212 UNCONDITIONALLY (DMS `create()` :207 return only sets tempId → DMS failure would NOT cause "tak reflect").
 - SUSPECTS (HYPOTHESIS, not repro'd): (1) `SenaraiSemakPTGForm.xhtml:24` `rowKey="#{item}"` + `PelupusanSuratVO` (`vo\PelupusanSuratVO.java:14`)→`BaseFileUploadVO` (Melaka common `BaseFileUploadVO.java:68`) has NO equals/hashCode = identity → row match breaks if `initSenaraiDokumen():217` re-fires on postback. (2) `immediate="true"` on auto fileUpload skips phases before `update=":suratTable"`.
 - NEXT: needs LIVE repro (Selangor app + login) to pick suspect; or fast diff vs working Melaka `MlkSenaraiSemakPTGForm.xhtml`. No fix applied.
-
-## 2026-08-19 — PPJK warta display adhoc (A18) + adhoc-lifecycle feature build + system-design Rule 11
-
-**Session shape: miya screen-report (PPJK e-Mohon warta papar 1 rekod) → code+DB trace → adhoc A18/ADHOC-PPJK-2026-1 → long planning arc on adhoc reconciliation → built domain/adhoc-lifecycle (the archiver) → system-design Rule 11 (state-awareness) → DE. Worktree claude/warta-85-display-issue-14b1ef.**
-
-### ADHOC-PPJK-2026-1 (A18) — PPJK e-Mohon Senarai Warta papar 1 rekod
-- Symptom: No.Warta NO.85/29-03-2007 → e-Mohon papar 1 (Lot 7324), Carian Pintas papar 2 (Lot 7263+7324).
-- Root (code+DB, 100%): `et_main.ind_rizab` 2 rows (1553/7263 PA25659, 1554/7324 PA25661, both SR_KTKUASA Y). Repository `AwamRizabRepository.java:18` returns List; **BUG** `PelupusanService.findMaklumatPerizabanVOByNoWartaAndTarikhWarta():10232-10285` for-loop reassigns `vo` each iteration, `return vo` = last only. Form `AwamSemakanKewujudanRizabForm.onSearchWarta():60-76` adds single VO.
-- Downstream: `onGoNext():89-96` saves only `maklumatWartaVOList.get(0)` → **BA-Q owed**: 1 vs multi lot per permohonan (decides fix scope). Baseline mlk/master d9441886b8. qa_doc: ADHOC-ppjk-warta-single-record/.
-- Owed: BA raises ticket → append # to A18; answer BA-Q; then code fix (return List) + build/repro.
-
-### Built: domain/adhoc-lifecycle/ (the adhoc-register ACT side / the parked archiver)
-- CLI match/promote/archive/unarchive/sweep + Door B weekly SessionStart surfacer (boot not DE — Rule 8). 14/14 eval green; live-smoke matched A18 by warta on real register.
-- Match keys: permohonan/aplikasi (exact) → warta+tarikh pair → lesen/resit/hakmilik/kp. Never deletes; all moves reversible via unarchive. Ships log.jsonl (Rule 5) + NUKE-MARKER (Rule 9) + STATE-SCOPE:yes (Rule 11).
-- Standard header `## Issue Summary` + `## Match Keys` added to register doc + retrofit into PPJK doc (the join column Door A reads).
-
-### system-design Rule 11 (state/tenant-awareness)
-- Any Feature touching a per-state artifact must parameterize the state + emit a README STATE-SCOPE line. Trigger: `adhoc-register.check.hook.js:26` hardcodes the melaka register path. SKILL.md v2.5.
-
-### Housekeeping audit (banked to slips.jsonl)
-- active/ has 104 dirs (≥6 closed, never archived) · 158 worktrees unpruned · main/ dupes (current-session ×3, todo ×3). Root: no atomic archiver → adhoc-lifecycle now supplies it.
-- 3 slips: housekeeping/memorycore-drift · communication/unglossed-internal-reference (miya banned bare "A18") · feature proposal.
