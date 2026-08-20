@@ -316,6 +316,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\compile-gate\\\\compile-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\deploy-merge-surface\\\\deploy-merge-surface.check.hook.js\""
           }
         ]
       }
