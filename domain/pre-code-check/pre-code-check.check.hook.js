@@ -40,6 +40,12 @@ const LOG = path.join(__dirname, 'log.jsonl');
 
 const ETANAH_PATH = /[\\\/]etanah-(pelupusan|common|awam|teknikal)[\\\/].+\.(java|xhtml|docx|json)$/i;
 
+// v1.6 (2026-08-20, miya, #276349 growl-not-refreshed): FOLDED into sibling-diff — NOT a new row.
+//   The growl bug (onGoNext added a ralat; nextProcessBtn had update="@this" -> message created,
+//   never rendered) is a per-file coupling miss sibling-diff already owns (QA-258004 lists `update`
+//   as a coupling attr). A separate `msg-render` row was tried then reverted as bloat (self-audit
+//   inv-1 orphan; repeats grand-audit defect #2/#3). sibling-diff guidance below now names the
+//   growl-in-update coupling explicitly. Spec-preservation: no row added/removed vs v1.5.
 const REQUIRED_CHECKS = [
   'analog', 'in-file', 'sibling', 'existing-reuse', 'name-by-purpose',
   'minimal-diff', 'logic-matrix', 'blast-radius', 'predicate', 'falsifier',
@@ -181,7 +187,10 @@ runHook({ name: 'pre-code-check', event: 'PreToolUse' }, (input) => {
         '                       shape did not match and the wrong-wired fix shipped)',
         '     sibling         ✓(<working sibling file:line> actually read this session — a bare ✓ here',
         '                       is how #259112 reused a minimal-attrs formField over the fully-wired one)',
-        '     sibling-diff    ✓(vs <sibling>: attrs ✓ · listener-sig ✓ · VO-instance ✓ · lifecycle ✓ — or name the divergence)',
+        '     sibling-diff    ✓(vs <sibling>: attrs ✓ · listener-sig ✓ · VO-instance ✓ · lifecycle ✓ — or name the divergence.',
+        '                       🚨 JSF action that adds a FacesMessage: the trigger control update= MUST include the',
+        '                       growl/messages component or the message renders NOWHERE — #276349 nextProcessBtn had',
+        '                       update="@this" only, no popup; working sibling tambahBtn updates msgs.)',
         '     existing-reuse  ✓(grepped <symbol> -> reused <Class.method():line>) | ✓(grepped <symbol> -> 0 existing resolvers)',
         '     blast-radius    ✓(grepped <symbol> -> N call-sites: <file:line>, ...)',
         '     read+write-path ✓(<Class.method():line> persists it) | ✓(grepped <getter> -> 0 persisters)',

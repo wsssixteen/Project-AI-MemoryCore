@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-19 — QA-274914 Phase 1 close (eSOKONGAN PPTPB Pembetulan → all 12 BPMN) + bpmn-check verify
+
+**Resume QA-274914 → triple-check all 12 fix-folder BPMN via bpmn-check → PSBS out-map gap found+fixed+reverified → PRBB PROD-safety confirmed → Phase 1 close → DE. Worktree `ticket-274914-ba-alignment-b14884`.**
+
+- **All 12 BPMN clean**: fix-vs-deployed-base delta (271020 corpus) → 0 new errors + 0 new C5/C7 from the Pembetulan edit. `domain/bpmn-check/bpmn-check.js`.
+- **PSBS was the one real gap**: gate-feeding `MLK_TKL_ST` didn't out-map `pembetulanPP` (the original ticket bug class). miya added the `<flowable:out>` row in modeler; re-check → C7 cleared, 0 new. Structure was already built (gateway + dedicated `(Pembetulan)` task + KM arm) — no new gateway needed.
+- **out-map is per-gate-feeding-ST, not per-ST**: PPTPB (BA-passed) carries it on 1 of 2 STs; PSBS was the sole miss.
+- **PRBB PROD-safe**: CR #263302 absent (`sid-B4276481` absent; `sid-F4F9ED6F`=JKBB task CR *removes* still present = pre-CR base). miya confirmed PROD = "Fix MCOT Stopper".
+- Closed QA-274914 Phase 1 (branch=none, BPMN via modeler). New memory `feedback_status_ask_ultra_concise.md`. Merged origin/main into worktree (registry union + slip-dashboard delete) before this DE commit.
+
 ## 2026-08-19 — Selangor Oracle MCP built + Selangor upload-not-reflect investigation (side-task, no Melaka quest)
 
 **Session shape: miya "create a db connection for oracle — Selangor project" → built oracle-slt MCP (proven live) → "retrieve a working CAS login" → pulled users, no shared default password → "where do I check Selangor pelupusan code" → mapped Selangor+Terengganu checkouts → colleague upload issue (Selangor SenaraiSemakPTGForm "tak reflect, no error") → traced code, ranked suspects → DE. Worktree claude/oracle-db-etanah-selangor-5f9c75.**
@@ -4341,6 +4351,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
