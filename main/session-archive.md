@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-21 (early AM) — Full-system audit night (miya /goal: audit every failure, make DE steps critical)
+- **THE find — bypass-token self-disarm bug**: 9 gates scanned the WHOLE transcript for their `[skip-*]` token, so a gate's own help text (printed at first block) permanently disarmed it for the session. design-consult-gate rode disarmed since ~2026-08-20 (worktree log `bypassed: skip-design-consult` with no token ever typed). FIX: `lib/bypass-scope.js` — token counts ONLY in current-turn assistant text; all 9 gates patched, 9 evals green (54 fixtures). Commit `a991511`.
+- **de-close-gate born** (forge, eval 8/8): DE close now BLOCKS on C1 blockless-ticket (QA-276182 replay) · C2 resume-readiness-ran · C3 session-trim-ran. Commit `db2c0e3`+`237411b`.
+- **feature-census born** (`lib/feature-census.js` → `system/feature-census.md`): 234 components, 0 ghosts after fixes; stop-point-summary ghost traced to sanctioned 2026-08-18 drop (`c270f89`, Stop-gate-reshape plan) → tombstoned + arch-doc fixed; attempt-before-blocked-gate wrapped for telemetry. Commit `118b18c`.
+- **system-design Rule 12** (≥10 adversarial/out-of-spec scenarios per Feature birth, verdicts + fixtures) + forge eval template stub; forge also now scaffolds NUKE-MARKER.md + README.md at birth (commit `249b81a`).
+- **DE 12.5 gains Feature-census sub-check** — DE now audits features created, not just tickets.
+- Slips ledgered: `incomplete-protocol-coverage` · `feature-shipped-without-system-design-pass` · `observability-retrofit-incomplete` · `design-gate-path-hole`. Proposals: census-debt weekly burn-down · stop-point-summary goal-aware re-registration.
+- Next boot: nothing owed by Ruri on tickets; miya still owes MLIT deploy of `mlk/int-env` + data patch + BA re-test for 276181/276182.
+
 ## 2026-08-20 (late) — Flowable knowledge lookup: which Java class sends permohonan id to next tugasan
 
 **Session shape: single knowledge Q ("what Java class makes Flowable send the permohonan id to the next tugasan?") → answered from banked FLOWABLE-KNOWLEDGE.md §4/§5 → miya asked for a handover → wrote one to scratchpad. No quest moved, no repo code changed. Worktree `flowable-permohonan-id-tugasan-0b7480`.**
@@ -4404,6 +4413,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
