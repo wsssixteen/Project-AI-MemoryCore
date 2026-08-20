@@ -4,6 +4,41 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-19 — Selangor Oracle MCP built + Selangor upload-not-reflect investigation (side-task, no Melaka quest)
+
+**Session shape: miya "create a db connection for oracle — Selangor project" → built oracle-slt MCP (proven live) → "retrieve a working CAS login" → pulled users, no shared default password → "where do I check Selangor pelupusan code" → mapped Selangor+Terengganu checkouts → colleague upload issue (Selangor SenaraiSemakPTGForm "tak reflect, no error") → traced code, ranked suspects → DE. Worktree claude/oracle-db-etanah-selangor-5f9c75.**
+
+### Oracle MCP `oracle-slt` — BUILT + PROVEN LIVE
+- Target: Selangor Etanah Oracle **19.3.0**, host `172.16.93.32:1521`, service **SLIT**, schema **ET_MAIN_DEV**, user `et_main_dev` / `etanah123` (same convention as Melaka).
+- Stack: `python-oracledb` THIN mode (no Oracle client) + `mcp<2` (FastMCP). mcp 2.0 removed `mcp.server.fastmcp` → pinned `<2`.
+- Files: `C:\Users\Ridhwan\AppData\Local\oracle-mcp\server.py` (+ venv beside). Tools: `query_database`, `get_schema_info`, `list_tables`.
+- Registered in `C:\Users\Ridhwan\.claude.json` mcpServers as `oracle-slt` (backup `.claude.json.bak_pre_oracle_slt_add_2026-08-18`).
+- ✅ CONFIRMED live: connectivity test returned schema/db, count query `pcp_pengguna flag_aktif='Y'` = 231565; MCP tools loaded this session (mcp__oracle-slt__* appeared after resume).
+
+### Selangor CAS login retrieval (pcp_pengguna)
+- Login col = `NAMA_PENGGUNA`; active-internal filter `flag_aktif='Y' AND flag_capaian_dalaman='Y'`. `admin` account active (2026-08-18).
+- ⚠️ NO shared default password — each `kata_laluan2` hash unique (top hash shared by only 2). Cannot hand a password; needs miya's known admin pw OR a reset (hash algo unconfirmed).
+
+### Selangor + Terengganu checkouts (NEW knowledge)
+- `E:\Projects\Selangor\etanah-pelupusan` — branch `master`, remote `ssh://git@172.16.93.167/etanah-pelupusan`, only pelupusan checked out (no common/awam). Trunk base = plain `master` (NOT mlk/master — branch-guard hook false-positives here).
+- `E:\Projects\Terengganu\etanah-pelupusan` also present. TRG stays hard-excluded.
+
+### Colleague upload issue — Selangor `SenaraiSemakPTGForm` "boleh upload tapi tak reflect, no error"
+- Screenshot was Terengganu (`tgit.terengganu.gov.my/etanah-pelupusan/.../SenaraiSemakPTGForm.xhtml`); miya redirected → check Selangor's same form.
+- VERIFIED (code): upload handler `E:\Projects\Selangor\etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\web\form\common\SenaraiSemakPTGForm.java:185-213` adds downloadVo to `senaraiSuratVO.getDocumentList()` at :212 UNCONDITIONALLY (DMS `create()` :207 return only sets tempId → DMS failure would NOT cause "tak reflect").
+- SUSPECTS (HYPOTHESIS, not repro'd): (1) `SenaraiSemakPTGForm.xhtml:24` `rowKey="#{item}"` + `PelupusanSuratVO` (`vo\PelupusanSuratVO.java:14`)→`BaseFileUploadVO` (Melaka common `BaseFileUploadVO.java:68`) has NO equals/hashCode = identity → row match breaks if `initSenaraiDokumen():217` re-fires on postback. (2) `immediate="true"` on auto fileUpload skips phases before `update=":suratTable"`.
+- NEXT: needs LIVE repro (Selangor app + login) to pick suspect; or fast diff vs working Melaka `MlkSenaraiSemakPTGForm.xhtml`. No fix applied.
+
+---
+
+## 2026-08-20 (session-end recap) — PPTPB Kertas Pertimbangan marathon (QA-276181 + QA-276182)
+- **Deployed** to `mlk/int-env` tip `87d0572543` (branch MERGE of `mlk/esokongan/275505`, not cherry-pick — miya's new standing policy). Awaiting miya MLIT deploy + BA re-test on `PTMLK/02/L/PPTPB/2026/5`.
+- **QA-276181** (font + CC): all template fonts normalized to Arial 11 (docDefaults/styles/footer); pemilikBerdaftar VO-font code fix; NEW `bezaLuas` content control wrapped on the `<Peraturan perbezaan>` placeholder.
+- **QA-276182** (Tajuk luas): A-derive `reconcileLuasInTajuk` (PelupusanUtil) + service `reconcileTajukLuasPPTPB` wired at 3 read points (doc populator + Kertas screen + Maklumat Tanah screen); `.trim()` for the space before `)`.
+- **Data patch** handed (file + inline): fills keadaanTanah/jarakBPM/tempat (tkl_a_laporan_tnh), 2.2.4 (tkl_a_mklmt_lot_persekitaran), Section-4 YB ulasan (umm_a_jabatan_teknikal agensi 55 + keputusan 29882 Menyokong), bezaLuas (beza_luas). NOTE: bezaLuas 5.00 Hektar = arbitrary test value; real field empty.
+- **2 new hooks built** (forge): `render-verify` (block template/render delivery without proof of rendered output) + `deploy-merge-surface` (block silent cherry-pick onto env branch until merge-vs-cherrypick tradeoff surfaced). Plus commit-gate plain-English message check.
+- **Slips (2× etanah-issue-solving, 7d escalation)**: shipped unverified font fixes 3×; silent cherry-pick 5× without surfacing the merge choice.
+
 ## 2026-08-19 — PPJK warta display adhoc (A18) + adhoc-lifecycle feature build + system-design Rule 11
 
 **Session shape: miya screen-report (PPJK e-Mohon warta papar 1 rekod) → code+DB trace → adhoc A18/ADHOC-PPJK-2026-1 → long planning arc on adhoc reconciliation → built domain/adhoc-lifecycle (the archiver) → system-design Rule 11 (state-awareness) → DE. Worktree claude/warta-85-display-issue-14b1ef.**
@@ -4306,6 +4341,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
