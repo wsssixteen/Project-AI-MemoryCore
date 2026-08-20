@@ -45,6 +45,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\release-mlk-plp\\unmerged-release-boot.js\" SessionStart"
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\adhoc-lifecycle\\\\adhoc-lifecycle.check.hook.js\""
           }
         ]
       }
@@ -175,6 +179,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\bug-db\\\\bug-db.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\feature-creation\\\\feature-creation.check.hook.js\""
           }
         ]
       }
@@ -304,6 +312,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\deploy-guard\\\\deploy-guard.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\compile-gate\\\\compile-gate.check.hook.js\""
           }
         ]
       }
@@ -438,6 +450,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\attachment-ledger-gate\\\\attachment-ledger-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\template-cc-preflight\\\\template-cc-preflight.check.hook.js\""
           }
         ]
       }
@@ -479,6 +495,15 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\spawn-telemetry\\\\spawn-telemetry.check.hook.js\""
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\bpmn-check\\\\bpmn-check.check.hook.js\""
           }
         ]
       }

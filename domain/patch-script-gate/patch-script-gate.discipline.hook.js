@@ -101,6 +101,17 @@ const BROAD_LIKE_IN_DML = /```[\w]*\s*[\s\S]*?(?:\bDELETE\s+FROM\b|\bUPDATE\s+[\
 const DELETE_FROM_IND = /```[\w]*\s*[\s\S]*?\bDELETE\s+FROM\s+(?:[\w]+\.)?ind_[\w]+/i;
 const IND_DELETE_EXEMPT = /\[skip-ind-delete:/;
 
+// CHECK 5 — display-column verification (added 2026-08-18 per みや, QA-275009 PT perihal miss).
+// A LABEL-column UPDATE on a reference table (ind_*/rjk_*/kod_*) is meant to fix what a user
+// SEES. Reference rows often carry SIBLING label columns (nama AND perihal), and the screen /
+// report may render a DIFFERENT one than you set — patch the wrong column and nothing changes.
+// Fires on UPDATE <ind_|rjk_|kod_> SET <nama|perihal|keterangan|tajuk|label> in a fence.
+const REF_LABEL_UPDATE = /```[\w]*\s*[\s\S]*?\bUPDATE\s+(?:[\w]+\.)?(?:ind_|rjk_|kod_)\w+\s+SET\b[\s\S]*?\b(?:nama|perihal|keterangan|tajuk|label)\s*=/i;
+// Suppress when the reply proves the read-column was verified, or names the [skip] token.
+const DISPLAY_VERIFY_MARKER = /\[skip-display-col:|display column|which column the (?:ui|screen|grid|report)|grid reads|ui reads|report reads|renders?\s+`?(?:nama|perihal)/i;
+// Suppress when BOTH sibling labels are set together (the safe form — no wrong-column risk).
+const BOTH_LABELS_SET = /\bSET\b[\s\S]*?\bnama\s*=[\s\S]*?\bperihal\s*=|\bSET\b[\s\S]*?\bperihal\s*=[\s\S]*?\bnama\s*=/i;
+
 function lastAssistantText(transcriptPath) {
   let raw;
   try { raw = fs.readFileSync(transcriptPath, 'utf8'); } catch (_) { return null; }
@@ -206,6 +217,25 @@ process.stdin.on('end', () => {
         '   Default: reset the application side (umm_a_*) only; leave the registry intact.',
       ].join('\n'));
       logFire('advisory-ind-delete', 'delete-from-ind-registry');
+    }
+
+    // CHECK 5 — display-column verification (label UPDATE on a reference table)
+    if (REF_LABEL_UPDATE.test(text) && !DISPLAY_VERIFY_MARKER.test(text) && !BOTH_LABELS_SET.test(text)) {
+      advisories.push([
+        '⚙️  patch-script-gate CHECK 5 — display-column verification.',
+        '   You UPDATE a LABEL column (nama/perihal/keterangan/tajuk) on a reference table',
+        '   (ind_*/rjk_*/kod_*). The screen/report may read a DIFFERENT text column than the',
+        '   one you set — reference rows often carry sibling labels (nama AND perihal), and',
+        '   patching the wrong one changes NOTHING on screen (QA-275009: patched nama, grid read perihal).',
+        '   Before handing this patch:',
+        '     1. Confirm WHICH column the UI/report renders — grep the xhtml/bean/jrxml for the',
+        '        field, OR match the exact on-screen string to the column whose value equals it.',
+        '     2. Align sibling label columns (set nama AND perihal together) unless you have',
+        '        PROVEN only one is read.',
+        '     3. Reference tables are cached — a raw UPDATE needs a full app restart to show.',
+        '   Bypass: [skip-display-col: <which column the UI reads + how verified>].',
+      ].join('\n'));
+      logFire('advisory-display-col', 'ref-label-update-unverified-column');
     }
 
     if (advisories.length === 0) {
