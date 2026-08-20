@@ -454,6 +454,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\template-cc-preflight\\\\template-cc-preflight.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\de-knowledge-gate\\\\de-knowledge-gate.check.hook.js\""
           }
         ]
       }

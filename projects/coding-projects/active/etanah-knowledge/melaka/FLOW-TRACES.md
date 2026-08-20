@@ -228,3 +228,32 @@ mlkMaklumatTanahV3.xhtml:244
 needs an urusan gate. `PelupusanService` has **no** `PraHakmilik` access of its own by default — only
 `PraHakmilikLain` is imported; the repository accessor exists on the locator
 (`PelupusanSpocService.java:236` uses it) but the import must be added.
+
+## File upload → DMS — the two-phase flow (Pelupusan + Awam) (2026-08-20, code-verified)
+
+> **Verification**: code-read + grep across `etanah-pelupusan`, `etanah-awam`, `etanah-common` (NOT breakpoint-confirmed). Every `file:line` below was opened and read.
+
+**Plain explanation**: uploading a file is a **two-click, two-phase** flow. Picking a file sends it to DMS **immediately** as a *temporary* document (bytes leave the app right away, only a `tempDocumentId` is held in memory — nothing in the DB yet). Clicking **Simpan/Hantar** promotes it to a *permanent* document and writes the DB pointer rows. The file bytes never live inside etanah — they are shipped over Spring HTTP-invoker remoting to a **separate `etanah-dms` web-app** (URL from `SistemParameter INVOCATION_URL_DMS`), which owns the real storage path. eTanah keeps only a `Document` metadata row (`documentId · namaFail · jenisFail · medan · medanPk`) pointing back to a "slot" row.
+
+**CLICK 1 (pick file → temp DMS)**
+- Pelupusan listener is shared: `etanah-common\...\vo\BaseFileUploadVO.java:110` `handleFileUpload()` → `getContent()` → `uploadTempDocument(byte[]):215`.
+- Awam listeners are per-form (own `handleFileUpload`): `PendaftaranSenaraiSemakTabForm.java:212` → `uploadTempDocument():262`; `ConsentKemasukanDokumenTambahanTabForm.java:136/183`; `LelongSemakanPanelForm.java:119/140`.
+- Common client boundary: `etanah-common\...\service\impl\DocumentManagementSystemClient.java:344` `uploadTempDocument` → `getDocumentRemotingService():471`.
+
+**CLICK 2 (Save → permanent DMS + DB rows)**
+- Pelupusan: `MlkMuatNaikCabutanMinitForm.java:4121` → `PelupusanDocumentService.saveUploadedFiles():2148` → creates `AppDokumenKemasukan:2194` → `saveDocument():626` → **`create(dto):692`** (sends `fileBytes`) → `Document` row saved `:697`.
+- Awam portal: `AwamCommonService.saveDokumenDisertakan():7076` → `saveUploadDocument():10110` → **`saveTempDocument(dto):10161`** (sends `tempDocumentId`) → `Document` linked `medan=MEDAN_PRA_SEMAKAN` / `medanPk=praSemakan.getId():10166`.
+- Awam lelong: `LelongService.saveAppLelongDokumenKemasukanDokumenVOList():712` → `saveUploadDocument():494` (`documentDTO.setTempDocumentId():534`).
+- Common finalize boundary: `DocumentManagementSystemClient.java:133` `create` / `:364` `saveTempDocument`.
+- Sibling common one-stage path (senarai-semak / imbasan): `DokumenKemasukanService.saveUploadDocument():1064` → `create():1145` (`setFileBytes(input):1132`).
+
+**The only module difference**
+| | Pelupusan | Awam (portal + lelong) |
+|---|---|---|
+| Upload listener | shared `BaseFileUploadVO` (common) | each Awam form's own `handleFileUpload` |
+| Finalize on Save | `create(dto)` — sends **bytes** | `saveTempDocument(dto)` — sends **tempDocumentId** |
+| Slot entity | `AppDokumenKemasukan` | `PraSemakan` (portal) / `AppDokumenKemasukan` (lelong) |
+
+**"The path created"**: no local filesystem path in etanah for normal uploads; the physical file + path live in the separate `etanah-dms` app. Melaka runs a second endpoint `etanah-dms-rahsia` for confidential docs, chosen by `NewDmsDocumentTypeConstant.SISTEM_FAIL_RAHSIA` (`RemotingServiceLocator.java:71-85`). DMS filename convention for imbasan/DHK docs: `IDPENGENALAN_JENISDOKUMEN_INDEX.EXT` (`ImbasanDokumenUtil.java:255-262`).
+
+**Out of scope (not readable here)**: `etanah-dms` server storage internals, and the `Document` entity's `@Table` mapping (compiled `etanah-domain` jar). `dokumenSokonganPanel.xhtml` is a composite with **no live consumer** in these three repos (dead in-repo).
