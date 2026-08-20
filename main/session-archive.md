@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-20 (late) — Flowable knowledge lookup: which Java class sends permohonan id to next tugasan
+
+**Session shape: single knowledge Q ("what Java class makes Flowable send the permohonan id to the next tugasan?") → answered from banked FLOWABLE-KNOWLEDGE.md §4/§5 → miya asked for a handover → wrote one to scratchpad. No quest moved, no repo code changed. Worktree `flowable-permohonan-id-tugasan-0b7480`.**
+
+- **Answer (banked, not re-derived)**: permohonan id rides the Flowable process var `aliranKerjaId` (→ `umm_aliran_kerja.aplikasi_id`), NOT a raw value. Chain: `CommonBPMServiceClient.startProcess():105` sets var at `:208` → BPMN `<userTask>` `create`-listener fires `FlowableTaskListener.receiveUserTask():62` (`etanah-common\src\main\java\my\com\marcus\etanah\common\flowable\FlowableTaskListener.java`) → `BpmCallbackService.handleAssignationSynchronized():201` (`etanah-common\...\service\BpmCallbackService.java`) → `AppTugasanService.createAppTugasan():806` writes the next `umm_a_tgsn` row linked back via `aliranKerjaId`. Class miya asked for = **`FlowableTaskListener`**; class that materializes the next tugasan = **`BpmCallbackService`**.
+- **Source**: `projects\coding-projects\active\etanah-knowledge\melaka\FLOWABLE-KNOWLEDGE.md` §4 (lifecycle L85-116) + §5 (variables L121-134), verified stg1 process 6912622 (PT). Line numbers are the knowledge doc's; etanah Java source lives at `E:\Projects\Melaka` (absent from this worktree).
+- Handover written to scratchpad (temp, not repo): `HANDOVER-flowable-permohonan-id-to-next-tugasan.md`.
+- Bounty pending (unrelated, from boot): QA-275501 — park until next natural stop.
+
 ## 2026-08-20 — "Finish all in-progress tickets": PPTPB bundle (275505+276181+276182) + PT NPE (276422) CLOSED + deployed to int-env
 
 **Session Recap for next start**: 4 tickets closed + deployed to `mlk/int-env` (BA testing). Branches pushed: `mlk/esokongan/275505` (eae4c59d0a — 275505+276181+276182 doc: Jenis Tanah CC move + Keadaan tanah populate + Meter Persegi + Arial 11 + remove `<ID PERMOHONAN>`), `mlk/esokongan/276182` (d15563430e Tajuk-luas stage-aware code + **6db3725b0c backward-compat overload**), `mlk/internal/276422` (cdb242bf09 PT SKM NPE null-guard). int-env tip `e5d2994b73`. **NOT on mlk/master** — Redmine planned-release list still owed for all 4.
@@ -4395,6 +4404,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
