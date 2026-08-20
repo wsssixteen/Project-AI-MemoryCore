@@ -17,6 +17,7 @@ function run(overrides) {
     transcript_path: '',
     _testEvents: [
       { kind: 'tool', name: 'Bash', blob: 'git commit -m "Ref QA-276182 fix"' },
+      { kind: 'tool', name: 'Edit', blob: '{"file_path":"projects/coding-projects/active/QA-276182/QA-276182.md"}' },
       { kind: 'text', role: 'assistant', text: CLOSE_BANNER },
     ],
     _testActiveText: 'qa=QA-276182\nstatus=active\n',
@@ -64,6 +65,21 @@ check('F7 passing mention -> not touched -> pass', r.status === 0, 'exit=' + r.s
 // F8: archived ticket (block in active-archive.txt) -> pass
 r = run({ _testActiveText: '', _testArchiveText: 'qa=QA-276182\nstatus=closed\n' });
 check('F8 archived block counts -> pass', r.status === 0, 'exit=' + r.status);
+
+// F9 (first-fire replay): ticket id ONLY inside an eval-file write -> fixture, not touched -> pass
+r = run({ _testEvents: [
+  { kind: 'tool', name: 'Write', blob: '{"file_path":"domain/x/x.eval.js","content":"run(QA-111111) run again QA-111111"}' },
+  { kind: 'tool', name: 'Bash', blob: 'node domain/x/x.eval.js QA-111111' },
+  { kind: 'text', role: 'assistant', text: CLOSE_BANNER },
+], _testActiveText: 'qa=QA-000001\n' });
+check('F9 eval-fixture ids ignored -> pass', r.status === 0, 'exit=' + r.status);
+
+// F10 (first-fire replay): single typo'd tool call (QA-276422 class) -> not touched -> pass
+r = run({ _testEvents: [
+  { kind: 'tool', name: 'Bash', blob: 'node quest/active-cli.js update QA-276422 local_test_confirmed=true' },
+  { kind: 'text', role: 'assistant', text: CLOSE_BANNER },
+], _testActiveText: 'qa=QA-000001\n' });
+check('F10 single tool occurrence ignored -> pass', r.status === 0, 'exit=' + r.status);
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' -> ' + x.d)); }

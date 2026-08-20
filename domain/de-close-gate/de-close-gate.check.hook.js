@@ -65,20 +65,31 @@ function lastAssistantText(events) {
   return '';
 }
 
-// C1 — ticket ids touched this session (tool-call signal OR mention floor)
+// Tool calls that are about TEST/EVAL artifacts, not real ticket work — their ids are
+// fixtures, never touched tickets (2026-08-21 first-fire false positives: QA-111111 etc.
+// from the gate's OWN eval file writes).
+const FIXTURE_CONTEXT = /eval\.js|\.eval\.|scratchpad|fixture|_testEvents|test-gate/i;
+
+// C1 — ticket ids touched this session. A tool-call signal needs >=2 DISTINCT tool calls
+// (a single occurrence is a typo/one-off echo — the QA-276422 active-cli typo class);
+// otherwise the assistant-mention floor applies.
 function touchedTickets(events) {
   const mentions = Object.create(null);   // id -> assistant mention count
-  const toolIds = new Set();              // id appeared inside a tool call (strong signal)
+  const toolCounts = Object.create(null); // id -> distinct tool calls carrying it
   for (const e of events) {
     if (e.kind === 'text' && e.role === 'assistant') {
       let m; TICKET_ID.lastIndex = 0;
       while ((m = TICKET_ID.exec(e.text)) !== null) mentions[m[1]] = (mentions[m[1]] || 0) + 1;
     } else if (e.kind === 'tool') {
+      if (FIXTURE_CONTEXT.test(e.blob)) continue;
+      const seen = new Set();
       let m; TICKET_ID.lastIndex = 0;
-      while ((m = TICKET_ID.exec(e.blob)) !== null) toolIds.add(m[1]);
+      while ((m = TICKET_ID.exec(e.blob)) !== null) seen.add(m[1]);
+      for (const id of seen) toolCounts[id] = (toolCounts[id] || 0) + 1;
     }
   }
-  const touched = new Set(toolIds);
+  const touched = new Set();
+  for (const id of Object.keys(toolCounts)) if (toolCounts[id] >= 2) touched.add(id);
   for (const id of Object.keys(mentions)) if (mentions[id] >= MENTION_FLOOR) touched.add(id);
   return touched;
 }
