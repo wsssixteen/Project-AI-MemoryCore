@@ -449,18 +449,6 @@ function appendActiveBlock(issue, parsed, taskFolderAbs, assignedDate) {
 // Pre-v5 history (kept for context, not for re-derivation): v1 unconditional · v2/v4
 // gated on `2. Fix/` non-empty proxy · v3 dropped that gate. Replaced wholesale 2026-05-20.
 
-// Detect if a journal entry corresponds to a transition INTO a Rework status.
-// This instance uses SEVERAL rework status_ids (observed: 23, 31, 38 — e.g.
-// "Rework", "Rework (Requirement Update)"). Keying on a single id (was '23')
-// under-counted cycles for reopens that landed on 31/38, so no cycle subfolder
-// was created. Used to count rework cycles. (Fixed 2026-08-21, #276181 audit.)
-const REWORK_STATUS_IDS = new Set(['23', '31', '38']);
-function isReworkTransition(journal) {
-    return (journal.details || []).some(d =>
-        d.property === 'attr' && d.name === 'status_id' && REWORK_STATUS_IDS.has(String(d.new_value))
-    );
-}
-
 // Move a Task folder OUT of Archive/ back to the active level with a new
 // number — fires when a previously-closed ticket is reopened to Rework.
 // Returns the new folder NAME (relative to TASKS_FOLDER), or null if no move.
@@ -523,15 +511,21 @@ async function addStatusFolder(existingFolderName, status, journals) {
     const fullPath = path.join(TASKS_FOLDER, folderRelPath);
     if (!fs.existsSync(fullPath)) return null;
 
-    // (2) Count Rework transitions in journals vs existing Rework/New subfolders
-    const journalReworkCount = (journals || []).filter(isReworkTransition).length;
+    // (2) Create ONE rework cycle folder per reactivation, idempotently.
+    //   v8.1 (2026-08-21, #276181 audit — B5): the old `journalReworkCount >
+    //   reworkSubfolderCount` count churned once isReworkTransition matched a SET of
+    //   rework ids: a single reopen hops through several rework statuses (3→31→23→3→38),
+    //   so one cycle counted as 3 and each re-sync spawned another empty N. Rework folder.
+    //   The cycle count is NOT derivable from status hops. Rule now: add a rework folder
+    //   only when NONE exists yet. Genuine 3rd/4th reopens are rare — みや adds/renames
+    //   those by hand (matches the v5 note that sync cannot classify cycles perfectly).
     const entries = fs.readdirSync(fullPath);
     const reworkSubfolderCount = entries.filter(e =>
         /^\d+\.\s*(Rework|New)\s*$/i.test(e)
     ).length;
 
     let statusFolderPath = null;
-    if (journalReworkCount > reworkSubfolderCount) {
+    if (reworkSubfolderCount === 0) {
         const nums = entries
             .map(e => { const em = e.match(/^(\d+)\./); return em ? parseInt(em[1]) : null; })
             .filter(n => n !== null);
