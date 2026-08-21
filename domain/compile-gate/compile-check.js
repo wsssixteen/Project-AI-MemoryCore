@@ -18,7 +18,11 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const PROJ = process.env.CLAUDE_PROJECT_DIR || process.cwd();
+// Canonical MemoryCore root: a worktree session shares the MAIN state dir — compile markers are
+// global, not per-worktree. Without this, `run` (my cwd) and the hook's `verify` (CLAUDE_PROJECT_DIR
+// = worktree) read different .claude/state dirs, so a green compile never registers for the gate.
+const PROJ = (process.env.CLAUDE_PROJECT_DIR || process.cwd())
+  .replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+$/i, '');
 const STATE = path.join(PROJ, '.claude', 'state');
 
 // module name -> local repo path (the repos are on E:\Projects\Melaka, not in MemoryCore)

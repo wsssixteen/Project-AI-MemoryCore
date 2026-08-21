@@ -15,7 +15,11 @@ const fs = require('fs');
 const path = require('path');
 const redmineCheck = require('./redmine-status-check');
 
-const REPO_ROOT = path.resolve(__dirname, '..');
+// Canonical MemoryCore root: quest/active.txt is global project state, shared across worktrees.
+// A worktree session must read+write the MAIN active.txt (the same one the commit-gate/quest hooks
+// resolve) — else writes land in a worktree copy the gates never read. Strip the worktree suffix.
+const REPO_ROOT = path.resolve(__dirname, '..')
+  .replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+$/i, '');
 // Resolved lazily inside main() so that --file/--archive CLI overrides apply BEFORE first use.
 let ACTIVE, ARCHIVE;
 function defaultActive()  { return path.join(REPO_ROOT, 'quest', 'active.txt'); }

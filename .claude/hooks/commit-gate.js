@@ -23,7 +23,12 @@
 const fs = require('fs');
 const path = require('path');
 
-const projectRoot = path.join(__dirname, '..', '..');
+// Canonical MemoryCore root: a worktree session shares the MAIN quest/active.txt + approval flags
+// (they are global project state, not per-worktree). Without stripping the worktree suffix, this
+// gate read the STALE worktree active.txt — it resolved the wrong quest and could not see a block
+// that active-cli wrote to main, and looked for the approval flag in the wrong .claude/state dir.
+const projectRoot = path.join(__dirname, '..', '..')
+  .replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+$/i, '');
 const activePath = path.join(projectRoot, 'quest', 'active.txt');
 const TERMINAL = ['closed', 'archived', 'archived-shipped-by-other'];
 
