@@ -18,6 +18,10 @@
 - Slip logged (convention): commit messages ignored team format (`AWAM` caps + over-segmented; convention = `Ref #<n> - <Urusan|Awam> - <action>`).
 
 **Improvable gate frictions (7.5 proposals logged)**: compile-gate marker main-repo-vs-worktree path · compile-gate `"commit"` substring false-positive on echo · branch-at-Apply gate mis-scoped to unrelated QA-274740.
+## 2026-08-21 — #276504 rework 2 (session: rework-ticket-fixes-190db0)
+- Board pulled live; 276504 picked as critical. Rework diagnosed to mechanism level (radio converter-string render match + unmapped bandar_id column), fixed (3 files), committed 2a259d8fa6, cherry-picked ef023d96cd to int-env, deployed via mirage1, DB-verified live (row 16541: bandar_id=2 + bandar_dipohon_id=2). miya local test pass. Related #276654 = Anis's PROD data patch for the original stuck app.
+- System work: commit-gate v3 (flag consumed only after all checks), deploy-merge-surface v2/v3 (in-command token, 5-message scan, git -C regex hole closed, fresh-compile-marker requirement), test-scenario-login-gate v2 (deploy card must carry Test Scenario table), runbook memory feedback_commit_deploy_runbook.md, slip logged (process-friction).
+- Open on 276504: Anis Redmine re-test; optional Redmine note + Sakinah WhatsApp reply drafted, unsent.
 
 ## 2026-08-21 (early AM) — Full-system audit night (miya /goal: audit every failure, make DE steps critical)
 - **THE find — bypass-token self-disarm bug**: 9 gates scanned the WHOLE transcript for their `[skip-*]` token, so a gate's own help text (printed at first block) permanently disarmed it for the session. design-consult-gate rode disarmed since ~2026-08-20 (worktree log `bypassed: skip-design-consult` with no token ever typed). FIX: `lib/bypass-scope.js` — token counts ONLY in current-turn assistant text; all 9 gates patched, 9 evals green (54 fixtures). Commit `a991511`.

@@ -15,10 +15,12 @@ const path = require('path');
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
 const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
 
-function lastAssistantText(tp) {
+function lastAssistantText(tp, howMany) {
+  const max = howMany || 1;
+  const found = [];
   try {
     const lines = fs.readFileSync(tp, 'utf8').split('\n').filter(Boolean);
-    for (let i = lines.length - 1; i >= 0; i--) {
+    for (let i = lines.length - 1; i >= 0 && found.length < max; i--) {
       let o; try { o = JSON.parse(lines[i]); } catch (_) { continue; }
       const m = o.message || o;
       if ((m.role || o.type) !== 'assistant') continue;
@@ -26,8 +28,9 @@ function lastAssistantText(tp) {
       let t = '';
       if (typeof c === 'string') t = c;
       else if (Array.isArray(c)) t = c.filter(b => b && b.type === 'text').map(b => b.text).join('\n');
-      if (t.trim()) return t;
+      if (t.trim()) found.push(t);
     }
+    if (found.length) return found.join('\n');
   } catch (_) {}
   return '';
 }
@@ -45,10 +48,31 @@ runHook({ name: 'deploy-merge-surface', event: 'PreToolUse' }, (input) => {
   let data = {}; try { data = JSON.parse(input || '{}'); } catch (_) {}
   if (data.tool_name !== 'Bash') return { fired: false };
   const cmd = (data.tool_input && data.tool_input.command) || '';
-  if (!/\bgit\s+cherry-pick\b/.test(cmd)) return { fired: false };
+  if (!/\bgit\b[^|;&\n]*\bcherry-pick\b/.test(cmd)) return { fired: false };
   if (/cherry-pick\s+--(continue|abort|skip|quit)\b/.test(cmd)) return { fired: false };
-  const turn = lastAssistantText(data.transcript_path || '');
-  if (/\[deploy-merge-decision:\s*[^\]]+\]/i.test(turn)) {
+  // v3 (2026-08-21, per みや): pre-deploy BUILD safety — an env cherry-pick needs a fresh
+  // green compile marker (domain/compile-gate) from the last 3 hours, else block.
+  const compileFresh = (() => {
+    try {
+      const stateDir = path.join(ROOT, '.claude', 'state');
+      return fs.readdirSync(stateDir).some(f => {
+        if (!/^compile-ok-.*\.json$/.test(f)) return false;
+        try {
+          const j = JSON.parse(fs.readFileSync(path.join(stateDir, f), 'utf8'));
+          return j.ok === true && (Date.now() - j.ts) < 3 * 60 * 60 * 1000;
+        } catch (_) { return false; }
+      });
+    } catch (_) { return false; }
+  })();
+  if (!compileFresh && !/\[skip-compile-verify:\s*[^\]]+\]/i.test(cmd)) {
+    return { fired: true, blocked: true, contextOut:
+      '⛔ deploy-merge-surface v3: no FRESH green compile marker (<3h) before this env cherry-pick.\n' +
+      '   Run: node domain/compile-gate/compile-check.js run <module>   (BUILD SUCCESS writes the marker)\n' +
+      '   then retry. Compiled elsewhere this session? [skip-compile-verify: <where/when>] in the command.' };
+  }
+
+  const turn = lastAssistantText(data.transcript_path || '', 5);
+  if (/\[deploy-merge-decision:\s*[^\]]+\]/i.test(turn) || /\[deploy-merge-decision:\s*[^\]]+\]/i.test(cmd)) {
     return { fired: true, bypassed: true, bypassToken: 'deploy-merge-decision' };
   }
   return { fired: true, blocked: true, contextOut: BLOCK };
