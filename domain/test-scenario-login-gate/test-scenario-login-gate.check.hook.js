@@ -53,6 +53,23 @@ runHook({ name: 'test-scenario-login-gate', event: 'Stop' }, (input) => {
   const text = lastAssistantText(data);
   if (!text || text.length < 200) return { fired: false };
   if (BYPASS_RE.test(text)) return { fired: false };
+
+  // v2 (2026-08-21, per みや): a DEPLOY-STEPS emit must CARRY its test scenario —
+  // prepare the scenario right after the deploy card, never leave testing implicit.
+  const DEPLOY_RE = /deployment-scripts|sh deploy-|deploy-awam\.sh|deploy-plp\.sh/i;
+  const SCENARIO_TABLE_RE = /\|\s*Login\s*\|/i;
+  if (DEPLOY_RE.test(text) && !(SCENARIO_TABLE_RE.test(text) && LOGIN_RE.test(text))) {
+    return {
+      fired: true,
+      blocked: true,
+      reason:
+        '⛔ test-scenario-login-gate v2: deploy steps emitted with NO test scenario attached.\n' +
+        '   Append the Test Scenario table (| Login | Screen | Do | Expect |) with a real login,\n' +
+        '   directly under the deploy steps, then re-send. Derive the login yourself (umm_a_tgsn\n' +
+        '   holder / umm_p_aplikasi.created_by). Bypass: [skip-login-gate: <reason>]\n',
+    };
+  }
+
   if (!HANDBACK_RE.test(text)) return { fired: false };
   if (LOGIN_RE.test(text)) return { fired: false };
 

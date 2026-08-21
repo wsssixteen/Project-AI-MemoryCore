@@ -159,10 +159,11 @@ process.stdin.on('end', () => {
     if (!useFlag) {
       blockCommit(`⚔️ COMMIT BLOCKED — ${state.qa}\n\nNo approval on record for this commit MESSAGE.\nShow みや: (1) \`git diff --cached\`   (2) the drafted commit message, verbatim.\nHe replies with an approval phrase → that writes a one-shot flag → this gate opens for exactly ONE commit.\n\nDefault when he has said nothing: STOP AT STAGING. Never "simply commit".`);
     }
-    try { fs.unlinkSync(useFlag); } catch (e) {}  // consume — next commit needs fresh approval
+    // v3 (2026-08-21): consume MOVED to the end — consuming here meant a later block
+    // (local-test / checklist) ate the approval and みや had to re-approve. QA-276504.
 
     // Quest-specific checks below only apply when a quest was actually resolved.
-    if (state.qa === 'none' || state.status === 'idle') process.exit(0);
+    if (state.qa === 'none' || state.status === 'idle') { try { fs.unlinkSync(useFlag); } catch (e) {} process.exit(0); }
 
     // Check 1: local test confirmed
     if (state.local_test_confirmed !== 'true') {
@@ -176,6 +177,8 @@ process.stdin.on('end', () => {
     }
 
     // (3a/3b moved ABOVE the quest-resolution guard in v2 — they are unconditional now.)
+
+    try { fs.unlinkSync(useFlag); } catch (e) {}  // v3: consume ONLY when every check passed
 
     process.exit(0);
   } catch (e) {
