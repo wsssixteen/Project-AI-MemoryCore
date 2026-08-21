@@ -2659,6 +2659,7 @@ qa_doc=projects/coding-projects/archive/ADHOC-OPRBB-2026-1/ADHOC-OPRBB-2026-1.md
 status=archived
 closed=2026-08-19
 close_note=Folded under another Redmine ticket (number TBD by miya). Root cause VERIFIED: PelupusanLiteService.saveMaklumatBorang4Ce():1080 (pelupusan) OPRBB branch writes kuantiti_pengeluaran only, never kuantiti_dilulus; Carian Pintas + AWAM read kuantiti_dilulus -> 0.00/blank; permit-detail + Borang4Ce read kuantiti_pengeluaran -> 55000. All 5 OPRBB permits affected. Data patch handed for aplikasi 3408554 (patch-oprbb-kuantiti-dilulus.sql). Code fix (add setKuantitiDilulus in OPRBB branch, analog PelupusanService.java:2810) + backfill of remaining 4 rows to be done under owning ticket. NOTE: original active.txt block dropped by concurrent OneDrive sync mid-session (459b8cb).
+
 qa=QA-275501
 quest_start_ts=2026-08-19T06:13:20.609Z
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\152. INTERNAL ISSUE (PROD) #275501 - Pelupusan - PRBB - Papar ralat bila klik pada tugasan di dashboard
@@ -2670,3 +2671,123 @@ current_phase=Closed
 local_test_confirmed=true
 close_note=2026-08-19 per miya: data patch (bandar_daftar_id backfill, A12 package) passed back to client on Redmine; awaiting their close. No code committed under this ticket - code null-guard leg stays with ADHOC-PRBB-2026-1
 qa_doc=projects/coding-projects/archive/QA-275501/QA-275501.md
+
+qa=QA-265414
+status=archived
+phase=0
+scope=Semua-urusan/teknikal-Charting-Mohon
+ticket_type=bug
+local_test_confirmed=false
+qa_doc=projects/coding-projects/archive/QA-265414/QA-265414.md
+note=FINAL (STG+IT DB-proven): PT/26 real teknikal bug - officer picked Ya (umm_keputusan 904) but SemakanUlasanSyorForm never sets flowable tolakPermohonan=true -> default route Penyediaan Laporan Tanah. PLPS works (904->true->Perakuan). PLPS/25 = no Ya recorded (blank), needs BA re-test. Owner=teknikal(Amirul), not us. Redmine 265414 already Closed.
+closed=2026-08-21
+close_note=RECONCILED from Redmine: Closed (Anis Nabilah, 100%). Not our fix - teknikal(Amirul) owns officer-picked-Ya flowable route bug. No residual.
+
+qa=QA-275475
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\153. ESOKONGAN #275475 - Hasil - Pelupusan - PLPS - Tiada Rekod Bayaran - Resit
+status=archived
+phase=0
+ticket_type=bug
+env=ESOKONGAN
+tracker=eSOKONGAN
+scope=Hasil/PLPS (cross-team)
+subject=Hasil > Pelupusan > PLPS > Tiada Rekod Bayaran / Resit
+assigned_to_me=2026-08-17
+current_phase=Phase 0 RETRIEVED only (2026-08-18) — my task = issue 2: Pelupusan flowable service ServiceTaskModuleIntegrationCommand.process():29 StaleObjectStateException on Aplikasi#3433478 (mlkPelupusanPermohonanService PLPS 24419). Batal /17 = Hasil's, NOT mine. Test: PTMLK/02/L/PLPS/2026/17(failed) + /19(good, resit 260812BSAT00487). Not investigated, no code/DB yet.
+quest_start=2026-08-18
+local_test_confirmed=false
+qa_doc=projects/coding-projects/archive/QA-275475/QA-275475.md
+held_reason=retrieved for its own session; postgres MCP offline 2026-08-18
+closed=2026-08-21
+close_note=RECONCILED from Redmine: Closed (Idris, 100%). Cross-team Hasil/PLPS; our half (StaleObjectState PLPS 24419) superseded. No code shipped by us.
+
+qa=QA-275152
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\143. ESOKONGAN #275152 - Pelupusan - Awam - Sistem Papar Ralat
+phase=0 - W3 blind + W4 audit done (2026-08-17): CONFIRMED both waves; fix in own session
+status=archived
+ticket_type=bug
+env=ESOKONGAN
+issue_one_liner=Pelupusan > Awam > Sistem Papar Ralat
+assigned_to_me=2026-08-12
+urusan=AWAM
+current_phase=Not drafted — opened at board-truth sweep 2026-08-16; family A10/ADHOC-PRBB-2026-1 per prior session note
+quest_start=2026-08-16
+closed=2026-08-21
+close_note=RECONCILED from Redmine: Closed (Idris, 100%). AWAM Sistem Papar Ralat - our A10/PRBB-family fix superseded by Idris close. ADHOC-PT-2026-4 bundled here keeps its own residual.
+qa_doc=projects/coding-projects/archive/QA-275152/QA-275152.md
+
+qa=QA-275587
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\150. INTERNAL ISSUE (PROD) #275587 - Pelupusan - MLPS - 1) Tukar No PT. ke ''--  2) Rotate Pelan
+phase=0 - Recon+Rubric done via sweep W1+W2 (2026-08-17); qa_doc ready; fix in own session
+status=archived
+ticket_type=bug
+env=Pelupusan > MLPS > 1) Tukar No PT. ke ''-"  2) Rotate Pelan
+issue_one_liner=Pelupusan > MLPS > 1) Tukar No PT. ke ''-'  2) Rotate Pelan
+assigned_to_me=2026-08-14
+closed=2026-08-21
+close_note=RECONCILED from Redmine: Closed (Idris, 100%). = ADHOC-MLPS-2026-1 (MLPS No PT->dash + rotate pelan). Superseded; diagnosis banked in qa_doc.
+qa_doc=projects/coding-projects/archive/QA-275587/QA-275587.md
+
+qa=QA-276074
+status=archived
+phase=0
+current_phase=Recon-done
+scope=AWAM
+ticket_type=bug
+subject=AWAM count-based PRADLL numbering creates duplicate kod_dokumen -> SPOC Perserahan kaunter crash Duplicate key PRADLL3
+tracker=eSOKONGAN
+local_test_confirmed=false
+assigned_to_me=false
+quest_start=2026-08-18
+qa_doc=projects/coding-projects/archive/QA-276074/QA-276074.md
+closed=2026-08-21
+close_note=RECONCILED from Redmine: Resolved (Nurul Amirah, 100%). AWAM PRADLL count->max fix shipped int-env 2060baad8a. assigned_to_me=false.
+
+qa=QA-274318
+quest_start_ts=2026-08-06T11:56:39.945Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\132. ESOKONGAN #274318 - Pelupusan - Kemaskini Jabatan Teknikal dan JPPH tidak Tepat
+phase=1
+status=archived
+ticket_type=bug
+env=Pelupusan > Kemaskini Jabatan Teknikal dan JPPH tidak Tepat
+issue_one_liner=Pelupusan > Kemaskini Jabatan Teknikal dan JPPH tidak Tepat
+assigned_to_me=2026-08-06
+current_phase=Delegated to etanah-common team; patch4 (1.1.24-MLK.beta.patch4, org-kod JPPH exclusion) shipped to mlk/int-env @ 0774903d4b 2026-08-14; awaits miya deploy+verify then close
+delegated_to=etanah-common team
+delegated_date=2026-08-12
+local_test_confirmed=true
+closed=2026-08-21
+close_note=RECONCILED from Redmine: Verified (Nurul Amirah, 100%). Delegated etanah-common team; patch4 1.1.24-MLK.beta.patch4 int-env 0774903d4b. RESIDUAL: miya deploy+verify - likely done given Verified.
+qa_doc=projects/coding-projects/archive/QA-274318/QA-274318.md
+
+qa=QA-275505
+quest_start_ts=2026-08-19T04:08:45.637Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\151. ESOKONGAN #275505 - Pelupusan - PPTPB - 1) Tanah Rizab tidak masuk dalam Jadual  2) Keadaa
+phase=1
+status=archived
+ticket_type=bug
+env=Pelupusan > PPTPB > 1) Tanah Rizab tidak masuk dalam Jadual  2) Keadaan Tanah papar Blank
+issue_one_liner=Pelupusan > PPTPB > 1) Tanah Rizab tidak masuk dalam Jadual  2) Keadaan Tanah papar Blank
+assigned_to_me=2026-08-14
+current_phase=Apply
+notes=2026-08-19: bundled fix with QA-276181 (same template, release under 275505). Java fixes applied (populateKeadaanTanah + populateLuasSyor); template edit BLOCKED by open Word instance (miya has TemplateKertasPertimbanganPentadbirTanah_PPTPB.docx open)
+closed=2026-08-21
+close_note=RECONCILED from Redmine: Verified (Nurul Amirah, 100%). PPTPB Kertas Pertimbangan CC; Java+template on mlk/esokongan/275505, bundled 276181/276182. RESIDUAL: template edit was Word-locked at last touch; Verified implies BA passed.
+qa_doc=projects/coding-projects/archive/QA-275505/QA-275505.md
+
+qa=QA-276181
+quest_start_ts=2026-08-20T08:47:52.302Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\155. ESOKONGAN #276181 - Pelupusan - PPTPB - 1) Kemaskini Luas perlu delete semua 2) Font papar
+phase=1
+status=archived
+ticket_type=bug
+env=mlit
+issue_one_liner=Pelupusan > PPTPB > 1) Kemaskini Luas perlu delete semua 2) Font papar berbeza
+assigned_to_me=2026-08-19
+current_phase=font+bezaLuas CC deployed to int-env 87d0572543 via merge; awaiting BA re-test
+quest_start=2026-08-19
+notes=2026-08-19: Phase 0 done — same template as 275505 (Kertas Pertimbangan PPTPB); latest BA journal narrows scope to (1) METER PERSEGI -> Meter Persegi (2) font Arial 11; fix rides mlk/esokongan/275505
+branch=mlk/esokongan/275505
+qa_doc=projects/coding-projects/archive/QA-276181/QA-276181.md
+closed=2026-08-21
+close_note=RECONCILED from Redmine: Resolved (Nurhafizah, 100%). Font Arial11 + METER PERSEGI casing + bezaLuas CC; rides mlk/esokongan/275505, int-env 87d0572543. RESIDUAL: BA re-test - Resolved implies done.

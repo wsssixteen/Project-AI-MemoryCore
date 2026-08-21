@@ -4,6 +4,21 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-20 (eve) — #276504 int-deploy + #276074/#276349 AWAM fixes → int-env (BA test) + code-check audit/de-bloat
+
+**Recap**: 3 AWAM things to `mlk/int-env` for BA testing (all uncommitted-to-master; Redmine planned-release owed):
+- **#276504** (Alex's PraHakmilik-bandar fix, HASIL receipt NPE) — cherry-picked to int-env (was release/1.7.0-based; merge would drag 15 tickets).
+- **#276074** — `AwamCommonService.saveDokumenDisertakan` PRADLL numbering count→max-based (elak duplicate kod → SPOC kaunter "Duplicate key PRADLL3"). Branch `mlk/esokongan/276074` @`2060baad8a`.
+- **#276349** (= ADHOC-PPJK-2026-1, A18) — PPJK Senarai Warta 3-part: `PelupusanService.findMaklumatPerizabanVOByNoWartaAndTarikhWarta:10232` return **List** (was last-only) · form `addAll` + `onGoNext` honors `selectedMaklumatWartaVOList` + empty-guard ralat "Sila pilih Senarai Warta yang terlibat untuk meneruskan permohonan" · xhtml `nextProcessBtn:178` `update="@this"` → +growl (else message never renders). Branch `mlk/esokongan/276349` @`9c5afea5c5`.
+- BA test data (mlit): #276349 warta `NO. 86`/`27/02/2025` (3 lots 15193-95, verified) · #276074 No Resit Carian Rasmi `260820BSAT00019` (MCL entry) · login SAMSIAH BINTI JAAMAT.
+
+**System work this session**:
+- Banked `feedback_awam_test_scenario_entry_key.md` — AWAM test-scenario ENTRY KEY is per-urusan (carian-rasmi MCL/PSBS/PLTP/PPTPB/PRBB → No Resit; PPJK → No Warta+Tarikh; Pelupusan → Permohonan ID+login).
+- **code-check audit + de-bloat**: added `msg-render` row → miya flagged bloat → REVERTED, FOLDED into `sibling-diff` guidance (growl-in-`update`). `audit.js` 5/5 · fixture 14/14 · mutation 5/5 · variation battery 10/10. LOG-PROVEN: `msg-render` caused **9/31** pre-code-check blocks in one session (self-inflicted).
+- Slip logged (convention): commit messages ignored team format (`AWAM` caps + over-segmented; convention = `Ref #<n> - <Urusan|Awam> - <action>`).
+
+**Improvable gate frictions (7.5 proposals logged)**: compile-gate marker main-repo-vs-worktree path · compile-gate `"commit"` substring false-positive on echo · branch-at-Apply gate mis-scoped to unrelated QA-274740.
+
 ## 2026-08-21 (early AM) — Full-system audit night (miya /goal: audit every failure, make DE steps critical)
 - **THE find — bypass-token self-disarm bug**: 9 gates scanned the WHOLE transcript for their `[skip-*]` token, so a gate's own help text (printed at first block) permanently disarmed it for the session. design-consult-gate rode disarmed since ~2026-08-20 (worktree log `bypassed: skip-design-consult` with no token ever typed). FIX: `lib/bypass-scope.js` — token counts ONLY in current-turn assistant text; all 9 gates patched, 9 evals green (54 fixtures). Commit `a991511`.
 - **de-close-gate born** (forge, eval 8/8): DE close now BLOCKS on C1 blockless-ticket (QA-276182 replay) · C2 resume-readiness-ran · C3 session-trim-ran. Commit `db2c0e3`+`237411b`.
@@ -4413,6 +4428,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

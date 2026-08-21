@@ -1,5 +1,21 @@
 # Current Session
 
+## 2026-08-21 — QA-276549 PRBB Perserahan Kaunter doc-mandatory: Scout→Rubric→Apply→handoff + module-boundary rule banked
+
+**Recap**: `/quest 276549` (PRBB, "Tidak boleh seterusnya kerana Dokumen Mandatori"). BA: "Salinan Resit Cukai Tahunan" + "Sijil Carian Rasmi" mandatori for ALL Taraf Tanah; should be non-mandatory except Tanah Milik. Twin of AWAM #270297. Test data `PTMLK/01/L/PRBB/2026/39` (apl 3433001, Rizab) login SaffuanH@melaka.gov.my, MLKSTG/et_main_stg2.
+
+**Root cause (VERIFIED, DB-proven)**: SKM "Dokumen Disertakan" screen (skrin `PLPS_SMKN`) = common `CommonSenaraiSemakanForm` → `CommonSemakanPanelForm.updateFlagWajibSenaraiSemakPelupusan():748` decides wajib — already forces Tanah-Milik→mandatory, has NO non-Milik release. `flag_wajib=Y` persisted in `umm_a_dok_kmskn`. Taraf Tanah source: counter→`umm_aplikasi.mklmt_tmbhn` "tarafTanah"; staff/online→`umm_a_permohonan_tnh.kelas_tnh_id`.
+
+**Fix-site journey (3 corrections, all this session)**: (1) first placed at `etanah-spoc-hasil PerserahanService.populateAppDokumenKemasukan:5343` — WRONG (payment path; DB `created_by`+timestamp proved counter rows written at perserahan not payment). (2) moved to `etanah-spoc-hasil PopulateDataUtil.populateAppDokumenKemasukanBySemakanDokumen:965` — correct counter generator, but SPOC = off-limits per miya's new rule. (3) FINAL = `etanah-common CommonSemakanPanelForm:748` (the read/validate gate) = STRONGER: fixes online + counter + already-stuck apps.
+
+**New rule banked**: `feedback_module_edit_boundary.md` — edit only awam/pelupusan; common = pass/handoff; spoc = NEVER edit, cater from our side (place fix where our tugasan reads/validates). miya 2026-08-21.
+
+**Deliverables** (Task `2. Fix\`): miya's renamed `2. CommonSemakanPanelForm.java.java` (Fix A common, BEFORE/AFTER, canonical — to common team) + `FIX-B-SPOC (alternative, new apps only).java`. Fix = non-Milik PRBB → `docsToSetNotMandatory` SCR + PLP_RESITCUKAI; PRBB-guarded (safe for other urusan). Control verified: `PTMLK/02/L/PRBB/2026/11` (apl 3431038) = Tanah Milik → mandatory correct.
+
+**Branch**: `mlk/esokongan/276549` pushed in etanah-spoc-hasil (now unused; fix is common) — left in place per miya.
+
+**Resume point**: common team merges Fix A → build → test (Case 1 non-Milik passes · Case 2 Tanah Milik stays mandatory). Fix NOT applied to any repo (handoff artifact). Bounty pending: QA-275501 (parked).
+
 ## 2026-08-20 (night-2) — #276504 root-cause + OUR fill-only fix on top of Alex → int-env (deploy re-run pending)
 
 **Recap**: miya asked me to root-cause #276504 (HASIL "Error during generate receipt", Critical PERMANENT FIX). Full context loaded (Description stack trace + 9 journal entries + rework video `276504_REWORK - MLIT.mp4` + DB).
@@ -23,18 +39,3 @@
 **System work (the main deliverable)**: miya flagged a real design hole — DE Step 7 (etanah-knowledge sweep) was model-judgment, silently skippable → session knowledge lost → next session re-derives = wasted usage. Built **`domain/de-knowledge-gate/`** (hook-only Feature, via forge): Stop hook fires on DE-close banner, BLOCKS when knowledge-worthy signals present (≥3 file:line · research .md/.html deliverable · DB MCP query · trace intent) but no `## Knowledge candidates` list/sentinel emitted. Non-auto-write (miya approves each bake). Eval 11/11 (10 verdict + 1 real-process effect exit-2). Registered in settings.json Stop; NUKE-MARKER + README present; expansion-protocol Step 7 pointer added.
 
 **Resume point**: de-knowledge-gate is live — retire 2026-09-19 if fired ≥1× + no rollback. If it misfires, NUKE-MARKER has the rollback recipe. Bounty pending: QA-275501 (parked, unrelated).
-
-## 2026-08-20 (eve) — #276504 int-deploy + #276074/#276349 AWAM fixes → int-env (BA test) + code-check audit/de-bloat
-
-**Recap**: 3 AWAM things to `mlk/int-env` for BA testing (all uncommitted-to-master; Redmine planned-release owed):
-- **#276504** (Alex's PraHakmilik-bandar fix, HASIL receipt NPE) — cherry-picked to int-env (was release/1.7.0-based; merge would drag 15 tickets).
-- **#276074** — `AwamCommonService.saveDokumenDisertakan` PRADLL numbering count→max-based (elak duplicate kod → SPOC kaunter "Duplicate key PRADLL3"). Branch `mlk/esokongan/276074` @`2060baad8a`.
-- **#276349** (= ADHOC-PPJK-2026-1, A18) — PPJK Senarai Warta 3-part: `PelupusanService.findMaklumatPerizabanVOByNoWartaAndTarikhWarta:10232` return **List** (was last-only) · form `addAll` + `onGoNext` honors `selectedMaklumatWartaVOList` + empty-guard ralat "Sila pilih Senarai Warta yang terlibat untuk meneruskan permohonan" · xhtml `nextProcessBtn:178` `update="@this"` → +growl (else message never renders). Branch `mlk/esokongan/276349` @`9c5afea5c5`.
-- BA test data (mlit): #276349 warta `NO. 86`/`27/02/2025` (3 lots 15193-95, verified) · #276074 No Resit Carian Rasmi `260820BSAT00019` (MCL entry) · login SAMSIAH BINTI JAAMAT.
-
-**System work this session**:
-- Banked `feedback_awam_test_scenario_entry_key.md` — AWAM test-scenario ENTRY KEY is per-urusan (carian-rasmi MCL/PSBS/PLTP/PPTPB/PRBB → No Resit; PPJK → No Warta+Tarikh; Pelupusan → Permohonan ID+login).
-- **code-check audit + de-bloat**: added `msg-render` row → miya flagged bloat → REVERTED, FOLDED into `sibling-diff` guidance (growl-in-`update`). `audit.js` 5/5 · fixture 14/14 · mutation 5/5 · variation battery 10/10. LOG-PROVEN: `msg-render` caused **9/31** pre-code-check blocks in one session (self-inflicted).
-- Slip logged (convention): commit messages ignored team format (`AWAM` caps + over-segmented; convention = `Ref #<n> - <Urusan|Awam> - <action>`).
-
-**Improvable gate frictions (7.5 proposals logged)**: compile-gate marker main-repo-vs-worktree path · compile-gate `"commit"` substring false-positive on echo · branch-at-Apply gate mis-scoped to unrelated QA-274740.
