@@ -1,5 +1,21 @@
 # Current Session
 
+## 2026-08-21 (late) — QA-276436 PPTPB counter→SKM split-fix + built `ticket-close-block` Feature + Redmine reconcile
+
+**Recap**: resumed `/quest 276436` (PPTPB Perserahan Kaunter: Kategori Tanah + Tujuan Permohonan + Keluasan Tanah Dipohon filled at counter, blank at SKM). First verified miya's question — is this a lost 1.3.5-vs-1.3.4 fix? **NO** (git-proven: `1.3.5..1.3.4` empty, writer byte-identical through master → standing omission, not regression).
+
+**Split resolution (3 fields, 2 owners)**: (a) **Keluasan** = OUR fix — counter writes `umm_a_hkmlk.mklmt_tmbhn.luasDimohon` (per-hakmilik, reachable); added PPTPB-gated block in `etanah-pelupusan PelupusanSpocService.java` kaunter else-branch reading that key. Commit `01be3f8dad` on `mlk/276436` → merged `mlk/int-env` `f79e9393f1`, compiled green. (b) **Tujuan + Kategori** = SPOC handoff — counter save `PelupusanSpocModuleStrategy.saveMaklumatPerserahanTab:655/:684` writes `tujuanPermohonan` only for urusans in its list; PRBB & PRU in, PPTPB NOT (DB-proven). Our reader `PelupusanSpocService.java:715` already reads it un-gated → SPOC fix alone closes Tujuan; Kategori reverse-engineers from Tujuan.
+
+**Rough session — corrections banked**: (1) never traced the screenshot's actual xhtml — grepped a keyword, matched the wrong SPOC tab, concluded wrong module twice (flip-flopped SPOC→pelupusan→SPOC before DB settled it). (2) handoff comments were AI-babble + CAPS — miya rewrote to bare statements ("PPTPB missing this inside DB"). (3) tried to BUILD the SPOC fix + compile — miya: "we're HANDING it off, build the WORDING". (4) put the evidence query in the Task folder — belongs in chat (not a data patch). Slips: `didnt-trace-ui-screenshot`, `wrong-module-from-keyword-grep`, `cross-module-unverified-analog`, `handoff-babble-not-statement`, `evidence-query-in-task-folder`.
+
+**New memory**: `feedback_ticket_writing_style.md` — miya's plain ticket voice (short human sentences, no technicals/CAPS/AI-words) with his verbatim #276436 example as the target. **Updated**: `feedback_cross_module_handoff_artifact.md` (+4: verify-in-target-module before proposing · 4-deliverable set · comments-are-statements · evidence-query-in-chat).
+
+**New Feature — `domain/ticket-close-block/`** (per miya, built via system-design/system-rules): deterministic git commit-reference `<pre>` block generator, module-aware (AWAM=branch only; pelupusan=branch+int-env). `--repo --ticket --module [--branch --intenv-sha --cherrypick]`, logs to log.jsonl. README (12 adversarial scenarios), NUKE-MARKER, wired into `feedback_ticket_writing_style`. Smoke-tested both module paths. **New knowledge**: `etanah-knowledge/melaka/SPOC-COUNTER.md` (SPOC counter mechanism + PPTPB gap + 2-part fix).
+
+**Redmine reconcile (this DE, per miya "check all our tickets")**: board = 0 assigned-open mine. Closed 7 stale active.txt blocks matching Redmine terminal state (274740·275501·276654·276182·276584·276504 + 276436 our-part-done), archived 6. active.txt 17→14 open (7 ADHOCs + 276549/276181 ours + 274914 Idris's).
+
+**Resume point**: 276436 off our plate — miya sends SPOC handoff + builds int-env for BA to test Keluasan. Nothing more our-side.
+
 ## 2026-08-21 — QA-276549 PRBB Perserahan Kaunter doc-mandatory: Scout→Rubric→Apply→handoff + module-boundary rule banked
 
 **Recap**: `/quest 276549` (PRBB, "Tidak boleh seterusnya kerana Dokumen Mandatori"). BA: "Salinan Resit Cukai Tahunan" + "Sijil Carian Rasmi" mandatori for ALL Taraf Tanah; should be non-mandatory except Tanah Milik. Twin of AWAM #270297. Test data `PTMLK/01/L/PRBB/2026/39` (apl 3433001, Rizab) login SaffuanH@melaka.gov.my, MLKSTG/et_main_stg2.
@@ -29,13 +45,3 @@
 **Rough session — 3 corrections banked**: (1) branch naming — INTERNAL ISSUE → `mlk/internal/<num>`, NEVER invent a suffix (`-permfix`) or abbreviation; (2) do NOT replace a colleague's fix — build on his commit; (3) commit-gate/compile-gate read the WORKTREE's stale `active.txt`/`.claude/state`, not the main-repo live one → resolved to wrong ticket (QA-274740). Improvement proposal logged.
 
 **Resume point**: after miya re-runs the deploy on MLIT, do a fresh eMohon PPTPB save → I verify `umm_p_hkmlk.bandar_dipohon_id` non-null (I hold mlit MCP). Then Redmine planned-release list (int-env never reaches master).
-
-## 2026-08-20 (night) — Upload-flow research (Pelupusan+Awam→DMS) + built `de-knowledge-gate` + banked FLOW-TRACES
-
-**Session shape**: miya asked for extensive verified research on the file-upload flow across pelupusan + awam (UI→DMS, path creation, common hops) → delivered story diagram + separate file:line tables (audited) → 2 more asks: a friend-facing `.md` handover + an HTML **Artifact** logic diagram (published `https://claude.ai/code/artifact/3ebdbe52-a09b-417b-9dd7-59da0b351c6f`). No etanah repo code changed (read-only trace). Worktree `oprbb-quantity-display-issue-95483d`, on `main`.
-
-**The research (banked → FLOW-TRACES.md)**: upload = two-click two-phase. CLICK1 pick file → `uploadTempDocument(byte[])` → temp doc in separate `etanah-dms` app (HTTP-invoker remoting), only `tempDocumentId` in RAM. CLICK2 Save → slot row (`AppDokumenKemasukan` PLP / `PraSemakan` AWAM portal) + permanent DMS doc + `Document` pointer row (`medan/medanPk`). Module diff: PLP finalizes `create(fileBytes)`; AWAM finalizes `saveTempDocument(tempDocumentId)`. Listener: PLP shared `BaseFileUploadVO:110` (common); AWAM per-form. Physical path lives in `etanah-dms` (out of workspace). Full file:line map in FLOW-TRACES.md §File upload → DMS.
-
-**System work (the main deliverable)**: miya flagged a real design hole — DE Step 7 (etanah-knowledge sweep) was model-judgment, silently skippable → session knowledge lost → next session re-derives = wasted usage. Built **`domain/de-knowledge-gate/`** (hook-only Feature, via forge): Stop hook fires on DE-close banner, BLOCKS when knowledge-worthy signals present (≥3 file:line · research .md/.html deliverable · DB MCP query · trace intent) but no `## Knowledge candidates` list/sentinel emitted. Non-auto-write (miya approves each bake). Eval 11/11 (10 verdict + 1 real-process effect exit-2). Registered in settings.json Stop; NUKE-MARKER + README present; expansion-protocol Step 7 pointer added.
-
-**Resume point**: de-knowledge-gate is live — retire 2026-09-19 if fired ≥1× + no rollback. If it misfires, NUKE-MARKER has the rollback recipe. Bounty pending: QA-275501 (parked, unrelated).

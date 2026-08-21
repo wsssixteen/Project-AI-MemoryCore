@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-20 (night) — Upload-flow research (Pelupusan+Awam→DMS) + built `de-knowledge-gate` + banked FLOW-TRACES
+
+**Session shape**: miya asked for extensive verified research on the file-upload flow across pelupusan + awam (UI→DMS, path creation, common hops) → delivered story diagram + separate file:line tables (audited) → 2 more asks: a friend-facing `.md` handover + an HTML **Artifact** logic diagram (published `https://claude.ai/code/artifact/3ebdbe52-a09b-417b-9dd7-59da0b351c6f`). No etanah repo code changed (read-only trace). Worktree `oprbb-quantity-display-issue-95483d`, on `main`.
+
+**The research (banked → FLOW-TRACES.md)**: upload = two-click two-phase. CLICK1 pick file → `uploadTempDocument(byte[])` → temp doc in separate `etanah-dms` app (HTTP-invoker remoting), only `tempDocumentId` in RAM. CLICK2 Save → slot row (`AppDokumenKemasukan` PLP / `PraSemakan` AWAM portal) + permanent DMS doc + `Document` pointer row (`medan/medanPk`). Module diff: PLP finalizes `create(fileBytes)`; AWAM finalizes `saveTempDocument(tempDocumentId)`. Listener: PLP shared `BaseFileUploadVO:110` (common); AWAM per-form. Physical path lives in `etanah-dms` (out of workspace). Full file:line map in FLOW-TRACES.md §File upload → DMS.
+
+**System work (the main deliverable)**: miya flagged a real design hole — DE Step 7 (etanah-knowledge sweep) was model-judgment, silently skippable → session knowledge lost → next session re-derives = wasted usage. Built **`domain/de-knowledge-gate/`** (hook-only Feature, via forge): Stop hook fires on DE-close banner, BLOCKS when knowledge-worthy signals present (≥3 file:line · research .md/.html deliverable · DB MCP query · trace intent) but no `## Knowledge candidates` list/sentinel emitted. Non-auto-write (miya approves each bake). Eval 11/11 (10 verdict + 1 real-process effect exit-2). Registered in settings.json Stop; NUKE-MARKER + README present; expansion-protocol Step 7 pointer added.
+
+**Resume point**: de-knowledge-gate is live — retire 2026-09-19 if fired ≥1× + no rollback. If it misfires, NUKE-MARKER has the rollback recipe. Bounty pending: QA-275501 (parked, unrelated).
+
 ## 2026-08-20 (eve) — #276504 int-deploy + #276074/#276349 AWAM fixes → int-env (BA test) + code-check audit/de-bloat
 
 **Recap**: 3 AWAM things to `mlk/int-env` for BA testing (all uncommitted-to-master; Redmine planned-release owed):
@@ -4432,6 +4442,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
