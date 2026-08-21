@@ -449,11 +449,15 @@ function appendActiveBlock(issue, parsed, taskFolderAbs, assignedDate) {
 // Pre-v5 history (kept for context, not for re-derivation): v1 unconditional · v2/v4
 // gated on `2. Fix/` non-empty proxy · v3 dropped that gate. Replaced wholesale 2026-05-20.
 
-// Detect if a journal entry corresponds to a transition INTO Rework status
-// (Redmine status_id=23 in this instance). Used to count rework cycles.
+// Detect if a journal entry corresponds to a transition INTO a Rework status.
+// This instance uses SEVERAL rework status_ids (observed: 23, 31, 38 — e.g.
+// "Rework", "Rework (Requirement Update)"). Keying on a single id (was '23')
+// under-counted cycles for reopens that landed on 31/38, so no cycle subfolder
+// was created. Used to count rework cycles. (Fixed 2026-08-21, #276181 audit.)
+const REWORK_STATUS_IDS = new Set(['23', '31', '38']);
 function isReworkTransition(journal) {
     return (journal.details || []).some(d =>
-        d.property === 'attr' && d.name === 'status_id' && String(d.new_value) === '23'
+        d.property === 'attr' && d.name === 'status_id' && REWORK_STATUS_IDS.has(String(d.new_value))
     );
 }
 
@@ -499,7 +503,12 @@ async function downloadNewAttachments(destFolder, issueId, knownFilenames) {
 //      journal note indicates a different issue).
 // Returns: { folderRelPath, unarchived, statusFolderPath } or null.
 async function addStatusFolder(existingFolderName, status, journals) {
-    if ((status || '').toLowerCase().trim() !== 'rework') return null;
+    // Loose match — the Redmine status cell carries DESCRIPTIVE labels
+    // ("Rework (Requirement Update)", "Rework (Bug)"), not the bare word "rework".
+    // The old `!== 'rework'` equality rejected every descriptive label, so a reopened
+    // ticket was neither unarchived nor given a cycle folder. Now matches classifyIssues'
+    // own `/rework/i` test for consistency. (Fixed 2026-08-21, #276181 audit — B1/B3.)
+    if (!/rework/i.test(status || '')) return null;
 
     // (1) Unarchive if needed
     let folderRelPath = existingFolderName;
@@ -599,6 +608,30 @@ function printReport(results) {
 
 // ─── MAIN ────────────────────────────────────────────────────────────────────
 
+// v8 (2026-08-21, #276181 audit — B4): reactivate reopened tickets on the PLAIN sync path.
+// Until today, addStatusFolder (unarchive Archive/ → active + create the N. Rework cycle
+// folder) was called ONLY inside runWithCreate() — the `--create` path. The plain
+// `node quest/redmine-sync.js <num>` command that retrieve-sync-gate mandates runs run(),
+// which refreshed History.txt but NEVER unarchived or created a rework cycle folder. A
+// reopened ticket (#276181: closed→reopened to "Rework (Requirement Update)") therefore
+// stayed in Archive\ with no cycle folder, and Ruri had to notice + reactivate it by hand.
+// Extracted here so BOTH run() and runWithCreate() reactivate. Must run BEFORE journal/
+// attachment sync so those write to the reactivated (active) path.
+async function reactivateReworkFolders(results) {
+    for (const issue of results.rework) {
+        if (!issue._existing) continue;
+        const journals = await fetchIssueJournals(issue.id);
+        const result = await addStatusFolder(issue._existing, issue._status, journals);
+        if (result && result.unarchived) {
+            console.log(`  ↩️  Unarchived: ${issue._existing} → ${result.folderRelPath}`);
+            issue._existing = result.folderRelPath;
+        }
+        if (result && result.statusFolderPath) {
+            console.log(`  🔁 Status folder added: ${result.statusFolderPath}`);
+        }
+    }
+}
+
 async function syncJournalsForExisting(results) {
     // Q1 todo (2026-05-07, applied 2026-05-11): write/refresh History.txt for every existing ticket
     // so BA replies + status changes are visible without manually opening Redmine.
@@ -647,6 +680,7 @@ async function run() {
         await enrichWithHtmlStatus(issues);
         const results = classifyIssues(issues);
         printReport(results);
+        await reactivateReworkFolders(results);
         await syncJournalsForExisting(results);
         await syncAttachmentsForExisting(results);
 
