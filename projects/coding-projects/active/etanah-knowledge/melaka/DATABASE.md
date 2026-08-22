@@ -805,6 +805,33 @@ WHERE ts.aplikasi_id = <your_aplikasi_id>;
 
 ---
 
+## 10b. Implicit table links — name-matched joins with NO declared FK (added 2026-08-22, Etanah Atlas tables-upgrade)
+
+> **The trap this section kills**: `information_schema` FK queries and any FK-based ERD are INCOMPLETE for et_main. Many real join paths carry **no FOREIGN KEY constraint** — the tables link purely by column-name convention (child column = parent's PK name). A "no FK found" result is NEVER proof two tables are unrelated.
+
+**Detection rule (mechanical, reusable)**: a column ending `_id` on table T, with no declared FK on (T, col), whose name equals another table P's single-column PK → implicit link T.col → P. Run against the schema dump this yields **~350 business links** (after excluding backup/tmp/migration housekeeping tables). Machine-readable list + verifications: `etanah_atlas/config/implicit_links.melaka.json`; the Atlas build recomputes candidates every build (`etanah_atlas/lib/build_dataset.py compute_implicit_links()`).
+
+**Data-verified links (mlit `et_main_mlit`, 2026-08-22)** — orphans = child values missing from parent:
+
+| Child.column → Parent | non-null rows | orphans |
+|---|---|---|
+| `ind_versi_dhd.mklmt_hkmlk_id` → `ind_mklmt_hkmlk` | 1,547,687 | 0 |
+| `umm_a_dok_kmskn.aplikasi_id` → `umm_aplikasi` | 5,033,043 | 0 |
+| `umm_a_dok_keluaran.aplikasi_id` → `umm_aplikasi` | 8,410,071 | 0 |
+| `umm_a_langkah.a_tgsn_id` → `umm_a_tgsn` | 42,099 | 10 |
+| `spc_capaian_p_aplikasi.p_aplikasi_id` → `umm_p_aplikasi` | 12,224 | 0 |
+| `umm_a_pihak_bkptg.pihak_bkptg_id` → `ind_pihak_bkptg` | 3,551,065 | 6 |
+| `umm_a_pihak_bkptg.a_hkmlk_id` → `umm_a_hkmlk` | 3,889,288 | 13 |
+| `umm_a_hkmlk.sktn_kptgn_id` → `ind_sktn_kptgn` | 4,162,694 | 0 |
+| `con_a_mohon_kebenaran.aplikasi_id` → `umm_aplikasi` | 54,715 | 0 |
+| `str_p_strata.p_aplikasi_id` → `umm_p_aplikasi` | 160 | 0 |
+
+Notables: the **document tables (`umm_a_dok_kmskn`, `umm_a_dok_keluaran`) hang off `umm_aplikasi` with NO FK** despite 5M/8.4M rows — FK-based blast-radius analysis misses them entirely. Same for the **SPOC access table `spc_capaian_p_aplikasi`**. `ind_versi_dhd` is the hakmilik-version spine (see the hakmilik change map: `ind_hkmlk.hkmlk_id → ind_versi_dhd (flag_aktif='Y') → ind_mklmt_hkmlk.mklmt_hkmlk_id`) — its `mklmt_hkmlk_id` leg is implicit-only.
+
+**Limits**: (a) this detection cannot see links carried INSIDE JSON columns (`mklmt_tmbhn` spine — §16) or polymorphic id columns; (b) `tkl_p_laporan_tnh.aplikasi_id → umm_aplikasi` is structurally certain but had 0 non-null rows on mlit at check time (untestable); (c) heuristic candidates not in the verified table above are marked `⇢?` in the Atlas — verify with an orphan-count query before relying on one.
+
+---
+
 ## 11. Standard Column Patterns
 
 All domain tables follow these audit columns:
