@@ -81,6 +81,27 @@ def compute_implicit_links(parsed, implicit_cfg):
     return links
 
 
+def compute_families(table_names):
+    """Name-stem families: tokens shared by >=5 tables become a browsable group.
+    A table can belong to several families (umm_a_hkmlk -> hkmlk; hsl_bayaran_fi -> bayaran, fi is too short)."""
+    from collections import Counter
+    STRUCTURAL = {"a", "p", "id", "mlk", "trg", "tmp", "main", "list", "data", "no", "new", "old",
+                  "umm", "ind", "rjk", "pcp", "skg", "plp", "dft", "hsl", "str", "pks", "amb", "tkl",
+                  "con", "bgn", "llg", "mig", "dm", "msk", "sptb", "tkr", "sws", "ckp", "spc", "gt",
+                  "backup", "bak", "masked", "test", "cutover", "delete", "delta", "stage", "ubah", "proses"}
+    freq = Counter()
+    toks_by_table = {}
+    for n in table_names:
+        toks = [t for t in n.split("_") if len(t) >= 3 and t not in STRUCTURAL and not t.isdigit()]
+        toks_by_table[n] = toks
+        freq.update(set(toks))
+    fams = {}
+    for tok, c in freq.items():
+        if c >= 5:
+            fams[tok] = sorted(n for n, toks in toks_by_table.items() if tok in toks)
+    return [{"key": k, "count": len(v), "tables": v} for k, v in sorted(fams.items(), key=lambda x: -len(x[1]))]
+
+
 def main(profile="melaka"):
     parsed = json.load(open(BUILD / "schema_parse.json", encoding="utf-8"))
     mapping_file = CONFIG / f"mapping.{profile}.json"
@@ -91,6 +112,10 @@ def main(profile="melaka"):
     implicit_cfg = json.load(open(implicit_file, encoding="utf-8")) if implicit_file.exists() else {}
     tugasan_file = CONFIG / f"tugasan_tables.{profile}.json"
     tugasan_cfg = json.load(open(tugasan_file, encoding="utf-8")) if tugasan_file.exists() else {"tugasans": []}
+    census_file = BUILD / "tugasan_census.json"
+    census = json.load(open(census_file, encoding="utf-8")) if census_file.exists() else {"tugasans": []}
+    screens_file = CONFIG / f"screen_tables.{profile}.json"
+    screen_tables = json.load(open(screens_file, encoding="utf-8")) if screens_file.exists() else {"screens": {}}
     raw_tables = {t["name"]: t for t in parsed["tables"]}
     moduls = mapping["moduls"]
 
@@ -188,6 +213,9 @@ def main(profile="melaka"):
         "anchor_blurbs": mapping["anchor_blurbs"],
         "urusans": mapping["urusans"],
         "tugasans": tugasan_cfg.get("tugasans", []),
+        "tugasan_census": census.get("tugasans", []),
+        "screen_tables": screen_tables.get("screens", {}),
+        "families": compute_families([t["name"] for t in tables]),
         "tables": tables, "in_fk": in_fk, "out_fk": out_fk,
         "implicit_in": implicit_in, "implicit_out": implicit_out,
         "anchor_children": anchor_children, "anchor_parents": anchor_parents,

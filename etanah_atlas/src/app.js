@@ -885,6 +885,7 @@ function renderUrusanView() {
           <div class="section">${escapeHtml(u.english)}${u.section ? " · " + escapeHtml(u.section) : ""}</div>
         </div>
         <p class="uj-desc">${escapeHtml(u.description)}</p>
+        ${u.notes ? `<details class="uj-notes"><summary>⟲ Unhappy-path notes (pembetulan / early-reject / modeling gaps)</summary><p>${escapeHtml(typeof u.notes === "string" ? u.notes : String(u.notes))}</p></details>` : ""}
         <div class="uj-stages">${parts.join("")}</div>
       </div>`;
   }).join("");
@@ -912,6 +913,7 @@ const TBL_STATE = {
   chipHk: false,
   showImplicit: true,
   showHk: false,
+  neighborModul: "",   // diagram: restrict neighbor tables to this modul (shared always kept)
 };
 
 function isHousekeepingName(n) {
@@ -935,6 +937,34 @@ function urusanStageIndex(kod) {
 }
 
 function tugasanOf(kod) { return (DATA.tugasans || []).find(t => t.kod === kod); }
+
+function censusTugasans(ursn) {
+  return (DATA.tugasan_census || []).filter(t => t.urusan === ursn)
+    .sort((a, b) => (a.turutan || 0) - (b.turutan || 0) || a.kod.localeCompare(b.kod));
+}
+function censusTugasanOf(ursn, kod) {
+  return (DATA.tugasan_census || []).find(t => t.urusan === ursn && t.kod === kod);
+}
+// Table sets for a census tugasan: union of its screens' traced loads/saves,
+// plus the per-tugasan pilot trace when one exists for this kod.
+function tugasanTableSets(ct) {
+  const loads = new Set(), saves = new Set();
+  let traced = 0;
+  const screens = (ct && ct.screens) || [];
+  for (const s of screens) {
+    const st = (DATA.screen_tables || {})[s.jsf];
+    if (!st) continue;
+    traced++;
+    (st.loads || []).forEach(x => loads.add(x.table));
+    (st.saves || []).forEach(x => saves.add(x.table));
+  }
+  const pilot = ct ? (DATA.tugasans || []).find(p => p.kod === ct.kod && (p.urusan || "PT") === ct.urusan) : null;
+  if (pilot) {
+    (pilot.loads || []).forEach(x => loads.add(x.table));
+    (pilot.saves || []).forEach(x => saves.add(x.table));
+  }
+  return { loads, saves, traced, total: screens.length, pilot };
+}
 
 let ALL_COLUMN_NAMES = null;
 function allColumnNames() {
@@ -1020,12 +1050,11 @@ function setupSearch() {
     ubU.appendChild(opt);
   });
   function rebuildTugasanOptions() {
-    const all = DATA.tugasans || [];
-    const scoped = ubU.value ? all.filter(t => (t.urusan || "") === ubU.value) : all;
+    const scoped = ubU.value ? censusTugasans(ubU.value) : [];
     ubT.innerHTML = "";
     const first = document.createElement("option");
     first.value = "";
-    first.textContent = scoped.length ? "(all)" : `(no pilot data${ubU.value ? " for " + ubU.value : ""})`;
+    first.textContent = ubU.value ? `(all — ${scoped.length} tugasan)` : "(pick an urusan first)";
     ubT.appendChild(first);
     scoped.forEach(t => {
       const opt = document.createElement("option");
@@ -1034,8 +1063,7 @@ function setupSearch() {
     });
     ubT.disabled = scoped.length === 0;
   }
-  if ((DATA.tugasans || []).length === 0) $("#ub-tugasan-wrap").classList.add("hidden");
-  else rebuildTugasanOptions();
+  rebuildTugasanOptions();
 
   // ---- DIAGRAM sub-tab: search -> hits list or straight focus ----
   function diagramState(which) {
@@ -1202,11 +1230,31 @@ function setupSearch() {
       return;
     }
     const u = DATA.urusans.find(x => x.kod === kod);
-    const tg = ubT.value ? tugasanOf(ubT.value) : null;
-    const tgTables = tg ? {} : null;
-    if (tg) {
-      (tg.loads || []).forEach(x => { (tgTables[x.table] = tgTables[x.table] || new Set()).add("loads"); });
-      (tg.saves || []).forEach(x => { (tgTables[x.table] = tgTables[x.table] || new Set()).add("saves"); });
+    const ct = ubT.value ? censusTugasanOf(kod, ubT.value) : null;
+    let tgTables = null, tgDetail = "";
+    if (ct) {
+      const sets = tugasanTableSets(ct);
+      if (sets.loads.size || sets.saves.size) {
+        tgTables = {};
+        sets.loads.forEach(t => { (tgTables[t] = tgTables[t] || new Set()).add("loads"); });
+        sets.saves.forEach(t => { (tgTables[t] = tgTables[t] || new Set()).add("saves"); });
+      }
+      const screenRows = (ct.screens || []).map(s => {
+        const st = (DATA.screen_tables || {})[s.jsf];
+        const base = s.jsf.split("/").pop();
+        const app = s.app || "etanah-common";
+        const badge = st
+          ? `<span class="tg-badge tg-loads">${(st.loads || []).length} loaded</span> <span class="tg-badge tg-saves">${(st.saves || []).length} saved</span>`
+          : (app === "etanah-pelupusan" || app === "etanah-common"
+              ? '<span class="ub-untraced">tables not yet traced</span>'
+              : `<span class="ub-untraced">${escapeHtml(app)} — module not in local checkout</span>`);
+        return `<div class="ub-screen-row"><code>${escapeHtml(base)}</code> <span class="ub-app">${escapeHtml(app)}</span> ${badge}</div>`;
+      }).join("") || '<div class="ub-screen-row"><em>No screen recorded in ind_langkah for this tugasan.</em></div>';
+      tgDetail = `<div class="card ub-tg-detail">
+        <div class="ub-tg-head"><strong>${escapeHtml(ct.kod)}</strong> · ${escapeHtml(ct.name)} <span class="ub-app">peranan: ${escapeHtml(ct.peranan || "—")}</span></div>
+        ${screenRows}
+        ${tgTables ? "" : '<div class="ub-untraced-note">No table trace available yet for this tugasan’s screens — stage chips below are NOT dimmed.</div>'}
+      </div>`;
     }
     const seen = new Set();
     function chip(t) {
@@ -1235,7 +1283,7 @@ function setupSearch() {
         }
       }
     }
-    wrap.innerHTML = parts.join("");
+    wrap.innerHTML = tgDetail + parts.join("");
     cntEl.textContent = `${seen.size} distinct tables`;
     wrap.querySelectorAll(".ub-chip").forEach(el =>
       el.addEventListener("click", () => focusTable(el.dataset.open, null, "urusan")));
@@ -1244,6 +1292,66 @@ function setupSearch() {
 
   ubU.addEventListener("change", () => { rebuildTugasanOptions(); renderUrusanBrowse(); });
   ubT.addEventListener("change", renderUrusanBrowse);
+
+  // ---- family browse (name-stem groups: hkmlk, tgsn, warta, …) ----
+  const famSel = $("#dg-family");
+  (DATA.families || []).forEach(f => {
+    const o = document.createElement("option");
+    o.value = f.key; o.textContent = `${f.key} (${f.count})`;
+    famSel.appendChild(o);
+  });
+  function renderFamilyView(key) {
+    const fam = (DATA.families || []).find(f => f.key === key);
+    if (!fam) { diagramState("empty"); return; }
+    const members = fam.tables.filter(t => TBL_STATE.showHk || !isHousekeepingName(t));
+    const memberSet = new Set(members);
+    let internalFk = 0, internalImp = 0;
+    for (const m of members) {
+      (DATA.out_fk[m] || []).forEach(e => { if (memberSet.has(e.to)) internalFk++; });
+      if (TBL_STATE.showImplicit) (DATA.implicit_out[m] || []).forEach(e => { if (memberSet.has(e.to)) internalImp++; });
+    }
+    const byModul = {};
+    members.forEach(m => {
+      const td = tableData(m);
+      const k = td ? td.modul : "?";
+      (byModul[k] = byModul[k] || []).push(m);
+    });
+    const sections = Object.entries(byModul).sort((a, b) => b[1].length - a[1].length).map(([mk, list]) => {
+      const mod = modulOf(mk);
+      return `<div class="fam-section">
+        <div class="fam-sec-h" style="color:${mod ? mod.color : 'inherit'}">${escapeHtml(mod ? mod.label : mk)} <span class="tf-flow-n">${list.length}</span></div>
+        <div class="ub-chips">${list.map(m => {
+          const td = tableData(m);
+          return `<button class="ub-chip" data-open="${escapeAttr(m)}">${escapeHtml(m)}<span class="ub-app">↓${td ? td.in : "?"} ↑${td ? td.out : "?"}</span></button>`;
+        }).join("")}</div>
+      </div>`;
+    }).join("");
+    $("#diagram-hits").innerHTML = `
+      <div class="fam-head"><strong>${escapeHtml(key)}</strong> family — ${members.length} tables ·
+      ${internalFk} FK links inside the family${TBL_STATE.showImplicit ? ` · ${internalImp} implicit` : ""} · click a table for its diagram</div>
+      ${sections}`;
+    diagramState("hits");
+    $("#diagram-hits").querySelectorAll(".ub-chip").forEach(el =>
+      el.addEventListener("click", () => focusTable(el.dataset.open, null, "diagram")));
+  }
+  famSel.addEventListener("change", () => {
+    input.value = ""; colInput.value = "";
+    if (famSel.value) renderFamilyView(famSel.value); else diagramState("empty");
+  });
+  TBL_STATE.renderFamilyView = renderFamilyView;
+
+  // ---- diagram neighbor-modul filter ----
+  const mf = $("#tf-mod-filter");
+  DATA.moduls.forEach(m => {
+    if (m.key === "operations" || m.key === "shared") return;
+    const o = document.createElement("option");
+    o.value = m.key; o.textContent = m.label;
+    mf.appendChild(o);
+  });
+  mf.addEventListener("change", () => {
+    TBL_STATE.neighborModul = mf.value;
+    if (TBL_STATE.selected) refreshFocus();
+  });
 
   // ---- diagram toggles / back / modal ----
   $("#tf-back").addEventListener("click", () => {
@@ -1254,7 +1362,9 @@ function setupSearch() {
     } else {
       clearFocus();
       const q = input.value.trim().toLowerCase();
-      if (q.length >= 2) renderTableHits(q); else diagramState("empty");
+      if (famSel.value) renderFamilyView(famSel.value);
+      else if (q.length >= 2) renderTableHits(q);
+      else diagramState("empty");
     }
   });
   TBL_STATE.renderTableHits = renderTableHits;
@@ -1304,11 +1414,17 @@ function refreshFocus() {
 
 function focusNeighbors(name) {
   const hkOk = (n) => TBL_STATE.showHk || !isHousekeepingName(n);
-  const parents = (DATA.out_fk[name] || []).filter(e => hkOk(e.to)).map(e => ({ table: e.to, col: e.col, kind: "fk" }));
-  const children = (DATA.in_fk[name] || []).filter(e => hkOk(e.from)).map(e => ({ table: e.from, col: e.col, kind: "fk" }));
+  const modOk = (n) => {
+    if (!TBL_STATE.neighborModul) return true;
+    const td = tableData(n);
+    return !td || td.modul === TBL_STATE.neighborModul || td.modul === "shared";
+  };
+  const keep = (n) => hkOk(n) && modOk(n);
+  const parents = (DATA.out_fk[name] || []).filter(e => keep(e.to)).map(e => ({ table: e.to, col: e.col, kind: "fk" }));
+  const children = (DATA.in_fk[name] || []).filter(e => keep(e.from)).map(e => ({ table: e.from, col: e.col, kind: "fk" }));
   if (TBL_STATE.showImplicit) {
-    (DATA.implicit_out[name] || []).filter(e => hkOk(e.to)).forEach(e => parents.push({ table: e.to, col: e.col, kind: "implicit", status: e.status }));
-    (DATA.implicit_in[name] || []).filter(e => (!e.hk || TBL_STATE.showHk) && hkOk(e.from)).forEach(e => children.push({ table: e.from, col: e.col, kind: "implicit", status: e.status }));
+    (DATA.implicit_out[name] || []).filter(e => keep(e.to)).forEach(e => parents.push({ table: e.to, col: e.col, kind: "implicit", status: e.status }));
+    (DATA.implicit_in[name] || []).filter(e => (!e.hk || TBL_STATE.showHk) && keep(e.from)).forEach(e => children.push({ table: e.from, col: e.col, kind: "implicit", status: e.status }));
   }
   return { parents, children };
 }
@@ -1438,16 +1554,30 @@ function renderFocusSidebar(name) {
   }
   const inTugasans = (DATA.tugasans || []).filter(t =>
     (t.loads || []).some(x => x.table === name) || (t.saves || []).some(x => x.table === name));
+  const inScreens = Object.entries(DATA.screen_tables || {}).map(([jsf, st]) => ({
+    jsf, st,
+    load: (st.loads || []).some(x => x.table === name),
+    save: (st.saves || []).some(x => x.table === name),
+  })).filter(s => s.load || s.save);
   const { parents, children } = focusNeighbors(name);
   $("#tf-flows").innerHTML = `
     <h4 class="tf-card-h">Where it appears</h4>
     <div class="tf-flow-row"><span>Urusan flows</span><span class="tf-flow-n">${inUrusans.length}</span>
       ${inUrusans.length ? '<button class="btn btn-sm" id="btn-urusan-modal">View</button>' : ''}</div>
+    <div class="tf-flow-row"><span>Screens (traced)</span><span class="tf-flow-n">${inScreens.length}</span>
+      ${inScreens.length ? '<button class="btn btn-sm" id="btn-screens-modal">View</button>' : ''}</div>
     <div class="tf-flow-row"><span>Tugasan (pilot)</span><span class="tf-flow-n">${inTugasans.length}</span>
       ${inTugasans.length ? '<button class="btn btn-sm" id="btn-tugasan-modal">View</button>' : ''}</div>
     <div class="tf-flow-row"><span>Links</span><span class="tf-flow-n">→${parents.length} · ←${children.length}</span>
       ${(parents.length + children.length) ? '<button class="btn btn-sm" id="btn-links-modal">View all</button>' : ''}</div>
   `;
+  const bs = $("#btn-screens-modal");
+  if (bs) bs.addEventListener("click", () => openModal(`${name} — screens that touch it`,
+    `<table class="modal-table"><tbody>${inScreens.map(s => {
+      const nTg = (DATA.tugasan_census || []).filter(t => (t.screens || []).some(x => x.jsf === s.jsf)).length;
+      return `<tr><td><code>${escapeHtml(s.jsf.split("/").pop())}</code><div class="modal-sub">${escapeHtml(s.st.repo || "")} · used by ${nTg} tugasan</div></td>
+        <td>${s.load ? '<span class="tg-badge tg-loads">LOADED</span>' : ''} ${s.save ? '<span class="tg-badge tg-saves">SAVED</span>' : ''}</td></tr>`;
+    }).join("")}</tbody></table>`));
   const bu = $("#btn-urusan-modal");
   if (bu) bu.addEventListener("click", () => openModal(`${name} — urusan flows`,
     `<table class="modal-table"><tbody>${inUrusans.map(u =>

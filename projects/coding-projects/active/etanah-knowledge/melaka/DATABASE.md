@@ -566,6 +566,14 @@ CREATE TABLE ind_tgsn (
 );
 ```
 
+### 6b. Tugasan → skrin census — the DB IS the screen-routing config (verified mlit 2026-08-22, Atlas tables-upgrade)
+
+> **Melaka's `tugasan.config.json` is EMPTY** (`E:\Projects\Melaka\etanah-pelupusan\src\main\resources\config\MLK\tugasan.config.json` = `{}`) — tugasan→screen routing lives in the DB: `ind_tgsn` (tugasan per urusan: kod, nama, peranan, turutan) → `ind_langkah` (`tgsn_id`, `skrin_id`, turutan) → `ind_skrin` (**`jsf_view`** = the xhtml path, **`nama_aplikasi`** = which WAR renders it: etanah-pelupusan / etanah-teknikal / etanah-pendaftaran / etanah-uam / blank≈etanah-common).
+
+- Census (mlit, `flag_aktif='Y'`, 13 pelupusan urusans): **1,433 tugasans · 5,822 langkah rows · only 82 distinct screens** — screens are heavily shared (MlkMaklumatPemohonForm 1,138 langkah refs; CommonSenaraiSemakanForm 1,134; MlkSuratTemplateForm serves PYMB/SMB/PMB/PYSKN5A).
+- `nama_aplikasi` is the DB-side counterpart of the BPMN-FIRST module-scope check — an Avalon* screen (etanah-teknikal) tugasan can never be fixed in etanah-pelupusan.
+- Extraction query + machine-readable output: `etanah_atlas/build/tugasan_census.json` (rebuilt via psycopg2 direct route, §16.0).
+
 ---
 
 ## 7. Flowable Tables (et_flowable schema)

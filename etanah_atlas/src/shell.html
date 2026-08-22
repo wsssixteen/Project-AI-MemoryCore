@@ -113,7 +113,8 @@
           <input type="search" id="col-search-input" placeholder="…or search a column across ALL tables" autocomplete="off">
           <div class="suggest-box hidden" id="col-suggest"></div>
         </div>
-        <label class="tf-toggle"><input type="checkbox" id="tf-show-implicit" checked> implicit links</label>
+        <label class="tf-toggle">Family <select id="dg-family"><option value="">(browse by family…)</option></select></label>
+        <label class="tf-toggle" title="unchecked = declared FK links ONLY"><input type="checkbox" id="tf-show-implicit" checked> implicit links</label>
         <label class="tf-toggle"><input type="checkbox" id="tf-show-hk"> housekeeping</label>
       </div>
     </div>
@@ -126,6 +127,7 @@
       <div class="tf-toolbar no-print">
         <button class="btn" id="tf-back">← Back</button>
         <span class="tf-title" id="tf-title"></span>
+        <label class="tf-toggle">Neighbor modul <select id="tf-mod-filter"><option value="">(all)</option></select></label>
       </div>
       <div class="tf-grid">
         <div class="tf-canvas-wrap card">
