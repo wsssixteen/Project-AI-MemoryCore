@@ -113,6 +113,7 @@
           <input type="search" id="col-search-input" placeholder="…or search a column across ALL tables" autocomplete="off">
           <div class="suggest-box hidden" id="col-suggest"></div>
         </div>
+        <label class="tf-toggle">Code scope <select id="dg-scope"><option value="pelupusan" selected>used by pelupusan code</option><option value="pel-common">pelupusan + common</option><option value="awam">used by awam code</option><option value="spoc-hasil">used by spoc-hasil code</option><option value="">(all 781 tables)</option></select></label>
         <label class="tf-toggle">Family <select id="dg-family"><option value="">(browse by family…)</option></select></label>
         <label class="tf-toggle" title="unchecked = declared FK links ONLY"><input type="checkbox" id="tf-show-implicit" checked> implicit links</label>
         <label class="tf-toggle"><input type="checkbox" id="tf-show-hk"> housekeeping</label>
@@ -127,7 +128,6 @@
       <div class="tf-toolbar no-print">
         <button class="btn" id="tf-back">← Back</button>
         <span class="tf-title" id="tf-title"></span>
-        <label class="tf-toggle">Neighbor modul <select id="tf-mod-filter"><option value="">(all)</option></select></label>
       </div>
       <div class="tf-grid">
         <div class="tf-canvas-wrap card">
@@ -151,6 +151,7 @@
       <div class="search-filters">
         <label>Modul <select id="search-modul"><option value="">(all)</option></select></label>
         <label>Layer <select id="search-layer"><option value="">(all)</option><option value="_a_">Internal _a_</option><option value="_p_">AWAM/Pra _p_</option><option value="neither">Neither</option></select></label>
+        <label>Code scope <select id="cat-scope"><option value="pelupusan" selected>pelupusan</option><option value="pel-common">pelupusan+common</option><option value="awam">awam</option><option value="spoc-hasil">spoc-hasil</option><option value="">(all)</option></select></label>
         <button class="rel-chip" data-chip="spoc" id="chip-spoc" title="SPOC integration tables (spc_*) — the AWAM→PLP handoff">SPOC (spc_)</button>
         <button class="rel-chip" data-chip="housekeeping" id="chip-hk" title="Backup/tmp/migration tables — hidden by default">housekeeping</button>
         <button class="btn btn-sm" id="filters-reset" title="Clear search + all filters">Reset</button>

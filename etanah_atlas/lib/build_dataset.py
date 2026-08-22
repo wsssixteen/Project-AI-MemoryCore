@@ -116,6 +116,17 @@ def main(profile="melaka"):
     census = json.load(open(census_file, encoding="utf-8")) if census_file.exists() else {"tugasans": []}
     screens_file = CONFIG / f"screen_tables.{profile}.json"
     screen_tables = json.load(open(screens_file, encoding="utf-8")) if screens_file.exists() else {"screens": {}}
+    usage_file = BUILD / "code_usage.json"
+    code_usage = json.load(open(usage_file, encoding="utf-8")) if usage_file.exists() else {}
+    registry_file = BUILD / "entity_registry.json"
+    entity_reg = json.load(open(registry_file, encoding="utf-8"))["entities"] if registry_file.exists() else {}
+    used_by = {}
+    for mod, d in code_usage.items():
+        for t in d.get("tables", []):
+            used_by.setdefault(t, []).append(mod)
+    table_entities = {}
+    for fq, t in entity_reg.items():
+        table_entities.setdefault(t, []).append(fq)
     raw_tables = {t["name"]: t for t in parsed["tables"]}
     moduls = mapping["moduls"]
 
@@ -159,6 +170,8 @@ def main(profile="melaka"):
             "comment": (t.get("comment") or "")[:300],
             "in": t["incoming_fk_count"], "out": t["outgoing_fk_count"],
             "is_main": nm in all_main,
+            "used_by": used_by.get(nm, []),
+            "entity": table_entities.get(nm, []),
         })
 
     NOISY = {"rjk_senarai_ahli_kumpulan"}

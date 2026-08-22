@@ -913,8 +913,17 @@ const TBL_STATE = {
   chipHk: false,
   showImplicit: true,
   showHk: false,
-  neighborModul: "",   // diagram: restrict neighbor tables to this modul (shared always kept)
+  codeScope: "pelupusan",   // code-truth filter: which module's CODE must use a table (from build/code_usage.json)
 };
+
+function scopePass(name) {
+  if (!TBL_STATE.codeScope) return true;
+  const td = tableData(name);
+  if (!td) return true;
+  const ub = td.used_by || [];
+  if (TBL_STATE.codeScope === "pel-common") return ub.includes("pelupusan") || ub.includes("common");
+  return ub.includes(TBL_STATE.codeScope);
+}
 
 function isHousekeepingName(n) {
   return /(_backup|_bak|_masked|_test|_tmp|_old|_cutover|_delete)$/.test(n) ||
@@ -1075,7 +1084,7 @@ function setupSearch() {
   TBL_STATE.diagramState = diagramState;
 
   function renderTableHits(q) {
-    const names = rankMatches(DATA.tables.map(t => t.name), q).slice(0, 30);
+    const names = rankMatches(DATA.tables.filter(t => scopePass(t.name)).map(t => t.name), q).slice(0, 30);
     if (names.length === 0) {
       $("#diagram-hits").innerHTML = `<p class="tf-empty">No table matches "${escapeHtml(q)}".</p>`;
       diagramState("hits"); return;
@@ -1098,6 +1107,7 @@ function setupSearch() {
     const hits = [];
     for (const t of DATA.tables) {
       if (!TBL_STATE.showHk && isHousekeepingName(t.name)) continue;
+      if (!scopePass(t.name)) continue;
       for (const c of (t.columns || [])) {
         if (c.n.toLowerCase().includes(cq)) hits.push({ t, c });
         if (hits.length > 300) break;
@@ -1124,7 +1134,7 @@ function setupSearch() {
   }
 
   attachSuggest(input, "table-suggest",
-    (q) => rankMatches(DATA.tables.map(t => t.name), q).map(n => {
+    (q) => rankMatches(DATA.tables.filter(t => scopePass(t.name)).map(t => t.name), q).map(n => {
       const t = tableData(n);
       return { value: n, html: `<span class="s-name">${escapeHtml(n)}</span><span class="s-meta">${t ? t.cols + " cols · ↓" + t.in : ""}</span>` };
     }),
@@ -1163,7 +1173,7 @@ function setupSearch() {
     hint.textContent = "";
     const q = catInput.value.trim().toLowerCase();
     const nameMatch = (t) => !q || t.name.toLowerCase().includes(q) || (t.comment || "").toLowerCase().includes(q);
-    let matched = DATA.tables.filter(t => nameMatch(t) && tablePassesFilters(t));
+    let matched = DATA.tables.filter(t => nameMatch(t) && tablePassesFilters(t) && scopePass(t.name));
     if (q) {
       const unfiltered = DATA.tables.filter(nameMatch).length;
       if (unfiltered > matched.length) {
@@ -1303,7 +1313,7 @@ function setupSearch() {
   function renderFamilyView(key) {
     const fam = (DATA.families || []).find(f => f.key === key);
     if (!fam) { diagramState("empty"); return; }
-    const members = fam.tables.filter(t => TBL_STATE.showHk || !isHousekeepingName(t));
+    const members = fam.tables.filter(t => (TBL_STATE.showHk || !isHousekeepingName(t)) && scopePass(t));
     const memberSet = new Set(members);
     let internalFk = 0, internalImp = 0;
     for (const m of members) {
@@ -1340,18 +1350,21 @@ function setupSearch() {
   });
   TBL_STATE.renderFamilyView = renderFamilyView;
 
-  // ---- diagram neighbor-modul filter ----
-  const mf = $("#tf-mod-filter");
-  DATA.moduls.forEach(m => {
-    if (m.key === "operations" || m.key === "shared") return;
-    const o = document.createElement("option");
-    o.value = m.key; o.textContent = m.label;
-    mf.appendChild(o);
-  });
-  mf.addEventListener("change", () => {
-    TBL_STATE.neighborModul = mf.value;
+  // ---- code-scope selects (Diagram + Catalog share one state) ----
+  const dgScope = $("#dg-scope");
+  const catScope = $("#cat-scope");
+  function onScopeChange(v) {
+    TBL_STATE.codeScope = v;
+    dgScope.value = v; catScope.value = v;
     if (TBL_STATE.selected) refreshFocus();
-  });
+    else if (famSel.value) renderFamilyView(famSel.value);
+    else { const q = input.value.trim().toLowerCase(); if (q.length >= 2) renderTableHits(q); }
+    const cq = colInput.value.trim().toLowerCase();
+    if (cq.length >= 2) renderColumnHits(cq);
+    runCatalog();
+  }
+  dgScope.addEventListener("change", () => onScopeChange(dgScope.value));
+  catScope.addEventListener("change", () => onScopeChange(catScope.value));
 
   // ---- diagram toggles / back / modal ----
   $("#tf-back").addEventListener("click", () => {
@@ -1414,12 +1427,7 @@ function refreshFocus() {
 
 function focusNeighbors(name) {
   const hkOk = (n) => TBL_STATE.showHk || !isHousekeepingName(n);
-  const modOk = (n) => {
-    if (!TBL_STATE.neighborModul) return true;
-    const td = tableData(n);
-    return !td || td.modul === TBL_STATE.neighborModul || td.modul === "shared";
-  };
-  const keep = (n) => hkOk(n) && modOk(n);
+  const keep = (n) => hkOk(n) && scopePass(n);
   const parents = (DATA.out_fk[name] || []).filter(e => keep(e.to)).map(e => ({ table: e.to, col: e.col, kind: "fk" }));
   const children = (DATA.in_fk[name] || []).filter(e => keep(e.from)).map(e => ({ table: e.from, col: e.col, kind: "fk" }));
   if (TBL_STATE.showImplicit) {
@@ -1543,6 +1551,8 @@ function renderFocusSidebar(name) {
       ${td.is_main ? '<span class="badge badge-main">main table</span>' : ''}
     </div>
     ${pk.length ? `<div class="tf-pk-line">PK: <code>${pk.map(escapeHtml).join(", ")}</code></div>` : ""}
+    ${(td.entity || []).length ? `<div class="tf-pk-line">Entity: <code>${td.entity.map(escapeHtml).join("</code>, <code>")}</code></div>` : ""}
+    <div class="tf-pk-line">Used by code: ${(td.used_by || []).length ? td.used_by.map(m => `<span class="ub-badge ub-${escapeAttr(m)}">${escapeHtml(m)}</span>`).join(" ") : '<span class="ub-badge ub-none">none found in scanned modules</span>'}</div>
     ${blurb ? `<p class="panel-blurb">${escapeHtml(blurb)}</p>` : ""}
     ${td.comment ? `<p class="panel-blurb panel-comment">${escapeHtml(td.comment)}</p>` : ""}
   `;
