@@ -39,7 +39,19 @@ def main():
         if not srcp.exists():
             out[mod] = {"error": "src not found"}
             continue
-        methods = {f"M{i}": defaultdict(set) for i in range(1, 6)}  # table -> set(files)
+        methods = {f"M{i}": defaultdict(set) for i in range(1, 8)}  # table -> set(files)
+        for jr in srcp.rglob("*.jrxml"):
+            try:
+                jtext = jr.read_text(encoding="utf-8", errors="replace")
+            except Exception:
+                continue
+            for m in table_word.finditer(jtext):
+                methods["M6"][m.group(1).lower()].add(str(jr.relative_to(srcp)))
+        ov_file = ROOT / "config" / "usage_overrides.melaka.json"
+        if ov_file.exists():
+            ov = json.load(open(ov_file, encoding="utf-8"))
+            for row in ov.get("add", {}).get(mod, []):
+                methods["M7"][row["table"]].add("OVERRIDE: " + row["evidence"])
         files = list(srcp.rglob("*.java"))
         for f in files:
             try:

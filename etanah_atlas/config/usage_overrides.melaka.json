@@ -1,0 +1,11 @@
+{
+ "_comment": "Workflow wf_782a3bde adversarial round (2026-08-23): usages reached via inherited getters / relation navigation / common-service indirection that the mechanical scan methods cannot see. Each row carries the verifying evidence.",
+ "add": {
+  "pelupusan": [
+   {"table": "umm_a_pembatalan", "reason": "inherited getter from common base class", "evidence": "etanah-pelupusan/src/main/java/my/gov/etanah/pelupusan/web/form/utiliti/mlk/MlkMaklumatPermohonanPembatalanForm.java:139-141 via etanah-common BaseMaklumatPermohonanPembatalanForm.java:179"},
+   {"table": "ind_skrin", "reason": "relation navigation langkah.getSkrin()", "evidence": "etanah-pelupusan/src/main/java/my/gov/etanah/pelupusan/config/json/tugasan/LangkahPropertyJson.java:80-81"},
+   {"table": "umm_hantaran_notis", "reason": "dashboard.getHantaranNotis() fed into query builders", "evidence": "etanah-pelupusan/src/main/java/my/gov/etanah/pelupusan/service/impl/PelupusanService.java:8997,9017,9052"},
+   {"table": "umm_kat_dok", "reason": "indirect: pelupusan-hardcoded kod KATDKM_LAIN into etanah-common derived query", "evidence": "etanah-pelupusan/src/main/java/my/gov/etanah/pelupusan/service/trg/impl/TrgPelupusanNotificationService.java:199 -> etanah-common CommonEmailService.java:40-41"}
+  ]
+ }
+}

@@ -6,10 +6,15 @@
    "M2": 31,
    "M3": 71,
    "M4": 74,
-   "M5": 14
+   "M5": 14,
+   "M6": 35,
+   "M7": 4
   },
-  "union_count": 144,
+  "union_count": 151,
   "tables": [
+   "amb_a_pengambilan",
+   "amb_p_pengambilan",
+   "bgn_p_pembangunan",
    "dft_a_btrn_dok_penntshn",
    "dft_a_srt_difail",
    "dm_a_pihak_bkptg",
@@ -48,6 +53,7 @@
    "ind_pihak_bkptg",
    "ind_rizab",
    "ind_seksyen",
+   "ind_skrin",
    "ind_sktn_kptgn",
    "ind_syrt_nyata",
    "ind_tgsn",
@@ -109,6 +115,7 @@
    "umm_a_mklmt_rpt_rpb",
    "umm_a_pelan",
    "umm_a_pelikuidasi_pihak",
+   "umm_a_pembatalan",
    "umm_a_pengalaman_kerja",
    "umm_a_penyerah",
    "umm_a_permit_lesen",
@@ -127,7 +134,9 @@
    "umm_aliran_kerja",
    "umm_aplikasi",
    "umm_btrn_hantaran_notis",
+   "umm_hantaran_notis",
    "umm_individu_siasatan",
+   "umm_kat_dok",
    "umm_keputusan",
    "umm_keputusan_mesyuarat",
    "umm_kertas_mesyuarat",
@@ -156,6 +165,25 @@
    "umm_trans_keluaran_doket"
   ],
   "provenance": {
+   "amb_a_pengambilan": {
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan.jrxml",
+     "resources\\reports\\state\\TRG\\LaporanSlipAkuanPenerimaan.jrxml"
+    ]
+   },
+   "amb_p_pengambilan": {
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan.jrxml",
+     "resources\\reports\\state\\TRG\\LaporanSlipAkuanPenerimaan.jrxml"
+    ]
+   },
+   "bgn_p_pembangunan": {
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanBorang12A_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1_Sub02.jrxml"
+    ]
+   },
    "dft_a_btrn_dok_penntshn": {
     "M1": [
      "java\\my\\gov\\etanah\\pelupusan\\vo\\PelupusanLaporanInfo.java"
@@ -288,6 +316,10 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpBayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan.jrxml",
+     "resources\\reports\\state\\TRG\\LaporanSlipAkuanPenerimaan.jrxml"
     ]
    },
    "hsl_bayaran_fi": {
@@ -303,6 +335,10 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpBayaranFiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan.jrxml",
+     "resources\\reports\\state\\TRG\\LaporanSlipAkuanPenerimaan.jrxml"
     ]
    },
    "hsl_bil_cukai_tahunan": {
@@ -323,6 +359,10 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpButiranBayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan.jrxml",
+     "resources\\reports\\state\\TRG\\LaporanSlipAkuanPenerimaan.jrxml"
     ]
    },
    "hsl_fi_kadar": {
@@ -385,6 +425,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpBandarPekanMukimRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanJadualIX.jrxml",
+     "resources\\reports\\state\\MLK\\LaporanJadualIX_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanBorang12A.jrxml"
     ]
    },
    "ind_borang_pelan": {
@@ -400,6 +445,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpDaerahRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanJadualIX.jrxml",
+     "resources\\reports\\state\\MLK\\LaporanJadualIX_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanBorang12A.jrxml"
     ]
    },
    "ind_hkmlk": {
@@ -417,6 +467,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\pelupusan\\web\\form\\preview\\DocumentPreview.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanJadualIX.jrxml",
+     "resources\\reports\\state\\MLK\\LaporanJadualIX_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanBorang12A.jrxml"
     ]
    },
    "ind_kadar_cukai_bpm": {
@@ -453,6 +508,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanSearchService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanJadualIX_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanBorang12A.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1.jrxml"
     ]
    },
    "ind_mklmt_tnh_permit_lesen": {
@@ -480,6 +540,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpAplikasiRepository.java",
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpCapaianPenggunaRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanJadualIX.jrxml",
+     "resources\\reports\\state\\MLK\\LaporanJadualIX_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan.jrxml"
     ]
    },
    "ind_pejabat": {
@@ -495,6 +560,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpCapaianPenggunaRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1_Sub02.jrxml"
     ]
    },
    "ind_pejabat_ursn": {
@@ -571,6 +641,10 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpPihakBerkepentinganRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanJadualPB.jrxml",
+     "resources\\reports\\state\\TRG\\LaporanJadualPB.jrxml"
     ]
    },
    "ind_rizab": {
@@ -595,6 +669,11 @@
      "java\\my\\gov\\etanah\\pelupusan\\helper\\PelupusanExcelReaderHelper.java",
      "java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanService.java",
      "java\\my\\gov\\etanah\\pelupusan\\vo\\PelupusanMaklumatBorangVO.java"
+    ]
+   },
+   "ind_skrin": {
+    "M7": [
+     "OVERRIDE: etanah-pelupusan/src/main/java/my/gov/etanah/pelupusan/config/json/tugasan/LangkahPropertyJson.java:80-81"
     ]
    },
    "ind_sktn_kptgn": {
@@ -637,6 +716,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpCapaianPenggunaRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanJadualIX.jrxml",
+     "resources\\reports\\state\\MLK\\LaporanJadualIX_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan.jrxml"
     ]
    },
    "ind_ursn_senarai_smkn": {
@@ -664,6 +748,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\pelupusan\\web\\form\\preview\\DocumentPreview.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanJadualIX_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanBorang12A.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1.jrxml"
     ]
    },
    "ind_versi_permit_lesen": {
@@ -761,6 +850,10 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\pelupusan\\web\\form\\preview\\DocumentPreview.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan.jrxml",
+     "resources\\reports\\state\\TRG\\LaporanSlipAkuanPenerimaan.jrxml"
     ]
    },
    "pcp_peranan_modul": {
@@ -878,6 +971,11 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpPraPelupusanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1P2_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1P2_Sub03.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanSuratAkujanji.jrxml"
     ]
    },
    "plp_pemohon_rtb": {
@@ -928,6 +1026,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanSearchService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanJadualIX.jrxml",
+     "resources\\reports\\state\\MLK\\LaporanJadualIX_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1.jrxml"
     ]
    },
    "rjk_jns_ursn": {
@@ -950,6 +1053,10 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\pelupusan\\config\\NegeriConfig.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan.jrxml",
+     "resources\\reports\\state\\TRG\\LaporanSlipAkuanPenerimaan.jrxml"
     ]
    },
    "rjk_senarai_ahli_kumpulan": {
@@ -966,6 +1073,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpCapaianPenggunaRepository.java",
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpSenaraiAhliKumpulanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanJadualIX.jrxml",
+     "resources\\reports\\state\\MLK\\LaporanJadualIX_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\LaporanJadualPB.jrxml"
     ]
    },
    "rjk_senarai_kumpulan": {
@@ -1036,6 +1148,10 @@
    "spc_btrn_terima_dok": {
     "M1": [
      "java\\my\\gov\\etanah\\pelupusan\\vo\\tab\\PelupusanTerimaanDokumenFizikalMaklumatPermohonanTab.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan_Sub03.jrxml",
+     "resources\\reports\\state\\TRG\\LaporanSlipAkuanPenerimaan_Sub03.jrxml"
     ]
    },
    "spc_kutipan_dok": {
@@ -1053,6 +1169,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpTerimaDokumenRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan.jrxml",
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan_Sub03.jrxml",
+     "resources\\reports\\state\\TRG\\LaporanSlipAkuanPenerimaan.jrxml"
     ]
    },
    "tkl_a_laporan_pelukis_pelan": {
@@ -1138,6 +1259,10 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpAppDokumenKemasukanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan_Sub02.jrxml",
+     "resources\\reports\\state\\TRG\\LaporanSlipAkuanPenerimaan_Sub02.jrxml"
     ]
    },
    "umm_a_hkmlk": {
@@ -1156,6 +1281,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\pelupusan\\helper\\PelupusanExcelReaderHelper.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanJadualIX.jrxml",
+     "resources\\reports\\state\\MLK\\LaporanJadualIX_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan_Sub01.jrxml"
     ]
    },
    "umm_a_hkmlk_lain": {
@@ -1256,6 +1386,11 @@
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpAppPelikuidasiPihakRepository.java"
     ]
    },
+   "umm_a_pembatalan": {
+    "M7": [
+     "OVERRIDE: etanah-pelupusan/src/main/java/my/gov/etanah/pelupusan/web/form/utiliti/mlk/MlkMaklumatPermohonanPembatalanForm.java:139-141 via etanah-common BaseMaklumatPermohonanPembatalanForm.java:179"
+    ]
+   },
    "umm_a_pengalaman_kerja": {
     "M1": [
      "java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanService.java",
@@ -1270,6 +1405,10 @@
    "umm_a_penyerah": {
     "M1": [
      "java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanLiteService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan.jrxml",
+     "resources\\reports\\state\\TRG\\LaporanSlipAkuanPenerimaan.jrxml"
     ]
    },
    "umm_a_permit_lesen": {
@@ -1459,6 +1598,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\pelupusan\\web\\form\\preview\\DocumentPreview.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanJadualIX.jrxml",
+     "resources\\reports\\state\\MLK\\LaporanJadualIX_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan.jrxml"
     ]
    },
    "umm_btrn_hantaran_notis": {
@@ -1473,6 +1617,11 @@
      "java\\my\\gov\\etanah\\pelupusan\\web\\form\\utiliti\\mlk\\MlkUtilitiPeringatanBayaranForm.java"
     ]
    },
+   "umm_hantaran_notis": {
+    "M7": [
+     "OVERRIDE: etanah-pelupusan/src/main/java/my/gov/etanah/pelupusan/service/impl/PelupusanService.java:8997,9017,9052"
+    ]
+   },
    "umm_individu_siasatan": {
     "M1": [
      "java\\my\\gov\\etanah\\pelupusan\\config\\json\\template\\TemplatePropertyJson.java",
@@ -1481,6 +1630,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanService.java"
+    ]
+   },
+   "umm_kat_dok": {
+    "M7": [
+     "OVERRIDE: etanah-pelupusan/src/main/java/my/gov/etanah/pelupusan/service/trg/impl/TrgPelupusanNotificationService.java:199 -> etanah-common CommonEmailService.java:40-41"
     ]
    },
    "umm_keputusan": {
@@ -1563,6 +1717,11 @@
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpPraTanggunganRepository.java",
      "java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanSearchService.java",
      "java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanSpocService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanBorangSyarikat_Sub02.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanSuratAkujanji.jrxml",
+     "resources\\reports\\state\\TRG\\PlpLaporanBorangSyarikat_Sub02.jrxml"
     ]
    },
    "umm_p_aplikasi": {
@@ -1575,6 +1734,11 @@
      "java\\my\\gov\\etanah\\pelupusan\\service\\trg\\impl\\TrgPelupusanNotificationService.java",
      "java\\my\\gov\\etanah\\pelupusan\\vo\\tab\\PelupusanTerimaanDokumenFizikalCetakanDokumenTab.java",
      "java\\my\\gov\\etanah\\pelupusan\\vo\\tab\\PelupusanTerimaanDokumenFizikalMaklumatPermohonanTab.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\LaporanSlipAkuanPenerimaan.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanAkuanBerkanun.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanBorang12A.jrxml"
     ]
    },
    "umm_p_hkmlk": {
@@ -1585,12 +1749,22 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanSpocService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanBorang12A.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1P2_Sub01.jrxml"
     ]
    },
    "umm_p_hkmlk_lain": {
     "M1": [
      "java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanService.java",
      "java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanSpocService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanBorangSyarikat_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1P2_Sub01.jrxml"
     ]
    },
    "umm_p_pelikuidasi_pihak": {
@@ -1621,6 +1795,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpPraPermitLesenRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1P2_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1P2_Sub03.jrxml",
+     "resources\\reports\\state\\TRG\\PlpLaporanJadual1P2_Sub01.jrxml"
     ]
    },
    "umm_p_permohonan_tnh": {
@@ -1631,6 +1810,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpPraPermohonanTanahRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1P2_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanJadual1P2_Sub03.jrxml"
     ]
    },
    "umm_p_pihak_bkptg": {
@@ -1641,6 +1825,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanSearchService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanAkuanBerkanun.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanBorang12A.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanBorangSyarikat.jrxml"
     ]
    },
    "umm_p_pihak_bkptg_srt": {
@@ -1651,6 +1840,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanSearchService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanBorangSyarikat_Sub02.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanSuratAkujanji.jrxml",
+     "resources\\reports\\state\\TRG\\PlpLaporanBorangSyarikat_Sub02.jrxml"
     ]
    },
    "umm_p_rizab": {
@@ -1687,6 +1881,10 @@
      "java\\my\\gov\\etanah\\pelupusan\\repository\\PlpPraTanggunganRepository.java",
      "java\\my\\gov\\etanah\\pelupusan\\service\\IPelupusanSearchService.java",
      "java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanSearchService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanSuratAkujanji.jrxml",
+     "resources\\reports\\state\\TRG\\PlpLaporanSuratAkujanji.jrxml"
     ]
    },
    "umm_pengguna_notifikasi": {
@@ -1741,9 +1939,11 @@
    "M2": 500,
    "M3": 171,
    "M4": 148,
-   "M5": 51
+   "M5": 51,
+   "M6": 73,
+   "M7": 0
   },
-  "union_count": 512,
+  "union_count": 514,
   "tables": [
    "amb_a_bahagian_pemberian",
    "amb_a_bantahan",
@@ -1884,6 +2084,7 @@
    "ind_kadar_cukai_bpm",
    "ind_kadar_cukai_nilai_lngkgn",
    "ind_kadar_premium_cukai",
+   "ind_kumpln_pihk_bkptg",
    "ind_langkah",
    "ind_laporan",
    "ind_mklmt_hkmlk",
@@ -2089,6 +2290,7 @@
    "str_i_mklmt_cpsp",
    "str_i_mklmt_strata",
    "str_i_mklmt_tmbhn",
+   "str_i_pindaan_syrt_nyata",
    "str_i_ptk",
    "str_i_ptk_aksesori",
    "str_i_ptk_aksesori_blok",
@@ -2353,6 +2555,11 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\common\\repository\\pengambilan\\PraPengambilanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanSlipPermohonan.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanSlipPermohonan.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanSlipPermohonan.jrxml"
     ]
    },
    "bgn_a_mklmt_syer_tnh": {
@@ -2377,6 +2584,11 @@
      "java\\my\\gov\\etanah\\common\\form\\CommonSemakanPanelForm.java",
      "java\\my\\gov\\etanah\\common\\service\\impl\\CommonUtilityMesyuaratPermohonanService.java",
      "java\\my\\gov\\etanah\\common\\vo\\DashboardVO.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C_Sub01.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanNotis5A.jrxml"
     ]
    },
    "bgn_p_mklmt_syer_tnh": {
@@ -2393,6 +2605,11 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\common\\repository\\pembangunan\\PraPembangunanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\PRK\\LaporanBorangA.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanBorangA_Sub06.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanBorangA_Sub07.jrxml"
     ]
    },
    "ckp_hkmlk": {
@@ -2613,6 +2830,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\common\\AplikasiRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\dms\\DocumentRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\MLK\\BillingReport1Summary_Sub02.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport4Registration_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport4Registration_Sub02.jrxml"
     ]
    },
    "dft_a_mohon_rizab": {
@@ -2642,6 +2864,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\pendaftaran\\AppNotaRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub05.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub11.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanCarianDFT_Sub05.jrxml"
     ]
    },
    "dft_a_notis": {
@@ -2988,6 +3215,11 @@
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\AkaunCukaiRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\BayaranRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\HakmilikRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\BillingReport_SUB02.jrxml",
+     "resources\\reports\\common\\BillingReport_SUB04.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport1Summary_Sub02.jrxml"
     ]
    },
    "hsl_akaun_deposit": {
@@ -3039,6 +3271,11 @@
      "java\\my\\gov\\etanah\\common\\constant\\SenaraiAhliKumpulanConstant.java",
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\AkaunCukaiRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\BayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport1Summary_Sub02.jrxml"
     ]
    },
    "hsl_bayaran_cukai_pintu": {
@@ -3065,6 +3302,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\BayaranFiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport1Summary_Sub02.jrxml"
     ]
    },
    "hsl_bayaran_luar": {
@@ -3091,6 +3333,11 @@
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\AkaunCukaiRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\BayaranRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\HakmilikRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\MLK\\BillingReport1Summary_Sub02.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport8Payment_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport8Payment_Sub02.jrxml"
     ]
    },
    "hsl_btrn_akaun_kutipan_pos": {
@@ -3130,6 +3377,11 @@
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\AkaunCukaiRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\BayaranRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\CaraBayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport1Summary_Sub02.jrxml"
     ]
    },
    "hsl_btrn_bayaran_kutipan_pos": {
@@ -3184,6 +3436,11 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\FiKadarRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanSenaraiSemak.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanSenaraiSemak.jrxml",
+     "resources\\reports\\common\\state\\TRG\\LaporanSenaraiSemak.jrxml"
     ]
    },
    "hsl_fi_kurungan": {
@@ -3209,6 +3466,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\BayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanSenaraiSemak.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport1Summary_Sub02.jrxml"
     ]
    },
    "hsl_jadual_ansuran": {
@@ -3471,6 +3733,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\HakmilikRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7G.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT.jrxml"
     ]
    },
    "ind_bandar_pekan_mukim_kawasan": {
@@ -3516,6 +3783,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\common\\util\\BuilderUtil.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanLampiranUrusan.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanCarianDFT.jrxml"
     ]
    },
    "ind_daerah": {
@@ -3537,6 +3809,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\HakmilikRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7G.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7G_Sub01.jrxml"
     ]
    },
    "ind_dok_kerja": {
@@ -3574,6 +3851,11 @@
      "java\\my\\gov\\etanah\\common\\constant\\SenaraiAhliKumpulanConstant.java",
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\AkaunCukaiRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\BayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\BillingReport_SUB01.jrxml",
+     "resources\\reports\\common\\BillingReport_SUB02.jrxml",
+     "resources\\reports\\common\\BillingReport_SUB03.jrxml"
     ]
    },
    "ind_hkmlk_asal": {
@@ -3591,6 +3873,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\HakmilikAsalRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub09.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub13.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanCarianDFT_Sub09.jrxml"
     ]
    },
    "ind_hkmlk_gantung": {
@@ -3614,6 +3901,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\HakmilikGSARepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub03.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanCarianDFT_Sub03.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanCarianDFT_Sub03.jrxml"
     ]
    },
    "ind_hkmlk_hancur": {
@@ -3652,6 +3944,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\HakmilikSambunganRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub09.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub10.jrxml"
     ]
    },
    "ind_jalan": {
@@ -3717,6 +4014,12 @@
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\KadarPremiumCukaiRepository.java"
     ]
    },
+   "ind_kumpln_pihk_bkptg": {
+    "M6": [
+     "resources\\reports\\common\\state\\PRK\\LaporanCarianDFT_Sub04.jrxml",
+     "resources\\reports\\common\\state\\SGR\\LaporanCarianDFT_Sub04.jrxml"
+    ]
+   },
    "ind_langkah": {
     "M1": [
      "java\\my\\gov\\etanah\\common\\form\\AutoCompleteComponent.java",
@@ -3772,6 +4075,11 @@
     "M5": [
      "java\\my\\gov\\etanah\\common\\constant\\SenaraiAhliKumpulanConstant.java",
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\HakmilikRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\BillingReport_SUB01.jrxml",
+     "resources\\reports\\common\\BillingReport_SUB03.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml"
     ]
    },
    "ind_mklmt_tnh_permit_lesen": {
@@ -3808,6 +4116,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\common\\service\\impl\\CommonPertanyaanService.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7G.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub06.jrxml"
     ]
    },
    "ind_modul_jns_ursn": {
@@ -3851,6 +4164,11 @@
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\BayaranRepository.java",
      "java\\my\\gov\\etanah\\common\\service\\impl\\PejabatLetterheadService.java",
      "java\\my\\gov\\etanah\\common\\util\\SuratWordEditorUtil.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7G_Sub01.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorangAduan.jrxml"
     ]
    },
    "ind_pejabat_bahagian_unit": {
@@ -3922,6 +4240,11 @@
     "M5": [
      "java\\my\\gov\\etanah\\common\\constant\\DocumentConstant.java",
      "java\\my\\gov\\etanah\\common\\constant\\SenaraiAhliKumpulanConstant.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanCarianDFT_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanLampiranUrusan_Sub01.jrxml"
     ]
    },
    "ind_pemegang_permit_lesen": {
@@ -3952,6 +4275,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\PermitLesenRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\MLK\\BillingReport1Summary_Sub02.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport5Permit_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport5Permit_Sub02.jrxml"
     ]
    },
    "ind_pihak_bkptg": {
@@ -3971,6 +4299,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\PihakBerkepentinganRepository.java",
      "java\\my\\gov\\etanah\\common\\service\\impl\\PengutipCheckingService.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub04.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanCarianDFT.jrxml"
     ]
    },
    "ind_prnth_halang_ursn": {
@@ -3998,6 +4331,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\RekodUrusanRepository.java",
      "java\\my\\gov\\etanah\\common\\service\\impl\\PengutipCheckingService.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub01.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub05.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub07.jrxml"
     ]
    },
    "ind_rizab": {
@@ -4011,6 +4349,11 @@
     "M3": [
      "java\\my\\gov\\etanah\\common\\service\\lucene\\impl\\LuceneSearchService.java",
      "java\\my\\gov\\etanah\\common\\web\\form\\CommonSelectItemProvider.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\MLK\\BillingReport1Summary_Sub02.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport5Permit_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport5Permit_Sub02.jrxml"
     ]
    },
    "ind_seksyen": {
@@ -4030,6 +4373,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\BandarPekanMukimRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\SeksyenRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanCarianDFT_Sub01.jrxml"
     ]
    },
    "ind_skrin": {
@@ -4061,6 +4409,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\SekatanKepentinganRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C_Sub01.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub03.jrxml"
     ]
    },
    "ind_strata_idx": {
@@ -4071,6 +4424,11 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\StrataIndeksRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanCarianDFT_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanLampiranUrusan_Sub01.jrxml"
     ]
    },
    "ind_strata_idx_penyampaian": {
@@ -4108,6 +4466,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\StrataIndeksVersiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanCarianDFT_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanLampiranUrusan_Sub01.jrxml"
     ]
    },
    "ind_strata_penyata": {
@@ -4127,6 +4490,11 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\StrataPetakAksesoriRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanCarianDFT_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanLampiranUrusan_Sub01.jrxml"
     ]
    },
    "ind_syrt_nyata": {
@@ -4140,6 +4508,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\SyaratNyataRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C_Sub01.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT.jrxml"
     ]
    },
    "ind_syrt_ursn_senarai_smkn": {
@@ -4185,6 +4558,11 @@
      "java\\my\\gov\\etanah\\common\\repository\\common\\AppTugasanRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\SkrinRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\TugasanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7G_Sub01.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT.jrxml"
     ]
    },
    "ind_ursn": {
@@ -4209,6 +4587,11 @@
     "M5": [
      "java\\my\\gov\\etanah\\common\\service\\impl\\CommonPertanyaanService.java",
      "java\\my\\gov\\etanah\\common\\web\\form\\PembetulanBatalPerserahanHakmilikForm.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\BillingReport_SUB02.jrxml",
+     "resources\\reports\\common\\BillingReport_SUB04.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml"
     ]
    },
    "ind_ursn_senarai_smkn": {
@@ -4258,6 +4641,11 @@
     "M5": [
      "java\\my\\gov\\etanah\\common\\constant\\DocumentConstant.java",
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\HakmilikRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\BillingReport_SUB01.jrxml",
+     "resources\\reports\\common\\BillingReport_SUB03.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml"
     ]
    },
    "ind_versi_permit_lesen": {
@@ -4272,6 +4660,11 @@
     "M3": [
      "java\\my\\gov\\etanah\\common\\service\\impl\\AppPermitLesenService.java",
      "java\\my\\gov\\etanah\\common\\service\\impl\\CommonSearchService.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\MLK\\BillingReport1Summary_Sub02.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport5Permit_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport5Permit_Sub02.jrxml"
     ]
    },
    "ind_warta": {
@@ -4694,6 +5087,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\pengguna\\CapaianPenggunaRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\pengguna\\PenggunaRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanNotis5A.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanNotis5A.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanNotis5A.jrxml"
     ]
    },
    "pcp_capaian_tmbhn": {
@@ -4806,6 +5204,11 @@
     "M5": [
      "java\\my\\gov\\etanah\\common\\constant\\SenaraiAhliKumpulanConstant.java",
      "java\\my\\gov\\etanah\\common\\migration\\TestEmailBlast.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7G_Sub01.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanNotis5A.jrxml"
     ]
    },
    "pcp_peranan_menu": {
@@ -4843,6 +5246,11 @@
      "java\\my\\gov\\etanah\\common\\repository\\common\\AppPihakBerkepentinganRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\SkrinRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\pengguna\\PenggunaRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanNotis5A.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanNotis5A.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanNotis5A.jrxml"
     ]
    },
    "pks_a_aduan": {
@@ -5090,6 +5498,11 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\common\\repository\\pelupusan\\PraPelupusanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\PRK\\LaporanBorangA.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanBorangA_Sub06.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanBorangA_Sub07.jrxml"
     ]
    },
    "rjk_agensi": {
@@ -5204,6 +5617,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\dms\\DocumentRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\refdata\\JenisDokumenRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanSenaraiSemak_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport1Summary_Sub02.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport5Permit_Sub01.jrxml"
     ]
    },
    "rjk_jns_hkmlk": {
@@ -5225,6 +5643,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\AkaunCukaiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7G.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT.jrxml"
     ]
    },
    "rjk_jns_janjitemu": {
@@ -5259,6 +5682,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\refdata\\JenisUrusanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub05.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub06.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT_Sub07.jrxml"
     ]
    },
    "rjk_jurukur_lesen_tnh": {
@@ -5375,6 +5803,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\refdata\\SistemParameterRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanSlipPermohonan.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanCarianDFT.jrxml"
     ]
    },
    "rjk_peguam": {
@@ -5441,6 +5874,11 @@
      "java\\my\\gov\\etanah\\common\\repository\\hasil\\BayaranRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\HakmilikRepository.java",
      "java\\my\\gov\\etanah\\common\\test\\ImejanMigration.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\BillingReport_SUB01.jrxml",
+     "resources\\reports\\common\\BillingReport_SUB03.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml"
     ]
    },
    "rjk_senarai_kumpulan": {
@@ -6150,6 +6588,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\common\\kpi\\service\\impl\\KpiCalculationService.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\SGR\\LaporanBorang7C.jrxml"
     ]
    },
    "str_i_mklmt_tmbhn": {
@@ -6158,6 +6601,13 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\common\\repository\\strata\\MaklumatTambahanRepository.java"
+    ]
+   },
+   "str_i_pindaan_syrt_nyata": {
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\SGR\\LaporanBorang7C.jrxml"
     ]
    },
    "str_i_ptk": {
@@ -6331,6 +6781,11 @@
     "M5": [
      "java\\my\\gov\\etanah\\common\\constant\\SenaraiAhliKumpulanConstant.java",
      "java\\my\\gov\\etanah\\common\\notification\\service\\impl\\DocumentService.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanCarianDFT.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanLampiranUrusan.jrxml"
     ]
    },
    "sws_item": {
@@ -6339,6 +6794,11 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\common\\repository\\singlewindow\\ItemRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanCarianDFT.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanLampiranUrusan.jrxml"
     ]
    },
    "sws_kat_item": {
@@ -6371,6 +6831,11 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\common\\repository\\singlewindow\\PembekalRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanCarianDFT.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanLampiranUrusan.jrxml"
     ]
    },
    "sws_pembelian": {
@@ -6382,6 +6847,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\common\\notification\\service\\impl\\DocumentService.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanCarianDFT.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanLampiranUrusan.jrxml"
     ]
    },
    "sws_troli": {
@@ -6504,6 +6974,11 @@
      "java\\my\\gov\\etanah\\common\\constant\\SenaraiAhliKumpulanConstant.java",
      "java\\my\\gov\\etanah\\common\\form\\BasePenyediaanDokumenForm.java",
      "java\\my\\gov\\etanah\\common\\notification\\service\\impl\\DocumentService.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7G_Sub01.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanNotis5A.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanBorang7G_Sub01.jrxml"
     ]
    },
    "umm_a_dok_kmskn": {
@@ -6550,6 +7025,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\common\\constant\\DocumentConstant.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\BillingReport_SUB02.jrxml",
+     "resources\\reports\\common\\BillingReport_SUB04.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml"
     ]
    },
    "umm_a_hkmlk_lain": {
@@ -6659,6 +7139,11 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\common\\repository\\common\\AppMaklumatPremiumRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7G.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanNotis5A.jrxml"
     ]
    },
    "umm_a_mklmt_rpt_rpb": {
@@ -6733,6 +7218,9 @@
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\common\\AppPenyerahRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\common\\PertanyaanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\MLK\\LaporanCarianDFT.jrxml"
     ]
    },
    "umm_a_permit_lesen": {
@@ -6752,6 +7240,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\common\\AppPermitLesenRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\masterdata\\PermitLesenRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\MLK\\BillingReport1Summary_Sub02.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport5Permit_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport5Permit_Sub02.jrxml"
     ]
    },
    "umm_a_permohonan_tnh": {
@@ -6767,6 +7260,11 @@
      "java\\my\\gov\\etanah\\common\\form\\BaseBpmForm.java",
      "java\\my\\gov\\etanah\\common\\notification\\service\\impl\\DashboardService.java",
      "java\\my\\gov\\etanah\\common\\pengagihan\\helper\\CommonPengagihanTugasanHelper.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport1Summary_Sub02.jrxml"
     ]
    },
    "umm_a_pihak_bkptg": {
@@ -6791,6 +7289,11 @@
      "java\\my\\gov\\etanah\\common\\service\\impl\\CommonSearchService.java",
      "java\\my\\gov\\etanah\\common\\service\\impl\\PenyaksianService.java",
      "java\\my\\gov\\etanah\\common\\service\\lucene\\impl\\LuceneSearchService.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7G.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanNotis5A.jrxml"
     ]
    },
    "umm_a_pihak_bkptg_srt": {
@@ -6810,6 +7313,10 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\common\\repository\\common\\AppRayuanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\TRG\\LaporanBorang7G.jrxml",
+     "resources\\reports\\common\\state\\TRG\\LaporanNotis5A.jrxml"
     ]
    },
    "umm_a_rizab": {
@@ -6825,6 +7332,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\common\\AppRizabRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\MLK\\BillingReport1Summary_Sub02.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport5Permit_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\BillingReport5Permit_Sub02.jrxml"
     ]
    },
    "umm_a_srt": {
@@ -6874,6 +7386,11 @@
      "java\\my\\gov\\etanah\\common\\repository\\common\\AppDokumenKeluaranRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\common\\AppTugasanDokumenRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\common\\AppTugasanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7G_Sub01.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanCarianDFT.jrxml"
     ]
    },
    "umm_a_tgsn_dok": {
@@ -6963,6 +7480,11 @@
      "java\\my\\gov\\etanah\\common\\constant\\SenaraiAhliKumpulanConstant.java",
      "java\\my\\gov\\etanah\\common\\service\\impl\\CommonSearchService.java",
      "java\\my\\gov\\etanah\\common\\service\\impl\\CommonService.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\BillingReport_SUB02.jrxml",
+     "resources\\reports\\common\\BillingReport_SUB04.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanBorang7C.jrxml"
     ]
    },
    "umm_bayaran_ukur": {
@@ -7577,6 +8099,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\common\\PraAhliLembagaRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\PRK\\LaporanBorangA_Sub01.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanBorangB.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanBorangC_Sub01.jrxml"
     ]
    },
    "umm_p_aplikasi": {
@@ -7597,6 +8124,11 @@
      "java\\my\\gov\\etanah\\common\\repository\\common\\AppHakmilikRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\common\\PraAplikasiRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\common\\PraPihakBerkepentinganRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanSenaraiSemak.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanSenaraiSemak_Sub01.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanSlipPermohonan.jrxml"
     ]
    },
    "umm_p_daftar_organisasi": {
@@ -7632,6 +8164,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\common\\PraHakmilikRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanSenaraiSemak.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanSlipPermohonan.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanSlipPermohonan_Sub02.jrxml"
     ]
    },
    "umm_p_hkmlk_lain": {
@@ -7691,6 +8228,11 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\common\\repository\\common\\PraPermitLesenRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanSlipPermohonan.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanSlipPermohonan.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanBorangA.jrxml"
     ]
    },
    "umm_p_permohonan_tnh": {
@@ -7699,6 +8241,11 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\common\\repository\\common\\PraPermohonanTanahRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanSenaraiSemak.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanSlipPermohonan.jrxml",
+     "resources\\reports\\common\\state\\KDH\\LaporanSlipPermohonan_Sub02.jrxml"
     ]
    },
    "umm_p_pihak_bkptg": {
@@ -7717,6 +8264,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\common\\repository\\common\\PraPihakBerkepentinganRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\MLK\\LaporanJadualKTN.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanBorangA_Sub01.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanBorangA_Sub02.jrxml"
     ]
    },
    "umm_p_pihak_bkptg_srt": {
@@ -7725,6 +8277,11 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\common\\repository\\common\\PraPihakBerkepentinganSuratRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\PRK\\LaporanBorangA_Sub01.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanBorangA_Sub02.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanBorangA_Sub03.jrxml"
     ]
    },
    "umm_p_serahan_terlibat": {
@@ -7748,6 +8305,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\common\\constant\\SenaraiAhliKumpulanConstant.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\KDH\\LaporanSenaraiSemak_Sub01.jrxml",
+     "resources\\reports\\common\\state\\MLK\\LaporanSenaraiSemak_Sub01.jrxml",
+     "resources\\reports\\common\\state\\PRK\\LaporanSenaraiSemak_Sub01.jrxml"
     ]
    },
    "umm_p_srt": {
@@ -7773,6 +8335,10 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\common\\repository\\common\\PraTanggunganRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\common\\state\\PRK\\LaporanBorangB.jrxml",
+     "resources\\reports\\common\\state\\SGR\\LaporanBorangB.jrxml"
     ]
    },
    "umm_pengguna_notifikasi": {
@@ -8134,9 +8700,11 @@
    "M2": 24,
    "M3": 163,
    "M4": 133,
-   "M5": 35
+   "M5": 35,
+   "M6": 111,
+   "M7": 0
   },
-  "union_count": 284,
+  "union_count": 286,
   "tables": [
    "amb_a_bahagian_pemberian",
    "amb_a_bantahan",
@@ -8212,6 +8780,7 @@
    "ind_hkmlk_pelbagai",
    "ind_hkmlk_sambungan",
    "ind_jns_senarai_smkn_bsyrt",
+   "ind_kumpln_pihk_bkptg",
    "ind_mklmt_hkmlk",
    "ind_mklmt_tnh_permit_lesen",
    "ind_modul",
@@ -8400,6 +8969,7 @@
    "umm_p_jabatan_teknikal",
    "umm_p_mklmt_kembaran",
    "umm_p_mklmt_laporan_tnh",
+   "umm_p_mklmt_ursn_tmbhn",
    "umm_p_pelikuidasi_pihak",
    "umm_p_pengalaman_kerja",
    "umm_p_penyaksian",
@@ -8497,6 +9067,11 @@
      "java\\my\\gov\\etanah\\awam\\common\\web\\form\\AwamBayaranTabForm.java",
      "java\\my\\gov\\etanah\\awam\\hasil\\strategy\\PembangunanBayaranOnlineStrategy.java",
      "java\\my\\gov\\etanah\\awam\\hasil\\strategy\\PendaftaranBayaranOnlineStrategy.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorangN.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorangN_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\AmbLaporanBorangN.jrxml"
     ]
    },
    "amb_p_pengambilan": {
@@ -8508,6 +9083,11 @@
     "M3": [
      "java\\my\\gov\\etanah\\awam\\common\\service\\impl\\AwamCommonService.java",
      "java\\my\\gov\\etanah\\awam\\pengambilan\\service\\impl\\PengambilanService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub06.jrxml"
     ]
    },
    "bgn_a_mklmt_syer_tnh": {
@@ -8533,6 +9113,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\awam\\pembangunan\\service\\impl\\PembangunanSearchService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang9B_Sub02.jrxml",
+     "resources\\reports\\state\\MLK\\BgnLaporanBorang9B_Sub02.jrxml",
+     "resources\\reports\\state\\MLK\\BgnLaporanLampiran2.jrxml"
     ]
    },
    "bgn_p_pembangunan": {
@@ -8546,6 +9131,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\awam\\pembangunan\\constant\\PembangunanConstant.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12A.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12A_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12B.jrxml"
     ]
    },
    "con_a_kebenaran_hkmlk": {
@@ -8616,6 +9206,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\consent\\repository\\AwamPraKebenaranHakmilikRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\ConLaporanBorangKPJ_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\ConLaporanBorangKPJ_Sub02.jrxml",
+     "resources\\reports\\state\\SGR\\ConLaporanBorangKPJ_Sub01.jrxml"
     ]
    },
    "con_p_mklmt_pembangunan": {
@@ -8659,6 +9254,11 @@
     "M5": [
      "java\\my\\gov\\etanah\\awam\\common\\constant\\AwamConsentConstant.java",
      "java\\my\\gov\\etanah\\awam\\consent\\constant\\ConsentConstant.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\ConLaporanBorang14D.jrxml",
+     "resources\\reports\\state\\KDH\\ConLaporanBorang14D_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\ConLaporanBorang14D.jrxml"
     ]
    },
    "dft_a_btrn_nota": {
@@ -8705,6 +9305,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\awam\\pembangunan\\service\\impl\\PembangunanSearchService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanBorang16G.jrxml",
+     "resources\\reports\\state\\MLK\\LlgLaporanBorang16G.jrxml",
+     "resources\\reports\\state\\PRK\\LlgLaporanBorang16G.jrxml"
     ]
    },
    "dft_p_borang": {
@@ -8791,6 +9396,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\awam\\hasil\\repository\\AwamHasilAkaunCukaiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12B_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang9C_Sub03.jrxml",
+     "resources\\reports\\state\\MLK\\BgnLaporanBorang12B_Sub02.jrxml"
     ]
    },
    "hsl_akaun_deposit": {
@@ -8835,6 +9445,11 @@
      "java\\my\\gov\\etanah\\awam\\common\\web\\form\\EMaklumatCukaiTanahForm.java",
      "java\\my\\gov\\etanah\\awam\\hasil\\helper\\HasilCartInitPaymentHelper.java",
      "java\\my\\gov\\etanah\\awam\\hasil\\integration\\CheckFPXPaymentStatusIntegrationCommand.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12B_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang9C_Sub03.jrxml",
+     "resources\\reports\\state\\MLK\\BgnLaporanBorang12B_Sub02.jrxml"
     ]
    },
    "hsl_bayaran_fi": {
@@ -8851,6 +9466,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\awam\\hasil\\repository\\AwamHasilBayaranFiRepository.java",
      "java\\my\\gov\\etanah\\awam\\hasil\\repository\\AwamHasilBayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\DftLaporanResitECarian.jrxml",
+     "resources\\reports\\state\\PRK\\DftLaporanResitECarian_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\DftLaporanResitECarian_Sub02.jrxml"
     ]
    },
    "hsl_bayaran_luar": {
@@ -8875,6 +9495,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\awam\\hasil\\repository\\AwamHasilAkaunCukaiRepository.java",
      "java\\my\\gov\\etanah\\awam\\hasil\\web\\form\\CarianAkaunCukaiTanahForm.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12B_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang9C_Sub03.jrxml",
+     "resources\\reports\\state\\MLK\\BgnLaporanBorang12B_Sub02.jrxml"
     ]
    },
    "hsl_btrn_bayaran": {
@@ -8891,6 +9516,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\awam\\hasil\\repository\\AwamHasilBayaranRepository.java",
      "java\\my\\gov\\etanah\\awam\\hasil\\repository\\AwamHasilButiranBayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12B_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang9C_Sub03.jrxml",
+     "resources\\reports\\state\\MLK\\BgnLaporanBorang12B_Sub02.jrxml"
     ]
    },
    "hsl_btrn_log_gerbang_bayaran": {
@@ -8917,6 +9547,10 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\awam\\common\\constant\\HasilConstant.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\DftLaporanResitECarian.jrxml",
+     "resources\\reports\\state\\SGR\\DftLaporanResitECarian.jrxml"
     ]
    },
    "hsl_fi_kadar": {
@@ -8934,6 +9568,11 @@
      "java\\my\\gov\\etanah\\awam\\pelupusan\\repository\\AwamPelupusanFiKadarRepository.java",
      "java\\my\\gov\\etanah\\awam\\pendaftaran\\repository\\AwamPendaftaranFiKadarRepository.java",
      "java\\my\\gov\\etanah\\common\\repository\\pembangunan\\PembangunanFiKadarRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12A.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang7D.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang9A.jrxml"
     ]
    },
    "hsl_fi_pejabat": {
@@ -8949,6 +9588,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\hasil\\repository\\AwamHasilFiPejabatRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12A.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12D.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang7D.jrxml"
     ]
    },
    "hsl_jadual_ansuran": {
@@ -9038,6 +9682,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\awam\\hasil\\repository\\AwamHasilPraBayaranFiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12B.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12D.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang9A.jrxml"
     ]
    },
    "hsl_p_btrn_kelompok_cukai": {
@@ -9142,6 +9791,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\masterdata\\AwamBandarPekanMukimRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub08.jrxml"
     ]
    },
    "ind_btrn_strata_idx": {
@@ -9162,6 +9816,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\refdata\\AwamDaerahRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub08.jrxml"
     ]
    },
    "ind_dok_kerja": {
@@ -9189,6 +9848,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\awam\\repository\\masterdata\\AwamHakmilikPelbagaiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub07.jrxml"
     ]
    },
    "ind_hkmlk_gsa": {
@@ -9245,6 +9909,13 @@
      "java\\my\\gov\\etanah\\awam\\service\\impl\\AwamPendaftaranService.java"
     ]
    },
+   "ind_kumpln_pihk_bkptg": {
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang8_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorangPBT8A_Sub02.jrxml"
+    ]
+   },
    "ind_mklmt_hkmlk": {
     "M1": [
      "java\\my\\gov\\etanah\\awam\\common\\service\\impl\\AwamCommonReportService.java",
@@ -9258,6 +9929,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\awam\\repository\\masterdata\\AwamHakmilikPelbagaiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub08.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang8_Sub01.jrxml"
     ]
    },
    "ind_mklmt_tnh_permit_lesen": {
@@ -9287,6 +9963,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\refdata\\AwamModulRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanSenaraiSemak.jrxml",
+     "resources\\reports\\state\\KDH\\ConLaporanBorang14D.jrxml",
+     "resources\\reports\\state\\KDH\\ConLaporanBorang14D_Sub01.jrxml"
     ]
    },
    "ind_modul_jns_ursn": {
@@ -9308,6 +9989,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\masterdata\\AwamPejabatRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang8.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorangN.jrxml"
     ]
    },
    "ind_pejabat_tgsn": {
@@ -9325,6 +10011,9 @@
    "ind_pelan": {
     "M1": [
      "java\\my\\gov\\etanah\\awam\\pembangunan\\web\\form\\PembangunanMaklumatSiasatanTanahHelper.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\BgnLaporanTanah_Sub01.jrxml"
     ]
    },
    "ind_pemegang_permit_lesen": {
@@ -9360,6 +10049,11 @@
     "M5": [
      "java\\my\\gov\\etanah\\awam\\penguatkuasaan\\web\\form\\MaklumatPermitLesenHelperForm.java",
      "java\\my\\gov\\etanah\\awam\\strata\\service\\impl\\AwamStrataService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanBorangMLPS_Sub02.jrxml",
+     "resources\\reports\\state\\SGR\\PlpLaporanLampiranC.jrxml",
+     "resources\\reports\\state\\TRG\\PlpLaporanBorangMLPS_Sub02.jrxml"
     ]
    },
    "ind_pihak_bkptg": {
@@ -9375,6 +10069,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\masterdata\\AwamPihakBerkepentinganRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang8_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorangPBT8A_Sub02.jrxml"
     ]
    },
    "ind_rekod_ursn": {
@@ -9386,6 +10085,11 @@
     "M3": [
      "java\\my\\gov\\etanah\\awam\\common\\web\\form\\base\\BaseKemasukanHakmilikForm.java",
      "java\\my\\gov\\etanah\\awam\\service\\impl\\PendaftaranService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanBorang16G.jrxml",
+     "resources\\reports\\state\\MLK\\BgnLaporanKembaranA.jrxml",
+     "resources\\reports\\state\\MLK\\BgnLaporanKembaranA_Sub02.jrxml"
     ]
    },
    "ind_rizab": {
@@ -9407,6 +10111,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\awam\\hasil\\service\\impl\\HasilService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub08.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang8_Sub01.jrxml"
     ]
    },
    "ind_skrin": {
@@ -9422,6 +10131,11 @@
      "java\\my\\gov\\etanah\\awam\\pelupusan\\service\\impl\\PelupusanService.java",
      "java\\my\\gov\\etanah\\awam\\pelupusan\\vo\\PelupusanMaklumatTanahVO.java",
      "java\\my\\gov\\etanah\\awam\\pelupusan\\vo\\PelupusanPermitVO.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanBorangD.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanJadualXXVII.jrxml",
+     "resources\\reports\\state\\MLK\\BgnLaporanJadualXXVII.jrxml"
     ]
    },
    "ind_strata_idx": {
@@ -9445,6 +10159,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\awam\\consent\\service\\impl\\AwamConsentService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanBorangD.jrxml",
+     "resources\\reports\\state\\KDH\\ConLaporanBorangKPW_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\ConLaporanBorangKPW_Sub04.jrxml"
     ]
    },
    "ind_templat": {
@@ -9467,6 +10186,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\common\\AwamAppTugasanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanSenaraiSemak_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\LlgLaporanSenaraiSemak_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\LlgLaporanSenaraiSemak_Sub01.jrxml"
     ]
    },
    "ind_ursn": {
@@ -9483,6 +10207,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\masterdata\\AwamUrusanRepository.java",
      "java\\my\\gov\\etanah\\awam\\repository\\refdata\\AwamModulRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub03.jrxml"
     ]
    },
    "ind_ursn_senarai_smkn": {
@@ -9499,6 +10228,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\masterdata\\AwamUrusanSenaraiSemakanRepository.java",
      "java\\my\\gov\\etanah\\awam\\service\\impl\\AwamPendaftaranService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12B.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang7D.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang9A.jrxml"
     ]
    },
    "ind_versi_dhd": {
@@ -9521,6 +10255,11 @@
      "java\\my\\gov\\etanah\\awam\\common\\constant\\HasilConstant.java",
      "java\\my\\gov\\etanah\\awam\\hasil\\repository\\AwamHasilButiranLogGerbangBayaranRepository.java",
      "java\\my\\gov\\etanah\\awam\\repository\\masterdata\\AwamHakmilikPelbagaiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub08.jrxml"
     ]
    },
    "ind_versi_permit_lesen": {
@@ -9540,6 +10279,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\awam\\strata\\service\\impl\\AwamStrataService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanBorangMLPS_Sub02.jrxml",
+     "resources\\reports\\state\\SGR\\PlpLaporanLampiranC.jrxml",
+     "resources\\reports\\state\\TRG\\PlpLaporanBorangMLPS_Sub02.jrxml"
     ]
    },
    "llg_a_alamat_tmbhn": {
@@ -9587,6 +10331,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\awam\\lelong\\repository\\AwamAppIsytiharJualanRepository.java",
      "java\\my\\gov\\etanah\\awam\\lelong\\repository\\AwamPraTuntutanPelelongRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanBorang16O.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPPP.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPTPLBL.jrxml"
     ]
    },
    "llg_a_kehadiran": {
@@ -9605,6 +10354,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\lelong\\repository\\AwamAppLelongDokumenRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanSenaraiSemak_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\LlgLaporanSenaraiSemak_Sub01.jrxml",
+     "resources\\reports\\state\\SGR\\LlgLaporanSenaraiSemak_Sub01.jrxml"
     ]
    },
    "llg_a_pelelong": {
@@ -9615,6 +10369,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\lelong\\repository\\AwamAppPelelongRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPTPLBL.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPTPLBL_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPTPLBL_Sub02.jrxml"
     ]
    },
    "llg_a_pembida": {
@@ -9632,6 +10391,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\awam\\common\\service\\impl\\AwamCommonService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPPP.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanSenaraiSemak.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanSenaraiSemak_Sub01.jrxml"
     ]
    },
    "llg_a_pembida_bayaran": {
@@ -9667,6 +10431,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\lelong\\repository\\AwamAppPerintahJualanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanBorang16O.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPPP.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPTPLBL.jrxml"
     ]
    },
    "llg_a_siasatan": {
@@ -9702,6 +10471,11 @@
      "java\\my\\gov\\etanah\\awam\\lelong\\repository\\AwamAppTuntutanPelelongRepository.java",
      "java\\my\\gov\\etanah\\awam\\lelong\\service\\ILelongService.java",
      "java\\my\\gov\\etanah\\awam\\lelong\\service\\impl\\LelongService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LlgLaporanBorangPTPLBL.jrxml",
+     "resources\\reports\\state\\PRK\\LlgLaporanSenaraiSemak.jrxml",
+     "resources\\reports\\state\\PRK\\LlgLaporanSenaraiSemak_Sub01.jrxml"
     ]
    },
    "llg_i_daftar_pelelong": {
@@ -9716,6 +10490,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\lelong\\repository\\AwamDaftarPelelongRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LlgLaporanBorangPTPLBL.jrxml",
+     "resources\\reports\\state\\PRK\\LlgLaporanSenaraiSemak.jrxml",
+     "resources\\reports\\state\\PRK\\LlgLaporanSenaraiSemak_Sub01.jrxml"
     ]
    },
    "llg_i_pembida": {
@@ -9733,6 +10512,11 @@
      "java\\my\\gov\\etanah\\awam\\common\\service\\IAwamCommonService.java",
      "java\\my\\gov\\etanah\\awam\\common\\service\\impl\\AwamCommonReportService.java",
      "java\\my\\gov\\etanah\\awam\\common\\service\\impl\\AwamCommonService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanBorang16G.jrxml",
+     "resources\\reports\\state\\MLK\\LlgLaporanBorang16G.jrxml",
+     "resources\\reports\\state\\PRK\\LlgLaporanBorang16G.jrxml"
     ]
    },
    "llg_p_bil_tuntutan_pelelong": {
@@ -9743,6 +10527,11 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\awam\\lelong\\repository\\AwamPraBilTuntutanPelelongRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPTPLBL_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanSenaraiSemak_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\LlgLaporanBorangPTPLBL_Sub02.jrxml"
     ]
    },
    "llg_p_daftar_pelelong": {
@@ -9756,6 +10545,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\lelong\\repository\\AwamPraDaftarPelelongRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPPLBL.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanSenaraiSemakPPLBL.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanSlipPermohonanPPLBL.jrxml"
     ]
    },
    "llg_p_prnth_jualan": {
@@ -9771,6 +10565,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\lelong\\repository\\AwamPraPerintahJualanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanBorang16G.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanBorang16O.jrxml",
+     "resources\\reports\\state\\MLK\\LlgLaporanBorang16G.jrxml"
     ]
    },
    "llg_p_tggh_batal_prnth_jualan": {
@@ -9781,6 +10580,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\lelong\\repository\\AwamPraTangguhBatalPerintahJualanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanBorang16O.jrxml",
+     "resources\\reports\\state\\MLK\\LlgLaporanBorang16O.jrxml",
+     "resources\\reports\\state\\PRK\\LlgLaporanBorang16O.jrxml"
     ]
    },
    "llg_p_tuntutan_pelelong": {
@@ -9794,6 +10598,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\lelong\\repository\\AwamPraTuntutanPelelongRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPTPLBL.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPTPLBL_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPTPLBL_Sub02.jrxml"
     ]
    },
    "pcp_audit_aktiviti": {
@@ -9848,6 +10657,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\pengguna\\AwamPenggunaRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPPP.jrxml",
+     "resources\\reports\\state\\MLK\\LlgLaporanBorangPPP.jrxml",
+     "resources\\reports\\state\\PRK\\DftLaporanResitECarian.jrxml"
     ]
    },
    "pks_a_aduan": {
@@ -9934,6 +10748,10 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\awam\\pelupusan\\repository\\AwamPraJenisBangunanAtasTanahRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanAkuanTanahHaram_Sub02.jrxml",
+     "resources\\reports\\state\\TRG\\PlpLaporanAkuanTanahHaram_Sub02.jrxml"
     ]
    },
    "plp_p_jns_tnmn_atas_tnh": {
@@ -9943,6 +10761,11 @@
     ],
     "M2": [
      "java\\my\\gov\\etanah\\awam\\pelupusan\\repository\\AwamPraJenisTanamanAtasTanahRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanAkuanTanahHaram.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanAkuanTanahHaram_Sub01.jrxml",
+     "resources\\reports\\state\\TRG\\PlpLaporanAkuanTanahHaram.jrxml"
     ]
    },
    "plp_p_pelupusan": {
@@ -9953,6 +10776,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\awam\\pelupusan\\service\\impl\\PelupusanService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanSuratAkujanji.jrxml",
+     "resources\\reports\\state\\PRK\\PlpLaporanJadual1P2.jrxml",
+     "resources\\reports\\state\\PRK\\PlpLaporanJadual1P2_Sub02.jrxml"
     ]
    },
    "plp_pemohon_rtb": {
@@ -9978,6 +10806,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\refdata\\AwamAgensiKerajaanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub07.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub08.jrxml"
     ]
    },
    "rjk_badan_berkanun": {
@@ -10016,6 +10849,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\awam\\common\\service\\impl\\AwamCommonService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LlgLaporanBorangPPLBL.jrxml",
+     "resources\\reports\\state\\SGR\\LlgLaporanBorangPPLBL.jrxml",
+     "resources\\reports\\state\\TRG\\LlgLaporanBorangPPLBL.jrxml"
     ]
    },
    "rjk_jns_dok": {
@@ -10028,6 +10866,11 @@
      "java\\my\\gov\\etanah\\awam\\common\\service\\impl\\AwamCommonService.java",
      "java\\my\\gov\\etanah\\awam\\common\\vo\\AwamDashboardVO.java",
      "java\\my\\gov\\etanah\\awam\\hasil\\service\\impl\\HasilService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12B.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang7D.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang9A.jrxml"
     ]
    },
    "rjk_jns_hkmlk": {
@@ -10043,6 +10886,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\refdata\\AwamJenisHakmilikRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub08.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang8.jrxml"
     ]
    },
    "rjk_jns_janjitemu": {
@@ -10107,6 +10955,9 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\refdata\\AwamOrganisasiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\PlpLaporanBorangPRU.jrxml"
     ]
    },
    "rjk_organisasi_individu": {
@@ -10132,6 +10983,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\awam\\common\\service\\impl\\AwamCommonSearchService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanJadualXXVII.jrxml",
+     "resources\\reports\\state\\KDH\\ConLaporanBorang14D.jrxml",
+     "resources\\reports\\state\\KDH\\ConLaporanBorang14D_Sub01.jrxml"
     ]
    },
    "rjk_peguam": {
@@ -10185,6 +11041,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\awam\\hasil\\repository\\AwamHasilButiranLogGerbangBayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\ResitRasmiInsolvensi.jrxml",
+     "resources\\reports\\ResitRasmiSWS.jrxml",
+     "resources\\reports\\singlewindow\\TerperinciTransaksiSingleWindow.jrxml"
     ]
    },
    "rjk_senarai_kumpulan": {
@@ -10195,6 +11056,9 @@
      "java\\my\\gov\\etanah\\awam\\common\\service\\impl\\AwamCommonSearchService.java",
      "java\\my\\gov\\etanah\\awam\\service\\impl\\PendaftaranService.java",
      "java\\my\\gov\\etanah\\awam\\strata\\util\\StrataCopyUtil.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\PlpLaporanBorangPRU.jrxml"
     ]
    },
    "rjk_syarikat": {
@@ -10210,6 +11074,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\refdata\\AwamSyarikatRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPPP.jrxml",
+     "resources\\reports\\state\\MLK\\LlgLaporanBorangPPP.jrxml",
+     "resources\\reports\\state\\PRK\\LlgLaporanBorangPPP.jrxml"
     ]
    },
    "sakkod": {
@@ -10244,6 +11113,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\dms\\AwamDocumentRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanSenaraiSemak.jrxml",
+     "resources\\reports\\state\\MLK\\AmbLaporanSenaraiSemak.jrxml",
+     "resources\\reports\\state\\PRK\\AmbLaporanSenaraiSemak.jrxml"
     ]
    },
    "spc_a_carian_dok": {
@@ -10254,6 +11128,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\awam\\service\\impl\\AwamPendaftaranService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\DftLaporanSlipE2e_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\DftLaporanSlipE2e_Sub03.jrxml",
+     "resources\\reports\\state\\MLK\\DftLaporanSlipE2e_Sub01.jrxml"
     ]
    },
    "spc_capaian_p_aplikasi": {
@@ -10417,6 +11296,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\strata\\repository\\AwamMaklumatStrataRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\StrLaporanBorang1.jrxml",
+     "resources\\reports\\state\\MLK\\StrLaporanBorang1.jrxml",
+     "resources\\reports\\state\\PRK\\StrLaporanBorang1.jrxml"
     ]
    },
    "str_i_ptk": {
@@ -10453,6 +11337,11 @@
      "java\\my\\gov\\etanah\\awam\\strata\\repository\\AwamPraAhliJawatankuasaMCRepository.java",
      "java\\my\\gov\\etanah\\awam\\strata\\service\\impl\\AwamStrataService.java",
      "java\\my\\gov\\etanah\\awam\\strata\\util\\StrataCopyUtil.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\StrLaporanBorang8Seksyen57_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\StrLaporanBorang9_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\StrLaporanBorang9_Sub02.jrxml"
     ]
    },
    "str_p_arkitek": {
@@ -10463,6 +11352,10 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\awam\\common\\service\\impl\\AwamCommonService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\StrLaporanSenaraiSemak.jrxml",
+     "resources\\reports\\state\\SGR\\StrLaporanSenaraiSemak.jrxml"
     ]
    },
    "str_p_blok_smtr": {
@@ -10476,6 +11369,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\strata\\repository\\AwamPraBlokSementaraRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\StrLaporanBorang5_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\StrLaporanBorang5_Sub02.jrxml",
+     "resources\\reports\\state\\MLK\\StrLaporanBorang5_Sub01.jrxml"
     ]
    },
    "str_p_jns_ptk": {
@@ -10493,6 +11391,11 @@
      "java\\my\\gov\\etanah\\awam\\strata\\repository\\AwamPraJurukurTanahRepository.java",
      "java\\my\\gov\\etanah\\awam\\strata\\service\\IAwamStrataService.java",
      "java\\my\\gov\\etanah\\awam\\strata\\service\\impl\\AwamStrataService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\StrLaporanBorangE_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\StrLaporanBorangE_Sub03.jrxml",
+     "resources\\reports\\state\\PRK\\StrLaporanSenaraiSemak.jrxml"
     ]
    },
    "str_p_kiraan_unit_syer": {
@@ -10512,6 +11415,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\strata\\repository\\AwamPraMcRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\StrLaporanBorang8Seksyen57.jrxml",
+     "resources\\reports\\state\\KDH\\StrLaporanBorang8Seksyen57_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\StrLaporanBorang9_Sub01.jrxml"
     ]
    },
    "str_p_mklmt_tmbhn": {
@@ -10522,6 +11430,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\strata\\repository\\AwamPraMaklumatTambahanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\StrLaporanBorang1_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\StrLaporanBorang1_Sub05.jrxml",
+     "resources\\reports\\state\\KDH\\StrLaporanBorang1_Sub06.jrxml"
     ]
    },
    "str_p_pemaju": {
@@ -10538,6 +11451,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\strata\\repository\\AwamPraPerakuanJupemRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\StrLaporanBorang1.jrxml",
+     "resources\\reports\\state\\KDH\\StrLaporanBorang5_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\StrLaporanBorang5_Sub02.jrxml"
     ]
    },
    "str_p_pindaan_syrt_nyata": {
@@ -10548,6 +11466,9 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\awam\\strata\\service\\impl\\AwamStrataService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\SGR\\StrLaporanBorangPSNT.jrxml"
     ]
    },
    "str_p_ptk": {
@@ -10558,6 +11479,11 @@
     "M3": [
      "java\\my\\gov\\etanah\\awam\\common\\service\\impl\\AwamCommonService.java",
      "java\\my\\gov\\etanah\\awam\\strata\\service\\impl\\AwamStrataService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\StrLaporanBorang1_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\StrLaporanBorang1_Sub04.jrxml",
+     "resources\\reports\\state\\MLK\\StrLaporanBorang1_Sub02.jrxml"
     ]
    },
    "str_p_ptk_aksesori": {
@@ -10568,6 +11494,11 @@
     "M3": [
      "java\\my\\gov\\etanah\\awam\\common\\service\\impl\\AwamCommonService.java",
      "java\\my\\gov\\etanah\\awam\\strata\\service\\impl\\AwamStrataService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\StrLaporanBorang1_Sub04.jrxml",
+     "resources\\reports\\state\\MLK\\StrLaporanBorang1_Sub04.jrxml",
+     "resources\\reports\\state\\SGR\\StrLaporanBorang1_Sub04.jrxml"
     ]
    },
    "str_p_rujukan_pelan_bangunan": {
@@ -10578,6 +11509,9 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\strata\\repository\\AwamPraRujukanPelanBangunanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\StrLaporanBorangB_Sub03.jrxml"
     ]
    },
    "str_p_sijil_perakuan": {
@@ -10585,6 +11519,9 @@
      "java\\my\\gov\\etanah\\awam\\strata\\repository\\AwamPraSijilPerakuanRepository.java",
      "java\\my\\gov\\etanah\\awam\\strata\\service\\impl\\AwamStrataService.java",
      "java\\my\\gov\\etanah\\awam\\strata\\util\\StrataCopyUtil.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\StrLaporanBorangB_Sub03.jrxml"
     ]
    },
    "str_p_strata": {
@@ -10601,6 +11538,11 @@
      "java\\my\\gov\\etanah\\awam\\common\\constant\\AwamStrataConstant.java",
      "java\\my\\gov\\etanah\\awam\\strata\\service\\impl\\AwamStrataService.java",
      "java\\my\\gov\\etanah\\awam\\strata\\web\\form\\StrataHelperForm.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\StrLaporanBorang1.jrxml",
+     "resources\\reports\\state\\KDH\\StrLaporanBorang1_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\StrLaporanBorang1_Sub02.jrxml"
     ]
    },
    "sws_bayaran": {
@@ -10614,6 +11556,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\singlewindow\\constant\\SingleWindowConstant.java"
+    ],
+    "M6": [
+     "resources\\reports\\ResitRasmiInsolvensi.jrxml",
+     "resources\\reports\\ResitRasmiInsolvensi_Sub01.jrxml",
+     "resources\\reports\\ResitRasmiInsolvensi_Sub02.jrxml"
     ]
    },
    "sws_item": {
@@ -10624,6 +11571,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\singlewindow\\service\\impl\\SingleWindowService.java"
+    ],
+    "M6": [
+     "resources\\reports\\ResitRasmiInsolvensi_Sub01.jrxml",
+     "resources\\reports\\ResitRasmiInsolvensi_Sub02.jrxml",
+     "resources\\reports\\ResitRasmiInsolvensi_Sub03.jrxml"
     ]
    },
    "sws_konf": {
@@ -10642,6 +11594,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\singlewindow\\AwamLogSwsGerbangBayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\ResitRasmiInsolvensi.jrxml",
+     "resources\\reports\\ResitRasmiSWS.jrxml",
+     "resources\\reports\\singlewindow\\RingkasanTransaksiSingleWindow.jrxml"
     ]
    },
    "sws_pembekal": {
@@ -10652,6 +11609,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\singlewindow\\service\\impl\\SingleWindowService.java"
+    ],
+    "M6": [
+     "resources\\reports\\ResitRasmiInsolvensi_Sub01.jrxml",
+     "resources\\reports\\ResitRasmiInsolvensi_Sub02.jrxml",
+     "resources\\reports\\ResitRasmiInsolvensi_Sub03.jrxml"
     ]
    },
    "sws_pembelian": {
@@ -10668,6 +11630,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\singlewindow\\constant\\SingleWindowConstant.java"
+    ],
+    "M6": [
+     "resources\\reports\\ResitRasmiInsolvensi_Sub01.jrxml",
+     "resources\\reports\\ResitRasmiInsolvensi_Sub02.jrxml",
+     "resources\\reports\\ResitRasmiInsolvensi_Sub03.jrxml"
     ]
    },
    "sws_troli": {
@@ -10720,6 +11687,11 @@
     "M3": [
      "java\\my\\gov\\etanah\\awam\\pembangunan\\service\\impl\\PembangunanService.java",
      "java\\my\\gov\\etanah\\awam\\pembangunan\\web\\form\\PembangunanMaklumatSiasatanTanahHelper.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\BgnLaporanTanah.jrxml",
+     "resources\\reports\\state\\MLK\\BgnLaporanTanah_Sub02.jrxml",
+     "resources\\reports\\state\\MLK\\BgnLaporanTanah_Sub03.jrxml"
     ]
    },
    "tkl_p_mklmt_bangunan": {
@@ -10730,6 +11702,9 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\awam\\pembangunan\\web\\form\\PembangunanMaklumatSiasatanTanahHelper.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\BgnLaporanTanah_Sub03.jrxml"
     ]
    },
    "tkl_p_mklmt_lot_persekitaran": {
@@ -10740,6 +11715,9 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\awam\\pembangunan\\web\\form\\PembangunanMaklumatSiasatanTanahHelper.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\BgnLaporanTanah_Sub04.jrxml"
     ]
    },
    "tkl_p_mklmt_tanaman": {
@@ -10750,6 +11728,9 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\awam\\pembangunan\\web\\form\\PembangunanMaklumatSiasatanTanahHelper.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\BgnLaporanTanah_Sub02.jrxml"
     ]
    },
    "tkl_p_pembelian_pelan": {
@@ -10814,6 +11795,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\awam\\hasil\\service\\impl\\HasilService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanSenaraiSemak_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\LlgLaporanSenaraiSemak_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\LlgLaporanSenaraiSemak_Sub01.jrxml"
     ]
    },
    "umm_a_hkmlk": {
@@ -10830,6 +11816,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\common\\AwamAppHakmilikRepository.java",
      "java\\my\\gov\\etanah\\awam\\repository\\masterdata\\AwamPermitLesenRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\DftLaporanSlipE2e_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPTPLBL_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanSenaraiSemak.jrxml"
     ]
    },
    "umm_a_hkmlk_lain": {
@@ -10878,6 +11869,11 @@
      "java\\my\\gov\\etanah\\awam\\repository\\common\\AwamAplikasiRepository.java",
      "java\\my\\gov\\etanah\\awam\\repository\\common\\AwamAppPenyerahRepository.java",
      "java\\my\\gov\\etanah\\awam\\repository\\masterdata\\AwamPermitLesenRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\DftLaporanSlipE2e.jrxml",
+     "resources\\reports\\state\\MLK\\DftLaporanSlipE2e.jrxml",
+     "resources\\reports\\state\\PRK\\DftLaporanResitECarian.jrxml"
     ]
    },
    "umm_a_permit_lesen": {
@@ -10890,6 +11886,11 @@
      "java\\my\\gov\\etanah\\awam\\common\\web\\form\\AwamMaklumatLesenTabForm.java",
      "java\\my\\gov\\etanah\\awam\\pelupusan\\service\\impl\\PelupusanSearchService.java",
      "java\\my\\gov\\etanah\\awam\\pelupusan\\service\\impl\\PelupusanService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanBorangMLPS_Sub02.jrxml",
+     "resources\\reports\\state\\SGR\\PlpLaporanLampiranC.jrxml",
+     "resources\\reports\\state\\TRG\\PlpLaporanBorangMLPS_Sub02.jrxml"
     ]
    },
    "umm_a_permohonan_tnh": {
@@ -10917,6 +11918,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\common\\AwamAppPihakBerkepentinganRepository.java",
      "java\\my\\gov\\etanah\\awam\\repository\\masterdata\\AwamPihakBerkepentinganRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPTPLBL_Sub01.jrxml",
+     "resources\\reports\\state\\MLK\\LlgLaporanBorangPTPLBL_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\LlgLaporanBorang16O.jrxml"
     ]
    },
    "umm_a_pihak_bkptg_srt": {
@@ -11023,6 +12029,11 @@
     "M5": [
      "java\\my\\gov\\etanah\\awam\\common\\web\\form\\AwamLaporanForm.java",
      "java\\my\\gov\\etanah\\awam\\hasil\\service\\impl\\HasilService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang8_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorangPBT8A_Sub02.jrxml"
     ]
    },
    "umm_btrn_hantaran_notis": {
@@ -11161,6 +12172,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\common\\AwamPraAhliLembagaRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanJadualXXVII_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\BgnSign2Columns.jrxml",
+     "resources\\reports\\state\\KDH\\BgnSign2Columns2.jrxml"
     ]
    },
    "umm_p_aplikasi": {
@@ -11183,6 +12199,11 @@
      "java\\my\\gov\\etanah\\awam\\common\\service\\impl\\AwamCommonReportService.java",
      "java\\my\\gov\\etanah\\awam\\common\\service\\impl\\AwamCommonService.java",
      "java\\my\\gov\\etanah\\awam\\common\\web\\form\\AwamBayaranTabForm.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub03.jrxml"
     ]
    },
    "umm_p_daftar_organisasi": {
@@ -11219,6 +12240,11 @@
      "java\\my\\gov\\etanah\\awam\\pelupusan\\service\\impl\\PelupusanService.java",
      "java\\my\\gov\\etanah\\awam\\pelupusan\\web\\form\\PelupusanPermitTabForm.java",
      "java\\my\\gov\\etanah\\awam\\pelupusan\\web\\form\\PelupusanPermohonanTanahTab.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub07.jrxml"
     ]
    },
    "umm_p_hkmlk_lain": {
@@ -11229,6 +12255,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\awam\\consent\\service\\impl\\AwamConsentService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\ConLaporanBorangKPM_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\ConLaporanBorangKPM_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\ConLaporanBorangKPM_Sub03.jrxml"
     ]
    },
    "umm_p_hkmlk_sempadan": {
@@ -11257,11 +12288,23 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\awam\\pembangunan\\service\\impl\\PembangunanSearchService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\BgnLaporanKembaranA.jrxml",
+     "resources\\reports\\state\\SGR\\BgnLaporanKembaranA.jrxml",
+     "resources\\reports\\state\\TRG\\BgnLaporanKembaranA.jrxml"
     ]
    },
    "umm_p_mklmt_laporan_tnh": {
     "M1": [
      "java\\my\\gov\\etanah\\awam\\common\\vo\\PembangunanTeknikalMaklumatTanahVO.java"
+    ]
+   },
+   "umm_p_mklmt_ursn_tmbhn": {
+    "M6": [
+     "resources\\reports\\state\\KDH\\StrLaporanBorang1.jrxml",
+     "resources\\reports\\state\\MLK\\StrLaporanBorang1.jrxml",
+     "resources\\reports\\state\\PRK\\StrLaporanBorang1.jrxml"
     ]
    },
    "umm_p_pelikuidasi_pihak": {
@@ -11272,6 +12315,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\common\\AwamPraPelikuidasiPihakRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanJadualXXVII_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\BgnSign2Columns.jrxml",
+     "resources\\reports\\state\\KDH\\BgnSign2Columns2.jrxml"
     ]
    },
    "umm_p_pengalaman_kerja": {
@@ -11291,6 +12339,9 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\common\\AwamPraPenyaksianRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\DftLaporanBorang19H.jrxml"
     ]
    },
    "umm_p_penyerah": {
@@ -11301,6 +12352,9 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\awam\\service\\impl\\PendaftaranService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\DftLaporanBorang19H.jrxml"
     ]
    },
    "umm_p_permit_lesen": {
@@ -11319,6 +12373,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\awam\\common\\constant\\AwamStrataConstant.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\PlpLaporanBorangPRU.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanBorangMLPS_Sub02.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanBorangPLPS.jrxml"
     ]
    },
    "umm_p_permohonan_tnh": {
@@ -11331,6 +12390,11 @@
      "java\\my\\gov\\etanah\\awam\\hasil\\strategy\\PembangunanBayaranOnlineStrategy.java",
      "java\\my\\gov\\etanah\\awam\\pelupusan\\service\\impl\\PelupusanService.java",
      "java\\my\\gov\\etanah\\awam\\pembangunan\\service\\impl\\PembangunanSearchService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12A.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12B.jrxml",
+     "resources\\reports\\state\\KDH\\BgnLaporanBorang12D.jrxml"
     ]
    },
    "umm_p_pihak_bkptg": {
@@ -11346,6 +12410,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\common\\AwamPraPihakBerkepentinganRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub03.jrxml",
+     "resources\\reports\\state\\KDH\\AmbLaporanBorang1_Sub04.jrxml"
     ]
    },
    "umm_p_pihak_bkptg_srt": {
@@ -11356,6 +12425,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\common\\AwamPraPihakBerkepentinganSuratRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanJadualXXVII_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\BgnSign2Columns.jrxml",
+     "resources\\reports\\state\\KDH\\BgnSign2Columns2.jrxml"
     ]
    },
    "umm_p_rizab": {
@@ -11371,6 +12445,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\awam\\pelupusan\\repository\\AwamPelupusanPraRizabRepository.java",
      "java\\my\\gov\\etanah\\awam\\pelupusan\\repository\\AwamPraRizabRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\MLK\\PlpLaporanLampiranD.jrxml",
+     "resources\\reports\\state\\MLK\\PlpLaporanSuratPRZ.jrxml",
+     "resources\\reports\\state\\SGR\\PlpLaporanSuratPRZ.jrxml"
     ]
    },
    "umm_p_serahan_terlibat": {
@@ -11381,6 +12460,9 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\common\\AwamPraSerahanTerlibatRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\DftLaporanBorang19H.jrxml"
     ]
    },
    "umm_p_smkn": {
@@ -11400,6 +12482,11 @@
     "M5": [
      "java\\my\\gov\\etanah\\awam\\pembangunan\\service\\impl\\PembangunanService.java",
      "java\\my\\gov\\etanah\\awam\\pembangunan\\web\\form\\PembangunanMaklumatSiasatanTanahHelper.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\AmbLaporanSenaraiSemak.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanBorangPTPLBL_Sub02.jrxml",
+     "resources\\reports\\state\\KDH\\LlgLaporanSenaraiSemakPPLBL_Sub01.jrxml"
     ]
    },
    "umm_p_srt": {
@@ -11414,6 +12501,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\awam\\repository\\common\\AwamPraSuratRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\BgnLaporanJadualXXVII_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\BgnSign2Columns.jrxml",
+     "resources\\reports\\state\\KDH\\BgnSign2Columns2.jrxml"
     ]
    },
    "umm_p_srt_terlibat": {
@@ -11439,6 +12531,11 @@
     "M3": [
      "java\\my\\gov\\etanah\\awam\\consent\\service\\impl\\AwamConsentService.java",
      "java\\my\\gov\\etanah\\awam\\pelupusan\\service\\impl\\PelupusanService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\ConLaporanBorangKPM_Sub01.jrxml",
+     "resources\\reports\\state\\KDH\\ConLaporanBorangKPM_Sub04.jrxml",
+     "resources\\reports\\state\\KDH\\ConLaporanBorangKPM_Sub05.jrxml"
     ]
    },
    "umm_pengesahan_ekyc": {
@@ -11478,6 +12575,11 @@
     "M1": [
      "java\\my\\gov\\etanah\\awam\\lelong\\vo\\PembidaMaklumatTambahanVO.java",
      "java\\my\\gov\\etanah\\awam\\strata\\web\\form\\BaseStrataTabPihakBerkepentinganForm.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\KDH\\LlgLaporanBorang16G.jrxml",
+     "resources\\reports\\state\\MLK\\LlgLaporanBorang16G.jrxml",
+     "resources\\reports\\state\\PRK\\LlgLaporanBorang16G.jrxml"
     ]
    },
    "umm_status_penyampaian_notis": {
@@ -11533,9 +12635,11 @@
    "M2": 4,
    "M3": 84,
    "M4": 105,
-   "M5": 39
+   "M5": 39,
+   "M6": 72,
+   "M7": 0
   },
-  "union_count": 148,
+  "union_count": 155,
   "tables": [
    "amb_a_pengambilan",
    "amb_p_bantahan",
@@ -11543,6 +12647,7 @@
    "bgn_p_pembangunan",
    "ckp_hkmlk",
    "con_p_kebenaran_hkmlk",
+   "con_p_mohon_kebenaran",
    "dft_a_borang",
    "dft_a_btrn_dok_penntshn",
    "dft_a_btrn_nota",
@@ -11613,6 +12718,7 @@
    "ind_rekod_ursn",
    "ind_seksyen",
    "ind_strata_idx",
+   "ind_strata_ptk_aksesori",
    "ind_templat",
    "ind_tgsn",
    "ind_ursn",
@@ -11661,6 +12767,11 @@
    "str_p_mc",
    "str_p_strata",
    "str_p_sub_mc",
+   "sws_bayaran",
+   "sws_item",
+   "sws_log_gerbang_bayaran",
+   "sws_pembekal",
+   "sws_pembelian",
    "umm_a_dok_keluaran",
    "umm_a_dok_kmskn",
    "umm_a_hkmlk",
@@ -11690,6 +12801,9 @@
    "amb_a_pengambilan": {
     "M1": [
      "java\\my\\gov\\etanah\\spochasil\\strategy\\PengambilanSpocModuleStrategy.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanSlipAkuanPenerimaan.jrxml"
     ]
    },
    "amb_p_bantahan": {
@@ -11706,6 +12820,9 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPraPengambilanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanSlipAkuanPenerimaan.jrxml"
     ]
    },
    "bgn_p_pembangunan": {
@@ -11726,6 +12843,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\spochasil\\service\\impl\\PerserahanService.java"
+    ]
+   },
+   "con_p_mohon_kebenaran": {
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanResitE2e_Sub01.jrxml"
     ]
    },
    "dft_a_borang": {
@@ -11764,6 +12886,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\PemantauanIntegrasiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran5F.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran_Sub01.jrxml"
     ]
    },
    "dft_a_nota": {
@@ -11788,6 +12915,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAppDokumenKeluaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanNotis6A.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanNotis6A_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanNotis6A_Sub02.jrxml"
     ]
    },
    "dft_a_srt_difail": {
@@ -11854,6 +12986,11 @@
      "java\\my\\gov\\etanah\\spochasil\\constant\\SpocHasilConstant.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocButiranBayaranRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPenyataPemungutRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanLampiran.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanLampiran_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitPerbendaharaan.jrxml"
     ]
    },
    "hsl_a_perampasan": {
@@ -11867,6 +13004,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAppPerampasanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanNotis6A.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanNotis6A_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanNotis6A_Sub02.jrxml"
     ]
    },
    "hsl_a_remitan": {
@@ -11877,6 +13019,9 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAppRemitanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml"
     ]
    },
    "hsl_akaun_cukai": {
@@ -11899,6 +13044,11 @@
      "java\\my\\gov\\etanah\\spochasil\\constant\\SpocHasilConstant.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\PemantauanIntegrasiRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAkaunCukaiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanHsl02_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanHsl02_Sub02.jrxml"
     ]
    },
    "hsl_akaun_deposit": {
@@ -11915,6 +13065,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAkaunDepositRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocTransaksiDepositRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBaucarDeposit.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanJadualAnsuran.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanPemindahanDeposit.jrxml"
     ]
    },
    "hsl_arahan_plrsn": {
@@ -11928,6 +13083,10 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\constant\\SpocHasilConstant.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBaucar.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanPemindahanDeposit.jrxml"
     ]
    },
    "hsl_bayaran": {
@@ -11950,6 +13109,11 @@
      "java\\my\\gov\\etanah\\spochasil\\constant\\SpocHasilConstant.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocBayaranRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocButiranBayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran_Sub02.jrxml"
     ]
    },
    "hsl_bayaran_fi": {
@@ -11971,6 +13135,11 @@
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocBayaranFiRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocBayaranRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocButiranBayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBaucarDeposit.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran5F_Sub01.jrxml"
     ]
    },
    "hsl_bayaran_luar": {
@@ -12005,6 +13174,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocBayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanHsl02_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanHsl02_Sub02.jrxml"
     ]
    },
    "hsl_btrn_akaun_kutipan_pos": {
@@ -12028,6 +13202,10 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocButiranArahanPelarasanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBaucar.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanPemindahanDeposit.jrxml"
     ]
    },
    "hsl_btrn_bayaran": {
@@ -12048,6 +13226,11 @@
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocBayaranRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocButiranBayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran_Sub02.jrxml"
     ]
    },
    "hsl_btrn_bayaran_kutipan_pos": {
@@ -12090,6 +13273,11 @@
      "java\\my\\gov\\etanah\\spochasil\\constant\\SpocHasilConstant.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocBayaranRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocButiranBayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanHsl02_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanHsl02_Sub02.jrxml"
     ]
    },
    "hsl_fi_kadar": {
@@ -12100,6 +13288,9 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocFiKadarRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanResitECarian_Sub01.jrxml"
     ]
    },
    "hsl_fi_pejabat": {
@@ -12119,6 +13310,11 @@
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocBayaranRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocButiranBayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBaucarDeposit.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran5F_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran5F_Sub02.jrxml"
     ]
    },
    "hsl_jadual_ansuran": {
@@ -12135,6 +13331,9 @@
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocHakmilikRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocJadualAnsuranRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPejabatRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanJadualAnsuran.jrxml"
     ]
    },
    "hsl_kod_flag_diskaun": {
@@ -12164,6 +13363,9 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocKumpulanCukaiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml"
     ]
    },
    "hsl_kutipan_pos": {
@@ -12216,6 +13418,9 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocMesejCukaiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml"
     ]
    },
    "hsl_p_bayaran_fi": {
@@ -12286,6 +13491,10 @@
    "hsl_penyata_akaun": {
     "M1": [
      "java\\my\\gov\\etanah\\spochasil\\service\\impl\\AkaunCukaiService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanPenyataAkaun.jrxml"
     ]
    },
    "hsl_pindahan_cukai_tnh": {
@@ -12307,6 +13516,9 @@
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPelarasanRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\service\\IAkaunCukaiService.java",
      "java\\my\\gov\\etanah\\spochasil\\service\\impl\\AkaunCukaiService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml"
     ]
    },
    "hsl_sasaran_prestasi": {
@@ -12338,6 +13550,10 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocSesiKutipanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanHsl04.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanHsl04_Sub01.jrxml"
     ]
    },
    "hsl_transaksi_cukai": {
@@ -12359,6 +13575,9 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\constant\\SpocHasilConstant.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBaucarDeposit.jrxml"
     ]
    },
    "ind_bandar_pekan_mukim": {
@@ -12377,6 +13596,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\PemantauanIntegrasiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran5F.jrxml"
     ]
    },
    "ind_daerah": {
@@ -12395,6 +13619,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\PemantauanIntegrasiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran5F.jrxml"
     ]
    },
    "ind_hkmlk": {
@@ -12417,6 +13646,11 @@
      "java\\my\\gov\\etanah\\spochasil\\repository\\PemantauanIntegrasiRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAkaunCukaiRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocDhdVersiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran5F.jrxml"
     ]
    },
    "ind_hkmlk_asal": {
@@ -12473,6 +13707,11 @@
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\PemantauanIntegrasiRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocDhdVersiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran5F.jrxml"
     ]
    },
    "ind_mklmt_tnh_permit_lesen": {
@@ -12484,6 +13723,9 @@
      "java\\my\\gov\\etanah\\spochasil\\service\\impl\\BayaranService.java",
      "java\\my\\gov\\etanah\\spochasil\\service\\impl\\PerserahanService.java",
      "java\\my\\gov\\etanah\\spochasil\\vo\\component\\CarianPajakanVO.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanNotisTuntutan.jrxml"
     ]
    },
    "ind_modul": {
@@ -12502,6 +13744,11 @@
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocBayaranRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocButiranBayaranRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPenggunaRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanCSBBP_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitDepositE2e.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitE2e.jrxml"
     ]
    },
    "ind_pejabat": {
@@ -12522,6 +13769,11 @@
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAplikasiRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocButiranBayaranRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPenyataPemungutRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBaucar.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran.jrxml"
     ]
    },
    "ind_pejabat_bahagian_unit": {
@@ -12547,6 +13799,9 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPemegangPermitLesenRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanNotisTuntutan.jrxml"
     ]
    },
    "ind_permit_lesen": {
@@ -12565,6 +13820,9 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\constant\\SpocHasilConstant.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanNotisTuntutan.jrxml"
     ]
    },
    "ind_pihak_bkptg": {
@@ -12580,6 +13838,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPihakBerkepentinganRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanNotis6A.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanNotis6A_Sub02.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanNotisTuntutan.jrxml"
     ]
    },
    "ind_rekod_ursn": {
@@ -12597,6 +13860,9 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\PemantauanIntegrasiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanCSBBP_Sub01.jrxml"
     ]
    },
    "ind_seksyen": {
@@ -12607,11 +13873,21 @@
      "java\\my\\gov\\etanah\\spochasil\\datamodel\\LazyCarianAkaunCukaiDataModel.java",
      "java\\my\\gov\\etanah\\spochasil\\service\\impl\\AkaunCukaiService.java",
      "java\\my\\gov\\etanah\\spochasil\\service\\impl\\PerserahanService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanResitDepositE2e_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitE2e_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitE2e_Sub05.jrxml"
     ]
    },
    "ind_strata_idx": {
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocStrataIndeksRepository.java"
+    ]
+   },
+   "ind_strata_ptk_aksesori": {
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml"
     ]
    },
    "ind_templat": {
@@ -12633,6 +13909,9 @@
      "java\\my\\gov\\etanah\\spochasil\\repository\\PemantauanIntegrasiRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAppTugasanRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPenggunaRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanSlipBank_Sub01.jrxml"
     ]
    },
    "ind_ursn": {
@@ -12653,6 +13932,11 @@
      "java\\my\\gov\\etanah\\spochasil\\repository\\PemantauanIntegrasiRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAplikasiRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocBayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran5F.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran5F_Sub01.jrxml"
     ]
    },
    "ind_ursn_senarai_smkn": {
@@ -12687,6 +13971,11 @@
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\PemantauanIntegrasiRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocDhdVersiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran5F.jrxml"
     ]
    },
    "ind_versi_permit_lesen": {
@@ -12705,6 +13994,9 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocVersiPermitLesenRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanNotisTuntutan.jrxml"
     ]
    },
    "llg_a_isytihar_jualan": {
@@ -12759,6 +14051,11 @@
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPenggunaRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPenyataPemungutRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanHsl02.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanHsl02_Sub01.jrxml"
     ]
    },
    "pcp_peranan_modul": {
@@ -12778,6 +14075,9 @@
     "M1": [
      "java\\my\\gov\\etanah\\spochasil\\strategy\\BaseSpocStrategy.java",
      "java\\my\\gov\\etanah\\spochasil\\util\\PopulateDataUtil.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanSlipAduan.jrxml"
     ]
    },
    "plp_a_pelupusan": {
@@ -12810,6 +14110,9 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPenyataPemungutRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanSlipBank_Sub01.jrxml"
     ]
    },
    "rjk_badan_berkanun": {
@@ -12835,6 +14138,9 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocIndividuRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanSlipBank_Sub01.jrxml"
     ]
    },
    "rjk_jns_dok": {
@@ -12851,6 +14157,10 @@
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocDocumentRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocJenisDokumenRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanSlipAkuanKutipan.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanSlipAkuanPenerimaan_Sub01.jrxml"
     ]
    },
    "rjk_jns_hkmlk": {
@@ -12866,6 +14176,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocJenisHakmilikRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran5F.jrxml"
     ]
    },
    "rjk_jns_ursn": {
@@ -12880,6 +14195,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocJenisUrusanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanCSBBP.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanCSBBP_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitUrusanTanah_Sub07.jrxml"
     ]
    },
    "rjk_jurukur_lesen_tnh": {
@@ -12913,6 +14233,9 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPenyataPemungutRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanSlipBank_Sub01.jrxml"
     ]
    },
    "rjk_organisasi_individu": {
@@ -12932,6 +14255,11 @@
     ],
     "M3": [
      "java\\my\\gov\\etanah\\spochasil\\service\\impl\\BaseSpocHasilService.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanNotisPeringatan.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitDepositE2e.jrxml"
     ]
    },
    "rjk_peguam": {
@@ -12988,6 +14316,11 @@
      "java\\my\\gov\\etanah\\spochasil\\repository\\PemantauanIntegrasiRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocBayaranRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocButiranBayaranRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBaucarDeposit.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilCukai.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran.jrxml"
     ]
    },
    "rjk_syarikat": {
@@ -13107,6 +14440,11 @@
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAppCarianDokumenRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPraCarianDokumenRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanResitE2e_Sub04.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitE2e_Sub06.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitECarian_Sub02.jrxml"
     ]
    },
    "spc_btrn_terima_dok": {
@@ -13116,6 +14454,9 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocButiranTerimaDokumenRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanSlipAkuanPenerimaan_Sub04.jrxml"
     ]
    },
    "spc_kutipan_dok": {
@@ -13130,6 +14471,10 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocKutipanDokumenRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanSlipAkuanKutipan.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanSlipAkuanKutipan_Sub01.jrxml"
     ]
    },
    "spc_p_carian_dok": {
@@ -13143,6 +14488,11 @@
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocTerimaDokumenRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\service\\impl\\TerimaanDokumenService.java",
      "java\\my\\gov\\etanah\\spochasil\\util\\PopulateDataUtil.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBorang10G.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanSlipAkuanPenerimaan_Sub03.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanSlipAkuanPenerimaan_Sub04.jrxml"
     ]
    },
    "str_p_mc": {
@@ -13170,6 +14520,35 @@
      "java\\my\\gov\\etanah\\spochasil\\service\\impl\\PerserahanService.java"
     ]
    },
+   "sws_bayaran": {
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanResitECarian.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitECarian_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitECarian_Sub02.jrxml"
+    ]
+   },
+   "sws_item": {
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanResitECarian_Sub01.jrxml"
+    ]
+   },
+   "sws_log_gerbang_bayaran": {
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanResitECarian.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitECarian_Sub02.jrxml"
+    ]
+   },
+   "sws_pembekal": {
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanResitECarian_Sub01.jrxml"
+    ]
+   },
+   "sws_pembelian": {
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanResitECarian_Sub01.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitECarian_Sub02.jrxml"
+    ]
+   },
    "umm_a_dok_keluaran": {
     "M1": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAppDokumenKeluaranRepository.java",
@@ -13189,6 +14568,10 @@
      "java\\my\\gov\\etanah\\spochasil\\constant\\SpocHasilConstant.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAppDokumenKeluaranRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocDocumentRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanSlipAkuanKutipan.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanSlipAkuanKutipan_Sub01.jrxml"
     ]
    },
    "umm_a_dok_kmskn": {
@@ -13204,6 +14587,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAppDokumenKemasukanRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran5F_Sub03.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran_Sub03.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitUrusanTanah_Sub03.jrxml"
     ]
    },
    "umm_a_hkmlk": {
@@ -13221,6 +14609,11 @@
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAppHakmilikRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocDhdVersiRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPraHakmilikRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBorang10G.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanCSBBP.jrxml"
     ]
    },
    "umm_a_langkah": {
@@ -13246,6 +14639,11 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAppPenyerahRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanCSBBP.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitECarian.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitUrusanTanah.jrxml"
     ]
    },
    "umm_a_permit_lesen": {
@@ -13268,6 +14666,10 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAppPihakBerkepentinganRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanSlipAduan.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanSlipAkuanKutipan.jrxml"
     ]
    },
    "umm_a_srt": {
@@ -13297,6 +14699,9 @@
      "java\\my\\gov\\etanah\\spochasil\\repository\\PemantauanIntegrasiRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAppTugasanRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPenggunaRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanSlipBank_Sub01.jrxml"
     ]
    },
    "umm_aliran_kerja": {
@@ -13329,6 +14734,11 @@
      "java\\my\\gov\\etanah\\spochasil\\constant\\SpocHasilConstant.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\PemantauanIntegrasiRepository.java",
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocAplikasiRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran5F.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanBilPembayaran5F_Sub01.jrxml"
     ]
    },
    "umm_keputusan": {
@@ -13363,6 +14773,11 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPraPermohonanTanahRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanResitDepositE2e.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitE2e.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitE2e_Sub01.jrxml"
     ]
    },
    "umm_p_hkmlk": {
@@ -13414,6 +14829,10 @@
     ],
     "M4": [
      "java\\my\\gov\\etanah\\spochasil\\repository\\SpocPraPihakBerkepentinganRepository.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanResitDepositE2e.jrxml",
+     "resources\\reports\\state\\PRK\\LaporanResitE2e.jrxml"
     ]
    },
    "umm_p_smkn": {
@@ -13426,6 +14845,9 @@
     ],
     "M5": [
      "java\\my\\gov\\etanah\\spochasil\\constant\\SpocHasilConstant.java"
+    ],
+    "M6": [
+     "resources\\reports\\state\\PRK\\LaporanResitE2e_Sub07.jrxml"
     ]
    },
    "umm_p_srt": {
