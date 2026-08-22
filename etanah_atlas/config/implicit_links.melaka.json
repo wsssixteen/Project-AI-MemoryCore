@@ -1,0 +1,26 @@
+{
+  "_comment": "Implicit (name-matched, no declared FK) table links. 'verified' entries were data-checked on a live DB: nonnull = child rows with a value, orphans = values missing from parent. Heuristic candidates are computed at build time by lib/build_dataset.py (single-column-PK name match); this file records which of them are data-verified, plus suppressions for false positives.",
+  "verified_env": "mlit (et_main_mlit @ mkit)",
+  "verified_date": "2026-08-22",
+  "verified": [
+    { "from": "ind_versi_dhd", "col": "mklmt_hkmlk_id", "to": "ind_mklmt_hkmlk", "nonnull": 1547687, "orphans": 0 },
+    { "from": "umm_a_dok_kmskn", "col": "aplikasi_id", "to": "umm_aplikasi", "nonnull": 5033043, "orphans": 0 },
+    { "from": "umm_a_dok_keluaran", "col": "aplikasi_id", "to": "umm_aplikasi", "nonnull": 8410071, "orphans": 0 },
+    { "from": "umm_a_langkah", "col": "a_tgsn_id", "to": "umm_a_tgsn", "nonnull": 42099, "orphans": 10 },
+    { "from": "spc_capaian_p_aplikasi", "col": "p_aplikasi_id", "to": "umm_p_aplikasi", "nonnull": 12224, "orphans": 0 },
+    { "from": "umm_a_pihak_bkptg", "col": "pihak_bkptg_id", "to": "ind_pihak_bkptg", "nonnull": 3551065, "orphans": 6 },
+    { "from": "umm_a_pihak_bkptg", "col": "a_hkmlk_id", "to": "umm_a_hkmlk", "nonnull": 3889288, "orphans": 13 },
+    { "from": "umm_a_hkmlk", "col": "sktn_kptgn_id", "to": "ind_sktn_kptgn", "nonnull": 4162694, "orphans": 0 },
+    { "from": "con_a_mohon_kebenaran", "col": "aplikasi_id", "to": "umm_aplikasi", "nonnull": 54715, "orphans": 0 },
+    { "from": "str_p_strata", "col": "p_aplikasi_id", "to": "umm_p_aplikasi", "nonnull": 160, "orphans": 0 }
+  ],
+  "untestable": [
+    { "from": "tkl_p_laporan_tnh", "col": "aplikasi_id", "to": "umm_aplikasi", "reason": "0 non-null rows on mlit at check time — stays heuristic" }
+  ],
+  "suppress": [],
+  "housekeeping_name_patterns": [
+    "(_backup|_bak|_masked|_test|_tmp|_old|_cutover|_delete)$",
+    "_20[0-9][0-9]$",
+    "^(tkr_|mig_|migr|sptb_|toad_|tmp_|dm_|mlk_|msk_|delta_|stage_|ubah_|proses_|con_teroka_bck)"
+  ]
+}

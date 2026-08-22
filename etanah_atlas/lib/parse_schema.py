@@ -56,6 +56,8 @@ def main():
         body = match.group(2)
         col_count = 0
         inline_fks = []
+        columns = []
+        pk_cols = []
         for raw_line in body.split("\n"):
             line = raw_line.strip().rstrip(",")
             if not line:
@@ -72,8 +74,17 @@ def main():
                     parent_table = fk_match.group(2).lower()
                     parent_col = fk_match.group(3).strip().strip('"').lower()
                     inline_fks.append((child_col, parent_table, parent_col))
+                pk_match = re.search(r"PRIMARY KEY\s*\(([^)]+)\)", line, re.IGNORECASE)
+                if pk_match:
+                    pk_cols.extend(c.strip().strip('"').lower() for c in pk_match.group(1).split(","))
                 continue
             col_count += 1
+            col_match = re.match(r'^"?([a-zA-Z_][\w]*)"?\s+(.+)$', line)
+            if col_match:
+                col_type = col_match.group(2).strip()
+                # trim DEFAULT / NOT NULL noise; keep the base type readable
+                col_type = re.split(r"\s+DEFAULT\s+|\s+NOT\s+NULL|\s+NULL", col_type, 1, re.IGNORECASE)[0].strip().rstrip(",")
+                columns.append({"n": col_match.group(1).lower(), "t": col_type[:40]})
 
         tables[name] = {
             "name": name,
@@ -81,9 +92,22 @@ def main():
             "layer": classify_layer(name),
             "column_count": col_count,
             "comment": None,
+            "columns": columns,
+            "pk": pk_cols,
             "_inline_fks": inline_fks,
         }
     print("Parsed {} tables".format(len(tables)), file=sys.stderr)
+
+    # ---- primary keys declared via ALTER TABLE ----
+    pk_alter_re = re.compile(
+        r"^ALTER TABLE\s+(?:ONLY\s+)?(?:et_main_uat\.)?([a-zA-Z_][\w]*)\s+ADD CONSTRAINT\s+[a-zA-Z_][\w]*\s+PRIMARY KEY\s*\(([^)]+)\)",
+        re.MULTILINE | re.IGNORECASE)
+    for match in pk_alter_re.finditer(text):
+        tname = match.group(1).lower()
+        if tname in tables and not tables[tname]["pk"]:
+            tables[tname]["pk"] = [c.strip().strip('"').lower() for c in match.group(2).split(",")]
+    n_pk = sum(1 for t in tables.values() if t["pk"])
+    print("Tables with PK: {}".format(n_pk), file=sys.stderr)
 
     # ---- table comments ----
     comment_re = re.compile(
@@ -156,6 +180,8 @@ def main():
             "layer": t["layer"],
             "column_count": t["column_count"],
             "comment": t["comment"],
+            "columns": t.get("columns", []),
+            "pk": t.get("pk", []),
             "incoming_fk_count": incoming.get(tname, 0),
             "outgoing_fk_count": outgoing.get(tname, 0),
         })

@@ -1,0 +1,325 @@
+{
+  "urusan": "PT",
+  "source": "etanah-pelupusan@mlk/master@cde4ed3ab9",
+  "generated": "2026-08-22",
+  "tugasans": [
+    {
+      "kod": "SKM",
+      "name": "Semakan Kemasukan Maklumat",
+      "screen": "/protected/mlk/common/MlkMaklumatTanahPemberimilikanForm.xhtml",
+      "form": "my.gov.etanah.pelupusan.web.form.common.mlk.MlkMaklumatTanahPemberimilikanForm",
+      "loads": [
+        {
+          "table": "umm_aplikasi",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkMaklumatTanahPemberimilikanForm.java:183 (aplikasiPelupusan.getUrusan(); entity Aplikasi @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\common\\Aplikasi.java:69)"
+        },
+        {
+          "table": "umm_a_hkmlk",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\helper\\PelupusanExcelReaderHelper.java:672-674 (URS_PT branch of initMaklumatTanah() -> pelupusanService.populateMaklumatTanahVOListFromAppHakmilik(aplikasi); entity AppHakmilik @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\common\\AppHakmilik.java:54)"
+        },
+        {
+          "table": "umm_a_jabatan_teknikal",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\helper\\PelupusanHelper.java:199-204 (initJabatanTeknikal() -> pelupusanSearchService.findJabatanTeknikalVOListByAplikasi(); entity AppJabatanTeknikal @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\common\\AppJabatanTeknikal.java:35; called from MlkMaklumatTanahPemberimilikanForm.java:240 when viewJbtn=true, which initMode():463-464 sets true for kod TGS_SEMAKAN_KEMASUKAN_MAKLUMAT)"
+        },
+        {
+          "table": "rjk_senarai_ahli_kumpulan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\helper\\PelupusanHelper.java:106-107 (findSenaraiAhliKumpulanByCode; entity SenaraiAhliKumpulan @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\refdata\\SenaraiAhliKumpulan.java:40)"
+        }
+      ],
+      "saves": [],
+      "status": "partial",
+      "notes": "MlkMaklumatTanahPemberimilikanForm.java is 2664 lines with deep per-urusan branching (initMode()/initData()); only the PT-relevant load paths were traced to entity @Table evidence. Also mounts /protected/mlk/common/MlkMaklumatPemohonForm.xhtml (backing MlkMaklumatPemohonForm) as the SKM_2 tab -- not separately traced. No dedicated onSave/onHantar override was found in this class; edits made here (Excel/plot data via excelReaderHelperForm, onSimpanPajakanWrapper/onSimpanMaklumatUrusan) persist through the generic et:navigationPanel Hantar action -> BasePelupusanForm.onGoNext()/onSave() -> BaseBpmForm (etanah-common, source not present locally at C:\\temp\\etanah-src -- only domain-entity sources are extracted there, not web/form classes) -- so the SAVE side could not be verified to specific tables and is left empty rather than guessed. mode=1/mode=2 + several view*Panel booleans (viewJbtn, viewMaklumatTanahForm, viewMaklumatTanahHaram, etc.) are set per-urusan/per-tugasan in initMode():455-589 -- these gate which panels render, not a hard readonly lock for SKM specifically.",
+      "urusan": "PT"
+    },
+    {
+      "kod": "SDK",
+      "name": "Semakan Dokumen Kelulusan (Resit Bayaran, Pelan Kelulusan, Cabutan Minit)",
+      "screen": "/protected/mlk/common/MlkSemakanDokumenKelulusanForm.xhtml",
+      "form": "my.gov.etanah.pelupusan.web.form.common.mlk.MlkSemakanDokumenKelulusanForm",
+      "loads": [
+        {
+          "table": "umm_keputusan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSemakanDokumenKelulusanForm.java:102-103,166-167 (getKeputusanRepository().findByAplikasiAndTugasanKod; entity Keputusan @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\common\\Keputusan.java:37)"
+        },
+        {
+          "table": "umm_kertas_mesyuarat",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSemakanDokumenKelulusanForm.java:114-115 (getKertasMesyuaratRepository().findByAplikasi; entity KertasMesyuarat @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\common\\KertasMesyuarat.java:33)"
+        },
+        {
+          "table": "umm_perkara_mesyuarat_pemohon",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSemakanDokumenKelulusanForm.java:117-120 (getPerkaraMesyuaratPermohonanRepository().findPerkaraMesyuaratPermohonanListByKertasMesyuarat; entity PerkaraMesyuaratPermohonan @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\common\\PerkaraMesyuaratPermohonan.java:25)"
+        },
+        {
+          "table": "umm_keputusan_mesyuarat",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSemakanDokumenKelulusanForm.java:133-135 (PlpKeputusanMesyuaratRepository.findKeputusanMesyuaratByMesyuaratPBN; entity KeputusanMesyuarat @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\common\\KeputusanMesyuarat.java:29)"
+        },
+        {
+          "table": "umm_a_tgsn",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSemakanDokumenKelulusanForm.java:153-154 (getAppTugasanRepository().findByAplikasiAndTugasanKod; entity AppTugasan @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\common\\AppTugasan.java:46)"
+        },
+        {
+          "table": "rjk_senarai_ahli_kumpulan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSemakanDokumenKelulusanForm.java:200-201 (getSenaraiAhliKumpulanRepository().findByKod; entity SenaraiAhliKumpulan @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\refdata\\SenaraiAhliKumpulan.java:40)"
+        },
+        {
+          "table": "umm_a_dok_keluaran",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSemakanDokumenKelulusanForm.java:213-215,225-227 (getAppDokumenKeluaranRepository().findAppDokumenKeluaranListByAplikasiAndKodJenisDokumen for CABUTAN_MINIT / KERTAS_MINIT; entity AppDokumenKeluaran @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\common\\AppDokumenKeluaran.java:42)"
+        },
+        {
+          "table": "skg_dok",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSemakanDokumenKelulusanForm.java:218-220,230-232 (getDocumentRepository().findDocumentByMedanIdAndMedanPkId; entity Document @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\dms\\Document.java:55)"
+        },
+        {
+          "table": "hsl_bayaran_fi",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanSearchService.java:824-825 (populateMaklumatBayaran() -> pelupusanRepositoryLocator.getPelupusanBayaranFiRepository().findByApikasiAndKodPejabatList; called from MlkSemakanDokumenKelulusanForm.java:193-194 initMaklumatBayaran(); entity BayaranFi @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\hasil\\BayaranFi.java:35)"
+        },
+        {
+          "table": "hsl_btrn_bayaran",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanSearchService.java:831-832 (getPelupusanButiranBayaranRepository().findByBayaranFi, part of populateMaklumatBayaran()); entity ButiranBayaran @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\hasil\\ButiranBayaran.java:31)"
+        }
+      ],
+      "saves": [],
+      "status": "partial",
+      "notes": "This screen (\"Semakan\" = review of Resit Bayaran / Pelan Kelulusan / Cabutan Minit) has NO explicit onSave/onHantar override in MlkSemakanDokumenKelulusanForm.java -- its xhtml (E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\webapp\\protected\\mlk\\common\\MlkSemakanDokumenKelulusanForm.xhtml:17-34) uses only a generic <et:navigationPanel> (save/next/submit all delegate to the framework). The officer's tindakan/keputusan pick (mlkSemakanMaklumatPanel, tindakanTugasanOptionVO) is very likely persisted back to umm_keputusan by the shared BaseBpmForm/BasePelupusanForm.onSave() chain (etanah-common), matching the umm_keputusan read at initMaklumatKeputusan() -- but BaseBpmForm.java source is not present in the locally extracted C:\\temp\\etanah-src tree (only my.gov.etanah.domain.* entity sources are extracted there, not web.form.base classes), so this could not be confirmed with a file:line citation and is intentionally left out of \"saves\" rather than guessed. prepareBpmValues() (line 244) only sets Flowable process variables (BPM routing), not DB writes.",
+      "urusan": "PT"
+    },
+    {
+      "kod": "PYMB",
+      "name": "Penyediaan Minit Bebas",
+      "screen": "/protected/mlk/common/MlkSuratTemplateForm.xhtml",
+      "form": "my.gov.etanah.pelupusan.web.form.common.mlk.MlkSuratTemplateForm",
+      "loads": [
+        {
+          "table": "umm_p_aplikasi",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:223 (PraAplikasiRepository.findByAplikasi; entity PraAplikasi @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\common\\PraAplikasi.java:50)"
+        },
+        {
+          "table": "umm_a_dok_keluaran",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:230 (super.populatePenyediaanDokumenByDocumentMode(), the BasePelupusanDokumenForm document framework that loads/regenerates the Minit Bebas AppDokumenKeluaran record; entity @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\common\\AppDokumenKeluaran.java:42)"
+        },
+        {
+          "table": "umm_keputusan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:2382-2383 (getCommonRepositoryLocator().getKeputusanRepository().findByAppTugasan(appTugasan), read at save-time inside saveSuratTemplateForm() before deciding whether to insert/update; entity @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\common\\Keputusan.java:37)"
+        }
+      ],
+      "saves": [
+        {
+          "table": "umm_keputusan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:2390-2401,2412-2425 (crudService.save(newKeputusan) / crudService.save(keputusan), inside performCustomSave():2280 -> saveSuratTemplateForm():2312)"
+        },
+        {
+          "table": "umm_a_langkah",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:2375-2380 (crudService.findById(appLangkah.getId(), AppLangkah.class) then commonServiceLocator.getCommonService().saveSemakanMaklumatPanel(...) persists the langkah's adalahLengkap/ulasan; entity AppLangkah @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\common\\AppLangkah.java:27)"
+        }
+      ],
+      "status": "traced",
+      "notes": "MlkSuratTemplateForm is a GENERIC letter/Word-document screen (extends BasePelupusanLiteForm -> BasePelupusanDokumenForm) shared by PYMB/SMB/PMB/PYSKN5A -- the loads/saves above come from the class's common performCustomSave()/saveSuratTemplateForm() path, not tugasan-specific config (grep of tindakan.config.json for PYMB/SMB/PMB found selection-option entries but not a document-generation wiring keyed by kod). Mode wiring: showJanaButton (the \"Jana\" generate-document button) is TRUE only for TGS_PENYEDIAAN_MINIT_BEBAS (PYMB) per lines 395-410 -- SMB/PMB do not show it, i.e. PYMB is the authoring step and SMB/PMB are review/confirm steps on the same screen class.",
+      "urusan": "PT"
+    },
+    {
+      "kod": "SMB",
+      "name": "Semakan Minit Bebas",
+      "screen": "/protected/mlk/common/MlkSuratTemplateForm.xhtml",
+      "form": "my.gov.etanah.pelupusan.web.form.common.mlk.MlkSuratTemplateForm",
+      "loads": [
+        {
+          "table": "umm_p_aplikasi",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:223 (PraAplikasiRepository.findByAplikasi)"
+        },
+        {
+          "table": "umm_a_dok_keluaran",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:230 (super.populatePenyediaanDokumenByDocumentMode(), reads the Minit Bebas AppDokumenKeluaran prepared at PYMB)"
+        },
+        {
+          "table": "umm_keputusan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:2382-2383 (getKeputusanRepository().findByAppTugasan)"
+        }
+      ],
+      "saves": [
+        {
+          "table": "umm_keputusan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:2390-2401,2412-2425 (same saveSuratTemplateForm() path as PYMB)"
+        },
+        {
+          "table": "umm_a_langkah",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:2375-2380"
+        },
+        {
+          "table": "umm_a_dok_keluaran",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:2447-2451 (overridePostSubmitMethod(): SMB-specific branch, role PPD + keputusan BGN_TNDKN_SEMAK -> updateDocStatusFromSemakToSedia(KERTAS_MINIT_BEBAS_TOLAK_RINGKAS) writes the document's status)"
+        }
+      ],
+      "status": "traced",
+      "notes": "SAME class as PYMB (MlkSuratTemplateForm) -- SMB is the reviewer step. showJanaButton is FALSE for SMB (lines 395-410), i.e. the field/document-generation controls are hidden/read-oriented compared to PYMB; SMB has its own explicit branch in overridePostSubmitMethod() (line 2447, MlkPelupusanTugasanConstant.TGS_SEMAKAN_MINIT_BEBAS) that is not present for PYMB/PMB.",
+      "urusan": "PT"
+    },
+    {
+      "kod": "PMB",
+      "name": "Pengesahan Minit Bebas",
+      "screen": "/protected/mlk/common/MlkSuratTemplateForm.xhtml",
+      "form": "my.gov.etanah.pelupusan.web.form.common.mlk.MlkSuratTemplateForm",
+      "loads": [
+        {
+          "table": "umm_p_aplikasi",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:223 (PraAplikasiRepository.findByAplikasi)"
+        },
+        {
+          "table": "umm_a_dok_keluaran",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:230 (super.populatePenyediaanDokumenByDocumentMode())"
+        },
+        {
+          "table": "umm_keputusan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:2382-2383 (getKeputusanRepository().findByAppTugasan)"
+        }
+      ],
+      "saves": [
+        {
+          "table": "umm_keputusan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:2390-2401,2412-2425 (same saveSuratTemplateForm() path)"
+        },
+        {
+          "table": "umm_a_langkah",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:2375-2380"
+        }
+      ],
+      "status": "partial",
+      "notes": "SAME class as PYMB/SMB. PMB (TGS_PENGESAHAN_MINIT_BEBAS) is the final confirmation step -- only one PT-scoped explicit branch was found for it (line 404, disables showJanaButton), no PMB-specific save beyond the generic saveSuratTemplateForm()/Keputusan path was located in the time available; a KPPD 3rd-signature mechanism is documented for this document family in MODULE-ARCHITECTURE.md (\"3-signature mechanism\") but its write path (signPegawaiSemak/namaPegawaiSemak fields) was not traced to a table/line in this pass -- marking partial rather than asserting no further writes exist.",
+      "urusan": "PT"
+    },
+    {
+      "kod": "PYSKN5A",
+      "name": "Penyediaan Surat Keputusan dan Borang Notis 5A",
+      "screen": "/protected/mlk/common/MlkSuratTemplateForm.xhtml",
+      "form": "my.gov.etanah.pelupusan.web.form.common.mlk.MlkSuratTemplateForm",
+      "loads": [
+        {
+          "table": "umm_p_aplikasi",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:223 (PraAplikasiRepository.findByAplikasi)"
+        },
+        {
+          "table": "umm_a_dok_keluaran",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:230 (super.populatePenyediaanDokumenByDocumentMode())"
+        },
+        {
+          "table": "umm_keputusan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:2382-2383 (getKeputusanRepository().findByAppTugasan)"
+        }
+      ],
+      "saves": [
+        {
+          "table": "umm_keputusan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkSuratTemplateForm.java:2390-2401 (TGS_PENGESAHAN_SURAT_KEPUTUSAN branch inside saveSuratTemplateForm() explicitly inserts a new Keputusan row for the KDO label)"
+        },
+        {
+          "table": "hsl_bayaran_fi",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanBayaranService.java:1081 (saveBayaranFromMap, inside saveBayaranPremiumDanNotis5A() called from MlkSuratTemplateForm.java:2218 onKira() when TGS_KEPUTUSAN_LULUS_NOTIS_5A_LIST.contains(kod))"
+        },
+        {
+          "table": "plp_a_pelupusan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanBayaranService.java:1085 (pelupusanServiceLocator.getPelupusanService().saveMaklumatNotis5A(notis5AVO, aplikasi, aplp, isBezaLuas))"
+        },
+        {
+          "table": "umm_a_permohonan_tnh",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanBayaranService.java:1087-1103 (loop over AppPermohonanTanah list, sets maklumatTambahan JSON KEY_JUMLAH_CUKAI/KEY_PREMIUM per plot; entity @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\common\\AppPermohonanTanah.java:41)"
+        }
+      ],
+      "status": "traced",
+      "notes": "SAME MlkSuratTemplateForm class; PYSKN5A/SSKN5A/PSKN5A are distinguished via MlkPelupusanTugasanConstant.TGS_..._SURAT_KEPUTUSAN_LULUS_DAN_NOTIS_5A constants (lines 1051,1403,1500-1505) which drive BPM-variable prep and, for the whole TGS_KEPUTUSAN_LULUS_NOTIS_5A_LIST group, the onKira() Bayaran/Notis 5A save at line 2205-2229. viewBorang5A + the *_LIST membership gate whether the Bayaran/Notis5A save block runs at all (line 2214-2216) -- i.e. Notis 5A fields are only writable/save-triggering for tugasan in that list.",
+      "urusan": "PT"
+    },
+    {
+      "kod": "KKMMKN",
+      "name": "Kemasukan Keputusan MMKN Dan Penyediaan Surat Keputusan",
+      "screen": "/protected/mlk/common/MlkMuatNaikCabutanMinitForm.xhtml",
+      "form": "my.gov.etanah.pelupusan.web.form.common.mlk.MlkMuatNaikCabutanMinitForm",
+      "loads": [
+        {
+          "table": "umm_mesyuarat_pbn",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkMuatNaikCabutanMinitForm.java:2198-2200 (initKeputusanMesyuarat(): MesyuaratPBNRepository.findAll() filtered to agenda='JKKL'; entity MesyuaratPBN @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\common\\MesyuaratPBN.java:40)"
+        },
+        {
+          "table": "rjk_jns_dok",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkMuatNaikCabutanMinitForm.java:2853-2858 (initKertasCabutanMinit(): getJenisDokumenRepository().findByKod for KERTAS_MINIT/CABUTAN_MINIT/PELAN_MESYUARAT_JKPTD/SURAT_UPEN; entity JenisDokumen @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\refdata\\JenisDokumen.java:44)"
+        },
+        {
+          "table": "umm_a_dok_keluaran",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanDocumentService.java:1972-1973 (populateUploadedFiles(): getPelupusanAppDokumenKeluaranRepository().findByAplikasiAndJenisDokumen; called from MlkMuatNaikCabutanMinitForm.java:2860-2887 for the uploaded Cabutan Minit / Pelan Mesyuarat JKPTD / Surat UPEN files)"
+        },
+        {
+          "table": "skg_dok",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\service\\impl\\PelupusanDocumentService.java:1994-1995 (getDocumentRepository().findByMedanAndMedanPkAndAdalahAktif, same populateUploadedFiles() call chain)"
+        },
+        {
+          "table": "umm_a_permohonan_tnh",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkMuatNaikCabutanMinitForm.java:4226 (saveLuasDiluluskanPT(): getPelupusanAppPermohonanTanahRepository().findOneByAplikasi)"
+        },
+        {
+          "table": "plp_a_pelupusan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkMuatNaikCabutanMinitForm.java:3885-3886 (performCustomSave(): pelupusanServiceLocator.getPelupusanSearchService().findAppPelupusanByAplikasi, read before the maklumatTambahan JSON update)"
+        }
+      ],
+      "saves": [
+        {
+          "table": "plp_a_pelupusan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkMuatNaikCabutanMinitForm.java:3902-3904 (performCustomSave(), TGS_KMSKN_KPTSN_MMKN_PYDN_SURAT_KTPSN branch: aplp.setMaklumatTambahan(...); pelupusanServiceLocator.getPelupusanService().saveAppPelupusan(aplp))"
+        },
+        {
+          "table": "umm_a_permohonan_tnh",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkMuatNaikCabutanMinitForm.java:4234 (saveLuasDiluluskanPT(), called at line 3919-3922 for URS_PT + TGS_KPTSN_MMKN_SURAT_KTPSN_LIST: SpringUtil.lookupBean(ICRUDService.class).save(apt) -- persists the approved land area from the MMKN decision)"
+        },
+        {
+          "table": "umm_a_dok_keluaran",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkMuatNaikCabutanMinitForm.java:519-524 (updateDocStatusBasedOnCurrentStatus(): crudService.save(adk), gated by MlkPelupusanDokumenConstant.getExpectedStatus(tugasanCode) -- see notes)"
+        }
+      ],
+      "status": "traced",
+      "notes": "MlkMuatNaikCabutanMinitForm.java is ~4700 lines shared across many urusan (PT/PSBS/PRZ/PLPS/PLTP/PPJK/etc); only the PT + KKMMKN-scoped branches (TGS_KMSKN_KPTSN_MMKN_PYDN_SURAT_KTPSN / TGS_KPTSN_MMKN_SURAT_KTPSN_LIST) were traced. Readonly/mode wiring: updateDocStatusBasedOnCurrentStatus():483 explicitly calls MlkPelupusanDokumenConstant.getExpectedStatus(tugasanCode) and only advances a document's status if its current status matches that tugasan's expected status -- a direct instance of the CLAUDE.md-documented getExpectedStatus() mode gate. The Keputusan-MMKN decision itself (jkktHelper / PelupusanCommonJKKTPanelForm, initKeputusanMesyuarat():2163-2196) likely also reads/writes umm_keputusan and umm_keputusan_mesyuarat via that helper class, but PelupusanCommonJKKTPanelForm internals were not opened in this pass -- treat umm_keputusan/umm_keputusan_mesyuarat as a likely additional table for this tugasan, unverified here.",
+      "urusan": "PT"
+    },
+    {
+      "kod": "PRMMKNPDT",
+      "name": "Penyediaan Risalat MMKN - PDT",
+      "screen": "/protected/mlk/common/MlkKertasTemplateForm.xhtml",
+      "form": "my.gov.etanah.pelupusan.web.form.common.mlk.MlkKertasTemplateForm",
+      "loads": [
+        {
+          "table": "plp_a_pelupusan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkKertasTemplateForm.java:477-478 (initKeputusanSyor(): pelupusanServiceLocator.getPelupusanSearchService().findAppPelupusanByAplikasi, reads syor/keputusan flags out of maklumatTambahan JSON)"
+        },
+        {
+          "table": "plp_a_pelupusan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkKertasTemplateForm.java:1179 (initJKPTD(): AppPelupusanRepository.findByAplikasi)"
+        },
+        {
+          "table": "umm_a_dok_keluaran",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkKertasTemplateForm.java:231 (super.populatePenyediaanDokumenByDocumentMode(), the BasePelupusanDokumenForm document-generation framework for the Risalat MMKN PDT document)"
+        },
+        {
+          "table": "skg_dok",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkKertasTemplateForm.java:244-245 (findDocumentByDocumentId, checking each document's dokumenRahsia flag)"
+        },
+        {
+          "table": "tkl_a_permohonan_bertindih",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkLaporanTanahDanPelanMesyuaratForm.java:134-135 (initPermohonanBertindih(): pelupusanServiceLocator.getPelupusanSearchService().findAppPermohonanBertindihByAplikasi; entity AppPermohonanBertindih @Table C:\\temp\\etanah-src\\my\\gov\\etanah\\domain\\teknikal\\AppPermohonanBertindih.java:24, in the secondary tab MlkLaporanTanahDanPelanMesyuaratForm.xhtml/.java)"
+        },
+        {
+          "table": "umm_aplikasi",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkLaporanTanahDanPelanMesyuaratForm.java:176-177 (onCariPermohonanBertindih(): getAplikasiRepository().findByIdPengenalan, secondary tab)"
+        }
+      ],
+      "saves": [
+        {
+          "table": "plp_a_pelupusan",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkKertasTemplateForm.java:1262-1296 (performCustomSave(): aplp.setMaklumatTambahan(...); getCRUDService().save(aplp) -- persists JKPTD flag + risalat/syor decision fields into the application's maklumatTambahan JSON)"
+        },
+        {
+          "table": "umm_aplikasi",
+          "evidence": "E:\\Projects\\Melaka\\etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\common\\mlk\\MlkLaporanTanahDanPelanMesyuaratForm.java:287 (getCommonRepositoryLocator().getAplikasiRepository().save(aplikasiManual), secondary tab -- manual permohonan-bertindih entry save)"
+        }
+      ],
+      "status": "partial",
+      "notes": "MlkKertasTemplateForm extends BasePelupusanDokumenForm (a Word-document/kertas-kerja generation screen, sibling of MlkSuratTemplateForm's hierarchy per MODULE-ARCHITECTURE.md's Base*DokumenForm note) and is shared across many kertas-mesyuarat tugasan; only the generic initKeputusanSyor()/initJKPTD()/performCustomSave() paths plus the PT/PRMMKNPDT-relevant document-mode call were traced -- initLaporanTanah()/initPelanSiasatanTanah() in the secondary tab MlkLaporanTanahDanPelanMesyuaratForm (the \"Laporan Tanah\" data itself, likely reading tkl_* teknikal-side tables per MODULE-ARCHITECTURE.md's \"Reading skrin teknikal\" note, plus umm_a_hkmlk/umm_a_permohonan_tnh) were not opened in this pass due to time budget -- marked partial. tugasanNextFailEmohonExist / TGSN_RISALAT_MODE (mode=2, MlkKertasTemplateForm.java:1166-1167) gate read/edit mode for certain tugasan groups but were not confirmed to include PRMMKNPDT specifically.",
+      "urusan": "PT"
+    }
+  ]
+}

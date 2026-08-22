@@ -1,0 +1,1917 @@
+[
+ {
+  "from": "bgn_a_mklmt_syer_tnh",
+  "col": "a_pihak_bkptg_id",
+  "to": "msk_nama_mapped"
+ },
+ {
+  "from": "bgn_a_mklmt_syer_tnh",
+  "col": "a_pihak_bkptg_id",
+  "to": "umm_a_pihak_bkptg"
+ },
+ {
+  "from": "bgn_a_utiliti",
+  "col": "a_utiliti_id",
+  "to": "umm_a_utiliti_premium"
+ },
+ {
+  "from": "con_a_kebenaran_hkmlk",
+  "col": "a_hkmlk_id",
+  "to": "umm_a_hkmlk"
+ },
+ {
+  "from": "con_a_mohon_kebenaran",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "dft_a_btrn_nota",
+  "col": "sktn_kptgn_id",
+  "to": "ind_sktn_kptgn"
+ },
+ {
+  "from": "dft_a_btrn_nota",
+  "col": "syrt_nyata_id",
+  "to": "ind_syrt_nyata"
+ },
+ {
+  "from": "dft_a_dhk_disertakan",
+  "col": "dok_id",
+  "to": "skg_dok"
+ },
+ {
+  "from": "dft_a_dhk_disertakan",
+  "col": "jns_dok_id",
+  "to": "rjk_jns_dok"
+ },
+ {
+  "from": "dft_a_dok_penntshn",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "dft_a_mohon_hkmlk",
+  "col": "sktn_kptgn_id",
+  "to": "ind_sktn_kptgn"
+ },
+ {
+  "from": "dft_a_mohon_hkmlk",
+  "col": "syrt_nyata_id",
+  "to": "ind_syrt_nyata"
+ },
+ {
+  "from": "dft_a_serahan_terlibat",
+  "col": "a_hkmlk_id",
+  "to": "umm_a_hkmlk"
+ },
+ {
+  "from": "dft_a_srt_difail",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "dft_a_srtcara",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "dft_a_undo_perserahan",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "dm_hsl_akaun_cukai_cutover",
+  "col": "akaun_cukai_id",
+  "to": "hsl_akaun_cukai"
+ },
+ {
+  "from": "dm_hsl_akaun_cukai_cutover",
+  "col": "bandar_pekan_mukim_id",
+  "to": "ind_bandar_pekan_mukim"
+ },
+ {
+  "from": "dm_hsl_akaun_cukai_cutover",
+  "col": "hkmlk_id",
+  "to": "ind_hkmlk"
+ },
+ {
+  "from": "dm_hsl_akaun_cukai_cutover",
+  "col": "kumpulan_cukai_id",
+  "to": "hsl_kumpulan_cukai"
+ },
+ {
+  "from": "dm_hsl_akaun_cukai_cutover",
+  "col": "kutipan_pos_id",
+  "to": "hsl_kutipan_pos"
+ },
+ {
+  "from": "dm_hsl_bil_cukai_tahunan_cutover",
+  "col": "akaun_cukai_id",
+  "to": "hsl_akaun_cukai"
+ },
+ {
+  "from": "dm_hsl_bil_cukai_tahunan_cutover",
+  "col": "akaun_deposit_id",
+  "to": "hsl_akaun_deposit"
+ },
+ {
+  "from": "dm_hsl_bil_cukai_tahunan_cutover",
+  "col": "bil_cukai_tahunan_id",
+  "to": "hsl_bil_cukai_tahunan"
+ },
+ {
+  "from": "dm_hsl_bil_cukai_tahunan_upd_cttp_jelas",
+  "col": "akaun_cukai_id",
+  "to": "hsl_akaun_cukai"
+ },
+ {
+  "from": "dm_hsl_bil_cukai_tahunan_upd_cttp_jelas",
+  "col": "akaun_deposit_id",
+  "to": "hsl_akaun_deposit"
+ },
+ {
+  "from": "dm_hsl_bil_cukai_tahunan_upd_cttp_jelas",
+  "col": "bil_cukai_tahunan_id",
+  "to": "hsl_bil_cukai_tahunan"
+ },
+ {
+  "from": "dm_hsl_penyata_akaun_cutover",
+  "col": "penyata_akaun_id",
+  "to": "hsl_penyata_akaun"
+ },
+ {
+  "from": "dm_hsl_penyata_akaun_upd_tarikh_tmp",
+  "col": "penyata_akaun_id",
+  "to": "hsl_penyata_akaun"
+ },
+ {
+  "from": "gt_hsl_bayaran_filtered",
+  "col": "bayaran_id",
+  "to": "hsl_bayaran"
+ },
+ {
+  "from": "gt_hsl_bayaran_filtered_t",
+  "col": "bayaran_id",
+  "to": "hsl_bayaran"
+ },
+ {
+  "from": "gt_hsl_bayaran_notmanual",
+  "col": "bayaran_id",
+  "to": "hsl_bayaran"
+ },
+ {
+  "from": "gt_hsl_bayaran_notmanual_t",
+  "col": "bayaran_id",
+  "to": "hsl_bayaran"
+ },
+ {
+  "from": "gt_hsl_btrn_bayaran_filtered",
+  "col": "btrn_bayaran_id",
+  "to": "hsl_btrn_bayaran"
+ },
+ {
+  "from": "gt_hsl_btrn_bayaran_filtered_t",
+  "col": "btrn_bayaran_id",
+  "to": "hsl_btrn_bayaran"
+ },
+ {
+  "from": "hsl_a_hasil",
+  "col": "medan_pk_id",
+  "to": "hsl_a_mklmt_byrn_ispeks"
+ },
+ {
+  "from": "hsl_a_kemaskini_hasil",
+  "col": "medan_pk_id",
+  "to": "hsl_a_mklmt_byrn_ispeks"
+ },
+ {
+  "from": "hsl_a_mklmt_tmbhn",
+  "col": "a_mklmt_tmbhn_id",
+  "to": "str_a_mklmt_tmbhn"
+ },
+ {
+  "from": "hsl_a_mklmt_tmbhn",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "hsl_a_perampasan",
+  "col": "akaun_cukai_id",
+  "to": "hsl_akaun_cukai"
+ },
+ {
+  "from": "hsl_akaun_cukai_2025",
+  "col": "akaun_cukai_id",
+  "to": "hsl_akaun_cukai"
+ },
+ {
+  "from": "hsl_akaun_cukai_2025",
+  "col": "bandar_pekan_mukim_id",
+  "to": "ind_bandar_pekan_mukim"
+ },
+ {
+  "from": "hsl_akaun_cukai_2025",
+  "col": "hkmlk_id",
+  "to": "ind_hkmlk"
+ },
+ {
+  "from": "hsl_akaun_cukai_2025",
+  "col": "kumpulan_cukai_id",
+  "to": "hsl_kumpulan_cukai"
+ },
+ {
+  "from": "hsl_akaun_cukai_2025",
+  "col": "kutipan_pos_id",
+  "to": "hsl_kutipan_pos"
+ },
+ {
+  "from": "hsl_bayaran_delete",
+  "col": "bayaran_id",
+  "to": "hsl_bayaran"
+ },
+ {
+  "from": "hsl_bayaran_delete",
+  "col": "bil_cukai_tahunan_id",
+  "to": "hsl_bil_cukai_tahunan"
+ },
+ {
+  "from": "hsl_bayaran_delete",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "hsl_bayaran_fi_delete",
+  "col": "a_tgsn_id",
+  "to": "umm_a_tgsn"
+ },
+ {
+  "from": "hsl_bayaran_fi_delete",
+  "col": "akaun_deposit_id",
+  "to": "hsl_akaun_deposit"
+ },
+ {
+  "from": "hsl_bayaran_fi_delete",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "hsl_bayaran_fi_delete",
+  "col": "bayaran_fi_id",
+  "to": "hsl_bayaran_fi"
+ },
+ {
+  "from": "hsl_bayaran_fi_delete",
+  "col": "fi_pejabat_id",
+  "to": "hsl_fi_pejabat"
+ },
+ {
+  "from": "hsl_bayaran_luar_delete",
+  "col": "bayaran_id",
+  "to": "hsl_bayaran"
+ },
+ {
+  "from": "hsl_bayaran_luar_delete",
+  "col": "bayaran_luar_id",
+  "to": "hsl_bayaran_luar"
+ },
+ {
+  "from": "hsl_bayaran_luar_delete",
+  "col": "cara_bayaran_id",
+  "to": "hsl_cara_bayaran"
+ },
+ {
+  "from": "hsl_bil_cukai_tahunan_2025",
+  "col": "akaun_cukai_id",
+  "to": "hsl_akaun_cukai"
+ },
+ {
+  "from": "hsl_bil_cukai_tahunan_2025",
+  "col": "akaun_deposit_id",
+  "to": "hsl_akaun_deposit"
+ },
+ {
+  "from": "hsl_bil_cukai_tahunan_2025",
+  "col": "bil_cukai_tahunan_id",
+  "to": "hsl_bil_cukai_tahunan"
+ },
+ {
+  "from": "hsl_btrn_bayaran",
+  "col": "bayaran_id",
+  "to": "hsl_bayaran"
+ },
+ {
+  "from": "hsl_btrn_bayaran_delete",
+  "col": "bayaran_fi_id",
+  "to": "hsl_bayaran_fi"
+ },
+ {
+  "from": "hsl_btrn_bayaran_delete",
+  "col": "bayaran_id",
+  "to": "hsl_bayaran"
+ },
+ {
+  "from": "hsl_btrn_bayaran_delete",
+  "col": "btrn_bayaran_id",
+  "to": "hsl_btrn_bayaran"
+ },
+ {
+  "from": "hsl_btrn_bayaran_delete",
+  "col": "cara_bayaran_id",
+  "to": "hsl_cara_bayaran"
+ },
+ {
+  "from": "hsl_btrn_bayaran_luar",
+  "col": "medan_pk_id",
+  "to": "hsl_a_mklmt_byrn_ispeks"
+ },
+ {
+  "from": "hsl_btrn_log_gerbang_bayaran",
+  "col": "medan_pk_id",
+  "to": "hsl_a_mklmt_byrn_ispeks"
+ },
+ {
+  "from": "hsl_cara_bayaran_delete",
+  "col": "cara_bayaran_id",
+  "to": "hsl_cara_bayaran"
+ },
+ {
+  "from": "hsl_log_gerbang_bayaran_08112023",
+  "col": "log_gerbang_bayaran_id",
+  "to": "hsl_log_gerbang_bayaran"
+ },
+ {
+  "from": "hsl_log_gerbang_bayaran_15112023",
+  "col": "log_gerbang_bayaran_id",
+  "to": "hsl_log_gerbang_bayaran"
+ },
+ {
+  "from": "hsl_log_gerbang_bayaran_mig",
+  "col": "log_gerbang_bayaran_id",
+  "to": "hsl_log_gerbang_bayaran"
+ },
+ {
+  "from": "hsl_p_btrn_kelompok_cukai",
+  "col": "akaun_cukai_id",
+  "to": "hsl_akaun_cukai"
+ },
+ {
+  "from": "hsl_p_troli",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "hsl_pengguna_online_cukai",
+  "col": "akaun_cukai_id",
+  "to": "hsl_akaun_cukai"
+ },
+ {
+  "from": "hsl_pengguna_online_cukai",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "hsl_pindahan_cukai_tnh",
+  "col": "akaun_cukai_id",
+  "to": "hsl_akaun_cukai"
+ },
+ {
+  "from": "hsl_sesi_kutipan",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "hsl_sub_mesej_cukai",
+  "col": "mesej_cukai_id",
+  "to": "hsl_mesej_cukai"
+ },
+ {
+  "from": "ind_hkmlk_gantung",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "ind_langkah_backup",
+  "col": "komponen_bisnes_id",
+  "to": "sis_komponen_bisnes"
+ },
+ {
+  "from": "ind_langkah_backup",
+  "col": "langkah_id",
+  "to": "ind_langkah"
+ },
+ {
+  "from": "ind_langkah_backup",
+  "col": "skrin_id",
+  "to": "ind_skrin"
+ },
+ {
+  "from": "ind_langkah_backup",
+  "col": "tgsn_id",
+  "to": "ind_tgsn"
+ },
+ {
+  "from": "ind_mklmt_hkmlk",
+  "col": "sktn_kptgn_id",
+  "to": "ind_sktn_kptgn"
+ },
+ {
+  "from": "ind_mklmt_hkmlk",
+  "col": "syrt_nyata_id",
+  "to": "ind_syrt_nyata"
+ },
+ {
+  "from": "ind_no_siri_keselamatan",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "ind_pejabat_tgsn_backup",
+  "col": "komponen_bisnes_id",
+  "to": "sis_komponen_bisnes"
+ },
+ {
+  "from": "ind_pejabat_tgsn_backup",
+  "col": "pejabat_tgsn_id",
+  "to": "ind_pejabat_tgsn"
+ },
+ {
+  "from": "ind_pejabat_tgsn_backup",
+  "col": "pejabat_ursn_id",
+  "to": "ind_pejabat_ursn"
+ },
+ {
+  "from": "ind_pejabat_tgsn_backup",
+  "col": "tgsn_id",
+  "to": "ind_tgsn"
+ },
+ {
+  "from": "ind_pelan_tmp",
+  "col": "hkmlk_id",
+  "to": "ind_hkmlk"
+ },
+ {
+  "from": "ind_pelan_tmp",
+  "col": "pelan_id",
+  "to": "ind_pelan"
+ },
+ {
+  "from": "ind_pihak_bkptg_backup",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "ind_pihak_bkptg_backup",
+  "col": "jadual_kedua_id",
+  "to": "umm_jadual_kedua"
+ },
+ {
+  "from": "ind_pihak_bkptg_backup",
+  "col": "jadual_ketiga_id",
+  "to": "umm_jadual_ketiga"
+ },
+ {
+  "from": "ind_pihak_bkptg_backup",
+  "col": "pihak_bkptg_id",
+  "to": "ind_pihak_bkptg"
+ },
+ {
+  "from": "ind_pihak_bkptg_masked",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "ind_pihak_bkptg_masked",
+  "col": "jadual_kedua_id",
+  "to": "umm_jadual_kedua"
+ },
+ {
+  "from": "ind_pihak_bkptg_masked",
+  "col": "jadual_ketiga_id",
+  "to": "umm_jadual_ketiga"
+ },
+ {
+  "from": "ind_pihak_bkptg_masked",
+  "col": "pihak_bkptg_id",
+  "to": "ind_pihak_bkptg"
+ },
+ {
+  "from": "ind_pihak_bkptg_test",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "ind_pihak_bkptg_test",
+  "col": "jadual_kedua_id",
+  "to": "umm_jadual_kedua"
+ },
+ {
+  "from": "ind_pihak_bkptg_test",
+  "col": "jadual_ketiga_id",
+  "to": "umm_jadual_ketiga"
+ },
+ {
+  "from": "ind_pihak_bkptg_test",
+  "col": "pihak_bkptg_id",
+  "to": "ind_pihak_bkptg"
+ },
+ {
+  "from": "ind_skrin_backup",
+  "col": "skrin_id",
+  "to": "ind_skrin"
+ },
+ {
+  "from": "ind_ursn_backup",
+  "col": "fi_pejabat_id",
+  "to": "hsl_fi_pejabat"
+ },
+ {
+  "from": "ind_ursn_backup",
+  "col": "jns_ursn_id",
+  "to": "rjk_jns_ursn"
+ },
+ {
+  "from": "ind_ursn_backup",
+  "col": "modul_id",
+  "to": "ind_modul"
+ },
+ {
+  "from": "ind_ursn_backup",
+  "col": "ursn_id",
+  "to": "ind_ursn"
+ },
+ {
+  "from": "ind_versi_dhd",
+  "col": "mklmt_hkmlk_id",
+  "to": "ind_mklmt_hkmlk"
+ },
+ {
+  "from": "llg_a_alamat_tmbhn",
+  "col": "a_pihak_bkptg_id",
+  "to": "msk_nama_mapped"
+ },
+ {
+  "from": "llg_a_alamat_tmbhn",
+  "col": "a_pihak_bkptg_id",
+  "to": "umm_a_pihak_bkptg"
+ },
+ {
+  "from": "llg_a_daftar_pelelong",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "llg_a_gadaian",
+  "col": "a_gadaian_id",
+  "to": "llg_a_lelong_gadaian"
+ },
+ {
+  "from": "llg_a_gadaian",
+  "col": "a_pihak_bkptg_id",
+  "to": "msk_nama_mapped"
+ },
+ {
+  "from": "llg_a_gadaian",
+  "col": "a_pihak_bkptg_id",
+  "to": "umm_a_pihak_bkptg"
+ },
+ {
+  "from": "llg_a_lelong_gadaian",
+  "col": "a_gadaian_id",
+  "to": "llg_a_gadaian"
+ },
+ {
+  "from": "llg_i_daftar_pelelong",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "llg_i_pembida",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "llg_p_daftar_pelelong",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "mig_json_rekod_ursn",
+  "col": "rekod_ursn_id",
+  "to": "ind_rekod_ursn"
+ },
+ {
+  "from": "mig_p_pb_app_id",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "mlk_uat_hakmilik_strata",
+  "col": "hkmlk_id",
+  "to": "ind_hkmlk"
+ },
+ {
+  "from": "msk_nama_mapped",
+  "col": "a_pihak_bkptg_id",
+  "to": "umm_a_pihak_bkptg"
+ },
+ {
+  "from": "n_new_mbp",
+  "col": "bandar_pekan_mukim_id",
+  "to": "ind_bandar_pekan_mukim"
+ },
+ {
+  "from": "n_saksptbid",
+  "col": "senarai_ahli_kumpulan_id",
+  "to": "rjk_senarai_ahli_kumpulan"
+ },
+ {
+  "from": "pcp_audit_aktiviti",
+  "col": "a_tgsn_id",
+  "to": "umm_a_tgsn"
+ },
+ {
+  "from": "pcp_audit_pengguna",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "pcp_capaian_awam",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "pcp_capaian_dok",
+  "col": "peranan_modul_id",
+  "to": "pcp_peranan_modul"
+ },
+ {
+  "from": "pcp_capaian_pengguna",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "pcp_capaian_pengguna",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "pcp_capaian_pengguna",
+  "col": "peranan_modul_id",
+  "to": "pcp_peranan_modul"
+ },
+ {
+  "from": "pcp_capaian_ulasan_tindakan",
+  "col": "peranan_modul_id",
+  "to": "pcp_peranan_modul"
+ },
+ {
+  "from": "pcp_log_kemaskini_katalaluan",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "pcp_pengesahan_biometrik",
+  "col": "individu_id",
+  "to": "rjk_individu"
+ },
+ {
+  "from": "pcp_pengguna",
+  "col": "individu_id",
+  "to": "rjk_individu"
+ },
+ {
+  "from": "pcp_pengguna",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "pcp_pengguna_110825",
+  "col": "daerah_id",
+  "to": "ind_daerah"
+ },
+ {
+  "from": "pcp_pengguna_110825",
+  "col": "individu_id",
+  "to": "rjk_individu"
+ },
+ {
+  "from": "pcp_pengguna_110825",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "pcp_pengguna_110825",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "pcp_peranan_menu",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "pcp_peranan_modul",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "pejid",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "pks_a_kertas_siasatan",
+  "col": "aliran_kerja_id",
+  "to": "umm_aliran_kerja"
+ },
+ {
+  "from": "proses_log",
+  "col": "akaun_cukai_id",
+  "to": "hsl_akaun_cukai"
+ },
+ {
+  "from": "proses_log",
+  "col": "daerah_id",
+  "to": "ind_daerah"
+ },
+ {
+  "from": "rjk_jurukur_lesen_tnh",
+  "col": "jurukur_tnh_id",
+  "to": "str_i_jurukur_tnh"
+ },
+ {
+  "from": "rjk_organisasi_individu",
+  "col": "individu_id",
+  "to": "rjk_individu"
+ },
+ {
+  "from": "rjk_organisasi_individu",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "rjk_parameter_sistem",
+  "col": "modul_id",
+  "to": "ind_modul"
+ },
+ {
+  "from": "rjk_parameter_sistem",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "rjk_peguam",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "rjk_peguam_sptb_temp",
+  "col": "peguam_sptb_id",
+  "to": "rjk_peguam_sptb"
+ },
+ {
+  "from": "rpt_hasil_fakta",
+  "col": "bayaran_fi_id",
+  "to": "hsl_bayaran_fi"
+ },
+ {
+  "from": "rpt_hasil_fakta",
+  "col": "bayaran_id",
+  "to": "hsl_bayaran"
+ },
+ {
+  "from": "rpt_hasil_fakta",
+  "col": "bil_cukai_tahunan_id",
+  "to": "hsl_bil_cukai_tahunan"
+ },
+ {
+  "from": "rpt_hasil_fakta",
+  "col": "btrn_bayaran_id",
+  "to": "hsl_btrn_bayaran"
+ },
+ {
+  "from": "rpt_hasil_fakta",
+  "col": "cara_bayaran_id",
+  "to": "hsl_cara_bayaran"
+ },
+ {
+  "from": "rpt_hasil_fakta",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "rpt_hasil_fakta_bck_120126",
+  "col": "bayaran_fi_id",
+  "to": "hsl_bayaran_fi"
+ },
+ {
+  "from": "rpt_hasil_fakta_bck_120126",
+  "col": "bayaran_id",
+  "to": "hsl_bayaran"
+ },
+ {
+  "from": "rpt_hasil_fakta_bck_120126",
+  "col": "bil_cukai_tahunan_id",
+  "to": "hsl_bil_cukai_tahunan"
+ },
+ {
+  "from": "rpt_hasil_fakta_bck_120126",
+  "col": "btrn_bayaran_id",
+  "to": "hsl_btrn_bayaran"
+ },
+ {
+  "from": "rpt_hasil_fakta_bck_120126",
+  "col": "cara_bayaran_id",
+  "to": "hsl_cara_bayaran"
+ },
+ {
+  "from": "rpt_hasil_fakta_bck_120126",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "rpt_hasil_fakta_bkup",
+  "col": "bayaran_fi_id",
+  "to": "hsl_bayaran_fi"
+ },
+ {
+  "from": "rpt_hasil_fakta_bkup",
+  "col": "bayaran_id",
+  "to": "hsl_bayaran"
+ },
+ {
+  "from": "rpt_hasil_fakta_bkup",
+  "col": "bil_cukai_tahunan_id",
+  "to": "hsl_bil_cukai_tahunan"
+ },
+ {
+  "from": "rpt_hasil_fakta_bkup",
+  "col": "btrn_bayaran_id",
+  "to": "hsl_btrn_bayaran"
+ },
+ {
+  "from": "rpt_hasil_fakta_bkup",
+  "col": "cara_bayaran_id",
+  "to": "hsl_cara_bayaran"
+ },
+ {
+  "from": "rpt_hasil_fakta_bkup",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "rpt_hasil_fakta_delta",
+  "col": "bayaran_fi_id",
+  "to": "hsl_bayaran_fi"
+ },
+ {
+  "from": "rpt_hasil_fakta_delta",
+  "col": "bayaran_id",
+  "to": "hsl_bayaran"
+ },
+ {
+  "from": "rpt_hasil_fakta_delta",
+  "col": "bil_cukai_tahunan_id",
+  "to": "hsl_bil_cukai_tahunan"
+ },
+ {
+  "from": "rpt_hasil_fakta_delta",
+  "col": "btrn_bayaran_id",
+  "to": "hsl_btrn_bayaran"
+ },
+ {
+  "from": "rpt_hasil_fakta_delta",
+  "col": "cara_bayaran_id",
+  "to": "hsl_cara_bayaran"
+ },
+ {
+  "from": "rpt_hasil_fakta_delta",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "sis_komponen_bisnes_backup",
+  "col": "komponen_bisnes_id",
+  "to": "sis_komponen_bisnes"
+ },
+ {
+  "from": "skg_dok",
+  "col": "medan_pk_id",
+  "to": "hsl_a_mklmt_byrn_ispeks"
+ },
+ {
+  "from": "skg_dok_housekeep",
+  "col": "a_dok_keluaran_id",
+  "to": "umm_a_dok_keluaran"
+ },
+ {
+  "from": "skg_dok_housekeep",
+  "col": "a_dok_kmskn_id",
+  "to": "umm_a_dok_kmskn"
+ },
+ {
+  "from": "skg_dok_housekeep",
+  "col": "dok_id",
+  "to": "skg_dok"
+ },
+ {
+  "from": "skg_dok_housekeep",
+  "col": "medan_pk_id",
+  "to": "hsl_a_mklmt_byrn_ispeks"
+ },
+ {
+  "from": "skg_dok_housekeep",
+  "col": "pertanyaan_id",
+  "to": "umm_pertanyaan"
+ },
+ {
+  "from": "spc_a_carian_dok",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "spc_a_pengecualian_kaunter",
+  "col": "medan_pk_id",
+  "to": "hsl_a_mklmt_byrn_ispeks"
+ },
+ {
+  "from": "spc_capaian_p_aplikasi",
+  "col": "p_aplikasi_id",
+  "to": "umm_p_aplikasi"
+ },
+ {
+  "from": "spc_capaian_p_aplikasi",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "sptb_compare_uah",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "str_a_mklmt_tmbhn",
+  "col": "a_mklmt_tmbhn_id",
+  "to": "hsl_a_mklmt_tmbhn"
+ },
+ {
+  "from": "str_a_pindaan_syrt_nyata",
+  "col": "syrt_nyata_id",
+  "to": "ind_syrt_nyata"
+ },
+ {
+  "from": "str_i_jurukur_tnh",
+  "col": "jurukur_tnh_id",
+  "to": "rjk_jurukur_lesen_tnh"
+ },
+ {
+  "from": "str_i_menara",
+  "col": "bangunan_id",
+  "to": "str_i_bangunan"
+ },
+ {
+  "from": "str_i_ptk",
+  "col": "bangunan_id",
+  "to": "str_i_bangunan"
+ },
+ {
+  "from": "str_i_ptk",
+  "col": "menara_id",
+  "to": "str_i_menara"
+ },
+ {
+  "from": "str_i_ptk",
+  "col": "tingkat_id",
+  "to": "str_i_tingkat"
+ },
+ {
+  "from": "str_i_tingkat",
+  "col": "menara_id",
+  "to": "str_i_menara"
+ },
+ {
+  "from": "str_p_ptk",
+  "col": "p_strata_id",
+  "to": "str_p_strata"
+ },
+ {
+  "from": "str_p_strata",
+  "col": "p_aplikasi_id",
+  "to": "umm_p_aplikasi"
+ },
+ {
+  "from": "str_p_strata",
+  "col": "p_pemaju_id",
+  "to": "str_p_pemaju"
+ },
+ {
+  "from": "sws_bayaran",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "sws_troli",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "tkl_p_laporan_tnh",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "tkr_borang_pelan",
+  "col": "a_dok_keluaran_id",
+  "to": "umm_a_dok_keluaran"
+ },
+ {
+  "from": "tkr_borang_pelan",
+  "col": "borang_pelan_id",
+  "to": "ind_borang_pelan"
+ },
+ {
+  "from": "tkr_borang_pelan",
+  "col": "hkmlk_id",
+  "to": "ind_hkmlk"
+ },
+ {
+  "from": "tkr_btrn_strata_idx",
+  "col": "btrn_strata_idx_id",
+  "to": "ind_btrn_strata_idx"
+ },
+ {
+  "from": "tkr_btrn_strata_idx",
+  "col": "hkmlk_id",
+  "to": "ind_hkmlk"
+ },
+ {
+  "from": "tkr_buku_hakmilik",
+  "col": "buku_hakmilik_id",
+  "to": "tkr_hakmilik_batal_log"
+ },
+ {
+  "from": "tkr_cukai_bpm",
+  "col": "bandar_pekan_mukim_id",
+  "to": "ind_bandar_pekan_mukim"
+ },
+ {
+  "from": "tkr_cukai_bpm",
+  "col": "kadar_cukai_bpm_id",
+  "to": "ind_kadar_cukai_bpm"
+ },
+ {
+  "from": "tkr_cukai_bpm",
+  "col": "kadar_premium_cukai_id",
+  "to": "ind_kadar_premium_cukai"
+ },
+ {
+  "from": "tkr_hakmilik_batal",
+  "col": "buku_hakmilik_id",
+  "to": "tkr_buku_hakmilik"
+ },
+ {
+  "from": "tkr_hakmilik_batal",
+  "col": "buku_hakmilik_id",
+  "to": "tkr_hakmilik_batal_log"
+ },
+ {
+  "from": "tkr_hakmilik_batal",
+  "col": "hkmlk_id",
+  "to": "ind_hkmlk"
+ },
+ {
+  "from": "tkr_hakmilik_batal_log",
+  "col": "buku_hakmilik_id",
+  "to": "tkr_buku_hakmilik"
+ },
+ {
+  "from": "tkr_kumpulan_mukim",
+  "col": "daerah_id",
+  "to": "ind_daerah"
+ },
+ {
+  "from": "tkr_kumpulan_mukim_ahli",
+  "col": "bandar_pekan_mukim_id",
+  "to": "ind_bandar_pekan_mukim"
+ },
+ {
+  "from": "tkr_pcp_excel_master",
+  "col": "hkmlk_id",
+  "to": "ind_hkmlk"
+ },
+ {
+  "from": "tkr_pcp_excel_master",
+  "col": "mklmt_hkmlk_id",
+  "to": "ind_mklmt_hkmlk"
+ },
+ {
+  "from": "tkr_pcp_excel_master",
+  "col": "versi_dhd_id",
+  "to": "ind_versi_dhd"
+ },
+ {
+  "from": "tkr_tmp_aplikasi_et",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "tkr_tmp_backup_sak",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "tkr_tmp_backup_sak",
+  "col": "senarai_ahli_kumpulan_id",
+  "to": "rjk_senarai_ahli_kumpulan"
+ },
+ {
+  "from": "tkr_tmp_backup_sak",
+  "col": "senarai_kumpulan_id",
+  "to": "rjk_senarai_kumpulan"
+ },
+ {
+  "from": "tkr_tmp_ctt_tugasan_tukarganti",
+  "col": "buku_hakmilik_id",
+  "to": "tkr_buku_hakmilik"
+ },
+ {
+  "from": "tkr_tmp_ctt_tugasan_tukarganti",
+  "col": "buku_hakmilik_id",
+  "to": "tkr_hakmilik_batal_log"
+ },
+ {
+  "from": "tkr_tmp_ctt_tugasan_tukarganti",
+  "col": "hakmilik_tukarganti_id",
+  "to": "tkr_hakmilik_tukarganti"
+ },
+ {
+  "from": "tkr_tmp_ctt_tugasan_tukarganti",
+  "col": "tugasan_tukarganti_id",
+  "to": "tkr_tugasan_tukarganti"
+ },
+ {
+  "from": "tkr_tmp_delete_bh",
+  "col": "bandar_pekan_mukim_id",
+  "to": "ind_bandar_pekan_mukim"
+ },
+ {
+  "from": "tkr_tmp_delete_bh",
+  "col": "buku_hakmilik_id",
+  "to": "tkr_buku_hakmilik"
+ },
+ {
+  "from": "tkr_tmp_delete_bh",
+  "col": "buku_hakmilik_id",
+  "to": "tkr_hakmilik_batal_log"
+ },
+ {
+  "from": "tkr_tmp_delete_bh",
+  "col": "daerah_id",
+  "to": "ind_daerah"
+ },
+ {
+  "from": "tkr_tmp_delete_bh",
+  "col": "senarai_pgrsn_kumpulan_id",
+  "to": "tkr_senarai_pgrsn_kumpulan"
+ },
+ {
+  "from": "tkr_tmp_delete_ht",
+  "col": "buku_hakmilik_id",
+  "to": "tkr_buku_hakmilik"
+ },
+ {
+  "from": "tkr_tmp_delete_ht",
+  "col": "buku_hakmilik_id",
+  "to": "tkr_hakmilik_batal_log"
+ },
+ {
+  "from": "tkr_tmp_delete_ht",
+  "col": "hakmilik_tukarganti_id",
+  "to": "tkr_hakmilik_tukarganti"
+ },
+ {
+  "from": "tkr_tmp_delete_ht",
+  "col": "hkmlk_id",
+  "to": "ind_hkmlk"
+ },
+ {
+  "from": "tkr_tmp_delete_tt",
+  "col": "buku_hakmilik_id",
+  "to": "tkr_buku_hakmilik"
+ },
+ {
+  "from": "tkr_tmp_delete_tt",
+  "col": "buku_hakmilik_id",
+  "to": "tkr_hakmilik_batal_log"
+ },
+ {
+  "from": "tkr_tmp_delete_tt",
+  "col": "hakmilik_tukarganti_id",
+  "to": "tkr_hakmilik_tukarganti"
+ },
+ {
+  "from": "tkr_tmp_delete_tt",
+  "col": "tugasan_tukarganti_id",
+  "to": "tkr_tugasan_tukarganti"
+ },
+ {
+  "from": "tkr_tmp_list_id",
+  "col": "tugasan_tukarganti_id",
+  "to": "tkr_tugasan_tukarganti"
+ },
+ {
+  "from": "tkr_tmp_tugasan_tukarganti",
+  "col": "buku_hakmilik_id",
+  "to": "tkr_buku_hakmilik"
+ },
+ {
+  "from": "tkr_tmp_tugasan_tukarganti",
+  "col": "buku_hakmilik_id",
+  "to": "tkr_hakmilik_batal_log"
+ },
+ {
+  "from": "tkr_tmp_tugasan_tukarganti",
+  "col": "hakmilik_tukarganti_id",
+  "to": "tkr_hakmilik_tukarganti"
+ },
+ {
+  "from": "tkr_tmp_tugasan_tukarganti",
+  "col": "tugasan_tukarganti_id",
+  "to": "tkr_tugasan_tukarganti"
+ },
+ {
+  "from": "tmp_hsl_bayaran_group_by_bil_cukai_tahunan_id",
+  "col": "bil_cukai_tahunan_id",
+  "to": "hsl_bil_cukai_tahunan"
+ },
+ {
+  "from": "tmp_hsl_bil_cukai_tahunan_upd_baki",
+  "col": "akaun_cukai_id",
+  "to": "hsl_akaun_cukai"
+ },
+ {
+  "from": "tmp_hsl_bil_cukai_tahunan_upd_baki",
+  "col": "bil_cukai_tahunan_id",
+  "to": "hsl_bil_cukai_tahunan"
+ },
+ {
+  "from": "tmp_hsl_bil_cukai_tahunan_upd_baki_bayaran_kurang_agihan",
+  "col": "akaun_cukai_id",
+  "to": "hsl_akaun_cukai"
+ },
+ {
+  "from": "tmp_hsl_bil_cukai_tahunan_upd_baki_bayaran_kurang_agihan",
+  "col": "bil_cukai_tahunan_id",
+  "to": "hsl_bil_cukai_tahunan"
+ },
+ {
+  "from": "tmp_hsl_bil_cukai_tahunan_upd_baki_bayaran_tiada",
+  "col": "akaun_cukai_id",
+  "to": "hsl_akaun_cukai"
+ },
+ {
+  "from": "tmp_hsl_bil_cukai_tahunan_upd_baki_bayaran_tiada",
+  "col": "bil_cukai_tahunan_id",
+  "to": "hsl_bil_cukai_tahunan"
+ },
+ {
+  "from": "tmp_komponen_bisnes",
+  "col": "komponen_bisnes_id",
+  "to": "sis_komponen_bisnes"
+ },
+ {
+  "from": "tmp_rpt_1",
+  "col": "bayaran_fi_id",
+  "to": "hsl_bayaran_fi"
+ },
+ {
+  "from": "tmp_rpt_1",
+  "col": "bayaran_id",
+  "to": "hsl_bayaran"
+ },
+ {
+  "from": "tmp_rpt_1",
+  "col": "bil_cukai_tahunan_id",
+  "to": "hsl_bil_cukai_tahunan"
+ },
+ {
+  "from": "tmp_rpt_1",
+  "col": "btrn_bayaran_id",
+  "to": "hsl_btrn_bayaran"
+ },
+ {
+  "from": "tmp_rpt_1",
+  "col": "cara_bayaran_id",
+  "to": "hsl_cara_bayaran"
+ },
+ {
+  "from": "tmp_rpt_1",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "tmp_rpt_2",
+  "col": "bayaran_fi_id",
+  "to": "hsl_bayaran_fi"
+ },
+ {
+  "from": "tmp_rpt_2",
+  "col": "bayaran_id",
+  "to": "hsl_bayaran"
+ },
+ {
+  "from": "tmp_rpt_2",
+  "col": "bil_cukai_tahunan_id",
+  "to": "hsl_bil_cukai_tahunan"
+ },
+ {
+  "from": "tmp_rpt_2",
+  "col": "btrn_bayaran_id",
+  "to": "hsl_btrn_bayaran"
+ },
+ {
+  "from": "tmp_rpt_2",
+  "col": "cara_bayaran_id",
+  "to": "hsl_cara_bayaran"
+ },
+ {
+  "from": "tmp_rpt_2",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "tmp_rpt_3",
+  "col": "bayaran_fi_id",
+  "to": "hsl_bayaran_fi"
+ },
+ {
+  "from": "tmp_rpt_3",
+  "col": "bayaran_id",
+  "to": "hsl_bayaran"
+ },
+ {
+  "from": "tmp_rpt_3",
+  "col": "bil_cukai_tahunan_id",
+  "to": "hsl_bil_cukai_tahunan"
+ },
+ {
+  "from": "tmp_rpt_3",
+  "col": "btrn_bayaran_id",
+  "to": "hsl_btrn_bayaran"
+ },
+ {
+  "from": "tmp_rpt_3",
+  "col": "cara_bayaran_id",
+  "to": "hsl_cara_bayaran"
+ },
+ {
+  "from": "tmp_rpt_3",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "tmp_rpt_4",
+  "col": "bayaran_fi_id",
+  "to": "hsl_bayaran_fi"
+ },
+ {
+  "from": "tmp_rpt_4",
+  "col": "bayaran_id",
+  "to": "hsl_bayaran"
+ },
+ {
+  "from": "tmp_rpt_4",
+  "col": "bil_cukai_tahunan_id",
+  "to": "hsl_bil_cukai_tahunan"
+ },
+ {
+  "from": "tmp_rpt_4",
+  "col": "btrn_bayaran_id",
+  "to": "hsl_btrn_bayaran"
+ },
+ {
+  "from": "tmp_rpt_4",
+  "col": "cara_bayaran_id",
+  "to": "hsl_cara_bayaran"
+ },
+ {
+  "from": "tmp_rpt_4",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "tmp_skrin",
+  "col": "skrin_id",
+  "to": "ind_skrin"
+ },
+ {
+  "from": "tmp_tkr_ulasan_tukarganti",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "tmp_tkr_ulasan_tukarganti",
+  "col": "senarai_ahli_kumpulan_id",
+  "to": "rjk_senarai_ahli_kumpulan"
+ },
+ {
+  "from": "tmp_tkr_ulasan_tukarganti",
+  "col": "senarai_kumpulan_id",
+  "to": "rjk_senarai_kumpulan"
+ },
+ {
+  "from": "ubah_cukai",
+  "col": "akaun_cukai_id",
+  "to": "hsl_akaun_cukai"
+ },
+ {
+  "from": "ubah_cukai_2023",
+  "col": "akaun_cukai_id",
+  "to": "hsl_akaun_cukai"
+ },
+ {
+  "from": "umm_a_ahli_lembaga",
+  "col": "a_pihak_bkptg_id",
+  "to": "msk_nama_mapped"
+ },
+ {
+  "from": "umm_a_ahli_lembaga",
+  "col": "a_pihak_bkptg_id",
+  "to": "umm_a_pihak_bkptg"
+ },
+ {
+  "from": "umm_a_dok_keluaran",
+  "col": "a_hkmlk_id",
+  "to": "umm_a_hkmlk"
+ },
+ {
+  "from": "umm_a_dok_keluaran",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "umm_a_dok_keluaran",
+  "col": "dok_id",
+  "to": "skg_dok"
+ },
+ {
+  "from": "umm_a_dok_kmskn",
+  "col": "a_hkmlk_id",
+  "to": "umm_a_hkmlk"
+ },
+ {
+  "from": "umm_a_dok_kmskn",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "umm_a_hkmlk",
+  "col": "sktn_kptgn_id",
+  "to": "ind_sktn_kptgn"
+ },
+ {
+  "from": "umm_a_hkmlk",
+  "col": "syrt_nyata_id",
+  "to": "ind_syrt_nyata"
+ },
+ {
+  "from": "umm_a_hkmlk_lain",
+  "col": "a_pihak_bkptg_id",
+  "to": "msk_nama_mapped"
+ },
+ {
+  "from": "umm_a_hkmlk_lain",
+  "col": "a_pihak_bkptg_id",
+  "to": "umm_a_pihak_bkptg"
+ },
+ {
+  "from": "umm_a_langkah",
+  "col": "a_tgsn_id",
+  "to": "umm_a_tgsn"
+ },
+ {
+  "from": "umm_a_mklmt_premium_wip",
+  "col": "a_wip_id",
+  "to": "umm_a_premium_wip"
+ },
+ {
+  "from": "umm_a_pelan",
+  "col": "medan_pk_id",
+  "to": "hsl_a_mklmt_byrn_ispeks"
+ },
+ {
+  "from": "umm_a_pelikuidasi_pihak",
+  "col": "p_pihak_bkptg_id",
+  "to": "umm_p_pihak_bkptg"
+ },
+ {
+  "from": "umm_a_penyaksian",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "umm_a_penyerah",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "umm_a_permit_lesen",
+  "col": "versi_permit_lesen_id",
+  "to": "ind_versi_permit_lesen"
+ },
+ {
+  "from": "umm_a_pihak_bkptg",
+  "col": "a_hkmlk_id",
+  "to": "umm_a_hkmlk"
+ },
+ {
+  "from": "umm_a_pihak_bkptg",
+  "col": "a_pihak_bkptg_id",
+  "to": "msk_nama_mapped"
+ },
+ {
+  "from": "umm_a_pihak_bkptg",
+  "col": "pengesahan_biometrik_id",
+  "to": "pcp_pengesahan_biometrik"
+ },
+ {
+  "from": "umm_a_pihak_bkptg",
+  "col": "pihak_bkptg_id",
+  "to": "ind_pihak_bkptg"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_backup",
+  "col": "a_hkmlk_id",
+  "to": "umm_a_hkmlk"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_backup",
+  "col": "a_kebenaran_hkmlk_id",
+  "to": "con_a_kebenaran_hkmlk"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_backup",
+  "col": "a_mohon_hkmlk_id",
+  "to": "dft_a_mohon_hkmlk"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_backup",
+  "col": "a_pihak_bkptg_id",
+  "to": "msk_nama_mapped"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_backup",
+  "col": "a_pihak_bkptg_id",
+  "to": "umm_a_pihak_bkptg"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_backup",
+  "col": "a_srt_id",
+  "to": "umm_a_srt"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_backup",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_backup",
+  "col": "jadual_kedua_id",
+  "to": "umm_jadual_kedua"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_backup",
+  "col": "jadual_ketiga_id",
+  "to": "umm_jadual_ketiga"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_backup",
+  "col": "jns_hkmlk_id",
+  "to": "rjk_jns_hkmlk"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_backup",
+  "col": "laporan_bancian_id",
+  "to": "pks_laporan_bancian"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_backup",
+  "col": "pengesahan_biometrik_id",
+  "to": "pcp_pengesahan_biometrik"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_backup",
+  "col": "pertanyaan_id",
+  "to": "umm_pertanyaan"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_backup",
+  "col": "pihak_bkptg_id",
+  "to": "ind_pihak_bkptg"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_backup",
+  "col": "syarikat_id",
+  "to": "rjk_syarikat"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_masked",
+  "col": "a_hkmlk_id",
+  "to": "umm_a_hkmlk"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_masked",
+  "col": "a_kebenaran_hkmlk_id",
+  "to": "con_a_kebenaran_hkmlk"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_masked",
+  "col": "a_mohon_hkmlk_id",
+  "to": "dft_a_mohon_hkmlk"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_masked",
+  "col": "a_pihak_bkptg_id",
+  "to": "msk_nama_mapped"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_masked",
+  "col": "a_pihak_bkptg_id",
+  "to": "umm_a_pihak_bkptg"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_masked",
+  "col": "a_srt_id",
+  "to": "umm_a_srt"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_masked",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_masked",
+  "col": "jadual_kedua_id",
+  "to": "umm_jadual_kedua"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_masked",
+  "col": "jadual_ketiga_id",
+  "to": "umm_jadual_ketiga"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_masked",
+  "col": "jns_hkmlk_id",
+  "to": "rjk_jns_hkmlk"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_masked",
+  "col": "laporan_bancian_id",
+  "to": "pks_laporan_bancian"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_masked",
+  "col": "pengesahan_biometrik_id",
+  "to": "pcp_pengesahan_biometrik"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_masked",
+  "col": "pertanyaan_id",
+  "to": "umm_pertanyaan"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_masked",
+  "col": "pihak_bkptg_id",
+  "to": "ind_pihak_bkptg"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_masked",
+  "col": "syarikat_id",
+  "to": "rjk_syarikat"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_srt",
+  "col": "a_pihak_bkptg_id",
+  "to": "msk_nama_mapped"
+ },
+ {
+  "from": "umm_a_pihak_bkptg_srt",
+  "col": "a_pihak_bkptg_id",
+  "to": "umm_a_pihak_bkptg"
+ },
+ {
+  "from": "umm_a_srt",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "umm_a_tanggungan",
+  "col": "a_ahli_lembaga_id",
+  "to": "umm_a_ahli_lembaga"
+ },
+ {
+  "from": "umm_a_tanggungan",
+  "col": "a_pihak_bkptg_id",
+  "to": "msk_nama_mapped"
+ },
+ {
+  "from": "umm_a_tanggungan",
+  "col": "a_pihak_bkptg_id",
+  "to": "umm_a_pihak_bkptg"
+ },
+ {
+  "from": "umm_a_tgsn",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "umm_a_tgsn_bk_del",
+  "col": "a_tgsn_id",
+  "to": "umm_a_tgsn"
+ },
+ {
+  "from": "umm_a_tgsn_bk_del",
+  "col": "aliran_kerja_id",
+  "to": "umm_aliran_kerja"
+ },
+ {
+  "from": "umm_a_tgsn_bk_del",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "umm_a_tgsn_bk_del",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "umm_a_tgsn_bk_del",
+  "col": "tgsn_id",
+  "to": "ind_tgsn"
+ },
+ {
+  "from": "umm_a_tgsn_dok",
+  "col": "a_tgsn_id",
+  "to": "umm_a_tgsn"
+ },
+ {
+  "from": "umm_a_tgsn_dok",
+  "col": "dok_id",
+  "to": "skg_dok"
+ },
+ {
+  "from": "umm_a_utiliti_premium",
+  "col": "a_utiliti_id",
+  "to": "bgn_a_utiliti"
+ },
+ {
+  "from": "umm_aliran_kerja",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "umm_btrn_hantaran_notis",
+  "col": "a_dok_keluaran_id",
+  "to": "umm_a_dok_keluaran"
+ },
+ {
+  "from": "umm_btrn_jadual_bekerja",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "umm_btrn_jadual_bekerja",
+  "col": "peranan_modul_id",
+  "to": "pcp_peranan_modul"
+ },
+ {
+  "from": "umm_cetak_semula_dok",
+  "col": "dok_id",
+  "to": "skg_dok"
+ },
+ {
+  "from": "umm_cetak_semula_dok",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "umm_jadual_ketujuh",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "umm_janjitemu",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "umm_jns_dok_peranan_modul",
+  "col": "peranan_modul_id",
+  "to": "pcp_peranan_modul"
+ },
+ {
+  "from": "umm_keputusan",
+  "col": "a_tgsn_id",
+  "to": "umm_a_tgsn"
+ },
+ {
+  "from": "umm_konf_pegawai_khusus",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "umm_konf_pengagihan_tgsn_pk_rr",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "umm_konf_pengagihan_tgsn_rr",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "umm_laporan_dijana",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "umm_mklmt_akaun_bank",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "umm_p_ahli_lembaga",
+  "col": "p_pihak_bkptg_id",
+  "to": "umm_p_pihak_bkptg"
+ },
+ {
+  "from": "umm_p_aplikasi",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "umm_p_pengguna",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "umm_p_pihak_bkptg",
+  "col": "pihak_bkptg_id",
+  "to": "ind_pihak_bkptg"
+ },
+ {
+  "from": "umm_p_tanggungan",
+  "col": "p_ahli_lembaga_id",
+  "to": "umm_p_ahli_lembaga"
+ },
+ {
+  "from": "umm_pengguna_notifikasi",
+  "col": "notifikasi_id",
+  "to": "umm_notifikasi"
+ },
+ {
+  "from": "umm_pengguna_notifikasi",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "umm_qms_report",
+  "col": "servis_qms_id",
+  "to": "umm_servis_qms"
+ },
+ {
+  "from": "umm_sasaran_hantaran_notis",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "umm_tetapan_pengguna",
+  "col": "pengguna_id",
+  "to": "pcp_pengguna"
+ },
+ {
+  "from": "umm_tgsn_semasa",
+  "col": "a_tgsn_id",
+  "to": "umm_a_tgsn"
+ },
+ {
+  "from": "umm_tgsn_semasa",
+  "col": "aplikasi_id",
+  "to": "umm_aplikasi"
+ },
+ {
+  "from": "v_pejabat_id",
+  "col": "pejabat_id",
+  "to": "ind_pejabat"
+ },
+ {
+  "from": "v_vdhdid",
+  "col": "versi_dhd_id",
+  "to": "ind_versi_dhd"
+ },
+ {
+  "from": "yep_kadar_kegunaan",
+  "col": "hkmlk_id",
+  "to": "ind_hkmlk"
+ }
+]

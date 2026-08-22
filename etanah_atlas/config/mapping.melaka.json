@@ -1,8 +1,8 @@
 {
   "_comment": "Stable curation config. Edit this to add Moduls, urusan flows, main tables, etc. Survives across schema versions. Profile-specific (this one = Melaka).",
   "profile": "melaka",
-  "version": "2.0",
-  "last_updated": "2026-05-20",
+  "version": "3.0",
+  "last_updated": "2026-08-22",
   "moduls": [
     {
       "key": "pelupusan",
@@ -217,11 +217,12 @@
   "urusans": [
     {
       "kod": "PT",
-      "name": "Pemberimilikan Tanah",
-      "english": "Land alienation",
-      "section": "KTN s.76",
+      "name": "Permohonan Pemberimilikan",
+      "english": "Application for land alienation",
+      "section": "S.76 KTN",
       "modul": "pelupusan",
-      "description": "Full pemberimilikan path. JKKL gate + MMKN decision, then handed off to Pendaftaran for title registration.",
+      "description": "New land alienation application progressing through technical/land report, JKKL committee endorsement, and final MMKN (State Executive Council) decision before hakmilik registration.",
+      "committee": "JKKL then MMKN",
       "stages": [
         {
           "kod": "intake",
@@ -231,210 +232,1879 @@
             "umm_p_hkmlk",
             "plp_p_pelupusan",
             "umm_p_pihak_bkptg"
-          ]
+          ],
+          "evidence": "pre-application tables per curated PT v2.0 mapping (analog)"
         },
         {
           "kod": "semakan",
-          "name": "Semakan Kemasukan",
+          "name": "Semakan Kemasukan Maklumat",
           "tables": [
             "umm_aplikasi",
             "umm_a_hkmlk",
             "plp_a_pelupusan",
             "umm_a_pihak_bkptg"
-          ]
+          ],
+          "evidence": "userTask '3.0 Semakan Kemasukan Maklumat' (sid-8748826F)"
         },
         {
           "kod": "jt",
-          "name": "JT / Laporan Tanah",
+          "name": "Jabatan Teknikal / Laporan Tanah",
           "tables": [
             "umm_a_jabatan_teknikal",
-            "rjk_agensi",
-            "tkl_*"
-          ]
+            "rjk_agensi"
+          ],
+          "evidence": "callActivity '1.0 Teknikal (WSB2PU) (MLK_TKL_B2_PU)'; callActivity '4.0 Charting Mohon (MLK_TKL_CM)'; callActivity '5.0 Penyediaan Laporan Tanah (MLK_TKL_ST)'; callActivity '6.0 Pelan Mesyuarat (MLK_TKL_PPM)'; userTask '7.0 Semakan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN' (sid-230EAA5D); userTask '8.0 Perakuan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN' (sid-1A129218)"
         },
         {
           "kod": "jkkl",
-          "name": "JKKL gate",
-          "tables": [
-            "umm_a_pelupusan"
-          ]
-        },
-        {
-          "kod": "kkpt",
-          "name": "KKPT (PYSK / SSK / PSSK)",
+          "name": "Rencana / Kemasukan Keputusan JKKL",
           "tables": [
             "umm_a_tgsn",
             "ind_tgsn",
             "pcp_pengguna"
-          ]
+          ],
+          "evidence": "userTask '23.0 Penyediaan Rencana JKKL - PDT' (sid-B566BD40); '24.0-26.0 Semakan Rencana JKKL - PDT'; '27.0 Perakuan Rencana JKKL - PDT' (sid-FCCF646B); '37.0 Kemasukan Keputusan JKKL' (sid-3233CAC0); '37.1-37.2 Semakan/Peraku Keputusan JKKL'; '37.3 Terimaan Keputusan JKKL Dan Penentuan Kelulusan' (sid-87661160, gateway condition ${keputusanJKKL== \"tangguh\"} at line 1710)"
+        },
+        {
+          "kod": "kkpt",
+          "name": "Penyediaan Minit Bebas / Risalat MMKN ke PTG",
+          "tables": [
+            "umm_a_tgsn",
+            "ind_tgsn",
+            "pcp_pengguna"
+          ],
+          "evidence": "userTask 'Penyediaan Minit Bebas' (sid-76A2C3ED); 'Semakan Minit Bebas (PPD)' (sid-90688DAB); 'Pengesahan Minit Bebas (PTNH)' (sid-2679662F); '19.0 Penyediaan Senarai Semak ke PTG' (sid-657F048B); '20.0 Penyediaan Risalat MMKN - PTG' (sid-E9F6D6E5); '21.0-22.0 Semakan Risalat MMKN - PTG'; '23.0 Perakuan Risalat MMKN - PTG' (sid-88180C48); '24.0 Zip Fail Dokumen MMKN' (sid-F15CA972)"
         },
         {
           "kod": "mmkn",
-          "name": "MMKN decision",
+          "name": "Kemasukan / Keputusan MMKN",
           "tables": [
-            "umm_a_pelupusan",
-            "ind_keputusan"
-          ]
-        },
-        {
-          "kod": "skl",
-          "name": "Surat Keputusan Lulus",
-          "tables": [
-            "umm_a_pelupusan",
             "umm_a_srt"
-          ]
-        },
-        {
-          "kod": "dft",
-          "name": "Pendaftaran",
-          "tables": [
-            "dft_a_hkmlk",
-            "dft_a_undo_perserahan",
-            "umm_a_hkmlk"
-          ]
+          ],
+          "evidence": "userTask '25.0 Kemasukan Keputusan MMKN Dan Penyediaan Surat Makluman Keputusan' (sid-48872EC9); '26.0 Semakan Keputusan MMKN' (sid-28AF801F); '27.0 Pengesahan Keputusan MMKN' (sid-BC146DB7); gateway 'Keputusan' (sid-0C06F072) and gateway 'Keputusan MMKN' (sid-48D07B72)",
+          "fork": {
+            "default": "lulus",
+            "outcomes": [
+              {
+                "kind": "lulus",
+                "label": "Lulus",
+                "steps": [
+                  {
+                    "name": "30.0 Penyediaan Surat Keputusan Lulus dan Borang Notis 5A / 31.0 Semakan / 32.0 Pengesahan",
+                    "tables": [
+                      "umm_a_srt",
+                      "dft_a_notis"
+                    ],
+                    "evidence": "userTask '30.0 Penyediaan Surat Keputusan Lulus dan Borang Notis 5A' (sid-54FE337C); '31.0 Semakan' (sid-BCE10E33); '32.0 Pengesahan' (sid-83043B79)"
+                  },
+                  {
+                    "name": "Bayaran Pelbagai / Semakan Dokumen Kelulusan / Senarai Semak Hakmilik",
+                    "tables": [
+                      "umm_a_tgsn"
+                    ],
+                    "evidence": "userTask '35.0 Bayaran Pelbagai' (sid-5FA44E13); '36.0 Semakan Dokumen Kelulusan' (sid-8A5E167D); '37.0/38.0 Senarai Semak Hakmilik Sementara'; '39.0/40.0 Senarai Semak Hakmilik Kekal'"
+                  },
+                  {
+                    "name": "Charting Keputusan / Cetakan Surat Lulus",
+                    "tables": [
+                      "umm_a_dok_keluaran"
+                    ],
+                    "evidence": "callActivity '33.0 Charting Keputusan (MLK_TKL_CL)' (sid-A9E2D248); callActivity '34.0 Cetakan Dokumen Surat Lulus dan Borang Notis 5A (MLK_PLP_SUB_UPN)' (sid-FCFA83FE)"
+                  },
+                  {
+                    "name": "Pendaftaran Hakmilik (Sementara/Kekal)",
+                    "tables": [
+                      "ind_hkmlk",
+                      "umm_a_hkmlk"
+                    ],
+                    "evidence": "callActivity '39.0 Daftar Hakmilik Sementara (HSBM) (MLK_DFT_NOTA_HKMLK)' (sid-04783399); '40.0 Daftar Hakmilik Sementara (HSBM)' (sid-8F2132DC); 'Daftar Hakmilik Kekal (HKBM)' (sid-77C7C5FA / sid-F4DFDE87)"
+                  }
+                ],
+                "end": "Hakmilik registered (HSBM/HKBM)"
+              },
+              {
+                "kind": "tolak",
+                "label": "Tolak",
+                "steps": [
+                  {
+                    "name": "Penyediaan / Semakan / Pengesahan Surat Tolak",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask 'Penyediaan Surat Tolak' (sid-174C8D47); 'Semakan Surat Tolak' (sid-A7DA848F); 'Pengesahan Surat Tolak' (sid-20D3CD8C); gateway 'Keputusan MMKN' sequenceFlow name='Tolak' condition ${keputusanMMKN == \"tolak\"}"
+                  },
+                  {
+                    "name": "Cetakan Dokumen Surat Tolak",
+                    "tables": [
+                      "umm_a_dok_keluaran"
+                    ],
+                    "evidence": "callActivity 'Cetakan Dokumen Surat Tolak (MLK_PLP_SUB_UPN)' (sid-54DC449D)"
+                  }
+                ],
+                "end": "Tamat"
+              },
+              {
+                "kind": "tangguh",
+                "label": "Tangguh",
+                "steps": [
+                  {
+                    "name": "28.0 Penyediaan / 29.0 Pengesahan Surat Keputusan Tangguh",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask '28.0 Penyediaan Surat Keputusan Tangguh' (sid-96847877); '29.0 Pengesahan Surat Keputusan Tangguh' (sid-31EA17AC); gateway 'Keputusan' sequenceFlow name='Tangguh' condition ${keputusan == \"tangguh\"}"
+                  },
+                  {
+                    "name": "Penyediaan Senarai Semak / Risalat MMKN (Tangguh) - re-table to PTG",
+                    "tables": [
+                      "umm_a_tgsn"
+                    ],
+                    "evidence": "userTask 'Penyediaan Senarai Semak ke PTG (Tangguh)' (sid-FC9ADD9D); 'Penyediaan Risalat MMKN dan Ringkasan Risalat (Tangguh) - PTG' (sid-61507C39); 'Perakuan Risalat MMKN (Tangguh)- PTG' (sid-DF966FAC)"
+                  }
+                ],
+                "loop": "Returns to Kemasukan Keputusan MMKN (25.0) for next MMKN sitting"
+              }
+            ]
+          }
         }
-      ]
+      ],
+      "bpmn_file": "MLK_PLP_PT.bpmn20.xml",
+      "fork_evidence": "gateway sid-0C06F072 'Keputusan': sequenceFlow sid-7E116BE8 name='Tangguh' condition ${keputusan == \"tangguh\"}; sequenceFlow sid-C33779F4 name='Lulus/Tolak' condition ${keputusan == \"lulus\" || keputusan== \"tolak\" } -> feeds 26.0/27.0 review chain -> gateway sid-48D07B72 'Keputusan MMKN': sequenceFlow sid-C85D1F9A name='Lulus' (unconditional/default) -> 30.0 Penyediaan Surat Keputusan Lulus; sequenceFlow sid-F82D0D4C name='Tolak' condition ${keputusanMMKN == \"tolak\" } -> Penyediaan Surat Tolak",
+      "confidence": "high",
+      "notes": "PT also has an earlier JKKL committee endorsement layer (23.0-27.0 Rencana JKKL, 37.0-37.3 Keputusan JKKL with its own tangguh gate keputusanJKKL==\"tangguh\") that feeds INTO the MMKN process (kertas kerja / minit bebas) rather than terminating the application itself — the JKKL gate does not itself produce a final Lulus/Tolak surat in this BPMN; the terminal committee decision with Lulus/Tolak/Tangguh surat production is the MMKN gateway pair documented in the fork above. PT is in URUSAN_INVOLVE_JKKL_LIST (URUSAN-FLOW.md) confirming JKKL participation as a pre-MMKN stage, consistent with this BPMN's structure."
     },
     {
       "kod": "PLPS",
-      "name": "Lesen Pendudukan Sementara",
-      "english": "Temporary Occupation Licence (TOL)",
-      "section": "KTN s.65",
+      "name": "Permohonan Lesen Pendudukan Sementara",
+      "english": "Application for Temporary Occupation Licence",
+      "section": "S.65 KTN",
       "modul": "pelupusan",
-      "description": "JKKL + MMKN, then unique Borang 4Ae / L1e permit-issuance sub-flow. No Pendaftaran handoff.",
+      "description": "Temporary occupation licence application; can be decided directly at Pentadbir Tanah (PT) level or escalated through JKKL/MMKN committee review depending on kelulusan type, ending in licence issuance (Borang 4Ae/L1e) rather than hakmilik registration.",
+      "committee": "JKKL / MMKN (routed by 'kelulusan' type: JNS_KELULUSAN_DO vs JNS_KELULUSAN_MMK)",
       "stages": [
         {
           "kod": "intake",
           "name": "Intake / Pra-Aplikasi",
           "tables": [
             "umm_p_aplikasi",
+            "umm_p_hkmlk",
             "plp_p_pelupusan",
             "umm_p_pihak_bkptg"
-          ]
+          ],
+          "evidence": "pre-application tables per curated PLPS mapping (analog)"
         },
         {
           "kod": "semakan",
-          "name": "Semakan Kemasukan",
+          "name": "Semakan Kemasukan Maklumat",
           "tables": [
             "umm_aplikasi",
+            "umm_a_hkmlk",
             "plp_a_pelupusan",
             "umm_a_pihak_bkptg"
-          ]
+          ],
+          "evidence": "userTask '4.0 Semakan Kemasukan Maklumat' (sid-5BBA4DF7)"
         },
         {
           "kod": "jt",
-          "name": "JT / Laporan Tanah",
+          "name": "Jabatan Teknikal / Laporan Tanah",
           "tables": [
             "umm_a_jabatan_teknikal",
-            "tkl_*"
-          ]
+            "rjk_agensi"
+          ],
+          "evidence": "userTask '8.0 Semakan Jabatan Teknikal,Laporan Tanah, Pelan MMK' (sid-3E1FF1D8); '9.0 Peraku Jabatan Teknikal, Laporan Tanah, Pelan MMKN' (sid-68462CF8)"
+        },
+        {
+          "kod": "kkpt",
+          "name": "Kertas Pertimbangan Pentadbir Tanah / Keputusan PT",
+          "tables": [
+            "umm_a_tgsn",
+            "ind_tgsn",
+            "pcp_pengguna"
+          ],
+          "evidence": "userTask '14.0 Penyediaan Kertas Pertimbangan Pentadbir Tanah' (sid-53BA3103); '15.0 Semakan Kertas Pertimbangan Pentadbir Tanah (KPT/PPD/KPPD)'; '16.0 Keputusan Pentadbir Tanah (PT)' (sid-D3912CD2, tugasan kod KDO); gateway 'Keputusan' (sid-6776129D) routes Lulus direct to Surat Keputusan Lulus or Tolak (=escalate) to Risalat MMKN prep"
         },
         {
           "kod": "jkkl",
-          "name": "JKKL gate",
-          "tables": [
-            "umm_a_pelupusan"
-          ]
-        },
-        {
-          "kod": "kkpt",
-          "name": "KKPT (PYSK / SSK / PSSK)",
+          "name": "Rencana / Kemasukan Keputusan JKKL (escalated path)",
           "tables": [
             "umm_a_tgsn",
-            "ind_tgsn"
-          ]
+            "ind_tgsn",
+            "pcp_pengguna"
+          ],
+          "evidence": "userTask '17.0 Penyediaan Rencana JKKL - PDT' (sid-9E6D28B7); '18.0-20.0 Semakan Rencana JKKL - PDT'; '21.0 Perakuan Rencana JKKL - PDT' (sid-54EF95DE); '31.0 Keputusan JKKL Dan Penyediaan Surat Keputusan' (sid-BB74A497); '31.3 Terimaan Keputusan JKKL Dan Penentuan Kelulusan' (sid-FF6B40D2, gateway condition ${keputusanJKKL== \"tangguh\"} at line 1741)"
         },
         {
           "kod": "mmkn",
-          "name": "MMKN decision",
+          "name": "Kemasukan / Keputusan MMKN",
           "tables": [
-            "umm_a_pelupusan",
-            "ind_keputusan"
-          ]
-        },
-        {
-          "kod": "skl",
-          "name": "Surat Keputusan Lulus",
-          "tables": [
-            "umm_a_pelupusan",
             "umm_a_srt"
-          ]
-        },
-        {
-          "kod": "borang4ae",
-          "name": "Borang 4Ae / L1e",
-          "tables": [
-            "umm_a_pelupusan",
-            "umm_a_srt"
-          ]
+          ],
+          "evidence": "userTask '29.0 Kemasukan Keputusan MMKN dan Penyediaan Surat Keputusan' (sid-16595437); '31.0 Semakan Keputusan MMKN Dan Surat Keputusan' (sid-5230D897); '33.0 Peraku Keputusan MMKN dan Surat Keputusan' (sid-257AA117); gateway 'Keputusan' (sid-88EFDD39)",
+          "fork": {
+            "default": "lulus",
+            "outcomes": [
+              {
+                "kind": "lulus",
+                "label": "Lulus",
+                "steps": [
+                  {
+                    "name": "31.0 Semakan / 33.0 Peraku Keputusan MMKN dan Surat Keputusan",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "sequenceFlow sid-21D73CC5 name='Lulus' sourceRef gateway sid-88EFDD39 -> targetRef sid-5230D897 '31.0 Semakan Keputusan MMKN Dan Surat Keputusan'; gateway condition ${keputusanPKMMKN == \"lulus\"} at line 1572 confirms the Peraku split"
+                  },
+                  {
+                    "name": "Bayaran Pelbagai / Penyediaan Borang 4Ae dan L1e / Pengesahan",
+                    "tables": [
+                      "umm_a_permit_lesen"
+                    ],
+                    "evidence": "userTask '39.0 Bayaran Pelbagai' (sid-E9F29B38); '40.0 Penyediaan Borang 4Ae Dan L1e' (sid-3B4AE293); '41.0 Pengesahan Borang 4Ae Dan L1e' (sid-86A889BE)"
+                  },
+                  {
+                    "name": "Cetakan Borang 4Ae dan L1e (licence print)",
+                    "tables": [
+                      "ind_permit_lesen",
+                      "dm_permit_lesen"
+                    ],
+                    "evidence": "same callActivity family as MLPS 'Cetakan Borang 4Ae dan L1e (MLK_PLP_SUB_UPN)'; shared PLPS/OPLPS/MLPS/OMLPS licence-number sequence per FLOWABLE-KNOWLEDGE.md §Shared 4-urusan licence-number sequence"
+                  }
+                ],
+                "end": "Lesen (4Ae/L1e) issued"
+              },
+              {
+                "kind": "tolak",
+                "label": "Tolak",
+                "steps": [
+                  {
+                    "name": "48.0 Penyediaan / 49.0 Semakan / 50.0 Peraku Surat Tolak",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask '48.0 Penyediaan Surat Tolak' (sid-ED1D6C6A); '49.0 Semakan Surat Tolak' (sid-9B10F7E8); '50.0 Peraku Surat Tolak' (sid-62ECCD8B); gateway condition ${keputusanPKMMKN == \"tolak\"} at line 894"
+                  }
+                ],
+                "end": "Tamat"
+              },
+              {
+                "kind": "tangguh",
+                "label": "Tangguh",
+                "steps": [
+                  {
+                    "name": "30.0 Penyediaan / 31.0 Peraku Surat Keputusan Tangguh",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask '30.0 Penyediaan Surat Keputusan Tangguh' (sid-F8070561); '31.0 Peraku Surat Keputusan Tangguh' (sid-301C8CDF); sequenceFlow sid-3727F10B name='Tangguh' condition ${keputusan == \"tangguh\"} at line 331"
+                  },
+                  {
+                    "name": "58.0 Penyediaan Senarai Semak / 60.0-64.0 Risalat MMKN (Tangguh) - re-table to PTG",
+                    "tables": [
+                      "umm_a_tgsn"
+                    ],
+                    "evidence": "userTask '58.0 Penyediaan Senarai Semak ke PTG (Tangguh)' (sid-AACFDCA9); '60.0 Penyediaan Risalat MMKN, ringkasan risalat dan surat maklumat balas - PTG' (sid-4D8253A1); '64.0 Zip Fail Dokumen MMKN (Tangguh)' (sid-DE869BF4)"
+                  }
+                ],
+                "loop": "Returns to Kemasukan Keputusan MMKN (29.0) for next MMKN sitting"
+              }
+            ]
+          }
         }
-      ]
+      ],
+      "bpmn_file": "MLK_PLP_PLPS.bpmn20.xml",
+      "fork_evidence": "gateway sid-88EFDD39 'Keputusan': sequenceFlow sid-3727F10B name='Tangguh' condition ${keputusan == \"tangguh\"} (line 331); sequenceFlow sid-CAD1FD50 name='Tolak' -> 31.0 Semakan; sequenceFlow sid-21D73CC5 name='Lulus' -> 31.0 Semakan (Lulus/Tolak share the same review task, split resolves later); downstream gateway (33.0 Peraku) conditions ${keputusanPKMMKN == \"tolak\"} (line 894) and ${keputusanPKMMKN == \"lulus\"} (line 1572) perform the actual Lulus vs Tolak branch to surat-lulus vs surat-tolak tails",
+      "confidence": "high",
+      "notes": "PLPS has an EARLIER direct-decision gate at Pentadbir Tanah level (16.0 Keputusan Pentadbir Tanah, gateway sid-6776129D, kelulusan==JNS_KELULUSAN_DO) that can approve Lulus directly (straight to Surat Keputusan Lulus, tugasan PYSK) without MMKN, OR escalate ('Tolak' edge label, but functionally 'not decided here') to the JKKL/MMKN chain. The fork documented above is the terminal MMKN-level Lulus/Tolak/Tangguh decision, matching the curated PT-style mapping's 'mmkn' stage. PLPS is in URUSAN_INVOLVE_JKKL_LIST confirming JKKL participation as a mid-tier stage before MMKN."
     },
     {
       "kod": "PRZ",
-      "name": "Perizaban",
-      "english": "Land reservation",
-      "section": "KTN s.62",
+      "name": "Permohonan Perizaban",
+      "english": "Application for land reservation",
+      "section": "S.62 KTN",
       "modul": "pelupusan",
-      "description": "Skips JKKL entirely. Uses JKKT committee family. Ends in reservation gazette.",
+      "description": "Land reservation application progressing straight from technical/land-report review to MMKN decision (no JKKL mid-tier committee), with an approved outcome requiring subsequent Warta (gazette) publication.",
+      "committee": "MMKN (JKKT decision-kod family per PelupusanService.populateKeputusanSelectItem)",
       "stages": [
         {
           "kod": "intake",
           "name": "Intake / Pra-Aplikasi",
           "tables": [
             "umm_p_aplikasi",
-            "plp_p_pelupusan"
-          ]
+            "umm_p_hkmlk",
+            "plp_p_pelupusan",
+            "umm_p_pihak_bkptg"
+          ],
+          "evidence": "pre-application tables per curated PT-style mapping (analog); no PRZ-specific pra table found in schema"
         },
         {
           "kod": "semakan",
-          "name": "Semakan Kemasukan",
+          "name": "Semakan Kemasukan Maklumat",
           "tables": [
             "umm_aplikasi",
-            "plp_a_pelupusan"
-          ]
+            "umm_a_hkmlk",
+            "plp_a_pelupusan",
+            "umm_a_pihak_bkptg"
+          ],
+          "evidence": "userTask '3.0 Semakan Kemasukan Maklumat' (sid-5BBA4DF7)"
         },
         {
           "kod": "jt",
-          "name": "JT / Laporan Tanah",
+          "name": "Jabatan Teknikal / Laporan Tanah",
           "tables": [
             "umm_a_jabatan_teknikal",
-            "tkl_*"
-          ]
+            "rjk_agensi"
+          ],
+          "evidence": "userTask '7.0 Semakan Jabatan Teknikal, Laporan Tanah dan Pelan Mesyuarat' (sid-3E1FF1D8); '8.0 Peraku Jabatan Teknikal, Laporan Tanah, Pelan MMKN' (sid-68462CF8)"
         },
         {
           "kod": "kkpt",
-          "name": "KKPT (PYSK / SSK / PSSK)",
+          "name": "Penyediaan Minit Bebas / Risalat MMKN ke PTG",
           "tables": [
             "umm_a_tgsn",
-            "ind_tgsn"
-          ]
+            "ind_tgsn",
+            "pcp_pengguna"
+          ],
+          "evidence": "userTask '61.0 Penyediaan Minit Bebas' (sid-5EB67A78); '62.0 Semakan Minit Bebas (PPD)' (sid-82A5669E); '63.0 Pengesahan Minit Bebas (PTNH)' (sid-3D571F09); '23.0 Penyediaan Risalat MMKN - PDT' (sid-24E81C7C); '27.0 Perakuan Pentadbir Tanah (PT)' (sid-6F4E4621); '29.0 Penyediaan Risalat MMKN - PTG' (sid-13D6DC84); '32.0 Perakuan Risalat MMKN - PTG' (sid-16E17230); '33.0 Zip Fail Dokumen MMKN' (sid-25001C96)"
         },
         {
-          "kod": "jkkt",
-          "name": "JKKT decision",
+          "kod": "mmkn",
+          "name": "Kemasukan / Keputusan MMKN",
           "tables": [
-            "umm_a_pelupusan",
-            "ind_keputusan"
-          ]
-        },
-        {
-          "kod": "skl",
-          "name": "Surat Keputusan Lulus",
-          "tables": [
-            "umm_a_pelupusan",
             "umm_a_srt"
-          ]
+          ],
+          "evidence": "userTask '34.0 Kemasukan Keputusan MMKN dan Surat Makluman Keputusan' (sid-8D0AA80A); gateway 'Keputusan' (sid-262639D9) and second gateway 'Keputusan' (sid-F5DC3C89)",
+          "fork": {
+            "default": "lulus",
+            "outcomes": [
+              {
+                "kind": "lulus",
+                "label": "Lulus",
+                "steps": [
+                  {
+                    "name": "35.0 Semakan / 36.0 Pengesahan Keputusan MMKN, then 39.0 Penyediaan Surat Keputusan Lulus",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask '35.0 Semakan Keputusan MMKN dan Surat Makluman Keputusan' (sid-9D10C547); '36.0 Pengesahan' (sid-CE3FB082); gateway sid-F5DC3C89 default flow sid-921DDF3E name='Lulus' -> '39.0 Penyediaan Surat Keputusan Lulus' (sid-13EAFCEF)"
+                  },
+                  {
+                    "name": "40.0 Semakan / 41.0 Pengesahan Surat Keputusan Lulus",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask '40.0 Semakan Surat Keputusan Lulus' (sid-0DD3DC25); '41.0 Pengesahan Surat Keputusan Lulus' (sid-0CF93561)"
+                  },
+                  {
+                    "name": "Draf Warta / Muatnaik Warta / Surat Iringan Ke Dewan",
+                    "tables": [
+                      "ind_warta"
+                    ],
+                    "evidence": "userTask '49.0 Penyediaan Draf Warta dan Surat Iringan Ke Dewan' (sid-00740C08); '50.0 Peraku Draf Warta dan Surat Iringan Ke Dewan' (sid-55159294); '54.0 Muatnaik Warta' (sid-FACF5D86); '51.0 Penyediaan Warta Dan Surat Iringan Pewartaan' (sid-865EEE0A); '52.0 Peraku Warta Dan Surat Iringan Pewartaan' (sid-A1B5F74E)"
+                  },
+                  {
+                    "name": "Surat Makluman Keluaran Warta / ke PDT / ke Pemohon",
+                    "tables": [
+                      "umm_sejarah_mklmt_warta"
+                    ],
+                    "evidence": "userTask '44.0 Penyediaan Surat Makluman Keluaran Warta' (sid-B84162E0); '55.0 Penyediaan Surat Makluman ke PDT' (sid-281A2F09); '57.0 Penyediaan Surat Makluman kepada Pemohon' (sid-A60E3CD3); '59.0 Pengesahan Surat Makluman kepada Pemohon' (sid-BCF067A9)"
+                  }
+                ],
+                "end": "Warta (gazette) published, tanah dirizabkan"
+              },
+              {
+                "kind": "tolak",
+                "label": "Tolak",
+                "steps": [
+                  {
+                    "name": "64.0 Penyediaan / 65.0 Semakan / 66.0 Peraku Surat Tolak Ringkas",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask '64.0 Penyediaan Surat Tolak Ringkas (PYSTP)' (sid-7382AC88); '65.0 Semakan Surat Tolak Ringkas (SSTP)' (sid-F3EF8746); '66.0 Peraku Surat Tolak Ringkas (PSTP)' (sid-A0628120); gateway sid-F5DC3C89 sequenceFlow sid-ED39A795 name='Tolak' condition ${keputusan == \"tolak\"} (line 804)"
+                  }
+                ],
+                "end": "Tamat"
+              },
+              {
+                "kind": "tangguh",
+                "label": "Tangguh",
+                "steps": [
+                  {
+                    "name": "37.0 Penyediaan / 38.0 Pengesahan Surat Keputusan Tangguh",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask '37.0 Penyediaan Surat Keputusan Tangguh' (sid-1AF5A411); '38.0 Pengesahan Surat Keputusan Tangguh' (sid-497DBB35); gateway sid-262639D9 sequenceFlow sid-5B4CC01A name='Tangguh' condition ${keputusan == \"tangguh\"} (line 508)"
+                  },
+                  {
+                    "name": "68.0 Penyediaan Senarai Semak / 69.0-73.0 Risalat MMKN (Tangguh) - re-table to PTG",
+                    "tables": [
+                      "umm_a_tgsn"
+                    ],
+                    "evidence": "userTask '68.0 Penyediaan Senarai Semak ke PTG (Tangguh)' (sid-421E0709); '69.0 Penyediaan Risalat MMKN dan Ringkasan Risalat (Tangguh) - PTG' (sid-0402F7E7); '73.0 Zip Fail Dokumen MMKN (Tangguh)' (sid-28FF793B)"
+                  }
+                ],
+                "loop": "Returns to Kemasukan Keputusan MMKN (34.0) for next MMKN sitting"
+              }
+            ]
+          }
+        }
+      ],
+      "bpmn_file": "MLK_PLP_PRZ.bpmn20.xml",
+      "fork_evidence": "gateway sid-262639D9 'Keputusan': sequenceFlow sid-5B4CC01A name='Tangguh' condition ${keputusan == \"tangguh\"} (line 508); sequenceFlow sid-A286D532 name='Lulus/Tolak' condition ${keputusan == \"lulus\" || keputusan== \"tolak\" } (line 534) -> feeds 35.0/36.0 review chain -> gateway sid-F5DC3C89 'Keputusan' (default=sid-921DDF3E 'Lulus', line 515/529) -> 39.0 Penyediaan Surat Keputusan Lulus; sequenceFlow sid-ED39A795 name='Tolak' condition ${keputusan == \"tolak\"} (line 804) -> 64.0 Penyediaan Surat Tolak Ringkas",
+      "confidence": "high",
+      "notes": "No JKKL 'Rencana JKKL' userTasks exist anywhere in this BPMN, consistent with URUSAN-FLOW.md: 'PRZ uses JKKT decisions ... does NOT participate in JKKL flow'. The committee here is a single-tier MMKN decision (no separate JKKL mid-committee stage as PT/PLPS have); JKKT is the SAK/decision-kod family used for the radio options at this MMKN gate, not a separate BPMN stage. Approved (Lulus) path is the only one requiring Warta gazettement, matching S.62 KTN."
+    },
+    {
+      "kod": "MLPS",
+      "name": "Membaharui Lesen Pendudukan Sementara",
+      "english": "Renewal of Temporary Occupation Licence",
+      "section": "S.67(3) KTN",
+      "modul": "pelupusan",
+      "description": "Renewal of an existing Temporary Occupation Licence — a short administrative flow (form preparation, confirmation, print) with NO committee decision gate at all.",
+      "committee": "none",
+      "stages": [
+        {
+          "kod": "intake",
+          "name": "Spoc Integration / Pelupusan Permohonan Service (intake)",
+          "tables": [
+            "umm_p_aplikasi",
+            "umm_p_permit_lesen"
+          ],
+          "evidence": "serviceTask 'Spoc Integration' (sid-3DF5C59D, expression mlkSpocIntegrationService); serviceTask 'Pelupusan Permohonan Service' (sid-48C65486, expression mlkPelupusanPermohonanService)"
         },
         {
-          "kod": "gazette",
-          "name": "Reservation Gazette",
+          "kod": "borang",
+          "name": "Penyediaan / Pengesahan Borang 4Ae dan L1e",
           "tables": [
-            "umm_a_rizab",
-            "umm_a_warta"
-          ]
+            "umm_a_permit_lesen"
+          ],
+          "evidence": "userTask '3.0 Penyediaan Borang 4Ae Dan L1e' (sid-9BB3C630, tugasan kod PYB4AE, peranan PT); userTask '4.0 Pengesahan Borang 4Ae Dan L1e' (sid-025F696A, tugasan kod PB4AE, peranan PPD_KPPD_PTNH); gateway (sid-1CE72607, unnamed 'Pembetulan'-style) conditions ${pembetulan == \"true\"} (Ya, loops back to 3.0) / ${pembetulan == \"false\"} (Tidak, proceeds to print)"
+        },
+        {
+          "kod": "post_2",
+          "name": "5.0 Cetakan Borang 4Ae dan L1e (print licence)",
+          "tables": [
+            "ind_permit_lesen",
+            "dm_permit_lesen"
+          ],
+          "evidence": "callActivity '5.0 Cetakan Borang 4Ae dan L1e' calledElement='MLK_PLP_SUB_UPN' (sid-6FA9F818); shared PLPS/OPLPS/MLPS/OMLPS licence-number sequence per FLOWABLE-KNOWLEDGE.md"
+        },
+        {
+          "kod": "post_3",
+          "name": "Tamat Aplikasi Service",
+          "tables": [],
+          "evidence": "serviceTask 'Tamat Aplikasi Service' (sid-CCE09251, expression mlkTamatAplikasiService)"
         }
-      ]
+      ],
+      "bpmn_file": "MLK_PLP_MLPS.bpmn20.xml",
+      "fork_evidence": "NONE — MLPS has no exclusiveGateway with Lulus/Tolak/Tangguh (or MMKN/JKKL) semantics anywhere in this BPMN. The only gateway (sid-1CE72607, unnamed) is a correction/pembetulan loop (${pembetulan == \"true\"} -> back to 3.0 Penyediaan Borang; ${pembetulan == \"false\"} -> proceed to print) around the 2-step form-prep/confirm cycle, not a committee decision.",
+      "confidence": "high",
+      "notes": "MLPS is a 43-line BPMN (whole file read directly, not grepped) — it is genuinely the shortest urusan of the four: Spoc Integration -> Pelupusan Permohonan Service -> Penyediaan Borang 4Ae/L1e -> Pengesahan Borang 4Ae/L1e -> [pembetulan loop] -> Cetakan Borang 4Ae/L1e (callActivity MLK_PLP_SUB_UPN) -> Tamat Aplikasi Service -> Tamat. No Lulus/Tolak/Tangguh outcomes exist because MLPS is a renewal of an ALREADY-approved licence (PLPS), not a fresh committee-gated application; confirmed absent from URUSAN_INVOLVE_JKKL_LIST and not mentioned in the JKKT branch either (URUSAN-FLOW.md). The 'fork' object above is a structural placeholder (single 'lulus'-kind outcome = the only path) so downstream tooling has a consistent shape; there is no real branching to render as Lulus/Tolak/Tangguh."
+    },
+    {
+      "kod": "BPRZ",
+      "name": "Pembatalan Perizaban",
+      "english": "Cancellation of Reservation",
+      "section": "S.64",
+      "modul": "pelupusan",
+      "description": "Internal-officer urusan (Pelupusan module) to cancel an existing land reservation (perizaban). Application is reviewed by Jabatan Teknikal, then goes through a JKKL (Jawatankuasa Khas Kelulusan Lahan) committee sitting whose decision is packaged into an MMKN (Majlis Mesyuarat Kerajaan Negeri) paper; MMKN's own decision (recorded back into the urusan) is the one that actually forks Lulus/Tolak/Tangguh. Lulus leads to charting + gazette (Warta) cancellation of the reservation; Tolak issues a short rejection letter; Tangguh re-tables the item for a future MMKN sitting.",
+      "committee": "JKKL",
+      "stages": [
+        {
+          "kod": "intake",
+          "name": "Kemasukan Maklumat & Semakan Awal",
+          "tables": [
+            "umm_p_aplikasi",
+            "plp_p_pelupusan",
+            "umm_p_pihak_bkptg",
+            "umm_p_rizab"
+          ],
+          "evidence": "userTask name=\"3.0 Semakan Kemasukan Maklumat\" (sid-5BBA4DF7-D952-43E4-8AEE-10CAEB76DD7C), line 7"
+        },
+        {
+          "kod": "jt",
+          "name": "Semakan Jabatan Teknikal",
+          "tables": [
+            "umm_a_jabatan_teknikal",
+            "rjk_agensi",
+            "umm_aplikasi",
+            "umm_a_hkmlk"
+          ],
+          "evidence": "userTask name=\"7.0 Semakan Jabatan Teknikal,Laporan Tanah, Pelan MMKN\" (sid-3E1FF1D8, line 54); \"8.0 Peraku Jabatan Teknikal, Laporan Tanah, Pelan MMKN\" (sid-68462CF8, line 89)"
+        },
+        {
+          "kod": "jkkl_prep",
+          "name": "Penyediaan & Perakuan Rencana JKKL",
+          "tables": [
+            "plp_a_pelupusan",
+            "umm_a_tgsn",
+            "ind_tgsn",
+            "pcp_pengguna"
+          ],
+          "evidence": "userTask name=\"12.0 Penyediaan Rencana JKKL - PDT\" (sid-C2B46018, line 805); \"25.0 Perakuan Rencana JKKL - PTG\" (sid-88DC307E, line 1010)"
+        },
+        {
+          "kod": "jkkl_decision",
+          "name": "Keputusan JKKL",
+          "tables": [
+            "umm_keputusan",
+            "umm_keputusan_mesyuarat",
+            "umm_a_srt"
+          ],
+          "evidence": "userTask name=\"26.0 Keputusan JKKL Dan Penyediaan Surat Keputusan\" (sid-46BD61F9, line 1027) -> \"26.1 Semakan...\" -> \"26.2 Peraku...\" -> exclusiveGateway name=\"Keputusan\" (sid-1BF3FF7F, line 1504): sequenceFlow name=\"Tangguh\" condition ${keputusanJKKL== \"tangguh\"} loops back to sid-46BD61F9 (re-table JKKL sitting); sequenceFlow name=\"Proceed\" condition ${keputusanJKKL== \"proceed\"} advances to userTask \"26.3 Terimaan Keputusan JKKL Dan Penentuan Kelulusan\" (sid-D977A0DE, line 1499). This is an internal committee re-sitting loop, distinct from the MMKN-level Lulus/Tolak/Tangguh fork below."
+        },
+        {
+          "kod": "mmkn_prep",
+          "name": "Penyediaan Risalat MMKN",
+          "tables": [
+            "umm_kertas_mesyuarat",
+            "umm_a_kertas",
+            "plp_a_pelupusan"
+          ],
+          "evidence": "userTask name=\"27.0 Penyediaan Risalat MMKN - PDT\" (sid-24E81C7C, line 250); \"33.0 Penyediaan Risalat MMKN - PTG\" (sid-13D6DC84, line 333); \"36.0 Perakuan Risalat MMKN - PTG\" (sid-16E17230, line 375)"
+        },
+        {
+          "kod": "mmkn_decision",
+          "name": "Kemasukan Keputusan MMKN",
+          "tables": [
+            "umm_keputusan",
+            "umm_keputusan_mesyuarat",
+            "umm_a_srt"
+          ],
+          "evidence": "userTask name=\"38.0 Kemasukan Keputusan MMKN dan Surat Makluman Keputusan\" (sid-8D0AA80A, line 135) feeds exclusiveGateway name=\"Keputusan\" (sid-262639D9, line 430) — the MMKN-level committee-outcome fork.",
+          "fork": {
+            "default": "lulus",
+            "outcomes": [
+              {
+                "kind": "tangguh",
+                "label": "Tangguh",
+                "steps": [
+                  {
+                    "name": "39.0 Penyediaan Surat Keputusan Tangguh",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "sequenceFlow name=\"Tangguh\" sourceRef=sid-262639D9 targetRef=sid-1AF5A411, condition ${keputusan == \"tangguh\"} (line 443-444); userTask sid-1AF5A411, line 420"
+                  },
+                  {
+                    "name": "40.0 Pengesahan Surat Keputusan Tangguh",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"40.0  Pengesahan Surat Keputusan Tangguh\" (sid-497DBB35, line 425)"
+                  }
+                ],
+                "loop": "Re-tabled for a future MMKN sitting — \"68.0 Penyediaan Senarai Semak ke PTG (Tangguh)\" (sid-421E0709, line 435) restarts the MMKN meeting-prep cycle rather than ending the urusan"
+              },
+              {
+                "kind": "tolak",
+                "label": "Tolak",
+                "steps": [
+                  {
+                    "name": "41.0 Semakan Keputusan MMKN dan Surat Makluman Keputusan / 42.0 Pengesahan Keputusan MMKN dan Surat Makluman Keputusan",
+                    "tables": [
+                      "umm_keputusan"
+                    ],
+                    "evidence": "sequenceFlow name=\"Lulus/Tolak\" sourceRef=sid-262639D9 targetRef=sid-9D10C547, condition ${keputusan == \"lulus\" || keputusan== \"tolak\" } (line 457-458); userTask sid-9D10C547 line 410, sid-CE3FB082 line 415"
+                  },
+                  {
+                    "name": "64.0 Penyediaan Surat Tolak Ringkas (PYSTP)",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "sequenceFlow name=\"Tolak\" sourceRef=sid-F5DC3C89 targetRef=sid-7382AC88, condition ${keputusan == \"tolak\"} (line 647-648); userTask sid-7382AC88, line 95"
+                  },
+                  {
+                    "name": "65.0 Semakan Surat Tolak Ringkas (SSTP)",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-F3EF8746, line 101"
+                  },
+                  {
+                    "name": "66.0 Peraku Surat Tolak Ringkas (PSTP)",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-A0628120, line 107"
+                  }
+                ],
+                "end": "Application rejected — Surat Tolak Ringkas (simple rejection letter) issued to applicant; urusan ends"
+              },
+              {
+                "kind": "lulus",
+                "label": "Lulus",
+                "steps": [
+                  {
+                    "name": "41.0 Semakan Keputusan MMKN dan Surat Makluman Keputusan / 42.0 Pengesahan Keputusan MMKN dan Surat Makluman Keputusan",
+                    "tables": [
+                      "umm_keputusan"
+                    ],
+                    "evidence": "same shared confirmation pair as Tolak (sid-9D10C547 / sid-CE3FB082); exclusiveGateway sid-F5DC3C89 default=\"sid-921DDF3E\" (Lulus) when neither the explicit Tolak condition nor a Pembetulan branch fires"
+                  },
+                  {
+                    "name": "43.0 Charting Keputusan Lulus (MLK_TKL_CL_LP)",
+                    "tables": [
+                      "umm_a_dok_keluaran"
+                    ],
+                    "evidence": "sequenceFlow name=\"Lulus\" sourceRef=sid-F5DC3C89 targetRef=sid-BBAF20C9 (line 1062); callActivity id=sid-BBAF20C9 name=\"43.0 Charting Keputusan Lulus (MLK_TKL_CL_LP)\" calledElement=\"MLK_TKL_CL_LP\" (line 580) — an etanah-teknikal callActivity, out of pelupusan module scope"
+                  },
+                  {
+                    "name": "44.0 Penyediaan Draf Notis Cadangan Pembatalan Perizaban dan Surat Iringan ke Pejabat LA",
+                    "tables": [
+                      "dft_a_notis"
+                    ],
+                    "evidence": "userTask sid-B84162E0, line 593, reached from sid-BBAF20C9 via sequenceFlow sid-5916FE1A (line 1349)"
+                  },
+                  {
+                    "name": "50.0 Penyediaan Draf Pembatalan Warta dan Surat Iringan Ke Dewan / 56.0 Muatnaik Pembatalan Warta",
+                    "tables": [
+                      "ind_warta",
+                      "umm_sejarah_mklmt_warta",
+                      "amb_a_mklmt_warta",
+                      "umm_a_rizab",
+                      "ind_rizab"
+                    ],
+                    "evidence": "userTask name=\"50.0 Penyediaan Draf Pembatalan Warta dan Surat Iringan Ke Dewan\" (sid-00740C08, line 615); \"56.0 Muatnaik  Pembatalan Warta\" (sid-FACF5D86, line 624)"
+                  }
+                ],
+                "end": "Application approved — reservation cancellation gazetted (Warta) and notified to PDT/applicant (57.0-61.0 Surat Makluman ke PDT/Pemohon); urusan ends"
+              }
+            ]
+          }
+        }
+      ],
+      "bpmn_file": "MLK_PLP_BPRZ.bpmn20.xml",
+      "fork_evidence": "exclusiveGateway id=\"sid-262639D9-4A31-4486-AFFF-5F135989D32A\" name=\"Keputusan\" (line 430): sequenceFlow name=\"Tangguh\" targetRef=sid-1AF5A411 condition ${keputusan == \"tangguh\"} (line 443-444); sequenceFlow name=\"Lulus/Tolak\" targetRef=sid-9D10C547 condition ${keputusan == \"lulus\" || keputusan== \"tolak\" } (line 457-458). Downstream exclusiveGateway id=\"sid-F5DC3C89-605C-4030-B87D-0BF76B9726C2\" name=\"Keputusan\" default=\"sid-921DDF3E...\" (line 451): sequenceFlow name=\"Tolak\" targetRef=sid-7382AC88 condition ${keputusan == \"tolak\"} (line 647-648); sequenceFlow name=\"Lulus\" targetRef=sid-BBAF20C9 is the DEFAULT flow (line 1062, no conditionExpression).",
+      "confidence": "high",
+      "notes": "A second, internal JKKL-level 'Keputusan' gateway (sid-1BF3FF7F, line 1504) routes ${keputusanJKKL==\"tangguh\"} back to the JKKL decision task itself (re-sit JKKL) vs ${keputusanJKKL==\"proceed\"} onward to MMKN prep — this is a committee re-sitting loop, not the urusan-level Lulus/Tolak/Tangguh fork, so it is folded into stage 'jkkl_decision' rather than given its own fork key. From line ~1615 onward the BPMN carries a large 'Pembetulan' (correction/rework) sub-flow re-using the same task set (e.g. \"3.0 Semakan Kemasukan Maklumat (Pembetulan)\") — excluded from stages[] as it is not part of the first-pass happy path. Table assignments for the JKKL/MMKN decision stages reuse umm_keputusan/umm_keputusan_mesyuarat/umm_a_srt by analogy with the PT curated mapping; the BPMN itself does not name DB tables, only task listener kod (e.g. KJKKLPSK, SKMMKN, PKMMKN) — those kod strings were not independently verified against a data-access layer for this extraction."
+    },
+    {
+      "kod": "PSBS",
+      "name": "Permohonan Serahbalik Berimilik Semula",
+      "english": "Surrender and re-alienation",
+      "section": "S.197 + S.76",
+      "modul": "pelupusan",
+      "description": "AWAM/portal-originated urusan (entry via SPOC integration after a portal carian-rasmi submission, eligible titles restricted to interim/qualified types HSM/PM/HSD/PN). Flowable process starts with a delay + SPOC integration + application-creation service, then runs the standard pelupusan technical/committee-paper track (JT, Risalat MMKN PDT, Risalat MMKN PTG) up to an MMKN committee decision (JKKT-family, not JKKL), which forks Lulus / Tolak / Tangguh.",
+      "committee": "JKKT",
+      "stages": [
+        {
+          "kod": "intake",
+          "name": "Pengesahan & Semakan Kemasukan Maklumat",
+          "tables": [
+            "umm_aplikasi",
+            "umm_a_hkmlk",
+            "plp_a_pelupusan",
+            "umm_a_pihak_bkptg"
+          ],
+          "evidence": "serviceTask 'Spoc Integration Service' (mlkSpocIntegrationService) -> serviceTask 'Pelupusan Permohonan Service' (mlkPelupusanPermohonanService, kod PSBS) -> userTask name=\"3.0 Semakan Kemasukan Maklumat\" -> exclusiveGateway name=\"Perlu JT?\""
+        },
+        {
+          "kod": "jt",
+          "name": "Jabatan Teknikal, Charting Mohon & Laporan Tanah",
+          "tables": [
+            "umm_a_jabatan_teknikal",
+            "rjk_agensi",
+            "umm_a_pelan"
+          ],
+          "evidence": "callActivity name=\"5.0 Charting Mohon (MLK_TKL_CM)\", callActivity name=\"6.0 Penyediaan Laporan Tanah (MLK_TKL_ST)\", userTask name=\"8.0 Semakan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN\", userTask name=\"9.0 Perakuan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN\""
+        },
+        {
+          "kod": "risalat_pdt",
+          "name": "Penyediaan & Perakuan Risalat MMKN - PDT",
+          "tables": [
+            "umm_a_kertas"
+          ],
+          "evidence": "userTask name=\"12.0 Penyediaan Risalat MMKN - PDT (PT)\", userTask name=\"16.0 Perakuan Pentadbir Tanah (PT)\""
+        },
+        {
+          "kod": "risalat_ptg",
+          "name": "Penyediaan & Perakuan Risalat MMKN - PTG",
+          "tables": [
+            "umm_a_kertas"
+          ],
+          "evidence": "userTask name=\"18.0 Penyediaan Risalat MMKN - PTG\", userTask name=\"21.0 Perakuan Risalat MMKN - PTG (PTG)\""
+        },
+        {
+          "kod": "keputusan_awal",
+          "name": "Keputusan Awal — Teruskan atau Tolak Permohonan",
+          "tables": [
+            "umm_aplikasi"
+          ],
+          "evidence": "exclusiveGateway id=sid-261C69FE-5FE7-4AC6-BD01-45463CB0FDD7 name=\"Keputusan Awal\", outgoing sequenceFlow name=\"Teruskan Permohonan\" (-> 12.0 Penyediaan Risalat MMKN - PDT) and default sequenceFlow name=\"Tolak Permohonan\" (-> 43.0 Penyediaan Minit Bebas, an early-reject tail converging on the same Tamat Aplikasi Service as the JKKT Tolak outcome)"
+        },
+        {
+          "kod": "zip_fail",
+          "name": "Zip Fail Dokumen MMKN",
+          "tables": [
+            "umm_a_kertas",
+            "umm_a_dok_kmskn"
+          ],
+          "evidence": "userTask name=\"22.0 Zip Fail Dokumen MMKN\""
+        },
+        {
+          "kod": "keputusan_mmkn",
+          "name": "Kemasukan, Semakan & Perakuan Keputusan MMKN (JKKT)",
+          "tables": [
+            "umm_keputusan",
+            "umm_keputusan_mesyuarat",
+            "umm_a_kertas"
+          ],
+          "evidence": "userTask name=\"23.0 Kemasukan Keputusan MMKN dan Penyediaan Surat Keputusan\", userTask name=\"24.0 Semakan Keputusan MMKN dan Surat Keputusan\", userTask name=\"25.0 Perakuan Keputusan MMKN dan Surat Keputusan\"",
+          "fork": {
+            "default": "lulus",
+            "outcomes": [
+              {
+                "kind": "lulus",
+                "label": "Lulus",
+                "steps": [
+                  {
+                    "name": "Penyediaan, Semakan & Pengesahan Surat Keputusan Lulus dan Borang Notis 5A",
+                    "tables": [
+                      "umm_a_srt",
+                      "dft_a_notis"
+                    ],
+                    "evidence": "userTask name=\"22.0 Penyediaan Surat Keputusan Lulus dan Borang Notis 5A\", name=\"23.0 Semakan Surat Keputusan Lulus dan Borang Notis 5A\", name=\"24.0 Pengesahan Surat Keputusan Lulus dan Borang Notis 5A\""
+                  },
+                  {
+                    "name": "Cetakan Surat Lulus & Charting Keputusan",
+                    "tables": [
+                      "umm_a_srt",
+                      "umm_a_hkmlk"
+                    ],
+                    "evidence": "parallelGateway sid-8D71A774 fans out to callActivity name=\"25.0 Cetakan Dokumen Surat Lulus dan Borang Notis 5A\" (MLK_PLP_SUB_UPN) and callActivity name=\"26.0 Charting Keputusan\" (MLK_TKL_CL)"
+                  },
+                  {
+                    "name": "Bayaran Pelbagai & Senarai Semak Serahbalik Seluruh",
+                    "tables": [
+                      "umm_a_mklmt_premium",
+                      "umm_a_dok_kmskn"
+                    ],
+                    "evidence": "userTask name=\"26.0 Bayaran Pelbagai\" -> userTask name=\"32.0 Penyediaan Senarai Semak Serahbalik Seluruh\""
+                  },
+                  {
+                    "name": "Endorsan Nota Mohon & Daftar Hakmilik Kekal (HKBM/HKGHS)",
+                    "tables": [
+                      "dft_a_nota",
+                      "umm_a_hkmlk"
+                    ],
+                    "evidence": "callActivity name=\"33.0 Endorsan Nota Mohon (SBTL)\" (MLK_DFT_NOTA_HKMLK), userTask name=\"53.0 Semakan Dokumen Kelulusan\", exclusiveGateway name=\"Ada QT?\" branching to callActivity name=\"Daftar Hakmilik Kekal Ganti Hakmilik Sementara (HKGHS) (MLK_DFT_NOTA_HKMLK)\" or callActivity name=\"Daftar Hakmilik Kekal (HKBM) (MLK_DFT_NOTA_HKMLK)\""
+                  }
+                ],
+                "end": "Tamat — Hakmilik Kekal (HKBM atau HKGHS) berdaftar, via serviceTask \"Tamat Aplikasi Service\" (mlkTamatAplikasiService)"
+              },
+              {
+                "kind": "tolak",
+                "label": "Tolak",
+                "steps": [
+                  {
+                    "name": "Penyediaan, Semakan & Peraku Surat Tolak",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"46.0 Penyediaan Surat Tolak\", name=\"47.0 Semakan Surat Tolak\", name=\"48.0 Peraku Surat Tolak\" (reached via parallelGateway sid-1C28E943 off gateway sid-6D352908 sequenceFlow name=\"Tolak\", condition ${keputusan == \"tolak\"})"
+                  },
+                  {
+                    "name": "Cetakan Dokumen Surat Tolak & Endorsan Nota (SBTB)",
+                    "tables": [
+                      "umm_a_srt",
+                      "dft_a_nota"
+                    ],
+                    "evidence": "callActivity name=\"51.0 Cetakan Dokumen Surat Tolak\" (MLK_PLP_SUB_UPN) in parallel with callActivity name=\"Endorsan Nota Mohon (SBTB)\" (MLK_DFT_NOTA_HKMLK)"
+                  }
+                ],
+                "end": "Tamat — Permohonan ditolak, Surat Tolak dikeluarkan, via serviceTask \"Tamat Aplikasi Service\""
+              },
+              {
+                "kind": "tangguh",
+                "label": "Tangguh",
+                "steps": [
+                  {
+                    "name": "Penyediaan & Pengesahan Surat Tangguh",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"27.0 Penyediaan Surat Tangguh\", name=\"28.0 Pengesahan Surat Tangguh\" (from gateway sid-52D42A7D sequenceFlow name=\"Tangguh\", condition ${keputusan == \"tangguh\"})"
+                  },
+                  {
+                    "name": "Penyediaan semula Risalat MMKN (Tangguh) - PTG",
+                    "tables": [
+                      "umm_a_kertas"
+                    ],
+                    "evidence": "userTask name=\"Penyediaan Risalat MMKN dan Ringkasan Risalat (Tangguh) - PTG\", name=\"Semakan Risalat MMKN dan Ringkasan Risalat (Tangguh) - PTG (KPT)\"/\"(KS)\", name=\"Perakuan Risalat MMKN (Tangguh)- PTG\""
+                  },
+                  {
+                    "name": "Senarai Semak & Zip Fail Dokumen MMKN (Tangguh)",
+                    "tables": [
+                      "umm_a_dok_kmskn",
+                      "umm_a_kertas"
+                    ],
+                    "evidence": "userTask name=\"41.0 Penyediaan Senarai Semak ke PTG (Tangguh)\" -> userTask name=\"Zip Fail Dokumen MMKN (Tangguh)\""
+                  }
+                ],
+                "end": "No outgoing sequenceFlow found from userTask \"Zip Fail Dokumen MMKN (Tangguh)\" (sid-65147853) in this BPMN — the resubmission-for-next-MMKN-sitting continuation is not modeled beyond this task; treated as a modeling gap, not re-derived/invented."
+              }
+            ]
+          }
+        }
+      ],
+      "bpmn_file": "MLK_PLP_PSBS.bpmn20.xml",
+      "fork_evidence": "exclusiveGateway id=sid-52D42A7D-B172-4FCA-AF3C-EDC699A33855 name=\"Keputusan\": sequenceFlow id=sid-C2182E37 name=\"Tangguh\" condition ${keputusan == \"tangguh\"} -> 27.0 Penyediaan Surat Tangguh; sequenceFlow id=sid-76F9C152 name=\"Lulus/Tolak\" condition ${keputusan == \"lulus\" || keputusan== \"tolak\"} -> 24.0 Semakan Keputusan MMKN dan Surat Keputusan -> 25.0 Perakuan Keputusan MMKN dan Surat Keputusan -> gateway sid-E89C42F0 (Pembetulan, Tidak) -> second exclusiveGateway id=sid-6D352908-C2B6-409B-8A2B-81BAA7C39871 name=\"Keputusan\": sequenceFlow id=sid-838426D2 name=\"Lulus\" condition ${keputusan == \"lulus\" } -> 22.0 Penyediaan Surat Keputusan Lulus dan Borang Notis 5A; sequenceFlow id=sid-7FDB874B name=\"Tolak\" condition ${keputusan == \"tolak\" } -> parallelGateway sid-1C28E943 -> 46.0 Penyediaan Surat Tolak / Endorsan Nota Mohon (SBTB)",
+      "confidence": "medium",
+      "notes": "All three outcomes (lulus/tolak/tangguh) are genuinely routed in this BPMN — PSBS does have a modeled Tangguh branch despite not being in URS_TANGGUH_LIST (that list likely governs a different concern, e.g. UI/report inclusion, not BPMN routing). Confidence held at medium (not high) solely because the Tangguh branch's terminal task \"Zip Fail Dokumen MMKN (Tangguh)\" (sid-65147853) has no outgoing sequenceFlow anywhere in the file — verified by full-file grep, not a sampling gap. Main linear path (intake -> JT -> Risalat PDT -> Risalat PTG -> Keputusan Awal -> Zip Fail -> Keputusan MMKN) and the Lulus/Tolak tails are high-confidence, directly evidenced. Committee-decision gateway naming ('Keputusan') matches the analog PT shape but is a two-stage split (Tangguh peeled off first, then Lulus vs Tolak) rather than a single 3-way gateway — reflected verbatim in fork_evidence. Table umm_a_pelupusan from the analog note does NOT exist in schema_parse.json; used plp_a_pelupusan (which does exist) instead for the intake stage."
+    },
+    {
+      "kod": "PPJK",
+      "name": "Permohonan Pajakan Tanah Perizaban",
+      "english": "Lease of Reserved Land",
+      "section": "S.63",
+      "modul": "pelupusan",
+      "description": "Application for lease of reserved land under Kanun Tanah Negara S.63. Flows through district/technical semakan, Jabatan Teknikal report, JKKL Rencana preparation (PDT and PTG tracks), a JKKL/MMKN committee decision gate, then either a Surat Keputusan Lulus (JPPH valuation + lease registration onward), a Surat Tolak (rejection), or a Surat Keputusan Tangguh (deferred, re-tabled at a future sitting).",
+      "committee": "JKKL",
+      "stages": [
+        {
+          "kod": "intake_semakan",
+          "name": "Semakan Kemasukan Maklumat",
+          "tables": [
+            "umm_aplikasi",
+            "umm_a_hkmlk",
+            "plp_a_pelupusan",
+            "umm_a_pihak_bkptg"
+          ],
+          "evidence": "userTask name=\"3.0 Semakan Kemasukan Maklumat\" (sid-AC6482F9-B12F-4485-BE15-4BCFAEFBBC42)"
+        },
+        {
+          "kod": "jabatan_teknikal",
+          "name": "Semakan & Perakuan Jabatan Teknikal / Laporan Tanah",
+          "tables": [
+            "umm_a_jabatan_teknikal",
+            "rjk_agensi"
+          ],
+          "evidence": "userTask name=\"7.0 Semakan Jabatan Teknikal, Laporan Tanah atau Pelan Mesyuarat JKBB\" (sid-3547FAA3-9EA6-4C4C-86DC-18708A87A096); name=\"8.0 Perakuan Jabatan  Teknikal, Laporan Tanah  atau Pelan Mesyuarat JKBB\" (sid-5D7C8F73-7531-48F2-A80A-0199C9B71587)"
+        },
+        {
+          "kod": "jkkl_prep",
+          "name": "Penyediaan & Perakuan Rencana JKKL",
+          "tables": [
+            "plp_a_pelupusan"
+          ],
+          "evidence": "userTask name=\"12.0 Penyediaan Rencana JKKL - PDT\" (sid-BCED5013-4392-4919-BEBD-6AD25D3C6D94); name=\"16.0 Perakuan Rencana JKKL - PDT\" (sid-7E8A17C6-3965-4578-9150-A2760A5E1878) — parallel PTG-track equivalents: \"21.0 Penyediaan Syor SO dan Rencana JKKL – PTG\" / \"25.0 Perakuan Rencana JKKL - PTG\""
+        },
+        {
+          "kod": "jkkl_keputusan",
+          "name": "Keputusan JKKL / MMKN Dan Penyediaan Surat Keputusan",
+          "tables": [
+            "plp_a_pelupusan",
+            "umm_keputusan"
+          ],
+          "evidence": "userTask name=\"26.0 Keputusan JKKL Dan Penyediaan Surat Keputusan\" (sid-A929A49A-C397-4E67-90C7-1C026E5D243F, taskListener kod KJKKLPSK); name=\"38.0 Kemasukan Keputusan MMKN dan Penyediaan Surat Keputusan\" (sid-81D9BAD2-B097-4FB8-BCF5-9E5299B82A29, taskListener kod KKMMKN)",
+          "fork": {
+            "default": "lulus",
+            "outcomes": [
+              {
+                "kind": "lulus",
+                "label": "Lulus",
+                "steps": [
+                  {
+                    "name": "43.0 Penyediaan Surat Keputusan Lulus",
+                    "tables": [
+                      "plp_a_pelupusan",
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"43.0 Penyediaan Surat Keputusan Lulus\" (sid-0A6D015A-D742-4A60-B8EE-052C826875F9), reached via default flow sid-3A8A0654-04F4-4FC6-90EF-4BB417D2A325 (name=\"Lulus\") off gateway sid-FDA27381"
+                  },
+                  {
+                    "name": "44.0 Semakan Surat Keputusan Lulus",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"44.0 Semakan Surat Keputusan Lulus\" (sid-DDA5815E-37FE-4A72-BF2E-690E32AF3AE5, taskListener kod SSK)"
+                  },
+                  {
+                    "name": "45.0 Pengesahan Surat Keputusan Lulus",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"45.0 Pengesahan Surat Keputusan Lulus\" (sid-B69717B6-514C-4A8C-A558-57008C096002, taskListener kod PSSK)"
+                  }
+                ],
+                "end": "Surat Keputusan Lulus disahkan — permohonan diluluskan; alur diteruskan ke Nilaian JPPH (gateway \"Perlu Nilaian JPPH?\" sid-91A7F600 → userTask \"49.0 Penyediaan Surat Nilaian JPPH\") dan seterusnya pendaftaran pajakan (\"54.0 Penyediaan Borang 4Ee dan P3e\")."
+              },
+              {
+                "kind": "tolak",
+                "label": "Tolak",
+                "steps": [
+                  {
+                    "name": "62.0 Penyediaan Surat Tolak",
+                    "tables": [
+                      "plp_a_pelupusan",
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"62.0 Penyediaan Surat Tolak\" (sid-DBB43062-9571-4F6E-A0D8-DB504C5D4F93), reached via flow sid-2B0EF18C-B81C-4732-91B0-B01034CD2938 (name=\"Tolak\", conditionExpression ${keputusan==\"tolak\"}) off gateway sid-FDA27381"
+                  },
+                  {
+                    "name": "63.0 Semakan Surat Tolak",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"63.0 Semakan Surat Tolak\" (sid-8611DD7C-F363-47FA-B010-3997B5A714DD)"
+                  },
+                  {
+                    "name": "64.0 Peraku Surat Tolak",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"64.0 Peraku Surat Tolak\" (sid-8D746F46-30C3-4206-8BB8-EDC9B7F486AD)"
+                  }
+                ],
+                "end": "Surat Tolak diperakukan — permohonan ditolak."
+              },
+              {
+                "kind": "tangguh",
+                "label": "Tangguh",
+                "steps": [
+                  {
+                    "name": "39.0 Penyediaan Surat Keputusan Tangguh",
+                    "tables": [
+                      "plp_a_pelupusan",
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"39.0 Penyediaan Surat Keputusan Tangguh\" (sid-0152FEF4-AD08-45D1-99C0-239CA7AF926A), reached via flow sid-67C86DEB-7179-447D-97A1-688DE407FAFB (name=\"Tangguh\", conditionExpression ${keputusan == \"tangguh\"}) off gateway sid-277187EA"
+                  },
+                  {
+                    "name": "40.0 Peraku Surat Keputusan Tangguh",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"40.0 Peraku Surat Keputusan Tangguh\" (sid-A11B2BAE-777D-417B-B88C-FED50529F6B6)"
+                  },
+                  {
+                    "name": "72.0 Penyediaan Senarai Semak Ke PTG - Tangguh",
+                    "tables": [
+                      "plp_a_pelupusan"
+                    ],
+                    "evidence": "userTask name=\"72.0 Penyediaan Senarai Semak Ke PTG - Tangguh\" (sid-D6E998F7-A02A-43BA-9C88-A73D665DEDF4)"
+                  }
+                ],
+                "loop": "Kes ditangguhkan — dijadualkan semula untuk dibentangkan pada mesyuarat JKKL/MMKN akan datang (re-table, not a terminal outcome)."
+              }
+            ]
+          }
+        }
+      ],
+      "bpmn_file": "MLK_PLP_PPJK.bpmn20.xml",
+      "fork_evidence": "Gateway sid-277187EA-C5BF-4629-8C96-4C87CB7C4E56 name=\"Keputusan\" (sourceRef=sid-81D9BAD2, task \"38.0 Kemasukan Keputusan MMKN dan Penyediaan Surat Keputusan\"): flow sid-85E40191 name=\"Lulus/Tolak\" conditionExpression ${keputusan == \"lulus\" || keputusan== \"tolak\"} -> targetRef sid-AA2C4433 (\"41.0 Semakan Keputusan MMKN dan Surat Keputusan\"); flow sid-67C86DEB name=\"Tangguh\" conditionExpression ${keputusan == \"tangguh\"} -> targetRef sid-0152FEF4 (\"39.0 Penyediaan Surat Keputusan Tangguh\"). Downstream, the Lulus/Tolak leg passes through \"42.0 Peraku Keputusan MMKN dan Surat Keputusan\" (sid-198DE18F) into gateway sid-FDA27381-633A-493A-8838-A03F0DBDB722 name=\"Keputusan\" default=sid-3A8A0654 (\"Lulus\"): flow sid-2B0EF18C name=\"Tolak\" conditionExpression ${keputusan==\"tolak\"} -> targetRef sid-DBB43062 (\"62.0 Penyediaan Surat Tolak\"); default flow sid-3A8A0654 name=\"Lulus\" -> targetRef sid-0A6D015A (\"43.0 Penyediaan Surat Keputusan Lulus\").",
+      "confidence": "high",
+      "notes": "This BPMN contains a SECOND, distinct decision loop internal to the JKKL sitting itself: userTask \"26.0 Keputusan JKKL Dan Penyediaan Surat Keputusan\" (sid-A929A49A, kod KJKKLPSK) -> \"26.1 Semakan...\" -> \"26.2 Peraku...\" -> gateway sid-6B1D745A name=\"Keputusan\" on variable keputusanJKKL: ${keputusanJKKL==\"proceed\"} -> \"26.3 Terimaan Keputusan JKKL Dan Penentuan Kelulusan\"; ${keputusanJKKL==\"tangguh\"} -> loops back to 26.0 itself. This is JKKL's internal recommend/re-table gate BEFORE the case reaches the MMKN-track keputusan (lulus/tolak/tangguh) gateway documented above as the main fork — it was not used as the primary fork because it lacks a 'tolak' branch and its outcomes (proceed/re-loop-26.0) are not the BA-recognizable Lulus/Tolak/Tangguh vocabulary the task asked for. Also: PDT vs PTG are two parallel routing tracks (agihanKepada variable: PT/PPD/KPPD/PTNH vs KPT/PPTG/TPTG/KS) collapsed into single abstract stages above — both tracks converge on the same MMKN keputusan gateway (sid-277187EA) and same Lulus/Tolak split (sid-FDA27381). No 'warta'/gazette userTask exists anywhere in this BPMN (grepped case-insensitively, zero matches) despite PPJK's URUSAN_PERIZABAN_LIST membership — pewartaan for reserved-land lease appears to live in a separate/related urusan, not in PPJK's own flow, so no warta stage was added. Table plp_a_pelupusan used in place of the prompt's suggested 'umm_a_pelupusan' (does not exist in schema_parse.json); dft_p_pajakan/dft_p_btrn_pajakan were NOT assigned to the Lulus tail because the BPMN evidence for the Lulus branch (43.0/44.0/45.0) is about Surat Keputusan generation, not lease registration itself — the registration step (\"54.0 Penyediaan Borang 4Ee dan P3e\") lies further downstream past the 4-step cap and is only referenced in the 'end' narrative, not as a scored step/table."
+    },
+    {
+      "kod": "PLTP",
+      "name": "Permohonan Lanjut Tempoh Pajakan",
+      "english": "Extension of Lease Term",
+      "section": "S.90A",
+      "modul": "pelupusan",
+      "description": "AWAM/portal carian-rasmi-entry urusan (No Resit Carian Rasmi lookup, interim-title-only: HSM/PM/HSD/PN eligible, GRN/GM/GMM/HMM blocked). After portal submission, an internal officer reviews intake, Jabatan Teknikal (JT) charts/reports/plans the land, PDT (Pentadbir Tanah) makes a preliminary recommendation, then a Risalat MMKN briefing paper is prepared and endorsed up through PDT and PTG (state) levels before going to the JKKT committee for a Lulus/Tolak/Tangguh decision. Lulus hands off via an MLK_DFT_NOTA_HKMLK callActivity to the PSPL pendaftaran (registration) sub-urusan; Tolak produces a formal Surat Tolak (PYSTP/SSTP/PSTP family, shared with the early-PDT-reject path); Tangguh produces a Surat Keputusan Tangguh and ends immediately.",
+      "committee": "JKKT",
+      "stages": [
+        {
+          "kod": "intake",
+          "name": "Semakan Kemasukan Maklumat (Portal AWAM)",
+          "tables": [
+            "umm_p_aplikasi",
+            "umm_p_hkmlk",
+            "plp_p_pelupusan",
+            "umm_p_pihak_bkptg"
+          ],
+          "evidence": "userTask name=\"Semakan Kemasukan Maklumat\" (sid-ADEC9079); immediately followed by callActivity name=\"Endorsan Nota Mohon (PSPM)\" calledElement=\"MLK_DFT_NOTA_HKMLK\" (sid-C0D5352B)"
+        },
+        {
+          "kod": "jt_review",
+          "name": "Jabatan Teknikal — Charting, Laporan Tanah & Pelan Mesyuarat",
+          "tables": [
+            "umm_a_jabatan_teknikal",
+            "rjk_agensi",
+            "plp_a_pelupusan"
+          ],
+          "evidence": "callActivity name=\"1.0 Jabatan Teknikal (MLK_PLP_SUB_JBTN_TEK)\" (sid-6C67B32E); userTask name=\"8.0 Semakan Jabatan Teknikal, Laporan Tanah dan Pelan Mesyuarat\" (sid-657C7B57)"
+        },
+        {
+          "kod": "pdt_risalat",
+          "name": "Perakuan JT & Risalat MMKN Peringkat PDT",
+          "tables": [
+            "plp_a_pelupusan",
+            "umm_a_tgsn",
+            "ind_tgsn"
+          ],
+          "evidence": "userTask name=\"9.0 Perakuan Jabatan Teknikal, Laporan Tanah, Pelan MMK\" (sid-DF436D43); userTask name=\"12.0 Penyediaan Risalat MMKN - PDT\" (sid-7FCDE9E0); userTask name=\"16.0 Perakuan Pentadbir Tanah (PT)\" (sid-C3BE511C) — reached via gateway name=\"Keputusan?\" (sid-6D1C5375, condition ${keputusanAwal} not \"false\") recommending forward to committee"
+        },
+        {
+          "kod": "handoff_ptg",
+          "name": "Penyediaan Senarai Semak ke PTG",
+          "tables": [
+            "plp_a_pelupusan",
+            "umm_a_tgsn"
+          ],
+          "evidence": "userTask name=\"22.0 Penyediaan Senarai Semak ke PTG\" (sid-8C86BC79)"
+        },
+        {
+          "kod": "ptg_risalat",
+          "name": "Risalat MMKN & Ringkasan Risalat — Peringkat PTG",
+          "tables": [
+            "plp_a_pelupusan",
+            "umm_a_tgsn",
+            "pcp_pengguna"
+          ],
+          "evidence": "userTask name=\"18.0 Penyediaan Risalat MMKN dan Ringkasan Risalat - PTG\" (sid-63BD0F2B); userTask name=\"21.0 Perakuan Risalat MMKN dan Ringkasan Risalat - PTG\" (sid-9B424A83)"
+        },
+        {
+          "kod": "zip_fail",
+          "name": "Zip Fail Dokumen MMKN",
+          "tables": [
+            "plp_a_pelupusan"
+          ],
+          "evidence": "userTask name=\"22.0 Zip Fail Dokumen MMKN\" (sid-7687D05E)"
+        },
+        {
+          "kod": "kkpt_decision",
+          "name": "Kemasukan Keputusan MMKN (Keputusan JKKT)",
+          "tables": [
+            "umm_keputusan",
+            "umm_keputusan_mesyuarat",
+            "umm_a_srt",
+            "plp_a_pelupusan"
+          ],
+          "evidence": "userTask name=\"23.0 Kemasukan Keputusan MMKN dan Penyediaan Surat Makluman Keputusan\" (sid-986A8BCD), tugasan kod KKMMKN, peranan PT; immediately followed by exclusiveGateway name=\"Keputusan\" (sid-D1225CE9)",
+          "fork": {
+            "default": "lulus",
+            "outcomes": [
+              {
+                "kind": "lulus",
+                "label": "Lulus",
+                "steps": [
+                  {
+                    "name": "Semakan & Pengesahan Keputusan MMKN",
+                    "tables": [
+                      "umm_keputusan",
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"24.0 Semakan Keputusan MMKN Dan Surat Makluman Keputusan\" (sid-C258E3FF, kod SKMMKN); userTask name=\"25.0 Pengesahan Keputusan MMKN dan Surat Makluman Keputusan\" (sid-BFEC5B4A, kod PKMMKN) — reached from sid-D1225CE9 condition ${keputusan == \"lulus\"}, confirmed again at 2nd gateway exclusiveGateway name=\"Keputusan\" (sid-95A41221) condition ${keputusan == \"lulus\"}"
+                  },
+                  {
+                    "name": "Penyediaan Surat Keputusan & Borang Notis 5A",
+                    "tables": [
+                      "dft_a_notis",
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"26.0 Penyediaan Surat Keputusan dan Borang Notis 5A\" (sid-2A5F512A, kod PYSKN5A); userTask name=\"27.0 Semakan Surat Keputusan dan Borang Notis 5A\" (sid-B83D447F, kod SSKN5A); userTask name=\"28.0 Pengesahan Surat Keputusan dan Borang Notis 5A\" (sid-3AA82C08, kod PSKN5A)"
+                  },
+                  {
+                    "name": "Cetakan Surat Lulus, Bayaran & Senarai Semak",
+                    "tables": [
+                      "umm_a_srt",
+                      "plp_a_pelupusan"
+                    ],
+                    "evidence": "callActivity name=\"29.0 Cetakan Dokumen Surat Lulus (MLK_PLP_SUB_UPN)\" (sid-D1961E51); userTask name=\"30.0 Bayaran Pelbagai\" (sid-98ACDFF8, kod PL); userTask name=\"31.0 Penyediaan Senarai Semak Lanjut Tempoh Pajakan - PSPL\" (sid-81B253CD, kod PSSTL)"
+                  },
+                  {
+                    "name": "Endorsan Nota & Serahan ke Pendaftaran (PSPL)",
+                    "tables": [
+                      "dft_p_pajakan",
+                      "dft_a_nota"
+                    ],
+                    "evidence": "callActivity name=\"32.0 Endorsan Nota Lulus Lanjut Tempoh Pajakan - PSPL\" calledElement=\"MLK_DFT_NOTA_HKMLK\" (sid-C71DF3CE, flowable:in nextUrusan=\"PSPL\", urusan=\"PLTP\", applicationName=\"etanah-pendaftaran\")"
+                  }
+                ],
+                "end": "serviceTask name=\"Servis Tamat Aplikasi\" (sid-AA5D1496, mlkTamatAplikasiService) -> endEvent name=\"End process\" (sid-DC3DC916)"
+              },
+              {
+                "kind": "tolak",
+                "label": "Tolak",
+                "steps": [
+                  {
+                    "name": "Semakan & Pengesahan Keputusan MMKN",
+                    "tables": [
+                      "umm_keputusan",
+                      "umm_a_srt"
+                    ],
+                    "evidence": "same shared task instance as Lulus: userTask name=\"24.0 Semakan Keputusan MMKN Dan Surat Makluman Keputusan\" (sid-C258E3FF); userTask name=\"25.0 Pengesahan Keputusan MMKN dan Surat Makluman Keputusan\" (sid-BFEC5B4A) — reached from sid-D1225CE9 condition ${keputusan == \"tolak\"} (sequenceFlow sid-2B076F32); diverges from Lulus at 2nd gateway sid-95A41221 condition ${keputusan == \"tolak\"} (sequenceFlow sid-E522B617) to merge gateway sid-10F8238E"
+                  },
+                  {
+                    "name": "Penyediaan Surat Tolak",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"47.0 Penyediaan Surat Tolak\" (sid-8CEC85EC), taskListener receiveUserTask(\"PYSTP\",\"PT\",task.id)"
+                  },
+                  {
+                    "name": "Semakan & Peraku Surat Tolak",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"48.0 Semakan Surat Tolak\" (sid-D169A047, kod SSTP); userTask name=\"49.0 Peraku Surat Tolak\" (sid-64144BAF, kod PSTP)"
+                  },
+                  {
+                    "name": "Cetakan Dokumen Surat Tolak",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "callActivity name=\"51.0 Cetakan Dokumen Surat Tolak (MLK_PLP_SUB_UPN)\" (sid-BF49045B)"
+                  }
+                ],
+                "end": "serviceTask name=\"Servis Tamat Aplikasi\" (sid-AA5D1496) -> endEvent name=\"End process\" (sid-DC3DC916) — same terminal service/end node as Lulus"
+              },
+              {
+                "kind": "tangguh",
+                "label": "Tangguh",
+                "steps": [
+                  {
+                    "name": "Penyediaan & Pengesahan Surat Keputusan Tangguh",
+                    "tables": [
+                      "umm_a_srt",
+                      "umm_keputusan"
+                    ],
+                    "evidence": "userTask name=\"33.0 Penyediaan Surat Keputusan Tangguh\" (sid-576C0C97, kod PYSKT), reached directly from sid-D1225CE9 condition ${keputusan == \"tangguh\"}; userTask name=\"34.0 Pengesahan Surat Keputusan Tangguh\" (sid-CF83012A, kod PSKTGH)"
+                  }
+                ],
+                "end": "endEvent name=\"Tangguh MMKN\" (sid-29DC62E8) — dedicated end event, distinct from the shared \"End process\" node used by Lulus/Tolak"
+              }
+            ]
+          }
+        }
+      ],
+      "bpmn_file": "MLK_PLP_PLTP.bpmn20.xml",
+      "fork_evidence": "exclusiveGateway id=\"sid-D1225CE9-F52D-49D6-A936-0714B1DF470B\" name=\"Keputusan\": sequenceFlow id=\"sid-3712D8BB\" name=\"Tangguh\" conditionExpression ${keputusan == \"tangguh\"} -> sid-576C0C97 (33.0 Penyediaan Surat Keputusan Tangguh); sequenceFlow id=\"sid-138212C9\" name=\"Lulus\" conditionExpression ${keputusan == \"lulus\"} -> sid-C258E3FF (24.0 Semakan Keputusan MMKN); sequenceFlow id=\"sid-2B076F32\" name=\"Tolak\" conditionExpression ${keputusan == \"tolak\"} -> sid-C258E3FF (same target as Lulus). Lulus/Tolak reconverge at 24.0/25.0 then split again at a second exclusiveGateway id=\"sid-95A41221-8433-47AD-8459-D65669842571\" name=\"Keputusan\": sequenceFlow id=\"sid-6EA3DBFA\" name=\"Lulus\" ${keputusan == \"lulus\"} -> sid-2A5F512A (26.0 Notis 5A path); sequenceFlow id=\"sid-E522B617\" name=\"Tolak\" ${keputusan == \"tolak\"} -> sid-10F8238E (merge gateway feeding the 47.0-51.0 Surat Tolak family, PYSTP/SSTP/PSTP, which is shared with the earlier PDT-level Tolak Awal path from gateway sid-6D1C5375 name=\"Keputusan?\" condition ${keputusanAwal == \"false\"}).",
+      "confidence": "high",
+      "notes": "Verified zero occurrences of a distinct JKKT-specific 'Tangguh' end path other than the dedicated 'Tangguh MMKN' end event (sid-29DC62E8) — Tangguh terminates immediately after the two Tangguh letter tasks with no further routing. The BPMN also contains an earlier, separate PDT-level preliminary reject ('Tolak Awal', gateway sid-6D1C5375 name=\"Keputusan?\", var keputusanAwal) that occurs BEFORE the committee stage and merges into the SAME Surat Tolak family (47.0-51.0, gateway sid-10F8238E) used by the JKKT committee Tolak outcome — this is a pre-committee shortcut, not a JKKT outcome, so it was excluded from stages[]/fork per task scope (only the committee-decision gateway sid-D1225CE9 was modeled as the fork). Many additional exclusiveGateways in this file (name=\"Pembetulan\", \"Agihan Kepada\", \"Pindaan\", \"Jenis Pindaan\") are rework/routing loops unrelated to the committee outcome and were excluded per task instructions. Table umm_a_pelupusan (used in the PT analog) does not exist in schema_parse.json for this build; substituted plp_a_pelupusan / plp_p_pelupusan (both verified present) as the pelupusan-urusan table. dft_a_hkmlk and dft_a_btrn_pajakan (suggested in the task hint) also do not exist in schema_parse.json; substituted verified dft_p_pajakan / dft_a_nota for the PSPL pendaftaran handoff."
+    },
+    {
+      "kod": "PRBB",
+      "name": "Permohonan Permit Bahan Batuan",
+      "english": "Application for Stone Material Permit",
+      "section": "S.70 KTN",
+      "modul": "pelupusan",
+      "description": "AWAM e-Mohon permit application to extract/remove stone material (Borang 4C) from state land; routed by 'kelulusan' variable to one of three approving-authority tracks (Pentadbir Tanah / PTG / JKBB) before a single converged Lulus/Tolak(/Tangguh on the JKBB track) decision.",
+      "committee": "JKBB (Jawatankuasa Khas Bahan Batuan) — mid-level track; also has Pentadbir Tanah (DO) and PTG-only tracks with no committee",
+      "stages": [
+        {
+          "kod": "intake",
+          "name": "Permohonan Diterima (AWAM e-Mohon)",
+          "tables": [
+            "umm_p_aplikasi",
+            "umm_p_hkmlk",
+            "plp_p_pelupusan",
+            "umm_p_pihak_bkptg"
+          ],
+          "evidence": "No dedicated BPMN userTask for portal submission — process instance begins with 'DELAY (35 s)' then the first real tugasan '3.0 Semakan Kemasukan Maklumat'; AWAM-entry classification per project brief, not directly evidenced inside this BPMN."
+        },
+        {
+          "kod": "semakan",
+          "name": "Semakan Kemasukan Maklumat",
+          "tables": [
+            "umm_aplikasi",
+            "umm_a_hkmlk",
+            "plp_a_pelupusan",
+            "umm_a_pihak_bkptg"
+          ],
+          "evidence": "userTask sid-AC6482F9 name=\"3.0 Semakan Kemasukan Maklumat\""
+        },
+        {
+          "kod": "jt",
+          "name": "Jabatan Teknikal — Laporan Tanah / Pelan / Perakuan",
+          "tables": [
+            "umm_a_jabatan_teknikal",
+            "rjk_agensi"
+          ],
+          "evidence": "callActivity sid-A5D04420 name=\"5.0 Penyediaan Laporan Tanah (MLK_TKL_ST)\"; userTask sid-5D7C8F73 name=\"7.0 Perakuan Jabatan  Teknikal, Laporan Tanah  atau Pelan Mesyuarat\""
+        },
+        {
+          "kod": "keputusan-awal",
+          "name": "Keputusan Awal (Teruskan / Tolak Ringkas)",
+          "tables": [
+            "umm_a_tgsn",
+            "ind_tgsn",
+            "pcp_pengguna"
+          ],
+          "evidence": "sequenceFlow name=\"Terus Permohonan\" cond ${keputusanAwal==\"true\"}; sequenceFlow name=\"Tolak Ringkas\" cond ${keputusanAwal==\"false\"} — both from exclusiveGateway sid-69DA65CB"
+        },
+        {
+          "kod": "kkpt",
+          "name": "Penyediaan Rencana (Pentadbir Tanah / PTG / JKBB) — routing",
+          "tables": [
+            "plp_a_pelupusan",
+            "umm_keputusan_mesyuarat"
+          ],
+          "evidence": "exclusiveGateway sid-69CCE68D name=\"Keputusan\": edge \"Pentadbir Tanah\" cond ${kelulusan==\"JNS_KELULUSAN_DO\"}→\"11.0 Penyediaan Rencana Pentadbir Tanah\"; edge \"PTG\" cond ${kelulusan==\"JNS_KELULUSAN_PTG\"}→\"15.0 Penyediaan Rencana - PDT\"; edge \"JKBB\" cond ${kelulusan==\"JNS_KELULUSAN_JKBB\"}→\"26.0 Penyediaan Rencana JKBB - PDT\""
+        },
+        {
+          "kod": "jkbb",
+          "name": "Keputusan Jawatankuasa (Lulus / Tolak / Tangguh)",
+          "tables": [
+            "plp_a_pelupusan",
+            "umm_keputusan"
+          ],
+          "evidence": "userTask sid-9DA40AFA name=\"38.0 Kemasukan Keputusan JKBB Dan Penyediaan Surat Keputusan\"",
+          "fork": {
+            "default": "lulus",
+            "outcomes": [
+              {
+                "kind": "lulus",
+                "label": "Lulus",
+                "steps": [
+                  {
+                    "name": "43.0 Penyediaan Surat Keputusan Lulus",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-0985F7E9; reached from all 3 tracks — sid-B061EA09 name=\"Lulus PT\" cond ${keputusanPTNH==\"lulus\"}, sid-...(\"Lulus\") cond ${keputusanPTG==\"Lulus\"}, sid-...(\"Lulus\") cond ${keputusanJKBB==\"lulus\"}"
+                  },
+                  {
+                    "name": "48.0 Penyediaan Borang 4Ce dan P1e",
+                    "tables": [
+                      "plp_a_pelupusan"
+                    ],
+                    "evidence": "userTask sid-F13F9A89 name=\"48.0 Penyediaan Borang 4Ce dan P1e\""
+                  }
+                ],
+                "end": "Permit Bahan Batuan diluluskan — Borang 4Ce & P1e dikeluarkan"
+              },
+              {
+                "kind": "tolak",
+                "label": "Tolak",
+                "steps": [
+                  {
+                    "name": "56.0 Penyediaan Surat Tolak",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-DC3BFB44; reached via sid-5ADA1E95 name=\"Tolak PT\" cond ${keputusanPTNH==\"tolak\"}, cond ${keputusanPTG==\"Tolak\"}, cond ${keputusanJKBB==\"tolak\"}"
+                  },
+                  {
+                    "name": "58.0 Pengesahan Surat Tolak",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-5E35B199 name=\"58.0 Pengesahan Surat Tolak\""
+                  }
+                ],
+                "end": "Permohonan ditolak"
+              },
+              {
+                "kind": "tangguh",
+                "label": "Tangguh",
+                "steps": [
+                  {
+                    "name": "39.0 Penyediaan Surat Keputusan Tangguh",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-81C44DC9, edge cond ${keputusanJKBB==\"tangguh\"}"
+                  },
+                  {
+                    "name": "40.0 Peraku Surat Keputusan Tangguh",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-940869F6"
+                  }
+                ],
+                "loop": "JKBB-track only — re-tabled to next JKBB meeting (loops back to Kemasukan Keputusan JKBB)"
+              }
+            ]
+          }
+        }
+      ],
+      "bpmn_file": "MLK_PLP_PRBB.bpmn20.xml",
+      "fork_evidence": "exclusiveGateway sid-2B58FA39: edge name=\"Lulus/Tolak\" cond ${keputusanJKBB==\"lulus\" || keputusanJKBB==\"tolak\"}→sid-B8AE4F07(41.0 Semakan Keputusan JKBB); edge name=\"Tangguh\" cond ${keputusanJKBB==\"tangguh\"}→sid-81C44DC9(39.0 Penyediaan Surat Keputusan Tangguh). Downstream per-track Lulus/Tolak gates: sid-5AF1C221 (PT track: keputusanPTNH lulus/tolak), sid-F8E165B0 (PTG track: keputusanPTG Lulus/Tolak), sid-B1DFF3EC (JKBB track: keputusanJKBB lulus/tolak) all converge to the same sid-0985F7E9 (43.0 SKL) / sid-DC3BFB44 (56.0 Surat Tolak).",
+      "confidence": "medium",
+      "notes": "3 parallel approving-authority tracks (Pentadbir Tanah/DO, PTG, JKBB) converge into ONE Lulus tail and ONE Tolak tail; only the JKBB track carries a Tangguh outcome. JKBB full name not confirmed in knowledge files (inferred by analogy to JKKL = Jawatankuasa Khas Kelulusan Lahan); flag for confirmation. callActivity targets are MLK_TKL_ST/CM/PPM (teknikal) and MLK_PLP_SUB_JBTN_TEK/UPN (pelupusan sub-process) — all in-scope per BPMN-first check, no cross-module edit implied by this read-only extraction."
+    },
+    {
+      "kod": "PRU",
+      "name": "Permohonan Permit Ruang Udara",
+      "english": "Application for Airspace Permit",
+      "section": "S.75 KTN",
+      "modul": "pelupusan",
+      "description": "AWAM e-Mohon permit application for use of airspace over state land (Borang Jadual XVIII); routed by 'kelulusan' to Pentadbir Tanah (DO, no committee) or MMKN (via JKKL committee endorsement) before final Lulus/Tolak/Tangguh decision. PRU is a confirmed member of URUSAN_INVOLVE_JKKL_LIST (URUSAN-FLOW.md).",
+      "committee": "JKKL (Jawatankuasa Khas Kelulusan Lahan) → MMKN; alternate Pentadbir Tanah (DO) track with no committee",
+      "stages": [
+        {
+          "kod": "intake",
+          "name": "Permohonan Diterima (AWAM e-Mohon)",
+          "tables": [
+            "umm_p_aplikasi",
+            "umm_p_hkmlk",
+            "plp_p_pelupusan",
+            "umm_p_pihak_bkptg"
+          ],
+          "evidence": "No dedicated BPMN userTask for portal submission; startEvent1 has no name attribute, flows straight to \"3.0 Semakan Kemasukan Maklumat\""
+        },
+        {
+          "kod": "semakan",
+          "name": "Semakan Kemasukan Maklumat",
+          "tables": [
+            "umm_aplikasi",
+            "umm_a_hkmlk",
+            "plp_a_pelupusan",
+            "umm_a_pihak_bkptg"
+          ],
+          "evidence": "userTask sid-DC02FA30 name=\"3.0 Semakan Kemasukan Maklumat\""
+        },
+        {
+          "kod": "jt",
+          "name": "Jabatan Teknikal — Laporan Tanah / Pelan MMKN",
+          "tables": [
+            "umm_a_jabatan_teknikal",
+            "rjk_agensi"
+          ],
+          "evidence": "userTask sid-0ADCC4B5 name=\"7.0 Semakan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN\"; userTask sid-14AD0EF5 name=\"8.0 Perakuan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN\""
+        },
+        {
+          "kod": "kkpt",
+          "name": "Kertas Pertimbangan Pentadbir Tanah / Keputusan Awal",
+          "tables": [
+            "umm_a_tgsn",
+            "ind_tgsn",
+            "pcp_pengguna"
+          ],
+          "evidence": "userTask sid-594D41B3 name=\"12.0 Penyediaan Kertas Pertimbangan Pentadbir Tanah\"; userTask sid-8C037DE5 name=\"16.0 Keputusan Pentadbir Tanah\"; routing gateway sid-C0E9AA69 edge \"DO\" cond ${kelulusan==\"JNS_KELULUSAN_DO\"} vs edge \"MMK\" cond ${kelulusan==\"JNS_KELULUSAN_MMK\"}"
+        },
+        {
+          "kod": "jkkl",
+          "name": "Rencana JKKL — Semakan & Perakuan",
+          "tables": [
+            "plp_a_pelupusan",
+            "umm_keputusan_mesyuarat"
+          ],
+          "evidence": "userTask sid-5E2D6B16 name=\"17.0 Penyediaan Rencana JKKL - PDT\"; userTask sid-D55B5483 name=\"21.0 Perakuan Rencana JKKL - PDT\""
+        },
+        {
+          "kod": "keputusan-jkkl",
+          "name": "Keputusan JKKL (Proceed / Tangguh) → Risalat MMKN",
+          "tables": [
+            "plp_a_pelupusan",
+            "umm_keputusan"
+          ],
+          "evidence": "exclusiveGateway sid-587521FF name=\"Keputusan\": edge \"Proceed\" cond ${keputusanJKKL==\"proceed\"}→sid-BE69BA2D(\"34. Terimaan Keputusan JKKL Dan Penentuan Kelulusan\"); edge \"Tangguh\" cond ${keputusanJKKL==\"tangguh\"}→sid-652A4C95(\"31.0 Keputusan JKKL Dan Penyediaan Surat Keputusan\")"
+        },
+        {
+          "kod": "mmkn",
+          "name": "Keputusan MMKN (Lulus / Tolak / Tangguh)",
+          "tables": [
+            "plp_a_pelupusan",
+            "umm_keputusan"
+          ],
+          "evidence": "userTask sid-682696AC name=\"43.0  Kemasukan Keputusan MMKN Dan Penyediaan Surat Keputusan\"",
+          "fork": {
+            "default": "lulus",
+            "outcomes": [
+              {
+                "kind": "lulus",
+                "label": "Lulus",
+                "steps": [
+                  {
+                    "name": "48.0  Penyediaan Surat Keputusan Lulus",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-842A95BA, edge cond ${keputusan==\"lulus\"}"
+                  },
+                  {
+                    "name": "50.0  Pengesahan Surat Keputusan Lulus",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-CC038335"
+                  },
+                  {
+                    "name": "54.0 Penyediaan Borang 4De and P2e",
+                    "tables": [
+                      "plp_a_pelupusan"
+                    ],
+                    "evidence": "userTask sid-55694F2E"
+                  }
+                ],
+                "end": "Permit Ruang Udara diluluskan — Borang 4De & P2e dikeluarkan"
+              },
+              {
+                "kind": "tolak",
+                "label": "Tolak",
+                "steps": [
+                  {
+                    "name": "62.0  Penyediaan Surat Tolak Permohonan",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-68EDD193, edge cond ${keputusan==\"tolak\"}"
+                  },
+                  {
+                    "name": "64.0  Pengesahan Surat Tolak Permohonan",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-ED0D82D6"
+                  }
+                ],
+                "end": "Permohonan ditolak"
+              },
+              {
+                "kind": "tangguh",
+                "label": "Tangguh",
+                "steps": [
+                  {
+                    "name": "44.0  Penyediaan Surat Keputusan Tangguh",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-4F508228, edge cond ${keputusan==\"tangguh\"}"
+                  },
+                  {
+                    "name": "47.0  Peraku Keputusan MMKN Dan Surat Keputusan",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-2F4FBB63"
+                  }
+                ],
+                "loop": "Re-tabled to next MMKN sitting (loops back to Kemasukan Keputusan MMKN)"
+              }
+            ]
+          }
+        }
+      ],
+      "bpmn_file": "MLK_PLP_PRU.bpmn20.xml",
+      "fork_evidence": "exclusiveGateway sid-A02741C1: edge name=\"Lulus/Tolak\" cond ${keputusan == \"lulus\" || keputusan== \"tolak\" }→sid-E3A775E2(46.0 Semakan Keputusan MMKN); edge name=\"Tangguh\" cond ${keputusan == \"tangguh\"}→sid-4F508228(44.0 Penyediaan Surat Keputusan Tangguh). Final split at sid-E8E220C6: edge \"Lulus\" cond ${keputusan== \"lulus\"}→sid-842A95BA(48.0 SKL); edge \"Tolak\" cond ${keputusan== \"tolak\"}→sid-68EDD193(62.0 Surat Tolak Permohonan).",
+      "confidence": "medium",
+      "notes": "Confirmed JKKL member (URUSAN-FLOW.md URUSAN_INVOLVE_JKKL_LIST). DO (Pentadbir Tanah) track skips the JKKL/MMKN committee entirely and its Lulus/Tolak gate uses a different variable (keputusanPTNH, not directly re-verified for PRU in this pass — inferred from the shared BPMN pattern seen in PRBB/RPPLP; flag for confirmation if precision matters)."
+    },
+    {
+      "kod": "PPTPB",
+      "name": "Permohonan Permit Khas Untuk Menggunakan Tanah Pertanian / Bangunan Bagi Kegunaan Lain-Lain",
+      "english": "Special Permit Application for Agricultural/Building Land Use for Other Purposes",
+      "section": "",
+      "modul": "pelupusan",
+      "description": "AWAM e-Mohon (portal) application for a special-use permit on agricultural/building land; also has a Perserahan Kaunter (counter) entry route per project brief, though this BPMN shows only ONE startEvent with no distinct counter/AWAM branching. Routed by 'kelulusan' to Pentadbir Tanah (DO) or MMKN, then Lulus/Tolak/Tangguh.",
+      "committee": "MMKN; alternate Pentadbir Tanah (DO) track with no committee — no JKKL/JKBB mid-level committee evidenced for PPTPB (consistent with DOMAIN-GLOSSARY: PPTPB not listed in URUSAN_INVOLVE_JKKL_LIST)",
+      "stages": [
+        {
+          "kod": "intake",
+          "name": "Permohonan Diterima (AWAM e-Mohon / Perserahan Kaunter)",
+          "tables": [
+            "umm_p_aplikasi",
+            "umm_p_hkmlk",
+            "plp_p_pelupusan",
+            "umm_p_pihak_bkptg"
+          ],
+          "evidence": "Single startEvent (id=startEvent1, unnamed) in this BPMN — no distinct Kaunter/PK branch visible at the BPMN level; the dual AWAM/PK entry route (per project brief) resolves upstream of this process (application-layer, not BPMN-modelled). Process flows straight to \"3.0 Semakan Kemasukan Maklumat\"."
+        },
+        {
+          "kod": "semakan",
+          "name": "Semakan Kemasukan Maklumat",
+          "tables": [
+            "umm_aplikasi",
+            "umm_a_hkmlk",
+            "plp_a_pelupusan",
+            "umm_a_pihak_bkptg"
+          ],
+          "evidence": "userTask sid-DC02FA30 name=\"3.0 Semakan Kemasukan Maklumat\" (also a Pembetulan/correction copy at sid-E865768D \"3.0 Semakan Kemasukan Maklumat (Pembetulan)\")"
+        },
+        {
+          "kod": "jt",
+          "name": "Jabatan Teknikal — Laporan Tanah / Pelan MMKN",
+          "tables": [
+            "umm_a_jabatan_teknikal",
+            "rjk_agensi"
+          ],
+          "evidence": "userTask sid-0ADCC4B5 name=\"7.0 Semakan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN\"; userTask sid-14AD0EF5 name=\"8.0 Perakuan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN\""
+        },
+        {
+          "kod": "kkpt",
+          "name": "Kertas Pertimbangan Pentadbir Tanah / Keputusan Awal",
+          "tables": [
+            "umm_a_tgsn",
+            "ind_tgsn",
+            "pcp_pengguna"
+          ],
+          "evidence": "userTask sid-6515D474 name=\"12.0 Penyediaan Kertas Pertimbangan Pentadbir Tanah\"; userTask sid-9B7B8C22 name=\"16.0 Keputusan Pentadbir Tanah\"; routing gateway sid-F4EDB4E8 edge \"Pentadbir Tanah\" cond ${kelulusan == \"JNS_KELULUSAN_DO\"} vs edge \"MMKN\" cond ${kelulusan == \"JNS_KELULUSAN_MMK\"}"
+        },
+        {
+          "kod": "mmkn-prep",
+          "name": "Risalat MMKN — Penyediaan & Perakuan",
+          "tables": [
+            "plp_a_pelupusan",
+            "umm_keputusan_mesyuarat"
+          ],
+          "evidence": "userTask sid-90F1AFC6 name=\"23.0 Penyediaan Risalat MMKN - PTG\"; userTask sid-1CFB6638 name=\"26.0 Perakuan Risalat MMKN - PTG\""
+        },
+        {
+          "kod": "mmkn",
+          "name": "Keputusan MMKN (Lulus / Tolak)",
+          "tables": [
+            "plp_a_pelupusan",
+            "umm_keputusan"
+          ],
+          "evidence": "userTask sid-682696AC name=\"28.0  Kemasukan Keputusan MMKN Dan Penyediaan Surat Keputusan\"; exclusiveGateway (Kelulusan gateway sid-70631659, per FLOWABLE-KNOWLEDGE.md §10.1 bug history) evaluates ${keputusan==\"true\"} for Lulus",
+          "fork": {
+            "default": "lulus",
+            "outcomes": [
+              {
+                "kind": "lulus",
+                "label": "Lulus",
+                "steps": [
+                  {
+                    "name": "33.0  Penyediaan Surat Keputusan Lulus",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-842A95BA; two upstream edges both name=\"Lulus\" cond ${keputusan == \"true\"} — sid-DBEEF8A1 (MMKN track) and sid-70631659 (DO track, the gateway named in FLOWABLE-KNOWLEDGE.md §10.1's bug history)"
+                  },
+                  {
+                    "name": "35.0  Pengesahan Surat Keputusan Lulus",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-CC038335"
+                  }
+                ],
+                "end": "Permit khas diluluskan — Surat Keputusan Lulus dikeluarkan"
+              },
+              {
+                "kind": "tolak",
+                "label": "Tolak",
+                "steps": [
+                  {
+                    "name": "45.0  Penyediaan Surat Tolak Permohonan",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-68EDD193; edge from sid-DBEEF8A1 name=\"Tolak\" (no explicit condition — the else/default branch)"
+                  },
+                  {
+                    "name": "47.0  Pengesahan Surat Tolak Permohonan",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-ED0D82D6"
+                  }
+                ],
+                "end": "Permohonan ditolak"
+              }
+            ]
+          }
+        }
+      ],
+      "bpmn_file": "MLK_PLP_PPTPB.bpmn20.xml",
+      "fork_evidence": "exclusiveGateway sid-DBEEF8A1: edge name=\"Tolak\" (no condition, default sink) → sid-68EDD193(45.0 Surat Tolak); edge name=\"Lulus\" cond ${keputusan == \"true\"} → sid-842A95BA(33.0 SKL). Sibling gateway sid-70631659 (same target task, also \"Lulus\" cond ${keputusan == \"true\"}) is the CORRECT sibling cited in FLOWABLE-KNOWLEDGE.md §10.1 next to the KNOWN-BUGGY \"Kelulusan\" gateway that once tested ${kelulusan==\"true\"/\"false\"} against a jenis-kelulusan code — no Tangguh outcome found anywhere in this BPMN.",
+      "confidence": "medium",
+      "notes": "No Tangguh outcome exists in this urusan's BPMN (only Lulus/Tolak) — consistent with the exclusiveGateway-with-no-default bug logged in FLOWABLE-KNOWLEDGE.md §10.1 (ADHOC-PPTPB-2026-3), which was specifically about this urusan's Kelulusan gateway lacking a default flow. callActivity \"41.0 Endosan (TSP-Tambahan Syarat Penggunaan)\" calledElement=MLK_DFT_NOTA_HKMLK shows PPTPB also touches the Daftar/Nota side post-approval (not modelled as its own stage here — out of the 6-9 stage abstraction budget)."
+    },
+    {
+      "kod": "MCL",
+      "name": "Permohonan Malacca Customary Land",
+      "english": "Malacca Customary Land Application",
+      "section": "",
+      "modul": "pelupusan",
+      "description": "Urusan pemberimilikan tanah adat Melaka (Malacca Customary Land, guna Borang Jadual XIV). Permohonan disemak, dinilai Jabatan Teknikal (charting + laporan tanah), disediakan Kertas Pertimbangan, dan diputuskan oleh Pentadbir Tanah (KPPD/PTNH) — bukan mesyuarat jawatankuasa formal. Jika lulus, hakmilik MCL (Sementara/HSBM atau Kekal/HKBM-HKGHS) didaftarkan; jika tolak, Surat Tolak dikeluarkan.",
+      "committee": "Keputusan Pentadbir Tanah (KPPD/PTNH) — internal officer decision, no JKKL/JKKT committee sitting",
+      "stages": [
+        {
+          "kod": "intake",
+          "name": "Semakan Kemasukan Maklumat",
+          "tables": [
+            "umm_p_aplikasi",
+            "umm_p_hkmlk",
+            "umm_p_pihak_bkptg",
+            "plp_p_pelupusan"
+          ],
+          "evidence": "userTask name=\"3.0 Semakan Kemasukan Maklumat\" (sid-DC02FA30) — first substantive userTask after the Start event; no 1.0/2.0 task exists in this BPMN, consistent with intake originating from the AWAM/e-Mohon portal before this internal process begins."
+        },
+        {
+          "kod": "jt_endorsan_nota",
+          "name": "Jabatan Teknikal & Endorsan Nota Mohon",
+          "tables": [
+            "umm_a_jabatan_teknikal",
+            "rjk_agensi",
+            "plp_a_pelupusan"
+          ],
+          "evidence": "callActivity name=\"Jabatan Teknikal 1 (MLK_PLP_SUB_JBTN_TEK)\" (sid-5A8F21CC, conditional on gateway \"Perlu JT?\"); callActivity name=\"4.0 Endorsan Nota Mohon (SBTM dan MCLM)\" calledElement=\"MLK_DFT_NOTA_HKMLK\" (sid-7EBF6FCF)."
+        },
+        {
+          "kod": "charting_laporan_tanah",
+          "name": "Charting Mohon & Penyediaan Laporan Tanah",
+          "tables": [
+            "umm_a_hkmlk",
+            "plp_a_pelupusan"
+          ],
+          "evidence": "callActivity name=\"5.0 Charting Mohon (MLK_TKL_CM)\" (sid-16C53EB2); callActivity name=\"6.0 Penyediaan Laporan Tanah (MLK_TKL_ST)\" (sid-E79BD73D)."
+        },
+        {
+          "kod": "semakan_perakuan_jt",
+          "name": "Semakan & Perakuan Jabatan Teknikal / Laporan Tanah / Pelan MMKN",
+          "tables": [
+            "umm_a_jabatan_teknikal",
+            "plp_a_pelupusan"
+          ],
+          "evidence": "userTask name=\"8.0 Semakan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN\" (sid-199B5B2A); userTask name=\"9.0 Perakuan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN\" (sid-5579448F)."
+        },
+        {
+          "kod": "kertas_pertimbangan",
+          "name": "Penyediaan Kertas Pertimbangan",
+          "tables": [
+            "umm_a_kertas",
+            "plp_a_pelupusan"
+          ],
+          "evidence": "userTask name=\"13.0 Penyediaan Kertas Pertimbangan\" (sid-41C19661), reached from gateway \"Keputusan Awal\" via flow name=\"Teruskan Permohonan\" (sid-156AD4FB)."
+        },
+        {
+          "kod": "semakan_kertas_pertimbangan",
+          "name": "Semakan Kertas Pertimbangan (PPD/KPT)",
+          "tables": [
+            "umm_a_kertas",
+            "umm_a_tgsn",
+            "ind_tgsn",
+            "pcp_pengguna"
+          ],
+          "evidence": "userTask name=\"14.0 Semakan Kertas Pertimbangan (PPD)\" (sid-5310174C); userTask name=\"15.0 Semakan Kertas Pertimbangan (KPT)\" (sid-18407A35), routed via gateway \"Agihan Kepada\" (sid-87791D62, KPT/PPD)."
+        },
+        {
+          "kod": "keputusan_pentadbir_tanah",
+          "name": "Keputusan Pentadbir Tanah",
+          "tables": [
+            "umm_keputusan",
+            "umm_a_tgsn",
+            "ind_tgsn",
+            "pcp_pengguna"
+          ],
+          "evidence": "userTask name=\"16.0 Keputusan Pentadbir Tanah (KPPD)\" (sid-98539D15); userTask name=\"17.0 Keputusan Pentadbir Tanah (PTNH)\" (sid-1187DFCA) — both feed gateway \"Kelulusan\" (sid-3E5D7514) via gateway \"Pembetulan\" (sid-EF6054D7).",
+          "fork": {
+            "default": "lulus",
+            "outcomes": [
+              {
+                "kind": "lulus",
+                "label": "Lulus",
+                "steps": [
+                  {
+                    "name": "22.0 Penyediaan Surat Keputusan Lulus dan Borang Notis 5A",
+                    "tables": [
+                      "umm_a_srt",
+                      "dft_a_notis"
+                    ],
+                    "evidence": "userTask name=\"22.0 Penyediaan Surat Keputusan Lulus dan Borang Notis 5A\" (sid-9ECD3B02); reviewed/endorsed via \"23.0 Semakan Surat Keputusan Lulus dan Borang Notis 5A\" (sid-52756DD5) and \"24.0 Pengesahan Surat Keputusan Lulus dan Borang Notis 5A\" (sid-D29C8091)."
+                  },
+                  {
+                    "name": "25.0 Cetakan Dokumen Surat Lulus dan Borang Notis 5A & 26.0 Charting Keputusan",
+                    "tables": [
+                      "umm_a_srt",
+                      "plp_a_pelupusan"
+                    ],
+                    "evidence": "callActivity name=\"25.0 Cetakan Dokumen Surat Lulus dan Borang Notis 5A\" calledElement=\"MLK_PLP_SUB_UPN\" (sid-0E995155); callActivity name=\"26.0 Charting Keputusan\" calledElement=\"MLK_TKL_CL\" (sid-7239FD5F)."
+                  },
+                  {
+                    "name": "26.0 Bayaran Pelbagai & 29.0 Endorsan Kelulusan MCLL",
+                    "tables": [
+                      "amb_a_mklmt_bayaran",
+                      "dft_a_mohon_hkmlk"
+                    ],
+                    "evidence": "userTask name=\"26.0 Bayaran Pelbagai\" (sid-76E1BE22); callActivity name=\"29.0 Endorsan Kelulusan MCLL\" calledElement=\"MLK_DFT_NOTA_HKMLK\" (sid-B4AB13EE)."
+                  },
+                  {
+                    "name": "32.0 Daftar Hakmilik Sementara (HSBM) / Daftar Hakmilik Kekal (HKBM/HKGHS)",
+                    "tables": [
+                      "dft_a_mohon_hkmlk",
+                      "umm_a_hkmlk"
+                    ],
+                    "evidence": "callActivity name=\"32.0 Daftar Hakmilik Sementara (HSBM)\" calledElement=\"MLK_DFT_NOTA_HKMLK\" (sid-3C52240C); callActivity name=\"Daftar Hakmilik Kekal (HKBM) (MLK_DFT_NOTA_HKMLK)\" (sid-9D5EF728) / \"Daftar Hakmilik Kekal Ganti Hakmilik Sementara (HKGHS) (MLK_DFT_NOTA_HKMLK)\" (sid-AA4983AF), branched by gateway \"Jenis HM\" (sid-6A188ED8: HSD/HSM/Default vs PN/PM/GRN/GM)."
+                  }
+                ],
+                "end": "Hakmilik MCL (Sementara HSBM, atau Kekal HKBM/HKGHS) didaftarkan"
+              },
+              {
+                "kind": "tolak",
+                "label": "Tolak",
+                "steps": [
+                  {
+                    "name": "46.0 Penyediaan Surat Tolak",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"46.0 Penyediaan Surat Tolak\" (sid-66A5AAB4), targeted directly by sequenceFlow name=\"Tolak\" conditionExpression ${keputusan==\"false\"} from gateway \"Kelulusan\" (sid-3E5D7514)."
+                  },
+                  {
+                    "name": "47.0 Semakan Surat Tolak & 48.0 Peraku Surat Tolak",
+                    "tables": [
+                      "umm_a_srt",
+                      "umm_a_tgsn"
+                    ],
+                    "evidence": "userTask name=\"47.0 Semakan Surat Tolak\" (sid-4326940F); userTask name=\"48.0 Peraku Surat Tolak\" (sid-1E0A36AC), routed via gateway \"Tindakan\" (sid-374BB5A8: Semak/Peraku)."
+                  },
+                  {
+                    "name": "51.0 Cetakan Dokumen Surat Tolak",
+                    "tables": [
+                      "umm_a_srt",
+                      "plp_a_pelupusan"
+                    ],
+                    "evidence": "callActivity name=\"51.0 Cetakan Dokumen Surat Tolak\" calledElement=\"MLK_PLP_SUB_UPN\" (sid-14BFADCA), leading to endEvent name=\"Tamat\" (sid-D54B28DF)."
+                  }
+                ],
+                "end": "Permohonan MCL ditolak; Surat Tolak dikeluarkan"
+              }
+            ]
+          }
+        }
+      ],
+      "bpmn_file": "MLK_PLP_MCL.bpmn20.xml",
+      "fork_evidence": "exclusiveGateway id=\"sid-3E5D7514-7FBC-4042-B133-F3CDDA15CBC2\" name=\"Kelulusan\" — sequenceFlow id=\"sid-03AF6C0B-365F-455B-AD67-E4DB315D83A3\" name=\"Lulus\" conditionExpression ${keputusan==\"true\"} targetRef gateway \"Jenis HM\" (sid-6A188ED8); sequenceFlow id=\"sid-AE5DD024-BEE3-4289-A7D6-074DBECD4EDC\" name=\"Tolak\" conditionExpression ${keputusan==\"false\"} targetRef userTask \"46.0 Penyediaan Surat Tolak\" (sid-66A5AAB4). No third outcome (no Tangguh flow exists off this gateway).",
+      "confidence": "high",
+      "notes": "Grepped case-insensitively for TANGGUH, JKKL, JKKT across the whole file: zero matches — confirms the MCL BPMN has no committee-style JKKL/JKKT decision and no deferral (Tangguh) outcome anywhere. The only outcome-determining fork is exclusiveGateway \"Kelulusan\" (sid-3E5D7514), fed by a boolean ${keputusan} variable set after \"16.0/17.0 Keputusan Pentadbir Tanah (KPPD/PTNH)\" — i.e. a single officer's (Pentadbir Tanah) decision, not a jawatankuasa sitting. A separate, earlier gateway \"Keputusan Awal\" (sid-261C69FE, var ${keputusanAwal}) exists right after \"9.0 Perakuan Jabatan Teknikal...\" and can also route straight to a reject path (\"43.0 Penyediaan Minit Bebas\" -> ... -> converges into the same \"46.0 Penyediaan Surat Tolak\" task) without ever reaching Kertas Pertimbangan — this is a preliminary/administrative screening reject, not the main committee-analog decision, so it is omitted from stages[] to keep the linear happy path to one decision point per the task instructions. The BPMN starts with a technical userTask \"DELAY (35 s)\" before \"3.0 Semakan Kemasukan Maklumat\" — a wait-state artifact, not a BA-visible stage, omitted from stages[]. No task numbered 1.0/2.0 exists in this file, consistent with MCL intake originating from the AWAM/e-Mohon portal (outside this internal Flowable process) before \"3.0 Semakan Kemasukan Maklumat\" runs. Table umm_a_pelupusan (used in the PT analog for committee-prep) and dft_a_hkmlk (used in the PT analog for title issuance) do NOT exist in schema_parse.json — substituted with plp_a_pelupusan and dft_a_mohon_hkmlk respectively, both verified present."
+    },
+    {
+      "kod": "RPPLP",
+      "name": "Permohonan Rayuan Pelbagai",
+      "english": "Miscellaneous/Various Appeal Application",
+      "section": "",
+      "modul": "pelupusan",
+      "description": "Appeal application against a prior Pelupusan decision; routed by 'kelulusan' to Pentadbir Tanah (DO) or MMKN, then a Lulus/Tolak/Tangguh decision (MMKN track) or Lulus/Tolak decision (DO/Pentadbir Tanah track).",
+      "committee": "MMKN; alternate Pentadbir Tanah (DO) track with no committee — no JKKL/JKBB evidenced",
+      "stages": [
+        {
+          "kod": "intake",
+          "name": "Permohonan Rayuan Diterima",
+          "tables": [
+            "umm_p_aplikasi",
+            "umm_p_hkmlk",
+            "plp_p_pelupusan",
+            "umm_p_pihak_bkptg"
+          ],
+          "evidence": "No dedicated BPMN userTask for submission; startEvent1 (unnamed) flows to an early DELAY then the first tugasan \"5.0 Semakan Kemasukan Maklumat\""
+        },
+        {
+          "kod": "semakan",
+          "name": "Semakan Kemasukan Maklumat / Semakan Permohonan",
+          "tables": [
+            "umm_aplikasi",
+            "umm_a_hkmlk",
+            "plp_a_pelupusan",
+            "umm_a_pihak_bkptg"
+          ],
+          "evidence": "userTask sid-AC6482F9 name=\"5.0 Semakan Kemasukan Maklumat\"; userTask sid-04685083 name=\"2.0 Semakan Permohonan\""
+        },
+        {
+          "kod": "jt",
+          "name": "Jabatan Teknikal — Laporan Tanah / Pelan Mesyuarat",
+          "tables": [
+            "umm_a_jabatan_teknikal",
+            "rjk_agensi"
+          ],
+          "evidence": "userTask sid-3547FAA3 name=\"9.0 Semakan Jabatan  Teknikal, Laporan Tanah  atau Pelan Mesyuarat\"; userTask sid-5D7C8F73 name=\"10.0 Perakuan Jabatan  Teknikal, Laporan Tanah  atau Pelan Mesyuarat\""
+        },
+        {
+          "kod": "minit-bebas",
+          "name": "Minit Bebas / Keputusan Awal (routing)",
+          "tables": [
+            "umm_a_tgsn",
+            "ind_tgsn",
+            "pcp_pengguna"
+          ],
+          "evidence": "userTask sid-B3E86988 name=\"39.0 Penyediaan Minit Bebas\"; userTask sid-069FFBAA name=\"14.0 Penyediaan Minit Bebas Pentadbir Tanah\" (DO track); routing gateway edge \"Terus Permohonan\" cond ${keputusanAwal==\"true\"} vs \"Tolak Ringkas\" cond ${keputusanAwal==\"false\"}"
+        },
+        {
+          "kod": "mmkn-prep",
+          "name": "Risalat MMKN — Penyediaan & Perakuan",
+          "tables": [
+            "plp_a_pelupusan",
+            "umm_keputusan_mesyuarat"
+          ],
+          "evidence": "userTask sid-198E0EE6 name=\"19.0 Penyediaan Risalat MMKN - PDT\"; userTask sid-3CCCBB74 name=\"28.0 Perakuan Risalat MMKN - PTG\""
+        },
+        {
+          "kod": "mmkn",
+          "name": "Keputusan MMKN / Pentadbir Tanah (Lulus / Tolak / Tangguh)",
+          "tables": [
+            "plp_a_pelupusan",
+            "umm_keputusan"
+          ],
+          "evidence": "userTask sid-81D9BAD2 name=\"30.0 Kemasukan Keputusan MMKN dan Penyediaan Surat Keputusan\"",
+          "fork": {
+            "default": "lulus",
+            "outcomes": [
+              {
+                "kind": "lulus",
+                "label": "Lulus",
+                "steps": [
+                  {
+                    "name": "43.0 Penyediaan Surat Keputusan Lulus",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-0A6D015A; edge \"Lulus\" cond ${keputusanPTNH==\"lulus\"} (DO track) — MMKN track reaches the same task after \"31.0 Semakan Keputusan MMKN dan Surat Keputusan\""
+                  },
+                  {
+                    "name": "44.0 Semakan Surat Keputusan Lulus",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-DDA5815E"
+                  },
+                  {
+                    "name": "45.0 Pengesahan Surat Keputusan Lulus",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-B69717B6"
+                  }
+                ],
+                "end": "Rayuan diluluskan — Surat Keputusan Lulus dikeluarkan"
+              },
+              {
+                "kind": "tolak",
+                "label": "Tolak",
+                "steps": [
+                  {
+                    "name": "42.0 Penyediaan Surat Tolak",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-DBB43062; edge \"Tolak\" cond ${keputusanPTNH==\"tolak\"} / ${keputusan==\"tolak\"}"
+                  },
+                  {
+                    "name": "44.0 Peraku Surat Tolak",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-8D746F46"
+                  }
+                ],
+                "end": "Rayuan ditolak"
+              },
+              {
+                "kind": "tangguh",
+                "label": "Tangguh",
+                "steps": [
+                  {
+                    "name": "33.0 Penyediaan Surat Keputusan Tangguh",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-0152FEF4, edge cond ${keputusan == \"tangguh\"}"
+                  },
+                  {
+                    "name": "34.0 Peraku Surat Keputusan Tangguh",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-A11B2BAE"
+                  }
+                ],
+                "loop": "MMKN-track only — re-tabled to next MMKN sitting (loops back to Kemasukan Keputusan MMKN)"
+              }
+            ]
+          }
+        }
+      ],
+      "bpmn_file": "MLK_PLP_RPPLP.bpmn20.xml",
+      "fork_evidence": "exclusiveGateway sid-277187EA: edge name=\"Lulus/Tolak\" cond ${keputusan == \"lulus\" || keputusan== \"tolak\" }→sid-AA2C4433(31.0 Semakan Keputusan MMKN dan Surat Keputusan); edge name=\"Tangguh\" cond ${keputusan == \"tangguh\"}→sid-0152FEF4(33.0 Penyediaan Surat Keputusan Tangguh). DO track gateway sid-BD2BB756 name=\"Keputusan\": edge \"Lulus\" cond ${keputusanPTNH==\"lulus\"}→sid-0A6D015A(43.0 SKL); edge \"Tolak\" cond ${keputusanPTNH==\"tolak\"}→sid-DBB43062(42.0 Surat Tolak).",
+      "confidence": "medium",
+      "notes": "Two independent routing tracks (DO/Pentadbir-Tanah-only vs MMKN-committee) converge on the same SKL/Surat-Tolak task pair; only the MMKN track carries a Tangguh outcome. No JKKL/JKBB committee evidenced for RPPLP — consistent with it being outside URUSAN_INVOLVE_JKKL_LIST."
     }
   ],
   "notes": [

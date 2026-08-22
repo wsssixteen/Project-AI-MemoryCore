@@ -44,12 +44,53 @@ def detect_layer(n):
     if "_p_" in n: return "_p_"
     return "neither"
 
+def compute_implicit_links(parsed, implicit_cfg):
+    """Name-matched links with no declared FK: child column == another table's single-column PK."""
+    tables = {t["name"]: t for t in parsed["tables"]}
+    hk_pats = [re.compile(p) for p in implicit_cfg.get("housekeeping_name_patterns", [])]
+    def housekeeping(name):
+        return any(p.search(name) for p in hk_pats)
+    declared = {(fk["child_table"], fk["child_column"]) for fk in parsed["foreign_keys"]}
+    suppress = {(s["from"], s["col"], s["to"]) for s in implicit_cfg.get("suppress", [])}
+    verified = {(v["from"], v["col"], v["to"]): v for v in implicit_cfg.get("verified", [])}
+    pkmap = {}
+    for name, t in tables.items():
+        pk = t.get("pk") or []
+        if len(pk) == 1:
+            pkmap.setdefault(pk[0], []).append(name)
+    GENERIC = {"id", "version"}
+    links = []
+    for name, t in tables.items():
+        for c in t.get("columns", []):
+            cn = c["n"]
+            if cn in GENERIC or not cn.endswith("_id"):
+                continue
+            if (name, cn) in declared:
+                continue
+            for parent in pkmap.get(cn, []):
+                if parent == name or housekeeping(parent):
+                    continue
+                if (name, cn, parent) in suppress:
+                    continue
+                v = verified.get((name, cn, parent))
+                links.append({
+                    "from": name, "col": cn, "to": parent,
+                    "status": "verified" if v else "heuristic",
+                    "housekeeping": housekeeping(name),
+                })
+    return links
+
+
 def main(profile="melaka"):
     parsed = json.load(open(BUILD / "schema_parse.json"))
     mapping_file = CONFIG / f"mapping.{profile}.json"
     if not mapping_file.exists():
         raise SystemExit(f"Mapping for profile '{profile}' not found at {mapping_file}")
     mapping = json.load(open(mapping_file))
+    implicit_file = CONFIG / f"implicit_links.{profile}.json"
+    implicit_cfg = json.load(open(implicit_file)) if implicit_file.exists() else {}
+    tugasan_file = CONFIG / f"tugasan_tables.{profile}.json"
+    tugasan_cfg = json.load(open(tugasan_file)) if tugasan_file.exists() else {"tugasans": []}
     raw_tables = {t["name"]: t for t in parsed["tables"]}
     moduls = mapping["moduls"]
 
@@ -59,6 +100,20 @@ def main(profile="melaka"):
     missing = [t for t in all_main if t not in raw_tables]
     if missing:
         print(f"WARN: main_tables in mapping not in schema: {missing}", file=sys.stderr)
+
+    bad_stage_tables = []
+    for u in mapping["urusans"]:
+        for s in u.get("stages", []):
+            refs = list(s.get("tables", []))
+            for o in (s.get("fork", {}) or {}).get("outcomes", []):
+                for st in o.get("steps", []):
+                    refs.extend(st.get("tables", []))
+            for t in refs:
+                if "*" in t: continue
+                if t not in raw_tables:
+                    bad_stage_tables.append(f"{u['kod']}/{s['kod']}: {t}")
+    if bad_stage_tables:
+        print(f"WARN: urusan stage tables not in schema ({len(bad_stage_tables)}): {bad_stage_tables}", file=sys.stderr)
 
     categories = mapping.get("categories", [])
     tables = []
@@ -74,6 +129,8 @@ def main(profile="melaka"):
             "category": cat,
             "swimlane": swim,
             "cols": t["column_count"],
+            "columns": t.get("columns", []),
+            "pk": t.get("pk", []),
             "comment": (t.get("comment") or "")[:300],
             "in": t["incoming_fk_count"], "out": t["outgoing_fk_count"],
             "is_main": nm in all_main,
@@ -86,6 +143,12 @@ def main(profile="melaka"):
         if c in NOISY or p in NOISY: continue
         out_fk.setdefault(c, []).append({"to": p, "col": fk["child_column"], "pcol": fk["parent_column"]})
         in_fk.setdefault(p, []).append({"from": c, "col": fk["child_column"], "pcol": fk["parent_column"]})
+
+    implicit_links = compute_implicit_links(parsed, implicit_cfg)
+    implicit_in, implicit_out = {}, {}
+    for lk in implicit_links:
+        implicit_out.setdefault(lk["from"], []).append({"to": lk["to"], "col": lk["col"], "status": lk["status"], "hk": lk["housekeeping"]})
+        implicit_in.setdefault(lk["to"], []).append({"from": lk["from"], "col": lk["col"], "status": lk["status"], "hk": lk["housekeeping"]})
 
     def topN(items, n):
         seen, out = set(), []
@@ -124,7 +187,9 @@ def main(profile="melaka"):
         "moduls": moduls, "modul_stats": modul_stats,
         "anchor_blurbs": mapping["anchor_blurbs"],
         "urusans": mapping["urusans"],
+        "tugasans": tugasan_cfg.get("tugasans", []),
         "tables": tables, "in_fk": in_fk, "out_fk": out_fk,
+        "implicit_in": implicit_in, "implicit_out": implicit_out,
         "anchor_children": anchor_children, "anchor_parents": anchor_parents,
         "profile": mapping.get("profile", profile),
         "version": mapping.get("version", "2.0"),
@@ -133,7 +198,7 @@ def main(profile="melaka"):
 
     BUILD.mkdir(exist_ok=True)
     (BUILD / "dataset.json").write_text(json.dumps(out, separators=(",", ":")))
-    print(f"  dataset.json: {len(tables)} tables, {len(parsed['foreign_keys'])} FKs, profile={mapping.get('profile')}")
+    print(f"  dataset.json: {len(tables)} tables, {len(parsed['foreign_keys'])} FKs, {len(implicit_links)} implicit links, {len(tugasan_cfg.get('tugasans', []))} tugasans, profile={mapping.get('profile')}")
     return out
 
 if __name__ == "__main__":

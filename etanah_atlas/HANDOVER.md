@@ -1,7 +1,9 @@
 # Etanah Atlas — Handover
 
-*Melaka profile · mapping v2.3 · 781 tables · 2,146 FKs · 12 moduls · 13 urusans*
+*Melaka profile · mapping v3.0 (2026-08-22) · 781 tables · 2,146 FKs · 350 implicit links · 12 moduls · 13 urusans (all with BPMN-verified decision forks) · 8 pilot tugasan traces*
 *Prepared for handover to Claude Design (visual layer) and Ruri / Claude Code (logic + content).*
+
+> **⚠️ HISTORY NOTE (2026-08-22)**: the v2.1–v2.3 iteration this document previously described (A\* edge routing, side-panel group-by, 13-urusan mapping with PT/PLPS forks) was **never committed and is lost** — only the docs and `lib/smoke_test.js` survived. v3.0 rebuilt the 13 urusans + forks from BPMN evidence (fresh extraction, all stage tables schema-validated), and added the Tables tab, columns, implicit links, and tugasan pilot. The v2.3 geometry features (A\* routing, panel group-by) are still lost — the smoke test marks them SKIP as backlog.
 
 This document is the quick orientation for whoever picks the project up next. The exhaustive reference — design rationale, contracts, iteration history — lives in `HANDBOOK.md`; this is the shorter "where things stand and how to continue" note.
 
@@ -112,18 +114,20 @@ Run both after **every** change. The smoke test boots the real `app.js` under a 
 
 ---
 
-## 8. Rollout TODO — the remaining 11 urusans
+## 8. Rollout status — DONE 2026-08-22 (v3.0)
 
-The decision selector is live for **PT** and **PLPS**. The other 11 still show only their linear happy-path and need a verified `fork` added:
+All 13 urusans now carry BPMN-extracted flows. Outcome coverage as found in the BPMN (never assumed):
 
-`PRZ · MLPS · BPRZ · PSBS · PPJK · PLTP · PRBB · PRU · PPTPB · MCL · RPPLP`
+| Urusan | Outcomes | Notes |
+|---|---|---|
+| PT, PLPS, PRZ, BPRZ, PSBS, PPJK, PLTP, PRBB, PRU, RPPLP | Lulus · Tolak · Tangguh | Tangguh loops back to re-table (PLTP's ends at a dedicated `Tangguh MMKN` endEvent) |
+| PPTPB | Lulus · Tolak only | No Tangguh anywhere in the BPMN (consistent with the ADHOC-PPTPB-2026-3 gateway findings) |
+| MCL | Lulus · Tolak only | Single Pentadbir Tanah boolean decision (`${keputusan}`), no committee, no Tangguh |
+| MLPS | no fork | No committee decision at all — linear flow with a pembetulan correction loop; rendered linear |
 
-For each, before wiring:
+Each urusan's `fork_evidence` field in `config/mapping.melaka.json` quotes the gateway ids + condition expressions verbatim. Stage/step tables are validated against the schema at build time (`build_dataset.py` warns) and by the smoke test.
 
-1. Read the urusan's BPMN to confirm its real decision point and the Lulus / Tolak / Tangguh tails (don't infer from kod prefixes — read the `.bpmn20.xml`).
-2. Confirm the tail tables in the schema. `umm_a_srt` is the shared surat table; *jenis* distinguishes lulus/tolak/tangguh.
-3. Note the committee family per `etanah-knowledge/melaka/URUSAN-FLOW.md`: the **JKKL** flow contains PRU, PT, PLPS, BPRZ, PPJK; PRZ/PRBB/PSBS use the **JKKT** family; PLTP/RPPLP are case-by-case. Some urusans may legitimately have only Lulus/Tolak (no Tangguh).
-4. Add the `fork` object to the decision stage, rebuild, and confirm the smoke test still passes (extend the PT/PLPS fork check to cover the new urusan if you want it guarded).
+**Not yet modeled**: the Pembetulan (correction) rework sub-flows several BPMNs carry, and pre-committee `keputusanAwal` early-reject shortcuts (PLTP, MCL) — noted in each urusan's `notes` field; candidates for a later "unhappy path v2" pass.
 
 ---
 
