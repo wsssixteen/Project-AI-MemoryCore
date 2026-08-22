@@ -1689,3 +1689,35 @@ setupSearch();
 renderUrusanView();
 restorePinned();
 layoutAndRender();
+
+// Deep links: ?tab=map|urusan|search|about &sub=diagram|catalog|urusan &table=<name>
+//             &urusan=<KOD> &tugasan=<KOD> &pick=<KOD> &fork=lulus|tolak|tangguh
+(function initDeepLink() {
+  let p;
+  try { p = new URLSearchParams(window.location.search); } catch (e) { return; }
+  if (!p || ![...p.keys()].length) return;
+  const tab = p.get("tab");
+  if (tab) {
+    $$(".tab").forEach(x => x.classList.toggle("active", x.dataset.tab === tab));
+    $$(".view").forEach(v => v.classList.toggle("hidden", v.dataset.view !== tab));
+    if (tab === "map") layoutAndRender();
+  }
+  if (p.get("pick")) {
+    const picker = $("#urusan-picker");
+    picker.value = p.get("pick");
+    if (p.get("fork")) FORK_CHOICE[p.get("pick")] = p.get("fork");
+    renderUrusanView();
+  }
+  if (p.get("sub")) selectSubTab(p.get("sub"));
+  if (p.get("urusan")) {
+    const u = $("#ub-urusan");
+    u.value = p.get("urusan");
+    u.dispatchEvent(new Event("change", { bubbles: true }));
+    if (p.get("tugasan")) {
+      const t = $("#ub-tugasan");
+      t.value = p.get("tugasan");
+      t.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  }
+  if (p.get("table")) focusTable(p.get("table"), p.get("col") || null, "diagram");
+})();

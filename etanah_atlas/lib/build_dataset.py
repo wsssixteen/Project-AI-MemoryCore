@@ -82,15 +82,15 @@ def compute_implicit_links(parsed, implicit_cfg):
 
 
 def main(profile="melaka"):
-    parsed = json.load(open(BUILD / "schema_parse.json"))
+    parsed = json.load(open(BUILD / "schema_parse.json", encoding="utf-8"))
     mapping_file = CONFIG / f"mapping.{profile}.json"
     if not mapping_file.exists():
         raise SystemExit(f"Mapping for profile '{profile}' not found at {mapping_file}")
-    mapping = json.load(open(mapping_file))
+    mapping = json.load(open(mapping_file, encoding="utf-8"))
     implicit_file = CONFIG / f"implicit_links.{profile}.json"
-    implicit_cfg = json.load(open(implicit_file)) if implicit_file.exists() else {}
+    implicit_cfg = json.load(open(implicit_file, encoding="utf-8")) if implicit_file.exists() else {}
     tugasan_file = CONFIG / f"tugasan_tables.{profile}.json"
-    tugasan_cfg = json.load(open(tugasan_file)) if tugasan_file.exists() else {"tugasans": []}
+    tugasan_cfg = json.load(open(tugasan_file, encoding="utf-8")) if tugasan_file.exists() else {"tugasans": []}
     raw_tables = {t["name"]: t for t in parsed["tables"]}
     moduls = mapping["moduls"]
 

@@ -347,3 +347,10 @@ code { font-family: "SF Mono", "Cascadia Code", Consolas, monospace; background:
 .ub-chip:hover { border-color:#534AB7; color:#534AB7; }
 .ub-chip.ub-dim { opacity:.45; }
 [data-theme="dark"] .linklike { color:#c4b5fd; }
+
+/* HARD hidden override — display-setting component rules (flex) were beating the
+   base .hidden rule on equal specificity; this class of bug blocked the whole page
+   behind an invisible modal overlay (2026-08-22). Never rely on bare .hidden again. */
+.modal-overlay.hidden, .table-focus.hidden, .suggest-box.hidden,
+.sub-view.hidden, .diagram-hits.hidden, .diagram-empty.hidden,
+.search-results.hidden, .focus-bar.hidden, .canvas-empty.hidden { display:none !important; }
