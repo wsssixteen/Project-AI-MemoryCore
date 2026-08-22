@@ -900,11 +900,11 @@ $("#urusan-picker").addEventListener("change", renderUrusanView);
 
 // ========== TABLES VIEW (search + link-graph + columns) ==========
 const TBL_STATE = {
-  selected: null,        // focused table name
-  highlightCol: null,    // column to highlight in the panel (from column search)
-  urusan: "",
-  tugasan: "",
-  chip: "",              // related-module quick chip
+  mode: "results",       // "results" | "focus"
+  selected: null,
+  highlightCol: null,
+  chipSpoc: false,
+  chipHk: false,
   showImplicit: true,
   showHk: false,
 };
@@ -916,7 +916,6 @@ function isHousekeepingName(n) {
 }
 
 function urusanStageIndex(kod) {
-  // Map: table name -> [stage/step names] for one urusan (stages + all fork outcome steps)
   const u = DATA.urusans.find(x => x.kod === kod);
   const idx = {};
   if (!u) return idx;
@@ -932,16 +931,58 @@ function urusanStageIndex(kod) {
 
 function tugasanOf(kod) { return (DATA.tugasans || []).find(t => t.kod === kod); }
 
-function tableChipPass(t) {
-  switch (TBL_STATE.chip) {
-    case "awam": return t.layer === "_p_";
-    case "spoc": return t.name.startsWith("spc_");
-    case "hasil": return t.name.startsWith("hsl_");
-    case "teknikal": return t.name.startsWith("tkl_");
-    case "pendaftaran": return t.name.startsWith("dft_");
-    case "housekeeping": return isHousekeepingName(t.name);
-    default: return true;
+// Distinct sorted column names across all tables (built once, for suggestions)
+let ALL_COLUMN_NAMES = null;
+function allColumnNames() {
+  if (ALL_COLUMN_NAMES) return ALL_COLUMN_NAMES;
+  const s = new Set();
+  for (const t of DATA.tables) for (const c of (t.columns || [])) s.add(c.n);
+  ALL_COLUMN_NAMES = Array.from(s).sort();
+  return ALL_COLUMN_NAMES;
+}
+
+// ---- suggestion dropdown (shared by both inputs) ----
+function attachSuggest(input, boxId, getItems, onPick) {
+  const box = document.getElementById(boxId);
+  let items = [], active = -1;
+  function close() { box.classList.add("hidden"); box.innerHTML = ""; items = []; active = -1; }
+  function render() {
+    if (items.length === 0) { close(); return; }
+    box.innerHTML = items.map((it, i) =>
+      `<div class="suggest-item ${i === active ? "active" : ""}" data-i="${i}">${it.html}</div>`).join("");
+    box.classList.remove("hidden");
+    box.querySelectorAll(".suggest-item").forEach(el => {
+      el.addEventListener("mousedown", (ev) => { ev.preventDefault(); pick(+el.dataset.i); });
+    });
   }
+  function pick(i) { const it = items[i]; if (!it) return; close(); onPick(it); }
+  input.addEventListener("input", () => {
+    const q = input.value.trim().toLowerCase();
+    if (q.length < 2) { close(); return; }
+    items = getItems(q).slice(0, 12);
+    active = -1;
+    render();
+  });
+  input.addEventListener("keydown", (e) => {
+    if (box.classList.contains("hidden")) return;
+    if (e.key === "ArrowDown") { e.preventDefault(); active = Math.min(items.length - 1, active + 1); render(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); active = Math.max(0, active - 1); render(); }
+    else if (e.key === "Enter" && active >= 0) { e.preventDefault(); pick(active); }
+    else if (e.key === "Escape") { close(); }
+  });
+  input.addEventListener("blur", () => setTimeout(close, 120));
+}
+
+function rankMatches(names, q) {
+  // prefix matches first, then substring; both alphabetical
+  const pre = [], sub = [];
+  for (const n of names) {
+    const ln = n.toLowerCase();
+    if (ln.startsWith(q)) pre.push(n);
+    else if (ln.includes(q)) sub.push(n);
+    if (pre.length > 24) break;
+  }
+  return pre.concat(sub);
 }
 
 function setupSearch() {
@@ -953,50 +994,69 @@ function setupSearch() {
   const gSel = $("#search-tugasan");
   const out = $("#search-results");
   const cnt = $("#search-count");
+  const hint = $("#filter-hint");
 
-  // populate urusan + tugasan filters
   DATA.urusans.forEach(u => {
     const opt = document.createElement("option");
     opt.value = u.kod; opt.textContent = `${u.kod} · ${u.name}`;
     uSel.appendChild(opt);
   });
-  const tugasans = DATA.tugasans || [];
-  if (tugasans.length === 0) {
-    $("#search-tugasan-wrap").classList.add("hidden");
-  } else {
-    tugasans.forEach(t => {
+
+  function rebuildTugasanOptions() {
+    const all = DATA.tugasans || [];
+    const scoped = uSel.value ? all.filter(t => (t.urusan || "") === uSel.value) : all;
+    gSel.innerHTML = "";
+    const first = document.createElement("option");
+    first.value = "";
+    first.textContent = scoped.length ? "(all)" : `(no pilot data${uSel.value ? " for " + uSel.value : ""})`;
+    gSel.appendChild(first);
+    scoped.forEach(t => {
       const opt = document.createElement("option");
       opt.value = t.kod; opt.textContent = `${t.kod} · ${t.name || ""}`.trim();
       gSel.appendChild(opt);
     });
+    gSel.disabled = scoped.length === 0;
+  }
+  if ((DATA.tugasans || []).length === 0) $("#search-tugasan-wrap").classList.add("hidden");
+  else rebuildTugasanOptions();
+
+  function tablePassesFilters(t, opts) {
+    const o = opts || {};
+    // Modul filter keeps shared tables visible — shared (umm_/ind_/rjk_/pcp_) is used by EVERY modul
+    if (mSel.value && t.modul !== mSel.value && t.modul !== "shared") return false;
+    if (lSel.value && t.layer !== lSel.value) return false;
+    if (TBL_STATE.chipSpoc && !t.name.startsWith("spc_")) return false;
+    if (!TBL_STATE.chipHk && isHousekeepingName(t.name)) return false;
+    if (TBL_STATE.chipHk && !isHousekeepingName(t.name)) return false;
+    if (o.uIdx && !o.uIdx[t.name]) return false;
+    if (o.tgTables && !o.tgTables[t.name]) return false;
+    return true;
+  }
+
+  function filterContext() {
+    const uIdx = uSel.value ? urusanStageIndex(uSel.value) : null;
+    const tg = gSel.value ? tugasanOf(gSel.value) : null;
+    let tgTables = null;
+    if (tg) {
+      tgTables = {};
+      (tg.loads || []).forEach(x => { (tgTables[x.table] = tgTables[x.table] || new Set()).add("loads"); });
+      (tg.saves || []).forEach(x => { (tgTables[x.table] = tgTables[x.table] || new Set()).add("saves"); });
+    }
+    return { uIdx, tgTables };
   }
 
   function run() {
+    if (TBL_STATE.mode === "focus") closeFocus();
+    hint.textContent = "";
     const q = input.value.trim().toLowerCase();
     const cq = colInput.value.trim().toLowerCase();
-    const mFilter = mSel.value;
-    const lFilter = lSel.value;
-    TBL_STATE.urusan = uSel.value;
-    TBL_STATE.tugasan = gSel.value;
-    const uIdx = TBL_STATE.urusan ? urusanStageIndex(TBL_STATE.urusan) : null;
-    const tg = TBL_STATE.tugasan ? tugasanOf(TBL_STATE.tugasan) : null;
-    const tgTables = tg ? {} : null;
-    if (tg) {
-      (tg.loads || []).forEach(x => { (tgTables[x.table] = tgTables[x.table] || []).push("loads"); });
-      (tg.saves || []).forEach(x => { (tgTables[x.table] = tgTables[x.table] || []).push("saves"); });
-    }
+    const ctx = filterContext();
 
     // ---- COLUMN SEARCH MODE ----
     if (cq) {
-      closeFocus();
       const hits = [];
       for (const t of DATA.tables) {
-        if (mFilter && t.modul !== mFilter) continue;
-        if (lFilter && t.layer !== lFilter) continue;
-        if (!TBL_STATE.showHk && !tableChipPass(t)) continue;
-        if (TBL_STATE.chip !== "housekeeping" && isHousekeepingName(t.name)) continue;
-        if (uIdx && !uIdx[t.name]) continue;
-        if (tgTables && !tgTables[t.name]) continue;
+        if (!tablePassesFilters(t, ctx)) continue;
         for (const c of (t.columns || [])) {
           if (c.n.toLowerCase().includes(cq)) hits.push({ t, c });
           if (hits.length > 400) break;
@@ -1025,16 +1085,15 @@ function setupSearch() {
     }
 
     // ---- TABLE SEARCH MODE ----
-    let matched = DATA.tables.filter(t => {
-      if (q && !t.name.toLowerCase().includes(q) && !(t.comment || "").toLowerCase().includes(q)) return false;
-      if (mFilter && t.modul !== mFilter) return false;
-      if (lFilter && t.layer !== lFilter) return false;
-      if (!tableChipPass(t)) return false;
-      if (TBL_STATE.chip !== "housekeeping" && !TBL_STATE.showHk && isHousekeepingName(t.name) && !q) return false;
-      if (uIdx && !uIdx[t.name]) return false;
-      if (tgTables && !tgTables[t.name]) return false;
-      return true;
-    });
+    const nameMatch = (t) => !q || t.name.toLowerCase().includes(q) || (t.comment || "").toLowerCase().includes(q);
+    let matched = DATA.tables.filter(t => nameMatch(t) && tablePassesFilters(t, ctx));
+    // escape hatch: query matched tables exist but the filters hid them — say so instead of a silent 0
+    if (q) {
+      const unfiltered = DATA.tables.filter(nameMatch).length;
+      if (unfiltered > matched.length) {
+        hint.textContent = `${unfiltered - matched.length} match${unfiltered - matched.length === 1 ? "" : "es"} hidden by filters`;
+      }
+    }
     matched.sort((a, b) => {
       if ((b.is_main ? 1 : 0) !== (a.is_main ? 1 : 0)) return (b.is_main ? 1 : 0) - (a.is_main ? 1 : 0);
       if (a.in !== b.in) return b.in - a.in;
@@ -1044,10 +1103,11 @@ function setupSearch() {
     const cap = matched.slice(0, 300);
     out.innerHTML = cap.map(t => {
       const mod = modulOf(t.modul);
-      const stages = uIdx && uIdx[t.name] ? `<div class="tc-stages">${uIdx[t.name].map(escapeHtml).join(" · ")}</div>` : "";
-      const tgBadge = tgTables && tgTables[t.name] ? tgTables[t.name].map(k => `<span class="tg-badge tg-${k}">${k === "loads" ? "LOADED" : "SAVED"}</span>`).join("") : "";
+      const stages = ctx.uIdx && ctx.uIdx[t.name] ? `<div class="tc-stages" title="${escapeAttr(ctx.uIdx[t.name].join(" · "))}">${ctx.uIdx[t.name].map(escapeHtml).join(" · ")}</div>` : "";
+      const tgBadge = ctx.tgTables && ctx.tgTables[t.name]
+        ? Array.from(ctx.tgTables[t.name]).map(k => `<span class="tg-badge tg-${k}">${k === "loads" ? "LOADED" : "SAVED"}</span>`).join("") : "";
       return `<div class="tc" data-open="${escapeAttr(t.name)}">
-        <div class="tc-name">${escapeHtml(t.name)}${t.is_main ? '<span class="tc-main-mark">MAIN</span>' : ''}${tgBadge}</div>
+        <div class="tc-name"><span class="tc-name-text">${escapeHtml(t.name)}</span>${t.is_main ? '<span class="tc-main-mark">MAIN</span>' : ''}${tgBadge}</div>
         <div class="tc-meta">
           <span class="tc-modul" style="background:${mod?mod.color_bg_light:'#eee'};color:${mod?mod.color:'#333'}">${escapeHtml(mod?mod.label:t.modul)}</span>
           <span>layer ${escapeHtml(t.layer)}</span>
@@ -1063,45 +1123,99 @@ function setupSearch() {
     });
   }
 
+  // ---- suggestions ----
+  attachSuggest(input, "table-suggest",
+    (q) => rankMatches(DATA.tables.map(t => t.name), q).map(n => {
+      const t = tableData(n);
+      return { value: n, html: `<span class="s-name">${escapeHtml(n)}</span><span class="s-meta">${t ? t.cols + " cols · ↓" + t.in : ""}</span>` };
+    }),
+    (it) => { input.value = it.value; focusTable(it.value, null); });
+  attachSuggest(colInput, "col-suggest",
+    (q) => rankMatches(allColumnNames(), q).map(n => ({ value: n, html: `<span class="s-name">${escapeHtml(n)}</span>` })),
+    (it) => { colInput.value = it.value; input.value = ""; run(); });
+
   input.addEventListener("input", () => { if (input.value) colInput.value = ""; run(); });
   colInput.addEventListener("input", () => { if (colInput.value) input.value = ""; run(); });
   mSel.addEventListener("change", run);
   lSel.addEventListener("change", run);
-  uSel.addEventListener("change", run);
-  gSel.addEventListener("change", run);
-  $$("#related-chips .rel-chip").forEach(ch => {
-    ch.addEventListener("click", () => {
-      const was = TBL_STATE.chip === ch.dataset.chip;
-      TBL_STATE.chip = was ? "" : ch.dataset.chip;
-      $$("#related-chips .rel-chip").forEach(x => x.classList.toggle("on", x.dataset.chip === TBL_STATE.chip));
-      run();
-    });
+  uSel.addEventListener("change", () => { rebuildTugasanOptions(); run(); });
+  gSel.addEventListener("change", () => {
+    // choosing a tugasan implies its urusan — sync the urusan select visibly
+    const tg = tugasanOf(gSel.value);
+    if (tg && tg.urusan && uSel.value !== tg.urusan) {
+      uSel.value = tg.urusan;
+      const keep = gSel.value;
+      rebuildTugasanOptions();
+      gSel.value = keep;
+    }
+    run();
+  });
+  $("#chip-spoc").addEventListener("click", () => {
+    TBL_STATE.chipSpoc = !TBL_STATE.chipSpoc;
+    if (TBL_STATE.chipSpoc) TBL_STATE.chipHk = false;
+    syncChips(); run();
+  });
+  $("#chip-hk").addEventListener("click", () => {
+    TBL_STATE.chipHk = !TBL_STATE.chipHk;
+    if (TBL_STATE.chipHk) TBL_STATE.chipSpoc = false;
+    syncChips(); run();
+  });
+  function syncChips() {
+    $("#chip-spoc").classList.toggle("on", TBL_STATE.chipSpoc);
+    $("#chip-hk").classList.toggle("on", TBL_STATE.chipHk);
+  }
+  $("#filters-reset").addEventListener("click", () => {
+    input.value = ""; colInput.value = "";
+    mSel.value = ""; lSel.value = ""; uSel.value = "";
+    TBL_STATE.chipSpoc = false; TBL_STATE.chipHk = false;
+    rebuildTugasanOptions(); syncChips(); run();
   });
   $("#tf-back").addEventListener("click", () => { closeFocus(); run(); });
-  $("#tf-show-implicit").addEventListener("change", (e) => { TBL_STATE.showImplicit = e.target.checked; if (TBL_STATE.selected) focusTable(TBL_STATE.selected, TBL_STATE.highlightCol); });
-  $("#tf-show-hk").addEventListener("change", (e) => { TBL_STATE.showHk = e.target.checked; if (TBL_STATE.selected) focusTable(TBL_STATE.selected, TBL_STATE.highlightCol); });
+  $("#tf-show-implicit").addEventListener("change", (e) => { TBL_STATE.showImplicit = e.target.checked; if (TBL_STATE.selected) refreshFocus(); });
+  $("#tf-show-hk").addEventListener("change", (e) => { TBL_STATE.showHk = e.target.checked; if (TBL_STATE.selected) refreshFocus(); });
+  $("#tf-modal-close").addEventListener("click", closeModal);
+  $("#tf-modal-overlay").addEventListener("click", (e) => { if (e.target.id === "tf-modal-overlay") closeModal(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+  // modal link delegation — modal content is injected per open, so wire once here
+  $("#tf-modal-body").addEventListener("click", (e) => {
+    const link = e.target.closest("[data-open]");
+    if (link) { closeModal(); focusTable(link.dataset.open, null); }
+  });
+
   TBL_STATE.rerun = run;
   run();
 }
 
 function closeFocus() {
+  TBL_STATE.mode = "results";
   TBL_STATE.selected = null;
   TBL_STATE.highlightCol = null;
   $("#table-focus").classList.add("hidden");
   $("#search-results").classList.remove("hidden");
 }
 
-// ---- FOCUS MODE: link graph + columns panel ----
+function openModal(title, bodyHtml) {
+  $("#tf-modal-title").textContent = title;
+  $("#tf-modal-body").innerHTML = bodyHtml;
+  $("#tf-modal-overlay").classList.remove("hidden");
+}
+function closeModal() { $("#tf-modal-overlay").classList.add("hidden"); }
+
+// ---- FOCUS MODE: link graph + sidebar cards ----
 function focusTable(name, highlightCol) {
   const td = tableData(name);
   if (!td) return;
+  TBL_STATE.mode = "focus";
   TBL_STATE.selected = name;
   TBL_STATE.highlightCol = highlightCol || null;
   $("#search-results").classList.add("hidden");
   $("#table-focus").classList.remove("hidden");
   $("#tf-title").textContent = name;
-  renderFocusGraph(name);
-  renderFocusPanel(name);
+  refreshFocus();
+}
+function refreshFocus() {
+  renderFocusGraph(TBL_STATE.selected);
+  renderFocusSidebar(TBL_STATE.selected);
 }
 
 function focusNeighbors(name) {
@@ -1110,7 +1224,7 @@ function focusNeighbors(name) {
   const children = (DATA.in_fk[name] || []).filter(e => hkOk(e.from)).map(e => ({ table: e.from, col: e.col, kind: "fk" }));
   if (TBL_STATE.showImplicit) {
     (DATA.implicit_out[name] || []).filter(e => hkOk(e.to)).forEach(e => parents.push({ table: e.to, col: e.col, kind: "implicit", status: e.status }));
-    (DATA.implicit_in[name] || []).filter(e => !e.hk || TBL_STATE.showHk).forEach(e => children.push({ table: e.from, col: e.col, kind: "implicit", status: e.status }));
+    (DATA.implicit_in[name] || []).filter(e => (!e.hk || TBL_STATE.showHk) && hkOk(e.from)).forEach(e => children.push({ table: e.from, col: e.col, kind: "implicit", status: e.status }));
   }
   return { parents, children };
 }
@@ -1141,7 +1255,6 @@ function renderFocusGraph(name) {
   pShow.forEach((p, i) => { positions["p" + i] = { x: 130, y: columnY(pShow.length, i, H) }; });
   cShow.forEach((c, i) => { positions["c" + i] = { x: W - 130, y: columnY(cShow.length, i, H) }; });
 
-  // Column headers
   const hdrP = svgEl("text", { x: 130, y: 26, "text-anchor": "middle", class: "tf-col-hdr" });
   hdrP.textContent = `POINTS TO (${parents.length})`;
   svg.appendChild(hdrP);
@@ -1149,7 +1262,6 @@ function renderFocusGraph(name) {
   hdrC.textContent = `REFERENCED BY (${children.length})`;
   svg.appendChild(hdrC);
 
-  // Edges
   function edge(x1, y1, x2, y2, label, kind, status) {
     const cls = kind === "implicit" ? "tf-edge tf-edge-implicit" : "tf-edge";
     const midX = (x1 + x2) / 2;
@@ -1169,8 +1281,7 @@ function renderFocusGraph(name) {
     edge(pos.x - nodeSizeSm.w / 2, pos.y, cx + centerSize.w / 2, cy, c.col, c.kind, c.status);
   });
 
-  // Neighbor nodes
-  function drawNode(pos, tname, kind, status) {
+  function drawNode(pos, tname, kind) {
     const td2 = tableData(tname);
     const cat = td2 ? (categoryOf(td2.category) || categoryOf("subsystem")) : categoryOf("subsystem");
     const g = svgEl("g", { class: "tf-node", "data-table": tname });
@@ -1184,22 +1295,20 @@ function renderFocusGraph(name) {
     g.addEventListener("click", () => focusTable(tname, null));
     svg.appendChild(g);
   }
-  pShow.forEach((p, i) => drawNode(positions["p" + i], p.table, p.kind, p.status));
-  cShow.forEach((c, i) => drawNode(positions["c" + i], c.table, c.kind, c.status));
+  pShow.forEach((p, i) => drawNode(positions["p" + i], p.table, p.kind));
+  cShow.forEach((c, i) => drawNode(positions["c" + i], c.table, c.kind));
 
-  // Overflow notes
   if (parents.length > CAPP) {
     const t = svgEl("text", { x: 130, y: H - 16, "text-anchor": "middle", class: "tf-overflow" });
-    t.textContent = `+${parents.length - CAPP} more in panel →`;
+    t.textContent = `+${parents.length - CAPP} more — see Links in the panel`;
     svg.appendChild(t);
   }
   if (children.length > CAPC) {
     const t = svgEl("text", { x: W - 130, y: H - 16, "text-anchor": "middle", class: "tf-overflow" });
-    t.textContent = `+${children.length - CAPC} more in panel →`;
+    t.textContent = `+${children.length - CAPC} more — see Links in the panel`;
     svg.appendChild(t);
   }
 
-  // Center (searched) node — highlighted
   const td = tableData(name);
   const cat = td ? (categoryOf(td.category) || categoryOf("subsystem")) : categoryOf("subsystem");
   const g = svgEl("g", { class: "tf-node tf-node-center" });
@@ -1216,41 +1325,17 @@ function renderFocusGraph(name) {
   svg.appendChild(g);
 }
 
-function renderFocusPanel(name) {
-  const panel = $("#tf-panel");
+// ---- FOCUS SIDEBAR: three separated cards ----
+function renderFocusSidebar(name) {
   const td = tableData(name);
-  if (!td) { panel.innerHTML = "<p>Table not found.</p>"; return; }
+  if (!td) return;
   const mod = modulOf(td.modul) || modulOf("shared");
   const cat = categoryOf(td.category) || categoryOf("subsystem");
   const blurb = DATA.anchor_blurbs[name];
   const pk = td.pk || [];
-  const fkByCol = {};
-  (DATA.out_fk[name] || []).forEach(e => { fkByCol[e.col] = fkByCol[e.col] || []; fkByCol[e.col].push({ to: e.to, kind: "fk" }); });
-  (DATA.implicit_out[name] || []).forEach(e => { fkByCol[e.col] = fkByCol[e.col] || []; fkByCol[e.col].push({ to: e.to, kind: "implicit", status: e.status }); });
 
-  // Urusan involvement
-  const inUrusans = [];
-  for (const u of DATA.urusans) {
-    const idx = urusanStageIndex(u.kod);
-    if (idx[name]) inUrusans.push({ kod: u.kod, stages: idx[name] });
-  }
-  // Tugasan involvement
-  const inTugasans = (DATA.tugasans || []).filter(t =>
-    (t.loads || []).some(x => x.table === name) || (t.saves || []).some(x => x.table === name));
-
-  const hc = TBL_STATE.highlightCol;
-  const colRows = (td.columns || []).map(c => {
-    const badges = [];
-    if (pk.includes(c.n)) badges.push('<span class="pk-badge">PK</span>');
-    (fkByCol[c.n] || []).forEach(l => {
-      if (l.kind === "fk") badges.push(`<span class="fk-badge" data-goto="${escapeAttr(l.to)}">FK → ${escapeHtml(l.to)}</span>`);
-      else if (TBL_STATE.showImplicit) badges.push(`<span class="imp-badge" data-goto="${escapeAttr(l.to)}" title="name-matched link, no declared FK (${l.status})">⇢ ${escapeHtml(l.to)}${l.status === "verified" ? " ✓" : " ?"}</span>`);
-    });
-    return `<tr class="${hc === c.n ? "col-highlight" : ""}" id="tfcol-${escapeAttr(c.n)}">
-      <td class="col-name">${escapeHtml(c.n)}</td><td class="col-type">${escapeHtml(c.t)}</td><td class="col-badges">${badges.join(" ")}</td></tr>`;
-  }).join("");
-
-  panel.innerHTML = `
+  // Card 1 — identity
+  $("#tf-identity").innerHTML = `
     <div class="panel-table-name">${escapeHtml(name)}</div>
     <div class="panel-badges">
       <span class="badge" style="background:${cat.color_bg_light};color:${cat.color}">${escapeHtml(cat.label)}</span>
@@ -1258,24 +1343,91 @@ function renderFocusPanel(name) {
       <span class="badge" style="background:var(--surface-2);color:var(--text-dim)">layer ${escapeHtml(td.layer)}</span>
       ${td.is_main ? '<span class="badge badge-main">main table</span>' : ''}
     </div>
+    ${pk.length ? `<div class="tf-pk-line">PK: <code>${pk.map(escapeHtml).join(", ")}</code></div>` : ""}
     ${blurb ? `<p class="panel-blurb">${escapeHtml(blurb)}</p>` : ""}
-    ${td.comment ? `<p class="panel-blurb" style="font-style:italic;color:var(--text-dim)">${escapeHtml(td.comment)}</p>` : ""}
-    ${inUrusans.length ? `<div class="panel-section"><h4>In urusan flows</h4><ul class="panel-list">${inUrusans.map(u => `<li><span><strong>${escapeHtml(u.kod)}</strong> — ${u.stages.map(escapeHtml).join(" · ")}</span></li>`).join("")}</ul></div>` : ""}
-    ${inTugasans.length ? `<div class="panel-section"><h4>In tugasan (pilot)</h4><ul class="panel-list">${inTugasans.map(t => {
-      const load = (t.loads || []).some(x => x.table === name);
-      const save = (t.saves || []).some(x => x.table === name);
-      return `<li><span><strong>${escapeHtml(t.kod)}</strong> ${load ? '<span class="tg-badge tg-loads">LOADED</span>' : ''}${save ? '<span class="tg-badge tg-saves">SAVED</span>' : ''}</span></li>`;
-    }).join("")}</ul></div>` : ""}
-    <div class="panel-section">
-      <h4>Columns (${(td.columns || []).length})</h4>
-      <table class="col-table"><tbody>${colRows || '<tr><td><em>No column data.</em></td></tr>'}</tbody></table>
-    </div>
+    ${td.comment ? `<p class="panel-blurb panel-comment">${escapeHtml(td.comment)}</p>` : ""}
   `;
-  panel.querySelectorAll("[data-goto]").forEach(el => {
-    el.addEventListener("click", (ev) => { ev.stopPropagation(); focusTable(el.dataset.goto, null); });
+
+  // Card 2 — flows + links (details open in a popup, keeps the sidebar clean)
+  const inUrusans = [];
+  for (const u of DATA.urusans) {
+    const idx = urusanStageIndex(u.kod);
+    if (idx[name]) inUrusans.push({ kod: u.kod, name: u.name, stages: idx[name] });
+  }
+  const inTugasans = (DATA.tugasans || []).filter(t =>
+    (t.loads || []).some(x => x.table === name) || (t.saves || []).some(x => x.table === name));
+  const { parents, children } = focusNeighbors(name);
+  $("#tf-flows").innerHTML = `
+    <h4 class="tf-card-h">Where it appears</h4>
+    <div class="tf-flow-row"><span>Urusan flows</span><span class="tf-flow-n">${inUrusans.length}</span>
+      ${inUrusans.length ? '<button class="btn btn-sm" id="btn-urusan-modal">View</button>' : ''}</div>
+    <div class="tf-flow-row"><span>Tugasan (pilot)</span><span class="tf-flow-n">${inTugasans.length}</span>
+      ${inTugasans.length ? '<button class="btn btn-sm" id="btn-tugasan-modal">View</button>' : ''}</div>
+    <div class="tf-flow-row"><span>Links</span><span class="tf-flow-n">→${parents.length} · ←${children.length}</span>
+      ${(parents.length + children.length) ? '<button class="btn btn-sm" id="btn-links-modal">View all</button>' : ''}</div>
+  `;
+  const bu = $("#btn-urusan-modal");
+  if (bu) bu.addEventListener("click", () => openModal(`${name} — urusan flows`,
+    `<table class="modal-table"><tbody>${inUrusans.map(u =>
+      `<tr><td><strong>${escapeHtml(u.kod)}</strong><div class="modal-sub">${escapeHtml(u.name)}</div></td><td>${u.stages.map(escapeHtml).join("<br>")}</td></tr>`).join("")}</tbody></table>`));
+  const bt = $("#btn-tugasan-modal");
+  if (bt) bt.addEventListener("click", () => openModal(`${name} — tugasan (pilot trace)`,
+    `<table class="modal-table"><tbody>${inTugasans.map(t => {
+      const load = (t.loads || []).find(x => x.table === name);
+      const save = (t.saves || []).find(x => x.table === name);
+      return `<tr><td><strong>${escapeHtml(t.kod)}</strong><div class="modal-sub">${escapeHtml(t.name || "")}</div></td>
+        <td>${load ? '<span class="tg-badge tg-loads">LOADED</span>' : ''}${save ? ' <span class="tg-badge tg-saves">SAVED</span>' : ''}
+        <div class="modal-sub">${escapeHtml((t.screen || "").split("/").pop())}</div></td></tr>`;
+    }).join("")}</tbody></table>`));
+  const bl = $("#btn-links-modal");
+  if (bl) bl.addEventListener("click", () => openModal(`${name} — all links`,
+    `<h5 class="modal-h5">Points to (${parents.length})</h5>
+     <table class="modal-table"><tbody>${parents.map(p =>
+       `<tr><td><a class="modal-link" data-open="${escapeAttr(p.table)}">${escapeHtml(p.table)}</a></td><td><code>${escapeHtml(p.col)}</code>${p.kind === "implicit" ? ` <span class="imp-badge">⇢${p.status === "verified" ? "✓" : "?"}</span>` : ""}</td></tr>`).join("") || "<tr><td><em>None</em></td></tr>"}</tbody></table>
+     <h5 class="modal-h5">Referenced by (${children.length})</h5>
+     <table class="modal-table"><tbody>${children.map(c =>
+       `<tr><td><a class="modal-link" data-open="${escapeAttr(c.table)}">${escapeHtml(c.table)}</a></td><td><code>${escapeHtml(c.col)}</code>${c.kind === "implicit" ? ` <span class="imp-badge">⇢${c.status === "verified" ? "✓" : "?"}</span>` : ""}</td></tr>`).join("") || "<tr><td><em>None</em></td></tr>"}</tbody></table>`));
+
+  // Card 3 — columns (own card, own filter, scrolls internally)
+  const fkByCol = {};
+  (DATA.out_fk[name] || []).forEach(e => { fkByCol[e.col] = fkByCol[e.col] || []; fkByCol[e.col].push({ to: e.to, kind: "fk" }); });
+  (DATA.implicit_out[name] || []).forEach(e => { fkByCol[e.col] = fkByCol[e.col] || []; fkByCol[e.col].push({ to: e.to, kind: "implicit", status: e.status }); });
+  const hc = TBL_STATE.highlightCol;
+
+  function colRowsHtml(filter) {
+    const f = (filter || "").toLowerCase();
+    return (td.columns || []).filter(c => !f || c.n.includes(f)).map(c => {
+      const badges = [];
+      if (pk.includes(c.n)) badges.push('<span class="pk-badge">PK</span>');
+      (fkByCol[c.n] || []).forEach(l => {
+        if (l.kind === "fk") badges.push(`<span class="fk-badge" data-goto="${escapeAttr(l.to)}">FK → ${escapeHtml(l.to)}</span>`);
+        else if (TBL_STATE.showImplicit) badges.push(`<span class="imp-badge" data-goto="${escapeAttr(l.to)}" title="name-matched link, no declared FK (${l.status})">⇢ ${escapeHtml(l.to)}${l.status === "verified" ? " ✓" : " ?"}</span>`);
+      });
+      return `<div class="col-row ${hc === c.n ? "col-highlight" : ""}">
+        <div class="col-row-main"><span class="col-name">${escapeHtml(c.n)}</span><span class="col-type">${escapeHtml(c.t)}</span></div>
+        ${badges.length ? `<div class="col-row-badges">${badges.join(" ")}</div>` : ""}
+      </div>`;
+    }).join("") || `<p class="tf-empty">No columns match.</p>`;
+  }
+
+  $("#tf-columns").innerHTML = `
+    <h4 class="tf-card-h">Columns <span class="tf-flow-n">${(td.columns || []).length}</span></h4>
+    <input type="search" class="col-filter" id="tf-col-filter" placeholder="filter columns…" autocomplete="off">
+    <div class="col-list" id="tf-col-list">${colRowsHtml("")}</div>
+  `;
+  const cf = $("#tf-col-filter");
+  cf.addEventListener("input", () => {
+    $("#tf-col-list").innerHTML = colRowsHtml(cf.value.trim());
+    wireGoto();
   });
+  function wireGoto() {
+    $("#table-focus").querySelectorAll("[data-goto]").forEach(el => {
+      el.addEventListener("click", (ev) => { ev.stopPropagation(); focusTable(el.dataset.goto, null); });
+    });
+  }
+  wireGoto();
   if (hc) {
-    const row = panel.querySelector(".col-highlight");
+    const row = $("#tf-col-list").querySelector(".col-highlight");
     if (row && row.scrollIntoView) setTimeout(() => row.scrollIntoView({ block: "center" }), 60);
   }
 }

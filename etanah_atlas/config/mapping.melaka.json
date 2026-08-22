@@ -777,62 +777,6 @@
             "default": "lulus",
             "outcomes": [
               {
-                "kind": "tangguh",
-                "label": "Tangguh",
-                "steps": [
-                  {
-                    "name": "39.0 Penyediaan Surat Keputusan Tangguh",
-                    "tables": [
-                      "umm_a_srt"
-                    ],
-                    "evidence": "sequenceFlow name=\"Tangguh\" sourceRef=sid-262639D9 targetRef=sid-1AF5A411, condition ${keputusan == \"tangguh\"} (line 443-444); userTask sid-1AF5A411, line 420"
-                  },
-                  {
-                    "name": "40.0 Pengesahan Surat Keputusan Tangguh",
-                    "tables": [
-                      "umm_a_srt"
-                    ],
-                    "evidence": "userTask name=\"40.0  Pengesahan Surat Keputusan Tangguh\" (sid-497DBB35, line 425)"
-                  }
-                ],
-                "loop": "Re-tabled for a future MMKN sitting — \"68.0 Penyediaan Senarai Semak ke PTG (Tangguh)\" (sid-421E0709, line 435) restarts the MMKN meeting-prep cycle rather than ending the urusan"
-              },
-              {
-                "kind": "tolak",
-                "label": "Tolak",
-                "steps": [
-                  {
-                    "name": "41.0 Semakan Keputusan MMKN dan Surat Makluman Keputusan / 42.0 Pengesahan Keputusan MMKN dan Surat Makluman Keputusan",
-                    "tables": [
-                      "umm_keputusan"
-                    ],
-                    "evidence": "sequenceFlow name=\"Lulus/Tolak\" sourceRef=sid-262639D9 targetRef=sid-9D10C547, condition ${keputusan == \"lulus\" || keputusan== \"tolak\" } (line 457-458); userTask sid-9D10C547 line 410, sid-CE3FB082 line 415"
-                  },
-                  {
-                    "name": "64.0 Penyediaan Surat Tolak Ringkas (PYSTP)",
-                    "tables": [
-                      "umm_a_srt"
-                    ],
-                    "evidence": "sequenceFlow name=\"Tolak\" sourceRef=sid-F5DC3C89 targetRef=sid-7382AC88, condition ${keputusan == \"tolak\"} (line 647-648); userTask sid-7382AC88, line 95"
-                  },
-                  {
-                    "name": "65.0 Semakan Surat Tolak Ringkas (SSTP)",
-                    "tables": [
-                      "umm_a_srt"
-                    ],
-                    "evidence": "userTask sid-F3EF8746, line 101"
-                  },
-                  {
-                    "name": "66.0 Peraku Surat Tolak Ringkas (PSTP)",
-                    "tables": [
-                      "umm_a_srt"
-                    ],
-                    "evidence": "userTask sid-A0628120, line 107"
-                  }
-                ],
-                "end": "Application rejected — Surat Tolak Ringkas (simple rejection letter) issued to applicant; urusan ends"
-              },
-              {
                 "kind": "lulus",
                 "label": "Lulus",
                 "steps": [
@@ -869,7 +813,63 @@
                     "evidence": "userTask name=\"50.0 Penyediaan Draf Pembatalan Warta dan Surat Iringan Ke Dewan\" (sid-00740C08, line 615); \"56.0 Muatnaik  Pembatalan Warta\" (sid-FACF5D86, line 624)"
                   }
                 ],
-                "end": "Application approved — reservation cancellation gazetted (Warta) and notified to PDT/applicant (57.0-61.0 Surat Makluman ke PDT/Pemohon); urusan ends"
+                "end": "Warta pembatalan rizab diwartakan"
+              },
+              {
+                "kind": "tolak",
+                "label": "Tolak",
+                "steps": [
+                  {
+                    "name": "41.0 Semakan Keputusan MMKN dan Surat Makluman Keputusan / 42.0 Pengesahan Keputusan MMKN dan Surat Makluman Keputusan",
+                    "tables": [
+                      "umm_keputusan"
+                    ],
+                    "evidence": "sequenceFlow name=\"Lulus/Tolak\" sourceRef=sid-262639D9 targetRef=sid-9D10C547, condition ${keputusan == \"lulus\" || keputusan== \"tolak\" } (line 457-458); userTask sid-9D10C547 line 410, sid-CE3FB082 line 415"
+                  },
+                  {
+                    "name": "64.0 Penyediaan Surat Tolak Ringkas (PYSTP)",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "sequenceFlow name=\"Tolak\" sourceRef=sid-F5DC3C89 targetRef=sid-7382AC88, condition ${keputusan == \"tolak\"} (line 647-648); userTask sid-7382AC88, line 95"
+                  },
+                  {
+                    "name": "65.0 Semakan Surat Tolak Ringkas (SSTP)",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-F3EF8746, line 101"
+                  },
+                  {
+                    "name": "66.0 Peraku Surat Tolak Ringkas (PSTP)",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask sid-A0628120, line 107"
+                  }
+                ],
+                "end": "Surat Tolak Ringkas dikeluarkan"
+              },
+              {
+                "kind": "tangguh",
+                "label": "Tangguh",
+                "steps": [
+                  {
+                    "name": "39.0 Penyediaan Surat Keputusan Tangguh",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "sequenceFlow name=\"Tangguh\" sourceRef=sid-262639D9 targetRef=sid-1AF5A411, condition ${keputusan == \"tangguh\"} (line 443-444); userTask sid-1AF5A411, line 420"
+                  },
+                  {
+                    "name": "40.0 Pengesahan Surat Keputusan Tangguh",
+                    "tables": [
+                      "umm_a_srt"
+                    ],
+                    "evidence": "userTask name=\"40.0  Pengesahan Surat Keputusan Tangguh\" (sid-497DBB35, line 425)"
+                  }
+                ],
+                "loop": "Re-tabled ke mesyuarat MMKN akan datang"
               }
             ]
           }
@@ -878,7 +878,7 @@
       "bpmn_file": "MLK_PLP_BPRZ.bpmn20.xml",
       "fork_evidence": "exclusiveGateway id=\"sid-262639D9-4A31-4486-AFFF-5F135989D32A\" name=\"Keputusan\" (line 430): sequenceFlow name=\"Tangguh\" targetRef=sid-1AF5A411 condition ${keputusan == \"tangguh\"} (line 443-444); sequenceFlow name=\"Lulus/Tolak\" targetRef=sid-9D10C547 condition ${keputusan == \"lulus\" || keputusan== \"tolak\" } (line 457-458). Downstream exclusiveGateway id=\"sid-F5DC3C89-605C-4030-B87D-0BF76B9726C2\" name=\"Keputusan\" default=\"sid-921DDF3E...\" (line 451): sequenceFlow name=\"Tolak\" targetRef=sid-7382AC88 condition ${keputusan == \"tolak\"} (line 647-648); sequenceFlow name=\"Lulus\" targetRef=sid-BBAF20C9 is the DEFAULT flow (line 1062, no conditionExpression).",
       "confidence": "high",
-      "notes": "A second, internal JKKL-level 'Keputusan' gateway (sid-1BF3FF7F, line 1504) routes ${keputusanJKKL==\"tangguh\"} back to the JKKL decision task itself (re-sit JKKL) vs ${keputusanJKKL==\"proceed\"} onward to MMKN prep — this is a committee re-sitting loop, not the urusan-level Lulus/Tolak/Tangguh fork, so it is folded into stage 'jkkl_decision' rather than given its own fork key. From line ~1615 onward the BPMN carries a large 'Pembetulan' (correction/rework) sub-flow re-using the same task set (e.g. \"3.0 Semakan Kemasukan Maklumat (Pembetulan)\") — excluded from stages[] as it is not part of the first-pass happy path. Table assignments for the JKKL/MMKN decision stages reuse umm_keputusan/umm_keputusan_mesyuarat/umm_a_srt by analogy with the PT curated mapping; the BPMN itself does not name DB tables, only task listener kod (e.g. KJKKLPSK, SKMMKN, PKMMKN) — those kod strings were not independently verified against a data-access layer for this extraction."
+      "notes": "A second, internal JKKL-level 'Keputusan' gateway (sid-1BF3FF7F, line 1504) routes ${keputusanJKKL==\"tangguh\"} back to the JKKL decision task itself (re-sit JKKL) vs ${keputusanJKKL==\"proceed\"} onward to MMKN prep — this is a committee re-sitting loop, not the urusan-level Lulus/Tolak/Tangguh fork, so it is folded into stage 'jkkl_decision' rather than given its own fork key. From line ~1615 onward the BPMN carries a large 'Pembetulan' (correction/rework) sub-flow re-using the same task set (e.g. \"3.0 Semakan Kemasukan Maklumat (Pembetulan)\") — excluded from stages[] as it is not part of the first-pass happy path. Table assignments for the JKKL/MMKN decision stages reuse umm_keputusan/umm_keputusan_mesyuarat/umm_a_srt by analogy with the PT curated mapping; the BPMN itself does not name DB tables, only task listener kod (e.g. KJKKLPSK, SKMMKN, PKMMKN) — those kod strings were not independently verified against a data-access layer for this extraction. | lulus end detail: Application approved — reservation cancellation gazetted (Warta) and notified to PDT/applicant (57.0-61.0 Surat Makluman ke PDT/Pemohon); urusan ends | tolak end detail: Application rejected — Surat Tolak Ringkas (simple rejection letter) issued to applicant; urusan ends"
     },
     {
       "kod": "PSBS",
@@ -992,7 +992,7 @@
                     "evidence": "callActivity name=\"33.0 Endorsan Nota Mohon (SBTL)\" (MLK_DFT_NOTA_HKMLK), userTask name=\"53.0 Semakan Dokumen Kelulusan\", exclusiveGateway name=\"Ada QT?\" branching to callActivity name=\"Daftar Hakmilik Kekal Ganti Hakmilik Sementara (HKGHS) (MLK_DFT_NOTA_HKMLK)\" or callActivity name=\"Daftar Hakmilik Kekal (HKBM) (MLK_DFT_NOTA_HKMLK)\""
                   }
                 ],
-                "end": "Tamat — Hakmilik Kekal (HKBM atau HKGHS) berdaftar, via serviceTask \"Tamat Aplikasi Service\" (mlkTamatAplikasiService)"
+                "end": "Tamat — Hakmilik Kekal (HKBM/HKGHS) berdaftar"
               },
               {
                 "kind": "tolak",
@@ -1014,7 +1014,7 @@
                     "evidence": "callActivity name=\"51.0 Cetakan Dokumen Surat Tolak\" (MLK_PLP_SUB_UPN) in parallel with callActivity name=\"Endorsan Nota Mohon (SBTB)\" (MLK_DFT_NOTA_HKMLK)"
                   }
                 ],
-                "end": "Tamat — Permohonan ditolak, Surat Tolak dikeluarkan, via serviceTask \"Tamat Aplikasi Service\""
+                "end": "Tamat — Surat Tolak dikeluarkan"
               },
               {
                 "kind": "tangguh",
@@ -1043,7 +1043,7 @@
                     "evidence": "userTask name=\"41.0 Penyediaan Senarai Semak ke PTG (Tangguh)\" -> userTask name=\"Zip Fail Dokumen MMKN (Tangguh)\""
                   }
                 ],
-                "end": "No outgoing sequenceFlow found from userTask \"Zip Fail Dokumen MMKN (Tangguh)\" (sid-65147853) in this BPMN — the resubmission-for-next-MMKN-sitting continuation is not modeled beyond this task; treated as a modeling gap, not re-derived/invented."
+                "end": "Zip Fail Dokumen MMKN — BPMN stops here (modeling gap; re-table not modeled)"
               }
             ]
           }
@@ -1052,7 +1052,7 @@
       "bpmn_file": "MLK_PLP_PSBS.bpmn20.xml",
       "fork_evidence": "exclusiveGateway id=sid-52D42A7D-B172-4FCA-AF3C-EDC699A33855 name=\"Keputusan\": sequenceFlow id=sid-C2182E37 name=\"Tangguh\" condition ${keputusan == \"tangguh\"} -> 27.0 Penyediaan Surat Tangguh; sequenceFlow id=sid-76F9C152 name=\"Lulus/Tolak\" condition ${keputusan == \"lulus\" || keputusan== \"tolak\"} -> 24.0 Semakan Keputusan MMKN dan Surat Keputusan -> 25.0 Perakuan Keputusan MMKN dan Surat Keputusan -> gateway sid-E89C42F0 (Pembetulan, Tidak) -> second exclusiveGateway id=sid-6D352908-C2B6-409B-8A2B-81BAA7C39871 name=\"Keputusan\": sequenceFlow id=sid-838426D2 name=\"Lulus\" condition ${keputusan == \"lulus\" } -> 22.0 Penyediaan Surat Keputusan Lulus dan Borang Notis 5A; sequenceFlow id=sid-7FDB874B name=\"Tolak\" condition ${keputusan == \"tolak\" } -> parallelGateway sid-1C28E943 -> 46.0 Penyediaan Surat Tolak / Endorsan Nota Mohon (SBTB)",
       "confidence": "medium",
-      "notes": "All three outcomes (lulus/tolak/tangguh) are genuinely routed in this BPMN — PSBS does have a modeled Tangguh branch despite not being in URS_TANGGUH_LIST (that list likely governs a different concern, e.g. UI/report inclusion, not BPMN routing). Confidence held at medium (not high) solely because the Tangguh branch's terminal task \"Zip Fail Dokumen MMKN (Tangguh)\" (sid-65147853) has no outgoing sequenceFlow anywhere in the file — verified by full-file grep, not a sampling gap. Main linear path (intake -> JT -> Risalat PDT -> Risalat PTG -> Keputusan Awal -> Zip Fail -> Keputusan MMKN) and the Lulus/Tolak tails are high-confidence, directly evidenced. Committee-decision gateway naming ('Keputusan') matches the analog PT shape but is a two-stage split (Tangguh peeled off first, then Lulus vs Tolak) rather than a single 3-way gateway — reflected verbatim in fork_evidence. Table umm_a_pelupusan from the analog note does NOT exist in schema_parse.json; used plp_a_pelupusan (which does exist) instead for the intake stage."
+      "notes": "All three outcomes (lulus/tolak/tangguh) are genuinely routed in this BPMN — PSBS does have a modeled Tangguh branch despite not being in URS_TANGGUH_LIST (that list likely governs a different concern, e.g. UI/report inclusion, not BPMN routing). Confidence held at medium (not high) solely because the Tangguh branch's terminal task \"Zip Fail Dokumen MMKN (Tangguh)\" (sid-65147853) has no outgoing sequenceFlow anywhere in the file — verified by full-file grep, not a sampling gap. Main linear path (intake -> JT -> Risalat PDT -> Risalat PTG -> Keputusan Awal -> Zip Fail -> Keputusan MMKN) and the Lulus/Tolak tails are high-confidence, directly evidenced. Committee-decision gateway naming ('Keputusan') matches the analog PT shape but is a two-stage split (Tangguh peeled off first, then Lulus vs Tolak) rather than a single 3-way gateway — reflected verbatim in fork_evidence. Table umm_a_pelupusan from the analog note does NOT exist in schema_parse.json; used plp_a_pelupusan (which does exist) instead for the intake stage. | lulus end detail: Tamat — Hakmilik Kekal (HKBM atau HKGHS) berdaftar, via serviceTask \"Tamat Aplikasi Service\" (mlkTamatAplikasiService) | tolak end detail: Tamat — Permohonan ditolak, Surat Tolak dikeluarkan, via serviceTask \"Tamat Aplikasi Service\" | tangguh end detail: No outgoing sequenceFlow found from userTask \"Zip Fail Dokumen MMKN (Tangguh)\" (sid-65147853) in this BPMN — the resubmission-for-next-MMKN-sitting continuation is not modeled beyond this task; treated as a modeling gap, not re-derived/invented."
     },
     {
       "kod": "PPJK",
@@ -1129,7 +1129,7 @@
                     "evidence": "userTask name=\"45.0 Pengesahan Surat Keputusan Lulus\" (sid-B69717B6-514C-4A8C-A558-57008C096002, taskListener kod PSSK)"
                   }
                 ],
-                "end": "Surat Keputusan Lulus disahkan — permohonan diluluskan; alur diteruskan ke Nilaian JPPH (gateway \"Perlu Nilaian JPPH?\" sid-91A7F600 → userTask \"49.0 Penyediaan Surat Nilaian JPPH\") dan seterusnya pendaftaran pajakan (\"54.0 Penyediaan Borang 4Ee dan P3e\")."
+                "end": "Surat Keputusan Lulus disahkan — diteruskan ke Nilaian/Warta"
               },
               {
                 "kind": "tolak",
@@ -1187,7 +1187,7 @@
                     "evidence": "userTask name=\"72.0 Penyediaan Senarai Semak Ke PTG - Tangguh\" (sid-D6E998F7-A02A-43BA-9C88-A73D665DEDF4)"
                   }
                 ],
-                "loop": "Kes ditangguhkan — dijadualkan semula untuk dibentangkan pada mesyuarat JKKL/MMKN akan datang (re-table, not a terminal outcome)."
+                "loop": "Re-tabled ke mesyuarat JKKL/MMKN akan datang"
               }
             ]
           }
@@ -1196,7 +1196,7 @@
       "bpmn_file": "MLK_PLP_PPJK.bpmn20.xml",
       "fork_evidence": "Gateway sid-277187EA-C5BF-4629-8C96-4C87CB7C4E56 name=\"Keputusan\" (sourceRef=sid-81D9BAD2, task \"38.0 Kemasukan Keputusan MMKN dan Penyediaan Surat Keputusan\"): flow sid-85E40191 name=\"Lulus/Tolak\" conditionExpression ${keputusan == \"lulus\" || keputusan== \"tolak\"} -> targetRef sid-AA2C4433 (\"41.0 Semakan Keputusan MMKN dan Surat Keputusan\"); flow sid-67C86DEB name=\"Tangguh\" conditionExpression ${keputusan == \"tangguh\"} -> targetRef sid-0152FEF4 (\"39.0 Penyediaan Surat Keputusan Tangguh\"). Downstream, the Lulus/Tolak leg passes through \"42.0 Peraku Keputusan MMKN dan Surat Keputusan\" (sid-198DE18F) into gateway sid-FDA27381-633A-493A-8838-A03F0DBDB722 name=\"Keputusan\" default=sid-3A8A0654 (\"Lulus\"): flow sid-2B0EF18C name=\"Tolak\" conditionExpression ${keputusan==\"tolak\"} -> targetRef sid-DBB43062 (\"62.0 Penyediaan Surat Tolak\"); default flow sid-3A8A0654 name=\"Lulus\" -> targetRef sid-0A6D015A (\"43.0 Penyediaan Surat Keputusan Lulus\").",
       "confidence": "high",
-      "notes": "This BPMN contains a SECOND, distinct decision loop internal to the JKKL sitting itself: userTask \"26.0 Keputusan JKKL Dan Penyediaan Surat Keputusan\" (sid-A929A49A, kod KJKKLPSK) -> \"26.1 Semakan...\" -> \"26.2 Peraku...\" -> gateway sid-6B1D745A name=\"Keputusan\" on variable keputusanJKKL: ${keputusanJKKL==\"proceed\"} -> \"26.3 Terimaan Keputusan JKKL Dan Penentuan Kelulusan\"; ${keputusanJKKL==\"tangguh\"} -> loops back to 26.0 itself. This is JKKL's internal recommend/re-table gate BEFORE the case reaches the MMKN-track keputusan (lulus/tolak/tangguh) gateway documented above as the main fork — it was not used as the primary fork because it lacks a 'tolak' branch and its outcomes (proceed/re-loop-26.0) are not the BA-recognizable Lulus/Tolak/Tangguh vocabulary the task asked for. Also: PDT vs PTG are two parallel routing tracks (agihanKepada variable: PT/PPD/KPPD/PTNH vs KPT/PPTG/TPTG/KS) collapsed into single abstract stages above — both tracks converge on the same MMKN keputusan gateway (sid-277187EA) and same Lulus/Tolak split (sid-FDA27381). No 'warta'/gazette userTask exists anywhere in this BPMN (grepped case-insensitively, zero matches) despite PPJK's URUSAN_PERIZABAN_LIST membership — pewartaan for reserved-land lease appears to live in a separate/related urusan, not in PPJK's own flow, so no warta stage was added. Table plp_a_pelupusan used in place of the prompt's suggested 'umm_a_pelupusan' (does not exist in schema_parse.json); dft_p_pajakan/dft_p_btrn_pajakan were NOT assigned to the Lulus tail because the BPMN evidence for the Lulus branch (43.0/44.0/45.0) is about Surat Keputusan generation, not lease registration itself — the registration step (\"54.0 Penyediaan Borang 4Ee dan P3e\") lies further downstream past the 4-step cap and is only referenced in the 'end' narrative, not as a scored step/table."
+      "notes": "This BPMN contains a SECOND, distinct decision loop internal to the JKKL sitting itself: userTask \"26.0 Keputusan JKKL Dan Penyediaan Surat Keputusan\" (sid-A929A49A, kod KJKKLPSK) -> \"26.1 Semakan...\" -> \"26.2 Peraku...\" -> gateway sid-6B1D745A name=\"Keputusan\" on variable keputusanJKKL: ${keputusanJKKL==\"proceed\"} -> \"26.3 Terimaan Keputusan JKKL Dan Penentuan Kelulusan\"; ${keputusanJKKL==\"tangguh\"} -> loops back to 26.0 itself. This is JKKL's internal recommend/re-table gate BEFORE the case reaches the MMKN-track keputusan (lulus/tolak/tangguh) gateway documented above as the main fork — it was not used as the primary fork because it lacks a 'tolak' branch and its outcomes (proceed/re-loop-26.0) are not the BA-recognizable Lulus/Tolak/Tangguh vocabulary the task asked for. Also: PDT vs PTG are two parallel routing tracks (agihanKepada variable: PT/PPD/KPPD/PTNH vs KPT/PPTG/TPTG/KS) collapsed into single abstract stages above — both tracks converge on the same MMKN keputusan gateway (sid-277187EA) and same Lulus/Tolak split (sid-FDA27381). No 'warta'/gazette userTask exists anywhere in this BPMN (grepped case-insensitively, zero matches) despite PPJK's URUSAN_PERIZABAN_LIST membership — pewartaan for reserved-land lease appears to live in a separate/related urusan, not in PPJK's own flow, so no warta stage was added. Table plp_a_pelupusan used in place of the prompt's suggested 'umm_a_pelupusan' (does not exist in schema_parse.json); dft_p_pajakan/dft_p_btrn_pajakan were NOT assigned to the Lulus tail because the BPMN evidence for the Lulus branch (43.0/44.0/45.0) is about Surat Keputusan generation, not lease registration itself — the registration step (\"54.0 Penyediaan Borang 4Ee dan P3e\") lies further downstream past the 4-step cap and is only referenced in the 'end' narrative, not as a scored step/table. | lulus end detail: Surat Keputusan Lulus disahkan — permohonan diluluskan; alur diteruskan ke Nilaian JPPH (gateway \"Perlu Nilaian JPPH?\" sid-91A7F600 → userTask \"49.0 Penyediaan Surat Nilaian JPPH\") dan seterusnya pendaftaran pajakan (\"54.0 Penyediaan Borang 4Ee dan P3e\")."
     },
     {
       "kod": "PLTP",
@@ -1315,7 +1315,7 @@
                     "evidence": "callActivity name=\"32.0 Endorsan Nota Lulus Lanjut Tempoh Pajakan - PSPL\" calledElement=\"MLK_DFT_NOTA_HKMLK\" (sid-C71DF3CE, flowable:in nextUrusan=\"PSPL\", urusan=\"PLTP\", applicationName=\"etanah-pendaftaran\")"
                   }
                 ],
-                "end": "serviceTask name=\"Servis Tamat Aplikasi\" (sid-AA5D1496, mlkTamatAplikasiService) -> endEvent name=\"End process\" (sid-DC3DC916)"
+                "end": "Tamat Aplikasi — permohonan diluluskan"
               },
               {
                 "kind": "tolak",
@@ -1351,7 +1351,7 @@
                     "evidence": "callActivity name=\"51.0 Cetakan Dokumen Surat Tolak (MLK_PLP_SUB_UPN)\" (sid-BF49045B)"
                   }
                 ],
-                "end": "serviceTask name=\"Servis Tamat Aplikasi\" (sid-AA5D1496) -> endEvent name=\"End process\" (sid-DC3DC916) — same terminal service/end node as Lulus"
+                "end": "Tamat Aplikasi — permohonan ditolak"
               },
               {
                 "kind": "tangguh",
@@ -1366,7 +1366,7 @@
                     "evidence": "userTask name=\"33.0 Penyediaan Surat Keputusan Tangguh\" (sid-576C0C97, kod PYSKT), reached directly from sid-D1225CE9 condition ${keputusan == \"tangguh\"}; userTask name=\"34.0 Pengesahan Surat Keputusan Tangguh\" (sid-CF83012A, kod PSKTGH)"
                   }
                 ],
-                "end": "endEvent name=\"Tangguh MMKN\" (sid-29DC62E8) — dedicated end event, distinct from the shared \"End process\" node used by Lulus/Tolak"
+                "end": "Tangguh MMKN (dedicated end event)"
               }
             ]
           }
@@ -1375,7 +1375,7 @@
       "bpmn_file": "MLK_PLP_PLTP.bpmn20.xml",
       "fork_evidence": "exclusiveGateway id=\"sid-D1225CE9-F52D-49D6-A936-0714B1DF470B\" name=\"Keputusan\": sequenceFlow id=\"sid-3712D8BB\" name=\"Tangguh\" conditionExpression ${keputusan == \"tangguh\"} -> sid-576C0C97 (33.0 Penyediaan Surat Keputusan Tangguh); sequenceFlow id=\"sid-138212C9\" name=\"Lulus\" conditionExpression ${keputusan == \"lulus\"} -> sid-C258E3FF (24.0 Semakan Keputusan MMKN); sequenceFlow id=\"sid-2B076F32\" name=\"Tolak\" conditionExpression ${keputusan == \"tolak\"} -> sid-C258E3FF (same target as Lulus). Lulus/Tolak reconverge at 24.0/25.0 then split again at a second exclusiveGateway id=\"sid-95A41221-8433-47AD-8459-D65669842571\" name=\"Keputusan\": sequenceFlow id=\"sid-6EA3DBFA\" name=\"Lulus\" ${keputusan == \"lulus\"} -> sid-2A5F512A (26.0 Notis 5A path); sequenceFlow id=\"sid-E522B617\" name=\"Tolak\" ${keputusan == \"tolak\"} -> sid-10F8238E (merge gateway feeding the 47.0-51.0 Surat Tolak family, PYSTP/SSTP/PSTP, which is shared with the earlier PDT-level Tolak Awal path from gateway sid-6D1C5375 name=\"Keputusan?\" condition ${keputusanAwal == \"false\"}).",
       "confidence": "high",
-      "notes": "Verified zero occurrences of a distinct JKKT-specific 'Tangguh' end path other than the dedicated 'Tangguh MMKN' end event (sid-29DC62E8) — Tangguh terminates immediately after the two Tangguh letter tasks with no further routing. The BPMN also contains an earlier, separate PDT-level preliminary reject ('Tolak Awal', gateway sid-6D1C5375 name=\"Keputusan?\", var keputusanAwal) that occurs BEFORE the committee stage and merges into the SAME Surat Tolak family (47.0-51.0, gateway sid-10F8238E) used by the JKKT committee Tolak outcome — this is a pre-committee shortcut, not a JKKT outcome, so it was excluded from stages[]/fork per task scope (only the committee-decision gateway sid-D1225CE9 was modeled as the fork). Many additional exclusiveGateways in this file (name=\"Pembetulan\", \"Agihan Kepada\", \"Pindaan\", \"Jenis Pindaan\") are rework/routing loops unrelated to the committee outcome and were excluded per task instructions. Table umm_a_pelupusan (used in the PT analog) does not exist in schema_parse.json for this build; substituted plp_a_pelupusan / plp_p_pelupusan (both verified present) as the pelupusan-urusan table. dft_a_hkmlk and dft_a_btrn_pajakan (suggested in the task hint) also do not exist in schema_parse.json; substituted verified dft_p_pajakan / dft_a_nota for the PSPL pendaftaran handoff."
+      "notes": "Verified zero occurrences of a distinct JKKT-specific 'Tangguh' end path other than the dedicated 'Tangguh MMKN' end event (sid-29DC62E8) — Tangguh terminates immediately after the two Tangguh letter tasks with no further routing. The BPMN also contains an earlier, separate PDT-level preliminary reject ('Tolak Awal', gateway sid-6D1C5375 name=\"Keputusan?\", var keputusanAwal) that occurs BEFORE the committee stage and merges into the SAME Surat Tolak family (47.0-51.0, gateway sid-10F8238E) used by the JKKT committee Tolak outcome — this is a pre-committee shortcut, not a JKKT outcome, so it was excluded from stages[]/fork per task scope (only the committee-decision gateway sid-D1225CE9 was modeled as the fork). Many additional exclusiveGateways in this file (name=\"Pembetulan\", \"Agihan Kepada\", \"Pindaan\", \"Jenis Pindaan\") are rework/routing loops unrelated to the committee outcome and were excluded per task instructions. Table umm_a_pelupusan (used in the PT analog) does not exist in schema_parse.json for this build; substituted plp_a_pelupusan / plp_p_pelupusan (both verified present) as the pelupusan-urusan table. dft_a_hkmlk and dft_a_btrn_pajakan (suggested in the task hint) also do not exist in schema_parse.json; substituted verified dft_p_pajakan / dft_a_nota for the PSPL pendaftaran handoff. | lulus end detail: serviceTask name=\"Servis Tamat Aplikasi\" (sid-AA5D1496, mlkTamatAplikasiService) -> endEvent name=\"End process\" (sid-DC3DC916) | tolak end detail: serviceTask name=\"Servis Tamat Aplikasi\" (sid-AA5D1496) -> endEvent name=\"End process\" (sid-DC3DC916) — same terminal service/end node as Lulus | tangguh end detail: endEvent name=\"Tangguh MMKN\" (sid-29DC62E8) — dedicated end event, distinct from the shared \"End process\" node used by Lulus/Tolak"
     },
     {
       "kod": "PRBB",

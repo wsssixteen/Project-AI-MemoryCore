@@ -96,26 +96,27 @@
 </section>
 
 <section class="view hidden" id="view-search" data-view="search">
-  <div class="search-controls no-print">
+  <div class="search-controls card no-print">
     <div class="search-inputs">
-      <input type="search" id="search-input" placeholder="Search tables… (name or comment)" autocomplete="off">
-      <input type="search" id="col-search-input" placeholder="Search columns across ALL tables…" autocomplete="off">
+      <div class="suggest-wrap">
+        <input type="search" id="search-input" placeholder="Search tables… (name or comment)" autocomplete="off">
+        <div class="suggest-box hidden" id="table-suggest"></div>
+      </div>
+      <div class="suggest-wrap">
+        <input type="search" id="col-search-input" placeholder="Search columns across ALL tables…" autocomplete="off">
+        <div class="suggest-box hidden" id="col-suggest"></div>
+      </div>
+      <span id="search-count" class="search-count"></span>
     </div>
     <div class="search-filters">
       <label>Modul <select id="search-modul"><option value="">(all)</option></select></label>
       <label>Layer <select id="search-layer"><option value="">(all)</option><option value="_a_">Internal _a_</option><option value="_p_">AWAM/Pra _p_</option><option value="neither">Neither</option></select></label>
       <label>Urusan <select id="search-urusan"><option value="">(all)</option></select></label>
       <label id="search-tugasan-wrap">Tugasan <select id="search-tugasan"><option value="">(all)</option></select></label>
-      <span id="search-count" class="search-count"></span>
-    </div>
-    <div class="related-chips" id="related-chips">
-      <span class="rc-label">Related modules:</span>
-      <button class="rel-chip" data-chip="awam" title="Portal-side tables (_p_ layer) — etanah-awam writes these">AWAM (_p_)</button>
-      <button class="rel-chip" data-chip="spoc" title="SPOC integration tables (spc_*) — the AWAM→PLP handoff">SPOC (spc_)</button>
-      <button class="rel-chip" data-chip="hasil" title="Revenue module (hsl_*)">Hasil (hsl_)</button>
-      <button class="rel-chip" data-chip="teknikal" title="Technical module (tkl_*)">Teknikal (tkl_)</button>
-      <button class="rel-chip" data-chip="pendaftaran" title="Registry module (dft_*)">Pendaftaran (dft_)</button>
-      <button class="rel-chip" data-chip="housekeeping" title="Backup/tmp/migration tables — hidden by default">show housekeeping</button>
+      <button class="rel-chip" data-chip="spoc" id="chip-spoc" title="SPOC integration tables (spc_*) — the AWAM→PLP handoff">SPOC (spc_)</button>
+      <button class="rel-chip" data-chip="housekeeping" id="chip-hk" title="Backup/tmp/migration tables — hidden by default">housekeeping</button>
+      <button class="btn btn-sm" id="filters-reset" title="Clear search + all filters">Reset</button>
+      <span class="filter-hint" id="filter-hint"></span>
     </div>
   </div>
   <div id="search-results" class="search-results"></div>
@@ -127,10 +128,20 @@
       <label class="tf-toggle"><input type="checkbox" id="tf-show-hk"> housekeeping tables</label>
     </div>
     <div class="tf-grid">
-      <div class="tf-canvas-wrap">
+      <div class="tf-canvas-wrap card">
         <svg id="tf-svg" viewBox="0 0 900 620" preserveAspectRatio="xMidYMid meet"></svg>
       </div>
-      <aside class="tf-panel" id="tf-panel"></aside>
+      <aside class="tf-sidebar">
+        <div class="card tf-card" id="tf-identity"></div>
+        <div class="card tf-card" id="tf-flows"></div>
+        <div class="card tf-card tf-columns-card" id="tf-columns"></div>
+      </aside>
+    </div>
+  </div>
+  <div class="modal-overlay hidden" id="tf-modal-overlay">
+    <div class="modal-card" id="tf-modal">
+      <div class="modal-head"><span id="tf-modal-title"></span><button class="modal-x" id="tf-modal-close">×</button></div>
+      <div class="modal-body" id="tf-modal-body"></div>
     </div>
   </div>
 </section>
