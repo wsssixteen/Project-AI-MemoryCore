@@ -899,10 +899,15 @@ function renderUrusanView() {
 $("#urusan-picker").addEventListener("change", renderUrusanView);
 
 // ========== TABLES VIEW (search + link-graph + columns) ==========
+// Three sub-tabs, one purpose each:
+//   Diagram  — know the table -> its link diagram + columns (search goes straight there)
+//   Catalog  — browse what exists, filtered by modul/layer
+//   By Urusan — stage-grouped tables per urusan (+ tugasan loads/saves)
 const TBL_STATE = {
-  mode: "results",       // "results" | "focus"
+  sub: "diagram",
   selected: null,
   highlightCol: null,
+  cameFrom: "diagram",
   chipSpoc: false,
   chipHk: false,
   showImplicit: true,
@@ -931,7 +936,6 @@ function urusanStageIndex(kod) {
 
 function tugasanOf(kod) { return (DATA.tugasans || []).find(t => t.kod === kod); }
 
-// Distinct sorted column names across all tables (built once, for suggestions)
 let ALL_COLUMN_NAMES = null;
 function allColumnNames() {
   if (ALL_COLUMN_NAMES) return ALL_COLUMN_NAMES;
@@ -974,7 +978,6 @@ function attachSuggest(input, boxId, getItems, onPick) {
 }
 
 function rankMatches(names, q) {
-  // prefix matches first, then substring; both alphabetical
   const pre = [], sub = [];
   for (const n of names) {
     const ln = n.toLowerCase();
@@ -985,109 +988,154 @@ function rankMatches(names, q) {
   return pre.concat(sub);
 }
 
+// ---- sub-tab switching ----
+function selectSubTab(name) {
+  TBL_STATE.sub = name;
+  $$("#tbl-subtabs .subtab").forEach(b => b.classList.toggle("active", b.dataset.sub === name));
+  ["diagram", "catalog", "urusan"].forEach(k => {
+    document.getElementById("sub-" + k).classList.toggle("hidden", k !== name);
+  });
+}
+
 function setupSearch() {
   const input = $("#search-input");
   const colInput = $("#col-search-input");
+  const catInput = $("#catalog-input");
   const mSel = $("#search-modul");
   const lSel = $("#search-layer");
-  const uSel = $("#search-urusan");
-  const gSel = $("#search-tugasan");
   const out = $("#search-results");
   const cnt = $("#search-count");
   const hint = $("#filter-hint");
+  const ubU = $("#ub-urusan");
+  const ubT = $("#ub-tugasan");
 
+  // sub-tab wiring
+  $$("#tbl-subtabs .subtab").forEach(b => b.addEventListener("click", () => selectSubTab(b.dataset.sub)));
+  $$("#diagram-empty [data-goto-sub]").forEach(b => b.addEventListener("click", () => selectSubTab(b.dataset.gotoSub)));
+
+  // urusan options (By Urusan sub-tab)
   DATA.urusans.forEach(u => {
     const opt = document.createElement("option");
     opt.value = u.kod; opt.textContent = `${u.kod} · ${u.name}`;
-    uSel.appendChild(opt);
+    ubU.appendChild(opt);
   });
-
   function rebuildTugasanOptions() {
     const all = DATA.tugasans || [];
-    const scoped = uSel.value ? all.filter(t => (t.urusan || "") === uSel.value) : all;
-    gSel.innerHTML = "";
+    const scoped = ubU.value ? all.filter(t => (t.urusan || "") === ubU.value) : all;
+    ubT.innerHTML = "";
     const first = document.createElement("option");
     first.value = "";
-    first.textContent = scoped.length ? "(all)" : `(no pilot data${uSel.value ? " for " + uSel.value : ""})`;
-    gSel.appendChild(first);
+    first.textContent = scoped.length ? "(all)" : `(no pilot data${ubU.value ? " for " + ubU.value : ""})`;
+    ubT.appendChild(first);
     scoped.forEach(t => {
       const opt = document.createElement("option");
       opt.value = t.kod; opt.textContent = `${t.kod} · ${t.name || ""}`.trim();
-      gSel.appendChild(opt);
+      ubT.appendChild(opt);
     });
-    gSel.disabled = scoped.length === 0;
+    ubT.disabled = scoped.length === 0;
   }
-  if ((DATA.tugasans || []).length === 0) $("#search-tugasan-wrap").classList.add("hidden");
+  if ((DATA.tugasans || []).length === 0) $("#ub-tugasan-wrap").classList.add("hidden");
   else rebuildTugasanOptions();
 
-  function tablePassesFilters(t, opts) {
-    const o = opts || {};
+  // ---- DIAGRAM sub-tab: search -> hits list or straight focus ----
+  function diagramState(which) {
+    // which: "empty" | "hits" | "focus"
+    $("#diagram-empty").classList.toggle("hidden", which !== "empty");
+    $("#diagram-hits").classList.toggle("hidden", which !== "hits");
+    $("#table-focus").classList.toggle("hidden", which !== "focus");
+  }
+  TBL_STATE.diagramState = diagramState;
+
+  function renderTableHits(q) {
+    const names = rankMatches(DATA.tables.map(t => t.name), q).slice(0, 30);
+    if (names.length === 0) {
+      $("#diagram-hits").innerHTML = `<p class="tf-empty">No table matches "${escapeHtml(q)}".</p>`;
+      diagramState("hits"); return;
+    }
+    $("#diagram-hits").innerHTML = names.map(n => {
+      const t = tableData(n);
+      const mod = t ? modulOf(t.modul) : null;
+      return `<div class="cc-hit" data-open="${escapeAttr(n)}">
+        <span class="cc-col">${escapeHtml(n)}</span>
+        <span class="cc-table" style="color:${mod ? mod.color : 'inherit'}">${escapeHtml(mod ? mod.label : "")}</span>
+        <span class="cc-type">${t ? t.cols + " cols · ↓" + t.in + " ↑" + t.out : ""}</span>
+      </div>`;
+    }).join("");
+    diagramState("hits");
+    $("#diagram-hits").querySelectorAll(".cc-hit").forEach(el =>
+      el.addEventListener("click", () => focusTable(el.dataset.open, null, "diagram")));
+  }
+
+  function renderColumnHits(cq) {
+    const hits = [];
+    for (const t of DATA.tables) {
+      if (!TBL_STATE.showHk && isHousekeepingName(t.name)) continue;
+      for (const c of (t.columns || [])) {
+        if (c.n.toLowerCase().includes(cq)) hits.push({ t, c });
+        if (hits.length > 300) break;
+      }
+      if (hits.length > 300) break;
+    }
+    $("#diagram-hits").innerHTML = (hits.slice(0, 300).map(h => {
+      const mod = modulOf(h.t.modul);
+      const isPk = (h.t.pk || []).includes(h.c.n);
+      const fk = (DATA.out_fk[h.t.name] || []).find(e => e.col === h.c.n);
+      const imp = (DATA.implicit_out[h.t.name] || []).find(e => e.col === h.c.n);
+      return `<div class="cc-hit" data-open="${escapeAttr(h.t.name)}" data-col="${escapeAttr(h.c.n)}">
+        <span class="cc-col">${escapeHtml(h.c.n)}</span>
+        <span class="cc-table" style="color:${mod ? mod.color : 'inherit'}">${escapeHtml(h.t.name)}</span>
+        <span class="cc-type">${escapeHtml(h.c.t)}</span>
+        ${isPk ? '<span class="pk-badge">PK</span>' : ''}
+        ${fk ? `<span class="fk-badge">FK → ${escapeHtml(fk.to)}</span>` : ''}
+        ${imp && TBL_STATE.showImplicit ? `<span class="imp-badge" title="name-matched link, no declared FK (${imp.status})">⇢ ${escapeHtml(imp.to)}</span>` : ''}
+      </div>`;
+    }).join("")) || `<p class="tf-empty">No columns match "${escapeHtml(cq)}".</p>`;
+    diagramState("hits");
+    $("#diagram-hits").querySelectorAll(".cc-hit").forEach(el =>
+      el.addEventListener("click", () => focusTable(el.dataset.open, el.dataset.col, "diagram")));
+  }
+
+  attachSuggest(input, "table-suggest",
+    (q) => rankMatches(DATA.tables.map(t => t.name), q).map(n => {
+      const t = tableData(n);
+      return { value: n, html: `<span class="s-name">${escapeHtml(n)}</span><span class="s-meta">${t ? t.cols + " cols · ↓" + t.in : ""}</span>` };
+    }),
+    (it) => { input.value = it.value; focusTable(it.value, null, "diagram"); });
+  attachSuggest(colInput, "col-suggest",
+    (q) => rankMatches(allColumnNames(), q).map(n => ({ value: n, html: `<span class="s-name">${escapeHtml(n)}</span>` })),
+    (it) => { colInput.value = it.value; input.value = ""; renderColumnHits(it.value.toLowerCase()); });
+
+  input.addEventListener("input", () => {
+    if (input.value) colInput.value = "";
+    const q = input.value.trim().toLowerCase();
+    if (!q) { diagramState("empty"); return; }
+    const exact = DATA.tables.find(t => t.name === q);
+    if (exact) { focusTable(exact.name, null, "diagram"); return; }
+    if (q.length >= 2) renderTableHits(q);
+  });
+  colInput.addEventListener("input", () => {
+    if (colInput.value) input.value = "";
+    const cq = colInput.value.trim().toLowerCase();
+    if (!cq) { diagramState("empty"); return; }
+    if (cq.length >= 2) renderColumnHits(cq);
+  });
+
+  // ---- CATALOG sub-tab ----
+  function tablePassesFilters(t) {
     // Modul filter keeps shared tables visible — shared (umm_/ind_/rjk_/pcp_) is used by EVERY modul
     if (mSel.value && t.modul !== mSel.value && t.modul !== "shared") return false;
     if (lSel.value && t.layer !== lSel.value) return false;
     if (TBL_STATE.chipSpoc && !t.name.startsWith("spc_")) return false;
     if (!TBL_STATE.chipHk && isHousekeepingName(t.name)) return false;
     if (TBL_STATE.chipHk && !isHousekeepingName(t.name)) return false;
-    if (o.uIdx && !o.uIdx[t.name]) return false;
-    if (o.tgTables && !o.tgTables[t.name]) return false;
     return true;
   }
 
-  function filterContext() {
-    const uIdx = uSel.value ? urusanStageIndex(uSel.value) : null;
-    const tg = gSel.value ? tugasanOf(gSel.value) : null;
-    let tgTables = null;
-    if (tg) {
-      tgTables = {};
-      (tg.loads || []).forEach(x => { (tgTables[x.table] = tgTables[x.table] || new Set()).add("loads"); });
-      (tg.saves || []).forEach(x => { (tgTables[x.table] = tgTables[x.table] || new Set()).add("saves"); });
-    }
-    return { uIdx, tgTables };
-  }
-
-  function run() {
-    if (TBL_STATE.mode === "focus") closeFocus();
+  function runCatalog() {
     hint.textContent = "";
-    const q = input.value.trim().toLowerCase();
-    const cq = colInput.value.trim().toLowerCase();
-    const ctx = filterContext();
-
-    // ---- COLUMN SEARCH MODE ----
-    if (cq) {
-      const hits = [];
-      for (const t of DATA.tables) {
-        if (!tablePassesFilters(t, ctx)) continue;
-        for (const c of (t.columns || [])) {
-          if (c.n.toLowerCase().includes(cq)) hits.push({ t, c });
-          if (hits.length > 400) break;
-        }
-        if (hits.length > 400) break;
-      }
-      cnt.textContent = `${hits.length}${hits.length > 400 ? "+" : ""} column match${hits.length === 1 ? "" : "es"}`;
-      out.innerHTML = hits.slice(0, 400).map(h => {
-        const mod = modulOf(h.t.modul);
-        const isPk = (h.t.pk || []).includes(h.c.n);
-        const fk = (DATA.out_fk[h.t.name] || []).find(e => e.col === h.c.n);
-        const imp = (DATA.implicit_out[h.t.name] || []).find(e => e.col === h.c.n);
-        return `<div class="cc-hit" data-open="${escapeAttr(h.t.name)}" data-col="${escapeAttr(h.c.n)}">
-          <span class="cc-col">${escapeHtml(h.c.n)}</span>
-          <span class="cc-table" style="color:${mod ? mod.color : 'inherit'}">${escapeHtml(h.t.name)}</span>
-          <span class="cc-type">${escapeHtml(h.c.t)}</span>
-          ${isPk ? '<span class="pk-badge">PK</span>' : ''}
-          ${fk ? `<span class="fk-badge">FK → ${escapeHtml(fk.to)}</span>` : ''}
-          ${imp && TBL_STATE.showImplicit ? `<span class="imp-badge" title="name-matched link, no declared FK (${imp.status})">⇢ ${escapeHtml(imp.to)}</span>` : ''}
-        </div>`;
-      }).join("") || `<p class="tf-empty">No columns match "${escapeHtml(cq)}" with the current filters.</p>`;
-      out.querySelectorAll(".cc-hit").forEach(el => {
-        el.addEventListener("click", () => focusTable(el.dataset.open, el.dataset.col));
-      });
-      return;
-    }
-
-    // ---- TABLE SEARCH MODE ----
+    const q = catInput.value.trim().toLowerCase();
     const nameMatch = (t) => !q || t.name.toLowerCase().includes(q) || (t.comment || "").toLowerCase().includes(q);
-    let matched = DATA.tables.filter(t => nameMatch(t) && tablePassesFilters(t, ctx));
-    // escape hatch: query matched tables exist but the filters hid them — say so instead of a silent 0
+    let matched = DATA.tables.filter(t => nameMatch(t) && tablePassesFilters(t));
     if (q) {
       const unfiltered = DATA.tables.filter(nameMatch).length;
       if (unfiltered > matched.length) {
@@ -1103,95 +1151,131 @@ function setupSearch() {
     const cap = matched.slice(0, 300);
     out.innerHTML = cap.map(t => {
       const mod = modulOf(t.modul);
-      const stages = ctx.uIdx && ctx.uIdx[t.name] ? `<div class="tc-stages" title="${escapeAttr(ctx.uIdx[t.name].join(" · "))}">${ctx.uIdx[t.name].map(escapeHtml).join(" · ")}</div>` : "";
-      const tgBadge = ctx.tgTables && ctx.tgTables[t.name]
-        ? Array.from(ctx.tgTables[t.name]).map(k => `<span class="tg-badge tg-${k}">${k === "loads" ? "LOADED" : "SAVED"}</span>`).join("") : "";
       return `<div class="tc" data-open="${escapeAttr(t.name)}">
-        <div class="tc-name"><span class="tc-name-text">${escapeHtml(t.name)}</span>${t.is_main ? '<span class="tc-main-mark">MAIN</span>' : ''}${tgBadge}</div>
+        <div class="tc-name"><span class="tc-name-text">${escapeHtml(t.name)}</span>${t.is_main ? '<span class="tc-main-mark">MAIN</span>' : ''}</div>
         <div class="tc-meta">
           <span class="tc-modul" style="background:${mod?mod.color_bg_light:'#eee'};color:${mod?mod.color:'#333'}">${escapeHtml(mod?mod.label:t.modul)}</span>
           <span>layer ${escapeHtml(t.layer)}</span>
           <span>${t.cols} cols · ↓${t.in} ↑${t.out}</span>
         </div>
         <div class="tc-comment">${escapeHtml(t.comment || '—')}</div>
-        ${stages}
       </div>`;
     }).join("");
     if (matched.length > 300) out.innerHTML += `<p style="grid-column:1/-1;font-size:11px;color:var(--text-dim);padding:12px">Showing first 300 of ${matched.length}. Narrow your search.</p>`;
     out.querySelectorAll(".tc").forEach(c => {
-      c.addEventListener("click", () => focusTable(c.dataset.open, null));
+      c.addEventListener("click", () => focusTable(c.dataset.open, null, "catalog"));
     });
   }
+  TBL_STATE.runCatalog = runCatalog;
 
-  // ---- suggestions ----
-  attachSuggest(input, "table-suggest",
-    (q) => rankMatches(DATA.tables.map(t => t.name), q).map(n => {
-      const t = tableData(n);
-      return { value: n, html: `<span class="s-name">${escapeHtml(n)}</span><span class="s-meta">${t ? t.cols + " cols · ↓" + t.in : ""}</span>` };
-    }),
-    (it) => { input.value = it.value; focusTable(it.value, null); });
-  attachSuggest(colInput, "col-suggest",
-    (q) => rankMatches(allColumnNames(), q).map(n => ({ value: n, html: `<span class="s-name">${escapeHtml(n)}</span>` })),
-    (it) => { colInput.value = it.value; input.value = ""; run(); });
-
-  input.addEventListener("input", () => { if (input.value) colInput.value = ""; run(); });
-  colInput.addEventListener("input", () => { if (colInput.value) input.value = ""; run(); });
-  mSel.addEventListener("change", run);
-  lSel.addEventListener("change", run);
-  uSel.addEventListener("change", () => { rebuildTugasanOptions(); run(); });
-  gSel.addEventListener("change", () => {
-    // choosing a tugasan implies its urusan — sync the urusan select visibly
-    const tg = tugasanOf(gSel.value);
-    if (tg && tg.urusan && uSel.value !== tg.urusan) {
-      uSel.value = tg.urusan;
-      const keep = gSel.value;
-      rebuildTugasanOptions();
-      gSel.value = keep;
-    }
-    run();
-  });
+  catInput.addEventListener("input", runCatalog);
+  mSel.addEventListener("change", runCatalog);
+  lSel.addEventListener("change", runCatalog);
   $("#chip-spoc").addEventListener("click", () => {
     TBL_STATE.chipSpoc = !TBL_STATE.chipSpoc;
     if (TBL_STATE.chipSpoc) TBL_STATE.chipHk = false;
-    syncChips(); run();
+    syncChips(); runCatalog();
   });
   $("#chip-hk").addEventListener("click", () => {
     TBL_STATE.chipHk = !TBL_STATE.chipHk;
     if (TBL_STATE.chipHk) TBL_STATE.chipSpoc = false;
-    syncChips(); run();
+    syncChips(); runCatalog();
   });
   function syncChips() {
     $("#chip-spoc").classList.toggle("on", TBL_STATE.chipSpoc);
     $("#chip-hk").classList.toggle("on", TBL_STATE.chipHk);
   }
   $("#filters-reset").addEventListener("click", () => {
-    input.value = ""; colInput.value = "";
-    mSel.value = ""; lSel.value = ""; uSel.value = "";
+    catInput.value = ""; mSel.value = ""; lSel.value = "";
     TBL_STATE.chipSpoc = false; TBL_STATE.chipHk = false;
-    rebuildTugasanOptions(); syncChips(); run();
+    syncChips(); runCatalog();
   });
-  $("#tf-back").addEventListener("click", () => { closeFocus(); run(); });
+
+  // ---- BY URUSAN sub-tab ----
+  function renderUrusanBrowse() {
+    const wrap = $("#urusan-browse");
+    const kod = ubU.value;
+    const cntEl = $("#ub-count");
+    if (!kod) {
+      wrap.innerHTML = `<div class="card diagram-empty"><p>Pick an urusan to see its tables grouped by stage. Pick a tugasan to see what that step LOADS and SAVES (pilot: PT).</p></div>`;
+      cntEl.textContent = "";
+      return;
+    }
+    const u = DATA.urusans.find(x => x.kod === kod);
+    const tg = ubT.value ? tugasanOf(ubT.value) : null;
+    const tgTables = tg ? {} : null;
+    if (tg) {
+      (tg.loads || []).forEach(x => { (tgTables[x.table] = tgTables[x.table] || new Set()).add("loads"); });
+      (tg.saves || []).forEach(x => { (tgTables[x.table] = tgTables[x.table] || new Set()).add("saves"); });
+    }
+    const seen = new Set();
+    function chip(t) {
+      seen.add(t);
+      const badge = tgTables && tgTables[t]
+        ? Array.from(tgTables[t]).map(k => `<span class="tg-badge tg-${k}">${k === "loads" ? "LOADED" : "SAVED"}</span>`).join("") : "";
+      const dim = tgTables && !tgTables[t] ? " ub-dim" : "";
+      return `<button class="ub-chip${dim}" data-open="${escapeAttr(t)}">${escapeHtml(t)}${badge}</button>`;
+    }
+    const parts = [];
+    for (const s of u.stages) {
+      const tables = (s.tables || []).filter(t => !t.includes("*"));
+      parts.push(`<details class="ub-stage" open>
+        <summary>${escapeHtml(s.name)} <span class="tf-flow-n">${tables.length}</span></summary>
+        <div class="ub-chips">${tables.map(chip).join("") || '<span class="tf-empty">no tables recorded</span>'}</div>
+      </details>`);
+      if (s.fork && (s.fork.outcomes || []).length > 1) {
+        for (const o of s.fork.outcomes) {
+          const oc = forkOutcomeColor(o.kind);
+          const oTables = [];
+          (o.steps || []).forEach(st => (st.tables || []).forEach(t => { if (!t.includes("*") && !oTables.includes(t)) oTables.push(t); }));
+          parts.push(`<details class="ub-stage ub-outcome" style="--fork-color:${oc}">
+            <summary>${escapeHtml(o.label)} tail <span class="tf-flow-n">${oTables.length}</span></summary>
+            <div class="ub-chips">${oTables.map(chip).join("") || '<span class="tf-empty">no tables recorded</span>'}</div>
+          </details>`);
+        }
+      }
+    }
+    wrap.innerHTML = parts.join("");
+    cntEl.textContent = `${seen.size} distinct tables`;
+    wrap.querySelectorAll(".ub-chip").forEach(el =>
+      el.addEventListener("click", () => focusTable(el.dataset.open, null, "urusan")));
+  }
+  TBL_STATE.renderUrusanBrowse = renderUrusanBrowse;
+
+  ubU.addEventListener("change", () => { rebuildTugasanOptions(); renderUrusanBrowse(); });
+  ubT.addEventListener("change", renderUrusanBrowse);
+
+  // ---- diagram toggles / back / modal ----
+  $("#tf-back").addEventListener("click", () => {
+    if (TBL_STATE.cameFrom && TBL_STATE.cameFrom !== "diagram") {
+      const target = TBL_STATE.cameFrom;
+      clearFocus();
+      selectSubTab(target);
+    } else {
+      clearFocus();
+      const q = input.value.trim().toLowerCase();
+      if (q.length >= 2) renderTableHits(q); else diagramState("empty");
+    }
+  });
+  TBL_STATE.renderTableHits = renderTableHits;
   $("#tf-show-implicit").addEventListener("change", (e) => { TBL_STATE.showImplicit = e.target.checked; if (TBL_STATE.selected) refreshFocus(); });
   $("#tf-show-hk").addEventListener("change", (e) => { TBL_STATE.showHk = e.target.checked; if (TBL_STATE.selected) refreshFocus(); });
   $("#tf-modal-close").addEventListener("click", closeModal);
   $("#tf-modal-overlay").addEventListener("click", (e) => { if (e.target.id === "tf-modal-overlay") closeModal(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
-  // modal link delegation — modal content is injected per open, so wire once here
   $("#tf-modal-body").addEventListener("click", (e) => {
     const link = e.target.closest("[data-open]");
-    if (link) { closeModal(); focusTable(link.dataset.open, null); }
+    if (link) { closeModal(); focusTable(link.dataset.open, null, TBL_STATE.cameFrom); }
   });
 
-  TBL_STATE.rerun = run;
-  run();
+  runCatalog();
+  renderUrusanBrowse();
 }
 
-function closeFocus() {
-  TBL_STATE.mode = "results";
+function clearFocus() {
   TBL_STATE.selected = null;
   TBL_STATE.highlightCol = null;
   $("#table-focus").classList.add("hidden");
-  $("#search-results").classList.remove("hidden");
 }
 
 function openModal(title, bodyHtml) {
@@ -1201,15 +1285,15 @@ function openModal(title, bodyHtml) {
 }
 function closeModal() { $("#tf-modal-overlay").classList.add("hidden"); }
 
-// ---- FOCUS MODE: link graph + sidebar cards ----
-function focusTable(name, highlightCol) {
+// ---- FOCUS MODE: link graph + sidebar cards (always inside the Diagram sub-tab) ----
+function focusTable(name, highlightCol, from) {
   const td = tableData(name);
   if (!td) return;
-  TBL_STATE.mode = "focus";
   TBL_STATE.selected = name;
   TBL_STATE.highlightCol = highlightCol || null;
-  $("#search-results").classList.add("hidden");
-  $("#table-focus").classList.remove("hidden");
+  if (from) TBL_STATE.cameFrom = from;
+  selectSubTab("diagram");
+  if (TBL_STATE.diagramState) TBL_STATE.diagramState("focus");
   $("#tf-title").textContent = name;
   refreshFocus();
 }
@@ -1292,7 +1376,7 @@ function renderFocusGraph(name) {
     const t = svgEl("text", { x: pos.x, y: pos.y + 4, "text-anchor": "middle", class: "tf-node-text", fill: cat ? cat.color : "#333" });
     t.textContent = tname;
     g.appendChild(t);
-    g.addEventListener("click", () => focusTable(tname, null));
+    g.addEventListener("click", () => focusTable(tname, null, TBL_STATE.cameFrom));
     svg.appendChild(g);
   }
   pShow.forEach((p, i) => drawNode(positions["p" + i], p.table, p.kind));
@@ -1334,7 +1418,6 @@ function renderFocusSidebar(name) {
   const blurb = DATA.anchor_blurbs[name];
   const pk = td.pk || [];
 
-  // Card 1 — identity
   $("#tf-identity").innerHTML = `
     <div class="panel-table-name">${escapeHtml(name)}</div>
     <div class="panel-badges">
@@ -1348,7 +1431,6 @@ function renderFocusSidebar(name) {
     ${td.comment ? `<p class="panel-blurb panel-comment">${escapeHtml(td.comment)}</p>` : ""}
   `;
 
-  // Card 2 — flows + links (details open in a popup, keeps the sidebar clean)
   const inUrusans = [];
   for (const u of DATA.urusans) {
     const idx = urusanStageIndex(u.kod);
@@ -1388,7 +1470,6 @@ function renderFocusSidebar(name) {
      <table class="modal-table"><tbody>${children.map(c =>
        `<tr><td><a class="modal-link" data-open="${escapeAttr(c.table)}">${escapeHtml(c.table)}</a></td><td><code>${escapeHtml(c.col)}</code>${c.kind === "implicit" ? ` <span class="imp-badge">⇢${c.status === "verified" ? "✓" : "?"}</span>` : ""}</td></tr>`).join("") || "<tr><td><em>None</em></td></tr>"}</tbody></table>`));
 
-  // Card 3 — columns (own card, own filter, scrolls internally)
   const fkByCol = {};
   (DATA.out_fk[name] || []).forEach(e => { fkByCol[e.col] = fkByCol[e.col] || []; fkByCol[e.col].push({ to: e.to, kind: "fk" }); });
   (DATA.implicit_out[name] || []).forEach(e => { fkByCol[e.col] = fkByCol[e.col] || []; fkByCol[e.col].push({ to: e.to, kind: "implicit", status: e.status }); });
@@ -1422,7 +1503,7 @@ function renderFocusSidebar(name) {
   });
   function wireGoto() {
     $("#table-focus").querySelectorAll("[data-goto]").forEach(el => {
-      el.addEventListener("click", (ev) => { ev.stopPropagation(); focusTable(el.dataset.goto, null); });
+      el.addEventListener("click", (ev) => { ev.stopPropagation(); focusTable(el.dataset.goto, null, TBL_STATE.cameFrom); });
     });
   }
   wireGoto();
