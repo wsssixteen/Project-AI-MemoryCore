@@ -45,3 +45,12 @@
 **Rough session — 3 corrections banked**: (1) branch naming — INTERNAL ISSUE → `mlk/internal/<num>`, NEVER invent a suffix (`-permfix`) or abbreviation; (2) do NOT replace a colleague's fix — build on his commit; (3) commit-gate/compile-gate read the WORKTREE's stale `active.txt`/`.claude/state`, not the main-repo live one → resolved to wrong ticket (QA-274740). Improvement proposal logged.
 
 **Resume point**: after miya re-runs the deploy on MLIT, do a fresh eMohon PPTPB save → I verify `umm_p_hkmlk.bandar_dipohon_id` non-null (I hold mlit MCP). Then Redmine planned-release list (int-env never reaches master).
+
+
+## 2026-08-23 — etanah Atlas tables-upgrade MEGA-SESSION (project, not quest)
+- Shipped v3.0→v3.7 (commits 4271d6c…249c06c, all on main): Tables tab (Diagram/Catalog/By Urusan/By Feature), 13 urusan forks BPMN-verified, 350 implicit links (10 mlit-verified), 596-entity registry (jar javap), code-truth scope pelupusan=151, 1,433-tugasan census (ind_tgsn→ind_langkah→ind_skrin; MLK tugasan.config.json is EMPTY), 46 screen traces, feature_tables.json (718 DB-verified, 12 groups, HANDOVER-db-feature-split executed, RESUME.md updated), 85 name families.
+- New Feature: domain/atlas-ship-gate (forge-born, eval 11/11) — Stop-blocks atlas-source sessions without a fresh ship_check (smoke + REAL headless-Edge file:// render). Root: 2026-08-22 unusable-page incident (invisible modal overlay; synthetic clicks all green).
+- Knowledge baked (dual-copy synced): DATABASE.md §2b trailing-space @Table + §6b census + §10b implicit links + §10c grep-blind-spots/code-usage · URUSAN-FLOW.md committee-fork ground truth · DEV-TESTING-HACKS python-encoding + real-render recipes · BUG-BESTIARY initData()-writes pattern · MODULE-ARCHITECTURE jar-version-skew · index.md Atlas row. recon-consult hook +§10c pointer (smoke-run ✓).
+- 6 proposals logged (A1/A2/A3 lanes) + research workflow wf_97f6f749 (results pending at save time).
+- Failures ledgered: assume-not-verify ×2 (prefix-as-relatedness lie; synthetic-verification theater) — category at 🚨 escalation, defender-redesign proposal filed.
+- Resume: Atlas is SHIPPED + gated; open threads = research-workflow results fold-in · weekly-audit ruling on 6 proposals · optional next: deepen 25 partial screen traces, Pembetulan sub-flow modeling, etanah-teknikal checkout for 402 Avalon refs.

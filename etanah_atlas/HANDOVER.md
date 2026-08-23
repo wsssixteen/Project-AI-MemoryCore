@@ -1,6 +1,6 @@
 # Etanah Atlas — Handover
 
-*Melaka profile · mapping v3.0 (2026-08-22) · 781 tables · 2,146 FKs · 350 implicit links · 12 moduls · 13 urusans (all with BPMN-verified decision forks) · 8 pilot tugasan traces*
+*Melaka profile · v3.7 (2026-08-23): Tables tab = Diagram/Catalog/By Urusan/By Feature sub-tabs · code-truth scope (pelupusan=151 tables, 7-method scan + adversarial workflow) · 596-entity registry · 1,433-tugasan census · 46 screen traces · 85 families · sidebar tabs · atlas-ship-gate Stop hook enforces smoke+real-render before any session stops. Prior: mapping v3.0 (2026-08-22) · 781 tables · 2,146 FKs · 350 implicit links · 12 moduls · 13 urusans (all with BPMN-verified decision forks) · 8 pilot tugasan traces*
 *Prepared for handover to Claude Design (visual layer) and Ruri / Claude Code (logic + content).*
 
 > **⚠️ HISTORY NOTE (2026-08-22)**: the v2.1–v2.3 iteration this document previously described (A\* edge routing, side-panel group-by, 13-urusan mapping with PT/PLPS forks) was **never committed and is lost** — only the docs and `lib/smoke_test.js` survived. v3.0 rebuilt the 13 urusans + forks from BPMN evidence (fresh extraction, all stage tables schema-validated), and added the Tables tab, columns, implicit links, and tugasan pilot. The v2.3 geometry features (A\* routing, panel group-by) are still lost — the smoke test marks them SKIP as backlog.
