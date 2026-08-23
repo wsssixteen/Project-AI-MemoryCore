@@ -34,6 +34,11 @@ List every skill / hook / rule / protocol **refined or created during this quest
 ### Step 3 — Harvest ETANAH-KNOWLEDGE
 Any new pattern discovered this quest lands in its owning knowledge file (per the Gap-Sweep category table): `BUG-BESTIARY.md` (bug/slip pattern) · `DATABASE.md` (schema/query) · `JSF-WIRING.md` · `FLOWABLE-WORKFLOWS.md` · `DOMAIN-GLOSSARY.md` · etc. Emit one line per entry written, or `knowledge: none new`.
 
+Three registers get a MANDATORY check in the same pass (each emits ✓ or ⏭ n/a — added 2026-08-23 per みや's loop-closure directive):
+1. **Urusan precedent doc** — append this quest's requirement decision / BA verdict as a manual note under the marker in `etanah-knowledge/melaka/urusan/<KOD>-TICKETS.md` (rows above the marker are regenerated; notes survive). One line: `#<num> — <decision>`.
+2. **LATENT-BUGS.md** — if this ticket landed on a register row, GRADUATE it (Status → FIXED, evidence += commit); if the quest surfaced a NEW pre-ticket bug outside scope, ADD a row (that is the feeder).
+3. **TEST-PERMOHONAN-INDEX.md** — new test data derived this quest is written back (then `node lib/test-data-db.js build`); this is the same rule row 1d enforces at Phase 0.
+
 ### Step 4 — Mine ONE refinement (the synthesis the system lacked)
 Scan **both** axes, pick the SINGLE highest-value item, propose ONE defender:
 
@@ -97,4 +102,5 @@ FF-only on main; on divergence, surface + merge before retry. Emit `Banked — Q
 - **⚠️ Coverage gap (eval-found, `wf_3c67b23f`)**: fires ONLY at Phase 2 — a quest that stays `held`/`blocked` and never archives is NEVER harvested. Domain Expansion is **not** a twin for this (DE commits session-end MemoryCore changes but has no per-quest Step-4 synthesis). Until a DE-side `bounty-deferred: QA-<num>` line ships for parked quests, their per-quest refinement evaporates.
 
 ## Skill History
+- 2026-08-23 — Step 3 extended per みや (loop-closure directive): 3 mandatory register checks at harvest — urusan precedent doc manual note (`urusan/<KOD>-TICKETS.md`), LATENT-BUGS.md graduate/add, TEST-PERMOHONAN-INDEX write-back + index rebuild. Each emits ✓ or ⏭ n/a. Spec preservation: all prior Step-3 content untouched; additive. Pairs with `domain/urusan-tickets/` + `domain/latent-bugs-gate/` (born same day).
 - 2026-07-01 — created (みや). Closes the synthesis gap: the system was capture-rich (auto-skill-on-mistake + slip-log) but never READ the pile to propose a fix, and quest value was banked only at session-end DE, not per-quest. quest-bounty runs at Phase 2 so each quest's spoils + one mined refinement are banked immediately. Boundary locked: MemoryCore main only, never etanah master. Routed through system-design + system-rules (design-consult-gate). Eval + deterministic verify-hook = pending completion.

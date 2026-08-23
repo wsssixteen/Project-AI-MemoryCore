@@ -183,6 +183,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\feature-creation\\\\feature-creation.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\latent-bugs-gate\\\\latent-bugs-gate.check.hook.js\""
           }
         ]
       }
