@@ -1,0 +1,62 @@
+{
+ "templates": {
+  "title": "Word Templates (docx4j)",
+  "purpose": "Generates the official letters/borang (.docx): template file + CC tags filled by populator methods, then saved to DMS."
+ },
+ "reports": {
+  "title": "Jasper Reports (jrxml)",
+  "purpose": "Generates PDF reports (Borang 4Ae/L1e, laporan): .jrxml layouts filled from SQL-in-jrxml or a Java datasource."
+ },
+ "flowable": {
+  "title": "Flowable / BPMN engine",
+  "purpose": "The workflow engine: BPMN diagrams define urusan step order; listeners/delegates connect engine events to etanah code."
+ },
+ "tugasan": {
+  "title": "Tugasan lifecycle (handoff)",
+  "purpose": "Passing one Tugasan to the next: task rows (umm_a_tgsn), role assignment, the dashboard inbox that opens each step."
+ },
+ "screens": {
+  "title": "Tugasan screens (JSF forms + composites)",
+  "purpose": "The per-step screens officers use: Mlk*Form backing beans, .xhtml composites, and the Helper classes that populate them."
+ },
+ "emohon": {
+  "title": "AWAM portal (e-Mohon)",
+  "purpose": "The public portal: applicant creates a permohonan (umm_p_* pra rows) which is copied into staff-side umm_a_* rows at intake."
+ },
+ "spoc": {
+  "title": "SPOC / HASIL (counter + payment)",
+  "purpose": "Perserahan Kaunter intake and payment: the SECOND entry route whose save code differs from the portal (two-entry-route family)."
+ },
+ "dokumen": {
+  "title": "Dokumen & DMS (upload / keluaran)",
+  "purpose": "File upload and generated-document storage: two-phase upload into the separate etanah-dms app; slot rows + Document pointer rows."
+ },
+ "persistence": {
+  "title": "Entities & persistence (Hibernate/JPA)",
+  "purpose": "The data layer: @Entity classes (etanah-domain JAR) mapped to tables via prefix constants; repositories run the queries."
+ },
+ "peranan": {
+  "title": "Peranan & capaian (roles/security)",
+  "purpose": "Who may hold which tugasan: pengguna/peranan tables, role override on task assignment, capaian screens."
+ },
+ "migration": {
+  "title": "Migration (legacy data)",
+  "purpose": "Legacy register imports (MIGRATOR_* rows) and the migrasi screens; source of many 'weird old data' tickets."
+ },
+ "config": {
+  "title": "Config subsystems (*.config.json)",
+  "purpose": "Declarative wiring: which tugasan shows which panels/actions/templates — behaviour changed by editing JSON, not Java."
+ },
+ "other-module": {
+  "title": "Other modules (dft/str/amb/pks/...)",
+  "purpose": "Tables owned by modules outside the 12 pelupusan-side feature groups."
+ },
+ "out-of-scope-teknikal": {
+  "title": "Teknikal (out of scope)",
+  "purpose": "tkl_* tables — etanah-teknikal owns these."
+ },
+ "unassigned": {
+  "title": "Unassigned (housekeeping)",
+  "purpose": "md_/tkr_/tmp_/rpt_ etc. — no feature claimed them; honest bucket."
+ }
+}
