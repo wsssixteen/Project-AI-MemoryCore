@@ -1031,9 +1031,14 @@ function rankMatches(names, q) {
 function selectSubTab(name) {
   TBL_STATE.sub = name;
   $$("#tbl-subtabs .subtab").forEach(b => b.classList.toggle("active", b.dataset.sub === name));
-  ["diagram", "catalog", "urusan"].forEach(k => {
+  ["diagram", "catalog", "urusan", "feature"].forEach(k => {
     document.getElementById("sub-" + k).classList.toggle("hidden", k !== name);
   });
+}
+
+function selectSideTab(paneId) {
+  $$("#tf-side-tabs .sidetab").forEach(b => b.classList.toggle("active", b.dataset.st === paneId));
+  $$("#table-focus .st-pane").forEach(p => p.classList.toggle("hidden", p.id !== paneId));
 }
 
 function setupSearch() {
@@ -1303,6 +1308,64 @@ function setupSearch() {
   ubU.addEventListener("change", () => { rebuildTugasanOptions(); renderUrusanBrowse(); });
   ubT.addEventListener("change", renderUrusanBrowse);
 
+  // ---- BY FEATURE sub-tab (feature_tables.json — DB-verified 12-group split) ----
+  const bfSel = $("#bf-feature");
+  function renderFeatureBrowse() {
+    const wrap = $("#feature-browse");
+    const key = bfSel.value;
+    const ft = DATA.feature_tables || { tables: [], unassigned: [], summary: {} };
+    const meta = (DATA.feature_meta || {})[key] || { title: key, purpose: "" };
+    if (!key) {
+      const s = ft.summary || {};
+      wrap.innerHTML = `<div class="card diagram-empty"><p><strong>Pick a feature</strong> — the DB split by verified feature group.</p>
+        <p class="de-sub">${s.total_db || 0} tables checked against ${escapeHtml(ft.schema_checked || "mlit")} · ${s.assigned || 0} assigned · ${s.unassigned || 0} honestly unassigned.</p></div>`;
+      $("#bf-count").textContent = "";
+      return;
+    }
+    let rows;
+    if (key === "unassigned") {
+      rows = (ft.unassigned || []).map(u => ({ table: u.table, features: [], assigned_by: "unassigned (" + u.prefix + ")", rows_est: -1 }));
+    } else {
+      rows = (ft.tables || []).filter(t => t.features.includes(key));
+    }
+    rows.sort((a, b) => (b.rows_est || 0) - (a.rows_est || 0));
+    $("#bf-count").textContent = `${rows.length} tables`;
+    const fmt = (n) => n < 0 ? "?" : n >= 1000000 ? (n / 1000000).toFixed(1) + "M" : n >= 1000 ? (n / 1000).toFixed(0) + "k" : String(n);
+    wrap.innerHTML = `
+      <div class="card ub-tg-detail">
+        <div class="ub-tg-head"><strong>${escapeHtml(meta.title)}</strong></div>
+        <div class="ub-screen-row">${escapeHtml(meta.purpose)}</div>
+      </div>
+      <div class="card fam-section"><div class="ub-chips">${rows.map(r =>
+        `<button class="ub-chip" data-open="${escapeAttr(r.table)}" title="${escapeAttr(r.assigned_by)}">${escapeHtml(r.table)}<span class="ub-app">${fmt(r.rows_est)} rows</span></button>`).join("") || '<span class="tf-empty">no tables in this group</span>'}</div></div>`;
+    wrap.querySelectorAll(".ub-chip").forEach(el =>
+      el.addEventListener("click", () => focusTable(el.dataset.open, null, "feature")));
+  }
+  {
+    const ft = DATA.feature_tables || { tables: [] };
+    const counts = {};
+    (ft.tables || []).forEach(t => t.features.forEach(f => { counts[f] = (counts[f] || 0) + 1; }));
+    const first = document.createElement("option");
+    first.value = ""; first.textContent = "(pick a feature group)";
+    bfSel.appendChild(first);
+    Object.keys(counts).sort((a, b) => counts[b] - counts[a]).forEach(k => {
+      const o = document.createElement("option");
+      o.value = k; o.textContent = `${((DATA.feature_meta || {})[k] || {}).title || k} (${counts[k]})`;
+      bfSel.appendChild(o);
+    });
+    if ((ft.unassigned || []).length) {
+      const o = document.createElement("option");
+      o.value = "unassigned"; o.textContent = `Unassigned (${ft.unassigned.length})`;
+      bfSel.appendChild(o);
+    }
+    bfSel.addEventListener("change", renderFeatureBrowse);
+    renderFeatureBrowse();
+  }
+
+  // ---- sidebar tabs (focus view) ----
+  $$("#tf-side-tabs .sidetab").forEach(b =>
+    b.addEventListener("click", () => selectSideTab(b.dataset.st)));
+
   // ---- family browse (name-stem groups: hkmlk, tgsn, warta, …) ----
   const famSel = $("#dg-family");
   (DATA.families || []).forEach(f => {
@@ -1419,6 +1482,7 @@ function focusTable(name, highlightCol, from) {
   if (TBL_STATE.diagramState) TBL_STATE.diagramState("focus");
   $("#tf-title").textContent = name;
   refreshFocus();
+  selectSideTab(TBL_STATE.highlightCol ? "tf-columns" : "tf-identity");
 }
 function refreshFocus() {
   renderFocusGraph(TBL_STATE.selected);

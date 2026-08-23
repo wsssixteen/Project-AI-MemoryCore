@@ -100,6 +100,7 @@
     <button class="subtab active" data-sub="diagram">Diagram</button>
     <button class="subtab" data-sub="catalog">Catalog</button>
     <button class="subtab" data-sub="urusan">By Urusan</button>
+    <button class="subtab" data-sub="feature">By Feature</button>
   </div>
 
   <div class="sub-view" id="sub-diagram">
@@ -113,8 +114,10 @@
           <input type="search" id="col-search-input" placeholder="…or search a column across ALL tables" autocomplete="off">
           <div class="suggest-box hidden" id="col-suggest"></div>
         </div>
-        <label class="tf-toggle">Code scope <select id="dg-scope"><option value="pelupusan" selected>used by pelupusan code</option><option value="pel-common">pelupusan + common</option><option value="awam">used by awam code</option><option value="spoc-hasil">used by spoc-hasil code</option><option value="">(all 781 tables)</option></select></label>
-        <label class="tf-toggle">Family <select id="dg-family"><option value="">(browse by family…)</option></select></label>
+      </div>
+      <div class="search-filters">
+        <label>Code scope <select id="dg-scope"><option value="pelupusan" selected>used by pelupusan code</option><option value="pel-common">pelupusan + common</option><option value="awam">used by awam code</option><option value="spoc-hasil">used by spoc-hasil code</option><option value="">(all 781 tables)</option></select></label>
+        <label>Family <select id="dg-family"><option value="">(browse by family…)</option></select></label>
         <label class="tf-toggle" title="unchecked = declared FK links ONLY"><input type="checkbox" id="tf-show-implicit" checked> implicit links</label>
         <label class="tf-toggle"><input type="checkbox" id="tf-show-hk"> housekeeping</label>
       </div>
@@ -133,10 +136,15 @@
         <div class="tf-canvas-wrap card">
           <svg id="tf-svg" viewBox="0 0 900 620" preserveAspectRatio="xMidYMid meet"></svg>
         </div>
-        <aside class="tf-sidebar">
-          <div class="card tf-card" id="tf-identity"></div>
-          <div class="card tf-card" id="tf-flows"></div>
-          <div class="card tf-card tf-columns-card" id="tf-columns"></div>
+        <aside class="tf-sidebar card">
+          <div class="side-tabs no-print" id="tf-side-tabs">
+            <button class="sidetab active" data-st="tf-identity">Overview</button>
+            <button class="sidetab" data-st="tf-flows">Appears in</button>
+            <button class="sidetab" data-st="tf-columns">Columns</button>
+          </div>
+          <div class="st-pane" id="tf-identity"></div>
+          <div class="st-pane hidden" id="tf-flows"></div>
+          <div class="st-pane hidden st-columns" id="tf-columns"></div>
         </aside>
       </div>
     </div>
@@ -170,6 +178,16 @@
       </div>
     </div>
     <div id="urusan-browse" class="urusan-browse"></div>
+  </div>
+
+  <div class="sub-view hidden" id="sub-feature">
+    <div class="search-controls card no-print">
+      <div class="search-filters">
+        <label>Feature <select id="bf-feature"></select></label>
+        <span class="search-count" id="bf-count"></span>
+      </div>
+    </div>
+    <div id="feature-browse" class="urusan-browse"></div>
   </div>
 
   <div class="modal-overlay hidden" id="tf-modal-overlay">

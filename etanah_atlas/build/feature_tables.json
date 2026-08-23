@@ -1,0 +1,6074 @@
+{
+ "generated": "2026-08-23",
+ "schema_checked": "et_main_mlit",
+ "tables": [
+  {
+   "table": "amb_a_bahagian_pemberian",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:amb_",
+   "exists": true,
+   "rows_est": 29
+  },
+  {
+   "table": "amb_a_bantahan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:amb_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "amb_a_cara_bayaran",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:amb_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "amb_a_kehadiran_siasatan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:amb_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "amb_a_mklmt_bayaran",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:amb_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "amb_a_mklmt_tnh",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:amb_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "amb_a_mklmt_warta",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:amb_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "amb_a_pengambilan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:amb_",
+   "exists": true,
+   "rows_est": 52
+  },
+  {
+   "table": "amb_a_siasatan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:amb_",
+   "exists": true,
+   "rows_est": 9
+  },
+  {
+   "table": "amb_a_terma_syarat",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:amb_",
+   "exists": true,
+   "rows_est": 13
+  },
+  {
+   "table": "amb_p_bantahan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:amb_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "amb_p_pengambilan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:amb_",
+   "exists": true,
+   "rows_est": 157
+  },
+  {
+   "table": "bgn_a_mklmt_syer_tnh",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:bgn_",
+   "exists": true,
+   "rows_est": 16
+  },
+  {
+   "table": "bgn_a_pembangunan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:bgn_",
+   "exists": true,
+   "rows_est": 3783
+  },
+  {
+   "table": "bgn_a_utiliti",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:bgn_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "bgn_p_mklmt_syer_tnh",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:bgn_",
+   "exists": true,
+   "rows_est": 92
+  },
+  {
+   "table": "bgn_p_pembangunan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:bgn_",
+   "exists": true,
+   "rows_est": 297
+  },
+  {
+   "table": "ckp_hkmlk",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:ckp_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ckp_jns_kegunaan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:ckp_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ckp_petugas",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:ckp_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ckp_status",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:ckp_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ckp_strata",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:ckp_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ckp_tgsn",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:ckp_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "con_a_kebenaran_hkmlk",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:con_",
+   "exists": true,
+   "rows_est": 2
+  },
+  {
+   "table": "con_a_kebenaran_perakuan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:con_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "con_a_kehadiran",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:con_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "con_a_mklmt_kehadiran",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:con_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "con_a_mohon_kebenaran",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:con_",
+   "exists": true,
+   "rows_est": 54642
+  },
+  {
+   "table": "con_a_siasatan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:con_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "con_p_capaian_mklmt_pembangunan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:con_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "con_p_hkmlk_projek",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:con_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "con_p_kebenaran_hkmlk",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:con_",
+   "exists": true,
+   "rows_est": 6
+  },
+  {
+   "table": "con_p_mklmt_pembangunan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:con_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "con_p_mklmt_projek",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:con_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "con_p_mohon_kebenaran",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:con_",
+   "exists": true,
+   "rows_est": 1416
+  },
+  {
+   "table": "dft_a_alasan_keputusan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 245
+  },
+  {
+   "table": "dft_a_borang",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 334000
+  },
+  {
+   "table": "dft_a_btrn_alasan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "dft_a_btrn_dok_penntshn",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 5538000
+  },
+  {
+   "table": "dft_a_btrn_nota",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 1259789
+  },
+  {
+   "table": "dft_a_btrn_srtcara",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 603223
+  },
+  {
+   "table": "dft_a_btrn_undo_perserahan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 13
+  },
+  {
+   "table": "dft_a_dhk_disertakan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 2868
+  },
+  {
+   "table": "dft_a_dok_penntshn",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 3110031
+  },
+  {
+   "table": "dft_a_mohon_hkmlk",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 944958
+  },
+  {
+   "table": "dft_a_mohon_rizab",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "dft_a_nota",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 361325
+  },
+  {
+   "table": "dft_a_notis",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 44280
+  },
+  {
+   "table": "dft_a_permohonan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "dft_a_pmbtln_aplikasi",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 45
+  },
+  {
+   "table": "dft_a_pmbtln_hkmlk_asal",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "dft_a_pmbtln_hkmlk_berikut",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "dft_a_pmbtln_hkmlk_gsa",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "dft_a_pmbtln_hkmlk_sblmkini",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "dft_a_pmbtln_medan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 131565
+  },
+  {
+   "table": "dft_a_prnth_halang_ursn",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "dft_a_ptk_aksesori_strata",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "dft_a_rekod_ursn",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 464309
+  },
+  {
+   "table": "dft_a_rizab_no_hkmlk",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 430832
+  },
+  {
+   "table": "dft_a_serahan_terlibat",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 1014256
+  },
+  {
+   "table": "dft_a_srt_difail",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 173308
+  },
+  {
+   "table": "dft_a_srtcara",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 1031383
+  },
+  {
+   "table": "dft_a_undo_perserahan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 12
+  },
+  {
+   "table": "dft_a_undo_perserahan_hkmlk",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 8
+  },
+  {
+   "table": "dft_p_borang",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 44
+  },
+  {
+   "table": "dft_p_btrn_pajakan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "dft_p_gadaian",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 992
+  },
+  {
+   "table": "dft_p_ismen",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "dft_p_pajakan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "dft_p_pindahmilik",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 1799
+  },
+  {
+   "table": "dft_p_setem_duti",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "dft_p_srtcara",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 3337
+  },
+  {
+   "table": "dft_pelan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "dft_pelan_gis",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:dft_",
+   "exists": true,
+   "rows_est": 500877
+  },
+  {
+   "table": "dm_a_pihak_bkptg",
+   "features": [
+    "persistence",
+    "migration"
+   ],
+   "assigned_by": "entity-member:DMAppPihakBerkepentingan",
+   "exists": true,
+   "rows_est": 3
+  },
+  {
+   "table": "dm_aplikasi",
+   "features": [
+    "persistence",
+    "migration"
+   ],
+   "assigned_by": "entity-member:DMAplikasi",
+   "exists": true,
+   "rows_est": 1545
+  },
+  {
+   "table": "dm_permit_lesen",
+   "features": [
+    "persistence",
+    "migration"
+   ],
+   "assigned_by": "entity-member:DMPermitLesen",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "dm_permohonan_tnh",
+   "features": [
+    "persistence",
+    "migration"
+   ],
+   "assigned_by": "entity-member:DMPermohonanTanah",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "dm_rizab",
+   "features": [
+    "persistence",
+    "migration"
+   ],
+   "assigned_by": "entity-member:DMRizab",
+   "exists": true,
+   "rows_est": 2218
+  },
+  {
+   "table": "dm_tgsn",
+   "features": [
+    "tugasan",
+    "persistence",
+    "migration"
+   ],
+   "assigned_by": "entity-member:DMTugasan",
+   "exists": true,
+   "rows_est": 1545
+  },
+  {
+   "table": "dm_versi_permit_lesen",
+   "features": [
+    "persistence",
+    "migration"
+   ],
+   "assigned_by": "entity-member:DMVersiPermitLesen",
+   "exists": true,
+   "rows_est": 4
+  },
+  {
+   "table": "hsl_a_ansuran",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Ansuran",
+   "exists": true,
+   "rows_est": 283
+  },
+  {
+   "table": "hsl_a_bil_cukai_tahunan",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppBilCukaiTahunan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_a_hasil",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppHasil",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_a_kemaskini_hasil",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppKemaskiniHasil",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_a_kslhn_penyata_pemungut",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppKesalahanPenyataPemungut",
+   "exists": true,
+   "rows_est": 9
+  },
+  {
+   "table": "hsl_a_mklmt_byrn_ispeks",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppMaklumatBayaranIspeks",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_a_mklmt_tmbhn",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppMaklumatTambahan",
+   "exists": true,
+   "rows_est": 4400
+  },
+  {
+   "table": "hsl_a_penyata_pemungut",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppPenyataPemungut",
+   "exists": true,
+   "rows_est": 252
+  },
+  {
+   "table": "hsl_a_perampasan",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppPerampasan",
+   "exists": true,
+   "rows_est": 2370
+  },
+  {
+   "table": "hsl_a_plrsn",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppPelarasan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_a_remitan",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppRemitan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_akaun_cukai",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AkaunCukai",
+   "exists": true,
+   "rows_est": 840021
+  },
+  {
+   "table": "hsl_akaun_deposit",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AkaunDeposit",
+   "exists": true,
+   "rows_est": 596
+  },
+  {
+   "table": "hsl_alamat_cukai",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AlamatCukai",
+   "exists": true,
+   "rows_est": 1994645
+  },
+  {
+   "table": "hsl_ampun_hasil",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AmpunHasil",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_arahan_byrn",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ArahanBayaran",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_arahan_plrsn",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ArahanPelarasan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_bayaran",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Bayaran",
+   "exists": true,
+   "rows_est": 8247859
+  },
+  {
+   "table": "hsl_bayaran_cukai_pintu",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:BayaranCukaiPintu",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_bayaran_fi",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:BayaranFi",
+   "exists": true,
+   "rows_est": 2124461
+  },
+  {
+   "table": "hsl_bayaran_luar",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:BayaranLuar",
+   "exists": true,
+   "rows_est": 907
+  },
+  {
+   "table": "hsl_bil_cukai_tahunan",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:BilCukaiTahunan",
+   "exists": true,
+   "rows_est": 10567661
+  },
+  {
+   "table": "hsl_btrn_akaun_kutipan_pos",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ButiranAkaunKutipanPos",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_btrn_ampun_hasil",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ButiranAmpunHasil",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_btrn_arahan_plrsn",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ButiranArahanPelarasan",
+   "exists": true,
+   "rows_est": 216
+  },
+  {
+   "table": "hsl_btrn_bayaran",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ButiranBayaran",
+   "exists": true,
+   "rows_est": 8846443
+  },
+  {
+   "table": "hsl_btrn_bayaran_kutipan_pos",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ButiranBayaranKutipanPos",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_btrn_bayaran_luar",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ButiranBayaranLuar",
+   "exists": true,
+   "rows_est": 860
+  },
+  {
+   "table": "hsl_btrn_log_gerbang_bayaran",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ButiranLogGerbangBayaran",
+   "exists": true,
+   "rows_est": 10265
+  },
+  {
+   "table": "hsl_btrn_log_pindahan_fail",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ButiranLogPindahanFail",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_btrn_pindahan_cukai_tnh",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ButiranPindahanCukaiTanah",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_cara_bayaran",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:CaraBayaran",
+   "exists": true,
+   "rows_est": 6934522
+  },
+  {
+   "table": "hsl_fi_kadar",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:FiKadar",
+   "exists": true,
+   "rows_est": 316
+  },
+  {
+   "table": "hsl_fi_kurungan",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:FiKurungan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_fi_pejabat",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:FiPejabat",
+   "exists": true,
+   "rows_est": 1167
+  },
+  {
+   "table": "hsl_jadual_ansuran",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JadualAnsuran",
+   "exists": true,
+   "rows_est": 1120
+  },
+  {
+   "table": "hsl_kod_flag_diskaun",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KodFlagDiskaun",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_komisyen",
+   "features": [
+    "spoc"
+   ],
+   "assigned_by": "prefix:hsl_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_kumpulan_cukai",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KumpulanCukai",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_kutipan_pos",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KutipanPos",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_log_gerbang_bayaran",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:LogGerbangBayaran",
+   "exists": true,
+   "rows_est": 8881
+  },
+  {
+   "table": "hsl_log_pindahan_fail",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:LogPindahanFail",
+   "exists": true,
+   "rows_est": 1546
+  },
+  {
+   "table": "hsl_manual_integrasi",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ManualIntegrasi",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_mesej_cukai",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:MesejCukai",
+   "exists": true,
+   "rows_est": 2842
+  },
+  {
+   "table": "hsl_mklmt_ebiling",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:MaklumatEbiling",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_p_ansuran",
+   "features": [
+    "emohon",
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraAnsuran",
+   "exists": true,
+   "rows_est": 10
+  },
+  {
+   "table": "hsl_p_bayaran_fi",
+   "features": [
+    "emohon",
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraBayaranFi",
+   "exists": true,
+   "rows_est": 4713
+  },
+  {
+   "table": "hsl_p_btrn_kelompok_cukai",
+   "features": [
+    "emohon",
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraButiranKelompokCukai",
+   "exists": true,
+   "rows_est": 113
+  },
+  {
+   "table": "hsl_p_jadual_ansuran",
+   "features": [
+    "emohon",
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraJadualAnsuran",
+   "exists": true,
+   "rows_est": 123
+  },
+  {
+   "table": "hsl_p_kelompok_cukai",
+   "features": [
+    "emohon",
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraKelompokCukai",
+   "exists": true,
+   "rows_est": 12
+  },
+  {
+   "table": "hsl_p_remitan",
+   "features": [
+    "emohon",
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraRemitan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_p_troli",
+   "features": [
+    "emohon",
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraTroli",
+   "exists": true,
+   "rows_est": 47
+  },
+  {
+   "table": "hsl_pemberian_diskaun_cukai",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PemberianDiskaunCukai",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_penerima_arahan_byrn",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PenerimaArahanBayaran",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_pengguna_online_cukai",
+   "features": [
+    "spoc",
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:PenggunaOnlineCukai",
+   "exists": true,
+   "rows_est": 576
+  },
+  {
+   "table": "hsl_penyata_akaun",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PenyataAkaun",
+   "exists": true,
+   "rows_est": 24074464
+  },
+  {
+   "table": "hsl_penyata_pemungut",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PenyataPemungut",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_pindahan_cukai_tnh",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PindahanCukaiTanah",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "hsl_pindahan_cukai_tnh_resit",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PindahanCukaiTanahResit",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "hsl_plrsn",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Pelarasan",
+   "exists": true,
+   "rows_est": 66
+  },
+  {
+   "table": "hsl_sasaran_prestasi",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SasaranPrestasi",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_sesi_kutipan",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SesiKutipan",
+   "exists": true,
+   "rows_est": 741
+  },
+  {
+   "table": "hsl_sub_mesej_cukai",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SubMesejCukai",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "hsl_transaksi_cukai",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:TransaksiCukai",
+   "exists": true,
+   "rows_est": 5951
+  },
+  {
+   "table": "hsl_transaksi_deposit",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:TransaksiDeposit",
+   "exists": true,
+   "rows_est": 639
+  },
+  {
+   "table": "hsl_transaksi_log_gerbang_bayaran",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:TransaksiLogGerbangBayaran",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ind_alasan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Alasan",
+   "exists": true,
+   "rows_est": 141
+  },
+  {
+   "table": "ind_alasan_ursn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AlasanUrusan",
+   "exists": true,
+   "rows_est": 2100
+  },
+  {
+   "table": "ind_bandar_pekan_mukim",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:BandarPekanMukim",
+   "exists": true,
+   "rows_est": 192
+  },
+  {
+   "table": "ind_bandar_pekan_mukim_kawasan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:BandarPekanMukimKawasan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ind_bhg_zon_penghantar_notis",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:BahagianZonPenghantarNotis",
+   "exists": true,
+   "rows_est": 28
+  },
+  {
+   "table": "ind_borang_pelan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:BorangPelan",
+   "exists": true,
+   "rows_est": 877463
+  },
+  {
+   "table": "ind_borang_pelan_delete",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "prefix:rjk_/ind_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ind_btrn_hkmlk_gantung",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ButiranHakmilikGantung",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ind_btrn_no_siri_keselamatan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ButiranNoSiriKeselamatan",
+   "exists": true,
+   "rows_est": 220
+  },
+  {
+   "table": "ind_btrn_strata_idx",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ButiranStrataIndeks",
+   "exists": true,
+   "rows_est": 60133
+  },
+  {
+   "table": "ind_daerah",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Daerah",
+   "exists": true,
+   "rows_est": 4
+  },
+  {
+   "table": "ind_dok_kerja",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:DokumenKerja",
+   "exists": true,
+   "rows_est": 41
+  },
+  {
+   "table": "ind_hkmlk",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Hakmilik",
+   "exists": true,
+   "rows_est": 739486
+  },
+  {
+   "table": "ind_hkmlk_asal",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:HakmilikAsal",
+   "exists": true,
+   "rows_est": 380971
+  },
+  {
+   "table": "ind_hkmlk_gantung",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:HakmilikGantung",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ind_hkmlk_gsa",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:HakmilikGSA",
+   "exists": true,
+   "rows_est": 1973
+  },
+  {
+   "table": "ind_hkmlk_hancur",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:HakmilikHancur",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ind_hkmlk_pelbagai",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:HakmilikPelbagai",
+   "exists": true,
+   "rows_est": 739486
+  },
+  {
+   "table": "ind_hkmlk_sambungan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:HakmilikSambungan",
+   "exists": true,
+   "rows_est": 583759
+  },
+  {
+   "table": "ind_jalan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Jalan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ind_jns_senarai_smkn_bsyrt",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JenisSenaraiSemakanBersyarat",
+   "exists": true,
+   "rows_est": 102
+  },
+  {
+   "table": "ind_kadar_cukai_bpm",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KadarCukaiBandarPekanMukim",
+   "exists": true,
+   "rows_est": 7230
+  },
+  {
+   "table": "ind_kadar_cukai_nilai_lngkgn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KadarCukaiNilaiLingkungan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ind_kadar_premium_cukai",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KadarPremiumCukai",
+   "exists": true,
+   "rows_est": 363
+  },
+  {
+   "table": "ind_kumpln_pihk_bkptg",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "prefix:rjk_/ind_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ind_langkah",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Langkah",
+   "exists": true,
+   "rows_est": 29925
+  },
+  {
+   "table": "ind_laporan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Laporan",
+   "exists": true,
+   "rows_est": 237
+  },
+  {
+   "table": "ind_mklmt_hkmlk",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:MaklumatHakmilik",
+   "exists": true,
+   "rows_est": 739679
+  },
+  {
+   "table": "ind_mklmt_tnh_permit_lesen",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:MaklumatTanahPermitLesen",
+   "exists": true,
+   "rows_est": 3457
+  },
+  {
+   "table": "ind_modul",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Modul",
+   "exists": true,
+   "rows_est": 18
+  },
+  {
+   "table": "ind_modul_jns_ursn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ModulJenisUrusan",
+   "exists": true,
+   "rows_est": 15
+  },
+  {
+   "table": "ind_no_siri_keselamatan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:NoSiriKeselamatan",
+   "exists": true,
+   "rows_est": 220
+  },
+  {
+   "table": "ind_pejabat",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Pejabat",
+   "exists": true,
+   "rows_est": 7
+  },
+  {
+   "table": "ind_pejabat_bahagian_unit",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PejabatBahagianUnit",
+   "exists": true,
+   "rows_est": 61
+  },
+  {
+   "table": "ind_pejabat_tgsn",
+   "features": [
+    "tugasan",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PejabatTugasan",
+   "exists": true,
+   "rows_est": 75776
+  },
+  {
+   "table": "ind_pejabat_ursn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PejabatUrusan",
+   "exists": true,
+   "rows_est": 2838
+  },
+  {
+   "table": "ind_pelan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Pelan",
+   "exists": true,
+   "rows_est": 755741
+  },
+  {
+   "table": "ind_pemegang_permit_lesen",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PemegangPermitLesen",
+   "exists": true,
+   "rows_est": 3880
+  },
+  {
+   "table": "ind_permit_lesen",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PermitLesen",
+   "exists": true,
+   "rows_est": 3588
+  },
+  {
+   "table": "ind_pihak_bkptg",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PihakBerkepentingan",
+   "exists": true,
+   "rows_est": 3778946
+  },
+  {
+   "table": "ind_prnth_halang_ursn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PerintahHalangUrusan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ind_rekod_ursn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:RekodUrusan",
+   "exists": true,
+   "rows_est": 4015105
+  },
+  {
+   "table": "ind_rizab",
+   "features": [
+    "persistence",
+    "emohon"
+   ],
+   "assigned_by": "entity-member:Rizab;known-join",
+   "exists": true,
+   "rows_est": 3039
+  },
+  {
+   "table": "ind_salinan_dhk",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SalinanDhk",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ind_seksyen",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Seksyen",
+   "exists": true,
+   "rows_est": 81
+  },
+  {
+   "table": "ind_skrin",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Skrin",
+   "exists": true,
+   "rows_est": 1159
+  },
+  {
+   "table": "ind_sktn_kptgn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SekatanKepentingan",
+   "exists": true,
+   "rows_est": 506
+  },
+  {
+   "table": "ind_strata_idx",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:StrataIndeks",
+   "exists": true,
+   "rows_est": 1710
+  },
+  {
+   "table": "ind_strata_idx_penyampaian",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:StrataIndeksPenyampaian",
+   "exists": true,
+   "rows_est": 1710
+  },
+  {
+   "table": "ind_strata_idx_ptk_aksesori",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:StrataIndeksPetakAksesori",
+   "exists": true,
+   "rows_est": 44765
+  },
+  {
+   "table": "ind_strata_idx_ringkasan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:StrataIndeksRingkasan",
+   "exists": true,
+   "rows_est": 2485
+  },
+  {
+   "table": "ind_strata_idx_versi",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:StrataIndeksVersi",
+   "exists": true,
+   "rows_est": 1710
+  },
+  {
+   "table": "ind_strata_penyata",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:StrataPenyata",
+   "exists": true,
+   "rows_est": 1700
+  },
+  {
+   "table": "ind_strata_ptk_aksesori",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:StrataPetakAksesori",
+   "exists": true,
+   "rows_est": 44765
+  },
+  {
+   "table": "ind_syrt_nyata",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SyaratNyata",
+   "exists": true,
+   "rows_est": 1206
+  },
+  {
+   "table": "ind_syrt_ursn_senarai_smkn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SyaratUrusanSenaraiSemakan",
+   "exists": true,
+   "rows_est": 80
+  },
+  {
+   "table": "ind_templat",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Template",
+   "exists": true,
+   "rows_est": 164
+  },
+  {
+   "table": "ind_tgsn",
+   "features": [
+    "tugasan",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Tugasan",
+   "exists": true,
+   "rows_est": 16856
+  },
+  {
+   "table": "ind_ursn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Urusan",
+   "exists": true,
+   "rows_est": 1443
+  },
+  {
+   "table": "ind_ursn_senarai_smkn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:UrusanSenaraiSemakan",
+   "exists": true,
+   "rows_est": 4793
+  },
+  {
+   "table": "ind_ursn_templat",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:UrusanTemplate",
+   "exists": true,
+   "rows_est": 129
+  },
+  {
+   "table": "ind_versi_dhd",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:DhdVersi",
+   "exists": true,
+   "rows_est": 1547684
+  },
+  {
+   "table": "ind_versi_permit_lesen",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:VersiPermitLesen",
+   "exists": true,
+   "rows_est": 3880
+  },
+  {
+   "table": "ind_waris",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "prefix:rjk_/ind_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "ind_warta",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Warta",
+   "exists": true,
+   "rows_est": 2
+  },
+  {
+   "table": "ind_zon",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Zon",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "llg_a_alamat_tmbhn",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 9465
+  },
+  {
+   "table": "llg_a_bayaran",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "llg_a_bil_tuntutan_pelelong",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "llg_a_daftar_pelelong",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "llg_a_eksibit",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "llg_a_emel_tmbhn",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "llg_a_gadaian",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 4238
+  },
+  {
+   "table": "llg_a_isytihar_jualan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 1884
+  },
+  {
+   "table": "llg_a_kehadiran",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 8775
+  },
+  {
+   "table": "llg_a_keterangan_pihak_bkptg",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 5188
+  },
+  {
+   "table": "llg_a_lelong_dok",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 9
+  },
+  {
+   "table": "llg_a_pelelong",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 1046
+  },
+  {
+   "table": "llg_a_pembida",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 669
+  },
+  {
+   "table": "llg_a_pembida_bayaran",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "llg_a_pihak_bkptg_wkl",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 4260
+  },
+  {
+   "table": "llg_a_pinjaman",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 1349
+  },
+  {
+   "table": "llg_a_prnth_jualan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 4372
+  },
+  {
+   "table": "llg_a_siasatan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 8517
+  },
+  {
+   "table": "llg_a_siasatan_pihak_lain",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "llg_a_tggh_batal_prnth_jualan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 11
+  },
+  {
+   "table": "llg_a_tunggakan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "llg_a_tuntutan_pelelong",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "llg_i_daftar_pelelong",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 102
+  },
+  {
+   "table": "llg_i_eksibit",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "llg_i_lelong_alamat",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "llg_i_pembida",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 522
+  },
+  {
+   "table": "llg_p_alamat_tmbhn",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 917
+  },
+  {
+   "table": "llg_p_bil_tuntutan_pelelong",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "llg_p_daftar_pelelong",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "llg_p_prnth_jualan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 48
+  },
+  {
+   "table": "llg_p_tggh_batal_prnth_jualan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 11
+  },
+  {
+   "table": "llg_p_tuntutan_pelelong",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:llg_",
+   "exists": true,
+   "rows_est": 4
+  },
+  {
+   "table": "mig_check_seq",
+   "features": [
+    "migration"
+   ],
+   "assigned_by": "prefix:mig_",
+   "exists": true,
+   "rows_est": 956
+  },
+  {
+   "table": "mig_json_hkmlk",
+   "features": [
+    "persistence",
+    "migration"
+   ],
+   "assigned_by": "entity-member:JsonHakmilik",
+   "exists": true,
+   "rows_est": 617343
+  },
+  {
+   "table": "mig_json_rekod_ursn",
+   "features": [
+    "persistence",
+    "migration"
+   ],
+   "assigned_by": "entity-member:JsonRekodUrusan",
+   "exists": true,
+   "rows_est": 6
+  },
+  {
+   "table": "mig_sptb_sejarah_cetakan_dhd",
+   "features": [
+    "persistence",
+    "migration"
+   ],
+   "assigned_by": "entity-member:SptbSejarahCetakanDHD",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "migration_reserved_words",
+   "features": [
+    "migration"
+   ],
+   "assigned_by": "prefix:mig_",
+   "exists": true,
+   "rows_est": 220
+  },
+  {
+   "table": "pcp_audit_aktiviti",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:AuditAktiviti",
+   "exists": true,
+   "rows_est": 20684
+  },
+  {
+   "table": "pcp_audit_pengguna",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:AuditPengguna",
+   "exists": true,
+   "rows_est": 181167
+  },
+  {
+   "table": "pcp_capaian_awam",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:CapaianAwam",
+   "exists": true,
+   "rows_est": 83
+  },
+  {
+   "table": "pcp_capaian_dok",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:CapaianDokumen",
+   "exists": true,
+   "rows_est": 1282783
+  },
+  {
+   "table": "pcp_capaian_jns_ursn",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:CapaianJenisUrusan",
+   "exists": true,
+   "rows_est": 15412
+  },
+  {
+   "table": "pcp_capaian_modul",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:CapaianModul",
+   "exists": true,
+   "rows_est": 3757
+  },
+  {
+   "table": "pcp_capaian_pengguna",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:CapaianPengguna",
+   "exists": true,
+   "rows_est": 3748
+  },
+  {
+   "table": "pcp_capaian_tmbhn",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:CapaianTambahan",
+   "exists": true,
+   "rows_est": 84
+  },
+  {
+   "table": "pcp_capaian_tmbhn_peranan",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:CapaianTambahanPeranan",
+   "exists": true,
+   "rows_est": 34227
+  },
+  {
+   "table": "pcp_capaian_ulasan_tindakan",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:CapaianUlasanTindakan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "pcp_capaian_ursn",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:CapaianUrusan",
+   "exists": true,
+   "rows_est": 146464
+  },
+  {
+   "table": "pcp_log_kemaskini_katalaluan",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:PasswordUpdateLog",
+   "exists": true,
+   "rows_est": 42
+  },
+  {
+   "table": "pcp_maklum_balas_portal",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:MaklumBalasPortal",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "pcp_pengesahan_biometrik",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:PengesahanBiometrik",
+   "exists": true,
+   "rows_est": 7902
+  },
+  {
+   "table": "pcp_pengguna",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:Pengguna",
+   "exists": true,
+   "rows_est": 8404
+  },
+  {
+   "table": "pcp_pengguna_smartbox",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:PenggunaSmartbox",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "pcp_peranan_menu",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:PerananMenu",
+   "exists": true,
+   "rows_est": 51141
+  },
+  {
+   "table": "pcp_peranan_modul",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:PerananModul",
+   "exists": true,
+   "rows_est": 1028
+  },
+  {
+   "table": "pks_a_aduan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 2
+  },
+  {
+   "table": "pks_a_agensi",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "pks_a_aktiviti_tnh",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 2
+  },
+  {
+   "table": "pks_a_bancian",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "pks_a_barang_rampasan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "pks_a_bongkaran",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "pks_a_diari_siasatan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 5
+  },
+  {
+   "table": "pks_a_jadual_rondaan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 11
+  },
+  {
+   "table": "pks_a_kenderaan_terlibat",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "pks_a_kerja_luar",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "pks_a_kertas_siasatan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "pks_a_kptsn_siasatan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "pks_a_langgar_syrt",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "pks_a_mesyuarat_penyelarasan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "pks_a_notis_pemberitahuan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "pks_a_notis_sita",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "pks_a_operasi",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "pks_a_operasi_dok",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "pks_a_orang_disyaki",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "pks_a_pegawai_terlibat",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 108
+  },
+  {
+   "table": "pks_a_pemandu_langgar_syrt",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "pks_a_pengusaha",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "pks_a_penyerahan_barang",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "pks_a_perihal_tnh",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "pks_a_pnrman_makluman",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "pks_a_rekod_syor_pegawai",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 2
+  },
+  {
+   "table": "pks_a_tangkapan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "pks_a_tangkapan_dok",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "pks_laporan_bancian",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "pks_p_aduan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:pks_",
+   "exists": true,
+   "rows_est": 3
+  },
+  {
+   "table": "plp_a_buku_doket",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppBukuDoket",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "plp_a_butiran_buku_doket",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppButiranBukuDoket",
+   "exists": true,
+   "rows_est": 999
+  },
+  {
+   "table": "plp_a_jns_bgn_atas_tnh",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppJenisBangunanAtasTanah",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "plp_a_jns_tnmn_atas_tnh",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppJenisTanamanAtasTanah",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "plp_a_pelupusan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppPelupusan",
+   "exists": true,
+   "rows_est": 1804
+  },
+  {
+   "table": "plp_a_pembelian_buku_doket",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppPembelianBukuDoket",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "plp_p_jns_bgn_atas_tnh",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraJenisBangunanAtasTanah",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "plp_p_jns_tnmn_atas_tnh",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraJenisTanamanAtasTanah",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "plp_p_pelupusan",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraPelupusan",
+   "exists": true,
+   "rows_est": 668
+  },
+  {
+   "table": "plp_pemohon_rtb",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PemohonRTB",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "rjk_agensi",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Agensi",
+   "exists": true,
+   "rows_est": 54
+  },
+  {
+   "table": "rjk_badan_berkanun",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:BadanBerkanun",
+   "exists": true,
+   "rows_est": 4
+  },
+  {
+   "table": "rjk_btrn_maklumat_terkini",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ButiranMaklumatTerkini",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "rjk_dir_pegawai",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:DirektoriPegawai",
+   "exists": true,
+   "rows_est": 856
+  },
+  {
+   "table": "rjk_hari_kelepasan_am",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:HariKelepasanAm",
+   "exists": true,
+   "rows_est": 46
+  },
+  {
+   "table": "rjk_individu",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Individu",
+   "exists": true,
+   "rows_est": 5652
+  },
+  {
+   "table": "rjk_jawatan_gred",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JawatanGred",
+   "exists": true,
+   "rows_est": 420
+  },
+  {
+   "table": "rjk_jns_dok",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JenisDokumen",
+   "exists": true,
+   "rows_est": 2439
+  },
+  {
+   "table": "rjk_jns_hkmlk",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JenisHakmilik",
+   "exists": true,
+   "rows_est": 138
+  },
+  {
+   "table": "rjk_jns_janjitemu",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JenisJanjitemu",
+   "exists": true,
+   "rows_est": 3
+  },
+  {
+   "table": "rjk_jns_kuasa",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JenisKuasa",
+   "exists": true,
+   "rows_est": 11
+  },
+  {
+   "table": "rjk_jns_ursn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JenisUrusan",
+   "exists": true,
+   "rows_est": 34
+  },
+  {
+   "table": "rjk_jurukur_lesen_tnh",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JurukurLesenTanah",
+   "exists": true,
+   "rows_est": 22
+  },
+  {
+   "table": "rjk_kalendar_kerja",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KalendarKerja",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "rjk_maklumat_terkini",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:MaklumatTerkini",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "rjk_masa_bekerja",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:MasaBekerja",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "rjk_moratorium",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Moratorium",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "rjk_organisasi",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Organisasi",
+   "exists": true,
+   "rows_est": 1287
+  },
+  {
+   "table": "rjk_organisasi_individu",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:OrganisasiIndividu",
+   "exists": true,
+   "rows_est": 1659
+  },
+  {
+   "table": "rjk_organisasi_lampiran",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:OrganisasiLampiran",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "rjk_parameter_sistem",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SistemParameter",
+   "exists": true,
+   "rows_est": 267
+  },
+  {
+   "table": "rjk_peguam",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Peguam",
+   "exists": true,
+   "rows_est": 1123
+  },
+  {
+   "table": "rjk_peguam_sptb",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PeguamSPTB",
+   "exists": true,
+   "rows_est": 1115
+  },
+  {
+   "table": "rjk_pertubuhan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Pertubuhan",
+   "exists": true,
+   "rows_est": 6
+  },
+  {
+   "table": "rjk_senarai_ahli_kumpulan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SenaraiAhliKumpulan",
+   "exists": true,
+   "rows_est": 14953
+  },
+  {
+   "table": "rjk_senarai_kumpulan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SenaraiKumpulan",
+   "exists": true,
+   "rows_est": 859
+  },
+  {
+   "table": "rjk_syarikat",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Syarikat",
+   "exists": true,
+   "rows_est": 58
+  },
+  {
+   "table": "rpt_kpi_aplikasi",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KpiAplikasi",
+   "exists": true,
+   "rows_est": 861340
+  },
+  {
+   "table": "rpt_kpi_komponen",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KpiKomponen",
+   "exists": true,
+   "rows_est": 17
+  },
+  {
+   "table": "rpt_kpi_komponen_aplikasi",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KpiKomponenAplikasi",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "rpt_kpi_komponen_ursn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KpiKomponenUrusan",
+   "exists": true,
+   "rows_est": 30
+  },
+  {
+   "table": "rpt_kpi_pnotis",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KpiPenghantarNotis",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "sis_bpm_log",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:BpmLog",
+   "exists": true,
+   "rows_est": 39756
+  },
+  {
+   "table": "sis_def_jadual_kerja",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ScheduledJobDefinition",
+   "exists": true,
+   "rows_est": 15
+  },
+  {
+   "table": "sis_jalanan_jadual_kerja",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ScheduledJobRun",
+   "exists": true,
+   "rows_est": 14870
+  },
+  {
+   "table": "sis_kerja_panggilan_servis",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ServiceCallJob",
+   "exists": true,
+   "rows_est": 1015
+  },
+  {
+   "table": "sis_komponen_bisnes",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KomponenBisnes",
+   "exists": true,
+   "rows_est": 101
+  },
+  {
+   "table": "sis_komponen_dinamik",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KomponenDinamik",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "sis_log_emel",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:EmailLog",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "sis_medan_borang",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:MedanBorang",
+   "exists": true,
+   "rows_est": 225
+  },
+  {
+   "table": "sis_medan_dinamik",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:MedanDinamik",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "sis_medan_panel_borang",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:FormPanelField",
+   "exists": true,
+   "rows_est": 485
+  },
+  {
+   "table": "sis_menu",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Menu",
+   "exists": true,
+   "rows_est": 396
+  },
+  {
+   "table": "sis_no_turutan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:NomborTurutan",
+   "exists": true,
+   "rows_est": 2147
+  },
+  {
+   "table": "sis_panel_borang",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:FormPanel",
+   "exists": true,
+   "rows_est": 236
+  },
+  {
+   "table": "sis_param_def_jadual_kerja",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ScheduledJobDefinitionParam",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "sis_rujukan_medan_borang",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:FormFieldReference",
+   "exists": true,
+   "rows_est": 186
+  },
+  {
+   "table": "sis_tab",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Tab",
+   "exists": true,
+   "rows_est": 9
+  },
+  {
+   "table": "sis_tab_komponen",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:TabKomponen",
+   "exists": true,
+   "rows_est": 101
+  },
+  {
+   "table": "sis_templat_emel",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:EmailTemplate",
+   "exists": true,
+   "rows_est": 138
+  },
+  {
+   "table": "sis_templat_pertanyaan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:QueryTemplate",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "sis_templat_sms",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SmsTemplate",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "sis_ursn_tab_komponen",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:UrusanTabKomponen",
+   "exists": true,
+   "rows_est": 465
+  },
+  {
+   "table": "skg_dok",
+   "features": [
+    "persistence",
+    "dokumen"
+   ],
+   "assigned_by": "entity-member:Document;known-join",
+   "exists": true,
+   "rows_est": 14867818
+  },
+  {
+   "table": "spc_a_btrn_pelan",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppButiranPelan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "spc_a_carian_dok",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppCarianDokumen",
+   "exists": true,
+   "rows_est": 775765
+  },
+  {
+   "table": "spc_a_pengecualian_kaunter",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PengecualianKaunter",
+   "exists": true,
+   "rows_est": 37
+  },
+  {
+   "table": "spc_btrn_terima_dok",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ButiranTerimaDokumen",
+   "exists": true,
+   "rows_est": 12
+  },
+  {
+   "table": "spc_capaian_p_aplikasi",
+   "features": [
+    "spoc",
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:CapaianPraAplikasi",
+   "exists": true,
+   "rows_est": 12008
+  },
+  {
+   "table": "spc_kutipan_dok",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KutipanDokumen",
+   "exists": true,
+   "rows_est": 443233
+  },
+  {
+   "table": "spc_p_btrn_pelan",
+   "features": [
+    "emohon",
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraButiranPelan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "spc_p_carian_dok",
+   "features": [
+    "emohon",
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraCarianDokumen",
+   "exists": true,
+   "rows_est": 406
+  },
+  {
+   "table": "spc_terima_dok",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:TerimaDokumen",
+   "exists": true,
+   "rows_est": 12
+  },
+  {
+   "table": "str_a_ahli_jawatankuasa_mc",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "str_a_arkitek",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 146
+  },
+  {
+   "table": "str_a_bangunan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 1394
+  },
+  {
+   "table": "str_a_blok_smtr",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 653
+  },
+  {
+   "table": "str_a_jns_ptk",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 316
+  },
+  {
+   "table": "str_a_jurukur_tnh",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 230
+  },
+  {
+   "table": "str_a_kiraan_unit_syer",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 10
+  },
+  {
+   "table": "str_a_mc",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 240
+  },
+  {
+   "table": "str_a_menara",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 680
+  },
+  {
+   "table": "str_a_mklmt_mesyuarat",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "str_a_mklmt_tmbhn",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 53
+  },
+  {
+   "table": "str_a_pemaju",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 3
+  },
+  {
+   "table": "str_a_perakuan_jupem",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 3
+  },
+  {
+   "table": "str_a_pindaan_syrt_nyata",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "str_a_ptk",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 75657
+  },
+  {
+   "table": "str_a_ptk_aksesori",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 70531
+  },
+  {
+   "table": "str_a_ptk_aksesori_blok",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 1466
+  },
+  {
+   "table": "str_a_rujukan_pelan_bangunan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 384
+  },
+  {
+   "table": "str_a_sijil_perakuan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 15
+  },
+  {
+   "table": "str_a_strata",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 1021
+  },
+  {
+   "table": "str_a_sub_mc",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "str_a_tingkat",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 2795
+  },
+  {
+   "table": "str_i_arkitek",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 345
+  },
+  {
+   "table": "str_i_bangunan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 2343
+  },
+  {
+   "table": "str_i_blok_smtr",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 59
+  },
+  {
+   "table": "str_i_jns_ptk",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "str_i_jurukur_tnh",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 255
+  },
+  {
+   "table": "str_i_kiraan_unit_syer",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 166
+  },
+  {
+   "table": "str_i_mc",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 1712
+  },
+  {
+   "table": "str_i_menara",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 76
+  },
+  {
+   "table": "str_i_mklmt_cpsp",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "str_i_mklmt_strata",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 1966
+  },
+  {
+   "table": "str_i_mklmt_tmbhn",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "str_i_pemaju",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 2
+  },
+  {
+   "table": "str_i_pindaan_syrt_nyata",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "str_i_ptk",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 60482
+  },
+  {
+   "table": "str_i_ptk_aksesori",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 45149
+  },
+  {
+   "table": "str_i_ptk_aksesori_blok",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 24
+  },
+  {
+   "table": "str_i_rujukan_pelan_bangunan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 378
+  },
+  {
+   "table": "str_i_sijil_perakuan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 3
+  },
+  {
+   "table": "str_i_sub_mc",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "str_i_tingkat",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 8211
+  },
+  {
+   "table": "str_p_ahli_jawatankuasa_mc",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 2
+  },
+  {
+   "table": "str_p_arkitek",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 9
+  },
+  {
+   "table": "str_p_blok_smtr",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "str_p_jns_ptk",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 4
+  },
+  {
+   "table": "str_p_jurukur_tnh",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 9
+  },
+  {
+   "table": "str_p_kiraan_unit_syer",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "str_p_mc",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 8
+  },
+  {
+   "table": "str_p_mklmt_tmbhn",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 49
+  },
+  {
+   "table": "str_p_pemaju",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 6
+  },
+  {
+   "table": "str_p_perakuan_jupem",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 5
+  },
+  {
+   "table": "str_p_pindaan_syrt_nyata",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "str_p_ptk",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 1844
+  },
+  {
+   "table": "str_p_ptk_aksesori",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 1712
+  },
+  {
+   "table": "str_p_rujukan_pelan_bangunan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 132
+  },
+  {
+   "table": "str_p_sijil_perakuan",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 14
+  },
+  {
+   "table": "str_p_strata",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": 140
+  },
+  {
+   "table": "str_p_sub_mc",
+   "features": [
+    "other-module"
+   ],
+   "assigned_by": "prefix:str_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "sws_bayaran",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SwsBayaran",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "sws_item",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Item",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "sws_kat_item",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KategoriItem",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "sws_konf",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Konfigurasi",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "sws_log_gerbang_bayaran",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:LogSwsGerbangBayaran",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "sws_pembekal",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Pembekal",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "sws_pembelian",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Pembelian",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "sws_troli",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Troli",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "tkl_a_btrn_tapak",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "tkl_a_ctk_pelan",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": 35
+  },
+  {
+   "table": "tkl_a_laporan_pelukis_pelan",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": 139
+  },
+  {
+   "table": "tkl_a_laporan_tnh",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": 179
+  },
+  {
+   "table": "tkl_a_mklmt_bangunan",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "tkl_a_mklmt_laporan_tnh",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "tkl_a_mklmt_lot_persekitaran",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": 485
+  },
+  {
+   "table": "tkl_a_mklmt_tanaman",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "tkl_a_mklmt_tapak",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": 4
+  },
+  {
+   "table": "tkl_a_pembelian_pelan",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "tkl_a_permintaan_ukur",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "tkl_a_permohonan_bertindih",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": 26
+  },
+  {
+   "table": "tkl_p_laporan_tnh",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": 31
+  },
+  {
+   "table": "tkl_p_mklmt_bangunan",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "tkl_p_mklmt_lot_persekitaran",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": 120
+  },
+  {
+   "table": "tkl_p_mklmt_tanaman",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "tkl_p_pembelian_pelan",
+   "features": [
+    "out-of-scope-teknikal"
+   ],
+   "assigned_by": "prefix:tkl_",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_a_ahli_lembaga",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppAhliLembaga",
+   "exists": true,
+   "rows_est": 40574
+  },
+  {
+   "table": "umm_a_daftar_pengguna",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:AppDaftarPengguna",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_a_dok_keluaran",
+   "features": [
+    "dokumen",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppDokumenKeluaran",
+   "exists": true,
+   "rows_est": 8429772
+  },
+  {
+   "table": "umm_a_dok_kmskn",
+   "features": [
+    "dokumen",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppDokumenKemasukan",
+   "exists": true,
+   "rows_est": 5030586
+  },
+  {
+   "table": "umm_a_hkmlk",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppHakmilik",
+   "exists": true,
+   "rows_est": 5569266
+  },
+  {
+   "table": "umm_a_hkmlk_lain",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppHakmilikLain",
+   "exists": true,
+   "rows_est": 63
+  },
+  {
+   "table": "umm_a_hkmlk_sempadan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppHakmilikSempadan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_a_jabatan_teknikal",
+   "features": [
+    "persistence",
+    "screens",
+    "templates"
+   ],
+   "assigned_by": "entity-member:AppJabatanTeknikal;known-join",
+   "exists": true,
+   "rows_est": 5066
+  },
+  {
+   "table": "umm_a_keputusan_pbn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppKeputusanPBN",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_a_kertas",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppKertas",
+   "exists": true,
+   "rows_est": 129
+  },
+  {
+   "table": "umm_a_kuota_bumiputera",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppKuotaBumiputera",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_a_langkah",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppLangkah",
+   "exists": true,
+   "rows_est": 40974
+  },
+  {
+   "table": "umm_a_mklmt_kembaran",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppMaklumatKembaran",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_a_mklmt_penyaksian",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppMaklumatPenyaksian",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_a_mklmt_premium",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppMaklumatPremium",
+   "exists": true,
+   "rows_est": 4
+  },
+  {
+   "table": "umm_a_mklmt_premium_wip",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppMaklumatPremiumWIP",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_a_mklmt_rpt_rpb",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppMaklumatRPTRPB",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_a_pelan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppPelan",
+   "exists": true,
+   "rows_est": 304
+  },
+  {
+   "table": "umm_a_pelikuidasi_pihak",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppPelikuidasiPihak",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_a_pembatalan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppPembatalan",
+   "exists": true,
+   "rows_est": 8
+  },
+  {
+   "table": "umm_a_pengalaman_kerja",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppPengalamanKerja",
+   "exists": true,
+   "rows_est": 8
+  },
+  {
+   "table": "umm_a_penyaksian",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppPenyaksian",
+   "exists": true,
+   "rows_est": 389
+  },
+  {
+   "table": "umm_a_penyerah",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppPenyerah",
+   "exists": true,
+   "rows_est": 1321982
+  },
+  {
+   "table": "umm_a_permit_lesen",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppPermitLesen",
+   "exists": true,
+   "rows_est": 12285
+  },
+  {
+   "table": "umm_a_permohonan_tnh",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppPermohonanTanah",
+   "exists": true,
+   "rows_est": 36555
+  },
+  {
+   "table": "umm_a_pihak_bkptg",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppPihakBerkepentingan",
+   "exists": true,
+   "rows_est": 3900143
+  },
+  {
+   "table": "umm_a_pihak_bkptg_srt",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppPihakBerkepentinganSurat",
+   "exists": true,
+   "rows_est": 2
+  },
+  {
+   "table": "umm_a_premium_wip",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppPremiumWIP",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_a_rayuan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppRayuan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_a_rizab",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppRizab",
+   "exists": true,
+   "rows_est": 4112
+  },
+  {
+   "table": "umm_a_srt",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppSurat",
+   "exists": true,
+   "rows_est": 613020
+  },
+  {
+   "table": "umm_a_srt_terlibat",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppSuratTerlibat",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_a_tanggungan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppTanggungan",
+   "exists": true,
+   "rows_est": 192
+  },
+  {
+   "table": "umm_a_tgsn",
+   "features": [
+    "tugasan",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppTugasan",
+   "exists": true,
+   "rows_est": 2707561
+  },
+  {
+   "table": "umm_a_tgsn_dok",
+   "features": [
+    "tugasan",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppTugasanDokumen",
+   "exists": true,
+   "rows_est": 11885
+  },
+  {
+   "table": "umm_a_utiliti_premium",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AppUtilitiPremium",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_alamat_pnrm_notis",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AlamatPenerimaNotis",
+   "exists": true,
+   "rows_est": 18041
+  },
+  {
+   "table": "umm_alamat_pnrm_notis_tmbhn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:AlamatPenerimaNotisTambahan",
+   "exists": true,
+   "rows_est": 1
+  },
+  {
+   "table": "umm_aliran_kerja",
+   "features": [
+    "persistence",
+    "flowable"
+   ],
+   "assigned_by": "entity-member:AliranKerja;known-join",
+   "exists": true,
+   "rows_est": 10144
+  },
+  {
+   "table": "umm_aplikasi",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Aplikasi",
+   "exists": true,
+   "rows_est": 3356915
+  },
+  {
+   "table": "umm_bayaran_ukur",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:BayaranUkur",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_borang_permohonan_mklmt",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:BorangPermohonanMaklumat",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_btrn_hantaran_notis",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ButiranHantaranNotis",
+   "exists": true,
+   "rows_est": 18025
+  },
+  {
+   "table": "umm_btrn_jadual_bekerja",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ButiranJadualBekerja",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_cetak_semula_dok",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:CetakSemulaDokumen",
+   "exists": true,
+   "rows_est": 1086113
+  },
+  {
+   "table": "umm_data_integrasi",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:DataIntegrasi",
+   "exists": true,
+   "rows_est": 86834
+  },
+  {
+   "table": "umm_hantaran_notis",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:HantaranNotis",
+   "exists": true,
+   "rows_est": 22160
+  },
+  {
+   "table": "umm_hebahan_portal",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:HebahanPortal",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_individu_siasatan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:IndividuSiasatan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_individu_siasatan_tmbhn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:IndividuSiasatanTambahan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_jadual_bekerja",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JadualBekerja",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_jadual_kedua",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JadualKedua",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_jadual_keenam",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JadualKeenam",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_jadual_ketiga",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JadualKetiga",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_jadual_ketujuh",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JadualKetujuh",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_jadual_laporan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JadualLaporan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_janjitemu",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JanjiTemu",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_janjitemu_slot",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JanjitemuSlot",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_jawapan_undian",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JawapanUndian",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_jdn_otp",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JDNOtp",
+   "exists": true,
+   "rows_est": 1109
+  },
+  {
+   "table": "umm_jdn_signing_log",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JDNSigningLog",
+   "exists": true,
+   "rows_est": 73308
+  },
+  {
+   "table": "umm_jns_dok_peranan_modul",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:JenisDokumenPerananModul",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_jns_pengagihan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:JenisPengagihan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_kat_dok",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KategoriDokumen",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_kehadiran_pejabat",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KehadiranPejabat",
+   "exists": true,
+   "rows_est": 12
+  },
+  {
+   "table": "umm_kehadiran_siasatan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KehadiranSiasatan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_keputusan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Keputusan",
+   "exists": true,
+   "rows_est": 2405174
+  },
+  {
+   "table": "umm_keputusan_mesyuarat",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KeputusanMesyuarat",
+   "exists": true,
+   "rows_est": 68
+  },
+  {
+   "table": "umm_kertas_mesyuarat",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KertasMesyuarat",
+   "exists": true,
+   "rows_est": 3
+  },
+  {
+   "table": "umm_konf_pegawai_khusus",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KonfigurasiPegawaiKhusus",
+   "exists": true,
+   "rows_est": 176
+  },
+  {
+   "table": "umm_konf_pengagihan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KonfigurasiPengagihan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_konf_pengagihan_tgsn",
+   "features": [
+    "tugasan",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KonfigurasiPengagihanTugasan",
+   "exists": true,
+   "rows_est": 44902
+  },
+  {
+   "table": "umm_konf_pengagihan_tgsn_pk",
+   "features": [
+    "tugasan",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KonfigurasiPengagihanTugasanPegawaiKhusus",
+   "exists": true,
+   "rows_est": 1184
+  },
+  {
+   "table": "umm_konf_pengagihan_tgsn_pk_rr",
+   "features": [
+    "tugasan",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KonfigurasiPengagihanTugasanPegawaiKhususRoundRobin",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_konf_pengagihan_tgsn_pyrh",
+   "features": [
+    "tugasan",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KonfigurasiPengagihanTugasanPenyerah",
+   "exists": true,
+   "rows_est": 26
+  },
+  {
+   "table": "umm_konf_pengagihan_tgsn_rr",
+   "features": [
+    "tugasan",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KonfigurasiPengagihanTugasanRoundRobin",
+   "exists": true,
+   "rows_est": 19912
+  },
+  {
+   "table": "umm_konfig_janjitemu_slot",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KonfigurasiJanjiTemuSlot",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_konfig_pngagihan_tgsn_agihn",
+   "features": [
+    "tugasan",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KonfigurasiPengagihanTugasanAgihan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_konfig_pngagihan_tgsn_agihn_pkl",
+   "features": [
+    "tugasan",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KonfigurasiPengagihanTugasanAgihanPukal",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_kriteria_laporan_dijana",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:KriteriaLaporanDijana",
+   "exists": true,
+   "rows_est": 8727
+  },
+  {
+   "table": "umm_laporan_dijana",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:LaporanDijana",
+   "exists": true,
+   "rows_est": 5694
+  },
+  {
+   "table": "umm_laporan_pngluarn_permit",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:LaporanPengeluaranPermit",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_lokasi_kotak_kutipan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:LokasiKotakKutipan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_lokasi_kotak_kutipan_orga",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:LokasiKotakKutipanOrganisasi",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_lokasi_ktk_ktpn_jns_psrhn",
+   "features": [
+    "spoc",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:LokasiKotakKutipanJenisPerserahan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_mesyuarat_pbn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:MesyuaratPBN",
+   "exists": true,
+   "rows_est": 61
+  },
+  {
+   "table": "umm_mklmt_akaun_bank",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:MaklumatAkaunBank",
+   "exists": true,
+   "rows_est": 61
+  },
+  {
+   "table": "umm_mklmt_laporan_siasatan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:MaklumatLaporanSiasatan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_mklmt_pengesahan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:MaklumatPengesahan",
+   "exists": true,
+   "rows_est": 3668
+  },
+  {
+   "table": "umm_notifikasi",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Notifikasi",
+   "exists": true,
+   "rows_est": 25371
+  },
+  {
+   "table": "umm_p_ahli_lembaga",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraAhliLembaga",
+   "exists": true,
+   "rows_est": 3364
+  },
+  {
+   "table": "umm_p_aplikasi",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraAplikasi",
+   "exists": true,
+   "rows_est": 15274
+  },
+  {
+   "table": "umm_p_daftar_organisasi",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraDaftarOrganisasi",
+   "exists": true,
+   "rows_est": 3615
+  },
+  {
+   "table": "umm_p_hkmlk",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraHakmilik",
+   "exists": true,
+   "rows_est": 10815
+  },
+  {
+   "table": "umm_p_hkmlk_lain",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraHakmilikLain",
+   "exists": true,
+   "rows_est": 178
+  },
+  {
+   "table": "umm_p_hkmlk_sempadan",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraHakmilikSempadan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_p_jabatan_teknikal",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraJabatanTeknikal",
+   "exists": true,
+   "rows_est": 241
+  },
+  {
+   "table": "umm_p_mklmt_kembaran",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraMaklumatKembaran",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_p_mklmt_laporan_tnh",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraMaklumatLaporanTanah",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_p_mklmt_ursn_tmbhn",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraMaklumatUrusanTambahan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_p_pelikuidasi_pihak",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraPelikuidasiPihak",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_p_pengalaman_kerja",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraPengalamanKerja",
+   "exists": true,
+   "rows_est": 56
+  },
+  {
+   "table": "umm_p_pengguna",
+   "features": [
+    "emohon",
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:PraPengguna",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_p_penyaksian",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraPenyaksian",
+   "exists": true,
+   "rows_est": 1806
+  },
+  {
+   "table": "umm_p_penyerah",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraPenyerah",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_p_permit_lesen",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraPermitLesen",
+   "exists": true,
+   "rows_est": 325
+  },
+  {
+   "table": "umm_p_permohonan_tnh",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraPermohonanTanah",
+   "exists": true,
+   "rows_est": 827
+  },
+  {
+   "table": "umm_p_pihak_bkptg",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraPihakBerkepentingan",
+   "exists": true,
+   "rows_est": 12985
+  },
+  {
+   "table": "umm_p_pihak_bkptg_srt",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraPihakBerkepentinganSurat",
+   "exists": true,
+   "rows_est": 3487
+  },
+  {
+   "table": "umm_p_rizab",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraRizab",
+   "exists": true,
+   "rows_est": 4
+  },
+  {
+   "table": "umm_p_serahan_terlibat",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraSerahanTerlibat",
+   "exists": true,
+   "rows_est": 1040
+  },
+  {
+   "table": "umm_p_smkn",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraSemakan",
+   "exists": true,
+   "rows_est": 58626
+  },
+  {
+   "table": "umm_p_srt",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraSurat",
+   "exists": true,
+   "rows_est": 619
+  },
+  {
+   "table": "umm_p_srt_terlibat",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraSuratTerlibat",
+   "exists": true,
+   "rows_est": 2
+  },
+  {
+   "table": "umm_p_tanggungan",
+   "features": [
+    "emohon",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PraTanggungan",
+   "exists": true,
+   "rows_est": 417
+  },
+  {
+   "table": "umm_pengesahan_ekyc",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PengesahanEKYC",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_pengguna_notifikasi",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:PenggunaNotifikasi",
+   "exists": true,
+   "rows_est": 23223
+  },
+  {
+   "table": "umm_perkara_mesyuarat_bangkit",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PerkaraMesyuaratBerbangkit",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_perkara_mesyuarat_pemohon",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PerkaraMesyuaratPermohonan",
+   "exists": true,
+   "rows_est": 44
+  },
+  {
+   "table": "umm_pertanyaan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Pertanyaan",
+   "exists": true,
+   "rows_est": 137
+  },
+  {
+   "table": "umm_pindaan_cabutan_minit_pbn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:PindaanCabutanMinitPBN",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_pmbtln",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Pembetulan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_qms_rekod",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:QmsRekod",
+   "exists": true,
+   "rows_est": 40846
+  },
+  {
+   "table": "umm_qms_report",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:QMSReport",
+   "exists": true,
+   "rows_est": 74427
+  },
+  {
+   "table": "umm_sasaran_hantaran_notis",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SasaranHantaranNotis",
+   "exists": true,
+   "rows_est": 22
+  },
+  {
+   "table": "umm_sasaran_kerja",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SasaranKerja",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_sasarn_hantaran_notis_unit",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SasaranHantaranNotisUnit",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_sejarah_mklmt_warta",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SejarahMaklumatWarta",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_sejarah_pengagihan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SejarahPengagihan",
+   "exists": true,
+   "rows_est": 3998
+  },
+  {
+   "table": "umm_sejarah_status_rahsia",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SejarahStatusRahsia",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_senarai_smkn_bergantung",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SenaraiSemakanBergantung",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_servis_qms",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ServisQMS",
+   "exists": true,
+   "rows_est": 19
+  },
+  {
+   "table": "umm_smkn_jpn",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SemakanJpn",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_soal_selidik_pilihan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SoalSelidikPilihan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_soal_selidik_soalan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SoalSelidikSoalan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_soal_selidik_undian",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SoalSelidikUndian",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_soalan_undian",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SoalanUndian",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_srt_pihak",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:SuratPihak",
+   "exists": true,
+   "rows_est": 18573
+  },
+  {
+   "table": "umm_statistik_pelawat",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:StatistikPelawat",
+   "exists": true,
+   "rows_est": 8215
+  },
+  {
+   "table": "umm_status_penyampaian_notis",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:StatusPenyampaianNotis",
+   "exists": true,
+   "rows_est": 42
+  },
+  {
+   "table": "umm_tdkn_susulan_jabatan",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:TindakanSusulanJabatan",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_terminal",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Terminal",
+   "exists": true,
+   "rows_est": 35
+  },
+  {
+   "table": "umm_tetapan_pengguna",
+   "features": [
+    "persistence",
+    "peranan"
+   ],
+   "assigned_by": "entity-member:TetapanPengguna",
+   "exists": true,
+   "rows_est": 16
+  },
+  {
+   "table": "umm_tgsn_semasa",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:Dashboard",
+   "exists": true,
+   "rows_est": 19126
+  },
+  {
+   "table": "umm_tgsn_v_rule",
+   "features": [
+    "tugasan",
+    "persistence"
+   ],
+   "assigned_by": "entity-member:TugasanValidationRule",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_trans_keluaran_doket",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:TransKeluaranDoket",
+   "exists": true,
+   "rows_est": 166
+  },
+  {
+   "table": "umm_tuntutan_maks_pllg_blesen",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:TuntutanMaksimumPelelongBerlesen",
+   "exists": true,
+   "rows_est": 10
+  },
+  {
+   "table": "umm_ulasan_notis",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:UlasanNotis",
+   "exists": true,
+   "rows_est": -1
+  },
+  {
+   "table": "umm_v_rule",
+   "features": [
+    "persistence"
+   ],
+   "assigned_by": "entity-member:ValidationRule",
+   "exists": true,
+   "rows_est": 1
+  }
+ ],
+ "unassigned": [
+  {
+   "table": "dmsa_err_log",
+   "prefix": "dmsa_"
+  },
+  {
+   "table": "dok_kutipan_lms_ag",
+   "prefix": "dok_"
+  },
+  {
+   "table": "dok_kutipan_lms_js",
+   "prefix": "dok_"
+  },
+  {
+   "table": "dok_kutipan_lms_mt",
+   "prefix": "dok_"
+  },
+  {
+   "table": "dok_kutipan_ppjk_ag",
+   "prefix": "dok_"
+  },
+  {
+   "table": "dok_kutipan_ppjk_mt",
+   "prefix": "dok_"
+  },
+  {
+   "table": "dok_kutipan_prbb_ag",
+   "prefix": "dok_"
+  },
+  {
+   "table": "dok_kutipan_prbb_js",
+   "prefix": "dok_"
+  },
+  {
+   "table": "dok_kutipan_prbb_mt",
+   "prefix": "dok_"
+  },
+  {
+   "table": "dok_kutipan_pru_ag",
+   "prefix": "dok_"
+  },
+  {
+   "table": "dok_kutipan_pru_mt",
+   "prefix": "dok_"
+  },
+  {
+   "table": "gt_hsl_bayaran_filtered",
+   "prefix": "gt_"
+  },
+  {
+   "table": "gt_hsl_bayaran_notmanual",
+   "prefix": "gt_"
+  },
+  {
+   "table": "gt_hsl_bayaran_resit",
+   "prefix": "gt_"
+  },
+  {
+   "table": "gt_hsl_btrn_bayaran_filtered",
+   "prefix": "gt_"
+  },
+  {
+   "table": "md_additional_properties",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_applicationfiles",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_applications",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_catalogs",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_code_regex",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_columns",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_connections",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_constraint_details",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_constraints",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_derivatives",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_file_artifacts",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_group_members",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_group_privileges",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_groups",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_index_details",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_indexes",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_migr_dependency",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_migr_parameter",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_migr_weakdep",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_numrow$source",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_numrow$target",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_other_objects",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_packages",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_partitions",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_privileges",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_projects",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_registry",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_repoversions",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_schemas",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_sequences",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_stored_programs",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_synonyms",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_tables",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_tablespaces",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_target_all_errors",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_target_all_objects",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_triggers",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_user_defined_data_types",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_user_privileges",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_users",
+   "prefix": "md_"
+  },
+  {
+   "table": "md_views",
+   "prefix": "md_"
+  },
+  {
+   "table": "rpt_data_fakta",
+   "prefix": "rpt_"
+  },
+  {
+   "table": "rpt_data_fakta_hakmilik",
+   "prefix": "rpt_"
+  },
+  {
+   "table": "rpt_hasil_fakta",
+   "prefix": "rpt_"
+  },
+  {
+   "table": "rpt_hasil_fakta_delta",
+   "prefix": "rpt_"
+  },
+  {
+   "table": "rpt_hsl15_fakta",
+   "prefix": "rpt_"
+  },
+  {
+   "table": "rpt_hsl15_fakta_22062026",
+   "prefix": "rpt_"
+  },
+  {
+   "table": "table_temp_tagging_dc_csv",
+   "prefix": "table_"
+  },
+  {
+   "table": "temp_pk_max",
+   "prefix": "temp_"
+  },
+  {
+   "table": "temp_seq_lastused",
+   "prefix": "temp_"
+  },
+  {
+   "table": "tkr_borang_pelan",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_btrn_strata_idx",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_buku_hakmilik",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_buku_hakmilik_backup",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_buku_hakmilik_baru",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_cukai_bpm",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_dc_kod",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_hakmilik_batal",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_hakmilik_batal_log",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_hakmilik_tukarganti",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_hakmilik_tukarganti_backup",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_hkmlk_str_syrt_nyt_bcmpr",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_kembali_versi_sejarah",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_kod",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_kod_umum",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_kumpulan_mukim",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_kumpulan_mukim_ahli",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_log",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_log_timer",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_pcp_excel_kategori",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_pengambilan_fail",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_pergerakan_buku",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_sejarah_cetak",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_senarai_pgrsn_kumpulan",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_senarai_pgrsn_kumpulan_pgn",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_tmp_borang_pelan",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_tmp_borang_pelan_20260623",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_tmp_borang_pelan_20260625",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_tmp_borang_pelan_20260626",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_tmp_borang_pelan_20260626_1",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_tmp_borang_pelan_20260628",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_tmp_borang_pelan_20260629",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_tmp_borang_pelan_20260630",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_tmp_dhd_versi",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_tmp_isu_worm_csv",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_tugasan_tukarganti",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tkr_watch_log",
+   "prefix": "tkr_"
+  },
+  {
+   "table": "tmp_kutipan_lms",
+   "prefix": "tmp_"
+  },
+  {
+   "table": "tmp_kutipan_lms_alor_gajah",
+   "prefix": "tmp_"
+  },
+  {
+   "table": "tmp_kutipan_lms_jasin",
+   "prefix": "tmp_"
+  },
+  {
+   "table": "tmp_kutipan_ppjk",
+   "prefix": "tmp_"
+  },
+  {
+   "table": "tmp_kutipan_ppjk_alor_gajah",
+   "prefix": "tmp_"
+  },
+  {
+   "table": "tmp_kutipan_prbb",
+   "prefix": "tmp_"
+  },
+  {
+   "table": "tmp_kutipan_prbb_alor_gajah",
+   "prefix": "tmp_"
+  },
+  {
+   "table": "tmp_kutipan_prbb_jasin",
+   "prefix": "tmp_"
+  },
+  {
+   "table": "tmp_kutipan_pru",
+   "prefix": "tmp_"
+  },
+  {
+   "table": "tmp_kutipan_pru_alor_gajah",
+   "prefix": "tmp_"
+  },
+  {
+   "table": "umm_jdn_signing_log_0624",
+   "prefix": "umm_"
+  },
+  {
+   "table": "v_lokasi_fail",
+   "prefix": "v_"
+  }
+ ],
+ "summary": {
+  "total_db": 718,
+  "assigned": 604,
+  "unassigned": 114,
+  "missing_entity_tables": []
+ }
+}

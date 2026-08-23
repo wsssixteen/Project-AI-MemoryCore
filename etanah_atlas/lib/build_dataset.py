@@ -116,6 +116,10 @@ def main(profile="melaka"):
     census = json.load(open(census_file, encoding="utf-8")) if census_file.exists() else {"tugasans": []}
     screens_file = CONFIG / f"screen_tables.{profile}.json"
     screen_tables = json.load(open(screens_file, encoding="utf-8")) if screens_file.exists() else {"screens": {}}
+    ft_file = BUILD / "feature_tables.json"
+    feature_tables = json.load(open(ft_file, encoding="utf-8")) if ft_file.exists() else {"tables": [], "unassigned": [], "summary": {}}
+    fm_file = BUILD / "feature_meta.json"
+    feature_meta = json.load(open(fm_file, encoding="utf-8")) if fm_file.exists() else {}
     usage_file = BUILD / "code_usage.json"
     code_usage = json.load(open(usage_file, encoding="utf-8")) if usage_file.exists() else {}
     registry_file = BUILD / "entity_registry.json"
@@ -226,6 +230,8 @@ def main(profile="melaka"):
         "anchor_blurbs": mapping["anchor_blurbs"],
         "urusans": mapping["urusans"],
         "tugasans": tugasan_cfg.get("tugasans", []),
+        "feature_tables": feature_tables,
+        "feature_meta": feature_meta,
         "tugasan_census": census.get("tugasans", []),
         "screen_tables": screen_tables.get("screens", {}),
         "families": compute_families([t["name"] for t in tables]),

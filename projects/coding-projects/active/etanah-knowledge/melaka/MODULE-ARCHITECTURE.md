@@ -231,6 +231,11 @@ Two strategy tiers control Word document generation:
 
 > **Trap**: Adding a kodDokumen to the wrong strategy = silent failure (null template or wrong CC tag populated). Always verify which tag the Word template actually uses.
 
+## etanah-domain jar — entity truth + PER-WAR VERSION SKEW (2026-08-23, Atlas)
+
+- Entity sources are NOT in any checked-out repo — `my.gov.etanah.domain.*` ships as a compiled jar in each WAR. **Each WAR pins a DIFFERENT version**: pelupusan `etanah-domain-1.0.0-MLK` · awam `1.0.2` · common `1.0.4` (checked in `target/<war>/WEB-INF/lib/`, 2026-08-23). An entity/getter present in one WAR's jar may not exist in another's — check the RIGHT jar for the module you are debugging.
+- Reading `@Table`/annotations off the jar: `"C:\Program Files\Java\jdk-17in\javap" -v -p -cp <extracted-jar-dir> <FQCN>` — class-level annotations print DECODED at the very END of the output (`javax.persistence.Table(` + `name="..."`). Batch builder: `etanah_atlas/lib/build_entity_registry.py` → `etanah_atlas/build/entity_registry.json` (596 entities).
+
 ## Related Modules
 
 | Module | Role | Notes |
@@ -241,6 +246,24 @@ Two strategy tiers control Word document generation:
 | `etanah-teknikal` | Technical-side module — owns Siasatan Tanah, Maklumat Plot, Laporan Tanah panels filled by JT (Jabatan Teknikal) / technical officers. Writes to `tkl_*` tables (e.g., `tkl_a_laporan_tnh`). **Separate web-app deployment from pelupusan** | Not yet synced locally; pelupusan cannot directly render teknikal UI components |
 
 > ⚠️ Some report displays that appear to be in pelupusan flows are actually rendered by `etanah-awam`. Always check module ownership before investigating report/display bugs.
+
+## 🗄 Where entity classes ACTUALLY live — the etanah-domain JAR (verified 2026-08-23)
+
+The core JPA entities (`AppHakmilik`, `AppPihakBerkepentingan`, `AppTugasan`, `Pengguna`, `Tugasan`, all `App*/Pra*/Base*`) are in **NONE of the checked-out repos**. They live in the **`etanah-domain` JAR**, package `my.gov.etanah.domain.*` — version pinned by `etanah-common\pom.xml` = **1.0.4-MLK**. Sources: `E:\Dev\.m2_etanah\my\gov\etanah\etanah-domain\1.0.4-MLK\etanah-domain-1.0.4-MLK-sources.jar` (1,265 files, 596 @Table entities).
+
+**Why grepping a table name in Java finds NOTHING — 5 traps, all verified:**
+
+| Trap | Example (real, read from source) |
+|---|---|
+| Table name is SPLIT in the annotation | `AppHakmilik.java:54` → `@Table(name = TablePrefixConstant.UMM_TABLE_PREFIX + "A_HKMLK")` — grep the SUFFIX `A_HKMLK`, never `umm_a_hkmlk` |
+| Prefix constants | `my\gov\etanah\domain\constant\TablePrefixConstant.java` — `UMM_ PCP_ IND_ RJK_ HSL_ PLP_ TKL_ DFT_ BGN_ MIG_ SPC_ …` (24 prefixes) |
+| Parent holds half the columns | `AppHakmilik extends BaseHakmilik` — `Base*` are `@MappedSuperclass`, NO table of their own |
+| JSON pseudo-columns | `MKLMT_TMBHN` (4000-char) — keys inside (`generateSurat`, `tarafTanah`, …) have NO Java property; grep the KEY STRING in services |
+| Q-classes are generated | `QAppHakmilik` etc. = QueryDSL metamodels, not entities — ignore when tracing |
+
+**Naming pairs**: `App*` = staff row (`umm_a_*`) · `Pra*` = portal pra-row (`umm_p_*`) · reference entities often drop the prefix entirely (`Tugasan` → `ind_tgsn`, `Pengguna` → `pcp_pengguna`).
+
+**Browsable map**: the codemap site v6 Entity↔Table tab (`etanah-codemap\site\index.html`) searches all 596 both directions (class OR table). ⚠ MAX_PATH: extracting the sources jar under a long path silently loses 751/1265 files — use a short dir like `%TEMP%\etanah-domain-src`.
 
 ### Reading "skrin teknikal" in BA briefs — DON'T confuse with pelupusan UI (QA-260508 slip, 2026-06-02)
 

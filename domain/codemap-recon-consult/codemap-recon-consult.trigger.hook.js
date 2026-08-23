@@ -113,6 +113,9 @@ process.stdin.on('end', () => {
       '          (pulls the whole interface surface; saw 301 symbols for a 2-caller method).',
       '  Tool by DISPATCH: class-inheritance (Base*→@Override) → codegraph OK · service-locator /',
       '  interface → GREP authoritative. Grep is the FLOOR for blast-radius; NEVER trust a',
+      '  🚨 Grep itself misses 4 access channels (inherited getters · relation navigation ·',
+      '     jrxml SQL · common-service indirection) — DATABASE.md §10c has the proven instances',
+      '     + the per-module code-usage truth (pelupusan=151 tables, etanah_atlas/build/code_usage.json).',
       '  codegraph "0 callers" on a Service method without a grep confirm.',
       '',
     ].join('\n');

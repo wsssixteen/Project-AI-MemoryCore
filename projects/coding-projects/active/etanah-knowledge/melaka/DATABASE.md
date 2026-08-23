@@ -90,6 +90,7 @@ These were confirmed from the SQL exports. Never assume otherwise:
 | FK from `umm_a_rizab` to permohonan tanah | `a_permohonan_tnh_id` references `umm_a_permohonan_tnh(a_permohonan_tnh_id)` | ~~`app_permohonan_tanah_id`~~ |
 | Urusan lookup pattern | Always JOIN `umm_aplikasi` → `ind_ursn` on `ursn_id` | Never filter by urusan_kod on umm_aplikasi directly |
 | `umm_aplikasi` FK to self (parent) | `hubungan_aplikasi_id` references `umm_aplikasi(aplikasi_id)` | |
+| `@Table` names can carry a TRAILING SPACE (2026-08-23, Atlas build) | `JDNOtp` → `@Table(name="UMM_JDN_OTP ")` — the annotation string in the real source ends with a space; both source- and bytecode-derived maps preserve it. **Always `.strip()` table names consumed from entity metadata** | assuming `@Table` values are clean identifiers — an exact-match join on the raw value silently misses the DB table |
 | **Pemohon data location** (2026-04-15 — QA #255773 resolved) | **Pemohon = `umm_a_pihak_bkptg` with `flag_pemohon='Y'`**. Portal side is `umm_p_pihak_bkptg`. PLU officer view (`MlkMaklumatPemohonForm` → `PelupusanMaklumatPemohonHelper.initPemohon()` at `etanah-pelupusan/.../helper/PelupusanMaklumatPemohonHelper.java:1790`) calls `findAppPihakBerkepentinganByAplikasi(aplikasiPelupusan)` — reads `_a_` layer keyed on internal `aplikasi_id`. AWAM public view uses `PelupusanMaklumatPemohonHelperForm` in etanah-awam (reads `_p_` via PraAplikasi) — **do not confuse the two classes, they have near-identical names**. | ~~`umm_a_pemohon`~~ / ~~`umm_p_pemohon`~~ fabricated by pattern-symmetry from `umm_a_rizab` in BUG-BESTIARY Pattern 001. Confirmed non-existent via grep against `MLKFAT/et_main.sql`. |
 
 ---
@@ -837,6 +838,19 @@ WHERE ts.aplikasi_id = <your_aplikasi_id>;
 Notables: the **document tables (`umm_a_dok_kmskn`, `umm_a_dok_keluaran`) hang off `umm_aplikasi` with NO FK** despite 5M/8.4M rows — FK-based blast-radius analysis misses them entirely. Same for the **SPOC access table `spc_capaian_p_aplikasi`**. `ind_versi_dhd` is the hakmilik-version spine (see the hakmilik change map: `ind_hkmlk.hkmlk_id → ind_versi_dhd (flag_aktif='Y') → ind_mklmt_hkmlk.mklmt_hkmlk_id`) — its `mklmt_hkmlk_id` leg is implicit-only.
 
 **Limits**: (a) this detection cannot see links carried INSIDE JSON columns (`mklmt_tmbhn` spine — §16) or polymorphic id columns; (b) `tkl_p_laporan_tnh.aplikasi_id → umm_aplikasi` is structurally certain but had 0 non-null rows on mlit at check time (untestable); (c) heuristic candidates not in the verified table above are marked `⇢?` in the Atlas — verify with an orphan-count query before relying on one.
+
+## 10c. Which tables does MODULE X's code use? — verified answer + the 4 access channels grep misses (2026-08-23, Atlas tables-upgrade)
+
+> Verified per-module table-usage (7-method scan + adversarial workflow, all evidence in `etanah_atlas/build/code_usage.json` + `etanah_atlas/config/usage_overrides.melaka.json`): **pelupusan = 151 tables · common = 514 · awam = 286 · spoc-hasil = 155**. Entity↔table registry: `etanah_atlas/build/entity_registry.json` (596 entities, cross-validated 596/596 vs `etanah-codemap/entity_table_map.json`). Feature split: `etanah-codemap/feature_tables.json` (718 mlit tables, 12 groups).
+
+**A "no grep hits for the table/entity" result is NOT proof a module doesn't use a table.** Four access channels a plain grep structurally misses (each caught by the 2026-08-23 adversarial workflow):
+
+| Channel | Proven instance |
+|---|---|
+| Inherited getter from a common base class | `umm_a_pembatalan` via `MlkMaklumatPermohonanPembatalanForm.java:139-141` ← `BaseMaklumatPermohonanPembatalanForm.java:179` (etanah-common) |
+| Relation navigation (`x.getY()` across a @ManyToOne) | `ind_skrin` via `LangkahPropertyJson.java:80-81` (`langkah.getSkrin().getKodSkrin()`) |
+| jrxml report SQL (`<queryString>` CDATA, resources not .java) | 100 jrxml in pelupusan resources; 35 tables incl. `amb_a_pengambilan` found nowhere in Java |
+| Common-service indirection (module passes a kod; the query lives in etanah-common) | `umm_kat_dok` via `TrgPelupusanNotificationService.java:199` → `CommonEmailService.java:40-41`. **383 tables are common-only** — pelupusan reach through injected common services is invisible to static per-module attribution |
 
 ---
 
