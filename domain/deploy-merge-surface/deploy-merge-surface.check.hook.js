@@ -1,5 +1,8 @@
 #!/usr/bin/env node
-// deploy-merge-surface.check.hook.js — born via core/forge.js (2026-08-20)
+// deploy-merge-surface.check.hook.js — born via core/forge.js (2026-08-20) — v3.1 (2026-08-24)
+// v3.1: compile-marker lookup normalizes worktree ROOT to the MAIN repo state dir (matches
+//       compile-check.js:25) + checks both dirs — fixes false "no fresh compile" block in
+//       worktree sessions where the worktree state dir held a stale marker copy (QA-276584).
 // TRIGGER: a NEW `git cherry-pick <sha>` (not --continue/--abort/--skip/--quit) in a work repo.
 // ACTION: BLOCK until the merge-vs-cherry-pick tradeoff was SURFACED to miya — he must have
 //         seen `git log --oneline <env>..<ticket-branch>` count + whether a merge drags version
@@ -52,9 +55,13 @@ runHook({ name: 'deploy-merge-surface', event: 'PreToolUse' }, (input) => {
   if (/cherry-pick\s+--(continue|abort|skip|quit)\b/.test(cmd)) return { fired: false };
   // v3 (2026-08-21, per みや): pre-deploy BUILD safety — an env cherry-pick needs a fresh
   // green compile marker (domain/compile-gate) from the last 3 hours, else block.
-  const compileFresh = (() => {
+  // v3.1: compile-check.js writes the marker to the MAIN repo state dir (worktree segment
+  // normalized away, same regex as compile-check.js:25) — a worktree session's own state dir
+  // holds only a stale copy. Check the normalized main-repo dir first, ROOT as fallback.
+  const MAIN = ROOT.replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+$/i, '');
+  const compileFresh = [MAIN, ROOT].some(base => {
     try {
-      const stateDir = path.join(ROOT, '.claude', 'state');
+      const stateDir = path.join(base, '.claude', 'state');
       return fs.readdirSync(stateDir).some(f => {
         if (!/^compile-ok-.*\.json$/.test(f)) return false;
         try {
@@ -63,7 +70,7 @@ runHook({ name: 'deploy-merge-surface', event: 'PreToolUse' }, (input) => {
         } catch (_) { return false; }
       });
     } catch (_) { return false; }
-  })();
+  });
   if (!compileFresh && !/\[skip-compile-verify:\s*[^\]]+\]/i.test(cmd)) {
     return { fired: true, blocked: true, contextOut:
       '⛔ deploy-merge-surface v3: no FRESH green compile marker (<3h) before this env cherry-pick.\n' +
