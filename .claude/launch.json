@@ -16,8 +16,8 @@
     {
       "name": "codemap",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8611", "--directory", "C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\etanah-codemap\\site"],
-      "port": 8611
+      "runtimeArgs": ["C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\etanah-codemap\\serve_codemap.py", "--no-browser"],
+      "port": 7717
     }
   ]
 }
