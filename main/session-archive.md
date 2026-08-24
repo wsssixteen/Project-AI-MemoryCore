@@ -4,6 +4,13 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-23 — Ticket-preparedness build (worktree etanah-eplupusan-review, /goal session)
+- Plan nodded: prepare against tickets via precedent + latent-bug pipeline, no-waste law (every artifact = forced FEEDER + forced CONSUMER).
+- BUILT: `domain/urusan-tickets/` (Redmine → 16 per-urusan precedent docs at etanah-knowledge/melaka/urusan/, 166 tickets, 143 classified) · `domain/latent-bugs-gate/` (forge-born, eval 13/13, injects LATENT-BUGS.md SUSPECT/VERIFIED rows at ticket signals) · `LATENT-BUGS.md` register (L1 = mlit PYSJT/PSJT stale seed, VERIFIED) · ticket-gate rows 1c (urusan precedent) + 1d (test-data lookup first) · quest-bounty Step 3 register-checks (feeder) · TEST-PERMOHONAN-INDEX env legend fixed (UAT/FAT decommissioned).
+- Sweeps run honestly: loop-reassign family (clean in-scope; 5 Strata hits out-of-scope, logged) · counter-tujuan-save-gate (PT/PSBP covered at PelupusanSpocModuleStrategy.java:781; clean beyond ticketed #276436).
+- Committed on claude/etanah-eplupusan-review-9bd2e4 → merged to main.
+- DE close 2026-08-24 09:57 (worktree etanah-eplupusan-review): ticket-preparedness build banked to origin/main 44cbf16; local main left for Atlas session pull.
+
 ## 2026-08-20 (night) — Upload-flow research (Pelupusan+Awam→DMS) + built `de-knowledge-gate` + banked FLOW-TRACES
 
 **Session shape**: miya asked for extensive verified research on the file-upload flow across pelupusan + awam (UI→DMS, path creation, common hops) → delivered story diagram + separate file:line tables (audited) → 2 more asks: a friend-facing `.md` handover + an HTML **Artifact** logic diagram (published `https://claude.ai/code/artifact/3ebdbe52-a09b-417b-9dd7-59da0b351c6f`). No etanah repo code changed (read-only trace). Worktree `oprbb-quantity-display-issue-95483d`, on `main`.
@@ -4442,6 +4449,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

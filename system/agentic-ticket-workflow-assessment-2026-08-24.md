@@ -1,0 +1,11 @@
+# Improvement Sweep — 2026-08-24 (DE step 7.5, ticket-preparedness session)
+
+> Five axes, one concrete instance per claim. Proposals logged via `core/slips.js` (💡 Open proposals on the dashboard); weekly audit rules BUILD/DROP/DEFER.
+
+| Axis | Assessment (instance) | Forward idea (eval case) |
+|---|---|---|
+| A1 agentic system | Forge + birth-gate + design-consult caught a hand-built hook TWICE this session and surfaced the `bug-db` sibling I had not inventoried — the gate stack is earning its cost. Weak spot: `system-audit` flags 14 doc-drift hooks every boot and nobody actions it (noise since ≥2026-08-16). | Proposal logged (A1): auto-generate the CLAUDE.md "Triggered enforcement" hook list from `system/registry.jsonl` + settings.json at DE step 10, killing permanent doc-drift noise. Eval: census run → zero DOC-DRIFT lines at next boot. |
+| A2 quest workflow | Phase-0 now has THREE deterministic registers (adhoc, latent-bugs, bug-db) + rows 1c/1d — intake is strong. Gap: nothing verifies the model actually ACTED on an injected row (injection ≠ comparison). | Proposal logged (A2): Stop-side check — when latent-bugs/adhoc injected this turn and reply contains a Phase-0 checklist, require the "match/no match" line. Eval: fixture transcript with injection but no verdict line → block. |
+| A3 debugging | The counter-tujuan sweep refuted my own PT hypothesis by reading `PelupusanSpocModuleStrategy.java:781` — cheapest-falsifier-first worked. No new gap surfaced. | A3 ⏭ nothing new this session — existing Recon falsifier rules covered it. |
+| A4 etanah issue-solving | Precedent docs now carry BA root-cause text (e.g. #275456 "SPOC does not save Daerah & Bandar") — Phase 0 can diff against it. Gap: docs hold list-API fields only; journals (the BA↔dev dialogue) are not pulled. | Proposal logged (A4): `urusan-tickets.js --journals <KOD>` per-urusan on-demand journal harvest into the doc's notes zone. Eval: run on PPTPB → #276436 journal decisions appear under the marker. |
+| A5 sweep/file | Sweep-log discipline held (2 families, hits/verified/notes columns, out-of-scope hits logged not registered). MEMORY.md is over its 24.4KB load budget — boot warns it loads partially. | Proposal logged (A5): MEMORY.md diet pass — move the 🚨-rule TAILS into their topic files, one-line hooks only in the index. Eval: boot warning gone, all entries load. |
