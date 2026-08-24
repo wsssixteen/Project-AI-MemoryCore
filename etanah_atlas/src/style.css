@@ -257,8 +257,13 @@ code { font-family: "SF Mono", "Cascadia Code", Consolas, monospace; background:
 .imp-badge { background:transparent; color:#7c3aed; border:1px dashed #7c3aed; cursor:pointer; }
 
 /* focus mode fills the remaining viewport — page itself never scrolls */
-/* Full-viewport focus mode: diagram + sidebar own the page below the sticky header. */
-.table-focus { display:flex; flex-direction:column; gap:8px; height:calc(100vh - 78px); min-height:480px; }
+/* Full-viewport focus mode: diagram + sidebar own the page below the sticky header.
+   --hdr-h is measured at runtime (app.js) so zoom/DPI never break the math.
+   Equal 10px gap above and below the block at max scroll (miya 2026-08-24):
+   focus height = viewport - header - 2x10px, and the container's bottom padding
+   drops to 10px while a focus is open so the scroll ends exactly at the even gap. */
+.table-focus { display:flex; flex-direction:column; gap:8px; height:calc(100vh - var(--hdr-h, 58px) - 20px); min-height:480px; scroll-margin-top:calc(var(--hdr-h, 58px) + 10px); }
+.app-main:has(#table-focus:not(.hidden)) { padding-bottom:10px; }
 #tbl-subtabs #tf-back { margin-left:auto; }
 .tf-toggle { font-size:11.5px; color:var(--text-soft, #444); display:flex; align-items:center; gap:4px; }
 .tf-grid { flex:1 1 auto; display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:10px; min-height:0; }
