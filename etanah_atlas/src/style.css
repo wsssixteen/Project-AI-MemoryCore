@@ -217,7 +217,9 @@ code { font-family: "SF Mono", "Cascadia Code", Consolas, monospace; background:
 .hint-glyph { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); color: var(--surface); font-size: 11px; font-weight: 700; line-height: 1; vertical-align: -2px; }
 
 /* ===== Tables tab (search revamp, v3.1 UI pass) ===== */
-#view-search { display:flex; flex-direction:column; height:calc(100vh - 112px); overflow:hidden; padding:0; gap:10px; box-sizing:border-box; }
+/* Page scrolls normally — scrolling down hides subtabs+search rows (miya 2026-08-24);
+   the focus grid below claims a full viewport on its own. */
+#view-search { display:flex; flex-direction:column; padding:0; gap:10px; box-sizing:border-box; }
 .card { background:var(--surface, #fff); border:1px solid var(--border, #e5e7eb); border-radius:12px; }
 .search-controls { padding:10px 14px; flex:0 0 auto; }
 .search-inputs { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
@@ -255,9 +257,9 @@ code { font-family: "SF Mono", "Cascadia Code", Consolas, monospace; background:
 .imp-badge { background:transparent; color:#7c3aed; border:1px dashed #7c3aed; cursor:pointer; }
 
 /* focus mode fills the remaining viewport — page itself never scrolls */
-.table-focus { flex:1 1 auto; display:flex; flex-direction:column; gap:8px; min-height:0; }
-.tf-toolbar { display:flex; align-items:center; gap:14px; flex-wrap:wrap; flex:0 0 auto; }
-.tf-title { font-family:ui-monospace, monospace; font-weight:700; font-size:15px; }
+/* Full-viewport focus mode: diagram + sidebar own the page below the sticky header. */
+.table-focus { display:flex; flex-direction:column; gap:8px; height:calc(100vh - 78px); min-height:480px; }
+#tbl-subtabs #tf-back { margin-left:auto; }
 .tf-toggle { font-size:11.5px; color:var(--text-soft, #444); display:flex; align-items:center; gap:4px; }
 .tf-grid { flex:1 1 auto; display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:10px; min-height:0; }
 @media (max-width: 980px) { .tf-grid { grid-template-columns:1fr; overflow-y:auto; } }

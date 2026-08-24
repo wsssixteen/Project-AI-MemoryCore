@@ -1057,6 +1057,7 @@ function selectSubTab(name) {
   ["diagram", "catalog", "urusan", "feature"].forEach(k => {
     document.getElementById("sub-" + k).classList.toggle("hidden", k !== name);
   });
+  $("#tf-back").classList.toggle("hidden", !(name === "diagram" && TBL_STATE.selected));
 }
 
 function selectSideTab(paneId) {
@@ -1485,6 +1486,7 @@ function clearFocus() {
   TBL_STATE.selected = null;
   TBL_STATE.highlightCol = null;
   $("#table-focus").classList.add("hidden");
+  $("#tf-back").classList.add("hidden");
 }
 
 function openModal(title, bodyHtml) {
@@ -1503,7 +1505,8 @@ function focusTable(name, highlightCol, from) {
   if (from) TBL_STATE.cameFrom = from;
   selectSubTab("diagram");
   if (TBL_STATE.diagramState) TBL_STATE.diagramState("focus");
-  $("#tf-title").textContent = name;
+  $("#search-input").value = name;
+  $("#tf-back").classList.remove("hidden");
   refreshFocus();
   selectSideTab(TBL_STATE.highlightCol ? "tf-columns" : "tf-identity");
 }
