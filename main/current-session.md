@@ -1,6 +1,16 @@
 # Current Session
 
-## 2026-08-21 (late) — QA-276436 PPTPB counter→SKM split-fix + built `ticket-close-block` Feature + Redmine reconcile
+## 2026-08-21→24 — Board Redmine-reconcile (20→9) + de-close-gate C4 + codemap v6 FEATURES revamp + knowledge bake
+
+**Arc**: boot briefing → miya raged at 20 stale "open" quests → reconciled vs live Redmine (0 assigned-open; archived 274740/274914/275009/275456/275500/275501/275587-MLPS/276182/276654 + adhocs A12/A13 via adhoc-lifecycle Doors) → built the permanent fix: `quest/redmine-reconcile.js` + **de-close-gate C4** (DE close BLOCKS unless reconcile ran ≤12h; eval 14/14). Root causes: DE had NO Redmine step + main↔worktree active.txt divergence (unioned, synced both). Rule 12 floor RAISED 10→20 scenarios per miya (SKILL.md v2.7) + scenario TABLE must be displayed.
+
+**Codemap v6 (miya's 8-point /goal)**: revamped `etanah-codemap` site — Features spine (12 grep-verified groups + class chains, 0 unresolved), Roles tab (9,132 files, 6 sources incl. spoc + bpmn), Entity↔Table tab (596 entities). KEY DISCOVERY: entities live in `etanah-domain-1.0.4-MLK` JAR (`my.gov.etanah.domain.*`), @Table names prefix-SPLIT via `TablePrefixConstant` — baked into `MODULE-ARCHITECTURE.md` §Where-entities-live + index.md quick-links. ⚠ MAX_PATH: long extract path silently skipped 751/1265 files. Pipeline: `scan_classes.py` → `features_build.py` → `build_site_v2.py` (wired into refresh-codemap.bat). All 5 tabs/buttons verified (real clicks + geometry, 0 console errors; pixel screenshot blocked — Browser pane hidden). Proposal #1 SHIPPED: codemap-recon-consult now surfaces `entity_table_map.json` + `features.json` (eval 7/7).
+
+**Handover written**: `etanah-codemap\HANDOVER-db-feature-split.md` — other session assigns ~734 et_main tables to the 12 feature groups, DB-verified. (Sibling session's `etanah_atlas` server appeared on main during DE-sync — possibly that work already started.)
+
+**Open residuals (miya answers pending)**: #276349 + QA-276584 fixes UNCOMMITTED while Redmine shows Verified/Resolved — commit or drop? · A12 PRBB null-guard `MlkBorang4CeForm:367/:369` still wanted? · 274740's owed patch verified MOOT (PROD 6/6 generateSurat=YA). Slips: assume-not-verify (board rot) + reask/redundant (asked adhoc archive when rules existed; 10-vs-20 scenarios under-write). 3 proposals logged (#1 shipped; #2 codegraph domain index; #3 codemap freshness automation).
+
+**Resume point**: DE 2026-08-24 closes this arc. Next: miya's 2 uncommitted-fix answers → then normal quest work; other session runs the DB-feature handover.
 
 **Recap**: resumed `/quest 276436` (PPTPB Perserahan Kaunter: Kategori Tanah + Tujuan Permohonan + Keluasan Tanah Dipohon filled at counter, blank at SKM). First verified miya's question — is this a lost 1.3.5-vs-1.3.4 fix? **NO** (git-proven: `1.3.5..1.3.4` empty, writer byte-identical through master → standing omission, not regression).
 
@@ -45,12 +55,3 @@
 **Rough session — 3 corrections banked**: (1) branch naming — INTERNAL ISSUE → `mlk/internal/<num>`, NEVER invent a suffix (`-permfix`) or abbreviation; (2) do NOT replace a colleague's fix — build on his commit; (3) commit-gate/compile-gate read the WORKTREE's stale `active.txt`/`.claude/state`, not the main-repo live one → resolved to wrong ticket (QA-274740). Improvement proposal logged.
 
 **Resume point**: after miya re-runs the deploy on MLIT, do a fresh eMohon PPTPB save → I verify `umm_p_hkmlk.bandar_dipohon_id` non-null (I hold mlit MCP). Then Redmine planned-release list (int-env never reaches master).
-
-
-## 2026-08-23 — etanah Atlas tables-upgrade MEGA-SESSION (project, not quest)
-- Shipped v3.0→v3.7 (commits 4271d6c…249c06c, all on main): Tables tab (Diagram/Catalog/By Urusan/By Feature), 13 urusan forks BPMN-verified, 350 implicit links (10 mlit-verified), 596-entity registry (jar javap), code-truth scope pelupusan=151, 1,433-tugasan census (ind_tgsn→ind_langkah→ind_skrin; MLK tugasan.config.json is EMPTY), 46 screen traces, feature_tables.json (718 DB-verified, 12 groups, HANDOVER-db-feature-split executed, RESUME.md updated), 85 name families.
-- New Feature: domain/atlas-ship-gate (forge-born, eval 11/11) — Stop-blocks atlas-source sessions without a fresh ship_check (smoke + REAL headless-Edge file:// render). Root: 2026-08-22 unusable-page incident (invisible modal overlay; synthetic clicks all green).
-- Knowledge baked (dual-copy synced): DATABASE.md §2b trailing-space @Table + §6b census + §10b implicit links + §10c grep-blind-spots/code-usage · URUSAN-FLOW.md committee-fork ground truth · DEV-TESTING-HACKS python-encoding + real-render recipes · BUG-BESTIARY initData()-writes pattern · MODULE-ARCHITECTURE jar-version-skew · index.md Atlas row. recon-consult hook +§10c pointer (smoke-run ✓).
-- 6 proposals logged (A1/A2/A3 lanes) + research workflow wf_97f6f749 (results pending at save time).
-- Failures ledgered: assume-not-verify ×2 (prefix-as-relatedness lie; synthetic-verification theater) — category at 🚨 escalation, defender-redesign proposal filed.
-- Resume: Atlas is SHIPPED + gated; open threads = research-workflow results fold-in · weekly-audit ruling on 6 proposals · optional next: deepen 25 partial screen traces, Pembetulan sub-flow modeling, etanah-teknikal checkout for 402 Avalon refs.

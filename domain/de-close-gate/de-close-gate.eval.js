@@ -11,6 +11,8 @@ function check(n, c, d) { results.push({ n, pass: !!c, d }); }
 const CLOSE_BANNER = '═══ [ Domain Expansion — closed ] ═══\nBarrier settles. Quest threads are at rest.';
 const FRESH_LOG = [JSON.stringify({ ts: new Date().toISOString(), via: 'resume-readiness', checked: 2, gaps: 0 })];
 const STALE_LOG = [JSON.stringify({ ts: '2026-08-01T00:00:00Z', via: 'resume-readiness', checked: 2, gaps: 0 })];
+const FRESH_RECON = [JSON.stringify({ ts: new Date().toISOString(), action: 'reconcile-ran', detail: 'open=11' })];
+const STALE_RECON = [JSON.stringify({ ts: '2026-08-01T00:00:00Z', action: 'reconcile-ran', detail: 'open=20' })];
 
 function run(overrides) {
   const stdin = JSON.stringify(Object.assign({
@@ -23,6 +25,7 @@ function run(overrides) {
     _testActiveText: 'qa=QA-276182\nstatus=active\n',
     _testArchiveText: '',
     _testLogLines: FRESH_LOG,
+    _testGateLogLines: FRESH_RECON,
     _testSessionLineCount: 56,
   }, overrides));
   return spawnSync(process.execPath, [HOOK], { input: stdin, encoding: 'utf8', timeout: 30000, env: process.env });
@@ -80,6 +83,22 @@ r = run({ _testEvents: [
   { kind: 'text', role: 'assistant', text: CLOSE_BANNER },
 ], _testActiveText: 'qa=QA-000001\n' });
 check('F10 single tool occurrence ignored -> pass', r.status === 0, 'exit=' + r.status);
+
+// F11 (2026-08-21 replay): redmine-reconcile NEVER ran -> BLOCK (C4) naming the fix command
+r = run({ _testGateLogLines: [] });
+check('F11 no redmine-reconcile -> BLOCK', r.status === 2 && /C4/.test(r.stderr || '') && /redmine-reconcile/.test(r.stderr || ''), 'exit=' + r.status);
+
+// F12: stale reconcile row (>12h) -> BLOCK (C4)
+r = run({ _testGateLogLines: STALE_RECON });
+check('F12 stale reconcile -> BLOCK', r.status === 2 && /C4/.test(r.stderr || ''), 'exit=' + r.status);
+
+// F13: gate log holds blocked/passed rows but a fresh reconcile-ran too -> pass (row-type filter)
+r = run({ _testGateLogLines: [JSON.stringify({ ts: new Date().toISOString(), action: 'blocked', detail: 'C1' })].concat(FRESH_RECON) });
+check('F13 mixed gate log with fresh reconcile -> pass', r.status === 0, 'exit=' + r.status);
+
+// F14: malformed rows in gate log ignored, fresh row still found -> pass
+r = run({ _testGateLogLines: ['not-json', '{broken'].concat(FRESH_RECON) });
+check('F14 malformed gate-log rows tolerated -> pass', r.status === 0, 'exit=' + r.status);
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' -> ' + x.d)); }

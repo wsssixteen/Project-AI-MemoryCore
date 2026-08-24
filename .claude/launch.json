@@ -6,6 +6,18 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "8791", "--directory", "etanah_atlas"],
       "port": 8791
+    },
+    {
+      "name": "monthly-preview",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8123", "--directory", "C:\\Users\\vice4\\Documents\\7. Code Projects\\12. Monthly\\Deploy"],
+      "port": 8123
+    },
+    {
+      "name": "codemap",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8611", "--directory", "C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\etanah-codemap\\site"],
+      "port": 8611
     }
   ]
 }
