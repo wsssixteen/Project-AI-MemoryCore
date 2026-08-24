@@ -40,16 +40,56 @@ def main():
     render_ok = render_size > 30000
     print(f"render: {png} ({render_size} bytes) {'OK' if render_ok else 'TOO SMALL / MISSING'}")
 
+    # View-exclusivity: per main tab, the RENDERED cascade must show exactly that one
+    # view. Guards the ID-selector-beats-.hidden class of bug (2026-08-24: #view-search
+    # display:flex leaked the Tables view onto every tab). Channel: ?shipcheck=1 makes
+    # app.js paint a fixed 4-block pixel barcode (green=visible, red=hidden, order
+    # map/urusan/search/about) sampled here with PIL — dump-dom emits nothing in this
+    # Edge build, so screenshots are the only trustworthy render channel.
+    from PIL import Image
+    ORDER = ["map", "urusan", "search", "about"]
+    views_ok = True
+    view_results = {}
+    for i, tab in enumerate(ORDER):
+        subprocess.run(["powershell", "-Command",
+                        "Get-Process msedge -ErrorAction SilentlyContinue | Where-Object {($_.MainWindowTitle -eq '')} | Stop-Process -Force -ErrorAction SilentlyContinue"],
+                       capture_output=True)
+        tab_png = tmp / f"ship_{tab}.png"
+        subprocess.run([str(EDGE), "--headless=new", "--disable-gpu", "--no-first-run",
+                        f"--user-data-dir={tmp / ('prof_' + tab)}", "--virtual-time-budget=7000",
+                        "--window-size=1600,900", f"--screenshot={tab_png}",
+                        "file:///" + str(test_html).replace("\\", "/") + f"?shipcheck=1&tab={tab}"],
+                       capture_output=True, timeout=90)
+        for _ in range(10):
+            if tab_png.exists() and tab_png.stat().st_size > 0:
+                break
+            time.sleep(1)
+        pattern = None
+        if tab_png.exists() and tab_png.stat().st_size > 0:
+            img = Image.open(tab_png).convert("RGB")
+            blocks = []
+            for j in range(len(ORDER)):
+                r, g, b = img.getpixel((j * 40 + 20, 20))
+                blocks.append("G" if g > r else ("R" if r > g else "?"))
+            pattern = "".join(blocks)
+        expected = "".join("G" if j == i else "R" for j in range(len(ORDER)))
+        view_results[tab] = pattern
+        if pattern != expected:
+            views_ok = False
+        print(f"views[{tab}]: barcode={pattern!r} expected={expected!r} {'OK' if pattern == expected else 'FAIL'}")
+
     out = {
         "html_sha256": sha,
         "smoke": "pass" if smoke_pass else "fail",
         "render_png": str(png) if render_ok else "",
         "render_size": render_size,
+        "view_exclusivity": view_results,
+        "views": "pass" if views_ok else "fail",
         "checked_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
     }
     (ROOT / "build").mkdir(exist_ok=True)
     json.dump(out, open(ROOT / "build" / "ship_check.json", "w", encoding="utf-8"), indent=1)
-    ok = smoke_pass and render_ok
+    ok = smoke_pass and render_ok and views_ok
     print("SHIP-CHECK:", "PASS" if ok else "FAIL", "->", ROOT / "build" / "ship_check.json")
     return 0 if ok else 1
 

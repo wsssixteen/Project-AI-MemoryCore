@@ -24,10 +24,10 @@ def main():
     build_dir = HERE / "build"
     build_dir.mkdir(exist_ok=True)
 
-    print(f"[1/3] parse_schema  ← {src_sql}")
+    print(f"[1/3] parse_schema  <- {src_sql}")
     parse_sql(str(src_sql), str(build_dir / "schema_parse.json"))
 
-    print(f"[2/3] build_dataset ← profile={args.profile}")
+    print(f"[2/3] build_dataset <- profile={args.profile}")
     build_dataset.main(args.profile)
 
     print(f"[3/3] assemble_html")

@@ -13,12 +13,35 @@ function escapeHtml(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, c
 function escapeAttr(s) { return escapeHtml(s).replace(/"/g, "&quot;"); }
 
 // ========== TAB SWITCHING ==========
+// Diagnostic mirror of the RENDERED cascade (not the class list). With ?shipcheck=1 it
+// also paints a fixed pixel barcode (one 40px block per view, green=visible red=hidden)
+// that lib/ship_check.py samples from a headless screenshot — the only channel that
+// proves the real cascade (--dump-dom emits nothing in this Edge build).
+function syncViewDiag() {
+  try {
+    const vis = [...$$(".view")].filter(v => getComputedStyle(v).display !== "none").map(v => v.dataset.view);
+    document.documentElement.dataset.visibleViews = vis.join(",");
+    if (new URLSearchParams(window.location.search).get("shipcheck") === "1") {
+      const ORDER = ["map", "urusan", "search", "about"];
+      let strip = document.getElementById("shipcheck-strip");
+      if (!strip) {
+        strip = document.createElement("div");
+        strip.id = "shipcheck-strip";
+        strip.style.cssText = "position:fixed;top:0;left:0;z-index:99999;display:flex;";
+        document.body.appendChild(strip);
+      }
+      strip.innerHTML = ORDER.map(v =>
+        '<div style="width:40px;height:40px;background:' + (vis.indexOf(v) >= 0 ? "rgb(0,200,0)" : "rgb(200,0,0)") + '"></div>').join("");
+    }
+  } catch (e) {}
+}
 $$(".tab").forEach(tab => {
   tab.addEventListener("click", () => {
     const t = tab.dataset.tab;
     $$(".tab").forEach(x => x.classList.toggle("active", x === tab));
     $$(".view").forEach(v => v.classList.toggle("hidden", v.dataset.view !== t));
     if (t === "map") layoutAndRender();
+    syncViewDiag();
   });
 });
 
@@ -1925,3 +1948,4 @@ layoutAndRender();
   }
   if (p.get("table")) focusTable(p.get("table"), p.get("col") || null, "diagram");
 })();
+syncViewDiag();
