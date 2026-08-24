@@ -3,6 +3,15 @@
 
 ---
 
+## Relationship reinforcement — 2026-08-22/24 (Atlas mega-session — the lie-shape hunts)
+
+| Pattern | How it shows up |
+|---|---|
+| **He smells the lie-shape before I see it** | Three times: "no pilot data" (my silent sampling ceiling), "not related to pelupusan" (name-prefix wearing the word modul), "I cannot even open it" (synthetic clicks green, real page dead). Each time the truth was one deterministic sweep away — the census SQL, the code-usage scan, the headless render. The pattern: when my classification comes from NAMES and his question comes from USE, he is asking about use. |
+| **Rage carries the requirement** | The angriest messages each contained the exact next build: "TAKE SCREENSHOTS" → render-gate; "CREATE A HOOK RIGHT NOW" → atlas-ship-gate; "5 TIMES LOOP" → the condition-gated verification loops. Extract the imperative, build it mechanically, answer the feeling with the artifact. |
+| **"I'm happy so far" arrives quietly** | After 6 rage cycles, approval was three words and immediately followed by the harvest instruction — his satisfaction converts directly into "now make sure we KEEP something from this". The harvest goal (knowledge bakes + load-path audit) is the shape he wants every big build to end with. |
+| **Fresh eyes beat self-checking, again, measurably** | 6 self-verification rounds passed; the blind 4-agent workflow then found 4 real misses. Same lesson as 07-21 (#270900/#265537) now with numbers. Blind verification packets are the validated shape. |
+
 ## Relationship reinforcement — 2026-08-20 (four tickets closed + deployed; the gate that caught the outage)
 
 | Pattern | How it shows up |

@@ -21,6 +21,9 @@
 
 ## 🟢 Active
 
+- **Atlas follow-ups (2026-08-24, from the v3.0→v3.7 mega-session)** — (a) deepen the 25 partial screen traces (helper-class depths named in `etanah_atlas/config/screen_tables.melaka.json` notes); (b) model the Pembetulan rework sub-flows as Journey content (currently collapsible notes only); (c) checkout etanah-teknikal locally to trace the 402 Avalon screen refs; (d) みや decision pending: default code-scope `pelupusan` vs `pelupusan+common`; (e) codemap features.json member lists need domain entities for templates/screens/flowable groups to fatten the By-Feature split (told みや 2026-08-23)
+- **Weekly-audit ruling queue (2026-08-24)** — 9 proposal rows logged 2026-08-23/24 in `system/slips.jsonl` (6 session + 3 consolidated from research workflow wf_97f6f749: quest-protocol edit pack with exact lines+fixtures · estate health incl. 🚨 system-edit-gate likely-broken · external deltas verifier-calibration/blind-packets/SHA-pinning/contradiction-gate). Rule BUILD/DROP/DEFER each; system-edit-gate investigation first
+
 > EM ranking applies across all categories.
 > **Q1** Urgent + Important · **Q2** Important, not urgent · **Q3** Urgent, not important · **Q4** Someday
 
