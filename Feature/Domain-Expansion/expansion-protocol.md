@@ -264,8 +264,15 @@ hook at the DE-close banner. It BLOCKS close when (C1) any ticket id worked on t
 signal or ≥5 assistant mentions) has NO block in `quest/active.txt`/`active-archive.txt` — the exact
 QA-276182 failure of 2026-08-20 where step 2b (model memory) forgot the quest and 12.6 could not see it
 (it only iterates existing blocks); (C2) `resume-readiness.js` did not run this session (log.jsonl
-freshness ≤12h); (C3) `main/current-session.md` exceeds 500 lines (trim skipped). Bypass
-`[skip-de-close-gate: <reason>]`. Eval 8/8. Per みや 2026-08-21: *"if there are not critical part,
+freshness ≤12h); (C3) `main/current-session.md` exceeds 500 lines (trim skipped); (C4, added
+2026-08-21 evening) `node quest/redmine-reconcile.js` did not run this session (action=reconcile-ran
+row ≤12h in the gate's log.jsonl) — the Redmine board-truth step. **Why C4**: 2026-08-21 boot showed
+20 "open" blocks while Redmine had 0 assigned-open; DE had NO Redmine step, so active.txt rotted for
+weeks (みや: *"Domain expansion doesn't check against redmine for the fucking tickets?"*). The
+reconcile script prints divergence (Redmine-done/reassigned blocks still open locally) + missing
+(assigned-open with no block) and logs the run; closes/archives stay みや-approved, never automatic.
+Network failure still logs the row — an offline evening never deadlocks DE. Bypass
+`[skip-de-close-gate: <reason>]`. Eval 14/14. Per みや 2026-08-21: *"if there are not critical part,
 MAKE THEM CRITICAL."*
 
 **Banned**: closing DE with a quest that moved this session and whose qa_doc carries no entry for it ·
@@ -355,6 +362,8 @@ Before emitting the closing banner — read `.claude/state/session-items.md` "Ac
 *Updated 2026-08-05 — **Step 7.5 IMPROVEMENT SWEEP added (MANDATORY)** per みや: five fixed axes (A1 agentic system · A2 quest workflow · A3 debugging efficiency+accuracy · A4 etanah issue-solving · A5 sweep/file-sweep), swept every DE, producing (a) a dated assessment under `system/` with a concrete instance per claim and (b) brainstormed proposals logged via `core/slips.js --type proposal` into the new 💡 Open proposals lane of `slip-dashboard.md` for weekly-audit ruling. Paired `core/slips.js` change: `type=proposal` split out of the slip counts and given its own dashboard section, because filing an idea as `upgrade` reads as shipped and makes an open decision invisible (the 2026-07-22 parked-enforcement-row failure). Rationale: みや had to ask for this assessment explicitly two goals running — a thing he must repeatedly request is a missing step, not a missing effort.*
 
 *Updated 2026-08-21 — Step 2b + 12.6 + step-2 trim now DETERMINISTIC via `domain/de-close-gate/` (Stop, BLOCKS): C1 blockless-ticket (QA-276182 replay) · C2 resume-readiness-ran · C3 session-trim-ran. Per みや's DE audit directive "MAKE THEM CRITICAL".*
+
+*Updated 2026-08-21 (evening) — de-close-gate +C4 REDMINE-RECONCILE-RAN: DE close now BLOCKS unless `node quest/redmine-reconcile.js` ran ≤12h (reconciles active.txt open blocks against live Redmine — divergence + missing directions; report-only, closes stay みや-approved). Root cause: 20 stale "open" blocks vs 0 assigned-open on Redmine, caught by みや at boot. Eval 8/8 → 14/14. Spec-preservation: C1-C3 untouched; additive.*
 
 *Updated 2026-08-17 — Step 2b: **EXTRA-ROBUST SAVE for a NOT-YET-CLOSED quest** (per みや, QA-274914 BA-confirmation-pending) — a blocked/awaiting-BA/hold-for-external save is held to a higher bar: the `## 0. Resume Point` must carry fix-location + why-it-works + banked-proof + verbatim open external confirmations + test data + deploy/reset prerequisites, cold-reader complete; banned to paraphrase the pending question or omit the reference-copy path when the change lives outside git (modeler model / Redmine attachment).*
 

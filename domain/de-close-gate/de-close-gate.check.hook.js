@@ -10,6 +10,9 @@
 //      via=resume-readiness entry from the last 12 hours (step 12.6 actually executed).
 //   C3 TRIM RAN: main/current-session.md is at or under 500 lines (session-format.md cap;
 //      an untrimmed file silently truncates the next boot's briefing).
+//   C4 REDMINE RECONCILE RAN: this gate's own log.jsonl carries an action=reconcile-ran row
+//      from the last 12 hours (quest/redmine-reconcile.js executed this session). REPLAY:
+//      2026-08-21 — 20 "open" blocks vs 0 assigned-open on Redmine; DE had no Redmine step.
 // REPLAY: 2026-08-20 QA-276182 — touched all session, deployed to int-env, had NO
 //   active.txt block and NO qa_doc; only miya's explicit audit ask caught it.
 // NOD: miya 2026-08-21 — "audit DE, list non-critical steps and MAKE THEM CRITICAL".
@@ -122,6 +125,19 @@ function checkC3(lineCount) {
   return { pass: lineCount <= SESSION_LINE_CAP, lineCount };
 }
 
+// C4 — quest/redmine-reconcile.js ran this session (writes action=reconcile-ran to THIS
+// gate's log.jsonl). Same freshness contract as C2. Network failure inside the reconcile
+// script still logs the row — an offline evening never deadlocks DE here.
+function checkC4(gateLogLines, now) {
+  for (let i = gateLogLines.length - 1; i >= 0; i--) {
+    let o; try { o = JSON.parse(gateLogLines[i]); } catch (_) { continue; }
+    if (o.action !== 'reconcile-ran') continue;
+    const ts = Date.parse(o.ts || '');
+    if (!isNaN(ts) && (now - ts) <= LOG_FRESH_MS) return { pass: true, ageH: ((now - ts) / 3600000).toFixed(1) };
+  }
+  return { pass: false };
+}
+
 function evaluate(events, disk) {
   const last = lastAssistantText(events);
   if (!last || !DE_CLOSE.test(last)) return { verdict: 'silent', reason: 'not-de-close' };
@@ -129,8 +145,9 @@ function evaluate(events, disk) {
   const c1 = checkC1(events, disk.activeText, disk.archiveText);
   const c2 = checkC2(disk.logLines, disk.now);
   const c3 = checkC3(disk.sessionLineCount);
-  if (c1.pass && c2.pass && c3.pass) return { verdict: 'pass', c1, c2, c3 };
-  return { verdict: 'block', c1, c2, c3 };
+  const c4 = checkC4(disk.gateLogLines, disk.now);
+  if (c1.pass && c2.pass && c3.pass && c4.pass) return { verdict: 'pass', c1, c2, c3, c4 };
+  return { verdict: 'block', c1, c2, c3, c4 };
 }
 
 function readDisk() {
@@ -138,10 +155,12 @@ function readDisk() {
   const activeText = safe(path.join(ROOT, 'quest', 'active.txt'));
   const archiveText = safe(path.join(ROOT, 'quest', 'active-archive.txt'));
   const logRaw = safe(path.join(ROOT, 'domain', 'checklist-reactivate', 'log.jsonl'));
+  const gateLogRaw = safe(LOG);
   const sessionRaw = safe(path.join(ROOT, 'main', 'current-session.md'));
   return {
     activeText, archiveText,
     logLines: logRaw.split(/\r?\n/).filter(Boolean),
+    gateLogLines: gateLogRaw.split(/\r?\n/).filter(Boolean),
     sessionLineCount: sessionRaw ? sessionRaw.split(/\r?\n/).length : 0,
     now: Date.now(),
   };
@@ -155,6 +174,8 @@ function buildBlockReason(r) {
     '   Fix: node domain/checklist-reactivate/resume-readiness.js — fill any ✗, then re-close.');
   if (!r.c3.pass) rows.push(`C3 main/current-session.md is ${r.c3.lineCount} lines (cap ${SESSION_LINE_CAP}) — trim did not run.`,
     '   Fix: node core/session-trim.js --apply, then re-close.');
+  if (!r.c4.pass) rows.push('C4 Redmine reconciliation NOT RUN this session — active.txt may carry Redmine-dead blocks.',
+    '   Fix: node quest/redmine-reconcile.js — close/archive any diverged block, then re-close.');
   return [
     '⛔ de-close-gate: Domain Expansion is closing but a deterministic close-condition FAILED:',
     ...rows.map(x => '   ' + x),
@@ -177,17 +198,18 @@ if (require.main === module) {
     if (typeof data._testActiveText === 'string') disk.activeText = data._testActiveText;
     if (typeof data._testArchiveText === 'string') disk.archiveText = data._testArchiveText;
     if (Array.isArray(data._testLogLines)) disk.logLines = data._testLogLines;
+    if (Array.isArray(data._testGateLogLines)) disk.gateLogLines = data._testGateLogLines;
     if (typeof data._testSessionLineCount === 'number') disk.sessionLineCount = data._testSessionLineCount;
 
     const r = evaluate(events, disk);
     if (r.verdict === 'block') {
       const text = buildBlockReason(r);
-      logFire('blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount)].filter(Boolean).join(' '));
+      logFire('blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4'].filter(Boolean).join(' '));
       return { fired: true, blocked: true, blockReason: text };
     }
-    if (r.verdict === 'pass') { logFire('passed', `touched=${r.c1.touchedCount} rr-age=${r.c2.ageH}h lines=${r.c3.lineCount}`); return { fired: true, blocked: false }; }
+    if (r.verdict === 'pass') { logFire('passed', `touched=${r.c1.touchedCount} rr-age=${r.c2.ageH}h lines=${r.c3.lineCount} recon-age=${r.c4.ageH}h`); return { fired: true, blocked: false }; }
     return { fired: false };
   });
 }
 
-module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3 };
+module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4 };
