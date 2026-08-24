@@ -4,6 +4,12 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-08-23 — Ticket-preparedness build (worktree etanah-eplupusan-review, /goal session)
+- Plan nodded: prepare against tickets via precedent + latent-bug pipeline, no-waste law (every artifact = forced FEEDER + forced CONSUMER).
+- BUILT: `domain/urusan-tickets/` (Redmine → 16 per-urusan precedent docs at etanah-knowledge/melaka/urusan/, 166 tickets, 143 classified) · `domain/latent-bugs-gate/` (forge-born, eval 13/13, injects LATENT-BUGS.md SUSPECT/VERIFIED rows at ticket signals) · `LATENT-BUGS.md` register (L1 = mlit PYSJT/PSJT stale seed, VERIFIED) · ticket-gate rows 1c (urusan precedent) + 1d (test-data lookup first) · quest-bounty Step 3 register-checks (feeder) · TEST-PERMOHONAN-INDEX env legend fixed (UAT/FAT decommissioned).
+- Sweeps run honestly: loop-reassign family (clean in-scope; 5 Strata hits out-of-scope, logged) · counter-tujuan-save-gate (PT/PSBP covered at PelupusanSpocModuleStrategy.java:781; clean beyond ticketed #276436).
+- Committed on claude/etanah-eplupusan-review-9bd2e4 → merged to main.
+- DE close 2026-08-24 09:57 (worktree etanah-eplupusan-review): ticket-preparedness build banked to origin/main 44cbf16; local main left for Atlas session pull.
 ## 2026-08-23 — etanah Atlas tables-upgrade MEGA-SESSION (project, not quest)
 - Shipped v3.0→v3.7 (commits 4271d6c…249c06c, all on main): Tables tab (Diagram/Catalog/By Urusan/By Feature), 13 urusan forks BPMN-verified, 350 implicit links (10 mlit-verified), 596-entity registry (jar javap), code-truth scope pelupusan=151, 1,433-tugasan census (ind_tgsn→ind_langkah→ind_skrin; MLK tugasan.config.json is EMPTY), 46 screen traces, feature_tables.json (718 DB-verified, 12 groups, HANDOVER-db-feature-split executed, RESUME.md updated), 85 name families.
 - New Feature: domain/atlas-ship-gate (forge-born, eval 11/11) — Stop-blocks atlas-source sessions without a fresh ship_check (smoke + REAL headless-Edge file:// render). Root: 2026-08-22 unusable-page incident (invisible modal overlay; synthetic clicks all green).

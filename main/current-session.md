@@ -1,6 +1,16 @@
 # Current Session
 
-## 2026-08-21 (late) — QA-276436 PPTPB counter→SKM split-fix + built `ticket-close-block` Feature + Redmine reconcile
+## 2026-08-21→24 — Board Redmine-reconcile (20→9) + de-close-gate C4 + codemap v6 FEATURES revamp + knowledge bake
+
+**Arc**: boot briefing → miya raged at 20 stale "open" quests → reconciled vs live Redmine (0 assigned-open; archived 274740/274914/275009/275456/275500/275501/275587-MLPS/276182/276654 + adhocs A12/A13 via adhoc-lifecycle Doors) → built the permanent fix: `quest/redmine-reconcile.js` + **de-close-gate C4** (DE close BLOCKS unless reconcile ran ≤12h; eval 14/14). Root causes: DE had NO Redmine step + main↔worktree active.txt divergence (unioned, synced both). Rule 12 floor RAISED 10→20 scenarios per miya (SKILL.md v2.7) + scenario TABLE must be displayed.
+
+**Codemap v6 (miya's 8-point /goal)**: revamped `etanah-codemap` site — Features spine (12 grep-verified groups + class chains, 0 unresolved), Roles tab (9,132 files, 6 sources incl. spoc + bpmn), Entity↔Table tab (596 entities). KEY DISCOVERY: entities live in `etanah-domain-1.0.4-MLK` JAR (`my.gov.etanah.domain.*`), @Table names prefix-SPLIT via `TablePrefixConstant` — baked into `MODULE-ARCHITECTURE.md` §Where-entities-live + index.md quick-links. ⚠ MAX_PATH: long extract path silently skipped 751/1265 files. Pipeline: `scan_classes.py` → `features_build.py` → `build_site_v2.py` (wired into refresh-codemap.bat). All 5 tabs/buttons verified (real clicks + geometry, 0 console errors; pixel screenshot blocked — Browser pane hidden). Proposal #1 SHIPPED: codemap-recon-consult now surfaces `entity_table_map.json` + `features.json` (eval 7/7).
+
+**Handover written**: `etanah-codemap\HANDOVER-db-feature-split.md` — other session assigns ~734 et_main tables to the 12 feature groups, DB-verified. (Sibling session's `etanah_atlas` server appeared on main during DE-sync — possibly that work already started.)
+
+**Open residuals (miya answers pending)**: #276349 + QA-276584 fixes UNCOMMITTED while Redmine shows Verified/Resolved — commit or drop? · A12 PRBB null-guard `MlkBorang4CeForm:367/:369` still wanted? · 274740's owed patch verified MOOT (PROD 6/6 generateSurat=YA). Slips: assume-not-verify (board rot) + reask/redundant (asked adhoc archive when rules existed; 10-vs-20 scenarios under-write). 3 proposals logged (#1 shipped; #2 codegraph domain index; #3 codemap freshness automation).
+
+**Resume point**: DE 2026-08-24 closes this arc. Next: miya's 2 uncommitted-fix answers → then normal quest work; other session runs the DB-feature handover.
 
 **Recap**: resumed `/quest 276436` (PPTPB Perserahan Kaunter: Kategori Tanah + Tujuan Permohonan + Keluasan Tanah Dipohon filled at counter, blank at SKM). First verified miya's question — is this a lost 1.3.5-vs-1.3.4 fix? **NO** (git-proven: `1.3.5..1.3.4` empty, writer byte-identical through master → standing omission, not regression).
 
