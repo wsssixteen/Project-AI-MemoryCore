@@ -17,6 +17,14 @@ function escapeAttr(s) { return escapeHtml(s).replace(/"/g, "&quot;"); }
 // also paints a fixed pixel barcode (one 40px block per view, green=visible red=hidden)
 // that lib/ship_check.py samples from a headless screenshot — the only channel that
 // proves the real cascade (--dump-dom emits nothing in this Edge build).
+// Measured header height -> CSS var, so viewport-height layouts survive zoom/DPI.
+function syncHdrVar() {
+  const h = document.querySelector(".hdr");
+  if (h) document.documentElement.style.setProperty("--hdr-h", h.offsetHeight + "px");
+}
+window.addEventListener("resize", syncHdrVar);
+syncHdrVar();
+
 function syncViewDiag() {
   try {
     const vis = [...$$(".view")].filter(v => getComputedStyle(v).display !== "none").map(v => v.dataset.view);
@@ -1057,6 +1065,7 @@ function selectSubTab(name) {
   ["diagram", "catalog", "urusan", "feature"].forEach(k => {
     document.getElementById("sub-" + k).classList.toggle("hidden", k !== name);
   });
+  $("#tf-back").classList.toggle("hidden", !(name === "diagram" && TBL_STATE.selected));
 }
 
 function selectSideTab(paneId) {
@@ -1485,6 +1494,7 @@ function clearFocus() {
   TBL_STATE.selected = null;
   TBL_STATE.highlightCol = null;
   $("#table-focus").classList.add("hidden");
+  $("#tf-back").classList.add("hidden");
 }
 
 function openModal(title, bodyHtml) {
@@ -1503,9 +1513,12 @@ function focusTable(name, highlightCol, from) {
   if (from) TBL_STATE.cameFrom = from;
   selectSubTab("diagram");
   if (TBL_STATE.diagramState) TBL_STATE.diagramState("focus");
-  $("#tf-title").textContent = name;
+  $("#search-input").value = name;
+  $("#tf-back").classList.remove("hidden");
   refreshFocus();
   selectSideTab(TBL_STATE.highlightCol ? "tf-columns" : "tf-identity");
+  const tfEl = $("#table-focus");
+  if (tfEl.scrollIntoView) tfEl.scrollIntoView({ block: "start" });
 }
 function refreshFocus() {
   renderFocusGraph(TBL_STATE.selected);
