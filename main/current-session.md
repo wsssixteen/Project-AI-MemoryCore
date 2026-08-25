@@ -1,5 +1,27 @@
 # Current Session
 
+## 2026-08-24→25 — QA-276584 PPTPB rework + Task-folder abbreviation + 22 quests Phase-2 archived + video-prune feature
+
+**Arc**: retrieve 276584 → PPTPB rework → deploy internal → folder-naming cleanup + JS → Phase-2 sweep (14 Closed/Verified + 8 QA FAT) → video-prune wired into Phase 2 → DE.
+
+**1. QA-276584 (ESOKONGAN PPTPB rework, BA Nurhafizah 08-23)**: BA asked to add urusan PPTPB to the surat-keputusan visibility filter. One-word change `etanah-awam AwamDashboardVO.java:543` — `ImmutableList.of("PRBB","PLPS","PRU","PT","MCL","PLTP","PPTPB")` (hide surat until a `PL` Bayaran Pelbagai tugasan exists; verified PPTPB has PL = et_main_stg2 ind_tgsn 5135265). Commit `ba65fb8bbb` on `mlk/esokongan/276584` → cherry-picked `mlk/int-env` `c59dde3d9e`, compile-gate green. **Awaiting BA internal test** (NOT closed). qa_doc REWORK block written.
+
+**2. Task-folder abbreviation (miya /goal)**: `quest/redmine-sync.js` — new `abbreviateType()` (ESOKONGAN→ES · INTERNAL ISSUE→II · ADHOC→AH · DATA PATCHING→DP · REQUIREMENT→RQ; brackets `(PROD)`/`(PERMANENT FIX)` moved to END of folder name) + removed `1. Simulate` from folder creation (new = `0. Brief` + `2. Fix`). Renamed ALL folders (active + Archive), removed 136 empty Simulate (5 non-empty kept). active.txt task_folder paths repointed.
+
+**3. Phase-2 batch 1 (14 Closed+Verified)**: 137/140/141/147/148/163/165 (Closed) + 154/158/159/160/62/166/164 (Verified) → Archive. Criterion miya-chosen = Closed OR Verified (Resolved excluded — QA hasn't signed off). active.txt duplicates 276181/276504 removed, ADHOC-PPJK-2026-1 archived. active.txt → 6 genuinely-open blocks.
+
+**4. Phase-2 batch 2 (8 QA FAT — miya /goal)**: FAT env decommissioned → BA can never close. Found each fix in `mlk/qa/<num>`, confirmed ALL in `mlk/master`: 265537·264006·264347·261986·262004·262027·262039·261517. Archived + qa_docs got `## Deferred to follow-up` + Phase-2 closure note; QA-264347 qa_doc created (had none).
+
+**5. Video-prune feature (miya /goal)**: `quest/archive-quest.js` +`pruneVideos()`/`sweepVideos()` + **Step 1.5** (auto-prune videos from archived folder, ALL subfolders — miya nod) + `--sweep-videos` mode + hygiene line shows `videos pruned N`. One-time sweep deleted **151 videos / 1.35 GB** from Archive (0 left; 4 active preserved). Fixed pre-existing stale eval (copy all quest/*.js deps — active-cli now needs redmine-status-check) + test 9. Eval 9/9. `close-phase` SKILL step-2 doc updated.
+
+**Blocker (verified external)**: folder `139. ESOKONGAN #274914` could NOT be renamed — OneDrive reparse/placeholder lock (attr 0x80000), 3 attempts / 2 methods all `Access denied`. Pending-User quest, not archived, no active.txt ref → nothing broken. Needs miya to release the handle.
+
+**Spawned**: background task `task_de076cad` — fix `lib/hook-runtime.js` blockReason-vs-contextOut silent "No stderr output" + deploy-merge-surface stale-worktree compile-marker path bug.
+
+**Rough patches**: deploy-merge-surface hook crashed silently (its own bug I chipped); heredoc backslash-mangling on JS (switched to Write tool); 139 lock unresolvable.
+
+**Resume point**: BA tests 276584 PPTPB on internal → if pass, Phase-1/2 close + planned-release list. Folder 139 rename when unlocked. task_de076cad delivers the hook fixes separately.
+
 ## 2026-08-21→24 — Board Redmine-reconcile (20→9) + de-close-gate C4 + codemap v6 FEATURES revamp + knowledge bake
 
 **Arc**: boot briefing → miya raged at 20 stale "open" quests → reconciled vs live Redmine (0 assigned-open; archived 274740/274914/275009/275456/275500/275501/275587-MLPS/276182/276654 + adhocs A12/A13 via adhoc-lifecycle Doors) → built the permanent fix: `quest/redmine-reconcile.js` + **de-close-gate C4** (DE close BLOCKS unless reconcile ran ≤12h; eval 14/14). Root causes: DE had NO Redmine step + main↔worktree active.txt divergence (unioned, synced both). Rule 12 floor RAISED 10→20 scenarios per miya (SKILL.md v2.7) + scenario TABLE must be displayed.
@@ -41,19 +63,3 @@
 **Branch**: `mlk/esokongan/276549` pushed in etanah-spoc-hasil (now unused; fix is common) — left in place per miya.
 
 **Resume point**: common team merges Fix A → build → test (Case 1 non-Milik passes · Case 2 Tanah Milik stays mandatory). Fix NOT applied to any repo (handoff artifact). Bounty pending: QA-275501 (parked).
-
-## 2026-08-20 (night-2) — #276504 root-cause + OUR fill-only fix on top of Alex → int-env (deploy re-run pending)
-
-**Recap**: miya asked me to root-cause #276504 (HASIL "Error during generate receipt", Critical PERMANENT FIX). Full context loaded (Description stack trace + 9 journal entries + rework video `276504_REWORK - MLIT.mp4` + DB).
-
-**Root cause (VERIFIED)**: PPTPB stores maklumat tanah in `umm_p_permohonan_tnh`; `umm_p_hkmlk` is a title-link row whose `bandar_dipohon_id` was never populated → HASIL `PerserahanService.populateAplikasi():6605` reads `PraHakmilik.getBandarPekanMukim().getKod()` → NPE. DB timeline: pre-08-20 PPTPB apps `bandar_dipohon_id`=NULL (v1); 08-20 apps set (v2). Regression Anis saw (maklumat hilang on re-save) = eMohon PPTPB reload reads bandar/daerah from title, seksyen/luasDipohon not from ppt — display/round-trip, data intact in `umm_p_permohonan_tnh`.
-
-**OUR fix (better than Alex's, built ON TOP — his kept)**: new `fillPraHakmilikBandarFromHakmilik` in `etanah-awam PelupusanService.java` — fill-only (never overwrites/creates orphan; all title rows; sourced from title `getHakmilik().getBandar()`), called from `saveMaklumatLesenPLPS` (eMohon path Alex's call misses). Alex's `syncBandarPekanMukimIntoPraHakmilik` untouched. Fill-only ⇒ structurally cannot cause the disappearing-data regression. Compiled green (branch + int-env).
-
-**Git**: base `mlk/internal/276504` off Alex commit `5351a7c31f` → our commit `7c01808ae2` → pushed. Cherry-picked our commit onto `mlk/int-env` → `e4eeafedd6` (full merge dragged master↔int-env divergence into conflict; cherry-pick clean). Deploy script → `1. Tasks\Melaka\164…\2. Fix\deploy-276504-internal.txt`. **Deploy attempt hit the transient `index-pack` clone failure (deploy skill §7) — re-run pending; NOT our change (build never compiled, 0.040s no-POM).**
-
-**Rough session — 3 corrections banked**: (1) branch naming — INTERNAL ISSUE → `mlk/internal/<num>`, NEVER invent a suffix (`-permfix`) or abbreviation; (2) do NOT replace a colleague's fix — build on his commit; (3) commit-gate/compile-gate read the WORKTREE's stale `active.txt`/`.claude/state`, not the main-repo live one → resolved to wrong ticket (QA-274740). Improvement proposal logged.
-
-**Resume point**: after miya re-runs the deploy on MLIT, do a fresh eMohon PPTPB save → I verify `umm_p_hkmlk.bandar_dipohon_id` non-null (I hold mlit MCP). Then Redmine planned-release list (int-env never reaches master).
-
-- 2026-08-24 post-DE hotfix: miya-reported bug — Tables view visible on EVERY main tab. Root: `#view-search{display:flex}` (ID specificity) beat `.view.hidden` (class-only; its !important twin lived only in @media print). Fix: `.view.hidden` added to the hard-override !important list (src/style.css:356) — the one selector missing from the 2026-08-22 overlay-lesson list. Mechanism: ship_check now renders all 4 tabs headless with a ?shipcheck=1 pixel barcode (green=visible/red=hidden, PIL-sampled) — dump-dom emits nothing in this Edge build; negative fixture proven (broken CSS -> RRGG FAIL). build.py non-ASCII prints fixed (cp1252 crash). Ship-check PASS; 4 clean tab screenshots delivered.

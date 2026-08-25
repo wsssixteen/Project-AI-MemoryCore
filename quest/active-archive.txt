@@ -1600,7 +1600,7 @@ closed=2026-08-10
 close_note=RECONCILED from live Redmine 2026-08-10 - Ready in PROD, Muhammad Shafiq Mohd Yohani, 100pct
 
 qa=QA-264006
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\58. QA #264006 - Semua Urusan - Tugasan peranan PT - Nama PT tidak sama dengan PT tugas
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\58. QA #264006 - Semua Urusan - Tugasan peranan PT - Nama PT tidak sama dengan PT tugas
 phase=1
 status=closed
 current_phase=Closed
@@ -1687,7 +1687,7 @@ closed=2026-06-15
 close_note=read-side fix: populateTarikh PB4AE gate (today on action=SIGN, blank otherwise) + removed colleague write-side stamp (PelupusanService+IPelupusanService+MlkLaporanL1eForm); auto-merged clean over 6 upstream commits
 
 qa=QA-261517
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\71. QA #261517 - MLKFAT - PSBS - Semakan JTLTPM - Semasa tugasan Semakan JTLTPM, Ulasan diterima dar
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\71. QA #261517 - MLKFAT - PSBS - Semakan JTLTPM - Semasa tugasan Semakan JTLTPM, Ulasan diterima dar
 phase=1
 status=closed
 ticket_type=bug
@@ -1953,7 +1953,7 @@ close_note=Applied+pushed by miya himself 2026-07-16 15:50+0800 (after session e
 
 qa=QA-265537
 quest_start_ts=2026-07-22T16:02:33.420Z
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\101. QA #265537 - MLKFAT - MLPS - Penyediaan Borang 4Ae dan L1e - Maklumat bagi medan Bandar yang telah dikemaskini
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\101. QA #265537 - MLKFAT - MLPS - Penyediaan Borang 4Ae dan L1e - Maklumat bagi medan Bandar yang telah dikemaskini
 phase=0
 status=closed
 ticket_type=bug
@@ -2461,7 +2461,7 @@ rework=cycle-3
 reopened=2026-06-20
 assigned_to_me=2026-06-09
 quest_start=2026-06-20
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\67. QA #261986 - FAT - PSBS - Isu pada Risalat MMKN
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\67. QA #261986 - FAT - PSBS - Isu pada Risalat MMKN
 qa_doc=projects/coding-projects/active/QA-261986/QA-261986.md
 test_app_uat=PTMLK/01/L/PSBS/2026/10
 prior_fix=cycle-1 mlk/qa/261986 commit d2aa36240b (Individu template fixes)
@@ -2479,7 +2479,7 @@ commit_cycle3=6938e9b656
 # duplicate-resolution 2026-08-16: SECOND copy from active.txt (fields may be newer than the first archive entry above)
 
 qa=QA-262004
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\68. QA #262004 - FAT - PSBS - Isu pada Ringkasan Risalat
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\68. QA #262004 - FAT - PSBS - Isu pada Ringkasan Risalat
 status=closed
 phase=1
 current_phase=Closed
@@ -2509,7 +2509,7 @@ close_note=cycle-2 shipped 71446bcaf5 (4 files incl faizudin config comma #26430
 
 qa=QA-262027
 quest_start_ts=2026-06-10T17:42:51.590Z
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\69. QA #262027 - FAT - PSBS - Isu pada Surat Keputusan PTG kepada PDT
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\69. QA #262027 - FAT - PSBS - Isu pada Surat Keputusan PTG kepada PDT
 status=closed
 phase=0
 ticket_type=bug
@@ -2533,7 +2533,7 @@ branch=mlk/qa/262027v2
 # duplicate-resolution 2026-08-16: SECOND copy from active.txt (fields may be newer than the first archive entry above)
 
 qa=QA-262039
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\70. QA #262039 - FAT - PSBS - Isu pada Surat Keputusan Lulus kepada Pemohon
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\70. QA #262039 - FAT - PSBS - Isu pada Surat Keputusan Lulus kepada Pemohon
 status=closed
 phase=1
 ticket_type=bug
@@ -3024,3 +3024,32 @@ current_phase=Recon-done (DB-proven root, code fix site not pinned)
 issue_one_liner=PPTPB Teknikal Laporan Pelukis Pelan papar Negeri SELANGOR + daerah/bandar kosong. ROOT (DB-proven): daerah/bandar tak captured di AWAM portal land entry -> umm_p_permohonan_tnh blank -> pra->app copy carries blank into umm_a_permohonan_tnh -> Teknikal grid defaults Selangor. Correct=bandar 87 Padang Sebang/Alor Gajah/Melaka in ind_hkmlk. 2/20 recent PPTPB blank. seksyen blank=normal. AWAM save PelupusanService.java:2160-2164 copies VO no hakmilik fallback; exact PPTPB method+why-empty NOT pinned (needs portal repro). Refuted: QA-273707 dup, patch-not-organic, master-empty. Maybe related QA-274740.
 branch=none - no code change yet
 close_note=adhoc-lifecycle terminal: register row TICKETED (A12->QA-275501 Closed / A13->QA-275456 Closed); archived per weekly-sweep rule 2026-08-21
+
+qa=ADHOC-PPJK-2026-1
+phase=0
+status=closed
+ticket_type=adhoc
+env=PROD (et_main) — code fix on mlk/master etanah-awam
+urusan=PPJK
+adhoc_register_row=A18
+quest_start=2026-08-19
+local_test_confirmed=false
+qa_doc=projects/coding-projects/active/ADHOC-ppjk-warta-single-record/ADHOC-ppjk-warta-single-record.md
+issue_one_liner=PPJK e-Mohon Senarai Warta papar 1 rekod (Lot 7324) untuk No.Warta NO.85/29-03-2007 sedangkan Carian Pintas papar 2 (Lot 7263+7324). ROOT (DB-proven): ind_rizab ada 2 rows (1553/7263, 1554/7324 both Kuatkuasa Y); repository AwamRizabRepository.java:18 returns List; BUG PelupusanService.findMaklumatPerizabanVOByNoWartaAndTarikhWarta():10232-10285 for-loop reassigns vo each iteration, returns LAST only. Downstream onGoNext():89-96 saves only get(0). BA-Q blocks fix: 1 vs multi lot per permohonan. Baseline mlk/master d9441886b8.
+test_app=PROD warta NO. 85 / 29-03-2007 (rizab_id 1553 lot 7263, 1554 lot 7324); PPJK e-Mohon AwamSemakanKewujudanRizabForm.xhtml
+current_phase=Apply-done (fix applied uncommitted, compiled green); redmine 276349
+board_state=Fix APPLIED+compiled (3 files: IPelupusanService/PelupusanService return List, AwamSemakanKewujudanRizabForm show-all+honor-tick). Uncommitted. Next: local/int test then commit+deploy-both with 276074
+branch=none - no code change yet
+redmine=276349
+closed=2026-08-24
+close_note=RECONCILED from Redmine: #276349 Verified 100% (Nurul Amirah Nadiah). Our diagnosis+uncommitted fix preserved in qa_doc Resume Point - verify who fixed before discarding local etanah-awam work
+
+qa=QA-264347
+status=archived
+phase=2
+ticket_type=bug
+env=FAT
+urusan=PRU
+current_phase=Phase 2 archived 2026-08-24 (miya /goal): fix in mlk/master @ 56f677c206, FAT decommissioned so no BA close; qa_doc created retroactively.
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\64. QA #264347 - FAT - PRU - Penyediaan Surat Keputusan Lul - Isi Tarikh Mula Permit Diluluskan tetapi Tarikh Ta
+qa_doc=projects/coding-projects/active/QA-264347/QA-264347.md

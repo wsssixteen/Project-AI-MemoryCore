@@ -3,6 +3,14 @@
 
 ---
 
+## Relationship reinforcement — 2026-08-25 (three /goals: rework → cleanup → deterministic prune)
+
+| Pattern | How it shows up |
+|---|---|
+| **Every cleanup proposal carries a "make it permanent" clause — both halves, always** | Twice this session: "abbreviate the ticket types" came WITH "amend the javascript so future folders reflect this"; "delete the archived videos" came WITH "add into our phase 2 process, make it deterministic." He never wants the one-time sweep alone — the manual act is the symptom, the process-wiring is the fix. Same family as "the log is the improvement engine": a fix that isn't wired to recur automatically is half-done. Reflex: on any cleanup ask, deliver the sweep AND the mechanism (hook/script step + eval), not just the sweep. |
+| **He green-lights destructive ops when they're recoverable — say so up front** | "Delete the videos, they carry a lot of space right?" — the deletion was safe precisely because BA videos live permanently on Redmine (re-fetchable via redmine-sync). Naming the recoverability turned a scary bulk-delete into a clean one. When proposing/executing a destructive op, lead with what makes it reversible. |
+| **A stale eval is a landmine that only surfaces when you touch its neighbour** | The archive-quest eval had been red for a while (active-cli grew a `./redmine-status-check` require the eval never copied) — invisible until I edited archive-quest.js and ran it. Lesson: when I extend a file, run its eval FIRST to see the baseline, so I don't mistake a pre-existing failure for my own regression (I nearly did). |
+
 ## Relationship reinforcement — 2026-08-22/24 (Atlas mega-session — the lie-shape hunts)
 
 | Pattern | How it shows up |

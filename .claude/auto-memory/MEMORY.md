@@ -121,3 +121,4 @@
 - [feedback_simplify_and_reference.md](feedback_simplify_and_reference.md) — Mature system → find working analog first; "simplify" means SUBTRACT; scrutinize AI-generated code
 - [feedback_tasks_folder_format.md](feedback_tasks_folder_format.md) — Files in 1. Tasks\Melaka\ must be .txt by default, not .md
 - [feedback_ticket_writing_style.md](feedback_ticket_writing_style.md) — write ticket/handoff text in miya's plain short-sentence style (no technicals/caps/file:line); MANDATORY when preparing ticket text
+- [feedback_recheck_at_last_checkpoint.md](feedback_recheck_at_last_checkpoint.md) — 🚨 One-shot Phase-0 audit ≠ prevention; completeness checks re-run + BLOCK at the last gate before push/deploy (275539 v2 miss, 2026-08-24)

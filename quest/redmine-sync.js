@@ -99,23 +99,44 @@ function sanitize(str, cap) {
     return truncated.replace(/[. ]+$/, '');
 }
 
+// Ticket-type abbreviation (2026-08-24, miya): folder names carry a short type code so many
+// open tickets are searchable at a glance. Any `(BRACKET)` on the tracker name (e.g.
+// "INTERNAL ISSUE (PROD)") is moved to the END of the whole folder name, not kept in the head.
+const TYPE_ABBR = {
+    'ESOKONGAN':      'ES',
+    'INTERNAL ISSUE': 'II',
+    'ADHOC':          'AH',
+    'DATA PATCHING':  'DP',
+    'REQUIREMENT':    'RQ',
+};
+function abbreviateType(trackerName) {
+    const raw = (trackerName || 'UNKNOWN').toUpperCase().trim();
+    const bm  = raw.match(/^(.*?)\s*(\([^)]*\))\s*$/);
+    const base = (bm ? bm[1] : raw).trim();
+    const bracket = bm ? bm[2] : '';
+    return { abbr: TYPE_ABBR[base] || base, bracket };
+}
+
 function buildFolderSlug(issue, parsed) {
     const f = parseDescriptionFields(issue.description);
+    const { abbr, bracket } = abbreviateType(parsed.prefix);
+    const head = `${abbr} #${parsed.number}`;
+    const tail = bracket ? ` ${bracket}` : '';
 
     if (f.urusan && f.tugasan && f.issue) {
         // ENV from description (e.g. "MLK FAT" → take last word "FAT") or subject first segment
         const env = f.env ? f.env.split(/\s+/).pop() : issue.subject.split(' - ')[0].trim();
         return [
-            `${parsed.prefix} #${parsed.number}`,
+            head,
             sanitize(env, 10),
             sanitize(f.urusan, 40),
             sanitize(f.tugasan, 30),
             sanitize(f.issue, 50),
-        ].filter(Boolean).join(' - ');
+        ].filter(Boolean).join(' - ') + tail;
     }
 
     // Fallback: use subject
-    return `${parsed.prefix} #${parsed.number} - ${sanitize(issue.subject, 70)}`;
+    return `${head} - ${sanitize(issue.subject, 70)}${tail}`;
 }
 
 // ─── TASK FOLDER CHECK ───────────────────────────────────────────────────────
@@ -353,10 +374,9 @@ async function createTaskFolder(issue, parsed) {
     const slug   = buildFolderSlug(issue, parsed);
     const folder = path.join(TASKS_FOLDER, `${num}. ${slug}`);
 
-    // Base structure — always 3 folders + blank Notes file
-    fs.mkdirSync(path.join(folder, '0. Brief'),    { recursive: true });
-    fs.mkdirSync(path.join(folder, '1. Simulate'), { recursive: true });
-    fs.mkdirSync(path.join(folder, '2. Fix'),      { recursive: true });
+    // Base structure — 0. Brief + 2. Fix + blank Notes file (1. Simulate retired 2026-08-24, miya)
+    fs.mkdirSync(path.join(folder, '0. Brief'), { recursive: true });
+    fs.mkdirSync(path.join(folder, '2. Fix'),   { recursive: true });
     // Notes file is named per-ticket — `1. NNN NNN.txt` (renamed 2026-05-31 from `1. Notes.txt`,
     // adjusted same day from `1. QA-NNNN.txt` per みや → drop tracker prefix, space before last 3
     // digits so the last-3 are quickly identifiable across many open tabs/greps).
