@@ -466,3 +466,6 @@
 {"ts":"2026-08-26T06:07:50.594Z","category":"A4"}
 {"ts":"2026-08-26T11:02:47.727Z","category":"reask/redundant"}
 {"ts":"2026-08-26T15:25:45.318Z","category":"verify-before-claim"}
+{"ts":"2026-08-26T15:53:32.789Z","category":"wrong-shell-syntax"}
+{"ts":"2026-08-26T16:16:40.811Z","category":"overstated-unbuilt-ui"}
+{"ts":"2026-08-26T16:41:03.704Z","category":"unsafe-live-action-during-test"}

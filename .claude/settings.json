@@ -324,6 +324,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\deploy-merge-surface\\\\deploy-merge-surface.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\lib\\\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\live-action-safety\\\\live-action-safety.check.hook.js\" PreToolUse"
           }
         ]
       }
