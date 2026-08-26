@@ -88,6 +88,30 @@ function fetchIssues() {
     });
 }
 
+// Single-issue fetch (2026-08-26, retrieval audit): `node quest/redmine-sync.js <num>` is the
+// command retrieve-sync-gate mandates, yet the number was silently IGNORED — only --poll/--create
+// were parsed, and the assigned-to-me list is the only source. A ticket that left the assigned
+// list (#275092: resolved+reassigned 3 min after first sync) was unretrievable. By-ID fetch works
+// regardless of current assignee — naming the ticket explicitly IS the authorization.
+function fetchSingleIssue(id) {
+    return new Promise((resolve, reject) => {
+        const options = {
+            hostname: '172.16.90.169',
+            path: `/redmine/issues/${id}.json`,
+            headers: { 'X-Redmine-API-Key': REDMINE_KEY }
+        };
+        http.get(options, res => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+                if (res.statusCode !== 200) { reject(new Error(`Redmine returned ${res.statusCode} for #${id}`)); return; }
+                try { resolve(JSON.parse(data).issue || null); }
+                catch (e) { reject(new Error('Failed to parse Redmine response')); }
+            });
+        }).on('error', reject);
+    });
+}
+
 // ─── TICKET PARSING ──────────────────────────────────────────────────────────
 
 function parseTicketId(issue) {
@@ -842,11 +866,47 @@ async function runWithCreate() {
     }
 }
 
+// By-ID sync: fetch ONE ticket regardless of assignment, create its folder if new,
+// refresh journals/attachments/rework state if existing. Always creates (an explicitly
+// named ticket is an explicit retrieval — no --create needed).
+async function runSingle(id) {
+    try {
+        const issue = await fetchSingleIssue(id);
+        if (!issue) { console.log(`  ❌ #${id} not found on Redmine`); return; }
+        await enrichWithHtmlStatus([issue]);
+        const results = classifyIssues([issue]);
+        printReport(results);
+        console.log(`  👤 Assigned to: ${issue.assigned_to?.name || '(nobody)'} | Project: ${issue.project?.name || '?'} → ${path.basename(taskBaseFor(issue))}\\`);
+        for (const it of results.new) {
+            const folder = await createTaskFolder(it, it._parsed);
+            console.log(`  📁 Created: ${folder}`);
+            const journals = await fetchIssueJournals(it.id);
+            const assignedDate = extractAssignedToMeDate(journals, it);
+            appendActiveBlock(it, it._parsed, folder, assignedDate);
+            if (journals.length) {
+                writeHistoryFile(path.join(folder, '0. Brief'), journals, {
+                    prefix: it._parsed.prefix, number: it._parsed.number,
+                    subject: it.subject, status: it._status, updated_on: it.updated_on,
+                });
+                console.log(`    📝 History.txt → ${journals.length} journal ${journals.length === 1 ? 'entry' : 'entries'}`);
+            }
+        }
+        await reactivateReworkFolders(results);
+        await syncJournalsForExisting(results);
+        await syncAttachmentsForExisting(results);
+    } catch (err) {
+        console.error(`\n  ❌ Error: ${err.message}\n`);
+    }
+}
+
 const args   = process.argv.slice(2);
 const poll   = args.includes('--poll');
 const create = args.includes('--create');
+const idArg  = args.find(a => /^#?\d+$/.test(a));
 
-if (poll) {
+if (idArg) {
+    runSingle(idArg.replace(/^#/, ''));
+} else if (poll) {
     console.log(`  Polling every ${POLL_INTERVAL_MINUTES} min. Ctrl+C to stop.\n`);
     const fn = create ? runWithCreate : run;
     fn();
