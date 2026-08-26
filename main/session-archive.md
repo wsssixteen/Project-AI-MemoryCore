@@ -4,6 +4,23 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session 2026-08-26 — ADHOC-PT-2026-5 (JKR jabatan-teknikal) + adhoc-paste-detector widening
+
+**Last Activity**: 2026-08-26 14:05
+
+**What happened**: PDTJ relay (nurhafizah@melaka.gov.my) — PROD PT `PTMLK/02/L/PT/2026/1` (aplikasi **3386051**), Utiliti Kemaskini Ulasan JT/JPPH grid papar 5 jabatan, sepatutnya 7 (JKR+JPPH). Diagnosed → JKR app-row deleted (hard delete, no DB trace); JPPH excluded by design. Patch ready (INSERT JKRNM), PROD → infra, awaiting Redmine #.
+
+**Rough session** (miya heavy frustration): answered a simple DATA-QUESTION with code-trace-first; wrong column assumption (`umm_p_aplikasi.no_rujukan_permohonan` → empty for PT) instead of `umm_aplikasi.id_pengenalan`; ~10 blind schema queries + false "wrong env / record doesn't exist" before resolving aplikasi_id. Root: never loaded DATABASE.md at intake because the adhoc detection hook (asked 2026-08-13) was built labelled-fields-only and never fired on the freeform PDTJ relay.
+
+**Fixed this session**:
+- `domain/adhoc-paste-detector` WIDENED — freeform path (office-code/permohonan-id + issue words); related-ticket # no longer aborts; scaffold step 0 forces ADHOC-TRIAGE + DATABASE.md load. Eval 11/11 green x5.
+- `etanah-knowledge/melaka/DATABASE.md` §4.1 — BA-ref → aplikasi_id recipe (`id_pengenalan`, NOT `no_rujukan_permohonan`) + trap table + known-positive discipline.
+- `etanah-knowledge/melaka/ADHOC-TRIAGE.md` — NEW 11-class adhoc intake ruleset (DATA-QUESTION / DATA-PATCH / DIAGNOSIS / CODE-CHECK / FLOW-RECOVERY / ...) + 5 cross-cutting rules; registered in index.md.
+- 2 slips ledgered: assume-not-verify + build-missed-requirement.
+- Memory: `feedback_data_question_db_first.md` (saved earlier this session).
+
+**Resume point**: ADHOC-PT-2026-5 diagnosed + PROD-proven + patch script-checked in Task 163 `2. Fix\patch-ADHOC-PT-2026-5.sql`. Owed: Redmine # → rename `patch-<ticket>.sql`, send infra format, apply on PROD. Register row A20.
+
 ## 2026-08-20 (night-2) — #276504 root-cause + OUR fill-only fix on top of Alex → int-env (deploy re-run pending)
 
 **Recap**: miya asked me to root-cause #276504 (HASIL "Error during generate receipt", Critical PERMANENT FIX). Full context loaded (Description stack trace + 9 journal entries + rework video `276504_REWORK - MLIT.mp4` + DB).
@@ -4489,6 +4506,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
