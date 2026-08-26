@@ -54,6 +54,7 @@
 - [feedback_common_ticket_line_triage.md](feedback_common_ticket_line_triage.md) — 🚨 Common-scoped ticket → Phase-0 5-step triage (owner-already-fixed? which common LINE is fix on vs which line env builds? superset gate) BEFORE editing/deploying; int-env+staging build mlk/beta NOT mlk/master — a fix only on master is undeployable to int-env (QA-276549)
 - [feedback_commit_deploy_runbook.md](feedback_commit_deploy_runbook.md) — 🚨 One-pass commit+deploy ceremony, 6 ordered steps — read it on ANY commit/deploy nod (QA-276504)
 - [feedback_prod_patch_infra_handoff.md](feedback_prod_patch_infra_handoff.md) — 🚨 PROD patches ALWAYS go to infra via fixed format: "Hi infra, please assist. Thank you." + `#ticket: one sentence` + fenced script ending `-- x row updated/inserted/deleted` (miya 2026-08-21)
+- [feedback_data_question_db_first.md](feedback_data_question_db_first.md) — 🚨 Confirmed-etanah DATA question (is X in list / does id exist / check value) → DB-first + prepare script-check, use DATABASE.md for table clues; code-trace ONLY for the filter, don't archaeology first (み 2026-08-26)
 - [feedback_attempt_before_claiming_blocked.md](feedback_attempt_before_claiming_blocked.md) — 🚨 NEVER declare blocked/can't/unavailable/missing-config from a PROXY check (ls a config file, the loaded-tool roster) — RUN the actual operation first; absence of a proxy ≠ absence of capability; only the op's real failure output is valid evidence. Enforced by `domain/attempt-before-blocked-gate` (Stop, BLOCKS; bypass `[verified-blocked: <cmd> -> <error>]`). Built 2026-08-13 after #275009/275152 false-"blocked" (assume-not-verify 30d=25 🚨)
 
 ## User
@@ -75,6 +76,7 @@
 - [project_etanah_organize.md](project_etanah_organize.md) — etanah-organize-alpha: organize etanah-knowledge/melaka into guidebook → Phase 2 office-day verification → Phase 3 website; activation: Bankai 蒼穹宝典; alpha-1 complete 2026-05-14 (115-item ledger)
 
 ## Reference
+- [reference_adhoc_triage_and_id_pengenalan.md](reference_adhoc_triage_and_id_pengenalan.md) — 🚨 Adhoc/BA-relay → classify via ADHOC-TRIAGE.md FIRST (11 classes); BA ref PTMLK/.. → aplikasi_id via umm_aplikasi.id_pengenalan (NOT no_rujukan_permohonan, empty for PT); DATABASE.md §4.1 (み 2026-08-26)
 - [reference_selangor_oracle_slt.md](reference_selangor_oracle_slt.md) — Selangor Etanah = Oracle (service SLIT, 172.16.93.32:1521, schema ET_MAIN_DEV) via oracle-slt MCP; python-oracledb thin + pin mcp<2; code at E:\Projects\Selangor\etanah-pelupusan (branch master, codegraph is Melaka-only)
 - [reference_baseline_release_servers.md](reference_baseline_release_servers.md) — Baseline build server 172.16.100.162 · deploy 172.30.12.203 · ssh user `app`; the gitignored servers.local.json does NOT travel between machines, this does
 - [reference_etanah_bpmn_source.md](reference_etanah_bpmn_source.md) — Flowable BPMN lives in main-repo etanah-knowledge/.../flowables-bpmn/ (absent from worktrees); read parsed bpmn_flow.json not raw XML; latest at mlit flowable-ui modeler
