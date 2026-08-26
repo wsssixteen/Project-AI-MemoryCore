@@ -3,6 +3,13 @@
 
 ---
 
+## Relationship reinforcement — 2026-08-26 (#273461 deep-audit + orchestration shootout)
+
+| Pattern | How it shows up |
+|---|---|
+| **He audits the MISS months later, and wants the mechanism, not the patch** | "The true reason is your recon & rubric I believe. How did you miss that?" — the 08-10 slip was ledgered `knowledge-not-banked`, but he correctly smelled the deeper hole: the completeness METHOD (column-name sweep) was blind by construction to convention-key links. When he re-opens an old miss, the deliverable is the method-level root cause + a shipped mechanical fix, with the knowledge update explicitly secondary. |
+| **He asks for simulation, and the experiment can refute the obvious answer** | He proposed hooks/more familiars; the 7-agent shootout showed 7/7 structures catch the miss once the QUESTION ("where is the value born?") is in the prompt — so the fix is a deterministic question, not a bigger fleet. Running the cheap experiment before building the expensive structure is the shape he wants: find the sweet spot empirically, then ship the smallest mechanism that encodes it. |
+
 ## Relationship reinforcement — 2026-08-25 (three /goals: rework → cleanup → deterministic prune)
 
 | Pattern | How it shows up |

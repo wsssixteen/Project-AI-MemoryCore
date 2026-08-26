@@ -23,7 +23,10 @@
  *   semantic, enforced by self-discipline + みや review; this hook only
  *   enforces the mechanical annotation check.
  *
- * FOUR checks (advisory v1, per /system-rules R4 — flip to block once validated):
+ * SIX checks (advisory v1, per /system-rules R4 — flip to block once validated):
+ *   CHECK 6 — generator-state disclosure (added 2026-08-26 per みや, #273461 deep-audit): a patch
+ *     releasing a generated identifier (SET no_* = NULL, or DELETE keyed by a no_* value) must
+ *     name the generator counter + its disposition; bypass [skip-generator-check: <reason>].
  *   CHECK 3 — reviewer-obvious safe: broad LIKE '%' in a handed DELETE/UPDATE → recommend
  *     pinned IN ('v1','v2',…) + a leading BEFORE SELECT (added 2026-08-10 per みや, #273461).
  *   CHECK 4 — never delete registry/master ind_* tables (an ind_ row = succeeded to daftar,
@@ -111,6 +114,16 @@ const REF_LABEL_UPDATE = /```[\w]*\s*[\s\S]*?\bUPDATE\s+(?:[\w]+\.)?(?:ind_|rjk_
 const DISPLAY_VERIFY_MARKER = /\[skip-display-col:|display column|which column the (?:ui|screen|grid|report)|grid reads|ui reads|report reads|renders?\s+`?(?:nama|perihal)/i;
 // Suppress when BOTH sibling labels are set together (the safe form — no wrong-column risk).
 const BOTH_LABELS_SET = /\bSET\b[\s\S]*?\bnama\s*=[\s\S]*?\bperihal\s*=|\bSET\b[\s\S]*?\bperihal\s*=[\s\S]*?\bnama\s*=/i;
+
+// CHECK 6 — generator-state disclosure (added 2026-08-26 per みや, #273461 deep-audit).
+// A patch that RELEASES a system-generated identifier (nulls a no_* column, or deletes rows
+// keyed by a no_* value) touches only the ROWS — the GENERATOR that minted the value can be a
+// separate counter (sis_no_turutan pattern: linked by a convention-built kod string, NO shared
+// column — invisible to FK/column-name sweeps). Deleting rows never rolls the counter back.
+// The reply must NAME the generator + its disposition (left untouched / rolled back + collision
+// analysis) — or declare the column has no generator via the skip token.
+const GENERATED_ID_RELEASE = /```[\w]*\s*[\s\S]*?(?:\bUPDATE\b[\s\S]*?\bSET\b[\s\S]*?\bno_\w+\s*=\s*NULL|\bDELETE\s+FROM\b[\s\S]*?\bno_\w+\b)[\s\S]*?```/i;
+const GENERATOR_MARKER = /--\s*generator\s*:|sis_no_turutan|\bno_turutan\b|\[skip-generator-check:/i;
 
 function lastAssistantText(transcriptPath) {
   let raw;
@@ -236,6 +249,24 @@ process.stdin.on('end', () => {
         '   Bypass: [skip-display-col: <which column the UI reads + how verified>].',
       ].join('\n'));
       logFire('advisory-display-col', 'ref-label-update-unverified-column');
+    }
+
+    // CHECK 6 — generator-state disclosure (release of a generated identifier)
+    if (GENERATED_ID_RELEASE.test(text) && !GENERATOR_MARKER.test(text)) {
+      advisories.push([
+        '⚙️  patch-script-gate CHECK 6 — generator-state disclosure MISSING.',
+        '   Your patch RELEASES a system-generated identifier (nulls a no_* column, or deletes',
+        '   rows keyed by a no_* value). The rows are only half the state: the GENERATOR that',
+        '   minted the value is a separate counter that does NOT roll back when rows are deleted',
+        '   (#273461: sis_no_turutan, linked by a convention-built kod string — no shared column,',
+        '   invisible to FK/column-name sweeps).',
+        '   Before handing this patch, answer: WHERE is this value born, and WHAT remembers how',
+        '   far the sequence has advanced? Then state the disposition in the script:',
+        '     -- generator: <table> kod \'<key>\' left untouched — gap permanent & expected',
+        '   or, if rolling it back, include the collision analysis (live numbers above the target).',
+        '   No generator behind this column? Bypass: [skip-generator-check: <why none exists>].',
+      ].join('\n'));
+      logFire('advisory-generator-state', 'generated-id-release-no-disclosure');
     }
 
     if (advisories.length === 0) {

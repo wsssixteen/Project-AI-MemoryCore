@@ -1,6 +1,19 @@
 # Current Session
 
-## 2026-08-24→25 — QA-276584 PPTPB rework + Task-folder abbreviation + 22 quests Phase-2 archived + video-prune feature
+## 2026-08-26 — #273461 sis_no_turutan deep-audit + recon-structure workflow shootout + CHECK 6 ship + Perak MCP
+
+**Arc**: miya asked WHY Recon/Rubric missed the `sis_no_turutan` running-number table on #273461 (only the versi/registry tables were in the delete footprint) → audit → 7-agent /workflows scenario shootout → shipped the hole-patch (hook CHECK 6 + script-check rule 8 + quest Recon row + knowledge top-up) → DE → Perak MCP connections.
+
+**1. Root cause (ledgered `recon-blast-radius`, caught-by miya)**: the 08-06 patch audit declared "reference graph complete 4/4" from a **shared-column-name sweep** (`permit_lesen_id`/`versi_permit_lesen_id`) — structurally blind to (a) convention-built key links (`sis_no_turutan` kod `01BRG_4AE2026` concat'd in Java, no shared column), (b) renamed FK columns (`ind_pemegang_permit_lesen.versi_akhir_id`). Recon's own trace cited `PelupusanService.runningNumberPessimisticLock():3169-3194` — the counter was ONE entity-resolution away; no step forced it, and no rule asked "what generates the value / what remembers the sequence?" The 08-10 `knowledge-not-banked` slip was the symptom; the method hole is the true cause (miya's hypothesis confirmed).
+
+**2. Workflow shootout (`wf_46c7a439-626`, 7 sonnet agents, 975k tokens, 0 errors)**: replayed the reset-footprint task under 5 structures (S1 baseline · S2 entity-checklist · S3 skeptic · S4 3-lens · S5 index-first) vs the 6-table ground truth. **7/7 caught everything incl. baseline** → the binding variable is the QUESTION (my prompt carried "reclaimable" = the lifecycle question August never asked), not agent count. Sweet spot = deterministic question (hook) + lensC lifecycle familiar ONLY for PROD-destructive patches (~113k, cheapest deep catch); skeptic panels (149k to confirm a right answer) reserved for PROD deletes. NEW PROD facts from the fleet: counter=6, `A01/2026/6` issued 08-21 (live above targets → **reclaim permanently impossible**), 3 premature registry rows are `SLP_KUATKUASA` with named holders, registry writer = `PelupusanService.saveMaklumatPermitToInduk():2277-2402`, ZERO DB-level FKs among all permit tables, manual counter UPDATE races the pessimistic lock.
+
+**3. Shipped (design-consulted, eval-proven)**: `domain/patch-script-gate` **CHECK 6** generator-state disclosure (fires on `SET no_*=NULL` / `DELETE ... no_*` in fence without `-- generator:` line; bypass `[skip-generator-check:]`; **eval 22→27 fixtures, 27/27 green**) · `script-check` SKILL **rule 8** + emit slot (v3) · quest SKILL Recon **state-footprint row** (resolve every entity on traced path via entity_table_map.json; name the completeness method + its blind spots) · `PERMIT-LESEN-RUNNING-NUMBER.md` 2026-08-26 block (synced to main copy). 20-scenario adversarial table displayed (Rule 12).
+
+**4. Perak MCP (miya /goal item 2)**: add `et_main_perak_dev` (172.16.93.150) + `et_main_perak_denda` (192.168.19.100), Oracle :1521, password same as Melaka's — see goal completion in this session's close.
+
+**Resume point**: CHECK 6 is advisory (matches CHECK 1-5 v1); miya may flip to block. Deferred #2 of #273461 now answerable to Anis: gap is permanent (counter=6, /4 + /6 live). Perak MCP servers usable next session (MCP loads at session start).
+
 
 **Arc**: retrieve 276584 → PPTPB rework → deploy internal → folder-naming cleanup + JS → Phase-2 sweep (14 Closed/Verified + 8 QA FAT) → video-prune wired into Phase 2 → DE.
 
