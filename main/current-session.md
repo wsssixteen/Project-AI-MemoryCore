@@ -14,6 +14,7 @@
 
 **Resume point**: CHECK 6 is advisory (matches CHECK 1-5 v1); miya may flip to block. Deferred #2 of #273461 now answerable to Anis: gap is permanent (counter=6, /4 + /6 live). Perak MCP servers usable next session (MCP loads at session start).
 
+## 2026-08-24→25 — QA-276584 PPTPB rework + Task-folder abbreviation + 22 quests Phase-2 archived + video-prune feature
 
 **Arc**: retrieve 276584 → PPTPB rework → deploy internal → folder-naming cleanup + JS → Phase-2 sweep (14 Closed/Verified + 8 QA FAT) → video-prune wired into Phase 2 → DE.
 
