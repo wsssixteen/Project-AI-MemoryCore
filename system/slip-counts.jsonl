@@ -458,3 +458,5 @@
 {"ts":"2026-08-25T14:30:16.882Z","category":"A2"}
 {"ts":"2026-08-25T14:30:17.004Z","category":"A3"}
 {"ts":"2026-08-24T07:43:29.053Z","category":"ux-two-step-entry"}
+{"ts":"2026-08-26T04:08:52.667Z","category":"assume-not-verify"}
+{"ts":"2026-08-26T04:08:52.757Z","category":"build-missed-requirement"}
