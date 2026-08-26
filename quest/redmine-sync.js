@@ -19,9 +19,17 @@ const POLL_INTERVAL_MINUTES = 15;
 // State routing (2026-08-26, miya — first Perak ticket #275092): a ticket's STATE lives in
 // issue.project.name, never the tracker. Perak/Selangor tickets must land in their own
 // sibling folder, not Melaka\. Default stays Melaka so every existing Melaka path is unchanged.
+// Patterns from the live Redmine project census (305 projects, 2026-08-26): each state appears
+// as "eSOKONGAN <STATE>", "e-Tanah <State>[ FAT/PAT/UAT]", "eTanah <State>", and module
+// projects prefixed "<ABBR>_NN_" (PRK_/KED_/TRG_/MLK_). Melaka + plain "eSOKONGAN" = default.
 const STATE_FOLDERS = [
-    { match: /perak/i,    folder: 'Perak' },
-    { match: /selangor/i, folder: 'Selangor' },
+    { match: /perak|^PRK_/i,      folder: 'Perak' },
+    { match: /selangor|^SEL_/i,   folder: 'Selangor' },
+    { match: /terengganu|^TRG_/i, folder: 'Terengganu' },
+    { match: /kedah|^KED_/i,      folder: 'Kedah' },
+    { match: /labuan/i,           folder: 'Labuan' },
+    { match: /putrajaya/i,        folder: 'Putrajaya' },
+    { match: /pulau pinang/i,     folder: 'PulauPinang' },
 ];
 function taskBaseFor(issue) {
     const proj = (issue && issue.project && issue.project.name) || '';
