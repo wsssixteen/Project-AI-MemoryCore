@@ -574,6 +574,17 @@ function renderUrusanView() {
   const cols = list.map(kod => {
     const u = DATA.urusans.find(x => x.kod === kod);
     if (!u) return `<div class="uj-col">Urusan ${escapeHtml(kod)} not found.</div>`;
+    // census-only urusan (live state, no curated stages): don't render empty stages —
+    // point to the live tugasan census in By-Urusan.
+    if (u.census_only || (!u.stages || !u.stages.length)) {
+      const n = censusTugasans(kod).length;
+      return `<div class="uj-col"><div class="uj-header"><h3>${escapeHtml(u.kod)}</h3>
+        <div class="english">${escapeHtml(u.name || "")}</div></div>
+        <div class="card diagram-empty"><p><strong>${n} tugasan</strong>, live from this state's database.</p>
+        <p class="de-sub">The curated workflow stages + decision forks are extracted per state from its own
+        Flowable BPMNs — pending. For now, browse every tugasan and its screens in
+        <button class="linklike" data-goto-sub="urusan" data-goto-tab="search">By Urusan</button>.</p></div></div>`;
+    }
     const seq = u.bpmn_seq || null;
     const normName = (s) => String(s || "").toLowerCase().replace(/\s+/g, " ").replace(/^\d+(\.\d+)?\s*/, "").trim();
     const ujRow = (r, color) => {
@@ -700,6 +711,14 @@ function renderUrusanView() {
 }
 $("#urusan-picker").addEventListener("change", renderUrusanView);
 $("#urusan-content").addEventListener("click", (e) => {
+  const goto = e.target.closest("[data-goto-sub]");
+  if (goto) {
+    $$(".tab").forEach(x => x.classList.toggle("active", x.dataset.tab === "search"));
+    $$(".view").forEach(v => v.classList.toggle("hidden", v.dataset.view !== "search"));
+    if (typeof syncViewDiag === "function") syncViewDiag();
+    selectSubTab(goto.dataset.gotoSub);
+    return;
+  }
   const el = e.target.closest("[data-open]");
   if (el) jumpToTables(el.dataset.open);
 });
