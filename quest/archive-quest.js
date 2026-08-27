@@ -37,6 +37,43 @@ const PROJECT_ARCHIVE = path.join(REPO_ROOT, 'projects', 'coding-projects', 'arc
 const ACTIVE_TXT = path.join(REPO_ROOT, 'quest', 'active.txt');
 const ACTIVE_CLI = path.join(__dirname, 'active-cli.js');
 
+// Video prune (2026-08-24, per みや) — an archived quest's videos are BA evidence that always
+// remains on Redmine (re-fetchable via redmine-sync), so the LOCAL copy in an archived Task
+// folder is pure disk space. Deterministic prune at Phase-2 archive keeps them from accumulating
+// (one-time sweep found 151 videos / 1.35 GB). Applies to EVERY subfolder (0. Brief · 2. Fix ·
+// N. Rework · 1. Simulate) — miya nod 2026-08-24 "All subfolders".
+const VIDEO_EXT = new Set(['.mp4', '.mov', '.avi', '.mkv', '.webm', '.wmv', '.m4v', '.mpg', '.mpeg']);
+function fmtMB(bytes) { return (bytes / 1048576).toFixed(1) + ' MB'; }
+function pruneVideos(root, opts) {
+    const dryRun = !!(opts && opts.dryRun);
+    const res = { count: 0, bytes: 0, files: [], failed: [] };
+    if (!root || !fs.existsSync(root)) return res;
+    const walk = (dir) => {
+        let entries; try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
+        for (const e of entries) {
+            const full = path.join(dir, e.name);
+            if (e.isDirectory()) { walk(full); continue; }
+            if (!VIDEO_EXT.has(path.extname(e.name).toLowerCase())) continue;
+            let sz = 0; try { sz = fs.statSync(full).size; } catch {}
+            if (!dryRun) { try { fs.unlinkSync(full); } catch (err) { res.failed.push(`${full} — ${err.message}`); continue; } }
+            res.count++; res.bytes += sz; res.files.push(path.relative(root, full));
+        }
+    };
+    walk(root);
+    return res;
+}
+function sweepVideos(args) {
+    const dryRun = args.includes('--dry-run');
+    const tasksIdx = args.indexOf('--tasks');
+    const tasksRoot = tasksIdx >= 0 ? args[tasksIdx + 1] : DEFAULT_TASKS;
+    const archiveRoot = path.join(tasksRoot, ARCHIVE_SUBFOLDER);
+    console.log(`\n🎞  Video sweep — all archived quests${dryRun ? ' (DRY-RUN)' : ''}\n   ${archiveRoot}`);
+    if (!fs.existsSync(archiveRoot)) { console.log('   (no Archive folder — nothing to do)'); return; }
+    const r = pruneVideos(archiveRoot, { dryRun });
+    console.log(`   ${dryRun ? 'would delete' : 'deleted'} ${r.count} video(s), ${fmtMB(r.bytes)}`);
+    if (r.failed.length) { console.log(`   ⚠ ${r.failed.length} failed (likely locked/hydrating):`); r.failed.slice(0, 10).forEach(f => console.log('     ' + f)); }
+}
+
 function readActiveTxtBlock(qa) {
     if (!fs.existsSync(ACTIVE_TXT)) return null;
     const text = fs.readFileSync(ACTIVE_TXT, 'utf8');
@@ -86,6 +123,7 @@ function blockExistsInArchiveTxt(qa) {
 
 function main() {
     const args = process.argv.slice(2);
+    if (args.includes('--sweep-videos')) { sweepVideos(args); return; }
     const qa = args[0];
     if (!qa || !/^QA-\d+$/.test(qa)) {
         console.error('Usage: node quest/archive-quest.js <QA-NNNNNN> [--dry-run] [--commit <SHA>] [--branch <name>] [--tasks <path>]');
@@ -169,6 +207,18 @@ function main() {
     } else {
         console.log(`  ⬜ Step 1: no task_folder= field in block`);
         folderState = 'no-folder';
+    }
+
+    // ── Step 1.5: prune videos from the archived folder (2026-08-24, per みや) ──
+    // Runs ONLY on the destination (Archive) path — this harness only ever archives, so an
+    // active quest's videos are never touched. Videos stay on Redmine; local copies are space.
+    let videoState = { count: 0, bytes: 0 };
+    const pruneTarget = (folderState === 'moved' || folderState === 'already-archived') ? dst : null;
+    if (pruneTarget && fs.existsSync(pruneTarget)) {
+        videoState = pruneVideos(pruneTarget, { dryRun });
+        console.log(`  ${dryRun ? '[dry] Step 1.5: would prune' : '✓ Step 1.5: pruned'} ${videoState.count} video(s), ${fmtMB(videoState.bytes)}`);
+    } else {
+        console.log(`  ⬜ Step 1.5: no archived folder to prune videos from`);
     }
 
     // ── Step 2: move project subfolder (if exists) ────────────────────────
@@ -283,7 +333,8 @@ function main() {
     const blockIcon   = blockState === 'archived' ? '✓' : blockState === 'already-archived' ? '✓ (was already)' : blockState === 'dry' ? '[dry]' : '⬜';
     const projectIcon = projectState === 'moved' ? '✓' : projectState === 'already-archived' ? '✓ (was already)' : projectState === 'dry' ? '[dry]' : '⬜ no-project-subfolder';
     const bountyIcon  = bountyState === 'harvested' ? '✓' : bountyState === 'stub' ? '⚠ stub' : bountyState === 'skip-no-op' ? '⏭' : bountyState === 'dry' ? '[dry]' : bountyState === 'error' ? '❌' : '⬜';
-    console.log(`\n📦 Archive hygiene — ${qa}: folder→Archive\\ ${folderIcon} · active.txt block→active-archive.txt ${blockIcon} · project subfolder ${projectIcon} · bounty log ${bountyIcon}\n`);
+    const videoIcon = dryRun ? `[dry] would prune ${videoState.count}` : `pruned ${videoState.count} (${fmtMB(videoState.bytes)})`;
+    console.log(`\n📦 Archive hygiene — ${qa}: folder→Archive\\ ${folderIcon} · active.txt block→active-archive.txt ${blockIcon} · project subfolder ${projectIcon} · videos ${videoIcon} · bounty log ${bountyIcon}\n`);
 }
 
 main();

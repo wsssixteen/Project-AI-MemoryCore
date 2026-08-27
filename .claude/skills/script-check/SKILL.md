@@ -26,6 +26,7 @@ NO SQL MUTATION IS HANDED TO みや UNTIL ALL 5 SCRIPT-CHECK RULES ARE ANSWERED 
 | 5 | **🚨 Display-column verification** | if the patch fixes what a user SEES, confirm WHICH column the UI/report renders BEFORE writing — reference rows carry sibling labels (`nama` AND `perihal`); patch the wrong one and nothing changes on screen |
 | 6 | **🚨 Schema-qualified + env-tagged** (Infra 2026-08-19) | every table carries its schema prefix (`et_main` PROD · `et_main_stg2` STG · `et_main_mlit` MLIT) AND the header names the env. Header format: `-- #<ticket> (ENV: <PROD\|STG\|MLIT> · <schema>): <short plain explanation, no jargon>`. Applies to any script HANDED OFF for execution (Infra/PROD). Supersedes the unqualified default, which stays ONLY for queries みや runs himself in his own MCP-connected session |
 | 7 | **🚨 File placement + name** (みや 2026-08-19) | the script file is named `patch-<ticket>.sql` and lives in the Task folder's `2. Fix\` — or the LATEST `Rework` folder when one exists (a rework supersedes `2. Fix\`). Never at the Task-folder root |
+| 8 | **🚨 Generator-state disclosure** (みや 2026-08-26, #273461 deep-audit) | if the patch RELEASES a system-generated identifier (nulls a `no_*` column, deletes rows keyed by a `no_*` value, or reassigns a running number): answer "WHERE is this value born, and WHAT remembers how far the sequence advanced?" The generator is a separate counter linked by a convention-built key, NOT a shared column (`sis_no_turutan` kod `01BRG_4AE2026`) — an FK/column-name sweep can NEVER find it. State its disposition in the script: `-- generator: <table> kod '<key>' left untouched — gap permanent & expected`, or the rollback + collision analysis (live numbers above the target make rollback unsafe). Bypass when no generator exists: `[skip-generator-check: <why>]` |
 
 ## Rule 5 — the one that just bit us (QA-275009, 2026-08-18)
 
@@ -47,7 +48,7 @@ Patched `ind_tgsn.nama = 'Semakan Minit Bebas'`; the Sejarah Tugasan grid reads 
 
 ## Emit before the script
 
-`SCRIPT-CHECK — rule 1 ✓ · rule 2 <✓|⏭ ref> · rule 3 ✓ · rule 4 ✓ · rule 5 <display col = `<col>`, verified via <grep/DB-match>> · rule 6 <ENV: <PROD|STG|MLIT> · schema `<et_main|et_main_stg2|et_main_mlit>` in header + every table>`
+`SCRIPT-CHECK — rule 1 ✓ · rule 2 <✓|⏭ ref> · rule 3 ✓ · rule 4 ✓ · rule 5 <display col = `<col>`, verified via <grep/DB-match>> · rule 6 <ENV: <PROD|STG|MLIT> · schema `<et_main|et_main_stg2|et_main_mlit>` in header + every table> · rule 8 <generator: <table+key+disposition> | ⏭ no generated id>`
 
 ## Hook pairing
 
@@ -58,3 +59,5 @@ Patched `ind_tgsn.nama = 'Semakan Minit Bebas'`; the Sejarah Tugasan grid reads 
 *Created 2026-08-18 per みや (goal: "learn so we don't repeat the wrong-column patch; give the script code-check a standard name"). Names the SCRIPT-CHECK discipline; promotes patch-script-gate from hook-only to hook+skill.*
 
 *v2 — 2026-08-19 per みや (Infra feedback #275501): added rule 6 — schema-qualified tables + env-tagged header (`-- #<ticket> (ENV: PROD|STG|MLIT · <schema>): …`) for any script handed off for execution; the unqualified default now applies ONLY to queries みや runs himself. Spec-preservation: rules 1-5 untouched; additive.*
+
+*v3 — 2026-08-26 per みや (#273461 deep-audit — the sis_no_turutan miss): added rule 8 — generator-state disclosure for any patch releasing a system-generated identifier; the counter behind a running number links by convention-built key, not a shared column, so FK/column-name sweeps are structurally blind to it. Enforced by patch-script-gate CHECK 6 (eval 27/27). Spec-preservation: rules 1-7 untouched; additive.*

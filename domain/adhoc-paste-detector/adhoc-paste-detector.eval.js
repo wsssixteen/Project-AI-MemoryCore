@@ -70,6 +70,21 @@ const cases = [
     want: [], notWant: ['adhoc-paste-detector'] },
   { id: 'P6 bypass honoured', prompt: PASTE + '\n[skip-adhoc-paste: already scaffolded]',
     want: [], notWant: ['adhoc-paste-detector'] },
+  // ── WIDENED 2026-08-26 (miya): freeform BA relay — the exact miss that motivated the widening ──
+  { id: 'P8 freeform PDTJ relay (2026-08-26 slip replay) FIRES despite related-ticket mention', prompt: [
+      'PDTJ', '', 'Hi team, mohon semak', '', 'nurhafizah@melaka.gov.my', 'PTMLK/02/L/PT/2026/1',
+      'related tiket eSOKONGAN #274318', '',
+      'User pergi ke Menu Pelupusan > Kemaskini Ulasan Jabatan Teknikal / JPPH > User Maklum hanya papar 5 Jabatan Teknikal sahaja, sepatutnya papar 7',
+    ].join('\n'),
+    want: ['adhoc-paste-detector', 'MANDATORY scaffold', 'ADHOC-PT', 'id_pengenalan'], notWant: [] },
+  { id: 'P9 office code alone (no permohonan-id) is SILENT', prompt: 'PDTJ ada tanya pasal isu papar senarai semalam',
+    want: [], notWant: ['adhoc-paste-detector'] },
+  { id: 'P10 freeform relay with OWNING ticket number is SILENT', prompt:
+      'PDTMT mohon semak isu ini QA 276999\nPTMLK/01/L/PRBB/2026/9\nsurat tidak papar',
+    want: [], notWant: ['adhoc-paste-detector'] },
+  { id: 'P11 permohonan-id + issue words, no office code, FIRES', prompt:
+      'boleh check kenapa PTMLK/03/L/MCL/2026/12 tak boleh proceed? ralat keluar',
+    want: ['adhoc-paste-detector', 'ADHOC-MCL'], notWant: [] },
 ];
 
 for (const c of cases) {

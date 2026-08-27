@@ -184,7 +184,7 @@ CREATE TABLE umm_aplikasi (
  hubungan_notis_id numeric(19) NULL, -- FK → umm_aplikasi(aplikasi_id)
  no_fail varchar(100) NULL,
  no_rujukan_fail varchar(150) NULL,
- id_pengenalan varchar(50) NULL, -- Application reference number
+ id_pengenalan varchar(50) NULL, -- 🚨 THE BA-quoted permohonan reference (PTMLK/02/L/PT/2026/1) — see recipe below
  status_keputusan varchar(150) NOT NULL,
  status_proses varchar(150) NOT NULL,
  status_awam varchar(255) NULL,
@@ -204,6 +204,26 @@ FROM umm_aplikasi a
 JOIN ind_ursn u ON u.ursn_id = a.ursn_id
 WHERE u.kod = 'BPRZ';
 ```
+
+#### 🚨 Recipe: BA-quoted permohonan reference → `aplikasi_id` (verified PROD/stg2/mlit 2026-08-26)
+
+The reference a BA quotes (`PTMLK/02/L/PT/2026/1`) lives in **`umm_aplikasi.id_pengenalan`** — ONE query:
+
+```sql
+SELECT aplikasi_id, id_pengenalan, status_proses, ursn_id
+FROM umm_aplikasi
+WHERE id_pengenalan = 'PTMLK/02/L/PT/2026/1';
+-- → aplikasi_id 3386051 (same id on PROD / stg2 / mlit for migrated apps)
+```
+
+| Trap | Truth |
+|---|---|
+| `umm_p_aplikasi.no_rujukan_permohonan` looks like the ref column | **Often EMPTY** for pelupusan (verified: PT app 3432839 blank; only stray KPM/KPG rows carry it). NOT the lookup column. |
+| `umm_p_aplikasi.id_transaksi` | Holds the SPOC/payment transaction id (`02PT2026000027`) — a different identifier, not the BA reference |
+| Numeric refs like `0402DIS2025000170` | PROD DIS/CON-era ids — those DO appear in `no_rujukan_permohonan`/`id_pengenalan` depending on era; try `id_pengenalan` FIRST |
+| "Column must be on the P-side because permohonan" | The spine `umm_aplikasi` owns the identity; `umm_p_aplikasi` is the perserahan wrapper |
+
+**Discipline**: before concluding a reference "does not exist on this env", test the pattern against a KNOWN-positive app (e.g. any recent app from `umm_a_tgsn`) to prove you're reading the right column — a 2026-08-26 session burned ~10 queries concluding "wrong env" while reading the wrong column.
 
 ### 4.2 `ind_ursn` — Urusan/Transaction Type Master
 

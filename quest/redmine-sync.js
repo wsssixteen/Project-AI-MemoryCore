@@ -12,8 +12,30 @@ const { execFileSync } = require('child_process');
 
 const REDMINE_BASE  = 'http://172.16.90.169/redmine';
 const REDMINE_KEY   = '9565c21aa6cd9672fd3c7c2c7fec4c934c2f7c66';
-const TASKS_FOLDER  = require('path').join(require('os').homedir(), 'OneDrive - Pymsoft Sdn Bhd', '1. Tasks', 'Melaka'); // machine-independent (GHOST-HOOKS-2 fix 2026-07-19)
+const TASKS_ROOT    = require('path').join(require('os').homedir(), 'OneDrive - Pymsoft Sdn Bhd', '1. Tasks'); // machine-independent (GHOST-HOOKS-2 fix 2026-07-19)
+const TASKS_FOLDER  = require('path').join(TASKS_ROOT, 'Melaka'); // default state — unchanged for Melaka
 const POLL_INTERVAL_MINUTES = 15;
+
+// State routing (2026-08-26, miya — first Perak ticket #275092): a ticket's STATE lives in
+// issue.project.name, never the tracker. Perak/Selangor tickets must land in their own
+// sibling folder, not Melaka\. Default stays Melaka so every existing Melaka path is unchanged.
+// Patterns from the live Redmine project census (305 projects, 2026-08-26): each state appears
+// as "eSOKONGAN <STATE>", "e-Tanah <State>[ FAT/PAT/UAT]", "eTanah <State>", and module
+// projects prefixed "<ABBR>_NN_" (PRK_/KED_/TRG_/MLK_). Melaka + plain "eSOKONGAN" = default.
+const STATE_FOLDERS = [
+    { match: /perak|^PRK_/i,      folder: 'Perak' },
+    { match: /selangor|^SEL_/i,   folder: 'Selangor' },
+    { match: /terengganu|^TRG_/i, folder: 'Terengganu' },
+    { match: /kedah|^KED_/i,      folder: 'Kedah' },
+    { match: /labuan/i,           folder: 'Labuan' },
+    { match: /putrajaya/i,        folder: 'Putrajaya' },
+    { match: /pulau pinang/i,     folder: 'PulauPinang' },
+];
+function taskBaseFor(issue) {
+    const proj = (issue && issue.project && issue.project.name) || '';
+    const hit = STATE_FOLDERS.find(s => s.match.test(proj));
+    return hit ? path.join(TASKS_ROOT, hit.folder) : TASKS_FOLDER;
+}
 
 // Known env prefixes — order matters (longer matches first)
 const TICKET_PREFIXES = ['FAT-OR', 'UAT-CR', 'FAT-CR', 'FAT', 'UAT', 'CR', 'QA'];
@@ -66,6 +88,30 @@ function fetchIssues() {
     });
 }
 
+// Single-issue fetch (2026-08-26, retrieval audit): `node quest/redmine-sync.js <num>` is the
+// command retrieve-sync-gate mandates, yet the number was silently IGNORED — only --poll/--create
+// were parsed, and the assigned-to-me list is the only source. A ticket that left the assigned
+// list (#275092: resolved+reassigned 3 min after first sync) was unretrievable. By-ID fetch works
+// regardless of current assignee — naming the ticket explicitly IS the authorization.
+function fetchSingleIssue(id) {
+    return new Promise((resolve, reject) => {
+        const options = {
+            hostname: '172.16.90.169',
+            path: `/redmine/issues/${id}.json`,
+            headers: { 'X-Redmine-API-Key': REDMINE_KEY }
+        };
+        http.get(options, res => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+                if (res.statusCode !== 200) { reject(new Error(`Redmine returned ${res.statusCode} for #${id}`)); return; }
+                try { resolve(JSON.parse(data).issue || null); }
+                catch (e) { reject(new Error('Failed to parse Redmine response')); }
+            });
+        }).on('error', reject);
+    });
+}
+
 // ─── TICKET PARSING ──────────────────────────────────────────────────────────
 
 function parseTicketId(issue) {
@@ -99,39 +145,60 @@ function sanitize(str, cap) {
     return truncated.replace(/[. ]+$/, '');
 }
 
+// Ticket-type abbreviation (2026-08-24, miya): folder names carry a short type code so many
+// open tickets are searchable at a glance. Any `(BRACKET)` on the tracker name (e.g.
+// "INTERNAL ISSUE (PROD)") is moved to the END of the whole folder name, not kept in the head.
+const TYPE_ABBR = {
+    'ESOKONGAN':      'ES',
+    'INTERNAL ISSUE': 'II',
+    'ADHOC':          'AH',
+    'DATA PATCHING':  'DP',
+    'REQUIREMENT':    'RQ',
+};
+function abbreviateType(trackerName) {
+    const raw = (trackerName || 'UNKNOWN').toUpperCase().trim();
+    const bm  = raw.match(/^(.*?)\s*(\([^)]*\))\s*$/);
+    const base = (bm ? bm[1] : raw).trim();
+    const bracket = bm ? bm[2] : '';
+    return { abbr: TYPE_ABBR[base] || base, bracket };
+}
+
 function buildFolderSlug(issue, parsed) {
     const f = parseDescriptionFields(issue.description);
+    const { abbr, bracket } = abbreviateType(parsed.prefix);
+    const head = `${abbr} #${parsed.number}`;
+    const tail = bracket ? ` ${bracket}` : '';
 
     if (f.urusan && f.tugasan && f.issue) {
         // ENV from description (e.g. "MLK FAT" → take last word "FAT") or subject first segment
         const env = f.env ? f.env.split(/\s+/).pop() : issue.subject.split(' - ')[0].trim();
         return [
-            `${parsed.prefix} #${parsed.number}`,
+            head,
             sanitize(env, 10),
             sanitize(f.urusan, 40),
             sanitize(f.tugasan, 30),
             sanitize(f.issue, 50),
-        ].filter(Boolean).join(' - ');
+        ].filter(Boolean).join(' - ') + tail;
     }
 
     // Fallback: use subject
-    return `${parsed.prefix} #${parsed.number} - ${sanitize(issue.subject, 70)}`;
+    return `${head} - ${sanitize(issue.subject, 70)}${tail}`;
 }
 
 // ─── TASK FOLDER CHECK ───────────────────────────────────────────────────────
 
-function findExistingFolder(prefix, number) {
-    if (!fs.existsSync(TASKS_FOLDER)) return null;
+function findExistingFolder(prefix, number, base = TASKS_FOLDER) {
+    if (!fs.existsSync(base)) return null;
     const idTarget = `#${number}`;
 
     // Check active folder
-    const active = fs.readdirSync(TASKS_FOLDER).find(e => e.includes(idTarget));
+    const active = fs.readdirSync(base).find(e => e.includes(idTarget));
     if (active) return active;
 
     // Check Archive subfolder (added 2026-05-12 — closed tickets relocated here at Phase 2)
     // Returns 'Archive/<folderName>' so callers see the actual on-disk location and don't
     // mistake an archived ticket for a brand-new one (which would re-create + duplicate).
-    const archivePath = path.join(TASKS_FOLDER, 'Archive');
+    const archivePath = path.join(base, 'Archive');
     if (fs.existsSync(archivePath)) {
         const archived = fs.readdirSync(archivePath).find(e => e.includes(idTarget));
         if (archived) return path.join('Archive', archived);
@@ -140,12 +207,12 @@ function findExistingFolder(prefix, number) {
     return null;
 }
 
-function getNextFolderNumber() {
-    if (!fs.existsSync(TASKS_FOLDER)) return 1;
-    const entries = fs.readdirSync(TASKS_FOLDER);
+function getNextFolderNumber(base = TASKS_FOLDER) {
+    if (!fs.existsSync(base)) return 1;
+    const entries = fs.readdirSync(base);
     // Archived tickets keep their numbers — increment from the highest across active + Archive,
     // else an emptied active folder restarts at 1 and collides with archived #1. (Mirrors findExistingFolder.)
-    const archivePath = path.join(TASKS_FOLDER, 'Archive');
+    const archivePath = path.join(base, 'Archive');
     if (fs.existsSync(archivePath)) {
         entries.push(...fs.readdirSync(archivePath));
     }
@@ -333,7 +400,7 @@ function writeHistoryFile(briefFolder, journals, issueMeta) {
 
 async function updateExistingTicketHistory(issue) {
     if (!issue._existing) return 0;
-    const briefFolder = path.join(TASKS_FOLDER, issue._existing, '0. Brief');
+    const briefFolder = path.join(taskBaseFor(issue), issue._existing, '0. Brief');
     if (!fs.existsSync(briefFolder)) return 0;
     const journals = await fetchIssueJournals(issue.id);
     writeHistoryFile(briefFolder, journals, {
@@ -349,14 +416,14 @@ async function updateExistingTicketHistory(issue) {
 // ─── TASK FOLDER CREATION ────────────────────────────────────────────────────
 
 async function createTaskFolder(issue, parsed) {
-    const num    = getNextFolderNumber();
+    const base   = taskBaseFor(issue);
+    const num    = getNextFolderNumber(base);
     const slug   = buildFolderSlug(issue, parsed);
-    const folder = path.join(TASKS_FOLDER, `${num}. ${slug}`);
+    const folder = path.join(base, `${num}. ${slug}`);
 
-    // Base structure — always 3 folders + blank Notes file
-    fs.mkdirSync(path.join(folder, '0. Brief'),    { recursive: true });
-    fs.mkdirSync(path.join(folder, '1. Simulate'), { recursive: true });
-    fs.mkdirSync(path.join(folder, '2. Fix'),      { recursive: true });
+    // Base structure — 0. Brief + 2. Fix + blank Notes file (1. Simulate retired 2026-08-24, miya)
+    fs.mkdirSync(path.join(folder, '0. Brief'), { recursive: true });
+    fs.mkdirSync(path.join(folder, '2. Fix'),   { recursive: true });
     // Notes file is named per-ticket — `1. NNN NNN.txt` (renamed 2026-05-31 from `1. Notes.txt`,
     // adjusted same day from `1. QA-NNNN.txt` per みや → drop tracker prefix, space before last 3
     // digits so the last-3 are quickly identifiable across many open tabs/greps).
@@ -420,6 +487,9 @@ function appendActiveBlock(issue, parsed, taskFolderAbs, assignedDate) {
     if (assignedDate) fields.push(`assigned_to_me=${assignedDate}`);
     if (f.urusan)  fields.push(`urusan=${f.urusan}`);
     if (f.tugasan) fields.push(`tugasan=${f.tugasan}`);
+    // Non-Melaka tickets carry an explicit state= field (2026-08-26, first Perak ticket).
+    const stateHit = STATE_FOLDERS.find(s => s.match.test((issue.project && issue.project.name) || ''));
+    if (stateHit) fields.push(`state=${stateHit.folder}`);
     try {
         const cliPath = path.join(__dirname, 'active-cli.js');
         const out = execFileSync('node', [cliPath, 'start', `QA-${parsed.number}`, ...fields], { encoding: 'utf8' });
@@ -452,15 +522,15 @@ function appendActiveBlock(issue, parsed, taskFolderAbs, assignedDate) {
 // Move a Task folder OUT of Archive/ back to the active level with a new
 // number — fires when a previously-closed ticket is reopened to Rework.
 // Returns the new folder NAME (relative to TASKS_FOLDER), or null if no move.
-function unarchiveFolder(archiveRelPath) {
-    const oldPath = path.join(TASKS_FOLDER, archiveRelPath);
+function unarchiveFolder(archiveRelPath, base = TASKS_FOLDER) {
+    const oldPath = path.join(base, archiveRelPath);
     if (!fs.existsSync(oldPath)) return null;
     const baseName = path.basename(archiveRelPath);
     const slugMatch = baseName.match(/^\d+\.\s*(.+)$/);
     const slug = slugMatch ? slugMatch[1] : baseName;
-    const newNum = getNextFolderNumber();
+    const newNum = getNextFolderNumber(base);
     const newFolderName = `${newNum}. ${slug}`;
-    const newPath = path.join(TASKS_FOLDER, newFolderName);
+    const newPath = path.join(base, newFolderName);
     fs.renameSync(oldPath, newPath);
     return newFolderName;
 }
@@ -490,7 +560,7 @@ async function downloadNewAttachments(destFolder, issueId, knownFilenames) {
 //      Rework-because-BA-found-new-issue — みや renames to "New" manually if BA's
 //      journal note indicates a different issue).
 // Returns: { folderRelPath, unarchived, statusFolderPath } or null.
-async function addStatusFolder(existingFolderName, status, journals) {
+async function addStatusFolder(existingFolderName, status, journals, base = TASKS_FOLDER) {
     // Loose match — the Redmine status cell carries DESCRIPTIVE labels
     // ("Rework (Requirement Update)", "Rework (Bug)"), not the bare word "rework".
     // The old `!== 'rework'` equality rejected every descriptive label, so a reopened
@@ -502,13 +572,13 @@ async function addStatusFolder(existingFolderName, status, journals) {
     let folderRelPath = existingFolderName;
     let unarchived = false;
     if (existingFolderName.startsWith('Archive')) {
-        const newName = unarchiveFolder(existingFolderName);
+        const newName = unarchiveFolder(existingFolderName, base);
         if (!newName) return null;
         folderRelPath = newName;
         unarchived = true;
     }
 
-    const fullPath = path.join(TASKS_FOLDER, folderRelPath);
+    const fullPath = path.join(base, folderRelPath);
     if (!fs.existsSync(fullPath)) return null;
 
     // (2) Create ONE rework cycle folder per reactivation, idempotently.
@@ -549,7 +619,7 @@ function classifyIssues(issues) {
             continue;
         }
 
-        const existing = findExistingFolder(parsed.prefix, parsed.number);
+        const existing = findExistingFolder(parsed.prefix, parsed.number, taskBaseFor(issue));
         const isRework = /rework/i.test(issue.subject);
 
         issue._parsed   = parsed;
@@ -615,7 +685,7 @@ async function reactivateReworkFolders(results) {
     for (const issue of results.rework) {
         if (!issue._existing) continue;
         const journals = await fetchIssueJournals(issue.id);
-        const result = await addStatusFolder(issue._existing, issue._status, journals);
+        const result = await addStatusFolder(issue._existing, issue._status, journals, taskBaseFor(issue));
         if (result && result.unarchived) {
             console.log(`  ↩️  Unarchived: ${issue._existing} → ${result.folderRelPath}`);
             issue._existing = result.folderRelPath;
@@ -646,7 +716,7 @@ async function syncJournalsForExisting(results) {
 async function syncAttachmentsForExisting(results) {
     for (const issue of results.rework) {
         if (!issue._existing) continue;
-        const ticketFullPath = path.join(TASKS_FOLDER, issue._existing);
+        const ticketFullPath = path.join(taskBaseFor(issue), issue._existing);
         if (!fs.existsSync(ticketFullPath)) continue;
         const entries = fs.readdirSync(ticketFullPath);
         const reworkEntries = entries
@@ -727,7 +797,7 @@ async function runWithCreate() {
             // Fetch journals BEFORE addStatusFolder so the v5 logic can count
             // Rework transitions and decide whether to add a new subfolder.
             const journals = await fetchIssueJournals(issue.id);
-            const result = await addStatusFolder(issue._existing, issue._status, journals);
+            const result = await addStatusFolder(issue._existing, issue._status, journals, taskBaseFor(issue));
             // v7 (2026-08-05): do NOT `continue` on a null result. addStatusFolder returns
             // null whenever it decides no new subfolder is needed — which is the NORMAL case
             // on a re-sync. The old `if (!result) continue;` skipped the attachment pass
@@ -755,7 +825,7 @@ async function runWithCreate() {
             // running it on every existing ticket, and the cost of NOT running it is briefing
             // みや on evidence nobody has seen.
             {
-                const ticketFullPath = path.join(TASKS_FOLDER, issue._existing);
+                const ticketFullPath = path.join(taskBaseFor(issue), issue._existing);
                 if (fs.existsSync(ticketFullPath)) {
                     // Find the LATEST `N. Rework` (or `N. New`) subfolder — the active cycle's home.
                     const entries = fs.readdirSync(ticketFullPath);
@@ -796,11 +866,47 @@ async function runWithCreate() {
     }
 }
 
+// By-ID sync: fetch ONE ticket regardless of assignment, create its folder if new,
+// refresh journals/attachments/rework state if existing. Always creates (an explicitly
+// named ticket is an explicit retrieval — no --create needed).
+async function runSingle(id) {
+    try {
+        const issue = await fetchSingleIssue(id);
+        if (!issue) { console.log(`  ❌ #${id} not found on Redmine`); return; }
+        await enrichWithHtmlStatus([issue]);
+        const results = classifyIssues([issue]);
+        printReport(results);
+        console.log(`  👤 Assigned to: ${issue.assigned_to?.name || '(nobody)'} | Project: ${issue.project?.name || '?'} → ${path.basename(taskBaseFor(issue))}\\`);
+        for (const it of results.new) {
+            const folder = await createTaskFolder(it, it._parsed);
+            console.log(`  📁 Created: ${folder}`);
+            const journals = await fetchIssueJournals(it.id);
+            const assignedDate = extractAssignedToMeDate(journals, it);
+            appendActiveBlock(it, it._parsed, folder, assignedDate);
+            if (journals.length) {
+                writeHistoryFile(path.join(folder, '0. Brief'), journals, {
+                    prefix: it._parsed.prefix, number: it._parsed.number,
+                    subject: it.subject, status: it._status, updated_on: it.updated_on,
+                });
+                console.log(`    📝 History.txt → ${journals.length} journal ${journals.length === 1 ? 'entry' : 'entries'}`);
+            }
+        }
+        await reactivateReworkFolders(results);
+        await syncJournalsForExisting(results);
+        await syncAttachmentsForExisting(results);
+    } catch (err) {
+        console.error(`\n  ❌ Error: ${err.message}\n`);
+    }
+}
+
 const args   = process.argv.slice(2);
 const poll   = args.includes('--poll');
 const create = args.includes('--create');
+const idArg  = args.find(a => /^#?\d+$/.test(a));
 
-if (poll) {
+if (idArg) {
+    runSingle(idArg.replace(/^#/, ''));
+} else if (poll) {
     console.log(`  Polling every ${POLL_INTERVAL_MINUTES} min. Ctrl+C to stop.\n`);
     const fn = create ? runWithCreate : run;
     fn();

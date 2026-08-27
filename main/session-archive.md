@@ -4,6 +4,55 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session 2026-08-26 — ADHOC-PT-2026-5 (JKR jabatan-teknikal) + adhoc-paste-detector widening
+
+**Last Activity**: 2026-08-26 14:05
+
+**What happened**: PDTJ relay (nurhafizah@melaka.gov.my) — PROD PT `PTMLK/02/L/PT/2026/1` (aplikasi **3386051**), Utiliti Kemaskini Ulasan JT/JPPH grid papar 5 jabatan, sepatutnya 7 (JKR+JPPH). Diagnosed → JKR app-row deleted (hard delete, no DB trace); JPPH excluded by design. Patch ready (INSERT JKRNM), PROD → infra, awaiting Redmine #.
+
+**Rough session** (miya heavy frustration): answered a simple DATA-QUESTION with code-trace-first; wrong column assumption (`umm_p_aplikasi.no_rujukan_permohonan` → empty for PT) instead of `umm_aplikasi.id_pengenalan`; ~10 blind schema queries + false "wrong env / record doesn't exist" before resolving aplikasi_id. Root: never loaded DATABASE.md at intake because the adhoc detection hook (asked 2026-08-13) was built labelled-fields-only and never fired on the freeform PDTJ relay.
+
+**Fixed this session**:
+- `domain/adhoc-paste-detector` WIDENED — freeform path (office-code/permohonan-id + issue words); related-ticket # no longer aborts; scaffold step 0 forces ADHOC-TRIAGE + DATABASE.md load. Eval 11/11 green x5.
+- `etanah-knowledge/melaka/DATABASE.md` §4.1 — BA-ref → aplikasi_id recipe (`id_pengenalan`, NOT `no_rujukan_permohonan`) + trap table + known-positive discipline.
+- `etanah-knowledge/melaka/ADHOC-TRIAGE.md` — NEW 11-class adhoc intake ruleset (DATA-QUESTION / DATA-PATCH / DIAGNOSIS / CODE-CHECK / FLOW-RECOVERY / ...) + 5 cross-cutting rules; registered in index.md.
+- 2 slips ledgered: assume-not-verify + build-missed-requirement.
+- Memory: `feedback_data_question_db_first.md` (saved earlier this session).
+
+**Resume point**: ADHOC-PT-2026-5 diagnosed + PROD-proven + patch script-checked in Task 163 `2. Fix\patch-ADHOC-PT-2026-5.sql`. Owed: Redmine # → rename `patch-<ticket>.sql`, send infra format, apply on PROD. Register row A20.
+
+## 2026-08-20 (night-2) — #276504 root-cause + OUR fill-only fix on top of Alex → int-env (deploy re-run pending)
+
+**Recap**: miya asked me to root-cause #276504 (HASIL "Error during generate receipt", Critical PERMANENT FIX). Full context loaded (Description stack trace + 9 journal entries + rework video `276504_REWORK - MLIT.mp4` + DB).
+
+**Root cause (VERIFIED)**: PPTPB stores maklumat tanah in `umm_p_permohonan_tnh`; `umm_p_hkmlk` is a title-link row whose `bandar_dipohon_id` was never populated → HASIL `PerserahanService.populateAplikasi():6605` reads `PraHakmilik.getBandarPekanMukim().getKod()` → NPE. DB timeline: pre-08-20 PPTPB apps `bandar_dipohon_id`=NULL (v1); 08-20 apps set (v2). Regression Anis saw (maklumat hilang on re-save) = eMohon PPTPB reload reads bandar/daerah from title, seksyen/luasDipohon not from ppt — display/round-trip, data intact in `umm_p_permohonan_tnh`.
+
+**OUR fix (better than Alex's, built ON TOP — his kept)**: new `fillPraHakmilikBandarFromHakmilik` in `etanah-awam PelupusanService.java` — fill-only (never overwrites/creates orphan; all title rows; sourced from title `getHakmilik().getBandar()`), called from `saveMaklumatLesenPLPS` (eMohon path Alex's call misses). Alex's `syncBandarPekanMukimIntoPraHakmilik` untouched. Fill-only ⇒ structurally cannot cause the disappearing-data regression. Compiled green (branch + int-env).
+
+**Git**: base `mlk/internal/276504` off Alex commit `5351a7c31f` → our commit `7c01808ae2` → pushed. Cherry-picked our commit onto `mlk/int-env` → `e4eeafedd6` (full merge dragged master↔int-env divergence into conflict; cherry-pick clean). Deploy script → `1. Tasks\Melaka\164…\2. Fix\deploy-276504-internal.txt`. **Deploy attempt hit the transient `index-pack` clone failure (deploy skill §7) — re-run pending; NOT our change (build never compiled, 0.040s no-POM).**
+
+**Rough session — 3 corrections banked**: (1) branch naming — INTERNAL ISSUE → `mlk/internal/<num>`, NEVER invent a suffix (`-permfix`) or abbreviation; (2) do NOT replace a colleague's fix — build on his commit; (3) commit-gate/compile-gate read the WORKTREE's stale `active.txt`/`.claude/state`, not the main-repo live one → resolved to wrong ticket (QA-274740). Improvement proposal logged.
+
+**Resume point**: after miya re-runs the deploy on MLIT, do a fresh eMohon PPTPB save → I verify `umm_p_hkmlk.bandar_dipohon_id` non-null (I hold mlit MCP). Then Redmine planned-release list (int-env never reaches master).
+
+- 2026-08-24 post-DE hotfix: miya-reported bug — Tables view visible on EVERY main tab. Root: `#view-search{display:flex}` (ID specificity) beat `.view.hidden` (class-only; its !important twin lived only in @media print). Fix: `.view.hidden` added to the hard-override !important list (src/style.css:356) — the one selector missing from the 2026-08-22 overlay-lesson list. Mechanism: ship_check now renders all 4 tabs headless with a ?shipcheck=1 pixel barcode (green=visible/red=hidden, PIL-sampled) — dump-dom emits nothing in this Edge build; negative fixture proven (broken CSS -> RRGG FAIL). build.py non-ASCII prints fixed (cp1252 crash). Ship-check PASS; 4 clean tab screenshots delivered.
+
+## 2026-08-24 — Baseline 1.3.6 + release-gate hardening (/goal)
+
+**Release 1.3.6 (BAQA 24/8)**: 7 tickets; merged 276422/275505(carries 276181)/276182/275539+275539v2; common 1.1.17→1.3.13-MLK (domain 1.0.6 = stg2 V_DOMAIN, --domain-ack); version 1.3.5→1.3.6. 🚨 SLIP: pushed 08fc1f6795 with v1-only 275539 — miya caught the missed mlk/training/275539v2 (+PelupusanExcelReaderHelper.java +48). Fixed: merged v2, re-pushed d85add1ec3, postcheck green. miya deployed. Sheet: common 1.3.13-MLK · module 1.3.6 · SQL empty. V8 merge-to-master PENDING BAQA sign-off.
+
+**/goal hardening (miya not yet convinced — evidence pending 200-run eval)**:
+- 20-scenario appraisal: 8 gated · 5 built · 4 strengthened · 1 manual (split-footprint no-suffix).
+- verify-gates.js: single module (containment · sibling-sweep · revert-scan · owner-aware drop-scan · noop-branch · pom-common · stowaway-refs) used by verify + NEW postcheck (AFTER-audit vs origin + tip-pin) + evals.
+- eval-merge-scenarios.js: 10 failure types fabricated in synthetic bare-origin+clone repos; shakeout found + fixed naive drop-scan blind spot (wholesale-side conflict drop); 20/20 shakeout; 200-run in flight.
+- sibling-sweep.test.js: real-repo regression pin (replays the actual 08fc1f6795 miss) 3/3.
+- Contract eval 26/26 (T9 caught my parent-version regex bug — fixed).
+- knownTickets state field: approved branchless tickets (276181/274318/276549) ≠ stowaways.
+- Commits: 9767b87 · 71b50cb · e9cebf3 · 64f1be6 · 34fafa1. Memory: feedback_recheck_at_last_checkpoint.
+- Deploy-skill audit: main gap = no mechanical harness (deploy-prep.js) — parked for nod; v2-class already covered by its ls-remote-all-matches rule.
+
+Slips logged: working-analog (v2 miss) · deferred-deliverable (20-scenario /goal swept).
+
 ## 2026-08-23 — Ticket-preparedness build (worktree etanah-eplupusan-review, /goal session)
 - Plan nodded: prepare against tickets via precedent + latent-bug pipeline, no-waste law (every artifact = forced FEEDER + forced CONSUMER).
 - BUILT: `domain/urusan-tickets/` (Redmine → 16 per-urusan precedent docs at etanah-knowledge/melaka/urusan/, 166 tickets, 143 classified) · `domain/latent-bugs-gate/` (forge-born, eval 13/13, injects LATENT-BUGS.md SUSPECT/VERIFIED rows at ticket signals) · `LATENT-BUGS.md` register (L1 = mlit PYSJT/PSJT stale seed, VERIFIED) · ticket-gate rows 1c (urusan precedent) + 1d (test-data lookup first) · quest-bounty Step 3 register-checks (feeder) · TEST-PERMOHONAN-INDEX env legend fixed (UAT/FAT decommissioned).
@@ -4457,6 +4506,8 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
+
 
 
 

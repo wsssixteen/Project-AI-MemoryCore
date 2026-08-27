@@ -28,9 +28,15 @@ function makeWorkspace({ qa, hasBounty, alsoArchived }) {
     fs.mkdirSync(path.join(root, 'quest'), { recursive: true });
     fs.mkdirSync(path.join(root, 'domain', 'quest-bounty'), { recursive: true });
 
-    // Copy the real scripts into the temp workspace (they resolve REPO_ROOT via __dirname/..)
-    fs.copyFileSync(REAL_ARCHIVE, path.join(root, 'quest', 'archive-quest.js'));
-    fs.copyFileSync(REAL_ACTIVE_CLI, path.join(root, 'quest', 'active-cli.js'));
+    // Copy the real scripts into the temp workspace (they resolve REPO_ROOT via __dirname/..).
+    // Copy EVERY non-eval quest/*.js so sibling requires resolve (active-cli now requires
+    // ./redmine-status-check — copying only 2 files broke the harness with MODULE_NOT_FOUND).
+    const realQuestDir = path.join(REPO_ROOT, 'quest');
+    for (const f of fs.readdirSync(realQuestDir)) {
+        if (f.endsWith('.js') && !f.endsWith('.eval.js')) {
+            fs.copyFileSync(path.join(realQuestDir, f), path.join(root, 'quest', f));
+        }
+    }
 
     // Fake Tasks root (avoids touching the real OneDrive folder)
     const tasksRoot = path.join(root, 'Tasks');
@@ -196,6 +202,28 @@ const tests = [
             return {
                 pass: r.exit === 3 && !!refusal && refusal.qa === 'QA-900008',
                 got: `exit=${r.exit} refusalLogged=${!!refusal}`,
+            };
+        },
+    },
+    {
+        name: '9. Video prune — .mp4 in Brief + Fix deleted, non-video kept, hygiene line reports pruned 2',
+        setup: () => makeWorkspace({ qa: 'QA-900009', hasBounty: true, alsoArchived: false }),
+        assert: (ws) => {
+            const brief = path.join(ws.taskFolderPath, '0. Brief');
+            const fix = path.join(ws.taskFolderPath, '2. Fix');
+            fs.mkdirSync(brief, { recursive: true });
+            fs.mkdirSync(fix, { recursive: true });
+            fs.writeFileSync(path.join(brief, 'demo.mp4'), 'x'.repeat(1000));
+            fs.writeFileSync(path.join(fix, 'evidence.MP4'), 'y'.repeat(2000)); // case-insensitive ext
+            fs.writeFileSync(path.join(brief, 'note.txt'), 'keep me');
+            const r = runArchive({ ...ws, qa: 'QA-900009' });
+            const archived = path.join(ws.tasksRoot, 'Archive', path.basename(ws.taskFolderPath));
+            const briefMp4 = fs.existsSync(path.join(archived, '0. Brief', 'demo.mp4'));
+            const fixMp4 = fs.existsSync(path.join(archived, '2. Fix', 'evidence.MP4'));
+            const txtKept = fs.existsSync(path.join(archived, '0. Brief', 'note.txt'));
+            return {
+                pass: r.exit === 0 && !briefMp4 && !fixMp4 && txtKept && /videos pruned 2/.test(r.stdout),
+                got: `exit=${r.exit} briefMp4=${briefMp4} fixMp4=${fixMp4} txtKept=${txtKept} line=${/videos pruned 2/.test(r.stdout)}`,
             };
         },
     },
