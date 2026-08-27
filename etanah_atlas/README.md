@@ -39,6 +39,11 @@ python build.py
 
 Output: `etanah_atlas_melaka.html` in this folder.
 
+### Requirements for the live-state builds
+
+- `python -m pip install psycopg2 oracledb cryptography` (Melaka's dump build needs none of these).
+- `oracledb` runs in THIN mode — no Oracle client install required.
+
 ## Multi-state (2026-08-27)
 
 Atlas is one build serving many states, each a self-contained HTML with a header
