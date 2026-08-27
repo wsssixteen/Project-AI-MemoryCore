@@ -12,7 +12,7 @@ live-DB path for the other states.
 import sys, argparse, pathlib
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE / "lib"))
-import pull_schema_live, make_state_mapping, build_dataset, assemble_html  # type: ignore
+import pull_schema_live, make_state_mapping, pull_census_live, build_dataset, assemble_html  # type: ignore
 
 
 def main():
@@ -28,6 +28,11 @@ def main():
         make_state_mapping.main(a.profile, a.label)
     else:
         print(f"[2/4] mapping.{a.profile}.json exists — kept")
+    print(f"[2b] pull_census_live    {a.profile}")
+    try:
+        pull_census_live.main(a.profile)
+    except Exception as e:
+        print(f"WARN: census skipped ({e}) — By-Urusan empty for this state")
     print(f"[3/4] build_dataset      {a.profile}")
     build_dataset.main(a.profile)
     print(f"[4/4] assemble_html      {a.profile}")

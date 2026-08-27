@@ -64,7 +64,10 @@ def main():
         if sw != N_STATES: verdict.append(f"switcher={sw}!={N_STATES}"); fails.append(pf)
         if pf != "melaka":
             if ub: verdict.append(f"LEAK used_by={ub}"); fails.append(pf)
-            if ur: verdict.append(f"LEAK urusans={ur}"); fails.append(pf)
+            # urusans>0 is fine IF they are this state's own live census (census_only);
+            # a Melaka-curated urusan (has stages/fork_evidence) on another state = leak
+            curated = [u for u in d.get("urusans", []) if u.get("stages") or u.get("fork_evidence")]
+            if curated: verdict.append(f"LEAK curated-urusan={len(curated)}"); fails.append(pf)
             lv, err = live_count(pf)
             if err: live = "SKIP"; verdict.append(f"skip:{err}")
             elif lv != ht: live = str(lv); verdict.append(f"COUNT {lv}!={ht}"); fails.append(pf)

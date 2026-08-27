@@ -1090,6 +1090,20 @@ function setupSearch() {
       return `<button class="ub-chip${dim}" data-open="${escapeAttr(t)}">${escapeHtml(t)}${badge}</button>`;
     }
     const parts = [];
+    // census-only urusan (live state, no curated stages): list its full tugasan census
+    // — every tugasan with peranan + screen count, each screen its xhtml + WAR.
+    if ((!u.stages || !u.stages.length) && !ct) {
+      const rows = censusTugasans(kod);
+      cntEl.textContent = `${rows.length} tugasan (live census)`;
+      wrap.innerHTML = `<div class="card ub-census">
+        <div class="ub-census-head">${escapeHtml(u.name || kod)} — ${rows.length} tugasan, live from this state's DB. Workflow stages/forks pending BPMN curation.</div>
+        ${rows.map(t => `<details class="ub-census-row"><summary><span class="uj-seq-kod">${escapeHtml(t.kod || "")}</span> ${escapeHtml(t.name || "")} <span class="uj-seq-per">${escapeHtml(t.peranan || "")}</span> <span class="tf-flow-n">${(t.screens||[]).length} skrin</span></summary>
+          ${(t.screens||[]).map(s => `<div class="ub-screen-row"><code>${escapeHtml((s.jsf||"").split("/").pop())}</code> <span class="ub-app">${escapeHtml(s.app || "etanah-common")}</span></div>`).join("") || '<div class="ub-screen-row"><em>no screen recorded</em></div>'}
+        </details>`).join("")}
+      </div>`;
+      wrap.querySelectorAll(".ub-census-row code").forEach(el => {});
+      return;
+    }
     for (const s of u.stages) {
       const tables = (s.tables || []).filter(t => !t.includes("*"));
       parts.push(`<details class="ub-stage" open>

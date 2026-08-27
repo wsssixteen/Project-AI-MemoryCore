@@ -388,6 +388,107 @@
   "umm_a_tgsn": "Application's current and past task instances. Joined to ind_tgsn + ind_pejabat + pcp_pengguna for the canonical task-state query.",
   "umm_p_aplikasi": "Portal-side application hub (AWAM). The _p_ counterpart of umm_aplikasi — every Pra-Aplikasi submission joins back here. Gets promoted to umm_aplikasi during SPOC handoff."
  },
- "urusans": [],
+ "urusans": [
+  {
+   "kod": "PT",
+   "name": "Permohonan Pemberimilikan",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Permohonan Pemberimilikan — 210 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "PLPS",
+   "name": "Permohonan Lesen Pendudukan Sementara",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Permohonan Lesen Pendudukan Sementara — 122 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "PRZ",
+   "name": "Permohonan Perizaban",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Permohonan Perizaban — 171 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "MLPS",
+   "name": "Membaharui Lesen Pendudukan Sementara",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Membaharui Lesen Pendudukan Sementara — 72 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "BPRZ",
+   "name": "Permohonan Pembatalan Perizaban",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Permohonan Pembatalan Perizaban — 176 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "PSBS",
+   "name": "Permohonan Serahbalik Pohon Semula",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Permohonan Serahbalik Pohon Semula — 151 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "PPJK",
+   "name": "Permohonan Pajakan Tanah Perizaban",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Permohonan Pajakan Tanah Perizaban — 98 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "PLTP",
+   "name": "Pemohonan Lanjut Tempoh Pajakan",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Pemohonan Lanjut Tempoh Pajakan — 128 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "PRBB",
+   "name": "Permohonan Permit Bahan Batuan (Borang 4C)",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Permohonan Permit Bahan Batuan (Borang 4C) — 127 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "PRU",
+   "name": "Permohonan Permit Ruang Udara",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Permohonan Permit Ruang Udara — 106 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  }
+ ],
  "notes": "Terengganu · schema-derived Tables/Map live from the state DB; Urusan Journey pending per-state BPMN curation."
 }
