@@ -48,33 +48,14 @@
       </div>
     </div>
     <div class="ctl-actions">
-      <div class="seg" id="ctl-layout-mode" title="Switch between soft bands and process flow swimlanes">
-        <button data-mode="bands" class="seg-btn active">Bands</button>
-        <button data-mode="swimlanes" class="seg-btn">Swimlanes</button>
-      </div>
-      <button class="btn" id="btn-pin" title="Save current layout to this browser">Pin layout</button>
-      <button class="btn" id="btn-reset" title="Reset to auto layout">Reset</button>
       <button class="btn" id="btn-print-map">Print this Modul ERD</button>
     </div>
   </div>
-  <div class="map-help no-print">
-    <span><strong>Click</strong> a card to inspect</span>
-    <span><strong>Double-click</strong> a card to drill into its children</span>
-    <span><strong>Drag</strong> to reposition</span>
-    <span><strong>Pin</strong> saves arrangement · <strong>Reset</strong> auto-arranges</span>
-  </div>
-  <div class="map-legend no-print" id="map-legend"></div>
-  <div class="focus-bar hidden no-print" id="focus-bar"></div>
   <div class="map-grid">
     <div class="canvas-wrap" id="canvas-wrap">
       <svg id="map-svg" viewBox="0 0 1100 720" preserveAspectRatio="xMidYMid meet"></svg>
       <div class="canvas-empty" id="canvas-empty">Loading…</div>
     </div>
-    <aside class="side-panel" id="side-panel">
-      <div class="panel-hint">
-        <p>Click any table to see its connections and details.</p>
-      </div>
-    </aside>
   </div>
 </section>
 

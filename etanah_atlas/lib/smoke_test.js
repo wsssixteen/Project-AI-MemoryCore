@@ -88,17 +88,17 @@ check("dropdown: compare chips", counts.compare === dataset.urusans.length, `${c
 const hook = sandbox.__hook;
 if (hook && hook.layoutAndRender && hook.MAP_STATE) {
   let rErr = 0, rN = 0;
-  for (const m of dataset.moduls) for (const mode of ["bands", "swimlanes"]) {
+  for (const m of dataset.moduls) {
     try {
-      hook.MAP_STATE.modul = m.key; hook.MAP_STATE.layoutMode = mode; hook.MAP_STATE.urusan = "";
-      hook.MAP_STATE.expanded = new Set(); hook.MAP_STATE.pinned = false; hook.MAP_STATE.positions = {};
+      hook.MAP_STATE.modul = m.key; hook.MAP_STATE.urusan = "";
+      hook.MAP_STATE.positions = {};
       hook.layoutAndRender(); rN++;
-    } catch (e) { rErr++; out.push(`        ↳ ${m.key}/${mode}: ${e.message || e}`); }
+    } catch (e) { rErr++; out.push(`        ↳ ${m.key}: ${e.message || e}`); }
   }
-  check("interaction: render all moduls × Bands+Swimlanes", rErr === 0, `${rN} renders, ${rErr} errors`);
+  check("interaction: render all moduls (swimlanes-only since 2026-08-27)", rErr === 0, `${rN} renders, ${rErr} errors`);
   let uErr = 0;
   try {
-    hook.MAP_STATE.modul = "pelupusan"; hook.MAP_STATE.layoutMode = "swimlanes";
+    hook.MAP_STATE.modul = "pelupusan";
     for (const u of dataset.urusans) { hook.MAP_STATE.urusan = u.kod; hook.layoutAndRender(); }
     hook.MAP_STATE.urusan = "";
   } catch (e) { uErr++; out.push(`        ↳ urusan filter: ${e.message || e}`); }
