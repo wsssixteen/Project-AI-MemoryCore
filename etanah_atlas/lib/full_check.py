@@ -94,14 +94,37 @@ def check_state(pw, profile, label):
     nd = page.locator(".nd").count()
     add("Map renders cards (pelupusan)", nd > 0, f"{nd} cards")
     shot("map_pelupusan")
-    # card drag (first card) — transform applied
-    if nd:
-        card = page.locator(".nd").first
-        box = card.bounding_box()
-        page.mouse.move(box["x"]+box["width"]/2, box["y"]+box["height"]/2)
-        page.mouse.down(); page.mouse.move(box["x"]+60, box["y"]+40, steps=5); page.mouse.up()
-        tr = card.get_attribute("transform")
-        add("Map card drag applies transform", bool(tr and "translate" in tr), str(tr))
+    # card drag — the ARROWS must follow the card, not stray. Drag a node that has a
+    # connected FK line TWICE (the stray bug only appears on the 2nd+ drag), then assert:
+    #  (a) visual centre (base + transform) == logical centre (positions[id]) the edges use
+    #  (b) the connected edge's node-side endpoint lands on the card's box (arrow attached)
+    drag_id = page.evaluate("() => { const l = document.querySelector('.fk-line'); return l ? l.dataset.from : null; }")
+    if drag_id:
+        loc = page.locator(f'.nd[data-table="{drag_id}"]')
+        for ddx, ddy in [(60, 40), (-35, 30)]:  # two sequential drags
+            b = loc.bounding_box()
+            page.mouse.move(b["x"]+b["width"]/2, b["y"]+b["height"]/2)
+            page.mouse.down(); page.mouse.move(b["x"]+b["width"]/2+ddx, b["y"]+b["height"]/2+ddy, steps=6); page.mouse.up()
+            page.wait_for_timeout(40)
+        geo = page.evaluate("""(id) => {
+            const g = document.querySelector('.nd[data-table="'+CSS.escape(id)+'"]');
+            const tr = g.getAttribute('transform') || 'translate(0,0)';
+            const m = tr.match(/translate\\(([-\\d.]+)[ ,]+([-\\d.]+)\\)/);
+            const tx = m?+m[1]:0, ty = m?+m[2]:0;
+            const base = MAP_STATE.basePos[id], pos = MAP_STATE.positions[id];
+            const stray = Math.hypot(base.x+tx-pos.x, base.y+ty-pos.y);
+            const line = [...document.querySelectorAll('.fk-line')].find(l=>l.dataset.from===id||l.dataset.to===id);
+            const n = line.getAttribute('d').match(/-?\\d+\\.?\\d*/g).map(Number);
+            const isFrom = line.dataset.from===id;
+            const ex = isFrom?n[0]:n[2], ey = isFrom?n[1]:n[3];
+            const endpointDist = Math.hypot(ex-pos.x, ey-pos.y);
+            return {stray, endpointDist};
+        }""", drag_id)
+        add("Map drag: arrows follow card (visual==logical centre)", geo["stray"] < 1.5,
+            f"stray={geo['stray']:.1f}px (must be <1.5 after 2 drags)")
+        add("Map drag: connected arrow stays attached to box", 5 < geo["endpointDist"] < 100,
+            f"endpoint {geo['endpointDist']:.1f}px from card centre (box boundary ~20-95)")
+        shot("map_drag")
     # card click -> Tables focus
     if nd:
         tname = page.locator(".nd").nth(1).get_attribute("data-table")

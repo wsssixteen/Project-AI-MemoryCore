@@ -2,8 +2,8 @@
  "_summary": {
   "all_pass": true,
   "full_run": true,
-  "checks_passed": 176,
-  "checks_total": 176,
+  "checks_passed": 181,
+  "checks_total": 181,
   "errors_total": 0,
   "states": [
    "melaka",
@@ -17,8 +17,8 @@
   "melaka": {
    "profile": "melaka",
    "label": "Melaka",
-   "passed": 36,
-   "total": 36,
+   "passed": 37,
+   "total": 37,
    "errors": [],
    "shots": [
     "melaka__tab_search.png",
@@ -26,6 +26,7 @@
     "melaka__tab_map.png",
     "melaka__tab_about.png",
     "melaka__map_pelupusan.png",
+    "melaka__map_drag.png",
     "melaka__sub_diagram.png",
     "melaka__sub_catalog.png",
     "melaka__sub_urusan.png",
@@ -103,9 +104,14 @@
      "detail": "11 cards"
     },
     {
-     "check": "Map card drag applies transform",
+     "check": "Map drag: arrows follow card (visual==logical centre)",
      "ok": true,
-     "detail": "translate(-29.46795654296875,9.8226318359375)"
+     "detail": "stray=0.0px (must be <1.5 after 2 drags)"
+    },
+    {
+     "check": "Map drag: connected arrow stays attached to box",
+     "ok": true,
+     "detail": "endpoint 28.1px from card centre (box boundary ~20-95)"
     },
     {
      "check": "Map card click -> Tables focus",
@@ -222,8 +228,8 @@
   "selangor": {
    "profile": "selangor",
    "label": "Selangor",
-   "passed": 35,
-   "total": 35,
+   "passed": 36,
+   "total": 36,
    "errors": [],
    "shots": [
     "selangor__tab_search.png",
@@ -231,6 +237,7 @@
     "selangor__tab_map.png",
     "selangor__tab_about.png",
     "selangor__map_pelupusan.png",
+    "selangor__map_drag.png",
     "selangor__sub_diagram.png",
     "selangor__sub_catalog.png",
     "selangor__sub_urusan.png",
@@ -306,9 +313,14 @@
      "detail": "11 cards"
     },
     {
-     "check": "Map card drag applies transform",
+     "check": "Map drag: arrows follow card (visual==logical centre)",
      "ok": true,
-     "detail": "translate(-29.46795654296875,9.8226318359375)"
+     "detail": "stray=0.0px (must be <1.5 after 2 drags)"
+    },
+    {
+     "check": "Map drag: connected arrow stays attached to box",
+     "ok": true,
+     "detail": "endpoint 28.1px from card centre (box boundary ~20-95)"
     },
     {
      "check": "Map card click -> Tables focus",
@@ -420,8 +432,8 @@
   "perak": {
    "profile": "perak",
    "label": "Perak",
-   "passed": 35,
-   "total": 35,
+   "passed": 36,
+   "total": 36,
    "errors": [],
    "shots": [
     "perak__tab_search.png",
@@ -429,6 +441,7 @@
     "perak__tab_map.png",
     "perak__tab_about.png",
     "perak__map_pelupusan.png",
+    "perak__map_drag.png",
     "perak__sub_diagram.png",
     "perak__sub_catalog.png",
     "perak__sub_urusan.png",
@@ -504,9 +517,14 @@
      "detail": "11 cards"
     },
     {
-     "check": "Map card drag applies transform",
+     "check": "Map drag: arrows follow card (visual==logical centre)",
      "ok": true,
-     "detail": "translate(-29.46795654296875,9.8226318359375)"
+     "detail": "stray=0.0px (must be <1.5 after 2 drags)"
+    },
+    {
+     "check": "Map drag: connected arrow stays attached to box",
+     "ok": true,
+     "detail": "endpoint 28.1px from card centre (box boundary ~20-95)"
     },
     {
      "check": "Map card click -> Tables focus",
@@ -618,8 +636,8 @@
   "terengganu": {
    "profile": "terengganu",
    "label": "Terengganu",
-   "passed": 35,
-   "total": 35,
+   "passed": 36,
+   "total": 36,
    "errors": [],
    "shots": [
     "terengganu__tab_search.png",
@@ -627,6 +645,7 @@
     "terengganu__tab_map.png",
     "terengganu__tab_about.png",
     "terengganu__map_pelupusan.png",
+    "terengganu__map_drag.png",
     "terengganu__sub_diagram.png",
     "terengganu__sub_catalog.png",
     "terengganu__sub_urusan.png",
@@ -702,9 +721,14 @@
      "detail": "11 cards"
     },
     {
-     "check": "Map card drag applies transform",
+     "check": "Map drag: arrows follow card (visual==logical centre)",
      "ok": true,
-     "detail": "translate(-29.46795654296875,9.8226318359375)"
+     "detail": "stray=0.0px (must be <1.5 after 2 drags)"
+    },
+    {
+     "check": "Map drag: connected arrow stays attached to box",
+     "ok": true,
+     "detail": "endpoint 28.1px from card centre (box boundary ~20-95)"
     },
     {
      "check": "Map card click -> Tables focus",
@@ -816,8 +840,8 @@
   "wp": {
    "profile": "wp",
    "label": "WP Kuala Lumpur",
-   "passed": 35,
-   "total": 35,
+   "passed": 36,
+   "total": 36,
    "errors": [],
    "shots": [
     "wp__tab_search.png",
@@ -825,6 +849,7 @@
     "wp__tab_map.png",
     "wp__tab_about.png",
     "wp__map_pelupusan.png",
+    "wp__map_drag.png",
     "wp__sub_diagram.png",
     "wp__sub_catalog.png",
     "wp__sub_urusan.png",
@@ -900,9 +925,14 @@
      "detail": "9 cards"
     },
     {
-     "check": "Map card drag applies transform",
+     "check": "Map drag: arrows follow card (visual==logical centre)",
      "ok": true,
-     "detail": "translate(-29.46795654296875,9.82269287109375)"
+     "detail": "stray=0.0px (must be <1.5 after 2 drags)"
+    },
+    {
+     "check": "Map drag: connected arrow stays attached to box",
+     "ok": true,
+     "detail": "endpoint 28.2px from card centre (box boundary ~20-95)"
     },
     {
      "check": "Map card click -> Tables focus",

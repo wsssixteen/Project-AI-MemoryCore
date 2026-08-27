@@ -101,7 +101,8 @@ const MAP_STATE = {
   modul: "pelupusan",
   urusan: "",
   layer: "both",
-  positions: {},
+  positions: {},   // current logical center per node (edges read this)
+  basePos: {},     // immutable render position per node — the group's transform is measured from here
   layoutMode: "swimlanes",
 };
 
@@ -363,8 +364,12 @@ function attachCardInteraction(g, id) {
       const cur = toSVG(e);
       const dx = cur.x - start.x, dy = cur.y - start.y;
       if (Math.hypot(dx, dy) > 4) moved = true;
-      MAP_STATE.positions[id] = { x: origin.x + dx, y: origin.y + dy };
-      g.setAttribute("transform", `translate(${dx},${dy})`);
+      const nx = origin.x + dx, ny = origin.y + dy;
+      MAP_STATE.positions[id] = { x: nx, y: ny };
+      // transform = TOTAL offset from the immutable render base, so the card's visual centre
+      // stays exactly equal to the logical centre the edges attach to (no stray on re-drag).
+      const base = MAP_STATE.basePos[id] || origin;
+      g.setAttribute("transform", `translate(${nx - base.x},${ny - base.y})`);
       redrawEdges();
     }
     function onUp() {
@@ -419,6 +424,11 @@ function layoutAndRender() {
   const edges = visibleEdges(nodeIds);
   const pos = forceLayout(nodeIds, edges, W, H);
   MAP_STATE.positions = pos;
+  // Immutable render base: the node rects/text are drawn at these absolute coords, so the
+  // group's drag transform must always be the TOTAL offset from here (not a per-drag delta,
+  // which strays the card away from its edges on the 2nd+ drag).
+  MAP_STATE.basePos = {};
+  for (const k in pos) MAP_STATE.basePos[k] = { x: pos[k].x, y: pos[k].y };
 
   // Defs: arrowhead
   const defs = svgEl("defs", {});
@@ -1631,6 +1641,7 @@ function handleSQL(file) {
       MAP_STATE.selected = null;
       MAP_STATE.pinned = false;
       MAP_STATE.positions = {};
+      MAP_STATE.basePos = {};
       refreshTotals();
       renderAbout();
       layoutAndRender();
