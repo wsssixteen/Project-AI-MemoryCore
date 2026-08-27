@@ -22,12 +22,28 @@ def main(profile, label):
     parsed = json.load(open(BUILD / "schema_parse.json", encoding="utf-8"))
     exist = {t["name"] for t in parsed["tables"]}
 
+    # Divergent-schema aliases: when a Melaka table name is absent but the state's
+    # equivalent exists under a different name (WP: older schema — spells 'tugasan',
+    # 'pemberimilikan'), substitute it so the Map/anchors show the REAL table.
+    ALIAS = {
+        "umm_a_tgsn": "umm_a_tugasan", "umm_tgsn_semasa": "umm_tugasan_semasa",
+        "plp_a_pelupusan": "plp_a_pemberimilikan", "plp_p_pelupusan": "plp_p_pemberimilikan",
+        "ind_tgsn": "ind_tugasan",
+    }
+    def resolve(t):
+        if t in exist: return t
+        alt = ALIAS.get(t)
+        return alt if alt and alt in exist else None
+
     moduls = []
     for m in mel["moduls"]:
         m2 = dict(m)
-        m2["main_tables"] = [t for t in m.get("main_tables", []) if t in exist]
+        m2["main_tables"] = [r for t in m.get("main_tables", []) if (r := resolve(t))]
         moduls.append(m2)
-    anchor_blurbs = {k: v for k, v in mel.get("anchor_blurbs", {}).items() if k in exist}
+    anchor_blurbs = {}
+    for k, v in mel.get("anchor_blurbs", {}).items():
+        r = resolve(k)
+        if r: anchor_blurbs[r] = v
 
     out = {
         "_comment": f"v1 mapping for {label}, derived from mapping.melaka.json by "

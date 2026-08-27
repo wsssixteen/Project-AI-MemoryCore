@@ -34,30 +34,42 @@ def main(profile):
     q = (lambda s, p=(): _pg(cfg, s, p)) if pg else (lambda s, p=None: _ora(cfg, s, p))
     Q = (lambda t: f"{sch}.{t}")  # schema-qualified table ref
 
-    # has IND_TGSN?
-    if pg:
-        has = q(f"SELECT 1 FROM information_schema.tables WHERE table_schema=%s AND table_name='ind_tgsn'", (sch,))
-    else:
-        has = q("SELECT 1 FROM all_tables WHERE owner=:o AND table_name='IND_TGSN'", {"o": sch})
-    if not has:
-        print(f"[census] {profile}: no IND_TGSN — skipped (divergent schema)", file=sys.stderr)
+    # RESOLVE the tugasan-definition table name PER STATE — never assume. Melaka/SEL/PRK/
+    # TRG abbreviate 'ind_tgsn'; WP spells it 'ind_tugasan' (older schema generation).
+    # The langkah FK column follows: tgsn_id vs tugasan_id.
+    def tbl_exists(name):
+        if pg:
+            return bool(q(f"SELECT 1 FROM information_schema.tables WHERE table_schema=%s AND table_name=%s", (sch, name.lower())))
+        return bool(q("SELECT 1 FROM all_tables WHERE owner=:o AND table_name=:t", {"o": sch, "t": name.upper()}))
+    def col_exists(tbl, col):
+        if pg:
+            return bool(q(f"SELECT 1 FROM information_schema.columns WHERE table_schema=%s AND table_name=%s AND column_name=%s", (sch, tbl.lower(), col.lower())))
+        return bool(q("SELECT 1 FROM all_tab_columns WHERE owner=:o AND table_name=:t AND column_name=:c", {"o": sch, "t": tbl.upper(), "c": col.upper()}))
+
+    tgsn_tbl = "ind_tgsn" if tbl_exists("ind_tgsn") else ("ind_tugasan" if tbl_exists("ind_tugasan") else None)
+    if not tgsn_tbl:
+        print(f"[census] {profile}: no ind_tgsn / ind_tugasan — genuinely absent", file=sys.stderr)
         return
+    tgsn_col = "tgsn_id" if col_exists("ind_langkah", "tgsn_id") else ("tugasan_id" if col_exists("ind_langkah", "tugasan_id") else "tgsn_id")
+    tgsn_pk = "tgsn_id" if col_exists(tgsn_tbl, "tgsn_id") else "tugasan_id"
+    ursn_fk = "ursn_id" if col_exists(tgsn_tbl, "ursn_id") else ("urusan_id" if col_exists(tgsn_tbl, "urusan_id") else "ursn_id")
+    print(f"[census] {profile}: tugasan table='{tgsn_tbl}' pk='{tgsn_pk}' langkah_fk='{tgsn_col}' ursn_fk='{ursn_fk}'", file=sys.stderr)
 
     inlist = ",".join(f"'{u}'" for u in PLP_URUSANS)
-    # tugasans of PLP urusans (active)
+    T = (lambda t: f"{sch}.{t}")
     if pg:
-        trows = q(f"""SELECT lower(u.kod), t.kod, t.nama, t.peranan, t.turutan, t.tgsn_id
-                      FROM {Q('ind_tgsn')} t JOIN {Q('ind_ursn')} u ON u.ursn_id=t.ursn_id
+        trows = q(f"""SELECT lower(u.kod), t.kod, t.nama, t.peranan, t.turutan, t.{tgsn_pk}
+                      FROM {T(tgsn_tbl)} t JOIN {T("ind_ursn")} u ON u.ursn_id=t.{ursn_fk}
                       WHERE u.kod IN ({inlist}) AND (t.flag_aktif='Y' OR t.flag_aktif IS NULL)""")
-        lrows = q(f"""SELECT l.tgsn_id, l.turutan, l.kod, l.nama, s.jsf_view, s.nama_aplikasi
-                      FROM {Q('ind_langkah')} l JOIN {Q('ind_skrin')} s ON s.skrin_id=l.skrin_id
+        lrows = q(f"""SELECT l.{tgsn_col}, l.turutan, l.kod, l.nama, s.jsf_view, s.nama_aplikasi
+                      FROM {T('ind_langkah')} l JOIN {T('ind_skrin')} s ON s.skrin_id=l.skrin_id
                       WHERE (l.flag_aktif='Y' OR l.flag_aktif IS NULL)""")
     else:
-        trows = q(f"""SELECT lower(u.kod), t.kod, t.nama, t.peranan, t.turutan, t.tgsn_id
-                      FROM {Q('IND_TGSN')} t JOIN {Q('IND_URSN')} u ON u.ursn_id=t.ursn_id
+        trows = q(f"""SELECT lower(u.kod), t.kod, t.nama, t.peranan, t.turutan, t.{tgsn_pk}
+                      FROM {T(tgsn_tbl.upper())} t JOIN {T("IND_URSN")} u ON u.ursn_id=t.{ursn_fk}
                       WHERE u.kod IN ({inlist}) AND (t.flag_aktif='Y' OR t.flag_aktif IS NULL)""")
-        lrows = q(f"""SELECT l.tgsn_id, l.turutan, l.kod, l.nama, s.jsf_view, s.nama_aplikasi
-                      FROM {Q('IND_LANGKAH')} l JOIN {Q('IND_SKRIN')} s ON s.skrin_id=l.skrin_id
+        lrows = q(f"""SELECT l.{tgsn_col}, l.turutan, l.kod, l.nama, s.jsf_view, s.nama_aplikasi
+                      FROM {T('IND_LANGKAH')} l JOIN {T('IND_SKRIN')} s ON s.skrin_id=l.skrin_id
                       WHERE (l.flag_aktif='Y' OR l.flag_aktif IS NULL)""")
 
     langkah_by_tgsn = {}

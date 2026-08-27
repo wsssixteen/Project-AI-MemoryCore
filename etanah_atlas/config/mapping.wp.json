@@ -16,11 +16,15 @@
    "status": "active",
    "description": "Land disposal — granting, leasing, reservation, occupation licences. Internal officers + AWAM portal.",
    "main_tables": [
+    "plp_a_pemberimilikan",
+    "plp_p_pemberimilikan",
     "umm_aplikasi",
     "umm_a_hkmlk",
     "umm_p_hkmlk",
     "umm_a_pihak_bkptg",
-    "ind_ursn"
+    "umm_a_tugasan",
+    "ind_ursn",
+    "ind_tugasan"
    ]
   },
   {
@@ -370,11 +374,106 @@
  ],
  "anchor_blurbs": {
   "umm_aplikasi": "The application hub. Every transaction joins back here via aplikasi_id. No urusan_kod column — JOIN to ind_ursn via ursn_id.",
+  "plp_a_pemberimilikan": "PLP-side container for pelupusan applications (officer-internal). Promoted from plp_p_pelupusan via the AWAM→PLP SPOC integration.",
+  "plp_p_pemberimilikan": "Portal-side container (AWAM/Pra). Holds the applicant's submission before it's accepted by PLP.",
   "umm_a_hkmlk": "Hakmilik (land title) attached to an application. Join-graph centre on the internal side.",
   "umm_p_hkmlk": "Portal-side hakmilik. Promoted to umm_a_hkmlk on PLP submission.",
   "umm_a_pihak_bkptg": "Party / stakeholder table. The applicant (pemohon) lives here with flag_pemohon='Y'.",
-  "ind_ursn": "Urusan (business workflow) reference. All urusan codes (PT, PLPS, PRBB, ...) defined here."
+  "ind_ursn": "Urusan (business workflow) reference. All urusan codes (PT, PLPS, PRBB, ...) defined here.",
+  "ind_tugasan": "Tugasan (task code) reference. Defines workflow step codes (PYSK, SSK, PSSK, ...).",
+  "umm_a_tugasan": "Application's current and past task instances. Joined to ind_tgsn + ind_pejabat + pcp_pengguna for the canonical task-state query."
  },
- "urusans": [],
+ "urusans": [
+  {
+   "kod": "PT",
+   "name": "Permohonan Pemberimilikan",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Permohonan Pemberimilikan — 177 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "PLPS",
+   "name": "Pembaharuan Lesen Pendudukan Sementara",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Pembaharuan Lesen Pendudukan Sementara — 41 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "PRZ",
+   "name": "Permohonan Perizaban",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Permohonan Perizaban — 121 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "BPRZ",
+   "name": "Permohonan Pembatalan Perizaban",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Permohonan Pembatalan Perizaban — 142 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "PSBS",
+   "name": "Permohonan Serahbalik Berimilik Semula",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Permohonan Serahbalik Berimilik Semula — 186 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "PPJK",
+   "name": "Permohonan Pajakan Tanah Perizaban",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Permohonan Pajakan Tanah Perizaban — 62 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "PLTP",
+   "name": "Permohonan Lanjut Tempoh Pegangan (Seksyen 90A)",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Permohonan Lanjut Tempoh Pegangan (Seksyen 90A) — 42 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "PRBB",
+   "name": "Permohonan Permit Bahan Batuan",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Permohonan Permit Bahan Batuan — 65 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  },
+  {
+   "kod": "PRU",
+   "name": "Permohonan Permit Ruang Udara",
+   "english": "",
+   "section": "",
+   "modul": "pelupusan",
+   "description": "Permohonan Permit Ruang Udara — 79 tugasan (live census; workflow stages pending BPMN curation).",
+   "stages": [],
+   "census_only": true
+  }
+ ],
  "notes": "WP Kuala Lumpur · schema-derived Tables/Map live from the state DB; Urusan Journey pending per-state BPMN curation."
 }
