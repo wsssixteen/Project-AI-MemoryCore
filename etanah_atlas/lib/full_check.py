@@ -229,9 +229,16 @@ def main():
                 if not res["ok"]: all_ok = False
                 print(f"  {mark}  {res['check']}" + (f" — {res['detail']}" if not res["ok"] else ""))
             print(f"  --> {r['passed']}/{r['total']} checks · {len(r['errors'])} JS errors · {len(r['shots'])} screenshots")
-    json.dump(report, open(ROOT / "build" / "full_check_report.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     tot_p = sum(r["passed"] for r in report.values()); tot_t = sum(r["total"] for r in report.values())
     tot_e = sum(len(r["errors"]) for r in report.values())
+    # Summary block the atlas-full-check hook validates (all_pass + covered states).
+    # Only a FULL run (no single-state arg) may claim all_pass — a one-state run marks partial.
+    full_run = len(sys.argv) <= 1
+    out = {"_summary": {"all_pass": bool(all_ok and tot_e == 0 and full_run),
+                        "full_run": full_run, "checks_passed": tot_p, "checks_total": tot_t,
+                        "errors_total": tot_e, "states": sorted(report.keys())},
+           "states": report}
+    json.dump(out, open(ROOT / "build" / "full_check_report.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"\n{'ALL PASS' if all_ok and tot_e==0 else 'FAILURES PRESENT'} — {tot_p}/{tot_t} checks across {len(report)} states · {tot_e} JS errors total")
     print(f"Report: build/full_check_report.json · Screenshots: checks/")
     return 0 if (all_ok and tot_e == 0) else 1

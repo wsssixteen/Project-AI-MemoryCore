@@ -478,6 +478,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\atlas-ship-gate\\\\atlas-ship-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\atlas-full-check\\\\atlas-full-check.check.hook.js\""
           }
         ]
       }
