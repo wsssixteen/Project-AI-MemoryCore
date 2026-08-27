@@ -68,6 +68,15 @@ That runs: live schema pull → v1 mapping (auto if none) → dataset → `etana
 3. `python build_state.py --profile <profile> --label "<Label>"`.
 4. Rebuild the others so their switcher includes the new state; end with `python build.py` (keeps `build/dataset.json` = Melaka for smoke/ship-check).
 
+### Release build (all states + shareable bundle) — one command
+
+```bash
+python build_all.py             # rebuilds every state live + Melaka, zips index.html + all 5 HTMLs -> etanah_atlas_states.zip
+```
+
+Share `etanah_atlas_states.zip` (or the whole folder). Open `index.html` → lands on the
+Atlas; the `STATE` switcher needs all state HTMLs side-by-side, which the zip guarantees.
+
 ### Verify all states
 
 ```bash
