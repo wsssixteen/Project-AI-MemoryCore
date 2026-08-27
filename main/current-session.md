@@ -1,5 +1,19 @@
 # Current Session
 
+## 2026-08-27 — Perak #275847 HSPS patch (first Perak data-patch) + DBeaver password recovery + comment-noise slip
+
+**Arc**: retrieve latest Perak ticket → found Perak Oracle MCP not connected (corrupted config paths) → fixed dev/denda + added PROD (recovered et_read password from DBeaver, live-tested) → full Phase-0→Rubric trace on Perak PROD via direct oracledb → prepared the patch → 2 furious correction cycles on script comments → DE.
+
+**1. #275847 (eSOKONGAN PERAK / Internal Issue PROD — HSPS Patch Tempat & Taraf Hakmilik, PDT Teluk Intan)**: 19 new HSPS subdivision titles saved with Tempat + Taraf Hakmilik blank. Fix = data patch on `ET_MAIN.DFT_A_MOHON_HKMLK`: aplikasi 11718961 (07MH412/2026, 7 rows 37331-37337) → LOKASI='SEBRANG DURIAN SEBATANG'; aplikasi 11718975 (07MH413/2026, 12 rows 37338-37349) → LOKASI='SEBRANG D. SEBATANG'; both TARAF_MILIK_ID=2429 (RJK_SENARAI_AHLI_KUMPULAN kod TARAFSEL=Selama-lamanya). Script `2. Fix\275847.sql`, PROD-verified (read-only et_read). Redmine moved to **Resolved (Ammar Zakwan 100%)** mid-session — confirm if colleague already patched. qa_doc: `projects/coding-projects/active/275847/QA-275847.md`.
+
+**2. Perak MCP connection fix**: `oracle-prk-dev`/`oracle-prk-denda` in `~/.claude.json` had **corrupted command/args paths** (backslashes stripped 2026-08-26 → `\v`→``) so they never launched — that's why no Perak Oracle tools. Fixed both + added `oracle-prk-prod` (192.168.15.104/etprdpk/et_read). **Password recovered by decrypting DBeaver `credentials-config.json`** (AES-128-CBC key `babb4a9f774ab853c96c2d653dfe544a`, strip 16-byte prefix) — written to config (not chat), live-tested OK (11490 tables). Backup `~/.claude.json.bak-perak-prod-2026-08-27`. **Restart Claude Code to load the MCP tools.**
+
+**3. Decoy caught**: no_lot 37331-37349 is heavily reused across Perak — a naive lot-number match hits aplikasi 8246053 (unrelated 2021 00SW412, mukim 080305). WHERE anchors on aplikasi_id. The 19 real titles live in DFT_A_MOHON_HKMLK (not UMM_A_HKMLK, not IND registry — titles not yet daftar); reached via parent GM4316/GM9122 → HSPS aplikasi.
+
+**4. Two slips (miya furious)**: (a) I added an explanatory comment HEADER to the patch (env + table desc + LOKASI=Tempat mapping + run-order) — source was `feedback_infra_script_schema_env` "env-tagged header" mandate; WITHDRAWN → env goes in chat handoff message, `.sql` = schema-qualified + only the mandatory `-- N rows` / SELECT `-- N rows, state` expected annotations. (b) Over-corrected by stripping ALL comments incl. the mandatory ones; restored. (c) **Edited SKILL.md + memory via the MAIN checkout absolute path, not the worktree** — the divergence bug; main tree is also dirty with other sessions' work.
+
+**Resume point**: patch ready; confirm Redmine-Resolved wasn't a colleague's applied patch, then run-channel (miya DBeaver vs infra). Perak MCP tools live after restart.
+
 ## 2026-08-26 — #273461 sis_no_turutan deep-audit + recon-structure workflow shootout + CHECK 6 ship + Perak MCP
 
 **Arc**: miya asked WHY Recon/Rubric missed the `sis_no_turutan` running-number table on #273461 (only the versi/registry tables were in the delete footprint) → audit → 7-agent /workflows scenario shootout → shipped the hole-patch (hook CHECK 6 + script-check rule 8 + quest Recon row + knowledge top-up) → DE → Perak MCP connections.
