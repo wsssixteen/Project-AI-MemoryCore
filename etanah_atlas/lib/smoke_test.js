@@ -182,10 +182,20 @@ if (hook && hook.urusanTables) {
   check("urusan filter: workflow spine present for all 13", noSpine.length === 0, noSpine.length ? noSpine.slice(0,4).join(", ") : "spine complete");
 }
 
-// ---------- T6c: full BPMN tugasan sequence attached per urusan (2026-08-27) ----------
+// ---------- T6c: structured BPMN path attached per urusan (2026-08-27 v2: main/branches/converged) ----------
 {
-  const noSeq = dataset.urusans.filter(u => !(u.bpmn_seq && u.bpmn_seq.tasks && u.bpmn_seq.tasks.length >= 2)).map(u => u.kod);
-  check("journey: BPMN full tugasan sequence attached (all 13)", noSeq.length === 0, noSeq.length ? "missing: " + noSeq.join(",") : "13/13");
+  const noSeq = dataset.urusans.filter(u => {
+    const s = u.bpmn_seq;
+    if (!s) return true;
+    const total = (s.main || []).length + (s.converged || []).length +
+      Object.values(s.branches || {}).reduce((a, v) => a + v.length, 0);
+    return total < 2;
+  }).map(u => u.kod);
+  check("journey: structured BPMN path attached (all 13)", noSeq.length === 0, noSeq.length ? "missing: " + noSeq.join(",") : "13/13");
+  const emptyBranch = dataset.urusans.filter(u => u.bpmn_seq && u.bpmn_seq.branches &&
+    Object.keys(u.bpmn_seq.branches).length > 0 &&
+    Object.values(u.bpmn_seq.branches).every(v => v.length === 0)).map(u => u.kod);
+  check("journey: no urusan with ALL branches empty", emptyBranch.length === 0, emptyBranch.length ? emptyBranch.join(",") : "branch rows present wherever anchored");
 }
 
 // ---------- T6: geometric quality - no overlapping cards, no coinciding edge endpoints ----------

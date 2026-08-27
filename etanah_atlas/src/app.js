@@ -550,14 +550,69 @@ function renderUrusanView() {
   const cols = list.map(kod => {
     const u = DATA.urusans.find(x => x.kod === kod);
     if (!u) return `<div class="uj-col">Urusan ${escapeHtml(kod)} not found.</div>`;
+    const seq = u.bpmn_seq || null;
+    const normName = (s) => String(s || "").toLowerCase().replace(/\s+/g, " ").replace(/^\d+(\.\d+)?\s*/, "").trim();
+    const ujRow = (r, color) => {
+      const badge = r.kind === "callActivity"
+        ? `<span class="uj-seq-mod">${escapeHtml(r.module || "")}</span>`
+        : (r.kod ? `<span class="uj-seq-kod">${escapeHtml(r.kod)}</span>` : `<span class="uj-seq-nok" title="no ind_tgsn name match">census: no match</span>`);
+      const per = r.peranan ? `<span class="uj-seq-per">${escapeHtml(r.peranan)}</span>` : "";
+      const nTag = (r.n || 1) > 1 ? `<span class="uj-seq-per">×${r.n}</span>` : "";
+      const head = `<span class="uj-seq-name">${escapeHtml(r.name)}</span>${badge}${per}${nTag}`;
+      const st = color ? ` style="--fork-color:${color}"` : "";
+      if (r.sub_tasks && r.sub_tasks.length) {
+        return `<details class="uj-task uj-task-sub"${st}><summary>${head} <span class="uj-seq-per">${r.sub_tasks.length} steps</span></summary>${r.sub_tasks.map(x => `<div class="uj-seq-sub">↳ ${escapeHtml(x)}</div>`).join("")}</details>`;
+      }
+      return `<div class="uj-task"${st}>${head}</div>`;
+    };
+
+    // assign main-line rows to curated stages by NAME-anchored boundaries: each stage
+    // matches its own tugasan row in the sequence (stage names carry no numbers for
+    // most urusans); rows between two stage anchors belong to the earlier stage
+    const rowsByStage = u.stages.map(() => []);
+    if (seq) {
+      const stageMatch = (s, r) => {
+        const rn = normName(r.name);
+        return (s.name || "").split("/").some(seg => {
+          const sn = normName(seg);
+          return sn.length >= 6 && (sn === rn || rn.includes(sn) || sn.includes(rn));
+        });
+      };
+      const anchorsIdx = [];
+      let searchFrom = 0;
+      u.stages.forEach((s, si) => {
+        for (let i = searchFrom; i < seq.main.length; i++) {
+          if (stageMatch(s, seq.main[i])) { anchorsIdx.push([si, i]); searchFrom = i; break; }
+        }
+      });
+      let ai = 0;
+      let gi = anchorsIdx.length ? 0 : 0;
+      seq.main.forEach((r, i) => {
+        while (ai < anchorsIdx.length && i >= anchorsIdx[ai][1]) { gi = anchorsIdx[ai][0]; ai++; }
+        rowsByStage[gi].push(r);
+      });
+    }
+
     const parts = [];
-    for (const s of u.stages) {
+    u.stages.forEach((s, si) => {
+      // merge the row that IS the stage header (same name) into the header badges
+      let rows = rowsByStage[si] || [];
+      let headBadges = "";
+      rows = rows.filter(r => {
+        if (normName(r.name) === normName(s.name)) {
+          if (r.kod) headBadges += ` <span class="uj-seq-kod">${escapeHtml(r.kod)}</span>`;
+          if (r.peranan) headBadges += ` <span class="uj-seq-per">${escapeHtml(r.peranan)}</span>`;
+          return false;
+        }
+        return true;
+      });
       parts.push(`
       <div class="uj-stage">
         <div class="uj-stage-dot"${s.fork ? ' style="background:#534AB7"' : ''}></div>
         <div>
-          <div class="uj-stage-name">${escapeHtml(s.name)}</div>
+          <div class="uj-stage-name">${escapeHtml(s.name)}${headBadges}</div>
           <div class="uj-stage-tables">${(s.tables || []).map(t => `<span class="uj-tbl" data-open="${escapeAttr(t)}">${escapeHtml(t)}</span>`).join(", ")}</div>
+          ${rows.length ? `<div class="uj-tasks">${rows.map(r => ujRow(r, null)).join("")}</div>` : ""}
         </div>
       </div>`);
       if (s.fork && (s.fork.outcomes || []).length > 1) {
@@ -568,20 +623,37 @@ function renderUrusanView() {
         parts.push(`<div class="uj-fork-selector"><span class="uj-fork-label">Keputusan:</span>${btns}</div>`);
         const outcome = s.fork.outcomes.find(o => o.kind === chosen) || s.fork.outcomes[0];
         const oc = forkOutcomeColor(outcome.kind);
-        for (const st of (outcome.steps || [])) {
-          parts.push(`
-          <div class="uj-stage uj-fork-stage" style="--fork-color:${oc}">
-            <div class="uj-stage-dot" style="background:${oc}"></div>
-            <div>
-              <div class="uj-stage-name">${escapeHtml(st.name)}</div>
-              <div class="uj-stage-tables">${(st.tables || []).map(t => `<span class="uj-tbl" data-open="${escapeAttr(t)}">${escapeHtml(t)}</span>`).join(", ")}</div>
-            </div>
-          </div>`);
+        const branchRows = seq && seq.branches ? (seq.branches[chosen] || []) : [];
+        if (branchRows.length) {
+          // real BPMN branch rows REPLACE the curated outcome lines (no duplication);
+          // the curated steps' tables survive as one slim line
+          const stepTables = [...new Set((outcome.steps || []).flatMap(st => st.tables || []))];
+          if (stepTables.length) parts.push(`
+            <div class="uj-stage uj-fork-stage" style="--fork-color:${oc}">
+              <div class="uj-stage-dot" style="background:${oc}"></div>
+              <div><div class="uj-stage-tables">${stepTables.map(t => `<span class="uj-tbl" data-open="${escapeAttr(t)}">${escapeHtml(t)}</span>`).join(", ")}</div></div>
+            </div>`);
+          parts.push(`<div class="uj-tasks uj-fork-tasks" style="--fork-color:${oc}">${branchRows.map(r => ujRow(r, oc)).join("")}</div>`);
+          if ((seq.converged || []).length) {
+            parts.push(`<div class="uj-conv-label">— shared tail (runs on every outcome) —</div>`);
+            parts.push(`<div class="uj-tasks">${seq.converged.map(r => ujRow(r, null)).join("")}</div>`);
+          }
+        } else {
+          for (const st of (outcome.steps || [])) {
+            parts.push(`
+            <div class="uj-stage uj-fork-stage" style="--fork-color:${oc}">
+              <div class="uj-stage-dot" style="background:${oc}"></div>
+              <div>
+                <div class="uj-stage-name">${escapeHtml(st.name)}</div>
+                <div class="uj-stage-tables">${(st.tables || []).map(t => `<span class="uj-tbl" data-open="${escapeAttr(t)}">${escapeHtml(t)}</span>`).join(", ")}</div>
+              </div>
+            </div>`);
+          }
         }
         if (outcome.end) parts.push(`<div class="uj-terminal" style="--fork-color:${oc}">◼ ${escapeHtml(outcome.end)}</div>`);
         if (outcome.loop) parts.push(`<div class="uj-terminal uj-loop" style="--fork-color:${oc}">↺ ${escapeHtml(outcome.loop)}</div>`);
       }
-    }
+    });
     return `
       <div class="uj-col">
         <div class="uj-header">
@@ -592,7 +664,6 @@ function renderUrusanView() {
         <p class="uj-desc">${escapeHtml(u.description)}</p>
         ${u.notes ? `<details class="uj-notes"><summary>⟲ Unhappy-path notes (pembetulan / early-reject / modeling gaps)</summary><p>${escapeHtml(typeof u.notes === "string" ? u.notes : String(u.notes))}</p></details>` : ""}
         <div class="uj-stages">${parts.join("")}</div>
-        ${renderBpmnSeq(u)}
       </div>`;
   }).join("");
   wrap.innerHTML = `<div class="urusan-grid ${colClass}">${cols}</div>`;
@@ -603,25 +674,6 @@ function renderUrusanView() {
     });
   });
 }
-// Full BPMN tugasan sequence (build/journey_seq.json via lib/build_journey_seq.py):
-// the completeness layer under the curated stage abstraction — every userTask +
-// callActivity from the Flowable, census-joined (kod · peranan) where names match.
-function renderBpmnSeq(u) {
-  const seq = u.bpmn_seq;
-  if (!seq || !(seq.tasks || []).length) return "";
-  const s = seq.stats || {};
-  const rows = seq.tasks.map(t => {
-    if (t.kind === "callActivity") {
-      const subs = (t.sub_tasks || []).map(x => `<div class="uj-seq-sub">↳ ${escapeHtml(x)}</div>`).join("");
-      return `<div class="uj-seq-row uj-seq-ca"><span class="uj-seq-name">${escapeHtml(t.name)}</span><span class="uj-seq-mod">${escapeHtml(t.module || "")}</span>${subs}</div>`;
-    }
-    const kodB = t.kod ? `<span class="uj-seq-kod">${escapeHtml(t.kod)}</span>` : `<span class="uj-seq-nok" title="no exact ind_tgsn name match">census: no match</span>`;
-    const per = t.peranan ? `<span class="uj-seq-per">${escapeHtml(t.peranan)}</span>` : "";
-    return `<div class="uj-seq-row"><span class="uj-seq-name">${escapeHtml(t.name)}</span>${kodB}${per}</div>`;
-  }).join("");
-  return `<details class="uj-notes uj-seq"><summary>⛓ Full BPMN tugasan sequence — ${s.user_tasks || 0} userTasks · ${s.call_activities || 0} callouts · ${s.census_matched || 0} census-matched</summary><div class="uj-seq-list">${rows}</div></details>`;
-}
-
 $("#urusan-picker").addEventListener("change", renderUrusanView);
 $("#urusan-content").addEventListener("click", (e) => {
   const el = e.target.closest("[data-open]");
