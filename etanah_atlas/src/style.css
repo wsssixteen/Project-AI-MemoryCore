@@ -247,6 +247,8 @@ code { font-family: "SF Mono", "Cascadia Code", Consolas, monospace; background:
 .tc-name { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
 .tc-name-text { overflow-wrap:anywhere; }
 .tc-stages { margin-top:5px; font-size:10.5px; color:#534AB7; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.uj-tbl { cursor:pointer; }
+.uj-tbl:hover { color: var(--accent); text-decoration: underline; }
 .tg-badge { font-size:9px; font-weight:700; letter-spacing:.4px; border-radius:4px; padding:1px 5px; white-space:nowrap; }
 .tg-loads { background:#dbeafe; color:#1d4ed8; }
 .tg-saves { background:#fee2e2; color:#b91c1c; }

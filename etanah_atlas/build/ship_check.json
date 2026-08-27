@@ -1,7 +1,7 @@
 {
- "html_sha256": "46e50bf2b249c1fa9ebd725dd5ebda5f4f66f09e0ef4b395fb1c0015809165fa",
+ "html_sha256": "56da2c67ef18fd8665f22be139cb589c62435040e5bf21a9f1185bba23b8cf7a",
  "smoke": "pass",
- "render_png": "C:\\Users\\Ridhwan\\AppData\\Local\\Temp\\atlas_ship_qip2hzg7\\ship_render.png",
+ "render_png": "C:\\Users\\Ridhwan\\AppData\\Local\\Temp\\atlas_ship_j_ei51rk\\ship_render.png",
  "render_size": 77088,
  "view_exclusivity": {
   "map": "GRRR",
@@ -10,5 +10,5 @@
   "about": "RRRG"
  },
  "views": "pass",
- "checked_at": "2026-08-27T12:04:06"
+ "checked_at": "2026-08-27T12:17:22"
 }

@@ -557,7 +557,7 @@ function renderUrusanView() {
         <div class="uj-stage-dot"${s.fork ? ' style="background:#534AB7"' : ''}></div>
         <div>
           <div class="uj-stage-name">${escapeHtml(s.name)}</div>
-          <div class="uj-stage-tables">${(s.tables || []).map(escapeHtml).join(", ")}</div>
+          <div class="uj-stage-tables">${(s.tables || []).map(t => `<span class="uj-tbl" data-open="${escapeAttr(t)}">${escapeHtml(t)}</span>`).join(", ")}</div>
         </div>
       </div>`);
       if (s.fork && (s.fork.outcomes || []).length > 1) {
@@ -574,7 +574,7 @@ function renderUrusanView() {
             <div class="uj-stage-dot" style="background:${oc}"></div>
             <div>
               <div class="uj-stage-name">${escapeHtml(st.name)}</div>
-              <div class="uj-stage-tables">${(st.tables || []).map(escapeHtml).join(", ")}</div>
+              <div class="uj-stage-tables">${(st.tables || []).map(t => `<span class="uj-tbl" data-open="${escapeAttr(t)}">${escapeHtml(t)}</span>`).join(", ")}</div>
             </div>
           </div>`);
         }
@@ -603,6 +603,10 @@ function renderUrusanView() {
   });
 }
 $("#urusan-picker").addEventListener("change", renderUrusanView);
+$("#urusan-content").addEventListener("click", (e) => {
+  const el = e.target.closest("[data-open]");
+  if (el) jumpToTables(el.dataset.open);
+});
 
 // ========== TABLES VIEW (search + link-graph + columns) ==========
 // Three sub-tabs, one purpose each:
