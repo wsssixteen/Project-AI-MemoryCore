@@ -1,0 +1,7565 @@
+{
+ "urusans": {
+  "PT": {
+   "tasks": [
+    {
+     "name": "1.0 Teknikal (WSB2PU) (MLK_TKL_B2_PU)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_B2_PU",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "PT",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat (Pembetulan)",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "PT",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "4.0 Charting Mohon (MLK_TKL_CM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah PJTPLT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah PYRJKKLPDT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah PSSPTGJKKL (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah PYRJKKLPTG (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah PRMMKNPDT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah PSSPTG (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah PSSPTGT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah TKJKKLPK (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan Mesyuarat (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan Mesyuarat PJTPLT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan Mesyuarat PYRJKKLPDT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan Mesyuarat PSSPTGJKKL (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan Mesyuarat PYRJKKLPTG (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan Mesyuarat PSSPTG (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan Mesyuarat PRMMKNPDT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan Mesyuarat PSSPTGT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan Mesyuarat TKJKKLPK(MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Semakan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "8.0 Perakuan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "14.0 Penyediaan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "PRMMKNPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "15.0 Semakan Risalat MMKN - PDT (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "16.0 Semakan Risalat MMKN - PDT (PPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "17.0 Semakan Risalat MMKN - PDT (KPPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "18.0 Perakuan Pentadbir Tanah (PT)",
+     "kind": "userTask",
+     "kod": "PPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "19.0 Penyediaan Senarai Semak ke PTG",
+     "kind": "userTask",
+     "kod": "PSSPTGJKKL",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "20.0 Penyediaan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRMMKNPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "21.0 Semakan Risalat MMKN - PTG (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "22.0 Semakan Risalat MMKN - PTG (KS)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "23.0 Perakuan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRRMMKNPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "23.0 Penyediaan Rencana JKKL - PDT",
+     "kind": "userTask",
+     "kod": "PYRJKKLPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "24.0 Zip Fail Dokumen MMKN",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "24.0 Semakan Rencana JKKL - PDT (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "25.0 Kemasukan Keputusan MMKN Dan Penyediaan Surat Makluman Keputusan",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "25.0 Semakan Rencana JKKL - PDT (PPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "26.0 Semakan Keputusan MMKN Dan Surat Makluman Keputusan",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "26.0 Semakan Rencana JKKL - PDT (KPPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "27.0 Pengesahan Keputusan MMKN Dan Surat Makluman Keputusan",
+     "kind": "userTask",
+     "kod": "PKMMKN",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "27.0 Perakuan Rencana JKKL - PDT",
+     "kind": "userTask",
+     "kod": "PRJKKLPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "28.0 Penyediaan Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": "PYSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "28.0 Penyediaan Senarai Semak ke PTG (Rencana JKKL)",
+     "kind": "userTask",
+     "kod": "PSSPTGJKKL",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "28.0 Penyediaan Senarai Semak ke PTG (Rencana JKKL)",
+     "kind": "userTask",
+     "kod": "PSSPTGJKKL",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "28.1 Penyediaan Maklumbalas Tangguh - PDT",
+     "kind": "userTask",
+     "kod": "PYSKTPDT",
+     "peranan": "-PT-PTTGGI-PTK-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "29.0 Pengesahan Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "29.0 Semakan Permohonan PDT",
+     "kind": "userTask",
+     "kod": "SPPDT",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "29.1 Pengesahan Maklumbalas Tangguh - PDT",
+     "kind": "userTask",
+     "kod": "PSKTPDT",
+     "peranan": "-PPD-KPPD-PTNH-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "30.0 Penyediaan Surat Keputusan Lulus dan Borang Notis 5A",
+     "kind": "userTask",
+     "kod": "PYSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "30.1 Cetakan Dokumen Surat Maklumbalas Tangguh - PDT (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "31.0 Semakan Surat Keputusan Lulus dan Borang Notis 5A",
+     "kind": "userTask",
+     "kod": "SSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "32.0 Pengesahan Surat Keputusan Lulus dan Borang Notis 5A",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "32.0 Penyediaan Syor SO Dan Rencana JKKL – PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "33.0 Charting Keputusan (MLK_TKL_CL)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CL",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "33.0 Semakan Rencana JKKL - PTG (SO Kanan/SO Tinggi)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "34.0 Cetakan Dokumen Surat Lulus dan Borang Notis 5A (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "34.0 Semakan Rencana JKKL - PTG (KS/SO Tinggi)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "35.0 Bayaran Pelbagai",
+     "kind": "userTask",
+     "kod": "PL",
+     "peranan": "",
+     "screens": 0,
+     "in_census": true
+    },
+    {
+     "name": "35.0 Semakan Rencana JKKL - PTG (TPTG/KS)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "36.0 Semakan Dokumen Kelulusan",
+     "kind": "userTask",
+     "kod": "SDK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "36.0 Perakuan Rencana JKKL - PTG",
+     "kind": "userTask",
+     "kod": "PRJKKLPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "37.0 Penyediaan Senarai Semak Hakmilik Sementara",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "37.0 Kemasukan Keputusan JKKL",
+     "kind": "userTask",
+     "kod": "KKJKKL",
+     "peranan": "",
+     "screens": 1,
+     "in_census": true
+    },
+    {
+     "name": "37.0 Keputusan JKKL Dan Penyediaan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "KJKKLPSK",
+     "peranan": "-PPTD-PT-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "37.1 Semakan Keputusan JKKL Dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "SKJKKLPSK",
+     "peranan": "-KS-PPTNT-PPTnKanan-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "37.2 Peraku Keputusan JKKL Dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "PKJKKLPSK",
+     "peranan": "-PTG-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "37.3 Terimaan Keputusan JKKL Dan Penentuan Kelulusan",
+     "kind": "userTask",
+     "kod": "TKJKKLPK",
+     "peranan": "-PPD-KPPD-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "38.0 Pengesahan Senarai Semak Hakmilik Sementara",
+     "kind": "userTask",
+     "kod": "SSSHS",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "39.0 Penyediaan Senarai Semak Hakmilik Kekal",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "39.0 Daftar Hakmilik Sementara (HSBM) (MLK_DFT_NOTA_HKMLK)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "40.0 Pengesahan Senarai Semak Hakmilik Kekal",
+     "kind": "userTask",
+     "kod": "SSSHK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "40.0 Daftar Hakmilik Sementara (HSBM) (MLK_DFT_NOTA_HKMLK)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "Penyediaan Surat Tolak",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Semakan Surat Tolak",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Pengesahan Surat Tolak",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Jabatan Teknikal (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Teknikal Penyediaan PA/B1 (MLK_TKL_PA_B1)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PA_B1",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "Cetakan Dokumen Surat Tolak (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "Penyediaan Minit Bebas",
+     "kind": "userTask",
+     "kod": "PYMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Semakan Minit Bebas (PPD)",
+     "kind": "userTask",
+     "kod": "SMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Pengesahan Minit Bebas (PTNH)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Jabatan Teknikal 2 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Penyediaan Senarai Semak ke PTG (Tangguh)",
+     "kind": "userTask",
+     "kod": "PSSPTGT",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Penyediaan Risalat MMKN dan Ringkasan Risalat (Tangguh) - PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Semakan Risalat MMKN dan Ringkasan Risalat (Tangguh) - PTG (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Semakan Risalat MMKN dan Ringkasan Risalat (Tangguh) - PTG (KS)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Zip Fail Dokumen MMKN (Tangguh)",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Perakuan Risalat MMKN (Tangguh)- PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Jabatan Teknikal 3 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Daftar Hakmilik Kekal (HKBM) (MLK_DFT_NOTA_HKMLK)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "Daftar Hakmilik Kekal Ganti Hakmilik Sementara (HKGHS) (MLK_DFT_NOTA_HKMLK)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "Daftar Hakmilik Kekal Ganti Hakmilik Sementara (HKGHS) (MLK_DFT_NOTA_HKMLK)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "Daftar Hakmilik Kekal (HKBM) (MLK_DFT_NOTA_HKMLK)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "Utiliti Urusetia Mesyuarat JKKL",
+     "kind": "userTask",
+     "kod": "UJKKL",
+     "peranan": "",
+     "screens": 0,
+     "in_census": true
+    },
+    {
+     "name": "Delay (6s)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Delay (6s)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Delay (6s)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Jabatan Teknikal 4 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Pengesahan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Semakan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "SMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Jabatan Teknikal TKJKKLPK (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    }
+   ],
+   "stats": {
+    "user_tasks": 67,
+    "call_activities": 36,
+    "census_matched": 37,
+    "census_defined": 202
+   }
+  },
+  "PLPS": {
+   "tasks": [
+    {
+     "name": "4.0 Semakan Kemasukan Maklumat",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "4.0 Semakan Kemasukan Maklumat (Pembetulan)",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "5.0 Charting Mohon (MLK_TKL_CM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Laporan Tanah (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Laporan Tanah-PJTLT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Laporan Tanah (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Laporan Tanah-PRMMKNPDT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Laporan Tanah-PRMMKNPDT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Laporan Tanah-PRMMKNPTGT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Laporan Tanah-PYRJKKLPTG (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Laporan Tanah-PYRJKKLPDT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Laporan Tanah-PSSPTGJKKL (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Laporan Tanah TKJKKLPK (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan MMKN (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan MMKN-PJTLT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan MMKN-PKPPT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan MMKN-PRMMKNPDT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan MMKN-PRMMKNPDT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan MMKN-PRMMKNPTGT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan MMKN-PYRJKKLPTG (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan MMKN-PYRJKKLPDT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan MMKN-PSSPTGJKKL (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan MMKN-TKJKKLPK (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "8.0 Semakan Jabatan Teknikal,Laporan Tanah, Pelan MMK",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "9.0 Peraku Jabatan Teknikal, Laporan Tanah, Pelan MMKN",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "14.0 Penyediaan Kertas Pertimbangan Pentadbir Tanah",
+     "kind": "userTask",
+     "kod": "PKPPT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "15.0 Semakan Kertas Pertimbangan Pentadbir Tanah (KPT)",
+     "kind": "userTask",
+     "kod": "SKPPT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "15.0 Semakan Kertas Pertimbangan Pentadbir Tanah (PPD)",
+     "kind": "userTask",
+     "kod": "SKPPT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "15.0 Semakan Kertas Pertimbangan Pentadbir Tanah (KPPD)",
+     "kind": "userTask",
+     "kod": "SKPPT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "15.0 Semakan Kertas Pertimbangan Pentadbir Tanah (KPPD)",
+     "kind": "userTask",
+     "kod": "SKPPT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "16.0 Keputusan Pentadbir Tanah (PT)",
+     "kind": "userTask",
+     "kod": "KDO",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "17.0 Penyediaan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "PRMMKNPDT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "17.0 Penyediaan Rencana JKKL - PDT",
+     "kind": "userTask",
+     "kod": "PYRJKKLPDT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "18.0 Semakan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "SRMMKNPDT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "18.0 Semakan Rencana JKKL - PDT",
+     "kind": "userTask",
+     "kod": "SRJKKLPDT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "19.0 Semakan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "SRMMKNPDT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "19.0 Semakan Rencana JKKL - PDT",
+     "kind": "userTask",
+     "kod": "SRJKKLPDT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "20.0 Semakan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "SRMMKNPDT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "20.0 Semakan Rencana JKKL - PDT",
+     "kind": "userTask",
+     "kod": "SRJKKLPDT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "21.0 Perakuan Pentadbir Tanah (PT)",
+     "kind": "userTask",
+     "kod": "PPT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "21.0 Perakuan Rencana JKKL - PDT",
+     "kind": "userTask",
+     "kod": "PRJKKLPDT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "22.0 Penyediaan Senarai Semak ke PTG",
+     "kind": "userTask",
+     "kod": "PSSPTGJKKL",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "22.0 Penyediaan Senarai Semak ke PTG (Rencana JKKL)",
+     "kind": "userTask",
+     "kod": "PSSPTGJKKL",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "23.0 Semakan Permohonan PDT",
+     "kind": "userTask",
+     "kod": "SPPDT",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "24.0 Penyediaan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRMMKNPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "25.0 Semakan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "SRMMKNPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "26.0 Semakan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "SRMMKNPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "26.0 Penyediaan Syor SO dan Rencana JKKL – PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "27.0 Perakuan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRRMMKNPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "27.0 Semakan Rencana JKKL - PTG",
+     "kind": "userTask",
+     "kod": "SRJKKLPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "28.0 Zip Fail Dokumen MMKN",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "28.0 Semakan Rencana JKKL - PTG",
+     "kind": "userTask",
+     "kod": "SRJKKLPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "29.0 Kemasukan Keputusan MMKN dan Penyediaan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "KKMMKN",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "29.0 Semakan Rencana JKKL - PTG",
+     "kind": "userTask",
+     "kod": "SRJKKLPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "30.0 Penyediaan Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "30.0 Perakuan Rencana JKKL - PTG",
+     "kind": "userTask",
+     "kod": "PRJKKLPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "30.1 Penyediaan Maklumbalas Tangguh - PDT",
+     "kind": "userTask",
+     "kod": "PYSKTPDT",
+     "peranan": "-PT-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "31.0 Semakan Keputusan MMKN Dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "SKMMKN",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "31.0 Peraku Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "31.0 Keputusan JKKL Dan Penyediaan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "KJKKLPSK",
+     "peranan": "-PPTD-PT-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "31.1 Semakan Keputusan JKKL Dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "SKJKKLPSK",
+     "peranan": "-KS-PPTNT-PPTnKanan-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "31.1 Pengesahan Maklumbalas Tangguh - PDT",
+     "kind": "userTask",
+     "kod": "PSKTPDT",
+     "peranan": "-PPD-KPPD-PTNH-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "31.2 Peraku Keputusan JKKL Dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "PKJKKLPSK",
+     "peranan": "-PTG-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "31.3 Terimaan Keputusan JKKL Dan Penentuan Kelulusan",
+     "kind": "userTask",
+     "kod": "TKJKKLPK",
+     "peranan": "-PPD-KPPD-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "32.1 Cetakan Dokumen Surat Maklumbalas Tangguh - PDT (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "33.0 Peraku Keputusan MMKN dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "PKMMKN",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "34.0 Penyediaan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "PYSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "35.0 Semakan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "SSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "36.0 Pengesahan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "PSSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "37.0 Cetakan Dokumen Surat Lulus (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "38.0 Charting Keputusan Lulus (MLK_TKL_CL_LP)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CL_LP",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "39.0 Bayaran Pelbagai",
+     "kind": "userTask",
+     "kod": "PL",
+     "peranan": "",
+     "screens": 0,
+     "in_census": true
+    },
+    {
+     "name": "40.0. Penyediaan Borang 4Ae Dan L1e",
+     "kind": "userTask",
+     "kod": "PYB4AE",
+     "peranan": "",
+     "screens": 2,
+     "in_census": true
+    },
+    {
+     "name": "41.0 Pengesahan Borang 4Ae Dan L1e",
+     "kind": "userTask",
+     "kod": "PB4AE",
+     "peranan": "",
+     "screens": 2,
+     "in_census": true
+    },
+    {
+     "name": "42.0 Cetakan Borang 4Ae dan L1e",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "45.0 Penyediaan Minit Bebas",
+     "kind": "userTask",
+     "kod": "PYMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "46.0 Semakan Minit Bebas (PPD)",
+     "kind": "userTask",
+     "kod": "SMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "46.1 Semakan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "SMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "47.0 Pengesahan Minit Bebas (PTNH)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "47.1 Pengesahan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "48.0 Penyediaan Surat Tolak",
+     "kind": "userTask",
+     "kod": "PYSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "49.0 Semakan Surat Tolak",
+     "kind": "userTask",
+     "kod": "SSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "50.0 Peraku Surat Tolak",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "51.0 Cetakan Dokumen Surat Tolak (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "58.0 Penyediaan Senarai Semak ke PTG (Tangguh)",
+     "kind": "userTask",
+     "kod": "PSSPTGT",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "60.0 Penyediaan Risalat MMKN, ringkasan risalat dan surat maklumat balas - PTG",
+     "kind": "userTask",
+     "kod": "PRMMKNPTGT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "62.0 Semakan Risalat MMKN, Ringkasan Risalat dan Surat Maklumat Balas - PTG",
+     "kind": "userTask",
+     "kod": "SRMMKNPTGT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "62.0 Semakan Risalat MMKN, Ringkasan Risalat dan Surat Maklumat Balas - PTG",
+     "kind": "userTask",
+     "kod": "SRMMKNPTGT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "63.0 Perakuan Risalat MMKN, Ringkasan Risalat dan Surat Maklumat Balas - PTG",
+     "kind": "userTask",
+     "kod": "PRRMMKNPTGT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "64.0 Zip Fail Dokumen MMKN (Tangguh)",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Jabatan Teknikal 1 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 2 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 3 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Utiliti JKKL",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Jabatan Teknikal 4 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 5 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal TKJKKLPK (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    }
+   ],
+   "stats": {
+    "user_tasks": 65,
+    "call_activities": 32,
+    "census_matched": 58,
+    "census_defined": 77
+   }
+  },
+  "PRZ": {
+   "tasks": [
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat (Pembetulan)",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "4.0 Charting Mohon (MLK_TKL_CM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah-PJTLT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah-PRMMKNPDT(MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah-PRMMKNPDT(MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah-Tangguh (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN -PJTLT(MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN -PRMMKNPDT(MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN -PRMMKNPDT(MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN -Tangguh (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Semakan Jabatan Teknikal, Laporan Tanah dan Pelan Mesyuarat",
+     "kind": "userTask",
+     "kod": "SJTLT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "8.0 Peraku Jabatan Teknikal, Laporan Tanah, Pelan MMKN",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "23.0 Penyediaan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "PRMMKNPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "24.0 Semakan Risalat MMKN - PDT (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "25.0 Semakan Risalat MMKN - PDT (PPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "26.0 Semakan Risalat MMKN - PDT (KPPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "27.0 Perakuan Pentadbir Tanah (PT)",
+     "kind": "userTask",
+     "kod": "PPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "28.0 Penyediaan Senarai Semak ke PTG (Risalat MMKN)",
+     "kind": "userTask",
+     "kod": "PSSPTG",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "29.0 Penyediaan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRMMKNPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "30.0 Semakan Risalat MMKN - PTG (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "31.0 Semakan Risalat MMKN - PTG (KS)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "32.0 Perakuan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRRMMKNPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "33.0 Zip Fail Dokumen MMKN",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "34.0 Kemasukan Keputusan MMKN dan Surat Makluman Keputusan",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "35.0 Semakan Keputusan MMKN dan Surat Makluman Keputusan",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "36.0 Pengesahan Keputusan MMKN dan Surat Makluman Keputusan",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "37.0 Penyediaan Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": "PYSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "38.0 Pengesahan Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "39.0 Penyediaan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "PYSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "40.0 Semakan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "SSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "41.0 Pengesahan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "PSSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "42.0 Charting Keputusan Lulus (MLK_TKL_CL_LP)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CL_LP",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "43.0 Cetakan Dokumen Surat Lulus (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "44.0 Penyediaan Surat Makluman Keluaran Warta",
+     "kind": "userTask",
+     "kod": "PSMKW",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "45.0 Semakan Surat Makluman Keluaran Warta",
+     "kind": "userTask",
+     "kod": "SSMKW",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "46.0 Peraku Surat Makluman Keluaran Warta",
+     "kind": "userTask",
+     "kod": "PRSMKW",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "47.0 Penyediaan PU (MLK_TKL_PRZ_PU)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PRZ_PU",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "48.0 Teknikal Penyediaan PA/B1 (MLK_TKL_PA_B1)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PA_B1",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "49.0 Penyediaan Draf Warta dan Surat Iringan Ke Dewan",
+     "kind": "userTask",
+     "kod": "PYDWPTG",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "50.0 Peraku Draf Warta dan Surat Iringan Ke Dewan",
+     "kind": "userTask",
+     "kod": "PDWPTG",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "51.0 Penyediaan Warta Dan Surat Iringan Pewartaan",
+     "kind": "userTask",
+     "kod": "PYDWSI",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "51.0 Cetakan Dokumen (Surat Iringan Dewan & Draf Warta) (MLK_PLP_SUB_UPN_PTG)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN_PTG",
+     "module": "pelupusan sub-process"
+    },
+    {
+     "name": "52.0 Peraku Warta Dan Surat Iringan Pewartaan",
+     "kind": "userTask",
+     "kod": "PDWSI",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "53.0 Cetakan Dokumen (Surat Iringan Pewartaan & Draf Warta) (MLK_PLP_SUB_UPN_PTG)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN_PTG",
+     "module": "pelupusan sub-process"
+    },
+    {
+     "name": "54.0 Muatnaik Warta",
+     "kind": "userTask",
+     "kod": "MW",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "55.0 Penyediaan Surat Makluman ke PDT",
+     "kind": "userTask",
+     "kod": "PYDWSMPTD",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "56.0 Peraku Surat Makluman ke PDT",
+     "kind": "userTask",
+     "kod": "PDWSMPTD",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "57.0 Penyediaan Surat Makluman kepada Pemohon",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "58.0 Semakan Surat Makluman kepada Pemohon",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "59.0 Pengesahan Surat Makluman kepada Pemohon",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "60.0 Cetakan Dokumen (Surat Makluman dan Salinan Warta) (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "61.0 Penyediaan Minit Bebas",
+     "kind": "userTask",
+     "kod": "PYMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "62.0 Semakan Minit Bebas (PPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "62.1 Semakan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "63.0 Pengesahan Minit Bebas (PTNH)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "63.1 Pengesahan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "64.0 Penyediaan Surat Tolak Ringkas (PYSTP)",
+     "kind": "userTask",
+     "kod": "PYSTR",
+     "peranan": "PT",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "65.0 Semakan Surat Tolak Ringkas (SSTP)",
+     "kind": "userTask",
+     "kod": "SSTR",
+     "peranan": "-KPT-PPD-KPPD-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "66.0 Peraku Surat Tolak Ringkas (PSTP)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "67.0 Cetakan Dokumen (Surat Tolak/Tolak Ringkas) MLK_PLP_SUB_UPN",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "68.0 Penyediaan Senarai Semak ke PTG (Tangguh)",
+     "kind": "userTask",
+     "kod": "PSSPTGT",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "69.0 Penyediaan Risalat MMKN dan Ringkasan Risalat (Tangguh) - PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "70.0 Semakan Risalat MMKN dan Ringkasan Risalat (Tangguh) - PTG (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "71.0 Semakan Risalat MMKN dan Ringkasan Risalat (Tangguh) - PTG (KS)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "72.0 Perakuan Risalat MMKN (Tangguh)- PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "73.0 Zip Fail Dokumen MMKN (Tangguh)",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Jabatan Teknikal 1 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 2 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 3 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "DFT : SBTM (PTG)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "DFT : SBTM (PTD)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "TBC",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "Jabatan Teknikal 3 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    }
+   ],
+   "stats": {
+    "user_tasks": 50,
+    "call_activities": 26,
+    "census_matched": 30,
+    "census_defined": 164
+   }
+  },
+  "MLPS": {
+   "tasks": [
+    {
+     "name": "3.0 Penyediaan Borang 4Ae Dan L1e",
+     "kind": "userTask",
+     "kod": "PYB4AE",
+     "peranan": "",
+     "screens": 2,
+     "in_census": true
+    },
+    {
+     "name": "4.0 Pengesahan Borang 4Ae Dan L1e",
+     "kind": "userTask",
+     "kod": "PB4AE",
+     "peranan": "",
+     "screens": 2,
+     "in_census": true
+    },
+    {
+     "name": "5.0 Cetakan Borang 4Ae dan L1e",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    }
+   ],
+   "stats": {
+    "user_tasks": 2,
+    "call_activities": 1,
+    "census_matched": 2,
+    "census_defined": 12
+   }
+  },
+  "BPRZ": {
+   "tasks": [
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "PT",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat (Pembetulan)",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "PT",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "4.0 Charting Mohon (MLK_TKL_CM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah-PJTLT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah-PRMMKNPDT(MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah-PRMMKNPDT(MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah-Tangguh (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah-PYRJKKLPDT(MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah-PSSPTGJKKL (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah-PYRJKKLPTG (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN -PJTLT(MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN -PRMMKNPDT(MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN -PRMMKNPDT(MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN -Tangguh (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN -PYRJKKLPDT(MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN -PSSPTGJKKL (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN -PYRJKKLPTG(MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN TKJKKLPK (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Penyediaan Laporan Tanah-TKJKKLPK (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Jabatan Teknikal TKJKKLPK (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "7.0 Semakan Jabatan Teknikal,Laporan Tanah, Pelan MMKN",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "8.0 Peraku Jabatan Teknikal, Laporan Tanah, Pelan MMKN",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "12.0 Penyediaan Rencana JKKL - PDT",
+     "kind": "userTask",
+     "kod": "PYRJKKLPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "13.0 Semakan Rencana JKKL - PDT (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "14.0 Semakan Rencana JKKL - PDT (PPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "15.0 Semakan Rencana JKKL - PDT (KPPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "16.0 Perakuan Rencana JKKL - PDT",
+     "kind": "userTask",
+     "kod": "PRJKKLPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "17.0 Penyediaan Senarai Semak ke PTG (Rencana JKKL)",
+     "kind": "userTask",
+     "kod": "PSSPTGJKKL",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "18.0 Semakan Permohonan PDT",
+     "kind": "userTask",
+     "kod": "SPPDT",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "21.0 Penyediaan Syor SO dan Rencana JKKL – PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "22.0 Semakan Rencana JKKL - PTG (SO Kanan/SO Tinggi)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "23.0 Semakan Rencana JKKL - PTG (KS/SO Tinggi)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "24.0 Semakan Rencana JKKL - PTG (TPTG/KS)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "25.0 Perakuan Rencana JKKL - PTG",
+     "kind": "userTask",
+     "kod": "PRJKKLPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "26.0 Keputusan JKKL Dan Penyediaan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "KJKKLPSK",
+     "peranan": "-PPTD-PT-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "26.1 Semakan Keputusan JKKL Dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "SKJKKLPSK",
+     "peranan": "-KS-PPTNT-PPTnKanan-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "26.2 Peraku Keputusan JKKL Dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "PKJKKLPSK",
+     "peranan": "-PTG-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "26.3 Terimaan Keputusan JKKL Dan Penentuan Kelulusan",
+     "kind": "userTask",
+     "kod": "TKJKKLPK",
+     "peranan": "-PPD-KPPD-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "27.0 Penyediaan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "PRMMKNPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "28.0 Semakan Risalat MMKN - PDT (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "29.0 Semakan Risalat MMKN - PDT (PPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "30.0 Semakan Risalat MMKN - PDT (KPPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "31.0 Perakuan Pentadbir Tanah (PT)",
+     "kind": "userTask",
+     "kod": "PPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "32.0 Penyediaan Senarai Semak ke PTG (Risalat MMKN)",
+     "kind": "userTask",
+     "kod": "PSSPTGJKKL",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "33.0 Penyediaan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRMMKNPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "34.0 Semakan Risalat MMKN - PTG (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "35.0 Semakan Risalat MMKN - PTG (KS)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "36.0 Perakuan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRRMMKNPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "37.0 Zip Fail Dokumen MMKN",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "38.0 Kemasukan Keputusan MMKN dan Surat Makluman Keputusan",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "39.0 Penyediaan Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": "PYSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "40.0 Pengesahan Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "41.0 Semakan Keputusan MMKN dan Surat Makluman Keputusan",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "42.0 Pengesahan Keputusan MMKN dan Surat Makluman Keputusan",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "43.0 Charting Keputusan Lulus (MLK_TKL_CL_LP)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CL_LP",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "44.0 Penyediaan Draf Notis Cadangan Pembatalan Perizaban dan Surat Iringan ke Pejabat LA",
+     "kind": "userTask",
+     "kod": "PYDNCPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "45.0 Semakan Draf Notis Cadangan Pembatalan Perizaban dan Surat Iringan ke Pejabat LA",
+     "kind": "userTask",
+     "kod": "SDNCPTG3",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "46.0 Peraku Draf Notis Cadangan Pembatalan Perizaban dan Surat Iringan ke Pejabat LA",
+     "kind": "userTask",
+     "kod": "PDNCPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "48.0 Muatnaik Notis Cadangan Pembatalan Perizaban",
+     "kind": "userTask",
+     "kod": "MNCPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "49.0 Kemasukan Keputusan Siasatan",
+     "kind": "userTask",
+     "kod": "KKS",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "50.0 Penyediaan Draf Pembatalan Warta dan Surat Iringan Ke Dewan",
+     "kind": "userTask",
+     "kod": "PYDPWCSI",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "51.0 Peraku Draf Pembatalan Warta dan Surat Iringan Ke Dewan",
+     "kind": "userTask",
+     "kod": "PDPWCSI",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "52.0 Cetakan Dokumen (Draf Pembatalan Warta dan Surat Iringan Ke Dewan) (MLK_PLP_SUB_UPN_PTG)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN_PTG",
+     "module": "pelupusan sub-process"
+    },
+    {
+     "name": "53.0 Penyediaan Draf Pembatalan Warta Dan Surat Iringan Pewartaan",
+     "kind": "userTask",
+     "kod": "PYDPWSIP",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "54.0 Peraku Draf Pembatalan Warta Dan Surat Iringan Pewartaan",
+     "kind": "userTask",
+     "kod": "PDPWSIP",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "55. Cetakan Dokumen Surat Iringan Pewartaan & Draf Pembatalan Warta) (MLK_PLP_SUB_UPN_PTG)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN_PTG",
+     "module": "pelupusan sub-process"
+    },
+    {
+     "name": "56.0 Muatnaik Pembatalan Warta",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "57.0 Penyediaan Surat Makluman ke PDT",
+     "kind": "userTask",
+     "kod": "PYDWSMPTD",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "58.0 Peraku Surat Makluman ke PDT",
+     "kind": "userTask",
+     "kod": "PDWSMPTD",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "59.0 Penyediaan Surat Makluman kepada Pemohon",
+     "kind": "userTask",
+     "kod": "PYSMW",
+     "peranan": "PT",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "60.0 Semakan Surat Makluman kepada Pemohon",
+     "kind": "userTask",
+     "kod": "SSMW",
+     "peranan": "KPT-KPPD-PPD",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "61.0 Pengesahan Surat Makluman kepada Pemohon",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "61.0 Penyediaan Minit Bebas",
+     "kind": "userTask",
+     "kod": "PYMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "62.0 Cetakan Dokumen (Surat Makluman dan Salinan Batal Warta) (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "62.0 Semakan Minit Bebas (PPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "62.1 Semakan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "63.0 Pengesahan Minit Bebas (PTNH)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "63.1 Pengesahan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "64.0 Penyediaan Surat Tolak Ringkas (PYSTP)",
+     "kind": "userTask",
+     "kod": "PYSTR",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "65.0 Semakan Surat Tolak Ringkas (SSTP)",
+     "kind": "userTask",
+     "kod": "SSTR",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "66.0 Peraku Surat Tolak Ringkas (PSTP)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "67.0 Cetakan Dokumen (Surat Tolak/Tolak Ringkas) MLK_PLP_SUB_UPN",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "68.0 Penyediaan Senarai Semak ke PTG (Tangguh)",
+     "kind": "userTask",
+     "kod": "PSSPTGT",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "69.0 Penyediaan Risalat MM ,Ringkasan Risalat dan Surat Maklumat Balas (Tangguh) - PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "70.0 Semakan Risalat MMKN , Ringkasan Risalat dan Surat Maklumat Balas(Tangguh) - PTG (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "71.0 Semakan Risalat , Ringkasan Risalat dan Surat Maklumat Balas (Tangguh) - PTG (KS)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "72.0 Perakuan Risalat MMKN dan Surat Maklumat Balas (Tangguh)- PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "73.0 Zip Fail Dokumen MMKN (Tangguh)",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Jabatan Teknikal 1 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 2 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 3 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Utiliti Urusetia Mesyuarat JKKL",
+     "kind": "userTask",
+     "kod": "UJKKL",
+     "peranan": "",
+     "screens": 0,
+     "in_census": true
+    },
+    {
+     "name": "Jabatan Teknikal 4 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    }
+   ],
+   "stats": {
+    "user_tasks": 66,
+    "call_activities": 29,
+    "census_matched": 39,
+    "census_defined": 184
+   }
+  },
+  "PSBS": {
+   "tasks": [
+    {
+     "name": "1.0 Teknikal (WSB2PU) (MLK_TKL_B2_PU)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_B2_PU",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "PT",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat (Pembetulan)",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "PT",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "4.0 Endorsan Nota Mohon (SBTM dan MCLM)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "5.0 Charting Mohon (MLK_TKL_CM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Penyediaan Laporan Tanah (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Penyediaan Laporan Tanah PJTLT",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Penyediaan Laporan Tanah PRMMKNPDT",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Penyediaan Laporan Tanah PSSPTG",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan Mesy",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan Mesyuarat PJTLT",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan Mesyuarat PRMMKNPDT",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan Mesyuarat PSSPTG",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "8.0 Semakan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "9.0 Perakuan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "12.0 Penyediaan Risalat MMKN - PDT (PT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "13.0 Semakan Risalat MMKN - PDT (PPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "14.0 Semakan Risalat MMKN - PDT (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "15.0 Semakan Risalat MMKN - PDT (KPPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "16.0 Perakuan Pentadbir Tanah (PT)",
+     "kind": "userTask",
+     "kod": "PPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "17.0 Penyediaan Senarai Semak ke PTG",
+     "kind": "userTask",
+     "kod": "PSSPTG",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "18.0 Penyediaan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRMMKNPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "19.0 Semakan Risalat MMKN - PTG ( KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "20.0 Semakan Risalat MMKN - PTG (KS)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "21.0 Perakuan Risalat MMKN - PTG (PTG)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "22.0 Penyediaan Surat Keputusan Lulus dan Borang Notis 5A",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "22.0 Zip Fail Dokumen MMKN",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "23.0 Semakan Surat Keputusan Lulus dan Borang Notis 5A",
+     "kind": "userTask",
+     "kod": "SSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "23.0 Kemasukan Keputusan MMKN dan Penyediaan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "KKMMKN",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "24.0 Pengesahan Surat Keputusan Lulus dan Borang Notis 5A",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "24.0 Semakan Keputusan MMKN dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "SKMMKN2",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "25.0 Cetakan Dokumen Surat Lulus dan Borang Notis 5A",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "25.0 Perakuan Keputusan MMKN dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "PKMMKN",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "26.0 Bayaran Pelbagai",
+     "kind": "userTask",
+     "kod": "PL",
+     "peranan": "",
+     "screens": 0,
+     "in_census": true
+    },
+    {
+     "name": "26.0 Charting Keputusan",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CL",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "27.0 Penyediaan Surat Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "28.0 Pengesahan Surat Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "32.0 Penyediaan Senarai Semak Serahbalik Seluruh",
+     "kind": "userTask",
+     "kod": "PSSTL",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "33.0 Endorsan Nota Mohon (SBTL)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "41.0 Penyediaan Senarai Semak ke PTG (Tangguh)",
+     "kind": "userTask",
+     "kod": "PSSPTGT",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "43.0 Penyediaan Minit Bebas",
+     "kind": "userTask",
+     "kod": "PYMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "44.0 Semakan Minit Bebas (PPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "44.1 Semakan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "45.0 Pengesahan Minit Bebas (PTNH)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "45.1 Pengesahan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "46.0 Penyediaan Surat Tolak",
+     "kind": "userTask",
+     "kod": "PYSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "47.0 Semakan Surat Tolak",
+     "kind": "userTask",
+     "kod": "SSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "48.0 Peraku Surat Tolak",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "51.0 Cetakan Dokumen Surat Tolak",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "53.0 Semakan Dokumen Kelulusan",
+     "kind": "userTask",
+     "kod": "SDK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "58.0 Penyediaan Senarai Semak Hakmilik Sementara",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "59.0 Pengesahan Senarai Semak Hakmilik Sementara",
+     "kind": "userTask",
+     "kod": "SSSHS",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "65.0 Penyediaan Senarai Semak Hakmilik Tetap",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "66.0 Pengesahan Senarai Semak Hakmilik Kekal",
+     "kind": "userTask",
+     "kod": "SSSHK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Jabatan Teknikal 1 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 2 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 2 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Daftar Hakmilik Sementara (HSBM) (MLK_DFT_NOTA_HKMLK)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "Daftar Hakmilik Sementara (HSBM) (MLK_DFT_NOTA_HKMLK)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "Semakan PA dan B1",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PA_B1",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "Daftar Hakmilik Kekal (HKBM) (MLK_DFT_NOTA_HKMLK)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "Daftar Hakmilik Kekal Ganti Hakmilik Sementara (HKGHS) (MLK_DFT_NOTA_HKMLK)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "Daftar Hakmilik Kekal Ganti Hakmilik Sementara (HKGHS) (MLK_DFT_NOTA_HKMLK)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "Daftar Hakmilik Kekal (HKBM) (MLK_DFT_NOTA_HKMLK)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "Penyediaan Risalat MMKN dan Ringkasan Risalat (Tangguh) - PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Semakan Risalat MMKN dan Ringkasan Risalat (Tangguh) - PTG (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Semakan Risalat MMKN dan Ringkasan Risalat (Tangguh) - PTG (KS)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Perakuan Risalat MMKN (Tangguh)- PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Zip Fail Dokumen MMKN (Tangguh)",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Endorsan Nota Mohon (SBTB)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "Jabatan Teknikal 3 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    }
+   ],
+   "stats": {
+    "user_tasks": 44,
+    "call_activities": 27,
+    "census_matched": 22,
+    "census_defined": 155
+   }
+  },
+  "PPJK": {
+   "tasks": [
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "PT",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat (Pembetulan)",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "PT",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "4.0 Charting Mohon(MLK_TKL_CM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah JKKLPTG (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah JKKL (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah 3 (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah 2 (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah TKJKKLPK (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN JKKLPTG (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN JKKL (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN 3 (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN 2 (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN TKJKKLPK (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Semakan Jabatan Teknikal, Laporan Tanah atau Pelan Mesyuarat JKBB",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "8.0 Perakuan Jabatan Teknikal, Laporan Tanah atau Pelan Mesyuarat JKBB",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "12.0 Penyediaan Rencana JKKL - PDT",
+     "kind": "userTask",
+     "kod": "PYRJKKLPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "13.0 Semakan Rencana JKKL - PDT",
+     "kind": "userTask",
+     "kod": "SRJKKLPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "14.0 Semakan Rencana JKKL - PDT",
+     "kind": "userTask",
+     "kod": "SRJKKLPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "15.0 Semakan Rencana JKKL - PDT",
+     "kind": "userTask",
+     "kod": "SRJKKLPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "16.0 Perakuan Rencana JKKL - PDT",
+     "kind": "userTask",
+     "kod": "PRJKKLPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "17.0 Penyediaan Senarai Semak ke PTG (JKKL)",
+     "kind": "userTask",
+     "kod": "PSSPTGJKKL",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "17.0 Penyediaan Senarai Semak ke PTG (JKKLPTG)",
+     "kind": "userTask",
+     "kod": "PSSPTGJKKL",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "18.0 Semakan Permohonan PDT",
+     "kind": "userTask",
+     "kod": "SPPDT",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "21.0 Penyediaan Syor SO dan Rencana JKKL – PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "22.0 Semakan Rencana JKKL - PTG",
+     "kind": "userTask",
+     "kod": "SRJKKLPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "23.0 Semakan Rencana JKKL - PTG",
+     "kind": "userTask",
+     "kod": "SRJKKLPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "24.0 Semakan Rencana JKKL - PTG",
+     "kind": "userTask",
+     "kod": "SRJKKLPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "25.0 Perakuan Rencana JKKL - PTG",
+     "kind": "userTask",
+     "kod": "PRJKKLPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "26.0 Keputusan JKKL Dan Penyediaan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "KJKKLPSK",
+     "peranan": "-PPTD-PT-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "26.0 Kemasukan Keputusan JKKL",
+     "kind": "userTask",
+     "kod": "KKJKKL",
+     "peranan": "",
+     "screens": 1,
+     "in_census": true
+    },
+    {
+     "name": "26.1 Semakan Keputusan JKKL Dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "SKJKKLPSK",
+     "peranan": "-KS-PPTNT-PPTnKanan-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "26.2 Peraku Keputusan JKKL Dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "PKJKKLPSK",
+     "peranan": "-PTG-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "26.3 Terimaan Keputusan JKKL Dan Penentuan Kelulusan",
+     "kind": "userTask",
+     "kod": "TKJKKLPK",
+     "peranan": "-PPD-KPPD-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "27.0 Penyediaan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "PRMMKNPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "28.0 Semakan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "SRMMKNPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "29.0 Semakan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "SRMMKNPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "30.0 Semakan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "SRMMKNPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "31.0 Perakuan Pentadbir Tanah (PT)",
+     "kind": "userTask",
+     "kod": "PPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "32.0 Penyediaan Senarai Semak ke PTG",
+     "kind": "userTask",
+     "kod": "PSSPTGJKKL",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "33.0 Penyediaan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRMMKNPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "34.0 Semakan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "SRMMKNPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "35.0 Semakan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "SRMMKNPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "36.0 Perakuan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRRMMKNPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "37.0 Zip Fail Dokumen MMKN",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "38.0 Kemasukan Keputusan MMKN dan Penyediaan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "KKMMKN",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "39.0 Penyediaan Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "40.0 Penyediaan Minit Bebas",
+     "kind": "userTask",
+     "kod": "PYMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "40.0 Peraku Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "41.0 Semakan Minit Bebas (PPD)",
+     "kind": "userTask",
+     "kod": "SMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "41.0 Semakan Keputusan MMKN dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "SKMMKN",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "41.1 Semakan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "SMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "42.0 Pengesahan Minit Bebas (PTNH)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "42.0 Peraku Keputusan MMKN dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "PKMMKN",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "42.1 Pengesahan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "43.0 Penyediaan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "PYSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "44.0 Semakan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "SSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "45.0 Pengesahan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "PSSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "46.0 Cetakan Dokumen (Surat Lulus) (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "47.0 Charting Keputusan Lulus (MLK_TKL_CL_LP))",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CL_LP",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "48.0 Bayaran Pelbagai",
+     "kind": "userTask",
+     "kod": "PL",
+     "peranan": "",
+     "screens": 0,
+     "in_census": true
+    },
+    {
+     "name": "49.0 Penyediaan Surat Nilaian JPPH",
+     "kind": "userTask",
+     "kod": "PYSNJPPH",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "50.0 Semakan Surat Nilaian JPPH",
+     "kind": "userTask",
+     "kod": "SSNJPPH",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "51.0 Pengesahan Surat Nilaian JPPH",
+     "kind": "userTask",
+     "kod": "PSNJPPH",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "52.0 Cetakan Dokumen (Surat Nilaian JPPH)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "53.0 Ulasan Teknikal (Surat Nilaian JPPH)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "54.0 Penyediaan Borang 4Ee dan P3e",
+     "kind": "userTask",
+     "kod": "PYB4EE",
+     "peranan": "",
+     "screens": 2,
+     "in_census": true
+    },
+    {
+     "name": "55.0 Pengesahan Borang 4Ee dan P3e",
+     "kind": "userTask",
+     "kod": "PB4EE",
+     "peranan": "",
+     "screens": 2,
+     "in_census": true
+    },
+    {
+     "name": "56.0 Cetakan Borang 4Ee dan P3e",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "62.0 Penyediaan Surat Tolak",
+     "kind": "userTask",
+     "kod": "PYSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "63.0 Semakan Surat Tolak",
+     "kind": "userTask",
+     "kod": "SSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "64.0 Peraku Surat Tolak",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "65.0 Cetakan Dokumen (Surat Tolak)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "72.0 Penyediaan Senarai Semak Ke PTG - Tangguh",
+     "kind": "userTask",
+     "kod": "PSSPTGJKKL",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "74.0 Penyediaan Risalat MMKN, ringkasan risalat dan surat maklumat balas– PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "75.0 Semakan Risalat MMKN dan surat maklumat balas – PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "76.0 Semakan Risalat MMKN dan surat maklumat balas – PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "77.0 Perakuan Risalat MMKN dan surat maklumat balas– PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "78.0 Zip Fail Dokumen MMKN",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Jabatan Teknikal 1 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 3 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Delay (6s)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Utiliti Urusetia Mesyuarat JKKL",
+     "kind": "userTask",
+     "kod": "UJKKL",
+     "peranan": "",
+     "screens": 0,
+     "in_census": true
+    },
+    {
+     "name": "Jabatan Teknikal 2 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 4 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal TKJKKLPK (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    }
+   ],
+   "stats": {
+    "user_tasks": 63,
+    "call_activities": 25,
+    "census_matched": 52,
+    "census_defined": 69
+   }
+  },
+  "PLTP": {
+   "tasks": [
+    {
+     "name": "1.0 Jabatan Teknikal (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "2.0 Jabatan Teknikal SJTLT (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "2.0 Jabatan Teknikal PJTLT(MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "2.0 Jabatan Teknikal PJTLT(MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "5.0 Charting Mohon (MLK_TKL_CM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Penyediaan Laporan Tanah",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Penyediaan Laporan Tanah PJTLT",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Penyediaan Laporan Tanah PRMMKNPDT",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Penyediaan Laporan Tanah PSSPTG",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan Mesyuarat",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan Mesyuarat PJTLT",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan Mesyuarat PRMMKNPDT",
+     "kind": "callActivity",
+     "called": "TRG_TKL_PPM",
+     "module": "TRG_TKL_PPM"
+    },
+    {
+     "name": "7.0 Pelan Mesyuarat PSSPTG",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "8.0 Semakan Jabatan Teknikal, Laporan Tanah dan Pelan Mesyuarat",
+     "kind": "userTask",
+     "kod": "SJTLT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "9.0 Perakuan Jabatan Teknikal, Laporan Tanah, Pelan MMK",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "12.0 Penyediaan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "PRMMKNPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "13.0 Semakan Risalat MMKN - PDT (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "13.0 Semakan Risalat MMKN - PDT (PPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "13.0 Semakan Risalat MMKN - PDT (KPPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "16.0 Perakuan Pentadbir Tanah (PT)",
+     "kind": "userTask",
+     "kod": "PPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "18.0 Penyediaan Risalat MMKN dan Ringkasan Risalat - PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "19.0 Semakan Risalat MMKN dan Ringkasan Risalat - PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "20.0 Semakan Risalat MMKN dan Ringkasan Risalat - PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "21.0 Perakuan Risalat MMKN dan Ringkasan Risalat - PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "22.0 Penyediaan Senarai Semak ke PTG",
+     "kind": "userTask",
+     "kod": "PSSPTG",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "22.0 Zip Fail Dokumen MMKN",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "23.0 Kemasukan Keputusan MMKN dan Penyediaan Surat Makluman Keputusan",
+     "kind": "userTask",
+     "kod": "KKMMKN",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "24.0 Semakan Keputusan MMKN Dan Surat Makluman Keputusan",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "25.0 Pengesahan Keputusan MMKN dan Surat Makluman Keputusan",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "26.0 Penyediaan Surat Keputusan dan Borang Notis 5A",
+     "kind": "userTask",
+     "kod": "PYSKN5A",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "27.0 Semakan Surat Keputusan dan Borang Notis 5A",
+     "kind": "userTask",
+     "kod": "SSKN5A",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "28.0 Pengesahan Surat Keputusan dan Borang Notis 5A",
+     "kind": "userTask",
+     "kod": "PSKN5A",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "29.0 Cetakan Dokumen Surat Lulus (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "29.0 Update Layer FT (Service)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "30.0 Bayaran Pelbagai",
+     "kind": "userTask",
+     "kod": "PL",
+     "peranan": "",
+     "screens": 0,
+     "in_census": true
+    },
+    {
+     "name": "31.0 Penyediaan Senarai Semak Lanjut Tempoh Pajakan - PSPL",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "32.0 Endorsan Nota Lulus Lanjut Tempoh Pajakan - PSPL",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "33.0 Penyediaan Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": "PYSK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "34.0 Pengesahan Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "35.0 Endorsan Nota Lulus Lanjut Tempoh Pajakan - PSPB",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "35.0 Endorsan Nota Lulus Lanjut Tempoh Pajakan - PSPB",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "47.0 Penyediaan Surat Tolak",
+     "kind": "userTask",
+     "kod": "PYSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "48.0 Semakan Surat Tolak",
+     "kind": "userTask",
+     "kod": "SSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "49.0 Peraku Surat Tolak",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "51.0 Cetakan Dokumen Surat Tolak (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "55.0 Penyediaan Minit Bebas",
+     "kind": "userTask",
+     "kod": "PYMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "56.0 Semakan Minit Bebas (PPD)",
+     "kind": "userTask",
+     "kod": "SMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "56.1 Semakan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "SMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "57.0 Pengesahan Minit Bebas (PTNH)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "57.1 Pengesahan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Semakan Kemasukan Maklumat",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "PT",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "Endorsan Nota Mohon (PSPM)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "Endorsan Nota Mohon (PSPM)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "Semakan Kemasukan Maklumat (Pembetulan)",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "PT",
+     "screens": 3,
+     "in_census": true
+    }
+   ],
+   "stats": {
+    "user_tasks": 34,
+    "call_activities": 20,
+    "census_matched": 20,
+    "census_defined": 119
+   }
+  },
+  "PRBB": {
+   "tasks": [
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "4.0 Charting Mohon(MLK_TKL_CM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan JKBB (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan JKBB PRPT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Penyediaan Laporan Tanah PRPT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan JKBB PRPDT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Penyediaan Laporan Tanah PRPDT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan JKBB PYRJKBBPDT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Penyediaan Laporan Tanah PYRJKBBPDT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Jabatan Teknikal PRPT (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "6.0 Jabatan Teknikal PRPDT (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "6.0 Jabatan Teknikal PYRJKBBPDT (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "7.0 Perakuan Jabatan Teknikal, Laporan Tanah atau Pelan Mesyuarat",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "11.0 Penyediaan Rencana Pentadbir Tanah",
+     "kind": "userTask",
+     "kod": "PRPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "12.0 Semakan Rencana Pentadbir Tanah",
+     "kind": "userTask",
+     "kod": "SRPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "13.0 Semakan Rencana Pentadbir Tanah",
+     "kind": "userTask",
+     "kod": "SRPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "14.0 Keputusan Pentadbir Tanah (PT)",
+     "kind": "userTask",
+     "kod": "KKPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "15.0 Penyediaan Rencana - PDT",
+     "kind": "userTask",
+     "kod": "PRPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "16.0 Semakan Rencana - PDT",
+     "kind": "userTask",
+     "kod": "SRPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "17.0 Semakan Rencana - PDT",
+     "kind": "userTask",
+     "kod": "SRPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "18.0 Perakuan Pentadbir Tanah (PT)",
+     "kind": "userTask",
+     "kod": "PPTPRBB",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "19.0 Penyediaan Senarai Semak Ke PTG",
+     "kind": "userTask",
+     "kod": "PSSPTG",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "20.0 Semakan Permohonan PDT",
+     "kind": "userTask",
+     "kod": "SPPDT",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "21.0 Penyediaan Rencana - PTG",
+     "kind": "userTask",
+     "kod": "PYRPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "22.0 Semakan Rencana - PTG",
+     "kind": "userTask",
+     "kod": "SRPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "23.0 Semakan Rencana - PTG",
+     "kind": "userTask",
+     "kod": "SRPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "24.0 Semakan Rencana - PTG",
+     "kind": "userTask",
+     "kod": "SRPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "25.0 Perakuan Rencana - PTG",
+     "kind": "userTask",
+     "kod": "PRPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "26.0 Penyediaan Rencana JKBB - PDT",
+     "kind": "userTask",
+     "kod": "PYRJKBBPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "27.0 Semakan Rencana JKBB - PDT",
+     "kind": "userTask",
+     "kod": "SRJKBBPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "28.0 Semakan Rencana JKBB - PDT",
+     "kind": "userTask",
+     "kod": "SRJKBBPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "29.0 Perakuan Rencana JKBB - PDT",
+     "kind": "userTask",
+     "kod": "PRJKBBPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "30.0 Penyediaan Senarai Semak Ke PTG",
+     "kind": "userTask",
+     "kod": "PSSPTG",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "31.0 Semakan Permohonan PDT",
+     "kind": "userTask",
+     "kod": "SPPDT",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "32.0 Penyediaan Syor SO dan Rencana JKBB - PTG",
+     "kind": "userTask",
+     "kod": "PYRJKBBPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "33.0 Semakan Rencana JKBB – PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "34.0 Semakan Rencana JKBB – PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "35.0 Semakan Rencana JKBB – PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "36.0 Perakuan Rencana JKBB - PTG",
+     "kind": "userTask",
+     "kod": "PRJKBBPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "38.0 Kemasukan Keputusan JKBB Dan Penyediaan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "KKJKBB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "39.0 Penyediaan Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "40.0 Peraku Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "41.0 Semakan Keputusan JKBB dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "42.0 Peraku Keputusan JKBB dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "43.0 Penyediaan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "PYSK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "44.0 Pengesahan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "PSSK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "45.0 Cetakan Dokumen Surat Lulus (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "46.0 Charting Keputusan Lulus (MLK_TKL_CL_LP)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CL_LP",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "47.0 Bayaran Pelbagai (Kupon)",
+     "kind": "userTask",
+     "kod": "PL",
+     "peranan": "",
+     "screens": 0,
+     "in_census": true
+    },
+    {
+     "name": "47.0 Bayaran Pelbagai (eDoket PDT)",
+     "kind": "userTask",
+     "kod": "PL",
+     "peranan": "",
+     "screens": 0,
+     "in_census": true
+    },
+    {
+     "name": "47.0 Bayaran Pelbagai (eDoket PTG)",
+     "kind": "userTask",
+     "kod": "PL",
+     "peranan": "",
+     "screens": 0,
+     "in_census": true
+    },
+    {
+     "name": "48.0 Penyediaan Borang 4Ce dan P1e",
+     "kind": "userTask",
+     "kod": "PYB4CE",
+     "peranan": "",
+     "screens": 2,
+     "in_census": true
+    },
+    {
+     "name": "49.0 Pengesahan Borang 4Ce dan P1e",
+     "kind": "userTask",
+     "kod": "PB4CE",
+     "peranan": "",
+     "screens": 2,
+     "in_census": true
+    },
+    {
+     "name": "50.0 Cetakan Borang 4Ce dan P1e (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "53.0 Penyediaan Surat Keputusan kepada PDT",
+     "kind": "userTask",
+     "kod": "PYSKPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "55.0 Pengesahan Surat Keputusan kepada PDT",
+     "kind": "userTask",
+     "kod": "PGSKPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "56.0 Penyediaan Surat Tolak",
+     "kind": "userTask",
+     "kod": "PYSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "58.0 Pengesahan Surat Tolak",
+     "kind": "userTask",
+     "kod": "PSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "59.0 Cetakan Dokumen (Surat Tolak)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "65.0 Penyediaan Senarai Semak Ke PTG - Tangguh",
+     "kind": "userTask",
+     "kod": "PSSPTGT",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "67. Siasatan Tanah dan Syor (PTG)",
+     "kind": "userTask",
+     "kod": "SSTTS",
+     "peranan": "-PPTN-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Jabatan Teknikal 1 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 2 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Penyediaan Minit Bebas dan Syor SO",
+     "kind": "userTask",
+     "kod": "PYMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Semakan Minit Bebas dan Syor SO (PPTnKanan/PPTNT)",
+     "kind": "userTask",
+     "kod": "SMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Perakuan Minit Bebas dan Syor SO",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Utiliti JKBB",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Semakan Minit Bebas dan Syor SO (PPD/KPPD)",
+     "kind": "userTask",
+     "kod": "SMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    }
+   ],
+   "stats": {
+    "user_tasks": 52,
+    "call_activities": 18,
+    "census_matched": 43,
+    "census_defined": 62
+   }
+  },
+  "PRU": {
+   "tasks": [
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat (Pembetulan)",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "4.0 Charting Mohon (MLK_TKL_CM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah PJTLT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah PKPPT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah PRMMKNPDT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah PRMMKNPTG (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah PYRJKKLPDT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah PSSPTGJKKL (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah PYRJKKLPTG (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah PRMMKNPTGT (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN PJTLT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN PKPPT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN PRMMKNPDT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN PRMMKNPTG (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN PYRJKKLPDT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN PSSPTGJKKL (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN PYRJKKLPTG (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN PRMMKNPTGT (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Semakan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "8.0 Perakuan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "9.0 Pelan MMKN TKJKKLPK (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "9.0 Penyediaan Laporan Tanah TKJKKLPK (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "9.0 Jabatan Teknikal TKJKKLPK(MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "12.0 Penyediaan Kertas Pertimbangan Pentadbir Tanah",
+     "kind": "userTask",
+     "kod": "PKPPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "13.0 Semakan Kertas Pertimbangan Pentadbir Tanah (KPT)",
+     "kind": "userTask",
+     "kod": "SKPPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "14.0 Semakan Kertas Pertimbangan Pentadbir Tanah (PPD)",
+     "kind": "userTask",
+     "kod": "SKPPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "15.0 Semakan Kertas Pertimbangan Pentadbir Tanah (KPPD)",
+     "kind": "userTask",
+     "kod": "SKPPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "16.0 Keputusan Pentadbir Tanah",
+     "kind": "userTask",
+     "kod": "KDO",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "17.0 Penyediaan Rencana JKKL - PDT",
+     "kind": "userTask",
+     "kod": "PYRJKKLPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "18.0 Semakan Rencana JKKL - PDT (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "19.0 Semakan Rencana JKKL - PDT (PPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "20.0 Semakan Rencana JKKL - PDT (KPPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "21.0 Perakuan Rencana JKKL - PDT",
+     "kind": "userTask",
+     "kod": "PRJKKLPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "22.0 Penyediaan Senarai Semak ke PTG (Rencana JKKL)",
+     "kind": "userTask",
+     "kod": "PSSPTG",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "22.0 Penyediaan Senarai Semak ke PTG (Rencana JKKL)",
+     "kind": "userTask",
+     "kod": "PSSPTG",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "23.0 Semakan Permohonan PDT",
+     "kind": "userTask",
+     "kod": "SPPDT",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "26.0 Penyediaan Syor SO dan Rencana JKKL – PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "27.0 Semakan Rencana JKKL - PTG (SO Kanan/SO Tinggi)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "28.0 Semakan Rencana JKKL - PTG (KS/SO Tinggi)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "29.0 Semakan Rencana JKKL - PTG (TPTG/KS)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "30.0 Perakuan Rencana JKKL - PTG",
+     "kind": "userTask",
+     "kod": "PRJKKLPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "31.0 Keputusan JKKL Dan Penyediaan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "KJKKLPSK",
+     "peranan": "-PPTD-PT-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "32.0 Penyediaan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "PRMMKNPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "32.0 Semakan Keputusan JKKL Dan Surat Keputusan (KS)",
+     "kind": "userTask",
+     "kod": "SKJKKLPSK",
+     "peranan": "-KS-PPTNT-PPTnKanan-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "32.0 Semakan Keputusan JKKL Dan Surat Keputusan (PPTnKanan)",
+     "kind": "userTask",
+     "kod": "SKJKKLPSK",
+     "peranan": "-KS-PPTNT-PPTnKanan-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "32.0 Semakan Keputusan JKKL Dan Surat Keputusan (PPTNT)",
+     "kind": "userTask",
+     "kod": "SKJKKLPSK",
+     "peranan": "-KS-PPTNT-PPTnKanan-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "33.0 Semakan Risalat MMKN - PDT (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "33. Peraku Keputusan JKKL Dan Surat Keputusan (PTG)",
+     "kind": "userTask",
+     "kod": "PKJKKLPSK",
+     "peranan": "-PTG-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "34.0 Semakan Risalat MMKN - PDT (PPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "34. Terimaan Keputusan JKKL Dan Penentuan Kelulusan",
+     "kind": "userTask",
+     "kod": "TKJKKLPK",
+     "peranan": "-PPD-KPPD-",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "35.0 Semakan Risalat MMKN - PDT (KPPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "36.0 Perakuan Pentadbir Tanah (PT)",
+     "kind": "userTask",
+     "kod": "PPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "37.0 Penyediaan Senarai Semak ke PTG (Risalat MMKN)",
+     "kind": "userTask",
+     "kod": "PSSPTG",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "38.0 Penyediaan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRMMKNPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "39.0 Semakan Risalat MMKN - PTG (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "40.0 Semakan Risalat MMKN - PTG (KS)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "41.0 Perakuan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRRMMKNPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "42.0 Zip Fail Dokumen MMKN",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "43.0 Kemasukan Keputusan MMKN Dan Penyediaan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "KKMMKN",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "44.0 Penyediaan Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "45.0 Peraku Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "46.0 Semakan Keputusan MMKN Dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "SKMMKN",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "47.0 Peraku Keputusan MMKN Dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "PKMMKN",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "48.0 Penyediaan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "PYSK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "49.0 Semakan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "SSK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "50.0 Pengesahan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "PSSK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "51.0 Cetakan Dokumen Surat Lulus (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "52.0 Charting Keputusan Lulus (MLK_TKL_CL_LP)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CL_LP",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "53.0 Bayaran Pelbagai",
+     "kind": "userTask",
+     "kod": "PL",
+     "peranan": "",
+     "screens": 0,
+     "in_census": true
+    },
+    {
+     "name": "54.0 Penyediaan Borang 4De and P2e",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "55.0 Pengesahan Borang 4De and P2e",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "56.0 Cetakan Borang 4De dan P2e",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "59.0 Penyediaan Minit Bebas",
+     "kind": "userTask",
+     "kod": "PYMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "60.0 Semakan Minit Bebas (PPD)",
+     "kind": "userTask",
+     "kod": "SMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "60.1 Semakan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "SMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "61.0 Pengesahan Minit Bebas (PTNH)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "61.1 Pengesahan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "62.0 Penyediaan Surat Tolak Permohonan",
+     "kind": "userTask",
+     "kod": "PYSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "63.0 Semakan Surat Tolak Permohonan",
+     "kind": "userTask",
+     "kod": "SSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "64.0 Pengesahan Surat Tolak Permohonan",
+     "kind": "userTask",
+     "kod": "PSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "65.0 Cetakan Dokumen Surat Tolak (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "72.0 Penyediaan Senarai Semak ke PTG (Tangguh)",
+     "kind": "userTask",
+     "kod": "PSSPTGT",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "73.0 Penyediaan Risalat MMKN,Ringkasan Risalat dan Surat Maklumat Balas - PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "74.0 Semakan Risalat MMKN dan Surat Maklumat Balas - PTG (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "75.0 Semakan Risalat MMKN dan Surat Maklumat Balas- PTG (KS)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "76.0 Perakuan Risalat MMKN dan Surat Maklumat Balas- PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "78.0 Zip Fail Dokumen MMKN (Tangguh)",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Jabatan Teknikal 1 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 2 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Delay (6s)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Jabatan Teknikal 3 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Utiliti Urusetia Mesyuarat JKKL",
+     "kind": "userTask",
+     "kod": "UJKKL",
+     "peranan": "",
+     "screens": 0,
+     "in_census": true
+    },
+    {
+     "name": "Jabatan Teknikal 4 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 5 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    }
+   ],
+   "stats": {
+    "user_tasks": 66,
+    "call_activities": 31,
+    "census_matched": 43,
+    "census_defined": 75
+   }
+  },
+  "PPTPB": {
+   "tasks": [
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat (Pembetulan)",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "4.0 Charting Mohon (MLK_TKL_CM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Semakan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "8.0 Perakuan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "12.0 Penyediaan Kertas Pertimbangan Pentadbir Tanah",
+     "kind": "userTask",
+     "kod": "PKPPT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "13.0 Semakan Kertas Pertimbangan Pentadbir Tanah (KPT)",
+     "kind": "userTask",
+     "kod": "SKPPT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "14.0 Semakan Kertas Pertimbangan Pentadbir Tanah (PPD)",
+     "kind": "userTask",
+     "kod": "SKPPT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "15.0 Semakan Kertas Pertimbangan Pentadbir Tanah (KPPD)",
+     "kind": "userTask",
+     "kod": "SKPPT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "16.0 Keputusan Pentadbir Tanah",
+     "kind": "userTask",
+     "kod": "KDO",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "17.0 Penyediaan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "PRMMKNPDT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "18.0 Semakan Risalat MMKN - PDT (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "19.0 Semakan Risalat MMKN - PDT (PPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "20.0 Semakan Risalat MMKN - PDT (KPPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "21.0 Perakuan Pentadbir Tanah (PT)",
+     "kind": "userTask",
+     "kod": "PPT",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "22.0 Penyediaan Senarai Semak ke PTG",
+     "kind": "userTask",
+     "kod": "PSSPTG",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "23.0 Penyediaan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRMMKNPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "24.0 Semakan Risalat MMKN - PTG (KPT)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "25.0 Semakan Risalat MMKN - PTG (KS)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "26.0 Perakuan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRRMMKNPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "27.0 Zip Fail Dokumen MMKN",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "28.0 Kemasukan Keputusan MMKN Dan Penyediaan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "KKMMKN",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "29.0 Penyediaan Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "30.0 Peraku Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "31.0 Semakan Keputusan MMKN Dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "SKMMKN",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "32.0 Peraku Keputusan MMKN Dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "PKMMKN",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "33.0 Penyediaan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "PYSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "34.0 Semakan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "SSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "35.0 Pengesahan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "PSSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "36.0 Charting Keputusan Lulus (MLK_TKL_CL_LP)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CL_LP",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "37.0 Cetakan Dokumen Surat Lulus (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "38.0 Bayaran Pelbagai",
+     "kind": "userTask",
+     "kod": "PL",
+     "peranan": "",
+     "screens": 0,
+     "in_census": true
+    },
+    {
+     "name": "39.0 Penyediaan Jadual VIII",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "40.0 Pengesahan Jadual VIII",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "41.0 Cetakan Dokumen Jadual VIII (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "41.0 Endosan (TSP-Tambahan Syarat Penggunaan)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "42.0 Penyediaan Minit Bebas",
+     "kind": "userTask",
+     "kod": "PYMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "43.0 Semakan Minit Bebas (PPD)",
+     "kind": "userTask",
+     "kod": "SMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "43.1 Semakan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "SMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "44.0 Pengesahan Minit Bebas (PTNH)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "44.1 Pengesahan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "45.0 Penyediaan Surat Tolak Permohonan",
+     "kind": "userTask",
+     "kod": "PYSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "46.0 Semakan Surat Tolak Permohonan",
+     "kind": "userTask",
+     "kod": "SSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "47.0 Pengesahan Surat Tolak Permohonan",
+     "kind": "userTask",
+     "kod": "PSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "48.0 Cetakan Dokumen Surat Tolak (MLK_PLP_SUB_UPN)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "57.0 Penyediaan Senarai Semak ke PTG (Tangguh)",
+     "kind": "userTask",
+     "kod": "PSSPTGT",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "58.0 Penyediaan Risalat MMKN,Ringkasan Risalat dan Surat Maklumat Balas - PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "59.0 Semakan Risalat MMKN dan Surat Maklumat Balas- PTG (KS)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "60.Perakuan Risalat MMKN dan Surat Maklumat Balas- PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "61.0 Zip Fail Dokumen MMKN (Tangguh)",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "Jabatan Teknikal 1 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 2 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Delay (6s)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "Jabatan Teknikal 2 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 3 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 4 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    }
+   ],
+   "stats": {
+    "user_tasks": 45,
+    "call_activities": 15,
+    "census_matched": 30,
+    "census_defined": 58
+   }
+  },
+  "MCL": {
+   "tasks": [
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "3.0 Semakan Kemasukan Maklumat (Pembetulan)",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "",
+     "screens": 3,
+     "in_census": true
+    },
+    {
+     "name": "4.0 Endorsan Nota Mohon (SBTM dan MCLM)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "5.0 Charting Mohon (MLK_TKL_CM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Penyediaan Laporan Tanah (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan Mesy",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "7.0 Pelan Mesy",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "8.0 Semakan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "9.0 Perakuan Jabatan Teknikal, Laporan Tanah dan Pelan MMKN",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "13.0 Penyediaan Kertas Pertimbangan",
+     "kind": "userTask",
+     "kod": "PKPPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "14.0 Semakan Kertas Pertimbangan (PPD)",
+     "kind": "userTask",
+     "kod": "SKPPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "15.0 Semakan Kertas Pertimbangan (KPT)",
+     "kind": "userTask",
+     "kod": "SKPPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "16.0 Keputusan Pentadbir Tanah (KPPD)",
+     "kind": "userTask",
+     "kod": "KDO",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "17.0 Keputusan Pentadbir Tanah (PTNH)",
+     "kind": "userTask",
+     "kod": "KDO",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "22.0 Penyediaan Surat Keputusan Lulus dan Borang Notis 5A",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "23.0 Semakan Surat Keputusan Lulus dan Borang Notis 5A",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "24.0 Pengesahan Surat Keputusan Lulus dan Borang Notis 5A",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "25.0 Cetakan Dokumen Surat Lulus dan Borang Notis 5A",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "26.0 Charting Keputusan",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CL",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "26.0 Bayaran Pelbagai",
+     "kind": "userTask",
+     "kod": "PL",
+     "peranan": "",
+     "screens": 0,
+     "in_census": true
+    },
+    {
+     "name": "29.0 Endorsan Kelulusan MCLL",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "30.0 Endorsan Kelulusan SBTL",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "30.0 Penyediaan Senarai Semak Hakmilik Sementara",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "32.0 Daftar Hakmilik Sementara (HSBM)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "35.0 Penyediaan Senarai Semak Hakmilik Tetap",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "43.0 Penyediaan Minit Bebas",
+     "kind": "userTask",
+     "kod": "PYMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "44.0 Semakan Minit Bebas (PPD)",
+     "kind": "userTask",
+     "kod": "SMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "44.1 Semakan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "SMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "45.0 Pengesahan Minit Bebas (PTNH)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "45.1 Pengesahan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "PMB",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "46.0 Penyediaan Surat Tolak",
+     "kind": "userTask",
+     "kod": "PYSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "47.0 Semakan Surat Tolak",
+     "kind": "userTask",
+     "kod": "SSTP",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "48.0 Peraku Surat Tolak",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "49.0 Endorsan Nota Batal (SBTB dan MCLB)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "51.0 Cetakan Dokumen Surat Tolak",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 1 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 2 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 2 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Daftar Hakmilik Kekal (HKBM) (MLK_DFT_NOTA_HKMLK)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "Daftar Hakmilik Kekal Ganti Hakmilik Sementara (HKGHS) (MLK_DFT_NOTA_HKMLK)",
+     "kind": "callActivity",
+     "called": "MLK_DFT_NOTA_HKMLK",
+     "module": "etanah-pendaftaran"
+    },
+    {
+     "name": "Jabatan Teknikal Lulus Nilaian (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 2 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    }
+   ],
+   "stats": {
+    "user_tasks": 23,
+    "call_activities": 19,
+    "census_matched": 15,
+    "census_defined": 43
+   }
+  },
+  "RPPLP": {
+   "tasks": [
+    {
+     "name": "2.0 Semakan Permohonan",
+     "kind": "userTask",
+     "kod": "SP",
+     "peranan": "",
+     "screens": 1,
+     "in_census": true
+    },
+    {
+     "name": "4.0 Charting Mohon(MLK_TKL_CM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_CM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Semakan Kemasukan Maklumat",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah 2 (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah MMKNPTG (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah 3 (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Penyediaan Laporan Tanah Tangguh (MLK_TKL_ST)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_ST",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "5.0 Semakan Kemasukan Maklumat (Pembetulan)",
+     "kind": "userTask",
+     "kod": "SKM",
+     "peranan": "",
+     "screens": 4,
+     "in_census": true
+    },
+    {
+     "name": "6.0 Pelan MMKN (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN 2 (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN MMKNPTG (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN 3 (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "6.0 Pelan MMKN Tangguh (MLK_TKL_PPM)",
+     "kind": "callActivity",
+     "called": "MLK_TKL_PPM",
+     "module": "etanah-teknikal"
+    },
+    {
+     "name": "9.0 Semakan Jabatan Teknikal, Laporan Tanah atau Pelan Mesyuarat",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "10.0 Perakuan Jabatan Teknikal, Laporan Tanah atau Pelan Mesyuarat",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "14.0 Penyediaan Minit Bebas Pentadbir Tanah",
+     "kind": "userTask",
+     "kod": "PYMBPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "15.0 Semakan Minit Bebas Pentadbir Tanah",
+     "kind": "userTask",
+     "kod": "SMBPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "16.0 Semakan Minit Bebas Pentadbir Tanah",
+     "kind": "userTask",
+     "kod": "SMBPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "17.0 Semakan Minit Bebas Pentadbir Tanah",
+     "kind": "userTask",
+     "kod": "SMBPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "18.0 Perakuan Minit Bebas Pentadbir Tanah",
+     "kind": "userTask",
+     "kod": "PMBPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "19.0 Penyediaan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "PRMMKNPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "20.0 Semakan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "SRMMKNPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "21.0 Semakan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "SRMMKNPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "22.0 Semakan Risalat MMKN - PDT",
+     "kind": "userTask",
+     "kod": "SRMMKNPDT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "23.0 Perakuan Pentadbir Tanah (PT)",
+     "kind": "userTask",
+     "kod": "PPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "24.0 Penyediaan Senarai Semak ke PTG",
+     "kind": "userTask",
+     "kod": "PSSPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "25.0 Penyediaan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRMMKNPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "26.0 Semakan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "SRMMKNPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "27.0 Semakan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "SRMMKNPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "28.0 Perakuan Risalat MMKN - PTG",
+     "kind": "userTask",
+     "kod": "PRRMMKNPTG",
+     "peranan": "",
+     "screens": 6,
+     "in_census": true
+    },
+    {
+     "name": "29.0 Zip Fail Dokumen MMKN",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "30.0 Kemasukan Keputusan MMKN dan Penyediaan Surat Keputusan",
+     "kind": "userTask",
+     "kod": "KKMMKN",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "31.0 Semakan Keputusan MMKN dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "32.0 Peraku Keputusan MMKN dan Surat Keputusan",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "33.0 Penyediaan Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "34.0 Peraku Surat Keputusan Tangguh",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "39.0 Penyediaan Minit Bebas",
+     "kind": "userTask",
+     "kod": "PYMBPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "40.0 Semakan Minit Bebas (PPD)",
+     "kind": "userTask",
+     "kod": "SMBPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "40.1 Semakan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": "SMBPT",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "41.0 Pengesahan Minit Bebas (PTNH)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "41.1 Pengesahan Minit Bebas (KPPD)",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "42.0 Penyediaan Surat Tolak",
+     "kind": "userTask",
+     "kod": "PYSTP",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "43.0 Semakan Surat Tolak",
+     "kind": "userTask",
+     "kod": "SSTP",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "43.0 Penyediaan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "PYSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "44.0 Peraku Surat Tolak",
+     "kind": "userTask",
+     "kod": "PSTP",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "44.0 Semakan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "SSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "45.0 Pengesahan Surat Keputusan Lulus",
+     "kind": "userTask",
+     "kod": "PSSK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "46.0 Cetakan Dokumen (Surat Lulus)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "53.0 Penyediaan Risalat MMKN, ringkasan risalat dan surat maklumat balas– PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "54.0 Semakan Risalat MMKN dan surat maklumat balas – PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "55.0 Semakan Risalat MMKN dan surat maklumat balas – PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "56.0 Perakuan Risalat MMKN dan surat maklumat balas– PTG",
+     "kind": "userTask",
+     "kod": null,
+     "peranan": null,
+     "screens": null,
+     "in_census": false
+    },
+    {
+     "name": "57.0 Zip Fail Dokumen MMKN",
+     "kind": "userTask",
+     "kod": "ZFDMMK",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "65.0 Cetakan Dokumen (Surat Tolak)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_UPN",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Cetakan Dokumen",
+      "Cetakan Berkelompok",
+      "Penerimaan Bukti Penyampaian Serahan Tangan",
+      "Penerimaan Bukti Penyampaian Serahan Tangan (PTG)",
+      "Cetakan Semula Dokumen",
+      "Kemasukan Maklumat Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar",
+      "Penerimaan Bukti Penyampaian Pos Berdaftar (PTG)",
+      "Kutipan Dokumen"
+     ]
+    },
+    {
+     "name": "72.0 Penyediaan Senarai Semak Ke PTG - Tangguh",
+     "kind": "userTask",
+     "kod": "PSSPTG",
+     "peranan": "",
+     "screens": 5,
+     "in_census": true
+    },
+    {
+     "name": "Jabatan Teknikal 1 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Jabatan Teknikal 2 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    },
+    {
+     "name": "Bayaran Atas Talian dan Terima Resit (PLPBAT)",
+     "kind": "userTask",
+     "kod": "PLPBAT",
+     "peranan": "",
+     "screens": 0,
+     "in_census": true
+    },
+    {
+     "name": "Jabatan Teknikal 3 (MLK_PLP_SUB_JBTN_TEK)",
+     "kind": "callActivity",
+     "called": "MLK_PLP_SUB_JBTN_TEK",
+     "module": "pelupusan sub-process",
+     "sub_tasks": [
+      "Penyediaan Surat Jabatan Teknikal",
+      "Pengesahan Surat Jabatan Teknikal"
+     ]
+    }
+   ],
+   "stats": {
+    "user_tasks": 44,
+    "call_activities": 16,
+    "census_matched": 32,
+    "census_defined": 49
+   }
+  }
+ },
+ "summary": {
+  "PT": {
+   "user_tasks": 67,
+   "call_activities": 36,
+   "census_matched": 37,
+   "census_defined": 202
+  },
+  "PLPS": {
+   "user_tasks": 65,
+   "call_activities": 32,
+   "census_matched": 58,
+   "census_defined": 77
+  },
+  "PRZ": {
+   "user_tasks": 50,
+   "call_activities": 26,
+   "census_matched": 30,
+   "census_defined": 164
+  },
+  "MLPS": {
+   "user_tasks": 2,
+   "call_activities": 1,
+   "census_matched": 2,
+   "census_defined": 12
+  },
+  "BPRZ": {
+   "user_tasks": 66,
+   "call_activities": 29,
+   "census_matched": 39,
+   "census_defined": 184
+  },
+  "PSBS": {
+   "user_tasks": 44,
+   "call_activities": 27,
+   "census_matched": 22,
+   "census_defined": 155
+  },
+  "PPJK": {
+   "user_tasks": 63,
+   "call_activities": 25,
+   "census_matched": 52,
+   "census_defined": 69
+  },
+  "PLTP": {
+   "user_tasks": 34,
+   "call_activities": 20,
+   "census_matched": 20,
+   "census_defined": 119
+  },
+  "PRBB": {
+   "user_tasks": 52,
+   "call_activities": 18,
+   "census_matched": 43,
+   "census_defined": 62
+  },
+  "PRU": {
+   "user_tasks": 66,
+   "call_activities": 31,
+   "census_matched": 43,
+   "census_defined": 75
+  },
+  "PPTPB": {
+   "user_tasks": 45,
+   "call_activities": 15,
+   "census_matched": 30,
+   "census_defined": 58
+  },
+  "MCL": {
+   "user_tasks": 23,
+   "call_activities": 19,
+   "census_matched": 15,
+   "census_defined": 43
+  },
+  "RPPLP": {
+   "user_tasks": 44,
+   "call_activities": 16,
+   "census_matched": 32,
+   "census_defined": 49
+  }
+ }
+}

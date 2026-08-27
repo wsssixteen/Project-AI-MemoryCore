@@ -592,6 +592,7 @@ function renderUrusanView() {
         <p class="uj-desc">${escapeHtml(u.description)}</p>
         ${u.notes ? `<details class="uj-notes"><summary>⟲ Unhappy-path notes (pembetulan / early-reject / modeling gaps)</summary><p>${escapeHtml(typeof u.notes === "string" ? u.notes : String(u.notes))}</p></details>` : ""}
         <div class="uj-stages">${parts.join("")}</div>
+        ${renderBpmnSeq(u)}
       </div>`;
   }).join("");
   wrap.innerHTML = `<div class="urusan-grid ${colClass}">${cols}</div>`;
@@ -602,6 +603,25 @@ function renderUrusanView() {
     });
   });
 }
+// Full BPMN tugasan sequence (build/journey_seq.json via lib/build_journey_seq.py):
+// the completeness layer under the curated stage abstraction — every userTask +
+// callActivity from the Flowable, census-joined (kod · peranan) where names match.
+function renderBpmnSeq(u) {
+  const seq = u.bpmn_seq;
+  if (!seq || !(seq.tasks || []).length) return "";
+  const s = seq.stats || {};
+  const rows = seq.tasks.map(t => {
+    if (t.kind === "callActivity") {
+      const subs = (t.sub_tasks || []).map(x => `<div class="uj-seq-sub">↳ ${escapeHtml(x)}</div>`).join("");
+      return `<div class="uj-seq-row uj-seq-ca"><span class="uj-seq-name">${escapeHtml(t.name)}</span><span class="uj-seq-mod">${escapeHtml(t.module || "")}</span>${subs}</div>`;
+    }
+    const kodB = t.kod ? `<span class="uj-seq-kod">${escapeHtml(t.kod)}</span>` : `<span class="uj-seq-nok" title="no exact ind_tgsn name match">census: no match</span>`;
+    const per = t.peranan ? `<span class="uj-seq-per">${escapeHtml(t.peranan)}</span>` : "";
+    return `<div class="uj-seq-row"><span class="uj-seq-name">${escapeHtml(t.name)}</span>${kodB}${per}</div>`;
+  }).join("");
+  return `<details class="uj-notes uj-seq"><summary>⛓ Full BPMN tugasan sequence — ${s.user_tasks || 0} userTasks · ${s.call_activities || 0} callouts · ${s.census_matched || 0} census-matched</summary><div class="uj-seq-list">${rows}</div></details>`;
+}
+
 $("#urusan-picker").addEventListener("change", renderUrusanView);
 $("#urusan-content").addEventListener("click", (e) => {
   const el = e.target.closest("[data-open]");
