@@ -12,6 +12,23 @@ function modulOf(key) { return DATA.moduls.find(m => m.key === key); }
 function escapeHtml(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c]); }
 function escapeAttr(s) { return escapeHtml(s).replace(/"/g, "&quot;"); }
 
+// ========== STATE SWITCHER ==========
+// Each state is a self-contained etanah_atlas_<profile>.html; the dropdown navigates
+// to its sibling file (offline-safe — plain relative links, no fetch).
+(function initStateSwitch() {
+  const sel = $("#state-switch");
+  if (!sel) return;
+  const states = window.__ATLAS_STATES__ || [];
+  const current = window.__ATLAS_PROFILE__ || "melaka";
+  if (!states.length) { sel.parentElement.style.display = "none"; return; }
+  sel.innerHTML = states.map(s =>
+    `<option value="${s.profile}"${s.profile === current ? " selected" : ""}>${s.label} · ${s.engine}</option>`).join("");
+  sel.addEventListener("change", () => {
+    const tail = window.location.search || "";
+    window.location.href = `etanah_atlas_${sel.value}.html${tail}`;
+  });
+})();
+
 // ========== TAB SWITCHING ==========
 // Diagnostic mirror of the RENDERED cascade (not the class list). With ?shipcheck=1 it
 // also paints a fixed pixel barcode (one 40px block per view, green=visible red=hidden)
@@ -541,6 +558,13 @@ function renderUrusanView() {
   const compareSet = new Set(
     Array.from($$("#urusan-compare .uc-chip.on")).map(c => c.dataset.kod).filter(k => k !== primary)
   );
+  if (!(DATA.urusans || []).length) {
+    wrap.innerHTML = `<div class="card diagram-empty"><p><strong>Urusan flows not yet curated for this state.</strong></p>
+      <p class="de-sub">The Tables and Map views are live from this state's database. Per-state
+      urusan journeys are extracted from that state's own Flowable BPMNs — pending. Melaka's
+      journeys are NOT shown here because they would misrepresent this state's real workflow.</p></div>`;
+    return;
+  }
   const list = [primary, ...compareSet].filter(Boolean);
   if (list.length === 0) {
     wrap.innerHTML = `<p style="color:var(--text-dim);text-align:center;padding:30px">Pick a Urusan above to see its workflow journey.</p>`;
@@ -694,8 +718,12 @@ const TBL_STATE = {
   chipHk: false,
   showImplicit: true,
   showHk: false,
-  codeScope: "pelupusan",   // code-truth filter: which module's CODE must use a table (from build/code_usage.json)
+  // code-truth filter: which module's CODE must use a table (from build/code_usage.json).
+  // Defaults to "pelupusan" ONLY when this state HAS code-usage data (Melaka). Other
+  // states have no scanned repo -> default to "" (all tables) so links are not hidden.
+  codeScope: (DATA.tables && DATA.tables.some(t => (t.used_by || []).length)) ? "pelupusan" : "",
 };
+const HAS_CODE_USAGE = DATA.tables && DATA.tables.some(t => (t.used_by || []).length);
 
 function scopePass(name) {
   if (!TBL_STATE.codeScope) return true;
@@ -1198,6 +1226,12 @@ function setupSearch() {
   // ---- code-scope selects (Diagram + Catalog share one state) ----
   const dgScope = $("#dg-scope");
   const catScope = $("#cat-scope");
+  // States without a scanned repo have no code-usage: sync selects to "all" + hide the
+  // scope control (it would filter every table out, showing zero links — the Perak bug).
+  if (!HAS_CODE_USAGE) {
+    dgScope.value = ""; catScope.value = "";
+    [dgScope, catScope].forEach(s => { const l = s.closest("label"); if (l) l.style.display = "none"; });
+  }
   function onScopeChange(v) {
     TBL_STATE.codeScope = v;
     dgScope.value = v; catScope.value = v;

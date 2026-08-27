@@ -1,0 +1,393 @@
+{
+ "_comment": "v1 mapping for Selangor, derived from mapping.melaka.json by lib/make_state_mapping.py. moduls/categories/anchors reused (shared schema family, filtered to existing tables). urusans EMPTY until curated from Selangor's own BPMNs — Melaka's journeys do NOT port.",
+ "profile": "selangor",
+ "label": "Selangor",
+ "version": "1.0",
+ "moduls": [
+  {
+   "key": "pelupusan",
+   "label": "Pelupusan",
+   "prefix": [
+    "plp_"
+   ],
+   "color": "#b45309",
+   "color_bg_light": "#fef3c7",
+   "color_bg_dark": "#3a2510",
+   "status": "active",
+   "description": "Land disposal — granting, leasing, reservation, occupation licences. Internal officers + AWAM portal.",
+   "main_tables": [
+    "plp_a_pelupusan",
+    "plp_p_pelupusan",
+    "umm_aplikasi",
+    "umm_p_aplikasi",
+    "umm_a_hkmlk",
+    "umm_p_hkmlk",
+    "umm_a_pihak_bkptg",
+    "umm_a_permohonan_tnh",
+    "umm_a_tgsn",
+    "ind_ursn",
+    "ind_tgsn"
+   ]
+  },
+  {
+   "key": "pendaftaran",
+   "label": "Pendaftaran",
+   "prefix": [
+    "dft_"
+   ],
+   "color": "#7c2d12",
+   "color_bg_light": "#fee2cf",
+   "color_bg_dark": "#2d130b",
+   "status": "preview",
+   "description": "Land-title registry. Receives approved applications from Pelupusan + handles direct title operations.",
+   "main_tables": [
+    "dft_a_mohon_hkmlk",
+    "dft_a_undo_perserahan"
+   ]
+  },
+  {
+   "key": "hasil",
+   "label": "Hasil",
+   "prefix": [
+    "hsl_"
+   ],
+   "color": "#0f766e",
+   "color_bg_light": "#ccfbf1",
+   "color_bg_dark": "#0c2c28",
+   "status": "preview",
+   "description": "Revenue / cukai — fees, payments, tax collection on land transactions.",
+   "main_tables": []
+  },
+  {
+   "key": "strata",
+   "label": "Strata",
+   "prefix": [
+    "str_"
+   ],
+   "color": "#1d4ed8",
+   "color_bg_light": "#dbeafe",
+   "color_bg_dark": "#11254f",
+   "status": "preview",
+   "description": "Strata-titled property — apartments, condominiums, mixed developments.",
+   "main_tables": []
+  },
+  {
+   "key": "penguatkuasaan",
+   "label": "Penguatkuasaan",
+   "prefix": [
+    "pks_"
+   ],
+   "color": "#be185d",
+   "color_bg_light": "#fce7f3",
+   "color_bg_dark": "#3a1031",
+   "status": "preview",
+   "description": "Enforcement — violations, notices, compounds against land owners.",
+   "main_tables": []
+  },
+  {
+   "key": "pengambilan",
+   "label": "Pengambilan",
+   "prefix": [
+    "amb_"
+   ],
+   "color": "#993C1D",
+   "color_bg_light": "#faece7",
+   "color_bg_dark": "#3a1407",
+   "status": "preview",
+   "description": "Land acquisition by the state — compensation, gazette notices.",
+   "main_tables": [
+    "amb_a_bahagian_pemberian"
+   ]
+  },
+  {
+   "key": "teknikal",
+   "label": "Teknikal",
+   "prefix": [
+    "tkl_"
+   ],
+   "color": "#475569",
+   "color_bg_light": "#e2e8f0",
+   "color_bg_dark": "#1c2331",
+   "status": "preview",
+   "kind": "it_module",
+   "description": "Technical Department records — surveyor reports, technical investigations. IT-side module, supports cross-module flows.",
+   "main_tables": []
+  },
+  {
+   "key": "consent",
+   "label": "Consent",
+   "prefix": [],
+   "color": "#7c3aed",
+   "color_bg_light": "#ede9fe",
+   "color_bg_dark": "#2d1b54",
+   "status": "preview",
+   "description": "Consent applications. Lives inside umm_* and plp_* (no dedicated prefix found). Distinguishable by urusan_kod.",
+   "main_tables": []
+  },
+  {
+   "key": "pembangunan",
+   "label": "Pembangunan",
+   "prefix": [],
+   "color": "#0891b2",
+   "color_bg_light": "#cffafe",
+   "color_bg_dark": "#0c2b35",
+   "status": "preview",
+   "description": "Development applications. Lives inside umm_* and plp_* (no dedicated prefix found). Distinguishable by urusan_kod.",
+   "main_tables": []
+  },
+  {
+   "key": "lelong",
+   "label": "Lelong",
+   "prefix": [],
+   "color": "#dc2626",
+   "color_bg_light": "#fecaca",
+   "color_bg_dark": "#3a1010",
+   "status": "preview",
+   "description": "Auction / public sale of land. Lives inside umm_* (no dedicated prefix found). Distinguishable by urusan_kod.",
+   "main_tables": []
+  },
+  {
+   "key": "shared",
+   "label": "Shared (cross-modul)",
+   "prefix": [
+    "umm_",
+    "ind_",
+    "rjk_",
+    "pcp_",
+    "skg_"
+   ],
+   "color": "#475569",
+   "color_bg_light": "#f1f5f9",
+   "color_bg_dark": "#0f172a",
+   "status": "active",
+   "kind": "cross_cutting",
+   "description": "Tables used by every modul: umm_=umum/application, ind_=induk/lookup, rjk_=rujukan/codes, pcp_=pengguna/access, skg_=document storage.",
+   "main_tables": []
+  },
+  {
+   "key": "operations",
+   "label": "Operations & Subsystems",
+   "prefix": [
+    "rpt_",
+    "mig_",
+    "migr",
+    "migration",
+    "tmp_",
+    "md_",
+    "tkr_",
+    "llg_",
+    "sis_",
+    "mlit_",
+    "spc_",
+    "stage_",
+    "ckp_",
+    "bgn_",
+    "mlk_",
+    "sws_",
+    "con_",
+    "proses_",
+    "ptg_",
+    "delta_",
+    "sptb_",
+    "toad_",
+    "ubah_"
+   ],
+   "color": "#6b7280",
+   "color_bg_light": "#f3f4f6",
+   "color_bg_dark": "#21262e",
+   "status": "preview",
+   "kind": "infrastructure",
+   "description": "Audit, migrations, temp tables, reports, system tooling. Not business-domain but lives in et_main.",
+   "main_tables": []
+  }
+ ],
+ "categories": [
+  {
+   "key": "hub",
+   "label": "Application Hub",
+   "letter": "H",
+   "color": "#185FA5",
+   "color_bg_light": "#B5D4F4",
+   "color_bg_dark": "#0C447C",
+   "color_p_light": "#E6F1FB",
+   "patterns": [
+    "^umm_aplikasi$",
+    "^umm_p_aplikasi$"
+   ]
+  },
+  {
+   "key": "land",
+   "label": "Land & Hakmilik",
+   "letter": "L",
+   "color": "#0F6E56",
+   "color_bg_light": "#9FE1CB",
+   "color_bg_dark": "#085041",
+   "color_p_light": "#E1F5EE",
+   "patterns": [
+    "^umm_(a|p)_hkmlk",
+    "^umm_(a|p)_permohonan_tnh",
+    "^umm_(a|p)_rizab",
+    "^umm_(a|p)_lot",
+    "^umm_(a|p)_tanah",
+    "^umm_(a|p)_pelan",
+    "^umm_(a|p)_permit",
+    "^umm_a_(mklmt_)?premium",
+    "^umm_a_utiliti_premium",
+    "^umm_a_bayaran_ukur",
+    "^str_"
+   ]
+  },
+  {
+   "key": "parties",
+   "label": "Parties / Pemohon",
+   "letter": "P",
+   "color": "#993556",
+   "color_bg_light": "#F4C0D1",
+   "color_bg_dark": "#72243E",
+   "color_p_light": "#FBEAF0",
+   "patterns": [
+    "^umm_(a|p)_pihak",
+    "^umm_(a|p)_pemohon",
+    "^umm_(a|p)_penyaksian",
+    "^umm_(a|p)_penyerah",
+    "^umm_(a|p)_ahli",
+    "^umm_a_pelikuidasi",
+    "^umm_a_tanggungan",
+    "^pcp_"
+   ]
+  },
+  {
+   "key": "workflow",
+   "label": "Workflow & Decisions",
+   "letter": "W",
+   "color": "#534AB7",
+   "color_bg_light": "#CECBF6",
+   "color_bg_dark": "#3C3489",
+   "color_p_light": "#EEEDFE",
+   "patterns": [
+    "^ind_tgsn",
+    "^ind_ursn",
+    "^umm_a_tgsn",
+    "^umm_aliran",
+    "^umm_(a|p)_jabatan",
+    "^umm_(a|p)_keputusan",
+    "^umm_(a|p)_jkk",
+    "^umm_(a|p)_mmkn",
+    "^umm_(a|p)_mesyuarat",
+    "^umm_a_langkah",
+    "^umm_a_kertas",
+    "^umm_a_rayuan",
+    "^umm_a_pembatalan",
+    "^umm_a_proses"
+   ]
+  },
+  {
+   "key": "reference",
+   "label": "Reference Data",
+   "letter": "R",
+   "color": "#5F5E5A",
+   "color_bg_light": "#D3D1C7",
+   "color_bg_dark": "#444441",
+   "color_p_light": "#F1EFE8",
+   "patterns": [
+    "^ind_",
+    "^rjk_",
+    "^kod_"
+   ]
+  },
+  {
+   "key": "container_pelupusan",
+   "label": "Pelupusan Container",
+   "letter": "1",
+   "color": "#854F0B",
+   "color_bg_light": "#FAC775",
+   "color_bg_dark": "#633806",
+   "color_p_light": "#FAEEDA",
+   "patterns": [
+    "^plp_"
+   ]
+  },
+  {
+   "key": "container_pendaftaran",
+   "label": "Pendaftaran (Registry)",
+   "letter": "2",
+   "color": "#993C1D",
+   "color_bg_light": "#F0997B",
+   "color_bg_dark": "#712B13",
+   "color_p_light": "#FAECE7",
+   "patterns": [
+    "^dft_"
+   ]
+  },
+  {
+   "key": "container_hasil",
+   "label": "Hasil (Revenue)",
+   "letter": "3",
+   "color": "#3B6D11",
+   "color_bg_light": "#C0DD97",
+   "color_bg_dark": "#27500A",
+   "color_p_light": "#EAF3DE",
+   "patterns": [
+    "^hsl_"
+   ]
+  },
+  {
+   "key": "container_other",
+   "label": "Other Modules",
+   "letter": "4",
+   "color": "#1d4ed8",
+   "color_bg_light": "#BDD7FE",
+   "color_bg_dark": "#1E40AF",
+   "color_p_light": "#DBEAFE",
+   "patterns": [
+    "^pks_",
+    "^amb_",
+    "^tkl_",
+    "^skg_",
+    "^dm_"
+   ]
+  },
+  {
+   "key": "documents",
+   "label": "Documents & Letters",
+   "letter": "D",
+   "color": "#9333EA",
+   "color_bg_light": "#E9D5FF",
+   "color_bg_dark": "#6B21A8",
+   "color_p_light": "#F3E8FF",
+   "patterns": [
+    "^umm_a_srt",
+    "^umm_a_dok",
+    "^umm_a_warta",
+    "^umm_a_cetak",
+    "^umm_alamat",
+    "^skg_"
+   ]
+  },
+  {
+   "key": "subsystem",
+   "label": "Subsystem / Utilities",
+   "letter": "S",
+   "color": "#6b7280",
+   "color_bg_light": "#E5E7EB",
+   "color_bg_dark": "#374151",
+   "color_p_light": "#F9FAFB",
+   "patterns": []
+  }
+ ],
+ "anchor_blurbs": {
+  "umm_aplikasi": "The application hub. Every transaction joins back here via aplikasi_id. No urusan_kod column — JOIN to ind_ursn via ursn_id.",
+  "plp_a_pelupusan": "PLP-side container for pelupusan applications (officer-internal). Promoted from plp_p_pelupusan via the AWAM→PLP SPOC integration.",
+  "plp_p_pelupusan": "Portal-side container (AWAM/Pra). Holds the applicant's submission before it's accepted by PLP.",
+  "umm_a_hkmlk": "Hakmilik (land title) attached to an application. Join-graph centre on the internal side.",
+  "umm_p_hkmlk": "Portal-side hakmilik. Promoted to umm_a_hkmlk on PLP submission.",
+  "umm_a_permohonan_tnh": "Land-permit application detail. Links umm_a_rizab via a_permohonan_tnh_id.",
+  "umm_a_pihak_bkptg": "Party / stakeholder table. The applicant (pemohon) lives here with flag_pemohon='Y'.",
+  "ind_ursn": "Urusan (business workflow) reference. All urusan codes (PT, PLPS, PRBB, ...) defined here.",
+  "ind_tgsn": "Tugasan (task code) reference. Defines workflow step codes (PYSK, SSK, PSSK, ...).",
+  "umm_a_tgsn": "Application's current and past task instances. Joined to ind_tgsn + ind_pejabat + pcp_pengguna for the canonical task-state query.",
+  "umm_p_aplikasi": "Portal-side application hub (AWAM). The _p_ counterpart of umm_aplikasi — every Pra-Aplikasi submission joins back here. Gets promoted to umm_aplikasi during SPOC handoff."
+ },
+ "urusans": [],
+ "notes": "Selangor · schema-derived Tables/Map live from the state DB; Urusan Journey pending per-state BPMN curation."
+}

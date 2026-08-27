@@ -1,0 +1,22 @@
+[
+ {
+  "profile": "melaka",
+  "label": "Melaka",
+  "engine": "PostgreSQL"
+ },
+ {
+  "profile": "selangor",
+  "label": "Selangor",
+  "engine": "Oracle"
+ },
+ {
+  "profile": "perak",
+  "label": "Perak",
+  "engine": "Oracle"
+ },
+ {
+  "profile": "terengganu",
+  "label": "Terengganu",
+  "engine": "PostgreSQL"
+ }
+]

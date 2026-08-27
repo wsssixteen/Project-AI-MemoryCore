@@ -26,6 +26,12 @@ def assemble(profile="melaka", output_name=None):
     shell = (SRC / "shell.html").read_text(encoding="utf-8")
     js    = (SRC / "app.js").read_text(encoding="utf-8")
 
+    states_path = CONFIG / "atlas_states.json"
+    states_json = states_path.read_text(encoding="utf-8") if states_path.exists() else "[]"
+    shell = (shell
+             .replace("/* STATES_HERE */", states_json)
+             .replace("/* PROFILE_HERE */", profile))
+
     dataset_safe = dataset.replace("</script", "<\\/script")
     mapping_safe = mapping.replace("</script", "<\\/script")
 

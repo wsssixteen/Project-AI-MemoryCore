@@ -24,8 +24,13 @@
     <button class="tab" data-tab="map">Map</button>
     <button class="tab" data-tab="about">About</button>
   </nav>
+  <label class="state-switch-wrap" title="Switch state — each state is its own self-contained file">
+    <span class="state-switch-label">STATE</span>
+    <select id="state-switch"></select>
+  </label>
   <button class="theme-btn" id="theme-btn" aria-label="Toggle theme">◐</button>
 </header>
+<script>window.__ATLAS_STATES__ = /* STATES_HERE */; window.__ATLAS_PROFILE__ = "/* PROFILE_HERE */";</script>
 
 <main class="app-main">
 

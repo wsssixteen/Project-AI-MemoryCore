@@ -112,18 +112,24 @@ def main(profile="melaka"):
     implicit_cfg = json.load(open(implicit_file, encoding="utf-8")) if implicit_file.exists() else {}
     tugasan_file = CONFIG / f"tugasan_tables.{profile}.json"
     tugasan_cfg = json.load(open(tugasan_file, encoding="utf-8")) if tugasan_file.exists() else {"tugasans": []}
-    census_file = BUILD / "tugasan_census.json"
-    census = json.load(open(census_file, encoding="utf-8")) if census_file.exists() else {"tugasans": []}
+    # BUILD-side enrichment (census / features / code-usage / entities) is PER-STATE.
+    # Resolver: try build/<stem>.<profile>.json first; only melaka falls back to the
+    # unsuffixed legacy name. A non-melaka state with no suffixed file gets the empty
+    # default = schema-only truth (never Melaka data attached to another state).
+    def _build_json(stem, default):
+        pf = BUILD / f"{stem}.{profile}.json"
+        if pf.exists(): return json.load(open(pf, encoding="utf-8"))
+        legacy = BUILD / f"{stem}.json"
+        if profile == "melaka" and legacy.exists(): return json.load(open(legacy, encoding="utf-8"))
+        return default
+    census = _build_json("tugasan_census", {"tugasans": []})
     screens_file = CONFIG / f"screen_tables.{profile}.json"
     screen_tables = json.load(open(screens_file, encoding="utf-8")) if screens_file.exists() else {"screens": {}}
-    ft_file = BUILD / "feature_tables.json"
-    feature_tables = json.load(open(ft_file, encoding="utf-8")) if ft_file.exists() else {"tables": [], "unassigned": [], "summary": {}}
-    fm_file = BUILD / "feature_meta.json"
-    feature_meta = json.load(open(fm_file, encoding="utf-8")) if fm_file.exists() else {}
-    usage_file = BUILD / "code_usage.json"
-    code_usage = json.load(open(usage_file, encoding="utf-8")) if usage_file.exists() else {}
-    registry_file = BUILD / "entity_registry.json"
-    entity_reg = json.load(open(registry_file, encoding="utf-8"))["entities"] if registry_file.exists() else {}
+    feature_tables = _build_json("feature_tables", {"tables": [], "unassigned": [], "summary": {}})
+    feature_meta = _build_json("feature_meta", {})
+    code_usage = _build_json("code_usage", {})
+    _reg = _build_json("entity_registry", {})
+    entity_reg = _reg.get("entities", {}) if isinstance(_reg, dict) else {}
     used_by = {}
     for mod, d in code_usage.items():
         for t in d.get("tables", []):
@@ -141,8 +147,10 @@ def main(profile="melaka"):
     if missing:
         print(f"WARN: main_tables in mapping not in schema: {missing}", file=sys.stderr)
 
-    seq_file = BUILD / "journey_seq.json"
-    if seq_file.exists():
+    seq_file = BUILD / f"journey_seq.{profile}.json"
+    if not seq_file.exists() and profile == "melaka":
+        seq_file = BUILD / "journey_seq.json"
+    if seq_file.exists() and mapping["urusans"]:
         seq = json.load(open(seq_file, encoding="utf-8"))["urusans"]
         for u in mapping["urusans"]:
             if u["kod"] in seq:

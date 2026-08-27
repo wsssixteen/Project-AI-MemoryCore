@@ -1,0 +1,12 @@
+{
+ "label": "<State>",
+ "connection": {
+  "engine": "postgres|oracle",
+  "host": "",
+  "port": 5444,
+  "database": "",
+  "schema": "",
+  "user": "",
+  "password": ""
+ }
+}
