@@ -217,6 +217,13 @@ def main():
     states = json.load(open(ROOT / "config" / "atlas_states.json", encoding="utf-8"))
     if len(sys.argv) > 1:
         states = [s for s in states if s["profile"] == sys.argv[1]]
+    # Wipe stale screenshots so checks/ only ever holds THIS run's captures — a leftover
+    # PNG from a prior build (e.g. an old By-Feature shot) would otherwise read as current.
+    # Unlink files individually (not rmtree — OneDrive locks the dir, WinError 5).
+    CHECKS.mkdir(parents=True, exist_ok=True)
+    for old in CHECKS.glob("*.png"):
+        try: old.unlink()
+        except OSError: pass
     report = {}
     all_ok = True
     with sync_playwright() as pw:
