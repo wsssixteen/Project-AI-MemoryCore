@@ -59,5 +59,33 @@ urusan chip click · By Feature select (14) + chip click · Journey picker ×13 
 compare chips ×13 · print journey · journey stage chips→Tables (added this pass) · About
 dropzone (synthetic .sql drop re-parsed: "1 tables · 0 FKs") · preview-modul empty message.
 
+## 5. Multi-state rules (2026-08-27 — the "change between states" feature)
+
+| # | Rule | Origin |
+|---|---|---|
+| M1 | Each state is a SELF-CONTAINED offline HTML `etanah_atlas_<profile>.html`; the header `[STATE ▾]` navigates between siblings with plain relative links (no fetch) | GO Selangor+Perak |
+| M2 | Each state's data is pulled LIVE from its own DB (`lib/pull_schema_live.py`, psycopg2 + oracledb-thin) into the identical `schema_parse.json` contract — never a shared/borrowed dataset | multi-state design |
+| M3 | Melaka curation does NOT port to other states. Moduls/categories/anchors reuse is fine (shared schema family, filtered to existing tables); urusan JOURNEYS start EMPTY — presenting Melaka's flows as another state's is a LIE. Journey tab says so plainly | truth rule T-family |
+| M4 | Per-state enrichment isolation: census/features/code-usage/entities/journey_seq load from `build/<stem>.<profile>.json`; only melaka falls back to the legacy unsuffixed name. A state with none gets schema-only truth — no cross-state leakage (audited by `lib/audit_states.py`) | Perak-leak risk |
+| M5 | A state without a scanned repo defaults code-scope to ALL and HIDES the scope control (it would filter every link out → zero neighbors — the Perak bug) | 2026-08-27 Perak render |
+| M6 | Schema divergence is shown TRUTHFULLY, never faked: WP lacks `ind_tgsn`/`umm_a_tgsn` → those cards simply don't appear (main_tables filtered to existing). Divergence is data, not a defect | WP probe |
+| M7 | Secrets NEVER committed: `config/states.<profile>.json` (creds) gitignored; `states.example.json` shipped. Creds recovered from DBeaver's AES store locally, used at build time only | security |
+| M8 | **STATE-SCOPE (system-design Rule 11)**: the pipeline is state-agnostic — `--profile` + `config/states.<profile>.json` add a state with zero code change. Only per-state literals are the connection config (gitignored) and `config/atlas_states.json` switcher list. A new state = write its config + `python build_state.py --profile X --label Y` | Rule 11 |
+
+### 5b. Multi-state verification ledger (2026-08-27, `lib/audit_states.py` — live re-query)
+
+| State | Engine | HTML tables | FKs | LIVE re-query | urusans | used_by leak | switcher |
+|---|---|---|---|---|---|---|---|
+| Melaka | PostgreSQL | 781 | 2146 | (dump) | 13 | (own) | 5 |
+| Selangor | Oracle | 841 | 2068 | **841 MATCH** | 0 | 0 | 5 |
+| Perak | Oracle | 793 | 2092 | **793 MATCH** | 0 | 0 | 5 |
+| Terengganu | PostgreSQL | 795 | 2181 | **795 MATCH** | 0 | 0 | 5 |
+| WP Kuala Lumpur | Oracle | 773 | 2237 | **773 MATCH** | 0 | 0 | 5 |
+
+Eval `python lib/audit_states.py` → **PASS 5/5**, exit 0. Melaka smoke 17/17 + ship-check PASS.
+Rendered live (real DB, screenshots): Selangor Map+focus, Perak focus (10→/←23 links), TRG Map,
+WP Map, switcher live-nav in browser.
+
 *Created 2026-08-27 per miya: "save every spec that is discussed and said out clearly by me
 into the project md file so that you do not keep on fucking up and follow that spec."*
+*Multi-state section added 2026-08-27 (M1-M8 + ledger).*

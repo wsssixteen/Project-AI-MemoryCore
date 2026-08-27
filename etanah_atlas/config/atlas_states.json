@@ -18,5 +18,10 @@
   "profile": "terengganu",
   "label": "Terengganu",
   "engine": "PostgreSQL"
+ },
+ {
+  "profile": "wp",
+  "label": "WP Kuala Lumpur",
+  "engine": "Oracle"
  }
 ]

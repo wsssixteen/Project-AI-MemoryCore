@@ -39,6 +39,45 @@ python build.py
 
 Output: `etanah_atlas_melaka.html` in this folder.
 
+## Multi-state (2026-08-27)
+
+Atlas is one build serving many states, each a self-contained HTML with a header
+`STATE` switcher. Melaka builds from a SQL dump (`build.py`); every other state builds
+LIVE from its own database (`build_state.py`).
+
+Live states shipped: Melaka (Postgres, dump) · Selangor (Oracle) · Perak (Oracle) ·
+Terengganu (Postgres) · WP Kuala Lumpur (Oracle).
+
+### Add / rebuild a state
+
+```bash
+python build_state.py --profile selangor --label Selangor
+```
+
+That runs: live schema pull → v1 mapping (auto if none) → dataset → `etanah_atlas_selangor.html`.
+
+### Add a NEW state (one-time)
+
+1. Write `config/states.<profile>.json` (gitignored — holds credentials; copy `states.example.json`).
+2. Add a row to `config/atlas_states.json` (the switcher list).
+3. `python build_state.py --profile <profile> --label "<Label>"`.
+4. Rebuild the others so their switcher includes the new state; end with `python build.py` (keeps `build/dataset.json` = Melaka for smoke/ship-check).
+
+### Verify all states
+
+```bash
+python lib/audit_states.py      # re-queries each state's live DB; asserts HTML==DB, no cross-state leak, switcher complete
+```
+
+Pipeline files: `lib/pull_schema_live.py` (Postgres + Oracle adapters) ·
+`lib/make_state_mapping.py` (v1 mapping from Melaka, urusans empty) · `build_state.py`
+(orchestrator) · `lib/audit_states.py` (eval).
+
+**What is live vs pending per non-Melaka state**: Tables + Map + Catalog + Families +
+implicit links + columns are LIVE from the DB. Urusan Journey is EMPTY until curated from
+that state's own Flowable BPMNs (the tab says so) — Melaka's journeys are never shown for
+another state.
+
 The build runs three steps with paths auto-detected from `build.py`'s location:
 1. Parse `source/et_main_uat.sql` → `build/schema_parse.json`
 2. Merge with `config/mapping.melaka.json` → `build/dataset.json`
