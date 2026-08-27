@@ -187,8 +187,10 @@ function nodeSize(id) {
   return { w: isMain ? 175 : 145, h: isMain ? 56 : 44 };
 }
 function forceLayout(nodeIds, edges, width, height) {
-  const pos = {}, vel = {};
-  // Deterministic seeding: stack per swimlane column (no Math.random, no pinned state).
+  // Deterministic lane STACKING — no physics. Each swimlane is one vertical column,
+  // ordered hub-degree-first; step >= card height + 28 so overlap is impossible by
+  // construction (2026-08-27: the force sim left unresolved overlaps the smoke
+  // geometry check could not see because it silently SKIPs on lost v2.3 internals).
   const bySwim = {};
   for (const id of nodeIds) {
     const td = tableData(id);
@@ -196,89 +198,28 @@ function forceLayout(nodeIds, edges, width, height) {
     bySwim[sk] = bySwim[sk] || [];
     bySwim[sk].push(id);
   }
-  for (const id of nodeIds) {
-    const td = tableData(id);
-    const sk = td && td.swimlane ? td.swimlane : "internal";
+  const deg = {};
+  for (const e of edges) { deg[e.from] = (deg[e.from] || 0) + 1; deg[e.to] = (deg[e.to] || 0) + 1; }
+  const pos = {};
+  for (const sk in bySwim) {
     const col = swimlaneCol(sk);
-    const idx = bySwim[sk].indexOf(id);
-    const cnt = bySwim[sk].length;
+    const ids = bySwim[sk].slice().sort((a, b) => (deg[b] || 0) - (deg[a] || 0) || a.localeCompare(b));
     const cx = (col.x0 + col.x1) / 2 * width;
-    const yStart = sk === "reference" ? height - 90 : 100;
-    const yStep = sk === "reference" ? 0 : Math.min(82, (height - 180) / Math.max(1, cnt));
-    pos[id] = { x: cx + (sk === "reference" ? (idx - cnt/2) * 160 : 0), y: yStart + idx * yStep };
-    vel[id] = { x: 0, y: 0 };
-  }
-
-  const sizes = {}; for (const id of nodeIds) sizes[id] = nodeSize(id);
-  const N = nodeIds.length;
-  const iter = 450;
-  for (let step = 0; step < iter; step++) {
-    const t = 1 - step / iter;
-    // Repulsion + collision
-    for (let i = 0; i < N; i++) {
-      const a = nodeIds[i];
-      let fx = 0, fy = 0;
-      for (let j = 0; j < N; j++) {
-        if (i === j) continue;
-        const b = nodeIds[j];
-        const dx = pos[a].x - pos[b].x;
-        const dy = pos[a].y - pos[b].y;
-        const sizeA = sizes[a], sizeB = sizes[b];
-        const minSepX = (sizeA.w + sizeB.w) / 2 + 18;
-        const minSepY = (sizeA.h + sizeB.h) / 2 + 14;
-        const ax = Math.abs(dx), ay = Math.abs(dy);
-        // Hard collision: push out if rectangles overlap (with padding)
-        if (ax < minSepX && ay < minSepY) {
-          const overlapX = minSepX - ax;
-          const overlapY = minSepY - ay;
-          if (overlapX < overlapY) {
-            fx += (dx >= 0 ? 1 : -1) * overlapX * 0.55;
-          } else {
-            fy += (dy >= 0 ? 1 : -1) * overlapY * 0.55;
-          }
-        } else {
-          // Soft repulsion (longer range)
-          const d2 = Math.max(50, dx*dx + dy*dy);
-          const d = Math.sqrt(d2);
-          const force = 18000 / d2;
-          fx += (dx / d) * force;
-          fy += (dy / d) * force;
-        }
-      }
-      // Center gravity (mild)
-      fx += (width/2 - pos[a].x) * 0.008;
-      fy += (height/2 - pos[a].y) * 0.008;
-      vel[a].x = (vel[a].x + fx) * 0.55 * (0.4 + 0.6 * t);
-      vel[a].y = (vel[a].y + fy) * 0.55 * (0.4 + 0.6 * t);
+    if (sk === "reference") {
+      ids.forEach((id, i) => { pos[id] = { x: cx + (i - (ids.length - 1) / 2) * 170, y: height - 70 }; });
+      continue;
     }
-    // Attraction along edges (link force)
-    for (const e of edges) {
-      if (!pos[e.from] || !pos[e.to]) continue;
-      const dx = pos[e.to].x - pos[e.from].x;
-      const dy = pos[e.to].y - pos[e.from].y;
-      const d = Math.max(1, Math.sqrt(dx*dx + dy*dy));
-      const targetD = 200;
-      const force = (d - targetD) * 0.05;
-      vel[e.from].x += (dx / d) * force;
-      vel[e.from].y += (dy / d) * force;
-      vel[e.to].x -= (dx / d) * force;
-      vel[e.to].y -= (dy / d) * force;
-    }
-    // Apply with damping + bounds; clamp X to swimlane column
-    for (const id of nodeIds) {
-      pos[id].x += Math.max(-14, Math.min(14, vel[id].x));
-      pos[id].y += Math.max(-14, Math.min(14, vel[id].y));
-      const sz = sizes[id];
-      const td = tableData(id);
-      const col = swimlaneCol(td && td.swimlane ? td.swimlane : "internal");
-      const minX = col.x0 * width + sz.w/2 + 8;
-      const maxX = col.x1 * width - sz.w/2 - 8;
-      pos[id].x = Math.max(minX, Math.min(maxX, pos[id].x));
-      pos[id].y = Math.max(sz.h/2 + 20, Math.min(height - sz.h/2 - 20, pos[id].y));
-    }
+    const n = ids.length;
+    const top = 70, bottom = height - 40;
+    const cardH = 56;
+    const step = n > 1 ? Math.max(cardH + 28, Math.min(110, (bottom - top - cardH) / (n - 1))) : 0;
+    const total = cardH + step * (n - 1);
+    const y0 = top + Math.max(0, (bottom - top - total) / 2) + cardH / 2;
+    ids.forEach((id, i) => { pos[id] = { x: cx, y: y0 + i * step }; });
   }
   return pos;
 }
+
 
 // ========== COMPUTE VISIBLE NODE SET ==========
 function visibleNodes() {
@@ -305,6 +246,7 @@ function visibleEdges(nodeIds) {
   const seen = new Set();
   for (const n of nodeIds) {
     for (const e of (DATA.out_fk[n] || [])) {
+      if (e.to === n) continue; // self-FK (hubungan_*) — meaningless as a map arrow
       if (setN.has(e.to)) {
         result.push({ from: n, to: e.to, col: e.col, kind: "fk" });
         seen.add(n + ">" + e.to);
@@ -315,6 +257,7 @@ function visibleEdges(nodeIds) {
   // paths (e.g. umm_a_dok_keluaran -> umm_aplikasi, 8.4M rows, no declared FK).
   for (const n of nodeIds) {
     for (const e of (DATA.implicit_out[n] || [])) {
+      if (e.to === n) continue;
       if (!setN.has(e.to) || seen.has(n + ">" + e.to)) continue;
       if (typeof isHousekeepingName === "function" && (isHousekeepingName(n) || isHousekeepingName(e.to))) continue;
       result.push({ from: n, to: e.to, col: e.col, kind: "implicit" });
@@ -327,7 +270,13 @@ function visibleEdges(nodeIds) {
 function urusanTables(kod) {
   const u = DATA.urusans.find(x => x.kod === kod);
   if (!u) return new Set();
-  const set = new Set();
+  // WORKFLOW SPINE — tables EVERY urusan touches by definition (DATABASE.md 4.1/6.x):
+  // the application row (umm_aplikasi.ursn_id -> ind_ursn), its tugasans
+  // (umm_a_tgsn.tgsn_id -> ind_tgsn), and the pemohon row (umm_a_pihak_bkptg
+  // flag_pemohon='Y' — DATABASE.md 2b, universal to every application). Stage curation
+  // habitually omitted these — 13/13 urusans were missing ind_ursn (miya caught MCL
+  // dimming it, 2026-08-27).
+  const set = new Set(["umm_aplikasi", "ind_ursn", "umm_a_tgsn", "ind_tgsn", "umm_a_pihak_bkptg"]);
   for (const s of u.stages) {
     for (const t of (s.tables || [])) {
       if (!t.includes("*")) set.add(t);
@@ -367,6 +316,48 @@ function jumpToTables(id) {
   $$(".view").forEach(v => v.classList.toggle("hidden", v.dataset.view !== "search"));
   syncViewDiag();
   focusTable(id, null, "diagram");
+}
+
+// Session-only drag (no persistence — the localStorage pin was the broken-Bands root
+// cause). Move > 4px = drag; less = click-through to Tables.
+function attachCardInteraction(g, id) {
+  g.addEventListener("mousedown", (ev) => {
+    if (ev.button !== 0) return;
+    ev.preventDefault();
+    const svg = document.getElementById("map-svg");
+    const ctm = svg.getScreenCTM();
+    if (!ctm) return;
+    const toSVG = (e) => { const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; return pt.matrixTransform(ctm.inverse()); };
+    const start = toSVG(ev);
+    const origin = { ...MAP_STATE.positions[id] };
+    let moved = false;
+    function redrawEdges() {
+      document.querySelectorAll(".fk-line").forEach(p => {
+        const from = p.dataset.from, to = p.dataset.to;
+        if (from !== id && to !== id) return;
+        const ap = MAP_STATE.positions[from], bp = MAP_STATE.positions[to];
+        if (!ap || !bp) return;
+        const [sx, sy] = boxEdge(nodeSize(from), ap.x, ap.y, bp.x, bp.y);
+        const [ex, ey] = boxEdge(nodeSize(to), bp.x, bp.y, ap.x, ap.y);
+        p.setAttribute("d", `M${sx},${sy} L${ex},${ey}`);
+      });
+    }
+    function onMove(e) {
+      const cur = toSVG(e);
+      const dx = cur.x - start.x, dy = cur.y - start.y;
+      if (Math.hypot(dx, dy) > 4) moved = true;
+      MAP_STATE.positions[id] = { x: origin.x + dx, y: origin.y + dy };
+      g.setAttribute("transform", `translate(${dx},${dy})`);
+      redrawEdges();
+    }
+    function onUp() {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+      if (!moved) jumpToTables(id);
+    }
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  });
 }
 
 // ========== MAP RENDER ==========
@@ -469,7 +460,7 @@ function layoutAndRender() {
     if (urusanSet && isUrusanHit) classes.push("node-urusan-hit");
 
     const g = svgEl("g", { class: classes.join(" "), "data-table": id });
-    g.style.cursor = "pointer";
+    g.style.cursor = "grab";
 
     // Color by CATEGORY (not modul) — _p_ tables get lighter shade of same category
     const isPLayer = td.layer === "_p_";
@@ -498,7 +489,7 @@ function layoutAndRender() {
       g.appendChild(sb);
     }
 
-    g.addEventListener("click", () => jumpToTables(id));
+    attachCardInteraction(g, id);
     svg.appendChild(g);
   }
 

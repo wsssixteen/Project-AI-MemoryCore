@@ -146,6 +146,7 @@ if (hook && hook.urusanTables) {
       for (const t of s.tables) if (!t.includes("*")) expect.add(t);
       if (s.fork) for (const o of s.fork.outcomes) for (const st of o.steps) for (const t of st.tables) if (!t.includes("*")) expect.add(t);
     }
+    ["umm_aplikasi", "ind_ursn", "umm_a_tgsn", "ind_tgsn", "umm_a_pihak_bkptg"].forEach(s => expect.add(s)); // workflow spine (2026-08-27)
     const got = hook.urusanTables(u.kod);
     let same = got.size === expect.size; if (same) for (const t of expect) if (!got.has(t)) { same = false; break; }
     if (!same) urBad.push(u.kod + " (got " + got.size + " vs " + expect.size + ")");
@@ -153,6 +154,33 @@ if (hook && hook.urusanTables) {
   }
   check("urusan filter: highlight set = stage tables & all exist", urBad.length === 0, urBad.length ? urBad.slice(0,4).join(", ") : "all 13 correct");
 } else check("urusan filter: urusanTables exposed", false, "hook missing");
+
+// ---------- T6a: ALWAYS-ON card-overlap check (2026-08-27 — the old T6 silently SKIPs
+// on lost v2.3 routing internals, which let real overlaps ship unseen) ----------
+if (hook && hook.layoutAndRender && hook.nodeSize && hook.MAP_STATE) {
+  const rectOf2 = (id, pos) => { const b = hook.nodeSize(id), p = pos[id]; return { x0: p.x - b.w/2, y0: p.y - b.h/2, x1: p.x + b.w/2, y1: p.y + b.h/2 }; };
+  const ovl2 = (A, B) => A.x0 < B.x1 - 0.5 && B.x0 < A.x1 - 0.5 && A.y0 < B.y1 - 0.5 && B.y0 < A.y1 - 0.5;
+  const bad = [];
+  for (const m of dataset.moduls) {
+    hook.MAP_STATE.modul = m.key; hook.MAP_STATE.urusan = ""; hook.MAP_STATE.positions = {};
+    hook.layoutAndRender();
+    const pos = hook.MAP_STATE.positions, ids = Object.keys(pos);
+    for (let i = 0; i < ids.length; i++) for (let j = i + 1; j < ids.length; j++)
+      if (ovl2(rectOf2(ids[i], pos), rectOf2(ids[j], pos))) bad.push(m.key + ":" + ids[i] + "x" + ids[j]);
+  }
+  check("geometry: no overlapping cards — ALWAYS-ON lane-stack check", bad.length === 0, bad.length ? bad.slice(0,4).join(", ") : "none across all moduls");
+} else check("geometry: always-on overlap check ran", false, "hook missing");
+
+// ---------- T6b: urusan highlight includes the workflow spine ----------
+if (hook && hook.urusanTables) {
+  const SPINE = ["umm_aplikasi", "ind_ursn", "umm_a_tgsn", "ind_tgsn", "umm_a_pihak_bkptg"];
+  const noSpine = [];
+  for (const u of dataset.urusans) {
+    const got = hook.urusanTables(u.kod);
+    for (const s of SPINE) if (!got.has(s)) noSpine.push(u.kod + ":" + s);
+  }
+  check("urusan filter: workflow spine present for all 13", noSpine.length === 0, noSpine.length ? noSpine.slice(0,4).join(", ") : "spine complete");
+}
 
 // ---------- T6: geometric quality - no overlapping cards, no coinciding edge endpoints ----------
 if (hook && hook.layoutAndRender && hook.visibleEdges && hook.buildEdgeRoutes && hook.edgePoints && hook.nodeSize) {

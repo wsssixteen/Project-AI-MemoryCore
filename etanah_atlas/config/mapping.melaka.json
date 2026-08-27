@@ -1814,9 +1814,10 @@
             "umm_p_aplikasi",
             "umm_p_hkmlk",
             "umm_p_pihak_bkptg",
-            "plp_p_pelupusan"
+            "plp_p_pelupusan",
+            "umm_a_permohonan_tnh"
           ],
-          "evidence": "userTask name=\"3.0 Semakan Kemasukan Maklumat\" (sid-DC02FA30) — first substantive userTask after the Start event; no 1.0/2.0 task exists in this BPMN, consistent with intake originating from the AWAM/e-Mohon portal before this internal process begins."
+          "evidence": "userTask name=\"3.0 Semakan Kemasukan Maklumat\" (sid-DC02FA30) — first substantive userTask after the Start event; no 1.0/2.0 task exists in this BPMN, consistent with intake originating from the AWAM/e-Mohon portal before this internal process begins. umm_a_permohonan_tnh added 2026-08-27: MCL land data is written to umm_p_permohonan_tnh by the AWAM default-branch save (DATABASE.md 16.7) and SPOC-copied to the a-side at intake."
         },
         {
           "kod": "jt_endorsan_nota",
