@@ -76,20 +76,17 @@ function refreshTotals() {
 }
 
 // ========== MAP STATE ==========
+// Map = read-only modul OVERVIEW (swimlanes, deterministic). Inspection lives in the
+// Tables tab — clicking a card jumps there. Bands mode + Pin/Drag/Reset removed
+// 2026-08-27: stale localStorage pins skipped layout entirely (forceLayout early-return)
+// and scattered post-pin tables at random seeds — the "broken Bands" miya reported.
 const MAP_STATE = {
   modul: "pelupusan",
   urusan: "",
   layer: "both",
-  expanded: new Set(),
-  selected: null,
   positions: {},
-  pinned: false,
-  layoutMode: "bands",  // "bands" | "swimlanes"
+  layoutMode: "swimlanes",
 };
-try {
-  const saved = localStorage.getItem("etanah-layout-mode");
-  if (saved === "swimlanes" || saved === "bands") MAP_STATE.layoutMode = saved;
-} catch(e){}
 
 // ========== POPULATE DROPDOWNS ==========
 function populateDropdowns() {
@@ -190,9 +187,10 @@ function nodeSize(id) {
   return { w: isMain ? 175 : 145, h: isMain ? 56 : 44 };
 }
 function forceLayout(nodeIds, edges, width, height) {
-  const pos = {}, vel = {};
-  const swimMode = MAP_STATE.layoutMode === "swimlanes";
-  // Group nodes by swimlane for Y distribution
+  // Deterministic lane STACKING — no physics. Each swimlane is one vertical column,
+  // ordered hub-degree-first; step >= card height + 28 so overlap is impossible by
+  // construction (2026-08-27: the force sim left unresolved overlaps the smoke
+  // geometry check could not see because it silently SKIPs on lost v2.3 internals).
   const bySwim = {};
   for (const id of nodeIds) {
     const td = tableData(id);
@@ -200,129 +198,28 @@ function forceLayout(nodeIds, edges, width, height) {
     bySwim[sk] = bySwim[sk] || [];
     bySwim[sk].push(id);
   }
-  for (const id of nodeIds) {
-    if (MAP_STATE.pinned && MAP_STATE.positions[id]) {
-      pos[id] = { x: MAP_STATE.positions[id].x, y: MAP_STATE.positions[id].y };
-    } else if (swimMode) {
-      const td = tableData(id);
-      const sk = td && td.swimlane ? td.swimlane : "internal";
-      const col = swimlaneCol(sk);
-      const idx = bySwim[sk].indexOf(id);
-      const cnt = bySwim[sk].length;
-      // Stack vertically inside the column
-      const cx = (col.x0 + col.x1) / 2 * width;
-      const yStart = sk === "reference" ? height - 90 : 100;
-      const yStep = sk === "reference" ? 0 : Math.min(82, (height - 180) / Math.max(1, cnt));
-      pos[id] = { x: cx + (sk === "reference" ? (idx - cnt/2) * 160 : 0), y: yStart + idx * yStep };
-    } else {
-      const td = tableData(id);
-      const cIdx = DATA.categories.findIndex(c => c.key === (td ? td.category : "subsystem"));
-      const ang = (cIdx / DATA.categories.length) * Math.PI * 2;
-      pos[id] = { x: width/2 + Math.cos(ang) * 240 + (Math.random()-0.5)*40, y: height/2 + Math.sin(ang) * 200 + (Math.random()-0.5)*40 };
+  const deg = {};
+  for (const e of edges) { deg[e.from] = (deg[e.from] || 0) + 1; deg[e.to] = (deg[e.to] || 0) + 1; }
+  const pos = {};
+  for (const sk in bySwim) {
+    const col = swimlaneCol(sk);
+    const ids = bySwim[sk].slice().sort((a, b) => (deg[b] || 0) - (deg[a] || 0) || a.localeCompare(b));
+    const cx = (col.x0 + col.x1) / 2 * width;
+    if (sk === "reference") {
+      ids.forEach((id, i) => { pos[id] = { x: cx + (i - (ids.length - 1) / 2) * 170, y: height - 70 }; });
+      continue;
     }
-    vel[id] = { x: 0, y: 0 };
-  }
-  if (MAP_STATE.pinned) return pos;
-
-  const sizes = {}; for (const id of nodeIds) sizes[id] = nodeSize(id);
-  const N = nodeIds.length;
-  const iter = 450;
-  for (let step = 0; step < iter; step++) {
-    const t = 1 - step / iter;
-    // Repulsion + collision
-    for (let i = 0; i < N; i++) {
-      const a = nodeIds[i];
-      let fx = 0, fy = 0;
-      for (let j = 0; j < N; j++) {
-        if (i === j) continue;
-        const b = nodeIds[j];
-        const dx = pos[a].x - pos[b].x;
-        const dy = pos[a].y - pos[b].y;
-        const sizeA = sizes[a], sizeB = sizes[b];
-        const minSepX = (sizeA.w + sizeB.w) / 2 + 18;
-        const minSepY = (sizeA.h + sizeB.h) / 2 + 14;
-        const ax = Math.abs(dx), ay = Math.abs(dy);
-        // Hard collision: push out if rectangles overlap (with padding)
-        if (ax < minSepX && ay < minSepY) {
-          const overlapX = minSepX - ax;
-          const overlapY = minSepY - ay;
-          if (overlapX < overlapY) {
-            fx += (dx >= 0 ? 1 : -1) * overlapX * 0.55;
-          } else {
-            fy += (dy >= 0 ? 1 : -1) * overlapY * 0.55;
-          }
-        } else {
-          // Soft repulsion (longer range)
-          const d2 = Math.max(50, dx*dx + dy*dy);
-          const d = Math.sqrt(d2);
-          const force = 18000 / d2;
-          fx += (dx / d) * force;
-          fy += (dy / d) * force;
-        }
-      }
-      // Center gravity (mild)
-      fx += (width/2 - pos[a].x) * 0.008;
-      fy += (height/2 - pos[a].y) * 0.008;
-      vel[a].x = (vel[a].x + fx) * 0.55 * (0.4 + 0.6 * t);
-      vel[a].y = (vel[a].y + fy) * 0.55 * (0.4 + 0.6 * t);
-    }
-    // Attraction along edges (link force)
-    for (const e of edges) {
-      if (!pos[e.from] || !pos[e.to]) continue;
-      const dx = pos[e.to].x - pos[e.from].x;
-      const dy = pos[e.to].y - pos[e.from].y;
-      const d = Math.max(1, Math.sqrt(dx*dx + dy*dy));
-      const targetD = 200;
-      const force = (d - targetD) * 0.05;
-      vel[e.from].x += (dx / d) * force;
-      vel[e.from].y += (dy / d) * force;
-      vel[e.to].x -= (dx / d) * force;
-      vel[e.to].y -= (dy / d) * force;
-    }
-    // Category cohesion (Bands mode only) — pull same-category nodes toward their centroid
-    // so bands form tight clusters and band-rectangles stop overlapping across the canvas.
-    if (!swimMode) {
-      const cats = {};
-      for (const id of nodeIds) {
-        const td = tableData(id);
-        const ck = td && td.category ? td.category : "subsystem";
-        cats[ck] = cats[ck] || { sx: 0, sy: 0, n: 0, ids: [] };
-        cats[ck].sx += pos[id].x;
-        cats[ck].sy += pos[id].y;
-        cats[ck].n += 1;
-        cats[ck].ids.push(id);
-      }
-      for (const ck in cats) {
-        const c = cats[ck];
-        if (c.n < 2) continue;  // singletons have no cohesion target
-        const cx = c.sx / c.n, cy = c.sy / c.n;
-        for (const id of c.ids) {
-          const dx = cx - pos[id].x;
-          const dy = cy - pos[id].y;
-          vel[id].x += dx * 0.04;
-          vel[id].y += dy * 0.04;
-        }
-      }
-    }
-    // Apply with damping + bounds; if swimlanes, clamp X to column
-    for (const id of nodeIds) {
-      pos[id].x += Math.max(-14, Math.min(14, vel[id].x));
-      pos[id].y += Math.max(-14, Math.min(14, vel[id].y));
-      const sz = sizes[id];
-      if (swimMode) {
-        const td = tableData(id);
-        const col = swimlaneCol(td && td.swimlane ? td.swimlane : "internal");
-        const minX = col.x0 * width + sz.w/2 + 8;
-        const maxX = col.x1 * width - sz.w/2 - 8;
-        pos[id].x = Math.max(minX, Math.min(maxX, pos[id].x));
-      } else {
-        pos[id].x = Math.max(sz.w/2 + 20, Math.min(width - sz.w/2 - 20, pos[id].x));
-      }
-      pos[id].y = Math.max(sz.h/2 + 20, Math.min(height - sz.h/2 - 20, pos[id].y));
-    }
+    const n = ids.length;
+    const top = 70, bottom = height - 40;
+    const cardH = 56;
+    const step = n > 1 ? Math.max(cardH + 28, Math.min(110, (bottom - top - cardH) / (n - 1))) : 0;
+    const total = cardH + step * (n - 1);
+    const y0 = top + Math.max(0, (bottom - top - total) / 2) + cardH / 2;
+    ids.forEach((id, i) => { pos[id] = { x: cx, y: y0 + i * step }; });
   }
   return pos;
 }
+
 
 // ========== COMPUTE VISIBLE NODE SET ==========
 function visibleNodes() {
@@ -338,36 +235,33 @@ function visibleNodes() {
     });
   }
 
-  // FOCUS MODE — when anything is expanded, hide other main tables (per user feedback).
-  // Visible = (expanded parents) ∪ (children of expanded) ∪ (always-on hub anchors).
-  const expandedActive = MAP_STATE.expanded && MAP_STATE.expanded.size > 0;
   const set = new Set();
-  if (expandedActive) {
-    // Always keep these "you-can't-orient-without-them" anchors visible
-    const ALWAYS_ON = new Set(["umm_aplikasi", "umm_p_aplikasi"]);
-    ALWAYS_ON.forEach(n => { if (mainSet.has(n)) set.add(n); });
-    for (const parent of MAP_STATE.expanded) {
-      if (!mainSet.has(parent)) continue;
-      set.add(parent);
-      const ch = DATA.anchor_children[parent] || [];
-      ch.slice(0, 8).forEach(c => set.add(c.from));
-    }
-  } else {
-    // Default: show all main tables
-    mainSet.forEach(n => set.add(n));
-  }
+  mainSet.forEach(n => set.add(n));
   return Array.from(set);
 }
 
 function visibleEdges(nodeIds) {
   const setN = new Set(nodeIds);
   const result = [];
+  const seen = new Set();
   for (const n of nodeIds) {
-    const outs = DATA.out_fk[n] || [];
-    for (const e of outs) {
+    for (const e of (DATA.out_fk[n] || [])) {
+      if (e.to === n) continue; // self-FK (hubungan_*) — meaningless as a map arrow
       if (setN.has(e.to)) {
-        result.push({ from: n, to: e.to, col: e.col });
+        result.push({ from: n, to: e.to, col: e.col, kind: "fk" });
+        seen.add(n + ">" + e.to);
       }
+    }
+  }
+  // Implicit name-matched links (DATABASE.md 10b) — the FK-only map hid real join
+  // paths (e.g. umm_a_dok_keluaran -> umm_aplikasi, 8.4M rows, no declared FK).
+  for (const n of nodeIds) {
+    for (const e of (DATA.implicit_out[n] || [])) {
+      if (e.to === n) continue;
+      if (!setN.has(e.to) || seen.has(n + ">" + e.to)) continue;
+      if (typeof isHousekeepingName === "function" && (isHousekeepingName(n) || isHousekeepingName(e.to))) continue;
+      result.push({ from: n, to: e.to, col: e.col, kind: "implicit" });
+      seen.add(n + ">" + e.to);
     }
   }
   return result;
@@ -376,7 +270,13 @@ function visibleEdges(nodeIds) {
 function urusanTables(kod) {
   const u = DATA.urusans.find(x => x.kod === kod);
   if (!u) return new Set();
-  const set = new Set();
+  // WORKFLOW SPINE — tables EVERY urusan touches by definition (DATABASE.md 4.1/6.x):
+  // the application row (umm_aplikasi.ursn_id -> ind_ursn), its tugasans
+  // (umm_a_tgsn.tgsn_id -> ind_tgsn), and the pemohon row (umm_a_pihak_bkptg
+  // flag_pemohon='Y' — DATABASE.md 2b, universal to every application). Stage curation
+  // habitually omitted these — 13/13 urusans were missing ind_ursn (miya caught MCL
+  // dimming it, 2026-08-27).
+  const set = new Set(["umm_aplikasi", "ind_ursn", "umm_a_tgsn", "ind_tgsn", "umm_a_pihak_bkptg"]);
   for (const s of u.stages) {
     for (const t of (s.tables || [])) {
       if (!t.includes("*")) set.add(t);
@@ -409,87 +309,54 @@ function boxEdge(box, bx, by, tx, ty) {
 }
 
 
-// ========== DRAG + CLICK HANDLER ==========
-// Distinguishes click (no movement) from drag (movement > 4px)
-function attachDragAndClick(g, id, pos) {
-  let startX, startY, originX, originY, moved, lastMouseTime;
+// ========== CLICK -> TABLES FOCUS ==========
+// One inspection surface: a Map card is a shortcut into the Tables tab's focus diagram.
+function jumpToTables(id) {
+  $$(".tab").forEach(x => x.classList.toggle("active", x.dataset.tab === "search"));
+  $$(".view").forEach(v => v.classList.toggle("hidden", v.dataset.view !== "search"));
+  syncViewDiag();
+  focusTable(id, null, "diagram");
+}
+
+// Session-only drag (no persistence — the localStorage pin was the broken-Bands root
+// cause). Move > 4px = drag; less = click-through to Tables.
+function attachCardInteraction(g, id) {
   g.addEventListener("mousedown", (ev) => {
     if (ev.button !== 0) return;
     ev.preventDefault();
     const svg = document.getElementById("map-svg");
-    const pt = svg.createSVGPoint();
-    pt.x = ev.clientX; pt.y = ev.clientY;
     const ctm = svg.getScreenCTM();
     if (!ctm) return;
-    const cursorSVG = pt.matrixTransform(ctm.inverse());
-    startX = cursorSVG.x; startY = cursorSVG.y;
-    originX = pos.x; originY = pos.y;
-    moved = false;
-    g.style.cursor = "grabbing";
-    lastMouseTime = Date.now();
-
-    function onMove(e) {
-      const pt2 = svg.createSVGPoint();
-      pt2.x = e.clientX; pt2.y = e.clientY;
-      const cur = pt2.matrixTransform(ctm.inverse());
-      const dx = cur.x - startX, dy = cur.y - startY;
-      if (Math.hypot(dx, dy) > 4) moved = true;
-      const newX = originX + dx, newY = originY + dy;
-      pos.x = newX; pos.y = newY;
-      MAP_STATE.positions[id] = { x: newX, y: newY };
-      // Update node position
-      const size = nodeSize(id);
-      const rect = g.querySelector(".node-rect");
-      if (rect) { rect.setAttribute("x", newX - size.w/2); rect.setAttribute("y", newY - size.h/2); }
-      const texts = g.querySelectorAll("text");
-      texts.forEach((t, i) => {
-        const cls = t.getAttribute("class") || "";
-        if (cls.includes("node-text")) { t.setAttribute("x", newX); t.setAttribute("y", newY - 3); }
-        else if (cls.includes("node-sub")) { t.setAttribute("x", newX); t.setAttribute("y", newY + 13); }
-        else if (cls.includes("node-shared-badge")) {
-          // MAIN badge left-anchored; shared badge right-anchored
-          if (t.textContent === "MAIN") { t.setAttribute("x", newX - size.w/2 + 8); t.setAttribute("y", newY - size.h/2 + 14); }
-          else { t.setAttribute("x", newX + size.w/2 - 8); t.setAttribute("y", newY - size.h/2 + 14); }
-        }
-      });
-      // Reposition the expanded-state ring if present
-      const rings = g.querySelectorAll(".node-expanded-ring");
-      rings.forEach(r => {
-        r.setAttribute("x", newX - size.w/2 - 3);
-        r.setAttribute("y", newY - size.h/2 - 3);
-      });
-      // Update connected edges in real time
+    const toSVG = (e) => { const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; return pt.matrixTransform(ctm.inverse()); };
+    const start = toSVG(ev);
+    const origin = { ...MAP_STATE.positions[id] };
+    let moved = false;
+    function redrawEdges() {
       document.querySelectorAll(".fk-line").forEach(p => {
         const from = p.dataset.from, to = p.dataset.to;
-        if (from === id || to === id) {
-          const ap = MAP_STATE.positions[from], bp = MAP_STATE.positions[to];
-          if (!ap || !bp) return;
-          const boxA = nodeSize(from), boxB = nodeSize(to);
-          const [sx, sy] = boxEdge(boxA, ap.x, ap.y, bp.x, bp.y);
-          const [ex, ey] = boxEdge(boxB, bp.x, bp.y, ap.x, ap.y);
-          p.setAttribute("d", `M${sx},${sy} L${ex},${ey}`);
-        }
+        if (from !== id && to !== id) return;
+        const ap = MAP_STATE.positions[from], bp = MAP_STATE.positions[to];
+        if (!ap || !bp) return;
+        const [sx, sy] = boxEdge(nodeSize(from), ap.x, ap.y, bp.x, bp.y);
+        const [ex, ey] = boxEdge(nodeSize(to), bp.x, bp.y, ap.x, ap.y);
+        p.setAttribute("d", `M${sx},${sy} L${ex},${ey}`);
       });
     }
-    function onUp(e) {
+    function onMove(e) {
+      const cur = toSVG(e);
+      const dx = cur.x - start.x, dy = cur.y - start.y;
+      if (Math.hypot(dx, dy) > 4) moved = true;
+      MAP_STATE.positions[id] = { x: origin.x + dx, y: origin.y + dy };
+      g.setAttribute("transform", `translate(${dx},${dy})`);
+      redrawEdges();
+    }
+    function onUp() {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseup", onUp);
-      g.style.cursor = "grab";
-      if (!moved) {
-        // Treat as click
-        const now = Date.now();
-        if (lastMouseTime && now - lastMouseTime < 400) {
-          // Maybe dblclick — schedule a delayed click that gets canceled by dblclick
-        }
-        selectTable(id);
-      }
+      if (!moved) jumpToTables(id);
     }
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseup", onUp);
-  });
-  g.addEventListener("dblclick", (ev) => {
-    ev.stopPropagation();
-    toggleExpand(id);
   });
 }
 
@@ -541,10 +408,10 @@ function layoutAndRender() {
   defs.innerHTML = `<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#888780"/></marker>`;
   svg.appendChild(defs);
 
-  // Background: bands (Mode A) or swimlane columns (Mode B)
+  // Background: swimlane columns
   const bgGroup = svgEl("g", { class: "bg-layer" });
   svg.appendChild(bgGroup);
-  if (MAP_STATE.layoutMode === "swimlanes") {
+  {
     for (const lane of ACTIVE_SWIMLANES) {
       if (lane.key === "reference") continue;
       const x = lane.x0 * W, w = (lane.x1 - lane.x0) * W;
@@ -570,6 +437,7 @@ function layoutAndRender() {
       "marker-end": "url(#arr)",
       "data-from": e.from, "data-to": e.to,
     });
+    if (e.kind === "implicit") { path.setAttribute("stroke-dasharray", "5 4"); path.setAttribute("opacity", "0.6"); }
     svg.appendChild(path);
   }
 
@@ -590,7 +458,6 @@ function layoutAndRender() {
     if (isMain) classes.push("node-main");
     if (urusanSet && !isUrusanHit) classes.push("node-dim");
     if (urusanSet && isUrusanHit) classes.push("node-urusan-hit");
-    if (MAP_STATE.expanded.has(id)) classes.push("node-anim-in");
 
     const g = svgEl("g", { class: classes.join(" "), "data-table": id });
     g.style.cursor = "grab";
@@ -622,61 +489,10 @@ function layoutAndRender() {
       g.appendChild(sb);
     }
 
-    // Subtle "has children" visual cue — a thin pulse-style ring shown when the node
-    // is currently expanded. No always-visible glyph (user feedback: keep the card clean).
-    const childCount = (DATA.anchor_children[id] || []).length;
-    if (childCount > 0 && MAP_STATE.expanded.has(id)) {
-      const ring = svgEl("rect", { x: p.x - w/2 - 3, y: p.y - h/2 - 3, width: w + 6, height: h + 6, rx: 12, class: "node-expanded-ring", fill: "none", stroke: cat.color, "stroke-width": 1.5, "stroke-dasharray": "3 3", opacity: 0.55 });
-      g.insertBefore(ring, g.firstChild);
-    }
-
-    attachDragAndClick(g, id, p);
+    attachCardInteraction(g, id);
     svg.appendChild(g);
   }
 
-  // Draw category bands (Mode A): one band per category that has tables in view
-  if (MAP_STATE.layoutMode === "bands") {
-    const byCat = {};
-    for (const id of nodeIds) {
-      const td = tableData(id);
-      const ck = td && td.category ? td.category : "subsystem";
-      byCat[ck] = byCat[ck] || [];
-      byCat[ck].push(pos[id]);
-    }
-    for (const [ck, points] of Object.entries(byCat)) {
-      if (points.length < 1) continue;
-      const cat = categoryOf(ck);
-      if (!cat) continue;
-      const xs = points.map(p => p.x), ys = points.map(p => p.y);
-      const sz = nodeSize(nodeIds.find(id => tableData(id).category === ck) || nodeIds[0]);
-      const pad = 28;
-      const x0 = Math.min(...xs) - sz.w/2 - pad;
-      const y0 = Math.min(...ys) - sz.h/2 - pad;
-      const x1 = Math.max(...xs) + sz.w/2 + pad;
-      const y1 = Math.max(...ys) + sz.h/2 + pad;
-      const r = svgEl("rect", { x: x0, y: y0, width: x1 - x0, height: y1 - y0, rx: 14, fill: cat.color_bg_light, opacity: 0.18, stroke: cat.color, "stroke-width": 0.6, "stroke-dasharray": "4 3" });
-      bgGroup.appendChild(r);
-      const lbl = svgEl("text", { x: x0 + 10, y: y0 + 14, "font-size": 10, "font-weight": 600, fill: cat.color, opacity: 0.9 });
-      lbl.textContent = cat.label.toUpperCase();
-      bgGroup.appendChild(lbl);
-    }
-  }
-
-  // Re-apply selection highlights
-  if (MAP_STATE.selected) selectTable(MAP_STATE.selected, true);
-
-  // Bg click clears selection — but ignore clicks that originated on a node
-  svg.onclick = (e) => {
-    if (e.target.closest(".nd")) return;
-    MAP_STATE.selected = null;
-    $$(".nd").forEach(n => n.classList.remove("node-selected"));
-    $$(".fk-line").forEach(l => l.classList.remove("highlight", "dim"));
-    renderPanel(null);
-  };
-
-  // Refresh legend + focus bar each render
-  renderMapLegend();
-  renderFocusBar();
 }
 
 function lighten(hex, amt) {
@@ -691,121 +507,10 @@ function lighten(hex, amt) {
   return `#${[r,g,b].map(v => v.toString(16).padStart(2,'0')).join('')}`;
 }
 
-function selectTable(id, silent) {
-  MAP_STATE.selected = id;
-  $$(".nd").forEach(n => n.classList.remove("node-selected"));
-  $$(".fk-line").forEach(l => l.classList.remove("highlight", "dim"));
-  const node = document.querySelector(`.nd[data-table="${CSS.escape(id)}"]`);
-  if (node) node.classList.add("node-selected");
-  $$(".fk-line").forEach(l => {
-    if (l.dataset.from === id || l.dataset.to === id) l.classList.add("highlight");
-    else l.classList.add("dim");
-  });
-  renderPanel(id);
-}
-
-function toggleExpand(id) {
-  if (MAP_STATE.expanded.has(id)) MAP_STATE.expanded.delete(id);
-  else MAP_STATE.expanded.add(id);
-  layoutAndRender();
-  selectTable(id, true);
-}
-
-function renderPanel(id) {
-  const panel = $("#side-panel");
-  if (!id) {
-    panel.innerHTML = `<div class="panel-hint">
-      <p><strong>Click</strong> any table to inspect its details here.</p>
-      <p class="hint-sub"><strong>Double-click</strong> a card to drill into its children. Drag a card to reposition.</p>
-    </div>`;
-    return;
-  }
-  const td = tableData(id);
-  if (!td) { panel.innerHTML = `<p>Table not found.</p>`; return; }
-  const mod = modulOf(td.modul) || modulOf("shared");
-  const cat = categoryOf(td.category) || categoryOf("subsystem");
-  const blurb = DATA.anchor_blurbs[id];
-  const childrenAll = DATA.in_fk[id] || [];
-  const parentsAll = DATA.out_fk[id] || [];
-  const children = childrenAll.slice(0, 16);
-  const parents = parentsAll.slice(0, 16);
-
-  panel.innerHTML = `
-    <div class="panel-table-name">${escapeHtml(id)}</div>
-    <div class="panel-badges">
-      <span class="badge" style="background:${cat.color_bg_light};color:${cat.color}">${escapeHtml(cat.label)}</span>
-      <span class="badge" style="background:${mod.color_bg_light};color:${mod.color}">${escapeHtml(mod.label)}</span>
-      <span class="badge" style="background:var(--surface-2);color:var(--text-dim)">layer ${escapeHtml(td.layer)}</span>
-      ${td.is_main ? '<span class="badge badge-main">main table</span>' : ''}
-    </div>
-    ${blurb ? `<p class="panel-blurb">${escapeHtml(blurb)}</p>` : ""}
-    ${td.comment ? `<p class="panel-blurb" style="font-style:italic;color:var(--text-dim)">${escapeHtml(td.comment)}</p>` : ""}
-    <div class="panel-stats">
-      <div class="panel-stat"><span class="num">${td.in}</span><span class="lbl">incoming FK</span></div>
-      <div class="panel-stat"><span class="num">${td.out}</span><span class="lbl">outgoing FK</span></div>
-      <div class="panel-stat"><span class="num">${td.cols}</span><span class="lbl">columns</span></div>
-    </div>
-    <div class="panel-section">
-      <h4>Children (referenced by, ${childrenAll.length})</h4>
-      <ul class="panel-list">${children.map(c => `<li data-open="${escapeAttr(c.from)}"><span>${escapeHtml(c.from)}</span><span class="colhint">.${escapeHtml(c.col)}</span></li>`).join("") || "<li><em>None.</em></li>"}</ul>
-    </div>
-    <div class="panel-section">
-      <h4>Points to (outgoing FK, ${parentsAll.length})</h4>
-      <ul class="panel-list">${parents.map(p => `<li data-open="${escapeAttr(p.to)}"><span>${escapeHtml(p.to)}</span><span class="colhint">.${escapeHtml(p.col)}</span></li>`).join("") || "<li><em>None.</em></li>"}</ul>
-    </div>
-  `;
-  panel.querySelectorAll("[data-open]").forEach(el => {
-    el.addEventListener("click", () => selectTable(el.dataset.open));
-  });
-}
-
-// ========== MAP-TAB CATEGORY LEGEND ==========
-function renderMapLegend() {
-  const wrap = $("#map-legend");
-  if (!wrap) return;
-  const cats = DATA.categories || [];
-  if (cats.length === 0) { wrap.innerHTML = ""; return; }
-  wrap.innerHTML = cats.map(c => `
-    <span class="legend-chip" title="${escapeAttr(c.label)}">
-      <span class="legend-swatch" style="background:${c.color_bg_light};border-color:${c.color}"></span>
-      <span class="legend-label">${escapeHtml(c.label)}</span>
-    </span>
-  `).join("");
-}
-
-// ========== FOCUS-MODE BAR ==========
-// When any table is expanded, show a small bar that lets the user clear focus easily.
-function renderFocusBar() {
-  const bar = $("#focus-bar");
-  if (!bar) return;
-  if (!MAP_STATE.expanded || MAP_STATE.expanded.size === 0) {
-    bar.classList.add("hidden");
-    bar.innerHTML = "";
-    return;
-  }
-  const names = Array.from(MAP_STATE.expanded);
-  const chips = names.map(n => `<span class="focus-chip">${escapeHtml(n)}<button class="focus-chip-x" data-collapse="${escapeAttr(n)}" title="Collapse ${escapeAttr(n)}">×</button></span>`).join("");
-  bar.classList.remove("hidden");
-  bar.innerHTML = `<span class="focus-bar-label">Focused on:</span> ${chips} <button class="btn focus-bar-clear" id="btn-clear-focus">Clear focus</button>`;
-  bar.querySelectorAll("[data-collapse]").forEach(el => {
-    el.addEventListener("click", () => {
-      MAP_STATE.expanded.delete(el.dataset.collapse);
-      layoutAndRender();
-    });
-  });
-  const clearBtn = bar.querySelector("#btn-clear-focus");
-  if (clearBtn) clearBtn.addEventListener("click", () => {
-    MAP_STATE.expanded = new Set();
-    layoutAndRender();
-  });
-}
 
 // ========== CONTROLS WIRING ==========
 $("#ctl-modul").addEventListener("change", (e) => {
   MAP_STATE.modul = e.target.value;
-  MAP_STATE.expanded = new Set();
-  MAP_STATE.selected = null;
-  MAP_STATE.pinned = false;
   layoutAndRender();
 });
 $("#ctl-urusan").addEventListener("change", (e) => {
@@ -819,40 +524,9 @@ $$("#ctl-layer .seg-btn").forEach(b => {
     layoutAndRender();
   });
 });
-// Layout-mode toggle
-$$("#ctl-layout-mode .seg-btn").forEach(b => {
-  if (b.dataset.mode === MAP_STATE.layoutMode) b.classList.add("active");
-  else b.classList.remove("active");
-  b.addEventListener("click", () => {
-    $$("#ctl-layout-mode .seg-btn").forEach(x => x.classList.toggle("active", x === b));
-    MAP_STATE.layoutMode = b.dataset.mode;
-    MAP_STATE.pinned = false;  // re-compute layout on mode switch
-    try { localStorage.setItem("etanah-layout-mode", MAP_STATE.layoutMode); } catch(e){}
-    layoutAndRender();
-  });
-});
-$("#btn-pin").addEventListener("click", () => {
-  MAP_STATE.pinned = true;
-  try { localStorage.setItem("etanah-positions-" + MAP_STATE.modul, JSON.stringify(MAP_STATE.positions)); } catch(e){}
-  $("#btn-pin").textContent = "Pinned ✓";
-  setTimeout(() => $("#btn-pin").textContent = "Pin layout", 1500);
-});
-$("#btn-reset").addEventListener("click", () => {
-  MAP_STATE.pinned = false;
-  MAP_STATE.positions = {};
-  try { localStorage.removeItem("etanah-positions-" + MAP_STATE.modul); } catch(e){}
-  layoutAndRender();
-});
 $("#btn-print-map").addEventListener("click", () => window.print());
 $("#btn-print-urusan").addEventListener("click", () => window.print());
 
-// Restore pinned positions on modul change
-function restorePinned() {
-  try {
-    const raw = localStorage.getItem("etanah-positions-" + MAP_STATE.modul);
-    if (raw) { MAP_STATE.positions = JSON.parse(raw); MAP_STATE.pinned = true; }
-  } catch(e){}
-}
 
 // ========== URUSAN JOURNEY VIEW ==========
 const FORK_CHOICE = {};  // kod -> chosen outcome kind
@@ -1927,7 +1601,6 @@ renderAbout();
 setupDropzone();
 setupSearch();
 renderUrusanView();
-restorePinned();
 layoutAndRender();
 
 // Deep links: ?tab=map|urusan|search|about &sub=diagram|catalog|urusan &table=<name>
