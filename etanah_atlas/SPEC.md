@@ -42,6 +42,7 @@
 | C4 | Urusan Journey: all 13 urusans, BPMN-verified decision forks (Lulus/Tolak/Tangguh per real gateway evidence), unhappy paths noted | 2026-08-22 goal B |
 | C5 | Every table shows: entity class, used-by-code badges, PK, comment; sidebar tabs Overview / Appears in / Columns with the columns list VISIBLE | 2026-08-24 |
 | C6 | Stage/fork tables must exist in schema (build-time WARN + smoke check) | 2026-08-22 goal C |
+| C7 | The Journey's curated stages are an ABSTRACTION — every urusan ALSO carries the full BPMN tugasan sequence (every userTask + callActivity, sub-processes expanded, census kod/peranan joined, no-match flagged honestly) as a collapsible layer; derived by `lib/build_journey_seq.py`, gated by smoke T6c | 2026-08-27 "you're missing many Tugasan" |
 
 ## 4. Verification ledger (2026-08-27 100% interaction sweep — all real-browser events)
 

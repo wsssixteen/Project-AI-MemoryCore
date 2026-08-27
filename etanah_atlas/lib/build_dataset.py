@@ -141,6 +141,15 @@ def main(profile="melaka"):
     if missing:
         print(f"WARN: main_tables in mapping not in schema: {missing}", file=sys.stderr)
 
+    seq_file = BUILD / "journey_seq.json"
+    if seq_file.exists():
+        seq = json.load(open(seq_file, encoding="utf-8"))["urusans"]
+        for u in mapping["urusans"]:
+            if u["kod"] in seq:
+                u["bpmn_seq"] = seq[u["kod"]]
+    else:
+        print("WARN: build/journey_seq.json missing — run lib/build_journey_seq.py (full BPMN tugasan sequences absent)", file=sys.stderr)
+
     bad_stage_tables = []
     for u in mapping["urusans"]:
         for s in u.get("stages", []):

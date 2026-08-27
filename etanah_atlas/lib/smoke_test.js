@@ -182,6 +182,12 @@ if (hook && hook.urusanTables) {
   check("urusan filter: workflow spine present for all 13", noSpine.length === 0, noSpine.length ? noSpine.slice(0,4).join(", ") : "spine complete");
 }
 
+// ---------- T6c: full BPMN tugasan sequence attached per urusan (2026-08-27) ----------
+{
+  const noSeq = dataset.urusans.filter(u => !(u.bpmn_seq && u.bpmn_seq.tasks && u.bpmn_seq.tasks.length >= 2)).map(u => u.kod);
+  check("journey: BPMN full tugasan sequence attached (all 13)", noSeq.length === 0, noSeq.length ? "missing: " + noSeq.join(",") : "13/13");
+}
+
 // ---------- T6: geometric quality - no overlapping cards, no coinciding edge endpoints ----------
 if (hook && hook.layoutAndRender && hook.visibleEdges && hook.buildEdgeRoutes && hook.edgePoints && hook.nodeSize) {
   const GW = 1100, GH = 720;

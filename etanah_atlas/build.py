@@ -27,6 +27,13 @@ def main():
     print(f"[1/3] parse_schema  <- {src_sql}")
     parse_sql(str(src_sql), str(build_dir / "schema_parse.json"))
 
+    print("[1b] build_journey_seq (BPMN full tugasan sequences)")
+    try:
+        import build_journey_seq
+        build_journey_seq.main()
+    except Exception as e:
+        print(f"WARN: journey_seq skipped ({e}) — Journey renders without the full-sequence layer")
+
     print(f"[2/3] build_dataset <- profile={args.profile}")
     build_dataset.main(args.profile)
 
