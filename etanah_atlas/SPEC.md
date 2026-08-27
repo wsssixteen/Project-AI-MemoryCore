@@ -27,7 +27,7 @@
 | D4 | Dropdowns/inputs standardized — shared CSS for all selects and search inputs; no unstyled stragglers | 2026-08-24 "I thought I've already asked to standardize" |
 | D5 | Focused table's name lives IN the search input, not a separate title row; Back sits far right of the sub-tab row, only in focus | 2026-08-24 |
 | D6 | Focus mode fills the viewport below the sticky header; scrolling down hides sub-tabs + search; EQUAL gaps above and below at max scroll (measured --hdr-h, 10px + 10px) | 2026-08-24 |
-| D7 | Map = 10-second modul overview: whole ERD fits ONE screen (SVG scales to fit, never blows up), deterministic swimlane layout, overlap impossible by construction | 2026-08-27 |
+| D7 | Map = 10-second modul overview: whole ERD fits ONE screen (SVG scales to fit, never blows up), deterministic swimlane layout, overlap impossible by construction. **Tables is the FIRST tab and the landing view; Map is third** | 2026-08-27 |
 | D8 | No persistent layout state (localStorage pins BANNED — root cause of broken Bands); drag is session-only | 2026-08-27 |
 | D9 | Filters never clash: a filter that hides all results says "N hidden by filters", and category exceptions (e.g. shared modul) are explicit | 2026-08-24 "your filter is fucking broken" (rjk_organisasi) |
 | D10 | Default code scope = pelupusan (miya decision pending on pelupusan+common); scope filter visible on the Diagram landing, not only in focus | 2026-08-23 |

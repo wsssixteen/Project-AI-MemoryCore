@@ -367,7 +367,7 @@ code { font-family: "SF Mono", "Cascadia Code", Consolas, monospace; background:
 .modal-overlay.hidden, .table-focus.hidden, .suggest-box.hidden,
 .sub-view.hidden, .diagram-hits.hidden, .diagram-empty.hidden,
 .search-results.hidden, .focus-bar.hidden, .canvas-empty.hidden,
-.view.hidden { display:none !important; }
+.view.hidden, #tf-back.hidden { display:none !important; }
 
 /* By-Urusan tugasan detail card (census coverage) */
 .ub-tg-detail { padding:10px 14px; border-left:3px solid #534AB7; }
