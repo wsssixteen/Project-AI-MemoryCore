@@ -5,16 +5,32 @@
 > **SCOPE**: PostgreSQL schema knowledge — `et_main` / `et_flowable` / `et_sistem` / `et_dms`, table+column names from SQL exports, `_p_`/`_a_` layer semantics, authoritative pemohon/hakmilik/permit references, verified SQL patterns.
 > **NOT FOR**: Java repository class internals, SQL performance tuning, DB migrations.
 
-*Source: TDD SQL exports at `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\Database\Melaka\` — three environments: `MLIT/`, `MLKFAT/`, `MLKUAT/`. FAT is authoritative for FAT-phase tickets.*
-*FAT schema files: `et_main.sql`, `et_flowable17.sql`, `et_sistem.sql`, `et_dms.sql` (no `_mlit` suffix in FAT).*
+*Source: TDD SQL exports at `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\Database\Melaka\` — `MLIT/`, `MLKFAT/`, `MLKUAT/` dump folders. The dumps stay valid as SCHEMA reference (CREATE TABLE truth), but the **FAT + UAT servers are DECOMMISSIONED (2026-07-17)** — live envs are mlit / stg1 / stg2 / PROD only (§12).*
 *Environment: PostgreSQL.*
-*Last updated: 2026-04-20 (PLP full table list confirmed via DB query; ind_* table names from JRXML scan; `_a_` ≠ approved clarification added; pemohon table = `umm_a_pihak_bkptg`)*
+*Last updated: 2026-08-24 (structural refine: env truth, section renumber — duplicate §16/§17/§18 orphans → §21-§26, back-harvest corrections merged in place, id_pengenalan contradiction resolved, §0 router added)*
 
 > **How to use this file**
 > 
 > - Paste into Claude context at the start of any DB investigation session
 > - `[VERIFY]` = not yet confirmed against live data
 > - Column names here are sourced directly from SQL exports — trust these over assumptions
+
+## 0. Router — question shape → section (agent entry points)
+
+| Question shape | Go to |
+|---|---|
+| BA reference `PTMLK/.../2026/N` → aplikasi_id | **§4.1 recipe** (`umm_aplikasi.id_pengenalan`) · internals §22 · decode §26 |
+| Which tugasan/langkah mounts which XHTML | §6.0 (`ind_langkah`+`ind_skrin`) · census §6b |
+| Which entity ↔ which table (+JSON column) | §2c · full 596-row registry pointer in §10c |
+| Data in AWAM but blank on officer side | §2 investigation order · §16 (mklmt_tmbhn spine + counter-payment gate) |
+| Does module X's code use table Y | §10c (grep's 4 blind channels) |
+| Tables that join with NO declared FK | §10b (implicit links) · permit/lesen graph §25 |
+| Live task / who holds the app now | §6.3 `umm_tgsn_semasa` · task-state SQL in quest skill |
+| Generated document → physical file / DMS row | §9.1 (path chain) · §21 (when the FK links are NULL) |
+| Surat Keputusan status vs tugasan | §17 (incl. auto-regen trap §17.7) |
+| Which BPMN version is deployed | §18 |
+| Access/capaian missing from dropdowns | §15 |
+| Query fails `relation does not exist` | schema prefix — §12 + §18.1 |
 
 ---
 
@@ -52,14 +68,8 @@ plp_p_pelupusan                  plp_a_pelupusan
 
 > **⚠️ `_a_` ≠ "approved/final"**: `_a_` means the application was received by the PLU internal module — it can still be rejected inside PLU. `AppPelupusan` Java class = entity for PLU-received application (maps to `plp_a_pelupusan`). Do not equate the AWAM→PLU handoff with final approval.
 
-**Promotion mechanism — SPOC Integration [VERIFY with seniors]:**
-When an application is submitted from AWAM, a Flowable service task (`SpocIntegrationServiceTask`) is believed to trigger automatically and copy `_p_` data into `_a_` tables. Confirmed classes exist in etanah-pelupusan:
-- `SpocIntegrationServiceTask.java` — base
-- `MlkSpocIntegrationServiceTask.java` — Melaka-specific
-- `MlkPelupusanSpocIntegrationServiceTask.java` — Melaka PLU
-- `PelupusanSpocService.java`
-
-If this is the mechanism, the promotion bug (data in `_p_` but not `_a_`) would be fixed in the SPOC service task, not in AWAM form code.
+**Promotion mechanism — SPOC Integration (VERIFIED 2026-07-31/08-06, see §16.3):**
+`SpocIntegrationServiceTask.process():70` (Flowable service task, `created_by = SYSTEM`) → `PelupusanSpocService.populateAppHakmilikList():241` `BeanUtil.copyProperties(phm, ahm, "id")` — gated at `:235` on `praAplikasi != null && CollectionUtils.isEmpty(ahmList)`. **The gate is why counter-paid applications lose the copy entirely** (officer session creates `umm_a_hkmlk` before the workflow exists → gate false → §16.4/§16.8). A promotion bug (data in `_p_` but not `_a_`) is fixed at the SPOC service task / read-side fallback, not in AWAM form code.
 
 **Investigation order — always follow this:**
 1. Check `_p_` layer — was data submitted correctly from AWAM?
@@ -111,8 +121,10 @@ These were confirmed from the SQL exports. Never assume otherwise:
 | `AppHakmilik` | `umm_a_hkmlk` | `mklmt_tmbhn` (TEXT, JSON-as-string) | Per-hakmilik row linked to aplikasi. Common var names: `ahm`, `ahmTerlibat`, `appHakmilik` |
 | `AppLaporanTanah` | `tkl_a_laporan_tnh` | `kedudukan_tanah` (TEXT, JSON-as-string) + `maklumat_tambahan` (TEXT, JSON-as-string) | **etanah-teknikal module owns** writes; pelupusan reads via `etanah-common/.../repository/teknikal/AppLaporanTanahRepository.findByAplikasi`. Holds Zone, Jalan, Landmark, Dun, PBT, koordinat GIS — all in `kedudukan_tanah` JSON |
 | `MaklumatHakmilik` | `umm_maklumat_hkmlk` (verify) | (read-only snapshot — verify before writing) | Historic hakmilik snapshot at decision time. Common var name: `maklumatHakmilik` |
-| `AppPermitLesen` | `umm_a_permit_lesen` (verify) | `syaratTambahan` (verify) | Used by `populateSyaratKelulusan` chain via `retrieveAppPermitLesen4Aor4B("4A", aplikasi)` |
+| `AppPermitLesen` | `umm_a_permit_lesen` (table confirmed — §25 uses it live) | `syaratTambahan` (verify) | Used by `populateSyaratKelulusan` chain via `retrieveAppPermitLesen4Aor4B("4A", aplikasi)` |
 | `AppMaklumatPremium` | `umm_a_mklmt_premium` (**NOT** `umm_a_maklumat_premium`) | — (typed cols only, no JSON) | MCL cukai panel typed values. Cols: `bayaran_premium`, `bayaran_hkmlk_tetap`, `bayaran_hkmlk_smtr`, `cukai_tnh_baru`. FK `aplikasi_id`. Written by `saveMaklumatMCL(aplikasi, premium, tetap, sementara, denda)` (PelupusanService ~:22065-22105). |
+
+> **Full registry**: this table holds the verified working set only. The COMPLETE 596-entity ↔ table map (bytecode-derived from `etanah-domain-1.0.4-MLK`) is machine-readable at `etanah_atlas/build/entity_registry.json` / `etanah-codemap/entity_table_map.json` — resolve any entity↔table question there before grepping Java (`@Table` names are prefix-SPLIT in source; see MODULE-ARCHITECTURE.md grep-traps).
 
 ### Name-similarity trap table (the QA-260508 slip in particular)
 
@@ -593,7 +605,7 @@ CREATE TABLE ind_tgsn (
 
 - Census (mlit, `flag_aktif='Y'`, 13 pelupusan urusans): **1,433 tugasans · 5,822 langkah rows · only 82 distinct screens** — screens are heavily shared (MlkMaklumatPemohonForm 1,138 langkah refs; CommonSenaraiSemakanForm 1,134; MlkSuratTemplateForm serves PYMB/SMB/PMB/PYSKN5A).
 - `nama_aplikasi` is the DB-side counterpart of the BPMN-FIRST module-scope check — an Avalon* screen (etanah-teknikal) tugasan can never be fixed in etanah-pelupusan.
-- Extraction query + machine-readable output: `etanah_atlas/build/tugasan_census.json` (rebuilt via psycopg2 direct route, §16.0).
+- Extraction query + machine-readable output: `etanah_atlas/build/tugasan_census.json` (rebuilt via psycopg2 direct route, §16b).
 
 ---
 
@@ -710,6 +722,7 @@ SELECT * FROM et_dms_stg1.dokumen_revision WHERE dokumen_id = 40963183;
 | `dokumen_revision` | `versi`, `saiz_fail_byte`, `mime_type`, `hash_code` | version · size · type · integrity |
 
 **Path shape on the server** — `/home/app/etanah/files/dms/SISTEM-FAIL/<KELUARAN|KEMASUKAN>/<kategori>/<YYYY>/<MM>/<id_dokumen>_<versi>.main`
+> When every `skg_dok`/`dok_id` link is NULL on PROD (it happens — §21), get the `LAIN-…` id from outside the DB instead (BA's executor.log) and query DMS forwards.
 
 Verified examples (ESOKONGAN #272096, stg1):
 
@@ -889,26 +902,24 @@ Flag columns are `bpchar(1)` with values `'Y'`/`'N'` (or `'y'`/`'n'` — case va
 
 ---
 
-## 12. Environment Connection Strings
+## 12. Environments — live servers, schemas, and how Ruri queries them
 
-| Env                                           | Host:Port            | DB         | Schema                  |
-| --------------------------------------------- | -------------------- | ---------- | ----------------------- |
-| FAT                                           | `172.30.17.104:5444` | `etprdmlk` | `et_main`               |
-| UAT                                           | `172.30.59.185:5444` | `mlkuat`   | (check `currentSchema`) |
-| **DBeaver connection string format for MCP:** |                      |            |                         |
+**FAT + UAT are DECOMMISSIONED (2026-07-17) — never target them.** Live environments:
 
-```
-options=-csearch_path%3Det_main
-```
+| Env | MCP server (Ruri-run queries) | Schema prefix (MCP queries) | Notes |
+|---|---|---|---|
+| mlit (internal test — PRIMARY) | `postgres-mlit-pg` | `et_main_mlit.` · flowable `et_flowable_mlit.` | 172.16.100.197:5444 db `mkit` |
+| staging stg2 (default) | `postgres-mlkstg-pg` | `et_main_stg2.` · dms `et_dms_stg2.` | miya switches stg1↔stg2 |
+| staging stg1 (PROD refresh) | `postgres-mlkstg1-pg` | `et_main_stg1.` · flowable `et_flowable17.` (§18.1) | aplikasi_id identical to PROD (§22b) |
+| PROD | `postgres-mlkprod-pg` | `et_main.` (user `et_read` defaults to `public` — always qualify) | permission-gated by prod-db-confirm hook |
 
-**MCP config location:** `E:\Dev\claude-tools\.mcp.json`
-Launch Claude Code from `E:\Dev\claude-tools\` for MCP to load.
+**Two opposite prefix rules (never mix)**: queries **Ruri executes** via MCP MUST carry the schema prefix; scripts **handed to miya** stay UNQUALIFIED ("run connected to the target schema" in the header). No-MCP fallback: psycopg2 direct route — §16b.
 
 ---
 
-## 13. BPRZ Bug #252456 — Reference Queries
+## 13. BPRZ ↔ parent PRZ pegawai queries (reference; origin ticket #252456, closed)
 
-Active investigation: pegawai fields blank on BPRZ at Step 3.0 SKM.
+Reusable shape: BPRZ inherits reservation officers from its parent PRZ via `hubungan_aplikasi_id` — compare both sides before calling the data missing.
 
 ```sql
 -- Check if BPRZ AppRizab has pegawai data
@@ -1200,7 +1211,7 @@ is needed for this defect class.
 **Full case**: `projects/coding-projects/active/PENDING-TICKET-pt-sempadan-awam/FINDINGS.md` ·
 register `ADHOC-REGISTER.md` A8.
 
-## 16.0 Direct postgres access without MCP (added 2026-08-03, DE gap-sweep)
+## 16b. Direct postgres access without MCP (added 2026-08-03, DE gap-sweep)
 
 - The pgEdge MCP server DEFINITIONS in `C:\Users\Ridhwan\.claude.json` carry full env creds (PGHOST/PGPORT/PGDATABASE/PGUSER/PGPASSWORD) for all 4 envs (mlit / mlkstg stg2-user / mlkstg stg1-user / prod et_read). When the MCP tools are not loaded in a session, `psycopg2` (installed) + a stdin-SQL runner reads them directly — see session scratchpad pattern `pg_query.py` (read-only session, echoes `current_schema()` per the stg1/stg2 rule).
 - Column truths verified live: the PTMLK permohonan id lives in **`umm_aplikasi.id_pengenalan`** (there is NO `id_permohonan` on umm_aplikasi) · `umm_a_tgsn` PK = `a_tgsn_id`, actor = `tdkn_oleh`, office = `pejabat_id` · selecting `status` on `rjk_senarai_ahli_kumpulan` can throw `schema "sptb05" does not exist` (view/trigger quirk) — omit that column.
@@ -1248,6 +1259,11 @@ is **after** the latest completed peraku tugasan.
 | **`NULL`** | when the peraku tugasan **completes** — **BEFORE cetakan** | ⚠️ NOT "released". mlit `8507340` last_modified `01:54:14` inside the PSSK window `01:53:41–01:54:27`; `CT_BSC_PLP` only started `01:54:47`. `NULL` is also the status of never-status-managed legacy rows |
 | `STATUS_PENYEDIAAN_CETAK` / `_SELESAI` | **zero rows ever** in Melaka PROD for `SRT_KPTSN_PLP` · `SRT_KPTSN_TLK` · `S_TLK` · `S_TLK_RGKS` · `SRT_KPTSN_LLS` | `BasePenyediaanDokumenForm.onCetakSemua():436-438` writes CETAK but not for these kinds |
 
+> **Scope correction (QA-273956, 2026-08-16)**: the "zero rows ever" holds ONLY for the Surat Keputusan
+> family — do NOT generalise: `PLP_SRT_YB` (aplikasi 3424732) carried `1979=STATUS_PENYEDIAAN_CETAK`.
+> And `NULL` status_id is ALSO the resting state of a ROLLED-BACK penyediaan document, not only
+> "peraku completed".
+
 **So the status column alone can never express "after cetakan".** It tops out at peraku.
 
 ### 17.4 `A_TGSN_ID` exists in the table and is NOT mapped in the entity
@@ -1265,6 +1281,14 @@ it requires an `etanah-domain` change — another team's artifact. Read entities
 ⚠️ **`a_tgsn_id` order does NOT match `trkh_mula` order** — 3 stg1 applications have tasks whose row
 ids run out of chronological sequence. Never use the id as a time proxy; use `tarikhMula`.
 
+### 17.7 🚨 Penyediaan documents AUTO-REGENERATE on screen open — fix data FIRST, open screen AFTER
+
+`BasePenyediaanDokumenForm.java:2399-2418` — `findBaruOrSediaOrPembetulanStatusDokumenByAplikasi(...)`
+then: empty → `initNewDokumenList()` (regenerates NOW); non-empty → `refreshDokumenList` (serves the
+EXISTING copy). There is NO "Jana semula" button — **opening the screen IS the regen**. Consequence:
+fix the DATA first, open the screen after; opening first locks stale content in (status flips BARU,
+later opens hit the else-branch and serve the stale copy). *(QA-273956 back-harvest 2026-08-16.)*
+
 ### 17.6 Which urusan even reach cetakan
 
 22 of 34 modul-PLP urusan define `CT_BSC_PLP` in `ind_tgsn`. The 12 without are utilities and
@@ -1276,7 +1300,9 @@ strand anyone — checked, not assumed.
 
 ---
 
-## §16 — There is NO application→DMS foreign key (verified 2026-08-05, PROD)
+## 21. There is NO application→DMS foreign key (verified 2026-08-05, PROD) *(formerly duplicate-numbered §16)*
+
+> Pairs with §9.1 (the path chain when `skg_dok` links ARE populated) — this section is the PROD reality where all four candidate links are NULL.
 
 Finding a generated document's DMS row **cannot be done by joining from the application**. All four
 candidate links are empty on PROD:
@@ -1303,7 +1329,7 @@ candidate links are empty on PROD:
 STAGING target id is only obtainable after the document exists on staging — i.e. have the officer
 regenerate there first, then overwrite that file.
 
-## §17 — 🚨 CORRECTED — the permohonan ID **is** stored: `umm_aplikasi.id_pengenalan`
+## 22. The permohonan ID **is** stored: `umm_aplikasi.id_pengenalan` — internals *(formerly duplicate-numbered §17; canonical recipe lives at §4.1)*
 
 > An earlier version of this section claimed no permohonan-ID column exists. **That was WRONG**,
 > written 2026-08-05 and refuted the same night. The error: the column list was read,
@@ -1342,12 +1368,14 @@ formatted at `PelupusanUtil.java:325-343` (`populateIdPermohonan`).
 
 **Not the link** — empty on real rows: `no_rujukan_fail`, `no_fail`, `turutan`.
 
-## §17b — stg1 is a PROD refresh
+## 22b. stg1 is a PROD refresh *(formerly §17b)*
 
-`PTMLK/02/L/PPTPB/2026/1` is **not stored** — `umm_aplikasi` has no `id_permohonan`, and `turutan`
-is NULL. The string appears only in `umm_notifikasi.id_permohonan`,
-`umm_sejarah_pengagihan.id_permohonan` and the `dok_kutipan_*` tables — none of which carry
-`aplikasi_id`, so neither is a usable bridge.
+> ⚠️ An earlier draft of this section repeated the refuted "reference not stored" claim (it searched
+> a column named `id_permohonan`, which does not exist). The reference IS stored — in
+> `umm_aplikasi.id_pengenalan` (§4.1; re-verified live on mlit 2026-08-24 for PT AND PPTPB, e.g.
+> `PTMLK/03/L/PPTPB/2026/4` → aplikasi 3408706). `umm_notifikasi.id_permohonan` /
+> `umm_sejarah_pengagihan.id_permohonan` also carry the string but have no `aplikasi_id` — never
+> needed now that the spine column is known.
 
 **The shortcut**: `aplikasi_id` is IDENTICAL between PROD and stg1 (stg1 is a refresh). Verified
 2026-08-05 — `3396320` on both, same `ursn`, same `pejabat`, same `created_date` to the second. So
@@ -1417,7 +1445,7 @@ and BA's PASS was recorded against v5.
 
 ---
 
-## §18 — `rjk_agensi` has DUPLICATE names — never `= (SELECT agensi_id … WHERE nama = …)`
+## 23. `rjk_agensi` has DUPLICATE names — never `= (SELECT agensi_id … WHERE nama = …)` *(formerly duplicate-numbered §18)*
 
 Verified 2026-08-06 on PROD, the hard way: a patch failed with
 `ERROR 21000: more than one row returned by a subquery used as an expression`.
@@ -1449,7 +1477,7 @@ easy to pick wrong — resolve by ADDRESS against the BA's document):
 ⚠️ **Trailing spaces are common**: `PEGAWAI PENYELARAS ` and `JABATAN PERANCANGAN BANDAR ` both carry
 one. Always `trim(nama_agensi)`.
 
-## §19 — `umm_a_jabatan_teknikal`: what a restored row needs
+## 24. `umm_a_jabatan_teknikal`: what a restored row needs *(formerly §19)*
 
 Table has **no unique constraint** on `(aplikasi_id, agensi_id)` — a re-run silently duplicates.
 Always guard an INSERT with `AND NOT EXISTS (…)`.
@@ -1476,7 +1504,13 @@ Always guard an INSERT with `AND NOT EXISTS (…)`.
 - `flagKemasukanDari` — `DARI_UTILITI` is the default written by
   `JabatanTeknikalHelper.java:323-328` when blank.
 
-## §20 — Permit/Lesen tables: 99.6% of PROD rows are MIGRATED, not generated (2026-08-06, #273461)
+> **Confirming case (QA-273956, back-harvested 2026-08-16)**: the `generateSurat` display-gate caused a
+> real 4-day reopen — a Phase-0 verdict quoted `generateSurat:"TIDAK"` on all 6 JT rows as proof
+> "nothing to patch" while the tugasan was PSJT — exactly this gate hiding the rows. The fact was banked
+> ~90 min BEFORE the wrong verdict and never cross-checked. When the tugasan is PSJT/PGSJT, TIDAK rows
+> are INVISIBLE on screen, not absent.
+
+## 25. Permit/Lesen tables: 99.6% of PROD rows are MIGRATED, not generated (2026-08-06, #273461) *(formerly §20)*
 
 Any query shaped "applications holding a No Lesen" is dominated by the June-2026 migration. Counting
 before scripting is the difference between a 3-row patch and erasing the historical TOL register.
@@ -1525,26 +1559,24 @@ reaches is `PRMMKNPDT`. Skrin 338 `PLP_BYRN_LSN` (Pengiraan Bayaran Lesen) mount
 
 ---
 
-## Locating a PLU app by its permohonan reference (`PTMLK/01/L/PT/2026/13`) — the ref is NOT stored
+## 26. Decoding the permohonan reference + locating an app when the direct lookup misses
 
-🚨 **The human-readable No. Permohonan is RUNTIME-GENERATED, not persisted as one string.** Searching
-for it as a column value returns 0 rows by design → do NOT conclude "the app isn't on PROD" from that.
-(2026-08-10, #273707 — a familiar searched `umm_p_aplikasi.no_rujukan_permohonan` for the reference,
-got 0, and falsely reported the app absent from PROD. The app was there.)
-
-**Two traps that produce the false negative:**
-- `umm_aplikasi` (the spine) has **no reference-string column** at all (checked all 43 cols).
-- `umm_p_aplikasi.no_rujukan_permohonan` exists BUT that table is **SPOC/awam pra-aplikasi only** —
-  staff-submitted PT/PLU apps are not in it (0 PT/2026 rows on PROD).
+> 🚨 **SUPERSEDED CLAIM, corrected**: an earlier version of this section (2026-08-10, #273707) said the
+> reference "is NOT stored" and that `umm_aplikasi` has no reference column. **WRONG** — the reference
+> lives in `umm_aplikasi.id_pengenalan` (§4.1 recipe; verified PROD/stg2/mlit). The #273707 familiar
+> searched `umm_p_aplikasi.no_rujukan_permohonan` (wrong column, wrong table) and falsely reported the
+> app absent from PROD. **Always try `id_pengenalan` FIRST.** The traps below stay true:
+> `umm_p_aplikasi.no_rujukan_permohonan` is SPOC/awam pra-aplikasi only (0 PT/2026 rows on PROD), and
+> `no_rujukan_fail` / `no_fail` / `turutan` are empty on real rows.
 
 **Decode the reference** `PTMLK / 01 / L / PT / 2026 / 13`:
 `<pejabat kod>` / `<daerah kod>` / L / `<urusan kod>` / `<year>` / `<running no>`.
 - pejabat `01` = `ind_pejabat.kod='01'` → pejabat_id 2 (Pejabat Daerah Dan Tanah Melaka Tengah)
 - urusan `PT` = `ind_ursn.kod='PT'` → ursn_id 51
-- running-no `13` is generated per (pejabat, urusan, year); not reliably stored as a queryable literal.
+- running-no `13` is generated per (pejabat, urusan, year) — counter in `sis_no_turutan` (§22).
 
-**How to actually locate the app on PROD** — by stored components or by the defect signature, never by
-the reference string:
+**Fallback when `id_pengenalan` genuinely misses** (legacy/DIS-era rows) — locate by stored components
+or by the defect signature:
 ```sql
 -- by defect signature (best when the ticket describes a data anomaly):
 SELECT pt.aplikasi_id, pt.bandar_pekan_mukim_id, pt.daerah_id, a.pejabat_id, a.status_proses
@@ -1557,13 +1589,5 @@ PROD with the same id — confirm on PROD rather than labelling a staging find "
 
 ---
 
-## Back-harvest corrections 2026-08-16 (QA-273956)
-
-### §17.3 SCOPE CORRECTION (owed since the quest, delivered now)
-§17.3's "zero rows ever" for STATUS_PENYEDIAAN_CETAK/_SELESAI holds ONLY for the Surat Keputusan family — do NOT generalise: PLP_SRT_YB (aplikasi 3424732) carried 1979=STATUS_PENYEDIAAN_CETAK at 273956 Phase 0. NULL status_id is also the resting state of a ROLLED-BACK penyediaan document, not only "peraku completed".
-
-### §19 confirming case — the generateSurat display-gate caused a real 4-day reopen
-273956's Phase-0 verdict quoted generateSurat:"TIDAK" on all 6 JT rows as proof "nothing to patch" while the tugasan was PSJT — exactly the §19 gate (PelupusanHelper.java:210-214 hides TIDAK rows on PSJT/PGSJT). Redmine reopened 2026-08-10; patch widened to flip the 6 flags. The §19 fact was banked ~90 min BEFORE the wrong verdict (commit 88b925f) and never cross-checked.
-
-### Penyediaan-doc AUTO-REGEN on screen open (previously undocumented)
-BasePenyediaanDokumenForm.java:2399-2418 — findBaruOrSediaOrPembetulanStatusDokumenByAplikasi(...) then: empty → initNewDokumenList() (regenerates NOW); non-empty → refreshDokumenList (serves the EXISTING copy). There is NO "Jana semula" button — opening the screen IS the regen. Consequence: fix the DATA FIRST, open the screen AFTER; opening first locks stale content in (status flips BARU, later opens hit the else-branch and serve the stale copy).
+*Changelog note: the 2026-08-16 QA-273956 back-harvest corrections formerly appended here are now
+merged IN PLACE (§17.3 scope correction · §17.7 auto-regen · §24 confirming case).*
