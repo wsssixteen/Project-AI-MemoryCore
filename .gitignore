@@ -88,3 +88,4 @@ system/slip-dashboard.md
 etanah_atlas/lib/__pycache__/
 etanah_atlas/config/states.*.json
 !etanah_atlas/config/states.example.json
+etanah_atlas/checks/

@@ -1186,6 +1186,14 @@ function setupSearch() {
   }
   {
     const ft = DATA.feature_tables || { tables: [] };
+    // By-Feature is a Melaka-only curated split (feature_tables.json keyed to mlit).
+    // States without it: HIDE the sub-tab entirely (no empty tab, no "mlit" on Perak).
+    if (!(ft.tables || []).length) {
+      const btn = document.querySelector('#tbl-subtabs .subtab[data-sub="feature"]');
+      if (btn) btn.style.display = "none";
+      const pane = document.getElementById("sub-feature");
+      if (pane) pane.classList.add("hidden");
+    }
     const counts = {};
     (ft.tables || []).forEach(t => t.features.forEach(f => { counts[f] = (counts[f] || 0) + 1; }));
     const first = document.createElement("option");

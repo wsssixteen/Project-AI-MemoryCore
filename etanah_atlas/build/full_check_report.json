@@ -1,0 +1,999 @@
+{
+ "melaka": {
+  "profile": "melaka",
+  "label": "Melaka",
+  "passed": 36,
+  "total": 36,
+  "errors": [],
+  "shots": [
+   "melaka__tab_search.png",
+   "melaka__tab_urusan.png",
+   "melaka__tab_map.png",
+   "melaka__tab_about.png",
+   "melaka__map_pelupusan.png",
+   "melaka__sub_diagram.png",
+   "melaka__sub_catalog.png",
+   "melaka__sub_urusan.png",
+   "melaka__sub_feature.png",
+   "melaka__diagram_focus.png",
+   "melaka__by_urusan.png",
+   "melaka__sub_feature.png",
+   "melaka__journey.png",
+   "melaka__about.png"
+  ],
+  "results": [
+   {
+    "check": "header shows profile",
+    "ok": true,
+    "detail": "781 tables · 2146 FKs · 12 moduls · profile: melaka"
+   },
+   {
+    "check": "state switcher populated",
+    "ok": true,
+    "detail": "5 options"
+   },
+   {
+    "check": "theme toggle round-trip",
+    "ok": true,
+    "detail": "light->dark->light"
+   },
+   {
+    "check": "tab search: only its view visible",
+    "ok": true,
+    "detail": "['search']"
+   },
+   {
+    "check": "tab urusan: only its view visible",
+    "ok": true,
+    "detail": "['urusan']"
+   },
+   {
+    "check": "tab map: only its view visible",
+    "ok": true,
+    "detail": "['map']"
+   },
+   {
+    "check": "tab about: only its view visible",
+    "ok": true,
+    "detail": "['about']"
+   },
+   {
+    "check": "Map modul select (11 options)",
+    "ok": true,
+    "detail": "errors on: []"
+   },
+   {
+    "check": "Map urusan select (14 options)",
+    "ok": true,
+    "detail": "errors on: []"
+   },
+   {
+    "check": "Map layer _a_",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Map layer _p_",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Map layer both",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Map renders cards (pelupusan)",
+    "ok": true,
+    "detail": "11 cards"
+   },
+   {
+    "check": "Map card drag applies transform",
+    "ok": true,
+    "detail": "translate(-29.46795654296875,9.8226318359375)"
+   },
+   {
+    "check": "Map card click -> Tables focus",
+    "ok": true,
+    "detail": "view=search:True input=plp_p_pelupusan"
+   },
+   {
+    "check": "sub-tab diagram shows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sub-tab catalog shows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sub-tab urusan shows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sub-tab feature shows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Diagram table suggestions appear",
+    "ok": true,
+    "detail": "12 items"
+   },
+   {
+    "check": "Diagram suggestion -> focus",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sidebar tf-identity",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sidebar tf-flows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sidebar tf-columns",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "tf-back clears focus",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Catalog filter narrows rows",
+    "ok": true,
+    "detail": "142->8"
+   },
+   {
+    "check": "Catalog reset restores",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Catalog row click -> focus",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "By-Urusan select (13 urusans)",
+    "ok": true,
+    "detail": "errors: []"
+   },
+   {
+    "check": "By-Urusan renders body (not blank)",
+    "ok": true,
+    "detail": "471 chars"
+   },
+   {
+    "check": "By-Feature has real groups (shown state)",
+    "ok": true,
+    "detail": "14 options (>1 required)"
+   },
+   {
+    "check": "Journey picker (13 urusans)",
+    "ok": true,
+    "detail": "errors: []"
+   },
+   {
+    "check": "Journey renders content",
+    "ok": true,
+    "detail": "6044 chars"
+   },
+   {
+    "check": "Journey fork button clickable",
+    "ok": true,
+    "detail": "3 forks"
+   },
+   {
+    "check": "About totals filled",
+    "ok": true,
+    "detail": "781 tables, 2146 foreign keys, 14 main tables cura"
+   },
+   {
+    "check": "ZERO JavaScript console errors",
+    "ok": true,
+    "detail": "0 errors: []"
+   }
+  ]
+ },
+ "selangor": {
+  "profile": "selangor",
+  "label": "Selangor",
+  "passed": 35,
+  "total": 35,
+  "errors": [],
+  "shots": [
+   "selangor__tab_search.png",
+   "selangor__tab_urusan.png",
+   "selangor__tab_map.png",
+   "selangor__tab_about.png",
+   "selangor__map_pelupusan.png",
+   "selangor__sub_diagram.png",
+   "selangor__sub_catalog.png",
+   "selangor__sub_urusan.png",
+   "selangor__diagram_focus.png",
+   "selangor__by_urusan.png",
+   "selangor__journey.png",
+   "selangor__about.png"
+  ],
+  "results": [
+   {
+    "check": "header shows profile",
+    "ok": true,
+    "detail": "841 tables · 2068 FKs · 12 moduls · profile: selangor"
+   },
+   {
+    "check": "state switcher populated",
+    "ok": true,
+    "detail": "5 options"
+   },
+   {
+    "check": "theme toggle round-trip",
+    "ok": true,
+    "detail": "light->dark->light"
+   },
+   {
+    "check": "tab search: only its view visible",
+    "ok": true,
+    "detail": "['search']"
+   },
+   {
+    "check": "tab urusan: only its view visible",
+    "ok": true,
+    "detail": "['urusan']"
+   },
+   {
+    "check": "tab map: only its view visible",
+    "ok": true,
+    "detail": "['map']"
+   },
+   {
+    "check": "tab about: only its view visible",
+    "ok": true,
+    "detail": "['about']"
+   },
+   {
+    "check": "Map modul select (11 options)",
+    "ok": true,
+    "detail": "errors on: []"
+   },
+   {
+    "check": "Map urusan select (10 options)",
+    "ok": true,
+    "detail": "errors on: []"
+   },
+   {
+    "check": "Map layer _a_",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Map layer _p_",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Map layer both",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Map renders cards (pelupusan)",
+    "ok": true,
+    "detail": "11 cards"
+   },
+   {
+    "check": "Map card drag applies transform",
+    "ok": true,
+    "detail": "translate(-29.46795654296875,9.8226318359375)"
+   },
+   {
+    "check": "Map card click -> Tables focus",
+    "ok": true,
+    "detail": "view=search:True input=plp_p_pelupusan"
+   },
+   {
+    "check": "sub-tab diagram shows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sub-tab catalog shows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sub-tab urusan shows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sub-tab feature hidden (no data for state)",
+    "ok": true,
+    "detail": "hidden"
+   },
+   {
+    "check": "Diagram table suggestions appear",
+    "ok": true,
+    "detail": "12 items"
+   },
+   {
+    "check": "Diagram suggestion -> focus",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sidebar tf-identity",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sidebar tf-flows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sidebar tf-columns",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "tf-back clears focus",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Catalog filter narrows rows",
+    "ok": true,
+    "detail": "300->28"
+   },
+   {
+    "check": "Catalog reset restores",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Catalog row click -> focus",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "By-Urusan select (9 urusans)",
+    "ok": true,
+    "detail": "errors: []"
+   },
+   {
+    "check": "By-Urusan renders body (not blank)",
+    "ok": true,
+    "detail": "9342 chars"
+   },
+   {
+    "check": "By-Feature hidden (no feature data for state)",
+    "ok": true,
+    "detail": "sub-tab hidden — no empty tab"
+   },
+   {
+    "check": "Journey picker (9 urusans)",
+    "ok": true,
+    "detail": "errors: []"
+   },
+   {
+    "check": "Journey renders content",
+    "ok": true,
+    "detail": "244 chars"
+   },
+   {
+    "check": "About totals filled",
+    "ok": true,
+    "detail": "841 tables, 2068 foreign keys, 14 main tables cura"
+   },
+   {
+    "check": "ZERO JavaScript console errors",
+    "ok": true,
+    "detail": "0 errors: []"
+   }
+  ]
+ },
+ "perak": {
+  "profile": "perak",
+  "label": "Perak",
+  "passed": 35,
+  "total": 35,
+  "errors": [],
+  "shots": [
+   "perak__tab_search.png",
+   "perak__tab_urusan.png",
+   "perak__tab_map.png",
+   "perak__tab_about.png",
+   "perak__map_pelupusan.png",
+   "perak__sub_diagram.png",
+   "perak__sub_catalog.png",
+   "perak__sub_urusan.png",
+   "perak__diagram_focus.png",
+   "perak__by_urusan.png",
+   "perak__journey.png",
+   "perak__about.png"
+  ],
+  "results": [
+   {
+    "check": "header shows profile",
+    "ok": true,
+    "detail": "793 tables · 2092 FKs · 12 moduls · profile: perak"
+   },
+   {
+    "check": "state switcher populated",
+    "ok": true,
+    "detail": "5 options"
+   },
+   {
+    "check": "theme toggle round-trip",
+    "ok": true,
+    "detail": "light->dark->light"
+   },
+   {
+    "check": "tab search: only its view visible",
+    "ok": true,
+    "detail": "['search']"
+   },
+   {
+    "check": "tab urusan: only its view visible",
+    "ok": true,
+    "detail": "['urusan']"
+   },
+   {
+    "check": "tab map: only its view visible",
+    "ok": true,
+    "detail": "['map']"
+   },
+   {
+    "check": "tab about: only its view visible",
+    "ok": true,
+    "detail": "['about']"
+   },
+   {
+    "check": "Map modul select (11 options)",
+    "ok": true,
+    "detail": "errors on: []"
+   },
+   {
+    "check": "Map urusan select (9 options)",
+    "ok": true,
+    "detail": "errors on: []"
+   },
+   {
+    "check": "Map layer _a_",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Map layer _p_",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Map layer both",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Map renders cards (pelupusan)",
+    "ok": true,
+    "detail": "11 cards"
+   },
+   {
+    "check": "Map card drag applies transform",
+    "ok": true,
+    "detail": "translate(-29.46795654296875,9.8226318359375)"
+   },
+   {
+    "check": "Map card click -> Tables focus",
+    "ok": true,
+    "detail": "view=search:True input=plp_p_pelupusan"
+   },
+   {
+    "check": "sub-tab diagram shows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sub-tab catalog shows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sub-tab urusan shows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sub-tab feature hidden (no data for state)",
+    "ok": true,
+    "detail": "hidden"
+   },
+   {
+    "check": "Diagram table suggestions appear",
+    "ok": true,
+    "detail": "12 items"
+   },
+   {
+    "check": "Diagram suggestion -> focus",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sidebar tf-identity",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sidebar tf-flows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sidebar tf-columns",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "tf-back clears focus",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Catalog filter narrows rows",
+    "ok": true,
+    "detail": "300->34"
+   },
+   {
+    "check": "Catalog reset restores",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Catalog row click -> focus",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "By-Urusan select (8 urusans)",
+    "ok": true,
+    "detail": "errors: []"
+   },
+   {
+    "check": "By-Urusan renders body (not blank)",
+    "ok": true,
+    "detail": "8672 chars"
+   },
+   {
+    "check": "By-Feature hidden (no feature data for state)",
+    "ok": true,
+    "detail": "sub-tab hidden — no empty tab"
+   },
+   {
+    "check": "Journey picker (8 urusans)",
+    "ok": true,
+    "detail": "errors: []"
+   },
+   {
+    "check": "Journey renders content",
+    "ok": true,
+    "detail": "244 chars"
+   },
+   {
+    "check": "About totals filled",
+    "ok": true,
+    "detail": "793 tables, 2092 foreign keys, 14 main tables cura"
+   },
+   {
+    "check": "ZERO JavaScript console errors",
+    "ok": true,
+    "detail": "0 errors: []"
+   }
+  ]
+ },
+ "terengganu": {
+  "profile": "terengganu",
+  "label": "Terengganu",
+  "passed": 35,
+  "total": 35,
+  "errors": [],
+  "shots": [
+   "terengganu__tab_search.png",
+   "terengganu__tab_urusan.png",
+   "terengganu__tab_map.png",
+   "terengganu__tab_about.png",
+   "terengganu__map_pelupusan.png",
+   "terengganu__sub_diagram.png",
+   "terengganu__sub_catalog.png",
+   "terengganu__sub_urusan.png",
+   "terengganu__diagram_focus.png",
+   "terengganu__by_urusan.png",
+   "terengganu__journey.png",
+   "terengganu__about.png"
+  ],
+  "results": [
+   {
+    "check": "header shows profile",
+    "ok": true,
+    "detail": "795 tables · 2181 FKs · 12 moduls · profile: terengganu"
+   },
+   {
+    "check": "state switcher populated",
+    "ok": true,
+    "detail": "5 options"
+   },
+   {
+    "check": "theme toggle round-trip",
+    "ok": true,
+    "detail": "light->dark->light"
+   },
+   {
+    "check": "tab search: only its view visible",
+    "ok": true,
+    "detail": "['search']"
+   },
+   {
+    "check": "tab urusan: only its view visible",
+    "ok": true,
+    "detail": "['urusan']"
+   },
+   {
+    "check": "tab map: only its view visible",
+    "ok": true,
+    "detail": "['map']"
+   },
+   {
+    "check": "tab about: only its view visible",
+    "ok": true,
+    "detail": "['about']"
+   },
+   {
+    "check": "Map modul select (11 options)",
+    "ok": true,
+    "detail": "errors on: []"
+   },
+   {
+    "check": "Map urusan select (11 options)",
+    "ok": true,
+    "detail": "errors on: []"
+   },
+   {
+    "check": "Map layer _a_",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Map layer _p_",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Map layer both",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Map renders cards (pelupusan)",
+    "ok": true,
+    "detail": "11 cards"
+   },
+   {
+    "check": "Map card drag applies transform",
+    "ok": true,
+    "detail": "translate(-29.46795654296875,9.8226318359375)"
+   },
+   {
+    "check": "Map card click -> Tables focus",
+    "ok": true,
+    "detail": "view=search:True input=plp_p_pelupusan"
+   },
+   {
+    "check": "sub-tab diagram shows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sub-tab catalog shows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sub-tab urusan shows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sub-tab feature hidden (no data for state)",
+    "ok": true,
+    "detail": "hidden"
+   },
+   {
+    "check": "Diagram table suggestions appear",
+    "ok": true,
+    "detail": "12 items"
+   },
+   {
+    "check": "Diagram suggestion -> focus",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sidebar tf-identity",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sidebar tf-flows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sidebar tf-columns",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "tf-back clears focus",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Catalog filter narrows rows",
+    "ok": true,
+    "detail": "300->27"
+   },
+   {
+    "check": "Catalog reset restores",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Catalog row click -> focus",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "By-Urusan select (10 urusans)",
+    "ok": true,
+    "detail": "errors: []"
+   },
+   {
+    "check": "By-Urusan renders body (not blank)",
+    "ok": true,
+    "detail": "10611 chars"
+   },
+   {
+    "check": "By-Feature hidden (no feature data for state)",
+    "ok": true,
+    "detail": "sub-tab hidden — no empty tab"
+   },
+   {
+    "check": "Journey picker (10 urusans)",
+    "ok": true,
+    "detail": "errors: []"
+   },
+   {
+    "check": "Journey renders content",
+    "ok": true,
+    "detail": "244 chars"
+   },
+   {
+    "check": "About totals filled",
+    "ok": true,
+    "detail": "795 tables, 2181 foreign keys, 14 main tables cura"
+   },
+   {
+    "check": "ZERO JavaScript console errors",
+    "ok": true,
+    "detail": "0 errors: []"
+   }
+  ]
+ },
+ "wp": {
+  "profile": "wp",
+  "label": "WP Kuala Lumpur",
+  "passed": 35,
+  "total": 35,
+  "errors": [],
+  "shots": [
+   "wp__tab_search.png",
+   "wp__tab_urusan.png",
+   "wp__tab_map.png",
+   "wp__tab_about.png",
+   "wp__map_pelupusan.png",
+   "wp__sub_diagram.png",
+   "wp__sub_catalog.png",
+   "wp__sub_urusan.png",
+   "wp__diagram_focus.png",
+   "wp__by_urusan.png",
+   "wp__journey.png",
+   "wp__about.png"
+  ],
+  "results": [
+   {
+    "check": "header shows profile",
+    "ok": true,
+    "detail": "773 tables · 2237 FKs · 12 moduls · profile: wp"
+   },
+   {
+    "check": "state switcher populated",
+    "ok": true,
+    "detail": "5 options"
+   },
+   {
+    "check": "theme toggle round-trip",
+    "ok": true,
+    "detail": "light->dark->light"
+   },
+   {
+    "check": "tab search: only its view visible",
+    "ok": true,
+    "detail": "['search']"
+   },
+   {
+    "check": "tab urusan: only its view visible",
+    "ok": true,
+    "detail": "['urusan']"
+   },
+   {
+    "check": "tab map: only its view visible",
+    "ok": true,
+    "detail": "['map']"
+   },
+   {
+    "check": "tab about: only its view visible",
+    "ok": true,
+    "detail": "['about']"
+   },
+   {
+    "check": "Map modul select (11 options)",
+    "ok": true,
+    "detail": "errors on: []"
+   },
+   {
+    "check": "Map urusan select (10 options)",
+    "ok": true,
+    "detail": "errors on: []"
+   },
+   {
+    "check": "Map layer _a_",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Map layer _p_",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Map layer both",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Map renders cards (pelupusan)",
+    "ok": true,
+    "detail": "9 cards"
+   },
+   {
+    "check": "Map card drag applies transform",
+    "ok": true,
+    "detail": "translate(-29.46795654296875,9.82269287109375)"
+   },
+   {
+    "check": "Map card click -> Tables focus",
+    "ok": true,
+    "detail": "view=search:True input=plp_p_pemberimilikan"
+   },
+   {
+    "check": "sub-tab diagram shows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sub-tab catalog shows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sub-tab urusan shows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sub-tab feature hidden (no data for state)",
+    "ok": true,
+    "detail": "hidden"
+   },
+   {
+    "check": "Diagram table suggestions appear",
+    "ok": true,
+    "detail": "12 items"
+   },
+   {
+    "check": "Diagram suggestion -> focus",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sidebar tf-identity",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sidebar tf-flows",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "sidebar tf-columns",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "tf-back clears focus",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Catalog filter narrows rows",
+    "ok": true,
+    "detail": "300->21"
+   },
+   {
+    "check": "Catalog reset restores",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "Catalog row click -> focus",
+    "ok": true,
+    "detail": "ok"
+   },
+   {
+    "check": "By-Urusan select (9 urusans)",
+    "ok": true,
+    "detail": "errors: []"
+   },
+   {
+    "check": "By-Urusan renders body (not blank)",
+    "ok": true,
+    "detail": "9223 chars"
+   },
+   {
+    "check": "By-Feature hidden (no feature data for state)",
+    "ok": true,
+    "detail": "sub-tab hidden — no empty tab"
+   },
+   {
+    "check": "Journey picker (9 urusans)",
+    "ok": true,
+    "detail": "errors: []"
+   },
+   {
+    "check": "Journey renders content",
+    "ok": true,
+    "detail": "244 chars"
+   },
+   {
+    "check": "About totals filled",
+    "ok": true,
+    "detail": "773 tables, 2237 foreign keys, 11 main tables cura"
+   },
+   {
+    "check": "ZERO JavaScript console errors",
+    "ok": true,
+    "detail": "0 errors: []"
+   }
+  ]
+ }
+}
