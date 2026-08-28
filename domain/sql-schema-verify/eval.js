@@ -19,9 +19,12 @@ const { execFileSync, spawnSync } = require('child_process');
 const DIR = __dirname;
 const VERIFIER = path.join(DIR, 'sql-schema-verify.js');
 const GATE = path.join(DIR, 'sql-schema-verify.check.hook.js');
-const STAMPS = path.join(DIR, 'stamps.jsonl');
 
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'sqlverify-'));
+
+// Isolate the eval from the real shared store: point every child at a throwaway store.
+// (Children inherit process.env, so stamp/check/gate all agree on this location.)
+process.env.SQL_SCHEMA_VERIFY_STORE = path.join(tmp, 'eval-stamps.jsonl');
 const taskDir = path.join(tmp, '99. ESOKONGAN #274510 - eval');
 fs.mkdirSync(taskDir, { recursive: true });
 
@@ -99,12 +102,38 @@ fs.writeFileSync(looseSql, FIXED);
 g = runGate([looseSql]);
 t('10 non-Task sql ignored', g.status === 0, `status=${g.status}`);
 
-// cleanup stamps written by this eval
-try {
-  const keep = fs.readFileSync(STAMPS, 'utf8').split('\n')
-    .filter(l => l && !l.includes('sqlverify-')).join('\n');
-  fs.writeFileSync(STAMPS, keep ? keep + '\n' : '');
-} catch (_) {}
+// 11 — REGRESSION (2026-08-28): a stamp written from one git checkout must be honoured by a
+// check run from a DIFFERENT checkout of the same repo. The store used to live inside each
+// checkout, so a stamp in worktree A was invisible to the Stop hook in worktree B and the gate
+// re-fired forever. Build a fake main-checkout + worktree sharing one .git common dir, copy the
+// verifier into each, stamp via the worktree copy, and check via the main copy.
+(function crossCheckout() {
+  const repo = path.join(tmp, 'repo');                 // the "main" checkout
+  const git = path.join(repo, '.git');                 // the shared common dir
+  const wtGit = path.join(git, 'worktrees', 'wt');
+  const wt = path.join(tmp, 'wt');                      // the "worktree" checkout
+  const mainVerifier = path.join(repo, 'domain', 'sql-schema-verify', 'sql-schema-verify.js');
+  const wtVerifier = path.join(wt, 'domain', 'sql-schema-verify', 'sql-schema-verify.js');
+  for (const p of [path.dirname(mainVerifier), path.dirname(wtVerifier), wtGit]) fs.mkdirSync(p, { recursive: true });
+  const src = fs.readFileSync(VERIFIER);
+  fs.writeFileSync(mainVerifier, src);
+  fs.writeFileSync(wtVerifier, src);
+  fs.writeFileSync(wtGit + '/commondir', '../..');     // git points a worktree's gitdir at the common .git
+  fs.writeFileSync(path.join(wt, '.git'), `gitdir: ${wtGit}`);
+
+  // A Task-folder .sql at a stable absolute path both invocations agree on.
+  const taskSql = path.join(tmp, '77. TASK #999 - cross-checkout', '2. Fix', 'x-999.sql');
+  fs.mkdirSync(path.dirname(taskSql), { recursive: true });
+  fs.writeFileSync(taskSql, FIXED);
+
+  // Env WITHOUT the store override, so each child resolves its store via the git common dir.
+  const env = { ...process.env }; delete env.SQL_SCHEMA_VERIFY_STORE;
+  execFileSync(process.execPath, [wtVerifier, 'stamp', taskSql, 'mlkstg1-pg'], { stdio: 'pipe', env });
+  const status = spawnSync(process.execPath, [mainVerifier, 'check', taskSql], { encoding: 'utf8', env }).status;
+  t('11 stamp in one checkout is honoured by a check in another (shared store)',
+    status === 0, `cross-checkout check exit=${status} (expected 0)`);
+})();
+
 try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {}
 
 const passed = results.filter(r => r.pass).length;

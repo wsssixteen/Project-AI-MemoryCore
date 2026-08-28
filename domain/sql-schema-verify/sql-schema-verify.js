@@ -22,7 +22,77 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const STAMPS = path.resolve(__dirname, 'stamps.jsonl');
+/**
+ * Stamp store — ONE store per REPOSITORY, shared by the main checkout and every git worktree.
+ *
+ * WHY (root cause 2026-08-28): the store used to be path.resolve(__dirname,'stamps.jsonl') — a
+ * file that lives INSIDE each checkout. Every worktree carries its own working copy, so a stamp
+ * appended in one root was invisible to a Stop hook running in another. 277147.sql and
+ * patch-ADHOC-PT-2026-5.sql were stamped (twice) yet the gate kept re-firing, because the
+ * checkout whose Stop hook fired had a stamps.jsonl without those lines. miya runs many parallel
+ * worktree sessions, so stamp-in-root-A / block-in-root-B was the norm, not the exception.
+ *
+ * The git COMMON dir resolves to the same absolute path from every worktree (git rev-parse
+ * --git-common-dir), and lives under .git so it is never tracked. Putting the store there makes
+ * it shared and kills the per-checkout git-status churn. Off a git repo we fall back to the old
+ * in-tree file. SQL_SCHEMA_VERIFY_STORE overrides the location (used by the eval for isolation).
+ *
+ * LEGACY_STAMPS (the old in-tree file) stays a READ source so files stamped before this change
+ * are still honoured; new stamps only ever write the shared store.
+ */
+const LEGACY_STAMPS = path.resolve(__dirname, 'stamps.jsonl');
+
+function gitCommonDir(startDir) {
+  let dir = startDir;
+  for (let i = 0; i < 64; i++) {
+    const dotgit = path.join(dir, '.git');
+    try {
+      const st = fs.statSync(dotgit);
+      if (st.isDirectory()) return dotgit;
+      if (st.isFile()) {
+        const m = fs.readFileSync(dotgit, 'utf8').match(/gitdir:\s*(.+)/);
+        if (m) {
+          let gd = m[1].trim();
+          if (!path.isAbsolute(gd)) gd = path.resolve(dir, gd);
+          const cdf = path.join(gd, 'commondir'); // present in a worktree's gitdir
+          if (fs.existsSync(cdf)) {
+            const cd = fs.readFileSync(cdf, 'utf8').trim();
+            return path.isAbsolute(cd) ? cd : path.resolve(gd, cd);
+          }
+          return gd;
+        }
+      }
+    } catch (_) { /* no .git here — keep walking up */ }
+    const parent = path.dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return null;
+}
+
+function storePath() {
+  if (process.env.SQL_SCHEMA_VERIFY_STORE) return process.env.SQL_SCHEMA_VERIFY_STORE;
+  const common = gitCommonDir(__dirname);
+  return common ? path.join(common, 'sql-schema-verify-stamps.jsonl') : LEGACY_STAMPS;
+}
+
+const STAMPS = storePath();
+
+// Windows paths are case-insensitive; a strict === on path.resolve output could miss a real stamp.
+function samePath(a, b) {
+  return process.platform === 'win32' ? a.toLowerCase() === b.toLowerCase() : a === b;
+}
+
+// Read stamps from the shared store AND the legacy in-tree file (transition courtesy).
+function readStamps() {
+  const out = [];
+  for (const p of new Set([STAMPS, LEGACY_STAMPS])) {
+    let lines = [];
+    try { lines = fs.readFileSync(p, 'utf8').trim().split('\n').filter(Boolean); } catch (_) {}
+    for (const l of lines) { try { out.push(JSON.parse(l)); } catch (_) {} }
+  }
+  return out;
+}
 
 const KEYWORDS = new Set([
   'select','from','where','and','or','in','not','null','is','order','by','group','having',
@@ -103,6 +173,7 @@ function emit(file) {
 function stamp(file, env) {
   if (!env) { console.error('stamp requires an environment name, e.g. mlkstg1-pg'); process.exit(1); }
   const rec = { ts: new Date().toISOString(), file: path.resolve(file), hash: hashFile(file), env, result: 'clean' };
+  try { fs.mkdirSync(path.dirname(STAMPS), { recursive: true }); } catch (_) {}
   fs.appendFileSync(STAMPS, JSON.stringify(rec) + '\n');
   console.log(`stamped ${path.basename(file)} hash=${rec.hash} env=${env}`);
 }
@@ -110,11 +181,8 @@ function stamp(file, env) {
 function check(file) {
   const hash = hashFile(file);
   const abs = path.resolve(file);
-  let lines = [];
-  try { lines = fs.readFileSync(STAMPS, 'utf8').trim().split('\n').filter(Boolean); } catch (_) {}
-  const hit = lines.map(l => { try { return JSON.parse(l); } catch (_) { return null; } })
-    .filter(Boolean)
-    .some(r => r.file === abs && r.hash === hash && r.result === 'clean');
+  const hit = readStamps()
+    .some(r => r && r.result === 'clean' && r.hash === hash && samePath(r.file, abs));
   if (hit) { console.log(`VERIFIED ${path.basename(file)} hash=${hash}`); process.exit(0); }
   console.error(`UNVERIFIED ${path.basename(file)} hash=${hash} — run emit, execute it, then stamp.`);
   process.exit(1);
