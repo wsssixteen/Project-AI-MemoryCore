@@ -206,7 +206,7 @@
     {
      "check": "Journey renders content",
      "ok": true,
-     "detail": "6044 chars"
+     "detail": "1029 chars"
     },
     {
      "check": "Journey fork button clickable",

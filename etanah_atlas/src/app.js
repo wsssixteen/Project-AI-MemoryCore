@@ -597,10 +597,21 @@ function renderUrusanView() {
     }
     const seq = u.bpmn_seq || null;
     const normName = (s) => String(s || "").toLowerCase().replace(/\s+/g, " ").replace(/^\d+(\.\d+)?\s*/, "").trim();
+    // Collapse repeated steps (same name+kod+module) into one, summing the ×N count — a
+    // sub-process called at several points should appear ONCE, not four times.
+    const dedupeRows = (rows) => {
+      const out = [], seen = new Map();
+      for (const r of rows || []) {
+        const key = `${normName(r.name)}|${r.kod || ""}|${r.module || ""}|${r.kind || ""}`;
+        if (seen.has(key)) { const e = seen.get(key); e.n = (e.n || 1) + (r.n || 1); }
+        else { const c = { ...r, n: r.n || 1 }; seen.set(key, c); out.push(c); }
+      }
+      return out;
+    };
     const ujRow = (r, color) => {
       const badge = r.kind === "callActivity"
         ? `<span class="uj-seq-mod">${escapeHtml(r.module || "")}</span>`
-        : (r.kod ? `<span class="uj-seq-kod">${escapeHtml(r.kod)}</span>` : `<span class="uj-seq-nok" title="no ind_tgsn name match">census: no match</span>`);
+        : (r.kod ? `<span class="uj-seq-kod">${escapeHtml(r.kod)}</span>` : "");
       const per = r.peranan ? `<span class="uj-seq-per">${escapeHtml(r.peranan)}</span>` : "";
       const nTag = (r.n || 1) > 1 ? `<span class="uj-seq-per">×${r.n}</span>` : "";
       const head = `<span class="uj-seq-name">${escapeHtml(r.name)}</span>${badge}${per}${nTag}`;
@@ -651,13 +662,17 @@ function renderUrusanView() {
         }
         return true;
       });
+      rows = dedupeRows(rows);
+      const stepsBlock = rows.length
+        ? `<details class="uj-steps"><summary>${rows.length} workflow step${rows.length > 1 ? "s" : ""}</summary><div class="uj-tasks">${rows.map(r => ujRow(r, null)).join("")}</div></details>`
+        : "";
       parts.push(`
       <div class="uj-stage">
         <div class="uj-stage-dot"${s.fork ? ' style="background:#534AB7"' : ''}></div>
         <div>
           <div class="uj-stage-name">${escapeHtml(s.name)}${headBadges}</div>
           <div class="uj-stage-tables">${(s.tables || []).map(t => `<span class="uj-tbl" data-open="${escapeAttr(t)}">${escapeHtml(t)}</span>`).join(", ")}</div>
-          ${rows.length ? `<div class="uj-tasks">${rows.map(r => ujRow(r, null)).join("")}</div>` : ""}
+          ${stepsBlock}
         </div>
       </div>`);
       if (s.fork && (s.fork.outcomes || []).length > 1) {
@@ -678,10 +693,11 @@ function renderUrusanView() {
               <div class="uj-stage-dot" style="background:${oc}"></div>
               <div><div class="uj-stage-tables">${stepTables.map(t => `<span class="uj-tbl" data-open="${escapeAttr(t)}">${escapeHtml(t)}</span>`).join(", ")}</div></div>
             </div>`);
-          parts.push(`<div class="uj-tasks uj-fork-tasks" style="--fork-color:${oc}">${branchRows.map(r => ujRow(r, oc)).join("")}</div>`);
+          const branchD = dedupeRows(branchRows);
+          parts.push(`<details class="uj-steps uj-fork-tasks" style="--fork-color:${oc}"><summary>${branchD.length} step${branchD.length > 1 ? "s" : ""} after this decision</summary><div class="uj-tasks">${branchD.map(r => ujRow(r, oc)).join("")}</div></details>`);
           if ((seq.converged || []).length) {
-            parts.push(`<div class="uj-conv-label">— shared tail (runs on every outcome) —</div>`);
-            parts.push(`<div class="uj-tasks">${seq.converged.map(r => ujRow(r, null)).join("")}</div>`);
+            const convD = dedupeRows(seq.converged);
+            parts.push(`<details class="uj-steps"><summary>shared tail — ${convD.length} step${convD.length > 1 ? "s" : ""} (runs on every outcome)</summary><div class="uj-tasks">${convD.map(r => ujRow(r, null)).join("")}</div></details>`);
           }
         } else {
           for (const st of (outcome.steps || [])) {
