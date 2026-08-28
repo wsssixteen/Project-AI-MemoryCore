@@ -5,7 +5,10 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 8704a5d4-6d61-456c-8842-fb7235288a7b
+  modified: 2026-08-28T03:57:14.882Z
 ---
+
+**🚨 MANDATORY — reinforced 2026-08-28 (QA-277309): when explaining ANY issue / bug / cause / mechanism, ALWAYS lead with a story diagram, never prose.** みや: *"Can you make it mandatory when explaining an issue, ALWAYS use Story Diagrams. I barely understood what you explain for the common issue."* A prose explanation of the JT-ulasan save bug (two-writer stale-read) left him unable to follow it. The rule is no longer scoped to "WHERE an issue lives" — it is EVERY issue explanation.
 
 **When explaining WHERE / HOW an issue happens — always lead with a story diagram, not prose.**
 

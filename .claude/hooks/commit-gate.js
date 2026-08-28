@@ -165,9 +165,18 @@ process.stdin.on('end', () => {
     // Quest-specific checks below only apply when a quest was actually resolved.
     if (state.qa === 'none' || state.status === 'idle') { try { fs.unlinkSync(useFlag); } catch (e) {} process.exit(0); }
 
-    // Check 1: local test confirmed
+    // Check 1: local test confirmed OR a green build (per みや 2026-08-28 — a successful
+    // build substitutes for a manual local test; commit-message approval (3b) is still required).
     if (state.local_test_confirmed !== 'true') {
-      blockCommit(`⚔️ COMMIT BLOCKED — ${state.qa}\n\nLocal test not confirmed.\n1. Test the fix locally\n2. Tell me "local test confirmed"\n3. Then commit`);
+      const mod = path.basename(targetRepo.replace(/[\\/]+$/, ''));
+      let buildGreen = false;
+      try {
+        const m = JSON.parse(fs.readFileSync(path.join(projectRoot, '.claude', 'state', `compile-ok-${mod}.json`), 'utf8'));
+        buildGreen = m && m.ok === true;
+      } catch (e) {}
+      if (!buildGreen) {
+        blockCommit(`⚔️ COMMIT BLOCKED — ${state.qa}\n\nNeither a green build nor local test on record.\nEither: run the build ( node domain/compile-gate/compile-check.js run ${mod} )\nOR test locally and tell me "local test confirmed".`);
+      }
     }
 
     // Check 2: unchecked checklist items

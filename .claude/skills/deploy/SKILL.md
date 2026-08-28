@@ -263,12 +263,13 @@ hyperlink **even inside backticks**, so みや gets a link where he needs a comm
 `sh deploy-<module>.sh` / `sh build-<module>.sh <branch>` — identical behaviour for a shell script,
 no leading `./`, no linkify. Applies to every runnable line in the card, not just the deploy step.
 
-🚨 **A VALUE みや types AT a prompt gets its OWN fenced block, never inline backticks** (みや 2026-08-14,
-2nd ask). The branch name he pastes at the `deploy-*.sh` branch prompt (`mlk/int-env`) and the env
-choice at the `build-*.sh` menu (`stag`) are things he COPIES into the shell — inline backticks give
-no copy button, so he hand-selects them. Emit each as a plain fenced block under a one-line "paste at
-the prompt:". Banned: "at the branch prompt choose `mlk/int-env`" (inline). Same test as a command:
-will he paste it into the shell? → own fenced block.
+🚨 **A VALUE みや types AT a prompt gets its OWN ` ```bash ` fenced block** (みや 2026-08-14, 2nd ask;
+**tag upgraded to `bash` 2026-08-28**). The branch name he pastes at the `deploy-*.sh` branch prompt
+(`mlk/int-env`) and the env choice at the `build-*.sh` menu (`stag`) are things he SENDS to the shell —
+a plain fenced block gives only a Copy button, but a **`bash`-tagged block gives the Run/send button**,
+which types the value straight into the terminal that is sitting at the prompt. Emit each as a `bash`
+block under a one-line "at the prompt, send:". Banned: inline backticks · a plain (untagged) fenced
+block for a value he must send. Same test as a command: will he send it into the shell? → `bash` block.
 
 Emit only the requested env. Shape:
 

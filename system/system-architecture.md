@@ -215,7 +215,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 
 | Hook | Owner | Watches | Action | Stakeholders |
 |---|---|---|---|---|
-| `commit-gate.js` | self | `git commit` commands | message-format check + commit-conventions.md reminder | etanah-pelupusan commits, MemoryCore commits | Commit-conventions changes require predicate update |
+| `commit-gate.js` | self | `git commit` commands | stop-at-staging + message-format + message-approval flag (3b) + Check 1 = **green build OR local_test_confirmed** (per みや 2026-08-28; a successful build substitutes for a manual local test) + checklist | etanah-pelupusan commits, MemoryCore commits | Commit-conventions changes require predicate update |
 | `convention-check-gate.js` | self (v1.5 2026-07-01) | Edit/Write on .java (BLOCK) · .docx / .xhtml / .sql / config (advisory) + SQL UPDATE/INSERT in Bash + mcp__postgres queries | find-working-analog convention reminder; **v1.5**: `.sql` file-write fires the sql checks + VERIFY-SELECT-shows-TRUE-values line (no BOOL_OR/COUNT/CASE stand-ins) | data-patch operations, all code edits | Rule home for verify-true-values: CLAUDE.md §9 |
 | `branch-at-apply-gate.js` | self (NEW 2026-06-19 branch-at-Apply ban defender; **un-ghosted 2026-06-20** — file had been written to the worktree hooks dir while settings.json points at the MAIN path → never fired; now copied to main path) | `git checkout/branch/switch` on a work repo while the active quest is pre-Commit | block + force-surface (base-branch decisions are みや's; branch ops are Commit-prep only, never Apply) | quest Phase-1 close, CLAUDE.md branch-at-Apply ban | one-shot flag bypass `.claude/state/base-branch-approved-<QA>.flag` |
 
