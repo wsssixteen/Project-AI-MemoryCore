@@ -5,6 +5,7 @@
 > `projects/coding-projects/archive/external-audit-2026-07/sprint-drafts/auto-memory-plan.md`.
 
 ## Feedback
+- [feedback_verify_generated_art_externally.md](feedback_verify_generated_art_externally.md) — Generated art/graphics verified by an EXTERNAL agent check ("does this read as a real X?"), never self-approval
 - [feedback_agent_execute_in_quest.md](feedback_agent_execute_in_quest.md) — In active quest / goal-driven context: any non-destructive action helping the goal = JUST DO IT (agent, not …
 - [feedback_bash_tool.md](feedback_bash_tool.md) — Bash tool hangs in みや's Windows env; use Glob/Read/Grep/PowerShell instead
 - [feedback_folder_vocabulary.md](feedback_folder_vocabulary.md) — Quest (protocol) vs Task folder (Windows ticket folder) vs Project folder (ongoing project folder)
@@ -55,7 +56,13 @@
 - [feedback_commit_deploy_runbook.md](feedback_commit_deploy_runbook.md) — 🚨 One-pass commit+deploy ceremony, 6 ordered steps — read it on ANY commit/deploy nod (QA-276504)
 - [feedback_prod_patch_infra_handoff.md](feedback_prod_patch_infra_handoff.md) — 🚨 PROD patches ALWAYS go to infra via fixed format: "Hi infra, please assist. Thank you." + `#ticket: one …
 - [feedback_data_question_db_first.md](feedback_data_question_db_first.md) — 🚨 Confirmed-etanah DATA question (is X in list / does id exist / check value) → DB-first + prepare script-check, …
+- [feedback_safe_by_default_before_testing.md](feedback_safe_by_default_before_testing.md) — 🚨 Build the safety gate BEFORE the first test run; default=dry, real action needs an explicit --live flag …
 - [feedback_attempt_before_claiming_blocked.md](feedback_attempt_before_claiming_blocked.md) — 🚨 NEVER declare blocked/can't/unavailable/missing-config from a PROXY check (ls a config file, the loaded-tool …
+- [feedback_adhoc_note_env_first.md](feedback_adhoc_note_env_first.md) — 🚨 At adhoc START pin the ENV from the error-page URL host (etanah-app=PROD vs stg); branch/version line ≠ env; verify on that env's DB + flag PROD loudly
+- [feedback_permohonan_id_not_aplikasi_id.md](feedback_permohonan_id_not_aplikasi_id.md) — 🚨 Refer to a permohonan by permohonan id (PTMLK/...) in ALL chat/docs/BA text; aplikasi_id ONLY inside SQL scripts
+- [feedback_missing_value_lifecycle_first.md](feedback_missing_value_lifecycle_first.md) — 🚨 Null-value bug → lifecycle table FIRST (writer·tugasan·mandatory+blame·why-this-row); blast-radius joins flow-position; find the existing prevention before designing one
+- [feedback_script_file_naming.md](feedback_script_file_naming.md) — 🚨 Task-folder .sql deliverables named <ticket>.sql (277309.sql), never descriptive names
+- [feedback_visual_samples_are_the_spec.md](feedback_visual_samples_are_the_spec.md) — 🚨 Sample images = the VISUAL spec: get the files, reuse/scale their art, match richness + brand colors; QA frames against the IMAGE (anatomy/layering/pose), not just text
 
 ## User
 - [user_career_vision.md](user_career_vision.md) — 3-phase career vision: Personal Excellence → Team Contribution → Company Impact
@@ -76,6 +83,8 @@
 - [project_etanah_organize.md](project_etanah_organize.md) — etanah-organize-alpha: organize etanah-knowledge/melaka into guidebook → Phase 2 office-day verification → Phase 3 …
 
 ## Reference
+- [reference_mas_ergonomics_animation.md](reference_mas_ergonomics_animation.md) — MAS ergonomics animation: video + artifact + Claude Design handoff URL + brand palette + source storyboards
+- [reference_redmine_shared_board_miya_ammar.md](reference_redmine_shared_board_miya_ammar.md) — 🚨 Saved Redmine link: OPEN tickets for みや + Ammar (ids 1311, 1218); pull on "any other tickets to do?", "tickets under Ammar and me", "Perak & Melaka tickets", "other tickets I can work on?"
 - [reference_adhoc_triage_and_id_pengenalan.md](reference_adhoc_triage_and_id_pengenalan.md) — 🚨 Adhoc/BA-relay → classify via ADHOC-TRIAGE.md FIRST (11 classes); BA ref PTMLK/.. → aplikasi_id via …
 - [reference_selangor_oracle_slt.md](reference_selangor_oracle_slt.md) — Selangor Etanah = Oracle (service SLIT, 172.16.93.32:1521, schema ET_MAIN_DEV) via oracle-slt MCP; python-oracledb …
 - [reference_perak_oracle.md](reference_perak_oracle.md) — Perak Etanah = Oracle: oracle-prk-dev (93.150/etanahprk, ET_MAIN_PERAK_DEV) + oracle-prk-denda (19.100/etstagnp, …
@@ -93,6 +102,9 @@
 - [reference_utiliti_ulasan_jt_jpph_screen.md](reference_utiliti_ulasan_jt_jpph_screen.md) — BA "Utiliti" = Pelupusan sidebar menu; "Kemaskini Ulasan JT/JPPH" = etanah-common …
 - [reference_awam_portal_test_users.md](reference_awam_portal_test_users.md) — みや's usable AWAM Portal test logins per env: staging `alyaaqilah802@gmail.com` (etanah-stg, DB et_main_stg2), PROD …
 - [reference_compile_gate_local_build.md](reference_compile_gate_local_build.md) — compile-gate BLOCKS an etanah commit unless a local `mvn compile` is green+current (`compile-check.js run/verify …
+- [reference_perak_codev_scope.md](reference_perak_codev_scope.md) — 🚨 We are co-developer for Perak too; Perak env (appspk/ESOKONGAN, PTPK ids), code E:\Projects\Perak, trunk=master, Oracle MCP
+- [reference_perak_deploy_flow.md](reference_perak_deploy_flow.md) — 🚨 Perak deploy flow: ticket branch prk/internal/<num> off master → merge/push to staging prk/stag-env → return to master
+- [feedback_state_aware_knowledge_load.md](feedback_state_aware_knowledge_load.md) — 🚨 Quest hard-codes etanah-knowledge/melaka; detect STATE from permohonan-ID prefix (PTPK=perak) + load etanah-knowledge/<state>/ FIRST
 
 ## Deferred — post-sprint forge work (still LIVE rules; see auto-memory-plan.md Table 4)
 - [feedback_awam_no_permohonan_id.md](feedback_awam_no_permohonan_id.md) — AWAM has no Permohonan ID test data; carian-rasmi key = No Resit Carian Rasmi (DEV-TESTING-HACKS.md)
