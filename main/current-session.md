@@ -1,5 +1,21 @@
 # Current Session
 
+## 2026-09-02 — ADHOC MCL PTMLK/03/L/MCL/2026/4 missing-permohonan = A9 silent-BPM-strand (PROD)
+
+**Arc**: BA (PDTAG, via masirah@melaka.gov.my) — MCL permohonan not on dashboard. Traced on PROD (`etprdmlk`). Concluded = **A9 recurrence** (silent BPM-submit strand), not a new mechanism → appended as A9's first PROD instance in ADHOC-REGISTER. Diagnosis-only; awaiting Redmine ticket. No scaffold created (matched A9).
+
+**Verified (live PROD primary, `pg_is_in_recovery=false`)**: apl **3401787**; 2 tugasan SKM + SPI both `Selesai`/`flag_aktif=N`; **NO active tugasan**; aplikasi frozen `Awalan` since 2026-07-03. Pengagihan semula SAMSIAH→MASIRAH 2026-08-04 (`umm_sejarah_pengagihan` 10351). masirah did SKM (16:19) then Semakan Permohonan → keputusan **Pembetulan** ("BORANG 12A TIDAK LENGKAP", ~16:33) → next step **SKM (Pembetulan)** (`flowables-bpmn\MLK_PLP_MCL.bpmn20.xml:705`) NEVER created → stranded → missing from every dashboard.
+
+**Mechanism (VERIFIED source, etanah-common)**: on Hantar the engine submit fails silently ("Cannot find task" WARN, no throw) inside the puncaktanah remoting layer; `CommonBPMServiceClient.submitBpmOutcome():611/697` then calls `BpmCallbackService.handleCompletion():2726` → marks row SELESAI (`:2758`) + deletes dashboard (`:2805`), no next task. Env/module-independent (NOT AWAM→APPS-specific).
+
+**Boundary / unknowns**: puncaktanah `FlowableService` (getBpmTask/submit) = dependency jar, not in `E:\Projects\Melaka` → exact swallow point + getBpmTask runtime-vs-history unread. Flowable `act_ru_*` NOT on etanah MCP → orphan ORIGIN unconfirmed (needs infra PROD `et_flowable17`, process `15492644`, task `20870474`).
+
+**Confidence**: mechanism 90% · this-instance 75% · orphan-origin 35% · not-AWAM-specific 90%.
+
+**Handed to BA** (Malay UI repro): MCL app at Semakan Permohonan → PT → Borang 12A tidak lengkap → Pembetulan → Hantar → app hilang, tiada tugasan Pembetulan. stg NOT conclusive (shared stale `et_flowable17`). Recovery = Initiate & Alter (infra/page side).
+
+**Resume point**: awaiting Redmine ticket for the common-side swallow fix (A9's first PROD instance). No fix by us (etanah-common = handoff). Recovery = alter (infra). ⚠️ This worktree's git linkage is broken (`.git/worktrees/...` not a repo) — commits done from main repo instead; worktree needs repair/prune.
+
 ## 2026-08-31 — Personal project: Monthly budget app (wsssixteen/monthly) — restart + ✓ button cadence-wipe fixes
 
 **Arc**: NON-etanah side session. みや asked to load his personal "Monthly" budget web-app from GitHub and fix two bugs where recurring (weekly/daily) rows lost their cadence. Cloned `wsssixteen/monthly` (single-file `index.html`, no build step, GitHub Pages). Fixed → committed → pushed → Pages deploy verified live → PROJECT.md docs synced.
@@ -36,39 +52,3 @@
 **Friction (slip)**: gate-loop churn — repeated commit-gate/compile-gate/local-test blocks on trivial 1-line xhtml frustrated miya ("tiring you kept blocking yourself"); goal-hook ↔ commit-approval deadlock cycled many turns. A misrouted approval flag (wrong QA 276549 + worktree dir) needed manual repair. Root: gates tuned for .java fire identically on 1-line xhtml.
 
 **Resume point**: QA-277309 OPEN, awaiting BA final test on int-env. Pass → Phase-1/2 close + Redmine planned-release + PROD DB widen (`ALTER umm_a_jabatan_teknikal.ulasan TYPE varchar(7000)`). Common fix already released; only PROD pin bump + DB widen remain for release.
-
-## 2026-08-26 — #273461 sis_no_turutan deep-audit + recon-structure workflow shootout + CHECK 6 ship + Perak MCP
-
-**Arc**: miya asked WHY Recon/Rubric missed the `sis_no_turutan` running-number table on #273461 (only the versi/registry tables were in the delete footprint) → audit → 7-agent /workflows scenario shootout → shipped the hole-patch (hook CHECK 6 + script-check rule 8 + quest Recon row + knowledge top-up) → DE → Perak MCP connections.
-
-**1. Root cause (ledgered `recon-blast-radius`, caught-by miya)**: the 08-06 patch audit declared "reference graph complete 4/4" from a **shared-column-name sweep** (`permit_lesen_id`/`versi_permit_lesen_id`) — structurally blind to (a) convention-built key links (`sis_no_turutan` kod `01BRG_4AE2026` concat'd in Java, no shared column), (b) renamed FK columns (`ind_pemegang_permit_lesen.versi_akhir_id`). Recon's own trace cited `PelupusanService.runningNumberPessimisticLock():3169-3194` — the counter was ONE entity-resolution away; no step forced it, and no rule asked "what generates the value / what remembers the sequence?" The 08-10 `knowledge-not-banked` slip was the symptom; the method hole is the true cause (miya's hypothesis confirmed).
-
-**2. Workflow shootout (`wf_46c7a439-626`, 7 sonnet agents, 975k tokens, 0 errors)**: replayed the reset-footprint task under 5 structures (S1 baseline · S2 entity-checklist · S3 skeptic · S4 3-lens · S5 index-first) vs the 6-table ground truth. **7/7 caught everything incl. baseline** → the binding variable is the QUESTION (my prompt carried "reclaimable" = the lifecycle question August never asked), not agent count. Sweet spot = deterministic question (hook) + lensC lifecycle familiar ONLY for PROD-destructive patches (~113k, cheapest deep catch); skeptic panels (149k to confirm a right answer) reserved for PROD deletes. NEW PROD facts from the fleet: counter=6, `A01/2026/6` issued 08-21 (live above targets → **reclaim permanently impossible**), 3 premature registry rows are `SLP_KUATKUASA` with named holders, registry writer = `PelupusanService.saveMaklumatPermitToInduk():2277-2402`, ZERO DB-level FKs among all permit tables, manual counter UPDATE races the pessimistic lock.
-
-**3. Shipped (design-consulted, eval-proven)**: `domain/patch-script-gate` **CHECK 6** generator-state disclosure (fires on `SET no_*=NULL` / `DELETE ... no_*` in fence without `-- generator:` line; bypass `[skip-generator-check:]`; **eval 22→27 fixtures, 27/27 green**) · `script-check` SKILL **rule 8** + emit slot (v3) · quest SKILL Recon **state-footprint row** (resolve every entity on traced path via entity_table_map.json; name the completeness method + its blind spots) · `PERMIT-LESEN-RUNNING-NUMBER.md` 2026-08-26 block (synced to main copy). 20-scenario adversarial table displayed (Rule 12).
-
-**4. Perak MCP (miya /goal item 2)**: add `et_main_perak_dev` (172.16.93.150) + `et_main_perak_denda` (192.168.19.100), Oracle :1521, password same as Melaka's — see goal completion in this session's close.
-
-**Resume point**: CHECK 6 is advisory (matches CHECK 1-5 v1); miya may flip to block. Deferred #2 of #273461 now answerable to Anis: gap is permanent (counter=6, /4 + /6 live). Perak MCP servers usable next session (MCP loads at session start).
-
-## 2026-08-24→25 — QA-276584 PPTPB rework + Task-folder abbreviation + 22 quests Phase-2 archived + video-prune feature
-
-**Arc**: retrieve 276584 → PPTPB rework → deploy internal → folder-naming cleanup + JS → Phase-2 sweep (14 Closed/Verified + 8 QA FAT) → video-prune wired into Phase 2 → DE.
-
-**1. QA-276584 (ESOKONGAN PPTPB rework, BA Nurhafizah 08-23)**: BA asked to add urusan PPTPB to the surat-keputusan visibility filter. One-word change `etanah-awam AwamDashboardVO.java:543` — `ImmutableList.of("PRBB","PLPS","PRU","PT","MCL","PLTP","PPTPB")` (hide surat until a `PL` Bayaran Pelbagai tugasan exists; verified PPTPB has PL = et_main_stg2 ind_tgsn 5135265). Commit `ba65fb8bbb` on `mlk/esokongan/276584` → cherry-picked `mlk/int-env` `c59dde3d9e`, compile-gate green. **Awaiting BA internal test** (NOT closed). qa_doc REWORK block written.
-
-**2. Task-folder abbreviation (miya /goal)**: `quest/redmine-sync.js` — new `abbreviateType()` (ESOKONGAN→ES · INTERNAL ISSUE→II · ADHOC→AH · DATA PATCHING→DP · REQUIREMENT→RQ; brackets `(PROD)`/`(PERMANENT FIX)` moved to END of folder name) + removed `1. Simulate` from folder creation (new = `0. Brief` + `2. Fix`). Renamed ALL folders (active + Archive), removed 136 empty Simulate (5 non-empty kept). active.txt task_folder paths repointed.
-
-**3. Phase-2 batch 1 (14 Closed+Verified)**: 137/140/141/147/148/163/165 (Closed) + 154/158/159/160/62/166/164 (Verified) → Archive. Criterion miya-chosen = Closed OR Verified (Resolved excluded — QA hasn't signed off). active.txt duplicates 276181/276504 removed, ADHOC-PPJK-2026-1 archived. active.txt → 6 genuinely-open blocks.
-
-**4. Phase-2 batch 2 (8 QA FAT — miya /goal)**: FAT env decommissioned → BA can never close. Found each fix in `mlk/qa/<num>`, confirmed ALL in `mlk/master`: 265537·264006·264347·261986·262004·262027·262039·261517. Archived + qa_docs got `## Deferred to follow-up` + Phase-2 closure note; QA-264347 qa_doc created (had none).
-
-**5. Video-prune feature (miya /goal)**: `quest/archive-quest.js` +`pruneVideos()`/`sweepVideos()` + **Step 1.5** (auto-prune videos from archived folder, ALL subfolders — miya nod) + `--sweep-videos` mode + hygiene line shows `videos pruned N`. One-time sweep deleted **151 videos / 1.35 GB** from Archive (0 left; 4 active preserved). Fixed pre-existing stale eval (copy all quest/*.js deps — active-cli now needs redmine-status-check) + test 9. Eval 9/9. `close-phase` SKILL step-2 doc updated.
-
-**Blocker (verified external)**: folder `139. ESOKONGAN #274914` could NOT be renamed — OneDrive reparse/placeholder lock (attr 0x80000), 3 attempts / 2 methods all `Access denied`. Pending-User quest, not archived, no active.txt ref → nothing broken. Needs miya to release the handle.
-
-**Spawned**: background task `task_de076cad` — fix `lib/hook-runtime.js` blockReason-vs-contextOut silent "No stderr output" + deploy-merge-surface stale-worktree compile-marker path bug.
-
-**Rough patches**: deploy-merge-surface hook crashed silently (its own bug I chipped); heredoc backslash-mangling on JS (switched to Write tool); 139 lock unresolvable.
-
-**Resume point**: BA tests 276584 PPTPB on internal → if pass, Phase-1/2 close + planned-release list. Folder 139 rename when unlocked. task_de076cad delivers the hook fixes separately.
