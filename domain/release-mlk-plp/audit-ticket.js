@@ -50,8 +50,28 @@ const branches = gLines(`ls-remote --heads origin`)
 const reverts = gLines(`log ${MASTER} --oneline -n 400`)
   .filter(l => /revert/i.test(l) && l.includes(num));
 
+// (1b) ENV-HISTORY sweep — a rework branch can be DELETED after its merge into an env branch, so the
+// branch-NAME scan above is blind to it (2026-09-02, Baseline 1.4.1: #274094's third fix fab13ed2 lived
+// only on mlk/int-env via the deleted mlk/internal/274094v3; miya found it in SourceTree). Truth = the
+// COMMITS: any non-merge commit on an env branch that names this ticket and is NOT in master.
+const ENV_REFS = ['origin/mlk/int-env', 'origin/mlk/stag-env'].filter(r => { try { g(`rev-parse --verify -q ${r}`); return true; } catch { return false; } });
+const envCommits = [];
+for (const r of ENV_REFS) {
+  for (const l of gLines(`log ${r} --not ${MASTER} --no-merges "--format=%H|%ad|%an|%s" --date=short --grep=${num}`)) {
+    const [sha, date, author, subject] = l.split('|');
+    if (sha && !envCommits.some(c => c.sha === sha)) envCommits.push({ sha, date, author, subject, env: r.replace('origin/', '') });
+  }
+}
+// also the merge commits that NAME a vN branch — the deleted-branch fingerprint
+const envMergesNaming = ENV_REFS.flatMap(r => gLines(`log ${r} --merges "--format=%h|%ad|%s" --date=short --grep=${num}`)).filter(l => /v\d+/.test(l));
+
 // (3)+(4) per-branch: ancestor-trap + release content coverage
-const relRef = ver ? `origin/mlk/release/${ver}` : null;
+// release ref: origin first (post-push); BEFORE push the release exists only locally → fall back to the
+// local branch so the audit is not blind during prep (it reported ❌ MISSING for every ticket pre-push).
+let relRef = null;
+if (ver) {
+  for (const cand of [`origin/mlk/release/${ver}`, `mlk/release/${ver}`]) { try { g(`rev-parse --verify -q ${cand}`); relRef = cand; break; } catch { /* next */ } }
+}
 const rows = branches.map(b => {
   const ref = `origin/${b}`;
   let trap = false, files = [], covered = null;
@@ -64,10 +84,21 @@ const rows = branches.map(b => {
   return { b, trap, files, covered };
 });
 
+// (1b) coverage of env-only commits: each must be an ancestor of the release (or patch-equivalent via cherry)
+for (const c of envCommits) {
+  c.inBranch = branches.some(b => { try { execSync(`git -C "${REPO}" merge-base --is-ancestor ${c.sha} origin/${b}`, { stdio: 'ignore' }); return true; } catch { return false; } });
+  if (relRef) {
+    try { execSync(`git -C "${REPO}" merge-base --is-ancestor ${c.sha} ${relRef}`, { stdio: 'ignore' }); c.inRelease = true; }
+    catch { c.inRelease = gLines(`cherry ${relRef} ${c.sha} ${c.sha}~1`).some(l => l.startsWith('- ')); } // '-' = patch-equivalent present
+  } else c.inRelease = null;
+}
+const orphanEnvCommits = envCommits.filter(c => !c.inBranch);           // commits no surviving branch carries
+const envUncovered = envCommits.filter(c => c.inRelease === false);      // env-only commits absent from the release
+
 // verdict
-const stacked = branches.length > 1;
+const stacked = branches.length > 1 || orphanEnvCommits.length > 0;
 const reverted = reverts.length > 0;
-const anyUncovered = rows.some(r => r.covered === false);
+const anyUncovered = rows.some(r => r.covered === false) || envUncovered.length > 0;
 
 console.log(`\n## audit-ticket #${num}${ver ? ` vs release/${ver}` : ''}  (repo ${REPO})\n`);
 console.log(`| signal | value |`);
@@ -75,6 +106,13 @@ console.log(`|---|---|`);
 console.log(`| rework branches | ${branches.length ? branches.join(' · ') : 'none found'} |`);
 console.log(`| STACKED (latest ≠ complete) | ${stacked ? '🚨 YES — reconstruct the FULL footprint, not one branch' : 'no'} |`);
 console.log(`| REVERTED on master | ${reverted ? '🚨 YES → ' + reverts.map(r=>r.split(' ')[0]).join(',') + ' (fix may be live nowhere)' : 'no'} |`);
+console.log(`| env-history commits (${ENV_REFS.map(r=>r.replace('origin/mlk/','')).join('+') || 'no env refs'}) not in master | ${envCommits.length} · orphan (no surviving branch): ${orphanEnvCommits.length ? '🚨 ' + orphanEnvCommits.map(c=>c.sha.slice(0,10)).join(',') : '0'} |`);
+if (envMergesNaming.length) console.log(`| env merges naming a vN branch | ${envMergesNaming.map(l=>l.split('|')[2]).join(' · ')} |`);
+if (envCommits.length) {
+  console.log(`\n| env commit | date | author | subject | carried by a branch | in release/${ver||'?'} |`);
+  console.log(`|---|---|---|---|---|---|`);
+  for (const c of envCommits) console.log(`| ${c.sha.slice(0,10)} (${c.env}) | ${c.date} | ${c.author} | ${c.subject.slice(0,60)} | ${c.inBranch ? 'yes' : '🚨 NO — branch deleted'} | ${c.inRelease==null?'—':(c.inRelease?'✅':'❌ MISSING')} |`);
+}
 console.log(`\n| branch | ancestor-trap (merge=no-op) | files changed | in release/${ver||'?'} |`);
 console.log(`|---|---|---|---|`);
 for (const r of rows) {

@@ -222,12 +222,60 @@ function cmdInit(a) {
 // Set/replace the merge list AFTER init/branch — lets the branch be cut while recon still
 // runs (2026-07-16 per miya). Same all-or-nothing preflight as init, just deferred; only
 // editable before any merge has landed.
+// discover — the deterministic ticket→content index (discover.js). Runs for the release's ticket
+// numbers, records every commit naming each number that is not in master, and derives the merge
+// plan = named branches + ORPHAN commit tips (fixes whose branch was deleted after an env merge).
+// Added 2026-09-02 after #274094's third fix (fab13ed2, deleted branch 274094v3) was missed.
+//   --tickets "274094,276465,277868:265537"   (":alias" = recon VIA-RELATED number to search too)
+function cmdDiscover(a) {
+  const st = loadState(a.release);
+  if (!a.tickets) die('--tickets required, e.g. "274094,276465,277868:265537" (digits; :alias optional)');
+  ensureRepo(st.repo);
+  const { discoverTicket, parseNumbers, renderTicket } = require('./discover.js');
+  git(st.repo, ['fetch', 'origin', '--prune']);
+  const releaseRef = git(st.repo, ['rev-parse', '--verify', '--quiet', st.branch], true).status === 0 ? st.branch : null;
+  const specs = a.tickets.split(',').map(s => s.trim()).filter(Boolean).map(parseNumbers);
+  st.discovery = {};
+  let orphanCount = 0;
+  for (const s of specs) {
+    const r = discoverTicket(st.repo, s.numbers, { noFetch: true, releaseRef });
+    r.ticket = s.ticket;
+    for (const p of r.plan) p.ticket = p.sha ? `${s.ticket}@${p.sha.slice(0, 10)}` : s.ticket;
+    orphanCount += r.orphanTips.length;
+    st.discovery[s.ticket] = { numbers: s.numbers, branches: r.branches.map(b => b.name), plan: r.plan, excluded: r.excluded, orphanTips: r.orphanTips, commits: r.commits.map(c => ({ sha: c.sha, kind: c.kind, inBranch: c.inBranch, subject: c.subject })) };
+    console.log(renderTicket(r) + '\n');
+  }
+  st.ticketNumbers = Object.fromEntries(specs.map(s => [s.ticket, s.numbers]));
+  saveState(st);
+  log('discover', st.release, 'ok', { tickets: specs.map(s => s.ticket), orphanCount });
+  console.log(`✅ discovery saved for ${specs.length} ticket(s) · orphan commit tips: ${orphanCount}${orphanCount ? ' 🚨 (would have been MISSED by a branch-name merge list)' : ''}`);
+  console.log('next: `set-tickets --from-discovery` (uses the plan above verbatim) — or hand-list with `--tickets` and let `verify` catch any gap');
+}
+
 function cmdSetTickets(a) {
   const st = loadState(a.release);
   if (st.phase !== 'planned' && st.phase !== 'branched') {
     die(`SET-TICKETS REFUSED — phase is ${st.phase}; the merge list is only editable before merging starts`, 2);
   }
-  if (!a.tickets) die('--tickets required, e.g. "269939=mlk/internal-issue/269939,..."');
+  if ('from-discovery' in a) {   // flag convention: `in` — the arg parser stores undefined for a bare flag
+    if (!st.discovery) die('no discovery recorded — run `discover --tickets ...` first', 2);
+    const tickets = [];
+    for (const [t, d] of Object.entries(st.discovery)) {
+      if (!d.plan.length) die(`discovery for #${t} found NOTHING in git (no branch, no commit) — NO-EVIDENCE: ask BA, do not release on a guess`, 2);
+      for (const p of d.plan) tickets.push(p.sha ? { ticket: p.ticket, src: p.src, sha: p.sha, merged: false } : { ticket: p.ticket, src: p.src, merged: false });
+    }
+    st.tickets = tickets;
+    saveState(st);
+    log('set-tickets', st.release, 'ok', tickets.map(t => t.src));
+    console.log(`✅ merge list set FROM DISCOVERY — ${tickets.length} source(s)`);
+    console.log('| Ticket | Source | Kind |'); console.log('|---|---|---|');
+    tickets.forEach(t => console.log(`| #${t.ticket} | ${t.src} | ${t.sha ? 'orphan commit' : 'branch'} |`));
+    const ex = Object.values(st.discovery).flatMap(d => d.excluded);
+    if (ex.length) { console.log('\nexcluded (visible): ' + ex.map(e => `${e.short} ${e.kind}`).join(' · ')); }
+    console.log('\nnext: `merge`');
+    return;
+  }
+  if (!a.tickets) die('--tickets required, e.g. "269939=mlk/internal-issue/269939,..." — or --from-discovery');
   ensureRepo(st.repo);
   const tickets = parseTickets(a.tickets);
   git(st.repo, ['fetch', 'origin', '--prune']);
@@ -244,6 +292,75 @@ function cmdSetTickets(a) {
   console.log('|---|---|---|');
   tickets.forEach(t => console.log(`| #${t.ticket} | ${t.src} | ✓ |`));
   console.log('\nnext: `merge`');
+}
+
+// add-ticket — APPEND one merge source AFTER merging has started (any phase before push), without
+// hand-editing the state json. Built 2026-09-02 (Baseline 1.4.1) when a completeness miss surfaced at
+// phase=verified: #274094's third fix existed only as commit fab13ed2 on mlk/int-env (its branch
+// mlk/internal/274094v3 had been deleted). Two sources: --branch <origin branch> OR --sha <commit>
+// (sha must be reachable from some origin ref — never an unpublished local commit). Phase drops back
+// to `merging` so `merge` runs only the new entry; verify (and any bump) must then re-run.
+function cmdAddTicket(a) {
+  const st = loadState(a.release);
+  const ok = ['branched', 'merging', 'merged', 'verified', 'bumped'];
+  if (!ok.includes(st.phase)) die(`ADD-TICKET REFUSED — phase is ${st.phase}; allowed before push only (${ok.join('/')})`, 2);
+  if (st.conflict) die(`ADD-TICKET REFUSED — a conflict on #${st.conflict.ticket} is still open; run merge-continue first`, 2);
+  if (!a.ticket) die('--ticket <label> required (e.g. 274094v3)');
+  if (!a.branch && !a.sha) die('one of --branch <origin branch> or --sha <commit> required');
+  if (st.tickets.some(t => t.ticket === String(a.ticket))) die(`ticket label ${a.ticket} already in the merge list`, 2);
+  ensureRepo(st.repo);
+  git(st.repo, ['fetch', 'origin', '--prune']);
+  let entry;
+  if (a.branch) {
+    if (!remoteBranchExists(st.repo, a.branch)) die(`PREFLIGHT FAIL — origin/${a.branch} does not exist`, 2);
+    entry = { ticket: String(a.ticket), src: a.branch, merged: false };
+  } else {
+    const sha = gitOut(st.repo, ['rev-parse', '--verify', `${a.sha}^{commit}`]);
+    const holders = gitOut(st.repo, ['branch', '-r', '--contains', sha]).split('\n').map(s => s.trim()).filter(Boolean);
+    if (!holders.length) die(`PREFLIGHT FAIL — ${sha.slice(0, 10)} is not reachable from ANY origin ref (unpublished commit)`, 2);
+    entry = { ticket: String(a.ticket), src: `sha:${sha.slice(0, 10)} (on ${holders[0]})`, sha, merged: false };
+  }
+  st.tickets.push(entry);
+  if (st.phase !== 'branched') { st.phase = 'merging'; st.headSha = null; }
+  saveState(st);
+  log('add-ticket', st.release, 'ok', entry);
+  console.log(`✅ added #${entry.ticket} → ${entry.src}`);
+  console.log(`phase=${st.phase} · next: \`merge\` (merges only the new entry) → \`verify\`${st.tickets.length ? '' : ''}`);
+}
+
+// drop-ticket — DEFER one ticket out of the merge list before push, visibly (recorded under st.deferred
+// with a reason; the coverage gate stops demanding its commits). Built 2026-09-02: #256334 (CR still In
+// Progress) conflicted against master mid-merge while miya had already said "finalize only after 334";
+// the right move was to defer it, not to hand-resolve Aaron's in-flight code. If the ticket is the one
+// currently in conflict, the in-progress merge is aborted (nothing of it is kept). Re-add later with
+// `add-ticket`. Refused once anything of that ticket is already merged into the release.
+function cmdDropTicket(a) {
+  const st = loadState(a.release);
+  const ok = ['branched', 'merging', 'merged', 'verified', 'bumped'];
+  if (!ok.includes(st.phase)) die(`DROP-TICKET REFUSED — phase is ${st.phase}; allowed before push only`, 2);
+  if (!a.ticket) die('--ticket <label> required');
+  if (!a.reason) die('--reason "<why>" required — a deferral is a visible decision, never silent');
+  const t = String(a.ticket);
+  const entries = st.tickets.filter(x => x.ticket === t || x.ticket.startsWith(`${t}@`));
+  if (!entries.length) die(`#${t} is not in the merge list`, 2);
+  if (entries.some(x => x.merged)) die(`DROP-TICKET REFUSED — #${t} already has a merged source in ${st.branch}; deferring now would need a revert (not a baseline step)`, 2);
+  ensureRepo(st.repo);
+  if (st.conflict && (st.conflict.ticket === t || String(st.conflict.ticket).startsWith(`${t}@`))) {
+    if (mergeInProgress(st.repo)) git(st.repo, ['merge', '--abort']);
+    st.conflict = null;
+    console.log(`· aborted the in-progress conflicted merge of #${t} (nothing kept)`);
+  } else if (st.conflict) die(`a conflict on #${st.conflict.ticket} is open — resolve or drop THAT ticket first`, 2);
+  st.tickets = st.tickets.filter(x => !entries.includes(x));
+  st.deferred = st.deferred || [];
+  st.deferred.push({ ticket: t, sources: entries.map(e => e.src), reason: a.reason, at: new Date().toISOString() });
+  if (st.ticketNumbers && st.ticketNumbers[t]) { st.deferredNumbers = Object.assign(st.deferredNumbers || {}, { [t]: st.ticketNumbers[t] }); delete st.ticketNumbers[t]; }
+  if (st.phase === 'merging' && !st.tickets.some(x => !x.merged)) st.phase = st.tickets.length ? 'merged' : 'branched';
+  if (st.phase === 'verified' || st.phase === 'bumped') { st.phase = 'merged'; st.headSha = null; }
+  saveState(st);
+  log('drop-ticket', st.release, 'ok', { ticket: t, reason: a.reason });
+  console.log(`✅ #${t} DEFERRED out of ${st.branch} — ${entries.length} source(s): ${entries.map(e => e.src).join(', ')}`);
+  console.log(`   reason: ${a.reason}`);
+  console.log(`   ⚠️ the release now ships WITHOUT #${t}; re-add with \`add-ticket\` when ready. phase=${st.phase}`);
 }
 
 function cmdBranch(a) {
@@ -263,11 +380,17 @@ function cmdBranch(a) {
   console.log('phase=branched · next: `merge`');
 }
 
+// A ticket's merge source is normally an origin BRANCH (`origin/<src>`). Since 2026-09-02 it may also be
+// a bare COMMIT SHA (`t.sha`) — for a fix whose rework branch was DELETED after being merged into an env
+// branch (Baseline 1.4.1: #274094's third fix fab13ed2 lived only on mlk/int-env via the deleted
+// mlk/internal/274094v3). `add-ticket --sha` requires the sha to be reachable from an origin ref.
+function refOf(t) { return t.sha ? t.sha : `origin/${t.src}`; }
+
 function doMergeLoop(st) {
   for (const t of st.tickets) {
     if (t.merged) continue;
-    console.log(`· merging #${t.ticket} (origin/${t.src})…`);
-    const r = git(st.repo, ['merge', '--no-ff', `origin/${t.src}`], true);
+    console.log(`· merging #${t.ticket} (${refOf(t)})…`);
+    const r = git(st.repo, ['merge', '--no-ff', refOf(t)], true);
     if (r.status !== 0) {
       const files = unmergedFiles(st.repo);
       st.phase = 'merging';
@@ -293,6 +416,9 @@ function doMergeLoop(st) {
 
 function cmdMerge(a) {
   const st = loadState(a.release);
+  if (st.phase === 'merged' && st.tickets.length && !st.tickets.some(t => !t.merged)) {   // idempotent: nothing left (e.g. after drop-ticket)
+    console.log('· nothing left to merge — every listed source is already in the release · phase=merged · next: `verify`'); return;
+  }
   if (st.phase !== 'branched' && st.phase !== 'merging') die(`phase is ${st.phase}, expected branched/merging`);
   if (!st.tickets.length) die('no tickets set — run `set-tickets --release ' + st.release + ' --tickets "..."` first (V1)', 2);
   ensureRepo(st.repo);
@@ -327,12 +453,38 @@ function cmdVerify(a) {
   console.log('| Ticket | Source branch | Commits missing from release | OK |');
   console.log('|---|---|---|---|');
   for (const t of st.tickets) {
-    const missing = gitOut(st.repo, ['rev-list', `origin/${t.src}`, '--not', 'HEAD', '--count']);
+    const missing = gitOut(st.repo, ['rev-list', refOf(t), '--not', 'HEAD', '--count']);
     const ok = missing === '0';
     if (!ok) allOk = false;
     console.log(`| #${t.ticket} | ${t.src} | ${missing} | ${ok ? '✓' : '✗'} |`);
   }
   if (!allOk) { log('verify', st.release, 'fail'); die('verification FAILED — see ✗ rows', 2); }
+
+  // ── CONTENT-COVERAGE GATE (2026-09-02, the #274094 fab13ed2 lesson) ──
+  // The table above only proves the SOURCES WE WERE TOLD ABOUT landed. This proves nothing carrying a
+  // release ticket's NUMBER anywhere on origin was left behind: every non-merge commit reachable from
+  // any origin ref, naming the number, not in master, must be in HEAD (ancestor or patch-equivalent).
+  // POM-PIN / PATCH-EQUIVALENT commits are reported but never fail (env pins + cherry-pick dups).
+  const { discoverTicket } = require('./discover.js');
+  const numbersByTicket = st.ticketNumbers || Object.fromEntries(st.tickets.map(t => [t.ticket, [t.ticket.replace(/@.*$/, '').replace(/\D.*$/, '')]]).filter(([, n]) => n[0]));
+  console.log('\nCONTENT COVERAGE — every commit naming a release ticket on ANY origin ref, not in master');
+  console.log('| Ticket | numbers searched | commits | orphan (branch deleted) | uncovered in release |');
+  console.log('|---|---|---|---|---|');
+  let uncoveredAll = [];
+  for (const [t, numbers] of Object.entries(numbersByTicket)) {
+    const r = discoverTicket(st.repo, numbers, { noFetch: true, releaseRef: 'HEAD' });
+    const unc = r.uncovered || [];
+    uncoveredAll.push(...unc.map(s => ({ t, s, c: r.commits.find(c => c.sha === s) })));
+    console.log(`| #${t} | ${numbers.join(',')} | ${r.commits.length} | ${r.orphanTips.length} | ${unc.length ? '🚨 ' + unc.map(s => s.slice(0, 10)).join(',') : '0 ✓'} |`);
+  }
+  if (st.deferred && st.deferred.length) console.log(`\n⚠️ DEFERRED (visible, not in this release): ${st.deferred.map(d => `#${d.ticket} — ${d.reason}`).join(' · ')}`);
+  if (uncoveredAll.length) {
+    console.log('\n🚨 UNCOVERED commits (would ship WITHOUT these — exactly the fab13ed2 miss):');
+    for (const u of uncoveredAll) console.log(`   #${u.t} ${u.s.slice(0, 10)} ${u.c ? `${u.c.date} ${u.c.author} "${u.c.subject.slice(0, 60)}" on ${u.c.holders.join('/')}` : ''}`);
+    console.log('   → `add-ticket --ticket <t>@<sha> --sha <sha>` then `merge` + `verify` again (or exclude with a reason via `discover` review)');
+    log('verify', st.release, 'fail-coverage', uncoveredAll.map(u => u.s));
+    die('verification FAILED — content coverage gap', 2);
+  }
   st.headSha = gitOut(st.repo, ['rev-parse', 'HEAD']);
   st.phase = 'verified';
   saveState(st);
@@ -542,11 +694,11 @@ function cmdStatus(a) {
 const a = parseArgs(process.argv.slice(2));
 const cmd = a._[0];
 const commands = {
-  init: cmdInit, branch: cmdBranch, 'set-tickets': cmdSetTickets, merge: cmdMerge,
+  init: cmdInit, branch: cmdBranch, discover: cmdDiscover, 'set-tickets': cmdSetTickets, 'add-ticket': cmdAddTicket, 'drop-ticket': cmdDropTicket, merge: cmdMerge,
   'merge-continue': cmdMergeContinue, verify: cmdVerify,
   'bump-common': cmdBumpCommon, 'bump-version': cmdBumpVersion,
   push: cmdPush, 'merge-to-master': cmdMergeToMaster, status: cmdStatus,
 };
-if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|set-tickets|merge|merge-continue|verify|bump-common|bump-version|push|merge-to-master|status> --release <ver> [...]`);
+if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|discover|set-tickets|add-ticket|merge|merge-continue|verify|bump-common|bump-version|push|merge-to-master|status> --release <ver> [...]`);
 if (cmd !== 'init' && !a.release) die('--release required');
 commands[cmd](a);
