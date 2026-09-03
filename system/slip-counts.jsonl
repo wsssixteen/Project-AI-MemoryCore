@@ -476,3 +476,6 @@
 {"ts":"2026-09-02T02:52:50.468Z","category":"overreach/unverified-claim"}
 {"ts":"2026-09-02T08:27:54.832Z","category":"baseline/completeness-miss"}
 {"ts":"2026-09-02T11:13:37.893Z","category":"stop-instead-of-action"}
+{"ts":"2026-09-03T06:39:27.253Z","category":"A1"}
+{"ts":"2026-09-03T06:39:27.386Z","category":"A2"}
+{"ts":"2026-09-03T06:39:27.540Z","category":"A4"}
