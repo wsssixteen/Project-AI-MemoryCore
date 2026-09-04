@@ -25,6 +25,108 @@
 
 **Conclusion**: the data exists. What is missing is CONSUMPTION — a deterministic step that turns ledgers into rulings.
 
+### 0b. Is MONITORING collecting? — NO. It was never built as a layer
+
+みや's distinction (2026-09-04): observability = liveness ("did it fire / block / how long"); monitoring = the extra
+CONTEXT ("why, on which quest and phase, was the block true or false, what did the turn cost, how did みや react").
+
+| Candidate found | Records | Verdict |
+|---|---|---|
+| `lib/watch.js` change-watch (his 2026-08-16 "observe what we touched") | target · what to observe · rollback SHA · sessions-left | 6 watches ever, all 2026-08-16; 5 resolved ok; 0 added since → **built, then abandoned** |
+| `.claude/hooks/reply-log.js` (Stop, 2.9 s/turn) | `ts · qa_active · phase · status · gap_since_prev_minutes` | rhythm only, no context |
+| `Feature/Observation-System/observation-log.md` | T1–T4 human observations | tombstoned 2026-05-31 |
+| `domain/quest-objective-anchor/log.jsonl` (413 rows) | every open quest's scope + verbatim counts (all 0) | context-free |
+| `system/telemetry/hook-fires.jsonl` | `hook · event · mode · exit · blocked · bypassed · dur_ms` (bypass only in native mode) | no reason · no quest · no turn id · no true/false verdict |
+
+Proof of the gap: §1d below had to be reconstructed by hand from this session; nothing in any ledger can answer
+"how many of today's blocks were false positives" or "what did Phase 0 of #278304 cost".
+
+---
+
+## M. Monitoring layer design — `turn-ledger` (designed 2026-09-04; BUILD next session via forge)
+
+### M.1 Anchor + best practice, reconciled
+
+| Our system design (the ANCHOR) | Industry practice adopted | How it lands here |
+|---|---|---|
+| system-rules Rule 1 inventory-first · Rule 5 "log is the optimization dataset (ts + outcome + duration)" | **Wide-event / canonical log line**: ONE rich row per unit of work instead of many narrow rows (Stripe, Honeycomb) | unit of work = the TURN (user prompt → my reply). One wide row per turn in `system/telemetry/turns.jsonl` |
+| system-design Rule 7 pick the primitive · Rule 8 leanest trigger | **Correlation id + context propagation** (trace id set at request entry, stamped on every child span) | `turn_id` minted ONCE per turn by the existing UserPromptSubmit dispatcher, propagated via a 1-line file `system/telemetry/current-turn.json`; every hook-fire row stamps it. **Zero new hook registrations.** |
+| Rule 9 NUKE-MARKER · forge birth (README · eval · log.jsonl · registry row) | structured logging, schema-versioned rows (`v:1`), low-cardinality fields, bounded strings | all rows JSONL; free text truncated to 160 chars; enums for verdicts |
+| Rule 11 state-agnostic | — | `qa` is data; no state literal anywhere |
+| Rule 12 ≥20 adversarial scenarios | fail-open telemetry (a monitor must never break the monitored) | every writer swallows its own errors, same as `appendTelemetry` today |
+| Rule 3 decay matrix (fire-rate × effectiveness) | **SLO-style yield metric**: true-positive rate per gate, not fire count | `true_blocks = blocks − fp_bypasses` becomes the gate-ruling axis (Q6) |
+| File-ownership (no invented folders) | log rotation / retention | `hook-fires.jsonl` (10.5 MB) rotates monthly into `hook-fires-YYYY-MM.jsonl`; readers union the last 2 files |
+
+### M.2 Primitive: **hook + script** (no skill). Components — 2 refined, 1 born, 0 new registrations
+
+| Piece | Kind | What changes |
+|---|---|---|
+| **M1 context on every fire** — `lib/hook-runtime.js` (wrap + native) and `lib/dispatch-hooks.js` (bundle children) | refine existing | each telemetry row gains `turn_id · session_id · qa · phase · reason` (`reason` = first 160 chars of the block/deny text or the advisory's first line; empty on pass). Read from `current-turn.json` (≈0.1 ms). Bundle mode also gains `bypassed` by scanning the child's own stdout for its bypass-token echo (today only native mode records bypass). |
+| **M2 turn-open stamp** — `lib/dispatch-hooks.js` when `--event UserPromptSubmit` | refine existing | before running children: write `current-turn.json` = `{ turn_id: <session_id>-<n>, session_id, opened_ts, qa, phase, status }` (qa/phase = top active.txt block, the exact read `reply-log.js` does today). `n` = count of prior user turns in `transcript_path` (one cheap line scan) |
+| **M3 turn row writer** — `domain/turn-ledger/turn-ledger.check.hook.js` (Stop, forge-born; REPLACES `.claude/hooks/reply-log.js`, whose fields it absorbs) | born via forge | at Stop: parse transcript tail once → `tool_calls · tool_names(counted) · reply_chars · assistant_msgs`; read `hook-fires.jsonl` rows with this `turn_id` → `hooks_fired · hook_ms · blocks[] (hook,reason) · bypasses[] (token,reason,fp)`; read `domain/reask/log.jsonl` + `domain/auto-skill-trigger` rows inside `[opened_ts, now]` → `user_signal ∈ {none, reask, correction, nod}`; carry `gap_since_prev_minutes`. Append ONE row to `system/telemetry/turns.jsonl`. |
+| **M4 false-positive convention** | rule + parser | a bypass token whose reason starts with `fp:` (e.g. `[skip-predicate-box: fp: no .java edited]`) is a FALSE POSITIVE; any other reason is a legitimate override. M3 parses tokens from the last assistant message with `/\[(skip-[a-z0-9-]+|verified-blocked)[^:\]]*:\s*([^\]]*)\]/g`, sets `fp=true` when the reason matches `/^fp:/i`, and resolves token→hook through a small map in `domain/turn-ledger/token-map.json` (seeded from the existing bypass strings in each hook's source; unknown token → `hook:"?"`, never dropped). |
+| **M5 watch discipline** — `domain/de-close-gate` gains C5 | refine existing | block DE close when a file under `domain/`, `lib/`, `.claude/hooks/`, `core/` was Edit/Write-touched this session (transcript tool calls) and `system/claude-md-watchlist.jsonl` has no `watch` row for it this session. Makes the abandoned 08-16 tool fire by construction. |
+| **M6 consumer** — `lib/turn-report.js` | born (script) | reads `turns.jsonl` + `hook-fires*.jsonl` (30d): (a) gate yield table: hook · fires · blocks · fp · **true_blocks** · avg ms · verdict per decay matrix; (b) cost by quest phase: turns · tool_calls · hook_ms · blocks; (c) reask rate per session; (d) overdue watches. Output = `system/monitoring-dashboard.md` (generated, never hand-edited) + the Q6/Q8 ruling table. DE step 12.5 runs it; `lib/weekly-audit.js` (Part 2) consumes it. |
+
+### M.3 Row schemas (v1)
+
+`hook-fires.jsonl` (existing + M1 fields): `{ v:1, ts, hook, event, mode, exit, blocked, bypassed, bypass_token?, dur_ms, error?, turn_id, session_id, qa, phase, reason? }`
+
+`turns.jsonl` (new): `{ v:1, turn_id, session_id, opened_ts, closed_ts, qa, phase, status, tool_calls, tool_names:{Read:n,…}, assistant_msgs, reply_chars, hooks_fired, hook_ms, blocks:[{hook,reason}], bypasses:[{token,hook,fp,reason}], user_signal, gap_since_prev_minutes }`
+
+`current-turn.json` (ephemeral, overwritten per turn): `{ turn_id, session_id, opened_ts, qa, phase, status }`
+
+### M.4 Trigger moments (Rule 8)
+
+| Moment | Already fires? | Added cost |
+|---|---|---|
+| UserPromptSubmit bundle start | yes (34 commands run anyway) | 1 file write + 1 transcript line-count |
+| every hook fire | yes | 1 small file read per fire (~0.1 ms × ~116) |
+| Stop bundle | yes (39 commands; ~6 already parse the transcript) | 1 transcript tail parse + 1 append; reply-log's 2.9 s disappears (its work is absorbed) |
+
+### M.5 Eval cases (Rule 6 — must pass before registration)
+
+| # | Fixture | Assert |
+|---|---|---|
+| E1 | synthetic transcript: 3 user turns, 2nd turn has 5 tool_use blocks + an assistant message with `[skip-predicate-box: fp: no edit]` and `[skip-patch-gate: script already stamped]`; telemetry rows for that turn_id incl. 2 blocked | turns.jsonl row 2: `tool_calls=5`, `blocks.length=2`, `bypasses=[{fp:true},{fp:false}]` |
+| E2 | current-turn.json missing | hook-fires row still written, `turn_id:null`, no crash, exit code unchanged |
+| E3 | replay TODAY's session (transcript at hand) | turn-report reproduces §1d: 12 blocks, 7 fp, per-hook |
+| E4 | de-close C5: transcript with an Edit on `lib/x.js`, no watch row | DE close blocked with the file named; with a watch row → pass |
+| E5 | rotation: hook-fires.jsonl >8 MB at SessionStart | renamed to `hook-fires-YYYY-MM.jsonl`, liveness 30d counts unchanged |
+
+### M.6 Adversarial scenarios (Rule 12 — 20, each with a verdict)
+
+| # | Scenario | Verdict |
+|---|---|---|
+| 1 | `current-turn.json` written by session A, read by concurrent session B (two sessions, one repo) | fixture-added: key the file by `session_id` (`current-turn-<sid>.json`); hook reads the one matching its stdin `session_id` |
+| 2 | Hook fires with no stdin `session_id` (eval sandbox, manual run) | handled: `turn_id:null`, row still written |
+| 3 | Stop fires with `stop_hook_active=true` (anti-loop re-entry) | handled: M3 exits 0 without writing (same guard every Stop gate uses) |
+| 4 | Transcript is huge (multi-MB) | handled: read tail only (last 200 KB) for the turn window; line-count for `n` cached in current-turn.json |
+| 5 | Transcript path missing / plain text | handled: `tool_calls:null`, row still written |
+| 6 | A bypass token appears inside a QUOTED gate message in my reply (the 2026-08-21 self-disarm class) | fixture-added: only tokens in the LAST assistant message count, and only outside fenced code blocks |
+| 7 | Reason text contains `]` or newlines | handled: regex stops at first `]`; reason truncated 160 chars; newlines collapsed |
+| 8 | I write `fp:` on a bypass that was actually a true block (gaming my own metric) | accepted-risk with control: fp bypasses are listed by name in the weekly table for みや; an fp on a gate that then produced a みや-caught slip flips to `fp_disputed` |
+| 9 | Unknown bypass token (new gate not in token-map) | handled: `hook:"?"`, counted, surfaced in report as "unmapped token" |
+| 10 | Bundle child blocks via exit 2 with empty stderr | handled: `reason:""`; report flags "silent block" (that is itself a defect to fix) |
+| 11 | active.txt has no active block (no quest) | handled: `qa:null, phase:null`; cost still attributed to session |
+| 12 | Two turns close within the same second (fast auto-turns) | handled: `turn_id` uses counter `n`, not ts |
+| 13 | Worktree session: `CLAUDE_PROJECT_DIR` ≠ main repo; telemetry lands in the worktree copy | accepted-risk (existing behaviour of hook-fires today); DE step 10 pushes the worktree; readers union both paths |
+| 14 | OneDrive sync conflict duplicates `turns.jsonl` (`turns-<machine>.jsonl`, seen already for slips/watchlist) | handled: readers glob `turns*.jsonl`, dedupe on `turn_id` |
+| 15 | Disk full / file locked | handled: fail-open, swallow, exit unchanged |
+| 16 | `reply-log.js` still registered after M3 ships → double rows | fixture-added: forge birth removes the legacy registration; liveness flags a still-firing `reply-log` as duplicate |
+| 17 | Orchestration mode (sweep) suppresses gates | handled: suppressed rows already carry `mode:orch-suppressed`; turn row counts them as `suppressed`, not blocks |
+| 18 | Rotation happens mid-turn | handled: rotation only at SessionStart; readers union last 2 files |
+| 19 | User's prompt is a /command (goal, quest) with no reply text | handled: `reply_chars:0`, row written |
+| 20 | Someone hand-edits `turns.jsonl` | handled: `v` field + generated dashboard header "never hand-edit"; report tolerates bad lines |
+| 21 | M5 blocks DE for an edit to `lib/` that was a pure revert | accepted-risk: add the watch anyway (`--observe "revert holds"`); cost 1 command |
+| 22 | The `fp:` convention forgotten by me | fixture-added: M3 logs `bypass_reason_unclassified` count; report shows it; a rising count is a slip |
+
+### M.7 Success measure (Rule 5 — proven from logs, never asserted)
+
+After 14 days of rows: (a) the Q6 gate ruling is made from `true_blocks`, not `blocks`; (b) "today's 7 false blocks" is a one-line query, not a hand reconstruction; (c) cost per quest phase is visible per ticket; (d) zero `domain/`/`lib/` edits without a watch row.
+
+**STATE-SCOPE**: no, state-agnostic. **NUKE-MARKER**: `domain/turn-ledger/NUKE-MARKER.md` at birth (rollback = remove Stop registration, restore `reply-log.js` registration, delete folder; hook-runtime/dispatch-hooks changes are additive fields and can stay).
+
 ---
 
 ## 1. What the data says (30-day hook telemetry)
@@ -125,6 +227,8 @@ Every row refines an existing component (Rule 1). **Safety** = what breaks if wr
 
 ## 5. Sequence
 
-1. みや rules on §2 rows (BUILD / DROP / DEFER each).
+1. みや rules on §2 rows (BUILD / DROP / DEFER each) + confirms §M as designed.
 2. This session: bank §4 (mechanical, ~6 edits), then Q3 + Q5 (small, deterministic, eval-guarded, each with its ≥20-scenario table per system-design Rule 12).
-3. Fresh session: Q1/Q2/Q4/Q6/Q7/Q8/Q9/Q10 + Part 2, one commit per item, before/after telemetry rows cited in each commit.
+3. **Fresh session, FIRST item: build §M (turn-ledger) via forge** — M1/M2 refinements, M3 born, M4 token-map seeded, M5 de-close C5, M6 report; evals E1–E5 green before registration. Reason it goes first: every later ruling (Q6 gate yield, Q8 proposals, Part 2 hook pass) is decided from `true_blocks` and per-phase cost, which only exist once §M is collecting.
+4. Same fresh session after §M: Q1/Q2/Q4/Q6/Q7/Q8/Q9/Q10, one commit per item, before/after telemetry rows cited in each commit.
+5. Part 2 (§3) after 14 days of §M rows, so the whole-system ruling pass reads measured yield, not fire counts.
