@@ -1,5 +1,31 @@
 # Current Session
 
+## 2026-09-04 (S4, 16:59–17:15) — #271910 Azam colleague-assist (WP-KL PRZ GIS "Status Permohonan Is NULL") ROOT-CAUSED on staging + 6 WP DB MCPs built from DBeaver
+
+**Arc**: miya: "help Azam's ticket #271910". redmine-sync has no single-ticket mode (assignee-scoped) → fetched the issue JSON directly (scratch script). Ticket = WP-KL, Teknikal module, PRZ `PTGKL/11/PRZ/2025/16` aplikasi 13244845 @ msazwan@ptgwp.gov.my at Charting Keputusan; Najwa (09-03) had already found "no row in umm_keputusan_mesyuarat". Via `oracle-wp` (= `ET_MAIN_STAG`, PROD copy where Emirul reproduced it): the app **skipped KKJKKT + SKKJKKT** — `PTBUT8` born by SYSTEM 2026-07-09 with `app_tugasan_sebelum = CKMPPLN` (ended 06-26), vs 2 working PRZ apps (14085110, 14085482) that run CKMPPLN → KKJKKT → SKKJKKT → PTBUT8 → CK. Four facts: status_keputusan `Awalan`, tarikh_keputusan NULL, a_kertas.cabutan_minit_id NULL, 0 keputusan_mesyuarat rows. Fix proposed = reroute flowable token (proc 40987580) to KKJKKT; data-patch fallback rejected (leaves cabutan minit missing). Sendable reply drafted for Azam. Confidence: cause 95%, fix-shape 80% (etanah-teknikal + WP PRZ BPMN not on disk), PROD unverified. No quest run (colleague's Teknikal ticket).
+
+**Env facts (mid-turn from miya)**: code folder = `E:\Projects\WP` (KL folder stale); DBeaver project "ETANAH AND MYLAND" holds every WP env. Decrypted its credentials (AES key public) → **6 MCPs added to `~/.claude.json`** (`.bak-2026-09-04`): kl-stag-flowable/dms/sistem · wppj-stag · wpl-stag · 🚨 kl-prod-read (et_main_read, SELECT only). Restart to load. Banked in `etanah-knowledge/wp/STATE-FACTS.md` version row.
+
+**Files**: `projects/coding-projects/active/QA-271910/QA-271910.md` (new, §0 Resume Point cold-complete) · `quest/active.txt` +QA-271910 block (status=hold, adhoc, state=wp) · wp/STATE-FACTS.md · `~/.claude.json`.
+
+**Resume ("continue 271910")**: (1) `oracle-wp-kl-prod-read` 4-fact query on PROD for 13244845; (2) `oracle-wp-kl-stag-flowable` ACT_HI_TASKINST proc 40987580 — why KKJKKT skipped; (3) update Azam.
+
+## 2026-09-04 — Session 3 (worktree ticket-275847-perak-docs-244548) — MULTI-STATE AUDIT (todo Q1 row 1)
+
+**Last Activity**: built the state registry + folder-structure rule; 16 components migrated; all evals green; committed on the worktree branch + pushed to origin/main.
+
+**Working memory**
+- Registry: `system/states.json` (tracked) + `system/states.local.json` (gitignored hosts overlay; copied to the main checkout too) → `lib/states.js` (`list · show <key> · resolve <text|path> · validate [key] · check [--all] · add · remove`; eval `lib/states.eval.js` 40/40).
+- Cascade: explicit → `ETANAH_STATE` → active.txt `state=`/`task_folder=` → path segment (`1. Tasks\<State>` | `E:\Projects\<State>`) → `PT<STATE>/` prefix → UNKNOWN (never a silent melaka).
+- Root layout rule: `system/FOLDER-STRUCTURE.md` (allow-list JSON fence + orphan table, 9 entries pending miya's nod) + `lib/folder-structure.js check` (eval 6/6). `system-audit.js` CHECK 7 (state-literal drift count) + CHECK 8 (root orphans / pending) fire at every boot.
+- Migrated: ticket-gate · knowledge-first-gate v3 · branch-guard v2 · alter-ticket-gate v1.1 · adhoc-register · latent-bugs-gate · adhoc-lifecycle (hook + CLI) · awam-no-resit-gate · notes-on-test-data · pre-action-check-gate · quest-resume-preflight · quest-knowledge-save-gate · lib/test-data-db · bug-db (lookup + build-index) · knowledge-schema-audit (`states` block moved out of KNOWLEDGE-SCHEMA.json) · quest SKILL.md STATE-FIRST paragraph.
+- `node lib/states.js check` after migration: 275 sites / 85 files → 52 UNROUTED · 8 routed · 25 eval fixtures.
+
+**Resume point (cold)**
+1. Ask miya for the verdict on the 9 orphan rows in `system/FOLDER-STRUCTURE.md` → execute the delete or move per row → empty `pending_nod` → `node lib/folder-structure.js check` = 0.
+2. Bulk-migrate the 52 UNROUTED files one category per pass (task-folder scripts → repo-root scripts → redmine-project → skills); Melaka-only-by-design tools (release-mlk-plp*, deploy, env-check/env-switch, staging-schema-*, patch-mlk-doc, local-deploy-gate) get a `// state-scoped: yes, melaka-only by design` header instead. Eval-green each pass.
+3. Verify `_unverified` registry facts: wp/selangor/kedah/terengganu permohonan prefixes (one DB read each), Perak Redmine project identifier (API read).
+
 ## 2026-09-04 — ADHOC-FLOWABLE-2026-1 APPLIED on MLIT (3 sub-processes annotated, LEFT layout, versions 2/2/1) + knowledge = live exports + cross-state KNOWLEDGE-SCHEMA/audit/ticket-gate
 
 **Arc**: (1) annotations written INTO the existing MLIT models via the in-page Oryx editor API (REST `newversion` upload classifier-blocked): `MLK_PLP_SUB_JBTN_TEK` abc34d49… v1→v2, `MLK_PLP_SUB_UPN` 90e6c6a8… v1→v2 (new version + comment), `MLK_PLP_SUB_UPW` a3655569… v1 (miya's import). (2) miya: "do not create a new version… annotations on the LEFT… limit line length" → overwrite-save, box at (15,15), text wrapped 72 chars, diagram shifted to x=531/519, y=15; versions unchanged. Comment = version metadata not shown anywhere in the UI (History popup = version·user·date); Description = header, left as the sub-process name. (3) miya: "update our respective sub flows into our etanah knowledge" → `melaka/flowables-bpmn/MLK_PLP_SUB_*.bpmn20.xml` are now the REAL exports of v2/v2/v1: JBTN_TEK = actual download; UPN/UPW rebuilt from a DI-token transfer (`tools/rebuild_di.py`, sha256 MATCH, byte sizes 39689/31779 = live). Slip caught: first install used two morning-old `Unconfirmed *.crdownload` files (old 43/23-line layout) — line-count check reverted it. (4) /goal "save every finding into etanah knowledge since I cannot trust your DE on this regard" → banked FIRST (below), then DE.
@@ -24,19 +50,4 @@
 
 **Open**: PROD V_DOMAIN must be 1.0.8-MLK before PROD (MCP read denied; ask Haikal/Arkan). Sheet SQL: `#277309, 277309.sql`. AWAM PLP list = khaihantan/shahrul.
 
-
-## 2026-09-04 — Session 3 (worktree ticket-275847-perak-docs-244548) — MULTI-STATE AUDIT (todo Q1 row 1)
-
-**Last Activity**: built the state registry + folder-structure rule; 16 components migrated; all evals green; committed on the worktree branch + pushed to origin/main.
-
-**Working memory**
-- Registry: `system/states.json` (tracked) + `system/states.local.json` (gitignored hosts overlay; copied to the main checkout too) → `lib/states.js` (`list · show <key> · resolve <text|path> · validate [key] · check [--all] · add · remove`; eval `lib/states.eval.js` 40/40).
-- Cascade: explicit → `ETANAH_STATE` → active.txt `state=`/`task_folder=` → path segment (`1. Tasks\<State>` | `E:\Projects\<State>`) → `PT<STATE>/` prefix → UNKNOWN (never a silent melaka).
-- Root layout rule: `system/FOLDER-STRUCTURE.md` (allow-list JSON fence + orphan table, 9 entries pending miya's nod) + `lib/folder-structure.js check` (eval 6/6). `system-audit.js` CHECK 7 (state-literal drift count) + CHECK 8 (root orphans / pending) fire at every boot.
-- Migrated: ticket-gate · knowledge-first-gate v3 · branch-guard v2 · alter-ticket-gate v1.1 · adhoc-register · latent-bugs-gate · adhoc-lifecycle (hook + CLI) · awam-no-resit-gate · notes-on-test-data · pre-action-check-gate · quest-resume-preflight · quest-knowledge-save-gate · lib/test-data-db · bug-db (lookup + build-index) · knowledge-schema-audit (`states` block moved out of KNOWLEDGE-SCHEMA.json) · quest SKILL.md STATE-FIRST paragraph.
-- `node lib/states.js check` after migration: 275 sites / 85 files → 52 UNROUTED · 8 routed · 25 eval fixtures.
-
-**Resume point (cold)**
-1. Ask miya for the verdict on the 9 orphan rows in `system/FOLDER-STRUCTURE.md` → execute the delete or move per row → empty `pending_nod` → `node lib/folder-structure.js check` = 0.
-2. Bulk-migrate the 52 UNROUTED files one category per pass (task-folder scripts → repo-root scripts → redmine-project → skills); Melaka-only-by-design tools (release-mlk-plp*, deploy, env-check/env-switch, staging-schema-*, patch-mlk-doc, local-deploy-gate) get a `// state-scoped: yes, melaka-only by design` header instead. Eval-green each pass.
-3. Verify `_unverified` registry facts: wp/selangor/kedah/terengganu permohonan prefixes (one DB read each), Perak Redmine project identifier (API read).
+

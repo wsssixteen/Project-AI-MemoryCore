@@ -4,6 +4,14 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-09-02 — Baseline 1.4.1 (Pelupusan) — COMPLETE: BAQA PASSED → Phase F merged: origin/mlk/master = fae671944b (undo tag mlk/pre-master-merge/1.4.1 @ e1712bc0e7, local). Release worktree removed. #256334 dropped by BA (not in 1.4.1). Staging capaian script (PPTnKanan PRBB, azlee/kamarolzaman) handed 2026-09-02 for #274094 retest — data, not code.
+
+**What happened**: first 1.4.1 branch MISSED #274094 third fix fab13ed2 (deleted branch mlk/internal/274094v3, int-env only) — miya caught it in SourceTree. Per /goal: branch DELETED + rebuilt through NEW deterministic discovery: `domain/release-mlk-plp/discover.js` (ticket number → EVERY commit on any origin ref not in master; orphan tips become merge sources; POM-PIN / PATCH-EQUIVALENT surfaced+excluded) + `release-prep.js discover` / `set-tickets --from-discovery` / `add-ticket --sha` / **verify CONTENT-COVERAGE gate** (fails if any ticket-numbered commit on origin is absent from HEAD). Evals: `discover.eval.js` 27/27 (synthetic deleted-branch replay + real-repo fab13ed2) · eval.js 26/26 · eval-recon 19/19 · push-gate 12/12. Slip logged `baseline/completeness-miss`.
+
+**Final**: 4 tickets (#274094 incl. fab13ed2 · #276465 · #277309 · #277868 via 265537v2) · common 1.3.13-MLK → 1.5.4-MLK (8a54240f13, domain 1.0.6→1.0.8 acked, stg2 V_DOMAIN 1.0.8 ✓) · pelupusan 1.4.0 → 1.4.1 (fae671944b) · local `mvn -t toolchains compile` BUILD SUCCESS online (1.5.4-MLK pulled from Nexus) · pushed via release-prep (phase=pushed, headSha fae671944b). V6b: build log checkout SHA must equal fae671944b. Sheet: Common 1.5.4-MLK · Module 1.4.1 · Branch mlk/release/1.4.1 · SQL `#277309, 277309.sql`. Phase F (merge-to-master --ba-approved) ONLY after BAQA passes. Worktree E:/Projects/Melaka/etanah-pelupusan-rel can be removed after Phase F. **Earlier state**: isolated worktree `E:/Projects/Melaka/etanah-pelupusan-rel` (his live checkout = mlk/internal/277697, 138 dirty paths, UNTOUCHED). `mlk/release/1.4.1` LOCAL, off origin/mlk/master e1712bc0e7. Discovery plan (7 sources): mlk/CR/256334 · mlk/internal/274094 · sha fab13ed2 · mlk/internal/276465 · mlk/esokongan/277309 · mlk/qa/265537 · mlk/qa/265537v2. Excluded visible: e17c497870 POM-PIN, 633f922cb2 PATCH-EQUIVALENT. phase=verified @ 69f5ec10b9 — 6 sources merged (274094 · fab13ed2 · 276465 [pom→HEAD 1.3.13-MLK per V2 nod] · 277309 · 265537 · 265537v2); #256334 DEFERRED via `drop-ticket --reason` because its branch (Aaron 6 commits 2026-09-02) conflicts with master #263302 on `mlkMaklumatUrusanForm.xhtml` (2 hunks: rendered=!isGantiHari vs mode … or isPDBB) — Aaron should reconcile with master, then `add-ticket --ticket 256334 --branch mlk/CR/256334` → merge → verify. New cmds this session: discover · set-tickets --from-discovery · add-ticket · drop-ticket; verify has CONTENT-COVERAGE gate. Evals 33/33 (discover) · 26/26 · 19/19 · 12/12.
+
+**Open**: PROD V_DOMAIN must be 1.0.8-MLK before PROD (MCP read denied; ask Haikal/Arkan). Sheet SQL: `#277309, 277309.sql`. AWAM PLP list = khaihantan/shahrul.
+
 ## 2026-09-02 — ADHOC MCL PTMLK/03/L/MCL/2026/4 missing-permohonan = A9 silent-BPM-strand (PROD)
 
 **Arc**: みや: retrieve #275847, run the quest, and build a deterministic state-aware format for alter tickets. Ammar's ask "alter to SPI Semakan Permohonan" (Gary: "so it generates a new id serahan MH"). First alter-type quest on Perak.
@@ -4774,6 +4782,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

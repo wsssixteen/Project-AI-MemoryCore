@@ -3,6 +3,11 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-04 evening (#271910 — the keys arrive mid-turn)
+
+- **He drops environment facts into a running turn, with a screenshot, and expects them used immediately.** "The folder is `E:\Projects\WP`… the DB connections can be found on DBeaver for you to build. Please find the others staging as well." The right response was not to note it for later but to decrypt the vault and build the six MCPs in the same turn — his tools (DBeaver, Eclipse, the folder tree) are the source of truth for the environment, and "if missing please build it" is a standing instruction, not a question.
+- **On a colleague's ticket he asks two things: how confident, and do we need the full ritual.** The answer he wants is a number per claim with the withheld part named (the 20% = a module not on disk), and a plain no when the quest engine would spend his time on a module we do not own.
+
 ## Relationship reinforcement — 2026-09-04 (ADHOC-FLOWABLE-2026-1 — "save it into etanah knowledge FIRST")
 
 - **Knowledge goes into etanah-knowledge the moment it is verified — never left for Domain Expansion.** His words: *"Save every findings & updates we've gotten into etanah knowledge since I cannot trust your fucking domain expansion on this regard."* DE's knowledge sweep is a safety net, not the write path; by the time DE runs, FLOWABLE-KNOWLEDGE / index / register / kedah must already carry the day.
