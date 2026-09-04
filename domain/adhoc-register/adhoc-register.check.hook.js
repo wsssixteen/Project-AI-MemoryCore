@@ -20,21 +20,24 @@ const path = require('path');
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
 const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
 
-// The register sits with the other etanah-knowledge files. That tree is gitignored
-// (untracked-confidential) and lives on the MAIN repo working tree, not in worktrees — so
-// resolve toward the main repo when this runs from a worktree.
-const REL = path.join('projects', 'coding-projects', 'active', 'etanah-knowledge', 'melaka', 'ADHOC-REGISTER.md');
+// The register sits with the other etanah-knowledge files (gitignored, main working tree only —
+// lib/states.js knowledgeDir() is main-repo aware). state-scoped: yes — keyed by state via lib/states.js
+// (v2 2026-09-04, multi-state audit): a permohonan prefix in the prompt picks ONE state's register; a bare
+// ticket number cannot say which state, so EVERY registered state's register that exists on disk is read and
+// each row is labelled with its state. Before v2 the path was the melaka literal Rule 11 named as the example.
+const states = require(fs.existsSync(path.join(ROOT, 'lib', 'states.js')) ? path.join(ROOT, 'lib', 'states.js') : path.join(__dirname, '..', '..', 'lib', 'states.js'));
+const REL = 'etanah-knowledge/<state>/ADHOC-REGISTER.md';
 
-function registerPath() {
-  const direct = path.join(ROOT, REL);
-  if (fs.existsSync(direct)) return direct;
-  const marker = path.join('.claude', 'worktrees');
-  const idx = ROOT.indexOf(marker);
-  if (idx > 0) {
-    const viaMain = path.join(ROOT.slice(0, idx), REL);
-    if (fs.existsSync(viaMain)) return viaMain;
+function registerPaths(prompt) {
+  const r = states.resolve({ text: prompt });
+  const keys = r.state ? [r.state] : Object.values(states.all()).filter(s => s.work_scope !== 'excluded').map(s => s.key);
+  const out = [];
+  for (const k of keys) {
+    const dir = states.knowledgeDir(k);
+    const p = dir && path.join(dir, 'ADHOC-REGISTER.md');
+    if (p && fs.existsSync(p)) out.push({ state: k, path: p });
   }
-  return null;
+  return { paths: out, resolved: r.state || null };
 }
 
 const PREFIXED_RE = /\b(?:QA|FAT-OR|UAT-CR|FAT|UAT|eSOKONGAN|ESOKONGAN|REQUIREMENT|INTERNAL(?:\s+ISSUE)?)\s*#?\s*(\d{4,})\b/i;
@@ -88,36 +91,39 @@ runHook({ name: 'adhoc-register', event: 'UserPromptSubmit' }, (input) => {
     return { fired: false };
   }
 
-  const p = registerPath();
-  if (!p) {
+  const { paths, resolved } = registerPaths(prompt);
+  if (!paths.length) {
     return {
       fired: true,
       contextOut:
-        '⚠️  adhoc-register: ADHOC-REGISTER.md NOT FOUND — cannot check for a matching pending issue.\n' +
-        '   Expected at: <main-repo>\\' + REL + '\n' +
+        '⚠️  adhoc-register: ADHOC-REGISTER.md NOT FOUND' + (resolved ? ' for state ' + resolved : ' for any registered state') + ' — cannot check for a matching pending issue.\n' +
+        '   Expected at: <main-repo>/projects/coding-projects/active/' + REL + '\n' +
         '   Create it before Phase 0, or this ticket may repeat an investigation we already did.\n',
     };
   }
 
-  let rows;
-  try {
-    rows = parseOpenRows(fs.readFileSync(p, 'utf8'));
-  } catch (_) {
+  let rows = [];
+  const unreadable = [];
+  for (const reg of paths) {
+    try { rows = rows.concat(parseOpenRows(fs.readFileSync(reg.path, 'utf8')).map(r => ({ ...r, state: reg.state }))); }
+    catch (_) { unreadable.push(reg.state); }
+  }
+  if (unreadable.length) {
     return {
       fired: true,
-      contextOut: '⚠️  adhoc-register: could not read ' + REL + ' — check the pending register by hand before Phase 0.\n',
+      contextOut: '⚠️  adhoc-register: could not read ' + REL.replace('<state>', unreadable.join('|')) + ' — check the pending register by hand before Phase 0.\n',
     };
   }
 
   if (!rows.length) return { fired: false };
 
   const lines = [
-    '🔎 adhoc-register: ' + rows.length + ' ad-hoc row(s) still owed (OPEN / LATENT) — already investigated, no ticket of ours.',
+    '🔎 adhoc-register: ' + rows.length + ' ad-hoc row(s) still owed (OPEN / LATENT) — already investigated, no ticket of ours.' + (resolved ? ' [state=' + resolved + ']' : ' [state unknown from the prompt — all registers read]'),
     '   🚨 MANDATORY at Phase 0 — compare THIS ticket against every row below:',
     '',
   ];
   for (const r of rows) {
-    lines.push('   [' + r.n + '] ' + r.date + ' · asked by ' + clip(r.askedBy, 40) + ' · ' + clip(r.status, 60));
+    lines.push('   [' + r.state + ' ' + r.n + '] ' + r.date + ' · asked by ' + clip(r.askedBy, 40) + ' · ' + clip(r.status, 60));
     lines.push('       ask       : ' + clip(r.ask, 150));
     lines.push('       conclusion: ' + clip(r.conclusion, 200));
     lines.push('       evidence  : ' + r.doc);

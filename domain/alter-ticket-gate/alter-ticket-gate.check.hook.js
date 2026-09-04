@@ -12,12 +12,15 @@
 // NOD: miya 2026-09-04 — "build a format for deterministic replying to alter type tickets ... include it into our
 //   Quest workflow when detecting the solution as flowable type ... just like we loaded other things by layers".
 //
-// state-scoped: YES — keyed by state (melaka|perak|selangor|terengganu|kedah|wp) via STATE_MAP below.
+// state-scoped: YES — keyed by state via lib/states.js (system/states.json); the per-state alter file is the
+//   record's `flowable_alter_file`. v1.1 (2026-09-04 multi-state audit): the local STATE_MAP became a view over
+//   the registry — a new state is one registry row, never an edit here.
 'use strict';
 const fs = require('fs');
 const path = require('path');
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
 const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
+const states = require(fs.existsSync(path.join(ROOT, 'lib', 'states.js')) ? path.join(ROOT, 'lib', 'states.js') : path.join(__dirname, '..', '..', 'lib', 'states.js'));
 const LOG = path.join(__dirname, 'log.jsonl');
 
 // A worktree has no quest/active.txt and may lack projects/ (both gitignored) — fall back to the main checkout.
@@ -31,16 +34,18 @@ const KNOWLEDGE_ROOT = process.env.ALTER_GATE_KNOWLEDGE_ROOT
   || path.join(MAIN_ROOT, 'projects', 'coding-projects', 'active', 'etanah-knowledge');
 const PLAYBOOK_REL = 'projects/coding-projects/active/etanah-knowledge/ALTER-TICKET-PLAYBOOK.md';
 
-// One row per state. `file` = the state's alter mechanics file (relative to etanah-knowledge/).
-const STATE_MAP = {
-  melaka:     { prefix: 'PTMLK', folder: 'melaka',     file: 'melaka/FLOWABLE-KNOWLEDGE.md', note: '§6 five actions · §6b verify · §6c admin UI · §11.5 edge-trace' },
-  perak:      { prefix: 'PTPK',  folder: 'perak',      file: 'perak/FLOWABLE-ALTER.md',      note: 'Utility page (no one-click Init&Alter) · Oracle verify · staging BPMN dump' },
-  selangor:   { prefix: 'PTSGR', folder: 'selangor',   file: 'selangor/FLOWABLE-ALTER.md',   note: '⬜ NOT WRITTEN — derive from the playbook + oracle-slt + Selangor checkout, then write it' },
-  terengganu: { prefix: 'PTTRG', folder: 'terengganu', file: 'terengganu/FLOWABLE-ALTER.md', note: '⬜ NOT WRITTEN' },
-  kedah:      { prefix: 'PTKDH', folder: 'kedah',      file: 'kedah/FLOWABLE-ALTER.md',      note: '⬜ NOT WRITTEN' },
-  wp:         { prefix: 'PTWP',  folder: 'putrajaya',  file: 'wp/FLOWABLE-ALTER.md',         note: '⬜ NOT WRITTEN' },
+// One row per state — a VIEW over system/states.json. `file` = the state's alter mechanics file (relative to
+// etanah-knowledge/). NOTES are documentation only; the file name + prefix + folder come from the registry.
+const NOTES = {
+  melaka: '§6 five actions · §6b verify · §6c admin UI · §11.5 edge-trace',
+  perak:  'Utility page (no one-click Init&Alter) · Oracle verify · staging BPMN dump',
 };
-const FOLDER_TO_STATE = { melaka: 'melaka', perak: 'perak', selangor: 'selangor', terengganu: 'terengganu', kedah: 'kedah', putrajaya: 'wp', 'wp': 'wp', kl: 'wp' };
+const STATE_MAP = Object.fromEntries(Object.values(states.all()).map(s => [s.key, {
+  prefix: s.permohonan_prefix, folder: s.knowledge_dir, file: `${s.knowledge_dir}/${s.flowable_alter_file || 'FLOWABLE-ALTER.md'}`,
+  note: NOTES[s.key] || '⬜ NOT WRITTEN — derive from the playbook + the state DB MCP + the state checkout, then write it',
+  excluded: s.work_scope === 'excluded',
+}]));
+const FOLDER_TO_STATE = new Proxy({}, { get: (_, k) => { const s = states.get(String(k)); return s ? s.key : undefined; } });
 
 // Strong signals — page/engine vocabulary that means "alter" unambiguously.
 const ALTER_STRONG = /initiate\s*(?:&(?:amp;)?|and|\+|-)\s*alter|InitiateBPMFlowableForm|BpmAlterFlowForm|moveActivityIdTo|alter\s*flow\s*flowable|flowable\s+alter\b|alter\s+page|flowable\s+utility\s+page|initiate\s+flowable\b|on-submit\s+flowable|migrate\s+bpm\s+to\s+flowable/i;
@@ -106,14 +111,10 @@ function assistantTextOnly(tail) {
   // only assistant lines, and never the gate's own advisory (self-disarm / self-trigger guard)
   return tail.split('\n').filter(l => /"type"\s*:\s*"assistant"/.test(l) && !OWN_OUTPUT.test(l)).join('\n');
 }
+// Cascade = lib/states.js resolve(): active.txt state= → Task folder segment → permohonan prefix (texts in order).
 function resolveState(st, texts) {
-  if (st.state && FOLDER_TO_STATE[st.state.toLowerCase()]) return { state: FOLDER_TO_STATE[st.state.toLowerCase()], src: 'active.txt state=' };
-  const m = (st.task_folder || '').match(/[\\/]1\. Tasks[\\/]([^\\/]+)/i);
-  if (m && FOLDER_TO_STATE[m[1].toLowerCase()]) return { state: FOLDER_TO_STATE[m[1].toLowerCase()], src: 'Task folder ' + m[1] };
-  for (const t of texts) {
-    const id = t.match(PERMOHONAN_ID);
-    if (id) { const hit = Object.entries(STATE_MAP).find(([, v]) => v.prefix === 'PT' + id[1]); if (hit) return { state: hit[0], src: 'permohonan-ID prefix ' + id[0] }; }
-  }
+  const r = states.resolve({ activeBlock: st, text: texts.join('\n') });
+  if (r.state) return { state: r.state, src: r.src };
   return { state: 'unknown', src: 'no state evidence' };
 }
 function signalIn(text) {

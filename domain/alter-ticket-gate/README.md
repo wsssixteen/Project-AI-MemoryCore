@@ -73,3 +73,10 @@ Result at ship (2026-09-04): **20/20 green** (F2 = #275847 replay, F3 = #277926 
 ## History
 
 - 2026-09-04 v1.0 — born (#275847 Perak + #277926 Melaka). Companion knowledge: `ALTER-TICKET-PLAYBOOK.md` (new), `perak/FLOWABLE-ALTER.md` (new), Melaka §6 pointer line.
+
+
+## STATE-SCOPE (2026-09-04, multi-state audit)
+
+state-scoped: **yes — keyed by state via lib/states.js** (system/states.json). No state literal remains in the hook; a new state is one registry row. Migration verified by this Feature's own eval (green) + 
+ode lib/states.js check (this file no longer listed as UNROUTED). Spec-preservation (Rule 6 v1.2): every prior fixture kept and passing; the only behavioural change is that a non-Melaka state now resolves to ITS OWN folder/trunk instead of Melaka's.
+

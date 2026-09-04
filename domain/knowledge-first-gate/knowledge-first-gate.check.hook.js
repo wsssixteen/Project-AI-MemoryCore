@@ -22,18 +22,33 @@
 //
 // NOT "read it last session". EVERY session. A memory of a file is not the file — trusting one is
 // the resolve-by-resemblance failure this gate family exists to kill.
+//
+// v3 (2026-09-04, #275847 multi-state audit): state-scoped: yes — keyed by state via lib/states.js.
+//   The knowledge dir is resolved from the edited file's repo root (E:/Projects/<State>/…); a read of
+//   ANY registered state's knowledge folder clears the generic branch, and the flowable branch accepts
+//   the resolved state's FLOWABLE-KNOWLEDGE.md or its flowable_alter_file. Before v3 the regexes were
+//   hard-coded to melaka/, so a Perak flowable edit demanded the MELAKA doc (proposal A4).
 'use strict';
 const fs = require('fs');
 const path = require('path');
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
 const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
+const states = require(fs.existsSync(path.join(ROOT, 'lib', 'states.js')) ? path.join(ROOT, 'lib', 'states.js') : path.join(__dirname, '..', '..', 'lib', 'states.js'));
 const LOG = path.join(__dirname, 'log.jsonl');
 
 // etanah SOURCE only. Not .json/.sql/.properties — the rule is about understanding the system
 // before reading its CODE.
 const ETANAH_SRC = /[\\/]etanah-(pelupusan|common|awam|teknikal)[\\/].+\.(java|xhtml|jrxml)$/i;
-const KNOWLEDGE_READ = /etanah-knowledge[\\/]melaka[\\/][A-Za-z0-9._-]+\.md/i;
+const KNOWLEDGE_READ = states.knowledgeReadRegex();
 const BYPASS = /\[skip-knowledge-first:\s*[^\]]+\]/i;
+function stateDirLabel(fp) {
+  const r = states.resolve({ filePath: String(fp || '') });
+  return r.state ? r.record.knowledge_dir + '/' : '<state UNKNOWN from this path — ask miya which state; never default to melaka>/';
+}
+function flowableDoc(fp) {
+  const r = states.resolve({ filePath: String(fp || '') });
+  return r.state ? `${r.record.knowledge_dir}/${r.record.flowable_alter_file || 'FLOWABLE-KNOWLEDGE.md'} (or ${r.record.knowledge_dir}/FLOWABLE-KNOWLEDGE.md)` : '<state>/FLOWABLE-KNOWLEDGE.md — state UNKNOWN from this path, ask miya';
+}
 
 // v2 FLOWABLE-CHANGE intent (miya 2026-08-07, #274510): touching engine/BPMN state needs the DEEP
 // architecture doc, and a generic knowledge read must NOT clear it. Fires on: a .bpmn file edit;
@@ -41,7 +56,7 @@ const BYPASS = /\[skip-knowledge-first:\s*[^\]]+\]/i;
 const FLOWABLE_CORE_SRC = /(InitiateBPMFlowableForm|PelupusanFlowableService|CommonBPMServiceClient|FlowableTaskListener|BpmCallbackService|BpmAlterFlowForm|CommonAsyncService)\.java$/i;
 const BPMN_FILE = /\.bpmn20?\.xml$/i;
 const FLOWABLE_SQL = /\b(umm_aliran_kerja|umm_a_tgsn|umm_tgsn_semasa|act_ru_|act_hi_|act_re_procdef|process_instance_id_|proc_inst_id_|moveActivityIdTo|alterFlow)\b/i;
-const FLOWABLE_KNOWLEDGE_READ = /etanah-knowledge[\\/]melaka[\\/]FLOWABLE-KNOWLEDGE\.md/i;
+const FLOWABLE_KNOWLEDGE_READ = states.knowledgeReadRegex(/(?:FLOWABLE-KNOWLEDGE|FLOWABLE-ALTER)\.md/);
 
 function isFlowableChange(toolName, fp, ti) {
   if (BPMN_FILE.test(fp) || FLOWABLE_CORE_SRC.test(fp)) return true;
@@ -85,7 +100,7 @@ runHook({ name: 'knowledge-first-gate', event: 'PreToolUse', log: LOG }, (input)
       `   target: ${String(fp).slice(0, 160)}`,
       '',
       '   Read this FIRST (it is the reverse-engineered, engine-VERIFIED architecture), then retry:',
-      '     projects/coding-projects/active/etanah-knowledge/melaka/FLOWABLE-KNOWLEDGE.md',
+      `     projects/coding-projects/active/etanah-knowledge/${flowableDoc(fp)}`,
       '',
       '   It carries: the et_main<->et_flowable17 bridge (3 links), the column-name trap',
       '   (proc_inst_id_ vs process_instance_id_), the lifecycle, the routing variables, the',
@@ -113,7 +128,7 @@ runHook({ name: 'knowledge-first-gate', event: 'PreToolUse', log: LOG }, (input)
     '   Read one of these FIRST, then retry — the gate clears itself:',
     ...suggest(fp).map(p => `     - ${p}`),
     '',
-    '   Location: projects/coding-projects/active/etanah-knowledge/melaka/',
+    `   Location: projects/coding-projects/active/etanah-knowledge/${stateDirLabel(fp)}`,
     '',
     '   NOT "I read it last session". EVERY session. A memory of a file is not the file.',
     '   #273201: skipped 3 sessions running. PERANAN-MAP.md held the agihan hierarchy rule the',

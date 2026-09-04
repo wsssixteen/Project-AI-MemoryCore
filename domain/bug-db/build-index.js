@@ -7,8 +7,13 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const MAIN = 'C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore';
-const KNOW = path.join(MAIN, 'projects', 'coding-projects', 'active', 'etanah-knowledge', 'melaka');
+// State via lib/states.js (2026-09-04): --state <key> · ETANAH_STATE · else the reference state, echoed below.
+const states = require(path.join(__dirname, '..', '..', 'lib', 'states.js'));
+const _si = process.argv.indexOf('--state');
+const STATE_KEY = (_si > 0 ? process.argv[_si + 1] : null) || process.env.ETANAH_STATE || states.reference();
+const KNOW = states.knowledgeDir(STATE_KEY);
+if (!KNOW) { console.error('bug-db build-index: unknown state "' + STATE_KEY + '" — node lib/states.js list'); process.exit(2); }
+console.log('bug-db build-index: state = ' + STATE_KEY + ((_si > 0 || process.env.ETANAH_STATE) ? '' : ' (reference-state default — pass --state <key>)'));
 const OUT = path.join(KNOW, 'bug-db-index.jsonl');
 
 const STOP = new Set(['pattern', 'yang', 'tidak', 'pada', 'dalam', 'untuk', 'dengan', 'adalah', 'because', 'after', 'before', 'where', 'which', 'while', 'their', 'there', 'these', 'those', 'field', 'fields', 'value', 'values', 'table', 'screen', 'error', 'ralat', 'issue', 'fixed', 'never', 'always', 'when', 'then', 'that', 'this', 'from', 'into', 'only', 'null', 'blank', 'kosong', 'papar', 'salah']);
@@ -57,7 +62,7 @@ const sources = [path.join(KNOW, 'BUG-BESTIARY.md')];
 try { for (const f of fs.readdirSync(KNOW)) if (/^LEARNED-FROM-.*\.md$/i.test(f)) sources.push(path.join(KNOW, f)); } catch (_) {}
 
 let rows = [];
-for (const s of sources) rows = rows.concat(parseFile(s, 'melaka'));
+for (const s of sources) rows = rows.concat(parseFile(s, STATE_KEY));
 fs.writeFileSync(OUT, rows.map(r => JSON.stringify(r)).join('\n') + '\n');
 console.log('bug-db index: ' + rows.length + ' entries from ' + sources.length + ' source file(s) -> ' + OUT);
 process.exit(rows.length >= 15 ? 0 : 1); // fewer than 15 = parser broke, not a shrunken corpus (17 patterns at build time)

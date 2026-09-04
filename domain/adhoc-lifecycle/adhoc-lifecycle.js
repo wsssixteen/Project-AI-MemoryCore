@@ -29,24 +29,22 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = arg('root') || process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
-const STATE = (arg('state') || 'melaka').toLowerCase();
+// State via lib/states.js (2026-09-04 multi-state audit): --state <key> · ETANAH_STATE · else the registry's
+// reference state, echoed to stderr so a default is never silent.
+const statesLib = require(fs.existsSync(path.join(ROOT, 'lib', 'states.js')) ? path.join(ROOT, 'lib', 'states.js') : path.join(__dirname, '..', '..', 'lib', 'states.js'));
+const STATE_ARG = arg('state') || process.env.ETANAH_STATE;
+const STATE_REC = statesLib.get(STATE_ARG || statesLib.reference());
+if (!STATE_REC) { console.error('adhoc-lifecycle: unknown state "' + STATE_ARG + '" — node lib/states.js list'); process.exit(2); }
+const STATE = STATE_REC.knowledge_dir;
+if (!STATE_ARG) console.error('adhoc-lifecycle: state = ' + STATE_REC.key + ' (reference-state default — pass --state <key>)');
 
 function arg(name) { const i = process.argv.indexOf('--' + name); return i > 0 ? process.argv[i + 1] : undefined; }
 function has(name) { return process.argv.indexOf('--' + name) > 0; }
 
-// ---- path resolution (main-repo-aware, like adhoc-register.check.hook.js) ----
-function mainRoot() {
-  const marker = path.join('.claude', 'worktrees');
-  const idx = ROOT.indexOf(marker);
-  return idx > 0 ? ROOT.slice(0, idx) : ROOT;
-}
+// ---- path resolution (main-repo-aware via lib/states.js) ----
+function mainRoot() { return statesLib.mainRoot(ROOT); }
 function registerPath() {
-  const rel = path.join('projects', 'coding-projects', 'active', 'etanah-knowledge', STATE, 'ADHOC-REGISTER.md');
-  for (const base of [ROOT, mainRoot()]) {
-    const p = path.join(base, rel);
-    if (fs.existsSync(p)) return p;
-  }
-  return path.join(mainRoot(), rel); // canonical target even if absent (loud downstream)
+  return path.join(statesLib.knowledgeDir(STATE_REC.key, ROOT), 'ADHOC-REGISTER.md'); // canonical target even if absent (loud downstream)
 }
 function activeDir() { return path.join(mainRoot(), 'projects', 'coding-projects', 'active'); }
 function archiveDir() { return path.join(mainRoot(), 'projects', 'coding-projects', 'archive'); }

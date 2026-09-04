@@ -64,7 +64,7 @@ function extractTicketCandidates(prompt) {
     found.add(m[1]);
   }
 
-  // Pattern C: PTMLK permohonan ID (extract the year/seq as candidate)
+  // Pattern C: permohonan ID (PT<STATE>/… — any registered prefix, lib/states.js permohonanRegex)
   // Note: permohonan IDs are NOT ticket #s — keep separate, don't add as ticket candidates.
 
   return Array.from(found);
@@ -109,7 +109,7 @@ process.stdin.on('end', () => {
       lines.push(`📌 QA-${qa} — status=${state.status} · phase=${state.phase || '?'} · rework_cycle=${state.rework_cycle || 'n/a'}`);
       if (state.task_folder) {
         const inArchive = /\\Archive\\/.test(state.task_folder);
-        lines.push(`   ⬜ Confirm task folder location: ${state.task_folder}${inArchive ? '  🔴 IN ARCHIVE — propose reactivation move to active Tasks/Melaka/' : ''}`);
+        lines.push(`   ⬜ Confirm task folder location: ${state.task_folder}${inArchive ? '  🔴 IN ARCHIVE — propose reactivation move back to the active 1. Tasks/<State>/ folder (lib/states.js taskFolder)' : ''}`);
       }
       lines.push(`   ⬜ Read \`<task_folder>/1. <NNN NNN>.txt\` (legacy \`1. Notes.txt\`) — prior test data + logins (cycle-1 entries are gold for rework)`);
       lines.push(`   ⬜ Read full \`<task_folder>/0. Brief/History.txt\` — BA's complete journal (not just tail)`);

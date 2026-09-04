@@ -74,3 +74,10 @@ and my row appended as `A6`. Logged as `overwrote-concurrent-session-work`.
 
 **The standing lesson**: in a gitignored tree, absence on my view is not absence in fact. Check the
 sibling worktrees before creating a file a concurrent session may already own.
+
+
+## STATE-SCOPE (2026-09-04, multi-state audit)
+
+state-scoped: **yes — keyed by state via lib/states.js** (system/states.json). No state literal remains in the hook; a new state is one registry row. Migration verified by this Feature's own eval (green) + 
+ode lib/states.js check (this file no longer listed as UNROUTED). Spec-preservation (Rule 6 v1.2): every prior fixture kept and passing; the only behavioural change is that a non-Melaka state now resolves to ITS OWN folder/trunk instead of Melaka's.
+

@@ -1,0 +1,14 @@
+{
+  "_comment": "Copy to system/states.local.json (gitignored). Same shape as system/states.json; deep-merged over it by lib/states.js. Holds what must never reach the public repo: hosts, IPs, URLs, machine-local roots. Credentials NEVER go here either — they stay in the untracked etanah-knowledge/<state>/ file the record points at.",
+  "tasks_root_override": null,
+  "states": {
+    "melaka": {
+      "hosts": { "prod_cas": "https://<prod-host>/etanah-cas", "stg_cas": "https://<stg-host>/etanah-cas", "mlit_cas": "https://<mlit-host>/etanah-cas" }
+    },
+    "perak": {
+      "hosts": { "prod": "https://<prod-host>", "staging": "https://<staging-host>" },
+      "flowable_alter_page": "/etanah-pelupusan/protected/flowable/InitiateBPMFlowableForm.xhtml",
+      "credentials_pointer": "etanah-knowledge/perak/FLOWABLE-ALTER.md §1"
+    }
+  }
+}

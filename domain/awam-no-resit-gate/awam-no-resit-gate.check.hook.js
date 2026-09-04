@@ -73,6 +73,9 @@ runHook({ name: 'awam-no-resit-gate', event: 'Stop' }, (input) => {
   if (NO_RESIT_RE.test(text)) return { fired: true, blocked: false };
 
   const urusan = hit.join('/');
+  // state from the hand-back text (permohonan prefix) via lib/states.js — never assume melaka (2026-09-04)
+  let stateDir = '<state>';
+  try { const r = require(path.join(ROOT, 'lib', 'states.js')).resolve({ text }); if (r.state) stateDir = r.record.knowledge_dir; } catch (_) {}
   return {
     fired: true,
     blocked: true,
@@ -81,7 +84,7 @@ runHook({ name: 'awam-no-resit-gate', event: 'Stop' }, (input) => {
       `   ${urusan} starts at CarianRasmiHakmilikForm — みや cannot open the permohonan without a receipt,\n` +
       `   and BA almost never puts one in the ticket. It is DERIVABLE from the DB in one query.\n\n` +
       `   Fix before stopping:\n` +
-      `     1. Derive it — etanah-knowledge/melaka/TEST-PERMOHONAN-INDEX.md § "No Resit Carian Rasmi"\n` +
+      `     1. Derive it — etanah-knowledge/${stateDir}/TEST-PERMOHONAN-INDEX.md § "No Resit Carian Rasmi"\n` +
       `        (V1-V7 validations + ready query; receipt must be < 6 months old and unused for that hakmilik)\n` +
       `     2. Write it into the Task notes file:\n` +
       `        node quest/notes.js --folder "<Task folder>" --qa <n> --env <env> --urusan ${hit[0]} \\\n` +

@@ -5,17 +5,16 @@
 //         PROPOSE-ONLY — never moves files itself.
 // WHY boot-not-DE (system-design Rule 8): boot ALWAYS fires; Domain Expansion only fires if invoked,
 //         so a DE-triggered sweep silently skips on sessions that never wrap. miya 2026-08-19.
-// STATE-SCOPE (system-design Rule 11): state-scoped: YES, keyed by <state> — melaka register only for now.
+// STATE-SCOPE (system-design Rule 11): state-scoped: YES, keyed by state via lib/states.js — every registered
+//   state's ADHOC-REGISTER.md on disk is swept (v2 2026-09-04, multi-state audit; v1 was melaka-only).
 'use strict';
 const fs = require('fs');
 const path = require('path');
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
 const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
+const states = require(fs.existsSync(path.join(ROOT, 'lib', 'states.js')) ? path.join(ROOT, 'lib', 'states.js') : path.join(__dirname, '..', '..', 'lib', 'states.js'));
 
-const STATE = 'melaka';
 const GUARD = path.join(__dirname, '.last-sweep-week');
-
-function mainRoot() { const m = path.join('.claude', 'worktrees'); const i = ROOT.indexOf(m); return i > 0 ? ROOT.slice(0, i) : ROOT; }
 function isoWeek(d) {
   const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
   const day = (t.getUTCDay() + 6) % 7; t.setUTCDate(t.getUTCDate() - day + 3);
@@ -31,18 +30,21 @@ runHook({ name: 'adhoc-lifecycle', event: 'SessionStart' }, () => {
   try { last = fs.readFileSync(GUARD, 'utf8').trim(); } catch (_) {}
   if (last === week) return { fired: false }; // already surfaced this week
 
-  const regFile = path.join(mainRoot(), 'projects', 'coding-projects', 'active', 'etanah-knowledge', STATE, 'ADHOC-REGISTER.md');
-  let terminalRows = 0; const sample = [];
-  try {
-    const md = fs.readFileSync(regFile, 'utf8');
-    const TERMINAL = /\b(ANSWERED|OWNED-ELSEWHERE|TICKETED|RESOLVED)\b/;
+  let terminalRows = 0; const sample = []; let readAny = false;
+  const TERMINAL = /\b(ANSWERED|OWNED-ELSEWHERE|TICKETED|RESOLVED)\b/;
+  for (const s of Object.values(states.all())) {
+    const dir = states.knowledgeDir(s.key);
+    const regFile = dir && path.join(dir, 'ADHOC-REGISTER.md');
+    let md; try { md = fs.readFileSync(regFile, 'utf8'); } catch (_) { continue; } // no register for this state → skip
+    readAny = true;
     for (const line of md.split(/\r?\n/)) {
       const t = line.trim();
       if (!/^\|\s*[A-Z]?\d+\s*\|/.test(t)) continue;
       const cells = t.split('|').slice(1, -1).map(c => c.trim());
-      if (cells.length >= 7 && TERMINAL.test(cells[6])) { terminalRows++; if (sample.length < 4) sample.push(cells[0]); }
+      if (cells.length >= 7 && TERMINAL.test(cells[6])) { terminalRows++; if (sample.length < 4) sample.push(s.key + ':' + cells[0]); }
     }
-  } catch (_) { return { fired: false }; } // no register in this tree → silent
+  }
+  if (!readAny) return { fired: false }; // no register in this tree → silent
 
   try { fs.writeFileSync(GUARD, week); } catch (_) {} // stamp once/week regardless of action
 

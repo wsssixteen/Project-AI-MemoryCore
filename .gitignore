@@ -89,3 +89,6 @@ etanah_atlas/lib/__pycache__/
 etanah_atlas/config/states.*.json
 !etanah_atlas/config/states.example.json
 etanah_atlas/checks/
+
+# lib/states.js overlay — hosts/URLs/machine-local roots, never for the public repo (states.local.example.json is the tracked shape)
+system/states.local.json

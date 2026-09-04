@@ -4,8 +4,11 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const MAIN = 'C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore';
-const INDEX = path.join(MAIN, 'projects', 'coding-projects', 'active', 'etanah-knowledge', 'melaka', 'bug-db-index.jsonl');
+// State via lib/states.js (2026-09-04): --state <key> · ETANAH_STATE · else the reference state (echoed by callers).
+const states = require(path.join(__dirname, '..', '..', 'lib', 'states.js'));
+const _si = process.argv.indexOf('--state');
+const STATE_KEY = (_si > 0 ? process.argv[_si + 1] : null) || process.env.ETANAH_STATE || states.reference();
+const INDEX = path.join(states.knowledgeDir(STATE_KEY) || '', 'bug-db-index.jsonl');
 
 function tokensOf(text) {
   const t = new Set();

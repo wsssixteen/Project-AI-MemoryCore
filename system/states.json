@@ -1,0 +1,165 @@
+{
+  "_comment": "THE state registry (single source, tracked, worktree-safe). Every hook / skill / script that touches a per-state thing — Task folder, etanah-knowledge dir, repo root, trunk branch, DB MCP, permohonan prefix, BPMN key prefix, Redmine project — resolves it through lib/states.js, never a literal. Add a state = one record here + `node lib/states.js validate <key>`; remove = `node lib/states.js remove <key>`. Hosts / IPs / URLs live in system/states.local.json (gitignored overlay, same shape, deep-merged) — never here. Facts marked `_unverified` are structure copied from the reference state and must be confirmed against a real source before a tool relies on them.",
+  "version": 1,
+  "updated": "2026-09-04",
+  "reference_state": "melaka",
+  "tasks_root": "OneDrive - Pymsoft Sdn Bhd/1. Tasks",
+  "repos_root": "E:/Projects",
+  "knowledge_root": "projects/coding-projects/active/etanah-knowledge",
+  "work_scope_values": {
+    "active": "we work tickets on it — full quest",
+    "scaffold": "knowledge folder scaffolded, no tickets yet — resolve, never assume facts",
+    "excluded": "HARD EXCLUDED from our work (CLAUDE.md TRG guardrail) — tools must refuse, never route"
+  },
+  "states": {
+    "melaka": {
+      "label": "Melaka",
+      "code": "MLK",
+      "aliases": ["Melaka", "MLK", "mlk"],
+      "permohonan_prefix": "PTMLK",
+      "work_scope": "active",
+      "task_folder": "Melaka",
+      "knowledge_dir": "melaka",
+      "repo_dir": "Melaka",
+      "modules": {
+        "pelupusan":  { "repo": "etanah-pelupusan",  "trunk": "mlk/master" },
+        "awam":       { "repo": "etanah-awam",       "trunk": "mlk/master" },
+        "common":     { "repo": "etanah-common",     "trunk": "mlk/master" },
+        "spoc-hasil": { "repo": "etanah-spoc-hasil", "trunk": "master" }
+      },
+      "branch_prefix": "mlk",
+      "ticket_branch": "mlk/<tracker>/<num>",
+      "bpmn": { "prefix": "MLK", "root_module": "PLP" },
+      "db": {
+        "engine": "postgres",
+        "mcp": { "mlit": "postgres-mlit-pg", "stg": "postgres-mlkstg-pg", "stg1": "postgres-mlkstg1-pg", "prod": "postgres-mlkprod-pg" },
+        "schemas": { "mlit": "et_main_mlit", "stg1": "et_main_stg1", "stg2": "et_main_stg2", "prod": "et_main" },
+        "primary_env": "mlit"
+      },
+      "redmine": { "project": "helpdesk_melaka", "project_names": ["eSOKONGAN MELAKA"] },
+      "flowable_alter_file": "FLOWABLE-KNOWLEDGE.md",
+      "local_server": { "jboss_home": "E:/Dev/jboss-7.4-plp-melaka", "deployed_wars": ["etanah-pelupusan", "etanah-awam"] },
+      "state_only_tools": ["release-mlk-plp", "release-mlk-plp-ask", "release-mlk-plp-push-gate", "release-mlk-plp-scope-gate", "deploy", "env-check", "env-switch", "staging-schema-check", "staging-schema-tracker", "patch-mlk-doc", "local-deploy-gate"]
+    },
+    "perak": {
+      "label": "Perak",
+      "code": "PRK",
+      "aliases": ["Perak", "PRK", "prk"],
+      "permohonan_prefix": "PTPK",
+      "work_scope": "active",
+      "task_folder": "Perak",
+      "knowledge_dir": "perak",
+      "repo_dir": "Perak",
+      "modules": {
+        "pelupusan":  { "repo": "etanah-pelupusan",  "trunk": "master" },
+        "awam":       { "repo": "etanah-awam",       "trunk": "master" },
+        "common":     { "repo": "etanah-common",     "trunk": "master" },
+        "spoc-hasil": { "repo": "etanah-spoc-hasil", "trunk": "master" }
+      },
+      "branch_prefix": "prk",
+      "ticket_branch": "prk/internal/<num>",
+      "staging_branch": "prk/stag-env",
+      "bpmn": { "prefix": "PRK", "root_module": "PLP" },
+      "db": {
+        "engine": "oracle",
+        "mcp": { "dev": "oracle-prk-dev", "stag": "oracle-prk-denda", "prod": "oracle-prk-prod" },
+        "schemas": { "prod": "ET_MAIN", "dev": "ET_MAIN_PERAK_DEV", "engine_stag": "ET_FLOWABLE_STAG" },
+        "primary_env": "prod"
+      },
+      "redmine": { "project": null, "project_names": ["eSOKONGAN PERAK"], "_unverified": "project identifier not read from the API yet" },
+      "flowable_alter_file": "FLOWABLE-ALTER.md",
+      "local_server": null
+    },
+    "wp": {
+      "label": "Wilayah Persekutuan",
+      "code": "WP",
+      "aliases": ["WP", "Putrajaya", "KL", "Kuala Lumpur", "Labuan", "Wilayah Persekutuan"],
+      "permohonan_prefix": "PTWP",
+      "_unverified": "permohonan prefix",
+      "work_scope": "active",
+      "task_folder": "Putrajaya",
+      "knowledge_dir": "wp",
+      "repo_dir": "KL",
+      "modules": {
+        "pelupusan":       { "repo": "etanah-pelupusan",            "trunk": "master" },
+        "common":          { "repo": "etanah-common",               "trunk": "master" },
+        "awam-spoc-hasil": { "repo": "etanah-awam-spoc-hasil",      "trunk": "master" }
+      },
+      "branch_prefix": null,
+      "ticket_branch": null,
+      "bpmn": { "prefix": "WP", "root_module": "PLP" },
+      "db": { "engine": "oracle", "mcp": { "prod": "oracle-wp" }, "schemas": {}, "primary_env": "prod" },
+      "redmine": { "project": null, "project_names": [] },
+      "flowable_alter_file": "FLOWABLE-ALTER.md",
+      "local_server": null
+    },
+    "selangor": {
+      "label": "Selangor",
+      "code": "SGR",
+      "aliases": ["Selangor", "SGR", "sgr"],
+      "permohonan_prefix": "PTSGR",
+      "_unverified": "permohonan prefix",
+      "work_scope": "scaffold",
+      "task_folder": null,
+      "knowledge_dir": "selangor",
+      "repo_dir": "Selangor",
+      "modules": {
+        "pelupusan":  { "repo": "etanah-pelupusan",  "trunk": "sgr/master" },
+        "awam":       { "repo": "etanah-awam",       "trunk": "sgr/master" },
+        "common":     { "repo": "etanah-common",     "trunk": "sgr/master" },
+        "spoc-hasil": { "repo": "etanah-spoc-hasil", "trunk": "sgr/master" }
+      },
+      "branch_prefix": "sgr",
+      "ticket_branch": null,
+      "bpmn": { "prefix": "SGR", "root_module": "PLP" },
+      "db": { "engine": "oracle", "mcp": { "slt": "oracle-slt" }, "schemas": {}, "primary_env": "slt" },
+      "redmine": { "project": null, "project_names": [] },
+      "flowable_alter_file": "FLOWABLE-ALTER.md",
+      "local_server": null
+    },
+    "kedah": {
+      "label": "Kedah",
+      "code": "KDH",
+      "aliases": ["Kedah", "KDH", "kdh"],
+      "permohonan_prefix": "PTKDH",
+      "_unverified": "permohonan prefix; no local repo checkout (remote branch kdh/master exists on common + pelupusan)",
+      "work_scope": "scaffold",
+      "task_folder": null,
+      "knowledge_dir": "kedah",
+      "repo_dir": null,
+      "modules": {},
+      "branch_prefix": "kdh",
+      "ticket_branch": null,
+      "bpmn": { "prefix": "KDH", "root_module": "PLP" },
+      "db": { "engine": null, "mcp": {}, "schemas": {}, "primary_env": null },
+      "redmine": { "project": null, "project_names": [] },
+      "flowable_alter_file": "FLOWABLE-ALTER.md",
+      "local_server": null
+    },
+    "terengganu": {
+      "label": "Terengganu",
+      "code": "TRG",
+      "aliases": ["Terengganu", "TRG", "trg"],
+      "permohonan_prefix": "PTTRG",
+      "_unverified": "permohonan prefix",
+      "work_scope": "excluded",
+      "work_scope_note": "CLAUDE.md TRG guardrail — HARD EXCLUDED from our work; a fix that would touch TRG code paths must stop and surface",
+      "task_folder": null,
+      "knowledge_dir": "terengganu",
+      "repo_dir": "Terengganu",
+      "modules": {
+        "pelupusan":  { "repo": "etanah-pelupusan",  "trunk": "trg/master" },
+        "awam":       { "repo": "etanah-awam",       "trunk": "trg/master" },
+        "common":     { "repo": "etanah-common",     "trunk": "trg/master" },
+        "spoc-hasil": { "repo": "etanah-spoc-hasil", "trunk": "trg/master" }
+      },
+      "branch_prefix": "trg",
+      "ticket_branch": null,
+      "bpmn": { "prefix": "TRG", "root_module": "PLP" },
+      "db": { "engine": null, "mcp": {}, "schemas": {}, "primary_env": null },
+      "redmine": { "project": null, "project_names": [] },
+      "flowable_alter_file": "FLOWABLE-ALTER.md",
+      "local_server": null
+    }
+  }
+}

@@ -320,6 +320,20 @@ try {
   }
 } catch (e) { /* swallow */ }
 
+// CHECK 7 — state-literal drift (lib/states.js, 2026-09-04 multi-state audit): harness code that still
+// hard-codes a state (melaka/ · PTMLK · mlk/master · 1. Tasks\Melaka · E:\Projects\Melaka · helpdesk_melaka)
+// instead of resolving through system/states.json. Count only — the list is `node lib/states.js check`.
+try {
+  const c = require(path.join(REPO_ROOT, 'lib', 'states.js')).check({ root: REPO_ROOT });
+  if (c.summary.unrouted > 0) invFindings.push(`ℹ STATE-LITERAL drift: ${c.summary.unrouted} file(s) / ${c.summary.sites} site(s) still hard-code a state instead of lib/states.js → node lib/states.js check`);
+} catch (e) { invFindings.push('ℹ STATE-LITERAL check unavailable: ' + e.message); }
+// CHECK 8 — root layout vs system/FOLDER-STRUCTURE.md (the allow-list is the rule; a row is the nod).
+try {
+  const r = require(path.join(REPO_ROOT, 'lib', 'folder-structure.js')).check({ root: REPO_ROOT });
+  if (r.orphans.length) invFindings.push(`⚠ ROOT ORPHANS (${r.orphans.length}) not in system/FOLDER-STRUCTURE.md: ${r.orphans.join(', ')} → add a row (the row is the nod) or remove the entry`);
+  if (r.pending.length) invFindings.push(`ℹ root entries awaiting みや's verdict (FOLDER-STRUCTURE.md orphan table): ${r.pending.join(', ')}`);
+} catch (e) { invFindings.push('ℹ folder-structure check unavailable: ' + e.message); }
+
 // Append invariant findings to main findings
 if (invFindings.length > 0) {
   findings.push(''); // separator

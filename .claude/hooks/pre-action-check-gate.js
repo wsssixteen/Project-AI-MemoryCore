@@ -87,7 +87,14 @@ process.stdin.on('end', () => {
     // `node quest/notes.js`. Direct Write/Edit hand-writing drifts the locked 3-line format
     // (banned per quest-protocol.md:421). notes.js writes via Node fs through Bash, bypassing this
     // Edit|Write tool gate — so this deny ONLY catches direct hand-writes, never notes.js itself.
-    if (/1\.\s?Tasks[\\/]Melaka[\\/].*[\\/]1\.\s[^\\/]*\.txt$/i.test(filePath)) {
+    // Task folders of EVERY registered state (1. Tasks\Melaka | Perak | Putrajaya …) — lib/states.js (2026-09-04).
+    let TASK_FOLDER_RX = /1\.\s?Tasks[\\/][^\\/]+/i;
+    try {
+      const st = require(path.join(__dirname, '..', '..', 'lib', 'states.js'));
+      const names = Object.values(st.all()).map(s => s.task_folder).filter(Boolean).map(n => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+      if (names.length) TASK_FOLDER_RX = new RegExp('1\\.\\s?Tasks[\\\\/](?:' + names.join('|') + ')', 'i');
+    } catch (_) {}
+    if (new RegExp(TASK_FOLDER_RX.source + '[\\\\/].*[\\\\/]1\\.\\s[^\\\\/]*\\.txt$', 'i').test(filePath)) {
       const reason = [
         '🚫 Notes file is tool-generated — do NOT Write/Edit it directly.',
         `   File: ${filePath}`,
@@ -124,7 +131,7 @@ process.stdin.on('end', () => {
             '🚫 deliverable-in-quest-folder: the quest folder holds ONE file — QA-<NNN>.md.',
             `   File: ${filePath}`,
             '   Anything miya opens or uploads to Redmine (report / script / doc / evidence) goes to the',
-            '   Task folder ONLY:  1. Tasks\\Melaka\\<n>. <ticket>\\2. Fix\\   or   \\3. Rework\\',
+            '   Task folder ONLY:  1. Tasks\\<State>\\<n>. <ticket>\\2. Fix\\   or   \\3. Rework\\',
             '   Need a copy for yourself? Make it in the Task folder too — never here.',
             '   Findings / reasoning / pointers → QA-<NNN>.md. Bypass (legacy quests): [skip-canonical-doc: <reason>]',
           ].join('\n');
@@ -142,7 +149,7 @@ process.stdin.on('end', () => {
 
     // Quest-related path patterns
     const questPatterns = [
-      /1\.\s?Tasks[\\/]Melaka/i,
+      TASK_FOLDER_RX,
       /projects[\\/]coding-projects[\\/]active[\\/]QA-/i,
       /quest[\\/]active\.txt/i,
       /etanah-pelupusan[\\/]src/i,

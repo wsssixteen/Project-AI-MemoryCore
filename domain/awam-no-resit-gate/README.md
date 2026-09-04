@@ -40,3 +40,10 @@ node domain/awam-no-resit-gate/awam-no-resit-gate.eval.js
 ## History
 
 - 2026-07-22 — created per みや `/goal` item 4 after #271721. Replaces a rule that had lived as CLAUDE.md prose since 2026-07-20 with a parked (never-built) `ticket-gate.js` row. Born via `core/forge.js new check`.
+
+
+## STATE-SCOPE (2026-09-04, multi-state audit)
+
+state-scoped: **yes — keyed by state via lib/states.js** (system/states.json). No state literal remains in the hook; a new state is one registry row. Migration verified by this Feature's own eval (green) + 
+ode lib/states.js check (this file no longer listed as UNROUTED). Spec-preservation (Rule 6 v1.2): every prior fixture kept and passing; the only behavioural change is that a non-Melaka state now resolves to ITS OWN folder/trunk instead of Melaka's.
+

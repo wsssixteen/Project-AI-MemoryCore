@@ -36,11 +36,13 @@ Workflow({ name: 'quest-phase0', args: {
   ticketType,              // bug | enhancement | template | cr
   depth,                   // 'full' for bugs (adversarial Verify) | 'quick' otherwise; みや can override "deep"/"quick"
   protocolPath: 'quest/quest-protocol.md',
-  knowledgeDir: 'projects/coding-projects/active/etanah-knowledge/melaka',
+  knowledgeDir,            // `node lib/states.js show <state>` → knowledge_dir_abs — NEVER a literal (2026-09-04 multi-state audit)
   qaDocPath,               // projects/coding-projects/active/QA-<num>/QA-<num>.md
-  dbMcp                    // mcp__postgres-mlkuat__query | mcp__postgres-mlkfat__query — per ticket Env
+  dbMcp                    // `node lib/states.js show <state>` → db.mcp[<env>] (Melaka = postgres-*, Perak = oracle-prk-*, WP = oracle-wp)
 } })
 ```
+
+**🏛️ STATE FIRST (2026-09-04, per みや — "cater for ALL states & even future ones").** Before deriving anything above, resolve the ticket's STATE through the registry: `node lib/states.js resolve "<Task folder path or permohonan id>"` (cascade: active.txt `state=` → Task folder `1. Tasks\<State>` → repo path → `PT<STATE>/` prefix). The record (`node lib/states.js show <key>`) carries the Task folder · knowledge dir · repo root + trunk per module · DB MCPs · BPMN key prefix · alter file. **Banned**: assuming Melaka, or typing a `melaka/` · `mlk/master` · `PTMLK` · `1. Tasks\Melaka` literal anywhere in this quest — every state literal below (the Melaka examples) reads as "the resolved state's value". `work_scope=excluded` (Terengganu) → stop and surface, never quest.
 
 - **Depth scaling** — `full` (Discovery → KnowledgeLoad → Recon → adversarial Verify → Synthesize) when `ticketType==='bug'`; `quick` (skips the adversarial fan-out) otherwise.
 - **Blast-radius by codebaseRoot** — `etanah-pelupusan` → codebase-only, **TRG BANNED** (ignored entirely). `etanah-awam` → **multi-state-aware** (other states share the portal).

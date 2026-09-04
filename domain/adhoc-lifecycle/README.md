@@ -41,3 +41,10 @@ Extracted from free text on both sides: **permohonan** (`PTMLK/…`), **aplikasi
 ## Why boot, not Domain Expansion (Rule 8)
 
 Boot ALWAYS fires; DE only fires if invoked. A DE-triggered sweep silently skips on sessions that never wrap. The hook guards to once per ISO week via `.last-sweep-week` (runtime state, not committed).
+
+
+## STATE-SCOPE (2026-09-04, multi-state audit)
+
+state-scoped: **yes — keyed by state via lib/states.js** (system/states.json). No state literal remains in the hook; a new state is one registry row. Migration verified by this Feature's own eval (green) + 
+ode lib/states.js check (this file no longer listed as UNROUTED). Spec-preservation (Rule 6 v1.2): every prior fixture kept and passing; the only behavioural change is that a non-Melaka state now resolves to ITS OWN folder/trunk instead of Melaka's.
+

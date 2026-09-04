@@ -21,20 +21,23 @@ const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
 const LOG = path.join(__dirname, 'log.jsonl');
 function log(o) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), ...o }) + '\n'); } catch (_) {} }
 
-// The register sits with the other etanah-knowledge files (gitignored, main working tree only) —
-// resolve toward the main repo when running from a worktree.
-const REL = path.join('projects', 'coding-projects', 'active', 'etanah-knowledge', 'melaka', 'LATENT-BUGS.md');
+// The register sits with the other etanah-knowledge files (gitignored, main working tree only —
+// lib/states.js knowledgeDir() is main-repo aware). state-scoped: yes — keyed by state via lib/states.js
+// (v2 2026-09-04, multi-state audit): a permohonan prefix in the prompt picks ONE state's register; a bare
+// ticket number cannot say which state, so every registered state's LATENT-BUGS.md on disk is read, rows labelled.
+const states = require(fs.existsSync(path.join(ROOT, 'lib', 'states.js')) ? path.join(ROOT, 'lib', 'states.js') : path.join(__dirname, '..', '..', 'lib', 'states.js'));
+const REL = 'etanah-knowledge/<state>/LATENT-BUGS.md';
 
-function registerPath() {
-  const direct = path.join(ROOT, REL);
-  if (fs.existsSync(direct)) return direct;
-  const marker = path.join('.claude', 'worktrees');
-  const idx = ROOT.indexOf(marker);
-  if (idx > 0) {
-    const viaMain = path.join(ROOT.slice(0, idx), REL);
-    if (fs.existsSync(viaMain)) return viaMain;
+function registerPaths(prompt) {
+  const r = states.resolve({ text: prompt });
+  const keys = r.state ? [r.state] : Object.values(states.all()).filter(s => s.work_scope !== 'excluded').map(s => s.key);
+  const out = [];
+  for (const k of keys) {
+    const dir = states.knowledgeDir(k);
+    const p = dir && path.join(dir, 'LATENT-BUGS.md');
+    if (p && fs.existsSync(p)) out.push({ state: k, path: p });
   }
-  return null;
+  return { paths: out, resolved: r.state || null };
 }
 
 const PREFIXED_RE = /\b(?:QA|FAT-OR|UAT-CR|FAT|UAT|eSOKONGAN|ESOKONGAN|REQUIREMENT|INTERNAL(?:\s+ISSUE)?)\s*#?\s*(\d{4,})\b/i;
@@ -85,39 +88,42 @@ runHook({ name: 'latent-bugs-gate', event: 'UserPromptSubmit' }, (input) => {
     return { fired: false };
   }
 
-  const p = registerPath();
-  if (!p) {
-    log({ action: 'register-missing' });
+  const { paths, resolved } = registerPaths(prompt);
+  if (!paths.length) {
+    log({ action: 'register-missing', state: resolved });
     return {
       fired: true,
       contextOut:
-        '⚠️  latent-bugs-gate: LATENT-BUGS.md NOT FOUND — cannot check the pre-diagnosed bug list.\n' +
-        '   Expected at: <main-repo>\\' + REL + '\n' +
+        '⚠️  latent-bugs-gate: LATENT-BUGS.md NOT FOUND' + (resolved ? ' for state ' + resolved : ' for any registered state') + ' — cannot check the pre-diagnosed bug list.\n' +
+        '   Expected at: <main-repo>/projects/coding-projects/active/' + REL + '\n' +
         '   Create it (schema in domain/latent-bugs-gate/README.md) or this ticket may re-diagnose a known latent bug.\n',
     };
   }
 
-  let rows;
-  try {
-    rows = parseOpenRows(fs.readFileSync(p, 'utf8'));
-  } catch (_) {
-    log({ action: 'register-unreadable' });
+  let rows = [];
+  const unreadable = [];
+  for (const reg of paths) {
+    try { rows = rows.concat(parseOpenRows(fs.readFileSync(reg.path, 'utf8')).map(r => ({ ...r, state: reg.state }))); }
+    catch (_) { unreadable.push(reg.state); }
+  }
+  if (unreadable.length) {
+    log({ action: 'register-unreadable', states: unreadable });
     return {
       fired: true,
-      contextOut: '⚠️  latent-bugs-gate: could not read ' + REL + ' — check the latent-bug register by hand before Phase 0.\n',
+      contextOut: '⚠️  latent-bugs-gate: could not read ' + REL.replace('<state>', unreadable.join('|')) + ' — check the latent-bug register by hand before Phase 0.\n',
     };
   }
 
   if (!rows.length) return { fired: false };
-  log({ action: 'injected', rows: rows.map(r => r.n), prompt: prompt.slice(0, 120) });
+  log({ action: 'injected', rows: rows.map(r => r.state + ':' + r.n), prompt: prompt.slice(0, 120) });
 
   const lines = [
-    '🕳️ latent-bugs-gate: ' + rows.length + ' pre-diagnosed latent bug(s) on the register (SUSPECT/VERIFIED).',
+    '🕳️ latent-bugs-gate: ' + rows.length + ' pre-diagnosed latent bug(s) on the register (SUSPECT/VERIFIED).' + (resolved ? ' [state=' + resolved + ']' : ' [state unknown from the prompt — all registers read]'),
     '   🚨 MANDATORY at Phase 0 — compare THIS ticket\'s symptom/screen against every row below:',
     '',
   ];
   for (const r of rows) {
-    lines.push('   [' + r.n + '] ' + r.date + ' · ' + clip(r.family, 50) + ' · ' + clip(r.status, 20));
+    lines.push('   [' + r.state + ' ' + r.n + '] ' + r.date + ' · ' + clip(r.family, 50) + ' · ' + clip(r.status, 20));
     lines.push('       where  : ' + clip(r.where, 150));
     lines.push('       screen : ' + clip(r.screen, 100));
     lines.push('       symptom: ' + clip(r.symptom, 180));

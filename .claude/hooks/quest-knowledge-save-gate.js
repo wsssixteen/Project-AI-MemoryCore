@@ -24,7 +24,8 @@ const path = require('path');
 
 const projectRoot = path.join(__dirname, '..', '..');
 const activePath = path.join(projectRoot, 'quest', 'active.txt');
-const knowledgeDir = path.join(projectRoot, 'projects', 'coding-projects', 'active', 'etanah-knowledge', 'melaka');
+// State-routed (2026-09-04, lib/states.js): the knowledge dir named in the nudge is the active quest's state.
+let statesLib = null; try { statesLib = require(path.join(projectRoot, 'lib', 'states.js')); } catch (_) {}
 const logPath = path.join(projectRoot, 'Feature', 'Forge-Self-Improvement-System', 'quest-knowledge-save-log.jsonl');
 
 // Category → etanah-knowledge file (mirrors DE Step-7 sweep table).
@@ -50,7 +51,7 @@ const PHASE_EMIT_RX = /Scout emit|Recon emit|Rubric emit|Recon Context Re-load|Q
 const HANDBACK_RX = /▶ YOUR MOVE|YOUR MOVE —|Waiting on you for|hand-?back/i;
 
 // Phrases that mean Ruri already persisted this turn → don't nag.
-const ALREADY_SAVED_RX = /saved to|wrote to|appended to|written into|→ (DATABASE|MODULE-ARCHITECTURE|JSF-WIRING|FLOWABLE-WORKFLOWS|DOMAIN-GLOSSARY|BUG-BESTIARY|DEFERRED-CRITICAL|TEST-PERMOHONAN|FRONTEND-PATTERNS|URUSAN-FLOW|PERANAN-MAP|QA-\d+)\.md|updated QA-\d+\.md|etanah-knowledge\/melaka\//;
+const ALREADY_SAVED_RX = /saved to|wrote to|appended to|written into|→ (DATABASE|MODULE-ARCHITECTURE|JSF-WIRING|FLOWABLE-WORKFLOWS|DOMAIN-GLOSSARY|BUG-BESTIARY|DEFERRED-CRITICAL|TEST-PERMOHONAN|FRONTEND-PATTERNS|URUSAN-FLOW|PERANAN-MAP|QA-\d+)\.md|updated QA-\d+\.md|etanah-knowledge\/[a-z]+\//;
 
 function getActiveQuest() {
   try {
@@ -64,7 +65,9 @@ function getActiveQuest() {
       const phase = (block.match(/^current_phase=(\S+)/m) || [])[1] || (block.match(/^phase=(\S+)/m) || [])[1];
       const qaDoc = (block.match(/^qa_doc=(.+)$/m) || [])[1];
       const scope = (block.match(/^(?:scope|env|urusan)=(.+)$/m) || [])[1];
-      return { qa, phase: phase || '?', qaDoc: qaDoc ? qaDoc.trim() : null, scope: scope ? scope.trim() : '' };
+      let stateDir = '<state>';
+      try { const r = statesLib && statesLib.resolve({ activeBlock: block }); if (r && r.state) stateDir = r.record.knowledge_dir; } catch (_) {}
+      return { qa, phase: phase || '?', qaDoc: qaDoc ? qaDoc.trim() : null, scope: scope ? scope.trim() : '', stateDir };
     }
     return null;
   } catch (e) { return null; }
@@ -101,7 +104,7 @@ process.stdin.on('end', () => {
     const table = CATEGORY_TABLE.map(([k, f]) => `     ${f.padEnd(34)} ← ${k}`).join('\n');
     process.stderr.write(
 `\n📚 quest-knowledge-save: ${active.qa} (phase ${active.phase}) surfaced a finding this turn — persist it before it's lost.
-   DURABLE codebase knowledge → the matching etanah-knowledge/melaka file:
+   DURABLE codebase knowledge → the matching etanah-knowledge/${active.stateDir} file:
 ${table}
    QUEST-specific detail → ${qaDocPath}
    (warn-only — if nothing durable surfaced, ignore. Say what you saved to silence next turn.)\n`);

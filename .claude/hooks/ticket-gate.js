@@ -75,19 +75,18 @@ function readQAState(qaNum) {
   return state;
 }
 
-// ── State-aware knowledge dir (added 2026-09-04, miya /goal: same layout across states) ──
-// active.txt carries `state=<Name>` (redmine-sync v9: Perak / Putrajaya / …); the permohonan prefix in the
-// one-liner is the fallback. Resolved through etanah-knowledge/KNOWLEDGE-SCHEMA.json (aliases + prefixes) so
-// a new state needs ONE schema row, never an edit here. Default = melaka (the reference state).
+// ── State-aware knowledge dir (2026-09-04, miya /goal: same layout across states; v2 same day, multi-state audit) ──
+// Resolved through lib/states.js (system/states.json — tracked, so it exists in every worktree): active.txt
+// `state=` → task_folder segment (1. Tasks\<State>) → permohonan prefix in the one-liner. A new state is ONE
+// registry row, never an edit here. NEVER a silent default: v1 fell back to melaka whenever projects/ was absent
+// (= every worktree), which routed Perak tickets to the Melaka knowledge — the row now says UNKNOWN out loud.
 function knowledgeDirFor(state) {
-  let dir = null;
   try {
-    const ksa = require(path.join(projectRoot, 'domain', 'knowledge-schema-audit', 'knowledge-schema-audit.js'));
-    const schema = ksa.loadSchema(ksa.knowledgeRoot());
-    dir = ksa.stateDirFor(state.state, schema);
-    if (!dir) { const m = (state.issue_one_liner || '').match(/\bPT[A-Z]{2,4}\//); if (m) dir = ksa.stateDirFor(m[0].replace('/', ''), schema); }
-  } catch (e) { /* schema unavailable (worktree without projects/) → melaka */ }
-  return 'etanah-knowledge/' + (dir || 'melaka') + '/';
+    const states = require(path.join(projectRoot, 'lib', 'states.js'));
+    const r = states.resolve({ activeBlock: state, text: `${state.issue_one_liner || ''} ${state.subject || ''}` });
+    if (r.state) return 'etanah-knowledge/' + r.record.knowledge_dir + '/';
+    return 'etanah-knowledge/<STATE UNKNOWN — active.txt has no state=, Task folder is not under 1. Tasks\\<State>, no PT<STATE>/ id in the one-liner: ASK miya, never assume melaka>/';
+  } catch (e) { return 'etanah-knowledge/<registry unavailable: ' + e.message + '>/'; }
 }
 
 // ── AWAM No-Resit detection (added 2026-07-22, #271721) ──────────────────────

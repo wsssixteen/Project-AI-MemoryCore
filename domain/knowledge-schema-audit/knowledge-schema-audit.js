@@ -31,8 +31,19 @@ function knowledgeRoot(rootOverride) {
   const base = rootOverride ? path.resolve(rootOverride) : mainRoot(ROOT);
   return path.join(base, 'projects', 'coding-projects', 'active', 'etanah-knowledge');
 }
+// The per-state records live in system/states.json (lib/states.js) since 2026-09-04 — the schema file carries only
+// the FILE LAYOUT. A schema that still ships its own `states` object (eval sandboxes, old copies) is honoured as-is.
 function loadSchema(kroot) {
-  return JSON.parse(fs.readFileSync(path.join(kroot, 'KNOWLEDGE-SCHEMA.json'), 'utf8'));
+  const schema = JSON.parse(fs.readFileSync(path.join(kroot, 'KNOWLEDGE-SCHEMA.json'), 'utf8'));
+  if (!schema.states || typeof schema.states !== 'object') {
+    const states = require(fs.existsSync(path.join(ROOT, 'lib', 'states.js')) ? path.join(ROOT, 'lib', 'states.js') : path.join(__dirname, '..', '..', 'lib', 'states.js'));
+    schema.states = {};
+    for (const s of Object.values(states.all())) {
+      schema.states[s.knowledge_dir || s.key] = { code: s.code, permohonan_prefix: s.permohonan_prefix, task_folder: s.task_folder, aliases: [s.key, ...(s.aliases || [])], work_scope: s.work_scope };
+    }
+    if (!schema.reference_state) schema.reference_state = 'melaka';
+  }
+  return schema;
 }
 function logLine(row) {
   try { fs.appendFileSync(path.join(__dirname, 'log.jsonl'), JSON.stringify({ ts: new Date().toISOString(), ...row }) + '\n'); } catch (_) {}
