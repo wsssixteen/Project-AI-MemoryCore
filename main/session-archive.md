@@ -6,6 +6,74 @@
 
 ## 2026-09-02 — ADHOC MCL PTMLK/03/L/MCL/2026/4 missing-permohonan = A9 silent-BPM-strand (PROD)
 
+**Arc**: みや: retrieve #275847, run the quest, and build a deterministic state-aware format for alter tickets. Ammar's ask "alter to SPI Semakan Permohonan" (Gary: "so it generates a new id serahan MH"). First alter-type quest on Perak.
+
+**Verified (PROD `ET_MAIN` via oracle-prk-prod + code + staging engine)**: `PTPK/07/E/PSBP/2022/2` = aplikasi 8566328, Tamat/Tarik Balik 2025-10-27, 0 active tugasan → Alter Flow impossible (ID Process lists only live processes, `InitiateBPMFlowableForm.checkAplikasi():425-442`). The SPI a PSBP shows is the **SBTM sub-flow's** SPI (`PRK_PLP_PSBP.bpmn20.xml:54` callActivity → `DFT/PRK_DFT_NOTA_HKMLK` → `DFT/PRK_DFT_INTEGRASI` userTask `SPI`); proof: child `07N209/2022` `hubungan_aliran_kerja_id=377777`, born 12 min after SPI closed. The two HSPS `07MH412/413` are counter-born (`KodPemula=PEMULA_ABK`, no hubungan) → no pelupusan alter regenerates them. Initiate CAN run on a Tamat app (no status guard, `checkAplikasi():393-398`, `initPermohonan():856-869`) but deletes `umm_aliran_kerja` and copies zero variables (`PelupusanService.getFlowableVariables():19656-19666` needs a live task); re-alter into the SBTM sub-flow yields a NEW SBTM `07N…` serahan, never an MH. **Slip**: first verdict "not executable" was shipped before the SBTM-child trace — みや: "verify, do not assume, document everything" → corrected + `FLOWABLE-ALTER.md §8` worked trace.
+
+**Built**: `etanah-knowledge/ALTER-TICKET-PLAYBOOK.md` (A0–A6 rows · action table · verify signature · 3 reply formats) · `etanah-knowledge/perak/FLOWABLE-ALTER.md` 🔒 (page URL/hosts/login, 5 actions code-verified, Oracle verify SQL, BPMN sources + `dump_bpmn.py`, vocabulary traps, §8 trace, Melaka-vs-Perak matrix) · 9 Perak BPMN dumped from `ET_FLOWABLE_STAG` (another session moved them into `BGN/` `DFT/` subfolders + renamed PERAK-FACTS→STATE-FACTS) · `domain/alter-ticket-gate` (UserPromptSubmit advisory, state-routed via STATE_MAP, reminder mode; forge-born, eval 20/20, live smoke 150 ms on the 6.4 MB transcript) · memory `reference_perak_flowable_alter_page` (login pointer; password only in the untracked Perak file).
+
+**Deliverables**: reply draft in `projects/coding-projects/active/275847/QA-275847.md` §Reply (two working options: counter re-submit / un-Batal + `2. Fix\275847.sql`; re-initiate path stated with its real effect) · notes `1. 275 847.txt`. Perak alter page: `https://appspk.perak.gov.my/etanah-pelupusan/protected/flowable/InitiateBPMFlowableForm.xhtml` (STAGING = appspkstg, same path; login nurhafizah@ptsb.puncaktegap.com.my — みや types it).
+
+**Proposals logged**: A2 branch-guard blocks Read + hard-codes `mlk/master` (Perak repos on `master`/`prk/stag-env`) · A4 knowledge-first-gate flowable branch Melaka-hardcoded. **Todo Q1 added**: multi-state audit of the whole Quest/etanah workflow + `states.json` registry + folder-structure rule (みや: orphaned root folders).
+
+**Resume point**: send the reply on Redmine #275847; if Gary insists → miya logs in, Ruri drives Initiate → Alter to `SBTM (PRK_DFT_NOTA_HKMLK)` per `FLOWABLE-ALTER.md §8`. Next session = the multi-state audit (todo Q1 row). Perak pelupusan checkout sits on `prk/stag-env` — `git checkout master` before any Perak code work.
+
+## 2026-09-03 — ES #274509 (eSOKONGAN WP Putrajaya) colleague assist + WP etanah-knowledge built (FIRST WP-scope work)
+
+**Arc**: みや asked to help colleague Azam on ESOKONGAN #274509 (MLMS renewal — No Lesen prints `A3/2025/2`, should be `/1`; Azam patched 4× without it sticking). WP = Wilayah Persekutuan Putrajaya, a NEW scope (not Melaka). Source at `E:\Projects\KL\` (etanah-pelupusan/common/awam-spoc-hasil, package `my.gov.nre`, Oracle).
+
+**Diagnosis (code-VERIFIED)**: doc No Lesen = base `NO_LESEN` + "/" + `vo.getKiraanPembaharuan()` (`PelupusanReportManager.java:192-227`); value = licence CUMULATIVE `KIRAAN_PEMBAHARUAN` (not per-renewal `TURUTAN`), overwritten to record-count on save (`PelupusanCommonManager.saveRekodPembaharuanMLMS():11351`), AND baked into a STORED PDF (DMS). Two renewals of one licence → first prints wrong ordinal.
+
+**CONFIRMED (PROD)**: Azam's working patch `UPDATE ET_DMS_WPPJ.DOKUMEN_REVISION SET LOKASI_FAIL_PDF=NULL WHERE DOKUMEN_REVISION_ID=1091615` forced Borang 4Ae regen → `A3/2025/1` (screenshot `274509_PROD.png`). = my handoff's "stored PDF must regenerate". Diagnosis vindicated. Azam owns next: /2026/2.
+
+**WP knowledge built** (`etanah-knowledge/wp/`, 7 files via mandatory 10-loop + background audit): PROJECT-LOG · MODULE-ARCHITECTURE · DOMAIN-GLOSSARY · MLMS-LESEN-RENEWAL · BUG-BESTIARY · TEST-DATA-AND-ACCESS · (inherited DATABASE.md=WP-KL). Env: Oracle end-to-end, per-territory `config\{WPKL,WPL,WPPJ}\`, NegeriConfig WP_KL/WP_PJ/WP_LB.
+
+**WP DB access PROVEN** (corrected an earlier wrong "no access"): `python-oracledb` → `192.168.11.100:1521/etanah` as `et_main_stag` (creds `etanah_atlas\config\states.wp.json`); sees 17 WP schemas; readable copies (`ET_MAIN_WPPJ_DENDA` holds licence 1241) but bare `ET_MAIN_WPPJ` = ORA-00942. **`oracle-wp` MCP added** to `~/.claude.json` + permissions in settings.local.json — **restart to load**.
+
+**Security finding**: FPX RSA private keys committed in git (`etanah-common\notes\sql\data-for-fpx.sql` +2) → `wp/BUG-BESTIARY.md` S1 (verified). Awaiting みや decision to escalate.
+
+**Deliverable**: handoff `1. Tasks\Putrajaya\1. ES #274509 ...\2. Fix\Handoff ES-274509.md` (SQL corrected to real schema: tempoh links via A_LESEN_ID, no APLIKASI_ID; dates TRKH_*). Quest doc `projects\coding-projects\active\274509\QA-274509.md`.
+
+## 2026-09-02 — Baseline 1.4.1 (Pelupusan) — COMPLETE: BAQA PASSED → Phase F merged: origin/mlk/master = fae671944b (undo tag mlk/pre-master-merge/1.4.1 @ e1712bc0e7, local). Release worktree removed. #256334 dropped by BA (not in 1.4.1). Staging capaian script (PPTnKanan PRBB, azlee/kamarolzaman) handed 2026-09-02 for #274094 retest — data, not code.
+
+**What happened**: first 1.4.1 branch MISSED #274094 third fix fab13ed2 (deleted branch mlk/internal/274094v3, int-env only) — miya caught it in SourceTree. Per /goal: branch DELETED + rebuilt through NEW deterministic discovery: `domain/release-mlk-plp/discover.js` (ticket number → EVERY commit on any origin ref not in master; orphan tips become merge sources; POM-PIN / PATCH-EQUIVALENT surfaced+excluded) + `release-prep.js discover` / `set-tickets --from-discovery` / `add-ticket --sha` / **verify CONTENT-COVERAGE gate** (fails if any ticket-numbered commit on origin is absent from HEAD). Evals: `discover.eval.js` 27/27 (synthetic deleted-branch replay + real-repo fab13ed2) · eval.js 26/26 · eval-recon 19/19 · push-gate 12/12. Slip logged `baseline/completeness-miss`.
+
+**Final**: 4 tickets (#274094 incl. fab13ed2 · #276465 · #277309 · #277868 via 265537v2) · common 1.3.13-MLK → 1.5.4-MLK (8a54240f13, domain 1.0.6→1.0.8 acked, stg2 V_DOMAIN 1.0.8 ✓) · pelupusan 1.4.0 → 1.4.1 (fae671944b) · local `mvn -t toolchains compile` BUILD SUCCESS online (1.5.4-MLK pulled from Nexus) · pushed via release-prep (phase=pushed, headSha fae671944b). V6b: build log checkout SHA must equal fae671944b. Sheet: Common 1.5.4-MLK · Module 1.4.1 · Branch mlk/release/1.4.1 · SQL `#277309, 277309.sql`. Phase F (merge-to-master --ba-approved) ONLY after BAQA passes. Worktree E:/Projects/Melaka/etanah-pelupusan-rel can be removed after Phase F. **Earlier state**: isolated worktree `E:/Projects/Melaka/etanah-pelupusan-rel` (his live checkout = mlk/internal/277697, 138 dirty paths, UNTOUCHED). `mlk/release/1.4.1` LOCAL, off origin/mlk/master e1712bc0e7. Discovery plan (7 sources): mlk/CR/256334 · mlk/internal/274094 · sha fab13ed2 · mlk/internal/276465 · mlk/esokongan/277309 · mlk/qa/265537 · mlk/qa/265537v2. Excluded visible: e17c497870 POM-PIN, 633f922cb2 PATCH-EQUIVALENT. phase=verified @ 69f5ec10b9 — 6 sources merged (274094 · fab13ed2 · 276465 [pom→HEAD 1.3.13-MLK per V2 nod] · 277309 · 265537 · 265537v2); #256334 DEFERRED via `drop-ticket --reason` because its branch (Aaron 6 commits 2026-09-02) conflicts with master #263302 on `mlkMaklumatUrusanForm.xhtml` (2 hunks: rendered=!isGantiHari vs mode … or isPDBB) — Aaron should reconcile with master, then `add-ticket --ticket 256334 --branch mlk/CR/256334` → merge → verify. New cmds this session: discover · set-tickets --from-discovery · add-ticket · drop-ticket; verify has CONTENT-COVERAGE gate. Evals 33/33 (discover) · 26/26 · 19/19 · 12/12.
+
+**Open**: PROD V_DOMAIN must be 1.0.8-MLK before PROD (MCP read denied; ask Haikal/Arkan). Sheet SQL: `#277309, 277309.sql`. AWAM PLP list = khaihantan/shahrul.
+**1. System-wide coverage (Issue 1, 7000 chars)** — 4 editable surfaces, all now `maxlength=7000`:
+ · pelupusan popup `mlkUlasanJabatanTeknikalDataTable.xhtml:211` (shared composite → 4 screens auto-covered) — `6912d0023f` → int-env `633f922cb2`
+ · common utiliti `UtilitiKemaskiniUlasanJPPHForm.xhtml:291` (JT grid) + `:203` (JPPH box) — released by Arkan as etanah-common `1.5.2-MLK.beta.patch4` (`21e57a0b93`)
+ · AWAM portal `UlasanJabatanTeknikalForm.xhtml:229` (online JT officer) — `6abad84670` → int-env `4ec0f90526`
+ · REVERTED: pembangunan `bgnMaklumatTambahanUlasanJT.xhtml` (wrong module, multi-state KDH/MLK/TRG, not PT-reachable)
+ · DB: `umm_a_jabatan_teknikal.ulasan`=varchar(7000) on stg2 + mlit; `umm_p_`(255/4000) NOT used by any give-ulasan form; PROD widen owed at release.
+
+**2. Issue 2 (save flip) — common, 2022-origin NOT recent**: `UtilitiKemaskiniUlasanJPPHForm.java:530` set the ulasan COLUMN from the OLD persisted JSON (read before `:551` writes new JSON) → column lags one save; pelupusan popup reads the column (`PelupusanHelper.java:666`) → shows stale. Fix = set column from the typed value. Blame: arifin `f971b73c6e` 2022 — long-latent, exposed only when edited on utiliti AND viewed on the pelupusan popup. Released in 1.5.2-MLK.beta.patch4.
+
+**3. Deploy**: pelupusan pin bump `e17c497870` (etanah-common `1.3.9-MLK.beta.patch1`→`1.5.2-MLK.beta.patch4`, verified linear superset, +198 commits) → mlk/int-env. miya deployed pelupusan + awam, tested, passed to BA. One deploy interrupted (unzip overwrite prompt closed mid-extraction on 172.16.100.49) → clean idempotent re-run succeeded.
+
+**4. System refinements**: (a) `commit-gate.js` Check 1 → passes on (green build OR local_test_confirmed), message-approval still required; arch-doc synced. (b) `deploy/SKILL.md` prompt-value blocks upgraded plain→`bash` (Run/send button). (c) `feedback_show_diagram_for_issues.md` strengthened to MANDATORY for ANY issue explanation.
+
+**Friction (slip)**: gate-loop churn — repeated commit-gate/compile-gate/local-test blocks on trivial 1-line xhtml frustrated miya ("tiring you kept blocking yourself"); goal-hook ↔ commit-approval deadlock cycled many turns. A misrouted approval flag (wrong QA 276549 + worktree dir) needed manual repair. Root: gates tuned for .java fire identically on 1-line xhtml.
+
+**Resume point**: QA-277309 OPEN, awaiting BA final test on int-env. Pass → Phase-1/2 close + Redmine planned-release + PROD DB widen (`ALTER umm_a_jabatan_teknikal.ulasan TYPE varchar(7000)`). Common fix already released; only PROD pin bump + DB widen remain for release.
+
+---
+
+## ADHOC-PRBB-2026-4 — SPOC Perserahan Kaunter → SKM handoff (2026-09-02)
+
+**Ask**: BA "tujuan permohonan & tempoh ganti hari save kt table mana" → widened to full counter field map + why past missing-at-SKM data needed re-save + proper fix.
+
+**Root cause (verified code+flowable+STG DB)**: counter→officer handoff = the SEED `PelupusanSpocService.populateAppPermitLesen()` at the flowable Spoc Integration serviceTask (background, ~40s, before SKM). SPOC writes only `umm_aplikasi.mklmt_tmbhn`; the seed creates `umm_a_permit_lesen`. Walk-in (Route B) gaps: jenis `"1"/"2"/"3"` seeded as Baru (`:1270-1277` label-only match), Tempoh Ganti Hari saved as `tempohDipohon` never remapped, flowable `isLangkauTahun` walk-in mis-route. AWAM route (`adalahe2e`) loses nothing. Proper fix = 3 seed edits (etanah-pelupusan, mlk/master), NOT per-field page-open re-save.
+
+**Big misunderstandings corrected** (SPOC-COUNTER.md §4.6): (1) grepped STALE local etanah-spoc-hasil (Perak master) instead of `origin/mlk/stag-env`; (2) named officer READ column `umm_a_permit_lesen` as the SPOC WRITE target. Slips: verify/read-vs-write-conflation, verify/stale-branch-negative.
+
+**Saved**: SPOC-COUNTER.md §4 (rewrite) + §4.6 (misunderstandings) · LATENT-BUGS L4/L5 · ADHOC-REGISTER A25 · ADHOC-PRBB-2026-4.md · active.txt block · feedback_spoc_branch_freshness memory.
+
+**Resume**: fix ROOT-CAUSED not applied. miya nod → branch+apply 3 edits; need 1 walk-in Ganti Hari STG row to repro Route B. NOT a blanket fix (1 of 342 counter urusan; PT/PPTPB separate).
+
+## 2026-09-02 — ADHOC MCL PTMLK/03/L/MCL/2026/4 missing-permohonan = A9 silent-BPM-strand (PROD)
+
 **Arc**: BA (PDTAG, via masirah@melaka.gov.my) — MCL permohonan not on dashboard. Traced on PROD (`etprdmlk`). Concluded = **A9 recurrence** (silent BPM-submit strand), not a new mechanism → appended as A9's first PROD instance in ADHOC-REGISTER. Diagnosis-only; awaiting Redmine ticket. No scaffold created (matched A9).
 
 **Verified (live PROD primary, `pg_is_in_recovery=false`)**: apl **3401787**; 2 tugasan SKM + SPI both `Selesai`/`flag_aktif=N`; **NO active tugasan**; aplikasi frozen `Awalan` since 2026-07-03. Pengagihan semula SAMSIAH→MASIRAH 2026-08-04 (`umm_sejarah_pengagihan` 10351). masirah did SKM (16:19) then Semakan Permohonan → keputusan **Pembetulan** ("BORANG 12A TIDAK LENGKAP", ~16:33) → next step **SKM (Pembetulan)** (`flowables-bpmn\MLK_PLP_MCL.bpmn20.xml:705`) NEVER created → stranded → missing from every dashboard.
@@ -4706,6 +4774,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

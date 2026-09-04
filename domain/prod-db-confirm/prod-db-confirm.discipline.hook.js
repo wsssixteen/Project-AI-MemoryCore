@@ -38,8 +38,15 @@ const fs = require('fs');
 const path = require('path');
 const LOG = path.resolve(__dirname, 'log.jsonl');
 
-// Tool-name pattern: any pgEdge tool on the PROD MCP server
-const PROD_TOOL = /^mcp__postgres-mlkprod-pg__/;
+// Tool-name pattern: any tool on a PROD MCP server.
+//   postgres-mlkprod-pg — Melaka PROD (pgEdge, read-only et_read role)
+//   oracle-prk-prod     — Perak PROD (co-dev; DML CAPABLE — writes commit, so the
+//                         WRITE_VERB ask below is a real safety gate, not defence-in-depth)
+const PROD_TOOL = /^mcp__(postgres-mlkprod-pg|oracle-prk-prod)__/;
+const PROD_META = {
+  'postgres-mlkprod-pg': { env: 'Melaka PROD', role: 'et_read (read-only enforced at DB-user level)', host: '172.30.17.104:5444 db=etprdmlk' },
+  'oracle-prk-prod': { env: 'Perak PROD', role: 'DML-capable (writes COMMIT — not read-only)', host: 'oracle-prk-prod' },
+};
 
 // v1.1 (2026-08-05, per みや): READS no longer prompt.
 // The PROD MCP runs every statement in a READ-ONLY transaction as DB user
@@ -87,12 +94,15 @@ process.stdin.on('end', () => {
       decision: isWrite ? 'ask' : 'allow',
     });
 
+    const serverKey = (toolName.match(/^mcp__([^_]+(?:-[^_]+)*)__/) || [])[1] || '';
+    const meta = PROD_META[serverKey] || { env: 'PROD', role: 'unknown', host: serverKey };
+
     if (!isWrite) {
       process.stdout.write(JSON.stringify({
         hookSpecificOutput: {
           hookEventName: 'PreToolUse',
           permissionDecision: 'allow',
-          permissionDecisionReason: 'PROD read (et_read, read-only txn) — logged, not gated',
+          permissionDecisionReason: `${meta.env} read — logged, not gated`,
         },
       }));
       process.exit(0);
@@ -103,14 +113,14 @@ process.stdin.on('end', () => {
         hookEventName: 'PreToolUse',
         permissionDecision: 'ask',
         permissionDecisionReason: [
-          '🚨 PROD DB ACCESS — confirm intent',
+          `🚨 ${meta.env} DB WRITE — confirm intent`,
           `   Tool:  ${toolName}`,
           `   Args:  ${previewSql || '(no query/sql/table arg)'}`,
-          '   Role:  et_read (read-only enforced at DB-user level)',
-          '   Host:  172.30.17.104:5444  db=etprdmlk',
+          `   Role:  ${meta.role}`,
+          `   Host:  ${meta.host}`,
           '   Audit: domain/prod-db-confirm/log.jsonl',
           '',
-          '   Approve only if you intend to query LIVE PRODUCTION.',
+          '   Approve only if you intend to WRITE to LIVE PRODUCTION.',
         ].join('\n'),
       },
     }));

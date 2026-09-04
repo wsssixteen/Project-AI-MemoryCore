@@ -164,8 +164,14 @@ async function gather(c, id, repo, releaseBranch, followed) {
   // branch probe (only if the tracker maps to a known prefix)
   let branch = '';
   if (prefix) {
-    for (const cand of [`${prefix}/${id}`, `${prefix}/${id}v2`, `${prefix}/${id}v3`]) {
-      if (git(repo, ['ls-remote', '--heads', 'origin', cand])) branch = cand; // last match wins => latest rework
+    // branch prefixes exist in BOTH cases on origin (mlk/cr/ vs mlk/CR/ — 263302/263304 were
+    // uppercase and the lowercase-only probe missed them, release 1.4.0 2026-08-26)
+    const upper = prefix.replace(/\/([a-z-]+)$/, (m, seg) => '/' + seg.toUpperCase());
+    const prefixes = upper === prefix ? [prefix] : [prefix, upper];
+    for (const p of prefixes) {
+      for (const cand of [`${p}/${id}`, `${p}/${id}v2`, `${p}/${id}v3`]) {
+        if (git(repo, ['ls-remote', '--heads', 'origin', cand])) branch = cand; // last match wins => latest rework
+      }
     }
   }
   const unlabelled = !branch ? (git(repo, ['log', '--all', '--grep', String(id), '--format=%h', '-1']) || '') : '';

@@ -3053,3 +3053,32 @@ urusan=PRU
 current_phase=Phase 2 archived 2026-08-24 (miya /goal): fix in mlk/master @ 56f677c206, FAT decommissioned so no BA close; qa_doc created retroactively.
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\64. QA #264347 - FAT - PRU - Penyediaan Surat Keputusan Lul - Isi Tarikh Mula Permit Diluluskan tetapi Tarikh Ta
 qa_doc=projects/coding-projects/active/QA-264347/QA-264347.md
+
+qa=QA-275092
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Perak\1. II #275092 - PT - Skrin Papar Ralat Apabila User Click Button Seterusnya (PROD)
+phase=0
+status=closed
+ticket_type=bug
+env=PT
+issue_one_liner=PT - Skrin Papar Ralat Apabila User Click Button Seterusnya
+assigned_to_me=2026-08-26
+state=Perak
+notes=Retrieved 2026-08-26 for retrieval-audit + quest dry-run only. Already resolved by miya (alter PTPK/07/E/PT/2023/154 -> Semakan Permohonan HKGHS, PROD) and reassigned to Hafizul for verify BEFORE retrieval. Latent root cause NOT fixed: pendaftaran->pelupusan ModuleIntegrationRemotingService failure at PROD (see perak/PERAK-FACTS.md section 5) - bounce-back plausible.
+
+
+## 2026-08-27 — ADHOC-PRBB-2026-2 TICKETED -> QA-277309 (char-limit half of #277309)
+qa=ADHOC-PRBB-2026-2
+phase=0
+status=active
+ticket_type=adhoc
+env=PROD/mlit (answer env-independent)
+urusan=PRBB+MCL
+quest_start=2026-08-27
+local_test_confirmed=false
+adhoc_register_row=A23
+qa_doc=projects/coding-projects/active/ADHOC-PRBB-2026-2/ADHOC-PRBB-2026-2.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\165. AH - PDTJ - PRBB MCL - Ulasan JT Character Limit
+issue_one_liner=PDTJ asks Ulasan JT field character limit — ANSWERED: tugasan dialog 4000 (mlkUlasanJabatanTeknikalDataTable.xhtml:211) vs utiliti JT grid 500 (UtilitiKemaskiniUlasanJPPHForm.xhtml:291); same column umm_a_jabatan_teknikal.ulasan varchar(4000). Awaiting possible ticket.
+board_state=Answered in chat 2026-08-27; awaiting possible ticket #
+branch=none
+disposition=folded into QA-277309 as Issue 1 evidence

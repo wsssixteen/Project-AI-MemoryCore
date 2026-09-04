@@ -51,6 +51,14 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\adhoc-lifecycle\\\\adhoc-lifecycle.check.hook.js\""
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\knowledge-schema-audit\\\\knowledge-schema-audit.check.hook.js\""
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
@@ -330,6 +338,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\deploy-merge-surface\\\\deploy-merge-surface.check.hook.js\""
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\knowledge-schema-audit\\\\knowledge-schema-audit.check.hook.js\""
+          }
+        ]
       }
     ],
     "Stop": [
@@ -486,6 +503,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\atlas-full-check\\\\atlas-full-check.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\commit-subject-gate\\\\commit-subject-gate.check.hook.js\""
           }
         ]
       }

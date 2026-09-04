@@ -5,10 +5,12 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: bb314863-3a57-4f05-a939-94f49cf121c3
-  modified: 2026-08-21T11:51:38.084Z
+  modified: 2026-08-27T07:44:08.434Z
 ---
 
 **🚨 EVIDENCE/PROOF QUERIES GO IN CHAT, NEVER THE TASK FOLDER (added 2026-08-21, #276436).** A proof SELECT is shown in chat for miya to run and screenshot. It is NOT a deliverable. Do NOT save it into `2. Fix/` — that folder holds only the real fix (the `.java`/`.docx`/patch). A ticket is not a data patch just because it has a query. The Task folder is for what gets attached to the ticket as the fix; a screenshot of the query result is the evidence, the query itself lives in chat. Slip: `evidence-query-in-task-folder`.
+
+**🚫🚫 MARKDOWN (.md) HANDOVER IS FOREVER BANNED (2026-08-27, per みや, deterministic).** NEVER write a `.md` write-up / `HANDOVER-*.md` for a cross-module fix — みや hates it. The hand-off is a BARE source file only (see shape below). Enforced by `domain/cross-module-handoff-gate/` (PreToolUse, BLOCKS any `.md` or `handover/handoff`-named file written into a `1. Tasks\Melaka` Task folder; bypass `[skip-handoff-gate: <reason>]`).
 
 **When a fix belongs to a module that is NOT ours to commit (etanah-common is the usual one; also any non-pelupusan/non-awam module) OR みや signals a hand-off — produce a HANDOFF ARTIFACT, not just a chat diff.**
 
@@ -49,3 +51,5 @@ When the recipient is a **different team** (they do NOT see our chat), the artif
 **Why** (2026-08-21, #276436): PPTPB SKM counter-route — Tujuan/Kategori belong to etanah-spoc-hasil (never-edit). The right output is a send-ready package (before/after `.java` + evidence `.sql` + wait-what brief) so みや forwards it to SPOC with zero rework. Distinct from the bare-reference shape above (that was a common-team handoff where みや had already given chat context). Pairs with [[feedback_module_edit_boundary]].
 
 **Why** (2026-08-12, QA-274318): fix was in `etanah-common\...\UtilitiKemaskiniUlasanJPPHForm.java` (common team owns it). I wrote a handoff `.txt` with symptom + root cause + before/after + scope — みや: *"you added bloats, refer to my copy"* — his `3. Reference.java` was just filename + line markers + the new code. The applied `.java` carries the before/after (for the screenshot); the reference file is bare. Pairs with [[reference_utiliti_ulasan_jt_jpph_screen]] + [[feedback_stay_in_module]] + [[feedback_my_files_minimal]].
+
+enforcement: hook-exists: cross-module-handoff-gate
