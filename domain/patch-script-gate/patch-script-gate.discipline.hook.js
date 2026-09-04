@@ -23,7 +23,12 @@
  *   semantic, enforced by self-discipline + みや review; this hook only
  *   enforces the mechanical annotation check.
  *
- * FOUR checks (advisory v1, per /system-rules R4 — flip to block once validated):
+ * SEVEN checks (1-6 advisory v1, per /system-rules R4 — flip to block once validated;
+ *   CHECK 7 BLOCKS from birth, 2026-09-03 per みや #277346: the infra handoff fence must hold
+ *   the DML + `-- N rows …` ONLY — a file header / before-SELECT inside it = wrong artifact):
+ *   CHECK 6 — generator-state disclosure (added 2026-08-26 per みや, #273461 deep-audit): a patch
+ *     releasing a generated identifier (SET no_* = NULL, or DELETE keyed by a no_* value) must
+ *     name the generator counter + its disposition; bypass [skip-generator-check: <reason>].
  *   CHECK 3 — reviewer-obvious safe: broad LIKE '%' in a handed DELETE/UPDATE → recommend
  *     pinned IN ('v1','v2',…) + a leading BEFORE SELECT (added 2026-08-10 per みや, #273461).
  *   CHECK 4 — never delete registry/master ind_* tables (an ind_ row = succeeded to daftar,
@@ -112,6 +117,39 @@ const DISPLAY_VERIFY_MARKER = /\[skip-display-col:|display column|which column t
 // Suppress when BOTH sibling labels are set together (the safe form — no wrong-column risk).
 const BOTH_LABELS_SET = /\bSET\b[\s\S]*?\bnama\s*=[\s\S]*?\bperihal\s*=|\bSET\b[\s\S]*?\bperihal\s*=[\s\S]*?\bnama\s*=/i;
 
+// CHECK 6 — generator-state disclosure (added 2026-08-26 per みや, #273461 deep-audit).
+// A patch that RELEASES a system-generated identifier (nulls a no_* column, or deletes rows
+// keyed by a no_* value) touches only the ROWS — the GENERATOR that minted the value can be a
+// separate counter (sis_no_turutan pattern: linked by a convention-built kod string, NO shared
+// column — invisible to FK/column-name sweeps). Deleting rows never rolls the counter back.
+// The reply must NAME the generator + its disposition (left untouched / rolled back + collision
+// analysis) — or declare the column has no generator via the skip token.
+const GENERATED_ID_RELEASE = /```[\w]*\s*[\s\S]*?(?:\bUPDATE\b[\s\S]*?\bSET\b[\s\S]*?\bno_\w+\s*=\s*NULL|\bDELETE\s+FROM\b[\s\S]*?\bno_\w+\b)[\s\S]*?```/i;
+const GENERATOR_MARKER = /--\s*generator\s*:|sis_no_turutan|\bno_turutan\b|\[skip-generator-check:/i;
+
+// CHECK 7 — infra HANDOFF block shape (added 2026-09-03 per みや, #277346 — BLOCKS).
+// The chat message handed to infra ("Hi infra, please assist…") is a DIFFERENT artifact from
+// the `.sql` file in the Task folder. The MESSAGE carries the DML statement(s) + `-- N rows …`
+// ONLY. The file's 4-line header (`-- Ticket/Env/Permohonan/Fix`) and the before-SELECT belong
+// to the FILE (shown in its own review section), never inside the handoff fence.
+// Evaluated BEFORE the EXEMPT early-exit: the miss happened inside a ▶ YOUR MOVE hand-back.
+const HANDOFF_GREETING = /Hi infra,?\s+please assist/i;
+const HANDOFF_EXEMPT = /\[skip-handoff-shape:/;
+const HANDOFF_HEADER = /^\s*--\s*(?:Ticket|Env|Permohonan|Fix)\s*:/im;
+function handoffFenceDefect(text) {
+  const g = HANDOFF_GREETING.exec(text);
+  if (!g) return null;
+  const fence = /```[\w]*[ \t]*\r?\n([\s\S]*?)```/.exec(text.slice(g.index));
+  if (!fence) return null;
+  const body = fence[1];
+  const header = HANDOFF_HEADER.test(body);
+  const dmlIdx = body.search(/\b(?:UPDATE|DELETE|INSERT)\b/i);
+  const selIdx = body.search(/\bSELECT\b/i);
+  const selectFirst = selIdx >= 0 && (dmlIdx < 0 || selIdx < dmlIdx);
+  if (!header && !selectFirst) return null;
+  return { header, selectFirst };
+}
+
 function lastAssistantText(transcriptPath) {
   let raw;
   try { raw = fs.readFileSync(transcriptPath, 'utf8'); } catch (_) { return null; }
@@ -145,6 +183,27 @@ process.stdin.on('end', () => {
 
     const text = lastAssistantText(data.transcript_path || '');
     if (!text || text.length < 200) process.exit(0);     // short reply / ack
+
+    // CHECK 7 — infra handoff block shape (BLOCK; runs before EXEMPT so ▶ YOUR MOVE can't mask it)
+    const hd = HANDOFF_EXEMPT.test(text) ? null : handoffFenceDefect(text);
+    if (hd) {
+      logFire('block-handoff-shape', (hd.header ? 'header-in-handoff ' : '') + (hd.selectFirst ? 'select-before-dml' : ''));
+      process.stdout.write(JSON.stringify({
+        decision: 'block',
+        reason: [
+          '⛔ patch-script-gate CHECK 7 — infra HANDOFF block has the wrong shape.',
+          '   The "Hi infra, please assist" message carries ONLY the DML statement(s) + `-- N rows …`.',
+          hd.header ? '   ✗ found a file header (`-- Ticket:` / `-- Env:` / `-- Permohonan:` / `-- Fix:`) inside the handoff fence.' : '',
+          hd.selectFirst ? '   ✗ found a SELECT before the DML inside the handoff fence (the before-SELECT belongs to the .sql FILE only).' : '',
+          '   Two artifacts, two sections, two formats (みや 2026-09-03, #277346):',
+          '     1. `<ticket>.sql` in 2. Fix\\ — 4-line header + before-SELECT + DML; show it in ITS OWN review section.',
+          '     2. Handoff message — greeting · `#<ticket>: <one sentence>` · fence with the DML + `-- N rows updated` and nothing else.',
+          '   Bypass: [skip-handoff-shape: <reason>].',
+        ].filter(Boolean).join('\n'),
+      }));
+      process.exit(0);
+    }
+
     if (EXEMPT.test(text)) process.exit(0);
 
     const hasSqlDml = SQL_DML_IN_FENCE.test(text);
@@ -236,6 +295,24 @@ process.stdin.on('end', () => {
         '   Bypass: [skip-display-col: <which column the UI reads + how verified>].',
       ].join('\n'));
       logFire('advisory-display-col', 'ref-label-update-unverified-column');
+    }
+
+    // CHECK 6 — generator-state disclosure (release of a generated identifier)
+    if (GENERATED_ID_RELEASE.test(text) && !GENERATOR_MARKER.test(text)) {
+      advisories.push([
+        '⚙️  patch-script-gate CHECK 6 — generator-state disclosure MISSING.',
+        '   Your patch RELEASES a system-generated identifier (nulls a no_* column, or deletes',
+        '   rows keyed by a no_* value). The rows are only half the state: the GENERATOR that',
+        '   minted the value is a separate counter that does NOT roll back when rows are deleted',
+        '   (#273461: sis_no_turutan, linked by a convention-built kod string — no shared column,',
+        '   invisible to FK/column-name sweeps).',
+        '   Before handing this patch, answer: WHERE is this value born, and WHAT remembers how',
+        '   far the sequence has advanced? Then state the disposition in the script:',
+        '     -- generator: <table> kod \'<key>\' left untouched — gap permanent & expected',
+        '   or, if rolling it back, include the collision analysis (live numbers above the target).',
+        '   No generator behind this column? Bypass: [skip-generator-check: <why none exists>].',
+      ].join('\n'));
+      logFire('advisory-generator-state', 'generated-id-release-no-disclosure');
     }
 
     if (advisories.length === 0) {

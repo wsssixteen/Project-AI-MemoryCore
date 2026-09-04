@@ -266,6 +266,72 @@ function fetchIssueJournals(id) {
     });
 }
 
+// ─── TICKET FIELDS: custom_fields + relations (added 2026-08-07) ──────────────
+// The journal dump was the ONLY thing intake ever saw, so two whole evidence
+// classes were structurally invisible:
+//   · custom_fields — #273460 carried `Isu Berulang? = 1` (a RECURRING flag the BA
+//     set on day one) plus Punca Isu, Kategori Isu, the TerraDesk ticket # and the
+//     severity SLA. Phase 0 ran twice and never saw any of it; the recurrence flag
+//     pointed straight at #271710 (same symptom, same urusan, already closed with a
+//     behavioural answer) and #273979 (sibling tugasan, fixed by Aaron, on int-env).
+//   · relations — a related ticket can carry the fix (#270952 → #270253, 2026-07-17).
+// Journals render as `[cf] field#115: 0 → 1` — a bare numeric id nobody can decode.
+// Resolve it to its NAME here so the fact is readable at intake, not archaeology.
+function fetchIssueFields(id) {
+    return new Promise(resolve => {
+        const options = {
+            hostname: '172.16.90.169',
+            path: `/redmine/issues/${id}.json?include=relations`,
+            headers: { 'X-Redmine-API-Key': REDMINE_KEY }
+        };
+        http.get(options, res => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+                try {
+                    const i = JSON.parse(data).issue || {};
+                    resolve({ customFields: i.custom_fields || [], relations: i.relations || [] });
+                } catch (e) { resolve({ customFields: [], relations: [] }); }
+            });
+        }).on('error', () => resolve({ customFields: [], relations: [] }));
+    });
+}
+
+// Empty fields are noise — a ticket carries ~30 custom fields and ~24 are blank.
+// "-Sila Pilih-" is Redmine's unselected sentinel and means the same as empty.
+const FIELD_NOISE = /^(|-\s*sila\s*pilih\s*-|0)$/i;
+
+function formatTicketFields({ customFields, relations }) {
+    const out = [];
+    const filled = (customFields || []).filter(f => {
+        const v = Array.isArray(f.value) ? f.value.join(',') : String(f.value == null ? '' : f.value);
+        return !FIELD_NOISE.test(v.trim());
+    });
+    // Isu Berulang? = 1 is an INSTRUCTION, not a datum: the reporter is telling us
+    // this has happened before. It gets its own banner because a row in a 12-row
+    // table is exactly how the first two Phase-0 passes would have skimmed past it.
+    const berulang = (customFields || []).find(f => /isu\s*berulang/i.test(f.name) && String(f.value) === '1');
+    if (berulang) {
+        out.push('🚨 ISU BERULANG = YES — the reporter flagged this as a RECURRING issue.');
+        out.push('   MANDATORY at Phase 0: search Redmine for the prior occurrence before Scout');
+        out.push('   (subject~ the symptom, all states + all statuses) and read how it was closed.');
+    }
+    if (filled.length) {
+        out.push('TICKET FIELDS (non-empty only):');
+        filled.forEach(f => {
+            const v = Array.isArray(f.value) ? f.value.join(', ') : f.value;
+            out.push(`   ${f.name} = ${v}`);
+        });
+    }
+    if (relations && relations.length) {
+        out.push('🔗 RELATIONS — read each; a related ticket can carry the fix or the spec:');
+        relations.forEach(r => out.push(`   ${r.relation_type} → #${r.issue_to_id === undefined ? r.issue_id : r.issue_to_id}`));
+    } else {
+        out.push('🔗 RELATIONS: none');
+    }
+    return out;
+}
+
 // ─── ASSIGNED-TO-ME DATE (added 2026-06-04, work-date drift fix) ──────────────
 // "When the ticket became mine" — distinct from retrieve/quest-start/close.
 // fetchIssues() only pulls tickets CURRENTLY assigned to the API-key user, so the
@@ -334,8 +400,9 @@ function extractBaGivenTestData(journals) {
     return rows;
 }
 
-function writeHistoryFile(briefFolder, journals, issueMeta) {
+function writeHistoryFile(briefFolder, journals, issueMeta, fields) {
     const baGiven = extractBaGivenTestData(journals);
+    const fieldLines = fields ? formatTicketFields(fields) : [];
     const header = [
         `Redmine ticket journal — synced ${new Date().toISOString()}`,
         `Issue: ${issueMeta.prefix} #${issueMeta.number} — ${issueMeta.subject}`,
@@ -344,12 +411,15 @@ function writeHistoryFile(briefFolder, journals, issueMeta) {
             '🚨 BA-GIVEN TEST DATA (from journals, LATEST first — this OUTRANKS any doc/pack/memory record):',
             ...baGiven.map(r => '   ' + r),
         ] : []),
+        ...fieldLines,
         '─'.repeat(70),
         '',
     ].join('\n');
     const body = formatJournalsForHistory(journals);
     fs.writeFileSync(path.join(briefFolder, 'History.txt'), header + body + '\n');
     if (baGiven.length) console.log('🚨 BA-GIVEN TEST DATA (latest first):\n' + baGiven.map(r => '   ' + r).join('\n'));
+    const berulang = fieldLines.find(l => l.startsWith('🚨 ISU BERULANG'));
+    if (berulang) console.log('   ' + berulang);
 }
 
 async function updateExistingTicketHistory(issue) {
@@ -357,13 +427,14 @@ async function updateExistingTicketHistory(issue) {
     const briefFolder = path.join(TASKS_FOLDER, issue._existing, '0. Brief');
     if (!fs.existsSync(briefFolder)) return 0;
     const journals = await fetchIssueJournals(issue.id);
+    const fields = await fetchIssueFields(issue.id);
     writeHistoryFile(briefFolder, journals, {
         prefix:    issue._parsed.prefix,
         number:    issue._parsed.number,
         subject:   issue.subject,
         status:    issue._status,
         updated_on: issue.updated_on,
-    });
+    }, fields);
     return journals.length;
 }
 
@@ -737,7 +808,7 @@ async function runWithCreate() {
                     subject:   issue.subject,
                     status:    issue._status,
                     updated_on: issue.updated_on,
-                });
+                }, await fetchIssueFields(issue.id));
                 console.log(`    📝 [${issue._parsed.prefix} #${issue._parsed.number}] History.txt → ${journals.length} journal ${journals.length === 1 ? 'entry' : 'entries'}`);
             }
         }

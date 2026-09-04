@@ -107,6 +107,22 @@ if (!fs.existsSync(historyPath)) die(`no 0. Brief/History.txt in\n   ${folder}\n
 
 const historyText = fs.readFileSync(historyPath, 'utf8');
 const journals = parseJournals(historyText);
+
+// Ticket fields live in the History.txt header, above the ─── rule, written by
+// redmine-sync's formatTicketFields(). Added 2026-08-07 because the manifest
+// counted conversations and attachments and NOTHING else, so a field the reporter
+// set on day one could not be omitted-visibly — it was simply never present.
+// #273460 is the proof: `Isu Berulang? = 1` sat on the ticket through two full
+// Phase-0 passes, and it pointed at two sibling tickets that changed the analysis.
+const headerText = historyText.split(/^─{10,}$/m)[0] || '';
+const ticketFieldLines = headerText.split(/\r?\n/)
+    .filter(l => /^\s{3}\S/.test(l) && !/^\s{3}(PT[A-Z]{3}\/|\w+@)/.test(l))
+    .map(l => l.trim());
+const isuBerulang = /ISU BERULANG = YES/.test(headerText);
+const relationsNone = /🔗 RELATIONS: none/.test(headerText);
+const relationLines = headerText.split(/\r?\n/)
+    .filter(l => /^\s{3}\w+\s+→\s+#\d+/.test(l)).map(l => l.trim());
+const fieldsSynced = /TICKET FIELDS|🔗 RELATIONS/.test(headerText);
 const briefFiles = walk(briefDir, briefDir).filter(f => !/^(History|Description)\.txt$/i.test(f.rel));
 const reworkDirs = fs.readdirSync(folder, { withFileTypes: true })
     .filter(e => e.isDirectory() && /rework|addition/i.test(e.name))
@@ -170,6 +186,26 @@ if (elsewhere.length) {
 if (reworkDirs.length) {
     L.push('');
     L.push(`D. REWORK/ADDITION FOLDERS \u2014 ${reworkDirs.join(' · ')}`);
+}
+L.push('');
+L.push('D2. TICKET FIELDS + RELATIONS \u2014 the reporter\u2019s own metadata. Echo the decision-bearing ones.');
+if (!fieldsSynced) {
+    L.push(`   \u26a0 NOT SYNCED \u2014 this History.txt predates the fields block. Re-run: node quest/redmine-sync.js ${num}`);
+} else {
+    if (isuBerulang) {
+        L.push('   \ud83d\udea8 ISU BERULANG = YES \u2014 the reporter says this has happened BEFORE.');
+        L.push('      REQUIRED emit before Scout: a prior-occurrence search across ALL states + ALL statuses,');
+        L.push('      e.g. /redmine/issues.json?status_id=*&subject=~<symptom>. State the hits and how each');
+        L.push('      closed, or state "searched <terms>, no prior occurrence". A git-log for THIS ticket');
+        L.push('      number does NOT satisfy it \u2014 a recurrence is a DIFFERENT ticket number by definition.');
+    }
+    if (relationLines.length) {
+        L.push('   \ud83d\udd17 RELATIONS \u2014 read each before Scout:');
+        relationLines.forEach(r => L.push(`      ${r}`));
+    } else if (relationsNone) {
+        L.push('   \ud83d\udd17 RELATIONS: none (verified against the API, not assumed)');
+    }
+    ticketFieldLines.filter(l => l.includes('=')).forEach(l => L.push(`      ${l}`));
 }
 L.push('');
 L.push(`E. QUEST DOC \u2014 ${qaDoc ? qaDoc.replace(REPO_ROOT + path.sep, '') : 'NONE (fresh quest)'}`);
