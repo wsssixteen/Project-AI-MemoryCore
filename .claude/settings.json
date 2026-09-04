@@ -330,6 +330,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\deploy-merge-surface\\\\deploy-merge-surface.check.hook.js\""
           }
         ]
+      },
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\redmine-write-gate\\\\redmine-write-gate.check.hook.js\""
+          }
+        ]
       }
     ],
     "Stop": [
