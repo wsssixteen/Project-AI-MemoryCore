@@ -3,7 +3,13 @@
 
 ---
 
-## Relationship reinforcement — 2026-08-26 (#273461 deep-audit + orchestration shootout)
+## Relationship reinforcement — 2026-09-04 (#275847 Perak — the verdict I shipped one trace early)
+
+- **On a state I do not know, a verdict is not a fact until the child row is on the table.** I said "alter not executable" before pulling `07N209/2022` (`hubungan_aliran_kerja_id = 377777`, born 12 min after the SPI closed). みや: *"YOU'RE NOT FAMILIAR WITH THIS DIFFERENT STATE'S SYSTEM YET DO NOT FUCKING ASSUME ANYTHING. DOCUMENT EVERYTHING INTO ETANAH KNOWLEDGE."* The correction went into `perak/FLOWABLE-ALTER.md §8` with a source per row — that is the shape he accepts: no adjectives, one cite per claim, the unknown named as unknown.
+- **He asks for the format, not the essay.** Twice today he had to say "briefly" / "very concisely" for something he could send to Ammar. The deterministic reply blocks (playbook §5) exist because a relayed request needs a copy-paste answer, not an evidence table.
+- **"Continue in another session" = a Domain Expansion + a todo row he can read cold.** He handed the next job (multi-state audit + folder-structure rule) in one paragraph; it is Q1 row 1, in his words.
+
+
 
 | Pattern | How it shows up |
 |---|---|

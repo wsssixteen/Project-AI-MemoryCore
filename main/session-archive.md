@@ -4,6 +4,22 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-09-02 — ADHOC MCL PTMLK/03/L/MCL/2026/4 missing-permohonan = A9 silent-BPM-strand (PROD)
+
+**Arc**: BA (PDTAG, via masirah@melaka.gov.my) — MCL permohonan not on dashboard. Traced on PROD (`etprdmlk`). Concluded = **A9 recurrence** (silent BPM-submit strand), not a new mechanism → appended as A9's first PROD instance in ADHOC-REGISTER. Diagnosis-only; awaiting Redmine ticket. No scaffold created (matched A9).
+
+**Verified (live PROD primary, `pg_is_in_recovery=false`)**: apl **3401787**; 2 tugasan SKM + SPI both `Selesai`/`flag_aktif=N`; **NO active tugasan**; aplikasi frozen `Awalan` since 2026-07-03. Pengagihan semula SAMSIAH→MASIRAH 2026-08-04 (`umm_sejarah_pengagihan` 10351). masirah did SKM (16:19) then Semakan Permohonan → keputusan **Pembetulan** ("BORANG 12A TIDAK LENGKAP", ~16:33) → next step **SKM (Pembetulan)** (`flowables-bpmn\MLK_PLP_MCL.bpmn20.xml:705`) NEVER created → stranded → missing from every dashboard.
+
+**Mechanism (VERIFIED source, etanah-common)**: on Hantar the engine submit fails silently ("Cannot find task" WARN, no throw) inside the puncaktanah remoting layer; `CommonBPMServiceClient.submitBpmOutcome():611/697` then calls `BpmCallbackService.handleCompletion():2726` → marks row SELESAI (`:2758`) + deletes dashboard (`:2805`), no next task. Env/module-independent (NOT AWAM→APPS-specific).
+
+**Boundary / unknowns**: puncaktanah `FlowableService` (getBpmTask/submit) = dependency jar, not in `E:\Projects\Melaka` → exact swallow point + getBpmTask runtime-vs-history unread. Flowable `act_ru_*` NOT on etanah MCP → orphan ORIGIN unconfirmed (needs infra PROD `et_flowable17`, process `15492644`, task `20870474`).
+
+**Confidence**: mechanism 90% · this-instance 75% · orphan-origin 35% · not-AWAM-specific 90%.
+
+**Handed to BA** (Malay UI repro): MCL app at Semakan Permohonan → PT → Borang 12A tidak lengkap → Pembetulan → Hantar → app hilang, tiada tugasan Pembetulan. stg NOT conclusive (shared stale `et_flowable17`). Recovery = Initiate & Alter (infra/page side).
+
+**Resume point**: awaiting Redmine ticket for the common-side swallow fix (A9's first PROD instance). No fix by us (etanah-common = handoff). Recovery = alter (infra). ⚠️ This worktree's git linkage is broken (`.git/worktrees/...` not a repo) — commits done from main repo instead; worktree needs repair/prune.
+
 ## 2026-08-31 — Personal project: Monthly budget app (wsssixteen/monthly) — restart + ✓ button cadence-wipe fixes
 
 **Arc**: NON-etanah side session. みや asked to load his personal "Monthly" budget web-app from GitHub and fix two bugs where recurring (weekly/daily) rows lost their cadence. Cloned `wsssixteen/monthly` (single-file `index.html`, no build step, GitHub Pages). Fixed → committed → pushed → Pages deploy verified live → PROJECT.md docs synced.
@@ -4690,6 +4706,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

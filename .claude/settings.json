@@ -187,6 +187,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\latent-bugs-gate\\\\latent-bugs-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\alter-ticket-gate\\\\alter-ticket-gate.check.hook.js\""
           }
         ]
       }
