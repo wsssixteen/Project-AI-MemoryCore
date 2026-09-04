@@ -35,3 +35,15 @@ Session: Perak #275847 ("alter to SPI") + birth of the ALTER layer (playbook · 
 | A3 debugging | Disk-proven the 4 defects before touching code (208/213 broken `.git` links · 192/213 branchless · telemetry 6 fires · local main 4 behind); the `git diff`-vs-main scan measured staleness not divergence and was replaced by a blob check. | measure-then-fix ✓ · wrong-instrument caught |
 | A4 etanah | ⏭ none |
 | A5 sweep | Salvage sweep found 4 lost Features + 1 lost session save + CHECK 7 the register never knew about — orphaned worktrees are an unindexed knowledge store. | negative-space |
+
+## Session 6 — #278304 + #277442 (PROD data patches) · speed-optimization plan · monitoring design
+
+| Axis | Failure class → instance | Measured |
+|---|---|---|
+| A1 agentic system | **Second-opinion fan-out on precedent-matched patches bought nothing**: two `quest-phase0` runs upheld both scripts, found 0 new decisions; one recon agent died after 5 schema retries (`confidence` missing); one verifier asserted `SYSDATE` fails on Postgres without running it (PROD is EDB) | 22 agents · 2.43 M tokens · 26 min · +2 line cites |
+| A2 quest workflow | **Intake tooling does not cover a colleague's ticket**: `redmine-sync.js <num>` ignores the number, `notes.js` cannot parse an `II #NNN` folder, active-cli flags miya's own tickets as "not miya's work" (name match, not id 1311) | 3 workarounds · 1 hand-built Task folder · 2 false divergence flags |
+| A3 debugging | **Live state drifted between intake and hand-off**: Alex closed #277442 at 16:22 while the workflow was mid-synthesis; the synthesizer caught it, I re-read PROD before the summary. Zero build cycles (data patches) | 1 caught drift · 0 wasted infra messages |
+| A4 etanah issue-solving | ✅ Both tickets started from a register/precedent (A14, #276229/#275922) not from Scout; 6 facts banked with anchors. ⚠️ `tempat='-'` on the source lesen row was proposed before a value census — miya's suspicion forced the census (NULL default 17/24, `-` legit 67) | 6 banks · 1 census-after-the-fact |
+| A5 sweep / gates | **7 of 12 Stop-hook interruptions were false or repeats** (predicate-box with no edit · ba-table ×3 on non-intake turns · patch-gate on an already-stamped script · full-address ×3); plus alter-ticket-gate on "alter to" about an ignored ticket and DE-trigger on the words "new session"; sql-schema-verify emitter cross-products columns onto every table | 12 blocks · 7 false · 5 true |
+
+**Biggest miss**: answered "is observability collecting" and stopped — miya had asked about monitoring too, and that layer had never been built (`reask/buried-answer`). Corrected by the §M design in `system/speed-optimization-plan-2026-09-04.md`.
