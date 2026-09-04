@@ -216,18 +216,20 @@ Every row refines an existing component (Rule 1). **Safety** = what breaks if wr
 
 | Fact | Home | Status |
 |---|---|---|
-| MLPS renewal copies the lesen land row: `E:\Projects\Melaka\etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\service\impl\PelupusanSpocService.java` `populateAppPermohonanTanahFromInduk():1051` → `:1073 setNamaKawasanTerlibat(mtpl.getTempat())`, `:1089 setTempat(mtpl.getTempat())`; migrated `tempat='PT '||no_lot` = 48 lesen rows (`MIGRATOR_KTPN_LMS_JASIN`) | BUG-BESTIARY.md (new pattern) · ADHOC-REGISTER A14 (row updated ✓) | queued |
-| Batal a mistakenly-created UPS_PLP = 3-table shape (umm_aplikasi Tamat/Batal/Tamat + hubungan NULL · umm_a_tgsn flag_aktif N / Selesai / trkh_tetap · DELETE umm_tgsn_semasa); precedents #276229, #275922, #277442; Utiliti Batal has no UPS_PLP flag (`MlkUtilitiPembatalanPermohonanForm.xhtml:22-38`) | DATABASE.md §cancel-shape · FLOW-TRACES.md | queued |
-| `AppTugasan.tarikhTamat` ↔ `umm_a_tgsn.trkh_tetap` (completion instant), NOT `trkh_luput`; engine close = `E:\Projects\Melaka\etanah-common\src\main\java\my\gov\etanah\common\repository\common\AppTugasanRepository.java:31` | DATABASE.md §6.1 | queued |
-| Senarai Tugasan = `umm_tgsn_semasa`, read by `E:\Projects\Melaka\etanah-common\src\main\java\my\gov\etanah\common\notification\service\impl\DashboardService.java:165` with NO status filter → a Tamat app keeps its row until deleted | DATABASE.md §6.3 | queued |
-| Melaka PROD `etprdmlk` is EDB Advanced Server (Oracle-compat): `SYSDATE` valid | DATABASE.md §env | queued |
-| `tempat` convention: app default NULL (17/24 user rows); "-" is a stored value (66 migrated + 1 officer-typed); L1e renders blank as "-" (`PelupusanReportMethodConstant.populateTempat():818`) | DATABASE.md value-conventions | queued |
+| MLPS renewal copies the lesen land row: `E:\Projects\Melaka\etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\service\impl\PelupusanSpocService.java` `populateAppPermohonanTanahFromInduk():1051` → `:1073 setNamaKawasanTerlibat(mtpl.getTempat())`, `:1089 setTempat(mtpl.getTempat())`; migrated `tempat='PT '||no_lot` = 48 lesen rows (`MIGRATOR_KTPN_LMS_JASIN`) | BUG-BESTIARY.md (new pattern) · ADHOC-REGISTER A14 (row updated ✓) | ✅ banked 2026-09-04 |
+| Batal a mistakenly-created UPS_PLP = 3-table shape (umm_aplikasi Tamat/Batal/Tamat + hubungan NULL · umm_a_tgsn flag_aktif N / Selesai / trkh_tetap · DELETE umm_tgsn_semasa); precedents #276229, #275922, #277442; Utiliti Batal has no UPS_PLP flag (`MlkUtilitiPembatalanPermohonanForm.xhtml:22-38`) | DATABASE.md §cancel-shape · FLOW-TRACES.md | ✅ banked 2026-09-04 |
+| `AppTugasan.tarikhTamat` ↔ `umm_a_tgsn.trkh_tetap` (completion instant), NOT `trkh_luput`; engine close = `E:\Projects\Melaka\etanah-common\src\main\java\my\gov\etanah\common\repository\common\AppTugasanRepository.java:31` | DATABASE.md §6.1 | ✅ banked 2026-09-04 |
+| Senarai Tugasan = `umm_tgsn_semasa`, read by `E:\Projects\Melaka\etanah-common\src\main\java\my\gov\etanah\common\notification\service\impl\DashboardService.java:165` with NO status filter → a Tamat app keeps its row until deleted | DATABASE.md §6.3 | ✅ banked 2026-09-04 |
+| Melaka PROD `etprdmlk` is EDB Advanced Server (Oracle-compat): `SYSDATE` valid | DATABASE.md §env | ✅ banked 2026-09-04 |
+| `tempat` convention: app default NULL (17/24 user rows); "-" is a stored value (66 migrated + 1 officer-typed); L1e renders blank as "-" (`PelupusanReportMethodConstant.populateTempat():818`) | DATABASE.md value-conventions | ✅ banked 2026-09-04 |
 
 ---
 
 ## 5. Sequence
 
-1. みや rules on §2 rows (BUILD / DROP / DEFER each) + confirms §M as designed.
+**RULING (みや, 2026-09-04)**: §M ok · Q1–Q10 ALL BUILD — condition: every item ships only after (a) its eval runs green AND (b) a BEFORE/AFTER comparison from the telemetry proves it works (Rule 5). Concretely each commit cites: the 30d baseline number from §1 (before) → the same query after ≥3 sessions (after). No before/after row = not done.
+
+1. ~~みや rules on §2 rows~~ — ruled above.
 2. This session: bank §4 (mechanical, ~6 edits), then Q3 + Q5 (small, deterministic, eval-guarded, each with its ≥20-scenario table per system-design Rule 12).
 3. **Fresh session, FIRST item: build §M (turn-ledger) via forge** — M1/M2 refinements, M3 born, M4 token-map seeded, M5 de-close C5, M6 report; evals E1–E5 green before registration. Reason it goes first: every later ruling (Q6 gate yield, Q8 proposals, Part 2 hook pass) is decided from `true_blocks` and per-phase cost, which only exist once §M is collecting.
 4. Same fresh session after §M: Q1/Q2/Q4/Q6/Q7/Q8/Q9/Q10, one commit per item, before/after telemetry rows cited in each commit.

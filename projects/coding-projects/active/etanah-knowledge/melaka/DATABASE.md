@@ -550,6 +550,8 @@ CREATE TABLE umm_a_tgsn (
 );
 ```
 
+**Date columns — which one is "completed" (PROD-verified 2026-09-04, #277442)**: `trkh_mula` = start · `trkh_mula_asal` = original start · **`trkh_tetap` = completion instant** (`AppTugasan.tarikhTamat` maps here; every `Selesai` row carries it, e.g. 2800628 `trkh_tetap 2026-08-20T18:50:20Z` with its successor created at 18:50:23) · `trkh_luput` = luput/expiry, NOT completion. There is no `pengguna_semasa` column — the login is `pengguna_semasa_id` → `pcp_pengguna`. The engine's own close is `E:\Projects\Melaka\etanah-common\src\main\java\my\gov\etanah\common\repository\common\AppTugasanRepository.java:31` — `SET adalahAktif=false, tarikhTamat=:now, statusTugasan='Selesai'` — mirror exactly that (`flag_aktif='N', trkh_tetap=<now>, status_tugasan='Selesai'`) when a patch must close a task.
+
 ### 6.2 `umm_aliran_kerja` — Workflow Instance
 
 ```sql
@@ -564,7 +566,7 @@ CREATE TABLE umm_aliran_kerja (
 
 ### 6.3 `umm_tgsn_semasa` — Current/Active Task
 
-This is what the worklist UI reads. Links domain data to workflow.
+This is what the worklist UI reads. Links domain data to workflow. **It is the `Dashboard` entity**: `E:\Projects\Melaka\etanah-common\src\main\java\my\gov\etanah\common\notification\service\impl\DashboardService.java:165-168` selects it joined to `umm_aplikasi` with **no `status_proses` filter** — a permohonan patched to `Tamat`/`Batal` KEEPS its Senarai Tugasan row until this row is deleted (PROD-verified 2026-09-04: 2 `OPLPS` Tamat apps still listed). The engine deletes it on completion (`ImbasanDokumenService.java:967-982` shape: close AppTugasan, then `deleteInBatch(dashboards)`). Not an `ind_*` table — a DELETE here is the normal cancel shape (§27).
 
 ```sql
 CREATE TABLE umm_tgsn_semasa (
@@ -903,6 +905,8 @@ Flag columns are `bpchar(1)` with values `'Y'`/`'N'` (or `'y'`/`'n'` — case va
 ---
 
 ## 12. Environments — live servers, schemas, and how Ruri queries them
+
+> **Melaka PROD `etprdmlk` (172.30.17.104:5444) is EnterpriseDB Advanced Server (Oracle-compat), not vanilla Postgres** (verified 2026-09-04: `SELECT SYSDATE` returns a value; a synthesis agent read `version()` = EDB 17.10). So Alex's Oracle-style scripts (`SYSDATE`, upper-case `ET_MAIN.UMM_APLIKASI`) run as-is on PROD. Do NOT "fix" `SYSDATE` → `NOW()` on a PROD hand-off; two workflow readers wrongly flagged it 2026-09-04.
 
 **FAT + UAT are DECOMMISSIONED (2026-07-17) — never target them.** Live environments:
 
@@ -1591,3 +1595,34 @@ PROD with the same id — confirm on PROD rather than labelling a staging find "
 
 *Changelog note: the 2026-08-16 QA-273956 back-harvest corrections formerly appended here are now
 merged IN PLACE (§17.3 scope correction · §17.7 auto-regen · §24 confirming case).*
+
+## 27. Cancel ("batal") a permohonan created by mistake — the 3-table shape (2026-09-04, #277442; precedents #276229 · #275922; PROD-verified against rows 3439000 + 3415610)
+
+Used when a user TER-create an application that has no in-screen cancel (UPS_PLP has no Utiliti Batal flag — see BUG-BESTIARY). Three statements, in this order; literal `id_pengenalan` list when ≤10 ids.
+
+```sql
+UPDATE et_main.umm_aplikasi
+SET status_keputusan = 'Batal', hubungan_aplikasi_id = NULL, status_proses = 'Tamat', trkh_tamat = SYSDATE, status_awam = 'Tamat'
+WHERE id_pengenalan IN ('<ID1>', '<ID2>');
+-- N rows updated
+
+UPDATE et_main.umm_a_tgsn
+SET flag_aktif = 'N', status_tugasan = 'Selesai', trkh_tetap = SYSDATE
+WHERE flag_aktif = 'Y'
+  AND aplikasi_id IN (SELECT aplikasi_id FROM et_main.umm_aplikasi WHERE id_pengenalan IN ('<ID1>', '<ID2>'));
+-- N rows updated
+
+DELETE FROM et_main.umm_tgsn_semasa
+WHERE aplikasi_id IN (SELECT aplikasi_id FROM et_main.umm_aplikasi WHERE id_pengenalan IN ('<ID1>', '<ID2>'));
+-- N rows deleted
+```
+
+| Statement | Why | Skip when |
+|---|---|---|
+| 1 `umm_aplikasi` | = Alex's #276229 statement word-for-word (user-verified) | never |
+| 2 `umm_a_tgsn` | mirrors `AppTugasanRepository.java:31` (§6.1) | the tugasan is already `Selesai`/`N` |
+| 3 `umm_tgsn_semasa` | dashboard has no Tamat filter (§6.3); without it the row stays on Senarai Tugasan | already 0 rows |
+
+Before-SELECT: `SELECT aplikasi_id, id_pengenalan, status_proses, status_keputusan, status_awam, hubungan_aplikasi_id, trkh_tamat FROM umm_aplikasi WHERE id_pengenalan IN (…)` + counts of active `umm_a_tgsn` and `umm_tgsn_semasa` per aplikasi. Caveat: the Flowable engine process stays orphaned (separate DB, PROD not readable) — same as every precedent; harmless once the dashboard row is gone. `version` is NOT bumped (precedent rows sit at version 0 → cancelled).
+
+**`tempat` value convention** (`ind_mklmt_tnh_permit_lesen` / `umm_a_permohonan_tnh`, PROD census 2026-09-04): app default for "no place" is **NULL** (17 of 24 officer-created lesen rows; 34 officer MLPS rows); `'-'` is a legitimate stored value (66 migrated + 1 officer-typed on the lesen table; 2 patched MLPS rows) and is what BA asks to SEE — the L1e report renders blank as `-` (`populateTempat():818`), the Maklumat Tanah grid does not. Empty string exists only on 126 migrated rows. Pick `'-'` when the user asked for a dash on screen; NULL otherwise.

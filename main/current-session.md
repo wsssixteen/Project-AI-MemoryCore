@@ -35,19 +35,3 @@
 **Files**: `projects/coding-projects/active/QA-271910/QA-271910.md` (new, §0 Resume Point cold-complete) · `quest/active.txt` +QA-271910 block (status=hold, adhoc, state=wp) · wp/STATE-FACTS.md · `~/.claude.json`.
 
 **Resume ("continue 271910")**: (1) `oracle-wp-kl-prod-read` 4-fact query on PROD for 13244845; (2) `oracle-wp-kl-stag-flowable` ACT_HI_TASKINST proc 40987580 — why KKJKKT skipped; (3) update Azam.
-
-## 2026-09-04 — Session 3 (worktree ticket-275847-perak-docs-244548) — MULTI-STATE AUDIT (todo Q1 row 1)
-
-**Last Activity**: built the state registry + folder-structure rule; 16 components migrated; all evals green; committed on the worktree branch + pushed to origin/main.
-
-**Working memory**
-- Registry: `system/states.json` (tracked) + `system/states.local.json` (gitignored hosts overlay; copied to the main checkout too) → `lib/states.js` (`list · show <key> · resolve <text|path> · validate [key] · check [--all] · add · remove`; eval `lib/states.eval.js` 40/40).
-- Cascade: explicit → `ETANAH_STATE` → active.txt `state=`/`task_folder=` → path segment (`1. Tasks\<State>` | `E:\Projects\<State>`) → `PT<STATE>/` prefix → UNKNOWN (never a silent melaka).
-- Root layout rule: `system/FOLDER-STRUCTURE.md` (allow-list JSON fence + orphan table, 9 entries pending miya's nod) + `lib/folder-structure.js check` (eval 6/6). `system-audit.js` CHECK 7 (state-literal drift count) + CHECK 8 (root orphans / pending) fire at every boot.
-- Migrated: ticket-gate · knowledge-first-gate v3 · branch-guard v2 · alter-ticket-gate v1.1 · adhoc-register · latent-bugs-gate · adhoc-lifecycle (hook + CLI) · awam-no-resit-gate · notes-on-test-data · pre-action-check-gate · quest-resume-preflight · quest-knowledge-save-gate · lib/test-data-db · bug-db (lookup + build-index) · knowledge-schema-audit (`states` block moved out of KNOWLEDGE-SCHEMA.json) · quest SKILL.md STATE-FIRST paragraph.
-- `node lib/states.js check` after migration: 275 sites / 85 files → 52 UNROUTED · 8 routed · 25 eval fixtures.
-
-**Resume point (cold)**
-1. Ask miya for the verdict on the 9 orphan rows in `system/FOLDER-STRUCTURE.md` → execute the delete or move per row → empty `pending_nod` → `node lib/folder-structure.js check` = 0.
-2. Bulk-migrate the 52 UNROUTED files one category per pass (task-folder scripts → repo-root scripts → redmine-project → skills); Melaka-only-by-design tools (release-mlk-plp*, deploy, env-check/env-switch, staging-schema-*, patch-mlk-doc, local-deploy-gate) get a `// state-scoped: yes, melaka-only by design` header instead. Eval-green each pass.
-3. Verify `_unverified` registry facts: wp/selangor/kedah/terengganu permohonan prefixes (one DB read each), Perak Redmine project identifier (API read).

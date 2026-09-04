@@ -257,3 +257,25 @@ needs an urusan gate. `PelupusanService` has **no** `PraHakmilik` access of its 
 **"The path created"**: no local filesystem path in etanah for normal uploads; the physical file + path live in the separate `etanah-dms` app. Melaka runs a second endpoint `etanah-dms-rahsia` for confidential docs, chosen by `NewDmsDocumentTypeConstant.SISTEM_FAIL_RAHSIA` (`RemotingServiceLocator.java:71-85`). DMS filename convention for imbasan/DHK docs: `IDPENGENALAN_JENISDOKUMEN_INDEX.EXT` (`ImbasanDokumenUtil.java:255-262`).
 
 **Out of scope (not readable here)**: `etanah-dms` server storage internals, and the `Document` entity's `@Table` mapping (compiled `etanah-domain` jar). `dokumenSokonganPanel.xhtml` is a composite with **no live consumer** in these three repos (dead in-repo).
+
+## Batal a UPS_PLP created by mistake — why the screen cannot, and what the patch must touch (2026-09-04, #277442)
+
+```
+Utiliti Penyediaan Surat (UPS_PLP) created by officer (PT/KPT)
+  umm_aplikasi Awalan/Dalam Proses · umm_aliran_kerja + engine process · umm_a_tgsn UPS_PS flag_aktif Y · umm_tgsn_semasa row
+        |
+        |  officer looks for a cancel
+        ↓
+  MlkUtilitiPembatalanPermohonanForm.xhtml:22-38  (etanah-pelupusan)  — urusan flags PLPS/MLPS/PRBB/PRU/PRZ/BPRZ/PT/PSBS/PLTP, NO UPS_PLP
+  CommonPenyediaanSuratForm.java (etanah-common)  — tindakan = Sedia/Semak/Peraku only, NO batal outcome (UtilitiPenyediaanSuratConstant.java:130-132)
+        |
+        ↓  → data patch (DATABASE.md §27), three tables in order
+  umm_aplikasi → Tamat/Batal/Tamat + hubungan NULL          (CommonService.java:579-581 is the code twin: status_awam there is 'Selesai', tugasan 'Batal' — precedent rows use the patch shape, not the code shape)
+  umm_a_tgsn   → flag_aktif N · Selesai · trkh_tetap        (AppTugasanRepository.java:31)
+  umm_tgsn_semasa → DELETE                                  (DashboardService.java:165 reads it with no Tamat filter)
+        |
+        ↓
+  Senarai Tugasan clear · engine process orphaned (accepted, same as #276229/#275922)
+```
+
+Verified end-state rows on PROD: `PTMLK/02/L/UPS_PLP/2026/2` (3415610), `PTMLK/01/L/UPS_PLP/2026/4` (3439000), and the four #277442 apps after Alex's run at 16:22 MYT 2026-09-04.

@@ -4,6 +4,22 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-09-04 — Session 3 (worktree ticket-275847-perak-docs-244548) — MULTI-STATE AUDIT (todo Q1 row 1)
+
+**Last Activity**: built the state registry + folder-structure rule; 16 components migrated; all evals green; committed on the worktree branch + pushed to origin/main.
+
+**Working memory**
+- Registry: `system/states.json` (tracked) + `system/states.local.json` (gitignored hosts overlay; copied to the main checkout too) → `lib/states.js` (`list · show <key> · resolve <text|path> · validate [key] · check [--all] · add · remove`; eval `lib/states.eval.js` 40/40).
+- Cascade: explicit → `ETANAH_STATE` → active.txt `state=`/`task_folder=` → path segment (`1. Tasks\<State>` | `E:\Projects\<State>`) → `PT<STATE>/` prefix → UNKNOWN (never a silent melaka).
+- Root layout rule: `system/FOLDER-STRUCTURE.md` (allow-list JSON fence + orphan table, 9 entries pending miya's nod) + `lib/folder-structure.js check` (eval 6/6). `system-audit.js` CHECK 7 (state-literal drift count) + CHECK 8 (root orphans / pending) fire at every boot.
+- Migrated: ticket-gate · knowledge-first-gate v3 · branch-guard v2 · alter-ticket-gate v1.1 · adhoc-register · latent-bugs-gate · adhoc-lifecycle (hook + CLI) · awam-no-resit-gate · notes-on-test-data · pre-action-check-gate · quest-resume-preflight · quest-knowledge-save-gate · lib/test-data-db · bug-db (lookup + build-index) · knowledge-schema-audit (`states` block moved out of KNOWLEDGE-SCHEMA.json) · quest SKILL.md STATE-FIRST paragraph.
+- `node lib/states.js check` after migration: 275 sites / 85 files → 52 UNROUTED · 8 routed · 25 eval fixtures.
+
+**Resume point (cold)**
+1. Ask miya for the verdict on the 9 orphan rows in `system/FOLDER-STRUCTURE.md` → execute the delete or move per row → empty `pending_nod` → `node lib/folder-structure.js check` = 0.
+2. Bulk-migrate the 52 UNROUTED files one category per pass (task-folder scripts → repo-root scripts → redmine-project → skills); Melaka-only-by-design tools (release-mlk-plp*, deploy, env-check/env-switch, staging-schema-*, patch-mlk-doc, local-deploy-gate) get a `// state-scoped: yes, melaka-only by design` header instead. Eval-green each pass.
+3. Verify `_unverified` registry facts: wp/selangor/kedah/terengganu permohonan prefixes (one DB read each), Perak Redmine project identifier (API read).
+
 ## 2026-09-04 — ADHOC-FLOWABLE-2026-1 APPLIED on MLIT (3 sub-processes annotated, LEFT layout, versions 2/2/1) + knowledge = live exports + cross-state KNOWLEDGE-SCHEMA/audit/ticket-gate
 
 **Arc**: (1) annotations written INTO the existing MLIT models via the in-page Oryx editor API (REST `newversion` upload classifier-blocked): `MLK_PLP_SUB_JBTN_TEK` abc34d49… v1→v2, `MLK_PLP_SUB_UPN` 90e6c6a8… v1→v2 (new version + comment), `MLK_PLP_SUB_UPW` a3655569… v1 (miya's import). (2) miya: "do not create a new version… annotations on the LEFT… limit line length" → overwrite-save, box at (15,15), text wrapped 72 chars, diagram shifted to x=531/519, y=15; versions unchanged. Comment = version metadata not shown anywhere in the UI (History popup = version·user·date); Description = header, left as the sub-process name. (3) miya: "update our respective sub flows into our etanah knowledge" → `melaka/flowables-bpmn/MLK_PLP_SUB_*.bpmn20.xml` are now the REAL exports of v2/v2/v1: JBTN_TEK = actual download; UPN/UPW rebuilt from a DI-token transfer (`tools/rebuild_di.py`, sha256 MATCH, byte sizes 39689/31779 = live). Slip caught: first install used two morning-old `Unconfirmed *.crdownload` files (old 43/23-line layout) — line-count check reverted it. (4) /goal "save every finding into etanah knowledge since I cannot trust your DE on this regard" → banked FIRST (below), then DE.
@@ -4806,6 +4822,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
