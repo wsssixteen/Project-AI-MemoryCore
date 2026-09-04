@@ -226,7 +226,7 @@ Every row refines an existing component (Rule 1). **Safety** = what breaks if wr
 1. **Hook-yield ruling pass** (Q6 method) across all 116 registered hook commands, all events.
 2. **Eval backfill** for the 129 no-eval components — or an explicit `eval: not-applicable` ruling so the census stops flagging them.
 3. **`deploy-guard.check.hook`** silent since birth (08-14): fixture-replay, then keep or retire.
-4. **`states.json`** registry (proposal 09-04 A2, todo Q1 multi-state row): one registry resolved by every hook — kills the Melaka-hardcoded blocks seen on #275847.
+4. ~~**`states.json`** registry (proposal 09-04 A2, todo Q1 multi-state row): one registry resolved by every hook — kills the Melaka-hardcoded blocks seen on #275847.~~ ✅ **BUILT 2026-09-04 S3** (`4d0785a`) — see §6; what remains is the 52-file bulk migration + the root-orphan retire, both listed there.
 5. **Weekly audit as a script** (`lib/weekly-audit.js`): proposals ≥7d · hooks with 0 blocks/30d · stale dashboards · overdue watches → one ruling table.
 6. **Low-effort tier policy**: catalogue every Agent/Workflow call-site with model + effort; retrieval defaults to `sonnet` + `low`, judgment stays on the session model.
 
@@ -256,3 +256,27 @@ Every row refines an existing component (Rule 1). **Safety** = what breaks if wr
 3. **Fresh session, FIRST item: build §M (turn-ledger) via forge** — M1/M2 refinements, M3 born, M4 token-map seeded, M5 de-close C5, M6 report; evals E1–E5 green before registration. Reason it goes first: every later ruling (Q6 gate yield, Q8 proposals, Part 2 hook pass) is decided from `true_blocks` and per-phase cost, which only exist once §M is collecting.
 4. Same fresh session after §M: Q1/Q2/Q4/Q6/Q7/Q8/Q9/Q10, one commit per item, before/after telemetry rows cited in each commit.
 5. Part 2 (§3) after 14 days of §M rows, so the whole-system ruling pass reads measured yield, not fire counts.
+6. **Multi-state + folder-structure (§6) rides Part 2's house-cleaning, not a separate track** — the orphan retire waits for みや's row-by-row nod; the 52-file literal migration is done category by category, each pass eval-green, and can start any session (no §M dependency).
+
+---
+
+## 6. Multi-state + folder-structure — MERGED 2026-09-04 S3 (was todo Q1 "🏛️ Multi-state"; みや: "merge or add into it … the Quest workflow improvements … rely on one another")
+
+**Built (commit `4d0785a`, all evals green)**
+
+| Piece | What it is | Proof |
+|---|---|---|
+| `system/states.json` + `system/states.local.json` (gitignored) | THE state registry — 6 states, disk-verified (WP Task folder = `Putrajaya`, not `WP`) · `work_scope` active/scaffold/excluded (TRG) · trunk per module · DB MCPs · BPMN prefix · alter file; hosts only in the overlay | `node lib/states.js validate` → 6/6 ✓ |
+| `lib/states.js` | resolve cascade (explicit → `ETANAH_STATE` → active.txt → path segment → `PT<STATE>/` → UNKNOWN, never silent) · `validate · check · add · remove` | `lib/states.eval.js` 40/40 |
+| `system/FOLDER-STRUCTURE.md` + `lib/folder-structure.js` | root allow-list (a row is the nod) + 9-row orphan table pending みや | eval 6/6; boot CHECK 8 |
+| `system-audit.js` CHECK 7 + 8 | state-literal drift count (`node lib/states.js check`) + root orphans | boot line |
+| 16 components migrated | ticket-gate · knowledge-first-gate v3 · branch-guard v2 · alter-ticket-gate v1.1 · adhoc-register · latent-bugs-gate · adhoc-lifecycle · awam-no-resit-gate · notes-on-test-data · pre-action-check-gate · quest-resume-preflight · quest-knowledge-save-gate · test-data-db · bug-db · knowledge-schema-audit · quest SKILL.md | each Feature's own eval green |
+
+**Remaining — where it sits in THIS plan**
+
+| Item | Depends on / feeds | Sequence |
+|---|---|---|
+| 6a. Root-orphan retire (9 rows in FOLDER-STRUCTURE.md: delete `library/`, `plugins/ruri-skills/`, `Project Resources/`, `salvage/`, `outputs-temp/`; move `growth/`, `RURI-GROWTH.md`; move-or-delete `tools/docx/`; port-then-delete root `etanah-knowledge/`) | みや's row verdicts; the Observability row's rule (delete only with liveness evidence — all 9 have 0 live readers per the 2026-09-04 reference grep) | any session after the nod; pairs with Part 2 item 1 house-cleaning |
+| 6b. Bulk-migrate the 52 UNROUTED files (`node lib/states.js check`) — task-folder scripts → repo-root scripts → redmine-project (`redmine-board`, `urusan-tickets`) → skills; Melaka-only-by-design tools (`release-mlk-plp*`, `deploy`, `env-check`/`env-switch`, `staging-schema-*`, `patch-mlk-doc`, `local-deploy-gate`) get a `state-scoped: yes, melaka-only by design` header instead | feeds **Q3** (intake tools: `redmine-sync`/`redmine-board` match by id AND by state project) and **Q7** (`worktree-cleanup-boot`, `open-quest-surfacer` read Task folders per state) — do 6b before or with those rows so they are not rewritten twice | one category per pass, eval-green each; no §M dependency |
+| 6c. Verify `_unverified` registry facts (wp/selangor/kedah/terengganu permohonan prefixes; Perak Redmine project identifier) | one DB read per state + one Redmine API read | first session that touches that state |
+| 6d. Quest-workflow overlap (みや's point): **Q1 precedent fast-path** now reads the resolved state's registers (adhoc-register/latent-bugs read per state since S3); **Q2 `quest-phase0` tiering** must take `knowledgeDir` + `dbMcp` from `node lib/states.js show <state>` (SKILL.md already says so) — encode it when Q2 is built; **Q4 Stop false positives** — `alter-ticket-gate` firing on "alter to" is the same false-trigger class, now state-routed, predicate still to narrow | Q1/Q2/Q4 rows | build those rows state-aware from the start; a Melaka literal in a new row is a Rule 11 violation |

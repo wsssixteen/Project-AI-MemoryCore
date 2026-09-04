@@ -47,3 +47,14 @@ Session: Perak #275847 ("alter to SPI") + birth of the ALTER layer (playbook · 
 | A5 sweep / gates | **7 of 12 Stop-hook interruptions were false or repeats** (predicate-box with no edit · ba-table ×3 on non-intake turns · patch-gate on an already-stamped script · full-address ×3); plus alter-ticket-gate on "alter to" about an ignored ticket and DE-trigger on the words "new session"; sql-schema-verify emitter cross-products columns onto every table | 12 blocks · 7 false · 5 true |
 
 **Biggest miss**: answered "is observability collecting" and stopped — miya had asked about monitoring too, and that layer had never been built (`reask/buried-answer`). Corrected by the §M design in `system/speed-optimization-plan-2026-09-04.md`.
+
+## Session 3 — multi-state audit (registry + folder-structure rule)
+
+| Axis | Finding (with instance) | Measured |
+|---|---|---|
+| A1 agentic system | ⏭ no fleet — the whole audit was 3 greps + 2 disk listings; a fan-out would have re-read what `Grep` already indexed | 0 agents · 289 literal sites found inline |
+| A2 quest workflow | **Silent-default is the state bug class**: `ticket-gate.js:89` fell back to melaka whenever `projects/` was absent (every worktree). Fixed by a resolver that returns UNKNOWN; 16 components migrated | `node lib/states.js check`: 66 → 52 UNROUTED files |
+| A3 debugging | **Eval sandboxes are the second execution context**: 3 gate evals failed after migration because `CLAUDE_PROJECT_DIR` pointed at a temp tree with no `lib/`; fixed by a registry fallback + robust require. One round-trip, caught by running every touched eval, not by reading | 3 evals red → green in 1 pass |
+| A4 etanah issue-solving | Disk beat the schema: `KNOWLEDGE-SCHEMA.json` said the WP Task folder was `1. Tasks\WP`; `Get-ChildItem` said `Putrajaya`. The registry carries disk truth; the schema block was removed | 1 wrong fact prevented from becoming code |
+| A5 sweep / file sweep | The "obvious duplicate" root `etanah-knowledge/melaka/DEV-TESTING-HACKS.md` has 29 headings the canonical file lacks — verdict changed from delete to port-then-delete before anyone deleted it | 1 verdict corrected by a 3-line check |
+

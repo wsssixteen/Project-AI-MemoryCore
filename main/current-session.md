@@ -35,3 +35,18 @@
 **Files**: `projects/coding-projects/active/QA-271910/QA-271910.md` (new, §0 Resume Point cold-complete) · `quest/active.txt` +QA-271910 block (status=hold, adhoc, state=wp) · wp/STATE-FACTS.md · `~/.claude.json`.
 
 **Resume ("continue 271910")**: (1) `oracle-wp-kl-prod-read` 4-fact query on PROD for 13244845; (2) `oracle-wp-kl-stag-flowable` ACT_HI_TASKINST proc 40987580 — why KKJKKT skipped; (3) update Azam.
+
+
+## 2026-09-04 — Session 3 (multi-state audit; worktree ticket-275847-perak-docs-244548, pruned mid-session) — CLOSED 17:57
+
+**Last Activity**: state registry + folder-structure rule built and merged into `system/speed-optimization-plan-2026-09-04.md` §6; commit `4d0785a` on origin/main; DE closed from the main checkout.
+
+**Working memory**
+- Registry: `system/states.json` (tracked, 6 states) + `system/states.local.json` (gitignored hosts overlay, present in main) → `lib/states.js` (`list · show <key> · resolve <text|path> · validate [key] · check [--all] · add · remove`; eval 40/40).
+- Cascade: explicit → `ETANAH_STATE` → active.txt `state=`/`task_folder=` → path segment (`1. Tasks\<State>` | `E:\Projects\<State>`) → `PT<STATE>/` prefix → UNKNOWN (never a silent melaka).
+- Root layout rule: `system/FOLDER-STRUCTURE.md` (allow-list JSON fence + 9-row orphan table pending miya) + `lib/folder-structure.js check` (eval 6/6). `system-audit.js` CHECK 7 (state-literal drift) + CHECK 8 (root orphans) fire at boot.
+- Migrated (all evals green): ticket-gate · knowledge-first-gate v3 · branch-guard v2 · alter-ticket-gate v1.1 · adhoc-register · latent-bugs-gate · adhoc-lifecycle (hook + CLI) · awam-no-resit-gate · notes-on-test-data · pre-action-check-gate · quest-resume-preflight · quest-knowledge-save-gate · lib/test-data-db · bug-db · knowledge-schema-audit (`states` block moved out of KNOWLEDGE-SCHEMA.json) · quest SKILL.md STATE-FIRST paragraph.
+- `node lib/states.js check`: 275 sites / 85 files → 52 UNROUTED · 8 routed · 25 eval fixtures.
+- Plan merge (miya's ask): todo Q1 Multi-state row now points at `speed-optimization-plan-2026-09-04.md` §6 (6a orphan-retire · 6b 52-file migration feeds Q3/Q7 · 6c unverified facts · 6d Q1/Q2/Q4 built state-aware).
+
+**Resume point (cold)** — see plan §6: (1) miya's verdict on the 9 orphan rows → git delete or move per row → empty `pending_nod`; (2) 6b migration one category per pass, eval-green; (3) 6c verify prefixes + Perak Redmine project id. The pruned worktree folder `.claude/worktrees/ticket-275847-perak-docs-244548` has no git metadata and nothing unpushed — safe for the boot orphan sweep to delete.
