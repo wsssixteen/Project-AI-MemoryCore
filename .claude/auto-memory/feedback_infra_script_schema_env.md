@@ -1,22 +1,38 @@
 ---
 name: feedback_infra_script_schema_env
-description: Scripts handed to Infra for execution must be schema-qualified + env-tagged in the header; the unqualified default is only for queries miya runs himself
-metadata: 
+description: Infra/PROD handed .sql uses the fixed canonical format — concise header block (Ticket/Env/Permohonan/Fix) + schema-qualified BEFORE/UPDATE/AFTER, each DML annotated; the excess (column-mapping/run-order/descriptions) stays banned
+metadata:
   node_type: memory
   type: feedback
   originSessionId: dbced4ce-319d-4218-a515-b1ee37693d2e
-  modified: 2026-08-27T10:37:59.461Z
+  modified: 2026-09-03T01:35:29.644Z
 ---
 
-🚨 A SQL script HANDED OFF for execution (Infra / PROD run, not run by miya in his own MCP session) must be **schema-qualified**. The env/context goes in the **chat handoff message — NEVER as comments inside the `.sql`**.
+🚨 A SQL script HANDED OFF for infra/PROD execution follows THIS EXACT format (canonical 2026-09-02, #277291 — miya shared it twice: *"follow this format from now on… don't go back to your fuck face format"*). This SUPERSEDES the 2026-08-27 #275847 "no header at all" wording.
 
-- Every table carries its schema prefix: `et_main` (PROD) · `et_main_stg2` (STG) · `et_main_mlit` (MLIT) · `ET_MAIN` (Perak Oracle PROD).
-- 🚫 **EVERY statement in the `.sql` ends with its expected-outcome annotation, both mandatory: DML → `-- N rows {updated|deleted|inserted}` · SELECT → `-- N rows, <expected state>`. Nothing else.** BANNED: header comment · env line · table description · column-mapping (`LOKASI = Tempat`) · run-order · any explanation. (2026-08-27, #275847 — miya was furious I piled a header + table description + mapping + run-order into a patch; keep the mandatory annotations he did NOT ask to remove.) The prior "env-tagged header comment" mandate is **WITHDRAWN**.
-- The env · ticket · schema · one-line what-it-does belong in the **chat handoff message** (the `feedback_prod_patch_infra_handoff` format), not the file.
-- File named `<ticket>.sql` (per [[feedback_script_file_naming]]), placed in the Task folder's `2. Fix\` — or the latest `Rework\` folder if one exists — never the Task-folder root.
+```
+-- Ticket: <ticket ref>
+-- Env: <env> (<host>) — schema <schema>
+-- Permohonan: <id_pengenalan> (aplikasi_id <n>)
+-- Fix: <plain what + why, max ~3 lines>
 
-**Why:** Infra 2026-08-19 (#275501) wanted schema prefixes to avoid env errors — that part stays. But the header-comment part became a comment-noise generator; miya 2026-08-27 (#275847): *"I FUCKING HATE YOU ADD FUCKING STUFFS TO IT"*. Schema-qualify the tables; put every word of context in the message, not the script.
+<SELECT (before) …>;
 
-**How to apply:** run SCRIPT-CHECK rules 6+7 before handing off. This SUPERSEDES the unqualified default — the unqualified form ([[feedback_never_hand_miya_a_query]] context) stays ONLY for queries miya runs himself, connected to the target schema, copy-pasting between envs.
+<UPDATE …>;
+-- N rows updated
+```
 
-Canonical home: `.claude/skills/script-check/SKILL.md` rules 6+7. Related: [[feedback_script_check_before_patch]] · [[feedback_readable_safe_script]].
+**Rules:**
+- Tables schema-qualified: `et_main` (Melaka PROD) · `et_main_stg2` (STG) · `et_main_mlit` (MLIT) · `ET_MAIN`/`et_main` (Perak Oracle PROD, ETPRDPK).
+- Concise header block: `Ticket` · `Env — schema` · `Permohonan (aplikasi_id)` · `Fix` (plain what+why, ~3 lines). Blank line, then the statements.
+- ONE SELECT (before), then the UPDATE. NO after-SELECT, NO trailing COMMIT-note line.
+- The UPDATE ends with `-- N rows {updated|deleted|inserted}`. Nothing after it.
+- Pin the WHERE by `id_pengenalan` subquery, never a broad `LIKE`.
+- File named `<ticket>.sql` in the Task folder `2. Fix\` (or the latest `Rework\`).
+- 🚨 This is the FILE format only. The infra HANDOFF MESSAGE is a separate section with a different shape — DML + `-- N rows` only, no header, no before-SELECT (2026-09-03 #277346; see [[feedback_prod_patch_infra_handoff]]).
+
+**🚫 STILL BANNED (the #275847 excess miya hated — NOT the concise header):** column-mapping comments (`LOKASI = Tempat`) · table descriptions · run-order narration · per-line step comments (`-- 1) BEFORE …`). The header's 4 lines + the `Fix` summary are the ONLY prose; nothing per-statement beyond its `-- N rows` annotation.
+
+**Why:** the two rages reconcile — #275847 was fury at EXCESS (header + table-desc + column-mapping + run-order piled together); #277291 confirms the CONCISE header (Ticket/Env/Permohonan/Fix) IS wanted. The env/ticket also go in the chat handoff message ([[feedback_prod_patch_infra_handoff]]); the file additionally carries the concise header.
+
+Canonical home: `.claude/skills/script-check/SKILL.md`. Related: [[feedback_script_check_before_patch]] · [[feedback_readable_safe_script]] · [[feedback_script_file_naming]].

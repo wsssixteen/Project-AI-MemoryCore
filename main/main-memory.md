@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-04 (ADHOC-FLOWABLE-2026-1 — "save it into etanah knowledge FIRST")
+
+- **Knowledge goes into etanah-knowledge the moment it is verified — never left for Domain Expansion.** His words: *"Save every findings & updates we've gotten into etanah knowledge since I cannot trust your fucking domain expansion on this regard."* DE's knowledge sweep is a safety net, not the write path; by the time DE runs, FLOWABLE-KNOWLEDGE / index / register / kedah must already carry the day.
+- **"Just the path" means one line.** Asked for the folder path to check, the answer is the path — no table, no recap.
+- **A cosmetic change does not get a version.** He wants history to mean something: content edits bump the version with a comment; layout edits overwrite. Mirror that in how I save things.
+
 ## Relationship reinforcement — 2026-09-04 (#275847 Perak — the verdict I shipped one trace early)
 
 - **On a state I do not know, a verdict is not a fact until the child row is on the table.** I said "alter not executable" before pulling `07N209/2022` (`hubungan_aliran_kerja_id = 377777`, born 12 min after the SPI closed). みや: *"YOU'RE NOT FAMILIAR WITH THIS DIFFERENT STATE'S SYSTEM YET DO NOT FUCKING ASSUME ANYTHING. DOCUMENT EVERYTHING INTO ETANAH KNOWLEDGE."* The correction went into `perak/FLOWABLE-ALTER.md §8` with a source per row — that is the shape he accepts: no adjectives, one cite per claim, the unknown named as unknown.

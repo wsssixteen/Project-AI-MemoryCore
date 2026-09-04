@@ -75,6 +75,21 @@ function readQAState(qaNum) {
   return state;
 }
 
+// ── State-aware knowledge dir (added 2026-09-04, miya /goal: same layout across states) ──
+// active.txt carries `state=<Name>` (redmine-sync v9: Perak / Putrajaya / …); the permohonan prefix in the
+// one-liner is the fallback. Resolved through etanah-knowledge/KNOWLEDGE-SCHEMA.json (aliases + prefixes) so
+// a new state needs ONE schema row, never an edit here. Default = melaka (the reference state).
+function knowledgeDirFor(state) {
+  let dir = null;
+  try {
+    const ksa = require(path.join(projectRoot, 'domain', 'knowledge-schema-audit', 'knowledge-schema-audit.js'));
+    const schema = ksa.loadSchema(ksa.knowledgeRoot());
+    dir = ksa.stateDirFor(state.state, schema);
+    if (!dir) { const m = (state.issue_one_liner || '').match(/\bPT[A-Z]{2,4}\//); if (m) dir = ksa.stateDirFor(m[0].replace('/', ''), schema); }
+  } catch (e) { /* schema unavailable (worktree without projects/) → melaka */ }
+  return 'etanah-knowledge/' + (dir || 'melaka') + '/';
+}
+
 // ── AWAM No-Resit detection (added 2026-07-22, #271721) ──────────────────────
 // The 5 PLP urusan whose AWAM flow starts at CarianRasmiHakmilikForm and therefore
 // REQUIRE a No Resit Carian Rasmi as test data. Source of truth:
@@ -91,7 +106,8 @@ function noResitRow(state) {
   const hit = NO_RESIT_URUSAN.filter(u => new RegExp(`\\b${u}\\b`).test(hay));
   if (!hit.length) return null;
   const u = hit[0];
-  return `7. ⬜ **🚨 No-Resit urusan detected (${hit.join('/')}) — SETTLE THE SIDE, THEN DERIVE** — (a) **Which side is this ticket?** AWAM (pemohon portal, \`etanah-awam\`) or APPS (staff tugasan, \`etanah-pelupusan\`)? The ticket text often does NOT say — check the BA screenshot header ("Portal Awam" vs the staff shell) and which repo renders the screen. (b) **If AWAM → DERIVE the No Resit Carian Rasmi NOW.** ${u} starts at \`CarianRasmiHakmilikForm.xhtml\`; みや cannot open the permohonan without a receipt and BA never supplies one. It is ONE query away — do NOT hand back asking for it. (c) If APPS-side, mark this row \`⏭ N/A — staff-side\` and move on. Method + the 7 validations: \`etanah-knowledge/melaka/TEST-PERMOHONAN-INDEX.md\` § *No Resit Carian Rasmi* (V3 <6 months · V4 jenis-hakmilik allow-list for PSBS/PLTP · V6 no cukai arrears · V7 not Batal). Write it into the Task notes file: \`node quest/notes.js --folder "<Task folder>" --qa ${state.qa || '<n>'} --env <env> --urusan ${u} --id "No Resit: <no_resit>" --user "<login>"\`. **Also confirm the module** — an AWAM ticket's fix usually lives in \`etanah-awam\`, NOT \`etanah-pelupusan\`. Enforced at hand-back by \`domain/awam-no-resit-gate\`.`;
+  const kdir = knowledgeDirFor(state);
+  return `7. ⬜ **🚨 No-Resit urusan detected (${hit.join('/')}) — SETTLE THE SIDE, THEN DERIVE** — (a) **Which side is this ticket?** AWAM (pemohon portal, \`etanah-awam\`) or APPS (staff tugasan, \`etanah-pelupusan\`)? The ticket text often does NOT say — check the BA screenshot header ("Portal Awam" vs the staff shell) and which repo renders the screen. (b) **If AWAM → DERIVE the No Resit Carian Rasmi NOW.** ${u} starts at \`CarianRasmiHakmilikForm.xhtml\`; みや cannot open the permohonan without a receipt and BA never supplies one. It is ONE query away — do NOT hand back asking for it. (c) If APPS-side, mark this row \`⏭ N/A — staff-side\` and move on. Method + the 7 validations: \`${kdir}TEST-PERMOHONAN-INDEX.md\` § *No Resit Carian Rasmi* (V3 <6 months · V4 jenis-hakmilik allow-list for PSBS/PLTP · V6 no cukai arrears · V7 not Batal). Write it into the Task notes file: \`node quest/notes.js --folder "<Task folder>" --qa ${state.qa || '<n>'} --env <env> --urusan ${u} --id "No Resit: <no_resit>" --user "<login>"\`. **Also confirm the module** — an AWAM ticket's fix usually lives in \`etanah-awam\`, NOT \`etanah-pelupusan\`. Enforced at hand-back by \`domain/awam-no-resit-gate\`.`;
 }
 
 let inputData = '';
@@ -157,10 +173,12 @@ process.stdin.on('end', () => {
 
       const patchFlag = renderPatchIntakeFlag(readBriefText(state.task_folder), `QA-${qaNum}`);
       if (patchFlag) logPatchIntake(qaNum, detectPatchRequest(readBriefText(state.task_folder)).signal);
+      const kdir = knowledgeDirFor(state);
 
       context = [
         ...(patchFlag ? [patchFlag, ``] : []),
-        `⚔️ QUEST GATE — QA #${qaNum} detected (state: phase=${state.phase || 'none'}, status=${state.status}).`,
+        `⚔️ QUEST GATE — QA #${qaNum} detected (state: phase=${state.phase || 'none'}, status=${state.status}${state.state ? ', state=' + state.state : ''}).`,
+        `🗂 KNOWLEDGE DIR for this ticket: \`${kdir}\` — read its \`index.md\` FIRST (knowledge-first rule); every file name below resolves inside it (identical layout in every state per \`etanah-knowledge/KNOWLEDGE-SCHEMA.json\`).`,
         ``,
         `MANDATORY — emit the Phase-0 gate checklist FIRST as ✓/⬜ rows (a skipped item must be VISIBLE):`,
         ``,
@@ -172,7 +190,7 @@ process.stdin.on('end', () => {
         \`0.7 ⬜ **🚨 MODULE SET — declare the module(s) in focus in ONE line at load, BEFORE any analysis** — \`etanah-pelupusan | etanah-awam | etanah-teknikal (STOP — not deployed locally) | etanah-common\`, with the evidence (BPMN userTask vs MLK_TKL_* callActivity per CLAUDE.md BPMN-FIRST · BA's own words naming AWAM/portal · screen path). Persist \`module=\` in active.txt. Multi-module tickets name EVERY module and which half lives where. Banned: loading a ticket without the module line (2026-08-03 per みや, QA-272867 — AWAM half ignored at load).`,
         `1. ⬜ Task folder loaded — \`handoff_file\` from active.txt OR ask みや for path. Read every file in \`0. Brief/\` (Description, History, every PDF/docx/photo).`,
         `1b. ⬜ **🚨 LATEST-STATE: journal-timeline table emitted + every issue classified OPEN / ALREADY-SOLVED** — from History.txt, one row per journal entry (date · author · assignee-change · issue raised/solved), oldest→newest; solved issues emitted as a DO-NOT-RESOLVE list (cite the journal date proving each). Fix targets = LATEST open issues ONLY — newest entries supersede the Description. Banned: scouting an issue solved earlier in the thread. (Added 2026-07-27 per みや — stale-conversation slip.)`,
-        `1c. ⬜ **URUSAN PRECEDENT — read \`etanah-knowledge/melaka/urusan/${state.urusan || '<KOD>'}-TICKETS.md\`** (derive the KOD first if active.txt has no \`urusan=\`) and cite matching past tickets ("precedent: #NNNNN same screen/symptom" or "no urusan precedent"). Past tickets ARE the distribution of future tickets — a match turns Phase 0 into diff-against-precedent instead of a fresh trace. Regenerate stale docs: \`node domain/urusan-tickets/urusan-tickets.js\` (office network). (Added 2026-08-23 per みや — precedent-first directive.)`,
+        `1c. ⬜ **URUSAN PRECEDENT — read \`${kdir}urusan/${state.urusan || '<KOD>'}-TICKETS.md\`** (derive the KOD first if active.txt has no \`urusan=\`) and cite matching past tickets ("precedent: #NNNNN same screen/symptom" or "no urusan precedent"). Past tickets ARE the distribution of future tickets — a match turns Phase 0 into diff-against-precedent instead of a fresh trace. Regenerate stale docs: \`node domain/urusan-tickets/urusan-tickets.js\` (office network). (Added 2026-08-23 per みや — precedent-first directive.)`,
         `1d. ⬜ **TEST-DATA LOOKUP FIRST — run \`node lib/test-data-db.js ${state.urusan || '<urusan or keyword>'}\` and paste the result** BEFORE creating fresh test data; on a hit, re-verify the row on the LIVE env (UAT/FAT rows are historical — envs deleted 2026-07-17). Any NEW test data derived this quest is WRITTEN BACK to TEST-PERMOHONAN-INDEX.md (then \`node lib/test-data-db.js build\`). (Added 2026-08-23 per みや — close-the-loop directive.)`,
         `2. ⬜ **Issue Checklist created at quest creation** in \`projects/coding-projects/active/QA-${qaNum}/QA-${qaNum}.md\` — from PRIMARY SOURCES (BA Description + History + attachments). NOT copied from Scout. Scout's diagnostic is DIFFED against this. List GROWS through Recon/Apply/Test; out-of-scope findings get explicit OOS rows. **Enumerate ALL** (every BA-numbered item, every gate-writer, every OR-bypass, every data-axis branch) — see \`checklist\` skill "Enumeration completeness".`,
         `3. ⬜ **Existing-utility sweep** — grep for existing helpers/constants/sets/templates BEFORE proposing custom ones. Applies even when みや says "create our own X" — flag the existing util first.`,

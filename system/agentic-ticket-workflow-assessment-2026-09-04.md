@@ -13,3 +13,13 @@ Session: Perak #275847 ("alter to SPI") + birth of the ALTER layer (playbook · 
 **Biggest slip**: shipping a verdict with an unproven half (A3). The playbook's A2 birth-check row now exists precisely so the child-serahan origin is a mandatory row, not a memory.
 
 **Open decision for みや**: reply option to Ammar/Gary; 9 Redmine-closed quest blocks await his close nod (reconcile output).
+
+## Session 2 — ADHOC-FLOWABLE-2026-1 (modeler edits + knowledge refresh + cross-state schema)
+
+| Axis | Failure class → instance | Measured |
+|---|---|---|
+| A1 agentic system | **Tool-channel blind spots cost a full hour**: Claude-in-Chrome JS output truncates ~1 KB, base64/hex blocked, downloads dropped after the first → 40+ tool calls to move 2 files; solved by transferring only the DI coordinates as tokens (`rebuild_di.py`) | 2 files · ~45 browser calls · 0 bytes wrong after hash check |
+| A2 quest workflow | **Knowledge write happened at the end, on his order** — the facts (editor API, comment semantics, contracts) sat in the quest MD until the /goal forced them into etanah-knowledge; DE's sweep was being trusted as the write path | 6 knowledge files written only after "I cannot trust your DE" |
+| A3 debugging | **Stale-artifact install**: two `Unconfirmed *.crdownload` files from the morning were installed as "live" for one turn; caught by the annotation line-count check, not by the pull procedure | 1 near-miss, reverted same turn |
+| A4 etanah issue-solving | **Bash-tool escape collapse** broke 3 generated scripts (`\\n` → newline, heredoc non-ASCII mangled) — 4 repair cycles before switching to Write-tool Python patches with `chr()` escapes | 4 wasted cycles |
+| A5 sweep / repo | **Orphan worktree discovered only at DE**: git metadata pruned under a live session; main dirty from 2 other sessions and 4 behind → 30-minute manual reconciliation. No boot signal said "your worktree has no git" | 1 orphan dir · 2 conflicts · 6 hand-ported paths |

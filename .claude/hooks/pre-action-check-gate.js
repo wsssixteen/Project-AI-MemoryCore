@@ -30,6 +30,13 @@
  * before editing. Catches scope drift (a wrong-baseline variant) — the
  * scope-anchor-echo skill exists but is unenforced. Advisory only, never
  * blocks. Bypass: not needed (advisory, no deny).
+ *
+ * v1.3 2026-09-02 — DELIVERABLE-IN-QUEST-FOLDER DENY (per miya, QA-277697). The v1.1
+ * sibling-file advisory is now a hard deny for ANY non-QA-<NNN>.md file under
+ * projects/coding-projects/active/QA-<NNN>/ (any extension, any depth). Redmine-bound
+ * deliverables live in the Task folder 2. Fix/ or 3. Rework/ only. Spec-preservation:
+ * v1.1 advisory text retained for the (now unreachable without bypass) sibling case;
+ * bypass token unchanged: [skip-canonical-doc: <reason>]. Smoke-tested 20 fixtures.
  */
 const fs = require('fs');
 const path = require('path');
@@ -97,6 +104,40 @@ process.stdin.on('end', () => {
         },
       }));
       process.exit(0);
+    }
+
+    // v1.3 2026-09-02 — DELIVERABLE-IN-QUEST-FOLDER DENY (per miya, QA-277697).
+    // Anything miya must open / upload to Redmine (audit report, script, doc, patch, evidence)
+    // lives ONLY in the Task folder `2. Fix/` or `3. Rework/`. The quest project folder
+    // holds exactly ONE file: QA-<NNN>.md. A second file there is a deliverable in the
+    // wrong home — miya had to go hunting for 277697-docx-audit.md. This upgrades the
+    // v1.1 advisory to a hard deny for ANY non-canonical file under the quest folder.
+    // Bypass: `[skip-canonical-doc: <reason>]` in the current message (legacy quests only).
+    {
+      const inQuestFolder = /projects[\\/]coding-projects[\\/]active[\\/]QA-\d+[\\/]/i.test(filePath);
+      const isCanonical = /[\\/]QA-\d+\.md$/i.test(filePath);
+      if (inQuestFolder && !isCanonical) {
+        const transcript = readTranscript(data.transcript_path);
+        const tail = transcript ? transcript.slice(-20000) : '';
+        if (!/\[skip-canonical-doc:/i.test(tail)) {
+          const reason = [
+            '🚫 deliverable-in-quest-folder: the quest folder holds ONE file — QA-<NNN>.md.',
+            `   File: ${filePath}`,
+            '   Anything miya opens or uploads to Redmine (report / script / doc / evidence) goes to the',
+            '   Task folder ONLY:  1. Tasks\\Melaka\\<n>. <ticket>\\2. Fix\\   or   \\3. Rework\\',
+            '   Need a copy for yourself? Make it in the Task folder too — never here.',
+            '   Findings / reasoning / pointers → QA-<NNN>.md. Bypass (legacy quests): [skip-canonical-doc: <reason>]',
+          ].join('\n');
+          process.stdout.write(JSON.stringify({
+            hookSpecificOutput: {
+              hookEventName: 'PreToolUse',
+              permissionDecision: 'deny',
+              permissionDecisionReason: reason,
+            },
+          }));
+          process.exit(0);
+        }
+      }
     }
 
     // Quest-related path patterns

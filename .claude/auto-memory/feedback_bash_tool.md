@@ -14,3 +14,4 @@ Bash tool hangs for simple shell commands. Use dedicated tools instead for those
 - Use Read/Grep instead of `cat`/`grep`
 - **Run scripts directly via Bash** — `node quest/redmine-sync.js`, Python scripts, etc. — these are Ruri's tools
 - Reserve caution for interactive/blocking commands only (git rebase -i, long-running processes without timeout)
+- **Escaping trap (2026-09-04)**: the Bash tool collapses a doubled backslash to a single one and can mangle non-ASCII inside heredocs, so an inline `python - <<EOF` that writes `'\\n'` produces a real newline and breaks the file. For any generated script or text patch: Write the `.py` with the Write tool, use `chr(10)` / `chr(92)` for escapes, and never put `\\` in a heredoc.

@@ -21,7 +21,9 @@ When みや says **"save everything" / "save the quest" / "save it" / "document 
 2. **Task folder `1. <NNN NNN>.txt`** — test-data only, via `node quest/notes.js` (never hand-write).
 3. **`quest/active.txt`** block — phase/status/scope fields, via `node quest/active-cli.js update`.
 
-See "QA-NNNN.md persistence — save after EVERY stop" below for the full rule. If unsure whether "save" means quest-save vs session-save, the quest context (a ticket is active) defaults to quest-save.
+See "QA-NNNN.md persistence — save after EVERY stop" below for the full rule.
+
+**🚫 REDMINE-BOUND DELIVERABLES → TASK FOLDER ONLY (HARD RULE, added 2026-09-02 per みや, QA-277697).** Anything みや has to OPEN or UPLOAD to Redmine — audit report, `.sql` script, `.docx`, evidence file, WhatsApp text file, patch — is written ONLY into the Task folder `2. Fix\` (or `3. Rework\` on a rework cycle). It is BANNED from `projects/coding-projects/active/QA-<NNN>/`, which holds exactly ONE file: `QA-<NNN>.md`. Need a working copy for myself? Make it in the Task folder too, never in the quest folder. The quest doc carries the POINTER (full path) + the findings, never the deliverable itself. Applies to familiar-written output as well — when delegating, hand the familiar the Task-folder path as its write target. **Enforced** by `pre-action-check-gate.js` v1.3 (PreToolUse DENY on any non-`QA-<NNN>.md` file under the quest folder; bypass `[skip-canonical-doc: <reason>]`). **Why**: 2026-09-02 the 277697 DOCX audit report landed in the quest folder; みや had to go looking for the file he needed to attach. If unsure whether "save" means quest-save vs session-save, the quest context (a ticket is active) defaults to quest-save.
 
 ## /quest start <QA-number> <task-folder-path>
 
@@ -42,7 +44,6 @@ Workflow({ name: 'quest-phase0', args: {
 
 - **Depth scaling** — `full` (Discovery → KnowledgeLoad → Recon → adversarial Verify → Synthesize) when `ticketType==='bug'`; `quick` (skips the adversarial fan-out) otherwise.
 - **Blast-radius by codebaseRoot** — `etanah-pelupusan` → codebase-only, **TRG BANNED** (ignored entirely). `etanah-awam` → **multi-state-aware** (other states share the portal).
-- **🚨 State-footprint of the traced path (added 2026-08-26 per みや, #273461 sis_no_turutan miss)** — a blast-radius/footprint built ONLY from a shared-column-name or FK sweep is INCOMPLETE BY CONSTRUCTION: it cannot see (a) tables linked by a **convention-built key string** composed in Java (counters/config — `sis_no_turutan` kod `01BRG_4AE2026`), (b) **FK columns named differently** from the parent PK (`ind_pemegang_permit_lesen.versi_akhir_id`), (c) JSON/`mklmt_tmbhn` keys, (d) generator/sequence state. The rule: for EVERY service method on the traced path, resolve every JPA entity it loads or persists to its table (`etanah-codemap/entity_table_map.json` holds all 596 mappings; the atlas `entity_registry.json`/`code_usage.json` are the pre-built index) and include those tables in the footprint. For any generated identifier, additionally answer: **where is the value born, and what remembers how far the sequence advanced?** A completeness claim must NAME its method and that method's blind spots — "4/4 by column name" was #273461's false-complete.
 - The workflow **writes `1. <NNN NNN>.txt`** (canonical format, `quest-protocol.md:373-403`) **and the QA-NNN.md investigation sections**, then returns a verified diagnosis + fix-shape.
 - After it returns: present the **Issue Checklist + diagnosis** to みや and **wait for confirmation before any code**. The interactive remainder (Rubric-pick → Apply → test → commit) stays human-gated in this skill — the workflow owns Phase 0 investigation ONLY.
 - **Fallback**: if the Workflow tool is unavailable (headless/cron), run the manual Phase 0 steps below directly.
@@ -142,7 +143,11 @@ At **every** point Ruri stops and hands back to みや after `/quest start` — 
 
 ═══ ▶ YOUR MOVE — QA-NNNN ═══
 
-Pre-emit gate: Notes.txt ✓ · Tugasan ✓ · Flag-WHERE ✓ · Login ✓
+Pre-emit gate: Notes.txt ✓ · Tugasan ✓ · Flag-WHERE ✓ · Login ✓ · Root-cause ✓
+
+| Root cause (plain, Redmine-ready) |
+|---|
+| <CAUSE ONLY, max 2 plain sentences, sendable to BA. Say what happens and why. NO fix sentence. NO file:line, class names, jargon. NEVER use dashes or semicolons. Use ASD-STE100 Simplified Technical English, one idea per sentence. Straightforward sentences are fine and need not be formal. Exemplar (#277532): "Di Pengiraan Bayaran Lesen, Tujuan Permohonan ikut kod Maksud Menduduki yang tersimpan. Lain-Lain pun ada kod sendiri jadi sistem papar gabungan lama, bukan teks yang diisi pengguna." MANDATORY every hand-back once a cause is known. Use `⬜ not yet diagnosed` if pre-Recon.> |
 
 | Test data | Value |
 |---|---|

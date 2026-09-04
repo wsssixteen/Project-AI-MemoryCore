@@ -70,6 +70,7 @@ const APPROVAL = [
   /\bgo ahead( and)? commit\b/i,
   /\b(looks good|lgtm)\b[^\n]*\b(commit|push|ship)\b/i,
   /\byes,?\s+commit\b/i,
+  /\bcommit,?\s+(and\s+)?(push|merge)\b/i,   // "commit, push" / "commit and push" / "commit, push and merge" (2026-08-28: explicit deploy directive was not recognized, caused bouncing)
 ];
 
 let input = '';

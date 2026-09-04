@@ -18,6 +18,11 @@
  *
  * 2026-06-05 (per みや): added Checks 3a/3b (always stop at staging + share the
  * message for review). Fails OPEN on any error (a broken hook never blocks).
+ *
+ * v4 2026-09-02 (per みや /goal, QA-277697): Check 0 hardened — separators up to 3, en/em dash
+ * banned, NON-CHANGE words banned (keep/leave/untouched…), 100-char cap, and the subject's verbs
+ * must match `git diff --cached --name-status` (rename↔R, remove↔D, add↔A; an R with no "rename"
+ * blocks). Draft-time twin: domain/commit-subject-gate/. Smoke-tested 6 cases 2026-09-02.
  */
 
 const fs = require('fs');
@@ -128,9 +133,35 @@ process.stdin.on('end', () => {
     const msg = msgMatch ? msgMatch[2] : '';
     if (msg) {
       const dashSeps = (msg.match(/ - /g) || []).length;
-      if (/;/.test(msg) || /--?>/.test(msg) || /\|/.test(msg) || dashSeps > 2) {
-        blockCommit(`⚔️ COMMIT MESSAGE — plain English please.\n\nBanned: ";", arrows ("->"), "|", and dash-separators beyond the "Ref #<num> - <MODULE> - " prefix.\nJoin clauses with "and" or "+". Say what changed, in simple words.\nGot: ${msg}`);
+      // v4 (2026-09-02, QA-277697): separators up to 3 (prefix - URUSAN - TUGASAN - description) per
+      // commit-conventions.md; en/em dash banned; non-change words banned; 100-char cap.
+      if (/;/.test(msg) || /--?>/.test(msg) || /\|/.test(msg) || /[–—]/.test(msg) || dashSeps > 3) {
+        blockCommit(`⚔️ COMMIT MESSAGE — plain English please.\n\nBanned: ";", arrows ("->"), "|", en/em dashes, and " - " beyond "Ref #<num> - <URUSAN> - <TUGASAN> - ".\nJoin clauses with "," or "and" or "&". Say what changed, in simple words.\nGot: ${msg}`);
       }
+      const desc = msg.split(' - ').pop();
+      const nonChange = /\b(keep|kept|keeping|leave|leaving|left|untouched|unchanged|retain|retained|retains|remain|remains|remained|still)\b/i.exec(desc);
+      if (nonChange) {
+        blockCommit(`⚔️ COMMIT MESSAGE — "${nonChange[1]}" describes a NON-change.\n\nA subject says what CHANGED in this commit, never what was left alone. Files that were not touched are not in the diff and do not belong in the message.\nGot: ${msg}`);
+      }
+      if (msg.length > 100) {
+        blockCommit(`⚔️ COMMIT MESSAGE — ${msg.length} chars, max 100.\n\nShorter, not longer. Got: ${msg}`);
+      }
+      // v4: verbs must match the STAGED diff. "rename" needs an R entry, "remove"/"delete" a D entry,
+      // "add" an A entry. And an R entry in the diff must be named as a rename (not "move").
+      try {
+        const { execSync } = require('child_process');
+        const repoDir = cdMatch ? cdMatch[1].trim() : process.cwd();
+        const status = execSync('git diff --cached --name-status', { cwd: repoDir, encoding: 'utf8', windowsHide: true });
+        const letters = new Set(status.split('\n').map(l => l.trim()[0]).filter(Boolean));
+        const want = [];
+        if (/\brename[sd]?\b/i.test(desc) && !letters.has('R')) want.push('"rename" but no renamed (R) file is staged');
+        if (/\b(remove[sd]?|delete[sd]?)\b/i.test(desc) && !letters.has('D')) want.push('"remove/delete" but no deleted (D) file is staged');
+        if (/\badd(s|ed)?\b/i.test(desc) && !letters.has('A')) want.push('"add" but no added (A) file is staged');
+        if (letters.has('R') && !/\brename[sd]?\b/i.test(desc)) want.push('staged renames (R) exist but the subject does not say "rename" (say rename, not move)');
+        if (want.length) {
+          blockCommit(`⚔️ COMMIT MESSAGE — verbs do not match the staged diff.\n\n${want.map(w => '  - ' + w).join('\n')}\nStaged status letters: ${[...letters].join(' ') || 'none'}\nGot: ${msg}`);
+        }
+      } catch (e) { /* fail-open: no repo or git error */ }
     }
 
     // v2: checks 3a/3b are UNCONDITIONAL on any work-repo commit. Per みや 2026-08-05:

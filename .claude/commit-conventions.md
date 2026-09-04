@@ -1,6 +1,8 @@
 # Commit Conventions
 
 > Routed out of CLAUDE.md 2026-05-22 (decomposition).
+> *Version: 1.4 | Last updated: 2026-09-02 — §Subject shape HARD RULES R1–R6 (deterministic, enforced at DRAFT time by `domain/commit-subject-gate/` Stop hook and at COMMIT time by `commit-gate.js` Check 0 v4 incl. verb-vs-staged-diff): no `;`, no dash inside the description, no arrows/pipes, no non-change words (keep/leave/untouched…), ≤100 chars, a redraft is never longer than the draft it replaces, verbs come from the staged status letters (A add · D remove · R rename · M fix/change). Per みや 2026-09-02 /goal after the QA-277697 five-draft slip. Spec-preservation: every v1.3 rule intact; additive.*
+>
 > *Version: 1.3 | Last updated: 2026-07-21 — INTERNAL ISSUE branch prefix corrected `mlk/internal-issue/` → **`mlk/internal/`** (retired the old form; new branches only, existing pushed branches untouched), per みや (#271049). Evidence: Baseline 1.0.10 recon found the team already using `mlk/internal/270727`.*
 >
 > *Version: 1.2 | Last updated: 2026-06-27 — added ESOKONGAN tracker → `mlk/esokongan/<num>` branch + the general `mlk/<tracker>/<num>` derive-rule, per みや (QA-267382).*
@@ -45,6 +47,25 @@ Subject-only — **no body, no trailer at all** (per `main/post-mortems.md:99` a
 - Multi-urusan or framework-wide: `QA #260302 - Semua Urusan - Panel Ulasan JPPH render fix` ✓
 - Rework cycle: `QA #262233 - PRZ - Ringkasan Risalat MMKN - Jabatan Teknikal fix` ✓ (cycle-2 commit `5023fbf2fc` 2026-05-25)
 - Tugasan-kod + action-oriented (canonical from 2026-06-01): `QA #262762 - OPLPS - PB - Tujuan Pengiklanan save + Borang papar maklumat reflect changes` ✓ (commit `f4a73be3cc`)
+
+
+### 🚨 Subject shape — SIX HARD RULES, deterministic (added 2026-09-02 per みや, QA-277697)
+
+The subject is `<QA|Ref> #<num> - <URUSAN> - <TUGASAN> - <what changed>` (URUSAN / TUGASAN segments only when specific). The description segment obeys:
+
+| # | Rule | Enforced by |
+|---|---|---|
+| R1 | no `;` | draft gate + commit gate |
+| R2 | no dash inside the description: no ` - `, no en/em dash. Intra-word hyphens (`int-env`, `e-Doket`) are fine | draft gate + commit gate |
+| R3 | no arrows or pipes | draft gate + commit gate |
+| R4 | no NON-CHANGE word: keep, kept, leave, left, untouched, unchanged, retain, remain, still. A subject says what CHANGED. Files not in the diff do not belong in the message | draft gate + commit gate |
+| R5 | ≤ 100 characters. Join clauses with `,` or `and` or `&` | draft gate + commit gate |
+| R6 | a redraft after a correction is SHORTER or equal, never longer. "Better words" means fewer words | draft gate (transcript compare, per ticket) |
+| R7 | verbs come from the staged status letters only: A → add · D → remove · R → rename (never "move") · M → fix/change. A verb with no matching letter, or an R with no "rename", is blocked | commit gate (reads `git diff --cached --name-status`) |
+
+Draft gate: `domain/commit-subject-gate/` (Stop; bypass `[skip-commit-subject: <reason>]`). Commit gate: `.claude/hooks/commit-gate.js` Check 0 v4.
+
+**Why**: 2026-09-02, QA-277697 — five drafts of one subject, each longer than the last, with `;`, dashes and "keep 3 trg pages" (a non-change) until みや wrote it himself: `Ref #277697 - Remove TRG code & resources, rename 2 shared composites to mlk`. That line is the exemplar: 74 chars, two verbs, both from the diff (D and R), nothing about what was left alone.
 
 **Why** (みや 2026-05-20): teammates scan commit log by urusan/tugasan; consistent hyphen-segmentation makes the categorical structure visible at a glance. The PRU precedent (`QA #247710 - PRU - Risalat MMKN...`) is the canonical form.
 
