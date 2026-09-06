@@ -92,3 +92,8 @@ etanah_atlas/checks/
 
 # lib/states.js overlay — hosts/URLs/machine-local roots, never for the public repo (states.local.example.json is the tracked shape)
 system/states.local.json
+
+# turn-ledger ephemeral state (retention: regenerate) — 2026-09-07
+system/telemetry/current-turn-*.json
+system/telemetry/current-turn-*.json.lock
+system/telemetry/turn-ledger-state.json
