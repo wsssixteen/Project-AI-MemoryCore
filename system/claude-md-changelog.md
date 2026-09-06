@@ -10,6 +10,12 @@
 
 ---
 
+## system-rules SKILL.md v1.2 — 2026-09-06
+
+**Rule 6 — Data lifecycle declared at birth** (per みや: "a garbage collector or something … some data are kept, some data are cleaned up since it will be deprecated or irrelevant or replaced"). Every component README carries one `retention:` line — `keep` / `rotate <period>` / `consume <into>` / `regenerate`. Housekeeping runs ONLY at Domain Expansion 12.5 and the system audit. Birth-gate blocks a log with no retention line. Rule 3 retires FEATURES; Rule 6 retires their DATA. Spec-preservation: Rules 1-5 untouched; additive. Heading "5 Rules" → "6 Rules". Pairs with plan `system/speed-optimization-plan-2026-09-04.md` §M.8 (forge `--retention`, `lib/housekeeping.js` born in P0). Inventory at edit time: no unified retention rule existed (session-trim, slips window, NUKE-MARKER retire were each local).
+
+---
+
 ## quest/SKILL.md + ticket-gate.js — LATEST-STATE FIRST row — 2026-07-27
 
 Per みや (planning turn, 2026-07-27): *"scrutinize & double check the redmine what the ticket wants … take note if the ticket has previous issue that has been solved so that we do not try to solve an issue that has been solved … it has happened a few times you're trying to solve an old issue when the ticket has a long conversation and you didn't even take into account the dates and time and who it is assigned to."* Slip: `stale-conversation-read-solved-issue-reattempted` (ledgered same turn).

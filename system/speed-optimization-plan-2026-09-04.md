@@ -258,6 +258,18 @@ Every row refines an existing component (Rule 1). **Safety** = what breaks if wr
 5. Part 2 (§3) after 14 days of §M rows, so the whole-system ruling pass reads measured yield, not fire counts.
 6. **Multi-state + folder-structure (§6) rides Part 2's house-cleaning, not a separate track** — the orphan retire waits for みや's row-by-row nod; the 52-file literal migration is done category by category, each pass eval-green, and can start any session (no §M dependency).
 
+**RE-SEQUENCED 2026-09-06 (みや: nothing is struck by hand; everything runs → measured → audited; Ruri owns the audit because he is blind to most features — memory `user_miya_blind_to_features`)**
+
+| Phase | What | Removes anything? | Gate to next phase |
+|---|---|---|---|
+| P0 | §M turn-ledger (M1–M6) + M7 goal-lens + M8 rules (Rule 13, forge `--symptom --goal --signal`) via forge | no | evals E1–E10 green · smoke-fire · first `turns.jsonl` row exists |
+| P1 | **FULL FEATURE AUDIT** (みや's weekend ask): every registered hook (117 entries) + every `domain/` feature + skill → one row: goal (README or backfilled from NUKE-MARKER/slip origin) · fires/blocks/ms 30d · slip recurrence · last fire · duplicate-of · verdict KEEP/MERGE/REFINE/RETIRE + one-line reason | no — proposals only; obvious RETIREs (0 fires 30d + no goal + duplicate) tombstoned, not deleted | table delivered; みや nods RETIRE rows only |
+| P1 **RUN 1 — 2026-09-06** (miya: "audit first, then GO") | `system/feature-audit-2026-09-06.md` — 164 rows from 30d telemetry (5,241 rows) + settings + READMEs. Counts: KEEP 119 · REFINE 8 (4 boot hooks = 7,489 s/30d; 4 gates with ≥50% bypass) · RETIRE? 2 (`deploy-guard`, `prod-db-confirm` — 0 fires, rare-by-design candidates) · DEAD-DIR? 19 (unregistered domain dirs, per-row check needed) · SKILL 10 · CONTAINER 5 · goal-less READMEs 53 · no-retention READMEs 53. **Data limits found**: Stop-bundle members are under-counted (17 fires vs 222 turns — bundle dispatch logs the manifest, not each member) and there is no true/false-block column → both are exactly what §M fixes; run 2 after §M | no | run 2 after ≥3 sessions of §M rows |
+| P2 | Q3 · Q5 · Q7 (deterministic, add-only, cache-only) | no | each: eval green + before/after telemetry after ≥3 sessions |
+| P3 | Q1 · Q2 · Q4 · Q8 · Q9 · Q10 | Q9 moves files (git mv); Q4 narrows 4 triggers | same |
+| P4 | §7 STRUCTURE-SCHEMA + checker v2 + fix-plan (system level, then project level) | moves after nod | boot line shows 0 misnamed at each level |
+| P5 | Q6 gate rulings + 6a orphan delete + P1 MERGE/RETIRE execution — from `true_blocks` + `goal_met` after ≥3 sessions of §M rows | YES — only here | numbers + goal shown per row; みや nods; tombstone one cycle; git-recoverable |
+
 ---
 
 ## 6. Multi-state + folder-structure — MERGED 2026-09-04 S3 (was todo Q1 "🏛️ Multi-state"; みや: "merge or add into it … the Quest workflow improvements … rely on one another")
@@ -280,3 +292,69 @@ Every row refines an existing component (Rule 1). **Safety** = what breaks if wr
 | 6b. Bulk-migrate the 52 UNROUTED files (`node lib/states.js check`) — task-folder scripts → repo-root scripts → redmine-project (`redmine-board`, `urusan-tickets`) → skills; Melaka-only-by-design tools (`release-mlk-plp*`, `deploy`, `env-check`/`env-switch`, `staging-schema-*`, `patch-mlk-doc`, `local-deploy-gate`) get a `state-scoped: yes, melaka-only by design` header instead | feeds **Q3** (intake tools: `redmine-sync`/`redmine-board` match by id AND by state project) and **Q7** (`worktree-cleanup-boot`, `open-quest-surfacer` read Task folders per state) — do 6b before or with those rows so they are not rewritten twice | one category per pass, eval-green each; no §M dependency |
 | 6c. Verify `_unverified` registry facts (wp/selangor/kedah/terengganu permohonan prefixes; Perak Redmine project identifier) | one DB read per state + one Redmine API read | first session that touches that state |
 | 6d. Quest-workflow overlap (みや's point): **Q1 precedent fast-path** now reads the resolved state's registers (adhoc-register/latent-bugs read per state since S3); **Q2 `quest-phase0` tiering** must take `knowledgeDir` + `dbMcp` from `node lib/states.js show <state>` (SKILL.md already says so) — encode it when Q2 is built; **Q4 Stop false positives** — `alter-ticket-gate` firing on "alter to" is the same false-trigger class, now state-routed, predicate still to narrow | Q1/Q2/Q4 rows | build those rows state-aware from the start; a Melaka literal in a new row is a Rule 11 violation |
+
+---
+
+## M.8 Goal-lens lands in the DESIGN RULES, not only in the ledger (みや 2026-09-06 verbatim: "integrate this into system design and system rules SO THAT EVERY SINGLE TIME YOU CREATE A NEW FEATURE YOU WILL BE AWARE WHY, WHY, WHY WE BUILT THAT SO THAT WE CAN OPTIMIZE IN THE FUTURE")
+
+Gap found 2026-09-06: §M.2b puts `goal:` / `goal_signal:` in the README and in the forge template, but NO design rule requires them, so a hand-designed feature can still be born without its why. Today `core/forge.js` `nukeMarkerTemplate()` writes `Session: TODO(forge): one-line root symptom …` — the why is a placeholder the builder may leave blank.
+
+| Piece | Refines (Rule 1) | Change |
+|---|---|---|
+| `system-rules` Rule 5 | existing "log is the optimization dataset" | + clause: a log without the feature's declared GOAL cannot be optimized against — every component ships `goal:` + `goal_signal:` in its README, and `goal_met` is a log-row field |
+| `system-design` **Rule 13 — WHY-chain at birth** (new, additive) | Rule 9 NUKE-MARKER `Session` field · Rule 10 REQUIREMENTS table | every Feature birth/refinement DISPLAYS a 3-line why-chain before build: `symptom:` (the slip/ask, verbatim + date) → `goal:` (outcome the feature exists to produce) → `goal_signal:` (how one run knows it succeeded, mechanical when possible). Banned: `TODO` in any of the three; a goal that restates the trigger ("fires on X") instead of the outcome |
+| `core/forge.js` | `readmeTemplate()` / `nukeMarkerTemplate()` | `forge new` REQUIRES `--symptom --goal --signal`; refuses to scaffold with any missing (no TODO placeholders); README + NUKE-MARKER `Session` filled from them |
+| `domain/component-birth-gate` | existing birth gate | + check: README lacks `goal:`/`goal_signal:` → block (same tier as missing eval) |
+| `system/feature-census.md` | existing census | + column `goal` (`declared` / `goal-less`); DE 12.5 lists goal-less features for backfill (259 components today; backfill is a Part 2 pass, 20/session) |
+| **Housekeeping (みや 2026-09-06: "a garbage collector … some data are kept, some data are cleaned up")** — `system-rules` **Rule 6 Data lifecycle** (SHIPPED v1.2 same day) | Rule 5 (every feature writes) | every README carries `retention: keep \| rotate <period> \| consume <into> \| regenerate`; forge requires `--retention`; birth-gate blocks a log without it; `lib/housekeeping.js` (born) runs ONLY at DE 12.5 (rotate + regenerate + archive consumed) and at the system audit (retire what Rule 3 ruled); prints what it moved. 53 existing READMEs have no retention line today → backfilled in the same 20/session pass as `goal:` |
+
+Eval: E8 — `forge new x --goal ""` exits non-zero with the missing-field name · E9 — a README without `goal:` trips component-birth-gate on a fixture · E10 — census counts one seeded goal-less feature.
+
+---
+
+## 7. Structure + naming SPEC — every level ordered the same way (みや 2026-09-06: "audit the system design & rule so that IT WILL follow a certain set of folder structure and file naming — at least at system level; project level is an even greater win")
+
+**Inventory (Rule 1) — what already orders things, and where it stops**
+
+| Level | Ordering that exists | Enforced by | Gap |
+|---|---|---|---|
+| Root | allow-list + 4 naming rules (`system/FOLDER-STRUCTURE.md` §Naming) | `lib/folder-structure.js` · boot CHECK 8 | names only; says nothing about what goes INSIDE `system/` `main/` `lib/` `core/` `quest/` |
+| `domain/<feature>/` | trinity shape: `README.md` · `<name>.check.hook.js` · `eval.js` · `log.jsonl` · `NUKE-MARKER.md` | `core/forge.js` + `component-birth-gate` | strongest level; hand-made siblings still drift (`*.gate.hook.js` vs `*.check.hook.js`) |
+| `etanah-knowledge/<state>/` | `KNOWLEDGE-SCHEMA.json` (14 required files, layout rules) | `domain/knowledge-schema-audit` at boot | the model to copy — a schema file + an audit hook |
+| `system/` | none | — | 26 loose `agentic-ticket-workflow-assessment-*.md` + 3 assessment variants + `research-proposals/` — the proof (Q9 is one symptom) |
+| `main/` · `quest/` · `lib/` · `core/` · `.claude/hooks/` · `.claude/skills/` | none written | — | skills = one shape by Claude Code itself; hooks: `*.js` flat, some Features live here instead of `domain/` |
+| `projects/coding-projects/{active,archive}/<KEY>/` | quest doc `<KEY>.md` by convention (quest-protocol) | `quest/archive-quest.js` moves whole folders | side-projects (`etanah-organize-alpha`, `etanah-codemap`, `multi-ticket-sweep`) each invent their own inside shape |
+
+**Design (Rule 7 primitive = script + boot check, no skill): ONE schema per level, same mechanism as KNOWLEDGE-SCHEMA**
+
+| Piece | Refines | Content |
+|---|---|---|
+| `system/STRUCTURE-SCHEMA.json` (born) | `KNOWLEDGE-SCHEMA.json` pattern · FOLDER-STRUCTURE allow-list moves INTO it as the `root` level | per level: `allow` (files/folders that may exist) · `pattern` (filename regex, e.g. `system/`: `^[a-z0-9-]+\.(md\|json\|jsonl\|js)$`, dated series go to `system/<series>/<date>.md`, never `<series>-<date>.md` at the top) · `required` (what every child MUST have, e.g. `domain/*`: README + eval + log + NUKE-MARKER) · `retire` rule |
+| `lib/folder-structure.js` v2 | existing root checker | walks every level in the schema; reports `orphan` / `misnamed` / `missing-required` per level; `--fix-plan` prints the move/rename table for みや's nod (never moves on its own) |
+| `system-audit.js` CHECK 8 | existing | counts per level, one boot line: `structure: root 0 · system 29 misnamed · domain 3 missing-required · projects 2` |
+| `system-design` Rule 13 (see M.8) + **Rule 14 — placement at birth**: before creating ANY file, name its level + the schema row that allows it; no row = propose the row first (a row is the nod, same as FOLDER-STRUCTURE today) | Rules 9/10 | the human half the checker cannot do |
+| `core/forge.js` | existing | refuses a path outside the schema's `domain/` row; `forge new --level system` scaffolds a dated-series folder correctly |
+
+**Project level (the greater win)**: `projects/coding-projects/STRUCTURE-SCHEMA.json` — quest folders: `<KEY>.md` + `0-brief/` `1-simulate/` `2-fix/` mirrors of the Task folder + `handoff-<date>.md`; side-projects: `PROJECT.md` + `handoff-<date>-<phase>.md` + `runs/` banned (File Ownership row). Same checker, same boot line. Migration is a `--fix-plan` table per folder, ruled by みや, executed one folder per pass with git mv.
+
+**Sequence**: 7a schema written from the inventory above (one session, no dependency) → 7b checker v2 + boot line (eval: seeded misnamed file caught; clean tree = silent) → 7c `--fix-plan` for `system/` (the 26+3 assessment files fold under Q9 anyway) → 7d みや rules the plan rows → 7e project level.
+Adversarial floor (Rule 12, 20 rows) at 7b build time, displayed in that reply.
+
+---
+
+## 8. Expected gain — what the data supports, and what it cannot yet (みや 2026-09-06: "how much of an improvement based on accuracy (deterministic) + speed")
+
+Numbers below come from §1 (30-day telemetry) and §1d (one measured session). They are BEFORE figures with the AFTER target each row's eval asserts; the real AFTER is read from `turns.jsonl` after ≥3 sessions (§5 ruling condition).
+
+| Axis | Row | Before (measured) | After (target) | Gain | Confidence |
+|---|---|---|---|---|---|
+| Speed — boot | Q7 | 45 s/boot × ~224 boots = 2.8 h/30d (52% of all hook time) | ≤10 s/boot when nothing changed | ~2.2 h/30d, ~35 s felt at every boot | HIGH — file-mtime caching is deterministic |
+| Speed — Stop gates | Q6 | 5,238 s/30d in Stop hooks, ~25 of them 0–1 blocks | retire/redesign ~half after みや's ruling | ~0.7 h/30d + fewer false blocks | MEDIUM — depends on ruling |
+| Speed — tokens on precedent tickets | Q1 | 2.43 M tokens / 26 min bought 0 decisions (#278304 + #277442) | ≤300k tokens, ≤15 tool calls | ~85–90% on that ticket class (patch-only with a closed precedent) | HIGH on that class; 0% on novel tickets |
+| Speed — tokens on novel tickets | Q2 | 22 agents on session model, 1 death | ≤40% tokens, same verdict | ~60% on quest-phase0 runs | MEDIUM — one scratchpad rerun proved it once |
+| Accuracy — false blocks | Q4 | 7 of 12 blocks in one session false or repeats (58%) | 0 on the fixture set, true 5 untouched | fewer re-emits = fewer `reask/rambling` slips | MEDIUM — fixture-proven, not yet live-measured |
+| Accuracy — SQL verify | Q5 | 12 refs, 5 impossible (42% noise) | 7 refs, 0 false | deterministic | HIGH — parser change |
+| Accuracy — intake | Q3 | 3 workarounds + 2 false "not miya's work" in one session | 0 | deterministic | HIGH |
+| Optimization loop | §M + Q8 + M.8 | 234 proposals, 0 rulings; no row can say "was this block true" | every gate has `true_blocks`; every feature has `goal_met` | this is the row that makes every future gain MEASURABLE instead of asserted | — |
+
+Honest limits: (1) "accuracy" today is fixture-based — a live false-positive rate exists only once §M writes `fp:` bypasses per turn; (2) the 30d numbers are one machine, one user; (3) no row claims a gain on the judgment work (Recon, Rubric) — those improve only through the goal-lens loop over many runs. The handover from 2026-09-04 IS enough to build §M and Q3/Q4/Q5/Q7/Q8/Q9/Q10 without re-asking (file-level specs + eval cases exist); Q1/Q2/Q6 need one design pass each at build time (Rule 12 tables not yet written).
