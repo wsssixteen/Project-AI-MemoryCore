@@ -1,4 +1,8 @@
 # steal-risk-flag
+retention: regenerate
+goal_signal: the boot board prints the QUICK-WIN steal-risk banner whenever a diagnosed idle patch exists and stays silent otherwise
+goal_status: declared (promoted 2026-09-06)
+goal: a diagnosed patch-only ticket that sits idle is surfaced on the boot board as a steal-risk before a colleague applies it first
 
 **Born** 2026-08-17 (miya, after ticket 275587 was stolen). **Surface** boot board (`quest/redmine-board.js`). **Lifecycle** created.
 

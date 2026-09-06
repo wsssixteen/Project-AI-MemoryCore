@@ -117,3 +117,5 @@ Trigger: "close reconcile" / "phase 2 reconcile" / "reconcile closed tickets" / 
 Acceptance: `bulk.js --debt` prints `0 unharvested` and the boot surfacer shows no divergence.
 
 *Rule 6 v1.2 note: additive section; prior stage behaviours (Phase 1 close / Phase 2 archive) untouched. Smoke = the 2026-08-16 gate+enumerator evals (refuse exit 3 · pass-on-harvest · allow-stub · refusal-not-evidence · stub-not-evidence), all green same day.*
+
+*2026-09-07 — plan §9a/9b per みや: Phase 1 step 0 (wrong-fix rows saved via `lib/wrong-fix.js add`) + Phase 2 step 0 🔧 WORKFLOW UPGRADE (mandatory, first, highlighted: `lib/wrong-fix.js upgrade-table` → one verdict per row, DONE in the same close; `quest/archive-quest.js` Step -0.5 refuses while any row is unruled). Spec-preservation: every prior step kept, renumbered none — both additions are step 0. Fire check: `lib/wrong-fix.eval.js` 14/14 + archive-quest refusal path smoke (`--dry-run` reports, live refuses exit 3).*

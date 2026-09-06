@@ -1,5 +1,8 @@
+// system-audit: skip-ghost-check
 /**
- * reply-log.js — Stop hook
+ * reply-log.js — Stop hook — DEREGISTERED 2026-09-06 (tombstone): its fields (qa · phase · status ·
+ * gap_since_prev_minutes) are absorbed into domain/turn-ledger (plan §M M3). File kept for one cycle; restore
+ * line lives in domain/turn-ledger/README.md. Delete after 2026-10-06 if turn-ledger has fired ≥1× and no rollback.
  *
  * Fires every time Ruri finishes a response. Logs ONE JSONL row to
  * Feature/Time-Based-Aware-System/reply-log.jsonl with:

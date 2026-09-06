@@ -182,7 +182,7 @@ function evaluate(data) {
   let prev = null; try { prev = JSON.parse(fs.readFileSync(STATE, 'utf8')); } catch (_) {}
   const row = buildRow(data, stamp, win, hookRows, bypasses, prev);
   const lens = goalLens(hookRows, win.lastText, row.turn_id);
-  return { row, lens };
+  return { row, lens, lastText: win.lastText || '' };
 }
 
 if (require.main === module) {
@@ -190,14 +190,14 @@ if (require.main === module) {
     let data = {}; try { data = JSON.parse(input || '{}'); } catch (_) { return { fired: false }; }
     if (data.stop_hook_active) return { fired: false }; // anti-loop (scenario 3)
     if (!data.session_id && !data.transcript_path && !data._testStamp) return { fired: false }; // empty payload (smoke-fire / eval F1): nothing to ledger
-    const { row, lens } = evaluate(data);
+    const { row, lens, lastText } = evaluate(data);
     const target = data._testTurnsPath || TURNS;
     appendJsonl(target, row);
     try { fs.writeFileSync(STATE, JSON.stringify({ closed_ts: row.closed_ts, turn_id: row.turn_id })); } catch (_) {}
     appendJsonl(LOG, { ts: row.closed_ts, turn_id: row.turn_id, tool_calls: row.tool_calls, blocks: row.blocks.length, fp: row.bypasses.filter(b => b.fp).length, goal_mechanical: lens.mechanical, goal_prompts: lens.prompts.length });
     const lines = lens.prompts.map(p => `goal-lens: ${p.feature} BLOCKED this turn — goal: ${p.goal}\n   Met? gap? improve? → node lib/goal-lens.js note ${p.feature} --turn ${row.turn_id} --met y|n|partial --gap "<what fell short>" --improve "<change that reaches the goal>"`);
     // 9a (2026-09-07): a refute verdict in this reply on a known quest with no wrong-fix row today → advisory
-    if (row.qa && /\b(REFUTED|refuted|reverted|not the (root )?cause|wrong fix|does not fix|did not fix)\b/.test(win.lastText || '')) {
+    if (row.qa && /\b(REFUTED|refuted|reverted|not the (root )?cause|wrong fix|does not fix|did not fix)\b/.test(lastText)) {
       let hasToday = false;
       try { const wf = require(path.join(ROOT, 'lib', 'wrong-fix.js')); const p = wf.docPath(row.qa); const d = new Date().toISOString().slice(0, 10); hasToday = !!p && wf.readRows(fs.readFileSync(p, 'utf8')).rows.some(r => r.date === d); } catch (_) {}
       if (!hasToday) lines.push(`wrong-fix: this reply refutes a fix on ${row.qa} but the qa_doc has no Wrong-fixes row today → node lib/wrong-fix.js add ${row.qa} --was "<fix>" --why "<how refuted>" --learned "<rule>"  (Phase 2 cannot archive until every row has a verdict)`);

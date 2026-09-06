@@ -10,6 +10,12 @@
 
 ---
 
+## Plan §9 P3 builds — 2026-09-07 (miya /goal "Fix all except 7 & 10")
+
+Built, eval-green, all additive: **9h** `lib/turn-context.js` attribution (named ticket → first `status=active` block → null; eval 11/11) + Stop-side re-attribution from tool paths and `tokens` per turn in `domain/turn-ledger` (eval 23/23) · **9a/9b/9c** `lib/wrong-fix.js` (add · verdict · pending · upgrade-table · today; eval 14/14), `quest/archive-quest.js` Step -0.5 wrong-fix verdict gate, turn-ledger refute advisory, `close-phase` Phase 1 step 0 + Phase 2 step 0 🔧 WORKFLOW UPGRADE, DE 12.5 row for Redmine-Closed quests · **9d** `lib/audit-briefing.js` + skill `system-audit` (4 fixed blocks + rulings) · **9f** `lib/goal-backfill.js` (52 drafts from registry / NUKE-MARKER / hook header; 1 promoted by hand → census 0 goal-less) · **9e** `domain/skill-invocation-log` (PostToolUse Skill; eval 7/7) + `tokens` in turn rows · **evals**: bpmn-check + cross-module-intake made machine-independent, deploy-merge-surface F3 updated for hook v3 (5/5), live-action-safety-gate + release merge-scenarios quarantined with classification. Deferred to todo Q2 per miya: 9g adhoc 10-day sweep, Redmine reconcile at the office. `reply-log.js` tombstoned (DEREGISTERED marker).
+
+---
+
 ## system-design SKILL.md v2.8 — 2026-09-06
 
 **Rule 13 — WHY-chain at birth** (symptom · goal · goal_signal · retention as machine-readable README keys; `core/forge.js new` refuses without `--symptom --goal --signal --retention`; `component-birth-gate` blocks a new `domain/*/README.md` lacking goal:/retention:; `feature-census` flags `goal-less` / `no retention`; the turn-ledger writes `goal_met` per blocking feature). **Rule 14 — placement at birth** (level + `system/STRUCTURE-SCHEMA.json` row named before any file; dated series under `system/<series>/`). Per みや 2026-09-06. Spec-preservation: Rules 6-12 untouched; additive. Paired builds same day (plan §M P0): `lib/turn-context.js` (M1/M2) · `domain/turn-ledger/` (M3/M4/M7, replaces `reply-log.js` Stop registration — file kept) · `de-close-gate` C5 · `lib/goal-lens.js` · `lib/turn-report.js` → `system/monitoring-dashboard.md` · `lib/housekeeping.js` · DE 12.5 "Monitoring + housekeeping" row.

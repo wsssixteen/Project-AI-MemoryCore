@@ -84,6 +84,14 @@ r = run({ session_id: 'evalsid-1', transcript_path: t2, _testStamp: { ...stamp, 
 x = lastRow();
 check('S19 command turn → reply_chars 0, tool_calls 1', r.status === 0 && x.reply_chars === 0 && x.tool_calls === 1, JSON.stringify([x.reply_chars, x.tool_calls]));
 
+// A1 (2026-09-07 regression: "win is not defined" swallowed by fail-open): the advisory path must RUN —
+// a refute verdict on a quest with no wrong-fix row today → stdout carries the wrong-fix advisory, and no error row
+const t3 = transcript('t3.jsonl', [row('user', 'check the fix', '2026-09-06T03:00:00Z'), row('assistant', [{ type: 'text', text: 'The stashed fix is REFUTED: the key is never written.' }], '2026-09-06T03:00:05Z')]);
+r = run({ session_id: 'evalsid-1', transcript_path: t3, _testStamp: { ...stamp, turn_id: 'evalsid-6', qa: 'QA-000001' }, _testHookRows: [], _testTurnsPath: TURNS });
+check('A1 refute verdict → wrong-fix advisory emitted on stdout', r.status === 0 && /wrong-fix: this reply refutes a fix on QA-000001/.test(r.stdout || ''), 'exit=' + r.status + ' out=' + (r.stdout || '').slice(0, 80));
+r = run({ session_id: 'evalsid-1', transcript_path: t3, _testStamp: { ...stamp, turn_id: 'evalsid-7', qa: null }, _testHookRows: [], _testTurnsPath: TURNS });
+check('A2 refute verdict with no attributed quest → no advisory (nothing to file it under)', r.status === 0 && !/wrong-fix:/.test(r.stdout || ''), (r.stdout || '').slice(0, 80));
+
 // S17: orch-suppressed rows counted as suppressed, not blocks
 r = run({ session_id: 'evalsid-1', transcript_path: t2, _testStamp: { ...stamp, turn_id: 'evalsid-5' }, _testHookRows: [{ hook: 'terse-gate', mode: 'orch-suppressed', blocked: false, dur_ms: 0, turn_id: 'evalsid-5' }], _testTurnsPath: TURNS });
 x = lastRow();
