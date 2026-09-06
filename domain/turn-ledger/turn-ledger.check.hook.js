@@ -55,19 +55,26 @@ function transcriptWindow(transcriptPath) {
   }
   const win = start >= 0 ? rows.slice(start) : rows;
   const toolNames = {};
-  let toolCalls = 0, assistantMsgs = 0, replyChars = 0, lastText = '';
+  let toolCalls = 0, assistantMsgs = 0, replyChars = 0, lastText = '', toolText = '';
+  const tokens = { in: 0, out: 0, cache_read: 0, cache_create: 0 };
   for (const r of win) {
     if (r.type !== 'assistant' || !r.message) continue;
     assistantMsgs++;
     const content = Array.isArray(r.message.content) ? r.message.content : [];
     let text = '';
     for (const b of content) {
-      if (b.type === 'tool_use') { toolCalls++; toolNames[b.name] = (toolNames[b.name] || 0) + 1; }
+      if (b.type === 'tool_use') { toolCalls++; toolNames[b.name] = (toolNames[b.name] || 0) + 1; toolText += ' ' + JSON.stringify(b.input || {}).slice(0, 2000); }
       else if (b.type === 'text' && typeof b.text === 'string') text += b.text;
     }
     if (text) { replyChars += text.length; lastText = text; }
+    // 9e blind spot: model tokens per turn (transcript `usage` rows) — summed per assistant message
+    const u = r.message.usage;
+    if (u && typeof u === 'object') {
+      tokens.in += u.input_tokens || 0; tokens.out += u.output_tokens || 0;
+      tokens.cache_read += u.cache_read_input_tokens || 0; tokens.cache_create += u.cache_creation_input_tokens || 0;
+    }
   }
-  return { found: rows.length > 0, toolCalls, toolNames, assistantMsgs, replyChars, lastText, promptTs: start >= 0 ? rows[start].timestamp || null : null };
+  return { found: rows.length > 0, toolCalls, toolNames, assistantMsgs, replyChars, lastText, toolText, tokens, promptTs: start >= 0 ? rows[start].timestamp || null : null };
 }
 
 // M4 — bypass tokens in the LAST assistant message, outside fenced code (scenario 6).
@@ -136,18 +143,24 @@ function buildRow(data, stamp, win, hookRows, bypasses, prev) {
   const hookMs = hookRows.reduce((a, r) => a + (Number.isFinite(r.dur_ms) ? r.dur_ms : 0), 0);
   let gap = null;
   if (prev && prev.closed_ts) gap = Math.round((now.getTime() - Date.parse(prev.closed_ts)) / 60000);
+  // 9h: if the prompt named no ticket, the tool paths/commands of this turn may — re-attribute at Stop.
+  let qa = stamp ? stamp.qa : null, phase = stamp ? stamp.phase : null, status = stamp ? stamp.status : null, qaSource = stamp ? (stamp.qa_source || null) : null;
+  if (turnCtx && turnCtx.attribute && (!qaSource || qaSource === 'top-active') && win.toolText) {
+    try { const a = turnCtx.attribute(win.toolText, undefined); if (a.qa && /^named/.test(a.qa_source || '')) { qa = a.qa; phase = a.phase; status = a.status; qaSource = 'tools'; } } catch (_) {}
+  }
   return {
     v: 1,
     turn_id: stamp ? stamp.turn_id : null,
     session_id: data.session_id || (stamp && stamp.session_id) || null,
     opened_ts: stamp ? stamp.opened_ts : (win.promptTs || null),
     closed_ts: now.toISOString(),
-    qa: stamp ? stamp.qa : null, phase: stamp ? stamp.phase : null, status: stamp ? stamp.status : null,
+    qa, phase, status, qa_source: qaSource,
     prompt_head: stamp ? stamp.prompt_head : null,
     tool_calls: win.found ? win.toolCalls : null,
     tool_names: win.toolNames,
     assistant_msgs: win.assistantMsgs,
     reply_chars: win.replyChars,
+    tokens: win.tokens,
     hooks_fired: hookRows.length,
     hook_ms: hookMs,
     blocks,
