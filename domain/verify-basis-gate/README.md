@@ -1,3 +1,8 @@
+goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote verify-basis-gate)
+symptom: not recorded at birth (pre-Rule-13 feature)
+goal: verify-basis-gate.discipline.hook.js — Stop hook Power: domain/verify-basis-gate/ PURPOSE (みや 2026-06-24, "you're lying, you didn't check flowables"): catch a claim
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # Power: verify-basis-gate
 
 **Stop hook.** Blocks a claim of having VERIFIED something ("from … evidence", "I checked the flowables/code/DB", "I confirmed by reading X") made with **ZERO tool calls that turn** — i.e. the basis was never performed.

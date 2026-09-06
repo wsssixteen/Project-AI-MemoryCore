@@ -1,3 +1,8 @@
+goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote quest-doc-freshness)
+symptom: not recorded at birth (pre-Rule-13 feature)
+goal: quest-doc-freshness.discipline.hook.js — Stop hook (Power: quest-doc-freshness) Keeps the active quest's qa_doc fresh ON THE FLY. After each reply during an active quest, if the reply CHANGED quest state (a finding / decision / fix /
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # Power: quest-doc-freshness
 
 **Layer**: hook-only (Stop) · **REPORT-ONLY** (advisory, never blocks) · **Created** 2026-06-28 (みや)

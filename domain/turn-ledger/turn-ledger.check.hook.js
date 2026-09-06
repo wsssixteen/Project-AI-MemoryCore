@@ -195,10 +195,14 @@ if (require.main === module) {
     appendJsonl(target, row);
     try { fs.writeFileSync(STATE, JSON.stringify({ closed_ts: row.closed_ts, turn_id: row.turn_id })); } catch (_) {}
     appendJsonl(LOG, { ts: row.closed_ts, turn_id: row.turn_id, tool_calls: row.tool_calls, blocks: row.blocks.length, fp: row.bypasses.filter(b => b.fp).length, goal_mechanical: lens.mechanical, goal_prompts: lens.prompts.length });
-    if (lens.prompts.length) {
-      const lines = lens.prompts.map(p => `goal-lens: ${p.feature} BLOCKED this turn — goal: ${p.goal}\n   Met? gap? improve? → node lib/goal-lens.js note ${p.feature} --turn ${row.turn_id} --met y|n|partial --gap "<what fell short>" --improve "<change that reaches the goal>"`);
-      return { fired: true, blocked: false, contextOut: lines.join('\n') + '\n' };
+    const lines = lens.prompts.map(p => `goal-lens: ${p.feature} BLOCKED this turn — goal: ${p.goal}\n   Met? gap? improve? → node lib/goal-lens.js note ${p.feature} --turn ${row.turn_id} --met y|n|partial --gap "<what fell short>" --improve "<change that reaches the goal>"`);
+    // 9a (2026-09-07): a refute verdict in this reply on a known quest with no wrong-fix row today → advisory
+    if (row.qa && /\b(REFUTED|refuted|reverted|not the (root )?cause|wrong fix|does not fix|did not fix)\b/.test(win.lastText || '')) {
+      let hasToday = false;
+      try { const wf = require(path.join(ROOT, 'lib', 'wrong-fix.js')); const p = wf.docPath(row.qa); const d = new Date().toISOString().slice(0, 10); hasToday = !!p && wf.readRows(fs.readFileSync(p, 'utf8')).rows.some(r => r.date === d); } catch (_) {}
+      if (!hasToday) lines.push(`wrong-fix: this reply refutes a fix on ${row.qa} but the qa_doc has no Wrong-fixes row today → node lib/wrong-fix.js add ${row.qa} --was "<fix>" --why "<how refuted>" --learned "<rule>"  (Phase 2 cannot archive until every row has a verdict)`);
     }
+    if (lines.length) return { fired: true, blocked: false, contextOut: lines.join('\n') + '\n' };
     return { fired: true, blocked: false };
   });
 }

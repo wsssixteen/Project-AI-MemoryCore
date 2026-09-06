@@ -1,6 +1,16 @@
 #!/usr/bin/env node
 /* eval for cross-module-intake/scan.js — the QA-274318 regression + negatives. */
 const { execFileSync } = require('child_process');
+
+// Machine-independent (2026-09-07): locate the replay Task folder under THIS user's OneDrive (active or Archive).
+function findTaskFolder(num) {
+  const os = require('os'); const fs = require('fs'); const path = require('path');
+  const base = path.join(os.homedir(), 'OneDrive - Pymsoft Sdn Bhd', '1. Tasks', 'Melaka');
+  for (const dir of [base, path.join(base, 'Archive')]) {
+    try { const hit = fs.readdirSync(dir).find(f => f.includes('#' + num)); if (hit) return path.join(dir, hit); } catch (_) {}
+  }
+  return path.join(base, 'MISSING-' + num);
+}
 const path = require('path');
 const scan = path.join(__dirname, 'scan.js');
 
@@ -12,7 +22,7 @@ function run(args) {
 const cases = [
   {
     name: 'QA-274318 (the missed ticket) → MUST flag cross-module',
-    args: ['--folder', 'C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\1. Tasks\\Melaka\\132. ESOKONGAN #274318 - Pelupusan - Kemaskini Jabatan Teknikal dan JPPH tidak Tepat'],
+    args: ['--folder', findTaskFolder('274318')],
     expectCode: 2,
     expectContains: ['our issue or Common', 'CROSS-MODULE'],
   },

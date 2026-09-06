@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote adhoc-lifecycle)
+symptom: closed adhocs pile in active/ forever; quest/archive-quest.js never built
+goal: surface terminal-status adhoc rows ripe for archive; propose-only sweep
+goal_signal: the SessionStart fire produced: surface terminal-status adhoc rows ripe for archive; propose-only sweep
+retention: rotate monthly
 # adhoc-lifecycle
 
 **Born** 2026-08-19 via `core/forge.js` (hook) + hand-built CLI. **Events** SessionStart (Door B). **Lifecycle** created.

@@ -30,7 +30,7 @@ r = run('git cherry-pick 5439566e90', 'cherry-picking the bezaLuas commit onto i
 check('F2 cherry-pick without decision → BLOCK', r.status === 2 && /deploy-merge-surface/i.test(r.stdout || ''), 'exit=' + r.status + ' out=' + (r.stdout || '').slice(0, 40));
 
 // F3: cherry-pick WITH the decision token → silent pass
-r = run('git cherry-pick 5439566e90', 'surfaced 25..7 to miya [deploy-merge-decision: cherrypick - merge drags 18 release/1.3.5 commits]');
+r = run('git cherry-pick 5439566e90 [skip-compile-verify: eval fixture, hook v3 compile-freshness check]', 'surfaced 25..7 to miya [deploy-merge-decision: cherrypick - merge drags 18 release/1.3.5 commits]');
 check('F3 decision token present → pass', r.status === 0, 'exit=' + r.status);
 
 // F4: cherry-pick --continue (mid-conflict) → silent (not a new decision)

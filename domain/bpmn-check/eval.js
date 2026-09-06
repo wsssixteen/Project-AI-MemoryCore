@@ -15,7 +15,11 @@ const path = require('path');
 const os = require('os');
 
 const CHECK = path.join(__dirname, 'bpmn-check.js');
-const KNOW = 'C:/Users/Ridhwan/OneDrive - Pymsoft Sdn Bhd/0. AI/Project-AI-MemoryCore/projects/coding-projects/active/etanah-knowledge/melaka/flowables-bpmn';
+// Machine-independent (2026-09-07): the corpus is untracked-confidential and lives in the MAIN repo only
+// (absent from worktrees) - resolve MAIN by stripping any .claude/worktrees/<name> suffix.
+const ROOT0 = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
+const MAIN = ROOT0.replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+$/i, '');
+const KNOW = path.join(MAIN, 'projects', 'coding-projects', 'active', 'etanah-knowledge', 'melaka', 'flowables-bpmn');
 const OLD = path.join(KNOW, 'MLK_PLP_PPTPB.bpmn20 - old.xml');
 const FIXED = path.join(KNOW, 'MLK_PLP_PPTPB.bpmn20.xml'); // corpus copy of the senior fix
 const MLPS = path.join(KNOW, 'MLK_PLP_MLPS.bpmn20.xml');

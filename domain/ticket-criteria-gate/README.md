@@ -1,3 +1,8 @@
+goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote ticket-criteria-gate)
+symptom: not recorded at birth (pre-Rule-13 feature)
+goal: ticket-criteria-gate.discipline.hook.js — Stop hook Power: domain/ticket-criteria-gate/ PURPOSE (per みや 2026-06-20, QA-261986 close — "much more critical than the
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # Power: ticket-criteria-gate
 
 The most critical Stop gate (per みや 2026-06-20, QA-261986 close — "much more critical than the test stop hook"): I cannot declare a ticket **done / closed / ready-to-test** without showing that **every BA criterion** is addressed-with-evidence — not a bogus self-asserted ✓. Kills the `knowledge-transfer-incompleteness` slip class (the Tolak-deferred-incomplete-close + the cycle-2 bogus CC-tag list).

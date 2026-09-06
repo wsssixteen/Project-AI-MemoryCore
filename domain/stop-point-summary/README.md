@@ -1,3 +1,8 @@
+goal_status: draft (derived from nuke-marker+header on 2026-09-06; promote with node lib/goal-backfill.js promote stop-point-summary)
+symptom: Background task — recurring "missing end-of-reply summary" slip. Root symptom: 154/618 substantive turns compliant = 24.9% baseline. みや: *"Please also add ALWAYS AT THE END OF A REPLY A FUCKING SUMMARY."*
+goal: stop-point-summary.discipline.hook.js — Stop hook Feature: domain/stop-point-summary/ PURPOSE (みや 2026-07-06): a substantive assistant turn that ends WITHOUT a
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # stop-point-summary — Feature contract
 
 > **DEREGISTERED 2026-08-18** (commit `c270f89`, per the Stop-gate-reshape-around-/goal plan —

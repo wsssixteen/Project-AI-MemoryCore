@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote brief)
+symptom: start-of-work orientation had no procedure; kowalski covers architecture, stop-point-summary covers end-of-work, show-gate+terse-gate enforce format but define no content
+goal: emit the 6-block start-of-work brief: bottom line, where-he-sees-it table, story diagram with full addresses, fix table one row per site, what-could-bite bullets with confidence, first move
+goal_signal: the run fire produced: emit the 6-block start-of-work brief: bottom line, where-he-sees-it table, story
+retention: rotate monthly
 # brief (skill-only Feature)
 
 **Contract:** when みや is about to START a work item, emit a 6-block orientation brief — bottom line · where-he-sees-it table · story diagram with full addresses · fix table (one row per site in the bug CLASS) · what-could-bite bullets with a confidence % · first move. Story diagrams, tables, and short-sentence bullets only.

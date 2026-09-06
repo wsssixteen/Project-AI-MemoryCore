@@ -1,3 +1,8 @@
+goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote full-address-trace-gate)
+symptom: not recorded at birth (pre-Rule-13 feature)
+goal: full-address-trace-gate.discipline.hook.js — Stop hook (BLOCKING) Feature: domain/full-address-trace-gate/ PURPOSE: every code reference in a trace / class chain must be GREPPABLE by
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # full-address-trace-gate — Feature
 
 Stop-hook (BLOCKING) that rejects a reply whose class-chain / trace contains

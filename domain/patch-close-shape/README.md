@@ -1,3 +1,8 @@
+goal_status: draft (derived from nuke-marker+header on 2026-09-06; promote with node lib/goal-backfill.js promote patch-close-shape)
+symptom: #277291 PLTP PROD data-patch close-out drifted 3× on the infra handoff shape; みや asked to build a deterministic guard
+goal: advise when greeting/#ticket not adjacent OR the handoff is not the closing block
+goal_signal: a fire on: reply contains a fenced infra handoff block whose first line is 'Hi infra, please assist. Thank you.'
+retention: rotate monthly
 # patch-close-shape
 
 **Purpose**: when a quest finishes with a PROD data-patch handed to infra, the closing reply must END with the infra handoff block, in format. Born after #277291 (2026-09-02) drifted 3× — handoff verbose, then at the TOP not the end, then a blank line between greeting and `#ticket` — each caught only by みや. `patch-script-gate` checks the SQL pieces; nothing checked the reply ENVELOPE. This is that gate.

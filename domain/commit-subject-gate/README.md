@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote commit-subject-gate)
+symptom: QA-277697 2026-09-02: five drafts of one subject, each longer, with ';', dashes and 'keep 3 trg pages' (a non-change) until miya wrote the message himself
+goal: BLOCK when the subject breaks the deterministic shape: ';' or dash inside the description, arrows/pipes, a non-change word (keep/kept/leave/left/untouched/unchanged/retain/remain/still), length > 100 chars, or a redraft LONGER than the previous draft for the same ticket in this transcript
+goal_signal: the Stop fire produced: BLOCK when the subject breaks the deterministic shape: ';' or dash inside the de
+retention: rotate monthly
 # commit-subject-gate
 
 **What fires when**: Stop — the reply carries an etanah commit subject: a fenced block whose only line matches `^(QA|Ref) #NNN - `, or a `git commit -m "…"` string inside a fenced block.

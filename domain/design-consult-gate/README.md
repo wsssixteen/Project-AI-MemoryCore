@@ -1,3 +1,8 @@
+goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote design-consult-gate)
+symptom: not recorded at birth (pre-Rule-13 feature)
+goal: design-consult-gate.gate.hook.js — PreToolUse hook (matcher: Edit|Write) Feature: domain/design-consult-gate/ PURPOSE: creating/editing a system-shape file MUST be preceded by consulting BOTH
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # design-consult-gate (hook)
 
 **Contract:** creating or editing a **skill** (`.claude/skills/<x>/SKILL.md`) or a **hook** (`.claude/hooks/<x>.js`, `domain/<x>/<y>.hook.js`) MUST be preceded by invoking BOTH `system-design` AND `system-rules` this session. The gate hard-blocks the edit until both appear in the session transcript.

@@ -1,3 +1,8 @@
+goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote batch-ask)
+symptom: not recorded at birth (pre-Rule-13 feature)
+goal: batch-ask.trigger.hook.js — UserPromptSubmit hook Power: domain/batch-ask/ PURPOSE: when みや's prompt signals extensive / sweep / thorough / in-one-go
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # batch-ask — force AskUserQuestion when extensive-intent detected
 
 ## Power purpose

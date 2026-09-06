@@ -1,3 +1,8 @@
+goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote scan)
+symptom: not recorded at birth (pre-Rule-13 feature)
+goal: known-bug-surfacer.hook.js — PreToolUse Read|Edit|Write hook (scan Power). When a Read/Edit/Write targets an etanah `.java` file that has recorded known bugs in `domain/scan/known-bugs.jsonl` (status != "fixed"), surface them NOW —
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # Power: scan — static bug-pattern detection for etanah
 
 **Capability we lacked.** codegraph / SootUp / etanah-codemap map *structure* (symbols, call-graph, flows). None find *defects*. `/scan` adds that layer: PMD (curated bug-only ruleset on source) + SpotBugs (`-high` bytecode dataflow on `target/classes`), merged into a bug-focused table.

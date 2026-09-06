@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote alter-ticket-gate)
+symptom: #275847 2026-09-04 Perak: Ammar 'can help alter to SPI Semakan Permohonan' — quest hard-coded melaka knowledge, no alter-page/verify/reply layer existed; #277926 2026-09-03 Melaka: Initiate&Alter picked the wrong SKM twin by name
+goal: advisory: inject the state-routed ALTER layer (ALTER-TICKET-PLAYBOOK + <state>/FLOWABLE-ALTER file) + the A0-A6 deterministic rows + the fixed reply format; state resolved from Task folder / permohonan-ID prefix
+goal_signal: the UserPromptSubmit fire produced: advisory: inject the state-routed ALTER layer (ALTER-TICKET-PLAYBOOK + <state>/F
+retention: rotate monthly
 # alter-ticket-gate (hook-only Feature, v1.0 — born 2026-09-04 via core/forge.js)
 
 **What fires when**: `UserPromptSubmit` — the prompt names a ticket / permohonan ID (or a prior assistant turn does) AND an **alter signal** is found in the prompt, the ticket brief (`0. Brief/Description.txt` + `History.txt` + active.txt one-liner), or the prior assistant turns of this session's transcript.

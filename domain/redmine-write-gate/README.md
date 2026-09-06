@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote redmine-write-gate)
+symptom: #275847 2026-09-04: note posted + reassigned to Ammar on the strength of 'Start with the standard Salam Amar' (a wording instruction, not a post approval); miya wanted to review first and the journal cannot be edited via API (404)
+goal: BLOCK unless the LAST user message is an explicit post approval (post it / post now / Yes, post / [redmine-post-ok]) — the note text must have been shown and nodded first
+goal_signal: the PreToolUse fire produced: BLOCK unless the LAST user message is an explicit post approval (post it / post 
+retention: rotate monthly
 # redmine-write-gate (hook-only Feature, v1.0 — born 2026-09-04 via core/forge.js)
 
 **What fires when**: `PreToolUse` on `Bash|PowerShell` — the command (or the `.js` it executes) references the Redmine host / API key AND carries a mutation (`method:'PUT'|'POST'|'DELETE'`, `-X PUT`, `notes`, `assigned_to_id`, `status_id`, `done_ratio`, `journal`, `uploads`).

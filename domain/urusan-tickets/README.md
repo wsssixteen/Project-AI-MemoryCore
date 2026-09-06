@@ -1,3 +1,8 @@
+goal_status: draft (derived from nuke-marker on 2026-09-06; promote with node lib/goal-backfill.js promote urusan-tickets)
+symptom: miya: deep plan on ticket-preparedness — "Redmine requirement tickets for all Urusans... document it into our etanah knowledge MD files for each Urusans" + build-nothing-that-rots directive; executed under /goal
+goal: resolve: miya: deep plan on ticket-preparedness — "Redmine requirement tickets for all Urusans... document it into our etanah knowledge MD files for each Urusans" + build-nothing-that-rots directive; executed under /goal
+goal_signal: unknown — needs a read of the code
+retention: rotate monthly
 # urusan-tickets
 
 **What it is**: deterministic generator for the per-urusan Redmine precedent docs — pulls every helpdesk_melaka ticket whose Module is Pelupusan / Awam Pelupusan (+ assigned-to-miya safety pass), classifies each into its urusan, regenerates `etanah-knowledge/melaka/urusan/<KOD>-TICKETS.md` + `_UNCLASSIFIED.md` + `_INDEX.md` on the MAIN repo working tree.

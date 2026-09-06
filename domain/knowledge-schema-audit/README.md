@@ -1,3 +1,8 @@
+goal_status: draft (derived from nuke-marker+header on 2026-09-06; promote with node lib/goal-backfill.js promote knowledge-schema-audit)
+symptom: miya /goal: keep etanah-knowledge folder structure + MD naming identical across states so the Quest workflow works between states; build the memory + audit it. Same session: perak `PERAK-FACTS.md` / wp `TEST-DATA-AND-ACCESS.md` legacy names, kedah with no `index.md`, a `CON\` flowables folder that broke OneDrive sync
+goal: audit every state folder against KNOWLEDGE-SCHEMA.json; surface drift (silent when canonical). Never blocks.
+goal_signal: a fire on: every session boot — etanah-knowledge/<state>/ folders drift from the canonical layout (missing required
+retention: rotate monthly
 # knowledge-schema-audit
 
 **Born** 2026-09-04 via `core/forge.js` (check) + hand-built CLI + write-time hook. **Events** SessionStart (boot audit) · PreToolUse `Edit|Write` (write-time advisory). **Lifecycle** created.

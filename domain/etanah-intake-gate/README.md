@@ -1,3 +1,8 @@
+goal_status: draft (derived from nuke-marker+header on 2026-09-06; promote with node lib/goal-backfill.js promote etanah-intake-gate)
+symptom: one-line root symptom / quest ID / user ask that triggered this Feature
+goal: Classify into lane DATA-PATCH | ADHOC-CANDIDATE | LOOKUP and inject the lane's compact pre-flight: routed etanah-knowledge file(s), key-path-evidence rule, input-IDs-verbatim rule, cross-verify rule
+goal_signal: a fire on: Free-text etanah work signal (hakmilik ID / etanah table / mutation-verb + env / error signal) with NO Redmine ticket number and NO labelled-field adhoc paste
+retention: rotate monthly
 # etanah-intake-gate
 
 **What fires when**: UserPromptSubmit — Free-text etanah work signal (hakmilik ID / etanah table / mutation-verb + env / error signal) with NO Redmine ticket number and NO labelled-field adhoc paste

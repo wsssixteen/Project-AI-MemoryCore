@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote claude-md-watch)
+symptom: 2026-08-16 miya: when we change something we do not only run tests, we set up a thing to OBSERVE the specific things we touched, so next run you self-alert and we amend or revert
+goal: reads system/claude-md-watchlist.jsonl (written by lib/watch.js add at change-time); emits each ACTIVE watch: what was changed, what to observe, sessions remaining, and the exact one-line git rollback command anchored to the pre-change SHA
+goal_signal: the SessionStart fire produced: reads system/claude-md-watchlist.jsonl (written by lib/watch.js add at change-ti
+retention: rotate monthly
 # claude-md-watch — THE CLAUDE.md UPDATE SYSTEM (complete pipeline, assembled 2026-08-16)
 
 Any change to `.claude/CLAUDE.md` (and any boot-loaded protocol file) follows this pipeline. Built piecewise during the 2026-08-16 weekend audit; this README is the single assembled reference.

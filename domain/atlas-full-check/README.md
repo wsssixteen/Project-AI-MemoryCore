@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote atlas-full-check)
+symptom: 2026-08-27: shipped a multi-state Atlas claiming verified-everything while By-Feature was empty on Perak and states were never visually checked — miya: create a deterministic checker so you dont lie about a single alphabet
+goal: BLOCK stop unless etanah_atlas/build/full_check_report.json is a fresh all-pass FULL run covering every state in atlas_states.json (0 JS errors); bypass [skip-atlas-full-check: reason]
+goal_signal: the Stop fire produced: BLOCK stop unless etanah_atlas/build/full_check_report.json is a fresh all-pass 
+retention: rotate monthly
 # atlas-full-check
 
 Deterministic full-website checker for the multi-state etanah Atlas. Born 2026-08-27

@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote pre-reply-contract)
+symptom: 2026-07-28 + 2026-08-16 double-emit complaint (todo Q1 rows 42+44): Stop gates rejected finished replies, forcing full re-emits miya read twice
+goal: inject the condensed permanent ADHD reply contract BEFORE composing (full-address + micro-summary + delta-only-correction); constrained-format ask wins over all shape rules
+goal_signal: the UserPromptSubmit fire produced: inject the condensed permanent ADHD reply contract BEFORE composing (full-addres
+retention: rotate monthly
 # pre-reply-contract — the reply-shape rules arrive BEFORE the reply
 
 **Fires**: UserPromptSubmit, every prompt ≥4 chars. **Never blocks** (contextOut only, fail-open).

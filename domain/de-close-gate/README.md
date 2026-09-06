@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote de-close-gate)
+symptom: 2026-08-20 QA-276182: touched all session, deployed to int-env, had NO active.txt block and NO qa_doc; only miya's explicit audit ask caught it - step 2c is model-memory and 12.6 only iterates existing blocks
+goal: BLOCK the DE close unless the deterministic close-conditions hold: (1) every ticket id mentioned this session that has a Task folder or qa_doc also has an active.txt block (kills the blockless-ticket hole), (2) resume-readiness.js ran this session (log.jsonl fresh), (3) main/current-session.md is at or under 500 lines (trim ran). Bypass [skip-de-close-gate: <reason>]
+goal_signal: the Stop fire produced: BLOCK the DE close unless the deterministic close-conditions hold: (1) every tic
+retention: keep
 # de-close-gate — deterministic close-conditions for Domain Expansion
 
 **What fires when**: Stop hook. Fires ONLY when the last assistant text carries the DE closing

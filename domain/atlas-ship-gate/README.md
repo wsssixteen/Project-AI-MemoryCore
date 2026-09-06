@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote atlas-ship-gate)
+symptom: 2026-08-22 Atlas v3.2: synthetic-only verification shipped a page with an invisible modal overlay blocking every real click; miya could not open/use it
+goal: BLOCK stop (exit 2) unless etanah_atlas/build/ship_check.json is FRESH for the current etanah_atlas_melaka.html sha256, with smoke=pass and a real headless file:// render recorded; bypass [skip-atlas-ship-gate: reason]
+goal_signal: the Stop fire produced: BLOCK stop (exit 2) unless etanah_atlas/build/ship_check.json is FRESH for the c
+retention: rotate monthly
 # atlas-ship-gate
 
 **What fires when**: Stop — Stop, predicate: session transcript tail shows edits under etanah_atlas/(src|config|lib)

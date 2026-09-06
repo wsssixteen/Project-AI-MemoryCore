@@ -1,3 +1,8 @@
+goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote quest-bounty)
+symptom: not recorded at birth (pre-Rule-13 feature)
+goal: quest-bounty-verify — domain/quest-bounty/discipline.hook.js — Stop hook Makes a SKIPPED quest-bounty VISIBLE. Eval wf_3c67b23f flagged that close-phase invokes quest-bounty via a prose step (~70-85% reliable) and a skip is invisible —
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # Power: quest-bounty
 
 **What fires when**: invoked by `close-phase` at **Phase 2** (quest archive), after archive hygiene runs.

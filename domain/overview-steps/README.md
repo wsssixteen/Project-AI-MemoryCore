@@ -1,3 +1,8 @@
+goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote overview-steps)
+symptom: not recorded at birth (pre-Rule-13 feature)
+goal: overview-tracker.trigger.hook.js — UserPromptSubmit hook Power: domain/overview-steps/ PURPOSE (みや 2026-06-24): inject the active ticket's OVERVIEW STEPS + % done every
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # Power: overview-steps
 
 **UserPromptSubmit hook.** Injects the active ticket's OVERVIEW STEPS + % done every turn, so it's shown at every turn-end until complete.

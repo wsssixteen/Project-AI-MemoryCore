@@ -1,3 +1,8 @@
+goal_status: draft (derived from nuke-marker on 2026-09-06; promote with node lib/goal-backfill.js promote ticket-close-block)
+symptom: miya ask (#276436): auto-emit the git commit-reference block at ticket close, module-aware branch vs int-env, in his plain sentence style
+goal: resolve: miya ask (#276436): auto-emit the git commit-reference block at ticket close, module-aware branch vs int-env, in his plain sentence style
+goal_signal: unknown — needs a read of the code
+retention: rotate monthly
 # ticket-close-block
 
 Generates the git commit-reference block miya pastes at the end of a ticket, in the exact `<pre>` shape.

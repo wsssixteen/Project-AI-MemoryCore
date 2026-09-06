@@ -1,3 +1,8 @@
+goal_status: draft (derived from nuke-marker+header on 2026-09-06; promote with node lib/goal-backfill.js promote logic-blast-radius)
+symptom: Familiar-built batch (commit `2750811`). Root symptom: みや 2026-07-07 — *"checks must ALWAYS fire when I ask to apply fix or implement etanah code, even outside quests"*; recon found the v1 gate silently dark without `status=active`. v2 = quest-gate REMOVED — fires on ANY stateful-flow etanah .java Edit.
+goal: logic-blast-radius.discipline.hook.js — PreToolUse hook (Edit | Write) v2 2026-07-07 — quest-gate REMOVED per みや ("checks must always fire on etanah fix work even outside quests"); relocated from .claude/hooks/logic-blast-radius-gate.js.
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # logic-blast-radius
 
 **PreToolUse hook (Edit | Write)** — HARD-BLOCKS any Edit/Write to a stateful-flow etanah `.java` file until a LOGIC BLAST RADIUS scenario-matrix banner has been emitted in the session transcript. The structural defender for the Rubric row (h) CODE-LOGIC scenario matrix (quest-protocol.md "🚨 Logic Blast Radius"; built for QA-268273).

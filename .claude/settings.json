@@ -1,7 +1,7 @@
 {
-  "$schema_note": "Project-scope settings \u2014 committed to git so hook registrations propagate across machines. Sibling .claude/settings.local.json holds machine-specific permissions (gitignored). Both files MERGE per Claude Code convention; keep hooks ONLY here to avoid double-fire.",
+  "$schema_note": "Project-scope settings — committed to git so hook registrations propagate across machines. Sibling .claude/settings.local.json holds machine-specific permissions (gitignored). Both files MERGE per Claude Code convention; keep hooks ONLY here to avoid double-fire.",
   "env": {},
-  "$env_note": "SUBAGENT_MODEL=sonnet \u2014 Layer-1 spend failsafe (2026-07-19, per miya after 105-agent Fable blowup, 4.08M tokens). Highest-precedence: every subagent runs sonnet regardless of spawner. Trade-off accepted: flattens haiku tiering + opus verify stages need miya's nod to unset. Pairs with domain/agent-spend-gate (Layer 2). \u26a0\ufe0f UNVERIFIED until a post-restart probe confirms a subagent reports sonnet.",
+  "$env_note": "SUBAGENT_MODEL=sonnet — Layer-1 spend failsafe (2026-07-19, per miya after 105-agent Fable blowup, 4.08M tokens). Highest-precedence: every subagent runs sonnet regardless of spawner. Trade-off accepted: flattens haiku tiering + opus verify stages need miya's nod to unset. Pairs with domain/agent-spend-gate (Layer 2). ⚠️ UNVERIFIED until a post-restart probe confirms a subagent reports sonnet.",
   "hooks": {
     "SessionStart": [
       {
@@ -566,6 +566,15 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\bpmn-check\\\\bpmn-check.check.hook.js\""
+          }
+        ]
+      },
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\skill-invocation-log\\\\skill-invocation-log.check.hook.js\""
           }
         ]
       }

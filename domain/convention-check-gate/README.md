@@ -1,3 +1,8 @@
+goal_status: draft (derived from nuke-marker+header on 2026-09-06; promote with node lib/goal-backfill.js promote convention-check-gate)
+symptom: Familiar-built batch (commit `2750811`). Migration to `domain/` per trinity convention + first-ever eval; only code change is the log path (now `log.jsonl` beside the hook). Legacy log stays at `.claude/hooks/`.
+goal: convention-check-gate.gate.hook.js — PreToolUse hook (Edit | Write | Bash) RELOCATED 2026-07-07 from .claude/hooks/convention-check-gate.js into the domain/convention-check-gate/ Feature folder. v1.5 behavior preserved
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # convention-check-gate — Feature folder
 
 > Relocated 2026-07-07 from `.claude/hooks/convention-check-gate.js` (flat hook) into this Feature folder.

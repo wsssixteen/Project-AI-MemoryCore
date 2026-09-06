@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote render-verify)
+symptom: #276181 font Arial 11 delivered 3x, each 12pt, because the rendered output was never inspected
+goal: BLOCK until the RENDERED output is proven from an actual generated .docx (unzip word/document.xml, check the target run sz/font/text); compile-green is not proof
+goal_signal: the Stop fire produced: BLOCK until the RENDERED output is proven from an actual generated .docx (unzip 
+retention: rotate monthly
 # render-verify — a template/render fix is not finished until the RENDERED output is proven
 
 **Why (miya 2026-08-20, #276181)**: the font "Arial 11" fix on the PPTPB Pemilik Berdaftar block was declared fixed and delivered as a deploy card **three times** — (1) template `docDefaults` sz=22, (2) template placeholder run sz=22, (3) the VO `setFontSize(FONT_SIZE_11)` code fix — and every time the generated document still rendered **12pt**, because the actual RENDERED output was never inspected. Compile-green and "the code is correct" are not proof. Only the generated `.docx` is.

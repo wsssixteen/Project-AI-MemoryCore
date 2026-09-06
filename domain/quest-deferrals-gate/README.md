@@ -1,3 +1,8 @@
+goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote quest-deferrals-gate)
+symptom: not recorded at birth (pre-Rule-13 feature)
+goal: quest-deferrals-gate.discipline.hook.js — Stop hook Power: domain/quest-deferrals-gate/ PURPOSE (per みや 2026-07-06, QA-268415 Phase 2 rule-add): at a Phase-2 close-out
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # quest-deferrals-gate
 
 **Stop hook** — at a Phase-2 close-out signal, verify the referenced `QA-<n>.md` holds a `## Deferred to follow-up` section with every row's Home cell filled. Prevents silent-drop of quest-time deferrals (out-of-BA-scope bonuses, known future gaps, learning asks, protocol edits).

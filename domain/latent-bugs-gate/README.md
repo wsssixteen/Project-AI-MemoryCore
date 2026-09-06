@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote latent-bugs-gate)
+symptom: miya 2026-08-23: if we do find a bug, we put it into bug list, then it will load during Phase 0 to check if it is a known bug - deterministic so it won't go missed
+goal: read etanah-knowledge/melaka/LATENT-BUGS.md, inject every SUSPECT/VERIFIED row before Phase 0 with compare-and-graduate instruction; warn loudly if register missing
+goal_signal: the UserPromptSubmit fire produced: read etanah-knowledge/melaka/LATENT-BUGS.md, inject every SUSPECT/VERIFIED row b
+retention: keep
 # latent-bugs-gate
 
 **What fires when**: UserPromptSubmit — ticket signal in prompt (prefixed/bare ticket number, quest-start phrase, redmine-retrieval phrase) — same trigger set as adhoc-register.

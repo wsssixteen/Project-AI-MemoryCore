@@ -1,3 +1,8 @@
+goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote show-gate)
+symptom: not recorded at birth (pre-Rule-13 feature)
+goal: show-gate.discipline.hook.js — Stop hook Power: domain/show-gate/ PURPOSE (per みや 2026-06-18, "utmost, highest, perfect, absolute criteria"):
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # show-gate (hook)
 
 **Contract:** a reply that DISCUSSES a change / comparison / diff / finding / root-cause MUST **show** it — a drawn box-diagram OR the actual code/SQL/diff in a fenced block — not describe it in prose. The Stop hook hard-blocks the turn end otherwise.

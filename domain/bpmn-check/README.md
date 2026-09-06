@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote bpmn-check)
+symptom: QA-274914: analog-first outranked BA-verbatim A7 (Isu-1 miss); pembetulanUnit chosen without semantics proof (hijacked Charting-Mohon correction); broken test permohonan handed twice (skipPTB unset)
+goal: run validator (Step 0) + emit the 10-row judgment table J1-J10 (ticket-verbatim flow, var semantics via act_hi_varinst, dedicated-task-over-gateway, null-safety on migrated tokens, child-parent map audit, loop termination, shared-kod, deployed-version reality, test-data health, inbound-census blast radius)
+goal_signal: the run fire produced: run validator (Step 0) + emit the 10-row judgment table J1-J10 (ticket-verbatim 
+retention: rotate monthly
 # domain/bpmn-check — BPMN validation gate (v1.0, born 2026-08-19 via core/forge.js)
 
 > Nod: miya /goal 2026-08-19 (QA-274914): *"please create a BPMN-CHECK gate. Learn from this mistake."*

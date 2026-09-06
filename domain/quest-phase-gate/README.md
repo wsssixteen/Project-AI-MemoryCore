@@ -1,3 +1,8 @@
+goal_status: draft (derived from nuke-marker+header on 2026-09-06; promote with node lib/goal-backfill.js promote quest-phase-gate)
+symptom: Familiar-built batch (commit `2750811`). Migration to `domain/` per trinity convention + eval. Quest-gated BY DESIGN (Scout/Recon/Rubric banners are quest artifacts; outside-quest coverage = logic-blast-radius + predicate-box + convention-check-gate). Code changes at migration: `log.jsonl` fire log beside the hook + repo-root resolve via `path.resolve(__dirname,'..','..')` — depth-2 invariant, do NOT nest the folder deeper.
+goal: quest-phase-gate.gate.hook.js — PreToolUse hook (Edit | Write) RELOCATED 2026-07-07 from .claude/hooks/quest-phase-gate.js into the domain/quest-phase-gate/ Feature folder. Behavior unchanged; the ONLY code
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # quest-phase-gate — Feature folder
 
 > Relocated 2026-07-07 from `.claude/hooks/quest-phase-gate.js` (flat hook) into this Feature folder.

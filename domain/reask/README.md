@@ -1,3 +1,8 @@
+goal_status: draft (derived from nuke-marker+header on 2026-09-06; promote with node lib/goal-backfill.js promote reask)
+symptom: みや in-session ask 2026-07-14: "I want to create something like a slip-log but for when every time I had to ask you to explain again". Root symptom = reply-clarity failures where the answer was IN the reply but みや still had to ask.
+goal: advisory-only additionalContext reminding to log via core/slips.js add --category reask/<axis> and fix reply structure
+goal_signal: a fire on: user prompt matches reask regex — 6 categories: verbose/rambling/hallucination/buried-answer/redundant/rephrase-check
+retention: rotate monthly
 # reask — Feature contract
 
 **Purpose**: Detect when みや re-asks for information Ruri already gave, and prompt Ruri to log the reply-clarity slip.

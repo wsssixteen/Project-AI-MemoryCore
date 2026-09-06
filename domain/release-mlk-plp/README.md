@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote release-mlk-plp)
+symptom: Deploy Pelupusan 1.0.9 - tickets 269802 269939 270952 - build stag + deploy on the internal servers (endpoints: gitignored servers.local.json; scrubbed from registry 2026-07-16, public-repo rule)
+goal: drive PLAN then BRANCH-MERGE-VERIFY-PUSH via release-prep.js then SSH BUILD then SSH DEPLOY then Google Sheet - 7 miya stop-points V1-V7
+goal_signal: the run fire produced: drive PLAN then BRANCH-MERGE-VERIFY-PUSH via release-prep.js then SSH BUILD then
+retention: rotate monthly
 # release-mlk-plp — Melaka Pelupusan release pipeline (Feature contract)
 
 **One line**: Redmine-recon every ticket → branch `mlk/release/<ver>` off fresh `mlk/master` →

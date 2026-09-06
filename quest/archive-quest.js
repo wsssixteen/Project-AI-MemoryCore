@@ -166,6 +166,20 @@ function main() {
             console.error(`\n⛔ Step -1: --allow-stub requires a non-empty reason.`);
             process.exit(3);
         }
+        // ── Step -0.5: WRONG-FIX VERDICT GATE (2026-09-07, plan §9b per みや — "during Phase 2, make it
+        // MANDATORY to search that mistake"). Every `## Wrong fixes` row in the qa_doc must carry a
+        // verdict (knowledge/phrase/feature/none) before the quest archives. Dry-run reports only.
+        try {
+            const wf = require(path.join(REPO_ROOT, 'lib', 'wrong-fix.js'));
+            const open = gateDocPaths.flatMap(p => wf.readRows(fs.readFileSync(p, 'utf8')).rows.filter(r => !r.verdict));
+            if (open.length && !dryRun) {
+                console.error(`\n⛔ Step -0.5 WRONG-FIX VERDICT GATE: ${qa} has ${open.length} wrong-fix row(s) without a verdict (rows ${open.map(r => r.n).join(', ')}).`);
+                console.error(`   Run the Phase-2 upgrade search:  node lib/wrong-fix.js upgrade-table ${qa}`);
+                console.error(`   then rule each row:              node lib/wrong-fix.js verdict ${qa} --row N --verdict "knowledge:<file> | phrase:<where> | feature:<name> | none:<why>"`);
+                try { fs.appendFileSync(path.join(REPO_ROOT, 'domain', 'quest-bounty', 'log.jsonl'), JSON.stringify({ ts: new Date().toISOString(), qa, gate: 'wrong-fix-verdict-gate', action: 'refused', open: open.length }) + '\n'); } catch (_) {}
+                process.exit(3);
+            }
+        } catch (_) { /* fail-open: a missing lib must never block an archive */ }
         if (!gateHasBounty && dryRun) console.log(`  [dry] Step -1: HARVEST GATE would BLOCK (no harvest section${allowStubReason ? '; --allow-stub present' : ''})`);
         else console.log(`  ✓ Step -1: harvest gate ${gateHasBounty ? 'passed (harvest section found)' : `bypassed (--allow-stub: ${allowStubReason})`}`);
     }

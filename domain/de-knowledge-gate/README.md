@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote de-knowledge-gate)
+symptom: Step 7 etanah-knowledge sweep silently skippable -> knowledge lost -> re-derive wasted usage
+goal: BLOCK DE close until knowledge-candidate list or sentinel emitted
+goal_signal: the Stop fire produced: BLOCK DE close until knowledge-candidate list or sentinel emitted
+retention: rotate monthly
 # de-knowledge-gate
 
 Deterministic backstop for **expansion-protocol Step 7** (the etanah-knowledge sweep). Turns a model-judgment step that can be silently skipped into a Stop-hook that **blocks Domain Expansion close** when the session produced knowledge worth banking but no candidate list was emitted.

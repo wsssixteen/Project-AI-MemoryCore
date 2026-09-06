@@ -1,3 +1,8 @@
+goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote ba-understanding-table)
+symptom: not recorded at birth (pre-Rule-13 feature)
+goal: ba-understanding-table.discipline.hook.js — Stop hook (Power: ba-understanding-table) WHY (QA-267382, 2026-06-25 — みや directed): At quest intake I read the BA brief + 3 attachments, then OVERRODE the BA's
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # Power: ba-understanding-table
 
 **Fires:** Stop hook, on a quest-INTAKE turn (ticket id + brief/attachment signals).

@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote awam-no-resit-gate)
+symptom: #271721 2026-07-22: PRBB AWAM ticket ran Phase 0 through Apply and a full Test Scenario emit with no No Resit; CLAUDE.md carried the rule as PROSE only, ticket-gate.js row was parked and never built
+goal: BLOCK the stop and require the No Resit to be derived from the DB and written into the Task notes file
+goal_signal: the Stop fire produced: BLOCK the stop and require the No Resit to be derived from the DB and written in
+retention: rotate monthly
 # awam-no-resit-gate (hook-only Feature)
 
 **Contract:** an AWAM ticket on a carian-rasmi urusan may not reach a test-data / hand-back emit without a **No Resit Carian Rasmi**. The Stop hook hard-blocks the turn otherwise.

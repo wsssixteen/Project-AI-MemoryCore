@@ -35,6 +35,7 @@ archived                              --close-->   (no-op: already archived)
 
 **Visible checklist first:** `Phase 1 close — QA-<num>: 1 ⬜ test-confirmed · 2 ⬜ pull+branch · 3 ⬜ stage-fix-only · 4 ⬜ STOP review · 5 ⬜ commit+push · 6 ⬜ master+active.txt · 7 ⬜ /verify`
 
+0. **Wrong-fix rows saved (added 2026-09-07, plan §9a).** If any fix was REFUTED / reverted / found not the cause during this quest, each one is a row: `node lib/wrong-fix.js add QA-<num> --was "<fix>" --why "<how refuted>" --learned "<rule>"`. Emit `wrong-fix rows: N` (0 is a valid answer only when no fix was overturned). The turn-ledger advisory names the missing row at the moment of the refute; this step is the backstop.
 1. **Assert local test.** If `local_test_confirmed` ≠ true → ask みや "Tested locally?" Do NOT proceed until confirmed.
 2. **🚨 The FIXED git sequence (etanah repo, e.g. `E:\Projects\Melaka\etanah-pelupusan`). The pull is NON-SKIPPABLE.** Identify the **cited fix file(s)** for THIS quest — the files actually changed for the fix, NOT other uncommitted WIP (e.g. another ticket's edits). Then, in order:
    ```
@@ -63,8 +64,14 @@ archived                              --close-->   (no-op: already archived)
 
 ## Phase 2 archive  (status == closed  →  archived)
 
-**Visible Phase 2 step line:** `Phase 2 — QA-<num>: 1 ⬜ Faster-finding · 1b ⬜ Fastest-Path · 2 ⬜ KPI · 3 ⬜ Post-mortem · 4 ⬜ Refine · 5 ⬜ Archive · 5b ⬜ Bounty · 6 ⬜ /verify`
+**Visible Phase 2 step line:** `Phase 2 — QA-<num>: 0 ⬜ 🔧 WORKFLOW UPGRADE · 1 ⬜ Faster-finding · 1b ⬜ Fastest-Path · 2 ⬜ KPI · 3 ⬜ Post-mortem · 4 ⬜ Refine · 5 ⬜ Archive · 5b ⬜ Bounty · 6 ⬜ /verify`
 
+0. **🔧 WORKFLOW UPGRADE — MANDATORY, FIRST, HIGHLIGHTED (added 2026-09-07, plan §9b per みや: "make it MANDATORY to search that mistake … improve our workflow … HIGHLIGHT THIS CLEARLY").** Run `node lib/wrong-fix.js upgrade-table QA-<num>` and paste its table. For EVERY row (wrong-fix rows + slips carrying this QA) give one verdict and DO it in this close, not later:
+   - `knowledge:<etanah-knowledge file>` → write the fact/pattern into that file now
+   - `phrase:<skill or protocol line>` → edit the skill/protocol line now (Rule 6 v1.2: spec-preservation + version stamp)
+   - `feature:<name>` → `node core/forge.js new …` now (Rule 13 four keys), or `refine <existing>`
+   - `none:<why>` → the reason, one sentence
+   Record each: `node lib/wrong-fix.js verdict QA-<num> --row N --verdict "<verdict>"`. `quest/archive-quest.js` REFUSES (Step -0.5) while any row lacks a verdict. Emit the line `🔧 WORKFLOW UPGRADE — QA-<num>: <n> rows · knowledge <a> · phrase <b> · feature <c> · none <d>`.
 1. **Phase 2 emit** (the 5 streamlined steps — `quest/quest-protocol.md` Phase 2, each emitted inline, not just ticked):
    - **Step 1 — Faster-finding** (1-2 lines + the applied artifact).
    - **Step 1b — Fastest-Path Retrospective** (if the quest took >1 wrong turn): write a `## Fastest Path` block into `QA-NNNN.md` — symptom signature · the clean shortest path to root cause · wrong turns removed · reusable recipe (promote a recurring class to `BUG-BESTIARY.md`).

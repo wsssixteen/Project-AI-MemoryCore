@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote adhoc-register)
+symptom: 2026-07-29: the ADHOC-REGISTER rule was written 2026-07-28 into expansion-protocol.md:50 + domain-expansion/SKILL.md:39 but the FILE was never created, and tonight's PLTP diagnosis got parked in todo.md instead. A ticket arriving later would have triggered a full re-investigation of an issue already diagnosed to 93%.
+goal: read ADHOC-REGISTER.md and inject every OPEN row (Ticket=none) BEFORE Phase 0, with the mandatory compare-and-promote instruction; warn loudly if the register file is missing
+goal_signal: the UserPromptSubmit fire produced: read ADHOC-REGISTER.md and inject every OPEN row (Ticket=none) BEFORE Phase 0, w
+retention: keep
 # adhoc-register
 
 **Born** 2026-07-29 via `core/forge.js`. **Event** UserPromptSubmit. **Lifecycle** created.

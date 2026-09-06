@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote feature-creation)
+symptom: 2026-08-19 miya: create/update/refine FEATURE should be a keyword phrase to invoke proper feature creation
+goal: inject the feature-creation pipeline checklist: system-rules then system-design then best-practices freshness then inventory then forge birth then implement then eval green then NUKE-MARKER then version-stamp
+goal_signal: the UserPromptSubmit fire produced: inject the feature-creation pipeline checklist: system-rules then system-design 
+retention: rotate monthly
 # feature-creation — "create/update/refine FEATURE" keyword trigger
 
 **Why (miya 2026-08-19)**: *"'create/update/refine FEATURE' should be a keyword phrase to invoke proper feature creation."* The proper pipeline existed (system-rules → system-design → forge) but had no deterministic keyword entry — this hook is that entry.

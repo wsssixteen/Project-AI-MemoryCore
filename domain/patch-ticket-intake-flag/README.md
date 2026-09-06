@@ -1,3 +1,8 @@
+goal_status: draft (derived from nuke-marker on 2026-09-06; promote with node lib/goal-backfill.js promote patch-ticket-intake-flag)
+symptom: #275501 — patch script not prepared straight away at intake; patch nature not highlighted as do-first (miya correction)
+goal: resolve: #275501 — patch script not prepared straight away at intake; patch nature not highlighted as do-first (miya correction)
+goal_signal: unknown — needs a read of the code
+retention: rotate monthly
 # patch-ticket-intake-flag
 
 **Born** 2026-08-19 (miya, #275501 — patch script not prepared straight away, patch nature not highlighted). **Fires** at ticket engagement (UserPromptSubmit, inside `.claude/hooks/ticket-gate.js`). **Primitive** hook-only (no skill — the behaviour is a deterministic banner). **Lifecycle** created.

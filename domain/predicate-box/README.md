@@ -1,3 +1,8 @@
+goal_status: draft (derived from nuke-marker+header on 2026-09-06; promote with node lib/goal-backfill.js promote predicate-box)
+symptom: Familiar-built batch (commit `2750811`). Root symptom: みや 2026-07-07 — *"checks must ALWAYS fire when I ask to apply fix or implement etanah code, even outside quests"*; recon found the v1 gate silently dark without `status=active`. v2 = quest-gate REMOVED + advisory PROMOTED to `decision:block`; firing scope = etanah edit + fix-intent in last user message; `stop_hook_active` guard.
+goal: predicate-box.discipline.hook.js — Stop hook (BLOCKING) Power: domain/predicate-box/ v2 (2026-07-07): quest-gate REMOVED + advisory promoted to decision:block.
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # predicate-box — Feature power
 
 > Deterministic back-gate for the Predicate Diagram (CLAUDE.md §10 — the 3-node

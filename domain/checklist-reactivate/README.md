@@ -1,3 +1,8 @@
+goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote checklist-reactivate)
+symptom: not recorded at birth (pre-Rule-13 feature)
+goal: checklist-show.js — quest-resume CLI (Power: checklist-reactivate) Surfaces a quest's persisted `## Next-Steps Checklist` open rows ON DEMAND — invoked by the /quest skill at resume (NOT at SessionStart). This is the
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # Power: checklist-reactivate
 
 **Layer**: CLI invoked at **`/quest resume`** (NOT SessionStart — boot stays lean) · report-only · fail-open

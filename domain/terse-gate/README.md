@@ -1,3 +1,8 @@
+goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote terse-gate)
+symptom: not recorded at birth (pre-Rule-13 feature)
+goal: terse-gate.discipline.hook.js — Stop hook Power: domain/terse-gate/ PURPOSE (みや 2026-06-24, "you're still blabbering stupidly"): block a reply that is
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # Power: terse-gate
 
 **Stop hook.** Blocks a PROSE-WALL reply — ≥ 6 long prose lines (> 150 chars) that aren't table rows / diagram lines. Forces tables / diagrams / short bullets.

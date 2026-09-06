@@ -1,3 +1,8 @@
+goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote de-step11-verdict-gate)
+symptom: not recorded at birth (pre-Rule-13 feature)
+goal: de-step11-verdict-gate.discipline.hook.js — Stop hook (BLOCKING) Feature: domain/de-step11-verdict-gate/ PURPOSE: at Domain Expansion close, BLOCK if the worktree still has
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # de-step11-verdict-gate — Feature
 
 Stop-hook (BLOCKING). At Domain Expansion close, refuses the close if the

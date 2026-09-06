@@ -1,3 +1,8 @@
+goal_status: draft (derived from nuke-marker+header on 2026-09-06; promote with node lib/goal-backfill.js promote rootcause-format)
+symptom: one-line root symptom / quest ID / user ask that triggered this Feature
+goal: block when the Root cause text contains dashes or semicolons; enforce short plain ASD-STE100 sentences
+goal_signal: a fire on: quest hand-back emit carries a Root cause row with real content
+retention: rotate monthly
 # rootcause-format
 
 **What fires when**: Stop — quest hand-back emit carries a Root cause row with real content

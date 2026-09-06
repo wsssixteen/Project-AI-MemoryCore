@@ -1,3 +1,8 @@
+goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote codemap-recon-consult)
+symptom: not recorded at birth (pre-Rule-13 feature)
+goal: codemap-recon-consult.discipline.hook.js — Stop hook (back-gate) Power: domain/codemap-recon-consult/ — back-gate paired with the front-gate trigger.hook.js reminder.
+goal_signal: a fire on: its trigger
+retention: rotate monthly
 # codemap-recon-consult — remind to consult the codemap during quest investigation
 
 ## Power purpose

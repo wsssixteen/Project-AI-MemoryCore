@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote adhoc-paste-detector)
+symptom: 2026-08-13 PPTPB Teknikal Selangor issue pasted several times over sessions; each answered inline, no scaffold; a later ticket would cost a full re-investigation
+goal: inject the MANDATORY ADHOC-scaffold procedure (task folder + active.txt block + ADHOC-REGISTER row + qa_doc) so the issue is captured like a Redmine retrieval, not answered inline and lost
+goal_signal: the UserPromptSubmit fire produced: inject the MANDATORY ADHOC-scaffold procedure (task folder + active.txt block + 
+retention: keep
 # adhoc-paste-detector
 
 **Primitive**: hook-only (UserPromptSubmit). **Lifecycle**: created 2026-08-13 · **WIDENED 2026-08-26** (per miya — PDTJ jabatan-teknikal intake answered inline for a dozen turns with no scaffold).

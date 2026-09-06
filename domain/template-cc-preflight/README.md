@@ -1,3 +1,8 @@
+goal_status: draft (derived from registry on 2026-09-06; promote with node lib/goal-backfill.js promote template-cc-preflight)
+symptom: 2026-08-19 BA: ralat sbb maklumat tak lengkap on PROD - preflighting CC tags vs the app rows would have surfaced patchable gaps before testing
+goal: advisory: demand the CC-data preflight (all template CC tags checked against the test permohonan data; patchable gaps named) before the scenario is handed
+goal_signal: the Stop fire produced: advisory: demand the CC-data preflight (all template CC tags checked against the
+retention: rotate monthly
 # template-cc-preflight — CC-data preflight before template-ticket test scenarios
 
 **Why (miya 2026-08-19)**: BA hit "ralat sbb maklumat tak lengkap" on a PROD doc — a generated document renders "-"/blank wherever the test permohonan lacks the data a content control pulls. From now on, a template-ticket test scenario is handed only AFTER checking every CC tag against the test app's data, with patchable gaps named.
