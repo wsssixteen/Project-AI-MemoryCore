@@ -96,6 +96,21 @@ check('F12 stale reconcile -> BLOCK', r.status === 2 && /C4/.test(r.stderr || ''
 r = run({ _testGateLogLines: [JSON.stringify({ ts: new Date().toISOString(), action: 'blocked', detail: 'C1' })].concat(FRESH_RECON) });
 check('F13 mixed gate log with fresh reconcile -> pass', r.status === 0, 'exit=' + r.status);
 
+// F14/F15 — C5 watch discipline (plan §M M5, 2026-09-06): an Edit on lib/x.js with no watch row → BLOCK; with a watch row → pass
+const c5base = {}; // defaults from run(): close banner + fresh logs + trimmed session
+const c5events = [
+  { kind: 'tool', name: 'Bash', blob: 'git commit -m "Ref QA-276182 fix"' },
+  { kind: 'tool', name: 'Edit', blob: '{"file_path":"projects/coding-projects/active/QA-276182/QA-276182.md"}' },
+  { kind: 'tool', name: 'Edit', input: { file_path: 'C:/repo/lib/x.js' }, blob: '{"file_path":"C:/repo/lib/x.js"}', ts: '2026-09-06T10:00:00Z' },
+  { kind: 'text', role: 'assistant', text: CLOSE_BANNER },
+];
+r = run({ ...c5base, _testEvents: c5events, _testWatchLines: [], _testSessionStartMs: Date.parse('2026-09-06T09:00:00Z') });
+check('F14 system edit without watch row -> BLOCK C5', r.status === 2 && /C5/.test(r.stderr || '') && /lib\/x\.js/.test(r.stderr || ''), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 100));
+r = run({ ...c5base, _testEvents: c5events, _testWatchLines: [JSON.stringify({ kind: 'watch', id: 'w1', ts: '2026-09-06T10:05:00Z', target: 'lib/x.js', observe: 'x', sessions_left: 3 })], _testSessionStartMs: Date.parse('2026-09-06T09:00:00Z') });
+check('F15 system edit with watch row -> pass', r.status === 0, 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 100));
+r = run({ ...c5base, _testEvents: c5events, _testWatchLines: [JSON.stringify({ kind: 'watch', id: 'w0', ts: '2026-09-01T10:05:00Z', target: 'lib/x.js', observe: 'old', sessions_left: 3 })], _testSessionStartMs: Date.parse('2026-09-06T09:00:00Z') });
+check('F16 stale watch row from an older session does not count -> BLOCK', r.status === 2 && /C5/.test(r.stderr || ''), 'exit=' + r.status);
+
 // F14: malformed rows in gate log ignored, fresh row still found -> pass
 r = run({ _testGateLogLines: ['not-json', '{broken'].concat(FRESH_RECON) });
 check('F14 malformed gate-log rows tolerated -> pass', r.status === 0, 'exit=' + r.status);

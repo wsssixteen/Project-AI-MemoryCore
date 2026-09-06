@@ -106,21 +106,29 @@ console.log('\\n${name}.eval: ' + (results.length - failed) + '/' + results.leng
 process.exit(failed ? 1 : 0);
 `;
 }
-function nukeMarkerTemplate(name, createdFiles, event) {
+function nukeMarkerTemplate(name, createdFiles, event, symptom) {
   const today = new Date().toISOString().slice(0, 10);
   const retire = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
   const files = createdFiles.map(f => path.relative(ROOT, f)).join(' · ');
   return '# NUKE-MARKER — ' + name + '\n\n' +
     '| Field | Value |\n|---|---|\n' +
     '| Created  | ' + today + ' |\n' +
-    '| Session  | TODO(forge): one-line root symptom / quest ID / user ask that triggered this Feature |\n' +
+    '| Session  | ' + (symptom || 'TODO(forge): one-line root symptom / quest ID / user ask that triggered this Feature') + ' |\n' +
     '| Files    | ' + files + ' · README.md · settings.json ' + (event || '') + ' entry · system/registry.jsonl line |\n' +
     '| Rollback | `rm -rf domain/' + name + '` · remove the settings.json entry · remove the registry.jsonl line · `git revert <birth-SHA>` |\n' +
     '| Retire   | ' + retire + ' — remove this file if the Feature fired >=1x in log.jsonl AND no rollback |\n';
 }
 
-function readmeTemplate(name, event, trigger, action) {
+function readmeTemplate(name, event, trigger, action, why) {
+  why = why || {};
+  // system-design Rule 13 WHY-chain (2026-09-06): machine-readable keys FIRST — the turn-ledger,
+  // feature-census and housekeeping read these lines; the prose below is for humans.
   return '# ' + name + '\n\n' +
+    'symptom: ' + (why.symptom || 'TODO(forge)') + '\n' +
+    'goal: ' + (why.goal || 'TODO(forge)') + '\n' +
+    'goal_signal: ' + (why.signal || 'TODO(forge)') + '\n' +
+    (why.signalRegex ? 'goal_signal_regex: ' + why.signalRegex + '\n' : '') +
+    'retention: ' + (why.retention || 'TODO(forge)') + '\n\n' +
     '**What fires when**: ' + (event || 'n/a') + ' — ' + trigger + '\n\n' +
     '**Contract**: ' + action + '\n\n' +
     '**Layer choice (Rule 7)**: TODO(forge): hook-only | skill-only | hook+skill — justify.\n\n' +
@@ -178,9 +186,17 @@ function forgeNew() {
   const route = arg('route') || (kind === 'check' ? 'check' : kind), routeWhy = arg('route-why') || '(not stated)';
   const event = kind === 'check' ? arg('event', true) : null;
   const matcher = arg('matcher') || '';
+  // system-design Rule 13 WHY-chain (2026-09-06, per miya): a Feature is born knowing its goal.
+  const why = { symptom: arg('symptom', true), goal: arg('goal', true), signal: arg('signal', true), retention: arg('retention', true), signalRegex: arg('signal-regex') };
+  for (const k of ['symptom', 'goal', 'signal', 'retention']) {
+    if (/^\s*$/.test(why[k]) || /\bTODO\b/i.test(why[k])) die(2, '--' + k + ' must be a real sentence (empty/TODO banned — Rule 13)');
+  }
+  if (!/^(keep|rotate\s+\S+|consume\s+\S+|regenerate)$/i.test(why.retention.trim())) die(2, '--retention must be one of: keep | rotate <period> | consume <into> | regenerate (system-rules Rule 6)');
+  if (/^(fires?|triggers?|runs?)\b/i.test(why.goal.trim())) die(2, '--goal restates the trigger; state the OUTCOME the feature exists to produce (Rule 13)');
 
   // 1. ECHO (recorded, per operator parameter echo+nod)
   log('ECHO  Trigger: when ' + trigger + ' · Action: ' + action + ' · Replay case: ' + replay);
+  log('WHY   symptom: ' + why.symptom + ' · goal: ' + why.goal + ' · signal: ' + why.signal + ' · retention: ' + why.retention);
   log('NOD   ' + nod + ' · ROUTE ' + route + ' (' + routeWhy + ')');
 
   // 2. collision → refine-first
@@ -209,8 +225,8 @@ function forgeNew() {
       //  so finishing forge FELT like finishing system-design. Now the scaffold carries them.)
       const nukePath = path.join(dir, 'NUKE-MARKER.md');
       const readmePath = path.join(dir, 'README.md');
-      fs.writeFileSync(nukePath, nukeMarkerTemplate(name, created, event)); created.push(nukePath);
-      fs.writeFileSync(readmePath, readmeTemplate(name, event, trigger, action)); created.push(readmePath);
+      fs.writeFileSync(nukePath, nukeMarkerTemplate(name, created, event, why.symptom)); created.push(nukePath);
+      fs.writeFileSync(readmePath, readmeTemplate(name, event, trigger, action, why)); created.push(readmePath);
       // 3. syntax
       for (const f of [mainPath, evalPath]) {
         const c = spawnSync(process.execPath, ['--check', f], { encoding: 'utf8' });
@@ -230,7 +246,8 @@ function forgeNew() {
       const dir = kind === 'skill' ? path.join(ROOT, '.claude', 'skills', name) : path.join(ROOT, 'lib');
       fs.mkdirSync(dir, { recursive: true });
       mainPath = kind === 'skill' ? path.join(dir, 'SKILL.md') : path.join(dir, name + '.js');
-      fs.writeFileSync(mainPath, kind === 'skill' ? skillTemplate(name, trigger, action) : '#!/usr/bin/env node\n// ' + name + ' — born via forge\n');
+      const whyHeader = '// symptom: ' + why.symptom + '\n// goal: ' + why.goal + '\n// goal_signal: ' + why.signal + '\n// retention: ' + why.retention + '\n';
+      fs.writeFileSync(mainPath, kind === 'skill' ? skillTemplate(name, trigger, action) + '\n' + whyHeader.replace(/^\/\/ /gm, '') : '#!/usr/bin/env node\n// ' + name + ' — born via forge\n' + whyHeader);
       created.push(mainPath);
       if (kind === 'script') {
         const c = spawnSync(process.execPath, ['--check', mainPath], { encoding: 'utf8' });
@@ -238,7 +255,7 @@ function forgeNew() {
       }
     }
     // 7. registry + telemetry + rollback recipe
-    append(REGISTRY, { ts: new Date().toISOString(), name, kind, event, files: created.map(f => path.relative(ROOT, f)), lifecycle: 'created', route, route_why: routeWhy, trigger, action, replay, nod, collisions_overridden: override || null });
+    append(REGISTRY, { ts: new Date().toISOString(), name, kind, event, files: created.map(f => path.relative(ROOT, f)), lifecycle: 'created', route, route_why: routeWhy, trigger, action, replay, nod, symptom: why.symptom, goal: why.goal, goal_signal: why.signal, retention: why.retention, collisions_overridden: override || null });
     append(TELEMETRY, { ts: new Date().toISOString(), hook: 'forge', event: 'Forge', mode: 'forge-new', component: name, kind, exit: 0, blocked: false });
     // Auto-ledger the birth as a type=upgrade Slip Ledger row (weekly-audit feed) — 2026-07-19
     // scour refinement #3. Expected result: registry rows ⊆ upgrade rows, zero manual memory.

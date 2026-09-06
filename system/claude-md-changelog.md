@@ -10,6 +10,12 @@
 
 ---
 
+## system-design SKILL.md v2.8 — 2026-09-06
+
+**Rule 13 — WHY-chain at birth** (symptom · goal · goal_signal · retention as machine-readable README keys; `core/forge.js new` refuses without `--symptom --goal --signal --retention`; `component-birth-gate` blocks a new `domain/*/README.md` lacking goal:/retention:; `feature-census` flags `goal-less` / `no retention`; the turn-ledger writes `goal_met` per blocking feature). **Rule 14 — placement at birth** (level + `system/STRUCTURE-SCHEMA.json` row named before any file; dated series under `system/<series>/`). Per みや 2026-09-06. Spec-preservation: Rules 6-12 untouched; additive. Paired builds same day (plan §M P0): `lib/turn-context.js` (M1/M2) · `domain/turn-ledger/` (M3/M4/M7, replaces `reply-log.js` Stop registration — file kept) · `de-close-gate` C5 · `lib/goal-lens.js` · `lib/turn-report.js` → `system/monitoring-dashboard.md` · `lib/housekeeping.js` · DE 12.5 "Monitoring + housekeeping" row.
+
+---
+
 ## system-rules SKILL.md v1.2 — 2026-09-06
 
 **Rule 6 — Data lifecycle declared at birth** (per みや: "a garbage collector or something … some data are kept, some data are cleaned up since it will be deprecated or irrelevant or replaced"). Every component README carries one `retention:` line — `keep` / `rotate <period>` / `consume <into>` / `regenerate`. Housekeeping runs ONLY at Domain Expansion 12.5 and the system audit. Birth-gate blocks a log with no retention line. Rule 3 retires FEATURES; Rule 6 retires their DATA. Spec-preservation: Rules 1-5 untouched; additive. Heading "5 Rules" → "6 Rules". Pairs with plan `system/speed-optimization-plan-2026-09-04.md` §M.8 (forge `--retention`, `lib/housekeeping.js` born in P0). Inventory at edit time: no unified retention rule existed (session-trim, slips window, NUKE-MARKER retire were each local).

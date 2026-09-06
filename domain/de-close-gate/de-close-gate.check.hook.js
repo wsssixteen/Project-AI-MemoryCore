@@ -45,14 +45,15 @@ function parseTranscript(transcriptPath) {
     const msg = obj.message || obj;
     const role = msg.role || obj.type;
     const c = msg.content;
-    if (typeof c === 'string') events.push({ kind: 'text', role, text: c });
+    const ts = obj.timestamp || null;
+    if (typeof c === 'string') events.push({ kind: 'text', role, text: c, ts });
     else if (Array.isArray(c)) {
       for (const b of c) {
         if (!b) continue;
-        if (b.type === 'text' && b.text) events.push({ kind: 'text', role, text: b.text });
+        if (b.type === 'text' && b.text) events.push({ kind: 'text', role, text: b.text, ts });
         else if (b.type === 'tool_use') {
           const inp = b.input || {};
-          events.push({ kind: 'tool', name: b.name || '', blob: JSON.stringify(inp).slice(0, 4000) });
+          events.push({ kind: 'tool', name: b.name || '', blob: JSON.stringify(inp).slice(0, 4000), input: { file_path: inp.file_path }, ts });
         }
       }
     }
@@ -138,6 +139,28 @@ function checkC4(gateLogLines, now) {
   return { pass: false };
 }
 
+// C5 — watch discipline (plan §M M5, 2026-09-06): every file under domain/ lib/ core/ .claude/hooks/
+// Edit/Write-touched this session must have a `watch` row in system/claude-md-watchlist*.jsonl from
+// this session (lib/watch.js add). Makes the abandoned 08-16 observe tool fire by construction.
+const WATCHED_DIRS = /(?:^|\/)(domain|lib|core|\.claude\/hooks)\//;
+function editedSystemFiles(events) {
+  const out = new Set();
+  for (const e of events) {
+    if (e.kind !== 'tool' || !/^(Edit|Write|MultiEdit)$/.test(e.name || '')) continue;
+    const fp = String((e.input && e.input.file_path) || '').split('\\').join('/');
+    if (fp && WATCHED_DIRS.test(fp) && !/\.eval\.js$|NUKE-MARKER\.md$|README\.md$|log\.jsonl$|goal-log\.jsonl$/.test(fp)) out.add(fp);
+  }
+  return [...out];
+}
+function checkC5(events, watchLines, sessionStartMs) {
+  const edited = editedSystemFiles(events);
+  if (!edited.length) return { pass: true, missing: [], edited: 0 };
+  const watched = new Set();
+  for (const l of watchLines) { try { const r = JSON.parse(l); if (r.kind === 'watch' && Date.parse(r.ts) >= sessionStartMs) watched.add(String(r.target).split('\\').join('/')); } catch (_) {} }
+  const missing = edited.filter(f => ![...watched].some(w => f.endsWith(w) || w.endsWith(f) || f.endsWith('/' + w)));
+  return { pass: missing.length === 0, missing, edited: edited.length };
+}
+
 function evaluate(events, disk) {
   const last = lastAssistantText(events);
   if (!last || !DE_CLOSE.test(last)) return { verdict: 'silent', reason: 'not-de-close' };
@@ -146,8 +169,9 @@ function evaluate(events, disk) {
   const c2 = checkC2(disk.logLines, disk.now);
   const c3 = checkC3(disk.sessionLineCount);
   const c4 = checkC4(disk.gateLogLines, disk.now);
-  if (c1.pass && c2.pass && c3.pass && c4.pass) return { verdict: 'pass', c1, c2, c3, c4 };
-  return { verdict: 'block', c1, c2, c3, c4 };
+  const c5 = checkC5(events, disk.watchLines || [], disk.sessionStartMs || 0);
+  if (c1.pass && c2.pass && c3.pass && c4.pass && c5.pass) return { verdict: 'pass', c1, c2, c3, c4, c5 };
+  return { verdict: 'block', c1, c2, c3, c4, c5 };
 }
 
 function readDisk() {
@@ -157,8 +181,10 @@ function readDisk() {
   const logRaw = safe(path.join(ROOT, 'domain', 'checklist-reactivate', 'log.jsonl'));
   const gateLogRaw = safe(LOG);
   const sessionRaw = safe(path.join(ROOT, 'main', 'current-session.md'));
+  let watchLines = [];
+  try { for (const f of fs.readdirSync(path.join(ROOT, 'system'))) if (f.startsWith('claude-md-watchlist') && f.endsWith('.jsonl')) watchLines.push(...safe(path.join(ROOT, 'system', f)).split(String.fromCharCode(10)).map(l => l.replace(/\r$/, '')).filter(Boolean)); } catch (_) {}
   return {
-    activeText, archiveText,
+    activeText, archiveText, watchLines, sessionStartMs: 0,
     logLines: logRaw.split(/\r?\n/).filter(Boolean),
     gateLogLines: gateLogRaw.split(/\r?\n/).filter(Boolean),
     sessionLineCount: sessionRaw ? sessionRaw.split(/\r?\n/).length : 0,
@@ -176,6 +202,8 @@ function buildBlockReason(r) {
     '   Fix: node core/session-trim.js --apply, then re-close.');
   if (!r.c4.pass) rows.push('C4 Redmine reconciliation NOT RUN this session — active.txt may carry Redmine-dead blocks.',
     '   Fix: node quest/redmine-reconcile.js — close/archive any diverged block, then re-close.');
+  if (r.c5 && !r.c5.pass) rows.push(`C5 system file(s) edited this session with NO watch row: ${r.c5.missing.join(', ')}`,
+    '   Fix: node lib/watch.js add --target <file> --observe "<what to watch for>" — one per file, then re-close.');
   return [
     '⛔ de-close-gate: Domain Expansion is closing but a deterministic close-condition FAILED:',
     ...rows.map(x => '   ' + x),
@@ -200,11 +228,14 @@ if (require.main === module) {
     if (Array.isArray(data._testLogLines)) disk.logLines = data._testLogLines;
     if (Array.isArray(data._testGateLogLines)) disk.gateLogLines = data._testGateLogLines;
     if (typeof data._testSessionLineCount === 'number') disk.sessionLineCount = data._testSessionLineCount;
+    if (Array.isArray(data._testWatchLines)) disk.watchLines = data._testWatchLines;
+    if (typeof data._testSessionStartMs === 'number') disk.sessionStartMs = data._testSessionStartMs;
+    else { const first = events.find(e => e.ts); disk.sessionStartMs = first && Date.parse(first.ts) || 0; }
 
     const r = evaluate(events, disk);
     if (r.verdict === 'block') {
       const text = buildBlockReason(r);
-      logFire('blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4'].filter(Boolean).join(' '));
+      logFire('blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4', r.c5 && !r.c5.pass && ('C5:' + r.c5.missing.length)].filter(Boolean).join(' '));
       return { fired: true, blocked: true, blockReason: text };
     }
     if (r.verdict === 'pass') { logFire('passed', `touched=${r.c1.touchedCount} rr-age=${r.c2.ageH}h lines=${r.c3.lineCount} recon-age=${r.c4.ageH}h`); return { fired: true, blocked: false }; }
@@ -212,4 +243,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4 };
+module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4, checkC5, editedSystemFiles };

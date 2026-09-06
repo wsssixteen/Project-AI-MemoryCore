@@ -116,9 +116,20 @@ Components fade if unused. Periodic audit (per /system-rules Rule 3): check hook
    - **user-instruction reversal** — the simplest instruction the Feature could invert or lose (みや's example: the deploy/baseline skills that lost fixes on a plain "merge the fixes into master")
    At least the credible ones become **eval fixtures**, not prose. **Banned**: shipping with fewer than 20 scenarios enumerated · a scenario list kept in my head — the TABLE (scenario | verdict) is DISPLAYED in the reply, always · scenarios that are all restatements of the happy path · "accepted-risk" without the why.
 
+13. **🚨 WHY-chain at birth — every Feature is born knowing its goal, and every run is judged against it** (HARD RULE, added 2026-09-06 per みや: *"every single time you create a new feature you will be aware WHY we built that so that we can optimize in the future"*). BEFORE building or refining any Feature, DISPLAY four lines and write them into its README as machine-readable keys:
+   - `symptom:` the slip / ask that triggered it, verbatim + date (this fills the NUKE-MARKER `Session` field — `TODO` is banned there)
+   - `goal:` the OUTCOME the Feature exists to produce (not its trigger: "no SQL ships without `-- N rows`", never "fires on .sql")
+   - `goal_signal:` how ONE run knows it succeeded; add `goal_signal_regex:` when the next reply can be tested mechanically
+   - `retention:` what happens to its data — `keep` / `rotate <period>` / `consume <into>` / `regenerate` (system-rules Rule 6)
+   **Enforcement**: `core/forge.js new` refuses to scaffold without `--symptom --goal --signal --retention`; `component-birth-gate` blocks a new `domain/*/README.md` missing `goal:` or `retention:`; `feature-census` lists goal-less Features; the turn-ledger writes `goal_met` per fire (mechanical when `goal_signal_regex` exists, else a ≤2-line `core/goal-lens.js note`). A Feature whose met-rate < 70% over 20 fires, or whose same `gap` repeats 3×, is auto-raised as a proposal. **Banned**: a goal that restates the trigger · `TODO` in any of the four keys · answering `--met y` without the evidence turn.
+
+14. **Placement at birth — name the level and the schema row before creating any file** (added 2026-09-06 per みや: "follow a certain set of folder structure and file naming"). Every new file states which level it belongs to (root · `system/` · `domain/<feature>/` · `main/` · `quest/` · `lib/` · `core/` · `.claude/hooks/` · `.claude/skills/` · `projects/…/<KEY>/`) and which row of `system/STRUCTURE-SCHEMA.json` allows it; no row = propose the row first (a row is the nod, same as `FOLDER-STRUCTURE.md` today). Dated series go to `system/<series>/<date>.md`, never `<series>-<date>.md` loose at the top. `lib/folder-structure.js` reports misnamed/missing per level at boot; it never moves files itself. **Banned**: a new top-level folder without a schema row · a Feature file outside `domain/<feature>/` · a per-operation folder (File Ownership row).
+
 ## Bloat-prevention default
 
 When refining any `/skill` or CLAUDE.md content: apply `/system-rules` Rule 2 (merge in place). The `claude-md-edit-guard.js` hook enforces this deterministically on edits to CLAUDE.md / /system-rules / /system-design.
+
+*Version 2.8 — 2026-09-06. Rules 13 (WHY-chain at birth: symptom · goal · goal_signal · retention as README keys; forge refuses without them; birth-gate blocks; turn-ledger writes goal_met per fire) + 14 (placement at birth: level + STRUCTURE-SCHEMA row named before any file is created) added per みや. Spec-preservation: Rules 6-12 untouched; additive.*
 
 *Version 2.0 — 2026-06-02. Complete rewrite. Old version (197 lines mixed universal + agentic) split into /system-rules (universal background) + this (agentic-specific specialization). Naming convention "Power" locked per みや 2026-06-02; RENAMED to "Feature" 2026-07-03 per みや (audit E14).*
 

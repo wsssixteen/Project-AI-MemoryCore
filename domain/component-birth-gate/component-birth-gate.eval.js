@@ -26,6 +26,14 @@ check('F3 existing-component edit passes', r.status === 0, 'exit=' + r.status);
 r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'Write', tool_input: { file_path: 'C:/tmp/notes.md' } }), encoding: 'utf8', timeout: 30000, env: process.env });
 check('F4 non-component path passes', r.status === 0, 'exit=' + r.status);
 
+// F4b/F4c — Rule 13 (2026-09-06): new Feature README without goal:/retention: is blocked; with both it passes
+const readmePath = path.join(__dirname, '..', 'zz-probe-feature-' + Date.now(), 'README.md');
+r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'Write', tool_input: { file_path: readmePath, content: '# probe\n\n**What fires when**: Stop\n' } }), encoding: 'utf8', timeout: 30000, env: process.env });
+check('F4b README without goal/retention BLOCKED', r.status === 2 && /goal:/.test(r.stderr), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 80));
+r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'Write', tool_input: { file_path: readmePath, content: '# probe\n\nsymptom: s\ngoal: an outcome\ngoal_signal: sig\nretention: keep\n' } }), encoding: 'utf8', timeout: 30000, env: process.env });
+check('F4c README with goal+retention passes', r.status === 0, 'exit=' + r.status);
+
+
 // F5: forge's own birth (FORGE_BIRTH=1) → pass
 r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'Write', tool_input: { file_path: ghostPath } }), encoding: 'utf8', timeout: 30000, env: { ...process.env, FORGE_BIRTH: '1' } });
 check('F5 forge-authorized birth passes', r.status === 0, 'exit=' + r.status);
