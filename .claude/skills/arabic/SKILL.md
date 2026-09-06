@@ -20,6 +20,8 @@ Engine (deterministic, no dependencies): `.claude/skills/arabic/arabic.js`. Data
 | `/arabic week <lesson>` · `/arabic week next` | `node .claude/skills/arabic/arabic.js week <lesson\|next>` | paste output. |
 | `/arabic class at <text>` | `node .claude/skills/arabic/arabic.js class "<text>"` | paste output. |
 | `/arabic status` | `node .claude/skills/arabic/arabic.js status` | paste output. |
+| `/arabic settings` · `/arabic settings <key> <n>` (keys: `words` rows per review 3–15 · `pace` lessons per week 1–4 · `min_reviews` 1–7 · `set_max` 5–30) | `node .claude/skills/arabic/arabic.js settings [key n]` | paste output. |
+| `/arabic stats` | `node .claude/skills/arabic/arabic.js stats` | paste the table. Observability: every engine call also appends to `data/log.jsonl` (ts · cmd · outcome · dur_ms). |
 
 PowerShell form: `node ".claude\skills\arabic\arabic.js" review`.
 

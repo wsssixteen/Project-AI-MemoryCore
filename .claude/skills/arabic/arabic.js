@@ -11,6 +11,8 @@
  *   node arabic.js week <lesson>|next             override this week's set / force-advance
  *   node arabic.js class <text>                   record class position (informational)
  *   node arabic.js status                         one status line
+ *   node arabic.js settings [key value]           show/set: words · pace · min_reviews · set_max
+ *   node arabic.js stats                          weekly table + mastery (observability)
  *   node arabic.js nudge                          one boot line or nothing
  * Env: ARABIC_DATA_DIR overrides the data folder (used by tests).
  */
@@ -22,9 +24,12 @@ const REPO = path.join(__dirname, '..', '..', '..');
 const DATA_DIR = process.env.ARABIC_DATA_DIR || path.join(REPO, 'projects', 'learning-projects', 'active', 'arabic', 'data');
 const WORDS = path.join(DATA_DIR, 'words.json');
 const PROGRESS = path.join(DATA_DIR, 'progress.json');
-const SET_MAX = 15;
-const SHOW = 5;
-const CARRY_MIN = 3;
+const SETTINGS = path.join(DATA_DIR, 'settings.json');
+const LOG = path.join(DATA_DIR, 'log.jsonl');
+// Settings (みや-adjustable via `settings <key> <value>`): words = rows per review · pace = lessons (chunks) per week ·
+// min_reviews = reviews needed before the week advances · set_max = words per chunk
+const DEFAULTS = { words: 5, pace: 1, min_reviews: 3, set_max: 15 };
+const LIMITS = { words: [3, 15], pace: [1, 4], min_reviews: [1, 7], set_max: [5, 30] };
 const AHEAD_FROM_LESSON = 21;
 const FUNCTION_WORDS = ['فِي', 'عَلَى', 'مِنْ', 'إِلَى', 'هَذَا', 'ذَلِكَ', 'هَذِهِ', 'تِلْكَ', 'وَ', 'لَا', 'نَعَمْ', 'أَ', 'مَا', 'مَنْ', 'هَلْ', 'يَا'];
 
@@ -35,6 +40,9 @@ function loadWords() { const w = readJson(WORDS, null); if (!w) throw new Error(
 function loadProgress() {
   return readJson(PROGRESS, { week_start: null, set_index: 0, week_set: [], reviews: [], words: {}, class_position: null, override: null });
 }
+function loadSettings() { const s = readJson(SETTINGS, {}); const out = { ...DEFAULTS }; for (const k of Object.keys(DEFAULTS)) if (Number.isInteger(s[k])) out[k] = s[k]; return out; }
+let S = loadSettings();
+function logRow(row) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), ...row }) + '\n'); } catch {} }
 
 // ---------- dates ----------
 function parseDate(s) { const [y, m, d] = s.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d)); }
@@ -49,10 +57,16 @@ function chunks(words) {
   const out = [];
   for (const lesson of [...byLesson.keys()].sort((a, b) => a - b)) {
     const list = byLesson.get(lesson);
-    const n = Math.ceil(list.length / SET_MAX);
-    for (let i = 0; i < n; i++) out.push({ lesson, chunk: i + 1, of: n, ids: list.slice(i * SET_MAX, (i + 1) * SET_MAX).map(w => w.id) });
+    const n = Math.ceil(list.length / S.set_max);
+    for (let i = 0; i < n; i++) out.push({ lesson, chunk: i + 1, of: n, ids: list.slice(i * S.set_max, (i + 1) * S.set_max).map(w => w.id) });
   }
   return out;
+}
+// The active Week Set = `pace` consecutive chunks starting at set_index (pace 1 = one chunk, the default).
+function activeSet(all, idx) {
+  const parts = all.slice(idx, idx + S.pace);
+  const first = parts[0], last = parts[parts.length - 1];
+  return { lesson: first.lesson, lessonTo: last.lesson, chunk: first.chunk, of: first.of, parts: parts.length, ids: parts.flatMap(c => c.ids) };
 }
 function chunkIndexForLesson(all, lesson) { const i = all.findIndex(c => c.lesson === Number(lesson)); return i < 0 ? null : i; }
 
@@ -67,12 +81,13 @@ function rollIfNeeded(p, words, date) {
   else if (monday !== p.week_start) {
     const prev = distinctDates(reviewsThisWeek(p)).length;
     if (p.override && p.override.week_start === monday) { p.set_index = p.override.set_index; p.override = null; }
-    else if (prev >= CARRY_MIN && p.set_index < all.length - 1) p.set_index += 1;   // else carry-over
+    else if (prev >= S.min_reviews && p.set_index < all.length - 1) p.set_index = Math.min(p.set_index + S.pace, all.length - 1);   // else carry-over
     p.week_start = monday;
   } else if (p.override && p.override.week_start === monday) { p.set_index = p.override.set_index; p.override = null; }
   p.set_index = Math.min(p.set_index, all.length - 1);
-  p.week_set = all[p.set_index].ids;
-  return all[p.set_index];
+  const set = activeSet(all, p.set_index);
+  p.week_set = set.ids;
+  return set;
 }
 
 function stats(p, id) { return p.words[id] || (p.words[id] = { shown: 0, hit: 0, miss: 0 }); }
@@ -83,7 +98,7 @@ function pickFive(p, words, set) {
   const order = set.ids.map((id, i) => ({ id, i }));
   const missFirst = order.filter(o => stats(p, o.id).miss > stats(p, o.id).hit);
   const rest = order.filter(o => !missFirst.includes(o)).sort((a, b) => shownThisWeek(p, a.id) - shownThisWeek(p, b.id) || a.i - b.i);
-  return [...missFirst, ...rest].slice(0, SHOW).map(o => byId[o.id]);
+  return [...missFirst, ...rest].slice(0, S.words).map(o => byId[o.id]);
 }
 function hashDate(s) { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; }
 function pickRecall(p, five, date) {
@@ -142,10 +157,11 @@ function match(answer, target) {
 
 // ---------- rendering ----------
 function header(p, set, n) {
-  const ahead = set.lesson >= AHEAD_FROM_LESSON ? ' · ahead of class' : '';
-  const chunk = set.of > 1 ? ` (${set.chunk}/${set.of})` : '';
-  const weekNo = p.set_index + 1;
-  return `Week ${weekNo} · Lesson ${set.lesson}${chunk} · review ${n} of 5${ahead}`;
+  const ahead = set.lessonTo >= AHEAD_FROM_LESSON ? ' · ahead of class' : '';
+  const chunk = set.parts === 1 && set.of > 1 ? ` (${set.chunk}/${set.of})` : '';
+  const lesson = set.lessonTo !== set.lesson ? `Lessons ${set.lesson}–${set.lessonTo}` : `Lesson ${set.lesson}`;
+  const weekNo = p.reviews.length ? new Set(p.reviews.map(r => r.week_start)).size : 1;
+  return `Week ${weekNo} · ${lesson}${chunk} · review ${n} of 5${ahead}`;
 }
 function table(five) {
   const rows = five.map((w, i) => `| ${i + 1} | ${w.arabic}${w.plural ? ' (ج ' + w.plural + ')' : ''} | ${w.malay} |`);
@@ -195,15 +211,43 @@ function cmdWeek(arg, date) {
   const words = loadWords(); const p = loadProgress(); const all = chunks(words);
   rollIfNeeded(p, words, date);
   let idx;
-  if (arg === 'next') idx = Math.min(p.set_index + 1, all.length - 1);
+  if (arg === 'next') idx = Math.min(p.set_index + S.pace, all.length - 1);
   else { idx = chunkIndexForLesson(all, arg); if (idx === null) return `No words for lesson ${arg} (lessons with words: ${[...new Set(all.map(c => c.lesson))].join(', ')}).`; }
-  p.set_index = idx; p.week_set = all[idx].ids; p.override = null;
+  p.set_index = idx; const set = activeSet(all, idx); p.week_set = set.ids; p.override = null;
   writeJson(PROGRESS, p);
-  return `Week set → Lesson ${all[idx].lesson}${all[idx].of > 1 ? ' (' + all[idx].chunk + '/' + all[idx].of + ')' : ''} (${all[idx].ids.length} words).`;
+  const name = set.lessonTo !== set.lesson ? `Lessons ${set.lesson}–${set.lessonTo}` : `Lesson ${set.lesson}${set.of > 1 ? ' (' + set.chunk + '/' + set.of + ')' : ''}`;
+  return `Week set → ${name} (${set.ids.length} words).`;
+}
+function cmdSettings(key, value) {
+  const s = readJson(SETTINGS, {});
+  if (!key) return Object.entries({ ...DEFAULTS, ...s }).map(([k, v]) => `${k} = ${v}${DEFAULTS[k] === v ? '' : ' (custom)'}`).join(' · ');
+  if (!(key in DEFAULTS)) return `Unknown setting "${key}". Settings: ${Object.keys(DEFAULTS).join(', ')}.`;
+  const n = Number(value); const [lo, hi] = LIMITS[key];
+  if (!Number.isInteger(n) || n < lo || n > hi) return `${key} must be a whole number ${lo}–${hi}.`;
+  s[key] = n; writeJson(SETTINGS, s); S = loadSettings();
+  return `${key} = ${n}. Takes effect on the next review${key === 'pace' || key === 'set_max' ? ' (week set re-computed)' : ''}.`;
+}
+function cmdStats() {
+  const words = loadWords(); const p = loadProgress();
+  if (!p.reviews.length) return 'No reviews yet.';
+  const weeks = [...new Set(p.reviews.map(r => r.week_start))];
+  const byId = Object.fromEntries(words.map(w => [w.id, w]));
+  const rows = weeks.map((wk, i) => {
+    const rs = p.reviews.filter(r => r.week_start === wk);
+    const ids = [...new Set(rs.flatMap(r => r.shown))]; const lessons = [...new Set(ids.map(id => byId[id] && byId[id].lesson))].filter(Boolean);
+    const hit = rs.filter(r => r.result === 'hit').length, miss = rs.filter(r => r.result === 'miss').length, skip = rs.filter(r => r.result === 'skip').length;
+    return `| ${i + 1} | ${wk} | ${lessons.join(',')} | ${new Set(rs.map(r => r.date)).size} | ${ids.length} | ${hit} | ${miss} | ${skip} |`;
+  });
+  const seen = Object.values(p.words).filter(s => s.shown > 0).length;
+  const mastered = Object.entries(p.words).filter(([, s]) => s.hit >= 2 && s.hit > s.miss).length;
+  const shaky = Object.entries(p.words).filter(([, s]) => s.miss > 0 && s.miss >= s.hit).map(([id]) => byId[id] ? byId[id].arabic : id);
+  return ['| wk | start | lessons | reviews | words seen | hit | miss | skip |', '|---|---|---|---|---|---|---|---|', ...rows,
+    `Words: ${words.length} total · ${seen} seen · ${mastered} mastered (2+ hits, more hits than misses) · shaky: ${shaky.length ? shaky.join(' ') : 'none'}`,
+    `Settings: ${cmdSettings()}`].join('\n');
 }
 function cmdClass(text) { const p = loadProgress(); p.class_position = { text, set: today() }; writeJson(PROGRESS, p); return `Class position noted: ${text}`; }
 function statusLine(p, words, date) {
-  const all = chunks(words); const set = all[Math.min(p.set_index, all.length - 1)];
+  const all = chunks(words); const set = activeSet(all, Math.min(p.set_index, all.length - 1));
   const rs = reviewsThisWeek(p); const done = distinctDates(rs).length;
   const misses = rs.filter(r => r.result === 'miss').length;
   const todayDone = rs.some(r => r.date === date);
@@ -213,7 +257,9 @@ function cmdStatus(date) {
   const words = loadWords(); const p = loadProgress();
   if (p.week_start === null) return 'Not started — run `/arabic`.';
   const { set, done, misses } = statusLine(p, words, date);
-  return `Week ${p.set_index + 1} · Lesson ${set.lesson} (chunk ${set.chunk}/${set.of}) · ${done}/5 reviews · misses: ${misses} · next roll Mon`;
+  const weekNo = new Set(p.reviews.map(r => r.week_start)).size || 1;
+  const lesson = set.lessonTo !== set.lesson ? `Lessons ${set.lesson}–${set.lessonTo}` : `Lesson ${set.lesson} (chunk ${set.chunk}/${set.of})`;
+  return `Week ${weekNo} · ${lesson} · ${done}/5 reviews · misses: ${misses} · next roll Mon`;
 }
 function cmdNudge(date) {
   const words = readJson(WORDS, null); const p = readJson(PROGRESS, null);
@@ -230,16 +276,21 @@ function main(argv) {
   if (di >= 0) { date = args[di + 1]; args.splice(di, 2); }
   date = today(date);
   const cmd = args[0] || 'review';
+  const t0 = Date.now(); let out;
   switch (cmd) {
-    case 'review': return cmdReview(date);
-    case 'answer': return cmdAnswer(args.slice(1).join(' '), date);
-    case 'more': return cmdMore();
-    case 'week': return cmdWeek(args[1], date);
-    case 'class': return cmdClass(args.slice(1).join(' '));
-    case 'status': return cmdStatus(date);
-    case 'nudge': return cmdNudge(date);
-    default: return `Unknown command ${cmd}`;
+    case 'review': out = cmdReview(date); break;
+    case 'answer': out = cmdAnswer(args.slice(1).join(' '), date); break;
+    case 'more': out = cmdMore(); break;
+    case 'week': out = cmdWeek(args[1], date); break;
+    case 'class': out = cmdClass(args.slice(1).join(' ')); break;
+    case 'status': out = cmdStatus(date); break;
+    case 'settings': out = cmdSettings(args[1], args[2]); break;
+    case 'stats': out = cmdStats(); break;
+    case 'nudge': out = cmdNudge(date); break;
+    default: out = `Unknown command ${cmd}`;
   }
+  if (cmd !== 'nudge') logRow({ cmd, date, arg: args.slice(1).join(' ') || undefined, outcome: (out || '').split('\n')[0].slice(0, 80), dur_ms: Date.now() - t0 });
+  return out;
 }
 if (require.main === module) { const out = main(process.argv); if (out) process.stdout.write(out + '\n'); }
 module.exports = { main, match, chunks, mondayOf, translitToSkeleton, arabicSkeleton, modeFor, DATA_DIR };
