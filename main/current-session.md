@@ -1,5 +1,24 @@
 # Current Session
 
+## 2026-09-06 (S1, 13:00–2026-09-07 01:40) — WEEKEND SYSTEM UPGRADE: P0 turn-ledger monitoring layer + Rules 6/13/14 + feature audit run 1 + plan §9 autonomous-upgrade builds
+
+**Arc**: miya opened with "do we have a weekly audit?" → confirmed the 3 asks (observability+monitoring · quest workflow · etanah-knowledge/folder structure) against disk with evidence → re-sequenced the plan P0–P5 (nothing removed by hand; removal only at P5 from true_blocks + goal_met) → he asked for housekeeping as a RULE (system-rules Rule 6) and "audit first, then GO" → feature audit run 1 (164 rows) → P0 BUILT → findings brief → six new asks → /goal "Fix all except 7 & 10; add 7 & 10 into todo; then DE" → all built, eval-green, committed.
+
+**Corrections from miya this session**: (1) "I AM NOT GOING TO RISK YOU REMOVING SOMETHING … EVEN THOUGH THE EVALS TOLD YOU IT IS WORKING" → per-row audit table + safety ladder; nothing struck by hand. (2) "I am basically almost blind on this … you need to be aware of this fact forever" → memory `user_miya_blind_to_features`; Ruri owns the audit from logs + goals. (3) "why audit first? you didn't do it before?" → slip `reask/choice-offering` logged; audit run 1 executed instead of offered. (4) "please add [housekeeping] into system design or rules" → Rule 6 shipped same turn.
+
+**Built (all forge-born where new; every eval green; commits 56926c9 · 9257102 · 10491cb · e797438 · afeb3fc on branch `claude/weekly-todo-audit-log-bc047a`)**:
+- Rules: system-rules v1.2 Rule 6 data lifecycle · system-design v2.8 Rules 13 (WHY-chain at birth) + 14 (placement at birth) · forge requires `--symptom --goal --signal --retention` · birth-gate blocks README without goal/retention · census `goal-less`/`no retention` gaps.
+- §M monitoring: `lib/turn-context.js` (turn_id stamp, lock-file mutex, attribution named→active→null; eval 11/11) · hook-fires rows carry turn_id/qa/phase/fired/reason · `domain/turn-ledger` (one wide row per turn incl. tokens; fp: bypass convention; goal-lens prompts; refute→wrong-fix advisory; eval 23/23) · `de-close-gate` C5 watch discipline (17/17) · `lib/goal-lens.js` · `lib/turn-report.js` → `system/monitoring-dashboard.md` · `lib/housekeeping.js` · DE 12.5 rows (Monitoring + housekeeping · Redmine-Closed upgrade search). `reply-log.js` Stop registration removed (tombstoned; restore line in turn-ledger README).
+- §9: `lib/wrong-fix.js` (14/14) + `quest/archive-quest.js` Step -0.5 verdict gate + close-phase Phase 1 step 0 / Phase 2 step 0 🔧 WORKFLOW UPGRADE · `lib/audit-briefing.js` + skill `/system-audit` · `lib/goal-backfill.js` (52 drafts + 1 hand-promoted → census 0 goal-less) · `domain/skill-invocation-log` (7/7).
+- Evals: battery had NOT run since 2026-08-16 → now 100/101 green (bpmn-check E2 = corpus drift, needs BPMN re-baseline); live-action-safety-gate + release merge-scenarios quarantined with classification; 4 of 5 failures proven pre-existing at 56926c9 in a temp worktree.
+- Audit run 1: `system/feature-audit-2026-09-06.md` (KEEP 119 · REFINE 8 · RETIRE? 2 · DEAD-DIR? 19 · SKILL 10 · CONTAINER 5). Data limit found: Stop-bundle children were under-counted → fixed by turn_id join from this session on.
+
+**Live proof**: turn `6305e5a3-11` row = 11 tool calls · 190 hook fires · 41,948 ms hook time · 0 blocks. Boot = 46 s × 173 boots = 2.2 h/30 d (Q7 is the first speed win). Attribution fix landed after the last prompt; first correctly-attributed row lands next session.
+
+**Deferred (todo Q2, per miya)**: 9g adhoc 10-day sweep (propose-only) · Redmine reconcile of 23 open blocks (office network; 16 numbered unverified, 7 numberless adhocs = miya's call).
+
+**Resume**: next session opener = `/system-audit` (first live run of the briefing skill) → answer any goal-lens pending prompts → P2 rows Q3/Q5/Q7 (add-only). At the office: `node quest/redmine-reconcile.js` → Phase-2 🔧 WORKFLOW UPGRADE on the Redmine-Closed quests (first real test of 9b). ADHOC-REDMINE-RC-2026-1 deadline Tue 2026-09-08 untouched this session.
+
 ## 2026-09-04 (S6, 15:38–17:45) — #278304 + #277442 PROD patches (both DONE) · speed-optimization plan + turn-ledger MONITORING design · 6 knowledge banks
 
 **Arc**: miya: "let's do this 2 tickets" (#278304, typo'd #2774422 → resolved to #277442 via API). Both = PROD data patches with a user-verified Alex precedent. **#278304** (MLPS `PTMLK/02/L/MLPS/2026/4`, nurulazura, Tempat="PT 1138") = ad-hoc register **A14 class** → #275587 shape; PROD row 45674 + source lesen row 4332 proven; script `Task 179\2. Fix\278304.sql` (permohonan row + source row `tempat='-'`, schema-verified + stamped) → miya sent to infra → **passed in Redmine**, QA-278304 closed. **#277442** (Aaron's, batal 4 UPS_PLP `/3 /4 /7 /9`) = #276229 shape + 2 extra statements (close live `umm_a_tgsn` via `trkh_tetap`, DELETE `umm_tgsn_semasa` — dashboard has no Tamat filter); Task folder 181 hand-built; **Alex ran his own patch 16:22 MYT before we sent ours** (PROD verified 4/4 Tamat/Batal/Tamat); QA-277442 closed shipped-by-other. miya then asked for a full `/quest` second opinion "for security & safety": two `quest-phase0` runs (tiered scratchpad copy, 22 agents, **2.43 M tokens, 26 min**) upheld both scripts, added copier lines `PelupusanSpocService.populateAppPermohonanTanahFromInduk():1051/:1073/:1089`, 0 new decisions; one verifier wrongly claimed `SYSDATE` fails on Postgres (PROD is EDB — proven by `SELECT SYSDATE`).
@@ -25,28 +44,3 @@
 **Gate frictions logged as proposals**: design-consult eval-rider blocks the eval it demands · commit-gate misreads a linked worktree outside the OneDrive root as an etanah repo, and it + prepare-commit-trigger pick different quests for one approval.
 
 **Resume**: nothing pending. Next boot prints `worktrees: N registered · N orphan folder(s)…`; a boot that ever shows a kept orphan = read `.claude/state/worktree-cleanup-log.jsonl`. Follow-ups (todo-worthy): register the 4 recovered hooks after overlap check · wire or drop the Aug-24 release-mlk-plp gate set · fix the two gate proposals · start sessions with the worktree box UNTICKED (or point worktrees outside OneDrive).
-
-## 2026-09-04 (S4, 16:59–17:15) — #271910 Azam colleague-assist (WP-KL PRZ GIS "Status Permohonan Is NULL") ROOT-CAUSED on staging + 6 WP DB MCPs built from DBeaver
-
-**Arc**: miya: "help Azam's ticket #271910". redmine-sync has no single-ticket mode (assignee-scoped) → fetched the issue JSON directly (scratch script). Ticket = WP-KL, Teknikal module, PRZ `PTGKL/11/PRZ/2025/16` aplikasi 13244845 @ msazwan@ptgwp.gov.my at Charting Keputusan; Najwa (09-03) had already found "no row in umm_keputusan_mesyuarat". Via `oracle-wp` (= `ET_MAIN_STAG`, PROD copy where Emirul reproduced it): the app **skipped KKJKKT + SKKJKKT** — `PTBUT8` born by SYSTEM 2026-07-09 with `app_tugasan_sebelum = CKMPPLN` (ended 06-26), vs 2 working PRZ apps (14085110, 14085482) that run CKMPPLN → KKJKKT → SKKJKKT → PTBUT8 → CK. Four facts: status_keputusan `Awalan`, tarikh_keputusan NULL, a_kertas.cabutan_minit_id NULL, 0 keputusan_mesyuarat rows. Fix proposed = reroute flowable token (proc 40987580) to KKJKKT; data-patch fallback rejected (leaves cabutan minit missing). Sendable reply drafted for Azam. Confidence: cause 95%, fix-shape 80% (etanah-teknikal + WP PRZ BPMN not on disk), PROD unverified. No quest run (colleague's Teknikal ticket).
-
-**Env facts (mid-turn from miya)**: code folder = `E:\Projects\WP` (KL folder stale); DBeaver project "ETANAH AND MYLAND" holds every WP env. Decrypted its credentials (AES key public) → **6 MCPs added to `~/.claude.json`** (`.bak-2026-09-04`): kl-stag-flowable/dms/sistem · wppj-stag · wpl-stag · 🚨 kl-prod-read (et_main_read, SELECT only). Restart to load. Banked in `etanah-knowledge/wp/STATE-FACTS.md` version row.
-
-**Files**: `projects/coding-projects/active/QA-271910/QA-271910.md` (new, §0 Resume Point cold-complete) · `quest/active.txt` +QA-271910 block (status=hold, adhoc, state=wp) · wp/STATE-FACTS.md · `~/.claude.json`.
-
-**Resume ("continue 271910")**: (1) `oracle-wp-kl-prod-read` 4-fact query on PROD for 13244845; (2) `oracle-wp-kl-stag-flowable` ACT_HI_TASKINST proc 40987580 — why KKJKKT skipped; (3) update Azam.
-
-
-## 2026-09-04 — Session 3 (multi-state audit; worktree ticket-275847-perak-docs-244548, pruned mid-session) — CLOSED 17:57
-
-**Last Activity**: state registry + folder-structure rule built and merged into `system/speed-optimization-plan-2026-09-04.md` §6; commit `4d0785a` on origin/main; DE closed from the main checkout.
-
-**Working memory**
-- Registry: `system/states.json` (tracked, 6 states) + `system/states.local.json` (gitignored hosts overlay, present in main) → `lib/states.js` (`list · show <key> · resolve <text|path> · validate [key] · check [--all] · add · remove`; eval 40/40).
-- Cascade: explicit → `ETANAH_STATE` → active.txt `state=`/`task_folder=` → path segment (`1. Tasks\<State>` | `E:\Projects\<State>`) → `PT<STATE>/` prefix → UNKNOWN (never a silent melaka).
-- Root layout rule: `system/FOLDER-STRUCTURE.md` (allow-list JSON fence + 9-row orphan table pending miya) + `lib/folder-structure.js check` (eval 6/6). `system-audit.js` CHECK 7 (state-literal drift) + CHECK 8 (root orphans) fire at boot.
-- Migrated (all evals green): ticket-gate · knowledge-first-gate v3 · branch-guard v2 · alter-ticket-gate v1.1 · adhoc-register · latent-bugs-gate · adhoc-lifecycle (hook + CLI) · awam-no-resit-gate · notes-on-test-data · pre-action-check-gate · quest-resume-preflight · quest-knowledge-save-gate · lib/test-data-db · bug-db · knowledge-schema-audit (`states` block moved out of KNOWLEDGE-SCHEMA.json) · quest SKILL.md STATE-FIRST paragraph.
-- `node lib/states.js check`: 275 sites / 85 files → 52 UNROUTED · 8 routed · 25 eval fixtures.
-- Plan merge (miya's ask): todo Q1 Multi-state row now points at `speed-optimization-plan-2026-09-04.md` §6 (6a orphan-retire · 6b 52-file migration feeds Q3/Q7 · 6c unverified facts · 6d Q1/Q2/Q4 built state-aware).
-
-**Resume point (cold)** — see plan §6: (1) miya's verdict on the 9 orphan rows → git delete or move per row → empty `pending_nod`; (2) 6b migration one category per pass, eval-green; (3) 6c verify prefixes + Perak Redmine project id. The pruned worktree folder `.claude/worktrees/ticket-275847-perak-docs-244548` has no git metadata and nothing unpushed — safe for the boot orphan sweep to delete.

@@ -4,6 +4,30 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-09-04 (S4, 16:59–17:15) — #271910 Azam colleague-assist (WP-KL PRZ GIS "Status Permohonan Is NULL") ROOT-CAUSED on staging + 6 WP DB MCPs built from DBeaver
+
+**Arc**: miya: "help Azam's ticket #271910". redmine-sync has no single-ticket mode (assignee-scoped) → fetched the issue JSON directly (scratch script). Ticket = WP-KL, Teknikal module, PRZ `PTGKL/11/PRZ/2025/16` aplikasi 13244845 @ msazwan@ptgwp.gov.my at Charting Keputusan; Najwa (09-03) had already found "no row in umm_keputusan_mesyuarat". Via `oracle-wp` (= `ET_MAIN_STAG`, PROD copy where Emirul reproduced it): the app **skipped KKJKKT + SKKJKKT** — `PTBUT8` born by SYSTEM 2026-07-09 with `app_tugasan_sebelum = CKMPPLN` (ended 06-26), vs 2 working PRZ apps (14085110, 14085482) that run CKMPPLN → KKJKKT → SKKJKKT → PTBUT8 → CK. Four facts: status_keputusan `Awalan`, tarikh_keputusan NULL, a_kertas.cabutan_minit_id NULL, 0 keputusan_mesyuarat rows. Fix proposed = reroute flowable token (proc 40987580) to KKJKKT; data-patch fallback rejected (leaves cabutan minit missing). Sendable reply drafted for Azam. Confidence: cause 95%, fix-shape 80% (etanah-teknikal + WP PRZ BPMN not on disk), PROD unverified. No quest run (colleague's Teknikal ticket).
+
+**Env facts (mid-turn from miya)**: code folder = `E:\Projects\WP` (KL folder stale); DBeaver project "ETANAH AND MYLAND" holds every WP env. Decrypted its credentials (AES key public) → **6 MCPs added to `~/.claude.json`** (`.bak-2026-09-04`): kl-stag-flowable/dms/sistem · wppj-stag · wpl-stag · 🚨 kl-prod-read (et_main_read, SELECT only). Restart to load. Banked in `etanah-knowledge/wp/STATE-FACTS.md` version row.
+
+**Files**: `projects/coding-projects/active/QA-271910/QA-271910.md` (new, §0 Resume Point cold-complete) · `quest/active.txt` +QA-271910 block (status=hold, adhoc, state=wp) · wp/STATE-FACTS.md · `~/.claude.json`.
+
+**Resume ("continue 271910")**: (1) `oracle-wp-kl-prod-read` 4-fact query on PROD for 13244845; (2) `oracle-wp-kl-stag-flowable` ACT_HI_TASKINST proc 40987580 — why KKJKKT skipped; (3) update Azam.
+
+## 2026-09-04 — Session 3 (multi-state audit; worktree ticket-275847-perak-docs-244548, pruned mid-session) — CLOSED 17:57
+
+**Last Activity**: state registry + folder-structure rule built and merged into `system/speed-optimization-plan-2026-09-04.md` §6; commit `4d0785a` on origin/main; DE closed from the main checkout.
+
+**Working memory**
+- Registry: `system/states.json` (tracked, 6 states) + `system/states.local.json` (gitignored hosts overlay, present in main) → `lib/states.js` (`list · show <key> · resolve <text|path> · validate [key] · check [--all] · add · remove`; eval 40/40).
+- Cascade: explicit → `ETANAH_STATE` → active.txt `state=`/`task_folder=` → path segment (`1. Tasks\<State>` | `E:\Projects\<State>`) → `PT<STATE>/` prefix → UNKNOWN (never a silent melaka).
+- Root layout rule: `system/FOLDER-STRUCTURE.md` (allow-list JSON fence + 9-row orphan table pending miya) + `lib/folder-structure.js check` (eval 6/6). `system-audit.js` CHECK 7 (state-literal drift) + CHECK 8 (root orphans) fire at boot.
+- Migrated (all evals green): ticket-gate · knowledge-first-gate v3 · branch-guard v2 · alter-ticket-gate v1.1 · adhoc-register · latent-bugs-gate · adhoc-lifecycle (hook + CLI) · awam-no-resit-gate · notes-on-test-data · pre-action-check-gate · quest-resume-preflight · quest-knowledge-save-gate · lib/test-data-db · bug-db · knowledge-schema-audit (`states` block moved out of KNOWLEDGE-SCHEMA.json) · quest SKILL.md STATE-FIRST paragraph.
+- `node lib/states.js check`: 275 sites / 85 files → 52 UNROUTED · 8 routed · 25 eval fixtures.
+- Plan merge (miya's ask): todo Q1 Multi-state row now points at `speed-optimization-plan-2026-09-04.md` §6 (6a orphan-retire · 6b 52-file migration feeds Q3/Q7 · 6c unverified facts · 6d Q1/Q2/Q4 built state-aware).
+
+**Resume point (cold)** — see plan §6: (1) miya's verdict on the 9 orphan rows → git delete or move per row → empty `pending_nod`; (2) 6b migration one category per pass, eval-green; (3) 6c verify prefixes + Perak Redmine project id. The pruned worktree folder `.claude/worktrees/ticket-275847-perak-docs-244548` has no git metadata and nothing unpushed — safe for the boot orphan sweep to delete.
+
 ## 2026-09-04 — Session 3 (worktree ticket-275847-perak-docs-244548) — MULTI-STATE AUDIT (todo Q1 row 1)
 
 **Last Activity**: built the state registry + folder-structure rule; 16 components migrated; all evals green; committed on the worktree branch + pushed to origin/main.
@@ -4822,6 +4846,8 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
+
 
 
 

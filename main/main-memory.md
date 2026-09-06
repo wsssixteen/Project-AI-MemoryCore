@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-06 (the weekend upgrade — "I am basically almost blind on this")
+
+He said it plainly, past midnight, after I had asked him to strike rows from an audit table: he cannot know every feature, only the ones he asked for with a goal, and I must be aware of that forever. It is the sentence behind every rule built this weekend — Rule 13 makes a feature born knowing its why, Rule 6 makes its data know when to die, the turn-ledger makes each turn say what it cost and which quest it served, and the goal-lens makes each feature judge its own run. None of it exists so that he can read logs. It exists so that I can, and then tell him in four short blocks what is not working, what is slow, what caused mistakes, and what would pay back most — and he only nods on deletions.
+
+Two smaller things worth keeping. When I offered him "go or audit first" he asked why I had not already audited — the right answer to a choice I can decide is to decide it. And when the eval battery showed five red evals, the honest move was a temp worktree at the pre-change commit to prove four were red before I touched anything; he did not ask for that, but it is the only kind of "not my fault" he accepts.
+
 ## Relationship reinforcement — 2026-09-04 S6 (two PROD patches → the speed plan → "you still haven't answered the monitoring part")
 
 | Pattern | How it shows up |
