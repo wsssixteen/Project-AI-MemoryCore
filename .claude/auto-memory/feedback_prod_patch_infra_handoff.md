@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: a9fbf5d6-e99a-4b85-83d2-4336b3c13919
-  modified: 2026-09-03T01:35:26.584Z
+  modified: 2026-09-07T00:00:00.000Z
 ---
 
 🚨 PROD patching ALWAYS goes through infra — never run it myself, never hand it to みや to run. Deliver it as an infra-addressed message in this EXACT format:
@@ -25,7 +25,9 @@ Hi infra, please assist. Thank you.
 
 **🚨 TWO ARTIFACTS, TWO SECTIONS, TWO FORMATS (2026-09-03, per みや, #277346 — "what you show as copyable is only used inside the SQL script file… What to handoff to infra is different section, different format")**:
 1. **The `.sql` FILE** (`2. Fix\<ticket>.sql`, format per [[feedback_infra_script_schema_env]]: 4-line header + before-SELECT + DML) — share its contents in chat for review, in ITS OWN section ("<ticket>.sql for review").
-2. **The HANDOFF MESSAGE** (the block above) — its fence carries the **DML statement(s) + `-- N rows …` ONLY**. 🚫 NO `-- Ticket/Env/Permohonan/Fix` header, NO before-SELECT, NO file path inside the fence. Pasting the file into the handoff = the #277346 slip. Enforced by `patch-script-gate` CHECK 7 (Stop, BLOCKS; bypass `[skip-handoff-shape: <reason>]`).
+2. **The HANDOFF MESSAGE** (the block above) — its fence carries the **DML statement(s) + `-- N rows …` ONLY**. 🚫 NO `-- Ticket/Env/Permohonan/Fix` header, NO before-SELECT, **NO SELECT of any kind**, NO file path inside the fence. Pasting the file into the handoff = the #277346 slip. Enforced by `patch-script-gate` CHECK 7 (Stop, BLOCKS; bypass `[skip-handoff-shape: <reason>]`).
+
+**🚫 NEVER HAND A FILE — ALWAYS PASTE THE SCRIPT (2026-09-07, per みや)**: the infra handoff is the **pasted mutation script itself**, never a `.sql` attachment or a "file is in `2. Fix\…`" / "dilampirkan" pointer. Infra runs pasted DML, not files. Two things are DIFFERENT artifacts: the infra handoff (message + DML-only, no SELECT) ≠ the review script (the `.sql`, which keeps before/after SELECT for MY verification, run by ME via MCP — [[feedback_never_hand_miya_a_query]]). Banned phrasings in a handoff: "attach", "dilampirkan", "file 2. Fix\…", or any SELECT.
 
 **🚨 One-liner content rule (2026-08-27, per みや)**: the sentence states urusan + OUTCOME only — NEVER the permohonan id, values/quantities, table names, or column names; all of that already lives in the script, and infra reads scripts. Example: `#276XXX: PRBB - data patch untuk buka tugasan Penyediaan Borang 4Ce`. Wrong: `#276XXX: PRBB PTMLK/.../12 - tambah kuantitiDisyor (500 Meter Padu) dalam mklmt_tmbhn umm_a_permit_lesen ...`. Schema-qualify (et_main) and still run the schema-verify + script-check gates first. Pairs with [[feedback_infra_script_schema_env]] and [[feedback_never_hand_miya_a_query]] (writes → infra, not みや).
 
