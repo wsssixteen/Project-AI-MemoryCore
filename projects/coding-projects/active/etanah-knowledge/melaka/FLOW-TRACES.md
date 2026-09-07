@@ -258,6 +258,26 @@ needs an urusan gate. `PelupusanService` has **no** `PraHakmilik` access of its 
 
 **Out of scope (not readable here)**: `etanah-dms` server storage internals, and the `Document` entity's `@Table` mapping (compiled `etanah-domain` jar). `dokumenSokonganPanel.xhtml` is a composite with **no live consumer** in these three repos (dead in-repo).
 
+### Upload SIZE limits — three layers, and the 1 MB outlier trap (2026-09-07, #278585, code-verified)
+
+```
+  Browser                 JBoss (Undertow)              etanah app              etanah-dms            DB
+┌──────────────┐  file   ┌──────────────────┐  bytes  ┌────────────────┐  bytes ┌──────────────┐ pointer ┌────────────────┐
+│ p:fileUpload │ ──────► │ max-post-size    │ ──────► │ handleFileUpload│ ─────► │ stores file  │ ──────► │ umm_a_dok_kmskn│
+│ sizeLimit    │         │ (default 10 MB   │         │ :110 → DMS     │        │ on disk      │         │ (no bytes)     │
+│ default 1 GB │         │  if not set)     │         │ client :344    │        │              │         │                │
+└──────────────┘         └──────────────────┘         └────────────────┘        └──────────────┘         └────────────────┘
+   stops > sizeLimit        stops > server cap          never sees oversize        real storage             metadata only
+```
+
+| Layer | Value | Where |
+|---|---|---|
+| Browser (PrimeFaces `sizeLimit`, client-side, rejects BEFORE the listener fires, no server log) | system default **1,000,000,000 B (1 GB)** | `etanah-common\src\main\java\my\gov\etanah\common\web\utils\WebUtil.java:1859` `getFileUploadSizeLimit()`; the `et:fileUpload` composite falls back to it when `sizeLimit` is null — `etanah-common\src\main\webapp\WEB-INF\taglib\components\common\fileUpload.xhtml:77` and `:102` |
+| Server (Undertow `max-post-size`) | not set in local `standalone.xml` → Undertow default 10 MB per request; PROD value unknown (infra) | `E:\Dev\jboss-7.4-plp-melaka\standalone\configuration\standalone.xml` |
+| DMS | whatever `etanah-dms` enforces | separate app |
+
+**The trap**: a screen that hard-codes `sizeLimit="1000000"` (1 MB, not 1 MiB) silently drops any file over that — no error, no log line, the row just stays "Tiada rekod yang dijumpai". Symptom reads like a save bug; it is a client-side size gate. **Diagnostic**: compare the BA's file sizes to 1,000,000 B (#278585: JKR 880,316 B shown, MPJ 1,141,931 B + Pertanian 1,539,243 B absent). **Convention** (30 sites across pelupusan + awam, and the Kedah fix `0576fc1ab6` 2026-09-04): `sizeLimit="#{webUtil.getFileUploadSizeLimit()}"`. Fixed for the JT/YB panel in `etanah-pelupusan\src\main\webapp\resources\components\mlk\mlkUlasanJabatanTeknikalDataTable.xhtml:121` (#278585). **Still hard-coded at 1 MB in etanah-pelupusan** (fix only when BA reports them): `mlkKeputusanJKKTForm.xhtml:184,:230` · `mlkMuatNaikDokumen.xhtml:45,:60` · `mlkMaklumatRisalat.xhtml:69` · `mlkMaklumatPermohonan.xhtml:240` · `MlkSuratTemplateForm.xhtml:287` · `MlkKeputusanSiasatanForm.xhtml:129` · `MlkUtilitiPajakanBerfasa.xhtml:169` · `trgMaklumatPermohonan.xhtml:238` (TRG). Decision 2026-09-07 (みや): leave the 1 GB default as-is because siblings use it; do not invent a per-panel cap.
+
 ## Batal a UPS_PLP created by mistake — why the screen cannot, and what the patch must touch (2026-09-04, #277442)
 
 ```
