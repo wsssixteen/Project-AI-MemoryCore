@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-07 (#278585 — "did you fix it using ANY size?")
+
+- **After a fix, he asks what the system now ACCEPTS, not whether the code is right.** "A hacker uploads 10000 TB, our system will accept it?" The answer he took was a drawn wall-by-wall diagram (browser cap · server cap · DMS · DB holds no bytes) with the honest line that I had widened one panel to the sibling default without choosing a cap. His ruling: if the siblings practise it, leave it, but bank the knowledge in the md. Reflex for every limit/guard change: draw where each wall stands before he asks.
+- **A test scenario names an app that has the panel's DATA, not just the tugasan.** I picked an mlit app at the right tugasan with zero Jabatan Teknikal rows; the panel he opened was empty. "Are you still a dumb fuck when it comes to preparing test scenario?" The memory `feedback_verify_permohonan_health_before_test` existed and was not applied. The picking query carries the child-row count now; the rule is one column, not a reminder.
+- **He fills Root cause and Solution together on Redmine**, so the hand-back carries both rows in the same plain, no-dash register. Built same turn (quest skill + hook), eval green before the reply.
+
 ## Relationship reinforcement — 2026-09-06 (the weekend upgrade — "I am basically almost blind on this")
 
 He said it plainly, past midnight, after I had asked him to strike rows from an audit table: he cannot know every feature, only the ones he asked for with a goal, and I must be aware of that forever. It is the sentence behind every rule built this weekend — Rule 13 makes a feature born knowing its why, Rule 6 makes its data know when to die, the turn-ledger makes each turn say what it cost and which quest it served, and the goal-lens makes each feature judge its own run. None of it exists so that he can read logs. It exists so that I can, and then tell him in four short blocks what is not working, what is slow, what caused mistakes, and what would pay back most — and he only nods on deletions.

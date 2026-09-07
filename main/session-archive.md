@@ -4,6 +4,18 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-09-04 (S5, 15:18–) — OneDrive worktree cleanup: 213 folders / 15.10 GB → 2 / <100 MB · hook v1.6 · /worktree-retrieve salvage · pushed 5932556
+
+**Arc**: miya: "handoff to resolve our onedrive issue" → `.claude/worktrees` held 213 folders / 15.10 GB inside the OneDrive-synced repo; git listed only 2. His question *"why are you failing this so badly?"* → mechanism, disk-proven: **D1** cleanup keyed off `git worktree list` (208/213 de-registered → invisible forever) · **D2** step 4 deleted the branch whether or not step 3's `worktree remove` succeeded (192/213 branchless) · **D3** "silent = success" (6 fires today, exit 0, nothing said) · **D4** merged set vs LOCAL main (lags origin on two laptops). Hypothesis for the de-registration: OneDrive syncs `.git/` between laptops; the other machine's `worktree prune` drops admin entries whose folders it can't see.
+
+**Shipped** (commit `39fc8e8` → rebased → `origin/main 5932556`): `worktree-cleanup-boot.js` v1.6 — step 5 reads the DIRECTORY; never-committed test = blob **reachable from any ref** (found live: staging a salvage copy in a sibling worktree made a folder look "committed" and it was deleted → slip `assume-not-verify`); `projects/` mirror + same-as-main-working-copy count as safe; origin/main base; branch -d only after removal; summary line + `.claude/state/worktree-cleanup-log.jsonl` every sweep; `WORKTREE_CLEANUP_DRY_RUN=1`. Eval 23/23. Salvage worktree lived OUTSIDE OneDrive at `%TEMP%\claude\mc-salvage` (scratchpad path blew MAX_PATH).
+
+**Salvaged (never on main)**: 4 lost Features (etanah-intake-gate 17/17 · rootcause-format 12/12 · patch-close-shape 27/27 · agih + skill) + staging-schema-tracker hook 8/8 — **files only, NOT registered** (miya) · patch-script-gate CHECK 7 (miya 09-03, #277346) 3-way → 33/33 · redmine-sync/ticket-load-verify `formatTicketFields` (08-07) · release-mlk-plp verify-gates/deploy-check set (unwired; `eval-merge-scenarios` hangs — unverified) · live-action-safety 42/42 + wayfinder · skills pack (setup-matt-pocock-skills/research/grilling/prototype/domain-modeling, miya: keep) · lost Baseline 1.3.1 session save (08-05 diary Session 4, 3 main-memory rows, assessment) · 1 todo row. Pruned 29 `claude/*` (26 superseded + 3 salvage sources). Deleted 168 + 24 + 11 + 4 orphan folders by miya's policy (identical-to-main / superseded drafts); `quest-277697-briefing-a1d839` KEPT — dated today, another live session's work.
+
+**Gate frictions logged as proposals**: design-consult eval-rider blocks the eval it demands · commit-gate misreads a linked worktree outside the OneDrive root as an etanah repo, and it + prepare-commit-trigger pick different quests for one approval.
+
+**Resume**: nothing pending. Next boot prints `worktrees: N registered · N orphan folder(s)…`; a boot that ever shows a kept orphan = read `.claude/state/worktree-cleanup-log.jsonl`. Follow-ups (todo-worthy): register the 4 recovered hooks after overlap check · wire or drop the Aug-24 release-mlk-plp gate set · fix the two gate proposals · start sessions with the worktree box UNTICKED (or point worktrees outside OneDrive).
+
 ## 2026-09-04 (S4, 16:59–17:15) — #271910 Azam colleague-assist (WP-KL PRZ GIS "Status Permohonan Is NULL") ROOT-CAUSED on staging + 6 WP DB MCPs built from DBeaver
 
 **Arc**: miya: "help Azam's ticket #271910". redmine-sync has no single-ticket mode (assignee-scoped) → fetched the issue JSON directly (scratch script). Ticket = WP-KL, Teknikal module, PRZ `PTGKL/11/PRZ/2025/16` aplikasi 13244845 @ msazwan@ptgwp.gov.my at Charting Keputusan; Najwa (09-03) had already found "no row in umm_keputusan_mesyuarat". Via `oracle-wp` (= `ET_MAIN_STAG`, PROD copy where Emirul reproduced it): the app **skipped KKJKKT + SKKJKKT** — `PTBUT8` born by SYSTEM 2026-07-09 with `app_tugasan_sebelum = CKMPPLN` (ended 06-26), vs 2 working PRZ apps (14085110, 14085482) that run CKMPPLN → KKJKKT → SKKJKKT → PTBUT8 → CK. Four facts: status_keputusan `Awalan`, tarikh_keputusan NULL, a_kertas.cabutan_minit_id NULL, 0 keputusan_mesyuarat rows. Fix proposed = reroute flowable token (proc 40987580) to KKJKKT; data-patch fallback rejected (leaves cabutan minit missing). Sendable reply drafted for Azam. Confidence: cause 95%, fix-shape 80% (etanah-teknikal + WP PRZ BPMN not on disk), PROD unverified. No quest run (colleague's Teknikal ticket).
@@ -4846,6 +4858,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
