@@ -7,7 +7,7 @@ retention: rotate monthly
 
 **What fires when**: Stop — quest hand-back emit carries a Root cause row with real content
 
-**Contract**: block when the Root cause text contains dashes or semicolons; enforce short plain ASD-STE100 sentences
+**Contract**: block when the Root cause text contains dashes or semicolons; enforce short plain ASD-STE100 sentences. Since 2026-09-07 (#278585, per みや) the hand-back table carries a second row **Solution** (2-col shape `| Root cause | … |` / `| Solution | … |`) and the same rules apply to it; the Solution row is only checked when a Root cause row is present.
 
 **Layer choice (Rule 7)**: TODO(forge): hook-only | skill-only | hook+skill — justify.
 

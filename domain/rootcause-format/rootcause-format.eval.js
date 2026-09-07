@@ -35,6 +35,16 @@ check('F7 hyphen-in-word only passes', runOn(HB('Lain-Lain pun ada kod sendiri j
 check('F8 no root-cause row is silent', runOn('Normal reply. Mentions a - dash and ; but no root cause row here.') === 0, 'no row');
 check('F9 placeholder sentinel is silent', runOn(HB('⬜ not yet diagnosed')) === 0, 'sentinel');
 check('F10 bypass token is silent', runOn('[skip-rootcause-format: quoting BA]\n' + HB('ikut kod — lama.')) === 0, 'bypass');
+// 2-col shape with Solution row (2026-09-07, #278585)
+const HB2 = (rc, sol) => `Hand-back.\n\n| Redmine-ready | Text (plain, sendable to BA) |\n|---|---|\n| Root cause | ${rc} |\n| Solution | ${sol} |\n\n| Test data | Value |\n|---|---|`;
+const RC_OK = 'Butang muat naik Lampiran ada had saiz 1 MB yang ditetapkan tetap dalam skrin. Fail lebih 1 MB ditolak sebelum muat naik bermula.';
+const SOL_OK = 'Had saiz muat naik Lampiran dibuang, kini ikut had sistem. Fail lebih 1 MB boleh dimuat naik dan dipaparkan.';
+check('F13 2-col clean root cause + solution passes', runOn(HB2(RC_OK, SOL_OK)) === 0, '2-col clean');
+check('F14 2-col solution em-dash blocks', runOn(HB2(RC_OK, 'Had saiz dibuang — ikut had sistem.')) === 2, 'solution em-dash');
+check('F15 2-col solution semicolon blocks', runOn(HB2(RC_OK, 'Had saiz dibuang; ikut had sistem.')) === 2, 'solution semicolon');
+check('F16 2-col root cause dash blocks even with clean solution', runOn(HB2('Had saiz 1 MB — tetap.', SOL_OK)) === 2, '2-col rc dash');
+check('F17 2-col solution placeholder is silent', runOn(HB2(RC_OK, '⬜ not yet fixed')) === 0, 'solution sentinel');
+check('F18 word "solution" in prose without a root cause row is silent', runOn('The solution — a dash here; and a semicolon — is discussed in prose only.') === 0, 'prose solution');
 check('F11 empty stdin no false block', spawnSync(process.execPath, [HOOK], { input: '{}', encoding: 'utf8', timeout: 30000, env: process.env }).status === 0, 'empty');
 check('F12 malformed stdin no false block', spawnSync(process.execPath, [HOOK], { input: 'not json', encoding: 'utf8', timeout: 30000, env: process.env }).status === 0, 'malformed');
 
