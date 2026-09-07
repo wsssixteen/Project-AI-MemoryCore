@@ -284,3 +284,10 @@
 - [ ] Boot-bundle cutover decision — after ~1 week shadow agreement (core/boot.js vs prose boot)
 - [ ] Forge v2: refine-path support for legacy .claude/hooks components (found during ticket-gate refine)
 - [ ] Skill grading (N4): extend spawn-telemetry to Skill invocations
+
+## TODO (2026-09-07, #278580 — verify Alter populate-DEFAULT routing bug)
+- **Verify 100% whether the Alter's populate-DEFAULT set `keputusan` wrong** on PT `PTMLK/02/L/PT/2026/3` (apl 3398208, Altered 2× → proc 18870459, routed PMB→PYSTP Tangguh while decision=Tolak Ringkas).
+  1. Read `et_flowable17.act_hi_varinst` (proc_inst 18870459, name 'keputusan') via infra — expect 'tangguh'; establish who/what set it.
+  2. Trace the Pengesahan Minit Bebas page bean (PT, tugasan kod `PMB`, peranan KPPD) — where `keputusan` is written on decision submit.
+  3. Trace the Alter Flow Flowable code (`CommonBPMServiceClient` / alter service) — does it populate routing vars with a DEFAULT that can land 'tangguh'? Compare a non-altered PT app's route.
+  4. Confirm bug-vs-officer-choice; if Alter-caused, file the code fix under the flowable-alter family (#274510). qa_doc: projects/coding-projects/active/ADHOC-PT-2026-7/ADHOC-PT-2026-7.md (Part 2).

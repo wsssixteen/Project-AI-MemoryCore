@@ -12,3 +12,13 @@
 - A2 redmine-write-gate false positive (logged earlier this session).
 - A4 test-scenario health gate: the `Test Scenario` emit must carry a child-row count for the panel the scenario opens (eval: a scenario naming an app whose panel table has 0 rows is blocked).
 - A2 commit-approval hook keys the QA from the USER message only, never from assistant text (eval: reply mentioning another QA number must not create its flag).
+
+---
+
+# Agentic + ticket workflow assessment — 2026-09-07 (#278580)
+
+- **A1 agentic system**: hand-composed infra handoffs drift every correction cycle (no gate on chat-pasted text). Instance: #278580 handoff mangled 3x before I built quest/infra-handoff.js. Forward: a Stop hook validating the handoff block shape (DML-only, no SELECT, no file ref).
+- **A2 quest workflow**: adhoc to ticketed has no forced re-read of the official Brief. Instance: #278580 BA routing question sat unread in the History journal while I called it done. Forward: a hook blocking resolved/close on a ticketed adhoc until Description, History and attachments are ledgered.
+- **A3 debugging efficiency/accuracy**: worktree/main path split stranded the qa_doc (written to worktree, main lacked it until DE copied it). Instance: this session. Forward: a path resolver that always writes projects and etanah-knowledge to MAIN from a worktree session (mirror active-cli suffix strip).
+- **A4 etanah issue-solving**: altered permohonan routing not flagged at Phase 0. Instance: #278580 routed Tangguh vs Tolak from a stale keputusan after 2x Alter. Forward: a Phase-0 detector that warns when umm_aliran_kerja has more than 1 process instance or history_init_alter is set.
+- **A5 sweep/file sweep**: A5 skip. No multi-ticket sweep this session; single adhoc only.
