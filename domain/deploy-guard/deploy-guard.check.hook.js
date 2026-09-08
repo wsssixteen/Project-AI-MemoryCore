@@ -14,6 +14,7 @@ const path = require('path');
 const fs = require('fs');
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
 const LOG = path.join(__dirname, 'log.jsonl');
+const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));   // missing since birth: every fire threw ReferenceError (found 2026-09-08 audit)
 
 // company-branch / etanah-repo context — MemoryCore (main) never trips this
 const ETANAH_CTX = /etanah-(?:pelupusan|awam|common|spoc-hasil|teknikal)|\bmlk\/(?:master|int-env|stag-env|release|esokongan|training|internal|qa|cr)/i;
