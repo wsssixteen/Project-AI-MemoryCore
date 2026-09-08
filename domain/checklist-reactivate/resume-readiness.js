@@ -28,7 +28,7 @@ const LOG = path.join(REPO_ROOT, 'domain', 'checklist-reactivate', 'log.jsonl');
 const OPEN_STATUSES = new Set(['active', 'hold', 'blocked', 'delegated']);
 const FILTER_QA = (process.argv[2] || '').trim().replace(/^QA-?/i, '');
 
-const PERMOHONAN_RE = /PT[A-Z]{3}\/\d{2}\/[A-Z]\/[A-Z0-9]+\/\d{4}\/\d+/;       // PTMLK/01/L/PSBS/2026/14
+const PERMOHONAN_RE = /PT[A-Z]{2,4}\/\d{2}\/[A-Z]\/[A-Z0-9]+\/\d{4}\/\d+/;     // PTMLK/01/L/PSBS/2026/14 (Melaka) · PTPK/04/E/PLMS/2022/350 (Perak, PT+2 letters) — state code is 2-4 letters
 // AWAM quests have NO Permohonan ID by design — the test key is login + p_aplikasi_id
 // (DEV-TESTING-HACKS.md:106). Before 2026-07-22 this check was structurally unpassable for
 // every AWAM quest, producing a permanent false ✗ (QA-271721). Accept the AWAM shape too.
