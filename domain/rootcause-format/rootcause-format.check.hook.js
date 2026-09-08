@@ -27,12 +27,16 @@ function lastAssistantText(transcriptPath) {
   return null;
 }
 
-// Pull the root-cause CONTENT string out of the emit, or null if none present.
-function extractRootCause(text) {
+// Pull one Redmine-ready CONTENT string (Root cause / Solution) out of the emit, or null if none present.
+// Shapes accepted: 2-col row `| Root cause | text |` (2026-09-07 shape) · 1-col header + next cell ·
+// inline `Root cause: text` · blockquote under a "Root cause" line.
+function extractLabelled(text, labelRe) {
   const lines = text.split(/\r?\n/);
   for (let i = 0; i < lines.length; i++) {
-    if (!/root cause/i.test(lines[i])) continue;
-    const inline = lines[i].split(/root cause[^:|]*:/i)[1];
+    if (!labelRe.test(lines[i])) continue;
+    const cells = lines[i].trim().replace(/^\||\|$/g, '').split('|').map(s => s.trim());
+    if (lines[i].trim().startsWith('|') && cells.length >= 2 && labelRe.test(cells[0]) && cells[1]) return cells[1];
+    const inline = lines[i].split(new RegExp(labelRe.source + '[^:|]*:', 'i'))[1];
     if (inline && inline.replace(/\|/g, '').trim()) return inline.replace(/\|/g, '').trim();
     for (let j = i + 1; j < Math.min(i + 4, lines.length); j++) {
       const ln = lines[j].trim();
@@ -45,8 +49,10 @@ function extractRootCause(text) {
   }
   return null;
 }
+function extractRootCause(text) { return extractLabelled(text, /root cause/i); }
+function extractSolution(text) { return extractLabelled(text, /\bsolution\b/i); }
 
-function isPlaceholder(s) { return /<CAUSE ONLY|not yet diagnosed|⬜/i.test(s); }
+function isPlaceholder(s) { return /<CAUSE ONLY|<FIX ONLY|not yet diagnosed|not yet fixed|⬜/i.test(s); }
 
 function findViolations(s) {
   const v = [];
@@ -61,10 +67,12 @@ function evaluate(text) {
   if (EXEMPT.test(text)) return { verdict: 'silent' };
   const rc = extractRootCause(text);
   if (!rc || isPlaceholder(rc)) return { verdict: 'silent' };
-  const violations = findViolations(rc);
-  return violations.length ? { verdict: 'blocked', violations, rc } : { verdict: 'passed', rc };
+  const sol = extractSolution(text);
+  const violations = findViolations(rc).map(x => 'Root cause: ' + x);
+  if (sol && !isPlaceholder(sol)) violations.push(...findViolations(sol).map(x => 'Solution: ' + x));
+  return violations.length ? { verdict: 'blocked', violations, rc, sol } : { verdict: 'passed', rc, sol };
 }
-module.exports = { evaluate, extractRootCause, findViolations };
+module.exports = { evaluate, extractRootCause, extractSolution, findViolations };
 
 runHook({ name: 'rootcause-format', event: 'Stop' }, (input) => {
   let data = {}; try { data = JSON.parse(input || '{}'); } catch (_) {}
@@ -74,8 +82,8 @@ runHook({ name: 'rootcause-format', event: 'Stop' }, (input) => {
   return {
     fired: true, blocked: true,
     blockReason: [
-      '⛔ rootcause-format: the Root cause line is BA-sendable text and breaks the required format.',
-      '   Fix the Root cause line, then re-send:',
+      '⛔ rootcause-format: the Root cause / Solution line is BA-sendable text and breaks the required format.',
+      '   Fix the named line, then re-send:',
       ...res.violations.map(x => '   - ' + x),
       '   Rules: NO dashes, NO semicolons, short plain sentences (ASD-STE100). A hyphen inside a word (Lain-Lain) is fine.',
       '   Genuinely intentional? add [skip-rootcause-format: <reason>].',

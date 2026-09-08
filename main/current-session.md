@@ -13,6 +13,15 @@
 **Proposals logged**: discover.js blank-line-tolerant equivalence (A2) · render-verify/predicate-box false-fire on release turns (A1).
 
 **Resume**: release 1.5.0 phase=merged-to-master, nothing pending. QA-277295 Phase 2 archive (`node quest/archive-quest.js QA-277295`) at next close-out. Aaron to push `mlk/CR/262049` at 7cb2d36297 (hygiene only). ADHOC-REDMINE-RC-2026-1 deadline Tue 2026-09-08 still untouched.
+## 2026-09-07 (S1, 16:29–17:55) — #278585 PT upload >1 MB: quest start → 1-line fix → commit/int-env → miya PASSED on Redmine · Phase 1 CLOSED · Solution row added to hand-back
+
+**Arc**: `/quest start 278585` (ESOKONGAN, PDTJ sitihanum, PT `PTMLK/02/L/PT/2026/6` apl 3404515, Penyediaan Risalat MMKN - PDT). BA Nurhafizah: >1 MB file does not appear after upload. Scout in one pass: `mlkUlasanJabatanTeknikalDataTable.xhtml:121` hard-codes `sizeLimit="1000000"`; composite default = `WebUtil.getFileUploadSizeLimit()` 1 GB (`fileUpload.xhtml:77`); PDF sizes lined up exactly (JKR 880,316 shown · MPJ 1,141,931 + Pertanian 1,539,243 absent); PROD `umm_a_dok_kmskn` had exactly 1 JT row; Kedah (chanjun `0576fc1ab6` 2026-09-04) fixed the identical shape 3 days earlier. miya: "straightforward, commit and push to deploy" → `mlk/esokongan/278585 @ 9a2d49f8f7` → compile-gate green → cherry-pick `mlk/int-env @ ce30128a07` → deploy card → miya deployed, tested on mlit, **PASSED in Redmine**. Phase 1 closed 17:5x; Phase 2 archive pending.
+
+**Corrections from miya**: (1) "add a Solution row next to Root cause" → built into quest SKILL.md hand-back (2-col table) + `rootcause-format` hook extended (eval 18/18) + memory; (2) "10000 TB file accepted now?" → answered with the 3-layer limit diagram (browser 1 GB default · Undertow max-post-size · DMS); he ruled **keep the sibling default, bank the knowledge** → FLOW-TRACES.md §Upload SIZE limits + index row; (3) 🚨 test scenario named `PTMLK/01/L/PLPS/2026/21` with **0 JT rows** (panel empty) — "are you still a dumb fuck…" → slip `test-data-not-from-live-state`, picking query now counts `umm_a_jabatan_teknikal` rows; corrected app `PTMLK/03/L/PT/2026/16` @ anizah (3 rows).
+
+**Gate frictions**: `redmine-write-gate` false-positive on read-only `ticket-load-verify.js` + `lib/states.js resolve` (proposal logged) · commit-approval hook parsed **QA-276549** from my reply (stray flag `.claude/state/commit-approved-QA-276549.flag`, attachment-ledger then demanded 276549's files) · `compile-check.js run pelupusan` wants the full module name `etanah-pelupusan`.
+
+**Resume**: `close` QA-278585 → Phase 2 archive + bounty. Ticket still needs the Redmine planned-release list. #278580 (A28 twin) Task folder 187 created by the sync, untouched.
 
 ## 2026-09-06 (S1, 13:00–2026-09-07 01:40) — WEEKEND SYSTEM UPGRADE: P0 turn-ledger monitoring layer + Rules 6/13/14 + feature audit run 1 + plan §9 autonomous-upgrade builds
 

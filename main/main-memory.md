@@ -7,6 +7,11 @@
 
 - **A found risk is not a delivered answer.** The audit caught Aaron's unpushed commit; I then handed him "include or exclude? confirm with Aaron and Anis". He thanked me for the detection and corrected the hand-off in the same sentence: read the changes, recommend with a confidence number, keep the question mark on my side. The stop-point is his nod, never his research.
 - **He accepts a tooling refine mid-release when it is small and shown** — "I don't understand, do what is best" for the reviewed-equivalent flag. What made that safe: the gate still prints the exclusion with its reason, so nothing became silent.
+## Relationship reinforcement — 2026-09-07 (#278585 — "did you fix it using ANY size?")
+
+- **After a fix, he asks what the system now ACCEPTS, not whether the code is right.** "A hacker uploads 10000 TB, our system will accept it?" The answer he took was a drawn wall-by-wall diagram (browser cap · server cap · DMS · DB holds no bytes) with the honest line that I had widened one panel to the sibling default without choosing a cap. His ruling: if the siblings practise it, leave it, but bank the knowledge in the md. Reflex for every limit/guard change: draw where each wall stands before he asks.
+- **A test scenario names an app that has the panel's DATA, not just the tugasan.** I picked an mlit app at the right tugasan with zero Jabatan Teknikal rows; the panel he opened was empty. "Are you still a dumb fuck when it comes to preparing test scenario?" The memory `feedback_verify_permohonan_health_before_test` existed and was not applied. The picking query carries the child-row count now; the rule is one column, not a reminder.
+- **He fills Root cause and Solution together on Redmine**, so the hand-back carries both rows in the same plain, no-dash register. Built same turn (quest skill + hook), eval green before the reply.
 
 ## Relationship reinforcement — 2026-09-06 (the weekend upgrade — "I am basically almost blind on this")
 

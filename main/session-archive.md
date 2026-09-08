@@ -15,6 +15,17 @@
 **Gate frictions logged as proposals**: design-consult eval-rider blocks the eval it demands · commit-gate misreads a linked worktree outside the OneDrive root as an etanah repo, and it + prepare-commit-trigger pick different quests for one approval.
 
 **Resume**: nothing pending. Next boot prints `worktrees: N registered · N orphan folder(s)…`; a boot that ever shows a kept orphan = read `.claude/state/worktree-cleanup-log.jsonl`. Follow-ups (todo-worthy): register the 4 recovered hooks after overlap check · wire or drop the Aug-24 release-mlk-plp gate set · fix the two gate proposals · start sessions with the worktree box UNTICKED (or point worktrees outside OneDrive).
+## 2026-09-07 (adhoc) — #278580 PT masuk tugasan ralat: NonUnique dedup PROD-verified + routing follow-up + tooling/memory hardening
+
+**Arc**: BA paste of NonUnique error (ID Rujukan 327326) → diagnosed 3 duplicate "Minit Bebas" docs (`umm_a_dok_keluaran`, apl 3398208) born of 2× Alter + 5× PYMB/SMB re-cycles → PROD data patch deletes the 2 older docs + their `umm_btrn_hantaran_notis` children, keeps latest 8642311. Infra ran it, PROD-verified 3→1. **Ticket #278580 RESOLVED.**
+
+**Big miss (miya-caught)**: worked from the chat paste, never opened the official Task folder 187 `0. Brief/` (Description + History journal + screenshot + video). Missed the BA journal (Nurhafizah) routing question — why routed to PYSTP (Tangguh) not Penyediaan Surat Tolak — + "Related #274510". Root-caused: gateway `MLK_PLP_PT.bpmn20.xml:1583-1590` routes on flowable var `keputusan`; current process 18870459 (Alter #2, 2026-08-07) carries `keputusan=tangguh` while `status_keputusan=Tolak Ringkas` → alter-caused wrong route (#274510 family). Flowable engine unreachable (`et_flowable17` separate DB, verified 0 flow/act schemas on etprdmlk); staging stale pre-Alter#2 (stg2 lacks proc 18870459). Simple root cause given to BA; alter recovery + code-confirm TODO'd.
+
+**Shipped**: `quest/infra-handoff.js` (generate DML-only infra handoff from a .sql, kills hand-compose drift) · `quest/archive-quest.js` now accepts `ADHOC-*` ids + reads the block via active-cli (worktree-safe) · memories `feedback_adhoc_to_ticket_reread`, `feedback_plain_punctuation`, `feedback_prod_patch_infra_handoff` (no-file/no-SELECT handoff + no-BA-test-on-PROD), `feedback_redmine_rootcause_format` (bullets for multi-step + conditional final answer row) · FLOWABLE-KNOWLEDGE §Altered-permohonan-staleness · todo.md code-confirm TODO · ADHOC-REGISTER A28.
+
+**Slips (5, all miya-caught)**: BA-test-on-PROD + non-close · folder 185/187 split, script not migrated to official folder · missed BA journal (gate gap adhoc→ticketed) · reask punctuation (colons/dashes in BA text) · process escalation 3/7d.
+
+**Resume**: routing Alter for `PTMLK/02/L/PT/2026/3` back to the Tolak Ringkas path — pending miya nod + flowable-engine access for the code-confirm. The adhoc→ticketed official-Brief-read hook is parked (the escalation defender).
 
 ## 2026-09-04 (S4, 16:59–17:15) — #271910 Azam colleague-assist (WP-KL PRZ GIS "Status Permohonan Is NULL") ROOT-CAUSED on staging + 6 WP DB MCPs built from DBeaver
 

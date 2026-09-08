@@ -145,11 +145,12 @@ At **every** point Ruri stops and hands back to みや after `/quest start` — 
 
 ═══ ▶ YOUR MOVE — QA-NNNN ═══
 
-Pre-emit gate: Notes.txt ✓ · Tugasan ✓ · Flag-WHERE ✓ · Login ✓ · Root-cause ✓
+Pre-emit gate: Notes.txt ✓ · Tugasan ✓ · Flag-WHERE ✓ · Login ✓ · Root-cause ✓ · Solution ✓
 
-| Root cause (plain, Redmine-ready) |
-|---|
-| <CAUSE ONLY, max 2 plain sentences, sendable to BA. Say what happens and why. NO fix sentence. NO file:line, class names, jargon. NEVER use dashes or semicolons. Use ASD-STE100 Simplified Technical English, one idea per sentence. Straightforward sentences are fine and need not be formal. Exemplar (#277532): "Di Pengiraan Bayaran Lesen, Tujuan Permohonan ikut kod Maksud Menduduki yang tersimpan. Lain-Lain pun ada kod sendiri jadi sistem papar gabungan lama, bukan teks yang diisi pengguna." MANDATORY every hand-back once a cause is known. Use `⬜ not yet diagnosed` if pre-Recon.> |
+| Redmine-ready | Text (plain, sendable to BA) |
+|---|---|
+| Root cause | <CAUSE ONLY, max 2 plain sentences. Say what happens and why. NO fix sentence. NO file:line, class names, jargon. NEVER use dashes or semicolons. Use ASD-STE100 Simplified Technical English, one idea per sentence. Straightforward sentences are fine and need not be formal. Exemplar (#277532): "Di Pengiraan Bayaran Lesen, Tujuan Permohonan ikut kod Maksud Menduduki yang tersimpan. Lain-Lain pun ada kod sendiri jadi sistem papar gabungan lama, bukan teks yang diisi pengguna." MANDATORY every hand-back once a cause is known. Use `⬜ not yet diagnosed` if pre-Recon.> |
+| Solution | <FIX ONLY, max 2 plain sentences, same rules as Root cause (no dashes, no semicolons, no file:line or class names). Say what was changed and what the user now gets. Exemplar (#278585): "Had saiz muat naik Lampiran di Panel Jabatan Teknikal dan Ulasan YB dibuang, kini ikut had sistem. Fail lebih 1 MB boleh dimuat naik dan dipaparkan." MANDATORY once a fix shape is chosen. Use `⬜ not yet fixed` before Rubric picks a candidate. (Added 2026-09-07 per みや, #278585: the two Redmine fields Root cause + Solution are filled together, so the hand-back carries both.)> |
 
 | Test data | Value |
 |---|---|

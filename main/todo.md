@@ -150,6 +150,7 @@
 
 | Category | Item | Notes |
 |---|---|---|
+| 📈 Bursa assistant (added 2026-09-07, みや) | **Chart the wayfinder map for the trading rulebook** — seed saved at `projects/coding-projects/active/bursa-assistant/PROJECT.md` (handoff + decisions + fog). Next: みや types `/wayfinder` to name the destination + cut first tickets; map at `bursa-assistant/wayfinder/map.md` (PymTime shape, local-markdown tracker) | No rush, multi-session, one decision per session. Shariah gate hard. Ruri never places orders or gives stock calls. |
 | ⚙️ Adhoc | **9g Adhoc sweep proposes UNMATCHED rows older than 10 days (added 2026-09-07, みや 2026-09-06: "adhoc that goes unknown will be archived automatically after a week and a half")** — today `domain/adhoc-lifecycle` sweep proposes only terminal-status rows; add a second lane: rows with no ticket match and `opened` > 10 d → listed as archive candidates, still PROPOSE-ONLY (みや nods each); eval +1 fixture | Deferred by みや ("add 7 into todo"). Design in plan `system/speed-optimization-plan-2026-09-04.md` §9g. |
 | 🌐 Redmine | **10 Reconcile the 23 open blocks against Redmine on the office network (added 2026-09-07)** — `node quest/redmine-reconcile.js` was unreachable from home (16 numbered quests unverified, 7 numberless adhocs are みや's call); the Redmine-Closed ones become the first test set for the Phase-2 🔧 WORKFLOW UPGRADE (plan §9b/9c) | Deferred by みや ("add 10 into todo"). Needs VPN/office. |
 | 🗣️ Reply | **Standard reply format from Ruri (added 2026-09-06, みや)** — like `i-have-adhd`: story diagram + simplified technical English + fixed order; PARKED by みや until the fundamentals (§M monitoring + goal-lens + feature audit + §7 structure) are built and proven | みや: "I cannot focus on that UNLESS we have this more fundamental stuffs corrected & PROPERLY BUILT." Home when built: `.claude/reply-shape-spec.md` (THE output spec). |
@@ -284,3 +285,10 @@
 - [ ] Boot-bundle cutover decision — after ~1 week shadow agreement (core/boot.js vs prose boot)
 - [ ] Forge v2: refine-path support for legacy .claude/hooks components (found during ticket-gate refine)
 - [ ] Skill grading (N4): extend spawn-telemetry to Skill invocations
+
+## TODO (2026-09-07, #278580 — verify Alter populate-DEFAULT routing bug)
+- **Verify 100% whether the Alter's populate-DEFAULT set `keputusan` wrong** on PT `PTMLK/02/L/PT/2026/3` (apl 3398208, Altered 2× → proc 18870459, routed PMB→PYSTP Tangguh while decision=Tolak Ringkas).
+  1. Read `et_flowable17.act_hi_varinst` (proc_inst 18870459, name 'keputusan') via infra — expect 'tangguh'; establish who/what set it.
+  2. Trace the Pengesahan Minit Bebas page bean (PT, tugasan kod `PMB`, peranan KPPD) — where `keputusan` is written on decision submit.
+  3. Trace the Alter Flow Flowable code (`CommonBPMServiceClient` / alter service) — does it populate routing vars with a DEFAULT that can land 'tangguh'? Compare a non-altered PT app's route.
+  4. Confirm bug-vs-officer-choice; if Alter-caused, file the code fix under the flowable-alter family (#274510). qa_doc: projects/coding-projects/active/ADHOC-PT-2026-7/ADHOC-PT-2026-7.md (Part 2).

@@ -74,27 +74,18 @@ function sweepVideos(args) {
     if (r.failed.length) { console.log(`   ⚠ ${r.failed.length} failed (likely locked/hydrating):`); r.failed.slice(0, 10).forEach(f => console.log('     ' + f)); }
 }
 
+// Read the block via active-cli (2026-09-07) — active-cli strips the worktree suffix so it
+// always resolves the SHARED main active.txt; reading ACTIVE_TXT directly from a worktree
+// session missed the block (it lives in main). Returns the kv body, or null if the block is
+// absent or already in active-archive.txt (that case is handled by blockExistsInArchiveTxt).
 function readActiveTxtBlock(qa) {
-    if (!fs.existsSync(ACTIVE_TXT)) return null;
-    const text = fs.readFileSync(ACTIVE_TXT, 'utf8');
-    const lines = text.split(/\r?\n/);
-    const block = [];
-    let inBlock = false;
-    for (const line of lines) {
-        if (/^qa=QA-\d+/.test(line)) {
-            if (inBlock) break;
-            if (line.trim() === `qa=${qa}`) {
-                inBlock = true;
-                block.push(line);
-                continue;
-            }
-        }
-        if (inBlock) {
-            if (line.trim() === '') break;
-            block.push(line);
-        }
-    }
-    return block.length ? block.join('\n') : null;
+    let out;
+    try {
+        out = execFileSync('node', [ACTIVE_CLI, 'read', qa], { encoding: 'utf8', stdio: 'pipe' });
+    } catch { return null; }
+    if (out.includes('active-archive.txt')) return null; // already archived
+    const body = out.split(/\r?\n/).filter(l => l && !l.startsWith('#')).join('\n').trim();
+    return body ? body : null;
 }
 
 function getField(block, key) {
@@ -125,8 +116,10 @@ function main() {
     const args = process.argv.slice(2);
     if (args.includes('--sweep-videos')) { sweepVideos(args); return; }
     const qa = args[0];
-    if (!qa || !/^QA-\d+$/.test(qa)) {
-        console.error('Usage: node quest/archive-quest.js <QA-NNNNNN> [--dry-run] [--commit <SHA>] [--branch <name>] [--tasks <path>]');
+    // Accept QA-<num> AND ADHOC-<TRACK>-<year>-<n> (e.g. ADHOC-PT-2026-7, ADHOC-REDMINE-RC-2026-1)
+    // — adhocs archive the same way; the QA-only regex silently rejected them (2026-09-07).
+    if (!qa || !/^(QA-\d+|ADHOC-[A-Z0-9]+(?:-[A-Z0-9]+)*-\d{4}-\d+)$/.test(qa)) {
+        console.error('Usage: node quest/archive-quest.js <QA-NNNNNN | ADHOC-TRACK-YYYY-N> [--dry-run] [--commit <SHA>] [--branch <name>] [--tasks <path>]');
         process.exit(2);
     }
     const dryRun = args.includes('--dry-run');

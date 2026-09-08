@@ -1,0 +1,1 @@
+{"ts":"2026-09-07T09:57:23.210Z","turn_id":"4484f85c-1","feature":"redmine-write-gate","met":"n","mode":"judgment","gap":"false positive: blocked read-only ticket-load-verify.js + states.js resolve","improve":"match only redmine-api write verbs","evidence":"4484f85c-1"}

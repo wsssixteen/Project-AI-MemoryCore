@@ -5,23 +5,24 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: a9fbf5d6-e99a-4b85-83d2-4336b3c13919
-  modified: 2026-09-03T01:35:26.584Z
+  modified: 2026-09-07T02:35:23.125Z
 ---
 
 🚨 PROD patching ALWAYS goes through infra — never run it myself, never hand it to みや to run. Deliver it as an infra-addressed message in this EXACT format:
 
 ```
 Hi infra, please assist. Thank you.
-
 #<ticket number>: 1 very short, concise sentence explaining what/why.
 
 <script>
 -- x row <updated/inserted/deleted>
 ```
 
+🚨 NO blank line between the greeting and the `#ticket:` line — they are adjacent (みや 2026-09-07, corrected repeatedly). The ONLY blank line is between the `#ticket:` line and the script.
+
 **Why**: infra is the only party that executes PROD writes; a fixed, minimal format lets them apply it without back-and-forth. The one-line explainer + the trailing `-- N row ...` expected-outcome comment are the whole context they need.
 
-**How to apply**: at any PROD data-patch hand-back, emit this block verbatim (greeting line · blank · `#ticket: sentence` · blank · fenced script ending in the expected-outcome comment). Keep the sentence to one line.
+**How to apply**: at any PROD data-patch hand-back, emit this block verbatim (greeting line · `#ticket: sentence` on the very NEXT line, NO blank between · blank · fenced script ending in the expected-outcome comment). Keep the sentence to one line.
 
 **🚨 TWO ARTIFACTS, TWO SECTIONS, TWO FORMATS (2026-09-03, per みや, #277346 — "what you show as copyable is only used inside the SQL script file… What to handoff to infra is different section, different format")**:
 1. **The `.sql` FILE** (`2. Fix\<ticket>.sql`, format per [[feedback_infra_script_schema_env]]: 4-line header + before-SELECT + DML) — share its contents in chat for review, in ITS OWN section ("<ticket>.sql for review").
