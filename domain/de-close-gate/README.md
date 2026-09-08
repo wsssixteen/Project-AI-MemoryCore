@@ -33,5 +33,10 @@ schema, or urusan set. A second state reuses it unchanged.
 **Eval**: `de-close-gate.eval.js` — 8 fixtures (replay QA-276182 blockless-block · pass ·
 bypass · stale-12.6 · untrimmed · passing-mention no-false-positive · archived-block pass).
 
+## C6 — Audit briefing ran (added 2026-09-08)
+
+symptom: miya 2026-09-08 — "do we have these 'audit' section during domain expansion? I've been asking you to build it many times" — `lib/audit-briefing.js` existed since 09-07 but DE never ran it.
+Rule: DE close BLOCKS unless `domain/de-close-gate/log.jsonl` carries `action=audit-briefing-ran` ≤12 h old (written by `node lib/audit-briefing.js` at every CLI run). Same freshness contract as C4. DE step 7.4 pastes the four blocks + rulings into the reply.
+
 ## C4 — Redmine reconcile (added 2026-08-21 evening)
 DE close BLOCKS unless `node quest/redmine-reconcile.js` ran <=12h (writes action=reconcile-ran to log.jsonl). Reconciles active.txt open blocks against live Redmine both directions; report-only. Replay: 2026-08-21 — 20 stale open blocks vs 0 assigned-open.

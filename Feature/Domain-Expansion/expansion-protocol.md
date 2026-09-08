@@ -140,6 +140,23 @@ Every refinement to this protocol — whether a rule tweak, signal added/removed
 
 ---
 
+## Step 7.4 — AUDIT BRIEFING (added 2026-09-08 per みや — MANDATORY, deterministic)
+
+> みや, 2026-09-08: *"do we have these 'audit' section during domain expansion? It should be robust and almost
+> perfect at this point right? I've been asking you to build it many times."* The answer was: partly. Step 7.5
+> (five-axis sweep, model-written) and Step 12.5 (component liveness) existed; the four-block audit screen
+> `lib/audit-briefing.js` (built 2026-09-07 for the `/system-audit` opener) was NEVER a DE step, so every
+> session-end audit was my opinion, not the ledgers. This step closes that.
+
+**What runs**: `node lib/audit-briefing.js --days 7` → paste the output into the DE reply unedited:
+`NOT WORKING` · `TOO SLOW` · `MISTAKES` · `HIGH-RETURN OPTIMIZATIONS` · `NEEDS みや'S RULING`.
+Then: rule what is mine (retire/redesign candidates I own → 7.5 rows; overdue watches → `lib/watch.js` resolve
+now); his rulings stay listed for him. The script appends `action=audit-briefing-ran` to
+`domain/de-close-gate/log.jsonl`; **`de-close-gate` C6 blocks the close banner without a row ≤12 h old**.
+
+**Banned**: summarising the screen instead of pasting it · running it and not ruling my own rows · a 7.5
+brainstorm with no 7.4 output above it.
+
 ## Step 7.5 — IMPROVEMENT SWEEP (added 2026-08-05 per みや — MANDATORY, never optional)
 
 > **みや's instruction, verbatim**: *"add this rule into our domain expansion. So that I don't have to
@@ -365,6 +382,8 @@ Before emitting the closing banner — read `.claude/state/session-items.md` "Ac
 *Updated 2026-08-05 — **Step 7.5 IMPROVEMENT SWEEP added (MANDATORY)** per みや: five fixed axes (A1 agentic system · A2 quest workflow · A3 debugging efficiency+accuracy · A4 etanah issue-solving · A5 sweep/file-sweep), swept every DE, producing (a) a dated assessment under `system/` with a concrete instance per claim and (b) brainstormed proposals logged via `core/slips.js --type proposal` into the new 💡 Open proposals lane of `slip-dashboard.md` for weekly-audit ruling. Paired `core/slips.js` change: `type=proposal` split out of the slip counts and given its own dashboard section, because filing an idea as `upgrade` reads as shipped and makes an open decision invisible (the 2026-07-22 parked-enforcement-row failure). Rationale: みや had to ask for this assessment explicitly two goals running — a thing he must repeatedly request is a missing step, not a missing effort.*
 
 *Updated 2026-08-21 — Step 2b + 12.6 + step-2 trim now DETERMINISTIC via `domain/de-close-gate/` (Stop, BLOCKS): C1 blockless-ticket (QA-276182 replay) · C2 resume-readiness-ran · C3 session-trim-ran. Per みや's DE audit directive "MAKE THEM CRITICAL".*
+
+*Updated 2026-09-08 — Step 7.4 AUDIT BRIEFING added (MANDATORY, deterministic) + de-close-gate C6 AUDIT-BRIEFING-RAN: DE close BLOCKS unless `node lib/audit-briefing.js` ran ≤12h; its four blocks + rulings are pasted into the DE reply before 7.5. Root cause: the audit screen was built 09-07 for the `/system-audit` opener only; DE's own "audit" was 7.5 opinion + 12.5 liveness. Per みや: "I've been asking you to build it many times." Eval 17/17 → 19/19. Spec-preservation: 7.5 / 12.5 / C1-C5 untouched; additive.*
 
 *Updated 2026-08-21 (evening) — de-close-gate +C4 REDMINE-RECONCILE-RAN: DE close now BLOCKS unless `node quest/redmine-reconcile.js` ran ≤12h (reconciles active.txt open blocks against live Redmine — divergence + missing directions; report-only, closes stay みや-approved). Root cause: 20 stale "open" blocks vs 0 assigned-open on Redmine, caught by みや at boot. Eval 8/8 → 14/14. Spec-preservation: C1-C3 untouched; additive.*
 

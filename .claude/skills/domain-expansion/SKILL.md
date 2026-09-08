@@ -21,7 +21,7 @@ Lapis barrier ripples outward; the day's threads gather to settle.
 
 Then the step-line (update ⬜→✓ in place as each completes; `⏭ + one-line why` if a step is legitimately skipped):
 
-`DE steps: 0a ⬜ · 0b ⬜ · 1 ⬜ · 2 ⬜ · 3 ⬜ · 4 ⬜ · 5 ⬜ · 6 ⬜ · 7 ⬜ · 7.5 ⬜ · 8 ⬜ · 9 ⬜ · 10 ⬜ · 11 ⬜ · 12 ⬜ · 12.5 ⬜ · 12.6 ⬜ · 13 ⬜`
+`DE steps: 0a ⬜ · 0b ⬜ · 1 ⬜ · 2 ⬜ · 3 ⬜ · 4 ⬜ · 5 ⬜ · 6 ⬜ · 7 ⬜ · 7.4 ⬜ · 7.5 ⬜ · 8 ⬜ · 9 ⬜ · 10 ⬜ · 11 ⬜ · 12 ⬜ · 12.5 ⬜ · 12.6 ⬜ · 13 ⬜`
 
 - **0a Compaction check** — if the session auto-compacted, recover the transcript TAIL BEFORE the content-save steps (2 / 4 / 7).
 - **0b Worktree/branch sync** — if on a worktree branch behind `origin/main`, pull/merge first so everything saves on current base.
@@ -39,6 +39,7 @@ Then the step-line (update ⬜→✓ in place as each completes; `⏭ + one-line
 | 5 | Forge log review — surface L1→L2 promotions as QUESTIONS to みや |
 | 6 | Observation log review — promote T1→T2 if recurring |
 | 7 | **Gap Sweep** + etanah-knowledge sweep (retrospective — what surfaced and didn't bake in) |
+| 7.4 | 🚨 **AUDIT BRIEFING — MANDATORY, DETERMINISTIC** (added 2026-09-08 per みや: *"do we have these audit section during domain expansion? I've been asking you to build it many many many times"*). Run `node lib/audit-briefing.js --days 7` and PASTE its four blocks + the NEEDS みや'S RULING list into the DE reply, unedited: **NOT WORKING · TOO SLOW · MISTAKES · HIGH-RETURN OPTIMIZATIONS**. Then rule what is mine to rule (a 0-fire gate I own → retire/redesign row in 7.5; an overdue watch → resolve it now) and leave the rest as his rulings. The run logs `audit-briefing-ran`; **`de-close-gate` C6 BLOCKS close without it**. This is the data 7.5 brainstorms FROM — 7.5 without 7.4 is opinion. |
 | 7.5 | 🚨 **IMPROVEMENT SWEEP — MANDATORY** (added 2026-08-05 per みや, so he never has to ask again). Forward-looking, axis-driven. Sweep **all five axes every time**: **A1** agentic system · **A2** quest workflow · **A3** debugging efficiency + accuracy · **A4** etanah issue-solving · **A5** sweep / file sweep. Produce BOTH: **(a)** an assessment with a concrete instance per claim → `system/agentic-ticket-workflow-assessment-<date>.md`, and **(b)** brainstormed forward ideas, each logged for the weekly audit:<br>`node core/slips.js add --type proposal --category <A1..A5> --evidence "<idea + eval case>" --caught-by self`<br>They surface in `slip-dashboard.md` under **💡 Open proposals**; weekly audit rules each BUILD/DROP/DEFER. Every idea names its **eval case** or it is a wish, not a proposal. Prefer mechanical (a hook that counts) over prose (a rule to remember). An axis with genuinely nothing gets `A<n> ⏭ <reason>` — silence is banned. Detail: `expansion-protocol.md` §Step 7.5. |
 | 8 | Closing words to みや (**fenced code block**) |
 | 9 | Change manifest (`git status` touched files) |
