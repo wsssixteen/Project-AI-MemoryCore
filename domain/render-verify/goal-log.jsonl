@@ -1,0 +1,2 @@
+{"ts":"2026-09-08T02:23:52.308Z","turn_id":"2167c6a4-2","feature":"render-verify","met":"n","mode":"judgment","gap":"fired on a release turn: docx compared for merge resolution, no template fix authored","improve":"skip when the turn is release-mlk-plp phase (state file present) or no template/CC edit happened","evidence":"2167c6a4-2"}
+{"ts":"2026-09-08T02:23:52.595Z","turn_id":"2167c6a4-3","feature":"render-verify","met":"n","mode":"judgment","gap":"same false-fire, next turn","improve":"same","evidence":"2167c6a4-3"}

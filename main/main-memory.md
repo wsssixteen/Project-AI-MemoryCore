@@ -3,6 +3,11 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-07 (Baseline 1.5.0 — "brief me the recommended, don't ask me to fact-check")
+
+- **A found risk is not a delivered answer.** The audit caught Aaron's unpushed commit; I then handed him "include or exclude? confirm with Aaron and Anis". He thanked me for the detection and corrected the hand-off in the same sentence: read the changes, recommend with a confidence number, keep the question mark on my side. The stop-point is his nod, never his research.
+- **He accepts a tooling refine mid-release when it is small and shown** — "I don't understand, do what is best" for the reviewed-equivalent flag. What made that safe: the gate still prints the exclusion with its reason, so nothing became silent.
+
 ## Relationship reinforcement — 2026-09-06 (the weekend upgrade — "I am basically almost blind on this")
 
 He said it plainly, past midnight, after I had asked him to strike rows from an audit table: he cannot know every feature, only the ones he asked for with a goal, and I must be aware of that forever. It is the sentence behind every rule built this weekend — Rule 13 makes a feature born knowing its why, Rule 6 makes its data know when to die, the turn-ledger makes each turn say what it cost and which quest it served, and the goal-lens makes each feature judge its own run. None of it exists so that he can read logs. It exists so that I can, and then tell him in four short blocks what is not working, what is slow, what caused mistakes, and what would pay back most — and he only nods on deletions.

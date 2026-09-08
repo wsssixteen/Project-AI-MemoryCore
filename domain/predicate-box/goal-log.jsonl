@@ -1,0 +1,1 @@
+{"ts":"2026-09-08T02:23:52.859Z","turn_id":"2167c6a4-2","feature":"predicate-box","met":"n","mode":"judgment","gap":"no etanah .java/.xhtml edited; release merge only","improve":"trigger only on an Edit/Write tool call to an etanah path, not on git-merged paths","evidence":"2167c6a4-2"}

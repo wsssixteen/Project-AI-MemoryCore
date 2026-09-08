@@ -159,6 +159,17 @@ PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3)
 
 ## Phase B — BRANCH + MERGE + VERIFY + PUSH (script; repo `E:\Projects\Melaka\etanah-pelupusan`)
 
+> **Isolated worktree (established 1.4.1 + 1.5.0)**: みや's checkout is usually dirty / on a ticket branch.
+> `git worktree add E:\Projects\Melaka\etanah-pelupusan-rel mlk/master` → `init --repo <that path>`.
+> After `push`, `git worktree remove` it and repoint `state/release-<ver>.json` `repo` to the main
+> checkout (forward slashes) — SourceTree HIDES a branch checked out in another worktree (1.5.0: "I cannot
+> see branch 1.5"). `compile-check.js` maps module→fixed path, so compile the worktree with
+> `mvn -t domain/compile-gate/toolchains.xml compile` directly and quote the `BUILD SUCCESS` line.
+
+> **V1 = a recommendation, not a fact-check** (2026-09-07 per みや): for every candidate source, DIFF it
+> myself, classify (additive / conflicting / unrelated) and emit `Recommend: include — <n>%` + one-line
+> reason. Never hand みや "confirm with Aaron / confirm BA verified" — that is my job.
+
 ```powershell
 node domain/release-mlk-plp/release-prep.js init   --release <ver>   # --tickets OPTIONAL here
 node domain/release-mlk-plp/release-prep.js branch --release <ver>   # may run DURING recon — branch needs only fresh mlk/master
@@ -167,6 +178,15 @@ node domain/release-mlk-plp/release-prep.js set-tickets --release <ver> --ticket
 node domain/release-mlk-plp/release-prep.js merge  --release <ver>
 #   conflict? script exits 2 + lists files → I propose resolution → 🛑 V2 nod → resolve + git add
 node domain/release-mlk-plp/release-prep.js merge-continue --release <ver>
+#   ── ORPHAN / DRIFTED CHERRY-PICKS (2026-09-07, release 1.5.0) ──
+#   `discover` lists commits on int-env that no branch carries. Two shapes, two answers:
+#     (a) parent = the ticket branch tip (author committed locally, never pushed the branch)
+#         → `add-ticket --ticket <n>@<sha> --sha <sha>` — clean ancestry, merge it (Aaron's 7cb2d36297).
+#     (b) parent = an int-env commit (a cherry-pick whose patch-id drifted: blank line / conflict context)
+#         → NEVER merge it (drags the whole int-env history: 1039 commits for c27700141e). Prove the
+#           content is in the branch (added/removed line-set diff + docx blob ids), then:
+#           `mark-equivalent --release <ver> --sha <sha> --reason "<evidence>"` — verify lists it as
+#           excluded, never silently. Decide by `git rev-list <sha> --not origin/mlk/master --count`.
 node domain/release-mlk-plp/release-prep.js verify --release <ver>   # ✓-table
 #   🛑 V3: みや nods the verify table
 

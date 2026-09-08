@@ -154,6 +154,18 @@ function ensureRepo(repo) {
     die(`PLP-ONLY GUARD: origin "${url}" is not etanah-pelupusan — refusing to touch this repo`);
   }
 }
+// Worktree preflight (2026-09-08, 4th occurrence of the missing-config friction): the gitignored
+// servers.local.json / redmine.local.json live only in the MAIN repo checkout. When this script runs
+// from a claude worktree (<main>/.claude/worktrees/<name>/domain/release-mlk-plp), seed them from main.
+function seedLocalConfigs() {
+  const m = __dirname.match(/^(.*)[\\/]\.claude[\\/]worktrees[\\/][^\\/]+[\\/]domain[\\/]release-mlk-plp$/);
+  if (!m) return;
+  const mainDir = path.join(m[1], 'domain', 'release-mlk-plp');
+  for (const f of ['servers.local.json', 'redmine.local.json']) {
+    const dst = path.join(__dirname, f), src = path.join(mainDir, f);
+    if (!fs.existsSync(dst) && fs.existsSync(src)) { fs.copyFileSync(src, dst); console.log(`· seeded ${f} from main repo`); }
+  }
+}
 function ensureClean(repo) {
   const s = gitOut(repo, ['status', '--porcelain']);
   if (s) die(`working tree NOT clean — stash/commit first:\n${s}`);
@@ -188,6 +200,7 @@ function cmdInit(a) {
   const repo = a.repo || DEFAULT_REPO;
   ensureRepo(repo);
   ensureClean(repo);
+  seedLocalConfigs();   // worktree preflight (2026-09-08): copy gitignored *.local.json from the main repo when absent
   // --tickets is OPTIONAL here (2026-07-16 per miya): the branch needs only fresh mlk/master,
   // so it can be cut while recon still decides the merge list — tickets land via `set-tickets`.
   const tickets = a.tickets ? parseTickets(a.tickets) : [];
@@ -326,6 +339,23 @@ function cmdAddTicket(a) {
   log('add-ticket', st.release, 'ok', entry);
   console.log(`✅ added #${entry.ticket} → ${entry.src}`);
   console.log(`phase=${st.phase} · next: \`merge\` (merges only the new entry) → \`verify\`${st.tickets.length ? '' : ''}`);
+}
+
+// mark-equivalent — record that an UNCOVERED commit's content IS in the release (a cherry-pick whose
+// patch-id drifted). Built 2026-09-07 (Baseline 1.5.0): #277295's int-env cherry-pick c27700141e differed
+// from the branch by ONE blank line, so `git cherry` called it uncovered. Human-reviewed, reason mandatory.
+function cmdMarkEquivalent(a) {
+  const st = loadState(a.release);
+  if (st.phase === 'pushed' || st.phase === 'merged-to-master') die(`MARK-EQUIVALENT REFUSED — phase is ${st.phase}`, 2);
+  if (!a.sha) die('--sha <commit> required');
+  if (!a.reason) die('--reason "<evidence>" required — an exclusion is a visible decision, never silent');
+  ensureRepo(st.repo);
+  const sha = gitOut(st.repo, ['rev-parse', '--verify', `${a.sha}^{commit}`]);
+  st.reviewedEquivalent = (st.reviewedEquivalent || []).filter(x => x.sha !== sha);
+  st.reviewedEquivalent.push({ sha, reason: a.reason, at: new Date().toISOString() });
+  saveState(st);
+  log('mark-equivalent', st.release, 'ok', { sha, reason: a.reason });
+  console.log(`✅ ${sha.slice(0, 10)} marked reviewed-equivalent — verify will list it as excluded, not uncovered`);
 }
 
 // drop-ticket — DEFER one ticket out of the merge list before push, visibly (recorded under st.deferred
@@ -471,9 +501,15 @@ function cmdVerify(a) {
   console.log('| Ticket | numbers searched | commits | orphan (branch deleted) | uncovered in release |');
   console.log('|---|---|---|---|---|');
   let uncoveredAll = [];
+  // reviewed-equivalent (2026-09-07, Baseline 1.5.0): a cherry-pick whose patch-id drifted (context /
+  // blank-line resolution) is CODE-uncovered to `git cherry` even though its content is in the release.
+  // `mark-equivalent --sha --reason` records the human verdict; it is EXCLUDED here but printed, never silent.
+  const reviewed = st.reviewedEquivalent || [];
   for (const [t, numbers] of Object.entries(numbersByTicket)) {
     const r = discoverTicket(st.repo, numbers, { noFetch: true, releaseRef: 'HEAD' });
-    const unc = r.uncovered || [];
+    const unc = (r.uncovered || []).filter(s => !reviewed.some(x => s.startsWith(x.sha)));
+    for (const x of reviewed.filter(x => (r.uncovered || []).some(s => s.startsWith(x.sha))))
+      console.log(`   — excluded (reviewed-equivalent) #${t} ${x.sha.slice(0, 10)}: ${x.reason}`);
     uncoveredAll.push(...unc.map(s => ({ t, s, c: r.commits.find(c => c.sha === s) })));
     console.log(`| #${t} | ${numbers.join(',')} | ${r.commits.length} | ${r.orphanTips.length} | ${unc.length ? '🚨 ' + unc.map(s => s.slice(0, 10)).join(',') : '0 ✓'} |`);
   }
@@ -694,7 +730,7 @@ function cmdStatus(a) {
 const a = parseArgs(process.argv.slice(2));
 const cmd = a._[0];
 const commands = {
-  init: cmdInit, branch: cmdBranch, discover: cmdDiscover, 'set-tickets': cmdSetTickets, 'add-ticket': cmdAddTicket, 'drop-ticket': cmdDropTicket, merge: cmdMerge,
+  init: cmdInit, branch: cmdBranch, discover: cmdDiscover, 'set-tickets': cmdSetTickets, 'add-ticket': cmdAddTicket, 'mark-equivalent': cmdMarkEquivalent, 'drop-ticket': cmdDropTicket, merge: cmdMerge,
   'merge-continue': cmdMergeContinue, verify: cmdVerify,
   'bump-common': cmdBumpCommon, 'bump-version': cmdBumpVersion,
   push: cmdPush, 'merge-to-master': cmdMergeToMaster, status: cmdStatus,
