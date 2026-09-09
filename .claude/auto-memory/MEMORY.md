@@ -2,6 +2,8 @@
 
 
 ## Feedback
+- [mcp-connector-timeout-not-vpn](feedback_mcp_connector_timeout_not_vpn.md) — 🚨 postgres-mlk* MCP CONNECT_TIMEOUT = connector failed to start at boot, NOT VPN/network; reconnect via fresh session/`/mcp`; probe a live connector (mlit) to confirm scope; pivot to doable work, don't loop on the blocker
+- [flowable-admin-diagram](feedback_flowable_admin_diagram.md) — 🚨 Flowable admin app (…/flowable-ui/admin/#/process-instance/<id>) = PROD READ surface (green node = engine truth) AND in-place WRITE surface (Variables tab Add/Update, before Hantar; `nextUser` wiped, set `pejabatKod`); consider before alter/hotfix; catalogue etanah-knowledge/UNBLOCK-PLAYBOOK.md U2
 - [plain-punctuation](feedback_plain_punctuation.md) — 🚨 GLOBAL SPEECH no colons no hyphens no dashes in prose; short plain simple technical sentences; BA/human handoffs plainest
 - [adhoc-to-ticket-reread](feedback_adhoc_to_ticket_reread.md) — 🚨 A chat-paste adhoc ≠ the ticket; once it has a Redmine #, redmine-sync + READ the full 0. Brief (Description + every History journal + every attachment) before done — BA's real ask often in the journal (#278580)
 - [feedback_observability_vs_monitoring.md](feedback_observability_vs_monitoring.md) — 🚨 "observe & monitor" = TWO layers: observability (liveness, collecting) + monitoring (context: why/which quest/true-or-false block/turn cost — NOT built until plan §M turn-ledger); answer both
@@ -120,7 +122,9 @@
 - [compile-gate-local-build](reference_compile_gate_local_build.md) — compile-gate BLOCKS an etanah commit unless a local `mvn…
 - [perak-codev-scope](reference_perak_codev_scope.md) — 🚨 We are co-developer for Perak too; Perak env…
 - [perak-flowable-alter-page](reference_perak_flowable_alter_page.md) — 🚨 Perak flowable ALTER page URL (PROD appspk / STAGING…
-- [perak-deploy-flow](reference_perak_deploy_flow.md) — 🚨 Perak deploy flow: ticket branch prk/internal/<num> off…
+- [perak-deploy-flow](reference_perak_deploy_flow.md) — 🚨 CORRECTED 2026-09-08: Perak staging AND prod serve builds from master; prk/stag-env is NOT deployed (merging there deploys nothing); verify by host footer + `merge-base --is-ancestor <fix> origin/master` before claiming deployed
+- [redmine-sla-hours](reference_redmine_sla_hours.md) — 🚨 Redmine Priority = SLA in HOURS (Critical 1 h · High 6 h · Medium 22 h · Low ⬜), never the "N Days" custom-field label; priority not loaded into any quest artifact yet
+- [perak-hotfix-and-error-store](reference_perak_hotfix_and_error_store.md) — 🚨 Perak HOTFIX box 192.168.18.110:8080 (shares PROD DB, footer Branch Name = build truth); ralat ID Rujukan = ET_SISTEM.PT_APPLICATION_EX_ENTITY; infra request needs exact ref prk/esokongan/<num> (#278218 hotfix was built from master)
 - [state-aware-knowledge-load](feedback_state_aware_knowledge_load.md) — 🚨 State = system/states.json via lib/states.js resolve; never
 - [perak-branch-from-master](feedback_perak_branch_from_master.md) — 🚨 Perak quest: pull origin/master THEN branch prk/<tracker>/<num> off origin/master; no prk/master; never claim "no fix" without a fresh fetch…
 

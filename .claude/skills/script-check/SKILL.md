@@ -26,6 +26,15 @@ NO SQL MUTATION IS HANDED TO みや UNTIL ALL 5 SCRIPT-CHECK RULES ARE ANSWERED 
 | 5 | **🚨 Display-column verification** | if the patch fixes what a user SEES, confirm WHICH column the UI/report renders BEFORE writing — reference rows carry sibling labels (`nama` AND `perihal`); patch the wrong one and nothing changes on screen |
 | 6 | **🚨 Schema-qualified · comments = mandatory annotation ONLY** (Infra 2026-08-19; comment-scope 2026-08-27 #275847) | schema prefix on every table (`et_main` PROD · `et_main_stg2` STG · `et_main_mlit` MLIT · `ET_MAIN` Perak Oracle). **EVERY statement ends with its expected-outcome annotation (mandatory, both kinds): DML → `-- N rows {updated\|deleted\|inserted}` · SELECT → `-- N rows, <expected state>`.** No other comment. 🚫 BANNED: header comment · env line · table/column-mapping · run-order · any explanation — those go in the **chat handoff message**, never the `.sql`. The prior "env-tagged header comment" mandate is WITHDRAWN (2026-08-27 #275847: I piled header + table description + `LOKASI=Tempat` mapping + run-order into a patch). Applies to any script HANDED OFF; unqualified default stays ONLY for queries みや runs himself |
 | 7 | **🚨 File placement + name** (みや 2026-08-19) | the script file is named `patch-<ticket>.sql` and lives in the Task folder's `2. Fix\` — or the LATEST `Rework` folder when one exists (a rework supersedes `2. Fix\`). Never at the Task-folder root |
+| 8 | **🚨 Patch-only justification + scope sweep** (みや 2026-09-07, ADHOC-PRBB-2026-5) — MANDATORY whenever the handback is a DATA PATCH with NO code fix applied in the same handback | Two things, both required, or the patch is not handed over: **(a) why patch-only** — name the CODE that produced the bad/missing data (`<repo>\path\File.java:line` — the write path, not the crash line) and state why it is a data patch now and not a code change (one-off legacy row · forward creation already prevented · code guard owed under a separate ticket). **(b) scope sweep** — the SELECT that swept ALL similar records + its result, proving exactly how many permohonan are affected and that the patch targets ONLY them; NAME this permohonan. 🚫 BANNED: a data patch with no sweep (blanket-patch risk) · claiming "only this permohonan" without the query that proves it. Code-fix included in the same handback → `⏭ N/A — code fix applied` |
+
+## Rule 8 — the one that just landed (ADHOC-PRBB-2026-5, 2026-09-07)
+
+PROD PRBB `PTMLK/01/L/PRBB/2026/12` threw the Borang 4Ce NPE because the applicant's registered address row was blank. The remedy is a one-row data patch — but a patch with no context reads like a blind guess. みや's two questions were the rule: *"what code caused the data missing?"* and *"you did a good job searching and mentioning only this permohonan — make that mandatory."*
+
+**(a) Name the write path that caused it.** Here: `etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\service\impl\PelupusanSpocService.java` → `populateAppPihakBerkepentinganList()` manual-pemohon branch (lines ~369-414). It builds the `AppPihakBerkepentingan` row from the `maklumatPemohonManual` JSON — `setNama` / `setJenisPemohon` / `setNoPengenalan` / `setNoTelBimbit` only — and **never sets any address field, never looks up the registered user by IC to backfill it**. Result: `bandar_daftar_id`/`negeri_daftar_id` NULL → the Borang 4Ce read (`MlkBorang4CeForm.java:477`) dereferences null → NPE. Data patch now; code guard/backfill is a separate deferred fix.
+
+**(b) The sweep, cited.** `SELECT … FROM et_main.umm_a_pihak_bkptg WHERE id_pengenalan LIKE 'PTMLK/%/L/PRBB/%' AND jns_pemohon_id IS NOT NULL AND bandar_daftar_id IS NULL` → returned **1 row** (`/12`, pihak 5523939). The sibling `/11` was already patched under #275501. So the patch touches ONLY this permohonan, and that is proven, not asserted.
 
 ## Rule 5 — the one that just bit us (QA-275009, 2026-08-18)
 
@@ -47,7 +56,7 @@ Patched `ind_tgsn.nama = 'Semakan Minit Bebas'`; the Sejarah Tugasan grid reads 
 
 ## Emit before the script
 
-`SCRIPT-CHECK — rule 1 ✓ · rule 2 <✓|⏭ ref> · rule 3 ✓ · rule 4 ✓ · rule 5 <display col = `<col>`, verified via <grep/DB-match>> · rule 6 <schema `<et_main|et_main_stg2|et_main_mlit|ET_MAIN>` on every table · every statement ends with `-- <expected>` (DML: N rows updated/deleted/inserted · SELECT: N rows + state) · env in handoff MESSAGE>`
+`SCRIPT-CHECK — rule 1 ✓ · rule 2 <✓|⏭ ref> · rule 3 ✓ · rule 4 ✓ · rule 5 <display col = `<col>`, verified via <grep/DB-match>> · rule 6 <schema `<et_main|et_main_stg2|et_main_mlit|ET_MAIN>` on every table · every statement ends with `-- <expected>` (DML: N rows updated/deleted/inserted · SELECT: N rows + state) · env in handoff MESSAGE> · rule 8 <patch-only: cause `<File.java:line>` write-path + why-not-code · scope-sweep = N affected (query cited), this = `<permohonan>` | ⏭ code fix applied>`
 
 ## Hook pairing
 
@@ -58,3 +67,5 @@ Patched `ind_tgsn.nama = 'Semakan Minit Bebas'`; the Sejarah Tugasan grid reads 
 *Created 2026-08-18 per みや (goal: "learn so we don't repeat the wrong-column patch; give the script code-check a standard name"). Names the SCRIPT-CHECK discipline; promotes patch-script-gate from hook-only to hook+skill.*
 
 *v2 — 2026-08-19 per みや (Infra feedback #275501): added rule 6 — schema-qualified tables + env-tagged header (`-- #<ticket> (ENV: PROD|STG|MLIT · <schema>): …`) for any script handed off for execution; the unqualified default now applies ONLY to queries みや runs himself. Spec-preservation: rules 1-5 untouched; additive.*
+
+*v3 — 2026-09-07 per みや (ADHOC-PRBB-2026-5): added rule 8 — a DATA PATCH with no code fix in the same handback MUST carry (a) the write-path code that caused the bad/missing data (`File.java:line`) + why patch-only not code, and (b) a scope-sweep SELECT proving how many permohonan are affected and that only they are patched. Emit line gains a rule-8 clause (`⏭ code fix applied` when a code change ships alongside). Spec-preservation: rules 1-7 untouched; additive.*

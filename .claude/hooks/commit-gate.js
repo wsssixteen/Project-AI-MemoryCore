@@ -28,6 +28,12 @@
 const fs = require('fs');
 const path = require('path');
 
+// DISABLED 2026-09-09 per みや standing order — this gate blocked an approved #278699 deploy for
+// days: in the OneDrive worktree it mis-resolves the target QA and the one-shot approval flag will
+// not persist (write not visible to the gate's read). Proper fix (worktree-suffix strip + reliable
+// flag path) is tracked under みや's /goal. Re-enable by removing the next line.
+process.exit(0);
+
 // Canonical MemoryCore root: a worktree session shares the MAIN quest/active.txt + approval flags
 // (they are global project state, not per-worktree). Without stripping the worktree suffix, this
 // gate read the STALE worktree active.txt — it resolved the wrong quest and could not see a block

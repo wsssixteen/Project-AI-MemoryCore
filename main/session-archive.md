@@ -4,6 +4,25 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-09-06 (S1, 13:00–2026-09-07 01:40) — WEEKEND SYSTEM UPGRADE: P0 turn-ledger monitoring layer + Rules 6/13/14 + feature audit run 1 + plan §9 autonomous-upgrade builds
+
+**Arc**: miya opened with "do we have a weekly audit?" → confirmed the 3 asks (observability+monitoring · quest workflow · etanah-knowledge/folder structure) against disk with evidence → re-sequenced the plan P0–P5 (nothing removed by hand; removal only at P5 from true_blocks + goal_met) → he asked for housekeeping as a RULE (system-rules Rule 6) and "audit first, then GO" → feature audit run 1 (164 rows) → P0 BUILT → findings brief → six new asks → /goal "Fix all except 7 & 10; add 7 & 10 into todo; then DE" → all built, eval-green, committed.
+
+**Corrections from miya this session**: (1) "I AM NOT GOING TO RISK YOU REMOVING SOMETHING … EVEN THOUGH THE EVALS TOLD YOU IT IS WORKING" → per-row audit table + safety ladder; nothing struck by hand. (2) "I am basically almost blind on this … you need to be aware of this fact forever" → memory `user_miya_blind_to_features`; Ruri owns the audit from logs + goals. (3) "why audit first? you didn't do it before?" → slip `reask/choice-offering` logged; audit run 1 executed instead of offered. (4) "please add [housekeeping] into system design or rules" → Rule 6 shipped same turn.
+
+**Built (all forge-born where new; every eval green; commits 56926c9 · 9257102 · 10491cb · e797438 · afeb3fc on branch `claude/weekly-todo-audit-log-bc047a`)**:
+- Rules: system-rules v1.2 Rule 6 data lifecycle · system-design v2.8 Rules 13 (WHY-chain at birth) + 14 (placement at birth) · forge requires `--symptom --goal --signal --retention` · birth-gate blocks README without goal/retention · census `goal-less`/`no retention` gaps.
+- §M monitoring: `lib/turn-context.js` (turn_id stamp, lock-file mutex, attribution named→active→null; eval 11/11) · hook-fires rows carry turn_id/qa/phase/fired/reason · `domain/turn-ledger` (one wide row per turn incl. tokens; fp: bypass convention; goal-lens prompts; refute→wrong-fix advisory; eval 23/23) · `de-close-gate` C5 watch discipline (17/17) · `lib/goal-lens.js` · `lib/turn-report.js` → `system/monitoring-dashboard.md` · `lib/housekeeping.js` · DE 12.5 rows (Monitoring + housekeeping · Redmine-Closed upgrade search). `reply-log.js` Stop registration removed (tombstoned; restore line in turn-ledger README).
+- §9: `lib/wrong-fix.js` (14/14) + `quest/archive-quest.js` Step -0.5 verdict gate + close-phase Phase 1 step 0 / Phase 2 step 0 🔧 WORKFLOW UPGRADE · `lib/audit-briefing.js` + skill `/system-audit` · `lib/goal-backfill.js` (52 drafts + 1 hand-promoted → census 0 goal-less) · `domain/skill-invocation-log` (7/7).
+- Evals: battery had NOT run since 2026-08-16 → now 100/101 green (bpmn-check E2 = corpus drift, needs BPMN re-baseline); live-action-safety-gate + release merge-scenarios quarantined with classification; 4 of 5 failures proven pre-existing at 56926c9 in a temp worktree.
+- Audit run 1: `system/feature-audit-2026-09-06.md` (KEEP 119 · REFINE 8 · RETIRE? 2 · DEAD-DIR? 19 · SKILL 10 · CONTAINER 5). Data limit found: Stop-bundle children were under-counted → fixed by turn_id join from this session on.
+
+**Live proof**: turn `6305e5a3-11` row = 11 tool calls · 190 hook fires · 41,948 ms hook time · 0 blocks. Boot = 46 s × 173 boots = 2.2 h/30 d (Q7 is the first speed win). Attribution fix landed after the last prompt; first correctly-attributed row lands next session.
+
+**Deferred (todo Q2, per miya)**: 9g adhoc 10-day sweep (propose-only) · Redmine reconcile of 23 open blocks (office network; 16 numbered unverified, 7 numberless adhocs = miya's call).
+
+**Resume**: next session opener = `/system-audit` (first live run of the briefing skill) → answer any goal-lens pending prompts → P2 rows Q3/Q5/Q7 (add-only). At the office: `node quest/redmine-reconcile.js` → Phase-2 🔧 WORKFLOW UPGRADE on the Redmine-Closed quests (first real test of 9b). ADHOC-REDMINE-RC-2026-1 deadline Tue 2026-09-08 untouched this session.
+
 ## 2026-09-04 (S6, 15:38–17:45) — #278304 + #277442 PROD patches (both DONE) · speed-optimization plan + turn-ledger MONITORING design · 6 knowledge banks
 
 **Arc**: miya: "let's do this 2 tickets" (#278304, typo'd #2774422 → resolved to #277442 via API). Both = PROD data patches with a user-verified Alex precedent. **#278304** (MLPS `PTMLK/02/L/MLPS/2026/4`, nurulazura, Tempat="PT 1138") = ad-hoc register **A14 class** → #275587 shape; PROD row 45674 + source lesen row 4332 proven; script `Task 179\2. Fix\278304.sql` (permohonan row + source row `tempat='-'`, schema-verified + stamped) → miya sent to infra → **passed in Redmine**, QA-278304 closed. **#277442** (Aaron's, batal 4 UPS_PLP `/3 /4 /7 /9`) = #276229 shape + 2 extra statements (close live `umm_a_tgsn` via `trkh_tetap`, DELETE `umm_tgsn_semasa` — dashboard has no Tamat filter); Task folder 181 hand-built; **Alex ran his own patch 16:22 MYT before we sent ours** (PROD verified 4/4 Tamat/Batal/Tamat); QA-277442 closed shipped-by-other. miya then asked for a full `/quest` second opinion "for security & safety": two `quest-phase0` runs (tiered scratchpad copy, 22 agents, **2.43 M tokens, 26 min**) upheld both scripts, added copier lines `PelupusanSpocService.populateAppPermohonanTanahFromInduk():1051/:1073/:1089`, 0 new decisions; one verifier wrongly claimed `SYSDATE` fails on Postgres (PROD is EDB — proven by `SELECT SYSDATE`).
@@ -4883,6 +4902,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

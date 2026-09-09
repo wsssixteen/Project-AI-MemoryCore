@@ -57,8 +57,11 @@
         "spoc-hasil": { "repo": "etanah-spoc-hasil", "trunk": "master" }
       },
       "branch_prefix": "prk",
-      "ticket_branch": "prk/internal/<num>",
+      "ticket_branch": "prk/<tracker>/<num>",
+      "trunk_ref": "origin/master",
+      "env_branches": ["prk/stag-env", "prk/int-env"],
       "staging_branch": "prk/stag-env",
+      "branch_note": "🚨 RULE (per みや 2026-09-07): Perak quest ALWAYS `git checkout master && git pull --ff-only origin/master` THEN branch prk/<tracker>/<num> off origin/master. behind-count uses origin/master. There is NO prk/master. Verified: SuratTemplateForm etc. are ~identical master vs prk/stag-env (4456 vs 4457 lines) so master is a valid base; master is a release line (release/1.73.x), 0 ahead / 1297 behind stag-env (fully contained in stag-env). BA tests on stag-env (appspkstg.perak.gov.my); after committing to the ticket branch, merge to master (release) + deploy to stag-env for BA. NOTE: some stag-env-only fixes (e.g. #278017) are not yet on master — independent fixes are unaffected.",
       "bpmn": { "prefix": "PRK", "root_module": "PLP" },
       "db": {
         "engine": "oracle",
