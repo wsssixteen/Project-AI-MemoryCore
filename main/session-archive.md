@@ -4,6 +4,30 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-09-07 (S1, 15:29–2026-09-08 00:10) — Baseline 1.5.0 SHIPPED end-to-end (branch → BAQA pass → mlk/master) · release tooling hardened
+
+**Arc**: miya pasted the BAQA "Planned Release Melaka 7/9/2026 — Deploy Pelupusan 1.5.0, common 1.5.8-MLK, #262049 CR + #277295 eSOKONGAN". Recon (`redmine-recon.js`) → both CODE-BRANCH, no SQL. `audit-ticket` + `discover` surfaced two int-env orphans: **7cb2d36297** (Aaron, today 12:00, parent = `mlk/CR/262049` tip, never pushed to the branch — adds `TemplateRisalatMMKN_PDT_PT_AdaPemilikan_Bujang.docx` + config) and **c27700141e** (my cherry-pick of #277295's first two commits, one blank line of patch-id drift, parent ON int-env → merging it would drag 1039 commits). Built release in an isolated worktree `E:\Projects\Melaka\etanah-pelupusan-rel` (his checkout dirty on `mlk/esokongan/277295`). V1: miya chose include (a) + "do what is best" for the gate. V2: one binary conflict `MaklumatPemohon.docx` — Aaron's blob = master's #275009 keepNext fix + 2 Pemilikan tables (12 CC tags), identical to the int-env blob BA tested → took Aaron's. Compat gate: common 1.5.4→1.5.8-MLK both etanah-domain 1.0.8-MLK = STG `V_DOMAIN`. Local `mvn compile` BUILD SUCCESS. Pushed `105903217e`. BAQA (Mira/Fizah/Anis) passed same evening → `merge-to-master --ba-approved` FF `0b7b5cff37 → 105903217e`, tag `mlk/pre-master-merge/1.5.0`.
+
+**Corrections from miya**: (1) "check straight away the code changes and brief me the recommended with higher confidence instead of asking me to fact check you" → memory `feedback_release_recommend_dont_ask` + skill V1 rule + slip `ask-back/fact-check`. (2) "I cannot see branch 1.5 in SourceTree" → SourceTree hides worktree-checked-out branches; worktree removed after push, state `repo` repointed (forward slashes).
+
+**Built**: `release-prep.js` `mark-equivalent --sha --reason` (verify prints it as excluded, never silent) + `seedLocalConfigs()` at init (copies `*.local.json` from main repo when running in a claude worktree; 4th occurrence of that friction) · skill Phase B: orphan two-shape rule (a) add-ticket / (b) mark-equivalent, isolated-worktree procedure, V1-recommend rule. Eval 26/26 green.
+
+**Other CR branches NOT in master** (miya asked): `mlk/CR/256334` 60 commits (Aaron, In Progress, deferred since 1.4.1) · `mlk/CR/263304` 15 · `mlk/CR/259110` 6 · `mlk/CR/256335` 2.
+
+**Proposals logged**: discover.js blank-line-tolerant equivalence (A2) · render-verify/predicate-box false-fire on release turns (A1).
+
+**Resume**: release 1.5.0 phase=merged-to-master, nothing pending. QA-277295 Phase 2 archive (`node quest/archive-quest.js QA-277295`) at next close-out. Aaron to push `mlk/CR/262049` at 7cb2d36297 (hygiene only). ADHOC-REDMINE-RC-2026-1 deadline Tue 2026-09-08 still untouched.
+
+## 2026-09-07 (S1, 16:29–17:55) — #278585 PT upload >1 MB: quest start → 1-line fix → commit/int-env → miya PASSED on Redmine · Phase 1 CLOSED · Solution row added to hand-back
+
+**Arc**: `/quest start 278585` (ESOKONGAN, PDTJ sitihanum, PT `PTMLK/02/L/PT/2026/6` apl 3404515, Penyediaan Risalat MMKN - PDT). BA Nurhafizah: >1 MB file does not appear after upload. Scout in one pass: `mlkUlasanJabatanTeknikalDataTable.xhtml:121` hard-codes `sizeLimit="1000000"`; composite default = `WebUtil.getFileUploadSizeLimit()` 1 GB (`fileUpload.xhtml:77`); PDF sizes lined up exactly (JKR 880,316 shown · MPJ 1,141,931 + Pertanian 1,539,243 absent); PROD `umm_a_dok_kmskn` had exactly 1 JT row; Kedah (chanjun `0576fc1ab6` 2026-09-04) fixed the identical shape 3 days earlier. miya: "straightforward, commit and push to deploy" → `mlk/esokongan/278585 @ 9a2d49f8f7` → compile-gate green → cherry-pick `mlk/int-env @ ce30128a07` → deploy card → miya deployed, tested on mlit, **PASSED in Redmine**. Phase 1 closed 17:5x; Phase 2 archive pending.
+
+**Corrections from miya**: (1) "add a Solution row next to Root cause" → built into quest SKILL.md hand-back (2-col table) + `rootcause-format` hook extended (eval 18/18) + memory; (2) "10000 TB file accepted now?" → answered with the 3-layer limit diagram (browser 1 GB default · Undertow max-post-size · DMS); he ruled **keep the sibling default, bank the knowledge** → FLOW-TRACES.md §Upload SIZE limits + index row; (3) 🚨 test scenario named `PTMLK/01/L/PLPS/2026/21` with **0 JT rows** (panel empty) — "are you still a dumb fuck…" → slip `test-data-not-from-live-state`, picking query now counts `umm_a_jabatan_teknikal` rows; corrected app `PTMLK/03/L/PT/2026/16` @ anizah (3 rows).
+
+**Gate frictions**: `redmine-write-gate` false-positive on read-only `ticket-load-verify.js` + `lib/states.js resolve` (proposal logged) · commit-approval hook parsed **QA-276549** from my reply (stray flag `.claude/state/commit-approved-QA-276549.flag`, attachment-ledger then demanded 276549's files) · `compile-check.js run pelupusan` wants the full module name `etanah-pelupusan`.
+
+**Resume**: `close` QA-278585 → Phase 2 archive + bounty. Ticket still needs the Redmine planned-release list. #278580 (A28 twin) Task folder 187 created by the sync, untouched.
+
 ## 2026-09-06 (S1, 13:00–2026-09-07 01:40) — WEEKEND SYSTEM UPGRADE: P0 turn-ledger monitoring layer + Rules 6/13/14 + feature audit run 1 + plan §9 autonomous-upgrade builds
 
 **Arc**: miya opened with "do we have a weekly audit?" → confirmed the 3 asks (observability+monitoring · quest workflow · etanah-knowledge/folder structure) against disk with evidence → re-sequenced the plan P0–P5 (nothing removed by hand; removal only at P5 from true_blocks + goal_met) → he asked for housekeeping as a RULE (system-rules Rule 6) and "audit first, then GO" → feature audit run 1 (164 rows) → P0 BUILT → findings brief → six new asks → /goal "Fix all except 7 & 10; add 7 & 10 into todo; then DE" → all built, eval-green, committed.
@@ -4902,6 +4926,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
