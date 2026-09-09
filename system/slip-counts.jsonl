@@ -524,6 +524,11 @@
 {"ts":"2026-09-06T17:39:31.239Z","category":"A3"}
 {"ts":"2026-09-06T17:39:31.408Z","category":"A2"}
 {"ts":"2026-09-06T06:04:59.587Z","category":"asking-back"}
+{"ts":"2026-09-08T02:20:05.774Z","category":"ask-back/fact-check"}
+{"ts":"2026-09-08T02:20:06.065Z","category":"A2"}
+{"ts":"2026-09-08T02:20:06.322Z","category":"A1"}
+{"ts":"2026-09-08T02:23:28.957Z","category":"A3"}
+{"ts":"2026-09-08T02:23:29.790Z","category":"A1"}
 {"ts":"2026-09-07T08:38:00.331Z","category":"A2"}
 {"ts":"2026-09-07T09:29:22.038Z","category":"test-data-not-from-live-state"}
 {"ts":"2026-09-07T09:56:50.187Z","category":"A4"}
@@ -556,3 +561,6 @@
 {"ts":"2026-09-09T06:05:57.738Z","category":"collateral-change"}
 {"ts":"2026-09-09T06:28:15.335Z","category":"A3"}
 {"ts":"2026-09-09T06:28:15.457Z","category":"A3"}
+{"ts":"2026-09-08T02:31:11.997Z","category":"build-missed-requirement"}
+{"ts":"2026-09-08T03:07:00.753Z","category":"eval-green-hook-dead"}
+{"ts":"2026-09-08T03:07:00.986Z","category":"A1"}

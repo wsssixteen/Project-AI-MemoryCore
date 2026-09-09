@@ -11,7 +11,8 @@ function check(n, c, d) { results.push({ n, pass: !!c, d }); }
 const CLOSE_BANNER = '═══ [ Domain Expansion — closed ] ═══\nBarrier settles. Quest threads are at rest.';
 const FRESH_LOG = [JSON.stringify({ ts: new Date().toISOString(), via: 'resume-readiness', checked: 2, gaps: 0 })];
 const STALE_LOG = [JSON.stringify({ ts: '2026-08-01T00:00:00Z', via: 'resume-readiness', checked: 2, gaps: 0 })];
-const FRESH_RECON = [JSON.stringify({ ts: new Date().toISOString(), action: 'reconcile-ran', detail: 'open=11' })];
+const FRESH_AUDIT = JSON.stringify({ ts: new Date().toISOString(), action: 'audit-briefing-ran', notWorking: 3, rulings: 2 });
+const FRESH_RECON = [JSON.stringify({ ts: new Date().toISOString(), action: 'reconcile-ran', detail: 'open=11' }), FRESH_AUDIT];
 const STALE_RECON = [JSON.stringify({ ts: '2026-08-01T00:00:00Z', action: 'reconcile-ran', detail: 'open=20' })];
 
 function run(overrides) {
@@ -91,6 +92,12 @@ check('F11 no redmine-reconcile -> BLOCK', r.status === 2 && /C4/.test(r.stderr 
 // F12: stale reconcile row (>12h) -> BLOCK (C4)
 r = run({ _testGateLogLines: STALE_RECON });
 check('F12 stale reconcile -> BLOCK', r.status === 2 && /C4/.test(r.stderr || ''), 'exit=' + r.status);
+
+// F17/F18 — C6 audit-briefing-ran (2026-09-08): fresh reconcile but NO audit row -> BLOCK C6; stale audit row -> BLOCK C6
+r = run({ _testGateLogLines: [JSON.stringify({ ts: new Date().toISOString(), action: 'reconcile-ran', detail: 'open=11' })] });
+check('F17 no audit-briefing-ran row -> BLOCK C6', r.status === 2 && /C6 AUDIT BRIEFING NOT RUN/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr.slice(0, 120));
+r = run({ _testGateLogLines: [JSON.stringify({ ts: new Date().toISOString(), action: 'reconcile-ran', detail: 'open=11' }), JSON.stringify({ ts: '2026-08-01T00:00:00Z', action: 'audit-briefing-ran' })] });
+check('F18 stale audit-briefing-ran row -> BLOCK C6', r.status === 2 && /C6 AUDIT BRIEFING NOT RUN/.test(r.stderr), 'exit=' + r.status);
 
 // F13: gate log holds blocked/passed rows but a fresh reconcile-ran too -> pass (row-type filter)
 r = run({ _testGateLogLines: [JSON.stringify({ ts: new Date().toISOString(), action: 'blocked', detail: 'C1' })].concat(FRESH_RECON) });

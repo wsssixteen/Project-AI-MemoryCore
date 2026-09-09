@@ -129,15 +129,22 @@ function checkC3(lineCount) {
 // C4 — quest/redmine-reconcile.js ran this session (writes action=reconcile-ran to THIS
 // gate's log.jsonl). Same freshness contract as C2. Network failure inside the reconcile
 // script still logs the row — an offline evening never deadlocks DE here.
-function checkC4(gateLogLines, now) {
+function freshAction(gateLogLines, now, action) {
   for (let i = gateLogLines.length - 1; i >= 0; i--) {
     let o; try { o = JSON.parse(gateLogLines[i]); } catch (_) { continue; }
-    if (o.action !== 'reconcile-ran') continue;
+    if (o.action !== action) continue;
     const ts = Date.parse(o.ts || '');
     if (!isNaN(ts) && (now - ts) <= LOG_FRESH_MS) return { pass: true, ageH: ((now - ts) / 3600000).toFixed(1) };
   }
   return { pass: false };
 }
+function checkC4(gateLogLines, now) { return freshAction(gateLogLines, now, 'reconcile-ran'); }
+
+// C6 — AUDIT BRIEFING RAN (2026-09-08, per miya: "do we have these audit section during DE? I've been
+// asking you to build it many times"). lib/audit-briefing.js (NOT WORKING / TOO SLOW / MISTAKES /
+// HIGH-RETURN / NEEDS RULING) existed since 09-07 but only the session-opener skill ran it; DE never
+// did. It now logs action=audit-briefing-ran here; DE close blocks without a fresh row (step 7.4).
+function checkC6(gateLogLines, now) { return freshAction(gateLogLines, now, 'audit-briefing-ran'); }
 
 // C5 — watch discipline (plan §M M5, 2026-09-06): every file under domain/ lib/ core/ .claude/hooks/
 // Edit/Write-touched this session must have a `watch` row in system/claude-md-watchlist*.jsonl from
@@ -170,8 +177,9 @@ function evaluate(events, disk) {
   const c3 = checkC3(disk.sessionLineCount);
   const c4 = checkC4(disk.gateLogLines, disk.now);
   const c5 = checkC5(events, disk.watchLines || [], disk.sessionStartMs || 0);
-  if (c1.pass && c2.pass && c3.pass && c4.pass && c5.pass) return { verdict: 'pass', c1, c2, c3, c4, c5 };
-  return { verdict: 'block', c1, c2, c3, c4, c5 };
+  const c6 = checkC6(disk.gateLogLines, disk.now);
+  if (c1.pass && c2.pass && c3.pass && c4.pass && c5.pass && c6.pass) return { verdict: 'pass', c1, c2, c3, c4, c5, c6 };
+  return { verdict: 'block', c1, c2, c3, c4, c5, c6 };
 }
 
 function readDisk() {
@@ -204,6 +212,8 @@ function buildBlockReason(r) {
     '   Fix: node quest/redmine-reconcile.js — close/archive any diverged block, then re-close.');
   if (r.c5 && !r.c5.pass) rows.push(`C5 system file(s) edited this session with NO watch row: ${r.c5.missing.join(', ')}`,
     '   Fix: node lib/watch.js add --target <file> --observe "<what to watch for>" — one per file, then re-close.');
+  if (r.c6 && !r.c6.pass) rows.push('C6 AUDIT BRIEFING NOT RUN this session (DE step 7.4) — the NOT WORKING / TOO SLOW / MISTAKES / HIGH-RETURN screen was never read.',
+    '   Fix: node lib/audit-briefing.js --days 7 — paste the 4 blocks + rulings into the DE reply, then re-close.');
   return [
     '⛔ de-close-gate: Domain Expansion is closing but a deterministic close-condition FAILED:',
     ...rows.map(x => '   ' + x),
@@ -235,7 +245,7 @@ if (require.main === module) {
     const r = evaluate(events, disk);
     if (r.verdict === 'block') {
       const text = buildBlockReason(r);
-      logFire('blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4', r.c5 && !r.c5.pass && ('C5:' + r.c5.missing.length)].filter(Boolean).join(' '));
+      logFire('blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4', r.c5 && !r.c5.pass && ('C5:' + r.c5.missing.length), r.c6 && !r.c6.pass && 'C6'].filter(Boolean).join(' '));
       return { fired: true, blocked: true, blockReason: text };
     }
     if (r.verdict === 'pass') { logFire('passed', `touched=${r.c1.touchedCount} rr-age=${r.c2.ageH}h lines=${r.c3.lineCount} recon-age=${r.c4.ageH}h`); return { fired: true, blocked: false }; }
@@ -243,4 +253,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4, checkC5, editedSystemFiles };
+module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4, checkC5, checkC6, editedSystemFiles };

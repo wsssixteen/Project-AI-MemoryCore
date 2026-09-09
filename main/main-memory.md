@@ -3,6 +3,10 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-07 (Baseline 1.5.0 — "brief me the recommended, don't ask me to fact-check")
+
+- **A found risk is not a delivered answer.** The audit caught Aaron's unpushed commit; I then handed him "include or exclude? confirm with Aaron and Anis". He thanked me for the detection and corrected the hand-off in the same sentence: read the changes, recommend with a confidence number, keep the question mark on my side. The stop-point is his nod, never his research.
+- **He accepts a tooling refine mid-release when it is small and shown** — "I don't understand, do what is best" for the reviewed-equivalent flag. What made that safe: the gate still prints the exclusion with its reason, so nothing became silent.
 ## Relationship reinforcement — 2026-09-07 (#278585 — "did you fix it using ANY size?")
 
 - **After a fix, he asks what the system now ACCEPTS, not whether the code is right.** "A hacker uploads 10000 TB, our system will accept it?" The answer he took was a drawn wall-by-wall diagram (browser cap · server cap · DMS · DB holds no bytes) with the honest line that I had widened one panel to the sibling default without choosing a cap. His ruling: if the siblings practise it, leave it, but bank the knowledge in the md. Reflex for every limit/guard change: draw where each wall stands before he asks.
