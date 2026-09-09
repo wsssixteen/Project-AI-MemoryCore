@@ -651,20 +651,30 @@ function cmdMergeToMaster(a) {
   git(st.repo, ['checkout', 'mlk/master']);
   git(st.repo, ['merge', '--ff-only', 'origin/mlk/master']);
   const masterBefore = gitOut(st.repo, ['rev-parse', 'HEAD']);
+  // Drift guard (this was the old `--ff-only`'s implicit job): master MUST be an ancestor of the
+  // release tip, else it carries commits the release does not — stop and reconcile, never force.
+  if (git(st.repo, ['merge-base', '--is-ancestor', masterBefore, releaseTip], true).status !== 0)
+    die(`MERGE-TO-MASTER REFUSED — origin/mlk/master (${masterBefore.slice(0, 10)}) is NOT an ancestor of ${st.branch} (${releaseTip.slice(0, 10)}); master drifted — reconcile before merging`, 2);
   const tag = `mlk/pre-master-merge/${st.release}`;
   git(st.repo, ['tag', '-f', tag, masterBefore]);            // local undo point
-  git(st.repo, ['merge', '--ff-only', `origin/${st.branch}`]); // FF only — a non-FF means master drifted; stop and think
+  // --no-ff ALWAYS: a real merge commit records WHO merged and WHEN for managers / SourceTree.
+  // A fast-forward writes no merge commit and hides the merge (rule: feedback_master_merge_no_ff, #277697).
+  git(st.repo, ['merge', '--no-ff', '--no-edit', '-m', `Merge branch '${st.branch}' into mlk/master (release ${st.release})`, `origin/${st.branch}`]);
   git(st.repo, ['push', 'origin', 'mlk/master']);
 
   const remoteMaster = gitOut(st.repo, ['ls-remote', 'origin', 'refs/heads/mlk/master']).split(/\s+/)[0];
-  if (remoteMaster !== releaseTip) die(`push reported success but origin/mlk/master reads ${remoteMaster.slice(0, 10)}, expected ${releaseTip.slice(0, 10)} — investigate`);
+  // no-ff: master's tip is now the MERGE COMMIT, not the release tip — verify it CONTAINS the
+  // release tip and that master actually moved (not the old equality check, which no-ff breaks).
+  if (git(st.repo, ['merge-base', '--is-ancestor', releaseTip, remoteMaster], true).status !== 0)
+    die(`push reported success but origin/mlk/master (${remoteMaster.slice(0, 10)}) does NOT contain the release tip ${releaseTip.slice(0, 10)} — investigate`);
+  if (remoteMaster === masterBefore) die(`push reported success but origin/mlk/master did not move from ${masterBefore.slice(0, 10)} — investigate`);
 
   st.phase = 'merged-to-master';
   st.masterSha = remoteMaster;
   st.masterMergedFrom = masterBefore;
   saveState(st);
   log('merge-to-master', st.release, 'ok', { from: masterBefore, to: remoteMaster });
-  console.log(`✅ mlk/master ${masterBefore.slice(0, 10)} → ${remoteMaster.slice(0, 10)} (ff from ${st.branch}) + pushed`);
+  console.log(`✅ mlk/master ${masterBefore.slice(0, 10)} → ${remoteMaster.slice(0, 10)} (--no-ff merge of ${st.branch}) + pushed`);
   console.log(`   undo point: tag ${tag} @ ${masterBefore.slice(0, 10)} (local) · phase=merged-to-master · release COMPLETE`);
 }
 
