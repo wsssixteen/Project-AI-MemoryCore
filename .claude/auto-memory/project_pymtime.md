@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 73387deb-cd38-48d9-99c3-6231a2e51b8d
-  modified: 2026-09-09T11:08:33.711Z
+  modified: 2026-09-10T03:51:40.194Z
 ---
 
 **PymTime** = みや's local Windows app that clocks him into Protime daily + generates/submits monthly timesheet/claim PDFs. Repo `E:\Dev\scripts\PymTime` (private GitHub `wsssixteen/PymTime`, separate from MemoryCore). Data dir `%USERPROFILE%\.pymtime\` (config.json · cred.bin DPAPI · log.jsonl · skip-YYYYMMDD flags · holidays-cache.json).
@@ -21,6 +21,8 @@ metadata:
 **Own leaves (2026-09-09)**: `GET leaves/user?page=1&limit=50[&month&year]` (page is 1-based; 0 → 400) = the logged-in user's leave list `{startDate:"dd/mm/yyyy", endDate, leaveTypeCode, leaveTypeName, session:"Full|AM|PM", leaveStatus:"APPROVED|PENDING|…"}` — found by grepping Protime's lazy chunk 510 (`getLeaves` → `leaves/user`); guessed paths (`leaves/self`, `leaves/self/upcoming`) all 500. `lib/leave.js` caches it (`leaves-cache.json`, 6 h) and `/health.nextOff` = earlier of public holiday vs own leave. To find any Protime endpoint: fetch `runtime.<hash>.js`, map `id:"hash"` → `<id>.<hash>.js`, grep the chunks — never guess URLs.
 
 **Attendance lookup (2026-09-09)**: `GET staff/attendance?page=0&limit=20&username=<local part>` returns exactly your row in ~50 ms; `search=` HANGS 20 s and returns nothing (was making every clock-in / reminder / health check 20–30 s). The page's "Clocked in today" cell reads Protime live via `/health.todayLive` (3 min cache, 4 s cap), not only the local run log — a fresh install or a hand clock-in shows correctly. Bundle layout since 2026-09-09: zip root = `Start PymTime.bat` + `READ ME.txt`, program under `app\`; updates = unzip over the same folder (config lives in `%USERPROFILE%\.pymtime`).
+
+**Colleague probe (2026-09-10)**: `staff/attendance?username=<x>` is a CONTAINS match (irfan → 3 rows); the app picks the exact local part. Team logins seen: aaron, jun.chan@pymsoft, nmuhammad.ammar@pymsoft, ainbalqis, victor, irfan, azimramlan, adhwa, ummi. Script v6 (11:50): look-alike = run of the person's own name words or exact login. `lib/config.js` clockMeta carries ONE office's coordinates for everyone (open decision). Apps Script edits: the clipboard paste stopped working today; ctrl+h regex replace (Alt+R regex toggle, `\n` allowed in the replace box, ctrl+alt+Enter = replace all) worked line by line; deploy = Manage deployments → pencil → dropdown → SCREENSHOT before choosing "New version" (a blind click once rolled the live deployment back to v3).
 
 **Portable build**: `build-portable.ps1` needs `$env:TEMP\node-portable.zip` (a zip containing node.exe); if missing, extract `node\node.exe` from the previous `PymTime-portable.zip` and re-zip it. Output ~32.6 MB, no install/admin.
 
