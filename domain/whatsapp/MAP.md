@@ -60,6 +60,17 @@ The watcher running in **DRY RUN** over the cached last 7 days of the three work
 - `claude` CLI: `-p` headless · `--name` · `--session-id <uuid>` · `--resume <id>` · `--model` · `--effort` · `--permission-mode dontAsk` · `--allowedTools` · `--output-format json` · `remote-control` server (phone → laptop sessions).
 - Session-to-session messaging inside the desktop app exists but only from an OPEN session, so it cannot be the always-on path.
 
+## Built 2026-09-14 (goal: working tomorrow)
+
+- Daemon `E:\Dev\scripts\WaRead\wa-watch.js` (run · dry-run · status · check-login · spawn-test · sessions · adhoc-week) + `lib/watcher/{config,filter,registry,judge,handover,spawn,actions}.js` + `watcher.config.json` + `judge/` (cwd for judge calls, allowlist) + `install-logon-task.ps1` (Task Scheduler `WaRead Watcher`, at logon, restart every minute).
+- Child mode DEFAULT = headless (proven). Remote Control console child started but sat on a terminal prompt with no transcript (2026-09-14 00:11); debug with the screen visible → new ticket WA-13.
+- Two more reader bugs found and fixed while building: credential file truncated by exit-during-write (`lib/auth.js`), and the spawn command line mangled by Node''s quoting (`windowsVerbatimArguments`).
+
+### WA-13 · task · open
+type: task (HITL) · blocked by: none
+**Question**: Make the Remote Control child work: a minimized console running `claude --remote-control` starts but never runs its first turn (debug log ends after the terminal-capability probe). Reproduce with miya watching the window; likely a trust/consent prompt or a TTY probe. Until then children are headless (`child.mode`).
+**Resolution**: _pending_
+
 ## Not yet specified
 
 - How the judge session's transcript is bounded over a day (reset at midnight? summarise-and-fork? cost per resume as the day grows).
@@ -85,7 +96,7 @@ type: research (AFK) · blocked by: none
 **Question**: Can `claude remote-control` let miya open, from his phone, a session that the daemon started headless on the laptop (same session id / name)? If not, what is the nearest path?
 **Resolution**: **No.** A `-p` (headless) session has no attach path for Remote Control; the three start methods are server mode `claude remote-control`, interactive `claude --remote-control [name]`, or `/remote-control` inside a session (docs: code.claude.com/docs/en/remote-control). **Nearest path**: the daemon spawns each child as `claude --remote-control "<name>" --session-id <uuid> --model … --effort xhigh "<prompt>"` — an interactive process that registers with claude.ai at once and is reachable from the phone. Alternative: a logon-started `claude remote-control --spawn=worktree` server (default capacity 32 concurrent). Limits: needs a full claude.ai login (Pro/Max/Team), not an API key; server mode exits after ~10 min of network outage, interactive mode retries forever; a stopped server's sessions stay resumable ~4 h. Consequence for the design: children are interactive `--remote-control` processes, not `-p`; the judge stays `-p`.
 
-### WA-02 · research · CLOSED 2026-09-13
+### WA-02 · research · CLOSED 2026-09-13 (login re-verified 2026-09-14: `check-login` → OK, judge calls run at ~$0.03 per resume)
 type: research (AFK) · blocked by: none
 **Question**: Headless session mechanics for the daemon (create, name, resume many times, JSON verdict, caching, dontAsk + allowlist).
 **Resolution**: `--session-id <uuid>` pins the id at creation; `claude -p --resume <uuid> "<text>"` restores the full history and continues it (docs: /sessions, /headless). `-p` sessions are **excluded from the `--resume` picker and from `--continue`**, resumable only by id; the desktop app keeps its own session list. `--output-format json` returns `result`, `session_id`, `total_cost_usd`, `usage`, `permission_denials` (observed live). `dontAsk` **refuses** a non-allowlisted call, never hangs; allowlist syntax `--allowedTools "Read,Glob,Grep,Bash(node *),mcp__postgres-mlit-pg__*"` (MCP wildcard only after a literal `mcp__<server>__` prefix; a bare `*` is silently ignored). Resume re-sends the whole transcript and reads the cache; 1-hour TTL applies on a subscription. **Two blockers found**: (1) `--bare` needs an API key, so the daemon runs WITHOUT `--bare`; (2) the standalone `claude` CLI's login on this laptop is **expired (401)** — miya must run `claude login` once (→ WA-12). A `--session-id` is reserved on disk even when the call fails: always mint a fresh uuid per attempt.
@@ -100,32 +111,32 @@ type: research (AFK) · blocked by: none
 **Question**: 🚨 Offline delivery gap: `sync` received 0 new messages and the store held nothing after the link moment (2026-09-10 18:59). Does WhatsApp replay messages sent while the companion was offline?
 **Resolution**: **Yes, it replays — the reader was closing too early.** Live probe 2026-09-13: the server starts replaying the offline backlog ~30 s after the socket opens, in batches of 100, and raises `receivedPendingNotifications` when done (Baileys `socket.js:805-841`); 1,186 messages covering 2.5 days arrived within ~85 s. WaRead's `settle()` treated 4 s of silence as "done" and closed at ~6 s, so every `sync`/`read` since the link saw nothing. **Fixed** in `E:\Dev\scripts\WaRead\wa-read.js` (`settle` now waits for the backlog flag, up to 240 s, before the quiet rule applies; selftest green; committed). **Three facts that shape the daemon**: (1) each offline message is replayed **once** — the receiving process acks it, so whichever reader connects first consumes it; my text-free diagnostic probe consumed the 2-day backlog before the fix, and the Friday 21:16 message miya asked about was lost to the store (slip `unsafe-diagnostic`) → rule: **exactly one connecting process, and every process that connects must persist what it receives**; (2) ~5% of replayed messages (57/1,186) were undecryptable (`stub=2`, pre-key/session errors) and are gone for this device → the watcher must tolerate gaps, never assume completeness; (3) on-demand history (`fetchMessageHistory`) only returns messages OLDER than a message the phone can find, so a synthetic anchor returns nothing — lost recent messages are recoverable only by re-linking (the phone re-pushes recent history of every chat). Catch-up from the cache is therefore real for downtime, as long as the daemon is the only reader.
 
-### WA-12 · task · open
+### WA-12 · task · CLOSED 2026-09-14 — `node wa-watch.js check-login` → `login OK`; the 2026-09-13 401 came from a probe run with `--bare`
 type: task (HITL) · blocked by: none
 **Question**: miya runs `claude login` once in a terminal so the standalone CLI (which the daemon will drive) has a valid claude.ai login; verify with `claude -p "Reply OK" --model sonnet --output-format json` returning `is_error:false`. Record the expiry behaviour in SETUP.md.
 **Resolution**: _pending_
 
-### WA-04 · task · open
+### WA-04 · task · CLOSED 2026-09-14 — built: rows keep `quotedId` / `mentions` / `media` (`lib/text.js meta()`, `lib/store.js`), `resolveChat()` by phone / LID / group, `lib/connect.js` always-on connection with reconnect + media download at receipt (`lib/media.js`, pure read, no reupload), `lib/auth.js` credential guard
 type: task (AFK) · blocked by: WA-03
 **Question**: Extend WaRead: (a) `read` and the stream can target a DM by contact (Alex), (b) rows keep `quotedId` + `mentionedJids` + media refs, (c) `watch --stream` prints one JSON line per new message in watched chats, (d) `daemon` mode with reconnect + logon start, (e) read-only media download into a target folder. Selftest extended; allowlist wall unchanged except what WA-03 proves is a pure read.
 **Resolution**: _pending_
 
-### WA-05 · task · open
+### WA-05 · task · CLOSED 2026-09-13 — `domain/whatsapp/RULES.md` v1.0 written; inlined into the judge's first prompt each day
 type: task (AFK) · blocked by: none
 **Question**: Write `domain/whatsapp/RULES.md` v1: the judge-readable routing table from Decisions so far (room → gate → hints → meaning → skill to load: ADHOC scaffold / `quest resume` / `release-mlk-plp` / `list-redmine` → action: spawn / send-into / skip; session naming; env-label heuristics; name spellings; Alex rules). One table per room, one for Alex, one for Baseline days.
 **Resolution**: _pending_
 
-### WA-06 · prototype · open
+### WA-06 · prototype · CLOSED 2026-09-14 — `node wa-watch.js dry-run --since 7d --judge stub` (542 msgs → 78 candidates → 11 fire / 11 follow-up / 7 baseline / 2 hold / 47 skip) and `--since 3d --judge claude` (8 candidates, sane reasons, Alex's Friday ask judged; rule sharpened so a closed-then-rework ticket fires). Review with miya = WA-09
 type: prototype (HITL) · blocked by: WA-02, WA-04, WA-05
 **Question**: The dry run itself: daemon `--dry-run --since <7 days>` replays the cache through the loose filter and the single resumable judge session, prints the "would have fired" rows, and writes nothing else. miya reviews misses and false alarms.
 **Resolution**: _pending_
 
-### WA-07 · task · open
+### WA-07 · task · PARTIAL 2026-09-14 — allowlist written (`judge/allowlist.txt`), a headless child boots MemoryCore under dontAsk; full quest-to-brief audit on a real ticket still to run (first live fire will show refusals in the child log)
 type: task (AFK) · blocked by: WA-02
 **Question**: Allowlist audit for unattended children: run the ADHOC scaffold + quest Phase 0 to brief headless in `dontAsk` on one past Melaka ticket and one Perak ticket, capture every refused tool call, build the allowlist until a clean run writes the Task folder, the `active.txt` block, the ADHOC-REGISTER row and the quest md with zero prompts. Document the list in SETUP.md.
 **Resolution**: _pending_
 
-### WA-08 · task · open
+### WA-08 · task · CLOSED 2026-09-14 — `regenerateAdhocWeek()` in `lib/watcher/actions.js`, `node wa-watch.js adhoc-week`, regenerated after every fire/follow-up and every 30 min
 type: task (AFK) · blocked by: none
 **Question**: `adhoc-week.txt` regenerator: reads `quest/active.txt` (+ archive) ADHOC blocks born via the watcher, writes `1. Tasks\Melaka\adhoc-week.txt` in miya's format, overwrites weekly, retention `regenerate`, declared in the feature README.
 **Resolution**: _pending_
@@ -135,7 +146,7 @@ type: grilling (HITL) · blocked by: WA-06
 **Question**: Review the dry-run rows with miya: which fires were wrong, which real issues were missed, how the per-issue grouping held up on overlapping conversations; tune RULES.md; decide whether the map's destination is reached.
 **Resolution**: _pending_
 
-### WA-10 · task · open
+### WA-10 · task · CLOSED 2026-09-14 — `domain/whatsapp/SETUP.md` (prerequisites · install · link · proof table · logon task · file map · failure modes)
 type: task (AFK) · blocked by: WA-06, WA-07
 **Question**: `domain/whatsapp/SETUP.md`: complete portable install for another laptop (Node version, WaRead clone + link flow, logon task for the daemon, allowlist file, paths, claude CLI flags used, how to verify read-only, how to unlink).
 **Resolution**: _pending_
