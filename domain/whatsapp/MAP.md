@@ -51,6 +51,10 @@ The watcher running in **DRY RUN** over the cached last 7 days of the three work
 - Env label (Prod / Internal) judged from context: forwarded-from-TSO shape, PDT* structured message, pasted URL host, words like prod / staging / mlit; `?` when unsure.
 - Rules home `domain/whatsapp/RULES.md` (judge-readable routing table). Map home this file. Setup home `domain/whatsapp/SETUP.md`.
 
+**Live test 2026-09-13 (manual run of the whole chain)**
+- Read Alex's direct chat → found the Friday 21:16 ask (Redmine #278699 rework, weekend, SLA) → judge: FIRE → session spawned as `MLK278699 - PT - surat tolak rework` with a self-contained brief-only handover. The chain works by hand; what the map must still remove is the manual steps (reader closing early = fixed; identity by name = WA-04; spawn without a tap = WA-02/WA-12; media = WA-03/04).
+- Pairing lesson: windows live ~3.5 min; random codes die with them; use the fixed code + `link --windows 0` (no deadline) + push the code to the phone + Monitor the log. Never connect a second process to the account.
+
 **Facts checked**
 - Cache holds the last 7 days for all three rooms (73 / 139 / 343 rows on 2026-09-11). `watch add/remove` exists in the CLI. The store keeps DMs but `read` matches groups only. Rows carry no quoted-message id, no mention ids, no media bytes (`[image] caption` only). `updateMediaMessage` and `refreshMediaConn` sit on the DENY list.
 - `claude` CLI: `-p` headless · `--name` · `--session-id <uuid>` · `--resume <id>` · `--model` · `--effort` · `--permission-mode dontAsk` · `--allowedTools` · `--output-format json` · `remote-control` server (phone → laptop sessions).
