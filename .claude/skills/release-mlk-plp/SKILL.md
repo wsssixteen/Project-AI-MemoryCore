@@ -191,6 +191,11 @@ node domain/release-mlk-plp/release-prep.js set-tickets --release <ver> --ticket
 #   ↑ after 🛑 V1 — same all-or-nothing preflight as init, just deferred; merge refuses until this ran
 node domain/release-mlk-plp/release-prep.js merge  --release <ver>
 #   conflict? script exits 2 + lists files → I propose resolution → 🛑 V2 nod → resolve + git add
+#   🚨 V2 resolve gotchas (added 2026-09-14 per みや, release 1.6.1):
+#     · `git checkout --theirs <docx>` for a binary trips deploy-guard — add [skip-deploy-guard: V2 conflict
+#       resolution, みや-nodded per-file] in the same message (it is a nodded release resolve, not silent auto-resolve).
+#     · PowerShell: call `git -C <repo> ...` DIRECTLY — never a 2-3 letter helper function (gc=Get-Content,
+#       gm=Get-Member, gcm=Get-Command alias-collide and waste retries).
 node domain/release-mlk-plp/release-prep.js merge-continue --release <ver>
 #   ── ORPHAN / DRIFTED CHERRY-PICKS (2026-09-07, release 1.5.0) ──
 #   `discover` lists commits on int-env that no branch carries. Two shapes, two answers:
@@ -212,6 +217,12 @@ node domain/release-mlk-plp/release-prep.js bump-common --release <ver> --common
 #        --db-domain = SELECT nilai_parameter FROM rjk_parameter_sistem WHERE kod='V_DOMAIN' (per env).
 #        The --common value is NOT trusted from recon/BA-word alone — the gate validates it. Override an
 #        intentional domain change with --domain-ack "<reason>".  (root cause: 1.3.5 shipped 1.2.1/domain 1.0.5 > DB 1.0.4)
+#     🚨 PRE-FETCH THE DOMAIN TRIAD AT PHASE A, surface it in the V1 plan (added 2026-09-14 per みや — do not
+#        discover a domain advance mid-flight at bump-common). When recon shows a common bump is needed, at V1
+#        already compute + show: target common's transitive etanah-domain · previous release's common→domain ·
+#        stag V_DOMAIN (from servers.local.json `stagSchema`). If target domain != prev-release domain, the
+#        --domain-ack is a V1 decision みや makes ONCE up front — not a surprise halt at bump-common.
+#        (2026-09-14 1.6.1: 1.6.7-MLK→domain 1.0.9 vs prev 1.0.8, DB 1.0.10 — safe direction but surfaced late.)
 #     ⚠️ This RESETS phase to merged → re-run `verify` before push (the eval pins this).
 # 🚨 STALE-MASTER GATE (added 2026-08-19, at `branch`): REFUSES if the previous release branch is NOT an
 #    ancestor of origin/mlk/master — i.e. its Phase-F merge-back was skipped and master is stale. Fix = run
@@ -327,6 +338,8 @@ It refuses unless `phase=pushed`, re-fetches, asserts `origin/mlk/release/<ver>`
 pushed head, tolerates a dirty tree **only** when no dirty path intersects the release delta,
 tags `mlk/pre-master-merge/<ver>` at the pre-merge master SHA, fast-forwards, pushes, then
 re-reads `origin/mlk/master` and fails loudly if it isn't the release tip.
+
+🚨 **The merge SHAPE is SETTLED — never raise ff-vs-no-ff as a decision** (added 2026-09-14 per みや after I halted on exactly this: *"Why are you asking me this? Are you broken?"*). `merge-to-master` fast-forwards, and that IS the PLP release shape. The `master-merge-no-ff` memory refers to MANUAL / Alex-run master merges, NOT this tool. Once BAQA passes (V8), **RUN the command** — do not stop to compare against the memory rule, do not surface a merge-shape fork. The ONLY Phase-F stop-point is V8 (BA sign-off); nothing after it is a decision.
 
 | Gate | Rule |
 |---|---|
