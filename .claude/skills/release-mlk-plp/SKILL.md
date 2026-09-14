@@ -151,8 +151,22 @@ PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3)
       so the next baseline greps instead of re-deriving. **Delete superseded/wrong branches** (miya's rule)
       once the canonical branch is confirmed on master — a wrong branch left alive is the next v2/v3 trap.
 
+   **🚨 CROSS-BRANCH DIRECT-COMMIT SWEEP — EMIT at V1, for EVERY ticket** (added 2026-09-14 per みや, release 1.6.1).
+   A fix may be committed **DIRECTLY onto a main/env branch** (`mlk/master` / `mlk/int-env` / `mlk/stag-env`),
+   bypassing any ticket branch — so completeness is NOT provable from named branches alone. Sweep by NUMBER:
+   ```powershell
+   git -C <repo> log --oneline --all --grep "<num>" --pretty="%h %ad %an %d %s" --date=short
+   # then per env, what is NOT yet in the baseline:
+   git -C <repo> log --oneline origin/mlk/int-env origin/mlk/stag-env --not origin/mlk/master --grep "<num>"
+   ```
+   `discover` already detects int-env/stag-env **orphan tips** (deleted rework branches) — but EMIT the per-branch
+   sweep result at V1 so みや sees it, and cross-check the number lives nowhere the merge list misses. **Why**:
+   #252285's true tip `e982bfcbe5` (former `252285v3`) lived ONLY on `mlk/int-env` after its branch was deleted;
+   a named-branch merge list (`252285v2`) would have shipped the incomplete v2, missing 2 `MlkKertasTemplateForm.java`
+   conditions. `verify`'s content-coverage gate is the backstop, but the V1 sweep makes it visible up front.
+
    **Banned**: declaring a ticket ready on "a named branch merged" — readiness is **content coverage of the
-   complete footprint**, proven by `audit-ticket`, never by branch-reachability alone.
+   complete footprint**, proven by `audit-ticket` + the cross-branch sweep, never by branch-reachability alone.
 
 6. Emit the plan table (ticket · verdict · branch · action) + the **audit-ticket verdict per ticket** +
    the Ask-BA table → **🛑 V1: みや nods**.
