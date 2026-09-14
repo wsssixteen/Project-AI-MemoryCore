@@ -573,3 +573,6 @@
 {"ts":"2026-09-13T04:00:00.242Z","category":"unsafe-diagnostic"}
 {"ts":"2026-09-13T04:26:49.169Z","category":"feature-shipped-unverified"}
 {"ts":"2026-09-13T16:11:07.464Z","category":"exit-during-write"}
+{"ts":"2026-09-14T11:11:52.113Z","category":"invented-halt"}
+{"ts":"2026-09-14T11:15:21.546Z","category":"A1"}
+{"ts":"2026-09-14T11:15:21.638Z","category":"A3"}
