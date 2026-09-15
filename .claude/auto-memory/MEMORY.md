@@ -2,6 +2,7 @@
 
 
 ## Feedback
+- [adhoc-full-quest](feedback_adhoc_full_quest.md) — 🚨 adhoc with real investigation → run FULL quest (Scout→Recon→Rubric), never premature root cause; a live test that contradicts me is ground truth
 - [popup-questions](feedback_popup_questions.md) — 🚨 decisions via AskUserQuestion popups, not chat rounds; side builds → own session via spawn_task with full handover
 - [whatsapp-read-rules](feedback_whatsapp_read_rules.md) — 🚨 WhatsApp = READ ONLY via WaRead; paraphrase third person in my own…
 - [do-dont-ask-answer-literal](feedback_do_dont_ask_answer_literal.md) — 🚨 DO the obvious non-destructive next step, don't hand it back as a…
