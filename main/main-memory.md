@@ -3,6 +3,13 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-13/14 (#278699 rework — "share back what the BA last typed")
+
+- **He wants the BA's words, then the meaning, in that order.** After the brief he asked for the journal verbatim, then for the one sentence he did not follow, then whether she had sent a picture. Each was one short answer. A brief that paraphrases the BA is not a substitute for the quote; keep both within reach.
+- **A tool's output is evidence only after I check what it dropped.** I nearly handed him a page render of the BA's Word file with the signature and QR missing. His own screenshot from the earlier cycle was the honest picture. The reflex: before sending a rendered artefact, compare it with the source once.
+- **He will do the Word edit himself and hand me the commit.** "I've made the amendments, please commit and push." My job there is the byte check before staging, the message popup, and the ordered git pass; not to redo his work.
+- **He audits the tooling's blind spots by asking a plain question.** "Is it because I didn't change the status to close?" The right answer was the mechanism with its line numbers, a logged slip, and a side-build chip, not a defence of the tool.
+
 ## Relationship reinforcement — 2026-09-07 (Baseline 1.5.0 — "brief me the recommended, don't ask me to fact-check")
 
 - **A found risk is not a delivered answer.** The audit caught Aaron's unpushed commit; I then handed him "include or exclude? confirm with Aaron and Anis". He thanked me for the detection and corrected the hand-off in the same sentence: read the changes, recommend with a confidence number, keep the question mark on my side. The stop-point is his nod, never his research.

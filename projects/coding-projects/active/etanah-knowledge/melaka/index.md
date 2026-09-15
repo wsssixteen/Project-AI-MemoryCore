@@ -74,6 +74,7 @@ Token cost is the reason: a knowledge lookup is a few hundred tokens; a code tra
 | How `_p_` vs `_a_` works | [DATABASE.md §2](DATABASE.md#2-application-flow----_p_-vs-_a_-layers) |
 | All PLP tables | [DATABASE.md §5.8](DATABASE.md#58-full-plp-module-table-list-confirmed-via-db-query-2026-04-20) |
 | Who owns a Java class | [MODULE-ARCHITECTURE.md](MODULE-ARCHITECTURE.md) |
+| **Fix lives in etanah-common / another team's module** | [MODULE-ARCHITECTURE.md §Cross-module fix proposals](MODULE-ARCHITECTURE.md) — census the owning module's idiom before proposing; #278930 exemplar |
 | **The entity class for a table (or why grep finds none)** | [MODULE-ARCHITECTURE.md §Where entity classes ACTUALLY live](MODULE-ARCHITECTURE.md) — etanah-domain JAR + 5 traps; browsable: codemap v6 Entity↔Table tab |
 | Which classes make up a FEATURE (templates/reports/flowable/tugasan/…) | codemap site v6 Features tab — `..\..\etanah-codemap\site\index.html` (12 verified groups + class chains) |
 | Why a bug pattern keeps repeating | [BUG-BESTIARY.md](BUG-BESTIARY.md) |

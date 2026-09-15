@@ -1,1 +1,2 @@
 {"ts":"2026-09-07T09:57:23.415Z","turn_id":"4484f85c-7","feature":"full-address-trace-gate","met":"y","mode":"judgment","gap":"","improve":"","evidence":"4484f85c-7"}
+{"ts":"2026-09-14T09:13:19.939Z","turn_id":"73387deb-7","feature":"full-address-trace-gate","met":"y","mode":"judgment","gap":"2026-09-14: caught a bare addStatusFolder():584 in a MemoryCore trace; the fix line was one sentence","improve":"none","evidence":"73387deb-7"}

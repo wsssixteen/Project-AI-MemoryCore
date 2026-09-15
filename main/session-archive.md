@@ -4,6 +4,14 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-09-10 (S1, ~01:30–02:30) — QA-278699 PT Surat Tolak: DEPLOYED to MLKIT · KPPD render PASS · browser-permission wildcard · Phase 1 closed · broken-worktree
+
+**Arc** (resumed from compaction, worktree `quest-278699-resume-d5f4d5`): the two-issue PT Surat Tolak fix was already committed last session (3 commits `mlk/esokongan/278699` tip `16c227af48`, merged `mlk/int-env` `bba8c1ac04`, both pushed). This session: (1) **deployed** via the web console `172.16.90.169/etanah-deployment` — the confirm dialog was left un-clicked last session; clicked **Yes, Deploy**, run `4b9950d4` built + deployed `mlk/int-env` to **fudge1 (172.16.100.49) = MLKIT / et_main_mlit** in ~1m30s, all 5 phases green. (2) **Browser-permission friction fixed**: 15 fragile per-tool `mcp__Claude_Browser__*` allow entries collapsed to ONE wildcard in the **user-level** `C:\Users\Ridhwan\.claude\settings.json` (+ worktree local) → no browser prompts next session, any tool, any worktree. (3) **KPPD render VERIFIED**: `PTMLK/01/L/PT/2026/29` Peraku by KPPD m.ikram → `b.p: Pentadbir Tanah` — correct per BA rule (a). miya's confusion ("title says Pentadbir Tanah = PTNH?") answered: `b.p` = bagi pihak = on behalf of; "Pentadbir Tanah" is the OFFICE signed for, not m.ikram's jawatan; his own KPPD is deliberately unprinted. The b.p toggle is driven by flowable `agihanKepada` at `PelupusanWordCCMethodConstant.java:2861` (multi-jawatan safe). Changing the *word* "Pentadbir Tanah" to the agih'd office would contradict BA's written spec (hardcoded both cases) → not done.
+
+**🚨 Broken worktree (finding)**: mid-session the worktree `quest-278699-resume-d5f4d5` was DE-REGISTERED — its `.git/worktrees/<name>/` admin dir is empty and `git worktree list` dropped it, so no commit is possible from the worktree. Root cause corroborated by 7.4 audit: **`worktree-cleanup-boot` errored 37×/7d** (avg 21.5 s) — it removed the active session's own worktree. Consequence: all DE saves + the commit were done in the **main checkout** instead (auto-memory already writes to main; quest saves ported over). Proposal A1 logged.
+
+**Resume**: QA-278699 Phase 1 CLOSED (status=closed, commit `16c227af48`, closed 2026-09-10). Pending (external): PTNH-signer render case (expect "Pentadbir Tanah", no b.p) + BA Nurul Amirah final retest on MLKIT. Phase 2 archive at a later close-out.
+
 ## 2026-09-09 (S1, ~10:00–14:30) — PymTime day: distribution-ready · Drive script v4 (no second file) · first-run safety audit M1–M26 · toast/tab icon saga
 
 **Arc** (repo `E:\Dev\scripts\PymTime`, private GitHub, NOT this repo; last commit `38b1780`, zip 33.03 MB rebuilt): day-off cell shape settled (label "Next holiday", date bold, leave name small). Buttons two-column layout built then reverted on request. Beta pill removed; How it works split Daily / Monthly; readmes rewritten; personal strings swept out of the bundle; file-name token from Protime now remembered server-side. miya's question "does upload detect my hand-uploaded file under a different name?" → honest answer NO (S10 even asserted the duplicate) → **Apps Script v4 deployed 12:33** (`exists-similar` on a hand-uploaded look-alike by name token ≥3 letters or login; `already-ticked` when the Checklist box is ticked and nothing of theirs is recognisable; force only from code, page never offers it) → verified live: July upload named Ridhwan refused, folder unchanged (live scenario S36). First-run safety audit written as M1–M26 in `FAILURE-MODES-AND-TESTS.md` with proof per row (Windows never fires a task whose start time passed today — probed; dry run on a clocked-in account → already-clocked). Self-test 459/459, live scenarios 36/36.
@@ -4944,6 +4952,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

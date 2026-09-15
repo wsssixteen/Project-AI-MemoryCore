@@ -387,3 +387,47 @@ session building fixes into dead code. Now enforced by the `hierarchy` check in 
 - First-slot overwrite: on a later officer's regenerate, slot-1 nama/sign are preserved by the guard `if (TGS_SEMAKAN_MINIT_BEBAS && namaJawatan.equals("KPPD")) return null;` — same listPeranan-vs-utama root.
 
 **int-env divergence trap (verified 2026-08-17):** int-env refactored these 4 populators to a helper `getJawatanUtama()` (uses listPeranan.contains — already correct) via #221364; master + release branches still INLINE. A master-based ticket fix to these methods CONFLICTS on merge to int-env → re-apply/cherry-pick, never full-merge. Release (off master) is clean.
+
+## 🤝 Cross-module fix proposals — census the OWNING module's idiom before inventing a mechanism (#278930, 2026-09-11)
+
+**The rule**: when the fix site is in a module we do not own (`etanah-common`, `etanah-teknikal`, reports), the
+proposal handed to that team must FIRST cite how that module already expresses the concept. Working-analog-first
+applies to the module that owns the file, not to pelupusan.
+
+**Emit before any cross-module proposal** — the module-idiom census line:
+
+`<concept> — <n> existing instances in <owning module> at <file:line ×3>` (or `0 instances — genuinely new`)
+
+**The #278930 instance.** BA: agihan made to officer A, task landed on officer B.
+
+| | Our proposal | Amirul's fix (shipped as `1.6.5-MLK.278930`) |
+|---|---|---|
+| Shape | new `BpmParameterConstant.MANUAL_AGIHAN` flag, set in `CommonPenyediaanSuratForm`, read in `BpmCallbackService` to SKIP 5 eligibility gates | one JPQL predicate widened |
+| Files | 3 | 1 |
+| Change | `etanah-common\src\main\java\my\gov\etanah\common\repository\pengguna\CapaianPenggunaRepository.java:44` — `cu.urusan=:urusan` → `(cu.urusan=:urusan OR cm.adalahCapaianPenuh=true)` |
+| Side effect | would also skip the **kehadiran** gate → an officer on leave could be assigned | none; every gate still runs |
+| Reach | manual-agihan path only | both callers — `BpmCallbackService.java:1787` and `PengagihanTugasanServiceHelper.java:1006` |
+
+**Why his is the right one and ours was not**: the `OR adalahCapaianPenuh` idiom already existed **14 times** in the
+sibling service `etanah-common\src\main\java\my\gov\etanah\common\pengagihan\service\impl\PengagihanTugasanService.java`
+(`:1147 :1177 :1240 :1265 :1348 :1383 :1452 :1484 :1552 :1578 :1646 :1671 :1730 :1753`) and once in
+`etanah-common\src\main\java\my\gov\etanah\common\repository\masterdata\SkrinRepository.java:18`. One JPQL query was
+simply the odd one out. We proposed a bypass flag to route AROUND a filter that was merely written wrong. One grep for
+`adalahCapaianPenuh` inside the owning module would have produced his fix instead of ours.
+
+**The domain fact worth keeping**: eTanah capaian has TWO branches — a per-urusan grant
+(`pcp_capaian_ursn.ursn_id`) AND a module-wide full-access flag (`pcp_capaian_modul.flag_capaian_penuh`). **Any
+predicate that reads only the per-urusan branch under-selects** and silently drops full-access officers.
+
+**DB proof (mlit, 2026-09-11)**: `ind_ursn` UPS_PLP `ursn_id 1536`, `jns_ursn_id` NULL → `BpmCallbackService.java:1786`
+takes the else-branch, so the patched query is the one that fires. Norul Aqmar (`pengguna_id 6095`,
+`aqmar@melaka.gov.my`) has `flag_capaian_penuh = 'Y'` on 2 Pelupusan `pcp_capaian_modul` rows (8503, 9665) at
+`pejabat_id 3` PDT Jasin, and **0** `pcp_capaian_ursn` rows for `ursn_id 1536` — so the old predicate dropped her and
+auto-agihan reused the previous holder (Fariza).
+
+**🚩 Twin gap still open (surface to common team)**: the sibling branch at `BpmCallbackService.java:1783` calls
+`CapaianPenggunaRepository.findByModulPerananCodeListPejabatJenisUrusan` (`:49-54`), whose JPQL
+`AND cj.jenisUrusan=:jenisUrusan` has **no** capaian-penuh OR. Any urusan WITH a `jns_ursn_id` reproduces the same bug.
+
+**Read this section before**: proposing any fix in `etanah-common` / `etanah-teknikal`, and before writing a
+Redmine handover note to another team.

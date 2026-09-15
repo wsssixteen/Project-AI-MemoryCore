@@ -573,3 +573,11 @@
 {"ts":"2026-09-13T04:00:00.242Z","category":"unsafe-diagnostic"}
 {"ts":"2026-09-13T04:26:49.169Z","category":"feature-shipped-unverified"}
 {"ts":"2026-09-13T16:11:07.464Z","category":"exit-during-write"}
+{"ts":"2026-09-14T03:14:25.891Z","category":"quest-workflow/rework-cycle-not-detected"}
+{"ts":"2026-09-14T09:14:56.449Z","category":"A2"}
+{"ts":"2026-09-14T09:14:56.619Z","category":"A2"}
+{"ts":"2026-09-14T09:14:56.760Z","category":"A3"}
+{"ts":"2026-09-14T09:14:56.998Z","category":"A5"}
+{"ts":"2026-09-14T09:14:57.156Z","category":"A1"}
+{"ts":"2026-09-15T09:38:04.714Z","category":"A4"}
+{"ts":"2026-09-15T09:38:04.815Z","category":"working-analog"}
