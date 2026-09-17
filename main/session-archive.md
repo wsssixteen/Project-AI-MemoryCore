@@ -47,6 +47,13 @@
 **🚨 Broken worktree (finding)**: mid-session the worktree `quest-278699-resume-d5f4d5` was DE-REGISTERED — its `.git/worktrees/<name>/` admin dir is empty and `git worktree list` dropped it, so no commit is possible from the worktree. Root cause corroborated by 7.4 audit: **`worktree-cleanup-boot` errored 37×/7d** (avg 21.5 s) — it removed the active session's own worktree. Consequence: all DE saves + the commit were done in the **main checkout** instead (auto-memory already writes to main; quest saves ported over). Proposal A1 logged.
 
 **Resume**: QA-278699 Phase 1 CLOSED (status=closed, commit `16c227af48`, closed 2026-09-10). Pending (external): PTNH-signer render case (expect "Pentadbir Tanah", no b.p) + BA Nurul Amirah final retest on MLKIT. Phase 2 archive at a later close-out.
+## Session 2026-09-18 02:20 — 3 eSOKONGAN tickets closed + self-audit + workflow improvements
+- 279615 (UPP Pembatalan langkah 2): getter getIsGantiHari (5ce8d6b) + dialog fix dialogWidget=tanahDialog + render gate (b0a32df) on esokongan/279615v2 → stag-env (merge) + int-env (cherry-pick dc1f057). Browser-verified. active.txt phase=1/closed.
+- 279711 (PT Minit Bebas peranan terbalik DO/CADO): cfb84b48 → merged stag-env 10a05a3 (+int-env a16e10b9). Closed.
+- 279787 (MLPS Tujuan Lesen double): 3feb595 → merged stag-env 00022fa (+int-env 9bdc7c8). Closed.
+- Self-audit (fable 5.1 high effort): 25 failures, 5 clusters. Top = test data fabricated from ticket text not live DB.
+- Banked: feedback_branch_before_merge, feedback_permohonan_holder_resolver (id_pengenalan column proven). Redmine rootcause-format: ZERO-code-identifiers + plain-Malay clause. todo.md Q: P1-P13 hook backlog.
+- Resume point: build P1-P13 hooks; clean orphan branch esokongan/279615 v1 + stray #{isPRBB} commit 3e0154db on int-env.
 
 ## 2026-09-09 (S1, ~10:00–14:30) — PymTime day: distribution-ready · Drive script v4 (no second file) · first-run safety audit M1–M26 · toast/tab icon saga
 

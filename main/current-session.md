@@ -41,3 +41,16 @@
 - **#279882** (date patch) — Data Patching PROD. **Phase 1 CLOSED**. M081 versi 0 (`ind_versi_permit_lesen` 6505) trkh_mula/tamat wrongly 2026 → patch to 2025 (1/1/2025–31/12/2025). Script `2. Fix\279882.sql` (schema-qualified et_main, kod-subquery, BEFORE+AFTER, PROD-catalog schema-verified). Infra handoff generated + given to miya. Awaiting infra PROD run + AFTER-SELECT → Phase 2. Doc `projects/coding-projects/active/279882/279882.md` · task folder `209. DP #279882`.
 
 **Resume**: #279882 awaits infra confirm (AFTER-SELECT = 2025/2025) → Phase 2 archive. #279709 OPEN — on miya's go, build the runtime logger probe on `mlk/master`, deploy staging, re-Cari as nurulazura, read `server.log`. Everything on staging until root cause found (miya's directive).
+
+## 2026-09-15 (Mon ~17:00–17:40, worktree `redmine-ticket-279793-303163`) — #279793 PROD MLPS Tempat patch: shipped tempat-only, audit caught incomplete vs #278304 precedent
+
+**Arc**: retrieved #279793 (PROD MLPS, PDTJ) → "patch Tempat/Wilayah/Lokasi = '-' for PTMLK/02/L/MLPS/2026/6, then passback for team-data pelan replace (req 2, not ours)". Field = `umm_a_permohonan_tnh.tempat` = "PT 1139" (grid `MlkBorang4AeForm.xhtml:141` `#{tanah.tempat}`, aplikasi 3454765, row 46847). Handed infra `tempat='-'`, infra ran it, PROD-verified '-', ticket Resolved by Nurhafizah.
+
+**🚨 Audit slip (goal item 2)**: I short-cut Phase 0 and skipped the working-analog / prior-identical-ticket search. #278304 (closed 2026-09-04, IDENTICAL MLPS-Tempat family, in active.txt) shipped a **2-row/2-col** fix — `umm_a_permohonan_tnh` `tempat`+`nama_kawasan_terlibat`='-' AND source `ind_mklmt_tnh_permit_lesen` 4334 `tempat`='-'. My patch missed `nama_kawasan_terlibat` (still 'PT 1139' on row 46847) + the source lesen row. Grid shows only `tempat` so visible symptom IS fixed → the miss is data-consistency + future-renewal prevention (migrator wrote `tempat='PT '||no_lot` on Jasin lesen rows). Fix: corrected `279793.sql` to full 3-change shape (stamped `3cfd6d4833f508a3`), delta handoff surfaced to miya as a decision, memory `feedback_simple_patch_still_needs_analog_check` written.
+
+**Other slips this session**: wrong infra-handoff format on first pass (memory `prod_patch_infra_handoff` exists, not consulted first — miya corrected hard); reached for `[skip-sql-schema-verify]` twice before running the real narrowed catalog check (miya: "please verify" → ran it, 0 rows, stamped).
+
+**Resume**: #279793 Phase 1 CLOSED (data patch, status=closed, active.txt block created in main checkout). OPEN decision for miya: run the delta handoff (nama_kawasan_terlibat + source lesen row) to match #278304, or leave (visible fix accepted, ticket Resolved). Req 2 pelan = team data.
+**Resume**: QA-278699 Phase 1 CLOSED (status=closed, commit `16c227af48`, closed 2026-09-10). Pending (external): PTNH-signer render case (expect "Pentadbir Tanah", no b.p) + BA Nurul Amirah final retest on MLKIT. Phase 2 archive at a later close-out.
+
+---

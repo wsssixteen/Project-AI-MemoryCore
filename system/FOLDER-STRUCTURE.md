@@ -53,7 +53,7 @@ After the nod: run each move with `git mv`, each delete with `git rm -r`, then `
 
 ```json
 {
-  "allow": [".claude", ".git", ".gitattributes", ".gitignore", "main", "system", "core", "lib", "domain", "quest", "Feature", "daily-diary", "projects", "etanah_atlas", "library-items", "README.md", "RURI-NOTEBOOK.md", "MIYA-NOTEBOOK.md", "AGENT-ARCHITECTURE.md", "REGISTRY.md", "node_modules", "backups", "meta", "outputs-temp.gitkeep"],
+  "allow": [".claude", ".git", ".gitattributes", ".gitignore", "main", "system", "core", "lib", "domain", "quest", "Feature", "daily-diary", "projects", "etanah_atlas", "library-items", "README.md", "RURI-NOTEBOOK.md", "MIYA-NOTEBOOK.md", "AGENT-ARCHITECTURE.md", "REGISTRY.md", ".agents", "skills-lock.json", "node_modules", "backups", "meta", "outputs-temp.gitkeep"],
   "pending_nod": ["etanah-knowledge", "growth", "library", "plugins", "Project Resources", "tools", "salvage", "outputs-temp", "RURI-GROWTH.md"]
 }
 ```
