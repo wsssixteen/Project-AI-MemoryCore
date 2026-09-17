@@ -52,9 +52,11 @@ Emit: stage · #agents · model · effort · output schema · expected token ban
 | **W1 UNDERSTAND** | every BA artifact — videos via video-frames + READ THE URL BAR, images as images, stack traces in full, .docx via zipfile. State the issue exactly; claim NO root cause | Task folder `0. Brief\` + etanah-knowledge | `QA-<n>.md` §1 |
 | **W2 QUEST** | Scout → Recon → Rubric | §1 + repo + DB | `QA-<n>.md` §2 |
 | **W3 BLIND** | independent Recon+Rubric, BARRED from the qa_doc — controller passes facts in-prompt | in-prompt facts + repo + DB | `QA-<n>-wave3.md` (sibling file) |
-| **W4 AUDIT** | adversarial — refute, don't agree; adjudicate W2 vs W3 differences | all above | `QA-<n>-audit.md` |
+| **W4 AUDIT** | adversarial — refute, don't agree; adjudicate W2 vs W3 differences; **establish the EXPECTED behaviour WITH EVIDENCE** and **verify the fix PRODUCES it** (not just stops the error) | all above | `QA-<n>-audit.md` |
 
 Blindness is enforced STRUCTURALLY: W3 writes to a sibling file so it never needs to open the qa_doc, and the prompt contains the blind clause ("do NOT read QA-<n>.md or any -audit/-wave file").
+
+**W4 must pin the EXPECTED behaviour, not only the bug** (added 2026-09-18 after a verify pass on #280132/#280176/#280191/#280166). The audit is INCOMPLETE if it confirms the root cause without: (a) an evidenced statement of what the screen/save SHOULD do, and (b) a trace proving the proposed fix yields it. Evidence sources, in order: a WORKING sibling that behaves correctly (file:line) · a healthy-vs-broken DB row comparison · the field/BPMN spec. Why: this discipline caught #280166's flat `caraPenghantaran="TP"` (an unconditional literal that kills the gateway's own Warta branch → must be `perluWT ? "warta" : "TP"`), and raised confidence on #280176 (85→93) and #280191 (90→95) by closing "does the fix reach the correct save path" residuals. Re-running W4-with-expected-behaviour on already-diagnosed tickets is the **`--verify` pass** (opus, one familiar per ticket, reads the qa_doc + wave3 + audit, writes `QA-<n>-verify2.md`).
 
 ## Step 5 — Delegation Safety Template (VERBATIM in every familiar prompt)
 

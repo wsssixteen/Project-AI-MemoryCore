@@ -1,5 +1,21 @@
 # Current Session
 
+## 2026-09-18 (continues worktree `esokongan-tracker-tickets-save-3ddcc8`) — /goal S2: VERIFY sweep on the 4 eSOKONGAN tickets (expected-behaviour-with-evidence)
+
+**Arc**: /goal — re-sweep the 4 (280132/166/176/191) to VERIFY the fixes, pin the EXPECTED behaviour WITH EVIDENCE, re-score confidence; then /quest save + audit + improve sweep + DE. 4 opus verify2 familiars (one/ticket) each read the sweep-1 qa_doc + wave3 + audit and re-derived independently.
+
+**Verify2 verdicts (all CONFIRM root cause; one fix revised)**:
+- **#280132** CONFIRM 95% (unchanged). Analog corrected: real proof = `onCariPermohonanBertindih():209-212` (NOT TamatAplikasiServiceTask). Expected display DB-proven: PROD /7 → {/16,/18} each once; stg2 /7 → {/6}. New flag: IF/ELSE is either-or, not union.
+- **#280176** CONFIRM 85→93% (+8). Closed residual: reconciler `!found` → `createNewVersiPermitLesenDataEntry` writes fresh 2026 versi; 6506 preserved (pulled before delete `:2593`); no secondary NPE. Code-only; W3's data-patch REFUTED.
+- **#280191** CONFIRM 90→95% (+5). Save path traced: kemaskini `:19189` re-fetches + preserves `no_lot=223`; Tambah-Tanah INSERT `:19373` null-safe. Silent guard right, validator wrong.
+- **#280166** CONFIRM root 98%, 🚨 FIX REVISED. Missing-branch REFUTED (gateway warta+default-End complete). Flat "TP" UNSAFE (kills Warta branch) → DERIVE `perluWT ? "warta" : "TP"`. Module etanah-common → likely **etanah-uam**. Still gated on #267621 diff.
+
+**Improved the sweep**: W4 wave now requires EXPECTED-behaviour-WITH-EVIDENCE + verify-fix-produces-it (`.claude/skills/sweep/SKILL.md`, eval 13/13 green). The `--verify` pass = re-run W4-with-expected-behaviour on diagnosed tickets. Proposal logged (A5).
+
+**Save**: 4 `QA-<n>-verify2.md` + a `## 0b. VERIFY2` addendum per qa_doc; synced worktree→main; active.txt phases bumped. Audit: 16 artifacts present in main.
+
+**Resume**: unchanged from S1 — Apply each in its own session. #280166 now carries the REVISED fix (derived value + etanah-uam) + the #267621 gate.
+
 ## 2026-09-17 (Thu ~18:50–19:55, worktree `esokongan-tracker-tickets-save-3ddcc8`) — /goal: retrieve 4 eSOKONGAN tickets → full sweep (W1–W4) → save → audit → DE
 
 **Arc**: /goal — retrieve the 4 eSOKONGAN tickets in a photo, full sweep, save all quests, DE, "so I can continue them in another session; audit the save before DE commit/push". Retrieved via `redmine-sync.js --create`: **#280166 · #280176 · #280191 · #280132** (folders 212–215) + bonus **#280099** (folder 216, PROD PT alter, NOT in photo, held not swept). Ran `/sweep` full 4-wave ladder — 16 familiars (sonnet W1–W3, opus W4), orchestration-mode flag on→off, 61 orch-suppressed rows, ledger `domain/sweep/log.jsonl`.
@@ -25,13 +41,3 @@
 - **#279882** (date patch) — Data Patching PROD. **Phase 1 CLOSED**. M081 versi 0 (`ind_versi_permit_lesen` 6505) trkh_mula/tamat wrongly 2026 → patch to 2025 (1/1/2025–31/12/2025). Script `2. Fix\279882.sql` (schema-qualified et_main, kod-subquery, BEFORE+AFTER, PROD-catalog schema-verified). Infra handoff generated + given to miya. Awaiting infra PROD run + AFTER-SELECT → Phase 2. Doc `projects/coding-projects/active/279882/279882.md` · task folder `209. DP #279882`.
 
 **Resume**: #279882 awaits infra confirm (AFTER-SELECT = 2025/2025) → Phase 2 archive. #279709 OPEN — on miya's go, build the runtime logger probe on `mlk/master`, deploy staging, re-Cari as nurulazura, read `server.log`. Everything on staging until root cause found (miya's directive).
-
-## 2026-09-15 (Mon ~17:00–17:40, worktree `redmine-ticket-279793-303163`) — #279793 PROD MLPS Tempat patch: shipped tempat-only, audit caught incomplete vs #278304 precedent
-
-**Arc**: retrieved #279793 (PROD MLPS, PDTJ) → "patch Tempat/Wilayah/Lokasi = '-' for PTMLK/02/L/MLPS/2026/6, then passback for team-data pelan replace (req 2, not ours)". Field = `umm_a_permohonan_tnh.tempat` = "PT 1139" (grid `MlkBorang4AeForm.xhtml:141` `#{tanah.tempat}`, aplikasi 3454765, row 46847). Handed infra `tempat='-'`, infra ran it, PROD-verified '-', ticket Resolved by Nurhafizah.
-
-**🚨 Audit slip (goal item 2)**: I short-cut Phase 0 and skipped the working-analog / prior-identical-ticket search. #278304 (closed 2026-09-04, IDENTICAL MLPS-Tempat family, in active.txt) shipped a **2-row/2-col** fix — `umm_a_permohonan_tnh` `tempat`+`nama_kawasan_terlibat`='-' AND source `ind_mklmt_tnh_permit_lesen` 4334 `tempat`='-'. My patch missed `nama_kawasan_terlibat` (still 'PT 1139' on row 46847) + the source lesen row. Grid shows only `tempat` so visible symptom IS fixed → the miss is data-consistency + future-renewal prevention (migrator wrote `tempat='PT '||no_lot` on Jasin lesen rows). Fix: corrected `279793.sql` to full 3-change shape (stamped `3cfd6d4833f508a3`), delta handoff surfaced to miya as a decision, memory `feedback_simple_patch_still_needs_analog_check` written.
-
-**Other slips this session**: wrong infra-handoff format on first pass (memory `prod_patch_infra_handoff` exists, not consulted first — miya corrected hard); reached for `[skip-sql-schema-verify]` twice before running the real narrowed catalog check (miya: "please verify" → ran it, 0 rows, stamped).
-
-**Resume**: #279793 Phase 1 CLOSED (data patch, status=closed, active.txt block created in main checkout). OPEN decision for miya: run the delta handoff (nama_kawasan_terlibat + source lesen row) to match #278304, or leave (visible fix accepted, ticket Resolved). Req 2 pelan = team data.

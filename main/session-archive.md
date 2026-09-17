@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-09-15 (Mon ~17:00–17:40, worktree `redmine-ticket-279793-303163`) — #279793 PROD MLPS Tempat patch: shipped tempat-only, audit caught incomplete vs #278304 precedent
+
+**Arc**: retrieved #279793 (PROD MLPS, PDTJ) → "patch Tempat/Wilayah/Lokasi = '-' for PTMLK/02/L/MLPS/2026/6, then passback for team-data pelan replace (req 2, not ours)". Field = `umm_a_permohonan_tnh.tempat` = "PT 1139" (grid `MlkBorang4AeForm.xhtml:141` `#{tanah.tempat}`, aplikasi 3454765, row 46847). Handed infra `tempat='-'`, infra ran it, PROD-verified '-', ticket Resolved by Nurhafizah.
+
+**🚨 Audit slip (goal item 2)**: I short-cut Phase 0 and skipped the working-analog / prior-identical-ticket search. #278304 (closed 2026-09-04, IDENTICAL MLPS-Tempat family, in active.txt) shipped a **2-row/2-col** fix — `umm_a_permohonan_tnh` `tempat`+`nama_kawasan_terlibat`='-' AND source `ind_mklmt_tnh_permit_lesen` 4334 `tempat`='-'. My patch missed `nama_kawasan_terlibat` (still 'PT 1139' on row 46847) + the source lesen row. Grid shows only `tempat` so visible symptom IS fixed → the miss is data-consistency + future-renewal prevention (migrator wrote `tempat='PT '||no_lot` on Jasin lesen rows). Fix: corrected `279793.sql` to full 3-change shape (stamped `3cfd6d4833f508a3`), delta handoff surfaced to miya as a decision, memory `feedback_simple_patch_still_needs_analog_check` written.
+
+**Other slips this session**: wrong infra-handoff format on first pass (memory `prod_patch_infra_handoff` exists, not consulted first — miya corrected hard); reached for `[skip-sql-schema-verify]` twice before running the real narrowed catalog check (miya: "please verify" → ran it, 0 rows, stamped).
+
+**Resume**: #279793 Phase 1 CLOSED (data patch, status=closed, active.txt block created in main checkout). OPEN decision for miya: run the delta handoff (nama_kawasan_terlibat + source lesen row) to match #278304, or leave (visible fix accepted, ticket Resolved). Req 2 pelan = team data.
+
 ## 2026-09-13/14 (S1, Sat 22:00 → Sun 17:30, worktree `brave-clarke-bd6d5c`) — QA-278699 rework cycle 2: brief → miya's Word edits → commit a940bbf8dd + int-env 57b10ee0b6 → Phase 1 closed again
 
 **Arc**: spawned by the WhatsApp-watcher live test (manager asked 09-11 21:16 for #278699 over the weekend). Rework brief only, per handover. Opened all 10 files in `3. Rework\`; the two `.main` attachments are the generated DOCX letters. BA's 09-11 18:29 journal: Issues 1, 3, 4 solved; Issue 2 layout remains (name not bold, QR beside name, wide sign→name gap). Root cause from BA's own docx bytes: all 7 `TemplateSuratTolakPermohonan*.docx` put the `qrKod` CC inline in the name paragraph (1.75 cm picture inflates the line, name baseline drops) and the name runs carry `bCs` only. Analog `TemplateSuratJabatanTeknikal.docx`/`TemplateSuratYB.docx` = QR beside signature + bold name. Template-only fix, populators unchanged. miya made the edits in Word himself; I byte-verified all 7 (shape, bold, testzip, no floating boxes), commit `a940bbf8dd` on `mlk/esokongan/278699` (message chosen via popup), pushed, merged `--no-ff` into `mlk/int-env` = `57b10ee0b6` (5 upstream commits pulled first), pushed, repo returned to `mlk/master` (he later moved it to `mlk/int-env` himself). Phase 1 closed: `status=closed closed_cycle2=2026-09-14 commit_cycle2=a940bbf8dd int_env_cycle2=57b10ee0b6`.
@@ -4978,6 +4988,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
