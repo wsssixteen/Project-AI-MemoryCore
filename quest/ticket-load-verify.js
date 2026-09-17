@@ -19,6 +19,11 @@
  * Usage:  node quest/ticket-load-verify.js 273461
  *         node quest/ticket-load-verify.js 273461 --json
  *
+ * v1.2 (2026-09-14, #278699): section D is now a derived CYCLE line — Redmine status ·
+ *      cycle folders on disk · reopens in the journal · verdict NEW / REWORK cycle k /
+ *      ADDITION — with a warning when the journal has more reopens than the disk has
+ *      folders. /quest resume step iii echoes it verbatim; eval: ticket-load-verify.eval.js.
+ *
  * Exit 0 = manifest printed. Exit 1 = ticket folder not found / sync missing.
  * Exit 2 = integrity problem (journal names an attachment absent from disk,
  *          or History.txt is older than the Redmine `Last updated` it records).
@@ -124,9 +129,40 @@ const relationLines = headerText.split(/\r?\n/)
     .filter(l => /^\s{3}\w+\s+→\s+#\d+/.test(l)).map(l => l.trim());
 const fieldsSynced = /TICKET FIELDS|🔗 RELATIONS/.test(headerText);
 const briefFiles = walk(briefDir, briefDir).filter(f => !/^(History|Description)\.txt$/i.test(f.rel));
-const reworkDirs = fs.readdirSync(folder, { withFileTypes: true })
-    .filter(e => e.isDirectory() && /rework|addition/i.test(e.name))
-    .map(e => e.name);
+
+// ---- CYCLE (added 2026-09-14, #278699) ----
+// The ticket was returned to Rework twice and only one "3. Rework" folder existed; /quest
+// resume treated it as a rework only because the launching prompt said so. The cycle is
+// now DERIVED, not remembered: Redmine status (History.txt header) + the numbered
+// "N. Rework"/"N. New"/"N. Addition" folders on disk + the status_id transitions INTO a
+// rework status in the journal (ids 23/31/38 — same set as redmine-sync's REWORK_STATUS_IDS).
+// Cycle k = 1 (the original brief) + one per cycle folder. Verdict is one of NEW /
+// REWORK cycle k / ADDITION; a journal with more reopens than the disk has cycle folders
+// is flagged so the sync (which now creates folders by reopen TIME) gets re-run.
+const REWORK_IDS = new Set(['23', '31', '38']);
+const redmineStatus = (headerText.match(/^Status:\s*(.+?)\s*\|/m) || [])[1] || 'unknown';
+const cycleDirs = fs.readdirSync(folder, { withFileTypes: true })
+    .filter(e => e.isDirectory() && /^\d+\.\s*(Rework|New|Addition)\s*$/i.test(e.name))
+    .map(e => ({ name: e.name, num: parseInt(e.name) }))
+    .sort((a, b) => a.num - b.num);
+const reopens = [];
+for (const j of journals) {
+    for (const line of j.body) {
+        const m = line.match(/^\s*\[attr\]\s+status_id:\s*(\S+)\s*→\s*(\S+)/);
+        if (m && REWORK_IDS.has(m[2]) && !REWORK_IDS.has(m[1])) reopens.push(j.ts);
+    }
+}
+const cycleK = cycleDirs.length + 1;
+const newestCycle = cycleDirs.length ? cycleDirs[cycleDirs.length - 1] : null;
+let cycleVerdict;
+if (newestCycle && /New|Addition/i.test(newestCycle.name)) cycleVerdict = `ADDITION (cycle ${cycleK}, newest folder "${newestCycle.name}")`;
+else if (/rework/i.test(redmineStatus)) cycleVerdict = `REWORK cycle ${cycleK}`;
+else if (!cycleDirs.length && !reopens.length) cycleVerdict = 'NEW';
+else cycleVerdict = `REWORK cycle ${cycleK} (status now "${redmineStatus}")`;
+const cycleWarn = reopens.length > cycleDirs.length
+    ? `⚠ ${reopens.length} reopen(s) in the journal vs ${cycleDirs.length} cycle folder(s) on disk — one reopen's evidence may sit in an earlier cycle folder; re-run: node quest/redmine-sync.js ${num} (creates a folder only when a reopen is newer than the newest folder)`
+    : null;
+const cycleLine = `CYCLE: status=${redmineStatus} · folders=${cycleDirs.length ? cycleDirs.map(d => d.name).join(' · ') : 'none'} · reopens-in-journal=${reopens.length}${reopens.length ? ` (latest ${reopens[reopens.length - 1]})` : ''} · verdict=${cycleVerdict}`;
 
 // ---- integrity checks (these are the reason this exits non-zero) ----
 // Search the WHOLE task folder, not just 0. Brief/ — an attachment we upload OURSELVES
@@ -155,7 +191,8 @@ const qaDocCandidates = [
 const qaDoc = qaDocCandidates.find(p => fs.existsSync(p)) || null;
 
 if (asJson) {
-    console.log(JSON.stringify({ num, folder, archived, journals: journals.length, namedInJournals, briefFiles, qaDoc, problems }, null, 2));
+    console.log(JSON.stringify({ num, folder, archived, journals: journals.length, namedInJournals, briefFiles, qaDoc, problems,
+        cycle: { status: redmineStatus, folders: cycleDirs.map(d => d.name), reopens, verdict: cycleVerdict, warn: cycleWarn, line: cycleLine } }, null, 2));
     process.exit(problems.length ? 2 : 0);
 }
 
@@ -183,10 +220,10 @@ if (elsewhere.length) {
     L.push(`   journal-named, stored elsewhere in the task folder (ours, not the BA's):`);
     elsewhere.forEach(a => L.push(`      · ${a}  →  ${onDisk.get(a)}`));
 }
-if (reworkDirs.length) {
-    L.push('');
-    L.push(`D. REWORK/ADDITION FOLDERS \u2014 ${reworkDirs.join(' · ')}`);
-}
+L.push('');
+L.push('D. CYCLE — derived from Redmine status + cycle folders + journal reopens. Echo the CYCLE line VERBATIM.');
+L.push(`   ${cycleLine}`);
+if (cycleWarn) L.push(`   ${cycleWarn}`);
 L.push('');
 L.push('D2. TICKET FIELDS + RELATIONS \u2014 the reporter\u2019s own metadata. Echo the decision-bearing ones.');
 if (!fieldsSynced) {
@@ -220,7 +257,7 @@ if (problems.length) {
     problems.forEach(p => L.push(`   \u2022 ${p}`));
 }
 L.push('');
-L.push(`ECHO CONTRACT: ${journals.length} conversation line(s) + ${briefFiles.length} attachment line(s) + Description + reconcile table.`);
+L.push(`ECHO CONTRACT: ${journals.length} conversation line(s) + ${briefFiles.length} attachment line(s) + Description + the CYCLE line + reconcile table.`);
 L.push('A missing echo is a skipped read, not a shortened reply.');
 console.log(L.join('\n'));
 process.exit(problems.length ? 2 : 0);

@@ -307,3 +307,19 @@
 - Full audit of every .claude/auto-memory/feedback_*.md: classify GENERAL (keep global) vs DOMAIN/etanah (move to etanah-knowledge + quest skill JIT layer). Delete the global copy after moving.
 - Build an auto-memory-write gate (PreToolUse on .claude/auto-memory/ writes): classify at write-time, block a domain-specific rule from landing in global auto-memory, point it to the contained layer.
 - CLAUDE.md §System-Design containment rule added 2026-09-08 (version bump owed).
+
+## Q — Approved quest-workflow improvements (2026-09-18, session ca1f50dc audit, みや-approved "proceed")
+Build each as a proper feature (hook + eval, born green) per feature-creation rules. Behavioural rules already banked as memory this session: branch-before-merge, permohonan-holder-resolver.
+- [ ] P1 `lib/resolve-permohonan.js` — id_pengenalan → aplikasi → live holder/login/env (query proven; memory banked, script TODO)
+- [ ] P4 live-state gate — extend `domain/test-scenario-login-gate`: block a scenario whose login was NOT returned by a DB query THIS turn + env of the query must match the scenario env; merge the stranded F1 aplikasi_id detector into main
+- [ ] P2 `quest/sweep-close.js` + `domain/sweep/` boundary gate — write each swept ticket's block to MAIN active.txt + spawn one session per ticket; block fixing a swept ticket inside the sweep session; second-defect-in-ticket → AskUserQuestion park
+- [ ] P3 plain-Malay gate — extend `domain/rootcause-format`: recognise Punca/Penyelesaian numbered bodies (extractor returns null today), BLOCK code identifiers (CamelCase, get*(), #{, rendered=, widgetVar, .java/.xhtml, dev words), ADVISE when baku not working-Malay
+- [ ] P6 verdict≠apply-ready — sweep verdict=diagnosed only; commit-gate blocks etanah git commit unless local_test_confirmed=true or [untested-deploy: authorized]
+- [ ] P7 chain-handback (render-verify) — UI fix needs a LAYER table w/ live evidence per row + a real click observed before "done/complete"
+- [ ] P5 goal-loop-breaker + goal-popup — goal w/ user-owned steps → one AskUserQuestion; block re-emitting "waiting/owed"
+- [ ] P8 rework-in-place — no vN on un-merged branch; at rework run `git branch -r --contains <old sha>` + revert stray commit on every env branch same turn
+- [ ] P9 hook-friction — compile-gate regex token-level (ignore echo "commit"); branch-guard Edit/Write only (Read exempt), read skip token from stdin; deploy-guard accept cherry-pick w/ [deploy-merge-decision: cherrypick]; bank ENV-TOPOLOGY (int-env=CR line→cherry-pick; stag-env=master mirror→merge)
+- [ ] P10 stranded-worktree-write check at Stop + DE — flag files written under .claude/worktrees/*/ that are absent/older in main; route memory/gate writes to MAIN
+- [ ] P12 post-compaction re-anchor hook — on "session is being continued" inject current-session + active qa_doc heads + DATABASE.md router
+- [ ] P13 phase-0 linked-ticket read — sync every ticket #/URL in Description/History before drafting a BA-Q; bogus-ba-q slip class
+- [ ] cleanup — orphan branch `mlk/esokongan/279615` (v1, un-merged) delete local+origin; stray `#{isPRBB}` commit 3e0154db still on int-env

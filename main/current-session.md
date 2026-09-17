@@ -35,3 +35,6 @@
 **Other slips this session**: wrong infra-handoff format on first pass (memory `prod_patch_infra_handoff` exists, not consulted first — miya corrected hard); reached for `[skip-sql-schema-verify]` twice before running the real narrowed catalog check (miya: "please verify" → ran it, 0 rows, stamped).
 
 **Resume**: #279793 Phase 1 CLOSED (data patch, status=closed, active.txt block created in main checkout). OPEN decision for miya: run the delta handoff (nama_kawasan_terlibat + source lesen row) to match #278304, or leave (visible fix accepted, ticket Resolved). Req 2 pelan = team data.
+**Resume**: QA-278699 Phase 1 CLOSED (status=closed, commit `16c227af48`, closed 2026-09-10). Pending (external): PTNH-signer render case (expect "Pentadbir Tanah", no b.p) + BA Nurul Amirah final retest on MLKIT. Phase 2 archive at a later close-out.
+
+---
