@@ -4,6 +4,31 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 2026-09-15 (S1) — OMLPS "tujuan/tanah tiada pilihan": adhoc → 2 tickets (#279709 dropdown bug, #279882 date patch) · premature-root-cause slip cluster
+
+**Arc** (worktree `omlps-tujuan-permohonan-dropdown-344bd1`): adhoc from PDTJ (nurulazura) — OMLPS Membaharui Lesen, "Kategori Tujuan Permohonan + Maklumat Tanah papar tiada pilihan", No LPS M081. I gave THREE premature root causes before running the quest, each refuted by miya's next screenshot: (1) "migration didn't carry data" → refuted (registry `ind_mklmt_tnh_permit_lesen` 4832 had it); (2) "key PDTJ.600-2/9/79 not 0402DIS2024000574" → live test threw errors; (3) "pick Kategori first (cascade)" → photo showed the Kategori parent itself intermittently empty. miya: "run full /quest ... stop bullshit". **Fix**: `feedback_adhoc_full_quest.md` (adhoc with real investigation → full quest; verify before claim; live test = ground truth) + MEMORY.md pointer + slip `reask/hallucination`.
+
+**Findings (staging et_main_stg2, verified)**: M081 = permit_lesen_id 6253, lives on aplikasi 3412358 (`PDTJ.600-2/9/79`, urusan DMMLMS migrated), NOT 0402DIS2024000574 (aplikasi 3371287, PLPS migrated stub, created_by `MIGRATOR_MOHON_PLP`). Two migrated records, unlinked. OMLPS Cari gate = `onCheckPelan` requires a SIGNED PELAN (`MlkUtilitiPengeluaranLesenPermitForm.java:2485`→`:2570`); no pelan → "Pelan tidak dijumpai" + cascade "semua tahun sudah dikeluarkan" (one cause, two messages). Reference groups populated (PLP_KTGR_PRMHNN 5 · PLP_TJN_PMH_PLMS 18). Kategori list loads via `PelupusanMaklumatPermitLesenHelper.java:753`; intermittent empty = helper-build path (`MlkUtilitiPengeluaranLesenPermitForm.java:966`, `aplikasiNew!=null`) skipped on some Cari — runtime/lifecycle, not static; duplicate-app REFUTED (only one PDTJ.600-2/9/79 at Jasin).
+
+**Tickets**:
+- **#279709** (dropdown bug) — Internal Issue PROD, In Progress. Phase 0 done (Scout+Recon, all static causes eliminated). OPEN. Next = runtime logger probe on `retrieveAplikasi():349` + `initMaklumatTanah():966` to pin the intermittent `aplikasiNew`-null. Doc `projects/coding-projects/active/279709/279709.md` · task folder `205. II #279709`.
+- **#279882** (date patch) — Data Patching PROD. **Phase 1 CLOSED**. M081 versi 0 (`ind_versi_permit_lesen` 6505) trkh_mula/tamat wrongly 2026 → patch to 2025 (1/1/2025–31/12/2025). Script `2. Fix\279882.sql` (schema-qualified et_main, kod-subquery, BEFORE+AFTER, PROD-catalog schema-verified). Infra handoff generated + given to miya. Awaiting infra PROD run + AFTER-SELECT → Phase 2. Doc `projects/coding-projects/active/279882/279882.md` · task folder `209. DP #279882`.
+
+**Resume**: #279882 awaits infra confirm (AFTER-SELECT = 2025/2025) → Phase 2 archive. #279709 OPEN — on miya's go, build the runtime logger probe on `mlk/master`, deploy staging, re-Cari as nurulazura, read `server.log`. Everything on staging until root cause found (miya's directive).
+
+## 2026-09-15 (Mon ~17:00–17:40, worktree `redmine-ticket-279793-303163`) — #279793 PROD MLPS Tempat patch: shipped tempat-only, audit caught incomplete vs #278304 precedent
+
+**Arc**: retrieved #279793 (PROD MLPS, PDTJ) → "patch Tempat/Wilayah/Lokasi = '-' for PTMLK/02/L/MLPS/2026/6, then passback for team-data pelan replace (req 2, not ours)". Field = `umm_a_permohonan_tnh.tempat` = "PT 1139" (grid `MlkBorang4AeForm.xhtml:141` `#{tanah.tempat}`, aplikasi 3454765, row 46847). Handed infra `tempat='-'`, infra ran it, PROD-verified '-', ticket Resolved by Nurhafizah.
+
+**🚨 Audit slip (goal item 2)**: I short-cut Phase 0 and skipped the working-analog / prior-identical-ticket search. #278304 (closed 2026-09-04, IDENTICAL MLPS-Tempat family, in active.txt) shipped a **2-row/2-col** fix — `umm_a_permohonan_tnh` `tempat`+`nama_kawasan_terlibat`='-' AND source `ind_mklmt_tnh_permit_lesen` 4334 `tempat`='-'. My patch missed `nama_kawasan_terlibat` (still 'PT 1139' on row 46847) + the source lesen row. Grid shows only `tempat` so visible symptom IS fixed → the miss is data-consistency + future-renewal prevention (migrator wrote `tempat='PT '||no_lot` on Jasin lesen rows). Fix: corrected `279793.sql` to full 3-change shape (stamped `3cfd6d4833f508a3`), delta handoff surfaced to miya as a decision, memory `feedback_simple_patch_still_needs_analog_check` written.
+
+**Other slips this session**: wrong infra-handoff format on first pass (memory `prod_patch_infra_handoff` exists, not consulted first — miya corrected hard); reached for `[skip-sql-schema-verify]` twice before running the real narrowed catalog check (miya: "please verify" → ran it, 0 rows, stamped).
+
+**Resume**: #279793 Phase 1 CLOSED (data patch, status=closed, active.txt block created in main checkout). OPEN decision for miya: run the delta handoff (nama_kawasan_terlibat + source lesen row) to match #278304, or leave (visible fix accepted, ticket Resolved). Req 2 pelan = team data.
+**Resume**: QA-278699 Phase 1 CLOSED (status=closed, commit `16c227af48`, closed 2026-09-10). Pending (external): PTNH-signer render case (expect "Pentadbir Tanah", no b.p) + BA Nurul Amirah final retest on MLKIT. Phase 2 archive at a later close-out.
+
+---
+
 ## 2026-09-15 (Mon ~17:00–17:40, worktree `redmine-ticket-279793-303163`) — #279793 PROD MLPS Tempat patch: shipped tempat-only, audit caught incomplete vs #278304 precedent
 
 **Arc**: retrieved #279793 (PROD MLPS, PDTJ) → "patch Tempat/Wilayah/Lokasi = '-' for PTMLK/02/L/MLPS/2026/6, then passback for team-data pelan replace (req 2, not ours)". Field = `umm_a_permohonan_tnh.tempat` = "PT 1139" (grid `MlkBorang4AeForm.xhtml:141` `#{tanah.tempat}`, aplikasi 3454765, row 46847). Handed infra `tempat='-'`, infra ran it, PROD-verified '-', ticket Resolved by Nurhafizah.
@@ -4995,6 +5020,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
