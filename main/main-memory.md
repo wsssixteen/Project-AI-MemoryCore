@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-18 (ES #279615 rework — the merge that would have wiped a ticket)
+
+- **He says "full merge" and means "catch me up" — but the deploy still has to be safe.** He chose the full merge into int-env to stop it lagging. The merge conflicted on a binary `.docx` that int-env had changed via #280029 — taking either side loses work. The right move was to STOP, show him the 116k-line delete + the #280029 collision, and let him re-decide; he switched to cherry-pick in one word. A literal instruction does not override the data-loss check; showing the wreckage is what earns the correction.
+- **"Very disturbing" wanted a census, not reassurance.** His SourceTree showed "Push 11 / stag-env 10↑" and he asked me to remove the push if it was already remote. The answer he took was the fetched ahead/behind table (0/0 on every branch) + "it's a stale UI, hit Fetch" — evidence first, then the one-line cause. Same family as the `'-'` PROD-value census: when he is suspicious of git/data state, the reply is the real numbers laid out, never "it's fine".
+- **The twin-getter was pre-diagnosed and I still had to earn it.** Latent-bug L8 predicted `isTambahKuantiti` would crash the Pembatalan screen once #263304 shipped; MLIT proved it verbatim. Banking the sibling-getter pattern (a shared composite reads N flags → every bean that mounts it needs all N getters) is the reusable lesson, not this one fix.
+
 ## Relationship reinforcement — 2026-09-13/14 (#278699 rework — "share back what the BA last typed")
 
 - **He wants the BA's words, then the meaning, in that order.** After the brief he asked for the journal verbatim, then for the one sentence he did not follow, then whether she had sent a picture. Each was one short answer. A brief that paraphrases the BA is not a substitute for the quote; keep both within reach.
