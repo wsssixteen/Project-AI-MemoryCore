@@ -1,6 +1,6 @@
 ---
 name: arabic
-description: みや's daily Arabic vocabulary review — a few seconds to 2 minutes, in chat. Triggers — "/arabic", "arabic review", "arabic today", "/arabic more", "/arabic week <lesson>", "/arabic week next", "/arabic class at <topic>", "/arabic status", any reply that answers a pending Arabic recall (Arabic script or Latin transliteration like "sukkarun"). Spec: projects/learning-projects/active/arabic/SPEC.md.
+description: みや's daily Arabic vocabulary review — a few seconds to 2 minutes, in chat. Triggers — "/arabic", "arabic review", "arabic today", "/arabic more", "/arabic week <lesson>", "/arabic week next", "/arabic class at <topic>", "/arabic status", "/arabic topic [id]", "/arabic root [root]", "/arabic form [paradigm]", "/arabic drill", any reply that answers a pending Arabic recall or form drill (Arabic script or Latin transliteration like "sukkarun"). Spec: projects/learning-projects/active/arabic/SPEC.md.
 allowed-tools: Bash, PowerShell, Read
 ---
 
@@ -22,8 +22,19 @@ Engine (deterministic, no dependencies): `.claude/skills/arabic/arabic.js`. Data
 | `/arabic status` | `node .claude/skills/arabic/arabic.js status` | paste output. |
 | `/arabic settings` · `/arabic settings <key> <n>` (keys: `words` rows per review 3–15 · `pace` lessons per week 1–4 · `min_reviews` 1–7 · `set_max` 5–30) | `node .claude/skills/arabic/arabic.js settings [key n]` | paste output. |
 | `/arabic stats` | `node .claude/skills/arabic/arabic.js stats` | paste the table. Observability: every engine call also appends to `data/log.jsonl` (ts · cmd · outcome · dur_ms). |
+| `/arabic topic [id\|list]` | `node .claude/skills/arabic/arabic.js topic [id\|list]` | paste. Grammar-topic review — a topic's rules + worked examples from `data/syllabus.json` (24 topics). No arg = today's topic (date-seeded). |
+| `/arabic root [root\|list]` | `node .claude/skills/arabic/arabic.js root [root\|list]` | paste. Root family from `data/roots.json` — same 3 letters, different harakat = different meaning (e.g. حجر). No arg = date-seeded. |
+| `/arabic form [paradigm\|list]` | `node .claude/skills/arabic/arabic.js form [paradigm]` | paste the drill question ("give the 3rd-person feminine of نَصَرَ → Arabic?"). When みや replies, run the SAME `answer "<reply>"` — it resolves the pending form drill first. `form list` = the 8 paradigms. |
+| `/arabic drill` | `node .claude/skills/arabic/arabic.js drill` | paste. Difficulty-aware pick — word recall early, then root/topic, then form drills once the review reaches the pronoun/verb lessons (book L10+). |
 
 PowerShell form: `node ".claude\skills\arabic\arabic.js" review`.
+
+## Data (built by the Phase 1–2 pipeline, frozen + verified)
+
+- `data/syllabus.json` — 24 grammar topics in class order (rules + examples, doc-cited). `data/classes.json` — 69 classes. Both verified against the teacher's doc (`data/VERIFY-LOG.md`).
+- `data/paradigms.json` — 8 closed form-tables (pronouns ×3 · demonstratives · relative · numbers · verb madhi + mudhari) keyed by person/gender/number → deterministic form-drill lookup.
+- `data/roots.json` — 16 root families where harakat flips meaning. `data/words.json` v2 — 198 words with `root` + `pos`.
+- Rebuild provenance: `library/scripts/phase1|phase2/` (BUILD once → verify → freeze; USE = script over the frozen JSON).
 
 ## Hard rules
 
@@ -39,4 +50,4 @@ PowerShell form: `node ".claude\skills\arabic\arabic.js" review`.
 
 ## Eval
 
-`node .claude/skills/arabic/arabic.test.js` — 42 scenarios (matching incl. no-shadda + typed-ن tanwin, chunk split, week roll, carry-over, override, modes, miss-first, idempotent same-day, status, nudge, corrupt state, real-data full walk). Must be green before any engine change ships.
+`node .claude/skills/arabic/arabic.test.js` — 62 scenarios (S1–S48 core: matching incl. no-shadda + typed-ن tanwin, chunk split, week roll, carry-over, override, modes, miss-first, idempotent same-day, status, nudge, corrupt state, real-data full walk; S49–S60 Phase-3: syllabus/paradigms/roots load, topic review, root families, form drill pose+resolve, drill routing, no-disturbance of the daily flow). Must be green before any engine change ships.

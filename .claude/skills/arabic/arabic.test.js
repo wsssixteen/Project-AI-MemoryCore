@@ -80,6 +80,28 @@ t('S40 real words.json loads, 198 entries, all 7 fields, unique ids', () => { co
 t('S41 real data: every Malay gloss is non-Arabic and ≤ 4 words', () => { const w = JSON.parse(fs.readFileSync(REAL, 'utf8')); for (const x of w) { ok(!/[؀-ۿ]/.test(x.malay), x.id + ' malay has Arabic'); ok(x.malay.split(/\s+/).length <= 4, x.id + ' gloss too long: ' + x.malay); } });
 t('S42 real data: full walk 23 sets without crash, ends at last set', () => { const w = JSON.parse(fs.readFileSync(REAL, 'utf8')); reset(w); const all = chunks(w); let d = new Date(Date.UTC(2026, 8, 7)); for (let wk = 0; wk < all.length + 2; wk++) { for (let i = 0; i < 3; i++) { const ds = new Date(d.getTime() + i * 86400000).toISOString().slice(0, 10); run('review', '--date', ds); } d = new Date(d.getTime() + 7 * 86400000); } ok(run('status', '--date', d.toISOString().slice(0, 10)).includes(`Lesson ${all[all.length - 1].lesson}`)); });
 
+// ---- Phase 3: revision modes (S49–S60) ----
+const REALDIR = path.join(__dirname, '..', '..', '..', 'projects', 'learning-projects', 'active', 'arabic', 'data');
+function copyReal(name) { fs.copyFileSync(path.join(REALDIR, name), path.join(tmp, name)); }
+function loadReal() { reset(small); ['syllabus.json', 'paradigms.json', 'roots.json'].forEach(copyReal); }
+t('S49 real syllabus/paradigms/roots load with expected shapes', () => {
+  const s = JSON.parse(fs.readFileSync(path.join(REALDIR, 'syllabus.json'), 'utf8')); eq(Object.keys(s).length, 24);
+  const par = JSON.parse(fs.readFileSync(path.join(REALDIR, 'paradigms.json'), 'utf8')); eq(Object.keys(par).length, 8);
+  const r = JSON.parse(fs.readFileSync(path.join(REALDIR, 'roots.json'), 'utf8')); ok(r.families.length >= 15);
+});
+t('S50 topic list = 24 topics in order', () => { loadReal(); const lines = run('topic', 'list').split('\n'); eq(lines.length, 24); ok(lines[0].startsWith('1. ')); });
+t('S51 topic <id> shows rules + examples', () => { loadReal(); const o = run('topic', 'isim-mawsul'); ok(o.includes('Mawsul') || o.includes('Hubung')); ok(o.includes('•')); });
+t('S52 topic (no arg) deterministic per date', () => { loadReal(); eq(run('topic', '--date', '2026-09-07'), run('topic', '--date', '2026-09-07')); });
+t('S53 root list + root <root> shows harakat variants', () => { loadReal(); ok(run('root', 'list').includes('حجر')); const o = run('root', 'حجر'); ok(o.includes('حَجَرٌ')); ok(o.includes('حُجْرَةٌ')); });
+t('S54 form <paradigm> poses a question + stores pending', () => { loadReal(); const o = run('form', 'tasrif-madhi', '--date', '2026-09-07'); ok(o.includes('Form drill')); ok(o.trim().endsWith('Arabic?')); ok(prog().form_pending); });
+t('S55 answer resolves a pending form drill (hit)', () => { loadReal(); run('form', 'tasrif-madhi', '--date', '2026-09-07'); const exp = prog().form_pending.expected; const o = run('answer', exp, '--date', '2026-09-07'); ok(o.startsWith('✓')); eq(prog().form_pending, null); eq(prog().form_stats.hit, 1); });
+t('S56 answer resolves a pending form drill (miss)', () => { loadReal(); run('form', 'tasrif-madhi', '--date', '2026-09-07'); const o = run('answer', 'kitabun', '--date', '2026-09-07'); ok(o.startsWith('✗'), o); eq(prog().form_stats.miss, 1); });
+t('S57 form drill deterministic per date+paradigm', () => { loadReal(); const a = run('form', 'isim-isyarah', '--date', '2026-09-07'); run('answer', 'x', '--date', '2026-09-07'); eq(a, run('form', 'isim-isyarah', '--date', '2026-09-07')); });
+t('S58 form answer works with no word review (no crash)', () => { loadReal(); run('form', 'nombor', '--date', '2026-09-07'); const exp = prog().form_pending.expected; ok(run('answer', exp, '--date', '2026-09-07').startsWith('✓')); });
+t('S59 drill routes (starts with DRILL) at early lesson', () => { loadReal(); ok(run('drill', '--date', '2026-09-07').startsWith('DRILL')); });
+t('S60 new commands do not disturb the daily review flow', () => { loadReal(); run('form', 'tasrif-madhi', '--date', '2026-09-07'); ok(run('review', '--date', '2026-09-07').startsWith('Week 1 · Lesson 1')); });
+t('S61 sync reports the 69-class manifest state', () => { loadReal(); copyReal('classes.json'); const o = run('sync'); ok(o.includes('69 classes'), o); ok(o.includes('library/sync.md')); });
+
 console.log(rows.join('\n'));
 console.log(`\n${pass} passed, ${fail} failed`);
 fs.rmSync(tmp, { recursive: true, force: true });

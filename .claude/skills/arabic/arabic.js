@@ -26,6 +26,10 @@ const WORDS = path.join(DATA_DIR, 'words.json');
 const PROGRESS = path.join(DATA_DIR, 'progress.json');
 const SETTINGS = path.join(DATA_DIR, 'settings.json');
 const LOG = path.join(DATA_DIR, 'log.jsonl');
+// Phase 2/3 data (syllabus knowledge base + form tables + root families)
+const SYLLABUS = path.join(DATA_DIR, 'syllabus.json');
+const PARADIGMS = path.join(DATA_DIR, 'paradigms.json');
+const ROOTS = path.join(DATA_DIR, 'roots.json');
 // Settings (みや-adjustable via `settings <key> <value>`): words = rows per review · pace = lessons (chunks) per week ·
 // min_reviews = reviews needed before the week advances · set_max = words per chunk
 const DEFAULTS = { words: 5, pace: 1, min_reviews: 3, set_max: 15 };
@@ -37,6 +41,9 @@ const FUNCTION_WORDS = ['فِي', 'عَلَى', 'مِنْ', 'إِلَى', 'هَ�
 function readJson(p, fallback) { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return fallback; } }
 function writeJson(p, o) { fs.writeFileSync(p, JSON.stringify(o, null, 1), 'utf8'); }
 function loadWords() { const w = readJson(WORDS, null); if (!w) throw new Error('words.json missing at ' + WORDS); return w; }
+function loadSyllabus() { return readJson(SYLLABUS, null); }
+function loadParadigms() { return readJson(PARADIGMS, null); }
+function loadRoots() { return readJson(ROOTS, null); }
 function loadProgress() {
   return readJson(PROGRESS, { week_start: null, set_index: 0, week_set: [], reviews: [], words: {}, class_position: null, override: null });
 }
@@ -190,7 +197,9 @@ function cmdReview(date) {
   return out.join('\n');
 }
 function cmdAnswer(text, date) {
-  const words = loadWords(); const p = loadProgress();
+  const p = loadProgress();
+  if (p.form_pending) return resolveForm(p, text);   // a form drill is awaiting its answer
+  const words = loadWords();
   const r = reviewsThisWeek(p).find(x => x.date === date);
   if (!r) return 'No review today yet — run `/arabic` first.';
   const w = words.find(x => x.id === r.recall_id);
@@ -270,6 +279,119 @@ function cmdNudge(date) {
   return `📖 Arabic: ${done}/5 reviews this week · ${todayDone ? 'done today' : 'not yet today'}`;
 }
 
+// ---------- Phase 3: revision modes (form drill · grammar-topic review · root family) ----------
+// Difficulty gate: topics/paradigms unlock up to the class's reached position. class_position (set via
+// `class`) names the current topic; if unset, everything is unlocked (the real class is at the end).
+function topicCeiling(p, syll) {
+  if (!syll) return Infinity;
+  const cp = p.class_position && p.class_position.text ? p.class_position.text.toLowerCase() : '';
+  if (!cp) return Infinity;
+  let best = 0;
+  for (const t of Object.values(syll)) {
+    if (cp.includes(t.id) || cp.includes((t.name_ms || '').toLowerCase()) || (t.name_ar && cp.includes(t.name_ar))) best = Math.max(best, t.order);
+  }
+  return best || Infinity;
+}
+const PERSON = { 1: '1st-person (aku/kami)', 2: '2nd-person (kamu)', 3: '3rd-person (dia/mereka)' };
+const GENDER = { m: 'male', f: 'female', c: '' };
+const NUMBER = { sing: 'singular', dual: 'dual (2)', plur: 'plural' };
+const DIST = { near: 'near (this)', far: 'far (that)' };
+function slotDesc(pid, f) {
+  if (pid === 'nombor') return `number ${f.n} (masculine form)`;
+  const parts = [];
+  if (f.person) parts.push(PERSON[f.person]);
+  if (f.distance) parts.push(DIST[f.distance]);
+  if (f.gender && f.gender !== 'c') parts.push(GENDER[f.gender]);
+  if (f.number) parts.push(NUMBER[f.number]);
+  return parts.join(' ');
+}
+function formExpected(pid, f) { return pid === 'nombor' ? f.cardinal_m : (f.ar || f.example); }
+
+function cmdTopic(arg, date) {
+  const syll = loadSyllabus();
+  if (!syll) return 'No syllabus.json — run Phase 1 build first.';
+  const list = Object.values(syll).sort((a, b) => a.order - b.order);
+  if (arg === 'list') return list.map(t => `${t.order}. ${t.id} — ${t.name_ms}`).join('\n');
+  let t = null;
+  if (arg) t = syll[arg] || list.find(x => (x.name_ms || '').toLowerCase().includes(arg.toLowerCase()));
+  if (!t) { const ceil = topicCeiling(loadProgress(), syll); const elig = list.filter(x => x.order <= ceil && x.rules.length); t = elig[hashDate(date) % elig.length]; }
+  if (!t) return `No topic "${arg}". Try \`topic list\`.`;
+  const out = [`Topic ${t.order}: ${t.name_ms}${t.name_ar ? ' (' + t.name_ar + ')' : ''} — ${t.concept}`];
+  if (t.summary) out.push(t.summary);
+  for (const r of t.rules) out.push(`• ${r.text}`);
+  for (const e of t.examples) out.push(`  ${e.ar} — ${e.ms}`);
+  out.push(`Classes: ${t.classes.join(', ') || '—'}${t.revised_in.length ? ' · revised ' + t.revised_in.join(', ') : ''}`);
+  return out.join('\n');
+}
+function cmdRoot(arg, date) {
+  const r = loadRoots();
+  if (!r) return 'No roots.json — run Phase 2 build first.';
+  const fams = r.families;
+  if (arg === 'list') return fams.map(f => `${f.root} — ${f.gloss}`).join('\n');
+  let fam = null;
+  if (arg) { const a = arg.replace(HARAKAT, ''); fam = fams.find(f => f.root === a) || fams.find(f => f.variants.some(v => arabicSkeleton(v.ar) === arabicSkeleton(arg))); }
+  if (!fam) fam = fams[hashDate(date) % fams.length];
+  const out = [`Root ${fam.root} — ${fam.gloss}:`];
+  for (const v of fam.variants) out.push(`• ${v.ar} = ${v.ms} (${v.pos})`);
+  out.push('Same 3 letters, different harakat → different meaning.');
+  return out.join('\n');
+}
+function cmdForm(arg, date) {
+  const par = loadParadigms();
+  if (!par) return 'No paradigms.json — run Phase 2 build first.';
+  const ids = Object.keys(par);
+  if (arg === 'list') return ids.map(id => `${id} — ${par[id].name_ms}`).join('\n');
+  const p = loadProgress();
+  let pid = arg && par[arg] ? arg : null;
+  if (!pid) {
+    const syll = loadSyllabus(); const ceil = topicCeiling(p, syll);
+    const elig = ids.filter(id => { const top = syll && syll[par[id].topic]; return !top || top.order <= ceil; });
+    const pool = elig.length ? elig : ids; pid = pool[hashDate(date) % pool.length];
+  }
+  const pdef = par[pid]; const forms = pdef.forms;
+  const f = forms[hashDate(date + pid) % forms.length];
+  const expected = formExpected(pid, f); const desc = slotDesc(pid, f);
+  const base = pdef.exemplar ? ` of ${pdef.exemplar}` : (pid === 'dhamir-muttasil' ? ' on طَالِب' : '');
+  p.form_pending = { paradigm: pid, expected, desc };
+  writeJson(PROGRESS, p);
+  return `Form drill — ${pdef.name_ms}\nGive the ${desc}${base} → Arabic?`;
+}
+function resolveForm(p, text) {
+  const fp = p.form_pending; const verdict = match(text, fp.expected);
+  p.form_pending = null;
+  if (!p.form_stats) p.form_stats = { hit: 0, miss: 0 };
+  if (verdict === 'miss') p.form_stats.miss++; else p.form_stats.hit++;
+  writeJson(PROGRESS, p);
+  return verdict === 'hit' ? `✓ ${fp.expected}` : verdict === 'near' ? `~ ${fp.expected} (you: ${text})` : `✗ ${fp.expected} (you: ${text})`;
+}
+// drill = difficulty-aware picker: word recall early, then root/topic, then form drills once the
+// vocabulary review reaches the attached-pronoun/verb lessons (book lesson >= 10).
+function cmdDrill(date) {
+  const p = loadProgress(); const syll = loadSyllabus(); const par = loadParadigms(); const roots = loadRoots();
+  let lesson = 1;
+  try { const words = loadWords(); const all = chunks(words); const set = activeSet(all, Math.min(p.set_index || 0, all.length - 1)); lesson = set.lessonTo; } catch {}
+  const modes = ['word'];
+  if (roots) modes.push('root');
+  if (syll) modes.push('topic');
+  if (par && lesson >= 10) modes.push('form');
+  const mode = modes[hashDate(date) % modes.length];
+  if (mode === 'root') return 'DRILL (root) — ' + cmdRoot(null, date);
+  if (mode === 'topic') return 'DRILL (topic) — ' + cmdTopic(null, date);
+  if (mode === 'form') return 'DRILL (form) — ' + cmdForm(null, date);
+  return 'DRILL (word) — run `/arabic` for today\'s word recall.';
+}
+
+// ---------- Phase 4: freshness / sync (manifest state; enumeration is a documented human/browser step) ----------
+function cmdSync() {
+  const classes = readJson(path.join(DATA_DIR, 'classes.json'), null);
+  if (!classes) return 'No classes.json — run Phase 1 build first.';
+  const ids = Object.keys(classes).sort();
+  const last = classes[ids[ids.length - 1]];
+  const withBook = ids.filter(k => classes[k].book_lesson).length;
+  return [`Syllabus manifest: ${ids.length} classes · latest = ${last.nn} (${last.date}) "${last.title}" · ${withBook} book-tagged.`,
+    `New class? Drive folder enumeration is not automatable (owner-shared folder is not searchable via the Drive API, verified twice). To ingest one, follow library/sync.md: get its file id, then run the download+transcribe pipeline and re-run the Phase-1 finalize.`].join('\n');
+}
+
 // ---------- main ----------
 function main(argv) {
   const args = argv.slice(2); const di = args.indexOf('--date'); let date = null;
@@ -286,6 +408,11 @@ function main(argv) {
     case 'status': out = cmdStatus(date); break;
     case 'settings': out = cmdSettings(args[1], args[2]); break;
     case 'stats': out = cmdStats(); break;
+    case 'topic': out = cmdTopic(args[1], date); break;
+    case 'root': out = cmdRoot(args[1], date); break;
+    case 'form': out = cmdForm(args[1], date); break;
+    case 'drill': out = cmdDrill(date); break;
+    case 'sync': out = cmdSync(); break;
     case 'nudge': out = cmdNudge(date); break;
     default: out = `Unknown command ${cmd}`;
   }
@@ -293,4 +420,4 @@ function main(argv) {
   return out;
 }
 if (require.main === module) { const out = main(process.argv); if (out) process.stdout.write(out + '\n'); }
-module.exports = { main, match, chunks, mondayOf, translitToSkeleton, arabicSkeleton, modeFor, DATA_DIR };
+module.exports = { main, match, chunks, mondayOf, translitToSkeleton, arabicSkeleton, modeFor, DATA_DIR, slotDesc, formExpected, topicCeiling };
