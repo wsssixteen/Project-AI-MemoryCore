@@ -54,3 +54,9 @@ Also on the plate: **#280099** (folder `216`, PROD PT "Alter Permohonan Ke Kemas
 **Save**: each qa_doc got `## 0. RESUME POINT` (verdict · exact fix · banked proof · test data · residuals). 12 artifacts (4 doc + 4 wave3 + 4 audit). active.txt 4 blocks phase=Rubric-done. 🚨 **Untracked-strand catch**: `projects/` + `quest/active.txt` gitignored (untracked-confidential) → qa_docs were worktree-only; COPIED to main so next boot sees them (worktree is 0-ahead → auto-reaped). git-history probe clean (no existing fix / no regression) on all 4.
 
 **Resume**: 4 tickets Rubric-done — resume each from its qa_doc `## 0. RESUME POINT`. #280166 blocked on #267621 pull + fix-layer nod. #280099 retrieved not swept (folder 216).
+
+---
+## Last Activity — 2026-09-20 · Arabic /arabic v2
+- 69/69 class transcripts done; library built; PLAN-v2 APPROVED (syllabus-driven study system, 5 phases, determinism-hardened).
+- Resume: projects/learning-projects/active/arabic/library/HANDOFF-arabic-v2.md → Phase 1.
+- New memories: feedback_mechanical_deterministic, reference_drive_viewonly_download; project_arabic_review updated; todo.md Q2 determinism-audit added.
