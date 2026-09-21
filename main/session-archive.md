@@ -36,6 +36,19 @@
 
 ---
 
+## Last Activity — 2026-09-21 (worktree `redmine-280191-audit-merge`) · /goal: audit colleague fix #280191 + merge to internal
+
+**Arc**: /goal — retrieve #280191, load as adhoc, audit colleague's fix, merge branch into internal to deploy.
+
+**Done**:
+- Synced #280191 (REWORK). Colleague Ammar Zakwan fixed it on `mlk/esokongan/280191` (tip `522951d0`) — 3 additive fixes, handover in `2. Fix\280191 - Handover.txt`.
+- Audited PASS: matches our W1–W4 sweep diagnosis + goes further — `NumberUtils.isParsable` guard (catches non-numeric No Lot, not just blank) + mandatory No-Lot-or-Bersebelahan validation + Fix 3 butir-butir readback. Minimal-diff, analog-matched, pelupusan-only.
+- Ancestry-audited (not tip-guess): int-env + stag-env already had Fixes 1–3 base; missing the last 2 commits (`b10432cafe` isParsable + `522951d068` merge).
+- Merged `280191` → `mlk/int-env` (isolated worktree off origin, clean +4/−1) → tip `6897975b9b`. みや merged stag-env himself → `1c82407e2c` @ 11:59. Both env branches complete.
+- Handed internal deploy card (build+deploy `deploy-pelupusan.sh` on mlit, base `mlk/int-env`).
+
+**Awaiting**: run internal deploy card; deploy staging if wanted; add #280191 to Redmine planned-release list. Full detail: qa_doc `QA-280191.md §0c`.
+
 ## Last Activity — 2026-09-20 · Arabic /arabic v2
 - 69/69 class transcripts done; library built; PLAN-v2 APPROVED (syllabus-driven study system, 5 phases, determinism-hardened).
 - Resume: projects/learning-projects/active/arabic/library/HANDOFF-arabic-v2.md → Phase 1.
