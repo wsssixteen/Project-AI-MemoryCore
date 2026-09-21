@@ -2,7 +2,6 @@
 
 
 ## Feedback
-- [mechanical-deterministic](feedback_mechanical_deterministic.md) — 🚨 ALWAYS 100% mechanical & deterministic; judgment only where necessary; retrieve/check = script over frozen data
 - [permohonan-holder-resolver](feedback_permohonan_holder_resolver.md) — 🚨 permohonan id = umm_aplikasi.id_pengenalan; resolve live holder from DB on the right env, never from ticket text
 - [branch-before-merge](feedback_branch_before_merge.md) — 🚨 fix goes on its OWN ticket branch FIRST, then merge to env branches; never commit straight to int-env/stag-env
 - [diff-first-on-comparison](feedback_diff_first_on_comparison.md) — 🚨 "why A differs from B" / specific-instance question → pull BOTH real values + diff FIRST, lead with the diff, mechanism only after
@@ -85,10 +84,6 @@
 - [flowable-node-edge-trace](feedback_flowable_node_edge_trace.md) — 🚨 Never pick/assert a Flowable Alter target node by
 - [patch-only-justify-and-scope-sweep](feedback_patch_only_justify_and_scope_sweep.md) — 🚨 Data-patch-only handback MUST carry (a) the write-path code that c…
 
-- [etanah-git-separate-clone](feedback_etanah_git_separate_clone.md) — 🚨 write-side etanah git (fetch/branch/commit/merge/push/worktree) runs in a SEPARATE clone off the server, NEVER miya's working repo; his refs/reflog must not move because of me
-- [worktree-cleanup-after-merge](feedback_worktree_cleanup_after_merge.md) — 🚨 remove every temp git worktree in the SAME session; a worktree locks its branch so miya can't check it out
-- [commit-no-code-jargon](feedback_commit_subject_shape.md) — 🚨 commit subjects use plain technical English, NO code-symbol jargon (method names, docx4j rPr/sdtPr)
-
 ## User
 - [miya-blind-to-features](user_miya_blind_to_features.md) — 🚨 miya cannot know every feature; Ruri owns the audit from logs + go…
 - [career-vision](user_career_vision.md) — 3-phase career vision: Personal Excellence → Team…
@@ -115,7 +110,6 @@
 - [etanah-organize](project_etanah_organize.md) — etanah-organize-alpha: organize etanah-knowledge/melaka into…
 
 ## Reference
-- [drive-viewonly-download](reference_drive_viewonly_download.md) — download view-only Drive video via yt-dlp + Firefox cookies + --http-chunk-size
 - [kadar-cukai-duplicate-maintenance](reference_kadar_cukai_duplicate_maintenance.md) — PT plot Kadar Cukai Tanah pulls OLDEST of duplicate maintenance rate rows (same keys diff value); 2026-09-17 adhoc, DATA-side, future ticket possible
 - [mas-ergonomics-animation](reference_mas_ergonomics_animation.md) — MAS ergonomics animation: video + artifact + Claude Design…
 - [redmine-shared-board-miya-ammar](reference_redmine_shared_board_miya_ammar.md) — 🚨 Saved Redmine link: OPEN tickets for みや + Ammar (ids 1311…

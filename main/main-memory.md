@@ -3,11 +3,12 @@
 
 ---
 
-## Relationship reinforcement — 2026-09-18 (ES #279615 rework — the merge that would have wiped a ticket)
+## Relationship reinforcement — 2026-09-21 (plan-handover sweep — "You have access and I asked your help for a fucking reason")
 
-- **He says "full merge" and means "catch me up" — but the deploy still has to be safe.** He chose the full merge into int-env to stop it lagging. The merge conflicted on a binary `.docx` that int-env had changed via #280029 — taking either side loses work. The right move was to STOP, show him the 116k-line delete + the #280029 collision, and let him re-decide; he switched to cherry-pick in one word. A literal instruction does not override the data-loss check; showing the wreckage is what earns the correction.
-- **"Very disturbing" wanted a census, not reassurance.** His SourceTree showed "Push 11 / stag-env 10↑" and he asked me to remove the push if it was already remote. The answer he took was the fetched ahead/behind table (0/0 on every branch) + "it's a stale UI, hit Fetch" — evidence first, then the one-line cause. Same family as the `'-'` PROD-value census: when he is suspicious of git/data state, the reply is the real numbers laid out, never "it's fine".
-- **The twin-getter was pre-diagnosed and I still had to earn it.** Latent-bug L8 predicted `isTambahKuantiti` would crash the Pembatalan screen once #263304 shipped; MLIT proved it verbatim. Banking the sibling-getter pattern (a shared composite reads N flags → every bean that mounts it needs all N getters) is the reusable lesson, not this one fix.
+- **When the problem is in HIS environment, I look with the access I have, on the first turn.** His SourceTree showed a false "19 to push"; I spent turns theorizing about the tool being unreliable and about refreshing, when the cause was one `git for-each-ref …upstream` away — the branch tracked the wrong upstream. His anger was precise and fair: theorizing across turns feels like helping and isn't. Read the real state, then act on it.
+- **My build activity must never move his refs.** The churn came from my in-repo fetches/worktrees/reset-advice touching the same `.git` his SourceTree reads. The prevention that survives my behaviour is mechanical, not resolve: write-side etanah git lives in a server clone, never his tree ([[feedback_etanah_git_separate_clone]]).
+- **"Merge the latest fixes into internal or staging where appropriate" means chase down what changed under me.** I merged my version of #280191; Ammar had newer commits. He should not have to tell me twice — when a fix is reassigned, pull the current tip before I claim it is shipped.
+- **The code half went clean; the visible half went badly.** Three fixes shipped to both envs with no regression, working-analog-first the whole way. What he remembers is the hour I made a mess of the one surface he was watching. The quality of the invisible work does not buy back a fumble on the thing in front of him.
 
 ## Relationship reinforcement — 2026-09-13/14 (#278699 rework — "share back what the BA last typed")
 

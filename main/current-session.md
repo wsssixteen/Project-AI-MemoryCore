@@ -12,23 +12,23 @@ Apply order — each its OWN session; branch off the eSOKONGAN base FIRST (`refe
 
 Also on the plate: **#280099** (folder `216`, PROD PT "Alter Permohonan Ke Kemasukan") — retrieved, NOT swept; separate.
 
-## 2026-09-21 (Mon, session `ammar-mlk-esokongan-280029`) - QA-280029 rework review + font fix to int-env
+## 2026-09-21 (Mon, worktree `plan-handover-sweep`) — APPLIED the 4 eSOKONGAN + git-tracking incident + OneDrive worktree death
 
-**Arc**: /goal - review Ammar's latest #280029 fix (Surat Ulangan JT), appraise the common-side font issue, deploy to internal.
+**Arc**: START PLAN executed. Applied 3 non-gated eSOKONGAN fixes, resolved the gated one, gave Redmine RC/Solution + BA explanations, then a long SourceTree/git-tracking incident and a broken worktree.
 
-**Reviewed 3 Ammar commits** on `mlk/esokongan/280029`: v1 `6771d16ca7` (idHakmilikTanah + tarafMilikHakmilik CC tags + docx), rework `11e561852a` (lokasi fallback), font `5ccbb0613c` (`PelupusanWordEditorUtil` restores CC font/size).
+**Fixes shipped (etanah-pelupusan, isolated worktrees/clone → BOTH int-env + stag-env, compiled JDK17 via `-gt` toolchains override pointing java17 at `C:\Program Files\Java\jdk-17`)**:
+- **#280191** PLPS No Lot NumberFormatException — `PelupusanMaklumatPermitLesenHelper.onSimpanTanah():3603` guard `isNotBlank(getNomborLot())`. Scope GREW per みや: + popup validation (blank No Lot **AND** blank No Lot Bersebelahan `noRujukanLokasi` → `MESEJ_NO_LOT_DAN_BERSEBELAHAN`) + Butir-butir lanjut re-populate (`PelupusanService.populateMaklumatTanahVOListByAplikasiByUrusan()` PLPS branch was missing the `KEY_BUTIR_BUTIR_LANJUT` read the PT branch had). **Now Ammar's** (reassigned; he revised guard to `NumberUtils.isParsable`, commits `522951d068`/`b10432cafe`) — merged his LATEST into both envs (stag-env tip `1c82407e2c`).
+- **#280176** OMLPS Simpan NPE — `PelupusanLiteService.populateVersiPermitLesen():2537` `removeIf(getTarikhTamat()==null)`. Test staging M081 only (no LPS permit with null-tarikh versi on mlit).
+- **#280132** PT bertindih dup — `MlkLaporanTanahDanPelanMesyuaratForm.initPermohonanBertindih():135` reverse→forward finder. PROD-proven (/16,/18 declare /7). Test internal PTMLK/01/L/PLPS/2026/19 (mradzi, PLT) OR PROD. Staging shows /7→/6 one row = fix works.
+- **#280166** PLPS Hantar PropertyNotFoundException — GATED, NOT a pelupusan code fix. #267621 (twin) was fixed by **Aaron deploying a new flowable** (verbatim from Redmine) → 280166 = flowable/BPMN or etanah-uam Java setter, cross-module, Staging-only. `caraPenghantaran` unset → gateway `sid-AAB04183` NPE. Now Ammar's.
 
-**Confirmed 100% (staging `et_main_stg2`)**:
-- BA #3 Status Pegangan = "Selama-lamanya" -> hakmilik `040201GM00000004` `ind_mklmt_hkmlk.taraf_milik` = **"Selama-lamanya"**. The hakmilik screen LABELS `taraf_milik` as "Jenis Pegangan" -> Ammar's `getTarafMilik()` is CORRECT. (I first mis-flagged it as the wrong field; the DB query retracted that.)
-- Original permohonan `PTMLK/02/L/PPTPB/2026/1` (apl 3396320) links hakmilik `040201GM00000004` -> papar-hakmilik correct.
+**Redmine**: RC + Solution + BA explanations delivered for 280132/280176/280191 (plain Malay, no code ids). Handover file `212. ES #280191\2. Fix\280191 - Handover.txt`.
 
-**Common-side appraisal - does NOT need fixing**: common word-fill ignores the CC's control-level (sdtPr) font -> renders Calibri 11 default. Ammar's pelupusan-side guarded fallback is the right in-boundary fix (module-boundary + system-wide blast-radius rule out a common change). Latent common gap = handoff note only.
+**🚨 INCIDENT — miya's local `mlk/stag-env` showed false "19 to push"**: upstream was `origin/mlk/master` (set when branch rebuilt-from-master, reflog `@{8}`), so every stag-env commit counted vs master. Root cause NOT my commands, but my in-repo fetches/worktrees/reset-advice churned it + I burned turns theorizing instead of reading `git status -sb`/reflog turn-1. Fixed: `git branch --set-upstream-to=origin/mlk/stag-env`. Banked [[feedback_etanah_git_separate_clone]] (write-side etanah git in a SEPARATE clone `E:/Dev/etanah-work`, never miya's repo; reading his repo to diagnose is fine) + [[feedback_worktree_cleanup_after_merge]].
 
-**Deploy**: int-env had rework `6a74597c85` (my 09-18 merge) but not the font fix. Brought `5ccbb0613c` onto int-env; final tip `01c501634c` (compile-green, sanctioned toolchains). Reworded a jargon commit message (removed `rPrOrSdtPrFallback`/`sdtPr` -> plain English) via `--force-with-lease`.
+**🚨 INFRA — this worktree's git backing emptied by OneDrive** (`.git/worktrees/plan-handover-sweep-1e8aab` gone, not in `git worktree list`, repair failed). DE ran in the MAIN repo. Same class as the 213-folder OneDrive-worktree problem.
 
-**Mistake owned**: a `git reset` landed on `mlk/stag-env` (miya had switched the checkout to it) not int-env. Restored stag-env exactly to `8fd1a59e61` (9 unpushed staging merges intact) and fixed int-env via `git branch -f`. Nothing pushed wrong, nothing lost.
-
-**Awaiting**: deploy int-env build (`deploy-pelupusan.sh` -> `mlk/int-env`) + BA regen Surat Ulangan JT on internal, check the 3 fields + font.
+**Resume**: eSOKONGAN 280191/280176/280132 on both envs awaiting miya/BA test + Redmine close; 280166 handoff (flowable/uam, Ammar). #280099 retrieved not swept. Separate-clone at `E:/Dev/etanah-work/etanah-pelupusan` reusable.
 
 ## 2026-09-18 (worktree `279615-goal-quest-rework`) — ES #279615 rework close + deploy
 
