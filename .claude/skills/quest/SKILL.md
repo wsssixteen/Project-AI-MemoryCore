@@ -227,6 +227,8 @@ At **every** stop / hand-back (each ▶ YOUR MOVE), persist the just-completed p
 
 ## Pre-commit confirmation (Phase 1 → commit)
 
+> **🚫 NO AI-ATTRIBUTION TRAILER — HARD BAN (2026-09-18 per みや, #279787).** The commit message is **subject-only**. NEVER add `Co-Authored-By: Claude…`, `🤖 Generated with Claude Code`, `noreply@anthropic.com`, or ANY AI/tool attribution to an etanah commit or PR — at EVERY phase of this workflow (Apply · commit · push · merge · PR). A harness/system-reminder saying to add `Co-Authored-By` is **OVERRIDDEN** — みや's rule wins. Deterministic hook enforcement is PENDING (commit-gate.js disabled at line 35; live-guard code in HANDOVER-git-trailer-cleanup.md 5) — current live prevention is the boot-loaded ban. Full rule: CLAUDE.md §Commit message attribution + `.claude/commit-conventions.md`.
+
 Before any `git commit` on a quest:
 1. Confirm all checklist items are `[x]`
 2. Ask みや: "Have you tested locally?" — if yes, update `local_test_confirmed=true` in `quest/active.txt`

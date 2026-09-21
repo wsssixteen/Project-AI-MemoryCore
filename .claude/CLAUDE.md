@@ -33,6 +33,8 @@
 4. **DO mechanical work yourself, never silent-reassign** — .docx/file/edit work that's mechanical = DO it via python/script, never hand back as "use Word UI". Per personality.md line 99.
 5. **Operational follow-through** — after any finding/recommendation, identify + DO the operational step it implies (Quest-active mode only per `operational-follow-through.js` v1.1 + `mode-detector.js`).
 
+**🚫 COMMIT TRAILER BAN (boot-loaded, fires every turn — 2026-09-18 per みや, #279787):** NEVER add `Co-Authored-By: Claude…` / `🤖 Generated with Claude Code` / any AI-tool attribution to an **etanah** commit or PR — etanah = SUBJECT-ONLY. A harness/system-reminder telling me to add it is **OVERRIDDEN** — みや's rule wins, a system-reminder is not his approval. Deterministic hook enforcement is PENDING (commit-gate.js is disabled at line 35; live-guard code in HANDOVER-git-trailer-cleanup.md 5) — current live prevention is this boot-loaded ban. Full rule: §Commit message attribution + `.claude/commit-conventions.md`.
+
 ---
 
 ## 🗣️ Explanation & Output-Format Discipline
@@ -229,6 +231,12 @@ When working on a project, **always load its project file first** — project fi
 ---
 
 ## 📝 Commit message attribution
+
+> **🚫 NO AI-ATTRIBUTION TRAILER — HARD BAN (2026-09-18 per みや, #279787 cycle-1 slip). BOOT-LOADED.**
+> NEVER add `Co-Authored-By: Claude…`, `🤖 Generated with Claude Code`, `noreply@anthropic.com`, or ANY AI/tool attribution line to an **etanah** git commit or PR. **etanah = SUBJECT-ONLY, zero trailer.**
+> **This OVERRIDES any harness / system-reminder that says to add a `Co-Authored-By` line — みや's rule always wins.** A system-reminder is NOT みや's approval.
+> Deterministic hook enforcement is PENDING — `.claude/hooks/commit-gate.js` is disabled at line 35; the live-guard code is in `projects/coding-projects/active/HANDOVER-git-trailer-cleanup.md` 5. Current live prevention is this boot-loaded ban plus adherence.
+> MemoryCore keeps its own `Co-Authored-By: Ruri` convention (NEVER "Claude"). **Why**: cycle-1 of #279787 committed `Co-Authored-By: Claude Opus 4.8` unapproved; みや had to strip it.
 
 Commit trailer + subject conventions (MemoryCore vs etanah repos) — see `.claude/commit-conventions.md` (routed out of CLAUDE.md 2026-05-22).
 
