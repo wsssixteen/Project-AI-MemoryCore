@@ -12,6 +12,24 @@ Apply order — each its OWN session; branch off the eSOKONGAN base FIRST (`refe
 
 Also on the plate: **#280099** (folder `216`, PROD PT "Alter Permohonan Ke Kemasukan") — retrieved, NOT swept; separate.
 
+## 2026-09-21 (Mon, session `ammar-mlk-esokongan-280029`) - QA-280029 rework review + font fix to int-env
+
+**Arc**: /goal - review Ammar's latest #280029 fix (Surat Ulangan JT), appraise the common-side font issue, deploy to internal.
+
+**Reviewed 3 Ammar commits** on `mlk/esokongan/280029`: v1 `6771d16ca7` (idHakmilikTanah + tarafMilikHakmilik CC tags + docx), rework `11e561852a` (lokasi fallback), font `5ccbb0613c` (`PelupusanWordEditorUtil` restores CC font/size).
+
+**Confirmed 100% (staging `et_main_stg2`)**:
+- BA #3 Status Pegangan = "Selama-lamanya" -> hakmilik `040201GM00000004` `ind_mklmt_hkmlk.taraf_milik` = **"Selama-lamanya"**. The hakmilik screen LABELS `taraf_milik` as "Jenis Pegangan" -> Ammar's `getTarafMilik()` is CORRECT. (I first mis-flagged it as the wrong field; the DB query retracted that.)
+- Original permohonan `PTMLK/02/L/PPTPB/2026/1` (apl 3396320) links hakmilik `040201GM00000004` -> papar-hakmilik correct.
+
+**Common-side appraisal - does NOT need fixing**: common word-fill ignores the CC's control-level (sdtPr) font -> renders Calibri 11 default. Ammar's pelupusan-side guarded fallback is the right in-boundary fix (module-boundary + system-wide blast-radius rule out a common change). Latent common gap = handoff note only.
+
+**Deploy**: int-env had rework `6a74597c85` (my 09-18 merge) but not the font fix. Brought `5ccbb0613c` onto int-env; final tip `01c501634c` (compile-green, sanctioned toolchains). Reworded a jargon commit message (removed `rPrOrSdtPrFallback`/`sdtPr` -> plain English) via `--force-with-lease`.
+
+**Mistake owned**: a `git reset` landed on `mlk/stag-env` (miya had switched the checkout to it) not int-env. Restored stag-env exactly to `8fd1a59e61` (9 unpushed staging merges intact) and fixed int-env via `git branch -f`. Nothing pushed wrong, nothing lost.
+
+**Awaiting**: deploy int-env build (`deploy-pelupusan.sh` -> `mlk/int-env`) + BA regen Surat Ulangan JT on internal, check the 3 fields + font.
+
 ## 2026-09-18 (worktree `279615-goal-quest-rework`) — ES #279615 rework close + deploy
 
 **Arc**: /goal on ES #279615 (UPP Pembatalan langkah 2 rework). BA Nurhafizah reopened 2026-09-18 with 2 issues from MLIT: (R1) langkah-2 error still — now `isTambahKuantiti` not `isGantiHari`; (R2) Jana id UPP → GIS-null NPE.

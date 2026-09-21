@@ -85,6 +85,10 @@
 - [flowable-node-edge-trace](feedback_flowable_node_edge_trace.md) — 🚨 Never pick/assert a Flowable Alter target node by
 - [patch-only-justify-and-scope-sweep](feedback_patch_only_justify_and_scope_sweep.md) — 🚨 Data-patch-only handback MUST carry (a) the write-path code that c…
 
+- [etanah-git-separate-clone](feedback_etanah_git_separate_clone.md) — 🚨 write-side etanah git (fetch/branch/commit/merge/push/worktree) runs in a SEPARATE clone off the server, NEVER miya's working repo; his refs/reflog must not move because of me
+- [worktree-cleanup-after-merge](feedback_worktree_cleanup_after_merge.md) — 🚨 remove every temp git worktree in the SAME session; a worktree locks its branch so miya can't check it out
+- [commit-no-code-jargon](feedback_commit_subject_shape.md) — 🚨 commit subjects use plain technical English, NO code-symbol jargon (method names, docx4j rPr/sdtPr)
+
 ## User
 - [miya-blind-to-features](user_miya_blind_to_features.md) — 🚨 miya cannot know every feature; Ruri owns the audit from logs + go…
 - [career-vision](user_career_vision.md) — 3-phase career vision: Personal Excellence → Team…
