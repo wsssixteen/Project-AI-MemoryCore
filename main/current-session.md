@@ -1,14 +1,20 @@
 # Current Session
 
-## 🚀 NEXT-SESSION START PLAN — Apply the 4 verify-swept eSOKONGAN tickets
+**Last Activity**: 2026-09-21 18:20 — Domain Expansion close (patch/eSOKONGAN sweep + Redmine reconcile).
 
-**Full per-ticket handover = each qa_doc `## 0. RESUME POINT` + `## 0b. VERIFY2`** (`projects/coding-projects/active/QA-<n>/QA-<n>.md`; also `-verify2.md` / `-wave3.md` / `-audit.md`). All on origin/main.
+## Working Memory
+- **Focus tickets for tomorrow (みや's plan list)**: 280614 (send to infra), 280099 (run Alter on page), 280540 (build code fix).
+- **Melaka DB**: reconnected mid-session (was CONNECT_TIMEOUT at boot); postgres-mlkprod live (`etprdmlk`).
+- **Canonical-formats rule**: never invent handoff/reply shapes — use infra-handoff + SCRIPT-CHECK + close-phase verbatim (`feedback_use_canonical_formats_never_invent`).
 
-Apply order — each its OWN session; branch off the eSOKONGAN base FIRST (`reference_esokongan_branch_shape`, 1.6.x), never straight to int-env/stag-env:
-1. ~~**#280191**~~ ✅ **DONE 2026-09-21** — colleague Ammar shipped the fix on `mlk/esokongan/280191` (superset of our `isNotBlank` plan: adds `NumberUtils.isParsable` guard + mandatory No-Lot-or-Bersebelahan validation + Fix 3 butir-butir readback). Audited PASS, merged to int-env (`6897975b9b`) + stag-env (みや, `1c82407e2c`). Remaining: run internal deploy card; add to planned-release list. See qa_doc §0c.
-2. **#280176** (93%) — `etanah-pelupusan\...\service\impl\PelupusanLiteService.java:2537` add `vplList.removeIf(v -> v.getTarikhTamat()==null);`. Test @Staging, No Lesen `M081` / `PDTJ.600-2/9/79`, `nurulazura@melaka.gov.my`, Utiliti > Pengeluaran Lesen dan Permit.
-3. **#280132** (95%) — `etanah-pelupusan\...\web\form\common\mlk\MlkLaporanTanahDanPelanMesyuaratForm.java:142-162` 3-swap reverse→forward finder+getter. Test **@PROD** `PTMLK/01/L/PT/2026/7`, `hafizahkasim@melaka.gov.my` (stg2 does NOT reproduce).
-4. **#280166** (root 98%, fix GATED) — BEFORE coding: pull #267621 (needs `[skip-redmine-write-gate]`), confirm module (**etanah-uam** vs common) + value `perluWT ? "warta" : "TP"`. Test @Staging only (etanah-uam not on local JBoss).
+## Session Recap (2026-09-21)
+- **Board + reconcile**: みや 0 open; reconciled active.txt vs Redmine → **31 quests closed** (Redmine-done); 3 missing synced (265109/274323/246923).
+- **280265** PT Patch Status JT — JPPH row 7547 `generateSurat` TIDAK→YA, PROD-applied + live-verified, closed in Redmine. `.sql` in `218…/2. Fix/`.
+- **280614** MLPS Tempat ×2 — 4 rows live-verified, `280614.sql` built+stamped+sent; awaiting infra send + prevention-half decision.
+- **280099** PT Alter Ke Kemasukan — live proc CT_BSC_PLP, Alter Flow → SKM (`MLK_PLP_PT.bpmn20.xml:7`); awaiting page execution.
+- **280540** PPTPB formula — `PelupusanMaklumatBayaranHelper.java:276` unconditional multiply; fix = `PLP_BANGUNAN_*` flat-rate guard (not built).
+- **280166** PLPS Hantar error — `caraPenghantaran` unset → gateway NPE; fix = set real delivery value (NOT flat literal); Ammar/cross-module owns.
+- **New-ticket Recon (qa_docs written)**: 265109 (config-data gap), 246923 (config dedup ~9 lines), 274323 (force RM0.00), 279411 (add guard to MlkSenaraiSemakPTGForm), 275043 (Aaron's v2 verify).
 
 Also on the plate: **#280099** (folder `216`, PROD PT "Alter Permohonan Ke Kemasukan") — retrieved, NOT swept; separate.
 
@@ -68,3 +74,10 @@ Also on the plate: **#280099** (folder `216`, PROD PT "Alter Permohonan Ke Kemas
 **Save**: 4 `QA-<n>-verify2.md` + a `## 0b. VERIFY2` addendum per qa_doc; synced worktree→main; active.txt phases bumped. Audit: 16 artifacts present in main.
 
 **Resume**: unchanged from S1 — Apply each in its own session. #280166 now carries the REVISED fix (derived value + etanah-uam) + the #267621 gate.
+## Deferred to follow-up
+| Ticket | Next action | Owner |
+|---|---|---|
+| 280614 | send hand-off to infra + decide prevention UPDATEs | みや |
+| 280099 | run Alter Flow on the page, tell Ruri result | みや |
+| 280540 | build `PLP_BANGUNAN_*` guard, branch+test | Ruri/みや |
+| 279411 | patch MlkSenaraiSemakPTGForm.java:839 (Ammar's fix gap) | Ammar |

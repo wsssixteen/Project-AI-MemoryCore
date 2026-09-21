@@ -33,7 +33,9 @@ archived                              --close-->   (no-op: already archived)
 
 ## Phase 1 close-out  (status ∈ active/hold/blocked/delegated  →  closed)
 
-**Visible checklist first:** `Phase 1 close — QA-<num>: 1 ⬜ test-confirmed · 2 ⬜ pull+branch · 3 ⬜ stage-fix-only · 4 ⬜ STOP review · 5 ⬜ commit+push · 6 ⬜ master+active.txt · 7 ⬜ /verify`
+**Visible checklist first:** `Phase 1 close — QA-<num>: 1 ⬜ test-confirmed · 2 ⬜ pull+branch · 3 ⬜ stage-fix-only · 4 ⬜ STOP review · 5 ⬜ commit+push · 6 ⬜ master+active.txt · 7 ⬜ /verify · 8 ⬜ Redmine root-cause+solution`
+
+**🚨 ALWAYS emit the Redmine Root cause + Solution pair at every close (みや 2026-09-21, standing rule).** Before declaring the quest closed, emit both rows per `feedback_redmine_rootcause_format` — plain Malay, cause-only / fix-only, max 2 short sentences (or bullets) each, NO code identifiers, NO dashes/semicolons/colons. This holds for a data-patch close too (no git steps), not just code fixes.
 
 0. **Wrong-fix rows saved (added 2026-09-07, plan §9a).** If any fix was REFUTED / reverted / found not the cause during this quest, each one is a row: `node lib/wrong-fix.js add QA-<num> --was "<fix>" --why "<how refuted>" --learned "<rule>"`. Emit `wrong-fix rows: N` (0 is a valid answer only when no fix was overturned). The turn-ledger advisory names the missing row at the moment of the refute; this step is the backstop.
 1. **Assert local test.** If `local_test_confirmed` ≠ true → ask みや "Tested locally?" Do NOT proceed until confirmed.
