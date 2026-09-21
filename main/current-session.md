@@ -12,6 +12,16 @@ Apply order — each its OWN session; branch off the eSOKONGAN base FIRST (`refe
 
 Also on the plate: **#280099** (folder `216`, PROD PT "Alter Permohonan Ke Kemasukan") — retrieved, NOT swept; separate.
 
+## 2026-09-21 (Mon evening, main repo session) — PymTime v14 "works when a friend installs it" (/goal + ultracode)
+
+- **Repo** `E:\Dev\scripts\PymTime` main, commits `3b6f232` (v14) · `5498a74` · `95580ad` (docs), pushed to private `wsssixteen/PymTime`
+- **Hand-out file** `E:\Dev\scripts\PymTime\PymTime-portable-v14.zip` (33.1 MB, SHA-256 `AAEB62F2…3BCB98`, BUILD.json git `95580ad`)
+- **Proofs on that zip** selftest 546/546 · scenarios 36/36 · build gate · `dev/install-sim.ps1` 15/15 · `dev/upgrade-sim.ps1` PASS
+- **His laptop** self-repair run from source (never `--live`): Reconcile registered, keep-alive shortcut created, doctor 26 ok · 0 broken
+- **Still open** colleague's `Check PymTime.bat` output never received (the real cause on that laptop is unknown until it arrives) · per-office clock-in coordinates (old decision) · `holidays-2027.json` absent (the live Protime holiday check covers it)
+- **Spawned** task chip: compact `.claude/auto-memory/MEMORY.md` under 140 lines
+- **Memory** `project_pymtime.md` carries the v14 architecture, proofs and 9 lessons
+
 ## 2026-09-21 (Mon, worktree `plan-handover-sweep`) — APPLIED the 4 eSOKONGAN + git-tracking incident + OneDrive worktree death
 
 **Arc**: START PLAN executed. Applied 3 non-gated eSOKONGAN fixes, resolved the gated one, gave Redmine RC/Solution + BA explanations, then a long SourceTree/git-tracking incident and a broken worktree.
