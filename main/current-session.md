@@ -27,6 +27,7 @@ Also on the plate: **#280099** (folder `216`, PROD PT "Alter Permohonan Ke Kemas
 - **Still open** colleague's `Check PymTime.bat` output never received (the real cause on that laptop is unknown until it arrives) · per-office clock-in coordinates (old decision) · `holidays-2027.json` absent (the live Protime holiday check covers it)
 - **Spawned** task chip: compact `.claude/auto-memory/MEMORY.md` under 140 lines
 - **Memory** `project_pymtime.md` carries the v14 architecture, proofs and 9 lessons
+- **v15 (2026-09-22 early morning, same session, /goal + ultracode)**: he asked "what guarantee"; honest root cause = every release was proven only on the build laptop and no data ever came back from a colleague. Built "Verify this laptop" (`lib/verify.js`, 21 checks incl. a task Windows really runs, one login, report file), evening day-truth from Protime + 10-day strip (`lib/history.js`, `reconcile.js`), false-READY guards, canonical-username fix. Commit `7eabfa0` pushed. Zip `E:DevscriptsPymTimePymTime-portable-v15.zip` SHA-256 `CE55C4BB…901070`. Proofs on that zip: selftest 558/558, gate ok, install sim 20/20, upgrade sim PASS; his laptop verify = READY 21/21. Workflows: assumption hunt (9 agents, 18 real / 17 dropped) + v15 review (3 agents, 19 findings, all fixed or consciously skipped). **Acceptance rule from now: a build is "working" only when the friend's `PymTime report.txt` says READY.**
 
 ## 2026-09-21 (Mon, worktree `plan-handover-sweep`) — APPLIED the 4 eSOKONGAN + git-tracking incident + OneDrive worktree death
 
