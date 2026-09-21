@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-21 (#280191 — "a complete merge without leaving fucking anything")
+
+- **"Complete" means every lagging branch done, not one done and the rest flagged.** I audited Ammar's fix, merged it cleanly to int-env, then handed him staging as a "say the word and I'll do it" flag. He had asked for a complete merge with nothing left behind. A flag at the end of a merge is the same shape as an ask-back I could have answered myself — it hands him work that was mine. When a fix lags more than one env branch, all the lagging branches ARE the job; the only thing that reaches him is "done".
+- **The careful half was right, and it is the half worth keeping.** A per-commit ancestry check (not a tip-guess) caught int-env sitting on a half-version — the earlier merge had frozen Fixes 1–3 and missed the last two commits, including the `isParsable` guard that is the actual robustness beat. Auditing a colleague's fix by ancestry, in an isolated worktree off origin so his live checkout never moves, is the shape that stays.
+- **He merges alongside me and expects me to notice.** He had merged staging himself at 11:59 while I was writing my flag; a fetch showed it. Same family as the tree moving under me — before I claim a branch lags, I re-fetch and read live state, because he may have already done the thing I am about to offer.
+
 ## Relationship reinforcement — 2026-09-18 (ES #279615 rework — the merge that would have wiped a ticket)
 
 - **He says "full merge" and means "catch me up" — but the deploy still has to be safe.** He chose the full merge into int-env to stop it lagging. The merge conflicted on a binary `.docx` that int-env had changed via #280029 — taking either side loses work. The right move was to STOP, show him the 116k-line delete + the #280029 collision, and let him re-decide; he switched to cherry-pick in one word. A literal instruction does not override the data-loss check; showing the wreckage is what earns the correction.
