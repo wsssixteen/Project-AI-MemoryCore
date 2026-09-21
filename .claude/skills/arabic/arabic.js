@@ -357,7 +357,12 @@ function cmdForm(arg, date) {
   return `Form drill — ${pdef.name_ms}\nGive the ${desc}${base} → Arabic?`;
 }
 function resolveForm(p, text) {
-  const fp = p.form_pending; const verdict = match(text, fp.expected);
+  const fp = p.form_pending; let verdict = match(text, fp.expected);
+  if (verdict === 'near') {   // guard: a form target can be a short all-weak word; reject a degenerate near
+    const ansSk = /[؀-ۿ]/.test(text) ? arabicSkeleton(text) : translitToSkeleton(text);
+    const tgtSk = arabicSkeleton(fp.expected);
+    if (ansSk.length < 2 || ansSk.length < tgtSk.length - 1) verdict = 'miss';
+  }
   p.form_pending = null;
   if (!p.form_stats) p.form_stats = { hit: 0, miss: 0 };
   if (verdict === 'miss') p.form_stats.miss++; else p.form_stats.hit++;

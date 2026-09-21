@@ -102,6 +102,17 @@ t('S59 drill routes (starts with DRILL) at early lesson', () => { loadReal(); ok
 t('S60 new commands do not disturb the daily review flow', () => { loadReal(); run('form', 'tasrif-madhi', '--date', '2026-09-07'); ok(run('review', '--date', '2026-09-07').startsWith('Week 1 · Lesson 1')); });
 t('S61 sync reports the 69-class manifest state', () => { loadReal(); copyReal('classes.json'); const o = run('sync'); ok(o.includes('69 classes'), o); ok(o.includes('library/sync.md')); });
 
+t('S62 golden paradigm values (regression guard on the form tables)', () => {
+  const par = JSON.parse(fs.readFileSync(path.join(REALDIR, 'paradigms.json'), 'utf8'));
+  const find = (pid, q) => par[pid].forms.find(f => Object.entries(q).every(([k, v]) => f[k] === v));
+  eq(find('tasrif-madhi', { person: 3, gender: 'f', number: 'sing' }).ar, 'نَصَرَتْ');
+  eq(find('tasrif-madhi', { person: 3, gender: 'm', number: 'plur' }).ar, 'نَصَرُوا');
+  eq(find('isim-isyarah', { distance: 'far', gender: 'f', number: 'plur' }).ar, 'أُولئِكَ');
+  eq(find('isim-mawsul', { gender: 'm', number: 'sing' }).ar, 'الَّذِي');
+  eq(find('nombor', { n: 7 }).cardinal_f, 'سَبْعَةٌ');
+});
+t('S63 form-drill degenerate near is rejected as miss', () => { loadReal(); run('form', 'dhamir-munfasil', '--date', '2026-09-07'); const o = run('answer', 'zzz', '--date', '2026-09-07'); ok(o.startsWith('✗'), o); });
+
 console.log(rows.join('\n'));
 console.log(`\n${pass} passed, ${fail} failed`);
 fs.rmSync(tmp, { recursive: true, force: true });
