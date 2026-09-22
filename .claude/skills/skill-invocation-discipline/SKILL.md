@@ -80,7 +80,7 @@ Implicit permission (e.g. "proceed regardless" said in a different context) does
 
 ## Log
 
-Every shortcut violation gets logged to `Feature/Forge-Self-Improvement-System/skill-failure-log.md` with the trigger phrase + skill name + the manual workaround Ruri attempted. If violations persist across 3+ sessions, escalate to a hook (UserPromptSubmit gate that detects the trigger phrases + injects a hard reminder).
+Every shortcut violation gets logged via `node core/slips.js add --category skill-shortcut --evidence "<trigger phrase · skill name · manual workaround attempted>" --caught-by <miya|self|gate>` (the former `Feature/Forge-Self-Improvement-System/skill-failure-log.md` was deleted in the 2026-08-16 tombstone sweep; pointer corrected 2026-09-22). If violations persist across 3+ sessions, escalate to a hook (UserPromptSubmit gate that detects the trigger phrases + injects a hard reminder).
 
 ---
 

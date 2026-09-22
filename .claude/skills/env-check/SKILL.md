@@ -271,7 +271,7 @@ Pressure-tested against 3 sessions:
 - **L2 (after 3 quest cycles)**: refine mapping table based on edge cases discovered
 - **L3 (after stable)**: integrate with `/quest start` — auto-fire env-check at every quest activation
 
-Continuous improvement entries land in `Feature/Forge-Self-Improvement-System/forge-log.md` with reference to this skill.
+Continuous improvement entries land in `system/slips.jsonl` via `node core/slips.js add …` with reference to this skill (`forge-log.md` was deleted in the 2026-08-16 tombstone sweep; pointer corrected 2026-09-22).
 
 ---
 

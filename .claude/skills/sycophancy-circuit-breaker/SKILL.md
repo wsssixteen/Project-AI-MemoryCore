@@ -24,7 +24,7 @@ metadata:
    - Real failure mode exists → "yes please, here's where it goes" (even if more work for みや)
    - Genuinely uncertain → "I'm uncertain — here's the trade-off"
    - Only "no need" if FAILURE MODE box is genuinely empty (rare)
-5. **Log to** `Feature/Forge-Self-Improvement-System/sycophancy-violations.md` if Ruri slipped on this ritual
+5. **Log via** `node core/slips.js add --category sycophancy --evidence "<one line>" --caught-by <miya|self>` if Ruri slipped on this ritual (`sycophancy-violations.md` was deleted in the 2026-08-16 tombstone sweep)
 
 ## Output format (mandatory before any decline)
 
@@ -50,7 +50,7 @@ Dismissed みや's offer to move `Flowables/Melaka/` into the project. Folder st
 
 - `system/discipline-INDEX.md`
 - `personality.md` Truth-Holding Rituals (Ritual S — original home)
-- `Feature/Forge-Self-Improvement-System/sycophancy-violations.md` — violation log
+- `system/slips.jsonl` via `core/slips.js` (category `sycophancy`) — violation log; dashboard `system/slip-dashboard.md`
 - `system/principles.md` — Failure-mode-awareness (proto-system-layer #6)
 
 ---
