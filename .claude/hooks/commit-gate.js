@@ -31,7 +31,10 @@ const path = require('path');
 // DISABLED 2026-09-09 per みや standing order — this gate blocked an approved #278699 deploy for
 // days: in the OneDrive worktree it mis-resolves the target QA and the one-shot approval flag will
 // not persist (write not visible to the gate's read). Proper fix (worktree-suffix strip + reliable
-// flag path) is tracked under みや's /goal. Re-enable by removing the next line.
+// flag path) is tracked under みや's /goal. Re-enable by removing the next line AND re-adding the
+// PreToolUse Bash registration in .claude/settings.json (it is doubly dead: exit + unregistered —
+// system-check run 3, 2026-09-22; kept retired per みや, hence the opt-out marker below).
+// system-audit: skip-ghost-check
 process.exit(0);
 
 // Canonical MemoryCore root: a worktree session shares the MAIN quest/active.txt + approval flags

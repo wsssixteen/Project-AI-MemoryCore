@@ -1,6 +1,9 @@
 /**
  * stop-point-summary.discipline.hook.js — Stop hook
  * Feature: domain/stop-point-summary/
+ * RETIRED from settings.json 2026-08-18 (see README); re-registration parked in main/todo.md Q1
+ * "Stop-gate reshape around /goal". Kept retired per みや 2026-09-22 (system-check run 3).
+ * system-audit: skip-ghost-check
  *
  * PURPOSE (みや 2026-07-06): a substantive assistant turn that ends WITHOUT a
  *   Stop-Point Summary (per .claude/skills/stop-point-summary/SKILL.md) = a

@@ -119,6 +119,27 @@ function collectHookFiles(dir) {
       if (/\bsystem-audit:\s*skip-ghost-check\b/.test(body)) skip.add(base);
     }
   } catch {}
+  // 2026-09-22 (system-check run 3): Feature hooks live under domain/<name>/*.hook.js and were
+  // INVISIBLE to this scan — 9 ghosts (etanah-intake-gate, staging-schema-tracker, rootcause-format …)
+  // sat unregistered while boot reported "1 ghost". Walk domain/ recursively for *.hook.js; the
+  // registered-name set already carries these as basename-without-.js (e.g. batch-ask.trigger.hook).
+  const domainDir = path.join(REPO_ROOT, 'domain');
+  const walk = (d, depth) => {
+    if (depth > 3) return;
+    let ents = [];
+    try { ents = fs.readdirSync(d, { withFileTypes: true }); } catch { return; }
+    for (const e of ents) {
+      if (e.name === 'node_modules' || e.name === 'bundles' || e.name.startsWith('.')) continue;
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) { walk(p, depth + 1); continue; }
+      if (!/\.hook\.js$/.test(e.name) || /-PJNBRidhwan|-miyazaki/.test(e.name)) continue;
+      const base = e.name.replace(/\.js$/, '');
+      names.add(base);
+      const body = safeRead(p) || '';
+      if (/\bsystem-audit:\s*skip-ghost-check\b/.test(body)) skip.add(base);
+    }
+  };
+  walk(domainDir, 0);
   return { names, skip };
 }
 
