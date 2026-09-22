@@ -43,14 +43,34 @@ Then the step-line (update ⬜→✓ in place as each completes; `⏭ + one-line
 | 7.5 | 🚨 **IMPROVEMENT SWEEP — MANDATORY** (added 2026-08-05 per みや, so he never has to ask again). Forward-looking, axis-driven. Sweep **all five axes every time**: **A1** agentic system · **A2** quest workflow · **A3** debugging efficiency + accuracy · **A4** etanah issue-solving · **A5** sweep / file sweep. Produce BOTH: **(a)** an assessment with a concrete instance per claim → `system/agentic-ticket-workflow-assessment-<date>.md`, and **(b)** brainstormed forward ideas, each logged for the weekly audit:<br>`node core/slips.js add --type proposal --category <A1..A5> --evidence "<idea + eval case>" --caught-by self`<br>They surface in `slip-dashboard.md` under **💡 Open proposals**; weekly audit rules each BUILD/DROP/DEFER. Every idea names its **eval case** or it is a wish, not a proposal. Prefer mechanical (a hook that counts) over prose (a rule to remember). An axis with genuinely nothing gets `A<n> ⏭ <reason>` — silence is banned. Detail: `expansion-protocol.md` §Step 7.5. |
 | 8 | Closing words to みや (**fenced code block**) |
 | 9 | Change manifest (`git status` touched files) |
-| 10 | **Auto-commit + push** (worktree branch + main FF) |
+| 10 | 🚨 **COMMIT + PUSH + MERGE — MANDATORY, NON-NEGOTIABLE, NOT OPTIONAL** (see hard rule below) |
 | 11 | Worktree & branch close (verify main current + salvage unmerged) |
 | 12 | Run **`/verify` Checklist D** — cross-check every step fired with evidence |
 | 12.5 | **Meta-audit** — hook-fire reliability + cross-refs + component-liveness |
 | 12.6 | **Resume-readiness sweep** — `node domain/checklist-reactivate/resume-readiness.js`; fill any `✗`/`🔴` qa_doc gap before close |
 | 13 | **Handoff Block** (tiered — default SILENCE; only blocked/stranded work) |
 
-Closing banner (VERBATIM, after step 10's push completes):
+## 🚨 STEP 10 IS AN EXPLICIT ORDER — COMMIT + PUSH + MERGE (hard rule, 2026-07-28 per みや)
+
+**みや, verbatim**: *"MAKE IT FUCKING EXPLICIT ORDER TO COMMIT, PUSH & MERGE WHEN FINISHING DOMAIN EXPANSION!!!!"*
+
+Every Domain Expansion **ends with all three, verified**:
+
+| # | Action | Verified how |
+|---|---|---|
+| 1 | `git add -A` + `git commit` — **every** modified/untracked path, authorship is NOT a filter | commit SHA emitted |
+| 2 | `git push origin HEAD` (worktree branch) | remote ref matches local SHA |
+| 3 | `git push origin HEAD:main` (**the merge** — FF main on the remote) | `git ls-remote origin refs/heads/main` **equals** local `HEAD` |
+
+**Verification is mandatory and mechanical**: emit the three SHAs and show they match. "Push succeeded" without the remote SHA is not evidence.
+
+**Banned**: emitting the closing banner with step 10 at anything but ✓ · downgrading a failed push/merge into a Handoff Block and closing DE anyway.
+
+**When a push genuinely fails — retry first, do not hand it back.** Then enumerate: credential-helper context (a changed Windows user breaks both `safe.directory` and the credential store — use `git -c safe.directory=*` + re-auth), a diverged remote (`git fetch` + rebase, then push), a locked worktree. Only a blocker that survives all of these goes to the Handoff Block, with the exact failing command and its output.
+
+> Restored 2026-09-22 (system-check run 3): this section was committed 2026-07-28 (`2940eb07`) and silently deleted 2026-08-03 (`25a0379c`) when a stale OneDrive conflict copy overwrote the file before a `git add -A`.
+
+Closing banner (VERBATIM, after step 10's commit + push + **merge** are all SHA-verified):
 
 ```
 ═══ [ Domain Expansion — closed ] ═══
