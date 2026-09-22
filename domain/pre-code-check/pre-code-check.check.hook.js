@@ -31,6 +31,20 @@
 //   Spec preservation: all v1.0-v1.4 specs intact for plain .java/.xhtml (row set unchanged there);
 //   drops are TYPE-SCOPED only. Finding 5 (intake-phase BPMN gate + prior-fix per-ticket memoization)
 //   deferred → proposal slip.
+// v1.7 (2026-09-22, miya, QA-280540 PPTPB unit_pengiraan over-copy): `necessity` now demands a CENSUS
+//   when the diff ADDS a branch chain keyed on enum/reference values. The fee fix copied six
+//   `unit_pengiraan` branches wholesale from the AWAM analog (PelupusanBayaranOnlineStrategy.java:173-210);
+//   a 4/4-env census showed the field only ever holds Meter Persegi or Lot — Plot/Hakmilik/Permohonan/
+//   Urusan covered 0 rows. The line said `necessity ✓(no analog-copied extras)` and PASSED: model-
+//   attested, nothing counted. Mechanical form (scope-claim-census pattern — the AUTHOR counts, the hook
+//   only checks the citation exists; no DB call here): when tool_input adds >= ENUM_BRANCH_MIN keys via
+//   `"X".equals(` / `CONST_X.equals(` / `case X:`, the necessity parenthetical must (a) carry a count with
+//   a denominator (N/M · N of M · count(*) · SELECT..FROM · 0 rows · grepped..N — the bare word "census"
+//   is NOT evidence here), (b) NAME every added key, (c) not KEEP a key it cites at 0 coverage without a
+//   because/justified/spec/BA/ticket/required reason. Keys already in old_string are context, not adds.
+//   Explicit waiver form: `census N/A — <reason>` inside the necessity cell (visible at miya's review).
+//   Spec preservation: no row added/removed (system-rules R1/R2 refine-in-place, same as v1.6); fires only
+//   when the diff itself adds the chain — every prior fixture carries no new_string and is untouched.
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -77,6 +91,48 @@ const TYPE_DROP = {
 // prediction ("appearance unchanged", "should work"). If the outcome is only observable after a
 // build/render you cannot run, the honest form is ✗(unverified — <specific risk>).
 const OBSERVATION_TOKEN_RX = /observed|verified|read|grep|query|queried|screenshot|photo|pdf|rendered|:\d+|SELECT/i;
+
+// v1.7: enum/reference-keyed branch heads. Each regex captures the KEY (string literal or UPPER_SNAKE constant).
+const BRANCH_KEY_RXS = [
+  /"([^"\n]+)"\s*\.\s*equals(?:IgnoreCase)?\s*\(/g,                                            // "Lot".equals(unit)
+  /\.\s*equals(?:IgnoreCase)?\s*\(\s*"([^"\n]+)"\s*\)/g,                                        // unit.equals("Lot")
+  /\b(?:[A-Za-z_]\w*\.)*([A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)\s*\.\s*equals(?:IgnoreCase)?\s*\(/g,   // URS_PT.equals(kod)
+  /\.\s*equals(?:IgnoreCase)?\s*\(\s*(?:[A-Za-z_]\w*\.)*([A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)\s*\)/g, // kod.equals(URS_PT)
+  /\bcase\s+(?:"([^"\n]+)"|([A-Z][A-Z0-9_]*))\s*(?::|->)/g,                                    // case "Lot": · case LOT ->
+];
+const ENUM_BRANCH_MIN = 2; // a CHAIN — one equals-guard is ordinary control flow
+// Denominator-bearing count (scope-claim-census EVIDENCE minus the bare word "census").
+const CENSUS_COUNT_RX = /\b\d+\s*(?:of|\/)\s*\d+\b|\bcount\(\*\)|\bSELECT\b[\s\S]{0,400}\bFROM\b|\b0\s+(?:rows|matches|hits)\b|\bgrepp?ed\b[^\n]{0,80}\d+/i;
+const CENSUS_WAIVER_RX = /\bcensus\s+N\/A\s*[—-]\s*\S.{11,}/i;
+const FIRST_COUNT_RX = /\b(\d+)\s*(?:of|\/)\s*\d+\b|\b(\d+)\s+rows\b/i; // the key's OWN count = first count after its name
+const ZERO_JUSTIFIED_RX = /\bbecause\b|\bjustif|\bspec\b|\bBA\b|\bticket\b|\brequired\b/i;
+
+function branchKeys(code) {
+  const keys = new Set();
+  for (const rx of BRANCH_KEY_RXS) for (const m of String(code || '').matchAll(rx)) keys.add((m[1] || m[2] || '').trim());
+  keys.delete('');
+  return keys;
+}
+// URS_PT -> [URS_PT, PT] · UNIT_METER_PERSEGI -> [UNIT_METER_PERSEGI, METER PERSEGI, PERSEGI] · "Meter Persegi" -> itself
+function keyAliases(key) {
+  const out = [key];
+  if (/^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+$/.test(key)) { out.push(key.slice(key.indexOf('_') + 1).replace(/_/g, ' ')); out.push(key.slice(key.lastIndexOf('_') + 1)); }
+  return out;
+}
+const esc = (s) => s.replace(/[.+*?^$()[\]{}|\\]/g, '\\$&');
+// Returns { unnamed: [...keys], dead: [...keys] } — empty arrays = census satisfied.
+function enumCensusGaps(keys, necessityText) {
+  const t = String(necessityText || '');
+  const unnamed = [], dead = [];
+  for (const key of keys) {
+    const alias = keyAliases(key).find(a => new RegExp('\\b' + esc(a) + '\\b', 'i').test(t));
+    if (!alias) { unnamed.push(key); continue; }
+    const seg = t.match(new RegExp('\\b' + esc(alias) + '\\b[^·;]*', 'i'));
+    const first = seg && seg[0].slice(alias.length, alias.length + 80).match(FIRST_COUNT_RX);
+    if (first && (first[1] || first[2]) === '0' && !ZERO_JUSTIFIED_RX.test(seg[0])) dead.push(key);
+  }
+  return { unnamed, dead };
+}
 
 function log(o) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), ...o }) + '\n'); } catch (_) {} }
 
@@ -138,6 +194,11 @@ runHook({ name: 'pre-code-check', event: 'PreToolUse' }, (input) => {
         '',
         '   necessity = every added line maps to the DEFECT, not to the analog (2026-08-03 QA-272943:',
         '   scaleToFitA4Strict copied wholesale from the analog shrank the pelan — size was the only issue).',
+        '   🚨 Adding >= 2 branches keyed on enum/reference values ("Lot".equals / URS_PT.equals / case X:)?',
+        '   necessity MUST cite a CENSUS naming every key with a denominator — e.g. necessity ✓(census',
+        '   PPTPBL.unit_pengiraan 4/4 envs: Meter Persegi 3/4 · Lot 1/4 — Plot/Hakmilik/Permohonan/Urusan',
+        '   0/4 DROPPED). A key you keep at 0 rows needs a because/spec/BA reason (QA-280540: 4 of 6 copied',
+        '   branches covered 0 rows across 4 envs and shipped behind "no analog-copied extras").',
         '   BA-expected ✓ must cite an OBSERVATION; unobservable before a build -> ✗(unverified — <risk>).',
         '   all-writers = when guarding/fixing a null-or-bad VALUE, grep EVERY site that writes/constructs',
         '   the failing symbol and state each is safe: all-writers ✓(grep setAlamatBerdaftar -> 4 sites, each',
@@ -258,6 +319,40 @@ runHook({ name: 'pre-code-check', event: 'PreToolUse' }, (input) => {
         '   Full expected list (' + type + '): ' + REQUIRED.join(' · '),
       ].join('\n'),
     };
+  }
+
+  // v1.7: enum-keyed branch chain ADDED by this edit → necessity must carry a census naming every key.
+  const addedKeys = [...branchKeys(toolInput.new_string || toolInput.content)].filter(k => !branchKeys(toolInput.old_string).has(k));
+  if (addedKeys.length >= ENUM_BRANCH_MIN) {
+    const necMatch = line.match(/necessity\s*[✓✗]\s*\(([^)]+)\)/i);
+    const necText = necMatch ? necMatch[1] : '';
+    const waived = CENSUS_WAIVER_RX.test(necText);
+    const gaps = waived ? { unnamed: [], dead: [] } : enumCensusGaps(addedKeys, necText);
+    const noCount = !waived && !CENSUS_COUNT_RX.test(necText);
+    if (noCount || gaps.unnamed.length > 0 || gaps.dead.length > 0) {
+      log({ action: 'blocked-enum-census', file: filePath, type, addedKeys, noCount, unnamed: gaps.unnamed, dead: gaps.dead });
+      return {
+        fired: true, blocked: true,
+        blockReason: [
+          '⛔ pre-code-check: this edit ADDS ' + addedKeys.length + ' enum/reference-keyed branches with no census behind them.',
+          '   File: ' + filePath,
+          '   Added keys: ' + addedKeys.join(' · '),
+          ...(noCount ? ['   necessity cites NO count with a denominator (N/M · N of M · count(*) · SELECT..FROM · 0 rows · grepped..N).'] : []),
+          ...(gaps.unnamed.length ? ['   Keys NOT named in the necessity census: ' + gaps.unnamed.join(' · ')] : []),
+          ...(gaps.dead.length ? ['   Keys cited at 0 coverage yet still in the diff, no because/spec/BA reason: ' + gaps.dead.join(' · ')] : []),
+          '',
+          '   A branch per enum value is a claim that the POPULATION uses that value. Count it first —',
+          '   one GROUP BY on the keyed column per env — then cite it per key inside necessity:',
+          '     necessity ✓(census PPTPBL.unit_pengiraan 4/4 envs: Meter Persegi 3/4 · Lot 1/4 —',
+          '                 Plot/Hakmilik/Permohonan/Urusan 0/4 DROPPED)',
+          '   Keys are not population values (Y/N flag, BA-spec statuses)? necessity ✓(... census N/A — <why>).',
+          '',
+          '   2026-09-22 QA-280540: six unit_pengiraan branches copied from PelupusanBayaranOnlineStrategy:173-210;',
+          '   the field holds only Meter Persegi or Lot on 4/4 Melaka envs — four branches were dead on arrival',
+          '   and the line read "necessity ✓(no analog-copied extras)".',
+        ].join('\n'),
+      };
+    }
   }
 
   log({ action: 'passed', file: filePath, line: line.slice(0, 200) });

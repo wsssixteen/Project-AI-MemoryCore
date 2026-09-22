@@ -110,6 +110,47 @@ check('F13 config-json without CODE-CHECK → BLOCK (c38bc07a90 gap closed)', r.
 r = runHookWith({ tool_input: { file_path: 'E:/Projects/Melaka/etanah-pelupusan/src/main/java/foo.java' }, transcript_path: makeTranscript(DOCX_LINE + '\napplying fix') });
 check('F14 reduced line on plain .java → BLOCK (spec preserved)', r.blocked, 'blocked=' + r.blocked);
 
+// ── v1.7 (2026-09-22, QA-280540) enum-branch census — RED FIRST ─────────────────────────────
+const JAVA = 'E:/Projects/Melaka/etanah-pelupusan/src/main/java/foo.java';
+const BR = (k) => `} else if ("${k}".equals(unitPengiraan)) {\n  jumlah = kadar.multiply(bilangan);\n`;
+const CHAIN_2 = `if ("Meter Persegi".equals(unitPengiraan)) {\n  jumlah = kadar.multiply(luas);\n` + BR('Lot') + '}';
+const CHAIN_6 = `if ("Meter Persegi".equals(unitPengiraan)) {\n  jumlah = kadar.multiply(luas);\n` + ['Lot', 'Plot', 'Hakmilik', 'Permohonan', 'Urusan'].map(BR).join('') + '}';
+const NEC_CENSUS = 'necessity ✓(census PPTPBL.unit_pengiraan 4/4 envs: Meter Persegi 3/4 · Lot 1/4 — Plot/Hakmilik/Permohonan/Urusan 0/4 DROPPED)';
+const NEC_280540 = 'necessity ✓(no analog-copied extras)'; // the verbatim shipping cell
+const withNec = (nec) => FULL_CHECK_LINE.replace(EV.necessity, nec) + '\napplying fix';
+
+// F15 (a): 2-key chain + census naming both keys → allow
+r = runHookWith({ tool_input: { file_path: JAVA, old_string: 'jumlah = kadar;', new_string: CHAIN_2 }, transcript_path: makeTranscript(withNec(NEC_CENSUS)) });
+check('F15 enum chain WITH per-key census → allow', !r.blocked, 'blocked=' + r.blocked + ' ' + r.combined.slice(0, 300));
+
+// F16 (b): the verbatim QA-280540 shape — 6 keys, "no analog-copied extras", zero counts → BLOCK naming census + keys
+r = runHookWith({ tool_input: { file_path: JAVA, old_string: 'jumlah = kadar;', new_string: CHAIN_6 }, transcript_path: makeTranscript(withNec(NEC_280540)) });
+check('F16 280540 replay: 6-key chain, model-attested necessity → BLOCK', r.blocked && /Added keys:.*Plot/.test(r.combined) && /NO count/.test(r.combined) && /QA-280540/.test(r.combined), 'blocked=' + r.blocked + ' ' + r.combined.slice(0, 300));
+
+// F17 (b'): census cited, but keys counted at 0/4 are STILL in the diff with no reason → BLOCK naming the dead keys
+r = runHookWith({ tool_input: { file_path: JAVA, old_string: 'jumlah = kadar;', new_string: CHAIN_6 }, transcript_path: makeTranscript(withNec(NEC_CENSUS)) });
+check('F17 keys cited at 0/4 yet kept in diff → BLOCK (dead branches)', r.blocked && /0 coverage[^\n]*Plot[^\n]*Hakmilik[^\n]*Permohonan[^\n]*Urusan/.test(r.combined), 'blocked=' + r.blocked + ' ' + r.combined.slice(0, 300));
+
+// F18 (c): non-enum edit (single null guard) with the ordinary necessity cell → unaffected
+r = runHookWith({ tool_input: { file_path: JAVA, old_string: 'vo.setLuas(luas);', new_string: 'if (luas == null) { luas = BigDecimal.ZERO; }\nvo.setLuas(luas);' }, transcript_path: makeTranscript(FULL_CHECK_LINE + '\napplying fix') });
+check('F18 non-enum edit → unaffected (allow)', !r.blocked, 'blocked=' + r.blocked + ' ' + r.combined.slice(0, 200));
+
+// F19: the chain already EXISTS in old_string (Edit context lines) — nothing added → unaffected
+r = runHookWith({ tool_input: { file_path: JAVA, old_string: CHAIN_6, new_string: CHAIN_6.replace('kadar.multiply(luas)', 'kadar.multiply(luas).setScale(2)') }, transcript_path: makeTranscript(FULL_CHECK_LINE + '\napplying fix') });
+check('F19 chain pre-existing in old_string → unaffected (allow)', !r.blocked, 'blocked=' + r.blocked + ' ' + r.combined.slice(0, 200));
+
+// F20: explicit waiver — keys are not population values → allow (visible at review)
+r = runHookWith({ tool_input: { file_path: JAVA, old_string: 'x', new_string: 'if ("Y".equals(flag)) { a(); } else if ("N".equals(flag)) { b(); }' }, transcript_path: makeTranscript(withNec('necessity ✓(guard maps to the crash; census N/A — Y/N flag per BA spec, not a population column)')) });
+check('F20 waiver "census N/A — <reason>" → allow', !r.blocked, 'blocked=' + r.blocked + ' ' + r.combined.slice(0, 200));
+
+// F21: constant-keyed chain (URS_PT / URS_PSBS) + a JUSTIFIED zero → allow
+r = runHookWith({ tool_input: { file_path: JAVA, old_string: 'x', new_string: 'if (PelupusanUrusanConstant.URS_PT.equals(kod)) { a(); } else if (PelupusanUrusanConstant.URS_PSBS.equals(kod)) { b(); }' }, transcript_path: makeTranscript(withNec('necessity ✓(census umm_aplikasi kod_urusan: PT 12/49 rows · PSBS 0/49 because BA ticket #280540 names PSBS as the second urusan going live)')) });
+check('F21 constant keys + justified 0-count → allow', !r.blocked, 'blocked=' + r.blocked + ' ' + r.combined.slice(0, 300));
+
+// F22: Write (content, no old_string) with a switch/case chain and a count but one key unnamed → BLOCK naming it
+r = runHookWith({ tool_input: { file_path: JAVA, content: 'switch (unit) {\n  case "Lot": a(); break;\n  case "Plot": b(); break;\n}' }, transcript_path: makeTranscript(withNec('necessity ✓(census unit_pengiraan 4/4 envs: Lot 1/4)')) });
+check('F22 Write+switch, one key unnamed in census → BLOCK naming Plot', r.blocked && /NOT named[^\n]*Plot/.test(r.combined), 'blocked=' + r.blocked + ' ' + r.combined.slice(0, 300));
+
 // F9: empty stdin → no crash, no block
 r = spawnSync(process.execPath, [HOOK], { input: '', encoding: 'utf8', timeout: 30000, env: process.env });
 check('F9 empty stdin exits 0', r.status === 0, 'exit=' + r.status);
