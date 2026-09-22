@@ -45,17 +45,17 @@ Recursive through system-design-router:
 ## State
 
 ```yaml
-last-evolution-check: 2026-06-30  # reset by みや 2026-06-30 — no new Anthropic model news, only a Claude Code release rumored; skipped full deep-research run
-next-elapsed-check-due: 2026-07-30  # +30 days
-last-model-id-seen: claude-opus-4-7[1m]  # current session model
+last-evolution-check: 2026-09-22  # run via system-check run 3 Familiar 5 (Claude Code changelog 2026-06-30→09-22 + comparative matrix); digest in chat 2026-09-22 + todo.md Q1 row; research file NOT re-run
+next-elapsed-check-due: 2026-10-22  # +30 days
+last-model-id-seen: claude-fable-5-1  # current session model
 research-file-last-updated: 2026-05-23  # research file itself NOT re-run; only the cadence stamp reset
 research-file-path: library-items/agent-architecture/claude-code-best-practices.md
 
 # Added 2026-05-24 — system-check cadence (paired skill: .claude/skills/system-check/SKILL.md)
-last-system-check: 2026-07-19  # run 2 — weekly-audit Step 1; 5 familiars (sonnet-tiered); headline: system-audit self-regression (54 false ghosts) found+fixed same run
-next-system-check-due: 2026-06-23  # +30 days
+last-system-check: 2026-09-22  # run 3 — pre-build audit for the System-level registry; 5 familiars (sonnet) + controller verification; headline: 9 ghost hooks system-audit cannot see (domain/ blind) + change-checklist referencer step dead on this machine (bash ENOENT) + 26 OneDrive conflict copies incl. .git internals
+next-system-check-due: 2026-10-22  # +30 days
 system-check-cadence-days: 30  # calibrate over first 3 runs
-last-system-check-findings-count: 35  # surfaced critical+high+medium gaps
+last-system-check-findings-count: 27  # CRITICAL 6 · HIGH 9 · MEDIUM 12 (ranked table in main/todo.md Q1 row "System-check run 3")
 ```
 
 (Phase 7 implementation may move this state to `state/evolution-state.json` if hook-readable YAML state is cleaner; decide at implementation.)
