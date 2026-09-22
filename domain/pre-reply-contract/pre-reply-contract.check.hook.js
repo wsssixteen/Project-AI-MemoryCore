@@ -43,7 +43,8 @@ runHook({ name: 'pre-reply-contract', event: 'UserPromptSubmit' }, (input) => {
     '   · Load-bearing words only: understanding > concision > grammar. NEVER drop not/never/no/only, numbers, units, exact errors.',
     '   · No fake savings: no invented abbreviations (cfg/impl), no decorative symbols — full word is cheaper AND clearer.',
     '   · Code/file cites = FULL address <repo>\\<path>\\File.ext:line.',
-    '   · End with *DO THIS*: numbered next actions for みや, priority-first + spell out reply options on decisions. Omit only when no user action.',
+    '   · End with a **Next steps** TABLE — columns `# | Action | Your reply` — priority-first, one row per decision or action for みや; NEVER a numbered list, NEVER prose. Omit only when no user action.',
+    '   · Verification you ran for YOURSELF (git log, fsck, eval output, grep dumps) stays OUT of the reply — one line "verified: <what>" is the whole of it.',
     '   · Stop-hook correction = DELTA ONLY (token + missing line) — NEVER re-emit the reply.',
   ].join('\n') + '\n' };
 });

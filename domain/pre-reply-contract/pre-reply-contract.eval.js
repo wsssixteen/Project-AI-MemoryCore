@@ -14,7 +14,7 @@ check('F1 clean input exits 0 (no false block)', r.status === 0, 'exit=' + r.sta
 
 // F2: normal work prompt → full contract injected (incl. the delta-only rule)
 r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ prompt: 'can you check why the risalat shows one pemohon only' }), encoding: 'utf8', timeout: 30000, env: process.env });
-check('F2 normal prompt → full contract + DELTA ONLY rule', r.status === 0 && /v2-blend/.test(r.stdout) && /DELTA ONLY/.test(r.stdout) && /DO THIS/.test(r.stdout) && /NEVER drop/.test(r.stdout), 'exit=' + r.status + ' out=' + (r.stdout || '').slice(0, 120));
+check('F2 normal prompt → full contract + DELTA ONLY rule', r.status === 0 && /v2-blend/.test(r.stdout) && /DELTA ONLY/.test(r.stdout) && /Next steps\*\* TABLE/.test(r.stdout) && !/DO THIS/.test(r.stdout) && /stays OUT of the reply/.test(r.stdout) && /NEVER drop/.test(r.stdout), 'exit=' + r.status + ' out=' + (r.stdout || '').slice(0, 120));
 
 // F3: constrained-format ask → suppression variant, NOT the full contract
 r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ prompt: 'give me the next steps, only a table please' }), encoding: 'utf8', timeout: 30000, env: process.env });

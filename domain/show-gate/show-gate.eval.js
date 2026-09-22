@@ -77,8 +77,22 @@ r = run(shortPath);
 check('F5 short reply (<500 chars) exits 0', r.status === 0, 'exit=' + r.status);
 check('F5 short reply emits no block decision', !/"decision":"block"/.test(r.stdout || ''), (r.stdout || '').slice(0, 120));
 
+// F6 (2026-09-22 per みや): a markdown TABLE is content shown — a status/hand-back reply that carries a
+// table plus "vs"/"diff" wording must NOT block (it used to, and Ruri answered by pasting git logs at him).
+const tableText = SHOW_PROSE + '\n\n| Batch | What landed | Proof |\n|---|---|---|\n| A | change-checklist pure-node | eval 8/8 |\n| B | 5 hooks registered | smoke fire/quiet |\n';
+const tablePath = writeTranscript('fixture-show-table.jsonl', tableText);
+r = run(tablePath);
+check('F6 markdown table shown exits 0', r.status === 0, 'exit=' + r.status);
+check('F6 markdown table shown emits no block decision', !/"decision":"block"/.test(r.stdout || ''), (r.stdout || '').slice(0, 120));
+// F7: a lone pipe in prose is NOT a table — still blocks
+const pipeText = SHOW_PROSE + '\n\nrun a | b and see. ' + 'x'.repeat(40);
+const pipePath = writeTranscript('fixture-show-pipe.jsonl', pipeText);
+r = run(pipePath);
+check('F7 a stray pipe in prose still BLOCKS', /"decision":"block"/.test(r.stdout || ''), (r.stdout || '').slice(0, 120));
+check('F7 block message no longer demands code dumps, names TABLE first', /markdown TABLE/.test(r.stdout || '') && /NOT your own verification/.test(r.stdout || ''), (r.stdout || '').slice(0, 200));
+
 // cleanup tmp fixtures
-for (const p of [cleanPath, triggerPath, bypassPath, boxPath, shortPath]) {
+for (const p of [cleanPath, triggerPath, bypassPath, boxPath, shortPath, tablePath, pipePath]) {
   try { fs.unlinkSync(p); } catch (_) {}
 }
 

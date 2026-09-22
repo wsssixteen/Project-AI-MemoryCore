@@ -36,6 +36,10 @@ const LOG = path.resolve(__dirname, 'log.jsonl');
 
 const BOX_CHARS = /[┌┐└┘├┤┬┴┼─│╔╗╚╝╠╣╦╩╬]/;        // a drawn diagram
 const CODE_FENCE = /```/;                              // actual code/SQL/diff shown
+// 2026-09-22 per みや: a markdown TABLE is "showing" too (CLAUDE.md pillar: tables carry the load).
+// Before this, every table-carrying status/hand-back reply that said "vs"/"diff"/"changed from…to"
+// was blocked until Ruri pasted git logs / eval output at him — bloat he never asked for.
+const MD_TABLE = /^\s*\|.*\|\s*\r?\n\s*\|[\s:|-]+\|\s*$/m;  // a header row followed by a |---| separator row
 const EXEMPT = /\[skip-show-gate:|═══|るり結界|Domain Expansion/;
 
 // Strong "I'm discussing a change/comparison/finding" signals
@@ -87,7 +91,7 @@ process.stdin.on('end', () => {
     const text = lastAssistantText(data.transcript_path || '');
     if (!text || text.length < 500) process.exit(0);
     if (EXEMPT.test(text)) { process.exit(0); }
-    if (BOX_CHARS.test(text) || CODE_FENCE.test(text)) { logFire('passed'); process.exit(0); }
+    if (BOX_CHARS.test(text) || CODE_FENCE.test(text) || MD_TABLE.test(text)) { logFire('passed'); process.exit(0); }
 
     const matched = SHOW_SIGNALS.find(re => re.test(text));
     if (!matched) process.exit(0);
@@ -97,8 +101,8 @@ process.stdin.on('end', () => {
       decision: 'block',
       reason: [
         '⛔ show-gate: this reply discusses a change/comparison/finding but SHOWS nothing.',
-        '   Add the actual content — a drawn box-diagram (┌─┐ │ └─┘) OR the real code/SQL/diff in a ``` block —',
-        '   so what is being discussed is visible, not described. Then end the turn.',
+        '   Add the thing itself — a markdown TABLE, a drawn box-diagram (┌─┐ │ └─┘), or the real code/SQL/diff in a ``` block —',
+        '   so what is being discussed is visible, not described. NOT your own verification output (git log / eval / grep). Then end the turn.',
         '   Genuinely nothing to show? Add [skip-show-gate: <reason>] and continue.',
         '   ⚡ DELTA ONLY: みや already read the reply above — output ONLY the missing content block; do NOT re-emit the reply.',
       ].join('\n'),
