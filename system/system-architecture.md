@@ -53,27 +53,37 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `system/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `system-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node system/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 106 hook registrations across 5 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 133 hook registrations across 5 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
+| SessionStart | — | `adhoc-lifecycle.check.hook.js` | ✓ |
+| SessionStart | — | `arabic-nudge.check.hook.js` | ✓ |
 | SessionStart | — | `boot-load-verification.js` | ✓ |
 | SessionStart | — | `boot-required-read-gate.js` | ✓ |
+| SessionStart | — | `claude-md-watch.check.hook.js` | ✓ |
 | SessionStart | — | `evolution-check-trigger.js` | ✓ |
 | SessionStart | — | `hook-syntax-check.js` | ✓ |
+| SessionStart | — | `knowledge-schema-audit.check.hook.js` | ✓ |
 | SessionStart | — | `open-quest-surfacer.js` | ✓ |
 | SessionStart | — | `system-audit.js` | ✓ |
 | SessionStart | — | `system-check-trigger.js` | ✓ |
+| SessionStart | — | `unmerged-release-boot.js` | ✓ |
 | SessionStart | — | `worktree-cleanup-boot.js` | ✓ |
 | UserPromptSubmit | — | `adhoc-paste-detector.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `adhoc-register.check.hook.js` | ✓ |
+| UserPromptSubmit | — | `alter-ticket-gate.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `attachment-context.trigger.hook.js` | ✓ |
 | UserPromptSubmit | — | `auto-skill-trigger.js` | ✓ |
 | UserPromptSubmit | — | `batch-ask.trigger.hook.js` | ✓ |
 | UserPromptSubmit | — | `best-practices-consult-gate.js` | ✓ |
+| UserPromptSubmit | — | `bug-db.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `codemap-recon-consult.trigger.hook.js (bundle upsm-consult)` | ✓ |
 | UserPromptSubmit | — | `domain-expansion-trigger.js` | ✓ |
+| UserPromptSubmit | — | `etanah-intake-gate.check.hook.js` | ✓ |
+| UserPromptSubmit | — | `feature-creation.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `inventory-first-gate.js` | ✓ |
+| UserPromptSubmit | — | `latent-bugs-gate.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `local-deploy-gate.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `MemoryClaimGate.js` | ✓ |
 | UserPromptSubmit | — | `mode-detector.js (bundle upsm-mode)` | ✓ |
@@ -94,6 +104,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | UserPromptSubmit | — | `scout-completeness-gate.js` | ✓ |
 | UserPromptSubmit | — | `session-items-manager.js` | ✓ |
 | UserPromptSubmit | — | `skill-invocation-discipline-gate.js (bundle upsm-consult)` | ✓ |
+| UserPromptSubmit | — | `staging-schema-tracker.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `ticket-gate.js` | ✓ |
 | UserPromptSubmit | — | `TurnChecklistGate.js` | ✓ |
 | UserPromptSubmit | — | `user-side-guardrail.js` | ✓ |
@@ -102,39 +113,49 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | PreToolUse | Bash | `branch-at-apply-gate.js` | ✓ |
 | PreToolUse | — | `branch-guard.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `claude-md-edit-guard.js` | ✓ |
-| PreToolUse | Bash | `commit-gate.js` | ✓ |
-| PreToolUse | Edit\|Write | `domain/knowledge-schema-audit/knowledge-schema-audit.check.hook.js` (write-time branch: warns when a non-canonical / legacy knowledge file name or a bad `flowables-bpmn/` placement is about to be written under `etanah-knowledge/<state>/`; advisory) | ✓ 2026-09-04 |
-| SessionStart | — | `domain/knowledge-schema-audit/knowledge-schema-audit.check.hook.js` (boot branch: audits every `etanah-knowledge/<state>/` against `KNOWLEDGE-SCHEMA.json` — required files/dirs, legacy names, un-indexed extras, flowables layout; one advisory line per drifting state; CLI `audit` / `scaffold --state`) | ✓ 2026-09-04 |
-| Stop | — | `domain/commit-subject-gate/commit-subject-gate.check.hook.js` | ✓ |
+| PreToolUse | — | `compile-gate.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `component-birth-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash | `convention-check-gate.gate.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `convention-check-gate.gate.hook.js` | ✓ |
 | PreToolUse | — | `deploy-guard.check.hook.js` | ✓ |
+| PreToolUse | — | `deploy-merge-surface.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `design-consult-gate.gate.hook.js (bundle pretool-editwrite-gates)` | ✓ |
 | PreToolUse | Edit|Write | `edit-scope-gate.js` | ✓ |
 | PreToolUse | Read | `familiar-nudge.check.hook.js` | ✓ |
 | PreToolUse | — | `knowledge-first-gate.check.hook.js` | ✓ |
+| PreToolUse | Edit|Write | `knowledge-schema-audit.check.hook.js` | ✓ |
 | PreToolUse | Read|Edit|Write | `known-bug-surfacer.hook.js` | ✓ |
+| PreToolUse | Bash|PowerShell | `live-action-safety.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `logic-blast-radius.discipline.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `no-code-comments-gate.js` | ✓ |
 | PreToolUse | Edit|Write | `pre-action-check-gate.js (bundle pretool-editwrite-gates)` | ✓ |
 | PreToolUse | Edit|Write | `pre-code-check.check.hook.js` | ✓ |
 | PreToolUse | mcp__postgres-mlkprod-pg__.* | `prod-db-confirm.discipline.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `quest-phase-gate.gate.hook.js` | ✓ |
+| PreToolUse | Bash|PowerShell | `redmine-write-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash | `release-mlk-plp-push-gate.check.hook.js` | ✓ |
+| PreToolUse | PowerShell | `release-mlk-plp-push-gate.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `release-mlk-plp-scope-gate.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `system-edit-gate.js (bundle pretool-editwrite-gates)` | ✓ |
+| PostToolUse | Edit|Write | `bpmn-check.check.hook.js` | ✓ |
 | PostToolUse | Grep | `grep-rubric-gate.js` | ✓ |
 | PostToolUse | Bash | `quest-bounty.hook.js` | ✓ |
 | PostToolUse | — | `RecursiveLoopDetector.js` | ✓ |
+| PostToolUse | Skill | `skill-invocation-log.check.hook.js` | ✓ |
 | PostToolUse | — | `slip-count-tracker.js` | ✓ |
 | PostToolUse | Task|Agent|Workflow | `spawn-telemetry.check.hook.js` | ✓ |
 | Stop | — | `ask-back-gate.js` | ✓ |
+| Stop | — | `atlas-full-check.check.hook.js` | ✓ |
+| Stop | — | `atlas-ship-gate.check.hook.js` | ✓ |
+| Stop | — | `attachment-ledger-gate.check.hook.js` | ✓ |
 | Stop | — | `attempt-before-blocked-gate.check.hook.js` | ✓ |
 | Stop | — | `awam-no-resit-gate.check.hook.js` | ✓ |
 | Stop | — | `ba-understanding-table.discipline.hook.js` | ✓ |
 | Stop | — | `citation-cross-check.check.hook.js` | ✓ |
 | Stop | — | `codemap-recon-consult.discipline.hook.js` | ✓ |
+| Stop | — | `commit-subject-gate.check.hook.js` | ✓ |
+| Stop | — | `de-close-gate.check.hook.js` | ✓ |
+| Stop | — | `de-knowledge-gate.check.hook.js` | ✓ |
 | Stop | — | `de-output-integrity-checker.js` | ✓ |
 | Stop | — | `de-run-verify.js` | ✓ |
 | Stop | — | `de-step11-verdict-gate.discipline.hook.js` | ✓ |
@@ -148,6 +169,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | Stop | — | `notes-on-test-data.js` | ✓ |
 | Stop | — | `operational-follow-through.js` | ✓ |
 | Stop | — | `over-generalization-gate.js` | ✓ |
+| Stop | — | `patch-close-shape.check.hook.js` | ✓ |
 | Stop | — | `patch-script-gate.discipline.hook.js` | ✓ |
 | Stop | — | `predicate-box.discipline.hook.js` | ✓ |
 | Stop | — | `quest-context-load-gate.js` | ✓ |
@@ -155,15 +177,17 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | Stop | — | `quest-doc-freshness.discipline.hook.js` | ✓ |
 | Stop | — | `quest-knowledge-save-gate.js` | ✓ |
 | Stop | — | `rcrl-emit-check.js` | ✓ |
-| Stop | — | `reply-log.js` | ✓ |
+| Stop | — | `render-verify.check.hook.js` | ✓ |
+| Stop | — | `rootcause-format.check.hook.js` | ✓ |
 | Stop | — | `scope-claim-census.check.hook.js` | ✓ |
 | Stop | — | `show-gate.discipline.hook.js (bundle stop-reply-shape)` | ✓ |
 | Stop | — | `silent-claim-drift-gate.js (bundle stop-claim-integrity)` | ✓ |
 | Stop | — | `sql-schema-verify.check.hook.js` | ✓ |
-| Stop | — | ~~`stop-point-summary.discipline.hook.js`~~ DEREGISTERED 2026-08-18 (`c270f89`, Stop-gate reshape — re-registration parked in todo Q1) | — |
+| Stop | — | `template-cc-preflight.check.hook.js` | ✓ |
 | Stop | — | `terse-gate.discipline.hook.js (bundle stop-reply-shape)` | ✓ |
 | Stop | — | `test-scenario-login-gate.check.hook.js` | ✓ |
 | Stop | — | `ticket-criteria-gate.discipline.hook.js (bundle stop-claim-integrity)` | ✓ |
+| Stop | — | `turn-ledger.check.hook.js` | ✓ |
 | Stop | — | `verify-basis-gate.discipline.hook.js (bundle stop-claim-integrity)` | ✓ |
 | Stop | — | `veritas-claim-gate.js (bundle stop-claim-integrity)` | ✓ |
 <!-- HOOK-REGISTRY:AUTO-END -->

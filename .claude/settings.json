@@ -186,6 +186,14 @@
           },
           {
             "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\etanah-intake-gate\\\\etanah-intake-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\staging-schema-tracker\\\\staging-schema-tracker.check.hook.js\""
+          },
+          {
+            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\pre-reply-contract\\\\pre-reply-contract.check.hook.js\""
           },
           {
@@ -354,6 +362,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\redmine-write-gate\\\\redmine-write-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\live-action-safety\\\\live-action-safety.check.hook.js\""
           }
         ]
       }
@@ -512,6 +524,14 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\commit-subject-gate\\\\commit-subject-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\rootcause-format\\\\rootcause-format.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\patch-close-shape\\\\patch-close-shape.check.hook.js\""
           },
           {
             "type": "command",
