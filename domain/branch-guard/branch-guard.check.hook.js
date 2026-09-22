@@ -9,6 +9,9 @@
 //   v2 every etanah repo was assumed mlk/master, so Perak's checkout (trunk master) was blocked on every Read/Edit
 //   (proposal A2). A repo outside the registry's repos_root is NOT guarded (logged `unregistered-repo`) — the
 //   registry is the only source of trunk truth; guessing one would re-create the A2 failure in reverse.
+// v2.1 (2026-09-22, C11): decide() returns `reason` (the captured [skip-branch-check:] token text) so the
+//   bypass log row carries WHY, not just that a bypass happened — the 2 bypasses/day were invisible at DE
+//   Forge review before this. No block/pass behaviour change.
 'use strict';
 const path = require('path');
 const fs = require('fs');
@@ -32,7 +35,8 @@ function expectedBranch(repo) {
 function decide(fp, branch, turnText) {
   const repo = repoOf(fp);
   if (!repo) return { block: false };
-  if (/\[skip-branch-check:\s*[^\]]+\]/i.test(turnText || '')) return { block: false, bypass: true, repo };
+  const skipM = /\[skip-branch-check:\s*([^\]]+)\]/i.exec(turnText || '');
+  if (skipM) return { block: false, bypass: true, repo, reason: skipM[1].trim() };
   const expected = expectedBranch(repo);
   if (!expected) return { block: false, repo, branch, unregistered: true };
   if (branch === expected) return { block: false, repo, branch };
@@ -84,7 +88,7 @@ if (require.main === module) {
     try { branch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: repo, encoding: 'utf8' }).trim(); }
     catch (_) { return { fired: false }; }
     const d = decide(fp, branch, turn);
-    if (!d.block) { log({ action: d.bypass ? 'bypass' : (d.unregistered ? 'unregistered-repo' : 'pass'), repo, branch }); return { fired: false }; }
+    if (!d.block) { log({ action: d.bypass ? 'bypass' : (d.unregistered ? 'unregistered-repo' : 'pass'), repo, branch, reason: d.reason }); return { fired: false }; }
     log({ action: 'blocked', repo, branch, expected: d.expected });
     return { fired: true, blocked: true, blockReason: blockMsg(repo, branch, d.expected) };
   });

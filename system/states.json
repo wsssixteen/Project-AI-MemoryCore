@@ -1,7 +1,7 @@
 {
   "_comment": "THE state registry (single source, tracked, worktree-safe). Every hook / skill / script that touches a per-state thing — Task folder, etanah-knowledge dir, repo root, trunk branch, DB MCP, permohonan prefix, BPMN key prefix, Redmine project — resolves it through lib/states.js, never a literal. Add a state = one record here + `node lib/states.js validate <key>`; remove = `node lib/states.js remove <key>`. Hosts / IPs / URLs live in system/states.local.json (gitignored overlay, same shape, deep-merged) — never here. Facts marked `_unverified` are structure copied from the reference state and must be confirmed against a real source before a tool relies on them.",
   "version": 1,
-  "updated": "2026-09-04",
+  "updated": "2026-09-22",
   "reference_state": "melaka",
   "tasks_root": "OneDrive - Pymsoft Sdn Bhd/1. Tasks",
   "repos_root": "E:/Projects",
@@ -29,6 +29,7 @@
       },
       "branch_prefix": "mlk",
       "ticket_branch": "mlk/<tracker>/<num>",
+      "env_branches": ["mlk/int-env", "mlk/stag-env"],
       "bpmn": { "prefix": "MLK", "root_module": "PLP" },
       "db": {
         "engine": "postgres",

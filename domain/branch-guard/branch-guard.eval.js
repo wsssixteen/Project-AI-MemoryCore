@@ -23,6 +23,7 @@ check('F5 spoc-hasil on master → pass (its trunk)', decide(SPOC, 'master', '')
 check('F6 spoc-hasil on mlk/master → BLOCK', decide(SPOC, 'mlk/master', '').block === true);
 check('F7 bypass token → pass', decide(PLP, 'mlk/int-env', '[skip-branch-check: intentional]').block === false);
 check('F8 non-etanah file → pass', decide('C:\\repo\\foo.js', 'x', '').block === false);
+check('F9 (C11) bypass reason captured verbatim', decide(PLP, 'mlk/int-env', '[skip-branch-check: intenvfix per miya]').reason === 'intenvfix per miya', JSON.stringify(decide(PLP, 'mlk/int-env', '[skip-branch-check: intenvfix per miya]')));
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }

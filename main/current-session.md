@@ -1,13 +1,13 @@
 # Current Session
 
-**Last Activity**: 2026-09-22 — new-ticket intake + Phase 0 (278909, 279711, 280176) + DE.
+**Last Activity**: 2026-09-23 — #280540 rebuilt from scratch + deployed (int-env `73b52efb81`, stag-env `9ac74506dd`); gate audit + hardening (pre-code-check v1.7.1 · deploy-guard v1.2.1 · compile-check v1.1.1 · branch-guard v2.1, all evals green).
 
 ## 🎯 HANDOVER — Focus tickets (load this after compaction)
 
 | # | Type | Focus / next action | Effort | Why |
 |---|---|---|---|---|
 | **280614** | Data patch (PROD) | ✅ **APPLIED** (verified: permohonan /9+/10 tempat='-', lesen rows patched) → **close it** | done | patch ran |
-| **280540** | eSOKONGAN code | build `PLP_BANGUNAN_*` flat-rate guard at `PelupusanMaklumatBayaranHelper.java:276` | build+test | recon done, net-new build |
+| **280540** | eSOKONGAN code | ✅ clean fix `19c975c9fa` on `mlk/esokongan/280540` (off master) · int-env `73b52efb81` · stag-env `9ac74506dd` → BA test (mlit norzaida / stg2 azmezan, PKPPT step) → **prod prerequisite: BA sets PPTPBL "Kadar Pengiraan Per" = Lot** (prod is still Meter Persegi) | test | fee now follows maintenance config: row Per → row Unit Luas → header Per |
 | **246923** | template config | remove 3 dup keys (PRMMKNPTG/SRMMKNPTG/PRRMMKNPTG) from Block A in `template.config.json` | ~9 lines | rework, BA waiting |
 | **274323** | Word CC | force `"RM 0.00"` in `PelupusanWordCCMethodConstant.java:4772` when royalti exempted | tiny | rework, BA waiting |
 | **279711** | code (populator) | repoint `PelupusanWordCCMethodConstant.java:842-843` to gated `populateJawatanPegawaiSemak` + PPD branch in isValidUser :2043 | small | rework; ⚠️ MaklumatPemohon.docx shared-tag blast radius |
@@ -20,6 +20,13 @@
 - Melaka DB reconnected (postgres-mlkprod live, etprdmlk).
 - Canonical formats only (never invent): infra-handoff + SCRIPT-CHECK + close-phase (`feedback_use_canonical_formats_never_invent`).
 - close-phase now always emits Redmine Root cause + Solution.
+
+## Session Recap (2026-09-22 → 23, worktree `ticket-prioritization-feea0e`) — #280540 five attempts → restart → gate audit
+- #280540: v1–v4 (unit hack · CR engine · matcher restore · Kategori filter) all wrong, all passed pre-code-check; loose branches `280540v2` + `intenvfix-280540`; int-env carried 5 merges of mine. みや ordered a restart from scratch.
+- Restart: baseline `72147fe936` found by marker walk; int-env restored by forward commit `d3f6e26b0d` (pom / CR / #280176 untouched); ticket branch deleted + recreated off master; fix `19c975c9fa` = unit resolved from `hsl_fi_pejabat.unit_pengiraan_id` (prod METER · stg2/mlit LOT) with row overrides + Kategori-aware row match + Perindustrian tujuan map; merges int-env `73b52efb81`, stag-env `9ac74506dd`; compiles green ×3.
+- Lossless history rewrite proven locally (`608c3f7740`, tree byte-identical) — みや: too late, dropped; prevention only.
+- Audit workflow (41 agents, 9 causes adversarially confirmed) → pre-code-check v1.7.1 · deploy-guard v1.2.1 · compile-check v1.1.1 · branch-guard v2.1 · states.json `env_branches` · memory `config-table-before-code` · DATABASE.md §28. Evals controller-run: 35/35 · 36/36 · 13/13 · 9/9. Round-2 subagents hard-blocked by design-consult-gate (transcript_path = parent session) → fixes applied by the main session; cmd.exe `^` bug caught by the real-git fixture.
+- Slips: over-copy-analog · wrong-branch-target · unclear-reply · reask/redundant ×2 (escalated) · reask/verbose · gate-routed-around-by-subagent.
 
 ## Session Recap (2026-09-22)
 - Reconciled active.txt vs Redmine (31 closed 09-21 + 280099/280191/278580 closed 09-22).

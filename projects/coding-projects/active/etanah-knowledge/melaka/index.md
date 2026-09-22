@@ -10,7 +10,7 @@
 
 | File | Scope (one-line) | Use when… |
 |---|---|---|
-| [DATABASE.md](DATABASE.md) | PostgreSQL schema — table names, column names, `_p_`/`_a_` layer semantics, SQL patterns · **§4.1 recipe: BA-quoted permohonan reference → aplikasi_id (`umm_aplikasi.id_pengenalan`, NOT `no_rujukan_permohonan`)** · **§9.1 document → physical file path (et_main ↔ et_dms)** · **§15 capaian pengguna — "capaian penuh" vs per-urusan rows** | Any DB query, SQL investigation, table/column lookup, **resolving a `PTMLK/...` reference to its aplikasi_id**, **"where is this document's file on the server"**, **an officer missing from an Agihan Kepada / next-user dropdown** |
+| [DATABASE.md](DATABASE.md) | PostgreSQL schema — table names, column names, `_p_`/`_a_` layer semantics, SQL patterns · **§4.1 recipe: BA-quoted permohonan reference → aplikasi_id (`umm_aplikasi.id_pengenalan`, NOT `no_rujukan_permohonan`)** · **§9.1 document → physical file path (et_main ↔ et_dms)** · **§15 capaian pengguna — "capaian penuh" vs per-urusan rows** · **§28 fee-unit config `hsl_fi_pejabat.unit_pengiraan_id` / `hsl_fi_kadar` (flat per lot vs rate × luas, per-env values)** | Any DB query, SQL investigation, table/column lookup, **resolving a `PTMLK/...` reference to its aplikasi_id**, **"where is this document's file on the server"**, **an officer missing from an Agihan Kepada / next-user dropdown**, **a fee multiplies by m² when BA expects flat (or the reverse) — read §28 and query the config on every env BEFORE code** |
 | [ADHOC-TRIAGE.md](ADHOC-TRIAGE.md) | Adhoc intake classification — DATA-QUESTION / DATA-PATCH / DIAGNOSIS / CODE-CHECK / FLOW-RECOVERY / ENV-VERSION / CAPABILITY / ACCESS / TEST-DATA / DEPLOY-VERIFY / TEMPLATE, each with FIRST action + tool order · cross-cutting rules (question≠patch, forensics floor, known-positive test) | EVERY adhoc/BA-relay intake, BEFORE any query or trace — injected by `domain/adhoc-paste-detector` |
 | [FLOW-TRACES.md](FLOW-TRACES.md) | Verified breakpoint traces — UI→Bean→Service→Repo→DB happy paths · **§File upload → DMS** incl. the 3-layer SIZE limits (browser `sizeLimit` 1 GB default · Undertow `max-post-size` · DMS) and the `sizeLimit="1000000"` 1 MB outlier trap (#278585) | Need to know actual execution flow through the stack; **any "uploaded file does not appear / tak papar" report** — check file size vs the screen's `sizeLimit` first |
 | [SPOC-COUNTER.md](SPOC-COUNTER.md) | 🚨 §4 (2026-09-02): PRBB Ganti Hari TWO routes — AWAM e-mohon (`adalahe2e`, pra row copied wholesale by the seed, nothing lost) vs walk-in (`modul:PLP`, seed maps jenis `"1"/"2"/"3"` → Baru, `tempohDipohon` never read); seed = `PelupusanSpocService.populateAppPermitLesen()` at the flowable Spoc Integration serviceTask (t0+40 s); LOCAL etanah-spoc-hasil tree is STALE — read `origin/mlk/stag-env`. Also: Perserahan Kaunter (SPOC, etanah-spoc-hasil) → SKM data flow — what the counter saves vs what pelupusan reads, the `saveMaklumatPerserahanTab` per-urusan write list, the `PelupusanSpocService` copy-hop (pra vs kaunter else-branch), `umm_a_hkmlk.mklmt_tmbhn.luasDimohon`, PPTPB gaps (#276436) | Any "filled at counter, blank at SKM" bug; a PK/counter field not carrying to SKM; deciding ours (pelupusan reads) vs SPOC (counter save) — **SPOC = never edit, cater/handoff** |
@@ -79,10 +79,11 @@ Token cost is the reason: a knowledge lookup is a few hundred tokens; a code tra
 | Which classes make up a FEATURE (templates/reports/flowable/tugasan/…) | codemap site v6 Features tab — `..\..\etanah-codemap\site\index.html` (12 verified groups + class chains) |
 | Why a bug pattern keeps repeating | [BUG-BESTIARY.md](BUG-BESTIARY.md) |
 | What `PRBB`, `PLTP`, `PSBS` mean | [DOMAIN-GLOSSARY.md](DOMAIN-GLOSSARY.md) |
+| Which unit a kadar/fi uses and why it multiplies | [DATABASE.md §28](DATABASE.md#28-fee-unit-config--hsl_fi_pejabat--hsl_fi_kadar-2026-09-22-280540-db-verified-prodstg2mlit) |
 
 ---
 
-*Last updated: 2026-07-24 — DATABASE.md §9.1 added (document → physical file path, et_main ↔ et_dms)*
+*Last updated: 2026-09-22 — DATABASE.md §28 added (fee-unit config `hsl_fi_pejabat`/`hsl_fi_kadar`, QA-280540)*
 *Generated from planning session — architecture mapping + context pipeline upgrade*
 
 ## Cross-state playbooks (added 2026-09-09)

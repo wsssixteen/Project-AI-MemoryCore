@@ -2,6 +2,8 @@
 // compile-gate.eval.js — replay eval (born WITH the component; forge blocks ship until green).
 // Replay case: QA-275456 2026-08-18 — fix used mh.getBandar() (MaklumatHakmilik has none);
 // never compiled; reported tested-PASSED from a green DB read; int-env BUILD failed; mlit DOWN.
+// v1.1.1 (2026-09-23): +F13 — a pre-v1.1 marker with no `repo` field must fail verify (was
+// silently leniently passing for any clone — reviewer finding, compile-check.js v1.1.1).
 'use strict';
 const path = require('path');
 const { spawnSync } = require('child_process');
@@ -38,6 +40,55 @@ check('F6 message mentions etanah but cwd is MemoryCore → pass', d5.block === 
 // F7: git -C into an etanah repo also detected
 const d6 = decide('git -C "E:/Projects/Melaka/etanah-common" commit -m "bump"', '');
 check('F7 git -C etanah repo routes to verify', d6.block === null && d6.mod === 'etanah-common', JSON.stringify(d6));
+
+// F8 (C8 replay — #280540 causes 4+8): decide() carries the CLONE the commit is issued from, not
+// just the module name — a commit from the work clone must never be verified against a default clone.
+const d7 = decide('cd "E:/Dev/etanah-work/etanah-pelupusan" && git commit -m "x"', '');
+const expectRepo8 = path.resolve('E:/Dev/etanah-work/etanah-pelupusan');
+check('F8 (C8) decide() carries the commit clone as repo', d7.repo === expectRepo8, JSON.stringify(d7) + ' expected ' + expectRepo8);
+
+// F12: a relative `cd etanah-pelupusan` resolves against the cwd the hook was invoked from.
+const d8 = decide('cd etanah-pelupusan && git commit -m "x"', '', 'E:/Dev/etanah-work');
+const expectRepo12 = path.resolve('E:/Dev/etanah-work', 'etanah-pelupusan');
+check('F12 (C8) relative cd resolves under supplied cwd', d8.repo === expectRepo12, JSON.stringify(d8) + ' expected ' + expectRepo12);
+
+// ---- compile-check.js (C7) repo resolution ----
+const os = require('os');
+const fs = require('fs');
+const { execSync } = require('child_process');
+const CHECK = path.join(__dirname, 'compile-check.js');
+const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'compile-gate-eval-'));
+const tmpRepo = path.join(tmpRoot, 'etanah-pelupusan');
+fs.mkdirSync(path.join(tmpRepo, 'src', 'main', 'java'), { recursive: true });
+fs.writeFileSync(path.join(tmpRepo, 'src', 'main', 'java', 'A.java'), 'class A {}');
+const tmpProj = path.join(tmpRoot, 'proj');
+fs.mkdirSync(path.join(tmpProj, '.claude', 'state'), { recursive: true });
+const markerFile = path.join(tmpProj, '.claude', 'state', 'compile-ok-etanah-pelupusan.json');
+const env9 = { ...process.env, CLAUDE_PROJECT_DIR: tmpProj };
+
+// F9: marker.repo === resolved --repo → verify exits 0
+fs.writeFileSync(markerFile, JSON.stringify({ ok: true, ts: Date.now(), mod: 'etanah-pelupusan', repo: tmpRepo }));
+const r9 = spawnSync(process.execPath, [CHECK, 'verify', 'etanah-pelupusan', '--repo', tmpRepo], { encoding: 'utf8', env: env9 });
+check('F9 (C7) verify green marker, same clone → exit 0', r9.status === 0, 'exit=' + r9.status + ' ' + r9.stdout + r9.stderr);
+
+// F10: marker.repo is a DIFFERENT clone → verify exits 1 "different clone"
+const otherRepo = path.join(tmpRoot, 'etanah-pelupusan-OTHER');
+fs.writeFileSync(markerFile, JSON.stringify({ ok: true, ts: Date.now(), mod: 'etanah-pelupusan', repo: otherRepo }));
+const r10 = spawnSync(process.execPath, [CHECK, 'verify', 'etanah-pelupusan', '--repo', tmpRepo], { encoding: 'utf8', env: env9 });
+check('F10 (C7) marker for a different clone → exit 1 "different clone"', r10.status === 1 && /different clone/i.test(r10.stderr || ''), 'exit=' + r10.status + ' ' + r10.stderr);
+
+// F11: a .java edited AFTER the marker's ts → verify exits 1 "edited AFTER"
+const oldTs = Date.now() - 60000;
+fs.writeFileSync(markerFile, JSON.stringify({ ok: true, ts: oldTs, mod: 'etanah-pelupusan', repo: tmpRepo }));
+fs.utimesSync(path.join(tmpRepo, 'src', 'main', 'java', 'A.java'), new Date(), new Date());
+const r11 = spawnSync(process.execPath, [CHECK, 'verify', 'etanah-pelupusan', '--repo', tmpRepo], { encoding: 'utf8', env: env9 });
+check('F11 (C7) .java edited after marker.ts → exit 1 "edited AFTER"', r11.status === 1 && /edited AFTER/i.test(r11.stderr || ''), 'exit=' + r11.status + ' ' + r11.stderr);
+
+// F13 (v1.1.1, reviewer finding): a pre-v1.1 marker with NO `repo` field must FAIL verify for
+// ANY clone — strict, no transitional leniency treating a missing repo as "matches everything".
+fs.writeFileSync(markerFile, JSON.stringify({ ok: true, ts: Date.now(), mod: 'etanah-pelupusan' }));
+const r13 = spawnSync(process.execPath, [CHECK, 'verify', 'etanah-pelupusan', '--repo', tmpRepo], { encoding: 'utf8', env: env9 });
+check('F13 (v1.1.1) marker with no repo field → exit 1 "different clone"', r13.status === 1 && /different clone/i.test(r13.stderr || ''), 'exit=' + r13.status + ' ' + r13.stderr);
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }

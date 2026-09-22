@@ -7,6 +7,17 @@
 //      compiled, but a green DB read (4/87 from the Kemas kini composite) made me report
 //      "tested PASSED". The int-env BUILD was the FIRST compile — it failed on the server,
 //      AFTER commit, and mlit went down. This gate makes a local compile the pre-commit check.
+//
+// v1.1 (2026-09-22, C8): decide() additionally returns `repo` = path.resolve(cwd || '', m[1])
+// (m[1] is captured by CD_RX/GITC_RX but was discarded before this version) so the module and
+// the CLONE it was committed from travel together; the hook passes data.cwd. verify() spawns
+// `compile-check.js verify <mod> --repo "<repo>"` so a green marker from a DIFFERENT clone of
+// the same module never satisfies this commit. blockMsg names the resolved clone and prints the
+// re-run command WITH --repo. Log rows gain `repo`.
+// WHY (C8): #280540 cause 8 reason 2 — decide() kept only the module NAME, so a commit issued
+// from the work clone (E:/Dev/etanah-work/etanah-pelupusan) was verified against whatever the
+// hardcoded default clone (E:/Projects/Melaka/etanah-pelupusan) last compiled — the hook already
+// held the path it needed (m[1]) and simply never carried it forward.
 'use strict';
 const path = require('path');
 const fs = require('fs');
@@ -22,14 +33,15 @@ const GITC_RX = /git\s+-C\s+["']?([^"'&|;]*etanah-(pelupusan|awam|common))["']?/
 // Pure decision (unit-testable without live mvn/git).
 // -> block:false  (pass or bypass)
 // -> block:null   (an etanah-repo commit — caller must run verify)
-function decide(command, turnText) {
+function decide(command, turnText, cwd) {
   const cmd = String(command || '');
   if (!/\bgit\b[^&|;]*\bcommit\b/.test(cmd)) return { block: false };   // git … commit (allows `git -C <path> commit`)
   const m = cmd.match(CD_RX) || cmd.match(GITC_RX);
   if (!m) return { block: false };
   const mod = `etanah-${m[2].toLowerCase()}`;
-  if (/\[skip-compile-gate:\s*[^\]]+\]/i.test(turnText || '')) return { block: false, bypass: true, mod };
-  return { block: null, mod };
+  const repo = path.resolve(cwd || '', m[1]).replace(/[\\/]+$/, '');
+  if (/\[skip-compile-gate:\s*[^\]]+\]/i.test(turnText || '')) return { block: false, bypass: true, mod, repo };
+  return { block: null, mod, repo };
 }
 function log(o) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), ...o }) + '\n'); } catch (_) {} }
 
@@ -48,9 +60,10 @@ function lastAssistantTurn(tp) {
   return text;
 }
 
-function verify(mod) {
+function verify(mod, repo) {
   try {
-    const out = execSync(`node "${path.join(__dirname, 'compile-check.js')}" verify ${mod}`,
+    const args = repo ? `verify ${mod} --repo "${repo}"` : `verify ${mod}`;
+    const out = execSync(`node "${path.join(__dirname, 'compile-check.js')}" ${args}`,
       { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
     return { ok: true, message: out.trim() };
   } catch (e) {
@@ -58,13 +71,13 @@ function verify(mod) {
   }
 }
 
-function blockMsg(mod, detail) {
+function blockMsg(mod, repo, detail) {
   return [
-    `⛔ compile-gate: ${mod} was NOT compiled green + current before this commit.`,
+    `⛔ compile-gate: ${mod} (${repo || 'unresolved clone'}) was NOT compiled green + current before this commit.`,
     `   ${String(detail).split('\n').join('\n   ')}`,
     ``,
     `   Run it (backgroundable — ~1-2 min, works in parallel):`,
-    `     node domain/compile-gate/compile-check.js run ${mod}`,
+    `     node domain/compile-gate/compile-check.js run ${mod}${repo ? ` --repo "${repo}"` : ''}`,
     `   then re-commit. WHY: QA-275456 — a non-compiling fix ("tested" from a green DB read)`,
     `   reached int-env, the server BUILD failed, and mlit went down. Compile locally first.`,
     ``,
@@ -77,12 +90,12 @@ if (require.main === module) {
   runHook({ name: 'compile-gate', event: 'PreToolUse' }, (input) => {
     let data = {}; try { data = JSON.parse(input || '{}'); } catch (_) { return { fired: false }; }
     const command = String((data.tool_input || {}).command || '');
-    const d = decide(command, lastAssistantTurn(data.transcript_path || ''));
-    if (d.block === false) { if (d.bypass) log({ action: 'bypass', mod: d.mod }); return { fired: false }; }
-    const v = verify(d.mod);
-    if (v.ok) { log({ action: 'pass', mod: d.mod }); return { fired: false }; }
-    log({ action: 'blocked', mod: d.mod, detail: v.message });
-    return { fired: true, blocked: true, blockReason: blockMsg(d.mod, v.message) };
+    const d = decide(command, lastAssistantTurn(data.transcript_path || ''), data.cwd);
+    if (d.block === false) { if (d.bypass) log({ action: 'bypass', mod: d.mod, repo: d.repo }); return { fired: false }; }
+    const v = verify(d.mod, d.repo);
+    if (v.ok) { log({ action: 'pass', mod: d.mod, repo: d.repo }); return { fired: false }; }
+    log({ action: 'blocked', mod: d.mod, repo: d.repo, detail: v.message });
+    return { fired: true, blocked: true, blockReason: blockMsg(d.mod, d.repo, v.message) };
   });
 }
 
