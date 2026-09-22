@@ -355,6 +355,39 @@ try {
   if (r.pending.length) invFindings.push(`ℹ root entries awaiting みや's verdict (FOLDER-STRUCTURE.md orphan table): ${r.pending.join(', ')}`);
 } catch (e) { invFindings.push('ℹ folder-structure check unavailable: ' + e.message); }
 
+// CHECK 9 — OneDrive machine-conflict copies (system-check run 3, 2026-09-22). OneDrive forks
+// "<name>-<MACHINE>[-N].<ext>" (and whole folders) whenever two laptops write one path. They are
+// never authored content, yet they load as duplicate skills (wayfinder-PJNBRidhwan carried
+// `name: wayfinder`), pile up as 75 MB of telemetry, land inside .git, and — worst — a stale copy
+// can overwrite canonical and be committed by `git add -A` (commit 25a0379c lost the Step-10
+// COMMIT+PUSH+MERGE hard rule + Step 2b safe.directory that way). Machine names come from the
+// .gitignore rules that already list them, plus this machine's COMPUTERNAME.
+try {
+  const names = new Set();
+  const gi = safeRead(path.join(REPO_ROOT, '.gitignore')) || '';
+  for (const m of gi.matchAll(/^\*-([A-Za-z][A-Za-z0-9]+)(?:-\[0-9\])?\.[a-z]+\s*$/gm)) names.add(m[1]);
+  if (process.env.COMPUTERNAME) names.add(process.env.COMPUTERNAME);
+  const alt = [...names].map(n => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  const re = alt ? new RegExp('-(?:' + alt + ')(?:-\\d+)?(?:\\.[A-Za-z0-9]+)?$', 'i') : null;
+  const hits = [];
+  const SKIP = new Set(['node_modules', 'worktrees', 'objects', 'pack']);
+  const walk = (d, depth) => {
+    if (!re || depth > 6 || hits.length > 200) return;
+    let ents = []; try { ents = fs.readdirSync(d, { withFileTypes: true }); } catch { return; }
+    for (const e of ents) {
+      if (SKIP.has(e.name)) continue;
+      const p = path.join(d, e.name);
+      if (re.test(e.name)) { hits.push(path.relative(REPO_ROOT, p)); if (e.isDirectory()) continue; }
+      if (e.isDirectory()) walk(p, depth + 1);
+    }
+  };
+  walk(REPO_ROOT, 0);
+  if (hits.length) {
+    findings.push(`⚠ ONEDRIVE CONFLICT COPIES (${hits.length}) — machine-suffixed duplicates on disk: ${hits.slice(0, 8).join(', ')}${hits.length > 8 ? ' …' : ''}`);
+    findings.push('   → diff each against its canonical sibling: identical/stale → delete; a jsonl with extra rows → append them to canonical first; a doc whose copy is NEWER than canonical = a clobbered edit → restore before deleting');
+  }
+} catch (e) { findings.push('ℹ conflict-copy check unavailable: ' + e.message); }
+
 // Append invariant findings to main findings
 if (invFindings.length > 0) {
   findings.push(''); // separator
