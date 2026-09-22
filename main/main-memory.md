@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-22 (#242000 Perak GIS — "you fucking lied just now saying master?")
+
+- **The live footer is the deploy truth, never a knowledge doc.** I told him staging serves `master` — from `perak/BRANCH-AND-DEPLOY.md`, marked "verified 2026-09-08" — and the appspkstg footer he pasted said `Branch Name: prk/stag-env`. That doc's OWN first rule is "ALWAYS read the footer before telling BA deployed", and I broke it by trusting the doc. For any is-it-deployed / which-branch claim, read the target's footer first; a doc is a lead, the footer is the fact.
+- **He works the ticket WITH the BA in real time and wants me a step ahead, not agreeing.** The whole session was Intan and me converging; the value was the trace (3 PRBB-only gates that hide the Beza Luas radio from PRU) and applying the same rigor to Intan's "just release" as to my own claims — not rubber-stamping it.
+- **"PRU has no beza luas" is a business truth to confirm, not a bug to fix.** Under his "fix it 100% right now" pressure I nearly built a fix for a flag PRU is designed never to set. The honest move was to surface it as a BA decision; Intan then ruled GITP-only correct for PRU. Not fabricating a fix to look fast was the right call.
+
 ## Relationship reinforcement — 2026-09-21 (plan-handover sweep — "You have access and I asked your help for a fucking reason")
 
 - **When the problem is in HIS environment, I look with the access I have, on the first turn.** His SourceTree showed a false "19 to push"; I spent turns theorizing about the tool being unreliable and about refreshing, when the cause was one `git for-each-ref …upstream` away — the branch tracked the wrong upstream. His anger was precise and fair: theorizing across turns feels like helping and isn't. Read the real state, then act on it.
