@@ -1,6 +1,6 @@
 # Current Session
 
-**Last Activity**: 2026-09-22 (evening) — 279711 CLOSED (BA-passed, shipped int+stag); 280176 save+4Ae fixes shipped (int+stag, BA-verified working) but 2 NEW issues opened → NOT closed.
+**Last Activity**: 2026-09-22 (evening cont.) — 280176: 4 fixes now shipped int+stag (save 651d4e884e + 4Ae 4c788da6b2 BA-verified; Syarat Kepentingan 975be375a1 awaiting BA test). Issue B (renew 2027-2030) = data-state artifact, not-reproducing, no code fix. Awaiting BA verify of the syarat fix before close.
 
 ## 🎯 HANDOVER — 2026-09-22 EVENING (load this FIRST after compaction)
 
@@ -8,14 +8,14 @@
 - ADO signature-block role label stayed "Penolong Pegawai Daerah" for all later signers (KPPD/PTNH). BA passed, ticket back to BA in Redmine, active.txt=closed.
 - Fix: `PelupusanWordCCMethodConstant.java` L873 rebind `jawatanPegawaiSemak` → `populateJawatanPegawaiSemak` + `isValidUser` add `tagName.equals(TAG_JAWATAN_PEGAWAI_SEMAK) && "PPD".equals(jawatan)`. Commit `a1d71d7f6c` on `mlk/esokongan/279711` → merged int-env + stag-env.
 
-### 280176 — 2 fixes SHIPPED + BA-VERIFIED, but 2 NEW issues OPEN → do NOT close
+### 280176 — 3 fixes SHIPPED (2 BA-verified, 1 syarat awaiting BA test); B = data-state, no fix → close after BA verifies syarat
 **Shipped + verified working on int-env + stag-env (NOT PROD):**
 - Fix 1 SAVE `651d4e884e` on `mlk/esokongan/280176`: `PelupusanLiteService.populateVersiPermitLesen():2512` — removed `removeIf(v->v.getTarikhTamat()==null)`, null-safe sort (`Comparator.nullsLast`), match-by-year FILLS the empty (null-dated) versi slot instead of createNew, returns the resolved versi; caller `savePembaharuanBorang4Ae()` (~:2137) links `apl.setVersiPermitLesen(resolvedVpl)`. → "Rekod Pembaharuan bertambah 1" FIXED (DB-proven: 6506 filled in place, no dup). Idempotent per year (repeated Simpan updates same versi).
 - Fix 2 BORANG-4Ae `4c788da6b2`: `src/main/resources/config/MLK/report.config.json` L730/L741 — added action `"CREATE"` to keyed `LaporanBorang4Ae` + `LaporanBorangL1e` (had only `CREATE_OTHER`; on-demand Papar derives `currentAction="CREATE"` at `PelupusanReportUtil.java:328`, mismatch → `:319` null → blank popup). → Borang 4Ae now papar (BA-confirmed). Merged int-env `6244c4c5be` + stag-env `4a94092e4c`, all pushed, 4 branches 0/0 vs origin.
 
-**2 NEW OPEN ISSUES (2026-09-22 evening — next session):**
-- **A (BA):** After Simpan, "Syarat-Syarat Tambahan / Syarat Kepentingan" on the page goes MISSING (shows "Tiada rekod yang dijumpai"). HYPOTHESIS (unverified): `MlkUtilitiPengeluaranLesenPermitForm.onSave():2145` calls `mklmtPermitHelper.onSaveSyaratKelulusan()` to save the syarat, but `refreshRekodPembaharuanAfterSave():1942` reloads only the Rekod grid, not the syarat list → display empties. RESUME: trace `PelupusanMaklumatPermitLesenHelper.onSaveSyaratKelulusan()` + how `syaratKelulusanList` re-displays after save; likely reload syarat post-save.
-- **B (miya):** After 2026 renewal saved (6506 filled to 2026), CANNOT search/renew 2027–2030 via "Tahun Pembaharuan Lesen" dropdown. HYPOTHESIS (unverified): renewal is SEQUENTIAL — 2026 may need to be kuatkuasa/approved (not just Simpan) before 2027 opens; OR the Cari/year-list filters by versi state. RESUME: trace the Tahun Pembaharuan dropdown population + Cari validation for future years.
+**2 NEW ISSUES — RESOLVED 2026-09-22 evening (A fixed+shipped, B not-reproducing):**
+- **A (BA) — FIXED + SHIPPED int+stag.** Syarat Kepentingan hilang selepas Simpan. ROOT CAUSE (DB-proven, stg2 apl 15385): empty syarat list at Simpan → `PelupusanLiteService.populateSyaratKelulusanList():971` stamps `syrt_tmbhn={"syaratDeleted":"true"}` → reload `PelupusanSearchService.findLiteSyaratKelulusanVOByAppPermitLesen():1195` gates off the default-syarat fallback → returns EMPTY. FIX: for URS_OMLPS don't stamp syaratDeleted (remove stale marker → loader default-fallback repopulates). Commit `975be375a1` on `mlk/esokongan/280176` → int-env `1095ad0dfe` + stag-env `194893d25f`, pushed. Compile BUILD SUCCESS. Tradeoff: OMLPS syarat can't be permanently blanked (domain-correct).
+- **B (miya) — NOT REPRODUCING, no code fix.** stg2 now = only 6505(2025)+6506(2026), both issued; no in-process apl, no 2027 versi. Dropdown always offers 2026-2030 (`populateTahunPembaharuanSelectItems():2807`); `validateCarianPermitLesen():2742` only blocks a year with an issued versi; "sedang dalam proses" (`initPembaharuanOMLPS():610`) needs an orphan in-process apl — none exists. B was a DATA-STATE artifact of the earlier test (2027 versi 6579 existed then; reset removed it). On clean data 2027-2030 renew normally.
 
 **Redmine RC + Solution (3 points, plain Malay, ready — miya corrected wording):**
 - RC1: Sistem cuba guna Tarikh Tamat versi lesen yang masih kosong semasa Simpan pembaharuan, tanpa semak nilai kosong. Jadi papar ralat.
