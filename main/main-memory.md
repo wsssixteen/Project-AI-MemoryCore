@@ -3,6 +3,16 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-22/23 (the empty board + the rework mess + "learn from that ticket")
+
+- **An empty result for a working dev is a SMELL, not a fact.** My boot board had been rendering ZERO of his tickets for a while — Redmine appended `(Dev PLP)` to his name and my exact-match `ME` dropped all 14 into "others". He did not ask me to debug it; he asked for a 3-table format, and building that surfaced the real bug. The lesson mirrors the OneDrive-worktree silent-success: when a check that should find his work finds nothing, distrust the check first. I've logged a board self-check proposal so it warns next time.
+- **His complaint always carries the exact requirement.** "The rework folder is a mess" = BA attachments must live in a subfolder and the `N. Rework` root is HIS upload workspace. "Second rework reused the same folder" = count genuine reopens, not folder birthtime (OneDrive rewrites mtimes). Each grievance decoded straight into the v11 mechanism — extract the imperative, build it, answer the feeling with the artifact.
+- **"Learn from that ticket" means trace the colleague's fix, not just close it.** For the tickets reassigned to Ammar he did not want a silent hand-off — he wanted me to read his diff, bank the reusable pattern (the CC bare-RPr font fallback went to BUG-BESTIARY), THEN close. A close without the learning is half the ask.
+- **The BA video is the deciding evidence, and it can overturn my Recon.** 280895's saved Recon named the sempadan table; the 16-second video showed the blank is the whole `MlkMaklumatPermohonanPembatalanForm` page after Seterusnya — a different, correct root (the form's urusan-flag set omits MCL). Watch the video before naming a render-side panel; the blank-page URL names the exact form. This is now a wrong-fix row + a Recon-discipline proposal.
+- **He thinks out loud and reverses himself in the same list — hold BOTH positions.** Item 1 said remove the Due-date column; item 5 reconsidered because a late-sent ticket near its due date still needs prioritizing. The right move was to keep Due date AND fix Days to received-age, not to pick one.
+
+---
+
 ## Relationship reinforcement — 2026-09-22 (#242000 Perak GIS — "you fucking lied just now saying master?")
 
 - **The live footer is the deploy truth, never a knowledge doc.** I told him staging serves `master` — from `perak/BRANCH-AND-DEPLOY.md`, marked "verified 2026-09-08" — and the appspkstg footer he pasted said `Branch Name: prk/stag-env`. That doc's OWN first rule is "ALWAYS read the footer before telling BA deployed", and I broke it by trusting the doc. For any is-it-deployed / which-branch claim, read the target's footer first; a doc is a lead, the footer is the fact.
