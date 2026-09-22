@@ -1,8 +1,50 @@
 # Current Session
 
-**Last Activity**: 2026-09-22 — new-ticket intake + Phase 0 (278909, 279711, 280176) + DE.
+**Last Activity**: 2026-09-22 (evening) — 279711 CLOSED (BA-passed, shipped int+stag); 280176 save+4Ae fixes shipped (int+stag, BA-verified working) but 2 NEW issues opened → NOT closed.
 
-## 🎯 HANDOVER — Focus tickets (load this after compaction)
+## 🎯 HANDOVER — 2026-09-22 EVENING (load this FIRST after compaction)
+
+### 279711 — DONE (closed)
+- ADO signature-block role label stayed "Penolong Pegawai Daerah" for all later signers (KPPD/PTNH). BA passed, ticket back to BA in Redmine, active.txt=closed.
+- Fix: `PelupusanWordCCMethodConstant.java` L873 rebind `jawatanPegawaiSemak` → `populateJawatanPegawaiSemak` + `isValidUser` add `tagName.equals(TAG_JAWATAN_PEGAWAI_SEMAK) && "PPD".equals(jawatan)`. Commit `a1d71d7f6c` on `mlk/esokongan/279711` → merged int-env + stag-env.
+
+### 280176 — 2 fixes SHIPPED + BA-VERIFIED, but 2 NEW issues OPEN → do NOT close
+**Shipped + verified working on int-env + stag-env (NOT PROD):**
+- Fix 1 SAVE `651d4e884e` on `mlk/esokongan/280176`: `PelupusanLiteService.populateVersiPermitLesen():2512` — removed `removeIf(v->v.getTarikhTamat()==null)`, null-safe sort (`Comparator.nullsLast`), match-by-year FILLS the empty (null-dated) versi slot instead of createNew, returns the resolved versi; caller `savePembaharuanBorang4Ae()` (~:2137) links `apl.setVersiPermitLesen(resolvedVpl)`. → "Rekod Pembaharuan bertambah 1" FIXED (DB-proven: 6506 filled in place, no dup). Idempotent per year (repeated Simpan updates same versi).
+- Fix 2 BORANG-4Ae `4c788da6b2`: `src/main/resources/config/MLK/report.config.json` L730/L741 — added action `"CREATE"` to keyed `LaporanBorang4Ae` + `LaporanBorangL1e` (had only `CREATE_OTHER`; on-demand Papar derives `currentAction="CREATE"` at `PelupusanReportUtil.java:328`, mismatch → `:319` null → blank popup). → Borang 4Ae now papar (BA-confirmed). Merged int-env `6244c4c5be` + stag-env `4a94092e4c`, all pushed, 4 branches 0/0 vs origin.
+
+**2 NEW OPEN ISSUES (2026-09-22 evening — next session):**
+- **A (BA):** After Simpan, "Syarat-Syarat Tambahan / Syarat Kepentingan" on the page goes MISSING (shows "Tiada rekod yang dijumpai"). HYPOTHESIS (unverified): `MlkUtilitiPengeluaranLesenPermitForm.onSave():2145` calls `mklmtPermitHelper.onSaveSyaratKelulusan()` to save the syarat, but `refreshRekodPembaharuanAfterSave():1942` reloads only the Rekod grid, not the syarat list → display empties. RESUME: trace `PelupusanMaklumatPermitLesenHelper.onSaveSyaratKelulusan()` + how `syaratKelulusanList` re-displays after save; likely reload syarat post-save.
+- **B (miya):** After 2026 renewal saved (6506 filled to 2026), CANNOT search/renew 2027–2030 via "Tahun Pembaharuan Lesen" dropdown. HYPOTHESIS (unverified): renewal is SEQUENTIAL — 2026 may need to be kuatkuasa/approved (not just Simpan) before 2027 opens; OR the Cari/year-list filters by versi state. RESUME: trace the Tahun Pembaharuan dropdown population + Cari validation for future years.
+
+**Redmine RC + Solution (3 points, plain Malay, ready — miya corrected wording):**
+- RC1: Sistem cuba guna Tarikh Tamat versi lesen yang masih kosong semasa Simpan pembaharuan, tanpa semak nilai kosong. Jadi papar ralat.
+- RC2: Semasa Simpan, sistem tidak isi versi lesen kosong sedia ada mengikut tahun. Sebaliknya ia cipta satu rekod pembaharuan baharu setiap kali Simpan.
+- RC3: Bila klik Papar Borang, sistem jana borang atas permintaan menggunakan tindakan CREATE, tetapi senarai tindakan bagi Borang 4Ae dan L1e dalam konfigurasi laporan hanya ada CREATE_OTHER. Tindakan tidak sepadan jadi borang tidak dijana lalu papar kosong.
+- Sol1: Sistem kini isi Tarikh Tamat pada versi lesen kosong sedia ada semasa Simpan, jadi tidak lagi papar ralat.
+- Sol2: Sistem kini padankan pembaharuan dengan versi lesen mengikut tahun dan kemaskini versi yang sama, tanpa cipta rekod baharu.
+- Sol3: Tambah tindakan CREATE pada konfigurasi laporan Borang 4Ae dan L1e supaya jana atas permintaan sepadan dan borang dapat dipapar.
+
+**Reset scripts (M081 = permit_lesen_id 6253, aplikasi 3412358):**
+- Staging (BA re-test): file `1. Tasks\Melaka\213…\2. Fix\280176-reset.sql` (UPDATE-null form, stamped). FULL reset (re-point apl→6505 by aplikasi 3412358, delete pemegang + versi versi_dok>=2, un-fill versi_dok=1) drafted in the 2026-09-22 evening chat — ind-delete flagged, staging only, not yet written to file.
+- PROD: **NO data patch** — PROD M081 is clean {6505(2025), 6506(empty)}; officer renews 2026 normally AFTER the code fix reaches PROD via release. DO NOT patch PROD data.
+
+**DB state (M081 permit 6253):** stg2 = 6505(v0,2025) · 6506(v1,2026 filled nurulazura) · 6579(v2,2027 nurulazura); apl 15385→6579. prod = 6505(v0,2025) · 6506(v1,EMPTY null); apl 15385→6505 (untouched).
+
+**Deploy state:** 280176 (both fixes) + 279711 on int-env + stag-env only. NOT on PROD (release train). BA tests on staging.
+
+**Key code (repo `E:\Projects\Melaka\etanah-pelupusan`):**
+- `...\service\impl\PelupusanLiteService.java:2512` populateVersiPermitLesen (match-fill) · `:292` pre-check "Sila isi Rekod Pembaharuan" (Tempoh+Bayaran+NoResit all required) · savePembaharuanBorang4Ae caller ~:2137
+- `...\web\form\utiliti\mlk\MlkUtilitiPengeluaranLesenPermitForm.java:2066` onSave · `:1942` refreshRekodPembaharuanAfterSave (clears+reloads Rekod grid only) · `:376` initReport (Papar 4Ae) · `:2145` onSaveSyaratKelulusan
+- `...\util\report\PelupusanReportUtil.java:298` action-map gate · `:328` currentAction="CREATE"
+- `...\resources\config\MLK\report.config.json:730` keyed other-report LaporanBorang4Ae/L1e
+- grid composite `...\webapp\resources\components\mlk\mlkMaklumatRekodPembaharuanLite.xhtml` (value=`#{cc.attrs.permitHelper.rekodPembaharuanList}` ← `permitHelper=#{mb.mklmtPermitHelper}`)
+
+**New rules saved this session:** `feedback_rework_commit_on_existing_ticket_branch` (rework commits on the existing ticket branch, never a new vN) · `feedback_deploy_staging_implies_internal` (staging deploy → also internal; internal → internal only).
+
+---
+
+## 🎯 HANDOVER — Focus tickets (09-22 morning, SUPERSEDED)
 
 | # | Type | Focus / next action | Effort | Why |
 |---|---|---|---|---|
