@@ -111,3 +111,21 @@ Also on the plate: **#280099** (folder `216`, PROD PT "Alter Permohonan Ke Kemas
 | 280099 | run Alter Flow on the page, tell Ruri result | みや |
 | 280540 | build `PLP_BANGUNAN_*` guard, branch+test | Ruri/みや |
 | 279411 | patch MlkSenaraiSemakPTGForm.java:839 (Ammar's fix gap) | Ammar |
+
+## 2026-09-22 (worktree `perak-quest-task-setup-ea1e3f`) — /goal QA-242000 Perak GIS GITP/GUTP (reload closed quest -> BA-resolved -> archived)
+
+**Arc**: reload the closed Perak II #242000, check staging server.log for PRU `PTPK/02/E/PRU/2026/4` (BA Intan asked does the GIS trigger fire), set up the misfiled Perak task folder, resolve with Intan, close.
+
+**Findings**:
+- Log: PRU sign (PB4DE, 14:44-14:51) fired GITP only (`TaskId=GKP`; GIS server replied `Flag:N "Kemaskini gagal"`); NO GUTP. Matches pre-fix PRU behaviour.
+- Fix `e476e2465f` (mirror-PRBB, gates GUTP on `adaBezaLuas`) is on `prk/internal/242000` + `prk/stag-env`; staging serves `prk/stag-env` (footer 1.74.3) so it IS in staging but INERT for PRU.
+- Root: PRU never sets `adaBezaLuas` - 3 PRBB-only gates: render `JabatanTeknikalTerlibatForm.xhtml:33` (`adaBezaLuas="#{mb.renewPRBB}"`), save `JabatanTeknikalTerlibatForm.java:799` (`URS_PRBB`), jenisPermohonan `PelupusanService.saveAppPelupusan():871`. DB: 1547 rows have adaBezaLuas, ALL PRBB; 0 of 129 PRU.
+- BA ruling (Intan): PRU is air-space, renews existing permit, NO beza luas by nature -> GITP-only is CORRECT for PRU; no code change. PRBB enhancement is the release; Intan handles release.
+
+**Delivered**: Perak task folder (was misfiled Melaka\188 -> Perak\9, now Archive); server.log moved in; log slice + 3.1KB cut log in `2. Fix\`; Redmine comment drafted (Malay). qa_doc + active.txt updated then archived.
+
+**Correction banked**: `perak/BRANCH-AND-DEPLOY.md` said staging=master; live footer 2026-09-22 = prk/stag-env -> doc fixed, footer-first rule reinforced. Slip logged.
+
+**Open (not ours)**: GITP call returns `Flag:N "Kemaskini gagal"` - GIS web service (192.168.19.98) rejects the register; GIS-team issue.
+
+**Status**: QA-242000 ARCHIVED. No follow-up owed by us; release is Intan's.
