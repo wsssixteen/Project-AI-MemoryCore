@@ -29,6 +29,12 @@ const PROJECT      = 'helpdesk_melaka';
 const ME           = 'Ahmad Ridhwan Anuar';
 const INTERNAL_DEADLINE_DAYS = 3;
 
+// Redmine appends a role suffix to the display name — "Ahmad Ridhwan Anuar (Dev PLP)".
+// Match on the name with any trailing "(...)" role tag stripped, so a role change on
+// Redmine never silently empties his board (2026-09-22: the suffix classified all 14
+// of his open tickets as colleagues' -> mine=0 -> an empty boot board).
+const isMe = name => (name || '').replace(/\s*\([^)]*\)\s*$/, '').trim() === ME;
+
 // Three passes, unioned by issue id. Module=Pelupusan alone is NOT enough:
 // #273919 (miya's own, Apply-ready) carries Module='Awam' + Awam Sub Module=
 // 'Awam Pelupusan', so a single cf_17 filter silently dropped it. The
@@ -46,7 +52,11 @@ const FILTERS = [
 // to helpdesk_melaka, so a ticket assigned to him on ANOTHER state's project
 // would be invisible. This pass cannot miss it; anything it finds outside the
 // Melaka project is surfaced on its own line, never merged into the ranked list.
-const MELAKA_PROJECTS = new Set(['eSOKONGAN MELAKA']);
+// His Melaka work spans TWO Redmine projects — the eSOKONGAN tracker lives under
+// 'eSOKONGAN MELAKA', the Internal Issue / Data Patching tickets under 'MLK_03_Pelupusan'.
+// Both must be recognised as Melaka, or his own tickets get mis-flagged "outside Melaka"
+// and dropped from the board (2026-09-22: 4 real Melaka tickets excluded this way).
+const MELAKA_PROJECTS = new Set(['eSOKONGAN MELAKA', 'MLK_03_Pelupusan']);
 
 // 51 eSOKONGAN · 53 Internal Issue · 63 Internal Issue (PROD-CR) · 64 Data Patching (PROD)
 // 71 Internal Issue (PROD) · 77 Internal Issue (Permanent Fix) · 79 Internal Issue (MA Fix)
@@ -191,6 +201,9 @@ function shape(issues, today, trainByVersion, states) {
         return {
             id: i.id,
             tracker: i.tracker.name,
+            tracker_id: i.tracker.id,
+            priority: i.priority ? i.priority.name : '—',
+            priority_id: i.priority ? i.priority.id : 0,
             status: i.status.name,
             assignee: i.assigned_to ? i.assigned_to.name : 'unassigned',
             start: i.start_date || null,
@@ -216,13 +229,68 @@ function rankMine(rows) {
     });
 }
 
-function renderMine(rows) {
-    const out = [`### Mine — ${rows.length} open (ranked: oldest start first)`, '',
-        '| # | Days | Due date | Subject | State |', '|---|---|---|---|---|'];
+// THREE-TABLE SPLIT (miya 2026-09-22): his list is presented as three
+// priority-ordered tables, categorised DETERMINISTICALLY by tracker_id — the
+// tracker IS the category, so the split never depends on parsing a subject.
+//   Table 1 Patching (PROD): where we patch dokumen / patch data / alter flowable.
+//     63 Internal Issue (PROD-CR) · 64 Data Patching (PROD) · 71 Internal Issue (PROD)
+//   Table 2 eSOKONGAN tracker: 51 — ranked severity DESC, then nearest due date.
+//   Table 3 Internal fixes & other: everything else (53 Internal Issue · 77 Permanent
+//     Fix · 79 MA Fix + any tracker not above).
+const PATCH_TRACKER_IDS     = new Set([63, 64, 71]);
+const ESOKONGAN_TRACKER_IDS = new Set([51]);
+
+function categoryOf(r) {
+    if (PATCH_TRACKER_IDS.has(r.tracker_id)) return 'patch';
+    if (ESOKONGAN_TRACKER_IDS.has(r.tracker_id)) return 'esokongan';
+    return 'other';
+}
+
+// Severity = Redmine Priority. Higher rank = more severe. Named map first (this
+// instance names them per reference_redmine_sla_hours), then fall back to
+// priority_id (Redmine default: higher id = higher priority).
+const SEVERITY_RANK = { immediate: 5, critical: 5, urgent: 4, high: 3, normal: 2, medium: 2, low: 1 };
+function severityRank(r) {
+    const byName = SEVERITY_RANK[(r.priority || '').toLowerCase()];
+    return byName != null ? byName : (r.priority_id || 0);
+}
+
+// eSOKONGAN order (miya 2026-09-22): severity DESC first, then nearest due date
+// (soonest first; no-due rows last), then id.
+function rankEsokongan(rows) {
+    return rows.slice().sort((a, b) => {
+        const s = severityRank(b) - severityRank(a);
+        if (s !== 0) return s;
+        if (a.due && b.due && a.due !== b.due) return a.due < b.due ? -1 : 1;
+        if (a.due && !b.due) return -1;
+        if (!a.due && b.due) return 1;
+        return a.id - b.id;
+    });
+}
+
+function renderRows5(rows) {
+    return rows.map(r => `| ${r.id} | ${r.days ?? '—'} | ${shortDate(r.due)} | ${r.subject} | ${r.state} |`);
+}
+
+function renderPatch(rows) {
+    return [`### 1. Patching (PROD) — ${rows.length} open (ranked: oldest start first)`, '',
+        '| # | Days | Due date | Subject | State |', '|---|---|---|---|---|',
+        ...renderRows5(rows)].join('\n');
+}
+
+function renderEsokongan(rows) {
+    const out = [`### 2. eSOKONGAN tracker — ${rows.length} open (ranked: severity, then nearest due)`, '',
+        '| # | Severity | Days | Due date | Subject | State |', '|---|---|---|---|---|---|'];
     for (const r of rows) {
-        out.push(`| ${r.id} | ${r.days ?? '—'} | ${shortDate(r.due)} | ${r.subject} | ${r.state} |`);
+        out.push(`| ${r.id} | ${r.priority} | ${r.days ?? '—'} | ${shortDate(r.due)} | ${r.subject} | ${r.state} |`);
     }
     return out.join('\n');
+}
+
+function renderOther(rows) {
+    return [`### 3. Internal fixes & other — ${rows.length} open (ranked: oldest start first)`, '',
+        '| # | Days | Due date | Subject | State |', '|---|---|---|---|---|',
+        ...renderRows5(rows)].join('\n');
 }
 
 function renderOthers(rows) {
@@ -256,15 +324,20 @@ async function main() {
     // Anything assigned to miya OUTSIDE the Melaka project — another state, another
     // programme. Surfaced separately so it can never be mistaken for Melaka work,
     // and can never be silently dropped by the Melaka-scoped filters either.
-    const offProject = rows.filter(r => r.assignee === ME && !MELAKA_PROJECTS.has(r.project));
+    const offProject = rows.filter(r => isMe(r.assignee) && !MELAKA_PROJECTS.has(r.project));
     rows = rows.filter(r => !offProject.includes(r));
 
-    const isMine = r => r.assignee === ME || ADOPTED_AS_MINE.has(r.id);
+    const isMine = r => isMe(r.assignee) || ADOPTED_AS_MINE.has(r.id);
     const mine = rankMine(rows.filter(isMine));
     const others = rows.filter(r => !isMine(r));
 
+    // His list, split into the three priority-ordered tables (miya 2026-09-22).
+    const minePatch = mine.filter(r => categoryOf(r) === 'patch');       // age-ranked (from rankMine)
+    const mineEsok  = rankEsokongan(mine.filter(r => categoryOf(r) === 'esokongan')); // severity, then due
+    const mineOther = mine.filter(r => categoryOf(r) === 'other');       // age-ranked (from rankMine)
+
     if (args.includes('--json')) {
-        console.log(JSON.stringify({ mine, others, dropped, offProject }, null, 2));
+        console.log(JSON.stringify({ mine, patch: minePatch, esokongan: mineEsok, other: mineOther, others, dropped, offProject }, null, 2));
         return;
     }
     // QUICK-WIN / steal-risk banner ABOVE the age-ranked table: a diagnosed patch
@@ -276,7 +349,11 @@ async function main() {
 
     // Default is MINE ONLY (miya 2026-08-05: "present to me ONLY my list").
     // The colleagues' table is still built — ask for it with --tracking.
-    console.log(renderMine(mine));
+    console.log(renderPatch(minePatch));
+    console.log('');
+    console.log(renderEsokongan(mineEsok));
+    console.log('');
+    console.log(renderOther(mineOther));
     if (args.includes('--tracking')) {
         console.log('');
         console.log(renderOthers(others));
