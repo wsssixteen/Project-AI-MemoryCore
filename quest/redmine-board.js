@@ -146,6 +146,62 @@ async function resolveTrains(issues) {
     return byVersion;
 }
 
+// My Redmine user id — needed to find the assignment-to-me journal entry. Resolved
+// once via the API key's own /users/current.
+function fetchMyId() {
+    return new Promise(resolve => {
+        http.get(`${REDMINE_BASE}/users/current.json`,
+            { headers: { 'X-Redmine-API-Key': REDMINE_KEY } }, res => {
+                let data = '';
+                res.on('data', c => data += c);
+                res.on('end', () => { try { resolve(JSON.parse(data).user.id); } catch { resolve(null); } });
+            }).on('error', () => resolve(null));
+    });
+}
+
+// RECEIVED date (miya 2026-09-22): the day the ticket actually landed on HIS desk —
+// the LATEST journal where assigned_to_id was set to him. A reassigned rework is only
+// "his" from that reassignment, so start_date (which can be months earlier, when the
+// ticket was first created) is the wrong age. Fallback = created_on if it was created
+// already assigned to him (no reassignment journal). Returns "YYYY-MM-DD" or null.
+function fetchReceivedDate(issueId, myId) {
+    return new Promise(resolve => {
+        http.get(`${REDMINE_BASE}/issues/${issueId}.json?include=journals`,
+            { headers: { 'X-Redmine-API-Key': REDMINE_KEY } }, res => {
+                let data = '';
+                res.on('data', c => data += c);
+                res.on('end', () => {
+                    try {
+                        const iss = JSON.parse(data).issue;
+                        let received = null;
+                        for (const jr of (iss.journals || [])) {
+                            for (const det of (jr.details || [])) {
+                                if (det.property === 'attr' && det.name === 'assigned_to_id'
+                                    && String(det.new_value) === String(myId)) {
+                                    received = jr.created_on; // journals are chronological — last write wins
+                                }
+                            }
+                        }
+                        const iso = received || iss.created_on || null;
+                        resolve(iso ? String(iso).slice(0, 10) : null);
+                    } catch { resolve(null); }
+                });
+            }).on('error', () => resolve(null));
+    });
+}
+
+// Stamp every "mine" row with its received-date age. Best-effort: any fetch that fails
+// leaves the row's start_date-based days untouched, so an offline/journal-less run still
+// renders (just with the older age basis).
+async function stampReceivedDays(mineRows, today) {
+    const myId = await fetchMyId();
+    if (!myId) return;
+    await Promise.all(mineRows.map(async r => {
+        const recv = await fetchReceivedDate(r.id, myId);
+        if (recv) { r.received = recv; r.days = daysSince(recv, today); }
+    }));
+}
+
 // STATE — read from quest/active.txt, never hand-typed, so the column loads the
 // same way every boot (miya 2026-08-05: "make the table deterministic so it will
 // CONSISTENTLY load the same way").
@@ -328,7 +384,9 @@ async function main() {
     rows = rows.filter(r => !offProject.includes(r));
 
     const isMine = r => isMe(r.assignee) || ADOPTED_AS_MINE.has(r.id);
-    const mine = rankMine(rows.filter(isMine));
+    const mineRows = rows.filter(isMine);
+    await stampReceivedDays(mineRows, today);   // Days = age since HE received it (miya 2026-09-22)
+    const mine = rankMine(mineRows);            // rank AFTER re-stamping days
     const others = rows.filter(r => !isMine(r));
 
     // His list, split into the three priority-ordered tables (miya 2026-09-22).
