@@ -7,7 +7,7 @@
 
 *Source: TDD SQL exports at `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\Database\Melaka\` — `MLIT/`, `MLKFAT/`, `MLKUAT/` dump folders. The dumps stay valid as SCHEMA reference (CREATE TABLE truth), but the **FAT + UAT servers are DECOMMISSIONED (2026-07-17)** — live envs are mlit / stg1 / stg2 / PROD only (§12).*
 *Environment: PostgreSQL.*
-*Last updated: 2026-09-22 (§28 added — fee unit config `hsl_fi_pejabat`/`hsl_fi_kadar`, DB-verified prod/stg2/mlit, QA-280540)*
+*Last updated: 2026-08-24 (structural refine: env truth, section renumber — duplicate §16/§17/§18 orphans → §21-§26, back-harvest corrections merged in place, id_pengenalan contradiction resolved, §0 router added)*
 
 > **How to use this file**
 > 
@@ -31,7 +31,6 @@
 | Which BPMN version is deployed | §18 |
 | Access/capaian missing from dropdowns | §15 |
 | Query fails `relation does not exist` | schema prefix — §12 + §18.1 |
-| Fee shows rate × m² / flat-vs-area unit | §28 (`hsl_fi_pejabat.unit_pengiraan_id` / `hsl_fi_kadar`) |
 
 ---
 
@@ -1627,30 +1626,3 @@ WHERE aplikasi_id IN (SELECT aplikasi_id FROM et_main.umm_aplikasi WHERE id_peng
 Before-SELECT: `SELECT aplikasi_id, id_pengenalan, status_proses, status_keputusan, status_awam, hubungan_aplikasi_id, trkh_tamat FROM umm_aplikasi WHERE id_pengenalan IN (…)` + counts of active `umm_a_tgsn` and `umm_tgsn_semasa` per aplikasi. Caveat: the Flowable engine process stays orphaned (separate DB, PROD not readable) — same as every precedent; harmless once the dashboard row is gone. `version` is NOT bumped (precedent rows sit at version 0 → cancelled).
 
 **`tempat` value convention** (`ind_mklmt_tnh_permit_lesen` / `umm_a_permohonan_tnh`, PROD census 2026-09-04): app default for "no place" is **NULL** (17 of 24 officer-created lesen rows; 34 officer MLPS rows); `'-'` is a legitimate stored value (66 migrated + 1 officer-typed on the lesen table; 2 patched MLPS rows) and is what BA asks to SEE — the L1e report renders blank as `-` (`populateTempat():818`), the Maklumat Tanah grid does not. Empty string exists only on 126 migrated rows. Pick `'-'` when the user asked for a dash on screen; NULL otherwise.
-
----
-
-## 28. Fee unit config — hsl_fi_pejabat + hsl_fi_kadar (2026-09-22, #280540, DB-verified prod/stg2/mlit)
-
-**Columns**: header `hsl_fi_pejabat.unit_pengiraan_id` = "Kadar Pengiraan Per", one of the `JNS_PER_FI_*` family (28 values — Lot, Lot Tambahan, Meter Padu, Meter Persegi, Metrik Tan, Hakmilik, Hektar, Ekar, Petak, Plot, Permohonan, Urusan, …). Row overrides live on `hsl_fi_kadar`: `kadar_pengiraan_id` (also `JNS_PER_FI_*`) and `unit_luas_id` (`UNIKEL*`).
-
-**Precedence**: row `kadar_pengiraan_id` → row `unit_luas_id` → header `unit_pengiraan_id`. Only the area units (`JNS_PER_FI_METER`/`JNS_PER_FI_HKTR`/`JNS_PER_FI_EKAR`, plus any `UNIKEL*` row override) multiply by `luas`; every other unit is flat.
-
-**Per-env values** (config-source ✓ query, not a code read):
-
-| Env | `hsl_fi_pejabat.unit_pengiraan_id` (header) | Notes |
-|---|---|---|
-| prod | `JNS_PER_FI_METER` | area unit → × luas |
-| stg2 | `JNS_PER_FI_LOT` (since 2026-09-21) | flat, no luas multiply |
-| mlit | `JNS_PER_FI_LOT` | flat; Perindustrian rows carry `unit_luas_id = UNIKELMP` row override |
-
-**Ready SELECT** (unqualified, one table per line, kod-subquery, no JOIN — run connected to the target schema):
-
-```sql
-SELECT unit_pengiraan_id FROM hsl_fi_pejabat WHERE kod = '<KOD_FI>';
-SELECT kadar_pengiraan_id, unit_luas_id FROM hsl_fi_kadar WHERE fi_pejabat_id = (SELECT fi_pejabat_id FROM hsl_fi_pejabat WHERE kod = '<KOD_FI>');
-```
-
-**Consumers**: `PelupusanMaklumatBayaranHelper.calculateBayaran()` (etanah-pelupusan, unit fallback chain) + working analog `etanah-awam\src\main\java\my\gov\etanah\awam\hasil\strategy\PelupusanBayaranOnlineStrategy.java:169-210` (switch on `fiPejabat.getUnitPengiraan().getKod()` → `HasilConstant.SAK_FI_PER_*`) + Jasper `BgnLaporanBorang9B/9C.jrxml` CASE logic. Screens: `MlkPengiraanBayaranLesenForm.xhtml` (etanah-pelupusan) and `etanah-maintenance/FiSetupManagerForm.xhtml` (module not checked out locally — trace via the two tables + BA screenshots, not the screen source).
-
-Ref [[config-table-before-code]] — the field has 28 values; never collapse it to a binary from one observed row.
