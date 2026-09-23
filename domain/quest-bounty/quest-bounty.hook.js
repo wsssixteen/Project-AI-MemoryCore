@@ -20,7 +20,9 @@ process.stdin.on('end', () => {
   try {
     const data = JSON.parse(input || '{}');
     const cmd = (data.tool_input && data.tool_input.command) || '';
-    if (!/archive-quest\.js/.test(cmd)) { process.exit(0); }     // only on Phase-2 archive
+    // v1.1 (2026-09-23): fire only when node RUNS archive-quest.js live — a grep/cat/sed of the file
+    // or a --dry-run is not an archive (a grep fired it and pushed a stale knowledge revert, QA-280540).
+    if (!/\bnode\s+(?:"[^"]*|[^\s|&;]*)archive-quest\.js\b/.test(cmd) || /--dry-run\b/.test(cmd)) { process.exit(0); }
     const qa = (cmd.match(/QA-\d+/) || ['QA-?'])[0];
     const ROOT = process.env.QB_ROOT || path.resolve(__dirname, '..', '..'); // repo this hook lives in (QB_ROOT = test override)
     const g = (a) => execSync(`git ${a}`, { cwd: ROOT, stdio: 'pipe' }).toString().trim();
