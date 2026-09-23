@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Working Memory
+- Melaka DB reconnected (postgres-mlkprod live, etprdmlk).
+- Canonical formats only (never invent): infra-handoff + SCRIPT-CHECK + close-phase (`feedback_use_canonical_formats_never_invent`).
+- close-phase now always emits Redmine Root cause + Solution.
+- **Parallel session 2026-09-22 (this laptop)**: System-check run 3 (5 familiars + controller verify) for みや's "system-context-before-change" routine; MEMORY.md compaction parked.
+- **みや's routine ask (2026-09-22)**: a mandatory mechanical rule = know the whole system context (why · goal · rules · structure · guardrails · monitoring · version · confidence) before any system change, plus a top-view registry of workflow groups. Appraised: real gaps = no group-level registry + no change-time context card for arbitrary targets; 70% of mechanics exist (`lib/change-checklist.js`, `system/registry.jsonl`, Rule 13 README keys, NUKE-MARKER, turn-ledger goal_met). His decisions via popup: audit first then build · group level named **System** · compaction resumes after the audit.
+- **System-check run 3 fixes SHIPPED (11 commits, remote main == local)**: batch A (change-checklist pure-node, ghost scan covers domain/, windowsHide, Rule 14, step 5, 4 SKILL pointers, registry regen) · batch B (5 hooks registered after evals + smoke) · batch C (120 OneDrive conflict copies removed, both machine names; 35 jsonl merged first; CHECK 9 boot detector; **restored** DE Step 10 hard rule + Step 2b safe.directory clobbered in `25a0379c`). fsck clean after cleanup. Open items stay in the todo row.
+- **System-check run 3 result**: 6 CRITICAL · 9 HIGH · 12 MEDIUM, all in `main/todo.md` Q1 row "System-check run 3"; stamps updated in `system/evolution-protocol.md` (system-check + evolution-check both 2026-09-22). Headline: 9 ghost hooks the boot audit cannot see, `change-checklist.js` referencer step dead on this laptop (bash ENOENT), 26 OneDrive conflict copies incl. `.git` internals.
+- **MEMORY.md compaction (parked)**: plan drafted = 48 merges → 118 files / ~129 lines; 2 dead files should MOVE to `.claude/auto-memory/archive/` (24 retired memories already live there), not delete; 25 live citers of memory filenames found by hand grep (quest SKILL, close-phase, bankai, patch-script-gate hook) → keep those filenames as survivors.
+
 ## Working Memory (carried from 2026-09-21)
 - **Focus tickets for tomorrow (みや's plan list)**: 280614 (send to infra), 280099 (run Alter on page), 280540 (build code fix).
 - **Melaka DB**: reconnected mid-session (was CONNECT_TIMEOUT at boot); postgres-mlkprod live (`etprdmlk`).
@@ -5176,6 +5186,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

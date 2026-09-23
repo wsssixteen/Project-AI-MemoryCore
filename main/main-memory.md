@@ -3,6 +3,14 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-23 (#280176 "you might have caused a regression")
+
+- **"Compare to master and audit" means prove it with the diff, then keep going on the real bug.** The audit cleared 280176 in one diff, but he did not want the verdict alone: the two videos were real bugs on neighbouring paths, and the day was spent fixing them. A clean audit is the opening line, not the deliverable.
+- **He wants the reset script to be ONE reusable thing, and he wants to know which block to run, not a lecture.** "Do we need a different script every time?" and "which script I should run now" were the same complaint twice: I kept appending sections and explaining instead of answering "RESET 1, top block". Answer the imperative, then stop.
+- **Loggers are fine, but they never leave his laptop.** He turned the probe question into a standing rule in one sentence: test probes locally, from now on, until he says otherwise. The rule is his; the gate is mine to build. Yesterday's probe-on-staging is exactly what he is stopping.
+- **The thing I put in his tree, I remove from his tree.** He erupted when I handed him `git checkout -- .` for my own uncommitted local-test patch. Same family as the July "why didn't you just run it yourself". If I wrote it there, the cleanup is mine, silently, before the hand-back.
+- **A test hand-back must name the exact control.** "Simpan" was ambiguous (dialog Simpan vs page Simpan); he saved the dialog and the DB could not prove the fix. The test row names the button, not the verb.
+
 ## Relationship reinforcement — 2026-09-22/23 (the empty board + the rework mess + "learn from that ticket")
 
 - **An empty result for a working dev is a SMELL, not a fact.** My boot board had been rendering ZERO of his tickets for a while — Redmine appended `(Dev PLP)` to his name and my exact-match `ME` dropped all 14 into "others". He did not ask me to debug it; he asked for a 3-table format, and building that surfaced the real bug. The lesson mirrors the OneDrive-worktree silent-success: when a check that should find his work finds nothing, distrust the check first. I've logged a board self-check proposal so it warns next time.

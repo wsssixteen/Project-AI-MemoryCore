@@ -40,3 +40,6 @@ Rule: DE close BLOCKS unless `domain/de-close-gate/log.jsonl` carries `action=au
 
 ## C4 — Redmine reconcile (added 2026-08-21 evening)
 DE close BLOCKS unless `node quest/redmine-reconcile.js` ran <=12h (writes action=reconcile-ran to log.jsonl). Reconciles active.txt open blocks against live Redmine both directions; report-only. Replay: 2026-08-21 — 20 stale open blocks vs 0 assigned-open.
+
+## C7 — qa_doc saved this session (added 2026-09-23, #280176 DE audit)
+Every touched ticket whose active.txt block names a `qa_doc=` must have that file modified after the session started. Step 2c (save every quest touched) had no check. A doc absent on disk is skipped; a worktree also looks in the main checkout three levels up. Eval F19–F21.

@@ -57,7 +57,7 @@ function parseTranscript(p) {
     const text = textFromContent(msg.content);
     if (role === 'assistant' && text.trim()) assistantTexts.push(text);
   }
-  return { raw, assistantText: assistantTexts.join('\n') };
+  return { raw, assistantText: assistantTexts.join('\n'), assistantTexts };
 }
 
 function activeQuests() {
@@ -98,7 +98,12 @@ process.stdin.on('end', () => {
 
     const missingByQuest = [];
     for (const q of activeQuests()) {
-      if (!t.assistantText.includes(q.qa) && !t.assistantText.includes(q.num)) continue;
+      // v1.1 (2026-09-23): a quest is "worked on" when its number recurs (>=3 mentions) OR a reply
+      // OPENS with a diagnosis line naming it. One mention deep inside a change-manifest table
+      // (QA-280540 during the #280176 DE) is neither, so it no longer fires.
+      const hits = t.assistantText.split(q.num).length - 1;
+      const headline = t.assistantTexts.some(m => { const h = m.slice(0, 200); return DIAGNOSIS.test(h) && h.includes(q.num); });
+      if (hits < 3 && !headline) continue;
       const files = briefVisuals(q.taskFolder);
       if (!files.length) continue;
       const missing = files.filter(f => !t.assistantText.includes(f));

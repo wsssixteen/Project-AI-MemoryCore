@@ -105,3 +105,42 @@ Logged via `core/slips.js --type proposal` (see slip-dashboard "Open proposals")
   wrong panel; the rule forces the video first.
 - **P3 (A4):** knowledge note "UtilitiPembatalan urusan-flag falls-through" family in URUSAN-FLOW /
   BUG-BESTIARY. Eval: a future non-MCL unusual-urusan Pembatalan blank matches the note.
+
+---
+
+# Session audit 2 — 2026-09-23 daytime (#280176 regression audit → 2 fixes shipped · probe-local-only rule)
+
+## A1 Agentic system
+- **Instance**: `release-mlk-plp-push-gate` blocked TWO non-git commands (a forge scaffold call and a slips.js add) because their quoted text contained the trunk branch name + the verb. Class: free-text regex on a gate that should anchor on a git verb. Proposal logged (A2 row). The new `probe-local-only-gate` anchors on the verb by design (eval F9/F10 encode the false positive).
+- **Instance (RETRACTED same day)**: I claimed skill invocations go unlogged. Wrong: `skill-invocation-log` is registered and wrote 6 rows today. The A1 proposal logged for this is void; the expansion-protocol counter row was corrected instead. Lesson: read the log before declaring a logger absent.
+- **Instance**: `core/forge.js new check` needs `--trigger --action --replay` as well as the four WHY keys; the usage line printed by a bare `forge new` does not say so. Two failed calls before the third succeeded. Cheap fix: print the full flag list on the first error.
+
+## A2 Quest workflow
+- **Instance**: `quest/active-cli.js` refused `status=active` for 280176 ("Not miya's open work") while cycle 3 was being shipped; resume-readiness 12.6 then skipped the quest. A rework cycle with a dated commit after `closed=` is open work. Proposal logged.
+- **Instance (good)**: the 09-22 rework save lived only in another worktree's `current-session.md`; found via a worktree-wide grep and folded into `QA-280176.md`. Step 2b's "sync BOTH copies" does not cover a THIRD copy in a sibling worktree — the qa_doc is untracked, so only the main copy is durable. Rule already says write the qa_doc at every stop; the 09-22 session did not.
+- **Instance**: branch-ledger-check reports 5 old quests with unclassified stacked branches (277697, 269704, 265109, 244600 + 1). Pre-existing debt, surfaced in the Handoff; not this quest's.
+
+## A3 Debugging efficiency + accuracy
+- **Instance**: Issue B cost ~25 static reads and stayed at "should persist on paper"; the local probe answered in one build with three log lines. The exhaustive-branch probe (entry / after-branch / service) was the right shape: candidate 2 (urusan ≠ PLPS) was the answer and it was covered. What would have collapsed it: reading `git log -S` on the guard FIRST (it showed the PLPS scoping in one line) before the composite-binding survey.
+- **Instance (slip)**: `test-scenario/incomplete` — "Simpan" named the verb, not the control; the DB (unchanged row id) caught it. Proposal logged (A3 row).
+
+## A4 Etanah issue-solving
+- **Instance**: two verified patterns banked in BUG-BESTIARY today (dual lot-number fields with a urusan-scoped converter · list-append then delete-and-recreate). Both are "walk the rest of the method after removing an earlier crash" lessons.
+- **Instance**: the NPE fix of 09-18 unmasked the duplicate-rows bug; nobody could have seen it before because only one OMLPS app ever reached tugasan PB on stg2 (census). Post-fix, the rule "everything after the removed crash runs for the first time" belongs in the Apply checklist.
+
+## A5 Sweep / file sweep
+- **Instance**: video frames at 1 per 3 s (1100 px) were enough to read both videos; the WhatsApp screenshot carried the colleague's own hypothesis (release the ticket) which turned out right for scope. I first reported the synced `Penyediaan Borang 4Ae.mp4` as missing on disk; it is in the rework-cycle subfolder, not `0. Brief/`. Retracted: the sync worked, my lookup path was wrong. Same lesson as the A1 retraction.
+
+## Audit fixes implemented before commit (same session)
+| Found | What happens | Fixed |
+|---|---|---|
+| release-mlk-plp-push-gate matched free text | forge + slips commands blocked | v3 regex anchored on a git push verb; eval F13–F15, 15/15 |
+| forge usage hid three required flags | two failed scaffolds | full flag list in the error |
+| attachment-ledger-gate fired on one table mention | false block during DE | needs 3 mentions or a diagnosis headline; eval 7/7 |
+| resume-readiness skipped a closed-then-reworked quest | 12.6 blind to rework cycles | `reworkedAfterClose` filter; QA-280176 now READY |
+| nothing checked that the qa_doc was saved | step 2c could be skipped silently | de-close-gate C7 blocks when a touched ticket's qa_doc mtime predates the session; eval F19–F21 |
+| protocol counter row said skill loads are unlogged | wrong audit claim | row corrected; F4 + F7 retracted above |
+
+## Rulings needed from みや (from 7.4)
+- RETIRE? 0-fire gates in 7 d: `branch-at-apply-gate` · `prod-db-confirm` · `agent-spend-gate` · `sql-schema-verify` · `attachment-ledger-gate` (fired today on a false positive against QA-280540, not zero).
+- 271 unruled proposals (+4 today) · 45 goal-lens prompts pending.

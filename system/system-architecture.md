@@ -148,6 +148,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | Stop | — | `atlas-full-check.check.hook.js` | ✓ |
 | Stop | — | `atlas-ship-gate.check.hook.js` | ✓ |
 | Stop | — | `attachment-ledger-gate.check.hook.js` | ✓ |
+| PreToolUse Bash · PowerShell | — | `probe-local-only-gate.check.hook.js` (2026-09-23: blocks git add/commit/stash of a file carrying a `QA<num>-PROBE` / `QALOG` marker; probes are local-only) | ✓ |
 | Stop | — | `attempt-before-blocked-gate.check.hook.js` | ✓ |
 | Stop | — | `awam-no-resit-gate.check.hook.js` | ✓ |
 | Stop | — | `ba-understanding-table.discipline.hook.js` | ✓ |
