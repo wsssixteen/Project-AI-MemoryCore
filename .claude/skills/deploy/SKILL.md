@@ -178,6 +178,12 @@ into `mlk/master` (verified 2026-07-27 across full merge history) — a wrong me
 the release path, and `git revert -m 1 <sha>` undoes it additively. Precedent: `aa2db329a8`.
 
 1. `git fetch origin <base> <ticket-branch>`
+1b. **🚨 STAGING ONLY — ticket branch must carry the latest release** (みや 2026-09-23, #280540). Before
+   merging into `mlk/stag-env`: `git rev-list --count origin/<ticket-branch>..origin/mlk/master` must be 0.
+   If > 0 → dry-run `git merge-tree --write-tree origin/<ticket-branch> origin/mlk/master`, then
+   `git merge --no-ff origin/mlk/master` INTO the ticket branch, compile, push the ticket branch, and only
+   then merge into stag-env. **Merge, never rebase** — the ticket branch is already pushed; a rebase needs a
+   force-push. Internal (`mlk/int-env`) skips this step.
 2. **Already-merged guard — test the FIX COMMITS, never the branch TIP** 🚨 (corrected 2026-08-06).
    `git merge-base --is-ancestor origin/<ticket-branch> origin/<base>` asks about the **tip**, and a
    tip drifts: `mlk/training/273938` grew a release-merge commit *after* int-env had already taken
