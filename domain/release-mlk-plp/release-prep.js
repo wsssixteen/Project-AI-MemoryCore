@@ -358,6 +358,22 @@ function cmdMarkEquivalent(a) {
   console.log(`✅ ${sha.slice(0, 10)} marked reviewed-equivalent — verify will list it as excluded, not uncovered`);
 }
 
+// ack-untested — accept a source the ENV-TESTED gate flagged (code on no env, or reverted there), with a
+// mandatory reason. For the rare legitimate case, e.g. a fix committed during baseline and tested elsewhere.
+function cmdAckUntested(a) {
+  const st = loadState(a.release);
+  if (st.phase === 'pushed' || st.phase === 'merged-to-master') die(`ACK-UNTESTED REFUSED — phase is ${st.phase}`, 2);
+  if (!a.ticket) die('--ticket <label> required');
+  if (!a.reason) die('--reason "<why>" required — shipping untested code is a visible decision, never silent');
+  const t = String(a.ticket);
+  if (!st.tickets.some(x => x.ticket === t)) die(`#${t} is not in the merge list`, 2);
+  st.untestedAck = (st.untestedAck || []).filter(x => x.ticket !== t);
+  st.untestedAck.push({ ticket: t, reason: a.reason, at: new Date().toISOString() });
+  saveState(st);
+  log('ack-untested', st.release, 'ok', { ticket: t, reason: a.reason });
+  console.log(`✅ #${t} acknowledged as untested — verify will pass it and print the reason`);
+}
+
 // drop-ticket — DEFER one ticket out of the merge list before push, visibly (recorded under st.deferred
 // with a reason; the coverage gate stops demanding its commits). Built 2026-09-02: #256334 (CR still In
 // Progress) conflicted against master mid-merge while miya had already said "finalize only after 334";
@@ -520,6 +536,29 @@ function cmdVerify(a) {
     console.log('   → `add-ticket --ticket <t>@<sha> --sha <sha>` then `merge` + `verify` again (or exclude with a reason via `discover` review)');
     log('verify', st.release, 'fail-coverage', uncoveredAll.map(u => u.s));
     die('verification FAILED — content coverage gap', 2);
+  }
+
+  // ── ENV-TESTED GATE (2026-09-23, Baseline 1.6.3: #280166's branch code never reached any env; the real
+  // fix was the PLPS flowable model). BA only tests what is on int-env/stag-env, so a source whose code is
+  // on NO env, or was removed from it (revert), ships untested. `ack-untested --ticket --reason` overrides.
+  const { checkEnvTested, describe } = require('./env-tested.js');
+  const acks = st.untestedAck || [];
+  const blocked = [];
+  console.log('\nENV-TESTED — is each source\'s code on int-env / stag-env (what BA actually tested)?');
+  console.log('| Ticket | Source | Result |');
+  console.log('|---|---|---|');
+  for (const t of st.tickets) {
+    const r = checkEnvTested(st.repo, refOf(t));
+    const ack = acks.find(x => x.ticket === t.ticket);
+    const bad = r.verdict === 'UNTESTED' || r.verdict === 'REMOVED';
+    if (bad && !ack) blocked.push({ t, r });
+    console.log(`| #${t.ticket} | ${t.src} | ${describe(r)}${bad && ack ? ` · acknowledged: ${ack.reason}` : ''} |`);
+  }
+  if (blocked.length) {
+    for (const { t, r } of blocked) for (const m of r.missing) console.log(`   #${t.ticket} missing on env: ${m}`);
+    console.log('   → confirm with みや: drop it (`drop-ticket` before merge / rebuild after) or `ack-untested --ticket <t> --reason "<why>"`');
+    log('verify', st.release, 'fail-env-tested', blocked.map(b => b.t.ticket));
+    die('verification FAILED — release carries code no env has (untested or reverted)', 2);
   }
   st.headSha = gitOut(st.repo, ['rev-parse', 'HEAD']);
   st.phase = 'verified';
@@ -730,11 +769,11 @@ function cmdStatus(a) {
 const a = parseArgs(process.argv.slice(2));
 const cmd = a._[0];
 const commands = {
-  init: cmdInit, branch: cmdBranch, discover: cmdDiscover, 'set-tickets': cmdSetTickets, 'add-ticket': cmdAddTicket, 'mark-equivalent': cmdMarkEquivalent, 'drop-ticket': cmdDropTicket, merge: cmdMerge,
+  init: cmdInit, branch: cmdBranch, discover: cmdDiscover, 'set-tickets': cmdSetTickets, 'add-ticket': cmdAddTicket, 'mark-equivalent': cmdMarkEquivalent, 'ack-untested': cmdAckUntested, 'drop-ticket': cmdDropTicket, merge: cmdMerge,
   'merge-continue': cmdMergeContinue, verify: cmdVerify,
   'bump-common': cmdBumpCommon, 'bump-version': cmdBumpVersion,
   push: cmdPush, 'merge-to-master': cmdMergeToMaster, status: cmdStatus,
 };
-if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|discover|set-tickets|add-ticket|merge|merge-continue|verify|bump-common|bump-version|push|merge-to-master|status> --release <ver> [...]`);
+if (!cmd || !commands[cmd]) die(`usage: release-prep.js <init|branch|discover|set-tickets|add-ticket|mark-equivalent|ack-untested|drop-ticket|merge|merge-continue|verify|bump-common|bump-version|push|merge-to-master|status> --release <ver> [...]`);
 if (cmd !== 'init' && !a.release) die('--release required');
 commands[cmd](a);
