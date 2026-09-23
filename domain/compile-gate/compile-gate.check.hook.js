@@ -39,7 +39,9 @@ function decide(command, turnText, cwd) {
   const m = cmd.match(CD_RX) || cmd.match(GITC_RX);
   if (!m) return { block: false };
   const mod = `etanah-${m[2].toLowerCase()}`;
-  const repo = path.resolve(cwd || '', m[1]).replace(/[\\/]+$/, '');
+  // v1.1.1: Git Bash paths (`/e/Dev/...`) → `E:/Dev/...` before resolving, else Windows makes `C:\e\Dev\...`.
+  const raw = process.platform === 'win32' ? m[1].replace(/^\/([a-zA-Z])(?=\/)/, (_, d) => d.toUpperCase() + ':') : m[1];
+  const repo = path.resolve(cwd || '', raw).replace(/[\\/]+$/, '');
   if (/\[skip-compile-gate:\s*[^\]]+\]/i.test(turnText || '')) return { block: false, bypass: true, mod, repo };
   return { block: null, mod, repo };
 }

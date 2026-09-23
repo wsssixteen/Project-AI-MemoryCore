@@ -55,6 +55,8 @@ const ctxCases = [
   { name: 'v1.2.1 (5): `checkout -b intenvfix-280540` while on int-env → BLOCK', cmd: 'git checkout -b intenvfix-280540', ctx: { currentBranch: 'mlk/int-env' }, expectBlock: true, expectKind: 'branch-from-env' },
   { name: 'v1.2.1 (5b): `checkout -b -q x` (flag after -b) while on int-env → BLOCK', cmd: 'git checkout -b -q x', ctx: { currentBranch: 'mlk/int-env' }, expectBlock: true, expectKind: 'branch-from-env' },
   { name: 'v1.2.1 (5c): `switch -c y origin/mlk/stag-env` → BLOCK', cmd: 'git switch -c y origin/mlk/stag-env', ctx: {}, expectBlock: true, expectKind: 'branch-from-env' },
+  { name: 'v1.2.2: `checkout -q -B mlk/int-env origin/mlk/int-env` (refresh env copy for a merge) → PASS', cmd: 'git checkout -q -B mlk/int-env origin/mlk/int-env', ctx: { currentBranch: 'mlk/esokongan/280540' }, expectBlock: false },
+  { name: 'v1.2.2: `checkout -B mlk/stag-env origin/mlk/stag-env` → PASS', cmd: 'git checkout -B mlk/stag-env origin/mlk/stag-env', ctx: {}, expectBlock: false },
   { name: 'v1.2.1 (1): ticket merged into int-env, then commit on ticket (envAncestry true) → PASS', cmd: 'cd "E:/Projects/Melaka/etanah-pelupusan" && git commit -m "rework"', ctx: { currentBranch: 'mlk/esokongan/280540', envAncestry: { 'mlk/int-env': true } }, expectBlock: false },
 ];
 for (const c of ctxCases) {

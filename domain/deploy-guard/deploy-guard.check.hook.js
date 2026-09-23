@@ -93,6 +93,8 @@ function checkBranchFromEnv(cmd, ctx) {
   }
   if (!name) return null;
   if (!start) start = ctx && ctx.currentBranch;
+  // v1.2.2: `checkout -B mlk/int-env origin/mlk/int-env` refreshes the local env copy before a deploy merge — not new work.
+  if (start && stripOrigin(name) === stripOrigin(start)) return null;
   if (!start) return { noCtx: true, kind: 'branch-from-env' };
   const st = resolveState(cmd + ' ' + start, ctx);
   if (!st || !Array.isArray(st.env_branches)) return null;

@@ -53,7 +53,11 @@ const MODULES = {
 
 function markerPath(mod) { return path.join(STATE, `compile-ok-${mod}.json`); }
 
-function normRepo(p) { return path.resolve(String(p || '')).replace(/[\\/]+$/, ''); }
+function normRepo(p) {
+  let s = String(p || '');
+  if (process.platform === 'win32') s = s.replace(/^\/([a-zA-Z])(?=\/)/, (_, d) => d.toUpperCase() + ':');
+  return path.resolve(s).replace(/[\\/]+$/, '');
+}
 
 // Resolution order (C7): --repo argv flag -> cwd's git toplevel when its basename === mod ->
 // MODULES[mod] default. Returns the normalized absolute path.
