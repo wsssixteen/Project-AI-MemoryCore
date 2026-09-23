@@ -49,6 +49,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const { spawnSync } = require('child_process');
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
 const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
 const LOG = process.env.PRE_CODE_CHECK_LOG || path.join(__dirname, 'log.jsonl');
@@ -335,6 +336,38 @@ function isAllImportLines(str) {
   if (lines.length === 0) return false;
   return lines.every(l => IMPORT_LINE_RX.test(l));
 }
+// v1.8 (2026-09-23, QA-280540): duplicate-literal probe — a TRUTH check, not a shape check. A kod-shaped
+// string literal the Edit ADDS (absent from old_string) that already exists as a literal in ANOTHER file
+// of the same module's src/main/java means the value already has a home. #280540 re-declared
+// "JNS_PER_FI_METER"/"_HKTR"/"_EKAR" in a new map while PelupusanCommonConstant.UNIT_CONVERSION_MAP:34
+// already mapped them and the same helper used it 3x; every CODE-CHECK row passed. Fail-open (no git,
+// no repo, timeout → no hits).
+const KOD_LITERAL_RX = /"([A-Z][A-Z0-9]*_[A-Z0-9_]{2,})"/g;
+function duplicateLiterals(filePath, toolInput) {
+  const added = String(toolInput.new_string != null ? toolInput.new_string : (toolInput.content || ''));
+  const removed = String(toolInput.old_string || '');
+  const lits = [...new Set([...added.matchAll(KOD_LITERAL_RX)].map(m => m[1]))]
+    .filter(l => !removed.includes('"' + l + '"')).slice(0, 12);
+  if (!lits.length) return [];
+  const mm = filePath.replace(/\\/g, '/').match(/^(.*?)\/src\/main\//);
+  if (!mm) return [];
+  const repo = mm[1];
+  const target = path.resolve(filePath).toLowerCase();
+  const hits = [];
+  for (const lit of lits) {
+    let r;
+    try { r = spawnSync('git', ['grep', '-n', '-F', '"' + lit + '"', '--', 'src/main/java'], { cwd: repo, encoding: 'utf8', timeout: 8000 }); } catch (_) { continue; }
+    if (!r || r.status !== 0 || !r.stdout) continue;
+    for (const l of r.stdout.split(/\r?\n/).filter(Boolean)) {
+      const f = l.split(':')[0];
+      if (path.resolve(repo, f).toLowerCase() === target) continue;
+      hits.push({ lit, where: l.split(':').slice(0, 2).join(':'), cls: path.basename(f, '.java') });
+      break;
+    }
+  }
+  return hits;
+}
+
 // v1.7.1 (finding A): import-only is the ONLY light path — the v1.7 rename-only classifier treated
 // `return a` → `return b` as a rename and skipped the CODE-CHECK; a genuine rename uses the bypass token.
 function lightEdit(toolInput) {
@@ -468,6 +501,21 @@ runHook({ name: 'pre-code-check', event: 'PreToolUse' }, (input) => {
   }
 
   if (configDeclined) log({ action: 'config-source-declined', file: filePath });
+
+  const dupes = /\.java$/i.test(filePath) ? duplicateLiterals(filePath, toolInput).filter(h => !line.includes(h.cls)) : [];
+  if (dupes.length) {
+    log({ action: 'blocked-duplicate-literal', file: filePath, dupes });
+    return {
+      fired: true, blocked: true,
+      blockReason: [
+        '⛔ pre-code-check: this Edit adds code literal(s) that ALREADY have a home in the module:',
+        ...dupes.map(h => '     "' + h.lit + '"  →  ' + h.where),
+        '   Reuse that constant/map (read it first — it may already do the whole job), or, if a new',
+        '   definition is genuinely right, name the existing file in existing-reuse evidence, e.g.',
+        '   existing-reuse ✓(' + dupes[0].cls + ' read — <why it cannot be reused>).',
+      ].join('\n'),
+    };
+  }
   log({ action: 'passed', file: filePath, line: line.slice(0, 200) });
   return { fired: false };
 });

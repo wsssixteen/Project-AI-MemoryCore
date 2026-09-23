@@ -319,6 +319,25 @@ r = runHookWith(
 );
 check('F35 unrelated active quest mentions maintenance, turn names no ticket \u2192 no config-source demand', !r.blocked, 'blocked=' + r.blocked + ' ' + r.combined.slice(0, 250));
 
+// F36-F38 (v1.8): duplicate-literal probe against a real temp git repo.
+const DUP_ROOT = fs.mkdtempSync(path.join(os.tmpdir(), 'pcc-dup-'));
+const DUP_REPO = path.join(DUP_ROOT, 'etanah-pelupusan');
+const DUP_JAVA = path.join(DUP_REPO, 'src', 'main', 'java');
+fs.mkdirSync(DUP_JAVA, { recursive: true });
+fs.writeFileSync(path.join(DUP_JAVA, 'ExistingUnitConstant.java'), 'class ExistingUnitConstant { void m(java.util.Map<String,String> x) { x.put("JNS_PER_FI_METER", "UNIKELMP"); } }\n');
+fs.writeFileSync(path.join(DUP_JAVA, 'TargetHelper.java'), 'class TargetHelper { String k = "ONLY_IN_TARGET"; }\n');
+spawnSync('git', ['init', '-q'], { cwd: DUP_REPO });
+spawnSync('git', ['add', '-A'], { cwd: DUP_REPO });
+spawnSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-q', '-m', 'init'], { cwd: DUP_REPO });
+const DUP_TARGET = path.join(DUP_JAVA, 'TargetHelper.java');
+r = runHookWith({ tool_name: 'Edit', tool_input: { file_path: DUP_TARGET, old_string: 'String k = "ONLY_IN_TARGET";', new_string: 'String k = "ONLY_IN_TARGET"; String m = "JNS_PER_FI_METER";' }, transcript_path: makeTranscript(FULL_CHECK_LINE + '\napplying fix') });
+check('F36 Edit adds a literal that already lives in another module file → BLOCK naming that file', r.blocked && /ExistingUnitConstant\.java/.test(r.combined), 'blocked=' + r.blocked + ' ' + r.combined.slice(0, 250));
+r = runHookWith({ tool_name: 'Edit', tool_input: { file_path: DUP_TARGET, old_string: 'String k = "ONLY_IN_TARGET";', new_string: 'String k = "ONLY_IN_TARGET"; String m = "JNS_PER_FI_METER";' }, transcript_path: makeTranscript(FULL_CHECK_LINE.replace(EV.existingReuse, 'existing-reuse ✓(ExistingUnitConstant read — its map is keyed per state, cannot reuse here)') + '\napplying fix') });
+check('F37 same Edit, CODE-CHECK names ExistingUnitConstant → allow', !r.blocked, 'blocked=' + r.blocked + ' ' + r.combined.slice(0, 250));
+r = runHookWith({ tool_name: 'Edit', tool_input: { file_path: DUP_TARGET, old_string: 'String k = "ONLY_IN_TARGET";', new_string: 'String k = "ONLY_IN_TARGET"; String n = "BRAND_NEW_KOD";' }, transcript_path: makeTranscript(FULL_CHECK_LINE + '\napplying fix') });
+check('F38 literal with no other home → allow', !r.blocked, 'blocked=' + r.blocked + ' ' + r.combined.slice(0, 250));
+try { fs.rmSync(DUP_ROOT, { recursive: true, force: true }); } catch (_) {}
+
 // F9: empty stdin → no crash, no block
 r = spawnSync(process.execPath, [HOOK], { input: '', encoding: 'utf8', timeout: 30000, env: process.env });
 check('F9 empty stdin exits 0', r.status === 0, 'exit=' + r.status);

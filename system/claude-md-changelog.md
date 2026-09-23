@@ -10,6 +10,14 @@
 
 ---
 
+## #280540 analog-behaviour enforcement — pre-code-check v1.8 + quest Rubric row (i) + quest-bounty hook v1.1 — 2026-09-23
+
+Root: after the rebuild, the fix still re-declared `JNS_PER_FI_METER/HKTR/EKAR` in a new map while the SAME helper already normalised them via `PelupusanCommonConstant.UNIT_CONVERSION_MAP` (`calculatePlpsSewaTahunan`, #265109 `367be111da`); every CODE-CHECK row passed on prose. I then told みや "per Lot should × lot count" from the AWAM counter strategy — contradicting the in-file analog (non-area unit → flat).
+- **pre-code-check.check.hook.js v1.8**: duplicate-literal probe — `git grep` of each kod-shaped literal the Edit adds; a hit in another module file blocks unless the CODE-CHECK names that class. Truth check, fail-open. Eval 35 → 38 (F36 block / F37 acknowledged / F38 no other home). Spec preservation: all v1.7.1 rows and paths unchanged; additive block after a passing CODE-CHECK.
+- **quest/SKILL.md Rubric (i) ANALOG-BEHAVIOUR DIFF**: bug/enhancement/cr fixes that change a calculation or a config-keyed branch must grep the target file for the in-file analog first and table `value | analog outcome | fix outcome` for every DB-enumerated value; re-declaring the analog's mapping is rejected at Rubric. Spec preservation: rows (a)–(h) untouched.
+- **quest-bounty.hook.js v1.1**: fires only on a live `node … archive-quest.js` run (not grep/cat/sed/--dry-run) — it had matched a grep, `add -A`'d a reverted knowledge file and pushed `06d9427`; §28 restored `472ab9f`. Smoke 5/5.
+- Observed while applying: the CODE-CHECK line in the SAME message as an Edit was not yet flushed to the transcript when the hook fired (after a session resume); v1.7.1's turn-level scan accepted it on retry.
+
 ## #280540 audit — gates hardened (pre-code-check v1.7.1 · deploy-guard v1.2.1 · compile-check v1.1.1 · branch-guard v2.1) + memory/knowledge — 2026-09-23
 
 Root: QA-280540 took five attempts (v1–v4 wrong, all passed pre-code-check) before a restart from scratch found the config-driven cause (`hsl_fi_pejabat.unit_pengiraan_id`). Workflow audit (41 agents, 9 causes adversarially confirmed) → fixes; evals re-run by the controller: pre-code-check 35/35 · compile-gate 13/13 · deploy-guard 36/36 · branch-guard 9/9.

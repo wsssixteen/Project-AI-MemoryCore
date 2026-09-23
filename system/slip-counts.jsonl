@@ -599,3 +599,5 @@
 {"ts":"2026-09-22T15:29:46.349Z","category":"reask/verbose"}
 {"ts":"2026-09-22T16:07:13.303Z","category":"gate-routed-around-by-subagent"}
 {"ts":"2026-09-23T08:42:48.033Z","category":"hook-false-trigger"}
+{"ts":"2026-09-23T09:38:09.191Z","category":"existing-reuse-missed"}
+{"ts":"2026-09-23T09:38:09.449Z","category":"reask/redundant"}
