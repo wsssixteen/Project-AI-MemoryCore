@@ -1,6 +1,15 @@
 # Current Session
 
-**Last Activity**: 2026-09-23 14:10 — #280176 regression audit (NO regression from 280176) → 2 new issues fixed + shipped int-env/stag-env (2013e8e935 Penyediaan list rebuild · 5d6c4a9a2e onSimpanTanah nomborLot→noLot all urusan) · probe-local-only rule born · DE stopped before step 10 per みや.
+**Last Activity**: 2026-09-24 18:47 — #280895 UPP Langkah 2 blank for MCL: blind Rubric re-run overturned cycle-1 (int-env working copy masked the thrower) → fix `0c074d07a2` on `mlk/esokongan/280895`, merged stag-env `5f60caef17`, miya PASS on internal · quest closed + archived + bounty · DE.
+
+## Session Recap (2026-09-23 → 24, quest-280895-rubric-compare worktree)
+- **Ask**: run /quest 280895 to Rubric, compare with prior findings, brief fix + next steps + test scenario. Then close, commit, stag-env, archive.
+- **Root cause (static-proven on origin/mlk/master)**: panel `maklumatUrusanPRBB` in `MlkMaklumatPermohonanPembatalanForm.xhtml:98-99` used a NEGATIVE urusan list → renders for MCL/PPTPB → `mlkMaklumatUrusanForm.xhtml:54` reads `mbb.keputusanMMKN`, absent on the Pembatalan bean → PropertyNotFoundException at render → blank page.
+- **Prior findings corrected**: cycle 1 read `:99 rendered="#{isPRBB}"` from the int-env working copy (#279615 commit `3e0154db9e` never left int-env) and chased an isMCL theory; its stg2 test app UPP/2026/2 actually cancels PT/2026/33 (MCL one on stg2 = UPP/2026/3).
+- **Shipped**: cherry-pick `3e0154db9e` → `0c074d07a2` "Ref #280895 - UPP - KMPPP - change panel maklumatUrusanPRBB rendered to isPRBB only" · pushed · stag-env `5f60caef17` · repo back on mlk/master. miya tested PASS on internal (PTMLK/01/L/UPP/2026/1 @ iskandarz).
+- **Owed (miya)**: deploy stag-env to staging before BA retest · post Redmine RC/Solution (in archive QA-280895.md §Ship) · include branch in next release. PROD UPP/02/4 (MCL), /02/5 /02/6 (PPTPB) unblock on release.
+- **Born**: quest SKILL.md resume step 4 off-baseline read rule · BUG-BESTIARY pattern · LATENT-BUGS L9 (keputusanMMKN, PRBB-origin cancel) + L8 → FIXED.
+- **Slips**: verify-before-claim (working-copy read) · stalled after "go create the branch" (permission classifier failure, then waited instead of retrying).
 
 ## Session Recap (2026-09-23, quest-280176-regression worktree)
 - **Ask**: BA (Nurhafizah) PASSED 280176 on staging, then a colleague's two videos looked like regressions. Audit of `mlk/esokongan/280176` vs `mlk/master`: 3 files, none on the reported paths → **not a regression from 280176**.
@@ -18,17 +27,3 @@
 - **Reassigned tickets (item 6)**: 280029 = Ammar's Surat Ulangan JT fix — traced + banked to BUG-BESTIARY (CC bare-RPr → doc-default font; `rPrOrSdtPrFallback`; commits `01c501634c`+`6a74597c85`). 278909 (New) + 280166 (cross-module flowable/uam) closed as delegated-to-Ammar.
 - **280895 quest → Rubric** (eSokongan, PRIORITY next session): UPP MCL papar-kosong. Root (90%): `MlkMaklumatPermohonanPembatalanForm.xhtml:32-45` declares 9 urusan flags but NOT `isMCL` → MCL app falls through negative-list panels → render exception → whole Langkah-2 blank. The BA VIDEO corrected the earlier sempadan theory (L8 getter already present :937). Apply next session (server.log names the throwing panel). Doc: `projects/coding-projects/active/QA-280895/QA-280895.md`.
 - **Full-context audit**: `system/agentic-ticket-workflow-assessment-2026-09-23.md` (what he asked/questioned, bugs B1-B5, commits, residuals) + todo Q1 rows + proposals P1-P3.
-
-## 🎯 HANDOVER — Focus tickets (load this after compaction)
-
-| # | Type | Focus / next action | Effort | Why |
-|---|---|---|---|---|
-| **280614** | Data patch (PROD) | ✅ **APPLIED** (verified: permohonan /9+/10 tempat='-', lesen rows patched) → **close it** | done | patch ran |
-| **280540** | eSOKONGAN code | build `PLP_BANGUNAN_*` flat-rate guard at `PelupusanMaklumatBayaranHelper.java:276` | build+test | recon done, net-new build |
-| **246923** | template config | remove 3 dup keys (PRMMKNPTG/SRMMKNPTG/PRRMMKNPTG) from Block A in `template.config.json` | ~9 lines | rework, BA waiting |
-| **274323** | Word CC | force `"RM 0.00"` in `PelupusanWordCCMethodConstant.java:4772` when royalti exempted | tiny | rework, BA waiting |
-| **279711** | code (populator) | repoint `PelupusanWordCCMethodConstant.java:842-843` to gated `populateJawatanPegawaiSemak` + PPD branch in isValidUser :2043 | small | rework; ⚠️ MaklumatPemohon.docx shared-tag blast radius |
-| **280176** | code (read-guard) | add `removeIf(getTarikhTamat==null)` at `PelupusanSearchService.java:2064` + `:2110` | 2 lines | rework; save-side fix shipped, read-side gap |
-| **278909** | template add | add 3 docx twins + 3 config blocks (adaPemilikanTanah) mirroring Lulus family | medium | new; task folder unread — get Brief at Apply |
-
-**280265** — patched (generateSurat 7547→YA); pending BA retest. Per DATABASE.md §24 the flip un-hides JPPH (show-goal); if BA needs re-add → Alex's DELETE pattern (BUG-BESTIARY §JT). Knowledge-first: read §24 on any JT ticket.
