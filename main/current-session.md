@@ -1,6 +1,41 @@
 # Current Session
 
-**Last Activity**: 2026-09-23 14:10 — #280176 regression audit (NO regression from 280176) → 2 new issues fixed + shipped int-env/stag-env (2013e8e935 Penyediaan list rebuild · 5d6c4a9a2e onSimpanTanah nomborLot→noLot all urusan) · probe-local-only rule born · DE stopped before step 10 per みや.
+**Last Activity**: 2026-09-24 18:47 — #280895 UPP Langkah 2 blank for MCL: blind Rubric re-run overturned cycle-1 (int-env working copy masked the thrower) → fix `0c074d07a2` on `mlk/esokongan/280895`, merged stag-env `5f60caef17`, miya PASS on internal · quest closed + archived + bounty · DE.
+
+## Session Recap (2026-09-23 → 24, quest-280895-rubric-compare worktree)
+- **Ask**: run /quest 280895 to Rubric, compare with prior findings, brief fix + next steps + test scenario. Then close, commit, stag-env, archive.
+- **Root cause (static-proven on origin/mlk/master)**: panel `maklumatUrusanPRBB` in `MlkMaklumatPermohonanPembatalanForm.xhtml:98-99` used a NEGATIVE urusan list → renders for MCL/PPTPB → `mlkMaklumatUrusanForm.xhtml:54` reads `mbb.keputusanMMKN`, absent on the Pembatalan bean → PropertyNotFoundException at render → blank page.
+- **Prior findings corrected**: cycle 1 read `:99 rendered="#{isPRBB}"` from the int-env working copy (#279615 commit `3e0154db9e` never left int-env) and chased an isMCL theory; its stg2 test app UPP/2026/2 actually cancels PT/2026/33 (MCL one on stg2 = UPP/2026/3).
+- **Shipped**: cherry-pick `3e0154db9e` → `0c074d07a2` "Ref #280895 - UPP - KMPPP - change panel maklumatUrusanPRBB rendered to isPRBB only" · pushed · stag-env `5f60caef17` · repo back on mlk/master. miya tested PASS on internal (PTMLK/01/L/UPP/2026/1 @ iskandarz).
+- **Owed (miya)**: deploy stag-env to staging before BA retest · post Redmine RC/Solution (in archive QA-280895.md §Ship) · include branch in next release. PROD UPP/02/4 (MCL), /02/5 /02/6 (PPTPB) unblock on release.
+- **Born**: quest SKILL.md resume step 4 off-baseline read rule · BUG-BESTIARY pattern · LATENT-BUGS L9 (keputusanMMKN, PRBB-origin cancel) + L8 → FIXED.
+- **Slips**: verify-before-claim (working-copy read) · stalled after "go create the branch" (permission classifier failure, then waited instead of retrying).
+**Last Activity**: 2026-09-24 18:45 — #278909 (PT Risalat MMKN Tolak + ada pemilikan) root-caused + audited; fix = 3 missing template docx; DELEGATED to junior Siti Farhanih (みや guides); Redmine note drafted, NOT posted.
+**Last Activity**: 2026-09-24 18:50 — #280540 BA data ask answered (Kadar Pengiraan Per per env, before/after MLKIT test); QA-280540 Phase 1 closed; DE.
+
+## Session Recap (2026-09-24, pptpbl-fees-export worktree)
+- **Ask**: BA (Mira) on #280540: what is Kadar Pengiraan Per for all Kategori on MLKIT + MLKSTG, is the maintenance page saving it.
+- **Finding (DB-proven)**: Per is ONE field on Kod Fi `hsl_fi_pejabat.unit_pengiraan_id`; row `hsl_fi_kadar.kadar_pengiraan_id` empty on every PPTPBL row. Form field sits beside Kategori/Jenis but saves to the Kod Fi, so one change hits all rows. Row edit = delete+insert (MLKIT 307→2040, 318→2041). Re-added 2041 Unit Ukuran Luas stayed empty in DB.
+- **Test**: みや set MLKIT Per = Meter Persegi (16:07) → PTMLK/03/L/PPTPB/2026/5 Pertanian Lain-lain = RM20 x 80 m² = 1,600 (fix follows the page). MLKIT still Meter Persegi; MLKSTG Lot.
+- **Delivered**: Task folder `280540.xlsx` (MLKSTG · MLKIT Sebelum · MLKIT Selepas; joined per-row view + table.column source row) + `280540.sql` (subquery joined view, no JOIN). Redmine reply (short) posted by みや.
+- **Closed**: QA-280540 Phase 1 (status=closed, commit 66777ba6d5, on int-env + stag-env). Phase 2 archive after BA confirms.
+- **Slips**: ticket-context-skipped · scope-overreach (verdict columns for BA) · output-shape (row-only data, no joined per-row parent view) · reask/verbose ×2 · reask/redundant.
+- **Open**: MLKIT Per back to Lot (みや decides) · PROD PPTPBL Per = Lot before release · maintenance page Unit Ukuran Luas not persisting on re-added row (unconfirmed, needs one retest).
+
+## Session Recap (2026-09-24 evening, redmine-278909 worktree)
+- **Ask**: /quest #278909 start→finish + test scenarios, staging. BA: Tidak Boleh Dipertimbangkan (PDT) / Tolak (PTG) + ada pemilikan → Risalat MMKN missing 2.3.3 (berkahwin) / 2.3.2 (bujang, syarikat).
+- **Root**: CR #262049 (Aaron) built AdaPemilikan variants for Boleh Dipertimbangkan only; the 3 Tolak AdaPemilikan docx NEVER existed on any ref. Ammar `1e05aa9169` (09-23, msg "refs @#280029") added the 3 Tolak AdaPemilikan config entries + `adaPemilikanTanah=false` filters WITHOUT docx → merged whole 280029 branch into release/1.6.3 (by us) → master/int-env/stag-env. Staging 1.6.3 now throws `SystemException: Couldn't load file` (みや photo, asmida, 24/09 18:05). PROD on 1.6.3 same; NO hotfix (みや) → next release.
+- **Decision**: option A — 3 separate docx, config names as-is, no Java/config change. B (CC tags in base) rejected: numbered tajuk leaves dangling "2.3.3".
+- **Delegated**: みや prefers to guide junior (Siti Farhanih, Redmine assignee). My built templates removed from his tree; reference copies + PDF renders at `E:\Dev\tmp-278909\`. Test data in Task `1. 278 909.txt` (PT/2026/32, /24, /2 @ asmida PRMMKNPDT).
+- **Slips**: `release/unaudited-branch-content` · `reask/jammed-sentence` (Redmine note).
+- **Open**: post Redmine note (needs "post it") · compare Farhanih's docx vs `E:\Dev\tmp-278909\` · merge stag-env+int-env · config→template existence check for release V3 (`cfg_missing.py`) · `TemplateSuratAkuJanjiRoboh.docx` missing in config since ≤1.6.2 · memory edit (one-idea-per-line split check) blocked from worktree → add in `feedback_ticket_writing_style.md`.
+
+## Session Recap (2026-09-24, perak-ticket-deploy worktree)
+- **Ask**: deploy Perak eSOKONGAN-CR #110506 (Fatin, branch `esokonganCR/110506`: No Permit · Bayaran Permit · Jadual 20) to `prk/int-env` if sound.
+- **Review**: branch tip `9f9e5dcc8d` compiles green. Findings for Fatin (owed, not sent): (1) HIGH `PelupusanService.saveRunningNumber():2319` `if PRU` became `else if`, so PRBB no longer falls to the generic No-Permit fill (Perak staging: 6 PRBB rows with MKLMT_TMBHN + NO_PERMIT_LESEN null) — one-line restore; (2) tujuan saved by name, read by code (`PelupusanService.java:3365` vs `PelupusanMaklumatBayaranHelperForm.java:318`); (3) `LaporanP1eForm.java:366` fi NPE + ICU BigDecimal import.
+- **Merge**: whole branch (みや chose it after I wrongly recommended cherry-pick; cherry-pick only defers the conflicts). 12 conflicts, 9 master-sourced → int-env side; IPelupusanService union; MaklumatTanahPlpForm kept int-env (auto-merge double call). Merged-tree compile green vs common 1.52.7-PRK.beta.patch4. Pushed `prk/int-env` 4e0a02a968 → **a71c31d97c**. Work clone only, his tree untouched.
+- **Closed**: QA-110506 archived (Task folder `1. Tasks\Perak\Archive\10. ESOKONGAN-CR #110506 ...`, qa_doc `projects/coding-projects/archive/QA-110506/`). Knowledge: `perak/BRANCH-AND-DEPLOY.md` §6 prk/int-env.
+- **Open**: みや deploys int-env + footer check · Redmine note to Fatin (findings 1-3) needs his nod · refinement proposal: compile-check `--path` so Perak/work-clone compiles write a marker.
 
 ## Session Recap (2026-09-23, quest-280176-regression worktree)
 - **Ask**: BA (Nurhafizah) PASSED 280176 on staging, then a colleague's two videos looked like regressions. Audit of `mlk/esokongan/280176` vs `mlk/master`: 3 files, none on the reported paths → **not a regression from 280176**.
@@ -18,17 +53,3 @@
 - **Reassigned tickets (item 6)**: 280029 = Ammar's Surat Ulangan JT fix — traced + banked to BUG-BESTIARY (CC bare-RPr → doc-default font; `rPrOrSdtPrFallback`; commits `01c501634c`+`6a74597c85`). 278909 (New) + 280166 (cross-module flowable/uam) closed as delegated-to-Ammar.
 - **280895 quest → Rubric** (eSokongan, PRIORITY next session): UPP MCL papar-kosong. Root (90%): `MlkMaklumatPermohonanPembatalanForm.xhtml:32-45` declares 9 urusan flags but NOT `isMCL` → MCL app falls through negative-list panels → render exception → whole Langkah-2 blank. The BA VIDEO corrected the earlier sempadan theory (L8 getter already present :937). Apply next session (server.log names the throwing panel). Doc: `projects/coding-projects/active/QA-280895/QA-280895.md`.
 - **Full-context audit**: `system/agentic-ticket-workflow-assessment-2026-09-23.md` (what he asked/questioned, bugs B1-B5, commits, residuals) + todo Q1 rows + proposals P1-P3.
-
-## 🎯 HANDOVER — Focus tickets (load this after compaction)
-
-| # | Type | Focus / next action | Effort | Why |
-|---|---|---|---|---|
-| **280614** | Data patch (PROD) | ✅ **APPLIED** (verified: permohonan /9+/10 tempat='-', lesen rows patched) → **close it** | done | patch ran |
-| **280540** | eSOKONGAN code | build `PLP_BANGUNAN_*` flat-rate guard at `PelupusanMaklumatBayaranHelper.java:276` | build+test | recon done, net-new build |
-| **246923** | template config | remove 3 dup keys (PRMMKNPTG/SRMMKNPTG/PRRMMKNPTG) from Block A in `template.config.json` | ~9 lines | rework, BA waiting |
-| **274323** | Word CC | force `"RM 0.00"` in `PelupusanWordCCMethodConstant.java:4772` when royalti exempted | tiny | rework, BA waiting |
-| **279711** | code (populator) | repoint `PelupusanWordCCMethodConstant.java:842-843` to gated `populateJawatanPegawaiSemak` + PPD branch in isValidUser :2043 | small | rework; ⚠️ MaklumatPemohon.docx shared-tag blast radius |
-| **280176** | code (read-guard) | add `removeIf(getTarikhTamat==null)` at `PelupusanSearchService.java:2064` + `:2110` | 2 lines | rework; save-side fix shipped, read-side gap |
-| **278909** | template add | add 3 docx twins + 3 config blocks (adaPemilikanTanah) mirroring Lulus family | medium | new; task folder unread — get Brief at Apply |
-
-**280265** — patched (generateSurat 7547→YA); pending BA retest. Per DATABASE.md §24 the flip un-hides JPPH (show-goal); if BA needs re-add → Alex's DELETE pattern (BUG-BESTIARY §JT). Knowledge-first: read §24 on any JT ticket.
