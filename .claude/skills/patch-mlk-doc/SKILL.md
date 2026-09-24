@@ -53,14 +53,21 @@ ORDER BY adk.a_dok_keluaran_id, sd.versi_dok DESC;
 Pick the row that matches the BA's document type (kod/nama) AND is the **latest active** (`flag_aktif='Y'`, highest `versi_dok`). That row's `lokasi_fail` + `dokumen_revision_id` are the deliverables.
 
 ## STEP 2 — deliverable to hand みや (Task folder `2. Fix/PATCH-REQUEST-<num>.txt`)
-Two blocks he forwards:
+**Infra handoff — EXACT format (みや 2026-09-24, #281482).** Greeting and `#ticket:` line adjacent (no blank line); one blank line; then the bare path. Nothing else. The one-liner = urusan + outcome only (no permohonan id, no table names):
 ```
-STEP 1 - Hi infra, please replace this file in Melaka PROD with the attached edited doc:
-<lokasi_fail>
+Hi infra, please help to replace document for MLK PROD. Thank you.
+#<ticket>: <URUSAN> - <one short outcome sentence>.
 
-STEP 2 - after infra confirms, patching team runs:
+<lokasi_fail>
+```
+**Renamed file ready to attach**: copy the BA's new file into `2. Fix\` renamed to the exact basename of `lokasi_fail` (e.g. `LAIN-<n>_1.main`). I do the rename; みや just attaches it.
+
+**After infra confirms** — patching team runs (generated-docx case only, see below):
+```
 UPDATE ET_DMS.DOKUMEN_REVISION SET LOKASI_FAIL_PDF=NULL WHERE DOKUMEN_REVISION_ID=<id>;   -- 1 row updated
 ```
+
+**Uploaded-PDF case — NO UPDATE (verified #281482, 2026-09-24).** When `lokasi_fail_pdf` = `lokasi_fail` (same `.main` path, typically `SISTEM-FAIL/KEMASUKAN/...` uploads such as Pelan TOL `GPTOL` on DMMLMS migration records), the `.main` IS the PDF. Replacing the file is the whole fix; do NOT null `LOKASI_FAIL_PDF`. Reports that embed the pelan (L1e via `PelupusanReportMethodConstant.populatePelanLot`) read the file live, so they pick up the new file at next view.
 
 ## Conventions (this skill is an EXCEPTION to two standing rules — audience is the patching team)
 - **JOINs are allowed here** — the locator + patch queries mirror the patching team's own runbook format verbatim. The NO-JOIN rule (`convention-check-gate`) targets scripts みや reads to trace data; this output goes to infra/DBA who run it as-is. If writing to a `.sql` trips the gate, use `.txt` (matches the runbook shape) or bypass with reason.

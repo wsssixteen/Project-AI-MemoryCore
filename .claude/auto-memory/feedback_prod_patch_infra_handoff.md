@@ -20,6 +20,16 @@ Hi infra, please assist. Thank you.
 
 🚨 NO blank line between the greeting and the `#ticket:` line — they are adjacent (みや 2026-09-07, corrected repeatedly). The ONLY blank line is between the `#ticket:` line and the script.
 
+**DOCUMENT-REPLACE variant (2026-09-24, per みや, #281482)** — when the patch is a DMS file swap (no SQL), use this EXACT shape instead; the fence carries ONLY the bare `lokasi_fail` path, and I prepare the BA's file renamed to that path's basename in `2. Fix\` so みや just attaches it:
+
+```
+Hi infra, please help to replace document for MLK PROD. Thank you.
+#<ticket>: <URUSAN> - <one short outcome sentence>.
+
+<lokasi_fail path>
+```
+Canonical home: `/patch-mlk-doc` skill STEP 2.
+
 **Why**: infra is the only party that executes PROD writes; a fixed, minimal format lets them apply it without back-and-forth. The one-line explainer + the trailing `-- N row ...` expected-outcome comment are the whole context they need.
 
 **How to apply**: at any PROD data-patch hand-back, emit this block verbatim (greeting line · `#ticket: sentence` on the very NEXT line, NO blank between · blank · fenced script ending in the expected-outcome comment). Keep the sentence to one line.
