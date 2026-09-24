@@ -39,3 +39,13 @@ Scope: one session, one deploy-only Perak quest (review Fatin's CR branch → me
 | A3 debugging | Cycle 1 read code from the int-env working copy; the fix line there hid the thrower | proposal: off-baseline Read advisory hook |
 | A4 etanah issue-solving | #279615 split fix: getter route to stag, panel route to int-env only; env branches drift from master | proposal: env-branch drift report |
 | A5 sweep | ⏭ no sweep run this session | — |
+
+## Session 5 — #281392 (4Ae No Resit PROD hotfix + hotfix audit)
+
+| Axis | Assessment (concrete instance) | Forward idea + eval case (logged as proposal) |
+|---|---|---|
+| A1 agentic system | `core/slips.js add` rows carry no `qa`, so Phase-2 `lib/wrong-fix.js upgrade-table QA-281392` printed "no slips for this quest" while 9 slips named #281392. Hook overhead: one turn of this session logged 1224 hook fires / 343 s (audit-briefing). A tracked file (BRANCH-AND-DEPLOY.md §8) was removed from the working copy twice by an external writer (OneDrive worktree suspected) and first misread as "never written". | slips.js `add` auto-fills `qa` from the first `#<n>`/`QA-<n>`/`ADHOC-*` in `--evidence` that has an active.txt block. Eval: evidence "#281392 ..." → row qa=QA-281392; upgrade-table lists it. · DE step 9: flag tracked files whose working copy DELETES lines committed this session. Eval: replay §8 removal → flagged before commit. |
+| A2 quest workflow | Hotfix ran hours with no quest because the prompt named a CLOSED ticket; ticket-gate bound to it. Built this session: `hotfix` skill + HOTFIX intake lane + `quest-exists-gate` (commit-time). | ⏭ built this session (evals 24/24 · 20/20); widen quest-exists-gate to edit time only on miya's ruling |
+| A3 debugging efficiency + accuracy | Reset script rev 1 went stale after the flow advanced (Pengesahan renamed the permit, added FK child rows); found only by re-running the aplikasi_id census + an FK query. | Reset-script generator: census every aplikasi_id/permit/tgsn-keyed table on PROD vs STG, emit restore/delete statements FK-ordered. Eval: replay stg2 post-Pengesahan → generates ind_permit_lesen restore + notis/tgsn_dok/langkah deletes before umm_a_tgsn. |
+| A4 etanah issue-solving | Root cause was a populator branch listing MLPS/OMLPS but not the migration urusan DMMLMS; `populateKadarFi` already grouped all three. Sibling migration urusan (DMPLMS/DMLMSP) not swept. | Bug-family sweep: every `URS_MLPS`/`URS_OMLPS` branch in `PelupusanReportMethodConstant` + `PelupusanWordCCMethodConstant` without the matching migration urusan → LATENT-BUGS rows. Eval: run on 1.6.3 → flags populateNoResit + populateTarikhPertamaPermitLesen. |
+| A5 sweep / file sweep | ⏭ no sweep run this session | — |

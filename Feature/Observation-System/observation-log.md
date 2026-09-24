@@ -48,6 +48,9 @@ Across QA #258022 (3 sessions, 2026-04-28 → 2026-04-29), みや told me 3-4+ t
 **[2026-05-12] みや uses pushback as design-discipline enforcement** ↑ from T1
 Rather than directly saying "this is wrong", みや asks "is X truly different from Y you already have?" and lets me re-examine. Recurring teaching mode confirmed across 3+ sessions: 2026-04-30 BPMN inference catch ("did you check from flowable") + 2026-05-11 MCL false-flag catch + 2026-05-12 morning Zeller logbook / Audit 5 push-back. The pattern's effect: it forces me to strip vocabulary and check whether something is genuinely new or just renamed familiar concepts. When applied to design decisions, this is how the "Refine before introducing" tenet emerged — みや's questions about Zeller / 30-min time-box / 5 Whys collapsed all 10 adoptions into refinements. **Promoted T1→T2 2026-05-12 per みや**: "if you're increasing its priority, then yes. That is my way."
 
+**[2026-09-24] Committed file content silently replaced by an older copy in the working tree** (straight to T2 — 3 instances)
+2026-08-03 DE skill STEP 10 section deleted when a stale OneDrive conflict copy overwrote the file before `git add -A` (`25a0379c`) · 2026-09-14 quest sync script v9 lost to a pre-v9 copy during an orphan-worktree salvage · 2026-09-24 BRANCH-AND-DEPLOY.md §8 (committed `7372050`) removed from the worktree working copy twice, first misread as "never written". Common shape: a tracked file's working copy loses lines that git HEAD still has, and a later `git add -A` would commit the loss. Mitigation proposed (A1, slips proposal): DE step 9 flags working-copy deletions of lines committed this session. Worktrees inside OneDrive = suspected writer (`project_onedrive_worktrees`).
+
 **[2026-04-02] Direct naming corrections**
 みや corrects naming inconsistencies immediately when noticed (keiro → quest, Miya → みや). These corrections are precise and non-negotiable. Take them as hard rules, not preferences.
 
