@@ -4,6 +4,7 @@
 ## Feedback
 - [probe-builds-local-only](feedback_probe_builds_local_only.md) — 🚨 PROBE/logger builds are tested on miya's LOCAL JBoss only, never merged/pushed to int-env/stag-env/master/release; gate domain/probe-local-only-gate; "for now"
 - [permohonan-holder-resolver](feedback_permohonan_holder_resolver.md) — 🚨 permohonan id = umm_aplikasi.id_pengenalan; resolve live holder from DB on the right env, never from ticket text
+- [hotfix-branch-from-master](feedback_hotfix_branch_from_master.md) — 🚨 PROD hotfix on a released ticket → mlk/hotfix/<ticket> off latest origin/mlk/master; old ticket branch = reference only
 - [branch-before-merge](feedback_branch_before_merge.md) — 🚨 fix goes on its OWN ticket branch FIRST, then merge to env branches; never commit straight to int-env/stag-env
 - [diff-first-on-comparison](feedback_diff_first_on_comparison.md) — 🚨 "why A differs from B" / specific-instance question → pull BOTH real values + diff FIRST, lead with the diff, mechanism only after
 - [popup-questions](feedback_popup_questions.md) — 🚨 decisions via AskUserQuestion popups, not chat rounds; side builds → own session via spawn_task with full handover

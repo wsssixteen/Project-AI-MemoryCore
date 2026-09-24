@@ -23,6 +23,9 @@ check('F5 spoc-hasil on master → pass (its trunk)', decide(SPOC, 'master', '')
 check('F6 spoc-hasil on mlk/master → BLOCK', decide(SPOC, 'mlk/master', '').block === true);
 check('F7 bypass token → pass', decide(PLP, 'mlk/int-env', '[skip-branch-check: intentional]').block === false);
 check('F8 non-etanah file → pass', decide('C:\\repo\\foo.js', 'x', '').block === false);
+// Hotfix route (2026-09-24, #281392): edits go in the unregistered work clone on mlk/hotfix/<n>, never the local-server clone.
+check('F9 work clone E:\\Dev\\etanah-work on mlk/hotfix/281392 → pass', decide('E:\\Dev\\etanah-work\\etanah-pelupusan\\src\\X.java', 'mlk/hotfix/281392', '').block === false);
+check('F10 local-server clone on mlk/hotfix/281392 → BLOCK', decide(PLP, 'mlk/hotfix/281392', '').block === true);
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
