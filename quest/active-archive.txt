@@ -3083,3 +3083,125 @@ issue_one_liner=PDTJ asks Ulasan JT field character limit — ANSWERED: tugasan 
 board_state=Answered in chat 2026-08-27; awaiting possible ticket #
 branch=none
 disposition=folded into QA-277309 as Issue 1 evidence
+
+
+### 2026-09-22 — QA-242000 (Perak II — Servis GIS GITP/GUTP; PRU GITP-only correct per BA, PRBB enhancement)
+
+qa=QA-242000
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Perak\Archive\9. II #242000 - Teknikal - Servis GIS - trigger GITP dan GUTP (beza luas + charting)
+phase=verify
+status=archived
+ticket_type=enhancement
+env=Teknikal: Servis GIS: Ada beza luas > Ada charting keputusan >  perlu trigger servis GITP dan GUTP
+issue_one_liner=Teknikal: Servis GIS: Ada beza luas > Ada charting keputusan >  perlu trigger servis GITP dan GUTP
+assigned_to_me=2026-09-08
+urusan=PRBB Renew, PRU Renew, MLMS
+current_phase=RESOLVED 2026-09-22 (BA Intan ruling): PRU GITP-only is CORRECT (air-space renew, no beza luas by nature); GUTP not expected; no PRU code change. PRBB enhancement e476e2465f is the release (on prk/internal/242000 + prk/stag-env, NOT master). Deliverable=GITP log + comment on tic; Intan handles release. Open GIS-side: GITP returned Flag:N Kemaskini gagal (GIS server 192.168.19.98 reject, not our module).
+state=perak
+local_test_confirmed=false
+quest_start=2026-09-08
+qa_doc=projects/coding-projects/active/QA-242000/QA-242000.md
+branch=prk/internal/242000
+closed=2026-09-21
+close_note=RECONCILED from Redmine: Resolved (2026-09-21)
+reopened=2026-09-22
+reopen_note=BA Intan asked to verify PRU GIS trigger via staging server.log; confirmed GITP-only (GUTP not firing). See qa_doc Live verification 2026-09-22.
+archived=2026-09-22
+
+qa=QA-280614
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\219. II #280614 - Pelupusan - MLPS - 1) Request untuk Patch Tempat-Wilayah-Lokasi  2) Re (PROD)
+phase=0
+status=archived
+ticket_type=bug
+env=Pelupusan > MLPS > 1) Request untuk Patch Tempat/Wilayah/Lokasi  2) Replace Pelan
+issue_one_liner=Pelupusan > MLPS > 1) Request untuk Patch Tempat/Wilayah/Lokasi  2) Replace Pelan
+assigned_to_me=2026-09-21
+current_phase=Recon-done (session 2026-09-21): twin of 279793 MLPS Tempat patch; script shape ready, 2 source rows need live verify
+qa_doc=projects/coding-projects/active/QA-280614.md
+board_state=Patch shape ready, DB-verify 2 rows pending
+closed=2026-09-22
+close_note=Patch APPLIED + PROD-verified (permohonan /9+/10 tempat='-', lesen rows patched). Pelan replace = DMS team.
+
+qa=QA-110506
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Perak\Archive\10. ESOKONGAN-CR #110506 - Permohonan menwujudkan dan dibangunkan  PERMIT KHAS - dalam eTanah
+phase=1-closed
+status=archived
+ticket_type=deploy
+env=Perak prk/int-env
+issue_one_liner=Deploy Fatin CR branch esokonganCR/110506 (PPTPB No Permit, Bayaran Permit, Jadual 20) to prk/int-env; reviewed + merged
+assigned_to_me=2026-09-24
+urusan=PPTPB
+state=Perak
+branch=prk/int-env
+commit=a71c31d97c
+qa_doc=projects/coding-projects/archive/QA-110506/QA-110506.md
+current_phase=Merged+pushed prk/int-env a71c31d97c; miya deploys; PRBB else-if finding owed to Fatin
+closed=2026-09-24
+quest_start=2026-09-24
+
+qa=QA-281482
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\226. DP #281482 - Pelupusan - OMLPS - Borang 4Ae - User maklum untuk tukar pelan yang ad (PROD)
+phase=Closed
+status=archived
+ticket_type=patch
+env=Pelupusan > OMLPS > Borang 4Ae : User maklum untuk tukar pelan yang ada cop  sulit
+issue_one_liner=PROD DMMLMS PDTJ.600-2/9/79 lesen A02/2026/11 - Pelan TOL (GPTOL LAIN-36636799) replaced by infra with BA's new pelan; no SQL (uploaded PDF)
+assigned_to_me=2026-09-24
+current_phase=Closed
+local_test_confirmed=n/a
+closed=2026-09-24
+qa_doc=projects/coding-projects/archive/QA-281482/QA-281482.md
+
+qa=QA-280895
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\221. ES #280895 - Pelupusan - UPP - Papar Kosong pada Langkah 2
+phase=0
+status=archived
+ticket_type=bug
+env=MLKSTG
+issue_one_liner=Pelupusan - UPP - Papar Kosong pada Langkah 2
+assigned_to_me=2026-09-22
+urusan=UPP
+tugasan=Kemasukan Maklumat Pembatalan Permohonan
+current_phase=Phase 1 closed - Redmine post pending
+board_state=Rubric re-run done; Apply next
+qa_doc=projects/coding-projects/archive/QA-280895/QA-280895.md
+test_app=PTMLK/03/L/UPP/2026/3 @ masirah@melaka.gov.my (stg2 apl 3436258, asal MCL/2026/2); regresi PTMLK/03/L/UPP/2026/2 @ nfadzilah (asal PT/2026/33)
+branch=mlk/esokongan/280895
+closed=2026-09-24
+local_test_confirmed=true
+commit=0c074d07a2
+phase1_note=cherry-pick of int-env 3e0154db9e; tested PASS on internal (PTMLK/01/L/UPP/2026/1 MCL @ iskandarz); merged stag-env 5f60caef17; master merge via next release
+
+## 2026-09-24 — ADHOC-SGR-PLMS-2026-1 CLOSED (adhoc answered, Selangor)
+
+qa=ADHOC-SGR-PLMS-2026-1
+phase=Closed
+status=archived
+ticket_type=adhoc
+state=selangor
+env=code-only (oracle-slt unreachable)
+urusan=PLMS
+tugasan=PYB4AE Penyediaan Borang 4Ae dan L1e
+quest_start=2026-09-24
+closed=2026-09-24
+local_test_confirmed=n/a
+branch=none
+task_folder=none (adhoc, no ticket)
+issue_one_liner=Where to patch PLMS pelan GPTOL at Penyediaan Borang: permohonan (UMM_A_DOK_KELUARAN by aplikasi + GPTOL, DOKUMEN medan UMM_A_DOK_KELUARAN), NOT versi lesen; No Lesen only used for MLMS
+qa_doc=projects/coding-projects/archive/ADHOC-SGR-PLMS-2026-1/ADHOC-SGR-PLMS-2026-1.md
+
+qa=QA-281319
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\225. II #281319 - Pelupusan - PRBB - Papar Ralat selepas Klik Button hantar (PROD)
+phase=Closed 2026-09-24: PROD verified - 2808785 BP_SWA_PLP Selesai/N, successor PL Bayaran Pelbagai 2854264 (fakhrullah@). Variable caraPenghantaran added on SUB_UPN child 20527561; infra ran 281319.sql.
+status=archived
+ticket_type=bug
+env=Pelupusan
+issue_one_liner=Pelupusan - PRBB - Papar Ralat selepas Klik Button hantar
+assigned_to_me=2026-09-24
+urusan=PRBB
+tugasan=Penerimaan Bukti Penyampaian Serahan Tangan
+current_phase=Closed
+local_test_confirmed=true
+commit=none (data patch + flowable variable, PROD)
+closed=2026-09-24
+qa_doc=projects/coding-projects/archive/QA-281319/QA-281319.md
