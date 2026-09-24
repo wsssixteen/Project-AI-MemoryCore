@@ -39,3 +39,12 @@ Scope: one session, one deploy-only Perak quest (review Fatin's CR branch → me
 | A3 debugging | ⏭ no debugging this session, pure lookup; code trace 3 files, answer in one pass | — | — |
 | A4 etanah issue-solving | PLMS absent in melaka BPMN, present in perak/terengganu; selangor has no PLMS BPMN in knowledge | No urusan→state index; I found the state by Glob accident | urusan→states index (logged A4) |
 | A5 file sweep | DE range-delete in shared main quest/active-archive.txt removed another session's 2 blocks (restored same step) | Main checkout is written concurrently by several sessions | exact-block remove helper (logged A5) |
+## Session 4 — #280895 (UPP Langkah 2 blank for MCL)
+
+| Axis | Observation (instance) | Proposal |
+|---|---|---|
+| A1 agentic system | Permission-classifier outage left "go create the branch" unexecuted; I waited instead of retrying | none new (retry-first already a rule) |
+| A2 quest workflow | Blind re-run (resume step 1b) caught a wrong prior diagnosis and wrong test data | worked as designed |
+| A3 debugging | Cycle 1 read code from the int-env working copy; the fix line there hid the thrower | proposal: off-baseline Read advisory hook |
+| A4 etanah issue-solving | #279615 split fix: getter route to stag, panel route to int-env only; env branches drift from master | proposal: env-branch drift report |
+| A5 sweep | ⏭ no sweep run this session | — |
