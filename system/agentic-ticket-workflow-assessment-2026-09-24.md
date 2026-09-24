@@ -1,4 +1,6 @@
-# Agentic ticket workflow assessment — 2026-09-24 (session: #278909)
+
+
+## Session 2 — #278909 (Risalat MMKN Tolak + ada pemilikan)
 
 | Axis | What happened (instance) | Assessment | Proposal |
 |---|---|---|---|
