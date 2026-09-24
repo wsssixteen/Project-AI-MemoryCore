@@ -604,6 +604,11 @@
 {"ts":"2026-09-24T10:48:57.861Z","category":"A3"}
 {"ts":"2026-09-24T10:48:58.104Z","category":"A4"}
 {"ts":"2026-09-23T06:48:19.735Z","category":"release-untested-code"}
+{"ts":"2026-09-24T04:25:09.812Z","category":"reask/redundant"}
+{"ts":"2026-09-24T05:19:44.887Z","category":"ticket-context-skipped"}
+{"ts":"2026-09-24T05:32:29.335Z","category":"scope-overreach"}
+{"ts":"2026-09-24T07:39:05.722Z","category":"output-shape"}
+{"ts":"2026-09-24T08:21:47.268Z","category":"reask/verbose"}
 {"ts":"2026-09-24T05:39:54.418Z","category":"reask/deviated-from-request"}
 {"ts":"2026-09-24T05:41:13.961Z","category":"A1"}
 {"ts":"2026-09-24T05:41:14.271Z","category":"A1"}
@@ -613,3 +618,7 @@
 {"ts":"2026-09-24T10:45:38.964Z","category":"A4"}
 {"ts":"2026-09-24T10:45:39.141Z","category":"A2"}
 {"ts":"2026-09-24T10:45:39.408Z","category":"A1"}
+{"ts":"2026-09-24T10:50:22.580Z","category":"A1"}
+{"ts":"2026-09-24T10:50:22.760Z","category":"A4"}
+{"ts":"2026-09-24T10:50:22.967Z","category":"A2"}
+{"ts":"2026-09-24T10:48:23.090Z","category":"verify-before-claim"}

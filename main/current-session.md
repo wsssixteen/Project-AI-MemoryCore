@@ -11,6 +11,16 @@
 - **Born**: quest SKILL.md resume step 4 off-baseline read rule · BUG-BESTIARY pattern · LATENT-BUGS L9 (keputusanMMKN, PRBB-origin cancel) + L8 → FIXED.
 - **Slips**: verify-before-claim (working-copy read) · stalled after "go create the branch" (permission classifier failure, then waited instead of retrying).
 **Last Activity**: 2026-09-24 18:45 — #278909 (PT Risalat MMKN Tolak + ada pemilikan) root-caused + audited; fix = 3 missing template docx; DELEGATED to junior Siti Farhanih (みや guides); Redmine note drafted, NOT posted.
+**Last Activity**: 2026-09-24 18:50 — #280540 BA data ask answered (Kadar Pengiraan Per per env, before/after MLKIT test); QA-280540 Phase 1 closed; DE.
+
+## Session Recap (2026-09-24, pptpbl-fees-export worktree)
+- **Ask**: BA (Mira) on #280540: what is Kadar Pengiraan Per for all Kategori on MLKIT + MLKSTG, is the maintenance page saving it.
+- **Finding (DB-proven)**: Per is ONE field on Kod Fi `hsl_fi_pejabat.unit_pengiraan_id`; row `hsl_fi_kadar.kadar_pengiraan_id` empty on every PPTPBL row. Form field sits beside Kategori/Jenis but saves to the Kod Fi, so one change hits all rows. Row edit = delete+insert (MLKIT 307→2040, 318→2041). Re-added 2041 Unit Ukuran Luas stayed empty in DB.
+- **Test**: みや set MLKIT Per = Meter Persegi (16:07) → PTMLK/03/L/PPTPB/2026/5 Pertanian Lain-lain = RM20 x 80 m² = 1,600 (fix follows the page). MLKIT still Meter Persegi; MLKSTG Lot.
+- **Delivered**: Task folder `280540.xlsx` (MLKSTG · MLKIT Sebelum · MLKIT Selepas; joined per-row view + table.column source row) + `280540.sql` (subquery joined view, no JOIN). Redmine reply (short) posted by みや.
+- **Closed**: QA-280540 Phase 1 (status=closed, commit 66777ba6d5, on int-env + stag-env). Phase 2 archive after BA confirms.
+- **Slips**: ticket-context-skipped · scope-overreach (verdict columns for BA) · output-shape (row-only data, no joined per-row parent view) · reask/verbose ×2 · reask/redundant.
+- **Open**: MLKIT Per back to Lot (みや decides) · PROD PPTPBL Per = Lot before release · maintenance page Unit Ukuran Luas not persisting on re-added row (unconfirmed, needs one retest).
 
 ## Session Recap (2026-09-24 evening, redmine-278909 worktree)
 - **Ask**: /quest #278909 start→finish + test scenarios, staging. BA: Tidak Boleh Dipertimbangkan (PDT) / Tolak (PTG) + ada pemilikan → Risalat MMKN missing 2.3.3 (berkahwin) / 2.3.2 (bujang, syarikat).
