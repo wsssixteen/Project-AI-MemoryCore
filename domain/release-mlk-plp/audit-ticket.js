@@ -119,6 +119,17 @@ for (const r of rows) {
   console.log(`| ${r.b} | ${r.trap ? '🚨 YES' : 'no'} | ${r.files.length}: ${r.files.map(f=>f.split('/').pop()).join(', ') || '—'} | ${r.covered==null?'—':(r.covered?'✅ all blobs match':'❌ MISSING')} |`);
 }
 
+// ---- env-tested (2026-09-23, #280166): is each branch's code on int-env / stag-env — what BA tested? ----
+const { checkEnvTested, describe } = require('./env-tested.js');
+let untested = false;
+console.log(`\n| branch | env-tested (BA only tests what an env carries) |`);
+console.log(`|---|---|`);
+for (const r of rows) {
+  const e = checkEnvTested(REPO, `origin/${r.b}`, MASTER);
+  if (e.verdict === 'UNTESTED' || e.verdict === 'REMOVED') untested = true;
+  console.log(`| ${r.b} | ${describe(e)} |`);
+}
+
 // ---- ledger enforcement (deterministic guarantee the stack is classified in the quest MD) ----
 let ledgerOk = true;
 try {
@@ -133,8 +144,10 @@ try {
   }
 } catch (e) { console.log(`\n(ledger check skipped: ${e.message})`); }
 
-const verdict = (reverted || stacked || anyUncovered || !ledgerOk)
+const verdict = untested
+  ? '🚨 UNTESTED CODE — this branch carries code no env has (never deployed, or reverted there); ask みや whether it ships'
+  : (reverted || stacked || anyUncovered || !ledgerOk)
   ? '🚨 DO NOT trust a single branch merge — reconstruct the complete footprint, content-verify the release, and classify every branch in the quest-MD ledger'
   : '✅ single clean branch — normal merge path';
 console.log(`\n**verdict:** ${verdict}\n`);
-process.exit((anyUncovered || !ledgerOk) ? 1 : 0);
+process.exit((anyUncovered || !ledgerOk || untested) ? 1 : 0);

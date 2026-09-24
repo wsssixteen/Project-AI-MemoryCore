@@ -3,6 +3,17 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-24 evening (#278909 — "commit what templates? From where do you get it?")
+
+- **Templates are his junior's learning ground.** He guides, she builds. I built the three docx on a "start to finish" ask and he did not recognise them. For template work, draft the guide note first and ask who builds, before I build.
+- **"Very briefly audit" means a chain of short answers, one question at a time.** Branched from internal? Missed cherry-pick? When did it go missing? Each wanted one fact backed by git, not a survey.
+- **One point per line in anything he sends out.** He named it with heat: jamming facts into one sentence is what he hates. The rule already existed in `feedback_ticket_writing_style.md`; the split check before sending is the missing reflex.
+
+## Relationship reinforcement — 2026-09-24 (Perak #110506 — "why you recommend cherry pick when the requested is whole branch?")
+
+- **His request is the default; my deviation carries the burden of proof, up front.** He and the developer asked for a whole-branch merge; I led with cherry-pick because the trial merge looked messy. His question was not anger, it was an audit: assess it. The honest assessment reversed me in one table (team norm, precedent merge two weeks earlier, cherry-pick only defers the same conflicts). Next time: evaluate the requested path first and recommend a deviation only with that comparison already on the table.
+- **"Please assess and brief me first" means stop acting and show the reasoning.** He answered both popup questions with "assess" rather than picking an option. When he does that, the popup was premature: the options were not yet earned.
+
 ## Relationship reinforcement — 2026-09-23 (#280176 "you might have caused a regression")
 
 - **"Compare to master and audit" means prove it with the diff, then keep going on the real bug.** The audit cleared 280176 in one diff, but he did not want the verdict alone: the two videos were real bugs on neighbouring paths, and the day was spent fixing them. A clean audit is the opening line, not the deliverable.

@@ -26,6 +26,8 @@ metadata:
 > Attached are the fixes required for SPOC side for them to check further.
 > Thank you.
 
+**Pre-send split check (2026-09-24, #278909, miya: "I hate it when you jam your points"):** any sentence joined by `jadi` / `so` / `bila` / `sebab` / `dan` that carries 2+ facts gets split into one line per fact before sending. Bad: "Config sudah merujuk templat ini, jadi bila Tidak Boleh Dipertimbangkan / Tolak dan pemohon ada pemilikan tanah, sistem papar ralat Couldn't load file." Good: "Config refer 3 templat yang belum wujud." / "Sistem papar ralat Couldn't load file." / "Ralat keluar bila ..." Also: miya prefers his own mixed wording ("config refer ...") and label-style short lines ("Base: X" / "Refer point 2.3.3: Y") over full Malay sentences.
+
 **Banned in ticket text:** "DB-proven" / "verified" / file:line / class names / JSON keys / method names / CAPS-for-emphasis / long sentences / more than one idea per line. Keep the technical detail inside the attached files, never in the message.
 
 **At ticket close / "test passed" / after a confirmed push:** emit the plain close message (above) PLUS the git commit-reference block. Generate the block with `node domain/ticket-close-block/ticket-close-block.js --repo <path> --ticket <num> --module <pelupusan|awam>`. Module rule: AWAM = branch only (another team merges PROD); pelupusan = branch + merged to mlk/int-env (we deploy PROD, BA tests int-env). Do not hand-type the block.
