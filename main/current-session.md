@@ -1,6 +1,13 @@
 # Current Session
 
-**Last Activity**: 2026-09-23 14:10 — #280176 regression audit (NO regression from 280176) → 2 new issues fixed + shipped int-env/stag-env (2013e8e935 Penyediaan list rebuild · 5d6c4a9a2e onSimpanTanah nomborLot→noLot all urusan) · probe-local-only rule born · DE stopped before step 10 per みや.
+**Last Activity**: 2026-09-24 13:40 — Perak #110506 (Fatin PPTPB Permit Khas CR) reviewed + merged whole branch into prk/int-env `a71c31d97c` (12 conflicts, non-CR to int-env side); みや deploys; quest QA-110506 opened, closed, archived.
+
+## Session Recap (2026-09-24, perak-ticket-deploy worktree)
+- **Ask**: deploy Perak eSOKONGAN-CR #110506 (Fatin, branch `esokonganCR/110506`: No Permit · Bayaran Permit · Jadual 20) to `prk/int-env` if sound.
+- **Review**: branch tip `9f9e5dcc8d` compiles green. Findings for Fatin (owed, not sent): (1) HIGH `PelupusanService.saveRunningNumber():2319` `if PRU` became `else if`, so PRBB no longer falls to the generic No-Permit fill (Perak staging: 6 PRBB rows with MKLMT_TMBHN + NO_PERMIT_LESEN null) — one-line restore; (2) tujuan saved by name, read by code (`PelupusanService.java:3365` vs `PelupusanMaklumatBayaranHelperForm.java:318`); (3) `LaporanP1eForm.java:366` fi NPE + ICU BigDecimal import.
+- **Merge**: whole branch (みや chose it after I wrongly recommended cherry-pick; cherry-pick only defers the conflicts). 12 conflicts, 9 master-sourced → int-env side; IPelupusanService union; MaklumatTanahPlpForm kept int-env (auto-merge double call). Merged-tree compile green vs common 1.52.7-PRK.beta.patch4. Pushed `prk/int-env` 4e0a02a968 → **a71c31d97c**. Work clone only, his tree untouched.
+- **Closed**: QA-110506 archived (Task folder `1. Tasks\Perak\Archive\10. ESOKONGAN-CR #110506 ...`, qa_doc `projects/coding-projects/archive/QA-110506/`). Knowledge: `perak/BRANCH-AND-DEPLOY.md` §6 prk/int-env.
+- **Open**: みや deploys int-env + footer check · Redmine note to Fatin (findings 1-3) needs his nod · refinement proposal: compile-check `--path` so Perak/work-clone compiles write a marker.
 
 ## Session Recap (2026-09-23, quest-280176-regression worktree)
 - **Ask**: BA (Nurhafizah) PASSED 280176 on staging, then a colleague's two videos looked like regressions. Audit of `mlk/esokongan/280176` vs `mlk/master`: 3 files, none on the reported paths → **not a regression from 280176**.
