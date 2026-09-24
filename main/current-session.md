@@ -1,6 +1,15 @@
 # Current Session
 
-**Last Activity**: 2026-09-24 18:45 — #278909 (PT Risalat MMKN Tolak + ada pemilikan) root-caused + audited; fix = 3 missing template docx; DELEGATED to junior Siti Farhanih (みや guides); Redmine note drafted, NOT posted.
+**Last Activity**: 2026-09-24 18:50 — #280540 BA data ask answered (Kadar Pengiraan Per per env, before/after MLKIT test); QA-280540 Phase 1 closed; DE.
+
+## Session Recap (2026-09-24, pptpbl-fees-export worktree)
+- **Ask**: BA (Mira) on #280540: what is Kadar Pengiraan Per for all Kategori on MLKIT + MLKSTG, is the maintenance page saving it.
+- **Finding (DB-proven)**: Per is ONE field on Kod Fi `hsl_fi_pejabat.unit_pengiraan_id`; row `hsl_fi_kadar.kadar_pengiraan_id` empty on every PPTPBL row. Form field sits beside Kategori/Jenis but saves to the Kod Fi, so one change hits all rows. Row edit = delete+insert (MLKIT 307→2040, 318→2041). Re-added 2041 Unit Ukuran Luas stayed empty in DB.
+- **Test**: みや set MLKIT Per = Meter Persegi (16:07) → PTMLK/03/L/PPTPB/2026/5 Pertanian Lain-lain = RM20 x 80 m² = 1,600 (fix follows the page). MLKIT still Meter Persegi; MLKSTG Lot.
+- **Delivered**: Task folder `280540.xlsx` (MLKSTG · MLKIT Sebelum · MLKIT Selepas; joined per-row view + table.column source row) + `280540.sql` (subquery joined view, no JOIN). Redmine reply (short) posted by みや.
+- **Closed**: QA-280540 Phase 1 (status=closed, commit 66777ba6d5, on int-env + stag-env). Phase 2 archive after BA confirms.
+- **Slips**: ticket-context-skipped · scope-overreach (verdict columns for BA) · output-shape (row-only data, no joined per-row parent view) · reask/verbose ×2 · reask/redundant.
+- **Open**: MLKIT Per back to Lot (みや decides) · PROD PPTPBL Per = Lot before release · maintenance page Unit Ukuran Luas not persisting on re-added row (unconfirmed, needs one retest).
 
 ## Session Recap (2026-09-24 evening, redmine-278909 worktree)
 - **Ask**: /quest #278909 start→finish + test scenarios, staging. BA: Tidak Boleh Dipertimbangkan (PDT) / Tolak (PTG) + ada pemilikan → Risalat MMKN missing 2.3.3 (berkahwin) / 2.3.2 (bujang, syarikat).
@@ -16,12 +25,3 @@
 - **Merge**: whole branch (みや chose it after I wrongly recommended cherry-pick; cherry-pick only defers the conflicts). 12 conflicts, 9 master-sourced → int-env side; IPelupusanService union; MaklumatTanahPlpForm kept int-env (auto-merge double call). Merged-tree compile green vs common 1.52.7-PRK.beta.patch4. Pushed `prk/int-env` 4e0a02a968 → **a71c31d97c**. Work clone only, his tree untouched.
 - **Closed**: QA-110506 archived (Task folder `1. Tasks\Perak\Archive\10. ESOKONGAN-CR #110506 ...`, qa_doc `projects/coding-projects/archive/QA-110506/`). Knowledge: `perak/BRANCH-AND-DEPLOY.md` §6 prk/int-env.
 - **Open**: みや deploys int-env + footer check · Redmine note to Fatin (findings 1-3) needs his nod · refinement proposal: compile-check `--path` so Perak/work-clone compiles write a marker.
-
-## Session Recap (2026-09-23, quest-280176-regression worktree)
-- **Ask**: BA (Nurhafizah) PASSED 280176 on staging, then a colleague's two videos looked like regressions. Audit of `mlk/esokongan/280176` vs `mlk/master`: 3 files, none on the reported paths → **not a regression from 280176**.
-- **Issue A** (video 1): Penyediaan Borang 4Ae Simpan multiplied Maklumat Tanah rows (stg2 apl 3412358 = 10 rows born 09:08:55). Root: `MlkPenyediaanBorang4AeL1eForm.performCustomSave():455` appended to a list pre-filled by `BasePelupusanLiteForm.initMaklumatBorang():541-801`; `PelupusanLiteService.populateAppPermohonanTanah():537` deletes+recreates. Masked before by the NPE. Fix = rebuild the list from the helper's displayed rows (analog Utiliti `syncMaklumatTanahFromPermitHelperForSave():1998-2027`). Commit `2013e8e935`.
-- **Issue B** (video 2): OMLPS Utiliti Kemas kini No Lot saved old value. Static trace said it should persist; **local probe** (QA280176B-PROBE) proved `nomborLot=307 noLot=1` after the PLPS-only branch → `PelupusanMaklumatPermitLesenHelper.onSimpanTanah():3612` converts only for PLPS (aaron 4dad297088 2025-10; nurasia 0b70351f8c8 2026-04 added the OMLPS load half, never the save half). Fix = drop the urusan guard. Commit `5d6c4a9a2e`. Blast radius: only `nomborLot`-bound dialogs feed this helper; OPLPS binds `noLot` with `nomborLot` null; PT + Perserahan use `PelupusanExcelReaderHelper`.
-- **Shipped**: branch merged `origin/mlk/master` (ca8acf73a6) → int-env `b7816982e7` · stag-env `7ae6152a4f`. Deploy cards handed (internal one-function; staging build+deploy). BA retest pending. Reset 2 (tanah dups) added to `2. Fix\280176-reset.sql`; RESET 1 re-run by みや 12:xx, verified live.
-- **Rules born**: `feedback_probe_builds_local_only` (probes tested on local JBoss only; never merged to env/trunk/release) + Feature `domain/probe-local-only-gate` (PreToolUse Bash|PowerShell). Work-clone discipline held: all write-side git in `E:\Dev\etanah-work\etanah-pelupusan`; his tree only got the uncommitted local-test patch, then cleared.
-- **Slips today**: `test-scenario/incomplete` (did not name the page-level Simpan as the step under test) · `stop-instead-of-action` (handed him the `git checkout -- .` line instead of clearing my own patch) · reask/verbose (long answers to short questions, ×3 corrections).
-- **Open**: read-side guard `PelupusanSearchService.java:2064` + `:2110` (from 09-22 session, unverified whether still needed after the fill-empty-slot fix) · branch-ledger debt on 5 old quests (277697, 269704, 265109, 244600 +1) · 45 goal-lens prompts pending · 2 ghost Features in census.
