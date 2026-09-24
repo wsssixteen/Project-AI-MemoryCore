@@ -620,3 +620,9 @@
 {"ts":"2026-09-24T10:50:22.760Z","category":"A4"}
 {"ts":"2026-09-24T10:50:22.967Z","category":"A2"}
 {"ts":"2026-09-24T10:48:23.090Z","category":"verify-before-claim"}
+{"ts":"2026-09-24T10:55:27.764Z","category":"state-assumed"}
+{"ts":"2026-09-24T10:55:53.016Z","category":"shared-file-range-delete"}
+{"ts":"2026-09-24T10:55:53.595Z","category":"A1"}
+{"ts":"2026-09-24T10:55:54.103Z","category":"A4"}
+{"ts":"2026-09-24T10:55:54.332Z","category":"A5"}
+{"ts":"2026-09-24T10:55:54.514Z","category":"A2"}

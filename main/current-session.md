@@ -1,6 +1,14 @@
 # Current Session
 
-**Last Activity**: 2026-09-24 18:50 — #280540 BA data ask answered (Kadar Pengiraan Per per env, before/after MLKIT test); QA-280540 Phase 1 closed; DE.
+**Last Activity**: 2026-09-24 18:55 — Selangor PLMS adhoc answered (pelan GPTOL patch location = permohonan, not versi lesen); ADHOC-SGR-PLMS-2026-1 closed + archived; DE.
+
+## Session Recap (2026-09-24 evening, gptol-patching-location worktree)
+- **Ask**: PLMS Penyediaan Borang (PYB4AE, langkah PYB4AE_2 Maklumat Pelan L1e): when patching the pelan GPTOL, patch permohonan or versi lesen? Is it by No Lesen? **State = Selangor** (みや said so only at close).
+- **Answer**: permohonan. `PelupusanReportService.getLaporanBorangL1e()` reads `UMM_A_DOK_KELUARAN` by the PLMS aplikasi + `GPTOL`, then latest active `DOKUMEN` (medan UMM_A_DOK_KELUARAN, medan_pk = adk id). No Lesen only drives the MLMS branch, which still ends on an aplikasi. `IND_VERSI_PERMIT_LESEN.PELAN_DOK_ID` = decoy, never read.
+- **Evidence**: Selangor `sgr/master :1951` + `origin/master :2126/:2304`; Perak `master` same shape + oracle-prk-stag langkah/skrin rows. oracle-slt REFUSED (WinError 10061) so Selangor DB not read.
+- **Slip**: `state-assumed` — answered on Perak code because Melaka had no PLMS; never asked/derived the state (Selangor also has PLMS). Caught by みや's close message.
+- **Closed**: ADHOC-SGR-PLMS-2026-1 archived (quest/active-archive.txt block + qa_doc projects/coding-projects/archive/ADHOC-SGR-PLMS-2026-1/). Knowledge: selangor/STATE-FACTS.md PLMS pelan section + perak/STATE-FACTS.md §10.
+- **Open**: none. If a real patch comes, give the PLMS permohonan id + env and pull its GPTOL rows first.
 
 ## Session Recap (2026-09-24, pptpbl-fees-export worktree)
 - **Ask**: BA (Mira) on #280540: what is Kadar Pengiraan Per for all Kategori on MLKIT + MLKSTG, is the maintenance page saving it.
@@ -18,10 +26,3 @@
 - **Delegated**: みや prefers to guide junior (Siti Farhanih, Redmine assignee). My built templates removed from his tree; reference copies + PDF renders at `E:\Dev\tmp-278909\`. Test data in Task `1. 278 909.txt` (PT/2026/32, /24, /2 @ asmida PRMMKNPDT).
 - **Slips**: `release/unaudited-branch-content` · `reask/jammed-sentence` (Redmine note).
 - **Open**: post Redmine note (needs "post it") · compare Farhanih's docx vs `E:\Dev\tmp-278909\` · merge stag-env+int-env · config→template existence check for release V3 (`cfg_missing.py`) · `TemplateSuratAkuJanjiRoboh.docx` missing in config since ≤1.6.2 · memory edit (one-idea-per-line split check) blocked from worktree → add in `feedback_ticket_writing_style.md`.
-
-## Session Recap (2026-09-24, perak-ticket-deploy worktree)
-- **Ask**: deploy Perak eSOKONGAN-CR #110506 (Fatin, branch `esokonganCR/110506`: No Permit · Bayaran Permit · Jadual 20) to `prk/int-env` if sound.
-- **Review**: branch tip `9f9e5dcc8d` compiles green. Findings for Fatin (owed, not sent): (1) HIGH `PelupusanService.saveRunningNumber():2319` `if PRU` became `else if`, so PRBB no longer falls to the generic No-Permit fill (Perak staging: 6 PRBB rows with MKLMT_TMBHN + NO_PERMIT_LESEN null) — one-line restore; (2) tujuan saved by name, read by code (`PelupusanService.java:3365` vs `PelupusanMaklumatBayaranHelperForm.java:318`); (3) `LaporanP1eForm.java:366` fi NPE + ICU BigDecimal import.
-- **Merge**: whole branch (みや chose it after I wrongly recommended cherry-pick; cherry-pick only defers the conflicts). 12 conflicts, 9 master-sourced → int-env side; IPelupusanService union; MaklumatTanahPlpForm kept int-env (auto-merge double call). Merged-tree compile green vs common 1.52.7-PRK.beta.patch4. Pushed `prk/int-env` 4e0a02a968 → **a71c31d97c**. Work clone only, his tree untouched.
-- **Closed**: QA-110506 archived (Task folder `1. Tasks\Perak\Archive\10. ESOKONGAN-CR #110506 ...`, qa_doc `projects/coding-projects/archive/QA-110506/`). Knowledge: `perak/BRANCH-AND-DEPLOY.md` §6 prk/int-env.
-- **Open**: みや deploys int-env + footer check · Redmine note to Fatin (findings 1-3) needs his nod · refinement proposal: compile-check `--path` so Perak/work-clone compiles write a marker.

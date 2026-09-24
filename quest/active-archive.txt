@@ -3083,3 +3083,21 @@ issue_one_liner=PDTJ asks Ulasan JT field character limit — ANSWERED: tugasan 
 board_state=Answered in chat 2026-08-27; awaiting possible ticket #
 branch=none
 disposition=folded into QA-277309 as Issue 1 evidence
+
+## 2026-09-24 — ADHOC-SGR-PLMS-2026-1 CLOSED (adhoc answered, Selangor)
+
+qa=ADHOC-SGR-PLMS-2026-1
+phase=Closed
+status=archived
+ticket_type=adhoc
+state=selangor
+env=code-only (oracle-slt unreachable)
+urusan=PLMS
+tugasan=PYB4AE Penyediaan Borang 4Ae dan L1e
+quest_start=2026-09-24
+closed=2026-09-24
+local_test_confirmed=n/a
+branch=none
+task_folder=none (adhoc, no ticket)
+issue_one_liner=Where to patch PLMS pelan GPTOL at Penyediaan Borang: permohonan (UMM_A_DOK_KELUARAN by aplikasi + GPTOL, DOKUMEN medan UMM_A_DOK_KELUARAN), NOT versi lesen; No Lesen only used for MLMS
+qa_doc=projects/coding-projects/archive/ADHOC-SGR-PLMS-2026-1/ADHOC-SGR-PLMS-2026-1.md

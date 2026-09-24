@@ -4,6 +4,13 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-09-24, perak-ticket-deploy worktree)
+- **Ask**: deploy Perak eSOKONGAN-CR #110506 (Fatin, branch `esokonganCR/110506`: No Permit · Bayaran Permit · Jadual 20) to `prk/int-env` if sound.
+- **Review**: branch tip `9f9e5dcc8d` compiles green. Findings for Fatin (owed, not sent): (1) HIGH `PelupusanService.saveRunningNumber():2319` `if PRU` became `else if`, so PRBB no longer falls to the generic No-Permit fill (Perak staging: 6 PRBB rows with MKLMT_TMBHN + NO_PERMIT_LESEN null) — one-line restore; (2) tujuan saved by name, read by code (`PelupusanService.java:3365` vs `PelupusanMaklumatBayaranHelperForm.java:318`); (3) `LaporanP1eForm.java:366` fi NPE + ICU BigDecimal import.
+- **Merge**: whole branch (みや chose it after I wrongly recommended cherry-pick; cherry-pick only defers the conflicts). 12 conflicts, 9 master-sourced → int-env side; IPelupusanService union; MaklumatTanahPlpForm kept int-env (auto-merge double call). Merged-tree compile green vs common 1.52.7-PRK.beta.patch4. Pushed `prk/int-env` 4e0a02a968 → **a71c31d97c**. Work clone only, his tree untouched.
+- **Closed**: QA-110506 archived (Task folder `1. Tasks\Perak\Archive\10. ESOKONGAN-CR #110506 ...`, qa_doc `projects/coding-projects/archive/QA-110506/`). Knowledge: `perak/BRANCH-AND-DEPLOY.md` §6 prk/int-env.
+- **Open**: みや deploys int-env + footer check · Redmine note to Fatin (findings 1-3) needs his nod · refinement proposal: compile-check `--path` so Perak/work-clone compiles write a marker.
+
 ## Session Recap (2026-09-23, quest-280176-regression worktree)
 - **Ask**: BA (Nurhafizah) PASSED 280176 on staging, then a colleague's two videos looked like regressions. Audit of `mlk/esokongan/280176` vs `mlk/master`: 3 files, none on the reported paths → **not a regression from 280176**.
 - **Issue A** (video 1): Penyediaan Borang 4Ae Simpan multiplied Maklumat Tanah rows (stg2 apl 3412358 = 10 rows born 09:08:55). Root: `MlkPenyediaanBorang4AeL1eForm.performCustomSave():455` appended to a list pre-filled by `BasePelupusanLiteForm.initMaklumatBorang():541-801`; `PelupusanLiteService.populateAppPermohonanTanah():537` deletes+recreates. Masked before by the NPE. Fix = rebuild the list from the helper's displayed rows (analog Utiliti `syncMaklumatTanahFromPermitHelperForSave():1998-2027`). Commit `2013e8e935`.
@@ -5217,6 +5224,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

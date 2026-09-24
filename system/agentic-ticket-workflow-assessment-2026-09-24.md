@@ -29,3 +29,13 @@ Scope: one session, one deploy-only Perak quest (review Fatin's CR branch → me
 | A3 debugging | DB-first answered the real question fast (Per lives on `hsl_fi_pejabat`); the waste was in output shape, not diagnosis. |
 | A4 etanah issue-solving | BA data asks need the joined per-child view first time; took 6 rounds → proposal logged; fact written to DATABASE.md §28. |
 | A5 sweep | ⏭ no sweep this session. |
+
+## Addendum — gptol-patching-location session (Selangor PLMS adhoc)
+
+| Axis | Instance | Assessment | Proposal |
+|---|---|---|---|
+| A1 agentic system | Answered PLMS from Perak code; Selangor named only at close | No gate derives STATE for a non-Melaka urusan without a permohonan prefix. Knowledge-first hook pointed at melaka/ only | state-detect gate (logged A1) |
+| A2 quest workflow | Adhoc with no ticket/Task folder closed by hand-written archive block | archive-quest.js assumes a Task folder + active.txt block | adhoc mode for archive-quest.js (logged A2) |
+| A3 debugging | ⏭ no debugging this session, pure lookup; code trace 3 files, answer in one pass | — | — |
+| A4 etanah issue-solving | PLMS absent in melaka BPMN, present in perak/terengganu; selangor has no PLMS BPMN in knowledge | No urusan→state index; I found the state by Glob accident | urusan→states index (logged A4) |
+| A5 file sweep | DE range-delete in shared main quest/active-archive.txt removed another session's 2 blocks (restored same step) | Main checkout is written concurrently by several sessions | exact-block remove helper (logged A5) |
