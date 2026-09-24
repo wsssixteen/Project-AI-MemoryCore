@@ -1626,3 +1626,18 @@ WHERE aplikasi_id IN (SELECT aplikasi_id FROM et_main.umm_aplikasi WHERE id_peng
 Before-SELECT: `SELECT aplikasi_id, id_pengenalan, status_proses, status_keputusan, status_awam, hubungan_aplikasi_id, trkh_tamat FROM umm_aplikasi WHERE id_pengenalan IN (…)` + counts of active `umm_a_tgsn` and `umm_tgsn_semasa` per aplikasi. Caveat: the Flowable engine process stays orphaned (separate DB, PROD not readable) — same as every precedent; harmless once the dashboard row is gone. `version` is NOT bumped (precedent rows sit at version 0 → cancelled).
 
 **`tempat` value convention** (`ind_mklmt_tnh_permit_lesen` / `umm_a_permohonan_tnh`, PROD census 2026-09-04): app default for "no place" is **NULL** (17 of 24 officer-created lesen rows; 34 officer MLPS rows); `'-'` is a legitimate stored value (66 migrated + 1 officer-typed on the lesen table; 2 patched MLPS rows) and is what BA asks to SEE — the L1e report renders blank as `-` (`populateTempat():818`), the Maklumat Tanah grid does not. Empty string exists only on 126 migrated rows. Pick `'-'` when the user asked for a dash on screen; NULL otherwise.
+
+## 28. Fee config (Penyelenggaraan Fi) — where "Kadar Pengiraan Per" and the rate rows live (2026-09-24, #280540, MLKIT + MLKSTG DB-proven)
+
+| Page field (`etanah-maintenance` FiSetupManagerForm / PenyelenggaraanFiForm) | Table.column | Scope |
+|---|---|---|
+| Kod Fi | `hsl_fi_pejabat.kod` | one row per Kod Fi |
+| Kadar Pengiraan Per | `hsl_fi_pejabat.unit_pengiraan_id` → `rjk_senarai_ahli_kumpulan` (list 122, `JNS_PER_FI_*`: Lot, Meter Persegi, Bilik…) | **ONE value for the whole Kod Fi** |
+| Kategori · Jenis · Unit Ukuran Luas · Kadar Fi | `hsl_fi_kadar.mksd_menduduki_id` · `kat_mksd_menduduki_id` · `unit_luas_id` (list 395, `UNIKEL*`, has NO Lot) · `kadar_fi` | one row per rate |
+| (not on the form) | `hsl_fi_kadar.kadar_pengiraan_id` | row-level Per; PPTPBL: empty on every row, both envs |
+
+- The Per field sits beside Kategori/Jenis on the form but saves to the Kod Fi → changing it while editing one row changes every row (MLKIT 2026-09-24: Lot → Bilik → Meter Persegi, all 28 rows).
+- Editing a rate row = delete + insert (new `fi_kadar_id`; MLKIT 307→2040, 318→2041). History is not kept.
+- Re-added row 2041 saved with `unit_luas_id` empty although the list showed Meter Persegi before Simpan (single observation, unconfirmed).
+- PPTPB calc (#280540 fix) unit order: row `kadar_pengiraan_id` → row `unit_luas_id` → Kod Fi `unit_pengiraan_id` (`PelupusanMaklumatBayaranHelper.getPptpbUnitKadar()`).
+- Per-row BA evidence query (no JOIN): Task folder `217. ES #280540…\280540.sql`.
