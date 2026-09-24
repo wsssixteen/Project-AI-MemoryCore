@@ -1,6 +1,15 @@
 # Current Session
 
 **Last Activity**: 2026-09-24 18:55 — #281392 4Ae hotfix (DMMLMS) shipped on mlk/hotfix/281392 → int-env 70c28f0157 + stag-env ba79202142; reset script rev 2; hotfix audit built (hotfix skill · HOTFIX lane · quest-exists-gate · db-claim-proof); QA-281392 archived + bounty · DE.
+**Last Activity**: 2026-09-24 18:55 — Selangor PLMS adhoc answered (pelan GPTOL patch location = permohonan, not versi lesen); ADHOC-SGR-PLMS-2026-1 closed + archived; DE.
+
+## Session Recap (2026-09-24 evening, gptol-patching-location worktree)
+- **Ask**: PLMS Penyediaan Borang (PYB4AE, langkah PYB4AE_2 Maklumat Pelan L1e): when patching the pelan GPTOL, patch permohonan or versi lesen? Is it by No Lesen? **State = Selangor** (みや said so only at close).
+- **Answer**: permohonan. `PelupusanReportService.getLaporanBorangL1e()` reads `UMM_A_DOK_KELUARAN` by the PLMS aplikasi + `GPTOL`, then latest active `DOKUMEN` (medan UMM_A_DOK_KELUARAN, medan_pk = adk id). No Lesen only drives the MLMS branch, which still ends on an aplikasi. `IND_VERSI_PERMIT_LESEN.PELAN_DOK_ID` = decoy, never read.
+- **Evidence**: Selangor `sgr/master :1951` + `origin/master :2126/:2304`; Perak `master` same shape + oracle-prk-stag langkah/skrin rows. oracle-slt REFUSED (WinError 10061) so Selangor DB not read.
+- **Slip**: `state-assumed` — answered on Perak code because Melaka had no PLMS; never asked/derived the state (Selangor also has PLMS). Caught by みや's close message.
+- **Closed**: ADHOC-SGR-PLMS-2026-1 archived (quest/active-archive.txt block + qa_doc projects/coding-projects/archive/ADHOC-SGR-PLMS-2026-1/). Knowledge: selangor/STATE-FACTS.md PLMS pelan section + perak/STATE-FACTS.md §10.
+- **Open**: none. If a real patch comes, give the PLMS permohonan id + env and pull its GPTOL rows first.
 **Last Activity**: 2026-09-24 18:47 — #280895 UPP Langkah 2 blank for MCL: blind Rubric re-run overturned cycle-1 (int-env working copy masked the thrower) → fix `0c074d07a2` on `mlk/esokongan/280895`, merged stag-env `5f60caef17`, miya PASS on internal · quest closed + archived + bounty · DE.
 
 ## Session Recap (2026-09-24, form-4ae-no-resit-hotfix worktree)
