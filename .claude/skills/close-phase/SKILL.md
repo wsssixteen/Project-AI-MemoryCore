@@ -58,7 +58,15 @@ archived                              --close-->   (no-op: already archived)
 5. **Return:** `git checkout mlk/master` → `git pull --ff-only origin mlk/master` (the non-fix WIP follows back, untouched).
 6. **Mark closed:** `node quest/active-cli.js update QA-<num> status=closed current_phase=Closed local_test_confirmed=true commit=<sha> closed=@now`
    (run against the LIVE `active.txt`; if running inside a worktree, target the main-repo path so the live state — what the boot hooks read — is the one updated).
-7. **`/verify` Checklist C** — emit the green/red close-out table (branch off current master · only the fix committed · pushed · message · active.txt closed).
+6b. **💾 SAVE EVERYTHING — mandatory at EVERY Phase 1 close, code fix OR data patch (added 2026-09-25 per みや).** In the SAME close, write into the quest's `qa_doc` (the path `active.txt qa_doc=` names; if it exists only in the main checkout, write it there):
+   - `## Ship — Verify` — one table: what shipped (commit sha, or patch file + infra row count) · the read-back that proves it (DB SELECT or test result, with the value seen) · what could NOT be proven and why · Redmine status.
+   - The Redmine **Root cause + Solution** rows, same text as step 8.
+   - `## Deferred to follow-up` — one row per deferred item with a filled Home cell, or the sentinel `_none this quest_`.
+   - Rewrite `## 0. Resume Point` to the closed state: status · done · still owed · next `close` = Phase 2.
+   - **Linked adhoc**: find every `ADHOC-*` block tied to this ticket (same `adhoc_register_row=`, `migrated_from=`, or the ticket number in its `close_note`/register row). For each: move the register row Status to `TICKETED → #<num>`, then archive it now with `node quest/archive-quest.js <ADHOC-id> --allow-stub "superseded by #<num>; evidence folded into QA-<num>"`.
+   Emit: `💾 Saved — QA-<num>: Ship-Verify ✓ · RC/Solution ✓ · Deferred ✓ · Resume Point ✓ · linked adhoc <archived ADHOC-x | none>`.
+   **Banned**: declaring the close done without this line · leaving an adhoc open after its ticket closes · a close that only updates active.txt.
+7. **`/verify` Checklist C** — emit the green/red close-out table (branch off current master · only the fix committed · pushed · message · active.txt closed · 💾 Saved line present).
 
 **The quest is now `closed` (Phase 1 done). The next `close` archives it (Phase 2).**
 
@@ -100,6 +108,7 @@ If status == archived → emit `QA-<num> is already archived — nothing to clos
 - **Pairs with**: `quest/active-cli.js` (active.txt CRUD), `quest/archive-quest.js` (Phase 2 moves), `.claude/commit-conventions.md` (commit subject), `/verify` (checkpoint verification), `quest-protocol.md` (Phase 1 close-out + Phase 2 emit bodies).
 
 ## Skill History
+- 2026-09-25 — Phase 1 step 6b 💾 SAVE EVERYTHING added per みや (QA-281567: "close quest" updated only active.txt; the qa_doc stayed at "Apply prep" and the superseded adhoc stayed open). Adds qa_doc Ship-Verify / RC+Solution / Deferred / Resume Point writes + linked-adhoc archive via existing `archive-quest.js --allow-stub`; step 7 checks the Saved line. Spec-preservation: steps 0-8 untouched, additive only.
 - 2026-06-05 — created. Born from the QA-263921 Phase 1 close slip: a plan that started with "pull first" was silently executed without the pull (branched off a stale master). The defender is this skill — the pull-before-branch + stage-cited-files-only + stop-at-stage steps are now a fixed, non-skippable sequence. Wraps the existing `active-cli.js` / `archive-quest.js` primitives (inventory-first: no new CRUD invented).
 
 ---
