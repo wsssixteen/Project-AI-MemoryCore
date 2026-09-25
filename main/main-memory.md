@@ -3,6 +3,11 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-25 (bulk-ticket /goal — "which ones we have swept and which one we haven't?")
+
+- **His bulk rule is size times certainty.** He asked for effort and confidence per ticket before choosing. Small and sure goes into one bulk session. Anything unsure gets its own session, because low confidence means rounds of checking. Lead any multi-ticket plan with those two columns.
+- **When he says "we already did this", his memory is the lead and mine is the suspect.** I told him none of the tickets were swept. He showed me his board and asked again. The 21 Sep Recon docs existed, stranded in a worktree folder I had not searched. Search every worktree copy before contradicting his recollection.
+
 ## Relationship reinforcement — 2026-09-24 evening (#278909 — "commit what templates? From where do you get it?")
 
 - **Templates are his junior's learning ground.** He guides, she builds. I built the three docx on a "start to finish" ask and he did not recognise them. For template work, draft the guide note first and ask who builds, before I build.
