@@ -675,3 +675,8 @@
 {"ts":"2026-09-25T07:56:10.326Z","category":"gate-false-positive"}
 {"ts":"2026-09-25T10:12:03.525Z","category":"handoff-babble-not-statement"}
 {"ts":"2026-09-25T10:47:27.168Z","category":"reask/rambling"}
+{"ts":"2026-09-25T11:00:17.025Z","category":"A1"}
+{"ts":"2026-09-25T11:00:17.149Z","category":"A2"}
+{"ts":"2026-09-25T11:00:17.256Z","category":"A3"}
+{"ts":"2026-09-25T11:00:17.386Z","category":"A4"}
+{"ts":"2026-09-25T11:00:17.509Z","category":"A5"}

@@ -4,6 +4,19 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## 🎯 HANDOVER — ticket board after the 2026-09-25 sweep
+
+| # | Verdict | Fix | Conf | Effort | Next |
+|---|---|---|---|---|---|
+| 279411 | — | Ammar's fix + one more form guard (09-21 Recon) | 92% | — | running in miya's other session |
+| 274323 | — | Surat royalti RM 0.00 + *Pengecualian Bayaran | 90% | 1.5 h | own session (chip) |
+| 274266 | ind_tgsn PT PYSKTPDT peranan `-PT-PTTGGI-PTK-` overrides BPMN role | 4 data statements, no code | 92% | 1 h | /script-check → miya runs on mlit → retest (bulk-ready) |
+| 264355 | PRU kod `PLP_PRU_SRTLULUS` missing from AWAM list | 1 line AWAM | 85% | 2 h | apply on mlk/qa/264355 + BA Q1 Tolak / Q2 notifikasi (bulk-ready) |
+| 265109 | band-2 PLPSL rate row missing for pengiklanan | 9 data rows + 67dda807e2 rescue | 88% | 2.5 h | BA Q1-Q4 first |
+| 246923 | Item 6 not filled on PTG entry + duplicate PLPS block | ~22 lines | 60% | 5 h | STG T2 discriminator + BA Q1 |
+| 275043 + 244600 | always-bump save override + common WordEditorService draft on any upload | ~11 lines ours + common hand-off | 65-70% | 1 day | one paired session |
+| 281568 | done on PROD | none | — | — | confirm + close block |
+
 ## Working Memory (2026-09-25)
 - Quest docs live in MAIN `projects/coding-projects/active/` — worktree copies are hook-redirect artifacts; check both when asked "have we done X".
 - mlit PT PYSKTPDT still `-PT-PTTGGI-PTK-` (not patched). No code or DB changed this session.
@@ -5296,6 +5309,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

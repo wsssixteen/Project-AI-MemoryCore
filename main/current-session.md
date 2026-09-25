@@ -1,5 +1,14 @@
 # Current Session
 
+**Last Activity**: 2026-09-25 18:56 — adhoc ADHOC-PLTP-2026-1 (PROD Portal Awam PLTP syer popup) diagnosed + saved; fix APPROVED by BA ketua, awaiting ticket; adhoc-save skill + audit built · DE.
+
+## Session Recap (2026-09-25, portal-awam-syer-validation worktree)
+- **Ask**: PDTMT via Fizah: public filled syer exactly as the sijil carian (auto-pulled from hakmilik 040210PM00001265) but Seterusnya shows "Maaf syer yang dimasukkan tidak sah atau melebihi had".
+- **Cause (CODE, 95%)**: etanah-awam `PelupusanPemohonTabForm.checkingSyer():462` sums numerators vs the largest denominator (11 vs 28); dialog `PelupusanMaklumatPemohonHelperForm.java:5635` rejects any denominator ≠ row 1. PROD pra `umm_p_pihak_bkptg` p_aplikasi_id 55278: 7×1/28 + 2×1/4 + 2×1/8 = 1.00. Analog = kaunter fraction sum `PelupusanMaklumatPemohonHelper.java:5848`.
+- **Status**: BA ketua approved the fix 2026-09-25; BA will raise a Redmine ticket → promote register A32.
+- **Built**: `adhoc-save` skill + `lib/adhoc-save-audit.js` (18/18 eval) · adhoc-paste-detector now anchors on hakmilik id / No Resit (13/13) · `quest/notes.js` keeps ADHOC ids whole (was "1. 2 026.txt").
+- **Audit found in older adhocs**: A27 double-claimed (REDMINE-RC re-pointed to new A33) · PRBB-2026-5 notes renamed · legacy qa_docs missing the standard header (FLOWABLE-2026-1, REDMINE-RC-2026-1, PRBB-2026-5) · ADHOC-FLOWABLE-2026-1 block open while register says RESOLVED · ADHOC-PRBB-2026-4 block missing most keys.
+
 **Last Activity**: 2026-09-25 15:48 — #281656 PRBB resit kaunter tidak masuk (PROD): link-resit data patch via infra + Alter Flow PL→PYB4CE on /14 and /15, verified PROD; quest closed + archived + bounty · DE.
 
 ## Session Recap (2026-09-25, ticket-281656-prep worktree)
@@ -20,16 +29,3 @@
 - **#281568** (PROD alter to Pelukis Pelan): PROD already at PLPP for azizah@melaka.gov.my (a_tgsn 2855392, 09:45); no longer under miya on Redmine. Block still `hold` — close after miya nods.
 - **#281567** eSOKONGAN: another session opened QA-281567.md 10:20; not swept.
 - **Spawned**: chip "Fix Redmine divergence check name match" (landed on main as 5cecffc) · chip "Quest 274323" (own session).
-
-## 🎯 HANDOVER — ticket board after the 2026-09-25 sweep
-
-| # | Verdict | Fix | Conf | Effort | Next |
-|---|---|---|---|---|---|
-| 279411 | — | Ammar's fix + one more form guard (09-21 Recon) | 92% | — | running in miya's other session |
-| 274323 | — | Surat royalti RM 0.00 + *Pengecualian Bayaran | 90% | 1.5 h | own session (chip) |
-| 274266 | ind_tgsn PT PYSKTPDT peranan `-PT-PTTGGI-PTK-` overrides BPMN role | 4 data statements, no code | 92% | 1 h | /script-check → miya runs on mlit → retest (bulk-ready) |
-| 264355 | PRU kod `PLP_PRU_SRTLULUS` missing from AWAM list | 1 line AWAM | 85% | 2 h | apply on mlk/qa/264355 + BA Q1 Tolak / Q2 notifikasi (bulk-ready) |
-| 265109 | band-2 PLPSL rate row missing for pengiklanan | 9 data rows + 67dda807e2 rescue | 88% | 2.5 h | BA Q1-Q4 first |
-| 246923 | Item 6 not filled on PTG entry + duplicate PLPS block | ~22 lines | 60% | 5 h | STG T2 discriminator + BA Q1 |
-| 275043 + 244600 | always-bump save override + common WordEditorService draft on any upload | ~11 lines ours + common hand-off | 65-70% | 1 day | one paired session |
-| 281568 | done on PROD | none | — | — | confirm + close block |

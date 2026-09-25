@@ -8,3 +8,5 @@
 {"ts":"2026-09-25T10:53:05.750Z","id":"ADHOC-PRBB-2026-5","outcome":"fail","fails":["qa_doc: has \"## Issue Summary\"","qa_doc: has \"## Match Keys\"","qa_doc: Issue Summary \"Symptom\" line","qa_doc: Issue Summary \"Screen\" line","qa_doc: Issue Summary \"Verdict\" line","qa_doc: Match Keys \"permohonan\" line","qa_doc: Match Keys \"aplikasi\" line"],"dur_ms":35}
 {"ts":"2026-09-25T10:53:05.881Z","id":"ADHOC-REDMINE-RC-2026-1","outcome":"fail","fails":["qa_doc: has \"## Issue Summary\"","qa_doc: has \"## Match Keys\"","qa_doc: Issue Summary \"Symptom\" line","qa_doc: Issue Summary \"Screen\" line","qa_doc: Issue Summary \"Verdict\" line","qa_doc: Match Keys \"permohonan\" line","qa_doc: Match Keys \"aplikasi\" line","task folder: notes file \"1. ADHOC-REDMINE-RC-2026-1.txt\""],"dur_ms":36}
 {"ts":"2026-09-25T10:55:40.110Z","id":"ADHOC-PLTP-2026-1","outcome":"pass","fails":[],"dur_ms":46}
+{"ts":"2026-09-25T10:57:29.222Z","id":"ADHOC-PLTP-2026-1","outcome":"pass","fails":[],"dur_ms":46}
+{"ts":"2026-09-25T10:58:43.479Z","id":"ADHOC-PLTP-2026-1","outcome":"pass","fails":[],"dur_ms":36}
