@@ -3346,3 +3346,20 @@ qa_doc=projects/coding-projects/archive/QA-281656/QA-281656.md
 closed=2026-09-25
 fix_type=data-patch+alter
 patch_file=2. Fix\281656.sql
+
+## 2026-09-25 — ADHOC-PLTP-2026-1 TICKETED -> QA-281712
+qa=ADHOC-PLTP-2026-1
+phase=0
+status=archived
+ticket_type=adhoc
+env=PROD
+urusan=PLTP
+quest_start=2026-09-25
+local_test_confirmed=false
+adhoc_register_row=A32
+branch=none-until-ticket (etanah-awam, off mlk/master)
+qa_doc=projects/coding-projects/active/ADHOC-PLTP-2026-1/ADHOC-PLTP-2026-1.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\234. AH - PROD - PLTP - AWAM Syer Tidak Sah Penyebut Berbeza
+issue_one_liner=PROD Portal Awam PLTP hakmilik 040210PM00001265 - popup syer tidak sah on Seterusnya; AWAM checkingSyer():462 sums numerators vs max denominator (11 vs 28) though real total = 1 (1/28,1/4,1/8). CODE fix APPROVED by BA ketua 2026-09-25; awaiting BA Redmine ticket
+closed=2026-09-25
+close_note=TICKETED -> QA-281712 (ESOKONGAN #281712, same hakmilik + resit + error); register A32 promoted; canonical doc = projects/coding-projects/active/QA-281712/QA-281712.md
