@@ -1,5 +1,15 @@
 # Current Session
 
+**Last Activity**: 2026-09-25 15:48 — #281656 PRBB resit kaunter tidak masuk (PROD): link-resit data patch via infra + Alter Flow PL→PYB4CE on /14 and /15, verified PROD; quest closed + archived + bounty · DE.
+
+## Session Recap (2026-09-25, ticket-281656-prep worktree)
+- **Ask**: quest-prepare #281656 (PDTAG PRBB, public paid, resit not in Carian Pintas; link + alter to Penyediaan Borang 4Ce dan P1e).
+- **Cause**: public paid at the counter while SDU2 was still open; PL tugasan appeared 11:15, payments 09:26/09:49. Cashiers used manual Bayaran Pelbagai → new hsl_bayaran_fi rows with aplikasi_id NULL; officer fees stayed flag_bayar N.
+- **BA data errors caught**: #15 resit are D84300003/4 (BA typed D84000003/4 = Norshamsul SPPK/2026/484-485 Semakan Pelan); #15 receipts keyed PRBB/2025/15.
+- **Fix**: `1. Tasks\Melaka\Archive\230. II #281656 ...\2. Fix\281656.sql` (6 btrn repoint + 6 fi paid + deposit 646/647), schema-verified, infra ran it. Alter Flow: /14 → nurwaheda@melaka.gov.my, /15 → samsiah_jaamat@melaka.gov.my. みや confirmed.
+- **Slip**: claimed receipts belonged to another payer without showing the evidence script (`show-evidence`, logged).
+- **Carry forward**: PTMLK/03/L/PRBB/2026/8 — same cashier 10:37, RM4,500 manual vs RM9,300 unpaid fees, no PL tugasan → likely future ticket.
+
 **Last Activity**: 2026-09-25 12:00 — /goal bulk-ticket triage → quest sweep (6 tickets, 18 agents, run wf_bb588f6c-e2c) → findings saved to qa_docs + active.txt · DE.
 
 ## Session Recap (2026-09-25, perak-ticket-deploy worktree)
@@ -23,10 +33,3 @@
 | 246923 | Item 6 not filled on PTG entry + duplicate PLPS block | ~22 lines | 60% | 5 h | STG T2 discriminator + BA Q1 |
 | 275043 + 244600 | always-bump save override + common WordEditorService draft on any upload | ~11 lines ours + common hand-off | 65-70% | 1 day | one paired session |
 | 281568 | done on PROD | none | — | — | confirm + close block |
-
-## Working Memory (2026-09-25)
-- Quest docs live in MAIN `projects/coding-projects/active/` — worktree copies are hook-redirect artifacts; check both when asked "have we done X".
-- mlit PT PYSKTPDT still `-PT-PTTGGI-PTK-` (not patched). No code or DB changed this session.
-
-**Last Activity**: 2026-09-24 18:55 — #281392 4Ae hotfix (DMMLMS) shipped on mlk/hotfix/281392 → int-env 70c28f0157 + stag-env ba79202142; reset script rev 2; hotfix audit built (hotfix skill · HOTFIX lane · quest-exists-gate · db-claim-proof); QA-281392 archived + bounty · DE.
-**Last Activity**: 2026-09-24 18:55 — Selangor PLMS adhoc answered (pelan GPTOL patch location = permohonan, not versi lesen); ADHOC-SGR-PLMS-2026-1 closed + archived; DE.

@@ -4,6 +4,13 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Working Memory (2026-09-25)
+- Quest docs live in MAIN `projects/coding-projects/active/` — worktree copies are hook-redirect artifacts; check both when asked "have we done X".
+- mlit PT PYSKTPDT still `-PT-PTTGGI-PTK-` (not patched). No code or DB changed this session.
+
+**Last Activity**: 2026-09-24 18:55 — #281392 4Ae hotfix (DMMLMS) shipped on mlk/hotfix/281392 → int-env 70c28f0157 + stag-env ba79202142; reset script rev 2; hotfix audit built (hotfix skill · HOTFIX lane · quest-exists-gate · db-claim-proof); QA-281392 archived + bounty · DE.
+**Last Activity**: 2026-09-24 18:55 — Selangor PLMS adhoc answered (pelan GPTOL patch location = permohonan, not versi lesen); ADHOC-SGR-PLMS-2026-1 closed + archived; DE.
+
 ## Session Recap (2026-09-24 evening, gptol-patching-location worktree)
 - **Ask**: PLMS Penyediaan Borang (PYB4AE, langkah PYB4AE_2 Maklumat Pelan L1e): when patching the pelan GPTOL, patch permohonan or versi lesen? Is it by No Lesen? **State = Selangor** (みや said so only at close).
 - **Answer**: permohonan. `PelupusanReportService.getLaporanBorangL1e()` reads `UMM_A_DOK_KELUARAN` by the PLMS aplikasi + `GPTOL`, then latest active `DOKUMEN` (medan UMM_A_DOK_KELUARAN, medan_pk = adk id). No Lesen only drives the MLMS branch, which still ends on an aplikasi. `IND_VERSI_PERMIT_LESEN.PELAN_DOK_ID` = decoy, never read.
@@ -5289,6 +5296,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

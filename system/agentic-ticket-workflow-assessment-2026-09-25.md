@@ -35,3 +35,13 @@ Session: bulk-ticket /goal → quest sweep `wf_bb588f6c-e2c` (6 tickets, 18 agen
 | P3 | A3 | Triage reads the qa_doc (main + worktrees) and greps etanah-knowledge for the tables named in a verdict before stating a confidence | The 274266 morning claim meets `FLOWABLE-KNOWLEDGE.md:395` before it is sent. |
 | P4 | A1 | Wrap bare-registered hooks for telemetry before any RETIRE ruling | `attachment-ledger-gate` shows at least 1 fire for 2026-09-25. |
 | P5 | A4 | Triage adds a branch-presence column (master / int-env / stag-env) for every ticket commit | 265109 shows `67dda807e2` as int-env only. |
+
+## Session 2 addendum — #281656 (PRBB resit kaunter, PROD data patch + alter)
+
+| Axis | Assessment (instance) | Proposal logged |
+|---|---|---|
+| A1 agentic system | audit-briefing says `sql-schema-verify` 0 fires, yet it blocked this session's Stop on `281656.sql` → Stop-bundle fires missing from the fire log | A1 telemetry proposal |
+| A2 quest workflow | worktree-isolation hook blocked Write to the main-repo QA doc (gitignored, main-only) → worktree copy + Copy-Item at close | A2 allow gitignored projects/ |
+| A3 debugging | redmine-write-gate blocked read-only `ticket-load-verify.js`; fell back to reading synced files by hand | A3 READ_ONLY_SCRIPT add |
+| A4 etanah solving | receipt → btrn → fi → aplikasi trace settled the ticket in 3 SELECTs; caught 2 BA data errors; sibling + writer code confirmed patch shape | A4 daily manual-PRBB-payment detector |
+| A5 sweep | ⏭ no file/ticket sweep this session | — |
