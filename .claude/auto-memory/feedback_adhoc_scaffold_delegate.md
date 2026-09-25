@@ -12,4 +12,6 @@ When an adhoc arrives that involves a real investigation — it names a `PTMLK/�
 
 **Why:** みや tracks adhocs as first-class work items on the board (existing: ADHOC-PPTPB-2026-1/-2, ADHOC-PRBB-2026-1, ADHOC-MLPS-2026-1). An un-scaffolded adhoc has no folder and no board presence, so it gets lost and there is nowhere to park the deliverable. He corrected this on the PPTPB Hantar-error adhoc (2026-08-17): I went straight to inline diagnosis with no Task folder and no delegation.
 
+**Every save round (2026-09-25, みや):** invoke the `adhoc-save` skill → write/update all 4 save-set parts → `node lib/adhoc-save-audit.js <ADHOC-ID>` → fix every FAIL (and the tool that caused it) → re-run until green, in the same turn. AWAM relays anchor on hakmilik id / No Resit, not a PTMLK id.
+
 **How to apply:** on adhoc intake, invoke `/quest` (or delegate a general-purpose subagent) to create the Task folder + `active.txt` block BEFORE or in parallel with the diagnosis. Root gap: the quest `ticket-gate` force-injects on Redmine QA numbers but NOT on bare `PTMLK/…` permohonan-IDs or the word "adhoc" — so the trigger did not fire on its own. Related: [[feedback_agent_execute_in_quest]].

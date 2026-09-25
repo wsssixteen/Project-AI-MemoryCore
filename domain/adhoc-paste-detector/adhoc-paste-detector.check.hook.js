@@ -43,6 +43,11 @@ const F_USER    = /^\s*(?:user|pengguna)\s*:/im;
 
 // Permohonan id like PTMLK/02/L/PT/2026/1 (state-office/district/L/urusan/year/n).
 const PERMOHONAN_ID_RE = /\b[A-Z]{2,5}\/\d{2}\/[A-Z]\/[A-Z]+\/\d{4}\/\d+\b/i;
+// AWAM relays carry no permohonan-id — the anchor is the hakmilik id or the carian-rasmi receipt
+// (WIDENED 2026-09-25: PDTMT "Portal Awam / Urusan : PLTP / ID hakmilik : 040210PM00001265 /
+// No. resit carian rasmi : 02CR3761/2026" matched neither shape and was answered with no scaffold).
+const AWAM_KEY_RE = /\bid\s*hakmilik\s*:\s*\S+|\bno\.?\s*resit(?:\s*carian(?:\s*rasmi)?)?\s*:\s*\S+|\b\d{6}[A-Z]{2,5}\d{5,8}\b/i;
+function hasAnchor(prompt) { return PERMOHONAN_ID_RE.test(prompt) || AWAM_KEY_RE.test(prompt); }
 // Office-code the BA relay opens with (Pejabat Daerah dan Tanah — PDTJ Jasin, PDTAG Alor Gajah,
 // PDTMT Melaka Tengah; tolerate other PDT* districts). Word-bounded so "PDTx" inside a path can't hit.
 const OFFICE_RE = /\b(PDTJ|PDTAG|PDTMT|PDT[A-Z]{1,4})\b/;
@@ -76,8 +81,8 @@ runHook({ name: 'adhoc-paste-detector', event: 'UserPromptSubmit' }, (input) => 
   //  (a) labelled: >=3 of 4 field labels + a permohonan-id (the original 2026-08-13 trigger), OR
   //  (b) freeform: a permohonan-id + an issue-description signal (office code alone is NOT enough —
   //      "PDTJ asked about X" with no id has nothing to scaffold; the id is the anchor).
-  const labelledPath = fieldCount(prompt) >= 3 && PERMOHONAN_ID_RE.test(prompt);
-  const freeformPath = PERMOHONAN_ID_RE.test(prompt) && ISSUE_RE.test(prompt);
+  const labelledPath = fieldCount(prompt) >= 3 && hasAnchor(prompt);
+  const freeformPath = hasAnchor(prompt) && ISSUE_RE.test(prompt);
   if (!labelledPath && !freeformPath) return { fired: false };
 
   const urusan = extractUrusan(prompt);
@@ -99,6 +104,8 @@ runHook({ name: 'adhoc-paste-detector', event: 'UserPromptSubmit' }, (input) => 
     '        node quest/active-cli.js start ADHOC-' + urusan + '-<year>-<n> phase=0 status=active ticket_type=adhoc env=<ENV> urusan=' + urusan + ' quest_start=@now local_test_confirmed=false adhoc_register_row=<A#> qa_doc=<path> task_folder="<folder>" issue_one_liner="<...>"',
     '     3. ADHOC-REGISTER.md: append the next A# row (grep-able identifiers, honest Status).',
     '     4. qa_doc: projects/coding-projects/active/ADHOC-<slug>/ADHOC-<slug>.md — full investigation.',
+    '     5. EVERY save round → invoke the `adhoc-save` skill: write the set, then',
+    '        node lib/adhoc-save-audit.js ADHOC-<slug>  → fix every FAIL, re-run until green.',
     '',
     '   Bypass (genuinely not an ADHOC / already scaffolded): [skip-adhoc-paste: <reason>]',
   ];

@@ -85,6 +85,15 @@ const cases = [
   { id: 'P11 permohonan-id + issue words, no office code, FIRES', prompt:
       'boleh check kenapa PTMLK/03/L/MCL/2026/12 tak boleh proceed? ralat keluar',
     want: ['adhoc-paste-detector', 'ADHOC-MCL'], notWant: [] },
+  // ── WIDENED 2026-09-25: AWAM relay keyed by hakmilik + resit, no permohonan-id (slip replay) ──
+  { id: 'P12 AWAM PLTP relay (hakmilik + resit, 2026-09-25 slip replay) FIRES + names adhoc-save', prompt: [
+      'PDTMT', '', 'Portal Awam', 'Urusan : PLTP', 'ID hakmilik : 040210PM00001265',
+      'No. resit carian rasmi : 02CR3761/2026', '', 'Isu',
+      'Papar "Info : Maaf syer yang dimasukkan tidak sah atau melebihi had." bila klik seterusnya',
+    ].join('\n'),
+    want: ['adhoc-paste-detector', 'MANDATORY scaffold', 'ADHOC-PLTP', 'adhoc-save-audit.js'], notWant: [] },
+  { id: 'P13 hakmilik id without issue words is SILENT', prompt: 'hakmilik 040210PM00001265 tu luas berapa',
+    want: [], notWant: ['adhoc-paste-detector'] },
 ];
 
 for (const c of cases) {
