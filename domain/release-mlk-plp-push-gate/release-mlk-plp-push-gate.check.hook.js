@@ -30,7 +30,12 @@ runHook({ name: 'release-mlk-plp-push-gate', event: 'PreToolUse' }, (input) => {
   const cmd = (data.tool_input && data.tool_input.command) || '';
   // v2 fix (2026-08-19): /git\s+push/ NEVER matched `git -C <path> push ...` — the form every
   // manual push actually uses. The gate was blind since birth. Now: git … push on one line.
-  if (!/\bgit\b[^\r\n|;&]*\bpush\b/.test(cmd)) return { fired: false };
+  // v3 (2026-09-23): anchor on a REAL git invocation — `git` at command start or after ; & | —
+  // so free text inside a quoted node/forge/slips argument that merely mentions "push" and a
+  // branch name never trips the gate (two false blocks on 2026-09-23, #280176 DE).
+  const GIT_PUSH = /(?:^|[;&|]\s*)git\s+(?:-C\s+(?:"[^"]+"|'[^']+'|\S+)\s+)?push\b([^\r\n|;&]*)/;
+  const gp = GIT_PUSH.exec(cmd);
+  if (!gp) return { fired: false };
   if (/RELEASE_GATE_BYPASS/.test(cmd)) {
     return { fired: true, blocked: false, bypassed: true, bypassToken: 'RELEASE_GATE_BYPASS' };
   }
@@ -38,7 +43,7 @@ runHook({ name: 'release-mlk-plp-push-gate', event: 'PreToolUse' }, (input) => {
   // via release-prep.js merge-to-master --ba-approved (V8). Its child-process git never passes
   // through tool hooks, so ANY mlk/master push seen here is a manual breach (the 1.3.5 class:
   // hand-merged to master without BA pass). MemoryCore pushes (main/claude/*) are untouched.
-  if (/\bgit\b[^\r\n|;&]*\bpush\b[^\r\n|;&]*\bmlk\/master\b/.test(cmd)) {
+  if (/\bmlk\/master\b/.test(gp[1])) {
     return {
       fired: true, blocked: true,
       blockReason: '⛔ release-mlk-plp-push-gate v2: manual push of mlk/master is BANNED — master moves only via release-prep.js merge-to-master --release <ver> --ba-approved (V8: BA baseline pass first). Bypass: RELEASE_GATE_BYPASS in the command.',

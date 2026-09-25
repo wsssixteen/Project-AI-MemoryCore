@@ -2,7 +2,9 @@
 
 
 ## Feedback
+- [probe-builds-local-only](feedback_probe_builds_local_only.md) — 🚨 PROBE/logger builds are tested on miya's LOCAL JBoss only, never merged/pushed to int-env/stag-env/master/release; gate domain/probe-local-only-gate; "for now"
 - [permohonan-holder-resolver](feedback_permohonan_holder_resolver.md) — 🚨 permohonan id = umm_aplikasi.id_pengenalan; resolve live holder from DB on the right env, never from ticket text
+- [hotfix-branch-from-master](feedback_hotfix_branch_from_master.md) — 🚨 PROD hotfix on a released ticket → mlk/hotfix/<ticket> off latest origin/mlk/master; old ticket branch = reference only
 - [branch-before-merge](feedback_branch_before_merge.md) — 🚨 fix goes on its OWN ticket branch FIRST, then merge to env branches; never commit straight to int-env/stag-env
 - [diff-first-on-comparison](feedback_diff_first_on_comparison.md) — 🚨 "why A differs from B" / specific-instance question → pull BOTH real values + diff FIRST, lead with the diff, mechanism only after
 - [popup-questions](feedback_popup_questions.md) — 🚨 decisions via AskUserQuestion popups, not chat rounds; side builds → own session via spawn_task with full handover
@@ -83,6 +85,8 @@
 - [redmine-write-needs-nod](feedback_redmine_write_needs_nod.md) — 🚨 Every Redmine WRITE runs under miya's name; first write on…
 - [flowable-node-edge-trace](feedback_flowable_node_edge_trace.md) — 🚨 Never pick/assert a Flowable Alter target node by
 - [patch-only-justify-and-scope-sweep](feedback_patch_only_justify_and_scope_sweep.md) — 🚨 Data-patch-only handback MUST carry (a) the write-path code that c…
+- [deploy-staging-implies-internal](feedback_deploy_staging_implies_internal.md) — 🚨 "deploy to staging" = stag-env AND int-env; "deploy to internal" = int-env only (salvaged 2026-09-25 from stranded worktree)
+- [rework-commit-on-existing-ticket-branch](feedback_rework_commit_on_existing_ticket_branch.md) — 🚨 rework commits ON TOP of the existing ticket branch, never a new vN branch (salvaged 2026-09-25)
 
 ## User
 - [miya-blind-to-features](user_miya_blind_to_features.md) — 🚨 miya cannot know every feature; Ruri owns the audit from logs + go…
@@ -169,5 +173,6 @@
 - [simplify-and-reference](feedback_simplify_and_reference.md) — Mature system → find working analog first; "simplify" means…
 - [tasks-folder-format](feedback_tasks_folder_format.md) — Files in 1. Tasks\Melaka\ must be .txt by default, not .md
 - [ticket-writing-style](feedback_ticket_writing_style.md) — write ticket/handoff text in miya's plain short-sentence…
+- [template-work-junior-builds](feedback_template_work_junior_builds.md) — 🚨 template .docx tickets: junior builds, miya guides; I draft the guide note, ASK before building a docx
 - [recheck-at-last-checkpoint](feedback_recheck_at_last_checkpoint.md) — 🚨 One-shot Phase-0 audit ≠ prevention; completeness checks…
 - [knowledge-schema-parity](feedback_knowledge_schema_parity.md) — 🚨 Every etanah-knowledge/<state>/ uses the SAME file names +…

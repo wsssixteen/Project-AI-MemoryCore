@@ -168,6 +168,35 @@ function checkC5(events, watchLines, sessionStartMs) {
   return { pass: missing.length === 0, missing, edited: edited.length };
 }
 
+// C7 — QA_DOC SAVED (2026-09-23, #280176 DE audit F6): step 2c says "save every quest touched", but
+// nothing checked it. Every touched ticket whose block names a qa_doc must have that file modified
+// since the session started. A doc absent on disk is skipped (the qa_doc is untracked and lives in
+// the main repo; a worktree resolves it via the main checkout three levels up).
+function qaDocOf(id, blocksText) {
+  const m = new RegExp('(?:^|\\n)qa=' + id.replace(/[-]/g, '\\-') + '\\b[\\s\\S]*?(?=\\n\\s*\\n|$)').exec(blocksText);
+  if (!m) return null;
+  const f = /(?:^|\n)\s*qa_doc=([^\r\n]+)/.exec(m[0]);
+  return f ? f[1].trim() : null;
+}
+function qaDocMtime(rel) {
+  const roots = [ROOT];
+  if (/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+$/.test(ROOT)) roots.push(path.resolve(ROOT, '..', '..', '..'));
+  for (const r of roots) { try { return fs.statSync(path.join(r, rel)).mtimeMs; } catch (_) {} }
+  return null;
+}
+function checkC7(events, activeText, archiveText, sessionStartMs, mtimeOverride) {
+  if (!sessionStartMs) return { pass: true, stale: [] };
+  const blocks = activeText + '\n\n' + archiveText;
+  const stale = [];
+  for (const id of touchedTickets(events)) {
+    const rel = qaDocOf(id, blocks); if (!rel) continue;
+    const mt = mtimeOverride && id in mtimeOverride ? mtimeOverride[id] : qaDocMtime(rel);
+    if (mt === null) continue;
+    if (mt < sessionStartMs) stale.push(id + ' (' + rel + ')');
+  }
+  return { pass: stale.length === 0, stale };
+}
+
 function evaluate(events, disk) {
   const last = lastAssistantText(events);
   if (!last || !DE_CLOSE.test(last)) return { verdict: 'silent', reason: 'not-de-close' };
@@ -178,8 +207,9 @@ function evaluate(events, disk) {
   const c4 = checkC4(disk.gateLogLines, disk.now);
   const c5 = checkC5(events, disk.watchLines || [], disk.sessionStartMs || 0);
   const c6 = checkC6(disk.gateLogLines, disk.now);
-  if (c1.pass && c2.pass && c3.pass && c4.pass && c5.pass && c6.pass) return { verdict: 'pass', c1, c2, c3, c4, c5, c6 };
-  return { verdict: 'block', c1, c2, c3, c4, c5, c6 };
+  const c7 = checkC7(events, disk.activeText, disk.archiveText, disk.sessionStartMs || 0, disk.qaDocMtimes);
+  if (c1.pass && c2.pass && c3.pass && c4.pass && c5.pass && c6.pass && c7.pass) return { verdict: 'pass', c1, c2, c3, c4, c5, c6, c7 };
+  return { verdict: 'block', c1, c2, c3, c4, c5, c6, c7 };
 }
 
 function readDisk() {
@@ -214,6 +244,8 @@ function buildBlockReason(r) {
     '   Fix: node lib/watch.js add --target <file> --observe "<what to watch for>" — one per file, then re-close.');
   if (r.c6 && !r.c6.pass) rows.push('C6 AUDIT BRIEFING NOT RUN this session (DE step 7.4) — the NOT WORKING / TOO SLOW / MISTAKES / HIGH-RETURN screen was never read.',
     '   Fix: node lib/audit-briefing.js --days 7 — paste the 4 blocks + rulings into the DE reply, then re-close.');
+  if (r.c7 && !r.c7.pass) rows.push(`C7 QA_DOC NOT SAVED this session (DE step 2c): ${r.c7.stale.join(', ')}`,
+    '   Fix: append the dated save block to each qa_doc (phase/status · what moved · resume point · deferred table), then re-close.');
   return [
     '⛔ de-close-gate: Domain Expansion is closing but a deterministic close-condition FAILED:',
     ...rows.map(x => '   ' + x),
@@ -239,13 +271,14 @@ if (require.main === module) {
     if (Array.isArray(data._testGateLogLines)) disk.gateLogLines = data._testGateLogLines;
     if (typeof data._testSessionLineCount === 'number') disk.sessionLineCount = data._testSessionLineCount;
     if (Array.isArray(data._testWatchLines)) disk.watchLines = data._testWatchLines;
+    if (data._testQaDocMtimes && typeof data._testQaDocMtimes === 'object') disk.qaDocMtimes = data._testQaDocMtimes;
     if (typeof data._testSessionStartMs === 'number') disk.sessionStartMs = data._testSessionStartMs;
     else { const first = events.find(e => e.ts); disk.sessionStartMs = first && Date.parse(first.ts) || 0; }
 
     const r = evaluate(events, disk);
     if (r.verdict === 'block') {
       const text = buildBlockReason(r);
-      logFire('blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4', r.c5 && !r.c5.pass && ('C5:' + r.c5.missing.length), r.c6 && !r.c6.pass && 'C6'].filter(Boolean).join(' '));
+      logFire('blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4', r.c5 && !r.c5.pass && ('C5:' + r.c5.missing.length), r.c6 && !r.c6.pass && 'C6', r.c7 && !r.c7.pass && ('C7:' + r.c7.stale.length)].filter(Boolean).join(' '));
       return { fired: true, blocked: true, blockReason: text };
     }
     if (r.verdict === 'pass') { logFire('passed', `touched=${r.c1.touchedCount} rr-age=${r.c2.ageH}h lines=${r.c3.lineCount} recon-age=${r.c4.ageH}h`); return { fired: true, blocked: false }; }
@@ -253,4 +286,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4, checkC5, checkC6, editedSystemFiles };
+module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4, checkC5, checkC6, checkC7, editedSystemFiles };

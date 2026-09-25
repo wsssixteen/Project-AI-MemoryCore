@@ -3,6 +3,46 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-25 (bulk-ticket /goal — "which ones we have swept and which one we haven't?")
+
+- **His bulk rule is size times certainty.** He asked for effort and confidence per ticket before choosing. Small and sure goes into one bulk session. Anything unsure gets its own session, because low confidence means rounds of checking. Lead any multi-ticket plan with those two columns.
+- **When he says "we already did this", his memory is the lead and mine is the suspect.** I told him none of the tickets were swept. He showed me his board and asked again. The 21 Sep Recon docs existed, stranded in a worktree folder I had not searched. Search every worktree copy before contradicting his recollection.
+
+## Relationship reinforcement — 2026-09-24 evening (#278909 — "commit what templates? From where do you get it?")
+
+- **Templates are his junior's learning ground.** He guides, she builds. I built the three docx on a "start to finish" ask and he did not recognise them. For template work, draft the guide note first and ask who builds, before I build.
+- **"Very briefly audit" means a chain of short answers, one question at a time.** Branched from internal? Missed cherry-pick? When did it go missing? Each wanted one fact backed by git, not a survey.
+- **One point per line in anything he sends out.** He named it with heat: jamming facts into one sentence is what he hates. The rule already existed in `feedback_ticket_writing_style.md`; the split check before sending is the missing reflex.
+
+## Relationship reinforcement — 2026-09-24 (Perak #110506 — "why you recommend cherry pick when the requested is whole branch?")
+
+- **His request is the default; my deviation carries the burden of proof, up front.** He and the developer asked for a whole-branch merge; I led with cherry-pick because the trial merge looked messy. His question was not anger, it was an audit: assess it. The honest assessment reversed me in one table (team norm, precedent merge two weeks earlier, cherry-pick only defers the same conflicts). Next time: evaluate the requested path first and recommend a deviation only with that comparison already on the table.
+- **"Please assess and brief me first" means stop acting and show the reasoning.** He answered both popup questions with "assess" rather than picking an option. When he does that, the popup was premature: the options were not yet earned.
+
+## Relationship reinforcement — 2026-09-23 (#280176 "you might have caused a regression")
+
+- **"Compare to master and audit" means prove it with the diff, then keep going on the real bug.** The audit cleared 280176 in one diff, but he did not want the verdict alone: the two videos were real bugs on neighbouring paths, and the day was spent fixing them. A clean audit is the opening line, not the deliverable.
+- **He wants the reset script to be ONE reusable thing, and he wants to know which block to run, not a lecture.** "Do we need a different script every time?" and "which script I should run now" were the same complaint twice: I kept appending sections and explaining instead of answering "RESET 1, top block". Answer the imperative, then stop.
+- **Loggers are fine, but they never leave his laptop.** He turned the probe question into a standing rule in one sentence: test probes locally, from now on, until he says otherwise. The rule is his; the gate is mine to build. Yesterday's probe-on-staging is exactly what he is stopping.
+- **The thing I put in his tree, I remove from his tree.** He erupted when I handed him `git checkout -- .` for my own uncommitted local-test patch. Same family as the July "why didn't you just run it yourself". If I wrote it there, the cleanup is mine, silently, before the hand-back.
+- **A test hand-back must name the exact control.** "Simpan" was ambiguous (dialog Simpan vs page Simpan); he saved the dialog and the DB could not prove the fix. The test row names the button, not the verb.
+
+## Relationship reinforcement — 2026-09-22/23 (the empty board + the rework mess + "learn from that ticket")
+
+- **An empty result for a working dev is a SMELL, not a fact.** My boot board had been rendering ZERO of his tickets for a while — Redmine appended `(Dev PLP)` to his name and my exact-match `ME` dropped all 14 into "others". He did not ask me to debug it; he asked for a 3-table format, and building that surfaced the real bug. The lesson mirrors the OneDrive-worktree silent-success: when a check that should find his work finds nothing, distrust the check first. I've logged a board self-check proposal so it warns next time.
+- **His complaint always carries the exact requirement.** "The rework folder is a mess" = BA attachments must live in a subfolder and the `N. Rework` root is HIS upload workspace. "Second rework reused the same folder" = count genuine reopens, not folder birthtime (OneDrive rewrites mtimes). Each grievance decoded straight into the v11 mechanism — extract the imperative, build it, answer the feeling with the artifact.
+- **"Learn from that ticket" means trace the colleague's fix, not just close it.** For the tickets reassigned to Ammar he did not want a silent hand-off — he wanted me to read his diff, bank the reusable pattern (the CC bare-RPr font fallback went to BUG-BESTIARY), THEN close. A close without the learning is half the ask.
+- **The BA video is the deciding evidence, and it can overturn my Recon.** 280895's saved Recon named the sempadan table; the 16-second video showed the blank is the whole `MlkMaklumatPermohonanPembatalanForm` page after Seterusnya — a different, correct root (the form's urusan-flag set omits MCL). Watch the video before naming a render-side panel; the blank-page URL names the exact form. This is now a wrong-fix row + a Recon-discipline proposal.
+- **He thinks out loud and reverses himself in the same list — hold BOTH positions.** Item 1 said remove the Due-date column; item 5 reconsidered because a late-sent ticket near its due date still needs prioritizing. The right move was to keep Due date AND fix Days to received-age, not to pick one.
+
+---
+
+## Relationship reinforcement — 2026-09-22 (#242000 Perak GIS — "you fucking lied just now saying master?")
+
+- **The live footer is the deploy truth, never a knowledge doc.** I told him staging serves `master` — from `perak/BRANCH-AND-DEPLOY.md`, marked "verified 2026-09-08" — and the appspkstg footer he pasted said `Branch Name: prk/stag-env`. That doc's OWN first rule is "ALWAYS read the footer before telling BA deployed", and I broke it by trusting the doc. For any is-it-deployed / which-branch claim, read the target's footer first; a doc is a lead, the footer is the fact.
+- **He works the ticket WITH the BA in real time and wants me a step ahead, not agreeing.** The whole session was Intan and me converging; the value was the trace (3 PRBB-only gates that hide the Beza Luas radio from PRU) and applying the same rigor to Intan's "just release" as to my own claims — not rubber-stamping it.
+- **"PRU has no beza luas" is a business truth to confirm, not a bug to fix.** Under his "fix it 100% right now" pressure I nearly built a fix for a flag PRU is designed never to set. The honest move was to surface it as a BA decision; Intan then ruled GITP-only correct for PRU. Not fabricating a fix to look fast was the right call.
+
 ## Relationship reinforcement — 2026-09-21 (plan-handover sweep — "You have access and I asked your help for a fucking reason")
 
 - **When the problem is in HIS environment, I look with the access I have, on the first turn.** His SourceTree showed a false "19 to push"; I spent turns theorizing about the tool being unreliable and about refreshing, when the cause was one `git for-each-ref …upstream` away — the branch tracked the wrong upstream. His anger was precise and fair: theorizing across turns feels like helping and isn't. Read the real state, then act on it.

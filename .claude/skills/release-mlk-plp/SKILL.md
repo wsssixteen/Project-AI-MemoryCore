@@ -151,6 +151,14 @@ PLAN(V1) → BRANCH → MERGE(V2 per conflict) → VERIFY(V3)
       so the next baseline greps instead of re-deriving. **Delete superseded/wrong branches** (miya's rule)
       once the canonical branch is confirmed on master — a wrong branch left alive is the next v2/v3 trap.
 
+   4. **ENV-TESTED (added 2026-09-23, Baseline 1.6.3 / #280166)** — `audit-ticket` now prints, per branch,
+      whether its code is on `int-env` / `stag-env` (`env-tested.js`). BA only tests what an env carries, so
+      `🚨 UNTESTED` (branch code on no env) or `🚨 REMOVED` (was on an env, reverted/overwritten there) means
+      **nobody tested it** — surface it at V1 with the missing lines and ask whether it ships. `verify` BLOCKS
+      on it; the only override is `ack-untested --ticket <t> --reason "<why>"`. **Why**: #280166's branch held
+      88 lines of Java that never reached any env (the real fix was the PLPS flowable model); I read "0 env
+      commits" as clean and merged it — みや caught it after push.
+
    **Banned**: declaring a ticket ready on "a named branch merged" — readiness is **content coverage of the
    complete footprint**, proven by `audit-ticket`, never by branch-reachability alone.
 

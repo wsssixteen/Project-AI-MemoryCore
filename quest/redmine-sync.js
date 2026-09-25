@@ -1,11 +1,17 @@
 // redmine-sync.js — Fetch assigned Redmine tickets, classify, optionally create Task folders
-// Version: v10 (2026-09-14)
+// Version: v11 (2026-09-22)
 // Usage:
 //   node redmine-sync.js           — run once
 //   node redmine-sync.js --poll    — poll every POLL_INTERVAL_MINUTES
 //   node redmine-sync.js <num>     — by-ID single-ticket sync (v9.2; creates if new, refreshes if existing)
 //
 // Changelog (newest first — per-function comments carry the detail):
+//   v11   2026-09-22  miya: rework-cycle folder by GENUINE-REOPEN COUNT, not by folder birthtime
+//                     (OneDrive rewrites mtimes on sync → v10 missed the 2nd reopen of #278699). A
+//                     genuine reopen = non-rework status → rework status; intra-rework hops ignored.
+//                     Each new "N. Rework" gets 0. Brief (BA's new attachments) + 2. Fix (his
+//                     Redmine-upload workspace); attachments route into that 0. Brief, not the root.
+//                     Removed the dead v10 time helpers (latestReworkTransition/newestCycleFolder).
 //   v10   2026-09-14  #278699: rework-cycle folder by TIME, not by count. addStatusFolder creates
 //                     "(max+1). Rework" only when the LATEST journal transition INTO a rework status
 //                     is NEWER than the newest existing "N. Rework"/"N. New" folder (birthtime).
@@ -624,34 +630,23 @@ function isReworkTransition(journal) {
     );
 }
 
-// v10: the NEWEST rework transition in the journal, as a Date (null if none). Hop chains
-// inside one reopen (3→31→23→38) all sit BEFORE the folder that reopen created, so only
-// the latest transition matters — "is there a reopen the disk has not seen yet?".
-function latestReworkTransition(journals) {
-    let latest = null;
-    for (const j of journals || []) {
-        if (!isReworkTransition(j)) continue;
-        const t = new Date(j.created_on);
-        if (isNaN(t)) continue;
-        if (!latest || t > latest) latest = t;
-    }
-    return latest;
+// v11 (miya 2026-09-22): a GENUINE reopen = a status transition FROM a non-rework
+// status INTO a rework status. A hop WITHIN one reopen (Rework -> Rework (Requirement
+// Update): old_value is itself a rework id) is NOT a reopen, so it never inflates the
+// count — that was v8.1's churn. Counting genuine reopens replaces v10's folder-birthtime
+// compare, which OneDrive broke by rewriting folder mtimes on sync (the 2nd-reopen miss
+// miya caught 2026-09-22). Count-based on genuine reopens is deterministic + sync-proof.
+function isGenuineReopen(journal) {
+    return (journal.details || []).some(d =>
+        d.property === 'attr' && d.name === 'status_id'
+        && REWORK_STATUS_IDS.has(String(d.new_value))
+        && !REWORK_STATUS_IDS.has(String(d.old_value))
+    );
+}
+function genuineReopenCount(journals) {
+    return (journals || []).filter(isGenuineReopen).length;
 }
 
-// v10: the newest "N. Rework" / "N. New" subfolder by number, with its creation time.
-// birthtime is the folder's CreationTime on NTFS; mtime is the fallback for filesystems
-// that report a zero birthtime. Returns { name, num, time } or null when none exists.
-function newestCycleFolder(fullPath) {
-    const entries = fs.readdirSync(fullPath);
-    const cycles = entries
-        .map(e => { const m = e.match(/^(\d+)\.\s*(Rework|New)\s*$/i); return m ? { name: e, num: parseInt(m[1]) } : null; })
-        .filter(Boolean)
-        .sort((a, b) => b.num - a.num);
-    if (!cycles.length) return null;
-    const st = fs.statSync(path.join(fullPath, cycles[0].name));
-    const time = (st.birthtimeMs && st.birthtimeMs > 0) ? st.birthtime : st.mtime;
-    return { name: cycles[0].name, num: cycles[0].num, time };
-}
 
 // Move a Task folder OUT of Archive/ back to the active level with a new
 // number — fires when a previously-closed ticket is reopened to Rework.
@@ -671,8 +666,25 @@ function unarchiveFolder(archiveRelPath, base = TASKS_FOLDER) {
 
 // Download attachments NOT already present at the candidate known-files list.
 // Used at rework time to fetch the new BA screenshots that came with the reopen.
+// Every filename anywhere UNDER dir (recursive). v11: attachments now nest one level
+// deeper ("N. Rework/0. Brief/"), so a 1-level scan would miss them and re-download on
+// each sync — the dedup must see all depths.
+function collectFilesRecursive(dir) {
+    const out = new Set();
+    const walk = d => {
+        let entries; try { entries = fs.readdirSync(d, { withFileTypes: true }); } catch { return; }
+        for (const e of entries) {
+            if (e.isDirectory()) walk(path.join(d, e.name));
+            else out.add(e.name);
+        }
+    };
+    walk(dir);
+    return out;
+}
+
 async function downloadNewAttachments(destFolder, issueId, knownFilenames) {
     const attachments = await fetchAttachments(issueId);
+    fs.mkdirSync(destFolder, { recursive: true }); // target may be a fresh N. Rework/0. Brief
     const known = new Set(knownFilenames);
     const downloaded = [];
     for (const att of attachments) {
@@ -716,37 +728,36 @@ async function addStatusFolder(existingFolderName, status, journals, base = TASK
     const fullPath = path.join(base, folderRelPath);
     if (!fs.existsSync(fullPath)) return null;
 
-    // (2) One rework cycle folder per GENUINE reopen — decided by TIME, not by count.
-    //   v8.1 (2026-08-21, #276181 audit — B5): the old `journalReworkCount >
-    //   reworkSubfolderCount` count churned once isReworkTransition matched a SET of
-    //   rework ids: a single reopen hops through several rework statuses (3→31→23→3→38),
-    //   so one cycle counted as 3 and each re-sync spawned another empty N. Rework folder.
-    //   v8.1's cure ("only when NONE exists") over-corrected: #278699 was returned to
-    //   Rework twice (2026-09-09 03:53Z and 2026-09-11 10:55Z) and both cycles' attachments
-    //   piled into the single 3. Rework — /quest resume could not see a 2nd cycle.
-    //   v10 (2026-09-14): compare the LATEST rework transition's created_on against the
-    //   CreationTime of the newest "N. Rework"/"N. New" folder. Newer transition = a reopen
-    //   the disk has not seen → create "(max+1). Rework". Otherwise nothing. Every folder
-    //   this creates is born AFTER the transition it answers, so a re-sync is a no-op; a hop
-    //   chain inside one reopen is all older than the folder it spawned → still one folder.
-    const entries = fs.readdirSync(fullPath);
-    const newest = newestCycleFolder(fullPath);
-    const latestReopen = latestReworkTransition(journals);
-
-    // No rework transition in the journal but status IS rework (journal not included /
-    // status set at creation) → fall back to "none exists yet", as v8.1 did.
-    const needsFolder = newest === null
-        ? true
-        : (latestReopen !== null && latestReopen > newest.time);
+    // (2) One rework CYCLE folder per GENUINE reopen (v11, miya 2026-09-22).
+    //   History: v8.1's count churned on intra-reopen hops (3→31→23→38 = 1 reopen counted
+    //   as 3); v10 switched to comparing the latest transition time against the folder's
+    //   birthtime, but OneDrive rewrites folder mtimes on sync, so the 2nd reopen of #278699
+    //   was MISSED — the bug miya caught. v11 counts GENUINE reopens (non-rework → rework,
+    //   ignoring intra-rework hops) and compares that count to the cycle folders on disk. No
+    //   timestamps, so OneDrive cannot break it; idempotent on re-sync.
+    const cycleFolders = fs.readdirSync(fullPath)
+        .filter(e => /^\d+\.\s*(Rework|New)\s*$/i.test(e));
+    const reopens = genuineReopenCount(journals);
+    // Fallback: journals not included / status set at creation with no transition → ensure
+    // at least one cycle when none exists yet (mirrors the old "none exists yet" fallback).
+    const wanted  = Math.max(reopens, cycleFolders.length === 0 ? 1 : 0);
+    const deficit = Math.max(0, wanted - cycleFolders.length);
 
     let statusFolderPath = null;
-    if (needsFolder) {
-        const nums = entries
+    if (deficit > 0) {
+        const nums = fs.readdirSync(fullPath)
             .map(e => { const em = e.match(/^(\d+)\./); return em ? parseInt(em[1]) : null; })
             .filter(n => n !== null);
-        const next = nums.length ? Math.max(...nums) + 1 : 3;
-        statusFolderPath = path.join(fullPath, `${next}. Rework`);
-        fs.mkdirSync(statusFolderPath, { recursive: true });
+        let next = nums.length ? Math.max(...nums) + 1 : 3;
+        for (let k = 0; k < deficit; k++, next++) {
+            const cyclePath = path.join(fullPath, `${next}. Rework`);
+            // Mirror the Task-folder subfolder convention (items 3+4, miya 2026-09-22):
+            // BA's NEW attachments land in 0. Brief; his fixes / Redmine-upload files go in
+            // 2. Fix. Keeps the rework root clean instead of a loose dump of mixed files.
+            fs.mkdirSync(path.join(cyclePath, '0. Brief'), { recursive: true });
+            fs.mkdirSync(path.join(cyclePath, '2. Fix'),   { recursive: true });
+            statusFolderPath = cyclePath; // newest cycle = attachment target
+        }
     }
 
     return { folderRelPath, unarchived, statusFolderPath };
@@ -868,14 +879,12 @@ async function syncAttachmentsForExisting(results) {
             .map(e => { const m = e.match(/^(\d+)\.\s*(Rework|New)\s*$/i); return m ? { name: e, num: parseInt(m[1]) } : null; })
             .filter(Boolean)
             .sort((a, b) => b.num - a.num);
+        // v11 (miya 2026-09-22): BA's new attachments go in the rework's 0. Brief subfolder,
+        // not loose in the N. Rework root (that root is his fixes / Redmine-upload workspace).
         const targetSubfolder = reworkEntries.length
-            ? path.join(ticketFullPath, reworkEntries[0].name)
+            ? path.join(ticketFullPath, reworkEntries[0].name, '0. Brief')
             : path.join(ticketFullPath, '0. Brief');
-        const known = new Set();
-        for (const e of entries) {
-            const sub = path.join(ticketFullPath, e);
-            try { if (fs.statSync(sub).isDirectory()) fs.readdirSync(sub).forEach(f => known.add(f)); } catch (_) {}
-        }
+        const known = collectFilesRecursive(ticketFullPath);
         const downloaded = await downloadNewAttachments(targetSubfolder, issue.id, Array.from(known));
         for (const f of downloaded) {
             console.log(`    ⬇️  ${f} → ${path.basename(targetSubfolder)}/`);
@@ -981,21 +990,16 @@ async function runWithCreate() {
                     // v7 (2026-08-05): `result` can now be null (no new subfolder needed), so
                     // the old `result.statusFolderPath` fallback would throw. Final fallback is
                     // `0. Brief` — a ticket with no rework subfolder keeps its evidence there.
+                    // v11 (miya 2026-09-22): BA's new attachments go in the rework's 0. Brief
+                    // subfolder (the N. Rework root is his fixes / Redmine-upload workspace).
                     const targetSubfolder = reworkEntries.length
-                        ? path.join(ticketFullPath, reworkEntries[0].name)
-                        : (result && result.statusFolderPath) || path.join(ticketFullPath, '0. Brief');
+                        ? path.join(ticketFullPath, reworkEntries[0].name, '0. Brief')
+                        : (result && result.statusFolderPath && path.join(result.statusFolderPath, '0. Brief'))
+                          || path.join(ticketFullPath, '0. Brief');
                     if (targetSubfolder) {
                         // `known` = every file already present anywhere under the ticket folder
-                        // (0. Brief + every status subfolder) so we never re-download.
-                        const known = new Set();
-                        const briefFolder = path.join(ticketFullPath, '0. Brief');
-                        if (fs.existsSync(briefFolder)) fs.readdirSync(briefFolder).forEach(f => known.add(f));
-                        for (const e of entries) {
-                            const sub = path.join(ticketFullPath, e);
-                            if (fs.statSync(sub).isDirectory()) {
-                                try { fs.readdirSync(sub).forEach(f => known.add(f)); } catch (_) {}
-                            }
-                        }
+                        // (all depths) so we never re-download.
+                        const known = collectFilesRecursive(ticketFullPath);
                         const downloaded = await downloadNewAttachments(targetSubfolder, issue.id, Array.from(known));
                         for (const f of downloaded) {
                             console.log(`    ⬇️  ${f} → ${path.basename(targetSubfolder)}/`);
@@ -1045,7 +1049,7 @@ async function runSingle(id) {
 }
 
 // v10: exported for quest/redmine-sync.eval.js (fixture-driven; no Redmine call in these).
-module.exports = { addStatusFolder, isReworkTransition, latestReworkTransition, newestCycleFolder, REWORK_STATUS_IDS };
+module.exports = { addStatusFolder, isReworkTransition, isGenuineReopen, genuineReopenCount, REWORK_STATUS_IDS };
 
 if (require.main === module) {
     const args   = process.argv.slice(2);

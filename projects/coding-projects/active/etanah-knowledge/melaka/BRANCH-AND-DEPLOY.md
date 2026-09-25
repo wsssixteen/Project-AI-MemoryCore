@@ -187,6 +187,33 @@ release/deploy tooling.
 
 ---
 
+## 8. Hotfix — a PROD break after a release
+
+Workflow: `.claude/skills/hotfix/SKILL.md` (fired by the etanah-intake-gate HOTFIX lane).
+
+| Rule | Command / shape |
+|---|---|
+| Branch off FRESH master, own ticket # | `git fetch origin` → `git checkout --no-track -b mlk/hotfix/<own #> origin/mlk/master` |
+| Never on the closed ticket's branch | the closed # is a reference only; its branch is already released |
+| Work clone, not the local-server clone | `E:\Dev\etanah-work\<repo>` (branch-guard keeps `E:\Projects\Melaka\<repo>` on trunk) |
+| Commit subject | `#<own #> - <URUSAN> - <Tugasan> - <what changed>` |
+| Env order | `mlk/stag-env` (`--no-ff`) → BA test → `mlk/int-env`; release team builds from `mlk/hotfix/<own #>` |
+
+**Renumber** (work started before the own ticket existed, or under the wrong #) — no force-push, no cherry-pick:
+
+| # | Step |
+|---|---|
+| 1 | new branch `mlk/hotfix/<new #>` off fresh `origin/mlk/master` |
+| 2 | per commit A: `git diff A~1 A \| git apply --index` → commit with the new # |
+| 3 | on `mlk/stag-env`: `git revert -m 1 <old merge>` (and any old-# commits), push |
+| 4 | merge `mlk/hotfix/<new #>` into `mlk/stag-env` `--no-ff`, push |
+| 5 | `git push origin --delete mlk/hotfix/<old #>` + delete the local branch |
+
+**Origin**: #281392 (2026-09-24). Four fix commits first landed as `mlk/hotfix/280176` under the closed
+#280176; renumbered by revert `0c76e5deb8` + `da57b0add2` and re-merge `e728e10cab` on stag-env.
+
+---
+
 **Origin**: #271721 (2026-07-27). The route had to be re-derived from git history mid-session
 because nothing documented it; the derivation then missed `mlk/int-env` because the Redmine ticket
 was never read. The ticket said *"merge into mlk/int-env and mlk/stag-env branch and deploy the

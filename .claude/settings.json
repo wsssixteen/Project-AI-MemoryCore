@@ -230,6 +230,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\release-mlk-plp-push-gate\\\\release-mlk-plp-push-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\probe-local-only-gate\\\\probe-local-only-gate.check.hook.js\""
           }
         ]
       },
@@ -239,6 +243,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\release-mlk-plp-push-gate\\\\release-mlk-plp-push-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\probe-local-only-gate\\\\probe-local-only-gate.check.hook.js\""
           }
         ]
       },
@@ -366,6 +374,14 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\live-action-safety\\\\live-action-safety.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\probe-local-only-gate\\\\probe-local-only-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\quest-exists-gate\\\\quest-exists-gate.check.hook.js\""
           }
         ]
       }
@@ -536,6 +552,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\turn-ledger\\\\turn-ledger.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\db-claim-proof\\\\db-claim-proof.check.hook.js\""
           }
         ]
       }

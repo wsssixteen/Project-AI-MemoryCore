@@ -53,7 +53,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `system/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `system-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node system/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 133 hook registrations across 5 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 138 hook registrations across 5 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
@@ -130,7 +130,11 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | PreToolUse | Edit|Write | `no-code-comments-gate.js` | ✓ |
 | PreToolUse | Edit|Write | `pre-action-check-gate.js (bundle pretool-editwrite-gates)` | ✓ |
 | PreToolUse | Edit|Write | `pre-code-check.check.hook.js` | ✓ |
+| PreToolUse | Bash | `probe-local-only-gate.check.hook.js` | ✓ |
+| PreToolUse | PowerShell | `probe-local-only-gate.check.hook.js` | ✓ |
+| PreToolUse | Bash|PowerShell | `probe-local-only-gate.check.hook.js` | ✓ |
 | PreToolUse | mcp__postgres-mlkprod-pg__.* | `prod-db-confirm.discipline.hook.js` | ✓ |
+| PreToolUse | Bash|PowerShell | `quest-exists-gate.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `quest-phase-gate.gate.hook.js` | ✓ |
 | PreToolUse | Bash|PowerShell | `redmine-write-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash | `release-mlk-plp-push-gate.check.hook.js` | ✓ |
@@ -154,6 +158,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | Stop | — | `citation-cross-check.check.hook.js` | ✓ |
 | Stop | — | `codemap-recon-consult.discipline.hook.js` | ✓ |
 | Stop | — | `commit-subject-gate.check.hook.js` | ✓ |
+| Stop | — | `db-claim-proof.check.hook.js` | ✓ |
 | Stop | — | `de-close-gate.check.hook.js` | ✓ |
 | Stop | — | `de-knowledge-gate.check.hook.js` | ✓ |
 | Stop | — | `de-output-integrity-checker.js` | ✓ |

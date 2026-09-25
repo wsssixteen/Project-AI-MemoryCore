@@ -36,7 +36,7 @@ const TELEMETRY = path.join(ROOT, 'system', 'telemetry', 'hook-fires.jsonl');
 function arg(name, required) {
   const i = process.argv.indexOf('--' + name);
   const v = i > 0 ? process.argv[i + 1] : undefined;
-  if (required && (v === undefined || v.startsWith('--'))) die(2, `missing required --${name}`);
+  if (required && (v === undefined || v.startsWith('--'))) die(2, `missing required --${name}\n       forge new check <name> needs ALL of: --event --trigger --action --replay --symptom --goal --signal --retention --nod  [--matcher "<m>"] [--override-collision "<reason>"] [--root <path>]`);
   return v;
 }
 function die(code, msg) { console.error('forge: ' + msg); process.exit(code); }

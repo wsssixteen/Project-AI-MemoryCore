@@ -35,6 +35,9 @@ const MUTATION_RE = /\b(?:patch|update|tukar(?:kan)?|betulkan|set(?:kan)?|insert
 // "it" is only an env when addressed as a place: "@ it", "& it", "di it", "ke it", "it env".
 const ENV_RE = /\b(?:stg\d?|staging|mlit|int-env|internal|prod|production)\b|(?:[@&]|\bdi\b|\bke\b)\s*it\b|\bit\s+env\b/i;
 const ERROR_RE = /\b(?:NPE|NullPointer\w*|exception|stack\s?trace|error|ralat|gagal|fail(?:ed|s)?)\b|\b(?:tak|tidak|x)\s+(?:boleh|papar|keluar|jana|muncul)\b/i;
+// HOTFIX: a PROD break after a release. Fires BEFORE the ticket-number silence — the #281392 prompt
+// named the CLOSED #280176, so ticket-gate took it as that ticket and no hotfix workflow started.
+const HOTFIX_RE = /\bhot\s?-?fix\b|\breleased?\s+(?:yesterday|semalam|last\s+night|this\s+morning|tadi)\b|\bdah\s+release\b|\bafter\s+(?:the\s+)?release\b|\b(?:closed|released)\s+(?:ticket|tiket)\b|\b(?:ticket|tiket)\s+(?:is\s+|dah\s+|sudah\s+)?(?:closed|ditutup|tutup)\b/i;
 
 // ── knowledge routing: topic regex -> files to Read (up to 3 injected) ──────
 // STATE-SCOPE: melaka literal (see README). A second state parameterizes KNOWLEDGE_DIR.
@@ -68,8 +71,22 @@ runHook({ name: 'etanah-intake-gate', event: 'UserPromptSubmit' }, (input) => {
   if (!prompt) return { fired: false };
   if (BYPASS_RE.test(prompt)) return { fired: false };
 
+  // HOTFIX lane — owns the prompt even when a ticket # is present (that # is usually the CLOSED one).
+  const hasTicket = TICKET_NUM_RE.test(prompt);
+  if (HOTFIX_RE.test(prompt) && (hasTicket || ENV_RE.test(prompt) || ERROR_RE.test(prompt) || DOMAIN_WORD_RE.test(prompt) || PERMOHONAN_ID_RE.test(prompt))) {
+    return { fired: true, blocked: false, lane: 'HOTFIX', contextOut: [
+      '🔥 etanah-intake: HOTFIX lane — invoke the `hotfix` skill NOW (Skill tool), then follow it in order:',
+      '   0. SCAFFOLD FIRST — own ticket # given → `node quest/redmine-sync.js <num>`; none yet → ADHOC scaffold.',
+      '      A # in the prompt that is CLOSED/released is a REFERENCE, never the work ticket.',
+      '   1. PROD vs STAG diff — one SELECT per claim, shown with the claim.',
+      '   2. Branch `mlk/hotfix/<own #>` off fresh origin/mlk/master (work clone). Never the closed ticket branch.',
+      '   3. Test on a PROD-shaped staging mirror + reset script; walk the WHOLE page and every tugasan sharing it.',
+      '   KNOWLEDGE — Read: ' + KNOWLEDGE_DIR + '/BRANCH-AND-DEPLOY.md §8',
+    ].join('\n') + '\n' };
+  }
+
   // Sibling-owned surfaces -> silent.
-  if (TICKET_NUM_RE.test(prompt)) return { fired: false };
+  if (hasTicket) return { fired: false };
   if (LABELLED_FIELDS.reduce((n, re) => n + (re.test(prompt) ? 1 : 0), 0) >= 3) return { fired: false };
 
   const hasId = HAKMILIK_ID_RE.test(prompt) || PERMOHONAN_ID_RE.test(prompt);

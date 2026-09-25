@@ -62,7 +62,8 @@ runHook({ name: 'test-scenario-login-gate', event: 'Stop' }, (input) => {
     return {
       fired: true,
       blocked: true,
-      reason:
+      blockReason: // runHook prints only blockReason/contextOut to stderr
+        
         '⛔ test-scenario-login-gate v2: deploy steps emitted with NO test scenario attached.\n' +
         '   Append the Test Scenario table (| Login | Screen | Do | Expect |) with a real login,\n' +
         '   directly under the deploy steps, then re-send. Derive the login yourself (umm_a_tgsn\n' +
@@ -76,7 +77,8 @@ runHook({ name: 'test-scenario-login-gate', event: 'Stop' }, (input) => {
   return {
     fired: true,
     blocked: true,
-    reason:
+    blockReason: // runHook prints only blockReason/contextOut to stderr
+      
       '⛔ test-scenario-login-gate: a test scenario was emitted with NO login.\n' +
       '   みや cannot test without a username. Derive it, do not ask him:\n' +
       '     • officer side → umm_a_tgsn + ind_tgsn + pcp_pengguna, the CURRENT holder\n' +

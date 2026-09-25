@@ -49,6 +49,27 @@ check('F7 non-etanah -> silent', r.status === 0 && !/etanah-intake/.test(r.out),
 r = fire('[skip-etanah-intake: already scaffolded] patch luas hakmilik 040202PM00000298');
 check('F8 bypass token -> silent', r.status === 0 && !/DATA-PATCH/.test(r.out), r.out.slice(0, 120));
 
+// ── HOTFIX lane (2026-09-24, #281392 replay) ────────────────────────────────
+// H1: THE REPLAY — verbatim opening prompt; it got LOOKUP, no scaffold, no hotfix workflow.
+r = fire('Ruri, we have an adhoc issue, we will be releasing hotfix today. Related to a ticket we released yesterday. Related to our fix ticket 280176 you can check back. The clues, during BA testing in internal, there was no issue, so please check data as well for PROD vs STAG. Please check jrxml as well.\nUser speaking to BA:\n[[Assalamualaikum fizah, user dah try buat tapi bila click borang 4Ae no resit keluar null dan tarikh 31/12/206 bukan 31/12/2025]]');
+check('H1 replay fires HOTFIX lane + names hotfix skill + scaffold', r.status === 0 && /HOTFIX lane/.test(r.out) && /`hotfix` skill/.test(r.out) && /SCAFFOLD FIRST/.test(r.out), r.out.slice(0, 200));
+check('H1b effect: branch rule + knowledge §8 rendered', /mlk\/hotfix\/<own #>/.test(r.out) && /BRANCH-AND-DEPLOY\.md §8/.test(r.out), 'effect check');
+// H2: hotfix with a #ticket present → still HOTFIX (beats the ticket silence)
+r = fire('hotfix for #280176 — PROD borang 4Ae null');
+check('H2 hotfix + #ticket → HOTFIX lane (not silent)', r.status === 0 && /HOTFIX lane/.test(r.out), r.out.slice(0, 160));
+// H3: "dah release" + ralat, no word hotfix
+r = fire('semalam dah release, sekarang PROD papar ralat kat Pengeluaran Lesen');
+check('H3 "dah release" + ralat → HOTFIX lane', r.status === 0 && /HOTFIX lane/.test(r.out), r.out.slice(0, 160));
+// H4: hotfix word with no etanah / env / error / ticket signal → silent
+r = fire('what is a hotfix in git terminology?');
+check('H4 generic hotfix question → silent', r.status === 0 && !/HOTFIX lane/.test(r.out), r.out.slice(0, 160));
+// H5: bypass token silences HOTFIX too
+r = fire('[skip-etanah-intake: scaffolded] hotfix PROD ralat');
+check('H5 bypass → silent', r.status === 0 && !/HOTFIX lane/.test(r.out), r.out.slice(0, 160));
+// H6: plain ticket without hotfix signal → still silent (sibling ownership unchanged)
+r = fire('#280895 continue the Rubric please');
+check('H6 plain #ticket → silent (unchanged)', r.status === 0 && !/etanah-intake/.test(r.out), r.out.slice(0, 160));
+
 // ═══ ADVERSARIAL SCENARIOS — system-design Rule 12 (>=10, verdict each) ═══
 // 1. Own emit text pasted back (self-disarm class): prompt quoting "DATA-PATCH lane" -> A1 fixture:
 //    still classifies by SIGNALS not by its own vocabulary; quoting the banner alone (no etanah signal) stays silent.

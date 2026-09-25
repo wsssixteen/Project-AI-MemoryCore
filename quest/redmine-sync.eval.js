@@ -1,23 +1,23 @@
 #!/usr/bin/env node
 /**
- * redmine-sync.eval.js — fixture-driven eval for addStatusFolder's v10 TIME rule.
+ * redmine-sync.eval.js — fixture-driven eval for addStatusFolder's v11 GENUINE-REOPEN rule.
  *
- * Replay case (2026-09-14, #278699): BA returned the ticket to Rework twice
- * (2026-09-09 03:53Z and 2026-09-11 10:55Z). v8.1's "create only when NONE exists"
- * rule gave the second reopen no folder, so both cycles' attachments piled into
- * one "3. Rework" and /quest resume could not see a 2nd cycle.
+ * v11 (miya 2026-09-22): rework cycle folders are counted by GENUINE reopens — a status
+ * transition FROM a non-rework status INTO a rework status — NOT by folder birthtime.
+ * OneDrive rewrites folder mtimes on sync, which made v10's TIME rule miss the 2nd reopen
+ * of #278699 (the bug miya caught). Each new "N. Rework" also gets a 0. Brief (BA's new
+ * attachments land there) + 2. Fix (his Redmine-upload workspace), mirroring the Task
+ * folder's own subfolder convention so the rework root is never a loose dump.
  *
- * Cases (each on its own temp Tasks root — never touches the real OneDrive tree,
- * never calls Redmine):
- *   (a) first reopen, no cycle folder            → "3. Rework" created
+ * Cases (each on its own temp Tasks root — never touches OneDrive, never calls Redmine):
+ *   (a) first reopen, no cycle folder            → "3. Rework" created, WITH 0.Brief + 2.Fix
  *   (b) re-sync, same journal                    → no new folder (idempotent)
- *   (c) second reopen AFTER the folder was born  → "4. Rework" created; re-sync → still 2
- *   (d) status-hop chain inside ONE reopen       → exactly one folder, re-sync → still one
- *   (e) hand-made folder NEWER than the reopen   → nothing created (the 278699 state today)
+ *   (c) second GENUINE reopen (exits rework, re-enters) → "4. Rework"; re-sync → still 2
+ *   (d) consecutive rework HOPS in one reopen (31→23→38, never exits) → exactly one folder
+ *   (e) cycle folders already match the reopen count → nothing created (278699 today)
  *   (f) status not Rework                        → null, nothing created
- *   (g) Rework status but no transition in journal (journal not included) → v8.1 fallback:
- *       create when none exists, nothing when one exists
- *   (h) Archive/ folder reopened                 → unarchived + "3. Rework" (unarchive kept)
+ *   (g) Rework status but no journal transition  → fallback: create when none, else nothing
+ *   (h) Archive/ folder reopened                 → unarchived + "3. Rework"
  *
  * Run: node quest/redmine-sync.eval.js      Exit: 0 = all green, 1 = any red
  */
@@ -26,13 +26,11 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
-const { addStatusFolder, isReworkTransition, latestReworkTransition } = require(path.join(__dirname, 'redmine-sync.js'));
+const { addStatusFolder, isReworkTransition, isGenuineReopen, genuineReopenCount } = require(path.join(__dirname, 'redmine-sync.js'));
 
 const results = [];
 function check(name, cond, detail) { results.push({ name, pass: !!cond, detail }); }
-const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-const H = 3600 * 1000;
 function j(ts, from, to) {
     return { created_on: new Date(ts).toISOString(), details: [{ property: 'attr', name: 'status_id', old_value: String(from), new_value: String(to) }] };
 }
@@ -49,45 +47,52 @@ function makeRoot(folderName, opts = {}) {
 function cycleDirs(full) {
     return fs.readdirSync(full).filter(e => /^\d+\.\s*(Rework|New)\s*$/i.test(e)).sort();
 }
+// Item 4 (miya 2026-09-22): a new cycle folder mirrors the Task-folder subfolder convention.
+function hasSub(full, cycle) {
+    return fs.existsSync(path.join(full, cycle, '0. Brief')) && fs.existsSync(path.join(full, cycle, '2. Fix'));
+}
 
 (async () => {
     const now = Date.now();
+    const H = 3600 * 1000;
     const FOLDER = '189. ES #999999 - eval fixture';
 
     // helper sanity
     check('helper: isReworkTransition matches 23/31/38, not 3', isReworkTransition(j(now, 3, 23)) && isReworkTransition(j(now, 3, 31)) && isReworkTransition(j(now, 3, 38)) && !isReworkTransition(j(now, 23, 3)), '');
-    check('helper: latestReworkTransition picks the newest', latestReworkTransition([j(now - 3 * H, 3, 23), j(now - 1 * H, 3, 23), j(now - 2 * H, 3, 23)]).getTime() === now - 1 * H, '');
-    check('helper: latestReworkTransition null when none', latestReworkTransition([j(now, 23, 3)]) === null, '');
+    check('helper: isGenuineReopen true only from a non-rework status', isGenuineReopen(j(now, 3, 23)) && !isGenuineReopen(j(now, 31, 23)) && !isGenuineReopen(j(now, 23, 3)), '');
+    check('helper: genuineReopenCount ignores intra-rework hops', genuineReopenCount([j(now, 3, 31), j(now, 31, 23), j(now, 23, 38)]) === 1, String(genuineReopenCount([j(now, 3, 31), j(now, 31, 23), j(now, 23, 38)])));
+    check('helper: genuineReopenCount counts each exit+re-enter', genuineReopenCount([j(now, 3, 23), j(now, 23, 3), j(now, 3, 23)]) === 2, String(genuineReopenCount([j(now, 3, 23), j(now, 23, 3), j(now, 3, 23)])));
 
-    // (a) first reopen → 3. Rework
+    // (a) first reopen → 3. Rework, with 0.Brief + 2.Fix inside
     {
         const fx = makeRoot(FOLDER);
         const journals = [j(now - 2 * H, 1, 2), j(now - 1 * H, 3, 23)];
         const r = await addStatusFolder(fx.rel, 'Rework', journals, fx.root);
         const dirs = cycleDirs(fx.full);
         check('(a) first reopen creates "3. Rework"', r && r.statusFolderPath && dirs.join('|') === '3. Rework', dirs.join('|'));
+        check('(a2) new cycle has 0. Brief + 2. Fix', hasSub(fx.full, '3. Rework'), '');
 
-        // (b) re-sync same day → no new folder
+        // (b) re-sync same journal → no new folder
         const r2 = await addStatusFolder(fx.rel, 'Rework', journals, fx.root);
         const dirs2 = cycleDirs(fx.full);
         check('(b) re-sync same journal → no new folder', r2 && r2.statusFolderPath === null && dirs2.join('|') === '3. Rework', dirs2.join('|'));
 
-        // (c) second reopen AFTER the folder was born (2 days later in life; 1.2 s here — same comparison)
-        await sleep(1200);
-        const journals2 = [...journals, j(Date.now() - 200, 23, 3), j(Date.now(), 3, 23)];
+        // (c) second GENUINE reopen: exits rework (23→3) then re-enters (3→23) → "4. Rework"
+        const journals2 = [...journals, j(now - 30 * 1000, 23, 3), j(now, 3, 23)];
         const r3 = await addStatusFolder(fx.rel, 'Rework', journals2, fx.root);
         const dirs3 = cycleDirs(fx.full);
-        check('(c) second reopen newer than folder → "4. Rework"', r3 && r3.statusFolderPath && dirs3.join('|') === '3. Rework|4. Rework', dirs3.join('|'));
+        check('(c) second genuine reopen → "4. Rework"', r3 && r3.statusFolderPath && dirs3.join('|') === '3. Rework|4. Rework', dirs3.join('|'));
+        check('(c2) new cycle 4 has 0. Brief + 2. Fix', hasSub(fx.full, '4. Rework'), '');
         const r4 = await addStatusFolder(fx.rel, 'Rework', journals2, fx.root);
         const dirs4 = cycleDirs(fx.full);
-        check('(c2) re-sync after 2nd reopen → still 2 folders', r4 && r4.statusFolderPath === null && dirs4.join('|') === '3. Rework|4. Rework', dirs4.join('|'));
+        check('(c3) re-sync after 2nd reopen → still 2 folders', r4 && r4.statusFolderPath === null && dirs4.join('|') === '3. Rework|4. Rework', dirs4.join('|'));
         fs.rmSync(fx.root, { recursive: true, force: true });
     }
 
-    // (d) hop chain inside one reopen: 3→31→23→3→38, all before the sync → ONE folder
+    // (d) consecutive rework hops in ONE reopen: 3→31→23→38, never exits rework → ONE folder
     {
         const fx = makeRoot(FOLDER);
-        const journals = [j(now - 3 * H, 3, 31), j(now - 2 * H, 31, 23), j(now - 1.5 * H, 23, 3), j(now - 1 * H, 3, 38)];
+        const journals = [j(now - 3 * H, 3, 31), j(now - 2 * H, 31, 23), j(now - 1 * H, 23, 38)];
         await addStatusFolder(fx.rel, 'Rework (Requirement Update)', journals, fx.root);
         const d1 = cycleDirs(fx.full);
         check('(d) hop chain in one reopen → one folder', d1.join('|') === '3. Rework', d1.join('|'));
@@ -97,13 +102,13 @@ function cycleDirs(full) {
         fs.rmSync(fx.root, { recursive: true, force: true });
     }
 
-    // (e) hand-made folders NEWER than every reopen (278699 today: 3. Rework + 4. Rework on disk)
+    // (e) cycle folders on disk already match the reopen count (278699 today: 2 folders, 2 reopens)
     {
         const fx = makeRoot(FOLDER, { cycles: ['3. Rework', '4. Rework'] });
-        const journals = [j(now - 5 * 24 * H, 3, 23), j(now - 3 * 24 * H, 3, 23)];
+        const journals = [j(now - 5 * 24 * H, 3, 23), j(now - 3 * 24 * H, 23, 3), j(now - 3 * 24 * H + 60000, 3, 23)];
         const r = await addStatusFolder(fx.rel, 'Rework', journals, fx.root);
         const d = cycleDirs(fx.full);
-        check('(e) folders newer than latest reopen → nothing created', r && r.statusFolderPath === null && d.join('|') === '3. Rework|4. Rework', d.join('|'));
+        check('(e) folders already match reopen count → nothing created', r && r.statusFolderPath === null && d.join('|') === '3. Rework|4. Rework', d.join('|'));
         fs.rmSync(fx.root, { recursive: true, force: true });
     }
 

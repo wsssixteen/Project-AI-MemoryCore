@@ -48,8 +48,10 @@ if (/Redmine unreachable/.test(base)) {
     process.exit(0);
 }
 
-// 1. The board renders miya's table.
-check('renders the Mine table', () => /^### Mine — \d+ open/m.test(base));
+// 1. The board renders the three priority-ordered category tables (miya 2026-09-22).
+check('renders the Patching (PROD) table', () => /^### 1\. Patching \(PROD\) — \d+ open/m.test(base));
+check('renders the eSOKONGAN table', () => /^### 2\. eSOKONGAN tracker — \d+ open/m.test(base));
+check('renders the Internal fixes & other table', () => /^### 3\. Internal fixes & other — \d+ open/m.test(base));
 
 // 2. Default is HIS LIST ONLY (miya 2026-08-05: "present to me ONLY my list").
 check('default omits the Tracking table', () => !/### Tracking/.test(base));
@@ -57,9 +59,11 @@ check('default omits the Tracking table', () => !/### Tracking/.test(base));
 // 3. ...but the tracking view still exists on request.
 check('--tracking adds the Tracking table', () => /^### Tracking — \d+ open/m.test(tracking));
 
-// 4. Header is exactly the agreed 5 columns.
-check('Mine header is # | Days | Due date | Subject | State',
+// 4. Headers are the agreed columns per table.
+check('patch/other header is # | Days | Due date | Subject | State',
     () => base.includes('| # | Days | Due date | Subject | State |'));
+check('eSOKONGAN header carries the Severity column',
+    () => base.includes('| # | Severity | Days | Due date | Subject | State |'));
 
 // 5. Banned columns stay banned (2026-08-04 + 2026-08-05).
 check('no Deadline column', () => !/\|\s*Deadline\s*\|/.test(base));
@@ -67,27 +71,34 @@ check('no "Redmine due" wording', () => !/Redmine due/.test(base));
 check('no Start column', () => !/\|\s*Start\s*\|/.test(base));
 check('no "+3d" or "Days left"', () => !/\+3d|Days left/.test(base));
 
-// Scope Mine-table assertions to the Mine block. The board may prepend a
-// QUICK-WIN / steal-risk banner (domain/steal-risk-flag) whose rows share the
-// generic `| id | ... |` shape; parsing the whole output would mis-read those.
-const mineTable = (base.split('### Mine')[1] || '').split(/^_|^###/m)[0];
+// Scope Mine-table assertions to the three category tables. The board may prepend
+// a QUICK-WIN / steal-risk banner (domain/steal-risk-flag) whose rows share the
+// generic `| id | ... |` shape; starting the region at "### 1. Patching" excludes it.
+const mineRegion = (base.split('### 1. Patching')[1] || '').split('### Tracking')[0];
 
-// 6. Dates carry no year — "12 Aug", not "2026-08-12".
-check('due dates are day + short month, no year', () => {
-    const cells = [...mineTable.matchAll(/^\| \d+ \| [\d—]+ \| ([^|]+) \|/gm)].map(m => m[1].trim());
-    return cells.length > 0 && cells.every(c => c === '—' || /^\d{1,2} [A-Z][a-z]{2}$/.test(c));
-});
+// 6. Dates carry no year — a due cell is "12 Aug", never "2026-08-12".
+//    Tables mix 5-col (patch/other) and 6-col (eSOKONGAN), so assert on the cell
+//    shape directly: no ISO-date cell anywhere in the mine region.
+check('due dates are year-free (no ISO-date cell)',
+    () => mineRegion.length > 0 && !/\|\s*\d{4}-\d{2}-\d{2}\s*\|/.test(mineRegion));
 
-// 7. Every row carries a State from the fixed vocabulary — never blank, never prose.
+// 7. Every row carries a State (the LAST cell) — never blank, never prose. Works
+//    for both the 5-col and 6-col table shapes (State is always last).
 check('every State cell is short and non-empty', () => {
-    const states = [...mineTable.matchAll(/^\| \d+ \|.*\| ([^|]+) \|$/gm)].map(m => m[1].trim());
+    const states = [...mineRegion.matchAll(/^\| \d+ \|.*\| ([^|]+) \|$/gm)].map(m => m[1].trim());
     return states.length > 0 && states.every(s => s.length > 0 && s.length <= 24);
 });
 
-// 8. Adopted tickets appear under Mine even though Redmine shows another name.
-check('adopted tickets land in Mine', () => {
+// 8. Adopted tickets appear in a mine table even though Redmine shows another name.
+//    ADOPTED_AS_MINE ids may have since closed (a closed ticket is not fetched at all),
+//    so assert only on those still OPEN in the board — vacuously true if none are open,
+//    and never a false red for a ticket that simply got closed.
+check('adopted tickets, when open, land in a mine table (not Tracking)', () => {
     const mineBlock = base.split('### Tracking')[0];
-    return mineBlock.includes('| 273837 |') && mineBlock.includes('| 273956 |');
+    const trackingBlock = base.split('### Tracking')[1] || '';
+    const adopted = [273837, 273956];
+    const openAdopted = adopted.filter(id => base.includes(`| ${id} |`));
+    return openAdopted.every(id => mineBlock.includes(`| ${id} |`) && !trackingBlock.includes(`| ${id} |`));
 });
 
 // 9. No silent caps — a filtered-out row is always named by number.

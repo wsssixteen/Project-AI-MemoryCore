@@ -22,7 +22,7 @@ const LOG = path.join(__dirname, 'log.jsonl');
 // A Redmine WRITE = the redmine host/key is referenced AND a mutating verb or a mutating field is present.
 const REDMINE_REF = /172\.16\.90\.169\/redmine|REDMINE_BASE|REDMINE_KEY|X-Redmine-API-Key|redmine-sync\.js/i;
 const MUTATION = /\bmethod\s*[:=]\s*['"]?(PUT|POST|DELETE)\b|-X\s*(PUT|POST|DELETE)\b|assigned_to_id|status_id|done_ratio|["']notes["']|\bnotes\s*[:=]|\bjournal\s*:|\buploads?\s*:/i;
-const READ_ONLY_SCRIPT = /redmine-(sync|board|reconcile|status-check)\.js/i;
+const READ_ONLY_SCRIPT = /redmine-(sync|board|reconcile|status-check)(\.eval)?\.js/i;
 // What counts as miya's approval — the LAST user message only, never an older turn.
 const APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never)\s)(?<!\bI (?:will|'ll) )\b(post it|post now|go ahead and post|yes,? post|postkan|hantar (?:note|nota|komen)|\[redmine-post-ok\])\b/i;
 const BYPASS = /\[skip-redmine-write-gate:\s*[^\]]+\]/i;

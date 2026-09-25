@@ -73,6 +73,17 @@ check('F11 manual mlk/master push blocks', r.status === 2 && /mlk\/master is BAN
 r = run(pwsh('git push origin HEAD:main'));
 check('F12 HEAD:main push ignored', r.status === 0, 'exit=' + r.status);
 
+// ── v3 cases (2026-09-23, #280176 DE: two false blocks on non-git commands) ──
+// F13: free text in a quoted argument mentioning "push" + mlk/master is NOT a push → ignored
+r = run(pwsh('node core/forge.js new check x --signal "a git push into mlk/master is BLOCKED"'));
+check('F13 quoted free text mentioning push + mlk/master ignored', r.status === 0, 'exit=' + r.status + ' stderr=' + r.stderr.slice(0, 80));
+// F14: slips.js evidence text mentioning push of mlk/master → ignored
+r = run(pwsh('node core/slips.js add --evidence "manual push of mlk/master blocked"'));
+check('F14 slips evidence text ignored', r.status === 0, 'exit=' + r.status);
+// F15: real chained push to mlk/master after a separator → still BLOCKED
+r = run(pwsh('git fetch origin; git -C "E:\\x\\etanah-pelupusan" push origin HEAD:mlk/master'));
+check('F15 chained real mlk/master push still blocks', r.status === 2 && /mlk\/master is BANNED/.test(r.stderr), 'exit=' + r.status);
+
 try { fs.rmSync(stateDir, { recursive: true, force: true }); } catch (_) {}
 
 let failed = 0;

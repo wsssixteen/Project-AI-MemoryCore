@@ -118,6 +118,17 @@ check('F15 system edit with watch row -> pass', r.status === 0, 'exit=' + r.stat
 r = run({ ...c5base, _testEvents: c5events, _testWatchLines: [JSON.stringify({ kind: 'watch', id: 'w0', ts: '2026-09-01T10:05:00Z', target: 'lib/x.js', observe: 'old', sessions_left: 3 })], _testSessionStartMs: Date.parse('2026-09-06T09:00:00Z') });
 check('F16 stale watch row from an older session does not count -> BLOCK', r.status === 2 && /C5/.test(r.stderr || ''), 'exit=' + r.status);
 
+// F19/F20 — C7 qa_doc saved (2026-09-23, #280176 DE audit F6): touched ticket whose qa_doc mtime predates the
+// session -> BLOCK C7; mtime inside the session -> pass. F21: block without qa_doc= is skipped.
+const c7active = 'qa=QA-276182\nstatus=active\nqa_doc=projects/coding-projects/active/QA-276182/QA-276182.md\n';
+const c7start = Date.parse('2026-09-23T01:00:00Z');
+r = run({ _testActiveText: c7active, _testSessionStartMs: c7start, _testQaDocMtimes: { 'QA-276182': c7start - 3600000 } });
+check('F19 stale qa_doc -> BLOCK C7', r.status === 2 && /C7 QA_DOC NOT SAVED/.test(r.stderr || '') && /QA-276182/.test(r.stderr || ''), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 120));
+r = run({ _testActiveText: c7active, _testSessionStartMs: c7start, _testQaDocMtimes: { 'QA-276182': c7start + 3600000 } });
+check('F20 qa_doc saved this session -> pass', r.status === 0, 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 120));
+r = run({ _testActiveText: 'qa=QA-276182\nstatus=active\n', _testSessionStartMs: c7start, _testQaDocMtimes: { 'QA-276182': 0 } });
+check('F21 block without qa_doc -> C7 skipped -> pass', r.status === 0, 'exit=' + r.status);
+
 // F14: malformed rows in gate log ignored, fresh row still found -> pass
 r = run({ _testGateLogLines: ['not-json', '{broken'].concat(FRESH_RECON) });
 check('F14 malformed gate-log rows tolerated -> pass', r.status === 0, 'exit=' + r.status);
