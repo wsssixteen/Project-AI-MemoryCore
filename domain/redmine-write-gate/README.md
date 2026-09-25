@@ -3,9 +3,11 @@ symptom: #275847 2026-09-04: note posted + reassigned to Ammar on the strength o
 goal: BLOCK unless the LAST user message is an explicit post approval (post it / post now / Yes, post / [redmine-post-ok]) — the note text must have been shown and nodded first
 goal_signal: the PreToolUse fire produced: BLOCK unless the LAST user message is an explicit post approval (post it / post 
 retention: rotate monthly
-# redmine-write-gate (hook-only Feature, v1.0 — born 2026-09-04 via core/forge.js)
+# redmine-write-gate (hook-only Feature, v1.1 — born 2026-09-04 via core/forge.js)
 
-**What fires when**: `PreToolUse` on `Bash|PowerShell` — the command (or the `.js` it executes) references the Redmine host / API key AND carries a mutation (`method:'PUT'|'POST'|'DELETE'`, `-X PUT`, `notes`, `assigned_to_id`, `status_id`, `done_ratio`, `journal`, `uploads`).
+**What fires when**: `PreToolUse` on `Bash|PowerShell` — the command (or any `.js` it executes) references the Redmine host / API key AND carries a mutation (`method:'PUT'|'POST'|'DELETE'`, `-X PUT`, `notes`, `assigned_to_id`, `status_id`, `done_ratio`, `journal`, `uploads`).
+
+**Read-only exemption**: `redmine-sync|board|reconcile|status-check.js` (+ their `.eval.js`) and `quest/ticket-load-verify.js`, matched on the basename. An exempt script's body is skipped only when it is invoked as an EXECUTED script AND the command text itself carries no mutation; every other executed script's body (a chained writer included) and the command text are always scanned.
 
 **Contract (BLOCKS)**: the write runs only when the **last user message** in the transcript is an explicit post approval — `post it` · `post now` · `Yes, post …` (the AskUserQuestion answer shape) · `postkan` · `[redmine-post-ok]`. An approval in an older turn does not count; "post it" written by the assistant does not count; no transcript = block. Bypass (user message only): `[skip-redmine-write-gate: <reason>]`.
 
@@ -16,12 +18,14 @@ retention: rotate monthly
 | Piece | File | Role |
 |---|---|---|
 | Hook | `redmine-write-gate.check.hook.js` | PreToolUse block/allow |
-| Eval | `redmine-write-gate.eval.js` | 15 fixtures, sandboxed transcripts (F2 = the replay) |
+| Eval | `redmine-write-gate.eval.js` | 31 fixtures, sandboxed transcripts (F2 = the #275847 replay · F18 = the 2026-09-25 replay) |
 | Log | `log.jsonl` | `{ts, outcome: blocked\|allowed, approval\|last_user}` |
 
 **Layer choice (Rule 7)**: hook-only — the decision is mechanical (is the last user turn an approval?). **Trigger moment (Rule 8)**: PreToolUse on the shell tools that can reach the API; not Stop (too late — the write has happened). **state-scoped**: no — one Redmine host for every state.
 
-**Verify**: `node domain/redmine-write-gate/redmine-write-gate.eval.js` → **15/15 green** at ship (2026-09-04).
+**Verify**: `node lib/eval-runner.js --only redmine-write-gate` → **31/31 green** (2026-09-25). Run it through the runner: invoking the eval file directly is blocked by this gate, because its body carries the replay strings.
+
+**v1.1 (2026-09-25)**: `node quest/ticket-load-verify.js <num>` (the `/quest resume` step 1a-ii reader, local files only) was BLOCKED as a write because its body names `redmine-sync.js` and holds a `/^\s*notes:\s*$/` parser regex. Added to the exemption, basename-anchored (F25). Every `node <script>` in the command is now read, not only the first, so a writer chained after an exempt script is still scanned (F23 — a naive name-append let it through). Script capture now reads quoted paths with spaces (row 17 was marked handled but was not — F26). Reconciles the uncommitted `(\.eval)?` exemption (F27). Spec preservation: "exempt only when it is the script being EXECUTED, never when passed as an argument" and "the command itself carries no mutation" both kept (F24, F31); no spec dropped.
 
 ## Adversarial scenarios (Rule 12 — 20)
 
@@ -43,7 +47,14 @@ retention: rotate monthly
 | 14 | approval phrase inside a longer sentence ("don't post it yet") | accepted-risk — regex matches "post it"; mitigation: みや's usual phrasing is bare; refine to negative-lookbehind on `don't|jangan|not` if it misfires once |
 | 15 | write via python / PowerShell Invoke-RestMethod instead of node | handled by REDMINE_REF + MUTATION (host/key + verb) — tool-agnostic |
 | 16 | write via a browser form (Claude in Chrome) | accepted-risk — outside Bash/PowerShell; the `redmine-phase1-prefill` skill fills the form and waits for miya to click Submit |
-| 17 | script path with spaces | handled — quoted path capture |
+| 17 | script path with spaces | handled since v1.1 — quoted-path capture (F26); before v1.1 the body was silently NOT read |
 | 18 | huge transcript | handled — 400 KB tail |
 | 19 | worktree vs main root | handled — no repo path dependency |
 | 20 | user instruction reversal ("no, I will post it myself" · "don't post it yet") | handled — negative lookbehinds (`don't/do not/jangan/not/never`, `I will/I'll`) (F16, F17); eval 17/17 |
+| 21 | read-only local script whose body names `redmine-sync.js` + a `notes:` regex (`ticket-load-verify.js`) | handled — exempt (F18, F20, F21); F19 proves the same body under another name still blocks |
+| 22 | exempt script + a writer chained in one command | handled — the writer's body and the command text are still scanned (F22 inline curl, F23 writer script) |
+| 23 | look-alike or argument-borrowed name (`xticket-load-verify.js`, name passed as an argument) | handled — basename anchor + executed-script rule (F24, F25) |
+| 24 | a writer saved under an exempt NAME elsewhere | accepted-risk — exemption is name-based like the redmine-* helpers; that is deliberate evasion, the gate targets honest slips |
+| 25 | `ticket-load-verify.js` later gains HTTP / child_process | handled — F29 goes RED, forcing a re-review of the exemption |
+| 26 | exempt script only MENTIONED in a quoted argument (a slip note, a commit message) | handled — its body is skipped, so a clean command stays silent (F30; live false positive hit while building v1.1) |
+| 27 | exempt script + mutation-shaped text in the command | handled — exemption void, its body is scanned → BLOCK (F31) |

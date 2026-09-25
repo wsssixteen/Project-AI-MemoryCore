@@ -22,7 +22,11 @@ const LOG = path.join(__dirname, 'log.jsonl');
 // A Redmine WRITE = the redmine host/key is referenced AND a mutating verb or a mutating field is present.
 const REDMINE_REF = /172\.16\.90\.169\/redmine|REDMINE_BASE|REDMINE_KEY|X-Redmine-API-Key|redmine-sync\.js/i;
 const MUTATION = /\bmethod\s*[:=]\s*['"]?(PUT|POST|DELETE)\b|-X\s*(PUT|POST|DELETE)\b|assigned_to_id|status_id|done_ratio|["']notes["']|\bnotes\s*[:=]|\bjournal\s*:|\buploads?\s*:/i;
-const READ_ONLY_SCRIPT = /redmine-(sync|board|reconcile|status-check)(\.eval)?\.js/i;
+// Read-only helpers, matched on the basename. ticket-load-verify.js reads only local Task-folder files — its body names
+// redmine-sync.js and a /notes:/ parser regex, which blocked every /quest resume (2026-09-25, #256334).
+const READ_ONLY_SCRIPT = /(?:^|[\\/])(?:redmine-(?:sync|board|reconcile|status-check)(?:\.eval)?|ticket-load-verify)\.js$/i;
+// Every script the command executes — quoted (spaces allowed) or bare path.
+const NODE_SCRIPT = /node\s+(?:"([^"]+?\.js)"|'([^']+?\.js)'|([^"'\s]+\.js))/gi;
 // What counts as miya's approval — the LAST user message only, never an older turn.
 const APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never)\s)(?<!\bI (?:will|'ll) )\b(post it|post now|go ahead and post|yes,? post|postkan|hantar (?:note|nota|komen)|\[redmine-post-ok\])\b/i;
 const BYPASS = /\[skip-redmine-write-gate:\s*[^\]]+\]/i;
@@ -54,14 +58,18 @@ runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) =
   const ti = data.tool_input || {};
   const cmd = String(ti.command || '');
   if (!cmd) return { fired: false };
-  // A script file invoked by path — read it so a write hidden inside a helper is still seen.
+  // Script files invoked by path — read each one so a write hidden inside a helper is still seen.
+  // A read-only helper's body is skipped ONLY when it is invoked as an executed script AND the command itself carries
+  // no mutation; every other script body (a chained writer included) and the command text are always scanned.
+  // A writer that passes redmine-sync.js as an argument (to borrow the key) is still a writer.
   let body = cmd;
-  const m = cmd.match(/node\s+"?([^"\s]+\.js)"?/i);
-  if (m) { try { body += '\n' + fs.readFileSync(m[1], 'utf8'); } catch (_) { /* absent */ } }
+  const cmdClean = !MUTATION.test(cmd);
+  for (const x of cmd.matchAll(NODE_SCRIPT)) {
+    const s = x[1] || x[2] || x[3];
+    if (cmdClean && READ_ONLY_SCRIPT.test(s)) continue;
+    try { body += '\n' + fs.readFileSync(s, 'utf8'); } catch (_) { /* absent */ }
+  }
   if (!REDMINE_REF.test(body)) return { fired: false };
-  // read-only helpers are exempt ONLY when they are the script being EXECUTED — a writer that merely
-  // passes redmine-sync.js as an argument (to borrow the key) is still a writer.
-  if (m && READ_ONLY_SCRIPT.test(m[1]) && !MUTATION.test(cmd)) return { fired: false };
   if (!MUTATION.test(body)) return { fired: false };
 
   const last = data.transcript_path ? lastUserText(String(data.transcript_path)) : '';

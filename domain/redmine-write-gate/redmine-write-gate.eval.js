@@ -18,9 +18,16 @@ const WRITE_CMD = `node "${postScript}" "C:/x/quest/redmine-sync.js" "C:/x/note.
 const INLINE_WRITE = `curl -X PUT -H "X-Redmine-API-Key: abc" http://172.16.90.169/redmine/issues/275847.json -d '{"issue":{"notes":"hi"}}'`;
 const READ_CMD = `node quest/redmine-sync.js 275847`;
 const OTHER_PUT = `curl -X PUT https://example.com/api/thing -d '{"notes":"x"}'`;
+// 2026-09-25 replay: /quest resume step 1a-ii runs this local-only reader; its body names redmine-sync.js + a /notes:/ regex.
+const TLV = path.join(ROOT, 'quest', 'ticket-load-verify.js');
+const TLV_CMD = 'node quest/ticket-load-verify.js 256334';
+const tlvCopy = path.join(sb, 'tlv-copy.js'); fs.copyFileSync(TLV, tlvCopy);
+const spacedDir = path.join(sb, 'dir with space'); fs.mkdirSync(spacedDir);
+const spacedWriter = path.join(spacedDir, 'post-note.js'); fs.copyFileSync(postScript, spacedWriter);
+const lookalike = path.join(sb, 'xticket-load-verify.js'); fs.copyFileSync(postScript, lookalike);
 
 function run(payload) {
-  const r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify(payload), encoding: 'utf8', timeout: 30000, env: { ...process.env, CLAUDE_PROJECT_DIR: ROOT } });
+  const r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify(payload), encoding: 'utf8', timeout: 30000, cwd: ROOT, env: { ...process.env, CLAUDE_PROJECT_DIR: ROOT } });
   return { out: (r.stdout || '') + (r.stderr || ''), status: r.status };
 }
 const blocked = r => /redmine-write-gate/.test(r.out) && /⛔/.test(r.out);
@@ -57,6 +64,37 @@ r = run({ tool_name: 'PowerShell', tool_input: { command: WRITE_CMD }, transcrip
 check('F16 "I will post it myself" → BLOCK (reversal)', blocked(r), r.out.slice(0, 120));
 r = run({ tool_name: 'PowerShell', tool_input: { command: WRITE_CMD }, transcript_path: transcript([user("don't post it yet")]) });
 check('F17 "don\'t post it yet" → BLOCK (negation)', blocked(r), r.out.slice(0, 120));
+const noApproval = () => transcript([user('/quest resume 256334')]);
+const silent = r => !blocked(r) && !/redmine-write-gate/.test(r.out);
+r = run({ tool_name: 'PowerShell', tool_input: { command: TLV_CMD }, transcript_path: noApproval() });
+check('F18 REPLAY 2026-09-25: node quest/ticket-load-verify.js 256334 → silent', silent(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${tlvCopy}" 256334` }, transcript_path: noApproval() });
+check('F19 same body under another name → BLOCK (F18 passes on the exemption, not a vacuous body)', blocked(r), r.out.slice(0, 120));
+r = run({ tool_name: 'PowerShell', tool_input: { command: 'node .\\quest\\ticket-load-verify.js 256334' }, transcript_path: noApproval() });
+check('F20 backslash path form → silent', silent(r), r.out.slice(0, 120));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${TLV}" 256334` }, transcript_path: noApproval() });
+check('F21 absolute quoted path (repo root has spaces) → silent', silent(r), r.out.slice(0, 120));
+r = run({ tool_name: 'Bash', tool_input: { command: `${TLV_CMD} && ${INLINE_WRITE}` }, transcript_path: noApproval() });
+check('F22 exempt script + inline curl PUT in the same command → BLOCK', blocked(r), r.out.slice(0, 120));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `${TLV_CMD}; node "${postScript}"` }, transcript_path: noApproval() });
+check('F23 exempt script chained with a writer script → BLOCK (the writer body is still scanned)', blocked(r), r.out.slice(0, 120));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${postScript}" "C:/x/quest/ticket-load-verify.js"` }, transcript_path: noApproval() });
+check('F24 writer passes ticket-load-verify.js as an ARGUMENT → BLOCK', blocked(r), r.out.slice(0, 120));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${lookalike}" 256334` }, transcript_path: noApproval() });
+check('F25 look-alike name xticket-load-verify.js → BLOCK (basename anchor)', blocked(r), r.out.slice(0, 120));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${spacedWriter}"` }, transcript_path: noApproval() });
+check('F26 writer at a quoted path with spaces → BLOCK (body is read)', blocked(r), r.out.slice(0, 120));
+r = run({ tool_name: 'PowerShell', tool_input: { command: 'node quest/redmine-sync.eval.js' }, transcript_path: noApproval() });
+check('F27 redmine-sync.eval.js (read-only eval) → silent', silent(r), r.out.slice(0, 120));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node quest/redmine-sync.js 256334 && ${TLV_CMD}` }, transcript_path: noApproval() });
+check('F28 two exempt scripts chained → silent', silent(r), r.out.slice(0, 120));
+r = run({ tool_name: 'Bash', tool_input: { command: `node core/slips.js add --category x --evidence "blocked node quest/ticket-load-verify.js 256334 on resume"` }, transcript_path: noApproval() });
+check('F30 exempt script only MENTIONED inside an argument of a clean script → silent (live false positive 2026-09-25)', silent(r), r.out.slice(0, 120));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `${TLV_CMD} --x "status_id"` }, transcript_path: noApproval() });
+check('F31 exempt script + mutation-shaped text in the command → exemption void → BLOCK', blocked(r), r.out.slice(0, 120));
+const tlvBody = fs.readFileSync(TLV, 'utf8');
+check('F29 guard: ticket-load-verify.js stays network-free (else re-review its exemption)',
+  !/require\(\s*['"](?:node:)?(?:https?|net|child_process)['"]\s*\)|\bfetch\s*\(/.test(tlvBody), 'network/process I/O found in ' + TLV);
 // F15 log rows
 const logP = path.join(__dirname, 'log.jsonl');
 const lastLog = fs.existsSync(logP) ? fs.readFileSync(logP, 'utf8').trim().split('\n').pop() : '';
