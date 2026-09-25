@@ -73,6 +73,7 @@ Phase 0 — Accept the Quest (manual steps / what the workflow encodes):
    ```
    - `quest_start=@now` — stamps **when work actually begins** (active-cli.js resolves `@now` → local date; `@nowts` for time-of-day). Distinct from `assigned_to_me` (when it became mine) and from the folder-creation time (retrieval — deliberately not tracked).
    - If no block exists yet (rare — manual quest with no sync), use `start` instead of `update` with the same fields.
+6b. **🚨 Patching ticket → Redmine status `In Progress` FIRST (added 2026-09-25 per みや, #281567).** When a ticket assigned to みや is a patch (data patch · document patch · flowable alter — trackers PROD-CR / Data Patching (PROD) / Internal Issue (PROD), or any ticket whose Rubric picks a patch), the first outward step once he starts it is: read the LIVE Redmine status, and if it is not already `In Progress`, set `status_id=2` (status only — no note, no assignee, no % done). Never at retrieval or in a multi-ticket sweep; only the ticket he starts. It is a Redmine write, so `domain/redmine-write-gate` still needs his approval phrase (`post it`) in his latest message unless he approves a narrow exemption. Report it in the reply's first lines, done or blocked. **Why**: みや 2026-09-25 — *"if this is a patching ticket, always first and foremost, when I want to start, change it to in progress."*
 7. Present Issue Checklist to みや — wait for confirmation before touching any code
 
 Only proceed to Phase 1 after explicit confirmation.

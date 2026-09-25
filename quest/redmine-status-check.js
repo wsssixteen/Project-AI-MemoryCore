@@ -20,7 +20,15 @@ const REDMINE_HOST = '172.16.90.169';
 const REDMINE_KEY = '9565c21aa6cd9672fd3c7c2c7fec4c934c2f7c66';
 const OPEN_STATUSES = new Set(['active', 'hold', 'blocked', 'delegated']);
 const DONE_ON_REDMINE = new Set(['Resolved', 'Closed', 'Rejected']);
-const OWNER = 'Ahmad Ridhwan Anuar';
+// Match the assignee by Redmine user id, never by display name: Redmine appends a role
+// suffix — "Ahmad Ridhwan Anuar (Dev PLP)" — so an exact name match flagged every one of
+// miya's own tickets as reassigned (2026-09-25 boot: 9 of his tickets listed as not his).
+const OWNER_ID = 1311;
+
+// Issue JSON -> the row classify() reads.
+function toResult(num, i) {
+  return { num, status: i.status && i.status.name, assignee: i.assigned_to ? i.assigned_to.name : 'NONE', assigneeId: i.assigned_to ? i.assigned_to.id : null, done: i.done_ratio };
+}
 
 function fetchIssue(num) {
   return new Promise(resolve => {
@@ -35,7 +43,7 @@ function fetchIssue(num) {
       res.on('end', () => {
         try {
           const i = JSON.parse(d).issue;
-          resolve(i ? { num, status: i.status && i.status.name, assignee: i.assigned_to ? i.assigned_to.name : 'NONE', done: i.done_ratio } : null);
+          resolve(i ? toResult(num, i) : null);
         } catch (_) { resolve(null); }
       });
     });
@@ -51,7 +59,7 @@ function classify(localStatus, r) {
   if (!r) return 'unknown';
   const staysOpen = OPEN_STATUSES.has(localStatus);
   const doneThere = DONE_ON_REDMINE.has(r.status);
-  const reassigned = r.assignee !== OWNER && r.assignee !== 'NONE';
+  const reassigned = r.assigneeId != null && r.assigneeId !== OWNER_ID;
   if (staysOpen && (doneThere || reassigned)) return 'diverged';
   if (!staysOpen && !doneThere && !reassigned) return 'redmine-open';
   return 'ok';
@@ -73,6 +81,9 @@ async function checkOne(qa, localStatus, context) {
 
 // All open quests at once (boot). Prints one summary line; silent-clean when everything agrees.
 async function checkAll(quests) {
+  // A numberless ADHOC has no Redmine issue to fetch. Fetching it requested
+  // /issues/undefined.json -> 404 -> counted as "unreachable" (2026-09-25: 9 ADHOCs = the 9).
+  quests = quests.filter(q => numOf(q.qa));
   if (!quests.length) return;
   const results = await Promise.all(quests.map(async q => ({ q, r: await fetchIssue(numOf(q.qa)) })));
   const diverged = results.filter(x => classify(x.q.status, x.r) === 'diverged');
@@ -147,4 +158,4 @@ async function checkMissing(localOpenQa) {
   console.log('   → A briefing that omits any of these is a 🔴 verify failure (undercount hides his own work).');
 }
 
-module.exports = { checkOne, checkAll, checkMissing, fetchAssignedOpen, OPEN_STATUSES };
+module.exports = { checkOne, checkAll, checkMissing, fetchAssignedOpen, OPEN_STATUSES, classify, toResult, numOf };
