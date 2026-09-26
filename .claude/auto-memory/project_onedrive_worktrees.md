@@ -16,4 +16,6 @@ metadata:
 - Start sessions with the worktree box UNTICKED until worktree creation is pointed outside OneDrive.
 - Blob-in-object-DB ≠ committed: a blob staged in ANY worktree's index (shared `.git`) passes `cat-file -e` yet is reachable from no commit — never use bare blob existence as a "safe to delete" test.
 
+**Recurred 2026-09-27**: 66 folders / 19 GB under `.claude/worktrees/`, only 2 registered with git; the boot sweep keeps folders holding never-committed files or unmerged branches, so the pile regrows. Salvage via `/worktree-retrieve` before any delete. The rename to Lapis-Lazuli ([[project-name-lapis-lazuli]]) is the natural moment to move worktree creation outside OneDrive.
+
 Pairs with [[project-onedrive-branch-refs]] (same OneDrive `.git` sync mechanism, ref side).
