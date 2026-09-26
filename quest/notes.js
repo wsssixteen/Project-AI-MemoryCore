@@ -58,14 +58,16 @@ function deriveTicketNumber(folderPath) {
   return m ? m[1] : null;
 }
 // --qa accepts "QA-262762", "QA #262762", or bare "262762" — strip to digits.
-const overrideDigits = qaOverride ? (qaOverride.match(/\d+/) || [])[0] : null;
-const ticketNum = overrideDigits || deriveTicketNumber(folder);
+// An ADHOC id ("ADHOC-PLTP-2026-1") is kept whole: stripping it to digits gave "1. 2 026.txt" (2026-09-25).
+const adhocId = qaOverride && /^ADHOC-/i.test(qaOverride) ? qaOverride.toUpperCase() : null;
+const overrideDigits = qaOverride && !adhocId ? (qaOverride.match(/\d+/) || [])[0] : null;
+const ticketNum = adhocId || overrideDigits || deriveTicketNumber(folder);
 if (!ticketNum) {
   console.error('ERROR: cannot derive ticket number from folder name; pass --qa <number>.');
   process.exit(1);
 }
 // Spaced form: insert a space before the last 3 digits (e.g. 262762 → "262 762").
-const spaced = ticketNum.replace(/(\d+)(\d{3})$/, '$1 $2');
+const spaced = adhocId || ticketNum.replace(/(\d+)(\d{3})$/, '$1 $2');
 
 // Filename: per-ticket self-identifying. Back-compat: prefer any pre-existing legacy file
 // in the folder so we don't fork a second file mid-quest.

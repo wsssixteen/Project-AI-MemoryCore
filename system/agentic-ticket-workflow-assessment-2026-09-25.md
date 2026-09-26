@@ -45,3 +45,13 @@ Session: bulk-ticket /goal → quest sweep `wf_bb588f6c-e2c` (6 tickets, 18 agen
 | A3 debugging | redmine-write-gate blocked read-only `ticket-load-verify.js`; fell back to reading synced files by hand | A3 READ_ONLY_SCRIPT add |
 | A4 etanah solving | receipt → btrn → fi → aplikasi trace settled the ticket in 3 SELECTs; caught 2 BA data errors; sibling + writer code confirmed patch shape | A4 daily manual-PRBB-payment detector |
 | A5 sweep | ⏭ no file/ticket sweep this session | — |
+
+## Session 3 addendum — ADHOC-PLTP-2026-1 (Portal Awam PLTP syer popup) + adhoc-save build
+
+| Axis | Assessment (instance) | Proposal logged |
+|---|---|---|
+| A1 agentic system | boot `hook-syntax-check` reported 15 hooks as parse-error GHOSTS (`branch-guard`, `sql-schema-verify`, `attachment-ledger-gate` …) yet `node --check` exits 0 on all three and `branch-guard` fired this session → the ghost report is a false positive that makes 0-fire RETIRE rulings untrustworthy | A1 hook-syntax-check false ghosts |
+| A2 quest workflow | adhoc diagnosed 5 turns with no save-set; detector anchored on PTMLK ids only → widened to hakmilik / No Resit + `adhoc-save` skill + `lib/adhoc-save-audit.js`; audit pointed at 6 open adhocs found 4 with drift (A27 double-claim, missing headers, open-vs-RESOLVED) | A2 run adhoc-save-audit over every open adhoc at boot |
+| A3 debugging | first PROD query guessed `hakmilik_pihak_berkepentingan` → wrong table; `information_schema.columns WHERE column_name='syer_penyebut'` found `umm_p_pihak_bkptg` in one call | A3 knowledge row: AWAM pra pemohon = `umm_p_pihak_bkptg` via `umm_p_hkmlk.hkmlk_id` |
+| A4 etanah solving | AWAM `checkingSyer()` compares Σ numerators to max denominator; kaunter analog sums real fractions → fix shape found in-repo in one grep | A4 sweep other AWAM numerator-sum checks |
+| A5 sweep | the audit over 6 open adhocs is itself a mini sweep; 2 mechanical fixes applied (A27→A33, PRBB-2026-5 notes rename), 3 header back-fills left | A5 back-fill legacy adhoc headers |

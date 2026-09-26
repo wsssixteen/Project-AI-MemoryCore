@@ -105,6 +105,7 @@
 - [onedrive-branch-refs](project_onedrive_branch_refs.md) — Deleted claude/* branches can reappear (OneDrive re-syncs…
 
 ## Project
+- [project-name-lapis-lazuli](project_name_lapis_lazuli.md) — 🚨 project = "Lapis Lazuli"; "Ruri" = my name only; physical rename not done yet (2026-09-27)
 - [installed-skills](project_installed_skills.md) — 🚨 wayfinder (Matt Pocock) installed 2026-09-11 at .agents/skills + .claude/skills symlink; every install → write here SAME turn
 - [wa-read](project_wa_read.md) — 🚨 WaRead read-only WhatsApp reader (E:\Dev\scripts\WaRead, Baileys l…
 - [pymtime](project_pymtime.md) — 🚨 PymTime app: repo E:\Dev\scripts\PymTime, v14 self-repair architecture + proofs (selftest, build gate, install/upgrade sims), lessons, remote skip
