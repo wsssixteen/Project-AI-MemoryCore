@@ -16,12 +16,16 @@
  *  K. delete blocked by a live process CWD inside the folder → KEPT + "delete failed" surfaced, branch NOT deleted
  *  L. .claude/worktrees absent → empty result, no throw
  *  M. never-committed NOISE only (.verify-notified / .flag / .lock) → still DELETED
+ *  R. (v1.7) boot fired from INSIDE a worktree session → sweeps MAIN's .claude/worktrees, logs to MAIN
+ *  S. (v1.7) de-registered CURRENT session (exact path or nested path) → never deleted
+ *  T. (v1.7) root resolution strips .claude/worktrees/<name> (repo idiom)
+ *  U. (v1.7) ls-files failure → content check fails CLOSED (kept), never "no files = safe"
  */
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { execSync, spawn } = require('child_process');
-const { sweepOrphans, mergeBaseRef } = require('./worktree-cleanup-boot.js');
+const { execSync, spawn, spawnSync } = require('child_process');
+const { sweepOrphans, mergeBaseRef, mainRootOf, neverCommittedFiles } = require('./worktree-cleanup-boot.js');
 
 let pass = 0, fail = 0;
 const check = (name, cond) => { if (cond) { pass++; console.log('  ✓', name); } else { fail++; console.log('  ✗ FAIL:', name); } };
@@ -148,6 +152,63 @@ if (process.platform === 'win32') {
   fs.rmSync(path.join(repo, '.claude', 'worktrees'), { recursive: true, force: true });
   const res = sweepOrphans(repo, { dryRun: false, here: repo });
   check('L worktrees dir absent → empty result, no throw', res.orphans.length === 0 && res.registered === 0);
+  try { fs.rmSync(tmp, { recursive: true, force: true }); } catch {}
+}
+
+// ── R: boot fired from INSIDE a worktree session → sweeps MAIN's folder ──
+//      2026-09-27 live miss: projectRoot resolved to the worktree root, so a worktree-rooted boot scanned
+//      the worktree's own (empty) .claude/worktrees; 66 folders / 19 GB piled up under main.
+{
+  const { tmp, repo } = freshRepo();
+  const W = mkWorktree(repo, 'w-session', { keepRegistered: true });                      // the live session
+  const V = mkWorktree(repo, 'v-live', { keepRegistered: true, commitFile: 'v.md' });     // another live session (unmerged → step 3 leaves it)
+  const Z = mkWorktree(repo, 'z-orphan', { deleteBranch: true });                         // clean orphan → delete
+  const Y = mkWorktree(repo, 'y-unmerged', { commitFile: 'y.md' });                       // unmerged orphan → keep
+  const hookCopy = path.join(W, '.claude', 'hooks', 'worktree-cleanup-boot.js');         // the hook as a worktree session runs it
+  fs.mkdirSync(path.dirname(hookCopy), { recursive: true });
+  fs.copyFileSync(path.join(__dirname, 'worktree-cleanup-boot.js'), hookCopy);
+  const boot = dry => spawnSync(process.execPath, [hookCopy], { cwd: W, encoding: 'utf8', windowsHide: true, timeout: 120000,
+    env: { ...process.env, CLAUDE_PROJECT_DIR: W, WORKTREE_CLEANUP_DRY_RUN: dry ? '1' : '0' } });
+  let b = boot(true);
+  check('R dry boot from worktree → plans MAIN\'s orphans, deletes nothing', /2 orphan folder\(s\) → would delete 1/.test(b.stderr) && fs.existsSync(Z));
+  b = boot(false);
+  check('R boot from worktree → MAIN\'s clean orphan deleted', !fs.existsSync(Z));
+  check('R boot from worktree → MAIN\'s unmerged orphan kept + surfaced', fs.existsSync(Y) && /y-unmerged — branch claude\/y-unmerged UNMERGED/.test(b.stderr));
+  check('R current session + registered sibling untouched', fs.existsSync(W) && fs.existsSync(V));
+  const mainLog = path.join(repo, '.claude', 'state', 'worktree-cleanup-log.jsonl');
+  check('R log row lands in MAIN, not a worktree copy', fs.existsSync(mainLog) && /z-orphan/.test(fs.readFileSync(mainLog, 'utf8'))
+    && !fs.existsSync(path.join(W, '.claude', 'state', 'worktree-cleanup-log.jsonl')));
+  try { fs.rmSync(tmp, { recursive: true, force: true }); } catch {}
+}
+
+// ── S: the current session is protected by PATH, not only by registration ──
+//      the other laptop's `worktree prune` can drop THIS session's admin dir → the live session reads as an orphan
+{
+  const { tmp, repo } = freshRepo();
+  const X = mkWorktree(repo, 'x-session-deregistered', { deleteBranch: true });           // clean + branchless + de-registered
+  const X2 = mkWorktree(repo, 'x2-session-subdir', { deleteBranch: true });
+  const Z = mkWorktree(repo, 'z-control', { deleteBranch: true });                         // control: proves the sweep ran
+  const res = sweepOrphans(repo, { dryRun: false, here: [X, path.join(X2, 'sub', 'dir')] });
+  check('S de-registered CURRENT session never deleted', fs.existsSync(X) && !res.orphans.some(o => o.name === 'x-session-deregistered'));
+  check('S session path nested inside a folder protects that folder', fs.existsSync(X2));
+  check('S control orphan still deleted (sweep ran)', !fs.existsSync(Z));
+  try { fs.rmSync(tmp, { recursive: true, force: true }); } catch {}
+}
+
+// ── T: root resolution — repo idiom (lib/states.js mainRoot · quest/active-cli.js REPO_ROOT) ──
+check('T worktree root → main root', mainRootOf('C:\\r\\.claude\\worktrees\\foo') === 'C:\\r');
+check('T trailing separator + forward slashes', mainRootOf('/r/.claude/worktrees/foo/') === '/r');
+check('T case-insensitive (.Claude\\Worktrees)', mainRootOf('C:\\r\\.Claude\\Worktrees\\Foo') === 'C:\\r');
+check('T main root unchanged', mainRootOf('C:\\r') === 'C:\\r');
+
+// ── U: git cannot list the folder → fail CLOSED ──
+{
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'wtclean-eval-'));
+  const dir = path.join(tmp, 'folder'); const noGit = path.join(tmp, 'no-git-here');
+  fs.mkdirSync(dir); fs.mkdirSync(noGit);
+  fs.writeFileSync(path.join(dir, 'work.md'), 'unverifiable\n');
+  const nc = neverCommittedFiles(dir, noGit);
+  check('U ls-files failure → reported unverified (folder would be KEPT)', nc.length > 0 && /ls-files failed/.test(nc[0]));
   try { fs.rmSync(tmp, { recursive: true, force: true }); } catch {}
 }
 
