@@ -29,6 +29,9 @@
     observability: ['Observability', 'Did it run, did it block, how long did it take.'],
     monitoring: ['Monitoring', 'Why it ran, for which quest and phase, and what it cost you: re-asks and corrections.'],
     quest: ['Quest', 'A ticket or adhoc task tracked in quest/active.txt.'],
+    division: ['Division', 'A group of departments that serve the same end, like a vice president’s area.'],
+    department: ['Department', 'Features that do one kind of job, headed by the doc that owns that job’s rules.'],
+    tier: ['Tier', 'How constantly a Feature acts. Senior: always on, every session or turn. Mid: on action, when a tool is used. Junior: on call, only when invoked. It says how present it is, not how important.'],
   };
   const term = (k, text) => `<span class="term" tabindex="0" data-tip="<b>${esc(TERMS[k][0])}</b><br>${esc(TERMS[k][1])}">${esc(text || TERMS[k][0])}</span>`;
 
@@ -46,6 +49,7 @@
   const ROLE = { folder: 'Folder', skill: 'Skill', hook: 'Hook', script: 'Script', protocol: 'Protocol doc', workflow: 'Workflow' };
   const NAV = [
     { id: 'overview', label: 'Overview' },
+    { id: 'map', label: 'Map' },
     { id: 'findings', label: 'Findings' },
     { id: 'features', label: 'Features' },
     { id: 'activity', label: 'Activity', subs: [['hooks', 'Hooks'], ['turns', 'Turns & quests'], ['mistakes', 'Mistakes'], ['evals', 'Evals']] },
@@ -116,8 +120,8 @@
     const max = Math.max(1, ...values); const n = values.length; const x = i => (n <= 1 ? w / 2 : (i * (w - 4)) / (n - 1) + 2); const y = v => h - 3 - (v / max) * (h - 6);
     return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" width="100%" height="${h}" aria-hidden="true"><line class="spark-base" x1="0" x2="${w}" y1="${h - 1}" y2="${h - 1}"/><polyline class="spark-line" vector-effect="non-scaling-stroke" points="${values.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ')}"/></svg>`;
   }
-  function verdictBar(counts, total) {
-    const segs = VORDER.filter(v => counts[v]).map(v => `<span class="vseg fill-${VERDICT[v].status}" style="flex:${counts[v]}" data-tip="<b>${esc(VERDICT[v].label)}</b><br>${counts[v]} Features · ${esc(VERDICT[v].means)}" data-fverdict="${v}"></span>`).join('');
+  function verdictBar(counts, total, opt = {}) {
+    const segs = VORDER.filter(v => counts[v]).map(v => `<span class="vseg fill-${VERDICT[v].status}" style="flex:${counts[v]}" data-tip="<b>${esc(VERDICT[v].label)}</b><br>${counts[v]} Features · ${esc(VERDICT[v].means)}"${opt.plain ? '' : ` data-fverdict="${v}"`}></span>`).join('');
     return `<div class="vbar" role="img" aria-label="${esc(VORDER.filter(v => counts[v]).map(v => counts[v] + ' ' + VERDICT[v].label).join(', '))} of ${total} Features">${segs}</div>`;
   }
 
@@ -243,6 +247,54 @@
     const body = rows.map(f => `<tr class="row" tabindex="0" data-open="${esc(f.id)}"><td class="wrap"><strong>${esc(f.name)}</strong>${f.purposeDraft ? ' <span class="tag" title="Auto-derived by goal-backfill and never promoted">draft purpose</span>' : ''}<span class="path clamp">${f.purpose ? esc(f.purpose) : '<span class="warn-t">No purpose declared</span>'}</span></td><td>${esc(f.layout)}</td><td>${partsSummary(f)}</td><td class="num">${f.runtime ? int(f.runtime.runs) : f.skillUse ? int(f.skillUse.window) + ' <small class="muted">uses</small>' : '—'}</td><td class="trend">${f.runtime ? sparkSVG(f.runtime.spark, 80, 20) : ''}</td><td>${chip(f.verdict)}</td></tr>`).join('');
     return `<p class="count">${rows.length} of ${state.snap.features.length} Features</p><div class="tablewrap scroll-y"><table><thead><tr>${th('name', 'Feature and purpose')}${th('layout', 'Layout')}${th('parts', 'Parts')}${th('runs', 'Runs', 1)}<th scope="col">Trend</th>${th('verdict', 'Verdict')}</tr></thead><tbody>${body || '<tr><td colspan="6" class="empty">No Feature matches these filters.</td></tr>'}</tbody></table></div>`;
   }
+  // ═════════ Map: the system as a company. Chart 1 = Board → CEO → divisions → departments; chart 2 = one department's tiers ═════════
+  const TIER = { senior: ['Senior', 'always on', 'fires every session or every turn'], mid: ['Mid', 'on action', 'fires when I use a tool'], junior: ['Junior', 'on call', 'runs only when invoked'] };
+  const deptById = id => state.snap && state.snap.org ? state.snap.org.departments.find(d => d.id === id) : null;
+  function deptLine(f) {
+    const org = state.snap && state.snap.org; if (!org) return ''; const d = deptById(org.deptOf[f.id]); if (!d) return ' <span class="tag">No department</span>';
+    const ex = d.features.find(x => x.id === f.id);
+    return ` <button type="button" class="tag link-tag" data-go="map/${d.id}">${esc(d.name)}</button>${ex ? ` <span class="tag" title="${esc(TIER[ex.tier][2])}">${TIER[ex.tier][0]} · ${TIER[ex.tier][1]}</span>` : ''}`;
+  }
+  function deptCard(d) {
+    const live = d.features.filter(f => f.verdict !== 'retired').length;
+    return `<button type="button" class="org-dept" data-go="map/${d.id}">
+      <span class="org-dept-h"><strong>${esc(d.name)}</strong><span class="muted">${esc(d.analog)}</span></span>
+      ${verdictBar(d.verdicts, d.features.length, { plain: true })}
+      <span class="org-dept-n">${d.features.length} Features · ${d.healthPct}% healthy${live < d.features.length ? ` · ${d.features.length - live} retired` : ''}</span>
+      <span class="org-dept-t">${d.tiers.senior} senior · ${d.tiers.mid} mid · ${d.tiers.junior} junior</span>
+    </button>`;
+  }
+  function vMap(s, arg) {
+    const org = s.org; if (!org) return card('Map', '', '<p class="empty">This snapshot has no org chart. Refresh.</p>');
+    const d = arg && deptById(arg);
+    if (d) return vDept(s, d);
+    const divs = org.divisions.map(v => `<div class="org-div"><div class="org-div-h"><strong>${esc(v.name)}</strong><span>${esc(v.does)} <span class="muted">${v.goals.join(' · ')}</span></span></div><div class="org-depts">${v.departments.map(id => deptCard(deptById(id))).join('')}</div></div>`).join('');
+    const unplaced = org.unassigned.length ? `<p class="sec">${org.unassigned.length} Feature(s) have no department yet; see the finding <button type="button" class="link" data-go="findings/org-unplaced">org-unplaced</button>.</p>` : '';
+    return `<div class="stack">${card('The system as a company', `Top down: the ${term('division', 'divisions')} split the work, each ${term('department', 'department')} is headed by the doc that owns its rules, and its ${term('feature', 'Features')} are the executives. Click a department for its ${term('tier', 'tiers')}.`,
+      `<div class="org" data-tour="org">
+        <div class="org-node org-board"><span class="org-k">Board · sets direction</span><div class="org-board-items">${org.board.map(b => `<div><strong>${esc(b.name)}</strong><span>${esc(b.role)}</span>${b.path ? `<code>${esc(b.path)}</code>` : ''}</div>`).join('')}</div></div>
+        <div class="org-v" aria-hidden="true"></div>
+        <div class="org-node org-ceo"><span class="org-k">Chief executive</span><strong>${esc(org.ceo.name)}</strong><span>${esc(org.ceo.role)}</span><code>${org.ceo.files.map(esc).join(' · ')}</code></div>
+        <div class="org-v" aria-hidden="true"></div>
+        <div class="org-divs">${divs}</div>
+      </div>${unplaced}`)}
+      <p class="muted org-foot">${Object.values(TIER).map(t => `<strong>${t[0]}</strong> ${t[1]}: ${t[2]}`).join(' · ')}. A tier says how present a Feature is, not how important.</p></div>`;
+  }
+  function vDept(s, d) {
+    const org = s.org; const div = org.divisions.find(v => v.id === d.division);
+    const ex = f => `<button type="button" class="exec" data-open="${esc(f.id)}" title="${esc(VERDICT[f.verdict].label)}${f.runs ? ' · ' + int(f.runs) + ' runs' : ''}"><i class="s-${VERDICT[f.verdict].status}" aria-hidden="true">${VERDICT[f.verdict].icon}</i>${esc(f.name)}</button>`;
+    const order = (a, b) => VORDER.indexOf(a.verdict) - VORDER.indexOf(b.verdict) || a.name.localeCompare(b.name);
+    const rows = ['senior', 'mid', 'junior'].map(t => { const fs = d.features.filter(f => f.tier === t).sort(order); return `<div class="org-v" aria-hidden="true"></div><div class="org-tier"><div class="org-tier-h"><strong>${TIER[t][0]}</strong> <span>${TIER[t][1]} · ${TIER[t][2]}</span><span class="muted">${fs.length}</span></div><div class="org-execs">${fs.map(ex).join('') || '<span class="muted">None.</span>'}</div></div>`; }).join('');
+    const siblings = org.departments.map(x => `<button type="button" class="pill${x.id === d.id ? ' on' : ''}" data-go="map/${x.id}">${esc(x.name)}</button>`).join('');
+    return `<div class="stack">
+      <nav class="crumbs" aria-label="Breadcrumb"><button type="button" class="link" data-go="map">Map</button> › <span>${esc(div ? div.name : '')}</span> › <strong>${esc(d.name)}</strong></nav>
+      ${card(`${esc(d.name)} <span class="muted">· ${esc(d.analog)}</span>`, esc(d.does), `<div class="org" data-tour="dept">
+        <div class="org-node org-ceo"><span class="org-k">Head of department</span><code>${esc(d.head)}</code><span>${d.features.length} Features · ${d.healthPct}% healthy · serves ${d.goals.join(' · ')}</span>${verdictBar(d.verdicts, d.features.length)}</div>
+        ${rows}
+      </div>`)}
+      <div class="pills" aria-label="Other departments">${siblings}</div></div>`;
+  }
+
   function vFeatures(s) {
     const fl = state.feat; const layouts = [...new Set(s.features.map(f => f.layout))];
     const vchips = VORDER.filter(v => s.kpis.featureVerdicts[v]).map(v => `<button type="button" class="fchip" data-verdict="${v}" aria-pressed="${fl.verdicts.has(v)}">${chip(v)}<span class="muted">${s.kpis.featureVerdicts[v]}</span></button>`).join('');
@@ -384,7 +436,7 @@
   function kv(pairs) { return `<dl class="kv">${pairs.filter(p => p[1] != null && p[1] !== '').map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join('')}</dl>`; }
   function featureDrawer(f) {
     const s = state.snap; const days = s.meta.days;
-    let h = `<h2>${esc(f.name)}</h2><p class="d-sub">${chip(f.verdict)} <span class="tag">${esc(f.layout)}</span></p>`;
+    let h = `<h2>${esc(f.name)}</h2><p class="d-sub">${chip(f.verdict)} <span class="tag">${esc(f.layout)}</span>${deptLine(f)}</p>`;
     h += `<h3>${term('purpose')}${f.purposeDraft ? ' <span class="tag">draft</span>' : ''}</h3>${f.purposeDraft ? `<p class="sec">Auto-derived from old headers and never promoted. Promote it with ${code('node lib/goal-backfill.js promote ' + f.name)} once it reads right.</p>` : ''}${f.purpose ? `<p>${esc(f.purpose)}</p>` : `<p>${schip('warning', '!', 'No purpose declared')} <span class="sec">It cannot be judged met or unmet until its goal is written down.</span></p>`}`;
     h += `<h3>Why: ${esc(VERDICT[f.verdict].label)}</h3>`;
     if (f.verdict === 'retired') h += `<p>${esc(f.retiredReason)}</p>`;
@@ -430,7 +482,7 @@
   }
 
   // ═════════ routing + render ═════════
-  const VIEWS = { overview: vOverview, findings: vFindings, features: vFeatures, 'activity/hooks': vHooks, 'activity/turns': vTurns, 'activity/mistakes': vMistakes, 'activity/evals': vEvals, 'estate/strays': vStrays, 'estate/stores': vStores, 'estate/sources': vSources };
+  const VIEWS = { overview: vOverview, map: vMap, findings: vFindings, features: vFeatures, 'activity/hooks': vHooks, 'activity/turns': vTurns, 'activity/mistakes': vMistakes, 'activity/evals': vEvals, 'estate/strays': vStrays, 'estate/stores': vStores, 'estate/sources': vSources };
   function route() {
     const [tab, sub] = (location.hash || '#overview').slice(1).split('/');
     const n = NAV.find(x => x.id === tab); if (!n) return { tab: 'overview', key: 'overview' };
@@ -456,7 +508,7 @@
     if (!state.snap) { $('#view').innerHTML = '<p class="empty">Building the snapshot…</p>'; return; }
     if (r.tab === 'findings' && r.arg) state.open.add('f:' + r.arg);
     const keep = state.charts.drawer; state.charts = keep ? { drawer: keep } : {};
-    $('#view').innerHTML = VIEWS[r.key](state.snap);
+    $('#view').innerHTML = VIEWS[r.key](state.snap, r.arg);
     renderMeta();
     if (r.key === 'overview') { sizeOverview(); watchOverview(); }
     drawAll();
@@ -484,6 +536,7 @@
     { route: 'overview', sel: '[data-tour="health"]', title: 'How healthy the Features are', body: 'A Feature is one capability made of parts: hooks, skills, scripts, evals. It takes the verdict of its worst part. Click a colour or a verdict to list those Features.' },
     { route: 'overview', sel: '[data-tour="kpis"]', title: 'Three numbers that matter', body: 'Open findings, hooks that actually ran, and mistakes this week. Each card opens its area.' },
     { route: 'overview', sel: '[data-tour="attention"]', title: 'Needs attention', body: 'The worst findings first, each with my one-line judgement. Click one to read it in full.' },
+    { route: 'map', sel: '[data-tour="org"]', title: 'The system as a company', body: 'The Board sets direction, I run it as chief executive, and four divisions hold twelve departments. Each department is headed by the doc that owns its rules. Click a department to see its Features in senior, mid and junior rows.' },
     { route: 'findings', sel: '[data-tour="finding-list"]', open: true, title: 'A finding reads left to right', body: 'Fact: what the data shows, with evidence. Context: what it means here. Judgement: my verdict, why, the next action, and whether it is your decision or mine. Evidence and my notes stay folded until you open them.' },
     { route: 'features', sel: '[data-tour="features-table"]', title: 'Every Feature and its parts', body: 'Purpose sits under each name; a missing purpose is a gap. Sort, filter by verdict or layout, and click a row for its parts, activity, findings and notes.' },
     { route: 'activity/hooks', sel: '#subnav', title: 'Activity', body: 'Hooks is observability: did it run, block, how long. Turns & quests is monitoring: why it ran, for which quest, and what it cost you. Mistakes and Evals sit beside them.' },

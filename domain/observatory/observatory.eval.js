@@ -196,14 +196,21 @@ function get(port, p, method) {
   check('every finding names the Features its components belong to, and each Feature lists it back', unlinked.length === 0 && snap.features.every(ft => ft.findingIds.every(id => snap.findings.find(f => f.id === id).features.includes(ft.id))), unlinked.map(f => f.id).join(', '));
   check('no Feature is healthy while carrying gaps', snap.features.every(f => f.verdict !== 'healthy' || !f.gaps.length), '');
 
-  // UI wiring: 5 areas, a view for every area and section, a glossary and a guide
+  // Map: every Feature sits in exactly one department or is reported by the org-unplaced finding; tiers follow the event rule
+  const org = snap.org; const inDept = org.departments.flatMap(d => d.features.map(f => f.id));
+  check(`Map: ${org.departments.length} departments in ${org.divisions.length} divisions hold ${inDept.length} of ${snap.features.length} Features, the rest are reported`, org.divisions.flatMap(v => v.departments).length === org.departments.length && inDept.length + org.unassigned.length - org.twice.length === snap.features.length && (!org.unassigned.length || snap.findings.some(f => f.id === 'org-unplaced')), `unassigned ${org.unassigned.length}, twice ${org.twice.length}`);
+  const ALWAYS = ['SessionStart', 'UserPromptSubmit', 'Stop', 'SubagentStop', 'PreCompact', 'SessionEnd'];
+  const badTier = org.departments.flatMap(d => d.features).filter(x => { const f = snap.features.find(y => y.id === x.id); const want = f.layout === 'Protocol' || f.events.some(e => ALWAYS.includes(e)) ? 'senior' : f.events.length ? 'mid' : 'junior'; return x.tier !== want; });
+  check('every executive tier follows the event rule (always on, on action, on call)', badTier.length === 0, badTier.slice(0, 4).map(x => x.name + '=' + x.tier).join(', '));
+
+  // UI wiring: 6 areas, a view for every area and section, a glossary and a guide
   const html = fs.readFileSync(path.join(HERE, 'public', 'index.html'), 'utf8'); const app = fs.readFileSync(path.join(HERE, 'public', 'app.js'), 'utf8');
   const navSrc = (app.match(/const NAV = \[([\s\S]*?)\n  \];/) || [])[1] || '';
   const areas = [...navSrc.matchAll(/\{ id: '(\w+)'/g)].map(m => m[1]);
   const leaves = [...navSrc.matchAll(/\{ id: '(\w+)'[^\n]*?(?:subs: \[(.*)\])? \}/g)].flatMap(m => m[2] ? [...m[2].matchAll(/\['(\w+)'/g)].map(s => m[1] + '/' + s[1]) : [m[1]]);
   const viewsSrc = (app.match(/const VIEWS = \{([^}]*)\}/) || [])[1] || '';
   const views = [...viewsSrc.matchAll(/'?([\w/]+)'?: (v[A-Z]\w+)/g)].map(m => [m[1], m[2]]);
-  check(`5 areas (${areas.join(', ')}) and ${leaves.length} views, each routed to a function that exists`, areas.length === 5 && leaves.length === 10 && leaves.every(l => views.some(([k]) => k === l)) && views.every(([, fn]) => new RegExp('function ' + fn + '\\(').test(app)), 'leaves ' + leaves.join(',') + ' | views ' + views.map(v => v[0]).join(','));
+  check(`6 areas (${areas.join(', ')}) and ${leaves.length} views, each routed to a function that exists`, areas.length === 6 && leaves.length === 11 && leaves.every(l => views.some(([k]) => k === l)) && views.every(([, fn]) => new RegExp('function ' + fn + '\\(').test(app)), 'leaves ' + leaves.join(',') + ' | views ' + views.map(v => v[0]).join(','));
   check('header carries Glossary and Guide, and the guide markup exists', ['id="glossary"', 'id="guide"', 'id="tour-card"', 'id="tour-next"'].every(s => html.includes(s)), '');
   const tourSrc = (app.match(/const TOUR = \[([\s\S]*?)\n  \];/) || [])[1] || '';
   const tourSteps = tourSrc.split('\n').filter(l => /title: '/.test(l)).length;

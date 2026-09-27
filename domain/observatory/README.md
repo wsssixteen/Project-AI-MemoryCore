@@ -68,12 +68,24 @@ A Feature is the top unit from `.claude/skills/system-design/SKILL.md`: one capa
 
 A Feature takes the verdict of its worst live part; retired and disabled parts are shown but not judged.
 
+## Map: the system as a company
+
+`orgChart()` draws the system as an org chart. Chart 1: Board (みや, system goals, north star, constitution) → chief executive (Ruri) → 4 divisions → 12 departments. Chart 2 (`#map/<department>`): the department's head doc, then its Features as executives in three tiers.
+
+| Tier | Rule | Means |
+|---|---|---|
+| Senior | a hook on SessionStart, UserPromptSubmit or Stop, or a Protocol | always on, every session or turn |
+| Mid | hooks on PreToolUse or PostToolUse only | on action, when a tool is used |
+| Junior | no hook | on call, only when invoked |
+
+A tier says how present a Feature is, not how important. Department membership is Ruri's classification in `ORG` (lib/observatory.js); a Feature in no department (or two) raises `org-unplaced`, a listed name with no Feature raises `org-stale`.
+
 ## Views: top down, open only when needed
 
 | Level | What | Where |
 |---|---|---|
 | L0 glance | Feature health bar, 3 numbers, the 10 worst findings, hook runs | Overview (fits one screen) |
-| L1 area | Findings · Features · Activity (Hooks, Turns and quests, Mistakes, Evals) · Estate (Strays, Stores and docs, Data sources) | tabs, sections |
+| L1 area | Map · Findings · Features · Activity (Hooks, Turns and quests, Mistakes, Evals) · Estate (Strays, Stores and docs, Data sources) | tabs, sections |
 | L2 item | one finding expanded (fact, context, judgement) · one Feature drawer (purpose, parts, hooks, activity, findings, notes) | click |
 | L3 evidence | evidence lists, notes, raw paths | folds, built only when opened |
 
