@@ -20,6 +20,7 @@
  *  S. (v1.7) de-registered CURRENT session (exact path or nested path) → never deleted
  *  T. (v1.7) root resolution strips .claude/worktrees/<name> (repo idiom)
  *  U. (v1.7) ls-files failure → content check fails CLOSED (kept), never "no files = safe"
+ *  V. (v1.8) boot without WORKTREE_CLEANUP_DELETE=1 → report-only: no orphan deleted, no registered worktree removed
  */
 const fs = require('fs');
 const os = require('os');
@@ -164,14 +165,23 @@ if (process.platform === 'win32') {
   const V = mkWorktree(repo, 'v-live', { keepRegistered: true, commitFile: 'v.md' });     // another live session (unmerged → step 3 leaves it)
   const Z = mkWorktree(repo, 'z-orphan', { deleteBranch: true });                         // clean orphan → delete
   const Y = mkWorktree(repo, 'y-unmerged', { commitFile: 'y.md' });                       // unmerged orphan → keep
+  const M2 = mkWorktree(repo, 'm2-merged-live', { keepRegistered: true });                // merged + clean + registered → step 3 target
   const hookCopy = path.join(W, '.claude', 'hooks', 'worktree-cleanup-boot.js');         // the hook as a worktree session runs it
   fs.mkdirSync(path.dirname(hookCopy), { recursive: true });
   fs.copyFileSync(path.join(__dirname, 'worktree-cleanup-boot.js'), hookCopy);
-  const boot = dry => spawnSync(process.execPath, [hookCopy], { cwd: W, encoding: 'utf8', windowsHide: true, timeout: 120000,
-    env: { ...process.env, CLAUDE_PROJECT_DIR: W, WORKTREE_CLEANUP_DRY_RUN: dry ? '1' : '0' } });
-  let b = boot(true);
+  const boot = (dry, del) => spawnSync(process.execPath, [hookCopy], { cwd: W, encoding: 'utf8', windowsHide: true, timeout: 120000,
+    env: { ...process.env, CLAUDE_PROJECT_DIR: W, WORKTREE_CLEANUP_DRY_RUN: dry ? '1' : '0', WORKTREE_CLEANUP_DELETE: del ? '1' : '0' } });
+  let b = boot(true, true);
   check('R dry boot from worktree → plans MAIN\'s orphans, deletes nothing', /2 orphan folder\(s\) → would delete 1/.test(b.stderr) && fs.existsSync(Z));
-  b = boot(false);
+  // ── V (v1.8): a normal boot WITHOUT the opt-in is report-only — no orphan deleted, no registered worktree removed
+  b = boot(false, false);
+  const mainLogV = path.join(repo, '.claude', 'state', 'worktree-cleanup-log.jsonl');
+  const lastRow = () => { try { const r = fs.readFileSync(mainLogV, 'utf8').trim().split('\n'); return JSON.parse(r[r.length - 1]); } catch { return {}; } };
+  check('V boot without opt-in → orphan NOT deleted + line says REPORT ONLY', fs.existsSync(Z) && /REPORT ONLY/.test(b.stderr));
+  check('V boot without opt-in → merged registered worktree NOT removed (step 3 frozen)', fs.existsSync(M2));
+  check('V boot without opt-in → log row carries dry:true', lastRow().dry === true);
+  b = boot(false, true);
+  check('V opt-in boot → step 3 removes the merged registered worktree again', !fs.existsSync(M2));
   check('R boot from worktree → MAIN\'s clean orphan deleted', !fs.existsSync(Z));
   check('R boot from worktree → MAIN\'s unmerged orphan kept + surfaced', fs.existsSync(Y) && /y-unmerged — branch claude\/y-unmerged UNMERGED/.test(b.stderr));
   check('R current session + registered sibling untouched', fs.existsSync(W) && fs.existsSync(V));
