@@ -81,6 +81,19 @@
  *     checkout — unchanged. Delete rule unchanged (every non-ignored file reachable from a ref or
  *     byte-identical to main). Registered + current never swept — kept, current widened to path
  *     containment. Dropped: none. Eval fixtures R · S · T · U.
+ *
+ * v1.8 2026-09-27 — BOOT DELETES FROZEN (per みや's "have you confirmed it is safe to delete?").
+ *   The delete rule proves only committed + non-ignored files. An audit of the 22 "deletable"
+ *   folders found gitignored / mirror-path files the rule never looks at, newer than main or
+ *   missing from main (quest docs, etanah-knowledge edits, feature logs). A v1.6 main-root boot
+ *   deleted the first 4 of those folders alphabetically before its 30 s kill.
+ *   symptom:     2026-09-27 — 4 planned-delete folders vanished between two dry runs; audit: 250 files newer than main + 158 absent from main in the 22 folders
+ *   goal:        no boot deletes a folder until the rule also proves ignored-path content, or みや opts in
+ *   goal_signal: boot sweep log rows carry dry:true unless WORKTREE_CLEANUP_DELETE=1
+ *   retention:   keep (same log)
+ *   Changed: step 5 sweep is report-only unless WORKTREE_CLEANUP_DELETE=1. Direct sweepOrphans()
+ *     calls keep their explicit dryRun. Spec preservation: every v1.7 spec intact; boot-time
+ *     deletion SUSPENDED (named, reversible: set the env var). Eval fixture V.
  */
 const { execSync } = require('child_process');
 const fs = require('fs');
@@ -93,6 +106,7 @@ const mainRootOf = dir => String(dir).replace(/[\\/]\.claude[\\/]worktrees[\\/][
 const MAIN_ROOT = mainRootOf(projectRoot);
 const skillsDir = path.join(projectRoot, '.claude', 'skills');
 const DRY = process.env.WORKTREE_CLEANUP_DRY_RUN === '1';
+const BOOT_DELETES = process.env.WORKTREE_CLEANUP_DELETE === '1';     // v1.8: boot sweep is report-only unless opted in
 const LOG = path.join(MAIN_ROOT, '.claude', 'state', 'worktree-cleanup-log.jsonl');
 
 function run(cmd, cwd) {
@@ -372,7 +386,7 @@ try {
     const wt = wtByBranch.get(b);
     if (wt && norm(wt) === here) continue;                             // never self-remove
     if (wt) {
-      if (DRY) continue;
+      if (DRY || !BOOT_DELETES) continue;                              // v1.8: `worktree remove` ignores gitignored files → frozen too
       const rm = runFull(`git worktree remove "${wt}"`);
       if (!rm.ok) { refused.push(`${path.basename(wt)} (${b}): ${rm.err.split('\n')[0]}`); continue; }
     }
@@ -385,19 +399,20 @@ try {
   // 5. ORPHAN-FOLDER SWEEP (v1.6, D1) — folders on disk that git no longer lists.
   //    v1.7: always MAIN's folder, whichever checkout booted; this session is protected by path.
   try {
-    const sw = sweepOrphans(MAIN_ROOT, { dryRun: DRY, baseRef, here: [projectRoot, process.env.CLAUDE_PROJECT_DIR, process.cwd()] });
+    const dry = DRY || !BOOT_DELETES;                                  // v1.8: report-only unless WORKTREE_CLEANUP_DELETE=1
+    const sw = sweepOrphans(MAIN_ROOT, { dryRun: dry, baseRef, here: [projectRoot, process.env.CLAUDE_PROJECT_DIR, process.cwd()] });
     const gb = b => (b / 1073741824).toFixed(2);
     let keptBytes = 0, delBytes = 0;
     for (const e of sw.kept) keptBytes += dirBytes(path.join(MAIN_ROOT, '.claude', 'worktrees', e.name));
-    if (DRY) for (const e of sw.deleted) delBytes += dirBytes(path.join(MAIN_ROOT, '.claude', 'worktrees', e.name));
+    if (dry) for (const e of sw.deleted) delBytes += dirBytes(path.join(MAIN_ROOT, '.claude', 'worktrees', e.name));
     const line = `worktrees: ${sw.registered} registered · ${sw.orphans.length} orphan folder(s)` +
-      (sw.orphans.length ? ` → ${DRY ? 'would delete' : 'deleted'} ${sw.deleted.length}${DRY ? ` (${gb(delBytes)} GB)` : ''} · kept ${sw.kept.length}${sw.kept.length ? ` (${gb(keptBytes)} GB)` : ''}` : '') +
-      (DRY ? '  [DRY RUN]' : '');
+      (sw.orphans.length ? ` → ${dry ? 'would delete' : 'deleted'} ${sw.deleted.length}${dry ? ` (${gb(delBytes)} GB)` : ''} · kept ${sw.kept.length}${sw.kept.length ? ` (${gb(keptBytes)} GB)` : ''}` : '') +
+      (DRY ? '  [DRY RUN]' : dry ? '  [REPORT ONLY — boot deletes frozen, WORKTREE_CLEANUP_DELETE=1 to enable]' : '');
     process.stderr.write(line + '\n');                                 // D3: a number every boot, never silence
     if (sw.kept.length) {
       process.stderr.write(`   kept (never auto-deleted — /worktree-retrieve or inspect):\n   ${sw.kept.map(e => `${e.name} — ${e.why}`).join('\n   ')}\n`);
     }
-    if (DRY && sw.deleted.length) {
+    if (dry && sw.deleted.length) {
       process.stderr.write(`   would delete:\n   ${sw.deleted.map(e => `${e.name} — ${e.why}`).join('\n   ')}\n`);
     }
     // (sweep row already written inside sweepOrphans; add the step-3 refusals if any)
