@@ -178,10 +178,39 @@ function get(port, p, method) {
   check('--judge rejects an unknown id with exit 2', jbad.status === 2, jbad.status);
   delete process.env.OBSERVATORY_JUDGEMENTS; try { fs.unlinkSync(tmpLedger); } catch (_) {}
 
-  // UI wiring: 11 tabs in the HTML, a view for each in app.js
+  // Feature grouping: every component lands in exactly one home, a Feature is as healthy as its worst part
+  const featureIds = new Set(snap.features.map(f => f.id));
+  const homes = new Map();
+  const put = (id, where) => homes.set(id, (homes.get(id) || []).concat(where));
+  for (const f of snap.features) for (const p of f.parts) put(p.id, f.id);
+  for (const x of snap.shared) put(x.id, 'shared'); for (const x of snap.unowned) put(x.id, 'unowned'); for (const id of snap.stores) put(id, 'stores');
+  const homeless = snap.components.filter(c => !c.ghost && !homes.has(c.id)).map(c => c.id);
+  const twice = [...homes].filter(([, w]) => w.length > 1).map(([id, w]) => id + '→' + w.join('+'));
+  check(`every component has exactly one home (${snap.features.length} Features · ${snap.shared.length} shared · ${snap.unowned.length} unowned · ${snap.stores.length} stores)`, homeless.length === 0 && twice.length === 0, homeless.slice(0, 4).concat(twice.slice(0, 4)).join(', '));
+  check('partOf agrees with Feature parts', snap.features.every(f => f.parts.every(p => snap.partOf[p.id] === f.id)) && Object.entries(snap.partOf).every(([id, fid]) => featureIds.has(fid) && snap.features.find(f => f.id === fid).parts.some(p => p.id === id)), '');
+  const RANK = ['ghost', 'failing', 'unregistered', 'silent', 'gaps', 'healthy', 'retired'];
+  const byCid = new Map(snap.components.map(c => [c.id, c]));
+  const wrongVerdict = snap.features.filter(f => { const live = f.parts.map(p => byCid.get(p.id)).filter(c => !c.retired && !c.disabled); const want = live.length ? live.map(c => c.verdict).sort((a, b) => RANK.indexOf(a) - RANK.indexOf(b))[0] : 'retired'; return f.verdict !== want; });
+  check('every Feature verdict is its worst live part', wrongVerdict.length === 0, wrongVerdict.slice(0, 4).map(f => f.name + '=' + f.verdict).join(', '));
+  const unlinked = snap.findings.filter(f => (f.components || []).some(id => snap.partOf[id] && !(f.features || []).includes(snap.partOf[id])));
+  check('every finding names the Features its components belong to, and each Feature lists it back', unlinked.length === 0 && snap.features.every(ft => ft.findingIds.every(id => snap.findings.find(f => f.id === id).features.includes(ft.id))), unlinked.map(f => f.id).join(', '));
+  check('no Feature is healthy while carrying gaps', snap.features.every(f => f.verdict !== 'healthy' || !f.gaps.length), '');
+
+  // UI wiring: 5 areas, a view for every area and section, a glossary and a guide
   const html = fs.readFileSync(path.join(HERE, 'public', 'index.html'), 'utf8'); const app = fs.readFileSync(path.join(HERE, 'public', 'app.js'), 'utf8');
-  const tabs = [...html.matchAll(/<a href="#(\w+)">/g)].map(m => m[1]);
-  check(`11 tabs in index.html, each with a view in app.js (${tabs.join(', ')})`, tabs.length === 11 && tabs.every(t => new RegExp('\\b' + t + ': v[A-Z]').test(app)), tabs.join(','));
+  const navSrc = (app.match(/const NAV = \[([\s\S]*?)\n  \];/) || [])[1] || '';
+  const areas = [...navSrc.matchAll(/\{ id: '(\w+)'/g)].map(m => m[1]);
+  const leaves = [...navSrc.matchAll(/\{ id: '(\w+)'[^\n]*?(?:subs: \[(.*)\])? \}/g)].flatMap(m => m[2] ? [...m[2].matchAll(/\['(\w+)'/g)].map(s => m[1] + '/' + s[1]) : [m[1]]);
+  const viewsSrc = (app.match(/const VIEWS = \{([^}]*)\}/) || [])[1] || '';
+  const views = [...viewsSrc.matchAll(/'?([\w/]+)'?: (v[A-Z]\w+)/g)].map(m => [m[1], m[2]]);
+  check(`5 areas (${areas.join(', ')}) and ${leaves.length} views, each routed to a function that exists`, areas.length === 5 && leaves.length === 10 && leaves.every(l => views.some(([k]) => k === l)) && views.every(([, fn]) => new RegExp('function ' + fn + '\\(').test(app)), 'leaves ' + leaves.join(',') + ' | views ' + views.map(v => v[0]).join(','));
+  check('header carries Glossary and Guide, and the guide markup exists', ['id="glossary"', 'id="guide"', 'id="tour-card"', 'id="tour-next"'].every(s => html.includes(s)), '');
+  const tourSrc = (app.match(/const TOUR = \[([\s\S]*?)\n  \];/) || [])[1] || '';
+  const tourSteps = tourSrc.split('\n').filter(l => /title: '/.test(l)).length;
+  const anchors = [...tourSrc.matchAll(/data-tour="([\w-]+)"/g)].map(m => m[1]);
+  const unanchored = anchors.filter(a => !app.replace(tourSrc, '').includes('data-tour="' + a + '"') && !app.includes("tour: '" + a + "'"));
+  check(`guide has ${tourSteps} steps; all ${anchors.length} data-tour anchors it points at are rendered by a view`, tourSteps >= 6 && anchors.length >= 5 && unanchored.length === 0, unanchored.join(', '));
+  check('no dashboard label says "Feature hook" (a Feature is the whole unit, not a hook type)', !/Feature hook/i.test(app), '');
   check('no CDN or external script/style in the UI', !/(src|href)="https?:\/\//.test(html) && !/https?:\/\//.test(app.replace(/http:\/\/www\.w3\.org\/2000\/svg/g, '')), '');
 
   console.log(`\n${pass}/${pass + fail} passed`);

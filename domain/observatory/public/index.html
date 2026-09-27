@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lapis Lazuli Observatory</title>
-<meta name="description" content="Every component of the Lapis Lazuli project with its registration, eval, liveness and gaps, plus the stray files no component owns.">
+<meta name="description" content="The health of every Lapis Lazuli Feature, what is wrong with it read as fact, context and judgement, and the files nothing owns.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232a78d6'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='white' stroke-width='3'/%3E%3C/svg%3E">
 <script>try { var t = localStorage.getItem('lapis-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <link rel="stylesheet" href="styles.css">
@@ -15,42 +15,42 @@
     <span class="mark" aria-hidden="true"></span>
     <div>
       <h1>Lapis Lazuli Observatory</h1>
-      <p id="meta" class="meta">Loading snapshot…</p>
+      <p id="meta" class="meta">Loading…</p>
     </div>
   </div>
   <div class="controls">
-    <label><span class="sr">Liveness window</span>
-      <select id="days" aria-label="Liveness window">
+    <label><span class="sr">Time window</span>
+      <select id="days" aria-label="Time window">
         <option value="7">Last 7 days</option>
         <option value="30" selected>Last 30 days</option>
         <option value="90">Last 90 days</option>
       </select>
     </label>
     <button id="refresh" type="button">Refresh</button>
-    <button id="theme" type="button" aria-label="Toggle light or dark theme">Theme</button>
+    <button id="theme" type="button" aria-label="Switch between light and dark theme">Theme</button>
+    <button id="glossary" type="button">Glossary</button>
+    <button id="guide" type="button">Guide</button>
   </div>
 </header>
-<nav id="tabs" class="tabs" aria-label="Views">
-  <a href="#overview">Overview</a>
-  <a href="#findings">Findings</a>
-  <a href="#catalog">Catalog</a>
-  <a href="#runtime">Runtime</a>
-  <a href="#monitoring">Monitoring</a>
-  <a href="#mistakes">Mistakes</a>
-  <a href="#evals">Evals</a>
-  <a href="#quests">Quests</a>
-  <a href="#memory">Memory</a>
-  <a href="#unmanaged">Unmanaged</a>
-  <a href="#sources">Sources</a>
-</nav>
+<nav id="tabs" class="tabs" aria-label="Areas"></nav>
+<nav id="subnav" class="subnav" aria-label="Sections" hidden></nav>
 <main><section id="view" aria-live="polite"></section></main>
 <div id="scrim" class="scrim"></div>
-<aside id="drawer" class="drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Component detail">
+<aside id="drawer" class="drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Details">
   <div class="drawer-inner">
     <button id="drawer-close" class="close" type="button">Close</button>
     <div id="drawer-body"></div>
   </div>
 </aside>
+<div id="tour" class="tour" hidden>
+  <div id="tour-spot" class="tour-spot"></div>
+  <div id="tour-card" class="tour-card" role="dialog" aria-modal="true" aria-labelledby="tour-title">
+    <p id="tour-step" class="tour-step"></p>
+    <h2 id="tour-title"></h2>
+    <p id="tour-body"></p>
+    <div class="tour-actions"><button id="tour-skip" type="button" class="btn ghost">Skip guide</button><span class="grow"></span><button id="tour-back" type="button" class="btn">Back</button><button id="tour-next" type="button" class="btn primary">Next</button></div>
+  </div>
+</div>
 <div id="tip" class="tip" role="tooltip"></div>
 <script src="app.js"></script>
 </body>

@@ -2,6 +2,7 @@
 
 
 ## Feedback
+- [top-down-app-design](feedback_top_down_app_design.md) — 🚨 apps/dashboards: glance → area → item → evidence, deeper levels only on demand; names before layout; guide last
 - [probe-builds-local-only](feedback_probe_builds_local_only.md) — 🚨 PROBE/logger builds are tested on miya's LOCAL JBoss only, never merged/pushed to int-env/stag-env/master/release; gate domain/probe-local-only-gate; "for now"
 - [permohonan-holder-resolver](feedback_permohonan_holder_resolver.md) — 🚨 permohonan id = umm_aplikasi.id_pengenalan; resolve live holder from DB on the right env, never from ticket text
 - [hotfix-branch-from-master](feedback_hotfix_branch_from_master.md) — 🚨 PROD hotfix on a released ticket → mlk/hotfix/<ticket> off latest origin/mlk/master; old ticket branch = reference only

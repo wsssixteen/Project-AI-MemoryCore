@@ -1,7 +1,7 @@
-goal: one screen shows every Lapis Lazuli component with its purpose, registration, eval, liveness and gaps, plus the stray files no component owns; every finding reads fact, context, judgement with evidence, and Ruri retrieves the same findings in one command to diagnose the system and brief miya without missing anything
+goal: one screen shows every Lapis Lazuli Feature (the unit of skill + hooks + scripts + eval) with its purpose, parts, liveness and gaps, plus the stray files nothing owns; every finding reads fact, context, judgement with evidence, and Ruri retrieves the same findings in one command to diagnose the system and brief miya without missing anything
 retention: regenerate
 symptom: 2026-09-27 miya: prove monitoring and observability visually for every feature; estate state was split across 4 markdown views and worktree telemetry was invisible
-goal_signal: observatory.eval.js green (counts equal the disk per kind, every non-healthy component sits in a finding, every finding carries all layers), every tab renders with 0 console errors, the Overview fits one desktop screen
+goal_signal: observatory.eval.js green (counts equal the disk per kind, every non-healthy component sits in a finding, every finding carries all layers), every Feature is its worst live part and every component has exactly one home, every view renders with 0 console errors, the Overview fits one desktop screen
 
 # Lapis Lazuli Observatory
 
@@ -20,7 +20,7 @@ A local dashboard for the whole Lapis Lazuli project: every component, its healt
 | `lib/observatory.js` | Data layer (forge-born). One read-only snapshot of 12 component kinds + ledgers + strays. Reuses `lib/feature-census.js` collect() for verdict gaps and `lib/audit-briefing.js` gather() for the audit screen. |
 | `server.js` | Zero-dependency HTTP server on 127.0.0.1. Caches the snapshot 30 s; git state, stale-worktree sizes and the audit block run in the background. |
 | `public/` | Vanilla HTML/CSS/JS, inline SVG charts, dataviz reference palette, light + dark. |
-| `observatory.eval.js` | Per-kind counts vs an independent disk count, every kind has rows, verdict rules, server routes, build time. |
+| `observatory.eval.js` | Per-kind counts vs an independent disk count, verdict rules, Feature grouping (one home per component, worst-part verdict, finding links both ways), findings layers, retrieval CLIs, server routes, UI wiring, build time. |
 | `log.jsonl` | One row per snapshot (gitignored runtime). |
 | `judgements.jsonl` | Ruri's investigation notes per finding or component (committed; written by `--judge`). |
 | `%TEMP%\lapis-observatory\telemetry-v3.json` | Incremental hook-telemetry aggregate: byte offset per append-only file + a hash per row already counted. Outside the repo so OneDrive never syncs it; safe to delete (the next build rebuilds it in ~10 s). |
@@ -49,16 +49,41 @@ An eval proves nothing is left out: every non-healthy component must appear in a
 - `node lib/observatory.js --finding <id>` · one finding in full
 - `node lib/observatory.js --judge <id> --judgement "..." --justification "..." [--context "..."] [--action "..."]` · record an investigation (id = a finding id or `component:<component id>`)
 
-Purpose is a pillar: the drawer leads with each component's goal, the Catalog has a Purpose column, and components with no declared goal are their own finding.
+Purpose is a pillar: the Feature drawer leads with its purpose, the Features table shows it under each name, a purpose the goal-backfill derived and nobody promoted is tagged draft, and a Feature with no purpose is its own finding.
 
-## Views
+## Features: the unit on screen
 
-Overview (one screen: KPIs, findings, health by kind, activity) · Findings · Catalog · Runtime · Monitoring · Mistakes · Evals · Quests · Memory · Unmanaged · Sources.
-Observability (did it fire, block, how long) lives in Runtime; monitoring (why, which quest phase, re-asks, cost) lives in Monitoring.
+A Feature is the top unit from `.claude/skills/system-design/SKILL.md`: one capability whose parts (skill, hooks, scripts, eval, README, log) work together. `groupFeatures()` assigns every component one home by rule:
+
+| Component | Home |
+|---|---|
+| `domain/<name>/` folder | Feature `<name>` (layout Feature folder) |
+| skill `.claude/skills/<name>` | Feature `<name>` |
+| legacy hook `.claude/hooks/<name>.js` | Feature `<name>` |
+| protocol `Feature/<Name>/` | Feature `<name>` (layout Protocol) |
+| workflow | Feature of the same name |
+| script | Feature of its own name, else the one Feature that references it, else Shared (2+) or Unowned (0) |
+| bundle | Shared runtime |
+| knowledge, memory, doc, project | Stores (listed, not judged) |
+
+A Feature takes the verdict of its worst live part; retired and disabled parts are shown but not judged.
+
+## Views: top down, open only when needed
+
+| Level | What | Where |
+|---|---|---|
+| L0 glance | Feature health bar, 3 numbers, the 10 worst findings, hook runs | Overview (fits one screen) |
+| L1 area | Findings · Features · Activity (Hooks, Turns and quests, Mistakes, Evals) · Estate (Strays, Stores and docs, Data sources) | tabs, sections |
+| L2 item | one finding expanded (fact, context, judgement) · one Feature drawer (purpose, parts, hooks, activity, findings, notes) | click |
+| L3 evidence | evidence lists, notes, raw paths | folds, built only when opened |
+
+Observability (did it fire, block, how long) lives in Activity > Hooks; monitoring (why, which quest, re-asks, cost) lives in Activity > Turns and quests. Quests are the work the turns serve, not a component, so they sit there as a fold instead of a tab.
+
+Every term with a dotted underline has a definition on hover; **Glossary** lists them all. **Guide** walks 9 steps through the app; it opens once on first visit (remembered in localStorage) and `?guide=off` suppresses it.
 
 ## Verdicts
 
-`ghost` (registered, file missing) · `failing` (eval red in the latest battery) · `unregistered` (hook file settings.json never runs) · `silent` (registered and observable, 0 runs in the window) · `gaps` (feature-census gaps: no eval, no README, goal-less, no retention, unobservable) · `retired` (tombstoned, deliberately unregistered with a system-audit opt-out marker, or disabled in code with a DISABLED comment) · `healthy`. Memory stores and docs are listed but not judged.
+`ghost` (registered, file missing) · `failing` (eval red in the latest battery) · `unregistered` (hook file settings.json never runs) · `silent` (registered and observable, 0 runs in the window) · `gaps` (feature-census gaps: no eval, no README, goal-less, no retention, unobservable) · `retired` (tombstoned, deliberately unregistered with a system-audit opt-out marker, or disabled in code with a DISABLED comment) · `healthy`. On screen they read Broken wiring · Failing tests · Not wired · Not running · Needs work · Retired · Healthy. Memory stores and docs are listed but not judged.
 
 ## Data roots
 
