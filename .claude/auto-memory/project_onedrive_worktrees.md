@@ -5,12 +5,13 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 6e2f7830-916e-4545-ae29-7e0c7f2bb184
-  modified: 2026-09-26T23:05:53.410Z
+  modified: 2026-09-27T00:35:26.806Z
 ---
 
 **What happened (2026-09-04)**: `.claude/worktrees/` inside the OneDrive repo held 213 folders / 15.10 GB while `git worktree list` showed 2. OneDrive syncs `.git/` across two laptops; the other machine's `worktree prune` drops admin entries for folders it cannot see, so folders survive here de-registered — invisible to every cleanup that keys off git's list. The boot hook then deleted their branches as "merged" (D2), leaving folders with no branch and, in 5 cases, whole never-committed Features (etanah-intake-gate, rootcause-format, patch-close-shape, agih, staging-schema-tracker).
 
 **Standing rules**:
+- **v1.8 (2026-09-27): boot deletes are FROZEN** — the sweep reports only, unless `WORKTREE_CLEANUP_DELETE=1`. The delete rule ignores gitignored + mirror-path files, and the 22 "deletable" folders held unique work there (quest docs, etanah-knowledge edits, feature log rows). A v1.6 boot had already deleted 4 folders that way. Never re-enable deletes until the rule also proves that content.
 - `worktree-cleanup-boot.js` v1.7 (2026-09-27) sweeps MAIN's `.claude/worktrees` from main OR any in-tree worktree session (v1.6 resolved the worktree's own root, so worktree boots never swept main → 66 folders / 19 GB). A worktree session runs its OWN branch's copy of the hook, so a fix reaches old worktrees only after they are re-created from main. It reads the directory every boot, deletes only folders whose every non-ignored file is **reachable from a ref** or byte-identical to main's working copy, keeps + lists the rest, logs to `.claude/state/worktree-cleanup-log.jsonl`. A boot line `worktrees: … kept N` means never-committed work exists — salvage it, never `rm`.
 - A worktree for salvage/rebase work goes to a SHORT path OUTSIDE OneDrive, e.g. `C:\Users\Ridhwan\AppData\Local\Temp\claude\mc-<name>` — the session scratchpad path is ~200 chars and blew MAX_PATH on `git worktree add` (967 files).
 - Start sessions with the worktree box UNTICKED until worktree creation is pointed outside OneDrive.
