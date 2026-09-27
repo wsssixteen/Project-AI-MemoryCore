@@ -2,6 +2,12 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "observatory",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["domain/observatory/server.js"],
+      "port": 7790
+    },
+    {
       "name": "atlas",
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "8791", "--directory", "etanah_atlas"],
