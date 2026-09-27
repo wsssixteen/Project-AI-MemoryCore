@@ -285,12 +285,13 @@
     const ex = f => `<button type="button" class="exec" data-open="${esc(f.id)}" title="${esc(VERDICT[f.verdict].label)}${f.runs ? ' · ' + int(f.runs) + ' runs' : ''}"><i class="s-${VERDICT[f.verdict].status}" aria-hidden="true">${VERDICT[f.verdict].icon}</i>${esc(f.name)}</button>`;
     const order = (a, b) => VORDER.indexOf(a.verdict) - VORDER.indexOf(b.verdict) || a.name.localeCompare(b.name);
     const rows = ['senior', 'mid', 'junior'].map(t => { const fs = d.features.filter(f => f.tier === t).sort(order); return `<div class="org-v" aria-hidden="true"></div><div class="org-tier"><div class="org-tier-h"><strong>${TIER[t][0]}</strong> <span>${TIER[t][1]} · ${TIER[t][2]}</span><span class="muted">${fs.length}</span></div><div class="org-execs">${fs.map(ex).join('') || '<span class="muted">None.</span>'}</div></div>`; }).join('');
-    const siblings = org.departments.map(x => `<button type="button" class="pill${x.id === d.id ? ' on' : ''}" data-go="map/${x.id}">${esc(x.name)}</button>`).join('');
+    const MT = { working: ['Working', 'what is happening now; small, reset when done'], episodic: ['Episodic', 'what happened: sessions, quests, mistakes'], semantic: ['Semantic', 'what is known: facts, profile, rules learned'] };
+    const keeps = (d.keeps || []).length ? `<div class="org-v" aria-hidden="true"></div><div class="org-tier org-keeps"><div class="org-tier-h"><strong>Keeps</strong> <span>the records this department writes and reads back, by memory type</span><span class="muted">${d.keeps.length}</span></div><div class="mem-types">${Object.keys(MT).map(t => { const ks = d.keeps.filter(k => k.memType === t); return ks.length ? `<div class="mem-type"><div class="mem-type-h"><strong>${MT[t][0]}</strong> <span class="muted">${MT[t][1]}</span></div>${ks.map(k => `<button type="button" class="store" data-open="${esc(k.id)}"><code>${esc(k.path.replace('projects/coding-projects/active/', ''))}</code><span>${esc(k.description)}${k.bytes ? ' · ' + bytes(k.bytes) : ''} · ${esc(ago(k.modified))}</span></button>`).join('')}</div>` : ''; }).join('')}</div></div>` : '';    const siblings = org.departments.map(x => `<button type="button" class="pill${x.id === d.id ? ' on' : ''}" data-go="map/${x.id}">${esc(x.name)}</button>`).join('');
     return `<div class="stack">
       <nav class="crumbs" aria-label="Breadcrumb"><button type="button" class="link" data-go="map">Map</button> › <span>${esc(div ? div.name : '')}</span> › <strong>${esc(d.name)}</strong></nav>
       ${card(`${esc(d.name)} <span class="muted">· ${esc(d.analog)}</span>`, esc(d.does), `<div class="org" data-tour="dept">
         <div class="org-node org-ceo"><span class="org-k">Head of department</span><code>${esc(d.head)}</code><span>${d.features.length} Features · ${d.healthPct}% healthy · serves ${d.goals.join(' · ')}</span>${verdictBar(d.verdicts, d.features.length)}</div>
-        ${rows}
+        ${rows}${keeps}
       </div>`)}
       <div class="pills" aria-label="Other departments">${siblings}</div></div>`;
   }

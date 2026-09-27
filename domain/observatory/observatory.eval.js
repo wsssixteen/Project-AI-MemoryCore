@@ -26,7 +26,7 @@ function diskCounts() {
   const scripts = ['core', 'lib', 'quest', 'system'].reduce((a, d) => a + ls(path.join(CODE_ROOT, d)).filter(f => f.isFile() && f.name.endsWith('.js') && !f.name.endsWith('.eval.js') && !f.name.includes('.log.')).length, 0);
   const skills = ['.claude/skills', '.agents/skills'].reduce((a, d) => a + ls(path.join(CODE_ROOT, d)).filter(f => f.isDirectory() || f.isSymbolicLink()).length, 0);
   const docs = ['system', '.claude', ''].reduce((a, d) => a + ls(path.join(CODE_ROOT, d)).filter(f => f.isFile() && f.name.endsWith('.md') && !/-\d{4}-\d{2}-\d{2}/.test(f.name)).length, 0);
-  const memory = ['main/main-memory.md', 'main/current-session.md', 'main/todo.md', '.claude/auto-memory', 'daily-diary'].filter(p => exists(path.join(DATA_ROOT, p))).length;
+  const memory = ['main/main-memory.md', 'main/current-session.md', 'main/todo.md', '.claude/auto-memory', 'daily-diary', 'main/session-archive.md', 'quest/active.txt', 'quest/active-archive.txt', 'projects/coding-projects/active', 'system/slips.jsonl'].filter(p => exists(path.join(DATA_ROOT, p))).length;
   return {
     feature: dom.filter(hasHook).length,
     package: dom.filter(d => !hasHook(d)).length,
