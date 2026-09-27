@@ -6,6 +6,7 @@
  *      registration + green stub eval + registry line + exit 0
  *   F2 collision → refine-first: same birth again → exit 3, no duplicate files
  *   F3 missing --nod → exit 2 (echo+nod is mandatory, per operator parameter)
+ *   F4 refine of a pre-forge flat hook (.claude/hooks/<name>.js) runs its <name>.eval.js pin; red pin → exit 2
  */
 'use strict';
 const fs = require('fs');
@@ -59,6 +60,16 @@ r = runForge(['new', 'check', 'trigger-goal-probe', '--event', 'Stop', '--sympto
 check('F3c goal-restates-trigger exit 2', r.status === 2 && /restates the trigger/.test(r.stderr), 'exit=' + r.status);
 r = runForge(['new', 'check', 'bad-retention-probe', '--event', 'Stop', '--symptom', 's', '--goal', 'a real outcome', '--signal', 'sig', '--retention', 'forever', '--trigger', 't', '--action', 'a', '--replay', 'r', '--nod', 'n']);
 check('F3d bad --retention exit 2', r.status === 2 && /retention/.test(r.stderr), 'exit=' + r.status);
+
+// F4 — refine resolves a pre-forge flat hook (.claude/hooks/<name>.js) and runs its <name>.eval.js pin
+fs.mkdirSync(path.join(TMP, '.claude', 'hooks'), { recursive: true });
+fs.writeFileSync(path.join(TMP, '.claude', 'hooks', 'flat-probe.js'), '// flat hook\n');
+fs.writeFileSync(path.join(TMP, '.claude', 'hooks', 'flat-probe.eval.js'), "console.log('flat-probe pin ran'); process.exit(0);\n");
+r = runForge(['refine', 'flat-probe', '--nod', 'forge-eval-fixture']);
+check('F4 flat hook refine exit 0 + its eval pin ran', r.status === 0 && /flat-probe pin ran/.test(r.stdout), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 120));
+fs.writeFileSync(path.join(TMP, '.claude', 'hooks', 'flat-probe.eval.js'), 'process.exit(1);\n');
+r = runForge(['refine', 'flat-probe', '--nod', 'forge-eval-fixture']);
+check('F4b flat hook with RED pin → exit 2', r.status === 2 && /pre-refine eval RED/.test(r.stderr), 'exit=' + r.status);
 
 
 let failed = 0;

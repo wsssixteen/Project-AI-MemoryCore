@@ -273,10 +273,12 @@ function forgeRefine() {
   const nod = arg('nod', true);
   if (!name) die(2, 'usage: forge refine <name> --nod "..."');
   const candidates = [path.join(ROOT, 'domain', name), path.join(ROOT, '.claude', 'skills', name)].filter(p => fs.existsSync(p));
-  if (!candidates.length) die(2, 'no component named "' + name + '" found (domain/ or skills/)');
-  log('REFINE target: ' + candidates.join(' · '));
+  const flatHook = path.join(ROOT, '.claude', 'hooks', name + '.js');          // pre-forge flat hook: <name>.js + <name>.eval.js
+  if (!candidates.length && !fs.existsSync(flatHook)) die(2, 'no component named "' + name + '" found (domain/, skills/ or .claude/hooks/)');
+  log('REFINE target: ' + candidates.concat(fs.existsSync(flatHook) ? [flatHook] : []).join(' · '));
   const evals = [];
   for (const dir of candidates) for (const f of fs.readdirSync(dir)) if (/eval.*\.js$/.test(f)) evals.push(path.join(dir, f));
+  if (fs.existsSync(flatHook.replace(/\.js$/, '.eval.js'))) evals.push(flatHook.replace(/\.js$/, '.eval.js'));
   log('behavior pins (must stay green after your edit): ' + (evals.length ? evals.map(f => path.relative(ROOT, f)).join(' · ') : 'NONE — add a fixture with the refine'));
   for (const f of evals) {
     const e = spawnSync(process.execPath, [f], { encoding: 'utf8', env: { ...process.env, CLAUDE_PROJECT_DIR: ROOT } });

@@ -63,16 +63,37 @@
  *        prints the plan without deleting. Eval: worktree-cleanup-boot.eval.js.
  *   Spec preservation vs v1.5: steps 1 · 1.5 · 1.6 · 2.5 · 2.6 · decay-scan unchanged.
  *   Changed: step 2 merge base (main → origin/main, D4) · steps 3+4 coupled (D2).
+ *
+ * v1.7 2026-09-27 — MAIN-ROOT TARGETING (per みや). projectRoot (__dirname/../..) is the checkout
+ * that booted; in a worktree session that is the WORKTREE root, so step 5 scanned the worktree's
+ * own empty .claude/worktrees and main's folder was never swept from a worktree boot. The log
+ * forked into per-worktree copies too.
+ *   symptom:     2026-09-27 — 66 folders / 19 GB under main's .claude/worktrees, 2 registered; dry run of sweepOrphans(main) = 27 deletable (8.2 GB), 37 kept
+ *   goal:        a boot from main OR any in-tree worktree sweeps MAIN's .claude/worktrees and logs to MAIN's worktree-cleanup-log.jsonl
+ *   goal_signal: main's log gains one row per completed boot, naming main's folders
+ *   retention:   keep (.claude/state/worktree-cleanup-log.jsonl — append-only "why was X deleted" ledger)
+ *   Changed: MAIN_ROOT = mainRootOf(projectRoot) (repo idiom: lib/states.js mainRoot · quest/active-cli.js)
+ *     drives step 5 + LOG + the sweepOrphans/neverCommittedFiles defaults · `here` takes a LIST
+ *     (this checkout + CLAUDE_PROJECT_DIR + cwd) and protects any folder CONTAINING one of them — a
+ *     de-registered live session is not in git's list, only its path protects it · neverCommittedFiles
+ *     fails CLOSED when ls-files / hash-object fail (v1.6 read a failure as "no files" = safe).
+ *   Spec preservation vs v1.6: steps 1 · 1.5 · 1.6 · 2 · 2.5 · 2.6 · 3+4 · 6 still act on the booting
+ *     checkout — unchanged. Delete rule unchanged (every non-ignored file reachable from a ref or
+ *     byte-identical to main). Registered + current never swept — kept, current widened to path
+ *     containment. Dropped: none. Eval fixtures R · S · T · U.
  */
 const { execSync } = require('child_process');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const projectRoot = path.join(__dirname, '..', '..');
+const projectRoot = path.join(__dirname, '..', '..');                 // the checkout that booted (main OR a worktree)
+// v1.7 — the sweep + its log always target the MAIN repo, whichever checkout booted
+const mainRootOf = dir => String(dir).replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+[\\/]?$/i, '');
+const MAIN_ROOT = mainRootOf(projectRoot);
 const skillsDir = path.join(projectRoot, '.claude', 'skills');
 const DRY = process.env.WORKTREE_CLEANUP_DRY_RUN === '1';
-const LOG = path.join(projectRoot, '.claude', 'state', 'worktree-cleanup-log.jsonl');
+const LOG = path.join(MAIN_ROOT, '.claude', 'state', 'worktree-cleanup-log.jsonl');
 
 function run(cmd, cwd) {
   try {
@@ -132,9 +153,11 @@ function reachableBlobs(root) {
 }
 
 function neverCommittedFiles(dir, root) {
-  const r = root || projectRoot;
+  const r = root || MAIN_ROOT;
   const gitDir = path.join(r, '.git');
-  const listed = run(`git --git-dir="${gitDir}" --work-tree="${dir}" ls-files -co --exclude-standard`, r) || '';
+  const ls = runFull(`git --git-dir="${gitDir}" --work-tree="${dir}" ls-files -co --exclude-standard`, r);
+  if (!ls.ok) return [`(ls-files failed, unverified: ${ls.err.split('\n')[0]})`];   // v1.7: fail CLOSED
+  const listed = ls.out;
   // NOISE — runtime state that is not gitignored but is never "work": bounty stamps, gate
   // locks/flags, per-machine launch config, .claude/state, ledgers. Verified 2026-09-04 on
   // 182 orphans: without this line ~8 folders would be kept for a `.verify-notified` alone.
@@ -154,9 +177,10 @@ function neverCommittedFiles(dir, root) {
   try {
     fs.writeFileSync(tmpP, files.join('\n') + '\n');
     const hashed = run(`git --git-dir="${gitDir}" hash-object --stdin-paths < "${tmpP}"`, dir) || '';
+    if (hashed.split('\n').length !== files.length) return files;          // v1.7: fail CLOSED — an unhashed file is never proven safe
     const reach = reachableBlobs(r);
     const missing = [];
-    hashed.split('\n').forEach((h, i) => { h = h.trim(); if (files[i] && h && !reach.has(h) && !sameAsMain(files[i])) missing.push(files[i]); });
+    hashed.split('\n').forEach((h, i) => { h = h.trim(); if (files[i] && !reach.has(h) && !sameAsMain(files[i])) missing.push(files[i]); });
     return missing;
   } finally {
     try { fs.unlinkSync(tmpP); } catch {}
@@ -173,7 +197,7 @@ function neverCommittedFiles(dir, root) {
  * Returns a plan/result object; performs deletes unless opts.dryRun.
  */
 function sweepOrphans(root, opts) {
-  const r = root || projectRoot;
+  const r = root || MAIN_ROOT;
   const o = Object.assign({ dryRun: DRY, baseRef: null, here: null }, opts || {});
   const wtDir = path.join(r, '.claude', 'worktrees');
   const res = { registered: 0, orphans: [], deleted: [], kept: [], baseRef: null };
@@ -183,11 +207,11 @@ function sweepOrphans(root, opts) {
   const reg = registeredWorktrees(r);
   res.registered = reg.length;
   const regSet = new Set(reg.map(w => norm(w.path)));
-  const here = norm(o.here || r);
+  const here = [].concat(o.here || r).filter(Boolean).map(norm);       // v1.7: one path or a list
   const dirs = fs.readdirSync(wtDir, { withFileTypes: true }).filter(d => d.isDirectory()).map(d => d.name);
   for (const name of dirs) {
     const full = path.join(wtDir, name);
-    if (regSet.has(norm(full)) || norm(full) === here) continue;       // registered or current → not ours
+    if (regSet.has(norm(full)) || here.some(h => h === norm(full) || h.startsWith(norm(full) + '/'))) continue;   // registered, or holds the current session → not ours
     const branch = `claude/${name}`;
     const hasBranch = !!run(`git show-ref --verify --quiet "refs/heads/${branch}" && echo y`, r);
     let verdict, why;
@@ -235,7 +259,7 @@ function dirBytes(p) {
   return n;
 }
 
-module.exports = { sweepOrphans, neverCommittedFiles, registeredWorktrees, mergeBaseRef, dirBytes };
+module.exports = { sweepOrphans, neverCommittedFiles, registeredWorktrees, mergeBaseRef, dirBytes, mainRootOf };
 
 function main() {
 try {
@@ -359,12 +383,13 @@ try {
   }
 
   // 5. ORPHAN-FOLDER SWEEP (v1.6, D1) — folders on disk that git no longer lists.
+  //    v1.7: always MAIN's folder, whichever checkout booted; this session is protected by path.
   try {
-    const sw = sweepOrphans(projectRoot, { dryRun: DRY, baseRef, here: projectRoot });
+    const sw = sweepOrphans(MAIN_ROOT, { dryRun: DRY, baseRef, here: [projectRoot, process.env.CLAUDE_PROJECT_DIR, process.cwd()] });
     const gb = b => (b / 1073741824).toFixed(2);
     let keptBytes = 0, delBytes = 0;
-    for (const e of sw.kept) keptBytes += dirBytes(path.join(projectRoot, '.claude', 'worktrees', e.name));
-    if (DRY) for (const e of sw.deleted) delBytes += dirBytes(path.join(projectRoot, '.claude', 'worktrees', e.name));
+    for (const e of sw.kept) keptBytes += dirBytes(path.join(MAIN_ROOT, '.claude', 'worktrees', e.name));
+    if (DRY) for (const e of sw.deleted) delBytes += dirBytes(path.join(MAIN_ROOT, '.claude', 'worktrees', e.name));
     const line = `worktrees: ${sw.registered} registered · ${sw.orphans.length} orphan folder(s)` +
       (sw.orphans.length ? ` → ${DRY ? 'would delete' : 'deleted'} ${sw.deleted.length}${DRY ? ` (${gb(delBytes)} GB)` : ''} · kept ${sw.kept.length}${sw.kept.length ? ` (${gb(keptBytes)} GB)` : ''}` : '') +
       (DRY ? '  [DRY RUN]' : '');
