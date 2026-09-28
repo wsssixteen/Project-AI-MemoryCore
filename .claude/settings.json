@@ -556,6 +556,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\db-claim-proof\\\\db-claim-proof.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\fix-photo\\\\fix-photo.check.hook.js\""
           }
         ]
       }
