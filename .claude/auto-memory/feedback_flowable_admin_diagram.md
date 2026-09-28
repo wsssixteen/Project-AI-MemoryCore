@@ -15,8 +15,8 @@ Read (2026-09-08 #278580): when the engine DB is not reachable, open the process
 Write (2026-09-08 #278218, Perak PROD, audited by an independent Fable pass): the instance page's Variables tab can Add / Update / Delete process variables. A gateway that throws `Cannot resolve identifier '<var>'` or `No outgoing sequence flow` is unblocked by adding the variable the form should have emitted, with the value the code would derive, type string, before the officer clicks Hantar. The token does not move. Caveat: `nextUser*` is wiped at Hantar (`CommonBPMServiceClient.submitBpmOutcome()` `:596-612`), so the companion to set is `pejabatKod`.
 
 Steps.
-1. process id from `umm_aliran_kerja.process_instance_id` (latest, `flag_flowable=Y`).
-2. Melaka `https://etanah-app.melaka.gov.my/flowable-ui/admin/#/process-instance/<id>` · Perak `https://appspk.perak.gov.my/flowable-ui/admin/#/process-instance/<id>`. miya signs in and clicks; Ruri never types into PROD.
+1. Start from the stuck row's `umm_a_tgsn.id_bpm_task` → Melaka `https://etanah-app.melaka.gov.my/flowable-ui/admin/#/task/<id_bpm_task>`. On that page click the blue id next to **"Process Instance"** (check **"Process definition"** under it — e.g. `MLK_PLP_SUB_UPN:3` = the called child). NOT the task page's own Variables tab (task-local), and NOT `umm_aliran_kerja.process_instance_id` (main process only — wrong instance when the tugasan sits in a called `MLK_PLP_SUB_*`; #281319 slip, #281638 wording slip 2026-09-28: say the on-screen label, never "Process instance → child").
+2. The link opens `…/flowable-ui/admin/#/process-instance/<id>` (Perak `https://appspk.perak.gov.my/flowable-ui/admin/#/process-instance/<id>`) → Variables tab → Add. miya signs in and clicks; Ruri never types into PROD.
 3. Variable name from the gateway `conditionExpression` in the state's `flowables-bpmn/<KEY>.bpmn20.xml`; value from `new BpmNameValue(PelupusanConstant.<CONST>` in the form.
 4. Verify after Hantar: successor row in `umm_a_tgsn`, no new error-store row.
 

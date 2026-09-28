@@ -108,6 +108,7 @@
 ## Project
 - [project-name-lapis-lazuli](project_name_lapis_lazuli.md) — 🚨 project = "Lapis Lazuli"; "Ruri" = my name only; physical rename not done yet (2026-09-27)
 - [installed-skills](project_installed_skills.md) — 🚨 wayfinder (Matt Pocock) installed 2026-09-11 at .agents/skills + .claude/skills symlink; every install → write here SAME turn
+- [db-gateway](project_db_gateway.md) — 🚨 all postgres-*/oracle-* MCP servers run behind ONE shared lazy gateway (127.0.0.1:7411, E:\Dev\scripts\db-gateway); DB tools fail → `schtasks /run /tn "DB Gateway"`
 - [wa-read](project_wa_read.md) — 🚨 WaRead read-only WhatsApp reader (E:\Dev\scripts\WaRead, Baileys l…
 - [pymtime](project_pymtime.md) — 🚨 PymTime app: repo E:\Dev\scripts\PymTime, v14 self-repair architecture + proofs (selftest, build gate, install/upgrade sims), lessons, remote skip
 - [arabic-review](project_arabic_review.md) — 🚨 /arabic daily vocab review (built 2026-09-06): seconds-to-2-min in…

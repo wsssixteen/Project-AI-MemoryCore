@@ -48,6 +48,18 @@ git config --global --add safe.directory "E:/Projects/Melaka/etanah-common"
 - Forward slashes, quoted (the paths contain spaces and a dot-prefixed segment).
 - This is per-account in `~/.gitconfig`, so it does NOT sync with the project folder — same class as Step 2.
 
+## Step 2c — Database gateway (machine-level, does NOT sync)
+
+> Added 2026-09-28 after the laptop hung at 93-96% RAM: every session started all 21 database MCP servers. The gateway (`E:\Dev\scripts\db-gateway`, local git repo) serves them to all sessions from one process and starts a database server only when it is queried.
+
+1. Copy `E:\Dev\scripts\db-gateway` to the new machine (or clone the repo).
+2. Add the database servers to `~/.claude.json` as normal stdio entries named `postgres-*` / `oracle-*`.
+3. `<oracle-mcp venv>\Scripts\python.exe E:\Dev\scripts\db-gateway\db_gateway.py migrate` (warms each server, aborts without touching config if one cannot start).
+4. `powershell -ExecutionPolicy Bypass -File E:\Dev\scripts\db-gateway\install-logon-task.ps1`, then `schtasks /run /tn "DB Gateway"`.
+5. Verify: `claude mcp list` shows every `postgres-*` / `oracle-*` entry as `(HTTP) - Connected`.
+
+Details, rollback and gotchas: `E:\Dev\scripts\db-gateway\README.md` · memory [[project_db_gateway]].
+
 ## Step 3 — Done
 
 Everything else (personality, memory, session, permissions, project rules) is in the project folder and already synced.
