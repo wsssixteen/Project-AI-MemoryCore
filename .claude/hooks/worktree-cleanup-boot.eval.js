@@ -222,5 +222,72 @@ check('T main root unchanged', mainRootOf('C:\\r') === 'C:\\r');
   try { fs.rmSync(tmp, { recursive: true, force: true }); } catch {}
 }
 
+// ── W: (v1.9) OPEN-QUEST HOLD — 2026-09-27 live miss: the sweep deleted the cwd of a live session whose quest
+//      (QA-279411) was on hold; the folder name had no ticket number, the branch lived only in the session transcript ──
+{
+  const { tmp, repo } = freshRepo();
+  const transcripts = path.join(tmp, 'transcripts');
+  const writeActive = body => { fs.mkdirSync(path.join(repo, 'quest'), { recursive: true }); fs.writeFileSync(path.join(repo, 'quest', 'active.txt'), body); };
+  const transcriptFor = (dir, lines) => { const t = path.join(transcripts, path.resolve(dir).replace(/[^A-Za-z0-9-]/g, '-')); fs.mkdirSync(t, { recursive: true }); fs.writeFileSync(path.join(t, 's.jsonl'), lines); return t; };
+  writeActive('qa=QA-279411\nstatus=hold\n\nqa=QA-281568\nstatus=closed\n\nqa=QA-256334\nstatus=active\n\nqa=ADHOC-PT-2026-6\nstatus=active\n');
+  const W1 = mkWorktree(repo, 'ticket-256334-work', { deleteBranch: true });                 // number in folder name, open
+  const W2 = mkWorktree(repo, 'internal-tickets-review-ffefc6', { deleteBranch: true });     // THE incident shape: no number in name
+  transcriptFor(W2, '{"type":"user","gitBranch":"claude/redmine-279411-566a70","x":1}\n');
+  const W4 = mkWorktree(repo, 'ticket-281568-done', { deleteBranch: true });                 // number present but quest CLOSED
+  const W5 = mkWorktree(repo, 'ticket-999999-unknown', { deleteBranch: true });              // number not in active.txt
+  const W8 = mkWorktree(repo, 'build-2794110-seven', { deleteBranch: true });                // 7 digits containing 279411 → not a ticket
+  const W9 = mkWorktree(repo, 'garbage-transcript', { deleteBranch: true });
+  transcriptFor(W9, 'not json at all \u0000\u0001 {"gitBranch": broken\n');
+  const W12 = mkWorktree(repo, 'colleague-cr-issue-ed8731', { deleteBranch: true });         // dry-run find: number only in the session TITLE
+  transcriptFor(W12, '{"type":"user","gitBranch":"claude/colleague-cr-issue-ed8731"}\n{"type":"custom-title","customTitle":"256334 - CR -","sessionId":"x"}\n');
+  const W10 = mkWorktree(repo, 'transcript-no-jsonl', { deleteBranch: true });
+  fs.rmSync(transcriptFor(W10, 'x'), { recursive: true, force: true }); fs.mkdirSync(path.join(transcripts, path.resolve(W10).replace(/[^A-Za-z0-9-]/g, '-')), { recursive: true });
+
+  const dry = sweepOrphans(repo, { dryRun: true, here: repo, transcriptsRoot: transcripts });
+  const held = n => dry.kept.some(o => o.name === n && /open quest/.test(o.why));
+  check('W1 folder name carries an OPEN ticket → held', held('ticket-256334-work'));
+  check('W2 incident shape: branch only in session transcript → held as QA-279411 (hold)', dry.skippedOpenQuest.some(s => s.name === 'internal-tickets-review-ffefc6' && s.qa === 'QA-279411' && s.status === 'hold' && /transcript/.test(s.source)));
+  check('W12 number only in the session title → held as QA-256334 via session title', dry.skippedOpenQuest.some(s => s.name === 'colleague-cr-issue-ed8731' && s.qa === 'QA-256334' && s.source === 'session title'));
+  check('W4 ticket whose quest is CLOSED → not held (normal rule: deletable)', dry.deleted.some(o => o.name === 'ticket-281568-done'));
+  check('W5 ticket absent from active.txt → not held', dry.deleted.some(o => o.name === 'ticket-999999-unknown'));
+  check('W8 7-digit run containing 279411 → not read as a ticket', dry.deleted.some(o => o.name === 'build-2794110-seven'));
+  check('W9 garbage transcript → no throw, classified normally', dry.deleted.some(o => o.name === 'garbage-transcript'));
+  check('W10 transcript dir without .jsonl → no throw, classified normally', dry.deleted.some(o => o.name === 'transcript-no-jsonl'));
+  check('W dry run → nothing removed', [W1, W2, W4, W5, W8, W9, W10].every(d => fs.existsSync(d)));
+
+  const live = sweepOrphans(repo, { dryRun: false, here: repo, transcriptsRoot: transcripts });
+  check('W live sweep → held folders survive, closed-quest folder deleted', fs.existsSync(W1) && fs.existsSync(W2) && !fs.existsSync(W4));
+  const logW = path.join(repo, '.claude', 'state', 'worktree-cleanup-log.jsonl');
+  const lastW = JSON.parse(fs.readFileSync(logW, 'utf8').trim().split('\n').pop());
+  check('W7 log row lists skippedOpenQuest with qa + source', Array.isArray(lastW.skippedOpenQuest) && lastW.skippedOpenQuest.some(s => s.qa === 'QA-279411' && s.source));
+
+  // W6: active.txt unreadable → fail CLOSED for numbered folders, unnumbered ones follow the normal rule
+  fs.rmSync(path.join(repo, 'quest', 'active.txt'), { force: true });
+  const W6 = mkWorktree(repo, 'ticket-123456-anything', { deleteBranch: true });
+  const W6b = mkWorktree(repo, 'no-number-here', { deleteBranch: true });
+  const r6 = sweepOrphans(repo, { dryRun: true, here: repo, transcriptsRoot: transcripts });
+  check('W6 active.txt missing → numbered folder held (fail closed)', r6.kept.some(o => o.name === 'ticket-123456-anything' && /unknown/.test(o.why)));
+  check('W6 active.txt missing → unnumbered folder still deletable', r6.deleted.some(o => o.name === 'no-number-here'));
+
+  // W3: registered worktree whose admin HEAD names an open ticket → openQuestHold reads the admin HEAD
+  writeActive('qa=QA-279411\nstatus=hold\n');
+  const W3 = mkWorktree(repo, 'redmine-279411-566a70', { keepRegistered: true, folder: 'plain-name' });
+  const { openQuestHold, openQuestMap } = require('./worktree-cleanup-boot.js');
+  const h3 = openQuestHold(W3, 'plain-name', repo, transcripts, openQuestMap(repo));
+  check('W3 admin HEAD branch carries the open ticket → held via admin HEAD', !!h3 && h3.qa === 'QA-279411' && h3.source === 'admin HEAD');
+
+  // W11: step 3 (registered merged worktree) with opt-in deletes → held, folder + branch kept
+  const W11 = mkWorktree(repo, 'm-279411-merged', { keepRegistered: true });
+  const sess = mkWorktree(repo, 'session-w11', { keepRegistered: true });
+  const hookCopy = path.join(sess, '.claude', 'hooks', 'worktree-cleanup-boot.js');
+  fs.mkdirSync(path.dirname(hookCopy), { recursive: true });
+  fs.copyFileSync(path.join(__dirname, 'worktree-cleanup-boot.js'), hookCopy);
+  const b11 = spawnSync(process.execPath, [hookCopy], { cwd: sess, encoding: 'utf8', windowsHide: true, timeout: 120000,
+    env: { ...process.env, CLAUDE_PROJECT_DIR: sess, WORKTREE_CLEANUP_DRY_RUN: '0', WORKTREE_CLEANUP_DELETE: '1' } });
+  check('W11 step 3 opt-in boot → merged registered open-quest worktree NOT removed', fs.existsSync(W11) && !!g(['branch', '--list', 'claude/m-279411-merged'], repo));
+  check('W11 boot stderr names the held folder', /held for open quests[\s\S]*m-279411-merged — QA-279411/.test(b11.stderr));
+  try { fs.rmSync(tmp, { recursive: true, force: true }); } catch {}
+}
+
 console.log(`\n${fail === 0 ? 'PASS' : 'FAIL'} — ${pass} passed, ${fail} failed`);
 process.exit(fail === 0 ? 0 : 1);
