@@ -13,6 +13,7 @@ metadata:
 | Env | Portal host | Login | Account name |
 |---|---|---|---|
 | **Staging** | `etanah-stg.melaka.gov.my/etanah-awam` | `alyaaqilah802@gmail.com` | ALYA AQILAH BINTI FAUZI (Individu) |
+| **MLIT** (internal) | `etanahmlit` host | `alyaaqilah802@gmail.com` | same account, 1106 pra apps on et_main_mlit (verified 2026-09-28, QA-281712) |
 | **PROD** | AWAM PROD portal | `muhammadsyafiq0102@gmail.com` | — |
 
 - Stated by みや 2026-08-18 (QA-275456 PPTPB location-blank simulate). Staging DB = `et_main_stg2` ([[feedback_staging_schema_stg2]]).
