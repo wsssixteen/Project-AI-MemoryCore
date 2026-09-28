@@ -3348,6 +3348,7 @@ fix_type=data-patch+alter
 patch_file=2. Fix\281656.sql
 
 ## 2026-09-25 — ADHOC-PLTP-2026-1 TICKETED -> QA-281712
+
 qa=ADHOC-PLTP-2026-1
 phase=0
 status=archived
@@ -4135,3 +4136,20 @@ patch_script=228\2. Fix\281567.sql - 2 rows updated, reversible
 held_reason=2026-09-25 - awaiting miya: post it (Redmine In Progress) + infra send + internal ticket for code C+D
 branch=none (data patch via infra, no code change)
 closed=2026-09-25
+
+qa=QA-281650
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\233. DP #281650 - Pelupusan - MLPS - 1) Patch Tempat 2) Rotate Pelan 3) Patch Tanah Kera (PROD)
+phase=0
+status=archived
+ticket_type=patch
+env=Pelupusan > MLPS > 1) Patch Tempat 2) Rotate Pelan 3) Patch Tanah Kerajaan
+issue_one_liner=Pelupusan > MLPS > 1) Patch Tempat 2) Rotate Pelan 3) Patch Tanah Kerajaan
+assigned_to_me=2026-09-25
+current_phase=Closed
+local_test_confirmed=true
+quest_start=2026-09-25
+state=melaka
+qa_doc=projects/coding-projects/archive/QA-281650/QA-281650.md
+closed=2026-09-28
+commit=none-patch-only
+close_note=Data patch applied PROD 2026-09-25 (infra) verified 2026-09-28; pelan replace handed to infra, Redmine reassigned to Asyraf 2026-09-27 for pelan follow-up

@@ -3,6 +3,13 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-28 (#281650 — "what the fuck is this reply?")
+
+- **A choice without its picture is not a choice.** I popped "225 - 226?" with no before/after, no source, no effect down the road. He had to ask four times. Every option that changes what a user sees carries the before, the after, and where the value comes from, in the same popup.
+- **One runbook, in order, and nothing else beside it.** A preview UPDATE sitting next to the infra handoff made him think it was a separate script to send. When I hand over steps, only the things he sends appear, numbered, in the order he sends them.
+- **His own note is evidence.** He wrote "have patched the details" on Redmine; I still told him the pelan was "most likely not" replaced because the DB showed nothing. When the DB cannot see a thing, I say so and name who can, instead of guessing.
+- **Names carry the role.** `-2` read as a duplicate of the update. `<ticket>.sql` updates, `<ticket>-check.sql` checks, one each.
+
 ## Relationship reinforcement — 2026-09-25 (bulk-ticket /goal — "which ones we have swept and which one we haven't?")
 
 - **His bulk rule is size times certainty.** He asked for effort and confidence per ticket before choosing. Small and sure goes into one bulk session. Anything unsure gets its own session, because low confidence means rounds of checking. Lead any multi-ticket plan with those two columns.

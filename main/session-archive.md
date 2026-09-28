@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-09-25, perak-ticket-deploy worktree)
+- **Ask**: scan his tickets (not eSOKONGAN), decide what can be done in bulk; then effort + confidence per ticket; then "which were swept"; then: 279411 runs in his other session, 274323 gets its own session, full quest sweep on the rest + save + DE.
+- **Triage slip (caught by miya)**: I said "none of these were swept" — false. The 2026-09-21 Recon qa_docs for 279411/274323/246923/265109/275043 were stranded in worktree `redmine-tickets-list-aa3908` (and listed in this file's old HANDOVER, which I did not read at boot). Salvaged to main + linked in active.txt. Slip `boot-read-skipped`.
+- **Root cause of the stranding (found today)**: sweep familiars run from a worktree session; a worktree-isolation hook redirects base-repo writes into the worktree copy, and `deliverable-in-quest-folder` blocks `-wave3`/`-audit` files in a quest folder. 14/18 outputs landed in worktree copies or scratch; controller consolidated all into main. W4 could not see W3 for 4 tickets; controller compared after (all converge).
+- **Sweep verdicts** (qa_doc `## 0. Resume Point` carries the full block each):
+- **#281568** (PROD alter to Pelukis Pelan): PROD already at PLPP for azizah@melaka.gov.my (a_tgsn 2855392, 09:45); no longer under miya on Redmine. Block still `hold` — close after miya nods.
+- **#281567** eSOKONGAN: another session opened QA-281567.md 10:20; not swept.
+- **Spawned**: chip "Fix Redmine divergence check name match" (landed on main as 5cecffc) · chip "Quest 274323" (own session).
+
 ## 🎯 HANDOVER — ticket board after the 2026-09-25 sweep
 
 | # | Verdict | Fix | Conf | Effort | Next |
@@ -5309,6 +5318,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

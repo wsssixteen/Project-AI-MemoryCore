@@ -1,0 +1,10 @@
+# Agentic ticket workflow assessment — 2026-09-28 (DE, #281650 session)
+
+| Axis | Finding (concrete instance) | Proposal (eval case) |
+|---|---|---|
+| A1 agentic system | `sql-schema-verify` blocked the Stop 8+ times on #281650: its emit pairs every column with every table in a statement (9 false rows: `umm_aplikasi.tempat`, `ind_permit_lesen.no_lot` …) so a correct script can never be stamped, and it demands a check on miya's unqualified `-check.sql` which it cannot parse. Audit-briefing meanwhile reports it at 0 fires (telemetry gap). | Resolve each column to its own FROM/UPDATE table (per-subquery scope) before emitting refs; skip unqualified `*-check.sql`. Eval: `281650.sql` emits 0 false rows; `281650-check.sql` is exempt. |
+| A1 agentic system | `attachment-ledger-gate` + `sql-schema-verify` fired this session but audit-briefing shows 0 fires → retire suggestions are built on missing telemetry. | Log fires for gates dispatched through `hook-runtime --wrap`. Eval: a blocked Stop increments the gate's fire count. |
+| A2 quest workflow | Worktree-isolation hook blocked writes to the main quest doc and memory index even after the session moved to main; the doc had to be written in the worktree and copied. | Re-read the session's primary dir on each call, not the start-time worktree. Eval: session with cwd=main can Write `projects/coding-projects/active/QA-x/QA-x.md`. |
+| A3 debugging | Display-value question answered only after 4 re-asks; the label/value/note split of Tanah Kerajaan was known at turn 10 but never shown as before→after. | Popup options that change a user-visible value carry a before→after preview + value source (phrase in `feedback_popup_questions.md`). Eval: a popup with a display choice and no preview is flagged. |
+| A4 etanah issue-solving | Tempat migrated shape still on 73 licence rows; keterangan note lost at licence approval (L13). | Offer BA a one-shot batch patch for the 73 rows (Option C of #278304). Eval: next MLPS renewal on a migrated lesen shows Tempat `-`. |
+| A5 sweep | ⏭ no sweep run this session. | — |
