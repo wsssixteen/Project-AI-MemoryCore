@@ -691,3 +691,14 @@
 {"ts":"2026-09-28T06:19:00.378Z","category":"A2"}
 {"ts":"2026-09-28T06:19:00.535Z","category":"A3"}
 {"ts":"2026-09-28T06:19:00.791Z","category":"A4"}
+{"ts":"2026-09-28T07:14:46.267Z","category":"incomplete-handback"}
+{"ts":"2026-09-28T07:48:17.192Z","category":"boot-skipped"}
+{"ts":"2026-09-28T08:23:56.268Z","category":"handoff/missing-infra-block"}
+{"ts":"2026-09-28T08:23:56.365Z","category":"handoff/ambiguous-target"}
+{"ts":"2026-09-28T08:23:56.460Z","category":"evidence/db-claim-no-select"}
+{"ts":"2026-09-28T08:23:56.562Z","category":"patch/stage-match-missing"}
+{"ts":"2026-09-28T08:23:56.667Z","category":"resume/attachment-not-ledgered"}
+{"ts":"2026-09-28T08:37:31.219Z","category":"A1"}
+{"ts":"2026-09-28T08:37:31.309Z","category":"A2"}
+{"ts":"2026-09-28T08:37:31.381Z","category":"A3"}
+{"ts":"2026-09-28T08:37:31.454Z","category":"A4"}

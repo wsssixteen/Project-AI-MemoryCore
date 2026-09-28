@@ -8,3 +8,13 @@
 | A3 debugging | Display-value question answered only after 4 re-asks; the label/value/note split of Tanah Kerajaan was known at turn 10 but never shown as before→after. | Popup options that change a user-visible value carry a before→after preview + value source (phrase in `feedback_popup_questions.md`). Eval: a popup with a display choice and no preview is flagged. |
 | A4 etanah issue-solving | Tempat migrated shape still on 73 licence rows; keterangan note lost at licence approval (L13). | Offer BA a one-shot batch patch for the 73 rows (Option C of #278304). Eval: next MLPS renewal on a migrated lesen shows Tempat `-`. |
 | A5 sweep | ⏭ no sweep run this session. | — |
+
+## Session addendum — QA-281712 (Portal Awam PLTP syer fix → archived)
+
+| Axis | Assessment (instance) | Proposal logged |
+|---|---|---|
+| A1 agentic system | the worktree-isolation guard kept denying Edit/Write to main-checkout files (`TEST-PERMOHONAN-INDEX.md`, `.claude/state` flag) after the worktree folder was deleted and the env said "no longer a worktree" — forced PowerShell workarounds | A1 guard re-checks the worktree path exists |
+| A2 quest workflow | mlit receipt `260706BSAT00275` passed V1–V6 but failed V8 lease + V9 semakan on miya's screen; he had to find `260709BSAT00111` himself | A2 `lib/awam-resit-check.js` (the bounty refinement) |
+| A3 debugging | owner-set via MAX(`versi_mula`) of `ind_pihak_bkptg` gave totals of 3.5 / 9 for many hakmilik (stale duplicate rows) — the query had to filter total = 1 instead of knowing the true current owners | A3 find the code path AWAM uses to auto-pull owners and bank its exact query |
+| A4 etanah solving | int-env cherry-pick conflicted: `checkingSyer()` on int-env carried an env-only rewrite (`penyebutValue`) not on master | A4 pre-cherry-pick diff of each touched file `origin/mlk/master..origin/mlk/int-env` surfaced before the pick |
+| A5 sweep | ⏭ no ticket/file sweep this session | — |

@@ -4,6 +4,24 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-09-25, ticket-281656-prep worktree)
+- **Ask**: quest-prepare #281656 (PDTAG PRBB, public paid, resit not in Carian Pintas; link + alter to Penyediaan Borang 4Ce dan P1e).
+- **Cause**: public paid at the counter while SDU2 was still open; PL tugasan appeared 11:15, payments 09:26/09:49. Cashiers used manual Bayaran Pelbagai → new hsl_bayaran_fi rows with aplikasi_id NULL; officer fees stayed flag_bayar N.
+- **BA data errors caught**: #15 resit are D84300003/4 (BA typed D84000003/4 = Norshamsul SPPK/2026/484-485 Semakan Pelan); #15 receipts keyed PRBB/2025/15.
+- **Fix**: `1. Tasks\Melaka\Archive\230. II #281656 ...\2. Fix\281656.sql` (6 btrn repoint + 6 fi paid + deposit 646/647), schema-verified, infra ran it. Alter Flow: /14 → nurwaheda@melaka.gov.my, /15 → samsiah_jaamat@melaka.gov.my. みや confirmed.
+- **Slip**: claimed receipts belonged to another payer without showing the evidence script (`show-evidence`, logged).
+- **Carry forward**: PTMLK/03/L/PRBB/2026/8 — same cashier 10:37, RM4,500 manual vs RM9,300 unpaid fees, no PL tugasan → likely future ticket.
+
+**Last Activity**: 2026-09-25 12:00 — /goal bulk-ticket triage → quest sweep (6 tickets, 18 agents, run wf_bb588f6c-e2c) → findings saved to qa_docs + active.txt · DE.
+
+## 2026-09-28 — Housekeeping audit (miya /goal)
+- QA-279411 Phase 1 closed: eabbbd8c2d on mlk/internal/279411, int-env 8194bd7817, deployed mlit; Redmine Resolved to Anis.
+- Redmine reconcile (quest/redmine-reconcile.js): 20 open blocks, 11 checkable, 4 diverged (278909 Siti In Progress, 281568 Closed, 256334 Lau Li Wen Rework, 281638 Shafiq Ready in PROD). All 7 assigned-open tickets have a block.
+- Task folders (1. Tasks\Melaka root, 70): 42 belong to quests already in active-archive.txt as status=closed but never Phase-2 archived (folder still in root); 2 (279615, 279709) have no quest block anywhere; 6 adhoc folders with no block (111, 138, 142, 146, 149, 194); 2 loose files (MLK_PLP_PPTPB.bpmn20.xml, Redmine MCOT 264316.txt); 277309 also has an Archive copy.
+- Project folder (projects/coding-projects/active, 178 entries): 127 belong to non-open quests (18 of them duplicated in archive/); 274532 + QA-274532 duplicate; mixed shapes (bare-number dirs, loose QA-*.md, loose sweep -audit/-wave3/-verify2 files); open QA-256334 has no qa_doc, QA-281568 none.
+- Harvest debt: domain/quest-bounty/bulk.js --debt = 160 unharvested (archive-quest.js harvest gate refuses these without --allow-stub).
+- Sessions: 82 unarchived; ~8 tied to open work, rest recommended for ARCHIVE (reversible), not delete.
+
 ## Session Recap (2026-09-25, perak-ticket-deploy worktree)
 - **Ask**: scan his tickets (not eSOKONGAN), decide what can be done in bulk; then effort + confidence per ticket; then "which were swept"; then: 279411 runs in his other session, 274323 gets its own session, full quest sweep on the rest + save + DE.
 - **Triage slip (caught by miya)**: I said "none of these were swept" — false. The 2026-09-21 Recon qa_docs for 279411/274323/246923/265109/275043 were stranded in worktree `redmine-tickets-list-aa3908` (and listed in this file's old HANDOVER, which I did not read at boot). Salvaged to main + linked in active.txt. Slip `boot-read-skipped`.
@@ -5318,6 +5336,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

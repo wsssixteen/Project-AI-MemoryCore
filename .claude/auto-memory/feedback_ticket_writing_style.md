@@ -76,4 +76,14 @@ Thanks
 ```
 My draft he replaced: "Hi Nurhafizah, fix sudah di deploy ke internal (mlit) untuk diuji." → he writes English for the pass note, "Salam" + short name, names the module ("AWAM internal"), and closes a side question the BA raised in chat.
 
+2. BA pass after a fix, #279411 (2026-09-28). Greeting + "fix deployed to internal" + "Please help to verify" all on the FIRST line · a short "Tugasan covered now:" list for a multi-tugasan fix · "Thanks". He CUT from my draft: the error-message sentence, the "Test data (mlit)" block, and the word "Pelupusan" before internal. Less is the style: no restating the expected behaviour, no test data unless the BA asked.
+```
+Salam Anis, fix deployed to internal. Please help to verify.
+
+Tugasan covered now:
+Penyediaan Senarai Semak ke PTG, Semakan Permohonan PDT, Semakan Dokumen Permohonan PDT, Penyediaan dan Semakan Risalat MMKN PTG, and the other Senarai Semak tugasan.
+
+Thanks
+```
+
 Related: [[feedback_cross_module_handoff_artifact]] · [[feedback_ba_facing_reply_plain]].

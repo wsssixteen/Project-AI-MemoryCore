@@ -1,5 +1,14 @@
 # Current Session
 
+**Last Activity**: 2026-09-28 16:36 — #281712 (Portal Awam PLTP syer popup) fixed, deployed int-env, test passed, Redmine resolved, Phase 2 archived + bounty · DE.
+
+## Session Recap (2026-09-28, #281712 — was ADHOC-PLTP-2026-1)
+- **Fix**: etanah-awam `mlk/esokongan/281712` `2121050779` — `PelupusanMaklumatPemohonHelperForm.onNextPbTab():5635` (dialog Seterusnya) + `PelupusanPemohonTabForm.checkingSyer():462` (page Seterusnya) now sum fractions with `RationalNumberUtil` (analog `AwamConsentService.onSemakSyerKepentingan():1168`). int-env cherry-pick `8ffb6a060e` (conflict with an env-only variant resolved). Built in separate clone `E:\Dev\etanah-work\etanah-awam` (remote `git@10.16.63.27`).
+- **Test**: local test waived by miya; server test PASSED on mlit with No Resit `260709BSAT00111` / `alyaaqilah802@gmail.com`. My first receipt `260706BSAT00275` failed PLTP V8 (lease expired) + V9 (belum disemak) → screen added to TEST-PERMOHONAN-INDEX.
+- **Apps check (miya ask)**: `etanah-pelupusan` `validateSyer():6024` already sums fractions; SKM Maklumat Pemohon Simpan has no syer check; Double rounding false warning (2/3, 3/7) → LATENT L14, no deploy.
+- **Redmine**: miya posted; his pass-note wording + root-cause/solution edits banked in memory (Redmine speech collection).
+- **Closed**: QA-281712 archived (Task 235 → Archive, doc → archive/QA-281712, BUG-BESTIARY pattern, PLTP-TICKETS note). Quest skill resume step 4: fetch only in the work clone.
+- **Slips**: ref-moving `git fetch` in miya's etanah-awam · mlit receipt screened V1–V6 only.
 **Last Activity**: 2026-09-28 14:20 — #281650 (DP PROD, MLPS Tempat + pelan + Tanah Kerajaan) closed + archived + bounty · DE.
 
 ## Session Recap (2026-09-25 → 2026-09-28, ticket-281656-prep worktree → main)
@@ -20,13 +29,3 @@
 - **Audit found in older adhocs**: A27 double-claimed (REDMINE-RC re-pointed to new A33) · PRBB-2026-5 notes renamed · legacy qa_docs missing the standard header (FLOWABLE-2026-1, REDMINE-RC-2026-1, PRBB-2026-5) · ADHOC-FLOWABLE-2026-1 block open while register says RESOLVED · ADHOC-PRBB-2026-4 block missing most keys.
 
 **Last Activity**: 2026-09-25 15:48 — #281656 PRBB resit kaunter tidak masuk (PROD): link-resit data patch via infra + Alter Flow PL→PYB4CE on /14 and /15, verified PROD; quest closed + archived + bounty · DE.
-
-## Session Recap (2026-09-25, ticket-281656-prep worktree)
-- **Ask**: quest-prepare #281656 (PDTAG PRBB, public paid, resit not in Carian Pintas; link + alter to Penyediaan Borang 4Ce dan P1e).
-- **Cause**: public paid at the counter while SDU2 was still open; PL tugasan appeared 11:15, payments 09:26/09:49. Cashiers used manual Bayaran Pelbagai → new hsl_bayaran_fi rows with aplikasi_id NULL; officer fees stayed flag_bayar N.
-- **BA data errors caught**: #15 resit are D84300003/4 (BA typed D84000003/4 = Norshamsul SPPK/2026/484-485 Semakan Pelan); #15 receipts keyed PRBB/2025/15.
-- **Fix**: `1. Tasks\Melaka\Archive\230. II #281656 ...\2. Fix\281656.sql` (6 btrn repoint + 6 fi paid + deposit 646/647), schema-verified, infra ran it. Alter Flow: /14 → nurwaheda@melaka.gov.my, /15 → samsiah_jaamat@melaka.gov.my. みや confirmed.
-- **Slip**: claimed receipts belonged to another payer without showing the evidence script (`show-evidence`, logged).
-- **Carry forward**: PTMLK/03/L/PRBB/2026/8 — same cashier 10:37, RM4,500 manual vs RM9,300 unpaid fees, no PL tugasan → likely future ticket.
-
-**Last Activity**: 2026-09-25 12:00 — /goal bulk-ticket triage → quest sweep (6 tickets, 18 agents, run wf_bb588f6c-e2c) → findings saved to qa_docs + active.txt · DE.
