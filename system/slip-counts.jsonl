@@ -703,3 +703,6 @@
 {"ts":"2026-09-28T08:37:31.381Z","category":"A3"}
 {"ts":"2026-09-28T08:37:31.454Z","category":"A4"}
 {"ts":"2026-09-28T06:41:01.434Z","category":"ui-handback-no-photo"}
+{"ts":"2026-09-28T08:56:58.560Z","category":"ui-guard-wrong-entry-point"}
+{"ts":"2026-09-28T09:36:01.774Z","category":"handoff-wrong-format"}
+{"ts":"2026-09-28T09:41:26.662Z","category":"redmine-note-wrong-addressee"}
