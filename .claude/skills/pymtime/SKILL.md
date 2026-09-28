@@ -66,18 +66,26 @@ If the command errors (`date is in the past`, `bad date`) — show the error, re
 
 ## Handover — a colleague's laptop reports back (added 2026-09-28)
 
-**The loop**: a colleague runs PymTime's check on THEIR laptop (their Claude Code reads the zip's `CLAUDE.md` and runs `app/node/node.exe app/handover.js --json`, or they double-click `Check PymTime.bat`). It shows them READY / NOT READY and a block they paste to みや by WhatsApp / Teams / email. みや pastes it here. The `pymtime-handover` hook fires on the block's `===== PYMTIME HANDOVER v1 =====` / `===== END PYMTIME HANDOVER =====` lines in ANY session.
+**The loop**: a colleague drops the PymTime zip into Claude Code; their Claude extracts it to `C:\PymTime`, reads its `CLAUDE.md`, opens the page (`start-page.js`), waits while they type the login (`wait-setup.js`), then runs `handover.js --json` (reuses the page's check after Save). Without Claude Code: `Check PymTime.bat`. It shows them READY / NOT READY and a block they paste to みや by WhatsApp / Teams / email. みや pastes it here. The `pymtime-handover` hook fires on the block's `===== PYMTIME HANDOVER v1 =====` / `===== END PYMTIME HANDOVER =====` lines in ANY session.
 
 **The block** (written by `E:\Dev\scripts\PymTime\lib\handover.js`): `Person` (name + login local part) · `Result` (Verify headline) · `When` · `Build` (their version + folder) · `Laptop` (Windows, uptime, free RAM, CPU busy) · `Setup` (window, workdays, paused, Protime address) · `Checks` (counts, then every FAIL / warn / not-tested row; **the first FAIL is the cause, later ones follow from it**) · `Days` (last 10 workdays) · `Week` (7-day counts) · `Events` (notable log rows, repeats folded as `xN`).
 
 **Procedure**
+0. **A photo instead of text** (screenshot of the check window / Claude Code): read the image, transcribe the Result + every FAIL/warn row, mark the diagnosis *partial*, and ask for the text block (`PymTime handover.txt` beside `Start PymTime.bat`, or the box Claude Code showed).
 1. **Cut block?** No first or END line = the chat app cut it. Say so and ask for the whole block (or `PymTime handover.txt` beside their `Start PymTime.bat`). Diagnose what is there, marked partial.
 2. **Match the signature** (first match wins), then open the cited PymTime source to confirm before claiming it:
 
 | Signature in the block | Cause | What the colleague does |
 |---|---|---|
 | `Build` older than `E:\Dev\scripts\PymTime\VERSION.txt` + a FAIL that a newer build fixes | old build | install the newest zip over the same folder |
-| `Week` ps_fail (timeout N) high + `no-password` · FAIL "saved Protime password can be read back" · low RAM / CPU 100% | PowerShell starved (fixed v17: tasks at `<Priority>4`, `lib/config.js` raises priority) | install v17+ and restart the laptop; password is fine |
+| `Week` ps_fail (timeout N) high + `no-password` · FAIL "PowerShell … too busy" or "saved Protime password … not read in time" · low RAM / CPU 100% | PowerShell starved (v17: tasks at `<Priority>4`, run retries the decrypt through the window) | install v17+ (self-repair re-registers the tasks on the next run); close programs; password is fine, do NOT retype |
+| FAIL "daily schedule" detail `ClockIn: priority` | pre-v17 tasks, not yet repaired | open the PymTime page once (or wait for the next run): self-repair fixes it |
+| FAIL "daily schedule" detail `action` / "another PymTime folder owns the schedule" | two PymTime copies; the schedule points at the other folder | open `Start PymTime.bat` in the folder they want to keep, delete the other |
+| `Setup` line `PAUSED` | paused on purpose or by accident | press Start on the page |
+| FAIL "Protime shows YOUR attendance row" ("row was not found") | username spelling differs from Protime's | retype the username exactly as Protime shows it, Save |
+| warn/FAIL "laptop clock and time zone" (N min ahead/behind) | clock skew | Windows Settings → Time → Sync now |
+| warn "sits in a safe folder" (OneDrive / Desktop) | install place | move to `C:\PymTime`, Start PymTime there |
+| verdict READY BUT NOT PROVEN with Protime reachable | a Protime answer was inconclusive | check again in 15 min |
 | FAIL "Protime accepts your username and password" · `login-failed` | Protime password changed | open the page, retype the password, Test login, Save setup |
 | `throttled` in Week | 3–4 logins within ~15 min | wait 15 min, check once |
 | FAIL "Protime can be reached" · not tested Protime rows | not on office network / VPN | connect, check again |
