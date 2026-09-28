@@ -9,9 +9,10 @@ retention: rotate monthly
 
 **What fires when**: Stop — only when the reply contains a fenced infra handoff block whose first content line is `Hi infra, please assist. Thank you.`. No such block → silent pass. Checks run on the LAST such block (a before/after comparison turn whose final handoff is correct still passes).
 
-**Two checks** (advisory v1):
-- **CHECK A** — greeting and `#<ticket>:` are ADJACENT (no blank/prose line between).
-- **CHECK B** — the handoff is the CLOSING block (nothing substantive after its closing fence).
+**Three checks**:
+- **CHECK A** (advisory) — greeting and `#<ticket>:` are ADJACENT (no blank/prose line between).
+- **CHECK B** (advisory) — the handoff is the CLOSING block (nothing substantive after its closing fence).
+- **CHECK C** (BLOCKS, v2 2026-09-28) — reply routes a PROD patch to infra (`\d{6}.sql` + `PROD` + a send/hand/pass-to-infra or infra-runs verb) but has NO handoff block. Closes the negative-space hole: v1 passed silently when the handoff was absent altogether (#281638 patch prep, caught by みや). Past tense ("infra ran") does not fire, so verify turns pass. Promoted straight to block: the absence is the exact slip, and advisory text on an absent block was never going to be seen.
 
 **Layer choice (Rule 7)**: hook-only — no procedure to invoke, mechanical detection, no front-gate needed.
 
@@ -23,4 +24,4 @@ retention: rotate monthly
 
 **state-scoped**: no, state-agnostic — the handoff shape is identical for Melaka / Perak / any state; no per-state path, schema, or key (Rule 11).
 
-**Eval**: `node domain/patch-close-shape/patch-close-shape.eval.js` — 27 fixtures (happy path + CHECK A + CHECK B + 15 adversarial/out-of-spec), all green 2026-09-02. Live smoke-test confirmed both advisories render.
+**Eval**: `node domain/patch-close-shape/patch-close-shape.eval.js` — 50 fixtures after v2 (CHECK C adds 23: #281638 replay + 21 adversarial, 50/50 green 2026-09-28, live smoke exit 2 + message rendered). v1: 27 fixtures (happy path + CHECK A + CHECK B + 15 adversarial/out-of-spec), all green 2026-09-02. Live smoke-test confirmed both advisories render.

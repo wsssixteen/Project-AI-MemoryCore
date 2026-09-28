@@ -59,7 +59,32 @@ const CASES = [
   ['24 very long reply, handoff correct at end', j('x'.repeat(5000), GOOD), false, null],
   ['25 short multi-digit ticket', j('x', GOOD.replace('#277291:', '#12:')), false, null],
   ['26 malformed: greeting fence never closed', j('x', '```\nHi infra, please assist. Thank you.\n#277291: x.'), false, null],
+  // CHECK C — PROD patch routed to infra with no handoff (#281638 replay, 2026-09-28)
+  ['C1 #281638 replay: send path to infra, PROD, no handoff', j('Checked against PROD today.', '| 2 | Send `C:\\Users\\R\\1. Tasks\\Melaka\\232. II #281638 - Pelupusan - PRBB - Papar Ralat selepas Klik Button hantar (PROD)\\2. Fix\\281638.sql` to infra. |'), true, /CHECK C/],
+  ['C2 "Infra runs 281638.sql" PROD', 'PROD fix. Infra runs `2. Fix\\281638.sql` (1 row).', true, /CHECK C/],
+  ['C3 hand to infra', 'Hand 281319.sql to infra for PROD.', true, /CHECK C/],
+  ['C4 same text + correct handoff at end → pass', j('PROD. Send 281638.sql to infra.', GOOD), false, null],
+  ['C5 same text + handoff wrong shape → CHECK A not C', j('PROD. Send 281638.sql to infra.', ['```', 'Hi infra, please assist. Thank you.', '', '#281638: x.', 'UPDATE a SET b=1;', '```'].join('\n')), true, /CHECK A/],
+  ['C6 past tense: infra ran it (verify turn)', 'PROD verified: infra ran 281638.sql, 1 row updated.', false, null],
+  ['C7 no PROD word (staging patch)', 'Send 281638.sql to infra for staging.', false, null],
+  ['C8 no .sql named', 'PROD patch. Send it to infra.', false, null],
+  ['C9 .sql + PROD, no infra route (miya runs locally)', 'PROD data in 281638.sql for review.', false, null],
+  ['C10 bypass token', '[skip-patch-close-shape: review-only turn] Send 281638.sql to infra, PROD.', false, null],
+  ['C11 lowercase prod word only', 'send 281638.sql to infra for prod', false, null],
+  ['C12 5-digit sql name', 'PROD. Send 28163.sql to infra.', false, null],
+  ['C13 infra in inline code only still routes', 'PROD. Send `281638.sql` to `infra`.', true, /CHECK C/],
+  ['C14 routing verb on another line from infra', 'PROD 281638.sql.\nSend it.\nAsk infra later.', false, null],
+  ['C15 handoff greeting only in prose (not fenced) → still missing', 'PROD. Send 281638.sql to infra. Start with Hi infra, please assist. Thank you.', true, /CHECK C/],
+  ['C16 tilde-fenced handoff not recognised → still missing', j('PROD. Send 281638.sql to infra.', GOOD.replace(/```/g, '~~~')), true, /CHECK C/],
+  ['C17 empty text', '', false, null],
+  ['C18 Next-steps table row routes to infra', '| 2 | Forward 279882.sql to infra | "infra ran it" |\nEnv PROD', true, /CHECK C/],
+  ['C19 "infra will run" future', 'PROD: infra will run 281638.sql tomorrow.', true, /CHECK C/],
+  ['C20 hotfix doc patch without .sql', 'PROD: send the edited docx to infra.', false, null],
+  ['C21 CHECK C marks block=true', 'PROD. Send 281638.sql to infra.', true, /CHECK C/],
 ];
+
+{ const r0 = evaluate('PROD. Send 281638.sql to infra.'); check('C21b block flag set', r0.block === true, 'block=' + r0.block); }
+{ const r1 = evaluate(j('x', GOOD, 'after')); check('C22 CHECK B stays advisory (block not set)', !r1.block, 'block=' + r1.block); }
 
 for (const [name, text, expectFire, match] of CASES) {
   const { fire, advisories } = evaluate(text);
