@@ -1,6 +1,6 @@
 ---
 name: pymtime
-description: Remote control of みや's PymTime clock-in app (E:\Dev\scripts\PymTime) — skip / unskip a day, pause, status. Triggers — "/pymtime", "skip today", "skip tomorrow", "skip clock in", "skip clock-in today", "skip pymtime", "skip pymtime clock in", "skip attendance", "don't clock in today/tomorrow", "cuti hari ini", "EL today", "emergency leave", "did pymtime run", "pymtime status", "pause pymtime", "resume pymtime", "undo skip". ANY of these = invoke this skill BEFORE replying — the phrase alone never triggers an action; this skill's confirm step does.
+description: Remote control of みや's PymTime clock-in app (E:\Dev\scripts\PymTime) — skip / unskip a day, pause, status — AND diagnosing a colleague's pasted PymTime HANDOVER block (§Handover). Triggers — "===== PYMTIME HANDOVER", "pymtime handover", "handover from <colleague>", "colleague's pymtime", "/pymtime", "skip today", "skip tomorrow", "skip clock in", "skip clock-in today", "skip pymtime", "skip pymtime clock in", "skip attendance", "don't clock in today/tomorrow", "cuti hari ini", "EL today", "emergency leave", "did pymtime run", "pymtime status", "pause pymtime", "resume pymtime", "undo skip". ANY of these = invoke this skill BEFORE replying — the phrase alone never triggers an action; this skill's confirm step does.
 ---
 
 # /pymtime — remote skip / status for the daily clock-in
@@ -63,6 +63,34 @@ node -e "console.log(require('E:/Dev/scripts/PymTime/setup.js').setTasksEnabled(
 2. **On the laptop** — `skip.js` (without `--quiet`) fires a Windows toast *"PymTime will skip clock-in — Tue 8 Sep 2026 — set remotely"* so the change is visible on the machine itself, and the Settings page shows it as a chip with an ✕ undo.
 
 If the command errors (`date is in the past`, `bad date`) — show the error, re-ask; never retry with a guessed date.
+
+## Handover — a colleague's laptop reports back (added 2026-09-28)
+
+**The loop**: a colleague runs PymTime's check on THEIR laptop (their Claude Code reads the zip's `CLAUDE.md` and runs `app/node/node.exe app/handover.js --json`, or they double-click `Check PymTime.bat`). It shows them READY / NOT READY and a block they paste to みや by WhatsApp / Teams / email. みや pastes it here. The `pymtime-handover` hook fires on the block's `===== PYMTIME HANDOVER v1 =====` / `===== END PYMTIME HANDOVER =====` lines in ANY session.
+
+**The block** (written by `E:\Dev\scripts\PymTime\lib\handover.js`): `Person` (name + login local part) · `Result` (Verify headline) · `When` · `Build` (their version + folder) · `Laptop` (Windows, uptime, free RAM, CPU busy) · `Setup` (window, workdays, paused, Protime address) · `Checks` (counts, then every FAIL / warn / not-tested row; **the first FAIL is the cause, later ones follow from it**) · `Days` (last 10 workdays) · `Week` (7-day counts) · `Events` (notable log rows, repeats folded as `xN`).
+
+**Procedure**
+1. **Cut block?** No first or END line = the chat app cut it. Say so and ask for the whole block (or `PymTime handover.txt` beside their `Start PymTime.bat`). Diagnose what is there, marked partial.
+2. **Match the signature** (first match wins), then open the cited PymTime source to confirm before claiming it:
+
+| Signature in the block | Cause | What the colleague does |
+|---|---|---|
+| `Build` older than `E:\Dev\scripts\PymTime\VERSION.txt` + a FAIL that a newer build fixes | old build | install the newest zip over the same folder |
+| `Week` ps_fail (timeout N) high + `no-password` · FAIL "saved Protime password can be read back" · low RAM / CPU 100% | PowerShell starved (fixed v17: tasks at `<Priority>4`, `lib/config.js` raises priority) | install v17+ and restart the laptop; password is fine |
+| FAIL "Protime accepts your username and password" · `login-failed` | Protime password changed | open the page, retype the password, Test login, Save setup |
+| `throttled` in Week | 3–4 logins within ~15 min | wait 15 min, check once |
+| FAIL "Protime can be reached" · not tested Protime rows | not on office network / VPN | connect, check again |
+| FAIL "Task Scheduler really starts PymTime" / "start itself" | IT policy or bad folder | extract to `C:\PymTime`, Start PymTime again; still failing → IT |
+| FAIL "All PymTime files are here" · `node-missing` | half unzip / antivirus | unzip again over the folder; ask IT to allow `node.exe` |
+| `Days` all `clocked` / `by-hand`, verdict READY | healthy | nothing |
+| none of the above | unknown | read `E:\Dev\scripts\PymTime\FAILURE-MODES-AND-TESTS.md` + the check's source in `lib\verify.js`; never guess |
+
+3. **Reply to みや**: first line = the cause in plain words (or "healthy"). Then the rows that prove it (quote them). Then a **sendable reply to the colleague** in a `text` block: plain short sentences, what to do, no jargon (same style as a BA-facing reply). If the fix is on our side (a PymTime bug), say that instead and name the file.
+4. If the block shows a PymTime **bug** (not the colleague's setup), fix it in `E:\Dev\scripts\PymTime` like any bug: root cause first, then the fix, `_selftest.js`, and a new build.
+5. **みや's ask wins**: if he only asks "what does it say", summarise; do not start a fix.
+
+Banned: diagnosing from memory without opening the cited source · asking the colleague for their password · telling them to re-enter a password when the signature is a PowerShell timeout (the 2026-09-28 misdiagnosis this loop exists to stop).
 
 ## Why this exists (2026-09-07)
 みや asked for a remote skip path for emergency leave ("connect through claude remote session"). The phrase set is loose ("skip today", "skip attendance") — so a **mandatory ask-back with the real date + a visible confirmation** is the safety gate, the same pattern as the confirm-gated Submit / Clock-in-now buttons in the app.
