@@ -8,7 +8,7 @@ metadata:
   modified: 2026-08-27T07:44:14.019Z
 ---
 
-🚨 **Name every `.sql` deliverable in a Task folder `<ticket>.sql`** — e.g. `277309.sql`, `276549.sql`. If a ticket genuinely needs more than one, `<ticket>-2.sql`, `<ticket>-3.sql`.
+🚨 **Name by ROLE (updated 2026-09-25, #281650):** `<ticket>.sql` = the UPDATE/patch script (infra runs it, goes to Redmine) · `<ticket>-check.sql` = ONE combined check script showing every row the patch changes (UNION ALL across tables), before + after in the trailing comment. **Banned**: `-2` / `-3` numbering (reads as a duplicate of the update script) · more than one check script. **Why**: `281650-2.sql` looked like a redundant copy and the checks were split; miya wants the role visible from the name and all changes checked in one run.
 
 **Banned**: descriptive/verbose names — `patch-ADHOC-PRBB-2026-3-STANDBY.sql`, `ddl-widen-ulasan-277309.sql`, `upload-patch-TICKET.sql`. They look stupid and add lookup headache.
 

@@ -28,8 +28,52 @@ metadata:
 
 **Pre-send split check (2026-09-24, #278909, miya: "I hate it when you jam your points"):** any sentence joined by `jadi` / `so` / `bila` / `sebab` / `dan` that carries 2+ facts gets split into one line per fact before sending. Bad: "Config sudah merujuk templat ini, jadi bila Tidak Boleh Dipertimbangkan / Tolak dan pemohon ada pemilikan tanah, sistem papar ralat Couldn't load file." Good: "Config refer 3 templat yang belum wujud." / "Sistem papar ralat Couldn't load file." / "Ralat keluar bila ..." Also: miya prefers his own mixed wording ("config refer ...") and label-style short lines ("Base: X" / "Refer point 2.3.3: Y") over full Malay sentences.
 
+**Dev-to-dev fix list on Redmine (2026-09-28, #278909, miya's final version: "I prefer this way"):** for a note to a developer (Farah), the numbered item IS the title line and its detail sits in a `<pre>` block under it (Redmine renders it boxed). Class/constant/file names are fine here (developer audience), unlike BA text. Shape:
+```
+Salam Farah,
+
+Bujang dan Syarikat ok. Tinggal 3 fixes:
+
+1. Tujuan tiada nombor 1.1
+<pre>
+   Templat: TemplateRisalatMMKN_PDT_Tolak_PT_AdaPemilikan.docx
+   Ikut base. Refer gambar 1.
+</pre>
+
+2. 3.1 Melaka Tengah hardcode
+<pre>
+   Templat: 4 templat Tolak individu
+   Tukar ke CC namaDaerah. Refer gambar 2.
+</pre>
+
+Thank you.
+```
+Rules: opener says what is OK + how many fixes are left · number leads the item, never sits under a heading line · each item = short title + `<pre>` detail (Templat/Java line, action, "Refer gambar N") · sub-steps a./b. inside the `<pre>` · attach red-boxed screenshots named `N. <what>.png` in the Task `2. Fix\` folder. Banned: a heading line with the number beneath it (miya: "why does the numbering below a statement").
+
 **Banned in ticket text:** "DB-proven" / "verified" / file:line / class names / JSON keys / method names / CAPS-for-emphasis / long sentences / more than one idea per line. Keep the technical detail inside the attached files, never in the message.
 
 **At ticket close / "test passed" / after a confirmed push:** emit the plain close message (above) PLUS the git commit-reference block. Generate the block with `node domain/ticket-close-block/ticket-close-block.js --repo <path> --ticket <num> --module <pelupusan|awam>`. Module rule: AWAM = branch only (another team merges PROD); pelupusan = branch + merged to mlk/int-env (we deploy PROD, BA tests int-env). Do not hand-type the block.
+
+**📚 miya's Redmine speech collection — VERBATIM notes he sent (grows over time; match this voice, do not paraphrase it):**
+
+1. BA pass after a fix, #281712 (2026-09-28). Greeting "Salam <BA first name>" · one line answering anything the BA asked on the side (here: apps checked) · one line "deployed to <module> internal, please help to verify" · the ticket-close-block · "Thanks".
+```
+Salam Fizah, I have checked for APPS, the logic is already correct and there is no checking when saving Maklumat Pemohon. 
+
+I have deployed the fixes to AWAM internal. Please help to verify.
+
+*mlk/esokongan/281712*
+<pre>
+Commit  : 21210507790080c41bf450dfca277e205e04c4fd
+Author  : Ridhwan
+Date    : 28/09/2026 11:17:48
+Subject : Ref #281712 - PLTP - Fix syer checks to add mixed fractions so shares totalling 1 pass
+Branch  : mlk/esokongan/281712
+Module  : etanah-awam
+</pre>
+
+Thanks
+```
+My draft he replaced: "Hi Nurhafizah, fix sudah di deploy ke internal (mlit) untuk diuji." → he writes English for the pass note, "Salam" + short name, names the module ("AWAM internal"), and closes a side question the BA raised in chat.
 
 Related: [[feedback_cross_module_handoff_artifact]] · [[feedback_ba_facing_reply_plain]].
