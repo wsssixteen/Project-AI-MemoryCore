@@ -94,6 +94,20 @@
  *   Changed: step 5 sweep is report-only unless WORKTREE_CLEANUP_DELETE=1. Direct sweepOrphans()
  *     calls keep their explicit dryRun. Spec preservation: every v1.7 spec intact; boot-time
  *     deletion SUSPENDED (named, reversible: set the env var). Eval fixture V.
+ *
+ * v1.9 2026-09-28 — OPEN-QUEST HOLD (per みや).
+ *   symptom:     2026-09-27T01:09 manual salvage-and-sweep deleted internal-tickets-review-ffefc6, the cwd of the live
+ *                session "279411 - All urusan - Ulasan JT" (QA-279411 status=hold); session became unusable. The folder
+ *                name held no ticket number; the branch (claude/redmine-279411-566a70) survived only in the session transcript.
+ *   goal:        no sweep or step-3 removal deletes a worktree folder tied to a ticket with an OPEN block in quest/active.txt
+ *   goal_signal: sweep log rows carry skippedOpenQuest[] / openQuestSkips[] naming the held folder + qa + source
+ *   retention:   keep (same log)
+ *   Changed: openQuestHold() reads ticket numbers from folder name · admin HEAD · session-transcript gitBranch + session
+ *     title (custom-title record; 3 newest transcripts, >32 MB skipped — dry smoke found "256334 - CR -" held only by title), matches
+ *     MAIN's active.txt (active/hold/blocked/delegated); unreadable active.txt → every numbered folder held (fail closed).
+ *     Applied in sweepOrphans (orphans) and step 3 (registered merged worktrees; branch kept too).
+ *   Spec preservation: every v1.8 spec intact (report-only default, delete rule, current-session path protection).
+ *     Additive only. Dropped: none. Eval fixtures W1-W9.
  */
 const { execSync } = require('child_process');
 const fs = require('fs');
@@ -203,6 +217,57 @@ function neverCommittedFiles(dir, root) {
 }
 
 /**
+ * v1.9 — OPEN-QUEST HOLD. Ticket numbers (6 digits) tied to a worktree folder, from every source that
+ * survives a de-registration: the folder name, the branch in the folder's own git admin HEAD, and the
+ * gitBranch + session title (custom-title) the Claude desktop recorded in that folder's session transcripts
+ * (~/.claude/projects/<cwd with non [A-Za-z0-9-] chars as '-'>/*.jsonl). Returns the first number with
+ * an OPEN block in MAIN's quest/active.txt, else null. active.txt unreadable → any numbered folder is held.
+ */
+const OPEN_STATUSES = /^(active|hold|blocked|delegated)$/;
+function openQuestMap(root) {
+  try {
+    const txt = fs.readFileSync(path.join(root, 'quest', 'active.txt'), 'utf8');
+    const map = new Map();
+    for (const b of txt.split(/^(?=qa=)/m)) {
+      const qa = (b.match(/^qa=(\S+)/m) || [])[1];
+      const st = ((b.match(/^status=(\S+)/m) || [])[1] || '').trim();
+      const num = qa && (qa.match(/(\d{6})/) || [])[1];
+      if (num && OPEN_STATUSES.test(st)) map.set(num, { qa, status: st });
+    }
+    return map;
+  } catch { return null; }
+}
+function ticketSources(dir, name, transcriptsRoot) {
+  const found = [];                                                     // [{num, source}]
+  const add = (text, source) => { for (const m of String(text || '').matchAll(/(?<!\d)(\d{6})(?!\d)/g)) found.push({ num: m[1], source }); };
+  add(name, 'folder name');
+  try {
+    const link = fs.readFileSync(path.join(dir, '.git'), 'utf8').match(/^gitdir:\s*(.+)$/m);
+    if (link) add(fs.readFileSync(path.join(link[1].trim(), 'HEAD'), 'utf8'), 'admin HEAD');
+  } catch {}
+  try {
+    const tdir = path.join(transcriptsRoot, path.resolve(dir).replace(/[^A-Za-z0-9-]/g, '-'));
+    const newest = fs.readdirSync(tdir).filter(f => f.endsWith('.jsonl'))
+      .map(f => ({ f, t: fs.statSync(path.join(tdir, f)).mtimeMs })).sort((a, b) => b.t - a.t).slice(0, 3);
+    for (const n of newest) {
+      const p = path.join(tdir, n.f);
+      if (fs.statSync(p).size > 32 * 1048576) continue;                 // a runaway transcript is skipped, never a boot stall
+      const text = fs.readFileSync(p, 'utf8');
+      for (const m of text.matchAll(/"gitBranch":"([^"]+)"/g)) add(m[1], 'session transcript branch');
+      for (const m of text.matchAll(/"type":"custom-title","customTitle":"([^"]*)"/g)) add(m[1], 'session title');
+    }
+  } catch {}
+  return found;
+}
+function openQuestHold(dir, name, root, transcriptsRoot, map) {
+  const src = ticketSources(dir, name, transcriptsRoot);
+  if (!src.length) return null;
+  if (map === null) return { qa: `#${src[0].num}`, status: 'unknown (active.txt unreadable)', source: src[0].source };
+  for (const s of src) { const q = map.get(s.num); if (q) return { qa: q.qa, status: q.status, source: s.source }; }
+  return null;
+}
+
+/**
  * v1.6 — ORPHAN-FOLDER SWEEP. Reads .claude/worktrees on DISK, not git's list.
  * For every folder that is NOT a registered worktree and NOT the current one:
  *   no branch / branch merged into <baseRef>  → delete folder (+ branch), unless it
@@ -212,9 +277,10 @@ function neverCommittedFiles(dir, root) {
  */
 function sweepOrphans(root, opts) {
   const r = root || MAIN_ROOT;
-  const o = Object.assign({ dryRun: DRY, baseRef: null, here: null }, opts || {});
+  const o = Object.assign({ dryRun: DRY, baseRef: null, here: null, transcriptsRoot: path.join(os.homedir(), '.claude', 'projects') }, opts || {});
   const wtDir = path.join(r, '.claude', 'worktrees');
-  const res = { registered: 0, orphans: [], deleted: [], kept: [], baseRef: null };
+  const res = { registered: 0, orphans: [], deleted: [], kept: [], skippedOpenQuest: [], baseRef: null };
+  const questMap = openQuestMap(r);                                     // v1.9
   if (!fs.existsSync(wtDir)) return res;
   const base = o.baseRef || mergeBaseRef(r);
   res.baseRef = base;
@@ -228,6 +294,13 @@ function sweepOrphans(root, opts) {
     if (regSet.has(norm(full)) || here.some(h => h === norm(full) || h.startsWith(norm(full) + '/'))) continue;   // registered, or holds the current session → not ours
     const branch = `claude/${name}`;
     const hasBranch = !!run(`git show-ref --verify --quiet "refs/heads/${branch}" && echo y`, r);
+    const hold = openQuestHold(full, name, r, o.transcriptsRoot, questMap);   // v1.9: an open quest's session folder is never swept
+    if (hold) {
+      const entry = { name, verdict: 'keep', why: `open quest ${hold.qa} (${hold.status}) via ${hold.source}`, hasBranch };
+      res.orphans.push(entry); res.kept.push(entry);
+      res.skippedOpenQuest.push({ name, qa: hold.qa, status: hold.status, source: hold.source });
+      continue;
+    }
     let verdict, why;
     if (hasBranch) {
       const merged = !!run(`git merge-base --is-ancestor "${branch}" ${base} && echo y`, r);
@@ -257,7 +330,7 @@ function sweepOrphans(root, opts) {
     const logPath = path.join(r, '.claude', 'state', 'worktree-cleanup-log.jsonl');
     fs.mkdirSync(path.dirname(logPath), { recursive: true });
     fs.appendFileSync(logPath, JSON.stringify({ ts: new Date().toISOString(), dry: !!o.dryRun, baseRef: base, registered: res.registered,
-      deleted: res.deleted.map(e => e.name), kept: res.kept.map(e => ({ name: e.name, why: e.why })) }) + '\n');
+      deleted: res.deleted.map(e => e.name), kept: res.kept.map(e => ({ name: e.name, why: e.why })), skippedOpenQuest: res.skippedOpenQuest }) + '\n');
   } catch {}
   return res;
 }
@@ -273,7 +346,7 @@ function dirBytes(p) {
   return n;
 }
 
-module.exports = { sweepOrphans, neverCommittedFiles, registeredWorktrees, mergeBaseRef, dirBytes, mainRootOf };
+module.exports = { sweepOrphans, neverCommittedFiles, registeredWorktrees, mergeBaseRef, dirBytes, mainRootOf, openQuestMap, openQuestHold, ticketSources };
 
 function main() {
 try {
@@ -381,11 +454,16 @@ try {
   //      again be orphaned with its branch gone.
   const here = norm(projectRoot);
   const refused = [];
+  const openQuestSkips = [];                                           // v1.9
+  const questMap3 = openQuestMap(MAIN_ROOT);
+  const transcripts = path.join(os.homedir(), '.claude', 'projects');
   const wtByBranch = new Map(registeredWorktrees().filter(w => w.branch).map(w => [w.branch, w.path]));
   for (const b of mergedBranches) {
     const wt = wtByBranch.get(b);
     if (wt && norm(wt) === here) continue;                             // never self-remove
     if (wt) {
+      const hold = openQuestHold(wt, `${path.basename(wt)} ${b}`, MAIN_ROOT, transcripts, questMap3);
+      if (hold) { openQuestSkips.push({ name: path.basename(wt), branch: b, qa: hold.qa, status: hold.status, source: hold.source }); continue; }   // branch kept too
       if (DRY || !BOOT_DELETES) continue;                              // v1.8: `worktree remove` ignores gitignored files → frozen too
       const rm = runFull(`git worktree remove "${wt}"`);
       if (!rm.ok) { refused.push(`${path.basename(wt)} (${b}): ${rm.err.split('\n')[0]}`); continue; }
@@ -416,7 +494,9 @@ try {
       process.stderr.write(`   would delete:\n   ${sw.deleted.map(e => `${e.name} — ${e.why}`).join('\n   ')}\n`);
     }
     // (sweep row already written inside sweepOrphans; add the step-3 refusals if any)
-    if (refused.length) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), refused }) + '\n'); } catch {} }
+    if (refused.length || openQuestSkips.length) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), refused, openQuestSkips }) + '\n'); } catch {} }
+    const held = sw.skippedOpenQuest.concat(openQuestSkips);
+    if (held.length) process.stderr.write(`   held for open quests (never removed):\n   ${held.map(e => `${e.name} — ${e.qa} (${e.status}) via ${e.source}`).join('\n   ')}\n`);
   } catch (e) {
     process.stderr.write(`worktree-cleanup-boot orphan-sweep: ${e.message}\n`);
   }

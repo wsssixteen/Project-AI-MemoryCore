@@ -3348,6 +3348,7 @@ fix_type=data-patch+alter
 patch_file=2. Fix\281656.sql
 
 ## 2026-09-25 — ADHOC-PLTP-2026-1 TICKETED -> QA-281712
+
 qa=ADHOC-PLTP-2026-1
 phase=0
 status=archived
@@ -3358,11 +3359,11 @@ quest_start=2026-09-25
 local_test_confirmed=false
 adhoc_register_row=A32
 branch=none-until-ticket (etanah-awam, off mlk/master)
-qa_doc=projects/coding-projects/active/ADHOC-PLTP-2026-1/ADHOC-PLTP-2026-1.md
+qa_doc=projects/coding-projects/archive/ADHOC-PLTP-2026-1/ADHOC-PLTP-2026-1.md
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\234. AH - PROD - PLTP - AWAM Syer Tidak Sah Penyebut Berbeza
 issue_one_liner=PROD Portal Awam PLTP hakmilik 040210PM00001265 - popup syer tidak sah on Seterusnya; AWAM checkingSyer():462 sums numerators vs max denominator (11 vs 28) though real total = 1 (1/28,1/4,1/8). CODE fix APPROVED by BA ketua 2026-09-25; awaiting BA Redmine ticket
 closed=2026-09-25
-close_note=TICKETED -> QA-281712 (ESOKONGAN #281712, same hakmilik + resit + error); register A32 promoted; canonical doc = projects/coding-projects/active/QA-281712/QA-281712.md
+close_note=TICKETED -> QA-281712 (ESOKONGAN #281712, same hakmilik + resit + error); register A32 promoted; canonical doc = projects/coding-projects/archive/QA-281712/QA-281712.md
 
 # ---- archived 2026-09-27 (moved from active.txt by active-trim.js) ----
 
@@ -4135,3 +4136,92 @@ patch_script=228\2. Fix\281567.sql - 2 rows updated, reversible
 held_reason=2026-09-25 - awaiting miya: post it (Redmine In Progress) + infra send + internal ticket for code C+D
 branch=none (data patch via infra, no code change)
 closed=2026-09-25
+
+qa=QA-281568
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\229. II #281568 - Pelupusan - PT - Request untuk Alter ke Tugasan Pelukis Pelan untuk Ja (PROD)
+phase=2026-09-28 Phase 1 closed: alter done, PROD PLPP a_tgsn 2855392 Baru for azizah@melaka.gov.my (2026-09-25 09:45); Redmine Closed by Idris; no code, no commit
+status=archived
+ticket_type=bug
+env=Pelupusan > PT > Request untuk Alter ke Tugasan Pelukis Pelan untuk Jana Pelan baharu
+issue_one_liner=Pelupusan > PT > Request untuk Alter ke Tugasan Pelukis Pelan untuk Jana Pelan baharu
+assigned_to_me=2026-09-25
+current_phase=Closed
+closed=2026-09-28
+qa_doc=projects/coding-projects/archive/QA-281568/QA-281568.md
+
+qa=QA-281638
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\232. II #281638 - Pelupusan - PRBB - Papar Ralat selepas Klik Button hantar (PROD)
+phase=0
+status=archived
+ticket_type=bug
+env=Pelupusan
+issue_one_liner=Pelupusan - PRBB - Papar Ralat selepas Klik Button hantar
+assigned_to_me=2026-09-25
+urusan=PRBB
+tugasan=Penerimaan Bukti Penyampaian Serahan Tangan
+current_phase=Closed
+local_test_confirmed=true
+quest_start=2026-09-25
+scope=PRBB
+qa_doc=projects/coding-projects/archive/QA-281638/QA-281638.md
+commit=none
+closed=2026-09-28
+
+qa=QA-281712
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\235. ES #281712 - Pelupusan - Portal Awam - PLTP - Papar -Info - Maaf syer yang dimasukk
+phase=1
+status=archived
+ticket_type=bug
+env=Pelupusan > Portal Awam > PLTP > Papar "Info : Maaf syer yang dimasukkan tidak sah atau melebihi had." walaupun syer sudah betul
+issue_one_liner=Pelupusan > Portal Awam > PLTP > Papar 'Info : Maaf syer yang dimasukkan tidak sah atau melebihi had.' walaupun syer sudah betul
+assigned_to_me=2026-09-25
+qa_doc=projects/coding-projects/archive/QA-281712/QA-281712.md
+urusan=PLTP
+branch=mlk/esokongan/281712
+adhoc_origin=ADHOC-PLTP-2026-1 (register A32)
+phase0_note=Scout+Recon DONE via adhoc (code read origin/mlk/master + PROD pra 55278); fix approved by BA ketua; STG repro resit 260925BSAT00029
+current_phase=Phase1-closed-awaiting-BA-verify
+quest_start=2026-09-28
+local_test_confirmed=true
+local_test_waiver=miya 2026-09-28: skip local test, test on server (int-env)
+apply_note=fix in E:\Dev\etanah-work\etanah-awam (separate clone, remote git@10.16.63.27), mvn -o compile exit 0 2026-09-28 11:12
+commit=2121050779
+int_env_merge=cherry-pick 8ffb6a060e (conflict in PelupusanPemohonTabForm resolved: int-env-only penyebutValue lines replaced, Boolean.TRUE kept); mvn compile exit 0 on int-env result
+test_result=miya 2026-09-28 server test PASSED on int-env (260709BSAT00111)
+closed=2026-09-28
+post_mortem=main/post-mortems.md#QA-281712
+kpi_entry=skip-routine
+
+# ===== archived 2026-09-28 (answered adhoc) =====
+
+qa=ADHOC-PT-2026-10
+phase=answered
+status=answered
+ticket_type=adhoc
+env=MLKSTG
+urusan=PT
+quest_start=2026-09-28
+local_test_confirmed=false
+adhoc_register_row=A35
+aplikasi_id=3436849
+qa_doc=projects/coding-projects/active/ADHOC-PT-2026-10/ADHOC-PT-2026-10.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\237. AH - MLKSTG - PT - SKM JT Tidak Hantar tiada tugasan seterusnya
+issue_one_liner=MLKSTG PT PTMLK/03/L/PT/2026/63 (+PT/39): PTBUT row missing after SKM JT=Tidak — VERIFIED node-level async assignation stall 16:50-18:02 (flowable ID block 12050xxx, also hit Pembangunan), drained itself 18:03; not a 1.7.0 code defect, no fix
+branch=none-until-ticket
+
+qa=QA-281650
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\239. DP #281650 - Pelupusan - MLPS - 1) Patch Tempat 2) Rotate Pelan 3) Patch Tanah Kera (PROD)
+phase=rework1 PROD patched 2026-09-29 (46856 + licence 4346), verified; awaiting Redmine Resolved
+status=archived
+ticket_type=patch
+issue_one_liner=Rework: L1e Tanah Kerajaan shows ' - PT 225 & PT 226' on MLPS/2026/8; dash added by code :772
+board_state=W4: code fix · 80%
+qa_doc=projects/coding-projects/archive/QA-281650/QA-281650.md
+state=melaka
+branch=none yet (Rubric)
+env=PROD
+current_phase=Closed
+local_test_confirmed=true
+closed_cycle1=2026-09-29
+cycle0_closed=2026-09-28
+cycle0_task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\233. DP #281650 - Pelupusan - MLPS - 1) Patch Tempat 2) Rotate Pelan 3) Patch Tanah Kera (PROD)

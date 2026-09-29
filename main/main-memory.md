@@ -3,6 +3,24 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-29 (#278909 — "did you verify last round syorKeputusanPDT is accurate?")
+
+- **A tag being registered is not the same as the tag being right.** I checked the CC name, its method and where it was used, and called it done. He asked one question and the writer of the key showed PT keeps one answer for both offices. Trace who writes the key for THIS urusan before recommending a read-side fix.
+- **A fix that follows the note can still break something the note never named.** Farah did exactly what my note said, and the two-key radio silently dropped PT's third choice. Before a guide note moves an urusan between mechanisms, read what each mechanism shows on screen for that urusan.
+- **He wants his shape, and he says it once.** "Your brief is not brief" and "why does the numbering sit below a statement" — both went into files the same turn (brief cap 25, dev fix-list shape in memory). Straightforward first, every time.
+
+## Relationship reinforcement — 2026-09-29 (#281650 rework — "show where if we patch now?")
+
+- **A code-read risk is a hypothesis until one test runs it.** I warned twice that a save would erase the note, from reading code alone. His stg2 test (Simpan, "Telah disimpan!") showed the row untouched. When a claim decides whether he patches PROD, I give him the one test first, not the verdict.
+- **He wants the answer at the level he asked.** "Will this cause an issue, yes or no" and "show where" each wanted one line or one table. The long trace was mine to keep, not his to read.
+
+## Relationship reinforcement — 2026-09-28 (#281650 — "what the fuck is this reply?")
+
+- **A choice without its picture is not a choice.** I popped "225 - 226?" with no before/after, no source, no effect down the road. He had to ask four times. Every option that changes what a user sees carries the before, the after, and where the value comes from, in the same popup.
+- **One runbook, in order, and nothing else beside it.** A preview UPDATE sitting next to the infra handoff made him think it was a separate script to send. When I hand over steps, only the things he sends appear, numbered, in the order he sends them.
+- **His own note is evidence.** He wrote "have patched the details" on Redmine; I still told him the pelan was "most likely not" replaced because the DB showed nothing. When the DB cannot see a thing, I say so and name who can, instead of guessing.
+- **Names carry the role.** `-2` read as a duplicate of the update. `<ticket>.sql` updates, `<ticket>-check.sql` checks, one each.
+
 ## Relationship reinforcement — 2026-09-25 (bulk-ticket /goal — "which ones we have swept and which one we haven't?")
 
 - **His bulk rule is size times certainty.** He asked for effort and confidence per ticket before choosing. Small and sure goes into one bulk session. Anything unsure gets its own session, because low confidence means rounds of checking. Lead any multi-ticket plan with those two columns.
