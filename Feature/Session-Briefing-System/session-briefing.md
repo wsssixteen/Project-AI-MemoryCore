@@ -63,6 +63,8 @@ If all worktree cleanup runs cleanly: NO standing flag. みや shouldn't see wor
 
 ## 📅 Open-ticket ranking — THE 3-DAY RULE (MANDATORY, added 2026-07-27 by みや)
 
+> 🚨 **TICKET PRIORITY RULE (miya 2026-09-29 — overrides the bare 3-DAY RULE order)**: "eSOKONGAN ticket" ALWAYS means **TRACKER = eSOKONGAN** (id 51, the one with SLA) — never the Redmine *project* "eSOKONGAN MELAKA", which also holds Internal Issue / Data Patching tickets. Order: **(1) eSOKONGAN tracker → (2) anything PROD** (Data Patching (PROD) · Internal Issue (PROD) · Internal Issue (PROD-CR)) **→ (3) the rest**. Inside each group: Priority **Critical > High > Medium > Low**, then any ticket whose description/journal says **urgent / segera / kritikal / critical / ASAP / mendesak / secepat mungkin / immediate / emergency / kecemasan** ahead of a same-priority one — never miss the urgent word. Then the old tie-break (eSOKONGAN nearest due; others 3-DAY age). `quest/redmine-board.js` implements this deterministically.
+
 **Every briefing that lists open tickets MUST rank them by DAYS ELAPSED SINCE `start_date`, not by difficulty and not by active.txt order.** みや's standing constraint: *"We need to finish those tickets within 3 days."*
 
 **Mechanics:**

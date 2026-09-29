@@ -388,6 +388,36 @@ try {
   }
 } catch (e) { findings.push('ℹ conflict-copy check unavailable: ' + e.message); }
 
+// CHECK 10 — Windows-reserved file names (2026-09-28). A Git Bash `> NUL` writes a REAL file named
+// NUL, which OneDrive refuses to sync ("Rename 1 item?" popup; hit in worktree colleague-cr-issue-ed8731).
+// domain/nul-redirect-gate prevents the Bash case; this is the detect side for any other writer.
+// Scans the repo (depth 4) and each worktree root under the MAIN repo (depth 2) — worktrees are
+// where the founding file landed, and CHECK 9 skips them.
+try {
+  const RESERVED = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\.[^.]*)?$/i;
+  const hits = [];
+  const SKIP = new Set(['node_modules', 'worktrees', '.git', 'objects', 'pack']);
+  const walk = (d, depth, max) => {
+    if (depth > max || hits.length > 50) return;
+    let ents = []; try { ents = fs.readdirSync(d, { withFileTypes: true }); } catch { return; }
+    for (const e of ents) {
+      if (SKIP.has(e.name)) continue;
+      const p = path.join(d, e.name);
+      if (RESERVED.test(e.name)) hits.push(p);
+      else if (e.isDirectory()) walk(p, depth + 1, max);
+    }
+  };
+  walk(REPO_ROOT, 0, 4);
+  const mainRoot = REPO_ROOT.split(/[\\/]\.claude[\\/]worktrees[\\/]/)[0];
+  const wtDir = path.join(mainRoot, '.claude', 'worktrees');
+  let wts = []; try { wts = fs.readdirSync(wtDir, { withFileTypes: true }).filter(e => e.isDirectory()); } catch {}
+  for (const w of wts) { const p = path.join(wtDir, w.name); if (p !== REPO_ROOT) walk(p, 0, 2); }
+  if (hits.length) {
+    findings.push(`⚠ WINDOWS-RESERVED FILE NAMES (${hits.length}) — OneDrive cannot sync these: ${hits.slice(0, 8).join(', ')}${hits.length > 8 ? ' …' : ''}`);
+    findings.push('   → read each, then remove it via the \\\\?\\ long-path prefix (plain paths hit the device); the usual source is a Git Bash `> NUL` — use /dev/null');
+  }
+} catch (e) { findings.push('ℹ reserved-name check unavailable: ' + e.message); }
+
 // Append invariant findings to main findings
 if (invFindings.length > 0) {
   findings.push(''); // separator
