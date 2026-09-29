@@ -74,8 +74,8 @@ const CHECKS = [
   },
   {
     id: 'format-length',
-    desc: 'brief is ≤60 content lines',
-    test: t => t.split('\n').filter(l => l.trim()).length <= 60,
+    desc: 'brief is ≤25 content lines',
+    test: t => t.split('\n').filter(l => l.trim()).length <= 25,
   },
   {
     id: 'no-bare-permohonan-id',

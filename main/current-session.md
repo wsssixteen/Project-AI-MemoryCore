@@ -1,32 +1,31 @@
 # Current Session
 
-**Last Activity**: 2026-09-28 14:20 — #281650 (DP PROD, MLPS Tempat + pelan + Tanah Kerajaan) closed + archived + bounty · DE.
+**Last Activity**: 2026-09-29 15:25 — laptop RAM incident closed out: db-gateway live, 153 sessions archived, system-rules Rule 7 + birth enforcement, research note · DE.
 
-## Session Recap (2026-09-25 → 2026-09-28, ticket-281656-prep worktree → main)
-- **Ask**: retrieve + quest #281650 (Nurhafizah PDTJ): MLPS /7 and /8 at PYB4AE — Tempat `PT 118` / `PT 225 & 226 PT 117` → `-`, replace pelan L1e, /8 Tanah Kerajaan → `PT 225 & PT 226`.
-- **Done**: `281650.sql` (4 UPDATEs, apt 46855/46856 + licence rows 4342/4346) ran in PROD 2026-09-25 by infra, verified 2026-09-28. /8 no_lot NULL + `mklmt_tmbhn.keteranganTempatTanahKerajaan = "PT 225 & PT 226"` → L1e `- PT 225 & PT 226` (miya chose BA Description wording). Pelan: renamed PDFs (`PDTJ.600.2~6~69_M033_pelan.pdf`, `~6~70_M032`) handed to infra; BA reopened 27 Sep → reassigned to Asyraf for pelan; DB cannot confirm a disk swap (ask infra file size 436,915 / 457,395).
-- **Closed**: QA-281650 archived (Task 233 → Archive, block → active-archive, doc → archive/QA-281650). Knowledge: MLPS-TICKETS note, LATENT-BUGS L13 (keterangan not copied to licence, `PelupusanLiteService.java:1853`).
-- **Rule change**: script naming by role — `<ticket>.sql` = update, `<ticket>-check.sql` = one combined check; `-2` banned.
-- **Slips**: `reask/context-free-popup` (225-226 popup with no before/after) · `handoff/unclear-steps` (lone UPDATE beside handoff) · `assume-not-verify/state-guess` (said pelan "most likely not" replaced).
+## Session Recap (2026-09-22 → 09-29, resource-usage-investigation worktree)
+- **Incident**: laptop hung at 93-96% RAM, 60 GB commit. Every session started all 21 stdio DB MCP servers (~23 processes, ~2.4 GB each); 233 finished sessions never archived; 2 sessions ran 4 days at 70-85 CPU-hours.
+- **Fixed**: `E:\Dev\scripts\db-gateway` (local git `8f66e6a`): one shared process serves 20 DB MCP endpoints on 127.0.0.1:7411, starts a DB server on first call, stops it after 10 idle min, token + Host check; Task Scheduler "DB Gateway" at logon + 5 min, Priority 4. Selftest 22/22; `claude mcp list` 20/20 connected; 3-DB live test OK. Commit after reboot 12 GB (was 60).
+- **Cleanup**: 153 sessions archived after a 14-gate safety check; 412 Oracle connector processes stopped.
+- **System**: system-rules **Rule 7** (resource footprint declared at birth) + `core/forge.js --footprint` (forge.eval 17/17) + `component-birth-gate` `footprint:` (eval 9/9). Research + audit: `library-items/agent-architecture/agent-resource-footprint-2026.md`. Memory `feedback_resource_footprint`, `project_db_gateway`; new-machine Step 2c.
+- **Open (todo Q1 "Resource footprint follow-ups")**: mechanical resource-guard (miya: not a UI) · `auto_archive_inactive_days` 0→7 · bundle 36 UserPromptSubmit + 42 Stop hooks · rotate 64 MB telemetry · worktree consent sweep (56 / 15 GB) · WaRead watcher crash · codegraph shared · pdf-viewer off in claude.ai settings (miya only).
 
-**Last Activity**: 2026-09-25 18:56 — adhoc ADHOC-PLTP-2026-1 (PROD Portal Awam PLTP syer popup) diagnosed + saved; fix APPROVED by BA ketua, awaiting ticket; adhoc-save skill + audit built · DE.
+**Last Activity**: 2026-09-29 15:10 — #278909 Risalat MMKN PT: Farah's rework audited, PBN regression fixed (Option D), committed + merged int-env/stag-env, stag-env caught up to PROD 1.7.0, Phase 1 closed · DE.
 
-## Session Recap (2026-09-25, portal-awam-syer-validation worktree)
-- **Ask**: PDTMT via Fizah: public filled syer exactly as the sijil carian (auto-pulled from hakmilik 040210PM00001265) but Seterusnya shows "Maaf syer yang dimasukkan tidak sah atau melebihi had".
-- **Cause (CODE, 95%)**: etanah-awam `PelupusanPemohonTabForm.checkingSyer():462` sums numerators vs the largest denominator (11 vs 28); dialog `PelupusanMaklumatPemohonHelperForm.java:5635` rejects any denominator ≠ row 1. PROD pra `umm_p_pihak_bkptg` p_aplikasi_id 55278: 7×1/28 + 2×1/4 + 2×1/8 = 1.00. Analog = kaunter fraction sum `PelupusanMaklumatPemohonHelper.java:5848`.
-- **Status**: BA ketua approved the fix; the ticket already existed → **ESOKONGAN #281712** (found by redmine-reconcile at DE). A32 promoted, adhoc block archived, Task 234 → Archive, canonical doc `projects/coding-projects/active/QA-281712/QA-281712.md` (cold-resume ready). STG repro resit 260925BSAT00029. Next: `/quest resume 281712` → Apply.
-- **Reconcile divergences (miya's call)**: QA-278909 (Siti Farhanih, In Progress) · QA-281568 (Closed) · QA-256334 (Rework, Lau Li Wen).
-- **Built**: `adhoc-save` skill + `lib/adhoc-save-audit.js` (18/18 eval) · adhoc-paste-detector now anchors on hakmilik id / No Resit (13/13) · `quest/notes.js` keeps ADHOC ids whole (was "1. 2 026.txt").
-- **Audit found in older adhocs**: A27 double-claimed (REDMINE-RC re-pointed to new A33) · PRBB-2026-5 notes renamed · legacy qa_docs missing the standard header (FLOWABLE-2026-1, REDMINE-RC-2026-1, PRBB-2026-5) · ADHOC-FLOWABLE-2026-1 block open while register says RESOLVED · ADHOC-PRBB-2026-4 block missing most keys.
+## Session Recap (2026-09-25 → 09-29, #278909, worktree redmine-278909-ebf259 — git link pruned mid-session, saved from main)
+- **Decision**: separate AdaPemilikan templates (option A) over CC tags in the Tolak base — tajuk paragraph is auto-numbered, an empty CC leaves a dangling "2.3.3"; renderer has no paragraph removal.
+- **BA add-on**: PDT tidak boleh dipertimbangkan + PTG lulus. PT was on single `KeputusanSyor` (PTG overwrites PDT). Farah moved PT to dual keys → dropped PTG "Diangkat untuk pertimbangan PBN" (#260325) + relabelled PDT radio. Refuted; replaced by `40993fe86d`: PT stays single-key, PDT tugasan also saves `KeputusanSyorPDT`, 5.1 CC `syorKeputusanPDT` reads it.
+- **Shipped**: `mlk/internal-issues/278909` 40993fe86d · int-env 8f339a6861 · stag-env ab7a68c42f → 1.7.0 catch-up 2a9cd0afa5. Compile ×3 green, `E:\Dev\tmp-278909\review\Sim.java` 8/8. Not run on JBoss; render check pending deploy.
+- **Open**: miya deploys int + stag · post Redmine root cause/solution (text in QA doc) · pass to BA · int-env lacks 1.7.0 (4-file conflict, left) · stg2 `PTMLK/01/L/PT/2026/2` + 6 mlit syarikat PT apps are Flowable orphans (Initiate & Alter) · new PROD alter tickets #282178, #282175 have no block.
+- **Built/saved**: brief skill cap 60→25 lines (eval green) · memory dev fix-list Redmine shape (`feedback_ticket_writing_style`) · slips `gate/false-positive`, `reask/verbose`, `git/write-in-miya-repo`, `knowledge/derivable-not-derived` · 2 wrong-fix rows.
 
-**Last Activity**: 2026-09-25 15:48 — #281656 PRBB resit kaunter tidak masuk (PROD): link-resit data patch via infra + Alter Flow PL→PYB4CE on /14 and /15, verified PROD; quest closed + archived + bounty · DE.
+**Last Activity**: 2026-09-29 14:55 — #281650 rework (MLPS PTMLK/02/L/MLPS/2026/8 Tanah Kerajaan) patched in PROD, verified, closed + archived · DE.
 
-## Session Recap (2026-09-25, ticket-281656-prep worktree)
-- **Ask**: quest-prepare #281656 (PDTAG PRBB, public paid, resit not in Carian Pintas; link + alter to Penyediaan Borang 4Ce dan P1e).
-- **Cause**: public paid at the counter while SDU2 was still open; PL tugasan appeared 11:15, payments 09:26/09:49. Cashiers used manual Bayaran Pelbagai → new hsl_bayaran_fi rows with aplikasi_id NULL; officer fees stayed flag_bayar N.
-- **BA data errors caught**: #15 resit are D84300003/4 (BA typed D84000003/4 = Norshamsul SPPK/2026/484-485 Semakan Pelan); #15 receipts keyed PRBB/2025/15.
-- **Fix**: `1. Tasks\Melaka\Archive\230. II #281656 ...\2. Fix\281656.sql` (6 btrn repoint + 6 fi paid + deposit 646/647), schema-verified, infra ran it. Alter Flow: /14 → nurwaheda@melaka.gov.my, /15 → samsiah_jaamat@melaka.gov.my. みや confirmed.
-- **Slip**: claimed receipts belonged to another payer without showing the evidence script (`show-evidence`, logged).
-- **Carry forward**: PTMLK/03/L/PRBB/2026/8 — same cashier 10:37, RM4,500 manual vs RM9,300 unpaid fees, no PL tugasan → likely future ticket.
+## Session Recap (2026-09-29, #281650 rework)
+- **Ask**: BA (Fizah/Idris) wanted Tanah Kerajaan (No.PT) on MLPS/2026/8 to show numbers only, no leading dash, no "&", no PT wording ("225,226").
+- **Limit**: `umm_a_permohonan_tnh.no_lot` is NUMERIC (`'225,226'::numeric` errors); L1e prints `no_lot` + " - " + note. miya chose `225 - 226` (patch ticket).
+- **Done**: `3. Rework\2. Fix\281650.sql` — row 46856 no_lot 225 + note 226, licence row 4346 same (so next renewal seeds it). Infra ran it; PROD verified. Redmine Resolved text prepared (miya posts).
+- **stg2 test** (MLPS/2026/4 row 44424, note 1140): L1e + 4Ae show `1139 - 1140`; Papar Borang 4Ae + Simpan did not touch the row, so my "Simpan wipes the note" claim is refuted (LATENT-BUGS L15). miya to run the stg2 reset.
+- **Closed**: QA-281650 archived (Task 239 to Archive, doc to archive/QA-281650, block to active-archive, cycle-0 block merged).
+- **Slips**: `assume-not-verify/state-guess` x2 (Hantar-safe claim; wipe claim before test) · `reask/misread-ba-intent`.
 
-**Last Activity**: 2026-09-25 12:00 — /goal bulk-ticket triage → quest sweep (6 tickets, 18 agents, run wf_bb588f6c-e2c) → findings saved to qa_docs + active.txt · DE.
+**Last Activity**: 2026-09-29 12:18 — eSOKONGAN priority rule patched system-wide · Redmine retrieved · 3-ticket sweep (W1-W4, 9 familiars) · DE.

@@ -11,3 +11,10 @@
 {"ts":"2026-09-25T10:57:29.222Z","id":"ADHOC-PLTP-2026-1","outcome":"pass","fails":[],"dur_ms":46}
 {"ts":"2026-09-25T10:58:43.479Z","id":"ADHOC-PLTP-2026-1","outcome":"pass","fails":[],"dur_ms":36}
 {"ts":"2026-09-25T11:05:12.346Z","id":"ADHOC-PLTP-2026-1","outcome":"pass","fails":[],"dur_ms":28}
+{"ts":"2026-09-28T08:34:32.758Z","id":"ADHOC-PLTP-2026-1","outcome":"pass","fails":[],"dur_ms":29}
+{"ts":"2026-09-28T10:03:56.642Z","id":"ADHOC-PT-2026-10","outcome":"fail","fails":["qa_doc: Issue Summary \"Symptom\" line","qa_doc: Issue Summary \"Screen\" line","qa_doc: Issue Summary \"Verdict\" line","qa_doc: Match Keys \"aplikasi\" line"],"dur_ms":25}
+{"ts":"2026-09-28T10:04:02.708Z","id":"ADHOC-PT-2026-10","outcome":"fail","fails":["qa_doc: Issue Summary \"Symptom\" line","qa_doc: Issue Summary \"Screen\" line","qa_doc: Issue Summary \"Verdict\" line","qa_doc: Match Keys \"aplikasi\" line"],"dur_ms":28}
+{"ts":"2026-09-28T10:04:10.698Z","id":"ADHOC-PT-2026-10","outcome":"pass","fails":[],"dur_ms":26}
+{"ts":"2026-09-28T10:14:32.239Z","id":"ADHOC-PT-2026-10","outcome":"fail","fails":["block: open ↔ file location"],"dur_ms":49}
+{"ts":"2026-09-28T10:14:41.008Z","id":"ADHOC-PT-2026-10","outcome":"pass","fails":[],"dur_ms":32}
+{"ts":"2026-09-29T08:27:01.170Z","id":"ADHOC-PERMIT-2026-1","outcome":"pass","fails":[],"dur_ms":21}

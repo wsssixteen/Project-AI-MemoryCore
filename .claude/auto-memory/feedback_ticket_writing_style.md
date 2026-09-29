@@ -76,4 +76,47 @@ Thanks
 ```
 My draft he replaced: "Hi Nurhafizah, fix sudah di deploy ke internal (mlit) untuk diuji." → he writes English for the pass note, "Salam" + short name, names the module ("AWAM internal"), and closes a side question the BA raised in chat.
 
+2. BA pass after a fix, #279411 (2026-09-28). Greeting + "fix deployed to internal" + "Please help to verify" all on the FIRST line · a short "Tugasan covered now:" list for a multi-tugasan fix · "Thanks". He CUT from my draft: the error-message sentence, the "Test data (mlit)" block, and the word "Pelupusan" before internal. Less is the style: no restating the expected behaviour, no test data unless the BA asked.
+```
+Salam Anis, fix deployed to internal. Please help to verify.
+
+Tugasan covered now:
+Penyediaan Senarai Semak ke PTG, Semakan Permohonan PDT, Semakan Dokumen Permohonan PDT, Penyediaan dan Semakan Risalat MMKN PTG, and the other Senarai Semak tugasan.
+
+Thanks
+```
+
+3. Dev-to-dev finding note, #256334 (2026-09-28). Greeting = the person the ticket is assigned to RIGHT NOW (re-sync Redmine and read the live assignee before writing; I greeted Li Wen, he changed it to Anis). Opener answers the side question in 2 lines. Numbered title + `<pre>` detail. A pending decision is written "Perlu confirmation: A, atau B." (not "Perlu setuju").
+```
+Salam Anis,
+
+Pelupusan panggil sub-flow sekali je setiap Hantar di Perakuan.
+Service start banyak kali sebab flow ABB start semula service yang sama.
+
+1. Service ulang tanpa henti
+<pre>
+   HasilSpocIntegrationService.java line 99 (case ABB) panggil onKemaskiniPerserahanABB.
+   Line 230 submitBpmWithParam(ABB) setiap kali.
+   Flow ABB guna MLK_HSL_ISPEKS, jadi service dipanggil semula.
+   Cadangan: submit BPM bila aplikasi ABB baru dicipta sahaja. Refer HasilSpocIntegrationService.java.
+</pre>
+
+2. Tugasan Semakan dalam sub-flow PDBB tiada pengguna
+<pre>
+   Sub-flow guna aliran kerja PDBB.
+   ISPEKS_SMKN tiada bawah urusan PDBB.
+   Perlu confirmation: sub-flow tamat dan PDBB tunggu ABB, atau sub-flow tukar ke aliran kerja ABB.
+</pre>
+
+Thank you.
+```
+
+4. Dev-to-dev WhatsApp reply to another team, #280540 (2026-09-29). Common said "dev kau tarik data lain". Casual Manglish, no greeting, no apology. Opens "Actually", states what our code really reads in fallback order, then one line on why the evidence looked different. He cut my "Maaf atas kekeliruan" and the formal Malay.
+```
+Actually code kita memang amik dari hsl_fi_kadar.kadar_pengiraan_id, tapi kalau null, fallback ke hsl_fi_kadar.unit_luas_id, lepas tu baru ke hsl_fi_pejabat.unit_pengiraan_id.
+
+Script tu just untuk tunjuk currently amik dari mana, sebab hari tu kadar_pengiraan_id null untuk semua baris. Tu yang script tak tunjuk column hsl_fi_kadar.
+```
+
+**Before writing ANY Redmine note: run `node quest/redmine-sync.js <num>` and greet the live assignee.**
 Related: [[feedback_cross_module_handoff_artifact]] · [[feedback_ba_facing_reply_plain]].

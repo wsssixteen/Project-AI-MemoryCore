@@ -35,7 +35,7 @@ Subject-only — **no body, no trailer at all** (per `main/post-mortems.md:99` a
 
 ### Subject format — URUSAN + TUGASAN hyphen-segmentation (HARD RULE, absorbed from amendment A10 on 2026-05-25 — originally 2026-05-20 by みや)
 
-**Main rule**: etanah commit subject locked to `QA #<num> - <URUSAN> - <description>` when the ticket is urusan-specific (PRZ / PT / PLPS / PSBS / PLTP / PRU / RPPLP / PPJK / BPRZ / PPTPB / SMB / etc.). For tickets that span multiple urusans (e.g. "all urusan" fixes), drop the urusan segment.
+**Main rule**: etanah commit subject locked to `QA #<num> - <URUSAN> - <description>` when the ticket is urusan-specific (PRZ / PT / PLPS / PSBS / PLTP / PRU / RPPLP / PPJK / BPRZ / PPTPB / SMB / etc.). For tickets that span multiple urusans (e.g. "all urusan" fixes), the urusan segment is the literal highlight `All Urusan`, never dropped (2026-09-28 per みや, #279411: `Ref #279411 - All Urusan - Add Ulasan JT check on Senarai Semak PTG Hantar`). A reader scanning the log must see at a glance that the change touches every urusan.
 
 **Sub-rule (extends main)**: if a tugasan is meaningfully part of the ticket's identity (the fix is specific to one tugasan within an urusan), it ALSO gets its own hyphen-segment. Form: `QA #<num> - <URUSAN> - <TUGASAN-KOD> - <description>`. Whenever any categorization (urusan / tugasan / langkah / surat type) is mentioned in the subject, it MUST be hyphen-separated, never noun-glued.
 

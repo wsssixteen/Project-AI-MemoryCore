@@ -183,10 +183,11 @@ function fetchReceivedDate(issueId, myId) {
                             }
                         }
                         const iso = received || iss.created_on || null;
-                        resolve(iso ? String(iso).slice(0, 10) : null);
-                    } catch { resolve(null); }
+                        const notes = (iss.journals || []).map(j => j.notes || '').join('\n');
+                        resolve({ received: iso ? String(iso).slice(0, 10) : null, notes });
+                    } catch { resolve({ received: null, notes: '' }); }
                 });
-            }).on('error', () => resolve(null));
+            }).on('error', () => resolve({ received: null, notes: '' }));
     });
 }
 
@@ -197,8 +198,9 @@ async function stampReceivedDays(mineRows, today) {
     const myId = await fetchMyId();
     if (!myId) return;
     await Promise.all(mineRows.map(async r => {
-        const recv = await fetchReceivedDate(r.id, myId);
+        const { received: recv, notes } = await fetchReceivedDate(r.id, myId);
         if (recv) { r.received = recv; r.days = daysSince(recv, today); }
+        r.urgent = [...new Set([...r.urgent, ...urgentWords(notes)])].sort();
     }));
 }
 
@@ -271,8 +273,20 @@ function shape(issues, today, trainByVersion, states) {
             state: states.get(i.id) || 'Not drafted',
             project: i.project ? i.project.name : '(unknown)',
             subject: (i.subject || '').trim(),
+            urgent: urgentWords(i.description),
         };
     });
+}
+
+// URGENT scan (miya 2026-09-29): "IMPORTANT TO NOT MISS if they mention urgent or any
+// similar words inside the description". Malay + English. Matched words are returned so
+// the flag names its evidence; description from the list API, journal notes added later
+// by stampReceivedDays (a rework note can carry the word too).
+const URGENT_RE = /\b(urgent\w*|segera|kritikal|critical|asap|mendesak|secepat\s+mungkin|dengan\s+kadar\s+segera|immediate\w*|emergency|kecemasan)\b/gi;
+function urgentWords(text) {
+    const hits = new Set();
+    for (const m of String(text || '').matchAll(URGENT_RE)) hits.add(m[1].toLowerCase().replace(/\s+/g, ' '));
+    return [...hits].sort();
 }
 
 function rankMine(rows) {
@@ -285,20 +299,24 @@ function rankMine(rows) {
     });
 }
 
-// THREE-TABLE SPLIT (miya 2026-09-22): his list is presented as three
-// priority-ordered tables, categorised DETERMINISTICALLY by tracker_id — the
-// tracker IS the category, so the split never depends on parsing a subject.
-//   Table 1 Patching (PROD): where we patch dokumen / patch data / alter flowable.
-//     63 Internal Issue (PROD-CR) · 64 Data Patching (PROD) · 71 Internal Issue (PROD)
-//   Table 2 eSOKONGAN tracker: 51 — ranked severity DESC, then nearest due date.
+// THREE-TABLE SPLIT — order REVISED by miya 2026-09-29. Categorised DETERMINISTICALLY
+// by tracker_id — the tracker IS the category, never a subject parse.
+//   🚨 VOCABULARY: "eSOKONGAN ticket" ALWAYS means TRACKER = eSOKONGAN (id 51) — the one
+//     carrying the SLA. The Redmine PROJECT "eSOKONGAN MELAKA" also holds Internal Issue /
+//     Data Patching tickets; the project name never makes a ticket "eSOKONGAN".
+//   Table 1 eSOKONGAN tracker (51) — real SLA tickets, FIRST.
+//   Table 2 PROD (anything PROD): 63 Internal Issue (PROD-CR) · 64 Data Patching (PROD) ·
+//     71 Internal Issue (PROD) — "just as important, settle first" after eSOKONGAN.
 //   Table 3 Internal fixes & other: everything else (53 Internal Issue · 77 Permanent
-//     Fix · 79 MA Fix + any tracker not above).
+//     Fix · 79 MA Fix · QA + any tracker not above).
+// Within EVERY table: Priority (Critical > High > Medium > Low) DESC first, then an
+// URGENT-worded ticket ahead of a same-priority one, then the table's own tie-break.
 const PATCH_TRACKER_IDS     = new Set([63, 64, 71]);
 const ESOKONGAN_TRACKER_IDS = new Set([51]);
 
 function categoryOf(r) {
-    if (PATCH_TRACKER_IDS.has(r.tracker_id)) return 'patch';
     if (ESOKONGAN_TRACKER_IDS.has(r.tracker_id)) return 'esokongan';
+    if (PATCH_TRACKER_IDS.has(r.tracker_id)) return 'patch';
     return 'other';
 }
 
@@ -311,42 +329,63 @@ function severityRank(r) {
     return byName != null ? byName : (r.priority_id || 0);
 }
 
-// eSOKONGAN order (miya 2026-09-22): severity DESC first, then nearest due date
-// (soonest first; no-due rows last), then id.
-function rankEsokongan(rows) {
-    return rows.slice().sort((a, b) => {
+// Priority DESC, then urgent-worded first, then the given tie-break.
+function bySeverityThen(tieBreak) {
+    return (a, b) => {
         const s = severityRank(b) - severityRank(a);
         if (s !== 0) return s;
-        if (a.due && b.due && a.due !== b.due) return a.due < b.due ? -1 : 1;
-        if (a.due && !b.due) return -1;
-        if (!a.due && b.due) return 1;
-        return a.id - b.id;
-    });
+        const u = (b.urgent.length ? 1 : 0) - (a.urgent.length ? 1 : 0);
+        if (u !== 0) return u;
+        return tieBreak(a, b);
+    };
 }
 
-function renderRows5(rows) {
-    return rows.map(r => `| ${r.id} | ${r.days ?? '—'} | ${shortDate(r.due)} | ${r.subject} | ${r.state} |`);
+// eSOKONGAN tie-break: nearest due date (soonest first; no-due rows last), then id.
+function byNearestDue(a, b) {
+    if (a.due && b.due && a.due !== b.due) return a.due < b.due ? -1 : 1;
+    if (a.due && !b.due) return -1;
+    if (!a.due && b.due) return 1;
+    return a.id - b.id;
+}
+function rankEsokongan(rows) { return rows.slice().sort(bySeverityThen(byNearestDue)); }
+
+// PROD + other tie-break: the 3-DAY RULE age order rankMine already produced.
+function rankAged(rows) {
+    const aged = rankMine(rows);
+    const pos = new Map(aged.map((r, n) => [r.id, n]));
+    return aged.slice().sort(bySeverityThen((a, b) => pos.get(a.id) - pos.get(b.id)));
 }
 
-function renderPatch(rows) {
-    return [`### 1. Patching (PROD) — ${rows.length} open (ranked: oldest start first)`, '',
-        '| # | Days | Due date | Subject | State |', '|---|---|---|---|---|',
-        ...renderRows5(rows)].join('\n');
+// Severity cell carries the urgent flag + its evidence words, e.g. "High · URGENT (segera)".
+function severityCell(r) {
+    return r.urgent.length ? `${r.priority} · URGENT (${r.urgent.join(', ')})` : r.priority;
+}
+
+const HEADER6 = ['| # | Severity | Days | Due date | Subject | State |', '|---|---|---|---|---|---|'];
+function renderRows6(rows) {
+    return rows.map(r => `| ${r.id} | ${severityCell(r)} | ${r.days ?? '—'} | ${shortDate(r.due)} | ${r.subject} | ${r.state} |`);
 }
 
 function renderEsokongan(rows) {
-    const out = [`### 2. eSOKONGAN tracker — ${rows.length} open (ranked: severity, then nearest due)`, '',
-        '| # | Severity | Days | Due date | Subject | State |', '|---|---|---|---|---|---|'];
-    for (const r of rows) {
-        out.push(`| ${r.id} | ${r.priority} | ${r.days ?? '—'} | ${shortDate(r.due)} | ${r.subject} | ${r.state} |`);
-    }
-    return out.join('\n');
+    return [`### 1. eSOKONGAN tracker (SLA) — ${rows.length} open (ranked: priority, urgent, then nearest due)`, '',
+        ...HEADER6, ...renderRows6(rows)].join('\n');
+}
+
+function renderPatch(rows) {
+    return [`### 2. PROD (Data Patching / Internal Issue PROD) — ${rows.length} open (ranked: priority, urgent, then oldest)`, '',
+        ...HEADER6, ...renderRows6(rows)].join('\n');
 }
 
 function renderOther(rows) {
-    return [`### 3. Internal fixes & other — ${rows.length} open (ranked: oldest start first)`, '',
-        '| # | Days | Due date | Subject | State |', '|---|---|---|---|---|',
-        ...renderRows5(rows)].join('\n');
+    return [`### 3. Internal fixes & other — ${rows.length} open (ranked: priority, urgent, then oldest)`, '',
+        ...HEADER6, ...renderRows6(rows)].join('\n');
+}
+
+// Urgent banner — printed FIRST so a flagged ticket can never sit unseen in table 3.
+function renderUrgentBanner(rows) {
+    const hits = rows.filter(r => r.urgent.length);
+    if (!hits.length) return null;
+    return `🚨 URGENT-worded (${hits.length}): ` + hits.map(r => `#${r.id} [${r.tracker}, ${r.priority}] "${r.urgent.join(', ')}"`).join(' · ');
 }
 
 function renderOthers(rows) {
@@ -390,9 +429,9 @@ async function main() {
     const others = rows.filter(r => !isMine(r));
 
     // His list, split into the three priority-ordered tables (miya 2026-09-22).
-    const minePatch = mine.filter(r => categoryOf(r) === 'patch');       // age-ranked (from rankMine)
-    const mineEsok  = rankEsokongan(mine.filter(r => categoryOf(r) === 'esokongan')); // severity, then due
-    const mineOther = mine.filter(r => categoryOf(r) === 'other');       // age-ranked (from rankMine)
+    const mineEsok  = rankEsokongan(mine.filter(r => categoryOf(r) === 'esokongan')); // priority, urgent, due
+    const minePatch = rankAged(mine.filter(r => categoryOf(r) === 'patch'));          // priority, urgent, age
+    const mineOther = rankAged(mine.filter(r => categoryOf(r) === 'other'));          // priority, urgent, age
 
     if (args.includes('--json')) {
         console.log(JSON.stringify({ mine, patch: minePatch, esokongan: mineEsok, other: mineOther, others, dropped, offProject }, null, 2));
@@ -402,14 +441,16 @@ async function main() {
     // sitting idle is the cheapest KPI on the board and losable to whoever applies
     // it first (275587 was stolen this way, 2026-08-17). Silent when nothing
     // qualifies. Grab-risk beats age — that is why it prints first.
+    const urgentBanner = renderUrgentBanner(mine);
+    if (urgentBanner) { console.log(urgentBanner); console.log(''); }
     const stealBanner = renderStealBanner(mine);
     if (stealBanner) { console.log(stealBanner); console.log(''); }
 
     // Default is MINE ONLY (miya 2026-08-05: "present to me ONLY my list").
     // The colleagues' table is still built — ask for it with --tracking.
-    console.log(renderPatch(minePatch));
-    console.log('');
     console.log(renderEsokongan(mineEsok));
+    console.log('');
+    console.log(renderPatch(minePatch));
     console.log('');
     console.log(renderOther(mineOther));
     if (args.includes('--tracking')) {

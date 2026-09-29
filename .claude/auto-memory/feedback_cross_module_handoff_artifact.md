@@ -52,4 +52,4 @@ When the recipient is a **different team** (they do NOT see our chat), the artif
 
 **Why** (2026-08-12, QA-274318): fix was in `etanah-common\...\UtilitiKemaskiniUlasanJPPHForm.java` (common team owns it). I wrote a handoff `.txt` with symptom + root cause + before/after + scope — みや: *"you added bloats, refer to my copy"* — his `3. Reference.java` was just filename + line markers + the new code. The applied `.java` carries the before/after (for the screenshot); the reference file is bare. Pairs with [[reference_utiliti_ulasan_jt_jpph_screen]] + [[feedback_stay_in_module]] + [[feedback_my_files_minimal]].
 
-enforcement: hook-exists: cross-module-handoff-gate
+enforcement: NONE LIVE — cross-module-handoff-gate named above does NOT exist (checked 2026-09-28, #256334 slip handoff-wrong-format). Read THIS file before writing any handover until the gate is built.
