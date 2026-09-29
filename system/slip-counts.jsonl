@@ -704,6 +704,14 @@
 {"ts":"2026-09-28T08:37:31.381Z","category":"A3"}
 {"ts":"2026-09-28T08:37:31.454Z","category":"A4"}
 {"ts":"2026-09-28T06:41:01.434Z","category":"ui-handback-no-photo"}
+{"ts":"2026-09-28T08:56:58.560Z","category":"ui-guard-wrong-entry-point"}
+{"ts":"2026-09-28T09:36:01.774Z","category":"handoff-wrong-format"}
+{"ts":"2026-09-28T09:41:26.662Z","category":"redmine-note-wrong-addressee"}
+{"ts":"2026-09-28T10:54:19.375Z","category":"reask/rambling"}
+{"ts":"2026-09-28T10:56:13.114Z","category":"test-data-not-from-live-state"}
+{"ts":"2026-09-28T10:56:13.283Z","category":"claim-before-trace"}
+{"ts":"2026-09-28T10:56:13.473Z","category":"fix-reported-line-not-flow"}
+{"ts":"2026-09-29T09:28:20.994Z","category":"diagram-cluttered"}
 {"ts":"2026-09-28T10:29:52.500Z","category":"wrong-target"}
 {"ts":"2026-09-29T06:15:12.744Z","category":"assume-not-verify/state-guess"}
 {"ts":"2026-09-29T06:18:13.206Z","category":"reask/misread-ba-intent"}
@@ -718,6 +726,7 @@
 {"ts":"2026-09-29T04:22:34.980Z","category":"A2"}
 {"ts":"2026-09-29T04:22:35.463Z","category":"A4"}
 {"ts":"2026-09-29T04:22:35.735Z","category":"A1"}
+{"ts":"2026-09-29T08:16:28.074Z","category":"reask/verbose"}
 {"ts":"2026-09-29T06:56:27.007Z","category":"reask/incomplete"}
 {"ts":"2026-09-29T06:57:56.907Z","category":"A2"}
 {"ts":"2026-09-29T06:57:57.006Z","category":"A3"}
@@ -736,3 +745,6 @@
 {"ts":"2026-09-29T07:52:29.993Z","category":"popup-conflated-options"}
 {"ts":"2026-09-29T10:04:12.615Z","category":"A1"}
 {"ts":"2026-09-29T10:12:36.974Z","category":"reask/redundant"}
+{"ts":"2026-09-29T10:32:23.391Z","category":"A1"}
+{"ts":"2026-09-29T10:32:23.558Z","category":"A3"}
+{"ts":"2026-09-29T10:32:23.853Z","category":"A2"}
