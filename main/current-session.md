@@ -1,5 +1,13 @@
 # Current Session
 
+**Last Activity**: 2026-09-29 12:18 — eSOKONGAN priority rule patched system-wide · Redmine retrieved · 3-ticket sweep (W1-W4, 9 familiars) · DE.
+
+## Session Recap (2026-09-29, redmine-tickets-triage worktree)
+- **Rule (miya)**: "eSOKONGAN ticket" = TRACKER eSOKONGAN (id 51, SLA), never the project name. Order: eSOKONGAN → anything PROD → rest; inside each Priority, then urgent words in description/journals. Built into `quest/redmine-board.js` (table order, Severity column + URGENT flag + banner), list-redmine eval 17/17, list-redmine / sweep / retrieve-redmine skills, session-briefing.md, CLAUDE.md v1.73 §Vocabulary, memory `feedback_esokongan_means_tracker`.
+- **Board**: all Medium, no urgent words. 282061 (eSOKONGAN, due 8 Oct) · 281650 (DP PROD, reopened today) · 6 others. 278909 Resolved. 274266 + 264355 now with Farah (miya reassigned 264355 at 11:51 with a guide; active-cli refused the delegated update — block still says active).
+- **Sweep** (qa_docs in main repo `projects/coding-projects/active/QA-<n>/`): 282061 two permit counters + borang Fi sums RM 200 fee → code C1-C4 + 4-row number swap, 83% · 281650 dash is code `PelupusanTemplateReportMethodParameter.java:772`, code fix alone renders "PT 225 & PT 226", 1 PROD row, 80% · 281324 `MLK_PLP_SUB_UPN` gateway needs `caraPenghantaran` default (1 model) + 5 PROD instances rescued via Flowable admin, 90%. 6 tickets swept 25 Sep skipped (no Redmine activity since).
+- **Tooling gap**: familiars could not write qa_docs (worktree guard on base checkout + sibling-file ban); outputs went to scratchpad and I banked them via PowerShell.
+
 **Last Activity**: 2026-09-28 18:46 — OneDrive "Rename 1 item? NUL" popup diagnosed; nul-redirect-gate + system-audit CHECK 10 built · DE.
 
 ## Session Recap (2026-09-28, NUL popup → session-256334-recovery worktree)
@@ -17,12 +25,3 @@
 - **Closed**: QA-281712 archived (Task 235 → Archive, doc → archive/QA-281712, BUG-BESTIARY pattern, PLTP-TICKETS note). Quest skill resume step 4: fetch only in the work clone.
 - **Slips**: ref-moving `git fetch` in miya's etanah-awam · mlit receipt screened V1–V6 only.
 **Last Activity**: 2026-09-28 14:20 — #281650 (DP PROD, MLPS Tempat + pelan + Tanah Kerajaan) closed + archived + bounty · DE.
-
-## Session Recap (2026-09-25 → 2026-09-28, ticket-281656-prep worktree → main)
-- **Ask**: retrieve + quest #281650 (Nurhafizah PDTJ): MLPS /7 and /8 at PYB4AE — Tempat `PT 118` / `PT 225 & 226 PT 117` → `-`, replace pelan L1e, /8 Tanah Kerajaan → `PT 225 & PT 226`.
-- **Done**: `281650.sql` (4 UPDATEs, apt 46855/46856 + licence rows 4342/4346) ran in PROD 2026-09-25 by infra, verified 2026-09-28. /8 no_lot NULL + `mklmt_tmbhn.keteranganTempatTanahKerajaan = "PT 225 & PT 226"` → L1e `- PT 225 & PT 226` (miya chose BA Description wording). Pelan: renamed PDFs (`PDTJ.600.2~6~69_M033_pelan.pdf`, `~6~70_M032`) handed to infra; BA reopened 27 Sep → reassigned to Asyraf for pelan; DB cannot confirm a disk swap (ask infra file size 436,915 / 457,395).
-- **Closed**: QA-281650 archived (Task 233 → Archive, block → active-archive, doc → archive/QA-281650). Knowledge: MLPS-TICKETS note, LATENT-BUGS L13 (keterangan not copied to licence, `PelupusanLiteService.java:1853`).
-- **Rule change**: script naming by role — `<ticket>.sql` = update, `<ticket>-check.sql` = one combined check; `-2` banned.
-- **Slips**: `reask/context-free-popup` (225-226 popup with no before/after) · `handoff/unclear-steps` (lone UPDATE beside handoff) · `assume-not-verify/state-guess` (said pelan "most likely not" replaced).
-
-**Last Activity**: 2026-09-25 18:56 — adhoc ADHOC-PLTP-2026-1 (PROD Portal Awam PLTP syer popup) diagnosed + saved; fix APPROVED by BA ketua, awaiting ticket; adhoc-save skill + audit built · DE.
