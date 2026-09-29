@@ -17,3 +17,4 @@
 {"ts":"2026-09-28T10:04:10.698Z","id":"ADHOC-PT-2026-10","outcome":"pass","fails":[],"dur_ms":26}
 {"ts":"2026-09-28T10:14:32.239Z","id":"ADHOC-PT-2026-10","outcome":"fail","fails":["block: open ↔ file location"],"dur_ms":49}
 {"ts":"2026-09-28T10:14:41.008Z","id":"ADHOC-PT-2026-10","outcome":"pass","fails":[],"dur_ms":32}
+{"ts":"2026-09-29T08:27:01.170Z","id":"ADHOC-PERMIT-2026-1","outcome":"pass","fails":[],"dur_ms":21}
