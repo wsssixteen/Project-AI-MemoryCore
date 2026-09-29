@@ -1,5 +1,15 @@
 # Current Session
 
+**Last Activity**: 2026-09-29 14:55 — #281650 rework (MLPS PTMLK/02/L/MLPS/2026/8 Tanah Kerajaan) patched in PROD, verified, closed + archived · DE.
+
+## Session Recap (2026-09-29, #281650 rework)
+- **Ask**: BA (Fizah/Idris) wanted Tanah Kerajaan (No.PT) on MLPS/2026/8 to show numbers only, no leading dash, no "&", no PT wording ("225,226").
+- **Limit**: `umm_a_permohonan_tnh.no_lot` is NUMERIC (`'225,226'::numeric` errors); L1e prints `no_lot` + " - " + note. miya chose `225 - 226` (patch ticket).
+- **Done**: `3. Rework\2. Fix\281650.sql` — row 46856 no_lot 225 + note 226, licence row 4346 same (so next renewal seeds it). Infra ran it; PROD verified. Redmine Resolved text prepared (miya posts).
+- **stg2 test** (MLPS/2026/4 row 44424, note 1140): L1e + 4Ae show `1139 - 1140`; Papar Borang 4Ae + Simpan did not touch the row, so my "Simpan wipes the note" claim is refuted (LATENT-BUGS L15). miya to run the stg2 reset.
+- **Closed**: QA-281650 archived (Task 239 to Archive, doc to archive/QA-281650, block to active-archive, cycle-0 block merged).
+- **Slips**: `assume-not-verify/state-guess` x2 (Hantar-safe claim; wipe claim before test) · `reask/misread-ba-intent`.
+
 **Last Activity**: 2026-09-29 12:18 — eSOKONGAN priority rule patched system-wide · Redmine retrieved · 3-ticket sweep (W1-W4, 9 familiars) · DE.
 
 ## Session Recap (2026-09-29, redmine-tickets-triage worktree)
@@ -16,12 +26,3 @@
 - **Open (miya's call)**: leftover worktree folder `colleague-cr-issue-ed8731` (git link broken) still inside OneDrive.
 
 **Last Activity**: 2026-09-28 16:36 — #281712 (Portal Awam PLTP syer popup) fixed, deployed int-env, test passed, Redmine resolved, Phase 2 archived + bounty · DE.
-
-## Session Recap (2026-09-28, #281712 — was ADHOC-PLTP-2026-1)
-- **Fix**: etanah-awam `mlk/esokongan/281712` `2121050779` — `PelupusanMaklumatPemohonHelperForm.onNextPbTab():5635` (dialog Seterusnya) + `PelupusanPemohonTabForm.checkingSyer():462` (page Seterusnya) now sum fractions with `RationalNumberUtil` (analog `AwamConsentService.onSemakSyerKepentingan():1168`). int-env cherry-pick `8ffb6a060e` (conflict with an env-only variant resolved). Built in separate clone `E:\Dev\etanah-work\etanah-awam` (remote `git@10.16.63.27`).
-- **Test**: local test waived by miya; server test PASSED on mlit with No Resit `260709BSAT00111` / `alyaaqilah802@gmail.com`. My first receipt `260706BSAT00275` failed PLTP V8 (lease expired) + V9 (belum disemak) → screen added to TEST-PERMOHONAN-INDEX.
-- **Apps check (miya ask)**: `etanah-pelupusan` `validateSyer():6024` already sums fractions; SKM Maklumat Pemohon Simpan has no syer check; Double rounding false warning (2/3, 3/7) → LATENT L14, no deploy.
-- **Redmine**: miya posted; his pass-note wording + root-cause/solution edits banked in memory (Redmine speech collection).
-- **Closed**: QA-281712 archived (Task 235 → Archive, doc → archive/QA-281712, BUG-BESTIARY pattern, PLTP-TICKETS note). Quest skill resume step 4: fetch only in the work clone.
-- **Slips**: ref-moving `git fetch` in miya's etanah-awam · mlit receipt screened V1–V6 only.
-**Last Activity**: 2026-09-28 14:20 — #281650 (DP PROD, MLPS Tempat + pelan + Tanah Kerajaan) closed + archived + bounty · DE.

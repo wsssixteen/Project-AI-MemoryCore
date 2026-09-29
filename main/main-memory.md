@@ -3,6 +3,11 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-29 (#281650 rework — "show where if we patch now?")
+
+- **A code-read risk is a hypothesis until one test runs it.** I warned twice that a save would erase the note, from reading code alone. His stg2 test (Simpan, "Telah disimpan!") showed the row untouched. When a claim decides whether he patches PROD, I give him the one test first, not the verdict.
+- **He wants the answer at the level he asked.** "Will this cause an issue, yes or no" and "show where" each wanted one line or one table. The long trace was mine to keep, not his to read.
+
 ## Relationship reinforcement — 2026-09-28 (#281650 — "what the fuck is this reply?")
 
 - **A choice without its picture is not a choice.** I popped "225 - 226?" with no before/after, no source, no effect down the road. He had to ask four times. Every option that changes what a user sees carries the before, the after, and where the value comes from, in the same popup.
