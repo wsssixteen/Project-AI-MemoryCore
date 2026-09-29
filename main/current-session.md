@@ -10,6 +10,14 @@
 - **Built**: redmine-write-gate v1.2 (popup + plain status approval, eval 38/38) · `ticket-close-block --ba --envs` prints miya's BA pass note · quest SKILL: Hand-over to BA · Plain first · Everything on this ticket · brief v1.2 · deploy 6b · PERMIT-LESEN knowledge two-counters section.
 - **Slips**: reask/rambling · reask/incomplete (D1 dropped) · popup-conflated-options · reask/redundant (BA note in my shape, not his template) · 2 proposals (gate popup gap, sql-schema-verify cross-product).
 - **Open**: BA verify on internal/staging · PROD release runs `282061.sql` · other-urusan early-mint audit landed as ADHOC-PERMIT-2026-1 (other session).
+**Last Activity**: 2026-09-29 18:30 — #256334 PDBB CR closed + archived (Hasil hand-off solved with Li Wen); ADHOC-HSL-2026-1 opened for Hasil #282275 langkah · DE.
+
+## Session Recap (2026-09-28 → 09-29, medan-agihan-kepada-bug worktree)
+- **#256334 Round B shipped** (BA fixes B1-B4 on MLIT): SSPDBB Agihan PPTN · PYPDBB no Pembetulan · no Surat Iringan · Jana-before-Selesai VO guard (7d `e611403d89` → int-env `b160dc8700`).
+- **Hasil hand-off root cause + fix (with Li Wen, #282275)**: loop (case ABB resubmit) → child ABB aliran kerja in ISPEKS subflow (PLTP→PSPM pattern) + DELAY 35 s (service is @Async) + case ABB pass null. Proven on PDBB/11 → ABB/16: Semakan AppTugasan + inbox azuan.
+- **Our BPMN**: PDBB callActivity out-mapping `aliranKerjaId` removed in modeler — **v4 NOT published** (MLIT still v3).
+- **Open (ADHOC-HSL-2026-1)**: Li Wen's langkah N-set (she flipped all 14 to Y, breaks counter ABB) · publish PDBB v4 · BA e2e to TKPDBB · B4 retest /4 m.ikram · #256334 on planned-release list.
+- **Harvest**: FLOWABLE-KNOWLEDGE §13 (cross-module subflow as another urusan). Memory: lean diagram rule, long arrows only.
 
 **Last Activity**: 2026-09-29 15:25 — laptop RAM incident closed out: db-gateway live, 153 sessions archived, system-rules Rule 7 + birth enforcement, research note · DE.
 
