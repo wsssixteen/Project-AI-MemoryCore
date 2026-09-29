@@ -33,3 +33,14 @@ Proposals logged via `core/slips.js --type proposal`: A1 scratchpad-default swee
 | A3 debugging | Template-only CC advice was wrong until miya asked "did you verify?": I checked tag + method but not the WRITER of the key for PT. Sim.java (real Gson, line-copied code) proved 8 paths in minutes where a deploy loop costs ~40 min. |
 | A4 etanah | Knowledge: PT/PSBS/PPJK are single-key syor (URUSAN_LEGACY_SYOR_PERMOHONAN); dual list lacks PBN; DynamicFieldUtil.getAsString of a JSON boolean = "true"/"false". Staging lagged PROD 1.7.0 by 27 commits with no check in /deploy. |
 | A5 sweep | Test-data picks included Flowable orphans (7 syarikat PT apps) — health check only looked at eTanah task rows, not the engine. |
+
+## Session: resource-usage investigation (2026-09-22 → 09-29, laptop RAM incident)
+
+| Axis | Finding | Instance |
+|---|---|---|
+| A1 agentic | Per-session and per-prompt costs were never counted: 21 stdio DB MCP servers × every session, 36 UserPromptSubmit + 42 Stop hook registrations (~60-70 node spawns per prompt; one turn of this session spent 149 s in hooks). Fixed the DB half with db-gateway; Rule 7 + birth enforcement now make every new component state its cost. | 60 GB → 12 GB commit; audit-briefing turn 4629f1fc-25 |
+| A1 agentic | Audit shows ttachment-ledger-gate at 0 fires and proposes retiring it, but it blocked me this session: directly-registered hooks that bypass hook-runtime --wrap are invisible to telemetry, so the audit's RETIRE list can be wrong. | settings.json:522 direct registration; block on 2026-09-24 |
+| A2 quest | ⏭ no quest touched; the only quest-side effect was the 14-gate archive check reading active.txt open blocks. | — |
+| A3 debugging | First answers ("orphans", "can't trace") preceded measurement; the parent-tree trace settled it in one command. Task Scheduler default priority 7 starved the gateway: found only by comparing a manual run (4 s) with the scheduled one (minutes). | slip esource-blindness |
+| A4 etanah | ⏭ no etanah code touched; the Perak/WP Oracle MCP server hardcodes ET_MAIN_DEV in its schema tools (server.py), noted for whoever next uses oracle-prk-*. | oracle-mcp server.py get_schema_info |
+| A5 sweep | Session sweep at scale worked once the 14 safety gates were scripted: 153 of 233 archived with zero loss. The gate list (work in main, unmerged branch, dirty tree, stash, open quest, recent, pinned, remote control, shared folder, main-repo cwd) is reusable. | safety.ps1 run 2026-09-28 |
