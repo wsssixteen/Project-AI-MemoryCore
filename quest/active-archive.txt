@@ -4225,3 +4225,32 @@ local_test_confirmed=true
 closed_cycle1=2026-09-29
 cycle0_closed=2026-09-28
 cycle0_task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\233. DP #281650 - Pelupusan - MLPS - 1) Patch Tempat 2) Rotate Pelan 3) Patch Tanah Kera (PROD)
+
+qa=QA-256334
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\231. CR - AFTER GO LIVE #256334 - PRBB - Proses Pemulangan Wang Cagaran Perlu Diwujudkan dalam sistem eT
+phase=0
+status=archived
+ticket_type=cr
+env=MLIT
+issue_one_liner=PRBB - Proses Pemulangan Wang Cagaran Perlu Diwujudkan dalam sistem eTanah
+assigned_to_me=2026-09-25
+urusan=PDBB - Permohonan Pemulangan Wang Cagaran
+current_phase=waiting-PDBB-v4-publish-and-Hasil-langkah
+local_test_confirmed=false
+quest_start=2026-09-25
+owner=aaron-assist
+fix_layer=flowable-bpmn
+qa_doc=projects/coding-projects/archive/QA-256334/QA-256334.md
+phase_note=CLOSED 2026-09-29 per miya. Round B B1-B4 shipped (int-env ded02f8579/f72c3dc406/b160dc8700). PDBB out-mapping aliranKerjaId removed (v4 unpublished at close). Open items moved to ADHOC-HSL-2026-1.
+commit_cycle7=882f86cbf5
+int_env_merge_cycle7=ded02f8579
+commit_cycle7c=3c199a7401
+int_env_merge_cycle7c=f72c3dc406
+held_reason=2026-09-29: Hasil tugasan fixed & proven on /11 (ADHOC-HSL-2026-1). Owed: miya publish PDBB v4 (out-mapping removed, MLIT still v3); Li Wen langkah N set (#282275); BA e2e to TKPDBB + B4 retest.
+commit_cycle7d=e611403d89
+int_env_merge_cycle7d=b160dc8700
+hasil_finding=2026-09-28 CONFIRMED (code+data+Li Wen log): HasilSpocIntegrationService (spoc-hasil 0dc090584b) ABB branch :94-104 always submitBpmWithParam(ABB) :230; AsyncSpocHasilService.submitBpmWithParam has no @Async (:200) and ABB process = MLK_HSL_ISPEKS (ind_pejabat_ursn) -> recursive re-run of the service ('start banyak kali'); one tx -> any failure (16:46:01 HTTP 503 from pelupusan during deploy) rolls back all -> no ABB app, sis_bpm_log FAIL 8/8. Plus design gap: PDBB-called sub-process Semakan resolves urusan from PDBB aliran kerja 11644 -> ISPEKS_SMKN not under PDBB -> no umm_a_tgsn. Pelupusan calls sub-flow once per Hantar. Handover file deleted (wrong format); note lives in chat + qa_doc.
+hasil_proof=sis_kerja_panggilan_servis stack traces for all PDBB runs (11511..11563) are Hasil-side exceptions; 11563 = tx timeout with aliran kerja ids 11564-11599,11601-11640 burned (loop); 11644 ids 11645-11649 burned then HTTP 503 16:46:01. Handover updated.
+branch=mlk/CR/256334
+related_quest=ADHOC-HSL-2026-1
+commit=e611403d89

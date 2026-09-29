@@ -44,3 +44,12 @@ Proposals logged via `core/slips.js --type proposal`: A1 scratchpad-default swee
 | A3 debugging | First answers ("orphans", "can't trace") preceded measurement; the parent-tree trace settled it in one command. Task Scheduler default priority 7 starved the gateway: found only by comparing a manual run (4 s) with the scheduled one (minutes). | slip esource-blindness |
 | A4 etanah | ⏭ no etanah code touched; the Perak/WP Oracle MCP server hardcodes ET_MAIN_DEV in its schema tools (server.py), noted for whoever next uses oracle-prk-*. | oracle-mcp server.py get_schema_info |
 | A5 sweep | Session sweep at scale worked once the 14 safety gates were scripted: 153 of 233 archived with zero loss. The gate list (work in main, unmerged branch, dirty tree, stash, open quest, recent, pinned, remote control, shared folder, main-repo cwd) is reusable. | safety.ps1 run 2026-09-28 |
+
+## Session 4 — #256334 PDBB ↔ Hasil (medan-agihan-kepada-bug worktree)
+| Axis | Instance | Verdict |
+|---|---|---|
+| A1 agentic | Proposed 3 designs (serviceTask/PACT, end-subflow, async flag) before reading the CR spec PDF + the working PLTP→PSPM analog; miya: "you cannot recommend something, check the CR" | Analog/spec read came too late — design proposals need a "CR spec + existing pattern cited" precondition |
+| A2 quest | Cross-module ticket had no home until miya asked; ADHOC scaffold + register made it resumable | Cross-team assist should auto-scaffold an ADHOC when the fix owner is another team |
+| A3 debugging | Claimed "effectively synchronous" after reading method body, missed `@Async` annotation → wrong DELAY reasoning until DB timestamps (17 s gap) showed it | Timestamp diff (act_hi_taskinst vs act_hi_varinst) was the decisive, cheap falsifier — use it first for ordering questions |
+| A4 etanah | Pattern banked: FLOWABLE-KNOWLEDGE §13 (child aliran kerja, no aliranKerjaId out-mapping, @Async + DELAY, langkah flag_integrasi filter) | Good — reusable for any cross-module callActivity |
+| A5 sweep | ⏭ no sweep this session | — |
