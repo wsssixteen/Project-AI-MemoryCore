@@ -44,3 +44,18 @@ Proposals logged via `core/slips.js --type proposal`: A1 scratchpad-default swee
 | A3 debugging | First answers ("orphans", "can't trace") preceded measurement; the parent-tree trace settled it in one command. Task Scheduler default priority 7 starved the gateway: found only by comparing a manual run (4 s) with the scheduled one (minutes). | slip esource-blindness |
 | A4 etanah | ⏭ no etanah code touched; the Perak/WP Oracle MCP server hardcodes ET_MAIN_DEV in its schema tools (server.py), noted for whoever next uses oracle-prk-*. | oracle-mcp server.py get_schema_info |
 | A5 sweep | Session sweep at scale worked once the 14 safety gates were scripted: 153 of 233 archived with zero loss. The gate list (work in main, unmerged branch, dirty tree, stash, open quest, recent, pinned, remote control, shared folder, main-repo cwd) is reusable. | safety.ps1 run 2026-09-28 |
+
+## Session: #282061 PPTPB Permit Khas Jadual VIII (dedicated session after the morning sweep)
+
+| Axis | Finding | Instance |
+|---|---|---|
+| A1 agentic | `redmine-write-gate` blocked two approved status writes: a popup answer ("Yes, post In Progress") and a plain "update the fucking redmine" were not read as approval. Fixed as v1.2 (popup answers read, status-only path), eval 38/38. The early-mint audit spawned to its own session landed as ADHOC-PERMIT-2026-1 and merged with zero conflict. | 2 blocked writes; F32-F38 fixtures |
+| A1 agentic | audit-briefing again lists `sql-schema-verify` as 0 fires / RETIRE, yet it fired and stamped twice this session. Third day of the same false RETIRE. | stamps f45478f6, 6d0324b2 |
+| A2 quest | The BA pass-note rule lived only in a memory file, so I sent my own Malay shape after miya had given his English template. Moved into a tool (`ticket-close-block --ba --envs`) + quest SKILL § Hand-over to BA + deploy 6b. | slip `reask/redundant` |
+| A2 quest | `## 0. Resume Point` stayed at the W2 state ("No code changed", 80%) through Apply, commit, 2 env merges and Redmine Resolved; only the DE save rewrote it. A cold resume mid-afternoon would have read the opposite of the truth. | QA-282061.md §0 vs §7-§13 |
+| A3 debugging | The swap-safety proof (every place the number lives, links by id) came only when miya asked a second time; it should ship with any PROD script that changes an identifier value. | §12, miya "it won't point to the other permohonan?" |
+| A3 debugging | `sql-schema-verify` pairs every table with every column in the script, so a correct script emits false "missing column" rows; a catalog check of the 16 real pairs (0 missing) was needed. | proposal logged in session |
+| A4 etanah | One permit, two counters (register G1 vs screen G2), and a bill saver that reuses only unpaid rows. Knowledge now in PERMIT-LESEN-RUNNING-NUMBER.md incl. fix status + swap rule. Staging held the same bug with a different record state (stg2 copied from PROD to 23 Jul, re-run 18 Aug), which took a manual per-env compare. | stg2 /5 at PKPPT with 02/2026/5 |
+| A5 sweep | Morning W4 (83%) held; the dedicated session added C4 (dup bill root cause) and raised to 92%. After miya attached the PROD script to Redmine, I kept editing the Task-folder copy (release-team version) and he had to ask whether the attachment was still right. | attachment 1023225 vs local rewrite, restored |
+
+Proposals logged: A2 Resume-Point freshness check · A3 identity-value swap sweep in script-check · A4 per-env patch-state print at deploy · A5 attachment-drift warning.

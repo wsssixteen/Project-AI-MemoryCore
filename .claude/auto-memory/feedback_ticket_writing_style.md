@@ -118,5 +118,18 @@ Actually code kita memang amik dari hsl_fi_kadar.kadar_pengiraan_id, tapi kalau 
 Script tu just untuk tunjuk currently amik dari mana, sebab hari tu kadar_pengiraan_id null untuk semua baris. Tu yang script tak tunjuk column hsl_fi_kadar.
 ```
 
+5. BA pass after a multi-issue fix, #282061 (2026-09-29). He pasted this template and asked for the fixed list inside it; I had sent my own Malay shape instead (slip `reask/redundant`). English, "Salam" + short name, envs named, one numbered line per issue in plain words, git block, then the thanks line. **Printed by the tool, never retyped**: `node domain/ticket-close-block/ticket-close-block.js --repo <clone> --ticket <num> --module pelupusan --ba <Name> --envs "internal & staging"` (only the numbered lines are written by hand). Rule home: quest SKILL § Hand-over to BA + deploy SKILL 6b.
+```
+Salam Fizah, have deployed fixes to internal & staging. Please help to verify.
+
+Issues found and resolved:
+1. <plain one-line fix>
+2. <plain one-line fix>
+
+<git block>
+
+Thank you very much.
+```
+
 **Before writing ANY Redmine note: run `node quest/redmine-sync.js <num>` and greet the live assignee.**
 Related: [[feedback_cross_module_handoff_artifact]] · [[feedback_ba_facing_reply_plain]].
