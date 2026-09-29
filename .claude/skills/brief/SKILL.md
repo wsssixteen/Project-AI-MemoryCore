@@ -80,7 +80,7 @@ The ticket inventory `| # | Item | Type | Status |`: every code site, data patch
 |---|---|
 | Confidence | State a % once, in block 5. Never assert past verified evidence. |
 | Evidence labels | `VERIFIED` (line read) / `HYPOTHESIS` / `BA-Q`. Unlabelled = claimed as fact. |
-| Length | ≤60 content lines. Longer means the investigation is unfinished — finish it, don't pad the brief. |
+| Length | **≤25 content lines** (was 60; みや 2026-09-25 #278909: a 55-line brief "is not brief"). Story diagram ≤8 lines · fix table ≤4 rows · bites ≤3 bullets. Detail belongs in the qa_doc, not the brief. |
 | Source | Read the qa_doc + Task folder first. A brief written from memory is banned. |
 | No asking-back | Any question a tool can answer, answer it before briefing. Only genuine forks reach him. |
 
