@@ -31,7 +31,9 @@ const readmePath = path.join(__dirname, '..', 'zz-probe-feature-' + Date.now(), 
 r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'Write', tool_input: { file_path: readmePath, content: '# probe\n\n**What fires when**: Stop\n' } }), encoding: 'utf8', timeout: 30000, env: process.env });
 check('F4b README without goal/retention BLOCKED', r.status === 2 && /goal:/.test(r.stderr), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 80));
 r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'Write', tool_input: { file_path: readmePath, content: '# probe\n\nsymptom: s\ngoal: an outcome\ngoal_signal: sig\nretention: keep\n' } }), encoding: 'utf8', timeout: 30000, env: process.env });
-check('F4c README with goal+retention passes', r.status === 0, 'exit=' + r.status);
+check('F4d README with goal+retention but no footprint BLOCKED (Rule 7)', r.status === 2 && /footprint:/.test(r.stderr), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 80));
+r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'Write', tool_input: { file_path: readmePath, content: '# probe\n\nsymptom: s\ngoal: an outcome\ngoal_signal: sig\nretention: keep\nfootprint: on-demand: 1 node process while running, <50 MB\n' } }), encoding: 'utf8', timeout: 30000, env: process.env });
+check('F4c README with goal+retention+footprint passes', r.status === 0, 'exit=' + r.status);
 
 
 // F5: forge's own birth (FORGE_BIRTH=1) → pass
