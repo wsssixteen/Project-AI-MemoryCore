@@ -86,4 +86,37 @@ Penyediaan Senarai Semak ke PTG, Semakan Permohonan PDT, Semakan Dokumen Permoho
 Thanks
 ```
 
+3. Dev-to-dev finding note, #256334 (2026-09-28). Greeting = the person the ticket is assigned to RIGHT NOW (re-sync Redmine and read the live assignee before writing; I greeted Li Wen, he changed it to Anis). Opener answers the side question in 2 lines. Numbered title + `<pre>` detail. A pending decision is written "Perlu confirmation: A, atau B." (not "Perlu setuju").
+```
+Salam Anis,
+
+Pelupusan panggil sub-flow sekali je setiap Hantar di Perakuan.
+Service start banyak kali sebab flow ABB start semula service yang sama.
+
+1. Service ulang tanpa henti
+<pre>
+   HasilSpocIntegrationService.java line 99 (case ABB) panggil onKemaskiniPerserahanABB.
+   Line 230 submitBpmWithParam(ABB) setiap kali.
+   Flow ABB guna MLK_HSL_ISPEKS, jadi service dipanggil semula.
+   Cadangan: submit BPM bila aplikasi ABB baru dicipta sahaja. Refer HasilSpocIntegrationService.java.
+</pre>
+
+2. Tugasan Semakan dalam sub-flow PDBB tiada pengguna
+<pre>
+   Sub-flow guna aliran kerja PDBB.
+   ISPEKS_SMKN tiada bawah urusan PDBB.
+   Perlu confirmation: sub-flow tamat dan PDBB tunggu ABB, atau sub-flow tukar ke aliran kerja ABB.
+</pre>
+
+Thank you.
+```
+
+4. Dev-to-dev WhatsApp reply to another team, #280540 (2026-09-29). Common said "dev kau tarik data lain". Casual Manglish, no greeting, no apology. Opens "Actually", states what our code really reads in fallback order, then one line on why the evidence looked different. He cut my "Maaf atas kekeliruan" and the formal Malay.
+```
+Actually code kita memang amik dari hsl_fi_kadar.kadar_pengiraan_id, tapi kalau null, fallback ke hsl_fi_kadar.unit_luas_id, lepas tu baru ke hsl_fi_pejabat.unit_pengiraan_id.
+
+Script tu just untuk tunjuk currently amik dari mana, sebab hari tu kadar_pengiraan_id null untuk semua baris. Tu yang script tak tunjuk column hsl_fi_kadar.
+```
+
+**Before writing ANY Redmine note: run `node quest/redmine-sync.js <num>` and greet the live assignee.**
 Related: [[feedback_cross_module_handoff_artifact]] · [[feedback_ba_facing_reply_plain]].

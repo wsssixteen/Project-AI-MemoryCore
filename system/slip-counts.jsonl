@@ -703,3 +703,7 @@
 {"ts":"2026-09-28T08:37:31.381Z","category":"A3"}
 {"ts":"2026-09-28T08:37:31.454Z","category":"A4"}
 {"ts":"2026-09-28T06:41:01.434Z","category":"ui-handback-no-photo"}
+{"ts":"2026-09-28T10:29:52.500Z","category":"wrong-target"}
+{"ts":"2026-09-29T06:15:12.744Z","category":"assume-not-verify/state-guess"}
+{"ts":"2026-09-29T06:18:13.206Z","category":"reask/misread-ba-intent"}
+{"ts":"2026-09-29T06:51:27.278Z","category":"reask/rambling"}
