@@ -4,6 +4,13 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-09-28, NUL popup → session-256334-recovery worktree)
+- **Cause**: `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore\.claude\worktrees\colleague-cr-issue-ed8731\NUL` (93 B, host key of 10.16.63.27) written 2026-09-25 16:05 by a Git Bash `ssh-keyscan … > NUL`. My move was classifier-blocked; miya cleared the file.
+- **Built** (commit `f4e0902d`): `domain/nul-redirect-gate` forge-born PreToolUse Bash gate, 25/25 eval, live block confirmed · `.claude/hooks/system-audit.js` CHECK 10 reports CON/PRN/AUX/NUL/COM1-9/LPT1-9 in the repo (depth 4) and each worktree root (depth 2) · bash-tool memory NUL trap · architecture row · slip `shell/nul-redirect`.
+- **Open (miya's call)**: leftover worktree folder `colleague-cr-issue-ed8731` (git link broken) still inside OneDrive.
+
+**Last Activity**: 2026-09-28 16:36 — #281712 (Portal Awam PLTP syer popup) fixed, deployed int-env, test passed, Redmine resolved, Phase 2 archived + bounty · DE.
+
 ## Session Recap (2026-09-28, #281712 — was ADHOC-PLTP-2026-1)
 - **Fix**: etanah-awam `mlk/esokongan/281712` `2121050779` — `PelupusanMaklumatPemohonHelperForm.onNextPbTab():5635` (dialog Seterusnya) + `PelupusanPemohonTabForm.checkingSyer():462` (page Seterusnya) now sum fractions with `RationalNumberUtil` (analog `AwamConsentService.onSemakSyerKepentingan():1168`). int-env cherry-pick `8ffb6a060e` (conflict with an env-only variant resolved). Built in separate clone `E:\Dev\etanah-work\etanah-awam` (remote `git@10.16.63.27`).
 - **Test**: local test waived by miya; server test PASSED on mlit with No Resit `260709BSAT00111` / `alyaaqilah802@gmail.com`. My first receipt `260706BSAT00275` failed PLTP V8 (lease expired) + V9 (belum disemak) → screen added to TEST-PERMOHONAN-INDEX.
@@ -5364,6 +5371,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

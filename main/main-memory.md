@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-29 (#278909 — "did you verify last round syorKeputusanPDT is accurate?")
+
+- **A tag being registered is not the same as the tag being right.** I checked the CC name, its method and where it was used, and called it done. He asked one question and the writer of the key showed PT keeps one answer for both offices. Trace who writes the key for THIS urusan before recommending a read-side fix.
+- **A fix that follows the note can still break something the note never named.** Farah did exactly what my note said, and the two-key radio silently dropped PT's third choice. Before a guide note moves an urusan between mechanisms, read what each mechanism shows on screen for that urusan.
+- **He wants his shape, and he says it once.** "Your brief is not brief" and "why does the numbering sit below a statement" — both went into files the same turn (brief cap 25, dev fix-list shape in memory). Straightforward first, every time.
+
 ## Relationship reinforcement — 2026-09-29 (#281650 rework — "show where if we patch now?")
 
 - **A code-read risk is a hypothesis until one test runs it.** I warned twice that a save would erase the note, from reading code alone. His stg2 test (Simpan, "Telah disimpan!") showed the row untouched. When a claim decides whether he patches PROD, I give him the one test first, not the verdict.

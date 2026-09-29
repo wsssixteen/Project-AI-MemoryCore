@@ -1,5 +1,14 @@
 # Current Session
 
+**Last Activity**: 2026-09-29 15:10 — #278909 Risalat MMKN PT: Farah's rework audited, PBN regression fixed (Option D), committed + merged int-env/stag-env, stag-env caught up to PROD 1.7.0, Phase 1 closed · DE.
+
+## Session Recap (2026-09-25 → 09-29, #278909, worktree redmine-278909-ebf259 — git link pruned mid-session, saved from main)
+- **Decision**: separate AdaPemilikan templates (option A) over CC tags in the Tolak base — tajuk paragraph is auto-numbered, an empty CC leaves a dangling "2.3.3"; renderer has no paragraph removal.
+- **BA add-on**: PDT tidak boleh dipertimbangkan + PTG lulus. PT was on single `KeputusanSyor` (PTG overwrites PDT). Farah moved PT to dual keys → dropped PTG "Diangkat untuk pertimbangan PBN" (#260325) + relabelled PDT radio. Refuted; replaced by `40993fe86d`: PT stays single-key, PDT tugasan also saves `KeputusanSyorPDT`, 5.1 CC `syorKeputusanPDT` reads it.
+- **Shipped**: `mlk/internal-issues/278909` 40993fe86d · int-env 8f339a6861 · stag-env ab7a68c42f → 1.7.0 catch-up 2a9cd0afa5. Compile ×3 green, `E:\Dev\tmp-278909\review\Sim.java` 8/8. Not run on JBoss; render check pending deploy.
+- **Open**: miya deploys int + stag · post Redmine root cause/solution (text in QA doc) · pass to BA · int-env lacks 1.7.0 (4-file conflict, left) · stg2 `PTMLK/01/L/PT/2026/2` + 6 mlit syarikat PT apps are Flowable orphans (Initiate & Alter) · new PROD alter tickets #282178, #282175 have no block.
+- **Built/saved**: brief skill cap 60→25 lines (eval green) · memory dev fix-list Redmine shape (`feedback_ticket_writing_style`) · slips `gate/false-positive`, `reask/verbose`, `git/write-in-miya-repo`, `knowledge/derivable-not-derived` · 2 wrong-fix rows.
+
 **Last Activity**: 2026-09-29 14:55 — #281650 rework (MLPS PTMLK/02/L/MLPS/2026/8 Tanah Kerajaan) patched in PROD, verified, closed + archived · DE.
 
 ## Session Recap (2026-09-29, #281650 rework)
@@ -19,10 +28,3 @@
 - **Tooling gap**: familiars could not write qa_docs (worktree guard on base checkout + sibling-file ban); outputs went to scratchpad and I banked them via PowerShell.
 
 **Last Activity**: 2026-09-28 18:46 — OneDrive "Rename 1 item? NUL" popup diagnosed; nul-redirect-gate + system-audit CHECK 10 built · DE.
-
-## Session Recap (2026-09-28, NUL popup → session-256334-recovery worktree)
-- **Cause**: `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore\.claude\worktrees\colleague-cr-issue-ed8731\NUL` (93 B, host key of 10.16.63.27) written 2026-09-25 16:05 by a Git Bash `ssh-keyscan … > NUL`. My move was classifier-blocked; miya cleared the file.
-- **Built** (commit `f4e0902d`): `domain/nul-redirect-gate` forge-born PreToolUse Bash gate, 25/25 eval, live block confirmed · `.claude/hooks/system-audit.js` CHECK 10 reports CON/PRN/AUX/NUL/COM1-9/LPT1-9 in the repo (depth 4) and each worktree root (depth 2) · bash-tool memory NUL trap · architecture row · slip `shell/nul-redirect`.
-- **Open (miya's call)**: leftover worktree folder `colleague-cr-issue-ed8731` (git link broken) still inside OneDrive.
-
-**Last Activity**: 2026-09-28 16:36 — #281712 (Portal Awam PLTP syer popup) fixed, deployed int-env, test passed, Redmine resolved, Phase 2 archived + bounty · DE.
