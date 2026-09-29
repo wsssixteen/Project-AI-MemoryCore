@@ -18,3 +18,13 @@
 | A3 debugging | owner-set via MAX(`versi_mula`) of `ind_pihak_bkptg` gave totals of 3.5 / 9 for many hakmilik (stale duplicate rows) — the query had to filter total = 1 instead of knowing the true current owners | A3 find the code path AWAM uses to auto-pull owners and bank its exact query |
 | A4 etanah solving | int-env cherry-pick conflicted: `checkingSyer()` on int-env carried an env-only rewrite (`penyebutValue`) not on master | A4 pre-cherry-pick diff of each touched file `origin/mlk/master..origin/mlk/int-env` surfaced before the pick |
 | A5 sweep | ⏭ no ticket/file sweep this session | — |
+
+## Session addendum — NUL popup → nul-redirect-gate
+
+| Axis | Assessment (instance) | Proposal logged |
+|---|---|---|
+| A1 agentic system | A prose rule ("use /dev/null, not NUL") lived only in the harness Bash tool text; a 2026-09-25 `ssh-keyscan > NUL` still wrote a real NUL file that sat 3 days until OneDrive popped. Now gated + boot-detected. | A1 worktree-cleanup-boot also flags worktree folders whose git link is broken (colleague-cr-issue-ed8731 is one) |
+| A2 quest workflow | ⏭ no quest moved this session. | — |
+| A3 debugging | Finding the file took one recursive scan of the whole OneDrive tree (~2 min); the boot audit would have named it in seconds had CHECK 10 existed. | — (CHECK 10 is the fix) |
+| A4 etanah solving | ⏭ no etanah ticket this session. | — |
+| A5 sweep | ⏭ no sweep run this session. | — |

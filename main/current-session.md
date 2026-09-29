@@ -1,5 +1,12 @@
 # Current Session
 
+**Last Activity**: 2026-09-28 18:46 — OneDrive "Rename 1 item? NUL" popup diagnosed; nul-redirect-gate + system-audit CHECK 10 built · DE.
+
+## Session Recap (2026-09-28, NUL popup → session-256334-recovery worktree)
+- **Cause**: `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore\.claude\worktrees\colleague-cr-issue-ed8731\NUL` (93 B, host key of 10.16.63.27) written 2026-09-25 16:05 by a Git Bash `ssh-keyscan … > NUL`. My move was classifier-blocked; miya cleared the file.
+- **Built** (commit `f4e0902d`): `domain/nul-redirect-gate` forge-born PreToolUse Bash gate, 25/25 eval, live block confirmed · `.claude/hooks/system-audit.js` CHECK 10 reports CON/PRN/AUX/NUL/COM1-9/LPT1-9 in the repo (depth 4) and each worktree root (depth 2) · bash-tool memory NUL trap · architecture row · slip `shell/nul-redirect`.
+- **Open (miya's call)**: leftover worktree folder `colleague-cr-issue-ed8731` (git link broken) still inside OneDrive.
+
 **Last Activity**: 2026-09-28 16:36 — #281712 (Portal Awam PLTP syer popup) fixed, deployed int-env, test passed, Redmine resolved, Phase 2 archived + bounty · DE.
 
 ## Session Recap (2026-09-28, #281712 — was ADHOC-PLTP-2026-1)
@@ -19,13 +26,3 @@
 - **Slips**: `reask/context-free-popup` (225-226 popup with no before/after) · `handoff/unclear-steps` (lone UPDATE beside handoff) · `assume-not-verify/state-guess` (said pelan "most likely not" replaced).
 
 **Last Activity**: 2026-09-25 18:56 — adhoc ADHOC-PLTP-2026-1 (PROD Portal Awam PLTP syer popup) diagnosed + saved; fix APPROVED by BA ketua, awaiting ticket; adhoc-save skill + audit built · DE.
-
-## Session Recap (2026-09-25, portal-awam-syer-validation worktree)
-- **Ask**: PDTMT via Fizah: public filled syer exactly as the sijil carian (auto-pulled from hakmilik 040210PM00001265) but Seterusnya shows "Maaf syer yang dimasukkan tidak sah atau melebihi had".
-- **Cause (CODE, 95%)**: etanah-awam `PelupusanPemohonTabForm.checkingSyer():462` sums numerators vs the largest denominator (11 vs 28); dialog `PelupusanMaklumatPemohonHelperForm.java:5635` rejects any denominator ≠ row 1. PROD pra `umm_p_pihak_bkptg` p_aplikasi_id 55278: 7×1/28 + 2×1/4 + 2×1/8 = 1.00. Analog = kaunter fraction sum `PelupusanMaklumatPemohonHelper.java:5848`.
-- **Status**: BA ketua approved the fix; the ticket already existed → **ESOKONGAN #281712** (found by redmine-reconcile at DE). A32 promoted, adhoc block archived, Task 234 → Archive, canonical doc `projects/coding-projects/active/QA-281712/QA-281712.md` (cold-resume ready). STG repro resit 260925BSAT00029. Next: `/quest resume 281712` → Apply.
-- **Reconcile divergences (miya's call)**: QA-278909 (Siti Farhanih, In Progress) · QA-281568 (Closed) · QA-256334 (Rework, Lau Li Wen).
-- **Built**: `adhoc-save` skill + `lib/adhoc-save-audit.js` (18/18 eval) · adhoc-paste-detector now anchors on hakmilik id / No Resit (13/13) · `quest/notes.js` keeps ADHOC ids whole (was "1. 2 026.txt").
-- **Audit found in older adhocs**: A27 double-claimed (REDMINE-RC re-pointed to new A33) · PRBB-2026-5 notes renamed · legacy qa_docs missing the standard header (FLOWABLE-2026-1, REDMINE-RC-2026-1, PRBB-2026-5) · ADHOC-FLOWABLE-2026-1 block open while register says RESOLVED · ADHOC-PRBB-2026-4 block missing most keys.
-
-**Last Activity**: 2026-09-25 15:48 — #281656 PRBB resit kaunter tidak masuk (PROD): link-resit data patch via infra + Alter Flow PL→PYB4CE on /14 and /15, verified PROD; quest closed + archived + bounty · DE.
