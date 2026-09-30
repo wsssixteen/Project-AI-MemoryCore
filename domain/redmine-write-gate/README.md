@@ -3,9 +3,9 @@ symptom: #275847 2026-09-04: note posted + reassigned to Ammar on the strength o
 goal: BLOCK unless the LAST user message is an explicit post approval (post it / post now / Yes, post / [redmine-post-ok]) — the note text must have been shown and nodded first
 goal_signal: the PreToolUse fire produced: BLOCK unless the LAST user message is an explicit post approval (post it / post 
 retention: rotate monthly
-# redmine-write-gate (hook-only Feature, v1.1 — born 2026-09-04 via core/forge.js)
+# redmine-write-gate (hook-only Feature, v1.3 — born 2026-09-04 via core/forge.js)
 
-**What fires when**: `PreToolUse` on `Bash|PowerShell` — the command (or any `.js` it executes) references the Redmine host / API key AND carries a mutation (`method:'PUT'|'POST'|'DELETE'`, `-X PUT`, `notes`, `assigned_to_id`, `status_id`, `done_ratio`, `journal`, `uploads`).
+**What fires when**: `PreToolUse` on `Bash|PowerShell` — the command (or any `.js` it executes) references the Redmine host / API key AND carries a mutation: a write verb (`method:'PUT'|'POST'|'DELETE'|'PATCH'`, `-X PUT`, `--request POST`, `-Method Put`, a quoted `'PUT'` literal, `requests.put(`, `wget --post-data`), a request body (`-Body`, `curl -d/--data*/-F/-T`), or a payload KEY (`issue: {` · `notes:` · `status_id:` · `assigned_to_id:` · `done_ratio:` · `journal:` · `uploads:`). A field READ (`i.done_ratio`, `i['notes']`) is not a mutation (v1.3).
 
 **Read-only exemption**: `redmine-sync|board|reconcile|status-check.js` (+ their `.eval.js`) and `quest/ticket-load-verify.js`, matched on the basename. An exempt script's body is skipped only when it is invoked as an EXECUTED script AND the command text itself carries no mutation; every other executed script's body (a chained writer included) and the command text are always scanned.
 
@@ -18,14 +18,46 @@ retention: rotate monthly
 | Piece | File | Role |
 |---|---|---|
 | Hook | `redmine-write-gate.check.hook.js` | PreToolUse block/allow |
-| Eval | `redmine-write-gate.eval.js` | 31 fixtures, sandboxed transcripts (F2 = the #275847 replay · F18 = the 2026-09-25 replay) |
+| Eval | `redmine-write-gate.eval.js` | 56 fixtures, sandboxed transcripts (F2 = the #275847 replay · F18 = the 2026-09-25 replay · F39 = the 2026-09-28 replay) |
 | Log | `log.jsonl` | `{ts, outcome: blocked\|allowed, approval\|last_user}` |
 
 **Layer choice (Rule 7)**: hook-only — the decision is mechanical (is the last user turn an approval?). **Trigger moment (Rule 8)**: PreToolUse on the shell tools that can reach the API; not Stop (too late — the write has happened). **state-scoped**: no — one Redmine host for every state.
 
-**Verify**: `node lib/eval-runner.js --only redmine-write-gate` → **31/31 green** (2026-09-25). Run it through the runner: invoking the eval file directly is blocked by this gate, because its body carries the replay strings.
+**Verify**: `node lib/eval-runner.js --only redmine-write-gate` → **56/56 green** (2026-09-30). Run it through the runner: invoking the eval file directly is blocked by this gate, because its body carries the replay strings.
 
 **v1.1 (2026-09-25)**: `node quest/ticket-load-verify.js <num>` (the `/quest resume` step 1a-ii reader, local files only) was BLOCKED as a write because its body names `redmine-sync.js` and holds a `/^\s*notes:\s*$/` parser regex. Added to the exemption, basename-anchored (F25). Every `node <script>` in the command is now read, not only the first, so a writer chained after an exempt script is still scanned (F23 — a naive name-append let it through). Script capture now reads quoted paths with spaces (row 17 was marked handled but was not — F26). Reconciles the uncommitted `(\.eval)?` exemption (F27). Spec preservation: "exempt only when it is the script being EXECUTED, never when passed as an argument" and "the command itself carries no mutation" both kept (F24, F31); no spec dropped.
+
+**v1.2 (2026-09-29, #282061)**: two gaps closed. (1) A real AskUserQuestion answer arrives as a `tool_result`, which the gate skipped, so F5 (plain-text popup) passed while the live popup "Yes, post In Progress" was blocked. The gate now reads a `tool_result` starting `Your questions have been answered:` and takes the ANSWER values only (`"="…"`), never the question text (F35, F36). (2) A status-only write (`status_id` with no notes / assignee / % done / journal / upload) is allowed on a plain `update|set|change|tukar|kemaskini … redmine|status|in progress` from miya, with the same negation lookbehind (F32, F34, F37). A note or assignee change still needs "post it" (F33). Spec preservation: every v1.1 spec kept; eval 38/38 green.
+
+**v1.3 (2026-09-30)**: `node <scratchpad>/audit.js` (2026-09-28) was BLOCKED as a write — it only did `http.get` on `/redmine/issues/<n>.json` and read `i.done_ratio`. The old MUTATION regex counted any bare field name. MUTATION is now `isMutation()` = write verb OR request body OR payload key; a field counts only as a KEY (`status_id: 2`, `"notes":`), never as a read (`i.done_ratio`, `i['notes']`). Added verb shapes the old regex missed: `--request`, `-Method Put`, quoted `'PUT'` literal, `requests.put(`, `wget --post-data`, `PATCH`, implied-POST `curl -d`. Spec preservation — dropped: bare `status_id|done_ratio|assigned_to_id` anywhere (the false positive itself) · bare `"notes"` with no colon (a read `i['notes']`) · `notes =` assignment (a local `const notes = …` in a reader). Every true positive kept: F2 F3 F7 F22-F26 F31-F33 unchanged; F31 fixture re-shaped from `"status_id"` to `"-X PUT"` because a bare field name is no longer mutation-shaped (F31b proves that). Eval 56/56 green.
+
+### v1.3 adversarial scenarios (Rule 12 — 20)
+
+| # | Scenario | Verdict |
+|---|---|---|
+| 1 | GET script reads `i.done_ratio` / `i.status_id` / `i.assigned_to_id` | fixture-added (F39) |
+| 2 | GET script with `let body = ''` + `body += c` | fixture-added (F39) |
+| 3 | GET script prints a `'Post'` label and `'Journal:'` label | fixture-added (F39 — uppercase-only quoted verb, lowercase-only keys) |
+| 4 | fetch with explicit `method: 'GET'` | fixture-added (F40) |
+| 5 | `Invoke-RestMethod -Method Get` reading done_ratio | fixture-added (F41) |
+| 6 | GET audit chained with an inline curl PUT | fixture-added (F42) |
+| 7 | `Invoke-RestMethod -Method Put -Body` | fixture-added (F43) |
+| 8 | lowercase `-method put` | fixture-added (F44) |
+| 9 | `curl --request POST` | fixture-added (F45) |
+| 10 | `curl -d` with no `-X` (implied POST) | fixture-added (F46) |
+| 11 | binary upload `--data-binary` to `/uploads.json` | fixture-added (F47) |
+| 12 | `issue: { uploads: … }` with the verb hidden in a helper | fixture-added (F48) |
+| 13 | verb held in a variable `isNew ? 'POST' : 'PUT'` | fixture-added (F49) |
+| 14 | python `requests.put(` | fixture-added (F50) |
+| 15 | `PATCH` verb | fixture-added (F51) |
+| 16 | `wget --post-data` | fixture-added (F52) |
+| 17 | `journal:` key with the verb hidden in a helper | fixture-added (F53) |
+| 18 | field written as a KEY `{ notes, status_id: 2 }` passed to a helper | fixture-added (F54 BLOCK) |
+| 19 | quoted JSON key `"notes":` | fixture-added (F55) |
+| 20 | bare field name in the command text beside an exempt script | fixture-added (F31b silent) — F31 keeps the voiding rule with `-X PUT` |
+| 21 | read script building a summary row `{ done_ratio: i.done_ratio }` | accepted-risk — a KEY still blocks; the false block is recoverable, a false allow is a permanent journal |
+| 22 | writer whose verb and body both live in a required module, caller passes only `{ notes }` shorthand | accepted-risk — no such helper exists in quest/ lib/ core/ (grep 2026-09-30); a future helper carries its own verb when it runs |
+| 23 | `ticket-load-verify.js` body under another name | handled — still BLOCK via its `notes:` parser regex text (F19 unchanged) |
 
 ## Adversarial scenarios (Rule 12 — 20)
 
@@ -58,3 +90,8 @@ retention: rotate monthly
 | 25 | `ticket-load-verify.js` later gains HTTP / child_process | handled — F29 goes RED, forcing a re-review of the exemption |
 | 26 | exempt script only MENTIONED in a quoted argument (a slip note, a commit message) | handled — its body is skipped, so a clean command stays silent (F30; live false positive hit while building v1.1) |
 | 27 | exempt script + mutation-shaped text in the command | handled — exemption void, its body is scanned → BLOCK (F31) |
+| 28 | popup QUESTION text contains "set status" but the answer is "Not now" | handled — only answer values are read (F36) |
+| 29 | status write bundled with a note under a status-style approval | handled — any note/assignee field voids the status path (F33) |
+| 30 | "don't update the redmine yet" | handled — negation lookbehind (F34) |
+| 31 | a non-popup tool_result (file read) after the approval | handled — skipped, the typed approval still counts (F38) |
+| 32 | a file read whose text starts with "Your questions have been answered:" | accepted-risk — only the harness writes that prefix at the start of a tool_result; worst case is a status change, which can be set back |

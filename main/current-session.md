@@ -1,32 +1,30 @@
 # Current Session
 
-**Last Activity**: 2026-09-28 14:20 — #281650 (DP PROD, MLPS Tempat + pelan + Tanah Kerajaan) closed + archived + bounty · DE.
+**Last Activity**: 2026-09-30 17:45 — junior handover (#264355 + #274266 → Farah) saved · main merged into worktree · DE.
 
-## Session Recap (2026-09-25 → 2026-09-28, ticket-281656-prep worktree → main)
-- **Ask**: retrieve + quest #281650 (Nurhafizah PDTJ): MLPS /7 and /8 at PYB4AE — Tempat `PT 118` / `PT 225 & 226 PT 117` → `-`, replace pelan L1e, /8 Tanah Kerajaan → `PT 225 & PT 226`.
-- **Done**: `281650.sql` (4 UPDATEs, apt 46855/46856 + licence rows 4342/4346) ran in PROD 2026-09-25 by infra, verified 2026-09-28. /8 no_lot NULL + `mklmt_tmbhn.keteranganTempatTanahKerajaan = "PT 225 & PT 226"` → L1e `- PT 225 & PT 226` (miya chose BA Description wording). Pelan: renamed PDFs (`PDTJ.600.2~6~69_M033_pelan.pdf`, `~6~70_M032`) handed to infra; BA reopened 27 Sep → reassigned to Asyraf for pelan; DB cannot confirm a disk swap (ask infra file size 436,915 / 457,395).
-- **Closed**: QA-281650 archived (Task 233 → Archive, block → active-archive, doc → archive/QA-281650). Knowledge: MLPS-TICKETS note, LATENT-BUGS L13 (keterangan not copied to licence, `PelupusanLiteService.java:1853`).
-- **Rule change**: script naming by role — `<ticket>.sql` = update, `<ticket>-check.sql` = one combined check; `-2` banned.
-- **Slips**: `reask/context-free-popup` (225-226 popup with no before/after) · `handoff/unclear-steps` (lone UPDATE beside handoff) · `assume-not-verify/state-guess` (said pelan "most likely not" replaced).
+## Session Recap (2026-09-28 to 09-30, worktree easy-internal-tickets-c23369)
+- **Ask**: scan internal tickets (not patch or eSOKONGAN), list easy ones for the junior. Result: 7 open internal/QA, all miya's; easy = #264355 (PRU Lulus letter, AWAM list) + #274266 (PT PYSKTPDT peranan, data only).
+- **Guides**: posted by miya 2026-09-29 to Farah (Siti Farhanih Abdul Razak). #274266 → Farah Resolved 2026-09-29 (block delegated, Redmine divergence: close needs miya nod). #264355 → Farah testing.
+- **Gap owned**: #264355 guide items 4 (Tolak) + 5 (notifikasi) had no proven fix; only Lulus is proven. Written into QA-264355.md.
+- **Memory**: feedback_ticket_writing_style entry 7 — junior hints = symptom + where + test data, never the cause; internal test data only; proven fixes only.
+- **Slips (miya)**: spoon-feeding cause in hints · staging test data for a junior who tests on internal · guide sent without sweep-proven fixes.
 
-**Last Activity**: 2026-09-25 18:56 — adhoc ADHOC-PLTP-2026-1 (PROD Portal Awam PLTP syer popup) diagnosed + saved; fix APPROVED by BA ketua, awaiting ticket; adhoc-save skill + audit built · DE.
+**Last Activity**: 2026-09-30 17:00 — QA-281423 follow-ups: hooks retired (prod-db-confirm · quest-bounty skip-warning + auto-save) · audit false-RETIRE fixed · bounty proposals tracked · CLAUDE.md v1.74 reply skeleton · DE.
 
-## Session Recap (2026-09-25, portal-awam-syer-validation worktree)
-- **Ask**: PDTMT via Fizah: public filled syer exactly as the sijil carian (auto-pulled from hakmilik 040210PM00001265) but Seterusnya shows "Maaf syer yang dimasukkan tidak sah atau melebihi had".
-- **Cause (CODE, 95%)**: etanah-awam `PelupusanPemohonTabForm.checkingSyer():462` sums numerators vs the largest denominator (11 vs 28); dialog `PelupusanMaklumatPemohonHelperForm.java:5635` rejects any denominator ≠ row 1. PROD pra `umm_p_pihak_bkptg` p_aplikasi_id 55278: 7×1/28 + 2×1/4 + 2×1/8 = 1.00. Analog = kaunter fraction sum `PelupusanMaklumatPemohonHelper.java:5848`.
-- **Status**: BA ketua approved the fix; the ticket already existed → **ESOKONGAN #281712** (found by redmine-reconcile at DE). A32 promoted, adhoc block archived, Task 234 → Archive, canonical doc `projects/coding-projects/active/QA-281712/QA-281712.md` (cold-resume ready). STG repro resit 260925BSAT00029. Next: `/quest resume 281712` → Apply.
-- **Reconcile divergences (miya's call)**: QA-278909 (Siti Farhanih, In Progress) · QA-281568 (Closed) · QA-256334 (Rework, Lau Li Wen).
-- **Built**: `adhoc-save` skill + `lib/adhoc-save-audit.js` (18/18 eval) · adhoc-paste-detector now anchors on hakmilik id / No Resit (13/13) · `quest/notes.js` keeps ADHOC ids whole (was "1. 2 026.txt").
-- **Audit found in older adhocs**: A27 double-claimed (REDMINE-RC re-pointed to new A33) · PRBB-2026-5 notes renamed · legacy qa_docs missing the standard header (FLOWABLE-2026-1, REDMINE-RC-2026-1, PRBB-2026-5) · ADHOC-FLOWABLE-2026-1 block open while register says RESOLVED · ADHOC-PRBB-2026-4 block missing most keys.
+## Session Recap (2026-09-30 16:00-17:00, worktree session-256334-recovery)
+- **Retired (miya)**: `prod-db-confirm` (PROD read-only via et_read; it DID fire, 118 log rows) · quest-bounty `discipline.hook.js` (dead since archive-quest writes its own log line; 1,039 runs, 0 fires) · `quest-bounty.hook.js` (Bash-only matcher, pushed branch not main; DE step 10 saves instead).
+- **Fixed**: `lib/audit-briefing.js` read own-log files from the worktree ROOT → working hooks showed "0 fires, RETIRE?". Now reads MAIN_ROOT. sql-schema-verify (164 fires, blocked today) kept.
+- **Built**: quest-bounty SKILL Step 4 — every proposal goes to `core/slips.js --type proposal --category bounty` (dashboard Open proposals, weekly ruling). CLAUDE.md v1.74 REPLY SKELETON + reply-shape-spec §1-0 (sections per topic · tables for data · short-sentence bullets), folding the unfolded 2026-08-19 ask.
+- **Memory**: feedback_ticket_writing_style += statements not implications · not bossy · Redmine = Textile. feedback_reply_separation_of_concerns marked folded.
+- **Slips (miya)**: reply-shape (topics mixed, long cells; 08-19 fold never done).
+- **Commits**: ee26f55f · 5a5adfd3 · b0073bda (all on main).
+**Last Activity**: 2026-09-30 16:45 — redmine-write-gate v1.3 (field reads no longer count as a write) · DE.
 
-**Last Activity**: 2026-09-25 15:48 — #281656 PRBB resit kaunter tidak masuk (PROD): link-resit data patch via infra + Alter Flow PL→PYB4CE on /14 and /15, verified PROD; quest closed + archived + bounty · DE.
+## Session Recap (2026-09-30, redmine-write-gate v1.3, main checkout)
+- **Ask**: the gate blocked `node <scratchpad>/audit.js` on 2026-09-28 (http.get only, read `i.done_ratio`). Refine so bare field reads do not count; keep every real write blocked.
+- **Built**: `isMutation()` = write verb (method/`-X`/`--request`/`-Method`/quoted `'PUT'`/`requests.put(`/wget) OR request body (`-Body`, curl `-d/--data*/-F/-T`) OR payload KEY (`issue: {`, `notes:`, `status_id:` …). A read (`i.done_ratio`, `i['notes']`) no longer counts. Eval 56/56 (F39 = the 09-28 replay, F40-F55 new, F31 re-shaped, F31b added). Commit b570ad8a. README v1.3 + 23-row scenario table.
+- **Denied**: F19b (writer saved under the exempt name passes) blocked by the auto-mode classifier; miya ruled skip — F19 + F29 already cover the exemption.
+- **Watches**: new wmuns52kg on the hook (5 sessions) · wmumjs1ma (v1.2) resolved ok as superseded.
+- **Slips (miya)**: 2× answer-the-ask — asked for one sentence / very short sentences, got bullets + a table.
 
-## Session Recap (2026-09-25, ticket-281656-prep worktree)
-- **Ask**: quest-prepare #281656 (PDTAG PRBB, public paid, resit not in Carian Pintas; link + alter to Penyediaan Borang 4Ce dan P1e).
-- **Cause**: public paid at the counter while SDU2 was still open; PL tugasan appeared 11:15, payments 09:26/09:49. Cashiers used manual Bayaran Pelbagai → new hsl_bayaran_fi rows with aplikasi_id NULL; officer fees stayed flag_bayar N.
-- **BA data errors caught**: #15 resit are D84300003/4 (BA typed D84000003/4 = Norshamsul SPPK/2026/484-485 Semakan Pelan); #15 receipts keyed PRBB/2025/15.
-- **Fix**: `1. Tasks\Melaka\Archive\230. II #281656 ...\2. Fix\281656.sql` (6 btrn repoint + 6 fi paid + deposit 646/647), schema-verified, infra ran it. Alter Flow: /14 → nurwaheda@melaka.gov.my, /15 → samsiah_jaamat@melaka.gov.my. みや confirmed.
-- **Slip**: claimed receipts belonged to another payer without showing the evidence script (`show-evidence`, logged).
-- **Carry forward**: PTMLK/03/L/PRBB/2026/8 — same cashier 10:37, RM4,500 manual vs RM9,300 unpaid fees, no PL tugasan → likely future ticket.
-
-**Last Activity**: 2026-09-25 12:00 — /goal bulk-ticket triage → quest sweep (6 tickets, 18 agents, run wf_bb588f6c-e2c) → findings saved to qa_docs + active.txt · DE.
+**Last Activity**: 2026-09-30 16:10 — ADHOC-PRBB-2026-6 (PROD Pembatalan Permohonan Jana ralat) closed OWNED-ELSEWHERE (common/GIS) + archived · adhoc "move BA downloads" step built · DE.

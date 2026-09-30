@@ -9,6 +9,7 @@
  *   node core/forge.js new check <name> --event <Event> [--matcher "<m>"] \
  *        --trigger "<when X>" --action "<flag/block Y>" --replay "<concrete case>" \
  *        --route <code|check|tool-gate|skill|prose> --route-why "<reason>" \
+ *        --footprint "<per-prompt|per-tool|per-turn|per-session|always|scheduled|on-demand|none>: <processes, RAM>" \
  *        --nod "<authorization>" [--override-collision "<reason>"] [--root <path>]
  *   node core/forge.js new skill <name>  --trigger ... --action ... --replay ... --nod ...
  *   node core/forge.js new script <name> --trigger ... --action ... --replay ... --nod ...
@@ -36,9 +37,10 @@ const TELEMETRY = path.join(ROOT, 'system', 'telemetry', 'hook-fires.jsonl');
 function arg(name, required) {
   const i = process.argv.indexOf('--' + name);
   const v = i > 0 ? process.argv[i + 1] : undefined;
-  if (required && (v === undefined || v.startsWith('--'))) die(2, `missing required --${name}\n       forge new check <name> needs ALL of: --event --trigger --action --replay --symptom --goal --signal --retention --nod  [--matcher "<m>"] [--override-collision "<reason>"] [--root <path>]`);
+  if (required && (v === undefined || v.startsWith('--'))) die(2, `missing required --${name}\n       forge new check <name> needs ALL of: --event --trigger --action --replay --symptom --goal --signal --retention --footprint --nod  [--matcher "<m>"] [--override-collision "<reason>"] [--root <path>]`);
   return v;
 }
+const FOOTPRINT_RE = /^(per-prompt|per-tool|per-turn|per-session|always|scheduled|on-demand|none)\b/i;
 function die(code, msg) { console.error('forge: ' + msg); process.exit(code); }
 function log(msg) { console.log('forge: ' + msg); }
 function append(file, row) {
@@ -128,7 +130,8 @@ function readmeTemplate(name, event, trigger, action, why) {
     'goal: ' + (why.goal || 'TODO(forge)') + '\n' +
     'goal_signal: ' + (why.signal || 'TODO(forge)') + '\n' +
     (why.signalRegex ? 'goal_signal_regex: ' + why.signalRegex + '\n' : '') +
-    'retention: ' + (why.retention || 'TODO(forge)') + '\n\n' +
+    'retention: ' + (why.retention || 'TODO(forge)') + '\n' +
+    'footprint: ' + (why.footprint || 'TODO(forge)') + '\n\n' +
     '**What fires when**: ' + (event || 'n/a') + ' — ' + trigger + '\n\n' +
     '**Contract**: ' + action + '\n\n' +
     '**Layer choice (Rule 7)**: TODO(forge): hook-only | skill-only | hook+skill — justify.\n\n' +
@@ -193,10 +196,13 @@ function forgeNew() {
   }
   if (!/^(keep|rotate\s+\S+|consume\s+\S+|regenerate)$/i.test(why.retention.trim())) die(2, '--retention must be one of: keep | rotate <period> | consume <into> | regenerate (system-rules Rule 6)');
   if (/^(fires?|triggers?|runs?)\b/i.test(why.goal.trim())) die(2, '--goal restates the trigger; state the OUTCOME the feature exists to produce (Rule 13)');
+  // system-rules Rule 7 (2026-09-29): resource footprint declared at birth — trigger class first, then processes + RAM
+  why.footprint = arg('footprint', true);
+  if (!FOOTPRINT_RE.test(why.footprint.trim())) die(2, '--footprint must start with one of: per-prompt | per-tool | per-turn | per-session | always | scheduled | on-demand | none, then ": <processes, RAM>" (system-rules Rule 7)');
 
   // 1. ECHO (recorded, per operator parameter echo+nod)
   log('ECHO  Trigger: when ' + trigger + ' · Action: ' + action + ' · Replay case: ' + replay);
-  log('WHY   symptom: ' + why.symptom + ' · goal: ' + why.goal + ' · signal: ' + why.signal + ' · retention: ' + why.retention);
+  log('WHY   symptom: ' + why.symptom + ' · goal: ' + why.goal + ' · signal: ' + why.signal + ' · retention: ' + why.retention + ' · footprint: ' + why.footprint);
   log('NOD   ' + nod + ' · ROUTE ' + route + ' (' + routeWhy + ')');
 
   // 2. collision → refine-first
@@ -246,7 +252,7 @@ function forgeNew() {
       const dir = kind === 'skill' ? path.join(ROOT, '.claude', 'skills', name) : path.join(ROOT, 'lib');
       fs.mkdirSync(dir, { recursive: true });
       mainPath = kind === 'skill' ? path.join(dir, 'SKILL.md') : path.join(dir, name + '.js');
-      const whyHeader = '// symptom: ' + why.symptom + '\n// goal: ' + why.goal + '\n// goal_signal: ' + why.signal + '\n// retention: ' + why.retention + '\n';
+      const whyHeader = '// symptom: ' + why.symptom + '\n// goal: ' + why.goal + '\n// goal_signal: ' + why.signal + '\n// retention: ' + why.retention + '\n// footprint: ' + why.footprint + '\n';
       fs.writeFileSync(mainPath, kind === 'skill' ? skillTemplate(name, trigger, action) + '\n' + whyHeader.replace(/^\/\/ /gm, '') : '#!/usr/bin/env node\n// ' + name + ' — born via forge\n' + whyHeader);
       created.push(mainPath);
       if (kind === 'script') {
@@ -255,7 +261,7 @@ function forgeNew() {
       }
     }
     // 7. registry + telemetry + rollback recipe
-    append(REGISTRY, { ts: new Date().toISOString(), name, kind, event, files: created.map(f => path.relative(ROOT, f)), lifecycle: 'created', route, route_why: routeWhy, trigger, action, replay, nod, symptom: why.symptom, goal: why.goal, goal_signal: why.signal, retention: why.retention, collisions_overridden: override || null });
+    append(REGISTRY, { ts: new Date().toISOString(), name, kind, event, files: created.map(f => path.relative(ROOT, f)), lifecycle: 'created', route, route_why: routeWhy, trigger, action, replay, nod, symptom: why.symptom, goal: why.goal, goal_signal: why.signal, retention: why.retention, footprint: why.footprint, collisions_overridden: override || null });
     append(TELEMETRY, { ts: new Date().toISOString(), hook: 'forge', event: 'Forge', mode: 'forge-new', component: name, kind, exit: 0, blocked: false });
     // Auto-ledger the birth as a type=upgrade Slip Ledger row (weekly-audit feed) — 2026-07-19
     // scour refinement #3. Expected result: registry rows ⊆ upgrade rows, zero manual memory.

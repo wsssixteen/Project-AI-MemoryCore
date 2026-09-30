@@ -35,6 +35,7 @@ const http = require('http');
 const fs   = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
+const TF   = require('../lib/task-folder'); // Task-folder shape: 1. Brief (legacy 0. Brief) · N. Rework\Brief
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 
@@ -498,7 +499,7 @@ function writeHistoryFile(briefFolder, journals, issueMeta, fields) {
 
 async function updateExistingTicketHistory(issue) {
     if (!issue._existing) return 0;
-    const briefFolder = path.join(taskBaseFor(issue), issue._existing, '0. Brief');
+    const briefFolder = TF.briefDir(path.join(taskBaseFor(issue), issue._existing));
     if (!fs.existsSync(briefFolder)) return 0;
     const journals = await fetchIssueJournals(issue.id);
     const fields = await fetchIssueFields(issue.id);
@@ -520,15 +521,12 @@ async function createTaskFolder(issue, parsed) {
     const slug   = buildFolderSlug(issue, parsed);
     const folder = path.join(base, `${num}. ${slug}`);
 
-    // Base structure — 0. Brief + 2. Fix + blank Notes file (1. Simulate retired 2026-08-24, miya)
-    fs.mkdirSync(path.join(folder, '0. Brief'), { recursive: true });
-    fs.mkdirSync(path.join(folder, '2. Fix'),   { recursive: true });
-    // Notes file is named per-ticket — `1. NNN NNN.txt` (renamed 2026-05-31 from `1. Notes.txt`,
-    // adjusted same day from `1. QA-NNNN.txt` per みや → drop tracker prefix, space before last 3
-    // digits so the last-3 are quickly identifiable across many open tabs/greps).
-    const spaced = parsed.number.replace(/(\d+)(\d{3})$/, '$1 $2');
-    const notesFilename = `1. ${spaced}.txt`;
-    fs.writeFileSync(path.join(folder, notesFilename), '');
+    // Base structure — 1. Brief + 2. Fix only (2026-09-30, miya: leaner folders).
+    // Retired: 1. Simulate (2026-08-24) · the blank `1. NNN NNN.txt` notes file (test data
+    // now lives in the quest MD's "## Test data" section via quest/notes.js).
+    const brief = path.join(folder, TF.ROOT_BRIEF);
+    fs.mkdirSync(brief, { recursive: true });
+    fs.mkdirSync(path.join(folder, '2. Fix'), { recursive: true });
 
     // Description.txt — ticket brief
     const desc = [
@@ -542,20 +540,20 @@ async function createTaskFolder(issue, parsed) {
         '',
         issue.description || '(no description in Redmine)',
     ].join('\n');
-    fs.writeFileSync(path.join(folder, '0. Brief', 'Description.txt'), desc);
+    fs.writeFileSync(path.join(brief, 'Description.txt'), desc);
 
-    // Attachments — download into 0. Brief/
+    // Attachments — download into 1. Brief/
     const attachments = await fetchAttachments(issue.id);
     const attFailed = [];
     for (const att of attachments) {
         if (!att.content_url || !att.filename) continue;
-        const destPath = path.join(folder, '0. Brief', att.filename);
+        const destPath = path.join(brief, att.filename);
         const r = await downloadFile(att.content_url, destPath, att.filesize);
         if (r.ok) console.log(`    ⬇️  ${att.filename} (${r.bytes} bytes)`);
         else { attFailed.push(`${att.filename} — ${r.why}`); console.log(`    ❌ ${att.filename} — ${r.why}`); }
     }
     if (attFailed.length) {
-        console.log(`\n    🚨 ${attFailed.length}/${attachments.length} ATTACHMENT(S) MISSING from 0. Brief/ — the folder is NOT the full ticket:`);
+        console.log(`\n    🚨 ${attFailed.length}/${attachments.length} ATTACHMENT(S) MISSING from 1. Brief/ — the folder is NOT the full ticket:`);
         attFailed.forEach(f => console.log(`       • ${f}`));
     }
 
@@ -624,6 +622,11 @@ function appendActiveBlock(issue, parsed, taskFolderAbs, assignedDate) {
 // under-counted cycles for reopens that landed on 31/38. (2026-08-21, #276181 audit;
 // dropped in v8.1 with the count rule, restored in v10 for the TIME rule.)
 const REWORK_STATUS_IDS = new Set(['23', '31', '38']);
+// 2026-09-30 #280540: a ticket sent back from Resolved to In Progress (3 → 2) is a reopen too.
+// Done = 3 Resolved · 5 Closed · 25 Acknowledged · 36 Ready in PROD (Redmine /issue_statuses).
+const DONE_STATUS_IDS = new Set(['3', '5', '25', '36']);
+// Current-status names that mean "not open" (the status cell is a name, not an id).
+const DONE_STATUS_NAME_RE = /^(resolved|closed|acknowledged|ready in prod|cancelled|declined|not applicable)$/i;
 function isReworkTransition(journal) {
     return (journal.details || []).some(d =>
         d.property === 'attr' && d.name === 'status_id' && REWORK_STATUS_IDS.has(String(d.new_value))
@@ -639,8 +642,8 @@ function isReworkTransition(journal) {
 function isGenuineReopen(journal) {
     return (journal.details || []).some(d =>
         d.property === 'attr' && d.name === 'status_id'
-        && REWORK_STATUS_IDS.has(String(d.new_value))
-        && !REWORK_STATUS_IDS.has(String(d.old_value))
+        && ((REWORK_STATUS_IDS.has(String(d.new_value)) && !REWORK_STATUS_IDS.has(String(d.old_value)))
+            || (DONE_STATUS_IDS.has(String(d.old_value)) && !DONE_STATUS_IDS.has(String(d.new_value))))
     );
 }
 function genuineReopenCount(journals) {
@@ -698,22 +701,21 @@ async function downloadNewAttachments(destFolder, issueId, knownFilenames) {
     return downloaded;
 }
 
-// addStatusFolder (v5, rule rewritten v10) — async. When a ticket's Redmine status is Rework:
-//   1. If folder is in Archive/, MOVE it back to active.
-//   2. TIME rule (v10): if the latest journal transition INTO a rework status is NEWER
-//      than the newest existing "N. Rework"/"N. New" subfolder (or none exists), create
-//      "(max+1). Rework" numbered next-after-max-existing. Otherwise nothing.
-//   3. Default label = "Rework" (sync can't classify Rework-on-same-issue vs
-//      Rework-because-BA-found-new-issue — みや renames to "New" manually if BA's
-//      journal note indicates a different issue).
-// Returns: { folderRelPath, unarchived, statusFolderPath } or null.
+// addStatusFolder (v13, 2026-09-30) — async. When a ticket is reopened (Rework status, or
+// sent back out of a done status and open now) and its folder sits in Archive/, MOVE it back
+// to active. It creates NO cycle folder (see step 2). Name kept for callers.
+// Returns: { folderRelPath, unarchived, statusFolderPath: null } or null.
 async function addStatusFolder(existingFolderName, status, journals, base = TASKS_FOLDER) {
     // Loose match — the Redmine status cell carries DESCRIPTIVE labels
     // ("Rework (Requirement Update)", "Rework (Bug)"), not the bare word "rework".
     // The old `!== 'rework'` equality rejected every descriptive label, so a reopened
     // ticket was neither unarchived nor given a cycle folder. Now matches classifyIssues'
     // own `/rework/i` test for consistency. (Fixed 2026-08-21, #276181 audit — B1/B3.)
-    if (!/rework/i.test(status || '')) return null;
+    // v12 (2026-09-30, #280540): a ticket sent back from Resolved to In Progress never carries
+    // the word "rework", so it got no unarchive and no cycle folder. It now qualifies when the
+    // journal holds a genuine reopen (incl. leaving a done status) and the ticket is open now.
+    const reopenedOpen = genuineReopenCount(journals) > 0 && !DONE_STATUS_NAME_RE.test((status || '').trim());
+    if (!/rework/i.test(status || '') && !reopenedOpen) return null;
 
     // (1) Unarchive if needed
     let folderRelPath = existingFolderName;
@@ -728,39 +730,12 @@ async function addStatusFolder(existingFolderName, status, journals, base = TASK
     const fullPath = path.join(base, folderRelPath);
     if (!fs.existsSync(fullPath)) return null;
 
-    // (2) One rework CYCLE folder per GENUINE reopen (v11, miya 2026-09-22).
-    //   History: v8.1's count churned on intra-reopen hops (3→31→23→38 = 1 reopen counted
-    //   as 3); v10 switched to comparing the latest transition time against the folder's
-    //   birthtime, but OneDrive rewrites folder mtimes on sync, so the 2nd reopen of #278699
-    //   was MISSED — the bug miya caught. v11 counts GENUINE reopens (non-rework → rework,
-    //   ignoring intra-rework hops) and compares that count to the cycle folders on disk. No
-    //   timestamps, so OneDrive cannot break it; idempotent on re-sync.
-    const cycleFolders = fs.readdirSync(fullPath)
-        .filter(e => /^\d+\.\s*(Rework|New)\s*$/i.test(e));
-    const reopens = genuineReopenCount(journals);
-    // Fallback: journals not included / status set at creation with no transition → ensure
-    // at least one cycle when none exists yet (mirrors the old "none exists yet" fallback).
-    const wanted  = Math.max(reopens, cycleFolders.length === 0 ? 1 : 0);
-    const deficit = Math.max(0, wanted - cycleFolders.length);
-
-    let statusFolderPath = null;
-    if (deficit > 0) {
-        const nums = fs.readdirSync(fullPath)
-            .map(e => { const em = e.match(/^(\d+)\./); return em ? parseInt(em[1]) : null; })
-            .filter(n => n !== null);
-        let next = nums.length ? Math.max(...nums) + 1 : 3;
-        for (let k = 0; k < deficit; k++, next++) {
-            const cyclePath = path.join(fullPath, `${next}. Rework`);
-            // Mirror the Task-folder subfolder convention (items 3+4, miya 2026-09-22):
-            // BA's NEW attachments land in 0. Brief; his fixes / Redmine-upload files go in
-            // 2. Fix. Keeps the rework root clean instead of a loose dump of mixed files.
-            fs.mkdirSync(path.join(cyclePath, '0. Brief'), { recursive: true });
-            fs.mkdirSync(path.join(cyclePath, '2. Fix'),   { recursive: true });
-            statusFolderPath = cyclePath; // newest cycle = attachment target
-        }
-    }
-
-    return { folderRelPath, unarchived, statusFolderPath };
+    // (2) v13 (2026-09-30, miya): the sync NEVER creates a Rework folder. A Rework folder is a
+    //   separate change WE deployed, so it is made only when we start work on a quest that
+    //   already shipped a cycle — quest/active-cli.js → lib/task-folder.js ensureCycleFolder.
+    //   Status-driven creation (v5–v12) made empty folders whenever a colleague reworked a
+    //   ticket (#244600 had 3–7. Rework, #265109 3–5, all empty; 16 deleted 2026-09-30).
+    return { folderRelPath, unarchived, statusFolderPath: null };
 }
 
 // ─── CLASSIFY + REPORT ───────────────────────────────────────────────────────
@@ -874,16 +849,9 @@ async function syncAttachmentsForExisting(results) {
         if (!issue._existing) continue;
         const ticketFullPath = path.join(taskBaseFor(issue), issue._existing);
         if (!fs.existsSync(ticketFullPath)) continue;
-        const entries = fs.readdirSync(ticketFullPath);
-        const reworkEntries = entries
-            .map(e => { const m = e.match(/^(\d+)\.\s*(Rework|New)\s*$/i); return m ? { name: e, num: parseInt(m[1]) } : null; })
-            .filter(Boolean)
-            .sort((a, b) => b.num - a.num);
-        // v11 (miya 2026-09-22): BA's new attachments go in the rework's 0. Brief subfolder,
-        // not loose in the N. Rework root (that root is his fixes / Redmine-upload workspace).
-        const targetSubfolder = reworkEntries.length
-            ? path.join(ticketFullPath, reworkEntries[0].name, '0. Brief')
-            : path.join(ticketFullPath, '0. Brief');
+        // BA's new attachments go in the newest cycle's Brief\ (the N. Rework root is our
+        // fixes / scripts), else the root Brief (1. Brief, legacy 0. Brief). lib/task-folder.js
+        const targetSubfolder = TF.latestBriefDir(ticketFullPath);
         const known = collectFilesRecursive(ticketFullPath);
         const downloaded = await downloadNewAttachments(targetSubfolder, issue.id, Array.from(known));
         for (const f of downloaded) {
@@ -935,7 +903,7 @@ async function runWithCreate() {
             // behavior only wrote History.txt on re-sync (existing path), leaving net-new tickets
             // without their already-present journal context.
             if (journals.length) {
-                writeHistoryFile(path.join(folder, '0. Brief'), journals, {
+                writeHistoryFile(TF.briefDir(folder), journals, {
                     prefix:    issue._parsed.prefix,
                     number:    issue._parsed.number,
                     subject:   issue.subject,
@@ -981,21 +949,8 @@ async function runWithCreate() {
             {
                 const ticketFullPath = path.join(taskBaseFor(issue), issue._existing);
                 if (fs.existsSync(ticketFullPath)) {
-                    // Find the LATEST `N. Rework` (or `N. New`) subfolder — the active cycle's home.
-                    const entries = fs.readdirSync(ticketFullPath);
-                    const reworkEntries = entries
-                        .map(e => { const m = e.match(/^(\d+)\.\s*(Rework|New)\s*$/i); return m ? { name: e, num: parseInt(m[1]) } : null; })
-                        .filter(Boolean)
-                        .sort((a, b) => b.num - a.num);
-                    // v7 (2026-08-05): `result` can now be null (no new subfolder needed), so
-                    // the old `result.statusFolderPath` fallback would throw. Final fallback is
-                    // `0. Brief` — a ticket with no rework subfolder keeps its evidence there.
-                    // v11 (miya 2026-09-22): BA's new attachments go in the rework's 0. Brief
-                    // subfolder (the N. Rework root is his fixes / Redmine-upload workspace).
-                    const targetSubfolder = reworkEntries.length
-                        ? path.join(ticketFullPath, reworkEntries[0].name, '0. Brief')
-                        : (result && result.statusFolderPath && path.join(result.statusFolderPath, '0. Brief'))
-                          || path.join(ticketFullPath, '0. Brief');
+                    // Newest cycle's Brief\, else the root Brief (lib/task-folder.js).
+                    const targetSubfolder = TF.latestBriefDir(ticketFullPath);
                     if (targetSubfolder) {
                         // `known` = every file already present anywhere under the ticket folder
                         // (all depths) so we never re-download.
@@ -1033,7 +988,7 @@ async function runSingle(id) {
             const assignedDate = extractAssignedToMeDate(journals, it);
             appendActiveBlock(it, it._parsed, folder, assignedDate);
             if (journals.length) {
-                writeHistoryFile(path.join(folder, '0. Brief'), journals, {
+                writeHistoryFile(TF.briefDir(folder), journals, {
                     prefix: it._parsed.prefix, number: it._parsed.number,
                     subject: it.subject, status: it._status, updated_on: it.updated_on,
                 }, await fetchIssueFields(it.id));

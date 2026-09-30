@@ -62,9 +62,11 @@ Trackers: eSOKONGAN · Internal Issue · Internal Issue (PROD-CR) · Internal Is
 (PROD) · Internal Issue (Permanent Fix) · Internal Issue (MA Fix) · Data Patching
 (PROD).
 
-## Ranking — the 3-DAY RULE
+## Ranking
 
-Descending by days elapsed since `start_date`; tie-break on the nearer due date.
+🚨 **TICKET PRIORITY RULE (miya 2026-09-29 — overrides the bare 3-DAY RULE order)**: "eSOKONGAN ticket" ALWAYS means **TRACKER = eSOKONGAN** (id 51, the one with SLA) — never the Redmine *project* "eSOKONGAN MELAKA", which also holds Internal Issue / Data Patching tickets. Order: **(1) eSOKONGAN tracker → (2) anything PROD** (Data Patching (PROD) · Internal Issue (PROD) · Internal Issue (PROD-CR)) **→ (3) the rest**. Inside each group: Priority **Critical > High > Medium > Low**, then any ticket whose description/journal says **urgent / segera / kritikal / critical / ASAP / mendesak / secepat mungkin / immediate / emergency / kecemasan** ahead of a same-priority one — never miss the urgent word. Then the old tie-break (eSOKONGAN nearest due; others 3-DAY age). `quest/redmine-board.js` implements this deterministically.
+
+Tie-break inside a group (the old 3-DAY RULE): descending by days elapsed since received; tie-break on the nearer due date.
 Difficulty is **not** the sort axis — secondary column on request only.
 Full spec: `Feature/Session-Briefing-System/session-briefing.md`.
 

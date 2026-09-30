@@ -61,6 +61,10 @@ Then emit ONE proposal via the standard shape (route the actual build through `a
 | Source (cluster / dimension) | Proposed defender | Layer (new-hook / refine-hook / sharpen-phrase) | Exact change |
 ```
 
+**🚨 TRACK IT (2026-09-30 per みや — proposals were logged once and forgotten):** the same turn you emit the proposal, record it in the proposal tracker so the weekly audit rules it BUILD / DROP / DEFER:
+`node core/slips.js add --type proposal --category bounty --qa QA-<num> --evidence "<proposed defender + exact change> · eval: <how we'd know it works>" --caught-by self`
+Emit `bounty proposal tracked ✓`. It then shows under **💡 Open proposals** in `system/slip-dashboard.md` until ruled. **Banned**: a proposal that exists only in the reply or the qa_doc.
+
 On みや's nod → build via the proper skill → then **stamp the harvested slip rows** `bounty_actioned=@now` so they are never re-proposed. One refinement per bounty — never a firehose. If nothing qualifies, emit `refinement: none this quest` explicitly (silent skip is banned).
 
 ### Step 5 — Bank to MemoryCore main

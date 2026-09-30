@@ -80,7 +80,7 @@ def main():
         fail('destination must be a .png file: ' + a.dst, t0, a.dst)
     dst_dir = os.path.dirname(os.path.abspath(a.dst))
     if not os.path.isdir(dst_dir):
-        fail('destination folder does not exist (create the cycle "2. Fix" folder first): ' + dst_dir, t0, a.dst)
+        fail('destination folder does not exist (use "2. Fix" for cycle 1, the "N. Rework" root after): ' + dst_dir, t0, a.dst)
 
     try:
         boxes = [parse_box(b) for b in a.box]
@@ -89,8 +89,8 @@ def main():
         fail(str(e), t0, a.dst)
 
     warns = []
-    if not re.search(r'[\\/]2\. Fix$', dst_dir):
-        warns.append('destination is not a "2. Fix" folder — fix photos belong in the cycle 2. Fix folder')
+    if not re.search(r'[\\/](2\. Fix|\d+\. Rework)$', dst_dir, re.I):
+        warns.append('destination is not "2. Fix" (cycle 1) or an "N. Rework" root (later cycles)')
     if not NAME_RE.match(os.path.basename(a.dst)):
         warns.append('file name should look like "<n>. <TUGASAN KOD> - <what changed>.png"')
 

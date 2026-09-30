@@ -52,6 +52,13 @@ ORDER BY adk.a_dok_keluaran_id, sd.versi_dok DESC;
 ```
 Pick the row that matches the BA's document type (kod/nama) AND is the **latest active** (`flag_aktif='Y'`, highest `versi_dok`). That row's `lokasi_fail` + `dokumen_revision_id` are the deliverables.
 
+## Retrieve-only ask (BA wants the current doc out of PROD for the user to edit)
+Hand みや ONE copy-paste box, exactly this shape (added 2026-09-29 per みや, #282198). `<STATE>` `<ENV>` come from the ticket, e.g. `MLK PROD`:
+```
+Hi infra, kindly need your help to download this file from <STATE> <ENV>. Thank you.
+<lokasi_fail>
+```
+
 ## STEP 2 — deliverable to hand みや (Task folder `2. Fix/PATCH-REQUEST-<num>.txt`)
 Two blocks he forwards:
 ```

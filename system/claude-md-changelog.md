@@ -10,6 +10,12 @@
 
 ---
 
+## v1.73 — 2026-09-29 (per みや, /goal eSOKONGAN triage)
+
+**§Vocabulary "eSOKONGAN ticket"** (new, boot-loaded): ALWAYS = Tracker eSOKONGAN (id 51, the SLA tickets), never the Redmine project "eSOKONGAN MELAKA". Ticket order: eSOKONGAN tracker → anything PROD (Data Patching / Internal Issue PROD / PROD-CR) → rest; inside each, Priority Critical > High > Medium > Low, then urgent-worded descriptions/journals first. **Paired**: `quest/redmine-board.js` (table order flipped, Severity column + URGENT flag on all three tables, urgent banner, priority-first ranking inside PROD and other) · `domain/list-redmine/eval.js` (order + severity + urgent-evidence assertions) · list-redmine / sweep / retrieve-redmine SKILL.md · session-briefing.md 3-DAY RULE header · auto-memory `feedback_esokongan_means_tracker.md`. Spec-preservation: the 2026-09-22 three-table split is kept; only table order (PROD was first) and within-table rank (priority now leads) change; 3-DAY age is the tie-break.
+
+---
+
 ## v1.72 — 2026-09-28 (per みや, #256334)
 
 **§Vocabulary "awareness"** (new, boot-loaded): "awareness" = the context a workflow / feature / skill LOADS while it runs; "add X to <workflow> awareness" = put X into that workflow's loaded file (its SKILL.md / hook-injected text / pre-emit gate) so it fires every time the workflow runs. Banned: treating it as a one-off, or parking a single-workflow rule in CLAUDE.md. **§8 Task-folder default contents** += red-box UI fix photo(s) in `2. Fix/`. **Paired**: `.claude/skills/quest/SKILL.md` pre-emit gate row 🖼️ UI fix → red-box fix photo (copy BA's screenshot, red box + short Malay label on the changed area, save to the cycle's `2. Fix\`, view it before hand-back, emit `FIX-PHOTO: <file> ✓`). Primitive: skill-only (system-design Rule 7, no hook until a slip is observed). Spec-preservation: additive; the Task-folder "ask before adding any file" rule is unchanged — the fix photo is now a named default deliverable, not an ask-first extra. Origin: みや asked for the red-box photo of the #256334 PYPDBB/SSPDBB fixes and for it to be "added into quest workflow awareness". **Same day, hardened**: Feature `domain/fix-photo/` born via forge — `mark.py` (drawing + self-checks + log) · Stop BLOCK gate `fix-photo.check.hook.js` (hand-back + UI words + etanah terms + BA-image evidence, no valid `FIX-PHOTO:` line) · eval 42/42 (24 hook + 17 script + 1 end-to-end, 31-row adversarial table in the README) · live replay on the real #256334 transcript blocked without a photo line and passed with one. The quest SKILL.md row now points at the script and the gate.
@@ -192,3 +198,9 @@ Added 2026-05-13 per みや.
 
 ## v1.71 — 2026-08-16
 **§Version-bump discipline gains the assembled UPDATE-PIPELINE pointer** → `domain/claude-md-watch/README.md`: the complete CLAUDE.md change ceremony (change-checklist → trim-guard harness → mandatory adversarial pass for deletions → byte-parity moves → gate battery → watch registration with SHA-anchored rollback + per-boot self-alert). Assembles the 2026-08-16 weekend-audit builds into one referenced procedure. Additive pointer only.
+
+## v1.74 — 2026-09-30
+- Added §Explanation REPLY SKELETON line (one numbered section per topic · tables carry data · explanation as bullets, one fact each, very short sentences · no paragraphs / multi-sentence cells). Body: reply-shape-spec.md §1-0.
+- Why: miya 2026-09-30 after the quest-bounty audit reply mixed topics in long cells; the 2026-08-19 ask (feedback_reply_separation_of_concerns) said 'fold into the spec at next pass' and never was.
+- Spec preservation: additive; pillar, 1a, 1b and the situation table untouched.
+

@@ -14,4 +14,4 @@ Reply-structure fundamentals (miya 2026-08-19, QA-274914 session — his verbati
 3. The rest of the existing reply rules apply where they do not clash.
 
 **Why:** he named this the fundamental he needs beside the audited shape rules, after the numbered-section replies in this session landed well.
-**How to apply:** every multi-topic reply opens with numbered sections mirroring his asks (the TurnChecklistGate numbering is a good anchor); inside each section a table first, bullets only as trailing context. Canonical spec home is `.claude/reply-shape-spec.md` — fold in at the next claude-md-watch pipeline pass.
+**How to apply:** every multi-topic reply opens with numbered sections mirroring his asks (the TurnChecklistGate numbering is a good anchor); inside each section a table first, bullets only as trailing context. Canonical spec home is `.claude/reply-shape-spec.md` — FOLDED 2026-09-30 into reply-shape-spec §1-0 + CLAUDE.md v1.74 REPLY SKELETON. Bullets = very short sentences, one fact each (added 2026-09-30).

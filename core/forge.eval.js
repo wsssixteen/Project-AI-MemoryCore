@@ -32,7 +32,7 @@ function check(n, c, d) { results.push({ n, pass: !!c, d }); }
 
 // F1 — birth
 let r = runForge(['new', 'check', 'probe-check', '--event', 'Stop',
-  '--symptom', 'eval fixture symptom 2026-09-06', '--goal', 'eval probe produces a green row', '--signal', 'the row exists', '--retention', 'regenerate', '--trigger', 'eval probe trigger for sandbox test', '--action', 'flag probe', '--replay', 'sandbox probe replay case',
+  '--symptom', 'eval fixture symptom 2026-09-06', '--goal', 'eval probe produces a green row', '--signal', 'the row exists', '--retention', 'regenerate', '--footprint', 'on-demand: none (eval probe)', '--trigger', 'eval probe trigger for sandbox test', '--action', 'flag probe', '--replay', 'sandbox probe replay case',
   '--route', 'check', '--route-why', 'detectable trigger', '--nod', 'forge-eval-fixture']);
 check('F1 exit 0', r.status === 0, 'exit=' + r.status + ' err=' + (r.stderr || '').slice(0, 200));
 check('F1 hook file born', fs.existsSync(path.join(TMP, 'domain', 'probe-check', 'probe-check.check.hook.js')), '');
@@ -45,22 +45,28 @@ check('F1 echo emitted', /ECHO\s+Trigger: when eval probe trigger/.test(r.stdout
 
 // F2 — collision → refine-first
 r = runForge(['new', 'check', 'probe-check', '--event', 'Stop',
-  '--symptom', 'eval fixture symptom 2026-09-06', '--goal', 'eval probe produces a green row', '--signal', 'the row exists', '--retention', 'regenerate', '--trigger', 'eval probe trigger for sandbox test', '--action', 'flag probe', '--replay', 'sandbox probe replay case', '--nod', 'forge-eval-fixture']);
+  '--symptom', 'eval fixture symptom 2026-09-06', '--goal', 'eval probe produces a green row', '--signal', 'the row exists', '--retention', 'regenerate', '--footprint', 'on-demand: none (eval probe)', '--trigger', 'eval probe trigger for sandbox test', '--action', 'flag probe', '--replay', 'sandbox probe replay case', '--nod', 'forge-eval-fixture']);
 check('F2 collision exit 3', r.status === 3, 'exit=' + r.status);
 check('F2 refine-first suggested', /refine-first/.test(r.stdout), r.stdout.slice(0, 200));
 
 // F3 — missing --nod
-r = runForge(['new', 'check', 'nod-less-probe', '--event', 'Stop', '--symptom', 'eval fixture symptom 2026-09-06', '--goal', 'eval probe produces a green row', '--signal', 'the row exists', '--retention', 'regenerate', '--trigger', 't', '--action', 'a', '--replay', 'r']);
+r = runForge(['new', 'check', 'nod-less-probe', '--event', 'Stop', '--symptom', 'eval fixture symptom 2026-09-06', '--goal', 'eval probe produces a green row', '--signal', 'the row exists', '--retention', 'regenerate', '--footprint', 'on-demand: none (eval probe)', '--trigger', 't', '--action', 'a', '--replay', 'r']);
 check('F3 missing nod exit 2', r.status === 2, 'exit=' + r.status);
 
 // F3b — Rule 13 WHY-chain (2026-09-06): missing --goal → exit 2; a goal that restates the trigger → exit 2
-r = runForge(['new', 'check', 'goal-less-probe', '--event', 'Stop', '--symptom', 's', '--signal', 'sig', '--retention', 'keep', '--trigger', 't', '--action', 'a', '--replay', 'r', '--nod', 'n']);
+r = runForge(['new', 'check', 'goal-less-probe', '--event', 'Stop', '--symptom', 's', '--signal', 'sig', '--retention', 'keep', '--footprint', 'on-demand: none (eval probe)', '--trigger', 't', '--action', 'a', '--replay', 'r', '--nod', 'n']);
 check('F3b missing --goal exit 2', r.status === 2 && /--goal/.test(r.stderr), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 80));
-r = runForge(['new', 'check', 'trigger-goal-probe', '--event', 'Stop', '--symptom', 's', '--goal', 'fires on every Stop', '--signal', 'sig', '--retention', 'keep', '--trigger', 't', '--action', 'a', '--replay', 'r', '--nod', 'n']);
+r = runForge(['new', 'check', 'trigger-goal-probe', '--event', 'Stop', '--symptom', 's', '--goal', 'fires on every Stop', '--signal', 'sig', '--retention', 'keep', '--footprint', 'on-demand: none (eval probe)', '--trigger', 't', '--action', 'a', '--replay', 'r', '--nod', 'n']);
 check('F3c goal-restates-trigger exit 2', r.status === 2 && /restates the trigger/.test(r.stderr), 'exit=' + r.status);
-r = runForge(['new', 'check', 'bad-retention-probe', '--event', 'Stop', '--symptom', 's', '--goal', 'a real outcome', '--signal', 'sig', '--retention', 'forever', '--trigger', 't', '--action', 'a', '--replay', 'r', '--nod', 'n']);
+r = runForge(['new', 'check', 'bad-retention-probe', '--event', 'Stop', '--symptom', 's', '--goal', 'a real outcome', '--signal', 'sig', '--retention', 'forever', '--footprint', 'on-demand: none (eval probe)', '--trigger', 't', '--action', 'a', '--replay', 'r', '--nod', 'n']);
 check('F3d bad --retention exit 2', r.status === 2 && /retention/.test(r.stderr), 'exit=' + r.status);
 
+// F3e/F3f — system-rules Rule 7 (2026-09-29): missing --footprint → exit 2; unknown trigger class → exit 2; README carries the line
+r = runForge(['new', 'check', 'footprint-less-probe', '--event', 'Stop', '--symptom', 's', '--goal', 'a real outcome', '--signal', 'sig', '--retention', 'keep', '--trigger', 't', '--action', 'a', '--replay', 'r', '--nod', 'n']);
+check('F3e missing --footprint exit 2', r.status === 2 && /--footprint/.test(r.stderr), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 80));
+r = runForge(['new', 'check', 'bad-footprint-probe', '--event', 'Stop', '--symptom', 's', '--goal', 'a real outcome', '--signal', 'sig', '--retention', 'keep', '--footprint', 'light', '--trigger', 't', '--action', 'a', '--replay', 'r', '--nod', 'n']);
+check('F3f footprint without a trigger class exit 2', r.status === 2 && /Rule 7/.test(r.stderr), 'exit=' + r.status);
+check('F1b born README carries footprint:', /^footprint: on-demand/m.test(fs.readFileSync(path.join(TMP, 'domain', 'probe-check', 'README.md'), 'utf8')), '');
 // F4 — refine resolves a pre-forge flat hook (.claude/hooks/<name>.js) and runs its <name>.eval.js pin
 fs.mkdirSync(path.join(TMP, '.claude', 'hooks'), { recursive: true });
 fs.writeFileSync(path.join(TMP, '.claude', 'hooks', 'flat-probe.js'), '// flat hook\n');

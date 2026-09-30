@@ -27,7 +27,7 @@ Invoke at ticket **close** / miya says **"test passed"** / after a **confirmed p
 
 ## Wording style
 
-The prose close-message uses miya's plain sentence voice — see `feedback_ticket_writing_style.md`. This script produces only the git block; the surrounding message follows that style. Style converges over time from miya's amendments (the improvement dimension of this feature).
+The prose close-message uses miya's plain sentence voice — see `feedback_ticket_writing_style.md`. **v1.1 (2026-09-29, #282061)**: `--ba <first name> [--envs "internal & staging"]` prints miya's BA pass note around the git block (`Salam <BA>, have deployed fixes to <envs>. Please help to verify.` · `Issues found and resolved:` · `1. ` · git block · `Thank you very much.`), so the shape comes from the tool, not from a memory file. Without `--ba` the output is unchanged (smoke-tested both ways). Only the numbered list is written by hand. Style converges over time from miya's amendments (the improvement dimension of this feature).
 
 state-scoped: no, state-agnostic — module + repo are parameters; works for any state (Melaka now, Perak later) with no path change.
 

@@ -238,6 +238,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\probe-local-only-gate\\\\probe-local-only-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\nul-redirect-gate\\\\nul-redirect-gate.check.hook.js\""
           }
         ]
       },
@@ -305,15 +309,6 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\scan\\known-bug-surfacer.hook.js\" PreToolUse"
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__postgres-mlkprod-pg__.*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\prod-db-confirm\\prod-db-confirm.discipline.hook.js\" PreToolUse"
           }
         ]
       },
@@ -447,10 +442,6 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\quest-bounty\\discipline.hook.js\" Stop"
-          },
-          {
-            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\quest-deferrals-gate\\quest-deferrals-gate.discipline.hook.js\" Stop"
           },
           {
@@ -507,7 +498,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\sql-schema-verify\\\\sql-schema-verify.check.hook.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\sql-schema-verify\\sql-schema-verify.check.hook.js\" Stop"
           },
           {
             "type": "command",
@@ -515,7 +506,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\attachment-ledger-gate\\\\attachment-ledger-gate.check.hook.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\attachment-ledger-gate\\attachment-ledger-gate.check.hook.js\" Stop"
           },
           {
             "type": "command",
@@ -578,15 +569,6 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\slip-count-tracker.js\" PostToolUse"
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\quest-bounty\\quest-bounty.hook.js\" PostToolUse"
           }
         ]
       },

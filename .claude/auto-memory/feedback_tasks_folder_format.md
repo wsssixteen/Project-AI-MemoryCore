@@ -1,24 +1,24 @@
 ---
 name: Tasks folder file format
-description: Task folder structure, file format, and rework folder convention for 1. Tasks\Melaka\
+description: 🚨 Task folder shape v2026-09-30 — 1. Brief · 2. Fix · N. Rework\Brief only for OUR deploy cycles; no notes txt, no 1. Simulate; test data in quest MD
 type: feedback
 originSessionId: 2d6b5b34-1a73-4255-9713-7b3e34579056
 ---
-Always create `.txt` files inside the Tasks folder (`1. Tasks\Melaka\...`), not `.md`.
+Task folder (`1. Tasks\<State>\<n>. <tracker> #<num> - ...\`) shape, per みや 2026-09-30 (#280540):
 
-**Why:** Tasks folders are simple working folders — plain text is the default. Only use a different format if みや explicitly requests it.
-
-**How to apply:** Any time Phase 0 creates files in the Task folder (Brief, notes, references), use `.txt` extension unless told otherwise.
-
-**Folder structure (added 2026-04-23):** Create all standard folders and files at quest start, even if empty:
 ```
-0. Brief\
-1. Simulate\
-2. Fix\
-3. Rework\
-1. <NNN NNN>.txt   ← blank, for みや to fill (legacy folders: `1. Notes.txt`; renamed 2026-05-31)
+1. Brief\        BA files · History.txt · Description.txt   (old folders keep 0. Brief — never renamed)
+2. Fix\          our cycle-1 fixes / scripts / photos
+3. Rework\       our cycle-2 deploy
+   Brief\        BA's new files for that cycle only
+   1. … 2. …     our fixes / scripts / photos, loose in the rework root
 ```
 
-**Rework folder rule:** `3. Rework\` is only created when a quest is re-opened. All investigation and fix files produced during the rework go inside `3. Rework\` — not in `2. Fix\`.
+- **No** notes txt (`1. NNN NNN.txt`) and **no** `1. Simulate\` — test data goes to the quest MD `## Test data` via `node quest/notes.js --qa <num>`.
+- **A Rework folder = a separate change WE deployed.** Never made from a Redmine status change or a colleague's rework. Created by `quest/active-cli.js` (→ `lib/task-folder.js ensureCycleFolder`) when the quest goes `status=active` and the block has more `closed*=` stamps than Rework folders.
+- **Banned**: `2. Fix\` inside a Rework folder · empty Rework folders · a notes txt.
+- Files in the Task folder are `.txt`, not `.md` (unchanged).
 
-**Why:** Consistent structure from the start means nothing is missing when needed. Rework folder separation keeps the original fix artifacts clean and distinguishable from rework artifacts.
+**Why:** status-driven creation made 16 empty Rework folders (#244600 had 3–7. Rework, all empty); 67 blank notes files; みや wants folders "cleaner & leaner", and the rework history only needs to track OUR separate deploys.
+
+**How to apply:** read/write through `lib/task-folder.js` (briefDir · latestBriefDir · allBriefDirs · ensureCycleFolder); never hardcode `0. Brief`.
