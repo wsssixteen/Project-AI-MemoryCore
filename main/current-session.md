@@ -1,5 +1,14 @@
 # Current Session
 
+**Last Activity**: 2026-09-30 17:00 — QA-281423 follow-ups: hooks retired (prod-db-confirm · quest-bounty skip-warning + auto-save) · audit false-RETIRE fixed · bounty proposals tracked · CLAUDE.md v1.74 reply skeleton · DE.
+
+## Session Recap (2026-09-30 16:00-17:00, worktree session-256334-recovery)
+- **Retired (miya)**: `prod-db-confirm` (PROD read-only via et_read; it DID fire, 118 log rows) · quest-bounty `discipline.hook.js` (dead since archive-quest writes its own log line; 1,039 runs, 0 fires) · `quest-bounty.hook.js` (Bash-only matcher, pushed branch not main; DE step 10 saves instead).
+- **Fixed**: `lib/audit-briefing.js` read own-log files from the worktree ROOT → working hooks showed "0 fires, RETIRE?". Now reads MAIN_ROOT. sql-schema-verify (164 fires, blocked today) kept.
+- **Built**: quest-bounty SKILL Step 4 — every proposal goes to `core/slips.js --type proposal --category bounty` (dashboard Open proposals, weekly ruling). CLAUDE.md v1.74 REPLY SKELETON + reply-shape-spec §1-0 (sections per topic · tables for data · short-sentence bullets), folding the unfolded 2026-08-19 ask.
+- **Memory**: feedback_ticket_writing_style += statements not implications · not bossy · Redmine = Textile. feedback_reply_separation_of_concerns marked folded.
+- **Slips (miya)**: reply-shape (topics mixed, long cells; 08-19 fold never done).
+- **Commits**: ee26f55f · 5a5adfd3 · b0073bda (all on main).
 **Last Activity**: 2026-09-30 16:45 — redmine-write-gate v1.3 (field reads no longer count as a write) · DE.
 
 ## Session Recap (2026-09-30, redmine-write-gate v1.3, main checkout)
@@ -21,12 +30,3 @@
 - **Open**: empty source Task folder `244. AH ...` (`0. Brief`, `2. Fix`) locked by Explorer — files are in Archive\, delete the empty shell once Explorer is closed. DB gateway backends blocked by Windows Application Control this morning.
 
 **Last Activity**: 2026-09-30 15:58 — QA-281423 consultation answered (Pemilik Tanah source mapping posted by miya to Teknikal) · closed + archived · DE.
-
-## Session Recap (2026-09-30, QA-281423, worktree session-256334-recovery)
-- **Ticket**: Teknikal Laporan Tanah 2.3(b)(xi) Pemilikan dan Alamat shows the Pemohon (SYARIKAT A), not the Pemilik Tanah (LIOW ENG KEONG). PTMLK/03/L/PRBB/2026/14 on MLIT. Syakir (Teknikal) asked Pelupusan for the data mapping.
-- **Answer**: umm_a_pihak_bkptg holds only the Pemohon (flag_pemohon Y). Owner = ind_pihak_bkptg via idHkmlk → active ind_versi_dhd (versi_akhir_id) + flag_kuatkuasa + JENIS_PB_KEEMPUNYAAN. Trap: every PRBB pemohon row has jns_pihak_bkptg_id 625 (432/433 MLIT). Individu/Syarikat = jns_no_id 452/456.
-- **Saved**: archive/QA-281423.md · DATABASE.md §30 · urusan/PRBB-TICKETS note · Task folder → Archive\.
-- **Slips (miya)**: 2× ticket-writing-style — long sentences; implication instead of statement. Also: miya rejected bossy wording; Redmine needs Textile (pasted markdown table flattened).
-- **Open**: feedback_ticket_writing_style memory not yet sharpened (worktree guard blocked the edit) — do from main checkout.
-**Last Activity**: 2026-09-30 15:30 — ADHOC-PERMIT-2026-1 all-urusan early-mint audit saved as bug awareness (LATENT-BUGS L16/L17) · save routing fixed (DE Step 7 table + adhoc-save row 6) · adhoc-save-audit moved to Task folder v13 · DE.
-**Last Activity**: 2026-09-30 16:05 — ADHOC-PERMIT-2026-1 CLOSED + archived (miya ruling: PPJK/PSBS fix in a future release or when a ticket lands) · Next steps rows now need a "What it means" sentence (next-steps-shape check) · 6 overdue watches resolved · DE.

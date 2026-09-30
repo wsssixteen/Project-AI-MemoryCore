@@ -100,3 +100,12 @@
 | A3 debugging | The fix kept every prior fixture green only after one regex was widened again (field KEYS count, field READS do not); a narrower first cut would have let a helper-hidden `{ notes, status_id }` write through. Fixture F54 now pins it. | v1.3 draft 1 → draft 3 |
 | A4 etanah | ⏭ no etanah work this session | — |
 | A5 sweep | ⏭ no sweep this session | — |
+
+## Session: hook retire + reply skeleton (17:00)
+| Axis | Instance | Verdict |
+|---|---|---|
+| A1 | audit-briefing read own logs from worktree ROOT -> false RETIRE on 3 working hooks | fixed (MAIN_ROOT); proposal: mechanical reply-skeleton check |
+| A2 | bounty proposals logged once, never followed | fixed: tracked via slips --type proposal |
+| A3 | ⏭ no debugging | |
+| A4 | ⏭ no etanah change | |
+| A5 | ⏭ no sweep | |
