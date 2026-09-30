@@ -8,6 +8,7 @@
 - **Retry** `304b7721` 13:12 SUCCESS only because JBoss was already down (no "Stopping fudge1 JBoss..." line); console build `11:19:55` unchanged → no fix seen. Expect repeat on next deploy to a running `.49`. MLIT pelupusan back (Laman Utama 200). miya messaged Nick; WP (James) had the same the day before; 25 FAILED MLK runs 25-30 Sep in History.
 - **How Ruri reads the console**: Claude in Chrome (miya's Keycloak session); full log JSON at `/etanah-deployment/api/deployment-history/<id>` · live at `/api/deployment-queue/<id>/live`.
 - **Built**: deploy skill v1.3 §8 (step→owner table, keywords, known 137 case), eval 52/52, `2f509f2d`.
+- **Open (miya's rulings)**: bake fudge1 line into ENV-ARCHITECTURE.md? · retire 5 zero-fire hooks? · reconcile: 274266 / 282061 / 280540 Resolved on Redmine, 264355 / 282198 with others, #281423 has no block · worktree cleanup (59 folders = 16.34 GB of 16.82 GB) + move creation to `E:\Dev\worktrees`.
 - **Slip (self)**: suggested Nick "probably changed the stop script" without evidence; miya asked "how do we know"; corrected with the console build-time diff.
 
 **Last Activity**: 2026-09-30 13:50 — #281324 re-verified + plan set (sub-flow only) · weekly planner Wed-Fri from Redmine · #281423 synced (Teknikal data-mapping consult) · DE.

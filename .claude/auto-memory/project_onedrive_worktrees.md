@@ -19,4 +19,6 @@ metadata:
 
 **Recurred 2026-09-27**: 66 folders / 19 GB under `.claude/worktrees/`, only 2 registered with git; the boot sweep keeps folders holding never-committed files or unmerged branches, so the pile regrows. Salvage via `/worktree-retrieve` before any delete. The rename to Lapis-Lazuli ([[project-name-lapis-lazuli]]) is the natural moment to move worktree creation outside OneDrive.
 
+**Measured 2026-09-30**: project folder 16.82 GB, of which `.claude/worktrees/` = **16.34 GB (97%) in 59 folders**; everything else ≈ 0.5 GB. Session transcripts (2.05 GB) live outside the repo in `%USERPROFILE%\.claude\projects` — archiving/deleting a session does NOT shrink the project folder; only removing its worktree does. みや asked how to stop the growth; cleanup (salvage then prune) + moving worktree creation to `E:\Dev\worktrees` offered, not yet ruled. Gitignored files (quest/active.txt, feature logs) exist per worktree — sync active.txt edits to the main repo copy before a worktree goes.
+
 Pairs with [[project-onedrive-branch-refs]] (same OneDrive `.git` sync mechanism, ref side).
