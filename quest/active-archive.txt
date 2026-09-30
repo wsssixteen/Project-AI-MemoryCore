@@ -4290,3 +4290,19 @@ branch=none-until-ticket
 issue_one_liner=Read-only audit: skrin 338 (MlkPengiraanBayaranLesenForm.performCustomSave():647) mints No Lesen/Permit early. PROD 62 numbers 2026: PPTPB 6 early (fix owned by #282061 C1), PLPS 3 residue (#273461), PPJK latent (0 apps at PYSK yet), PSBS latent throw (no counter). Others mint at issuing tugasan. Nothing fixed; miya decides per urusan
 closed=2026-09-30
 close_note=miya ruling 2026-09-30: PPJK/PSBS fix in a future release or when a ticket lands; kept as LATENT-BUGS L16/L17 + register A36 LATENT
+
+qa=ADHOC-PRBB-2026-6
+phase=closed
+status=archived
+ticket_type=adhoc
+env=PROD
+urusan=PRBB
+quest_start=2026-09-30
+local_test_confirmed=false
+adhoc_register_row=A38
+qa_doc=projects/coding-projects/archive/ADHOC-PRBB-2026-6/ADHOC-PRBB-2026-6.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\244. AH - PROD - PRBB - Pembatalan Permohonan Jana Ralat GIS
+branch=none-until-ticket
+issue_one_liner=PROD PDTMT Utiliti Pembatalan Permohonan PTMLK/01/L/PRBB/2026/13 Jana ralat NPE = common/GIS: PROD GIS table et_ptg.log_service missing (server.log 6x 09:50-10:03) + common PostgresUpdateService null helper. OWNED-ELSEWHERE, common told. Pelupusan try/catch enhancement parked in qa_doc, not applied
+closed=2026-09-30
+close_note=OWNED-ELSEWHERE common/GIS per miya
