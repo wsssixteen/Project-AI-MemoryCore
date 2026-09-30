@@ -14,11 +14,13 @@
     </CalendarTrigger>
     <LogonTrigger>
       <Enabled>true</Enabled>
+      <UserId>__SID__</UserId>
       <Delay>PT10M</Delay>
     </LogonTrigger>
   </Triggers>
   <Principals>
     <Principal id="Author">
+      <UserId>__SID__</UserId>
       <LogonType>InteractiveToken</LogonType>
       <RunLevel>LeastPrivilege</RunLevel>
     </Principal>
