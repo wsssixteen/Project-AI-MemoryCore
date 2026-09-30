@@ -24,5 +24,12 @@ retention: rotate monthly
 
 **False-positive cost:** a trivial skill/hook edit is blocked until the consult or the bypass token. Accepted — skill/hook creation is exactly where the consult must not be skipped.
 
+**Stop side (2026-09-30):** `proposal-judge.js`, called by the same hook file when `hook_event_name` is `Stop`. A reply that proposes a system component (future-tense build intent + a named system location) is blocked unless both skills ran this session AND it carries a `UNIVERSAL:` line naming the class of cases, with no ticket number, permohonan id, etanah class, CONSTANT or kod on it. Bypass `[skip-design-proposal: <real reason>]`. Registration: add this hook file to `domain/bundles/stop-claim-integrity.json` (no new Stop registration, system-rules Rule 7).
+symptom (Stop side): 2026-09-30 — submit-path-gate options were proposed before system-rules/system-design loaded, and the proposed check was keyed to one tugasan; miya: a fix to his system is a universal rule and the rules load first.
+goal (Stop side): no system-component proposal reaches miya unless it was designed with both skills loaded and states the universal class it covers.
+goal_signal (Stop side): every allowed-proposal row in log.jsonl has a clean UNIVERSAL line; blocked-proposal rows fall to zero repeats per session.
+footprint: per-turn: runs inside the existing stop-claim-integrity bundle process, reads the transcript tail (max 20 MB), no new process.
+state-scoped: no, state-agnostic.
+
 **History:**
 - 2026-06-18 — created per みや. Routed through system-design + system-rules. Replaces the advisory consult-reminder in `system-edit-gate.js` (which only named the placeholder `system-design-router`, never blocked) and the WARN-only `self-gate-impulse.js` for the skill/hook case. `self-gate-impulse` retired the same day to avoid double-fire on these paths.

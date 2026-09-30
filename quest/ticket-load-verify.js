@@ -105,10 +105,11 @@ const found = findTaskFolder(num);
 if (!found) die(`no task folder containing "${num}" under\n   ${TASKS_ROOT}\n   Run: node quest/redmine-sync.js ${num} --create`);
 const { folder, archived } = found;
 
-const briefDir = path.join(folder, '0. Brief');
+const TF = require('../lib/task-folder');
+const briefDir = TF.briefDir(folder); // 1. Brief, legacy 0. Brief
 const historyPath = path.join(briefDir, 'History.txt');
 const descPath = path.join(briefDir, 'Description.txt');
-if (!fs.existsSync(historyPath)) die(`no 0. Brief/History.txt in\n   ${folder}\n   Run: node quest/redmine-sync.js ${num}`);
+if (!fs.existsSync(historyPath)) die(`no ${path.basename(briefDir)}/History.txt in\n   ${folder}\n   Run: node quest/redmine-sync.js ${num}`);
 
 const historyText = fs.readFileSync(historyPath, 'utf8');
 const journals = parseJournals(historyText);
@@ -140,16 +141,17 @@ const briefFiles = walk(briefDir, briefDir).filter(f => !/^(History|Description)
 // REWORK cycle k / ADDITION; a journal with more reopens than the disk has cycle folders
 // is flagged so the sync (which now creates folders by reopen TIME) gets re-run.
 const REWORK_IDS = new Set(['23', '31', '38']);
+// 2026-09-30 #280540: BA can send a ticket back from Resolved straight to In Progress
+// (3 → 2), never touching a Rework id. Leaving a done status counts as a reopen too.
+// Done = 3 Resolved · 5 Closed · 25 Acknowledged · 36 Ready in PROD (Redmine /issue_statuses).
+const DONE_IDS = new Set(['3', '5', '25', '36']);
 const redmineStatus = (headerText.match(/^Status:\s*(.+?)\s*\|/m) || [])[1] || 'unknown';
-const cycleDirs = fs.readdirSync(folder, { withFileTypes: true })
-    .filter(e => e.isDirectory() && /^\d+\.\s*(Rework|New|Addition)\s*$/i.test(e.name))
-    .map(e => ({ name: e.name, num: parseInt(e.name) }))
-    .sort((a, b) => a.num - b.num);
+const cycleDirs = TF.cycleFolders(folder);
 const reopens = [];
 for (const j of journals) {
     for (const line of j.body) {
         const m = line.match(/^\s*\[attr\]\s+status_id:\s*(\S+)\s*→\s*(\S+)/);
-        if (m && REWORK_IDS.has(m[2]) && !REWORK_IDS.has(m[1])) reopens.push(j.ts);
+        if (m && ((REWORK_IDS.has(m[2]) && !REWORK_IDS.has(m[1])) || (DONE_IDS.has(m[1]) && !DONE_IDS.has(m[2])))) reopens.push(j.ts);
     }
 }
 const cycleK = cycleDirs.length + 1;
@@ -159,8 +161,11 @@ if (newestCycle && /New|Addition/i.test(newestCycle.name)) cycleVerdict = `ADDIT
 else if (/rework/i.test(redmineStatus)) cycleVerdict = `REWORK cycle ${cycleK}`;
 else if (!cycleDirs.length && !reopens.length) cycleVerdict = 'NEW';
 else cycleVerdict = `REWORK cycle ${cycleK} (status now "${redmineStatus}")`;
-const cycleWarn = reopens.length > cycleDirs.length
-    ? `⚠ ${reopens.length} reopen(s) in the journal vs ${cycleDirs.length} cycle folder(s) on disk — one reopen's evidence may sit in an earlier cycle folder; re-run: node quest/redmine-sync.js ${num} (creates a folder only when a reopen is newer than the newest folder)`
+// v13 (2026-09-30, miya): cycle folders track OUR deploys, not Redmine reopens, so a reopen
+// count above the folder count is normal (a colleague's rework). The only warning left: the
+// ticket came back to us and nothing shows we started the next cycle.
+const cycleWarn = reopens.length && !cycleDirs.length && !/rework/i.test(redmineStatus) && archived === false
+    ? `⚠ ticket was sent back ${reopens.length}× (latest ${reopens[reopens.length - 1]}) — if WE shipped a change before, this is our next cycle: node quest/active-cli.js update QA-${num} status=active creates the Rework folder (needs closed= in the block)`
     : null;
 const cycleLine = `CYCLE: status=${redmineStatus} · folders=${cycleDirs.length ? cycleDirs.map(d => d.name).join(' · ') : 'none'} · reopens-in-journal=${reopens.length}${reopens.length ? ` (latest ${reopens[reopens.length - 1]})` : ''} · verdict=${cycleVerdict}`;
 

@@ -5,7 +5,7 @@
  * Builds a fake Tasks root (TLV_TASKS_ROOT) per case with a synced-looking History.txt and
  * numbered cycle folders, runs ticket-load-verify.js, and asserts the "CYCLE:" line.
  *   (1) two reopens + two cycle folders + status Rework   → REWORK cycle 3, no warning
- *   (2) two reopens + ONE cycle folder (the 278699 slip)   → warning "cycle folder is missing"
+ *   (2) two reopens + ONE cycle folder                     → REWORK cycle 2, no folder warning (v13)
  *   (3) no reopens, no folders, status New                 → NEW
  *   (4) newest folder "3. New"                             → ADDITION
  *   (5) --json carries the cycle object
@@ -75,7 +75,9 @@ const twoReopens = [
     fs.writeFileSync(path.join(root, '7. ES #990001 - eval fixture', '0. Brief', 'a.png'), '');
     const r = run(root);
     const line = (r.out.match(/CYCLE:.*/) || [''])[0];
-    check('(2) 2 reopens vs 1 folder → REWORK cycle 2 + missing-folder warning', /verdict=REWORK cycle 2$/.test(line) && /2 reopen\(s\) in the journal vs 1 cycle folder\(s\)/.test(r.out) && /redmine-sync\.js 990001/.test(r.out), line);
+    // v13 (2026-09-30): cycle folders track OUR deploys; 2 reopens vs 1 folder is normal
+    // (a colleague's rework) — no warning, and never a prompt to let the sync make a folder.
+    check('(2) 2 reopens vs 1 folder → REWORK cycle 2, no folder warning', /verdict=REWORK cycle 2$/.test(line) && !/cycle folder\(s\) on disk/.test(r.out), line);
     fs.rmSync(root, { recursive: true, force: true });
 }
 // (3) NEW

@@ -47,7 +47,7 @@ function loadText() {
   if (text) return text;
   const folder = arg('--folder');
   if (!folder) { console.error('need --folder or --text'); process.exit(1); }
-  const brief = path.join(folder, '0. Brief');
+  const brief = require('../../lib/task-folder').briefDir(folder); // 1. Brief, legacy 0. Brief
   let out = '';
   for (const f of ['Description.txt', 'History.txt']) {
     const p = path.join(brief, f);

@@ -198,3 +198,9 @@ Added 2026-05-13 per みや.
 
 ## v1.71 — 2026-08-16
 **§Version-bump discipline gains the assembled UPDATE-PIPELINE pointer** → `domain/claude-md-watch/README.md`: the complete CLAUDE.md change ceremony (change-checklist → trim-guard harness → mandatory adversarial pass for deletions → byte-parity moves → gate battery → watch registration with SHA-anchored rollback + per-boot self-alert). Assembles the 2026-08-16 weekend-audit builds into one referenced procedure. Additive pointer only.
+
+## v1.74 — 2026-09-30
+- Added §Explanation REPLY SKELETON line (one numbered section per topic · tables carry data · explanation as bullets, one fact each, very short sentences · no paragraphs / multi-sentence cells). Body: reply-shape-spec.md §1-0.
+- Why: miya 2026-09-30 after the quest-bounty audit reply mixed topics in long cells; the 2026-08-19 ask (feedback_reply_separation_of_concerns) said 'fold into the spec at next pass' and never was.
+- Spec preservation: additive; pillar, 1a, 1b and the situation table untouched.
+

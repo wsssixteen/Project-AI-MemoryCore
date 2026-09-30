@@ -1,6 +1,6 @@
 goal_status: draft (derived from hook-header on 2026-09-06; promote with node lib/goal-backfill.js promote quest-bounty)
 symptom: not recorded at birth (pre-Rule-13 feature)
-goal: quest-bounty-verify — domain/quest-bounty/discipline.hook.js — Stop hook Makes a SKIPPED quest-bounty VISIBLE. Eval wf_3c67b23f flagged that close-phase invokes quest-bounty via a prose step (~70-85% reliable) and a skip is invisible —
+goal: every archived quest leaves a harvest (qa_doc ## Bounty + knowledge) and ONE tracked refinement proposal; enforced by archive-quest.js harvest gate, proposals tracked via core/slips.js --type proposal
 goal_signal: a fire on: its trigger
 retention: rotate monthly
 # Power: quest-bounty
@@ -17,7 +17,7 @@ retention: rotate monthly
 | Trigger (wiring) | `close-phase` SKILL.md Phase 2 step 4 (invokes quest-bounty) | ✅ wired 2026-07-01 |
 | State flag | `system/slip-log.md` schema `bounty_actioned` | ✅ added 2026-07-01 |
 | Audit log | `domain/quest-bounty/log.jsonl` | ✅ this folder |
-| Discipline hook (verify it ran at archive) | `domain/quest-bounty/discipline.hook.js` | ⬜ pending |
+| Discipline hook + auto-save hook | RETIRED 2026-09-30 (miya): skip-warning could never fire (archive-quest.js writes the log line itself); save hook only matched Bash and pushed the branch, DE step 10 already saves to main | ✖ retired |
 | Eval (score a bounty run) | `domain/quest-bounty/eval.workflow.js` | ⬜ pending |
 
 ## Why (extend-over-create, per system-rules Rule 1)

@@ -14,6 +14,9 @@ metadata:
 
 **How to apply - the shape (from miya's own example, #276436):**
 - Short simple sentences. One idea per line.
+- STATEMENTS, never implications (2026-09-30, #281423): say the fact and its result outright; no "X can carry Y. This happens even when..." that makes the reader infer the point. Back it with the real count ("every PRBB pemohon row has 625, owner or not").
+- Not bossy: no "Do not use X" commands to another team. State the fact, let it guide them.
+- Redmine = Textile, not markdown: tables as |_. Head | rows |, code/columns in @...@ (underscores italicise otherwise). Hand the draft in a code block so it pastes raw.
 - Plain words. No file names, no line numbers, no code names, no jargon.
 - Normal human tone. Warm. No caps for emphasis. No "AI explaining".
 - Order: what we fixed + where to test it -> what is still broken + which side does not do it -> what DOES work (the comparison) -> what will show once the condition is met -> "Attached are the fixes required for X to check further." -> "Thank you."
@@ -129,6 +132,59 @@ Issues found and resolved:
 <git block>
 
 Thank you very much.
+```
+
+6. Dev-to-dev WhatsApp answer to a "why" question, Li Wen (Hasil) on Flowable Source vs Source expression (2026-09-30). He kept my draft and changed one word: the closing summary opener "Ringkasnya" became "Basically". Rule: in rojak, the connectors and fillers are casual English (Basically · Actually · just · so · currently), never formal Malay (Ringkasnya · Oleh itu · Maaf atas kekeliruan). Technical terms stay English too: "fixed value" not "nilai tetap", "value" not "nilai" (he asked "nilai tetap is basically value?" = a Malay translation of a dev term made him stop and decode it). Shape he approved: one fact per short paragraph, blank line between, concrete example with the real value, last line = the one-line rule.
+```
+Source tu untuk nama variable dalam parent flow. Flowable akan cari variable nama tu dan copy value dia.
+
+Kalau letak etanah-spoc-hasil kat Source, Flowable akan cari variable nama "etanah-spoc-hasil" dalam PDBB. Takde variable tu, so jadi null.
+
+Source expression pulak dia evaluate expression. ${'etanah-spoc-hasil'} tu string tetap, so value dia memang terus "etanah-spoc-hasil".
+
+Basically, nak pass variable guna Source. Nak pass fixed value guna Source expression.
+```
+
+7. Junior handover, hints not answers, #264355 (2026-09-29). To Farah (Siti Farhanih Abdul Razak). His final version below. Opener = which side + symptom + the working comparison, one line each. Numbered title + `<pre>` of WHERE to look (repo, branch, screen, file to start from, analog ticket), never the fix line. He CUT: "Fix dijangka kecil. Kalau rasa perlu ubah banyak, tanya saya dulu." and the "Skop" block ("Siap: push branch, bagitahu saya untuk review" is noise, she already does it; parking BA items as "tunggu BA" is wrong, the handover covers the WHOLE ticket). 🚨 Junior hint = symptom + WHERE to start + test data ONLY. NEVER state the cause or mechanism ("ID tak lalu Bayaran Pelbagai", "notifikasi ada tapi satu tugasan sahaja" = the answer, spoon-feeding; he raged at it). Pre-send check per `<pre>` line: does it say WHY it breaks? → cut it. 🚨 Junior tests on INTERNAL: test data comes from internal only, never staging (even if BA reproduced on staging). 🚨 Every item in the guide must be backed by a PROVEN fix from a quest sweep, never a proposed or untraced one (he asked "did you run full quest sweep").
+```
+Salam Farah,
+
+Ticket ni side AWAM.
+Surat Keputusan PRU tak papar di AWAM Status Permohonan bila ID di Bayaran Pelbagai.
+PRBB di tugasan yang sama papar surat.
+
+1. Mula dari screen
+<pre>
+   Repo: etanah-awam. Branch mlk/qa/264355 dari mlk/master.
+   Screen: AWAM > Status Permohonan, icon Surat Keputusan.
+   Start dari xhtml Status Permohonan.
+   Ikut syarat rendered icon tu sampai jumpa di mana surat Pelupusan ditapis.
+</pre>
+
+2. Banding PRU dengan PRBB
+<pre>
+   Tengok jenis dokumen surat keputusan PRU dan PRBB dalam umm_a_dok_keluaran.
+   Refer template.config.json di etanah-pelupusan untuk kod dokumen setiap urusan.
+   Refer eSOKONGAN #276584, logik AWAM yang sama.
+</pre>
+
+3. Test data (internal)
+<pre>
+   ...
+</pre>
+
+4. Surat Tolak tak papar di AWAM
+<pre>
+   Screen: AWAM > Status Permohonan, icon Surat Keputusan.
+   Guna jalan yang sama macam point 1. Banding apa beza Lulus dengan Tolak.
+</pre>
+
+5. Tiada notifikasi ke AWAM
+<pre>
+   Repo: etanah-pelupusan.
+   Cari sama ada Pelupusan pernah hantar notifikasi keputusan kepada pemohon.
+</pre>
+Thank you.
 ```
 
 **Before writing ANY Redmine note: run `node quest/redmine-sync.js <num>` and greet the live assignee.**

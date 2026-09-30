@@ -78,7 +78,9 @@ function activeQuests() {
 
 function briefVisuals(taskFolder) {
   try {
-    return fs.readdirSync(path.join(taskFolder, '0. Brief')).filter(f => !f.startsWith('.') && VISUAL.test(f));
+    // Every BA Brief: root (1. Brief / legacy 0. Brief) + each N. Rework\Brief.
+    return require('../../lib/task-folder').allBriefDirs(taskFolder)
+      .flatMap(d => fs.readdirSync(d)).filter(f => !f.startsWith('.') && VISUAL.test(f));
   } catch (e) { return []; }
 }
 

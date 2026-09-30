@@ -53,3 +53,8 @@ Deterministic backstop for **expansion-protocol Step 7** (the etanah-knowledge s
 ## Eval
 
 `node domain/de-knowledge-gate/de-knowledge-gate.eval.js` → 11/11 (10 verdict fixtures + 1 real-process effect check asserting exit 2 + rendered block reason).
+
+## v2 — router check (2026-09-30, per みや: "save everything into the appropriate already-decided structure")
+- Every `bake` row whose Home names an UPPER-CASE-DASHED `.md` must name a file listed in `etanah-knowledge/<state>/index.md`; otherwise BLOCK (`home-not-in-router`). Lower-case homes (main-memory.md, todo.md) and `drop`/`defer` rows are not checked.
+- Fail-open when no index.md is reachable (worktree without the untracked knowledge folder).
+- Spec preservation: every v1 signal/pass/block/bypass rule unchanged (eval cases 1-10 unchanged, all pass). Eval 18/18.

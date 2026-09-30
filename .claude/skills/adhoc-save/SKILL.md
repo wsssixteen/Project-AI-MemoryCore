@@ -15,10 +15,11 @@ description: Save an adhoc's findings as the full 4-part save-set (Task folder �
 | # | Part | Home | Written by |
 |---|---|---|---|
 | 1 | Task folder | `1. Tasks\<State>\<N+1>. AH - <ENV> - <URUSAN> - <desc>` with `0. Brief\` (brief.txt = BA verbatim + screenshots), `1. Simulate\`, `2. Fix\` | PowerShell `New-Item`; every file みや downloaded (the `@...\Desktop\...` / `Downloads` path in his message) is **MOVED** into `0. Brief\` with `Move-Item`, never copied — audit fails if a same-named file is still on Desktop/Downloads |
-| 2 | Notes file | `<Task folder>\1. <ADHOC-ID>.txt` | `node quest/notes.js --folder "<folder>" --qa <ADHOC-ID> --env <ENV> --urusan <X> --id "<permohonan or No Resit ...>" --user "<login>" --reset` (never hand-written) |
+| 2 | Test data | qa_doc `## Test data` — Task folder v13 (2026-09-30): notes txt + `1. Simulate\` RETIRED, new folders use `1. Brief\` (legacy `0. Brief\` accepted); read/write via `lib/task-folder.js` | `node quest/notes.js --qa <ADHOC-ID> --env <ENV> --urusan <X> --id "<permohonan or No Resit ...>" --user "<login>" --reset` (never hand-written) |
 | 3 | active.txt block | `quest/active.txt` (main checkout) — keys `qa phase status ticket_type=adhoc env urusan quest_start local_test_confirmed adhoc_register_row qa_doc task_folder issue_one_liner branch` (`branch=none-until-ticket` is fine) | `node quest/active-cli.js start <ADHOC-ID> ...` or append |
 | 4 | Register row | `etanah-knowledge/<state>/ADHOC-REGISTER.md` next free `A#` — conclusion carries `file:line` / `table.column`; Status cell starts `OPEN` / `ANSWERED` / `OWNED-ELSEWHERE` / `LATENT` / `TICKETED` / `RESOLVED` | append |
 | 5 | qa_doc | `projects/coding-projects/active/<ADHOC-ID>/<ADHOC-ID>.md` — opens with `## Issue Summary` (Symptom · Screen · Verdict) + `## Match Keys` (permohonan · aplikasi · warta · lesen/resit/hakmilik), then `## 0. Resume Point` (mandatory while status is hold/blocked/delegated — expansion-protocol §Step 2b rows) · Status · Env · evidence SELECTs · mechanism · analog · `## Next-Steps Checklist` | Write to scratchpad → copy (projects/ is main-checkout only) |
+| 6 | Bug awareness (when the adhoc finds a bug with NO ticket yet) | `etanah-knowledge/<state>/LATENT-BUGS.md` row `L<next>` + Sweep-log row (a live bug a ticket already owns goes in that ticket's qa_doc instead); if a BUG-BESTIARY pattern covers the family, add a pointer line there | append, then `node domain/bug-db/build-index.js --state <key>` |
 
 ID = `ADHOC-<URUSAN>-<YYYY>-<n>` — next n after grepping `active.txt` + `active-archive.txt`.
 
@@ -35,6 +36,8 @@ ID = `ADHOC-<URUSAN>-<YYYY>-<n>` — next n after grepping `active.txt` + `activ
 - Replying on an adhoc finding with the save-set unwritten or the audit not run this round.
 - Hand-writing the notes file · reusing an `A#` another block holds · an open block whose register row says RESOLVED (or the reverse).
 - Names / dates / monologue inside Task-folder deliverables (brief.txt is BA verbatim, exempt).
+- Copying an object name from a colleague's source (view / table / file / method) without a spelling check — correct an obvious typo in OUR deliverable and name the correction in the reply (2026-09-30, ADHOC-VIEW-2026-1: KL `TKLPREMITTABLEVIEW` carried into Melaka and run on internal).
+- Mixing up which env/ticket a hand-off is for — "infra sendoff" on an adhoc means THIS adhoc's scripts for PROD, never another open ticket's patch (same adhoc).
 
 symptom: 2026-09-25 miya: 'Create a skill that you will always invoke to properly save every adhoc findings properly, make sure to always audit each round of save and apply the fixes straight-away'
 goal: every adhoc save round ends with all 4 save-set parts present, consistent, and audit-green
