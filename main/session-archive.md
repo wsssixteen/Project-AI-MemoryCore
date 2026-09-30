@@ -4,6 +4,13 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-09-28 → 2026-09-30, melaka-internal-deploy worktree)
+- **Deploy card**: internal = one host `172.16.100.162`, `deployment-scripts/mlit`, `sh deploy-<module>.sh`, branch `mlk/int-env`.
+- **Pelupusan build failure (2026-09-28 10:49)**: first failure `maven-antrun-plugin (replace-properties): Problem creating zip: .../target/etanah-pelupusan.war (No such file or directory)` after 59.8 s; everything below it was cascade. `ps` showed `deploy-pendaftaran-it.sh` (pid 1817149, pts/2, started 10:36, 21+ min). HYPOTHESIS, unconfirmed: concurrent run on mirage1. miya never pasted the re-run result.
+- **ADHOC-VIEW-2026-1**: Alex asked whether the views include expired lesen/permit. Yes — no status filter (same as KL). PROD evidence: all 3148 permit rows `flag_permit = KuatKuasa` incl. 731 past `trkh_tamat`, so status never flips on expiry; filter by `tarikh_tamat` / `bakitempoh`. Neither view exists yet on STG2 · STG1 · MLIT · PROD (information_schema, 2026-09-30). Scripts handed in chat; PROD via infra needs `et_main.` prefix + miya's nod.
+- **Slip (self)**: first answer told miya to filter `flag_permit = 'Kuatkuasa'` before checking the data; corrected after the PROD query.
+**Last Activity**: 2026-09-30 15:22 — Baseline Pelupusan 1.7.0 closed: BAQA passed, `mlk/master` = `365fe73629` · DE.
+
 ## Session Recap (2026-09-28 → 2026-09-30, melaka-release-baseline worktree)
 - **Release 1.7.0**: #281392 (`mlk/hotfix/281392`) · #280895 · #246512 (`mlk/qa/246512v9` = full footprint, v7/v8 ancestors) · #263304 (`mlk/CR/263304`) + #280993 compile fix. Pushed `365fe73629`, BAQA passed, ff-merged to `mlk/master` 2026-09-28 (undo tag `mlk/pre-master-merge/1.7.0` @ `4016667b7f`). Common stays `1.6.7-MLK`.
 - **#280993 (Alex, direct-to-master logger cleanup)**: master did not compile (private `LOGGER` in `BasePelupusanDokumenForm` hid the inherited one, 32 errors). Fix `mlk/development/280993` `55d2832342` (3-line delete), merged first in 1.7.0.
@@ -5459,6 +5466,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

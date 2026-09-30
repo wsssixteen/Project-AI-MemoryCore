@@ -44,3 +44,4 @@
 {"ts":"2026-09-30T08:06:08.757Z","id":"ADHOC-PRBB-2026-6","outcome":"fail","fails":["block: open ↔ file location"],"dur_ms":57}
 {"ts":"2026-09-30T08:07:03.953Z","id":"ADHOC-PRBB-2026-6","outcome":"fail","fails":["qa_doc: file exists","qa_doc: \"## Test data\" has an entry"],"dur_ms":31}
 {"ts":"2026-09-30T08:07:23.378Z","id":"ADHOC-PRBB-2026-6","outcome":"pass","fails":[],"dur_ms":42}
+{"ts":"2026-09-30T08:11:05.084Z","id":"ADHOC-PRBB-2026-6","outcome":"pass","fails":[],"dur_ms":38}

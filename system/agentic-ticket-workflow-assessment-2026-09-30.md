@@ -79,3 +79,12 @@
 | A3 debugging | owner source found in 6 reads: xhtml → component → helper → repository in common | ⏭ worked as designed; counting the 625 trap only happened when miya asked "reliable?" — verify-before-claim held |
 | A4 etanah solving | Redmine drafts: 4 rewrites (long sentences, implication, bossy, markdown table) | proposal logged (Textile helper); slips x2 ticket-writing-style |
 | A5 sweep | ⏭ no sweep this session |
+
+## Session: ADHOC-PRBB-2026-6 (worktree melaka-pembatalan-ralat-f283f4, 16:10)
+| Axis | Instance | Verdict |
+|---|---|---|
+| A1 agentic system | "Build it, verify it" (a system ask) read as the etanah fix → JBoss ask; also `archive-quest` EPERM on an Explorer-locked folder left a half move | proposal logged (archive-quest: detect lock, move files then report the empty shell) |
+| A2 quest workflow | pelupusan workaround built + compiled before the PROD server.log was read; the log named the owner (common/GIS) in one line | proposal logged (etanah-intake mask-NPE → server.log-first injection) — also the bounty refinement |
+| A3 debugging | NPE in a catch hid `relation "et_ptg.log_service" does not exist`; ADHOC-TRIAGE rule 6 now says read the line before the NPE | ⏭ baked into knowledge this session |
+| A4 etanah solving | drafted a common hand-off offering to carry their CREATE TABLE to infra; miya: not our issue, one line | memory written (feedback_other_team_message_not_our_issue); ⏭ no new proposal |
+| A5 sweep | ⏭ no sweep this session |
