@@ -77,7 +77,7 @@ Use `mcp__Claude_in_Chrome__form_input` for each:
 | Resolved By Text | `#issue_custom_field_values_<id>` (text) | `Ahmad Ridhwan Anuar` |
 | Notes textarea | `#issue_notes` (textarea) | (see Step 4) |
 
-**Fill only these fields.** Root Cause Issue (DEV) and any Solution text are filled ONLY when the tracker's form has a Solution field. No Solution field → leave Root Cause (DEV) empty too (みや 2026-09-30, #282555).
+**Fill a field if it EXISTS on the form, skip it if it does not.** Read the form's field list first, never assume. Root Cause Issue (DEV) exists on eSOKONGAN MELAKA → fill it in the shape of `.claude/auto-memory/feedback_redmine_rootcause_format.md`. A Solution field exists on some trackers only → fill it only when present (みや 2026-09-30, #282555).
 
 Resolved By + Resolved By Text custom-field IDs need to be discovered on first run via `mcp__Claude_in_Chrome__find` against the form labels — cache the IDs in skill state after first successful discovery.
 

@@ -9,7 +9,7 @@ Seven rules that apply to ANY system, agentic or not.
 
 ## The 7 Rules
 
-1. **Inventory first** — before adding any new component (rule / skill / hook / module), check what already exists. If a sibling solves 90% of the problem, refine it instead of duplicating.
+1. **Inventory first — then LINK what is related** — before adding OR refining any component (rule / skill / hook / module / playbook / format), check what already exists. If a sibling solves 90% of the problem, refine it instead of duplicating. **Also grep `.claude/auto-memory/MEMORY.md`, etanah-knowledge `index.md` and `.claude/skills/` for every rule that governs the SAME output** (voice, format, field rule, env, assignee), and put a one-line pointer to each in the component at the step where that output is produced. Link, never copy the rule. **Banned**: a component that writes Redmine / BA / infra text with no pointer to the memory that decides that text. **Test**: for the step that writes the output, one read shows every rule that shapes it. (#282555: the prefill skill and the alter playbook never pointed to the speech memory or the root-cause memory, so the note came out in the wrong voice.)
 
 2. **Merge in place when refining** — keep the rule clause + concrete example + Banned clause. Drop the Why story / Cross-ref / quote / "pairs with X" scaffolding. **Test**: if removing a sentence doesn't change behavior, it's scaffolding — drop it.
 
@@ -28,6 +28,8 @@ Seven rules that apply to ANY system, agentic or not.
 Invoke at any architectural decision point. Apply each rule as a filter. /system-design is the agentic-specific specialization that builds on these universal disciplines.
 
 *Version 1.0 — 2026-06-02. Refactored from old /system-design (was 197 lines of mixed universal + agentic content); the 4 truly-universal rules + 1 new audit-logging rule live here; 2 agentic-specific rules moved to /system-design.*
+
+*Version 1.4 — 2026-09-30. Rule 1 refined in place per みや (#282555): inventory also LINKS every rule that governs the same output (one-line pointer at the producing step, link not copy); banned a Redmine/BA/infra-text writer with no pointer to its governing memory. Spec-preservation: v1.0 Rule 1 specs kept (inventory before adding · refine a 90% sibling instead of duplicating); scope widened from 'adding' to 'adding OR refining'. Audit same turn: 4 real writers (quest · deploy 6b · redmine-phase1-prefill · alter playbook + gate A6), all now point to the voice + root-cause memories.*
 
 *Version 1.3 — 2026-09-29. Rule 7 added per みや after the 2026-09-28 RAM incident (21 per-session stdio DB MCP servers × 19 sessions = 45-60 GB commit, laptop hung; 36 UserPromptSubmit + 42 Stop hook registrations ≈ 60-70 node spawns per prompt/reply): resource footprint declared at birth, shared + on-demand preferred, bundling for per-prompt checks, normal-priority daemons with mechanical health. Enforced same day: forge `--footprint` (forge.eval 17/17) + component-birth-gate `footprint:` (eval 9/9). Research + audit + appraise done before adding, per みや's condition. Spec-preservation: Rules 1-6 untouched; additive. Title "6 Rules" → 7.*
 
