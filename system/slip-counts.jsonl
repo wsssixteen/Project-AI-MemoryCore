@@ -755,6 +755,7 @@
 {"ts":"2026-09-29T10:32:23.391Z","category":"A1"}
 {"ts":"2026-09-29T10:32:23.558Z","category":"A3"}
 {"ts":"2026-09-29T10:32:23.853Z","category":"A2"}
+{"ts":"2026-09-30T02:36:27.189Z","category":"adhoc-scaffold-misread"}
 {"ts":"2026-09-29T13:29:07.203Z","category":"scope-creep"}
 {"ts":"2026-09-30T01:08:37.771Z","category":"scope-misread"}
 {"ts":"2026-09-30T02:59:27.119Z","category":"module-boundary-overreach"}
@@ -786,3 +787,5 @@
 {"ts":"2026-09-30T08:00:03.827Z","category":"A1"}
 {"ts":"2026-09-30T08:00:03.978Z","category":"A4"}
 {"ts":"2026-09-30T08:03:22.195Z","category":"A2"}
+{"ts":"2026-09-30T08:11:29.705Z","category":"A1"}
+{"ts":"2026-09-30T08:11:29.903Z","category":"A2"}

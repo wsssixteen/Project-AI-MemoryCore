@@ -1,5 +1,16 @@
 # Current Session
 
+**Last Activity**: 2026-09-30 16:10 — ADHOC-PRBB-2026-6 (PROD Pembatalan Permohonan Jana ralat) closed OWNED-ELSEWHERE (common/GIS) + archived · adhoc "move BA downloads" step built · DE.
+
+## Session Recap (2026-09-30, ADHOC-PRBB-2026-6, worktree melaka-pembatalan-ralat-f283f4)
+- **Ask**: PDTMT PROD, Utiliti Proses Pembatalan Permohonan PTMLK/01/L/PRBB/2026/13 @ SaffuanH, klik Jana → ralat NPE `this.gisRequestService is null`.
+- **Root cause (PROD server.log)**: `relation "et_ptg.log_service" does not exist` ×6 09:50-10:03, all Pembatalan Jana. GIS log table missing in PROD GIS DB (common 1.6.7 logging, commit e2ee7f9adc) + common `PostgresUpdateService` null helper turns it into an NPE. **Not ours** — common told with the error line only.
+- **Parked**: pelupusan try/catch in `PelupusanIntegrateGISService.insertChartingTolak` built + compiled then DISCARDED; kept as option in the qa_doc. Pelupusan tree clean.
+- **Built**: adhoc detector step 1a (MOVE attached Desktop/Downloads files into the brief folder) + audit check "BA downloads MOVED" + adhoc-save row — eval 15/15, commit c6d4a079.
+- **Knowledge**: LATENT-BUGS L18 · ADHOC-TRIAGE rule 6 (mask NPE → read the server.log line before it) · urusan/PRBB-TICKETS note. Bounty e862cc7a.
+- **Slips (miya)**: adhoc-scaffold-misread (read "build it, verify" as the etanah fix, asked for JBoss) · module-boundary-overreach (drafted common hand-off offering to carry their script to infra). Memory: feedback_other_team_message_not_our_issue + module_edit_boundary "never carry".
+- **Open**: empty source Task folder `244. AH ...` (`0. Brief`, `2. Fix`) locked by Explorer — files are in Archive\, delete the empty shell once Explorer is closed. DB gateway backends blocked by Windows Application Control this morning.
+
 **Last Activity**: 2026-09-30 15:58 — QA-281423 consultation answered (Pemilik Tanah source mapping posted by miya to Teknikal) · closed + archived · DE.
 
 ## Session Recap (2026-09-30, QA-281423, worktree session-256334-recovery)
@@ -21,10 +32,3 @@
 - **Round 2 (15:45, "do it all")**: de-knowledge-gate v2 router check (bake homes must be in etanah-knowledge/<state>/index.md; eval 18/18) · audit-briefing no longer offers false RETIRE rows (own-log hooks + Agent-only hooks classified; 0 retire candidates) · sql-schema-verify + attachment-ledger-gate wrapped with hook-runtime (smoke-tested, telemetry rows written) · MAS 29 Sep diary merged into `current/2026-09-29.md` Session 7, stray root file removed. **Redmine ticket NOT raised** — miya wanted internal save only (slip `reask/misread-intent`); L16/L17 stay internal.
 
 **Last Activity**: 2026-09-30 15:25 — MLIT internal deploy card · pelupusan build died at antrun zip (concurrent deploy-pendaftaran-it.sh) · ADHOC-VIEW-2026-1 scripts handed for all envs · DE.
-
-## Session Recap (2026-09-28 → 2026-09-30, melaka-internal-deploy worktree)
-- **Deploy card**: internal = one host `172.16.100.162`, `deployment-scripts/mlit`, `sh deploy-<module>.sh`, branch `mlk/int-env`.
-- **Pelupusan build failure (2026-09-28 10:49)**: first failure `maven-antrun-plugin (replace-properties): Problem creating zip: .../target/etanah-pelupusan.war (No such file or directory)` after 59.8 s; everything below it was cascade. `ps` showed `deploy-pendaftaran-it.sh` (pid 1817149, pts/2, started 10:36, 21+ min). HYPOTHESIS, unconfirmed: concurrent run on mirage1. miya never pasted the re-run result.
-- **ADHOC-VIEW-2026-1**: Alex asked whether the views include expired lesen/permit. Yes — no status filter (same as KL). PROD evidence: all 3148 permit rows `flag_permit = KuatKuasa` incl. 731 past `trkh_tamat`, so status never flips on expiry; filter by `tarikh_tamat` / `bakitempoh`. Neither view exists yet on STG2 · STG1 · MLIT · PROD (information_schema, 2026-09-30). Scripts handed in chat; PROD via infra needs `et_main.` prefix + miya's nod.
-- **Slip (self)**: first answer told miya to filter `flag_permit = 'Kuatkuasa'` before checking the data; corrected after the PROD query.
-**Last Activity**: 2026-09-30 15:22 — Baseline Pelupusan 1.7.0 closed: BAQA passed, `mlk/master` = `365fe73629` · DE.

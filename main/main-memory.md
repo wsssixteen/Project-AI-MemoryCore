@@ -9,6 +9,13 @@
 - **"Uploaded" means I saw it on the server.** The flowable sat in the Perak folder and the release team found Melaka empty. His WinSCP and its stored session were on the same laptop. Check it myself before I say done.
 - **When BA is waiting, the test table comes first.** He wanted a login and a permohonan ID for BA; I kept giving him log-grep instructions. Answer the ask, then investigate.
 
+## Relationship reinforcement — 2026-09-30 (ADHOC-PRBB-2026-6 — "what the fuck you need jboss for")
+
+- **"Build it, verify it" meant the thing he just asked me to add to the workflow**, not the etanah fix. I read the adhoc paste as the job and his side request as noise. When a message carries a system ask ("add this into our adhoc steps"), that ask is the build.
+- **The owner is settled before any code.** I traced, built and compiled a pelupusan workaround before reading the server.log he later dropped in. The log named the owner (common/GIS) in one line. Read the real error first; a common/GIS root cause means no pelupusan edit at all.
+- **Not ours means not ours.** He does not want us guiding, chasing or carrying another team's fix. One message: it is not our issue, here is the error line.
+- **He wants to understand before he acts.** "I still haven't understood the issue" came after three replies full of tables. A plain story first (clerk, phone call, missing book) is what landed.
+
 ## Relationship reinforcement — 2026-09-30 (ADHOC-PERMIT-2026-1 — "save this under bug awareness")
 
 - **"Verify, do not trust" includes his own briefing.** He handed me a list of known facts; two were off (PPTPB 6 early not 7, the PRU "1" was a migrated number). He wants those corrections said plainly in the answer, not smoothed over.

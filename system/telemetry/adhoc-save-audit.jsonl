@@ -23,6 +23,11 @@
 {"ts":"2026-09-29T10:10:06.803Z","id":"ADHOC-HSL-2026-1","outcome":"pass","fails":[],"dur_ms":29}
 {"ts":"2026-09-29T10:18:27.814Z","id":"ADHOC-HSL-2026-1","outcome":"pass","fails":[],"dur_ms":28}
 {"ts":"2026-09-29T10:18:47.248Z","id":"ADHOC-HSL-2026-1","outcome":"pass","fails":[],"dur_ms":28}
+{"ts":"2026-09-30T02:26:51.415Z","id":"ADHOC-PRBB-2026-6","outcome":"fail","fails":["qa_doc: Issue Summary \"Symptom\" line","qa_doc: Issue Summary \"Screen\" line","qa_doc: Issue Summary \"Verdict\" line"],"dur_ms":28}
+{"ts":"2026-09-30T02:34:34.427Z","id":"ADHOC-PRBB-2026-6","outcome":"pass","fails":[],"dur_ms":32}
+{"ts":"2026-09-30T02:36:15.033Z","id":"ADHOC-PRBB-2026-6","outcome":"pass","fails":[],"dur_ms":28}
+{"ts":"2026-09-30T02:36:26.798Z","id":"ADHOC-PRBB-2026-6","outcome":"fail","fails":["task folder: BA downloads MOVED (none left on Desktop/Downloads)"],"dur_ms":30}
+{"ts":"2026-09-30T02:36:27.046Z","id":"ADHOC-PRBB-2026-6","outcome":"pass","fails":[],"dur_ms":26}
 {"ts":"2026-09-30T02:27:02.338Z","id":"ADHOC-PRBB-2026-6","outcome":"fail","fails":["qa_doc: Issue Summary \"Symptom\" line","qa_doc: Issue Summary \"Screen\" line","qa_doc: Issue Summary \"Verdict\" line"],"dur_ms":37}
 {"ts":"2026-09-30T02:27:39.617Z","id":"ADHOC-PRBB-2026-6","outcome":"pass","fails":[],"dur_ms":27}
 {"ts":"2026-09-30T02:37:05.342Z","id":"ADHOC-PRBB-2026-6","outcome":"pass","fails":[],"dur_ms":34}
@@ -35,3 +40,8 @@
 {"ts":"2026-09-30T08:00:21.157Z","id":"ADHOC-PERMIT-2026-1","outcome":"fail","fails":["qa_doc: file exists","qa_doc: \"## Test data\" has an entry"],"dur_ms":68}
 {"ts":"2026-09-30T08:00:35.071Z","id":"ADHOC-PERMIT-2026-1","outcome":"pass","fails":[],"dur_ms":33}
 {"ts":"2026-09-30T08:03:54.837Z","id":"ADHOC-PRBB-2026-6","outcome":"pass","fails":[],"dur_ms":41}
+{"ts":"2026-09-30T08:06:01.874Z","id":"ADHOC-PRBB-2026-6","outcome":"fail","fails":["block: open ↔ file location"],"dur_ms":46}
+{"ts":"2026-09-30T08:06:08.757Z","id":"ADHOC-PRBB-2026-6","outcome":"fail","fails":["block: open ↔ file location"],"dur_ms":57}
+{"ts":"2026-09-30T08:07:03.953Z","id":"ADHOC-PRBB-2026-6","outcome":"fail","fails":["qa_doc: file exists","qa_doc: \"## Test data\" has an entry"],"dur_ms":31}
+{"ts":"2026-09-30T08:07:23.378Z","id":"ADHOC-PRBB-2026-6","outcome":"pass","fails":[],"dur_ms":42}
+{"ts":"2026-09-30T08:11:05.084Z","id":"ADHOC-PRBB-2026-6","outcome":"pass","fails":[],"dur_ms":38}
