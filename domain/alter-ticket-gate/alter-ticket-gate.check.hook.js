@@ -174,7 +174,7 @@ runHook({ name: 'alter-ticket-gate', event: 'UserPromptSubmit', log: LOG }, (inp
     `     A3 ⬜ NODE EDGE-TRACE table for the target (grep receiveUserTask(&quot;KOD&quot; in <state>/flowables-bpmn/<KEY>.bpmn20.xml — dump if absent); OUTGOING edge = intended next step? twins by edges, never by name`,
     `     A3b ⬜ VARIABLE TRACE for a sub-flow target: node domain/alter-ticket-gate/subflow-trace.js <bpmn-dir> <parent.bpmn20.xml> <callActivityId> — the callActivity NAME is a label; the in-mapped variables (nextUrusan, flagSemakanPemohonan, …) decide what the child does`,
     `     A4 ⬜ ACTION DECISION: Alter Flow (live) | Initiate→Alter (ended, node in LATEST model) | NOT EXECUTABLE (no process / node absent / born elsewhere) — one row, evidence per cell`,
-    `     A5 ⬜ RUNBOOK for みや (he types the login, Ruri never does) + BEFORE/AFTER verify SQL in the state dialect — or the not-executable evidence`,
+    `     A5 ⬜ RUNBOOK for みや (he types the login, Ruri never does) + BEFORE/AFTER verify SQL in the state dialect — or the not-executable evidence. ASSIGNEE = agihan default (previous holder of that tugasan kod, else peranan); NEVER add nextUser / nextUser<KOD> to pin an officer — verify the assignee AFTER`,
     `     A6 ⬜ REPLY in the playbook §5 format (done-alter 5-line block | not-executable options block) — BA register, no file:line / SQL / engine ids`,
     `   Bypass: [skip-alter-gate: <reason>]`,
     '',
