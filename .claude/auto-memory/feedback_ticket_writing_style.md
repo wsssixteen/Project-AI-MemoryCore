@@ -86,4 +86,37 @@ Penyediaan Senarai Semak ke PTG, Semakan Permohonan PDT, Semakan Dokumen Permoho
 Thanks
 ```
 
+5. Junior handover, hints not answers, #264355 (2026-09-29). To Farah (Siti Farhanih Abdul Razak). Opener = which side + symptom + the working comparison, one line each. Numbered title + `<pre>` of WHERE to look (repo, branch, screen, file to start from, analog ticket), never the fix line. He CUT: "Fix dijangka kecil. Kalau rasa perlu ubah banyak, tanya saya dulu." He questioned a "Skop" block: "Siap: push branch, bagitahu saya untuk review" is noise (she already does it), and parking BA-reported items as "tunggu BA" is wrong — the handover covers the WHOLE ticket. 🚨 Junior hint = symptom + WHERE to start + test data ONLY. NEVER state the cause or the mechanism ("ID tak lalu Bayaran Pelbagai", "notifikasi ada tapi satu tugasan sahaja" = the answer, spoon-feeding; he raged at it). Pre-send check per `<pre>` line: does it say WHY it breaks? → cut it.
+```
+Salam Farah,
+
+Ticket ni side AWAM.
+Surat Keputusan PRU tak papar di AWAM Status Permohonan bila ID di Bayaran Pelbagai.
+PRBB di tugasan yang sama papar surat.
+
+1. Mula dari screen
+<pre>
+   Repo: etanah-awam. Branch mlk/qa/264355 dari mlk/master.
+   Screen: AWAM > Status Permohonan, icon Surat Keputusan.
+   Start dari xhtml Status Permohonan.
+   Ikut syarat rendered icon tu sampai jumpa di mana surat Pelupusan ditapis.
+</pre>
+
+2. Banding PRU dengan PRBB
+<pre>
+   Tengok jenis dokumen surat keputusan PRU dan PRBB dalam umm_a_dok_keluaran.
+   Refer template.config.json di etanah-pelupusan untuk kod dokumen setiap urusan.
+   Refer eSOKONGAN #276584, logik AWAM yang sama.
+</pre>
+
+3. Test data (staging)
+<pre>
+   PRU: login AWAM alyaaqilah802@gmail.com, ID PTMLK/01/L/PRU/2026/2.
+   Tugasan sekarang Bayaran Pelbagai (mzahiruddin@melaka.gov.my). Jangan hantar tugasan ni.
+   Banding: login AWAM redha@samb.com.my, ID PTMLK/02/L/PRBB/2026/5 (Bayaran Pelbagai, amalia@melaka.gov.my).
+</pre>
+
+Thank you.
+```
+
 Related: [[feedback_cross_module_handoff_artifact]] · [[feedback_ba_facing_reply_plain]].
