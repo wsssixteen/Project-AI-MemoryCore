@@ -95,3 +95,35 @@ retention: rotate monthly
 | 30 | "don't update the redmine yet" | handled — negation lookbehind (F34) |
 | 31 | a non-popup tool_result (file read) after the approval | handled — skipped, the typed approval still counts (F38) |
 | 32 | a file read whose text starts with "Your questions have been answered:" | accepted-risk — only the harness writes that prefix at the start of a tool_result; worst case is a status change, which can be set back |
+
+**v1.4 (2026-09-30, #282555)**: per みや — *"For a month or until I approve, for now you will always stop at staging. Build at the start, to detect if I request to view first as a gate."* Three additions. (1) **STAGE-ONLY until 2026-10-30** (`STAGE_ONLY_UNTIL`, env `REDMINE_STAGE_ONLY_UNTIL` for evals): every API write is blocked even with "post it"; the route is the browser edit form (`redmine-phase1-prefill`), stop before Submit. Lift = みや's nod → change the constant through `forge refine`. (2) **View-first detection**: a last user message like "let me see / prepare first / in the same page / stop at staging" forces staging after the window too. (3) **Browser branch** (new matcher on `claude-in-chrome` + `Claude_Browser` `javascript_tool|computer|browser_batch`): browser JS that calls the Redmine API (`fetch`/XHR to `/redmine/…json`) is BLOCKED always — it popped a sign-in password box in みや's Chrome on #282555; a form submit (JS `.submit()`/commit `.click()`, or a click on a ref the `find` result named `button "Submit"`) needs "I approve" / "submit it" / "post it" in his LAST message. Reading the DOM and setting field values (staging) stay silent. Spec preservation: every v1.3 spec kept; legacy F1-F55 now run pinned to the post-window mode (`until=2000-01-01`) so they still prove the approval logic. Eval 74/74 green.
+
+symptom_v1_4: #282555 2026-09-30 — browser fetch of /redmine/issues/N.json popped a password box in miya's Chrome; miya wants every Redmine update staged and reviewed for a month
+footprint: per-tool: 1 node per Bash/PowerShell call + 1 node per browser javascript/computer/batch call, ~40 MB, exits in <100 ms
+
+### v1.4 adversarial scenarios (Rule 12 — 20)
+
+| # | Scenario | Verdict |
+|---|---|---|
+| 1 | "post it" inside the stage window | fixture-added (F56 BLOCK) |
+| 2 | bypass token inside the window | fixture-added (F57 allow) |
+| 3 | view-first + "post it" after the window | fixture-added (F58 BLOCK) |
+| 4 | read-only sync inside the window | fixture-added (F59 silent) |
+| 5 | the popup replay, fetch of `/redmine/issues/N.json` | fixture-added (F60 BLOCK) |
+| 6 | staging JS that sets field values | fixture-added (F61 silent) |
+| 7 | JS submit, no approval | fixture-added (F62 BLOCK) |
+| 8 | JS submit after "I approve current send" | fixture-added (F63 allow) |
+| 9 | ref click on a find-result "Submit", no approval | fixture-added (F64 BLOCK) |
+| 10 | same click with approval | fixture-added (F65 allow) |
+| 11 | click on a different ref (Edit link) | fixture-added (F66 silent) |
+| 12 | fetch hidden inside browser_batch | fixture-added (F67 BLOCK) |
+| 13 | built-in pane PUT with "post it" | fixture-added (F68 BLOCK) |
+| 14 | negated "I don't approve current send" | fixture-added (F69 BLOCK) |
+| 15 | DOM read of the issue page | fixture-added (F70 silent) |
+| 16 | non-Redmine .json fetch | fixture-added (F71 silent) |
+| 17 | "I approve" only in an assistant line | fixture-added (F72 BLOCK) |
+| 18 | browser submit with no transcript | fixture-added (F73 BLOCK) |
+| 19 | coordinate click on Submit (no ref) | accepted-risk — coordinates carry no label; the prefill skill stops before Submit and clicks by ref only |
+| 20 | pressing Enter inside a staged text input submits the form | accepted-risk — staging sets `.value` by JS, never types keys into the form |
+| 21 | window expires silently on 2026-10-30 | handled — the date is in the block text and this README; lift or extend only on みや's nod |
+| 22 | main repo still runs v1.3 until merge | accepted-risk until the branch is merged to main |

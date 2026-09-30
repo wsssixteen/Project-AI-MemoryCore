@@ -64,6 +64,8 @@ mcp__Claude_in_Chrome__navigate
 
 If page redirects to login → STOP, emit: `Redmine not logged in. Log in at <URL> then re-invoke.`
 
+**🚨 STAGE-ONLY until 2026-10-30 (or until みや lifts it)** — every Redmine update goes through THIS form, never the API: fill, show him the staged values as a table, STOP. Submit only after "I approve" / "submit it" / "post it" in his latest message. Also a view-first ask ("let me see", "prepare first", "same page") = staging, after the date too. **Read the open page's DOM only** — never `fetch`/XHR a `/redmine/….json` URL from the browser: it pops a sign-in password box in his Chrome (#282555). Enforced by `domain/redmine-write-gate` v1.4.
+
 ### Step 3 — Fill the 6 fields (per みや's photo)
 
 Use `mcp__Claude_in_Chrome__form_input` for each:
