@@ -20,3 +20,13 @@
 | A3 debugging | Good: first-red-step + log tail settled owner in 2 fetches. Slip: 'Nick probably changed the stop script' asserted without evidence (assume-not-verify); fixed by diffing console build time + both prepare outputs. Proposal logged. |
 | A4 etanah issue-solving | New known failure recorded (fudge1 prepare exit 137, retry passes when JBoss already down) in deploy skill §8. Proposal: deploy-run triage script. |
 | A5 sweep | ⏭ no sweep this session. |
+
+## Session 3 addendum (melaka-internal-deploy, 15:30)
+
+| Axis | Finding (instance) | Proposal |
+|---|---|---|
+| A1 agentic system | 3 gates misfired on non-ticket work: test-scenario-login-gate ×3 (deploy/triage, no ticket) · sql-schema-verify on READ-only files + refuses unqualified scripts · design-consult-gate ignored an in-message skip token and forced two skill loads for a 1-section doc addition | 2 proposals logged (login-gate silent without ticket · sql-schema-verify read-vs-write + unqualified) |
+| A2 quest workflow | ADHOC-VIEW-2026-1 block said "miya runs CREATE Mon 09-28"; live catalog showed no view on any env — active.txt state rots without a check | covered by existing resume-readiness sweep |
+| A3 debugging | Top-down log read found the first failure (antrun zip) under a misleading last line; ps check found the concurrent run in one step | deploy skill §7 entry added |
+| A4 etanah | Answered a data question from the view definition before querying data (flag_permit) — slip claim-before-data | knowledge: PERMIT-LESEN status never flips on expiry |
+| A5 sweep | deploy card lacks a pre-run concurrency check for shared mirage1 | proposal logged |

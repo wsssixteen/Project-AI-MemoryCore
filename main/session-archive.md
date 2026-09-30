@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-09-29, #282061, worktree quest-282061-rubric-7a809b)
+- **Bug**: PROD `PTMLK/02/L/PPTPB/2026/5` (PYJ, norlina@melaka.gov.my) borang showed No Permit Khas `02/2026/3` + Fi RM 2200; BA expects `02/2026/1` + RM 2000 (screen must tally with borang).
+- **Cause**: skrin 338 Simpan minted the register number at every PPTPB tugasan (only PLPS exempt since #273461) · screen and borang read two different counters · borang Fi summed PPTPB 200 + PPTPBL 2000 · bill saver reuses only UNPAID rows, so a save after payment re-billed PPTPBL.
+- **Shipped**: `mlk/esokongan/282061` `2729190807` (R1 mint at Jadual only · R2 screen reads register · R3 Fi = PPTPBL · C4 no re-bill after payment) · int-env cherry-pick `1cc113f7ee` · stag-env `6c891898ad`. miya deployed; mlit rehearsal patch verified.
+- **PROD data**: `2. Fix\282061.sql` (PROD-only, attachment 1023225): swap /5 ↔ /1 in `umm_a_permit_lesen` + `ind_permit_lesen`, delete unpaid dup PPTPBL bill. Swap proven 100% safe (register rows keep own lot + holder, links by id only). Runs with the release.
+- **Built**: redmine-write-gate v1.2 (popup + plain status approval, eval 38/38) · `ticket-close-block --ba --envs` prints miya's BA pass note · quest SKILL: Hand-over to BA · Plain first · Everything on this ticket · brief v1.2 · deploy 6b · PERMIT-LESEN knowledge two-counters section.
+- **Slips**: reask/rambling · reask/incomplete (D1 dropped) · popup-conflated-options · reask/redundant (BA note in my shape, not his template) · 2 proposals (gate popup gap, sql-schema-verify cross-product).
+- **Open**: BA verify on internal/staging · PROD release runs `282061.sql` · other-urusan early-mint audit landed as ADHOC-PERMIT-2026-1 (other session).
+**Last Activity**: 2026-09-29 18:30 — #256334 PDBB CR closed + archived (Hasil hand-off solved with Li Wen); ADHOC-HSL-2026-1 opened for Hasil #282275 langkah · DE.
+
 ## Session Recap (2026-09-28 → 09-29, medan-agihan-kepada-bug worktree)
 - **#256334 Round B shipped** (BA fixes B1-B4 on MLIT): SSPDBB Agihan PPTN · PYPDBB no Pembetulan · no Surat Iringan · Jana-before-Selesai VO guard (7d `e611403d89` → int-env `b160dc8700`).
 - **Hasil hand-off root cause + fix (with Li Wen, #282275)**: loop (case ABB resubmit) → child ABB aliran kerja in ISPEKS subflow (PLTP→PSPM pattern) + DELAY 35 s (service is @Async) + case ABB pass null. Proven on PDBB/11 → ABB/16: Semakan AppTugasan + inbox azuan.
@@ -5416,6 +5426,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

@@ -390,6 +390,22 @@ If `/home/app/git/MLK/<repo>` is non-empty, `rm -rf` it first. If it repeats, th
 
 **While it is failed, mlit is DOWN** — the exploded war directory exists but is empty.
 
+### Known failure: antrun cannot zip the WAR (2026-09-28, pelupusan → mlit)
+
+```
+[zip] Building zip: /home/app/git/MLK/etanah-pelupusan/target/etanah-pelupusan.war.temp
+Cleaning up unclosed ZipFile for archive …/target/etanah-pelupusan.war
+BUILD FAILURE   Total time: 59.848 s
+maven-antrun-plugin:1.8:run (replace-properties) … Problem creating zip: …/target/etanah-pelupusan.war (No such file or directory)
+```
+
+Compile passed (≈60 s, not the <1 s no-POM case); the WAR vanished from `target/` mid-repack.
+`ps -ef | grep deploy-` at the time showed another module's run alive: `deploy-pendaftaran-it.sh`
+(pid 1817149, started 10:36, still up 21 min later). **Hypothesis, unconfirmed** — concurrent run on
+mirage1. First move = `ps -ef | grep deploy-`; if another run is alive, wait for it
+(`ps -p <pid> -o pid,etime,cmd` until empty), then re-run. Idle at a prompt (no child `mvn`/`ssh`)
+= not touching anything. Never kill another person's run — ask its owner (`who | grep <pts>`).
+
 ---
 
 ## 8 · Web Deployment Console failure — our code or infra?
