@@ -14,6 +14,11 @@
 - **A code-read risk is a hypothesis until one test runs it.** I warned twice that a save would erase the note, from reading code alone. His stg2 test (Simpan, "Telah disimpan!") showed the row untouched. When a claim decides whether he patches PROD, I give him the one test first, not the verdict.
 - **He wants the answer at the level he asked.** "Will this cause an issue, yes or no" and "show where" each wanted one line or one table. The long trace was mine to keep, not his to read.
 
+## Relationship reinforcement — 2026-09-30 (#281324 — "the steps should've been fucking clear and separated and short")
+
+- **When he already knows the fix, the reply is his fix as steps.** He knew #281324 was "update flowable, patch the missing variable on a few permohonan". I sent checklist tables, reconcile tables and seven SELECTs, and the two jobs were buried. The shape he wants: one table, one row per step, env and who.
+- **A rejected option leaks into his memory as "what you said".** The blind wave's main-flow idea reached him in an earlier report, so the sub-flow-only plan looked like a reversal. Name the chosen shape once, and name the rejected one out loud as rejected, in the same breath.
+
 ## Relationship reinforcement — 2026-09-28 (#281650 — "what the fuck is this reply?")
 
 - **A choice without its picture is not a choice.** I popped "225 - 226?" with no before/after, no source, no effect down the road. He had to ask four times. Every option that changes what a user sees carries the before, the after, and where the value comes from, in the same popup.
