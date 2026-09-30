@@ -1,5 +1,14 @@
 # Current Session
 
+**Last Activity**: 2026-09-30 15:30 — ADHOC-PERMIT-2026-1 all-urusan early-mint audit saved as bug awareness (LATENT-BUGS L16/L17) · save routing fixed (DE Step 7 table + adhoc-save row 6) · adhoc-save-audit moved to Task folder v13 · DE.
+
+## Session Recap (2026-09-29 → 2026-09-30, ADHOC-PERMIT-2026-1, main checkout)
+- **Ask**: read-only audit, is any Melaka pelupusan urusan minting No Lesen/Permit before its issuing tugasan (class of #273461 / #282061)?
+- **Answer**: only skrin 338 `MlkPengiraanBayaranLesenForm.performCustomSave():647` mints early; mounted in 4 urusan (PLPS, PPJK, PPTPB, PSBS; PROD = stg2). PROD 2026 counters issued 62 numbers: PPTPB 6 early (fix = #282061 R1) · PLPS 3 residue (#273461) · PPJK latent (0 apps at PYSK) · PSBS latent throw (no counter, `retrieveRunningNumberCode():361`) · MLPS/PRBB/PRU/lite clean. Side: `0402DIS2024000574` A02/2026/13 via Utiliti with no register row (L11 shape, hypothesis).
+- **Saved**: ADHOC-REGISTER A36 · qa doc `ADHOC-PERMIT-2026-1.md` · PERMIT-LESEN-RUNNING-NUMBER.md §All-urusan early-mint audit · LATENT-BUGS L16 (PPJK) + L17 (PSBS) + L11 extended + sweep-log row · BUG-BESTIARY family-map line · bug-db index rebuilt (29).
+- **Built**: expansion-protocol Step 7 table ("bug awareness" row → LATENT-BUGS.md · "index.md is the router" row) · adhoc-save SKILL rows 2 (Test data in qa_doc, v13) + 6 (bug awareness) · `lib/adhoc-save-audit.js` v13 (1. Brief via task-folder.js, `## Test data` check, retired-notes-txt check), eval 21/21.
+- **Open (miya's rulings)**: PPJK guard now or wait · PSBS guard now or wait · check server.log 2026-09-14/15 for A02/2026/13.
+
 **Last Activity**: 2026-09-30 15:25 — MLIT internal deploy card · pelupusan build died at antrun zip (concurrent deploy-pendaftaran-it.sh) · ADHOC-VIEW-2026-1 scripts handed for all envs · DE.
 
 ## Session Recap (2026-09-28 → 2026-09-30, melaka-internal-deploy worktree)
@@ -31,13 +40,3 @@
 - **Slip (self)**: suggested Nick "probably changed the stop script" without evidence; miya asked "how do we know"; corrected with the console build-time diff.
 
 **Last Activity**: 2026-09-30 13:50 — #281324 re-verified + plan set (sub-flow only) · weekly planner Wed-Fri from Redmine · #281423 synced (Teknikal data-mapping consult) · DE.
-
-## Session Recap (2026-09-29 afternoon → 2026-09-30, redmine-tickets-triage worktree, part 2)
-- **#281324**: re-synced, blind re-check on live staging (et_flowable17) holds. Fix = Data Object `caraPenghantaran` default `TP` in `MLK_PLP_SUB_UPN` ONLY (not the 12 main flows; miya asked, W3's main-flow shape was rejected by W4) + admin variable-add on stuck cases. Staging repro: PTMLK/03/L/PRBB/2026/8, task 11675067, samsiah_jaamat@melaka.gov.my. 7-step table in QA-281324.md §0b. Waiting on miya to publish on staging; Redmine In Progress waits on "post it".
-- **Planner (miya's "My Weekly Planning", Wed-Fri)**: Wed 280540 (eSOKONGAN, due 30 Sep) · 281423 · 281324 — Thu 275043 + 244600 · 274323 — Fri 265109 · 246923. Resolved on Redmine: 279411 · 281638 · 281712 · 278909 · 274266 · 281650 (Ready in PROD) · 282061 · 282275. 282198 is with Idris (pending user update).
-- **#281423 (new)**: Teknikal (Aiman Syakir) asks Pelupusan for the data mapping to tell Pemohon / Pemilik / Individu / Syarikat apart in `umm_a_pihak_bkptg` (ref #275018). Consultation, not our code. miya starts it in a NEW session; QA-281423.md has the resume point.
-- **#280540**: now eSOKONGAN assigned to miya, due 30 Sep, Not drafted.
-- **Knowledge**: FLOWABLE-KNOWLEDGE §14 (child Data Object default vs caller In-param, by-key calls take latest version, bpmn-check blind to Data Objects).
-- **Slips**: `reask/verbose` (281324 hand-back buried a 2-job fix under J-tables) · proposal A1 redmine-write-gate blocks read-only GETs.
-
-**Last Activity**: 2026-09-29 18:35 — #282061 PPTPB Permit Khas Jadual VIII: 4-part fix committed, int-env + stag-env, Redmine Resolved to Fizah, PROD-only swap + dup-bill script attached · DE.

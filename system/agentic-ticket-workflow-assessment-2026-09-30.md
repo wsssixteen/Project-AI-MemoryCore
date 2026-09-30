@@ -40,3 +40,13 @@
 | A3 debugging | Top-down log read found the first failure (antrun zip) under a misleading last line; ps check found the concurrent run in one step | deploy skill §7 entry added |
 | A4 etanah | Answered a data question from the view definition before querying data (flag_permit) — slip claim-before-data | knowledge: PERMIT-LESEN status never flips on expiry |
 | A5 sweep | deploy card lacks a pre-run concurrency check for shared mirage1 | proposal logged |
+
+## Session 5 — ADHOC-PERMIT-2026-1 (main checkout, 15:30)
+
+| Axis | Assessment (concrete instance) |
+|---|---|
+| A1 agentic system | A structural rule changed mid-day (Task folder v13 retired notes txt) but `lib/adhoc-save-audit.js` still demanded `1. <ID>.txt`, so the audit FAILED on a correct save-set. Fixed in the tool + eval (21/21), not by writing the retired file. |
+| A2 quest workflow | "Bug awareness" had no row in the DE Step 7 routing table, so a verified no-ticket bug had no obvious home. Added the row (LATENT-BUGS.md) + "index.md is the router" row. |
+| A3 debugging | Counter census (every `sis_no_turutan` number matched to its app's tugasan history) proved completeness: 62/62 accounted for, no guessing. Banked in PERMIT-LESEN-RUNNING-NUMBER.md. |
+| A4 etanah | One shared screen (skrin 338) causes the whole early-mint family; PPJK + PSBS are latent (L16/L17) and share a one-line guard at `MlkPengiraanBayaranLesenForm.java:647`. |
+| A5 sweep | The family sweep was manual this time (code callers × ind_langkah × BPMN × counters). It is repeatable per release but nothing re-runs it. |

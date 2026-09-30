@@ -45,7 +45,9 @@ DE steps: 1 ⬜ · 2 ⬜ · 3 ⬜ · 4 ⬜ · 5 ⬜ · 6 ⬜ · 7 ⬜ · 8 ⬜ �
 | JSF / composite / EL-binding / XHTML patterns | `JSF-WIRING.md` |
 | Flowable / tugasan / langkah / skrin routing | `FLOWABLE-WORKFLOWS.md` + `DATABASE.md` 6.0 |
 | Domain / Malay terminology / urusan codes / business rules | `DOMAIN-GLOSSARY.md` |
-| Bug patterns / recurring slip shapes | `BUG-BESTIARY.md` |
+| Bug patterns / recurring slip shapes | `BUG-BESTIARY.md` (confirmed, from RESOLVED tickets) — then run `node domain/bug-db/build-index.js --state <key>` |
+| **"Bug awareness"** (みや's word, 2026-09-30) — a bug found by audit/sweep that has NO ticket yet, so the next quest on that screen starts from the diagnosis | **`LATENT-BUGS.md`** row `L<next>` (SUSPECT/VERIFIED) + a Sweep-log row — `latent-bugs-gate` injects every open row at Phase 0 of every quest. A live bug already owned by a ticket → note it in that ticket's qa_doc, not here |
+| A topic that already has its own file (e.g. permit/lesen numbering → `PERMIT-LESEN-RUNNING-NUMBER.md`) | the file whose SCOPE line in `etanah-knowledge/<state>/index.md` covers it — **index.md is the router**; read it before choosing a home, never open a new file when a scope already fits |
 | Deferred-known issues we can't fix yet | `DEFERRED-CRITICAL-ISSUES.md` |
 | **Ad-hoc ask answered this session that is NOT one of our tickets** — BA/colleague question, a screen issue みや hit mid-session, a side finding surfaced while working something else | **`ADHOC-REGISTER.md`** (added 2026-07-28 per みや — *"That is why I kept asking you to save known issues, adhoc issues BA asked us to check"*). ⚠️ **The row should already exist** — the register is written at the MOMENT of the ask, not at DE. If DE is the first time it is being written, that is itself a capture miss: write the row AND log a `knowledgebase-not-written` slip. |
 | Test data findings / verified permohonan-tugasan-user tuples | `TEST-PERMOHONAN-INDEX.md` |

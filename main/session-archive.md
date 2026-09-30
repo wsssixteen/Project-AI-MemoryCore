@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-09-29 afternoon → 2026-09-30, redmine-tickets-triage worktree, part 2)
+- **#281324**: re-synced, blind re-check on live staging (et_flowable17) holds. Fix = Data Object `caraPenghantaran` default `TP` in `MLK_PLP_SUB_UPN` ONLY (not the 12 main flows; miya asked, W3's main-flow shape was rejected by W4) + admin variable-add on stuck cases. Staging repro: PTMLK/03/L/PRBB/2026/8, task 11675067, samsiah_jaamat@melaka.gov.my. 7-step table in QA-281324.md §0b. Waiting on miya to publish on staging; Redmine In Progress waits on "post it".
+- **Planner (miya's "My Weekly Planning", Wed-Fri)**: Wed 280540 (eSOKONGAN, due 30 Sep) · 281423 · 281324 — Thu 275043 + 244600 · 274323 — Fri 265109 · 246923. Resolved on Redmine: 279411 · 281638 · 281712 · 278909 · 274266 · 281650 (Ready in PROD) · 282061 · 282275. 282198 is with Idris (pending user update).
+- **#281423 (new)**: Teknikal (Aiman Syakir) asks Pelupusan for the data mapping to tell Pemohon / Pemilik / Individu / Syarikat apart in `umm_a_pihak_bkptg` (ref #275018). Consultation, not our code. miya starts it in a NEW session; QA-281423.md has the resume point.
+- **#280540**: now eSOKONGAN assigned to miya, due 30 Sep, Not drafted.
+- **Knowledge**: FLOWABLE-KNOWLEDGE §14 (child Data Object default vs caller In-param, by-key calls take latest version, bpmn-check blind to Data Objects).
+- **Slips**: `reask/verbose` (281324 hand-back buried a 2-job fix under J-tables) · proposal A1 redmine-write-gate blocks read-only GETs.
+
+**Last Activity**: 2026-09-29 18:35 — #282061 PPTPB Permit Khas Jadual VIII: 4-part fix committed, int-env + stag-env, Redmine Resolved to Fizah, PROD-only swap + dup-bill script attached · DE.
+
 ## Session Recap (2026-09-29, #282061, worktree quest-282061-rubric-7a809b)
 - **Bug**: PROD `PTMLK/02/L/PPTPB/2026/5` (PYJ, norlina@melaka.gov.my) borang showed No Permit Khas `02/2026/3` + Fi RM 2200; BA expects `02/2026/1` + RM 2000 (screen must tally with borang).
 - **Cause**: skrin 338 Simpan minted the register number at every PPTPB tugasan (only PLPS exempt since #273461) · screen and borang read two different counters · borang Fi summed PPTPB 200 + PPTPBL 2000 · bill saver reuses only UNPAID rows, so a save after payment re-billed PPTPBL.
@@ -5426,6 +5436,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
