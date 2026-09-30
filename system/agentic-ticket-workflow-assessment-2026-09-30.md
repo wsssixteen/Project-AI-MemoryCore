@@ -61,6 +61,16 @@
 | A4 | ⏭ no etanah change this round (L16/L17 stay internal by miya's ruling) |
 | A5 | ⏭ no sweep this round |
 
+## Session 5 round 3 (16:00)
+
+| Axis | Assessment (concrete instance) |
+|---|---|
+| A1 | Next steps rows used my own labels ("rule the watches", "guards at line 647"); miya could not act on them. Now enforced by a Stop check (next-steps-shape, eval 8/8) plus the injector column. |
+| A2 | `active-cli archive` moved the qa_doc folder but left the block pointing at `active/`, so the adhoc audit failed on a correct close. Fixed in the tool (qa_doc repoint). |
+| A3 | ⏭ no debugging this round |
+| A4 | "Earliest tugasan" answered from data already banked (ind_langkah x BPMN) in one reply; written back to PERMIT-LESEN + L16/L17 |
+| A5 | ⏭ no sweep this round |
+
 ## Session: QA-281423 (worktree session-256334-recovery, 15:58)
 | Axis | Instance | Verdict |
 |---|---|---|

@@ -102,7 +102,13 @@ function afterArchive(qa) {
     const taskFolder = tfLib(); if (!taskFolder) return;
     try {
         const r = taskFolder.archiveProjectFolder(qa);
-        if (r === 'moved' || r === 'merged') console.log(`  📦 project folder → archive\\${qa} (${r})`);
+        if (r === 'moved' || r === 'merged') {
+            console.log(`  📦 project folder → archive\\${qa} (${r})`);
+            // Keep the archived block's qa_doc pointing where the doc now lives (2026-09-30: audit FAILed on a stale active/ path).
+            const text = readText(ARCHIVE);
+            const from = `qa_doc=projects/coding-projects/active/${qa}/`, to = `qa_doc=projects/coding-projects/archive/${qa}/`;
+            if (text.includes(from)) { writeAtomic(ARCHIVE, text.split(from).join(to)); console.log(`  🔗 qa_doc → archive/${qa}/`); }
+        }
     } catch (e) { console.error(`  ⚠ project folder not archived: ${e.message}`); }
 }
 

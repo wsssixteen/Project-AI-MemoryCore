@@ -32,3 +32,6 @@
 {"ts":"2026-09-30T07:27:44.253Z","id":"ADHOC-PERMIT-2026-1","outcome":"fail","fails":["task folder: notes file \"1. ADHOC-PERMIT-2026-1.txt\""],"dur_ms":29}
 {"ts":"2026-09-30T07:28:45.680Z","id":"ADHOC-PERMIT-2026-1","outcome":"pass","fails":[],"dur_ms":87}
 {"ts":"2026-09-30T07:29:28.002Z","id":"ADHOC-PERMIT-2026-1","outcome":"pass","fails":[],"dur_ms":72}
+{"ts":"2026-09-30T08:00:21.157Z","id":"ADHOC-PERMIT-2026-1","outcome":"fail","fails":["qa_doc: file exists","qa_doc: \"## Test data\" has an entry"],"dur_ms":68}
+{"ts":"2026-09-30T08:00:35.071Z","id":"ADHOC-PERMIT-2026-1","outcome":"pass","fails":[],"dur_ms":33}
+{"ts":"2026-09-30T08:03:54.837Z","id":"ADHOC-PRBB-2026-6","outcome":"pass","fails":[],"dur_ms":41}
