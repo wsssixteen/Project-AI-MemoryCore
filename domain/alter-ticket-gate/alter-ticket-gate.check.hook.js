@@ -82,7 +82,7 @@ function bareTicket(prompt) {
 function readBrief(folder) {
   if (!folder) return '';
   let out = '';
-  for (const f of ['Description.txt', 'History.txt']) { try { out += '\n' + fs.readFileSync(path.join(folder, '0. Brief', f), 'utf8'); } catch (_) { /* absent */ } }
+  for (const f of ['Description.txt', 'History.txt']) { try { out += '\n' + fs.readFileSync(path.join(require('../../lib/task-folder').briefDir(folder), f), 'utf8'); } catch (_) { /* absent */ } }
   return out;
 }
 function readTranscriptTail(p) {
