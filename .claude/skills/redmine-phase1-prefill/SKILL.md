@@ -77,9 +77,13 @@ Use `mcp__Claude_in_Chrome__form_input` for each:
 | Resolved By Text | `#issue_custom_field_values_<id>` (text) | `Ahmad Ridhwan Anuar` |
 | Notes textarea | `#issue_notes` (textarea) | (see Step 4) |
 
+**Fill only these fields.** Root Cause Issue (DEV) and any Solution text are filled ONLY when the tracker's form has a Solution field. No Solution field → leave Root Cause (DEV) empty too (みや 2026-09-30, #282555).
+
 Resolved By + Resolved By Text custom-field IDs need to be discovered on first run via `mcp__Claude_in_Chrome__find` against the form labels — cache the IDs in skill state after first successful discovery.
 
 ### Step 4 — Notes textarea template
+
+**READ FIRST, every time: `.claude/auto-memory/feedback_ticket_writing_style.md` → "miya's Redmine speech collection".** That memory decides his voice (English, "Salam <short name>", one fact per line, "Please help to verify.", "Thanks"). Pick the closest verbatim example there and match it. The block below is only the fallback when no example fits.
 
 ```
 Hi <Assignee firstname>, please find the fix at mlk/qa/<NNN>.
