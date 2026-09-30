@@ -64,6 +64,14 @@ Matches the long-standing note that `172.16.100.197:5444` is the mlit DB and nev
 
 ---
 
+### 2a. Reading the Fudge1 server.log (verified 2026-09-30, ADHOC-PDBB-2026-1)
+
+- One JBoss (jboss.node.name = fudge1) hosts /etanah-pelupusan + /etanah-pembangunan only. Other modules (landing, uam, teknikal, hasil…) log elsewhere.
+- MonitoringFilter "is accessing … to https://mlit.melaka.gov.my/…" = request through Bliss1 Apache (172.16.100.41); client IP is preserved (e.g. 10.242.2.9). Host http://172.16.100.41 / .42 = someone typed the Apache IP directly; SYSTEM … from 172.16.100.44 … /mvc/status/isAlive = the health check.
+- The log is BLIND to: /mvc/document (document/PDF previews), /resources/, pdfjs/web, javax.faces.resource, ClientPropertiesReaderServlet, and commonPollForm ajax (common MonitoringFilter.java:260-294). Previews show only as BaseController Streaming <file> … size N; polls show as CommonPollComponent Poll for user:<login> (every ~5 s while a page is open).
+- A user's page is alive iff their Poll for user: lines keep coming. Polls stopping with no page change = the browser stopped sending (queue held or tab frozen), not the server.
+- Time taken:N ms. Exceeds 3 seconds! is the per-request timer; Jana on Surat/Laporan templates is typically 3-11 s (docx build + DMS upload).
+- Browser-side slow clicks (>= 10 s click-to-send) are logged by the page template to **etanah-landing** /mvc/ajax-timing-log (AjaxTimingLogController, WARN "Ajax timing detected"), not to Fudge1.
 ## 3. TRAINING
 
 | Role | Host | IP | Port | Note |
