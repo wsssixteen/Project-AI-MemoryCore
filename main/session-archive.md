@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-09-28 → 09-29, medan-agihan-kepada-bug worktree)
+- **#256334 Round B shipped** (BA fixes B1-B4 on MLIT): SSPDBB Agihan PPTN · PYPDBB no Pembetulan · no Surat Iringan · Jana-before-Selesai VO guard (7d `e611403d89` → int-env `b160dc8700`).
+- **Hasil hand-off root cause + fix (with Li Wen, #282275)**: loop (case ABB resubmit) → child ABB aliran kerja in ISPEKS subflow (PLTP→PSPM pattern) + DELAY 35 s (service is @Async) + case ABB pass null. Proven on PDBB/11 → ABB/16: Semakan AppTugasan + inbox azuan.
+- **Our BPMN**: PDBB callActivity out-mapping `aliranKerjaId` removed in modeler — **v4 NOT published** (MLIT still v3).
+- **Open (ADHOC-HSL-2026-1)**: Li Wen's langkah N-set (she flipped all 14 to Y, breaks counter ABB) · publish PDBB v4 · BA e2e to TKPDBB · B4 retest /4 m.ikram · #256334 on planned-release list.
+- **Harvest**: FLOWABLE-KNOWLEDGE §13 (cross-module subflow as another urusan). Memory: lean diagram rule, long arrows only.
+
+**Last Activity**: 2026-09-29 15:25 — laptop RAM incident closed out: db-gateway live, 153 sessions archived, system-rules Rule 7 + birth enforcement, research note · DE.
+
 ## Session Recap (2026-09-22 → 09-29, resource-usage-investigation worktree)
 - **Incident**: laptop hung at 93-96% RAM, 60 GB commit. Every session started all 21 stdio DB MCP servers (~23 processes, ~2.4 GB each); 233 finished sessions never archived; 2 sessions ran 4 days at 70-85 CPU-hours.
 - **Fixed**: `E:\Dev\scripts\db-gateway` (local git `8f66e6a`): one shared process serves 20 DB MCP endpoints on 127.0.0.1:7411, starts a DB server on first call, stops it after 10 idle min, token + Host check; Task Scheduler "DB Gateway" at logon + 5 min, Priority 4. Selftest 22/22; `claude mcp list` 20/20 connected; 3-DB live test OK. Commit after reboot 12 GB (was 60).
@@ -5407,6 +5416,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

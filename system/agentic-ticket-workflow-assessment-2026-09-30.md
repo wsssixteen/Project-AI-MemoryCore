@@ -9,3 +9,14 @@
 | A3 debugging | Blind re-check on the live engine instead of the knowledge copy caught that the knowledge BPMN is not byte-identical to staging v2 and that PB could mean Pos Berdaftar; act_hi_varinst settled the value space in one query. | #281324 J2 |
 | A4 etanah | A variable read by a shared sub-flow gateway with no writer is fixed in the CHILD as a Data Object, because every caller starts the latest child by key. Banked as FLOWABLE-KNOWLEDGE §14. | #281324 |
 | A5 sweep | ⏭ no sweep run this session. | — |
+
+
+## Session 2 (deploy triage) — 2026-09-30 13:50
+
+| Axis | Assessment (instance) |
+|---|---|
+| A1 agentic system | Chrome session reuse beat the login wall: the built-in pane hit Keycloak, miya's Chrome read the full 1.6 MB log via the console's own JSON API in one call. Cost: 3 gate blocks (design-consult, predicate-box false positive on a MemoryCore edit, attempt-before-blocked) on a non-code session. |
+| A2 quest workflow | ⏭ no quest touched (env deploy of mlk/int-env). |
+| A3 debugging | Good: first-red-step + log tail settled owner in 2 fetches. Slip: 'Nick probably changed the stop script' asserted without evidence (assume-not-verify); fixed by diffing console build time + both prepare outputs. Proposal logged. |
+| A4 etanah issue-solving | New known failure recorded (fudge1 prepare exit 137, retry passes when JBoss already down) in deploy skill §8. Proposal: deploy-run triage script. |
+| A5 sweep | ⏭ no sweep this session. |
