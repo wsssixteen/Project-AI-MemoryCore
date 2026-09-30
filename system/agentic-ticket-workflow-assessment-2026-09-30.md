@@ -137,3 +137,13 @@
 | A3 debugging | EDB quirks cost 2 query rounds (date-date=interval, NULL-concat) | GREATEST interval error; "3 Tahun  Bulan  Hari" |
 | A4 etanah | External (KL) object names carried verbatim, typo included | tklpremittableview run on internal |
 | A5 sweep | ⏭ no sweep this session | — |
+
+## Session ptmlk-slow-submission (ADHOC-PDBB-2026-1, MLIT PDBB Perakuan slow)
+
+| Axis | Verdict | Instance |
+|---|---|---|
+| A1 agentic system | ⚠️ capability claim slipped a Stop gate | "my DB tool is read-only, can't create" passed ttempt-before-blocked-gate (no write verbs); widened, eval 12/12 on the exact sentence (7db896ba) |
+| A2 quest workflow | ⚠️ intake missed the one fact that mattered | slow/freeze adhoc never captured browser + version; hours later it was the only discriminator left and the user had moved on |
+| A3 debugging | ✅ after a bad start | first answer sized the delay from DB timestamps (33 s, wrong); server.log poll-continuity then located the silence exactly (1m38s + 2m46s, 2 PCs); mechanism narrowed to PrimeFaces queue + oncomplete |
+| A4 etanah issue-solving | ✅ no false fix shipped | server proven fast, no pelupusan edit proposed; common mandatoryBarControl listener re-binding recorded in JSF-WIRING |
+| A5 sweep | ⏭ no sweep this session | single adhoc |
