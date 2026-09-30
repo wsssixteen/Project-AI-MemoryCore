@@ -36,6 +36,8 @@ ID = `ADHOC-<URUSAN>-<YYYY>-<n>` — next n after grepping `active.txt` + `activ
 - Replying on an adhoc finding with the save-set unwritten or the audit not run this round.
 - Hand-writing the notes file · reusing an `A#` another block holds · an open block whose register row says RESOLVED (or the reverse).
 - Names / dates / monologue inside Task-folder deliverables (brief.txt is BA verbatim, exempt).
+- Copying an object name from a colleague's source (view / table / file / method) without a spelling check — correct an obvious typo in OUR deliverable and name the correction in the reply (2026-09-30, ADHOC-VIEW-2026-1: KL `TKLPREMITTABLEVIEW` carried into Melaka and run on internal).
+- Mixing up which env/ticket a hand-off is for — "infra sendoff" on an adhoc means THIS adhoc's scripts for PROD, never another open ticket's patch (same adhoc).
 
 symptom: 2026-09-25 miya: 'Create a skill that you will always invoke to properly save every adhoc findings properly, make sure to always audit each round of save and apply the fixes straight-away'
 goal: every adhoc save round ends with all 4 save-set parts present, consistent, and audit-green

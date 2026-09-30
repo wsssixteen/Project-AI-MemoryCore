@@ -1,0 +1,89 @@
+{"qa":"QA-267976","date":"2026-07-03","harvests":{"quest":"done — Ship Verify/Commit/Push/Wrap sections backfilled in archive/QA-267976/QA-267976.md (commit e308200402, 3 files)","system":"deferred","knowledge":"deferred"},"refinement":"deferred — full Step-2-4 harvest interrupted by みや (boot-pause priority); see slip-log 2026-07-03 + todo Q1 hook-nudge bundle","banked_sha":"pending"}
+{"qa":"QA-268322","date":"2026-07-03","harvests":{"quest":"deferred","system":"deferred","knowledge":"deferred"},"refinement":"deferred — minimal log line to clear quest-bounty-verify nag per みや 2026-07-03 'quickly and token-wise fix this'; full harvest at next DE/free slot","banked_sha":"pending"}
+{"ts":"2026-07-21T07:03:38.713Z","qa":"QA-271049","archive_atomic":true,"qa_doc_has_bounty":false,"commit":"2335a86ea5","branch":"mlk/internal/271049"}
+{"ts":"2026-07-26T17:32:15.651Z","qa":"QA-268170","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"n/a-delegated"}
+{"ts":"2026-07-26T17:32:15.979Z","qa":"QA-245240","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":null}
+{"ts":"2026-07-26T17:32:16.327Z","qa":"QA-271721","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-yet-uncommitted-on-mlk/master"}
+{"ts":"2026-07-28T18:19:52.615Z","qa":"QA-272499","archive_atomic":true,"qa_doc_has_bounty":false,"commit":"edc6482952","branch":"mlk/esokongan/272499"}
+{"qa": "QA-273294", "ts": "2026-08-05", "harvests": {"quest": true, "system": 2, "knowledge": 0}, "refinement": "proposed", "banked_sha": "pending"}
+{"qa": "QA-272574", "ts": "2026-08-05", "harvests": {"quest": true, "system": 0, "knowledge": 0}, "refinement": "none", "banked_sha": "n/a-reassigned"}
+{"ts":"2026-08-16T10:56:41.000Z","qa":"QA-273461","mode":"bulk-2026-08-16","run_doc":"domain/quest-bounty/runs/2026-08-16-bulk.md"}
+{"ts":"2026-08-16T10:56:41.000Z","qa":"QA-271985","mode":"bulk-2026-08-16","run_doc":"domain/quest-bounty/runs/2026-08-16-bulk.md"}
+{"ts":"2026-08-16T10:56:41.000Z","qa":"QA-270900","mode":"bulk-2026-08-16","run_doc":"domain/quest-bounty/runs/2026-08-16-bulk.md"}
+{"ts":"2026-08-16T10:56:41.000Z","qa":"QA-273455","mode":"bulk-2026-08-16","run_doc":"domain/quest-bounty/runs/2026-08-16-bulk.md"}
+{"ts":"2026-08-16T10:56:41.000Z","qa":"QA-274182","mode":"bulk-2026-08-16","run_doc":"domain/quest-bounty/runs/2026-08-16-bulk.md"}
+{"ts":"2026-08-16T10:56:41.000Z","qa":"QA-272127","mode":"bulk-2026-08-16","run_doc":"domain/quest-bounty/runs/2026-08-16-bulk.md"}
+{"ts":"2026-08-16T10:56:41.000Z","qa":"QA-272329","mode":"bulk-2026-08-16","run_doc":"domain/quest-bounty/runs/2026-08-16-bulk.md"}
+{"ts":"2026-08-16T10:56:42.000Z","qa":"QA-273294","mode":"bulk-2026-08-16","run_doc":"domain/quest-bounty/runs/2026-08-16-bulk.md"}
+{"ts":"2026-08-16T10:56:42.000Z","qa":"QA-273921","mode":"bulk-2026-08-16","run_doc":"domain/quest-bounty/runs/2026-08-16-bulk.md"}
+{"ts":"2026-08-16T10:56:42.000Z","qa":"QA-275319","mode":"bulk-2026-08-16","run_doc":"domain/quest-bounty/runs/2026-08-16-bulk.md"}
+{"ts":"2026-08-16T10:56:42.000Z","qa":"QA-272574","mode":"bulk-2026-08-16","run_doc":"domain/quest-bounty/runs/2026-08-16-bulk.md"}
+{"ts":"2026-08-16T12:46:55.006Z","qa":"QA-273837","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-08-16T12:47:38.000Z","qa":"QA-274510","mode":"back-harvest-2026-08-16","note":"knowledge already banked in FLOWABLE-KNOWLEDGE §5-§9 (quest authored it); +1 §6 addendum; active.txt block migration done this run"}
+{"ts":"2026-08-16T12:48:01.000Z","qa":"QA-273919","mode":"back-harvest-2026-08-16","note":"3 facts -> FRONTEND-PATTERNS; annotations-skill image-trigger refinement applied; block migrated"}
+{"ts":"2026-08-16T12:49:49.000Z","qa":"QA-274136","mode":"back-harvest-2026-08-16","note":"JSF dual-binding -> BESTIARY; AWAM draft recipe -> TEST-INDEX; scope-overshoot 2->15 keys on shipped 8098454df4 FLAGGED to miya + proposal row; qa_doc contradicts repo state (doc says Apply-not-started, commit shipped)"}
+{"ts":"2026-08-16T12:50:07.000Z","qa":"QA-274046","mode":"back-harvest-2026-08-16","note":"pre-paid (BESTIARY 676-716 + DATABASE); +1 single-image bloat addendum; empty-subfolder proposal; no code fix exists (family member of 272943/272181)"}
+{"ts":"2026-08-16T12:50:33.000Z","qa":"QA-273956","mode":"back-harvest-2026-08-16","note":"DATABASE s17.3 scope correction delivered + s19 confirming case + NEW auto-regen mechanism banked; grep-literal-vs-knowledge proposal; block migrated"}
+{"ts":"2026-08-20T23:29:17.909Z","qa":"QA-265414","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-08-20T23:29:18.058Z","qa":"QA-275475","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-08-20T23:29:18.196Z","qa":"QA-275152","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-08-20T23:29:18.338Z","qa":"QA-275587","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-08-20T23:29:18.548Z","qa":"QA-274740","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-08-20T23:29:18.715Z","qa":"QA-276074","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-08-20T23:29:18.864Z","qa":"QA-274318","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-08-20T23:29:19.028Z","qa":"QA-275505","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-08-20T23:29:19.177Z","qa":"QA-276181","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-08-20T23:39:47.869Z","qa":"QA-265414","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-08-20T23:39:48.446Z","qa":"QA-275475","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-08-20T23:39:49.013Z","qa":"QA-275152","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-08-20T23:39:49.585Z","qa":"QA-275587","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-08-20T23:39:50.177Z","qa":"QA-276074","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-08-20T23:39:50.844Z","qa":"QA-274318","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-08-20T23:39:51.421Z","qa":"QA-275505","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-08-20T23:39:52.066Z","qa":"QA-276181","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"mlk/esokongan/275505"}
+{"ts":"2026-09-22T12:04:05.168Z","qa":"QA-280614","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":null,"allow_stub_reason":"PROD data-patch, twin of 279793 MLPS Tempat pattern; no new reusable knowledge to harvest"}
+{"ts":"2026-09-22T16:01:25.935Z","qa":"QA-280895","kind":"wrong-fix","n":1,"was":"isMCL missing in mlkMaklumatTanahV3 sempadan guard = the blank","why":"video showed the blank is the WHOLE MlkMaklumatPermohonanPembatalanForm page after Seterusnya, and L8 getter isTambahKuantiti IS present (:937); root is the FORM param set missing isMCL among 9 urusan flags (:32-45)","learned":"watch the BA video before naming a render-side panel; the blank-page URL names the exact form"}
+{"ts":"2026-09-23T08:43:14.578Z","qa":"QA-280540","kind":"wrong-fix","n":1,"was":"v1 1f9b91a3ea header-unit hack, boolean isPptpbUnitBukanLuas, 6 over-copied JNS_PER_FI constants","why":"binary flag built from one observed value; the field has 28 values; row-level kadar_pengiraan/unit_luas overrides ignored","learned":"enumerate a config field's full value set and read its existing consumer before branching on it"}
+{"ts":"2026-09-23T08:43:14.794Z","qa":"QA-280540","kind":"wrong-fix","n":2,"was":"v2 78ef0ab280 routed PPTPB through the CR PLPS engine findKadarFiPLPS on loose branch 280540v2","why":"engine is int-env-only CR code and does not match PPTPB tujuan, fee went blank; branch cut from int-env","learned":"never base a prod ticket fix on CR-only code; branch off mlk/master and check against int-env"}
+{"ts":"2026-09-23T08:43:14.986Z","qa":"QA-280540","kind":"wrong-fix","n":3,"was":"v3 6afd3c36c0 matcher restore + row-unit gate on intenvfix-280540 cut from mlk/int-env","why":"forward-patched v2 env state instead of rebuilding from master; still no Kategori disambiguation","learned":"when a fix line drifts, restart from the master baseline instead of forward-patching env state"}
+{"ts":"2026-09-23T08:43:15.173Z","qa":"QA-280540","kind":"wrong-fix","n":4,"was":"v4 15e8270e0d Kategori filter with a private map inside the helper","why":"Perindustrian tujuan codes missing from TUJUAN_TO_MAKSUD_MENDUDUKI_MAP so Perindustrian fee blank; map belonged in the negeri constant","learned":"trace every CR-added value set (radio, tujuan, rate rows) through the whole lookup chain before calling scope"}
+{"ts":"2026-09-23T08:43:29.287Z","qa":"QA-280540","kind":"wrong-fix","n":1,"verdict":"phrase:pre-code-check v1.7.1 config-source row + memory feedback_config_table_before_code.md (done 179ed7b)"}
+{"ts":"2026-09-23T08:43:29.465Z","qa":"QA-280540","kind":"wrong-fix","n":2,"verdict":"feature:deploy-guard v1.2.1 branch-from-env kind (done 179ed7b)"}
+{"ts":"2026-09-23T08:43:29.671Z","qa":"QA-280540","kind":"wrong-fix","n":3,"verdict":"feature:deploy-guard v1.2.1 commit-off-env-ancestry + commit-branch-name kinds (done 179ed7b)"}
+{"ts":"2026-09-23T08:43:29.834Z","qa":"QA-280540","kind":"wrong-fix","n":4,"verdict":"knowledge:etanah-knowledge/melaka/DATABASE.md §28 fee-unit config (done 179ed7b, restored 472ab9f)"}
+{"ts":"2026-09-23T09:38:37.623Z","qa":"QA-280540","kind":"wrong-fix","n":5,"was":"19c975c9fa re-declared JNS_PER_FI_METER/HKTR/EKAR in a new PelupusanConstant map; then proposed per-Lot x lot count","why":"same helper already normalises these via PelupusanCommonConstant.UNIT_CONVERSION_MAP (calculatePlpsSewaTahunan #265109) and treats non-area units as flat; lot count is the AWAM counter rule","learned":"grep the target file for the in-file analog of the controlling field and diff behaviour per value before building"}
+{"ts":"2026-09-23T09:38:37.789Z","qa":"QA-280540","kind":"wrong-fix","n":5,"verdict":"feature:pre-code-check v1.8 duplicate-literal probe + phrase:quest Rubric row (i) analog-behaviour diff (2026-09-23)"}
+{"ts":"2026-09-24T05:37:16.831Z","qa":"QA-110506","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"a71c31d97c","branch":"prk/int-env"}
+{"ts":"2026-09-24T10:44:36.130Z","qa":"QA-280895","kind":"wrong-fix","n":2,"was":"add isMCL flag + exclude MCL from negative-list panels (panel unnamed)","why":"2026-09-23 blind re-run: prior session read the mlk/int-env working copy (:99 already rendered=isPRBB) so it ruled out the real thrower; on master the PRBB panel renders for MCL and reads mbb.keputusanMMKN which the bean lacks","learned":"read diagnosis code from origin/<baseline> via git show, never the working copy, when the repo may sit on int-env"}
+{"ts":"2026-09-24T10:45:20.243Z","qa":"QA-280895","kind":"wrong-fix","n":1,"verdict":"none: already covered by feedback_watch_video_url_first (video before naming the panel)"}
+{"ts":"2026-09-24T10:45:20.365Z","qa":"QA-280895","kind":"wrong-fix","n":2,"verdict":"phrase: .claude/skills/quest/SKILL.md resume step 4 off-baseline read rule (git show origin/<baseline>)"}
+{"ts":"2026-09-24T10:45:55.738Z","qa":"QA-280895","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-09-24T10:46:54.081Z","qa":"QA-281482","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-09-24T10:47:13.184Z","qa":"QA-281482","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-09-24T10:47:28.431Z","qa":"QA-280895","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"0c074d07a2","branch":"mlk/esokongan/280895"}
+{"ts":"2026-09-24T10:47:37.494Z","qa":"QA-281392","kind":"wrong-fix","n":1,"was":"e58e197538 alone: sync the page's first-year receipt into versi 0 on every Simpan of the shared 4Ae form","why":"Semakan (SMB) loaded renewal row 1 over the first-year receipt, Papar saved it, and the sync wrote 2607070201D89200001 into versi 0 on stg2 (shahniza 12:18)","learned":"before calling a shared save path safe, read what EVERY tugasan sharing the screen loads into the VO"}
+{"ts":"2026-09-24T10:47:37.765Z","qa":"QA-281392","kind":"wrong-fix","n":2,"was":"first 2 commits made as mlk/hotfix/280176 under the closed ticket number","why":"the hotfix got its own ticket #281392; stag-env had to be reverted and re-merged to renumber","learned":"a hotfix is its own ticket: scaffold + mlk/hotfix/<own #> before the first commit"}
+{"ts":"2026-09-24T10:48:23.658Z","qa":"QA-281392","kind":"wrong-fix","n":1,"verdict":"knowledge:etanah-knowledge/melaka/urusan/MLPS-TICKETS.md (shared skrin 378 PB/SMB/SB + Pengesahan side effects) + feature:hotfix step 4"}
+{"ts":"2026-09-24T10:48:23.872Z","qa":"QA-281392","kind":"wrong-fix","n":2,"verdict":"feature:quest-exists-gate (blocks commit # != mlk/hotfix/<n> and commits with no quest) + hotfix skill step 0/2 + BRANCH-AND-DEPLOY.md §8"}
+{"ts":"2026-09-24T10:50:12.757Z","qa":"QA-281319","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"none (data patch + flowable variable, PROD)","branch":null}
+{"ts":"2026-09-24T10:51:50.443Z","qa":"QA-281392","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"225deaf56a","branch":"mlk/hotfix/281392"}
+{"ts":"2026-09-25T03:03:03.308Z","qa":"ADHOC-PT-2026-9","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":null,"allow_stub_reason":"superseded by ESOKONGAN #281567; investigation folded into QA-281567.md, harvest runs at QA-281567 Phase 2"}
+{"ts":"2026-09-25T03:09:25.434Z","qa":"ADHOC-UPP-2026-1","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":null,"allow_stub_reason":"fixed under #279615 (Closed), commit 1439ab0a41"}
+{"ts":"2026-09-25T03:09:26.052Z","qa":"ADHOC-PT-2026-4","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none - diagnosis-only, no code branch yet (bundle target QA-275152)","allow_stub_reason":"fixed by colleague under #276422 (Closed), commit cdb242bf09"}
+{"ts":"2026-09-25T03:09:26.760Z","qa":"ADHOC-PT-2026-7","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-09-25T03:09:27.805Z","qa":"ADHOC-PRBB-2026-3","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none","allow_stub_reason":"superseded by QA-277346 / #277346 (Closed); evidence folded into QA-277346"}
+{"ts":"2026-09-25T03:09:29.018Z","qa":"ADHOC-PT-2026-5","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"n-a-data-patch-PROD-infra","allow_stub_reason":"migrated to QA-277147 / #277147 (Resolved)"}
+{"ts":"2026-09-25T07:47:56.831Z","qa":"QA-281656","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-09-28T06:16:29.084Z","qa":"QA-281650","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"none-patch-only","branch":null}
+{"ts":"2026-09-28T07:46:26.129Z","qa":"QA-281568","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-09-28T07:20:00Z","qa":"QA-281568","harvests":{"quest":true,"system":"none","knowledge":"PT-TICKETS.md note"},"refinement":"none","banked_sha":"66f8baae"}
+{"ts":"2026-09-28T08:24:43.778Z","qa":"QA-281638","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-09-28T08:25:25.112Z","qa":"QA-281638","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"none","branch":null}
+{"ts":"2026-09-28T08:33:16.873Z","qa":"QA-281712","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-09-28T08:34:20.634Z","qa":"QA-281712","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"2121050779","branch":"mlk/esokongan/281712"}
+{"ts":"2026-09-29T10:29:20.797Z","qa":"QA-256334","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"e611403d89","branch":"mlk/CR/256334"}
+{"ts":"2026-09-30T07:58:15.555Z","qa":"QA-281423","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none (consultation)"}
+{"ts":"2026-09-30T08:04:46.450Z","qa":"ADHOC-PRBB-2026-6","gate":"harvest-gate","action":"refused"}
+{"qa":"ADHOC-PRBB-2026-6","ts":"2026-09-30","harvests":{"quest":1,"system":5,"knowledge":3},"refinement":"proposed","banked_sha":"e862cc7a"}
+{"ts":"2026-09-30T09:35:41.364Z","qa":"ADHOC-VIEW-2026-1","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-09-30T09:36:14.579Z","qa":"ADHOC-VIEW-2026-1","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none-until-ticket"}
