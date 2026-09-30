@@ -1,5 +1,14 @@
 # Current Session
 
+**Last Activity**: 2026-09-30 17:45 — junior handover (#264355 + #274266 → Farah) saved · main merged into worktree · DE.
+
+## Session Recap (2026-09-28 to 09-30, worktree easy-internal-tickets-c23369)
+- **Ask**: scan internal tickets (not patch or eSOKONGAN), list easy ones for the junior. Result: 7 open internal/QA, all miya's; easy = #264355 (PRU Lulus letter, AWAM list) + #274266 (PT PYSKTPDT peranan, data only).
+- **Guides**: posted by miya 2026-09-29 to Farah (Siti Farhanih Abdul Razak). #274266 → Farah Resolved 2026-09-29 (block delegated, Redmine divergence: close needs miya nod). #264355 → Farah testing.
+- **Gap owned**: #264355 guide items 4 (Tolak) + 5 (notifikasi) had no proven fix; only Lulus is proven. Written into QA-264355.md.
+- **Memory**: feedback_ticket_writing_style entry 7 — junior hints = symptom + where + test data, never the cause; internal test data only; proven fixes only.
+- **Slips (miya)**: spoon-feeding cause in hints · staging test data for a junior who tests on internal · guide sent without sweep-proven fixes.
+
 **Last Activity**: 2026-09-30 17:00 — QA-281423 follow-ups: hooks retired (prod-db-confirm · quest-bounty skip-warning + auto-save) · audit false-RETIRE fixed · bounty proposals tracked · CLAUDE.md v1.74 reply skeleton · DE.
 
 ## Session Recap (2026-09-30 16:00-17:00, worktree session-256334-recovery)
@@ -19,14 +28,3 @@
 - **Slips (miya)**: 2× answer-the-ask — asked for one sentence / very short sentences, got bullets + a table.
 
 **Last Activity**: 2026-09-30 16:10 — ADHOC-PRBB-2026-6 (PROD Pembatalan Permohonan Jana ralat) closed OWNED-ELSEWHERE (common/GIS) + archived · adhoc "move BA downloads" step built · DE.
-
-## Session Recap (2026-09-30, ADHOC-PRBB-2026-6, worktree melaka-pembatalan-ralat-f283f4)
-- **Ask**: PDTMT PROD, Utiliti Proses Pembatalan Permohonan PTMLK/01/L/PRBB/2026/13 @ SaffuanH, klik Jana → ralat NPE `this.gisRequestService is null`.
-- **Root cause (PROD server.log)**: `relation "et_ptg.log_service" does not exist` ×6 09:50-10:03, all Pembatalan Jana. GIS log table missing in PROD GIS DB (common 1.6.7 logging, commit e2ee7f9adc) + common `PostgresUpdateService` null helper turns it into an NPE. **Not ours** — common told with the error line only.
-- **Parked**: pelupusan try/catch in `PelupusanIntegrateGISService.insertChartingTolak` built + compiled then DISCARDED; kept as option in the qa_doc. Pelupusan tree clean.
-- **Built**: adhoc detector step 1a (MOVE attached Desktop/Downloads files into the brief folder) + audit check "BA downloads MOVED" + adhoc-save row — eval 15/15, commit c6d4a079.
-- **Knowledge**: LATENT-BUGS L18 · ADHOC-TRIAGE rule 6 (mask NPE → read the server.log line before it) · urusan/PRBB-TICKETS note. Bounty e862cc7a.
-- **Slips (miya)**: adhoc-scaffold-misread (read "build it, verify" as the etanah fix, asked for JBoss) · module-boundary-overreach (drafted common hand-off offering to carry their script to infra). Memory: feedback_other_team_message_not_our_issue + module_edit_boundary "never carry".
-- **Open**: empty source Task folder `244. AH ...` (`0. Brief`, `2. Fix`) locked by Explorer — files are in Archive\, delete the empty shell once Explorer is closed. DB gateway backends blocked by Windows Application Control this morning.
-
-**Last Activity**: 2026-09-30 15:58 — QA-281423 consultation answered (Pemilik Tanah source mapping posted by miya to Teknikal) · closed + archived · DE.

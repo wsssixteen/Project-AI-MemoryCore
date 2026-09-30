@@ -109,3 +109,12 @@
 | A3 | ⏭ no debugging | |
 | A4 | ⏭ no etanah change | |
 | A5 | ⏭ no sweep | |
+
+## Session: junior handover (easy-internal-tickets, 17:45)
+| Axis | Instance | Verdict |
+|---|---|---|
+| A1 | Board scan reused the 09-25 sweep states instead of re-sweeping; 2 of 4 guide items (#264355 Tolak, notifikasi) had no proven fix | gap: "easy for junior" rating had no proof gate; proposal below |
+| A2 | Handover is not a quest phase; nothing checks a guide against the qa_doc Proven column before it goes out | proposal below |
+| A3 | ⏭ no debugging this session | |
+| A4 | Test data picked from staging (where BA reproduced) while the junior tests on internal; internal had no PRU at PL, needed a walk | rule saved (speech entry 7); proposal below |
+| A5 | ⏭ no sweep | |
