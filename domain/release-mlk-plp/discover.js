@@ -53,7 +53,7 @@ function discoverTicket(repo, numbersIn, opts = {}) {
   const g = mkGit(repo);
   const master = opts.master || 'origin/mlk/master';
   const numbers = Array.isArray(numbersIn) ? numbersIn.map(String) : [String(numbersIn)];
-  if (!opts.noFetch) g(['fetch', 'origin', '--prune'], true);
+  if (!opts.noFetch) require('./fetch-mlk').fetchMlk(repo);   // Melaka refs only (see fetch-mlk.js)
 
   // (1) branch-name index — one index into the set, never the set
   const allRemote = lines(g(['for-each-ref', '--format=%(refname:short)', 'refs/remotes/origin']))

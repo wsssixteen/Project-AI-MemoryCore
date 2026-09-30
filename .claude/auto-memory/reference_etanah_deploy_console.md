@@ -21,4 +21,6 @@ Browser-driven deploy UI (shown to Ruri 2026-09-10 by みや) — the deploy met
 
 **For a deploy-with-proof handback (みや's ask 2026-09-10)**: after the fix is confirmed + committed to branch + merged to `mlk/int-env`, drive this console (Melaka state → the pelupusan app → int-env), screenshot DURING (progress running) and AFTER (success), share both. Header tabs: Deployment Console · Deployment Freeze · History · Config · Maintenance.
 
+**Reading a failed run (2026-09-30)**: the built-in browser pane hits the Keycloak login; read it through **Claude in Chrome** (みや's signed-in session). Full log as JSON: `/etanah-deployment/api/deployment-history/<run-id>` (`.logs[]`), running job `/api/deployment-queue/<id>/live`, job list `/api/deployment-queue`. The **first red step** in Deployment Progress decides the owner; triage table + the fudge1 prepare exit-137 case live in the `deploy` skill §8. **Console/infra owner = Nick** (Yih Kit: "refer Nick").
+
 Related: [[melaka-env-deploy-paths]] · [[baseline-release-servers]] · [[ba-test-deploy-int-env]].

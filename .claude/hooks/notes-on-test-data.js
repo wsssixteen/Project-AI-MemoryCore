@@ -52,16 +52,16 @@ process.stdin.on('end', () => {
     const active = getActiveQATaskFolder();
     if (!active) process.exit(0);
 
-    // Per-ticket notes filename (renamed 2026-05-31): `1. <QA-NNNN>.txt`; legacy fallback `1. Notes.txt`.
-    const qaMatch = (active.qa || '').match(/(QA|FAT-OR|UAT-CR|FAT-CR|FAT|UAT|CR)-?(\d+)/i);
-    const qaTag = qaMatch ? `${qaMatch[1].toUpperCase()}-${qaMatch[2]}` : null;
-    let notesPath = qaTag ? path.join(active.taskFolder, `1. ${qaTag}.txt`) : path.join(active.taskFolder, '1. Notes.txt');
-    const legacyPath = path.join(active.taskFolder, '1. Notes.txt');
-    if (qaTag && !fs.existsSync(notesPath) && fs.existsSync(legacyPath)) {
-      notesPath = legacyPath;
-    }
+    // v2 (2026-09-30): test data lives in the quest MD's "## Test data" section (notes.js v2).
+    // Legacy txt files (`1. NNN NNN.txt` / `1. Notes.txt`) still count if one survives.
+    const root = projectRoot.replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+$/i, '');
     let notesContent = '';
-    try { notesContent = fs.readFileSync(notesPath, 'utf8'); } catch (_) {}
+    for (const sub of ['active', 'archive']) {
+      try { notesContent += fs.readFileSync(path.join(root, 'projects', 'coding-projects', sub, active.qa, `${active.qa}.md`), 'utf8'); } catch (_) {}
+    }
+    try {
+      for (const f of fs.readdirSync(active.taskFolder)) if (/^1\. .*\.txt$/i.test(f)) notesContent += fs.readFileSync(path.join(active.taskFolder, f), 'utf8');
+    } catch (_) {}
 
     const missing = unique.filter(id => !notesContent.includes(id));
     if (missing.length === 0) process.exit(0);
@@ -75,7 +75,7 @@ process.stdin.on('end', () => {
     };
     try { fs.appendFileSync(logPath, JSON.stringify(entry) + '\n'); } catch (_) {}
 
-    process.stderr.write(`\n⚠️  notes-on-test-data: emitted ${missing.length} permohonan ID(s) not in ${active.qa}'s Notes.txt: ${missing.join(', ')}\n   Call: node quest/notes.js --folder "<task-folder>" --env <ENV> --urusan <URUSAN> --tugasan <TUGASAN> --id <ID> --user <LOGIN>\n`);
+    process.stderr.write(`\n⚠️  notes-on-test-data: emitted ${missing.length} permohonan ID(s) not in ${active.qa}.md "## Test data": ${missing.join(', ')}\n   Call: node quest/notes.js --qa ${active.qa} --env <ENV> --urusan <URUSAN> --tugasan <TUGASAN> --id <ID> --user <LOGIN>\n`);
     process.exit(0);
   } catch (e) {
     process.exit(0);

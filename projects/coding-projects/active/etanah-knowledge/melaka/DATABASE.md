@@ -1660,3 +1660,13 @@ WHERE p_aplikasi_id IN (SELECT p_aplikasi_id FROM umm_p_hkmlk
   WHERE hkmlk_id = (SELECT hkmlk_id FROM ind_hkmlk WHERE id_hkmlk = '<id hakmilik>'));
 ```
 Not here: `hakmilik_pihak_berkepentingan` (does not exist in `et_main`). A carian-rasmi receipt like `02CR3761/2026` is NOT in `hsl_bayaran.no_resit`.
+
+## 30. Pemohon vs Pemilik Tanah vs Individu/Syarikat (2026-09-30, #281423, MLIT-proven)
+| Category | Table | Condition |
+|---|---|---|
+| Pemohon | `umm_a_pihak_bkptg` | `flag_pemohon = 'Y'` |
+| Pemilik Tanah | `ind_pihak_bkptg` | hakmilik from `umm_a_permohonan_tnh.mklmt_tmbhn` key `idHkmlk` · `versi_akhir_id` = `ind_versi_dhd` with `flag_aktif = 'Y'` · `flag_kuatkuasa = 'Y'` · jenis kod IN `PelupusanConstant.JENIS_PB_KEEMPUNYAAN` (JENPPM etc.) |
+| Ticked owners (PRBB Langkah 3) | `umm_a_permohonan_tnh.mklmt_tmbhn` | key `idPbKetuanpunyaanList` [{pbId}] → `ind_pihak_bkptg` |
+| Individu / Syarikat | either | `jns_no_id` 452 JNKP_BARU / 456 JNSYKT |
+- TRAP: PRBB pemohon rows ALWAYS carry `jns_pihak_bkptg_id = 625` (JENPPM) — 432/433 on MLIT, owner or not. Never use it to find the owner.
+- Code: `PelupusanExcelReaderHelper.java:4310-4318` → `PihakBerkepentinganRepository.findByJenisPBKodInAndDhdVersiBerkuatkuasa` (etanah-common :42).
