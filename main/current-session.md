@@ -8,6 +8,7 @@
 - **Saved**: ADHOC-REGISTER A36 · qa doc `ADHOC-PERMIT-2026-1.md` · PERMIT-LESEN-RUNNING-NUMBER.md §All-urusan early-mint audit · LATENT-BUGS L16 (PPJK) + L17 (PSBS) + L11 extended + sweep-log row · BUG-BESTIARY family-map line · bug-db index rebuilt (29).
 - **Built**: expansion-protocol Step 7 table ("bug awareness" row → LATENT-BUGS.md · "index.md is the router" row) · adhoc-save SKILL rows 2 (Test data in qa_doc, v13) + 6 (bug awareness) · `lib/adhoc-save-audit.js` v13 (1. Brief via task-folder.js, `## Test data` check, retired-notes-txt check), eval 21/21.
 - **Open (miya's rulings)**: PPJK guard now or wait · PSBS guard now or wait · check server.log 2026-09-14/15 for A02/2026/13.
+- **Round 2 (15:45, "do it all")**: de-knowledge-gate v2 router check (bake homes must be in etanah-knowledge/<state>/index.md; eval 18/18) · audit-briefing no longer offers false RETIRE rows (own-log hooks + Agent-only hooks classified; 0 retire candidates) · sql-schema-verify + attachment-ledger-gate wrapped with hook-runtime (smoke-tested, telemetry rows written) · MAS 29 Sep diary merged into `current/2026-09-29.md` Session 7, stray root file removed. **Redmine ticket NOT raised** — miya wanted internal save only (slip `reask/misread-intent`); L16/L17 stay internal.
 
 **Last Activity**: 2026-09-30 15:25 — MLIT internal deploy card · pelupusan build died at antrun zip (concurrent deploy-pendaftaran-it.sh) · ADHOC-VIEW-2026-1 scripts handed for all envs · DE.
 
@@ -29,14 +30,3 @@
 - **Open (miya)**: WinSCP alias `flowable-drop` nod (session `Petaling` collides with workspace) · delete superseded 246512 branches · 3 old release branches with commits not in master (1.0.0, 1.0.7, 270123).
 
 **Last Activity**: 2026-09-30 13:45 — MLIT pelupusan deploy failure triaged (infra, not our code) · retry succeeded 13:13 · deploy skill v1.3 §8 console triage · DE.
-
-## Session Recap (2026-09-30, server-deployment-slowness worktree)
-- **Symptom**: miya's pelupusan deploy to MLK IT (`mlk/int-env`, run `e711b154`) "taking too long"; MLIT `/etanah-pelupusan` returned 503 (hasil, pendaftaran 200).
-- **Cause (from the run log)**: Build SUCCESS; prepare on `172.16.100.49` (fudge1) died — `Killed sudo -n systemctl stop jboss` · `stop_jboss.sh: line 4: kill: (1481372) - Operation not permitted` · `Killed '/home/app/bin/stop_jboss.sh'` · exit 137. Infra (Nick). Hypothesis, unconfirmed: stop script kills by a "jboss" name match that hits itself.
-- **Retry** `304b7721` 13:12 SUCCESS only because JBoss was already down (no "Stopping fudge1 JBoss..." line); console build `11:19:55` unchanged → no fix seen. Expect repeat on next deploy to a running `.49`. MLIT pelupusan back (Laman Utama 200). miya messaged Nick; WP (James) had the same the day before; 25 FAILED MLK runs 25-30 Sep in History.
-- **How Ruri reads the console**: Claude in Chrome (miya's Keycloak session); full log JSON at `/etanah-deployment/api/deployment-history/<id>` · live at `/api/deployment-queue/<id>/live`.
-- **Built**: deploy skill v1.3 §8 (step→owner table, keywords, known 137 case), eval 52/52, `2f509f2d`.
-- **Open (miya's rulings)**: bake fudge1 line into ENV-ARCHITECTURE.md? · retire 5 zero-fire hooks? · reconcile: 274266 / 282061 / 280540 Resolved on Redmine, 264355 / 282198 with others, #281423 has no block · worktree cleanup (59 folders = 16.34 GB of 16.82 GB) + move creation to `E:\Dev\worktrees`.
-- **Slip (self)**: suggested Nick "probably changed the stop script" without evidence; miya asked "how do we know"; corrected with the console build-time diff.
-
-**Last Activity**: 2026-09-30 13:50 — #281324 re-verified + plan set (sub-flow only) · weekly planner Wed-Fri from Redmine · #281423 synced (Teknikal data-mapping consult) · DE.

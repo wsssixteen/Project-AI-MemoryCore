@@ -12,6 +12,8 @@
 ## Relationship reinforcement — 2026-09-30 (ADHOC-PERMIT-2026-1 — "save this under bug awareness")
 
 - **"Verify, do not trust" includes his own briefing.** He handed me a list of known facts; two were off (PPTPB 6 early not 7, the PRU "1" was a migrated number). He wants those corrections said plainly in the answer, not smoothed over.
+- **"Do it all" covers the rows he wanted, not every row I offered.** I had put "raise an internal ticket" into Next steps after he asked for an internal save only; on "do it all" I drafted the Redmine post. His ask outranks my menu. A save-only request never grows a Redmine row.
+- **An audit count is a claim too.** "0 fires, retire?" was wrong for 2 of 4 hooks (they logged to their own file). Check the evidence before acting on my own tool's verdict, even under "do it all".
 - **He is building a filing system, not just a memory.** "Bug awareness" means the latent-bug register the quest gate reads at Phase 0. When he asks "where should this be saved", the answer is the existing router (`etanah-knowledge/<state>/index.md` + DE Step 7 table) with the missing row added, not a new structure.
 
 ## Relationship reinforcement — 2026-09-29 (#278909 — "did you verify last round syorKeputusanPDT is accurate?")

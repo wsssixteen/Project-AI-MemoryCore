@@ -50,3 +50,13 @@
 | A3 debugging | Counter census (every `sis_no_turutan` number matched to its app's tugasan history) proved completeness: 62/62 accounted for, no guessing. Banked in PERMIT-LESEN-RUNNING-NUMBER.md. |
 | A4 etanah | One shared screen (skrin 338) causes the whole early-mint family; PPJK + PSBS are latent (L16/L17) and share a one-line guard at `MlkPengiraanBayaranLesenForm.java:647`. |
 | A5 sweep | The family sweep was manual this time (code callers × ind_langkah × BPMN × counters). It is repeatable per release but nothing re-runs it. |
+
+## Session 5 round 2 — "do it all" (15:45)
+
+| Axis | Assessment (concrete instance) |
+|---|---|
+| A1 | audit-briefing flagged 4 hooks "never fired, RETIRE?"; 2 had fired the same morning into their own `log.jsonl` (unwrapped, invisible to telemetry), 2 only fire on Agent spawns. Retiring on that count would have removed the PROD-SQL schema check. Fixed the classifier + wrapped both hooks. |
+| A2 | An internal-save ask grew a "raise ticket" row in my own Next-steps menu, and "do it all" nearly turned it into a Redmine post. The redmine-write-gate + popup held; the menu row should never have existed. |
+| A3 | ⏭ no debugging work this round |
+| A4 | ⏭ no etanah change this round (L16/L17 stay internal by miya's ruling) |
+| A5 | ⏭ no sweep this round |
