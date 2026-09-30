@@ -4,6 +4,17 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-09-29 → 2026-09-30, ADHOC-PERMIT-2026-1, main checkout)
+- **Ask**: read-only audit, is any Melaka pelupusan urusan minting No Lesen/Permit before its issuing tugasan (class of #273461 / #282061)?
+- **Answer**: only skrin 338 `MlkPengiraanBayaranLesenForm.performCustomSave():647` mints early; mounted in 4 urusan (PLPS, PPJK, PPTPB, PSBS; PROD = stg2). PROD 2026 counters issued 62 numbers: PPTPB 6 early (fix = #282061 R1) · PLPS 3 residue (#273461) · PPJK latent (0 apps at PYSK) · PSBS latent throw (no counter, `retrieveRunningNumberCode():361`) · MLPS/PRBB/PRU/lite clean. Side: `0402DIS2024000574` A02/2026/13 via Utiliti with no register row (L11 shape, hypothesis).
+- **Saved**: ADHOC-REGISTER A36 · qa doc `ADHOC-PERMIT-2026-1.md` · PERMIT-LESEN-RUNNING-NUMBER.md §All-urusan early-mint audit · LATENT-BUGS L16 (PPJK) + L17 (PSBS) + L11 extended + sweep-log row · BUG-BESTIARY family-map line · bug-db index rebuilt (29).
+- **Built**: expansion-protocol Step 7 table ("bug awareness" row → LATENT-BUGS.md · "index.md is the router" row) · adhoc-save SKILL rows 2 (Test data in qa_doc, v13) + 6 (bug awareness) · `lib/adhoc-save-audit.js` v13 (1. Brief via task-folder.js, `## Test data` check, retired-notes-txt check), eval 21/21.
+- **Ruled 2026-09-30**: PPJK + PSBS fixed in a future release or when a ticket lands (LATENT-BUGS L16/L17 carry the ruling + earliest tugasan: PPJK 43.0 PYSK, PSBS PRMMKNPTGT) · register A36 → LATENT · block archived, Task folder → Archive\. Still optional: server.log 2026-09-14/15 for A02/2026/13.
+- **Round 3 (16:00)**: miya "not sure what you're talking about ... next steps without short explanation" → Next steps table is now `# | Action | What it means | Your reply` (injector) + `domain/next-steps-shape` Stop check in the stop-reply-shape bundle (eval 8/8; blocks the exact flagged table) · slip `reask/jargon-next-steps` · 6 overdue watches resolved ok on telemetry/eval evidence, 2 left open (redmine status-write path, BA pass-note template: not yet exercised) · `quest/active-cli.js archive` now repoints the archived block's qa_doc to archive/ (was a manual fix).
+- **Round 2 (15:45, "do it all")**: de-knowledge-gate v2 router check (bake homes must be in etanah-knowledge/<state>/index.md; eval 18/18) · audit-briefing no longer offers false RETIRE rows (own-log hooks + Agent-only hooks classified; 0 retire candidates) · sql-schema-verify + attachment-ledger-gate wrapped with hook-runtime (smoke-tested, telemetry rows written) · MAS 29 Sep diary merged into `current/2026-09-29.md` Session 7, stray root file removed. **Redmine ticket NOT raised** — miya wanted internal save only (slip `reask/misread-intent`); L16/L17 stay internal.
+
+**Last Activity**: 2026-09-30 15:25 — MLIT internal deploy card · pelupusan build died at antrun zip (concurrent deploy-pendaftaran-it.sh) · ADHOC-VIEW-2026-1 scripts handed for all envs · DE.
+
 ## Session Recap (2026-09-28 → 2026-09-30, melaka-internal-deploy worktree)
 - **Deploy card**: internal = one host `172.16.100.162`, `deployment-scripts/mlit`, `sh deploy-<module>.sh`, branch `mlk/int-env`.
 - **Pelupusan build failure (2026-09-28 10:49)**: first failure `maven-antrun-plugin (replace-properties): Problem creating zip: .../target/etanah-pelupusan.war (No such file or directory)` after 59.8 s; everything below it was cascade. `ps` showed `deploy-pendaftaran-it.sh` (pid 1817149, pts/2, started 10:36, 21+ min). HYPOTHESIS, unconfirmed: concurrent run on mirage1. miya never pasted the re-run result.
@@ -5466,6 +5477,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

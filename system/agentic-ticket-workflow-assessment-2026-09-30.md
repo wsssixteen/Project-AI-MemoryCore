@@ -88,3 +88,15 @@
 | A3 debugging | NPE in a catch hid `relation "et_ptg.log_service" does not exist`; ADHOC-TRIAGE rule 6 now says read the line before the NPE | ⏭ baked into knowledge this session |
 | A4 etanah solving | drafted a common hand-off offering to carry their CREATE TABLE to infra; miya: not our issue, one line | memory written (feedback_other_team_message_not_our_issue); ⏭ no new proposal |
 | A5 sweep | ⏭ no sweep this session |
+
+## Session: redmine-write-gate v1.3 (main checkout, 16:45)
+
+| Axis | Finding | Instance |
+|---|---|---|
+| A1 agentic | Gate evals write into the gate's REAL log.jsonl, so audit counts and "has it fired" checks include fixture rows. | redmine-write-gate log.jsonl tail 2026-09-30 07:54: three `blocked` rows with last_user "/quest resume 256334", which is eval fixture text, not a live turn |
+| A1 agentic | A gate false positive cannot be replayed later: the block row keeps last_user but not the blocked command, and the 2026-09-28 scratchpad audit.js was gone, so its shape was reconstructed from the ask. | F39 fixture written from the description, not the real script |
+| A1 agentic | Brevity asks still get lists: "tell me what this session is for" and "in very short sentences" both got bullets or a table. | slips answer-the-ask ×2 today, ×3 in 7 d |
+| A2 quest | ⏭ no quest this session | — |
+| A3 debugging | The fix kept every prior fixture green only after one regex was widened again (field KEYS count, field READS do not); a narrower first cut would have let a helper-hidden `{ notes, status_id }` write through. Fixture F54 now pins it. | v1.3 draft 1 → draft 3 |
+| A4 etanah | ⏭ no etanah work this session | — |
+| A5 sweep | ⏭ no sweep this session | — |
