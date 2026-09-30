@@ -128,3 +128,12 @@
 | A3 debugging | Diagnosis was one query because the precedent qa_doc had a Final-state table. Hand-back format took 4 rounds. | ⏭ diagnosis fine; format fixed by the quest SKILL 🩹 row. |
 | A4 etanah issue-solving | L10 hit twice in 4 days on PRBB (/7, /8); /2 is waiting. Each costs a PROD patch + admin-UI step. | Ship the permanent In-param fix (#280166 shape) on PRBB/PRZ/PLTP models. Eval: BPMN check that every callActivity into MLK_PLP_SUB_UPN maps `caraPenghantaran`. |
 | A5 sweep | ⏭ no sweep this session. | — |
+## Session — ADHOC-VIEW-2026-1 (KL views port)
+
+| Axis | Finding | Instance |
+|---|---|---|
+| A1 agentic | Chrome MCP hung on Protime (page never idle); the Protime API through PymTime's stored login did the job in 2 calls | 2026-09-28 weekly plan: 3 entries POST 200, read back |
+| A2 quest | Adhoc close had no step asking "which envs does this deliverable need"; PROD was dropped from my mental model | infra sendoff answered with #281638 patch |
+| A3 debugging | EDB quirks cost 2 query rounds (date-date=interval, NULL-concat) | GREATEST interval error; "3 Tahun  Bulan  Hari" |
+| A4 etanah | External (KL) object names carried verbatim, typo included | tklpremittableview run on internal |
+| A5 sweep | ⏭ no sweep this session | — |

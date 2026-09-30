@@ -2,6 +2,8 @@
 
 
 ## Feedback
+- [mlit-db-write-access](feedback_mlit_db_write_access.md) — 🚨 MLIT/STG are WRITABLE via the gateway login (JDBC script); only the MCP query tool is read-only; never tell miya 'read-only'
+- [system-fix-universal-rule](feedback_system_fix_universal_rule.md) — 🚨 system fix = UNIVERSAL rule, never keyed to one ticket/tugasan; load system-rules + system-design BEFORE any design/audit
 - [resource-footprint](feedback_resource_footprint.md) — 🚨 laptop slow / RAM / "what are these processes" → measure LIVE + trace parents first; monitoring must be MECHANICAL not UI; system-rules Rule 7
 - [esokongan-means-tracker](feedback_esokongan_means_tracker.md) — 🚨 "eSOKONGAN ticket" = TRACKER eSOKONGAN (SLA), not the project; order eSOKONGAN → PROD → rest, then Priority, then urgent words
 - [top-down-app-design](feedback_top_down_app_design.md) — 🚨 apps/dashboards: glance → area → item → evidence, deeper levels only on demand; names before layout; guide last
