@@ -161,3 +161,4 @@
 {"ts":"2026-09-30T09:43:19.326Z","turn_id":"6982974f-28","feature":"de-knowledge-gate","goal":"BLOCK DE close until knowledge-candidate list or sentinel emitted"}
 {"ts":"2026-09-30T09:43:19.352Z","turn_id":"6982974f-28","feature":"db-claim-proof","goal":"every DB fact miya reads arrives with the SELECT he can run to verify it"}
 {"ts":"2026-09-30T09:52:55.291Z","turn_id":"57bb4457-2","feature":"predicate-box","goal":"predicate-box.discipline.hook.js — Stop hook (BLOCKING) Power: domain/predicate-box/ v2 (2026-07-07): quest-gate REMOVED + advisory promoted to decision:block."}
+{"ts":"2026-09-30T10:10:23.032Z","turn_id":"e7c7ed10-9","feature":"design-consult-gate","goal":"design-consult-gate.gate.hook.js — PreToolUse hook (matcher: Edit|Write) Feature: domain/design-consult-gate/ PURPOSE: creating/editing a system-shape file MUST be preceded by consulting BOTH"}
