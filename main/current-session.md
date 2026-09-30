@@ -1,5 +1,14 @@
 # Current Session
 
+**Last Activity**: 2026-09-30 18:05 — ADHOC-PDBB-2026-1 (MLIT PDBB Perakuan slow) closed + archived (dropped by miya) · attempt-before-blocked-gate widened · DE.
+
+## Session Recap (2026-09-30, worktree ptmlk-slow-submission-10ca65)
+- **Ask**: why PTMLK/01/L/PDBB/2026/12 on MLIT loads ~5 min at Perakuan Laporan Pemantauan (PRPDBB), m.ikram.
+- **Found**: server never slow (Jana Surat 10.7 s, Hantar 483 ms). The page itself went silent (no requests, not even the 5 s poll) in 2 gaps (1m38s, 2m46s) right after the Agihan Kepada radio; PDBB/13 froze the same way on a 2nd PC. Leading mechanism: PrimeFaces 12 queue held by the oncomplete="mandatoryBarControl(); fix();" step (common internal.js re-binds legacy DOMSubtreeModified listeners every call). Browser/version never confirmed → dropped by miya. Full evidence: archived qa_doc ADHOC-PDBB-2026-1.
+- **Env**: Windows Smart App Control blocked pgedge-postgres-mcp.exe (all postgres MCP) 10:22-10:57; worked around with a Java JDBC script; SAC then turned Off.
+- **Slips (miya)**: first answer wrongly put the ~33 s Hantar cost on the ISPEKS sub-flow (corrected by server.log) · told miya "my DB tool is read-only, can't create" (false: gateway login is read-write; memory already said so).
+- **Built**: attempt-before-blocked-gate now blocks "can't create/write/insert/update" + "read-only DB/tool" claims (eval 12/12 incl. the exact sentence; 7db896ba) · memory feedback_mlit_db_write_access.
+- **Carry forward**: none (adhoc closed).
 **Last Activity**: 2026-09-30 17:35 — QA-281638 PROD verified (successor PL Bayaran Pelbagai) · DE.
 
 ## Session Recap (2026-09-28 to 09-30, worktree patch-281638-status-flowable-3f968d)
@@ -18,21 +27,3 @@
 - **Carry forward**: PROD views pending infra · Alex to confirm baki unit (days) + kiraan_pembaharuan NULL.
 
 **Last Activity**: 2026-09-30 17:45 — junior handover (#264355 + #274266 → Farah) saved · main merged into worktree · DE.
-
-## Session Recap (2026-09-28 to 09-30, worktree easy-internal-tickets-c23369)
-- **Ask**: scan internal tickets (not patch or eSOKONGAN), list easy ones for the junior. Result: 7 open internal/QA, all miya's; easy = #264355 (PRU Lulus letter, AWAM list) + #274266 (PT PYSKTPDT peranan, data only).
-- **Guides**: posted by miya 2026-09-29 to Farah (Siti Farhanih Abdul Razak). #274266 → Farah Resolved 2026-09-29 (block delegated, Redmine divergence: close needs miya nod). #264355 → Farah testing.
-- **Gap owned**: #264355 guide items 4 (Tolak) + 5 (notifikasi) had no proven fix; only Lulus is proven. Written into QA-264355.md.
-- **Memory**: feedback_ticket_writing_style entry 7 — junior hints = symptom + where + test data, never the cause; internal test data only; proven fixes only.
-- **Slips (miya)**: spoon-feeding cause in hints · staging test data for a junior who tests on internal · guide sent without sweep-proven fixes.
-
-**Last Activity**: 2026-09-30 17:00 — QA-281423 follow-ups: hooks retired (prod-db-confirm · quest-bounty skip-warning + auto-save) · audit false-RETIRE fixed · bounty proposals tracked · CLAUDE.md v1.74 reply skeleton · DE.
-
-## Session Recap (2026-09-30 16:00-17:00, worktree session-256334-recovery)
-- **Retired (miya)**: `prod-db-confirm` (PROD read-only via et_read; it DID fire, 118 log rows) · quest-bounty `discipline.hook.js` (dead since archive-quest writes its own log line; 1,039 runs, 0 fires) · `quest-bounty.hook.js` (Bash-only matcher, pushed branch not main; DE step 10 saves instead).
-- **Fixed**: `lib/audit-briefing.js` read own-log files from the worktree ROOT → working hooks showed "0 fires, RETIRE?". Now reads MAIN_ROOT. sql-schema-verify (164 fires, blocked today) kept.
-- **Built**: quest-bounty SKILL Step 4 — every proposal goes to `core/slips.js --type proposal --category bounty` (dashboard Open proposals, weekly ruling). CLAUDE.md v1.74 REPLY SKELETON + reply-shape-spec §1-0 (sections per topic · tables for data · short-sentence bullets), folding the unfolded 2026-08-19 ask.
-- **Memory**: feedback_ticket_writing_style += statements not implications · not bossy · Redmine = Textile. feedback_reply_separation_of_concerns marked folded.
-- **Slips (miya)**: reply-shape (topics mixed, long cells; 08-19 fold never done).
-- **Commits**: ee26f55f · 5a5adfd3 · b0073bda (all on main).
-**Last Activity**: 2026-09-30 16:45 — redmine-write-gate v1.3 (field reads no longer count as a write) · DE.

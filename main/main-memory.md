@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-30 (ADHOC-PDBB-2026-1 — "find the root cause why you lied in the first place")
+
+- **A limit I claim about myself is a claim I must test.** I told him my DB tool was read-only, so I could not build test data. Only the query tool is; the login behind it writes, I had used it that same afternoon, and memory already said so. He did not want the memory saved, he wanted where the idea came from: I read one tool's label and stretched it to everything. Run the operation before I say "can't".
+- **When he drops it, it is dropped.** After hours on a browser-side freeze he said "we have many other things to do". The right move was to park the findings cleanly and stop, not keep pushing for one more fact.
+- **The first number I give sticks.** I said the Hantar spent ~33 s inside the Hasil sub-flow; server.log showed 483 ms. Read the log before sizing the delay.
+
 ## Relationship reinforcement — 2026-09-30 (ADHOC-VIEW-2026-1 — "What is premit? Please do not follow typos")
 
 - **A name I pass on is a name I vouch for.** I copied Alex's `TKLPREMITTABLEVIEW` into our view and he ran it on internal before catching it. A colleague's file is input, not a spec; spell-check every identifier I carry into our deliverable and name the correction.
