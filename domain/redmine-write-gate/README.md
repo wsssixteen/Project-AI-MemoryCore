@@ -27,6 +27,8 @@ retention: rotate monthly
 
 **v1.1 (2026-09-25)**: `node quest/ticket-load-verify.js <num>` (the `/quest resume` step 1a-ii reader, local files only) was BLOCKED as a write because its body names `redmine-sync.js` and holds a `/^\s*notes:\s*$/` parser regex. Added to the exemption, basename-anchored (F25). Every `node <script>` in the command is now read, not only the first, so a writer chained after an exempt script is still scanned (F23 — a naive name-append let it through). Script capture now reads quoted paths with spaces (row 17 was marked handled but was not — F26). Reconciles the uncommitted `(\.eval)?` exemption (F27). Spec preservation: "exempt only when it is the script being EXECUTED, never when passed as an argument" and "the command itself carries no mutation" both kept (F24, F31); no spec dropped.
 
+**v1.2 (2026-09-29, #282061)**: two gaps closed. (1) A real AskUserQuestion answer arrives as a `tool_result`, which the gate skipped, so F5 (plain-text popup) passed while the live popup "Yes, post In Progress" was blocked. The gate now reads a `tool_result` starting `Your questions have been answered:` and takes the ANSWER values only (`"="…"`), never the question text (F35, F36). (2) A status-only write (`status_id` with no notes / assignee / % done / journal / upload) is allowed on a plain `update|set|change|tukar|kemaskini … redmine|status|in progress` from miya, with the same negation lookbehind (F32, F34, F37). A note or assignee change still needs "post it" (F33). Spec preservation: every v1.1 spec kept; eval 38/38 green.
+
 ## Adversarial scenarios (Rule 12 — 20)
 
 | # | Scenario | Verdict |
@@ -58,3 +60,8 @@ retention: rotate monthly
 | 25 | `ticket-load-verify.js` later gains HTTP / child_process | handled — F29 goes RED, forcing a re-review of the exemption |
 | 26 | exempt script only MENTIONED in a quoted argument (a slip note, a commit message) | handled — its body is skipped, so a clean command stays silent (F30; live false positive hit while building v1.1) |
 | 27 | exempt script + mutation-shaped text in the command | handled — exemption void, its body is scanned → BLOCK (F31) |
+| 28 | popup QUESTION text contains "set status" but the answer is "Not now" | handled — only answer values are read (F36) |
+| 29 | status write bundled with a note under a status-style approval | handled — any note/assignee field voids the status path (F33) |
+| 30 | "don't update the redmine yet" | handled — negation lookbehind (F34) |
+| 31 | a non-popup tool_result (file read) after the approval | handled — skipped, the typed approval still counts (F38) |
+| 32 | a file read whose text starts with "Your questions have been answered:" | accepted-risk — only the harness writes that prefix at the start of a tool_result; worst case is a status change, which can be set back |

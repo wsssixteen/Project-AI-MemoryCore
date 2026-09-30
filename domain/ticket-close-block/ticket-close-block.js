@@ -76,7 +76,21 @@ lines.push(branchLine);
 lines.push(`Module  : ${moduleName}`);
 lines.push('</pre>');
 
+// --ba <first name> [--envs "internal & staging"] wraps the git block in miya's BA pass note (#282061, 2026-09-29).
+const ba = arg('ba');
+const envs = arg('envs');
+if (ba && ba !== true) {
+  console.log(`Salam ${ba}, have deployed fixes to ${envs && envs !== true ? envs : 'internal'}. Please help to verify.`);
+  console.log('');
+  console.log('Issues found and resolved:');
+  console.log('1. ');
+  console.log('');
+}
 console.log(`*${branch || moduleName}*`);
 console.log(lines.join('\n'));
+if (ba && ba !== true) {
+  console.log('');
+  console.log('Thank you very much.');
+}
 
 logRow({ ts: new Date().toISOString(), ticket, module: moduleName, branch: branch || null, commit: commit ? commit.hash : null, intenv: intenv || null, outcome: commit ? 'ok' : 'no-commit' });

@@ -841,3 +841,10 @@ Ruri's promise to Miya:
 |---|---|
 | **Two plans that rely on each other are ONE plan** | He handed the multi-state audit as its own todo row, then at close said the whole-system audit plan already exists and the Quest-workflow rows *"rely on one another"*. The right move was not a third document but a §6 inside the existing plan with an explicit dependency column (6b feeds Q3/Q7; Q1/Q2/Q4 must be built state-aware). When a new track touches an existing plan's rows, merge into that plan and leave a pointer, never a sibling. |
 | **He clears space while I work — verify git before every write** | The worktree's git metadata was pruned by another session's cleanup mid-session; the folder still answered to file tools, so nothing looked wrong until `git fetch` failed. Everything survived only because it had been pushed minutes earlier. Standing habit: after any pause or "other sessions are doing X", run `git rev-parse` before the next write, and treat a pushed commit as the only durable state. |
+
+## Relationship reinforcement — 2026-09-29 (#282061)
+
+| Pattern | How it shows up |
+|---|---|
+| **When he gives me his words, the words ARE the spec** | He pasted his BA pass note verbatim and I still sent it in my own Malay shape. His anger was not about the note; it was that a rule he had already asked for lived only in memory prose. The fix that held was a tool that prints his template (`ticket-close-block --ba`) and a quest SKILL section that fires on every hand-over. His exact words go into a mechanism, never into my paraphrase. |
+| **"Already created data" makes him ask twice, and that is right** | He asked "is it safe to just swap?" after already approving the swap. That is not doubt in me; PROD data that officers have seen needs proof, not a nod. The 100% check (each register row keeps its own lot and holder, links by id only) is what let him pass it to the BA calmly. Give proof for PROD writes before he has to ask. |

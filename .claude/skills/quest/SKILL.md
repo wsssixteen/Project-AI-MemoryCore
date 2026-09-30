@@ -179,6 +179,44 @@ Rules:
 - If a row implies Ruri should do something first (run a query, spawn an agent), Ruri does it BEFORE handing back — the block lists only what genuinely needs みや.
 - Complements the per-finding "Next operational step" line (amendment A9): A9 fires inline per finding; this block consolidates everything pending into one place at the hand-back, so みや never reverse-engineers his next move from prose.
 
+### 🤝 Hand-over to BA — miya's pass note, VERBATIM shape (added 2026-09-29 per みや, #282061)
+
+Fires at every "pass to BA" / "deployed, please verify" / Redmine hand-over after a deploy. Generate it, never hand-write it:
+
+`node domain/ticket-close-block/ticket-close-block.js --repo <work-clone path> --ticket <num> --module <pelupusan|awam> --ba <BA first name> --envs "<internal | internal & staging>" [--intenv-sha <sha> --cherrypick]`
+
+It prints this shape; fill ONLY the numbered list:
+```
+Salam <BA>, have deployed fixes to <internal & staging>. Please help to verify.
+
+Issues found and resolved:
+1. <one fix per line, plain English, what the user now sees>
+
+*<branch>*
+<pre>…git block…</pre>
+
+Thank you very much.
+```
+Rules: English, like miya's own notes · greet the LIVE assignee (re-sync Redmine first) · one fix per line, no code names · Root cause + Solution rows and the field set (Resolved · Assignee = BA · 100% · Resolved By Ahmad Ridhwan Anuar) go in their own fields, not in the note. **Banned**: a Malay rewrite · a test-data block or restated expected behaviour (miya cut both on #279411) · pointing at a memory file instead of printing the template. **Why**: #282061, the template lived only in `feedback_ticket_writing_style` memory and the deploy skill pointed at it by name; the note came out in my own shape.
+
+### 🗣️ Plain first — DEFAULT for every quest briefing and explanation (added 2026-09-29 per みや, #282061)
+
+Open with 1-2 plain sentences that give the cause in everyday words, before any diagram, table, class name or file:line. Example: *"The duplicate happens because of a logic error. The system only looks for an unpaid bill, but the bill was already paid."* THEN the details: a simple flow diagram, then a short Q → A table, and the technical site LAST on its own line. **Banned**: opening with a trace, a table or code · mixing the plain cause and the technical path in one paragraph.
+
+### 📋 Everything on this ticket — MANDATORY after Rubric and in every brief (added 2026-09-29 per みや, #282061)
+
+Every post-Rubric hand-back, and every `/brief` of a quest, carries ONE inventory table listing EVERY item the ticket owns:
+
+| # | Item | Type | Status |
+|---|---|---|---|
+| R1 | <code change, plain words> | code | ready to code / applied / committed |
+| D1 | <data patch, plain words> | data | needs your nod / script ready / sent to infra |
+| C1 | <side find BA did not raise> | code + data | your call |
+| Q1 | <open BA or dev question> | BA question | your call / asked |
+| RS | <Redmine or admin step> | Redmine | needs "post it" / done |
+
+Rules: one row per code site, per data patch, per side find, per open question, per Redmine/admin step · ids are the SAME as the latest Rubric section of the qa_doc, never renamed in a short reply · every data row gets a before → after table beside it (permohonan · table · before · after) · a short or re-sent reply keeps the whole table and drops only the explanation. **Banned**: a hand-back where any Rubric item is missing from the table. **Why**: #282061, a condensed re-reply dropped D1's label, the Redmine row and the BA question.
+
 ### Pre-emit gate — MANDATORY before every ▶ YOUR MOVE block (added 2026-05-21 by みや — Notes.txt ≥4-strike redesign)
 
 Before emitting ▶ YOUR MOVE, run this gate and emit it as the FIRST lines of the block (✓ only after the real check). If any row cannot be satisfied, do the work it names FIRST — never emit a partial hand-back.
