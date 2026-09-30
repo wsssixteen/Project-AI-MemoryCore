@@ -118,3 +118,13 @@
 | A3 | ⏭ no debugging this session | |
 | A4 | Test data picked from staging (where BA reproduced) while the junior tests on internal; internal had no PRU at PL, needed a walk | rule saved (speech entry 7); proposal below |
 | A5 | ⏭ no sweep | |
+
+## Session 10 — #281638 PROD patch (worktree patch-281638-status-flowable-3f968d)
+
+| Axis | Assessment (instance) | Forward idea + eval case |
+|---|---|---|
+| A1 agentic system | Silent-pass hole: `patch-close-shape` checked the handoff's shape only when one existed; a reply with NO handoff passed. Fixed as CHECK C (block). | Audit every shape-gate for the same "absent = pass" hole. Eval: feed each shape-gate a reply that routes the artefact but omits the block; it must fire. |
+| A2 quest workflow | #281319 bounty line claimed a memory edit that never landed; the stale step reached #281638. | Bounty lines carry the commit SHA of the edit. Eval: a Bounty line naming a file with no commit touching it since quest_start fails the harvest gate. |
+| A3 debugging | Diagnosis was one query because the precedent qa_doc had a Final-state table. Hand-back format took 4 rounds. | ⏭ diagnosis fine; format fixed by the quest SKILL 🩹 row. |
+| A4 etanah issue-solving | L10 hit twice in 4 days on PRBB (/7, /8); /2 is waiting. Each costs a PROD patch + admin-UI step. | Ship the permanent In-param fix (#280166 shape) on PRBB/PRZ/PLTP models. Eval: BPMN check that every callActivity into MLK_PLP_SUB_UPN maps `caraPenghantaran`. |
+| A5 sweep | ⏭ no sweep this session. | — |

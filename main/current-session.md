@@ -1,5 +1,14 @@
 # Current Session
 
+**Last Activity**: 2026-09-30 17:35 — QA-281638 PROD verified (successor PL Bayaran Pelbagai) · DE.
+
+## Session Recap (2026-09-28 to 09-30, worktree patch-281638-status-flowable-3f968d)
+- **Ask**: prepare PROD patch for #281638 (PRBB/2026/8 BP_SWA_PLP crashed on Hantar, `caraPenghantaran`), verify against #281319 + #280166 before preparing.
+- **Done**: re-verified PROD (row stuck Selesai/Y), miya added the variable on SUB_UPN child 20528039, infra ran `281638.sql`, officer Hantar → successor `PL` Bayaran Pelbagai 2859406 (verified 2026-09-30). Phase 1 + Phase 2 closed, archived, L10 evidence + PRBB-TICKETS note written.
+- **Built**: `patch-close-shape` CHECK C (blocks a PROD `.sql` routed to infra with no handoff; eval 50/50; eb803dc1) · quest SKILL pre-emit row 🩹 PROD patch hand-back (proof + Stage-Match + handoff last; on-screen admin labels) · `feedback_flowable_admin_diagram` step 1 rewritten with on-screen labels.
+- **Slips**: 5 tagged QA-281638 (missing infra handoff · ambiguous flowable step + #281319 bounty claim never landed · no proving SELECT · no Stage-Match · 0. Brief photo not opened on resume).
+- **Open**: PRBB/2026/2 (task 20527758) still needs the preventive variable (L10) · bounty proposal: Bounty lines must carry a commit SHA.
+
 **Last Activity**: 2026-09-30 17:45 — junior handover (#264355 + #274266 → Farah) saved · main merged into worktree · DE.
 
 ## Session Recap (2026-09-28 to 09-30, worktree easy-internal-tickets-c23369)
@@ -19,12 +28,3 @@
 - **Slips (miya)**: reply-shape (topics mixed, long cells; 08-19 fold never done).
 - **Commits**: ee26f55f · 5a5adfd3 · b0073bda (all on main).
 **Last Activity**: 2026-09-30 16:45 — redmine-write-gate v1.3 (field reads no longer count as a write) · DE.
-
-## Session Recap (2026-09-30, redmine-write-gate v1.3, main checkout)
-- **Ask**: the gate blocked `node <scratchpad>/audit.js` on 2026-09-28 (http.get only, read `i.done_ratio`). Refine so bare field reads do not count; keep every real write blocked.
-- **Built**: `isMutation()` = write verb (method/`-X`/`--request`/`-Method`/quoted `'PUT'`/`requests.put(`/wget) OR request body (`-Body`, curl `-d/--data*/-F/-T`) OR payload KEY (`issue: {`, `notes:`, `status_id:` …). A read (`i.done_ratio`, `i['notes']`) no longer counts. Eval 56/56 (F39 = the 09-28 replay, F40-F55 new, F31 re-shaped, F31b added). Commit b570ad8a. README v1.3 + 23-row scenario table.
-- **Denied**: F19b (writer saved under the exempt name passes) blocked by the auto-mode classifier; miya ruled skip — F19 + F29 already cover the exemption.
-- **Watches**: new wmuns52kg on the hook (5 sessions) · wmumjs1ma (v1.2) resolved ok as superseded.
-- **Slips (miya)**: 2× answer-the-ask — asked for one sentence / very short sentences, got bullets + a table.
-
-**Last Activity**: 2026-09-30 16:10 — ADHOC-PRBB-2026-6 (PROD Pembatalan Permohonan Jana ralat) closed OWNED-ELSEWHERE (common/GIS) + archived · adhoc "move BA downloads" step built · DE.
