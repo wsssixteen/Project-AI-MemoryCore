@@ -43,7 +43,7 @@ process.stdin.on('end', () => {
     const qa = m[1];
     const tf = taskFolderFor(qa);
     if (!tf) process.exit(0);
-    const brief = path.join(tf, '0. Brief');
+    const brief = require('../../lib/task-folder').briefDir(tf); // 1. Brief, legacy 0. Brief
     let files = [];
     try { files = fs.readdirSync(brief).filter(f => !f.startsWith('.')); } catch (_) { process.exit(0); }
     if (!files.length) process.exit(0);

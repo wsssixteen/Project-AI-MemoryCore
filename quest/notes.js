@@ -1,24 +1,23 @@
 #!/usr/bin/env node
 /*
- * quest/notes.js — generates `1. NNN NNN.txt` entries in the locked format.
- * (Renamed 2026-05-31 from `1. Notes.txt` per みや; adjusted same day from `1. QA-NNNN.txt`
- *  → drop tracker prefix, put a space before the last 3 digits so the last-3 are visible
- *  at a glance across many open tabs/greps.)
- * Exists because hand-writing the file drifted repeatedly. Do NOT hand-write it.
+ * quest/notes.js — writes a test-data entry into the quest MD's "## Test data" section.
  *
- * Filename: derived from the Task folder slug `<num>. QA #NNNN - ...` → `1. NNN NNN.txt`.
- * If --qa is passed (with or without tracker prefix), it overrides the auto-derivation.
+ * v2 (2026-09-30, miya: "folders cleaner & leaner"): the per-ticket `1. NNN NNN.txt` in the
+ * Task folder is RETIRED. Test data lives in projects/coding-projects/active/<QA>/<QA>.md
+ * under "## Test data" (the one doc /quest resume already reads). Existing txt files were
+ * migrated into their quest MD the same day. Do NOT hand-write entries.
  *
- * Format per entry, exactly 3 lines:
- *   N) <env> - <urusan> - <tugasan> - <langkah>   (skipped fields omitted; " - " joins present ones)
+ * Format per entry, exactly 3 lines (unchanged):
+ *   N) <env> - <urusan> - <tugasan> - <langkah>   (skipped fields omitted)
  *   <permohonan ID>
  *   <pengguna semasa / login>
- * Entries numbered 1), 2), ... ; blank line between entries. Nothing else in the file.
  *
  * Usage:
- *   node quest/notes.js --folder "<Task folder path>" --env <UAT|FAT> --id <permohonan> --user <login> \
- *        [--qa QA-NNNN] [--urusan <X|All Urusan>] [--tugasan <X>] [--langkah <X>] [--reset]
- *   --reset clears the file and writes entry 1; default appends the next numbered entry.
+ *   node quest/notes.js --qa <QA-NNNN | NNNN | ADHOC-...> --env <ENV> --id <permohonan> --user <login> \
+ *        [--urusan X] [--tugasan X] [--langkah X] [--reset] [--folder "<Task folder>"]
+ *   --folder is optional: only used to derive the ticket number when --qa is absent.
+ *   --simple / --blank: 2-line entries `N) <urusan>` + `<id>` (multi-urusan sweeps).
+ *   --reset clears the section and writes entry 1; default appends the next numbered entry.
  */
 'use strict';
 const fs = require('fs');
@@ -38,59 +37,48 @@ const langkah = arg('langkah');
 const id = arg('id');
 const user = arg('user');
 const qaOverride = arg('qa');
-
-// --simple (per みや 2026-07-20): 2-line entries `N) <urusan>` + `<id>` only.
-// For multi-urusan test sweeps where env is uniform and login is not yet known —
-// the env/login lines are noise when 20 urusan sit in one list.
-// --blank: header with an EMPTY id line (urusan has no permohonan in this env).
 const simple = hasFlag('simple');
 const blank = hasFlag('blank');
 
-if (!folder || (!simple && (!env || !id || !user)) || (simple && !urusan) || (simple && !id && !blank)) {
-  console.error('ERROR: --folder required; default mode needs --env --id --user; --simple needs --urusan and (--id or --blank).');
+if ((!folder && !qaOverride) || (!simple && (!env || !id || !user)) || (simple && !urusan) || (simple && !id && !blank)) {
+  console.error('ERROR: --qa (or --folder) required; default mode needs --env --id --user; --simple needs --urusan and (--id or --blank).');
   process.exit(1);
 }
 
-// Derive the ticket number from folder slug `<num>. QA #NNNN - ...` (or --qa override).
 function deriveTicketNumber(folderPath) {
-  const base = path.basename(folderPath);
-  const m = base.match(/(?:QA|FAT-OR|UAT-CR|FAT-CR|FAT|UAT|REQUIREMENT|REQ|CR)\s*#?(\d+)/i);
+  const m = path.basename(folderPath || '').match(/(?:QA|ES|II|DP|RQ|CR|FAT-OR|UAT-CR|FAT-CR|FAT|UAT|REQUIREMENT|REQ)\s*#?(\d+)/i);
   return m ? m[1] : null;
 }
-// --qa accepts "QA-262762", "QA #262762", or bare "262762" — strip to digits.
-// An ADHOC id ("ADHOC-PLTP-2026-1") is kept whole: stripping it to digits gave "1. 2 026.txt" (2026-09-25).
 const adhocId = qaOverride && /^ADHOC-/i.test(qaOverride) ? qaOverride.toUpperCase() : null;
-const overrideDigits = qaOverride && !adhocId ? (qaOverride.match(/\d+/) || [])[0] : null;
-const ticketNum = adhocId || overrideDigits || deriveTicketNumber(folder);
-if (!ticketNum) {
-  console.error('ERROR: cannot derive ticket number from folder name; pass --qa <number>.');
-  process.exit(1);
-}
-// Spaced form: insert a space before the last 3 digits (e.g. 262762 → "262 762").
-const spaced = adhocId || ticketNum.replace(/(\d+)(\d{3})$/, '$1 $2');
+const digits = qaOverride && !adhocId ? (qaOverride.match(/\d+/) || [])[0] : deriveTicketNumber(folder);
+const qaId = adhocId || (digits ? `QA-${digits}` : null);
+if (!qaId) { console.error('ERROR: cannot derive ticket number; pass --qa <number>.'); process.exit(1); }
 
-// Filename: per-ticket self-identifying. Back-compat: prefer any pre-existing legacy file
-// in the folder so we don't fork a second file mid-quest.
-let notesPath = path.join(folder, `1. ${spaced}.txt`);
-const legacyNotes = path.join(folder, '1. Notes.txt');
-const legacyQaTag = path.join(folder, `1. QA-${ticketNum}.txt`);
-if (!fs.existsSync(notesPath)) {
-  if (fs.existsSync(legacyQaTag)) notesPath = legacyQaTag;
-  else if (fs.existsSync(legacyNotes)) notesPath = legacyNotes;
-}
-let existing = '';
-if (!hasFlag('reset') && fs.existsSync(notesPath)) {
-  existing = fs.readFileSync(notesPath, 'utf8').trim();
+// Main checkout even from a worktree — quest MDs are untracked and live only there.
+const ROOT = path.resolve(__dirname, '..').replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+$/i, '');
+const proj = path.join(ROOT, 'projects', 'coding-projects');
+let mdPath = path.join(proj, 'active', qaId, `${qaId}.md`);
+const archived = path.join(proj, 'archive', qaId, `${qaId}.md`);
+if (!fs.existsSync(mdPath) && fs.existsSync(archived)) mdPath = archived;
+if (!fs.existsSync(mdPath)) {
+  fs.mkdirSync(path.dirname(mdPath), { recursive: true });
+  fs.writeFileSync(mdPath, `# ${qaId}\n`, 'utf8');
 }
 
-const n = (existing ? (existing.match(/^\d+\)/gm) || []).length : 0) + 1;
-const header = simple
-  ? n + ') ' + urusan
-  : n + ') ' + [env, urusan, tugasan, langkah].filter((s) => s && s.trim()).join(' - ');
-const entry = simple
-  ? header + '\n' + (blank ? '' : id)
-  : header + '\n' + id + '\n' + user;
-const out = (existing ? existing + '\n\n' + entry : entry) + '\n';
+const HEAD = '## Test data';
+let doc = fs.readFileSync(mdPath, 'utf8');
+let start = doc.search(/^## Test data\s*$/m);
+if (start < 0) { doc = doc.replace(/\s*$/, '') + `\n\n${HEAD}\n`; start = doc.search(/^## Test data\s*$/m); }
+const bodyStart = doc.indexOf('\n', start) + 1;
+const nextHead = doc.slice(bodyStart).search(/^## /m);
+const bodyEnd = nextHead < 0 ? doc.length : bodyStart + nextHead;
+let body = hasFlag('reset') ? '' : doc.slice(bodyStart, bodyEnd).trim();
 
-fs.writeFileSync(notesPath, out, 'utf8');
-console.log('Wrote entry ' + n + ' to:\n' + notesPath + '\n---\n' + entry);
+const n = (body.match(/^\d+\)/gm) || []).length + 1;
+const header = simple ? `${n}) ${urusan}` : `${n}) ` + [env, urusan, tugasan, langkah].filter((s) => s && s.trim()).join(' - ');
+const entry = simple ? header + '\n' + (blank ? '' : id) : header + '\n' + id + '\n' + user;
+body = (body ? body + '\n\n' : '') + entry;
+
+doc = doc.slice(0, bodyStart) + '\n' + body + '\n\n' + doc.slice(bodyEnd).replace(/^\s+/, '');
+fs.writeFileSync(mdPath, doc.replace(/\s*$/, '\n'), 'utf8');
+console.log(`Wrote entry ${n} to:\n${mdPath}  (## Test data)\n---\n${entry}`);

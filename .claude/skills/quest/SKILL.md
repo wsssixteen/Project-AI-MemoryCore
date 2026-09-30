@@ -9,6 +9,26 @@ allowed-tools: Read, Glob, Write, Bash
 
 ARGUMENTS: $ARGUMENTS
 
+## 📁 Task folder shape (v2026-09-30, per みや — lib/task-folder.js is the one home)
+
+| Folder | Holds | Created by |
+|---|---|---|
+| `1. Brief\` (legacy `0. Brief\`, never renamed) | BA files · History.txt · Description.txt | redmine-sync at retrieval |
+| `2. Fix\` | our cycle-1 fixes / scripts / photos | redmine-sync at retrieval |
+| `N. Rework\` + `Brief\` inside | one per separate change WE deploy; BA's new files → `Brief\`, ours loose in the root | `active-cli` when status→active AND the block has more `closed*=` stamps than Rework folders |
+| no notes txt · no `1. Simulate\` | test data → `QA-<num>.md` `## Test data` | — |
+
+**Detection — when a Rework folder appears**
+
+| When | Check | Folder? |
+|---|---|---|
+| Redmine sync (any time, any status) | — | **never** (only unarchives a reopened ticket) |
+| First fix | — | no (cycle 1 = `2. Fix\`) |
+| We start work again (`active-cli update … status=active`) | `closed=`/`closed_cycleN=` count > Rework folders | yes, exactly one |
+| Resume / re-sync / colleague reworks | same count | no |
+
+**Banned**: creating `2. Fix\` inside a Rework folder · making a Rework folder by hand for a status change · writing a notes txt.
+
 ## 🎯 Core methodology — the engine (keep it simple)
 
 `Scout (trace the whole class chain, start→end · 100%-verify) → Recon (distrust + verify the Scout, prove it wrong) → Rubric (blast-radius + read sibling code for format/structure/style + emit 2-5 candidate fixes) → Apply`. This loop covers debugging → implementation in one straightforward pass; the phase machinery + skill invocations below **serve** it, never replace it. If a gate gets in the loop's way, the loop wins. Detail: `quest/quest-protocol.md`.
@@ -18,7 +38,7 @@ ARGUMENTS: $ARGUMENTS
 When みや says **"save everything" / "save the quest" / "save it" / "document the quest"** DURING quest work, it means **persist into the quest's own MD files** — NOT a session save / diary / Domain Expansion. The three homes, in order:
 
 1. **`projects/coding-projects/active/QA-<num>/QA-<num>.md`** — the canonical per-quest doc (primary). Write the section matching the phase that just completed: Scout→`Context Loading (Discovery)` · Recon→`Debugging` · Rubric→`Code-Review` · Apply→`Ship — Apply` · test→`Ship — Verify`.
-2. **Task folder `1. <NNN NNN>.txt`** — test-data only, via `node quest/notes.js` (never hand-write).
+2. **`QA-<num>.md` → `## Test data`** — test-data only, via `node quest/notes.js --qa <num>` (never hand-write). The Task-folder `1. <NNN NNN>.txt` is RETIRED (2026-09-30).
 3. **`quest/active.txt`** block — phase/status/scope fields, via `node quest/active-cli.js update`.
 
 See "QA-NNNN.md persistence — save after EVERY stop" below for the full rule.
@@ -148,7 +168,7 @@ At **every** point Ruri stops and hands back to みや after `/quest start` — 
 
 ═══ ▶ YOUR MOVE — QA-NNNN ═══
 
-Pre-emit gate: Notes.txt ✓ · Tugasan ✓ · Flag-WHERE ✓ · Login ✓ · Root-cause ✓ · Solution ✓
+Pre-emit gate: Test data ✓ · Tugasan ✓ · Flag-WHERE ✓ · Login ✓ · Root-cause ✓ · Solution ✓
 
 | Redmine-ready | Text (plain, sendable to BA) |
 |---|---|
@@ -162,6 +182,17 @@ Pre-emit gate: Notes.txt ✓ · Tugasan ✓ · Flag-WHERE ✓ · Login ✓ · Ro
 | Env | <UAT / FAT> |
 | Tugasan | <kod — nama> (where the affected behaviour actually occurs) |
 | Note | <alter-from caveat / anything else — omit the row if none> |
+
+| Git | Value |
+|---|---|
+| Repo · branch | <full repo path> · <ticket branch> (or `uncommitted on <branch>`) |
+| Commit | <full SHA> — or `⬜ not committed` |
+| Commit message | <exact subject, verbatim from `git log -1 --format=%s`> |
+| Change | <file(s) + line count, one line> |
+| Merged to | <env branch + merge SHA per env, or `—`> |
+| Not merged to | <remaining env branches> |
+
+**🚨 Git table MANDATORY in EVERY hand-back once any code is edited (added 2026-09-30 per みや, #280540)** — whether uncommitted, committed, or merged. みや checks the commit message from this table; omitting it forces him to go looking. Values come from `git log -1` / `git diff --stat` run THIS turn, never from memory.
 
 | # | Do now — concrete action みや can act on immediately |
 |---|---|
@@ -223,7 +254,7 @@ Before emitting ▶ YOUR MOVE, run this gate and emit it as the FIRST lines of t
 
 | Gate | Requirement |
 |---|---|
-| Notes.txt written | If the hand-back asks みや to test/simulate, `1. <NNN NNN>.txt` in the Task folder MUST already hold this quest's entry (env / urusan / tugasan / langkah + permohonan ID + login). Missing → run `node quest/notes.js` NOW. Never hand-write it. |
+| Test data written | If the hand-back asks みや to test/simulate, the quest MD `## Test data` section MUST already hold this quest's entry (env / urusan / tugasan / langkah + permohonan ID + login). Missing → run `node quest/notes.js --qa <num>` NOW. Never hand-write it. |
 | Tugasan named | Every test/simulate instruction names the specific **tugasan** — not just the document/screen. みや needs to know where in the workflow to go. Omitting it = the same failure as a blank Notes.txt. |
 | Flag states WHERE — human-findable | Every flag / ⚠️ / caveat states a location みや can actually FIND: the file path PLUS, for a document, the visible **searchable text** + page number. NEVER cite an internal machine ID (Word `paraId`, SDT `id`, XML attribute) — みや cannot search those in Word. Say "the line reading '<visible text>' on page N", not "paragraph 78F8C270". |
 | Login present | Any permohonan ID carries its `pengguna_semasa` login (`feedback_pengguna_semasa.md`). Unknown → DB-query it first. |
@@ -231,7 +262,7 @@ Before emitting ▶ YOUR MOVE, run this gate and emit it as the FIRST lines of t
 | 🚨 **Env named + DERIVED, never assumed** (added 2026-08-06 per みや, QA-273455) | The test scenario names the schema the local app will actually hit, and cites how it was derived — the Spring JNDI binding (`etanah-common\src\main\resources\spring\applicationContext-main.xml` → `java:jboss/datasources/<pool>`) resolved against `E:\Dev\jboss-7.4-plp-melaka\standalone\configuration\standalone.xml`. **Banned**: naming an env from memory, from `active.txt`, or from the ticket's `Env:` line — those say where the BA tested, not where みや's build will read. The test permohonan MUST come from that same schema. |
 
 | 🩹 **PROD patch hand-back → 3 pieces in ONE reply (added 2026-09-28 per みや, #281638)** | Any hand-back that routes a PROD patch to infra carries, in order: (a) the **proving SELECT** under every DB fact (unqualified, no JOIN) · (b) the **Stage-Match block** (5 steps, or `⏭ N/A — reference table`) · (c) the **infra handoff** (`feedback_prod_patch_infra_handoff` shape) as the LAST block. A Flowable admin step names the **on-screen label** (e.g. the blue id next to "Process Instance" + its "Process definition" line), never an inferred name. Enforced: `patch-close-shape` CHECK C (block) · `db-claim-proof` · `patch-script-gate` CHECK 2. **Why**: #281638 shipped without all three and each needed a separate correction round. |
-| 🖼️ **UI fix → red-box fix photo (added 2026-09-28 per みや, #256334)** | When the fix changes a screen (a field added / removed / shown / hidden, a dropdown list, a button) AND BA gave a screenshot of that screen (in `0. Brief/` or pasted in chat): BEFORE the hand-back, copy BA's screenshot, draw a **red box** round the exact area the fix changes + a short Malay label of what changes (e.g. *"Penyediaan: medan Pembetulan dibuang"*), save as PNG into the current cycle's `2. Fix\` (`N. Rework\2. Fix\` on a rework) named `<n>. <TUGASAN KOD> - <what changed>.png`, then **open the saved file and look at it** to confirm the box sits on the right field. Tool: `python domain/fix-photo/mark.py --src "<BA screenshot>" --dst "<...>\2. Fix\<n>. <KOD> - <what changed>.png" --box "x0,y0,x1,y1" --label "x,y=<label>"` (prints the line to paste). Emit `FIX-PHOTO: <full path> ✓` per screen. Enforced by `domain/fix-photo/` (Stop BLOCK; bypass `[skip-fix-photo: <real reason>]`). **Banned**: describing the UI change in words only when BA's screenshot exists · names / dates / monologue in the label · a box drawn without viewing the result. |
+| 🖼️ **UI fix → red-box fix photo (added 2026-09-28 per みや, #256334)** | When the fix changes a screen (a field added / removed / shown / hidden, a dropdown list, a button) AND BA gave a screenshot of that screen (in `0. Brief/` or pasted in chat): BEFORE the hand-back, copy BA's screenshot, draw a **red box** round the exact area the fix changes + a short Malay label of what changes (e.g. *"Penyediaan: medan Pembetulan dibuang"*), save as PNG into `2. Fix\` on cycle 1, or loose in the `N. Rework\` root on a later cycle named `<n>. <TUGASAN KOD> - <what changed>.png`, then **open the saved file and look at it** to confirm the box sits on the right field. Tool: `python domain/fix-photo/mark.py --src "<BA screenshot>" --dst "<...>\2. Fix\<n>. <KOD> - <what changed>.png" --box "x0,y0,x1,y1" --label "x,y=<label>"` (prints the line to paste). Emit `FIX-PHOTO: <full path> ✓` per screen. Enforced by `domain/fix-photo/` (Stop BLOCK; bypass `[skip-fix-photo: <real reason>]`). **Banned**: describing the UI change in words only when BA's screenshot exists · names / dates / monologue in the label · a box drawn without viewing the result. |
 | 🧩 **Template ticket → CC-PREFLIGHT (added 2026-08-19 per みや, "ralat sbb maklumat tak lengkap")** | For any ticket whose fix touches a template `.docx` / generated document: BEFORE the hand-back, run `node domain/template-cc-preflight/preflight.js --template "<template path>"`, check each mapped tag's data on the TEST permohonan (DB), and emit `CC-PREFLIGHT: <n> tags · <m> unmapped · data-gaps: <…|none>` + a patch proposal per patchable gap. Enforced advisory by `domain/template-cc-preflight/` (Stop; bypass `[skip-cc-preflight: <reason>]`). |
 
 **Why the two rows above** (2026-08-06, QA-273455): the hand-back named a test app derived from `et_main_mlit` while the repo sat on `mlk/int-env`. Both were wrong for the same reason — a test scenario asserts *"run this against this base"*, and neither half had been measured. The env was settled only by reading the JNDI binding (it resolves to `et_main_stg1`, not mlit); the branch was caught by みや. Testing on `int-env` also means a pass proves nothing about `mlk/master`, which is what the fix branches from at Phase 1.
@@ -511,8 +542,8 @@ One straightforward pass covers debugging → implementation. Be as straightforw
 - **🪪 Notes file naming convention (renamed 2026-05-31 per みや)**: the per-ticket test-data log is named `1. <NNN NNN>.txt` (e.g. `1. QA-262762.txt`) — NOT the old `1. Notes.txt`. **Why**: when multiple Task folders are open in tabs / multiple files appear in a grep / `Get-ChildItem` listing, a bare `1. Notes.txt` is non-identifying — every ticket has one with the same name. `1. QA-NNNN.txt` is self-identifying. **Scope of rename**: applies going forward — new Task folders created by `quest/redmine-sync.js` use the new name; existing folders keep their legacy `1. Notes.txt` (renaming them in-place would silently break active.txt cross-refs + diary backlinks). `quest/notes.js` reads either filename (legacy-first) and writes the new one. Wherever this protocol says "Notes file" / "the Notes" / `1. <NNN NNN>.txt`, BOTH the new-named and legacy files are meant.
 
 - **Handoff / Notes / History first** (hard rule, 2026-04-29; broadened 2026-05-25): when a ticket # is mentioned, ALWAYS check `quest/active.txt` for a matching `qa=QA-<num>` block. If found:
-  - Read `<task_folder>/1. <NNN NNN>.txt` (or legacy `1. Notes.txt`) if it exists — prior test data + logins (cycle-1 entries are gold for rework cycles)
-  - Read `<task_folder>/0. Brief/History.txt` fully — full BA journal (not just tail)
+  - Read the quest MD `## Test data` section (legacy: `<task_folder>/1. <NNN NNN>.txt` if one survives) — prior test data + logins (cycle-1 entries are gold for rework cycles)
+  - Read `<task_folder>/1. Brief/History.txt` (legacy `0. Brief`) fully — full BA journal (not just tail)
   - If `handoff_file=` field exists in the active.txt entry → read that file too
   - **Failure mode this rule prevents** (2026-05-25 QA-262233 cycle-2): I "discovered" via SQL that `PTMLK/01/L/PRZ/2026/20` + `nor.aini@melaka.gov.my` were valid test data — they were literally Notes file entry #5 from cycle-1, sitting unread the entire session.
 
@@ -536,9 +567,9 @@ One straightforward pass covers debugging → implementation. Be as straightforw
 | **🚨 Git-state check (Phase-0, COMPULSORY — added 2026-06-20, run even if it returns nothing)** | ✓ + GIT-STATE summary | `git status` + `git branch --show-current`; baseline-confirm (`mlk/master` pelupusan · `mlk/master` AWAM — local base, mirrors PLP; stag-env/mlit downstream) + `pull --ff-only`; `git rev-list --count HEAD..origin/<baseline>` (behind-count); existing-fix probe `git branch -a --list "*<#>*"` + `git log --all --grep="#<#>"`. Emit a **GIT-STATE summary** (branch · behind · existing-fix? · ticket-keyword log hits). STOP if existing-fix-by-other / pull-fails / stale base. Enforced by `ticket-gate.js` Row 0. **Why**: QA-260139 stale-base · QA-261986 ~293-behind base · QA-266215 existing-fix-missed — prose git-discipline decayed (prompt-driven). |
 | active.txt block for QA-<num> | ✓ / ✗ | located + status read; if archived + reopened, folder reactivation noted |
 | **🚨 ADHOC-REGISTER check — MANDATORY (added 2026-07-29 per みや)** | ✓ + verdict | Read `projects/coding-projects/active/etanah-knowledge/melaka/ADHOC-REGISTER.md` and compare THIS ticket against every row whose `Status` is **`OPEN`** or **`LATENT`** (`ANSWERED` / `OWNED-ELSEWHERE` owe us nothing). Emit ONE of: **`ad-hoc register: MATCH row [A<n>] — already concluded, starting from <phase>`** (then **in the same turn** append the ticket number to that row and move its Status on, and fold the row's evidence doc into the quest doc — do NOT re-Scout a solved mechanism) OR **`ad-hoc register: no match`**. `domain/adhoc-register/` injects the still-owed rows at UserPromptSubmit so they are in context before Phase 0 begins; the emit is the honesty brake proving the compare happened. **Banned**: running Scout on a symptom that already has a register row. **Why** (みや 2026-07-29): we diagnose BA-reported issues before a ticket exists; without a forced compare the ticket arrives and the whole investigation is repeated. |
-| Task folder + 1. \<NNN NNN\>.txt (or legacy 1. Notes.txt) + 0. Brief/History.txt | ✓ / ✗ | folder path; Notes content cited; History.txt read fully (not just tail) |
+| Task folder + quest MD `## Test data` + 1. Brief/History.txt (legacy 0. Brief) | ✓ / ✗ | folder path; Notes content cited; History.txt read fully (not just tail) |
 | **🚨 LATEST-STATE FIRST — journal-timeline table + OPEN/SOLVED classification** (HARD 2026-07-27 per みや — repeated slip: solving an already-solved issue in a long-conversation ticket, ignoring dates/times/assignee) | ✓ + timeline emitted / ⏭ single-entry thread | BEFORE Scout: from History.txt emit the journal-timeline table — \`\| date \| author \| assignee-change \| issue raised/solved \|\`, one row per journal entry, oldest→newest. Then classify EVERY issue mentioned anywhere in the thread as **OPEN** (valid fix target) or **ALREADY-SOLVED** (a later entry records it fixed/deployed/verified — cite that entry's date); emit the solved set as an explicit **DO-NOT-RESOLVE list**. Fix targets = the LATEST open issues only — if the newest entries narrow/redirect/supersede the Description, the NEWEST wins. **Banned**: scouting an issue whose solving is recorded earlier in the thread · reading Description-only when journals exist · ignoring assignee changes when determining whose issue is live. Enforced by \`ticket-gate.js\` row 1b. |
-| **🚨 BA attachments — EXPLICIT per-file open + content emit (HARD 2026-06-03)** | ✓ + per-file emit / ⏭ none | For EVERY file in `0. Brief/` (photos / .pdf / .docx / video — NOT only the ones whose filename matches current theory), MUST Read/view AND emit 1-line per file: `<file>.png — content: <BA-visible state + annotations verbatim>` · `<file>.pdf — N annotations (FreeText/highlights/stickies)` · `<file>.docx — <content summary>`. Filename-based prioritization BANNED. |
+| **🚨 BA attachments — EXPLICIT per-file open + content emit (HARD 2026-06-03)** | ✓ + per-file emit / ⏭ none | For EVERY file in `1. Brief/` (legacy `0. Brief/`) and each `N. Rework/Brief/` (photos / .pdf / .docx / video — NOT only the ones whose filename matches current theory), MUST Read/view AND emit 1-line per file: `<file>.png — content: <BA-visible state + annotations verbatim>` · `<file>.pdf — N annotations (FreeText/highlights/stickies)` · `<file>.docx — <content summary>`. Filename-based prioritization BANNED. |
 | **🚨 PDF annotation extraction — EXPLICIT presence emit per .pdf** (HARD 2026-06-01 S5, みや item 2) | ✓ + count / ⏭ none / ⏭ no-pdf | For EVERY .pdf in 0. Brief/, MUST run `annotations` skill + emit a 1-line statement: `<file>.pdf — N annotations found (FreeText: X, highlights: Y, stickies: Z)` OR `<file>.pdf — no annotations`. Silent skip BANNED — explicit "no annotations" is the only valid empty-state. **Why**: skill exists + CLAUDE.md §8 mandates + pre-action-check-gate fires reminders — yet I still missed BA's annotations once this week. Explicit emit forces the action; absence of the line = audit-visible failure. |
 | QA-<num>.md cycle-N section | ✓ / ✗ | path; Scout familiar spawn note if missing |
 | etanah-knowledge Always tier (5 files) | ✓ | `Loaded: index.md · DOMAIN-GLOSSARY · MODULE-ARCHITECTURE · BUG-BESTIARY · DEFERRED-CRITICAL-ISSUES` (Read ≥50 lines per file, not Glob-only) |

@@ -90,11 +90,9 @@ function requiredSourceFiles() {
     const folders = live.map(b => (b.match(/^task_folder=(.+)$/m) || [])[1]).filter(Boolean);
     const files = new Set(fallback);
     for (const tf of folders) {
-      for (const sub of ['0. Brief'].concat(
-        (fs.existsSync(tf) ? fs.readdirSync(tf) : []).filter(d => /^\d+\.\s*(Rework|Addition)/i.test(d))
-      )) {
-        const dir = path.join(tf, sub);
-        if (!fs.existsSync(dir)) continue;
+      // BA sources only: root Brief (1. Brief / legacy 0. Brief) + each N. Rework\Brief.
+      // The N. Rework root holds OUR fixes, never BA evidence (2026-09-30, miya).
+      for (const dir of require('../../lib/task-folder').allBriefDirs(tf)) {
         for (const f of fs.readdirSync(dir)) if (!f.startsWith('~$')) files.add(f);
       }
     }

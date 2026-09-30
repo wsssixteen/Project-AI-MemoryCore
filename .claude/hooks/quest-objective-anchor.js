@@ -167,7 +167,7 @@ function main() {
     const scope = [urusan, tugasan].filter(Boolean).join(' / ');
     let verbatim = { issues: [], expected: [], cycleStamp: null };
     if (taskFolder) {
-      const historyPath = path.join(taskFolder, '0. Brief', 'History.txt');
+      const historyPath = path.join(require('../../lib/task-folder').briefDir(taskFolder), 'History.txt');
       verbatim = extractVerbatimBA(historyPath);
     }
     active.push({ qa, scope, issue, verbatim });
