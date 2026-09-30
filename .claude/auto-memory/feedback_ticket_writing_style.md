@@ -131,5 +131,16 @@ Issues found and resolved:
 Thank you very much.
 ```
 
+6. Dev-to-dev WhatsApp answer to a "why" question, Li Wen (Hasil) on Flowable Source vs Source expression (2026-09-30). He kept my draft and changed one word: the closing summary opener "Ringkasnya" became "Basically". Rule: in rojak, the connectors and fillers are casual English (Basically · Actually · just · so · currently), never formal Malay (Ringkasnya · Oleh itu · Maaf atas kekeliruan). Technical terms stay English too: "fixed value" not "nilai tetap", "value" not "nilai" (he asked "nilai tetap is basically value?" = a Malay translation of a dev term made him stop and decode it). Shape he approved: one fact per short paragraph, blank line between, concrete example with the real value, last line = the one-line rule.
+```
+Source tu untuk nama variable dalam parent flow. Flowable akan cari variable nama tu dan copy value dia.
+
+Kalau letak etanah-spoc-hasil kat Source, Flowable akan cari variable nama "etanah-spoc-hasil" dalam PDBB. Takde variable tu, so jadi null.
+
+Source expression pulak dia evaluate expression. ${'etanah-spoc-hasil'} tu string tetap, so value dia memang terus "etanah-spoc-hasil".
+
+Basically, nak pass variable guna Source. Nak pass fixed value guna Source expression.
+```
+
 **Before writing ANY Redmine note: run `node quest/redmine-sync.js <num>` and greet the live assignee.**
 Related: [[feedback_cross_module_handoff_artifact]] · [[feedback_ba_facing_reply_plain]].
