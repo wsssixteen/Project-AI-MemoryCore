@@ -70,3 +70,12 @@
 | A3 | ⏭ no debugging this round |
 | A4 | "Earliest tugasan" answered from data already banked (ind_langkah x BPMN) in one reply; written back to PERMIT-LESEN + L16/L17 |
 | A5 | ⏭ no sweep this round |
+
+## Session: QA-281423 (worktree session-256334-recovery, 15:58)
+| Axis | Instance | Verdict |
+|---|---|---|
+| A1 agentic system | worktree guard blocked edits to main-only qa doc + auto-memory; writes fell back to Add-Content | proposal logged (allow-list untracked-confidential paths) |
+| A2 quest workflow | load manifest said "QUEST DOC — NONE" though QA-281423.md existed in main | proposal logged (resolve main-repo qa_doc) |
+| A3 debugging | owner source found in 6 reads: xhtml → component → helper → repository in common | ⏭ worked as designed; counting the 625 trap only happened when miya asked "reliable?" — verify-before-claim held |
+| A4 etanah solving | Redmine drafts: 4 rewrites (long sentences, implication, bossy, markdown table) | proposal logged (Textile helper); slips x2 ticket-writing-style |
+| A5 sweep | ⏭ no sweep this session |

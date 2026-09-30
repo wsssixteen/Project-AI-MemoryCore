@@ -4,6 +4,18 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-09-28 → 2026-09-30, melaka-release-baseline worktree)
+- **Release 1.7.0**: #281392 (`mlk/hotfix/281392`) · #280895 · #246512 (`mlk/qa/246512v9` = full footprint, v7/v8 ancestors) · #263304 (`mlk/CR/263304`) + #280993 compile fix. Pushed `365fe73629`, BAQA passed, ff-merged to `mlk/master` 2026-09-28 (undo tag `mlk/pre-master-merge/1.7.0` @ `4016667b7f`). Common stays `1.6.7-MLK`.
+- **#280993 (Alex, direct-to-master logger cleanup)**: master did not compile (private `LOGGER` in `BasePelupusanDokumenForm` hid the inherited one, 32 errors). Fix `mlk/development/280993` `55d2832342` (3-line delete), merged first in 1.7.0.
+- **Conflicts**: #246512 union (1 file); #263304 5 files resolved to the tested int-env shape.
+- **#263304 extras**: SQL `263304-isu24-tugasan-tk.sql` run on stag `et_main_stg2` (3 tugasan · 12 langkah · 21 pejabat · 7 pengagihan, guarded tx); PROD runs it in `et_main` (APPS schema, not flowable). Flowable `MLK_PLP_PRBB.bpmn20.xml` pulled from MLIT (v9, 348,612 B, md5 `f1b8c3d7…`), deployed on stag by miya; PROD drop upload landed in `flowable-diagrams/Perak/…` — release team found `Melaka/2026-09-28` empty; miya re-uploading.
+- **ADHOC-PT-2026-10 (answered)**: stag PT SKM JT=Tidak → PTBUT row missing 17:27/17:55 = one flowable engine node's async assignation stalled 16:50–18:02 (ID block `12050xxx`, also hit Pembangunan), drained itself; not 1.7.0 code.
+- **Built**: `domain/release-mlk-plp/fetch-mlk.js` (mlk-only fetch + race retry, all 9 call sites) · skill "Baseline awareness" table (common, flowable ownership, AWAM list-only, unlisted master commits, full hand-off card, verify flowable drop listing, BA no-tugasan = test table first) · checklist row "compile master before branching".
+- **Slips**: reask/redundant (card lacked SQL/flowable/Sheet) · verify-before-handoff (flowable folder) · answer-the-ask (test table late).
+- **Open (miya)**: WinSCP alias `flowable-drop` nod (session `Petaling` collides with workspace) · delete superseded 246512 branches · 3 old release branches with commits not in master (1.0.0, 1.0.7, 270123).
+
+**Last Activity**: 2026-09-30 13:45 — MLIT pelupusan deploy failure triaged (infra, not our code) · retry succeeded 13:13 · deploy skill v1.3 §8 console triage · DE.
+
 ## Session Recap (2026-09-30, server-deployment-slowness worktree)
 - **Symptom**: miya's pelupusan deploy to MLK IT (`mlk/int-env`, run `e711b154`) "taking too long"; MLIT `/etanah-pelupusan` returned 503 (hasil, pendaftaran 200).
 - **Cause (from the run log)**: Build SUCCESS; prepare on `172.16.100.49` (fudge1) died — `Killed sudo -n systemctl stop jboss` · `stop_jboss.sh: line 4: kill: (1481372) - Operation not permitted` · `Killed '/home/app/bin/stop_jboss.sh'` · exit 137. Infra (Nick). Hypothesis, unconfirmed: stop script kills by a "jboss" name match that hits itself.
@@ -5447,6 +5459,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
