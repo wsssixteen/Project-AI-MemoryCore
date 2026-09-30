@@ -4306,3 +4306,19 @@ branch=none-until-ticket
 issue_one_liner=PROD PDTMT Utiliti Pembatalan Permohonan PTMLK/01/L/PRBB/2026/13 Jana ralat NPE = common/GIS: PROD GIS table et_ptg.log_service missing (server.log 6x 09:50-10:03) + common PostgresUpdateService null helper. OWNED-ELSEWHERE, common told. Pelupusan try/catch enhancement parked in qa_doc, not applied
 closed=2026-09-30
 close_note=OWNED-ELSEWHERE common/GIS per miya
+
+qa=ADHOC-VIEW-2026-1
+phase=0
+status=archived
+ticket_type=adhoc
+env=MLKSTG
+urusan=PLP
+quest_start=2026-09-25
+local_test_confirmed=true
+adhoc_register_row=A34
+branch=none-until-ticket
+qa_doc=projects/coding-projects/archive/ADHOC-VIEW-2026-1/ADHOC-VIEW-2026-1.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\236. AH - MLKSTG - PLP - Table View Lesen dan Permit dari KL
+issue_one_liner=Alex ask: KL views TKLLESENTABLEVIEW + TKLPREMITTABLEVIEW in Melaka; DONE as tkllesentableview + tklpermittableview (KL typo corrected) on internal + staging, verified 2026-09-30; PROD via infra
+current_phase=Closed
+closed=2026-09-30

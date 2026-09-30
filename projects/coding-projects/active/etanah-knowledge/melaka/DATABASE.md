@@ -1544,6 +1544,8 @@ umm_a_permit_lesen.no_permit_lesen ──(by value)──► ind_permit_lesen.pe
 find referencing tables by COLUMN NAME (`permit_lesen_id`, `versi_permit_lesen_id`), never by FK.
 Safe clear order: NULL the app row's number+versi first, then delete children, then the induk row.
 
+**Lesen vs permit split + reporting views (2026-09-30, ADHOC-VIEW-2026-1)**: `ind_permit_lesen.jns_borang_id` → `rjk_jns_dok.kod` (NOT `rjk_senarai_ahli_kumpulan`): lesen = `BRG_4AE` (PLPS/MLPS/OPLPS/OMLPS/PT), permit = `BRG_4CE` (PRBB bahan batuan) + `BRG_4DE` (PRU/PPRUS ruang udara); `status_id` → `rjk_senarai_ahli_kumpulan` (KuatKuasa / Pembetulan — never flips to expired). Views `tkllesentableview` + `tklpermittableview` (ports of KL's Oracle views) live on `et_main_mlit` + `et_main_stg2`; source `1. Tasks\Melaka\Archive\236. …\2. Fix\*_MLK.sql`. EDB quirks hit: `date - date` = interval (use `EXTRACT(DAY FROM …)`), `NULL || 'x'` = `'x'` (guard with `CASE`).
+
 ### The running number is shared across FOUR urusan
 
 `PelupusanPermitLesenNumberService.retrieveRunningNumberCode():335-341` — `PLPS`, `OPLPS`, `MLPS`,

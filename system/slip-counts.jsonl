@@ -802,3 +802,6 @@
 {"ts":"2026-09-30T09:31:47.788Z","category":"A2"}
 {"ts":"2026-09-30T09:31:48.134Z","category":"A4"}
 {"ts":"2026-09-30T09:31:48.411Z","category":"A1"}
+{"ts":"2026-09-30T09:19:32.794Z","category":"verify-before-send"}
+{"ts":"2026-09-30T09:20:50.392Z","category":"design-not-universal"}
+{"ts":"2026-09-30T09:34:09.345Z","category":"source-typo-carried"}
