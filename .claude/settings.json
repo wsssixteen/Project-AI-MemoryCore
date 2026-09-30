@@ -313,15 +313,6 @@
         ]
       },
       {
-        "matcher": "mcp__postgres-mlkprod-pg__.*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\prod-db-confirm\\prod-db-confirm.discipline.hook.js\" PreToolUse"
-          }
-        ]
-      },
-      {
         "matcher": "Read",
         "hooks": [
           {
