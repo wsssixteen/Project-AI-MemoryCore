@@ -21,6 +21,16 @@
 | A4 etanah issue-solving | New known failure recorded (fudge1 prepare exit 137, retry passes when JBoss already down) in deploy skill §8. Proposal: deploy-run triage script. |
 | A5 sweep | ⏭ no sweep this session. |
 
+## Session: Baseline 1.7.0 (2026-09-28 → 30, melaka-release-baseline worktree)
+
+| Axis | Assessment (instance) | Proposal logged |
+|---|---|---|
+| A1 agentic system | Hand-off card lacked SQL/flowable/Sheet; flowable drop landed in Perak/, unverified though WinSCP.com + stored session existed on the laptop | flowable drop listing gate |
+| A2 quest/release workflow | Direct-to-master #280993 broke compile; only caught because miya asked for an audit | compile-master preflight in `branch` |
+| A3 debugging | Missing PTBUT row traced correctly (bpm_log delay + ID block) but took ~30 queries | missing-tugasan-row triage script |
+| A4 etanah issue-solving | BA wanted login + ID; test table came 3 asks late | intake reminder: test table first |
+| A5 sweep | ⏭ no sweep run this session | — |
+
 ## Session 3 addendum (melaka-internal-deploy, 15:30)
 
 | Axis | Finding (instance) | Proposal |

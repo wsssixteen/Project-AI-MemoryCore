@@ -90,8 +90,10 @@ r = run({ tool_name: 'PowerShell', tool_input: { command: `node quest/redmine-sy
 check('F28 two exempt scripts chained → silent', silent(r), r.out.slice(0, 120));
 r = run({ tool_name: 'Bash', tool_input: { command: `node core/slips.js add --category x --evidence "blocked node quest/ticket-load-verify.js 256334 on resume"` }, transcript_path: noApproval() });
 check('F30 exempt script only MENTIONED inside an argument of a clean script → silent (live false positive 2026-09-25)', silent(r), r.out.slice(0, 120));
-r = run({ tool_name: 'PowerShell', tool_input: { command: `${TLV_CMD} --x "status_id"` }, transcript_path: noApproval() });
+r = run({ tool_name: 'PowerShell', tool_input: { command: `${TLV_CMD} --x "-X PUT"` }, transcript_path: noApproval() });
 check('F31 exempt script + mutation-shaped text in the command → exemption void → BLOCK', blocked(r), r.out.slice(0, 120));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `${TLV_CMD} --x "status_id"` }, transcript_path: noApproval() });
+check('F31b exempt script + a bare field name in the command → silent (v1.3: a field name is not a write)', silent(r), r.out.slice(0, 120));
 // 2026-09-29 (#282061): status-only writes + the real popup-answer shape (a tool_result, not user text)
 const statusScript = path.join(sb, 'set-status.js');
 fs.writeFileSync(statusScript, "// X-Redmine-API-Key\nreq('PUT', '/issues/282061.json', { issue: { status_id: 2 } });");
@@ -112,6 +114,53 @@ r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${statusScript}
 check('F37 status-only + unrelated question → BLOCK', blocked(r), r.out.slice(0, 160));
 r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${statusScript}"` }, transcript_path: transcript([user('update the redmine'), popup('file contents: ok')]) });
 check('F38 a non-popup tool_result after "update the redmine" is skipped → allow', !blocked(r), r.out.slice(0, 160));
+// 2026-09-28 (v1.3): a GET script that READS done_ratio / status_id / notes is not a write.
+const getAudit = path.join(sb, 'audit.js');
+fs.writeFileSync(getAudit, [
+  "const http = require('http'); const BASE = 'http://172.16.90.169/redmine'; const KEY = process.env.REDMINE_KEY;",
+  "for (const n of [282061, 281324]) http.get(`${BASE}/issues/${n}.json?include=journals&key=${KEY}`, res => {",
+  "  let body = ''; res.on('data', c => body += c);",
+  "  res.on('end', () => { const i = JSON.parse(body).issue;",
+  "    const notes = (i.journals || []).map(j => j.notes).filter(Boolean);",
+  "    console.log(n, 'Post', i.status.name, i.status_id, i.done_ratio, i.assigned_to_id, i['notes'], 'Journal:', notes.length); }); });",
+].join('\n'));
+const getAuditExplicit = path.join(sb, 'audit-get.js');
+fs.writeFileSync(getAuditExplicit, "const r = await fetch(`http://172.16.90.169/redmine/issues/282061.json`, { method: 'GET', headers: { 'X-Redmine-API-Key': KEY } }); const i = (await r.json()).issue; console.log(i.done_ratio, i.status_id);");
+const writer = (name, text) => { const p = path.join(sb, name); fs.writeFileSync(p, text); return p; };
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${getAudit}"` }, transcript_path: noApproval() });
+check('F39 REPLAY 2026-09-28: http.get script reading done_ratio / status_id / notes → silent', silent(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${getAuditExplicit}"` }, transcript_path: noApproval() });
+check('F40 fetch with method GET reading done_ratio → silent', silent(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `Invoke-RestMethod -Method Get -Headers @{'X-Redmine-API-Key'=$k} http://172.16.90.169/redmine/issues/282061.json | % { $_.issue.done_ratio }` }, transcript_path: noApproval() });
+check('F41 Invoke-RestMethod GET reading done_ratio → silent', silent(r), r.out.slice(0, 160));
+r = run({ tool_name: 'Bash', tool_input: { command: `node "${getAudit}" && ${INLINE_WRITE}` }, transcript_path: noApproval() });
+check('F42 GET audit chained with an inline curl PUT → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `Invoke-RestMethod -Method Put -Headers @{'X-Redmine-API-Key'=$k} -Body $json http://172.16.90.169/redmine/issues/282061.json` }, transcript_path: noApproval() });
+check('F43 Invoke-RestMethod -Method Put -Body → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `invoke-restmethod -method put -headers @{'X-Redmine-API-Key'=$k} http://172.16.90.169/redmine/issues/282061.json` }, transcript_path: noApproval() });
+check('F44 lowercase -method put → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'Bash', tool_input: { command: `curl --request POST -H "X-Redmine-API-Key: abc" http://172.16.90.169/redmine/issues/282061.json` }, transcript_path: noApproval() });
+check('F45 curl --request POST → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'Bash', tool_input: { command: `curl -H "X-Redmine-API-Key: abc" -d "issue[notes]=hi" http://172.16.90.169/redmine/issues/282061.json` }, transcript_path: noApproval() });
+check('F46 curl -d with no -X (implied POST) → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'Bash', tool_input: { command: `curl -H "X-Redmine-API-Key: abc" -H "Content-Type: application/octet-stream" --data-binary @shot.png http://172.16.90.169/redmine/uploads.json` }, transcript_path: noApproval() });
+check('F47 curl --data-binary upload → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${writer('attach.js', "// X-Redmine-API-Key\nsend(`/issues/282061.json`, { issue: { uploads: [{ token, filename: 'a.png' }] } });")}"` }, transcript_path: noApproval() });
+check('F48 issue envelope with uploads, verb hidden in a helper → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${writer('verbvar.js', "// X-Redmine-API-Key\nconst m = isNew ? 'POST' : 'PUT'; req(m, '/issues/282061.json', payload);")}"` }, transcript_path: noApproval() });
+check('F49 verb held in a variable (quoted PUT literal) → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'Bash', tool_input: { command: `python -c "import requests; requests.put('http://172.16.90.169/redmine/issues/282061.json', json=p)"` }, transcript_path: noApproval() });
+check('F50 python requests.put → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${writer('patch.js', "fetch(`${REDMINE_BASE}/issues/1.json`, { method: 'PATCH', headers })")}"` }, transcript_path: noApproval() });
+check('F51 fetch method PATCH → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'Bash', tool_input: { command: `wget --header "X-Redmine-API-Key: abc" --post-data "x=1" http://172.16.90.169/redmine/issues/1.json` }, transcript_path: noApproval() });
+check('F52 wget --post-data → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${writer('journal.js', "// X-Redmine-API-Key\nsubmit({ journal: { notes: 'x' } });")}"` }, transcript_path: noApproval() });
+check('F53 journal payload key, verb hidden in a helper → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${writer('fieldonly.js', "// X-Redmine-API-Key\nupdateIssue(282061, { notes, status_id: 2 });")}"` }, transcript_path: noApproval() });
+check('F54 field written as a KEY, verb hidden in a helper → BLOCK (a key is a payload, only a read is exempt)', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${writer('form.js', "// X-Redmine-API-Key\npost('/issues/1.json', { \"notes\": text });")}"` }, transcript_path: noApproval() });
+check('F55 quoted "notes": JSON key → BLOCK', blocked(r), r.out.slice(0, 160));
 const tlvBody = fs.readFileSync(TLV, 'utf8');
 check('F29 guard: ticket-load-verify.js stays network-free (else re-review its exemption)',
   !/require\(\s*['"](?:node:)?(?:https?|net|child_process)['"]\s*\)|\bfetch\s*\(/.test(tlvBody), 'network/process I/O found in ' + TLV);

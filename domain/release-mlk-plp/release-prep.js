@@ -28,6 +28,7 @@
  */
 'use strict';
 const { spawnSync } = require('child_process');
+const { fetchMlk } = require('./fetch-mlk');
 const fs = require('fs');
 const path = require('path');
 
@@ -55,6 +56,13 @@ function git(repo, args, allowFail) {
   return r;
 }
 function gitOut(repo, args) { return git(repo, args).stdout.trim(); }
+// Melaka refs only + one retry on a concurrent-fetch race — see fetch-mlk.js
+function fetchOrigin(repo, allowFail) {
+  const r = fetchMlk(repo);
+  if (r.error) die(`git not runnable: ${r.error.message}`);
+  if (r.status !== 0 && !allowFail) die(`git ${r.args.join(' ')} failed:\n${r.stderr}`);
+  return r;
+}
 
 function parseArgs(argv) {
   const out = { _: [] };
@@ -206,7 +214,7 @@ function cmdInit(a) {
   const tickets = a.tickets ? parseTickets(a.tickets) : [];
 
   console.log('· fetching origin…');
-  git(repo, ['fetch', 'origin', '--prune']);
+  fetchOrigin(repo);
   if (!remoteBranchExists(repo, 'mlk/master')) die('origin has no mlk/master — wrong repo?');
   if (remoteBranchExists(repo, branch)) die(`${branch} ALREADY EXISTS on origin — pick another number or handle manually`);
   if (git(repo, ['rev-parse', '--verify', '--quiet', branch], true).status === 0) {
@@ -245,7 +253,7 @@ function cmdDiscover(a) {
   if (!a.tickets) die('--tickets required, e.g. "274094,276465,277868:265537" (digits; :alias optional)');
   ensureRepo(st.repo);
   const { discoverTicket, parseNumbers, renderTicket } = require('./discover.js');
-  git(st.repo, ['fetch', 'origin', '--prune']);
+  fetchOrigin(st.repo);
   const releaseRef = git(st.repo, ['rev-parse', '--verify', '--quiet', st.branch], true).status === 0 ? st.branch : null;
   const specs = a.tickets.split(',').map(s => s.trim()).filter(Boolean).map(parseNumbers);
   st.discovery = {};
@@ -291,7 +299,7 @@ function cmdSetTickets(a) {
   if (!a.tickets) die('--tickets required, e.g. "269939=mlk/internal-issue/269939,..." — or --from-discovery');
   ensureRepo(st.repo);
   const tickets = parseTickets(a.tickets);
-  git(st.repo, ['fetch', 'origin', '--prune']);
+  fetchOrigin(st.repo);
   const missing = tickets.filter(t => !remoteBranchExists(st.repo, t.src));
   if (missing.length) {
     die('PREFLIGHT FAIL — these ticket branches do NOT exist on origin (all-or-nothing rule):\n'
@@ -322,7 +330,7 @@ function cmdAddTicket(a) {
   if (!a.branch && !a.sha) die('one of --branch <origin branch> or --sha <commit> required');
   if (st.tickets.some(t => t.ticket === String(a.ticket))) die(`ticket label ${a.ticket} already in the merge list`, 2);
   ensureRepo(st.repo);
-  git(st.repo, ['fetch', 'origin', '--prune']);
+  fetchOrigin(st.repo);
   let entry;
   if (a.branch) {
     if (!remoteBranchExists(st.repo, a.branch)) die(`PREFLIGHT FAIL — origin/${a.branch} does not exist`, 2);
@@ -415,7 +423,7 @@ function cmdBranch(a) {
   ensureRepo(st.repo);
   ensureClean(st.repo);
   git(st.repo, ['checkout', 'mlk/master']);
-  git(st.repo, ['fetch', 'origin']);
+  fetchOrigin(st.repo);
   git(st.repo, ['merge', '--ff-only', 'origin/mlk/master']);
   assertMasterReflectsPrevRelease(st, a);   // ── stale-master detector: prev release MUST be in master ──
   git(st.repo, ['checkout', '-b', st.branch]);
@@ -709,7 +717,7 @@ function cmdMergeToMaster(a) {
   // `--ba-approved` stores undefined — `in` makes the flag work with or without a value.
   if (!('ba-approved' in a)) die('MERGE-TO-MASTER REFUSED — 🛑 V8: pass --ba-approved only after みや confirms BAQA baseline testing PASSED. Deploy success is NOT testing success.', 2);
   ensureRepo(st.repo);
-  git(st.repo, ['fetch', 'origin', '--prune']);
+  fetchOrigin(st.repo);
   if (!remoteBranchExists(st.repo, st.branch)) die(`${st.branch} is not on origin — run \`push\` first`, 2);
 
   // Dirty tree is TOLERATED (みや routinely has ticket work in flight) but ONLY when no dirty
@@ -750,7 +758,7 @@ function cmdStatus(a) {
   // twice during the incident. Compare against live origin refs; drift = loud flag, exit 2.
   if (!('verify' in a)) return;
   ensureRepo(st.repo);
-  git(st.repo, ['fetch', 'origin', '--quiet'], true);
+  fetchOrigin(st.repo, true);
   const problems = [];
   const remoteTip = (git(st.repo, ['rev-parse', `origin/${st.branch}`], true).stdout || '').trim();
   if (!remoteTip) problems.push(`origin/${st.branch} does not exist`);

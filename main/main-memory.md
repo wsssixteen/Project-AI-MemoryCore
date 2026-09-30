@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-28/29 (Baseline 1.7.0 — "you should've been able to check the winscp connection in the first place")
+
+- **A handover that makes him ask is not a handover.** The card had build steps but not the SQL, the flowable or the Sheet path; he had to ask three times. The card now carries all of it the moment the branch is pushed.
+- **"Uploaded" means I saw it on the server.** The flowable sat in the Perak folder and the release team found Melaka empty. His WinSCP and its stored session were on the same laptop. Check it myself before I say done.
+- **When BA is waiting, the test table comes first.** He wanted a login and a permohonan ID for BA; I kept giving him log-grep instructions. Answer the ask, then investigate.
+
 ## Relationship reinforcement — 2026-09-29 (#278909 — "did you verify last round syorKeputusanPDT is accurate?")
 
 - **A tag being registered is not the same as the tag being right.** I checked the CC name, its method and where it was used, and called it done. He asked one question and the writer of the key showed PT keeps one answer for both offices. Trace who writes the key for THIS urusan before recommending a read-side fix.
