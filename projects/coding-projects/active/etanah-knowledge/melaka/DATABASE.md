@@ -1642,3 +1642,21 @@ Before-SELECT: `SELECT aplikasi_id, id_pengenalan, status_proses, status_keputus
 - PPTPB calc (#280540 fix) unit order: row `kadar_pengiraan_id` → row `unit_luas_id` → Kod Fi `unit_pengiraan_id` (`PelupusanMaklumatBayaranHelper.getPptpbUnitKadar()`).
 - Per-row BA evidence query (no JOIN): Task folder `217. ES #280540…\280540.sql`.
 - **Two-band rates (#265109, 2026-09-25, mlit DB verified)**: a prorata tujuan needs a SECOND `hsl_fi_kadar` row with `unit_luas_dari` > 0 for the rate above the first band. Jeti has it (mlit rows 2017 hingga 91.44 + 2018 dari 91.4401). PLPSL Tanah untuk pengiklanan has only band 1 (rows 2008-2016, hingga 10), so `calculateSewaTahunanProrata` returns null above 10 mp and Sewa Tahunan shows `-`. The RM20 rate sits only in the `perihal` text.
+
+## 29. AWAM pra (draft) pemohon syer — `umm_p_pihak_bkptg` (2026-09-25, ADHOC-PLTP-2026-1, PROD-proven)
+
+A Portal Awam application that has not been submitted lives only in the `umm_p_*` (pra) tables; there is no `umm_aplikasi` row and no permohonan ID yet.
+
+| Need | Table.column | Link |
+|---|---|---|
+| Pra application | `umm_p_aplikasi.p_aplikasi_id` (`aplikasi_id` NULL until submit; `created_by` = public login) | — |
+| Pra hakmilik | `umm_p_hkmlk.hkmlk_id` | `p_aplikasi_id` |
+| Pemohon + syer | `umm_p_pihak_bkptg.syer_pembilang` / `syer_penyebut` | `p_aplikasi_id` |
+| Hakmilik id → hkmlk_id | `ind_hkmlk.id_hkmlk` | — |
+
+```sql
+SELECT p_aplikasi_id, nama, syer_pembilang, syer_penyebut FROM umm_p_pihak_bkptg
+WHERE p_aplikasi_id IN (SELECT p_aplikasi_id FROM umm_p_hkmlk
+  WHERE hkmlk_id = (SELECT hkmlk_id FROM ind_hkmlk WHERE id_hkmlk = '<id hakmilik>'));
+```
+Not here: `hakmilik_pihak_berkepentingan` (does not exist in `et_main`). A carian-rasmi receipt like `02CR3761/2026` is NOT in `hsl_bayaran.no_resit`.
