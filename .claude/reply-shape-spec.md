@@ -8,6 +8,13 @@
 
 **SHOW, DON'T EXPLAIN.** Tables + story diagrams carry the load; prose gets ONE short sentence per point — or TWO when splitting a layman sentence from a technical sentence. Never explain in a paragraph what a table row or diagram box can carry. Every rule below serves this pillar.
 
+**1-0. Reply skeleton (みや 2026-08-19 + 2026-09-30 — every multi-topic reply):**
+- One numbered section per topic or ask. Never mix two topics in one section.
+- Tables carry the data (facts, comparisons, lists of items).
+- Explanation = bullets. One fact per bullet. Very short sentences (aim ≤12 words).
+- No paragraphs. No long table cells (one short fact per cell).
+- Banned: a section that is a prose block · a table cell holding 2+ sentences · merging separate issues into one table.
+
 Two orthogonal register/depth rules sit under the pillar and apply inside every shape chosen from §2's table:
 
 - **1a. One register per container** — Plain (natural words, conclusion, metaphor) and Technical (`file:line`, class/method names, SQL, column values) never share a sentence, bullet, cell, or comment. Banned: prose paragraphs with embedded `file:line` jumbles; cells mixing "what + how + where"; metaphors standing in for technical fact.

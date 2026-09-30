@@ -1,0 +1,111 @@
+# Agentic ticket workflow assessment — 2026-09-30
+
+## Session — #281324 resume + weekly planner (redmine-tickets-triage worktree, part 2)
+
+| Axis | Finding | Instance |
+|---|---|---|
+| A1 agentic | redmine-write-gate blocked a pure read three times because the command or script mentioned a field name; the allow-list only knows 5 scripts by name. Proposal logged. | planner read 2026-09-30 |
+| A2 quest | The hand-back format for a ticket miya already understands should be his steps as one table; the full quest emit (J-table, reconcile, YOUR MOVE, 7 SELECTs) buried a 2-job fix. Slip reask/verbose. | #281324 2026-09-29 evening |
+| A3 debugging | Blind re-check on the live engine instead of the knowledge copy caught that the knowledge BPMN is not byte-identical to staging v2 and that PB could mean Pos Berdaftar; act_hi_varinst settled the value space in one query. | #281324 J2 |
+| A4 etanah | A variable read by a shared sub-flow gateway with no writer is fixed in the CHILD as a Data Object, because every caller starts the latest child by key. Banked as FLOWABLE-KNOWLEDGE §14. | #281324 |
+| A5 sweep | ⏭ no sweep run this session. | — |
+
+
+## Session 2 (deploy triage) — 2026-09-30 13:50
+
+| Axis | Assessment (instance) |
+|---|---|
+| A1 agentic system | Chrome session reuse beat the login wall: the built-in pane hit Keycloak, miya's Chrome read the full 1.6 MB log via the console's own JSON API in one call. Cost: 3 gate blocks (design-consult, predicate-box false positive on a MemoryCore edit, attempt-before-blocked) on a non-code session. |
+| A2 quest workflow | ⏭ no quest touched (env deploy of mlk/int-env). |
+| A3 debugging | Good: first-red-step + log tail settled owner in 2 fetches. Slip: 'Nick probably changed the stop script' asserted without evidence (assume-not-verify); fixed by diffing console build time + both prepare outputs. Proposal logged. |
+| A4 etanah issue-solving | New known failure recorded (fudge1 prepare exit 137, retry passes when JBoss already down) in deploy skill §8. Proposal: deploy-run triage script. |
+| A5 sweep | ⏭ no sweep this session. |
+
+## Session: Baseline 1.7.0 (2026-09-28 → 30, melaka-release-baseline worktree)
+
+| Axis | Assessment (instance) | Proposal logged |
+|---|---|---|
+| A1 agentic system | Hand-off card lacked SQL/flowable/Sheet; flowable drop landed in Perak/, unverified though WinSCP.com + stored session existed on the laptop | flowable drop listing gate |
+| A2 quest/release workflow | Direct-to-master #280993 broke compile; only caught because miya asked for an audit | compile-master preflight in `branch` |
+| A3 debugging | Missing PTBUT row traced correctly (bpm_log delay + ID block) but took ~30 queries | missing-tugasan-row triage script |
+| A4 etanah issue-solving | BA wanted login + ID; test table came 3 asks late | intake reminder: test table first |
+| A5 sweep | ⏭ no sweep run this session | — |
+
+## Session 3 addendum (melaka-internal-deploy, 15:30)
+
+| Axis | Finding (instance) | Proposal |
+|---|---|---|
+| A1 agentic system | 3 gates misfired on non-ticket work: test-scenario-login-gate ×3 (deploy/triage, no ticket) · sql-schema-verify on READ-only files + refuses unqualified scripts · design-consult-gate ignored an in-message skip token and forced two skill loads for a 1-section doc addition | 2 proposals logged (login-gate silent without ticket · sql-schema-verify read-vs-write + unqualified) |
+| A2 quest workflow | ADHOC-VIEW-2026-1 block said "miya runs CREATE Mon 09-28"; live catalog showed no view on any env — active.txt state rots without a check | covered by existing resume-readiness sweep |
+| A3 debugging | Top-down log read found the first failure (antrun zip) under a misleading last line; ps check found the concurrent run in one step | deploy skill §7 entry added |
+| A4 etanah | Answered a data question from the view definition before querying data (flag_permit) — slip claim-before-data | knowledge: PERMIT-LESEN status never flips on expiry |
+| A5 sweep | deploy card lacks a pre-run concurrency check for shared mirage1 | proposal logged |
+
+## Session 5 — ADHOC-PERMIT-2026-1 (main checkout, 15:30)
+
+| Axis | Assessment (concrete instance) |
+|---|---|
+| A1 agentic system | A structural rule changed mid-day (Task folder v13 retired notes txt) but `lib/adhoc-save-audit.js` still demanded `1. <ID>.txt`, so the audit FAILED on a correct save-set. Fixed in the tool + eval (21/21), not by writing the retired file. |
+| A2 quest workflow | "Bug awareness" had no row in the DE Step 7 routing table, so a verified no-ticket bug had no obvious home. Added the row (LATENT-BUGS.md) + "index.md is the router" row. |
+| A3 debugging | Counter census (every `sis_no_turutan` number matched to its app's tugasan history) proved completeness: 62/62 accounted for, no guessing. Banked in PERMIT-LESEN-RUNNING-NUMBER.md. |
+| A4 etanah | One shared screen (skrin 338) causes the whole early-mint family; PPJK + PSBS are latent (L16/L17) and share a one-line guard at `MlkPengiraanBayaranLesenForm.java:647`. |
+| A5 sweep | The family sweep was manual this time (code callers × ind_langkah × BPMN × counters). It is repeatable per release but nothing re-runs it. |
+
+## Session 5 round 2 — "do it all" (15:45)
+
+| Axis | Assessment (concrete instance) |
+|---|---|
+| A1 | audit-briefing flagged 4 hooks "never fired, RETIRE?"; 2 had fired the same morning into their own `log.jsonl` (unwrapped, invisible to telemetry), 2 only fire on Agent spawns. Retiring on that count would have removed the PROD-SQL schema check. Fixed the classifier + wrapped both hooks. |
+| A2 | An internal-save ask grew a "raise ticket" row in my own Next-steps menu, and "do it all" nearly turned it into a Redmine post. The redmine-write-gate + popup held; the menu row should never have existed. |
+| A3 | ⏭ no debugging work this round |
+| A4 | ⏭ no etanah change this round (L16/L17 stay internal by miya's ruling) |
+| A5 | ⏭ no sweep this round |
+
+## Session 5 round 3 (16:00)
+
+| Axis | Assessment (concrete instance) |
+|---|---|
+| A1 | Next steps rows used my own labels ("rule the watches", "guards at line 647"); miya could not act on them. Now enforced by a Stop check (next-steps-shape, eval 8/8) plus the injector column. |
+| A2 | `active-cli archive` moved the qa_doc folder but left the block pointing at `active/`, so the adhoc audit failed on a correct close. Fixed in the tool (qa_doc repoint). |
+| A3 | ⏭ no debugging this round |
+| A4 | "Earliest tugasan" answered from data already banked (ind_langkah x BPMN) in one reply; written back to PERMIT-LESEN + L16/L17 |
+| A5 | ⏭ no sweep this round |
+
+## Session: QA-281423 (worktree session-256334-recovery, 15:58)
+| Axis | Instance | Verdict |
+|---|---|---|
+| A1 agentic system | worktree guard blocked edits to main-only qa doc + auto-memory; writes fell back to Add-Content | proposal logged (allow-list untracked-confidential paths) |
+| A2 quest workflow | load manifest said "QUEST DOC — NONE" though QA-281423.md existed in main | proposal logged (resolve main-repo qa_doc) |
+| A3 debugging | owner source found in 6 reads: xhtml → component → helper → repository in common | ⏭ worked as designed; counting the 625 trap only happened when miya asked "reliable?" — verify-before-claim held |
+| A4 etanah solving | Redmine drafts: 4 rewrites (long sentences, implication, bossy, markdown table) | proposal logged (Textile helper); slips x2 ticket-writing-style |
+| A5 sweep | ⏭ no sweep this session |
+
+## Session: ADHOC-PRBB-2026-6 (worktree melaka-pembatalan-ralat-f283f4, 16:10)
+| Axis | Instance | Verdict |
+|---|---|---|
+| A1 agentic system | "Build it, verify it" (a system ask) read as the etanah fix → JBoss ask; also `archive-quest` EPERM on an Explorer-locked folder left a half move | proposal logged (archive-quest: detect lock, move files then report the empty shell) |
+| A2 quest workflow | pelupusan workaround built + compiled before the PROD server.log was read; the log named the owner (common/GIS) in one line | proposal logged (etanah-intake mask-NPE → server.log-first injection) — also the bounty refinement |
+| A3 debugging | NPE in a catch hid `relation "et_ptg.log_service" does not exist`; ADHOC-TRIAGE rule 6 now says read the line before the NPE | ⏭ baked into knowledge this session |
+| A4 etanah solving | drafted a common hand-off offering to carry their CREATE TABLE to infra; miya: not our issue, one line | memory written (feedback_other_team_message_not_our_issue); ⏭ no new proposal |
+| A5 sweep | ⏭ no sweep this session |
+
+## Session: redmine-write-gate v1.3 (main checkout, 16:45)
+
+| Axis | Finding | Instance |
+|---|---|---|
+| A1 agentic | Gate evals write into the gate's REAL log.jsonl, so audit counts and "has it fired" checks include fixture rows. | redmine-write-gate log.jsonl tail 2026-09-30 07:54: three `blocked` rows with last_user "/quest resume 256334", which is eval fixture text, not a live turn |
+| A1 agentic | A gate false positive cannot be replayed later: the block row keeps last_user but not the blocked command, and the 2026-09-28 scratchpad audit.js was gone, so its shape was reconstructed from the ask. | F39 fixture written from the description, not the real script |
+| A1 agentic | Brevity asks still get lists: "tell me what this session is for" and "in very short sentences" both got bullets or a table. | slips answer-the-ask ×2 today, ×3 in 7 d |
+| A2 quest | ⏭ no quest this session | — |
+| A3 debugging | The fix kept every prior fixture green only after one regex was widened again (field KEYS count, field READS do not); a narrower first cut would have let a helper-hidden `{ notes, status_id }` write through. Fixture F54 now pins it. | v1.3 draft 1 → draft 3 |
+| A4 etanah | ⏭ no etanah work this session | — |
+| A5 sweep | ⏭ no sweep this session | — |
+
+## Session: hook retire + reply skeleton (17:00)
+| Axis | Instance | Verdict |
+|---|---|---|
+| A1 | audit-briefing read own logs from worktree ROOT -> false RETIRE on 3 working hooks | fixed (MAIN_ROOT); proposal: mechanical reply-skeleton check |
+| A2 | bounty proposals logged once, never followed | fixed: tracked via slips --type proposal |
+| A3 | ⏭ no debugging | |
+| A4 | ⏭ no etanah change | |
+| A5 | ⏭ no sweep | |

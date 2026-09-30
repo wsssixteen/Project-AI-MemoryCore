@@ -9,6 +9,18 @@ description: Baseline — Melaka Pelupusan (PLP) release PREPARATION. Redmine ev
 > `domain/release-mlk-plp-ask/` (prompt trigger) + `domain/release-mlk-plp-push-gate/` (push guard).
 > For another state/module, DUPLICATE as `release-<state>-<module>` — never generalize this one.
 
+## 🧭 Baseline awareness — standing answers, NEVER re-ask (2026-09-28 per みや, Baseline 1.7.0)
+
+| Situation | Standing answer |
+|---|---|
+| **Common version** | Keep master's `<etanah.common.version>`. Bump ONLY when a ticket in THIS release carries a fix that needs a newer common (recon `COMMON-VER`, or the ticket's own code will not compile without it). int-env/MLIT running a newer common is NOT a reason. Decide it LAST, after every ticket is in. |
+| **Flowable in a release ticket** (BAQA note "Ada flowable", or a `.bpmn20.xml` change) | **We own it** as part of the baseline. PROD delivery = upload the model file to the remote through WinSCP/FileZilla (SFTP as `ftpuser`, folder `/home/ftpuser/files/flowable-diagrams/<State>/<YYYY-MM-DD>/Pelupusan/` — `<State>` = `Melaka` for this skill); the release team picks it up from there and deploys. File source = the deployed `.bpmn20.xml` pulled from MLIT `et_flowable_mlit.act_ge_bytearray` (md5-checked). Stag gets the same model published by みや, and any SQL the ticket ships is run on stag too (1.7.0: #263304 isu24 SQL run on `et_main_stg2`). Put it on the hand-off card as its own step; never ask "who publishes". |
+| **Hand-off card = EVERYTHING in one go, unasked** (2026-09-28 per みや, 1.7.0) | At push, the card already carries: (1) every SQL file downloaded from Redmine + shown inline + run on stag (verified by counts) · (2) the flowable `.bpmn20.xml` file (MLIT pull, md5) · (3) the full Sheet Developer block ready to paste — Domain · DB · Common · Module · Branch · **Flowable Diagram = `/home/ftpuser/files/flowable-diagrams/Melaka/<YYYY-MM-DD>/Pelupusan/<file>`** (leading `/`, **Melaka** folder, never Perak) · SQL line. Never wait for みや to ask for the file or the script. |
+| **Flowable drop VERIFIED by me, not assumed** (2026-09-29 per みや, 1.7.0: file sat in `Perak/`, release team found `Melaka/2026-09-28` empty) | Before the card says "uploaded", I list the drop folder myself with `C:\Program Files (x86)\WinSCP\WinSCP.com` (stored session to `ftpuser@172.16.90.169`) and show the listing: file name + 348,612-style byte size under `Melaka/<date>/Pelupusan/`. No listing = not delivered. Blocker today: stored session `Petaling` collides with the workspace of the same name — needs a distinct alias (みや's nod). |
+| **BA "tak pergi mana-mana tugasan" during baseline** | Answer with the test table FIRST (login · screen · do · expect, from live `umm_a_tgsn`), the investigation after. Check `sis_bpm_log` delay vs `act_hi_taskinst.start_time_` before blaming the release — 1.7.0 PT stall was a node-level async queue, not code. |
+| **AWAM tickets in the BAQA message** ("Release Awam PLP") | List only, or ignore. At most one branch table. No AWAM git work, and no question about it. |
+| **Commit on `mlk/master` that is not on the BAQA list** (e.g. a direct maintenance commit) | Include it, but only after I audit the whole diff and compile it. If it is unsafe, it gets fixed on its own ticket branch before the release. Report the audit verdict at V1. |
+
 ## Pipeline (7 stop-points; NEVER skip forward past an un-nodded 🛑)
 
 ```
@@ -381,6 +393,7 @@ re-reads `origin/mlk/master` and fails loudly if it isn't the release tip.
 | ⬜ | **Build target named explicitly** in the hand-off card (stag / prod), never "choose the env" |
 | ⬜ | **Worktree preflight**: `redmine.local.json` + `servers.local.json` + `domain/compile-gate/` copied from main repo before Phase A (recurring friction, 3rd occurrence 2026-08-19) |
 | ⬜ | **Local `mvn compile` green on the FINAL tree before push** — show the `BUILD SUCCESS` line, not an exit code |
+| ⬜ | **Compile `origin/mlk/master` itself BEFORE branching** when it carries any commit after the previous release (1.7.0: #280993's direct logger commit broke master — a `private static LOGGER` in `BasePelupusanDokumenForm` hid the inherited one, 32 errors in subclasses) |
 
 **Deferred builds (todo)**: `status --verify` (state-vs-origin drift, I hand-edited state 2× on 2026-08-19) · extend `release-mlk-plp-push-gate` to block manual `git push origin mlk/master` (V8 breach class).
 

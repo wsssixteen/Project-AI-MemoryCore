@@ -14,6 +14,9 @@ metadata:
 
 **How to apply - the shape (from miya's own example, #276436):**
 - Short simple sentences. One idea per line.
+- STATEMENTS, never implications (2026-09-30, #281423): say the fact and its result outright; no "X can carry Y. This happens even when..." that makes the reader infer the point. Back it with the real count ("every PRBB pemohon row has 625, owner or not").
+- Not bossy: no "Do not use X" commands to another team. State the fact, let it guide them.
+- Redmine = Textile, not markdown: tables as |_. Head | rows |, code/columns in @...@ (underscores italicise otherwise). Hand the draft in a code block so it pastes raw.
 - Plain words. No file names, no line numbers, no code names, no jargon.
 - Normal human tone. Warm. No caps for emphasis. No "AI explaining".
 - Order: what we fixed + where to test it -> what is still broken + which side does not do it -> what DOES work (the comparison) -> what will show once the condition is met -> "Attached are the fixes required for X to check further." -> "Thank you."
@@ -86,7 +89,63 @@ Penyediaan Senarai Semak ke PTG, Semakan Permohonan PDT, Semakan Dokumen Permoho
 Thanks
 ```
 
-5. Junior handover, hints not answers, #264355 (2026-09-29). To Farah (Siti Farhanih Abdul Razak). Opener = which side + symptom + the working comparison, one line each. Numbered title + `<pre>` of WHERE to look (repo, branch, screen, file to start from, analog ticket), never the fix line. He CUT: "Fix dijangka kecil. Kalau rasa perlu ubah banyak, tanya saya dulu." He questioned a "Skop" block: "Siap: push branch, bagitahu saya untuk review" is noise (she already does it), and parking BA-reported items as "tunggu BA" is wrong — the handover covers the WHOLE ticket. 🚨 Junior hint = symptom + WHERE to start + test data ONLY. NEVER state the cause or the mechanism ("ID tak lalu Bayaran Pelbagai", "notifikasi ada tapi satu tugasan sahaja" = the answer, spoon-feeding; he raged at it). Pre-send check per `<pre>` line: does it say WHY it breaks? → cut it.
+3. Dev-to-dev finding note, #256334 (2026-09-28). Greeting = the person the ticket is assigned to RIGHT NOW (re-sync Redmine and read the live assignee before writing; I greeted Li Wen, he changed it to Anis). Opener answers the side question in 2 lines. Numbered title + `<pre>` detail. A pending decision is written "Perlu confirmation: A, atau B." (not "Perlu setuju").
+```
+Salam Anis,
+
+Pelupusan panggil sub-flow sekali je setiap Hantar di Perakuan.
+Service start banyak kali sebab flow ABB start semula service yang sama.
+
+1. Service ulang tanpa henti
+<pre>
+   HasilSpocIntegrationService.java line 99 (case ABB) panggil onKemaskiniPerserahanABB.
+   Line 230 submitBpmWithParam(ABB) setiap kali.
+   Flow ABB guna MLK_HSL_ISPEKS, jadi service dipanggil semula.
+   Cadangan: submit BPM bila aplikasi ABB baru dicipta sahaja. Refer HasilSpocIntegrationService.java.
+</pre>
+
+2. Tugasan Semakan dalam sub-flow PDBB tiada pengguna
+<pre>
+   Sub-flow guna aliran kerja PDBB.
+   ISPEKS_SMKN tiada bawah urusan PDBB.
+   Perlu confirmation: sub-flow tamat dan PDBB tunggu ABB, atau sub-flow tukar ke aliran kerja ABB.
+</pre>
+
+Thank you.
+```
+
+4. Dev-to-dev WhatsApp reply to another team, #280540 (2026-09-29). Common said "dev kau tarik data lain". Casual Manglish, no greeting, no apology. Opens "Actually", states what our code really reads in fallback order, then one line on why the evidence looked different. He cut my "Maaf atas kekeliruan" and the formal Malay.
+```
+Actually code kita memang amik dari hsl_fi_kadar.kadar_pengiraan_id, tapi kalau null, fallback ke hsl_fi_kadar.unit_luas_id, lepas tu baru ke hsl_fi_pejabat.unit_pengiraan_id.
+
+Script tu just untuk tunjuk currently amik dari mana, sebab hari tu kadar_pengiraan_id null untuk semua baris. Tu yang script tak tunjuk column hsl_fi_kadar.
+```
+
+5. BA pass after a multi-issue fix, #282061 (2026-09-29). He pasted this template and asked for the fixed list inside it; I had sent my own Malay shape instead (slip `reask/redundant`). English, "Salam" + short name, envs named, one numbered line per issue in plain words, git block, then the thanks line. **Printed by the tool, never retyped**: `node domain/ticket-close-block/ticket-close-block.js --repo <clone> --ticket <num> --module pelupusan --ba <Name> --envs "internal & staging"` (only the numbered lines are written by hand). Rule home: quest SKILL § Hand-over to BA + deploy SKILL 6b.
+```
+Salam Fizah, have deployed fixes to internal & staging. Please help to verify.
+
+Issues found and resolved:
+1. <plain one-line fix>
+2. <plain one-line fix>
+
+<git block>
+
+Thank you very much.
+```
+
+6. Dev-to-dev WhatsApp answer to a "why" question, Li Wen (Hasil) on Flowable Source vs Source expression (2026-09-30). He kept my draft and changed one word: the closing summary opener "Ringkasnya" became "Basically". Rule: in rojak, the connectors and fillers are casual English (Basically · Actually · just · so · currently), never formal Malay (Ringkasnya · Oleh itu · Maaf atas kekeliruan). Technical terms stay English too: "fixed value" not "nilai tetap", "value" not "nilai" (he asked "nilai tetap is basically value?" = a Malay translation of a dev term made him stop and decode it). Shape he approved: one fact per short paragraph, blank line between, concrete example with the real value, last line = the one-line rule.
+```
+Source tu untuk nama variable dalam parent flow. Flowable akan cari variable nama tu dan copy value dia.
+
+Kalau letak etanah-spoc-hasil kat Source, Flowable akan cari variable nama "etanah-spoc-hasil" dalam PDBB. Takde variable tu, so jadi null.
+
+Source expression pulak dia evaluate expression. ${'etanah-spoc-hasil'} tu string tetap, so value dia memang terus "etanah-spoc-hasil".
+
+Basically, nak pass variable guna Source. Nak pass fixed value guna Source expression.
+```
+
+7. Junior handover, hints not answers, #264355 (2026-09-29). To Farah (Siti Farhanih Abdul Razak). His final version below. Opener = which side + symptom + the working comparison, one line each. Numbered title + `<pre>` of WHERE to look (repo, branch, screen, file to start from, analog ticket), never the fix line. He CUT: "Fix dijangka kecil. Kalau rasa perlu ubah banyak, tanya saya dulu." and the "Skop" block ("Siap: push branch, bagitahu saya untuk review" is noise, she already does it; parking BA items as "tunggu BA" is wrong, the handover covers the WHOLE ticket). 🚨 Junior hint = symptom + WHERE to start + test data ONLY. NEVER state the cause or mechanism ("ID tak lalu Bayaran Pelbagai", "notifikasi ada tapi satu tugasan sahaja" = the answer, spoon-feeding; he raged at it). Pre-send check per `<pre>` line: does it say WHY it breaks? → cut it. 🚨 Junior tests on INTERNAL: test data comes from internal only, never staging (even if BA reproduced on staging). 🚨 Every item in the guide must be backed by a PROVEN fix from a quest sweep, never a proposed or untraced one (he asked "did you run full quest sweep").
 ```
 Salam Farah,
 
@@ -109,14 +168,24 @@ PRBB di tugasan yang sama papar surat.
    Refer eSOKONGAN #276584, logik AWAM yang sama.
 </pre>
 
-3. Test data (staging)
+3. Test data (internal)
 <pre>
-   PRU: login AWAM alyaaqilah802@gmail.com, ID PTMLK/01/L/PRU/2026/2.
-   Tugasan sekarang Bayaran Pelbagai (mzahiruddin@melaka.gov.my). Jangan hantar tugasan ni.
-   Banding: login AWAM redha@samb.com.my, ID PTMLK/02/L/PRBB/2026/5 (Bayaran Pelbagai, amalia@melaka.gov.my).
+   ...
 </pre>
 
+4. Surat Tolak tak papar di AWAM
+<pre>
+   Screen: AWAM > Status Permohonan, icon Surat Keputusan.
+   Guna jalan yang sama macam point 1. Banding apa beza Lulus dengan Tolak.
+</pre>
+
+5. Tiada notifikasi ke AWAM
+<pre>
+   Repo: etanah-pelupusan.
+   Cari sama ada Pelupusan pernah hantar notifikasi keputusan kepada pemohon.
+</pre>
 Thank you.
 ```
 
+**Before writing ANY Redmine note: run `node quest/redmine-sync.js <num>` and greet the live assignee.**
 Related: [[feedback_cross_module_handoff_artifact]] · [[feedback_ba_facing_reply_plain]].

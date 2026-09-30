@@ -18,3 +18,5 @@ metadata:
 **Worked example** — QA-276549 (PRBB counter doc-mandatory): root write is `etanah-spoc-hasil PopulateDataUtil.populateAppDokumenKemasukanBySemakanDokumen:965` (spoc — off-limits). Cater from pelupusan: the SKM tugasan is `MlkSemakanPermohonanForm` (pelupusan), so re-derive/override the doc `adalahWajib` for SCR + PLP_RESITCUKAI there, keyed on `tarafTanah` (from `umm_aplikasi.mklmt_tmbhn`).
 
 Related: [[feedback_stay_in_module]] · [[feedback_cross_module_handoff_artifact]] · [[feedback_cross_module_alert_at_intake]]
+
+**🚨 Also banned: CARRYING another module's fix (2026-09-30, ADHOC-PRBB-2026-6).** Not editing their code is not enough. Never offer to relay, chase, or run their work either — no "send us the script and we will pass it to infra", no column lists, no fix steps. Common and GIS (GIS DB + GisRequestService integration) are NOT our side. Our only output for their bug = one message saying it is not our issue + the error line. See [[feedback_other_team_message_not_our_issue]].

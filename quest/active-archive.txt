@@ -4137,23 +4137,6 @@ held_reason=2026-09-25 - awaiting miya: post it (Redmine In Progress) + infra se
 branch=none (data patch via infra, no code change)
 closed=2026-09-25
 
-qa=QA-281650
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\233. DP #281650 - Pelupusan - MLPS - 1) Patch Tempat 2) Rotate Pelan 3) Patch Tanah Kera (PROD)
-phase=0
-status=archived
-ticket_type=patch
-env=Pelupusan > MLPS > 1) Patch Tempat 2) Rotate Pelan 3) Patch Tanah Kerajaan
-issue_one_liner=Pelupusan > MLPS > 1) Patch Tempat 2) Rotate Pelan 3) Patch Tanah Kerajaan
-assigned_to_me=2026-09-25
-current_phase=Closed
-local_test_confirmed=true
-quest_start=2026-09-25
-state=melaka
-qa_doc=projects/coding-projects/archive/QA-281650/QA-281650.md
-closed=2026-09-28
-commit=none-patch-only
-close_note=Data patch applied PROD 2026-09-25 (infra) verified 2026-09-28; pelan replace handed to infra, Redmine reassigned to Asyraf 2026-09-27 for pelan follow-up
-
 qa=QA-281568
 task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\229. II #281568 - Pelupusan - PT - Request untuk Alter ke Tugasan Pelukis Pelan untuk Ja (PROD)
 phase=2026-09-28 Phase 1 closed: alter done, PROD PLPP a_tgsn 2855392 Baru for azizah@melaka.gov.my (2026-09-25 09:45); Redmine Closed by Idris; no code, no commit
@@ -4208,3 +4191,118 @@ test_result=miya 2026-09-28 server test PASSED on int-env (260709BSAT00111)
 closed=2026-09-28
 post_mortem=main/post-mortems.md#QA-281712
 kpi_entry=skip-routine
+
+# ===== archived 2026-09-28 (answered adhoc) =====
+
+qa=ADHOC-PT-2026-10
+phase=answered
+status=answered
+ticket_type=adhoc
+env=MLKSTG
+urusan=PT
+quest_start=2026-09-28
+local_test_confirmed=false
+adhoc_register_row=A35
+aplikasi_id=3436849
+qa_doc=projects/coding-projects/active/ADHOC-PT-2026-10/ADHOC-PT-2026-10.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\237. AH - MLKSTG - PT - SKM JT Tidak Hantar tiada tugasan seterusnya
+issue_one_liner=MLKSTG PT PTMLK/03/L/PT/2026/63 (+PT/39): PTBUT row missing after SKM JT=Tidak — VERIFIED node-level async assignation stall 16:50-18:02 (flowable ID block 12050xxx, also hit Pembangunan), drained itself 18:03; not a 1.7.0 code defect, no fix
+branch=none-until-ticket
+
+qa=QA-281650
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\239. DP #281650 - Pelupusan - MLPS - 1) Patch Tempat 2) Rotate Pelan 3) Patch Tanah Kera (PROD)
+phase=rework1 PROD patched 2026-09-29 (46856 + licence 4346), verified; awaiting Redmine Resolved
+status=archived
+ticket_type=patch
+issue_one_liner=Rework: L1e Tanah Kerajaan shows ' - PT 225 & PT 226' on MLPS/2026/8; dash added by code :772
+board_state=W4: code fix · 80%
+qa_doc=projects/coding-projects/archive/QA-281650/QA-281650.md
+state=melaka
+branch=none yet (Rubric)
+env=PROD
+current_phase=Closed
+local_test_confirmed=true
+closed_cycle1=2026-09-29
+cycle0_closed=2026-09-28
+cycle0_task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\233. DP #281650 - Pelupusan - MLPS - 1) Patch Tempat 2) Rotate Pelan 3) Patch Tanah Kera (PROD)
+
+qa=QA-256334
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\231. CR - AFTER GO LIVE #256334 - PRBB - Proses Pemulangan Wang Cagaran Perlu Diwujudkan dalam sistem eT
+phase=0
+status=archived
+ticket_type=cr
+env=MLIT
+issue_one_liner=PRBB - Proses Pemulangan Wang Cagaran Perlu Diwujudkan dalam sistem eTanah
+assigned_to_me=2026-09-25
+urusan=PDBB - Permohonan Pemulangan Wang Cagaran
+current_phase=waiting-PDBB-v4-publish-and-Hasil-langkah
+local_test_confirmed=false
+quest_start=2026-09-25
+owner=aaron-assist
+fix_layer=flowable-bpmn
+qa_doc=projects/coding-projects/archive/QA-256334/QA-256334.md
+phase_note=CLOSED 2026-09-29 per miya. Round B B1-B4 shipped (int-env ded02f8579/f72c3dc406/b160dc8700). PDBB out-mapping aliranKerjaId removed (v4 unpublished at close). Open items moved to ADHOC-HSL-2026-1.
+commit_cycle7=882f86cbf5
+int_env_merge_cycle7=ded02f8579
+commit_cycle7c=3c199a7401
+int_env_merge_cycle7c=f72c3dc406
+held_reason=2026-09-29: Hasil tugasan fixed & proven on /11 (ADHOC-HSL-2026-1). Owed: miya publish PDBB v4 (out-mapping removed, MLIT still v3); Li Wen langkah N set (#282275); BA e2e to TKPDBB + B4 retest.
+commit_cycle7d=e611403d89
+int_env_merge_cycle7d=b160dc8700
+hasil_finding=2026-09-28 CONFIRMED (code+data+Li Wen log): HasilSpocIntegrationService (spoc-hasil 0dc090584b) ABB branch :94-104 always submitBpmWithParam(ABB) :230; AsyncSpocHasilService.submitBpmWithParam has no @Async (:200) and ABB process = MLK_HSL_ISPEKS (ind_pejabat_ursn) -> recursive re-run of the service ('start banyak kali'); one tx -> any failure (16:46:01 HTTP 503 from pelupusan during deploy) rolls back all -> no ABB app, sis_bpm_log FAIL 8/8. Plus design gap: PDBB-called sub-process Semakan resolves urusan from PDBB aliran kerja 11644 -> ISPEKS_SMKN not under PDBB -> no umm_a_tgsn. Pelupusan calls sub-flow once per Hantar. Handover file deleted (wrong format); note lives in chat + qa_doc.
+hasil_proof=sis_kerja_panggilan_servis stack traces for all PDBB runs (11511..11563) are Hasil-side exceptions; 11563 = tx timeout with aliran kerja ids 11564-11599,11601-11640 burned (loop); 11644 ids 11645-11649 burned then HTTP 503 16:46:01. Handover updated.
+branch=mlk/CR/256334
+related_quest=ADHOC-HSL-2026-1
+commit=e611403d89
+
+qa=QA-281423
+quest_start_ts=2026-09-30T07:19:52.762Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\245. II #281423 - TEKNIKAL - Tugasan PLT - Laporan Tanah - Maklumat Pemilikan dan Alamat (PERMANENT FIX)
+phase=0
+status=archived
+ticket_type=requirement
+env=MLKIT
+issue_one_liner=TEKNIKAL - Tugasan PLT - Laporan Tanah - Maklumat Pemilikan dan Alamat Tidak Tally dengan Maklumat Pemilik Tanah
+assigned_to_me=2026-09-30
+tugasan=Penyediaan Laporan Tanah
+qa_doc=projects/coding-projects/archive/QA-281423/QA-281423.md
+board_state=Consult: data mapping
+state=melaka
+branch=none (consultation)
+current_phase=Closed
+local_test_confirmed=false
+quest_start=2026-09-30
+closed=2026-09-30
+
+qa=ADHOC-PERMIT-2026-1
+phase=closed
+status=archived
+ticket_type=adhoc
+env=PROD
+urusan=MULTI
+scope=MULTI
+quest_start=2026-09-29
+local_test_confirmed=false
+adhoc_register_row=A36
+qa_doc=projects/coding-projects/archive/ADHOC-PERMIT-2026-1/ADHOC-PERMIT-2026-1.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\241. AH - PROD - PLP - No Lesen Permit dijana awal semua urusan
+branch=none-until-ticket
+issue_one_liner=Read-only audit: skrin 338 (MlkPengiraanBayaranLesenForm.performCustomSave():647) mints No Lesen/Permit early. PROD 62 numbers 2026: PPTPB 6 early (fix owned by #282061 C1), PLPS 3 residue (#273461), PPJK latent (0 apps at PYSK yet), PSBS latent throw (no counter). Others mint at issuing tugasan. Nothing fixed; miya decides per urusan
+closed=2026-09-30
+close_note=miya ruling 2026-09-30: PPJK/PSBS fix in a future release or when a ticket lands; kept as LATENT-BUGS L16/L17 + register A36 LATENT
+
+qa=ADHOC-PRBB-2026-6
+phase=closed
+status=archived
+ticket_type=adhoc
+env=PROD
+urusan=PRBB
+quest_start=2026-09-30
+local_test_confirmed=false
+adhoc_register_row=A38
+qa_doc=projects/coding-projects/archive/ADHOC-PRBB-2026-6/ADHOC-PRBB-2026-6.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\244. AH - PROD - PRBB - Pembatalan Permohonan Jana Ralat GIS
+branch=none-until-ticket
+issue_one_liner=PROD PDTMT Utiliti Pembatalan Permohonan PTMLK/01/L/PRBB/2026/13 Jana ralat NPE = common/GIS: PROD GIS table et_ptg.log_service missing (server.log 6x 09:50-10:03) + common PostgresUpdateService null helper. OWNED-ELSEWHERE, common told. Pelupusan try/catch enhancement parked in qa_doc, not applied
+closed=2026-09-30
+close_note=OWNED-ELSEWHERE common/GIS per miya

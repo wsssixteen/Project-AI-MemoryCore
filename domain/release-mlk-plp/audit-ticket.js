@@ -33,7 +33,7 @@ const gLines = (a) => { const o = g(a); return o ? o.split('\n') : []; };
 const blob = (ref, file) => { try { return execSync(`git -C "${REPO}" show ${ref}:"${file}"`, { stdio: ['pipe','pipe','ignore'] }); } catch { return null; } };
 const hash = (buf) => buf == null ? null : require('crypto').createHash('sha1').update(buf).digest('hex');
 
-try { g('fetch origin --prune'); } catch { /* offline ok */ }
+require('./fetch-mlk').fetchMlk(REPO);   // Melaka refs only; failure (offline) is non-fatal, as before
 // Reference is the master the release BRANCHED FROM — not live master (which moves once V8 merges
 // the release in, collapsing every diff to empty). During prep they are the same; post-merge, pass
 // PLP_BASE=<pre-release master sha> (the `mlk/pre-master-merge/<ver>` tag captures it).

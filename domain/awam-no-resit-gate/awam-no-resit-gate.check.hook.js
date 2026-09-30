@@ -86,8 +86,8 @@ runHook({ name: 'awam-no-resit-gate', event: 'Stop' }, (input) => {
       `   Fix before stopping:\n` +
       `     1. Derive it — etanah-knowledge/${stateDir}/TEST-PERMOHONAN-INDEX.md § "No Resit Carian Rasmi"\n` +
       `        (V1-V7 validations + ready query; receipt must be < 6 months old and unused for that hakmilik)\n` +
-      `     2. Write it into the Task notes file:\n` +
-      `        node quest/notes.js --folder "<Task folder>" --qa <n> --env <env> --urusan ${hit[0]} \\\n` +
+      `     2. Write it into the quest MD "## Test data":\n` +
+      `        node quest/notes.js --qa <n> --env <env> --urusan ${hit[0]} \\\n` +
       `             --id "No Resit: <no_resit>" --user "<login>"\n` +
       `     3. Re-emit the hand-back WITH the receipt value.\n\n` +
       `   Banned: handing back an AWAM carian-rasmi ticket with "need a No Resit from BA".\n` +

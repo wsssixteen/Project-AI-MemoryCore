@@ -47,6 +47,13 @@ const PERMOHONAN_ID_RE = /\b[A-Z]{2,5}\/\d{2}\/[A-Z]\/[A-Z]+\/\d{4}\/\d+\b/i;
 // (WIDENED 2026-09-25: PDTMT "Portal Awam / Urusan : PLTP / ID hakmilik : 040210PM00001265 /
 // No. resit carian rasmi : 02CR3761/2026" matched neither shape and was answered with no scaffold).
 const AWAM_KEY_RE = /\bid\s*hakmilik\s*:\s*\S+|\bno\.?\s*resit(?:\s*carian(?:\s*rasmi)?)?\s*:\s*\S+|\b\d{6}[A-Z]{2,5}\d{5,8}\b/i;
+const ATTACHED_RE = /@"?([A-Za-z]:[\\/][^"\n]*?[\\/](?:Desktop|Downloads)[\\/][^"\n]+?)"?(?=\s|$)/gi;
+function attachedFiles(prompt) {
+  const out = []; let m;
+  ATTACHED_RE.lastIndex = 0;
+  while ((m = ATTACHED_RE.exec(prompt)) !== null) out.push(m[1].trim());
+  return out;
+}
 function hasAnchor(prompt) { return PERMOHONAN_ID_RE.test(prompt) || AWAM_KEY_RE.test(prompt); }
 // Office-code the BA relay opens with (Pejabat Daerah dan Tanah — PDTJ Jasin, PDTAG Alor Gajah,
 // PDTMT Melaka Tengah; tolerate other PDT* districts). Word-bounded so "PDTx" inside a path can't hit.
@@ -87,6 +94,7 @@ runHook({ name: 'adhoc-paste-detector', event: 'UserPromptSubmit' }, (input) => 
 
   const urusan = extractUrusan(prompt);
   const office = (prompt.match(OFFICE_RE) || [null, ''])[1] || '';
+  const files = attachedFiles(prompt);
   const lines = [
     '🆕 adhoc-paste-detector: BA-relayed issue' + (office ? ' (from ' + office + ')' : '') + ' with a permohonan-id and NO OWNING Redmine number.',
     '   → This is an ADHOC. Create the SAME scaffold a Redmine retrieval / /quest start does —',
@@ -98,7 +106,9 @@ runHook({ name: 'adhoc-paste-detector', event: 'UserPromptSubmit' }, (input) => 
     '        resolve aplikasi_id via umm_aplikasi.id_pengenalan = \'<permohonan>\' (DATABASE.md §4.1 recipe —',
     '        NOT umm_p_aplikasi.no_rujukan_permohonan) BEFORE any schema hunting.',
     '     1. Task folder: "1. Tasks\\Melaka\\<N+1>. ADHOC - <ENV> - ' + urusan + ' - <short desc>"',
-    '        + 0. Brief/brief.txt (BA verbatim Isu/Expected/ask) + notes via:',
+    '        + 1. Brief/brief.txt (BA verbatim Isu/Expected/ask) + notes via:',
+    '     1a. MOVE every file he downloaded into 1. Brief/ (Move-Item, never Copy; the Desktop/Downloads copy must be gone):',
+    ...(files.length ? files.map(f => '         ' + f) : ['         (none attached this prompt; if he mentions a download, find it in Desktop / Downloads)']),
     '        node quest/notes.js --folder "<folder>" --qa ADHOC-' + urusan + '-<year>-<n> --env <ENV> --urusan ' + urusan + ' --id "<permohonan>" --user "<login>" --reset',
     '     2. active.txt block:',
     '        node quest/active-cli.js start ADHOC-' + urusan + '-<year>-<n> phase=0 status=active ticket_type=adhoc env=<ENV> urusan=' + urusan + ' quest_start=@now local_test_confirmed=false adhoc_register_row=<A#> qa_doc=<path> task_folder="<folder>" issue_one_liner="<...>"',
