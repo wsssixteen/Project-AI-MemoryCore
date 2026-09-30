@@ -29,8 +29,8 @@ Format is already hook-enforced by `domain/show-gate` + `domain/terse-gate`. Thi
 
 Order is load-bearing: what he can SEE → then code → then risk. Never lead with code.
 
-### 1. Bottom line — 1 sentence
-What is broken (or wanted), in みや's/BA's words, not mine. Quote BA verbatim where a symptom is disputed.
+### 1. Bottom line — 1 sentence, then the plain cause
+What is broken (or wanted), in みや's/BA's words, not mine. Quote BA verbatim where a symptom is disputed. Once the cause is known, add 1-2 plain sentences on WHY in everyday words (e.g. *"The system only looks for an unpaid bill, but the bill was already paid."*) before any diagram or code (quest SKILL.md § "Plain first").
 
 ### 2. Where he'll see it — table
 
@@ -69,6 +69,9 @@ If the bug has a **class**, every sibling instance gets a row — never just the
 ### 6. First move — 1 bullet, imperative
 Exactly what みや does first. Names who acts.
 
+### 7. Everything on this ticket — table (quest briefs only)
+The ticket inventory `| # | Item | Type | Status |`: every code site, data patch, side find, open question and Redmine step, same ids as the latest qa_doc Rubric. Shape + rules: `.claude/skills/quest/SKILL.md` § "Everything on this ticket".
+
 ---
 
 ## Rules
@@ -77,7 +80,7 @@ Exactly what みや does first. Names who acts.
 |---|---|
 | Confidence | State a % once, in block 5. Never assert past verified evidence. |
 | Evidence labels | `VERIFIED` (line read) / `HYPOTHESIS` / `BA-Q`. Unlabelled = claimed as fact. |
-| Length | ≤60 content lines. Longer means the investigation is unfinished — finish it, don't pad the brief. |
+| Length | **≤25 content lines** (was 60; みや 2026-09-25 #278909: a 55-line brief "is not brief"). Story diagram ≤8 lines · fix table ≤4 rows · bites ≤3 bullets. Detail belongs in the qa_doc, not the brief. |
 | Source | Read the qa_doc + Task folder first. A brief written from memory is banned. |
 | No asking-back | Any question a tool can answer, answer it before briefing. Only genuine forks reach him. |
 
@@ -93,5 +96,9 @@ node domain/brief/eval.js <brief.md>   # score a real brief, 10 checks
 ```
 
 **Rollback**: `domain/brief/NUKE-MARKER.md`.
+
+*Version 1.2 — 2026-09-29: block 1 adds the plain cause sentence before any diagram (per みや, #282061). Spec-preservation: block 1's BA-words + verbatim-quote specs kept; additive.*
+
+*Version 1.1 — 2026-09-29: block 7 ticket inventory table for quest briefs (per みや, #282061). Spec-preservation: blocks 1-6 and all rules untouched; additive.*
 
 *Version 1.0 — 2026-07-22. Born via `core/forge.js new skill brief`. Skill-only by design: the format constraint みや asked for is ALREADY hook-enforced by `domain/show-gate` + `domain/terse-gate`; a third gate would duplicate (system-rules Rule 1) and double-block. This skill supplies the missing piece — what a brief CONTAINS. Per system-design Rule 7 (leanest primitive). Eval 3/3 green before ship (Rule 6).*

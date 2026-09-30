@@ -90,11 +90,13 @@ process.stdin.on('end', () => {
     // Ground-truth reads: each satisfied if its filename appears in the transcript
     // (a Read tool call / result surfaces the path). Loose by design — v1 advisory.
     const qaMd = `${active.qa}.md`;
+    let briefHint = `${active.task_folder}\\1. Brief`;
+    try { briefHint = require('../../lib/task-folder').briefDir(active.task_folder); } catch (_) { /* keep default */ }
     const checks = [
-      { label: 'BA Description', ok: /Description\.txt/i.test(transcript), hint: `${active.task_folder}\\0. Brief\\Description.txt` },
-      { label: 'BA History journal', ok: /History\.txt/i.test(transcript), hint: `${active.task_folder}\\0. Brief\\History.txt` },
+      { label: 'BA Description', ok: /Description\.txt/i.test(transcript), hint: `${briefHint}\\Description.txt` },
+      { label: 'BA History journal', ok: /History\.txt/i.test(transcript), hint: `${briefHint}\\History.txt` },
       { label: 'main quest doc', ok: transcript.includes(qaMd), hint: active.qa_doc || `projects/coding-projects/active/${active.qa}/${qaMd}` },
-      { label: '0. Brief attachments (photos/pdf/video)', ok: /0\.\s*Brief/i.test(transcript), hint: `${active.task_folder}\\0. Brief\\ — open EVERY file, emit 1 line each` },
+      { label: 'Brief attachments (photos/pdf/video)', ok: /[01]\.\s*Brief|[\\/]Brief[\\/]/i.test(transcript), hint: `${briefHint}\\ (+ each N. Rework\\Brief\\) — open EVERY file, emit 1 line each` },
     ];
 
     const missing = checks.filter(c => !c.ok);

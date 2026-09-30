@@ -98,3 +98,4 @@ system/telemetry/current-turn-*.json
 system/telemetry/current-turn-*.json.lock
 system/telemetry/turn-ledger-state.json
 system/telemetry/turns*.jsonl
+quest/active.txt.bak*

@@ -133,6 +133,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | PreToolUse | Bash | `probe-local-only-gate.check.hook.js` | ✓ |
 | PreToolUse | PowerShell | `probe-local-only-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash|PowerShell | `probe-local-only-gate.check.hook.js` | ✓ |
+| PreToolUse | Bash | `nul-redirect-gate.check.hook.js` — blocks `> NUL` (Git Bash writes a real NUL file OneDrive cannot sync); detect side = system-audit CHECK 10 | ✓ |
 | PreToolUse | mcp__postgres-mlkprod-pg__.* | `prod-db-confirm.discipline.hook.js` | ✓ |
 | PreToolUse | Bash|PowerShell | `quest-exists-gate.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `quest-phase-gate.gate.hook.js` | ✓ |

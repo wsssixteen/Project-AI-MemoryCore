@@ -211,6 +211,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\alter-ticket-gate\\\\alter-ticket-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\pymtime-handover\\\\pymtime-handover.check.hook.js\""
           }
         ]
       }
@@ -234,6 +238,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\probe-local-only-gate\\\\probe-local-only-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\nul-redirect-gate\\\\nul-redirect-gate.check.hook.js\""
           }
         ]
       },
@@ -556,6 +564,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\db-claim-proof\\\\db-claim-proof.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\fix-photo\\\\fix-photo.check.hook.js\""
           }
         ]
       }

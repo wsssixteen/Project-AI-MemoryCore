@@ -20,9 +20,10 @@ runHook({ name: 'component-birth-gate', event: 'PreToolUse' }, (input) => {
   const isFeatureReadme = /\/domain\/[^/]+\/README\.md$/.test(fp);
   if (isFeatureReadme && !require('fs').existsSync(fp) && process.env.FORGE_BIRTH !== '1') {
     const content = String((data.tool_input && data.tool_input.content) || '');
-    const KEY = { goal: /^\s*\**goal\**\s*:\s*\S/mi, retention: /^\s*\**retention\**\s*:\s*\S/mi };
-    const missing = ['goal', 'retention'].filter(k => !KEY[k].test(content));
-    if (missing.length) return { fired: true, blocked: true, blockReason: '⛔ component-birth-gate: new Feature README lacks ' + missing.map(k => k + ':').join(' + ') + ' (system-design Rule 13 / system-rules Rule 6). Add the machine-readable lines at the top, or let core/forge.js write them.' };
+    // system-rules Rule 7 (2026-09-29): footprint: <trigger class>: <processes, RAM>
+    const KEY = { goal: /^\s*\**goal\**\s*:\s*\S/mi, retention: /^\s*\**retention\**\s*:\s*\S/mi, footprint: /^\s*\**footprint\**\s*:\s*(per-prompt|per-tool|per-turn|per-session|always|scheduled|on-demand|none)\b/mi };
+    const missing = ['goal', 'retention', 'footprint'].filter(k => !KEY[k].test(content));
+    if (missing.length) return { fired: true, blocked: true, blockReason: '⛔ component-birth-gate: new Feature README lacks ' + missing.map(k => k + ':').join(' + ') + ' (system-design Rule 13 / system-rules Rules 6-7; footprint: starts with per-prompt|per-tool|per-turn|per-session|always|scheduled|on-demand|none). Add the machine-readable lines at the top, or let core/forge.js write them.' };
     return { fired: false };
   }
   if (!isComponent) return { fired: false };

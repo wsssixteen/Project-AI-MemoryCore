@@ -10,6 +10,14 @@ metadata:
 
 **🚨 MANDATORY — reinforced 2026-08-28 (QA-277309): when explaining ANY issue / bug / cause / mechanism, ALWAYS lead with a story diagram, never prose.** みや: *"Can you make it mandatory when explaining an issue, ALWAYS use Story Diagrams. I barely understood what you explain for the common issue."* A prose explanation of the JT-ulasan save bug (two-writer stale-read) left him unable to follow it. The rule is no longer scoped to "WHERE an issue lives" — it is EVERY issue explanation.
 
+**🚨 LEAN DRAWING — added 2026-09-29 (#256334, "too cluttered. Failed. Please remember").** The AppLangkah drawing failed: it mixed table ids, a code rule, a Y/N comparison row and a side-case inside the diagram. What みや called "nice" the same day: a 6-step vertical arrow list, one short plain phrase per box, no ids, no code. These OVERRIDE the node-detail rules below:
+- ≤ 6 nodes, one short plain phrase each (≤ 8 words), vertical flow only
+- 🚫 BANNED: the short single-glyph arrow "↓" (2026-09-29 per みや, "banned to use those short arrows"). ALWAYS medium/long arrows: a 2-3 line shaft "│" ending in "▼" (or "────▶" horizontally)
+- NO table names, row ids, code expressions or file:line inside the drawing; evidence goes in the table AFTER it
+- One path per drawing; a contrast = two tiny drawings, never a parenthetical side-case
+- Mark only the ONE break point (❌)
+Good shape: nodes stacked vertically, each joined by a long arrow (│ / │ / ▼), one ❌ at the break point
+
 **When explaining WHERE / HOW an issue happens — always lead with a story diagram, not prose.**
 
 The diagram shape:

@@ -83,6 +83,29 @@ function resolveKv(kv) {
     return kv;
 }
 
+// Folder side-effects (2026-09-30, #280540 — see lib/task-folder.js). Skipped under
+// --file/--archive overrides (self-tests) so a test never touches real folders.
+// Lazy + guarded: sandboxes (archive-quest.eval copies quest/*.js only) have no lib/.
+let LIVE = true;
+function tfLib() { try { return require(path.join(REPO_ROOT, 'lib', 'task-folder')); } catch (_) { return null; } }
+function afterStatus(qa, lines) {
+    if (!LIVE) return;
+    const taskFolder = tfLib(); if (!taskFolder) return;
+    const tf = ((lines.find(l => l.startsWith('task_folder=')) || '').slice(12)).trim();
+    try {
+        const made = taskFolder.ensureCycleFolder(tf, lines);
+        if (made) console.log(`  🔁 new deploy cycle → ${made}\\Brief`);
+    } catch (e) { console.error(`  ⚠ cycle folder not created: ${e.message}`); }
+}
+function afterArchive(qa) {
+    if (!LIVE) return;
+    const taskFolder = tfLib(); if (!taskFolder) return;
+    try {
+        const r = taskFolder.archiveProjectFolder(qa);
+        if (r === 'moved' || r === 'merged') console.log(`  📦 project folder → archive\\${qa} (${r})`);
+    } catch (e) { console.error(`  ⚠ project folder not archived: ${e.message}`); }
+}
+
 function writeAtomic(p, content) {
     const tmp = p + '.tmp_' + process.pid;
     fs.writeFileSync(tmp, content);
@@ -104,6 +127,7 @@ function cmdStart(qa, kvs) {
     console.log(`✓ start ${qa} → ${ACTIVE} (block has ${lines.length} lines)`);
     const startStatus = (lines.find(l => l.startsWith('status=')) || 'status=active').slice(7);
     redmineCheck.checkOne(qa, startStatus, 'start');
+    afterStatus(qa, lines);
 }
 
 function cmdRead(qa) {
@@ -152,6 +176,7 @@ function cmdUpdate(qa, kvs) {
     // Why it exists: 2026-08-04 boot surfaced 4 quests that were Resolved/Closed or reassigned
     // to someone else, so he was shown other people's tickets as his open work.
     if (updates.has('status')) redmineCheck.checkOne(qa, updates.get('status'), 'update');
+    if (updates.has('status')) afterStatus(qa, b.lines);
 }
 
 function cmdArchive(qa) {
@@ -171,6 +196,7 @@ function cmdArchive(qa) {
     console.log(`✓ archive ${qa} → cut from active.txt (${remaining.length} remain), appended to active-archive.txt (${archBlocks.length} total)`);
     const archStatus = (b.lines.find(l => l.startsWith('status=')) || 'status=closed').slice(7);
     redmineCheck.checkOne(qa, archStatus, 'archive');
+    afterArchive(qa);
 }
 
 // ─── Main ────────────────────────────────────────────────────────────────────
@@ -184,6 +210,7 @@ function main() {
     if (archIdx >= 0) { archOverride = args[archIdx + 1]; args.splice(archIdx, 2); }
     ACTIVE  = fileOverride || process.env.ACTIVE_TXT  || defaultActive();
     ARCHIVE = archOverride || process.env.ACTIVE_ARCH || defaultArchive();
+    LIVE = !(fileOverride || archOverride || process.env.ACTIVE_TXT || process.env.ACTIVE_ARCH);
 
     const [cmd, qa, ...rest] = args;
     try {
