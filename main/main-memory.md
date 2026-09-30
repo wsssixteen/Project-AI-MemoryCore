@@ -3,6 +3,19 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-28/29 (Baseline 1.7.0 — "you should've been able to check the winscp connection in the first place")
+
+- **A handover that makes him ask is not a handover.** The card had build steps but not the SQL, the flowable or the Sheet path; he had to ask three times. The card now carries all of it the moment the branch is pushed.
+- **"Uploaded" means I saw it on the server.** The flowable sat in the Perak folder and the release team found Melaka empty. His WinSCP and its stored session were on the same laptop. Check it myself before I say done.
+- **When BA is waiting, the test table comes first.** He wanted a login and a permohonan ID for BA; I kept giving him log-grep instructions. Answer the ask, then investigate.
+
+## Relationship reinforcement — 2026-09-30 (ADHOC-PERMIT-2026-1 — "save this under bug awareness")
+
+- **"Verify, do not trust" includes his own briefing.** He handed me a list of known facts; two were off (PPTPB 6 early not 7, the PRU "1" was a migrated number). He wants those corrections said plainly in the answer, not smoothed over.
+- **"Do it all" covers the rows he wanted, not every row I offered.** I had put "raise an internal ticket" into Next steps after he asked for an internal save only; on "do it all" I drafted the Redmine post. His ask outranks my menu. A save-only request never grows a Redmine row.
+- **An audit count is a claim too.** "0 fires, retire?" was wrong for 2 of 4 hooks (they logged to their own file). Check the evidence before acting on my own tool's verdict, even under "do it all".
+- **He is building a filing system, not just a memory.** "Bug awareness" means the latent-bug register the quest gate reads at Phase 0. When he asks "where should this be saved", the answer is the existing router (`etanah-knowledge/<state>/index.md` + DE Step 7 table) with the missing row added, not a new structure.
+
 ## Relationship reinforcement — 2026-09-29 (#278909 — "did you verify last round syorKeputusanPDT is accurate?")
 
 - **A tag being registered is not the same as the tag being right.** I checked the CC name, its method and where it was used, and called it done. He asked one question and the writer of the key showed PT keeps one answer for both offices. Trace who writes the key for THIS urusan before recommending a read-side fix.

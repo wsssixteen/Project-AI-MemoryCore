@@ -101,13 +101,51 @@ function hasCandidateList(events) {
   return false;
 }
 
-function evaluate(events) {
+// ROUTER CHECK (v2, 2026-09-30 per みや: "save everything into the already-decided structure"):
+// every etanah-knowledge-style home (UPPER-CASE-DASHED.md) named on a `bake` row must be a file listed in
+// etanah-knowledge/<state>/index.md — the router. Lower-case homes (main-memory.md, todo.md) are not checked.
+// Fail-OPEN when no index.md is reachable (worktree without the untracked knowledge folder).
+const KNOWLEDGE_FILE = /\b([A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+\.md)\b/g;
+function loadRouter(root) {
+  const set = new Set();
+  const base = path.join(root, 'projects', 'coding-projects', 'active', 'etanah-knowledge');
+  let states = []; try { states = fs.readdirSync(base); } catch (_) { return null; }
+  for (const s of states) {
+    let txt; try { txt = fs.readFileSync(path.join(base, s, 'index.md'), 'utf8'); } catch (_) { continue; }
+    let m; const re = /\b([A-Za-z0-9_.-]+\.md)\b/g; while ((m = re.exec(txt)) !== null) set.add(m[1]);
+  }
+  return set.size ? set : null;
+}
+function candidateRows(events) {
+  for (let i = events.length - 1; i >= 0; i--) {
+    const e = events[i];
+    if (e.kind !== 'text' || e.role !== 'assistant' || !KNOWLEDGE_LIST.test(e.text)) continue;
+    return e.text.split(/\r?\n/).filter(l => /^\s*\|/.test(l) && /\bbake\b/i.test(l));
+  }
+  return [];
+}
+function unroutedHomes(events, router) {
+  if (!router) return [];
+  const bad = new Set();
+  for (const row of candidateRows(events)) {
+    const home = row.split('|').filter(Boolean).slice(-1)[0] || '';
+    let m; KNOWLEDGE_FILE.lastIndex = 0;
+    while ((m = KNOWLEDGE_FILE.exec(home)) !== null) if (!router.has(m[1])) bad.add(m[1]);
+  }
+  return [...bad];
+}
+
+function evaluate(events, router) {
   const last = lastAssistantText(events);
   if (!last || !DE_CLOSE.test(last)) return { verdict: 'silent', reason: 'not-de-close' };
   if (BYPASS.test(last)) return { verdict: 'silent', reason: 'bypass' };
   const sig = computeSignals(events);
   if (!sig.any) return { verdict: 'silent', reason: 'no-knowledge-signal', sig };
-  if (hasCandidateList(events)) return { verdict: 'pass', reason: 'candidate-list-present', sig };
+  if (hasCandidateList(events)) {
+    const bad = unroutedHomes(events, router === undefined ? loadRouter(ROOT) : router);
+    if (bad.length) return { verdict: 'block', reason: 'home-not-in-router', sig, bad };
+    return { verdict: 'pass', reason: 'candidate-list-present', sig };
+  }
   return { verdict: 'block', reason: 'signals-without-sweep', sig };
 }
 
@@ -147,7 +185,20 @@ if (require.main === module) {
     const events = Array.isArray(data._testEvents) ? data._testEvents : parseTranscript(data.transcript_path || '');
     if (!events.length) return { fired: false };
 
-    const r = evaluate(events);
+    const r = evaluate(events, Array.isArray(data._testRouter) ? new Set(data._testRouter) : undefined);
+    if (r.verdict === 'block' && r.reason === 'home-not-in-router') {
+      logFire('blocked-router', r.bad.join(', '));
+      return { fired: true, blocked: true, blockReason: [
+        '⛔ de-knowledge-gate: a knowledge candidate is baked into a file the router does not know:',
+        ...r.bad.map(b => `   • ${b}`),
+        '',
+        '   The router is etanah-knowledge/<state>/index.md (every file + its SCOPE).',
+        '   Fix: bake into the existing file whose SCOPE fits (bug with no ticket → LATENT-BUGS.md,',
+        '   non-ticket ask → ADHOC-REGISTER.md, confirmed pattern → BUG-BESTIARY.md), or add the new',
+        '   file to index.md FIRST with its SCOPE line, then re-close.',
+        '   Bypass: [skip-knowledge-gate: <reason>].',
+      ].join('\n') };
+    }
     if (r.verdict === 'block') {
       const { which, text } = buildBlockReason(r.sig);
       logFire('blocked', which.join(', '));
@@ -158,4 +209,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { evaluate, computeSignals, hasCandidateList };
+module.exports = { evaluate, computeSignals, hasCandidateList, unroutedHomes, loadRouter };

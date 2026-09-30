@@ -511,7 +511,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\sql-schema-verify\\\\sql-schema-verify.check.hook.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\sql-schema-verify\\sql-schema-verify.check.hook.js\" Stop"
           },
           {
             "type": "command",
@@ -519,7 +519,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\attachment-ledger-gate\\\\attachment-ledger-gate.check.hook.js\""
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\attachment-ledger-gate\\attachment-ledger-gate.check.hook.js\" Stop"
           },
           {
             "type": "command",

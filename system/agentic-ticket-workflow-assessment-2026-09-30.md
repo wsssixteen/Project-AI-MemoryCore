@@ -20,3 +20,43 @@
 | A3 debugging | Good: first-red-step + log tail settled owner in 2 fetches. Slip: 'Nick probably changed the stop script' asserted without evidence (assume-not-verify); fixed by diffing console build time + both prepare outputs. Proposal logged. |
 | A4 etanah issue-solving | New known failure recorded (fudge1 prepare exit 137, retry passes when JBoss already down) in deploy skill §8. Proposal: deploy-run triage script. |
 | A5 sweep | ⏭ no sweep this session. |
+
+## Session: Baseline 1.7.0 (2026-09-28 → 30, melaka-release-baseline worktree)
+
+| Axis | Assessment (instance) | Proposal logged |
+|---|---|---|
+| A1 agentic system | Hand-off card lacked SQL/flowable/Sheet; flowable drop landed in Perak/, unverified though WinSCP.com + stored session existed on the laptop | flowable drop listing gate |
+| A2 quest/release workflow | Direct-to-master #280993 broke compile; only caught because miya asked for an audit | compile-master preflight in `branch` |
+| A3 debugging | Missing PTBUT row traced correctly (bpm_log delay + ID block) but took ~30 queries | missing-tugasan-row triage script |
+| A4 etanah issue-solving | BA wanted login + ID; test table came 3 asks late | intake reminder: test table first |
+| A5 sweep | ⏭ no sweep run this session | — |
+
+## Session 3 addendum (melaka-internal-deploy, 15:30)
+
+| Axis | Finding (instance) | Proposal |
+|---|---|---|
+| A1 agentic system | 3 gates misfired on non-ticket work: test-scenario-login-gate ×3 (deploy/triage, no ticket) · sql-schema-verify on READ-only files + refuses unqualified scripts · design-consult-gate ignored an in-message skip token and forced two skill loads for a 1-section doc addition | 2 proposals logged (login-gate silent without ticket · sql-schema-verify read-vs-write + unqualified) |
+| A2 quest workflow | ADHOC-VIEW-2026-1 block said "miya runs CREATE Mon 09-28"; live catalog showed no view on any env — active.txt state rots without a check | covered by existing resume-readiness sweep |
+| A3 debugging | Top-down log read found the first failure (antrun zip) under a misleading last line; ps check found the concurrent run in one step | deploy skill §7 entry added |
+| A4 etanah | Answered a data question from the view definition before querying data (flag_permit) — slip claim-before-data | knowledge: PERMIT-LESEN status never flips on expiry |
+| A5 sweep | deploy card lacks a pre-run concurrency check for shared mirage1 | proposal logged |
+
+## Session 5 — ADHOC-PERMIT-2026-1 (main checkout, 15:30)
+
+| Axis | Assessment (concrete instance) |
+|---|---|
+| A1 agentic system | A structural rule changed mid-day (Task folder v13 retired notes txt) but `lib/adhoc-save-audit.js` still demanded `1. <ID>.txt`, so the audit FAILED on a correct save-set. Fixed in the tool + eval (21/21), not by writing the retired file. |
+| A2 quest workflow | "Bug awareness" had no row in the DE Step 7 routing table, so a verified no-ticket bug had no obvious home. Added the row (LATENT-BUGS.md) + "index.md is the router" row. |
+| A3 debugging | Counter census (every `sis_no_turutan` number matched to its app's tugasan history) proved completeness: 62/62 accounted for, no guessing. Banked in PERMIT-LESEN-RUNNING-NUMBER.md. |
+| A4 etanah | One shared screen (skrin 338) causes the whole early-mint family; PPJK + PSBS are latent (L16/L17) and share a one-line guard at `MlkPengiraanBayaranLesenForm.java:647`. |
+| A5 sweep | The family sweep was manual this time (code callers × ind_langkah × BPMN × counters). It is repeatable per release but nothing re-runs it. |
+
+## Session 5 round 2 — "do it all" (15:45)
+
+| Axis | Assessment (concrete instance) |
+|---|---|
+| A1 | audit-briefing flagged 4 hooks "never fired, RETIRE?"; 2 had fired the same morning into their own `log.jsonl` (unwrapped, invisible to telemetry), 2 only fire on Agent spawns. Retiring on that count would have removed the PROD-SQL schema check. Fixed the classifier + wrapped both hooks. |
+| A2 | An internal-save ask grew a "raise ticket" row in my own Next-steps menu, and "do it all" nearly turned it into a Redmine post. The redmine-write-gate + popup held; the menu row should never have existed. |
+| A3 | ⏭ no debugging work this round |
+| A4 | ⏭ no etanah change this round (L16/L17 stay internal by miya's ruling) |
+| A5 | ⏭ no sweep this round |

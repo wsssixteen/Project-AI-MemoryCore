@@ -1,34 +1,32 @@
 # Current Session
 
+**Last Activity**: 2026-09-30 15:30 — ADHOC-PERMIT-2026-1 all-urusan early-mint audit saved as bug awareness (LATENT-BUGS L16/L17) · save routing fixed (DE Step 7 table + adhoc-save row 6) · adhoc-save-audit moved to Task folder v13 · DE.
+
+## Session Recap (2026-09-29 → 2026-09-30, ADHOC-PERMIT-2026-1, main checkout)
+- **Ask**: read-only audit, is any Melaka pelupusan urusan minting No Lesen/Permit before its issuing tugasan (class of #273461 / #282061)?
+- **Answer**: only skrin 338 `MlkPengiraanBayaranLesenForm.performCustomSave():647` mints early; mounted in 4 urusan (PLPS, PPJK, PPTPB, PSBS; PROD = stg2). PROD 2026 counters issued 62 numbers: PPTPB 6 early (fix = #282061 R1) · PLPS 3 residue (#273461) · PPJK latent (0 apps at PYSK) · PSBS latent throw (no counter, `retrieveRunningNumberCode():361`) · MLPS/PRBB/PRU/lite clean. Side: `0402DIS2024000574` A02/2026/13 via Utiliti with no register row (L11 shape, hypothesis).
+- **Saved**: ADHOC-REGISTER A36 · qa doc `ADHOC-PERMIT-2026-1.md` · PERMIT-LESEN-RUNNING-NUMBER.md §All-urusan early-mint audit · LATENT-BUGS L16 (PPJK) + L17 (PSBS) + L11 extended + sweep-log row · BUG-BESTIARY family-map line · bug-db index rebuilt (29).
+- **Built**: expansion-protocol Step 7 table ("bug awareness" row → LATENT-BUGS.md · "index.md is the router" row) · adhoc-save SKILL rows 2 (Test data in qa_doc, v13) + 6 (bug awareness) · `lib/adhoc-save-audit.js` v13 (1. Brief via task-folder.js, `## Test data` check, retired-notes-txt check), eval 21/21.
+- **Open (miya's rulings)**: PPJK guard now or wait · PSBS guard now or wait · check server.log 2026-09-14/15 for A02/2026/13.
+- **Round 2 (15:45, "do it all")**: de-knowledge-gate v2 router check (bake homes must be in etanah-knowledge/<state>/index.md; eval 18/18) · audit-briefing no longer offers false RETIRE rows (own-log hooks + Agent-only hooks classified; 0 retire candidates) · sql-schema-verify + attachment-ledger-gate wrapped with hook-runtime (smoke-tested, telemetry rows written) · MAS 29 Sep diary merged into `current/2026-09-29.md` Session 7, stray root file removed. **Redmine ticket NOT raised** — miya wanted internal save only (slip `reask/misread-intent`); L16/L17 stay internal.
+
+**Last Activity**: 2026-09-30 15:25 — MLIT internal deploy card · pelupusan build died at antrun zip (concurrent deploy-pendaftaran-it.sh) · ADHOC-VIEW-2026-1 scripts handed for all envs · DE.
+
+## Session Recap (2026-09-28 → 2026-09-30, melaka-internal-deploy worktree)
+- **Deploy card**: internal = one host `172.16.100.162`, `deployment-scripts/mlit`, `sh deploy-<module>.sh`, branch `mlk/int-env`.
+- **Pelupusan build failure (2026-09-28 10:49)**: first failure `maven-antrun-plugin (replace-properties): Problem creating zip: .../target/etanah-pelupusan.war (No such file or directory)` after 59.8 s; everything below it was cascade. `ps` showed `deploy-pendaftaran-it.sh` (pid 1817149, pts/2, started 10:36, 21+ min). HYPOTHESIS, unconfirmed: concurrent run on mirage1. miya never pasted the re-run result.
+- **ADHOC-VIEW-2026-1**: Alex asked whether the views include expired lesen/permit. Yes — no status filter (same as KL). PROD evidence: all 3148 permit rows `flag_permit = KuatKuasa` incl. 731 past `trkh_tamat`, so status never flips on expiry; filter by `tarikh_tamat` / `bakitempoh`. Neither view exists yet on STG2 · STG1 · MLIT · PROD (information_schema, 2026-09-30). Scripts handed in chat; PROD via infra needs `et_main.` prefix + miya's nod.
+- **Slip (self)**: first answer told miya to filter `flag_permit = 'Kuatkuasa'` before checking the data; corrected after the PROD query.
+**Last Activity**: 2026-09-30 15:22 — Baseline Pelupusan 1.7.0 closed: BAQA passed, `mlk/master` = `365fe73629` · DE.
+
+## Session Recap (2026-09-28 → 2026-09-30, melaka-release-baseline worktree)
+- **Release 1.7.0**: #281392 (`mlk/hotfix/281392`) · #280895 · #246512 (`mlk/qa/246512v9` = full footprint, v7/v8 ancestors) · #263304 (`mlk/CR/263304`) + #280993 compile fix. Pushed `365fe73629`, BAQA passed, ff-merged to `mlk/master` 2026-09-28 (undo tag `mlk/pre-master-merge/1.7.0` @ `4016667b7f`). Common stays `1.6.7-MLK`.
+- **#280993 (Alex, direct-to-master logger cleanup)**: master did not compile (private `LOGGER` in `BasePelupusanDokumenForm` hid the inherited one, 32 errors). Fix `mlk/development/280993` `55d2832342` (3-line delete), merged first in 1.7.0.
+- **Conflicts**: #246512 union (1 file); #263304 5 files resolved to the tested int-env shape.
+- **#263304 extras**: SQL `263304-isu24-tugasan-tk.sql` run on stag `et_main_stg2` (3 tugasan · 12 langkah · 21 pejabat · 7 pengagihan, guarded tx); PROD runs it in `et_main` (APPS schema, not flowable). Flowable `MLK_PLP_PRBB.bpmn20.xml` pulled from MLIT (v9, 348,612 B, md5 `f1b8c3d7…`), deployed on stag by miya; PROD drop upload landed in `flowable-diagrams/Perak/…` — release team found `Melaka/2026-09-28` empty; miya re-uploading.
+- **ADHOC-PT-2026-10 (answered)**: stag PT SKM JT=Tidak → PTBUT row missing 17:27/17:55 = one flowable engine node's async assignation stalled 16:50–18:02 (ID block `12050xxx`, also hit Pembangunan), drained itself; not 1.7.0 code.
+- **Built**: `domain/release-mlk-plp/fetch-mlk.js` (mlk-only fetch + race retry, all 9 call sites) · skill "Baseline awareness" table (common, flowable ownership, AWAM list-only, unlisted master commits, full hand-off card, verify flowable drop listing, BA no-tugasan = test table first) · checklist row "compile master before branching".
+- **Slips**: reask/redundant (card lacked SQL/flowable/Sheet) · verify-before-handoff (flowable folder) · answer-the-ask (test table late).
+- **Open (miya)**: WinSCP alias `flowable-drop` nod (session `Petaling` collides with workspace) · delete superseded 246512 branches · 3 old release branches with commits not in master (1.0.0, 1.0.7, 270123).
+
 **Last Activity**: 2026-09-30 13:45 — MLIT pelupusan deploy failure triaged (infra, not our code) · retry succeeded 13:13 · deploy skill v1.3 §8 console triage · DE.
-
-## Session Recap (2026-09-30, server-deployment-slowness worktree)
-- **Symptom**: miya's pelupusan deploy to MLK IT (`mlk/int-env`, run `e711b154`) "taking too long"; MLIT `/etanah-pelupusan` returned 503 (hasil, pendaftaran 200).
-- **Cause (from the run log)**: Build SUCCESS; prepare on `172.16.100.49` (fudge1) died — `Killed sudo -n systemctl stop jboss` · `stop_jboss.sh: line 4: kill: (1481372) - Operation not permitted` · `Killed '/home/app/bin/stop_jboss.sh'` · exit 137. Infra (Nick). Hypothesis, unconfirmed: stop script kills by a "jboss" name match that hits itself.
-- **Retry** `304b7721` 13:12 SUCCESS only because JBoss was already down (no "Stopping fudge1 JBoss..." line); console build `11:19:55` unchanged → no fix seen. Expect repeat on next deploy to a running `.49`. MLIT pelupusan back (Laman Utama 200). miya messaged Nick; WP (James) had the same the day before; 25 FAILED MLK runs 25-30 Sep in History.
-- **How Ruri reads the console**: Claude in Chrome (miya's Keycloak session); full log JSON at `/etanah-deployment/api/deployment-history/<id>` · live at `/api/deployment-queue/<id>/live`.
-- **Built**: deploy skill v1.3 §8 (step→owner table, keywords, known 137 case), eval 52/52, `2f509f2d`.
-- **Open (miya's rulings)**: bake fudge1 line into ENV-ARCHITECTURE.md? · retire 5 zero-fire hooks? · reconcile: 274266 / 282061 / 280540 Resolved on Redmine, 264355 / 282198 with others, #281423 has no block · worktree cleanup (59 folders = 16.34 GB of 16.82 GB) + move creation to `E:\Dev\worktrees`.
-- **Slip (self)**: suggested Nick "probably changed the stop script" without evidence; miya asked "how do we know"; corrected with the console build-time diff.
-
-**Last Activity**: 2026-09-30 13:50 — #281324 re-verified + plan set (sub-flow only) · weekly planner Wed-Fri from Redmine · #281423 synced (Teknikal data-mapping consult) · DE.
-
-## Session Recap (2026-09-29 afternoon → 2026-09-30, redmine-tickets-triage worktree, part 2)
-- **#281324**: re-synced, blind re-check on live staging (et_flowable17) holds. Fix = Data Object `caraPenghantaran` default `TP` in `MLK_PLP_SUB_UPN` ONLY (not the 12 main flows; miya asked, W3's main-flow shape was rejected by W4) + admin variable-add on stuck cases. Staging repro: PTMLK/03/L/PRBB/2026/8, task 11675067, samsiah_jaamat@melaka.gov.my. 7-step table in QA-281324.md §0b. Waiting on miya to publish on staging; Redmine In Progress waits on "post it".
-- **Planner (miya's "My Weekly Planning", Wed-Fri)**: Wed 280540 (eSOKONGAN, due 30 Sep) · 281423 · 281324 — Thu 275043 + 244600 · 274323 — Fri 265109 · 246923. Resolved on Redmine: 279411 · 281638 · 281712 · 278909 · 274266 · 281650 (Ready in PROD) · 282061 · 282275. 282198 is with Idris (pending user update).
-- **#281423 (new)**: Teknikal (Aiman Syakir) asks Pelupusan for the data mapping to tell Pemohon / Pemilik / Individu / Syarikat apart in `umm_a_pihak_bkptg` (ref #275018). Consultation, not our code. miya starts it in a NEW session; QA-281423.md has the resume point.
-- **#280540**: now eSOKONGAN assigned to miya, due 30 Sep, Not drafted.
-- **Knowledge**: FLOWABLE-KNOWLEDGE §14 (child Data Object default vs caller In-param, by-key calls take latest version, bpmn-check blind to Data Objects).
-- **Slips**: `reask/verbose` (281324 hand-back buried a 2-job fix under J-tables) · proposal A1 redmine-write-gate blocks read-only GETs.
-
-**Last Activity**: 2026-09-29 18:35 — #282061 PPTPB Permit Khas Jadual VIII: 4-part fix committed, int-env + stag-env, Redmine Resolved to Fizah, PROD-only swap + dup-bill script attached · DE.
-
-## Session Recap (2026-09-29, #282061, worktree quest-282061-rubric-7a809b)
-- **Bug**: PROD `PTMLK/02/L/PPTPB/2026/5` (PYJ, norlina@melaka.gov.my) borang showed No Permit Khas `02/2026/3` + Fi RM 2200; BA expects `02/2026/1` + RM 2000 (screen must tally with borang).
-- **Cause**: skrin 338 Simpan minted the register number at every PPTPB tugasan (only PLPS exempt since #273461) · screen and borang read two different counters · borang Fi summed PPTPB 200 + PPTPBL 2000 · bill saver reuses only UNPAID rows, so a save after payment re-billed PPTPBL.
-- **Shipped**: `mlk/esokongan/282061` `2729190807` (R1 mint at Jadual only · R2 screen reads register · R3 Fi = PPTPBL · C4 no re-bill after payment) · int-env cherry-pick `1cc113f7ee` · stag-env `6c891898ad`. miya deployed; mlit rehearsal patch verified.
-- **PROD data**: `2. Fix\282061.sql` (PROD-only, attachment 1023225): swap /5 ↔ /1 in `umm_a_permit_lesen` + `ind_permit_lesen`, delete unpaid dup PPTPBL bill. Swap proven 100% safe (register rows keep own lot + holder, links by id only). Runs with the release.
-- **Built**: redmine-write-gate v1.2 (popup + plain status approval, eval 38/38) · `ticket-close-block --ba --envs` prints miya's BA pass note · quest SKILL: Hand-over to BA · Plain first · Everything on this ticket · brief v1.2 · deploy 6b · PERMIT-LESEN knowledge two-counters section.
-- **Slips**: reask/rambling · reask/incomplete (D1 dropped) · popup-conflated-options · reask/redundant (BA note in my shape, not his template) · 2 proposals (gate popup gap, sql-schema-verify cross-product).
-- **Open**: BA verify on internal/staging · PROD release runs `282061.sql` · other-urusan early-mint audit landed as ADHOC-PERMIT-2026-1 (other session).
-**Last Activity**: 2026-09-29 18:30 — #256334 PDBB CR closed + archived (Hasil hand-off solved with Li Wen); ADHOC-HSL-2026-1 opened for Hasil #282275 langkah · DE.
