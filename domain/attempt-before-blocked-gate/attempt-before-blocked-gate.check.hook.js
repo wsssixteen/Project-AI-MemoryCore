@@ -22,7 +22,9 @@
  * The bypass is self-enforcing: it cannot be satisfied without having run the op.
  */
 const CLAIM_PATTERNS = [
-  /\b(can'?t|cannot|could ?n'?t|unable to|couldn'?t|no way to)\s+(retriev|sync|run|quer|fetch|pull|access|reach|read|load|connect|get)/i,
+  /\b(can'?t|cannot|could ?n'?t|unable to|couldn'?t|no way to)\s+(retriev|sync|run|quer|fetch|pull|access|reach|read|load|connect|get|creat|writ|insert|updat|modif|patch|chang|delet)/i,
+  /\b(?:tool|mcp|db|database|login|connection|access)\s+(?:is\s+|are\s+)?read-?only\b/i,
+  /\bread-?only\s+(?:tool|mcp|db|database|login|connection|access|transaction)/i,
   /\bno\s+(?:\w+\s+)?(config(?:uration)?|credential|api[- ]?key|access|connection)\b/i,
   /\b(?:not\s+(?:available|reachable|configured|accessible|set ?up)|unavailable|unreachable|un-?configured)\b/i,
   /\bblocked\s+(?:on|by|-)\s+(?:config|retriev|missing|the\s+config|no\s)/i,
