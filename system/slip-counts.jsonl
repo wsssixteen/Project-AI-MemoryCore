@@ -752,6 +752,11 @@
 {"ts":"2026-09-29T10:32:23.391Z","category":"A1"}
 {"ts":"2026-09-29T10:32:23.558Z","category":"A3"}
 {"ts":"2026-09-29T10:32:23.853Z","category":"A2"}
+{"ts":"2026-09-29T13:29:07.203Z","category":"scope-creep"}
+{"ts":"2026-09-30T01:08:37.771Z","category":"scope-misread"}
+{"ts":"2026-09-30T02:59:27.119Z","category":"module-boundary-overreach"}
+{"ts":"2026-09-30T03:09:28.291Z","category":"handback-shape"}
+{"ts":"2026-09-30T05:23:09.928Z","category":"cycle-misclassified"}
 {"ts":"2026-09-30T05:41:48.819Z","category":"A1"}
 {"ts":"2026-09-30T05:46:06.045Z","category":"assume-not-verify"}
 {"ts":"2026-09-30T05:48:29.995Z","category":"A4"}

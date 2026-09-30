@@ -22,7 +22,7 @@ const UI_RE = /\b(medan|field|butang|button|dropdown|checkbox|kotak semak|agihan
 const ETANAH_RE = /PTMLK|PTPRK|\btugasan\b|#\d{6}\b|QA-\d{6}/i;
 const BYPASS_RE = /\[skip-fix-photo:\s*([^\]<>]{3,})\]/i;
 const PHOTO_RE = /FIX-PHOTO:\s*`?([^`\r\n]+?\.(?:png|jpe?g))`?\s*(?:✓|$)/gim;
-const BRIEF_IMG_RE = /[\\/]0\. Brief[\\/][^\\/]+\.(png|jpe?g|webp|gif|bmp)$/i;
+const BRIEF_IMG_RE = /[\\/](?:[01]\. )?Brief[\\/][^\\/]+\.(png|jpe?g|webp|gif|bmp)$/i;
 
 function readTranscript(p) {
   let fd;
@@ -73,7 +73,8 @@ function photoVerdict(texts) {
   const bad = [];
   for (const p of found) {
     if (!/^([A-Za-z]:[\\/]|\\\\|\/)/.test(p)) { bad.push(p + ' (not a full path)'); continue; }
-    if (!/[\\/]2\. Fix[\\/]/.test(p)) { bad.push(p + ' (not in a "2. Fix" folder)'); continue; }
+    // Cycle 1 → "2. Fix\"; later cycles → loose in the "N. Rework\" root (2026-09-30, miya).
+    if (!/[\\/]2\. Fix[\\/]|[\\/]\d+\. Rework[\\/][^\\/]+$/i.test(p)) { bad.push(p + ' (not in "2. Fix" or an "N. Rework" root)'); continue; }
     if (!fs.existsSync(p)) { bad.push(p + ' (file not found)'); continue; }
     return { ok: true, found, bad };
   }

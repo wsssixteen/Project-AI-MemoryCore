@@ -29,7 +29,9 @@ const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
-const REPO_ROOT = path.resolve(__dirname, '..');
+// Main checkout even when run from .claude\worktrees\<name>\ — project folders are untracked
+// and live only there (2026-09-30: 19 archived quests left their folder behind in active\).
+const REPO_ROOT = path.resolve(__dirname, '..').replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+$/i, '');
 const DEFAULT_TASKS = require('path').join(require('os').homedir(), 'OneDrive - Pymsoft Sdn Bhd', '1. Tasks', 'Melaka'); // machine-independent (GHOST-HOOKS-2 fix 2026-07-19)
 const ARCHIVE_SUBFOLDER = 'Archive';
 const PROJECT_ACTIVE  = path.join(REPO_ROOT, 'projects', 'coding-projects', 'active');
@@ -233,9 +235,15 @@ function main() {
     const projectArchive = path.join(PROJECT_ARCHIVE, qa);
     let projectState; // 'moved' | 'already-archived' | 'none' | 'dry'
     if (fs.existsSync(projectActive)) {
-        if (fs.existsSync(projectArchive)) {
-            console.log(`  ⚠ Step 2: project subfolder already in archive/ — skipping move`);
-            projectState = 'already-archived';
+        if (fs.existsSync(projectArchive) && !dryRun) {
+            // Was a skip that left the active copy behind (17 duplicates found 2026-09-30).
+            try {
+                projectState = require(path.join(REPO_ROOT, 'lib', 'task-folder')).archiveProjectFolder(qa);
+                console.log(`  ✓ Step 2: project subfolder merged into archive/${qa}/ (differing files kept as .active-copy)`);
+            } catch (e) {
+                projectState = 'already-archived';
+                console.log(`  ⚠ Step 2: both copies exist, merge skipped (${e.message.split('\n')[0]})`);
+            }
         } else if (dryRun) {
             console.log(`  [dry] Step 2: move ${projectActive} → ${projectArchive}`);
             projectState = 'dry';
@@ -338,7 +346,7 @@ function main() {
     // ── Emit the hygiene line in CLAUDE.md v1.39 canonical format ─────────
     const folderIcon  = folderState === 'moved' ? '✓' : folderState === 'already-archived' ? '✓ (was already)' : '⬜';
     const blockIcon   = blockState === 'archived' ? '✓' : blockState === 'already-archived' ? '✓ (was already)' : blockState === 'dry' ? '[dry]' : '⬜';
-    const projectIcon = projectState === 'moved' ? '✓' : projectState === 'already-archived' ? '✓ (was already)' : projectState === 'dry' ? '[dry]' : '⬜ no-project-subfolder';
+    const projectIcon = projectState === 'moved' ? '✓' : projectState === 'merged' ? '✓ (merged)' : projectState === 'already-archived' ? '✓ (was already)' : projectState === 'dry' ? '[dry]' : '⬜ no-project-subfolder';
     const bountyIcon  = bountyState === 'harvested' ? '✓' : bountyState === 'stub' ? '⚠ stub' : bountyState === 'skip-no-op' ? '⏭' : bountyState === 'dry' ? '[dry]' : bountyState === 'error' ? '❌' : '⬜';
     const videoIcon = dryRun ? `[dry] would prune ${videoState.count}` : `pruned ${videoState.count} (${fmtMB(videoState.bytes)})`;
     console.log(`\n📦 Archive hygiene — ${qa}: folder→Archive\\ ${folderIcon} · active.txt block→active-archive.txt ${blockIcon} · project subfolder ${projectIcon} · videos ${videoIcon} · bounty log ${bountyIcon}\n`);
