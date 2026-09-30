@@ -14,6 +14,9 @@ metadata:
 
 **How to apply - the shape (from miya's own example, #276436):**
 - Short simple sentences. One idea per line.
+- STATEMENTS, never implications (2026-09-30, #281423): say the fact and its result outright; no "X can carry Y. This happens even when..." that makes the reader infer the point. Back it with the real count ("every PRBB pemohon row has 625, owner or not").
+- Not bossy: no "Do not use X" commands to another team. State the fact, let it guide them.
+- Redmine = Textile, not markdown: tables as |_. Head | rows |, code/columns in @...@ (underscores italicise otherwise). Hand the draft in a code block so it pastes raw.
 - Plain words. No file names, no line numbers, no code names, no jargon.
 - Normal human tone. Warm. No caps for emphasis. No "AI explaining".
 - Order: what we fixed + where to test it -> what is still broken + which side does not do it -> what DOES work (the comparison) -> what will show once the condition is met -> "Attached are the fixes required for X to check further." -> "Thank you."
