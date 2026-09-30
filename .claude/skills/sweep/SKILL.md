@@ -27,7 +27,7 @@ Emit: flag set + expiry clock time. Suppressions self-log as `mode:'orch-suppres
 
 ## Step 1 — board truth (Redmine FIRST, always)
 
-Run `node quest/redmine-board.js`. The live API is truth; `active.txt` is working memory and ROTS — **never take dates or status from active.txt**. Reconcile any divergence rows it prints before listing. Rank per the 3-DAY RULE: descending days since `start_date`; difficulty/ease is NOT a column unless miya asks.
+Run `node quest/redmine-board.js`. The live API is truth; `active.txt` is working memory and ROTS — **never take dates or status from active.txt**. Reconcile any divergence rows it prints before listing. Rank per the board's order — 🚨 **TICKET PRIORITY RULE (miya 2026-09-29 — overrides the bare 3-DAY RULE order)**: "eSOKONGAN ticket" ALWAYS means **TRACKER = eSOKONGAN** (id 51, the one with SLA) — never the Redmine *project* "eSOKONGAN MELAKA", which also holds Internal Issue / Data Patching tickets. Order: **(1) eSOKONGAN tracker → (2) anything PROD** (Data Patching (PROD) · Internal Issue (PROD) · Internal Issue (PROD-CR)) **→ (3) the rest**. Inside each group: Priority **Critical > High > Medium > Low**, then any ticket whose description/journal says **urgent / segera / kritikal / critical / ASAP / mendesak / secepat mungkin / immediate / emergency / kecemasan** ahead of a same-priority one — never miss the urgent word. Then the old tie-break (eSOKONGAN nearest due; others 3-DAY age). `quest/redmine-board.js` implements this deterministically. Difficulty/ease is NOT a column unless miya asks. The sweep runs and briefs tickets in THIS order.
 
 ## Step 2 — scope + skip computation (per ticket, from the qa_doc)
 

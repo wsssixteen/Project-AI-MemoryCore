@@ -30,6 +30,12 @@ const NODE_SCRIPT = /node\s+(?:"([^"]+?\.js)"|'([^']+?\.js)'|([^"'\s]+\.js))/gi;
 // What counts as miya's approval — the LAST user message only, never an older turn.
 const APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never)\s)(?<!\bI (?:will|'ll) )\b(post it|post now|go ahead and post|yes,? post|postkan|hantar (?:note|nota|komen)|\[redmine-post-ok\])\b/i;
 const BYPASS = /\[skip-redmine-write-gate:\s*[^\]]+\]/i;
+// A status-only write (no note, assignee, % done, journal or upload) may run on a plain "update the redmine" /
+// "set status" / "update in progress" from miya — a status can be set back, a note cannot (2026-09-29, #282061).
+const NON_STATUS_MUTATION = /assigned_to_id|done_ratio|["']notes["']|\bnotes\s*[:=]|\bjournal\s*:|\buploads?\s*:/i;
+const STATUS_APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never)\s)\b(?:update|set|change|tukar|kemaskini)\b[^.\n]{0,40}\b(?:redmine|status|in progress)\b/i;
+// The AskUserQuestion answer arrives as a tool_result, not user text.
+const POPUP_ANSWER = /^\s*Your questions have been answered:/;
 
 function lastUserText(transcriptPath) {
   let tail = '';
@@ -47,6 +53,12 @@ function lastUserText(transcriptPath) {
     if (Array.isArray(c)) {
       const texts = c.filter(x => x && x.type === 'text').map(x => x.text);
       if (texts.length) return texts.join('\n');               // user text blocks (tool_result-only turns are skipped)
+      for (const x of c) {                                      // except a popup answer, which IS miya's reply
+        if (!x || x.type !== 'tool_result') continue;
+        const t = typeof x.content === 'string' ? x.content
+          : Array.isArray(x.content) ? x.content.filter(y => y && y.type === 'text').map(y => y.text).join('\n') : '';
+        if (POPUP_ANSWER.test(t)) return [...t.matchAll(/"="([^"]*)"/g)].map(m => m[1]).join('\n'); // answers only, never the question text
+      }
     }
   }
   return '';
@@ -77,6 +89,11 @@ runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) =
   if (APPROVAL.test(last)) {
     try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), outcome: 'allowed', approval: (last.match(APPROVAL) || [''])[0] }) + '\n'); } catch (_) { /* never block */ }
     return { fired: true, blocked: false, contextOut: `redmine-write-gate: approved by miya ("${(last.match(APPROVAL) || [''])[0]}")\n` };
+  }
+  if (/status_id/i.test(body) && !NON_STATUS_MUTATION.test(body) && STATUS_APPROVAL.test(last)) {
+    const said = (last.match(STATUS_APPROVAL) || [''])[0];
+    try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), outcome: 'allowed', approval: 'status-only: ' + said }) + '\n'); } catch (_) { /* never block */ }
+    return { fired: true, blocked: false, contextOut: `redmine-write-gate: status-only write approved by miya ("${said}")\n` };
   }
   try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), outcome: 'blocked', last_user: last.slice(0, 120) }) + '\n'); } catch (_) { /* never block */ }
   return {

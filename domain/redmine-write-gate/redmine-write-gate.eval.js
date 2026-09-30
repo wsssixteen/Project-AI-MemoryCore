@@ -92,6 +92,26 @@ r = run({ tool_name: 'Bash', tool_input: { command: `node core/slips.js add --ca
 check('F30 exempt script only MENTIONED inside an argument of a clean script → silent (live false positive 2026-09-25)', silent(r), r.out.slice(0, 120));
 r = run({ tool_name: 'PowerShell', tool_input: { command: `${TLV_CMD} --x "status_id"` }, transcript_path: noApproval() });
 check('F31 exempt script + mutation-shaped text in the command → exemption void → BLOCK', blocked(r), r.out.slice(0, 120));
+// 2026-09-29 (#282061): status-only writes + the real popup-answer shape (a tool_result, not user text)
+const statusScript = path.join(sb, 'set-status.js');
+fs.writeFileSync(statusScript, "// X-Redmine-API-Key\nreq('PUT', '/issues/282061.json', { issue: { status_id: 2 } });");
+const statusNoteScript = path.join(sb, 'set-status-note.js');
+fs.writeFileSync(statusNoteScript, "// X-Redmine-API-Key\nreq('PUT', '/issues/282061.json', { issue: { status_id: 2, notes: 'x' } });");
+const popup = t => JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'tool_result', content: t }] } });
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${statusScript}"` }, transcript_path: transcript([user("4. Yes for fuck's sake update the fucking redmine")]) });
+check('F32 status-only write + "update the redmine" → allow', !blocked(r) && /status-only write approved/.test(r.out), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${statusNoteScript}"` }, transcript_path: transcript([user('update the redmine')]) });
+check('F33 status + NOTE write + "update the redmine" → BLOCK (a note still needs post it)', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${statusScript}"` }, transcript_path: transcript([user("don't update the redmine yet")]) });
+check('F34 status-only + "don\'t update the redmine" → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${statusScript}"` }, transcript_path: transcript([user('why does that happen'), popup('Your questions have been answered: "Set status?"="Yes, post In Progress". You can now continue.')]) });
+check('F35 real popup answer (tool_result) "Yes, post In Progress" → allow', !blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${statusScript}"` }, transcript_path: transcript([user('post it'), popup('Your questions have been answered: "Set status?"="Not now". You can now continue.')]) });
+check('F36 popup answer "Not now" after an older "post it" → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${statusScript}"` }, transcript_path: transcript([user('why does that happen in the first place?')]) });
+check('F37 status-only + unrelated question → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${statusScript}"` }, transcript_path: transcript([user('update the redmine'), popup('file contents: ok')]) });
+check('F38 a non-popup tool_result after "update the redmine" is skipped → allow', !blocked(r), r.out.slice(0, 160));
 const tlvBody = fs.readFileSync(TLV, 'utf8');
 check('F29 guard: ticket-load-verify.js stays network-free (else re-review its exemption)',
   !/require\(\s*['"](?:node:)?(?:https?|net|child_process)['"]\s*\)|\bfetch\s*\(/.test(tlvBody), 'network/process I/O found in ' + TLV);

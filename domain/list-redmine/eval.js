@@ -48,9 +48,11 @@ if (/Redmine unreachable/.test(base)) {
     process.exit(0);
 }
 
-// 1. The board renders the three priority-ordered category tables (miya 2026-09-22).
-check('renders the Patching (PROD) table', () => /^### 1\. Patching \(PROD\) — \d+ open/m.test(base));
-check('renders the eSOKONGAN table', () => /^### 2\. eSOKONGAN tracker — \d+ open/m.test(base));
+// 1. The board renders the three priority-ordered category tables — order REVISED
+//    miya 2026-09-29: eSOKONGAN TRACKER (SLA) first, then anything PROD, then the rest.
+check('renders the eSOKONGAN (SLA) table first', () => /^### 1\. eSOKONGAN tracker \(SLA\) — \d+ open/m.test(base));
+check('renders the PROD table second', () => /^### 2\. PROD \(Data Patching \/ Internal Issue PROD\) — \d+ open/m.test(base));
+check('eSOKONGAN table prints before the PROD table', () => base.indexOf('### 1. eSOKONGAN') < base.indexOf('### 2. PROD'));
 check('renders the Internal fixes & other table', () => /^### 3\. Internal fixes & other — \d+ open/m.test(base));
 
 // 2. Default is HIS LIST ONLY (miya 2026-08-05: "present to me ONLY my list").
@@ -60,10 +62,10 @@ check('default omits the Tracking table', () => !/### Tracking/.test(base));
 check('--tracking adds the Tracking table', () => /^### Tracking — \d+ open/m.test(tracking));
 
 // 4. Headers are the agreed columns per table.
-check('patch/other header is # | Days | Due date | Subject | State',
-    () => base.includes('| # | Days | Due date | Subject | State |'));
-check('eSOKONGAN header carries the Severity column',
-    () => base.includes('| # | Severity | Days | Due date | Subject | State |'));
+check('every table header carries the Severity column (3 tables)',
+    () => (base.split('| # | Severity | Days | Due date | Subject | State |').length - 1) === 3);
+check('urgent flag, when present, names its evidence words',
+    () => !/URGENT/.test(base) || /URGENT \([a-z ,]+\)/.test(base));
 
 // 5. Banned columns stay banned (2026-08-04 + 2026-08-05).
 check('no Deadline column', () => !/\|\s*Deadline\s*\|/.test(base));
@@ -73,8 +75,8 @@ check('no "+3d" or "Days left"', () => !/\+3d|Days left/.test(base));
 
 // Scope Mine-table assertions to the three category tables. The board may prepend
 // a QUICK-WIN / steal-risk banner (domain/steal-risk-flag) whose rows share the
-// generic `| id | ... |` shape; starting the region at "### 1. Patching" excludes it.
-const mineRegion = (base.split('### 1. Patching')[1] || '').split('### Tracking')[0];
+// generic `| id | ... |` shape; starting the region at "### 1. eSOKONGAN" excludes it.
+const mineRegion = (base.split('### 1. eSOKONGAN')[1] || '').split('### Tracking')[0];
 
 // 6. Dates carry no year — a due cell is "12 Aug", never "2026-08-12".
 //    Tables mix 5-col (patch/other) and 6-col (eSOKONGAN), so assert on the cell

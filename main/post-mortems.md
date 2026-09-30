@@ -23,3 +23,9 @@ Per CLAUDE.md v1.40, per-quest detail belongs in the single canonical `QA-NNN.md
 ## Original heading
 
 Pre-migration this file was the post-mortem registry maintained by Domain Expansion Step 3.5 (now retired per みや 2026-06-01).
+
+## QA-281712 — 2026-09-28 — Portal Awam PLTP syer check (mixed denominators)
+- META in `projects/coding-projects/archive/QA-281712/QA-281712.md` (Post-mortem META + Fastest Path).
+- Contributing: two AWAM syer checks add numerators, not fractions · "seterusnya" in the ticket meant the dialog button, not the page button.
+- Process: adhoc saved before the ticket → no re-Scout · int-env cherry-pick conflict with an env-only variant · local test waived, server test passed first deploy.
+- Carry forward: apps `validateSyer()` Double rounding false warning (LATENT L14).

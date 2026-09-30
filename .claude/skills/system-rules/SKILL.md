@@ -1,13 +1,13 @@
 ---
 name: system-rules
-description: Universal system-design discipline. 6 rules that apply to any system you maintain. Triggers — "/system-rules", "system rules", "clean system check", "audit the system", "system discipline", "inventory before adding", before any architectural decision or component addition.
+description: Universal system-design discipline. 7 rules that apply to any system you maintain (Rule 7 = resource footprint declared at birth; ask about RAM / processes / "why is my laptop slow" / what a new component costs routes here). Triggers — "/system-rules", "system rules", "clean system check", "audit the system", "system discipline", "inventory before adding", before any architectural decision or component addition.
 ---
 
 # /system-rules — Universal System Discipline
 
-Six rules that apply to ANY system, agentic or not.
+Seven rules that apply to ANY system, agentic or not.
 
-## The 6 Rules
+## The 7 Rules
 
 1. **Inventory first** — before adding any new component (rule / skill / hook / module), check what already exists. If a sibling solves 90% of the problem, refine it instead of duplicating.
 
@@ -21,11 +21,15 @@ Six rules that apply to ANY system, agentic or not.
 
 6. **Data lifecycle declared at birth — every log has a retention rule; housekeeping is a scheduled step, not a memory** (added 2026-09-06 per みや). Rule 5 makes every feature WRITE data; this rule says what happens to it afterwards. Every component's README carries one `retention:` line with exactly one of four verbs: **keep** (append-only ledger, never pruned — `system/slips.jsonl`, `system/registry.jsonl`) · **rotate** `<period>` (raw telemetry — monthly file, readers union the last 2 — `system/telemetry/hook-fires.jsonl`) · **consume** `<into>` (raw rows are folded into a summary, then archived — assessment files into the rolling assessment at DE; proposals ruled then closed) · **regenerate** (derived views, safe to delete any time — dashboards, census, profile-card). Housekeeping runs at TWO fixed moments only: Domain Expansion Step 12.5 (rotate + regenerate + archive consumed) and the system audit (retire what Rule 3 ruled). Rule 3 retires FEATURES; Rule 6 retires their DATA. **Banned**: a log with no `retention:` line (birth-gate blocks it, same tier as missing eval) · deleting raw rows before their summary exists · cleanup at an ad-hoc moment. **Test**: for any file under `system/`, `domain/*/`, `main/`, one grep answers "who deletes this, when, and what survives it".
 
+7. **Resource footprint declared at birth — prefer ONE shared process that starts on demand** (added 2026-09-29 per みや, after the 2026-09-28 RAM incident). Every component states its cost with one `footprint:` line: the trigger class first — `per-prompt` · `per-tool` · `per-turn` · `per-session` · `always` · `scheduled` · `on-demand` · `none` — then processes spawned + RAM (e.g. `footprint: on-demand: 1 python per queried DB, ~60 MB, stops after 10 idle min`). Multiply per-session and per-prompt costs by the real count (20 open sessions, ~60 prompts a day) before shipping. Design order: `none` > `on-demand` shared > `always` shared > `per-session` copy. New per-prompt / per-turn / per-tool checks JOIN an existing bundle (`lib/dispatch-hooks.js`) instead of a new registration. An `always` or `scheduled` daemon runs at normal priority (Task Scheduler `-Priority 4`; the default 7 starves it under memory pressure) and its health is visible to a mechanical check, never only to a UI. Enforced at birth: `core/forge.js new` refuses without `--footprint`; `component-birth-gate` blocks a new Feature README without `footprint:`. **Banned**: a per-session stdio MCP server when one shared server can serve every session · a new standalone hook registration on UserPromptSubmit/Stop · a daemon whose failure nothing notices. **Test**: for any component, one grep answers "how many processes does this add when 20 sessions are open".
+
 ## Usage
 
 Invoke at any architectural decision point. Apply each rule as a filter. /system-design is the agentic-specific specialization that builds on these universal disciplines.
 
 *Version 1.0 — 2026-06-02. Refactored from old /system-design (was 197 lines of mixed universal + agentic content); the 4 truly-universal rules + 1 new audit-logging rule live here; 2 agentic-specific rules moved to /system-design.*
+
+*Version 1.3 — 2026-09-29. Rule 7 added per みや after the 2026-09-28 RAM incident (21 per-session stdio DB MCP servers × 19 sessions = 45-60 GB commit, laptop hung; 36 UserPromptSubmit + 42 Stop hook registrations ≈ 60-70 node spawns per prompt/reply): resource footprint declared at birth, shared + on-demand preferred, bundling for per-prompt checks, normal-priority daemons with mechanical health. Enforced same day: forge `--footprint` (forge.eval 17/17) + component-birth-gate `footprint:` (eval 9/9). Research + audit + appraise done before adding, per みや's condition. Spec-preservation: Rules 1-6 untouched; additive. Title "6 Rules" → 7.*
 
 *Version 1.2 — 2026-09-06. Rule 6 added per みや: data lifecycle declared at birth — every component README carries one `retention:` line (keep / rotate / consume / regenerate); housekeeping runs only at DE 12.5 + system audit; birth-gate blocks a log without retention. Rules 1-5 untouched; additive. Title "5 Rules" → 6.*
 

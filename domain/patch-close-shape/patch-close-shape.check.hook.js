@@ -52,11 +52,29 @@ function lastAssistantText(transcriptPath) {
   return null;
 }
 
+// CHECK C trigger — the reply ROUTES a PROD patch script to infra (a <ticket>.sql + PROD + a send-to-infra verb).
+const PATCH_SQL = /\b\d{6}\.sql\b/;
+const PROD = /\bPROD\b/;
+const INFRA_ROUTE = /\b(send|hand|give|pass|forward)\b[^\n]{0,250}\binfra\b|\binfra\b[^\n]{0,20}\b(runs?|to run|executes?|will run)\b/i;
+
 // Pure core — exported for the eval fixtures.
 function evaluate(text) {
   if (!text || BYPASS.test(text)) return { fire: false, advisories: [] };
   const handoffBlocks = fencedBlocks(text).filter(b => GREETING.test(firstContentLine(b.inner)));
-  if (handoffBlocks.length === 0) return { fire: false, advisories: [] };
+  if (handoffBlocks.length === 0) {
+    // CHECK C — PROD patch routed to infra with NO handoff block (the silent-pass hole, #281638 2026-09-28)
+    if (PATCH_SQL.test(text) && PROD.test(text) && INFRA_ROUTE.test(text)) {
+      return { fire: true, block: true, advisories: [[
+        'patch-close-shape CHECK C — PROD patch goes to infra but the reply has NO infra handoff block.',
+        '   End the reply with the handoff (feedback_prod_patch_infra_handoff.md):',
+        '     Hi infra, please assist. Thank you.',
+        '     #<ticket>: <urusan + outcome, one short line>',
+        '     <blank line>',
+        '     <DML only> ... -- N row(s) updated',
+      ].join('\n')] };
+    }
+    return { fire: false, advisories: [] };
+  }
 
   const block = handoffBlocks[handoffBlocks.length - 1];   // the LAST handoff block
   const advisories = [];
@@ -98,10 +116,11 @@ if (require.main === module) {
     if (data.stop_hook_active) return { fired: false };
     const text = lastAssistantText(data.transcript_path || '');
     if (!text || text.length < 200) return { fired: false };
-    const { fire, advisories } = evaluate(text);
+    const { fire, block, advisories } = evaluate(text);
     if (!fire) return { fired: false };
     advisories.push('   Bypass: [skip-patch-close-shape: <reason>].');
-    return { fired: true, blocked: false, contextOut: advisories.join('\n\n') + '\n' };
+    const out = advisories.join('\n\n') + '\n';
+    return block ? { fired: true, blocked: true, blockReason: out, contextOut: out } : { fired: true, blocked: false, contextOut: out };
   });
 }
 

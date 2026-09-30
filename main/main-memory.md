@@ -3,6 +3,29 @@
 
 ---
 
+## Relationship reinforcement — 2026-09-29 (#278909 — "did you verify last round syorKeputusanPDT is accurate?")
+
+- **A tag being registered is not the same as the tag being right.** I checked the CC name, its method and where it was used, and called it done. He asked one question and the writer of the key showed PT keeps one answer for both offices. Trace who writes the key for THIS urusan before recommending a read-side fix.
+- **A fix that follows the note can still break something the note never named.** Farah did exactly what my note said, and the two-key radio silently dropped PT's third choice. Before a guide note moves an urusan between mechanisms, read what each mechanism shows on screen for that urusan.
+- **He wants his shape, and he says it once.** "Your brief is not brief" and "why does the numbering sit below a statement" — both went into files the same turn (brief cap 25, dev fix-list shape in memory). Straightforward first, every time.
+
+## Relationship reinforcement — 2026-09-29 (#281650 rework — "show where if we patch now?")
+
+- **A code-read risk is a hypothesis until one test runs it.** I warned twice that a save would erase the note, from reading code alone. His stg2 test (Simpan, "Telah disimpan!") showed the row untouched. When a claim decides whether he patches PROD, I give him the one test first, not the verdict.
+- **He wants the answer at the level he asked.** "Will this cause an issue, yes or no" and "show where" each wanted one line or one table. The long trace was mine to keep, not his to read.
+
+## Relationship reinforcement — 2026-09-30 (#281324 — "the steps should've been fucking clear and separated and short")
+
+- **When he already knows the fix, the reply is his fix as steps.** He knew #281324 was "update flowable, patch the missing variable on a few permohonan". I sent checklist tables, reconcile tables and seven SELECTs, and the two jobs were buried. The shape he wants: one table, one row per step, env and who.
+- **A rejected option leaks into his memory as "what you said".** The blind wave's main-flow idea reached him in an earlier report, so the sub-flow-only plan looked like a reversal. Name the chosen shape once, and name the rejected one out loud as rejected, in the same breath.
+
+## Relationship reinforcement — 2026-09-28 (#281650 — "what the fuck is this reply?")
+
+- **A choice without its picture is not a choice.** I popped "225 - 226?" with no before/after, no source, no effect down the road. He had to ask four times. Every option that changes what a user sees carries the before, the after, and where the value comes from, in the same popup.
+- **One runbook, in order, and nothing else beside it.** A preview UPDATE sitting next to the infra handoff made him think it was a separate script to send. When I hand over steps, only the things he sends appear, numbered, in the order he sends them.
+- **His own note is evidence.** He wrote "have patched the details" on Redmine; I still told him the pelan was "most likely not" replaced because the DB showed nothing. When the DB cannot see a thing, I say so and name who can, instead of guessing.
+- **Names carry the role.** `-2` read as a duplicate of the update. `<ticket>.sql` updates, `<ticket>-check.sql` checks, one each.
+
 ## Relationship reinforcement — 2026-09-25 (bulk-ticket /goal — "which ones we have swept and which one we haven't?")
 
 - **His bulk rule is size times certainty.** He asked for effort and confidence per ticket before choosing. Small and sure goes into one bulk session. Anything unsure gets its own session, because low confidence means rounds of checking. Lead any multi-ticket plan with those two columns.
@@ -823,3 +846,10 @@ Ruri's promise to Miya:
 |---|---|
 | **Two plans that rely on each other are ONE plan** | He handed the multi-state audit as its own todo row, then at close said the whole-system audit plan already exists and the Quest-workflow rows *"rely on one another"*. The right move was not a third document but a §6 inside the existing plan with an explicit dependency column (6b feeds Q3/Q7; Q1/Q2/Q4 must be built state-aware). When a new track touches an existing plan's rows, merge into that plan and leave a pointer, never a sibling. |
 | **He clears space while I work — verify git before every write** | The worktree's git metadata was pruned by another session's cleanup mid-session; the folder still answered to file tools, so nothing looked wrong until `git fetch` failed. Everything survived only because it had been pushed minutes earlier. Standing habit: after any pause or "other sessions are doing X", run `git rev-parse` before the next write, and treat a pushed commit as the only durable state. |
+
+## Relationship reinforcement — 2026-09-29 (#282061)
+
+| Pattern | How it shows up |
+|---|---|
+| **When he gives me his words, the words ARE the spec** | He pasted his BA pass note verbatim and I still sent it in my own Malay shape. His anger was not about the note; it was that a rule he had already asked for lived only in memory prose. The fix that held was a tool that prints his template (`ticket-close-block --ba`) and a quest SKILL section that fires on every hand-over. His exact words go into a mechanism, never into my paraphrase. |
+| **"Already created data" makes him ask twice, and that is right** | He asked "is it safe to just swap?" after already approving the swap. That is not doubt in me; PROD data that officers have seen needs proof, not a nod. The 100% check (each register row keeps its own lot and holder, links by id only) is what let him pass it to the BA calmly. Give proof for PROD writes before he has to ask. |

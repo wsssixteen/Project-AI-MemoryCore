@@ -88,7 +88,9 @@ evidence (DB row, code read, reproduction), never on two waves agreeing.
 
 ## Step 7 — Ranking + next-session plan (the hand-back)
 
-Emit ONE table ranked by **ownership first** (ours > data-patch > reports-team/delegate > out-of-scope), then days-elapsed (3-DAY RULE):
+🚨 **TICKET PRIORITY RULE (miya 2026-09-29 — overrides the bare 3-DAY RULE order)**: "eSOKONGAN ticket" ALWAYS means **TRACKER = eSOKONGAN** (id 51, the one with SLA) — never the Redmine *project* "eSOKONGAN MELAKA", which also holds Internal Issue / Data Patching tickets. Order: **(1) eSOKONGAN tracker → (2) anything PROD** (Data Patching (PROD) · Internal Issue (PROD) · Internal Issue (PROD-CR)) **→ (3) the rest**. Inside each group: Priority **Critical > High > Medium > Low**, then any ticket whose description/journal says **urgent / segera / kritikal / critical / ASAP / mendesak / secepat mungkin / immediate / emergency / kecemasan** ahead of a same-priority one — never miss the urgent word. Then the old tie-break (eSOKONGAN nearest due; others 3-DAY age). `quest/redmine-board.js` implements this deterministically.
+
+Emit ONE table ranked by **ownership first** (ours > data-patch > reports-team/delegate > out-of-scope), then the priority rule above, then days-elapsed (3-DAY RULE):
 
 `# · Ticket · Root cause (1-liner) · Conf% · Effort · Ownership · Test app · Testable-together pair`
 

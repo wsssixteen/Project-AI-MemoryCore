@@ -94,6 +94,15 @@ const cases = [
     want: ['adhoc-paste-detector', 'MANDATORY scaffold', 'ADHOC-PLTP', 'adhoc-save-audit.js'], notWant: [] },
   { id: 'P13 hakmilik id without issue words is SILENT', prompt: 'hakmilik 040210PM00001265 tu luas berapa',
     want: [], notWant: ['adhoc-paste-detector'] },
+  // ── 2026-09-30 (miya): downloaded BA files must be MOVED into 0. Brief\ (ADHOC-PRBB-2026-6 replay) ──
+  { id: 'P14 attached Desktop file is named in the MOVE step', prompt: [
+      '@"C:\\Users\\Ridhwan\\Desktop\\RalatPRBB.txt"', 'Ruri, help adhoc melaka:', 'PDTMT', '',
+      'Proses Pembatalan Permohonan', 'ID Permohonan : PTMLK/01/L/PRBB/2026/13', 'ID Pengguna : SaffuanH@melaka.gov.my',
+      '', 'Isu', 'Papar ralat bila klik jana',
+    ].join('\n'),
+    want: ['adhoc-paste-detector', '1a. MOVE', 'Desktop\\RalatPRBB.txt', 'Move-Item'], notWant: [] },
+  { id: 'P15 no attachment still carries the MOVE step', prompt: 'boleh check kenapa PTMLK/03/L/MCL/2026/12 tak boleh proceed? ralat keluar',
+    want: ['1a. MOVE', 'none attached'], notWant: [] },
 ];
 
 for (const c of cases) {

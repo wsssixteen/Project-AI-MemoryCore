@@ -333,6 +333,7 @@ Then stop.
 | 4 | Zero authored code. This skill merges and reports; it never edits source. |
 | 5 | Not a release. `mlk/release/*` and `mlk/master` are out of scope → `release-mlk-plp`. |
 | 6 | After a successful run, ONE line: the ticket still needs to be on the Redmine planned-release list — env branches never reach `mlk/master`. |
+| 6b | 🚨 **A "Redmine handover" after the card = the FULL close set, never the pass note alone** (2026-09-28, #279411 slip). In order: **Root cause** row + **Solution** row (rules in auto-memory `feedback_redmine_rootcause_format`: category sentence first, plain Malay, no code identifiers, no dashes/semicolons) → **pass note + git block in ONE run**: `node domain/ticket-close-block/ticket-close-block.js … --ba <BA first name> --envs "<internal | internal & staging>"` prints miya's note (`Salam <BA>, have deployed fixes to <envs>. Please help to verify.` · `Issues found and resolved:` numbered list · git block · `Thank you very much.`); fill only the list (quest SKILL.md § Hand-over to BA, 2026-09-29 #282061) → **field set** (Status Resolved · Assignee = BA · % Done 100 · Resolved By Ahmad Ridhwan Anuar). |
 | 7 | 🚨 **Merge order: training → `int-env` FIRST, release → training SECOND** (§3b). Never merge a training branch into `int-env` after it has taken a release merge — that drags the whole release lineage in. |
 | 8 | 🚨 **`int-env` receives ONLY the ticket's fixes.** If the staged merge diff vs `origin/mlk/int-env` shows a `pom.xml` version bump or other tickets' files, you are merging the wrong thing — stop. |
 | 9 | 🚨 **A deploy-script failure is read TOP-DOWN, never from the last line.** The final error is usually a cascade symptom (§7). |
@@ -391,6 +392,50 @@ If `/home/app/git/MLK/<repo>` is non-empty, `rm -rf` it first. If it repeats, th
 
 ---
 
+## 8 · Web Deployment Console failure — our code or infra?
+
+Console `http://172.16.90.169/etanah-deployment/` → **History** → the run. Needs みや's Keycloak
+session: Ruri reads it through **Claude in Chrome** (his browser), never the built-in pane.
+Full log as JSON (the page only shows a scroll box):
+`/etanah-deployment/api/deployment-history/<run-id>` → `.logs[]` · running job:
+`/api/deployment-queue/<id>/live` · job list: `/api/deployment-queue`.
+Filter out `Progress (` / `Downloading from` / `Downloaded from` (99% of the lines), then read
+from `BUILD SUCCESS` / `BUILD FAILURE` down.
+
+**First red step in Deployment Progress decides the owner:**
+
+| First red step | Owner |
+|---|---|
+| Clone project | infra (git / network) |
+| Build project | code — find `[ERROR] …/X.java:[line]`, check the file is in YOUR ticket's diff (`mlk/int-env` carries everyone's merges) |
+| Reserve target server | infra (console) |
+| Deploying | infra (target server) |
+| all green but app 503 | app startup — read server.log |
+
+**Keywords → owner:** `exit code 137` (process killed) · `exit code 255` / `Connection refused` /
+`timed out` (ssh) · `Permission denied` · `No space left on device` · same error on another state
+or app the same day → infra (Nick). `COMPILATION ERROR` · `cannot find symbol` → code.
+
+**Known failure: prepare `exit code 137` on `172.16.100.49` (fudge1), 2026-09-30.**
+
+```
+Killed  sudo -n systemctl stop jboss
+Stopping fudge1 JBoss...
+/home/app/bin/stop_jboss.sh: line 4: kill: (1481372) - Operation not permitted
+Killed  '/home/app/bin/stop_jboss.sh'
+prepare 172.16.100.49 exit code: 137
+```
+
+The server's stop step kills itself while JBoss is running (hypothesis: `stop_jboss.sh` kills by a
+"jboss" name match that also hits its own process and the root-owned `systemctl`). JBoss ends
+stopped, new WAR never activates → MLIT `/etanah-pelupusan` 503; other apps stay 200.
+**Retry passes** because JBoss is already down: the 13:12 retry printed no `Stopping fudge1
+JBoss...` line, prepare exit 0, success. Console header `Built 30/09/2026, 11:19:55 am` was the
+same for both runs — no console fix; the server script was not seen. Expect it again on the next
+deploy to a running `.49`; reported to Nick. History that week: 25 FAILED MLK runs across ~12 apps.
+
+---
+
 ## Rollback
 
 Skill-only Feature: no hook, no `settings.json` entry.
@@ -399,6 +444,9 @@ Nuke: `rm -rf .claude/skills/deploy/ domain/deploy/` · remove the `registry.jso
 Eval: `node domain/deploy/eval.js`.
 
 ## Origin
+
+**v1.3 — 2026-09-30** — §8 Web Deployment Console triage added per みや (MLIT pelupusan deploy
+failed at prepare, exit 137; "so next time I know whether it is my fault"). Additive; §1-§7 untouched.
 
 **v1.2 — 2026-08-06 later** — みや supplied the `ETANAH ARCHITECTURE - MLK` sheet. Read the four
 tabs that touch us and wrote
