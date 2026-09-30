@@ -30,6 +30,7 @@
 | Surat Keputusan status vs tugasan | §17 (incl. auto-regen trap §17.7) |
 | Which BPMN version is deployed | §18 |
 | Access/capaian missing from dropdowns | §15 |
+| User cannot log in (AWAM lock / internal LDAP) | §31 |
 | Query fails `relation does not exist` | schema prefix — §12 + §18.1 |
 
 ---
@@ -1660,3 +1661,16 @@ WHERE p_aplikasi_id IN (SELECT p_aplikasi_id FROM umm_p_hkmlk
   WHERE hkmlk_id = (SELECT hkmlk_id FROM ind_hkmlk WHERE id_hkmlk = '<id hakmilik>'));
 ```
 Not here: `hakmilik_pihak_berkepentingan` (does not exist in `et_main`). A carian-rasmi receipt like `02CR3761/2026` is NOT in `hsl_bayaran.no_resit`.
+
+## 31. User cannot log in — AWAM vs internal (2026-09-30, MLIT-proven)
+Both portals check the password against LDAP. The DB (`pcp_pengguna`, key `nama_pengguna` = the email) holds only the lock and flags.
+
+| Portal | Checks | Blocks when | Fix |
+|---|---|---|---|
+| AWAM | LDAP bind, then `kali_gagal_log_masuk` | count `>= 3`, even with the right password (`etanah-awam …/spring/security/CustomAuthenticationProvider.java:63`) | set count to `0`, then user uses **Terlupa Kata Laluan** (new password + count 0, `AwamTerlupaKataLaluanForm.java:246`) |
+| Internal (`/etanah-uam/…`) | LDAP bind only (`etanah-common LDAPAuthenticationService.authenticate`) | wrong LDAP password; no DB lock | reset password to default via user admin (`changePasswordToDefaultForInternal`) |
+
+- Every AWAM failure adds 1 (`CustomAuthenticationFailureHandler.java:47`); success sets 0 (`CustomAuthenticationSuccessHandler.java:49`). Error page code: 1 = wrong/unknown, 2 = `flag_aktif` N, 3 = locked.
+- TRAP: unlocking alone fails when the password is wrong; the count climbs back (seen 0 → 2 → 4 in minutes). Pair the unlock with Terlupa Kata Laluan.
+- `kata_laluan2` = second password for approvals, NOT login.
+- Check first: `flag_aktif`, `flag_capaian_awam` / `flag_capaian_dalaman`, `kali_gagal_log_masuk`, `trkh_log_terakhir` (last SUCCESS only). Watch look-alike usernames (`rodhiah_ms@` active vs `rodhiah.ms@` migrated inactive).
