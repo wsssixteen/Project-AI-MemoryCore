@@ -820,3 +820,7 @@
 {"ts":"2026-09-30T10:11:26.382Z","category":"A1"}
 {"ts":"2026-09-30T10:11:26.570Z","category":"A1"}
 {"ts":"2026-10-01T06:26:07.694Z","category":"wrong-owner-verdict"}
+{"ts":"2026-10-01T09:06:51.267Z","category":"adhoc-save/unsaved-finding"}
+{"ts":"2026-10-01T09:06:51.533Z","category":"A1"}
+{"ts":"2026-10-01T09:06:51.851Z","category":"A2"}
+{"ts":"2026-10-01T09:06:52.080Z","category":"A5"}

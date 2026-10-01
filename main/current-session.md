@@ -1,5 +1,13 @@
 # Current Session
 
+**Last Activity**: 2026-10-01 17:05 — ADHOC-UPS-2026-1 (UPS_PLP common templates) saved + audit 28/28 · DE.
+
+## Session Recap (2026-10-01, worktree pelupusan-template-verify-fe1bef)
+- **Ask**: reload the 21 Sep template-usage audit; verify the 3 templates that go through etanah-common (miya thought "ulangan"); give urusan + tugasan for BA to test.
+- **Found**: the 21 Sep session (archived "Etanah Melaka template usage audit") was never saved — found via transcript search. Re-verified: 3 common = SN_JPPH surat-SuratNilaianJPPH · CON_SRT_JT surat-SuratJabatanTeknikal · SMPG surat-SuratMaklumanKepadaPemegangGadaian, only via UPS_PLP / UPS_PS (MlkPelupusanPenyediaanSuratStrategy.java:62 → CommonPLPandBGNSuratStrategy.java:92). Ulangan JT is NOT common in Melaka (pelupusan own TemplateSuratUlanganJabatanTeknikal.docx). PROD: SN_JPPH 4 · CON_SRT_JT 1 · SMPG 0. 4th option BGN_UTILSM has no MLK surat_makluman.docx.
+- **Test data (STG)**: PTMLK/02/L/UPS_PLP/2026/7 nazli · /03/.../2026/4 asikin · /02/.../2026/6 faridmajid, all at Penyediaan Surat.
+- **Slips**: first adhoc-save writes landed in the worktree (no cd to main) — moved; notes.js --reset wiped the 2 extra test rows — re-added.
+- **Carry forward**: send BA message; BGN_UTILSM check if BA picks it; 10 ukur/permit templates need etanah-teknikal locally.
 **Last Activity**: 2026-09-30 18:05 — ADHOC-PDBB-2026-1 (MLIT PDBB Perakuan slow) closed + archived (dropped by miya) · attempt-before-blocked-gate widened · DE.
 
 ## Session Recap (2026-09-30, worktree ptmlk-slow-submission-10ca65)
@@ -18,12 +26,3 @@
 - **Slips**: 5 tagged QA-281638 (missing infra handoff · ambiguous flowable step + #281319 bounty claim never landed · no proving SELECT · no Stage-Match · 0. Brief photo not opened on resume).
 - **Open**: PRBB/2026/2 (task 20527758) still needs the preventive variable (L10) · bounty proposal: Bounty lines must carry a commit SHA.
 **Last Activity**: 2026-09-30 17:40 — ADHOC-VIEW-2026-1 closed + archived + bounty (bfdb6a89) · DE.
-
-## Session Recap (2026-09-25 to 09-30, session gptol-patching-location → main checkout after worktree was emptied)
-- **Ask**: Alex (KL) wanted KL views TKLLESENTABLEVIEW + TKLPREMITTABLEVIEW in Melaka. KL plp_* tables do not exist here; rebuilt on umm_a_permit_lesen → ind_versi_permit_lesen → ind_permit_lesen (lesen BRG_4AE, permit BRG_4CE+4DE via rjk_jns_dok).
-- **Done**: views live on internal (et_main_mlit 773/3154) + staging (et_main_stg2 760/3142) as `tkllesentableview` + `tklpermittableview` (KL typo PREMIT corrected; internal renamed via ALTER VIEW). PROD infra sendoff (et_main-qualified) handed to miya 2026-09-28; not on PROD at 2026-09-30.
-- **Also 09-28**: boot + Redmine retrieval + brief; Protime Monday plan filled via Protime API (281638, 281712, 279411) since Chrome hung.
-- **Slips (miya)**: carried KL typo into our view name · gave the #281638 infra handoff when he asked for the views' PROD sendoff. Both written into adhoc-save SKILL.md Banned list.
-- **Carry forward**: PROD views pending infra · Alex to confirm baki unit (days) + kiraan_pembaharuan NULL.
-
-**Last Activity**: 2026-09-30 17:45 — junior handover (#264355 + #274266 → Farah) saved · main merged into worktree · DE.
