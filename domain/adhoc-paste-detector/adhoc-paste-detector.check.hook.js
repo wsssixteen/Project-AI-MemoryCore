@@ -111,7 +111,7 @@ runHook({ name: 'adhoc-paste-detector', event: 'UserPromptSubmit' }, (input) => 
     ...(files.length ? files.map(f => '         ' + f) : ['         (none attached this prompt; if he mentions a download, find it in Desktop / Downloads)']),
     '        node quest/notes.js --folder "<folder>" --qa ADHOC-' + urusan + '-<year>-<n> --env <ENV> --urusan ' + urusan + ' --id "<permohonan>" --user "<login>" --reset',
     '     2. active.txt block:',
-    '        node quest/active-cli.js start ADHOC-' + urusan + '-<year>-<n> phase=0 status=active ticket_type=adhoc env=<ENV> urusan=' + urusan + ' quest_start=@now local_test_confirmed=false adhoc_register_row=<A#> qa_doc=<path> task_folder="<folder>" issue_one_liner="<...>"',
+    '        node quest/active-cli.js start ADHOC-' + urusan + '-<year>-<n> phase=0 status=active ticket_type=adhoc env=<ENV> urusan=' + urusan + ' quest_start=@now local_test_confirmed=false adhoc_register_row=<A#> qa_doc=<path> task_folder="<folder>" issue_one_liner="<...>" title="<URUSAN keyword keyword, max 6 words, ProTime>"',
     '     3. ADHOC-REGISTER.md: append the next A# row (grep-able identifiers, honest Status).',
     '     4. qa_doc: projects/coding-projects/active/ADHOC-<slug>/ADHOC-<slug>.md — full investigation.',
     '     5. EVERY save round → invoke the `adhoc-save` skill: write the set, then',
