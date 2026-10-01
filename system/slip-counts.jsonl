@@ -832,3 +832,13 @@
 {"ts":"2026-10-01T09:06:51.533Z","category":"A1"}
 {"ts":"2026-10-01T09:06:51.851Z","category":"A2"}
 {"ts":"2026-10-01T09:06:52.080Z","category":"A5"}
+{"ts":"2026-10-01T09:54:05.374Z","category":"wrong-browser"}
+{"ts":"2026-10-01T09:54:05.522Z","category":"information-overload"}
+{"ts":"2026-10-01T09:54:05.673Z","category":"junior-handover-answer-given"}
+{"ts":"2026-10-01T09:54:05.821Z","category":"incomplete-verification"}
+{"ts":"2026-10-01T09:54:05.973Z","category":"asked-searchable-fact"}
+{"ts":"2026-10-01T09:55:01.363Z","category":"A2"}
+{"ts":"2026-10-01T09:55:01.474Z","category":"A2"}
+{"ts":"2026-10-01T09:55:01.576Z","category":"A5"}
+{"ts":"2026-10-01T09:55:01.678Z","category":"A1"}
+{"ts":"2026-10-01T09:55:01.783Z","category":"A4"}

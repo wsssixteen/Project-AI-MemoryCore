@@ -17,3 +17,14 @@
 | A3 debugging efficiency + accuracy | ADHOC-PRBB-2026-8: "no SK" answered after a constants grep only; the code trace + `rjk_senarai_kumpulan` check came after 3 miya prompts. `verify-before-claim` now 3 in 7 d (escalation). | Mechanical defender: Stop hook blocks a negative existence claim about etanah data ("no SK / not in DB / tiada / doesn't exist") when the turn ran no DB query against the named table family. Eval: today's first SK reply → BLOCK; the reply after the senarai kumpulan SELECT → PASS. |
 | A4 etanah issue-solving | PRBB Ganti Hari: one combined no-JOIN SELECT (scalar subqueries for fee name + resit) answered the BA in one screenshot; the duplicate-royalti mechanism (counter by ID hakmilik → new fee row) is now banked in SPOC-COUNTER §4b. | A reusable `fee-status` check SQL template keyed by permohonan id (any urusan), stored with the knowledge §4b; eval: run against PRBB/2026/4 returns the same 6 rows. |
 | A5 sweep / file sweep | One side bug found by reading consumers (`== "2"`, LATENT L19); no sweep run. | Sweep for `getDynamicFieldAsString(...) == "` / `!= "` String identity compares across pelupusan + awam; eval: L19 line is among the hits. |
+
+## Session 3 — QA-282587 junior guide (worktree quest-282587-guide)
+
+| Axis | Failure class | Instance |
+|---|---|---|
+| A1 agentic | none used | no fan-out this session ⏭ |
+| A2 quest | handover written before a full panel-switch sweep | Tangguh trio declared data-only; `VIEW_TGSN_FORMULA_PREMIUM_LIST` gap found only on "verify" (R2) |
+| A2 quest | BA question drafted without reading the linked ticket | "which env was #261516 verified on" — journal said MLKSTG |
+| A3 debugging | last_modified_date read as "never patched" | SPI_SS shows the 2024 date though Aaron's UPDATE ran; plain UPDATEs do not stamp it |
+| A4 etanah | shared langkah across parent urusan | SBTM KP_PLPMT used by PSBS and MCL; one screen per row |
+| A5 sweep | output overload | guide = 4 sections / 6 tables; BA note 4 trim rounds |
