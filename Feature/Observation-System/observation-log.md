@@ -89,6 +89,8 @@ Rather than directly saying "this is wrong", みや asks "is X truly different f
 
 **[2026-08-04]** T2 — **When his question is short and my answer is long, I have probably substituted a question I prefer.** He asked *"do we need to prepare patch script?"*; I delivered a careful, correct analysis of orphaned `ind_permit_lesen` rows and answered *is this patch risky*. He asked which schema; I answered with a fixture copied from a doc instead of `SELECT current_schema()`. Both substitutions were well-evidenced, which is exactly why they were invisible to me — rigour on the wrong axis is indistinguishable from rigour, from the inside. The only reliable external tell is the length ratio: a one-line question answered in three paragraphs means I reframed it. Worth a Stop-hook experiment — echo his literal question above my answer before sending, so the mismatch is visible rather than felt.
 
+**[2026-10-01]** T1 — **A "there is none" answer needs the same proof as a "here it is" answer.** ADHOC-PRBB-2026-8: "no SK, hardcoded" came from a constants grep; みや then asked three times (verified 100%? / trace the code / did you check senarai kumpulan) before the negative was proven (code trace + rjk_senarai_kumpulan query). Same teaching-by-question mode as the 2026-05-12 T2 entry; the new part is the negative-claim shape. If it recurs, the A3 proposal (block negative existence claims with no DB query) becomes the defender.
+
 ---
 
 ## Retired Observations
