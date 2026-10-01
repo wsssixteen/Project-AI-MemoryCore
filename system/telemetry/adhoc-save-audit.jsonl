@@ -56,3 +56,8 @@
 {"ts":"2026-09-30T09:51:24.004Z","id":"ADHOC-PDBB-2026-1","outcome":"pass","fails":[],"dur_ms":31}
 {"ts":"2026-09-30T09:57:06.315Z","id":"ADHOC-PDBB-2026-1","outcome":"pass","fails":[],"dur_ms":31}
 {"ts":"2026-09-30T09:57:16.492Z","id":"ADHOC-PDBB-2026-1","outcome":"pass","fails":[],"dur_ms":29}
+{"ts":"2026-10-01T08:55:50.810Z","id":"ADHOC-PRBB-2026-8","outcome":"fail","fails":["block: required keys present","qa_doc: Issue Summary \"Title\" line"],"dur_ms":41}
+{"ts":"2026-10-01T08:56:07.830Z","id":"ADHOC-PRBB-2026-7","outcome":"pass","fails":[],"dur_ms":37}
+{"ts":"2026-10-01T08:56:08.038Z","id":"ADHOC-PRBB-2026-8","outcome":"pass","fails":[],"dur_ms":32}
+{"ts":"2026-10-01T09:06:39.311Z","id":"ADHOC-PRBB-2026-7","outcome":"pass","fails":[],"dur_ms":60}
+{"ts":"2026-10-01T09:06:39.587Z","id":"ADHOC-PRBB-2026-8","outcome":"pass","fails":[],"dur_ms":48}
