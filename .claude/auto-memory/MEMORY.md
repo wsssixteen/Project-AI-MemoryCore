@@ -2,6 +2,7 @@
 
 
 ## Feedback
+- [browser-edge-default](feedback_browser_edge_default.md) — 🚨 "show me in the browser" / Redmine / web UI → miya's EDGE (signed in), never the built-in pane or Chrome first
 - [mlit-db-write-access](feedback_mlit_db_write_access.md) — 🚨 MLIT/STG are WRITABLE via the gateway login (JDBC script); only the MCP query tool is read-only; never tell miya 'read-only'
 - [system-fix-universal-rule](feedback_system_fix_universal_rule.md) — 🚨 system fix = UNIVERSAL rule, never keyed to one ticket/tugasan; load system-rules + system-design BEFORE any design/audit
 - [resource-footprint](feedback_resource_footprint.md) — 🚨 laptop slow / RAM / "what are these processes" → measure LIVE + trace parents first; monitoring must be MECHANICAL not UI; system-rules Rule 7
