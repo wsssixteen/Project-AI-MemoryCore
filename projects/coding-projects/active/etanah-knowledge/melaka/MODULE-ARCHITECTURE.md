@@ -431,3 +431,7 @@ auto-agihan reused the previous holder (Fariza).
 
 **Read this section before**: proposing any fix in `etanah-common` / `etanah-teknikal`, and before writing a
 Redmine handover note to another team.
+
+## 🌐 GIS integration and every other module we do not own
+
+Moved to [OTHER-MODULES.md](OTHER-MODULES.md) (2026-10-01) — boundary map per module, read by the `cross-module-check` skill.

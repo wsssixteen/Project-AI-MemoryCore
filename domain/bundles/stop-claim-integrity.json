@@ -2,5 +2,6 @@
   ".claude/hooks/silent-claim-drift-gate.js",
   ".claude/hooks/veritas-claim-gate.js",
   "domain/verify-basis-gate/verify-basis-gate.discipline.hook.js",
-  "domain/ticket-criteria-gate/ticket-criteria-gate.discipline.hook.js"
+  "domain/ticket-criteria-gate/ticket-criteria-gate.discipline.hook.js",
+  "domain/ownership-input-check/ownership-input-check.check.hook.js"
 ] }
