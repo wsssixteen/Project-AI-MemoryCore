@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-09-25 to 09-30, session gptol-patching-location → main checkout after worktree was emptied)
+- **Ask**: Alex (KL) wanted KL views TKLLESENTABLEVIEW + TKLPREMITTABLEVIEW in Melaka. KL plp_* tables do not exist here; rebuilt on umm_a_permit_lesen → ind_versi_permit_lesen → ind_permit_lesen (lesen BRG_4AE, permit BRG_4CE+4DE via rjk_jns_dok).
+- **Done**: views live on internal (et_main_mlit 773/3154) + staging (et_main_stg2 760/3142) as `tkllesentableview` + `tklpermittableview` (KL typo PREMIT corrected; internal renamed via ALTER VIEW). PROD infra sendoff (et_main-qualified) handed to miya 2026-09-28; not on PROD at 2026-09-30.
+- **Also 09-28**: boot + Redmine retrieval + brief; Protime Monday plan filled via Protime API (281638, 281712, 279411) since Chrome hung.
+- **Slips (miya)**: carried KL typo into our view name · gave the #281638 infra handoff when he asked for the views' PROD sendoff. Both written into adhoc-save SKILL.md Banned list.
+- **Carry forward**: PROD views pending infra · Alex to confirm baki unit (days) + kiraan_pembaharuan NULL.
+
+**Last Activity**: 2026-09-30 17:45 — junior handover (#264355 + #274266 → Farah) saved · main merged into worktree · DE.
+
 ## Session Recap (2026-09-28 to 09-30, worktree easy-internal-tickets-c23369)
 - **Ask**: scan internal tickets (not patch or eSOKONGAN), list easy ones for the junior. Result: 7 open internal/QA, all miya's; easy = #264355 (PRU Lulus letter, AWAM list) + #274266 (PT PYSKTPDT peranan, data only).
 - **Guides**: posted by miya 2026-09-29 to Farah (Siti Farhanih Abdul Razak). #274266 → Farah Resolved 2026-09-29 (block delegated, Redmine divergence: close needs miya nod). #264355 → Farah testing.
@@ -5524,6 +5533,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
