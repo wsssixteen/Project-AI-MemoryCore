@@ -66,6 +66,7 @@ if (require.main === module) {
       blockReason: `⛔ ownership-input-check: the reply hands an error to another team ("${d.verdict}") without an Input check line.\n` +
         '   Before handing it over: list every value OUR code passed into the other module\'s call (kod, id, schema, table, flag),\n' +
         '   say where each came from (file:line or DB row) and whether it was right. A name in their error can be built from our input.\n' +
+        '   Run the cross-module-check skill (7 steps: call-site, inputs, name walk-back, sibling diff, version, env config, verdict).\n' +
         '   Add one line:  Input check: <value> = <what we sent> from <where> → correct / wrong\n' +
         '   ⚡ DELTA ONLY — do not re-emit the reply. Genuinely nothing of ours flows in? [skip-ownership-input: <why>]',
     };

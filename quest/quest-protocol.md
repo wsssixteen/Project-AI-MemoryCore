@@ -1066,6 +1066,7 @@ A schema, table, kod, id or path that appears in an error message (e.g. `relatio
 
 - For each identifier in the error, find the code that builds it (grep the callee for the string or the constant), and walk back to the parameter our caller sent.
 - Compare it with what the data says it should be: a Melaka Tengah app (pejabat 01) must hit schema `mtg`; seeing `ptg` is itself the clue.
+- Full boundary procedure (7 steps + verdict): the `cross-module-check` skill.
 - **Banned**: reasoning "table X does not exist → owner of X must create it" without this walk-back.
 - **Why**: ADHOC-PRBB-2026-6 (2026-09-30) read `et_ptg.log_service does not exist` and closed it as common/GIS. `et_ptg` came from the empty kodPejabat our `MlkUtilitiPembatalanPermohonanForm.initBPMFlow():346` sent; the GIS team bounced it back on #282442 note 8 the next day.
 
