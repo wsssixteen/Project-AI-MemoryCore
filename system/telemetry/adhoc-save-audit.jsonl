@@ -75,3 +75,4 @@
 {"ts":"2026-10-01T09:04:40.306Z","id":"ADHOC-UPS-2026-1","outcome":"pass","fails":[],"dur_ms":42}
 {"ts":"2026-10-01T09:05:12.737Z","id":"ADHOC-UPS-2026-1","outcome":"pass","fails":[],"dur_ms":44}
 {"ts":"2026-10-01T09:07:48.923Z","id":"ADHOC-UPS-2026-1","outcome":"pass","fails":[],"dur_ms":52}
+{"ts":"2026-10-01T09:18:46.422Z","id":"ADHOC-STG-2026-1","outcome":"pass","fails":[],"dur_ms":53}
