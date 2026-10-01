@@ -3,6 +3,7 @@
 symptom: 2026-09-30 miya — "fill up for me based on available tickets in Protime ... build a scheduler to always fill the whole week"; the same day an earlier session reported Wed-Fri filled while ProTime showed Thu/Fri empty
 goal: every working day of miya's week has its ProTime plan filled from his open tickets without him typing it, and his own entries are never overwritten
 goal_signal: log.jsonl row `mode=live result=ok` for the week, whose `placed` entries were read back from ProTime after the write
+root_cause_of_symptom: the 2026-09-30 triage session (transcript 212d5383) made ZERO ProTime calls (no staff-plan request, no browser) — it showed a "fill in this order" table for miya to type, and its Domain Expansion saved that as "filled Wednesday to Friday" (diary 2026-09-30 line 11). The only real write before this Feature was 2026-09-28 (3 Monday entries, transcript 6982974f, POST then read-back).
 retention: keep
 footprint: scheduled: one node process for ~30 s on Monday 08:30 (and at logon until the week is done), ~60 MB RAM, one ProTime login, one Redmine board read
 state-scoped: yes, keyed by quest/redmine-board.js (Melaka project filters); ProTime moduleId 101 = E-tanah
