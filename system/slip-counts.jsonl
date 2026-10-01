@@ -827,3 +827,8 @@
 {"ts":"2026-10-01T09:09:44.381Z","category":"A2"}
 {"ts":"2026-10-01T09:09:44.835Z","category":"A4"}
 {"ts":"2026-10-01T09:09:45.335Z","category":"A5"}
+{"ts":"2026-10-01T06:26:07.694Z","category":"wrong-owner-verdict"}
+{"ts":"2026-10-01T09:06:51.267Z","category":"adhoc-save/unsaved-finding"}
+{"ts":"2026-10-01T09:06:51.533Z","category":"A1"}
+{"ts":"2026-10-01T09:06:51.851Z","category":"A2"}
+{"ts":"2026-10-01T09:06:52.080Z","category":"A5"}

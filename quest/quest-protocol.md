@@ -1060,9 +1060,19 @@ When static analysis (code-read + DB queries + sibling-trace) is **genuinely exh
 
 **Pairs with** Ritual 5 (exhaust-to-confidence) + `personality.md` "No asking-back for searchable facts": Ritual 5 says don't hand back before exhausting accessible methods; Ritual 6 says loggers ARE an accessible method, breakpoints are NOT (they require みや). Escalation ladder: **code-read → DB → extensive loggers (one pass) → (only if loggers genuinely cannot reach it) surface the specific limit to みや**.
 
+### Ritual 7 — Error text is data: every name in an error may have been built from OUR input (added 2026-10-01 per みや, #282442)
+
+A schema, table, kod, id or path that appears in an error message (e.g. `relation "et_ptg.log_service" does not exist`) is NOT fixed infrastructure until proven so. Before reading it as "their table is missing", ask: **is this name computed from a value our code passed in?**
+
+- For each identifier in the error, find the code that builds it (grep the callee for the string or the constant), and walk back to the parameter our caller sent.
+- Compare it with what the data says it should be: a Melaka Tengah app (pejabat 01) must hit schema `mtg`; seeing `ptg` is itself the clue.
+- Full boundary procedure (7 steps + verdict): the `cross-module-check` skill.
+- **Banned**: reasoning "table X does not exist → owner of X must create it" without this walk-back.
+- **Why**: ADHOC-PRBB-2026-6 (2026-09-30) read `et_ptg.log_service does not exist` and closed it as common/GIS. `et_ptg` came from the empty kodPejabat our `MlkUtilitiPembatalanPermohonanForm.initBPMFlow():346` sent; the GIS team bounced it back on #282442 note 8 the next day.
+
 ### Violation Log
 
-Every slip on Rituals 1–6 gets a one-line entry in `Feature/Forge-Self-Improvement-System/debug-ritual-violations.md`. Trend visible over time. If slips persist across multiple sessions, the ritual design is wrong — redesign, don't just re-promise.
+Every slip on Rituals 1–7 gets a one-line entry in `Feature/Forge-Self-Improvement-System/debug-ritual-violations.md`. Trend visible over time. If slips persist across multiple sessions, the ritual design is wrong — redesign, don't just re-promise.
 
 ---
 
