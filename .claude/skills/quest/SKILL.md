@@ -178,7 +178,7 @@ Only proceed to Phase 1 after explicit confirmation.
 
 Record in the quest block: `fix_by=<colleague> fix_commit=<sha> fix_branch=<branch>`.
 
-Limits: a change inside etanah-common stays with the common owner (`feedback_module_edit_boundary`), we review it but do not edit it.
+Limits: a change inside etanah-common stays with the common owner (`feedback_module_edit_boundary`), we review it but do not edit it. The junior's template (.docx) work is the one exception (みや 2026-10-02): we review and give a guide note, she corrects it herself (`feedback_template_work_junior_builds`).
 
 **Banned**: handing findings back to the colleague as a "please fix" note · deploying a colleague's branch before steps 2-4 ran · a new branch for our correction.
 
