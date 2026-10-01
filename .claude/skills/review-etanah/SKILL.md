@@ -29,6 +29,8 @@ Inventory-first: this does NOT reimplement code review. It SEQUENCES three thing
 
 At **Phase-1 close, before the commit** (after `local_test_confirmed=true`), or any "review this fix" request. It's a pre-commit quality gate, not an always-on hook — it costs an AI review pass, so run it on the fix, not every keystroke.
 
+**A colleague's fix handed to us for review = takeover** (quest SKILL.md § Colleague asks us to review their fix = TAKEOVER). The review ends in OUR correction committed on top of their branch, then deploy to BA. Never a "please fix" note back to the colleague.
+
 ## Why these three (not one)
 
 `/scan` = mechanical/dataflow defects (cheap, deterministic). `/code-review` = semantic/logic/convention review the LLM does well. `/security-review` = the attack-surface lens a gov land-records system needs. Running them in this order means each later (more expensive) pass isn't spent on what the earlier one already caught.

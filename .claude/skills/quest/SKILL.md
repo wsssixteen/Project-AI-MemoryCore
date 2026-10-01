@@ -162,6 +162,28 @@ Only proceed to Phase 1 after explicit confirmation.
 
 ---
 
+## 🔁 Colleague asks us to review their fix = TAKEOVER (added 2026-10-02 per みや, #246964)
+
+**Trigger**: a ticket comes back to みや with a colleague's commit in the latest journal plus a review ask ("can help check", "is my implementation ok"), or みや says a colleague asked him to review a fix (Redmine, WhatsApp, verbal).
+
+**Rule**: we take the ticket over. We review, correct their branch ourselves, test, and deploy to BA. A review never ends in a note asking the colleague to fix it.
+
+| # | Step | How |
+|---|---|---|
+| 1 | Load the ticket | `node quest/redmine-sync.js <num>` + `node quest/ticket-load-verify.js <num>`. BA's latest cycle is the spec |
+| 2 | Review every commit on their branch | `git log --no-merges origin/mlk/master..<branch>` + `git show <sha>` in the work clone. Check each change against BA's latest asks AND our own precedent for the same document or screen (`git log -S`). Procedure: `review-etanah` |
+| 3 | Correct it on THEIR branch | checkout the colleague's ticket branch, keep what is right, commit our correction ON TOP. Never a new branch, never rewrite their pushed commit (`feedback_rework_commit_on_existing_ticket_branch`). Nothing wrong → no commit, go to step 4 |
+| 4 | Test locally | normal quest gate, `local_test_confirmed=true` before any commit |
+| 5 | Deploy to BA | `deploy` skill (internal + staging, re-merge even if their branch was merged before), then the BA pass note (§ Hand-over to BA below) |
+
+Record in the quest block: `fix_by=<colleague> fix_commit=<sha> fix_branch=<branch>`.
+
+Limits: a change inside etanah-common stays with the common owner (`feedback_module_edit_boundary`), we review it but do not edit it.
+
+**Banned**: handing findings back to the colleague as a "please fix" note · deploying a colleague's branch before steps 2-4 ran · a new branch for our correction.
+
+Example: #246964, Ammar's `ef49baf78f` on `mlk/qa/246964` had a correct template change and a Java change BA never asked for. We revert the Java on top of his branch, test, and deploy.
+
 ## Stop-Point Action Summary (mandatory after /quest start)
 
 At **every** point Ruri stops and hands back to みや after `/quest start` — Recon emit, fix-shape package, a blocker, awaiting-a-nod, end of a work chunk, or a hold — the response MUST end with a **TABLE-based** action block. **NEVER wrap it in triple-backticks** — a fenced code block renders as barely-readable monospace (みや 2026-05-21). Per Output-Format Discipline the tables render raw and the `═══` banners are plain-text delimiters:
