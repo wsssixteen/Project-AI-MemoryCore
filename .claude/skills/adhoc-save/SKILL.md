@@ -28,6 +28,18 @@ Every adhoc gets a **title**: a very short, almost-keyword label みや pastes i
 - Lives in 3 places: block `title=` · qa_doc `- Title : ...` (first line of ## Issue Summary) · the reply (first line, `Title: ...`).
 - Audit FAILs if it is missing or too long.
 
+## Daily adhoc session — 2026-10-01 per みや
+みや keeps ONE session open all day for adhocs. Many adhocs pass through the same chat, so every message is routed first.
+
+| Step | Rule |
+|---|---|
+| 1 Route | New message → match it to an adhoc this session already opened (same permohonan / No Permit / BA / screenshot thread). Match → update THAT adhoc. No match → new ADHOC id. Never fold two adhocs into one block. |
+| 2 Name it | Open the reply with `Title: <title>` so みや sees which adhoc the answer belongs to (ProTime title doubles as the thread label). |
+| 3 Answer first | Answer the ask, THEN write the save-set in the same turn (みや 2026-10-01: "focus on answering first then setup"). |
+| 4 Size gate | Stay in this session when the adhoc is answerable with DB queries + code reads. Hand off when it needs a code fix + build/deploy, a multi-env patch run, a long sweep, or a Workflow/agent fan-out: tell みや in one line, then `spawn_task` with a handover pointing at the qa_doc (the save-set IS the handover). |
+| 5 Stay lean | Never re-read a big file already read today; the qa_doc carries each adhoc's state. Persist every round so a compaction loses nothing. |
+| 6 End of day | Domain Expansion saves the day: list today's adhocs (`quest_start=<today>` + `ticket_type=adhoc` in active.txt), confirm each audit is green and each status/resume point is current, then the DE ritual. |
+
 ID = `ADHOC-<URUSAN>-<YYYY>-<n>` — next n after grepping `active.txt` + `active-archive.txt`.
 
 ## Each round
