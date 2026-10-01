@@ -118,6 +118,24 @@ fourth strike lands.
 
 ---
 
+## 3c. 🚫 No information overload (2026-10-01, per みや, #282587)
+
+**Overview first, detail only on ask.** Every reply, guide, note or brief gives the abstract level: what, why, what to do. Detail stays in the quest doc and comes out only when someone asks for it.
+
+| Rule | Test |
+|---|---|
+| Keep only what the reader needs NOW to understand or act | Delete the line: does the reader lose anything they need now? No → it stays deleted |
+| One idea per section, at most 5 sections | A section that needs two headings is two ideas |
+| Name things the reader already knows (screen names, tugasan names), never invented labels | No "A/B", no codes the reader must decode |
+| A question is allowed only if no tool or ticket can answer it | Search the ticket, the linked tickets and the DB first |
+| Leave out by default: verification trail, rejected options, ids, file:line, SQL, test-data dumps, caveats that change nothing | Add them only when asked, or when the reader must use them to act |
+
+**Banned**: a guide or note that carries the whole investigation · empty columns or questions for the reader to fill when the answer is already known · repeating the same fact in two sections.
+
+**Why**: #282587, the junior guide came out as 4 sections with 6 tables, SQL, Java and test data. The BA note took 4 trim rounds (A/B labels, a Confirm column, 2 questions the ticket already answered, extra sentences). みや: *"Abstract it. Overview guide, clear instead of convoluted and overloaded."*
+
+---
+
 ## 4. Precedence Note
 
 This file (`.claude/reply-shape-spec.md` — its permanent canonical home since 2026-07-13; the drafting copy is archived under `projects/coding-projects/archive/external-audit-2026-07/`) is the **canonical** source for reply-shape rules. `.claude/CLAUDE.md` §2 "Explanation & Output-Format Discipline" becomes a **pointer only**: its always-on mirror status (so the rule boot-loads every session) is preserved, but the full rule bodies, the gate predicate table, and the situation→shape table live HERE — CLAUDE.md must not carry a second full copy (per the File Ownership table's own "one canonical home" principle). Any future edit to a predicate, budget, or bypass token is made in this file first; CLAUDE.md's pointer text is updated only if the pointer's own summary line goes stale.
