@@ -98,3 +98,4 @@ Rather than directly saying "this is wrong", みや asks "is X truly different f
 ---
 
 *Observation System v1.0 — 2026-04-02*
+**[2026-10-01]** T1 — **A "there is none" answer needs the same proof as a "here it is" answer.** ADHOC-PRBB-2026-8: "no SK, hardcoded" came from a constants grep; みや then asked three times (verified 100
