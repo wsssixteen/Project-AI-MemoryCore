@@ -187,5 +187,20 @@ PRBB di tugasan yang sama papar surat.
 Thank you.
 ```
 
+8. Root cause + Solution rows, #282442 (2026-10-01). He rejected my draft as "doesn't match my word style". The rejected draft (formal Malay, dev terms translated, two facts jammed with "jadi"): "Di Proses Pembatalan Permohonan, sistem tidak dapat kod pejabat tanah bagi urusan PRBB. Kod kosong dihantar ke GIS, jadi GIS cari di pejabat PTG yang tiada jadual log dan papar ralat." Rules taken from entries 4 and 6 and applied: rojak not formal Malay (tak / dah / amik / so, never "dihantar" / "tidak dapat"), tech words stay English (table, value, default, kosong ok), one fact per line, screen name first. Refined draft sent for his check (replace with his final wording once he edits it):
+```
+Root cause:
+Untuk PRBB, skrin Pembatalan tak dapat kod pejabat dari maklumat tanah.
+Sistem hantar kod pejabat kosong ke GIS.
+GIS default ke PTG.
+Table log tak wujud di PTG, so keluar ralat.
+
+Solution:
+Kalau kod pejabat kosong, sistem amik kod pejabat dari maklumat tanah permohonan.
+Klik Jana untuk PRBB dah tak keluar ralat.
+Pembatalan boleh teruskan.
+```
+🚨 Root cause / Solution rows follow THIS collection's voice, not [[feedback_redmine_rootcause_format]]'s older formal-Malay exemplars. Pre-send check: any formal Malay verb (dihantar, tidak dapat, dipaparkan) or a translated dev term (jadual, nilai) → rewrite in his rojak.
+
 **Before writing ANY Redmine note: run `node quest/redmine-sync.js <num>` and greet the live assignee.**
 Related: [[feedback_cross_module_handoff_artifact]] · [[feedback_ba_facing_reply_plain]].
