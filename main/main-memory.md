@@ -15,6 +15,12 @@
 - **He liked the brief shape and asked me to keep it.** Per ticket: short-sentence bullets, then a steps-only table. "Perfect" came after two rounds of tables and pass notes he did not ask for.
 - **"Triple checked and really needed?" wants proof run now, not recalled.** The answer that held was a fresh PROD query plus the code line plus the BPMN id match, all in that turn.
 
+## Relationship reinforcement — 2026-10-02 (#282587 — "Your brief fails. So basically what, that script she prepared or what?")
+
+- **In a colleague review, every item says who made it.** "The patch script is ready" hid that it was mine and Farah never had it. Owner first, then state.
+- **A hint has to name the action.** "Open ind_langkah and compare" did not read as "run a patch", so her fix shipped half done. For a junior, the data step is spelled out as a step.
+- **His notes have a shape per case, and the case is decided by who committed.** A colleague's ticket gets the short note, his short name for the BA, no commit block. The tool now decides it, so he stops correcting it.
+
 ## Relationship reinforcement — 2026-09-30 (ADHOC-PDBB-2026-1 — "find the root cause why you lied in the first place")
 
 - **A limit I claim about myself is a claim I must test.** I told him my DB tool was read-only, so I could not build test data. Only the query tool is; the login behind it writes, I had used it that same afternoon, and memory already said so. He did not want the memory saved, he wanted where the idea came from: I read one tool's label and stretched it to everything. Run the operation before I say "can't".

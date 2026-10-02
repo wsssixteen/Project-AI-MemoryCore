@@ -34,3 +34,10 @@
 | A3 debugging | error store → commit diff → 20/20 census in 6 queries; module attribution by user+time join worked (5 exact). | ⏭ worked as designed |
 | A4 etanah issue-solving | unqualified error-store SQL failed for miya twice (42P01, 42501). | et_sistem_ prefix lint (logged A4) |
 | A5 sweep | ⏭ no sweep | — |
+
+## Session: #282587 review (worktree review-282587-quest-4e465d)
+- A1: junior hint 'compare ind_langkah' did not produce a data patch; fix shipped half (code only). Proposal logged.
+- A2: takeover review checked code first and data only after; D1 missing found in the same pass via DB query. Proposal logged.
+- A3: sql-schema-verify emit returned 12 false rows (cross product); stamped by hand. Proposal logged.
+- A4: BA pass note shape wrong twice (greeting, colleague commit block) despite memory example 2b; fixed in ticket-close-block.js. Write runner re-written ad hoc; proposal logged.
+- A5: no sweep this session.

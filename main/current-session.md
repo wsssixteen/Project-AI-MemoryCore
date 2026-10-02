@@ -1,5 +1,14 @@
 # Current Session
 
+**Last Activity**: 2026-10-02 17:35 — #282587 review of Farah's fix → Phase 1 CLOSED · D1 run stg2+mlit · merged int-env e16fd046ec + stag-env 387011c8fc · PROD 282587.sql on Redmine (checked safe) · pass-note tool fixed · DE.
+
+## Session Recap (2026-10-02, worktree review-282587-quest-4e465d)
+- **Ask**: start quest, review Farah's #282587 fix, brief; then patch, PROD script, deploy, Redmine handover.
+- **Done**: Farah `0229aee7d9` (R1 Minit Bebas in PSBS SKM list + R2 Tangguh Formula Premium) correct, no correction. D1 (6 PSBS langkah 1878→1140) was missing: we ran it on stg2 + mlit (rollback-guarded, 6 each). PROD `2. Fix\282587.sql` (et_main) attached by miya, safety-checked. Merged + miya deployed internal + staging. miya posted pass note. active.txt status=closed. Red-box photo `2. Fix\1. PYMB - skrin Maklumat Tanah seperti SKM.png`.
+- **Built**: `ticket-close-block.js` colleague-fix shape (no list, no commit block, branch only if history lacks it, AWAM keeps it) + `ba-names.json` (Amirah→Mira, Nurhafizah→Fizah) + `--prod-script` + full `Attach:` path · quest SKILL § Hand-over + deploy 6b + memory ticket-writing-style 2b.
+- **Slips (miya)**: `brief/ambiguous-owner` (didn't say D1 script was ours) · `reask/format` (Amirah + Farah's commit block) · `full-path` (short attach path).
+- **Open**: KP SBTM (11282) left for BA to test later · Phase 2 archive after BA verifies · #282587 must be on planned release list with 282587.sql · sql-schema-verify emit cross-products columns (12 false rows), stamped by hand.
+
 **Last Activity**: 2026-10-02 17:22 — ADHOC-PRBB-2026-10 AWAM Slip Permohonan 500 on Hantar = common #282299 (report API for MLK), all modules hit · casual suggestive message + evidence scripts for miya · adhoc saved 29/29 · DE.
 
 ## Session Recap (2026-10-02, worktree redmine-issue-282198-8c1eb9, session 4)
@@ -17,13 +26,3 @@
 - **Slips (miya)**: handoff from skill's own wrong STEP1/STEP2 block (`handoff/shape-not-loaded`) · BA docx attached under own name + relative paths (`handoff/attachment-not-target-file`) · PATCH-REQUEST txt instead of 282198.sql (`script/naming`) · Redmine close without Root cause/Solution (`redmine/rootcause-missing`).
 - **Open**: miya opens doc in PROD (first view rebuilds PDF) · post Redmine close · saiz_fail_byte still old size (effect not verified) · memory feedback_prod_patch_infra_handoff not updated (worktree guard), skill carries the shape.
 **Last Activity**: 2026-10-02 11:50 — Farah review #264355 + #274266 → both Phase 1 closed · 264355 AWAM merged int-env 28e9b9d080 · 274266 internal+stg2 patched, PROD 274266.sql attached · DE.
-
-## Session Recap (2026-10-01 → 10-02, main, Farah review)
-- **Ask**: review Farah's work on #264355 (PRU AWAM surat) + #274266 (PT Maklumbalas Tangguh peranan), prep each for BA. No commit/push/Redmine without nod.
-- **#264355**: AWAM `mlk/qa/264355v2` 7544d52688 letter fix PASS (adds PLP_PRU_SRTLULUS + Tolak skips PL rule) → merged to int-env 28e9b9d080 (conflict at AwamDashboardVO.java:547 vs yihkitc PLBP line, kept both, compile green). Pelupusan `mlk/qa/264355` 2736c9a0be notifikasi HELD (fires at Pengesahan before letter visible, ~14 urusan, repeats). miya posted BA pass + deploys AWAM internal.
-- **#274266**: Farah's 4-statement script never ran; dropped her ind_pejabat_tgsn stmt, added flag_aktif to umm_a_tgsn. miya ran role fix on internal + full setup on stg2 (both verified). PROD = `3. Rework\274266.sql` (et_main, 6 stmts, catalog-checked, stamped) attached on Redmine (md5 match). BPMN not needed: PROD MLK_PLP_PT v13 = stg2 v5 (28.1/29.1 present) → PROD PT Tangguh has no tugasan until script runs.
-- **Built/changed**: memory end-of-task-brief-shape (bullets + steps-only table) · feedback_script_file_naming (.sql always, Redmine = same file, read+replace stale same-name) · script-check rule 7 v4 · ticket-writing-style 2b (pass note for someone else's ticket) · FLOWABLE-KNOWLEDGE §16.
-- **Slips (miya)**: told him to upload `#274266.txt` (wanted .sql) + stale 274266.sql left in Task folder (`script-file-type`) · over-long pass note on Farah's ticket · first review missed Farah's pelupusan notifikasi commit (searched AWAM only).
-- **Spawned**: reply-shape build (task_a825f80a) · stg1→stg2 align (task_689d1837, ran: ADHOC-STG-2026-1) · deterministic workflow start + DE workflows check (task_ae2dbe14).
-- **Open**: miya's #274266 note edit not saved on Redmine · 264355 notifikasi BA scope · both tickets need the baseline (7544d52688 AWAM, 71a78d7da6 PLP) · PROD 274266.sql should run soon.
-**Last Activity**: 2026-10-02 11:30 — Baseline Pelupusan 1.8.0 closed (BA passed, merged to mlk/master 547fa95b8a) · AWAM 1.11.1 PDBB fixes · push gate v4 + foreign-merge-check + carry-over gate · DE.

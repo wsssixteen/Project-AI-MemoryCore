@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-01 → 10-02, main, Farah review)
+- **Ask**: review Farah's work on #264355 (PRU AWAM surat) + #274266 (PT Maklumbalas Tangguh peranan), prep each for BA. No commit/push/Redmine without nod.
+- **#264355**: AWAM `mlk/qa/264355v2` 7544d52688 letter fix PASS (adds PLP_PRU_SRTLULUS + Tolak skips PL rule) → merged to int-env 28e9b9d080 (conflict at AwamDashboardVO.java:547 vs yihkitc PLBP line, kept both, compile green). Pelupusan `mlk/qa/264355` 2736c9a0be notifikasi HELD (fires at Pengesahan before letter visible, ~14 urusan, repeats). miya posted BA pass + deploys AWAM internal.
+- **#274266**: Farah's 4-statement script never ran; dropped her ind_pejabat_tgsn stmt, added flag_aktif to umm_a_tgsn. miya ran role fix on internal + full setup on stg2 (both verified). PROD = `3. Rework\274266.sql` (et_main, 6 stmts, catalog-checked, stamped) attached on Redmine (md5 match). BPMN not needed: PROD MLK_PLP_PT v13 = stg2 v5 (28.1/29.1 present) → PROD PT Tangguh has no tugasan until script runs.
+- **Built/changed**: memory end-of-task-brief-shape (bullets + steps-only table) · feedback_script_file_naming (.sql always, Redmine = same file, read+replace stale same-name) · script-check rule 7 v4 · ticket-writing-style 2b (pass note for someone else's ticket) · FLOWABLE-KNOWLEDGE §16.
+- **Slips (miya)**: told him to upload `#274266.txt` (wanted .sql) + stale 274266.sql left in Task folder (`script-file-type`) · over-long pass note on Farah's ticket · first review missed Farah's pelupusan notifikasi commit (searched AWAM only).
+- **Spawned**: reply-shape build (task_a825f80a) · stg1→stg2 align (task_689d1837, ran: ADHOC-STG-2026-1) · deterministic workflow start + DE workflows check (task_ae2dbe14).
+- **Open**: miya's #274266 note edit not saved on Redmine · 264355 notifikasi BA scope · both tickets need the baseline (7544d52688 AWAM, 71a78d7da6 PLP) · PROD 274266.sql should run soon.
+**Last Activity**: 2026-10-02 11:30 — Baseline Pelupusan 1.8.0 closed (BA passed, merged to mlk/master 547fa95b8a) · AWAM 1.11.1 PDBB fixes · push gate v4 + foreign-merge-check + carry-over gate · DE.
+
 ## Session Recap (2026-09-30 → 10-02, worktree melaka-pembatalan-ralat-f283f4, branch claude/pelupusan-1-8-0-deploy-07a762)
 - **Ask**: prepare + support Baseline Pelupusan 1.8.0 (#256335 #256334 #282061 #280540 #276997 #261855); merge AWAM 1.11.1 PDBB fixes ourselves (AWAM team deploys).
 - **Done**: BA "Baseline Pelupusan / Awam Pelupusan / SPOC Hasil — Passed". 1.8.0 merged to mlk/master 547fa95b8a. Audit row in `domain/release-mlk-plp/log.jsonl`.
@@ -5587,6 +5597,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
