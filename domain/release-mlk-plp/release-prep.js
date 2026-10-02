@@ -230,6 +230,12 @@ function cmdInit(a) {
   saveState(st);
   log('init', release, 'ok');
   console.log(`\n✅ PREFLIGHT PASSED — plan for ${branch} (repo: ${repo})`);
+  const carryList = require('./carry-over.js').load();
+  if (carryList.length) {
+    console.log(`\n📌 CARRY-OVER — promised for this baseline (verify BLOCKS until merged or \`defer-carry\`):`);
+    carryList.forEach(c => console.log(`   #${c.ticket} ${c.branch} — ${c.reason} (added ${c.added})`));
+    console.log('   → put these in V1 and tell BA to add them to the BAQA list');
+  }
   if (tickets.length) {
     console.log('| Ticket | Source branch | On origin |');
     console.log('|---|---|---|');
@@ -380,6 +386,20 @@ function cmdAckUntested(a) {
   saveState(st);
   log('ack-untested', st.release, 'ok', { ticket: t, reason: a.reason });
   console.log(`✅ #${t} acknowledged as untested — verify will pass it and print the reason`);
+}
+
+// Carry-over deferral (2026-09-30, #274461): みや chose to leave a carried ticket out of THIS release.
+function cmdDeferCarry(a) {
+  const st = loadState(a.release);
+  if (!a.ticket) die('--ticket <n> required');
+  if (!a.reason) die('--reason "<みや\'s words>" required — skipping a promised ticket is his decision, never silent');
+  const t = String(a.ticket).replace(/^#/, '');
+  if (!require('./carry-over.js').load().some(c => c.ticket === t)) die(`#${t} is not on the carry-over list`, 2);
+  st.carryDeferred = (st.carryDeferred || []).filter(x => x.ticket !== t);
+  st.carryDeferred.push({ ticket: t, reason: a.reason, at: new Date().toISOString() });
+  saveState(st);
+  log('defer-carry', st.release, 'ok', { ticket: t, reason: a.reason });
+  console.log(`⏭ #${t} deferred for ${st.release} — it stays on the carry-over list for the next release`);
 }
 
 // drop-ticket — DEFER one ticket out of the merge list before push, visibly (recorded under st.deferred
@@ -568,6 +588,27 @@ function cmdVerify(a) {
     log('verify', st.release, 'fail-env-tested', blocked.map(b => b.t.ticket));
     die('verification FAILED — release carries code no env has (untested or reverted)', 2);
   }
+  // ── CARRY-OVER GATE (2026-09-30, #274461: closed on int-env, promised for "next baseline" — a todo row
+  // is never read by this pipeline). Every carried ticket must be fully in the release, or deferred by みや
+  // for THIS release with `defer-carry --release <ver> --ticket <n> --reason "<his words>"`.
+  const carry = require('./carry-over.js').check(st.repo, 'HEAD');
+  if (carry.length) {
+    const deferredCarry = st.carryDeferred || [];
+    console.log('\nCARRY-OVER — tickets promised for a future baseline');
+    console.log('| Ticket | Branch | In release | Why carried |');
+    console.log('|---|---|---|---|');
+    const missingCarry = [];
+    for (const c of carry) {
+      const d = deferredCarry.find(x => x.ticket === c.ticket);
+      if (!c.inRelease && !d) missingCarry.push(c);
+      console.log(`| #${c.ticket} | ${c.branch} | ${c.inRelease ? '✅' : d ? `⏭ deferred: ${d.reason}` : `❌ ${c.missing} missing`} | ${c.reason} |`);
+    }
+    if (missingCarry.length) {
+      console.log('   → add it: `add-ticket --ticket <n>=<branch>` then `merge` + `verify`, or ask みや and `defer-carry --release <ver> --ticket <n> --reason "<his words>"`');
+      log('verify', st.release, 'fail-carry-over', missingCarry.map(c => c.ticket));
+      die('verification FAILED — carried-over ticket not in this release', 2);
+    }
+  }
   st.headSha = gitOut(st.repo, ['rev-parse', 'HEAD']);
   st.phase = 'verified';
   saveState(st);
@@ -747,6 +788,8 @@ function cmdMergeToMaster(a) {
   st.masterMergedFrom = masterBefore;
   saveState(st);
   log('merge-to-master', st.release, 'ok', { from: masterBefore, to: remoteMaster });
+  const leftCarry = require('./carry-over.js').prune(st.repo, 'origin/mlk/master');   // shipped carry-overs drop off
+  if (leftCarry.length) console.log(`📌 carry-over still pending: ${leftCarry.map(c => '#' + c.ticket).join(', ')}`);
   console.log(`✅ mlk/master ${masterBefore.slice(0, 10)} → ${remoteMaster.slice(0, 10)} (ff from ${st.branch}) + pushed`);
   console.log(`   undo point: tag ${tag} @ ${masterBefore.slice(0, 10)} (local) · phase=merged-to-master · release COMPLETE`);
 }
@@ -777,7 +820,7 @@ function cmdStatus(a) {
 const a = parseArgs(process.argv.slice(2));
 const cmd = a._[0];
 const commands = {
-  init: cmdInit, branch: cmdBranch, discover: cmdDiscover, 'set-tickets': cmdSetTickets, 'add-ticket': cmdAddTicket, 'mark-equivalent': cmdMarkEquivalent, 'ack-untested': cmdAckUntested, 'drop-ticket': cmdDropTicket, merge: cmdMerge,
+  init: cmdInit, branch: cmdBranch, discover: cmdDiscover, 'set-tickets': cmdSetTickets, 'add-ticket': cmdAddTicket, 'mark-equivalent': cmdMarkEquivalent, 'ack-untested': cmdAckUntested, 'defer-carry': cmdDeferCarry, 'drop-ticket': cmdDropTicket, merge: cmdMerge,
   'merge-continue': cmdMergeContinue, verify: cmdVerify,
   'bump-common': cmdBumpCommon, 'bump-version': cmdBumpVersion,
   push: cmdPush, 'merge-to-master': cmdMergeToMaster, status: cmdStatus,

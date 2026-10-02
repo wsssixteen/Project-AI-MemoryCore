@@ -44,6 +44,13 @@ node E:\Dev\scripts\WaRead\wa-read.js link --phone 60XXXXXXXXX
 ```
 It prints an 8-character pairing code. He types it on the phone: WhatsApp → Linked devices → Link a device → Link with phone number instead. The device shows as "Chrome (Ubuntu)".
 
+## 1b. Direct chats + files (2026-09-30, after missing Aaron's script)
+
+- **A screenshot of a chat = that chat is the watch target.** If he shows a person's direct chat (or contact card), watch THAT chat. Do not re-read it as a privacy question and do not substitute groups.
+- `read "<name>"` matches GROUPS only. Direct chats ARE stored: look them up in `%USERPROFILE%\.wa-read\messages.jsonl` by `name` (sender display name, e.g. "Aron") or by the chat id (`...@lid` / `...@s.whatsapp.net`) after a `sync --wait 40`.
+- A watcher = loop of `sync --wait 40` + a check of BOTH the named groups AND the direct chat; stop the moment a match lands and tell him.
+- **Files are metadata only.** A `type=document` row gives the file NAME (`[file] X.sql`) but the reader cannot download it. Say the file name and ask him to save it (or forward it) — never claim you have the content.
+
 ## 2. Reply shape
 
 1. One line per group: **`<Group> says`** + two or three short sentences in my words.

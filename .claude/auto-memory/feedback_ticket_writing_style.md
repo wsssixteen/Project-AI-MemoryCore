@@ -187,5 +187,15 @@ PRBB di tugasan yang sama papar surat.
 Thank you.
 ```
 
+8. Dev-to-dev fix instructions for another team, AWAM release 1.11.1 / #256334 (2026-09-30), forwarded via the BA. He rewrote my draft into his words: "Rujuk" → "Refer", "Ambil" → "Amik", dropped the "Sebab:" label (the cause is just the first sentence), dropped my closing "deploy semula + test" line (the other team knows its own next step). Rule: dev loanwords stay English (Refer, commit, merge, branch), casual Malay spelling (amik, tak, je), no section labels inside a point, stop after the last fix item.
+```
+Isu 2 - Borang Permohonan PDBB tak keluar
+Report team commit dekat "mlk/cr/256334", tapi yang merge ke release "mlk/CR/256334". Jadi report files tak masuk.
+Amik dari mlk/int-env:
+1) src/main/resources/reports/state/MLK/PlpLaporanBorangPDBB.jrxml
+...
+4) PelupusanReportService.java - method getPlpLaporanBorangPDBB() ikut int-env (hantar P_IMG_PATH, bukan P_ADALAH_INDIVIDU). Kalau tak tukar, jata tak dapat load.
+```
+
 **Before writing ANY Redmine note: run `node quest/redmine-sync.js <num>` and greet the live assignee.**
 Related: [[feedback_cross_module_handoff_artifact]] · [[feedback_ba_facing_reply_plain]].

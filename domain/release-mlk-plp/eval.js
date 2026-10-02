@@ -18,7 +18,7 @@ const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'rmp-eval-'));
 const bare = path.join(tmp, 'origin', 'etanah-pelupusan.git');
 const work = path.join(tmp, 'etanah-pelupusan');
 const stateDir = path.join(tmp, 'state');
-const env = { ...process.env, RELEASE_MLK_PLP_STATE_DIR: stateDir };
+const env = { ...process.env, RELEASE_MLK_PLP_STATE_DIR: stateDir, CARRY_OVER_FILE: path.join(stateDir, 'carry-over.json') }; // fixtures never see the live carry-over list
 
 function sh(cwd, cmd, args) {
   const r = spawnSync(cmd, args, { cwd, encoding: 'utf8' });

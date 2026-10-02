@@ -204,3 +204,7 @@ Added 2026-05-13 per みや.
 - Why: miya 2026-09-30 after the quest-bounty audit reply mixed topics in long cells; the 2026-08-19 ask (feedback_reply_separation_of_concerns) said 'fold into the spec at next pass' and never was.
 - Spec preservation: additive; pillar, 1a, 1b and the situation table untouched.
 
+
+## v1.75 (2026-09-30)
+- Disposition +rule 6 NEVER ASSUME / never state a guess as fact; stored formats copied word for word. Per miya after #256334 (guessed server-log path + rewritten infra format). Additive; no spec dropped.
+
