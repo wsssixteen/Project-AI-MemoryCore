@@ -141,6 +141,15 @@ process.stdin.on('data', d => input += d);
 process.stdin.on('end', () => {
   try {
     const data = JSON.parse(input);
+    if (data.hook_event_name === 'Stop') {
+      // Stop side (2026-09-30): a design PROPOSAL in chat needs the consult + a UNIVERSAL: line.
+      const pj = require('./proposal-judge.js');
+      const raw = pj.readTranscript(data.transcript_path || '');
+      const v = raw ? pj.judge(raw) : { fired: false };
+      if (v.fired) logFire('stop-proposal', v.blocked ? 'blocked-proposal' : (v.bypassed ? 'bypassed-proposal' : 'allowed-proposal'), (v.problems || []).join(' | '));
+      if (v.blocked) { process.stderr.write(pj.blockText(v.problems)); process.exit(2); }
+      process.exit(0);
+    }
     const ti = data.tool_input || {};
     const filePath = ti.file_path || ti.path || '';
     const isGuarded = GUARDED.some(re => re.test(filePath));

@@ -128,3 +128,22 @@
 | A3 debugging | Diagnosis was one query because the precedent qa_doc had a Final-state table. Hand-back format took 4 rounds. | ⏭ diagnosis fine; format fixed by the quest SKILL 🩹 row. |
 | A4 etanah issue-solving | L10 hit twice in 4 days on PRBB (/7, /8); /2 is waiting. Each costs a PROD patch + admin-UI step. | Ship the permanent In-param fix (#280166 shape) on PRBB/PRZ/PLTP models. Eval: BPMN check that every callActivity into MLK_PLP_SUB_UPN maps `caraPenghantaran`. |
 | A5 sweep | ⏭ no sweep this session. | — |
+## Session — ADHOC-VIEW-2026-1 (KL views port)
+
+| Axis | Finding | Instance |
+|---|---|---|
+| A1 agentic | Chrome MCP hung on Protime (page never idle); the Protime API through PymTime's stored login did the job in 2 calls | 2026-09-28 weekly plan: 3 entries POST 200, read back |
+| A2 quest | Adhoc close had no step asking "which envs does this deliverable need"; PROD was dropped from my mental model | infra sendoff answered with #281638 patch |
+| A3 debugging | EDB quirks cost 2 query rounds (date-date=interval, NULL-concat) | GREATEST interval error; "3 Tahun  Bulan  Hari" |
+| A4 etanah | External (KL) object names carried verbatim, typo included | tklpremittableview run on internal |
+| A5 sweep | ⏭ no sweep this session | — |
+
+## Session ptmlk-slow-submission (ADHOC-PDBB-2026-1, MLIT PDBB Perakuan slow)
+
+| Axis | Verdict | Instance |
+|---|---|---|
+| A1 agentic system | ⚠️ capability claim slipped a Stop gate | "my DB tool is read-only, can't create" passed ttempt-before-blocked-gate (no write verbs); widened, eval 12/12 on the exact sentence (7db896ba) |
+| A2 quest workflow | ⚠️ intake missed the one fact that mattered | slow/freeze adhoc never captured browser + version; hours later it was the only discriminator left and the user had moved on |
+| A3 debugging | ✅ after a bad start | first answer sized the delay from DB timestamps (33 s, wrong); server.log poll-continuity then located the silence exactly (1m38s + 2m46s, 2 PCs); mechanism narrowed to PrimeFaces queue + oncomplete |
+| A4 etanah issue-solving | ✅ no false fix shipped | server proven fast, no pelupusan edit proposed; common mandatoryBarControl listener re-binding recorded in JSF-WIRING |
+| A5 sweep | ⏭ no sweep this session | single adhoc |

@@ -10,6 +10,12 @@
 
 ---
 
+## v1.75 — 2026-10-01 (per みや, #282587)
+
+**§Explanation & Output-Format Discipline +NO INFORMATION OVERLOAD line** (boot-loaded pointer). Body = `.claude/reply-shape-spec.md` §3c: overview first, detail only on ask, keep only what the reader needs now, known names over invented labels, no question a tool/ticket can answer, default-omit list (verification trail, rejected options, ids, file:line, SQL, test-data dumps, inert caveats). Primitive = text rule only; promote to a hook only on repeat slips. Root cause: #282587 junior guide (4 sections, 6 tables, SQL + Java + test data) and a BA note that needed 4 trim rounds. Spec preservation: purely additive; REPLY SKELETON, SHOW-DON'T-EXPLAIN and the ADHD contract are untouched.
+
+---
+
 ## v1.73 — 2026-09-29 (per みや, /goal eSOKONGAN triage)
 
 **§Vocabulary "eSOKONGAN ticket"** (new, boot-loaded): ALWAYS = Tracker eSOKONGAN (id 51, the SLA tickets), never the Redmine project "eSOKONGAN MELAKA". Ticket order: eSOKONGAN tracker → anything PROD (Data Patching / Internal Issue PROD / PROD-CR) → rest; inside each, Priority Critical > High > Medium > Low, then urgent-worded descriptions/journals first. **Paired**: `quest/redmine-board.js` (table order flipped, Severity column + URGENT flag on all three tables, urgent banner, priority-first ranking inside PROD and other) · `domain/list-redmine/eval.js` (order + severity + urgent-evidence assertions) · list-redmine / sweep / retrieve-redmine SKILL.md · session-briefing.md 3-DAY RULE header · auto-memory `feedback_esokongan_means_tracker.md`. Spec-preservation: the 2026-09-22 three-table split is kept; only table order (PROD was first) and within-table rank (priority now leads) change; 3-DAY age is the tie-break.
@@ -205,6 +211,6 @@ Added 2026-05-13 per みや.
 - Spec preservation: additive; pillar, 1a, 1b and the situation table untouched.
 
 
-## v1.75 (2026-09-30)
+## v1.76 (2026-09-30 — merged after main's v1.75)
 - Disposition +rule 6 NEVER ASSUME / never state a guess as fact; stored formats copied word for word. Per miya after #256334 (guessed server-log path + rewritten infra format). Additive; no spec dropped.
 

@@ -1,6 +1,6 @@
 ---
 name: pymtime
-description: Remote control of みや's PymTime clock-in app (E:\Dev\scripts\PymTime) — skip / unskip a day, pause, status — AND diagnosing a colleague's pasted PymTime HANDOVER block (§Handover). Triggers — "===== PYMTIME HANDOVER", "pymtime handover", "handover from <colleague>", "colleague's pymtime", "/pymtime", "skip today", "skip tomorrow", "skip clock in", "skip clock-in today", "skip pymtime", "skip pymtime clock in", "skip attendance", "don't clock in today/tomorrow", "cuti hari ini", "EL today", "emergency leave", "did pymtime run", "pymtime status", "pause pymtime", "resume pymtime", "undo skip". ANY of these = invoke this skill BEFORE replying — the phrase alone never triggers an action; this skill's confirm step does.
+description: Remote control of みや's PymTime clock-in app (E:\Dev\scripts\PymTime) — skip / unskip a day, pause, status — AND diagnosing a colleague's pasted PymTime HANDOVER block (§Handover). Triggers — "===== PYMTIME HANDOVER", "pymtime handover", "handover from <colleague>", "colleague's pymtime", "/pymtime", "skip today", "skip tomorrow", "skip clock in", "skip clock-in today", "skip pymtime", "skip pymtime clock in", "skip attendance", "don't clock in today/tomorrow", "cuti hari ini", "EL today", "emergency leave", "did pymtime run", "pymtime status", "pause pymtime", "resume pymtime", "undo skip", AND the ProTime weekly plan (§Weekly plan) — "fill my protime plan", "fill the planner", "weekly planning", "my weekly planning", "plan the week in protime", "isi plan". ANY of these = invoke this skill BEFORE replying — the phrase alone never triggers an action; this skill's confirm step does.
 ---
 
 # /pymtime — remote skip / status for the daily clock-in
@@ -63,6 +63,18 @@ node -e "console.log(require('E:/Dev/scripts/PymTime/setup.js').setTasksEnabled(
 2. **On the laptop** — `skip.js` (without `--quiet`) fires a Windows toast *"PymTime will skip clock-in — Tue 8 Sep 2026 — set remotely"* so the change is visible on the machine itself, and the Settings page shows it as a chip with an ✕ undo.
 
 If the command errors (`date is in the past`, `bad date`) — show the error, re-ask; never retry with a guessed date.
+
+## Weekly plan — ProTime "My Weekly Planning" (added 2026-09-30)
+
+Feature `domain/protime-plan/` (README has the rule + schedule). It runs by itself every Monday 08:30 and at logon until the week is done. On demand:
+
+1. Dry run first, show him the printed plan:
+   `node domain/protime-plan/protime-plan.js`
+2. He asked to fill (or already said "fill") → write + read back:
+   `node domain/protime-plan/protime-plan.js --live`
+3. Reply = the printed day lines + `WRITTEN and read back: N entries`. A result without that read-back line is NOT filled — say so.
+
+Rule: 4 tickets a day; if they cannot fill every open day at 4, then 3 a day; leftover days stay empty; days that already have any entry are never touched. **Banned**: typing the plan in the ProTime page by browser · saying "filled" from a chat plan without the script's read-back line (2026-09-30: a session reported Wed-Fri filled while ProTime showed Thu/Fri empty).
 
 ## Handover — a colleague's laptop reports back (added 2026-09-28)
 

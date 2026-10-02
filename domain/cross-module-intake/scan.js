@@ -76,6 +76,7 @@ console.log('═══ INTAKE SCAN ═══');
 if (cm.length) {
   console.log('🚨 CROSS-MODULE? — confirm the screen\'s repo (locate the .xhtml) BEFORE deep-tracing any module:');
   for (const h of cm) console.log(`   • [${h.label}] "${h.line}"`);
+  console.log('   → invoke Skill cross-module-check (7 steps, boundary map OTHER-MODULES.md) before ANY not-ours verdict or hand-off');
 } else {
   console.log('module: no cross-module signal (clean)');
 }

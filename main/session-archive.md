@@ -4,6 +4,50 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-09-30, worktree ptmlk-slow-submission-10ca65)
+- **Ask**: why PTMLK/01/L/PDBB/2026/12 on MLIT loads ~5 min at Perakuan Laporan Pemantauan (PRPDBB), m.ikram.
+- **Found**: server never slow (Jana Surat 10.7 s, Hantar 483 ms). The page itself went silent (no requests, not even the 5 s poll) in 2 gaps (1m38s, 2m46s) right after the Agihan Kepada radio; PDBB/13 froze the same way on a 2nd PC. Leading mechanism: PrimeFaces 12 queue held by the oncomplete="mandatoryBarControl(); fix();" step (common internal.js re-binds legacy DOMSubtreeModified listeners every call). Browser/version never confirmed → dropped by miya. Full evidence: archived qa_doc ADHOC-PDBB-2026-1.
+- **Env**: Windows Smart App Control blocked pgedge-postgres-mcp.exe (all postgres MCP) 10:22-10:57; worked around with a Java JDBC script; SAC then turned Off.
+- **Slips (miya)**: first answer wrongly put the ~33 s Hantar cost on the ISPEKS sub-flow (corrected by server.log) · told miya "my DB tool is read-only, can't create" (false: gateway login is read-write; memory already said so).
+- **Built**: attempt-before-blocked-gate now blocks "can't create/write/insert/update" + "read-only DB/tool" claims (eval 12/12 incl. the exact sentence; 7db896ba) · memory feedback_mlit_db_write_access.
+- **Carry forward**: none (adhoc closed).
+**Last Activity**: 2026-09-30 17:35 — QA-281638 PROD verified (successor PL Bayaran Pelbagai) · DE.
+
+## Session Recap (2026-09-28 to 09-30, worktree patch-281638-status-flowable-3f968d)
+- **Ask**: prepare PROD patch for #281638 (PRBB/2026/8 BP_SWA_PLP crashed on Hantar, `caraPenghantaran`), verify against #281319 + #280166 before preparing.
+- **Done**: re-verified PROD (row stuck Selesai/Y), miya added the variable on SUB_UPN child 20528039, infra ran `281638.sql`, officer Hantar → successor `PL` Bayaran Pelbagai 2859406 (verified 2026-09-30). Phase 1 + Phase 2 closed, archived, L10 evidence + PRBB-TICKETS note written.
+- **Built**: `patch-close-shape` CHECK C (blocks a PROD `.sql` routed to infra with no handoff; eval 50/50; eb803dc1) · quest SKILL pre-emit row 🩹 PROD patch hand-back (proof + Stage-Match + handoff last; on-screen admin labels) · `feedback_flowable_admin_diagram` step 1 rewritten with on-screen labels.
+- **Slips**: 5 tagged QA-281638 (missing infra handoff · ambiguous flowable step + #281319 bounty claim never landed · no proving SELECT · no Stage-Match · 0. Brief photo not opened on resume).
+- **Open**: PRBB/2026/2 (task 20527758) still needs the preventive variable (L10) · bounty proposal: Bounty lines must carry a commit SHA.
+**Last Activity**: 2026-09-30 17:40 — ADHOC-VIEW-2026-1 closed + archived + bounty (bfdb6a89) · DE.
+
+## Session Recap (2026-09-25 to 09-30, session gptol-patching-location → main checkout after worktree was emptied)
+- **Ask**: Alex (KL) wanted KL views TKLLESENTABLEVIEW + TKLPREMITTABLEVIEW in Melaka. KL plp_* tables do not exist here; rebuilt on umm_a_permit_lesen → ind_versi_permit_lesen → ind_permit_lesen (lesen BRG_4AE, permit BRG_4CE+4DE via rjk_jns_dok).
+- **Done**: views live on internal (et_main_mlit 773/3154) + staging (et_main_stg2 760/3142) as `tkllesentableview` + `tklpermittableview` (KL typo PREMIT corrected; internal renamed via ALTER VIEW). PROD infra sendoff (et_main-qualified) handed to miya 2026-09-28; not on PROD at 2026-09-30.
+- **Also 09-28**: boot + Redmine retrieval + brief; Protime Monday plan filled via Protime API (281638, 281712, 279411) since Chrome hung.
+- **Slips (miya)**: carried KL typo into our view name · gave the #281638 infra handoff when he asked for the views' PROD sendoff. Both written into adhoc-save SKILL.md Banned list.
+- **Carry forward**: PROD views pending infra · Alex to confirm baki unit (days) + kiraan_pembaharuan NULL.
+
+**Last Activity**: 2026-09-30 17:45 — junior handover (#264355 + #274266 → Farah) saved · main merged into worktree · DE.
+
+## Session Recap (2026-09-28 to 09-30, worktree easy-internal-tickets-c23369)
+- **Ask**: scan internal tickets (not patch or eSOKONGAN), list easy ones for the junior. Result: 7 open internal/QA, all miya's; easy = #264355 (PRU Lulus letter, AWAM list) + #274266 (PT PYSKTPDT peranan, data only).
+- **Guides**: posted by miya 2026-09-29 to Farah (Siti Farhanih Abdul Razak). #274266 → Farah Resolved 2026-09-29 (block delegated, Redmine divergence: close needs miya nod). #264355 → Farah testing.
+- **Gap owned**: #264355 guide items 4 (Tolak) + 5 (notifikasi) had no proven fix; only Lulus is proven. Written into QA-264355.md.
+- **Memory**: feedback_ticket_writing_style entry 7 — junior hints = symptom + where + test data, never the cause; internal test data only; proven fixes only.
+- **Slips (miya)**: spoon-feeding cause in hints · staging test data for a junior who tests on internal · guide sent without sweep-proven fixes.
+
+**Last Activity**: 2026-09-30 17:00 — QA-281423 follow-ups: hooks retired (prod-db-confirm · quest-bounty skip-warning + auto-save) · audit false-RETIRE fixed · bounty proposals tracked · CLAUDE.md v1.74 reply skeleton · DE.
+
+## Session Recap (2026-09-30 16:00-17:00, worktree session-256334-recovery)
+- **Retired (miya)**: `prod-db-confirm` (PROD read-only via et_read; it DID fire, 118 log rows) · quest-bounty `discipline.hook.js` (dead since archive-quest writes its own log line; 1,039 runs, 0 fires) · `quest-bounty.hook.js` (Bash-only matcher, pushed branch not main; DE step 10 saves instead).
+- **Fixed**: `lib/audit-briefing.js` read own-log files from the worktree ROOT → working hooks showed "0 fires, RETIRE?". Now reads MAIN_ROOT. sql-schema-verify (164 fires, blocked today) kept.
+- **Built**: quest-bounty SKILL Step 4 — every proposal goes to `core/slips.js --type proposal --category bounty` (dashboard Open proposals, weekly ruling). CLAUDE.md v1.74 REPLY SKELETON + reply-shape-spec §1-0 (sections per topic · tables for data · short-sentence bullets), folding the unfolded 2026-08-19 ask.
+- **Memory**: feedback_ticket_writing_style += statements not implications · not bossy · Redmine = Textile. feedback_reply_separation_of_concerns marked folded.
+- **Slips (miya)**: reply-shape (topics mixed, long cells; 08-19 fold never done).
+- **Commits**: ee26f55f · 5a5adfd3 · b0073bda (all on main).
+**Last Activity**: 2026-09-30 16:45 — redmine-write-gate v1.3 (field reads no longer count as a write) · DE.
+
 ## Session Recap (2026-09-30, redmine-write-gate v1.3, main checkout)
 - **Ask**: the gate blocked `node <scratchpad>/audit.js` on 2026-09-28 (http.get only, read `i.done_ratio`). Refine so bare field reads do not count; keep every real write blocked.
 - **Built**: `isMutation()` = write verb (method/`-X`/`--request`/`-Method`/quoted `'PUT'`/`requests.put(`/wget) OR request body (`-Body`, curl `-d/--data*/-F/-T`) OR payload KEY (`issue: {`, `notes:`, `status_id:` …). A read (`i.done_ratio`, `i['notes']`) no longer counts. Eval 56/56 (F39 = the 09-28 replay, F40-F55 new, F31 re-shaped, F31b added). Commit b570ad8a. README v1.3 + 23-row scenario table.
@@ -5506,6 +5550,9 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
+
+
 
 
 
