@@ -221,5 +221,28 @@ Amik dari mlk/int-env:
 4) PelupusanReportService.java - method getPlpLaporanBorangPDBB() ikut int-env (hantar P_IMG_PATH, bukan P_ADALAH_INDIVIDU). Kalau tak tukar, jata tak dapat load.
 ```
 
+10. Dev-to-dev "which table and column" answer to another team, #277706 (2026-10-02). To Atierah (SPOC). Numbered field title + `<pre>` with `Table :` / `Column :` / `Value :` label lines. He kept my extra item 5 (marked as extra, see [[flag-unasked-additions]]) and CUT my two closing lines: "Semua table link ke umm_p_aplikasi guna p_aplikasi_id." and "Contoh di staging, ID Transaksi <id>." Rule: a developer knows how the tables link and has the BA's test data already; stop after the last field item, then "Thank you."
+```
+Salam Atierah,
+
+Untuk no. 1, Tambah Kuantiti simpan dalam table yang sama macam Ganti Hari.
+Yang baru cuma value Jenis Permohonan 8 dan Kuantiti Tambahan Yang Dipohon.
+
+1. Jenis Permohonan
+<pre>
+   Table  : umm_p_permit_lesen
+   Column : mklmt_tmbhn, key integerJenisPermohonan
+   Value  : 8 = Tambah Kuantiti (Ganti Hari = 6)
+</pre>
+...
+5. Kuantiti Tambahan Yang Dipohon
+<pre>
+   Table  : umm_p_permit_lesen
+   Column : mklmt_tmbhn, key kuantitiTambahanDipohon dan unitKuantitiTambahanDipohon
+</pre>
+
+Thank you.
+```
+
 **Before writing ANY Redmine note: run `node quest/redmine-sync.js <num>` and greet the live assignee.**
 Related: [[feedback_cross_module_handoff_artifact]] · [[feedback_ba_facing_reply_plain]].

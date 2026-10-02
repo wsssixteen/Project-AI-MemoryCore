@@ -4,6 +4,7 @@
 ## Feedback
 - [junior-handover-hints](feedback_junior_handover_hints.md) — 🚨 junior handover = hints + where to look, never the finished script or diff
 - [browser-edge-default](feedback_browser_edge_default.md) — 🚨 "show me in the browser" / Redmine / web UI → miya's EDGE (signed in), never the built-in pane or Chrome first
+- [flag-unasked-additions](feedback_flag_unasked_additions.md) — 🚨 extra item beyond the ask → keep it but mark it "➕ Extra, not asked" in my chat bullets; not a slip
 - [end-of-task-brief-shape](feedback_end_of_task_brief_shape.md) — 🚨 end of long quest/task or "brief me" → per item: short-sentence bullets, then steps-only table; nothing else
 - [mlit-db-write-access](feedback_mlit_db_write_access.md) — 🚨 MLIT/STG are WRITABLE via the gateway login (JDBC script); only the MCP query tool is read-only; never tell miya 'read-only'
 - [system-fix-universal-rule](feedback_system_fix_universal_rule.md) — 🚨 system fix = UNIVERSAL rule, never keyed to one ticket/tugasan; load system-rules + system-design BEFORE any design/audit
