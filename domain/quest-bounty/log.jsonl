@@ -91,3 +91,5 @@
 {"ts":"2026-10-02T09:19:46.569Z","qa":"ADHOC-PRBB-2026-9","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-10-02T09:19:55.846Z","qa":"ADHOC-PRBB-2026-9","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"promoted to QA-282924; findings carry into that quest doc, register row A44 already TICKETED"}
 {"ts":"2026-10-02T09:42:52.073Z","qa":"ADHOC-PRBB-2026-11","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none-until-ticket"}
+{"ts":"2026-10-02T10:12:35.009Z","qa":"QA-277706","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-02T10:13:10.077Z","qa":"QA-246964","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"6feb2525c6","branch":"mlk/qa/246964"}

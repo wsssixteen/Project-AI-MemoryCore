@@ -4372,3 +4372,43 @@ task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\
 issue_one_liner=Assist BA Nurhafizah Hasan: PROD permit C02/2026/3 tujuan MERATAKAN TAPAK, kuantiti diluluskan 5000 meter padu, tempoh 30 hari 21/08-29/09/2026, GM 230 Lot 2211 Ayer Panas; MLIT 4 rows = follow-on permohonan copy permit asal (test data, no alter no patch); tugasan all-daerah query given
 title=PRBB query data permit dan tugasan
 closed=2026-10-02
+
+qa=QA-277706
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\259. RQ #277706 - [SPOC] PRBB - Tambahan Jenis Permohonan = Tambah Kuantiti
+phase=0
+status=archived
+ticket_type=requirement
+env=MLKSTG-stg2
+issue_one_liner=[SPOC] PRBB - Tambahan Jenis Permohonan = Tambah Kuantiti
+assigned_to_me=2026-10-01
+current_phase=Closed
+local_test_confirmed=n/a
+quest_start=2026-10-02
+qa_doc=projects/coding-projects/archive/QA-277706/QA-277706.md
+next_step=Phase 2 archive
+title=PRBB Tambah Kuantiti table SPOC
+held_reason=2026-10-02 no. 1 answered on Redmine 05:06Z (table and column for Jenis Permohonan, No Permit, Taraf Tanah, Maklumat Tanah + Kuantiti Tambahan), assigned back to Amirah; rest is SPOC/BA
+closed=2026-10-02
+
+qa=QA-246964
+quest_start_ts=2026-10-02T10:08:44.313Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\258. QA #246964 - UAT - PSBS - Penyediaan Surat Tolak Permoho - Ayat untuk tajuk surat tidak sama seperti Tajuk Ri
+phase=0
+status=archived
+ticket_type=bug
+env=MLK UAT
+issue_one_liner=PSBS - Penyediaan Surat Tolak Permohonan - Template Surat Keputusan Tolak Kepada Pemohon
+assigned_to_me=2026-10-01
+urusan=PSBS
+tugasan=Penyediaan Surat Tolak Permohonan
+current_phase=deployed-merge-awaiting-build
+qa_doc=projects/coding-projects/archive/QA-246964/QA-246964.md
+fix_by=Ammar
+fix_commit=ef49baf78f
+fix_branch=mlk/qa/246964
+closed=2026-10-02
+commit=6feb2525c6
+branch=mlk/qa/246964
+local_test_confirmed=skipped-per-miya
+int_env=803e4907bd
+stag_env=5110004a80
