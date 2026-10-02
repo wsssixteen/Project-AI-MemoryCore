@@ -60,14 +60,28 @@ Hi infra, kindly need your help to download this file from <STATE> <ENV>. Thank 
 ```
 
 ## STEP 2 — deliverable to hand みや (Task folder `2. Fix/PATCH-REQUEST-<num>.txt`)
-Two blocks he forwards:
-```
-STEP 1 - Hi infra, please replace this file in Melaka PROD with the attached edited doc:
-<lokasi_fail>
+**Two SEPARATE copy boxes, one per infra group. Not ordered, not numbered** (fixed 2026-10-02 per みや, #282198).
+Each box holds only what he pastes. Banned inside a box: "STEP 1/2", "after infra confirms", the attachment name, any explanation.
+Shapes are copied from his own sent messages (#281482 replace · `feedback_prod_patch_infra_handoff` data patch).
 
-STEP 2 - after infra confirms, patching team runs:
-UPDATE ET_DMS.DOKUMEN_REVISION SET LOKASI_FAIL_PDF=NULL WHERE DOKUMEN_REVISION_ID=<id>;   -- 1 row updated
+Replace document (he attaches the edited docx):
 ```
+Hi infra, please help to replace document for MLK PROD. Thank you.
+#<num>: <URUSAN> - <one short outcome sentence>.
+
+<lokasi_fail>
+```
+
+Reset PDF:
+```
+Hi infra, please assist. Thank you.
+#<num>: <URUSAN> - <one short outcome sentence>.
+
+UPDATE ET_DMS.DOKUMEN_REVISION SET LOKASI_FAIL_PDF=NULL WHERE DOKUMEN_REVISION_ID=<id>;
+-- 1 row updated
+```
+No blank line between greeting and `#<num>:`. The one-liner = urusan + outcome only (no permohonan id, no table names).
+The reply's FIRST line is the deliverable's full path: `<Task folder>\2. Fix\PATCH-REQUEST-<num>.txt`.
 
 ## Conventions (this skill is an EXCEPTION to two standing rules — audience is the patching team)
 - **JOINs are allowed here** — the locator + patch queries mirror the patching team's own runbook format verbatim. The NO-JOIN rule (`convention-check-gate`) targets scripts みや reads to trace data; this output goes to infra/DBA who run it as-is. If writing to a `.sql` trips the gate, use `.txt` (matches the runbook shape) or bypass with reason.
