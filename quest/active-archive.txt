@@ -4339,3 +4339,36 @@ related_quest=ADHOC-HSL-2026-1
 branch=none-until-ticket
 closed=2026-09-30
 close_note=Dropped by miya; server proven fast; freeze is browser-side (PrimeFaces queue held after Agihan radio oncomplete mandatoryBarControl); browser/version never confirmed
+
+qa=ADHOC-PRBB-2026-9
+phase=0
+status=archived
+ticket_type=adhoc
+env=AWAM
+urusan=PRBB
+quest_start=2026-10-02
+local_test_confirmed=false
+adhoc_register_row=A44
+branch=none-until-ticket
+qa_doc=projects/coding-projects/archive/ADHOC-PRBB-2026-9/ADHOC-PRBB-2026-9.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\260. AH - AWAM - PRBB - Had satu hakmilik satu permohonan
+issue_one_liner=AWAM PRBB one hakmilik per permohonan: possible, small; add PRBB size>1 ralat check in CarianRasmiHakmilikForm.onGoNext() like PLTP/PSBS :305-315; waiting BA eSOKONGAN ticket + mesej + kaunter scope (kaunter also allows >1)
+title=PRBB had satu hakmilik
+closed=2026-10-02
+close_note=TICKETED -> QA-282924 (eSOKONGAN, raised by TSO 2026-10-02)
+
+qa=ADHOC-PRBB-2026-11
+phase=closed
+status=archived
+ticket_type=adhoc
+env=PROD
+urusan=PRBB
+quest_start=2026-10-02
+local_test_confirmed=true
+adhoc_register_row=A46
+branch=none-until-ticket
+qa_doc=projects/coding-projects/archive/ADHOC-PRBB-2026-11/ADHOC-PRBB-2026-11.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\263. AH - PROD - PRBB - Query data permit C02-2026-3 dan tugasan semua daerah
+issue_one_liner=Assist BA Nurhafizah Hasan: PROD permit C02/2026/3 tujuan MERATAKAN TAPAK, kuantiti diluluskan 5000 meter padu, tempoh 30 hari 21/08-29/09/2026, GM 230 Lot 2211 Ayer Panas; MLIT 4 rows = follow-on permohonan copy permit asal (test data, no alter no patch); tugasan all-daerah query given
+title=PRBB query data permit dan tugasan
+closed=2026-10-02

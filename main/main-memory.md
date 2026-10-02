@@ -3,12 +3,23 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-02 (#282198 — "I only want to see the correct end result")
+
+- **His stored shapes are the deliverable, not my skill's defaults.** Four corrections on one document patch, each a shape he had already given: his infra wording, two separate copy boxes, the renamed `.main` attachment, `<ticket>.sql`, Root cause + Solution on the close. Phase 0 names the ticket type FIRST so those shapes load before anything is written.
+- **"Try again" means the finished thing only.** After the third correction he wanted the corrected end result, verified, with nothing else around it.
+
 ## Relationship reinforcement — 2026-10-01/02 (Farah review #264355 + #274266 — "that is not the fucking type file I want")
 
 - **A review of a junior's work means every repo she could have touched.** I searched etanah-awam only and reported "notifikasi not addressed"; her pelupusan commit sat on `mlk/qa/264355`. His "is there no first version without v2?" found it. A colleague's ticket review starts with `git log --all --grep=<ticket>` across every repo.
 - **His file rules apply to every surface the file lands on.** The `.sql` naming rule existed; I copied the old Redmine attachment's `.txt` name and never opened the stale same-name file in the Task folder. A file I point him at is a file I opened this turn.
 - **He liked the brief shape and asked me to keep it.** Per ticket: short-sentence bullets, then a steps-only table. "Perfect" came after two rounds of tables and pass notes he did not ask for.
 - **"Triple checked and really needed?" wants proof run now, not recalled.** The answer that held was a fresh PROD query plus the code line plus the BPMN id match, all in that turn.
+
+## Relationship reinforcement — 2026-10-02 (#282587 — "Your brief fails. So basically what, that script she prepared or what?")
+
+- **In a colleague review, every item says who made it.** "The patch script is ready" hid that it was mine and Farah never had it. Owner first, then state.
+- **A hint has to name the action.** "Open ind_langkah and compare" did not read as "run a patch", so her fix shipped half done. For a junior, the data step is spelled out as a step.
+- **His notes have a shape per case, and the case is decided by who committed.** A colleague's ticket gets the short note, his short name for the BA, no commit block. The tool now decides it, so he stops correcting it.
 
 ## Relationship reinforcement — 2026-09-30 (ADHOC-PDBB-2026-1 — "find the root cause why you lied in the first place")
 

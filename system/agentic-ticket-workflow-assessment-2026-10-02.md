@@ -16,3 +16,33 @@
 | A3 debugging | Told miya to upload `#274266.txt`; the Task-folder `274266.sql` was a stale 14-row partial patch never opened (slip `script-file-type`). | Hand-off file gate: block `.txt` script names and unread Task-folder files in a reply. Eval: "upload #274266.txt" → block. |
 | A4 etanah issue-solving | PROD MLK_PLP_PT v13 already routes PT Tangguh to 28.1 while PROD has no PT ind_tgsn rows → every PT Tangguh fails ("tugasan not found", BpmCallbackService.java:777-779). Proven via admin model-json ids = stg2 XML ids. Banked FLOWABLE-KNOWLEDGE §16. | New-userTask release check across envs (BPMN has kod vs rows exist). Eval: 274266 snapshot → PROD flagged. |
 | A5 sweep | `sql-schema-verify emit` crosses every identifier with every table (~70 false refs on 274266.sql); I ran an exact per-table query instead before stamping. | Per-statement refs. Eval: 274266.sql → 0 false rows. |
+
+## Session 3 (worktree 282198, #282198 PT Minit Bebas PROD document patch)
+| Axis | Assessment (instance) |
+|---|---|
+| A1 agentic system | Gates misfired on a DMS document patch: fix-photo (no UI change) and codemap UI-path (Word doc root cause) both needed skip tokens. fix-photo goal-lens met-rate 0% over 5 runs agrees. |
+| A2 quest workflow | Phase 0 was skipped: sync went straight into patch-mlk-doc, ticket_type=patch set after the deliverable. Stored infra shapes never loaded. Fixed: quest 6c. |
+| A3 debugging | No debugging. The correctness check that worked was rendering the docx through Word and viewing both pages. |
+| A4 etanah issue-solving | The DMS document patch now has a fixed end state: `<num>.sql` + renamed `.main`, linted by deliverable-check.js. Open question: saiz_fail_byte stays old after an infra replace. |
+| A5 sweep | ⏭ no sweep this session. |
+
+## Session 4 addendum (17:22, ADHOC-PRBB-2026-10)
+| Axis | Assessment (instance) | Proposal |
+|---|---|---|
+| A1 agentic system | ⏭ no agent fan-out this session | — |
+| A2 quest workflow | adhoc-save audit caught block↔register status mismatch (delegated vs OWNED-ELSEWHERE) in-turn; fixed to OPEN cell. | other-team draft tone check (logged A2) |
+| A3 debugging | error store → commit diff → 20/20 census in 6 queries; module attribution by user+time join worked (5 exact). | ⏭ worked as designed |
+| A4 etanah issue-solving | unqualified error-store SQL failed for miya twice (42P01, 42501). | et_sistem_ prefix lint (logged A4) |
+| A5 sweep | ⏭ no sweep | — |
+
+## Session: #282587 review (worktree review-282587-quest-4e465d)
+- A1: junior hint 'compare ind_langkah' did not produce a data patch; fix shipped half (code only). Proposal logged.
+- A2: takeover review checked code first and data only after; D1 missing found in the same pass via DB query. Proposal logged.
+- A3: sql-schema-verify emit returned 12 false rows (cross product); stamped by hand. Proposal logged.
+- A4: BA pass note shape wrong twice (greeting, colleague commit block) despite memory example 2b; fixed in ticket-close-block.js. Write runner re-written ad hoc; proposal logged.
+- A5: no sweep this session.
+
+## Session 6 (permit-c02-2026-3-query, ADHOC-PRBB-2026-11)
+- **A4 env-blind answer**: BA asked about a permit; I answered from PROD. Her screenshot (4 rows) was from internal MLIT. The mismatch cost one round-trip and a wrong guess ("maybe urusan lain"). Instance: reply listing HT16/CRHM/GD/PMT for aplikasi ids that only exist as PRBB-family rows on MLIT.
+- **A4 knowledge-first miss**: guessed `ind_kod_rujukan_tmp`, then 3 information_schema probes, before DATABASE.md line 285 named `rjk_senarai_ahli_kumpulan`. Fixed by an index.md quick-link.
+- A1 ⏭ no agents spawned · A2 ⏭ adhoc only, no quest phases · A3 ⏭ no debugging · A5 ⏭ no Brief reading beyond 2 screenshots.

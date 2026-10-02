@@ -89,7 +89,7 @@ Penyediaan Senarai Semak ke PTG, Semakan Permohonan PDT, Semakan Dokumen Permoho
 Thanks
 ```
 
-2b. BA pass on a ticket SOMEONE ELSE resolved, #274266 (2026-10-01, Farah resolved it). No "Issues found and resolved" list, no explanation, no "data patch sahaja". Envs + verify, one line naming the attached PROD script by its real file name, thanks. He said: "Since it is a ticket someone else resolved, please refrain from over commenting."
+2b. BA pass on a ticket SOMEONE ELSE resolved, #274266 (2026-10-01, Farah resolved it). Reconfirmed #282587 (2026-10-02): no commit details for a commit that is not ours; branch line only if the Redmine history does not already name it (AWAM keeps it); greet "Mira" not "Amirah". `ticket-close-block.js` now prints this shape by itself when the commit author is not us. No "Issues found and resolved" list, no explanation, no "data patch sahaja". Envs + verify, one line naming the attached PROD script by its real file name, thanks. He said: "Since it is a ticket someone else resolved, please refrain from over commenting."
 ```
 Salam Mira, have patched data on internal & staging. Please help to verify.
 
