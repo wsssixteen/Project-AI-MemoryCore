@@ -17,6 +17,7 @@ ARGUMENTS: $ARGUMENTS
 | `2. Fix\` | our cycle-1 fixes / scripts / photos | redmine-sync at retrieval |
 | `N. Rework\` + `Brief\` inside | one per separate change WE deploy; BA's new files → `Brief\`, ours loose in the root | `active-cli` when status→active AND the block has more `closed*=` stamps than Rework folders |
 | no notes txt · no `1. Simulate\` | test data → `QA-<num>.md` `## Test data` | — |
+| DB evidence screenshot `<n>. DB - <what it shows>.png` | the check script + its result grid, as proof of the data state (before/after a patch, a test scenario's starting data) | Ruri saves it into the current cycle folder (`2. Fix\` or `N. Rework\` root) the moment miya shares one; added 2026-10-02 per miya (#282721) |
 
 **Detection — when a Rework folder appears**
 
