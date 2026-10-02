@@ -1,6 +1,15 @@
 # Current Session
 
-**Last Activity**: 2026-10-02 18:20 — #244600 Kertas versi fix (our side only) committed d61fc2e611 on mlk/qa/244600v3 · int-env 5df44b12cf · miya posted Resolved to Fizah · Phase 1 CLOSED · #275043 split to Ammar · handoff-load feature built · DE.
+**Last Activity**: 2026-10-02 18:40 — #282723 + #282721 internal PROD patches closed (Alex did 282723 alter; 282721 unlink via infra) · voice map artifact · patch-close-shape CHECK D/E · reconcile closed 5 quests · DE.
+
+## Session Recap (2026-10-02, worktree quest-282587-guide-be4171, #282723 + #282721)
+- **Ask**: start quests for 2 internal PROD tickets; alter /3 /4 /9 (282723); fix PRBB/2026/4 unpaid bills (282721); infra handoff; answer Mira; style audit + artifact; reconcile quests with Redmine; DE.
+- **Done**: 282721 cause = cashier keyed hakmilik id, SPOC NO_FAIL made new paid fee rows, officer's 4 bills stayed N. Infra unlinked the 4 bills (`282721-amend.sql`); PROD 5 fi rows all Y. 282723 taken + done by Alex Ang (Initiate & Alter). Reconcile: 282198/282721/246923/280540/282723 closed, 282723 archived, #282966 synced as hold.
+- **Built**: patch-close-shape CHECK D (#ticket line ≤10 words) + CHECK E (greeting inside fence), eval 59/59 · quest SKILL 6b ask "post it" as row 1 + DB-screenshot row · no-builtin-browser memory · speech entries 11/12 + BA short names · artifact Miya's Voice Map.
+- **Slips**: built-in browser used after ban · Alter Flow vs Initiate & Alter · coordinate-click on PROD dropdown · tickets stolen (In Progress not set) · formal Malay root cause · overloaded infra handoff.
+- **Open**: QA-280540 archive needs harvest · QA-282721 archive · #282966 hold · Flowable alter Playwright tool (todo Q1).
+
+**Last Activity (prev)**: 2026-10-02 18:20 — #244600 Kertas versi fix (our side only) committed d61fc2e611 on mlk/qa/244600v3 · int-env 5df44b12cf · miya posted Resolved to Fizah · Phase 1 CLOSED · #275043 split to Ammar · handoff-load feature built · DE.
 
 ## Session Recap (2026-10-02, worktree quest-audit-275043-244600-7954c0, #244600 + #275043)
 - **Ask**: paired quest 275043 + 244600 to Rubric, brief (miya auditing my brief), then split, apply, deploy, Redmine.
@@ -19,13 +28,3 @@
 - **Learned (miya)**: an extra item beyond the ask is NOT a slip but must be marked "➕ Extra, not asked" (memory `feedback_flag_unasked_additions`) · dev answer stops after the last field, greet the BA who routed it (speech collection entry 10).
 - **Open**: bounty proposal (marker rule into reply-shape-spec) awaits weekly ruling · direct-kaunter Tambah Kuantiti seed gap parked (BA says direct kaunter not allowed).
 **Last Activity**: 2026-10-02 18:15 — #246964 takeover of Ammar's fix: review, revert his Java on his branch, merged int-env 803e4907bd + stag-env 5110004a80, miya posted handover, Phase 2 archived, DE.
-
-## Session Recap (2026-10-02, worktree permit-c02-2026-3-portal-362d6d, session 7)
-- **Ask**: retrieve #246964 and review Ammar's fix ("within Melaka standard?"); then take over, commit, deploy, Redmine handover.
-- **Done**: Ammar `ef49baf78f` = template (tahun after tempoh pajakan, slogan left) correct + Java (PSBS blank signature block before Peraku) NOT asked and against our #278699 placeholder rule. We committed `6feb2525c6` on `mlk/qa/246964` reverting the Java (file now equals master). Merged int-env `803e4907bd` + stag-env `5110004a80` from a temp worktree (work clone had another session's uncommitted edits). miya posted the pass note, assigned Mira, fixed Resolved By. Quest archived (Task folder to Archive, block to active-archive).
-- **Built**: takeover rule in quest SKILL (Colleague asks us to review their fix = TAKEOVER, junior template work stays guide-only) + deploy 6 row 10 + review-etanah pointer. LATENT-BUGS L20 (PLTP + PPTPB Tolak slogan still justified).
-- **Slips**: `workflow/handback-instead-of-takeover` (drafted a "please fix" note for Ammar).
-- **Open**: render not verified (no PSBS app at PYSTP/PSTP on stg2 or mlit; BA to regen) · #246964 on the planned-release list.
-
-
-**Last Activity**: 2026-10-02 17:45 — ADHOC-PRBB-2026-11 assist BA Fizah: PROD permit C02/2026/3 data + MLIT 4-row explanation + tugasan all-daerah query · adhoc saved 28/28 · Phase 2 archived + bounty · DE.

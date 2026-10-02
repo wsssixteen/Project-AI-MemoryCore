@@ -78,3 +78,12 @@
 | A3 debugging | DB rows (skg_dok draft/non-draft pairs) + BA video frames settled the writers in one pass. Miss: claimed R1 left line 3 unchanged without tracing the draft flag through the in-place save |
 | A4 etanah | New fact: version history = all skg_dok rows per medan/medanPk incl. drafts; `onRefreshDokumen` is overridable per form |
 | A5 sweep | Attachment-ledger gate forced all 25 BA files open; the older videos confirmed the original complaint needed G1 |
+
+## Session — #282723 + #282721 (worktree quest-282587-guide-be4171)
+| Axis | Instance | Verdict |
+|---|---|---|
+| A1 agentic | auto-mode classifier denied PROD browser clicks; settings allow-rules did not override | PROD UI actions need a deterministic tool, not live clicking |
+| A2 quest | In Progress never set on 2 patch tickets → Alex took both next morning | 6b now asks "post it" as row 1; needs a mechanical check |
+| A3 debugging | first cause claim (paid before PL task) wrong; real cause = wrong id keyed at kaunter | diff real rows before mechanism (diff-first held after correction) |
+| A4 etanah | no UI route reconciles an orphan unpaid fee row; unlink is the only path | banked in PRBB-TICKETS.md + FLOWABLE §6e |
+| A5 sweep | Redmine reconcile closed 5 quests in one pass; archive blocked by harvest gate for 280540 | gate works as designed |
