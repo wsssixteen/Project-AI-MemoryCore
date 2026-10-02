@@ -58,7 +58,7 @@ const CASES = [
   ['23 empty trailing fenced block accepted (no substantive content; cf. case 10)', j(GOOD) + '\n```\n   \n```', false, null],
   ['24 very long reply, handoff correct at end', j('x'.repeat(5000), GOOD), false, null],
   ['25 short multi-digit ticket', j('x', GOOD.replace('#277291:', '#12:')), false, null],
-  ['26 malformed: greeting fence never closed', j('x', '```\nHi infra, please assist. Thank you.\n#277291: x.'), false, null],
+  ['26 malformed: greeting fence never closed → CHECK E advisory (not copy-safe)', j('x', '```\nHi infra, please assist. Thank you.\n#277291: x.'), true, /CHECK E/],
   // CHECK C — PROD patch routed to infra with no handoff (#281638 replay, 2026-09-28)
   ['C1 #281638 replay: send path to infra, PROD, no handoff', j('Checked against PROD today.', '| 2 | Send `C:\\Users\\R\\1. Tasks\\Melaka\\232. II #281638 - Pelupusan - PRBB - Papar Ralat selepas Klik Button hantar (PROD)\\2. Fix\\281638.sql` to infra. |'), true, /CHECK C/],
   ['C2 "Infra runs 281638.sql" PROD', 'PROD fix. Infra runs `2. Fix\\281638.sql` (1 row).', true, /CHECK C/],
@@ -81,7 +81,18 @@ const CASES = [
   ['C19 "infra will run" future', 'PROD: infra will run 281638.sql tomorrow.', true, /CHECK C/],
   ['C20 hotfix doc patch without .sql', 'PROD: send the edited docx to infra.', false, null],
   ['C21 CHECK C marks block=true', 'PROD. Send 281638.sql to infra.', true, /CHECK C/],
+  // CHECK D — #ticket one-liner length (#282721 replay, 2026-10-02)
+  ['D1 #282721 replay: 15-word line', j('x', GOOD.replace('#277291: PLTP - patch data supaya tab Maklumat Tanah papar.', '#282721: PRBB - data patch untuk asingkan 4 bil fi pendua yang belum berbayar daripada permohonan')), true, /CHECK D/],
+  ['D2 exactly 10 words passes', j('x', GOOD.replace('#277291: PLTP - patch data supaya tab Maklumat Tanah papar.', '#282721: PRBB - unlink 4 bil fi pendua dari ID permohonan')), false, null],
+  ['D3 11 words fires', j('x', GOOD.replace('#277291: PLTP - patch data supaya tab Maklumat Tanah papar.', '#282721: a b c d e f g h i j k')), true, /CHECK D/],
+  ['D4 D stays advisory', j('x', GOOD.replace('#277291: PLTP - patch data supaya tab Maklumat Tanah papar.', '#282721: a b c d e f g h i j k')), true, /^(?![\s\S]*CHECK C)/],
+  // CHECK E — greeting outside a fence (#282721 replay)
+  ['E1 #282721 replay: greeting + ticket unfenced, DML fenced', j('This handoff is for the unlink.', 'Hi infra, please assist. Thank you.\n#282721: PRBB - unlink bil pendua', '```sql\nUPDATE et_main.hsl_bayaran_fi SET aplikasi_id = NULL WHERE bayaran_fi_id IN (1);\n-- 1 row updated\n```'), true, /CHECK E/],
+  ['E2 greeting line unfenced, nothing else', 'Hi infra, please assist. Thank you.', true, /CHECK E/],
+  ['E3 greeting inside fence → no E', j('x', GOOD), false, null],
+  ['E4 bypass token suppresses E', j('[skip-patch-close-shape: quoting format]', 'Hi infra, please assist. Thank you.'), false, null],
 ];
+{ const rE = evaluate('Hi infra, please assist. Thank you.'); check('E5 CHECK E is advisory (block not set)', !rE.block, 'block=' + rE.block); }
 
 { const r0 = evaluate('PROD. Send 281638.sql to infra.'); check('C21b block flag set', r0.block === true, 'block=' + r0.block); }
 { const r1 = evaluate(j('x', GOOD, 'after')); check('C22 CHECK B stays advisory (block not set)', !r1.block, 'block=' + r1.block); }

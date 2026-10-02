@@ -73,6 +73,15 @@ function evaluate(text) {
         '     <DML only> ... -- N row(s) updated',
       ].join('\n')] };
     }
+    // CHECK E — greeting written as its own line OUTSIDE a ``` / ~~~ fence (2026-10-02, #282721):
+    // the handoff must be ONE copyable fenced block. Runs after C so a missing handoff still blocks.
+    const outside = text.replace(/```[\s\S]*?```/g, '').replace(/~~~[\s\S]*?~~~/g, '');
+    if (outside.split(/\r?\n/).some(l => GREETING.test(l.trim()))) {
+      return { fire: true, block: false, advisories: [[
+        'patch-close-shape CHECK E — infra handoff is not one fenced block.',
+        '   Put greeting + #ticket line + DML inside ONE ``` block so miya copies it in one go.',
+      ].join('\n')] };
+    }
     return { fire: false, advisories: [] };
   }
 
@@ -94,6 +103,18 @@ function evaluate(text) {
       '     <blank line>',
       '     <SQL patch> ... -- N row(s) updated',
     ].join('\n'));
+  }
+
+  // CHECK D — #ticket one-liner stays short (2026-10-02, #282721: a 15-word formal-Malay line; miya writes ~6-10 words)
+  if (TICKET_LINE.test(nextLine)) {
+    const words = nextLine.replace(/^#\d+:\s*/, '').split(/\s+/).filter(Boolean).length;
+    if (words > 10) {
+      advisories.push([
+        `patch-close-shape CHECK D — #ticket line is ${words} words; keep it to 10 or fewer.`,
+        '   Urusan + outcome only, e.g. "#281656: PRBB - link resit kaunter ke permohonan".',
+        '   No table/column names, no ids, no long formal-Malay chains.',
+      ].join('\n'));
+    }
   }
 
   // CHECK B — handoff is the closing block (nothing substantive after it)

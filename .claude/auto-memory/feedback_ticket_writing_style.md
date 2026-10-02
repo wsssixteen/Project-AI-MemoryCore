@@ -215,6 +215,16 @@ Please help to verify.
 Thanks
 ```
 
+10. Infra handoff, #282721 (2026-10-02). He flagged my handoff as overloaded. The reply to "infra hand off please" is this block and nothing more:
+```
+Hi infra, please assist. Thank you.
+#282721: PRBB - unlink bil fi pendua
+
+UPDATE et_main.hsl_bayaran_fi SET aplikasi_id = NULL WHERE bayaran_fi_id IN (2165136, 2165137, 2165138, 2165139) AND aplikasi_id = 3408435 AND flag_bayar = 'N';
+-- 4 rows updated
+```
+WhatsApp answers to a BA follow the same rule: answer the asked question in 1-3 short lines, nothing extra (his own: "Just unlink je boleh. Sebab pemohon dah bayar kan sebenarnya.").
+
 **BA short names miya uses in greetings** (Redmine name → what he writes): Nurul Amirah Nadiah → **Mira** · Nurhafizah → Fizah · Siti Farhanih Abdul Razak → Farah.
 
 **Before writing ANY Redmine note: run `node quest/redmine-sync.js <num>` and greet the live assignee.**
