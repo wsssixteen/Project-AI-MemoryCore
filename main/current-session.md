@@ -10,6 +10,15 @@
 - **Open**: QA-280540 archive needs harvest · QA-282721 archive · #282966 hold · Flowable alter Playwright tool (todo Q1).
 
 **Last Activity (prev)**: 2026-10-02 18:20 — #244600 Kertas versi fix (our side only) committed d61fc2e611 on mlk/qa/244600v3 · int-env 5df44b12cf · miya posted Resolved to Fizah · Phase 1 CLOSED · #275043 split to Ammar · handoff-load feature built · DE.
+**Last Activity**: 2026-10-02 18:30 — #282442 Pembatalan Jana PRBB: R1 kod pejabat fallback `24c277d683` on `mlk/esokongan/282442`, cherry-picked int-env `495d16fe66`, MLIT tested pass · cross-module-check skill + ownership-input-check gate built · quest saved · DE.
+
+## Session Recap (2026-10-01 → 02, worktree redmine-282442-9258e6, #282442)
+- **Ask**: quest #282442 (ESOKONGAN, PRBB Pembatalan Jana ralat), audit why the 09-30 adhoc called it GIS, build a pre-handover check, deploy internal, Redmine handover.
+- **Done**: root cause = `MlkUtilitiPembatalanPermohonanForm.initBPMFlow():346` sends "" kodPejabat for PRBB (helper `PelupusanExcelReaderHelper:854` skips PRBB) → common `DBUtil.GetSchemaByKodPejabat` falls to `ptg` → `et_ptg.log_service` missing → L18 NPE mask. R1 committed, int-env cherry-pick (merge conflicted on release 1.8.0), miya tested pass. D1 (8 PROD orphan UPP, 24 rows) checked safe, no script yet.
+- **Built**: `domain/ownership-input-check` (Stop, stop-claim-integrity bundle, eval 22/22) · `.claude/skills/cross-module-check` (eval 29/29) · adhoc-save-audit OWNED-ELSEWHERE check (24/24) · quest Recon ownership row · Debug Ritual 7 · etanah-knowledge OTHER-MODULES.md (GIS kod→schema map moved there) · speech collection entry 8 (rojak Root cause/Solution).
+- **Slips**: `wrong-owner-verdict` · `reask/voice-mismatch`.
+- **Open**: rework cycle 1 (another session, 10-02) R2 `getKeputusanMMKN()` awaits nod · Redmine post (draft in qa_doc) · D1 delete script · planned-release list.
+**Last Activity**: 2026-10-02 18:20 — #244600 Kertas versi fix (our side only) committed d61fc2e611 on mlk/qa/244600v3 · int-env 5df44b12cf · miya posted Resolved to Fizah · Phase 1 CLOSED · #275043 split to Ammar · handoff-load feature built · DE.
 
 ## Session Recap (2026-10-02, worktree quest-audit-275043-244600-7954c0, #244600 + #275043)
 - **Ask**: paired quest 275043 + 244600 to Rubric, brief (miya auditing my brief), then split, apply, deploy, Redmine.
