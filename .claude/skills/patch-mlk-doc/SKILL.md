@@ -81,6 +81,8 @@ UPDATE ET_DMS.DOKUMEN_REVISION SET LOKASI_FAIL_PDF=NULL WHERE DOKUMEN_REVISION_I
 -- 1 row updated
 ```
 No blank line between greeting and `#<num>:`. The one-liner = urusan + outcome only (no permohonan id, no table names).
+
+**The attachment IS the target file** (fixed 2026-10-02 per みや, #282198 — precedent #273625 / #281482 `2. Fix\LAIN-<n>_1.main`): copy BA's edited docx into `2. Fix\` renamed to the EXACT basename of `lokasi_fail` (e.g. `LAIN-37140956_1.main`), confirm the copy's SHA-256 equals the source, and render the docx to PDF (Word COM export) and LOOK at every page before handing over. Every file named in the reply carries its FULL Windows path — never `0. Brief\…` or `2. Fix\…` alone. **Banned**: telling him to attach the BA's `.docx` under its own name.
 The reply's FIRST line is the deliverable's full path: `<Task folder>\2. Fix\PATCH-REQUEST-<num>.txt`.
 
 ## Conventions (this skill is an EXCEPTION to two standing rules — audience is the patching team)
