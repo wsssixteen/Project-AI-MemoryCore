@@ -45,6 +45,16 @@ check('F15 2-col solution semicolon blocks', runOn(HB2(RC_OK, 'Had saiz dibuang;
 check('F16 2-col root cause dash blocks even with clean solution', runOn(HB2('Had saiz 1 MB — tetap.', SOL_OK)) === 2, '2-col rc dash');
 check('F17 2-col solution placeholder is silent', runOn(HB2(RC_OK, '⬜ not yet fixed')) === 0, 'solution sentinel');
 check('F18 word "solution" in prose without a root cause row is silent', runOn('The solution — a dash here; and a semicolon — is discussed in prose only.') === 0, 'prose solution');
+// Redmine hand-over must carry Root cause + Solution (2026-10-02, #282198 replay)
+const HO = (extra) => `Both patches confirmed.\n\n**Redmine #282198**\n\n| Field | Value |\n|---|---|\n| Status | Resolved |\n| Assignee | Nurhafizah Hasan |\n| % Done | 100 |\n| Resolved By | Ahmad Ridhwan Anuar |\n${extra}\nNotes:\n\`\`\`\nSalam Fizah, have patched.\n\`\`\``;
+check('F19 replay #282198: hand-over with no Root cause/Solution blocks', runOn(HO('')) === 2, 'handover missing both');
+check('F20 hand-over with Root cause only blocks', runOn(HO(`| Root cause | ${RC_OK} |\n`)) === 2, 'handover missing solution');
+check('F21 hand-over with both clean rows passes', runOn(HO(`| Root cause | ${RC_OK} |\n| Solution | ${SOL_OK} |\n`)) === 0, 'handover complete');
+check('F22 hand-over with placeholder solution blocks', runOn(HO(`| Root cause | ${RC_OK} |\n| Solution | ⬜ not yet fixed |\n`)) === 2, 'handover placeholder');
+check('F23 Resolved By alone without the word Redmine is silent', runOn('| Resolved By | someone |') === 0, 'no redmine word');
+check('F24 Redmine mention without close fields is silent', runOn('I synced Redmine #282198 and read the journal.') === 0, 'redmine mention only');
+check('F25 bypass on hand-over is silent', runOn('[skip-rootcause-format: draft only]\n' + HO('')) === 0, 'bypass');
+check('F26 hand-over with dash in Root cause still blocks on format', runOn(HO(`| Root cause | Fail ditukar — PDF lama.|\n| Solution | ${SOL_OK} |\n`)) === 2, 'format still enforced');
 check('F11 empty stdin no false block', spawnSync(process.execPath, [HOOK], { input: '{}', encoding: 'utf8', timeout: 30000, env: process.env }).status === 0, 'empty');
 check('F12 malformed stdin no false block', spawnSync(process.execPath, [HOOK], { input: 'not json', encoding: 'utf8', timeout: 30000, env: process.env }).status === 0, 'malformed');
 

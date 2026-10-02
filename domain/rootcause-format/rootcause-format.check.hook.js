@@ -62,10 +62,25 @@ function findViolations(s) {
   return v;
 }
 
+// A Redmine hand-over / pass / close reply: names Redmine AND fills a close field (2026-10-02, #282198).
+function isRedmineHandover(text) {
+  if (!/redmine/i.test(text)) return false;
+  return /\|\s*Status\s*\|\s*(Resolved|Closed|Feedback|Ready)/i.test(text)
+    || /Resolved By/i.test(text)
+    || /%\s*Done\s*\|\s*100/i.test(text);
+}
+
 function evaluate(text) {
   if (!text) return { verdict: 'silent' };
   if (EXEMPT.test(text)) return { verdict: 'silent' };
   const rc = extractRootCause(text);
+  if (isRedmineHandover(text)) {
+    const s0 = extractSolution(text);
+    const missing = [];
+    if (!rc || isPlaceholder(rc)) missing.push('Root cause row missing (every Redmine hand-over / pass / close carries it, patch tickets too)');
+    if (!s0 || isPlaceholder(s0)) missing.push('Solution row missing (filled together with Root cause)');
+    if (missing.length) return { verdict: 'blocked', violations: missing, rc, sol: s0 };
+  }
   if (!rc || isPlaceholder(rc)) return { verdict: 'silent' };
   const sol = extractSolution(text);
   const violations = findViolations(rc).map(x => 'Root cause: ' + x);

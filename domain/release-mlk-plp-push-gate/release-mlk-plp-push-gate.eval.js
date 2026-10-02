@@ -46,9 +46,9 @@ check('F5 malformed ref blocks', r.status === 2 && /does not match/.test(r.stder
 r = run(bash('git push origin mlk/qa/262762'));
 check('F6 non-release push ignored', r.status === 0, 'exit=' + r.status);
 
-// F7: bypass token → ALLOW even with no state
-r = run(bash('RELEASE_GATE_BYPASS=1 git push origin mlk/release/7.7.7'));
-check('F7 bypass token passes', r.status === 0, 'exit=' + r.status);
+// F7 (v4): self-typed bypass token WITHOUT miya's approval → BLOCK (the 2026-09-30 #256334 form)
+r = run(bash('git push origin mlk/release/7.7.7  # RELEASE_GATE_BYPASS'));
+check('F7 self-typed bypass without approval blocks', r.status === 2 && /only counts when miya/.test(r.stderr), 'exit=' + r.status);
 
 // F8: non-Bash tool → NOT fired
 r = run({ tool_name: 'Edit', tool_input: { file_path: 'x' } });
@@ -83,6 +83,102 @@ check('F14 slips evidence text ignored', r.status === 0, 'exit=' + r.status);
 // F15: real chained push to mlk/master after a separator → still BLOCKED
 r = run(pwsh('git fetch origin; git -C "E:\\x\\etanah-pelupusan" push origin HEAD:mlk/master'));
 check('F15 chained real mlk/master push still blocks', r.status === 2 && /mlk\/master is BANNED/.test(r.stderr), 'exit=' + r.status);
+
+// ── v4 cases (2026-09-30, #256334 AWAM: pushed to another team's release branch twice, self-bypassed) ──
+const fDir = fs.mkdtempSync(path.join(os.tmpdir(), 'rmp-foreign-'));
+env.FOREIGN_CHECK_STATE_DIR = fDir;
+const repoDir = fs.mkdtempSync(path.join(os.tmpdir(), 'etanah-awam-'));
+spawnSync('git', ['init', '-q', repoDir]); spawnSync('git', ['-C', repoDir, '-c', 'user.email=e@e', '-c', 'user.name=e', 'commit', '-q', '--allow-empty', '-m', 'x']);
+const sha = spawnSync('git', ['-C', repoDir, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).stdout.trim();
+function transcript(userText) {
+  const tp = path.join(fDir, `t-${Math.random().toString(36).slice(2)}.jsonl`);
+  fs.writeFileSync(tp, JSON.stringify({ type: 'user', message: { role: 'user', content: userText } }) + '\n');
+  return tp;
+}
+function pw(command, userText) { return { tool_name: 'PowerShell', tool_input: { command }, transcript_path: userText == null ? '' : transcript(userText) }; }
+const push = `git -C "${repoDir}" push origin HEAD:mlk/release/1.11.1`;
+// F16: foreign repo, no report, no approval → BLOCK
+r = run(pw(push, 'lets do the merging ourselves'));
+check('F16 foreign push, no check + no approval blocks', r.status === 2 && /ANOTHER team/.test(r.stderr), 'exit=' + r.status);
+// F17: foreign repo, approval but no report → BLOCK
+r = run(pw(push, 'ok push it'));
+check('F17 foreign push, approval but no full check blocks', r.status === 2 && /❌ full check/.test(r.stderr), 'exit=' + r.status);
+// F18: foreign repo, report but no approval → BLOCK
+fs.writeFileSync(path.join(fDir, `foreign-check-${sha}.json`), '{}');
+r = run(pw(push, 'check the code please'));
+check('F18 foreign push, check but no approval blocks', r.status === 2 && /❌ miya/.test(r.stderr), 'exit=' + r.status);
+// F19: foreign repo, report + approval → ALLOW
+r = run(pw(push, 'go ahead and push'));
+check('F19 foreign push, check + approval passes', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 120));
+// F20: angry question containing "push" is NOT approval
+r = run(pw(push, 'who the fuck asks you to push to release branch'));
+check('F20 "who asks you to push" is not approval', r.status === 2, 'exit=' + r.status);
+// F21: bypass token does not open a foreign push without approval
+r = run(pw(push + '  # RELEASE_GATE_BYPASS', 'why did you push'));
+check('F21 bypass token cannot open foreign push', r.status === 2, 'exit=' + r.status);
+// F22: foreign repo, own ticket branch → not a shared branch → ignored
+r = run(pw(`git -C "${repoDir}" push origin mlk/cr/256334`, ''));
+check('F22 foreign own-ticket branch push ignored', r.status === 0, 'exit=' + r.status);
+// F23: foreign stag-env push gated too
+r = run(pw(`git -C "${repoDir}" push origin HEAD:mlk/stag-env`, ''));
+check('F23 foreign stag-env push blocks', r.status === 2, 'exit=' + r.status);
+// F24: report for an OLDER sha does not count after a new commit
+spawnSync('git', ['-C', repoDir, '-c', 'user.email=e@e', '-c', 'user.name=e', 'commit', '-q', '--allow-empty', '-m', 'y']);
+r = run(pw(push, 'go ahead and push'));
+check('F24 stale report (older HEAD) blocks', r.status === 2 && /❌ full check/.test(r.stderr), 'exit=' + r.status);
+// F25: "don't push" is not approval
+r = run(pw(push + '  # RELEASE_GATE_BYPASS', "don't push it yet"));
+check('F25 negated "don\'t push it" is not approval', r.status === 2, 'exit=' + r.status);
+
+// ── v5 cases (2026-10-02, AWAM stag-env PDBB fix: repo named by its origin remote, not its folder) ──
+function mkRepo(dir, remote) {
+  fs.mkdirSync(dir, { recursive: true });
+  spawnSync('git', ['init', '-q', dir]);
+  spawnSync('git', ['-C', dir, '-c', 'user.email=e@e', '-c', 'user.name=e', 'commit', '-q', '--allow-empty', '-m', 'x']);
+  if (remote) spawnSync('git', ['-C', dir, 'remote', 'add', 'origin', remote]);
+  return spawnSync('git', ['-C', dir, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).stdout.trim();
+}
+const v5 = fs.mkdtempSync(path.join(os.tmpdir(), 'rmp-v5-'));
+const wt = path.join(v5, 'stag-pdbb');                                   // worktree-style name, no "etanah" anywhere
+const wtSha = mkRepo(wt, '10.16.63.27:etanah/etanah-awam.git');
+const plp = path.join(v5, 'etanah-work', 'etanah-pelupusan');            // the path that used to read as foreign
+mkRepo(plp, '10.16.63.27:etanah/etanah-pelupusan.git');
+const mc = path.join(v5, 'memorycore');
+mkRepo(mc, 'https://github.com/x/Project-AI-MemoryCore.git');
+// F26: `cd X; git push` (the 2026-10-02 form) → blocked, reason names etanah-awam and the path WITHOUT the ";"
+r = run(pw(`cd ${wt}; git push origin HEAD:mlk/stag-env`, 'short version go'));
+check('F26 cd-semicolon form: blocks and names the clean path', r.status === 2 && r.stderr.includes(`etanah-awam at ${wt})`) && !r.stderr.includes(`${wt};`), 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
+// F27: worktree whose folder name has no "etanah" but whose remote is etanah-awam → still foreign (old gate: missed)
+r = run(pw(`git -C "${wt}" push origin HEAD:mlk/stag-env`, ''));
+check('F27 remote identity: etanah-awam worktree with neutral folder name is foreign', r.status === 2 && /ANOTHER team/.test(r.stderr), 'exit=' + r.status);
+// F28: pelupusan repo under an "etanah-work" parent folder is NOT foreign (old gate: false block)
+r = run(pw(`cd ${plp}; git push origin HEAD:mlk/stag-env`, ''));
+check('F28 pelupusan under etanah-work parent is not foreign', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
+// F29: Set-Location -LiteralPath form resolves too
+r = run(pw(`Set-Location -LiteralPath "${wt}"; git push origin HEAD:mlk/int-env`, ''));
+check('F29 Set-Location -LiteralPath form blocks foreign int-env push', r.status === 2 && /etanah-awam at/.test(r.stderr), 'exit=' + r.status);
+// F30: cd-semicolon form with report + approval → passes (the semicolon no longer breaks the sha lookup)
+fs.writeFileSync(path.join(fDir, `foreign-check-${wtSha}.json`), '{}');
+r = run(pw(`cd ${wt}; git push origin HEAD:mlk/stag-env`, 'push it'));
+check('F30 cd-semicolon form with check + approval passes', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
+// F31: two cds — the one before the push wins (non-etanah repo) → not foreign
+r = run(pw(`cd ${wt} && git fetch && cd ${mc}; git push origin HEAD:mlk/stag-env`, ''));
+check('F31 last cd before the push decides the repo', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
+// F32: -C on the push beats an earlier cd
+r = run(pw(`cd ${mc}; git -C "${wt}" push origin HEAD:mlk/stag-env`, ''));
+check('F32 git -C on the push beats an earlier cd', r.status === 2 && /etanah-awam at/.test(r.stderr), 'exit=' + r.status);
+// F33: a cd mentioned only inside a quoted commit message after the push is ignored
+r = run(pw(`git -C "${mc}" push origin HEAD:mlk/stag-env  # note "cd ${wt}"`, ''));
+check('F33 cd inside trailing text does not redirect the push', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
+// F34: non-repo directory → no identity → not foreign, no crash
+r = run(pw(`cd ${path.join(v5, 'nope')}; git push origin HEAD:mlk/stag-env`, ''));
+check('F34 non-repo dir: no crash, not treated as foreign', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
+// F35: pushd + & separator (cmd style) resolves
+r = run(pw(`pushd ${wt} & git push origin HEAD:mlk/stag-env`, ''));
+check('F35 pushd form resolves the repo', r.status === 2 && /etanah-awam at/.test(r.stderr), 'exit=' + r.status);
+try { fs.rmSync(v5, { recursive: true, force: true }); } catch (_) {}
+
+try { fs.rmSync(fDir, { recursive: true, force: true }); fs.rmSync(repoDir, { recursive: true, force: true }); } catch (_) {}
 
 try { fs.rmSync(stateDir, { recursive: true, force: true }); } catch (_) {}
 

@@ -4,6 +4,69 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-02, worktree redmine-issue-282198-8c1eb9, session 4)
+- **Ask**: BA relay, AWAM MLKSTG PRBB Baru cara bayar Kaunter, Hantar -> ralat ID Rujukan 64602.
+- **Done**: `et_sistem_stg2.pt_application_ex_entity` 64602 = `500 "Failed to generate report."` at common `BaseReportService.printReportUsingAPI():723`; common commit `8fb3d0334d` (#282299, azizam) routes MLK slip + senarai semak to report API. 20/20 slip errors today on `1.7.21-MLK.beta.patch.282299.1`; modules Consent/Pengambilan/Pendaftaran/Pelupusan. Input check clean (AWAM passes only praAplikasi). Task `262. AH - MLKSTG - AWAM - Slip Permohonan gagal jana (common 282299)` with combined check script.
+- **Learned (miya)**: WhatsApp replies casual + suggestive ("nampak macam isu common X ni... ada hit lain juga"), always ship the evidence script; error store needs `et_sistem_<env>.` prefix (unqualified gave 42P01, stg1 default gave 42501). Memory `feedback_other_team_message_not_our_issue` updated.
+- **Open**: miya sends common message + screenshot · ProTime title `AWAM slip permohonan gagal jana` · Senarai Semak (same #282299 change) not checked.
+
+**Last Activity**: 2026-10-02 15:51 — #282198 PT Minit Bebas PROD document patch done by infra (file replaced + PDF reset) · Redmine close drafted · patch-mlk-doc + quest patch path hardened · DE.
+
+## Session Recap (2026-10-02, worktree redmine-issue-282198-8c1eb9)
+- **Ask**: #282198 patch TSO's edited Minit Bebas (PTMLK/02/L/PT/2026/4) into PROD; then Redmine close.
+- **Done**: target LAIN-37140956 rev 41444766 (versi 1, unchanged since 09-17). Deliverables in Task `2. Fix\`: `LAIN-37140956_1.main` (= `(1)(1).docx`, hash equal, rendered via Word, 3 signatures correct) + `282198.sql` (PDF reset, schema-verified PROD). Infra did both. PROD lokasi_fail_pdf NULL confirmed. Redmine close drafted with Root cause + Solution, NOT posted.
+- **Built**: patch-mlk-doc STEP 2 = two separate infra copy boxes (miya's #281482 shape + data-patch shape), attachment = renamed .main, deliverables only `<num>.sql` + .main · `domain/patch-mlk-doc/deliverable-check.js` + 18-fixture eval · quest SKILL 6c (Phase 0 sets patch path, loads stored handoff, full path first) · quest SKILL Root cause + Solution on every Redmine hand-over · rootcause-format hook blocks hand-over without both rows (26/26).
+- **Slips (miya)**: handoff from skill's own wrong STEP1/STEP2 block (`handoff/shape-not-loaded`) · BA docx attached under own name + relative paths (`handoff/attachment-not-target-file`) · PATCH-REQUEST txt instead of 282198.sql (`script/naming`) · Redmine close without Root cause/Solution (`redmine/rootcause-missing`).
+- **Open**: miya opens doc in PROD (first view rebuilds PDF) · post Redmine close · saiz_fail_byte still old size (effect not verified) · memory feedback_prod_patch_infra_handoff not updated (worktree guard), skill carries the shape.
+**Last Activity**: 2026-10-02 11:50 — Farah review #264355 + #274266 → both Phase 1 closed · 264355 AWAM merged int-env 28e9b9d080 · 274266 internal+stg2 patched, PROD 274266.sql attached · DE.
+
+## Session Recap (2026-10-01 → 10-02, main, Farah review)
+- **Ask**: review Farah's work on #264355 (PRU AWAM surat) + #274266 (PT Maklumbalas Tangguh peranan), prep each for BA. No commit/push/Redmine without nod.
+- **#264355**: AWAM `mlk/qa/264355v2` 7544d52688 letter fix PASS (adds PLP_PRU_SRTLULUS + Tolak skips PL rule) → merged to int-env 28e9b9d080 (conflict at AwamDashboardVO.java:547 vs yihkitc PLBP line, kept both, compile green). Pelupusan `mlk/qa/264355` 2736c9a0be notifikasi HELD (fires at Pengesahan before letter visible, ~14 urusan, repeats). miya posted BA pass + deploys AWAM internal.
+- **#274266**: Farah's 4-statement script never ran; dropped her ind_pejabat_tgsn stmt, added flag_aktif to umm_a_tgsn. miya ran role fix on internal + full setup on stg2 (both verified). PROD = `3. Rework\274266.sql` (et_main, 6 stmts, catalog-checked, stamped) attached on Redmine (md5 match). BPMN not needed: PROD MLK_PLP_PT v13 = stg2 v5 (28.1/29.1 present) → PROD PT Tangguh has no tugasan until script runs.
+- **Built/changed**: memory end-of-task-brief-shape (bullets + steps-only table) · feedback_script_file_naming (.sql always, Redmine = same file, read+replace stale same-name) · script-check rule 7 v4 · ticket-writing-style 2b (pass note for someone else's ticket) · FLOWABLE-KNOWLEDGE §16.
+- **Slips (miya)**: told him to upload `#274266.txt` (wanted .sql) + stale 274266.sql left in Task folder (`script-file-type`) · over-long pass note on Farah's ticket · first review missed Farah's pelupusan notifikasi commit (searched AWAM only).
+- **Spawned**: reply-shape build (task_a825f80a) · stg1→stg2 align (task_689d1837, ran: ADHOC-STG-2026-1) · deterministic workflow start + DE workflows check (task_ae2dbe14).
+- **Open**: miya's #274266 note edit not saved on Redmine · 264355 notifikasi BA scope · both tickets need the baseline (7544d52688 AWAM, 71a78d7da6 PLP) · PROD 274266.sql should run soon.
+**Last Activity**: 2026-10-02 11:30 — Baseline Pelupusan 1.8.0 closed (BA passed, merged to mlk/master 547fa95b8a) · AWAM 1.11.1 PDBB fixes · push gate v4 + foreign-merge-check + carry-over gate · DE.
+
+## Session Recap (2026-09-30 → 10-02, worktree melaka-pembatalan-ralat-f283f4, branch claude/pelupusan-1-8-0-deploy-07a762)
+- **Ask**: prepare + support Baseline Pelupusan 1.8.0 (#256335 #256334 #282061 #280540 #276997 #261855); merge AWAM 1.11.1 PDBB fixes ourselves (AWAM team deploys).
+- **Done**: BA "Baseline Pelupusan / Awam Pelupusan / SPOC Hasil — Passed". 1.8.0 merged to mlk/master 547fa95b8a. Audit row in `domain/release-mlk-plp/log.jsonl`.
+- **AWAM mlk/release/1.11.1 (pushed)**: c088305452 (one maklumat tanah row, 3 PDBB jrxml, P_IMG_PATH, PDBB submit PDT only) · 8cf46735d4 (drop P_ADALAH_INDIVIDU → LazyInitializationException fixed). 8cf46735d4 was pushed WITHOUT miya's nod.
+- **PDBB semak sign blank (staging)**: `getJawatanUtama()` on release uses MAIN peranan; #274461 (int-env only) uses the task peranan. Officers whose main peranan is not PPTnKanan/PPTNT/PPTT get a blank sign. → #274461 carried to next baseline via `carry-over.json`. BA must set its target version.
+- **Built**: push gate v4 (foreign shared-branch push needs foreign-merge-check report + miya's own "push it"; 25/25 eval) · `foreign-merge-check.js` (int-env merge commits included, first-parent diff) · `carry-over.js` + verify CARRY-OVER GATE + `defer-carry` · CLAUDE.md v1.76 rule 6 never assume · memory infra server-log format (verbatim) · writing-style sample 9.
+- **Slips (miya)**: pushed to another team's release branch unasked · kept "harmless" P_ADALAH_INDIVIDU (crashed) · `--no-merges` check missed int-env merge resolutions · claimed "nothing else" on a partial check · infra request with a guessed path + wrong format · too-long replies.
+- **Open**: merge-to-master did ff, memory says `--no-ff` (fix offered) · release eval 13/17 (task chip task_d313af1d) · Rule 15 closing-audit step proposed, no nod · core/goal-lens.js missing · Flowables SFTP drop for 1.8.0 not verified.
+**Last Activity**: 2026-10-01 17:55 — QA-282587 (PSBS Maklumat Tanah wrong screen) BA confirmed, junior handover drafted · no-overload rule · DE.
+
+## Session Recap (2026-10-01, worktree quest-282587-guide-be4171)
+- **Ask**: junior guide for #282587 (root cause first, steps, screen-load chain); then a BA confirmation note; then hint-style handover for Farah (Siti Farhanih).
+- **Root cause (verified PROD/STG2/MLIT)**: 6 PSBS Maklumat Tanah langkah (PYMB/SMB/PMB + PTG Tangguh risalat trio) on skrin 1878 PLMS_MT instead of 1140 PLP_MT. #261516 KP fix was verified on MLKSTG in June but STG data was rebuilt after, never reached PROD.
+- **Fix**: D1 6-row `ind_langkah.skrin_id` → PLP_MT (`2. Fix\282587.sql` + `-check.sql`, answer key) · R1 Minit Bebas into PSBS no-extra-panel list (`PelupusanExcelReaderHelper.java:1658-1671`) · R2 Tangguh Formula Premium via `TGS_RISALAT_MMKN_PTG_TANGGUH_LIST` (:1675), found on miya's "verify" push.
+- **Redmine**: BA note posted (miya-edited, In Progress, assigned Amirah); BA replied "Yes like this, can proceed fixing". Farah hint handover drafted, NOT posted.
+- **Built**: CLAUDE.md v1.75 NO INFORMATION OVERLOAD + reply-shape-spec §3c (f78ae0d8) · memories browser-edge-default, junior-handover-hints (statements, no quiz) · FLOWABLE-WORKFLOWS.md Maklumat Tanah screen/panel routing.
+- **Slips (miya)**: built-in browser instead of Edge · asked BA which env #261516 used (ticket answered it) · 2 BA questions answerable from evidence · overloaded guide/note (4 trim rounds) · scripts given to junior · quiz-style hints · R2 gap missed until "verify".
+- **Carry forward**: post Farah handover · KP SBTM (shared PSBS+MCL) undecided · sql-schema-verify gate vs unqualified scripts (task chip spawned).
+**Last Activity**: 2026-10-01 17:10 — all-day adhoc session (ADHOC-PRBB-2026-7 + -8 on HOLD) · adhoc-save ProTime title + daily-session rules · DE.
+
+## Session Recap (2026-10-01, worktree permit-c02-2026-3-portal-362d6d — the all-day adhoc session)
+- **Adhoc 1 — ADHOC-PRBB-2026-7** (Title: PRBB Ganti Hari bayaran royalti): PDTJ public on AWAM Ganti Hari C02/2026/3 → "Bayaran royalti/fi permit asal belum dijelaskan". Check = `AwamMaklumatLesenTabForm.validateGantiHariPermitRules():1143-1156` (any N `hsl_bayaran_fi` row on the original PRBB app blocks). PROD apl 3408435: 4 N rows — royalti 2165137 (paid at counter by ID hakmilik as NEW row 2166364, so the prepared row never settled) + Deposit Jalan / Deposit Bahan Batuan / Doket (RM5,000, no resit). miya replied to BA Mira with the check SQL screenshot. HOLD → PDTJ answer, then PROD patch.
+- **Adhoc 2 — ADHOC-PRBB-2026-8** (Title: PRBB jenis permohonan SK): no SK. AWAM `PelupusanConstant` hardcodes 1 Baru / 6 Ganti Hari / 8 Tambah Kuantiti / 7 Langkau Tahun → saved as `integerJenisPermohonan` in `umm_a_permit_lesen.mklmt_tmbhn` → compared against the same constants (screen panels, Ganti Hari rules, `isLangkauTahun` BPMN gateway, template.config Minit Bebas / Surat Keputusan choice). Senarai kumpulan checked: closest `RPT_JNS_PERMOHONAN2` = old labels, report-only. HOLD → miya sends the BA answer. Side: LATENT-BUGS L19 (`== "2"`).
+- **Built**: adhoc-save ProTime `title` (block + qa_doc + audit ≤6 words/40 chars, 69128809) · daily adhoc session rules (route to open adhoc, Title first, answer first, size gate → spawn_task, end-of-day DE save; skill + intake hook, 261ec2d8).
+- **Slips (miya)**: SK answer handed over before checking senarai kumpulan + the code path ("have you verified it 100%", "trace the code", "did you check senarai kumpulan") · offered "log it / leave" for the L19 bug instead of logging it.
+- **Carry forward**: -7 PDTJ answer → PROD patch · -8 BA send → close · push of 69128809 failed earlier (GitHub unreachable) — retried at DE.
+
+**Last Activity**: 2026-10-01 17:05 — ADHOC-UPS-2026-1 (UPS_PLP common templates) saved + audit 28/28 · DE.
+
+## Session Recap (2026-10-01, worktree pelupusan-template-verify-fe1bef)
+- **Ask**: reload the 21 Sep template-usage audit; verify the 3 templates that go through etanah-common (miya thought "ulangan"); give urusan + tugasan for BA to test.
+- **Found**: the 21 Sep session (archived "Etanah Melaka template usage audit") was never saved — found via transcript search. Re-verified: 3 common = SN_JPPH surat-SuratNilaianJPPH · CON_SRT_JT surat-SuratJabatanTeknikal · SMPG surat-SuratMaklumanKepadaPemegangGadaian, only via UPS_PLP / UPS_PS (MlkPelupusanPenyediaanSuratStrategy.java:62 → CommonPLPandBGNSuratStrategy.java:92). Ulangan JT is NOT common in Melaka (pelupusan own TemplateSuratUlanganJabatanTeknikal.docx). PROD: SN_JPPH 4 · CON_SRT_JT 1 · SMPG 0. 4th option BGN_UTILSM has no MLK surat_makluman.docx.
+- **Test data (STG)**: PTMLK/02/L/UPS_PLP/2026/7 nazli · /03/.../2026/4 asikin · /02/.../2026/6 faridmajid, all at Penyediaan Surat.
+- **Slips**: first adhoc-save writes landed in the worktree (no cd to main) — moved; notes.js --reset wiped the 2 extra test rows — re-added.
+- **Carry forward**: send BA message; BGN_UTILSM check if BA picks it; 10 ukur/permit templates need etanah-teknikal locally.
+**Last Activity**: 2026-09-30 18:05 — ADHOC-PDBB-2026-1 (MLIT PDBB Perakuan slow) closed + archived (dropped by miya) · attempt-before-blocked-gate widened · DE.
+
 ## Session Recap (2026-09-30, worktree ptmlk-slow-submission-10ca65)
 - **Ask**: why PTMLK/01/L/PDBB/2026/12 on MLIT loads ~5 min at Perakuan Laporan Pemantauan (PRPDBB), m.ikram.
 - **Found**: server never slow (Jana Surat 10.7 s, Hantar 483 ms). The page itself went silent (no requests, not even the 5 s poll) in 2 gaps (1m38s, 2m46s) right after the Agihan Kepada radio; PDBB/13 froze the same way on a 2nd PC. Leading mechanism: PrimeFaces 12 queue held by the oncomplete="mandatoryBarControl(); fix();" step (common internal.js re-binds legacy DOMSubtreeModified listeners every call). Browser/version never confirmed → dropped by miya. Full evidence: archived qa_doc ADHOC-PDBB-2026-1.
@@ -5550,6 +5613,13 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
+
+
+
+
+
+
 
 
 

@@ -16,20 +16,41 @@ const LOG = path.join(__dirname, 'log.jsonl');
 
 // The WORKING DIR must be an etanah repo — match a `cd <path…etanah-mod>` or `git -C <path…etanah-mod>`,
 // NOT a bare mention of the module name (a commit MESSAGE can say "etanah-pelupusan" without being one).
+// v2 (2026-10-02): these two regexes are now only the FALLBACK when the directory is not a readable git
+// repo. The repo is named by its origin remote (lib/git-target.js), so a worktree such as
+// E:\Dev\etanah-work\stag-awam-pdbb is gated as etanah-awam (v1 let its commit through ungated).
 const CD_RX   = /cd\s+["']?([^"'&|;]*etanah-(pelupusan|awam|common))["']?/i;
 const GITC_RX = /git\s+-C\s+["']?([^"'&|;]*etanah-(pelupusan|awam|common))["']?/i;
+const { targetRepo, invokesGit } = require(path.join(ROOT, 'lib', 'git-target.js'));
+// A raw `mvn … compile` (no -t toolchains) in an etanah repo — always fails in this shell (no JDK 8);
+// compile-check.js is the one path that compiles AND records the marker the commit gate needs.
+const RAW_MVN_RX = /(?:^|[;&|\n(]\s*)mvn(?:\.cmd)?\b(?![^;&|\n]*\s-t\s)[^;&|\n]*\bcompile\b/i;
 
-// Pure decision (unit-testable without live mvn/git).
+function identify(cmd, cwd, verb) {
+  const t = targetRepo(cmd, cwd, verb);
+  if (t.id && /^etanah-/i.test(t.id.name)) return { mod: t.id.name.toLowerCase(), top: t.id.top };
+  if (t.id) return null;                                        // a real repo that is not etanah
+  const m = cmd.match(CD_RX) || cmd.match(GITC_RX);             // unreadable dir: v1 name fallback
+  return m ? { mod: `etanah-${m[2].toLowerCase()}`, top: m[1] } : null;
+}
+
+// Pure decision (unit-testable without live mvn/git — pass `ident` to stub the repo lookup).
 // -> block:false  (pass or bypass)
 // -> block:null   (an etanah-repo commit — caller must run verify)
-function decide(command, turnText) {
+// -> block:true   (raw mvn compile — use compile-check.js)
+function decide(command, turnText, cwd, ident) {
   const cmd = String(command || '');
-  if (!/\bgit\b[^&|;]*\bcommit\b/.test(cmd)) return { block: false };   // git … commit (allows `git -C <path> commit`)
-  const m = cmd.match(CD_RX) || cmd.match(GITC_RX);
-  if (!m) return { block: false };
-  const mod = `etanah-${m[2].toLowerCase()}`;
-  if (/\[skip-compile-gate:\s*[^\]]+\]/i.test(turnText || '')) return { block: false, bypass: true, mod };
-  return { block: null, mod };
+  const who = ident || identify;
+  const bypass = /\[skip-compile-gate:\s*[^\]]+\]/i.test(turnText || '');
+  if (RAW_MVN_RX.test(cmd)) {
+    const t = who(cmd, cwd, null);
+    if (t) return bypass ? { block: false, bypass: true, mod: t.mod } : { block: true, rawMvn: true, mod: t.mod, top: t.top };
+  }
+  if (!invokesGit(cmd, 'commit')) return { block: false };
+  const t = who(cmd, cwd, 'commit');
+  if (!t) return { block: false };
+  if (bypass) return { block: false, bypass: true, mod: t.mod };
+  return { block: null, mod: t.mod, top: t.top };
 }
 function log(o) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), ...o }) + '\n'); } catch (_) {} }
 
@@ -48,9 +69,9 @@ function lastAssistantTurn(tp) {
   return text;
 }
 
-function verify(mod) {
+function verify(target) {
   try {
-    const out = execSync(`node "${path.join(__dirname, 'compile-check.js')}" verify ${mod}`,
+    const out = execSync(`node "${path.join(__dirname, 'compile-check.js')}" verify "${target}"`,
       { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
     return { ok: true, message: out.trim() };
   } catch (e) {
@@ -58,13 +79,22 @@ function verify(mod) {
   }
 }
 
-function blockMsg(mod, detail) {
+function rawMvnMsg(mod, top) {
+  return [
+    `⛔ compile-gate: raw \`mvn compile\` in ${mod} — it fails in this shell (no JDK 8 toolchain) and records nothing.`,
+    `   Use the tool instead (toolchain + offline→online retry + the marker the commit gate reads):`,
+    `     node domain/compile-gate/compile-check.js run "${top}"`,
+    `   Intentional raw maven run? add [skip-compile-gate: <reason>].`,
+  ].join('\n');
+}
+
+function blockMsg(mod, detail, top) {
   return [
     `⛔ compile-gate: ${mod} was NOT compiled green + current before this commit.`,
     `   ${String(detail).split('\n').join('\n   ')}`,
     ``,
     `   Run it (backgroundable — ~1-2 min, works in parallel):`,
-    `     node domain/compile-gate/compile-check.js run ${mod}`,
+    `     node domain/compile-gate/compile-check.js run "${top}"`,
     `   then re-commit. WHY: QA-275456 — a non-compiling fix ("tested" from a green DB read)`,
     `   reached int-env, the server BUILD failed, and mlit went down. Compile locally first.`,
     ``,
@@ -77,13 +107,17 @@ if (require.main === module) {
   runHook({ name: 'compile-gate', event: 'PreToolUse' }, (input) => {
     let data = {}; try { data = JSON.parse(input || '{}'); } catch (_) { return { fired: false }; }
     const command = String((data.tool_input || {}).command || '');
-    const d = decide(command, lastAssistantTurn(data.transcript_path || ''));
+    const d = decide(command, lastAssistantTurn(data.transcript_path || ''), data.cwd || '');
     if (d.block === false) { if (d.bypass) log({ action: 'bypass', mod: d.mod }); return { fired: false }; }
-    const v = verify(d.mod);
-    if (v.ok) { log({ action: 'pass', mod: d.mod }); return { fired: false }; }
-    log({ action: 'blocked', mod: d.mod, detail: v.message });
-    return { fired: true, blocked: true, blockReason: blockMsg(d.mod, v.message) };
+    if (d.block === true) {
+      log({ action: 'blocked-raw-mvn', mod: d.mod, top: d.top });
+      return { fired: true, blocked: true, blockReason: rawMvnMsg(d.mod, d.top) };
+    }
+    const v = verify(d.top);
+    if (v.ok) { log({ action: 'pass', mod: d.mod, top: d.top }); return { fired: false }; }
+    log({ action: 'blocked', mod: d.mod, top: d.top, detail: v.message });
+    return { fired: true, blocked: true, blockReason: blockMsg(d.mod, v.message, d.top) };
   });
 }
 
-module.exports = { decide, CD_RX, GITC_RX };
+module.exports = { decide, identify, RAW_MVN_RX, CD_RX, GITC_RX };

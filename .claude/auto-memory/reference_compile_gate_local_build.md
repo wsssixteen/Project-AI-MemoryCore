@@ -11,8 +11,10 @@ metadata:
 **compile-gate** (`domain/compile-gate/`) — a PreToolUse Bash hook that BLOCKS a `git commit` issued inside an etanah repo (etanah-pelupusan/awam/common cwd) unless a local `mvn compile` for that module is green **and** current (no `.java` edited since). Bypass `[skip-compile-gate: <reason>]`.
 
 **Workflow before committing an etanah code fix:**
-- `node domain/compile-gate/compile-check.js run <module>` — runs the compile in the BACKGROUND (~1-2 min), writes a green marker at `.claude/state/compile-ok-<module>.json` (gitignored).
-- The commit hook calls `verify <module>` (instant) — passes only if marker is green AND no `.java` newer than the marker ts.
+- `node domain/compile-gate/compile-check.js run "<repo path>"` — ANY etanah repo path, worktrees included (e.g. `E:\Dev\etanah-work\stag-awam-pdbb`); short names `etanah-awam` etc. still mean `E:\Projects\Melaka\…`. Runs ~1-2 min (backgroundable), writes a green marker keyed by repo path at `.claude/state/compile-ok-<module>-<hash>.json` (gitignored).
+- Offline cache missing a dependency (new common version) → it retries ONCE online by itself. Failures print `KIND=compile|dependency|toolchain|other`; compile errors listed as `file:line`. Every run logged in `domain/compile-gate/log.jsonl`.
+- The commit hook names the repo by its **origin remote** (lib/git-target.js), not its folder name, then calls `verify "<repo top>"` — passes only if marker is green AND no `.java` newer than the marker ts.
+- 🚨 NEVER run raw `mvn compile` in an etanah repo — the gate BLOCKS it (no JDK 8 here, and it records no marker). Use the tool. (2026-10-02: I ran mvn by hand in a worktree and hit the offline miss, then the toolchain error.)
 
 **The toolchains trick** — etanah's build demands JDK-8 + JDK-11 toolchains at `E:\Java\java8` / `E:\Java\java11`, which Ruri's shell does NOT have (only JRE 8 + JDK 17). `compile-check.js` passes `mvn -o -q -t domain/compile-gate/toolchains.xml compile`; that `toolchains.xml` maps both `1.8` and `11` → `C:\Program Files\Java\jdk-17`. Per-invocation via `-t`, so みや's global `~/.m2` is never touched. Compiles source-8/11 on JDK 17 — enough to catch `cannot find symbol` (the target bug class). NOT a production build; a compile-only smoke check.
 
