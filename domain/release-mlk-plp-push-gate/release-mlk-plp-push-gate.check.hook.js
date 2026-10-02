@@ -63,9 +63,14 @@ runHook({ name: 'release-mlk-plp-push-gate', event: 'PreToolUse' }, (input) => {
   const approved = PUSH_APPROVAL.test(lastUserText(data.transcript_path || ''));
   // v4: another team's repo (anything but etanah-pelupusan) pushing a shared branch needs BOTH a
   // foreign-merge-check report for the exact HEAD being pushed AND miya's explicit push approval.
-  const cdm = /git\s+-C\s+("([^"]+)"|'([^']+)'|(\S+))/.exec(cmd) || /cd\s+("([^"]+)"|'([^']+)'|(\S+))/.exec(cmd);
-  const repo = cdm ? (cdm[2] || cdm[3] || cdm[4]) : (data.cwd || '');
-  const foreign = /etanah-(?!pelupusan)[a-z]+/i.test(repo);
+  // v5 (2026-10-02): the repo is named by its origin remote via lib/git-target.js, never by its folder
+  // name — `cd X; git push` kept the ";" in the path, a worktree named stag-awam-pdbb was "foreign" only
+  // because its parent was E:\Dev\etanah-work, and E:\Dev\etanah-work\etanah-pelupusan read as foreign.
+  const { targetRepo } = require(path.join(ROOT, 'lib', 'git-target.js'));
+  const tr = targetRepo(cmd, data.cwd || '', 'push');
+  const repo = tr.dir || '';
+  const repoName = tr.id ? tr.id.name : '';
+  const foreign = /^etanah-/i.test(repoName) && !/^etanah-pelupusan$/i.test(repoName);
   const shared = /\bmlk\/(release\/|stag-env\b|int-env\b|master\b|mlit\b)/.test(gp[1]);
   if (foreign && shared) {
     let sha = ''; try { sha = execSync(`git -C "${repo}" rev-parse HEAD`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim(); } catch (_) {}
@@ -73,7 +78,7 @@ runHook({ name: 'release-mlk-plp-push-gate', event: 'PreToolUse' }, (input) => {
     if (!report || !approved) {
       return {
         fired: true, blocked: true,
-        blockReason: `⛔ release-mlk-plp-push-gate v4: push to ANOTHER team's shared branch (${repo}).\n` +
+        blockReason: `⛔ release-mlk-plp-push-gate v5: push to ANOTHER team's shared branch (${repoName} at ${repo}).\n` +
           `   ${report ? '✅' : '❌'} full check for HEAD ${sha.slice(0, 10) || '?'}: node domain/release-mlk-plp/foreign-merge-check.js --repo "${repo}" --ticket <num>\n` +
           `   ${approved ? '✅' : '❌'} miya's own message approves the push ("push it" / "go ahead and push" / "boleh push")\n` +
           `   Brief him first: the diff, and WHY every differing line exists. No bypass token opens this.`,
