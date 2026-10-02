@@ -12,6 +12,8 @@ metadata:
 
 **Why:** BA and other teams do not know technicals. AI-style wording (DB-proven, file:line, "the constant does not exist yet", sudden CAPS) confuses them and wastes miya's time editing it.
 
+**🚨 Never restate what the ticket already holds (2026-10-02, #244600 common hand-off: "too long, unnecessary info that is already inside the ticket").** A Redmine note to another team carries only what is NEW: which issue numbers are theirs, the cause in one line, the proposed fix, what we already fixed, the decision we need. No BA issue list, no evidence rows, no file paths, no DB ids, no step-by-step of an alternative. Target 5-7 lines.
+
 **How to apply - the shape (from miya's own example, #276436):**
 - Short simple sentences. One idea per line.
 - STATEMENTS, never implications (2026-09-30, #281423): say the fact and its result outright; no "X can carry Y. This happens even when..." that makes the reader infer the point. Back it with the real count ("every PRBB pemohon row has 625, owner or not").

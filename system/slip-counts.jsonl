@@ -844,3 +844,6 @@
 {"ts":"2026-10-01T09:55:01.678Z","category":"A1"}
 {"ts":"2026-10-01T09:55:01.783Z","category":"A4"}
 {"ts":"2026-10-01T16:11:35.769Z","category":"workflow/handback-instead-of-takeover"}
+{"ts":"2026-10-02T08:13:25.391Z","category":"reask/rambling"}
+{"ts":"2026-10-02T08:20:27.698Z","category":"memory-not-loaded"}
+{"ts":"2026-10-02T09:56:18.186Z","category":"reask/invented-label"}
