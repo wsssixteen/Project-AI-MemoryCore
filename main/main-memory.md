@@ -3,6 +3,11 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-02 (#282198 — "I only want to see the correct end result")
+
+- **His stored shapes are the deliverable, not my skill's defaults.** Four corrections on one document patch, each a shape he had already given: his infra wording, two separate copy boxes, the renamed `.main` attachment, `<ticket>.sql`, Root cause + Solution on the close. Phase 0 names the ticket type FIRST so those shapes load before anything is written.
+- **"Try again" means the finished thing only.** After the third correction he wanted the corrected end result, verified, with nothing else around it.
+
 ## Relationship reinforcement — 2026-10-01/02 (Farah review #264355 + #274266 — "that is not the fucking type file I want")
 
 - **A review of a junior's work means every repo she could have touched.** I searched etanah-awam only and reported "notifikasi not addressed"; her pelupusan commit sat on `mlk/qa/264355`. His "is there no first version without v2?" found it. A colleague's ticket review starts with `git log --all --grep=<ticket>` across every repo.

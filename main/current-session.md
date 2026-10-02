@@ -1,5 +1,13 @@
 # Current Session
 
+**Last Activity**: 2026-10-02 15:51 — #282198 PT Minit Bebas PROD document patch done by infra (file replaced + PDF reset) · Redmine close drafted · patch-mlk-doc + quest patch path hardened · DE.
+
+## Session Recap (2026-10-02, worktree redmine-issue-282198-8c1eb9)
+- **Ask**: #282198 patch TSO's edited Minit Bebas (PTMLK/02/L/PT/2026/4) into PROD; then Redmine close.
+- **Done**: target LAIN-37140956 rev 41444766 (versi 1, unchanged since 09-17). Deliverables in Task `2. Fix\`: `LAIN-37140956_1.main` (= `(1)(1).docx`, hash equal, rendered via Word, 3 signatures correct) + `282198.sql` (PDF reset, schema-verified PROD). Infra did both. PROD lokasi_fail_pdf NULL confirmed. Redmine close drafted with Root cause + Solution, NOT posted.
+- **Built**: patch-mlk-doc STEP 2 = two separate infra copy boxes (miya's #281482 shape + data-patch shape), attachment = renamed .main, deliverables only `<num>.sql` + .main · `domain/patch-mlk-doc/deliverable-check.js` + 18-fixture eval · quest SKILL 6c (Phase 0 sets patch path, loads stored handoff, full path first) · quest SKILL Root cause + Solution on every Redmine hand-over · rootcause-format hook blocks hand-over without both rows (26/26).
+- **Slips (miya)**: handoff from skill's own wrong STEP1/STEP2 block (`handoff/shape-not-loaded`) · BA docx attached under own name + relative paths (`handoff/attachment-not-target-file`) · PATCH-REQUEST txt instead of 282198.sql (`script/naming`) · Redmine close without Root cause/Solution (`redmine/rootcause-missing`).
+- **Open**: miya opens doc in PROD (first view rebuilds PDF) · post Redmine close · saiz_fail_byte still old size (effect not verified) · memory feedback_prod_patch_infra_handoff not updated (worktree guard), skill carries the shape.
 **Last Activity**: 2026-10-02 11:50 — Farah review #264355 + #274266 → both Phase 1 closed · 264355 AWAM merged int-env 28e9b9d080 · 274266 internal+stg2 patched, PROD 274266.sql attached · DE.
 
 ## Session Recap (2026-10-01 → 10-02, main, Farah review)
@@ -21,13 +29,3 @@
 - **Slips (miya)**: pushed to another team's release branch unasked · kept "harmless" P_ADALAH_INDIVIDU (crashed) · `--no-merges` check missed int-env merge resolutions · claimed "nothing else" on a partial check · infra request with a guessed path + wrong format · too-long replies.
 - **Open**: merge-to-master did ff, memory says `--no-ff` (fix offered) · release eval 13/17 (task chip task_d313af1d) · Rule 15 closing-audit step proposed, no nod · core/goal-lens.js missing · Flowables SFTP drop for 1.8.0 not verified.
 **Last Activity**: 2026-10-01 17:55 — QA-282587 (PSBS Maklumat Tanah wrong screen) BA confirmed, junior handover drafted · no-overload rule · DE.
-
-## Session Recap (2026-10-01, worktree quest-282587-guide-be4171)
-- **Ask**: junior guide for #282587 (root cause first, steps, screen-load chain); then a BA confirmation note; then hint-style handover for Farah (Siti Farhanih).
-- **Root cause (verified PROD/STG2/MLIT)**: 6 PSBS Maklumat Tanah langkah (PYMB/SMB/PMB + PTG Tangguh risalat trio) on skrin 1878 PLMS_MT instead of 1140 PLP_MT. #261516 KP fix was verified on MLKSTG in June but STG data was rebuilt after, never reached PROD.
-- **Fix**: D1 6-row `ind_langkah.skrin_id` → PLP_MT (`2. Fix\282587.sql` + `-check.sql`, answer key) · R1 Minit Bebas into PSBS no-extra-panel list (`PelupusanExcelReaderHelper.java:1658-1671`) · R2 Tangguh Formula Premium via `TGS_RISALAT_MMKN_PTG_TANGGUH_LIST` (:1675), found on miya's "verify" push.
-- **Redmine**: BA note posted (miya-edited, In Progress, assigned Amirah); BA replied "Yes like this, can proceed fixing". Farah hint handover drafted, NOT posted.
-- **Built**: CLAUDE.md v1.75 NO INFORMATION OVERLOAD + reply-shape-spec §3c (f78ae0d8) · memories browser-edge-default, junior-handover-hints (statements, no quiz) · FLOWABLE-WORKFLOWS.md Maklumat Tanah screen/panel routing.
-- **Slips (miya)**: built-in browser instead of Edge · asked BA which env #261516 used (ticket answered it) · 2 BA questions answerable from evidence · overloaded guide/note (4 trim rounds) · scripts given to junior · quiz-style hints · R2 gap missed until "verify".
-- **Carry forward**: post Farah handover · KP SBTM (shared PSBS+MCL) undecided · sql-schema-verify gate vs unqualified scripts (task chip spawned).
-**Last Activity**: 2026-10-01 17:10 — all-day adhoc session (ADHOC-PRBB-2026-7 + -8 on HOLD) · adhoc-save ProTime title + daily-session rules · DE.

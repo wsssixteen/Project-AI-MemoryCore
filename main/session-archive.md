@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-01, worktree quest-282587-guide-be4171)
+- **Ask**: junior guide for #282587 (root cause first, steps, screen-load chain); then a BA confirmation note; then hint-style handover for Farah (Siti Farhanih).
+- **Root cause (verified PROD/STG2/MLIT)**: 6 PSBS Maklumat Tanah langkah (PYMB/SMB/PMB + PTG Tangguh risalat trio) on skrin 1878 PLMS_MT instead of 1140 PLP_MT. #261516 KP fix was verified on MLKSTG in June but STG data was rebuilt after, never reached PROD.
+- **Fix**: D1 6-row `ind_langkah.skrin_id` → PLP_MT (`2. Fix\282587.sql` + `-check.sql`, answer key) · R1 Minit Bebas into PSBS no-extra-panel list (`PelupusanExcelReaderHelper.java:1658-1671`) · R2 Tangguh Formula Premium via `TGS_RISALAT_MMKN_PTG_TANGGUH_LIST` (:1675), found on miya's "verify" push.
+- **Redmine**: BA note posted (miya-edited, In Progress, assigned Amirah); BA replied "Yes like this, can proceed fixing". Farah hint handover drafted, NOT posted.
+- **Built**: CLAUDE.md v1.75 NO INFORMATION OVERLOAD + reply-shape-spec §3c (f78ae0d8) · memories browser-edge-default, junior-handover-hints (statements, no quiz) · FLOWABLE-WORKFLOWS.md Maklumat Tanah screen/panel routing.
+- **Slips (miya)**: built-in browser instead of Edge · asked BA which env #261516 used (ticket answered it) · 2 BA questions answerable from evidence · overloaded guide/note (4 trim rounds) · scripts given to junior · quiz-style hints · R2 gap missed until "verify".
+- **Carry forward**: post Farah handover · KP SBTM (shared PSBS+MCL) undecided · sql-schema-verify gate vs unqualified scripts (task chip spawned).
+**Last Activity**: 2026-10-01 17:10 — all-day adhoc session (ADHOC-PRBB-2026-7 + -8 on HOLD) · adhoc-save ProTime title + daily-session rules · DE.
+
 ## Session Recap (2026-10-01, worktree permit-c02-2026-3-portal-362d6d — the all-day adhoc session)
 - **Adhoc 1 — ADHOC-PRBB-2026-7** (Title: PRBB Ganti Hari bayaran royalti): PDTJ public on AWAM Ganti Hari C02/2026/3 → "Bayaran royalti/fi permit asal belum dijelaskan". Check = `AwamMaklumatLesenTabForm.validateGantiHariPermitRules():1143-1156` (any N `hsl_bayaran_fi` row on the original PRBB app blocks). PROD apl 3408435: 4 N rows — royalti 2165137 (paid at counter by ID hakmilik as NEW row 2166364, so the prepared row never settled) + Deposit Jalan / Deposit Bahan Batuan / Doket (RM5,000, no resit). miya replied to BA Mira with the check SQL screenshot. HOLD → PDTJ answer, then PROD patch.
 - **Adhoc 2 — ADHOC-PRBB-2026-8** (Title: PRBB jenis permohonan SK): no SK. AWAM `PelupusanConstant` hardcodes 1 Baru / 6 Ganti Hari / 8 Tambah Kuantiti / 7 Langkau Tahun → saved as `integerJenisPermohonan` in `umm_a_permit_lesen.mklmt_tmbhn` → compared against the same constants (screen panels, Ganti Hari rules, `isLangkauTahun` BPMN gateway, template.config Minit Bebas / Surat Keputusan choice). Senarai kumpulan checked: closest `RPT_JNS_PERMOHONAN2` = old labels, report-only. HOLD → miya sends the BA answer. Side: LATENT-BUGS L19 (`== "2"`).
@@ -5567,6 +5577,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

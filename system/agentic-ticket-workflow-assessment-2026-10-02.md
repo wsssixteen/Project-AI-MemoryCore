@@ -16,3 +16,12 @@
 | A3 debugging | Told miya to upload `#274266.txt`; the Task-folder `274266.sql` was a stale 14-row partial patch never opened (slip `script-file-type`). | Hand-off file gate: block `.txt` script names and unread Task-folder files in a reply. Eval: "upload #274266.txt" → block. |
 | A4 etanah issue-solving | PROD MLK_PLP_PT v13 already routes PT Tangguh to 28.1 while PROD has no PT ind_tgsn rows → every PT Tangguh fails ("tugasan not found", BpmCallbackService.java:777-779). Proven via admin model-json ids = stg2 XML ids. Banked FLOWABLE-KNOWLEDGE §16. | New-userTask release check across envs (BPMN has kod vs rows exist). Eval: 274266 snapshot → PROD flagged. |
 | A5 sweep | `sql-schema-verify emit` crosses every identifier with every table (~70 false refs on 274266.sql); I ran an exact per-table query instead before stamping. | Per-statement refs. Eval: 274266.sql → 0 false rows. |
+
+## Session 3 (worktree 282198, #282198 PT Minit Bebas PROD document patch)
+| Axis | Assessment (instance) |
+|---|---|
+| A1 agentic system | Gates misfired on a DMS document patch: fix-photo (no UI change) and codemap UI-path (Word doc root cause) both needed skip tokens. fix-photo goal-lens met-rate 0% over 5 runs agrees. |
+| A2 quest workflow | Phase 0 was skipped: sync went straight into patch-mlk-doc, ticket_type=patch set after the deliverable. Stored infra shapes never loaded. Fixed: quest 6c. |
+| A3 debugging | No debugging. The correctness check that worked was rendering the docx through Word and viewing both pages. |
+| A4 etanah issue-solving | The DMS document patch now has a fixed end state: `<num>.sql` + renamed `.main`, linted by deliverable-check.js. Open question: saiz_fail_byte stays old after an infra replace. |
+| A5 sweep | ⏭ no sweep this session. |
