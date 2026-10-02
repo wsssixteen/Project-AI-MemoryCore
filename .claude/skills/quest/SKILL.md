@@ -254,6 +254,8 @@ Attached is the script for PROD (282587.sql).
 Thank you very much.
 ```
 
+**Attachments = FULL absolute path, always** (2026-10-02 per miya, #282587). Every file miya must upload is named by its full path (`C:\Users\…\1. Tasks\Melaka\<folder>\2. Fix\<ticket>.sql`), never `2. Fix\<ticket>.sql`. The tool prints it under `--- not part of the note ---` as `Attach: <full path>`; copy that line as is. **Banned**: a relative or folder-short path in any handover table or field set.
+
 Our own fix — it prints this shape; fill ONLY the numbered list:
 ```
 Salam <BA>, have deployed fixes to <internal & staging>. Please help to verify.

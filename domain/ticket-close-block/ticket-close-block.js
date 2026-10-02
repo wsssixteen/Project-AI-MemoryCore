@@ -132,4 +132,23 @@ if (foreign && ba && ba !== true) {
   }
 }
 
+// Attach line for miya (NOT part of the note): FULL path of every file he uploads (#282587, 2026-10-02).
+if (prodScript && prodScript !== true) {
+  let full = path.isAbsolute(prodScript) ? prodScript : null;
+  if (!full) {
+    try {
+      const block = execFileSync('node', [path.resolve(__dirname, '../../quest/active-cli.js'), 'read', `QA-${ticket}`], { encoding: 'utf8' });
+      const tf = (block.match(/^task_folder=(.+)$/m) || [])[1];
+      if (tf) {
+        const dirs = fs.readdirSync(tf.trim()).filter(d => /^\d+\. (Rework|Fix)$/.test(d)).sort((a, b) => parseInt(b) - parseInt(a));
+        const hit = dirs.map(d => path.join(tf.trim(), d, prodScript)).find(p => fs.existsSync(p));
+        full = hit || null;
+      }
+    } catch (_) {}
+  }
+  console.log('');
+  console.log('--- not part of the note ---');
+  console.log(`Attach: ${full || '(not found — give the full path) ' + prodScript}`);
+}
+
 logRow({ ts: new Date().toISOString(), ticket, module: moduleName, branch: branch || null, commit: commit ? commit.hash : null, intenv: intenv || null, outcome: commit ? 'ok' : 'no-commit' });
