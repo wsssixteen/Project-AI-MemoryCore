@@ -41,3 +41,8 @@
 - A3: sql-schema-verify emit returned 12 false rows (cross product); stamped by hand. Proposal logged.
 - A4: BA pass note shape wrong twice (greeting, colleague commit block) despite memory example 2b; fixed in ticket-close-block.js. Write runner re-written ad hoc; proposal logged.
 - A5: no sweep this session.
+
+## Session 6 (permit-c02-2026-3-query, ADHOC-PRBB-2026-11)
+- **A4 env-blind answer**: BA asked about a permit; I answered from PROD. Her screenshot (4 rows) was from internal MLIT. The mismatch cost one round-trip and a wrong guess ("maybe urusan lain"). Instance: reply listing HT16/CRHM/GD/PMT for aplikasi ids that only exist as PRBB-family rows on MLIT.
+- **A4 knowledge-first miss**: guessed `ind_kod_rujukan_tmp`, then 3 information_schema probes, before DATABASE.md line 285 named `rjk_senarai_ahli_kumpulan`. Fixed by an index.md quick-link.
+- A1 ⏭ no agents spawned · A2 ⏭ adhoc only, no quest phases · A3 ⏭ no debugging · A5 ⏭ no Brief reading beyond 2 screenshots.
