@@ -56,6 +56,7 @@ try {
     commit = { hash: parts[0], author: parts[1], date: parts[2], subject: parts.slice(3).join('\n') };
   }
 } catch (_) {}
+if (branch) branch = branch.replace(/^origin\//, '');
 
 let intenv = arg('intenv-sha');
 const cherrypick = arg('cherrypick') === true;
@@ -76,21 +77,59 @@ lines.push(branchLine);
 lines.push(`Module  : ${moduleName}`);
 lines.push('</pre>');
 
-// --ba <first name> [--envs "internal & staging"] wraps the git block in miya's BA pass note (#282061, 2026-09-29).
-const ba = arg('ba');
+// --ba <name> [--envs "internal & staging"] wraps the git block in miya's BA pass note (#282061, 2026-09-29).
+// BA name -> the short name miya greets with (ba-names.json). Unknown name -> printed as given + a stderr warning.
+let ba = arg('ba');
 const envs = arg('envs');
+const prodScript = arg('prod-script');
 if (ba && ba !== true) {
-  console.log(`Salam ${ba}, have deployed fixes to ${envs && envs !== true ? envs : 'internal'}. Please help to verify.`);
-  console.log('');
-  console.log('Issues found and resolved:');
-  console.log('1. ');
-  console.log('');
+  let names = {};
+  try { names = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'ba-names.json'), 'utf8')); } catch (_) {}
+  const key = Object.keys(names).find(k => k.toLowerCase() === String(ba).toLowerCase());
+  if (key) ba = names[key];
+  else console.error(`warn: no short name for "${ba}" in ba-names.json — check how miya greets this BA`);
 }
-console.log(`*${branch || moduleName}*`);
-console.log(lines.join('\n'));
-if (ba && ba !== true) {
+
+// Colleague's fix (#282587, 2026-10-02): commit author is not us -> no issues list, no commit details.
+// Branch line only when the Redmine history does not already name the branch. AWAM keeps the branch line
+// (another team merges PROD from it).
+const OURS = new RegExp(arg('ours-author', 'ridhwan'), 'i');
+const foreign = commit && !OURS.test(commit.author);
+let historyHasBranch = false;
+if (foreign && branch) {
+  let hist = arg('history');
+  if (!hist || hist === true) {
+    try {
+      const block = execFileSync('node', [path.resolve(__dirname, '../../quest/active-cli.js'), 'read', `QA-${ticket}`], { encoding: 'utf8' });
+      const tf = (block.match(/^task_folder=(.+)$/m) || [])[1];
+      if (tf) hist = ['1. Brief', '0. Brief'].map(d => path.join(tf.trim(), d, 'History.txt')).find(p => fs.existsSync(p));
+    } catch (_) {}
+  }
+  try { historyHasBranch = !!hist && fs.readFileSync(hist, 'utf8').includes(branch.replace(/^origin\//, '')); } catch (_) {}
+}
+
+const env = envs && envs !== true ? envs : 'internal';
+if (foreign && ba && ba !== true) {
+  console.log(`Salam ${ba}, have deployed fixes to ${env}. Please help to verify.`);
+  if (prodScript && prodScript !== true) { console.log(''); console.log(`Attached is the script for PROD (${prodScript}).`); }
+  if (isAwam || !historyHasBranch) { console.log(''); console.log(`Branch: ${branch || '(not found)'}`); }
   console.log('');
   console.log('Thank you very much.');
+} else {
+  if (ba && ba !== true) {
+    console.log(`Salam ${ba}, have deployed fixes to ${env}. Please help to verify.`);
+    console.log('');
+    console.log('Issues found and resolved:');
+    console.log('1. ');
+    console.log('');
+  }
+  console.log(`*${branch || moduleName}*`);
+  console.log(lines.join('\n'));
+  if (ba && ba !== true) {
+    if (prodScript && prodScript !== true) { console.log(''); console.log(`Attached is the script for PROD (${prodScript}).`); }
+    console.log('');
+    console.log('Thank you very much.');
+  }
 }
 
 logRow({ ts: new Date().toISOString(), ticket, module: moduleName, branch: branch || null, commit: commit ? commit.hash : null, intenv: intenv || null, outcome: commit ? 'ok' : 'no-commit' });

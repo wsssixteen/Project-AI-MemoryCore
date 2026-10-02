@@ -241,9 +241,20 @@ Any Redmine hand-over, BA pass, ticket close, "prepare redmine", "both done", "p
 
 Fires at every "pass to BA" / "deployed, please verify" / Redmine hand-over after a deploy. Generate it, never hand-write it:
 
-`node domain/ticket-close-block/ticket-close-block.js --repo <work-clone path> --ticket <num> --module <pelupusan|awam> --ba <BA first name> --envs "<internal | internal & staging>" [--intenv-sha <sha> --cherrypick]`
+`node domain/ticket-close-block/ticket-close-block.js --repo <work-clone path> --ticket <num> --module <pelupusan|awam> --ba <BA name as on Redmine> --envs "<internal | internal & staging>" [--prod-script <ticket>.sql] [--intenv-sha <sha> --cherrypick]`
 
-It prints this shape; fill ONLY the numbered list:
+**Greeting = miya's short name** for the BA (`domain/ticket-close-block/ba-names.json`: Nurul Amirah Nadiah → Mira, Nurhafizah → Fizah). The tool maps it; an unknown name prints a warning, then add the row.
+
+**🔁 Colleague's fix (commit author is not us, 2026-10-02 per miya, #282587)** — the tool switches shape by itself: NO "Issues found and resolved" list, NO commit details. Branch line only when the Redmine history does not already name the branch; AWAM keeps the branch line. Shape (matches #274266):
+```
+Salam Mira, have deployed fixes to internal & staging. Please help to verify.
+
+Attached is the script for PROD (282587.sql).
+
+Thank you very much.
+```
+
+Our own fix — it prints this shape; fill ONLY the numbered list:
 ```
 Salam <BA>, have deployed fixes to <internal & staging>. Please help to verify.
 
