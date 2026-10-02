@@ -202,5 +202,20 @@ Pembatalan boleh teruskan.
 ```
 🚨 Root cause / Solution rows follow THIS collection's voice, not [[feedback_redmine_rootcause_format]]'s older formal-Malay exemplars. Pre-send check: any formal Malay verb (dihantar, tidak dapat, dipaparkan) or a translated dev term (jadual, nilai) → rewrite in his rojak.
 
+9. Done-alter note, #282723 (2026-10-02). He rejected my draft that listed 3 permohonan ids inside one sentence. Rules: (a) never list many items in one sentence — either bullets/numbered, or summarise ("altered all the permohonan to ..."); (b) brief, short sentences; (c) a blank line between every sentence. Shape:
+```
+Salam Mira,
+
+Have altered all the permohonan to tugasan Penyediaan Borang 4Ae dan L1e.
+
+Borang 4Ae for /3 has been reset.
+
+Please help to verify.
+
+Thanks
+```
+
+**BA short names miya uses in greetings** (Redmine name → what he writes): Nurul Amirah Nadiah → **Mira** · Nurhafizah → Fizah · Siti Farhanih Abdul Razak → Farah.
+
 **Before writing ANY Redmine note: run `node quest/redmine-sync.js <num>` and greet the live assignee.**
 Related: [[feedback_cross_module_handoff_artifact]] · [[feedback_ba_facing_reply_plain]].

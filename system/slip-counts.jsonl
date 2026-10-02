@@ -843,3 +843,7 @@
 {"ts":"2026-10-01T09:55:01.576Z","category":"A5"}
 {"ts":"2026-10-01T09:55:01.678Z","category":"A1"}
 {"ts":"2026-10-01T09:55:01.783Z","category":"A4"}
+{"ts":"2026-10-01T16:20:51.432Z","category":"tool-choice"}
+{"ts":"2026-10-02T01:59:22.780Z","category":"ticket-ownership"}
+{"ts":"2026-10-02T02:05:51.332Z","category":"wrong-mechanism"}
+{"ts":"2026-10-02T02:05:51.504Z","category":"prod-safety"}

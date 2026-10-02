@@ -2,6 +2,7 @@
 
 
 ## Feedback
+- [no-builtin-browser](feedback_no_builtin_browser.md) — 🚨 BANNED: built-in browser (mcp__Claude_Browser__*) for any web task; use Claude in Chrome
 - [junior-handover-hints](feedback_junior_handover_hints.md) — 🚨 junior handover = hints + where to look, never the finished script or diff
 - [browser-edge-default](feedback_browser_edge_default.md) — 🚨 "show me in the browser" / Redmine / web UI → miya's EDGE (signed in), never the built-in pane or Chrome first
 - [end-of-task-brief-shape](feedback_end_of_task_brief_shape.md) — 🚨 end of long quest/task or "brief me" → per item: short-sentence bullets, then steps-only table; nothing else
@@ -184,7 +185,7 @@
 - [predicate-before-fix](feedback_predicate_before_fix.md) — Before proposing code, state the predicate that must hold +…
 - [simplify-and-reference](feedback_simplify_and_reference.md) — Mature system → find working analog first; "simplify" means…
 - [tasks-folder-format](feedback_tasks_folder_format.md) — 🚨 1. Brief · 2. Fix · N. Rework\Brief only for OUR deploys (never from Redmine status); no notes txt/1. Simulate; test data in quest MD
-- [ticket-writing-style](feedback_ticket_writing_style.md) — write ticket/handoff text in miya's plain short-sentence… + dev fix-list shape + 📚 verbatim Redmine speech collection (BA pass note #281712 · multi-issue pass note #282061 = `ticket-close-block --ba` · rojak fillers = casual English "Basically/Actually", never "Ringkasnya")
+- [ticket-writing-style](feedback_ticket_writing_style.md) — BA short names (Nurul Amirah Nadiah = Mira); never list many items in one sentence; blank line between sentences · write ticket/handoff text in miya's plain short-sentence… + dev fix-list shape + 📚 verbatim Redmine speech collection (BA pass note #281712 · multi-issue pass note #282061 = `ticket-close-block --ba` · rojak fillers = casual English "Basically/Actually", never "Ringkasnya")
 - [template-work-junior-builds](feedback_template_work_junior_builds.md) — 🚨 template .docx tickets: junior builds, miya guides; I draft the guide note, ASK before building a docx
 - [recheck-at-last-checkpoint](feedback_recheck_at_last_checkpoint.md) — 🚨 One-shot Phase-0 audit ≠ prevention; completeness checks…
 - [knowledge-schema-parity](feedback_knowledge_schema_parity.md) — 🚨 Every etanah-knowledge/<state>/ uses the SAME file names +…
