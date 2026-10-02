@@ -59,7 +59,15 @@ Hi infra, kindly need your help to download this file from <STATE> <ENV>. Thank 
 <lokasi_fail>
 ```
 
-## STEP 2 — deliverable to hand みや (Task folder `2. Fix/PATCH-REQUEST-<num>.txt`)
+## STEP 2 — deliverables (Task folder `2. Fix\`) — EXACTLY these two files, nothing else
+| File | Holds |
+|---|---|
+| `2. Fix\<num>.sql` | the PDF-reset script, in the `feedback_infra_script_schema_env` file format: 4-line header (Ticket · Env — schema · Permohonan (aplikasi_id) · Fix) · blank · ONE before SELECT · the UPDATE · `-- 1 row updated` |
+| `2. Fix\<lokasi_fail basename>` (e.g. `LAIN-37140956_1.main`) | the BA's edited docx, renamed — the attachment infra drops in place |
+
+**Banned** (2026-10-02 per みや, #282198): any `PATCH-REQUEST-*.txt` or other descriptive file · a `.txt` script. Script naming is `<num>.sql`, always (`feedback_script_file_naming`). The infra copy texts below live in CHAT only, never in a file.
+The reply's FIRST lines are the full Windows paths of both files.
+
 **Two SEPARATE copy boxes, one per infra group. Not ordered, not numbered** (fixed 2026-10-02 per みや, #282198).
 Each box holds only what he pastes. Banned inside a box: "STEP 1/2", "after infra confirms", the attachment name, any explanation.
 Shapes are copied from his own sent messages (#281482 replace · `feedback_prod_patch_infra_handoff` data patch).
@@ -83,10 +91,10 @@ UPDATE ET_DMS.DOKUMEN_REVISION SET LOKASI_FAIL_PDF=NULL WHERE DOKUMEN_REVISION_I
 No blank line between greeting and `#<num>:`. The one-liner = urusan + outcome only (no permohonan id, no table names).
 
 **The attachment IS the target file** (fixed 2026-10-02 per みや, #282198 — precedent #273625 / #281482 `2. Fix\LAIN-<n>_1.main`): copy BA's edited docx into `2. Fix\` renamed to the EXACT basename of `lokasi_fail` (e.g. `LAIN-37140956_1.main`), confirm the copy's SHA-256 equals the source, and render the docx to PDF (Word COM export) and LOOK at every page before handing over. Every file named in the reply carries its FULL Windows path — never `0. Brief\…` or `2. Fix\…` alone. **Banned**: telling him to attach the BA's `.docx` under its own name.
-The reply's FIRST line is the deliverable's full path: `<Task folder>\2. Fix\PATCH-REQUEST-<num>.txt`.
+**Self-check before the reply**: `node domain/patch-mlk-doc/deliverable-check.js "<Task folder>" <num> <lokasi_fail basename>` must print PASS.
 
 ## Conventions (this skill is an EXCEPTION to two standing rules — audience is the patching team)
-- **JOINs are allowed here** — the locator + patch queries mirror the patching team's own runbook format verbatim. The NO-JOIN rule (`convention-check-gate`) targets scripts みや reads to trace data; this output goes to infra/DBA who run it as-is. If writing to a `.sql` trips the gate, use `.txt` (matches the runbook shape) or bypass with reason.
+- **JOINs are allowed here** — the locator + patch queries mirror the patching team's own runbook format verbatim. The NO-JOIN rule (`convention-check-gate`) targets scripts みや reads to trace data; this output goes to infra/DBA who run it as-is. The handed `<num>.sql` has no JOIN anyway (single-table UPDATE pinned by `dokumen_revision_id`).
 - **The UPDATE stays schema-qualified `ET_DMS.`** — the patching team runs it connected to their own default schema; qualifying is their convention.
 
 ## Scaffolding this skill also owns
