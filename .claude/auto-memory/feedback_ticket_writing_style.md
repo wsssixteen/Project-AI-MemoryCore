@@ -221,9 +221,9 @@ Amik dari mlk/int-env:
 4) PelupusanReportService.java - method getPlpLaporanBorangPDBB() ikut int-env (hantar P_IMG_PATH, bukan P_ADALAH_INDIVIDU). Kalau tak tukar, jata tak dapat load.
 ```
 
-10. Dev-to-dev "which table and column" answer to another team, #277706 (2026-10-02). To Atierah (SPOC). Numbered field title + `<pre>` with `Table :` / `Column :` / `Value :` label lines. He kept my extra item 5 (marked as extra, see [[flag-unasked-additions]]) and CUT my two closing lines: "Semua table link ke umm_p_aplikasi guna p_aplikasi_id." and "Contoh di staging, ID Transaksi <id>." Rule: a developer knows how the tables link and has the BA's test data already; stop after the last field item, then "Thank you."
+10. Dev-to-dev "which table and column" answer to another team, #277706 (2026-10-02). To Atierah (SPOC). Numbered field title + `<pre>` with `Table :` / `Column :` / `Value :` label lines. He kept my extra item 5 (marked as extra, see [[flag-unasked-additions]]) and CUT my two closing lines: "Semua table link ke umm_p_aplikasi guna p_aplikasi_id." and "Contoh di staging, ID Transaksi <id>." Rule: a developer knows how the tables link and has the BA's test data already; stop after the last field item, then "Thank you." He also changed the greeting from "Salam Atierah" (the dev who asked) to "Salam Mira" (Amirah, the BA who passed the question to us) and assigned the ticket back to Mira: answer the person who routed it to us, not the original asker.
 ```
-Salam Atierah,
+Salam Mira,
 
 Untuk no. 1, Tambah Kuantiti simpan dalam table yang sama macam Ganti Hari.
 Yang baru cuma value Jenis Permohonan 8 dan Kuantiti Tambahan Yang Dipohon.
