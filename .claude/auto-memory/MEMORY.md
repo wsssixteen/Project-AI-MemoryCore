@@ -4,9 +4,11 @@
 ## Feedback
 - [junior-handover-hints](feedback_junior_handover_hints.md) — 🚨 junior handover = hints + where to look, never the finished script or diff
 - [browser-edge-default](feedback_browser_edge_default.md) — 🚨 "show me in the browser" / Redmine / web UI → miya's EDGE (signed in), never the built-in pane or Chrome first
+- [flag-unasked-additions](feedback_flag_unasked_additions.md) — 🚨 extra item beyond the ask → keep it but mark it "➕ Extra, not asked" in my chat bullets; not a slip
 - [end-of-task-brief-shape](feedback_end_of_task_brief_shape.md) — 🚨 end of long quest/task or "brief me" → per item: short-sentence bullets, then steps-only table; nothing else
 - [mlit-db-write-access](feedback_mlit_db_write_access.md) — 🚨 MLIT/STG are WRITABLE via the gateway login (JDBC script); only the MCP query tool is read-only; never tell miya 'read-only'
 - [system-fix-universal-rule](feedback_system_fix_universal_rule.md) — 🚨 system fix = UNIVERSAL rule, never keyed to one ticket/tugasan; load system-rules + system-design BEFORE any design/audit
+- [infra-server-log-request](feedback_infra_server_log_request.md) — 🚨 'hi Infra, please help to download server log for MLK Awam, env stag for today, thank you' — no path; check pt_application_ex_entity first
 - [resource-footprint](feedback_resource_footprint.md) — 🚨 laptop slow / RAM / "what are these processes" → measure LIVE + trace parents first; monitoring must be MECHANICAL not UI; system-rules Rule 7
 - [esokongan-means-tracker](feedback_esokongan_means_tracker.md) — 🚨 "eSOKONGAN ticket" = TRACKER eSOKONGAN (SLA), not the project; order eSOKONGAN → PROD → rest, then Priority, then urgent words
 - [top-down-app-design](feedback_top_down_app_design.md) — 🚨 apps/dashboards: glance → area → item → evidence, deeper levels only on demand; names before layout; guide last
@@ -98,6 +100,7 @@
 - [rework-commit-on-existing-ticket-branch](feedback_rework_commit_on_existing_ticket_branch.md) — 🚨 rework commits ON TOP of the existing ticket branch, never a new vN branch (salvaged 2026-09-25)
 
 ## User
+- [user-phone-number](user_phone_number.md) — 🚨 みや's number 60186669566 — use for WaRead relink, never ask again
 - [miya-blind-to-features](user_miya_blind_to_features.md) — 🚨 miya cannot know every feature; Ruri owns the audit from logs + go…
 - [career-vision](user_career_vision.md) — 3-phase career vision: Personal Excellence → Team…
 - [gender](user_gender.md) — みや is male; don't default to "she" in diary/narration; no…

@@ -46,9 +46,9 @@ check('F5 malformed ref blocks', r.status === 2 && /does not match/.test(r.stder
 r = run(bash('git push origin mlk/qa/262762'));
 check('F6 non-release push ignored', r.status === 0, 'exit=' + r.status);
 
-// F7: bypass token → ALLOW even with no state
-r = run(bash('RELEASE_GATE_BYPASS=1 git push origin mlk/release/7.7.7'));
-check('F7 bypass token passes', r.status === 0, 'exit=' + r.status);
+// F7 (v4): self-typed bypass token WITHOUT miya's approval → BLOCK (the 2026-09-30 #256334 form)
+r = run(bash('git push origin mlk/release/7.7.7  # RELEASE_GATE_BYPASS'));
+check('F7 self-typed bypass without approval blocks', r.status === 2 && /only counts when miya/.test(r.stderr), 'exit=' + r.status);
 
 // F8: non-Bash tool → NOT fired
 r = run({ tool_name: 'Edit', tool_input: { file_path: 'x' } });
@@ -83,6 +83,53 @@ check('F14 slips evidence text ignored', r.status === 0, 'exit=' + r.status);
 // F15: real chained push to mlk/master after a separator → still BLOCKED
 r = run(pwsh('git fetch origin; git -C "E:\\x\\etanah-pelupusan" push origin HEAD:mlk/master'));
 check('F15 chained real mlk/master push still blocks', r.status === 2 && /mlk\/master is BANNED/.test(r.stderr), 'exit=' + r.status);
+
+// ── v4 cases (2026-09-30, #256334 AWAM: pushed to another team's release branch twice, self-bypassed) ──
+const fDir = fs.mkdtempSync(path.join(os.tmpdir(), 'rmp-foreign-'));
+env.FOREIGN_CHECK_STATE_DIR = fDir;
+const repoDir = fs.mkdtempSync(path.join(os.tmpdir(), 'etanah-awam-'));
+spawnSync('git', ['init', '-q', repoDir]); spawnSync('git', ['-C', repoDir, '-c', 'user.email=e@e', '-c', 'user.name=e', 'commit', '-q', '--allow-empty', '-m', 'x']);
+const sha = spawnSync('git', ['-C', repoDir, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).stdout.trim();
+function transcript(userText) {
+  const tp = path.join(fDir, `t-${Math.random().toString(36).slice(2)}.jsonl`);
+  fs.writeFileSync(tp, JSON.stringify({ type: 'user', message: { role: 'user', content: userText } }) + '\n');
+  return tp;
+}
+function pw(command, userText) { return { tool_name: 'PowerShell', tool_input: { command }, transcript_path: userText == null ? '' : transcript(userText) }; }
+const push = `git -C "${repoDir}" push origin HEAD:mlk/release/1.11.1`;
+// F16: foreign repo, no report, no approval → BLOCK
+r = run(pw(push, 'lets do the merging ourselves'));
+check('F16 foreign push, no check + no approval blocks', r.status === 2 && /ANOTHER team/.test(r.stderr), 'exit=' + r.status);
+// F17: foreign repo, approval but no report → BLOCK
+r = run(pw(push, 'ok push it'));
+check('F17 foreign push, approval but no full check blocks', r.status === 2 && /❌ full check/.test(r.stderr), 'exit=' + r.status);
+// F18: foreign repo, report but no approval → BLOCK
+fs.writeFileSync(path.join(fDir, `foreign-check-${sha}.json`), '{}');
+r = run(pw(push, 'check the code please'));
+check('F18 foreign push, check but no approval blocks', r.status === 2 && /❌ miya/.test(r.stderr), 'exit=' + r.status);
+// F19: foreign repo, report + approval → ALLOW
+r = run(pw(push, 'go ahead and push'));
+check('F19 foreign push, check + approval passes', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 120));
+// F20: angry question containing "push" is NOT approval
+r = run(pw(push, 'who the fuck asks you to push to release branch'));
+check('F20 "who asks you to push" is not approval', r.status === 2, 'exit=' + r.status);
+// F21: bypass token does not open a foreign push without approval
+r = run(pw(push + '  # RELEASE_GATE_BYPASS', 'why did you push'));
+check('F21 bypass token cannot open foreign push', r.status === 2, 'exit=' + r.status);
+// F22: foreign repo, own ticket branch → not a shared branch → ignored
+r = run(pw(`git -C "${repoDir}" push origin mlk/cr/256334`, ''));
+check('F22 foreign own-ticket branch push ignored', r.status === 0, 'exit=' + r.status);
+// F23: foreign stag-env push gated too
+r = run(pw(`git -C "${repoDir}" push origin HEAD:mlk/stag-env`, ''));
+check('F23 foreign stag-env push blocks', r.status === 2, 'exit=' + r.status);
+// F24: report for an OLDER sha does not count after a new commit
+spawnSync('git', ['-C', repoDir, '-c', 'user.email=e@e', '-c', 'user.name=e', 'commit', '-q', '--allow-empty', '-m', 'y']);
+r = run(pw(push, 'go ahead and push'));
+check('F24 stale report (older HEAD) blocks', r.status === 2 && /❌ full check/.test(r.stderr), 'exit=' + r.status);
+// F25: "don't push" is not approval
+r = run(pw(push + '  # RELEASE_GATE_BYPASS', "don't push it yet"));
+check('F25 negated "don\'t push it" is not approval', r.status === 2, 'exit=' + r.status);
+try { fs.rmSync(fDir, { recursive: true, force: true }); fs.rmSync(repoDir, { recursive: true, force: true }); } catch (_) {}
 
 try { fs.rmSync(stateDir, { recursive: true, force: true }); } catch (_) {}
 
