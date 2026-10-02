@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-02, worktree permit-c02-2026-3-portal-362d6d, session 7)
+- **Ask**: retrieve #246964 and review Ammar's fix ("within Melaka standard?"); then take over, commit, deploy, Redmine handover.
+- **Done**: Ammar `ef49baf78f` = template (tahun after tempoh pajakan, slogan left) correct + Java (PSBS blank signature block before Peraku) NOT asked and against our #278699 placeholder rule. We committed `6feb2525c6` on `mlk/qa/246964` reverting the Java (file now equals master). Merged int-env `803e4907bd` + stag-env `5110004a80` from a temp worktree (work clone had another session's uncommitted edits). miya posted the pass note, assigned Mira, fixed Resolved By. Quest archived (Task folder to Archive, block to active-archive).
+- **Built**: takeover rule in quest SKILL (Colleague asks us to review their fix = TAKEOVER, junior template work stays guide-only) + deploy 6 row 10 + review-etanah pointer. LATENT-BUGS L20 (PLTP + PPTPB Tolak slogan still justified).
+- **Slips**: `workflow/handback-instead-of-takeover` (drafted a "please fix" note for Ammar).
+- **Open**: render not verified (no PSBS app at PYSTP/PSTP on stg2 or mlit; BA to regen) · #246964 on the planned-release list.
+
+
+**Last Activity**: 2026-10-02 17:45 — ADHOC-PRBB-2026-11 assist BA Fizah: PROD permit C02/2026/3 data + MLIT 4-row explanation + tugasan all-daerah query · adhoc saved 28/28 · Phase 2 archived + bounty · DE.
+
 ## Session Recap (2026-10-02, worktree permit-c02-2026-3-query-dba198, session 6)
 - **Ask**: BA Fizah (Nurhafizah Hasan) via WhatsApp: tujuan, kuantiti diluluskan, tempoh diluluskan + maklumat tanah for No Permit C02/2026/3; why internal shows 4 rows; query id permohonan at a tugasan for all daerah.
 - **Done**: PROD 1 row (apl 3408435): MERATAKAN TAPAK, 5000 meter padu, 30 hari 21/08-29/09/2026, GM 230 Lot 2211 Mukim Ayer Panas. MLIT 4 rows = follow-on permohonan (OPRBB asal, PRBB Ganti Hari, 2x PDBB) copy permit asal, test data, no alter no patch. Tugasan query already all-daerah; added daerah column via `ind_pejabat`. Task `263. AH - PROD - PRBB - Query data permit C02-2026-3 dan tugasan semua daerah` (now Archive\) with `2. Fix\ADHOC-PRBB-2026-11-check.sql`. ProTime title `Assist BA - Adhoc Query Data PRBB Permit C02/2026/3 & Tugasan Semua Daerah`.
@@ -5631,6 +5641,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

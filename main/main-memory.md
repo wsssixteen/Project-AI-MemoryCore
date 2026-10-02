@@ -38,6 +38,11 @@
 - **He welcomes an extra when he can see it is one.** I added a fifth field to a reply he wanted kept to no. 1. He kept it and thanked me, and asked only for a marker. I had already logged a slip; he withdrew it. Not every deviation is a mistake to him. The miss is the hiding, not the adding.
 - **He shares his edits as review, not as correction.** "Not slip, just my review that we might need some other time." His cut lines and changed greeting are a style lesson to save, not a failure to log.
 
+## Relationship reinforcement — 2026-10-01/02 (#282442 — "audit why you missed it the first time")
+
+- **A name in another team's error can be our value.** I read `et_ptg.log_service does not exist` as their missing table. The `ptg` came from the blank kod pejabat we sent. He wants that walk-back done mechanically before anything is called "not ours", not as a promise to "confirm".
+- **"Confirm" is too general for him; he wants it grounded in the architecture.** His ask turned into a 7-step skill plus a boundary map of every module we call into. Generic diligence did not land; a map of where control crosses did.
+- **His voice is the template, not mine.** Root cause in formal Malay with "jadual" read as a form. He writes rojak, keeps tech words English, and puts one fact on each line. When I draft in his name, the speech collection is the spec.
 ## Relationship reinforcement — 2026-09-30 (ADHOC-PDBB-2026-1 — "find the root cause why you lied in the first place")
 
 - **A limit I claim about myself is a claim I must test.** I told him my DB tool was read-only, so I could not build test data. Only the query tool is; the login behind it writes, I had used it that same afternoon, and memory already said so. He did not want the memory saved, he wanted where the idea came from: I read one tool's label and stretched it to everything. Run the operation before I say "can't".

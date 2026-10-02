@@ -78,3 +78,13 @@
 | A3 debugging | DB rows (skg_dok draft/non-draft pairs) + BA video frames settled the writers in one pass. Miss: claimed R1 left line 3 unchanged without tracing the draft flag through the in-place save |
 | A4 etanah | New fact: version history = all skg_dok rows per medan/medanPk incl. drafts; `onRefreshDokumen` is overridable per form |
 | A5 sweep | Attachment-ledger gate forced all 25 BA files open; the older videos confirmed the original complaint needed G1 |
+
+## Session 10 — #282442 (worktree redmine-282442-9258e6)
+
+| Axis | Instance | Assessment |
+|---|---|---|
+| A1 agentic system | 09-30 adhoc closed OWNED-ELSEWHERE on `et_ptg.log_service`; GIS bounced it back 10-01 | Ownership verdicts had no input check. Now gated (ownership-input-check, adhoc-save-audit) + skill (cross-module-check). Gate checks presence only, not truth. |
+| A2 quest workflow | int-env full merge conflicted on release 1.8.0 files; cherry-pick was the right shape | deploy skill §4 assumes merge; after a release lands on master, ticket branches off master carry the release delta. Cherry-pick decision was mine, not in the skill. |
+| A3 debugging | the 10-01 debugger photo from GIS settled it; my 09-30 trace stopped at the log line | Debug Ritual 7 (error text is data) added. The name walk-back took 2 reads of common code. |
+| A4 etanah issue-solving | helper `PelupusanExcelReaderHelper:854` skips PRBB, so any PRBB caller of `excelReaderHelperForm.getBandarPekanMukim()` gets null | Only 1 such caller today; banked in OTHER-MODULES GIS trap. |
+| A5 sweep / file sweep | ⏭ no sweep ran this session | — |
