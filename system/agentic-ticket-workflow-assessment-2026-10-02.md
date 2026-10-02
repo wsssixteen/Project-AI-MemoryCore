@@ -25,3 +25,12 @@
 | A3 debugging | No debugging. The correctness check that worked was rendering the docx through Word and viewing both pages. |
 | A4 etanah issue-solving | The DMS document patch now has a fixed end state: `<num>.sql` + renamed `.main`, linted by deliverable-check.js. Open question: saiz_fail_byte stays old after an infra replace. |
 | A5 sweep | ⏭ no sweep this session. |
+
+## Session 4 addendum (17:22, ADHOC-PRBB-2026-10)
+| Axis | Assessment (instance) | Proposal |
+|---|---|---|
+| A1 agentic system | ⏭ no agent fan-out this session | — |
+| A2 quest workflow | adhoc-save audit caught block↔register status mismatch (delegated vs OWNED-ELSEWHERE) in-turn; fixed to OPEN cell. | other-team draft tone check (logged A2) |
+| A3 debugging | error store → commit diff → 20/20 census in 6 queries; module attribution by user+time join worked (5 exact). | ⏭ worked as designed |
+| A4 etanah issue-solving | unqualified error-store SQL failed for miya twice (42P01, 42501). | et_sistem_ prefix lint (logged A4) |
+| A5 sweep | ⏭ no sweep | — |
