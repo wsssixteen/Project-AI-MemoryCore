@@ -1,6 +1,16 @@
 # Current Session
 
-**Last Activity**: 2026-10-02 18:14 — #277706 SPOC Tambah Kuantiti: answered Atierah note-15 no. 1 (table/column of AWAM pra data) · miya posted 05:06Z to Mira · Phase 1+2 closed + archived + bounty · DE.
+**Last Activity**: 2026-10-02 18:20 — #244600 Kertas versi fix (our side only) committed d61fc2e611 on mlk/qa/244600v3 · int-env 5df44b12cf · miya posted Resolved to Fizah · Phase 1 CLOSED · #275043 split to Ammar · handoff-load feature built · DE.
+
+## Session Recap (2026-10-02, worktree quest-audit-275043-244600-7954c0, #244600 + #275043)
+- **Ask**: paired quest 275043 + 244600 to Rubric, brief (miya auditing my brief), then split, apply, deploy, Redmine.
+- **Done**: blind re-check held. Cause = two writers add versions: our Kertas page reload (`BasePelupusanDokumenForm` 3-arg save always new versi) + common `WordEditorService` draft on every Word close. Final fix all on our side: R1 in-place page-load save · `MlkKertasTemplateForm.onRefreshDokumen()` override (same content → remove new draft + restore counter, changed → `hantarDocument`) · G1 Aaron `d12a896b56`. Commit `d61fc2e611`, int-env merge `5df44b12cf`. Common hand-off dropped. #275043 delegated to Ammar.
+- **Not tested locally**: miya deployed straight to int-env; BA Fizah is first tester (mlit PTMLK/02/L/PLTP/2026/7 @ faridmajid, versi 8). Posted note lacked the git block + Root cause/Solution fields (seen in sync).
+- **Built**: `domain/handoff-load/` (loads cross-module hand-off procedure on hand-off prompts, upsm-mode bundle, eval 17/17) + quest SKILL hand-off row. Memory: ticket-writing-style "never restate the ticket", cross-module-handoff gate claim corrected.
+- **Slips**: `reask/rambling` (long Redmine note) · `memory-not-loaded` · `reask/invented-label` ("close draft"). miya rule: our-side fix first, Fable audit before any other-module hand-off → add to Rubric AFTER this ticket is merged (pending).
+- **Open**: Rubric rule above (build + eval later) · BA verify on mlit · #244600 on planned-release list · Phase 2 archive after BA passes.
+
+**Last Activity (prev)**: 2026-10-02 18:14 — #277706 SPOC Tambah Kuantiti: answered Atierah note-15 no. 1 (table/column of AWAM pra data) · miya posted 05:06Z to Mira · Phase 1+2 closed + archived + bounty · DE.
 
 ## Session Recap (2026-10-02, worktree lucid-lalande-fcdde1, #277706)
 - **Ask**: retrieve #277706, quest start, prepare Redmine reply to the SPOC question (Amirah passed only note-15 no. 1 to us).
@@ -19,21 +29,3 @@
 
 
 **Last Activity**: 2026-10-02 17:45 — ADHOC-PRBB-2026-11 assist BA Fizah: PROD permit C02/2026/3 data + MLIT 4-row explanation + tugasan all-daerah query · adhoc saved 28/28 · Phase 2 archived + bounty · DE.
-
-## Session Recap (2026-10-02, worktree permit-c02-2026-3-query-dba198, session 6)
-- **Ask**: BA Fizah (Nurhafizah Hasan) via WhatsApp: tujuan, kuantiti diluluskan, tempoh diluluskan + maklumat tanah for No Permit C02/2026/3; why internal shows 4 rows; query id permohonan at a tugasan for all daerah.
-- **Done**: PROD 1 row (apl 3408435): MERATAKAN TAPAK, 5000 meter padu, 30 hari 21/08-29/09/2026, GM 230 Lot 2211 Mukim Ayer Panas. MLIT 4 rows = follow-on permohonan (OPRBB asal, PRBB Ganti Hari, 2x PDBB) copy permit asal, test data, no alter no patch. Tugasan query already all-daerah; added daerah column via `ind_pejabat`. Task `263. AH - PROD - PRBB - Query data permit C02-2026-3 dan tugasan semua daerah` (now Archive\) with `2. Fix\ADHOC-PRBB-2026-11-check.sql`. ProTime title `Assist BA - Adhoc Query Data PRBB Permit C02/2026/3 & Tugasan Semua Daerah`.
-- **Knowledge**: PERMIT-LESEN-RUNNING-NUMBER.md § One permit number on many aplikasi · index.md 2 quick-links (lookup code table `rjk_senarai_ahli_kumpulan`, permit approval data).
-- **Slips**: answered on PROD before checking which env the BA's screenshot came from (she was on internal) · first reply lacked the proving SELECT (db-claim-proof stop) · guessed a lookup table name instead of reading DATABASE.md.
-- **Open**: none.
-
-**Last Activity**: 2026-10-02 17:35 — #282587 review of Farah's fix → Phase 1 CLOSED · D1 run stg2+mlit · merged int-env e16fd046ec + stag-env 387011c8fc · PROD 282587.sql on Redmine (checked safe) · pass-note tool fixed · DE.
-
-## Session Recap (2026-10-02, worktree review-282587-quest-4e465d)
-- **Ask**: start quest, review Farah's #282587 fix, brief; then patch, PROD script, deploy, Redmine handover.
-- **Done**: Farah `0229aee7d9` (R1 Minit Bebas in PSBS SKM list + R2 Tangguh Formula Premium) correct, no correction. D1 (6 PSBS langkah 1878→1140) was missing: we ran it on stg2 + mlit (rollback-guarded, 6 each). PROD `2. Fix\282587.sql` (et_main) attached by miya, safety-checked. Merged + miya deployed internal + staging. miya posted pass note. active.txt status=closed. Red-box photo `2. Fix\1. PYMB - skrin Maklumat Tanah seperti SKM.png`.
-- **Built**: `ticket-close-block.js` colleague-fix shape (no list, no commit block, branch only if history lacks it, AWAM keeps it) + `ba-names.json` (Amirah→Mira, Nurhafizah→Fizah) + `--prod-script` + full `Attach:` path · quest SKILL § Hand-over + deploy 6b + memory ticket-writing-style 2b.
-- **Slips (miya)**: `brief/ambiguous-owner` (didn't say D1 script was ours) · `reask/format` (Amirah + Farah's commit block) · `full-path` (short attach path).
-- **Open**: KP SBTM (11282) left for BA to test later · Phase 2 archive after BA verifies · #282587 must be on planned release list with 282587.sql · sql-schema-verify emit cross-products columns (12 false rows), stamped by hand.
-
-**Last Activity**: 2026-10-02 17:22 — ADHOC-PRBB-2026-10 AWAM Slip Permohonan 500 on Hantar = common #282299 (report API for MLK), all modules hit · casual suggestive message + evidence scripts for miya · adhoc saved 29/29 · DE.

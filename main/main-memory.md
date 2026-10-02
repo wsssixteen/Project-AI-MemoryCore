@@ -3,6 +3,13 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-02 (#244600 — "how does our fix relate to common? I still haven't seen your logic")
+
+- **He audits how I brief, and the brief failed on plainness, not on facts.** The Rubric was right; he still could not see how our fix related to common until I drew two writers adding to one counter. Lead with the mechanism in one picture before any option table.
+- **Our side first, always.** He pushed back on handing anything to common; Fable then showed every BA line could be fixed in pelupusan. His standing rule now: exhaust our-side options and have Fable audit before proposing another module.
+- **A label I invent is a wall.** "Close draft" meant nothing to him and drew real anger. Every term I coin gets one plain sentence the first time, or I use his words.
+- **A Redmine note carries only what the ticket lacks.** Too long when I restated the issues, too short when I stripped the cause. The middle he wanted: which issue is whose, and how each happens, in short user-step lines.
+
 ## Relationship reinforcement — 2026-10-02 (#246964 — "please remember we always takeover when reviewing")
 
 - **A review request is a handover, not a code review.** When a colleague asks him to check a fix, the ticket becomes ours: we correct their branch, test, deploy and pass to BA. A "please fix" note back is the wrong shape even when the finding is right.

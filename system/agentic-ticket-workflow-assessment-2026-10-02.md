@@ -68,3 +68,13 @@
 | A3 debugging | no debugging; knowledge-first (SPOC-COUNTER §4b) gave the jenis value map in one read | ⏭ nothing to improve |
 | A4 issue-solving | pra-table lookup by `id_transaksi` took ~10 queries (schema, FK, rjk decode, 2 cross-checks) | proposal: one lookup script |
 | A5 sweep | no sweep this session | ⏭ |
+
+## Session 9 — #244600 + #275043 (paired quest, brief audit)
+
+| Axis | Instance |
+|---|---|
+| A1 agentic | Fable 5.1 options audit (1 agent, 215k tokens) found the R1 draft flaw and the our-side-only route the controller missed. Worth its cost on a cross-module decision |
+| A2 quest workflow | Rubric routed lines 2 and 3 to common before exhausting our-side options; miya had to push twice. Hand-off procedure existed only as a memory body, never loaded (2nd occurrence after #256334) |
+| A3 debugging | DB rows (skg_dok draft/non-draft pairs) + BA video frames settled the writers in one pass. Miss: claimed R1 left line 3 unchanged without tracing the draft flag through the in-place save |
+| A4 etanah | New fact: version history = all skg_dok rows per medan/medanPk incl. drafts; `onRefreshDokumen` is overridable per form |
+| A5 sweep | Attachment-ledger gate forced all 25 BA files open; the older videos confirmed the original complaint needed G1 |
