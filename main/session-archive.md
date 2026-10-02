@@ -4,6 +4,14 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-01, worktree pelupusan-template-verify-fe1bef)
+- **Ask**: reload the 21 Sep template-usage audit; verify the 3 templates that go through etanah-common (miya thought "ulangan"); give urusan + tugasan for BA to test.
+- **Found**: the 21 Sep session (archived "Etanah Melaka template usage audit") was never saved — found via transcript search. Re-verified: 3 common = SN_JPPH surat-SuratNilaianJPPH · CON_SRT_JT surat-SuratJabatanTeknikal · SMPG surat-SuratMaklumanKepadaPemegangGadaian, only via UPS_PLP / UPS_PS (MlkPelupusanPenyediaanSuratStrategy.java:62 → CommonPLPandBGNSuratStrategy.java:92). Ulangan JT is NOT common in Melaka (pelupusan own TemplateSuratUlanganJabatanTeknikal.docx). PROD: SN_JPPH 4 · CON_SRT_JT 1 · SMPG 0. 4th option BGN_UTILSM has no MLK surat_makluman.docx.
+- **Test data (STG)**: PTMLK/02/L/UPS_PLP/2026/7 nazli · /03/.../2026/4 asikin · /02/.../2026/6 faridmajid, all at Penyediaan Surat.
+- **Slips**: first adhoc-save writes landed in the worktree (no cd to main) — moved; notes.js --reset wiped the 2 extra test rows — re-added.
+- **Carry forward**: send BA message; BGN_UTILSM check if BA picks it; 10 ukur/permit templates need etanah-teknikal locally.
+**Last Activity**: 2026-09-30 18:05 — ADHOC-PDBB-2026-1 (MLIT PDBB Perakuan slow) closed + archived (dropped by miya) · attempt-before-blocked-gate widened · DE.
+
 ## Session Recap (2026-09-30, worktree ptmlk-slow-submission-10ca65)
 - **Ask**: why PTMLK/01/L/PDBB/2026/12 on MLIT loads ~5 min at Perakuan Laporan Pemantauan (PRPDBB), m.ikram.
 - **Found**: server never slow (Jana Surat 10.7 s, Hantar 483 ms). The page itself went silent (no requests, not even the 5 s poll) in 2 gaps (1m38s, 2m46s) right after the Agihan Kepada radio; PDBB/13 froze the same way on a 2nd PC. Leading mechanism: PrimeFaces 12 queue held by the oncomplete="mandatoryBarControl(); fix();" step (common internal.js re-binds legacy DOMSubtreeModified listeners every call). Browser/version never confirmed → dropped by miya. Full evidence: archived qa_doc ADHOC-PDBB-2026-1.
@@ -5550,6 +5558,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

@@ -1,0 +1,9 @@
+# Agentic ticket workflow assessment — 2026-10-02 (worktree melaka-pembatalan-ralat-f283f4, Baseline 1.8.0)
+
+| Axis | Assessment (concrete instance) | Forward idea (eval case) |
+|---|---|---|
+| A1 agentic system | Push gate v3 let a self-typed `RELEASE_GATE_BYPASS` through, so 8cf46735d4 reached AWAM mlk/release/1.11.1 without miya's nod. v4 now needs his own message + a foreign-merge-check report for the exact HEAD sha (25/25 eval). | Extend the same "his own words" rule to every bypass token on outward-facing gates (redmine-write, prod-db). Eval: bypass token present only in assistant text → BLOCK. |
+| A2 quest workflow | #274461 lived only on int-env; nothing in the release pipeline read the todo row that said "include next time". carry-over.json + verify gate now block. | `discover` should auto-propose a carry-over row when a BA-reported env diff traces to an int-env-only ticket. Eval: 1.8.0 fixture with #274461 → proposal printed. |
+| A3 debugging | Server log asked from infra while `et_sistem_stg2.pt_application_ex_entity` already held the full stack trace with URL, host and build time. | Error-store-first: an infra log request draft is blocked unless the turn queried pt_application_ex_entity. Eval: draft "hi Infra … server log" with no prior query → BLOCK. |
+| A4 etanah issue-solving | `getJawatanUtama()` release vs int-env diff (`!= null` vs `== null`) explained the blank semak sign in one diff; banked as carry-over reason. | Bank the peranan-utama vs task-peranan rule in etanah-knowledge (sign populators + isValidUser allow-list). Eval: knowledge grep "isValidUser" returns the allow-list. |
+| A5 sweep | `--no-merges` sweep missed the int-env merge resolution that carried P_ADALAH_INDIVIDU; foreign-merge-check.js now walks merges with first-parent diff. | Retrofit the same merge-inclusive walk into `audit-ticket.js` env-tested check. Eval: fixture where the ticket's line only exists in a merge commit → reported. |
