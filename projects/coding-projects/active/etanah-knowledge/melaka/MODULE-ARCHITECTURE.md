@@ -388,6 +388,8 @@ session building fixes into dead code. Now enforced by the `hierarchy` check in 
 
 **int-env divergence trap (verified 2026-08-17):** int-env refactored these 4 populators to a helper `getJawatanUtama()` (uses listPeranan.contains — already correct) via #221364; master + release branches still INLINE. A master-based ticket fix to these methods CONFLICTS on merge to int-env → re-apply/cherry-pick, never full-merge. Release (off master) is clean.
 
+**PDBB semak sign blank on staging (Baseline 1.8.0, 2026-09-30):** release `getJawatanUtama()` tests `appTugasan != null || aplikasi != null` (always true) → takes the officer's MAIN peranan. int-env #274461 flips it to `== null` → takes the task's dashboard peranan. `isValidUser()` gates the semak sign / nama / jawatan / tarikh populators and allows only **PPTnKanan · PPTNT · PPTT**. So an officer acting as PPTT whose main peranan is something else gets a blank sign on release. Main peranan = `pcp_capaian_pengguna.flag_peranan_utama`. Fix = #274461, carried to the next baseline (`domain/release-mlk-plp/carry-over.json`).
+
 ## 🤝 Cross-module fix proposals — census the OWNING module's idiom before inventing a mechanism (#278930, 2026-09-11)
 
 **The rule**: when the fix site is in a module we do not own (`etanah-common`, `etanah-teknikal`, reports), the

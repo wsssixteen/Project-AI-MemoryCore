@@ -1,5 +1,15 @@
 # Current Session
 
+**Last Activity**: 2026-10-02 11:50 — Farah review #264355 + #274266 → both Phase 1 closed · 264355 AWAM merged int-env 28e9b9d080 · 274266 internal+stg2 patched, PROD 274266.sql attached · DE.
+
+## Session Recap (2026-10-01 → 10-02, main, Farah review)
+- **Ask**: review Farah's work on #264355 (PRU AWAM surat) + #274266 (PT Maklumbalas Tangguh peranan), prep each for BA. No commit/push/Redmine without nod.
+- **#264355**: AWAM `mlk/qa/264355v2` 7544d52688 letter fix PASS (adds PLP_PRU_SRTLULUS + Tolak skips PL rule) → merged to int-env 28e9b9d080 (conflict at AwamDashboardVO.java:547 vs yihkitc PLBP line, kept both, compile green). Pelupusan `mlk/qa/264355` 2736c9a0be notifikasi HELD (fires at Pengesahan before letter visible, ~14 urusan, repeats). miya posted BA pass + deploys AWAM internal.
+- **#274266**: Farah's 4-statement script never ran; dropped her ind_pejabat_tgsn stmt, added flag_aktif to umm_a_tgsn. miya ran role fix on internal + full setup on stg2 (both verified). PROD = `3. Rework\274266.sql` (et_main, 6 stmts, catalog-checked, stamped) attached on Redmine (md5 match). BPMN not needed: PROD MLK_PLP_PT v13 = stg2 v5 (28.1/29.1 present) → PROD PT Tangguh has no tugasan until script runs.
+- **Built/changed**: memory end-of-task-brief-shape (bullets + steps-only table) · feedback_script_file_naming (.sql always, Redmine = same file, read+replace stale same-name) · script-check rule 7 v4 · ticket-writing-style 2b (pass note for someone else's ticket) · FLOWABLE-KNOWLEDGE §16.
+- **Slips (miya)**: told him to upload `#274266.txt` (wanted .sql) + stale 274266.sql left in Task folder (`script-file-type`) · over-long pass note on Farah's ticket · first review missed Farah's pelupusan notifikasi commit (searched AWAM only).
+- **Spawned**: reply-shape build (task_a825f80a) · stg1→stg2 align (task_689d1837, ran: ADHOC-STG-2026-1) · deterministic workflow start + DE workflows check (task_ae2dbe14).
+- **Open**: miya's #274266 note edit not saved on Redmine · 264355 notifikasi BA scope · both tickets need the baseline (7544d52688 AWAM, 71a78d7da6 PLP) · PROD 274266.sql should run soon.
 **Last Activity**: 2026-10-02 11:30 — Baseline Pelupusan 1.8.0 closed (BA passed, merged to mlk/master 547fa95b8a) · AWAM 1.11.1 PDBB fixes · push gate v4 + foreign-merge-check + carry-over gate · DE.
 
 ## Session Recap (2026-09-30 → 10-02, worktree melaka-pembatalan-ralat-f283f4, branch claude/pelupusan-1-8-0-deploy-07a762)
@@ -21,12 +31,3 @@
 - **Slips (miya)**: built-in browser instead of Edge · asked BA which env #261516 used (ticket answered it) · 2 BA questions answerable from evidence · overloaded guide/note (4 trim rounds) · scripts given to junior · quiz-style hints · R2 gap missed until "verify".
 - **Carry forward**: post Farah handover · KP SBTM (shared PSBS+MCL) undecided · sql-schema-verify gate vs unqualified scripts (task chip spawned).
 **Last Activity**: 2026-10-01 17:10 — all-day adhoc session (ADHOC-PRBB-2026-7 + -8 on HOLD) · adhoc-save ProTime title + daily-session rules · DE.
-
-## Session Recap (2026-10-01, worktree permit-c02-2026-3-portal-362d6d — the all-day adhoc session)
-- **Adhoc 1 — ADHOC-PRBB-2026-7** (Title: PRBB Ganti Hari bayaran royalti): PDTJ public on AWAM Ganti Hari C02/2026/3 → "Bayaran royalti/fi permit asal belum dijelaskan". Check = `AwamMaklumatLesenTabForm.validateGantiHariPermitRules():1143-1156` (any N `hsl_bayaran_fi` row on the original PRBB app blocks). PROD apl 3408435: 4 N rows — royalti 2165137 (paid at counter by ID hakmilik as NEW row 2166364, so the prepared row never settled) + Deposit Jalan / Deposit Bahan Batuan / Doket (RM5,000, no resit). miya replied to BA Mira with the check SQL screenshot. HOLD → PDTJ answer, then PROD patch.
-- **Adhoc 2 — ADHOC-PRBB-2026-8** (Title: PRBB jenis permohonan SK): no SK. AWAM `PelupusanConstant` hardcodes 1 Baru / 6 Ganti Hari / 8 Tambah Kuantiti / 7 Langkau Tahun → saved as `integerJenisPermohonan` in `umm_a_permit_lesen.mklmt_tmbhn` → compared against the same constants (screen panels, Ganti Hari rules, `isLangkauTahun` BPMN gateway, template.config Minit Bebas / Surat Keputusan choice). Senarai kumpulan checked: closest `RPT_JNS_PERMOHONAN2` = old labels, report-only. HOLD → miya sends the BA answer. Side: LATENT-BUGS L19 (`== "2"`).
-- **Built**: adhoc-save ProTime `title` (block + qa_doc + audit ≤6 words/40 chars, 69128809) · daily adhoc session rules (route to open adhoc, Title first, answer first, size gate → spawn_task, end-of-day DE save; skill + intake hook, 261ec2d8).
-- **Slips (miya)**: SK answer handed over before checking senarai kumpulan + the code path ("have you verified it 100%", "trace the code", "did you check senarai kumpulan") · offered "log it / leave" for the L19 bug instead of logging it.
-- **Carry forward**: -7 PDTJ answer → PROD patch · -8 BA send → close · push of 69128809 failed earlier (GitHub unreachable) — retried at DE.
-
-**Last Activity**: 2026-10-01 17:05 — ADHOC-UPS-2026-1 (UPS_PLP common templates) saved + audit 28/28 · DE.
