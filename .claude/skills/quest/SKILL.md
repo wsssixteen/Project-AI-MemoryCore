@@ -233,6 +233,10 @@ Rules:
 - If a row implies Ruri should do something first (run a query, spawn an agent), Ruri does it BEFORE handing back — the block lists only what genuinely needs みや.
 - Complements the per-finding "Next operational step" line (amendment A9): A9 fires inline per finding; this block consolidates everything pending into one place at the hand-back, so みや never reverse-engineers his next move from prose.
 
+### 🧾 Root cause + Solution on EVERY Redmine hand-over (added 2026-10-02 per みや, #282198)
+
+Any Redmine hand-over, BA pass, ticket close, "prepare redmine", "both done", "pass to X", in any wording, for EVERY ticket type (code fix, data patch, document patch, alter), carries the **Root cause** and **Solution** rows FIRST, above the field table and the Notes. Format per `feedback_redmine_rootcause_format` (plain Malay, max 2 sentences each, no dashes, no semicolons, no code names, no blame). A patch ticket is not exempt: its cause is why the data or document was wrong, its solution is what was patched. Enforced by `domain/rootcause-format` (Stop, BLOCKS a Redmine close-field reply without both rows; bypass `[skip-rootcause-format: <reason>]`).
+
 ### 🤝 Hand-over to BA — miya's pass note, VERBATIM shape (added 2026-09-29 per みや, #282061)
 
 Fires at every "pass to BA" / "deployed, please verify" / Redmine hand-over after a deploy. Generate it, never hand-write it:
