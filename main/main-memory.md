@@ -3,6 +3,11 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-02 (#246964 — "please remember we always takeover when reviewing")
+
+- **A review request is a handover, not a code review.** When a colleague asks him to check a fix, the ticket becomes ours: we correct their branch, test, deploy and pass to BA. A "please fix" note back is the wrong shape even when the finding is right.
+- **He keeps the junior's learning ground separate.** Template work by the junior is still guided, not taken over. He chose that in one click when asked.
+
 ## Relationship reinforcement — 2026-10-02 (#282198 — "I only want to see the correct end result")
 
 - **His stored shapes are the deliverable, not my skill's defaults.** Four corrections on one document patch, each a shape he had already given: his infra wording, two separate copy boxes, the renamed `.main` attachment, `<ticket>.sql`, Root cause + Solution on the close. Phase 0 names the ticket type FIRST so those shapes load before anything is written.

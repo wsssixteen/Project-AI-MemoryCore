@@ -46,3 +46,13 @@
 - **A4 env-blind answer**: BA asked about a permit; I answered from PROD. Her screenshot (4 rows) was from internal MLIT. The mismatch cost one round-trip and a wrong guess ("maybe urusan lain"). Instance: reply listing HT16/CRHM/GD/PMT for aplikasi ids that only exist as PRBB-family rows on MLIT.
 - **A4 knowledge-first miss**: guessed `ind_kod_rujukan_tmp`, then 3 information_schema probes, before DATABASE.md line 285 named `rjk_senarai_ahli_kumpulan`. Fixed by an index.md quick-link.
 - A1 ⏭ no agents spawned · A2 ⏭ adhoc only, no quest phases · A3 ⏭ no debugging · A5 ⏭ no Brief reading beyond 2 screenshots.
+
+## Session 7 — #246964 takeover of Ammar's fix (permit-c02-2026-3-portal)
+
+| Axis | Instance | Verdict |
+|---|---|---|
+| A1 agentic system | `worktree-cleanup-boot` errored 60 of 60 fires in 7 d (audit 7.4) | broken, proposal logged |
+| A2 quest workflow | review of a colleague's fix ended in a "please fix" note; みや: we take over | rule built same hour (quest SKILL, deploy row 10, review-etanah); detector proposed |
+| A3 debugging | `git log -S'"<Nama Pegawai>"'` found the #278699 precedent in one call | worked, recipe written into the qa_doc Fastest Path |
+| A4 etanah issue-solving | no PSBS permohonan at Penyediaan or Pengesahan Surat Tolak on stg2 or mlit, render left unverified | proposal logged (surface at Phase 0) |
+| A5 sweep | ⏭ no sweep this session | — |
