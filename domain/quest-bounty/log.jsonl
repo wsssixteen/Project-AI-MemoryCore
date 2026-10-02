@@ -87,3 +87,4 @@
 {"qa":"ADHOC-PRBB-2026-6","ts":"2026-09-30","harvests":{"quest":1,"system":5,"knowledge":3},"refinement":"proposed","banked_sha":"e862cc7a"}
 {"ts":"2026-09-30T09:35:41.364Z","qa":"ADHOC-VIEW-2026-1","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-09-30T09:36:14.579Z","qa":"ADHOC-VIEW-2026-1","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none-until-ticket"}
+{"ts":"2026-10-02T03:37:38.100Z","qa":"QA-282061","gate":"harvest-gate","action":"refused"}

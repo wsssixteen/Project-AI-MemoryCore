@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-01, worktree permit-c02-2026-3-portal-362d6d — the all-day adhoc session)
+- **Adhoc 1 — ADHOC-PRBB-2026-7** (Title: PRBB Ganti Hari bayaran royalti): PDTJ public on AWAM Ganti Hari C02/2026/3 → "Bayaran royalti/fi permit asal belum dijelaskan". Check = `AwamMaklumatLesenTabForm.validateGantiHariPermitRules():1143-1156` (any N `hsl_bayaran_fi` row on the original PRBB app blocks). PROD apl 3408435: 4 N rows — royalti 2165137 (paid at counter by ID hakmilik as NEW row 2166364, so the prepared row never settled) + Deposit Jalan / Deposit Bahan Batuan / Doket (RM5,000, no resit). miya replied to BA Mira with the check SQL screenshot. HOLD → PDTJ answer, then PROD patch.
+- **Adhoc 2 — ADHOC-PRBB-2026-8** (Title: PRBB jenis permohonan SK): no SK. AWAM `PelupusanConstant` hardcodes 1 Baru / 6 Ganti Hari / 8 Tambah Kuantiti / 7 Langkau Tahun → saved as `integerJenisPermohonan` in `umm_a_permit_lesen.mklmt_tmbhn` → compared against the same constants (screen panels, Ganti Hari rules, `isLangkauTahun` BPMN gateway, template.config Minit Bebas / Surat Keputusan choice). Senarai kumpulan checked: closest `RPT_JNS_PERMOHONAN2` = old labels, report-only. HOLD → miya sends the BA answer. Side: LATENT-BUGS L19 (`== "2"`).
+- **Built**: adhoc-save ProTime `title` (block + qa_doc + audit ≤6 words/40 chars, 69128809) · daily adhoc session rules (route to open adhoc, Title first, answer first, size gate → spawn_task, end-of-day DE save; skill + intake hook, 261ec2d8).
+- **Slips (miya)**: SK answer handed over before checking senarai kumpulan + the code path ("have you verified it 100%", "trace the code", "did you check senarai kumpulan") · offered "log it / leave" for the L19 bug instead of logging it.
+- **Carry forward**: -7 PDTJ answer → PROD patch · -8 BA send → close · push of 69128809 failed earlier (GitHub unreachable) — retried at DE.
+
+**Last Activity**: 2026-10-01 17:05 — ADHOC-UPS-2026-1 (UPS_PLP common templates) saved + audit 28/28 · DE.
+
 ## Session Recap (2026-10-01, worktree pelupusan-template-verify-fe1bef)
 - **Ask**: reload the 21 Sep template-usage audit; verify the 3 templates that go through etanah-common (miya thought "ulangan"); give urusan + tugasan for BA to test.
 - **Found**: the 21 Sep session (archived "Etanah Melaka template usage audit") was never saved — found via transcript search. Re-verified: 3 common = SN_JPPH surat-SuratNilaianJPPH · CON_SRT_JT surat-SuratJabatanTeknikal · SMPG surat-SuratMaklumanKepadaPemegangGadaian, only via UPS_PLP / UPS_PS (MlkPelupusanPenyediaanSuratStrategy.java:62 → CommonPLPandBGNSuratStrategy.java:92). Ulangan JT is NOT common in Melaka (pelupusan own TemplateSuratUlanganJabatanTeknikal.docx). PROD: SN_JPPH 4 · CON_SRT_JT 1 · SMPG 0. 4th option BGN_UTILSM has no MLK surat_makluman.docx.
@@ -5558,6 +5567,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
