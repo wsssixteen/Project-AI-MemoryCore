@@ -1,5 +1,14 @@
 # Current Session
 
+**Last Activity**: 2026-10-02 18:14 — #277706 SPOC Tambah Kuantiti: answered Atierah note-15 no. 1 (table/column of AWAM pra data) · miya posted 05:06Z to Mira · Phase 1+2 closed + archived + bounty · DE.
+
+## Session Recap (2026-10-02, worktree lucid-lalande-fcdde1, #277706)
+- **Ask**: retrieve #277706, quest start, prepare Redmine reply to the SPOC question (Amirah passed only note-15 no. 1 to us).
+- **Done**: stg2 `01PRBB2026000051` (38399) + Tanah Milik `02PRBB2026000020` + 2 Ganti Hari apps: Tambah Kuantiti uses Ganti Hari tables. Jenis `umm_p_permit_lesen.mklmt_tmbhn.integerJenisPermohonan`=8 · No Permit `noPermitLesenAsal` · Kuantiti Tambahan `kuantitiTambahanDipohon`+unit · Taraf Tanah `umm_p_permohonan_tnh.kelas_tnh_id` · Maklumat Tanah `umm_p_permohonan_tnh` cols · ID Hakmilik `mklmt_tmbhn.idHkmlk`. miya posted (greeting Mira, assignee back to her, 2 closing lines cut). Quest archived (`projects/coding-projects/archive/QA-277706/`, Task folder `Archive\259. RQ #277706 ...`). ProTime title `PRBB Tambah Kuantiti table SPOC`.
+- **Knowledge**: SPOC-COUNTER.md §4c · urusan/PRBB-TICKETS.md note · TEST-PERMOHONAN-INDEX PRBB Tambah Kuantiti section.
+- **Learned (miya)**: an extra item beyond the ask is NOT a slip but must be marked "➕ Extra, not asked" (memory `feedback_flag_unasked_additions`) · dev answer stops after the last field, greet the BA who routed it (speech collection entry 10).
+- **Open**: bounty proposal (marker rule into reply-shape-spec) awaits weekly ruling · direct-kaunter Tambah Kuantiti seed gap parked (BA says direct kaunter not allowed).
+
 **Last Activity**: 2026-10-02 17:45 — ADHOC-PRBB-2026-11 assist BA Fizah: PROD permit C02/2026/3 data + MLIT 4-row explanation + tugasan all-daerah query · adhoc saved 28/28 · Phase 2 archived + bounty · DE.
 
 ## Session Recap (2026-10-02, worktree permit-c02-2026-3-query-dba198, session 6)
@@ -19,11 +28,3 @@
 - **Open**: KP SBTM (11282) left for BA to test later · Phase 2 archive after BA verifies · #282587 must be on planned release list with 282587.sql · sql-schema-verify emit cross-products columns (12 false rows), stamped by hand.
 
 **Last Activity**: 2026-10-02 17:22 — ADHOC-PRBB-2026-10 AWAM Slip Permohonan 500 on Hantar = common #282299 (report API for MLK), all modules hit · casual suggestive message + evidence scripts for miya · adhoc saved 29/29 · DE.
-
-## Session Recap (2026-10-02, worktree redmine-issue-282198-8c1eb9, session 4)
-- **Ask**: BA relay, AWAM MLKSTG PRBB Baru cara bayar Kaunter, Hantar -> ralat ID Rujukan 64602.
-- **Done**: `et_sistem_stg2.pt_application_ex_entity` 64602 = `500 "Failed to generate report."` at common `BaseReportService.printReportUsingAPI():723`; common commit `8fb3d0334d` (#282299, azizam) routes MLK slip + senarai semak to report API. 20/20 slip errors today on `1.7.21-MLK.beta.patch.282299.1`; modules Consent/Pengambilan/Pendaftaran/Pelupusan. Input check clean (AWAM passes only praAplikasi). Task `262. AH - MLKSTG - AWAM - Slip Permohonan gagal jana (common 282299)` with combined check script.
-- **Learned (miya)**: WhatsApp replies casual + suggestive ("nampak macam isu common X ni... ada hit lain juga"), always ship the evidence script; error store needs `et_sistem_<env>.` prefix (unqualified gave 42P01, stg1 default gave 42501). Memory `feedback_other_team_message_not_our_issue` updated.
-- **Open**: miya sends common message + screenshot · ProTime title `AWAM slip permohonan gagal jana` · Senarai Semak (same #282299 change) not checked.
-
-**Last Activity**: 2026-10-02 15:51 — #282198 PT Minit Bebas PROD document patch done by infra (file replaced + PDF reset) · Redmine close drafted · patch-mlk-doc + quest patch path hardened · DE.

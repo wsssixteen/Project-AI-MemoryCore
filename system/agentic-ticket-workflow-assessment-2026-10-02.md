@@ -46,3 +46,15 @@
 - **A4 env-blind answer**: BA asked about a permit; I answered from PROD. Her screenshot (4 rows) was from internal MLIT. The mismatch cost one round-trip and a wrong guess ("maybe urusan lain"). Instance: reply listing HT16/CRHM/GD/PMT for aplikasi ids that only exist as PRBB-family rows on MLIT.
 - **A4 knowledge-first miss**: guessed `ind_kod_rujukan_tmp`, then 3 information_schema probes, before DATABASE.md line 285 named `rjk_senarai_ahli_kumpulan`. Fixed by an index.md quick-link.
 - A1 ⏭ no agents spawned · A2 ⏭ adhoc only, no quest phases · A3 ⏭ no debugging · A5 ⏭ no Brief reading beyond 2 screenshots.
+
+---
+
+## Session 7 addendum — #277706 SPOC Tambah Kuantiti (lucid-lalande, 18:14)
+
+| Axis | Instance this session | Verdict |
+|---|---|---|
+| A1 agentic system | `fix-photo` Stop hook fired 3× on turns with no screen change (a data-location answer, a yes/no, a memory save) because BA screenshots existed; `predicate-box` blocked once claiming an etanah file was edited when only `git grep`/`git show` ran | 2 false-positive gates → proposals |
+| A2 quest workflow | close-phase Phase 1 has no answer-only branch (no code, no git); steps were marked n/a by hand | proposal: answer-only close branch |
+| A3 debugging | no debugging; knowledge-first (SPOC-COUNTER §4b) gave the jenis value map in one read | ⏭ nothing to improve |
+| A4 issue-solving | pra-table lookup by `id_transaksi` took ~10 queries (schema, FK, rjk decode, 2 cross-checks) | proposal: one lookup script |
+| A5 sweep | no sweep this session | ⏭ |
