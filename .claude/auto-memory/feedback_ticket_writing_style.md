@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 8396324f-083e-49c7-a0cc-838d559ec328
-  modified: 2026-08-21T12:12:17.088Z
+  modified: 2026-10-01T09:45:39.040Z
 ---
 
 **When preparing ticket text, or explaining inside a ticket, write like miya writes - not like an AI.**
@@ -87,6 +87,15 @@ Tugasan covered now:
 Penyediaan Senarai Semak ke PTG, Semakan Permohonan PDT, Semakan Dokumen Permohonan PDT, Penyediaan dan Semakan Risalat MMKN PTG, and the other Senarai Semak tugasan.
 
 Thanks
+```
+
+2b. BA pass on a ticket SOMEONE ELSE resolved, #274266 (2026-10-01, Farah resolved it). No "Issues found and resolved" list, no explanation, no "data patch sahaja". Envs + verify, one line naming the attached PROD script by its real file name, thanks. He said: "Since it is a ticket someone else resolved, please refrain from over commenting."
+```
+Salam Mira, have patched data on internal & staging. Please help to verify.
+
+Attached is the script for PROD (274266.sql).
+
+Thank you very much.
 ```
 
 3. Dev-to-dev finding note, #256334 (2026-09-28). Greeting = the person the ticket is assigned to RIGHT NOW (re-sync Redmine and read the live assignee before writing; I greeted Li Wen, he changed it to Anis). Opener answers the side question in 2 lines. Numbered title + `<pre>` detail. A pending decision is written "Perlu confirmation: A, atau B." (not "Perlu setuju").
