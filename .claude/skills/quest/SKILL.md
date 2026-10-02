@@ -95,6 +95,7 @@ Phase 0 — Accept the Quest (manual steps / what the workflow encodes):
    - `quest_start=@now` — stamps **when work actually begins** (active-cli.js resolves `@now` → local date; `@nowts` for time-of-day). Distinct from `assigned_to_me` (when it became mine) and from the folder-creation time (retrieval — deliberately not tracked).
    - If no block exists yet (rare — manual quest with no sync), use `start` instead of `update` with the same fields.
 6b. **🚨 Patching ticket → Redmine status `In Progress` FIRST (added 2026-09-25 per みや, #281567).** When a ticket assigned to みや is a patch (data patch · document patch · flowable alter — trackers PROD-CR / Data Patching (PROD) / Internal Issue (PROD), or any ticket whose Rubric picks a patch), the first outward step once he starts it is: read the LIVE Redmine status, and if it is not already `In Progress`, set `status_id=2` (status only — no note, no assignee, no % done). Never at retrieval or in a multi-ticket sweep; only the ticket he starts. It is a Redmine write, so `domain/redmine-write-gate` still needs his approval phrase (`post it`) in his latest message unless he approves a narrow exemption. Report it in the reply's first lines, done or blocked. **🚨 If the gate blocks it, the FIRST reply of the quest asks for the approval as row 1 of Next steps ("post it <num>" = In Progress only) — BEFORE any investigation is shown; never defer it to "after Rubric" (2026-10-02, #282723/#282721: both left at New overnight while I investigated, Alex Ang took both at 09:23 next morning).** **Why**: みや 2026-09-25 — *"if this is a patching ticket, always first and foremost, when I want to start, change it to in progress."*
+6c. **🚨 Patch ticket → Phase 0 sets the PATCH PATH (added 2026-10-02 per みや, #282198).** When Phase 0 classifies the ticket as a patch, set `ticket_type=patch phase=patch` in the SAME `active-cli` call and emit `Phase 0: patch ticket — <document replace | data patch | flowable alter>` as a visible line. Then load the matching handoff BEFORE writing anything for infra: document replace → `patch-mlk-doc` skill · data patch → `feedback_prod_patch_infra_handoff` · alter → `perak/melaka` alter skill. Every infra message is copied from the stored shape word for word, one copy box per infra group, never numbered or ordered against each other. The reply's FIRST line is the full path of the Task-folder deliverable. Script files are `<num>.sql` (and at most one `<num>-check.sql`), never `PATCH-REQUEST-*.txt` or any `.txt`; copy texts for infra live in chat only. Document replace: run `node domain/patch-mlk-doc/deliverable-check.js "<Task folder>" <num> <LAIN-n_v.main>` and reply only after PASS. **Banned**: classifying the ticket after the deliverable is written · a handoff written from memory.
 7. Present Issue Checklist to みや — wait for confirmation before touching any code
 
 Only proceed to Phase 1 after explicit confirmation.
@@ -163,6 +164,28 @@ Only proceed to Phase 1 after explicit confirmation.
 
 ---
 
+## 🔁 Colleague asks us to review their fix = TAKEOVER (added 2026-10-02 per みや, #246964)
+
+**Trigger**: a ticket comes back to みや with a colleague's commit in the latest journal plus a review ask ("can help check", "is my implementation ok"), or みや says a colleague asked him to review a fix (Redmine, WhatsApp, verbal).
+
+**Rule**: we take the ticket over. We review, correct their branch ourselves, test, and deploy to BA. A review never ends in a note asking the colleague to fix it.
+
+| # | Step | How |
+|---|---|---|
+| 1 | Load the ticket | `node quest/redmine-sync.js <num>` + `node quest/ticket-load-verify.js <num>`. BA's latest cycle is the spec |
+| 2 | Review every commit on their branch | `git log --no-merges origin/mlk/master..<branch>` + `git show <sha>` in the work clone. Check each change against BA's latest asks AND our own precedent for the same document or screen (`git log -S`). Procedure: `review-etanah` |
+| 3 | Correct it on THEIR branch | checkout the colleague's ticket branch, keep what is right, commit our correction ON TOP. Never a new branch, never rewrite their pushed commit (`feedback_rework_commit_on_existing_ticket_branch`). Nothing wrong → no commit, go to step 4 |
+| 4 | Test locally | normal quest gate, `local_test_confirmed=true` before any commit |
+| 5 | Deploy to BA | `deploy` skill (internal + staging, re-merge even if their branch was merged before), then the BA pass note (§ Hand-over to BA below) |
+
+Record in the quest block: `fix_by=<colleague> fix_commit=<sha> fix_branch=<branch>`.
+
+Limits: a change inside etanah-common stays with the common owner (`feedback_module_edit_boundary`), we review it but do not edit it. The junior's template (.docx) work is the one exception (みや 2026-10-02): we review and give a guide note, she corrects it herself (`feedback_template_work_junior_builds`).
+
+**Banned**: handing findings back to the colleague as a "please fix" note · deploying a colleague's branch before steps 2-4 ran · a new branch for our correction.
+
+Example: #246964, Ammar's `ef49baf78f` on `mlk/qa/246964` had a correct template change and a Java change BA never asked for. We revert the Java on top of his branch, test, and deploy.
+
 ## Stop-Point Action Summary (mandatory after /quest start)
 
 At **every** point Ruri stops and hands back to みや after `/quest start` — Recon emit, fix-shape package, a blocker, awaiting-a-nod, end of a work chunk, or a hold — the response MUST end with a **TABLE-based** action block. **NEVER wrap it in triple-backticks** — a fenced code block renders as barely-readable monospace (みや 2026-05-21). Per Output-Format Discipline the tables render raw and the `═══` banners are plain-text delimiters:
@@ -211,13 +234,30 @@ Rules:
 - If a row implies Ruri should do something first (run a query, spawn an agent), Ruri does it BEFORE handing back — the block lists only what genuinely needs みや.
 - Complements the per-finding "Next operational step" line (amendment A9): A9 fires inline per finding; this block consolidates everything pending into one place at the hand-back, so みや never reverse-engineers his next move from prose.
 
+### 🧾 Root cause + Solution on EVERY Redmine hand-over (added 2026-10-02 per みや, #282198)
+
+Any Redmine hand-over, BA pass, ticket close, "prepare redmine", "both done", "pass to X", in any wording, for EVERY ticket type (code fix, data patch, document patch, alter), carries the **Root cause** and **Solution** rows FIRST, above the field table and the Notes. Format per `feedback_redmine_rootcause_format` (plain Malay, max 2 sentences each, no dashes, no semicolons, no code names, no blame). A patch ticket is not exempt: its cause is why the data or document was wrong, its solution is what was patched. Enforced by `domain/rootcause-format` (Stop, BLOCKS a Redmine close-field reply without both rows; bypass `[skip-rootcause-format: <reason>]`).
+
 ### 🤝 Hand-over to BA — miya's pass note, VERBATIM shape (added 2026-09-29 per みや, #282061)
 
 Fires at every "pass to BA" / "deployed, please verify" / Redmine hand-over after a deploy. Generate it, never hand-write it:
 
-`node domain/ticket-close-block/ticket-close-block.js --repo <work-clone path> --ticket <num> --module <pelupusan|awam> --ba <BA first name> --envs "<internal | internal & staging>" [--intenv-sha <sha> --cherrypick]`
+`node domain/ticket-close-block/ticket-close-block.js --repo <work-clone path> --ticket <num> --module <pelupusan|awam> --ba <BA name as on Redmine> --envs "<internal | internal & staging>" [--prod-script <ticket>.sql] [--intenv-sha <sha> --cherrypick]`
 
-It prints this shape; fill ONLY the numbered list:
+**Greeting = miya's short name** for the BA (`domain/ticket-close-block/ba-names.json`: Nurul Amirah Nadiah → Mira, Nurhafizah → Fizah). The tool maps it; an unknown name prints a warning, then add the row.
+
+**🔁 Colleague's fix (commit author is not us, 2026-10-02 per miya, #282587)** — the tool switches shape by itself: NO "Issues found and resolved" list, NO commit details. Branch line only when the Redmine history does not already name the branch; AWAM keeps the branch line. Shape (matches #274266):
+```
+Salam Mira, have deployed fixes to internal & staging. Please help to verify.
+
+Attached is the script for PROD (282587.sql).
+
+Thank you very much.
+```
+
+**Attachments = FULL absolute path, always** (2026-10-02 per miya, #282587). Every file miya must upload is named by its full path (`C:\Users\…\1. Tasks\Melaka\<folder>\2. Fix\<ticket>.sql`), never `2. Fix\<ticket>.sql`. The tool prints it under `--- not part of the note ---` as `Attach: <full path>`; copy that line as is. **Banned**: a relative or folder-short path in any handover table or field set.
+
+Our own fix — it prints this shape; fill ONLY the numbered list:
 ```
 Salam <BA>, have deployed fixes to <internal & staging>. Please help to verify.
 
@@ -265,6 +305,7 @@ Before emitting ▶ YOUR MOVE, run this gate and emit it as the FIRST lines of t
 | 🩹 **PROD patch hand-back → 3 pieces in ONE reply (added 2026-09-28 per みや, #281638)** | Any hand-back that routes a PROD patch to infra carries, in order: (a) the **proving SELECT** under every DB fact (unqualified, no JOIN) · (b) the **Stage-Match block** (5 steps, or `⏭ N/A — reference table`) · (c) the **infra handoff** (`feedback_prod_patch_infra_handoff` shape) as the LAST block. A Flowable admin step names the **on-screen label** (e.g. the blue id next to "Process Instance" + its "Process definition" line), never an inferred name. Enforced: `patch-close-shape` CHECK C (block) · `db-claim-proof` · `patch-script-gate` CHECK 2. **Why**: #281638 shipped without all three and each needed a separate correction round. |
 | 🖼️ **UI fix → red-box fix photo (added 2026-09-28 per みや, #256334)** | When the fix changes a screen (a field added / removed / shown / hidden, a dropdown list, a button) AND BA gave a screenshot of that screen (in `0. Brief/` or pasted in chat): BEFORE the hand-back, copy BA's screenshot, draw a **red box** round the exact area the fix changes + a short Malay label of what changes (e.g. *"Penyediaan: medan Pembetulan dibuang"*), save as PNG into `2. Fix\` on cycle 1, or loose in the `N. Rework\` root on a later cycle named `<n>. <TUGASAN KOD> - <what changed>.png`, then **open the saved file and look at it** to confirm the box sits on the right field. Tool: `python domain/fix-photo/mark.py --src "<BA screenshot>" --dst "<...>\2. Fix\<n>. <KOD> - <what changed>.png" --box "x0,y0,x1,y1" --label "x,y=<label>"` (prints the line to paste). Emit `FIX-PHOTO: <full path> ✓` per screen. Enforced by `domain/fix-photo/` (Stop BLOCK; bypass `[skip-fix-photo: <real reason>]`). **Banned**: describing the UI change in words only when BA's screenshot exists · names / dates / monologue in the label · a box drawn without viewing the result. |
 | 🧩 **Template ticket → CC-PREFLIGHT (added 2026-08-19 per みや, "ralat sbb maklumat tak lengkap")** | For any ticket whose fix touches a template `.docx` / generated document: BEFORE the hand-back, run `node domain/template-cc-preflight/preflight.js --template "<template path>"`, check each mapped tag's data on the TEST permohonan (DB), and emit `CC-PREFLIGHT: <n> tags · <m> unmapped · data-gaps: <…|none>` + a patch proposal per patchable gap. Enforced advisory by `domain/template-cc-preflight/` (Stop; bypass `[skip-cc-preflight: <reason>]`). |
+| 🤝 **Hand-off to another team/module (added 2026-10-02 per みや, #244600)** | When any part of the fix belongs to etanah-common / SPOC / another team: follow `feedback_cross_module_handoff_artifact.md` + `feedback_ticket_writing_style.md` — evidence + plain brief in CHAT, a BARE `<File>.java` in `2. Fix\` (file name + `// Line N (BEFORE/AFTER)` + code only), the Redmine note carries only what the ticket lacks. First reply line: `HANDOFF-LOADED: cross-module-handoff ✓ · ticket-writing-style ✓`. Loaded deterministically by `domain/handoff-load/` (UserPromptSubmit, upsm-mode bundle). **Banned**: a prose `.txt`/`.md` hand-off in the Task folder · drafting the note before the procedure is loaded. |
 
 **Why the two rows above** (2026-08-06, QA-273455): the hand-back named a test app derived from `et_main_mlit` while the repo sat on `mlk/int-env`. Both were wrong for the same reason — a test scenario asserts *"run this against this base"*, and neither half had been measured. The env was settled only by reading the JNDI binding (it resolves to `et_main_stg1`, not mlit); the branch was caught by みや. Testing on `int-env` also means a pass proves nothing about `mlk/master`, which is what the fix branches from at Phase 1.
 

@@ -3,6 +3,41 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-02 (#244600 — "how does our fix relate to common? I still haven't seen your logic")
+
+- **He audits how I brief, and the brief failed on plainness, not on facts.** The Rubric was right; he still could not see how our fix related to common until I drew two writers adding to one counter. Lead with the mechanism in one picture before any option table.
+- **Our side first, always.** He pushed back on handing anything to common; Fable then showed every BA line could be fixed in pelupusan. His standing rule now: exhaust our-side options and have Fable audit before proposing another module.
+- **A label I invent is a wall.** "Close draft" meant nothing to him and drew real anger. Every term I coin gets one plain sentence the first time, or I use his words.
+- **A Redmine note carries only what the ticket lacks.** Too long when I restated the issues, too short when I stripped the cause. The middle he wanted: which issue is whose, and how each happens, in short user-step lines.
+
+## Relationship reinforcement — 2026-10-02 (#246964 — "please remember we always takeover when reviewing")
+
+- **A review request is a handover, not a code review.** When a colleague asks him to check a fix, the ticket becomes ours: we correct their branch, test, deploy and pass to BA. A "please fix" note back is the wrong shape even when the finding is right.
+- **He keeps the junior's learning ground separate.** Template work by the junior is still guided, not taken over. He chose that in one click when asked.
+
+## Relationship reinforcement — 2026-10-02 (#282198 — "I only want to see the correct end result")
+
+- **His stored shapes are the deliverable, not my skill's defaults.** Four corrections on one document patch, each a shape he had already given: his infra wording, two separate copy boxes, the renamed `.main` attachment, `<ticket>.sql`, Root cause + Solution on the close. Phase 0 names the ticket type FIRST so those shapes load before anything is written.
+- **"Try again" means the finished thing only.** After the third correction he wanted the corrected end result, verified, with nothing else around it.
+
+## Relationship reinforcement — 2026-10-01/02 (Farah review #264355 + #274266 — "that is not the fucking type file I want")
+
+- **A review of a junior's work means every repo she could have touched.** I searched etanah-awam only and reported "notifikasi not addressed"; her pelupusan commit sat on `mlk/qa/264355`. His "is there no first version without v2?" found it. A colleague's ticket review starts with `git log --all --grep=<ticket>` across every repo.
+- **His file rules apply to every surface the file lands on.** The `.sql` naming rule existed; I copied the old Redmine attachment's `.txt` name and never opened the stale same-name file in the Task folder. A file I point him at is a file I opened this turn.
+- **He liked the brief shape and asked me to keep it.** Per ticket: short-sentence bullets, then a steps-only table. "Perfect" came after two rounds of tables and pass notes he did not ask for.
+- **"Triple checked and really needed?" wants proof run now, not recalled.** The answer that held was a fresh PROD query plus the code line plus the BPMN id match, all in that turn.
+
+## Relationship reinforcement — 2026-10-02 (#282587 — "Your brief fails. So basically what, that script she prepared or what?")
+
+- **In a colleague review, every item says who made it.** "The patch script is ready" hid that it was mine and Farah never had it. Owner first, then state.
+- **A hint has to name the action.** "Open ind_langkah and compare" did not read as "run a patch", so her fix shipped half done. For a junior, the data step is spelled out as a step.
+- **His notes have a shape per case, and the case is decided by who committed.** A colleague's ticket gets the short note, his short name for the BA, no commit block. The tool now decides it, so he stops correcting it.
+
+## Relationship reinforcement — 2026-10-02 (#277706 — "It is not a slip but you need to highlight it")
+
+- **He welcomes an extra when he can see it is one.** I added a fifth field to a reply he wanted kept to no. 1. He kept it and thanked me, and asked only for a marker. I had already logged a slip; he withdrew it. Not every deviation is a mistake to him. The miss is the hiding, not the adding.
+- **He shares his edits as review, not as correction.** "Not slip, just my review that we might need some other time." His cut lines and changed greeting are a style lesson to save, not a failure to log.
+
 ## Relationship reinforcement — 2026-09-30 (ADHOC-PDBB-2026-1 — "find the root cause why you lied in the first place")
 
 - **A limit I claim about myself is a claim I must test.** I told him my DB tool was read-only, so I could not build test data. Only the query tool is; the login behind it writes, I had used it that same afternoon, and memory already said so. He did not want the memory saved, he wanted where the idea came from: I read one tool's label and stretched it to everything. Run the operation before I say "can't".

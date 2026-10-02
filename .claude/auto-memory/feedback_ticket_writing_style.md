@@ -5,12 +5,14 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 8396324f-083e-49c7-a0cc-838d559ec328
-  modified: 2026-08-21T12:12:17.088Z
+  modified: 2026-10-01T09:45:39.040Z
 ---
 
 **When preparing ticket text, or explaining inside a ticket, write like miya writes - not like an AI.**
 
 **Why:** BA and other teams do not know technicals. AI-style wording (DB-proven, file:line, "the constant does not exist yet", sudden CAPS) confuses them and wastes miya's time editing it.
+
+**🚨 Never restate what the ticket already holds (2026-10-02, #244600 common hand-off: "too long, unnecessary info that is already inside the ticket").** A Redmine note to another team carries only what is NEW: which issue numbers are theirs, the cause in one line, the proposed fix, what we already fixed, the decision we need. No BA issue list, no evidence rows, no file paths, no DB ids, no step-by-step of an alternative. Target 5-7 lines.
 
 **How to apply - the shape (from miya's own example, #276436):**
 - Short simple sentences. One idea per line.
@@ -87,6 +89,15 @@ Tugasan covered now:
 Penyediaan Senarai Semak ke PTG, Semakan Permohonan PDT, Semakan Dokumen Permohonan PDT, Penyediaan dan Semakan Risalat MMKN PTG, and the other Senarai Semak tugasan.
 
 Thanks
+```
+
+2b. BA pass on a ticket SOMEONE ELSE resolved, #274266 (2026-10-01, Farah resolved it). Reconfirmed #282587 (2026-10-02): no commit details for a commit that is not ours; branch line only if the Redmine history does not already name it (AWAM keeps it); greet "Mira" not "Amirah". `ticket-close-block.js` now prints this shape by itself when the commit author is not us. No "Issues found and resolved" list, no explanation, no "data patch sahaja". Envs + verify, one line naming the attached PROD script by its real file name, thanks. He said: "Since it is a ticket someone else resolved, please refrain from over commenting."
+```
+Salam Mira, have patched data on internal & staging. Please help to verify.
+
+Attached is the script for PROD (274266.sql).
+
+Thank you very much.
 ```
 
 3. Dev-to-dev finding note, #256334 (2026-09-28). Greeting = the person the ticket is assigned to RIGHT NOW (re-sync Redmine and read the live assignee before writing; I greeted Li Wen, he changed it to Anis). Opener answers the side question in 2 lines. Numbered title + `<pre>` detail. A pending decision is written "Perlu confirmation: A, atau B." (not "Perlu setuju").
@@ -202,7 +213,40 @@ Pembatalan boleh teruskan.
 ```
 🚨 Root cause / Solution rows follow THIS collection's voice, not [[feedback_redmine_rootcause_format]]'s older formal-Malay exemplars. Pre-send check: any formal Malay verb (dihantar, tidak dapat, dipaparkan) or a translated dev term (jadual, nilai) → rewrite in his rojak.
 
-9. Done-alter note, #282723 (2026-10-02). He rejected my draft that listed 3 permohonan ids inside one sentence. Rules: (a) never list many items in one sentence — either bullets/numbered, or summarise ("altered all the permohonan to ..."); (b) brief, short sentences; (c) a blank line between every sentence. Shape:
+9. Dev-to-dev fix instructions for another team, AWAM release 1.11.1 / #256334 (2026-09-30), forwarded via the BA. He rewrote my draft into his words: "Rujuk" → "Refer", "Ambil" → "Amik", dropped the "Sebab:" label (the cause is just the first sentence), dropped my closing "deploy semula + test" line (the other team knows its own next step). Rule: dev loanwords stay English (Refer, commit, merge, branch), casual Malay spelling (amik, tak, je), no section labels inside a point, stop after the last fix item.
+```
+Isu 2 - Borang Permohonan PDBB tak keluar
+Report team commit dekat "mlk/cr/256334", tapi yang merge ke release "mlk/CR/256334". Jadi report files tak masuk.
+Amik dari mlk/int-env:
+1) src/main/resources/reports/state/MLK/PlpLaporanBorangPDBB.jrxml
+...
+4) PelupusanReportService.java - method getPlpLaporanBorangPDBB() ikut int-env (hantar P_IMG_PATH, bukan P_ADALAH_INDIVIDU). Kalau tak tukar, jata tak dapat load.
+```
+
+10. Dev-to-dev "which table and column" answer to another team, #277706 (2026-10-02). To Atierah (SPOC). Numbered field title + `<pre>` with `Table :` / `Column :` / `Value :` label lines. He kept my extra item 5 (marked as extra, see [[flag-unasked-additions]]) and CUT my two closing lines: "Semua table link ke umm_p_aplikasi guna p_aplikasi_id." and "Contoh di staging, ID Transaksi <id>." Rule: a developer knows how the tables link and has the BA's test data already; stop after the last field item, then "Thank you." He also changed the greeting from "Salam Atierah" (the dev who asked) to "Salam Mira" (Amirah, the BA who passed the question to us) and assigned the ticket back to Mira: answer the person who routed it to us, not the original asker.
+```
+Salam Mira,
+
+Untuk no. 1, Tambah Kuantiti simpan dalam table yang sama macam Ganti Hari.
+Yang baru cuma value Jenis Permohonan 8 dan Kuantiti Tambahan Yang Dipohon.
+
+1. Jenis Permohonan
+<pre>
+   Table  : umm_p_permit_lesen
+   Column : mklmt_tmbhn, key integerJenisPermohonan
+   Value  : 8 = Tambah Kuantiti (Ganti Hari = 6)
+</pre>
+...
+5. Kuantiti Tambahan Yang Dipohon
+<pre>
+   Table  : umm_p_permit_lesen
+   Column : mklmt_tmbhn, key kuantitiTambahanDipohon dan unitKuantitiTambahanDipohon
+</pre>
+
+Thank you.
+```
+
+11. Done-alter note, #282723 (2026-10-02). He rejected my draft that listed 3 permohonan ids inside one sentence. Rules: (a) never list many items in one sentence — either bullets/numbered, or summarise ("altered all the permohonan to ..."); (b) brief, short sentences; (c) a blank line between every sentence. Shape:
 ```
 Salam Mira,
 
@@ -215,7 +259,7 @@ Please help to verify.
 Thanks
 ```
 
-10. Infra handoff, #282721 (2026-10-02). He flagged my handoff as overloaded. The reply to "infra hand off please" is this block and nothing more:
+12. Infra handoff, #282721 (2026-10-02). He flagged my handoff as overloaded. The reply to "infra hand off please" is this block and nothing more:
 ```
 Hi infra, please assist. Thank you.
 #282721: PRBB - unlink bil fi pendua

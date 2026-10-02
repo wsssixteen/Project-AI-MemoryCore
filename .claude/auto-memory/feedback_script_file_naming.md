@@ -5,10 +5,12 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: d6617a39-e51c-4896-939d-62e88a55fe11
-  modified: 2026-08-27T07:44:14.019Z
+  modified: 2026-10-01T09:45:43.407Z
 ---
 
 🚨 **Name by ROLE (updated 2026-09-25, #281650):** `<ticket>.sql` = the UPDATE/patch script (infra runs it, goes to Redmine) · `<ticket>-check.sql` = ONE combined check script showing every row the patch changes (UNION ALL across tables), before + after in the trailing comment. **Banned**: `-2` / `-3` numbering (reads as a duplicate of the update script) · more than one check script. **Why**: `281650-2.sql` looked like a redundant copy and the checks were split; miya wants the role visible from the name and all changes checked in one run.
+
+🚨 **Always `.sql`, Task folder AND Redmine (2026-10-01, #274266, miya furious):** a script is a `.sql` file, never `.txt`, even when the ticket's older attachment is `.txt` (Aaron's `#274266.txt`). I told him to upload the PROD script "as `#274266.txt`"; he wanted `274266.sql`. Before naming or handing ANY script: (1) the Task-folder file and the Redmine upload are the SAME file, `<ticket>.sql`; (2) if a `<ticket>.sql` already exists in the folder, read it and replace it when it is a superseded script (the old 274266.sql was a 14-row partial patch that would have been wrong on PROD); (3) lint the file before handing: extension, statement count, one expected-row annotation per statement, nothing else commented, schema prefix on every table and sequence for PROD, no JOIN. Say "checked" only after that lint ran.
 
 **Banned**: descriptive/verbose names — `patch-ADHOC-PRBB-2026-3-STANDBY.sql`, `ddl-widen-ulasan-277309.sql`, `upload-patch-TICKET.sql`. They look stupid and add lookup headache.
 

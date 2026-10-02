@@ -18,7 +18,10 @@ description: Baseline — Melaka Pelupusan (PLP) release PREPARATION. Redmine ev
 | **Hand-off card = EVERYTHING in one go, unasked** (2026-09-28 per みや, 1.7.0) | At push, the card already carries: (1) every SQL file downloaded from Redmine + shown inline + run on stag (verified by counts) · (2) the flowable `.bpmn20.xml` file (MLIT pull, md5) · (3) the full Sheet Developer block ready to paste — Domain · DB · Common · Module · Branch · **Flowable Diagram = `/home/ftpuser/files/flowable-diagrams/Melaka/<YYYY-MM-DD>/Pelupusan/<file>`** (leading `/`, **Melaka** folder, never Perak) · SQL line. Never wait for みや to ask for the file or the script. |
 | **Flowable drop VERIFIED by me, not assumed** (2026-09-29 per みや, 1.7.0: file sat in `Perak/`, release team found `Melaka/2026-09-28` empty) | Before the card says "uploaded", I list the drop folder myself with `C:\Program Files (x86)\WinSCP\WinSCP.com` (stored session to `ftpuser@172.16.90.169`) and show the listing: file name + 348,612-style byte size under `Melaka/<date>/Pelupusan/`. No listing = not delivered. Blocker today: stored session `Petaling` collides with the workspace of the same name — needs a distinct alias (みや's nod). |
 | **BA "tak pergi mana-mana tugasan" during baseline** | Answer with the test table FIRST (login · screen · do · expect, from live `umm_a_tgsn`), the investigation after. Check `sis_bpm_log` delay vs `act_hi_taskinst.start_time_` before blaming the release — 1.7.0 PT stall was a node-level async queue, not code. |
+| **📌 Carry-over tickets** ("include it next baseline", 2026-09-30 per みや, #274461) | Never a todo row alone: `node domain/release-mlk-plp/carry-over.js add --ticket <n> --branch <origin branch> --reason "<why>"`. `init` prints the list, `verify` BLOCKS until each is in the release or `defer-carry --release <ver> --ticket <n> --reason "<his words>"`, and `merge-to-master` drops shipped ones. Put them in V1 and tell BA to add them to the BAQA list. |
 | **AWAM tickets in the BAQA message** ("Release Awam PLP") | List only, or ignore. At most one branch table. No AWAM git work, and no question about it. |
+| **🚨 ANY push to another team's branch (AWAM release etc.)** (2026-09-30 per みや, #256334) | **ENFORCED by `release-mlk-plp-push-gate` v4** (25/25): blocks a push from any non-pelupusan etanah repo to `mlk/release/*`, `stag-env`, `int-env`, `master`, `mlit` unless `foreign-merge-check.js` ran on that exact HEAD AND みや's own last message says "push it" / "go ahead and push" / "boleh push". No token opens it. Order is fixed: (1) FULL check first — every line the ticket's branch changes, release vs int-env, merge commits included, no keyword filter · (2) brief みや WHY each differing line exists (git log -S, who added it, who dropped it) · (3) show the diff · (4) wait for his nod · (5) push. **Banned**: pushing before steps 1-4 · calling a check "complete" when it was filtered · keeping a line that differs from int-env as "harmless" without reading what it executes. **Why**: pushed `8cf46735d4` before the full check; the earlier "harmless extra param" `P_ADALAH_INDIVIDU` crashed the borang (LazyInitializationException). |
+| **Any "is X on staging / why does staging do Y" question** (2026-09-30 per みや, 1.8.0 PDBB duplicate land row) | Read the env's footer **Git Branch** FIRST and check THAT branch. During a baseline, staging runs `mlk/release/<ver>` (AWAM: its own release branch, e.g. `mlk/release/1.11.1`), NOT `mlk/stag-env`. Checking `stag-env` gave a false "not deployed" verdict; the real cause was a merge resolution inside the release branch. |
 | **Commit on `mlk/master` that is not on the BAQA list** (e.g. a direct maintenance commit) | Include it, but only after I audit the whole diff and compile it. If it is unsafe, it gets fixed on its own ticket branch before the release. Report the audit verdict at V1. |
 
 ## Pipeline (7 stop-points; NEVER skip forward past an un-nodded 🛑)
@@ -293,7 +296,24 @@ against the release branch HEAD recorded in `state/release-<ver>.json` (`headSha
 Match → the artifact provably carries the merges. Mismatch or absent → 🚨 STOP and re-build; never
 infer it from the version footer, and never from "we pushed before building".
 
-**E · SHEET** — <sheet-url>, Developer section:
+**E · SHEET** — Developer section. 🚨 Emit it as ONE copy-paste block in みや's EXACT field order (2026-09-30, Baseline 1.8.0 — a table was wrong):
+
+```
+DEV Name: Ridhwan
+Domain Version : <domain>
+DB Version : <db>
+Common Version : <common>
+Module Version : <ver>
+Branch Name: mlk/release/<ver>
+Dependency pendaftaran: (for Tukarganti & Pendaftaran only)
+Flowable Diagram: /home/ftpuser/files/flowable-diagrams/Melaka/<YYYY-MM-DD>/Pelupusan/
+<file1>.bpmn20.xml
+<file2>.bpmn20.xml
+SQL name with ticket number:
+#<ticket>, <file>.sql
+```
+
+Multiple flowables = the folder path ONCE, then one file name per line (never a full path per file). The older field table below is the value source only:
 
 | Field | Value |
 |---|---|

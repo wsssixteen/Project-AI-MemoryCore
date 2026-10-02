@@ -19,6 +19,27 @@ const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
 const STATE_DIR = process.env.RELEASE_MLK_PLP_STATE_DIR
   || path.join(ROOT, 'domain', 'release-mlk-plp', 'state');
 const REF_RE = /mlk\/release\/([^\s'"]+)/;
+const { execSync } = require('child_process');
+const FOREIGN_DIR = process.env.FOREIGN_CHECK_STATE_DIR || path.join(ROOT, 'domain', 'release-mlk-plp', 'state');
+// Explicit push approval in miya's own words; negated / question forms ("who asked you to push") never match.
+const PUSH_APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never|why|who|asks? you to)\s)\b(push it|push now|go ahead and push|yes,? push|ok,? push|boleh push|pushkan|\[push-ok\])\b/i;
+function lastUserText(tp) {
+  let tail = '';
+  try {
+    const size = fs.statSync(tp).size, want = 400000;
+    const fd = fs.openSync(tp, 'r'); const buf = Buffer.alloc(Math.min(size, want));
+    fs.readSync(fd, buf, 0, buf.length, Math.max(0, size - buf.length)); fs.closeSync(fd);
+    tail = buf.toString('utf8');
+  } catch (_) { return ''; }
+  const ls = tail.split('\n').filter(l => /"type"\s*:\s*"user"/.test(l));
+  for (let i = ls.length - 1; i >= 0; i--) {
+    let o; try { o = JSON.parse(ls[i]); } catch (_) { continue; }
+    const c = o && o.message && o.message.content;
+    if (typeof c === 'string') return c;
+    if (Array.isArray(c)) { const t = c.filter(x => x && x.type === 'text').map(x => x.text); if (t.length) return t.join('\n'); }
+  }
+  return '';
+}
 const GOOD_VER = /^\d+\.\d+(\.\d+)?$/;
 
 runHook({ name: 'release-mlk-plp-push-gate', event: 'PreToolUse' }, (input) => {
@@ -36,7 +57,39 @@ runHook({ name: 'release-mlk-plp-push-gate', event: 'PreToolUse' }, (input) => {
   const GIT_PUSH = /(?:^|[;&|]\s*)git\s+(?:-C\s+(?:"[^"]+"|'[^']+'|\S+)\s+)?push\b([^\r\n|;&]*)/;
   const gp = GIT_PUSH.exec(cmd);
   if (!gp) return { fired: false };
+  // v4 (2026-09-30, #256334 AWAM): approval comes ONLY from miya's own last message — a token I type
+  // myself is not approval (I bypassed this gate twice with RELEASE_GATE_BYPASS and pushed to another
+  // team's release branch without telling him).
+  const approved = PUSH_APPROVAL.test(lastUserText(data.transcript_path || ''));
+  // v4: another team's repo (anything but etanah-pelupusan) pushing a shared branch needs BOTH a
+  // foreign-merge-check report for the exact HEAD being pushed AND miya's explicit push approval.
+  // v5 (2026-10-02): the repo is named by its origin remote via lib/git-target.js, never by its folder
+  // name — `cd X; git push` kept the ";" in the path, a worktree named stag-awam-pdbb was "foreign" only
+  // because its parent was E:\Dev\etanah-work, and E:\Dev\etanah-work\etanah-pelupusan read as foreign.
+  const { targetRepo } = require(path.join(ROOT, 'lib', 'git-target.js'));
+  const tr = targetRepo(cmd, data.cwd || '', 'push');
+  const repo = tr.dir || '';
+  const repoName = tr.id ? tr.id.name : '';
+  const foreign = /^etanah-/i.test(repoName) && !/^etanah-pelupusan$/i.test(repoName);
+  const shared = /\bmlk\/(release\/|stag-env\b|int-env\b|master\b|mlit\b)/.test(gp[1]);
+  if (foreign && shared) {
+    let sha = ''; try { sha = execSync(`git -C "${repo}" rev-parse HEAD`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim(); } catch (_) {}
+    const report = sha && fs.existsSync(path.join(FOREIGN_DIR, `foreign-check-${sha}.json`));
+    if (!report || !approved) {
+      return {
+        fired: true, blocked: true,
+        blockReason: `⛔ release-mlk-plp-push-gate v5: push to ANOTHER team's shared branch (${repoName} at ${repo}).\n` +
+          `   ${report ? '✅' : '❌'} full check for HEAD ${sha.slice(0, 10) || '?'}: node domain/release-mlk-plp/foreign-merge-check.js --repo "${repo}" --ticket <num>\n` +
+          `   ${approved ? '✅' : '❌'} miya's own message approves the push ("push it" / "go ahead and push" / "boleh push")\n` +
+          `   Brief him first: the diff, and WHY every differing line exists. No bypass token opens this.`,
+      };
+    }
+    return { fired: true, blocked: false, foreign: true };
+  }
   if (/RELEASE_GATE_BYPASS/.test(cmd)) {
+    if (!approved) {
+      return { fired: true, blocked: true, blockReason: '⛔ release-mlk-plp-push-gate v4: RELEASE_GATE_BYPASS only counts when miya\'s own last message approves the push ("push it" / "go ahead and push" / "boleh push").' };
+    }
     return { fired: true, blocked: false, bypassed: true, bypassToken: 'RELEASE_GATE_BYPASS' };
   }
   // v2 (2026-08-19): manual mlk/master push on etanah-pelupusan is BANNED — master moves ONLY

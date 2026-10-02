@@ -1,0 +1,8 @@
+[
+  {
+    "ticket": "274461",
+    "branch": "mlk/internal/274461",
+    "reason": "getJawatanUtama uses task peranan; Semak sign blank without it (Ibrahim PPT(KT), PDBB 1.8.0 staging). miya 2026-09-30: include next baseline",
+    "added": "2026-09-30"
+  }
+]

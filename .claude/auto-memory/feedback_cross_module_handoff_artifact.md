@@ -10,7 +10,7 @@ metadata:
 
 **🚨 EVIDENCE/PROOF QUERIES GO IN CHAT, NEVER THE TASK FOLDER (added 2026-08-21, #276436).** A proof SELECT is shown in chat for miya to run and screenshot. It is NOT a deliverable. Do NOT save it into `2. Fix/` — that folder holds only the real fix (the `.java`/`.docx`/patch). A ticket is not a data patch just because it has a query. The Task folder is for what gets attached to the ticket as the fix; a screenshot of the query result is the evidence, the query itself lives in chat. Slip: `evidence-query-in-task-folder`.
 
-**🚫🚫 MARKDOWN (.md) HANDOVER IS FOREVER BANNED (2026-08-27, per みや, deterministic).** NEVER write a `.md` write-up / `HANDOVER-*.md` for a cross-module fix — みや hates it. The hand-off is a BARE source file only (see shape below). Enforced by `domain/cross-module-handoff-gate/` (PreToolUse, BLOCKS any `.md` or `handover/handoff`-named file written into a `1. Tasks\Melaka` Task folder; bypass `[skip-handoff-gate: <reason>]`).
+**🚫🚫 MARKDOWN (.md) HANDOVER IS FOREVER BANNED (2026-08-27, per みや, deterministic).** NEVER write a `.md` write-up / `HANDOVER-*.md` for a cross-module fix — みや hates it. The hand-off is a BARE source file only (see shape below). ⚠️ AUDIT 2026-10-02: `domain/cross-module-handoff-gate/` does NOT exist (no folder, no git history, not registered). This was never enforced; a `244600 - common handoff WordEditorService.txt` with prose was written into the Task folder unblocked. Treat this rule as prose-only until a gate is actually built.
 
 **When a fix belongs to a module that is NOT ours to commit (etanah-common is the usual one; also any non-pelupusan/non-awam module) OR みや signals a hand-off — produce a HANDOFF ARTIFACT, not just a chat diff.**
 
@@ -52,4 +52,4 @@ When the recipient is a **different team** (they do NOT see our chat), the artif
 
 **Why** (2026-08-12, QA-274318): fix was in `etanah-common\...\UtilitiKemaskiniUlasanJPPHForm.java` (common team owns it). I wrote a handoff `.txt` with symptom + root cause + before/after + scope — みや: *"you added bloats, refer to my copy"* — his `3. Reference.java` was just filename + line markers + the new code. The applied `.java` carries the before/after (for the screenshot); the reference file is bare. Pairs with [[reference_utiliti_ulasan_jt_jpph_screen]] + [[feedback_stay_in_module]] + [[feedback_my_files_minimal]].
 
-enforcement: NONE LIVE — cross-module-handoff-gate named above does NOT exist (checked 2026-09-28, #256334 slip handoff-wrong-format). Read THIS file before writing any handover until the gate is built.
+enforcement: LOAD is deterministic since 2026-10-02 — `domain/handoff-load/` (UserPromptSubmit, upsm-mode bundle, eval 17/17) injects this whole file + the ticket-writing shape whenever a prompt names a hand-off / another team or module. The BLOCK gate (prose hand-off file in the Task folder) is still NOT built.

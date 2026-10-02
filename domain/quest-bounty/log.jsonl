@@ -87,3 +87,10 @@
 {"qa":"ADHOC-PRBB-2026-6","ts":"2026-09-30","harvests":{"quest":1,"system":5,"knowledge":3},"refinement":"proposed","banked_sha":"e862cc7a"}
 {"ts":"2026-09-30T09:35:41.364Z","qa":"ADHOC-VIEW-2026-1","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-09-30T09:36:14.579Z","qa":"ADHOC-VIEW-2026-1","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none-until-ticket"}
+{"ts":"2026-10-02T10:19:44.830Z","qa":"QA-244600","kind":"wrong-fix","n":1,"was":"R1 alone (page reload saves in place) presented as fixing issue 1 and leaving issue 3 unchanged","why":"Fable audit: in-place reload keeps the editor draft open, so later edits overwrite it and line 3 gets worse","learned":"trace the draft flag through every save path before claiming a version fix leaves other BA lines unchanged"}
+{"ts":"2026-10-02T03:37:38.100Z","qa":"QA-282061","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-02T09:19:46.569Z","qa":"ADHOC-PRBB-2026-9","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-02T09:19:55.846Z","qa":"ADHOC-PRBB-2026-9","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"promoted to QA-282924; findings carry into that quest doc, register row A44 already TICKETED"}
+{"ts":"2026-10-02T09:42:52.073Z","qa":"ADHOC-PRBB-2026-11","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none-until-ticket"}
+{"ts":"2026-10-02T10:12:35.009Z","qa":"QA-277706","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-02T10:13:10.077Z","qa":"QA-246964","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"6feb2525c6","branch":"mlk/qa/246964"}
