@@ -4,6 +4,14 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-02, worktree lucid-lalande-fcdde1, #277706)
+- **Ask**: retrieve #277706, quest start, prepare Redmine reply to the SPOC question (Amirah passed only note-15 no. 1 to us).
+- **Done**: stg2 `01PRBB2026000051` (38399) + Tanah Milik `02PRBB2026000020` + 2 Ganti Hari apps: Tambah Kuantiti uses Ganti Hari tables. Jenis `umm_p_permit_lesen.mklmt_tmbhn.integerJenisPermohonan`=8 · No Permit `noPermitLesenAsal` · Kuantiti Tambahan `kuantitiTambahanDipohon`+unit · Taraf Tanah `umm_p_permohonan_tnh.kelas_tnh_id` · Maklumat Tanah `umm_p_permohonan_tnh` cols · ID Hakmilik `mklmt_tmbhn.idHkmlk`. miya posted (greeting Mira, assignee back to her, 2 closing lines cut). Quest archived (`projects/coding-projects/archive/QA-277706/`, Task folder `Archive\259. RQ #277706 ...`). ProTime title `PRBB Tambah Kuantiti table SPOC`.
+- **Knowledge**: SPOC-COUNTER.md §4c · urusan/PRBB-TICKETS.md note · TEST-PERMOHONAN-INDEX PRBB Tambah Kuantiti section.
+- **Learned (miya)**: an extra item beyond the ask is NOT a slip but must be marked "➕ Extra, not asked" (memory `feedback_flag_unasked_additions`) · dev answer stops after the last field, greet the BA who routed it (speech collection entry 10).
+- **Open**: bounty proposal (marker rule into reply-shape-spec) awaits weekly ruling · direct-kaunter Tambah Kuantiti seed gap parked (BA says direct kaunter not allowed).
+**Last Activity**: 2026-10-02 18:15 — #246964 takeover of Ammar's fix: review, revert his Java on his branch, merged int-env 803e4907bd + stag-env 5110004a80, miya posted handover, Phase 2 archived, DE.
+
 ## Session Recap (2026-10-02, worktree permit-c02-2026-3-portal-362d6d, session 7)
 - **Ask**: retrieve #246964 and review Ammar's fix ("within Melaka standard?"); then take over, commit, deploy, Redmine handover.
 - **Done**: Ammar `ef49baf78f` = template (tahun after tempoh pajakan, slogan left) correct + Java (PSBS blank signature block before Peraku) NOT asked and against our #278699 placeholder rule. We committed `6feb2525c6` on `mlk/qa/246964` reverting the Java (file now equals master). Merged int-env `803e4907bd` + stag-env `5110004a80` from a temp worktree (work clone had another session's uncommitted edits). miya posted the pass note, assigned Mira, fixed Resolved By. Quest archived (Task folder to Archive, block to active-archive).
@@ -5641,6 +5649,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

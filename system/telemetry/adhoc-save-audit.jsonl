@@ -87,3 +87,6 @@
 {"ts":"2026-10-02T09:21:20.353Z","id":"ADHOC-PRBB-2026-10","outcome":"pass","fails":[],"dur_ms":62}
 {"ts":"2026-10-02T09:41:59.315Z","id":"ADHOC-PRBB-2026-11","outcome":"pass","fails":[],"dur_ms":25}
 {"ts":"2026-10-02T09:42:52.187Z","id":"ADHOC-PRBB-2026-11","outcome":"pass","fails":[],"dur_ms":25}
+{"ts":"2026-10-02T10:29:22.124Z","id":"ADHOC-PLP-2026-1","outcome":"pass","fails":[],"dur_ms":42}
+{"ts":"2026-10-02T10:31:15.531Z","id":"ADHOC-STG-2026-1","outcome":"pass","fails":[],"dur_ms":69}
+{"ts":"2026-10-02T10:36:17.292Z","id":"ADHOC-STG-2026-1","outcome":"pass","fails":[],"dur_ms":64}

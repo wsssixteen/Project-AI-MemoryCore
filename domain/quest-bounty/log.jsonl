@@ -94,3 +94,6 @@
 {"ts":"2026-10-02T09:42:52.073Z","qa":"ADHOC-PRBB-2026-11","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none-until-ticket"}
 {"ts":"2026-10-02T10:12:35.009Z","qa":"QA-277706","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
 {"ts":"2026-10-02T10:13:10.077Z","qa":"QA-246964","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"6feb2525c6","branch":"mlk/qa/246964"}
+{"ts":"2026-10-02T10:26:48.053Z","qa":"QA-280540","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-02T10:26:48.804Z","qa":"QA-282723","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-02T10:27:33.275Z","qa":"QA-282723","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}

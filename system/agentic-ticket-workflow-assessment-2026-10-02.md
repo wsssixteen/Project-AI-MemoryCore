@@ -97,3 +97,12 @@
 | A3 debugging | first cause claim (paid before PL task) wrong; real cause = wrong id keyed at kaunter | diff real rows before mechanism (diff-first held after correction) |
 | A4 etanah | no UI route reconciles an orphan unpaid fee row; unlink is the only path | banked in PRBB-TICKETS.md + FLOWABLE §6e |
 | A5 sweep | Redmine reconcile closed 5 quests in one pass; archive blocked by harvest gate for 280540 | gate works as designed |
+
+## Session 11 — ADHOC-STG-2026-1 (main, stg1 ← stg2 parity)
+| Axis | Assessment (instance) |
+|---|---|
+| A1 agentic system | Turn 1 of this session spent 481 s in hooks with 0 tools (audit-briefing "TOO SLOW" row d8402493-1) — the spawned-session boot paid the full UserPromptSubmit fan-out (OBJECTIVE LOCK for 17 quests, adhoc + latent registers) for a task that touched none of them. |
+| A2 quest workflow | #274266 setup was planned per env (mlit/stg2/PROD) but nobody noticed stg1 shares stg2's flowable: PT v5 already routed to PYSKTPDT on stg1 with no ind_tgsn row. A flow-to-registry orphan check would have shown it at Phase 0. |
+| A3 debugging | The read-only verify (every kod-subquery resolves to 1, or 0 when created earlier) + rowcount-per-statement runner meant zero surprises on a 168-statement write; worth reusing for every multi-row patch. |
+| A4 etanah issue-solving | PRBB v8 (PMBTK/PYMBTK/SMBTK) and PDBB were live on the shared engine while stg1 had no tugasan rows — any BA test on stg1 would have looked like a code bug. |
+| A5 sweep | ⏭ no multi-ticket sweep this session. |

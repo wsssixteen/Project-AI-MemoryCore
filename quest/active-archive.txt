@@ -4412,3 +4412,38 @@ branch=mlk/qa/246964
 local_test_confirmed=skipped-per-miya
 int_env=803e4907bd
 stag_env=5110004a80
+
+qa=QA-282723
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\256. II #282723 - Pelupusan - MLPS - Request untuk Alter Permohonan Ke Tugasan Penyediaa (PROD)
+phase=0
+status=archived
+ticket_type=bug
+env=Pelupusan > MLPS > Request untuk Alter Permohonan Ke Tugasan Penyediaan Borang 4Ae dan L1e
+issue_one_liner=MLPS PROD alter 3 apps (/3 /4 /9) from CT_BSC_PLP to PYB4AE; reset Borang 4Ae for /3 only (no Cop Pejabat Tanah Jasin on CADO sign)
+assigned_to_me=2026-10-01
+current_phase=Rubric
+local_test_confirmed=false
+quest_start=2026-10-01
+qa_doc=projects/coding-projects/archive/QA-282723/QA-282723.md
+state=melaka
+closed=2026-10-02
+close_note=RECONCILED from Redmine: Closed; taken by Alex Ang 2026-10-02 (Initiate and Alter, aliran 44074-44076)
+
+# --- archived 2026-10-02 ---
+qa=ADHOC-PLP-2026-1
+phase=closed
+status=archived
+ticket_type=adhoc
+env=CODE
+urusan=PLP
+quest_start=2026-10-02
+local_test_confirmed=false
+adhoc_register_row=A47
+branch=none-until-ticket
+qa_doc=projects/coding-projects/archive/ADHOC-PLP-2026-1/ADHOC-PLP-2026-1.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\263. AH - CODE - AWAM - plpMaklumatUrusan fail mati
+issue_one_liner=AWAM plpMaklumatUrusan.xhtml is a dead file in Melaka: deploys but 0 of 19 urusan tab lists (Pelupusan_Provider.xls Tab Rules) load it; Maklumat Urusan tab = PDBB plpMaklumatPermit.xhtml
+title=AWAM plpMaklumatUrusan fail mati
+state=melaka
+closed=2026-10-02
+close_note=Answered: dead file, nothing owed

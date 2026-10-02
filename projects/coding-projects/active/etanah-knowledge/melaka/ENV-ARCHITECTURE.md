@@ -131,6 +131,17 @@ him before treating the card as proven.
 The flowable-diagrams path is directly useful — it is the BPMN source we normally read from the
 repo, published per-date on the staging Flowable box.
 
+### 4a. stg1 vs stg2 (verified 2026-10-01, ADHOC-STG-2026-1)
+
+| Fact | Detail |
+|---|---|
+| Same DB, two main schemas | `172.30.12.202:5444/mlkstg` · login `et_main_stg1` → `et_main_stg1` · login `et_main_stg2` → `et_main_stg2` |
+| ONE flowable engine | both read `et_flowable17` — a BPMN published once is live on both; only `et_main_*` reference rows can drift |
+| No cross-schema read | `has_schema_privilege` false both ways → a diff runs client-side with both logins |
+| IDs mostly equal | both are PROD copies (16 836 / 16 841 tugasan share `tgsn_id`); still key every diff and script by kod |
+| Per-env by design (never sync) | `rjk_parameter_sistem` FLOWABLE_USERNAME(2) · email params · FPX window · CACHE_CLEAR_DATE · IDLE_ENABLED · GPKI map |
+| Last sync | 2026-10-01 stg1 ← stg2 pelupusan reference data (178 ins / 8 upd); tools + method in `projects/coding-projects/active/ADHOC-STG-2026-1/` |
+
 ---
 
 ## 5. PROD (reference only — we never deploy here)

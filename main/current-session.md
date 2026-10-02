@@ -10,6 +10,14 @@
 - **Open**: QA-280540 archive needs harvest · QA-282721 archive · #282966 hold · Flowable alter Playwright tool (todo Q1).
 
 **Last Activity (prev)**: 2026-10-02 18:20 — #244600 Kertas versi fix (our side only) committed d61fc2e611 on mlk/qa/244600v3 · int-env 5df44b12cf · miya posted Resolved to Fizah · Phase 1 CLOSED · #275043 split to Ammar · handoff-load feature built · DE.
+**Last Activity**: 2026-10-02 18:32 — ADHOC-STG-2026-1 stg1 synced to stg2 (pelupusan reference data, 178 ins / 8 upd, committed) · routine decision parked in todo Q1 · DE.
+
+## Session Recap (2026-10-01→02, main checkout, ADHOC-STG-2026-1)
+- **Ask**: check stg1 and stg2 are both up to date; stg1 to follow stg2 (trigger #274266 PT Tangguh setup).
+- **Found**: both schemas share ONE flowable t_flowable17 (22 MLK_PLP_* same version + md5) · neither login can read the other schema · stg1 missing PDBB urusan (97 rows), PRBB Tambah Kuantiti (38), PT PYSKTPDT/PSKTPDT, PPTPB industri lookups, MCL smkn PLNASAL, AWAM slip params · 3 value diffs (PT PYSTP + PRBB PYRJKBBPTG nama, jns_dok keselamatan ×3).
+- **Done**: generated kod-subquery script from stg2 rows, verified read-only, miya nod, ran on stg1 in ONE transaction (before/after check matched) → COMMIT; re-diff = PLP parity except MCL SPI. Task 255. AH - STG - PLP - stg1 ikut stg2 data rujukan (2. Fix\ADHOC-STG-2026-1.sql + -check.sql). Register A43. Tools in projects/coding-projects/active/ADHOC-STG-2026-1/.
+- **Left out (stg2 ≠ PROD)**: MCL SPI peranan · ind_laporan PLP01 · PLP_BIL_THN_PERINGATAN param — miya's call.
+- **Open**: stg1 cold restart (miya) · todo Q1 🌐 Env row: decide where/when env parity becomes a routine.
 **Last Activity**: 2026-10-02 18:30 — #282442 Pembatalan Jana PRBB: R1 kod pejabat fallback `24c277d683` on `mlk/esokongan/282442`, cherry-picked int-env `495d16fe66`, MLIT tested pass · cross-module-check skill + ownership-input-check gate built · quest saved · DE.
 
 ## Session Recap (2026-10-01 → 02, worktree redmine-282442-9258e6, #282442)
@@ -29,11 +37,3 @@
 - **Open**: Rubric rule above (build + eval later) · BA verify on mlit · #244600 on planned-release list · Phase 2 archive after BA passes.
 
 **Last Activity (prev)**: 2026-10-02 18:14 — #277706 SPOC Tambah Kuantiti: answered Atierah note-15 no. 1 (table/column of AWAM pra data) · miya posted 05:06Z to Mira · Phase 1+2 closed + archived + bounty · DE.
-
-## Session Recap (2026-10-02, worktree lucid-lalande-fcdde1, #277706)
-- **Ask**: retrieve #277706, quest start, prepare Redmine reply to the SPOC question (Amirah passed only note-15 no. 1 to us).
-- **Done**: stg2 `01PRBB2026000051` (38399) + Tanah Milik `02PRBB2026000020` + 2 Ganti Hari apps: Tambah Kuantiti uses Ganti Hari tables. Jenis `umm_p_permit_lesen.mklmt_tmbhn.integerJenisPermohonan`=8 · No Permit `noPermitLesenAsal` · Kuantiti Tambahan `kuantitiTambahanDipohon`+unit · Taraf Tanah `umm_p_permohonan_tnh.kelas_tnh_id` · Maklumat Tanah `umm_p_permohonan_tnh` cols · ID Hakmilik `mklmt_tmbhn.idHkmlk`. miya posted (greeting Mira, assignee back to her, 2 closing lines cut). Quest archived (`projects/coding-projects/archive/QA-277706/`, Task folder `Archive\259. RQ #277706 ...`). ProTime title `PRBB Tambah Kuantiti table SPOC`.
-- **Knowledge**: SPOC-COUNTER.md §4c · urusan/PRBB-TICKETS.md note · TEST-PERMOHONAN-INDEX PRBB Tambah Kuantiti section.
-- **Learned (miya)**: an extra item beyond the ask is NOT a slip but must be marked "➕ Extra, not asked" (memory `feedback_flag_unasked_additions`) · dev answer stops after the last field, greet the BA who routed it (speech collection entry 10).
-- **Open**: bounty proposal (marker rule into reply-shape-spec) awaits weekly ruling · direct-kaunter Tambah Kuantiti seed gap parked (BA says direct kaunter not allowed).
-**Last Activity**: 2026-10-02 18:15 — #246964 takeover of Ammar's fix: review, revert his Java on his branch, merged int-env 803e4907bd + stag-env 5110004a80, miya posted handover, Phase 2 archived, DE.
