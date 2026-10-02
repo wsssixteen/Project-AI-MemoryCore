@@ -8,6 +8,15 @@
 - **Knowledge**: SPOC-COUNTER.md §4c · urusan/PRBB-TICKETS.md note · TEST-PERMOHONAN-INDEX PRBB Tambah Kuantiti section.
 - **Learned (miya)**: an extra item beyond the ask is NOT a slip but must be marked "➕ Extra, not asked" (memory `feedback_flag_unasked_additions`) · dev answer stops after the last field, greet the BA who routed it (speech collection entry 10).
 - **Open**: bounty proposal (marker rule into reply-shape-spec) awaits weekly ruling · direct-kaunter Tambah Kuantiti seed gap parked (BA says direct kaunter not allowed).
+**Last Activity**: 2026-10-02 18:15 — #246964 takeover of Ammar's fix: review, revert his Java on his branch, merged int-env 803e4907bd + stag-env 5110004a80, miya posted handover, Phase 2 archived, DE.
+
+## Session Recap (2026-10-02, worktree permit-c02-2026-3-portal-362d6d, session 7)
+- **Ask**: retrieve #246964 and review Ammar's fix ("within Melaka standard?"); then take over, commit, deploy, Redmine handover.
+- **Done**: Ammar `ef49baf78f` = template (tahun after tempoh pajakan, slogan left) correct + Java (PSBS blank signature block before Peraku) NOT asked and against our #278699 placeholder rule. We committed `6feb2525c6` on `mlk/qa/246964` reverting the Java (file now equals master). Merged int-env `803e4907bd` + stag-env `5110004a80` from a temp worktree (work clone had another session's uncommitted edits). miya posted the pass note, assigned Mira, fixed Resolved By. Quest archived (Task folder to Archive, block to active-archive).
+- **Built**: takeover rule in quest SKILL (Colleague asks us to review their fix = TAKEOVER, junior template work stays guide-only) + deploy 6 row 10 + review-etanah pointer. LATENT-BUGS L20 (PLTP + PPTPB Tolak slogan still justified).
+- **Slips**: `workflow/handback-instead-of-takeover` (drafted a "please fix" note for Ammar).
+- **Open**: render not verified (no PSBS app at PYSTP/PSTP on stg2 or mlit; BA to regen) · #246964 on the planned-release list.
+
 
 **Last Activity**: 2026-10-02 17:45 — ADHOC-PRBB-2026-11 assist BA Fizah: PROD permit C02/2026/3 data + MLIT 4-row explanation + tugasan all-daerah query · adhoc saved 28/28 · Phase 2 archived + bounty · DE.
 
