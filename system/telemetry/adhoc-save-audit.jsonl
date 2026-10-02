@@ -78,3 +78,12 @@
 {"ts":"2026-10-01T09:14:38.668Z","id":"ADHOC-PRBB-2026-8","outcome":"pass","fails":[],"dur_ms":40}
 {"ts":"2026-10-01T09:18:46.422Z","id":"ADHOC-STG-2026-1","outcome":"pass","fails":[],"dur_ms":53}
 {"ts":"2026-10-01T09:49:12.074Z","id":"ADHOC-STG-2026-1","outcome":"pass","fails":[],"dur_ms":33}
+{"ts":"2026-10-02T04:04:53.058Z","id":"ADHOC-PRBB-2026-9","outcome":"pass","fails":[],"dur_ms":29}
+{"ts":"2026-10-02T06:35:58.005Z","id":"ADHOC-PRBB-2026-9","outcome":"pass","fails":[],"dur_ms":31}
+{"ts":"2026-10-02T09:19:46.808Z","id":"ADHOC-PRBB-2026-9","outcome":"fail","fails":["block: open ↔ file location"],"dur_ms":35}
+{"ts":"2026-10-02T09:19:56.110Z","id":"ADHOC-PRBB-2026-9","outcome":"pass","fails":[],"dur_ms":68}
+{"ts":"2026-10-02T09:20:38.076Z","id":"ADHOC-PRBB-2026-10","outcome":"fail","fails":["register: status ↔ block status"],"dur_ms":42}
+{"ts":"2026-10-02T09:20:48.721Z","id":"ADHOC-PRBB-2026-10","outcome":"fail","fails":["register: status ↔ block status"],"dur_ms":54}
+{"ts":"2026-10-02T09:21:20.353Z","id":"ADHOC-PRBB-2026-10","outcome":"pass","fails":[],"dur_ms":62}
+{"ts":"2026-10-02T09:41:59.315Z","id":"ADHOC-PRBB-2026-11","outcome":"pass","fails":[],"dur_ms":25}
+{"ts":"2026-10-02T09:42:52.187Z","id":"ADHOC-PRBB-2026-11","outcome":"pass","fails":[],"dur_ms":25}
