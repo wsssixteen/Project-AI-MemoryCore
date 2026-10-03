@@ -54,9 +54,16 @@ function main() {
   const resp = payload.tool_response;
   let zero = false;
   if (resp && typeof resp === 'object') {
-    if (typeof resp.numFiles === 'number') zero = resp.numFiles === 0;
-    else if (Array.isArray(resp.filenames)) zero = resp.filenames.length === 0;
-    else if (typeof resp.numLines === 'number') zero = resp.numLines === 0;
+    // v1.2 (2026-10-03): a content-mode result with matches carries numFiles:0 + numLines>0, so testing numFiles
+    // first warned "ZERO matches" on every content-mode grep that DID match (seen all session, and reported by
+    // two eval judges). Zero now means EVERY counter the payload carries is zero.
+    const counters = [];
+    if (typeof resp.numFiles === 'number') counters.push(resp.numFiles);
+    if (Array.isArray(resp.filenames)) counters.push(resp.filenames.length);
+    if (typeof resp.numLines === 'number') counters.push(resp.numLines);
+    if (typeof resp.numMatches === 'number') counters.push(resp.numMatches);
+    if (typeof resp.content === 'string') counters.push(resp.content.trim().length);
+    zero = counters.length > 0 && counters.every(n => n === 0);
   } else if (typeof resp === 'string') {
     zero = /no (matches|files) found/i.test(resp);
   }
