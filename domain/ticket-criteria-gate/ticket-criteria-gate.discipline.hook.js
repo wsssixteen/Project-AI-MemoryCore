@@ -53,7 +53,10 @@ const LOG = path.resolve(__dirname, 'log.jsonl');
 const EXEMPT = /\[skip-criteria-gate:|\[skip-show-gate:|═══ ▶ YOUR MOVE|るり結界|Domain Expansion/;
 
 // ticket context — a ticket reference present in the reply
-const TICKET_REF = /\bQA[-\s#]?\d{4,}\b|\bFAT-\w+|\bUAT-\w+|\bPTMLK\//i;
+// Permohonan prefixes come from the state registry; the literal stays as the fallback and inside the list.
+let PT_PREFIXES = 'PTMLK';
+try { const p = Object.values(require(path.resolve(__dirname, '..', '..', 'lib', 'states.js')).all()).map(s => s.permohonan_prefix).filter(Boolean); if (p.length) PT_PREFIXES += '|' + p.join('|'); } catch (_) { /* fallback literal */ }
+const TICKET_REF = new RegExp('\\bQA[-\\s#]?\\d{4,}\\b|\\bFAT-\\w+|\\bUAT-\\w+|\\b(?:' + PT_PREFIXES + ')\\/', 'i');
 
 // done / close / hand-back-for-test claims
 const DONE_CLAIM = [

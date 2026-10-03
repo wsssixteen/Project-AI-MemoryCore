@@ -125,6 +125,16 @@ if (py.status !== 0) {
   check('E01 END-TO-END: mark.py output line pasted into the reply satisfies the gate', silent(r), d(r) + ' line=' + line.slice(0, 60));
 }
 
+// Registry prefixes (2026-10-03): a hand-back whose only etanah marker is a non-reference permohonan id still counts.
+{
+  const otherState = '═══ ▶ YOUR MOVE ═══ Skrin Kertas Kerja: medan Pembetulan kini dipaparkan. PTTRG/07/01/L/PLPS/2026/135.' + PAD;
+  let rr = run([PASTED, say(otherState)]);
+  check('R01 hand-back with only a non-reference permohonan id + BA image, no FIX-PHOTO → BLOCK', blocked(rr), d(rr));
+  const noMarker = '═══ ▶ YOUR MOVE ═══ Skrin umum: medan Pembetulan kini dipaparkan. Tiada id permohonan.' + PAD;
+  rr = run([PASTED, say(noMarker)]);
+  check('R02 the same hand-back with no etanah marker at all → silent (unchanged)', silent(rr), d(rr));
+}
+
 try { fs.rmSync(TMP, { recursive: true, force: true }); } catch (_) {}
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }

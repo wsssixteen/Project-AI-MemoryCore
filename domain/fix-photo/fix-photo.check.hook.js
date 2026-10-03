@@ -19,7 +19,10 @@ const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
 const MAX_BYTES = 20 * 1024 * 1024;
 const HANDBACK_RE = /▶ YOUR MOVE|Test Scenario|DEPLOY\s*[—-]|\bRedmine\b/i;
 const UI_RE = /\b(medan|field|butang|button|dropdown|checkbox|kotak semak|agihan kepada|panel|popup|pop-up|radio|papar|dipaparkan|hilang|dibuang)\b/i;
-const ETANAH_RE = /PTMLK|PTPRK|\btugasan\b|#\d{6}\b|QA-\d{6}/i;
+// Permohonan prefixes come from the state registry; the two literals stay as the fallback and inside the list.
+let PT_PREFIXES = 'PTMLK|PTPRK';
+try { const p = Object.values(require(path.join(ROOT, 'lib', 'states.js')).all()).map(s => s.permohonan_prefix).filter(Boolean); if (p.length) PT_PREFIXES += '|' + p.join('|'); } catch (_) { /* fallback literal */ }
+const ETANAH_RE = new RegExp(PT_PREFIXES + '|\\btugasan\\b|#\\d{6}\\b|QA-\\d{6}', 'i');
 const BYPASS_RE = /\[skip-fix-photo:\s*([^\]<>]{3,})\]/i;
 const PHOTO_RE = /FIX-PHOTO:\s*`?([^`\r\n]+?\.(?:png|jpe?g))`?\s*(?:✓|$)/gim;
 const BRIEF_IMG_RE = /[\\/](?:[01]\. )?Brief[\\/][^\\/]+\.(png|jpe?g|webp|gif|bmp)$/i;

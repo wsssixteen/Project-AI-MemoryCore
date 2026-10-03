@@ -462,7 +462,10 @@ function formatJournalsForHistory(journals) {
 // v1.1 (2026-08-03, miya, QA-272867 wrong-test-data root cause): BA-given IDs live in journals and
 // keep getting outranked by doc-pack records. Scan journals (LATEST first) for permohonan IDs +
 // env words; surface them at the TOP of History.txt and on stdout so intake cannot bury them.
-const PERMOHONAN_RX = /PT[A-Z]{3}\/\d{2}\/[A-Z]\/[A-Z]+\/\d{4}\/\d+/g;
+// The pattern comes from the state registry (every state's prefix, an optional second 2-digit block, "_" in an
+// urusan kod). The hand-typed literal missed every non-reference id shape; it stays only as the fallback.
+let PERMOHONAN_RX = /PT[A-Z]{3}\/\d{2}\/[A-Z]\/[A-Z]+\/\d{4}\/\d+/g;
+try { PERMOHONAN_RX = require(path.join(__dirname, '..', 'lib', 'states.js')).permohonanRegex(); } catch (_) { /* fallback literal */ }
 const ENV_RX = /\b(staging|stg1|stg2|prod|production|mlit|uat|fat)\b/i;
 function extractBaGivenTestData(journals) {
     const rows = [];
@@ -1007,7 +1010,7 @@ async function runSingle(id) {
 }
 
 // v10: exported for quest/redmine-sync.eval.js (fixture-driven; no Redmine call in these).
-module.exports = { addStatusFolder, isReworkTransition, isGenuineReopen, genuineReopenCount, REWORK_STATUS_IDS, abbreviateType, buildFolderSlug, taskBaseFor, TYPE_ABBR };
+module.exports = { addStatusFolder, isReworkTransition, isGenuineReopen, genuineReopenCount, REWORK_STATUS_IDS, abbreviateType, buildFolderSlug, taskBaseFor, TYPE_ABBR, extractBaGivenTestData };
 
 if (require.main === module) {
     const args   = process.argv.slice(2);

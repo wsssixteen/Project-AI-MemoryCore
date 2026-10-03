@@ -100,6 +100,15 @@ const reproCleanPath = writeTranscript('fixture-criteria-repro-clean.jsonl', rep
 r = run({ transcript_path: reproCleanPath, stop_hook_active: false });
 check('F5 VERIFIED claim WITH before-fix repro does NOT block', !isBlock(r.stdout), 'stdout=' + (r.stdout || '').slice(0, 200));
 
+// ---- F6 / F7: registry prefixes (2026-10-03) — a done-claim whose only ticket reference is a non-reference
+// permohonan id is still a ticket reply; the same text with no reference at all is not.
+const otherStateText = triggerText.replace('QA-268888', 'PTTRG/07/01/L/PLPS/2026/135');
+r = run({ transcript_path: writeTranscript('fixture-criteria-other-state.jsonl', otherStateText), stop_hook_active: false });
+check('F6 done-claim with only a non-reference permohonan id BLOCKS', isBlock(r.stdout), 'stdout=' + (r.stdout || '').slice(0, 200));
+const noRefText = triggerText.replace('QA-268888', 'the screen');
+r = run({ transcript_path: writeTranscript('fixture-criteria-no-ref.jsonl', noRefText), stop_hook_active: false });
+check('F7 the same done-claim with no ticket reference does NOT block (unchanged)', !isBlock(r.stdout), 'stdout=' + (r.stdout || '').slice(0, 200));
+
 for (const f of tmpFiles) { try { fs.unlinkSync(f); } catch (_) {} }
 
 let failed = 0;

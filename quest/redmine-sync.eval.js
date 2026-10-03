@@ -153,6 +153,15 @@ const block = (status, ...closed) => ['qa=QA-999999', `status=${status}`, ...clo
             && base('eSOKONGAN MELAKA') === 'Melaka' && base('MLK_03_Pelupusan') === 'Melaka' && path.basename(taskBaseFor(null)) === 'Melaka', base('eSOKONGAN TERENGGANU'));
     }
 
+    // (n) BA-given test ids are surfaced for EVERY registered id shape, not only the reference state's.
+    {
+        const { extractBaGivenTestData } = require(path.join(__dirname, 'redmine-sync.js'));
+        const ids = ['PTMLK/01/L/PSBS/2026/1', 'PTPK/02/L/PT/2026/14', 'PTTRG/07/01/L/PLPS/2026/135', 'PTTRG/07/L/UPS_PLP/2026/5'];
+        const rows = extractBaGivenTestData(ids.map((id, i) => ({ notes: 'Sila semak ' + id + ' di staging.', created_on: '2026-10-0' + (i + 1) + 'T00:00:00Z', user: { name: 'BA' } })));
+        for (const id of ids) check('(n) BA-given id surfaced: ' + id, rows.some(r => r.startsWith(id + ' @ staging')), rows.join(' | '));
+        check('(n5) a note with no permohonan id gives no row', extractBaGivenTestData([{ notes: 'done alter please verify', user: { name: 'x' } }]).length === 0, '');
+    }
+
     let failed = 0;
     for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.name + (x.pass ? '' : ' → ' + x.detail)); }
     console.log('\nredmine-sync.eval: ' + (results.length - failed) + '/' + results.length + ' green');

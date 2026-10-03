@@ -53,18 +53,18 @@ phase('Discovery')
 log(`Discovery for ${t.qa}`)
 const discovery = await agent(`${base}
 
-Read ${PROTO} Phase-0 section (~lines 460-555) for the exact Discovery procedure, then:
+Read ${PROTO} section "Phase 0 — Accept the Quest" (about line 465, up to the next "### Read-Redmine sub-protocol" heading) for the exact Discovery procedure, then:
 - Read the task folder's "0. Brief/History.txt" (FULL), "Description.txt", "1. <NNN NNN>.txt", and any PNG/PDF in 0. Brief.
 - Classify ticket_type (bug | enhancement | template | cr) and entry context (New | Rework | Addition).
 - Pick codebase_root (etanah-pelupusan for APPS/PELUPUSAN; etanah-awam for AWAM) and base-branch (${BASE_BRANCH}). State: ${STATE}.
 - Extract urusan(s), tugasan(s), the layer guess, the BA-provided permohonan ID (if any), Expected vs Observed, and the scope anchor (BA's LITERAL scope: what is IN + explicit DO-NOT).`,
   { label: 'discovery', phase: 'Discovery', schema: DISCOVERY_SCHEMA })
 
-// ---- KnowledgeLoad (etanah-knowledge tiered load, protocol :85-93) ----
+// ---- KnowledgeLoad (protocol paragraph "etanah-knowledge tiered load at Phase 0", about line 103) ----
 phase('KnowledgeLoad')
 const knowledge = await agent(`${base}
 
-Per ${PROTO} etanah-knowledge tiered-load (~lines 85-93):
+Per ${PROTO}, the paragraph that starts "etanah-knowledge tiered load at Phase 0" and the tier table under it (about line 103; find it by that phrase, the line number drifts):
 - ALWAYS load + summarize from ${t.knowledgeDir}: index.md (it maps every file of THIS state's folder — follow it), STATE-FACTS.md, DOMAIN-GLOSSARY.md, MODULE-ARCHITECTURE.md, BUG-BESTIARY.md, LATENT-BUGS.md, DEFERRED-CRITICAL-ISSUES.md. A file that does not exist in this state's folder is skipped and NAMED as absent — never substituted with another state's copy.
 - CONDITIONAL by layer "${discovery.layerGuess}" + the symptom: load the matching layer file(s) — DATABASE (DB) / FLOWABLE-WORKFLOWS or FLOWABLE-KNOWLEDGE (workflow) / JSF-WIRING (UI) / FLOW-TRACES (deep-debug) / FRONTEND-PATTERNS (UI enhancement) / URUSAN-FLOW (cross-urusan) / PERANAN-MAP (role) / TEST-PERMOHONAN-INDEX (test data) / ENV-ARCHITECTURE (which DB + MCP).
 - Find the closest WORKING ANALOG ticket(s) for "${discovery.symptom}" — search projects/coding-projects QA docs + BUG-BESTIARY + this state's ${t.knowledgeDir}/urusan/<KOD>-TICKETS.md precedent file when it exists. Cite ticket + what it did + file:line/commit.
@@ -79,7 +79,7 @@ const dims = [
   { key: 'code-path', prompt: `Trace where the fix goes for "${discovery.symptom}". For layer "${discovery.layerGuess}" cite the exact file:line(s) (Java populator / .docx template SDT / JSF composite / config / SQL). Use the working analog as the template.` },
   { key: 'working-analog', prompt: `Confirm the closest working analog and READ its actual fix (file:line / commit). State exactly what to mirror, and any difference vs this ticket.` },
   { key: 'blast-radius', prompt: `Blast-radius — CODEBASE-ONLY. ${isPelupusan ? 'codebase_root is etanah-pelupusan (state: ' + STATE + '): IGNORE EVERY OTHER STATE ENTIRELY. Do NOT check, mention, or flag another state / cross-state. Scope PURELY to this state\'s pelupusan codebase: which Java / templates / configs / urusan WITHIN pelupusan this change touches (prefer codegraph_impact if etanah is indexed).' : 'codebase_root is etanah-awam: include MULTI-STATE awareness — other states share this portal, so flag general cross-state ripple.'} List every touch-site with file:line.` },
-  { key: 'test-data', prompt: `Run the canonical task-state query (${PROTO} ~lines 518-541) on ${t.dbMcp} to find ONE active permohonan per urusan (${(discovery.urusans || []).join(', ') || 'see Discovery'}) at the relevant tugasan, with its pengguna_semasa login. If the BA gave a permohonan ID (${discovery.baProvidedPermohonanId || 'none'}), also resolve ITS current pengguna_semasa. Return per-urusan {urusan, permohonanId, pengguna, tugasan}. Mark login TBD if the DB cannot resolve it. CANDIDATE, not authority — pengguna_semasa drifts as the app advances.` },
+  { key: 'test-data', prompt: `Run the task-state query (the one in ${t.knowledgeDir}/DATABASE.md when that file carries one; else the reference form in ${PROTO}, section "Auto-pengguna at END of Recon") on ${t.dbMcp} to find ONE active permohonan per urusan (${(discovery.urusans || []).join(', ') || 'see Discovery'}) at the relevant tugasan, with its pengguna_semasa login. If the BA gave a permohonan ID (${discovery.baProvidedPermohonanId || 'none'}), also resolve ITS current pengguna_semasa. Return per-urusan {urusan, permohonanId, pengguna, tugasan}. Mark login TBD if the DB cannot resolve it. CANDIDATE, not authority — pengguna_semasa drifts as the app advances.` },
 ]
 if (FULL) {
   dims.push({ key: 'reproduce', prompt: `Produce a deterministic REPRODUCTION recipe (exact tugasan + clicks + expected vs actual). State clearly: is a clean repro achievable from the brief — Y/N? If not, name the single artifact still needed.` })

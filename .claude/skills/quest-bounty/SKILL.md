@@ -35,7 +35,7 @@ List every skill / hook / rule / protocol **refined or created during this quest
 Any new pattern discovered this quest lands in its owning knowledge file (per the Gap-Sweep category table): `BUG-BESTIARY.md` (bug/slip pattern) · `DATABASE.md` (schema/query) · `JSF-WIRING.md` · `FLOWABLE-WORKFLOWS.md` · `DOMAIN-GLOSSARY.md` · etc. Emit one line per entry written, or `knowledge: none new`.
 
 Three registers get a MANDATORY check in the same pass (each emits ✓ or ⏭ n/a — added 2026-08-23 per みや's loop-closure directive):
-1. **Urusan precedent doc** — append this quest's requirement decision / BA verdict as a manual note under the marker in `etanah-knowledge/melaka/urusan/<KOD>-TICKETS.md` (rows above the marker are regenerated; notes survive). One line: `#<num> — <decision>`.
+1. **Urusan precedent doc** — append this quest's requirement decision / BA verdict as a manual note under the marker in `urusan/<KOD>-TICKETS.md` of the resolved state's knowledge dir (`node lib/states.js show <state>` → `knowledge_dir`; Melaka: `etanah-knowledge/melaka/urusan/<KOD>-TICKETS.md`) (rows above the marker are regenerated; notes survive). One line: `#<num> — <decision>`.
 2. **LATENT-BUGS.md** — if this ticket landed on a register row, GRADUATE it (Status → FIXED, evidence += commit); if the quest surfaced a NEW pre-ticket bug outside scope, ADD a row (that is the feeder).
 3. **TEST-PERMOHONAN-INDEX.md** — new test data derived this quest is written back (then `node lib/test-data-db.js build`); this is the same rule row 1d enforces at Phase 0.
 

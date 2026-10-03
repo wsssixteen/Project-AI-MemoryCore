@@ -23,7 +23,10 @@ const fs = require('fs');
 const path = require('path');
 
 const REPO_ROOT = require('path').resolve(__dirname, '..', '..'); // machine-independent (GHOST-HOOKS-2 fix 2026-07-19)
-const ACTIVE_TXT = path.join(REPO_ROOT, 'quest', 'active.txt');
+// quest/active.txt and the qa_doc under projects/ are untracked: they exist only in the MAIN checkout. Run from a
+// worktree, this script read nothing and exited 0 (2026-10-03). Data paths use MAIN_ROOT; code and the log stay here.
+const MAIN_ROOT = require(path.join(REPO_ROOT, 'lib', 'states.js')).mainRoot(REPO_ROOT);
+const ACTIVE_TXT = path.join(MAIN_ROOT, 'quest', 'active.txt');
 const LOG = path.join(REPO_ROOT, 'domain', 'checklist-reactivate', 'log.jsonl');
 const OPEN_STATUSES = new Set(['active', 'hold', 'blocked', 'delegated']);
 // 2026-09-23 (#280176 cycle 3): a `closed` block whose current_phase carries a date LATER than
@@ -35,7 +38,7 @@ function reworkedAfterClose(block, fieldOf) {
 }
 const FILTER_QA = (process.argv[2] || '').trim().replace(/^QA-?/i, '');
 
-const PERMOHONAN_RE = /PT[A-Z]{2,4}\/\d{2}\/[A-Z]\/[A-Z0-9_]+\/\d{4}\/\d+/;     // PTMLK/01/L/PSBS/2026/14 (Melaka) · PTPK/04/E/PLMS/2022/350 (Perak, PT+2 letters) — state code is 2-4 letters
+const PERMOHONAN_RE = /PT[A-Z]{2,4}\/\d{2}(?:\/\d{2})?\/[A-Z]\/[A-Z0-9_]+\/\d{4}\/\d+/;     // PTMLK/01/L/PSBS/2026/14 (Melaka) · PTPK/04/E/PLMS/2022/350 (Perak, PT+2 letters) · a state may carry a second 2-digit block (PTTRG/07/01/L/PLPS/2026/135) — state code is 2-4 letters
 // AWAM quests have NO Permohonan ID by design — the test key is login + p_aplikasi_id
 // (DEV-TESTING-HACKS.md:106). Before 2026-07-22 this check was structurally unpassable for
 // every AWAM quest, producing a permanent false ✗ (QA-271721). Accept the AWAM shape too.
@@ -83,7 +86,7 @@ function main() {
     if (!qa || !status || !qaDoc) continue;
     if (!OPEN_STATUSES.has(status) && !reworkedAfterClose(block, fieldOf)) continue;
     if (FILTER_QA && !qa.replace(/^QA-?/i, '').includes(FILTER_QA)) continue;
-    const doc = safeRead(path.join(REPO_ROOT, qaDoc.replace(/\//g, path.sep)));
+    const doc = safeRead(path.join(MAIN_ROOT, qaDoc.replace(/\//g, path.sep)));
     if (!doc) { console.log(`🔴 ${qa}: qa_doc unreadable (${qaDoc})`); checked++; totalGaps++; continue; }
     checked++;
     const checks = checkQuest(qa, block, doc);

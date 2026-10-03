@@ -19,7 +19,7 @@ metadata:
 | Finding shape | Save NOW, mid-quest, to | Save ONLY at Phase-2 close, to |
 |---|---|---|
 | Quest-specific detail (this ticket's chain, this fix, this test data) | `projects/coding-projects/active/QA-<n>/QA-<n>.md` | — |
-| Durable codebase knowledge (schema, JSF wiring, BPMN routing, domain term) | matching `etanah-knowledge/melaka/<file>.md` (table below; `melaka` is the Melaka example — write into the resolved state's knowledge dir, `node lib/states.js show <state>` → `knowledge_dir`, e.g. `etanah-knowledge/terengganu/`) | — |
+| Durable codebase knowledge (schema, JSF wiring, BPMN routing, domain term) | matching `etanah-knowledge/melaka/<file>.md` (table below; `melaka` is the Melaka example — write into the resolved state's knowledge dir, `node lib/states.js show <state>` → `knowledge_dir`) | — |
 | Recurring bug PATTERN (generalized, ticket-agnostic) | — | `BUG-BESTIARY.md` |
 | Post-mortem / lesson-learned narrative | — | `main/post-mortems.md` |
 
@@ -52,7 +52,7 @@ metadata:
 saved → <etanah-knowledge/melaka/FILE.md | QA-<n>.md>: <one-line description of what was written>
 ```
 
-`melaka` in that line is the Melaka example: name the resolved state's knowledge dir (`node lib/states.js show <state>` → `knowledge_dir`), e.g. `saved → etanah-knowledge/terengganu/DATABASE.md: …`.
+`melaka` in that line is the Melaka example: name the resolved state's knowledge dir (`node lib/states.js show <state>` → `knowledge_dir`).
 
 ## Banned
 

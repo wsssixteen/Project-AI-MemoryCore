@@ -27,7 +27,7 @@ Input = ticket number (`QA-268170`, `268170`, `#268170`, `QA-267382`) OR git com
 
 - If TICKET → `git log --all --grep="#<num>"` OR `git log --all --grep="<QA-num>"` on etanah-pelupusan repo → get commit SHA(s) + author + date + subject line.
 - If SHA → `git show --stat <sha>` → get files touched + commit body.
-- If ticket has a Task folder under `1. Tasks\Melaka\` → read `0. Brief/Description.txt` + `0. Brief/History.txt` for BA verbatim.
+- If ticket has a Task folder under the resolved state's Task folder (`node lib/states.js show <state>` → `task_folder`; Melaka: `1. Tasks\Melaka\`) → read `0. Brief/Description.txt` + `0. Brief/History.txt` for BA verbatim.
 - If neither task folder nor sync → advise: run `node quest/redmine-sync.js --create` first.
 
 ### Step 2 — Read the diff + commit body
@@ -90,7 +90,7 @@ Format:
 **Rationale**: <1 sentence — why this belongs here>
 ```
 
-**Primary target**: `projects/coding-projects/active/etanah-knowledge/melaka/BUG-BESTIARY.md` (bug patterns + symptom-class routing).
+**Primary target**: `BUG-BESTIARY.md` in the resolved state's knowledge dir, never another state's file (`node lib/states.js show <state>` → `knowledge_dir`; Melaka: `projects/coding-projects/active/etanah-knowledge/melaka/BUG-BESTIARY.md`) (bug patterns + symptom-class routing).
 
 **Secondary targets** (only if the fix genuinely revealed something new there):
 - `DOMAIN-GLOSSARY.md` — BA-wording → code artifact

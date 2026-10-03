@@ -46,7 +46,7 @@
 **Justification (from Description.txt)**: <quote + reasoning>
 
 **Issue (BA)**:
-- Env (BA): <UAT / FAT / MLIT>
+- Env (BA): <the env the BA names, one of the resolved state's envs (Melaka: MLIT / STG / PROD; UAT and FAT were retired 2026-07-17)>
 - Test app (Ruri verified): <id_pengenalan @ urusan + tugasan_kod> · login `<pengguna_semasa>` · role <kod>
 - Symptom: <verbatim from BA>
 - Expected: <verbatim or inferred from BA>
@@ -97,7 +97,7 @@
 |---|---|---|
 
 **Simulate**: reproduce bug locally?
-- Env: <mlkuat | mlkfat | mkit>
+- Env: <the resolved state's DB server for that env, `node lib/states.js show <state>` → db.mcp (Melaka: postgres-mlit-pg | postgres-mlkstg-pg | postgres-mlkstg1-pg | postgres-mlkprod-pg; mlkuat and mlkfat were retired 2026-07-17)>
 - Permohonan: <id + login>
 - Tugasan walked: <kod sequence>
 - Repro: <YES — verified ralat matches BA report / NO — reason>
@@ -208,7 +208,7 @@
 - Workrepo cleanup done (no `*.bak*` / `*- Copy*` / orphaned `~$*` in staging): <YES / NO>
 - `commit-conventions.md` read this session (Step 7.5): <YES / NO>
 
-**Branch**: `<repo>/mlk/qa/<NNN>` (or `<repo>/main` for MemoryCore)
+**Branch**: `<repo>/<the resolved state's ticket branch>` (`node lib/states.js show <state>` → `ticket_branch`; Melaka: `mlk/<tracker>/<NNN>`, e.g. `<repo>/mlk/qa/<NNN>`) (or `<repo>/main` for MemoryCore)
 
 **Drafted commit message** (per `commit-conventions.md`):
 
@@ -257,11 +257,11 @@ Co-Authored-By: Ruri <noreply@anthropic.com>
 - Learnings: <bullets>
 
 **Etanah-knowledge updates** (if applicable — per `feedback_knowledgebase_during_debug.md`):
-- Added entry to `etanah-knowledge/melaka/BUG-BESTIARY.md`: <YES / NO>
+- Added entry to the resolved state's `BUG-BESTIARY.md` (Melaka: `etanah-knowledge/melaka/BUG-BESTIARY.md`): <YES / NO>
 - Updated relevant layer (DATABASE / MODULE-ARCHITECTURE / FLOW-TRACES / etc.): <list>
 
 **Folder hygiene**:
-- Task folder moved: `1. Tasks/Melaka/<NN>. ...` → `1. Tasks/Melaka/Archive/<NN>. ...`
+- Task folder moved into the `Archive/` of the resolved state's Task folder (Melaka: `1. Tasks/Melaka/<NN>. ...` → `1. Tasks/Melaka/Archive/<NN>. ...`)
 - Project folder moved: `projects/coding-projects/active/QA-<NNN>/` → `projects/coding-projects/archive/QA-<NNN>/`
 
 **`active.txt` state**: `phase=2-complete` · `status=archived` (or `archived-shipped-by-other` if colleague shipped)

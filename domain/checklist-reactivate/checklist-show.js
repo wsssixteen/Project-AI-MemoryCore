@@ -18,7 +18,9 @@ const fs = require('fs');
 const path = require('path');
 
 const REPO_ROOT = require('path').resolve(__dirname, '..', '..'); // machine-independent (GHOST-HOOKS-2 fix 2026-07-19)
-const ACTIVE_TXT = path.join(REPO_ROOT, 'quest', 'active.txt');
+// Untracked data (quest/active.txt, the qa_doc under projects/) lives only in the MAIN checkout: same rule as resume-readiness.js.
+const MAIN_ROOT = require(path.join(REPO_ROOT, 'lib', 'states.js')).mainRoot(REPO_ROOT);
+const ACTIVE_TXT = path.join(MAIN_ROOT, 'quest', 'active.txt');
 const LOG = path.join(REPO_ROOT, 'domain', 'checklist-reactivate', 'log.jsonl');
 const OPEN_STATUSES = new Set(['active', 'hold', 'blocked', 'delegated']);
 const DONE_MARK = /✅|\bdone\b/i;
@@ -72,7 +74,7 @@ function main() {
     const qaDoc = fieldOf(block, 'qa_doc');
     if (!qa || !status || !OPEN_STATUSES.has(status) || !qaDoc) continue;
     if (FILTER_QA && !qa.replace(/^QA-?/i, '').includes(FILTER_QA)) continue;
-    const docText = safeRead(path.join(REPO_ROOT, qaDoc.replace(/\//g, path.sep)));
+    const docText = safeRead(path.join(MAIN_ROOT, qaDoc.replace(/\//g, path.sep)));
     if (!docText) continue;
     const open = extractOpenChecklist(docText);
     if (open.length) surfaced.push({ qa, open });

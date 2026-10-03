@@ -145,12 +145,18 @@ check('F16b existing-doc 1c row regenerates THIS state, not the reference one', 
 // F17 PROMPT fallback — block carries nothing, the prompt quotes a 7-segment and a 6-segment id
 r = run('ticket 90103 PTTRG/07/01/L/PLPS/2026/135 tak boleh hantar'); o = out();
 check('F17 prompt id resolves the state (7-segment id)', o.includes('etanah-knowledge/' + TRG.knowledge_dir + '/') && row(o, '0.').includes('ONLY in the work clone'), o.slice(0, 200));
+check('F17 a resolved state (non-reference) prints NO unresolved notice', !/STATE UNRESOLVED/.test(o), '');
+check('F17 row 0.7 lists THIS state\'s registry modules and asserts no other state\'s call-activity pattern or "not deployed" stop',
+  row(o, '0.7').includes('modules from the state registry') && Object.values(TRG.modules).every(m => row(o, '0.7').includes(m.repo))
+  && /reference only: read, never edit/.test(row(o, '0.7')) && !/MLK_TKL_|not deployed locally/.test(row(o, '0.7'))
+  && /Persist `module=` in active\.txt/.test(row(o, '0.7')) && /Banned: loading a ticket without the module line/.test(row(o, '0.7')), row(o, '0.7').slice(0, 300));
 check('F17 header says the state came from the prompt, not silently', /state=terengganu \(read from the permohonan id in the prompt/.test(o), o.slice(0, 200));
 r = run('ticket 90103 PTTRG/02/L/OPLPS/2026/47'); o = out();
 check('F17b prompt id resolves (6-segment id)', row(o, '0.6').includes(S.mcp('terengganu')), '');
 // F18 nothing resolves → STATE UNKNOWN stays, rows stay as before (no default picked by the new logic)
 r = run('ticket 90103 please'); o = out();
 check('F18 no state anywhere → STATE UNKNOWN: ASK miya', /STATE UNKNOWN/.test(o) && /ASK miya/.test(o) && !/DB FOR THIS STATE/.test(o), '');
+check('F18 unresolved state → the notice says the rows below are the reference state\'s text', /STATE UNRESOLVED — rows 0, 0\.6 and 1d below are the REFERENCE state's text/.test(o) && o.indexOf('STATE UNRESOLVED') < o.indexOf('0. ⬜'), o.slice(0, 300));
 r = run('ticket 90103 compare PTMLK/01/L/PT/2026/1 with PTTRG/07/01/L/PLPS/2026/135'); o = out();
 check('F18b ids of TWO states in the prompt → ambiguous → STATE UNKNOWN', /STATE UNKNOWN/.test(o) && !/ONLY in the work clone/.test(o), o.slice(0, 200));
 r = run('ticket 90106 PTTRG/07/01/L/PLPS/2026/135'); o = out();
@@ -164,6 +170,10 @@ check('F19 Melaka block + foreign prompt id → still Melaka', row(o, '0.') === 
 // F20 MELAKA UNCHANGED — the four touched rows, pinned to the pre-change text
 r = run('lets start with 90105'); o = out();
 check('F20 Melaka row 0 byte-identical to the pre-change literal', row(o, '0.') === MLK_ROW0, row(o, '0.').slice(0, 200));
+check('F20 a resolved state (reference) prints NO unresolved notice', !/STATE UNRESOLVED/.test(o), '');
+check('F20 Melaka row 0.7 is the pre-change literal (module menu + the teknikal STOP + the BPMN-FIRST pointer)',
+  o.includes('0.7 ⬜ **🚨 MODULE SET — declare the module(s) in focus in ONE line at load, BEFORE any analysis** — `etanah-pelupusan | etanah-awam | etanah-teknikal (STOP — not deployed locally) | etanah-common`, with the evidence (BPMN userTask vs MLK_TKL_* callActivity per CLAUDE.md BPMN-FIRST')
+  && !o.includes('modules from the state registry'), (o.split('\n').find(l => l.includes('0.7 ⬜')) || '').slice(0, 260));
 check('F20 Melaka row 0.6 still orders staging-schema-check', row(o, '0.6').startsWith('0.6 ⬜ **🚨 STAGING SCHEMA — resolve it at LOAD, never assume, never copy it from a qa_doc** — run `node domain/staging-schema-check/staging-schema.js` and EMIT the line it prints.') && !/DB FOR THIS STATE/.test(o), '');
 check('F20 Melaka row 1c still the read row', row(o, '1c.').startsWith('1c. ⬜ **URUSAN PRECEDENT — read `etanah-knowledge/melaka/urusan/PRZ-TICKETS.md`** (derive the KOD first'), row(o, '1c.').slice(0, 120));
 check('F20 Melaka row 1c regenerate command has NO --state', row(o, '1c.').includes('`node domain/urusan-tickets/urusan-tickets.js` (office network)'), row(o, '1c.').slice(-220));

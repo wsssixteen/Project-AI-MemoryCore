@@ -32,7 +32,7 @@ node quest/redmine-sync.js            # pull descriptions/History/attachments
 node quest/redmine-sync.js --create   # Task folders + active.txt blocks (status=hold) for folderless NEW tickets
 ```
 
-Verify: `Get-ChildItem "…\1. Tasks\Melaka" -Directory` (Melaka example; each ticket lands in its own state's Task folder, `node lib/states.js show <state>` → `task_folder`, e.g. `1. Tasks\Terengganu`) filtered on the ticket numbers — every NEW ticket must have a folder before fan-out.
+Verify: `Get-ChildItem "…\1. Tasks\Melaka" -Directory` (Melaka example; each ticket lands in its own state's Task folder, `node lib/states.js show <state>` → `task_folder`) filtered on the ticket numbers — every NEW ticket must have a folder before fan-out.
 
 ## Step 2b — Prior-work sweep (adhoc + pre-existing docs) BEFORE fan-out
 

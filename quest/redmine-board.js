@@ -22,7 +22,8 @@ const path = require('path');
 
 const { renderStealBanner } = require('../domain/steal-risk-flag/steal-risk');
 
-const ACTIVE_TXT = path.join(__dirname, 'active.txt');
+// active.txt is untracked and exists only in the MAIN checkout: strip the worktree suffix (same idiom as active-cli.js).
+const ACTIVE_TXT = path.join(__dirname.replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+(?=[\\/]quest$)/i, ''), 'active.txt');
 
 const REDMINE_BASE = 'http://172.16.90.169/redmine';
 const REDMINE_KEY  = '9565c21aa6cd9672fd3c7c2c7fec4c934c2f7c66'; // same constant as redmine-sync.js:14
