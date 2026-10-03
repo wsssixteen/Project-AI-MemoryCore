@@ -24,6 +24,10 @@
  *      ADDITION — with a warning when the journal has more reopens than the disk has
  *      folders. /quest resume step iii echoes it verbatim; eval: ticket-load-verify.eval.js.
  *
+ * v1.3 (2026-10-03): the Task folder is found for ANY registered state — the ticket's
+ *      active.txt block task_folder first, else every state's Task folder + Archive via
+ *      lib/states.js. Preserved: TLV_TASKS_ROOT override, manifest text, exit codes.
+ *
  * Exit 0 = manifest printed. Exit 1 = ticket folder not found / sync missing.
  * Exit 2 = integrity problem (journal names an attachment absent from disk,
  *          or History.txt is older than the Redmine `Last updated` it records).
@@ -34,26 +38,67 @@ const path = require('path');
 
 // TLV_TASKS_ROOT exists so the red-path eval can point at a fixture instead of
 // creating throwaway folders inside miya's real Tasks tree.
-const TASKS_ROOT = process.env.TLV_TASKS_ROOT
-    || 'C:\\Users\\Ridhwan\\OneDrive - Pymsoft Sdn Bhd\\1. Tasks\\Melaka';
+// Without the override no single state owns the root (2026-10-03, v1.3): the ticket's
+// quest/active.txt block names its task_folder, else every state registered in
+// system/states.json is searched (lib/states.js). TLV_ACTIVE_FILE = the eval's active.txt.
+const TASKS_ROOT = process.env.TLV_TASKS_ROOT || null;
 const REPO_ROOT = path.resolve(__dirname, '..');
+// active.txt is shared project state: from a worktree, read the MAIN repo's copy (same strip as active-cli.js).
+const ACTIVE_TXT = process.env.TLV_ACTIVE_FILE
+    || path.join(REPO_ROOT.replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+$/i, ''), 'quest', 'active.txt');
+const searched = [];
 
 function die(msg, code) {
-    console.error(`\u26d4 ticket-load-verify: ${msg}`);
+    console.error(`⛔ ticket-load-verify: ${msg}`);
     process.exit(code === undefined ? 1 : code);
 }
 
-function findTaskFolder(num) {
-    const roots = [TASKS_ROOT, path.join(TASKS_ROOT, 'Archive')];
+function findTaskFolder(num, tasksRoot) {
+    const roots = [tasksRoot, path.join(tasksRoot, 'Archive')];
     for (const root of roots) {
         if (!fs.existsSync(root)) continue;
         const hit = fs.readdirSync(root, { withFileTypes: true })
             .filter(e => e.isDirectory() && e.name.includes(num))
             .map(e => path.join(root, e.name));
-        if (hit.length === 1) return { folder: hit[0], archived: root !== TASKS_ROOT };
+        if (hit.length === 1) return { folder: hit[0], archived: root !== tasksRoot };
         if (hit.length > 1) die(`${hit.length} task folders match "${num}":\n   ${hit.join('\n   ')}`);
     }
     return null;
+}
+
+// The ticket's own block (qa=QA-<num>) outranks any search: its task_folder= is where the quest lives.
+// A block with no task_folder=, or one whose folder is gone from disk, falls through to the search.
+function activeBlockFolder(num) {
+    let text;
+    try { text = fs.readFileSync(ACTIVE_TXT, 'utf8'); } catch (_) { return null; }
+    let mine = false;
+    for (const line of text.split(/\r?\n/)) {
+        const head = line.match(/^qa=(\S+)/);
+        if (head) { mine = head[1] === `QA-${num}` || head[1] === num; continue; }
+        const tf = mine && line.match(/^task_folder=(.+?)\s*$/);
+        if (!tf) continue;
+        const folder = path.resolve(tf[1]);
+        let isDir = false;
+        try { isDir = fs.statSync(folder).isDirectory(); } catch (_) { isDir = false; }
+        if (isDir) return { folder, archived: /^archive$/i.test(path.basename(path.dirname(folder))) };
+    }
+    return null;
+}
+
+// Every registered state's Task folder (+ its Archive). A number found under two states is
+// never settled by picking one — the state is UNKNOWN until the block says so.
+function findAcrossStates(num) {
+    const states = require('../lib/states');
+    const hits = [];
+    for (const s of Object.values(states.all())) {
+        const root = states.taskFolder(s.key);
+        if (!root || searched.includes(root)) continue;
+        searched.push(root);
+        const f = findTaskFolder(num, root);
+        if (f) hits.push(f);
+    }
+    if (hits.length > 1) die(`state UNKNOWN — task folders in ${hits.length} states match "${num}":\n   ${hits.map(h => h.folder).join('\n   ')}\n   Name the right one as task_folder= in the ticket's quest/active.txt block.`);
+    return hits[0] || null;
 }
 
 // Journal entries are written by redmine-sync.js as:  --- <iso-ts> by <author> ---
@@ -101,8 +146,8 @@ const asJson = args.includes('--json');
 const num = args.find(a => /^\d{4,}$/.test(a));
 if (!num) die('usage: node quest/ticket-load-verify.js <ticket-number> [--json]');
 
-const found = findTaskFolder(num);
-if (!found) die(`no task folder containing "${num}" under\n   ${TASKS_ROOT}\n   Run: node quest/redmine-sync.js ${num} --create`);
+const found = TASKS_ROOT ? findTaskFolder(num, TASKS_ROOT) : (activeBlockFolder(num) || findAcrossStates(num));
+if (!found) die(`no task folder containing "${num}" under\n   ${TASKS_ROOT || searched.join('\n   ')}\n   Run: node quest/redmine-sync.js ${num} --create`);
 const { folder, archived } = found;
 
 const TF = require('../lib/task-folder');

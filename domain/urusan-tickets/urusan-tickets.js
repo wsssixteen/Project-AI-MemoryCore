@@ -4,6 +4,8 @@
 // Usage:
 //   node domain/urusan-tickets/urusan-tickets.js            — full pull + regenerate all docs
 //   node domain/urusan-tickets/urusan-tickets.js --dry-run  — pull + classify, print counts, write nothing
+//   node domain/urusan-tickets/urusan-tickets.js --state terengganu [--dry-run]
+//                                                           — same, for another registered state (system/states.json)
 //
 // WHAT: pulls EVERY helpdesk_melaka ticket (open + closed) whose Module is
 // Pelupusan / Awam Pelupusan (+ every ticket assigned to miya regardless of module),
@@ -30,13 +32,13 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const REDMINE_BASE = 'http://172.16.90.169/redmine';
+const REDMINE_BASE = process.env.URUSAN_TICKETS_REDMINE_BASE || 'http://172.16.90.169/redmine'; // env = eval stub only
 const REDMINE_KEY = '9565c21aa6cd9672fd3c7c2c7fec4c934c2f7c66'; // same constant as redmine-board.js:27
-const PROJECT = 'helpdesk_melaka';
+let PROJECT = 'helpdesk_melaka';
 
 // PLP urusan catalog — source: et_main_mlit.ind_ursn rows whose ind_modul is Pelupusan
 // (queried 2026-08-23, 74 rows). kod -> nama.
-const URUSAN = {
+let URUSAN = {
   '49KTN': 'Kesan Maraan atau Munduran Laut',
   APRU: 'Alihhak Permit Ruang Udara',
   BAPRU: 'Bayaran Alihhak Permit Ruang Udara',
@@ -113,7 +115,7 @@ const URUSAN = {
 
 // The three union passes — mirrors redmine-board.js FILTERS (a mislabelled module must
 // never hide a ticket; assigned_to=me is the safety net).
-const PASSES = [
+let PASSES = [
   'cf_17=Pelupusan',
   'cf_77=' + encodeURIComponent('Awam Pelupusan'),
   'assigned_to_id=me',
@@ -127,7 +129,34 @@ function mainRepoRoot() {
   const idx = ROOT.indexOf(marker);
   return idx > 0 ? ROOT.slice(0, idx).replace(/[\\/]+$/, '') : ROOT;
 }
-const OUT_DIR = path.join(mainRepoRoot(), 'projects', 'coding-projects', 'active', 'etanah-knowledge', 'melaka', 'urusan');
+let OUT_DIR = path.join(mainRepoRoot(), 'projects', 'coding-projects', 'active', 'etanah-knowledge', 'melaka', 'urusan');
+
+// --state <key> (2026-10-03): build another state's precedent docs. Absent = everything above, unchanged.
+// Project / module passes / output dir / id shape come from the registry (system/states.json via lib/states.js);
+// the urusan catalog from catalog.<key>.json next to this file (else the built-in one, said out loud).
+let STATE = null, STATE_ID_RE = null, CMD = 'node domain/urusan-tickets/urusan-tickets.js';
+const stateAt = process.argv.indexOf('--state');
+if (stateAt > 0) {
+  const S = require('../../lib/states.js');
+  const want = process.argv[stateAt + 1] || '';
+  const die = (msg) => { console.error('FAILED: ' + msg); process.exit(2); };
+  STATE = /^--/.test(want) ? null : S.get(want);
+  if (!STATE) die(`state UNKNOWN — "--state ${want}" is not a key/alias in system/states.json; nothing pulled, nothing written`);
+  if (!STATE.redmine || !STATE.redmine.project) die(`state ${STATE.key} has no redmine.project in system/states.json; nothing pulled, nothing written`);
+  if (!S.knowledgeDir(STATE.key)) die(`state ${STATE.key} has no knowledge_dir in system/states.json; nothing pulled, nothing written`);
+  PROJECT = STATE.redmine.project;
+  OUT_DIR = path.join(S.knowledgeDir(STATE.key), 'urusan');
+  STATE_ID_RE = S.permohonanRegex();
+  CMD += ' --state ' + STATE.key;
+  const pass = (f) => (f && f.id && f.value ? 'cf_' + f.id + '=' + encodeURIComponent(f.value) : null);
+  const own = [pass(STATE.redmine.module_field), pass(STATE.redmine.awam_sub_module_field)].filter(Boolean);
+  if (own.length) PASSES = [...own, 'assigned_to_id=me'];
+  else console.log(`note: state ${STATE.key} carries no redmine.module_field — using the built-in module passes`);
+  const catFile = path.join(__dirname, `catalog.${STATE.key}.json`);
+  if (fs.existsSync(catFile)) URUSAN = JSON.parse(fs.readFileSync(catFile, 'utf8')).urusan;
+  else console.log(`note: no catalog.${STATE.key}.json — classifying with the built-in urusan catalog`);
+  console.log(`state ${STATE.key}: project ${PROJECT} → ${OUT_DIR}`);
+}
 
 function get(url) {
   return new Promise((resolve, reject) => {
@@ -168,6 +197,15 @@ const PERMOHONAN_RE = /\bPTMLK\/\d+\/[A-Z]{1,3}\/([A-Z0-9_]{2,10})\/\d{4}\/\d+/;
 const NAMA_TO_KOD = Object.fromEntries(Object.entries(URUSAN).map(([k, n]) => [n.toLowerCase(), k]));
 const LONG_KODS = Object.keys(URUSAN).filter((k) => k.length >= 3).sort((a, b) => b.length - a.length);
 
+// --state path: first id of THIS state (a quoted id of another state never classifies); kod = 3rd segment
+// from the end, so both the 6- and 7-segment shapes work. Returns [id, kod] like a regex match, or null.
+function stateIdMatch(hay) {
+  const id = (hay.match(STATE_ID_RE) || []).find((x) => x.startsWith(STATE.permohonan_prefix + '/'));
+  if (!id) return null;
+  const seg = id.split('/');
+  return [id, seg[seg.length - 3]];
+}
+
 function classify(issue) {
   // 1. cf_33 Urusan field
   const cf33 = cf(issue, 33);
@@ -181,10 +219,11 @@ function classify(issue) {
   }
   const hay = (issue.subject || '') + '\n' + ((issue.description || '').slice(0, 600));
   // 2. Permohonan-ID pattern
-  const m = hay.match(PERMOHONAN_RE);
+  const m = STATE ? stateIdMatch(hay) : hay.match(PERMOHONAN_RE);
   if (m && URUSAN[m[1]]) return { kod: m[1], via: 'permohonan-id' };
   // 3. kod keyword (length >= 3, longest first)
-  const hayUp = hay.toUpperCase();
+  // --state path: ids are cut out first, so the kod inside a quoted id of another state is not a keyword hit
+  const hayUp = (STATE ? hay.replace(STATE_ID_RE, ' ') : hay).toUpperCase();
   for (const k of LONG_KODS) {
     if (new RegExp('\\b' + k.replace(/[^A-Z0-9_]/g, '') + '\\b').test(hayUp)) return { kod: k, via: 'keyword' };
   }
@@ -208,9 +247,9 @@ function docFor(kod, issues, stamp) {
   const lines = [
     `# ${kod} — Redmine Ticket History (${URUSAN[kod] || 'unclassified'})`,
     '',
-    `> **SCOPE**: every helpdesk_melaka ticket classified to urusan **${kod}** — the precedent index. Read at Phase 0 BEFORE tracing: has this urusan seen this symptom / screen / requirement before?`,
+    `> **SCOPE**: every ${PROJECT} ticket classified to urusan **${kod}** — the precedent index. Read at Phase 0 BEFORE tracing: has this urusan seen this symptom / screen / requirement before?`,
     `> **NOT FOR**: root-cause detail (that lives in the ticket's QA doc / BUG-BESTIARY.md) or test data (TEST-PERMOHONAN-INDEX.md).`,
-    `> **REGENERATED — do not hand-edit rows**: \`node domain/urusan-tickets/urusan-tickets.js\` rebuilds this file from Redmine (office network). Hand-written notes go BELOW the marker at the bottom; they survive regeneration.`,
+    `> **REGENERATED — do not hand-edit rows**: \`${CMD}\` rebuilds this file from Redmine (office network). Hand-written notes go BELOW the marker at the bottom; they survive regeneration.`,
     '',
     `Last regenerated: ${stamp} · tickets: ${issues.length} (open: ${open.length})`,
     '',
@@ -283,7 +322,7 @@ async function main() {
     '> One `<KOD>-TICKETS.md` per urusan. CONSUMER: ticket-gate Phase-0 row 1c. FEEDER: re-run the generator (below) + quest-bounty Step 3 manual notes.',
     '',
     '```',
-    'node domain/urusan-tickets/urusan-tickets.js',
+    CMD,
     '```',
     '',
     `Last regenerated: ${stamp} · total tickets: ${all.length} · unclassified: ${unclassified.length}`,
@@ -296,8 +335,8 @@ async function main() {
   ].join('\n');
   fs.writeFileSync(path.join(OUT_DIR, '_INDEX.md'), idx);
   try {
-    fs.appendFileSync(path.join(__dirname, 'log.jsonl'), JSON.stringify({
-      ts: new Date().toISOString(), total: all.length, classified: all.length - unclassified.length,
+    fs.appendFileSync(process.env.URUSAN_TICKETS_LOG || path.join(__dirname, 'log.jsonl'), JSON.stringify({
+      ts: new Date().toISOString(), ...(STATE ? { state: STATE.key } : {}), total: all.length, classified: all.length - unclassified.length,
       unclassified: unclassified.length, docs: buckets.size + 2,
     }) + '\n');
   } catch (_) {}

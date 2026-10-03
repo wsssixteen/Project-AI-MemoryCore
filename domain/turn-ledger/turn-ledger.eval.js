@@ -103,6 +103,10 @@ check('user_signal nod', M.userSignal([], 'ok go ahead') === 'nod', '');
 
 // M7 goal-lens: a blocked feature with goal_signal_regex → mechanical goal-log row; without regex → prompt (cap 3)
 const featDir = path.join(__dirname, '..', 'zz-eval-feature-' + process.pid);
+// goalLens() appends its prompts to the REAL goal-lens-pending.jsonl. Snapshot it and put it back below — the old
+// cleanup unlinked the file, so every eval-battery run wiped the pending prompts (229 rows on 2026-10-03).
+const pendFile = path.join(__dirname, 'goal-lens-pending.jsonl');
+const pendBefore = fs.existsSync(pendFile) ? fs.readFileSync(pendFile) : null;
 fs.mkdirSync(featDir, { recursive: true });
 fs.writeFileSync(path.join(featDir, 'README.md'), 'symptom: s\ngoal: the reply carries -- N rows\ngoal_signal: next reply contains -- N rows\ngoal_signal_regex: --\\s*\\d+\\s*rows\nretention: keep\n');
 const feat = path.basename(featDir);
@@ -116,7 +120,7 @@ check('M7 no regex → one prompt; goal-less feature → no prompt (scenario 25)
 const many = Array.from({ length: 6 }, (_, i) => ({ hook: feat, blocked: true }));
 check('M7 prompt cap = 3 (scenario 23) — same feature deduped to 1', M.goalLens(many, 't', 'evalsid-11').prompts.length === 1, '');
 fs.rmSync(featDir, { recursive: true, force: true });
-try { fs.unlinkSync(path.join(__dirname, 'goal-lens-pending.jsonl')); } catch (_) {}
+try { if (pendBefore !== null) fs.writeFileSync(pendFile, pendBefore); else fs.unlinkSync(pendFile); } catch (_) {}
 
 // ═══ ADVERSARIAL SCENARIOS (system-design Rule 12 — 22 enumerated in plan §M.6; verdicts):
 //  1 concurrent sessions → stamp keyed by session (fixture in lib/turn-context via E1/E2 stamps)  · 2 no session_id → E2

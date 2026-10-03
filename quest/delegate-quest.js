@@ -76,6 +76,26 @@ function archivedPath(taskFolder, tasksRoot) {
     return path.join(tasksRoot, ARCHIVE_SUBFOLDER, folderName);
 }
 
+// Tasks root for THIS quest (2026-10-03, H-07) — the state folder that holds its Task folder:
+// dirname of task_folder= (minus a trailing \Archive) → lib/states.js taskFolder(block state=) →
+// DEFAULT_TASKS. A Terengganu/Perak quest was being moved into Melaka\Archive. --tasks still wins.
+function tasksRootFor(block) {
+    const tf = getField(block, 'task_folder');
+    if (tf && path.isAbsolute(tf)) {
+        let dir = path.dirname(tf);
+        if (path.basename(dir).toLowerCase() === ARCHIVE_SUBFOLDER.toLowerCase()) dir = path.dirname(dir);
+        return path.resolve(dir).toLowerCase() === path.resolve(DEFAULT_TASKS).toLowerCase() ? DEFAULT_TASKS : dir;
+    }
+    const st = getField(block, 'state');
+    if (st) {
+        let dir = null;
+        try { dir = require(path.join(__dirname, '..', 'lib', 'states.js')).taskFolder(st); } catch (_) {}
+        if (dir) return dir;
+        console.log(`   ⚠ state UNKNOWN — state=${st} has no Task folder in lib/states.js; Tasks root left at the default`);
+    }
+    return DEFAULT_TASKS;
+}
+
 function blockExistsInArchiveTxt(qa) {
     try {
         const out = execFileSync('node', [ACTIVE_CLI, 'read', qa], { encoding: 'utf8', stdio: 'pipe' });
@@ -113,7 +133,7 @@ function main() {
     const tasksIdx = args.indexOf('--tasks');
     const delegatedTo = toIdx >= 0 ? args[toIdx + 1] : (positionals[0] || null);
     const commit = commitIdx >= 0 ? args[commitIdx + 1] : (positionals[1] || null);
-    const tasksRoot = tasksIdx >= 0 ? args[tasksIdx + 1] : DEFAULT_TASKS;
+    const tasksRoot = tasksIdx >= 0 ? args[tasksIdx + 1] : tasksRootFor(readActiveTxtBlock(qa));
 
     console.log(`\n🤝 Delegate harness — ${qa}${dryRun ? ' (DRY-RUN)' : ''}\n   Tasks root: ${tasksRoot}`);
 

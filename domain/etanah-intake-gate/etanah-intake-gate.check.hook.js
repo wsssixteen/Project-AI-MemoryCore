@@ -40,7 +40,7 @@ const ERROR_RE = /\b(?:NPE|NullPointer\w*|exception|stack\s?trace|error|ralat|ga
 const HOTFIX_RE = /\bhot\s?-?fix\b|\breleased?\s+(?:yesterday|semalam|last\s+night|this\s+morning|tadi)\b|\bdah\s+release\b|\bafter\s+(?:the\s+)?release\b|\b(?:closed|released)\s+(?:ticket|tiket)\b|\b(?:ticket|tiket)\s+(?:is\s+|dah\s+|sudah\s+)?(?:closed|ditutup|tutup)\b/i;
 
 // ── knowledge routing: topic regex -> files to Read (up to 3 injected) ──────
-// STATE-SCOPE: melaka literal (see README). A second state parameterizes KNOWLEDGE_DIR.
+// STATE-SCOPE: melaka literal = the DEFAULT (see README). Other states render from lib/states.js — see resolveState below.
 const KNOWLEDGE_DIR = 'projects/coding-projects/active/etanah-knowledge/melaka';
 const ROUTES = [
   { re: /hakmilik|hkmlk|fatmk|luas|geran|strata|kadar\s+cukai/i, files: [KNOWLEDGE_DIR + '/DATABASE.md', '.claude/auto-memory/reference_hakmilik_change_map.md'] },
@@ -55,13 +55,87 @@ const ROUTES = [
   { re: /\burusan\b|flow\b/i, files: [KNOWLEDGE_DIR + '/URUSAN-FLOW.md'] },
 ];
 
-function routeKnowledge(prompt) {
+// ── state resolution (2026-10-03, Terengganu went active) ───────────────────
+// STATE-SCOPE: the melaka literal above is this hook's DEFAULT. A prompt that names no state, or names the
+// state owning KNOWLEDGE_DIR, renders today's text byte for byte. Any other registered state renders every
+// lane path from its lib/states.js record (knowledge_dir · trunk + ticket branch · db primary_env/schema/MCP).
+// Two states named with no single permohonan prefix -> default text + a "state UNKNOWN" line, never a silent pick.
+const fs = require('fs');
+let STATES = null; try { STATES = require(path.join(ROOT, 'lib', 'states.js')); } catch (_) { STATES = null; }
+const isDefault = (rec) => KNOWLEDGE_DIR.endsWith('/' + rec.knowledge_dir);
+
+function resolveState(prompt) {
+  if (!STATES) return { rec: null };
+  try {
+    const all = Object.values(STATES.all());
+    const r = STATES.resolve({ text: prompt });
+    if (r.state && !/^permohonan-ID prefix/.test(r.src)) return { rec: r.record, src: r.src };
+    const byId = new Set();
+    for (const m of prompt.matchAll(/\bPT([A-Z]{2,4})\//g)) { const s = STATES.get('PT' + m[1]); if (s) byId.add(s.key); }
+    // Aliases/labels as whole words; short codes (TRG, KL, WP) only in the spelling the registry lists.
+    const byName = new Set();
+    for (const s of all) for (const a of [s.label].concat(s.aliases || [])) {
+      if (!a) continue;
+      const esc = String(a).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      if (new RegExp('\\b' + esc + '\\b', a.length >= 4 ? 'i' : '').test(prompt)) byName.add(s.key);
+    }
+    const label = (k) => STATES.get(k).label;
+    if (byId.size === 1) {
+      const k = [...byId][0];
+      return { rec: STATES.get(k), src: 'permohonan-ID prefix ' + STATES.get(k).permohonan_prefix, also: [...byName].filter(x => x !== k).map(label) };
+    }
+    if (byId.size > 1) return { rec: null, unknown: [...byId].map(label) };
+    if (byName.size === 1) return { rec: STATES.get([...byName][0]), src: 'state named in the prompt' };
+    if (byName.size > 1) return { rec: null, unknown: [...byName].map(label) };
+  } catch (_) { /* registry unreadable -> today's default */ }
+  return { rec: null };
+}
+
+// A lane file the resolved state does not have on disk -> that state's index.md + STATE-FACTS.md stand in.
+function stateFiles(st, list) {
+  const out = [];
+  for (const f of list) {
+    if (!f.startsWith(KNOWLEDGE_DIR + '/')) continue; // a banked memory of the default state is not evidence for another
+    const name = f.slice(KNOWLEDGE_DIR.length + 1);
+    let ok = false; try { ok = fs.existsSync(path.join(STATES.knowledgeDir(st.rec.key), name)); } catch (_) { ok = false; }
+    if (ok) out.push(st.kdir + '/' + name);
+    else { if (!st.missing.includes(name)) st.missing.push(name); out.push(st.kdir + '/index.md', st.kdir + '/STATE-FACTS.md'); }
+  }
+  return out;
+}
+
+function stateDbLines(rec) {
+  const db = rec.db || {}, m = db.mcp || {}, sc = db.schemas || {};
+  const envs = Object.keys(m);
+  if (!envs.length) return [
+    '   6. ALL named envs — state UNKNOWN envs: system/states.json holds no DB MCP for ' + rec.label + '. Read its',
+    '      STATE-FACTS.md + ENV-ARCHITECTURE.md and ASK before any query.',
+  ];
+  const one = (e) => e + (sc[e] ? ' = ' + sc[e] : '') + ' via ' + m[e];
+  const p = db.primary_env && m[db.primary_env] ? db.primary_env : null;
+  const rest = envs.filter(e => e !== p).map(one);
+  return [
+    '   6. ALL named envs — ' + rec.label + ' (' + (db.engine || 'engine UNKNOWN') + '): ' + (p ? 'primary ' + one(p) : 'primary env UNKNOWN') + (rest.length ? '; also ' + rest.join(' · ') : '') + '.',
+    '      Confirm the connected schema per connection; the MCP server name is the env discriminator, never the schema name.',
+  ];
+}
+
+function stateBranchLines(rec) {
+  const trunks = [...new Set(Object.values(rec.modules || {}).map(x => x.trunk).filter(Boolean))];
+  const base = rec.trunk_ref || (trunks.length === 1 ? 'trunk ' + trunks[0] : "that repo's trunk (node lib/states.js show " + rec.key + ')');
+  return [
+    '   2. Branch off fresh ' + base + ' (work clone' + (rec.work_clone_root ? ' ' + rec.work_clone_root : '') + '). Ticket branch shape ' + (rec.ticket_branch ? '`' + rec.ticket_branch + '`' : 'UNKNOWN') + '; a hotfix',
+    '      family is NOT in the registry for ' + rec.label + " — check that repo's recent branches first. Never the closed ticket branch.",
+  ];
+}
+
+function routeKnowledge(prompt, st) {
   const files = [];
   for (const r of ROUTES) {
     if (files.length >= 3) break;
-    if (r.re.test(prompt)) for (const f of r.files) if (!files.includes(f) && files.length < 3) files.push(f);
+    if (r.re.test(prompt)) for (const f of (st ? stateFiles(st, r.files) : r.files)) if (!files.includes(f) && files.length < 3) files.push(f);
   }
-  if (!files.length) files.push(KNOWLEDGE_DIR + "/index.md — maps every file's SCOPE; route from there");
+  if (!files.length) files.push((st ? st.kdir : KNOWLEDGE_DIR) + "/index.md — maps every file's SCOPE; route from there");
   return files;
 }
 
@@ -73,8 +147,18 @@ runHook({ name: 'etanah-intake-gate', event: 'UserPromptSubmit' }, (input) => {
 
   // HOTFIX lane — owns the prompt even when a ticket # is present (that # is usually the CLOSED one).
   const hasTicket = TICKET_NUM_RE.test(prompt);
-  if (HOTFIX_RE.test(prompt) && (hasTicket || ENV_RE.test(prompt) || ERROR_RE.test(prompt) || DOMAIN_WORD_RE.test(prompt) || PERMOHONAN_ID_RE.test(prompt))) {
-    return { fired: true, blocked: false, lane: 'HOTFIX', contextOut: [
+  // st = a resolved NON-default state (null -> today's text). tail = state notes appended to any lane.
+  const rs = resolveState(prompt);
+  const st = rs.rec && rs.rec.knowledge_dir && !isDefault(rs.rec) ? { rec: rs.rec, kdir: path.posix.dirname(KNOWLEDGE_DIR) + '/' + rs.rec.knowledge_dir, missing: [] } : null;
+  const head = st ? '   STATE — ' + st.rec.label + ' (' + st.rec.code + '), from ' + rs.src + '. Every path below is ' + st.rec.label + "'s; another state's files are not evidence for it." : null;
+  const tail = [];
+  if (rs.unknown) tail.push('   ⚠ state UNKNOWN — the prompt names ' + rs.unknown.join(' + ') + '. Paths above are this hook\'s default state; ASK miya which state before reading or querying.');
+  if (rs.also && rs.also.length) tail.push('   ⚠ the prompt also names ' + rs.also.join(' + ') + ' — paths above follow the permohonan id (' + rs.rec.label + '). ASK if the work is for the other state.');
+  const missingNote = () => (st && st.missing.length ? '\n      (no ' + st.missing.join(' / ') + ' for ' + st.rec.label + ' yet — its index.md + STATE-FACTS.md stand in)' : '');
+  const hasPermohonanId = PERMOHONAN_ID_RE.test(prompt) || !!(st && prompt.match(STATES.permohonanRegex()));
+
+  if (HOTFIX_RE.test(prompt) && (hasTicket || ENV_RE.test(prompt) || ERROR_RE.test(prompt) || DOMAIN_WORD_RE.test(prompt) || hasPermohonanId)) {
+    const hot = [
       '🔥 etanah-intake: HOTFIX lane — invoke the `hotfix` skill NOW (Skill tool), then follow it in order:',
       '   0. SCAFFOLD FIRST — own ticket # given → `node quest/redmine-sync.js <num>`; none yet → ADHOC scaffold.',
       '      A # in the prompt that is CLOSED/released is a REFERENCE, never the work ticket.',
@@ -82,18 +166,24 @@ runHook({ name: 'etanah-intake-gate', event: 'UserPromptSubmit' }, (input) => {
       '   2. Branch `mlk/hotfix/<own #>` off fresh origin/mlk/master (work clone). Never the closed ticket branch.',
       '   3. Test on a PROD-shaped staging mirror + reset script; walk the WHOLE page and every tugasan sharing it.',
       '   KNOWLEDGE — Read: ' + KNOWLEDGE_DIR + '/BRANCH-AND-DEPLOY.md §8',
-    ].join('\n') + '\n' };
+    ];
+    if (st) {
+      hot.splice(4, 1, ...stateBranchLines(st.rec));
+      hot[hot.length - 1] = '   KNOWLEDGE — Read: ' + [...new Set(stateFiles(st, [KNOWLEDGE_DIR + '/BRANCH-AND-DEPLOY.md']))].join(' + ') + missingNote();
+      hot.splice(1, 0, head);
+    }
+    return { fired: true, blocked: false, lane: 'HOTFIX', contextOut: hot.concat(tail).join('\n') + '\n' };
   }
 
   // Sibling-owned surfaces -> silent.
   if (hasTicket) return { fired: false };
   if (LABELLED_FIELDS.reduce((n, re) => n + (re.test(prompt) ? 1 : 0), 0) >= 3) return { fired: false };
 
-  const hasId = HAKMILIK_ID_RE.test(prompt) || PERMOHONAN_ID_RE.test(prompt);
+  const hasId = HAKMILIK_ID_RE.test(prompt) || hasPermohonanId;
   const etanahContext = hasId || ETANAH_TABLE_RE.test(prompt) || DOMAIN_WORD_RE.test(prompt);
   if (!etanahContext) return { fired: false };
 
-  const knowledge = routeKnowledge(prompt).map(f => '      - ' + f).join('\n');
+  const knowledge = routeKnowledge(prompt, st).map(f => '      - ' + f).join('\n') + missingNote();
   let lane, lines;
 
   if (MUTATION_RE.test(prompt) && (hasId || ETANAH_TABLE_RE.test(prompt) || ENV_RE.test(prompt))) {
@@ -134,5 +224,11 @@ runHook({ name: 'etanah-intake-gate', event: 'UserPromptSubmit' }, (input) => {
     ];
   }
 
-  return { fired: true, blocked: false, lane, contextOut: lines.join('\n') + '\n' };
+  if (st) {
+    const i = lines.findIndex(l => l.startsWith('   6. ALL named envs'));
+    if (i >= 0) lines.splice(i, 2, ...stateDbLines(st.rec));
+    lines.splice(1, 0, head);
+  }
+
+  return { fired: true, blocked: false, lane, contextOut: lines.concat(tail).join('\n') + '\n' };
 });

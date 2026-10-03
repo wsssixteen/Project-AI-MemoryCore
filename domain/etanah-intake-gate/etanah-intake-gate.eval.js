@@ -97,6 +97,91 @@ r = fire('boleh check kenapa PTMLK/02/L/PT/2026/26 stuck, ada error kat SKM');
 check('A11 bare permohonan-ID + error fires ADHOC-CANDIDATE', r.status === 0 && /ADHOC-CANDIDATE/.test(r.out), r.out.slice(0, 160));
 // 12. uppercase/mixed-case IDs and tables -> regexes are /i — handled (F6 lowercase fatmk proves).
 
+// ═══ STATE ROUTING (2026-10-03, Terengganu went active) ═════════════════════
+// Sandbox: temp registry (STATES_FILE) + temp knowledge root (KNOWLEDGE_ROOT). Never the real Task folders,
+// active.txt, Redmine or git. The Melaka goldens are sha1 of the hook's stdout captured BEFORE this change.
+{
+  const fs = require('fs'), os = require('os'), crypto = require('crypto');
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'intake-state-'));
+  const mods = (t) => ({ pelupusan: { repo: 'etanah-pelupusan', trunk: t }, awam: { repo: 'etanah-awam', trunk: t } });
+  const reg = { version: 1, reference_state: 'melaka', tasks_root: 'x/1. Tasks', repos_root: 'E:/Projects', knowledge_root: 'projects/coding-projects/active/etanah-knowledge', states: {
+    melaka: { label: 'Melaka', code: 'MLK', aliases: ['Melaka', 'MLK', 'mlk'], permohonan_prefix: 'PTMLK', work_scope: 'active', knowledge_dir: 'melaka', modules: mods('mlk/master'), branch_prefix: 'mlk', ticket_branch: 'mlk/<tracker>/<num>', db: { engine: 'postgres', mcp: { mlit: 'postgres-mlit-pg' }, schemas: { mlit: 'et_main_mlit' }, primary_env: 'mlit' } },
+    perak: { label: 'Perak', code: 'PRK', aliases: ['Perak', 'PRK', 'prk'], permohonan_prefix: 'PTPK', work_scope: 'active', knowledge_dir: 'perak', modules: mods('master'), branch_prefix: 'prk', ticket_branch: 'prk/<tracker>/<num>', trunk_ref: 'origin/master', db: { engine: 'oracle', mcp: { dev: 'oracle-prk-dev', prod: 'oracle-prk-prod' }, schemas: { prod: 'ET_MAIN' }, primary_env: 'prod' } },
+    kedah: { label: 'Kedah', code: 'KDH', aliases: ['Kedah', 'KDH', 'kdh'], permohonan_prefix: 'PTKDH', work_scope: 'scaffold', knowledge_dir: 'kedah', modules: {}, branch_prefix: 'kdh', ticket_branch: null, db: { engine: null, mcp: {}, schemas: {}, primary_env: null } },
+    terengganu: { label: 'Terengganu', code: 'TRG', aliases: ['Terengganu', 'TRG', 'trg'], permohonan_prefix: 'PTTRG', work_scope: 'active', knowledge_dir: 'terengganu', modules: mods('trg/master'), branch_prefix: 'trg', ticket_branch: 'trg/<tracker>/<num>', trunk_ref: 'origin/trg/master', work_clone_root: 'E:/Dev/etanah-work', db: { engine: 'postgres', mcp: { stg2: 'postgres-trgstg2-pg', stg1: 'postgres-trgstg1-pg' }, schemas: { stg2: 'et_main_stg2', stg1: 'et_main_stg1' }, primary_env: 'stg2' } },
+  } };
+  fs.writeFileSync(path.join(tmp, 'states.json'), JSON.stringify(reg));
+  const kroot = path.join(tmp, 'k');
+  for (const f of ['index.md', 'STATE-FACTS.md', 'DATABASE.md', 'BRANCH-AND-DEPLOY.md']) { fs.mkdirSync(path.join(kroot, 'terengganu'), { recursive: true }); fs.writeFileSync(path.join(kroot, 'terengganu', f), '# ' + f); }
+  fs.mkdirSync(path.join(kroot, 'perak'), { recursive: true });
+  const env = Object.assign({}, process.env, { STATES_FILE: path.join(tmp, 'states.json'), STATES_LOCAL_FILE: path.join(tmp, 'none.json'), KNOWLEDGE_ROOT: kroot });
+  delete env.ETANAH_STATE;
+  const fireS = (prompt, extra) => { const x = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ prompt }), encoding: 'utf8', timeout: 30000, env: Object.assign({}, env, extra || {}) }); return { status: x.status, out: x.stdout || '', err: x.stderr || '' }; };
+  const sha = (s) => crypto.createHash('sha1').update(s).digest('hex');
+  const KD = 'etanah-knowledge/';
+
+  // S1: 7-segment PTTRG id + patch -> DATA-PATCH on Terengganu paths, nothing Melaka.
+  let s = fireS('tolong patch luas hakmilik PTTRG/07/01/L/PLPS/2026/135 @ stg');
+  check('S1 PTTRG patch -> DATA-PATCH + STATE Terengganu', s.status === 0 && /DATA-PATCH lane/.test(s.out) && /STATE — Terengganu \(TRG\), from permohonan-ID prefix PTTRG/.test(s.out), s.out.slice(0, 300));
+  check('S1b terengganu/DATABASE.md, no melaka path, no Melaka-banked memory', s.out.includes(KD + 'terengganu/DATABASE.md') && !/melaka/i.test(s.out) && !/reference_hakmilik_change_map/.test(s.out), s.out);
+  check('S1c env line from the record (stg2 primary + MCP), no mlit', /primary stg2 = et_main_stg2 via postgres-trgstg2-pg/.test(s.out) && /stg1 = et_main_stg1 via postgres-trgstg1-pg/.test(s.out) && !/mlit/.test(s.out), s.out);
+  check('S1d disciplines kept (KEY-PATH · IDs VERBATIM · CROSS-VERIFY · script-check)', /KEY-PATH EVIDENCE/.test(s.out) && /IDs VERBATIM/.test(s.out) && /CROSS-VERIFY/.test(s.out) && /script-check/.test(s.out), 'effect');
+  // S2: bare 7-segment id, nothing else -> fires (the generic id regex cannot see the second 2-digit block).
+  s = fireS('PTTRG/07/01/L/PLPS/2026/135');
+  check('S2 bare PTTRG id fires LOOKUP on terengganu/index.md', /LOOKUP lane/.test(s.out) && s.out.includes(KD + 'terengganu/index.md') && !/melaka/i.test(s.out), s.out);
+  // S3: state named as a word; lane file absent on disk -> index.md + STATE-FACTS.md, never a missing file.
+  s = fireS('Terengganu: skrin tugasan papar ralat bila klik dropdown');
+  check('S3 alias "Terengganu" -> ADHOC-CANDIDATE on Terengganu', /ADHOC-CANDIDATE lane/.test(s.out) && /STATE — Terengganu/.test(s.out) && !/melaka/i.test(s.out), s.out);
+  check('S3b missing lane files -> index.md + STATE-FACTS.md + a note, no path to a missing file', s.out.includes('- ' + path.posix.join('projects/coding-projects/active', KD, 'terengganu/index.md')) && s.out.includes(KD + 'terengganu/STATE-FACTS.md') && !s.out.includes(KD + 'terengganu/JSF-WIRING.md') && !s.out.includes(KD + 'terengganu/FLOWABLE-WORKFLOWS.md') && /\(no FLOWABLE-WORKFLOWS\.md/.test(s.out), s.out);
+  // S4: short code as listed ("TRG") + hotfix -> trunk / ticket shape / work clone from the record.
+  s = fireS('TRG hotfix, PROD papar ralat lepas release semalam');
+  check('S4 TRG hotfix -> origin/trg/master + trg/<tracker>/<num> + work clone, no mlk', /HOTFIX lane/.test(s.out) && /off fresh origin\/trg\/master \(work clone E:\/Dev\/etanah-work\)/.test(s.out) && /`trg\/<tracker>\/<num>`/.test(s.out) && !/mlk\//.test(s.out) && s.out.includes(KD + 'terengganu/BRANCH-AND-DEPLOY.md') && !/§8/.test(s.out), s.out);
+  // S5: Perak — oracle record, knowledge dir empty on disk.
+  s = fireS('Perak hotfix, PROD papar ralat lepas release semalam');
+  check('S5 Perak hotfix -> origin/master + perak index/STATE-FACTS', /STATE — Perak \(PRK\)/.test(s.out) && /off fresh origin\/master/.test(s.out) && s.out.includes(KD + 'perak/index.md + ') && !/mlk\//.test(s.out), s.out);
+  s = fireS('boleh patch hakmilik PTPK/02/L/PT/2026/9 @ prod');
+  check('S5b Perak patch -> oracle primary prod = ET_MAIN via oracle-prk-prod', /Perak \(oracle\): primary prod = ET_MAIN via oracle-prk-prod; also dev via oracle-prk-dev/.test(s.out), s.out);
+  // S6: empty registry fields (no MCP, no trunk, no ticket branch) -> says UNKNOWN, never invents.
+  s = fireS('Kedah: patch luas hakmilik 040202PM00000298 @ stg');
+  check('S6 empty db -> "state UNKNOWN envs"', /state UNKNOWN envs: system\/states\.json holds no DB MCP for Kedah/.test(s.out) && !/et_main_/.test(s.out), s.out);
+  // S7: two states named, no id -> default text + state UNKNOWN line (never a silent pick).
+  s = fireS('beza flow tugasan Melaka dengan Terengganu?');
+  check('S7 two states named -> state UNKNOWN line', /LOOKUP lane/.test(s.out) && /⚠ state UNKNOWN — the prompt names Melaka \+ Terengganu/.test(s.out), s.out);
+  // S8: id of one state + name of another -> the id wins, the other is flagged.
+  s = fireS('PTTRG/02/L/OPLPS/2026/47 error, sama macam Melaka punya kes');
+  check('S8 PTTRG id + "Melaka" word -> Terengganu paths + flag', /STATE — Terengganu/.test(s.out) && /also names Melaka/.test(s.out), s.out);
+  s = fireS('Terengganu ticket, tengok PTMLK/02/L/PT/2026/26 kenapa error');
+  check('S8b PTMLK id + "Terengganu" word -> Melaka text + flag', s.out.includes(KD + 'melaka/') && !/STATE —/.test(s.out) && /also names Terengganu/.test(s.out), s.out);
+  // S9: unregistered prefix / lower-case short code inside a word -> no state, today's text.
+  s = fireS('boleh check kenapa PTXYZ/02/L/PT/2026/26 stuck, ada error');
+  check('S9 unknown prefix -> default text, no STATE line', /ADHOC-CANDIDATE/.test(s.out) && s.out.includes(KD + 'melaka/') && !/STATE —|state UNKNOWN/.test(s.out), s.out);
+  // S10: registry unreadable -> today's text, exit 0.
+  s = fireS('tolong patch luas hakmilik PTTRG/07/01/L/PLPS/2026/135 @ stg', { STATES_FILE: path.join(tmp, 'gone.json') });
+  check('S10 registry missing -> exit 0 + default text', s.status === 0 && /DATA-PATCH lane/.test(s.out) && !/STATE —/.test(s.out), s.out + s.err);
+  // S11: ETANAH_STATE env (lib/states.js cascade) beats the prompt text.
+  s = fireS('apa beza ind_hkmlk dengan fatmk.hakmilik?', { ETANAH_STATE: 'terengganu' });
+  check('S11 ETANAH_STATE=terengganu -> Terengganu paths', /STATE — Terengganu \(TRG\), from env ETANAH_STATE/.test(s.out) && s.out.includes(KD + 'terengganu/DATABASE.md'), s.out);
+  // S12: ticket number + Terengganu, no hotfix -> still silent (sibling ownership unchanged).
+  s = fireS('#281000 Terengganu continue the Rubric please');
+  check('S12 #ticket + state word -> silent', s.status === 0 && s.out === '', s.out);
+
+  // M: MELAKA UNCHANGED — stdout byte-identical to the pre-change capture (no state / PTMLK id / "Melaka" word).
+  const GOLD = [
+    ['M1 no-state DATA-PATCH', '5040140PM00000100\n040202PM00000298\n040327HSM00001293\n\nHi boleh tolong patch luas hakmilik to 6 hektar @ stg & it, thanks', '378b2280fe862892c761a2636493c1c1365c2d43'],
+    ['M2 PTMLK id ADHOC-CANDIDATE', 'boleh check kenapa PTMLK/02/L/PT/2026/26 stuck, ada error kat SKM', 'db22147a0ec1465a04805b8d8c9473cf97197beb'],
+    ['M3 no-state LOOKUP', 'apa beza ind_hkmlk dengan fatmk.hakmilik?', 'a2885ad6b776d94360ced1368b6c3fb1c45b7e84'],
+    ['M4 no-state HOTFIX', 'hotfix for #280176 — PROD borang 4Ae null', 'ac83eca47478bdfb033be39a41644b056ae3e5ab'],
+    ['M5 no-route index.md fallback', 'permohonan tu macam mana?', '0c1ae708c44af1b7e810a6ad72520bd72796fc68'],
+    ['M6 "Melaka" word ADHOC-CANDIDATE', 'Melaka: kenapa tugasan SKM tak papar dropdown, error', '9410f1005ff924af0ddbe939da02dde18b4ac7ad'],
+  ];
+  for (const [n, p, h] of GOLD) {
+    const a = fireS(p);
+    check(n + ' byte-identical (sandbox registry)', sha(a.out) === h, sha(a.out));
+    if (!process.env.ETANAH_STATE) { const live = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ prompt: p }), encoding: 'utf8', timeout: 30000, env: process.env }); check(n + ' byte-identical (live registry)', sha(live.stdout || '') === h, sha(live.stdout || '')); }
+  }
+  try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {}
+}
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' -> ' + x.d)); }
 console.log('\netanah-intake-gate.eval: ' + (results.length - failed) + '/' + results.length + ' green');

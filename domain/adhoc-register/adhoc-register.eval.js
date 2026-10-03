@@ -109,6 +109,50 @@ for (const c of cases) {
   check(c.id, !miss.length && !leak.length, 'missing=[' + miss.join(', ') + '] leaked=[' + leak.join(', ') + ']');
 }
 
+// ── 2026-10-03 (Terengganu support): ticket number → quest/active.txt block → ONE state's register ──
+//   F14 bare number whose block says state=Terengganu → Terengganu rows only
+//   F15 bare number whose block sits under 1. Tasks\Melaka (no state=) → Melaka rows only (same rows as before)
+//   F16 bare number with NO block → every register read, as before
+//   F17 the block's state outranks a foreign permohonan id quoted in the prompt
+//   F18 block with only an Archive\ task_folder holding [brackets] → resolves by folder
+//   F19 block with an unknown state= and no task_folder → every-register fallback
+//   F20 last block in a CRLF file with no trailing newline still matches
+const ROW_TRG = '| A1 | 2026-10-03 | miya (from BA PTG) | tugasan masuk ke inbox PDT bukan PTG | peranan map points at the daerah office | `x/TRG.md` | `OPEN` — BA to raise the ticket |';
+function addState(root, dir, body) {
+  const p = path.join(root, 'projects', 'coding-projects', 'active', 'etanah-knowledge', dir, 'ADHOC-REGISTER.md');
+  fs.mkdirSync(path.dirname(p), { recursive: true });
+  fs.writeFileSync(p, body, 'utf8');
+}
+const multi = makeRoot([HEADER, ROW_OPEN].join('\n'));
+addState(multi, 'terengganu', [HEADER, ROW_TRG].join('\n'));
+fs.mkdirSync(path.join(multi, 'quest'), { recursive: true });
+fs.writeFileSync(path.join(multi, 'quest', 'active.txt'), [
+  'qa=QA-283001', 'phase=0', 'status=active', 'state=Terengganu', '',
+  'qa=QA-272611', 'phase=0', 'status=active', 'task_folder=C:\\Users\\x\\OneDrive\\1. Tasks\\Melaka\\12. [FAT] 272611 - PLTP - x', '',
+  'qa=QA-283002', 'status=active', 'task_folder=C:\\Users\\x\\OneDrive\\1. Tasks\\Terengganu\\Archive\\3. [PROD] 283002 - PT - x', '',
+  'qa=QA-283003', 'status=active', 'state=Atlantis', '',
+  'qa=283004', 'status=active', 'state=TRG',
+].join('\r\n'), 'utf8');
+const TRG_ONLY = { want: ['adhoc-register', 'inbox PDT bukan PTG', '[state=terengganu]', '[terengganu A1]'], notWant: ['hakmilik lain', 'all registers read'] };
+const cases2 = [
+  { id: 'F14 bare TRG ticket number → Terengganu rows only (block state=)', prompt: 'start 283001', ...TRG_ONLY },
+  { id: 'F15 bare Melaka ticket number → Melaka rows only, rows unchanged', prompt: 'start 272611',
+    want: ['[melaka A6] 2026-07-28 · asked by miya (from BA PDTJ)', 'per-pemohon VO', '[state=melaka]'], notWant: ['inbox PDT bukan PTG'] },
+  { id: 'F16 bare number with NO block → every register read (fallback kept)', prompt: 'start 299999',
+    want: ['hakmilik lain', 'inbox PDT bukan PTG', 'state unknown from the prompt — all registers read'], notWant: [] },
+  { id: 'F17 block state outranks a quoted Melaka id', prompt: 'lets look at eSOKONGAN #283001, same as PTMLK/02/L/PT/2026/1', ...TRG_ONLY },
+  { id: 'F18 Archive\\ task_folder with [brackets], no state= → Terengganu', prompt: 'resume 283002', ...TRG_ONLY },
+  { id: 'F19 unknown state= in the block → every-register fallback', prompt: 'start 283003',
+    want: ['hakmilik lain', 'inbox PDT bukan PTG', 'all registers read'], notWant: [] },
+  { id: 'F20 last block, CRLF, no trailing newline, state=TRG code', prompt: 'start 283004', ...TRG_ONLY },
+];
+for (const c of cases2) {
+  const { out } = run(multi, c.prompt);
+  const miss = c.want.filter(w => !out.includes(w));
+  const leak = c.notWant.filter(w => out.includes(w));
+  check(c.id, !miss.length && !leak.length, 'missing=[' + miss.join(', ') + '] leaked=[' + leak.join(', ') + ']');
+}
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
 console.log('\nadhoc-register.eval: ' + (results.length - failed) + '/' + results.length + ' green');

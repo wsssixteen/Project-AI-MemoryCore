@@ -32,11 +32,11 @@ node quest/redmine-sync.js            # pull descriptions/History/attachments
 node quest/redmine-sync.js --create   # Task folders + active.txt blocks (status=hold) for folderless NEW tickets
 ```
 
-Verify: `Get-ChildItem "…\1. Tasks\Melaka" -Directory` filtered on the ticket numbers — every NEW ticket must have a folder before fan-out.
+Verify: `Get-ChildItem "…\1. Tasks\Melaka" -Directory` (Melaka example; each ticket lands in its own state's Task folder, `node lib/states.js show <state>` → `task_folder`, e.g. `1. Tasks\Terengganu`) filtered on the ticket numbers — every NEW ticket must have a folder before fan-out.
 
 ## Step 2b — Prior-work sweep (adhoc + pre-existing docs) BEFORE fan-out
 
-- **Adhoc/pre-ticket work**: read `etanah-knowledge/melaka/ADHOC-REGISTER.md` (all OPEN/LATENT rows) + glob `projects/coding-projects/active/PENDING-TICKET-*/FINDINGS.md` — a BA often asks us BEFORE raising the ticket, so a new ticket may be (partially) solved already. On a symptom match, the familiar's prompt carries the doc path as a LEAD and starts from the phase the row reached, and the register row is promoted to `TICKETED → #<n>` in the same session (2026-08-03 proof: #273455=A8, #272867=A6 — both arrived pre-solved).
+- **Adhoc/pre-ticket work**: read `etanah-knowledge/melaka/ADHOC-REGISTER.md` (Melaka example; use the resolved state's knowledge dir, `node lib/states.js show <state>` → `knowledge_dir`, and say so when that state has no register yet) (all OPEN/LATENT rows) + glob `projects/coding-projects/active/PENDING-TICKET-*/FINDINGS.md` — a BA often asks us BEFORE raising the ticket, so a new ticket may be (partially) solved already. On a symptom match, the familiar's prompt carries the doc path as a LEAD and starts from the phase the row reached, and the register row is promoted to `TICKETED → #<n>` in the same session (2026-08-03 proof: #273455=A8, #272867=A6 — both arrived pre-solved).
 - **Pre-existing qa_docs**: glob `projects/coding-projects/active/QA-<n>/QA-<n>.md` for every ticket — a concurrent/earlier session may have written one. If found: familiar is told APPEND-not-overwrite and to close that doc's stated gaps instead of re-deriving (2026-08-03: 4 of 11 tickets had prior docs).
 
 ## Step 3 — DELEGATION PLAN (mandatory emit before fan-out)
@@ -60,7 +60,7 @@ pass returns demonstrably shallow (name the gap when re-running).
 
 Each W1 prompt MUST carry (the delegation safety template):
 - ONE ticket only; Scout→Recon→Rubric; **NO code edits**; **NO sub-agents/workflows**
-- Ground truth: Task folder full path · codebases `E:\Projects\Melaka\etanah-{pelupusan,awam,common}` · knowledge base `projects/coding-projects/active/etanah-knowledge/melaka/index.md` READ-FIRST · ADHOC-REGISTER.md compare-and-promote · BPMN module-scope check · postgres MCP list with schema names (`SELECT current_schema()` first)
+- Ground truth, all from the ticket's resolved state (`node lib/states.js show <state>`), the literals here are the Melaka example: Task folder full path · codebases `E:\Projects\Melaka\etanah-{pelupusan,awam,common}` · knowledge base `projects/coding-projects/active/etanah-knowledge/melaka/index.md` READ-FIRST · ADHOC-REGISTER.md compare-and-promote · BPMN module-scope check · postgres MCP list with schema names (`SELECT current_schema()` first; that state's `db.mcp` servers only)
 - Evidence language VERIFIED/HYPOTHESIS/BA-Q · latest History.txt overrides · working-analog first · full addresses
 - **Leads, not conclusions**: if a prior quest/adhoc/bestiary entry matches the symptom family, name it as "LEAD TO VERIFY" with the doc path — never as settled truth
 - Forced deliverable: `projects/coding-projects/active/QA-<n>/QA-<n>.md` in the **MAIN repo path** (projects/ is gitignored in worktrees) with §BA report · §Scout · §Recon (story diagram) · §Rubric (candidates + conf% + effort + falsifier) · §Test data (ID + login + tugasan from DB, never ID alone) · §BA-Q · §Blast radius
@@ -110,3 +110,5 @@ Emit ONE table ranked by **ownership first** (ours > data-patch > reports-team/d
 - Worktree sessions: deliverables + config live in the MAIN repo path; check `quest/redmine.local.json`-class files exist before starting.
 
 *Born 2026-08-03 via core/forge.js per みや (session goal step 6), from the 11-ticket live run of the same shape. Eval: `domain/retrieve-redmine/eval.js`.*
+
+*2026-10-03 — Terengganu active per みや: the folder-verify line, the adhoc-register line and the familiar-prompt ground-truth line now read "the resolved state's value (`node lib/states.js show <state>`)". Spec-preservation: steps and order untouched; Melaka literals kept as the example.*

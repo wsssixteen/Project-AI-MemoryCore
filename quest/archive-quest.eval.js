@@ -23,7 +23,25 @@ const REPO_ROOT = path.resolve(__dirname, '..');
 const REAL_ARCHIVE = path.join(REPO_ROOT, 'quest', 'archive-quest.js');
 const REAL_ACTIVE_CLI = path.join(REPO_ROOT, 'quest', 'active-cli.js');
 
-function makeWorkspace({ qa, hasBounty, alsoArchived }) {
+// State fixtures (tests 10+, 2026-10-03, H-07): the Task folder sits under a FAKE home
+// (<root>\home\OneDrive - Pymsoft Sdn Bhd\1. Tasks\<stateFolder>) and the child runs with
+// USERPROFILE/HOME pointed there and NO --tasks flag, so the script's own default root resolves
+// inside the sandbox — a wrong root can never reach the real Tasks tree. Redmine check is stubbed.
+const FAKE_TASKS = ['OneDrive - Pymsoft Sdn Bhd', '1. Tasks'];
+const STUB_REDMINE = `module.exports = { checkOne: async () => null, checkAll: async () => [], checkMissing: async () => [] };\n`;
+function fixtureRegistry(home) {
+    return JSON.stringify({
+        reference_state: 'melaka', tasks_root: FAKE_TASKS.join('/'), tasks_root_override: path.join(home, ...FAKE_TASKS),
+        knowledge_root: 'k', repos_root: 'E:/none',
+        states: {
+            melaka: { label: 'Melaka', code: 'MLK', aliases: ['Melaka'], permohonan_prefix: 'PTMLK', task_folder: 'Melaka' },
+            terengganu: { label: 'Terengganu', code: 'TRG', aliases: ['Terengganu'], permohonan_prefix: 'PTTRG', task_folder: 'Terengganu' },
+            selangor: { label: 'Selangor', code: 'SEL', aliases: ['Selangor'], permohonan_prefix: 'PTSEL', task_folder: null },
+        },
+    });
+}
+
+function makeWorkspace({ qa, hasBounty, alsoArchived, stateFolder, state, folderName, noTaskFolder, startInArchive }) {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'archive-eval-'));
     fs.mkdirSync(path.join(root, 'quest'), { recursive: true });
     fs.mkdirSync(path.join(root, 'domain', 'quest-bounty'), { recursive: true });
@@ -39,19 +57,28 @@ function makeWorkspace({ qa, hasBounty, alsoArchived }) {
     }
 
     // Fake Tasks root (avoids touching the real OneDrive folder)
-    const tasksRoot = path.join(root, 'Tasks');
-    const taskFolderName = `99. QA #${qa.replace(/^QA-/, '')} - Test - eval fixture`;
-    const taskFolderPath = path.join(tasksRoot, taskFolderName);
+    const home = path.join(root, 'home');
+    const tasksRoot = stateFolder ? path.join(home, ...FAKE_TASKS, stateFolder) : path.join(root, 'Tasks');
+    const taskFolderName = folderName || `99. QA #${qa.replace(/^QA-/, '')} - Test - eval fixture`;
+    const taskFolderPath = startInArchive ? path.join(tasksRoot, 'Archive', taskFolderName) : path.join(tasksRoot, taskFolderName);
     if (!alsoArchived) {
         fs.mkdirSync(taskFolderPath, { recursive: true });
     } else {
         fs.mkdirSync(path.join(tasksRoot, 'Archive', taskFolderName), { recursive: true });
     }
+    if (stateFolder) {
+        fs.mkdirSync(home, { recursive: true });
+        fs.writeFileSync(path.join(root, 'quest', 'redmine-status-check.js'), STUB_REDMINE);
+        fs.mkdirSync(path.join(root, 'lib'), { recursive: true });
+        fs.copyFileSync(path.join(REPO_ROOT, 'lib', 'states.js'), path.join(root, 'lib', 'states.js'));
+        fs.writeFileSync(path.join(root, 'states.fixture.json'), fixtureRegistry(home));
+    }
 
     // active.txt block (or active-archive.txt if alsoArchived)
     const blockLines = [
         `qa=${qa}`,
-        `task_folder=${alsoArchived ? path.join(tasksRoot, 'Archive', taskFolderName) : taskFolderPath}`,
+        ...(noTaskFolder ? [] : [`task_folder=${alsoArchived ? path.join(tasksRoot, 'Archive', taskFolderName) : taskFolderPath}`]),
+        ...(state ? [`state=${state}`] : []),
         `phase=1`,
         `status=${alsoArchived ? 'archived' : 'closed'}`,
         `ticket_type=bug`,
@@ -82,19 +109,34 @@ function makeWorkspace({ qa, hasBounty, alsoArchived }) {
         fs.writeFileSync(path.join(projDir, `${qa}.md`), body);
     }
 
-    return { root, tasksRoot, taskFolderPath };
+    return { root, tasksRoot, taskFolderPath, home, taskFolderName };
 }
 
-function runArchive({ root, qa, tasksRoot, dryRun = false, allowStub = true }) {
+function runArchive({ root, qa, tasksRoot, dryRun = false, allowStub = true, home, noTasksFlag = false, tasksFlag }) {
     // 2026-08-16 contract change: Step -1 HARVEST GATE refuses no-bounty archives unless
     // --allow-stub. Fixtures default to the audited-stub path (the new shape of the old
     // stub flow); test 8 asserts the refusal itself with allowStub=false.
-    const args = [path.join(root, 'quest', 'archive-quest.js'), qa, '--tasks', tasksRoot];
+    const args = [path.join(root, 'quest', 'archive-quest.js'), qa];
+    if (!noTasksFlag) args.push('--tasks', tasksFlag || tasksRoot);
     if (allowStub) args.push('--allow-stub', 'eval-fixture');
     if (dryRun) args.push('--dry-run');
-    const r = spawnSync('node', args, { encoding: 'utf8', timeout: 15000, cwd: root });
+    const opts = { encoding: 'utf8', timeout: 15000, cwd: root };
+    if (noTasksFlag) {
+        // No --tasks = the script picks the root itself → fake home + fixture registry, never the real ones.
+        opts.env = { ...process.env, USERPROFILE: home, HOME: home, ETANAH_STATE: '', CLAUDE_PROJECT_DIR: root, STATES_ROOT: root,
+                     STATES_FILE: path.join(root, 'states.fixture.json'), STATES_LOCAL_FILE: path.join(root, 'no-states.local.json') };
+    }
+    const r = spawnSync('node', args, opts);
     return { stdout: r.stdout || '', stderr: r.stderr || '', exit: r.status };
 }
+
+// Archived block's task_folder= as written by Step 3.
+function archivedTaskFolder(root) {
+    const m = fs.readFileSync(path.join(root, 'quest', 'active-archive.txt'), 'utf8').match(/^task_folder=(.*)$/m);
+    return m ? m[1].trim() : null;
+}
+function fakeTasks(ws, stateFolder) { return path.join(ws.home, ...FAKE_TASKS, stateFolder); }
+function sameFile(a, b) { return path.resolve(a).toLowerCase() === path.resolve(b).toLowerCase(); }
 
 function readLog(root) {
     const p = path.join(root, 'domain', 'quest-bounty', 'log.jsonl');
@@ -225,6 +267,135 @@ const tests = [
                 pass: r.exit === 0 && !briefMp4 && !fixMp4 && txtKept && /videos pruned 2/.test(r.stdout),
                 got: `exit=${r.exit} briefMp4=${briefMp4} fixMp4=${fixMp4} txtKept=${txtKept} line=${/videos pruned 2/.test(r.stdout)}`,
             };
+        },
+    },
+    // ── State-aware archive root (H-07) — no --tasks flag, fake home ──
+    {
+        name: '10. TERENGGANU quest (state=Terengganu, bracket folder name) → Terengganu\\Archive, never Melaka\\Archive',
+        setup: () => makeWorkspace({ qa: 'QA-900010', hasBounty: true, alsoArchived: false, stateFolder: 'Terengganu', state: 'Terengganu',
+                                     folderName: '3. ESOKONGAN #900010 - [STG] - PLPS - eval fixture' }),
+        assert: (ws) => {
+            const r = runArchive({ ...ws, qa: 'QA-900010', noTasksFlag: true });
+            const want = path.join(fakeTasks(ws, 'Terengganu'), 'Archive', ws.taskFolderName);
+            const moved = fs.existsSync(want) && !fs.existsSync(ws.taskFolderPath);
+            const melakaTouched = fs.existsSync(fakeTasks(ws, 'Melaka'));
+            const tf = archivedTaskFolder(ws.root);
+            return {
+                pass: r.exit === 0 && moved && !melakaTouched && tf === want && r.stdout.includes(`Tasks root: ${fakeTasks(ws, 'Terengganu')}`),
+                got: `exit=${r.exit} moved=${moved} melakaTouched=${melakaTouched} task_folder=${tf}`,
+            };
+        },
+    },
+    {
+        name: '11. MELAKA quest (no state= field) → DEFAULT root: same header + same Melaka\\Archive path as before',
+        setup: () => makeWorkspace({ qa: 'QA-900011', hasBounty: true, alsoArchived: false, stateFolder: 'Melaka' }),
+        assert: (ws) => {
+            const r = runArchive({ ...ws, qa: 'QA-900011', noTasksFlag: true });
+            const def = fakeTasks(ws, 'Melaka'); // = the script's DEFAULT_TASKS under the fake home
+            const want = path.join(def, 'Archive', ws.taskFolderName);
+            const tf = archivedTaskFolder(ws.root);
+            return {
+                pass: r.exit === 0 && fs.existsSync(want) && tf === want && r.stdout.includes(`Tasks root: ${def}\n`) && !/state UNKNOWN/.test(r.stdout),
+                got: `exit=${r.exit} exists=${fs.existsSync(want)} task_folder=${tf}`,
+            };
+        },
+    },
+    {
+        name: '12. MELAKA task_folder written lower-case → root snaps to the DEFAULT spelling (byte-identical dst)',
+        setup: () => makeWorkspace({ qa: 'QA-900012', hasBounty: true, alsoArchived: false, stateFolder: 'Melaka' }),
+        assert: (ws) => {
+            const p = path.join(ws.root, 'quest', 'active.txt');
+            fs.writeFileSync(p, fs.readFileSync(p, 'utf8').replace(ws.taskFolderPath, path.join(path.dirname(ws.taskFolderPath).toLowerCase(), ws.taskFolderName)));
+            const r = runArchive({ ...ws, qa: 'QA-900012', noTasksFlag: true });
+            const want = path.join(fakeTasks(ws, 'Melaka'), 'Archive', ws.taskFolderName);
+            const tf = archivedTaskFolder(ws.root);
+            return { pass: r.exit === 0 && tf === want && fs.existsSync(want), got: `exit=${r.exit} task_folder=${tf}` };
+        },
+    },
+    {
+        name: '13. PERAK folder, block has NO state= → root from task_folder dirname → Perak\\Archive',
+        setup: () => makeWorkspace({ qa: 'QA-900013', hasBounty: true, alsoArchived: false, stateFolder: 'Perak' }),
+        assert: (ws) => {
+            const r = runArchive({ ...ws, qa: 'QA-900013', noTasksFlag: true });
+            const want = path.join(fakeTasks(ws, 'Perak'), 'Archive', ws.taskFolderName);
+            const tf = archivedTaskFolder(ws.root);
+            return { pass: r.exit === 0 && fs.existsSync(want) && tf === want && !fs.existsSync(fakeTasks(ws, 'Melaka')), got: `exit=${r.exit} task_folder=${tf}` };
+        },
+    },
+    {
+        name: '14. Folder ALREADY under Terengganu\\Archive (block still active) → no move, no Archive\\Archive, root = Terengganu',
+        setup: () => makeWorkspace({ qa: 'QA-900014', hasBounty: true, alsoArchived: false, stateFolder: 'Terengganu', state: 'terengganu', startInArchive: true }),
+        assert: (ws) => {
+            const r = runArchive({ ...ws, qa: 'QA-900014', noTasksFlag: true });
+            const tf = archivedTaskFolder(ws.root);
+            const nested = fs.existsSync(path.join(fakeTasks(ws, 'Terengganu'), 'Archive', 'Archive'));
+            return {
+                pass: r.exit === 0 && tf === ws.taskFolderPath && fs.existsSync(ws.taskFolderPath) && !nested && r.stdout.includes(`Tasks root: ${fakeTasks(ws, 'Terengganu')}\n`),
+                got: `exit=${r.exit} task_folder=${tf} nested=${nested}`,
+            };
+        },
+    },
+    {
+        name: '15. --tasks override still WINS over the block (Terengganu block + explicit root)',
+        setup: () => makeWorkspace({ qa: 'QA-900015', hasBounty: true, alsoArchived: false, stateFolder: 'Terengganu', state: 'Terengganu' }),
+        assert: (ws) => {
+            const other = path.join(ws.root, 'Override');
+            const r = runArchive({ ...ws, qa: 'QA-900015', tasksFlag: other });
+            const want = path.join(other, 'Archive', ws.taskFolderName);
+            return { pass: r.exit === 0 && fs.existsSync(want) && archivedTaskFolder(ws.root) === want, got: `exit=${r.exit} exists=${fs.existsSync(want)}` };
+        },
+    },
+    {
+        name: '16. --dry-run on a Terengganu quest → previews Terengganu\\Archive, moves nothing',
+        setup: () => makeWorkspace({ qa: 'QA-900016', hasBounty: true, alsoArchived: false, stateFolder: 'Terengganu', state: 'Terengganu' }),
+        assert: (ws) => {
+            const r = runArchive({ ...ws, qa: 'QA-900016', noTasksFlag: true, dryRun: true });
+            const want = path.join(fakeTasks(ws, 'Terengganu'), 'Archive', ws.taskFolderName);
+            return {
+                pass: r.exit === 0 && r.stdout.includes(`→ ${want}`) && fs.existsSync(ws.taskFolderPath) && !fs.existsSync(want),
+                got: `exit=${r.exit} preview=${r.stdout.includes(`→ ${want}`)} stillThere=${fs.existsSync(ws.taskFolderPath)}`,
+            };
+        },
+    },
+    {
+        name: '17. NO task_folder= + state=Terengganu → root from lib/states.js taskFolder (registry fallback)',
+        setup: () => makeWorkspace({ qa: 'QA-900017', hasBounty: true, alsoArchived: false, stateFolder: 'Terengganu', state: 'Terengganu', noTaskFolder: true }),
+        assert: (ws) => {
+            const r = runArchive({ ...ws, qa: 'QA-900017', noTasksFlag: true, dryRun: true });
+            return {
+                pass: r.exit === 0 && r.stdout.includes(`Tasks root: ${fakeTasks(ws, 'Terengganu')}\n`) && /no task_folder= field/.test(r.stdout),
+                got: `exit=${r.exit} out=${r.stdout.split('\n').slice(0, 4).join(' | ')}`,
+            };
+        },
+    },
+    {
+        name: '18. NO task_folder= + state=Atlantis (unregistered) → says "state UNKNOWN", keeps the default root, moves nothing',
+        setup: () => makeWorkspace({ qa: 'QA-900018', hasBounty: true, alsoArchived: false, stateFolder: 'Terengganu', state: 'Atlantis', noTaskFolder: true }),
+        assert: (ws) => {
+            const r = runArchive({ ...ws, qa: 'QA-900018', noTasksFlag: true, dryRun: true });
+            return {
+                pass: r.exit === 0 && /state UNKNOWN — state=Atlantis/.test(r.stdout) && r.stdout.includes(`Tasks root: ${fakeTasks(ws, 'Melaka')}\n`) && fs.existsSync(ws.taskFolderPath),
+                got: `exit=${r.exit} unknown=${/state UNKNOWN/.test(r.stdout)}`,
+            };
+        },
+    },
+    {
+        name: '19. state=Terengganu but task_folder sits under Melaka (mis-filed) → archived IN PLACE (Melaka\\Archive), folder never crosses states',
+        setup: () => makeWorkspace({ qa: 'QA-900019', hasBounty: true, alsoArchived: false, stateFolder: 'Melaka', state: 'Terengganu' }),
+        assert: (ws) => {
+            const r = runArchive({ ...ws, qa: 'QA-900019', noTasksFlag: true });
+            const want = path.join(fakeTasks(ws, 'Melaka'), 'Archive', ws.taskFolderName);
+            return { pass: r.exit === 0 && fs.existsSync(want) && !fs.existsSync(fakeTasks(ws, 'Terengganu')), got: `exit=${r.exit} exists=${fs.existsSync(want)}` };
+        },
+    },
+    {
+        name: '20. Terengganu task_folder= path missing on disk → nothing moved, task_folder= untouched, no Melaka path written',
+        setup: () => makeWorkspace({ qa: 'QA-900020', hasBounty: true, alsoArchived: false, stateFolder: 'Terengganu', state: 'Terengganu' }),
+        assert: (ws) => {
+            fs.rmSync(ws.taskFolderPath, { recursive: true, force: true });
+            const r = runArchive({ ...ws, qa: 'QA-900020', noTasksFlag: true });
+            const tf = archivedTaskFolder(ws.root);
+            return { pass: r.exit === 0 && /does not exist on disk/.test(r.stdout) && sameFile(tf, ws.taskFolderPath) && !/Melaka/.test(tf), got: `exit=${r.exit} task_folder=${tf}` };
         },
     },
 ];

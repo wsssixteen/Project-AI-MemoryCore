@@ -183,6 +183,9 @@ const TYPE_ABBR = {
     'ADHOC':          'AH',
     'DATA PATCHING':  'DP',
     'REQUIREMENT':    'RQ',
+    'ESOKONGAN-CR':   'EC',   // CR trackers — open on esokongan-terengganu (52 / 69 / 75)
+    'ESOKONGAN_NR':   'EN',
+    'SUB-CR':         'SC',
 };
 function abbreviateType(trackerName) {
     const raw = (trackerName || 'UNKNOWN').toUpperCase().trim();
@@ -1004,7 +1007,7 @@ async function runSingle(id) {
 }
 
 // v10: exported for quest/redmine-sync.eval.js (fixture-driven; no Redmine call in these).
-module.exports = { addStatusFolder, isReworkTransition, isGenuineReopen, genuineReopenCount, REWORK_STATUS_IDS };
+module.exports = { addStatusFolder, isReworkTransition, isGenuineReopen, genuineReopenCount, REWORK_STATUS_IDS, abbreviateType, buildFolderSlug, taskBaseFor, TYPE_ABBR };
 
 if (require.main === module) {
     const args   = process.argv.slice(2);

@@ -15,7 +15,7 @@ const LOG = path.join(__dirname, 'log.jsonl');
 
 // One git invocation = "git [ -C <path> ] <verb> ..." — the verb must be the first non-option word after git.
 const GIT_CMD_RX = /(?:^|[;&|]\s*|\n\s*)git\s+(?:-C\s+(?:"[^"]+"|'[^']+'|\S+)\s+)?(merge|push|cherry-pick|rebase)\b([^;&|\n]*)/g;
-const PROTECTED_RX = /(?:^|[\s"':])(?:origin\/)?(mlk\/(?:int-env|stag-env|master|mlit|release\/[^\s"']+)|prk\/[^\s"']+|sgr\/master|master)(?=$|[\s"':])/;
+const PROTECTED_RX = /(?:^|[\s"':])(?:origin\/)?(mlk\/(?:int-env|stag-env|master|mlit|release\/[^\s"']+)|trg\/(?:int-env|stag-env|master|release\/[^\s"']+)|prk\/[^\s"']+|sgr\/master|master)(?=$|[\s"':])/;
 const MARKER_GREP = 'QA[0-9]+[A-Z]*-PROBE|\\bQALOG\\b';
 
 function repoOf(cmd) {

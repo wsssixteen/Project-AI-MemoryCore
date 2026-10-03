@@ -22,4 +22,14 @@
       <jdkHome>C:\Program Files\Java\jdk-17</jdkHome>
     </configuration>
   </toolchain>
+  <!-- Terengganu (trg/*) poms require a JDK 17 toolchain (pom.xml maven-toolchains-plugin <version>17</version>). -->
+  <toolchain>
+    <type>jdk</type>
+    <provides>
+      <version>17</version>
+    </provides>
+    <configuration>
+      <jdkHome>C:\Program Files\Java\jdk-17</jdkHome>
+    </configuration>
+  </toolchain>
 </toolchains>

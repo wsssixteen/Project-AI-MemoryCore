@@ -28,8 +28,23 @@ const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
 const states = require(fs.existsSync(path.join(ROOT, 'lib', 'states.js')) ? path.join(ROOT, 'lib', 'states.js') : path.join(__dirname, '..', '..', 'lib', 'states.js'));
 const REL = 'etanah-knowledge/<state>/ADHOC-REGISTER.md';
 
+// v3 2026-10-03: a ticket number in the prompt is first looked up in the MAIN repo quest/active.txt (same qa=
+// block split as .claude/hooks/ticket-gate.js readQAState); its state= / task_folder picks ONE state's register.
+// The every-state read below stays as the fallback when no block (and no prefix) identifies the state.
+const ACTIVE = process.env.ADHOC_REGISTER_ACTIVE_TXT || path.join(states.mainRoot(), 'quest', 'active.txt'); // env override = eval-fixture path
+function activeBlockFor(prompt) {
+  let text; try { text = fs.readFileSync(ACTIVE, 'utf8'); } catch (_) { return null; }
+  const blocks = text.split(/^(?=qa=)/m);
+  for (const n of prompt.match(/\b\d{4,7}\b/g) || []) {
+    const head = new RegExp('^qa=(?:QA-)?' + n + '\\b');
+    const b = blocks.find(x => head.test(x));
+    if (b) return b;
+  }
+  return null;
+}
+
 function registerPaths(prompt) {
-  const r = states.resolve({ text: prompt });
+  const r = states.resolve({ activeBlock: activeBlockFor(prompt), text: prompt });
   const keys = r.state ? [r.state] : Object.values(states.all()).filter(s => s.work_scope !== 'excluded').map(s => s.key);
   const out = [];
   for (const k of keys) {

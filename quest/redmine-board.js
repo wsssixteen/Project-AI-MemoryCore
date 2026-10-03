@@ -5,6 +5,7 @@
 //   node quest/redmine-board.js --tracking  — also show colleagues' tickets
 //   node quest/redmine-board.js --all-trains / --all-statuses — undo a filter
 //   node quest/redmine-board.js --json      — raw rows, for other tooling
+//   node quest/redmine-board.js --state <key> — only that state's table (e.g. terengganu)
 //
 // Scope (miya 2026-08-05): every OPEN Melaka ticket whose Module is Pelupusan,
 // across eSOKONGAN + every Internal Issue variant + Data Patching (PROD) —
@@ -57,6 +58,21 @@ const FILTERS = [
 // Both must be recognised as Melaka, or his own tickets get mis-flagged "outside Melaka"
 // and dropped from the board (2026-09-22: 4 real Melaka tickets excluded this way).
 const MELAKA_PROJECTS = new Set(['eSOKONGAN MELAKA', 'MLK_03_Pelupusan']);
+
+// PER-STATE BOARDS — a ticket assigned to him on a project of ANOTHER active state of the
+// registry (system/states.json redmine.project_names, via lib/states.js) gets its own ranked
+// table under that state's heading instead of the one-line "OUTSIDE Melaka" note. A project
+// no registered state names keeps the note. A registry that fails to load leaves the board
+// exactly as it was (never break boot).
+let STATES = null;
+try { STATES = require('../lib/states'); } catch { STATES = null; }
+const isHomeState = s => !!(s && s.redmine && s.redmine.project === PROJECT);
+const projectNamesOf = s => ((s && s.redmine && s.redmine.project_names) || []).map(n => String(n).trim().toLowerCase()).filter(Boolean);
+function otherActiveStates() {
+    if (!STATES) return [];
+    try { return Object.values(STATES.all()).filter(s => s.work_scope === 'active' && !isHomeState(s) && projectNamesOf(s).length); }
+    catch { return []; }
+}
 
 // 51 eSOKONGAN · 53 Internal Issue · 63 Internal Issue (PROD-CR) · 64 Data Patching (PROD)
 // 71 Internal Issue (PROD) · 77 Internal Issue (Permanent Fix) · 79 Internal Issue (MA Fix)
@@ -381,6 +397,36 @@ function renderOther(rows) {
         ...HEADER6, ...renderRows6(rows)].join('\n');
 }
 
+// Off-project rows -> one board per other active state + the rest (which keep the note).
+function splitByState(offRows) {
+    const boards = [];
+    let rest = offRows.slice();
+    for (const s of otherActiveStates()) {
+        const names = new Set(projectNamesOf(s));
+        const hit = rest.filter(r => names.has(String(r.project || '').trim().toLowerCase()));
+        if (!hit.length) continue;
+        rest = rest.filter(r => !hit.includes(r));
+        boards.push({ state: s.key, label: s.label || s.key, rows: hit });
+    }
+    return { boards, rest };
+}
+
+// One table per state, same order as the three Melaka tables stacked: eSOKONGAN tracker,
+// then PROD, then the rest — each block ranked by its own helper.
+function rankStateBoard(rows) {
+    const aged = rankMine(rows);
+    return [
+        ...rankEsokongan(aged.filter(r => categoryOf(r) === 'esokongan')),
+        ...rankAged(aged.filter(r => categoryOf(r) === 'patch')),
+        ...rankAged(aged.filter(r => categoryOf(r) === 'other')),
+    ];
+}
+
+function renderStateBoard(board) {
+    return [`### ${board.label} — ${board.rows.length} open, assigned to you (ranked: eSOKONGAN tracker, then PROD, then the rest; inside each: priority, urgent, then due / oldest)`, '',
+        ...HEADER6, ...renderRows6(board.rows)].join('\n');
+}
+
 // Urgent banner — printed FIRST so a flagged ticket can never sit unseen in table 3.
 function renderUrgentBanner(rows) {
     const hits = rows.filter(r => r.urgent.length);
@@ -398,8 +444,8 @@ function renderOthers(rows) {
     return out.join('\n');
 }
 
-async function main() {
-    const args = process.argv.slice(2);
+async function main(argv) {
+    const args = argv || process.argv.slice(2);
     const today = new Date(new Date().toDateString());
     const issues = await fetchIssues();
     let rows = shape(issues, today, await resolveTrains(issues), readStates());
@@ -421,6 +467,7 @@ async function main() {
     // and can never be silently dropped by the Melaka-scoped filters either.
     const offProject = rows.filter(r => isMe(r.assignee) && !MELAKA_PROJECTS.has(r.project));
     rows = rows.filter(r => !offProject.includes(r));
+    const { boards: stateBoards, rest: offOther } = splitByState(offProject);
 
     const isMine = r => isMe(r.assignee) || ADOPTED_AS_MINE.has(r.id);
     const mineRows = rows.filter(isMine);
@@ -433,8 +480,33 @@ async function main() {
     const minePatch = rankAged(mine.filter(r => categoryOf(r) === 'patch'));          // priority, urgent, age
     const mineOther = rankAged(mine.filter(r => categoryOf(r) === 'other'));          // priority, urgent, age
 
+    for (const b of stateBoards) {
+        await stampReceivedDays(b.rows, today);
+        b.rows = rankStateBoard(b.rows);
+    }
+
+    // --state <key>: only that state's table. The home (Melaka) key prints the normal board.
+    if (args.includes('--state')) {
+        const key = args[args.indexOf('--state') + 1] || '';
+        const rec = STATES ? STATES.get(key) : null;
+        if (!rec) {
+            console.log(`⚠️  redmine-board: state UNKNOWN — "${key}" is not in the state registry (node lib/states.js list)`);
+            return;
+        }
+        if (!isHomeState(rec)) {
+            if (!otherActiveStates().some(s => s.key === rec.key)) {
+                console.log(`⚠️  redmine-board: state ${rec.key} has no board — work_scope=${rec.work_scope}, ${projectNamesOf(rec).length} Redmine project name(s) registered`);
+                return;
+            }
+            const b = stateBoards.find(x => x.state === rec.key) || { state: rec.key, label: rec.label || rec.key, rows: [] };
+            console.log(args.includes('--json') ? JSON.stringify(b, null, 2) : renderStateBoard(b));
+            return;
+        }
+    }
+
     if (args.includes('--json')) {
-        console.log(JSON.stringify({ mine, patch: minePatch, esokongan: mineEsok, other: mineOther, others, dropped, offProject }, null, 2));
+        console.log(JSON.stringify({ mine, patch: minePatch, esokongan: mineEsok, other: mineOther, others, dropped, offProject,
+            ...(stateBoards.length ? { states: stateBoards } : {}) }, null, 2));
         return;
     }
     // QUICK-WIN / steal-risk banner ABOVE the age-ranked table: a diagnosed patch
@@ -457,10 +529,14 @@ async function main() {
         console.log('');
         console.log(renderOthers(others));
     }
-    if (offProject.length) {
+    for (const b of stateBoards) {
         console.log('');
-        console.log(`_🚨 Assigned to you OUTSIDE Melaka (${offProject.length}): ` +
-            offProject.map(r => `#${r.id} [${r.project}] ${r.subject}`).join(' · ') + '_');
+        console.log(renderStateBoard(b));
+    }
+    if (offOther.length) {
+        console.log('');
+        console.log(`_🚨 Assigned to you OUTSIDE Melaka (${offOther.length}): ` +
+            offOther.map(r => `#${r.id} [${r.project}] ${r.subject}`).join(' · ') + '_');
     }
     if (dropped.length) {
         console.log('');
@@ -469,7 +545,10 @@ async function main() {
     }
 }
 
-main().catch(e => {
+// Exported for quest/redmine-board.eval.js (stubbed issue list; no Redmine call in it).
+module.exports = { main, shape, splitByState, rankStateBoard, renderStateBoard };
+
+if (require.main === module) main().catch(e => {
     console.log(`⚠️  redmine-board: ${e.message} — Redmine unreachable, fall back to quest/active.txt`);
     process.exitCode = 0; // never break boot
 });

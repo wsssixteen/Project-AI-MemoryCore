@@ -23,7 +23,7 @@ Style / naming / formatting = **Nit at most**, usually don't report.
 - **Smallest change**: touches only what the fix needs; matches THIS system's programmers' convention, not generic framework idioms.
 - **Name by purpose**, reuse the established/analog name; no screen/context suffixes (`onChangeKategoriTujuanMigrasi` ❌ — "Migrasi" is the screen, not the behaviour).
 - **Module scope**: the fix is in the module that actually renders the BA's page (`MLK_TKL_*` = etanah-teknikal, NOT deployed locally — a pelupusan "fix" can't fire there).
-- **TRG excluded**: no TRG code path touched (TRG is out of Melaka scope).
+- **Other states excluded**: the diff touches only the ticket's own state (a Melaka fix touches no TRG code path; a Terengganu fix lives on `trg/*` and touches no MLK one).
 - **No code comments** unless the WHY is non-obvious + shown first (no `// QA-XXXX`, no "mirrors X" — that belongs in the commit message).
 
 ## Do NOT report

@@ -108,6 +108,47 @@ for (const c of cases) {
 r = spawnSync(process.execPath, [HOOK, 'UserPromptSubmit'], { input: 'this is not json{{', encoding: 'utf8', timeout: 30000, env: Object.assign({}, process.env, { CLAUDE_PROJECT_DIR: withOpen }) });
 check('F12 malformed stdin exits 0 silently', r.status === 0 && !((r.stdout || '') + (r.stderr || '')).includes('latent-bugs-gate'), 'exit=' + r.status);
 
+// ── 2026-10-03 (Terengganu support): ticket number → quest/active.txt block → ONE state's register ──
+//   F14 bare TRG ticket (block state=Terengganu), Terengganu has NO LATENT-BUGS.md → SILENT (no Melaka rows, no NOT FOUND)
+//   F15 PTTRG id in the prompt, no Terengganu register → SILENT
+//   F16 bare Melaka ticket (block task_folder under 1. Tasks\Melaka) → Melaka rows, unchanged
+//   F17 bare number with NO block → every register read, as before
+//   F18 Terengganu register present → its rows only
+//   F19 Melaka resolved but its register MISSING → still warns loudly (reference state keeps the warning)
+function withActive(root) {
+  fs.mkdirSync(path.join(root, 'quest'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'quest', 'active.txt'), [
+    'qa=QA-283001', 'phase=0', 'status=active', 'state=Terengganu', '',
+    'qa=QA-276999', 'status=active', 'task_folder=C:\\Users\\x\\OneDrive\\1. Tasks\\Melaka\\Archive\\9. [FAT] 276999 - PPJK - x',
+  ].join('\n'), 'utf8');
+  return root;
+}
+const ROW_TRG = '| L1 | 2026-10-03 | wrong-inbox-routing | `TrgAgihan.assign():40` | PT Semakan | tugasan lands in the PDT inbox | `SUSPECT` | read only |';
+const mlkOnly = withActive(makeRoot([HEADER, ROW_SUSPECT].join('\n')));
+const both = withActive(makeRoot([HEADER, ROW_SUSPECT].join('\n')));
+fs.mkdirSync(path.join(both, path.dirname(REL), '..', 'terengganu'), { recursive: true });
+fs.writeFileSync(path.join(both, path.dirname(REL), '..', 'terengganu', 'LATENT-BUGS.md'), [HEADER, ROW_TRG].join('\n'), 'utf8');
+const cases2 = [
+  { id: 'F14 bare TRG ticket, no TRG register → SILENT (no Melaka rows, no NOT FOUND)', root: mlkOnly, prompt: 'start 283001',
+    want: [], notWant: ['latent-bugs-gate', 'NOT FOUND', 'only the last lot'] },
+  { id: 'F15 PTTRG id in prompt, no TRG register → SILENT', root: mlkOnly, prompt: 'new ticket for PTTRG/07/01/L/PLPS/2026/135',
+    want: [], notWant: ['latent-bugs-gate', 'NOT FOUND'] },
+  { id: 'F16 bare Melaka ticket → Melaka rows unchanged', root: both, prompt: 'start 276999',
+    want: ['   [melaka L1] 2026-08-23 · loop-reassign-returns-last · SUSPECT', 'only the last lot', '[state=melaka]'], notWant: ['PDT inbox'] },
+  { id: 'F17 bare number with NO block → every register read (fallback kept)', root: both, prompt: 'start 299999',
+    want: ['only the last lot', 'PDT inbox', 'state unknown from the prompt — all registers read'], notWant: [] },
+  { id: 'F18 bare TRG ticket with a TRG register → its rows only', root: both, prompt: 'start 283001',
+    want: ['[terengganu L1]', 'PDT inbox', '[state=terengganu]'], notWant: ['only the last lot'] },
+  { id: 'F19 Melaka resolved + register missing still warns', root: missing, prompt: 'look at PTMLK/02/L/PT/2026/1 ticket 276999',
+    want: ['NOT FOUND for state melaka', 'LATENT-BUGS.md'], notWant: [] },
+];
+for (const c of cases2) {
+  const { out } = run(c.root, c.prompt);
+  const miss = c.want.filter(w => !out.includes(w));
+  const leak = c.notWant.filter(w => out.includes(w));
+  check(c.id, !miss.length && !leak.length, 'missing=[' + miss.join(', ') + '] leaked=[' + leak.join(', ') + ']');
+}
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
 console.log('\nlatent-bugs-gate.eval: ' + (results.length - failed) + '/' + results.length + ' green');

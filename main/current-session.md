@@ -1,6 +1,16 @@
 # Current Session
 
-**Last Activity**: 2026-10-02 18:40 — #282723 + #282721 internal PROD patches closed (Alex did 282723 alter; 282721 unlink via infra) · voice map artifact · patch-close-shape CHECK D/E · reconcile closed 5 quests · DE.
+**Last Activity**: 2026-10-03 (Sat night) — Terengganu made an ACTIVE state: registry flipped, knowledge folder filled from live sources, harness made state-aware, 5 modules cloned, PROD read fixed, evals + quest audit run.
+
+## Session Recap (2026-10-03, worktree quest-audit-275043-244600-7954c0, Terengganu support prep)
+- **Ask**: Terengganu support starts 2026-10-04. Prepare everything a full quest needs, run real quests on Terengganu pelupusan as evals, fix, then audit the quest workflow in general (no state-specific patches, no context trimming).
+- **Registry**: `system/states.json` terengganu `excluded` → `active` (Task folder, DB MCP map, schemas incl. PROD, Redmine project `esokongan-terengganu`, branch shapes, work clone root, 9 modules). `lib/states.js` id regex accepts the 7-segment `PTTRG/<pejabat>/<sub>/<letter>/<URUSAN>/<yyyy>/<seq>`. CLAUDE.md v1.77.
+- **Knowledge** (`etanah-knowledge/terengganu/`, main repo, untracked): 17 files written from live staging + PROD + GitLab + code, each fact-checked by a second agent (about 110 corrections), plus `urusan/` precedent files (2481 tickets) and `flowables-bpmn/_engine/` (live PROD + staging models). Old scaffold backed up in `outputs-temp/terengganu-knowledge-backup-2026-10-03/`.
+- **Key facts** (all in `terengganu/STATE-FACTS.md`): live queue = Redmine `esokongan-terengganu`, mostly PROD support (alter tugasan, data patch). Staging = one DB `trgstg`; stg2 fresh (BA), stg1 frozen and the only reader of the shared engine schema `et_flowable17_stg`. Schema names equal Melaka's, the MCP server name is the discriminator. PROD read works (`et_main` + `et_flowable17`). PROD and staging models are byte-identical for 23 of 24 keys. A failed agihan shows as a pool row (`~`, no holder), never `flag_gagal_agih`.
+- **Git**: live server = GitLab `git@10.16.63.27:etanah/<repo>.git`; old `172.16.93.167` refuses auth. Trunk `trg/master` (1.36.0). Ticket branch in a worktree of `E:\Dev\etanah-work`. 5 modules cloned under `E:\Projects\Terengganu` (teknikal, uam, integration, dms, pembangunan). All 9 repos have a codegraph index. Compile green for 1.35.3 and for trunk 1.36.0 (`E:\Dev\etanah-work\wt-trg-master`).
+- **Harness**: 8 fixers + reviewer: ticket-load-verify, ticket-gate rows 0 / 0.6 / 1c / 1d, archive + delegate + backfill + bulk, etanah-intake-gate, adhoc-paste-detector, bug-db, adhoc-register, latent-bugs-gate, probe-local-only-gate, redmine-sync abbreviations, redmine-board per-state table, urusan-tickets `--state`, close-phase + verify + retrieve-redmine + script-check + quest skill wording, quest-protocol 3.9, compile toolchain JDK 17. Side fix: `turn-ledger.eval.js` no longer wipes `goal-lens-pending.jsonl`.
+- **PROD credential**: gateway entry `postgres-trgprd-pg` now carries the DBeaver password (per みや); backup `~\.db-gateway\backends.json.bak-20261003124914`.
+ (Alex did 282723 alter; 282721 unlink via infra) · voice map artifact · patch-close-shape CHECK D/E · reconcile closed 5 quests · DE.
 
 ## Session Recap (2026-10-02, worktree quest-282587-guide-be4171, #282723 + #282721)
 - **Ask**: start quests for 2 internal PROD tickets; alter /3 /4 /9 (282723); fix PRBB/2026/4 unpaid bills (282721); infra handoff; answer Mira; style audit + artifact; reconcile quests with Redmine; DE.

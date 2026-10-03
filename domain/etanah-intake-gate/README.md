@@ -24,6 +24,6 @@ retention: rotate monthly
 
 **Observability**: every fire appends to `domain/etanah-intake-gate/log.jsonl` (runHook telemetry: ts, fired, lane, dur_ms).
 
-**state-scoped**: yes — `KNOWLEDGE_DIR` hardcodes `etanah-knowledge/melaka` and the hakmilik/urusan regexes encode Melaka shapes. A second state parameterizes `KNOWLEDGE_DIR` + extends the ID prefix list.
+**state-scoped**: no (since 2026-10-03) — the state is resolved from the prompt through `lib/states.js` (`resolve({ text })` permohonan prefix, then registry aliases/labels as whole words) and every lane path renders from that record: `knowledge_dir`, trunk + ticket branch, `db.primary_env` + schema + MCP. `KNOWLEDGE_DIR` (`etanah-knowledge/melaka`) stays as the DEFAULT: a prompt naming no state, or naming Melaka, gets the pre-2026-10-03 text byte for byte (eval M1–M6 goldens). Two states named with no single permohonan prefix → default text + a `state UNKNOWN` line. A lane file the state does not have on disk → that state's `index.md` + `STATE-FACTS.md`. Still Melaka-shaped and not parameterized: the hakmilik-ID regex, the 2026-08-21 example in step 2, the `ind_* vs fatmk.*` hint in step 4.
 
 **Born from**: 2026-08-21 hakmilik-luas slip — free-text patch ask matched NO existing gate (ticket-gate needs a QA number, adhoc-paste-detector needs labelled fields, knowledge-first-gate needs a source-file Read); wrong banked 1:1 linkage trusted, wrong rows patched twice, one input ID silently substituted. Real path `ind_versi_dhd flag_aktif='Y' → mklmt_hkmlk_id` was one pg_constraint read away.

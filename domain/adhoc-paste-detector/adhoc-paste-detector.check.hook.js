@@ -13,9 +13,14 @@
 // WHY UserPromptSubmit (not Stop): the scaffold is knowable BEFORE the reply — capture at intake.
 // PRIMITIVE: hook-only (Rule 7) — deterministic paste-detection; no procedural state to hold.
 'use strict';
+const fs = require('fs');
 const path = require('path');
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
 const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
+// state-scoped: yes — keyed by state via lib/states.js (2026-10-03, Terengganu support): the permohonan prefix in
+// the paste picks the state's Task folder + knowledge dir for the scaffold text. A paste that names no state
+// (AWAM relay keyed by hakmilik/resit, unregistered prefix) keeps the reference state's text, as before.
+const states = require(fs.existsSync(path.join(ROOT, 'lib', 'states.js')) ? path.join(ROOT, 'lib', 'states.js') : path.join(__dirname, '..', '..', 'lib', 'states.js'));
 
 const BYPASS_RE = /\[skip-adhoc-paste:\s*[^\]]+\]/i;
 
@@ -41,8 +46,10 @@ const F_TUGASAN = /^\s*tugasan\s*:/im;
 const F_ID      = /^\s*id\s*(?:permohonan)?\s*:\s*\S/im;
 const F_USER    = /^\s*(?:user|pengguna)\s*:/im;
 
-// Permohonan id like PTMLK/02/L/PT/2026/1 (state-office/district/L/urusan/year/n).
-const PERMOHONAN_ID_RE = /\b[A-Z]{2,5}\/\d{2}\/[A-Z]\/[A-Z]+\/\d{4}\/\d+\b/i;
+// Permohonan id like PTMLK/02/L/PT/2026/1 (state-office/district/L/urusan/year/n). Terengganu ids carry a second
+// 2-digit block (PTTRG/07/01/L/PLPS/2026/135) and urusan kods may hold "_" (UPS_PLP) — same shape as
+// lib/states.js permohonanRegex(), kept prefix-generic here.
+const PERMOHONAN_ID_RE = /\b[A-Z]{2,5}\/\d{2}(?:\/\d{2})?\/[A-Z]\/[A-Z0-9_]+\/\d{4}\/\d+\b/i;
 // AWAM relays carry no permohonan-id — the anchor is the hakmilik id or the carian-rasmi receipt
 // (WIDENED 2026-09-25: PDTMT "Portal Awam / Urusan : PLTP / ID hakmilik : 040210PM00001265 /
 // No. resit carian rasmi : 02CR3761/2026" matched neither shape and was answered with no scaffold).
@@ -58,6 +65,10 @@ function hasAnchor(prompt) { return PERMOHONAN_ID_RE.test(prompt) || AWAM_KEY_RE
 // Office-code the BA relay opens with (Pejabat Daerah dan Tanah — PDTJ Jasin, PDTAG Alor Gajah,
 // PDTMT Melaka Tengah; tolerate other PDT* districts). Word-bounded so "PDTx" inside a path can't hit.
 const OFFICE_RE = /\b(PDTJ|PDTAG|PDTMT|PDT[A-Z]{1,4})\b/;
+// Terengganu relays open with PTG / PTGKT / PTK (seen in the Redmine "Pejabat Terengganu" field + PROD ticket first
+// lines; PDTKT already matches above). Consulted ONLY when no PDT* code matched AND the paste resolved to a
+// non-reference state, so the reference state's "(from …)" label never changes.
+const OFFICE_PT_RE = /\b(PTGKT|PTG|PTK)\b/;
 // Issue-description signal (Malay/English) — the message is describing a problem.
 const ISSUE_RE = /\b(isu|issue|mohon\s+semak|semak|papar|sepatutnya|tak\s+boleh|tidak\s+boleh|ralat|error|expected|actual|masalah|bug|salah|hilang|missing|delete[d]?)\b/i;
 
@@ -67,7 +78,7 @@ function fieldCount(prompt) {
 function extractUrusan(prompt) {
   const m = prompt.match(/^\s*urusan\s*:\s*([A-Za-z]+)/im);
   if (m) return m[1].toUpperCase();
-  const id = prompt.match(/\b[A-Z]{2,5}\/\d{2}\/[A-Z]\/([A-Z]+)\/\d{4}\/\d+\b/i);
+  const id = prompt.match(/\b[A-Z]{2,5}\/\d{2}(?:\/\d{2})?\/[A-Z]\/([A-Z0-9_]+)\/\d{4}\/\d+\b/i);
   if (id) return id[1].toUpperCase();
   return 'XXX';
 }
@@ -93,7 +104,11 @@ runHook({ name: 'adhoc-paste-detector', event: 'UserPromptSubmit' }, (input) => 
   if (!labelledPath && !freeformPath) return { fired: false };
 
   const urusan = extractUrusan(prompt);
-  const office = (prompt.match(OFFICE_RE) || [null, ''])[1] || '';
+  const st = states.resolve({ text: prompt });
+  const rec = st.record || states.get(states.reference());
+  const otherState = !!st.state && st.state !== states.reference();
+  const office = (prompt.match(OFFICE_RE) || [null, ''])[1] || (otherState ? (prompt.match(OFFICE_PT_RE) || [null, ''])[1] : '') || '';
+  const taskDir = rec.task_folder || '<no Task folder registered for ' + rec.key + ' — ASK miya>';
   const files = attachedFiles(prompt);
   const lines = [
     '🆕 adhoc-paste-detector: BA-relayed issue' + (office ? ' (from ' + office + ')' : '') + ' with a permohonan-id and NO OWNING Redmine number.',
@@ -105,11 +120,11 @@ runHook({ name: 'adhoc-paste-detector', event: 'UserPromptSubmit' }, (input) => 
     '   code fix + build/deploy or a long sweep → say so, spawn_task a new session (handover = the qa_doc).',
     '',
     '   MANDATORY scaffold (all in this turn, before/with the diagnosis):',
-    '     0. LOAD CONTEXT FIRST — read etanah-knowledge/melaka/ADHOC-TRIAGE.md and CLASSIFY each ask',
+    '     0. LOAD CONTEXT FIRST — read etanah-knowledge/' + rec.knowledge_dir + '/ADHOC-TRIAGE.md and CLASSIFY each ask',
     '        (DATA-QUESTION / DATA-PATCH / DIAGNOSIS / CODE-CHECK / FLOW-RECOVERY / ...) BEFORE touching anything;',
     '        resolve aplikasi_id via umm_aplikasi.id_pengenalan = \'<permohonan>\' (DATABASE.md §4.1 recipe —',
     '        NOT umm_p_aplikasi.no_rujukan_permohonan) BEFORE any schema hunting.',
-    '     1. Task folder: "1. Tasks\\Melaka\\<N+1>. ADHOC - <ENV> - ' + urusan + ' - <short desc>"',
+    '     1. Task folder: "1. Tasks\\' + taskDir + '\\<N+1>. ADHOC - <ENV> - ' + urusan + ' - <short desc>"',
     '        + 1. Brief/brief.txt (BA verbatim Isu/Expected/ask) + notes via:',
     '     1a. MOVE every file he downloaded into 1. Brief/ (Move-Item, never Copy; the Desktop/Downloads copy must be gone):',
     ...(files.length ? files.map(f => '         ' + f) : ['         (none attached this prompt; if he mentions a download, find it in Desktop / Downloads)']),

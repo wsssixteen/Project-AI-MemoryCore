@@ -10,6 +10,22 @@
 
 ---
 
+## v1.77 — 2026-10-03 (per みや, "we will be doing Terengganu support tomorrow")
+
+**Terengganu becomes an ACTIVE state.** Three boot-loaded lines changed, all additive:
+
+- §Etanah non-negotiables **TRG guardrail**: the first sentence is byte-identical ("TRG is HARD EXCLUDED from Melaka work…"). Added: Terengganu itself is active since 2026-10-03, worked in `E:\Projects\Terengganu` on `trg/*` with `etanah-knowledge/terengganu/`, and the same guardrail runs the other way (a Terengganu fix never touches MLK code paths).
+- **Multi-state classification first**: resolve the state through `node lib/states.js resolve` first; default scope = the ticket's own state (was "Melaka-only").
+- **KNOWLEDGE-FIRST**: a non-Melaka ticket reads its own state's folder (`perak/` · `terengganu/` · `wp/`).
+
+**Paired** (same pass): `system/states.json` terengganu `work_scope` excluded → active + Task folder, DB MCP map, schemas, Redmine project, ticket-branch shapes · `lib/states.js` permohonan regex accepts the 7-segment `PTTRG/<pejabat>/<sub>/L/<URUSAN>/<yyyy>/<seq>` id · `lib/states.eval.js` F14 moved off terengganu · `.claude/skills/quest/SKILL.md` (3 lines) + `.claude/workflows/quest-phase0.js` (state and base branch passed in, no `mlk/` literal) + `domain/review-etanah/REVIEW.md`: "TRG banned" → "every other state banned" · `domain/compile-gate/toolchains.xml` +JDK 17 entry (Terengganu poms need it) · `etanah-knowledge/terengganu/` filled from live staging, GitLab and the 1.35.3 checkout.
+
+**Spec preservation**: a Melaka quest still never touches TRG code (sentence kept verbatim). Dropped spec: "Terengganu → stop and surface, never quest" (`work_scope=excluded`) — dropped on purpose, it is the instruction being reversed. The `excluded` scope value itself stays in the registry for future use; no state carries it today.
+
+**Root cause it answers**: the registry and four prose rules all said "refuse Terengganu"; a quest tomorrow would have been refused or would have loaded Melaka knowledge (etanah-intake printed `melaka/index.md` for a prompt that named Terengganu).
+
+---
+
 ## v1.75 — 2026-10-01 (per みや, #282587)
 
 **§Explanation & Output-Format Discipline +NO INFORMATION OVERLOAD line** (boot-loaded pointer). Body = `.claude/reply-shape-spec.md` §3c: overview first, detail only on ask, keep only what the reader needs now, known names over invented labels, no question a tool/ticket can answer, default-omit list (verification trail, rejected options, ids, file:line, SQL, test-data dumps, inert caveats). Primitive = text rule only; promote to a hook only on repeat slips. Root cause: #282587 junior guide (4 sections, 6 tables, SQL + Java + test data) and a BA note that needed 4 trim rounds. Spec preservation: purely additive; REPLY SKELETON, SHOW-DON'T-EXPLAIN and the ADHD contract are untouched.

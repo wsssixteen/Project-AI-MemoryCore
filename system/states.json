@@ -1,7 +1,7 @@
 {
   "_comment": "THE state registry (single source, tracked, worktree-safe). Every hook / skill / script that touches a per-state thing — Task folder, etanah-knowledge dir, repo root, trunk branch, DB MCP, permohonan prefix, BPMN key prefix, Redmine project — resolves it through lib/states.js, never a literal. Add a state = one record here + `node lib/states.js validate <key>`; remove = `node lib/states.js remove <key>`. Hosts / IPs / URLs live in system/states.local.json (gitignored overlay, same shape, deep-merged) — never here. Facts marked `_unverified` are structure copied from the reference state and must be confirmed against a real source before a tool relies on them.",
   "version": 1,
-  "updated": "2026-09-04",
+  "updated": "2026-10-03",
   "reference_state": "melaka",
   "tasks_root": "OneDrive - Pymsoft Sdn Bhd/1. Tasks",
   "repos_root": "E:/Projects",
@@ -9,7 +9,7 @@
   "work_scope_values": {
     "active": "we work tickets on it — full quest",
     "scaffold": "knowledge folder scaffolded, no tickets yet — resolve, never assume facts",
-    "excluded": "HARD EXCLUDED from our work (CLAUDE.md TRG guardrail) — tools must refuse, never route"
+    "excluded": "HARD EXCLUDED from our work — tools must refuse, never route (no state carries it today; Terengganu went active 2026-10-03)"
   },
   "states": {
     "melaka": {
@@ -144,23 +144,41 @@
       "code": "TRG",
       "aliases": ["Terengganu", "TRG", "trg"],
       "permohonan_prefix": "PTTRG",
-      "_unverified": "permohonan prefix",
-      "work_scope": "excluded",
-      "work_scope_note": "CLAUDE.md TRG guardrail — HARD EXCLUDED from our work; a fix that would touch TRG code paths must stop and surface",
-      "task_folder": null,
+      "permohonan_shape": "PTTRG/<pejabat kod>/<sub>/L/<URUSAN>/<yyyy>/<seq> (7 segments; 6 without <sub> for OPLPS/OMLPS/UPP/UPS_PLP). Legacy migrated ids and NULL ids exist — see terengganu/TEST-PERMOHONAN-INDEX.md",
+      "work_scope": "active",
+      "task_folder": "Terengganu",
       "knowledge_dir": "terengganu",
       "repo_dir": "Terengganu",
       "modules": {
         "pelupusan":  { "repo": "etanah-pelupusan",  "trunk": "trg/master" },
         "awam":       { "repo": "etanah-awam",       "trunk": "trg/master" },
         "common":     { "repo": "etanah-common",     "trunk": "trg/master" },
-        "spoc-hasil": { "repo": "etanah-spoc-hasil", "trunk": "trg/master" }
+        "spoc-hasil": { "repo": "etanah-spoc-hasil", "trunk": "trg/master" },
+        "teknikal":    { "repo": "etanah-teknikal",    "trunk": "trg/master", "reference_only": true },
+        "uam":         { "repo": "etanah-uam",         "trunk": "trg/master", "reference_only": true },
+        "integration": { "repo": "etanah-integration", "trunk": "trg/master", "reference_only": true },
+        "dms":         { "repo": "etanah-dms",         "trunk": "trg/master", "reference_only": true },
+        "pembangunan": { "repo": "etanah-pembangunan", "trunk": "trg/master", "reference_only": true }
       },
+      "modules_note": "reference_only = cloned 2026-10-03 (single-branch trg/master, GitLab) to READ other teams' code while debugging; we edit only pelupusan + awam. No other module repo exposes a trg/master to this key (pendaftaran, hasil, consent, strata, penguatkuasaan, pengambilan, lelong were probed: no access).",
       "branch_prefix": "trg",
-      "ticket_branch": null,
+      "ticket_branch": "trg/<tracker>/<num>",
+      "ticket_branch_shapes": { "eSOKONGAN": "trg/esokongan/<num>", "Internal Issue": "trg/internal-issue/<num>", "Internal": "trg/internal/<num>", "eSOKONGAN-CR": "trg/esokongan-cr/<num>", "rework": "<branch>v2 (new branch)" },
+      "trunk_ref": "origin/trg/master",
+      "env_branches": ["trg/int-env", "trg/stag-env"],
+      "staging_branch": "trg/stag-env",
+      "work_clone_root": "E:/Dev/etanah-work",
+      "branch_note": "Verified 2026-10-03 on GitLab (git@10.16.63.27:etanah/<repo>.git): trunk trg/master moves by fast-forward to trg/release/<ver>; ticket branches are cut from origin/trg/master; trg/int-env + trg/stag-env are alive, heavily divergent, NEVER a base. Shapes above are read from the last 3 months of pelupusan branches; which Redmine tracker maps to which family is inferred, not confirmed. Fetch only in the work clone: E:\\Projects\\Terengganu still points at the old server (ssh://git@172.16.93.167, auth refused) and sat at 1.35.3 while the server was 1.36.0. Other repos spell families differently (awam: eSokongan-cr, sonar) — check that repo's recent branches first. Detail: terengganu/BRANCH-AND-DEPLOY.md.",
       "bpmn": { "prefix": "TRG", "root_module": "PLP" },
-      "db": { "engine": null, "mcp": {}, "schemas": {}, "primary_env": null },
-      "redmine": { "project": null, "project_names": [] },
+      "db": {
+        "engine": "postgres",
+        "mcp": { "stg2": "postgres-trgstg2-pg", "stg1": "postgres-trgstg1-pg", "it": "postgres-trgit-pg", "prod": "postgres-trgprd-pg" },
+        "schemas": { "stg2": "et_main_stg2", "stg1": "et_main_stg1", "prod": "et_main", "flowable_stg": "et_flowable17_stg", "flowable_prod": "et_flowable17" },
+        "primary_env": "stg2",
+        "flowable_read_via": "postgres-trgstg1-pg",
+        "note": "stg2 = fresh env (BA activity); stg1 = frozen at 2026-09-14/15. ONE staging Flowable schema et_flowable17_stg serves both and only the stg1 login can read it. PROD (login et_read) reads et_main + et_flowable17 in one connection; rjk_parameter_sistem is denied there. Schema names et_main_stg1/et_main_stg2 are the SAME names Melaka staging uses — the MCP server name is the only discriminator. Staging workflows whose process id is above the engine's range have no engine instance (refresh of 2026-09-15). On 2026-10-03 the internal host was unreachable from this network."
+      },
+      "redmine": { "project": "esokongan-terengganu", "project_names": ["eSOKONGAN TERENGGANU", "TRG_03_Pelupusan", "TRG_16_Awam", "e-Tanah Terengganu"], "module_field": { "id": 17, "value": "Pelupusan" }, "awam_sub_module_field": { "id": 77, "value": "Awam Pelupusan" } },
       "flowable_alter_file": "FLOWABLE-ALTER.md",
       "local_server": null
     }

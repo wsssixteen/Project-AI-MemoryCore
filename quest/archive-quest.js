@@ -3,7 +3,8 @@
 //
 // What it does — per CLAUDE.md v1.39 "Phase 2 Closure — Archive Hygiene":
 //   1. Move Task folder:   1. Tasks\Melaka\<n>. QA #N ...\   →   1. Tasks\Melaka\Archive\<n>. QA #N ...\
-//   2. Move project doc:   projects/coding-projects/active/QA-<num>/   →   archive/QA-<num>/
+//                          (any state: Archive\ sits beside the quest's own task_folder= — see tasksRootFor)
+//   2. Move project doc:  projects/coding-projects/active/QA-<num>/   →   archive/QA-<num>/
 //   3. Active.txt block:   set status=archived, rewrite task_folder= to new path, then cut
 //                          block from active.txt and append to active-archive.txt
 //
@@ -107,6 +108,26 @@ function archivedPath(taskFolder, tasksRoot) {
     return path.join(tasksRoot, ARCHIVE_SUBFOLDER, folderName);
 }
 
+// Tasks root for THIS quest (2026-10-03, H-07) — the state folder that holds its Task folder:
+// dirname of task_folder= (minus a trailing \Archive) → lib/states.js taskFolder(block state=) →
+// DEFAULT_TASKS. A Terengganu/Perak quest was being moved into Melaka\Archive. --tasks still wins.
+function tasksRootFor(block) {
+    const tf = getField(block, 'task_folder');
+    if (tf && path.isAbsolute(tf)) {
+        let dir = path.dirname(tf);
+        if (path.basename(dir).toLowerCase() === ARCHIVE_SUBFOLDER.toLowerCase()) dir = path.dirname(dir);
+        return path.resolve(dir).toLowerCase() === path.resolve(DEFAULT_TASKS).toLowerCase() ? DEFAULT_TASKS : dir;
+    }
+    const st = getField(block, 'state');
+    if (st) {
+        let dir = null;
+        try { dir = require(path.join(__dirname, '..', 'lib', 'states.js')).taskFolder(st); } catch (_) {}
+        if (dir) return dir;
+        console.log(`   ⚠ state UNKNOWN — state=${st} has no Task folder in lib/states.js; Tasks root left at the default`);
+    }
+    return DEFAULT_TASKS;
+}
+
 function blockExistsInArchiveTxt(qa) {
     try {
         const out = execFileSync('node', [ACTIVE_CLI, 'read', qa], { encoding: 'utf8', stdio: 'pipe' });
@@ -130,7 +151,7 @@ function main() {
     const branchIdx = args.indexOf('--branch');
     const branch = branchIdx >= 0 ? args[branchIdx + 1] : null;
     const tasksIdx = args.indexOf('--tasks');
-    const tasksRoot = tasksIdx >= 0 ? args[tasksIdx + 1] : DEFAULT_TASKS;
+    const tasksRoot = tasksIdx >= 0 ? args[tasksIdx + 1] : tasksRootFor(readActiveTxtBlock(qa));
     const allowStubIdx = args.indexOf('--allow-stub');
     const allowStubReason = allowStubIdx >= 0 ? (args[allowStubIdx + 1] || '') : null;
 

@@ -22,11 +22,23 @@ function safeRead(p) { try { return fs.readFileSync(p, 'utf8'); } catch (_) { re
 // 1. archived QA population: active-archive blocks + Archive folder names
 const qas = new Set();
 for (const m of safeRead(path.join(ROOT, 'quest', 'active-archive.txt')).matchAll(/^qa=(QA-\d+)$/gm)) qas.add(m[1]);
+// Every registered state's Archive (lib/states.js taskFolder) — TASKS_ARCHIVE alone missed Perak /
+// Terengganu folders (2026-10-03, H-23). Registry unreadable → TASKS_ARCHIVE only, as before.
+let archiveDirs = [TASKS_ARCHIVE];
 try {
-  for (const d of fs.readdirSync(TASKS_ARCHIVE)) {
-    const m = d.match(/#\s?(\d{6})/); if (m) qas.add('QA-' + m[1]);
-  }
-} catch (_) { console.error('warn: Tasks Archive dir unreadable — folder population skipped'); }
+  const st = require(path.join(__dirname, '..', '..', 'lib', 'states.js'));
+  const dirs = Object.keys(st.all()).map(k => st.taskFolder(k)).filter(Boolean).map(p => path.join(p, 'Archive'));
+  if (dirs.length) archiveDirs = dirs;
+} catch (_) {}
+for (const dir of archiveDirs) {
+  const isDefault = path.resolve(dir).toLowerCase() === path.resolve(TASKS_ARCHIVE).toLowerCase() || archiveDirs.length === 1;
+  if (!isDefault && !fs.existsSync(dir)) continue; // a state with no Archive yet is not a warning
+  try {
+    for (const d of fs.readdirSync(dir)) {
+      const m = d.match(/#\s?(\d{6})/); if (m) qas.add('QA-' + m[1]);
+    }
+  } catch (_) { console.error('warn: Tasks Archive dir unreadable — folder population skipped'); }
+}
 
 // 2. harvest evidence: log rows + qa_doc sections
 const logged = new Set();

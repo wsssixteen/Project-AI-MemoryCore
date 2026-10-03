@@ -80,13 +80,68 @@ function readQAState(qaNum) {
 // `state=` → task_folder segment (1. Tasks\<State>) → permohonan prefix in the one-liner. A new state is ONE
 // registry row, never an edit here. NEVER a silent default: v1 fell back to melaka whenever projects/ was absent
 // (= every worktree), which routed Perak tickets to the Melaka knowledge — the row now says UNKNOWN out loud.
-function knowledgeDirFor(state) {
+// Refined 2026-10-03 (Terengganu went active): the PROMPT is the LAST fallback, used only when the block carries no
+// `state=` and nothing above resolved — a prompt quoting a permohonan id (PTTRG/07/01/L/PLPS/2026/135) now resolves.
+// Ids of two different states in one prompt = ambiguous → stays UNKNOWN. Still never a default.
+function resolveState(state, prompt) {
+  const states = require(path.join(projectRoot, 'lib', 'states.js'));
+  let r = states.resolve({ activeBlock: state, text: `${state.issue_one_liner || ''} ${state.subject || ''}` });
+  if (!r.state && prompt && !state.state) {
+    const keys = [...new Set((String(prompt).match(/\bPT[A-Z]{2,4}\//g) || []).map(p => states.stateForPrefix(p.slice(0, -1))).filter(Boolean))];
+    if (keys.length === 1) r = { ...states.resolve({ state: keys[0] }), src: 'prompt permohonan-ID prefix' };
+  }
+  return r;
+}
+function knowledgeDirFor(state, prompt) {
   try {
-    const states = require(path.join(projectRoot, 'lib', 'states.js'));
-    const r = states.resolve({ activeBlock: state, text: `${state.issue_one_liner || ''} ${state.subject || ''}` });
+    const r = resolveState(state, prompt);
     if (r.state) return 'etanah-knowledge/' + r.record.knowledge_dir + '/';
     return 'etanah-knowledge/<STATE UNKNOWN — active.txt has no state=, Task folder is not under 1. Tasks\\<State>, no PT<STATE>/ id in the one-liner: ASK miya, never assume melaka>/';
   } catch (e) { return 'etanah-knowledge/<registry unavailable: ' + e.message + '>/'; }
+}
+
+// ── State-aware rows 0 / 0.6 / 1c / 1d (2026-10-03, Terengganu went active) ──
+// Returns null for the reference state, for an UNRESOLVED state and when the registry cannot load: those keep the
+// literal rows in the checklist below byte for byte (the KNOWLEDGE DIR line already says STATE UNKNOWN out loud).
+// Any other resolved state renders from its registry record — trunk, work clone, ticket branch, DB — never a literal.
+function stateRows(state, prompt, qaNum) {
+  try {
+    const states = require(path.join(projectRoot, 'lib', 'states.js'));
+    const r = resolveState(state, prompt);
+    if (!r.state || r.state === states.reference()) return null;
+    const rec = r.record, key = rec.key, ASK = 'not in the state registry: ASK miya';
+    const kdir = 'etanah-knowledge/' + rec.knowledge_dir + '/';
+
+    // Row 0 — baseline per repo from states.trunk(); a state with work_clone_root fetches ONLY there.
+    const mods = Object.keys(rec.modules || {});
+    const baselines = mods.length ? mods.map(m => `\`${states.trunk(key, m) || 'trunk UNKNOWN'}\` ${rec.modules[m].repo}`).join(' · ') : `baseline UNKNOWN (${ASK})`;
+    const devRepo = mods.length && states.repoPath(key, mods[0]) ? path.dirname(states.repoPath(key, mods[0])) + '\\<repo>' : `<developer checkout ${ASK}>`;
+    const shapes = Object.entries(rec.ticket_branch_shapes || {}).map(([t, b]) => `${t} → \`${b}\``).join(' · ');
+    const branch = `**Ticket branch shape**: ${rec.ticket_branch ? '`' + rec.ticket_branch + '`' : ASK}${shapes ? ' (' + shapes + ')' : ''}.${rec.branch_note ? ' Branch note (registry): ' + rec.branch_note : ''}`;
+    const probe = `**Existing-fix probe**: \`git branch -a --list "*${qaNum}*"\` + \`git log --all --grep="#${qaNum}" --format="%h %ci %an %s"\``;
+    const tail = `**Emit a GIT-STATE summary** (branch · behind-count · existing-fix? · ticket-keyword log hits for context).`;
+    let row0;
+    if (rec.work_clone_root) {
+      const wc = String(rec.work_clone_root).replace(/\//g, '\\') + '\\<repo>';
+      row0 = `0. ⬜ **🚨 GIT-STATE CHECK (Phase-0, COMPULSORY — run even if it returns nothing)** — state **${rec.label}**, baseline per repo: ${baselines}. **Fetch and measure the behind-count ONLY in the work clone** \`${wc}\` (the clone with the live remote): \`git -C "${wc}" fetch origin\` then \`git -C "${wc}" rev-list --count HEAD..origin/<baseline>\`. The developer's checkout \`${devRepo}\` gets READ-ONLY commands only (\`git status\` · \`git branch --show-current\` · \`git log -1\`): NEVER fetch / pull / checkout / stash there. ${probe} (run in the work clone). ${branch} ${tail} **STOP + surface** if a fix exists under another author, the work-clone fetch fails, or behind-count is large (stale base).`;
+    } else {
+      row0 = `0. ⬜ **🚨 GIT-STATE CHECK (Phase-0, COMPULSORY — run even if it returns nothing)** — state **${rec.label}**: \`git status\` + \`git branch --show-current\`; if NOT on the repo baseline (${baselines}) → stash → checkout baseline → \`git pull --ff-only origin <baseline>\` → pop (STOP if the pull fails — unknown commits). Then \`git rev-list --count HEAD..origin/<baseline>\` (behind-count). ${probe}. ${branch} ${tail} **STOP + surface** if a fix exists under another author, the baseline pull fails, or behind-count is large (stale base).`;
+    }
+
+    // Row 0.6 — staging-schema-check belongs to the state that lists it in state_only_tools; every other state gets its registry DB line.
+    const db = rec.db || {}, env = db.primary_env;
+    const row06 = (rec.state_only_tools || []).includes('staging-schema-check') ? null
+      : `0.6 ⬜ **🚨 DB FOR THIS STATE (${rec.label}) — from the state registry, never assume, never copy it from a qa_doc** — primary env \`${env || ASK}\` · MCP server \`${states.mcp(key, env) || ASK}\` · schema \`${(db.schemas || {})[env] || ASK}\`.${db.note ? ' ' + db.note : ''} Do NOT run \`staging-schema-check\` for this ticket: it reads another state's local server config.`;
+
+    // Row 1c — say so when the precedent doc is not on disk instead of pointing at a missing file.
+    const kd = states.knowledgeDir(key), kod = state.urusan;
+    let has = false;
+    try { has = kod ? fs.existsSync(path.join(kd, 'urusan', kod + '-TICKETS.md')) : fs.readdirSync(path.join(kd, 'urusan')).some(n => /-TICKETS\.md$/.test(n)); } catch (e) { has = false; }
+    const row1c = has ? null
+      : `1c. ⬜ **URUSAN PRECEDENT — none on file for ${rec.label} yet** — \`${kdir}urusan/${kod || '<KOD>'}-TICKETS.md\` does NOT exist${kod ? '' : ' (no `urusan/*-TICKETS.md` docs for this state at all)'}: do not open it, write "no urusan precedent (file absent)" in the checklist and trace fresh. Generate the docs with \`node domain/urusan-tickets/urusan-tickets.js --state ${key}\` (office network).`;
+
+    return { key, row0, row06, row1c };
+  } catch (e) { return null; }
 }
 
 // ── AWAM No-Resit detection (added 2026-07-22, #271721) ──────────────────────
@@ -100,12 +155,12 @@ const NO_RESIT_URUSAN = ['PLTP', 'PSBS', 'MCL', 'PPTPB', 'PRBB'];
 
 // urusan comes from active.txt (redmine-sync writes `urusan=`); the one-liner is the fallback
 // for a ticket synced before that field existed.
-function noResitRow(state) {
+function noResitRow(state, prompt) {
   const hay = `${state.urusan || ''} ${state.issue_one_liner || ''}`.toUpperCase();
   const hit = NO_RESIT_URUSAN.filter(u => new RegExp(`\\b${u}\\b`).test(hay));
   if (!hit.length) return null;
   const u = hit[0];
-  const kdir = knowledgeDirFor(state);
+  const kdir = knowledgeDirFor(state, prompt);
   return `7. ⬜ **🚨 No-Resit urusan detected (${hit.join('/')}) — SETTLE THE SIDE, THEN DERIVE** — (a) **Which side is this ticket?** AWAM (pemohon portal, \`etanah-awam\`) or APPS (staff tugasan, \`etanah-pelupusan\`)? The ticket text often does NOT say — check the BA screenshot header ("Portal Awam" vs the staff shell) and which repo renders the screen. (b) **If AWAM → DERIVE the No Resit Carian Rasmi NOW.** ${u} starts at \`CarianRasmiHakmilikForm.xhtml\`; みや cannot open the permohonan without a receipt and BA never supplies one. It is ONE query away — do NOT hand back asking for it. (c) If APPS-side, mark this row \`⏭ N/A — staff-side\` and move on. Method + the 7 validations: \`${kdir}TEST-PERMOHONAN-INDEX.md\` § *No Resit Carian Rasmi* (V3 <6 months · V4 jenis-hakmilik allow-list for PSBS/PLTP · V6 no cukai arrears · V7 not Batal). Write it into the Task notes file: \`node quest/notes.js --folder "<Task folder>" --qa ${state.qa || '<n>'} --env <env> --urusan ${u} --id "No Resit: <no_resit>" --user "<login>"\`. **Also confirm the module** — an AWAM ticket's fix usually lives in \`etanah-awam\`, NOT \`etanah-pelupusan\`. Enforced at hand-back by \`domain/awam-no-resit-gate\`.`;
 }
 
@@ -172,33 +227,37 @@ process.stdin.on('end', () => {
 
       const patchFlag = renderPatchIntakeFlag(readBriefText(state.task_folder), `QA-${qaNum}`);
       if (patchFlag) logPatchIntake(qaNum, detectPatchRequest(readBriefText(state.task_folder)).signal);
-      const kdir = knowledgeDirFor(state);
+      const kdir = knowledgeDirFor(state, prompt);
+      const st = stateRows(state, prompt, qaNum); // null = reference state or state unknown → the literal rows below, unchanged
+      let fromPrompt = '';
+      try { const sr = resolveState(state, prompt); if (sr.state && sr.src === 'prompt permohonan-ID prefix') fromPrompt = `, state=${sr.state} (read from the permohonan id in the prompt: the active.txt block has no state=)`; } catch (e) { /* never block */ }
 
       context = [
         ...(patchFlag ? [patchFlag, ``] : []),
-        `⚔️ QUEST GATE — QA #${qaNum} detected (state: phase=${state.phase || 'none'}, status=${state.status}${state.state ? ', state=' + state.state : ''}).`,
+        `⚔️ QUEST GATE — QA #${qaNum} detected (state: phase=${state.phase || 'none'}, status=${state.status}${state.state ? ', state=' + state.state : fromPrompt}).`,
         `🗂 KNOWLEDGE DIR for this ticket: \`${kdir}\` — read its \`index.md\` FIRST (knowledge-first rule); every file name below resolves inside it (identical layout in every state per \`etanah-knowledge/KNOWLEDGE-SCHEMA.json\`).`,
         ``,
         `MANDATORY — emit the Phase-0 gate checklist FIRST as ✓/⬜ rows (a skipped item must be VISIBLE):`,
         ``,
-        `0. ⬜ **🚨 GIT-STATE CHECK (Phase-0, COMPULSORY — run even if it returns nothing)** — \`git status\` + \`git branch --show-current\`; if NOT on the repo baseline (\`mlk/master\` pelupusan · \`mlk/master\` AWAM — corrected v1.55; stag-env/mlit are downstream) → stash → checkout baseline → \`git pull --ff-only origin <baseline>\` → pop (STOP if the pull fails — unknown commits). Then \`git rev-list --count HEAD..origin/<baseline>\` (behind-count). **Existing-fix probe**: \`git branch -a --list "*${qaNum}*"\` + \`git log --all --grep="#${qaNum}" --format="%h %ci %an %s"\`. **Emit a GIT-STATE summary** (branch · behind-count · existing-fix? · ticket-keyword log hits for context). **STOP + surface** if a fix exists under another author, the baseline pull fails, or behind-count is large (stale base).`,
+        st ? st.row0 : `0. ⬜ **🚨 GIT-STATE CHECK (Phase-0, COMPULSORY — run even if it returns nothing)** — \`git status\` + \`git branch --show-current\`; if NOT on the repo baseline (\`mlk/master\` pelupusan · \`mlk/master\` AWAM — corrected v1.55; stag-env/mlit are downstream) → stash → checkout baseline → \`git pull --ff-only origin <baseline>\` → pop (STOP if the pull fails — unknown commits). Then \`git rev-list --count HEAD..origin/<baseline>\` (behind-count). **Existing-fix probe**: \`git branch -a --list "*${qaNum}*"\` + \`git log --all --grep="#${qaNum}" --format="%h %ci %an %s"\`. **Emit a GIT-STATE summary** (branch · behind-count · existing-fix? · ticket-keyword log hits for context). **STOP + surface** if a fix exists under another author, the baseline pull fails, or behind-count is large (stale base).`,
         ``,
         `0.5 ⬜ **CLASSIFY MODE — debug | development** — auto-infer (bug → debug · requirement/enhancement/feature/CR → development), STATE it in ONE line, みや confirms/overrides. Persist \`mode=\` in active.txt. If **development**: set a forward GOAL — produce a Goal+Plan (a \`PLAN.md\` via the \`writing-plans\` skill for a big multi-session feature; a \`## Goal & Plan\` section in \`QA-${qaNum}.md\` for a small one). A real goal, NOT just progress notes.`,
         ``,
-        `0.6 ⬜ **🚨 STAGING SCHEMA — resolve it at LOAD, never assume, never copy it from a qa_doc** — run \`node domain/staging-schema-check/staging-schema.js\` and EMIT the line it prints. Melaka STG has TWO live schemas (\`et_main_stg1\` / \`et_main_stg2\`) and みや switches between them; the active one is whichever datasource in \`standalone.xml\` has \`pool-name="etanahDS"\` with NO numeric suffix. Persist \`staging_schema=\` in active.txt. **Every fixture, permohonan ID and SELECT this session must come from THAT schema** — a qa_doc row carrying a different schema is STALE, re-source it rather than relay it. If the script exits UNRESOLVED, ask みや; do NOT quote a schema. (Added 2026-08-04 per みや after a stg2 fixture was handed to him mid-test on a stg1 box: *"EVERY TIME WE LOAD QUEST MAKE SURE TO LOAD THE LATEST CORRECT DB SCHEMA WE'RE CURRENTLY USING FOR STAGING"*.)\`,
-        \`0.7 ⬜ **🚨 MODULE SET — declare the module(s) in focus in ONE line at load, BEFORE any analysis** — \`etanah-pelupusan | etanah-awam | etanah-teknikal (STOP — not deployed locally) | etanah-common\`, with the evidence (BPMN userTask vs MLK_TKL_* callActivity per CLAUDE.md BPMN-FIRST · BA's own words naming AWAM/portal · screen path). Persist \`module=\` in active.txt. Multi-module tickets name EVERY module and which half lives where. Banned: loading a ticket without the module line (2026-08-03 per みや, QA-272867 — AWAM half ignored at load).`,
+        // Rows 0.6 + 0.7 are ONE literal (the escaped backtick below glues them); another state swaps 0.6 only and keeps 0.7.
+        (s => (st && st.row06 ? st.row06 + '\n' + s.slice(s.indexOf('0.7 ⬜')) : s))(`0.6 ⬜ **🚨 STAGING SCHEMA — resolve it at LOAD, never assume, never copy it from a qa_doc** — run \`node domain/staging-schema-check/staging-schema.js\` and EMIT the line it prints. Melaka STG has TWO live schemas (\`et_main_stg1\` / \`et_main_stg2\`) and みや switches between them; the active one is whichever datasource in \`standalone.xml\` has \`pool-name="etanahDS"\` with NO numeric suffix. Persist \`staging_schema=\` in active.txt. **Every fixture, permohonan ID and SELECT this session must come from THAT schema** — a qa_doc row carrying a different schema is STALE, re-source it rather than relay it. If the script exits UNRESOLVED, ask みや; do NOT quote a schema. (Added 2026-08-04 per みや after a stg2 fixture was handed to him mid-test on a stg1 box: *"EVERY TIME WE LOAD QUEST MAKE SURE TO LOAD THE LATEST CORRECT DB SCHEMA WE'RE CURRENTLY USING FOR STAGING"*.)\`,
+        \`0.7 ⬜ **🚨 MODULE SET — declare the module(s) in focus in ONE line at load, BEFORE any analysis** — \`etanah-pelupusan | etanah-awam | etanah-teknikal (STOP — not deployed locally) | etanah-common\`, with the evidence (BPMN userTask vs MLK_TKL_* callActivity per CLAUDE.md BPMN-FIRST · BA's own words naming AWAM/portal · screen path). Persist \`module=\` in active.txt. Multi-module tickets name EVERY module and which half lives where. Banned: loading a ticket without the module line (2026-08-03 per みや, QA-272867 — AWAM half ignored at load).`),
         `1. ⬜ Task folder loaded — \`handoff_file\` from active.txt OR ask みや for path. Read every file in \`1. Brief/\` (legacy \`0. Brief/\`) + each \`N. Rework/Brief/\` (Description, History, every PDF/docx/photo).`,
         `1b. ⬜ **🚨 LATEST-STATE: journal-timeline table emitted + every issue classified OPEN / ALREADY-SOLVED** — from History.txt, one row per journal entry (date · author · assignee-change · issue raised/solved), oldest→newest; solved issues emitted as a DO-NOT-RESOLVE list (cite the journal date proving each). Fix targets = LATEST open issues ONLY — newest entries supersede the Description. Banned: scouting an issue solved earlier in the thread. (Added 2026-07-27 per みや — stale-conversation slip.)`,
-        `1c. ⬜ **URUSAN PRECEDENT — read \`${kdir}urusan/${state.urusan || '<KOD>'}-TICKETS.md\`** (derive the KOD first if active.txt has no \`urusan=\`) and cite matching past tickets ("precedent: #NNNNN same screen/symptom" or "no urusan precedent"). Past tickets ARE the distribution of future tickets — a match turns Phase 0 into diff-against-precedent instead of a fresh trace. Regenerate stale docs: \`node domain/urusan-tickets/urusan-tickets.js\` (office network). (Added 2026-08-23 per みや — precedent-first directive.)`,
-        `1d. ⬜ **TEST-DATA LOOKUP FIRST — run \`node lib/test-data-db.js ${state.urusan || '<urusan or keyword>'}\` and paste the result** BEFORE creating fresh test data; on a hit, re-verify the row on the LIVE env (UAT/FAT rows are historical — envs deleted 2026-07-17). Any NEW test data derived this quest is WRITTEN BACK to TEST-PERMOHONAN-INDEX.md (then \`node lib/test-data-db.js build\`). (Added 2026-08-23 per みや — close-the-loop directive.)`,
+        st && st.row1c ? st.row1c : `1c. ⬜ **URUSAN PRECEDENT — read \`${kdir}urusan/${state.urusan || '<KOD>'}-TICKETS.md\`** (derive the KOD first if active.txt has no \`urusan=\`) and cite matching past tickets ("precedent: #NNNNN same screen/symptom" or "no urusan precedent"). Past tickets ARE the distribution of future tickets — a match turns Phase 0 into diff-against-precedent instead of a fresh trace. Regenerate stale docs: \`node domain/urusan-tickets/urusan-tickets.js${st ? ' --state ' + st.key : ''}\` (office network). (Added 2026-08-23 per みや — precedent-first directive.)`,
+        `1d. ⬜ **TEST-DATA LOOKUP FIRST — run \`node lib/test-data-db.js ${state.urusan || '<urusan or keyword>'}${st ? ' --state ' + st.key : ''}\` and paste the result** BEFORE creating fresh test data; on a hit, re-verify the row on the LIVE env (UAT/FAT rows are historical — envs deleted 2026-07-17). Any NEW test data derived this quest is WRITTEN BACK to TEST-PERMOHONAN-INDEX.md (then \`node lib/test-data-db.js build\`). (Added 2026-08-23 per みや — close-the-loop directive.)`,
         `2. ⬜ **Issue Checklist created at quest creation** in \`projects/coding-projects/active/QA-${qaNum}/QA-${qaNum}.md\` — from PRIMARY SOURCES (BA Description + History + attachments). NOT copied from Scout. Scout's diagnostic is DIFFED against this. List GROWS through Recon/Apply/Test; out-of-scope findings get explicit OOS rows. **Enumerate ALL** (every BA-numbered item, every gate-writer, every OR-bypass, every data-axis branch) — see \`checklist\` skill "Enumeration completeness".`,
         `3. ⬜ **Existing-utility sweep** — grep for existing helpers/constants/sets/templates BEFORE proposing custom ones. Applies even when みや says "create our own X" — flag the existing util first.`,
         `4. ⬜ **Working-analog compare** — sibling templates / sibling urusan classes / sibling beans. Identify the canonical pattern BEFORE recommending tags/methods.`,
         `5. ⬜ **Cross-reference chase** — if Description/History references other tickets (Requirement #NNNNN, relates #, refs, "rujuk ... tic ini"), spawn the background cross-ref agent per \`quest/cross-ref-agent.md\` (non-blocking; ONE agent for the batch, sequential, browser MCP).`,
         `6. ⬜ **Recon block** emitted — Universal Checks 1-8 with file:line evidence per row.`,
-        ...(noResitRow(state) ? [noResitRow(state)] : []),
+        ...(noResitRow(state, prompt) ? [noResitRow(state, prompt)] : []),
         ``,
-        `Do NOT propose fixes / commit / open codebase files for editing until rows 0-6 (incl. 0.5 MODE)${noResitRow(state) ? '+7' : ''} are ✓ or have explicit deferrals (OOS / BA-Q / not-applicable + reason). Row 0 (git-state) is the FIRST thing — before reading the Task folder.`
+        `Do NOT propose fixes / commit / open codebase files for editing until rows 0-6 (incl. 0.5 MODE)${noResitRow(state, prompt) ? '+7' : ''} are ✓ or have explicit deferrals (OOS / BA-Q / not-applicable + reason). Row 0 (git-state) is the FIRST thing — before reading the Task folder.`
       ].join('\n');
     } else {
       // Redmine retrieval — no specific ticket yet

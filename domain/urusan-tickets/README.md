@@ -20,7 +20,7 @@ retention: rotate monthly
 
 **Observability**: each run appends `{ts, total, classified, unclassified, docs}` to `domain/urusan-tickets/log.jsonl`.
 
-**state-scoped**: yes — keyed by the hardcoded `melaka` output path, the `helpdesk_melaka` Redmine project, the Melaka Redmine host/key (shared with `quest/redmine-board.js:26-27`), and the Melaka urusan catalog. A second state needs its own project id + catalog + output folder; greppable via `melaka`.
+**state-scoped**: default run (no flag) = Melaka, unchanged — hardcoded `melaka` output path, `helpdesk_melaka` project, built-in urusan catalog. **`--state <key>`** (added 2026-10-03) builds another state's docs: project + module passes from the `system/states.json` record (`redmine.project`, `redmine.module_field`, `redmine.awam_sub_module_field`), output = `lib/states.js knowledgeDir(key)\urusan`, ids via `permohonanRegex()` (own-prefix ids only; kod = 3rd segment from the end, so 6- and 7-segment shapes both work), catalog from `catalog.<key>.json` next to the script (else the built-in one, printed as a note). Unknown state / no `redmine.project` / no `knowledge_dir` = exit 2, nothing pulled or written. Eval: `node domain/urusan-tickets/urusan-tickets.eval.js` (stub server, temp tree). Terengganu first run 2026-10-03: 2481 tickets, 1980 classified into 23 urusan, 501 unclassified (the project has no cf_33 Urusan field, so 2-letter kods PT/PS classify by id only).
 
 **Adversarial scenarios (Rule 12, at birth 2026-08-23)**:
 

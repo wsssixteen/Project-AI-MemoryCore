@@ -42,7 +42,7 @@ const NOTES = {
 };
 const STATE_MAP = Object.fromEntries(Object.values(states.all()).map(s => [s.key, {
   prefix: s.permohonan_prefix, folder: s.knowledge_dir, file: `${s.knowledge_dir}/${s.flowable_alter_file || 'FLOWABLE-ALTER.md'}`,
-  note: NOTES[s.key] || '⬜ NOT WRITTEN — derive from the playbook + the state DB MCP + the state checkout, then write it',
+  note: NOTES[s.key] || null,   // null = no hand-written summary; the render says "read it in full" or "NOT WRITTEN" from what is on disk
   excluded: s.work_scope === 'excluded',
 }]));
 const FOLDER_TO_STATE = new Proxy({}, { get: (_, k) => { const s = states.get(String(k)); return s ? s.key : undefined; } });
@@ -53,7 +53,8 @@ const ALTER_STRONG = /initiate\s*(?:&(?:amp;)?|and|\+|-)\s*alter|InitiateBPMFlow
 const SERAHAN_ID = /\b\d{2}[A-Z]{1,4}\d{1,6}\/\d{4}\b/;
 // Ask signals — "alter" as a request about a token/tugasan/ID. \balter\b never matches "alternative"/"alteration".
 const ALTER_ASK = /\b(?:tolong|please|mohon|boleh|can|help|kindly|sila|need\s+to|nak)\b[^.\n]{0,40}\balter\b|\balter(?:ed|ing)?\b\s*(?:the\s+|this\s+|semula\s+|balik\s+)?(?:id\b|permohonan|tugasan|ke\s|to\s|balik|semula|flow\b|token|process|SPI\b|SKM\b|[A-Z]{2,6}\b\s*[-–(])|\b(?:pindah(?:kan)?|kembalikan|undur(?:kan)?)\s+(?:tugasan|token|process|ke\s+tugasan)\b|\bmove\s+(?:the\s+)?(?:token|process)\b|\balter\s*id\b/i;
-const PERMOHONAN_ID = /\bPT([A-Z]{2,4})\/\d{2}\/[A-Z]\/[A-Z0-9]+\/\d{4}\/\d+/;
+// Terengganu ids carry a second 2-digit block (PTTRG/02/01/L/PT/2026/343); urusan kods may hold "_" — same shape as lib/states.js permohonanRegex().
+const PERMOHONAN_ID = /\bPT([A-Z]{2,4})\/\d{2}(?:\/\d{2})?\/[A-Z]\/[A-Z0-9_]+\/\d{4}\/\d+/;
 const TICKET_RE = /\b(?:QA|FAT-OR|UAT-CR|FAT|UAT|REQUIREMENT|REQ|CR|Redmine|ticket|issue|II|ES|ESOKONGAN)\s*#?\s*(\d{5,7})\b/i;
 const BYPASS = /\[skip-alter-gate:\s*[^\]]+\]/i;
 // A genuine Read of the playbook — the hook's own advisory text names the file in prose, never as a tool_use file_path.
@@ -165,7 +166,7 @@ runHook({ name: 'alter-ticket-gate', event: 'UserPromptSubmit', log: LOG }, (inp
     `🔀 ALTER-TICKET GATE — ${label} · state=${state} (from ${stateSrc}) · signal="${signal}" in ${src}`,
     `   MANDATORY READS this session, BEFORE any node pick, runbook, or reply:`,
     `     1. ${PLAYBOOK_REL}   ← procedure A0–A6 + the fixed reply formats (§5)`,
-    row ? `     2. projects/coding-projects/active/etanah-knowledge/${row.file}   ← ${row.note}${stateFileExists ? '' : '   ⚠️ FILE MISSING — write it from the playbook before proceeding'}`
+    row ? `     2. projects/coding-projects/active/etanah-knowledge/${row.file}   ← ${row.note || (stateFileExists ? "this state's alter mechanics — read it in full" : '⬜ NOT WRITTEN — derive from the playbook + the state DB MCP + the state checkout, then write it')}${stateFileExists ? '' : '   ⚠️ FILE MISSING — write it from the playbook before proceeding'}`
         : `     2. ⚠️ state UNKNOWN — ask みや which state; never default to Melaka silently`,
     `   EMIT the rows as ✓/⬜ (a skipped row must be VISIBLE):`,
     `     A0 ⬜ RESOLVE words → objects: "ID Permohonan" → aplikasi_id · urusan · pejabat; "tugasan X" → ind_tgsn kod(s) under THAT urusan; each "serahan" → its own aplikasi + hubungan_aliran_kerja_id`,

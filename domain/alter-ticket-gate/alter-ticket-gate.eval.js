@@ -78,6 +78,12 @@ r = run('{not json'); check('F8 malformed JSON stdin → exit 0, silent', r.stat
 // F9 missing active.txt + no transcript → ad-hoc relay with permohonan id + alter still fires by ID prefix
 r = run({ prompt: 'BA WhatsApp: tolong alter PTPK/07/E/PT/2023/154 ke tugasan Semakan Permohonan' }, { ALTER_GATE_ACTIVE_PATH: path.join(sb, 'nope.txt') });
 check('F9 ad-hoc relay, no ticket, no active.txt → fires, state by PTPK prefix', fired(r) && /state=perak/.test(r.out) && /ad-hoc/.test(r.out) && /permohonan-ID prefix/.test(r.out), r.out.slice(0, 200));
+// F9b (2026-10-03) the 7-segment Terengganu id counts as context: ad-hoc relay fires, state by PTTRG prefix
+r = run({ prompt: 'tolong alter tugasan PTTRG/02/01/L/PT/2026/343' }, { ALTER_GATE_ACTIVE_PATH: path.join(sb, 'nope.txt') });
+check('F9b ad-hoc relay with a 7-segment PTTRG id → fires, state=terengganu', fired(r) && /state=terengganu/.test(r.out) && /permohonan-ID prefix/.test(r.out), r.out.slice(0, 200));
+// F9c the 6-segment Melaka id still fires, state by PTMLK prefix (unchanged)
+r = run({ prompt: 'tolong alter tugasan PTMLK/02/L/PT/2026/343' }, { ALTER_GATE_ACTIVE_PATH: path.join(sb, 'nope.txt') });
+check('F9c ad-hoc relay with a 6-segment PTMLK id → fires, state=melaka', fired(r) && /state=melaka/.test(r.out), r.out.slice(0, 200));
 // F10 Task-folder state beats a foreign prefix in the text (a Perak ticket quoting a Melaka id)
 r = run({ prompt: 'ticket 275847 — compare with PTMLK/03/L/MCL/2026/4 and alter ke SPI', transcript_path: transcript([]) });
 check('F10 Task folder (Perak) outranks PTMLK prefix in the prompt', fired(r) && /state=perak/.test(r.out), r.out.slice(0, 160));

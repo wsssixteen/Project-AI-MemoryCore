@@ -39,12 +39,14 @@ archived                              --close-->   (no-op: already archived)
 
 0. **Wrong-fix rows saved (added 2026-09-07, plan §9a).** If any fix was REFUTED / reverted / found not the cause during this quest, each one is a row: `node lib/wrong-fix.js add QA-<num> --was "<fix>" --why "<how refuted>" --learned "<rule>"`. Emit `wrong-fix rows: N` (0 is a valid answer only when no fix was overturned). The turn-ledger advisory names the missing row at the moment of the refute; this step is the backstop.
 1. **Assert local test.** If `local_test_confirmed` ≠ true → ask みや "Tested locally?" Do NOT proceed until confirmed.
-2. **🚨 The FIXED git sequence (etanah repo, e.g. `E:\Projects\Melaka\etanah-pelupusan`). The pull is NON-SKIPPABLE.** Identify the **cited fix file(s)** for THIS quest — the files actually changed for the fix, NOT other uncommitted WIP (e.g. another ticket's edits). Then, in order:
+2. **🚨 The FIXED git sequence (etanah repo of the quest's resolved state, e.g. Melaka: `E:\Projects\Melaka\etanah-pelupusan`). The pull is NON-SKIPPABLE.** Identify the **cited fix file(s)** for THIS quest — the files actually changed for the fix, NOT other uncommitted WIP (e.g. another ticket's edits). Then, in order:
+   - **State values first (never assume Melaka):** resolve the quest's state from its active.txt block — `state=` when present, else its `task_folder=` path (`node lib/states.js resolve "<task_folder>"`; a Melaka block carries no `state=` and resolves by its `1. Tasks\Melaka` folder) — then `node lib/states.js show <state>`. `<trunk>` = `modules.<module>.trunk` of the repo being closed. `<ticket-branch>` = the record's `ticket_branch` shape (`ticket_branch_shapes` picks the tracker family when the record has one). **Melaka:** `<trunk>` = `mlk/master`, `<ticket-branch>` = `mlk/qa/<num>`. Neither `state=` nor `task_folder=` resolves, or the record's `ticket_branch` is null → say **state UNKNOWN** and ask みや, never fall back to the Melaka values.
+   - **Work-clone rule:** when the record has `work_clone_root`, every ref-moving command (fetch · pull · branch · commit · merge · rebase · push) runs under `<work_clone_root>`, never in `E:\Projects\<State>\<repo>` (that tree is read-only: status · branch · log · diff). The clone `<work_clone_root>\<repo>` is SHARED by every state, so the ticket branch is cut in its own worktree — `git -C <work_clone_root>\<repo> worktree add <work_clone_root>\wt-<num> -b <ticket-branch> origin/<trunk>` — and never with `checkout -b` in the clone's main tree (that would switch another state's tree). Carry the cited fix over as a patch (`git diff -- <cited-fix-file…>` there, `git apply` in the work clone) in place of the stash push / stash pop pair. The order below stays the same.
    ```
    git stash push -- <cited-fix-file…>          # protect ONLY the fix; leave other WIP alone
-   git checkout mlk/master
-   git pull --ff-only origin mlk/master          # ← the step that gets skipped — NEVER skip it
-   git checkout -b mlk/qa/<num>
+   git checkout <trunk>                          # Melaka: mlk/master
+   git pull --ff-only origin <trunk>             # ← the step that gets skipped — NEVER skip it
+   git checkout -b <ticket-branch>               # Melaka: mlk/qa/<num>
    git stash pop
    git add <cited-fix-file…>                      # stage ONLY the cited files
    ```
@@ -53,9 +55,9 @@ archived                              --close-->   (no-op: already archived)
    - the staged file list (confirm ONLY the cited files),
    - the full `git diff --cached`,
    - the drafted commit message (etanah convention: subject-only — `QA #<num> - <URUSAN> - <TUGASAN-KOD> - <action-oriented desc>`, no body, no trailer — per `.claude/commit-conventions.md`; ONE version only).
-4. **On approval:** `git commit -m "<approved>"` → `git push -u origin mlk/qa/<num>`.
-   - If `origin/mlk/master` advanced during the work, base the branch on the latest: `git fetch` → stash the non-fix WIP → `git rebase origin/mlk/master` → pop → `git push --force-with-lease`. Inspect any commit that touches the same area for interaction with the fix. **Rebase once, then stop chasing** — further team pushes are handled at merge time.
-5. **Return:** `git checkout mlk/master` → `git pull --ff-only origin mlk/master` (the non-fix WIP follows back, untouched).
+4. **On approval:** `git commit -m "<approved>"` → `git push -u origin <ticket-branch>` (Melaka: `mlk/qa/<num>`).
+   - If `origin/<trunk>` (Melaka: `origin/mlk/master`) advanced during the work, base the branch on the latest: `git fetch` → stash the non-fix WIP → `git rebase origin/<trunk>` → pop → `git push --force-with-lease`. Inspect any commit that touches the same area for interaction with the fix. **Rebase once, then stop chasing** — further team pushes are handled at merge time.
+5. **Return:** `git checkout <trunk>` → `git pull --ff-only origin <trunk>` (Melaka: `mlk/master`; the non-fix WIP follows back, untouched).
 6. **Mark closed:** `node quest/active-cli.js update QA-<num> status=closed current_phase=Closed local_test_confirmed=true commit=<sha> closed=@now`
    (run against the LIVE `active.txt`; if running inside a worktree, target the main-repo path so the live state — what the boot hooks read — is the one updated).
 7. **`/verify` Checklist C** — emit the green/red close-out table (branch off current master · only the fix committed · pushed · message · active.txt closed).
@@ -121,3 +123,5 @@ Acceptance: `bulk.js --debt` prints `0 unharvested` and the boot surfacer shows 
 *Rule 6 v1.2 note: additive section; prior stage behaviours (Phase 1 close / Phase 2 archive) untouched. Smoke = the 2026-08-16 gate+enumerator evals (refuse exit 3 · pass-on-harvest · allow-stub · refusal-not-evidence · stub-not-evidence), all green same day.*
 
 *2026-09-07 — plan §9a/9b per みや: Phase 1 step 0 (wrong-fix rows saved via `lib/wrong-fix.js add`) + Phase 2 step 0 🔧 WORKFLOW UPGRADE (mandatory, first, highlighted: `lib/wrong-fix.js upgrade-table` → one verdict per row, DONE in the same close; `quest/archive-quest.js` Step -0.5 refuses while any row is unruled). Spec-preservation: every prior step kept, renumbered none — both additions are step 0. Fire check: `lib/wrong-fix.eval.js` 14/14 + archive-quest refusal path smoke (`--dry-run` reports, live refuses exit 3).*
+
+*2026-10-03 — Terengganu active per みや: Phase 1 step 2/4/5 made state-neutral (`<trunk>` + `<ticket-branch>` from `node lib/states.js show <state>`) + the work-clone rule (`work_clone_root` → ref-moving git only in the work clone). Spec-preservation: step ORDER and every ban untouched; the Melaka values `mlk/master` / `mlk/qa/<num>` stay visible as the "Melaka:" example on each line.*

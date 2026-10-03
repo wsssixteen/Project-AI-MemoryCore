@@ -38,6 +38,20 @@ check('F20 sourceRef push src:dst', sourceRef('push', ' origin mlk/esokongan/280
 check('F21 targetOf push HEAD:dst', targetOf('push', ' origin HEAD:mlk/master') === 'mlk/master');
 check('F22 malformed stdin exits 0', spawnSync(process.execPath, [HOOK], { input: '{not json', encoding: 'utf8', timeout: 30000, env: process.env }).status === 0);
 check('F23 branch name as substring (mlk/master-ish) → not protected', decide('git push origin HEAD:mlk/master-backup', '', true, 'x').block === false);
+// Terengganu (active 2026-10-03): trg/master, trg/release/*, trg/int-env, trg/stag-env are protected; trg ticket branches are not.
+const TRG_MERGE = 'Set-Location "E:\\Dev\\etanah-work\\etanah-pelupusan"; git merge --no-ff trg/esokongan/278102';
+check('F24 TRG merge probe branch into trg/stag-env → BLOCK', decide(TRG_MERGE, '', true, 'trg/stag-env').block === true);
+check('F25 TRG merge probe branch into trg/int-env → BLOCK', decide(TRG_MERGE, '', true, 'trg/int-env').block === true);
+check('F26 TRG cherry-pick onto trg/master with markers → BLOCK', decide('git cherry-pick 3ba0dd4985', '', true, 'trg/master').block === true);
+check('F27 TRG push HEAD:trg/release/1.36.0 with markers → BLOCK', decide('git -C "E:\\Dev\\etanah-work\\etanah-pelupusan" push origin HEAD:trg/release/1.36.0', '', true, 'x').block === true);
+check('F28 TRG push origin trg/master with markers → BLOCK', decide('git push origin trg/master', '', true, 'trg/master').block === true);
+check('F29 TRG push plain ticket branch → pass', decide('git push -u origin trg/esokongan/278102', '', true, 'trg/esokongan/278102').block === false);
+check('F30 TRG merge trunk into a ticket branch (current not protected) → pass', decide('git merge origin/trg/master', '', true, 'trg/internal-issue/278102').block === false);
+check('F31 TRG same merge, marker-free source → pass', decide(TRG_MERGE, '', false, 'trg/stag-env').block === false);
+check('F32 TRG substring branch (trg/master-backup, trg/stag-env2) → not protected', decide('git push origin HEAD:trg/master-backup', '', true, 'x').block === false && decide(TRG_MERGE, '', true, 'trg/stag-env2').block === false);
+check('F33 TRG bypass token → pass', decide(TRG_MERGE, '[skip-probe-gate: intentional]', true, 'trg/stag-env').block === false);
+check('F34 TRG free text mentioning trg/master + push → pass', decide('node core/slips.js add --evidence "git push into trg/master blocked"', '', true, 'main').block === false);
+check('F35 Melaka unchanged: mlk/mlit protected, mlk ticket branch not', decide('git push origin HEAD:mlk/mlit', '', true, 'x').block === true && decide('git push origin HEAD:mlk/qa/123', '', true, 'x').block === false);
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + (x.d || ''))); }

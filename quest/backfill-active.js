@@ -7,15 +7,29 @@
 // the 17 historical folders that pre-dated the fix. Idempotent — re-running is safe
 // (active-cli.js start refuses to duplicate existing QA-<num> blocks).
 //
-// Usage: node quest/backfill-active.js [--dry-run]
+// Usage: node quest/backfill-active.js [--dry-run] [--state <key>] [--tasks <path>]
 
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
-const TASKS_FOLDER = require('path').join(require('os').homedir(), 'OneDrive - Pymsoft Sdn Bhd', '1. Tasks', 'Melaka'); // machine-independent (GHOST-HOOKS-2 fix 2026-07-19)
+let TASKS_FOLDER = require('path').join(require('os').homedir(), 'OneDrive - Pymsoft Sdn Bhd', '1. Tasks', 'Melaka'); // machine-independent (GHOST-HOOKS-2 fix 2026-07-19)
 const CLI = path.join(__dirname, 'active-cli.js');
 const DRY = process.argv.includes('--dry-run');
+
+// Another state's Task folder (2026-10-03, H-23): --state <key> resolves through lib/states.js and
+// stamps state= on each block (same value redmine-sync writes); --tasks <path> overrides the folder.
+// Neither flag = the folder above, no state= field — unchanged.
+const argAfter = (flag) => { const i = process.argv.indexOf(flag); return i >= 0 ? process.argv[i + 1] : null; };
+let STATE_FIELD = null;
+if (argAfter('--state')) {
+    let rec = null, dir = null;
+    try { const st = require(path.join(__dirname, '..', 'lib', 'states.js')); rec = st.get(argAfter('--state')); dir = rec && st.taskFolder(rec.key); } catch (_) {}
+    if (!dir) { console.error(`state UNKNOWN — --state ${argAfter('--state')} has no Task folder in lib/states.js`); process.exit(2); }
+    TASKS_FOLDER = dir;
+    STATE_FIELD = rec.task_folder;
+}
+if (argAfter('--tasks')) TASKS_FOLDER = argAfter('--tasks');
 
 function parseFolderName(name) {
     // Pattern: "<n>. QA #<NUM> - <env> - <urusan> - <tugasan> - <issue>"
@@ -57,6 +71,7 @@ function appendBlock(folderName, parsed) {
     ];
     if (parsed.urusan)  fields.push(`urusan=${parsed.urusan}`);
     if (parsed.tugasan) fields.push(`tugasan=${parsed.tugasan}`);
+    if (STATE_FIELD)    fields.push(`state=${STATE_FIELD}`);
 
     if (DRY) {
         console.log(`[dry] start ${qa} → ${absPath}`);

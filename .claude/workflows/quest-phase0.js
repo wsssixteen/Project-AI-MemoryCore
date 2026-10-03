@@ -1,6 +1,6 @@
 export const meta = {
   name: 'quest-phase0',
-  description: 'Quest Phase 0 investigation engine for an Etanah ticket, grounded in quest/quest-protocol.md. Discovery -> etanah-knowledge tiered load -> Recon (codebase-only blast-radius; TRG banned for pelupusan, multi-state-aware for awam) -> adversarial Verify (bugs) -> Synthesize. Writes 1. <NNN NNN>.txt (canonical format) + the QA-NNN.md investigation sections. Scales by ticket_type. Hands a verified diagnosis + fix-shape to the live /quest skill for Apply/test/commit (which stay human-gated).',
+  description: 'Quest Phase 0 investigation engine for an Etanah ticket, grounded in quest/quest-protocol.md. Discovery -> etanah-knowledge tiered load -> Recon (codebase-only blast-radius; other states out of scope for pelupusan, multi-state-aware for awam) -> adversarial Verify (bugs) -> Synthesize. Writes 1. <NNN NNN>.txt (canonical format) + the QA-NNN.md investigation sections. Scales by ticket_type. Hands a verified diagnosis + fix-shape to the live /quest skill for Apply/test/commit (which stay human-gated).',
   phases: [
     { title: 'Discovery', detail: 'read brief + protocol Phase-0, classify, pick codebase-root/base-branch' },
     { title: 'KnowledgeLoad', detail: 'etanah-knowledge tiered load + working analog' },
@@ -16,6 +16,9 @@ let t = args || {}
 if (typeof t === 'string') { try { t = JSON.parse(t) } catch (e) { t = {} } }
 const PROTO = t.protocolPath || 'quest/quest-protocol.md'
 const isPelupusan = !(t.codebaseRoot || '').includes('awam')
+// State comes from the registry (node lib/states.js resolve) — never assumed. Melaka stays the default wording only when the caller passes nothing.
+const STATE = t.state || 'the resolved state'
+const BASE_BRANCH = t.baseBranch || 'the trunk of that module in `node lib/states.js show <state>` (Melaka: mlk/master for pelupusan and awam)'
 const FULL = t.depth === 'full' || t.depth === 'deep' || t.ticketType === 'bug'
 
 // ---- structured-output schemas ----
@@ -53,7 +56,7 @@ const discovery = await agent(`${base}
 Read ${PROTO} Phase-0 section (~lines 460-555) for the exact Discovery procedure, then:
 - Read the task folder's "0. Brief/History.txt" (FULL), "Description.txt", "1. <NNN NNN>.txt", and any PNG/PDF in 0. Brief.
 - Classify ticket_type (bug | enhancement | template | cr) and entry context (New | Rework | Addition).
-- Pick codebase_root (etanah-pelupusan for APPS/PELUPUSAN; etanah-awam for AWAM) and base-branch (mlk/master for pelupusan; mlk/release/fat for awam).
+- Pick codebase_root (etanah-pelupusan for APPS/PELUPUSAN; etanah-awam for AWAM) and base-branch (${BASE_BRANCH}). State: ${STATE}.
 - Extract urusan(s), tugasan(s), the layer guess, the BA-provided permohonan ID (if any), Expected vs Observed, and the scope anchor (BA's LITERAL scope: what is IN + explicit DO-NOT).`,
   { label: 'discovery', phase: 'Discovery', schema: DISCOVERY_SCHEMA })
 
@@ -62,9 +65,9 @@ phase('KnowledgeLoad')
 const knowledge = await agent(`${base}
 
 Per ${PROTO} etanah-knowledge tiered-load (~lines 85-93):
-- ALWAYS load + summarize from ${t.knowledgeDir}: index.md, DOMAIN-GLOSSARY.md, MODULE-ARCHITECTURE.md, BUG-BESTIARY.md, DEFERRED-CRITICAL-ISSUES.md.
-- CONDITIONAL by layer "${discovery.layerGuess}" + the symptom: load the matching layer file(s) — DATABASE (DB) / FLOWABLE-WORKFLOWS (workflow) / JSF-WIRING (UI) / FLOW-TRACES (deep-debug) / FRONTEND-PATTERNS (UI enhancement) / URUSAN-FLOW (cross-urusan) / PERANAN-MAP (role).
-- Find the closest WORKING ANALOG ticket(s) for "${discovery.symptom}" — search projects/coding-projects QA docs + BUG-BESTIARY. Cite ticket + what it did + file:line/commit.
+- ALWAYS load + summarize from ${t.knowledgeDir}: index.md (it maps every file of THIS state's folder — follow it), STATE-FACTS.md, DOMAIN-GLOSSARY.md, MODULE-ARCHITECTURE.md, BUG-BESTIARY.md, LATENT-BUGS.md, DEFERRED-CRITICAL-ISSUES.md. A file that does not exist in this state's folder is skipped and NAMED as absent — never substituted with another state's copy.
+- CONDITIONAL by layer "${discovery.layerGuess}" + the symptom: load the matching layer file(s) — DATABASE (DB) / FLOWABLE-WORKFLOWS or FLOWABLE-KNOWLEDGE (workflow) / JSF-WIRING (UI) / FLOW-TRACES (deep-debug) / FRONTEND-PATTERNS (UI enhancement) / URUSAN-FLOW (cross-urusan) / PERANAN-MAP (role) / TEST-PERMOHONAN-INDEX (test data) / ENV-ARCHITECTURE (which DB + MCP).
+- Find the closest WORKING ANALOG ticket(s) for "${discovery.symptom}" — search projects/coding-projects QA docs + BUG-BESTIARY + this state's ${t.knowledgeDir}/urusan/<KOD>-TICKETS.md precedent file when it exists. Cite ticket + what it did + file:line/commit.
 Return what you loaded, the routing reason, and the analogs.`,
   { label: 'knowledge-load', phase: 'KnowledgeLoad', schema: KNOWLEDGE_SCHEMA })
 
@@ -75,7 +78,7 @@ phase('Recon')
 const dims = [
   { key: 'code-path', prompt: `Trace where the fix goes for "${discovery.symptom}". For layer "${discovery.layerGuess}" cite the exact file:line(s) (Java populator / .docx template SDT / JSF composite / config / SQL). Use the working analog as the template.` },
   { key: 'working-analog', prompt: `Confirm the closest working analog and READ its actual fix (file:line / commit). State exactly what to mirror, and any difference vs this ticket.` },
-  { key: 'blast-radius', prompt: `Blast-radius — CODEBASE-ONLY. ${isPelupusan ? 'codebase_root is etanah-pelupusan: IGNORE TRG ENTIRELY. Do NOT check, mention, or flag TRG / cross-state. Scope PURELY to the pelupusan codebase: which Java / templates / configs / urusan WITHIN pelupusan this change touches (prefer codegraph_impact if etanah is indexed).' : 'codebase_root is etanah-awam: include MULTI-STATE awareness — other states share this portal, so flag general cross-state ripple.'} List every touch-site with file:line.` },
+  { key: 'blast-radius', prompt: `Blast-radius — CODEBASE-ONLY. ${isPelupusan ? 'codebase_root is etanah-pelupusan (state: ' + STATE + '): IGNORE EVERY OTHER STATE ENTIRELY. Do NOT check, mention, or flag another state / cross-state. Scope PURELY to this state\'s pelupusan codebase: which Java / templates / configs / urusan WITHIN pelupusan this change touches (prefer codegraph_impact if etanah is indexed).' : 'codebase_root is etanah-awam: include MULTI-STATE awareness — other states share this portal, so flag general cross-state ripple.'} List every touch-site with file:line.` },
   { key: 'test-data', prompt: `Run the canonical task-state query (${PROTO} ~lines 518-541) on ${t.dbMcp} to find ONE active permohonan per urusan (${(discovery.urusans || []).join(', ') || 'see Discovery'}) at the relevant tugasan, with its pengguna_semasa login. If the BA gave a permohonan ID (${discovery.baProvidedPermohonanId || 'none'}), also resolve ITS current pengguna_semasa. Return per-urusan {urusan, permohonanId, pengguna, tugasan}. Mark login TBD if the DB cannot resolve it. CANDIDATE, not authority — pengguna_semasa drifts as the app advances.` },
 ]
 if (FULL) {
@@ -117,7 +120,7 @@ Inputs:
 - Recon: ${JSON.stringify(recon)}
 - Adversarial verdicts: ${JSON.stringify(verdicts)}
 - Notes.txt: ${JSON.stringify(notes)}
-Produce: the fix-shape (file:line + what changes), the blast-radius (codebase-only${isPelupusan ? ', TRG excluded' : ', multi-state-aware'}), the verification oracle (how we will KNOW it is fixed), repro-achieved Y/N (bugs), a confidence level (honest), and a seniorBlocker ONLY if solving genuinely stalled (else "none" — the goal is to SOLVE, not manufacture questions to ask).`,
+Produce: the fix-shape (file:line + what changes), the blast-radius (codebase-only${isPelupusan ? ', other states excluded' : ', multi-state-aware'}), the verification oracle (how we will KNOW it is fixed), repro-achieved Y/N (bugs), a confidence level (honest), and a seniorBlocker ONLY if solving genuinely stalled (else "none" — the goal is to SOLVE, not manufacture questions to ask).`,
   { label: 'synthesis', phase: 'Synthesize', agentType: 'general-purpose', schema: SYNTH_SCHEMA })
 
 return { qa: t.qa, depth: FULL ? 'full' : 'quick', discovery, knowledge, recon, verdicts, notes, synthesis }

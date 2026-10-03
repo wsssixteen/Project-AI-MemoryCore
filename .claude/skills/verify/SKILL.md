@@ -70,7 +70,7 @@ For ticket `QA-<n>`, identify the repo from `active.txt`, then:
 | C3 | Commit landed on the ticket branch | `git log --oneline -1 mlk/qa/<n>` → SHA + subject |
 | C4 | Push succeeded — local SHA == origin SHA | `git ls-remote origin mlk/qa/<n>` |
 | C5 | Remote branch discoverable by teammates | `git ls-remote origin mlk/qa/<n>` non-empty |
-| C6 | Repo returned to `mlk/master` (pelupusan) / `mlk/master` (awam), at origin tip | `git branch --show-current` + `git fetch` ahead-count == 0 |
+| C6 | Repo returned to the resolved state's trunk (`node lib/states.js show <state>`; Melaka: `mlk/master` (pelupusan) / `mlk/master` (awam)), at origin tip. In C3-C5 `mlk/qa/<n>` is the Melaka example of the record's `ticket_branch`; a state with `work_clone_root` is checked in the work clone | `git branch --show-current` + `git fetch` ahead-count == 0 |
 | C7 | `active.txt` updated — `phase=1-complete`, `commit=<SHA>`, `status=` set | `grep -A8 "^qa=QA-<n>" quest/active.txt` |
 
 ### Checklist D — DE close-out (added 2026-05-20 per みや)
@@ -110,7 +110,7 @@ For ticket `QA-<n>` with active.txt entry transitioning to `status=closed`:
 | E5 | Refine pass emitted in chat — at least one yes/no/park decision per relevant skill | transcript trace |
 | E6 | Fix.txt + SUMMARY.txt rendered in Task folder (auto-generated at Phase 1 close per the protocol, but verify here too) | `ls "<task-folder>/2. Fix/"` shows both files |
 | E7 | active.txt status flipped to `closed` (was `awaiting-ba` or `awaiting-phase-2`) | `grep -A8 "^qa=QA-<n>" quest/active.txt` → status=closed |
-| E8 | Task folder archived — moved from `1. Tasks/Melaka/<NN>. ...` → `1. Tasks/Melaka/Archive/<NN>. ...` | `ls "1. Tasks/Melaka/Archive/" \| grep "#<n>"` returns the folder |
+| E8 | Task folder archived — moved into the `Archive/` of the resolved state's Task folder (`node lib/states.js show <state>` → `task_folder`; Melaka: `1. Tasks/Melaka/<NN>. ...` → `1. Tasks/Melaka/Archive/<NN>. ...`) | `ls "1. Tasks/<State>/Archive/" \| grep "#<n>"` returns the folder (Melaka: `1. Tasks/Melaka/Archive/`) |
 | E9 | Project subfolder archived (if it existed) — moved from `projects/coding-projects/active/QA-<n>/` → `projects/coding-projects/archive/QA-<n>/` | `ls projects/coding-projects/archive/` shows it OR active.txt notes no subfolder existed |
 | E10 | active.txt entry moved into the `closed:` section (not still in active section) | transcript trace + file structure |
 
@@ -154,3 +154,5 @@ Verdict: ALL GREEN — safe to proceed · OR · N RED — stop, fix: &lt;list&gt
 ---
 
 *Created 2026-05-18 by Ruri (Design Memo) + みや (approved). Supersedes verify-close (2026-05-11).*
+
+*2026-10-03 — Terengganu active per みや: C6 + E8 read "the resolved state's value (`node lib/states.js show <state>`)". Spec-preservation: every check kept; the Melaka trunk, branch and Task-folder literals stay as the "Melaka:" example.*

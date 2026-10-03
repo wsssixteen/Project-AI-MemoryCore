@@ -131,6 +131,28 @@ const block = (status, ...closed) => ['qa=QA-999999', `status=${status}`, ...clo
         fs.rmSync(lg.root, { recursive: true, force: true });
     }
 
+    { // (m) tracker abbreviations — the CR trackers open on esokongan-terengganu; existing codes unchanged
+        const { abbreviateType, buildFolderSlug, taskBaseFor, TYPE_ABBR } = require(path.join(__dirname, 'redmine-sync.js'));
+        const ab = t => { const r = abbreviateType(t); return r.abbr + '|' + r.bracket; };
+        check('(m1) eSOKONGAN-CR → EC', ab('eSOKONGAN-CR') === 'EC|', ab('eSOKONGAN-CR'));
+        check('(m2) eSOKONGAN_NR → EN', ab('eSOKONGAN_NR') === 'EN|', ab('eSOKONGAN_NR'));
+        check('(m3) SUB-CR → SC', ab('SUB-CR') === 'SC|', ab('SUB-CR'));
+        check('(m4) existing codes unchanged (ES · II+bracket · DP+bracket · AH · RQ)',
+            ab('eSOKONGAN') === 'ES|' && ab('Internal Issue (PROD)') === 'II|(PROD)' && ab('Internal Issue (Permanent Fix)') === 'II|(PERMANENT FIX)'
+            && ab('Data Patching (PROD)') === 'DP|(PROD)' && ab('Adhoc') === 'AH|' && ab('Requirement') === 'RQ|', '');
+        check('(m5) unknown tracker still falls back to its own name', ab('QA') === 'QA|' && ab('eSOKONGAN-PERAK') === 'ESOKONGAN-PERAK|' && ab('') === 'UNKNOWN|', ab('eSOKONGAN-PERAK'));
+        const codes = Object.values(TYPE_ABBR);
+        check('(m6) no two trackers share a code', new Set(codes).size === codes.length, codes.join(','));
+        const slug = buildFolderSlug({ id: 211093, subject: 'PSBS - Tambah medan [STOPPER]', description: '' }, { prefix: 'ESOKONGAN-CR', number: '211093' });
+        check('(m7) Terengganu CR folder slug is short', slug === 'EC #211093 - PSBS - Tambah medan [STOPPER]', slug);
+        const mlk = buildFolderSlug({ id: 282442, subject: 'Sokongan > Papar ralat', description: '' }, { prefix: 'ESOKONGAN', number: '282442' });
+        check('(m8) Melaka eSOKONGAN folder slug unchanged', mlk === 'ES #282442 - Sokongan - Papar ralat', mlk);
+        const base = p => path.basename(taskBaseFor({ project: { name: p } }));
+        check('(m9) routing untouched: TRG projects → Terengganu, Melaka + unknown → Melaka',
+            base('eSOKONGAN TERENGGANU') === 'Terengganu' && base('TRG_03_Pelupusan') === 'Terengganu'
+            && base('eSOKONGAN MELAKA') === 'Melaka' && base('MLK_03_Pelupusan') === 'Melaka' && path.basename(taskBaseFor(null)) === 'Melaka', base('eSOKONGAN TERENGGANU'));
+    }
+
     let failed = 0;
     for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.name + (x.pass ? '' : ' → ' + x.detail)); }
     console.log('\nredmine-sync.eval: ' + (results.length - failed) + '/' + results.length + ' green');
