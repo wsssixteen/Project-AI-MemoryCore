@@ -9,7 +9,7 @@
 - **Spec changes named**: "save the quest" now = persist + Redmine-picked stage (was persist only) · Phase 2 now needs Redmine closed (was local status only).
 - **Worktree**: its git link had been pruned while idle (branch merged). Re-attached at `f98bd868`, fast-forwarded, built there. Forge birth commit went straight to main (`a78885ea`).
 - **Slip caught at close**: my trigger text put a colon + space inside the close-phase description, an unquoted YAML value. The harness dropped the whole description for about 25 minutes. Fixed (`db90cc5a`), eval check 2b added (feature eval now 27/27), full description confirmed back in the skill list. Seven other skills carry the same defect (arabic, confidence-table, evaluator-optimizer, hotfix, multi-dim-evidence, patch-mlk-doc, quest-knowledge-save): logged as a proposal, not fixed.
-- **Open**: proposal A2 (refusal inside `quest/archive-quest.js`, blocked by its quarantined eval) · proposal A1 (lock a live session's worktree) · proposal A1 (skill-header lint + the 7 headers) · PRBB/2026/2 still Baru on PROD, variable add not verified.
+- **Open**: proposal A2 (refusal inside `quest/archive-quest.js`; its eval runs 20/20, so it can be built once miya rules) · proposal A1 (lock a live session's worktree) · proposal A1 (skill-header lint + the 7 headers) · PRBB/2026/2 still Baru on PROD, variable add not verified.
 
 **Last Activity**: 2026-10-04 17:40 — #256334 (PDBB CR) Phase 2 re-run and ARCHIVED · Redmine Closed (released PROD 1.8.0 on 2026-09-30) · Domain Expansion run.
 
