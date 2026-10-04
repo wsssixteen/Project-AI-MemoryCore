@@ -1,6 +1,16 @@
 # Current Session
 
 **Last Activity**: 2026-10-04 17:10 — #282442 rework closed and ARCHIVED: `dcd4eab561` + `df981502a4` on `mlk/esokongan/282442`, int-env `29440f665b`, MLIT pass (miya 14:44), Redmine Resolved to Nurhafizah Hasan (miya 15:26, video attached). New: `quest/local-test-prep.js` + gate v3. Domain Expansion run.
+**Last Activity**: 2026-10-02 18:30 — ADHOC-PLP-2026-1: AWAM `plpMaklumatUrusan.xhtml` proven dead (0 of 19 Melaka urusan tab lists) · knowledge in JSF-WIRING.md · adhoc saved 28/28 + archived · DE.
+
+## Session Recap (2026-10-02, worktree pelupusan-template-verify-fe1bef, session 10)
+- **Ask**: where is `plpMaklumatUrusan.xhtml` in AWAM and how to navigate to it; then final dead-file verification; then save, archive, DE, brief.
+- **Done**: AWAM tab pages come from `etanah-awam\src\main\resources\provider\MLK\<Modul>_Provider.xls` sheet "Tab Rules" (`AwamRuleEngine.buildTabRules`) or hardcoded `BaseAwamTabForm` tabs. The file is in 0 of 30 provider sheets, 0 source refs, 0 hardcoded tabs, yet exists on master/int-env/stag-env. "Maklumat Urusan" tab = PDBB `plpMaklumatPermit.xhtml`.
+- **Saved**: JSF-WIRING.md § Where tab.tabUrl comes from (+ tab-2 file per urusan table) · ADHOC-REGISTER A47 · qa_doc `projects/coding-projects/archive/ADHOC-PLP-2026-1/` · Task folder `Archive\263. AH - CODE - AWAM - plpMaklumatUrusan fail mati`.
+- **Slips**: scope claim "Only PDBB has" without a count (gate caught, fixed to 1 of 19).
+- **Open**: `plpMaklumatTanahDipohon.xhtml` looks equally unused, not verified.
+
+**Last Activity (prev)**: 2026-10-02 18:20 — #244600 Kertas versi fix (our side only) committed d61fc2e611 on mlk/qa/244600v3 · int-env 5df44b12cf · miya posted Resolved to Fizah · Phase 1 CLOSED · #275043 split to Ammar · handoff-load feature built · DE.
 
 ## Session Recap (2026-10-04, worktree redmine-282442-9258e6, #282442 rework cycle 2 → archive)
 - **Ask**: retrieve #282442, start the quest again, audit why the previous fix failed → fix → deploy internal → Redmine handover → save + close quest → Domain Expansion.
@@ -73,3 +83,10 @@
 - **Open**: Mira's verify on internal · staging server deploy on miya's word · Phase 2 after the pass.
 
 **Last Activity**: 2026-10-04 16:45 — #244600 rework cycle 1 shipped to internal and handed to BA (`mlk/qa/244600v3` `f14c58ae64`, int-env `fbbbaf7bc6`); miya posted the notes on #244600 and #275043; quest saved; DE.
+## Session Recap (2026-10-02, worktree lucid-lalande-fcdde1, #277706)
+- **Ask**: retrieve #277706, quest start, prepare Redmine reply to the SPOC question (Amirah passed only note-15 no. 1 to us).
+- **Done**: stg2 `01PRBB2026000051` (38399) + Tanah Milik `02PRBB2026000020` + 2 Ganti Hari apps: Tambah Kuantiti uses Ganti Hari tables. Jenis `umm_p_permit_lesen.mklmt_tmbhn.integerJenisPermohonan`=8 · No Permit `noPermitLesenAsal` · Kuantiti Tambahan `kuantitiTambahanDipohon`+unit · Taraf Tanah `umm_p_permohonan_tnh.kelas_tnh_id` · Maklumat Tanah `umm_p_permohonan_tnh` cols · ID Hakmilik `mklmt_tmbhn.idHkmlk`. miya posted (greeting Mira, assignee back to her, 2 closing lines cut). Quest archived (`projects/coding-projects/archive/QA-277706/`, Task folder `Archive\259. RQ #277706 ...`). ProTime title `PRBB Tambah Kuantiti table SPOC`.
+- **Knowledge**: SPOC-COUNTER.md §4c · urusan/PRBB-TICKETS.md note · TEST-PERMOHONAN-INDEX PRBB Tambah Kuantiti section.
+- **Learned (miya)**: an extra item beyond the ask is NOT a slip but must be marked "➕ Extra, not asked" (memory `feedback_flag_unasked_additions`) · dev answer stops after the last field, greet the BA who routed it (speech collection entry 10).
+- **Open**: bounty proposal (marker rule into reply-shape-spec) awaits weekly ruling · direct-kaunter Tambah Kuantiti seed gap parked (BA says direct kaunter not allowed).
+**Last Activity**: 2026-10-02 18:15 — #246964 takeover of Ammar's fix: review, revert his Java on his branch, merged int-env 803e4907bd + stag-env 5110004a80, miya posted handover, Phase 2 archived, DE.

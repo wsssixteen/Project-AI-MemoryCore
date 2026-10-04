@@ -106,3 +106,12 @@
 | A3 debugging | The read-only verify (every kod-subquery resolves to 1, or 0 when created earlier) + rowcount-per-statement runner meant zero surprises on a 168-statement write; worth reusing for every multi-row patch. |
 | A4 etanah issue-solving | PRBB v8 (PMBTK/PYMBTK/SMBTK) and PDBB were live on the shared engine while stg1 had no tugasan rows — any BA test on stg1 would have looked like a code bug. |
 | A5 sweep | ⏭ no multi-ticket sweep this session. |
+## Session 12 — ADHOC-PLP-2026-1 (AWAM plpMaklumatUrusan dead file)
+
+| Axis | Instance |
+|---|---|
+| A1 agentic | ⏭ no subagents used; a single-file lookup stayed inline, which was correct for its size |
+| A2 quest workflow | adhoc-save + archive ran in one pass, audit 28/28 first try; the qa_doc went straight to archive/ and notes.js found it there |
+| A3 debugging | First grep (Grep tool, name only) returned 0 and could have been read as "file missing"; Glob on the filename found it. Positive controls (plpMaklumatPemohon, awamSemakanTab) made every 0 trustworthy |
+| A4 etanah | New fact: AWAM tab pages come from provider/<STATE>/<Modul>_Provider.xls sheet 2, invisible to grep/codegraph. Proposal logged: build an urusan→tab→xhtml JSON index |
+| A5 sweep | Dead-file check swept 30 xls × 2 sheets + 4 repos + fragment builds + hardcoded tabs; one side find (plpMaklumatTanahDipohon.xhtml) noted, not verified |
