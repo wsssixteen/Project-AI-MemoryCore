@@ -91,7 +91,8 @@ Measured boot on the main checkout, scripts run one after another: **61.4 s → 
 | Hooks run from the MAIN checkout | In a worktree session `CLAUDE_PROJECT_DIR` resolved to main (the old compile gate fired while my worktree held the new one). A hook change is live only after `main` is fast-forwarded. |
 | Cold syntax cache | First boot after many hook files change re-checks them (~13–18 s for all 138). Progress is saved every 20 files. |
 | Cleanup report is the previous run's | Boot shows the last finished run's headlines; a brand-new checkout shows none on its first boot. |
-| `lib/hook-runtime.eval.js` writes fixture rows into the real telemetry | `crash-child` / `does-not-exist` show up in the observatory's hook-errors finding. Not fixed. |
+| `lib/hook-runtime.eval.js` wrote fixture rows into the real telemetry | FIXED 2026-10-05: the eval uses a temp telemetry folder (13 of 13). Old fixture rows (`crash-child` / `does-not-exist`) stay in the monthly file until it rotates. |
+| The eval battery has one flat 120 s limit and prints a timeout as FAIL (exit null) | The cleanup eval (178 s) is quarantined because of it; `domain/release-mlk-plp/discover.eval.js` also ends with exit null. No per-eval duration is logged. Repair not built. |
 | Timings | One run each, on this laptop, scripts one after another. Whether Claude Code runs startup hooks side by side is NOT verified. |
 | Full eval battery | Only the affected evals were run before the merge. See §9 for the verification run. |
 
@@ -119,7 +120,17 @@ Mechanical checks, run by Ruri on the MAIN checkout (where hooks execute):
 | Syntax check at that real boot | 0 checked · 136 cached · 0 broken · 211 ms (`domain/hook-syntax-check/log.jsonl`) |
 | Startup scripts in 3 real boots since the cut, summed averages | about 12.9 s (same 10 scripts averaged 82 s over the 7 days before) |
 | Stale references to the two moved hook paths | one, `Feature/Domain-Expansion/expansion-protocol.md:61` (fixed in the same commit as this file) |
-| Full eval battery (`node lib/eval-battery.js` on main) | see the row appended below |
+| Full eval battery (`node lib/eval-battery.js` on main, 01:49) | **129 of 139 green**, 5 quarantined, 10 failing. Breakdown in the next table. |
+
+The 10 failing evals of the 01:49 battery run:
+
+| Eval | Why | Caused by this session? |
+|---|---|---|
+| `domain/bpmn-check/eval.js` · `domain/deploy/eval-deploy-check.js` · `domain/release-mlk-plp/discover.eval.js` · `domain/release-mlk-plp/eval.js` · `domain/sweep/eval.js` · `lib/adhoc-save-audit.eval.js` | the same six failed in all three battery runs of 2026-10-03 (`system/telemetry/eval-battery.jsonl`) | no, older; not investigated here |
+| `domain/arabic-nudge/arabic-nudge.eval.js` | F2 compares a UTC date with a local date; fails 00:00–08:00 local | no, known |
+| `domain/observatory/observatory.eval.js` | 57 of 59. One check recounts hook rows while rows are still being appended (diff 4,173); one check wants a cold snapshot under 5,000 ms and took 6,311 ms. Both ran while the battery and about 15 agents were running. It also failed once on 2026-10-03 13:05 and passed twice after. | not confirmed either way; re-run it on an idle machine |
+| `lib/hook-runtime.eval.js` | 10 of 12. F3 and F4 assert "exactly one new row" in the REAL telemetry file; a live hook appended a row at the same moment. The wrapper itself wrote the right rows. | test design (older), exposed tonight. **REPAIRED**: the eval now points the wrapper at a temp telemetry folder; 13 of 13, four runs in a row, and it no longer writes fixture rows into the real telemetry (new check F6). |
+| `domain/worktree-cleanup-boot/worktree-cleanup-boot.eval.js` | 63 of 63 when run alone, but it takes 178 s and the battery kills every eval at 120 s. It entered the battery when the hook was installed into `domain/` (the battery does not scan `.claude/hooks/`). | **yes, a side effect of the install.** Quarantined with the reason (`system/eval-quarantine.jsonl`, class SLOW-NOT-BROKEN) so the battery reports it and does not count it green. Repair = a per-eval time budget in `lib/eval-battery.js`, or faster fixtures. |
 
 Independent runs (Workflow tool, read-only):
 
