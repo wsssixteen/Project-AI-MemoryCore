@@ -3,6 +3,9 @@
  *
  * Power: domain/predicate-box/
  *
+ * v4.1 (2026-10-04): block text reworded. It said logging is not optional for a
+ *   code fix, which contradicted v4. Wording only; every verdict unchanged.
+ *
  * v4 (2026-10-04): confidence route. The probe requirement also passes when the
  *   LAST fix confidence the session states (assistant text or a .md it wrote,
  *   the word confidence then a number and the percent sign on one line) is 80 or
@@ -242,8 +245,8 @@ function probeVerdict(t) {
 }
 
 const PROBE_REASON = [
-  'BLOCKED — probe-matrix: an etanah .java file was edited and the session carries NO probe decision.',
-  '   Logging is not optional for a code fix (quest SKILL.md EXHAUSTIVE-BRANCH LOGGING, quest-protocol.md Ritual 6).',
+  'BLOCKED — probe-matrix: an etanah .java file was edited with no stated fix confidence of eighty percent or more and NO probe plan.',
+  '   Loggers are for an uncertain diagnosis (quest SKILL.md EXHAUSTIVE-BRANCH LOGGING, quest-protocol.md Ritual 6).',
   '   Emit the PROBE COVERAGE MATRIX and place the QA<num>-PROBE loggers it lists in the SAME build:',
   '   | # | Candidate writer (full address) | Probe placed? | If silent, what it proves |',
   '   At least 3 rows (every path that could produce the value, not only the favourite), and one row marked FALLBACK:',
