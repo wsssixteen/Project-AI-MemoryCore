@@ -273,5 +273,3 @@ WhatsApp answers to a BA follow the same rule: answer the asked question in 1-3 
 
 **Before writing ANY Redmine note: run `node quest/redmine-sync.js <num>` and greet the live assignee.**
 Related: [[feedback_cross_module_handoff_artifact]] · [[feedback_ba_facing_reply_plain]].
-
-**Note on a colleague's ticket (2026-10-04, #275043, miya angry):** say only what OUR ticket covers ("ticket 244600 already covers issue 1"). No verdict on their ticket ("No new fix is needed", "All 3 issues are fixed"). No asking their BA to verify or test anything. Tell the dev plainly which branches and commits he can refer to, to create the ticket branch for release later.

@@ -2,8 +2,6 @@
 
 
 ## Feedback
-- [no-new-destructive-call-without-analog](feedback_no_new_destructive_call_without_analog.md) — 🚨 a fix never adds a delete/cleanup the system does not already do; grep callers + query the data first; never offer an option I know is wrong
-- [logger-three-layers](feedback_logger_three_layers.md) — 🚨 before any test: loggers for EVERY scenario, 3 layers each (point · outer fallback · database evidence)
 - [delegated-quest-learn-before-close](feedback_delegated_quest_learn_before_close.md) — 🚨 colleague-held quest stays delegated while open on Redmine; Closed → /learn-from-fix audit, then close
 - [no-builtin-browser](feedback_no_builtin_browser.md) — 🚨 BANNED: built-in browser (mcp__Claude_Browser__*) for any web task; use Claude in Chrome
 - [junior-handover-hints](feedback_junior_handover_hints.md) — 🚨 junior handover = hints + where to look, never the finished script or diff
