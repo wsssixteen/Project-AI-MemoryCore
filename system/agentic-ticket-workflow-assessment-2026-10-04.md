@@ -37,6 +37,7 @@ State resolution from the Task folder or permohonan id · the Scout, Recon, Rubr
 
 What worked and must not be touched: the falsifier ledger at commit (it stopped the rework commit until rows 2 and 3 carried `RAN:` evidence) · the compile gate · probes shown in the browser console · miya's `[risk-ok]` as the only way past the local-test row.
 
+<<<<<<< HEAD
 ## Session: Terengganu adhoc day (ADHOC-PLPS-2026-1, ADHOC-MLPS-2026-2), 2026-10-04 afternoon
 
 | Axis | What the session showed | Instance |
@@ -49,3 +50,16 @@ What worked and must not be touched: the falsifier ledger at commit (it stopped 
 
 Other measured points: adhoc save audit needed `--state terengganu` by hand (first run compared against Melaka row A1); adhoc id `ADHOC-MLPS-2026-1` was already used by an archived Melaka adhoc and had to be renamed; 2 ProTime titles needed 2 corrections (no issue word, then no object word).
 Proposals logged: A1, A2, A3, A4, A5 (one each, 2026-10-04).
+=======
+## Session: ADHOC-PRBB-2026-9 → #282924 (2026-10-02 → 10-04)
+
+| Axis | What the session showed (instance) |
+|---|---|
+| A1 agentic system | No fan-out used; the whole quest ran inline on banked adhoc findings. The session worktree lost its git link mid-session (`fatal: not a git repository ... worktrees/melaka-pembatalan-ralat-f283f4`), so two edits (redmine-people.js, redmine-sync hookup) sat stranded for two days until salvaged by hand through a temp worktree. |
+| A2 quest workflow | Adhoc → ticket promotion worked: A44 matched, no re-Scout, Rubric in one pass. The Rubric caught C1 → C2 from BA's verbatim words. After the nod the workflow over-demanded: local test hand-back + probe matrix (Stop hook) + fix photo (Stop hook) on an 8-line 85% fix. Cost: 2 angry rounds. Fixed same day: predicate-box v4, fix-photo v2. |
+| A3 debugging | No debugging. Confidence 85% held; fix worked first deploy. The unread 15% (draft resume path) was never traced, it was accepted as a risk by miya. |
+| A4 etanah issue-solving | Analog in the same file found in minutes (`URUSAN_MAXIMUM_ONE_HAKMILIK`, PLTP/PSBS message). Multi-state gate (`isMelaka()`) was added from the in-file convention. Kaunter route found by one PROD census (first tugasan PK). |
+| A5 sweep / file sweep | Both BA images opened and echoed. Video read by contact sheet (36 frames) which showed select-all was NOT in the video; asked instead of assuming. The pass note assumed "internal & staging" with no evidence of which server he deployed. |
+
+Failure classes: (1) gate-over-demand after an agreed fix · (2) fabricated evidence artifact (marked BA before-screenshot as fix photo) · (3) env assumed in a BA note · (4) stranded worktree edits · (5) `de-run-verify` self-retrigger loop (6 re-fires).
+>>>>>>> origin/main

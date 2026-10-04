@@ -46,3 +46,7 @@ description: BPMN change checklist for eTanah Flowable models — MANDATORY befo
 - Declaring a BPMN fix "complete" while any BA-named flow segment is unverified (J1).
 - Choosing a routing variable without live `act_hi_varinst` proof (J2).
 - Handing a test permohonan without J9's health check.
+
+## Memory rules for this workflow (read when this skill fires — added 2026-10-04, additive)
+
+- `.claude/auto-memory/feedback_flowable_node_edge_trace.md` — trace real sequence flows before picking a node, Flowable admin app (diagram + variable edit), BPMN source + export recipe, Petaling archive

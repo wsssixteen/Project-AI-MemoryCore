@@ -66,3 +66,7 @@ goal: every adhoc save round ends with all 4 save-set parts present, consistent,
 goal_signal: adhoc-save-audit exits 0 for the saved ADHOC id in the same turn
 goal_signal_regex: adhoc saved → ADHOC-[A-Z0-9-]+: audit (\d+)/\1 PASS
 retention: keep
+
+## Memory rules for this workflow (read when this skill fires — added 2026-10-04, additive)
+
+- `.claude/auto-memory/feedback_adhoc_scaffold_delegate.md` — scaffold as a quest, full workflow, ENV from URL host first, ADHOC-TRIAGE, reread once it has a Redmine number

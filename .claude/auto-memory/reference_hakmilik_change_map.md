@@ -79,4 +79,4 @@ Set the unit by kod, never by hardcoded number (codes are per-schema):
 - Increasing "luas in hektar" = only rows whose `unit_luas_id` = the Hektar code (2531 on STG2). Rows in Meter Persegi are a different unit — surface the mismatch, don't silently convert.
 - Environment target follows [[feedback_staging_schema_stg2]] live pointer (STG2 as of 2026-08-10), not [[feedback_uat_fat_environments]]'s "mlit is PRIMARY".
 
-Related: [[feedback_never_hand_miya_a_query]] · [[feedback_staging_schema_stg2]]
+Related: [[feedback_readable_safe_script]] · [[feedback_staging_schema_stg2]]

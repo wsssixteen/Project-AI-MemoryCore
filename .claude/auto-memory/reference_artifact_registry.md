@@ -20,7 +20,7 @@ Every artifact published under miya's claude.ai account, newest first. Snapshot 
 | Alatas Critique Cards | https://claude.ai/artifact/8bBujkgMDNzqXe96zGQy1M | 2026-09-20 | Personal |
 | Karusel Semak Fakta: Perhambaan & Melayu Mundur | https://claude.ai/artifact/BupjjpicsLGmmJQgeCYqVo | 2026-09-20 | Personal |
 | Fact Check: Pre-1874 Malay Slavery, Feudal Oppression & 'Malay Backwardness' | https://claude.ai/artifact/Hso8chWfj4EqmeGQR5x1YM | 2026-09-19 | Personal |
-| Ergonomic Awareness | https://claude.ai/artifact/RRWztYYAqBtYQ8cHn1EcW9 | 2026-08-28 | See [[mas-ergonomics-animation]] |
+| Ergonomic Awareness | https://claude.ai/artifact/RRWztYYAqBtYQ8cHn1EcW9 | 2026-08-28 | See [[feedback_verify_generated_art_externally]] |
 | etanah learn | https://claude.ai/artifact/XTdy7A9vADR5gvPD5iKVzX | 2026-08-26 | etanah |
 | Release Gate Proof | https://claude.ai/artifact/6bQGUck9dkNq72SriaoQFt | 2026-08-24 | Release tooling |
 | eTanah Emel & Notifikasi | https://claude.ai/artifact/3muLMjUEXsn5AEYaGF5UqD | 2026-08-24 | etanah |

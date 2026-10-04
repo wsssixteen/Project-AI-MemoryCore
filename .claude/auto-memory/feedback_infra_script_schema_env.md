@@ -35,4 +35,4 @@ metadata:
 
 **Why:** the two rages reconcile — #275847 was fury at EXCESS (header + table-desc + column-mapping + run-order piled together); #277291 confirms the CONCISE header (Ticket/Env/Permohonan/Fix) IS wanted. The env/ticket also go in the chat handoff message ([[feedback_prod_patch_infra_handoff]]); the file additionally carries the concise header.
 
-Canonical home: `.claude/skills/script-check/SKILL.md`. Related: [[feedback_script_check_before_patch]] · [[feedback_readable_safe_script]] · [[feedback_script_file_naming]].
+Canonical home: `.claude/skills/script-check/SKILL.md`. Related: [[feedback_readable_safe_script]] · [[feedback_readable_safe_script]] · [[feedback_script_file_naming]].

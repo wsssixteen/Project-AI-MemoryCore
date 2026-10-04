@@ -704,4 +704,13 @@ The ordered `pull → checkout -b → stage → commit → push → /verify → 
 
 *2026-10-03 (quest-workflow audit, proposals P5 + P6) — Live-DB row and the canonical task-state SQL bullet name the resolved state's `db.mcp[env]` / `db.schemas[env]` (the two retired UAT / FAT tool names dropped); the two BPMN rows put the general form (the state's process definition via its `index.md`, registry `bpmn.prefix`) in front of the Melaka file name; the two Always-tier cells add the absence clause and `STATE-FACTS.md`. Spec-preservation: every Melaka literal, the three BPMN classifications, the six disambiguation sources, the 50-line read rule, the per-file Loaded proof, the reachability fail-check and the compliance exception are kept word for word. Dropped: only the two tool names that no longer exist.*
 
+## Memory rules for this workflow (read when this skill fires — added 2026-10-04, additive)
+
+- `.claude/auto-memory/feedback_simplify_and_reference.md` — working analog, lifecycle first on null bugs, loggers + fallback probes, safety gate before test, bundle not defer, run fully
+- `.claude/auto-memory/feedback_knowledgebase_during_debug.md` — bank knowledge, banked-knowledge change-check, archives, video URL bar, ticket TYPE
+- `.claude/auto-memory/feedback_pengguna_semasa.md` — permohonan id + live holder
+- `.claude/auto-memory/feedback_awam_test_scenario_entry_key.md` — AWAM entry key, portal logins, kaunter vs AWAM, URL host = WAR
+- `.claude/auto-memory/feedback_tasks_folder_format.md` — Task folder shape and what goes in it
+- `.claude/auto-memory/feedback_state_aware_knowledge_load.md` · `reference_perak_codev_scope.md` — non-Melaka states
+
 *2026-10-04 — falsifier ledger per みや (#244600): Rubric row (e) now also writes each falsifier as a ledger row; new bullets "Falsifier ledger" (statuses, design-changed-after-Rubric rewrite, the three enforcement points, no skip token) and "Straight to Apply" (pointer to quest-protocol's 2026-05-14 autonomous-flow rule, which this loaded file did not carry); the never-commit line names its gate. Spec-preservation: Rubric rows a-h, Logger choice, Exhaustive-branch logging and the never-commit rule are unchanged in meaning; additive. Fire + effect check: `domain/falsifier-ran-check/check.eval.js` 45/45.*

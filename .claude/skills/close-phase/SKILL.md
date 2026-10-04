@@ -126,4 +126,10 @@ Acceptance: `bulk.js --debt` prints `0 unharvested` and the boot surfacer shows 
 
 *2026-10-04 — falsifier ledger per みや (#244600): Phase 1 step 1 now RUNS `domain/falsifier-ran-check/check.js` (ledger + local test) and pastes the ledger. Spec-preservation: the "ask Tested locally? / do not proceed until confirmed" spec is kept inside the new step; nothing dropped. Fire + effect check: `domain/falsifier-ran-check/check.eval.js` 45/45 (replay case 01-03, hook 40, note 44).*
 
+## Memory rules for this workflow (read when this skill fires — added 2026-10-04, additive)
+
+- `.claude/auto-memory/feedback_etanah_git_separate_clone.md` — separate clone, ticket branch first, hotfix off master, `--no-ff`, no name in refs, worktree cleanup, stash naming
+- `.claude/auto-memory/feedback_commit_deploy_runbook.md` — commit + deploy ceremony, commit subject shape, commit message row in the hand-back table, recheck before push
+- `.claude/auto-memory/feedback_no_extra_comments.md` — code comment rules
+
 *2026-10-03 — Terengganu active per みや: Phase 1 step 2/4/5 made state-neutral (`<trunk>` + `<ticket-branch>` from `node lib/states.js show <state>`) + the work-clone rule (`work_clone_root` → ref-moving git only in the work clone). Spec-preservation: step ORDER and every ban untouched; the Melaka values `mlk/master` / `mlk/qa/<num>` stay visible as the "Melaka:" example on each line.*

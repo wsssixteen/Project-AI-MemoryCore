@@ -32,4 +32,4 @@ metadata:
 I edited `CommonSemakanPanelForm.java` myself and started a deploy, THEN discovered: arkanharyo had already committed the fix (`4e4a052907`, released as common `1.3.10-MLK` on `mlk/master`), but int-env's pelupusan pins `1.3.9-MLK.beta.patch` off `mlk/beta`, and `mlk/beta` had **797 commits master lacked** (#276465/#264470/#268928…). Bumping int-env to 1.3.10-MLK would have DROPPED all 797. The fix was on the wrong lane for int-env. Every fact was one `git` query away at Phase 0 — running the triage first turns this whole blocker into a one-line "flag common to put it on beta."
 
 ## How to apply
-Common scope detected (fix site under `etanah-common\`) → emit the 5 triage answers as a table BEFORE any common edit or deploy card. Related: [[feedback_module_edit_boundary]] · [[feedback_cross_module_alert_at_intake]] · deploy skill §4b.
+Common scope detected (fix site under `etanah-common\`) → emit the 5 triage answers as a table BEFORE any common edit or deploy card. Related: [[feedback_module_edit_boundary]] · [[feedback_module_edit_boundary]] · deploy skill §4b.

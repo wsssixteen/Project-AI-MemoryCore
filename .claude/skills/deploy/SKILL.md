@@ -484,3 +484,8 @@ Built 2026-07-27 during #271721 (AWAM PRBB jrxml). No documented AWAM/MLIT deplo
 anywhere in MemoryCore, so the route was re-derived from git history mid-session — and the
 derivation missed `int-env` entirely because the Redmine ticket was never read. This skill exists
 so that never repeats.
+
+## Memory rules for this workflow (read when this skill fires — added 2026-10-04, additive)
+
+- `.claude/auto-memory/feedback_commit_deploy_runbook.md` — commit + deploy ceremony, subject shape, staging implies internal, int-env conflicts, probes local only, servers, console
+- `.claude/auto-memory/feedback_etanah_git_separate_clone.md` — separate clone, ticket branch first, hotfix off master, `--no-ff`, worktree cleanup, stash naming

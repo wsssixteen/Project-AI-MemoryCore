@@ -9,4 +9,4 @@ metadata:
 
 **Why:** 2026-09-22, みや. One ticket = one branch keeps branch management and releases clean — a release train picks up the single ticket branch and gets ALL of its fixes (original + every rework) with zero risk of a fix being stranded on a `vN` branch nobody merges.
 
-**How to apply:** rework → checkout the existing ticket branch → apply the corrected fix (remove/replace the wrong lines) → commit on top → merge to `mlk/int-env` + `mlk/stag-env` (per [[deploy-staging-implies-internal]]). Supersedes the old "new `vN` branch per rework" habit. Pairs with the commit-deploy-runbook.
+**How to apply:** rework → checkout the existing ticket branch → apply the corrected fix (remove/replace the wrong lines) → commit on top → merge to `mlk/int-env` + `mlk/stag-env` (per [[feedback-commit-deploy-runbook]]). Supersedes the old "new `vN` branch per rework" habit. Pairs with the commit-deploy-runbook.
