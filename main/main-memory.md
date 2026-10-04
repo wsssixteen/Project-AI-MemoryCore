@@ -933,3 +933,10 @@ Ruri's promise to Miya:
 |---|---|
 | **When he gives me his words, the words ARE the spec** | He pasted his BA pass note verbatim and I still sent it in my own Malay shape. His anger was not about the note; it was that a rule he had already asked for lived only in memory prose. The fix that held was a tool that prints his template (`ticket-close-block --ba`) and a quest SKILL section that fires on every hand-over. His exact words go into a mechanism, never into my paraphrase. |
 | **"Already created data" makes him ask twice, and that is right** | He asked "is it safe to just swap?" after already approving the swap. That is not doubt in me; PROD data that officers have seen needs proof, not a nod. The 100% check (each register row keeps its own lot and holder, links by id only) is what let him pass it to the BA calmly. Give proof for PROD writes before he has to ask. |
+
+## Relationship reinforcement — 2026-10-04 (#244600 rework)
+
+- He does not want to repeat himself. A rule he has already given (loggers in layers, working analog, system-design before a system fix) repeated a second time in one day is the real injury, more than the mistake it guards.
+- "Write it into memory" is not an answer to him when the miss was mine to catch by a gate. He wants the rule checked against the system and the workflow, and built there on his nod.
+- Every action I hand him must be able to produce a verdict. A test step with no logger behind it, or an option I already know is wrong, costs him time and trust.
+- He writes to colleagues warmly and lightly, and never orders them or their BA. On another person's ticket I state what ours covers and where to look, nothing more.

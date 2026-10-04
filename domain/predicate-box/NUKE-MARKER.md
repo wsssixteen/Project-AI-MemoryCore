@@ -38,12 +38,20 @@ git show 2750811 --stat
 git push origin main
 ```
 
+## Roll back v3 only (probe decision, 2026-10-04)
+
+Keeps the Predicate Diagram gate, drops the probe requirement:
+
+```bash
+git checkout 7da9c1f1 -- domain/predicate-box/predicate-box.discipline.hook.js domain/predicate-box/eval.js domain/predicate-box/README.md
+```
+
 ## What each file does
 
 | File | Purpose | Blast radius if kept broken |
 |---|---|---|
 | `predicate-box.discipline.hook.js` | Stop hook — HARD-BLOCKS ending a turn after an etanah code edit with fix-intent unless an ASSUMPTION/FALSIFIER (predicate) box was emitted; `stop_hook_active` recursion guard | Blocks Ruri's turn until she emits the box — worst case: false-positive blocks on non-fix etanah edits (recursion guard prevents infinite block) |
-| `eval.js` | 7/7 fixture eval | No runtime effect — safe to keep even if hook is nuked |
+| `eval.js` | 36/36 fixture eval (1-7 Predicate Diagram, 8-36 probe decision) | No runtime effect — safe to keep even if hook is nuked |
 | `README.md` | Feature contract | No runtime effect |
 | `log.jsonl` | Fire history (blocked / passed / bypassed) | No runtime effect — retirement evidence |
 | `.claude/settings.json` entry | Registers the hook | THE trigger point — remove this and the hook is dormant even if files remain |

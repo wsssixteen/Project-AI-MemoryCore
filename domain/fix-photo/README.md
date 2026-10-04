@@ -60,3 +60,7 @@ retention: rotate monthly
 | 29 | wrong folder, wrong name, date/email in label | fixtures M09 M10 M11 |
 | 30 | re-run overwrites (idempotent) · webp source · logging | fixtures M12 M16 M17 |
 | 31 | the line mark.py prints satisfies the gate end to end | fixture E01 |
+
+## v2 (2026-10-04, #282924)
+
+The gate fires only when miya asked for a fix photo in his own words this session. A fix photo is a real after-fix screen (a frame of his test video or a screenshot he gave), never BA's before-screenshot with a box drawn on it. Why: an unrequested marked-up BA screenshot was created for #282924 and read as a fake screenshot of the fix. Eval 46/46.

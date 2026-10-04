@@ -1,5 +1,21 @@
 # Current Session
 
+**Last Activity**: 2026-10-04 16:45 — #244600 rework cycle 1 shipped to internal and handed to BA (`mlk/qa/244600v3` `f14c58ae64`, int-env `fbbbaf7bc6`); miya posted the notes on #244600 and #275043; quest saved; DE.
+
+## Session Recap (2026-10-04, worktree permit-c02-2026-3-portal-362d6d, #244600 rework)
+- **Ask**: retrieve #244600 (back as Rework), audit why the 2026-10-02 fix failed, rebuild it, test today; check overlap with Ammar's #275043; Redmine handover; note for #275043; save quest; DE.
+- **Why the first fix failed**: it compared raw document XML. Word rewrites the file on every close, so "no edit" always looked changed. My own Rubric of 2026-10-01 had written that falsifier and it was never run.
+- **Fix that shipped**: `onRefreshDokumen()` in `BasePelupusanDokumenForm.java` compares paragraph text + run format (docx4j) between the new draft and the previous versi. Same → draft row deleted, previous versi active again. Different → draft finalised. Page-load saves in place. Commits `0d20ccc8b4` + `f14c58ae64` on `mlk/qa/244600v3`, int-env merge `fbbbaf7bc6`. Not on stag-env or master.
+- **Test (miya, MLIT, PTMLK/02/L/PLTP/2026/7, faridmajid@melaka.gov.my, PRMMKNPDT)**: no-edit close ×3 same versi · words +1 · one space +1 (intended) · bold +1 · page load in place. Untested: Simpan, Selesai, Jana Semula, Surat screen, highlight-only in the app.
+- **Path to the test**: local JBoss was too slow, Eclipse could not compile the DOM-based reader (rewrote on docx4j), so the probe build went to internal on miya's `[risk-ok]`, with probe lines shown in the browser console. Server log from infra read once (76 probe lines).
+- **Wrong and removed**: a `DocumentManagementSystemClient.delete()` call on the discarded draft's store file. Failed 3 of 3 on internal (NPE inside etanah-dms). The system never deletes replaced store files; no analog existed. 3 unreferenced files stay on MLIT.
+- **#275043 (Ammar's)**: #244600 covers "Kemaskini without editing" through the shared base class. After PERAKU = Aaron `3aa68917eb` (`mlk/int-env` only). Jana Semula = Aaron `9c07ac4715` (`mlk/internal/275043`). Both conflict with current master. miya posted the note himself.
+- **Redmine**: #244600 Resolved → Nurhafizah Hasan (miya, 07:47Z, 3 videos). #275043 note (miya, 08:15Z). Local block QA-244600 `status=closed closed_cycle2=2026-10-04`.
+- **Slips (9, all in the ledger)**: shipped-untested-fix · probe-coverage-incomplete ×2 · popup-without-context · new-destructive-call-no-analog · claim-without-code-read · bossy-note-on-others-ticket · commit-id-unsearchable · offered a known-wrong option.
+- **System holes found, NOT built** (chip "Close three holes in pre-code-check", needs his click + system-design pass): the pre-code check passes an edit when it cannot read the transcript · no rule for a newly added destructive call · Java edits made by a shell script skip the edit gates (I did this 5 times today).
+- **Memory**: another session consolidated the memory folder in the main checkout (200 → 73 files, uncommitted there). Today's rules were folded into its files: `feedback_simplify_and_reference.md` (no destructive call without analog · loggers every scenario, 3 layers), `feedback_do_dont_ask_answer_literal.md` (popup context first), `feedback_ticket_writing_style.md` (note on a colleague's ticket, searchable commit rows). This branch carries no memory change.
+- **Open**: Fizah's test on internal · stag-env merge on miya's word after the pass · Phase 2 knowledge distill after the pass.
+
 **Last Activity**: 2026-10-04 08:30 — Domain Expansion close of the Terengganu prep session: everything on main, watch rows carried to the main ledger, resume sweep and Redmine reconcile run, verify done. Terengganu is ACTIVE; first ticket can start.
 
 ## Session Recap (2026-10-03, worktree quest-audit-275043-244600-7954c0, Terengganu support prep)
@@ -29,11 +45,3 @@
 
 **Last Activity (prev)**: 2026-10-02 18:20 — #244600 Kertas versi fix (our side only) committed d61fc2e611 on mlk/qa/244600v3 · int-env 5df44b12cf · miya posted Resolved to Fizah · Phase 1 CLOSED · #275043 split to Ammar · handoff-load feature built · DE.
 **Last Activity**: 2026-10-02 18:32 — ADHOC-STG-2026-1 stg1 synced to stg2 (pelupusan reference data, 178 ins / 8 upd, committed) · routine decision parked in todo Q1 · DE.
-
-## Session Recap (2026-10-01→02, main checkout, ADHOC-STG-2026-1)
-- **Ask**: check stg1 and stg2 are both up to date; stg1 to follow stg2 (trigger #274266 PT Tangguh setup).
-- **Found**: both schemas share ONE flowable t_flowable17 (22 MLK_PLP_* same version + md5) · neither login can read the other schema · stg1 missing PDBB urusan (97 rows), PRBB Tambah Kuantiti (38), PT PYSKTPDT/PSKTPDT, PPTPB industri lookups, MCL smkn PLNASAL, AWAM slip params · 3 value diffs (PT PYSTP + PRBB PYRJKBBPTG nama, jns_dok keselamatan ×3).
-- **Done**: generated kod-subquery script from stg2 rows, verified read-only, miya nod, ran on stg1 in ONE transaction (before/after check matched) → COMMIT; re-diff = PLP parity except MCL SPI. Task 255. AH - STG - PLP - stg1 ikut stg2 data rujukan (2. Fix\ADHOC-STG-2026-1.sql + -check.sql). Register A43. Tools in projects/coding-projects/active/ADHOC-STG-2026-1/.
-- **Left out (stg2 ≠ PROD)**: MCL SPI peranan · ind_laporan PLP01 · PLP_BIL_THN_PERINGATAN param — miya's call.
-- **Open**: stg1 cold restart (miya) · todo Q1 🌐 Env row: decide where/when env parity becomes a routine.
-**Last Activity**: 2026-10-02 18:30 — #282442 Pembatalan Jana PRBB: R1 kod pejabat fallback `24c277d683` on `mlk/esokongan/282442`, cherry-picked int-env `495d16fe66`, MLIT tested pass · cross-module-check skill + ownership-input-check gate built · quest saved · DE.

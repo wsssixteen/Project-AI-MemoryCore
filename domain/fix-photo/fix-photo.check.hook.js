@@ -9,6 +9,10 @@
 // ACTION: BLOCK (Stop advisory text never reaches the model, so a block is the only visible form).
 // Bypass: [skip-fix-photo: <reason>] in the CURRENT reply (a "<reason>" placeholder never counts,
 //         so this hook's own help text quoted back cannot disarm it).
+// v2 (2026-10-04, #282924, miya): fires ONLY when miya asked for a fix photo in his own words this
+//   session (fix photo / red box / kotak merah). A fix photo is a REAL after-fix screen (a frame of his
+//   test video or a screenshot he gave), never BA's before-screenshot with a box drawn on it: that reads
+//   as a fake screenshot of the fix. Spec kept: valid-path rules, bypass, block text shape, log rows.
 // Lifecycle: created 2026-09-28 (#256334) — narrow trigger; widen only with confirmed-fire evidence.
 'use strict';
 const fs = require('fs');
@@ -25,6 +29,8 @@ try { const p = Object.values(require(path.join(ROOT, 'lib', 'states.js')).all()
 const ETANAH_RE = new RegExp(PT_PREFIXES + '|\\btugasan\\b|#\\d{6}\\b|QA-\\d{6}', 'i');
 const BYPASS_RE = /\[skip-fix-photo:\s*([^\]<>]{3,})\]/i;
 const PHOTO_RE = /FIX-PHOTO:\s*`?([^`\r\n]+?\.(?:png|jpe?g))`?\s*(?:✓|$)/gim;
+const ASK_RE = /\b(fix[- ]?photo|red[- ]?box|kotak merah)\b/i;
+const HOOK_TEXT_RE = /FIX-PHOTO:|mark\.py|skip-fix-photo|Stop hook/;
 const BRIEF_IMG_RE = /[\\/](?:[01]\. )?Brief[\\/][^\\/]+\.(png|jpe?g|webp|gif|bmp)$/i;
 
 function readTranscript(p) {
@@ -40,7 +46,8 @@ function readTranscript(p) {
 }
 
 function scan(raw) {
-  const out = { assistantTexts: [], hasBaImage: false };
+  const out = { assistantTexts: [], hasBaImage: false, asked: false };
+  const ask = (t) => { if (typeof t === 'string' && ASK_RE.test(t) && !HOOK_TEXT_RE.test(t)) out.asked = true; };
   for (const line of raw.split('\n')) {
     if (!line.trim()) continue;
     let obj; try { obj = JSON.parse(line); } catch (_) { continue; }
@@ -48,11 +55,12 @@ function scan(raw) {
     const role = msg.role || obj.type;
     const c = msg.content;
     if (role === 'user') {
-      if (typeof c === 'string') { if (c.includes('[Image: source:')) out.hasBaImage = true; continue; }
+      if (typeof c === 'string') { ask(c); if (c.includes('[Image: source:')) out.hasBaImage = true; continue; }
       if (!Array.isArray(c)) continue;
       for (const b of c) {
         if (!b) continue;
         if (b.type === 'image') out.hasBaImage = true;
+        if (b.type === 'text') ask(b.text);
         if (b.type === 'text' && typeof b.text === 'string' && b.text.includes('[Image: source:')) out.hasBaImage = true;
       }
     } else if (role === 'assistant' && Array.isArray(c)) {
@@ -87,7 +95,8 @@ function photoVerdict(texts) {
 function blockText(bad) {
   return [
     '\u{1F5BC}️ fix-photo: this hand-back describes a UI change and BA gave screenshots, but no valid FIX-PHOTO line exists.',
-    '   1. For each changed screen, copy BA\'s screenshot with a red box + short Malay label on the changed area:',
+    '   miya asked for a fix photo. Use a REAL after-fix screen (a frame of his test video or his own screenshot), never BA\'s before-screenshot.',
+    '   1. Mark the changed area with a red box + short label:',
     '      python domain/fix-photo/mark.py --src "<BA screenshot>" --dst "<Task folder>\\<cycle>\\2. Fix\\<n>. <KOD> - <what changed>.png" --box "x0,y0,x1,y1" --label "x,y=<label>"',
     '   2. Open the saved file and look at it (box on the right field?).',
     '   3. Put one line per photo in the reply:  FIX-PHOTO: <full path> ✓',
@@ -105,7 +114,7 @@ runHook({ name: 'fix-photo', event: 'Stop' }, (input) => {
   const current = s.assistantTexts[s.assistantTexts.length - 1] || '';
   if (current.length < 200) return { fired: false };
   if (BYPASS_RE.test(current)) return { fired: true, bypassed: true, bypassToken: 'skip-fix-photo' };
-  if (!HANDBACK_RE.test(current) || !UI_RE.test(current) || !ETANAH_RE.test(current) || !s.hasBaImage) return { fired: false };
+  if (!HANDBACK_RE.test(current) || !UI_RE.test(current) || !ETANAH_RE.test(current) || !s.hasBaImage || !s.asked) return { fired: false };
   const v = photoVerdict(s.assistantTexts);
   if (v.ok) return { fired: false };
   return { fired: true, blocked: true, blockReason: blockText(v.bad) };

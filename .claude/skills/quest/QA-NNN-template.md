@@ -159,6 +159,18 @@
 
 ---
 
+## Falsifier ledger
+
+> ← one row per falsifier written in the Rubric. A row leaves `OPEN` only by running its cheapest test (`RAN: <what was run, what it showed>` / `BROKE: <evidence> → row N`) or by `ACCEPTED-RISK: "<miya's words>" miya YYYY-MM-DD`. Design changed after the Rubric → rewrite the rows and `Fix files:` before Apply. Check: `node domain/falsifier-ran-check/check.js <QA>` (commit gate · close-phase · BA pass note).
+
+Fix files: <File1.java>, <File2.xhtml>
+
+| # | design | falsifier | cheapest test | status |
+|---|---|---|---|---|
+| 1 | <chosen fix, one line> | <data shape that proves it wrong> | <the 5-minute run that would show it> | OPEN |
+
+---
+
 ## Ship — Apply
 
 > ← write this section as the code edit is applied. Predicate Box mandatory (debug mode). PRESERVATION DISCIPLINE applies — only modify what Rubric specified. POST-REFACTOR DEAD-BRANCH AUDIT applies if a new variant method was created.
