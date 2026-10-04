@@ -54,16 +54,27 @@ function fetchIssue(num) {
 
 const numOf = qa => (String(qa).match(/(\d{5,})/) || [])[1];
 
-// Returns 'diverged' | 'redmine-open' | 'ok' | 'unknown'
+// WHY tracking / learn / closed-early (2026-10-04, miya: "add a rule to not close reworks. Once we
+// detected a Delegated quest being Closed, we need to learn from it"): a ticket a colleague still
+// holds open on Redmine (In Progress, Rework, ...) keeps its local block; the block closes only
+// after Redmine shows Closed AND the colleague's fix was read and audited (/learn-from-fix).
+//
+// Returns 'diverged' | 'tracking' | 'learn' | 'closed-early' | 'redmine-open' | 'ok' | 'unknown'
 function classify(localStatus, r) {
   if (!r) return 'unknown';
   const staysOpen = OPEN_STATUSES.has(localStatus);
   const doneThere = DONE_ON_REDMINE.has(r.status);
   const reassigned = r.assigneeId != null && r.assigneeId !== OWNER_ID;
+  if (staysOpen && reassigned && !doneThere) return 'tracking';
+  if (staysOpen && localStatus === 'delegated' && r.status === 'Closed') return 'learn';
+  if (staysOpen && localStatus === 'delegated' && r.status === 'Resolved') return 'tracking';
   if (staysOpen && (doneThere || reassigned)) return 'diverged';
+  if (!staysOpen && !doneThere && reassigned) return 'closed-early';
   if (!staysOpen && !doneThere && !reassigned) return 'redmine-open';
   return 'ok';
 }
+
+const LEARN_LINE = 'LEARN FIRST, then close: /learn-from-fix <num> — read how the colleague solved it, audit it strictly, decide what goes into the quest workflow, that state\'s etanah-knowledge, or nowhere.';
 
 // Single quest, at the moment its state changes. context = 'start' | 'update' | 'archive'
 async function checkOne(qa, localStatus, context) {
@@ -74,6 +85,14 @@ async function checkOne(qa, localStatus, context) {
   if (verdict === 'diverged') {
     console.log(`🚨 REDMINE DIVERGENCE — ${qa} is '${localStatus}' locally but Redmine says: ${r.status} · ${r.assignee} · ${r.done}%`);
     console.log(`   Not miya's open work${context === 'start' ? ' — do not open a quest on it' : ' — close it instead'}.`);
+  } else if (verdict === 'learn') {
+    console.log(`🎓 ${qa} is delegated and Redmine now shows Closed (${r.assignee}).`);
+    console.log(`   ${LEARN_LINE}`);
+  } else if (verdict === 'closed-early') {
+    console.log(`🚨 ${qa} is '${localStatus}' locally but ${r.assignee} still holds it on Redmine: ${r.status} · ${r.done}%`);
+    console.log(`   A colleague's ticket stays open as status=delegated until Redmine shows Closed. ${LEARN_LINE}`);
+  } else if (verdict === 'tracking' && context !== 'start' && localStatus !== 'delegated') {
+    console.log(`ℹ️  ${qa} is '${localStatus}' locally; Redmine: ${r.status} · ${r.assignee} · ${r.done}% — keep the block, set status=delegated delegated_to=<name>. Do not close.`);
   } else if (verdict === 'redmine-open' && context !== 'start') {
     console.log(`ℹ️  ${qa} is '${localStatus}' locally but Redmine still shows: ${r.status} · ${r.assignee} · ${r.done}% — update Redmine too.`);
   }
@@ -86,8 +105,23 @@ async function checkAll(quests) {
   quests = quests.filter(q => numOf(q.qa));
   if (!quests.length) return;
   const results = await Promise.all(quests.map(async q => ({ q, r: await fetchIssue(numOf(q.qa)) })));
-  const diverged = results.filter(x => classify(x.q.status, x.r) === 'diverged');
+  const of = verdict => results.filter(x => classify(x.q.status, x.r) === verdict);
+  const diverged = of('diverged');
+  const tracking = of('tracking');
+  const learn = of('learn');
   const unknown = results.filter(x => !x.r);
+  if (learn.length) {
+    console.log(`🎓 LEARN BEFORE CLOSE — ${learn.length} delegated quest(s) are Closed on Redmine:`);
+    for (const d of learn) console.log(`   ${d.q.qa}  →  Redmine: ${d.r.status} · ${d.r.assignee} · ${d.r.done}%`);
+    console.log(`   ${LEARN_LINE}`);
+  }
+  if (tracking.length) {
+    console.log(`👀 TRACKING — ${tracking.length} quest(s) held by a colleague, still open on Redmine. KEEP the block, do NOT close:`);
+    for (const d of tracking) {
+      const fix = d.q.status === 'delegated' ? '' : '  (set status=delegated delegated_to=<name>)';
+      console.log(`   ${d.q.qa}  local=${d.q.status}  →  Redmine: ${d.r.status} · ${d.r.assignee} · ${d.r.done}%${fix}`);
+    }
+  }
   if (diverged.length) {
     console.log(`🚨 REDMINE DIVERGENCE — ${diverged.length}/${quests.length} "open" quest(s) are NOT miya's work:`);
     for (const d of diverged) {

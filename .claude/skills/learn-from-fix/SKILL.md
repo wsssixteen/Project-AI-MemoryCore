@@ -1,6 +1,6 @@
 ---
 name: learn-from-fix
-description: Extract lessons from a colleague's (or our own past) closed ticket fix — reads git log + commit diff + Redmine History.txt and produces a 5-section structured extract with proposed edits to etanah-knowledge. Manual-invoke only. Triggers — "learn from <ticket>", "learn from commit <SHA>", "extract lessons from <ticket>", "what can we learn from <ticket>", "/learn-from-fix <ticket>", "run learn-from-fix on <ticket>". Do NOT auto-fire on delegated-ticket-close or SessionStart — manual only per みや 2026-06-30. Full spec + build history in Feature/Learn-From-Others-Fixes/plan-v1.md.
+description: Extract lessons from a colleague's (or our own past) closed ticket fix — reads git log + commit diff + Redmine History.txt and produces a 5-section structured extract with proposed edits to etanah-knowledge. Manual-invoke only. Triggers — "learn from <ticket>", "learn from commit <SHA>", "extract lessons from <ticket>", "what can we learn from <ticket>", "/learn-from-fix <ticket>", "run learn-from-fix on <ticket>", the boot line "🎓 LEARN BEFORE CLOSE" (a delegated quest turned Closed on Redmine — run this BEFORE closing the block, per みや 2026-10-04). Never sweeps every closed ticket. Full spec + build history in Feature/Learn-From-Others-Fixes/plan-v1.md.
 ---
 
 # /learn-from-fix — Extract lessons from a closed fix
@@ -17,7 +17,11 @@ When a colleague (or a past-self) closes a ticket, their git commit + Redmine jo
 - I notice a colleague's fix just landed on a ticket we care about (e.g. delegated with `learning_marker=true` in active.txt) AND みや hasn't already asked
 - We're doing a retrospective and want to mine 2-3 past fixes
 
-**Do NOT auto-fire.** Do NOT invoke at SessionStart. Do NOT sweep every closed ticket.
+- **Boot prints `🎓 LEARN BEFORE CLOSE`** (`quest/redmine-status-check.js`, verdict `learn`): a quest with `status=delegated` is now Closed on Redmine. Run this skill on it FIRST; the block is closed only after Step 3.5 has a verdict per finding.
+
+**🚨 Delegated-quest close rule (みや 2026-10-04)**: a quest a colleague still holds open on Redmine (In Progress, Rework, Resolved) is NEVER closed locally — it stays `status=delegated` (boot verdict `tracking`). It closes only after Redmine shows Closed AND this skill ran. **Banned**: offering "close" for a `tracking` row.
+
+Do NOT sweep every closed ticket. Do NOT invoke at SessionStart on a ticket that is not a delegated-and-Closed quest.
 
 ## Procedure
 
@@ -74,6 +78,25 @@ Emit this shape as a fenced markdown block in chat. Use closed enums for A/B/C w
 - **Hook candidate for detection?**: yes (→ <shape>) | no
 ```
 
+### Step 3.5 — Audit the fix strictly, then route each finding (みや 2026-10-04)
+
+A colleague's fix is evidence, not a spec. Before anything is proposed, scrutinize it (`/appraise` loop) and give EACH finding one verdict:
+
+| Check | Question |
+|---|---|
+| Sound | Does the diff fix the root cause, or only the reported instance? Any regression risk on sibling urusan? |
+| Ours vs theirs | Compare with OUR Recon/Rubric for the same ticket (quest MD). Where did we differ, and who was right? |
+| Fits | Does the pattern match our conventions (working-analog, minimal-diff)? A pattern we would not copy is recorded as "do not copy", not as knowledge. |
+
+| Verdict | Home |
+|---|---|
+| `workflow` | a quest step / skill / gate that would have found it sooner (propose the edit to that file) |
+| `knowledge` | the resolved state's `etanah-knowledge/<state>/` file (Step 4) |
+| `elsewhere` | name the file (memory, latent-bug register, a hook) |
+| `none` | nothing reusable, or it does not fit — say why in one line |
+
+Only after every finding has a verdict is the delegated block closed.
+
 ### Step 4 — Propose edits to etanah-knowledge
 
 For each learnable factor in Section D that is NEW, emit a **proposed-edit block** — the exact new content + the target file:line. **Do NOT apply** — surface for みや to nod first (per Q3 answer).
@@ -123,7 +146,8 @@ Track quality via `log.jsonl` entries + みや's nod-vs-correction rate:
 
 ## Banned
 
-- Auto-firing at SessionStart / on delegated-ticket-close / on any signal — manual only
+- Closing a delegated quest while Redmine still shows it open, or closing it once Closed without running this skill
+- Sweeping closed tickets in bulk — the only automatic prompt is the boot `🎓 LEARN BEFORE CLOSE` line for a delegated-and-Closed quest (2026-10-04; replaces the 2026-06-30 "manual only, never on delegated-ticket-close" wording — that spec is dropped on みや's word)
 - Colleague names in the extract (per Q2) — cite "colleague" + commit SHA
 - Applying edits before みや nod (v1) — always propose-first
 - Creating a new file `LEARNED-FROM-COLLEAGUES.md` (per Q1) — fold everything into `BUG-BESTIARY.md` with the ticket # + commit + date as provenance
