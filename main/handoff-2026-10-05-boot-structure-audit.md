@@ -162,6 +162,35 @@ Independent runs (Workflow tool, read-only):
 | Run | Run id | What | Result |
 |---|---|---|---|
 | Verification | `wf_49cf7fce-b89` | six review dimensions (quest load · Redmine intake · wrapper change · background cleanup · gate false-blocks · boot documents), one refuter per finding, one completeness critic | (appended when it returns) |
-| Batch-2 design | `wf_923b9eaf-18e` | facts per remaining boot script and its consumers → design per script (two angles for the quest board) → cross-cutting critic | (appended when it returns) |
+| Batch-2 design | `wf_923b9eaf-18e` | facts per remaining boot script and its consumers → design per script (two angles for the quest board) → cross-cutting critic | **DONE 02:14** (18 agents, 0 errors). Full record: `main/handoff-2026-10-05-boot-batch-2-design.md` (critic first, then one design and one fact sheet per script). Summary in §10 below. |
 
 To resume either after a break: `Workflow({scriptPath: <script file under the session's workflows/scripts folder>, resumeFromRunId: "<run id>"})` — finished agents replay from cache.
+
+## 10. Batch 2 — design summary (NOT built, NOT ruled; full text in `main/handoff-2026-10-05-boot-batch-2-design.md`)
+
+Boot after batch 2, by the critic's arithmetic (single-run figures): 10 scripts → 4 (5 if the required-reads banner stays) · about 12.7 s → about 2.2 s · boot text 24,884 → between 989 and 3,384 characters. Moved, not removed: the first ticket / board / briefing prompt of a session-day waits 5–13 s for Redmine; session close gains about 5–20 s.
+
+| Script | Design in one line |
+|---|---|
+| `open-quest-surfacer` | SIGNAL-FIRST chosen over cache-first: nothing at boot; the live board prints at the first ticket / board / briefing signal, as a 4th child of the existing `domain/bundles/upsm-mode.json`; a last-good copy is shown only when Redmine fails, with its age. Two-step cutover: add the signal path while the boot entry stays, prove the last board row reaches context, then remove the boot entry together with CLAUDE.md boot step 5 and session-briefing.md. |
+| `system-audit` | Stays registered but becomes a change detector: full audit only on the first boot after a hook file / settings.json / bundle manifest changed, and at session close inside the audit screen. Name clash with the existing `system-audit` skill row in the registry must be settled before install. |
+| `boot-required-read-gate` | Off boot; checks at the moment `.claude/CLAUDE.md` is edited (child of the existing `pretool-editwrite-gates` bundle) plus a `--check` at session close. Critic: weigh `claude-md-edit-guard.js`, which already fires at that moment. |
+| `evolution-check-trigger` + `system-check-trigger` | Off boot, one commit; "last system check N days ago" becomes a row in the session-close audit screen (`lib/audit-briefing.js`). |
+| `adhoc-lifecycle` | Part 1: off boot (the weekly list). Part 2: the folder moves to Archive at the moment an adhoc is closed (adhoc-save skill + audit check + video guard in `quest/archive-quest.js`). |
+| `claude-md-watch` | Stays at boot; prints a count + the 3 oldest (5 lines, about 640 characters instead of about 16,000); the countdown steps once a day, not once a boot. |
+| `boot-load-verification` | Not in batch 2 unless ruled; tied to the two-boot-modes decision. |
+
+Pre-step found by the run and CONFIRMED on disk: `forge install hook` refuses all six loose boot hooks today, because `domain/hook-syntax-check/cache.json` names their old paths and `core/forge.js:399-412` counts a `.json` under `domain/` as code. One condition in forge + one fixture fixes it. This is a defect of the install built on 2026-10-05.
+
+Build order (critic): forge pre-step → claude-md-watch (eval, then the short boot form) → pin `lib/audit-briefing.eval.js` → the two reminders → boot-required-read-gate → system-audit → adhoc part 1 → adhoc part 2 → ticket board in three steps (install · add signal path · remove boot entry) → boot-load-verification only if ruled.
+
+Decisions that are みや's (asked by popup 2026-10-05; answers recorded below when given):
+
+| # | Question | Recommended |
+|---|---|---|
+| 1 | First message is not about tickets: what does Ruri load and say about tickets? | Nothing loads; the briefing row says "not loaded"; the live board loads when a ticket, "board" or a briefing is named. Price: a ticket assigned during a non-ticket session shows only at the next ticket word. |
+| 2 | The two reminder scripts and the required-reads banner | Delete the two reminders (their job moves to the session-close screen); keep the banner until the boot-modes decision. |
+| 3 | Should a finished adhoc's Task folder move to Archive by itself? | Yes, at the closing status; videos kept; the 9 leftovers shown for ticking. |
+| 4 | What should boot show about change watches? | A count, the 3 oldest and where the full list is; "overdue" counted in days. |
+
+Biggest risk (critic): the board leaves boot and ticket work starts without it. Four required fixes are in the design record §1.7 (change the boot prose in the same commit · pin the trigger to ticket-gate's signal tests with a phase-1 block · board and briefing asks always fetch live · keep the boot entry until one real session shows the last table row in context).
