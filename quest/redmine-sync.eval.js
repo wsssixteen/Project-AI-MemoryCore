@@ -162,6 +162,37 @@ const block = (status, ...closed) => ['qa=QA-999999', `status=${status}`, ...clo
         check('(n5) a note with no permohonan id gives no row', extractBaGivenTestData([{ notes: 'done alter please verify', user: { name: 'x' } }]).length === 0, '');
     }
 
+    // (o) v14: every journal stamp is followed by a [role] line and the stamp line itself is unchanged;
+    //     the header names the Description's author and role. Roster = a temp fixture, never the real one.
+    {
+        const KROOT = fs.mkdtempSync(path.join(os.tmpdir(), 'sync-role-'));
+        fs.mkdirSync(path.join(KROOT, 'melaka'), { recursive: true });
+        fs.writeFileSync(path.join(KROOT, 'melaka', 'REDMINE-PEOPLE.md'), ['Refreshed: ' + new Date().toISOString().slice(0, 10), '', '| Name | Class | Redmine roles | Projects | Id |', '|---|---|---|---|---|',
+            '| ITSO Melaka Admin | TSO | help_mlk | helpdesk | 1268 |', '| Nurul Amirah Nadiah | BA | Business Analyst | helpdesk | 901 |', ''].join('\n'));
+        const prev = process.env.KNOWLEDGE_ROOT;
+        process.env.KNOWLEDGE_ROOT = KROOT;
+        require(path.join(__dirname, '..', 'lib', 'redmine-role.js')).resetCache();
+        const { formatJournalsForHistory, descriptionByLine } = require(path.join(__dirname, 'redmine-sync.js'));
+        const brief = path.join(require(path.join(__dirname, '..', 'lib', 'states.js')).taskFolder('melaka'), '900001. fixture', '1. Brief');
+        const text = formatJournalsForHistory([
+            { created_on: '2026-10-01T00:00:00Z', user: { id: 1268, name: 'ITSO Melaka Admin' }, notes: 'laporan' },
+            { created_on: '2026-10-02T00:00:00Z', user: { id: 901, name: 'Nurul Amirah Nadiah' }, notes: 'Issue:\n1. x' },
+            { created_on: '2026-10-03T00:00:00Z', user: { id: 77, name: 'New Person' }, notes: 'hello' },
+            { created_on: '2026-10-04T00:00:00Z', notes: 'no user' },
+        ], brief);
+        const lines = text.split('\n');
+        check('(o1) the stamp line is byte-identical to the old shape', lines[0] === '--- 2026-10-01T00:00:00Z by ITSO Melaka Admin ---', lines[0]);
+        check('(o2) a TSO journal gets a [role] line right under the stamp', lines[1] === '  [role] TSO, shared account', lines[1]);
+        check('(o3) a BA journal is stamped BA', text.includes('--- 2026-10-02T00:00:00Z by Nurul Amirah Nadiah ---\n  [role] BA\n'), text);
+        check('(o4) a name outside the roster is role unknown, never guessed', text.includes('by New Person ---\n  [role] role unknown, not in roster\n'), text);
+        check('(o5) a journal with no user is role unknown', text.includes('by Unknown ---\n  [role] role unknown, no author\n'), text);
+        check('(o6) header line: a TSO Description is a report, not the BA spec', descriptionByLine({ id: 1268, name: 'ITSO Melaka Admin' }, brief) === 'Description by: ITSO Melaka Admin [TSO, shared account] — a TSO report, not the BA spec. A BA journal Issue/Expected list outranks it.', descriptionByLine({ id: 1268, name: 'ITSO Melaka Admin' }, brief));
+        check('(o7) header line: no author from Redmine is role unknown', /^Description by: \(author not returned by Redmine\) \[role unknown\]/.test(descriptionByLine(null, brief)), descriptionByLine(null, brief));
+        if (prev === undefined) delete process.env.KNOWLEDGE_ROOT; else process.env.KNOWLEDGE_ROOT = prev;
+        require(path.join(__dirname, '..', 'lib', 'redmine-role.js')).resetCache();
+        fs.rmSync(KROOT, { recursive: true, force: true });
+    }
+
     let failed = 0;
     for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.name + (x.pass ? '' : ' → ' + x.detail)); }
     console.log('\nredmine-sync.eval: ' + (results.length - failed) + '/' + results.length + ' green');
