@@ -3,6 +3,13 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-04 (#256334 first day, read back nine days later)
+
+- **To another team he sends the fix, not the lesson.** I wrote Li Wen a step-by-step of her own flow, then a prose handover file. He wanted two short lines that own our part and a bare before/after code block. A colleague reads a lecture as an accusation.
+- **He only passes on what is proven.** The Hasil guess was right, and he still had me word it as a guess until BA's test showed it. Right and unproven is still unproven in his name.
+- **When he asks why, he wants the line of code that reads the value.** I gave him a page with a diagram; he said it did not help. The four code stops did.
+- **Before I say reuse it, I check that he can.** I told him to reuse an SSH key his login could not open. One icacls would have saved him a wasted GitLab step.
+
 ## Relationship reinforcement — 2026-10-04 (#282442 rework — "what did you fix this round?")
 
 - **The code was the small part; the ground under his test was mine to lay.** Two fixes of five lines went out. He lost the day to an MLIT test row on a local that read stg2, a file copy that kept old timestamps so nothing rebuilt, and a restart I asked for without looking at the compiled class. Before I hand him anything to run, I check the thing that will actually run.
