@@ -119,8 +119,11 @@
  *     starts the real work as a detached process (`--run`), and exits. One run per checkout at a time
  *     (lock file, 15 min stale-out). The work itself (main()) is byte-for-byte the v1.9 body.
  *     WORKTREE_CLEANUP_FOREGROUND=1 keeps the old wait-for-it behaviour (the eval uses it).
- *   Spec preservation: every v1.9 step and guard intact. One spec is CHANGED and named: the report a boot
- *     shows is the PREVIOUS run's (labelled with its age); the first boot of a brand-new checkout shows none.
+ *   Spec preservation: every v1.9 step and guard intact. Two specs are CHANGED and named: (1) the report a boot
+ *     shows is the PREVIOUS run's (labelled with its age); the first boot of a brand-new checkout shows none;
+ *     (2) boot prints the report's HEADLINES only (the ⚠️ lines + the `worktrees:` count line) and points at the
+ *     file for the indented detail — a run that FINISHES (221 s on 2026-10-05) prints ~13,000 chars, which the
+ *     30 s kill used to truncate by accident.
  *   Eval fixtures B1-B6.
  */
 const { execSync, spawn } = require('child_process');
@@ -578,7 +581,13 @@ function launch() {
     const r = JSON.parse(fs.readFileSync(REPORT, 'utf8'));
     if (r.report && r.report.trim()) {
       const mins = Math.max(0, Math.round((Date.now() - Date.parse(r.ts)) / 60000));
-      process.stderr.write(`worktree-cleanup — report of the last finished run (${mins} min ago, took ${Math.round(r.dur_ms / 1000)} s; a fresh run is starting in the background):\n` + r.report);
+      // Boot shows the HEADLINES only. A run that finishes prints ~13,000 chars of detail (2026-10-05:
+      // 79 lines — every stranded branch, every kept folder); that belongs in the file, not in every
+      // session's context. /worktree-retrieve and the file itself carry the detail.
+      const lines = r.report.split('\n').filter(l => l.trim());
+      const heads = lines.filter(l => !/^\s{3}/.test(l));
+      process.stderr.write(`worktree-cleanup — last finished run (${mins} min ago, took ${Math.round(r.dur_ms / 1000)} s; a fresh run is starting in the background):\n`
+        + heads.join('\n') + `\n   ${lines.length - heads.length} detail line(s) in ${path.relative(projectRoot, REPORT) || REPORT} — or run /worktree-retrieve\n`);
     }
   } catch (_) {}
   let busy = false;

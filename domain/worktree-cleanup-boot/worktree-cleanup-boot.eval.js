@@ -205,7 +205,8 @@ if (process.platform === 'win32') {
   const tsBefore = fgReport ? fgReport.ts : '';
   let l = launch();
   check('B2 launcher exits 0 without waiting for the work (well under the 30 s hook limit)', l.status === 0 && l.ms < 10000, `exit=${l.status} ms=${l.ms}`);
-  check('B3 launcher shows the LAST finished run\'s report, labelled with its age', /report of the last finished run \(\d+ min ago/.test(l.stderr) && /worktrees: \d+ registered/.test(l.stderr), l.stderr.slice(0, 200));
+  check('B3 launcher shows the LAST finished run\'s headlines, labelled with its age', /last finished run \(\d+ min ago/.test(l.stderr) && /worktrees: \d+ registered/.test(l.stderr), l.stderr.slice(0, 200));
+  check('B3b boot prints headlines only: indented detail stays in the file, with a pointer to it', /y-unmerged/.test(fgReport.report) && !/y-unmerged/.test(l.stderr) && /detail line\(s\) in .*worktree-cleanup-last\.json/.test(l.stderr), l.stderr.slice(0, 400));
   check('B4 the background run finishes by itself: a newer report lands and the lock is released', waitFor(() => { const r = readReport(); return r && r.ts !== tsBefore && locks().length === 0; }, 90000), JSON.stringify({ report: readReport() && readReport().ts, tsBefore, locks: locks() }));
   // B5: a run already in flight (fresh lock) → the launcher starts no second run
   const hash = require('crypto').createHash('sha1').update(path.resolve(W).replace(/\\/g, '/').toLowerCase()).digest('hex').slice(0, 8);

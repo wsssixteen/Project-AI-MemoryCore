@@ -14,6 +14,8 @@ telemetry_name: worktree-cleanup-boot
 
 **Observability**: central telemetry rows `"hook":"worktree-cleanup-boot"` now time only the launcher (expect < 1 s; a 30 s row means the launcher regressed). The real work is timed in this Feature's `log.jsonl`: one `{run:'finished', dur_ms, checkout, lines}` row per background run — a run that never finishes leaves no row and a lock older than 15 min.
 
-**Eval**: `worktree-cleanup-boot.eval.js` — 62 checks: the 56 pre-install ones (run in foreground mode) + B1-B6 for the launcher (returns at once · shows the last report · background run finishes and releases its lock · fresh lock blocks a second run · stale lock does not).
+**Boot prints HEADLINES only** (the ⚠️ lines and the `worktrees:` count line) plus a pointer to `worktree-cleanup-last.json`. Measured 2026-10-05: a run that finishes takes 221 s and prints 79 lines (~13,000 chars) — every stranded branch and every kept folder. That detail stays in the file; `/worktree-retrieve` is the way to act on it.
+
+**Eval**: `worktree-cleanup-boot.eval.js` — 63 checks: the 56 pre-install ones (run in foreground mode) + B1-B6 for the launcher (returns at once · shows the last run's headlines, detail stays in the file · background run finishes and releases its lock · fresh lock blocks a second run · stale lock does not).
 
 **state-scoped**: no, state-agnostic.
