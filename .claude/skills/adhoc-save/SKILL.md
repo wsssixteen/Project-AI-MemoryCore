@@ -23,10 +23,13 @@ description: Save an adhoc's findings as the full 4-part save-set (Task folder �
 
 ## Adhoc title (ProTime) — 2026-10-01 per みや
 Every adhoc gets a **title**: a very short, almost-keyword label みや pastes into ProTime.
-- Shape: `<URUSAN> <keyword> <keyword>` · max 6 words · max 40 chars · no ids, no permohonan, no env, no punctuation.
-- Examples: `PRBB Ganti Hari bayaran royalti` · `PRBB jenis permohonan SK`.
+- Shape: `<URUSAN> <subject keywords> <issue word>` · max 6 words · max 40 chars · no ids, no permohonan, no env, no punctuation.
+- The issue word is mandatory (what is wrong: `missing` · `tiada` · `tak papar` · `ralat` · `salah` · `stuck`, or the ask: `alter` · `patch`). A subject-only title is wrong (2026-10-04: `MLPS ulasan SOK laporan tanah` → `MLPS ulasan SOK laporan tanah missing`).
+- Name the thing in a plain word too (`tugasan`, `dokumen`, `ulasan`, `bayaran`); a kod alone does not say what it is. Test: from the title only, "what is wrong with what?" must be answerable (2026-10-04: `PLPS SKM tiada dalam senarai` → `PLPS tugasan SKM tiada dalam inbox`).
+- Examples: `PLPS tugasan SKM tiada dalam inbox` · `MLPS ulasan SOK laporan tanah missing`.
 - Lives in 3 places: block `title=` · qa_doc `- Title : ...` (first line of ## Issue Summary) · the reply (first line, `Title: ...`).
 - Audit FAILs if it is missing or too long.
+- みや asks for the day's titles ("adhoc titles", "protime titles", "tajuk protime") → the `adhoc-titles` skill (`node lib/adhoc-titles.js`).
 
 ## Daily adhoc session — 2026-10-01 per みや
 みや keeps ONE session open all day for adhocs. Many adhocs pass through the same chat, so every message is routed first.

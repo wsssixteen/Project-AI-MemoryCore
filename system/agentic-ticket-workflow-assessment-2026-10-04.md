@@ -37,6 +37,20 @@ State resolution from the Task folder or permohonan id · the Scout, Recon, Rubr
 
 What worked and must not be touched: the falsifier ledger at commit (it stopped the rework commit until rows 2 and 3 carried `RAN:` evidence) · the compile gate · probes shown in the browser console · miya's `[risk-ok]` as the only way past the local-test row.
 
+<<<<<<< HEAD
+## Session: Terengganu adhoc day (ADHOC-PLPS-2026-1, ADHOC-MLPS-2026-2), 2026-10-04 afternoon
+
+| Axis | What the session showed | Instance |
+|---|---|---|
+| A1 agentic system | No agents used; all inline. The hand-off loader fired on an infra handoff and loaded the cross-module memories, the wrong pair for a PROD patch | prompt "prepare the infra handoff", ADHOC-PLPS-2026-1 |
+| A2 quest workflow | Simulate steps were built from the DB trail and ignored actor rows visible in the evidence photo; no git-history probe on the reassign code until miya asked | steps without the Utiliti Pengagihan Semula row; fix `c402a5766e` (#226218) found one turn late |
+| A3 debugging | A date was read off a screenshot before the audit tables were queried; wrong by 7 months. Once `et_sistem.pt_audit_entity` was found the change was pinned to the second in 2 queries | "1 Feb 2026" vs 2025-07-10 09:58:20 |
+| A4 etanah issue-solving | Terengganu knowledge held up: triage classes, PROD read, engine schema all right first time. Gaps: no audit-table knowledge, no `skg_dok` knowledge, 4 wrong-column queries. All written back the same day | `terengganu/ADHOC-TRIAGE.md` Step 2c, `DATABASE.md` 0b |
+| A5 sweep / file sweep | Two pasted images never reached disk, so the adhoc brief folder has 3 of 5 images; content was written into the quest doc instead | ADHOC-MLPS-2026-2 follow-up photos |
+
+Other measured points: adhoc save audit needed `--state terengganu` by hand (first run compared against Melaka row A1); adhoc id `ADHOC-MLPS-2026-1` was already used by an archived Melaka adhoc and had to be renamed; 2 ProTime titles needed 2 corrections (no issue word, then no object word).
+Proposals logged: A1, A2, A3, A4, A5 (one each, 2026-10-04).
+=======
 ## Session: ADHOC-PRBB-2026-9 → #282924 (2026-10-02 → 10-04)
 
 | Axis | What the session showed (instance) |
@@ -48,3 +62,4 @@ What worked and must not be touched: the falsifier ledger at commit (it stopped 
 | A5 sweep / file sweep | Both BA images opened and echoed. Video read by contact sheet (36 frames) which showed select-all was NOT in the video; asked instead of assuming. The pass note assumed "internal & staging" with no evidence of which server he deployed. |
 
 Failure classes: (1) gate-over-demand after an agreed fix · (2) fabricated evidence artifact (marked BA before-screenshot as fix photo) · (3) env assumed in a BA note · (4) stranded worktree edits · (5) `de-run-verify` self-retrigger loop (6 re-fires).
+>>>>>>> origin/main

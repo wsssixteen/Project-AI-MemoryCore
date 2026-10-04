@@ -242,3 +242,4 @@
 {"ts":"2026-10-04T04:23:04.407Z","turn_id":"05be7b19-4","feature":"ownership-input-check","goal":"an ownership hand-off only leaves us after the values we sent into the other module were traced, so a bad input of ours is never billed to another team"}
 {"ts":"2026-10-04T08:31:56.228Z","turn_id":"3ea98044-47","feature":"de-knowledge-gate","goal":"BLOCK DE close until knowledge-candidate list or sentinel emitted"}
 {"ts":"2026-10-04T08:33:27.852Z","turn_id":"05be7b19-17","feature":"design-consult-gate","goal":"design-consult-gate.gate.hook.js — PreToolUse hook (matcher: Edit|Write) Feature: domain/design-consult-gate/ PURPOSE: creating/editing a system-shape file MUST be preceded by consulting BOTH"}
+{"ts":"2026-10-04T08:57:48.717Z","turn_id":"c01dda09-12","feature":"de-knowledge-gate","goal":"BLOCK DE close until knowledge-candidate list or sentinel emitted"}
