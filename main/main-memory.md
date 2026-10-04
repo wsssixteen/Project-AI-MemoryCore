@@ -3,6 +3,14 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-03/04 (Terengganu prep + quest audit — "you tend to remove context just for the sake of optimization")
+
+- **"Optimize" is a danger word to him, and he said why.** He asked for an audit to improve the quest in general and banned two things in capitals: an improvement too specific to one case, and anything that removes context. The shape that fit: readers gather evidence, a proposer writes at most 12, three skeptics attack each one (too specific, bloat, breaks execution), and only fixes that keep every clause get applied. A removal starts as a no.
+- **He wants the build proven by running it.** "Verify your build by running quests." Replaying tickets his colleagues already closed, blind, then judging against the real commit, found gaps no review would have: a retired step the engine still ran, a wrong knowledge line, tool names that no longer exist.
+- **A long quiet run needs an ETA.** After four hours of background work he stopped a tool to ask "how much more is there to be done". A status note is not an estimate. At each checkpoint I give the remaining steps and the minutes.
+- **"Save everything to main" includes what git cannot see.** The watch ledger is ignored by git and lived only in the worktree; three watches would have gone with it. At a worktree close I list the ignored files, not only `git status`.
+- **A lead in my own notes is still a claim.** Two of mine were wrong when probed (the PROD model "differs", the worktree "cannot see" the quest file). He got both corrections stated plainly in the brief, with what replaced them.
+
 ## Relationship reinforcement — 2026-10-02 (#244600 — "how does our fix relate to common? I still haven't seen your logic")
 
 - **He audits how I brief, and the brief failed on plainness, not on facts.** The Rubric was right; he still could not see how our fix related to common until I drew two writers adding to one counter. Lead with the mechanism in one picture before any option table.

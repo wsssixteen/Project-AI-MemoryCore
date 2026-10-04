@@ -93,6 +93,8 @@ Rather than directly saying "this is wrong", みや asks "is X truly different f
 
 ---
 
+**[2026-10-03]** T1 — **A lead carried in my own summary is still a claim.** Terengganu prep: my notes held "the PROD PT model differs from staging" and "a worktree session cannot see quest/active.txt". Both went into a brief or an audit prompt before I probed them, and both were wrong (23 of 24 keys byte-identical; the file is untracked in main and the tools strip the worktree suffix). Same family as the 2026-10-01 entry above: a statement inherited from an earlier turn needs the same proof as a fresh one.
+
 ## Retired Observations
 
 *(Observations that have been fully integrated — moved to memory or Forge)*

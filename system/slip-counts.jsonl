@@ -930,3 +930,14 @@
 {"ts":"2026-10-03T16:00:09.884Z","category":"A1"}
 {"ts":"2026-10-03T16:00:10.023Z","category":"A1"}
 {"ts":"2026-10-03T16:00:10.164Z","category":"A1"}
+{"ts":"2026-10-04T00:10:42.849Z","category":"trusted-claim-unverified"}
+{"ts":"2026-10-04T00:10:43.015Z","category":"assume-not-verify/state-guess"}
+{"ts":"2026-10-04T00:10:43.176Z","category":"assume-not-verify/state-guess"}
+{"ts":"2026-10-04T00:10:43.322Z","category":"no-eta-on-long-run"}
+{"ts":"2026-10-04T00:10:43.476Z","category":"A3"}
+{"ts":"2026-10-04T00:10:43.613Z","category":"A1"}
+{"ts":"2026-10-04T00:10:43.764Z","category":"A4"}
+{"ts":"2026-10-04T00:10:43.914Z","category":"A5"}
+{"ts":"2026-10-04T00:10:44.053Z","category":"A2"}
+{"ts":"2026-10-04T00:10:44.209Z","category":"A1"}
+{"ts":"2026-10-04T00:10:44.342Z","category":"A1"}
