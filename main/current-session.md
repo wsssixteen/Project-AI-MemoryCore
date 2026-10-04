@@ -1,5 +1,21 @@
 # Current Session
 
+**Last Activity**: 2026-10-04 — ProTime weekly plan scheduler (`domain/protime-plan/`) built, live, and self-reporting; FIRST scheduled write is Mon 2026-10-05 08:30, not yet proven.
+
+## Session Recap (2026-09-30 → 2026-10-04, session "Protime scheduler automation", ProTime weekly plan)
+- **Ask**: fill ProTime "My Weekly Planning" from open tickets, schedule it every Monday, and record everything so success or failure names the next action.
+- **Built**: Feature `domain/protime-plan/` (protime-plan.js · eval 36/36 · run-hidden.vbs · task.xml · README · NUKE-MARKER · log.jsonl) + `pymtime` skill §Weekly plan + Windows task `\MemoryCore\ProTime Weekly Plan` (Monday 08:30, at logon +10 min, retry 30 min x6, once per week). Commits ff87fc1a · 39f3ec0c · 9fff4add · 3a76a151 · 398c33ba on main.
+- **Rule (miya)**: 4 tickets a day; if they cannot fill every open day at 4, then 3 a day; leftover days empty; a day with any entry is never touched; each ticket once. Board order from `quest/redmine-board.js --json`.
+- **Proven**: live write + read-back by hand 2026-09-30 (Thu 1 Oct 275043·274323·246923, Fri 2 Oct 265109·244600·281324; 282587 unplaced by the rule) · Task Scheduler really ran the task once (exit 0, login + read fine, nothing to write).
+- **NOT proven**: a write made by the scheduled task itself. First one = Mon 2026-10-05 08:30.
+- **How we will know (either way)**: `node domain/protime-plan/protime-plan.js --status` prints a verdict (FILLED · NOTHING TO FILL · FAILED · DID NOT RUN · NOT DUE YET) and ONE next action. Also: toast on the laptop, a row in `domain/protime-plan/log.jsonl` (failed rows carry `next`), and boot CHANGE-WATCH `wmutm5ont` until resolved.
+- **Next action for the next session**: after Mon 08:30 run `--status`. FILLED or NOTHING TO FILL → `node lib/watch.js resolve wmutm5ont ok --note "<the status line>"`, tell miya, done. FAILED or DID NOT RUN → do the printed `next:` action, tell miya, resolve the watch as `anomaly` only if the script itself is wrong.
+- **Why the 30 Sep "planner filled Wed-Fri" was false**: that session made zero ProTime calls; it showed a fill-in table and Domain Expansion saved it as filled (diary 2026-09-30 line 11 is wrong on that point). Root cause is in the Feature README.
+- **Decisions by miya**: keep the Windows task (not a Claude Desktop Routine) · do not build it into PymTime.
+- **Open, his call**: 282587 was left off last week's plan · hour-estimate planning (big ticket = whole day) not designed · `core/forge.js new script` puts scripts in `lib/` against Rule 14 `domain/<feature>/` (built by hand, registry row appended by hand).
+- **Slips (4, ledger)**: claim-not-verified x2 (same 30 Sep incident, before and after the cause was found) · best-practices-not-consulted (system-rules loaded late; gate caught) · misread-ask (answered cloud routines when he asked about Desktop Routines).
+- **Not done this session**: boot files + session briefing were never read (audit item) · no Domain Expansion run yet.
+
 **Last Activity**: 2026-10-04 17:30 — #282555 (PROD alter PYMB to PJTLT) Phase 2 closed and ARCHIVED; branch `claude/ticket-282555-ab97c6` merged to main (`417e4189`): redmine-write-gate v1.4 stage-only until 2026-10-30 now LIVE · Domain Expansion run.
 **Last Activity**: 2026-10-04 17:10 — #282442 rework closed and ARCHIVED: `dcd4eab561` + `df981502a4` on `mlk/esokongan/282442`, int-env `29440f665b`, MLIT pass (miya 14:44), Redmine Resolved to Nurhafizah Hasan (miya 15:26, video attached). New: `quest/local-test-prep.js` + gate v3. Domain Expansion run.
 **Last Activity**: 2026-10-02 18:30 — ADHOC-PLP-2026-1: AWAM `plpMaklumatUrusan.xhtml` proven dead (0 of 19 Melaka urusan tab lists) · knowledge in JSF-WIRING.md · adhoc saved 28/28 + archived · DE.
