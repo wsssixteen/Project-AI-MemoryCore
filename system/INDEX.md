@@ -19,6 +19,19 @@ LAYER 4 — Knowledge                 (references)         → library/, library
 LAYER 5 — State                     (current data)       → quest/active.txt, main/current-session.md, main/todo.md
 ```
 
+## Structure rulings — みや, 2026-10-04 (ruled by popup; NOT yet built)
+
+The layer table above pre-dates these rulings: it does not name `domain/`, `core/` or `lib/`, and still lists a deleted file and the retired `plugins/`. Rewriting it is the build step; until then these four rows are the ruling of record.
+
+| # | Ruling | Counted from disk at ruling time |
+|---|---|---|
+| 1 | "Everything under a Feature" = everything that DOES A JOB (hooks, skills, job scripts) is a Feature in `domain/<name>/`. `core/` (kernel) and `lib/` (shared code) stay outside Features; each names the Features that use it. | 115 Feature folders · 55 loose hooks in `.claude/hooks/` · 7 kernel scripts · 40 libraries |
+| 2 | A skill is a Feature PART: every skill has a Feature folder (README goal + log + eval) that points to `.claude/skills/<name>/SKILL.md`. | 72 skills · 52 without a Feature folder |
+| 3 | Root `Feature/` moves into `domain/` and the name is retired, so "Feature" has ONE meaning. | 7 legacy folders |
+| 4 | THIS file is the one map of the system. `CLAUDE.md`, `system/FOLDER-STRUCTURE.md` and the system-design skill point here instead of carrying their own map. | 4 documents carry a partial map today |
+
+A Feature's layers, in みや's words (2026-09-04): **observability** = liveness (did it fire, did it block, how long); **monitoring** = context (why, on which quest and phase, was it right, what it cost, did it meet its goal). Both are part of every Feature, not a dashboard. At ruling time: 59 of 115 Features write a log, 9 write a goal log, 41 have README + goal + log + eval together.
+
 ## What lives in system/
 
 | File | Purpose | Phase built |
