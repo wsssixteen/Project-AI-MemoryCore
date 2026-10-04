@@ -86,6 +86,39 @@ function decide({ today, board, existing, holidays = [], leave = [] }) {
   return { days, skipped, alreadyOnPlan: [...onPlan], ...distribute(tickets, candidates) };
 }
 
+// Every result the script can log -> the one next action. Written into each failed log row and printed by --status.
+const NEXT = {
+  'ok': 'nothing to do',
+  'redmine-unreachable': 'connect to the office network or VPN; the task retries by itself, or run: node domain/protime-plan/protime-plan.js --live',
+  'no-protime-login': 'open the PymTime page, type the ProTime password, Save, then run --live',
+  'protime-wrong-credentials': 'ProTime password changed: set it on the PymTime page, then run --live',
+  'protime-throttled': 'ProTime locked logins for a few minutes: wait 15 minutes, then run --live ONCE',
+  'protime-unreachable': 'connect to the office network or VPN; the task retries by itself, or run --live',
+  'protime-cert-error': 'ProTime certificate problem: check the address on the PymTime page, then run --live',
+  'protime-login-failed': 'run --live once more; if it repeats, open ProTime in the browser and check the login',
+  'protime-read-failed': 'run --live once more; if it repeats, ProTime changed its API: re-read staff-plan in its web bundle',
+  'protime-write-failed': 'nothing was written: run --live once more; if it repeats, ProTime changed its API',
+  'read-back-mismatch': 'ProTime accepted the write but entries are missing: open My Weekly Planning and compare with the log row BEFORE any rerun',
+  'crash': 'a script error: read `detail` in the log row and fix protime-plan.js, then run the eval and --live',
+};
+const nextFor = result => NEXT[result] || 'unknown result: read the log row';
+
+// What one week's log rows mean. Pure: rows = parsed log.jsonl, now = Date.
+function statusOf(rows, now) {
+  const monday = weekDays(now)[0];
+  const due = new Date(monday + 'T08:30:00');
+  const live = rows.filter(r => r.week === monday && r.mode === 'live');
+  const ok = live.filter(r => r.result === 'ok');
+  const filled = ok.find(r => r.placed && Object.keys(r.placed).length);
+  if (filled) return { week: monday, verdict: 'FILLED', next: NEXT.ok, row: filled };
+  if (ok.length) return { week: monday, verdict: 'NOTHING TO FILL', next: 'nothing to do (no empty day, or no open ticket)', row: ok[ok.length - 1] };
+  if (live.length) { const last = live[live.length - 1]; return { week: monday, verdict: 'FAILED', next: nextFor(last.result), row: last }; }
+  if (now < due) return { week: monday, verdict: 'NOT DUE YET', next: 'nothing to do until Monday 08:30', row: null };
+  return { week: monday, verdict: 'DID NOT RUN', next: 'the Windows task never started: run --live by hand, then check `schtasks /Query /TN "\\MemoryCore\\ProTime Weekly Plan" /V /FO LIST`', row: null };
+}
+
+function readLog() { try { return fs.readFileSync(LOG, 'utf8').split('\n').filter(Boolean).map(l => { try { return JSON.parse(l); } catch (_) { return null; } }).filter(Boolean); } catch (_) { return []; } }
+
 // ---------- side effects ----------
 const STARTED = Date.now();
 function logRow(row) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), dur_ms: Date.now() - STARTED, ...row }) + '\n'); } catch (_) {} }
@@ -121,13 +154,21 @@ async function main() {
   const week = weekDays(today);
   const monday = week[0];
   const fail = (code, result, detail) => {
-    logRow({ week: monday, mode: live ? 'live' : 'dry', result, detail });
-    console.log(`ProTime plan: ${result}${detail ? ' - ' + detail : ''}`);
+    logRow({ week: monday, mode: live ? 'live' : 'dry', result, detail, next: nextFor(result) });
+    console.log(`ProTime plan: ${result}${detail ? ' - ' + detail : ''}\nNext: ${nextFor(result)}`);
     // retryable failures stay quiet while the task still retries (every 30 min, and at logon);
     // from 11:00 on a failure shows, so a week that never fills is never silent
     if (live && args.includes('--notify') && (code === 2 || result === 'no-protime-login' || new Date().getHours() >= 11)) notify('ProTime plan NOT filled', `${result}. It retries by itself; or run: node domain/protime-plan/protime-plan.js --live`, 'Warning');
     process.exit(code);
   };
+
+  if (args.includes('--status')) {
+    const s = statusOf(readLog(), today);
+    console.log(`ProTime plan, week of ${s.week}: ${s.verdict}`);
+    if (s.row) console.log(`  last row: ${s.row.ts} result=${s.row.result}${s.row.detail ? ' (' + s.row.detail + ')' : ''}${s.row.placed ? ' placed=' + JSON.stringify(s.row.placed) : ''}${s.row.unplaced && s.row.unplaced.length ? ' unplaced=' + s.row.unplaced.join(',') : ''}`);
+    console.log(`  next: ${s.next}`);
+    return;
+  }
 
   if (live && args.includes('--once-per-week') && doneThisWeek(monday)) { console.log(`ProTime plan: week of ${monday} already filled - nothing to do`); return; }
 
@@ -174,4 +215,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(e => { logRow({ mode: 'error', result: 'crash', detail: String(e && e.stack || e).slice(0, 400) }); console.error(e); process.exit(1); });
-module.exports = { weekDays, planByDate, distribute, decide, iso, fromDmy };
+module.exports = { weekDays, planByDate, distribute, decide, iso, fromDmy, statusOf, nextFor, NEXT };

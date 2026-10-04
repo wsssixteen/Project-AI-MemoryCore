@@ -50,5 +50,20 @@ eq('S24 day with no tasks object -> empty list (day counts as open)', planByDate
 eq('S25 blank planName ignored', planByDate([{ date: '02/10/2026', tasks: { plan: [{ planName: '  ' }] } }]), { '2026-10-02': [] });
 eq('S26 distribute with no open day -> everything unplaced', distribute(T(3), []).unplaced.length, 3);
 
+// status: every outcome names its next action
+const { statusOf, nextFor, NEXT } = require('./protime-plan.js');
+const W = '2026-10-05';
+const row = (result, extra) => ({ week: W, mode: 'live', result, ...extra });
+eq('S27 filled week -> FILLED, nothing to do', (s => [s.verdict, s.next])(statusOf([row('ok', { placed: { [W]: ['274323'] } })], D('2026-10-05'))), ['FILLED', 'nothing to do']);
+eq('S28 ok with nothing placed -> NOTHING TO FILL', statusOf([row('ok', { placed: {} })], D('2026-10-06')).verdict, 'NOTHING TO FILL');
+eq('S29 failure -> FAILED with that result\'s action', (s => [s.verdict, s.next])(statusOf([row('protime-throttled')], D('2026-10-05'))), ['FAILED', NEXT['protime-throttled']]);
+eq('S30 failure then success -> FILLED (retry worked)', statusOf([row('redmine-unreachable'), row('ok', { placed: { [W]: ['1'] } })], D('2026-10-05')).verdict, 'FILLED');
+eq('S31 no row, before Monday 08:30 -> NOT DUE YET', statusOf([], new Date('2026-10-05T07:00:00')).verdict, 'NOT DUE YET');
+eq('S32 no row, after Monday 08:30 -> DID NOT RUN', statusOf([], new Date('2026-10-05T12:00:00')).verdict, 'DID NOT RUN');
+eq('S33 last week\'s ok row does not count for this week', statusOf([{ week: '2026-09-28', mode: 'live', result: 'ok', placed: { x: ['1'] } }], new Date('2026-10-05T12:00:00')).verdict, 'DID NOT RUN');
+eq('S34 dry rows never count as filled', statusOf([{ week: W, mode: 'dry', result: 'ok', placed: { x: ['1'] } }], new Date('2026-10-05T12:00:00')).verdict, 'DID NOT RUN');
+eq('S35 every result the script can log has a next action', ['redmine-unreachable', 'no-protime-login', 'protime-wrong-credentials', 'protime-throttled', 'protime-unreachable', 'protime-cert-error', 'protime-login-failed', 'protime-read-failed', 'protime-write-failed', 'read-back-mismatch', 'crash'].filter(r => !NEXT[r]), []);
+eq('S36 unknown result still answers', nextFor('something-new'), 'unknown result: read the log row');
+
 console.log(`\n${pass}/${pass + fail} passed`);
 process.exit(fail ? 1 : 0);

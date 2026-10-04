@@ -24,6 +24,20 @@ state-scoped: yes, keyed by quest/redmine-board.js (Melaka project filters); Pro
 - A day that already has any plan entry is never touched.
 - 4 tickets a day. If the tickets cannot fill every open day at 4, then 3 a day. Days left over stay empty. Each ticket is planned once.
 
+## After a run: what happened, and what to do next
+
+One command answers both: `node domain/protime-plan/protime-plan.js --status` (reads `log.jsonl`, no network).
+
+| Verdict | Meaning | Next action |
+|---|---|---|
+| FILLED | written and read back from ProTime | nothing |
+| NOTHING TO FILL | ran fine; no empty day or no open ticket | nothing |
+| FAILED | the last run this week failed | the `next:` line (one fixed action per result, table `NEXT` in protime-plan.js) |
+| DID NOT RUN | past Monday 08:30 and no row | run `--live` by hand, then check the Windows task |
+| NOT DUE YET | before Monday 08:30 | nothing |
+
+Where a run shows itself: a toast on the laptop (filled, or a failure after 11:00) · one row in `log.jsonl` (failed rows carry `next`) · the boot CHANGE-WATCH line until the first scheduled write is confirmed.
+
 ## Files
 
 | File | Role |

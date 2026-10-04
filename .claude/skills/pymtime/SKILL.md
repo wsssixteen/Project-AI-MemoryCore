@@ -72,6 +72,7 @@ Feature `domain/protime-plan/` (README has the rule + schedule). It runs by itse
    `node domain/protime-plan/protime-plan.js`
 2. He asked to fill (or already said "fill") → write + read back:
    `node domain/protime-plan/protime-plan.js --live`
+0. "did the plan fill" / "plan status" / "check Monday" → `node domain/protime-plan/protime-plan.js --status` and paste its verdict + `next:` line. Do that next action when it is mine to do.
 3. Reply = the printed day lines + `WRITTEN and read back: N entries`. A result without that read-back line is NOT filled — say so.
 
 Rule: 4 tickets a day; if they cannot fill every open day at 4, then 3 a day; leftover days stay empty; days that already have any entry are never touched. **Banned**: typing the plan in the ProTime page by browser · saying "filled" from a chat plan without the script's read-back line (2026-09-30: a session reported Wed-Fri filled while ProTime showed Thu/Fri empty).
