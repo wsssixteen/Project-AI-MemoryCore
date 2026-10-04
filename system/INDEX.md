@@ -30,6 +30,19 @@ The layer table above pre-dates these rulings: it does not name `domain/`, `core
 | 3 | Root `Feature/` moves into `domain/` and the name is retired, so "Feature" has ONE meaning. | 7 legacy folders |
 | 4 | THIS file is the one map of the system. `CLAUDE.md`, `system/FOLDER-STRUCTURE.md` and the system-design skill point here instead of carrying their own map. | 4 documents carry a partial map today |
 
+### Workflows — defaults taken 2026-10-04 (みや answered "no preference" on all four; these are Ruri's recommended options, open to his re-ruling)
+
+A **Workflow** is what the quest skill already calls a "workflow-type skill": it chains steps at each phase boundary and records its position in `current_phase` (`quest/active.txt`). A **Feature** is one job at one moment.
+
+| # | Default | State at decision time |
+|---|---|---|
+| 5 | A Workflow is a ROUTE (Layer 2) made of Features (Layer 3). Its own folder with goal + log + eval is a Feature, like every skill (ruling 2). | quest · domain-expansion · adhoc-save · close-phase · hotfix have a skill and no Feature folder |
+| 6 | The Workflow's SKILL owns its step list (the phase-boundary table); the protocol file is per-step detail. This supersedes the CLAUDE.md File Ownership row that names `quest/quest-protocol.md` as owner — that row is re-pointed at build time. | only quest has a step table and a position field; 9 other Workflow skills have neither |
+| 7 | The quest engine stays in `quest/` (27 scripts + protocol + `active.txt`); the quest Feature folder points to it. No path moves. | 6 scripts read `current_phase` by path |
+| 8 | "Workflow" = a route only. The Claude Code multi-agent scripts are always written "Workflow tool script". | the word had three uses |
+
+Design constraints carried from the 2026-10-04 audit (so the build does not re-invent): NO new steps file (the step table exists) · NO new shared step gate (join an existing bundle; add a gate to a step only on slip evidence; blocking predicates ship advisory first per `system-architecture.md` §8.4) · each Feature gains a README key naming the Workflow step it serves (0 of 115 had one) · load only the current step's text by refining the existing loader (quest skill 120 KB + protocol 188 KB were loaded whole).
+
 A Feature's layers, in みや's words (2026-09-04): **observability** = liveness (did it fire, did it block, how long); **monitoring** = context (why, on which quest and phase, was it right, what it cost, did it meet its goal). Both are part of every Feature, not a dashboard. At ruling time: 59 of 115 Features write a log, 9 write a goal log, 41 have README + goal + log + eval together.
 
 ## What lives in system/
