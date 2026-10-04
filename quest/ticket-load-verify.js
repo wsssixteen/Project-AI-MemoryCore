@@ -28,6 +28,13 @@
  *      active.txt block task_folder first, else every state's Task folder + Archive via
  *      lib/states.js. Preserved: TLV_TASKS_ROOT override, manifest text, exit codes.
  *
+ * v1.4 (2026-10-04, miya: "you thought the description is by the BA, when TSO is the one that
+ *      writes it"): every author carries a role from the Redmine roster (lib/redmine-role.js).
+ *      Section A shows `author [role]`; section B names the Description's author and role and
+ *      says when it is a report, not the BA spec; new section B2 names who wrote the latest
+ *      Issue / Expected list. A name outside the roster prints "role unknown". Preserved:
+ *      A/C/D/D2/E/F text, the ECHO CONTRACT counts, exit codes, --json keys (two added).
+ *
  * Exit 0 = manifest printed. Exit 1 = ticket folder not found / sync missing.
  * Exit 2 = integrity problem (journal names an attachment absent from disk,
  *          or History.txt is older than the Redmine `Last updated` it records).
@@ -232,6 +239,18 @@ if (syncedAt && lastUpdated && new Date(syncedAt) < new Date(lastUpdated)) {
     problems.push(`History.txt synced ${syncedAt} is OLDER than the ticket's Last updated ${lastUpdated} — re-run redmine-sync`);
 }
 
+// ---- authors and roles (v1.4) ----
+// The role is looked up LIVE from the roster by name, never read back from a stamp in the file,
+// so an old History.txt and a hand-edited one both get today's answer.
+const ROLE = (() => { try { return require('../lib/redmine-role'); } catch (_) { return null; } })();
+const ticketState = (() => { try { return require('../lib/states').stateForPath(folder); } catch (_) { return null; } })();
+const roleTagOf = name => (ROLE ? ROLE.tag(ROLE.roleOf(name, { state: ticketState })) : 'role unknown, lookup unavailable');
+const descText = fs.existsSync(descPath) ? fs.readFileSync(descPath, 'utf8') : '';
+const descAuthor = ROLE ? ROLE.descriptionAuthor(historyText, descText) : null;
+const descRole = ROLE && descAuthor ? ROLE.roleOf(descAuthor, { state: ticketState }) : null;
+const spec = ROLE ? ROLE.specFromHistory(historyText, ticketState) : {};
+const specJson = k => (spec[k] ? { by: spec[k].block.author, role: spec[k].role.cls, stamp: spec[k].block.stamp, isBaSpec: spec[k].isSpec } : null);
+
 // ---- quest doc ----
 const qaDocCandidates = [
     path.join(REPO_ROOT, 'projects', 'coding-projects', 'active', `QA-${num}`, `QA-${num}.md`),
@@ -242,6 +261,7 @@ const qaDoc = qaDocCandidates.find(p => fs.existsSync(p)) || null;
 
 if (asJson) {
     console.log(JSON.stringify({ num, folder, archived, journals: journals.length, namedInJournals, briefFiles, qaDoc, problems,
+        descriptionBy: { author: descAuthor, role: descRole ? descRole.cls : 'unknown' }, specSource: [specJson('issue'), specJson('expected')],
         cycle: { status: redmineStatus, folders: cycleDirs.map(d => d.name), reopens, verdict: cycleVerdict, warn: cycleWarn, line: cycleLine } }, null, 2));
     process.exit(problems.length ? 2 : 0);
 }
@@ -256,11 +276,24 @@ journals.forEach((j, i) => {
     const tags = [];
     if (j.hasNotes) tags.push('notes');
     if (j.attachments.length) tags.push(`attach:${j.attachments.join(', ')}`);
-    L.push(`   A${i + 1}. ${j.ts}  ${j.author}  [${tags.join(' · ') || 'attr-only'}]`);
+    L.push(`   A${i + 1}. ${j.ts}  ${j.author} [${roleTagOf(j.author)}]  [${tags.join(' · ') || 'attr-only'}]`);
     L.push(`        ${firstNote(j)}`);
 });
 L.push('');
-L.push(`B. DESCRIPTION \u2014 ${fs.existsSync(descPath) ? `${fs.statSync(descPath).size} bytes` : 'MISSING'}. Echo its Isu + Expected verbatim.`);
+L.push(`B. DESCRIPTION \u2014 ${fs.existsSync(descPath) ? `${fs.statSync(descPath).size} bytes` : 'MISSING'}. Echo its Isu + Expected verbatim, WITH the author and role below.`);
+if (descAuthor) L.push(`   by ${descAuthor} [${ROLE.tag(descRole)}] — ${ROLE.descriptionNote(descRole)}`);
+else L.push(`   by (author not synced) [role unknown] — do not treat the Description as the BA spec. Re-run: node quest/redmine-sync.js ${num}`);
+L.push('');
+L.push('B2. SPEC SOURCE — who wrote the latest Issue / Expected list in the journal. Echo both lines.');
+for (const kind of ['issue', 'expected']) {
+    const p = spec[kind];
+    const label = kind === 'issue' ? 'Issue   ' : 'Expected';
+    if (!p) { L.push(`   ${label}: no numbered list in the journal`); continue; }
+    L.push(`   ${label}: ${ROLE.headline(kind, p)}`);
+    const newer = ROLE.newerLine(kind, p);
+    if (newer) L.push(`             ↳ ${newer}`);
+}
+L.push('   Only a BA-written list is the spec. A TSO, Developer or role-unknown list is a report.');
 L.push('');
 L.push(`C. ATTACHMENTS / BRIEF FILES \u2014 ${briefFiles.length}. Echo content per file (image = what is visible, pdf = annotation count).`);
 briefFiles.forEach((f, i) => L.push(`   C${i + 1}. ${f.rel}  (${f.size} bytes)`));
