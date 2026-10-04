@@ -952,3 +952,10 @@
 {"ts":"2026-10-04T02:24:53.396Z","category":"A2"}
 {"ts":"2026-10-04T01:16:43.590Z","category":"test-stopped-at-fixed-step"}
 {"ts":"2026-10-04T01:16:43.725Z","category":"A3"}
+{"ts":"2026-10-04T08:29:21.243Z","category":"commit-id-unsearchable"}
+{"ts":"2026-10-04T08:29:21.381Z","category":"A1"}
+{"ts":"2026-10-04T08:29:21.495Z","category":"A1"}
+{"ts":"2026-10-04T08:29:21.641Z","category":"A2"}
+{"ts":"2026-10-04T08:29:21.766Z","category":"A2"}
+{"ts":"2026-10-04T08:29:21.876Z","category":"A3"}
+{"ts":"2026-10-04T08:29:21.989Z","category":"A5"}

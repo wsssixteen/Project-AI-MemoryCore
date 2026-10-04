@@ -24,3 +24,15 @@ State resolution from the Task folder or permohonan id · the Scout, Recon, Rubr
 - A3 debugging: `et_sistem_<env>.pt_application_ex_entity` answered a blank-page ticket in one query, timestamp matched the BA video. Already in memory (`infra-server-log-request`); worked as designed.
 - A4 etanah: second instance of the shared-composite missing-bean-property class on the same bean (#279615, now #282442). Bestiary pattern 4 covers it; bake the instance at Phase 2 close.
 - A5 ⏭ no sweep ran.
+
+## Addendum — session 3 (#244600 rework cycle 1)
+
+| Axis | Claim | Concrete instance | Proposal logged |
+|---|---|---|---|
+| A1 agentic system | The pre-code check can be passed without being read, and skipped entirely by a shell script | `domain/pre-code-check/pre-code-check.check.hook.js` returns `fired:false` on `no-transcript`; 5 Java changes on #244600 were made by Python scripts in the shell | A1 ×2 |
+| A2 quest workflow | A falsifier written in the Rubric was never run before ship | Rubric 2026-10-01 "Falsifier C1" (Word no-change save alters the XML); fix `d61fc2e611` shipped 2026-10-02; BA failed it 2026-10-03. The falsifier ledger built this morning now blocks this | covered by the ledger; A2 necessity row for new destructive calls; A2 note check for a colleague's ticket |
+| A3 debugging | Probe coverage was one logger on the first build, and two writers were unprobed on the second | slips `probe-coverage-incomplete` ×2; the third build (22 probes, browser console) answered the test in one run and found the failing delete from 76 server lines | A3 bank the console-probe pattern |
+| A4 etanah issue-solving | A new side-effect call was written with no analog | `DocumentManagementSystemClient.delete()` on a discarded draft: 3 of 3 failed on MLIT; Pelupusan never deletes store files | A2 necessity row (same proposal) |
+| A5 sweep | The sweep rated the ticket ready while its only falsifier was unrun | sweep 2026-09-25 row "65%, 4.5 h" for #244600 | A5 sweep reads the ledger |
+
+What worked and must not be touched: the falsifier ledger at commit (it stopped the rework commit until rows 2 and 3 carried `RAN:` evidence) · the compile gate · probes shown in the browser console · miya's `[risk-ok]` as the only way past the local-test row.

@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-01→02, main checkout, ADHOC-STG-2026-1)
+- **Ask**: check stg1 and stg2 are both up to date; stg1 to follow stg2 (trigger #274266 PT Tangguh setup).
+- **Found**: both schemas share ONE flowable t_flowable17 (22 MLK_PLP_* same version + md5) · neither login can read the other schema · stg1 missing PDBB urusan (97 rows), PRBB Tambah Kuantiti (38), PT PYSKTPDT/PSKTPDT, PPTPB industri lookups, MCL smkn PLNASAL, AWAM slip params · 3 value diffs (PT PYSTP + PRBB PYRJKBBPTG nama, jns_dok keselamatan ×3).
+- **Done**: generated kod-subquery script from stg2 rows, verified read-only, miya nod, ran on stg1 in ONE transaction (before/after check matched) → COMMIT; re-diff = PLP parity except MCL SPI. Task 255. AH - STG - PLP - stg1 ikut stg2 data rujukan (2. Fix\ADHOC-STG-2026-1.sql + -check.sql). Register A43. Tools in projects/coding-projects/active/ADHOC-STG-2026-1/.
+- **Left out (stg2 ≠ PROD)**: MCL SPI peranan · ind_laporan PLP01 · PLP_BIL_THN_PERINGATAN param — miya's call.
+- **Open**: stg1 cold restart (miya) · todo Q1 🌐 Env row: decide where/when env parity becomes a routine.
+**Last Activity**: 2026-10-02 18:30 — #282442 Pembatalan Jana PRBB: R1 kod pejabat fallback `24c277d683` on `mlk/esokongan/282442`, cherry-picked int-env `495d16fe66`, MLIT tested pass · cross-module-check skill + ownership-input-check gate built · quest saved · DE.
+**Last Activity**: 2026-10-04 10:30 — #282442 rework cycle 1 reconciled across two sessions: 10-02 worktree diagnosed (MLIT error log 402808/402809, missing `keputusanMMKN` getter on `MlkMaklumatPermohonanPembatalanForm`), 10-04 worktree applied R2 `dcd4eab561` on `mlk/esokongan/282442`, int-env merge `f84c6436a5`. Same cause, same fix, no conflict. Quest doc Resume Point + checklist brought in line. Open: miya MLIT deploy + test on PTMLK/01/L/UPP/2026/4 (SaffuanH@melaka.gov.my), Redmine pass note, D1 PROD cleanup script, planned-release entry · DE.
+
 ## Session Recap (2026-10-01 → 02, worktree redmine-282442-9258e6, #282442)
 - **Ask**: quest #282442 (ESOKONGAN, PRBB Pembatalan Jana ralat), audit why the 09-30 adhoc called it GIS, build a pre-handover check, deploy internal, Redmine handover.
 - **Done**: root cause = `MlkUtilitiPembatalanPermohonanForm.initBPMFlow():346` sends "" kodPejabat for PRBB (helper `PelupusanExcelReaderHelper:854` skips PRBB) → common `DBUtil.GetSchemaByKodPejabat` falls to `ptg` → `et_ptg.log_service` missing → L18 NPE mask. R1 committed, int-env cherry-pick (merge conflicted on release 1.8.0), miya tested pass. D1 (8 PROD orphan UPP, 24 rows) checked safe, no script yet.
@@ -5667,6 +5676,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
