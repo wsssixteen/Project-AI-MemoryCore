@@ -182,6 +182,7 @@ function main() {
         fix_files: fx.present.concat(fx.placed), placed: fx.placed, conflict: fx.conflict, jboss, restart, ok, problem: problems.join(' | ') };
     fs.mkdirSync(path.dirname(LOG), { recursive: true });
     fs.appendFileSync(LOG, JSON.stringify(row) + '\n');
+    if (!process.env.LTP_LOG) { try { fs.appendFileSync(AUDIT_LOG, JSON.stringify(row) + '\n'); } catch (_) { /* audit copy is best effort */ } }
 
     console.log('═══ LOCAL TEST PREP — #' + qa + (dry ? ' (dry run)' : '') + ' ═══\n');
     console.log('| Step | Result |\n|---|---|');

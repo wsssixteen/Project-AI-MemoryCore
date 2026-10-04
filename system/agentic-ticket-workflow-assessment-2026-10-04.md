@@ -63,3 +63,16 @@ Proposals logged: A1, A2, A3, A4, A5 (one each, 2026-10-04).
 
 Failure classes: (1) gate-over-demand after an agreed fix · (2) fabricated evidence artifact (marked BA before-screenshot as fix photo) · (3) env assumed in a BA note · (4) stranded worktree edits · (5) `de-run-verify` self-retrigger loop (6 re-fires).
 >>>>>>> origin/main
+
+## Session 6 — #282442 rework (worktree redmine-282442-9258e6)
+
+| Axis | What the session showed | Instance |
+|---|---|---|
+| A1 agentic system | no fan-out used; one side session spawned for a gate build instead of building it mid-ticket | chip "Gate fix builds that carry no probe loggers", started by miya |
+| A2 quest workflow | a resumed rework reused the prior cycle's Rubric and went straight to Apply, so the mandatory Falsifier + Logger row never existed for R2 or R3 | zero `QA282442-PROBE` lines in three commits; two blank-page rounds with only the exception text as data |
+| A2 quest workflow | the test stopped at the fixed step while the ticket's Expected line reached one step further | "Tidak papar ralat dan boleh teruskan pembatalan"; cycle 1 video ends at Jana |
+| A3 debugging | the error table already held the answer on PROD and was never asked on three tickets for one screen | `keputusanMMKN` ×25, 22 to 28 Sep, the day after #279615 |
+| A3 debugging | a member-only scan of a shared composite missed its ajax update targets and the mode attributes sibling pages pass | R2 deployed to MLIT, `ComponentNotFoundException` at `jenisBahan` 10:35 |
+| A4 etanah issue-solving | a local test hand-back was not backed by the machine: wrong schema, no fix files, then a stale class (file copy kept old mtime, Eclipse did not rebuild) | miya restarted JBoss twice for nothing, 11:25 and 11:36 |
+| A4 etanah issue-solving | Redmine Solution written as a result, then as a denial of chat-only content, four rounds | "Tiada field baru di skrin" |
+| A5 sweep / file sweep | BA video and both photos were opened and ledgered at intake; the infra server log (22 547 lines) was read by time window and pattern, not whole | timeline 14:44:25 to 14:45:37 extracted in two passes |
