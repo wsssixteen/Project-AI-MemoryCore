@@ -49,3 +49,9 @@ log: `domain/ticket-close-block/log.jsonl` (ts + ticket + module + branch + comm
 | 10 | Two sessions write log.jsonl | accepted-risk — appendFileSync is per-line atomic; rows may interleave, none corrupt |
 | 11 | Num is a substring of a longer number | handled — `git branch --list *<num>*` will not match a longer number as a whole |
 | 12 | miya passes explicit `--branch`/`--intenv-sha` | handled — explicit args override auto-detection |
+
+## Falsifier ledger refusal (2026-10-04, #244600)
+
+With `--ba` on OUR fix (commit author is us), the tool first runs `domain/falsifier-ran-check/check.js`. An OPEN falsifier row or `local_test_confirmed` not true → exit 3, nothing printed to stdout, the reasons on stderr. No flag skips it. A colleague's fix and a ticket with no quest block are not checked. Fixtures: `domain/falsifier-ran-check/check.eval.js` 44, 45.
+
+| 13 | BA pass note asked while a falsifier is unrun | fixture-added — refused, exit 3 |
