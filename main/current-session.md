@@ -1,5 +1,19 @@
 # Current Session
 
+**Last Activity**: 2026-10-05 01:45 — boot audit + system structure: batch 1 LIVE on main (`19bc4963` · `a954de41` · `6beed4ba`), handover written, two read-only Workflow runs in flight (verification `wf_49cf7fce-b89` · batch-2 design `wf_923b9eaf-18e`). NOT a session close; no Domain Expansion run.
+
+## Session Recap (2026-10-02 → 2026-10-05, session "new-session-77cffa", AWAM build fix → boot audit → structure audit)
+- **READ FIRST**: `main/handoff-2026-10-05-boot-structure-audit.md` (decisions, built pieces, worklist, batch-2 table, resume steps) and `system/INDEX.md` (the one map + "Change record"). Page for みや: https://claude.ai/artifact/FYG8o9tQy6KzRTqMN1doDo
+- **Started as**: Danial's AWAM `mlk/stag-env` compile break (duplicate PDBB method + constants). Fixed and pushed, etanah-awam `98e8595245`. DONE.
+- **Then**: session audit → push gate v5 + compile gate v2 name the repo by its git remote (`63f0ebee`, evals 35/35 · 27/27).
+- **Boot audit**: 13 startup scripts, 61.4 s. Batch 1: 10 scripts, 12.7 s. `hook-syntax-check` and `worktree-cleanup-boot` INSTALLED as Features via the new `core/forge.js install hook`; `unmerged-release-boot`, `arabic-nudge`, `knowledge-schema-audit` boot copy taken off boot.
+- **Structure audit**: `system/INDEX.md` is THE one map. Six kinds of parts (Rules · Workflows · Features · Memory · Kernel · Projects), disk-checked by `node lib/folder-structure.js map`. 8 decisions recorded there (4 ruled by みや by popup, 4 Workflow defaults he left open). "Install" = a part enters through the forge.
+- **His corrections (all logged via `core/slips.js`)**: observability + monitoring are layers of EVERY Feature, never "the dashboard" · system rules do not live in auto-memory · check system-design and existing plans before proposing · replies too long on the phone · boot reads skipped silently.
+- **His standing instructions (2026-10-05)**: an artifact for every system change · save at the moment of change, not at Domain Expansion · questions through the popup with a diagram or table. Recorded in `system/INDEX.md` "Change record". A gate for it is NOT built (Memory audit).
+- **Daily-work check (01:30)**: 126 registrations, 0 missing files · 691 real hook fires since the change, 0 errors · ticket gate, intake gate, quest phase gate, compile gate, push gate all fired clean · Redmine board printed live at the 01:26 boot. Detail in the handover §9.
+- **Next**: みや said "I want to boot batch 2". Design comes from run `wf_923b9eaf-18e`; show it to him by popup BEFORE building (it changes what he sees at boot). After batch 2: rule the overdue watches → install 53 loose hooks → skills → legacy `Feature/` → Memory audit.
+- **Open**: watch `wmuu2uoib` prints the wrong rollback line (true rollback `git revert 6beed4ba a954de41 635197ba 19bc4963`) · 25 adhoc rows ripe for archive (surfaced at the 01:26 boot) · #246923 Resolved on Redmine with no local block.
+
 **Last Activity**: 2026-10-04 18:00 — "save this quest" rule built (`lib/save-quest.js` + close-phase Save-quest mode, on main `50b3c46b`) · #281638 Redmine Closed 2026-09-29, local archived, verdict DONE · Domain Expansion run.
 
 ## Session Recap (2026-09-28 → 2026-10-04, session "patch-281638", #281638 + save-quest build)

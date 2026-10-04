@@ -69,6 +69,33 @@ Design constraints carried from the 2026-10-04 audit (so the build does not re-i
 
 A Feature's layers, in みや's words (2026-09-04): **observability** = liveness (did it fire, did it block, how long); **monitoring** = context (why, on which quest and phase, was it right, what it cost, did it meet its goal). Both are part of every Feature, not a dashboard. At ruling time: 59 of 115 Features write a log, 9 write a goal log, 41 have README + goal + log + eval together.
 
+## Change record — every system change is saved at the moment it is made (みや, 2026-10-05)
+
+His words: "keep creating artifacts for your reference every time a system change" · "I do not want to rely simply on domain expansion to save anything that is important … save every time you updated something. So that you will know the history and purpose and reason behind it."
+
+A system change = any change to a Rule, Workflow, Feature or Kernel part in the map above. It is not done until each row below that applies is written, in the same turn as the change. Domain Expansion only checks these; it is never the first place a change is recorded.
+
+| What is recorded | Where (existing ledger, nothing new) | When |
+|---|---|---|
+| What changed + why + rollback | the part's own `README.md` + `NUKE-MARKER.md` · `system/registry.jsonl` (forge writes it) | in the commit that makes the change |
+| Rule text changed | `system/claude-md-changelog.md` + the version stamp | same edit pass |
+| Hook added, moved or removed | `system/system-architecture.md` §9 sync row + `node system/sync-hook-catalog.js` | same commit |
+| Behaviour to watch after the change | `node lib/watch.js add …` BEFORE the commit (a watch added after it prints the wrong rollback line) | before commit |
+| The decision and who made it | "Structure rulings" above, or the owning skill | when ruled |
+| Session narrative (what, why, state, next) | `main/current-session.md` · the day's `daily-diary/current/<date>.md` · an open effort's `main/handoff-<date>-<topic>.md` | same turn, not at session end |
+| Open work | `main/todo.md` | same turn |
+| The picture | the artifact for that area, republished to the same URL | same turn |
+
+Artifacts (private pages on claude.ai, republished in place; the source HTML is rebuilt from this map and the handover when a session no longer has it):
+
+| Area | URL | Shows |
+|---|---|---|
+| System map | https://claude.ai/artifact/7rC3ck11zTHQdfqbtAnNGv | the six kinds, what is installed, what is not |
+| Boot sequence | https://claude.ai/artifact/WnyAt8Jdg9LEkZjdytmWzB | every startup script, cost before and after |
+| Boot + structure handover | https://claude.ai/artifact/FYG8o9tQy6KzRTqMN1doDo | decided · built · batch 2 · still to do (full text: `main/handoff-2026-10-05-boot-structure-audit.md`) |
+
+Not built: a gate that refuses a system-change commit when a row above is missing. Today this section is a rule that Ruri follows; the gate belongs to the Memory audit.
+
 ## What lives in system/
 
 | File | Purpose | Phase built |
