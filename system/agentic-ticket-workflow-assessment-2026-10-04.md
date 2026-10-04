@@ -17,3 +17,10 @@ Covers the session of 2026-10-03 night (Terengganu made active, 5 blind eval rep
 ## What worked and must not be touched
 
 State resolution from the Task folder or permohonan id · the Scout, Recon, Rubric, Apply engine and its code-level Recon lenses · live task-state query for the holder login · the adversarial Verify stage · the literal-scope rule · the artifact-checking gates (de-close, de-knowledge, branch-guard, compile, knowledge-first, attachment-ledger, db-claim-proof).
+
+## Addendum — session 2 (#282442 two-session reconcile)
+- A1 ⏭ nothing new beyond the morning sweep.
+- A2 quest workflow: two sessions worked #282442 without either knowing. Instance: 10-02 worktree stopped at "R2 needs nod"; 10-04 worktree applied R2 and updated active.txt but left the qa_doc Resume Point + checklist stale. Proposal logged (A2): at ticket-gate, list other live worktrees whose name carries the same ticket number. Eval case: two worktree dirs containing `282442` → gate prints the other path.
+- A3 debugging: `et_sistem_<env>.pt_application_ex_entity` answered a blank-page ticket in one query, timestamp matched the BA video. Already in memory (`infra-server-log-request`); worked as designed.
+- A4 etanah: second instance of the shared-composite missing-bean-property class on the same bean (#279615, now #282442). Bestiary pattern 4 covers it; bake the instance at Phase 2 close.
+- A5 ⏭ no sweep ran.

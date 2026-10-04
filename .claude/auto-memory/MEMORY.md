@@ -2,6 +2,7 @@
 
 
 ## Feedback
+- [delegated-quest-learn-before-close](feedback_delegated_quest_learn_before_close.md) — 🚨 colleague-held quest stays delegated while open on Redmine; Closed → /learn-from-fix audit, then close
 - [no-builtin-browser](feedback_no_builtin_browser.md) — 🚨 BANNED: built-in browser (mcp__Claude_Browser__*) for any web task; use Claude in Chrome
 - [junior-handover-hints](feedback_junior_handover_hints.md) — 🚨 junior handover = hints + where to look, never the finished script or diff
 - [browser-edge-default](feedback_browser_edge_default.md) — 🚨 "show me in the browser" / Redmine / web UI → miya's EDGE (signed in), never the built-in pane or Chrome first
