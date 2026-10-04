@@ -1,5 +1,20 @@
 # Current Session
 
+**Last Activity**: 2026-10-04 17:20 — auto-memory index consolidated in the main checkout (MEMORY.md 26,697 → 10,506 bytes, 196 → 73 memory files), regression run after miya's correction, Domain Expansion + audit of whether DE covers a one-off system improvement.
+
+## Session Recap (2026-10-04, main checkout, auto-memory consolidation — no ticket)
+- **Ask**: bring `.claude\auto-memory\MEMORY.md` under 17.1 KB without losing a rule (it was over its 24.4 KB read limit, last lines silently dropped). Then: commit, Domain Expansion, audit whether DE covers this kind of one-off system improvement.
+- **Done**: 125 memory files folded whole into 71 surviving files (body kept under a dated `## Merged 2026-10-04` heading), index regrouped by workflow with the owning skill named per group, 2 OneDrive conflict copies deleted, 1 dangling index line removed (`feedback_quick_patch_steal_risk.md` never existed in git). 48 files kept as their own line because a hook, skill, library or boot file names them.
+- **Skills touched (additive pointer section "Memory rules for this workflow")**: quest · close-phase · deploy · script-check · adhoc-save · bpmn-check · list-redmine.
+- **miya's two corrections**: (1) workflow rules belong in the workflow that loads them, not in auto-memory, and I must check the system (system-rules / system-design) before adding anything; (2) I merged without a regression test and loaded system-design only after he said so.
+- **Regression (run after correction 2)**: 530 name spellings over tracked + untracked files → 0 hooks / skills / libraries / boot files point at a deleted file; 6 live doc mentions repointed (`main\todo.md`, `main\kpi-tracker.md`, this file); 125 of 125 bodies present; 9 evals of memory-reading components green.
+- **Rules now at the top of MEMORY.md**: inventory before adding a memory · full repo search + referrer evals before merging, renaming or deleting one.
+- **Slips (ledger)**: `memory-instead-of-workflow` · `no-regression-before-change`.
+- **Commit**: the consolidation went to main inside another session's DE commit `9cc8f31c` (authorship is not a filter). This DE's own commit follows.
+- **Found, NOT fixed**: `domain\staging-schema-tracker\eval.js` is a dead eval (loads a hook file that moved) · `.claude\CLAUDE.md` and `feedback_task_folder_ownership.md` still describe the notes txt that the 2026-09-30 Task folder shape removed · no mechanical gate stops deleting a memory file something still names.
+- **DE coverage audit**: see `system\agentic-ticket-workflow-assessment-2026-10-04.md` § "Session: auto-memory consolidation".
+- **Open (miya's word)**: build the memory delete gate · remove the dead eval · fix the notes-file conflict · dedupe memories against skill bodies.
+
 **Last Activity**: 2026-10-04 17:10 — probe gate session closed: `domain/predicate-box` v3 → v4.1 on main (`ed75928b`), eval 46/46; the six-kinds logger gate was dropped; nothing owed on this thread except miya's ruling on the commit-reminder gap.
 
 ## Session Recap (2026-10-04, main checkout + worktree mc-probe-matrix (removed), probe-decision gate)
@@ -27,18 +42,3 @@
 - **Watches**: `wmusfyzci` (CLAUDE.md v1.77) observed OK on two real Terengganu asks · `wmuqtj4w2` (handoff-load) fired on the infra-handoff prompt but I did not open the reply with the HANDOFF-LOADED line.
 - **Open for みや**: who runs #283031 (pass the script to Alex or take it) · patch the other 2 reassigned IDs or not · trace the `perluJT` Hantar failure or not · mention the odd `aplikasiId` to teknikal or not · close the Ammar blocks (QA-275043, QA-265109) · block for #246923.
 **Last Activity**: 2026-10-04 17:00 — #282924 closed Phase 1 (AWAM PRBB one hakmilik per permohonan): fix `f42d96a1a0` on `mlk/esokongan/282924`, int-env `49a85f7366`, stag-env `641f5a0c9e`; miya deployed internal AWAM and posted the Redmine handover; Domain Expansion
-
-## Session Recap (2026-10-02 → 2026-10-04, worktree melaka-pembatalan-ralat-f283f4 (pruned), ADHOC-PRBB-2026-9 → #282924)
-- **Ask**: check a WhatsApp adhoc from BA Mira (PRBB at Portal Awam: one hakmilik per permohonan, error if more than one is ticked) → find the eSOKONGAN ticket the TSO raises → keep a BA/TSO names list → start the quest to Rubric → fix, deploy, handover, close, DE.
-- **Adhoc**: ADHOC-PRBB-2026-9, register A44, answered same turn (possible, small). Promoted to #282924 on arrival; adhoc block, project folder and Task folder `260. AH - AWAM - PRBB - Had satu hakmilik satu permohonan` archived.
-- **Fix**: `etanah-awam` `CarianRasmiHakmilikForm.onSelected()`: Melaka PRBB with more than 1 ticked → ralat "Sila pilih satu (1) hakmilik sahaja bagi setiap permohonan." + Teruskan Permohonan disabled; the 5 table ajax tags also refresh `msgs`. 8 Java lines + 5 xhtml lines. Rubric moved the check from Teruskan (C1) to the tick (C2) because Mira wrote "kalau nak tick lebih dari 1 ... papar mesej ralat".
-- **Git**: `f42d96a1a065a104430607b1fe8cc9c398790065` · `Ref #282924 - PRBB - Add one hakmilik only check on Portal Awam hakmilik selection` · `mlk/esokongan/282924` · merged `--no-ff` in work-clone worktrees to `mlk/int-env` `49a85f7366` and `mlk/stag-env` `641f5a0c9e`. miya's `E:\Projects\Melaka\etanah-awam` local `mlk/master` was reset to origin on his popup nod (dropped one empty local merge commit `433cf7c693`); it is on `mlk/master`, clean.
-- **Test + Redmine**: miya tested on the deployed internal AWAM (video `2. Fix\1. Test tick lebih satu hakmilik.mp4`, his name), posted the note himself 08:45Z. #282924 = Resolved, assignee Nurul Amirah Nadiah, 100%, Root Cause + Solutions filled. Block QA-282924 `status=closed closed=2026-10-04`.
-- **Owed on #282924**: BA verify · staging SERVER deploy (branch is merged, miya deployed internal only) · planned-release list · kaunter PRBB also accepts more than 1 hakmilik (PROD PTMLK/01/L/PRBB/2026/56, entered at kaunter by fazirah@melaka.gov.my; not raised to BA) · 7 unsent PROD drafts with more than 1 hakmilik (told to BA as a note, miya accepted the risk).
-- **System changes (all on main)**: `quest/redmine-people.js` + refresh hook in `quest/redmine-sync.js` → `etanah-knowledge/melaka/REDMINE-PEOPLE.md` (641 people, TSO 31 / BA 317 / QA 8 / Developer 285; TSO raise eSOKONGAN tickets, author usually ITSO Melaka Admin) · `predicate-box` v4 (probe gate passes on a stated fix confidence of 80%+; eval 46/46) · `fix-photo` v2 (fires only when miya asks; real after-fix screens only; eval 46/46) · quest SKILL.md + quest-protocol scope lines.
-- **Memory**: `redmine-people-roster` · `simple-fix-no-probe-no-local-test` · `no-unrequested-fix-photo` · speech collection entry 13 (his #282924 pass note, env line = what he really deployed, one-fact Note, "Thank you.") + his Task-folder file naming style.
-- **Slips (ledger)**: etanah-git-fetch-in-miya-repo · reask/unrequested-test-and-loggers · fabricated-fix-photo · wording-not-miya-style. Upgrade row: gate-over-demand (predicate-box v4).
-- **Found, NOT fixed**: `de-run-verify` Stop hook re-fires in a loop (it reads its own reminder as the user's message; 6 re-fires on 2026-10-02). Chip "Fix de-run-verify hook self-retrigger loop" was offered, not started. The session worktree's git link was pruned mid-session (work salvaged to main via temp worktrees; two temp worktree metadata folders `mc-probe-confidence`, `mc-fixphoto` could not be deleted: permission denied).
-- **Open**: Mira's verify on internal · staging server deploy on miya's word · Phase 2 after the pass.
-
-**Last Activity**: 2026-10-04 16:45 — #244600 rework cycle 1 shipped to internal and handed to BA (`mlk/qa/244600v3` `f14c58ae64`, int-env `fbbbaf7bc6`); miya posted the notes on #244600 and #275043; quest saved; DE.

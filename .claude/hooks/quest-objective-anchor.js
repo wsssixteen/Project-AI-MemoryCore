@@ -26,6 +26,14 @@
  *   MUST be preceded by a verbatim quote of THAT specific issue and an
  *   explicit nod-request — even if みや himself proposed the contraction.
  *
+ * v1.2 (2026-10-04, miya: "you thought the description is by the BA, when TSO is the one
+ *   that writes it"): every verbatim block now carries its AUTHOR and ROLE from the Redmine
+ *   roster (lib/redmine-role.js). Only a BA-class author's list is labelled BA ISSUES /
+ *   BA EXPECTED; anyone else prints "<ROLE> REPORT (not the BA spec)"; an author who is not in
+ *   the roster prints "ROLE UNKNOWN REPORT". The spec is the LATEST BA list; a newer list by
+ *   a non-BA gets a one-line pointer. Preserved from v1.1: verbatim items, latest-cycle stamp,
+ *   Rules 1-4, report-only, silent on read failure, the audit log (now with author + role).
+ *
  * Reads the MAIN-repo quest/active.txt (authoritative; worktree copies drift).
  * v1.1: still REPORT-ONLY — emits to stdout, never blocks.
  *
@@ -69,78 +77,25 @@ function isPastTesting(block) {
 }
 
 /**
- * Extract the MOST-RECENT verbatim Issue:/Expected: blocks from History.txt.
- * Returns { issues: string[], expected: string[], cycleStamp: string|null }.
- * Tolerates Redmine markdown bold (*Issue:*) and bare (Issue:) markers.
- * Returns empty arrays if file missing or no markers found.
+ * The verbatim Issue:/Expected: lists of a History.txt, each with its author and role.
+ * Returns { issue: pick|null, expected: pick|null } (lib/redmine-role.js specFromHistory):
+ * pick = { block:{stamp, author, items}, role, isSpec, newer|null }.
+ * A missing file, or a roster lib that cannot load, yields no blocks (never a guessed BA label).
  */
-function extractVerbatimBA(historyPath) {
+function extractVerbatimBA(historyPath, state) {
   const txt = safeRead(historyPath);
-  if (!txt) return { issues: [], expected: [], cycleStamp: null };
-  const lines = txt.split(/\r?\n/);
-
-  // Marker regex — `Issue:` / `*Issue:*` / `**Issue:**` (case-insensitive)
-  const isMarker = (l, word) =>
-    new RegExp(`^\\s*\\*{0,2}${word}\\s*:?\\s*\\*{0,2}\\s*$`, 'i').test(l);
-  // Author/timestamp line: `--- 2026-06-30T01:00:29Z by Anis Nabilah ---`
-  const stampRe = /^---\s*(\S+)\s+by\s+(.+?)\s*---\s*$/;
-  // Numbered item: `1. ...` or `  1. ...`
-  const itemRe  = /^\s*(\d+)\.\s+(.+\S)\s*$/;
-
-  // Track all marker-blocks in order; last wins for each kind.
-  const blocks = { issue: [], expected: [] };
-  let curStamp = null;
-  let curKind = null;        // 'issue' | 'expected' | null
-  let curItems = [];
-
-  function flush() {
-    if (curKind && curItems.length) {
-      blocks[curKind].push({ stamp: curStamp, items: curItems.slice() });
-    }
-    curItems = [];
-  }
-
-  for (const raw of lines) {
-    const m = raw.match(stampRe);
-    if (m) {
-      flush();
-      curStamp = m[1];
-      curKind = null;
-      continue;
-    }
-    if (isMarker(raw, 'Issue')) {
-      flush();
-      curKind = 'issue';
-      continue;
-    }
-    if (isMarker(raw, 'Expected')) {
-      flush();
-      curKind = 'expected';
-      continue;
-    }
-    if (curKind) {
-      const im = raw.match(itemRe);
-      if (im) {
-        curItems.push(`${im[1]}. ${im[2]}`);
-      } else if (raw.trim() === '' && curItems.length) {
-        // blank line ends the block
-        flush();
-        curKind = null;
-      }
-    }
-  }
-  flush();
-
-  const last = (arr) => (arr.length ? arr[arr.length - 1] : null);
-  const lastIssue = last(blocks.issue);
-  const lastExpected = last(blocks.expected);
-  return {
-    issues: lastIssue ? lastIssue.items : [],
-    expected: lastExpected ? lastExpected.items : [],
-    cycleStamp: (lastIssue && lastIssue.stamp) || (lastExpected && lastExpected.stamp) || null,
-  };
+  if (!txt) return { issue: null, expected: null };
+  try { return require('../../lib/redmine-role').specFromHistory(txt, state); }
+  catch { return { issue: null, expected: null }; }
 }
 
+// The ticket's state: the block's state= field, else its task_folder path. Unknown stays unknown.
+function stateOf(block) {
+  try {
+    const r = require('../../lib/states').resolve({ activeBlock: { state: fieldOf(block, 'state') || '', task_folder: fieldOf(block, 'task_folder') || '' } });
+    return r.state || null;
+  } catch { return null; }
+}
 function appendAuditLog(entry) {
   try {
     const logDir = path.join(REPO_ROOT, 'domain', 'quest-objective-anchor');
@@ -165,10 +120,10 @@ function main() {
     const issue = fieldOf(block, 'issue_one_liner') || '(no issue_one_liner recorded — read the qa_doc Ticket Summary)';
     const taskFolder = fieldOf(block, 'task_folder') || '';
     const scope = [urusan, tugasan].filter(Boolean).join(' / ');
-    let verbatim = { issues: [], expected: [], cycleStamp: null };
+    let verbatim = { issue: null, expected: null };
     if (taskFolder) {
       const historyPath = path.join(require('../../lib/task-folder').briefDir(taskFolder), 'History.txt');
-      verbatim = extractVerbatimBA(historyPath);
+      verbatim = extractVerbatimBA(historyPath, stateOf(block));
     }
     active.push({ qa, scope, issue, verbatim });
   }
@@ -178,13 +133,15 @@ function main() {
   for (const a of active) {
     lines.push(`\u{1F3AF} OBJECTIVE LOCK — ${a.qa}${a.scope ? ' (' + a.scope + ')' : ''}`);
     lines.push(`   ISSUE (paraphrase): ${a.issue}`);
-    if (a.verbatim.issues.length) {
-      lines.push(`   BA ISSUES (verbatim, latest cycle ${a.verbatim.cycleStamp || '?'}):`);
-      for (const it of a.verbatim.issues) lines.push(`      ${it}`);
-    }
-    if (a.verbatim.expected.length) {
-      lines.push(`   BA EXPECTED (verbatim):`);
-      for (const it of a.verbatim.expected) lines.push(`      ${it}`);
+    const RR = (() => { try { return require('../../lib/redmine-role'); } catch { return null; } })();
+    for (const kind of ['issue', 'expected']) {
+      const p = a.verbatim[kind];
+      if (!p || !RR) continue;
+      lines.push(`   ${RR.headline(kind, p)}:`);
+      for (const it of p.block.items) lines.push(`      ${it}`);
+      const newer = RR.newerLine(kind, p);
+      if (newer) lines.push(`      ↳ ${newer}`);
+      if (!p.isSpec) lines.push('      ↳ no BA list of this kind in the journal. Treat this as a report; a BA journal outranks it.');
     }
   }
   lines.push('   ── stay anchored ──');
@@ -200,9 +157,14 @@ function main() {
     quests: active.map(a => ({
       qa: a.qa,
       scope: a.scope,
-      verbatimIssueCount: a.verbatim.issues.length,
-      verbatimExpectedCount: a.verbatim.expected.length,
-      cycleStamp: a.verbatim.cycleStamp,
+      verbatimIssueCount: a.verbatim.issue ? a.verbatim.issue.block.items.length : 0,
+      verbatimExpectedCount: a.verbatim.expected ? a.verbatim.expected.block.items.length : 0,
+      cycleStamp: (a.verbatim.issue && a.verbatim.issue.block.stamp) || (a.verbatim.expected && a.verbatim.expected.block.stamp) || null,
+      issueBy: a.verbatim.issue ? a.verbatim.issue.block.author : null,
+      issueRole: a.verbatim.issue ? a.verbatim.issue.role.cls : null,
+      issueIsBaSpec: a.verbatim.issue ? a.verbatim.issue.isSpec : null,
+      expectedBy: a.verbatim.expected ? a.verbatim.expected.block.author : null,
+      expectedRole: a.verbatim.expected ? a.verbatim.expected.role.cls : null,
     })),
   });
 }

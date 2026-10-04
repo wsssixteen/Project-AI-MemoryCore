@@ -1,11 +1,19 @@
 // redmine-sync.js — Fetch assigned Redmine tickets, classify, optionally create Task folders
-// Version: v11 (2026-09-22)
+// Version: v14 (2026-10-04)
 // Usage:
 //   node redmine-sync.js           — run once
 //   node redmine-sync.js --poll    — poll every POLL_INTERVAL_MINUTES
 //   node redmine-sync.js <num>     — by-ID single-ticket sync (v9.2; creates if new, refreshes if existing)
 //
 // Changelog (newest first — per-function comments carry the detail):
+//   v14   2026-10-04  miya: "you thought the description is by the BA, when TSO is the one that
+//                     writes it". Every journal stamp is followed by a   [role] <Class> line and
+//                     the History.txt header (and a new Description.txt) names the Description's
+//                     author and role, from the roster via lib/redmine-role.js. The roster refresh
+//                     (quest/redmine-people.js --if-stale) is back and runs BEFORE the sync so the
+//                     roles it stamps are today's. Preserved: the --- <ts> by <name> --- stamp
+//                     line is byte-identical (ticket-load-verify + quest-objective-anchor parse it);
+//                     header order; a failed roster refresh never fails the sync.
 //   v11   2026-09-22  miya: rework-cycle folder by GENUINE-REOPEN COUNT, not by folder birthtime
 //                     (OneDrive rewrites mtimes on sync → v10 missed the 2nd reopen of #278699). A
 //                     genuine reopen = non-rework status → rework status; intra-rework hops ignored.
@@ -36,6 +44,22 @@ const fs   = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 const TF   = require('../lib/task-folder'); // Task-folder shape: 1. Brief (legacy 0. Brief) · N. Rework\Brief
+const ROLE = (() => { try { return require('../lib/redmine-role'); } catch (_) { return null; } })(); // author → BA / TSO / Developer / QA
+// Role label for one Redmine user, in the state the Task folder belongs to. Never guesses:
+// a name outside the roster comes back "role unknown".
+function roleTag(user, folderPath) {
+    if (!ROLE || !user || !user.name) return 'role unknown, no author';
+    let state = null;
+    try { state = require('../lib/states.js').stateForPath(folderPath); } catch (_) { state = null; }
+    return ROLE.tag(ROLE.roleOf(user.name, { state, id: user.id }));
+}
+function descriptionByLine(author, folderPath) {
+    if (!author || !author.name) return 'Description by: (author not returned by Redmine) [role unknown] — do not treat the Description as the BA spec.';
+    let state = null;
+    try { state = require('../lib/states.js').stateForPath(folderPath); } catch (_) { state = null; }
+    const r = ROLE ? ROLE.roleOf(author.name, { state, id: author.id }) : null;
+    return `Description by: ${author.name} [${r ? ROLE.tag(r) : 'role unknown'}] — ${ROLE ? ROLE.descriptionNote(r) : 'role lookup unavailable.'}`;
+}
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 
@@ -436,7 +460,7 @@ function extractAssignedToMeDate(journals, issue) {
     return iso ? toGmt8Date(iso) : null;
 }
 
-function formatJournalsForHistory(journals) {
+function formatJournalsForHistory(journals, folderPath) {
     if (!journals || !journals.length) return '(no journal entries)';
     return journals.map(j => {
         const date  = j.created_on || '';
@@ -449,7 +473,7 @@ function formatJournalsForHistory(journals) {
             if (d.property === 'cf')         return `  [cf] field#${d.name}: ${d.old_value || '∅'} → ${d.new_value || '∅'}`;
             return `  [${d.property}] ${JSON.stringify(d)}`;
         }).join('\n');
-        const body = [];
+        const body = [`  [role] ${roleTag(j.user, folderPath)}`];
         if (details) body.push(details);
         if (notes) {
             body.push('  notes:');
@@ -488,6 +512,7 @@ function writeHistoryFile(briefFolder, journals, issueMeta, fields) {
         `Redmine ticket journal — synced ${new Date().toISOString()}`,
         `Issue: ${issueMeta.prefix} #${issueMeta.number} — ${issueMeta.subject}`,
         `Status: ${issueMeta.status} | Last updated: ${issueMeta.updated_on || ''}`,
+        descriptionByLine(issueMeta.author, briefFolder),
         ...(baGiven.length ? [
             '🚨 BA-GIVEN TEST DATA (from journals, LATEST first — this OUTRANKS any doc/pack/memory record):',
             ...baGiven.map(r => '   ' + r),
@@ -496,7 +521,7 @@ function writeHistoryFile(briefFolder, journals, issueMeta, fields) {
         '─'.repeat(70),
         '',
     ].join('\n');
-    const body = formatJournalsForHistory(journals);
+    const body = formatJournalsForHistory(journals, briefFolder);
     fs.writeFileSync(path.join(briefFolder, 'History.txt'), header + body + '\n');
     if (baGiven.length) console.log('🚨 BA-GIVEN TEST DATA (latest first):\n' + baGiven.map(r => '   ' + r).join('\n'));
     const berulang = fieldLines.find(l => l.startsWith('🚨 ISU BERULANG'));
@@ -515,6 +540,7 @@ async function updateExistingTicketHistory(issue) {
         subject:   issue.subject,
         status:    issue._status,
         updated_on: issue.updated_on,
+        author:    issue.author,
     }, fields);
     return journals.length;
 }
@@ -543,6 +569,7 @@ async function createTaskFolder(issue, parsed) {
         `Env: ${parsed.prefix}`,
         `Ticket: ${parsed.prefix} #${parsed.number}`,
         `Subject: ${issue.subject}`,
+        `Author: ${(issue.author && issue.author.name) || '(not returned by Redmine)'} [${roleTag(issue.author, brief)}]`,
         '',
         issue.description || '(no description in Redmine)',
     ].join('\n');
@@ -915,6 +942,7 @@ async function runWithCreate() {
                     subject:   issue.subject,
                     status:    issue._status,
                     updated_on: issue.updated_on,
+                    author:    issue.author,
                 }, await fetchIssueFields(issue.id));
                 console.log(`    📝 [${issue._parsed.prefix} #${issue._parsed.number}] History.txt → ${journals.length} journal ${journals.length === 1 ? 'entry' : 'entries'}`);
             }
@@ -996,7 +1024,7 @@ async function runSingle(id) {
             if (journals.length) {
                 writeHistoryFile(TF.briefDir(folder), journals, {
                     prefix: it._parsed.prefix, number: it._parsed.number,
-                    subject: it.subject, status: it._status, updated_on: it.updated_on,
+                    subject: it.subject, status: it._status, updated_on: it.updated_on, author: it.author,
                 }, await fetchIssueFields(it.id));
                 console.log(`    📝 History.txt → ${journals.length} journal ${journals.length === 1 ? 'entry' : 'entries'}`);
             }
@@ -1010,13 +1038,16 @@ async function runSingle(id) {
 }
 
 // v10: exported for quest/redmine-sync.eval.js (fixture-driven; no Redmine call in these).
-module.exports = { addStatusFolder, isReworkTransition, isGenuineReopen, genuineReopenCount, REWORK_STATUS_IDS, abbreviateType, buildFolderSlug, taskBaseFor, TYPE_ABBR, extractBaGivenTestData };
+module.exports = { formatJournalsForHistory, descriptionByLine, roleTag, addStatusFolder, isReworkTransition, isGenuineReopen, genuineReopenCount, REWORK_STATUS_IDS, abbreviateType, buildFolderSlug, taskBaseFor, TYPE_ABBR, extractBaGivenTestData };
 
 if (require.main === module) {
     const args   = process.argv.slice(2);
     const poll   = args.includes('--poll');
     const create = args.includes('--create');
     const idArg  = args.find(a => /^#?\d+$/.test(a));
+    // Roster of who is BA / TSO, once a day, BEFORE the sync so the roles stamped below are current.
+    // Best-effort: a Redmine hiccup here never fails the retrieval.
+    try { execFileSync(process.execPath, [path.join(__dirname, 'redmine-people.js'), '--quiet', '--if-stale'], { stdio: 'ignore', timeout: 180000, windowsHide: true }); } catch (_) { /* old roster stays */ }
 
     // 2026-10-02 per miya: every retrieval refreshes the BA/TSO roster (once a day is enough).
     const refreshPeople = () => {
