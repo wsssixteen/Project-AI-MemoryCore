@@ -90,3 +90,18 @@
 {"ts":"2026-10-02T10:29:22.124Z","id":"ADHOC-PLP-2026-1","outcome":"pass","fails":[],"dur_ms":42}
 {"ts":"2026-10-02T10:31:15.531Z","id":"ADHOC-STG-2026-1","outcome":"pass","fails":[],"dur_ms":69}
 {"ts":"2026-10-02T10:36:17.292Z","id":"ADHOC-STG-2026-1","outcome":"pass","fails":[],"dur_ms":64}
+{"ts":"2026-10-04T04:17:07.671Z","id":"ADHOC-PLPS-2026-1","outcome":"fail","fails":["qa_doc: Match Keys \"permohonan\" line","qa_doc: Match Keys \"aplikasi\" line","register: row A1 cites ADHOC-PLPS-2026-1","register: status cell uses the vocabulary","register: status ↔ block status"],"dur_ms":45}
+{"ts":"2026-10-04T04:17:19.811Z","id":"ADHOC-PLPS-2026-1","outcome":"pass","fails":[],"dur_ms":41}
+{"ts":"2026-10-04T04:22:28.837Z","id":"ADHOC-PLPS-2026-1","outcome":"pass","fails":[],"dur_ms":54}
+{"ts":"2026-10-04T04:29:04.297Z","id":"ADHOC-PLPS-2026-1","outcome":"pass","fails":[],"dur_ms":42}
+{"ts":"2026-10-04T04:40:34.799Z","id":"ADHOC-PLPS-2026-1","outcome":"pass","fails":[],"dur_ms":61}
+{"ts":"2026-10-04T04:55:57.791Z","id":"ADHOC-PLPS-2026-1","outcome":"pass","fails":[],"dur_ms":63}
+{"ts":"2026-10-04T07:25:13.187Z","id":"ADHOC-MLPS-2026-1","outcome":"fail","fails":["block: exactly one active.txt/active-archive.txt block"],"dur_ms":33}
+{"ts":"2026-10-04T07:25:41.025Z","id":"ADHOC-MLPS-2026-2","outcome":"pass","fails":[],"dur_ms":37}
+{"ts":"2026-10-04T07:25:41.199Z","id":"ADHOC-PLPS-2026-1","outcome":"pass","fails":[],"dur_ms":43}
+{"ts":"2026-10-04T07:29:15.948Z","id":"ADHOC-MLPS-2026-2","outcome":"pass","fails":[],"dur_ms":39}
+{"ts":"2026-10-04T07:29:38.289Z","id":"ADHOC-MLPS-2026-2","outcome":"pass","fails":[],"dur_ms":32}
+{"ts":"2026-10-04T08:35:08.449Z","id":"ADHOC-MLPS-2026-2","outcome":"pass","fails":[],"dur_ms":54}
+{"ts":"2026-10-04T08:48:33.372Z","id":"ADHOC-PLPS-2026-1","outcome":"pass","fails":[],"dur_ms":46}
+{"ts":"2026-10-04T08:53:10.019Z","id":"ADHOC-PLPS-2026-1","outcome":"pass","fails":[],"dur_ms":61}
+{"ts":"2026-10-04T08:53:10.312Z","id":"ADHOC-MLPS-2026-2","outcome":"pass","fails":[],"dur_ms":62}

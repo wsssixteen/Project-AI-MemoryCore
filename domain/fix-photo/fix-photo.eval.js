@@ -39,12 +39,16 @@ function transcript(rows, raw) {
   return p;
 }
 function hook(stdin) { return spawnSync(process.execPath, [HOOK], { input: stdin, encoding: 'utf8', timeout: 30000, env: process.env }); }
-function run(rows, raw) { return hook(JSON.stringify({ transcript_path: transcript(rows, raw) })); }
+const ASK = { type: 'user', message: { role: 'user', content: 'please make a fix photo with a red box' } };
+function run(rows, raw) { return hook(JSON.stringify({ transcript_path: transcript(rows ? [ASK].concat(rows) : rows, raw) })); }
+function runNoAsk(rows) { return hook(JSON.stringify({ transcript_path: transcript(rows) })); }
 const blocked = (r) => r.status === 2 && /fix-photo/.test(r.stderr || '');
 const silent = (r) => r.status === 0 && !/fix-photo:/.test((r.stderr || '') + (r.stdout || ''));
 const d = (r) => 'exit=' + r.status + ' err=' + (r.stderr || '').slice(0, 80).replace(/\n/g, ' ');
 
 // ── Hook fixtures ────────────────────────────────────────────────────────────
+let r0 = runNoAsk([PASTED, say(UI_HANDBACK)]);       check('H00 v2 (#282924): UI hand-back + BA screenshot, miya did NOT ask for a fix photo → silent', silent(r0), d(r0));
+r0 = runNoAsk([PASTED, { type: 'user', message: { role: 'user', content: 'Stop hook feedback: fix-photo: add FIX-PHOTO: <full path> red box' } }, say(UI_HANDBACK)]); check('H00b SELF-TRIGGER: the gate text echoed as a user turn is not an ask → silent', silent(r0), d(r0));
 let r = hook('{}');                                  check('H01 empty stdin → exit 0', r.status === 0, d(r));
 r = hook('not json');                                check('H02 malformed stdin → exit 0', r.status === 0, d(r));
 r = hook(JSON.stringify({ transcript_path: path.join(TMP, 'missing.jsonl') })); check('H03 missing transcript → exit 0', r.status === 0, d(r));
@@ -65,7 +69,7 @@ r = run([PASTED, say('▶ YOUR MOVE — QA-281650 run the SQL patch on stg2 then
 r = run([PASTED, say('▶ YOUR MOVE — the MemoryCore dashboard button now shows the panel you asked for, refresh the page.' + ' More words here.'.repeat(20))]); check('H18 non-etanah UI hand-back (MemoryCore dashboard) → silent', silent(r), d(r));
 r = run([PASTED, say('Earlier photo: FIX-PHOTO: ' + GOOD_PHOTO + ' ✓' + PAD), say('DEPLOY — 256334 → internal. Tugasan PYPDBB medan Pembetulan dibuang.' + PAD)]); check('H19 FIX-PHOTO from an EARLIER reply this session counts → silent', silent(r), d(r));
 r = run([PASTED, say('▶ YOUR MOVE medan dibuang PTMLK')]); check('H20 short reply (<200 chars) → silent', silent(r), d(r));
-r = run(null, 'garbage line\n{not json}\n' + JSON.stringify(PASTED) + '\n' + JSON.stringify(say(UI_HANDBACK)) + '\n'); check('H21 malformed transcript lines skipped, still BLOCKS on the valid ones', blocked(r), d(r));
+r = run(null, 'garbage line\n{not json}\n' + JSON.stringify(ASK) + '\n' + JSON.stringify(PASTED) + '\n' + JSON.stringify(say(UI_HANDBACK)) + '\n'); check('H21 malformed transcript lines skipped, still BLOCKS on the valid ones', blocked(r), d(r));
 const big = [PASTED].concat(Array.from({ length: 4000 }, (_, i) => say('filler reply ' + i + ' ' + 'x'.repeat(400)))).concat([say(UI_HANDBACK)]);
 let t0 = Date.now(); r = run(big); const ms = Date.now() - t0;
 check('H22 large transcript (~1.7MB) still decides, under 5s', blocked(r) && ms < 5000, d(r) + ' ms=' + ms);

@@ -13,4 +13,4 @@ metadata:
 - Never ask him to strike/keep a row he did not originate. Run it, measure it, audit it, then show numbers + the goal.
 - Every proposal to add/change/remove a feature states: the feature's `goal:` line, the data (fires · true blocks · cost · goal_met rate), the verdict, in short plain sentences.
 - At `/system-check` and weekly audit Ruri reads turns.jsonl + feature logs + goals and proposes; he only nods on deletions.
-- Related: [[feedback_observability_vs_monitoring]] · plan §M.8 goal-lens · system-design Rule 13 WHY-chain.
+- Related: [[Inventory-first — take stock before acting]] · plan §M.8 goal-lens · system-design Rule 13 WHY-chain.

@@ -1,6 +1,6 @@
 ---
 name: feedback_commands_never_fenced
-description: "Commands miya must RUN go as ONE ```bash fenced block PER command (each renders its own Run + copy-icon button) — never one fence wrapping several, never bare inline-backtick bullets"
+description: "one bash block per command; full absolute paths; no colons or dashes in prose; deliverable shown in chat, never \"see file\""
 metadata: 
   node_type: memory
   type: feedback
@@ -40,5 +40,67 @@ rule and this memory's 2026-08-12 note flagged it for a follow-up sweep that NEV
 (verify next time each is touched): `reply-shape-spec.md` §3b · `deploy/SKILL.md` §5 · `deploy/eval.js`
 checks 21-24 — confirm each says one-```bash-block-per-command, not the old inline/no-fence rule.
 
-Related: [[feedback_two_sentence_default]] · [[feedback_ba_facing_reply_plain]] ·
-[[feedback_show_diagram_for_issues]]
+Related: [[feedback_reply_separation_of_concerns]] · [[feedback_ticket_writing_style]] ·
+[[feedback_reply_separation_of_concerns]]
+
+---
+
+## Merged 2026-10-04: feedback-full-path-always (was feedback_full_path_always.md)
+
+> Every file I name gets its FULL absolute path in plain text — relative paths and markdown links break because the Task folder sits outside the session working directory
+
+🚨 **Every file I name carries its FULL absolute path, written as plain text.**
+`1. Tasks\Melaka\131. ADHOC - …\evidence-PT-2026-3.sql` is BANNED — it is a fragment miya cannot
+paste, cannot click, and cannot search.
+
+Write: `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\136. ESOKONGAN #274510 - Pelupusan - PT - ID Permohonan tidak Masuk ke User\274510.sql`
+
+**Why the links have never worked** (2026-08-07, miya: *"Even the links to folders you gave so far
+doesn't work. Is it because of Task folder is in Onedrive?"*): **it is not OneDrive.** The harness
+resolves a markdown link's href relative to the session **working directory** — which during quest
+work is a MemoryCore worktree under `…\Project-AI-MemoryCore\.claude\worktrees\<name>\`. The Task
+folder (`…\1. Tasks\Melaka\`) and `projects/` live in entirely different subtrees, so a relative
+href has nothing to resolve against and the link dies. Backslashes and spaces in the path make it
+worse.
+
+**How to apply**
+- Anything OUTSIDE the current working directory → **plain-text absolute path, no markdown link.**
+  A dead link is worse than no link; it looks actionable and isn't.
+- Anything INSIDE the working directory → a relative markdown link is fine and clickable.
+- A `.sql` / `.docx` / evidence file I just wrote → also deliver it via SendUserFile, so the path is
+  a reference rather than the only way to reach it.
+
+Related: [[feedback_commands_never_fenced]] · [[Tasks folder file format]] ·
+[[feedback_readable_safe_script]] — same family: the artifact has to be usable where he actually is.
+
+---
+
+## Merged 2026-10-04: feedback_plain_punctuation (was feedback_plain_punctuation.md)
+
+> 🚨 GLOBAL SPEECH — no colons, no hyphens, no dashes (em/en) in prose sentences; write short plain simple technical sentences; especially in BA and human facing handoffs
+
+🚨 Drop the colon, the hyphen and every dash (em dash and en dash) from prose sentences. Write short plain simple technical sentences. One idea per sentence. This is global speech, not only BA text, and miya has said it many times.
+
+**Banned in prose** the colon character, the hyphen joining words, the em dash, the en dash, the arrow, the AI cadence (label then colon then value; word dash word aside).
+**Use instead** a full stop and a new sentence. Say the words plainly. A number stays a number. A file path keeps its own slashes and dots.
+
+**BA and human facing handoffs** plainest of all. No headers with colons. No bullet with a dash lead. Full sentences a clerk reads once and understands. State what happened. State the cause. State the fix.
+
+**Why (2026-09-07, #278580, per miya)** I keep writing BA handoffs in AI speak with colons and dashes after being told repeatedly to stop. Pairs with [[feedback_ticket_writing_style]] and [[feedback_reply_separation_of_concerns]].
+
+---
+
+## Merged 2026-10-04: show-deliverable-in-chat-never-point-to-project-folder (was feedback_show_deliverable_in_chat_never_point_to_project_folder.md)
+
+> 🚨 A brief / reply / summary miya asked for is SHOWN IN CHAT in full; NEVER 'see QA-NNN.md §Reply'. A hard copy he needs goes to the Task folder (his), never the projects/ quest doc (mine)
+
+**Rule (みや 2026-09-04, #275847, verbatim anger)**: *"WHERE IS THE BRIEF I WANT TO SEE IT HERE!!!! YOU ARE BANNED FROM POINTING ME TO YOUR COPY OF INFORMATION UNLESS I NEED THE HARD COPY OF SOMETHING BUT THEN AGAIN IT WILL BE CREATED INSIDE TASK FOLDER NOT THE PROJECT FOLDER FOR YOUR SIDE OF COPY INTERNAL INFORMATION."*
+
+- Anything he asked to READ or SEND (a brief for a colleague, a Redmine reply, a summary) is written **in the chat reply, in full, at the top** — not summarised, not linked.
+- Never "see `QA-NNN.md` §Reply" / "in the quest doc" — `projects/coding-projects/active/<n>/` is MY internal copy; he does not open it.
+- If he needs a **hard copy** (a file to attach or keep), it goes into HIS Task folder (`1. Tasks\<State>\<n>. …\2. Fix\` or the notes file), never the project folder.
+- A ritual (Domain Expansion, gates) never buries the deliverable: the deliverable comes FIRST, the ritual after.
+
+**Why**: the Ammar brief was emitted under 60 lines of DE ritual and the fuller reply was pointed at `QA-275847.md` — he could not find either. Pairs with [[feedback_ticket_writing_style]] and [[feedback_reply_separation_of_concerns]].
+
+**How to apply**: when a message contains "brief me / summary to send / reply for X", the FIRST block of the answer is the sendable text; everything else follows.

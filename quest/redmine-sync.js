@@ -1018,14 +1018,19 @@ if (require.main === module) {
     const create = args.includes('--create');
     const idArg  = args.find(a => /^#?\d+$/.test(a));
 
+    // 2026-10-02 per miya: every retrieval refreshes the BA/TSO roster (once a day is enough).
+    const refreshPeople = () => {
+        try { execFileSync(process.execPath, [path.join(__dirname, 'redmine-people.js'), '--quiet', '--if-stale'], { stdio: 'ignore', timeout: 120000 }); } catch (_) { /* roster is best-effort */ }
+    };
+
     if (idArg) {
-        runSingle(idArg.replace(/^#/, ''));
+        runSingle(idArg.replace(/^#/, '')).then(refreshPeople);
     } else if (poll) {
         console.log(`  Polling every ${POLL_INTERVAL_MINUTES} min. Ctrl+C to stop.\n`);
         const fn = create ? runWithCreate : run;
         fn();
         setInterval(fn, POLL_INTERVAL_MINUTES * 60 * 1000);
     } else {
-        (create ? runWithCreate : run)();
+        (create ? runWithCreate : run)().then(refreshPeople);
     }
 }

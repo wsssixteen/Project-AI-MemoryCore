@@ -1,6 +1,6 @@
 ---
 name: project_wa_read
-description: "WaRead — read-only WhatsApp group reader (linked device, Baileys 6.7.24) at E:\\Dev\\scripts\\WaRead; /whatsapp skill; link state; why the desktop-app path is banned"
+description: "WaRead WhatsApp reader at E:\\Dev\\scripts\\WaRead; relink number 60186669566, never ask"
 metadata: 
   node_type: memory
   type: project
@@ -44,3 +44,13 @@ Link state (history): NOT LINKED as of 2026-09-10 afternoon — needs his phone 
 
 **Why:** 2026-09-10 the computer-use path on the WhatsApp desktop app needed a grant each session, marked a group read when opened, and the app stopped taking clicks/keys mid-task (DBeaver kept jumping to front); the Tech Team group was never read that day. Desktop app / WhatsApp Web / Chrome are BANNED as reading paths now (see [[feedback_whatsapp_read_rules]]).
 **How to apply:** any "read/check WhatsApp" ask → invoke the whatsapp skill → run wa-read.js; if not linked, ask for the number first. Minimize the desktop app if it was ever brought forward.
+
+---
+
+## Merged 2026-10-04: user-phone-number (was user_phone_number.md)
+
+> みや's own WhatsApp/phone number (60186669566) — use for WaRead link, never ask again
+
+みや's phone number: **0186669566** (international form **60186669566**). Given 2026-09-30 with "you need to remember my number".
+
+Use it for `node E:\Dev\scripts\WaRead\wa-read.js link --phone 60186669566` whenever the reader shows `linked: false` — do not ask him for it again. Never share it or put it in any deliverable. See [[wa-read]].

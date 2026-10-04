@@ -72,4 +72,11 @@ Patched `ind_tgsn.nama = 'Semakan Minit Bebas'`; the Sejarah Tugasan grid reads 
 
 *v4 — 2026-10-01 per miya (#274266): rule 7 file name `patch-<ticket>.sql` → `<ticket>.sql` (+ `<ticket>-check.sql`), matching auto-memory feedback_script_file_naming (2026-09-25); added always .sql never .txt, Redmine upload = same file, read + replace a superseded same-name file, lint before ready. Spec-preservation: placement (2. Fix / latest Rework) and never-root kept; only the name pattern changed, justified by the newer naming rule.*
 
+## Memory rules for this workflow (read when this skill fires — added 2026-10-04, additive)
+
+- `.claude/auto-memory/feedback_readable_safe_script.md` — looks-safe script, never DELETE `ind_*`, patch-only needs write-path + scope sweep, analog check, anchor ids, I run SELECTs myself
+- `.claude/auto-memory/feedback_sql_insert_id_check.md` — INSERT with hardcoded PK
+- `.claude/auto-memory/feedback_prod_patch_infra_handoff.md` — PROD patch message to infra, server log request
+- `.claude/auto-memory/feedback_infra_script_schema_env.md` — Infra/PROD script format
+
 *v5 — 2026-10-03, Terengganu active per みや: rule 6 + the emit line read "the resolved state's value (`node lib/states.js show <state>`)" and carry the general warning that a schema name does not identify the state (the MCP server name does); the rule 8 story is labelled as the Melaka example. Spec-preservation: rules 1-8 untouched; every Melaka and Perak schema literal kept.*

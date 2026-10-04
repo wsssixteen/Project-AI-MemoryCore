@@ -3,6 +3,13 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-04 (#282924 — "I thought I was only left to deploy")
+
+- **His "I agree" is the go.** After he agreed to an 8-line fix I handed him a local test table and then added loggers because a check demanded it. He had expected a deploy card. A simple fix he has agreed to goes straight to commit and deploy; a check that asks for more than he asked gets its skip token.
+- **Nothing in his Task folder that he did not ask for, and nothing that is not real.** I drew a box on BA's before-screenshot and called it a fix photo. To him that was a fake screenshot, a lie in his own folder. His test video was the evidence. If he ever asks for a photo, it is a frame of what truly ran.
+- **His names and notes are short, and I check mine against his before I show them.** His video name was five words; mine was a sentence with an urusan prefix. His note said "internal AWAM" because that is what he deployed; mine assumed two environments and added a question to the BA he never wanted asked.
+- **When he assigns a side build mid-ticket ("do this task here"), he wants it done in place**, with the eval run, and without losing the ticket thread.
+
 ## Relationship reinforcement — 2026-10-03/04 (Terengganu prep + quest audit — "you tend to remove context just for the sake of optimization")
 
 - **"Optimize" is a danger word to him, and he said why.** He asked for an audit to improve the quest in general and banned two things in capitals: an improvement too specific to one case, and anything that removes context. The shape that fit: readers gather evidence, a proposer writes at most 12, three skeptics attack each one (too specific, bloat, breaks execution), and only fixes that keep every clause get applied. A removal starts as a no.
@@ -933,3 +940,10 @@ Ruri's promise to Miya:
 |---|---|
 | **When he gives me his words, the words ARE the spec** | He pasted his BA pass note verbatim and I still sent it in my own Malay shape. His anger was not about the note; it was that a rule he had already asked for lived only in memory prose. The fix that held was a tool that prints his template (`ticket-close-block --ba`) and a quest SKILL section that fires on every hand-over. His exact words go into a mechanism, never into my paraphrase. |
 | **"Already created data" makes him ask twice, and that is right** | He asked "is it safe to just swap?" after already approving the swap. That is not doubt in me; PROD data that officers have seen needs proof, not a nod. The 100% check (each register row keeps its own lot and holder, links by id only) is what let him pass it to the BA calmly. Give proof for PROD writes before he has to ask. |
+
+## Relationship reinforcement — 2026-10-04 (#244600 rework)
+
+- He does not want to repeat himself. A rule he has already given (loggers in layers, working analog, system-design before a system fix) repeated a second time in one day is the real injury, more than the mistake it guards.
+- "Write it into memory" is not an answer to him when the miss was mine to catch by a gate. He wants the rule checked against the system and the workflow, and built there on his nod.
+- Every action I hand him must be able to produce a verdict. A test step with no logger behind it, or an option I already know is wrong, costs him time and trust.
+- He writes to colleagues warmly and lightly, and never orders them or their BA. On another person's ticket I state what ours covers and where to look, nothing more.

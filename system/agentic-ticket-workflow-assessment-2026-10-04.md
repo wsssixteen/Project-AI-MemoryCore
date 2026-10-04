@@ -17,3 +17,34 @@ Covers the session of 2026-10-03 night (Terengganu made active, 5 blind eval rep
 ## What worked and must not be touched
 
 State resolution from the Task folder or permohonan id · the Scout, Recon, Rubric, Apply engine and its code-level Recon lenses · live task-state query for the holder login · the adversarial Verify stage · the literal-scope rule · the artifact-checking gates (de-close, de-knowledge, branch-guard, compile, knowledge-first, attachment-ledger, db-claim-proof).
+
+## Addendum — session 2 (#282442 two-session reconcile)
+- A1 ⏭ nothing new beyond the morning sweep.
+- A2 quest workflow: two sessions worked #282442 without either knowing. Instance: 10-02 worktree stopped at "R2 needs nod"; 10-04 worktree applied R2 and updated active.txt but left the qa_doc Resume Point + checklist stale. Proposal logged (A2): at ticket-gate, list other live worktrees whose name carries the same ticket number. Eval case: two worktree dirs containing `282442` → gate prints the other path.
+- A3 debugging: `et_sistem_<env>.pt_application_ex_entity` answered a blank-page ticket in one query, timestamp matched the BA video. Already in memory (`infra-server-log-request`); worked as designed.
+- A4 etanah: second instance of the shared-composite missing-bean-property class on the same bean (#279615, now #282442). Bestiary pattern 4 covers it; bake the instance at Phase 2 close.
+- A5 ⏭ no sweep ran.
+
+## Addendum — session 3 (#244600 rework cycle 1)
+
+| Axis | Claim | Concrete instance | Proposal logged |
+|---|---|---|---|
+| A1 agentic system | The pre-code check can be passed without being read, and skipped entirely by a shell script | `domain/pre-code-check/pre-code-check.check.hook.js` returns `fired:false` on `no-transcript`; 5 Java changes on #244600 were made by Python scripts in the shell | A1 ×2 |
+| A2 quest workflow | A falsifier written in the Rubric was never run before ship | Rubric 2026-10-01 "Falsifier C1" (Word no-change save alters the XML); fix `d61fc2e611` shipped 2026-10-02; BA failed it 2026-10-03. The falsifier ledger built this morning now blocks this | covered by the ledger; A2 necessity row for new destructive calls; A2 note check for a colleague's ticket |
+| A3 debugging | Probe coverage was one logger on the first build, and two writers were unprobed on the second | slips `probe-coverage-incomplete` ×2; the third build (22 probes, browser console) answered the test in one run and found the failing delete from 76 server lines | A3 bank the console-probe pattern |
+| A4 etanah issue-solving | A new side-effect call was written with no analog | `DocumentManagementSystemClient.delete()` on a discarded draft: 3 of 3 failed on MLIT; Pelupusan never deletes store files | A2 necessity row (same proposal) |
+| A5 sweep | The sweep rated the ticket ready while its only falsifier was unrun | sweep 2026-09-25 row "65%, 4.5 h" for #244600 | A5 sweep reads the ledger |
+
+What worked and must not be touched: the falsifier ledger at commit (it stopped the rework commit until rows 2 and 3 carried `RAN:` evidence) · the compile gate · probes shown in the browser console · miya's `[risk-ok]` as the only way past the local-test row.
+
+## Session: ADHOC-PRBB-2026-9 → #282924 (2026-10-02 → 10-04)
+
+| Axis | What the session showed (instance) |
+|---|---|
+| A1 agentic system | No fan-out used; the whole quest ran inline on banked adhoc findings. The session worktree lost its git link mid-session (`fatal: not a git repository ... worktrees/melaka-pembatalan-ralat-f283f4`), so two edits (redmine-people.js, redmine-sync hookup) sat stranded for two days until salvaged by hand through a temp worktree. |
+| A2 quest workflow | Adhoc → ticket promotion worked: A44 matched, no re-Scout, Rubric in one pass. The Rubric caught C1 → C2 from BA's verbatim words. After the nod the workflow over-demanded: local test hand-back + probe matrix (Stop hook) + fix photo (Stop hook) on an 8-line 85% fix. Cost: 2 angry rounds. Fixed same day: predicate-box v4, fix-photo v2. |
+| A3 debugging | No debugging. Confidence 85% held; fix worked first deploy. The unread 15% (draft resume path) was never traced, it was accepted as a risk by miya. |
+| A4 etanah issue-solving | Analog in the same file found in minutes (`URUSAN_MAXIMUM_ONE_HAKMILIK`, PLTP/PSBS message). Multi-state gate (`isMelaka()`) was added from the in-file convention. Kaunter route found by one PROD census (first tugasan PK). |
+| A5 sweep / file sweep | Both BA images opened and echoed. Video read by contact sheet (36 frames) which showed select-all was NOT in the video; asked instead of assuming. The pass note assumed "internal & staging" with no evidence of which server he deployed. |
+
+Failure classes: (1) gate-over-demand after an agreed fix · (2) fabricated evidence artifact (marked BA before-screenshot as fix photo) · (3) env assumed in a BA note · (4) stranded worktree edits · (5) `de-run-verify` self-retrigger loop (6 re-fires).

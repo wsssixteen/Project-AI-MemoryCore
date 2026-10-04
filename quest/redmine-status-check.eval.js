@@ -10,7 +10,9 @@
  * Cases (issue JSON fixtures only — never calls Redmine):
  *   (a) own ticket, name carries "(Dev PLP)", id 1311, Rework, local hold → ok
  *   (b) own ticket, bare name, id 1311                                  → ok
- *   (c) assigned to another user id, local hold                         → diverged
+ *   (c) colleague holds it open, local hold                             → tracking (2026-10-04: keep, never close)
+ *   (c2-c10) delegated lifecycle: Rework → tracking · Closed → learn · Resolved → tracking ·
+ *            Rejected → diverged · closed locally too early → closed-early · own fix closed by BA → diverged
  *   (d) own ticket Resolved on Redmine, local active                    → diverged
  *   (e) unassigned on Redmine, local hold                               → ok
  *   (f) closed locally, still open + own on Redmine                     → redmine-open
@@ -39,7 +41,16 @@ const OTHER     = { id: 1218, name: 'Ammar (Dev PLP)' };
 
     check('(a) own ticket with "(Dev PLP)" suffix → ok', v('hold', issue('Rework', MIYA_ROLE)) === 'ok', v('hold', issue('Rework', MIYA_ROLE)));
     check('(b) own ticket with bare name → ok', v('hold', issue('Rework', MIYA_BARE)) === 'ok', v('hold', issue('Rework', MIYA_BARE)));
-    check('(c) other assignee → diverged', v('hold', issue('In Progress', OTHER)) === 'diverged', v('hold', issue('In Progress', OTHER)));
+    check('(c) colleague holds it In Progress, local hold → tracking (never "close")', v('hold', issue('In Progress', OTHER)) === 'tracking', v('hold', issue('In Progress', OTHER)));
+    check('(c2) delegated, colleague in Rework → tracking', v('delegated', issue('Rework (Requirement Update)', OTHER)) === 'tracking', v('delegated', issue('Rework (Requirement Update)', OTHER)));
+    check('(c3) delegated, Closed on Redmine → learn', v('delegated', issue('Closed', OTHER)) === 'learn', v('delegated', issue('Closed', OTHER)));
+    check('(c4) delegated, Resolved (may bounce back) → tracking', v('delegated', issue('Resolved', OTHER)) === 'tracking', v('delegated', issue('Resolved', OTHER)));
+    check('(c5) delegated, Rejected → diverged', v('delegated', issue('Rejected', OTHER)) === 'diverged', v('delegated', issue('Rejected', OTHER)));
+    check('(c6) closed locally, colleague still open → closed-early', v('closed', issue('In Progress', OTHER)) === 'closed-early', v('closed', issue('In Progress', OTHER)));
+    check('(c7) archived locally, colleague in Rework → closed-early', v('archived', issue('Rework', OTHER)) === 'closed-early', v('archived', issue('Rework', OTHER)));
+    check('(c8) own fix, local active, BA Closed it → diverged (not learn)', v('active', issue('Closed', OTHER)) === 'diverged', v('active', issue('Closed', OTHER)));
+    check('(c9) closed locally, Closed on Redmine → ok', v('closed', issue('Closed', OTHER)) === 'ok', v('closed', issue('Closed', OTHER)));
+    check('(c10) delegated, own again and open (handed back) → ok', v('delegated', issue('Rework', MIYA_ROLE)) === 'ok', v('delegated', issue('Rework', MIYA_ROLE)));
     check('(d) own ticket Resolved on Redmine → diverged', v('active', issue('Resolved', MIYA_ROLE)) === 'diverged', v('active', issue('Resolved', MIYA_ROLE)));
     check('(e) unassigned on Redmine → ok', v('hold', issue('New', undefined)) === 'ok', v('hold', issue('New', undefined)));
     check('(f) closed locally, open + own on Redmine → redmine-open', v('closed', issue('Rework', MIYA_ROLE)) === 'redmine-open', v('closed', issue('Rework', MIYA_ROLE)));
