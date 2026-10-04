@@ -941,3 +941,10 @@
 {"ts":"2026-10-04T00:10:44.053Z","category":"A2"}
 {"ts":"2026-10-04T00:10:44.209Z","category":"A1"}
 {"ts":"2026-10-04T00:10:44.342Z","category":"A1"}
+{"ts":"2026-10-04T01:15:30.498Z","category":"shipped-untested-fix"}
+{"ts":"2026-10-04T02:10:48.834Z","category":"popup-without-context"}
+{"ts":"2026-10-04T03:58:29.821Z","category":"probe-coverage-incomplete"}
+{"ts":"2026-10-04T06:30:29.562Z","category":"probe-coverage-incomplete"}
+{"ts":"2026-10-04T07:07:18.660Z","category":"new-destructive-call-no-analog"}
+{"ts":"2026-10-04T07:52:58.293Z","category":"claim-without-code-read"}
+{"ts":"2026-10-04T08:02:23.676Z","category":"bossy-note-on-others-ticket"}
