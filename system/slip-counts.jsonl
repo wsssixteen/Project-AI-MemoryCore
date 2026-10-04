@@ -943,3 +943,5 @@
 {"ts":"2026-10-04T00:10:44.342Z","category":"A1"}
 {"ts":"2026-10-04T02:16:29.835Z","category":"shipped-untested-fix"}
 {"ts":"2026-10-04T02:24:53.396Z","category":"A2"}
+{"ts":"2026-10-04T01:16:43.590Z","category":"test-stopped-at-fixed-step"}
+{"ts":"2026-10-04T01:16:43.725Z","category":"A3"}
