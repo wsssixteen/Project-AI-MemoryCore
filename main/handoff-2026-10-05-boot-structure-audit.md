@@ -132,6 +132,31 @@ The 10 failing evals of the 01:49 battery run:
 | `lib/hook-runtime.eval.js` | 10 of 12. F3 and F4 assert "exactly one new row" in the REAL telemetry file; a live hook appended a row at the same moment. The wrapper itself wrote the right rows. | test design (older), exposed tonight. **REPAIRED**: the eval now points the wrapper at a temp telemetry folder; 13 of 13, four runs in a row, and it no longer writes fixture rows into the real telemetry (new check F6). |
 | `domain/worktree-cleanup-boot/worktree-cleanup-boot.eval.js` | 63 of 63 when run alone, but it takes 178 s and the battery kills every eval at 120 s. It entered the battery when the hook was installed into `domain/` (the battery does not scan `.claude/hooks/`). | **yes, a side effect of the install.** Quarantined with the reason (`system/eval-quarantine.jsonl`, class SLOW-NOT-BROKEN) so the battery reports it and does not count it green. Repair = a per-eval time budget in `lib/eval-battery.js`, or faster fixtures. |
 
+### 9a. INCIDENT 2026-10-05 01:47 — every session worktree lost its git link (cause NOT proven)
+
+| Item | Fact (each checked on disk this session) |
+|---|---|
+| What | At 01:47:40–42 local, `.git\worktrees\` went from 5 linked entries to 0 usable ones. `git worktree list` showed only the main checkout (the 01:28 sweep row said `registered: 6`). |
+| What survived | Every folder and every file. 61 folders under `.claude\worktrees\`: 49 with a `.git` link to a missing admin folder, 11 with no `.git` file, 1 intact (this session, after repair). |
+| This session | `HEAD`, `commondir`, `gitdir` were gone from `.git\worktrees\new-session-77cffa\`; `index`, `COMMIT_EDITMSG`, `logs` remained. Found at 01:57 when `git add` answered `fatal: not a git repository`. |
+| Repair | Rewrote the three files (`HEAD` = `ref: refs/heads/claude/new-session-77cffa`, `commondir` = `../..`, `gitdir` = the worktree's `.git` path). Then `git worktree lock` with a reason. Commit `0fed42c6` went through after that. |
+| What other sessions see | A session in another worktree gets `fatal: not a git repository` on its next git command. Same repair works: three small files, branch name from `git branch --list "claude/*"`. |
+
+Causes examined:
+
+| Candidate | Verdict | Evidence |
+|---|---|---|
+| The cleanup eval, killed by the battery at 120 s in that same second | EXCLUDED (one reproduction) | Re-ran it exactly as the battery does, with an unlocked canary worktree registered: canary and this session's link untouched right after the kill and 45 s later. |
+| A Workflow subagent ran a git command that did it | EXCLUDED | 462 shell commands logged across 57 agents; none ran `worktree prune / remove`, `gc` or a delete before 01:47:40. All commands in that minute were `git log / show / blame`. |
+| A session boot on this laptop launched the background cleanup | EXCLUDED | No SessionStart rows near 17:47Z in telemetry; no finished-run row after 17:28:59Z in `domain\worktree-cleanup-boot\log.jsonl`. And a prune on this laptop keeps entries whose folders exist. |
+| The other laptop (device name `miyazaki` in OneDrive conflict copies) ran `git worktree prune` and OneDrive synced the deletions here | NOT EXCLUDED, NOT PROVEN | `domain\worktree-cleanup-boot\worktree-cleanup-boot.hook.js:371` runs a bare `git worktree prune` at every boot on every machine; on a machine where the stored absolute paths do not exist, prune drops every entry. The hook's own eval (block S) names this. Last trace of that laptop: `.git\index-miyazaki-4`, 04/10 17:08:49, which is also when two sessions lost their links on 4 October. No trace for tonight. |
+
+Not caused by the boot change, as far as the evidence goes: the prune line is old and ran at every boot before the change too. Not confirmed safe either: the change did not make it worse and did not fix it.
+
+Standing risk and the open choice (みや's, proposal A1 of 2026-10-04 "lock a live session's worktree"): (a) lock each session's worktree at boot, git-native, a prune on any machine skips a locked entry and the lock file syncs; (b) stop the bare prune and let only the main-checkout sweep decide; (c) move worktrees out of OneDrive (memory `project_onedrive_worktrees`). Until ruled: this session is locked by hand.
+
+Leftover: `.git\worktrees\mc-canary-13156\` (my test canary: `logs`, `refs`, `ORIG_HEAD`) could not be deleted, "Permission denied". Harmless; git lists it as prunable and the next prune removes it.
+
 Independent runs (Workflow tool, read-only):
 
 | Run | Run id | What | Result |
