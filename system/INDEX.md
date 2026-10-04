@@ -32,7 +32,7 @@ LAYER 5 — State                     (current data)       → quest/active.txt,
 | `user-side-INDEX.md` | Sub-index for User-side Guardrails (user-side-guardrail.js hook + usage-guidance skill + MIYA-NOTEBOOK.md) | Phase 1 skeleton ✅ → Phase 5 populates |
 | `evolution-protocol.md` | How system-layer self-updates on Anthropic releases (SessionStart double-check + manual invoke) | Phase 1 placeholder ✅ → Phase 7 implements |
 | `slip-log.md` | **Pending Phase 8** — consolidated slip history from 8 scattered files | Phase 8 |
-| `hook-fire-log.md` | **Pending Phase 6** — per-hook fire logging for self-enforcement eval | Phase 6 |
+| `system/telemetry/hook-fires.jsonl` + `lib/liveness-report.js` (replace `hook-fire-log.md`, deleted 2026-08-16; pointer corrected 2026-10-04) | Per-hook fire logging for self-enforcement eval | Live |
 | `build-progress.md` | **Pending** — multi-session build state tracker (per refinement #6) | Add at next session resume |
 
 ## Cross-references (where system-layer touches other layers)
@@ -41,11 +41,11 @@ LAYER 5 — State                     (current data)       → quest/active.txt,
 |---|---|---|
 | `library-items/agent-architecture/claude-code-best-practices.md` | Knowledge layer | Read by system-design-router Step 3.5 (best-practices check) before deciding hook/skill/CLAUDE.md |
 | `personality.md` — Honesty Invariants section (Phase 4) | Identity layer | Always-on values that complement the Honesty atomic skills (triggered) |
-| `.claude/skills/system-design-router/SKILL.md` | Capabilities layer | The skill that runs the inventory → system-design → best-practices → skill/hook decision loop |
+| `.claude/skills/auto-skill-on-mistake/SKILL.md` (the system-design-router; the rename to `system-design-router` was never done, pointer corrected 2026-10-04) | Capabilities layer | The skill that runs the inventory → system-design → best-practices → skill/hook decision loop |
 | `.claude/hooks/system-edit-gate.js` (Phase 6, v1.2 2026-07-06) | Capabilities layer | PreToolUse hook on `system/*` paths — advisory reminder + HARD-BLOCK arch-doc-sync predicate (deny if system-touching edit lacks `system/system-architecture.md` Read/Edit this session) |
 | `domain/design-consult-gate/design-consult-gate.gate.hook.js` (v1.2 2026-07-06) | Capabilities layer | PreToolUse Edit\|Write hook — HARD-BLOCKS edits to skills/hooks/CLAUDE.md/personality.md/system/**/quest-protocol/settings.json unless `/system-design` + `/system-rules` invoked this session; eval-existence rider blocks new hook/skill without paired `domain/<name>/eval.js`; advisory-only on etanah new-symbol additions |
 | `Feature/Domain-Expansion/expansion-protocol.md` (Phase 6) | Workflow layer | Extended with `meta-audit` step (Step 12.5) covering hook-fire reliability + cross-ref validity + component-liveness |
-| `Feature/Forge-Self-Improvement-System/skill-failure-log.md` (Phase 6 extension) | Knowledge layer | Extended schema with skill-load counter for invocation-reliability tracking |
+| `domain/skill-invocation-log/log.jsonl` (replaces `Feature/Forge-Self-Improvement-System/skill-failure-log.md`, deleted 2026-08-16; pointer corrected 2026-10-04) | Knowledge layer | One row per Skill-tool invocation: the skill-load counter for invocation-reliability tracking |
 | `CLAUDE.md` (Phase 9) | Boot Config layer | Adds Layer 1 reference: "System-layer: see `system/INDEX.md`" |
 
 ## The 6 core tenets (proto-system-layer principles)
