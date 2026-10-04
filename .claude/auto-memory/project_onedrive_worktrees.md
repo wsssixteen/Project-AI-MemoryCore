@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 6e2f7830-916e-4545-ae29-7e0c7f2bb184
-  modified: 2026-09-27T00:35:26.806Z
+  modified: 2026-10-04T09:02:08.905Z
 ---
 
 **What happened (2026-09-04)**: `.claude/worktrees/` inside the OneDrive repo held 213 folders / 15.10 GB while `git worktree list` showed 2. OneDrive syncs `.git/` across two laptops; the other machine's `worktree prune` drops admin entries for folders it cannot see, so folders survive here de-registered — invisible to every cleanup that keys off git's list. The boot hook then deleted their branches as "merged" (D2), leaving folders with no branch and, in 5 cases, whole never-committed Features (etanah-intake-gate, rootcause-format, patch-close-shape, agih, staging-schema-tracker).
@@ -59,6 +59,7 @@ Which copy of `.claude/hooks/*` runs is NOT fixed. It follows `CLAUDE_PROJECT_DI
 
 - 2026-10-03 (worktree `quest-audit-275043-244600-7954c0`): hooks ran from MAIN. A probe write in the worktree copy of `grep-rubric-gate.js` never fired; the fix went live only after main was fast-forwarded to `8122785d`.
 - 2026-08-06 (slip `edited-wrong-copy-main-vs-worktree`): the opposite. The worktree copy was live and a fix made in main did nothing.
+- 2026-10-04 (same slip, write side): in PowerShell, `[IO.File]::ReadAllText/WriteAllText` with a RELATIVE path resolves against the process directory (the main checkout), not `Set-Location`. Four doc edits meant for a worktree landed in main. Use absolute paths in every .NET file call, and run `git status` in BOTH checkouts after a scripted edit.
 
 **Probe (no edit needed):** compare the last write time of `system/telemetry/hook-fires.jsonl` in main and in the worktree. The copy whose file moves on every tool call is the live one.
 

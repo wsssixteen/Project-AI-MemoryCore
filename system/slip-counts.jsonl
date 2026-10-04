@@ -980,3 +980,12 @@
 {"ts":"2026-10-04T08:55:16.977Z","category":"A4"}
 {"ts":"2026-10-04T08:55:17.595Z","category":"A5"}
 {"ts":"2026-10-04T08:55:17.929Z","category":"A1"}
+{"ts":"2026-10-04T09:00:27.003Z","category":"build-missed-requirement"}
+{"ts":"2026-10-04T09:00:27.339Z","category":"gate-over-demand"}
+{"ts":"2026-10-04T09:00:27.642Z","category":"answer-the-ask"}
+{"ts":"2026-10-04T09:00:27.887Z","category":"A2"}
+{"ts":"2026-10-04T09:00:28.116Z","category":"A1"}
+{"ts":"2026-10-04T09:00:28.381Z","category":"A1"}
+{"ts":"2026-10-04T09:00:28.708Z","category":"A4"}
+{"ts":"2026-10-04T09:00:28.995Z","category":"A3"}
+{"ts":"2026-10-04T09:01:36.671Z","category":"observatory-not-consulted"}

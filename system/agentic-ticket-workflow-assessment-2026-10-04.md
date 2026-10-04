@@ -63,3 +63,17 @@ Proposals logged: A1, A2, A3, A4, A5 (one each, 2026-10-04).
 
 Failure classes: (1) gate-over-demand after an agreed fix · (2) fabricated evidence artifact (marked BA before-screenshot as fix photo) · (3) env assumed in a BA note · (4) stranded worktree edits · (5) `de-run-verify` self-retrigger loop (6 re-fires).
 >>>>>>> origin/main
+
+## Addendum — session 5 (probe-decision gate, predicate-box v3 → v4.1)
+
+| Axis | Claim | Instance |
+|---|---|---|
+| A1 agentic | A handover brief written by one session is taken as the full requirement by the next | The brief cited `feedback_loggers_extensive_with_fallbacks.md`; the file did not exist. I built v3 from the brief, miya had to stop the build and order the search (system-design Rule 10 skipped). |
+| A1 agentic | Two sessions refined the same hook the same afternoon | v3 (this session) and v4 (#282924 session) both edited `domain/predicate-box`; v4 landed cleanly only because it was additive. My v3 wording then contradicted v4 until v4.1. |
+| A1 agentic | A shell helper wrote to the wrong checkout | `[IO.File]` with a relative path resolves against the process directory (main), not `Set-Location` (worktree): 4 doc edits landed in main. |
+| A2 quest | The strip-probes reminder has a phrase gap | `prepare-commit-trigger` fires on "prepare to commit" / "let's commit" / "close phase 1", not on "approve commit" or plain "close". A probe can be committed to a ticket branch. |
+| A3 debugging | Gate strength was set from one incident, not from his rule | v3 made loggers mandatory for every `.java` edit; his rule is loggers only when the diagnosis is uncertain. Same class as the upgrade row gate-over-demand. |
+| A4 etanah | Env debugging still depends on infra for non-exception logs | His idea: surface probe lines client side. Limits found: crashed requests and background code never reach the browser; needs a probe build on an env server. |
+| A5 sweep | ⏭ no sweep or file sweep ran this session | — |
+
+**What worked**: replaying the REAL failing transcript through the hook before and after (old exit 0, new exit 2) — a fixture built from memory would not have shown that the edit turn carried no fix-intent word. Keep that as the first eval of any gate born from a slip.

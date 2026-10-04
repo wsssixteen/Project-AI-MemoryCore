@@ -4430,6 +4430,7 @@ closed=2026-10-02
 close_note=RECONCILED from Redmine: Closed; taken by Alex Ang 2026-10-02 (Initiate and Alter, aliran 44074-44076)
 
 # --- archived 2026-10-02 ---
+
 qa=ADHOC-PLP-2026-1
 phase=closed
 status=archived
@@ -4447,3 +4448,26 @@ title=AWAM plpMaklumatUrusan fail mati
 state=melaka
 closed=2026-10-02
 close_note=Answered: dead file, nothing owed
+
+qa=QA-282442
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\252. ES #282442 - Sokongan - Pembatalan Permohonan Pelupusan - Papar ralat bila klik jan
+phase=Phase 1 closed cycle 2 2026-10-04: R2 dcd4eab561 + R3 df981502a4 on mlk/esokongan/282442, int-env 29440f665b, MLIT pass by miya 14:44; Redmine form prefilled in Edge (Resolved, Fizah), Submit + video attach are miya's; owed: stag-env decision, D1 PROD cleanup, planned-release entry
+status=archived
+ticket_type=bug
+env=MLKSTG
+issue_one_liner=Pembatalan Permohonan Jana ralat for PRBB: MlkUtilitiPembatalanPermohonanForm.initBPMFlow sends empty kodPejabat (helper skips bandar for PRBB) -> GIS falls to et_ptg (no log_service) -> common NPE mask. Fix = fallback kodPejabat from AppPermohonanTanah like MlkSuratTemplateForm:3201. 8 orphan UPP rows on PROD
+assigned_to_me=2026-10-01
+current_phase=Wrap
+urusan=PRBB
+local_test_confirmed=true
+quest_start=2026-10-01
+qa_doc=projects/coding-projects/archive/QA-282442/QA-282442.md
+commit=24c277d683
+branch=mlk/esokongan/282442
+merged_int_env=495d16fe66e5c98313f56e1e1a9393bbb1e2b1cc (cherry-pick of 24c277d683)
+closed=2026-10-01
+commit_cycle2=dcd4eab561
+merged_int_env_cycle2=f84c6436a5
+commit_cycle2b=df981502a4
+merged_int_env_cycle2b=29440f665b
+closed_cycle2=2026-10-04
