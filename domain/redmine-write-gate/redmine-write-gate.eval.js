@@ -26,8 +26,9 @@ const spacedDir = path.join(sb, 'dir with space'); fs.mkdirSync(spacedDir);
 const spacedWriter = path.join(spacedDir, 'post-note.js'); fs.copyFileSync(postScript, spacedWriter);
 const lookalike = path.join(sb, 'xticket-load-verify.js'); fs.copyFileSync(postScript, lookalike);
 
-function run(payload) {
-  const r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify(payload), encoding: 'utf8', timeout: 30000, cwd: ROOT, env: { ...process.env, CLAUDE_PROJECT_DIR: ROOT } });
+// Legacy fixtures (F1-F55) test the post-window behaviour; the v1.4 stage-only fixtures pass their own date.
+function run(payload, until = '2000-01-01') {
+  const r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify(payload), encoding: 'utf8', timeout: 30000, cwd: ROOT, env: { ...process.env, REDMINE_STAGE_ONLY_UNTIL: until, CLAUDE_PROJECT_DIR: ROOT } });
   return { out: (r.stdout || '') + (r.stderr || ''), status: r.status };
 }
 const blocked = r => /redmine-write-gate/.test(r.out) && /⛔/.test(r.out);
@@ -168,6 +169,50 @@ check('F29 guard: ticket-load-verify.js stays network-free (else re-review its e
 const logP = path.join(__dirname, 'log.jsonl');
 const lastLog = fs.existsSync(logP) ? fs.readFileSync(logP, 'utf8').trim().split('\n').pop() : '';
 check('F15 log.jsonl row carries ts + outcome', /"ts"/.test(lastLog) && /"outcome"/.test(lastLog), lastLog.slice(0, 100));
+
+// ── v1.4 (2026-09-30, #282555): stage-only window · view-first · browser guard ─────────────────────────────
+const STAGE = '2999-01-01';
+const findResult = (ref, label) => JSON.stringify({ type: 'user', message: { role: 'user', content: [{ type: 'tool_result', content: [{ type: 'text', text: `Found 1 matching element\n\n- ${ref}: button "${label}" (submit) - submit button of the issue edit form` }] }] } });
+const CHROME_JS = 'mcp__claude-in-chrome__javascript_tool', CHROME_CLICK = 'mcp__claude-in-chrome__computer', PANE_JS = 'mcp__Claude_Browser__javascript_tool';
+const POPUP_JS = "const out = {}; for (const n of [281712, 281638]) { const j = await fetch(`/redmine/issues/${n}.json`).then(r => r.json()); out[n] = j.issue.custom_fields; } out";
+const FILL_JS = "const s = document.getElementById('issue_status_id'); s.value = '3'; document.getElementById('issue_notes').value = 'Salam Amirah'; s.value";
+const SUBMIT_JS = "document.querySelector('#issue-form input[name=commit]').click()";
+r = run({ tool_name: 'PowerShell', tool_input: { command: WRITE_CMD }, transcript_path: transcript([user('ok post it')]) }, STAGE);
+check('F56 stage-only window: "post it" still BLOCKS an API write, names staging', blocked(r) && /STAGE-ONLY/.test(r.out) && /redmine-phase1-prefill/.test(r.out), r.out.slice(0, 200));
+r = run({ tool_name: 'PowerShell', tool_input: { command: WRITE_CMD }, transcript_path: transcript([user('[skip-redmine-write-gate: infra asked for API post]')]) }, STAGE);
+check('F57 stage-only window: miya bypass token still allows', !blocked(r) && /bypassed/.test(r.out), r.out.slice(0, 200));
+r = run({ tool_name: 'PowerShell', tool_input: { command: WRITE_CMD }, transcript_path: transcript([user('prepare it first, I want to see in the same page, then post it')]) });
+check('F58 after the window: a view-first ask forces staging even with "post it"', blocked(r) && /view it first/.test(r.out), r.out.slice(0, 200));
+r = run({ tool_name: 'PowerShell', tool_input: { command: READ_CMD }, transcript_path: transcript([user('retrieve 282555')]) }, STAGE);
+check('F59 stage-only window: read-only redmine-sync stays silent', !blocked(r) && !/redmine-write-gate/.test(r.out), r.out.slice(0, 120));
+r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: POPUP_JS }, transcript_path: transcript([user('can you prepare first the Redmine')]) }, STAGE);
+check('F60 REPLAY popup: browser fetch of /redmine/issues/N.json → BLOCK (password box)', blocked(r) && /password/.test(r.out), r.out.slice(0, 200));
+r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: FILL_JS }, transcript_path: transcript([user('prepare first')]) }, STAGE);
+check('F61 staging JS (set field values) → silent', !blocked(r) && !/redmine-write-gate/.test(r.out), r.out.slice(0, 120));
+r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS }, transcript_path: transcript([user('Beautiful, audit again')]) }, STAGE);
+check('F62 JS submit of the issue form without approval → BLOCK, says stop at staging', blocked(r) && /STOP AT STAGING/.test(r.out), r.out.slice(0, 200));
+r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS }, transcript_path: transcript([user('Then proceed to update that ticket. I approve current send.')]) }, STAGE);
+check('F63 REPLAY 282555: "I approve current send" → JS submit allowed', !blocked(r) && /Submit approved/.test(r.out), r.out.slice(0, 200));
+r = run({ tool_name: CHROME_CLICK, tool_input: { action: 'left_click', tabId: 1, ref: 'ref_2598' }, transcript_path: transcript([findResult('ref_2598', 'Submit'), user('Beautiful, let me check again')]) }, STAGE);
+check('F64 click on a ref the find result named button "Submit", no approval → BLOCK', blocked(r), r.out.slice(0, 200));
+r = run({ tool_name: CHROME_CLICK, tool_input: { action: 'left_click', tabId: 1, ref: 'ref_2598' }, transcript_path: transcript([findResult('ref_2598', 'Submit'), user('Then proceed to update that ticket. I approve current send.')]) }, STAGE);
+check('F65 same click after "I approve current send" → allow', !blocked(r), r.out.slice(0, 200));
+r = run({ tool_name: CHROME_CLICK, tool_input: { action: 'left_click', tabId: 1, ref: 'ref_77' }, transcript_path: transcript([findResult('ref_2598', 'Submit'), user('open the edit form')]) }, STAGE);
+check('F66 click on a different ref (Edit link) → silent', !blocked(r) && !/redmine-write-gate/.test(r.out), r.out.slice(0, 120));
+r = run({ tool_name: 'mcp__claude-in-chrome__browser_batch', tool_input: { actions: [{ name: 'computer', input: { action: 'screenshot', tabId: 1 } }, { name: 'javascript_tool', input: { action: 'javascript_exec', tabId: 1, text: POPUP_JS } }] }, transcript_path: transcript([user('prepare')]) }, STAGE);
+check('F67 browser_batch hiding a .json fetch → BLOCK', blocked(r), r.out.slice(0, 200));
+r = run({ tool_name: PANE_JS, tool_input: { action: 'javascript_exec', text: "fetch('http://172.16.90.169/redmine/issues/1.json', { method: 'PUT' })" }, transcript_path: transcript([user('post it')]) }, STAGE);
+check('F68 built-in browser pane fetch PUT to redmine → BLOCK even with "post it"', blocked(r), r.out.slice(0, 200));
+r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS }, transcript_path: transcript([user("I don't approve current send yet")]) }, STAGE);
+check('F69 negated approval "I don\'t approve current send" → BLOCK', blocked(r), r.out.slice(0, 200));
+r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: "document.querySelector('.attributes').innerText" }, transcript_path: transcript([user('check the ticket')]) }, STAGE);
+check('F70 DOM read of the issue page → silent', !blocked(r) && !/redmine-write-gate/.test(r.out), r.out.slice(0, 120));
+r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: "fetch('https://example.com/api/x.json')" }, transcript_path: transcript([user('x')]) }, STAGE);
+check('F71 browser fetch to a non-Redmine .json → silent', !blocked(r), r.out.slice(0, 120));
+r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS }, transcript_path: transcript([asst('I approve current send'), user('hmm')]) }, STAGE);
+check('F72 "I approve" only in an ASSISTANT line → BLOCK (self-approval)', blocked(r), r.out.slice(0, 120));
+r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS } }, STAGE);
+check('F73 browser submit with no transcript → BLOCK', blocked(r), r.out.slice(0, 120));
 
 let failed = 0; for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
 console.log('\nredmine-write-gate.eval: ' + (results.length - failed) + '/' + results.length + (failed ? ' RED' : ' green'));

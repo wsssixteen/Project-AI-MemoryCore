@@ -64,6 +64,8 @@ mcp__Claude_in_Chrome__navigate
 
 If page redirects to login → STOP, emit: `Redmine not logged in. Log in at <URL> then re-invoke.`
 
+**🚨 STAGE-ONLY until 2026-10-30 (or until みや lifts it)** — every Redmine update goes through THIS form, never the API: fill, show him the staged values as a table, STOP. Submit only after "I approve" / "submit it" / "post it" in his latest message. Also a view-first ask ("let me see", "prepare first", "same page") = staging, after the date too. **Read the open page's DOM only** — never `fetch`/XHR a `/redmine/….json` URL from the browser: it pops a sign-in password box in his Chrome (#282555). Enforced by `domain/redmine-write-gate` v1.4.
+
 ### Step 3 — Fill the 6 fields (per みや's photo)
 
 Use `mcp__Claude_in_Chrome__form_input` for each:
@@ -77,9 +79,13 @@ Use `mcp__Claude_in_Chrome__form_input` for each:
 | Resolved By Text | `#issue_custom_field_values_<id>` (text) | `Ahmad Ridhwan Anuar` |
 | Notes textarea | `#issue_notes` (textarea) | (see Step 4) |
 
+**Fill a field if it EXISTS on the form, skip it if it does not.** Read the form's field list first, never assume. Root Cause Issue (DEV) exists on eSOKONGAN MELAKA → fill it in the shape of `.claude/auto-memory/feedback_redmine_rootcause_format.md`. A Solution field exists on some trackers only → fill it only when present (みや 2026-09-30, #282555).
+
 Resolved By + Resolved By Text custom-field IDs need to be discovered on first run via `mcp__Claude_in_Chrome__find` against the form labels — cache the IDs in skill state after first successful discovery.
 
 ### Step 4 — Notes textarea template
+
+**READ FIRST, every time: `.claude/auto-memory/feedback_ticket_writing_style.md` → "miya's Redmine speech collection".** That memory decides his voice (English, "Salam <short name>", one fact per line, "Please help to verify.", "Thanks"). Pick the closest verbatim example there and match it. The block below is only the fallback when no example fits.
 
 ```
 Hi <Assignee firstname>, please find the fix at mlk/qa/<NNN>.

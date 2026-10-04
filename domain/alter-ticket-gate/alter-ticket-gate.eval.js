@@ -101,6 +101,10 @@ check('F13 2MB transcript → fires (tail scan), no timeout', fired(r) && r.stat
 // F14 effect check (Rule 6c): the block carries the 7 rows + both file paths + bypass hint
 r = run({ prompt: 'retrieve 275847', transcript_path: transcript([]) });
 check('F14 effect — A0..A6 rows + playbook + state file + bypass rendered', ['A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6'].every(a => new RegExp('\\b' + a + ' ⬜').test(r.out)) && /ALTER-TICKET-PLAYBOOK\.md/.test(r.out) && /skip-alter-gate/.test(r.out), r.out.slice(0, 120));
+// F21 (2026-09-30, #282555) A5 carries the assignee rule: agihan default, never pin via nextUser
+check('F21 A5 says assignee = agihan default, never nextUser', /ASSIGNEE = agihan default/.test(r.out) && /NEVER add nextUser/.test(r.out), r.out.slice(0, 120));
+// F22 (2026-09-30, #282555) A6 points to miya's voice memory + fill-if-exists field rule, no Perak 5-line block
+check('F22 A6 = miya voice memory + fill-if-exists', /feedback_ticket_writing_style/.test(r.out) && /fill every field that exists/.test(r.out) && !/done-alter 5-line block/.test(r.out), r.out.slice(0, 120));
 // F15 non-ticket, non-permohonan chat mentioning alter (e.g. git "alter table") → silent
 r = run({ prompt: 'can you alter the table layout in the README?', transcript_path: transcript([]) });
 check('F15 "alter" with no ticket/permohonan context → silent', !fired(r) && !reminder(r), r.out.slice(0, 120));
