@@ -943,3 +943,10 @@
 {"ts":"2026-10-04T00:10:44.342Z","category":"A1"}
 {"ts":"2026-10-04T01:16:43.590Z","category":"test-stopped-at-fixed-step"}
 {"ts":"2026-10-04T01:16:43.725Z","category":"A3"}
+{"ts":"2026-10-04T02:38:58.461Z","category":"blind-deploy-partial-scan"}
+{"ts":"2026-10-04T03:31:56.365Z","category":"env-not-set-for-test"}
+{"ts":"2026-10-04T03:54:41.173Z","category":"stale-build-handed-for-test"}
+{"ts":"2026-10-04T04:29:51.715Z","category":"no-probe-loggers-in-fix-build"}
+{"ts":"2026-10-04T04:37:55.403Z","category":"reask/redundant"}
+{"ts":"2026-10-04T04:41:52.141Z","category":"default-to-new-memory-file"}
+{"ts":"2026-10-04T07:11:45.131Z","category":"reask/conversation-leaked-into-deliverable"}
