@@ -53,23 +53,20 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `system/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `system-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node system/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 138 hook registrations across 5 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 139 hook registrations across 5 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
 | SessionStart | — | `adhoc-lifecycle.check.hook.js` | ✓ |
-| SessionStart | — | `arabic-nudge.check.hook.js` | ✓ |
 | SessionStart | — | `boot-load-verification.js` | ✓ |
 | SessionStart | — | `boot-required-read-gate.js` | ✓ |
 | SessionStart | — | `claude-md-watch.check.hook.js` | ✓ |
 | SessionStart | — | `evolution-check-trigger.js` | ✓ |
-| SessionStart | — | `hook-syntax-check.js` | ✓ |
-| SessionStart | — | `knowledge-schema-audit.check.hook.js` | ✓ |
+| SessionStart | — | `hook-syntax-check.hook.js` | ✓ |
 | SessionStart | — | `open-quest-surfacer.js` | ✓ |
 | SessionStart | — | `system-audit.js` | ✓ |
 | SessionStart | — | `system-check-trigger.js` | ✓ |
-| SessionStart | — | `unmerged-release-boot.js` | ✓ |
-| SessionStart | — | `worktree-cleanup-boot.js` | ✓ |
+| SessionStart | — | `worktree-cleanup-boot.hook.js` | ✓ |
 | UserPromptSubmit | — | `adhoc-paste-detector.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `adhoc-register.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `alter-ticket-gate.check.hook.js` | ✓ |
@@ -82,6 +79,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | UserPromptSubmit | — | `domain-expansion-trigger.js` | ✓ |
 | UserPromptSubmit | — | `etanah-intake-gate.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `feature-creation.check.hook.js` | ✓ |
+| UserPromptSubmit | — | `handoff-load.check.hook.js (bundle upsm-mode)` | ✓ |
 | UserPromptSubmit | — | `inventory-first-gate.js` | ✓ |
 | UserPromptSubmit | — | `latent-bugs-gate.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `local-deploy-gate.check.hook.js` | ✓ |
@@ -94,6 +92,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | UserPromptSubmit | — | `pre-reply-contract.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `prepare-commit-trigger.js` | ✓ |
 | UserPromptSubmit | — | `prose-default-gate.js` | ✓ |
+| UserPromptSubmit | — | `pymtime-handover.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `quest-active-grounding.js (bundle upsm-mode)` | ✓ |
 | UserPromptSubmit | — | `quest-objective-anchor.js` | ✓ |
 | UserPromptSubmit | — | `quest-resume-preflight.js` | ✓ |
@@ -128,15 +127,15 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | PreToolUse | Bash|PowerShell | `live-action-safety.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `logic-blast-radius.discipline.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `no-code-comments-gate.js` | ✓ |
+| PreToolUse | Bash | `nul-redirect-gate.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `pre-action-check-gate.js (bundle pretool-editwrite-gates)` | ✓ |
 | PreToolUse | Edit|Write | `pre-code-check.check.hook.js` | ✓ |
 | PreToolUse | Bash | `probe-local-only-gate.check.hook.js` | ✓ |
 | PreToolUse | PowerShell | `probe-local-only-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash|PowerShell | `probe-local-only-gate.check.hook.js` | ✓ |
-| PreToolUse | Bash | `nul-redirect-gate.check.hook.js` — blocks `> NUL` (Git Bash writes a real NUL file OneDrive cannot sync); detect side = system-audit CHECK 10 | ✓ |
-| PreToolUse | mcp__postgres-mlkprod-pg__.* | `prod-db-confirm.discipline.hook.js` | ✓ |
 | PreToolUse | Bash|PowerShell | `quest-exists-gate.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `quest-phase-gate.gate.hook.js` | ✓ |
+| PreToolUse | mcp__claude-in-chrome__javascript_tool|mcp__claude-in-chrome__computer|mcp__claude-in-chrome__browser_batch|mcp__Claude_Browser__javascript_tool|mcp__Claude_Browser__computer|mcp__Claude_Browser__browser_batch | `redmine-write-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash|PowerShell | `redmine-write-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash | `release-mlk-plp-push-gate.check.hook.js` | ✓ |
 | PreToolUse | PowerShell | `release-mlk-plp-push-gate.check.hook.js` | ✓ |
@@ -144,7 +143,6 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | PreToolUse | Edit|Write | `system-edit-gate.js (bundle pretool-editwrite-gates)` | ✓ |
 | PostToolUse | Edit|Write | `bpmn-check.check.hook.js` | ✓ |
 | PostToolUse | Grep | `grep-rubric-gate.js` | ✓ |
-| PostToolUse | Bash | `quest-bounty.hook.js` | ✓ |
 | PostToolUse | — | `RecursiveLoopDetector.js` | ✓ |
 | PostToolUse | Skill | `skill-invocation-log.check.hook.js` | ✓ |
 | PostToolUse | — | `slip-count-tracker.js` | ✓ |
@@ -169,12 +167,14 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | Stop | — | `deliverable-lands-on-main.check.hook.js` | ✓ |
 | Stop | — | `deploy-proof-gate.js` | ✓ |
 | Stop | — | `diagnostic-self-heal-gate.js` | ✓ |
-| Stop | — | `discipline.hook.js` | ✓ |
 | Stop | — | `falsifier-ran-check.check.hook.js` | ✓ |
+| Stop | — | `fix-photo.check.hook.js` | ✓ |
 | Stop | — | `full-address-trace-gate.discipline.hook.js (bundle stop-reply-shape)` | ✓ |
+| Stop | — | `next-steps-shape.check.hook.js (bundle stop-reply-shape)` | ✓ |
 | Stop | — | `notes-on-test-data.js` | ✓ |
 | Stop | — | `operational-follow-through.js` | ✓ |
 | Stop | — | `over-generalization-gate.js` | ✓ |
+| Stop | — | `ownership-input-check.check.hook.js (bundle stop-claim-integrity)` | ✓ |
 | Stop | — | `patch-close-shape.check.hook.js` | ✓ |
 | Stop | — | `patch-script-gate.discipline.hook.js` | ✓ |
 | Stop | — | `predicate-box.discipline.hook.js` | ✓ |

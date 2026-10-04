@@ -3,7 +3,8 @@
 // TRIGGER: every session boot; silent unless projects/learning-projects/active/arabic/data/words.json exists
 // ACTION: print ONE line: 📖 Arabic: N/5 reviews this week · not yet today|done today; nothing if data absent
 // Engine: .claude/skills/arabic/arabic.js nudge (SPEC.md §7). Advisory — never blocks. Fail-open on any error.
-// Lifecycle: created (narrow trigger — widen only with confirmed-fire evidence).
+// Lifecycle: DEREGISTERED 2026-10-05 per みや (Arabic runs only when /arabic is invoked) — kept for a one-line re-register.
+// system-audit: skip-ghost-check
 'use strict';
 const path = require('path');
 const fs = require('fs');
