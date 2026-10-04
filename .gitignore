@@ -102,3 +102,6 @@ quest/active.txt.bak*
 
 # Feature caches (retention: regenerate) — e.g. domain/hook-syntax-check/cache.json, 2026-10-05
 domain/*/cache.json
+# worktree-cleanup-boot v2.0 background run — last report + per-checkout lock (runtime state, regenerate)
+.claude/state/worktree-cleanup-last.json
+.claude/state/worktree-cleanup-*.lock
