@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-09-30 → 2026-10-04, #282061 follow-ups + close, worktree quest-282061-rubric-7a809b, git link pruned)
+- **BA questions (09-30)**: no duplicate after the patch (each number once, counter untouched) · OPPTPB not affected (own screen, own Fi branch, 0 PROD apps) · early numbers happen at any of 17 PPTPB tugasan on skrin 338, not only Kertas Pertimbangan.
+- **Decision**: BA never asked for PPTPB/2026/1 to change, so the number swap was DROPPED. PROD script = delete the duplicate unpaid PPTPBL bill only. PTMLK/02/L/PPTPB/2026/5 keeps 02/2026/3.
+- **Delivered**: `282061.sql` (delete-only, live-checked) · `282061-senarai.sql` (7 PROD permohonan with early numbers, for TSO) · staging + internal permit list queries for Fizah.
+- **Slip**: list query filtered on staging's number format (`LIKE 'C__/____/%'`), dropped rows elsewhere. Rule 9 (portable across envs, run on 2 envs) written; worktree was pruned so it is NOT on main yet, spawn task_054d57fa lands it.
+- **Closed**: QA-282061 archived (Task 238 → Archive, doc → archive/QA-282061, block → active-archive). Wrong-fix row 1 + bounty proposal tracked.
+- **Open**: start the spawn chip for rule 9 · PPJK / PSBS early-number ruling (ADHOC-PERMIT-2026-1).
+
+**Last Activity**: 2026-10-04 17:35 — ADHOC-GIT-2026-1 saved (audit 29/29): Sourcetree "Accept server's key?" for GitLab 10.16.63.27 = Sourcetree still on PuTTY with `id_rsa.ppk`; fix given (OpenSSH + `id_ed25519_gitlab`), waiting for miya's Fetch result · Domain Expansion run.
+
 ## Session Recap (2026-09-28 → 2026-10-04, session "gitlab-migration-check", ADHOC-GIT-2026-1)
 - **Ask**: Sourcetree popup "Accept server's key?" for 10.16.63.27 one week after the GitLab migration; check before advising. Then: save as an adhoc, Domain Expansion.
 - **Found**: popup key = the ED25519 key already in `C:\Users\Ridhwan\.ssh\known_hosts:24` (genuine). Sourcetree `SSHClientType` = PuTTY with `C:\Users\Ridhwan\.ssh\id_rsa.ppk`; PuTTY has no cached key for 10.16.63.27. GitLab accepts `id_ed25519_gitlab`, rejects `id_rsa` (both tested live with ssh -T).
@@ -5879,6 +5889,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

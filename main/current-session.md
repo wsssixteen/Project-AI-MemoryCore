@@ -1,5 +1,14 @@
 # Current Session
 
+**Last Activity**: 2026-10-04 17:40 — #256334 (PDBB CR) Phase 2 re-run and ARCHIVED · Redmine Closed (released PROD 1.8.0 on 2026-09-30) · Domain Expansion run.
+
+## Session Recap (2026-09-30 → 2026-10-04, session "medan-agihan-kepada-bug", #256334 → archive)
+- **Li Wen (Hasil) questions answered** in WhatsApp voice: Flowable Source vs Source expression · subflow End auto-resumes PDBB, `pembetulanUnit` "true" loops back to PYPDBB.
+- **TKPDBB rework**: BA asked to remove Senarai Dokumen. `d3128ad449` (xhtml only) broke Hantar; `072115f762` fixed it with the TKJKKLPK analog (viewMode TRUE + view-panel exclusion). Both in mlk/master + release 1.8.0. MLIT proof PDBB/12 Tamat.
+- **Close**: BA verified staging 2026-09-30, Hakiim closed same day. Quest doc got Close block + Fastest Path + post-mortem. BUG-BESTIARY pattern added. 5 re-synced videos pruned.
+- **Memory**: speech style, rojak fillers and technical terms stay English (`feedback_ticket_writing_style` example 6).
+- **Open**: `domain/submit-path-gate/` was queued 2026-09-30 and is NOT on main (re-logged as proposal A3) · PDBB/7 + /9 on MLIT Selesai but not Tamat (untraced) · ADHOC-HSL-2026-1 langkah N set still Hasil's.
+
 **Last Activity**: 2026-10-04 17:45 — #256334 checked on Redmine: **Closed** (2026-09-30, Anis). Phase 2 was already complete since 2026-09-29 (Task folder in Archive, block in active-archive, qa_doc in projects archive, bounty + FLOWABLE-KNOWLEDGE §13). Nothing left to archive. Domain Expansion run.
 
 ## Session Recap (opened 2026-09-25 as worktree colleague-cr-issue-ed8731, closed 2026-10-04 on main — #256334 first day + GitLab move)
@@ -23,13 +32,3 @@
 - **Slips (miya caught)**: hand-back without the Git table · rework cycle read as NEW · made `2. Fix` inside the Rework folder · acted before showing the changes.
 - **Open**: 3 notes txt with no ticket id left in place (two AH folders + #165) · `archive-quest.js` fails at Step 3 when an older archived block of the same quest exists (handled by hand today; proposal logged).
 **Last Activity**: 2026-10-04 17:40 — #282061 archived (Redmine Closed 2026-10-01, Baseline 1.8.0): Phase 2 + bounty done · script-check rule 9 handed to a separate session · Domain Expansion run.
-
-## Session Recap (2026-09-30 → 2026-10-04, #282061 follow-ups + close, worktree quest-282061-rubric-7a809b, git link pruned)
-- **BA questions (09-30)**: no duplicate after the patch (each number once, counter untouched) · OPPTPB not affected (own screen, own Fi branch, 0 PROD apps) · early numbers happen at any of 17 PPTPB tugasan on skrin 338, not only Kertas Pertimbangan.
-- **Decision**: BA never asked for PPTPB/2026/1 to change, so the number swap was DROPPED. PROD script = delete the duplicate unpaid PPTPBL bill only. PTMLK/02/L/PPTPB/2026/5 keeps 02/2026/3.
-- **Delivered**: `282061.sql` (delete-only, live-checked) · `282061-senarai.sql` (7 PROD permohonan with early numbers, for TSO) · staging + internal permit list queries for Fizah.
-- **Slip**: list query filtered on staging's number format (`LIKE 'C__/____/%'`), dropped rows elsewhere. Rule 9 (portable across envs, run on 2 envs) written; worktree was pruned so it is NOT on main yet, spawn task_054d57fa lands it.
-- **Closed**: QA-282061 archived (Task 238 → Archive, doc → archive/QA-282061, block → active-archive). Wrong-fix row 1 + bounty proposal tracked.
-- **Open**: start the spawn chip for rule 9 · PPJK / PSBS early-number ruling (ADHOC-PERMIT-2026-1).
-
-**Last Activity**: 2026-10-04 17:35 — ADHOC-GIT-2026-1 saved (audit 29/29): Sourcetree "Accept server's key?" for GitLab 10.16.63.27 = Sourcetree still on PuTTY with `id_rsa.ppk`; fix given (OpenSSH + `id_ed25519_gitlab`), waiting for miya's Fetch result · Domain Expansion run.
