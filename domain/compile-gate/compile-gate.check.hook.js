@@ -7,6 +7,9 @@
 //      compiled, but a green DB read (4/87 from the Kemas kini composite) made me report
 //      "tested PASSED". The int-env BUILD was the FIRST compile — it failed on the server,
 //      AFTER commit, and mlit went down. This gate makes a local compile the pre-commit check.
+// v3 (2026-10-04, #244600): the same commit moment also runs the falsifier ledger + local-test check
+//      (domain/falsifier-ran-check/check.js gateCommit). One registration, two checks; the compile bypass
+//      token does not reach the ledger check.
 'use strict';
 const path = require('path');
 const fs = require('fs');
@@ -108,15 +111,30 @@ if (require.main === module) {
     let data = {}; try { data = JSON.parse(input || '{}'); } catch (_) { return { fired: false }; }
     const command = String((data.tool_input || {}).command || '');
     const d = decide(command, lastAssistantTurn(data.transcript_path || ''), data.cwd || '');
-    if (d.block === false) { if (d.bypass) log({ action: 'bypass', mod: d.mod }); return { fired: false }; }
     if (d.block === true) {
       log({ action: 'blocked-raw-mvn', mod: d.mod, top: d.top });
       return { fired: true, blocked: true, blockReason: rawMvnMsg(d.mod, d.top) };
     }
-    const v = verify(d.top);
-    if (v.ok) { log({ action: 'pass', mod: d.mod, top: d.top }); return { fired: false }; }
-    log({ action: 'blocked', mod: d.mod, top: d.top, detail: v.message });
-    return { fired: true, blocked: true, blockReason: blockMsg(d.mod, v.message, d.top) };
+    if (d.block === null) {
+      const v = verify(d.top);
+      if (!v.ok) {
+        log({ action: 'blocked', mod: d.mod, top: d.top, detail: v.message });
+        return { fired: true, blocked: true, blockReason: blockMsg(d.mod, v.message, d.top) };
+      }
+      log({ action: 'pass', mod: d.mod, top: d.top });
+    } else if (d.bypass) log({ action: 'bypass', mod: d.mod });
+    // Falsifier ledger + local test (2026-10-04, #244600): every etanah commit, also when the compile
+    // check was bypassed. [skip-compile-gate:] never clears it; only miya's own [risk-ok:] clears the local test.
+    if (d.mod && invokesGit(command, 'commit')) {
+      const t = identify(command, data.cwd || '', 'commit');
+      let g = { ok: true };
+      try { g = require(path.join(ROOT, 'domain', 'falsifier-ran-check', 'check.js')).gateCommit({ command, top: (t && t.top) || d.top, transcriptPath: data.transcript_path || '' }); } catch (_) { /* fail-open */ }
+      if (!g.ok) {
+        log({ action: 'blocked-ledger', mod: d.mod, qa: g.qa });
+        return { fired: true, blocked: true, blockReason: g.message };
+      }
+    }
+    return { fired: false };
   });
 }
 

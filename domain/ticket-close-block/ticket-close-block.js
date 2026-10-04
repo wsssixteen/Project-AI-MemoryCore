@@ -108,6 +108,19 @@ if (foreign && branch) {
   try { historyHasBranch = !!hist && fs.readFileSync(hist, 'utf8').includes(branch.replace(/^origin\//, '')); } catch (_) {}
 }
 
+// BA pass note for OUR fix (2026-10-04, #244600): refuse while a written falsifier is unrun or the local
+// test is unconfirmed. No flag skips it — run the row, or miya accepts the risk / writes [risk-ok:].
+if (ba && ba !== true && commit && !foreign) {
+  let gate = null;
+  try { gate = require(path.resolve(__dirname, '../falsifier-ran-check/check.js')); } catch (_) {}
+  const r = gate ? gate.check(`QA-${ticket}`, { ctx: 'note', codeFix: true }) : { ok: true };
+  if (!r.ok) {
+    console.error(gate.message(`QA-${ticket}`, r, `BA pass note refused for QA-${ticket}`));
+    logRow({ ts: new Date().toISOString(), ticket, module: moduleName, branch: branch || null, commit: commit.hash, outcome: 'refused-ledger', kinds: r.fails.map(f => f.kind) });
+    process.exit(3);
+  }
+}
+
 const env = envs && envs !== true ? envs : 'internal';
 if (foreign && ba && ba !== true) {
   console.log(`Salam ${ba}, have deployed fixes to ${env}. Please help to verify.`);

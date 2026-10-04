@@ -4,6 +4,7 @@
 ## Feedback
 - [no-new-destructive-call-without-analog](feedback_no_new_destructive_call_without_analog.md) — 🚨 a fix never adds a delete/cleanup the system does not already do; grep callers + query the data first; never offer an option I know is wrong
 - [logger-three-layers](feedback_logger_three_layers.md) — 🚨 before any test: loggers for EVERY scenario, 3 layers each (point · outer fallback · database evidence)
+- [delegated-quest-learn-before-close](feedback_delegated_quest_learn_before_close.md) — 🚨 colleague-held quest stays delegated while open on Redmine; Closed → /learn-from-fix audit, then close
 - [no-builtin-browser](feedback_no_builtin_browser.md) — 🚨 BANNED: built-in browser (mcp__Claude_Browser__*) for any web task; use Claude in Chrome
 - [junior-handover-hints](feedback_junior_handover_hints.md) — 🚨 junior handover = hints + where to look, never the finished script or diff
 - [browser-edge-default](feedback_browser_edge_default.md) — 🚨 "show me in the browser" / Redmine / web UI → miya's EDGE (signed in), never the built-in pane or Chrome first
@@ -133,6 +134,7 @@
 
 ## Reference
 - [reference-git-server-gitlab](reference_git_server_gitlab.md) — 🚨 live etanah git = GitLab 10.16.63.27; old 172.16.93.167 refuses auth ("Permission denied" = stale remote)
+- [artifact-registry](reference_artifact_registry.md) — 🚨 every published artifact + link; UPDATE by link, never a second copy; add a row after each publish
 - [hooks-run-from-main](reference_hooks_run_from_main.md) — 🚨 hooks may run from MAIN, not the worktree; probe (telemetry mtime) before calling a hook edit live
 - [reference-observatory](reference_observatory.md) — 🚨 diagnose/brief FIRST with `node lib/observatory.js --brief` (fact · evidence · context · judgement per finding); app on :7790; its telemetry counts are de-duplicated
 - [kadar-cukai-duplicate-maintenance](reference_kadar_cukai_duplicate_maintenance.md) — PT plot Kadar Cukai Tanah pulls the OLDEST of duplicate maintenance rate rows; data-side

@@ -948,3 +948,7 @@
 {"ts":"2026-10-04T07:07:18.660Z","category":"new-destructive-call-no-analog"}
 {"ts":"2026-10-04T07:52:58.293Z","category":"claim-without-code-read"}
 {"ts":"2026-10-04T08:02:23.676Z","category":"bossy-note-on-others-ticket"}
+{"ts":"2026-10-04T02:16:29.835Z","category":"shipped-untested-fix"}
+{"ts":"2026-10-04T02:24:53.396Z","category":"A2"}
+{"ts":"2026-10-04T01:16:43.590Z","category":"test-stopped-at-fixed-step"}
+{"ts":"2026-10-04T01:16:43.725Z","category":"A3"}
