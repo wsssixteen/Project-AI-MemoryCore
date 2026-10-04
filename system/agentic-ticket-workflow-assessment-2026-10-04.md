@@ -147,3 +147,33 @@ Verdict: DE records a one-off system change (session, diary, commit) but does no
 | A3 debugging | ⏭ no debugging in this session (document patch only). | — |
 | A4 etanah issue-solving | Banked directly: after a DMS replace, `saiz_fail_byte` keeps the old size; download arrives as `.main.zip`. | ⏭ already in the skill, no proposal. |
 | A5 sweep | ⏭ no sweep run in this session. | — |
+
+## Session: #282061 follow-ups + Phase 2 close (2026-09-30 → 10-04)
+
+| Axis | Finding | Instance |
+|---|---|---|
+| A1 agentic | A rule written in a worktree whose git link was later pruned never reached main; nothing flagged it for 4 days. The base-repo edit guard then blocked the salvage from the same session. | script-check rule 9, written 09-30, absent on main 10-04; spawn task_054d57fa |
+| A1 agentic | Smart App Control blocked every DB connector for hours; scripts were handed over checked against a schema dump only. | OSError 22, 10:42 on 09-30; 282061.sql stamped only after the connector came back |
+| A2 quest | A PROD script changed a permohonan the BA never named and the Redmine note did not say so. The BA found out through her own questions. | swap /5 ↔ /1, note point 5; dropped after "did they approve us switching?" |
+| A3 debugging | A list query used a value-format filter seen in one env. | `LIKE 'C__/____/%'`: stg 17, mlit 31, et_main_dev 1 |
+| A4 etanah | One caller grep + the skrin mount list answered "is it only that tugasan?" and "is OPPTPB included?" in minutes once written down. | saveNoPermitLesen callers × ind_langkah skrin 338 |
+| A5 sweep | ⏭ no sweep this session | — |
+
+Proposals logged: A1 unmerged-worktree-edit check at DE · A2 pass note names every permohonan a script changes (bounty) · A3 two-env run stamp for handed-over SQL.
+
+## Session gitlab-migration-check (ADHOC-GIT-2026-1), 17:55
+
+| Axis | Assessment | Instance |
+|---|---|---|
+| A1 agentic system | A session's worktree can lose its git link while idle; nothing says so until a git command fails. Proposal logged (worktree-link check). | `gitlab-migration-check-57dc32`: `fatal: not a git repository` on every git call at Domain Expansion |
+| A2 quest workflow | Adhoc save-set works for a non-etanah adhoc, but resume-readiness needs a permohonan, a code file and a build step that such an adhoc does not have. Filled with explicit "none" lines. | ADHOC-GIT-2026-1: 3 gaps, then ready |
+| A3 debugging | ⏭ one live test per key settled it; nothing to improve | `ssh -T` with each key |
+| A4 etanah issue-solving | ⏭ no etanah issue this session | |
+| A5 sweep | ⏭ no sweep this session | |
+
+## Addendum — session #256334 status check (opened 2026-09-25, closed 2026-10-04)
+- A1 agentic system: this session's Edit tool stayed pinned to a worktree whose git record was already pruned, so every save to main was refused and went through a script. Proposal logged (A1): at DE step 0b, if `git -C <worktree> rev-parse` fails, say so in one line and route saves through a script from the start. Eval case: a worktree dir with no `.git/worktrees/<name>` → step 0b prints DEAD WORKTREE.
+- A2 quest workflow: "check Redmine, archive if closed" found the quest already archived 5 days earlier. `lib/save-quest.js` (new today) covers the open case; it has no line for "already archived, Redmine agrees". Proposal logged (A2): save-quest prints ALREADY ARCHIVED + the 3 disk checks. Eval case: archived block + Redmine Closed → verdict line, exit 0, no writes.
+- A3 debugging: on 25 Sep the cause was read from the deployed model in the flowable DB in 4 queries, not from the banked file (which was one version old). Worked; keep.
+- A4 etanah: cross-module sub-flow lessons are already banked (FLOWABLE-KNOWLEDGE §13). Nothing new.
+- A5 ⏭ no sweep ran.
