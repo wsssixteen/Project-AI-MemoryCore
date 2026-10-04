@@ -21,4 +21,4 @@ Per みや 2026-09-09 (#278218 retrospective):
 - The custom fields `Priority Severity Level Melaka = Medium (3): 7 Days` / `Priority (severity level) = High(3):5days` are labels, not the SLA. Never quote days as the deadline.
 - Today no quest artifact carries the priority: `quest\redmine-sync.js:667` prints it to the console only; Description.txt, History.txt, `active.txt` blocks, and the briefing board have no priority or SLA column. Planned: `priority=` + `sla_deadline=` in the block, `Priority:` line in Description.txt, hours-left column in the briefing, UNBLOCK table mandatory for Critical/High (`etanah-knowledge/UNBLOCK-PLAYBOOK.md`).
 
-Related: [[reference_perak_hotfix_and_error_store]] · [[quick-patch-steal-risk]] · [[feedback_flowable_admin_diagram]]
+Related: [[reference_perak_codev_scope]] · [[quick-patch-steal-risk]] · [[flowable-node-edge-trace]]

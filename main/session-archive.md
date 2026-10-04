@@ -4,6 +4,16 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-02, worktree quest-282587-guide-be4171, #282723 + #282721)
+- **Ask**: start quests for 2 internal PROD tickets; alter /3 /4 /9 (282723); fix PRBB/2026/4 unpaid bills (282721); infra handoff; answer Mira; style audit + artifact; reconcile quests with Redmine; DE.
+- **Done**: 282721 cause = cashier keyed hakmilik id, SPOC NO_FAIL made new paid fee rows, officer's 4 bills stayed N. Infra unlinked the 4 bills (`282721-amend.sql`); PROD 5 fi rows all Y. 282723 taken + done by Alex Ang (Initiate & Alter). Reconcile: 282198/282721/246923/280540/282723 closed, 282723 archived, #282966 synced as hold.
+- **Built**: patch-close-shape CHECK D (#ticket line ≤10 words) + CHECK E (greeting inside fence), eval 59/59 · quest SKILL 6b ask "post it" as row 1 + DB-screenshot row · no-builtin-browser memory · speech entries 11/12 + BA short names · artifact Miya's Voice Map.
+- **Slips**: built-in browser used after ban · Alter Flow vs Initiate & Alter · coordinate-click on PROD dropdown · tickets stolen (In Progress not set) · formal Malay root cause · overloaded infra handoff.
+- **Open**: QA-280540 archive needs harvest · QA-282721 archive · #282966 hold · Flowable alter Playwright tool (todo Q1).
+
+**Last Activity (prev)**: 2026-10-02 18:20 — #244600 Kertas versi fix (our side only) committed d61fc2e611 on mlk/qa/244600v3 · int-env 5df44b12cf · miya posted Resolved to Fizah · Phase 1 CLOSED · #275043 split to Ammar · handoff-load feature built · DE.
+**Last Activity**: 2026-10-02 18:32 — ADHOC-STG-2026-1 stg1 synced to stg2 (pelupusan reference data, 178 ins / 8 upd, committed) · routine decision parked in todo Q1 · DE.
+
 ## Session Recap (2026-10-01→02, main checkout, ADHOC-STG-2026-1)
 - **Ask**: check stg1 and stg2 are both up to date; stg1 to follow stg2 (trigger #274266 PT Tangguh setup).
 - **Found**: both schemas share ONE flowable t_flowable17 (22 MLK_PLP_* same version + md5) · neither login can read the other schema · stg1 missing PDBB urusan (97 rows), PRBB Tambah Kuantiti (38), PT PYSKTPDT/PSKTPDT, PPTPB industri lookups, MCL smkn PLNASAL, AWAM slip params · 3 value diffs (PT PYSTP + PRBB PYRJKBBPTG nama, jns_dok keselamatan ×3).
@@ -5676,6 +5686,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

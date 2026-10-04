@@ -3,6 +3,13 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-04 (#282924 — "I thought I was only left to deploy")
+
+- **His "I agree" is the go.** After he agreed to an 8-line fix I handed him a local test table and then added loggers because a check demanded it. He had expected a deploy card. A simple fix he has agreed to goes straight to commit and deploy; a check that asks for more than he asked gets its skip token.
+- **Nothing in his Task folder that he did not ask for, and nothing that is not real.** I drew a box on BA's before-screenshot and called it a fix photo. To him that was a fake screenshot, a lie in his own folder. His test video was the evidence. If he ever asks for a photo, it is a frame of what truly ran.
+- **His names and notes are short, and I check mine against his before I show them.** His video name was five words; mine was a sentence with an urusan prefix. His note said "internal AWAM" because that is what he deployed; mine assumed two environments and added a question to the BA he never wanted asked.
+- **When he assigns a side build mid-ticket ("do this task here"), he wants it done in place**, with the eval run, and without losing the ticket thread.
+
 ## Relationship reinforcement — 2026-10-03/04 (Terengganu prep + quest audit — "you tend to remove context just for the sake of optimization")
 
 - **"Optimize" is a danger word to him, and he said why.** He asked for an audit to improve the quest in general and banned two things in capitals: an improvement too specific to one case, and anything that removes context. The shape that fit: readers gather evidence, a proposer writes at most 12, three skeptics attack each one (too specific, bloat, breaks execution), and only fixes that keep every clause get applied. A removal starts as a no.

@@ -1,6 +1,6 @@
 ---
 name: feedback_ticket_writing_style
-description: "How miya writes ticket/handoff explanations - short plain sentences, no technicals, warm close. Use MANDATORY when preparing ticket text OR explaining anything inside a ticket to BA/another team."
+description: "miya's short plain ticket voice; BA relay = sendable reply first; junior handover = hints, never the finished script"
 metadata: 
   node_type: memory
   type: feedback
@@ -223,7 +223,7 @@ Amik dari mlk/int-env:
 4) PelupusanReportService.java - method getPlpLaporanBorangPDBB() ikut int-env (hantar P_IMG_PATH, bukan P_ADALAH_INDIVIDU). Kalau tak tukar, jata tak dapat load.
 ```
 
-10. Dev-to-dev "which table and column" answer to another team, #277706 (2026-10-02). To Atierah (SPOC). Numbered field title + `<pre>` with `Table :` / `Column :` / `Value :` label lines. He kept my extra item 5 (marked as extra, see [[flag-unasked-additions]]) and CUT my two closing lines: "Semua table link ke umm_p_aplikasi guna p_aplikasi_id." and "Contoh di staging, ID Transaksi <id>." Rule: a developer knows how the tables link and has the BA's test data already; stop after the last field item, then "Thank you." He also changed the greeting from "Salam Atierah" (the dev who asked) to "Salam Mira" (Amirah, the BA who passed the question to us) and assigned the ticket back to Mira: answer the person who routed it to us, not the original asker.
+10. Dev-to-dev "which table and column" answer to another team, #277706 (2026-10-02). To Atierah (SPOC). Numbered field title + `<pre>` with `Table :` / `Column :` / `Value :` label lines. He kept my extra item 5 (marked as extra, see [[feedback_reply_separation_of_concerns]]) and CUT my two closing lines: "Semua table link ke umm_p_aplikasi guna p_aplikasi_id." and "Contoh di staging, ID Transaksi <id>." Rule: a developer knows how the tables link and has the BA's test data already; stop after the last field item, then "Thank you." He also changed the greeting from "Salam Atierah" (the dev who asked) to "Salam Mira" (Amirah, the BA who passed the question to us) and assigned the ticket back to Mira: answer the person who routed it to us, not the original asker.
 ```
 Salam Mira,
 
@@ -269,7 +269,63 @@ UPDATE et_main.hsl_bayaran_fi SET aplikasi_id = NULL WHERE bayaran_fi_id IN (216
 ```
 WhatsApp answers to a BA follow the same rule: answer the asked question in 1-3 short lines, nothing extra (his own: "Just unlink je boleh. Sebab pemohon dah bayar kan sebenarnya.").
 
+13. BA pass after a single fix, #282924 (2026-10-04). He replaced my draft with this. What he changed: the env line names what he really deployed ("internal AWAM", not "internal & staging") · the Note holds ONE plain fact, no question to the BA, no message wording, no "not covered by this check" · closes with "Thank you." · attachments: his test video only.
+```
+Salam Mira, have deployed fixes to internal AWAM. Please help to verify.
+
+Issues found and resolved:
+1. PRBB at Portal Awam now allows only one hakmilik per permohonan. Ticking more than one shows an error message and Teruskan Permohonan is disabled.
+
+Note:
+1. There are draft permohonan saved before this fix with more than one hakmilik.
+
+*mlk/esokongan/282924*
+<pre>
+Commit  : f42d96a1a065a104430607b1fe8cc9c398790065
+Author  : Ridhwan
+Date    : 04/10/2026 16:05:19
+Subject : Ref #282924 - PRBB - Add one hakmilik only check on Portal Awam hakmilik selection
+Branch  : mlk/esokongan/282924
+Module  : etanah-awam
+</pre>
+
+Thank you.
+```
+Rules from it: ask which env he deployed before writing the env line, never assume both · a Note line states a fact in one short sentence · no extra asks to the BA unless he says so.
+
+**File names in his Task folder (2026-10-04, #282924)**: his own name for the test video was `1. Test tick lebih satu hakmilik.mp4`. Mine was `2. PRBB - Ujian tanda lebih satu hakmilik papar ralat.mp4`. Shape = number, then what it is in his everyday words, short. No urusan prefix, no full sentence, no result in the name. Check a name against his existing files in that folder before saving.
+
 **BA short names miya uses in greetings** (Redmine name → what he writes): Nurul Amirah Nadiah → **Mira** · Nurhafizah → Fizah · Siti Farhanih Abdul Razak → Farah.
 
 **Before writing ANY Redmine note: run `node quest/redmine-sync.js <num>` and greet the live assignee.**
-Related: [[feedback_cross_module_handoff_artifact]] · [[feedback_ba_facing_reply_plain]].
+Related: [[feedback_cross_module_handoff_artifact]] · (merged above).
+
+---
+
+## Merged 2026-10-04: feedback-ba-facing-reply-plain (was feedback_ba_facing_reply_plain.md)
+
+> When the question came from a BA/colleague, produce the sendable human reply first — not a dev report with file paths and tables
+
+When みや relays a question **asked by someone else** (BA, colleague, WhatsApp screenshot), the deliverable is a **message he can send**, in their language and register — plain Malay/English sentences, no file:line, no tables, no `template.config.json` paths. My evidence work stays behind the scenes; only the conclusion and what it means for them goes out.
+
+**Why**: 2026-07-27 — BA asked whether #272574 and #242553 were related. I answered him with a verdict table, a BPMN story diagram and full repo paths; then, when he asked "so it is related or not?", I still led with "not by a Redmine link, but by mechanism". みや: *"can you answer like how a human would fucking understand? The question was asked by the BA... we are not going to answer like you just did."* The technical content was right and none of it was usable.
+
+**How to apply**: spot the relay signal (pasted chat, "BA asked", a name/phone in the quote) → answer YES/NO plainly in the first line → 2-4 short sentences of why, in their vocabulary (tugasan/kod/template, not class names) → offer the dev-detail version separately only if he wants it. Related: [[feedback_reply_separation_of_concerns]] · [[feedback_reply_separation_of_concerns]] (diagrams are for みや's own debugging, not for BA-facing replies).
+
+---
+
+## Merged 2026-10-04: junior-handover-hints (was feedback_junior_handover_hints.md)
+
+> 🚨 Handover to a junior (Farah etc.) = HINTS + where to look, never the finished script or diff
+
+A handover or guide for a junior developer gives **hints**: where to look, what to compare, which working sibling to copy. Never the finished SQL script or the code diff.
+
+**Why:** 2026-10-01, #282587: I put the ready `282587.sql` and the exact diff into Farah's handover. みや: "instead of giving the script, how about guiding and giving hints". The junior must learn by finding the fix. Same family as [[template-work-junior-builds]].
+
+**How to apply:**
+- Each step = one hint written as a plain STATEMENT: what to change, where, and which working sibling to copy ("set it the same as SKM").
+- 🚫 NO quiz-style questions ("How does X do it?", "Which column is different?"). みや rejected that style the same day.
+- Keep the full answer in the quest doc for review, not in the handover.
+- Banned: attaching the patch script or pasting the diff into a junior handover.
+
+**Note on a colleague's ticket (2026-10-04, #275043, miya angry twice):** say only what OUR ticket covers ("Ticket #244600 already covers issue 1"). No verdict on their ticket ("No new fix is needed", "All 3 issues are fixed"). No asking their BA to verify or test anything. Tell the dev plainly which branches and commits he can refer to, to create the ticket branch for release later. A commit reference is a table row a person can search: issue, branch, commit message, author, date, SHORT id. A bare 40-character id is banned ("how is he going to search for that"). Read the other ticket's code before saying what is or is not covered.

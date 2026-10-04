@@ -104,3 +104,7 @@ A network failure reports SKIP; a crash reports FAIL. Last run: 13/13.
 | **Goal** | みや sees his true open standing, ranked his way, identically every time |
 | **Guardrails** | output pasted verbatim never composed · every exclusion named · Redmine read-only |
 | **Grounded** | live Redmine API + `quest/active.txt` on disk — no model memory in any cell |
+
+## Memory rules for this workflow (read when this skill fires — added 2026-10-04, additive)
+
+- `.claude/auto-memory/feedback_esokongan_means_tracker.md` — eSOKONGAN = the tracker, board script first, shared miya + Ammar filter, BA vs TSO roster, delegated quests

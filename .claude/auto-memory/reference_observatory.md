@@ -13,4 +13,4 @@ Built 2026-09-27 per miya's /goal: the Lapis Lazuli Observatory is the one place
 - **Trust its counts over the older reports**: hook telemetry files overlap (146k repeated rows on 2026-09-27); the observatory de-duplicates, `lib/turn-report.js` / `lib/audit-briefing.js` / `lib/liveness-report.js` still sum files until fixed.
 - Purpose pillar: a component with no declared goal is a gap, never healthy.
 
-Related: [[feedback_observability_vs_monitoring]] · [[project_onedrive_worktrees]] · [[project-name-lapis-lazuli]].
+Related: [[Inventory-first — take stock before acting]] · [[project_onedrive_worktrees]] · [[project-name-lapis-lazuli]].

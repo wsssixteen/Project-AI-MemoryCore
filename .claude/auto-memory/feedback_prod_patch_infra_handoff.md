@@ -1,6 +1,6 @@
 ---
 name: feedback_prod_patch_infra_handoff
-description: PROD data patches always go to infra via a fixed hand-off message format (greeting + one-line ticket explainer + script with expected-outcome comment)
+description: "PROD patch to infra in the fixed message format; server log ask = the exact one-liner, no path"
 metadata: 
   node_type: memory
   type: feedback
@@ -28,7 +28,7 @@ Hi infra, please assist. Thank you.
 1. **The `.sql` FILE** (`2. Fix\<ticket>.sql`, format per [[feedback_infra_script_schema_env]]: 4-line header + before-SELECT + DML) — share its contents in chat for review, in ITS OWN section ("<ticket>.sql for review").
 2. **The HANDOFF MESSAGE** (the block above) — its fence carries the **DML statement(s) + `-- N rows …` ONLY**. 🚫 NO `-- Ticket/Env/Permohonan/Fix` header, NO before-SELECT, NO file path inside the fence. Pasting the file into the handoff = the #277346 slip. Enforced by `patch-script-gate` CHECK 7 (Stop, BLOCKS; bypass `[skip-handoff-shape: <reason>]`).
 
-**🚨 One-liner content rule (2026-08-27, per みや)**: the sentence states urusan + OUTCOME only — NEVER the permohonan id, values/quantities, table names, or column names; all of that already lives in the script, and infra reads scripts. Example: `#276XXX: PRBB - data patch untuk buka tugasan Penyediaan Borang 4Ce`. Wrong: `#276XXX: PRBB PTMLK/.../12 - tambah kuantitiDisyor (500 Meter Padu) dalam mklmt_tmbhn umm_a_permit_lesen ...`. Schema-qualify (et_main) and still run the schema-verify + script-check gates first. Pairs with [[feedback_infra_script_schema_env]] and [[feedback_never_hand_miya_a_query]] (writes → infra, not みや).
+**🚨 One-liner content rule (2026-08-27, per みや)**: the sentence states urusan + OUTCOME only — NEVER the permohonan id, values/quantities, table names, or column names; all of that already lives in the script, and infra reads scripts. Example: `#276XXX: PRBB - data patch untuk buka tugasan Penyediaan Borang 4Ce`. Wrong: `#276XXX: PRBB PTMLK/.../12 - tambah kuantitiDisyor (500 Meter Padu) dalam mklmt_tmbhn umm_a_permit_lesen ...`. Schema-qualify (et_main) and still run the schema-verify + script-check gates first. Pairs with [[feedback_infra_script_schema_env]] and [[feedback_readable_safe_script]] (writes → infra, not みや).
 
 **🚨 CONCISE — miya's voice, not a report (2026-10-02, #282721).** He asked "infra hand off please" and I sent a 15-word formal-Malay one-liner ("data patch untuk asingkan 4 bil fi pendua yang belum berbayar daripada permohonan") plus a lead sentence and 3 bullets around the block, with the greeting OUTSIDE the fence. Rules:
 - When he asks for the handoff, the reply IS the fenced block. At most ONE short line before it. No file paths, no verify-SELECT, no "after infra runs" bullets unless he asks.
@@ -36,3 +36,21 @@ Hi infra, please assist. Thank you.
 - Greeting + #ticket + DML = ONE ``` block (copy once).
 
 enforcement: `domain/patch-close-shape` Stop hook — CHECK D (#ticket > 10 words, advisory) + CHECK E (greeting unfenced, advisory) added 2026-10-02, eval 59/59; — CHECK A adjacency + CHECK B handoff-last (advisory) + **CHECK C BLOCKS a reply that routes a PROD `<ticket>.sql` to infra with NO handoff block** (added 2026-09-28 after #281638: the patch prep reply said "Send 281638.sql to infra" and carried no handoff; the gate passed silently because it only checked shape when a handoff already existed). Script half: patch-script-gate + sql-schema-verify.
+
+---
+
+## Merged 2026-10-04: infra-server-log-request (was feedback_infra_server_log_request.md)
+
+> 🚨 Server log request to infra = miya's exact one-liner, no path, no grep, ends "thank you
+
+Server log request to infra, VERBATIM shape (miya 2026-09-30):
+
+```
+hi Infra, please help to download server log for MLK Awam, env stag for today, thank you
+```
+
+Swap only: module (MLK Awam / MLK Pelupusan), env (stag / prod / mlit), day (today / <date>).
+
+**Why:** I sent a file-download format with a guessed path (`/home/app/jboss/...`, never verified for AWAM staging) and dropped "thank you". People ask for the server log straight away; infra knows where it is.
+
+**How to apply:** never add a path, grep, ticket number or explanation. Never guess a server path. Before asking infra for any log, check the DB error store first: Melaka `et_sistem_<schema>.pt_application_ex_entity` (stack_trace carries URL, host, build time). That found the #256334 borang root cause without any log. Related: [[prod-patch-infra-handoff]] · [[verify-before-claim]]

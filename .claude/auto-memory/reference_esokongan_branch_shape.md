@@ -17,7 +17,7 @@ unlabelled merge commit; `git ls-remote origin '*271639*'` found the real branch
 
 **Rule**: always resolve the real branch with `git ls-remote origin '*<num>*'` before setting the
 merge list. The skill already says "verify each against ls-remote, never assume" — this is the
-concrete case that proves why. See [[reference_baseline_release_servers]].
+concrete case that proves why. See [[feedback-commit-deploy-runbook]].
 
 **Second failure mode — the ticket may have NO branch at all (release 1.0.12, 2026-07-24)**: Internal
 Issue **#272302** was the only ticket on BAQA's list, and no branch for that number exists anywhere.

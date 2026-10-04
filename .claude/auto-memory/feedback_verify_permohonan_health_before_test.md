@@ -14,7 +14,7 @@ metadata:
 
 **How to apply — before offering a test app:**
 - Prefer a permohonan that reaches the target tugasan **ORGANICALLY** (submit through the real flow), so all gateway variables are set — never one Init-Altered into the middle of a teknikal sub-flow.
-- If you must Init-Alter, set the required Flowable Variables in the alter screen (e.g. `skipPTB=false`), Reset Flowable Variables = **No** (copies previous vars). See [[project_local_deploy_hibernate_overlay]] family + FLOWABLE-KNOWLEDGE §6/§8b (bare-variables trap).
+- If you must Init-Alter, set the required Flowable Variables in the alter screen (e.g. `skipPTB=false`), Reset Flowable Variables = **No** (copies previous vars). See [[project-jboss-launched-by-eclipse]] family + FLOWABLE-KNOWLEDGE §6/§8b (bare-variables trap).
 - A gateway with all-conditional arms + no default throws this exact error when its variable is unset (FLOWABLE-KNOWLEDGE §10.1). If a handed app might land on such a gateway with a blank var, it is NOT a proper test app.
 - Health-check the app first: does it have a live engine task, is it on the migrated version, are the flow variables the target gateway reads actually set.
 

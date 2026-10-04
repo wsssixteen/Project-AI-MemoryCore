@@ -26,4 +26,4 @@ metadata:
 
 **How to apply**: resolve the state before anything (`node lib/states.js resolve`), load the Terengganu folder, never reuse a Melaka path, schema, branch or MCP by habit. A Melaka quest still never touches TRG code, and the reverse.
 
-Related: [[feedback_state_aware_knowledge_load]] · [[reference-git-server-gitlab]] · [[feedback_etanah_git_separate_clone]]
+Related: [[feedback_state_aware_knowledge_load]] · [[project-jboss-launched-by-eclipse]] · [[feedback_etanah_git_separate_clone]]
