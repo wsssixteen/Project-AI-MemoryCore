@@ -17,6 +17,14 @@ check('1 lib/save-quest.eval.js green', lib.status === 0, (lib.stdout || '').spl
 const skill = read('.claude/skills/close-phase/SKILL.md');
 const head = skill.split('\n').slice(0, 5).join('\n').toLowerCase();
 for (const phrase of ['save this quest', 'save quest', 'save the quest']) check('2 close-phase description carries trigger "' + phrase + '"', head.includes(phrase));
+// A plain YAML value breaks on "colon + space" or " #": the harness then drops the whole description
+// and the trigger phrases with it (seen 2026-10-04, minutes after the first ship). Backticks are fine.
+for (const [rel, s] of [['close-phase', skill], ['quest', read('.claude/skills/quest/SKILL.md')]]) {
+  const fm = (s.match(/^---\r?\n([\s\S]*?)\r?\n---/) || ['', ''])[1];
+  const desc = ((fm.split(/\r?\n/).find(l => /^description: /.test(l)) || '').replace(/^description: /, ''));
+  const quoted = /^".*"$|^'.*'$/.test(desc.trim());
+  check('2b ' + rel + ' skill description is a YAML-safe one-line value', desc.length > 50 && (quoted || (!/: /.test(desc) && !/ #/.test(desc))), desc.slice(0, 80));
+}
 check('3 close-phase names the script call', /node lib\/save-quest\.js <QA>/.test(skill));
 check('4 close-phase has the Save-quest mode section', /^## Save-quest mode/m.test(skill));
 check('5 close-phase Step 0 runs the resolver', /Step 0[\s\S]{0,900}node lib\/save-quest\.js/.test(skill));
