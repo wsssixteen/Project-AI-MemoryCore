@@ -98,3 +98,7 @@
 {"ts":"2026-10-02T10:26:48.804Z","qa":"QA-282723","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-10-02T10:27:33.275Z","qa":"QA-282723","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
 {"ts":"2026-10-04T09:01:01.365Z","qa":"QA-282442","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"24c277d683","branch":"mlk/esokongan/282442"}
+{"ts":"2026-10-04T09:17:27.092Z","qa":"QA-282555","kind":"wrong-fix","n":1,"was":"Runbook step: add Flowable variable nextUser=nazli on the Alter page to pin the CADO","why":"miya: the alter lands on the default user; FLOWABLE-KNOWLEDGE 8b trap 2 already said assignment comes from agihan; PROD after-check showed PJTLT on nazli with the variables table empty","learned":"On Alter Flow leave nextUser alone; the assignee is the agihan default (previous holder of that tugasan kod); verify after"}
+{"ts":"2026-10-04T09:17:27.484Z","qa":"QA-282555","kind":"wrong-fix","n":1,"verdict":"phrase: alter-ticket-gate A5 line + ALTER-TICKET-PLAYBOOK runbook row 7 (done 2026-09-30, commit d64abf26, eval F21)"}
+{"ts":"2026-10-04T09:17:59.626Z","qa":"QA-282555","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-04T09:18:39.016Z","qa":"QA-282555","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
