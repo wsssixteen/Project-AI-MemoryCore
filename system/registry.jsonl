@@ -91,3 +91,5 @@
 {"ts":"2026-10-04T02:08:50.070Z","name":"falsifier-ran-check","kind":"refine-opened","lifecycle":"refining","nod":"miya 2026-10-04 popup: Extend falsifier-ran-check (Recommended)"}
 {"ts":"2026-10-04T02:08:56.104Z","name":"compile-gate","kind":"refine-opened","lifecycle":"refining","nod":"miya 2026-10-04 brief: wire the ledger check into the etanah commit path (compile-gate)"}
 {"ts":"2026-10-04T02:08:56.225Z","name":"ticket-close-block","kind":"refine-opened","lifecycle":"refining","nod":"miya 2026-10-04 brief: BA pass note tool refuses on OPEN falsifier rows"}
+{"ts":"2026-10-04T04:44:20.776Z","name":"predicate-box","kind":"refine-opened","lifecycle":"refining","nod":"miya 2026-10-04 task brief: add probe-matrix requirement to predicate-box (282442 zero-logger builds)"}
+{"ts":"2026-10-04T04:52:48.393Z","name":"predicate-box","kind":"refine-closed","lifecycle":"active","note":"v3 probe decision: matrix >=3 rows + FALLBACK row; eval 36/36 + #282442 transcript replay"}
