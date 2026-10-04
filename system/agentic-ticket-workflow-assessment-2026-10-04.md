@@ -187,3 +187,12 @@ Proposals logged: A1 unmerged-worktree-edit check at DE · A2 pass note names ev
 | A3 debugging | The 24/09 evidence script showed one of three columns the code reads; another team drew the wrong conclusion from it | evidence script lists every column in read order (built as a memory rule today) |
 | A4 etanah issue-solving | Row Per was empty on 22/09 because the maintenance page never saved it; we added a header fallback and told nobody until BA raised it on 25/09 | advisory when a fix adds a fallback for an empty column another module writes |
 | A5 sweep / file sweep | 16 empty Rework folders, 67 blank notes and 102 stale project folders built up unseen for months | a counted folder-audit line at DE |
+
+## Session "#256334 Phase 2 re-run" (17:25 → 17:45)
+| Axis | Claim | Instance |
+|---|---|---|
+| A1 | a spawned side-build can vanish with no alarm | submit-path gate queued 2026-09-30, `domain/submit-path-gate/` absent on main 2026-10-04. Proposal logged |
+| A2 | a re-sync after archive re-downloads videos into the archived folder | redmine-sync 256334 pulled 5 mp4 into Archive; `archive-quest.js --sweep-videos` removed them |
+| A3 | a UI-only edit shipped without the submit path read | `d3128ad449` broke TKPDBB Hantar; fixed `072115f762` with the TKJKKLPK analog. Proposal A3 re-logged |
+| A4 | pattern banked | BUG-BESTIARY "no document mode on MlkSuratTemplateForm" |
+| A5 | ⏭ no sweep work this session | |
