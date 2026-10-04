@@ -1642,6 +1642,7 @@ Before-SELECT: `SELECT aplikasi_id, id_pengenalan, status_proses, status_keputus
 - Editing a rate row = delete + insert (new `fi_kadar_id`; MLKIT 307→2040, 318→2041). History is not kept.
 - Re-added row 2041 saved with `unit_luas_id` empty although the list showed Meter Persegi before Simpan (single observation, unconfirmed).
 - PPTPB calc (#280540 fix) unit order: row `kadar_pengiraan_id` → row `unit_luas_id` → Kod Fi `unit_pengiraan_id` (`PelupusanMaklumatBayaranHelper.getPptpbUnitKadar()`).
+- **Update 2026-09-29 (#280540 cycle 2)**: the maintenance page did NOT save `hsl_fi_kadar.kadar_pengiraan_id` for PPTPBL (a Common bug; every Simpan only rewrote the header `hsl_fi_pejabat.unit_pengiraan_id`). Fixed in `etanah-maintenance` branch `mlk/esokongan/280540` (Melaka + kod PPTPBL only), deployed MLKIT 2026-09-29. After it, each rate row carries its own Per and the row wins over the header. Other Kod Fi (BATUB, PLPSL, HDHK) already had row Per filled.
 - Per-row BA evidence query (no JOIN): Task folder `217. ES #280540…\280540.sql`.
 - **Two-band rates (#265109, 2026-09-25, mlit DB verified)**: a prorata tujuan needs a SECOND `hsl_fi_kadar` row with `unit_luas_dari` > 0 for the rate above the first band. Jeti has it (mlit rows 2017 hingga 91.44 + 2018 dari 91.4401). PLPSL Tanah untuk pengiklanan has only band 1 (rows 2008-2016, hingga 10), so `calculateSewaTahunanProrata` returns null above 10 mp and Sewa Tahunan shows `-`. The RM20 rate sits only in the `perihal` text.
 

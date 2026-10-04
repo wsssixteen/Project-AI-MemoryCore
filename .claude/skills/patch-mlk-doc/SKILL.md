@@ -106,3 +106,8 @@ Permohonan `PTMLK/02/L/MCL/2026/3` -> SN_JPPH `LAIN-36816725`, rev `41110560`, v
 `UPDATE ET_DMS.DOKUMEN_REVISION SET LOKASI_FAIL_PDF=NULL WHERE DOKUMEN_REVISION_ID=41110560;`
 
 > Fixture: `domain/patch-mlk-doc/eval.js` — asserts every load-bearing anchor (2 tables, join spine, both deliverables, order-guard, verified reference) still present.
+
+## Verified after-patch facts (#282198, PROD, 2026-10-02 — additive)
+- The file infra downloads may arrive named `<basename>.main.zip`. It is the Word document itself (header `50 4B 03 04`, has `word/document.xml`). Copy it to `.docx` to open; keep the original as the rollback copy.
+- After infra replaces the file, `et_dms.dokumen_revision.saiz_fail_byte` keeps the OLD size (954974 stayed while the new file was 158383). An unchanged size is NOT a failed replace.
+- The proof of a good patch is `lokasi_fail_pdf` NULL right after the UPDATE, then the corrected document on first view in PROD (BA screenshot on the ticket showed all three signatures correct).

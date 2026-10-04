@@ -131,3 +131,19 @@ Verdict: DE records a one-off system change (session, diary, commit) but does no
 | A3 debugging | ⏭ no debugging this session (alter + close-out only) | — |
 | A4 etanah issue-solving | An alter ask is settled by 3 reads; the form code read was optional | the Alter page's Next Possible Flows already listed Jabatan Teknikal 3 for PJTLT (miya's screenshot 2026-09-30) |
 | A5 sweep | ⏭ no sweep this session | — |
+
+## Addendum — gate false-positive session (2026-09-25 → 10-04)
+
+- **A1 agentic system**: a session can sit open 9 days with no Domain Expansion (this one: fix pushed 25 Sep, closed 4 Oct). Nothing was stranded this time because the commits were pushed the same day, but the session recap and diary were missing until today. Second instance today (#282555 branch unmerged 4 days).
+- **A1**: `RecursiveLoopDetector` fired 5 false alarms on five different README edits in this session; audit shows 0 blocks in 7 days for 3750 s.
+- A2 ⏭ no quest worked · A3 ⏭ no debugging beyond the gate · A4 ⏭ no etanah issue · A5 ⏭ no sweep.
+
+## Addendum — session #282198 close-out (17:45)
+
+| Axis | Assessment (instance) | Proposal |
+|---|---|---|
+| A1 agentic system | `worktree-cleanup-boot` errored 85 of 85 fires in 7 days (audit briefing). Quest scripts take paths from the current folder: `quest/archive-quest.js --dry-run` from a worktree targeted the worktree's `projects` folder. | Fix the boot hook error; scripts resolve the main root. Eval: 0 errors in 7-day telemetry; dry run from a worktree prints the main path. |
+| A2 quest workflow | "Is it closed on Redmine" had no defined answer: #282198 was Ready in PROD, the reconcile had already set local closed. | close-phase Step 0 names which Redmine statuses allow Phase 2. Eval: Ready in PROD / Closed / Verified map to a fixed allow or ask verdict. |
+| A3 debugging | ⏭ no debugging in this session (document patch only). | — |
+| A4 etanah issue-solving | Banked directly: after a DMS replace, `saiz_fail_byte` keeps the old size; download arrives as `.main.zip`. | ⏭ already in the skill, no proposal. |
+| A5 sweep | ⏭ no sweep run in this session. | — |

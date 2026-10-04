@@ -104,3 +104,6 @@
 {"ts":"2026-10-04T09:17:27.484Z","qa":"QA-282555","kind":"wrong-fix","n":1,"verdict":"phrase: alter-ticket-gate A5 line + ALTER-TICKET-PLAYBOOK runbook row 7 (done 2026-09-30, commit d64abf26, eval F21)"}
 {"ts":"2026-10-04T09:17:59.626Z","qa":"QA-282555","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-10-04T09:18:39.016Z","qa":"QA-282555","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-04T09:33:53.294Z","qa":"QA-282198","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none (data-only DMS patch, no code)"}
+{"ts":"2026-10-04T09:36:58.259Z","qa":"QA-282061","kind":"wrong-fix","n":1,"was":"PROD script swapping No Permit Khas between PTMLK/02/L/PPTPB/2026/5 and /1","why":"BA never asked for /1 to change; dropped 2026-09-30, delete-only script shipped","learned":"a patch that touches a permohonan the BA did not name is shown to the BA before it is attached"}
+{"ts":"2026-10-04T09:37:43.597Z","qa":"QA-282061","kind":"wrong-fix","n":1,"verdict":"knowledge:etanah-knowledge/melaka/PERMIT-LESEN-RUNNING-NUMBER.md (#282061 outcome line written 2026-10-04) + proposal tracked: ticket-close-block --ba lists every permohonan a PROD script changes"}
