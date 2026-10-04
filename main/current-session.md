@@ -33,12 +33,3 @@
 - **Open**: start the spawn chip for rule 9 · PPJK / PSBS early-number ruling (ADHOC-PERMIT-2026-1).
 
 **Last Activity**: 2026-10-04 17:35 — ADHOC-GIT-2026-1 saved (audit 29/29): Sourcetree "Accept server's key?" for GitLab 10.16.63.27 = Sourcetree still on PuTTY with `id_rsa.ppk`; fix given (OpenSSH + `id_ed25519_gitlab`), waiting for miya's Fetch result · Domain Expansion run.
-
-## Session Recap (2026-09-28 → 2026-10-04, session "gitlab-migration-check", ADHOC-GIT-2026-1)
-- **Ask**: Sourcetree popup "Accept server's key?" for 10.16.63.27 one week after the GitLab migration; check before advising. Then: save as an adhoc, Domain Expansion.
-- **Found**: popup key = the ED25519 key already in `C:\Users\Ridhwan\.ssh\known_hosts:24` (genuine). Sourcetree `SSHClientType` = PuTTY with `C:\Users\Ridhwan\.ssh\id_rsa.ppk`; PuTTY has no cached key for 10.16.63.27. GitLab accepts `id_ed25519_gitlab`, rejects `id_rsa` (both tested live with ssh -T).
-- **Fix given**: Sourcetree Options, SSH Client = OpenSSH, SSH Key = `C:\Users\Ridhwan\.ssh\id_ed25519_gitlab`, restart, Fetch.
-- **Saved**: block `ADHOC-GIT-2026-1` (status hold) · register A48 · qa_doc `projects/coding-projects/active/ADHOC-GIT-2026-1/ADHOC-GIT-2026-1.md` · Task folder `1. Tasks\Melaka\265. AH - LOCAL - GIT - Sourcetree SSH key ralat lepas migrasi GitLab`.
-- **Open**: miya has not reported the Fetch result. Not verified: Sourcetree in OpenSSH mode reads `C:\Users\Ridhwan\.ssh\config`.
-- **Session note**: the worktree `gitlab-migration-check-57dc32` lost its git link (pruned while the session was idle); all saves went straight to the main checkout. Boot files and session briefing were not read this session.
-**Last Activity**: 2026-10-04 17:40 — #282198 (PROD Minit Bebas document patch, PTMLK/02/L/PT/2026/4) Phase 2 done and ARCHIVED · Redmine status at close = Ready in PROD (with TSO), not Closed · Domain Expansion run.

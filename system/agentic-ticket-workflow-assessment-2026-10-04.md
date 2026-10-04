@@ -177,3 +177,13 @@ Proposals logged: A1 unmerged-worktree-edit check at DE · A2 pass note names ev
 - A3 debugging: on 25 Sep the cause was read from the deployed model in the flowable DB in 4 queries, not from the banked file (which was one version old). Worked; keep.
 - A4 etanah: cross-module sub-flow lessons are already banked (FLOWABLE-KNOWLEDGE §13). Nothing new.
 - A5 ⏭ no sweep ran.
+
+## Session "quest 280540 data update" (2026-09-29 → 2026-10-04) — improvement sweep
+
+| Axis | Assessment (concrete instance) | Idea logged |
+|---|---|---|
+| A1 agentic system | `quest/archive-quest.eval.js` is listed as quarantined (REPAIR-QUEUED) but ran 9/9 on 2026-09-30 after the lazy `lib/task-folder` require in `active-cli.js` | re-run the battery and lift the quarantine |
+| A2 quest workflow | A reopened quest left two blocks (one archived, one live); `archive-quest.js` stopped at Step 3 and the merge was done by hand | fold the old block into the live one before archiving |
+| A3 debugging | The 24/09 evidence script showed one of three columns the code reads; another team drew the wrong conclusion from it | evidence script lists every column in read order (built as a memory rule today) |
+| A4 etanah issue-solving | Row Per was empty on 22/09 because the maintenance page never saved it; we added a header fallback and told nobody until BA raised it on 25/09 | advisory when a fix adds a fallback for an empty column another module writes |
+| A5 sweep / file sweep | 16 empty Rework folders, 67 blank notes and 102 stale project folders built up unseen for months | a counted folder-audit line at DE |

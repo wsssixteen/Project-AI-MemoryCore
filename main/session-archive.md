@@ -4,6 +4,15 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-09-28 → 2026-10-04, session "gitlab-migration-check", ADHOC-GIT-2026-1)
+- **Ask**: Sourcetree popup "Accept server's key?" for 10.16.63.27 one week after the GitLab migration; check before advising. Then: save as an adhoc, Domain Expansion.
+- **Found**: popup key = the ED25519 key already in `C:\Users\Ridhwan\.ssh\known_hosts:24` (genuine). Sourcetree `SSHClientType` = PuTTY with `C:\Users\Ridhwan\.ssh\id_rsa.ppk`; PuTTY has no cached key for 10.16.63.27. GitLab accepts `id_ed25519_gitlab`, rejects `id_rsa` (both tested live with ssh -T).
+- **Fix given**: Sourcetree Options, SSH Client = OpenSSH, SSH Key = `C:\Users\Ridhwan\.ssh\id_ed25519_gitlab`, restart, Fetch.
+- **Saved**: block `ADHOC-GIT-2026-1` (status hold) · register A48 · qa_doc `projects/coding-projects/active/ADHOC-GIT-2026-1/ADHOC-GIT-2026-1.md` · Task folder `1. Tasks\Melaka\265. AH - LOCAL - GIT - Sourcetree SSH key ralat lepas migrasi GitLab`.
+- **Open**: miya has not reported the Fetch result. Not verified: Sourcetree in OpenSSH mode reads `C:\Users\Ridhwan\.ssh\config`.
+- **Session note**: the worktree `gitlab-migration-check-57dc32` lost its git link (pruned while the session was idle); all saves went straight to the main checkout. Boot files and session briefing were not read this session.
+**Last Activity**: 2026-10-04 17:40 — #282198 (PROD Minit Bebas document patch, PTMLK/02/L/PT/2026/4) Phase 2 done and ARCHIVED · Redmine status at close = Ready in PROD (with TSO), not Closed · Domain Expansion run.
+
 ## Session Recap (2026-09-29 → 2026-10-04, session "quest start 282198", #282198 → archive)
 - **Ask**: start the quest (29 Sep) → find the Minit Bebas on PROD, infra download box, convert to Word, Redmine handover → (4 Oct) check Redmine, run Phase 2, Domain Expansion.
 - **Done 29 Sep**: locator → `LAIN-37140956_1.main`, revision 41444766 · infra download box wording fixed by miya (`Hi infra, kindly need your help to download this file from <STATE> <ENV>. Thank you.`), now in `.claude/skills/patch-mlk-doc/SKILL.md` (`b49df96f`) · `.docx` copy + handover note to Nurhafizah.
@@ -5870,6 +5879,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
