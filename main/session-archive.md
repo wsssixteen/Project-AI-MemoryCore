@@ -4,6 +4,17 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-09-29 → 2026-10-04, session "quest 280540 data update", #280540 → archive)
+- **Ask**: reopen #280540 and answer Common ("dev kau tarik data lain") → audit our fixes → BA's last change (Lot shows "per Lot") → make the Task folder shape proper and the rework detection robust → clean up → (4 Oct) check Redmine, Phase 2, Domain Expansion.
+- **Answer to Common**: PPTPB unit order = row `hsl_fi_kadar.kadar_pengiraan_id` → row `unit_luas_id` → header `hsl_fi_pejabat.unit_pengiraan_id`. The 24/09 check script showed only the header, which caused the confusion. Common's save fix (etanah-maintenance `mlk/esokongan/280540`) went to MLKIT 2026-09-29.
+- **Cycle 2 fix**: `d510940da2` on `mlk/esokongan/280540` (4 lines removed in `PelupusanMaklumatBayaranHelper.getPptpbKadarBayaranFormula()`), merged to `mlk/int-env` `ff7bb7fb8c`. BA verified; Redmine Closed 2026-10-01. Not merged by us to stag-env or master.
+- **System build (2538d209, on main)**: `lib/task-folder.js` · Task folder = `1. Brief` + `2. Fix` + `N. Rework\Brief` · a Rework folder is made only when we start work on a quest that already shipped a cycle (`active-cli`), never by the Redmine sync · notes txt retired, test data in the quest MD `## Test data` (`quest/notes.js` v2) · archive moves the project folder from any close path · hand-back Git table in the quest skill.
+- **Cleanup 30 Sep**: 16 empty Rework folders, 67 blank notes, 7 empty `1. Simulate`, 5 archive videos deleted; 160 notes moved into quest MDs; 95+7 project folders moved to `archive\`; 76 extra files folded in by a sonnet agent.
+- **Phase 2 today**: workflow-upgrade rows all ruled; Fastest Path + post-mortem + bounty in `projects/coding-projects/archive/QA-280540/QA-280540.md`; DATABASE.md §28 update line; PPTPB precedent note; test-data index; evidence-script rule in `feedback_show_evidence_script_or_code.md`. The cycle-1 archived block was merged into the live block before archiving (one block now, `closed=` + `closed_cycle2=`).
+- **Slips (miya caught)**: hand-back without the Git table · rework cycle read as NEW · made `2. Fix` inside the Rework folder · acted before showing the changes.
+- **Open**: 3 notes txt with no ticket id left in place (two AH folders + #165) · `archive-quest.js` fails at Step 3 when an older archived block of the same quest exists (handled by hand today; proposal logged).
+**Last Activity**: 2026-10-04 17:40 — #282061 archived (Redmine Closed 2026-10-01, Baseline 1.8.0): Phase 2 + bounty done · script-check rule 9 handed to a separate session · Domain Expansion run.
+
 ## Session Recap (2026-09-30 → 2026-10-04, #282061 follow-ups + close, worktree quest-282061-rubric-7a809b, git link pruned)
 - **BA questions (09-30)**: no duplicate after the patch (each number once, counter untouched) · OPPTPB not affected (own screen, own Fi branch, 0 PROD apps) · early numbers happen at any of 17 PPTPB tugasan on skrin 338, not only Kertas Pertimbangan.
 - **Decision**: BA never asked for PPTPB/2026/1 to change, so the number swap was DROPPED. PROD script = delete the duplicate unpaid PPTPBL bill only. PTMLK/02/L/PPTPB/2026/5 keeps 02/2026/3.
@@ -5889,6 +5900,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

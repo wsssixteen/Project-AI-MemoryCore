@@ -196,3 +196,13 @@ Proposals logged: A1 unmerged-worktree-edit check at DE · A2 pass note names ev
 | A3 | a UI-only edit shipped without the submit path read | `d3128ad449` broke TKPDBB Hantar; fixed `072115f762` with the TKJKKLPK analog. Proposal A3 re-logged |
 | A4 | pattern banked | BUG-BESTIARY "no document mode on MlkSuratTemplateForm" |
 | A5 | ⏭ no sweep work this session | |
+
+## Session "patch-281638" (2026-09-28 → 2026-10-04) — save-quest build, improvement sweep
+
+| Axis | Assessment (instance) | Forward idea + eval case |
+|---|---|---|
+| A1 agentic system | A live session's worktree lost its git link while idle (branch merged, admin dir pruned). The Edit guard then refused the main checkout and the folder was an orphan. Same thing hit session gitlab-migration-check today. `worktree-cleanup-boot` also errored on 75 of 75 boots in the audit. | Lock a live session's worktree, or have cleanup skip a folder whose transcript changed in the last 7 days. Eval: registered worktree, merged branch, recent transcript = never de-registered. Logged A1. |
+| A2 quest workflow | Two quests were archived before Redmine closed them: #281638 (28 Sep, Resolved) and #282198 (4 Oct, Ready in PROD). Built today: `lib/save-quest.js` + close-phase Save-quest mode + Redmine check before Phase 2. The check is a skill line; the mover itself does not refuse. | Refusal inside `quest/archive-quest.js` while Redmine is open, bypass with miya's words logged. Eval: #282198 replay exits 3. Blocked on the mover's quarantined eval. Logged A2. |
+| A3 debugging | ⏭ no debugging this session. | — |
+| A4 etanah issue-solving | PRBB/2026/2 still waits at the same tugasan with no variable (child instance 20527622). The permanent model fix is ticket #281324, already open. | ⏭ covered by #281324. |
+| A5 sweep | ⏭ no sweep this session. | — |
