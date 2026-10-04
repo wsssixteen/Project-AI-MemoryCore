@@ -132,6 +132,7 @@
 
 ## Reference
 - [reference-git-server-gitlab](reference_git_server_gitlab.md) — 🚨 live etanah git = GitLab 10.16.63.27; old 172.16.93.167 refuses auth ("Permission denied" = stale remote)
+- [artifact-registry](reference_artifact_registry.md) — 🚨 every published artifact + link; UPDATE by link, never a second copy; add a row after each publish
 - [hooks-run-from-main](reference_hooks_run_from_main.md) — 🚨 hooks may run from MAIN, not the worktree; probe (telemetry mtime) before calling a hook edit live
 - [reference-observatory](reference_observatory.md) — 🚨 diagnose/brief FIRST with `node lib/observatory.js --brief` (fact · evidence · context · judgement per finding); app on :7790; its telemetry counts are de-duplicated
 - [kadar-cukai-duplicate-maintenance](reference_kadar_cukai_duplicate_maintenance.md) — PT plot Kadar Cukai Tanah pulls the OLDEST of duplicate maintenance rate rows; data-side
