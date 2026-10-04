@@ -36,7 +36,7 @@ ARGUMENTS: $ARGUMENTS
 
 ## 📌 Vocabulary — "save everything" in quest context (per みや 2026-06-18)
 
-When みや says **"save everything" / "save the quest" / "save it" / "document the quest"** DURING quest work, it means **persist into the quest's own MD files** — NOT a session save / diary / Domain Expansion. The three homes, in order:
+When みや says **"save everything" / "save it" / "document the quest"** DURING quest work, it means **persist into the quest's own MD files** — NOT a session save / diary / Domain Expansion. **"save this quest" / "save quest" / "save the quest"** (2026-10-04 per みや) = the same persist step FIRST, then the live Redmine status picks the closing stage → `close-phase` skill "Save-quest mode" (`node lib/save-quest.js <QA>`: Redmine not closed = Phase 1 only · Redmine Closed = Phase 2 archive). The three homes of the persist step, in order:
 
 1. **`projects/coding-projects/active/QA-<num>/QA-<num>.md`** — the canonical per-quest doc (primary). Write the section matching the phase that just completed: Scout→`Context Loading (Discovery)` · Recon→`Debugging` · Rubric→`Code-Review` · Apply→`Ship — Apply` · test→`Ship — Verify`.
 2. **`QA-<num>.md` → `## Test data`** — test-data only, via `node quest/notes.js --qa <num>` (never hand-write). The Task-folder `1. <NNN NNN>.txt` is RETIRED (2026-09-30).

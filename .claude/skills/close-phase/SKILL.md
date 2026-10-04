@@ -1,6 +1,6 @@
 ---
 name: close-phase
-description: Stage-aware quest close — the keyword "close" advances a quest to its NEXT closing stage. Phase 1 (active → closed) branches + commits + pushes the fix and sets status=closed; Phase 2 (closed → archived) runs the Phase 2 emit + archives the folder/block and sets status=archived. Triggers — "/close-phase", "/close", "close", "close phase", "close-out", "close the quest", "close X", "phase 1 close", "phase 2", "archive X" (when already closed), "wrap X", "bounty X". The skill detects the quest's current status and runs the matching stage. Built 2026-06-05 after the QA-263921 close slip (silent deviation from the pull-before-branch sequence) — a skill runs the sequence in a FIXED order so a step can't be dropped.
+description: Stage-aware quest close — the keyword "close" advances a quest to its NEXT closing stage. Phase 1 (active → closed) branches + commits + pushes the fix and sets status=closed; Phase 2 (closed → archived) runs the Phase 2 emit + archives the folder/block and sets status=archived. Triggers — "/close-phase", "/close", "close", "close phase", "close-out", "close the quest", "close X", "phase 1 close", "phase 2", "archive X" (when already closed), "wrap X", "bounty X", AND "save this quest", "save quest", "save the quest", "save quest X" (Save-quest mode — the LIVE Redmine status picks the stage via `node lib/save-quest.js`: Redmine not closed = Phase 1 only, Redmine Closed = Phase 2 archive). The skill detects the quest's current status and runs the matching stage. Built 2026-06-05 after the QA-263921 close slip (silent deviation from the pull-before-branch sequence) — a skill runs the sequence in a FIXED order so a step can't be dropped.
 argument-hint: "[<QA-number>]"
 allowed-tools: Read, Glob, Bash, Edit, Write, Skill
 ---
@@ -15,9 +15,11 @@ ONE keyword — **close** — advances a quest through its closing stages. The s
 
 ```
 active / hold / blocked / delegated   --close-->   closed     (Phase 1 close-out)
-closed                                --close-->   archived   (Phase 2 archive)
+closed                                --close-->   archived   (Phase 2 archive — ONLY when Redmine shows the ticket closed)
 archived                              --close-->   (no-op: already archived)
 ```
+
+**Redmine decides the archive (2026-10-04, per みや).** A quest moves to `archived` only when its ticket is closed on Redmine. The local status says which stage comes next; the live Redmine status says whether that stage may run now. One script reads both: `node lib/save-quest.js <QA>`.
 
 **Why a skill, not prose** (built 2026-06-05): the Phase 1 git sequence kept being deviated from — most recently QA-263921, where the "pull before branch" step was silently skipped after a plan that included it. A skill runs the sequence in a FIXED order so a step can't be dropped, and the only-stage-the-cited-files rule protects other parallel WIP.
 
@@ -27,7 +29,35 @@ archived                              --close-->   (no-op: already archived)
    - `<QA-number>` arg supplied → that block.
    - no arg → the single block with status ∈ {active, hold, blocked, delegated} (Phase 1) OR the single `closed` block (Phase 2). If 0 or >1 candidates, list them + ask which.
 2. Read the `status` field → pick the branch below.
-3. Emit the visible stage line: `close-phase — QA-<num>: stage = <Phase 1 close-out | Phase 2 archive | already archived>`.
+3. Run `node lib/save-quest.js <QA>` and paste its `SAVE-QUEST:` line (live Redmine status + local status + verdict). An ADHOC id prints `ADHOC` — it has no ticket, so the local status alone picks the stage.
+4. Emit the visible stage line: `close-phase — QA-<num>: stage = <Phase 1 close-out | Phase 2 archive | already archived | waits for Redmine Closed>`.
+
+---
+
+## Save-quest mode — "save this quest" (added 2026-10-04 per みや)
+
+Trigger: "save this quest" · "save quest" · "save the quest" · "save quest <num>". The LIVE Redmine status picks the stage. Never ask みや which phase to run.
+
+1. **Persist first, always.** Write the quest doc and the block the way the quest skill says (`.claude/skills/quest/SKILL.md` → "Vocabulary — save everything": qa_doc section · `## Test data` · active.txt fields), and check both folders (`.claude/auto-memory/feedback_quest_closure_both_folders.md`).
+2. **Run the resolver and paste its line:** `node lib/save-quest.js <QA>` → `SAVE-QUEST: <QA> · Redmine = <status> · local = <status> → <VERDICT>`.
+3. **Do what the verdict says, in the same turn:**
+
+| Verdict | Redmine | Do |
+|---|---|---|
+| `PHASE-1` | not closed | Phase 1 close-out below. No archive. If the fix is not finished or not delivered, stop after step 1 and say `Phase 1 not ready: <what is missing>`. Never ask "Tested locally?" on a quest with nothing to test. |
+| `PHASE-2` | Closed · Cancelled · Acknowledged | Phase 2 archive below. `(Phase 1 first)` = run the Phase 1 close-out, then Phase 2, in the same pass. |
+| `WAIT` | not closed, quest already closed | Nothing to move. Archive waits until Redmine shows Closed. |
+| `DONE` | closed, quest already archived | Nothing to move. Note the Redmine close (date, who) in the quest doc. |
+| `AHEAD` | not closed, quest already archived | Nothing to undo. A reopen on Redmine = `/quest resume <num>`. |
+| `KEEP-DELEGATED` | not closed, a colleague holds it | Keep the block as `status=delegated`. Do not close. |
+| `LEARN-THEN-PHASE-2` | closed, quest delegated | `/learn-from-fix <num>` first, then Phase 2. |
+| `UNKNOWN` | did not answer | Step 1 only. Change no stage. Say the Redmine status is not verified. |
+| `ADHOC` | no ticket number | Save with the `adhoc-save` skill. |
+| `NO-BLOCK` | any | No local quest for this ticket. Say so. |
+
+**Banned**: picking the stage from the local status alone or from memory of the ticket · archiving on `PHASE-1` / `WAIT` / `UNKNOWN` · asking みや which phase to run · a reply without the pasted `SAVE-QUEST:` line.
+
+"save everything" · "save it" · "save this finding" keep their old meaning: step 1 only (quest skill).
 
 ---
 
@@ -67,6 +97,8 @@ archived                              --close-->   (no-op: already archived)
 ---
 
 ## Phase 2 archive  (status == closed  →  archived)
+
+**🚨 Redmine check before any Phase 2 step (2026-10-04, per みや).** Read the `SAVE-QUEST:` line from Step 0. Phase 2 runs only on `PHASE-2`, `LEARN-THEN-PHASE-2`, or `ADHOC`. On `WAIT` or `UNKNOWN`: stop, the quest stays `closed`, and say `Redmine shows <status>: archive waits for Closed`. The only override is みや's own words in his message: "archive anyway". Then write `archived ahead of Redmine (<status>)` in the quest doc. **Why**: #281638 (2026-09-28, Redmine Resolved) and #282198 (2026-10-04, Redmine Ready in PROD) were both archived before Redmine closed them.
 
 **Visible Phase 2 step line:** `Phase 2 — QA-<num>: 0 ⬜ 🔧 WORKFLOW UPGRADE · 1 ⬜ Faster-finding · 1b ⬜ Fastest-Path · 2 ⬜ KPI · 3 ⬜ Post-mortem · 4 ⬜ Refine · 5 ⬜ Archive · 5b ⬜ Bounty · 6 ⬜ /verify`
 
@@ -131,5 +163,9 @@ Acceptance: `bulk.js --debt` prints `0 unharvested` and the boot surfacer shows 
 - `.claude/auto-memory/feedback_etanah_git_separate_clone.md` — separate clone, ticket branch first, hotfix off master, `--no-ff`, no name in refs, worktree cleanup, stash naming
 - `.claude/auto-memory/feedback_commit_deploy_runbook.md` — commit + deploy ceremony, commit subject shape, commit message row in the hand-back table, recheck before push
 - `.claude/auto-memory/feedback_no_extra_comments.md` — code comment rules
+- `.claude/auto-memory/feedback_quest_closure_both_folders.md` — a save or close updates BOTH the Task folder and the project folder
+- `.claude/auto-memory/feedback_redmine_rootcause_format.md` — the Root cause + Solution pair emitted at every close
+
+*2026-10-04 — Save-quest mode + Redmine check per みや ("when I say save this quest, you will automatically decide based on redmine status to simply close (phase 1) or if the status is Closed in Redmine ... run Phase 2"). Added: description triggers · Step 0 item 3 (resolver line) · the Save-quest section · the Redmine check that opens Phase 2. Spec-preservation: every Phase 1 and Phase 2 step kept in order; ONE prior spec changed and named here: `closed --close--> archived` ran on the local status alone, and now also needs the ticket closed on Redmine (override: みや's "archive anyway"). Reason: two early archives, #281638 and #282198. Fire + effect check: `lib/save-quest.eval.js` 54/54 (decision table 29, command line 25) + `domain/save-quest/eval.js` (this skill carries the triggers, the script call and the verdict table) + live run `QA-281638 → DONE`.*
 
 *2026-10-03 — Terengganu active per みや: Phase 1 step 2/4/5 made state-neutral (`<trunk>` + `<ticket-branch>` from `node lib/states.js show <state>`) + the work-clone rule (`work_clone_root` → ref-moving git only in the work clone). Spec-preservation: step ORDER and every ban untouched; the Melaka values `mlk/master` / `mlk/qa/<num>` stay visible as the "Melaka:" example on each line.*

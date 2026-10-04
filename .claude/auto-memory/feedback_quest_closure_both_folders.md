@@ -16,3 +16,5 @@ When みや says **save quest / update quest / conclude quest / wrap up quest / 
 - Each folder has its own format — respect them separately, don't cross-contaminate
 - If only one side has changes to write, still confirm the other was checked: *"Task folder updated (fix.txt + screenshots); project folder: no knowledge changes needed this quest"*
 - Never collapse both into a single write — they serve different audiences
+
+**"save this quest" / "save quest" (2026-10-04, per みや):** after both folders are written, the live Redmine status picks the closing stage. Run `node lib/save-quest.js <QA>` and follow its verdict: Redmine not closed = Phase 1 close only, Redmine Closed = Phase 2 archive. Never ask him which phase. Procedure: `.claude/skills/close-phase/SKILL.md` → "Save-quest mode".
