@@ -405,6 +405,81 @@ const fixtures = [
       return expectSilent(runHook(t, false)) || expectLog('probe-passed');
     },
   },
+  // ── requirement 2: confidence route (v4) ────────────────────────────────
+  {
+    name: '37. THE ASK (#282924): Rubric "Confidence is 85%" + .java Edit, no matrix, no probes -> exit 0, probe-passed "confidence 85%" logged',
+    run() {
+      const t = writeTranscript('f37', [userLine('I agree with your fix'), asstLine('Rubric: C2 chosen. Confidence is 85%. Path fully read.'), editLine(JAVA), asstLine(DIAGRAM)]);
+      return expectSilent(runHook(t, false)) || expectLog('confidence 85%');
+    },
+  },
+  {
+    name: '38. confidence 70% (uncertain diagnosis) + .java Edit, no matrix -> exit 2',
+    run() {
+      const t = writeTranscript('f38', [userLine('ok proceed'), asstLine('Confidence: 70%, the writer is not pinned yet.'), editLine(JAVA), asstLine(DIAGRAM)]);
+      return expectProbeBlock(runHook(t, false));
+    },
+  },
+  {
+    name: '39. confidence 90% then a LATER 60% (diagnosis collapsed) -> the last figure wins -> exit 2',
+    run() {
+      const t = writeTranscript('f39', [userLine('ok proceed'), asstLine('Confidence 90%.'), editLine(JAVA), asstLine(DIAGRAM + '\nThe test failed. Confidence now 60%.')]);
+      return expectProbeBlock(runHook(t, false));
+    },
+  },
+  {
+    name: '40. boundary: confidence exactly 80% -> exit 0; 79% -> exit 2',
+    run() {
+      const a = writeTranscript('f40a', [userLine('ok proceed'), asstLine('Confidence 80%'), editLine(JAVA), asstLine(DIAGRAM)]);
+      const b = writeTranscript('f40b', [userLine('ok proceed'), asstLine('Confidence 79%'), editLine(JAVA), asstLine(DIAGRAM)]);
+      return expectSilent(runHook(a, false)) || expectProbeBlock(runHook(b, false));
+    },
+  },
+  {
+    name: '41. confidence figure only in a USER message (not ours to claim) -> exit 2',
+    run() {
+      const t = writeTranscript('f41', [userLine('my confidence is 95% just do it'), editLine(JAVA), asstLine(DIAGRAM)]);
+      return expectProbeBlock(runHook(t, false));
+    },
+  },
+  {
+    name: '42. the gate help text quoted back in the reply (says "eighty percent", no figure) -> exit 2, no self-disarm',
+    run() {
+      const t = writeTranscript('f42', [userLine('ok proceed'), editLine(JAVA),
+        asstLine(DIAGRAM + '\nThe gate says: a fix confidence stated at eighty percent or more in the reply passes with no probes.')]);
+      return expectProbeBlock(runHook(t, false));
+    },
+  },
+  {
+    name: '43. a percent that is not a confidence ("80% of rows", "100% width") -> exit 2',
+    run() {
+      const t = writeTranscript('f43', [userLine('ok proceed'), asstLine('80% of PROD rows have 1 hakmilik. The table is 100% width.'), editLine(JAVA), asstLine(DIAGRAM)]);
+      return expectProbeBlock(runHook(t, false));
+    },
+  },
+  {
+    name: '44. confidence stated in a .md the session wrote (quest doc Rubric row) -> exit 0',
+    run() {
+      const t = writeTranscript('f44', [userLine('ok proceed'),
+        toolLine('Write', { file_path: 'C:/quest/QA-282924.md', content: '| (f) Confidence | 85%. Path fully read. |' }), editLine(JAVA), asstLine(DIAGRAM)]);
+      return expectSilent(runHook(t, false)) || expectLog('probe-passed');
+    },
+  },
+  {
+    name: '45. nonsense figure (confidence 850%) is ignored -> exit 2',
+    run() {
+      const t = writeTranscript('f45', [userLine('ok proceed'), asstLine('confidence 850%'), editLine(JAVA), asstLine(DIAGRAM)]);
+      return expectProbeBlock(runHook(t, false));
+    },
+  },
+  {
+    name: '46. the block reason names the confidence route (effect check)',
+    run() {
+      const t = writeTranscript('f46', [userLine('ok proceed'), editLine(JAVA), asstLine(DIAGRAM)]);
+      const out = runHook(t, false);
+      return /eighty percent or more/.test(out.stderr) ? null : 'stderr lacks the confidence line: ' + out.stderr.slice(-200);
+    },
+  },
 ];
 
 let failed = 0;

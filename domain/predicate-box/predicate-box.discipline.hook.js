@@ -3,6 +3,17 @@
  *
  * Power: domain/predicate-box/
  *
+ * v4 (2026-10-04): confidence route. The probe requirement also passes when the
+ *   LAST fix confidence the session states (assistant text or a .md it wrote,
+ *   the word confidence then a number and the percent sign on one line) is 80 or
+ *   more. Probes are for a diagnosis that is still uncertain; a fix the Rubric
+ *   already rates 80+ goes to commit and deploy (miya 2026-10-04, #282924: a
+ *   simple agreed fix was forced into probe loggers and a local test).
+ *   A later, lower figure wins, so a diagnosis that drops below 80 owes the matrix.
+ *   Spec preservation v3 -> v4: matrix route, cleanup route, skip token and its
+ *   refusals (placeholder, short, size reason), exit 2 on stderr, every log row:
+ *   all kept. Added: probe-passed row with detail 'confidence NN%'.
+ *
  * v3 (2026-10-04): SECOND requirement added — the probe decision.
  *   An etanah .java file changed through an Edit/Write/MultiEdit tool call
  *   must be backed by ONE of:
@@ -91,6 +102,8 @@ const EDIT_TOOLS = new Set(['Edit', 'Write', 'MultiEdit']);
 const ETANAH_JAVA_FILE = /etanah-(pelupusan|awam|common|teknikal)[\\/].*\.java$/i;
 const PROBE_MARKER = /QA\d+[A-Z]*-PROBE/;
 const PROBE_SKIP = /\[skip-probe-matrix:\s*([^\]]+)\]/gi;
+const CONFIDENCE = /confidence[^\n%]{0,60}?(\d{1,3})\s*%/gi;
+const CONFIDENCE_FLOOR = 80;
 const SIZE_REASON = /\b(too\s+small|small|tiny|trivial|simple|minor|quick|one[- ]?liner?|kecil)\b/i;
 
 function logFire(action, detail) {
@@ -191,10 +204,22 @@ function predicateVerdict(t) {
   return 'blocked';
 }
 
+// Last fix confidence stated in the session (assistant text, then .md written). null = none stated.
+function lastConfidence(t) {
+  let last = null;
+  for (const src of [t.assistantText].concat(t.mdWritten)) {
+    let m; const re = new RegExp(CONFIDENCE.source, 'gi');
+    while ((m = re.exec(String(src || ''))) !== null) { const n = parseInt(m[1], 10); if (n <= 100) last = n; }
+  }
+  return last;
+}
+
 // Requirement 2 verdict.
 function probeVerdict(t) {
   if (!t.javaEdits) return { v: 'no-java-edit' };
   if (t.cleanupEdits === t.javaEdits) return { v: 'passed', how: 'probe-cleanup' };
+  const conf = lastConfidence(t);
+  if (conf !== null && conf >= CONFIDENCE_FLOOR) return { v: 'passed', how: 'confidence ' + conf + '%' };
   let matrix = null;
   for (const src of [t.assistantText].concat(t.mdWritten)) {
     const m = probeMatrix(src);
@@ -224,6 +249,7 @@ const PROBE_REASON = [
   '   At least 3 rows (every path that could produce the value, not only the favourite), and one row marked FALLBACK:',
   '   the outermost probe that still fires when none of the expected paths run, so a failed test still tells something.',
   '   Probes stay local and uncommitted (probe-local-only-gate) — do not commit or merge them.',
+  '   Probes are for an uncertain diagnosis: a fix confidence stated at eighty percent or more in the reply passes with no probes.',
   '   No runtime path to probe? Add [skip-probe-matrix: <reason>] to the reply. A size reason (small / trivial / simple / one-line) is refused.',
 ];
 
