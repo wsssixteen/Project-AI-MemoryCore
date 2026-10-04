@@ -71,6 +71,33 @@ runHook({ name: 'test-scenario-login-gate', event: 'Stop' }, (input) => {
     };
   }
 
+  // v3 (2026-10-04, per みや, #282442): a test hand-back that names a permohonan must be backed
+  // by a local-test-prep run that is still true on the machine (local DB = the schema holding
+  // the test data, the ticket's fix files on his repo). He may run locally at any moment.
+  const PREP_BYPASS_RE = /\[skip-local-prep:\s*[^\]<]+\]/i;
+  const TEST_TABLE_RE = /\|\s*Login\s*\|[\s\S]*\|\s*(?:Do|Expect|Env)\s*\||\|\s*(?:Do|Expect|Env)\s*\|[\s\S]*\|\s*Login\s*\|/i;
+  if ((HANDBACK_RE.test(text) || TEST_TABLE_RE.test(text) || DEPLOY_RE.test(text)) && !PREP_BYPASS_RE.test(text)) {
+    const prep = require(path.join(ROOT, 'quest', 'local-test-prep.js'));
+    const ids = Array.from(new Set(text.match(prep.PERMOHONAN_RE) || []));
+    if (ids.length) {
+      let c; try { c = prep.check(ids); } catch (e) { c = { ok: false, reason: 'check failed: ' + e.message }; }
+      if (!c.ok) {
+        return {
+          fired: true,
+          blocked: true,
+          blockReason:
+            '⛔ test-scenario-login-gate v3: this test hand-back is NOT backed by a local test prep.\n' +
+            '   Reason: ' + c.reason + '\n' +
+            '   みや may start his local JBoss at any moment. Set his machine up BEFORE the hand-back:\n' +
+            '     1. confirm by a DB query which schema holds the permohonan\n' +
+            '     2. node quest/local-test-prep.js --qa <num> --env <stg1|stg2|mlit> --permohonan "' + ids.join(',') + '"\n' +
+            '     3. put its LOCAL-TEST-PREP line + the restart need in the reply, then re-send\n' +
+            '   みや said hold, or the module cannot run locally? add the skip-local-prep token with the real reason.\n',
+        };
+      }
+    }
+  }
+
   if (!HANDBACK_RE.test(text)) return { fired: false };
   if (LOGIN_RE.test(text)) return { fired: false };
 

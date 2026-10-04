@@ -952,6 +952,13 @@
 {"ts":"2026-10-04T02:24:53.396Z","category":"A2"}
 {"ts":"2026-10-04T01:16:43.590Z","category":"test-stopped-at-fixed-step"}
 {"ts":"2026-10-04T01:16:43.725Z","category":"A3"}
+{"ts":"2026-10-04T02:38:58.461Z","category":"blind-deploy-partial-scan"}
+{"ts":"2026-10-04T03:31:56.365Z","category":"env-not-set-for-test"}
+{"ts":"2026-10-04T03:54:41.173Z","category":"stale-build-handed-for-test"}
+{"ts":"2026-10-04T04:29:51.715Z","category":"no-probe-loggers-in-fix-build"}
+{"ts":"2026-10-04T04:37:55.403Z","category":"reask/redundant"}
+{"ts":"2026-10-04T04:41:52.141Z","category":"default-to-new-memory-file"}
+{"ts":"2026-10-04T07:11:45.131Z","category":"reask/conversation-leaked-into-deliverable"}
 {"ts":"2026-10-04T08:29:21.243Z","category":"commit-id-unsearchable"}
 {"ts":"2026-10-04T08:29:21.381Z","category":"A1"}
 {"ts":"2026-10-04T08:29:21.495Z","category":"A1"}
@@ -980,6 +987,14 @@
 {"ts":"2026-10-04T08:55:16.977Z","category":"A4"}
 {"ts":"2026-10-04T08:55:17.595Z","category":"A5"}
 {"ts":"2026-10-04T08:55:17.929Z","category":"A1"}
+{"ts":"2026-10-04T09:00:59.698Z","category":"bounty"}
+{"ts":"2026-10-04T09:05:07.611Z","category":"A2"}
+{"ts":"2026-10-04T09:05:08.470Z","category":"A3"}
+{"ts":"2026-10-04T09:05:09.094Z","category":"A3"}
+{"ts":"2026-10-04T09:05:09.327Z","category":"A4"}
+{"ts":"2026-10-04T09:05:09.639Z","category":"A4"}
+{"ts":"2026-10-04T09:05:10.186Z","category":"A5"}
+{"ts":"2026-10-04T09:05:11.066Z","category":"A1"}
 {"ts":"2026-10-04T09:00:27.003Z","category":"build-missed-requirement"}
 {"ts":"2026-10-04T09:00:27.339Z","category":"gate-over-demand"}
 {"ts":"2026-10-04T09:00:27.642Z","category":"answer-the-ask"}
@@ -996,3 +1011,5 @@
 {"ts":"2026-10-04T09:06:20.265Z","category":"A2"}
 {"ts":"2026-10-04T09:06:20.658Z","category":"A3"}
 {"ts":"2026-10-04T09:18:30.431Z","category":"bounty"}
+{"ts":"2026-10-02T10:31:57.472Z","category":"reask/unsupported-scope-claim"}
+{"ts":"2026-10-02T10:31:57.969Z","category":"A4"}
