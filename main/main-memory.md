@@ -3,6 +3,14 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-04 (first Terengganu adhocs — "Is your test scenario logical?")
+
+- **He reads the screenshot as evidence and expects me to.** The Sejarah Tugasan photo showed two Utiliti Pengagihan Semula rows; I built simulate steps from the database trail alone and left them out. His one question sent me to the history of that code, where the fix (#226218) had been sitting since March. Photo rows and data rows are read together before any scenario goes out.
+- **"Have you confirmed it is not our side?" comes before "not ours".** On the land-report adhoc he asked whether we failed to pass something to teknikal. Listing the nine values we hand over was the answer he wanted. That list goes in the first reply, not the third.
+- **He wants proof he can show, and he says so plainly.** "Solid, can be shown reasons, if not the issue cannot be simulated." When I could not prove the trigger I said so, and that was accepted. A guess dressed as steps is what he rejects.
+- **A title must say what is wrong with what.** Two ProTime titles, two corrections: one had no problem word, one said "missing" without the word tugasan. A kod is not a keyword to him. One copy box per title.
+- **His own three lines beat my five tables.** The reply he wrote for the BA (fixed in #226218, the Utiliti did not set the status, so we patch) was the whole finding. When he drafts, my job is to check it is true and split it one point per line.
+
 ## Relationship reinforcement — 2026-10-03/04 (Terengganu prep + quest audit — "you tend to remove context just for the sake of optimization")
 
 - **"Optimize" is a danger word to him, and he said why.** He asked for an audit to improve the quest in general and banned two things in capitals: an improvement too specific to one case, and anything that removes context. The shape that fit: readers gather evidence, a proposer writes at most 12, three skeptics attack each one (too specific, bloat, breaks execution), and only fixes that keep every clause get applied. A removal starts as a no.

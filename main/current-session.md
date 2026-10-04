@@ -1,5 +1,18 @@
 # Current Session
 
+**Last Activity**: 2026-10-04 16:55 — Terengganu adhoc day: 2 adhocs diagnosed on PROD (ADHOC-PLPS-2026-1, ADHOC-MLPS-2026-2), patch script for #283031 ready on standby, `adhoc-titles` skill built, knowledge written to `terengganu/ADHOC-TRIAGE.md` + `DATABASE.md`; DE.
+
+## Session Recap (2026-10-04, worktree quest-audit-275043-244600-7954c0, branch claude/terengganu-adhocs-ready-e2c2f8, Terengganu adhocs)
+- **Ask**: stand by for Terengganu adhocs from BA / TSO and judge whether each needs a ticket; later: infra handoff, Redmine check, ProTime titles + a skill for them, save + DE.
+- **ADHOC-PLPS-2026-1** (`PTTRG/02/07/L/PLPS/2025/155`, holder `noraida83@terengganu.gov.my`, PROD): "ID floating" is not floating. SKM row is active with holder and inbox row but status `Selesai`; dashboard query (common `DashboardService.queryForDashboard():388`) hides it. Born 2025-07-10 09:58:20: Hantar saved Selesai (common `BaseBpmForm.onSubmit():1100`) then the engine failed on missing `perluJT` and rolled back. Two Utiliti Pengagihan Semula moves kept Selesai (reassign bug fixed common `c402a5766e`, #226218, 2026-03-04). BA raised #283031 (assigned Alex Ang, not us). Script ready: Task folder `1. AH - PROD - PLPS - SKM tiada dalam senarai tugasan\2. Fix\ADHOC-PLPS-2026-1.sql` (status → Baru, 1 row).
+- **ADHOC-MLPS-2026-2** (`PTTRG/03/01/L/MLPS/2025/101`, holder `nurulain@terengganu.gov.my`, PROD): SOK ulasan empty in the Laporan Tanah opened inside the task. Viewer = common (`PaparanDokumenDialogVO.showDokumenKeluar():136`, merges every active stored file), report + Semakan Dan Syor = teknikal. Stored files v3/v4 predate the SOK task. Our 9 inputs to `TRG_TKL_ST` all present; 4 of 4 peers behave the same. BA already referred the user to Sokongan.
+- **Built**: skill `adhoc-titles` + `lib/adhoc-titles.js` (13 fixtures) + `domain/adhoc-titles/` (eval 6/6, README, NUKE-MARKER); title rule in `adhoc-save` now needs the thing in a plain word + the issue word.
+- **Knowledge**: `terengganu/ADHOC-TRIAGE.md` Step 2c (class g, audit tables, document viewer vs teknikal, `aplikasiId` unreliable) · `terengganu/DATABASE.md` 0b (8 tables + column traps) · `ADHOC-REGISTER.md` rows A1, A2.
+- **Slips** (ledger): `test-scenario/incomplete` (simulate steps without the Utiliti step, no git probe on the reassign code) · `answer-the-ask` ×2 (ProTime titles: no issue word, two titles in one box; then kod without the word tugasan).
+- **Corrections of my own claims**: "status changed 1 Feb 2026" was wrong (10 July 2025) · "Hantar pressed on the checklist screen" withdrawn (error URL does not prove the screen) · "likely no patch, redo Pengagihan Semula" overtaken by miya's call to patch.
+- **Watches**: `wmusfyzci` (CLAUDE.md v1.77) observed OK on two real Terengganu asks · `wmuqtj4w2` (handoff-load) fired on the infra-handoff prompt but I did not open the reply with the HANDOFF-LOADED line.
+- **Open for みや**: who runs #283031 (pass the script to Alex or take it) · patch the other 2 reassigned IDs or not · trace the `perluJT` Hantar failure or not · mention the odd `aplikasiId` to teknikal or not · close the Ammar blocks (QA-275043, QA-265109) · block for #246923.
+
 **Last Activity**: 2026-10-04 16:45 — #244600 rework cycle 1 shipped to internal and handed to BA (`mlk/qa/244600v3` `f14c58ae64`, int-env `fbbbaf7bc6`); miya posted the notes on #244600 and #275043; quest saved; DE.
 
 ## Session Recap (2026-10-04, worktree permit-c02-2026-3-portal-362d6d, #244600 rework)
@@ -35,13 +48,3 @@
 - **Standing flags from the close**: #244600 is back as Rework on Redmine and #246923 (Resolved) has no local block · QA-275043 and QA-265109 are Ammar's on Redmine, local blocks still open (close needs みや's word) · resume sweep, first real run from a worktree: 7 open quests with 19 gaps (ADHOC-PPTPB-2026-2, ADHOC-PT-2026-6, ADHOC-FLOWABLE-2026-1, ADHOC-REDMINE-RC-2026-1, ADHOC-PRBB-2026-5, ADHOC-PT-2026-8, QA-274323) · branch ledger: #274323 (`mlk/internal/274323` has 1 commit not in `274323v2`) and #265109 (`mlk/qa/265109` is inside `265109-rework`) unclassified · 15 older unmerged `claude/*` branches listed at every boot.
 - **Left for みや** (9 rows in the proposal ledger, category A1/A2, dated 2026-10-03): P1 notes-file retirement (format conflict) · P8 commit guards in the work-clone ticket folder (needs a per-gate rule design) · P9 rework branch rule + verify rows · P10 remainder · P11 hooks firing on background notices · P12 one canonical close list (5 questions) · eval leak into `goal-lens-pending.jsonl` · triple gate registration · keep the blind replay eval as a tool or not.
  (Alex did 282723 alter; 282721 unlink via infra) · voice map artifact · patch-close-shape CHECK D/E · reconcile closed 5 quests · DE.
-
-## Session Recap (2026-10-02, worktree quest-282587-guide-be4171, #282723 + #282721)
-- **Ask**: start quests for 2 internal PROD tickets; alter /3 /4 /9 (282723); fix PRBB/2026/4 unpaid bills (282721); infra handoff; answer Mira; style audit + artifact; reconcile quests with Redmine; DE.
-- **Done**: 282721 cause = cashier keyed hakmilik id, SPOC NO_FAIL made new paid fee rows, officer's 4 bills stayed N. Infra unlinked the 4 bills (`282721-amend.sql`); PROD 5 fi rows all Y. 282723 taken + done by Alex Ang (Initiate & Alter). Reconcile: 282198/282721/246923/280540/282723 closed, 282723 archived, #282966 synced as hold.
-- **Built**: patch-close-shape CHECK D (#ticket line ≤10 words) + CHECK E (greeting inside fence), eval 59/59 · quest SKILL 6b ask "post it" as row 1 + DB-screenshot row · no-builtin-browser memory · speech entries 11/12 + BA short names · artifact Miya's Voice Map.
-- **Slips**: built-in browser used after ban · Alter Flow vs Initiate & Alter · coordinate-click on PROD dropdown · tickets stolen (In Progress not set) · formal Malay root cause · overloaded infra handoff.
-- **Open**: QA-280540 archive needs harvest · QA-282721 archive · #282966 hold · Flowable alter Playwright tool (todo Q1).
-
-**Last Activity (prev)**: 2026-10-02 18:20 — #244600 Kertas versi fix (our side only) committed d61fc2e611 on mlk/qa/244600v3 · int-env 5df44b12cf · miya posted Resolved to Fizah · Phase 1 CLOSED · #275043 split to Ammar · handoff-load feature built · DE.
-**Last Activity**: 2026-10-02 18:32 — ADHOC-STG-2026-1 stg1 synced to stg2 (pelupusan reference data, 178 ins / 8 upd, committed) · routine decision parked in todo Q1 · DE.
