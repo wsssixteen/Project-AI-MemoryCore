@@ -2,6 +2,8 @@
 
 > **The rule**: every entry at the MemoryCore root is in the allow-list below, with one owner and one purpose. A root entry that is not listed is an ORPHAN and `system-audit.js` flags it at every boot. Adding a root folder = add its row here first (the row is the nod). Nothing at the root is a scratchpad — scratch goes to the session scratchpad dir, deliverables go to the Task folder, per-state facts go to `projects/coding-projects/active/etanah-knowledge/<state>/`.
 >
+> **The one map of the system is `system/INDEX.md`** (みや ruling 2026-10-04): it says which KIND each entry is (Rules · Workflows · Features · Memory · Kernel · Projects) and what "installed" means for that kind. This file stays the root ALLOW-LIST with one owner per entry. Adding a root entry = a row here AND a kind in the INDEX.md map fence; `node lib/folder-structure.js map` fails until both exist.
+>
 > Born per みや (#275847, 2026-09-04): *"organized properly for me to understand the folders & file structures … I see a lot of orphaned folders/files in your root folder."* Checked by `lib/folder-structure.js check` (the JSON fence below is the machine-read source — edit the table AND the fence together).
 
 ## Root layout — what each entry owns

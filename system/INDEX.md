@@ -8,20 +8,44 @@
 
 ---
 
-## Layer hierarchy
+## The system map — six kinds of parts (THE one map; rewritten 2026-10-05 per みや's rulings below)
 
+Everything in this repo is one of six kinds. **"Installed" has one meaning per kind** (last column): a part that does not meet its row is NOT installed, whatever folder it sits in.
+
+| Kind | Plain meaning | Layer | Home | Installed when |
+|---|---|---|---|---|
+| **Rules** | How Ruri decides, speaks and boots | 0 · 1 · 2 | `.claude/personality.md` (voice) · `system/` (the constitution: this map, the design rules, the ledgers) · `.claude/CLAUDE.md` + the files it routes to (boot rules) · the root guides | the rule has ONE home file; every other mention is a pointer |
+| **Workflows** | A route: ordered steps across many turns, which remembers the step it is on (quest · deploy · release · adhoc · Domain Expansion) | 2 | its skill (owns the step table) + its position in `quest/active.txt` `current_phase`; engines in `quest/` and the legacy `Feature/` folder | a Feature folder (goal + log + eval) · a step table in its skill · a position field |
+| **Features** | One job at one moment: a gate, a check, a tool, a skill | 3 | `domain/<name>/`; its skill in `.claude/skills/<name>/`. Hooks still loose in `.claude/hooks/` are NOT yet installed | home folder · README `goal:` `retention:` `footprint:` · a log (observability) · an eval · a registration → census verdict `PROPER` |
+| **Memory** | What Ruri knows and remembers | 0 · 4 · 5 | identity `main/main-memory.md` · knowledge `projects/…/etanah-knowledge/` + `library-items/` · notes `.claude/auto-memory/` · diary `daily-diary/` · state `quest/active.txt` + `main/current-session.md` + `main/todo.md` | it sits on a named shelf with an index line. System RULES never live in Memory |
+| **Kernel** | Shared code and wiring that everything else runs on | under all | `core/` (forge · registry · slips · boot) · `lib/` (hook-runtime · states · census …) · `.claude/settings.json` (hook wiring) | its header states its goal; at least one Feature or Workflow uses it |
+| **Projects** | Work Ruri builds for みや — not a system part | — | `etanah_atlas/` | it has an owner row in `system/FOLDER-STRUCTURE.md` |
+
+Layer numbers are unchanged, so every existing "Layer N" reference still resolves: **0** Identity · **1** Constitution · **2** Boot config & Workflow · **3** Capabilities · **4** Knowledge · **5** State.
+
+**Install** (みや 2026-10-05): a part enters the system through `core/forge.js` — `new` for a new part, `install` for one that already exists — never by hand-placing files. `node lib/feature-census.js` reports what is installed; `node lib/folder-structure.js map` proves this map against the disk (eval: `lib/folder-structure.eval.js`).
+
+Machine-read map — edit the table AND this fence together. `map` fails on a path that does not exist, a path under two kinds, or a root entry no kind claims. A deeper path may sit under another kind than its parent (most specific wins).
+
+```json
+{
+  "kinds": {
+    "rules": [".claude/CLAUDE.md", ".claude/personality.md", ".claude/reply-shape-spec.md", ".claude/commit-conventions.md", ".claude/cost-efficiency.md", ".claude/save-commands.md", ".claude/new-machine-setup.md", "system", "AGENT-ARCHITECTURE.md", "MIYA-NOTEBOOK.md", "RURI-NOTEBOOK.md", "README.md", "REGISTRY.md"],
+    "workflows": ["quest", "Feature", ".claude/workflows"],
+    "features": ["domain", ".claude/skills", ".claude/hooks", ".agents", "skills-lock.json"],
+    "memory": ["main", "daily-diary", "projects", "library-items", ".claude/auto-memory", ".claude/state", "quest/active.txt"],
+    "kernel": ["core", "lib", ".claude/settings.json"],
+    "projects": ["etanah_atlas"]
+  },
+  "ignored": [".git", ".gitattributes", ".gitignore", "node_modules", "backups", "meta", "outputs-temp.gitkeep", ".claude/worktrees", ".claude/settings.local.json", ".claude/launch.json"]
+}
 ```
-LAYER 0 — Identity                  (WHO Ruri is)        → personality.md, master-memory.md, main/main-memory.md
-LAYER 1 — Constitution / Meta       (HOW Ruri decides)   → system/ (THIS FOLDER)
-LAYER 2 — Boot Config & Workflow    (WHAT runs at boot)  → CLAUDE.md, Feature/Session-Briefing-System/, Feature/Domain-Expansion/, quest/
-LAYER 3 — Capabilities              (skills + hooks)     → .claude/skills/, .claude/hooks/, plugins/
-LAYER 4 — Knowledge                 (references)         → library/, library-items/, etanah-knowledge/, memory
-LAYER 5 — State                     (current data)       → quest/active.txt, main/current-session.md, main/todo.md
-```
 
-## Structure rulings — みや, 2026-10-04 (ruled by popup; NOT yet built)
+Dropped from the pre-2026-10-05 layer block, each on purpose: `master-memory.md` (file deleted 2026-08-16) · `plugins/` and `library/` (orphans awaiting みや's verdict in `system/FOLDER-STRUCTURE.md`; never live parts). Everything else the old block named is in the table above.
 
-The layer table above pre-dates these rulings: it does not name `domain/`, `core/` or `lib/`, and still lists a deleted file and the retired `plugins/`. Rewriting it is the build step; until then these four rows are the ruling of record.
+## Structure rulings — みや, 2026-10-04 (ruled by popup)
+
+Build state 2026-10-05: ruling 4 is BUILT (the map above + its disk check). Rulings 1–3 are migrations still to run: the loose hooks, the skills without a Feature folder and the legacy `Feature/` folder are named in the map as not yet installed.
 
 | # | Ruling | Counted from disk at ruling time |
 |---|---|---|

@@ -46,7 +46,7 @@ PowerShell form: `node ".claude\skills\arabic\arabic.js" review`.
 
 ## Boot nudge
 
-`domain/arabic-nudge/arabic-nudge.check.hook.js` prints one line at SessionStart (`📖 Arabic: 2/5 reviews this week · not yet today`). Never shows words. The only unprompted mention of Arabic in the system.
+**Off since 2026-10-05** (per みや: Arabic runs only when `/arabic` is invoked). `domain/arabic-nudge/arabic-nudge.check.hook.js` used to print one line at SessionStart (`📖 Arabic: 2/5 reviews this week · not yet today`); it is no longer registered. The same line comes from `/arabic status`. There is now NO unprompted mention of Arabic in the system.
 
 ## Eval
 

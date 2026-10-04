@@ -108,8 +108,22 @@
  *     Applied in sweepOrphans (orphans) and step 3 (registered merged worktrees; branch kept too).
  *   Spec preservation: every v1.8 spec intact (report-only default, delete rule, current-session path protection).
  *     Additive only. Dropped: none. Eval fixtures W1-W9.
+ *
+ * v2.0 2026-10-05 — BACKGROUND RUN (per みや, boot audit; installed as a Feature the same day).
+ *   symptom:     the hook took ~30 s at every boot and the 30 s hook limit killed it on 168 of 190 runs in
+ *                30 days — boot waited the full 30 s AND the cleanup + the worktree content-sync almost never finished.
+ *   goal:        boot does not wait for the cleanup, and the cleanup always runs to its end.
+ *   goal_signal: the SessionStart telemetry row for this hook is under 1 s; each background run appends a
+ *                {run:'finished', dur_ms} row to domain/worktree-cleanup-boot/log.jsonl (the sweep log is untouched).
+ *   Changed: the hook entry is now a LAUNCHER — it prints the report of the last finished run (with its age),
+ *     starts the real work as a detached process (`--run`), and exits. One run per checkout at a time
+ *     (lock file, 15 min stale-out). The work itself (main()) is byte-for-byte the v1.9 body.
+ *     WORKTREE_CLEANUP_FOREGROUND=1 keeps the old wait-for-it behaviour (the eval uses it).
+ *   Spec preservation: every v1.9 step and guard intact. One spec is CHANGED and named: the report a boot
+ *     shows is the PREVIOUS run's (labelled with its age); the first boot of a brand-new checkout shows none.
+ *   Eval fixtures B1-B6.
  */
-const { execSync } = require('child_process');
+const { execSync, spawn } = require('child_process');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -532,4 +546,57 @@ try {
 }
 }
 
-if (require.main === module) main();
+// ── v2.0 background run ──
+const crypto = require('crypto');
+const STATE_DIR = path.join(MAIN_ROOT, '.claude', 'state');
+const REPORT = path.join(STATE_DIR, 'worktree-cleanup-last.json');                       // newest finished run, any checkout
+const LOCK = path.join(STATE_DIR, 'worktree-cleanup-' + crypto.createHash('sha1').update(norm(projectRoot)).digest('hex').slice(0, 8) + '.lock');
+const LOCK_STALE_MS = 15 * 60 * 1000;
+const RUN_LOG = path.join(MAIN_ROOT, 'domain', 'worktree-cleanup-boot', 'log.jsonl');       // observability of the background run: one row per finished run
+
+/** The real work, with everything it prints captured so the NEXT boot can show it. */
+function runAndRecord() {
+  const t0 = Date.now(); let buf = '';
+  const orig = process.stderr.write.bind(process.stderr);
+  process.stderr.write = (s, ...a) => { buf += String(s); try { return orig(s, ...a); } catch (_) { return true; } };
+  process.on('exit', () => {
+    try {
+      fs.mkdirSync(STATE_DIR, { recursive: true });
+      fs.writeFileSync(REPORT, JSON.stringify({ ts: new Date().toISOString(), dur_ms: Date.now() - t0, checkout: projectRoot, report: buf }));
+      // run rows go to the Feature's OWN log — never the sweep log, whose LAST row lib/observatory.js reads as the sweep verdict
+      fs.mkdirSync(path.dirname(RUN_LOG), { recursive: true });
+      fs.appendFileSync(RUN_LOG, JSON.stringify({ ts: new Date().toISOString(), run: 'finished', dur_ms: Date.now() - t0, checkout: path.basename(projectRoot), lines: buf.split('\n').filter(Boolean).length }) + '\n');
+    } catch (_) {}
+    try { fs.unlinkSync(LOCK); } catch (_) {}
+  });
+  main();
+}
+
+/** The hook entry: show the last report, start a fresh run in the background, return at once. */
+function launch() {
+  try {
+    const r = JSON.parse(fs.readFileSync(REPORT, 'utf8'));
+    if (r.report && r.report.trim()) {
+      const mins = Math.max(0, Math.round((Date.now() - Date.parse(r.ts)) / 60000));
+      process.stderr.write(`worktree-cleanup — report of the last finished run (${mins} min ago, took ${Math.round(r.dur_ms / 1000)} s; a fresh run is starting in the background):\n` + r.report);
+    }
+  } catch (_) {}
+  let busy = false;
+  try { busy = Date.now() - JSON.parse(fs.readFileSync(LOCK, 'utf8')).ts < LOCK_STALE_MS; } catch (_) {}
+  if (!busy) {
+    try {
+      fs.mkdirSync(STATE_DIR, { recursive: true });
+      fs.writeFileSync(LOCK, JSON.stringify({ ts: Date.now(), pid: process.pid, checkout: projectRoot }));
+      spawn(process.execPath, [__filename, '--run'], { cwd: projectRoot, detached: true, stdio: 'ignore', windowsHide: true, env: process.env }).unref();
+    } catch (e) {
+      process.stderr.write(`worktree-cleanup-boot launch: ${e.message}\n`);
+      try { fs.unlinkSync(LOCK); } catch (_) {}
+    }
+  }
+  process.exit(0);
+}
+
+if (require.main === module) {
+  if (process.argv.includes('--run') || process.env.WORKTREE_CLEANUP_FOREGROUND === '1') runAndRecord();
+  else launch();
+}

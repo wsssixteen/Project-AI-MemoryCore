@@ -26,7 +26,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { execSync, spawn, spawnSync } = require('child_process');
-const { sweepOrphans, mergeBaseRef, mainRootOf, neverCommittedFiles } = require('./worktree-cleanup-boot.js');
+const { sweepOrphans, mergeBaseRef, mainRootOf, neverCommittedFiles } = require('./worktree-cleanup-boot.hook.js');
 
 let pass = 0, fail = 0;
 const check = (name, cond) => { if (cond) { pass++; console.log('  ✓', name); } else { fail++; console.log('  ✗ FAIL:', name); } };
@@ -166,11 +166,11 @@ if (process.platform === 'win32') {
   const Z = mkWorktree(repo, 'z-orphan', { deleteBranch: true });                         // clean orphan → delete
   const Y = mkWorktree(repo, 'y-unmerged', { commitFile: 'y.md' });                       // unmerged orphan → keep
   const M2 = mkWorktree(repo, 'm2-merged-live', { keepRegistered: true });                // merged + clean + registered → step 3 target
-  const hookCopy = path.join(W, '.claude', 'hooks', 'worktree-cleanup-boot.js');         // the hook as a worktree session runs it
+  const hookCopy = path.join(W, '.claude', 'hooks', 'worktree-cleanup-boot.hook.js');         // the hook as a worktree session runs it
   fs.mkdirSync(path.dirname(hookCopy), { recursive: true });
-  fs.copyFileSync(path.join(__dirname, 'worktree-cleanup-boot.js'), hookCopy);
+  fs.copyFileSync(path.join(__dirname, 'worktree-cleanup-boot.hook.js'), hookCopy);
   const boot = (dry, del) => spawnSync(process.execPath, [hookCopy], { cwd: W, encoding: 'utf8', windowsHide: true, timeout: 120000,
-    env: { ...process.env, CLAUDE_PROJECT_DIR: W, WORKTREE_CLEANUP_DRY_RUN: dry ? '1' : '0', WORKTREE_CLEANUP_DELETE: del ? '1' : '0' } });
+    env: { ...process.env, CLAUDE_PROJECT_DIR: W, WORKTREE_CLEANUP_DRY_RUN: dry ? '1' : '0', WORKTREE_CLEANUP_DELETE: del ? '1' : '0', WORKTREE_CLEANUP_FOREGROUND: '1' } });
   let b = boot(true, true);
   check('R dry boot from worktree → plans MAIN\'s orphans, deletes nothing', /2 orphan folder\(s\) → would delete 1/.test(b.stderr) && fs.existsSync(Z));
   // ── V (v1.8): a normal boot WITHOUT the opt-in is report-only — no orphan deleted, no registered worktree removed
@@ -188,6 +188,37 @@ if (process.platform === 'win32') {
   const mainLog = path.join(repo, '.claude', 'state', 'worktree-cleanup-log.jsonl');
   check('R log row lands in MAIN, not a worktree copy', fs.existsSync(mainLog) && /z-orphan/.test(fs.readFileSync(mainLog, 'utf8'))
     && !fs.existsSync(path.join(W, '.claude', 'state', 'worktree-cleanup-log.jsonl')));
+
+  // ── B (v2.0 2026-10-05): the hook entry is a LAUNCHER — boot does not wait, the work runs to its end ──
+  const stateDir = path.join(repo, '.claude', 'state');
+  const reportFile = path.join(stateDir, 'worktree-cleanup-last.json');
+  const readReport = () => { try { return JSON.parse(fs.readFileSync(reportFile, 'utf8')); } catch { return null; } };
+  const locks = () => { try { return fs.readdirSync(stateDir).filter(f => /^worktree-cleanup-[0-9a-f]{8}\.lock$/.test(f)); } catch { return []; } };
+  const waitFor = (pred, ms) => { const t = Date.now(); while (Date.now() - t < ms) { if (pred()) return true; execSync('ping -n 2 127.0.0.1 >nul'); } return pred(); };
+  const fgReport = readReport();
+  const runLog = path.join(repo, 'domain', 'worktree-cleanup-boot', 'log.jsonl');
+  check('B1 a foreground run records its report + a finished row in the Feature log (sweep log untouched)', !!fgReport && /worktrees: \d+ registered/.test(fgReport.report) && typeof fgReport.dur_ms === 'number'
+    && /"run":"finished"/.test(fs.readFileSync(runLog, 'utf8')) && !/"run":"finished"/.test(fs.readFileSync(mainLog, 'utf8')));
+  const launchEnv = { ...process.env, CLAUDE_PROJECT_DIR: W, WORKTREE_CLEANUP_DRY_RUN: '1', WORKTREE_CLEANUP_DELETE: '0' };
+  delete launchEnv.WORKTREE_CLEANUP_FOREGROUND;
+  const launch = () => { const t = Date.now(); const r = spawnSync(process.execPath, [hookCopy], { cwd: W, encoding: 'utf8', windowsHide: true, timeout: 120000, env: launchEnv }); r.ms = Date.now() - t; return r; };
+  const tsBefore = fgReport ? fgReport.ts : '';
+  let l = launch();
+  check('B2 launcher exits 0 without waiting for the work (well under the 30 s hook limit)', l.status === 0 && l.ms < 10000, `exit=${l.status} ms=${l.ms}`);
+  check('B3 launcher shows the LAST finished run\'s report, labelled with its age', /report of the last finished run \(\d+ min ago/.test(l.stderr) && /worktrees: \d+ registered/.test(l.stderr), l.stderr.slice(0, 200));
+  check('B4 the background run finishes by itself: a newer report lands and the lock is released', waitFor(() => { const r = readReport(); return r && r.ts !== tsBefore && locks().length === 0; }, 90000), JSON.stringify({ report: readReport() && readReport().ts, tsBefore, locks: locks() }));
+  // B5: a run already in flight (fresh lock) → the launcher starts no second run
+  const hash = require('crypto').createHash('sha1').update(path.resolve(W).replace(/\\/g, '/').toLowerCase()).digest('hex').slice(0, 8);
+  const lockFile = path.join(stateDir, `worktree-cleanup-${hash}.lock`);
+  const tsMid = readReport().ts;
+  fs.writeFileSync(lockFile, JSON.stringify({ ts: Date.now(), pid: 1, checkout: W }));
+  l = launch();
+  execSync('ping -n 6 127.0.0.1 >nul');
+  check('B5 fresh lock → no second run is started, the lock is left alone', l.status === 0 && readReport().ts === tsMid && fs.existsSync(lockFile), JSON.stringify({ now: readReport().ts, tsMid }));
+  // B6: a stale lock (crashed run) does not block forever
+  fs.writeFileSync(lockFile, JSON.stringify({ ts: Date.now() - 16 * 60 * 1000, pid: 1, checkout: W }));
+  l = launch();
+  check('B6 stale lock (16 min) → a fresh run starts and finishes', l.status === 0 && waitFor(() => readReport().ts !== tsMid && locks().length === 0, 90000), JSON.stringify({ now: readReport().ts, tsMid, locks: locks() }));
   try { fs.rmSync(tmp, { recursive: true, force: true }); } catch {}
 }
 
@@ -272,18 +303,18 @@ check('T main root unchanged', mainRootOf('C:\\r') === 'C:\\r');
   // W3: registered worktree whose admin HEAD names an open ticket → openQuestHold reads the admin HEAD
   writeActive('qa=QA-279411\nstatus=hold\n');
   const W3 = mkWorktree(repo, 'redmine-279411-566a70', { keepRegistered: true, folder: 'plain-name' });
-  const { openQuestHold, openQuestMap } = require('./worktree-cleanup-boot.js');
+  const { openQuestHold, openQuestMap } = require('./worktree-cleanup-boot.hook.js');
   const h3 = openQuestHold(W3, 'plain-name', repo, transcripts, openQuestMap(repo));
   check('W3 admin HEAD branch carries the open ticket → held via admin HEAD', !!h3 && h3.qa === 'QA-279411' && h3.source === 'admin HEAD');
 
   // W11: step 3 (registered merged worktree) with opt-in deletes → held, folder + branch kept
   const W11 = mkWorktree(repo, 'm-279411-merged', { keepRegistered: true });
   const sess = mkWorktree(repo, 'session-w11', { keepRegistered: true });
-  const hookCopy = path.join(sess, '.claude', 'hooks', 'worktree-cleanup-boot.js');
+  const hookCopy = path.join(sess, '.claude', 'hooks', 'worktree-cleanup-boot.hook.js');
   fs.mkdirSync(path.dirname(hookCopy), { recursive: true });
-  fs.copyFileSync(path.join(__dirname, 'worktree-cleanup-boot.js'), hookCopy);
+  fs.copyFileSync(path.join(__dirname, 'worktree-cleanup-boot.hook.js'), hookCopy);
   const b11 = spawnSync(process.execPath, [hookCopy], { cwd: sess, encoding: 'utf8', windowsHide: true, timeout: 120000,
-    env: { ...process.env, CLAUDE_PROJECT_DIR: sess, WORKTREE_CLEANUP_DRY_RUN: '0', WORKTREE_CLEANUP_DELETE: '1' } });
+    env: { ...process.env, CLAUDE_PROJECT_DIR: sess, WORKTREE_CLEANUP_DRY_RUN: '0', WORKTREE_CLEANUP_DELETE: '1', WORKTREE_CLEANUP_FOREGROUND: '1' } });
   check('W11 step 3 opt-in boot → merged registered open-quest worktree NOT removed', fs.existsSync(W11) && !!g(['branch', '--list', 'claude/m-279411-merged'], repo));
   check('W11 boot stderr names the held folder', /held for open quests[\s\S]*m-279411-merged — QA-279411/.test(b11.stderr));
   try { fs.rmSync(tmp, { recursive: true, force: true }); } catch {}

@@ -5,7 +5,9 @@ goal_signal: a fire on: every session boot — etanah-knowledge/<state>/ folders
 retention: rotate monthly
 # knowledge-schema-audit
 
-**Born** 2026-09-04 via `core/forge.js` (check) + hand-built CLI + write-time hook. **Events** SessionStart (boot audit) · PreToolUse `Edit|Write` (write-time advisory). **Lifecycle** created.
+**Born** 2026-09-04 via `core/forge.js` (check) + hand-built CLI + write-time hook. **Events** PreToolUse `Edit|Write` (write-time advisory). **Lifecycle** created.
+
+**Boot audit removed 2026-10-05** (per みや, boot audit: the check is needed when a knowledge file is WRITTEN, not at every boot). The SessionStart registration is gone; the hook still answers a SessionStart payload, so the whole-folder audit can be run on demand (`node domain/knowledge-schema-audit/knowledge-schema-audit.js`) or re-registered in one line. What is lost: drift created OUTSIDE a session (a manual rename, an OneDrive conflict) is no longer named at the next boot — it is named the next time that folder is written or the audit is run.
 
 **state-scoped: YES** — iterates every state in `projects/coding-projects/active/etanah-knowledge/KNOWLEDGE-SCHEMA.json` (system-design Rule 11).
 

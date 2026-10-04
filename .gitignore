@@ -99,3 +99,6 @@ system/telemetry/current-turn-*.json.lock
 system/telemetry/turn-ledger-state.json
 system/telemetry/turns*.jsonl
 quest/active.txt.bak*
+
+# Feature caches (retention: regenerate) — e.g. domain/hook-syntax-check/cache.json, 2026-10-05
+domain/*/cache.json

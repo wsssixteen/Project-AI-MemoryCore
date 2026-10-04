@@ -10,6 +10,8 @@ merge with stop-on-conflict → verify → bump common+module version → push �
 card. **Baseline PREPARES; みや runs build/deploy/sheet** (scope-locked 2026-07-16 — no SSH,
 no keys). Stop-points V1-V3. PLP-only; duplicate as `release-<state>-<module>` for expansion.
 
+**Boot surfacer removed 2026-10-05** (per みや, boot audit): `unmerged-release-boot.js` is no longer registered at SessionStart — it cost ~11 s at every boot of every project to repeat a check that only matters at release time. The BLOCKING form of the same rule stays where it is needed: `assertMasterReflectsPrevRelease` in `release-prep.js branch`. The script is kept for an on-demand look: `node domain/release-mlk-plp/unmerged-release-boot.js`.
+
 | Piece | File | Fires |
 |---|---|---|
 | Orchestrator skill | `.claude/skills/release-mlk-plp/SKILL.md` | Skill tool — "prepare release" / "baseline" / BAQA message |

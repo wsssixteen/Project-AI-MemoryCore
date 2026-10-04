@@ -4,7 +4,7 @@ description: Survey unmerged claude/* worktree branches, salvage genuinely-stran
 metadata:
   type: operational-primitive
   sub-layer: discipline
-  pairs-with: .claude/hooks/worktree-cleanup-boot.js (v1.4 surfacer)
+  pairs-with: domain/worktree-cleanup-boot/worktree-cleanup-boot.hook.js (surfacer; installed as a Feature 2026-10-05, runs in the background since v2.0)
 ---
 
 # /worktree-retrieve — salvage stranded worktree work into main

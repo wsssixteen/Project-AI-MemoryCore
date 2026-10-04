@@ -25,6 +25,25 @@ domain/<feature-name>/
 
 Pieces are OPTIONAL — some Features are hook-only (no skill), some skill-only (no gate). The folder structure makes presence/absence audit-visible.
 
+### Where a Feature sits, and what "installed" means (added 2026-10-05 per みや — the map itself lives in `system/INDEX.md`, THE one map; this is the pointer + the Feature row)
+
+The system has six kinds of parts: Rules · Workflows · Features · Memory · Kernel · Projects. A **Workflow** is a route (ordered steps across turns, position in `current_phase`); a **Feature** is one job at one moment, and a Workflow is made OF Features. Read `system/INDEX.md` before placing anything.
+
+**A Feature is INSTALLED only when all of these hold** — a hook or skill that merely exists on disk is not installed:
+
+| Part | Proves | Check |
+|---|---|---|
+| home `domain/<name>/` | one place to find and remove it | folder exists |
+| README `goal:` · `retention:` · `footprint:` | why it exists, what happens to its data, what it costs | `component-birth-gate` + census |
+| **observability** — a log | liveness: did it fire, did it block, how long | `log.jsonl` or central telemetry rows |
+| **monitoring** — goal rows | context: why it fired, on which quest and phase, was it right, what it cost, did it meet its goal | `goal_met` rows (`goal-log.jsonl` / turn ledger) |
+| eval | it still does what its fixtures pin | eval green |
+| registration | it actually runs | `settings.json` or a bundle manifest |
+
+Observability and monitoring are the two layers of EVERY Feature (みや 2026-09-04). They are not the dashboard: `lib/observatory.js` only READS them. A change to a part with no log and no goal cannot be judged, so install the part FIRST, then change it.
+
+**Install** = bring a part in through `core/forge.js` (`new` for a new part, `install` for one that already exists — a loose `.claude/hooks/*.js` or a skill with no Feature folder). Never hand-place files. `node lib/feature-census.js` is the verdict: `PROPER` = installed.
+
 ## Layering doctrine
 
 | Layer | Role | Reliability |
@@ -128,6 +147,8 @@ Components fade if unused. Periodic audit (per /system-rules Rule 3): check hook
 ## Bloat-prevention default
 
 When refining any `/skill` or CLAUDE.md content: apply `/system-rules` Rule 2 (merge in place). The `claude-md-edit-guard.js` hook enforces this deterministically on edits to CLAUDE.md / /system-rules / /system-design.
+
+*Version 3.0 — 2026-10-05. Section "Where a Feature sits, and what installed means" added per みや (structure audit 2026-10-04/05): pointer to `system/INDEX.md` as the one map (six kinds), Workflow vs Feature in one sentence, the INSTALLED table (home · README keys · observability log · monitoring goal rows · eval · registration), and Install = through `core/forge.js` (`new` / `install`). Root cause: the two layers lived only in an auto-memory note, so I answered "is boot observable?" with the dashboard; and 55 hooks + 52 skills sat outside any Feature with nothing naming that as "not installed". Spec-preservation: the trinity diagram, "pieces are OPTIONAL", the layering doctrine and Rules 6–14 are untouched; additive.*
 
 *Version 2.9 — 2026-09-22. Rule 14 pointer corrected: `system/STRUCTURE-SCHEMA.json` (never built) → `system/FOLDER-STRUCTURE.md` (what `lib/folder-structure.js` actually reads). Spec-preservation: Rule 14's placement-at-birth · per-level naming · dated-series rule · banned list all untouched; only the file name changed. Found by system-check run 3 (F3 + controller Test-Path).*
 

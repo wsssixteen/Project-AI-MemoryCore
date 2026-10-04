@@ -10,6 +10,19 @@
 
 ---
 
+## v1.78 — 2026-10-05 (per みや's structure rulings of 2026-10-04/05)
+
+**CLAUDE.md now points at the one map instead of carrying its own.** Two in-place refinements, zero net lines:
+
+- **§File Structure heading** gains the pointer: THE one map of the system = `system/INDEX.md` (six kinds — Rules · Workflows · Features · Memory · Kernel · Projects — and what "installed" means for each). The legacy tree stays, now labelled as the memory-core view that omits `domain/` `core/` `lib/` `system/`. Removing the tree outright is a TRIM and waits for the trim-guard harness (claude-md-watch pipeline step 2).
+- **§File Ownership, `quest/quest-protocol.md` row**: "quest workflow body" → "quest workflow body (per-step detail)"; the third column names the quest skill's §Workflow runner mode as the home of the STEP LIST (the phase-boundary table). Reason: two files claimed the step list (this row said the protocol; the table has lived in the skill since 2026-05-28). `system/INDEX.md` default 6 settles it.
+
+**Spec preservation**: every spec of the v1.77 row is kept (protocol still owns phase emits + Etanah hard-rule detail + the workflow body); one spec is NARROWED and named — the step list's owner is the skill. The tree's content is untouched.
+
+**Why**: 2026-10-04 structure audit — the map was split across four documents and the constitution's layer block never named `domain/`; みや ruled `system/INDEX.md` the one map (ruling 4). Paired: `system/INDEX.md` map + fence, `lib/folder-structure.js map` (eval 15/15), `system/FOLDER-STRUCTURE.md` pointer.
+
+---
+
 ## v1.77 — 2026-10-03 (per みや, "we will be doing Terengganu support tomorrow")
 
 **Terengganu becomes an ACTIVE state.** Three boot-loaded lines changed, all additive:

@@ -20,7 +20,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\worktree-cleanup-boot.js\" SessionStart"
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\worktree-cleanup-boot\\worktree-cleanup-boot.hook.js\" SessionStart worktree-cleanup-boot"
           },
           {
             "type": "command",
@@ -36,7 +36,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\hook-syntax-check.js\" SessionStart"
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\hook-syntax-check\\hook-syntax-check.hook.js\" SessionStart hook-syntax-check"
           },
           {
             "type": "command",
@@ -44,23 +44,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\release-mlk-plp\\unmerged-release-boot.js\" SessionStart"
-          },
-          {
-            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\adhoc-lifecycle\\\\adhoc-lifecycle.check.hook.js\""
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\arabic-nudge\\\\arabic-nudge.check.hook.js\""
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\knowledge-schema-audit\\\\knowledge-schema-audit.check.hook.js\""
           }
         ]
       }

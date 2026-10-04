@@ -1,6 +1,8 @@
 # arabic-nudge
 
-**What fires when**: SessionStart — every session boot. Prints nothing unless `projects/learning-projects/active/arabic/data/words.json` exists.
+**DEREGISTERED from SessionStart 2026-10-05** (per みや, boot audit: "this should only run when we invoke /arabic"). Nothing registers this hook now; the same line is printed on demand by `/arabic status` (`node .claude/skills/arabic/arabic.js status`). The hook file and its eval stay so it can be re-registered in one line.
+
+**What fired when (until 2026-10-05)**: SessionStart — every session boot. Prints nothing unless `projects/learning-projects/active/arabic/data/words.json` exists.
 
 **Contract**: print ONE line — `📖 Arabic: N/5 reviews this week · not yet today` | `· done today` | `📖 Arabic: new week · not yet today` | `📖 Arabic: not started · /arabic`. Never a word list. Advisory; never blocks.
 

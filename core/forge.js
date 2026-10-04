@@ -14,6 +14,9 @@
  *   node core/forge.js new skill <name>  --trigger ... --action ... --replay ... --nod ...
  *   node core/forge.js new script <name> --trigger ... --action ... --replay ... --nod ...
  *   node core/forge.js refine <name> --nod "<authorization>"
+ *   node core/forge.js install hook .claude/hooks/<file>.js [--name <kebab>] --symptom ... --goal ... --signal ... \
+ *        --retention ... --footprint ... --nod "<authorization>" [--allow-relative] [--no-smoke]
+ *        (2026-10-05: brings an EXISTING loose hook into domain/<name>/ unchanged — see forgeInstall)
  *
  * Exit codes: 0 ok · 2 hard failure (a birth step failed → nothing half-lands: files are
  * removed, settings restored) · 3 collision (refine-first: use `forge refine` or
@@ -295,7 +298,204 @@ function forgeRefine() {
   log('pre-refine pins GREEN — edit the component, add the new fixture, then re-run its eval.');
 }
 
+// ---------- install (2026-10-05, per みや: "start using the term Install") ----------
+// Brings an EXISTING loose hook (.claude/hooks/<file>.js) into a Feature folder so it is INSTALLED
+// (system/INDEX.md map, Features row): home + README goal/retention/footprint + eval + registration.
+// Behaviour must not change, so install REFUSES rather than guesses:
+//   - a sibling-relative reference inside the hook (require('./x'), path.join(__dirname, 'x')) would
+//     break on the move → exit 2 with the lines (fix, or pass --allow-relative once checked)
+//   - another .js/.json file that names the old path would break → exit 2 with the list
+//     (settings.json and bundle manifests are rewritten by install itself)
+// Both homes are two levels below the repo root, so `path.resolve(__dirname, '..', '..')` keeps resolving.
+// The telemetry name is KEPT (passed to hook-runtime --wrap as the name argument) so the fire history
+// before and after install is one series.
+function kebab(s) { return String(s).replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '').toLowerCase(); }
+function whyFromArgs() {
+  const why = { symptom: arg('symptom', true), goal: arg('goal', true), signal: arg('signal', true), retention: arg('retention', true), signalRegex: arg('signal-regex') };
+  for (const k of ['symptom', 'goal', 'signal', 'retention']) {
+    if (/^\s*$/.test(why[k]) || /\bTODO\b/i.test(why[k])) die(2, '--' + k + ' must be a real sentence (empty/TODO banned — Rule 13)');
+  }
+  if (!/^(keep|rotate\s+\S+|consume\s+\S+|regenerate)$/i.test(why.retention.trim())) die(2, '--retention must be one of: keep | rotate <period> | consume <into> | regenerate (system-rules Rule 6)');
+  if (/^(fires?|triggers?|runs?)\b/i.test(why.goal.trim())) die(2, '--goal restates the trigger; state the OUTCOME the feature exists to produce (Rule 13)');
+  why.footprint = arg('footprint', true);
+  if (!FOOTPRINT_RE.test(why.footprint.trim())) die(2, '--footprint must start with one of: per-prompt | per-tool | per-turn | per-session | always | scheduled | on-demand | none, then ": <processes, RAM>" (system-rules Rule 7)');
+  return why;
+}
+function walkFiles(dir, out) {
+  let ents; try { ents = fs.readdirSync(dir, { withFileTypes: true }); } catch (_) { return out; }
+  for (const e of ents) {
+    if (e.name === 'node_modules' || e.name === '.git' || e.name === 'worktrees') continue;
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) walkFiles(p, out); else out.push(p);
+  }
+  return out;
+}
+function installSmokeEval(name, file, oldRel) {
+  return `#!/usr/bin/env node
+// ${name}.eval.js — INSTALL pin (core/forge.js install, ${new Date().toISOString().slice(0, 10)}).
+// The hook was moved from ${oldRel} unchanged. This pins the install itself: the file parses and is
+// registered at its new home. Behaviour fixtures are still owed — add them with \`forge refine ${name}\`.
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const { spawnSync } = require('child_process');
+const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
+const HOOK = path.join(__dirname, '${file}');
+const results = [];
+function check(n, c, d) { results.push({ n, pass: !!c, d }); }
+const c = spawnSync(process.execPath, ['--check', HOOK], { encoding: 'utf8' });
+check('I1 hook file parses (node --check)', c.status === 0, (c.stderr || '').slice(0, 160));
+let reg = ''; try { reg = fs.readFileSync(path.join(ROOT, '.claude', 'settings.json'), 'utf8'); } catch (_) {}
+let bundles = ''; try { for (const f of fs.readdirSync(path.join(ROOT, 'domain', 'bundles'))) bundles += fs.readFileSync(path.join(ROOT, 'domain', 'bundles', f), 'utf8'); } catch (_) {}
+const wired = (reg + bundles).replace(/\\\\+/g, '/').includes('domain/${name}/${file}');
+check('I2 registered at its Feature home (settings.json or a bundle), or deliberately unregistered in README', wired || /^registration:\\s*none/mi.test(fs.readFileSync(path.join(__dirname, 'README.md'), 'utf8')), 'not found in settings.json / bundles');
+check('I3 old loose copy is gone', !fs.existsSync(path.join(ROOT, '${oldRel}'.split('/').join(path.sep))), 'old file still present');
+let failed = 0;
+for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
+console.log('\\n${name}.eval: ' + (results.length - failed) + '/' + results.length + ' green');
+process.exit(failed ? 1 : 0);
+`;
+}
+
+function forgeInstall() {
+  const kind = process.argv[3], srcArg = process.argv[4];
+  if (kind !== 'hook' || !srcArg || srcArg.startsWith('--')) die(2, 'usage: forge install hook <.claude/hooks/file.js> [--name <kebab>] --symptom --goal --signal --retention --footprint --nod [--allow-relative] [--no-smoke] [--root <path>]');
+  const src = path.isAbsolute(srcArg) ? srcArg : path.join(ROOT, srcArg);
+  const hooksDir = path.join(ROOT, '.claude', 'hooks');
+  if (!fs.existsSync(src) || path.dirname(path.resolve(src)) !== path.resolve(hooksDir) || !src.endsWith('.js')) die(2, 'install hook: source must be an existing .js file directly under .claude/hooks/ — got ' + srcArg);
+  const base = path.basename(src, '.js');
+  const name = arg('name') || kebab(base);
+  if (!/^[a-z0-9-]+$/.test(name)) die(2, 'name must be kebab-case (pass --name)');
+  const nod = arg('nod', true);
+  const why = whyFromArgs();
+  const oldRel = '.claude/hooks/' + base + '.js';
+  const newFile = name + '.hook.js';
+  const newRel = 'domain/' + name + '/' + newFile;
+  const dir = path.join(ROOT, 'domain', name);
+  log('ECHO  install ' + oldRel + ' → ' + newRel + ' (telemetry name kept: ' + base + ')');
+  log('WHY   symptom: ' + why.symptom + ' · goal: ' + why.goal + ' · signal: ' + why.signal + ' · retention: ' + why.retention + ' · footprint: ' + why.footprint);
+  log('NOD   ' + nod);
+
+  if (fs.existsSync(dir)) { log('COLLISION: domain/' + name + ' already exists — refine-first, or pick another --name'); process.exit(3); }
+
+  // safety 1: sibling-relative references inside the hook
+  const body = fs.readFileSync(src, 'utf8');
+  // The ONLY location-independent use of __dirname is "two levels up" (= the repo root from either home).
+  // Anything else — a sibling, one level up, a variable — resolves differently after the move.
+  const ROOT_UP = /__dirname\s*,\s*['"]\.\.['"]\s*,\s*['"]\.\.['"]/g;
+  const relLines = body.split(/\r?\n/).map((l, i) => ({ l, i: i + 1 }))
+    .filter(x => !/^\s*(\/\/|\*|\/\*)/.test(x.l))
+    .filter(x => /require\(\s*['"]\.\.?\/[^'"]+['"]\s*\)/.test(x.l) || /__dirname/.test(x.l.replace(ROOT_UP, '')));
+  if (relLines.length && !process.argv.includes('--allow-relative')) {
+    die(2, 'install REFUSED — ' + oldRel + ' has sibling-relative reference(s) that would break on the move:\n' + relLines.map(x => '       line ' + x.i + ': ' + x.l.trim().slice(0, 140)).join('\n') + '\n       fix them (resolve from the repo root), or pass --allow-relative once checked');
+  }
+  // safety 2: other code that names the old path (settings.json + bundle manifests are rewritten below)
+  const esc = base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const PATH_SRC = '\\.claude([\\\\/]+)hooks[\\\\/]+' + esc + '\\.js';
+  const PATH_RX = new RegExp(PATH_SRC);                                              // test only (no g flag: no lastIndex state)
+  const JOIN_RX = new RegExp("['\"]hooks['\"]\\s*,\\s*['\"]" + esc + "\\.js['\"]");
+  const settingsRel = path.join('.claude', 'settings.json');
+  const codeRefs = [], docRefs = [];
+  for (const top of ['domain', '.claude', 'lib', 'core', 'quest', 'system']) {
+    for (const f of walkFiles(path.join(ROOT, top), [])) {
+      if (path.resolve(f) === path.resolve(src)) continue;
+      const rel = path.relative(ROOT, f);
+      if (rel === settingsRel || /^domain[\\/]bundles[\\/]/.test(rel)) continue;
+      if (!/\.(js|json|md)$/.test(f)) continue;
+      if (path.resolve(f) === path.resolve(src.replace(/\.js$/, '.eval.js'))) continue;   // its own eval moves with it
+      let t; try { t = fs.readFileSync(f, 'utf8'); } catch (_) { continue; }
+      if (!PATH_RX.test(t) && !JOIN_RX.test(t)) continue;
+      if (/\.md$/.test(f)) docRefs.push(rel);
+      else if (t.split(/\r?\n/).some(l => !/^\s*(\/\/|\*|\/\*)/.test(l) && (PATH_RX.test(l) || JOIN_RX.test(l)))) codeRefs.push(rel);
+    }
+  }
+  if (codeRefs.length) die(2, 'install REFUSED — ' + codeRefs.length + ' code file(s) name the old path and would break:\n' + codeRefs.map(r => '       ' + r).join('\n') + '\n       re-point them at ' + newRel + ' first, then install');
+
+  // from here on: change the disk, with a full rollback on any failure
+  const settingsBefore = fs.readFileSync(SETTINGS, 'utf8');
+  const bundlesDir = path.join(ROOT, 'domain', 'bundles');
+  const bundleBefore = {};
+  try { for (const f of fs.readdirSync(bundlesDir)) if (f.endsWith('.json')) bundleBefore[f] = fs.readFileSync(path.join(bundlesDir, f), 'utf8'); } catch (_) {}
+  const evalSrc = src.replace(/\.js$/, '.eval.js');
+  const hadEval = fs.existsSync(evalSrc);
+  const evalBefore = hadEval ? fs.readFileSync(evalSrc, 'utf8') : null;
+  const created = []; let moved = false, evalMoved = false;
+  const dest = path.join(dir, newFile), evalDest = path.join(dir, name + '.eval.js');
+  try {
+    fs.mkdirSync(dir, { recursive: true });
+    fs.renameSync(src, dest); moved = true;
+    if (hadEval) {
+      const e = evalBefore
+        .replace(new RegExp("(['\"`])\\./" + esc + "(?:\\.js)?\\1", 'g'), '$1./' + newFile + '$1')
+        .replace(new RegExp("(['\"`])" + esc + "\\.js\\1", 'g'), '$1' + newFile + '$1')
+        .replace(new RegExp(PATH_SRC, 'g'), newRel);
+      fs.writeFileSync(evalDest, e); fs.unlinkSync(evalSrc); evalMoved = true;
+    } else { fs.writeFileSync(evalDest, installSmokeEval(name, newFile, oldRel)); created.push(evalDest); }
+
+    // registration: re-point every settings.json command + bundle child at the new home, keep the telemetry name
+    const settings = JSON.parse(settingsBefore);
+    let regCount = 0, event = null;
+    for (const [ev, groups] of Object.entries(settings.hooks || {})) for (const g of groups || []) for (const h of (g.hooks || [])) {
+      if (typeof h.command !== 'string' || !PATH_RX.test(h.command)) continue;
+      h.command = h.command.replace(new RegExp(PATH_SRC, 'g'), (_m, sep) => 'domain' + sep + name + sep + newFile);   // same separator style as the entry had
+      if (/hook-runtime\.js"?\s+--wrap/.test(h.command) && !new RegExp('\\s' + esc + '\\s*$').test(h.command)) h.command += ' ' + base;
+      regCount++; event = event || ev;
+    }
+    if (regCount) { fs.writeFileSync(SETTINGS, JSON.stringify(settings, null, 2)); JSON.parse(fs.readFileSync(SETTINGS, 'utf8')); }
+    let bundleCount = 0;
+    for (const [f, t] of Object.entries(bundleBefore)) {
+      const nt = t.replace(new RegExp(PATH_SRC, 'g'), newRel);
+      if (nt !== t) { fs.writeFileSync(path.join(bundlesDir, f), nt); JSON.parse(nt); bundleCount++; }
+    }
+    const registration = regCount ? regCount + ' settings.json entr' + (regCount > 1 ? 'ies' : 'y') : (bundleCount ? bundleCount + ' bundle manifest(s)' : 'none');
+
+    const readme = path.join(dir, 'README.md'), nuke = path.join(dir, 'NUKE-MARKER.md');
+    fs.writeFileSync(readme,
+      '# ' + name + '\n\n' +
+      'symptom: ' + why.symptom + '\n' + 'goal: ' + why.goal + '\n' + 'goal_signal: ' + why.signal + '\n' +
+      (why.signalRegex ? 'goal_signal_regex: ' + why.signalRegex + '\n' : '') +
+      'retention: ' + why.retention + '\n' + 'footprint: ' + why.footprint + '\n' +
+      'registration: ' + registration + '\n' +
+      'telemetry_name: ' + base + '\n\n' +
+      '**Installed** ' + new Date().toISOString().slice(0, 10) + ' via `core/forge.js install hook` — moved unchanged from `' + oldRel + '`. The telemetry name `' + base + '` is kept, so its fire history before and after the install is one series.\n\n' +
+      '**Observability**: central telemetry `system/telemetry/hook-fires.jsonl`, rows with `"hook":"' + base + '"` (fired · blocked · dur_ms · quest · phase).\n\n' +
+      '**Eval**: ' + (hadEval ? 'its pre-install eval moved with it (`' + name + '.eval.js`).' : '`' + name + '.eval.js` pins the INSTALL only (parses · registered · old copy gone). Behaviour fixtures are owed.') + '\n');
+    created.push(readme);
+    fs.writeFileSync(nuke, '# NUKE-MARKER — ' + name + '\n\n| Field | Value |\n|---|---|\n' +
+      '| Created  | ' + new Date().toISOString().slice(0, 10) + ' (INSTALLED from `' + oldRel + '`, not newly built) |\n' +
+      '| Session  | ' + why.symptom + ' |\n' +
+      '| Files    | ' + newRel + ' · domain/' + name + '/' + name + '.eval.js · README.md · ' + registration + ' |\n' +
+      '| Rollback | move `' + newRel + '` back to `' + oldRel + '` · re-point the settings.json command(s) at the old path · `rm -rf domain/' + name + '` · or `git revert <install-SHA>` |\n' +
+      '| Retire   | ' + new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10) + ' — remove this file if the Feature fired >=1x since install AND no rollback |\n');
+    created.push(nuke);
+
+    const c = spawnSync(process.execPath, ['--check', dest], { encoding: 'utf8' });
+    if (c.status !== 0) throw new Error('syntax-check failed: ' + (c.stderr || '').slice(0, 200));
+    const ev = spawnSync(process.execPath, [evalDest], { encoding: 'utf8', timeout: 600000, env: { ...process.env, CLAUDE_PROJECT_DIR: ROOT } });
+    process.stdout.write(ev.stdout || '');
+    if (ev.status !== 0) throw new Error('eval RED after the move — install rolled back\n' + (ev.stderr || '').slice(0, 300));
+    if (!process.argv.includes('--no-smoke')) {
+      const s = spawnSync(process.execPath, [dest], { input: '{}', encoding: 'utf8', timeout: 60000, env: { ...process.env, CLAUDE_PROJECT_DIR: ROOT } });
+      if (s.status !== 0 && s.status !== 2) throw new Error('smoke-fire failed (exit ' + s.status + ') ' + (s.stderr || '').slice(0, 200));
+    }
+    append(REGISTRY, { ts: new Date().toISOString(), name, kind: 'install-hook', event, files: [newRel, 'domain/' + name + '/' + name + '.eval.js', 'domain/' + name + '/README.md', 'domain/' + name + '/NUKE-MARKER.md'], lifecycle: 'installed', installed_from: oldRel, telemetry_name: base, registration, nod, symptom: why.symptom, goal: why.goal, goal_signal: why.signal, retention: why.retention, footprint: why.footprint });
+    append(TELEMETRY, { ts: new Date().toISOString(), hook: 'forge', event: 'Forge', mode: 'forge-install', component: name, kind: 'hook', exit: 0, blocked: false });
+    append(path.join(ROOT, 'system', 'slips.jsonl'), { ts: new Date().toISOString(), type: 'upgrade', category: 'forge/install-hook', qa: null, guard_expected: null, guard_fired: null, evidence: name + ' installed from ' + oldRel + ' (' + registration + ')', action: null, caught_by: 'forge' });
+    if (docRefs.length) log('DOCS still naming the old path (re-point by hand, they do not execute): ' + docRefs.join(' · '));
+    log('INSTALLED ✓ ' + name + ' — ' + newRel + ' · ' + registration + ' · eval ' + (hadEval ? 'moved' : 'install pin'));
+  } catch (e) {
+    try { if (moved && fs.existsSync(dest)) fs.renameSync(dest, src); } catch (_) {}
+    try { if (evalMoved) { fs.writeFileSync(evalSrc, evalBefore); if (fs.existsSync(evalDest)) fs.unlinkSync(evalDest); } } catch (_) {}
+    try { fs.writeFileSync(SETTINGS, settingsBefore); } catch (_) {}
+    for (const [f, t] of Object.entries(bundleBefore)) { try { fs.writeFileSync(path.join(bundlesDir, f), t); } catch (_) {} }
+    for (const f of created) { try { fs.unlinkSync(f); } catch (_) {} }
+    try { fs.rmdirSync(dir); } catch (_) {}
+    die(2, 'install FAILED, nothing half-landed: ' + e.message);
+  }
+}
+
 const cmd = process.argv[2];
 if (cmd === 'new') forgeNew();
 else if (cmd === 'refine') forgeRefine();
-else die(2, 'usage: forge <new|refine> ...');
+else if (cmd === 'install') forgeInstall();
+else die(2, 'usage: forge <new|refine|install> ...');
