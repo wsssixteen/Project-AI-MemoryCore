@@ -3,6 +3,7 @@ name: Simplify means subtract — reference working examples in mature systems
 description: "working analog first, simplify = shrink; null bug = lifecycle first; loggers with fallback probes; safety gate before test; bundle not defer; run fully"
 type: feedback
 originSessionId: 9a250643-8b07-48d4-8408-3e2fb4b02911
+modified: 2026-10-04T08:56:49.208Z
 ---
 **Rule**: Etanah is a mature system — most patterns are already solved somewhere. Before adding any new fix, find the closest working analog (urusan/tugasan combination) that solves a similar problem and read its config + code path. Match the existing shape. When みや asks to "simplify" or says the implementation is "too much," the next iteration's diff MUST shrink — fewer files, fewer lines. If you're adding code after a simplify feedback, you're misreading the feedback.
 
@@ -94,13 +95,15 @@ enforcement: hook-pending: null-bug lifecycle gate (P1)
 
 ## Merged 2026-10-04: loggers-extensive-with-fallbacks (was feedback_loggers_extensive_with_fallbacks.md)
 
-> 🚨 Every etanah .java fix build handed for test carries loggers: extensive (every candidate path, at least 3) PLUS fallback loggers for when the run does not go through the paths I expected; fix size is never a reason to skip
+> 🚨 Loggers ONLY when needed (diagnosis under 80%). When they are needed: extensive (every candidate path, at least 3) PLUS fallback loggers for when the run does not go through the paths I expected
 
-Every etanah `.java` fix build that goes to みや for testing carries `QA<num>-PROBE` loggers, and the loggers are planned as a PROBE COVERAGE MATRIX before the edit:
+**Scope (みや 2026-10-04, corrected the same day):** loggers go in only when the diagnosis is still uncertain (Rubric confidence under 80%, or a runtime-only residue). An agreed fix at 80% or more ships with no loggers and no local test: [[simple-fix-no-probe-no-local-test]]. I first wrote this rule as "every fix build, every time"; that was wrong and he rejected it.
+
+When loggers ARE needed, the build that goes to みや carries `QA<num>-PROBE` loggers, planned as a PROBE COVERAGE MATRIX before the edit:
 
 - **Extensive**: every code path that could produce the value, at least 3 rows, not only the favourite hypothesis.
 - **Fallbacks**: one row marked `FALLBACK`, the outermost probe that still fires when the run does not go through any path I expected. A failed test must still tell something.
-- **Not optional**: "the fix is small" is never a reason to skip. The only skip is no runtime path to probe at all (`[skip-probe-matrix: <reason>]`).
+- **Confidence decides, size does not**: under 80%, "the fix is small" is never a reason to skip.
 
 **Why:** みや 2026-10-04 (#282442, two fix builds handed over with zero loggers): *"I thought I asked you to remember everytime when putting loggers you should make it extensive & make fallbacks even for loggers if they didn't go through the ones you first though it would go through."* Same day, another session: *"so you put loggers on all of that for me to test right? You're not wasting my time testing locally right? With useless actions that doesn't get anything if the test fails."* Earlier asks: 2026-05-31 (Ritual 6, at least 3 what-if scenarios in one pass) and 2026-07-27 (QA-265537, three build rounds because each probe build covered one hypothesis). Each build + redeploy + manual test costs him 20 to 40 minutes.
 
