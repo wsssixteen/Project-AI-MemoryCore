@@ -120,3 +120,14 @@ Evals of the 7 edited skills, run at this DE: deploy 52/52 + 5/5 · bpmn-check.e
 | change watch | No | the 7 skill edits and the index rewrite got no watch row until added by hand at this DE; only .claude/CLAUDE.md has an automatic watch pipeline |
 
 Verdict: DE records a one-off system change (session, diary, commit) but does not verify it. Three holes: no regression evidence required for a system file changed this session; no automatic watch row for a changed skill or memory index; no check for committed merge markers.
+
+## DE 17:40 — #282555 close-out session (resumed from 2026-09-30)
+
+| Axis | Claim | Instance |
+|---|---|---|
+| A1 agentic system | A branch with built gates sat unmerged 4 days and nothing surfaced it | `claude/ticket-282555-ab97c6` (5 commits, incl. redmine-write-gate v1.4) was not on main from 2026-09-30 to 2026-10-04; the stranded-branch surfacer `worktree-cleanup-boot` errored 76 of 76 boots in the same window (audit briefing 2026-10-04) |
+| A1 agentic system | Rule 1 "link what is related" has no mechanical check | 3 of 4 Redmine writers lacked a pointer to the voice or root-cause memory until a hand audit on 2026-09-30 |
+| A2 quest workflow | A session that ends without Domain Expansion leaves a Phase-1-closed quest half closed | QA-282555 stayed `closed` in active.txt for 3 days after Redmine went Closed on 2026-10-01 |
+| A3 debugging | ⏭ no debugging this session (alter + close-out only) | — |
+| A4 etanah issue-solving | An alter ask is settled by 3 reads; the form code read was optional | the Alter page's Next Possible Flows already listed Jabatan Teknikal 3 for PJTLT (miya's screenshot 2026-09-30) |
+| A5 sweep | ⏭ no sweep this session | — |
