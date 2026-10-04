@@ -4,6 +4,21 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-02 → 2026-10-04, worktree melaka-pembatalan-ralat-f283f4 (pruned), ADHOC-PRBB-2026-9 → #282924)
+- **Ask**: check a WhatsApp adhoc from BA Mira (PRBB at Portal Awam: one hakmilik per permohonan, error if more than one is ticked) → find the eSOKONGAN ticket the TSO raises → keep a BA/TSO names list → start the quest to Rubric → fix, deploy, handover, close, DE.
+- **Adhoc**: ADHOC-PRBB-2026-9, register A44, answered same turn (possible, small). Promoted to #282924 on arrival; adhoc block, project folder and Task folder `260. AH - AWAM - PRBB - Had satu hakmilik satu permohonan` archived.
+- **Fix**: `etanah-awam` `CarianRasmiHakmilikForm.onSelected()`: Melaka PRBB with more than 1 ticked → ralat "Sila pilih satu (1) hakmilik sahaja bagi setiap permohonan." + Teruskan Permohonan disabled; the 5 table ajax tags also refresh `msgs`. 8 Java lines + 5 xhtml lines. Rubric moved the check from Teruskan (C1) to the tick (C2) because Mira wrote "kalau nak tick lebih dari 1 ... papar mesej ralat".
+- **Git**: `f42d96a1a065a104430607b1fe8cc9c398790065` · `Ref #282924 - PRBB - Add one hakmilik only check on Portal Awam hakmilik selection` · `mlk/esokongan/282924` · merged `--no-ff` in work-clone worktrees to `mlk/int-env` `49a85f7366` and `mlk/stag-env` `641f5a0c9e`. miya's `E:\Projects\Melaka\etanah-awam` local `mlk/master` was reset to origin on his popup nod (dropped one empty local merge commit `433cf7c693`); it is on `mlk/master`, clean.
+- **Test + Redmine**: miya tested on the deployed internal AWAM (video `2. Fix\1. Test tick lebih satu hakmilik.mp4`, his name), posted the note himself 08:45Z. #282924 = Resolved, assignee Nurul Amirah Nadiah, 100%, Root Cause + Solutions filled. Block QA-282924 `status=closed closed=2026-10-04`.
+- **Owed on #282924**: BA verify · staging SERVER deploy (branch is merged, miya deployed internal only) · planned-release list · kaunter PRBB also accepts more than 1 hakmilik (PROD PTMLK/01/L/PRBB/2026/56, entered at kaunter by fazirah@melaka.gov.my; not raised to BA) · 7 unsent PROD drafts with more than 1 hakmilik (told to BA as a note, miya accepted the risk).
+- **System changes (all on main)**: `quest/redmine-people.js` + refresh hook in `quest/redmine-sync.js` → `etanah-knowledge/melaka/REDMINE-PEOPLE.md` (641 people, TSO 31 / BA 317 / QA 8 / Developer 285; TSO raise eSOKONGAN tickets, author usually ITSO Melaka Admin) · `predicate-box` v4 (probe gate passes on a stated fix confidence of 80%+; eval 46/46) · `fix-photo` v2 (fires only when miya asks; real after-fix screens only; eval 46/46) · quest SKILL.md + quest-protocol scope lines.
+- **Memory**: `redmine-people-roster` · `simple-fix-no-probe-no-local-test` · `no-unrequested-fix-photo` · speech collection entry 13 (his #282924 pass note, env line = what he really deployed, one-fact Note, "Thank you.") + his Task-folder file naming style.
+- **Slips (ledger)**: etanah-git-fetch-in-miya-repo · reask/unrequested-test-and-loggers · fabricated-fix-photo · wording-not-miya-style. Upgrade row: gate-over-demand (predicate-box v4).
+- **Found, NOT fixed**: `de-run-verify` Stop hook re-fires in a loop (it reads its own reminder as the user's message; 6 re-fires on 2026-10-02). Chip "Fix de-run-verify hook self-retrigger loop" was offered, not started. The session worktree's git link was pruned mid-session (work salvaged to main via temp worktrees; two temp worktree metadata folders `mc-probe-confidence`, `mc-fixphoto` could not be deleted: permission denied).
+- **Open**: Mira's verify on internal · staging server deploy on miya's word · Phase 2 after the pass.
+
+**Last Activity**: 2026-10-04 16:45 — #244600 rework cycle 1 shipped to internal and handed to BA (`mlk/qa/244600v3` `f14c58ae64`, int-env `fbbbaf7bc6`); miya posted the notes on #244600 and #275043; quest saved; DE.
+
 ## Session Recap (2026-10-04, worktree permit-c02-2026-3-portal-362d6d, #244600 rework)
 - **Ask**: retrieve #244600 (back as Rework), audit why the 2026-10-02 fix failed, rebuild it, test today; check overlap with Ammar's #275043; Redmine handover; note for #275043; save quest; DE.
 - **Why the first fix failed**: it compared raw document XML. Word rewrites the file on every close, so "no edit" always looked changed. My own Rubric of 2026-10-01 had written that falsifier and it was never run.
@@ -5720,6 +5735,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

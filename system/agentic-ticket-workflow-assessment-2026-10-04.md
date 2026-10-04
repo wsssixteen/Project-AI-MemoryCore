@@ -37,7 +37,6 @@ State resolution from the Task folder or permohonan id · the Scout, Recon, Rubr
 
 What worked and must not be touched: the falsifier ledger at commit (it stopped the rework commit until rows 2 and 3 carried `RAN:` evidence) · the compile gate · probes shown in the browser console · miya's `[risk-ok]` as the only way past the local-test row.
 
-<<<<<<< HEAD
 ## Session: Terengganu adhoc day (ADHOC-PLPS-2026-1, ADHOC-MLPS-2026-2), 2026-10-04 afternoon
 
 | Axis | What the session showed | Instance |
@@ -50,7 +49,7 @@ What worked and must not be touched: the falsifier ledger at commit (it stopped 
 
 Other measured points: adhoc save audit needed `--state terengganu` by hand (first run compared against Melaka row A1); adhoc id `ADHOC-MLPS-2026-1` was already used by an archived Melaka adhoc and had to be renamed; 2 ProTime titles needed 2 corrections (no issue word, then no object word).
 Proposals logged: A1, A2, A3, A4, A5 (one each, 2026-10-04).
-=======
+
 ## Session: ADHOC-PRBB-2026-9 → #282924 (2026-10-02 → 10-04)
 
 | Axis | What the session showed (instance) |
@@ -62,7 +61,6 @@ Proposals logged: A1, A2, A3, A4, A5 (one each, 2026-10-04).
 | A5 sweep / file sweep | Both BA images opened and echoed. Video read by contact sheet (36 frames) which showed select-all was NOT in the video; asked instead of assuming. The pass note assumed "internal & staging" with no evidence of which server he deployed. |
 
 Failure classes: (1) gate-over-demand after an agreed fix · (2) fabricated evidence artifact (marked BA before-screenshot as fix photo) · (3) env assumed in a BA note · (4) stranded worktree edits · (5) `de-run-verify` self-retrigger loop (6 re-fires).
->>>>>>> origin/main
 
 ## Session 6 — #282442 rework (worktree redmine-282442-9258e6)
 
@@ -76,3 +74,49 @@ Failure classes: (1) gate-over-demand after an agreed fix · (2) fabricated evid
 | A4 etanah issue-solving | a local test hand-back was not backed by the machine: wrong schema, no fix files, then a stale class (file copy kept old mtime, Eclipse did not rebuild) | miya restarted JBoss twice for nothing, 11:25 and 11:36 |
 | A4 etanah issue-solving | Redmine Solution written as a result, then as a denial of chat-only content, four rounds | "Tiada field baru di skrin" |
 | A5 sweep / file sweep | BA video and both photos were opened and ledgered at intake; the infra server log (22 547 lines) was read by time window and pattern, not whole | timeline 14:44:25 to 14:45:37 extracted in two passes |
+
+## Addendum — session 5 (probe-decision gate, predicate-box v3 → v4.1)
+
+| Axis | Claim | Instance |
+|---|---|---|
+| A1 agentic | A handover brief written by one session is taken as the full requirement by the next | The brief cited `feedback_loggers_extensive_with_fallbacks.md`; the file did not exist. I built v3 from the brief, miya had to stop the build and order the search (system-design Rule 10 skipped). |
+| A1 agentic | Two sessions refined the same hook the same afternoon | v3 (this session) and v4 (#282924 session) both edited `domain/predicate-box`; v4 landed cleanly only because it was additive. My v3 wording then contradicted v4 until v4.1. |
+| A1 agentic | A shell helper wrote to the wrong checkout | `[IO.File]` with a relative path resolves against the process directory (main), not `Set-Location` (worktree): 4 doc edits landed in main. |
+| A2 quest | The strip-probes reminder has a phrase gap | `prepare-commit-trigger` fires on "prepare to commit" / "let's commit" / "close phase 1", not on "approve commit" or plain "close". A probe can be committed to a ticket branch. |
+| A3 debugging | Gate strength was set from one incident, not from his rule | v3 made loggers mandatory for every `.java` edit; his rule is loggers only when the diagnosis is uncertain. Same class as the upgrade row gate-over-demand. |
+| A4 etanah | Env debugging still depends on infra for non-exception logs | His idea: surface probe lines client side. Limits found: crashed requests and background code never reach the browser; needs a probe build on an env server. |
+| A5 sweep | ⏭ no sweep or file sweep ran this session | — |
+
+**What worked**: replaying the REAL failing transcript through the hook before and after (old exit 0, new exit 2) — a fixture built from memory would not have shown that the edit turn carried no fix-intent word. Keep that as the first eval of any gate born from a slip.
+
+
+## Session: auto-memory consolidation (2026-10-04, main checkout, no ticket)
+
+| Axis | What the session showed (instance) |
+|---|---|
+| A1 agentic system | No fan-out; one lossless script did the merge. The memory index had grown to 26,697 bytes over a 24.4 KB read limit because every correction became a new memory file with no inventory check (196 files; 12 on disk were not even indexed). system-design and system-rules were loaded only after miya's correction, not before the first design step. |
+| A2 quest workflow | Not a quest. Finding for the workflow: 48 memory files are named by hooks, skills, libraries or boot files, so quest rules were reachable only through a truncated index. 7 skills now point at their own memory file. |
+| A3 debugging | The pre-merge check was a filename search over tracked files in one spelling, with no evals run. The full regression (530 spellings, tracked + untracked, 9 referrer evals) ran only after miya asked. Result was clean (0 live breaks, 6 doc mentions repointed), but the order was wrong. |
+| A4 etanah issue-solving | ⏭ no etanah work this session. |
+| A5 sweep / file sweep | The memory folder sweep found 2 OneDrive conflict copies, 1 index line with no file ever in git, and 2 stale-vs-current contradictions (Task folder notes txt; "mlit primary"). At DE, a marker sweep found 4 files committed with unresolved merge markers by a concurrent session merge (c1a9d5dd). |
+
+Failure classes: (1) memory-instead-of-workflow · (2) no-regression-before-change · (3) committed merge markers from two sessions saving in one checkout (found and repaired, not mine).
+
+Evals of the 7 edited skills, run at this DE: deploy 52/52 + 5/5 · bpmn-check.eval 2/2 · bpmn-check eval.js 10 pass 1 fail · list-redmine 16/17 · adhoc-save-audit 19/24. The three non-green ones were already failing or quarantined in the 2026-10-03 battery (audit briefing, NOT WORKING block), before this session's edits.
+
+### Does Domain Expansion cover a one-off system improvement? (audit asked by miya)
+
+| DE step | Covers a one-off system change? | Evidence this session |
+|---|---|---|
+| 2 session recap | Yes | block written in main/current-session.md |
+| 2c save every quest | No, quest-only | a system change has no qa_doc; its only record is the session block and the diary |
+| 4 diary | Yes | Session 6 written |
+| 7 gap sweep | Partly | the knowledge table has no row for a MemoryCore system change |
+| 7.4 audit briefing | Partly | it reports hooks, evals, slips; it does not check that a file changed this session has a watch row, or that a deleted file is still named somewhere |
+| 7.5 improvement sweep | Yes | A1 row above |
+| 9-10 manifest + commit | Yes | every changed path is committed, authorship is not a filter |
+| 12 verify Checklist D | Partly | it checks DE steps fired, not that the change itself was regression-tested |
+| 12.5 meta-audit | Partly | the feature census covers domain/ Features only; a skill-text edit or a memory merge is not a Feature and is not listed; the cross-reference check covers system/INDEX.md links only, not memory file names cited by hooks and skills |
+| change watch | No | the 7 skill edits and the index rewrite got no watch row until added by hand at this DE; only .claude/CLAUDE.md has an automatic watch pipeline |
+
+Verdict: DE records a one-off system change (session, diary, commit) but does not verify it. Three holes: no regression evidence required for a system file changed this session; no automatic watch row for a changed skill or memory index; no check for committed merge markers.

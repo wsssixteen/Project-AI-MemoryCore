@@ -16,6 +16,34 @@
 - **Slips (8, ledger)**: test-stopped-at-fixed-step · blind-deploy-partial-scan · env-not-set-for-test · stale-build-handed-for-test · no-probe-loggers-in-fix-build · default-to-new-memory-file · reask/conversation-leaked-into-deliverable · reask/redundant.
 - **Seen, not mine**: `QA244600-PROBE` loggers (commit `0d20ccc8b4`) were live on MLIT via int-env at 14:16; reported to miya.
 - **Open ideas from miya (no build)**: trace the urusan end to end like the code (a banked map tugasan → langkah screen → form + composites); how far past the fixed step a test must walk. Side session running: gate for fix builds without probe loggers.
+**Last Activity**: 2026-10-04 17:20 — auto-memory index consolidated in the main checkout (MEMORY.md 26,697 → 10,506 bytes, 196 → 73 memory files), regression run after miya's correction, Domain Expansion + audit of whether DE covers a one-off system improvement.
+
+## Session Recap (2026-10-04, main checkout, auto-memory consolidation — no ticket)
+- **Ask**: bring `.claude\auto-memory\MEMORY.md` under 17.1 KB without losing a rule (it was over its 24.4 KB read limit, last lines silently dropped). Then: commit, Domain Expansion, audit whether DE covers this kind of one-off system improvement.
+- **Done**: 125 memory files folded whole into 71 surviving files (body kept under a dated `## Merged 2026-10-04` heading), index regrouped by workflow with the owning skill named per group, 2 OneDrive conflict copies deleted, 1 dangling index line removed (`feedback_quick_patch_steal_risk.md` never existed in git). 48 files kept as their own line because a hook, skill, library or boot file names them.
+- **Skills touched (additive pointer section "Memory rules for this workflow")**: quest · close-phase · deploy · script-check · adhoc-save · bpmn-check · list-redmine.
+- **miya's two corrections**: (1) workflow rules belong in the workflow that loads them, not in auto-memory, and I must check the system (system-rules / system-design) before adding anything; (2) I merged without a regression test and loaded system-design only after he said so.
+- **Regression (run after correction 2)**: 530 name spellings over tracked + untracked files → 0 hooks / skills / libraries / boot files point at a deleted file; 6 live doc mentions repointed (`main\todo.md`, `main\kpi-tracker.md`, this file); 125 of 125 bodies present; 9 evals of memory-reading components green.
+- **Rules now at the top of MEMORY.md**: inventory before adding a memory · full repo search + referrer evals before merging, renaming or deleting one.
+- **Slips (ledger)**: `memory-instead-of-workflow` · `no-regression-before-change`.
+- **Commit**: the consolidation went to main inside another session's DE commit `9cc8f31c` (authorship is not a filter). This DE's own commit follows.
+- **Found, NOT fixed**: `domain\staging-schema-tracker\eval.js` is a dead eval (loads a hook file that moved) · `.claude\CLAUDE.md` and `feedback_task_folder_ownership.md` still describe the notes txt that the 2026-09-30 Task folder shape removed · no mechanical gate stops deleting a memory file something still names.
+- **DE coverage audit**: see `system\agentic-ticket-workflow-assessment-2026-10-04.md` § "Session: auto-memory consolidation".
+- **Open (miya's word)**: build the memory delete gate · remove the dead eval · fix the notes-file conflict · dedupe memories against skill bodies.
+
+**Last Activity**: 2026-10-04 17:10 — probe gate session closed: `domain/predicate-box` v3 → v4.1 on main (`ed75928b`), eval 46/46; the six-kinds logger gate was dropped; nothing owed on this thread except miya's ruling on the commit-reminder gap.
+
+## Session Recap (2026-10-04, main checkout + worktree mc-probe-matrix (removed), probe-decision gate)
+- **Ask**: a deterministic gate so an etanah `.java` fix cannot reach a test hand-back with zero probe loggers (#282442 was the case). Brief came from another session.
+- **Built**: `domain/predicate-box` v3 (`3ed79f79`) — second requirement on the existing Stop hook: an etanah `.java` Edit needs a PROBE COVERAGE MATRIX (3+ rows, one FALLBACK row) or a reasoned `[skip-probe-matrix: …]`; probe-cleanup edits exempt; size reasons refused. Replay of the real #282442 transcript: old hook exit 0, new hook exit 2.
+- **Corrected by miya, twice**: (1) I built from the brief before searching his earlier rules; the sweep found "extensive + fallback loggers" in his own words and that the memory file the brief named did not exist. (2) v3 made loggers mandatory every time; his rule is loggers ONLY when needed. The #282924 session shipped v4 (a stated fix confidence of 80%+ passes with no probes, `f3d8ca3d`).
+- **Reconciled**: v4.1 (`ed75928b`) — block text, quest `SKILL.md` matrix bullet, Ritual 6 and memory `feedback_simplify_and_reference.md` no longer say "not optional"; they say under 80% the matrix is owed and size is never the reason to skip.
+- **Dropped**: the six probe classes gate (ENTRY / BRANCH / WRITER / BOUNDARY / ERROR / NEXT). Approved in a popup, then overtaken: "every scenario, three layers" is already in memory from the #244600 session and v4 covers when to log.
+- **Checked, still working**: `probe-local-only-gate` eval 35/35 (blocks a probe reaching env, master, release). Strip-probes reminder fires on "prepare to commit" / "let's commit" / "close phase 1".
+- **Open gap (his ruling)**: that reminder does NOT fire on "approve commit" or plain "close", so a probe can be committed to a ticket branch (it still cannot reach an env branch). Proposal logged.
+- **His idea, not built**: surface probe lines in the browser instead of asking infra for server logs. Answer given: works for requests that finish; a crashed request and background code never reach the browser; needs probes on an env build, which the local-only rule bans. Proposal logged.
+- **Slips (ledger)**: build-missed-requirement (built before sweeping his rules) · gate-over-demand (mandatory loggers) · answer-the-ask (answered what a gate can check, not his question) · reask/verbose ×2 · edited-wrong-copy-main-vs-worktree (.NET relative path wrote 4 doc edits into main; moved back).
+- **Spawned**: memory index trim (separate session, done: `MEMORY.md` consolidated on main).
 
 **Last Activity**: 2026-10-04 16:55 — Terengganu adhoc day: 2 adhocs diagnosed on PROD (ADHOC-PLPS-2026-1, ADHOC-MLPS-2026-2), patch script for #283031 ready on standby, `adhoc-titles` skill built, knowledge written to `terengganu/ADHOC-TRIAGE.md` + `DATABASE.md`; DE.
 

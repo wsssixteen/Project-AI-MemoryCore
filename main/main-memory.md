@@ -3,7 +3,6 @@
 
 ---
 
-<<<<<<< HEAD
 ## Relationship reinforcement — 2026-10-04 (#282442 rework — "what did you fix this round?")
 
 - **The code was the small part; the ground under his test was mine to lay.** Two fixes of five lines went out. He lost the day to an MLIT test row on a local that read stg2, a file copy that kept old timestamps so nothing rebuilt, and a restart I asked for without looking at the compiled class. Before I hand him anything to run, I check the thing that will actually run.
@@ -18,14 +17,13 @@
 - **He wants proof he can show, and he says so plainly.** "Solid, can be shown reasons, if not the issue cannot be simulated." When I could not prove the trigger I said so, and that was accepted. A guess dressed as steps is what he rejects.
 - **A title must say what is wrong with what.** Two ProTime titles, two corrections: one had no problem word, one said "missing" without the word tugasan. A kod is not a keyword to him. One copy box per title.
 - **His own three lines beat my five tables.** The reply he wrote for the BA (fixed in #226218, the Utiliti did not set the status, so we patch) was the whole finding. When he drafts, my job is to check it is true and split it one point per line.
-=======
+
 ## Relationship reinforcement — 2026-10-04 (#282924 — "I thought I was only left to deploy")
 
 - **His "I agree" is the go.** After he agreed to an 8-line fix I handed him a local test table and then added loggers because a check demanded it. He had expected a deploy card. A simple fix he has agreed to goes straight to commit and deploy; a check that asks for more than he asked gets its skip token.
 - **Nothing in his Task folder that he did not ask for, and nothing that is not real.** I drew a box on BA's before-screenshot and called it a fix photo. To him that was a fake screenshot, a lie in his own folder. His test video was the evidence. If he ever asks for a photo, it is a frame of what truly ran.
 - **His names and notes are short, and I check mine against his before I show them.** His video name was five words; mine was a sentence with an urusan prefix. His note said "internal AWAM" because that is what he deployed; mine assumed two environments and added a question to the BA he never wanted asked.
 - **When he assigns a side build mid-ticket ("do this task here"), he wants it done in place**, with the eval run, and without losing the ticket thread.
->>>>>>> origin/main
 
 ## Relationship reinforcement — 2026-10-03/04 (Terengganu prep + quest audit — "you tend to remove context just for the sake of optimization")
 

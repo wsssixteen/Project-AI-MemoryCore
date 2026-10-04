@@ -36,7 +36,7 @@
         "schemas": { "mlit": "et_main_mlit", "stg1": "et_main_stg1", "stg2": "et_main_stg2", "prod": "et_main" },
         "primary_env": "mlit"
       },
-      "redmine": { "project": "helpdesk_melaka", "project_names": ["eSOKONGAN MELAKA"] },
+      "redmine": { "project": "helpdesk_melaka", "project_names": ["eSOKONGAN MELAKA"], "member_projects": ["helpdesk_melaka", "e-tanah-melaka", "e-tanah-melaka-fat", "e-tanah-melaka-uat", "e-tanah-melaka-pat"] },
       "flowable_alter_file": "FLOWABLE-KNOWLEDGE.md",
       "local_server": { "jboss_home": "E:/Dev/jboss-7.4-plp-melaka", "deployed_wars": ["etanah-pelupusan", "etanah-awam"] },
       "state_only_tools": ["release-mlk-plp", "release-mlk-plp-ask", "release-mlk-plp-push-gate", "release-mlk-plp-scope-gate", "deploy", "env-check", "env-switch", "staging-schema-check", "staging-schema-tracker", "patch-mlk-doc", "local-deploy-gate"]
@@ -178,7 +178,7 @@
         "flowable_read_via": "postgres-trgstg1-pg",
         "note": "stg2 = fresh env (BA activity); stg1 = frozen at 2026-09-14/15. ONE staging Flowable schema et_flowable17_stg serves both and only the stg1 login can read it. PROD (login et_read) reads et_main + et_flowable17 in one connection; rjk_parameter_sistem is denied there. Schema names et_main_stg1/et_main_stg2 are the SAME names Melaka staging uses — the MCP server name is the only discriminator. Staging workflows whose process id is above the engine's range have no engine instance (refresh of 2026-09-15). On 2026-10-03 the internal host was unreachable from this network."
       },
-      "redmine": { "project": "esokongan-terengganu", "project_names": ["eSOKONGAN TERENGGANU", "TRG_03_Pelupusan", "TRG_16_Awam", "e-Tanah Terengganu"], "module_field": { "id": 17, "value": "Pelupusan" }, "awam_sub_module_field": { "id": 77, "value": "Awam Pelupusan" } },
+      "redmine": { "project": "esokongan-terengganu", "project_names": ["eSOKONGAN TERENGGANU", "TRG_03_Pelupusan", "TRG_16_Awam", "e-Tanah Terengganu"], "member_projects": ["esokongan-terengganu", "e-tanah-terengganu", "e-tanah-terengganu-fat", "e-tanah-terengganu-uat", "e-tanah-terengganu-pat"], "module_field": { "id": 17, "value": "Pelupusan" }, "awam_sub_module_field": { "id": 77, "value": "Awam Pelupusan" } },
       "flowable_alter_file": "FLOWABLE-ALTER.md",
       "local_server": null
     }
