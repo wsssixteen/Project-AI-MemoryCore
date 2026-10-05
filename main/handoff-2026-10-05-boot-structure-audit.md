@@ -115,7 +115,7 @@ Mechanical checks, run by Ruri on the MAIN checkout (where hooks execute):
 |---|---|
 | Every `.js` named by a `settings.json` hook command exists | 126 registrations · 0 missing |
 | Real telemetry since main got the change (cut 2026-10-04T17:05Z) vs the 7 days before | 691 fires across 131 hooks · 0 error rows (before: 128 errors in 205,078) · no hook appears under a new name |
-| Daily gates fired without error since the cut | `ticket-gate` 1 · `etanah-intake-gate` 1 · `quest-phase-gate` 13 · `convention-check-gate` 13 · `compile-gate` 40 · `release-mlk-plp-push-gate` 17 |
+| Daily gates ran without error since the cut — **CORRECTED 03:00** | The first version of this row counted eval rows as proof. Split by session id (cut 17:05Z → 19:00Z): real-session rows `ticket-gate` 16 (3 sessions, fired 1) · `etanah-intake-gate` 8 (fired 3) · `quest-phase-gate` 58 · `convention-check-gate` 61 · `compile-gate` 2,180 (fired 0) · `release-mlk-plp-push-gate` 586 (blocked 1: my own edit command). So the gates run error-free on every tool call, and ticket intake fired for real. **NOT proven by any real run: an etanah commit decision and an etanah push decision.** Those blocked rows (compile 4, push 20) came from eval runs with no session id. |
 | Redmine board at a real boot after the change | printed live (3 open tickets, 2 tracked, 1 missing block) at the 01:26 boot |
 | Syntax check at that real boot | 0 checked · 136 cached · 0 broken · 211 ms (`domain/hook-syntax-check/log.jsonl`) |
 | Startup scripts in 3 real boots since the cut, summed averages | about 12.9 s (same 10 scripts averaged 82 s over the 7 days before) |
@@ -155,13 +155,15 @@ Not caused by the boot change, as far as the evidence goes: the prune line is ol
 
 Standing risk and the open choice (みや's, proposal A1 of 2026-10-04 "lock a live session's worktree"): (a) lock each session's worktree at boot, git-native, a prune on any machine skips a locked entry and the lock file syncs; (b) stop the bare prune and let only the main-checkout sweep decide; (c) move worktrees out of OneDrive (memory `project_onedrive_worktrees`). Until ruled: this session is locked by hand.
 
+**RULED by みや, popup 2026-10-05 02:45**: the other laptop WAS on around 01:47 → the open candidate is now the accepted cause (still not observed directly). Protection = **(a) lock live sessions**. BUILT the same hour as `worktree-cleanup-boot` v2.1: the launcher locks the booting session's worktree (reason `live-session host=<hostname> since=<date>`); step 1 lifts only locks this host set and whose folder is gone; the background run gets the session folder for path protection. Fixtures LK1-LK8 in its eval. The plain prune stays (not part of his ruling). Not built: automatic repair of a link that is already cut.
+
 Leftover: `.git\worktrees\mc-canary-13156\` (my test canary: `logs`, `refs`, `ORIG_HEAD`) could not be deleted, "Permission denied". Harmless; git lists it as prunable and the next prune removes it.
 
 Independent runs (Workflow tool, read-only):
 
 | Run | Run id | What | Result |
 |---|---|---|---|
-| Verification | `wf_49cf7fce-b89` | six review dimensions (quest load · Redmine intake · wrapper change · background cleanup · gate false-blocks · boot documents), one refuter per finding, one completeness critic | (appended when it returns) |
+| Verification | `wf_49cf7fce-b89` | six review dimensions (quest load · Redmine intake · wrapper change · background cleanup · gate false-blocks · boot documents), one refuter per finding, one completeness critic | **DONE 02:36** (40 agents, 0 errors): 24 findings confirmed (20 cosmetic, 4 degrades, 0 "breaks daily work"), 9 refuted, 9 critic gaps. Summary and what was done about each: §11. |
 | Batch-2 design | `wf_923b9eaf-18e` | facts per remaining boot script and its consumers → design per script (two angles for the quest board) → cross-cutting critic | **DONE 02:14** (18 agents, 0 errors). Full record: `main/handoff-2026-10-05-boot-batch-2-design.md` (critic first, then one design and one fact sheet per script). Summary in §10 below. |
 
 To resume either after a break: `Workflow({scriptPath: <script file under the session's workflows/scripts folder>, resumeFromRunId: "<run id>"})` — finished agents replay from cache.
@@ -193,4 +195,56 @@ Decisions that are みや's (asked by popup 2026-10-05; answers recorded below w
 | 3 | Should a finished adhoc's Task folder move to Archive by itself? | Yes, at the closing status; videos kept; the 9 leftovers shown for ticking. |
 | 4 | What should boot show about change watches? | A count, the 3 oldest and where the full list is; "overdue" counted in days. |
 
+Answers given by popup, 2026-10-05 02:45:
+
+| # | His answer |
+|---|---|
+| 1 | **RULED: nothing loads.** The briefing row says "not loaded"; the live board loads when he names a ticket, says "board" or asks for a briefing. |
+| 2 | not asked yet |
+| 3 | not asked yet |
+| 4 | **NOT ruled.** His words: "I don't understand this part, also, I am thinking of adding a keyword so that you know we are starting our daily work. Or it is better if you can detect where we are or is it working day and also holiday days from redmine to determine if you boot in what mode. Can this be updated by a routine. or quick enough to be done boot time?" → explained in chat (a watch = a note to check that a change behaves; 32 open; boot prints 5 lines each). Ask again in plain words. His boot-mode idea: §12. |
+
 Biggest risk (critic): the board leaves boot and ticket work starts without it. Four required fixes are in the design record §1.7 (change the boot prose in the same commit · pin the trigger to ticket-gate's signal tests with a phase-1 block · board and briefing asks always fetch live · keep the boot entry until one real session shows the last table row in context).
+
+## 11. Independent review of batch 1 (run `wf_49cf7fce-b89`) — findings and what was done
+
+Verdict in one line: quest loading and Redmine intake are intact; nothing "breaks daily work"; two real gate defects came from the 2026-10-02 gate change and are fixed; the rest is cosmetic or older.
+
+| # | Finding | Severity | From this session's changes? | Status 2026-10-05 03:30 |
+|---|---|---|---|---|
+| 1 | Push gate fails OPEN when the command names the repo with a Git Bash path (`cd /e/Dev/... && git push`), an unset variable or a missing folder: identity null → "not foreign" → a shared-branch push from another team's repo passes unchecked. v4 blocked the Git Bash form by path text. The form is in real use (int-env pushes from `/e/Dev/etanah-work/wt-282442` on 2026-10-04). | degrades (safety gate) | YES, `63f0ebee` | FIXED: `lib/git-target.js` v2 (`resolveDir`, `inlineVars`, `named` / `unresolved`) + push gate v6 (blocks a shared-branch push when the named directory cannot be identified). Eval 50/50 (was 35). Adversarial review `wf_9f2f6a5c-fdc` launched; result appended in §11a. |
+| 2 | Compile gate refuses a commit issued through a Git Bash path with "is not an etanah git repo", after a green compile; the printed remedy cannot work. Happened live 2026-10-04T08:04:57Z. | wrongly blocks a daily flow | YES, same root | FIXED by the same helper; `compile-check.js` accepts a Git Bash path. Eval 43/43 (was 27). |
+| 3 | All linked worktrees lost their git link at 01:47 (two findings) | degrades | no, older mechanism | §9a. Lock built (v2.1). |
+| 4 | v2.0 background run starts with cwd = the hook's checkout, so the sweep no longer protects the booting session's folder by path | cosmetic today (deletes are frozen) | YES | FIXED in v2.1 (`WORKTREE_CLEANUP_SESSION_DIR`). |
+| 5 | The worktree content-sync (step 1.5) never runs when the hook executes from main, so a worktree session does not get `projects/` copied in | degrades | no, since 2026-06-04 | NOT fixed. A worktree session reads etanah-knowledge from the main checkout's absolute path. |
+| 6 | `lib/audit-briefing.js:36` dropped every registration that carries the telemetry-name token from its `registered` set | cosmetic, latent | YES | FIXED (regex accepts the trailing token). Smoke: 121 of 126 commands match, both installed hooks under their telemetry names; the screen runs, exit 0. No eval file exists for it yet. |
+| 7 | `core/registry.js:111` does not strip a bare `.hook`, so a manual run lists the two installed hooks as `*.hook` rows with no last fire | cosmetic | YES | NOT fixed. |
+| 8 | `forge install hook` says the telemetry name is kept, but for a hook that lives only in a bundle `lib/dispatch-hooks.js:98` names rows after the file | cosmetic, latent (next bundle-child install) | YES | NOT fixed. Fix before installing any bundle child. |
+| 9 | Documents made stale by this session's commits: release-mlk-plp `SKILL.md:405` · cleanup eval header path · arabic "same line" claim (2 files) · knowledge-schema-audit `README.md:24-25` · system-architecture §3.1 | cosmetic | YES | FIXED. |
+| 10 | Older stale documents: `.claude/save-commands.md:40` (banned columns) · hotfix `SKILL.md:20` and release `SKILL.md:190,415` (raw `mvn compile`, now blocked once with the right command) · expansion-protocol step 11(c), session-briefing.md:56-57 and `domain-expansion-trigger.js:108` (still describe automatic removal of merged worktrees, frozen since 2026-09-27) · system-audit CHECK 6 looks only at direct registrations · each finished cleanup run modifies the tracked sweep log in main | cosmetic | no | NOT fixed; listed here. |
+
+Gaps the critic named (not findings, things still unproven):
+
+| Gap | State |
+|---|---|
+| No real etanah commit, push or quest start has run since the change | still ahead. After the next real ticket: read the last rows of `domain/compile-gate/log.jsonl` and the telemetry rows of ticket-gate / etanah-intake-gate / quest-phase-gate with a session id and a qa value. |
+| Session close (Domain Expansion) has not run since the change; `de-close-gate` C5 wants one watch row per edited file under `domain/`, `lib/`, `core/`, `.claude/hooks/` | to do at the close of this session. |
+| Watch `wmuu2uoib` (the boot change) lost 3 of its 4 ticks to eval and compaction runs; one real boot was observed | resolve it with that note, never from the printed rollback line. |
+| The falsifier ledger check inside the compile gate (`domain/falsifier-ran-check/check.js`, 2026-10-04, not part of this session) was read by no reviewer | open. It sits on the etanah commit path and can block. |
+| `domain/release-mlk-plp/eval.js`, `domain/sweep/eval.js`, `lib/adhoc-save-audit.eval.js` were green on 2026-09-14 and red since 2026-10-03 | open, not this session's change; run each alone on an idle machine and read the failing fixture names. |
+| 47 of 61 folders under `.claude/worktrees/` hold an old `settings.json` that names the two old hook paths; whether a resumed old session reads its own settings.json is not verified | open. If it does, those two hooks log `target-missing` and are skipped (fail open). |
+| The background run does `git update-index --refresh` and `git fetch origin main` in the main checkout: a session opened in MAIN may hit `index.lock` in its first minutes | open, a retry fixes it. |
+
+## 12. みや's idea, 2026-10-05: boot mode by keyword or by working day (not designed, not ruled)
+
+His words are in §10 answer 4. It is the "two boot modes" item of §4 (row 8), now with a concrete trigger.
+
+| Fact (checked on disk) | Where |
+|---|---|
+| A holiday list and a lookup already exist locally | `E:\Dev\scripts\PymTime\holidays-2026.json` (1,195 bytes) + `lib\holiday.js` `isHolidayCached()`; `domain/protime-plan/protime-plan.js:141` already calls it |
+| Workdays and the clock-in window are PymTime settings | named in PymTime's own docs; the file that stores them was NOT read |
+| Working-day arithmetic exists for the board | `quest/redmine-board.js:249` (Sat/Sun excluded) |
+| A per-prompt mode line exists | `.claude/hooks/mode-detector.js` (Quest-active vs Discussion, from `quest/active.txt`) |
+| Redmine holds no holiday calendar that this repo reads | not verified against Redmine itself; nothing in `quest/redmine-*.js` reads one |
+
+Advice given in chat: fast enough at boot (a local file, milliseconds), no routine needed, Redmine not needed; use BOTH signals: working day + work hours picks the mode, a keyword such as "start work" overrides either way. To do: design it with system-design, bring it to him as a popup with a diagram.

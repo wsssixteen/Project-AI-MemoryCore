@@ -401,8 +401,10 @@ re-reads `origin/mlk/master` and fails loudly if it isn't the release tip.
 ## 🧨 FAILURE-MODE CHECKLIST (2026-08-19 post-incident audit — run EVERY release, emit ✓ per row)
 
 > Born from the 1.3.5 incident (wrong common shipped · 1.3.4 stranded off master · prod regressed).
-> Gated items live in release-prep.js (`runCompatGate` · `assertMasterReflectsPrevRelease`) +
-> `unmerged-release-boot.js` (SessionStart). These rows are the NON-gated judgment checks:
+> Gated items live in release-prep.js (`runCompatGate` · `assertMasterReflectsPrevRelease`). The advisory
+> `unmerged-release-boot.js` left SessionStart on 2026-10-05; run it on demand
+> (`node domain/release-mlk-plp/unmerged-release-boot.js`): it lists EVERY release branch not on master and
+> every in-flight state file, which the blocking gate (nearest lower release only) does not. These rows are the NON-gated judgment checks:
 
 | ✓ | Check |
 |---|---|

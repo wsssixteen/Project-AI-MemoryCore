@@ -1,6 +1,6 @@
 # arabic-nudge
 
-**DEREGISTERED from SessionStart 2026-10-05** (per みや, boot audit: "this should only run when we invoke /arabic"). Nothing registers this hook now; the same line is printed on demand by `/arabic status` (`node .claude/skills/arabic/arabic.js status`). The hook file and its eval stay so it can be re-registered in one line.
+**DEREGISTERED from SessionStart 2026-10-05** (per みや, boot audit: "this should only run when we invoke /arabic"). Nothing registers this hook now; the same line is printed on demand by `node .claude/skills/arabic/arabic.js nudge` (`/arabic status` prints the fuller week line instead). The hook file and its eval stay so it can be re-registered in one line.
 
 **What fired when (until 2026-10-05)**: SessionStart — every session boot. Prints nothing unless `projects/learning-projects/active/arabic/data/words.json` exists.
 

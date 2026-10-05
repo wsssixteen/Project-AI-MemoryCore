@@ -125,8 +125,30 @@
  *     file for the indented detail — a run that FINISHES (221 s on 2026-10-05) prints ~13,000 chars, which the
  *     30 s kill used to truncate by accident.
  *   Eval fixtures B1-B6.
+ *
+ * v2.1 2026-10-05 — LOCK THE LIVE SESSION'S WORKTREE (みや ruling by popup: "Lock live sessions").
+ *   symptom:     2026-10-05 01:47 and 2026-10-04 afternoon: every session worktree lost its git link while the
+ *                sessions were open (`fatal: not a git repository`). The repo is shared by two laptops through
+ *                OneDrive; step 1's `git worktree prune` on the OTHER laptop drops every entry whose stored
+ *                absolute path does not exist there, and OneDrive syncs the deletion back. みや confirmed the
+ *                other laptop was on at 01:47.
+ *   goal:        a live session never loses its git link to a prune, from this laptop or the other one.
+ *   goal_signal: after a boot inside `.claude/worktrees/<x>`, `.git/worktrees/<entry>/locked` exists and names
+ *                this host; `git worktree prune` with an unreadable gitdir path leaves that entry in place.
+ *   Changed: (1) the launcher locks the booting session's own worktree (`git worktree lock`, reason
+ *     `live-session host=<hostname> since=<date>`). git never prunes a locked entry, on any machine, and the
+ *     lock file syncs like the rest of .git. (2) step 1 first UNLOCKS entries that THIS host locked and whose
+ *     folder is gone (the session ended and was cleaned up), so the prune can drop them. Entries locked by
+ *     another host are never touched: on this laptop their folder path does not exist either, which is the
+ *     exact confusion the lock is there to survive. (3) the background run gets the booting session's folder
+ *     (WORKTREE_CLEANUP_SESSION_DIR) and adds it to the sweep's `here` list: v2.0 started the run with
+ *     cwd = the hook's checkout and lost that path protection (found by the independent review, 2026-10-05).
+ *   Spec preservation: every v2.0 step intact. Additive. Not changed: the plain prune stays (his ruling was the
+ *     lock alone). Residual risk, recorded: a worktree is unprotected between its creation and its first boot
+ *     hook, and until the lock file has synced to the other laptop.
+ *   Eval fixtures LK1-LK8.
  */
-const { execSync, spawn } = require('child_process');
+const { execSync, execFileSync, spawn } = require('child_process');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -363,10 +385,63 @@ function dirBytes(p) {
   return n;
 }
 
-module.exports = { sweepOrphans, neverCommittedFiles, registeredWorktrees, mergeBaseRef, dirBytes, mainRootOf, openQuestMap, openQuestHold, ticketSources };
+// ── v2.1 live-session lock ──
+const HOST = os.hostname();
+const LOCK_REASON_RX = /^live-session host=(\S+)/;
+/** The `.claude/worktrees/<name>` folder under MAIN that one of the candidate paths sits in, or null. */
+function sessionWorktree(candidates, mainRoot) {
+  const base = norm(path.join(mainRoot || MAIN_ROOT, '.claude', 'worktrees')) + '/';
+  for (const c of [].concat(candidates || []).filter(Boolean)) {
+    const p = norm(c) + '/';
+    if (!p.startsWith(base)) continue;
+    const name = p.slice(base.length).split('/')[0];
+    if (name) return path.join(mainRoot || MAIN_ROOT, '.claude', 'worktrees', name);
+  }
+  return null;
+}
+/** Lock the session's own worktree against any prune. Returns 'locked' | 'already' | 'not-registered' | 'failed: …'. Never throws. */
+function lockOwnWorktree(sessDir, mainRoot) {
+  if (!sessDir) return 'no-session-worktree';
+  const root = mainRoot || MAIN_ROOT;
+  try {
+    const reg = registeredWorktrees(root).some(w => norm(w.path) === norm(sessDir));
+    if (!reg) return 'not-registered';
+    execFileSync('git', ['-C', root, 'worktree', 'lock', sessDir, '--reason', `live-session host=${HOST} since=${new Date().toISOString().slice(0, 10)}`],
+      { stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true, timeout: 15000 });
+    return 'locked';
+  } catch (e) {
+    const msg = String((e.stderr || e.message || '')).trim().split('\n')[0];
+    return /already locked/i.test(msg) ? 'already' : 'failed: ' + msg.slice(0, 160);
+  }
+}
+/**
+ * Unlock entries THIS host locked whose folder no longer exists, so the prune that follows can drop them.
+ * An entry locked by another host is left alone: its folder path never exists on this machine.
+ */
+function unlockGone(mainRoot) {
+  const out = [];
+  try {
+    const adminRoot = path.join(mainRoot || MAIN_ROOT, '.git', 'worktrees');
+    for (const d of fs.readdirSync(adminRoot, { withFileTypes: true })) {
+      if (!d.isDirectory()) continue;
+      const lockFile = path.join(adminRoot, d.name, 'locked');
+      let reason; try { reason = fs.readFileSync(lockFile, 'utf8').trim(); } catch { continue; }
+      const m = reason.match(LOCK_REASON_RX);
+      if (!m || m[1].toLowerCase() !== HOST.toLowerCase()) continue;       // not a live-session lock, or another laptop's
+      let gitFile = ''; try { gitFile = fs.readFileSync(path.join(adminRoot, d.name, 'gitdir'), 'utf8').trim(); } catch {}
+      if (gitFile && fs.existsSync(gitFile)) continue;                     // the session's folder is still there
+      try { fs.unlinkSync(lockFile); out.push(d.name); } catch {}
+    }
+  } catch {}
+  return out;
+}
+
+module.exports = { sweepOrphans, neverCommittedFiles, registeredWorktrees, mergeBaseRef, dirBytes, mainRootOf, openQuestMap, openQuestHold, ticketSources, sessionWorktree, lockOwnWorktree, unlockGone };
 
 function main() {
 try {
+  // 1a. (v2.1) unlock what THIS host locked and whose folder is gone, so the prune below can drop it
+  unlockGone();
   // 1. Prune stale worktree records
   run('git worktree prune');
 
@@ -495,7 +570,8 @@ try {
   //    v1.7: always MAIN's folder, whichever checkout booted; this session is protected by path.
   try {
     const dry = DRY || !BOOT_DELETES;                                  // v1.8: report-only unless WORKTREE_CLEANUP_DELETE=1
-    const sw = sweepOrphans(MAIN_ROOT, { dryRun: dry, baseRef, here: [projectRoot, process.env.CLAUDE_PROJECT_DIR, process.cwd()] });
+    // v2.1: the booting session's folder is handed over by the launcher — the background run's own cwd is the hook's checkout
+    const sw = sweepOrphans(MAIN_ROOT, { dryRun: dry, baseRef, here: [projectRoot, process.env.CLAUDE_PROJECT_DIR, process.cwd(), process.env.WORKTREE_CLEANUP_SESSION_DIR] });
     const gb = b => (b / 1073741824).toFixed(2);
     let keptBytes = 0, delBytes = 0;
     for (const e of sw.kept) keptBytes += dirBytes(path.join(MAIN_ROOT, '.claude', 'worktrees', e.name));
@@ -596,7 +672,7 @@ function launch() {
     try {
       fs.mkdirSync(STATE_DIR, { recursive: true });
       fs.writeFileSync(LOCK, JSON.stringify({ ts: Date.now(), pid: process.pid, checkout: projectRoot }));
-      spawn(process.execPath, [__filename, '--run'], { cwd: projectRoot, detached: true, stdio: 'ignore', windowsHide: true, env: process.env }).unref();
+      spawn(process.execPath, [__filename, '--run'], { cwd: projectRoot, detached: true, stdio: 'ignore', windowsHide: true, env: Object.assign({}, process.env, { WORKTREE_CLEANUP_SESSION_DIR: SESSION_DIR || '' }) }).unref();
     } catch (e) {
       process.stderr.write(`worktree-cleanup-boot launch: ${e.message}\n`);
       try { fs.unlinkSync(LOCK); } catch (_) {}
@@ -605,7 +681,26 @@ function launch() {
   process.exit(0);
 }
 
+// The booting session's own worktree folder (null for a session in the main checkout). Sources, in order:
+// the hook input's `cwd` (stdin JSON, forwarded by the wrapper), the process cwd, CLAUDE_PROJECT_DIR; the
+// detached run reads what the launcher handed over.
+let SESSION_DIR = null;
+function readHookCwd() {
+  try { if (process.stdin.isTTY) return ''; const j = JSON.parse(fs.readFileSync(0, 'utf8') || '{}'); return typeof j.cwd === 'string' ? j.cwd : ''; } catch (_) { return ''; }
+}
+
 if (require.main === module) {
-  if (process.argv.includes('--run') || process.env.WORKTREE_CLEANUP_FOREGROUND === '1') runAndRecord();
+  const isRun = process.argv.includes('--run');
+  SESSION_DIR = isRun ? (process.env.WORKTREE_CLEANUP_SESSION_DIR || null)
+    : sessionWorktree([readHookCwd(), process.cwd(), process.env.CLAUDE_PROJECT_DIR, projectRoot]);
+  if (!isRun) {
+    const res = lockOwnWorktree(SESSION_DIR);
+    if (res === 'locked' || /^failed/.test(res)) {
+      try { fs.mkdirSync(path.dirname(RUN_LOG), { recursive: true }); fs.appendFileSync(RUN_LOG, JSON.stringify({ ts: new Date().toISOString(), lock: res, worktree: SESSION_DIR ? path.basename(SESSION_DIR) : null, host: HOST }) + '\n'); } catch (_) {}
+      if (/^failed/.test(res)) process.stderr.write(`worktree-cleanup-boot: could not lock this session's worktree (${res}) — a prune can still cut its git link\n`);
+    }
+    if (SESSION_DIR) process.env.WORKTREE_CLEANUP_SESSION_DIR = SESSION_DIR;     // foreground mode reads the same variable
+  }
+  if (isRun || process.env.WORKTREE_CLEANUP_FOREGROUND === '1') runAndRecord();
   else launch();
 }

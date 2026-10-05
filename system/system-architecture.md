@@ -198,7 +198,9 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | Stop | — | `veritas-claim-gate.js (bundle stop-claim-integrity)` | ✓ |
 <!-- HOOK-REGISTRY:AUTO-END -->
 
-### 3.1 SessionStart (7 hooks)
+### 3.1 SessionStart (10 registrations since 2026-10-05; the live list is the generated table in §3.0 above)
+
+> Hand-written commentary. Corrections 2026-10-05: `worktree-cleanup-boot` is now `domain/worktree-cleanup-boot/worktree-cleanup-boot.hook.js` — boot only LAUNCHES it and locks the session's own worktree (v2.1); the cleanup finishes in the background and is report-only (deletes frozen since v1.8). `hook-syntax-check` is `domain/hook-syntax-check/hook-syntax-check.hook.js`. `arabic-nudge`, `unmerged-release-boot` and the boot copy of `knowledge-schema-audit` are NO LONGER registered at SessionStart. Rows below that still say otherwise are history.
 
 | Hook | Owner | Watches | Injects/Blocks | Stakeholders (downstream) | Change-impact |
 |---|---|---|---|---|---|

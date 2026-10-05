@@ -1,7 +1,7 @@
 // system-audit: skip-ghost-check — eval harness, run by hand, NOT an event hook
 /**
  * worktree-cleanup-boot.eval.js — runnable eval for v1.6's orphan-folder sweep.
- * Run:  node .claude/hooks/worktree-cleanup-boot.eval.js   (exit 0 = PASS)
+ * Run:  node domain/worktree-cleanup-boot/worktree-cleanup-boot.eval.js   (exit 0 = PASS; about 3-4 minutes, real git fixtures)
  *
  * Builds a throwaway repo (origin + clone) and replays the 2026-09-04 failure shapes:
  *  A. de-registered folder, branch already deleted, all content committed → DELETED
@@ -318,6 +318,82 @@ check('T main root unchanged', mainRootOf('C:\\r') === 'C:\\r');
     env: { ...process.env, CLAUDE_PROJECT_DIR: sess, WORKTREE_CLEANUP_DRY_RUN: '0', WORKTREE_CLEANUP_DELETE: '1', WORKTREE_CLEANUP_FOREGROUND: '1' } });
   check('W11 step 3 opt-in boot → merged registered open-quest worktree NOT removed', fs.existsSync(W11) && !!g(['branch', '--list', 'claude/m-279411-merged'], repo));
   check('W11 boot stderr names the held folder', /held for open quests[\s\S]*m-279411-merged — QA-279411/.test(b11.stderr));
+  try { fs.rmSync(tmp, { recursive: true, force: true }); } catch {}
+}
+
+// ── LK (v2.1 2026-10-05): the live session's worktree is LOCKED, so a prune from any laptop cannot cut its git link ──
+//      live miss 2026-10-05 01:47: all 5 session worktrees lost their admin entry while the sessions were open;
+//      the other laptop was on (its prune sees none of this laptop's absolute paths) and OneDrive synced the deletes.
+{
+  const { sessionWorktree, lockOwnWorktree, unlockGone } = require('./worktree-cleanup-boot.hook.js');
+  const { tmp, repo } = freshRepo();
+  const admin = n => path.join(repo, '.git', 'worktrees', n);
+  const W = mkWorktree(repo, 'w-live', { keepRegistered: true });
+  const hookCopy = path.join(W, '.claude', 'hooks', 'worktree-cleanup-boot.hook.js');
+  fs.mkdirSync(path.dirname(hookCopy), { recursive: true });
+  fs.copyFileSync(path.join(__dirname, 'worktree-cleanup-boot.hook.js'), hookCopy);
+  const env0 = { ...process.env, CLAUDE_PROJECT_DIR: W, WORKTREE_CLEANUP_DRY_RUN: '1', WORKTREE_CLEANUP_DELETE: '0' };
+  delete env0.WORKTREE_CLEANUP_FOREGROUND; delete env0.WORKTREE_CLEANUP_SESSION_DIR;
+  const launch = () => spawnSync(process.execPath, [hookCopy], { cwd: W, encoding: 'utf8', windowsHide: true, timeout: 120000, env: env0 });
+  const stateDir = path.join(repo, '.claude', 'state');
+  const idle = () => { const t = Date.now(); while (Date.now() - t < 90000) { let l = []; try { l = fs.readdirSync(stateDir).filter(f => /\.lock$/.test(f)); } catch {} if (!l.length && fs.existsSync(path.join(stateDir, 'worktree-cleanup-last.json'))) return true; execSync('ping -n 2 127.0.0.1 >nul'); } return false; };
+  let l = launch();
+  const lockFile = path.join(admin('w-live'), 'locked');
+  const reason = () => { try { return fs.readFileSync(lockFile, 'utf8').trim(); } catch { return ''; } };
+  check('LK1 a boot inside a session worktree locks it, and the reason names this host', l.status === 0 && new RegExp('^live-session host=' + os.hostname().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ' since=\\d{4}-\\d{2}-\\d{2}$', 'i').test(reason()));
+  idle();
+  const r1 = reason();
+  l = launch(); idle();
+  const runLog = path.join(repo, 'domain', 'worktree-cleanup-boot', 'log.jsonl');
+  const lockRows = () => { try { return fs.readFileSync(runLog, 'utf8').split('\n').filter(x => /"lock":/.test(x)); } catch { return []; } };
+  check('LK2 a second boot leaves the lock as it is, logs the lock once, prints no lock error', l.status === 0 && reason() === r1 && lockRows().length === 1 && /"lock":"locked"/.test(lockRows()[0]) && !/could not lock/.test(l.stderr));
+  check('LK2b the session\'s own background run did not unlock or prune its own entry', fs.existsSync(lockFile) && fs.existsSync(path.join(admin('w-live'), 'gitdir')));
+  // LK3: what the OTHER laptop's prune does: it cannot see this laptop's path. Locked entry stays; unlocked one goes.
+  const V = mkWorktree(repo, 'v-unlocked', { keepRegistered: true });
+  const keepW = fs.readFileSync(path.join(admin('w-live'), 'gitdir'), 'utf8');
+  fs.writeFileSync(path.join(admin('w-live'), 'gitdir'), 'X:/not/on/this/laptop/w-live/.git\n');
+  fs.writeFileSync(path.join(admin('v-unlocked'), 'gitdir'), 'X:/not/on/this/laptop/v-unlocked/.git\n');
+  g(['worktree', 'prune'], repo);
+  check('LK3 a prune that cannot see the path keeps the LOCKED entry', fs.existsSync(path.join(admin('w-live'), 'HEAD')) && fs.existsSync(lockFile));
+  check('LK3b control: the same prune drops the UNLOCKED entry (this is the 01:47 failure)', !fs.existsSync(admin('v-unlocked')) && fs.existsSync(V));
+  fs.writeFileSync(path.join(admin('w-live'), 'gitdir'), keepW);
+  // LK4: the session ended and its folder was removed → this host's lock is lifted, the next prune drops the entry
+  const G = mkWorktree(repo, 'g-gone', { keepRegistered: true });
+  check('LK4a lockOwnWorktree on a registered worktree → locked', lockOwnWorktree(G, repo) === 'locked' && fs.existsSync(path.join(admin('g-gone'), 'locked')));
+  check('LK4b lockOwnWorktree again → already', lockOwnWorktree(G, repo) === 'already');
+  fs.rmSync(G, { recursive: true, force: true });
+  const freed = unlockGone(repo);
+  g(['worktree', 'prune'], repo);
+  check('LK4c folder gone + locked by THIS host → unlocked, then pruned', freed.includes('g-gone') && !fs.existsSync(admin('g-gone')));
+  check('LK4d unlockGone never touches a live session whose folder exists', !freed.includes('w-live') && fs.existsSync(lockFile));
+  // LK5: an entry the OTHER laptop locked is never unlocked here, although its folder does not exist on this laptop
+  const O = mkWorktree(repo, 'o-other', { keepRegistered: true });
+  fs.writeFileSync(path.join(admin('o-other'), 'locked'), 'live-session host=SOME-OTHER-LAPTOP since=2026-10-05\n');
+  fs.rmSync(O, { recursive: true, force: true });
+  const freed2 = unlockGone(repo);
+  g(['worktree', 'prune'], repo);
+  check('LK5 folder missing here + locked by ANOTHER host → left locked, survives the prune', !freed2.includes('o-other') && fs.existsSync(path.join(admin('o-other'), 'locked')));
+  // LK6: a lock somebody set by hand (free-text reason) is not ours to lift
+  const H = mkWorktree(repo, 'h-hand', { keepRegistered: true });
+  g(['worktree', 'lock', `"${H}"`, '--reason', '"kept on purpose"'], repo);
+  fs.rmSync(H, { recursive: true, force: true });
+  check('LK6 a hand-set lock is never lifted', !unlockGone(repo).includes('h-hand') && fs.existsSync(path.join(admin('h-hand'), 'locked')));
+  // LK7: which folder is "this session"
+  check('LK7a session in the main checkout → no session worktree, nothing to lock', sessionWorktree([repo, '', null], repo) === null && lockOwnWorktree(null, repo) === 'no-session-worktree');
+  check('LK7b a nested path inside a worktree resolves to the worktree folder; other candidates ignored', path.resolve(sessionWorktree(['', repo, path.join(W, 'sub', 'x')], repo)) === path.resolve(W));
+  check('LK7c a folder that is not a registered worktree → not-registered (no error)', lockOwnWorktree(path.join(repo, '.claude', 'worktrees', 'nope'), repo) === 'not-registered');
+  // LK8: the hook runs from MAIN while the session lives in a worktree (the real layout): the session folder arrives
+  //      in the hook input and must be protected by path in the sweep, even de-registered
+  const X = mkWorktree(repo, 'x-session-cut', { deleteBranch: true });          // this session, link already cut
+  const Z = mkWorktree(repo, 'z-control2', { deleteBranch: true });             // control: proves the sweep deleted something
+  const mainCopy = path.join(repo, '.claude', 'hooks', 'worktree-cleanup-boot.hook.js');
+  fs.mkdirSync(path.dirname(mainCopy), { recursive: true });
+  fs.copyFileSync(path.join(__dirname, 'worktree-cleanup-boot.hook.js'), mainCopy);
+  const env8 = { ...process.env, CLAUDE_PROJECT_DIR: repo, WORKTREE_CLEANUP_DRY_RUN: '0', WORKTREE_CLEANUP_DELETE: '1', WORKTREE_CLEANUP_FOREGROUND: '1' };
+  delete env8.WORKTREE_CLEANUP_SESSION_DIR;
+  const b8 = spawnSync(process.execPath, [mainCopy], { cwd: repo, input: JSON.stringify({ cwd: X, hook_event_name: 'SessionStart' }), encoding: 'utf8', windowsHide: true, timeout: 120000, env: env8 });
+  check('LK8 hook run from MAIN with the session folder in the hook input: that folder is never swept', b8.status === 0 && fs.existsSync(X) && !fs.existsSync(Z));
+  check('LK8b a session folder whose link is already cut is not reported as a lock failure', !/could not lock/.test(b8.stderr));
   try { fs.rmSync(tmp, { recursive: true, force: true }); } catch {}
 }
 

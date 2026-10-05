@@ -21,8 +21,7 @@ The quest workflow resolves knowledge by **exact file name** (`ticket-gate.js` �
 |---|---|
 | `etanah-knowledge/KNOWLEDGE-SCHEMA.json` | THE single source of truth: required files (with the tool that reads each), required dirs, optional files, legacy→canonical renames, flowables layout (PLP at root, `<MODULE>/` subfolders, reserved Windows names), the UNVERIFIED banner text |
 | `knowledge-schema-audit.js` | CLI — `audit [--state s] [--json]` (exit 1 on drift) · `scaffold --state s [--dry]` (creates missing skeletons: melaka headings under the `⚠️ UNVERIFIED-FOR-<STATE>` banner; never overwrites) |
-| `knowledge-schema-audit.check.hook.js` | SessionStart — one advisory line per drifting state; silent when canonical |
-| `knowledge-schema-audit.write.hook.js` | PreToolUse Edit\|Write — fires the moment a non-canonical / legacy name or a bad flowables placement is about to be written; advisory, never blocks |
+| `knowledge-schema-audit.check.hook.js` | ONE file, registered on PreToolUse Edit\|Write only since 2026-10-05 (its SessionStart copy left boot that day): fires the moment a non-canonical / legacy name or a bad flowables placement is about to be written; advisory, never blocks. A `.write.hook.js` named here before never existed. |
 | `knowledge-schema-audit.eval.js` | 26 fixtures on a temp fixture tree (`KNOWLEDGE_ROOT` env) — never touches the real tree |
 | `log.jsonl` | every audit/scaffold: `ts · cmd · states · drift` / `created[]` (system-rules Rule 5) |
 
