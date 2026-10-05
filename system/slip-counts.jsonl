@@ -1047,3 +1047,4 @@
 {"ts":"2026-10-04T10:07:38.095Z","category":"trusted-claim-unverified"}
 {"ts":"2026-10-04T10:07:38.195Z","category":"A2"}
 {"ts":"2026-10-05T02:42:16.910Z","category":"reask/ambiguous-wording"}
+{"ts":"2026-10-05T02:51:04.982Z","category":"adversarial-pass-skipped"}

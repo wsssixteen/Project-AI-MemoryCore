@@ -378,6 +378,17 @@ check('T main root unchanged', mainRootOf('C:\\r') === 'C:\\r');
   g(['worktree', 'lock', `"${H}"`, '--reason', '"kept on purpose"'], repo);
   fs.rmSync(H, { recursive: true, force: true });
   check('LK6 a hand-set lock is never lifted', !unlockGone(repo).includes('h-hand') && fs.existsSync(path.join(admin('h-hand'), 'locked')));
+  // LK6b-d (v2.1.1 safety pass): the lock is lifted only on positive proof that the folder is gone
+  const N1 = mkWorktree(repo, 'n1-no-gitdir', { keepRegistered: true });
+  lockOwnWorktree(N1, repo); fs.rmSync(path.join(admin('n1-no-gitdir'), 'gitdir'), { force: true });   // the gutted shape of 01:47
+  const N2 = mkWorktree(repo, 'n2-no-dotgit', { keepRegistered: true });
+  lockOwnWorktree(N2, repo); fs.rmSync(path.join(N2, '.git'), { force: true });                        // folder there, its .git file gone
+  const N3 = mkWorktree(repo, 'n3-empty-gitdir', { keepRegistered: true });
+  lockOwnWorktree(N3, repo); fs.writeFileSync(path.join(admin('n3-empty-gitdir'), 'gitdir'), '\n');
+  const freed3 = unlockGone(repo);
+  check('LK6b own lock + gitdir file missing (half-synced entry) → lock KEPT', !freed3.includes('n1-no-gitdir') && fs.existsSync(path.join(admin('n1-no-gitdir'), 'locked')));
+  check('LK6c own lock + folder still on disk with no .git file → lock KEPT', !freed3.includes('n2-no-dotgit') && fs.existsSync(path.join(admin('n2-no-dotgit'), 'locked')));
+  check('LK6d own lock + empty gitdir file → lock KEPT', !freed3.includes('n3-empty-gitdir') && fs.existsSync(path.join(admin('n3-empty-gitdir'), 'locked')));
   // LK7: which folder is "this session"
   check('LK7a session in the main checkout → no session worktree, nothing to lock', sessionWorktree([repo, '', null], repo) === null && lockOwnWorktree(null, repo) === 'no-session-worktree');
   check('LK7b a nested path inside a worktree resolves to the worktree folder; other candidates ignored', path.resolve(sessionWorktree(['', repo, path.join(W, 'sub', 'x')], repo)) === path.resolve(W));

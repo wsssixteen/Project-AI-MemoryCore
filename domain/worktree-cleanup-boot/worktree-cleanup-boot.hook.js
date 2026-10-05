@@ -428,8 +428,12 @@ function unlockGone(mainRoot) {
       let reason; try { reason = fs.readFileSync(lockFile, 'utf8').trim(); } catch { continue; }
       const m = reason.match(LOCK_REASON_RX);
       if (!m || m[1].toLowerCase() !== HOST.toLowerCase()) continue;       // not a live-session lock, or another laptop's
-      let gitFile = ''; try { gitFile = fs.readFileSync(path.join(adminRoot, d.name, 'gitdir'), 'utf8').trim(); } catch {}
-      if (gitFile && fs.existsSync(gitFile)) continue;                     // the session's folder is still there
+      // v2.1.1 (2026-10-05, safety pass): lift the lock ONLY on positive proof that the folder is gone.
+      // An unreadable or missing `gitdir` file proves nothing (it is exactly what a half-synced or gutted
+      // entry looks like) → keep the lock. The folder still on disk with only its `.git` file missing → keep too.
+      let gitFile; try { gitFile = fs.readFileSync(path.join(adminRoot, d.name, 'gitdir'), 'utf8').trim(); } catch { continue; }
+      if (!gitFile || !path.isAbsolute(gitFile)) continue;
+      if (fs.existsSync(gitFile) || fs.existsSync(path.dirname(gitFile))) continue;   // the session's folder is still there
       try { fs.unlinkSync(lockFile); out.push(d.name); } catch {}
     }
   } catch {}
