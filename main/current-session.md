@@ -1,5 +1,21 @@
 # Current Session
 
+**Last Activity**: 2026-10-05 17:00 — #278909 (PT Risalat MMKN, cycle 2) review of Farah's rework → shared docx conflict resolved by us → merged to `mlk/int-env` `d0f2177f02` → Redmine handover drafted → Phase 1 closed (cycle 2) · Domain Expansion run.
+
+## Session Recap (2026-10-05, worktree "review-farah-ticket-rework-64d3c2", #278909 takeover review)
+- **Ask**: review Farah's latest rework on #278909, then merge to internal Melaka and prepare the Redmine handover, then save quest + Phase 1 close + Domain Expansion.
+- **BA cycle (2026-10-03, MLIT)**: point 6 Perakuan PTG in the Risalat MMKN for PT. Fields not filled (No. Pengenalan, Lot/PT, Tujuan, Penjenisan, Premium), numbering `1.` where 6.1 / 6.2 belong, alignment.
+- **Farah `5fca34a75d`**: Java rows added to `populatePTGParagraph_PT_Tolak` / `_PT_Lulus` in `etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\constant\PelupusanWordCCMethodConstant.java`; PT sections edited in the shared `additionalJKKLParagraph.docx`; 8 PT templates indent only. Reviewed by diff: right shape, PT sections only, other urusan untouched.
+- **Conflict**: the shared docx had also changed on master (Aaron `ca5811afe2`, #246512, new section `paragraphPTGPPJKLulus`). I first stopped and asked who should rebuild it. みや: "We should resolve the conflict, please remember this rule." Then: merged `origin/mlk/master` into the ticket branch, resolution = master's file + Farah's 3 PT sections, checked section by section, opened in Word with repair off, compile green.
+- **Git**: `mlk/internal-issues/278909` @ `7cc4c84e1e` → `mlk/int-env` @ `d0f2177f02` (10 ticket files). Not on staging (he asked internal only).
+- **Gate**: commit blocked on no local test. He wrote `[risk-ok: 278909 BA tests on MLIT]`. Falsifier ledger written into the quest doc (4 rows, row 4 = his accepted risk).
+- **Not verified**: no Risalat generated with the fix. Test rows: `PTMLK/01/L/PT/2026/35` and `/27` @ muhammadshafiq@melaka.gov.my (PRMMKNPTG, MLIT).
+- **Handover shape he asked for**: BA note, "Thank you very much.", blank lines, then "Dev notes:" (branch, master merge, conflict line, int-env merge). Root cause + Solution drafted. He posts.
+- **Rule saved**: a merge conflict found while reviewing a colleague's branch or helping a deploy is ours to resolve, docx included (`.claude/auto-memory/feedback_commit_deploy_runbook.md`, top block).
+- **Redmine at close**: Resolved, assignee Nurhafizah Hasan, 100%. Quest block `status=closed`, `closed_cycle2=2026-10-05`.
+- **Open**: his internal deploy + a rendered check · planned release list · optional Java tidy (Farah's rows vs the PT PBN sibling shape) · knowledge candidates below need a main-checkout session (the etanah-knowledge folder is not in a worktree) · an empty `3. Rework\Brief` folder was created in the Task folder by the status flip.
+- **Session friction worth knowing**: this worktree session cannot edit the main checkout's quest doc with the Edit tool. The ledger and resume point were written by script after his "write the ledger". `quest/active.txt` in the main checkout was updated through `active-cli` and sits uncommitted there.
+
 **Last Activity**: 2026-10-05 16:00 — #246923 (PLPS Risalat MMKN, cycle 2) review of Ammar's fix → merged to `mlk/int-env` `3fa76655c6` → Redmine handover drafted → Phase 1 closed · Domain Expansion run.
 
 ## Session Recap (2026-10-05, worktree "quest-run-ticket-review-613e4d", #246923 takeover review)
@@ -30,14 +46,3 @@
 - **Open**: watch `wmuu2uoib` prints the wrong rollback line (true rollback `git revert 6beed4ba a954de41 635197ba 19bc4963`) · 25 adhoc rows ripe for archive (surfaced at the 01:26 boot) · #246923 Resolved on Redmine with no local block.
 
 **Last Activity**: 2026-10-04 18:00 — "save this quest" rule built (`lib/save-quest.js` + close-phase Save-quest mode, on main `50b3c46b`) · #281638 Redmine Closed 2026-09-29, local archived, verdict DONE · Domain Expansion run.
-
-## Session Recap (2026-09-28 → 2026-10-04, session "patch-281638", #281638 + save-quest build)
-- **Ask (4 Oct)**: check Redmine for #281638, save the quest accordingly, and build the rule: "save this quest" = Redmine status picks Phase 1 (not closed) or Phase 2 (Closed). Verify, run evals, audit against system-design. Then Domain Expansion.
-- **Redmine**: #281638 Closed 2026-09-29 by the TSO ("Verified, user dah pergi ke tugasan yang seterusnya"). Local was archived 2026-09-28, one day early. Doc now carries the close note.
-- **Built**: `lib/save-quest.js` (forge script, one Redmine GET, prints `SAVE-QUEST: <QA> · Redmine = … · local = … → <VERDICT>`) · close-phase skill: Save-quest mode + Redmine check before any Phase 2 (override: miya's "archive anyway") · pointers in quest skill, save-commands, closure memory + MEMORY.md line · `domain/save-quest/` README, NUKE-MARKER, eval. Evals: script 54/54, feature 25/25, Redmine probe 18/18. Live: QA-281638 → DONE.
-- **Spec changes named**: "save the quest" now = persist + Redmine-picked stage (was persist only) · Phase 2 now needs Redmine closed (was local status only).
-- **Worktree**: its git link had been pruned while idle (branch merged). Re-attached at `f98bd868`, fast-forwarded, built there. Forge birth commit went straight to main (`a78885ea`).
-- **Slip caught at close**: my trigger text put a colon + space inside the close-phase description, an unquoted YAML value. The harness dropped the whole description for about 25 minutes. Fixed (`db90cc5a`), eval check 2b added (feature eval now 27/27), full description confirmed back in the skill list. Seven other skills carry the same defect (arabic, confidence-table, evaluator-optimizer, hotfix, multi-dim-evidence, patch-mlk-doc, quest-knowledge-save): logged as a proposal, not fixed.
-- **Open**: proposal A2 (refusal inside `quest/archive-quest.js`; its eval runs 20/20, so it can be built once miya rules) · proposal A1 (lock a live session's worktree) · proposal A1 (skill-header lint + the 7 headers) · PRBB/2026/2 still Baru on PROD, variable add not verified.
-
-**Last Activity**: 2026-10-04 17:40 — #256334 (PDBB CR) Phase 2 re-run and ARCHIVED · Redmine Closed (released PROD 1.8.0 on 2026-09-30) · Domain Expansion run.
