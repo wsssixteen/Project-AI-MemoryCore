@@ -82,6 +82,8 @@ Flow (both repos): branch the fix off **`mlk/master`** → merge that ticket bra
 
 **Why:** 2026-09-22, みや set this as a standing rule during the 279711/280176 reworks. Staging is the wider BA-facing env, so anything reaching staging must also be on internal — internal must never lag behind staging. Internal is the narrower env, so an internal-only request stays internal.
 
+**🚨 Staging only on his word (2026-10-05, #246923, みや: "We should only deploy ticket branch to staging if I specified it").** A ticket branch is merged to `mlk/stag-env` ONLY when he names staging for that ticket. A bare "deploy" or a BA-test deploy = internal only. Never offer or plan staging as a default step in a deploy card or Next steps.
+
 **How to apply:** at every deploy step read the target from みや's exact words. staging → merge/deploy the fix into both env branches. internal → `mlk/int-env` only. The apply/local-test/STOP-review gates still precede any deploy. Pairs with (merged above) and the commit-deploy-runbook.
 
 ---

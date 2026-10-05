@@ -1048,3 +1048,7 @@
 {"ts":"2026-10-04T10:07:38.195Z","category":"A2"}
 {"ts":"2026-10-05T02:42:16.910Z","category":"reask/ambiguous-wording"}
 {"ts":"2026-10-05T02:51:04.982Z","category":"adversarial-pass-skipped"}
+{"ts":"2026-10-05T07:58:26.045Z","category":"deploy/staging-default-offered"}
+{"ts":"2026-10-05T07:58:57.218Z","category":"A2"}
+{"ts":"2026-10-05T07:58:57.316Z","category":"A3"}
+{"ts":"2026-10-05T07:58:57.420Z","category":"A5"}

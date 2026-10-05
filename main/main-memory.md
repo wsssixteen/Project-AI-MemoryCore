@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-05 (#246923 — "How sure are you the fixes will be successful?")
+
+- **Staging is his word, never my default.** I listed "merge to internal and staging" as a normal step. He said a ticket branch goes to staging only if he names it. Internal is where a fix is proven first.
+- **A question he skips three times is answered.** I raised the Claude line in Ammar's commits in three replies. He ruled everything else and left that one. Stop asking; note it, and raise it only when the branch heads to a release.
+- **He wants the number, then he decides.** "How sure are you" got 80% for the fix and 65% for the ticket, with the one unproven link named. He did not argue the number. He used it: rework goes back to Ammar.
+- **A review of a colleague's fix can end with no commit of ours.** The takeover was the reading, the merge and the handover. The ownership of the next round stayed with the author, by his ruling.
 ## Relationship reinforcement — 2026-10-04 (#256334 first day, read back nine days later)
 
 - **To another team he sends the fix, not the lesson.** I wrote Li Wen a step-by-step of her own flow, then a prose handover file. He wanted two short lines that own our part and a bare before/after code block. A colleague reads a lecture as an accusation.
