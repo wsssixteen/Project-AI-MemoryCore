@@ -248,3 +248,40 @@ His words are in §10 answer 4. It is the "two boot modes" item of §4 (row 8), 
 | Redmine holds no holiday calendar that this repo reads | not verified against Redmine itself; nothing in `quest/redmine-*.js` reads one |
 
 Advice given in chat: fast enough at boot (a local file, milliseconds), no routine needed, Redmine not needed; use BOTH signals: working day + work hours picks the mode, a keyword such as "start work" overrides either way. To do: design it with system-design, bring it to him as a popup with a diagram.
+## 11a. The gate fix — round 1 attack, and the rebuild (state 2026-10-05 13:00; NOT on main yet)
+
+Round 1 (`wf_9f2f6a5c-fdc`, 3 attackers + a refuter per finding, 40 agents): **37 ways through, 0 refuted.** 13 were new problems in my first fix (v6), 24 were older than this session. Full list: the run's result file in the session folder (`tasks\wytuixxmb.output`, key `result.confirmed`).
+
+| Class | Example | Age |
+|---|---|---|
+| A push on its own line, indented, after a comment line | newline as the only separator | older, since the gate was born |
+| Anything between a separator and the word git | output assigned to a variable, inside an if block, inside parentheses, `git.exe`, the call operator, an env prefix | older |
+| Options before the verb | `-c k=v` or `--no-pager` between git and the verb; and `-c k=v` read as `-C <dir>` | older |
+| A push inside a string handed to another shell | bash -lc "…", pwsh -c "…" | older |
+| Only the first push of a command was judged | two pushes; repo from one, branch from the other | older |
+| The target is not written | a bare push on a checked-out shared branch, all-branches and mirror forms, a branch in a variable | older |
+| Only `mlk/*` counted as shared | `trg/stag-env`, `prk/master`, `mlk/beta` in another team's repo | older |
+| Things that undo a cd | `Pop-Location`, a cd in a quoted string, a relative `-C` | older |
+| The Terminal-panel tool was not inspected | `mcp__terminal__run_in_terminal` | older |
+| The check report was tied to the folder's HEAD, not to the commit pushed | another local branch sent to the staging branch with a report for HEAD | older |
+| A Git Bash path read as a drive path in PowerShell (where that cd fails) | a `/e/…` path in the PowerShell tool | new in v6 |
+| The tool's own cwd parsed as shell text | a folder name containing `$` | new in v6 |
+| Variables substituted without knowing their value | re-assignment after the push, single quotes, expressions, `$env:` | new in v6 |
+| A folder created by the same command | worktree add, then a push from it, in one command: now refused | new in v6 (accepted, with a reason line) |
+
+The rebuild (uncommitted in the session worktree at the time of writing):
+
+| File | What changed |
+|---|---|
+| `lib/git-target.js` v3 | Finds EVERY git call (after any separator, with options, `git.exe`, env prefix; quoted text and here-strings are text). Reads a path the way the tool's SHELL reads it. Follows cd chains in order; a missing folder, a popd, a subshell cd make it uncertain. Variables only when certain (one quoted literal, before the call, no other assignment in between, never in single quotes). The tool cwd is never parsed. Says `unresolved` + `why`. |
+| push gate v7 | Every push judged. Unknown repo + a push that could reach a shared branch = REFUSED with the reason and the one plain form. In another team's repo everything that is not a ticket branch (`<state>/<tracker>/<number>`) is shared, including a bare push, the all-branches forms, deletes, other states. The check must cover the commit really pushed. Terminal-panel tool included (one new PreToolUse group in `settings.json`; catalog regenerated, 140 registrations). |
+| compile gate v2.2 | Every commit call judged, shell-aware. Unknown repo + an etanah signal outside the commit message (or an etanah tool folder) = refused with the reason; bypass token unchanged. `-c k=v` no longer read as `-C`. `compile-check.js` accepts a Git Bash path. |
+| evals | push gate 113/113 (was 35 at v5, 50 at v6) · compile gate 56/56 (was 27). Three older fixtures (F10/F11/F15) now use a real fixture repo; F34's expectation is reversed and named. |
+
+Round 2 (`wf_91995105-40c`) is attacking the rebuild: closure of all 37, a replay of real past commands from logs and transcripts (false blocks), fresh fail-open ideas, a parser attack. Nothing lands on main until it is back.
+
+**What a text gate can never close**: a push inside a script file, an alias or function, anything typed outside Ruri. Proposal for みや (NOT asked yet, NOT built): a second lock inside git itself, a `pre-push` hook in each foreign etanah clone on this laptop (`E:\Projects\Melaka\etanah-awam`, `etanah-common`, `etanah-spoc-hasil`; `E:\Dev\etanah-work\etanah-awam`, `etanah-common`; worktrees share their clone's hooks). git runs it on every push however the command was written, with the exact refs. It would act only when `CLAUDECODE=1` is in the environment (verified present in Ruri's tool shells), so his own pushes from Sourcetree or Eclipse are untouched. It changes files under his clones' `.git\hooks\`, so it needs his yes.
+
+Until the rebuild is on main: main still runs push gate v5 and compile gate v2 (the Git Bash path hole and the multi-line hole are live). Use literal Windows paths and one push per command.
+
+Note for whoever edits this file: the live gates read command text, so a shell command that CONTAINS push examples (a here-string appended to this file) is refused by them. Write such text with the file editor, never through a shell here-string.
