@@ -4,6 +4,17 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-09-28 → 2026-10-04, session "patch-281638", #281638 + save-quest build)
+- **Ask (4 Oct)**: check Redmine for #281638, save the quest accordingly, and build the rule: "save this quest" = Redmine status picks Phase 1 (not closed) or Phase 2 (Closed). Verify, run evals, audit against system-design. Then Domain Expansion.
+- **Redmine**: #281638 Closed 2026-09-29 by the TSO ("Verified, user dah pergi ke tugasan yang seterusnya"). Local was archived 2026-09-28, one day early. Doc now carries the close note.
+- **Built**: `lib/save-quest.js` (forge script, one Redmine GET, prints `SAVE-QUEST: <QA> · Redmine = … · local = … → <VERDICT>`) · close-phase skill: Save-quest mode + Redmine check before any Phase 2 (override: miya's "archive anyway") · pointers in quest skill, save-commands, closure memory + MEMORY.md line · `domain/save-quest/` README, NUKE-MARKER, eval. Evals: script 54/54, feature 25/25, Redmine probe 18/18. Live: QA-281638 → DONE.
+- **Spec changes named**: "save the quest" now = persist + Redmine-picked stage (was persist only) · Phase 2 now needs Redmine closed (was local status only).
+- **Worktree**: its git link had been pruned while idle (branch merged). Re-attached at `f98bd868`, fast-forwarded, built there. Forge birth commit went straight to main (`a78885ea`).
+- **Slip caught at close**: my trigger text put a colon + space inside the close-phase description, an unquoted YAML value. The harness dropped the whole description for about 25 minutes. Fixed (`db90cc5a`), eval check 2b added (feature eval now 27/27), full description confirmed back in the skill list. Seven other skills carry the same defect (arabic, confidence-table, evaluator-optimizer, hotfix, multi-dim-evidence, patch-mlk-doc, quest-knowledge-save): logged as a proposal, not fixed.
+- **Open**: proposal A2 (refusal inside `quest/archive-quest.js`; its eval runs 20/20, so it can be built once miya rules) · proposal A1 (lock a live session's worktree) · proposal A1 (skill-header lint + the 7 headers) · PRBB/2026/2 still Baru on PROD, variable add not verified.
+
+**Last Activity**: 2026-10-04 17:40 — #256334 (PDBB CR) Phase 2 re-run and ARCHIVED · Redmine Closed (released PROD 1.8.0 on 2026-09-30) · Domain Expansion run.
+
 ## Session Recap (2026-09-30 → 2026-10-04, session "medan-agihan-kepada-bug", #256334 → archive)
 - **Li Wen (Hasil) questions answered** in WhatsApp voice: Flowable Source vs Source expression · subflow End auto-resumes PDBB, `pembetulanUnit` "true" loops back to PYPDBB.
 - **TKPDBB rework**: BA asked to remove Senarai Dokumen. `d3128ad449` (xhtml only) broke Hantar; `072115f762` fixed it with the TKJKKLPK analog (viewMode TRUE + view-panel exclusion). Both in mlk/master + release 1.8.0. MLIT proof PDBB/12 Tamat.
@@ -5920,6 +5931,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

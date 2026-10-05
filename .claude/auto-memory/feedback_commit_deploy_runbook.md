@@ -8,6 +8,11 @@ metadata:
   modified: 2026-08-21T03:13:08.856Z
 ---
 
+🚨 **A merge conflict found while reviewing a colleague's branch or helping with a deploy is OURS to resolve** (miya 2026-10-05, #278909: "We should resolve the conflict, please remember this rule when we're reviewing and assisting deploy workflow"). Do not hand it back to the colleague and do not ask who resolves it. This covers a template (.docx) conflict too: the junior-builds rule ([[template-work-junior-builds]]) is about building a template, not about a merge conflict on one.
+- What I did on #278909 (my method, not his words): merged `origin/mlk/master` into the ticket branch in a work-clone worktree, rebuilt the conflicted shared docx as master's version plus the ticket's own sections, checked section by section, opened it in Word with repair off, compiled, then merged to the env branch.
+- The `-X ours` rule further down still holds for text conflicts on `mlk/int-env`. It does not fit a binary file the ticket itself changed, because it drops the ticket's fix.
+- Still his call: the falsifier gate at commit (local test or his `[risk-ok: <num> <reason>]`).
+
 🚨 One-pass etanah COMMIT + DEPLOY ceremony (order is the whole rule):
 
 1. Ensure `quest/active.txt` has the ticket's block with `status=active` + `local_test_confirmed=true` (miya saying "local test passed" = set it NOW).

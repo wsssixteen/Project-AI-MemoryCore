@@ -3,6 +3,13 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-05 (#278909 cycle 2 — "We should resolve the conflict")
+
+- **A conflict I find during a review or a deploy is mine to resolve.** I stopped at a Word file conflict and gave him two options and a note for Farah. He answered in one line and asked me to remember it. The junior builds templates; a merge conflict on one is not building.
+- **"I want to deploy" is not the words a gate needs.** The commit gate wanted his own risk line. I said so plainly and gave him the exact line. He sent it and the rest ran without a question.
+- **He shapes the handover as he reads it.** The BA note stays short. What we did goes under "Dev notes:" a few lines below "Thank you". His format, tried once, kept.
+- **He asks "have you pushed" before I say it.** After a blocked step, the first line of the next reply is yes or no.
+
 ## Relationship reinforcement — 2026-10-05 (#246923 — "How sure are you the fixes will be successful?")
 
 - **Staging is his word, never my default.** I listed "merge to internal and staging" as a normal step. He said a ticket branch goes to staging only if he names it. Internal is where a fix is proven first.
