@@ -11,6 +11,18 @@
 - **Watch points** (in the quest doc): a later re-merge of the branch into staging brings only the common version, not the rename (git sees it as merged) → revert `3db4027e7d` in the same merge · a release must point at a released common (1.7.8-MLK or newer), not the beta.
 - **Not verified**: the internal build result and the rendered Slip Akuan Penerimaan.
 - **State**: `QA-283286` status=closed, Redmine = Resolved (with BA), archive waits for Redmine Closed. Quest doc `projects/coding-projects/active/QA-283286/QA-283286.md` (main + worktree copies identical). No etanah repo touched, no Redmine write.
+**Last Activity**: 2026-10-06 23:15 — #283532 (PROD, batal two UPS_PLP) patched through infra, verified on PROD, Redmine submitted by miya, quest closed at Phase 1 · Domain Expansion run.
+
+## Session Recap (2026-10-06 evening, worktree "patch-quest-283532-954012", QA-283532)
+- **Ask**: run the patch quest for #283532, retrieve from Redmine, brief the steps. Then: stage Redmine, verify after infra, close quest, save quest, Domain Expansion.
+- **Result**: PTMLK/01/L/UPS_PLP/2026/7 (3448936) and PTMLK/01/L/UPS_PLP/2026/10 (3469308) cancelled on PROD; both were held by fatimah.salleh@melaka.gov.my at UPS_PS, no active tugasan now. Infra ran at 17:11; re-read = 2 aplikasi rows Tamat / Batal / Tamat, 2 tugasan rows N / Selesai, 0 dashboard rows. Parent PTMLK/01/L/PT/2026/30 (nurul.izza@melaka.gov.my at SRMMKNPDT) untouched.
+- **Script**: `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\269. II #283532 - Pelupusan - UPS - Batalkan ID UPS (PROD)\2. Fix\283532.sql`, the #277442 shape (`etanah-knowledge/melaka/DATABASE.md` section 27) with the two ids.
+- **Redmine**: form staged through the browser, miya submitted (Resolved, BA Nurul Amirah Nadiah, Root Cause (DEV), 283532.sql). Never went through In Progress. At save time Redmine = Ready in PROD (Amila Qistina Rohizat). `SAVE-QUEST → WAIT`: archive waits for Closed.
+- **Quest state**: `status=closed phase=1`, doc `projects/coding-projects/active/QA-283532/QA-283532.md` (copied to the main checkout, the folder is ignored by git).
+- **Slip logged**: `ask-back/searchable` (offered "want the code re-read?" for a fact one file read answers).
+- **Not verified**: the cancel screen was read from master and has no UPS_PLP handling; it was not run with a UPS_PLP id. The Flowable process of each app stays open in the engine (not readable).
+- **Tool gap**: `domain/sql-schema-verify/sql-schema-verify.js emit` pairs subquery columns and `SYSDATE` with the wrong table, so a correct script returned 7 rows and could not be stamped. Proposal logged.
+- **Open**: archive #283532 once Redmine shows Closed (`node lib/save-quest.js QA-283532`).
 
 **Last Activity**: 2026-10-06 15:40 — ADHOC-PT-2026-11 (Perak PT, load documents PROD to STAG): 122 `.main` paths listed and checked for infra · ProTime line now `<ENV> - <title>` · Domain Expansion run.
 

@@ -43,3 +43,14 @@ Noise seen: the loop detector fired on 20 of about 60 tool calls with no real lo
 Reply shape: the finding was right and unreadable. An invented word ("the pin") for the common version line in `pom.xml` cost one angry round trip. Slip `reask/invented-label`.
 
 Proposals logged: A2 (ls-remote first at colleague-review intake) · A4 (reverted-merge check before an env merge).
+## Session: #283532 PROD cancel of two UPS permohonan, 2026-10-06 evening, worktree
+
+| Axis | What this session showed | Instance |
+|---|---|---|
+| A1 agentic system | ⏭ no fan-out, a single-thread patch ticket | none |
+| A2 quest workflow | The patch path worked from banked knowledge in one pass. Two close checks do not fit a patch ticket | `falsifier-ran-check` printed "(no quest doc)" and "local_test_confirmed=false" for a PROD data patch whose doc sat in the worktree |
+| A3 debugging | ⏭ no debugging; the precedent script was reused | none |
+| A4 etanah issue-solving | Knowledge-first paid: DATABASE.md section 27 gave the three statements and the end state; the only new work was reading the two rows | The first PROD query failed on a guessed column (`trkh_mohon`); the error was read and the query corrected |
+| A5 sweep | The catalog check tool cannot stamp a correct script that uses a subquery | `sql-schema-verify emit` on 283532.sql returned 7 rows, all mis-paired columns or `SYSDATE` |
+
+Proposals logged: A2 (schema-verify parser scope) · A4 (falsifier check reads the worktree doc) · A2 (patch tickets cleared by the after-run re-read).
