@@ -87,7 +87,7 @@ check('F15 chained real mlk/master push still blocks', r.status === 2 && /mlk\/m
 // ── v4 cases (2026-09-30, #256334 AWAM: pushed to another team's release branch twice, self-bypassed) ──
 const fDir = fs.mkdtempSync(path.join(os.tmpdir(), 'rmp-foreign-'));
 env.FOREIGN_CHECK_STATE_DIR = fDir;
-const repoDir = fs.mkdtempSync(path.join(os.tmpdir(), 'etanah-awam-'));
+const repoDir = fs.mkdtempSync(path.join(os.tmpdir(), 'etanah-common-'));
 spawnSync('git', ['init', '-q', repoDir]); spawnSync('git', ['-C', repoDir, '-c', 'user.email=e@e', '-c', 'user.name=e', 'commit', '-q', '--allow-empty', '-m', 'x']);
 const sha = spawnSync('git', ['-C', repoDir, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).stdout.trim();
 function transcript(userText) {
@@ -140,14 +140,14 @@ function mkRepo(dir, remote) {
 }
 const v5 = fs.mkdtempSync(path.join(os.tmpdir(), 'rmp-v5-'));
 const wt = path.join(v5, 'stag-pdbb');                                   // worktree-style name, no "etanah" anywhere
-const wtSha = mkRepo(wt, '10.16.63.27:etanah/etanah-awam.git');
+const wtSha = mkRepo(wt, '10.16.63.27:etanah/etanah-common.git');
 const plp = path.join(v5, 'etanah-work', 'etanah-pelupusan');            // the path that used to read as foreign
 mkRepo(plp, '10.16.63.27:etanah/etanah-pelupusan.git');
 const mc = path.join(v5, 'memorycore');
 mkRepo(mc, 'https://github.com/x/Project-AI-MemoryCore.git');
 // F26: `cd X; git push` (the 2026-10-02 form) → blocked, reason names etanah-awam and the path WITHOUT the ";"
 r = run(pw(`cd ${wt}; git push origin HEAD:mlk/stag-env`, 'short version go'));
-check('F26 cd-semicolon form: blocks and names the clean path', r.status === 2 && r.stderr.includes(`etanah-awam at ${wt})`) && !r.stderr.includes(`${wt};`), 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
+check('F26 cd-semicolon form: blocks and names the clean path', r.status === 2 && r.stderr.includes(`etanah-common at ${wt})`) && !r.stderr.includes(`${wt};`), 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
 // F27: worktree whose folder name has no "etanah" but whose remote is etanah-awam → still foreign (old gate: missed)
 r = run(pw(`git -C "${wt}" push origin HEAD:mlk/stag-env`, ''));
 check('F27 remote identity: etanah-awam worktree with neutral folder name is foreign', r.status === 2 && /ANOTHER team/.test(r.stderr), 'exit=' + r.status);
@@ -156,7 +156,7 @@ r = run(pw(`cd ${plp}; git push origin HEAD:mlk/stag-env`, ''));
 check('F28 pelupusan under etanah-work parent is not foreign', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
 // F29: Set-Location -LiteralPath form resolves too
 r = run(pw(`Set-Location -LiteralPath "${wt}"; git push origin HEAD:mlk/int-env`, ''));
-check('F29 Set-Location -LiteralPath form blocks foreign int-env push', r.status === 2 && /etanah-awam at/.test(r.stderr), 'exit=' + r.status);
+check('F29 Set-Location -LiteralPath form blocks foreign int-env push', r.status === 2 && /etanah-common at/.test(r.stderr), 'exit=' + r.status);
 // F30: cd-semicolon form with report + approval → passes (the semicolon no longer breaks the sha lookup)
 fs.writeFileSync(path.join(fDir, `foreign-check-${wtSha}.json`), '{}');
 r = run(pw(`cd ${wt}; git push origin HEAD:mlk/stag-env`, 'push it'));
@@ -166,7 +166,7 @@ r = run(pw(`cd ${wt} && git fetch && cd ${mc}; git push origin HEAD:mlk/stag-env
 check('F31 last cd before the push decides the repo', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
 // F32: -C on the push beats an earlier cd
 r = run(pw(`cd ${mc}; git -C "${wt}" push origin HEAD:mlk/stag-env`, ''));
-check('F32 git -C on the push beats an earlier cd', r.status === 2 && /etanah-awam at/.test(r.stderr), 'exit=' + r.status);
+check('F32 git -C on the push beats an earlier cd', r.status === 2 && /etanah-common at/.test(r.stderr), 'exit=' + r.status);
 // F33: a cd mentioned only inside a quoted commit message after the push is ignored
 r = run(pw(`git -C "${mc}" push origin HEAD:mlk/stag-env  # note "cd ${wt}"`, ''));
 check('F33 cd inside trailing text does not redirect the push', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
@@ -175,12 +175,28 @@ r = run(pw(`cd ${path.join(v5, 'nope')}; git push origin HEAD:mlk/stag-env`, '')
 check('F34 non-repo dir: no crash, not treated as foreign', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
 // F35: pushd + & separator (cmd style) resolves
 r = run(pw(`pushd ${wt} & git push origin HEAD:mlk/stag-env`, ''));
-check('F35 pushd form resolves the repo', r.status === 2 && /etanah-awam at/.test(r.stderr), 'exit=' + r.status);
+check('F35 pushd form resolves the repo', r.status === 2 && /etanah-common at/.test(r.stderr), 'exit=' + r.status);
 try { fs.rmSync(v5, { recursive: true, force: true }); } catch (_) {}
 
 try { fs.rmSync(fDir, { recursive: true, force: true }); fs.rmSync(repoDir, { recursive: true, force: true }); } catch (_) {}
 
 try { fs.rmSync(stateDir, { recursive: true, force: true }); } catch (_) {}
+
+// ── own repos (2026-10-06 per miya): etanah-awam is pushed by us like etanah-pelupusan ──
+{
+  const own = fs.mkdtempSync(path.join(os.tmpdir(), 'rmp-own-'));
+  const aw = path.join(own, 'awam-wt');
+  fs.mkdirSync(aw, { recursive: true }); spawnSync('git', ['init', '-q', aw]);
+  spawnSync('git', ['-C', aw, '-c', 'user.email=e@e', '-c', 'user.name=e', 'commit', '-q', '--allow-empty', '-m', 'x']);
+  spawnSync('git', ['-C', aw, 'remote', 'add', 'origin', '10.16.63.27:etanah/etanah-awam.git']);
+  r = run(pw(`git -C "${aw}" push origin HEAD:mlk/stag-env`, null));
+  check('OWN1 etanah-awam push to mlk/stag-env passes with no check and no approval', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
+  r = run(pw(`git -C "${aw}" push origin HEAD:mlk/int-env`, null));
+  check('OWN2 etanah-awam push to mlk/int-env passes', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
+  r = run(pw(`git -C "${aw}" push origin HEAD:mlk/master`, null));
+  check('OWN3 the mlk/master ban holds for etanah-awam too', r.status === 2 && /mlk\/master is BANNED/.test(r.stderr), 'exit=' + r.status);
+  try { fs.rmSync(own, { recursive: true, force: true }); } catch (_) {}
+}
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }

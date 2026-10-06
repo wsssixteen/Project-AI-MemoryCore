@@ -86,8 +86,10 @@ Never add a silent cap.
 
 ## When this fires
 
-- **Automatically at boot** — `.claude/hooks/open-quest-surfacer.js` executes the
-  script as part of the Session Briefing. This skill is not needed then.
+- **Automatically on the first prompt about work** (since 2026-10-06; before: at every session start) —
+  `.claude/hooks/open-quest-surfacer.js` executes the script when a prompt names a ticket, says "board",
+  "my tickets", "redmine", "let's do some work", "brief me" and the like. An explicit ask always reloads it
+  live; a plain ticket mention reloads it at most once per 4 hours per session. This skill is not needed then.
 - **On demand** — `/list-redmine`, or any trigger phrase above.
 
 ## Eval

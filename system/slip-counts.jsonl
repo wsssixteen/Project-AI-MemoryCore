@@ -1097,3 +1097,17 @@
 {"ts":"2026-10-06T15:13:01.127Z","category":"A2"}
 {"ts":"2026-10-06T15:13:01.277Z","category":"A4"}
 {"ts":"2026-10-06T15:13:01.479Z","category":"A2"}
+{"ts":"2026-10-06T15:28:32.071Z","category":"reask/redundant"}
+{"ts":"2026-10-06T15:29:54.575Z","category":"gate-retry-loop"}
+{"ts":"2026-10-06T15:29:54.725Z","category":"A1"}
+{"ts":"2026-10-06T15:29:54.864Z","category":"A2"}
+{"ts":"2026-10-06T15:29:54.987Z","category":"A4"}
+{"ts":"2026-10-06T15:29:55.117Z","category":"A3"}
+{"ts":"2026-10-06T15:43:13.811Z","category":"A1"}
+{"ts":"2026-10-06T15:43:13.988Z","category":"A2"}
+{"ts":"2026-10-06T15:43:14.143Z","category":"A3"}
+{"ts":"2026-10-06T15:43:14.280Z","category":"A4"}
+{"ts":"2026-10-06T15:43:14.443Z","category":"A1"}
+{"ts":"2026-10-06T15:43:14.609Z","category":"ask-back/not-mine"}
+{"ts":"2026-10-06T15:52:33.303Z","category":"answer-the-ask"}
+{"ts":"2026-10-06T15:52:33.460Z","category":"assume-not-verify"}

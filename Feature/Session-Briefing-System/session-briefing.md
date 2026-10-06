@@ -24,7 +24,7 @@ Example shape (4-space indented — render natively in your emit, do NOT copy th
 
     | | |
     |---|---|
-    | **Quest status** | [active QA # / phase / status]  OR  [N closed yesterday / top held] |
+    | **Quest status** | [active QA # / phase / status]  OR  [N closed yesterday / top held]  OR  not loaded. Name a ticket or say "board". |
     | **Mode** | [Office hours → リドワンさん  /  Outside hours → みや] |
     | **Priority today** | Q1: [top urgent item]  •  Next: [second item if any] |
     | **Where we left off** | [1-2 sentence recap from current-session.md → Session Recap] |
@@ -71,7 +71,7 @@ If all worktree cleanup runs cleanly: NO standing flag. みや shouldn't see wor
 
 | Step | What |
 |---|---|
-| 1 | The board is printed AT BOOT by `quest/redmine-board.js`, executed from `open-quest-surfacer.js`. Do not hand-query — read the board. NEVER take dates from `active.txt` (it is working memory and rots) |
+| 1 | The board is printed by `quest/redmine-board.js`, executed from `open-quest-surfacer.js`. Since 2026-10-06 that happens on the FIRST PROMPT ABOUT WORK (a ticket number, "board", "my tickets", "redmine", "let's do some work", "brief me" …), not at session start; a briefing ask always loads it live. Not in context = the Quest status row says `not loaded. Name a ticket or say "board".` (to load on purpose: `node .claude/hooks/open-quest-surfacer.js --now`). Do not hand-query — read the board. NEVER take dates from `active.txt` (it is working memory and rots) |
 | 2 | Compute `days_elapsed = today − start_date` and `internal_deadline = start_date + 3 days` |
 | 3 | Rank **descending by `days_elapsed`** — oldest start = highest priority |
 | 4 | Show Redmine's own `due_date` alongside, because the two rulers disagree (Redmine typically grants 7-12 days; the 3-day rule is tighter) |
@@ -116,7 +116,7 @@ The `assigned_to_id=me` arm is a safety net, not a duplicate: #273919 is `Module
 
 - Run `date` to get current time — always timestamp the briefing
 - **Rank any open-ticket list by the 3-day rule above** — live Redmine `start_date`, descending by days elapsed
-- Read `quest/active.txt` for quest status
+- Quest status = the ticket list in context (see the step table above). NEVER compose it from a Read of `quest/active.txt`; not loaded = say so in the row
 - Read `main/current-session.md` → Session Recap section for "where we left off"
 - Read `main/todo.md` → Q1 section for top priority
 - **Read `Feature/Forge-Self-Improvement-System/improvement-audit-log.md`** — count `- [ ]` (unchecked) entries. If N > 0, surface as a STANDING FLAG: `⚠️ N pending improvement-audit entries — review before dropping`. Never silently drop.

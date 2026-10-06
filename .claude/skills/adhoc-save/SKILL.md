@@ -48,6 +48,7 @@ ID = `ADHOC-<URUSAN>-<YYYY>-<n>` — next n after grepping `active.txt` + `activ
 
 ## Each round
 1. Write or update every part the new finding touches. A status change (approved / ticketed / answered) updates BOTH the block `status=`/`issue_one_liner=` AND the register Status cell in the same round.
+1b. **Closing round** (the block status leaves active / hold / blocked / delegated: answered, resolved, owned elsewhere, ticketed): run `node quest/archive-quest.js <ADHOC-ID>` in the same round. It moves the Task folder to `Archive\`, DELETES the videos in it, moves the block to `active-archive.txt` and the project folder to `archive/`. No ask first (みや 2026-10-06). An adhoc still waiting on someone stays open and is not archived.
 2. Audit: `node lib/adhoc-save-audit.js <ADHOC-ID>` (run from the worktree or main; resolves the main checkout itself).
 3. Every FAIL → fix it now → re-run. Loop until `save-set green`. A FAIL caused by a tool (e.g. notes.js naming) → fix the tool too, not just the file.
 4. Reply with one line: `adhoc saved → <ADHOC-ID>: audit N/N PASS`, and show the ProTime `Title: ...` line.

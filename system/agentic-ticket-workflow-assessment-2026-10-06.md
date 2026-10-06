@@ -81,3 +81,29 @@ Proposals logged: A2 (schema-verify parser scope) · A4 (falsifier check reads t
 | A2 | BA issue coverage matrix across the ticket and its related tickets at every hand-back |
 | A3 | Same-mark writers sweep before a fix ships |
 | A4 | etanah-knowledge entry for document versi, Carian Pintas and Senarai Versi |
+
+## Session: #282966 AWAM RPPLP search screen (worktree "perak-permohonans-doc-paths-c1480c")
+
+| Axis | What this session showed | Instance |
+|---|---|---|
+| A1 agentic system | A small one-file ticket ran faster inline than the Phase 0 workflow would have | Cause found in 4 reads of one form and one xhtml; no familiar spawned |
+| A1 agentic system | A gate that reads the transcript did not see a line that was in my reply | `memory-write-gate` refused 5 writes of `feedback_ticket_writing_style.md` with "no RULE-PLACEMENT line" while the line was in the reply text each time |
+| A2 quest workflow | The falsifier check and the note tool disagree on the risk override | Commit passed on his `[risk-ok: 282966 ...]`; `ticket-close-block.js` then refused the BA note for the same quest because it reads `local_test_confirmed` only |
+| A2 quest workflow | Stop checks fired for cases the ticket did not have | No-Resit check fired on an RPPLP search screen (PPTPB appears only as the searched record); local-prep check fired on an internal-only test |
+| A3 debugging | A recent commit on the same handler was the cause; the git blame gave it in one call | `a105e11d7d` (#263304, 2026-09-02) added the flag reset at `AwamMaklumatLesenTabForm.onSearchNoLesen():351` |
+| A4 etanah issue-solving | Internal and master copies of one file differ in line endings, so a cherry-pick conflicts on the whole file | `AwamMaklumatLesenTabForm.java` on `mlk/int-env`: 3-line change conflicted on 1,600+ lines |
+| A5 sweep | Not used this session | A5 ⏭ single-ticket session |
+
+## Session: #268173 Kedah development quest (2026-10-05 night to 2026-10-06 night, main checkout)
+
+| Axis | What this session showed | The instance |
+|---|---|---|
+| A1 agentic system | Readers were sound; the skeptic checked the map against the code, not against the question "is this the right approach". Five agents (about 1.65M subagent tokens) audited a plan built on the wrong idea. | Fable found 6 missing items and 5 wrong claims inside the map and estimated "70-75% of the real work". The team then solved the ticket with about 120 lines using a page the map only cited as an example. |
+| A2 quest workflow | The development path I wrote replaced the Rubric's candidate step with a map. The quest skill was never invoked on the ticket because our role was "guide". | `.claude/skills/quest/QA-NNN-template.md` said "instead of fix-shape options" until tonight. Fixed: step D3b + `quest/dev-map-check.js` D3b (yesterday's map fails it). |
+| A3 debugging accuracy | Three claims went out as checked when they were guesses. | Database port 5432 (real: 5444) · guide row naming `tugasan.config.json` (it is `{}`) · "save is skipped without Kira" (the bill is always written). |
+| A4 etanah issue-solving | A BA mock-up was read as the page design. The page that owned the data was read six times and never proposed as the langkah. | `KdhPengiraanBayaranLesenForm` cited as "working example" in every reply; shipped fix makes it the langkah itself. |
+| A5 file sweep | Nothing new: all 5 attachments were opened and the two screenshots read as mock-ups. | Brief of 2026-10-05, "both screenshots are PLPS screens". |
+| Reply shape | Investigation shown instead of the answer; tables passed the brevity gate at any length. | "too long, I just wanted the answer" after two why-questions; "where is the files" after code was pasted three times. Fixed: `domain/terse-gate` signal 2 + reply-shape-spec §3c. |
+| Repo safety | A commit built from a stale index undid another session's work on main and was pushed. | `c1e6ad56` removed boot batch 2 (447 lines). Found only because this close compared the working files with the commit before it. |
+
+Proposals logged for this session (each with its eval case, in `system/slips.jsonl`): A1 skeptic brief must include "name a smaller approach" · A2 guide role runs the full engine · A3 a claim about a port/path/host carries the command that read it · A4 "which existing page owns this data" as the first Scout question on a development ticket · repo: refuse a commit in the main checkout when the index is older than HEAD.

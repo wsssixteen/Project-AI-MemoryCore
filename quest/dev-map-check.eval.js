@@ -26,6 +26,12 @@ const GOOD = [
   '|---|---|---|---|',
   '| F1 | steps are rows | `ind_langkah` | MODEL |',
   '| F2 | role from flow | `P src/main/java/x/FlowableConfig.java:952` | VERIFIED |',
+  '## Approaches',
+  '| # | Approach | Reuses | Size | Risk |',
+  '|---|---|---|---|---|',
+  '| A1 | Build where the mock-up draws it | nothing | large | high |',
+  '| A2 | Reuse the existing payment page, add the missing panel | helper, save | small | low |',
+  'Chosen: A2',
   '## Code-Review (Rubric) — Development build map',
   '### Work package 1 — Reference data',
   '| # | Table | Rows | Req | Status |',
@@ -75,6 +81,11 @@ check('S14 the phrase quoted in prose (no heading) fails D4',
   failed(checkDoc(GOOD.replace('## Code-Review (Rubric) — Development build map', '> see the Development build map later'))).split(',').includes('D4'));
 check('S15 a build map with no "Work package" heading fails D4',
   failed(checkDoc(GOOD.replace(/### Work package/g, '### Part'))).split(',').includes('D4'));
+
+check('S21 no Approaches section fails D3b', failed(checkDoc(drop(/^## Approaches|^\| A\d \||^Chosen:/))).split(',').includes('D3b'));
+check('S22 one approach only fails D3b', failed(checkDoc(drop(/^\| A1 \|/))).split(',').includes('D3b'));
+check('S23 no Chosen line fails D3b', failed(checkDoc(drop(/^Chosen:/))).split(',').includes('D3b'));
+check('S24 no approach that reuses something existing fails D3b', failed(checkDoc(GOOD.replace('Reuse the existing payment page, add the missing panel', 'Build a second new page').replace('| helper, save |', '| nothing |'))).split(',').includes('D3b'));
 
 // CLI
 const cli = path.join(__dirname, 'dev-map-check.js');

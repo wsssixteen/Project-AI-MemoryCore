@@ -16,23 +16,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\boot-required-read-gate.js\" SessionStart"
-          },
-          {
-            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\worktree-cleanup-boot\\worktree-cleanup-boot.hook.js\" SessionStart worktree-cleanup-boot"
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\evolution-check-trigger.js\" SessionStart"
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\system-check-trigger.js\" SessionStart"
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\open-quest-surfacer.js\" SessionStart"
           },
           {
             "type": "command",

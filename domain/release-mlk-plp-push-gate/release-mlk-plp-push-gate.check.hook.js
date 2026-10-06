@@ -70,7 +70,8 @@ runHook({ name: 'release-mlk-plp-push-gate', event: 'PreToolUse' }, (input) => {
   const tr = targetRepo(cmd, data.cwd || '', 'push');
   const repo = tr.dir || '';
   const repoName = tr.id ? tr.id.name : '';
-  const foreign = /^etanah-/i.test(repoName) && !/^etanah-pelupusan$/i.test(repoName);
+    // 2026-10-06 per miya: etanah-awam is OURS to push, like etanah-pelupusan. "Another team" = every other etanah repo (common, spoc-hasil ...).
+  const foreign = /^etanah-/i.test(repoName) && !/^etanah-(?:pelupusan|awam)$/i.test(repoName);
   const shared = /\bmlk\/(release\/|stag-env\b|int-env\b|master\b|mlit\b)/.test(gp[1]);
   if (foreign && shared) {
     let sha = ''; try { sha = execSync(`git -C "${repo}" rev-parse HEAD`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim(); } catch (_) {}
