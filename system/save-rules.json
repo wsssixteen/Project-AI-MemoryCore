@@ -1,0 +1,287 @@
+{
+  "version": 1,
+  "note": "THE one place a save rule is declared. Each rule cites the file that already states it; lib/save-rules.js holds only the check implementations. Kinds and paths follow system/INDEX.md (six kinds). Path patterns: * = one segment part, ** = anything; a pattern matches the path itself and everything under it; the part is the path cut at the pattern's depth. The most specific pattern wins. A kind with no rule for a part gives one UNRULED row (not a FAIL) so the owner can rule it.",
+  "ignore": [
+    "**/log.jsonl",
+    "**/*.log.jsonl",
+    "**/goal-log.jsonl",
+    "system/slips.jsonl",
+    "system/slip-counts.jsonl",
+    "system/registry.jsonl",
+    "system/eval-quarantine.jsonl",
+    "system/claude-md-watchlist*.jsonl",
+    "system/claude-md-changelog.md",
+    "system/telemetry",
+    "system/*dashboard*.md",
+    "system/feature-census.md",
+    "system/agentic-ticket-workflow-assessment-*.md",
+    "quest/active.txt",
+    "quest/active-archive.txt",
+    ".claude/auto-memory/MEMORY.md",
+    "REGISTRY.md",
+    ".claude/settings.local.json",
+    ".claude/launch.json",
+    ".claude/worktrees",
+    ".git",
+    ".gitattributes",
+    ".gitignore",
+    "node_modules",
+    "backups",
+    "meta",
+    "outputs-temp.gitkeep"
+  ],
+  "kinds": [
+    {
+      "kind": "rules",
+      "match": [
+        ".claude/CLAUDE.md", ".claude/personality.md", ".claude/reply-shape-spec.md", ".claude/commit-conventions.md",
+        ".claude/cost-efficiency.md", ".claude/save-commands.md", ".claude/new-machine-setup.md",
+        "system/*", "AGENT-ARCHITECTURE.md", "MIYA-NOTEBOOK.md", "RURI-NOTEBOOK.md", "README.md"
+      ],
+      "rules": [
+        {
+          "id": "rules-version-stamp",
+          "text": "A changed rule file carries a version stamp line changed in the same diff.",
+          "check": "version-stamp-changed",
+          "applies": [".claude/CLAUDE.md", ".claude/personality.md", ".claude/reply-shape-spec.md", ".claude/commit-conventions.md"],
+          "source": ".claude/CLAUDE.md (Version-bump discipline)"
+        },
+        {
+          "id": "rules-changelog",
+          "text": "A changed rule file has an entry in system/claude-md-changelog.md written in the same session.",
+          "check": "changelog-touched",
+          "applies": [".claude/CLAUDE.md", ".claude/personality.md", ".claude/reply-shape-spec.md", ".claude/commit-conventions.md"],
+          "source": "domain/claude-md-watch/README.md (pipeline step 5: version stamp + changelog entry in the same edit)"
+        },
+        {
+          "id": "rules-folder-map",
+          "text": "The system map and the root allow-list agree with the disk (every mapped path exists, no root orphan).",
+          "check": "folder-map-ok",
+          "applies": ["system/INDEX.md", "system/FOLDER-STRUCTURE.md"],
+          "source": "system/FOLDER-STRUCTURE.md (a root entry needs a row here and a kind in the INDEX map fence)"
+        },
+        {
+          "id": "rules-save-rules-valid",
+          "text": "The save-rules file parses and every rule names an existing check.",
+          "check": "save-rules-json-valid",
+          "applies": ["system/save-rules.json"],
+          "source": "system/save-rules.json (note)"
+        }
+      ]
+    },
+    {
+      "kind": "workflows",
+      "match": ["quest/*", "Feature/*", ".claude/workflows/*"],
+      "rules": [
+        {
+          "id": "wf-protocol-version-stamp",
+          "text": "A changed protocol file that carries a version or last-updated stamp has that stamp changed in the same diff.",
+          "check": "version-stamp-changed",
+          "args": { "onlyIfStampExists": true },
+          "applies": ["**/*protocol*.md"],
+          "source": ".claude/CLAUDE.md (Version-bump discipline: every refinement of a protocol file updates its stamp)"
+        },
+        {
+          "id": "wf-script-eval",
+          "text": "A workflow engine script has an eval next to it and the eval passes.",
+          "check": "eval-passes",
+          "applies": ["quest/*.js"],
+          "source": ".claude/skills/system-design/SKILL.md (Rule 6: ship with eval, refinements included)"
+        }
+      ]
+    },
+    {
+      "kind": "features",
+      "match": ["domain/*", "domain/bundles/*", ".claude/skills/*", ".claude/hooks/*", ".agents/*", "skills-lock.json"],
+      "rules": [
+        {
+          "id": "feat-readme-keys",
+          "text": "The Feature README carries goal, retention and footprint lines.",
+          "check": "feature-readme-keys",
+          "applies": ["domain"],
+          "except": ["domain/bundles"],
+          "source": ".claude/skills/system-design/SKILL.md (Rule 13) and .claude/skills/system-rules/SKILL.md (Rules 6 and 7)"
+        },
+        {
+          "id": "feat-new-nuke-marker",
+          "text": "A new Feature folder has a NUKE-MARKER.md.",
+          "check": "feature-new-nuke-marker",
+          "applies": ["domain"],
+          "except": ["domain/bundles"],
+          "source": ".claude/skills/system-design/SKILL.md (Rule 9)"
+        },
+        {
+          "id": "feat-eval-passes",
+          "text": "The Feature has an eval and it passes.",
+          "check": "eval-passes",
+          "applies": ["domain", ".claude/hooks"],
+          "except": ["domain/bundles"],
+          "source": ".claude/skills/system-design/SKILL.md (Rule 6)"
+        },
+        {
+          "id": "feat-census-proper",
+          "text": "The feature census verdict for the part is PROPER.",
+          "check": "feature-census-proper",
+          "applies": ["domain", ".claude/hooks", ".claude/skills"],
+          "except": ["domain/bundles"],
+          "source": ".claude/skills/system-design/SKILL.md (what installed means) and lib/feature-census.js"
+        },
+        {
+          "id": "skill-frontmatter",
+          "text": "SKILL.md starts with front matter that has a name and a description.",
+          "check": "skill-frontmatter",
+          "applies": [".claude/skills"],
+          "source": "lib/feature-census.js (skills row requires SKILL.md) and the front matter every skill in .claude/skills carries"
+        },
+        {
+          "id": "skill-version-stamp",
+          "text": "A changed skill that carries a version or history stamp line has a stamp line added in the same diff.",
+          "check": "version-stamp-changed",
+          "args": { "onlyIfStampExists": true },
+          "applies": [".claude/skills/*/SKILL.md"],
+          "source": ".claude/CLAUDE.md (Version-bump discipline) and .claude/skills/system-design/SKILL.md (Rule 6 v1.2, spec preservation)"
+        },
+        {
+          "id": "skill-paired-eval",
+          "text": "If the skill has a paired eval in domain/<name>/, it passes.",
+          "check": "eval-passes",
+          "applies": [".claude/skills"],
+          "source": ".claude/skills/system-design/SKILL.md (Rule 6)"
+        },
+        {
+          "id": "skill-changelog",
+          "text": "A changed system-rules or system-design skill has an entry in system/claude-md-changelog.md.",
+          "check": "changelog-touched",
+          "applies": [".claude/skills/system-rules", ".claude/skills/system-design"],
+          "source": "system/claude-md-changelog.md (carries 'system-design SKILL.md' and 'system-rules SKILL.md' version entries)"
+        }
+      ]
+    },
+    {
+      "kind": "memory",
+      "match": [
+        "main/*", "daily-diary/*", "daily-diary/*/*", "projects/**", "projects/coding-projects/active/*", "library-items/*",
+        ".claude/auto-memory/*", ".claude/state/*", "quest/active.txt"
+      ],
+      "rules": [
+        {
+          "id": "mem-frontmatter",
+          "text": "A memory note has front matter with name, description and type.",
+          "check": "memory-frontmatter",
+          "applies": [".claude/auto-memory/*.md"],
+          "source": "domain/memory-write-gate/README.md (check 5: type read from front matter) and .claude/auto-memory/MEMORY.md"
+        },
+        {
+          "id": "mem-index-line",
+          "text": "MEMORY.md has an index line that points at the memory note.",
+          "check": "memory-index-line",
+          "applies": [".claude/auto-memory/*.md"],
+          "source": ".claude/auto-memory/MEMORY.md (header: one line per memory)"
+        },
+        {
+          "id": "mem-session-cap",
+          "text": "Session memory is at most 500 lines.",
+          "check": "session-line-cap",
+          "applies": ["main/current-session.md"],
+          "source": "main/session-format.md (500-Line Limit Protocol) and domain/de-close-gate (C3)"
+        },
+        {
+          "id": "mem-diary-template",
+          "text": "A diary entry has the locked Sessions, Index and Closing sections.",
+          "check": "diary-template",
+          "applies": ["daily-diary/current/*.md"],
+          "source": "daily-diary/diary-format.md (Entry template, locked)"
+        },
+        {
+          "id": "quest-block",
+          "text": "The quest has an active.txt (or archive) block with status and qa_doc.",
+          "check": "quest-block-exists",
+          "applies": ["projects/coding-projects/active/QA-*", "projects/coding-projects/active/ADHOC-*", "projects/coding-projects/active/[0-9]*"],
+          "source": ".claude/skills/domain-expansion/SKILL.md (step 2c) and domain/de-close-gate (C1)"
+        },
+        {
+          "id": "quest-doc-resolves",
+          "text": "The qa_doc path in the block resolves to a file.",
+          "check": "quest-doc-resolves",
+          "applies": ["projects/coding-projects/active/QA-*", "projects/coding-projects/active/ADHOC-*", "projects/coding-projects/active/[0-9]*"],
+          "source": ".claude/skills/domain-expansion/SKILL.md (step 2c)"
+        },
+        {
+          "id": "quest-doc-dated-today",
+          "text": "The quest doc has a heading dated today.",
+          "check": "quest-doc-dated-today",
+          "applies": ["projects/coding-projects/active/QA-*", "projects/coding-projects/active/ADHOC-*", "projects/coding-projects/active/[0-9]*"],
+          "source": ".claude/skills/domain-expansion/SKILL.md (step 2c: append a dated block)"
+        },
+        {
+          "id": "quest-doc-copies-agree",
+          "text": "From a worktree, the main-repo copy and the worktree copy of the quest doc are identical.",
+          "check": "quest-doc-copies-agree",
+          "applies": ["projects/coding-projects/active/QA-*", "projects/coding-projects/active/ADHOC-*", "projects/coding-projects/active/[0-9]*"],
+          "source": ".claude/skills/domain-expansion/SKILL.md (step 2c: sync both copies)"
+        },
+        {
+          "id": "quest-task-folder-exists",
+          "text": "The task_folder path in the block exists.",
+          "check": "quest-task-folder-exists",
+          "applies": ["projects/coding-projects/active/QA-*", "projects/coding-projects/active/ADHOC-*", "projects/coding-projects/active/[0-9]*"],
+          "source": ".claude/auto-memory/feedback_quest_closure_both_folders.md and .claude/CLAUDE.md (Phase 2 Closure step 1)"
+        }
+      ]
+    },
+    {
+      "kind": "kernel",
+      "match": ["core/*", "lib/*", ".claude/settings.json"],
+      "rules": [
+        {
+          "id": "kernel-eval",
+          "text": "The kernel script has an eval and it passes.",
+          "check": "eval-passes",
+          "applies": ["core/*.js", "lib/*.js"],
+          "source": ".claude/skills/system-design/SKILL.md (Rule 6) and core/forge.js"
+        },
+        {
+          "id": "kernel-registry-row",
+          "text": "The script has a row in system/registry.jsonl.",
+          "check": "kernel-registry-row",
+          "applies": ["core/*.js", "lib/*.js"],
+          "source": ".claude/skills/system-rules/SKILL.md (Rule 5) and core/forge.js (forge writes the row)"
+        },
+        {
+          "id": "kernel-header",
+          "text": "The script starts with a comment header.",
+          "check": "kernel-header-goal",
+          "applies": ["core/*.js", "lib/*.js"],
+          "source": "system/INDEX.md (Kernel: its header states its goal)"
+        },
+        {
+          "id": "kernel-has-user",
+          "text": "At least one Feature or Workflow file refers to the script.",
+          "check": "kernel-has-user",
+          "applies": ["core/*.js", "lib/*.js"],
+          "source": "system/INDEX.md (Kernel: at least one Feature or Workflow uses it)"
+        },
+        {
+          "id": "kernel-settings",
+          "text": "settings.json parses and every hook file it names exists.",
+          "check": "settings-hooks-resolve",
+          "applies": [".claude/settings.json"],
+          "source": ".claude/CLAUDE.md (Layer 0: system-audit.js ghost-hook audit)"
+        }
+      ]
+    },
+    {
+      "kind": "projects",
+      "match": ["etanah_atlas"],
+      "rules": [
+        {
+          "id": "project-owner-row",
+          "text": "The project has an owner row in system/FOLDER-STRUCTURE.md.",
+          "check": "project-owner-row",
+          "applies": ["etanah_atlas"],
+          "source": "system/INDEX.md (Projects: it has an owner row in system/FOLDER-STRUCTURE.md)"
+        }
+      ]
+    }
+  ]
+}

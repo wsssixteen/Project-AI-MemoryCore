@@ -3,6 +3,7 @@ symptom: 2026-08-20 QA-276182: touched all session, deployed to int-env, had NO 
 goal: BLOCK the DE close unless the deterministic close-conditions hold: (1) every ticket id mentioned this session that has a Task folder or qa_doc also has an active.txt block (kills the blockless-ticket hole), (2) resume-readiness.js ran this session (log.jsonl fresh), (3) main/current-session.md is at or under 500 lines (trim ran). Bypass [skip-de-close-gate: <reason>]
 goal_signal: the Stop fire produced: BLOCK the DE close unless the deterministic close-conditions hold: (1) every tic
 retention: keep
+footprint: Stop hook: no work unless the reply carries the Domain Expansion closing banner; on a close, file reads only, no child process, under 1 second
 # de-close-gate — deterministic close-conditions for Domain Expansion
 
 **What fires when**: Stop hook. Fires ONLY when the last assistant text carries the DE closing
@@ -40,6 +41,11 @@ Rule: DE close BLOCKS unless `domain/de-close-gate/log.jsonl` carries `action=au
 
 ## C4 — Redmine reconcile (added 2026-08-21 evening)
 DE close BLOCKS unless `node quest/redmine-reconcile.js` ran <=12h (writes action=reconcile-ran to log.jsonl). Reconciles active.txt open blocks against live Redmine both directions; report-only. Replay: 2026-08-21 — 20 stale open blocks vs 0 assigned-open.
+
+## C8 — save rules ran with 0 FAIL (added 2026-10-06, per miya)
+
+symptom: miya 2026-10-06 — "have you also finished building the domain expansion to check for Features, Workflows, Tools, etc (all parts of system) to save by checking each part of those things' save rules ... more deterministic or mechanical so that it won't simply be up to you."
+Rule: DE close BLOCKS unless the latest full (non-partial) `action=save-rules-ran` row in `domain/de-close-gate/log.jsonl` is ≤12 h old and carries `fail=0`. `lib/save-rules.js` (DE step 12.7) writes the row on every full run; `--paths` / `--since` runs are marked `partial` and never count. Eval F22–F26.
 
 ## C7 — qa_doc saved this session (added 2026-09-23, #280176 DE audit)
 Every touched ticket whose active.txt block names a `qa_doc=` must have that file modified after the session started. Step 2c (save every quest touched) had no check. A doc absent on disk is skipped; a worktree also looks in the main checkout three levels up. Eval F19–F21.

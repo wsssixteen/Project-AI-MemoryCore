@@ -21,7 +21,7 @@ Lapis barrier ripples outward; the day's threads gather to settle.
 
 Then the step-line (update ⬜→✓ in place as each completes; `⏭ + one-line why` if a step is legitimately skipped):
 
-`DE steps: 0a ⬜ · 0b ⬜ · 1 ⬜ · 2 ⬜ · 3 ⬜ · 4 ⬜ · 5 ⬜ · 6 ⬜ · 7 ⬜ · 7.4 ⬜ · 7.5 ⬜ · 8 ⬜ · 9 ⬜ · 10 ⬜ · 11 ⬜ · 12 ⬜ · 12.5 ⬜ · 12.6 ⬜ · 13 ⬜`
+`DE steps: 0a ⬜ · 0b ⬜ · 1 ⬜ · 2 ⬜ · 3 ⬜ · 4 ⬜ · 5 ⬜ · 6 ⬜ · 7 ⬜ · 7.4 ⬜ · 7.5 ⬜ · 8 ⬜ · 9 ⬜ · 10 ⬜ · 11 ⬜ · 12 ⬜ · 12.5 ⬜ · 12.6 ⬜ · 12.7 ⬜ · 13 ⬜`
 
 - **0a Compaction check** — if the session auto-compacted, recover the transcript TAIL BEFORE the content-save steps (2 / 4 / 7).
 - **0b Worktree/branch sync** — if on a worktree branch behind `origin/main`, pull/merge first so everything saves on current base.
@@ -48,6 +48,7 @@ Then the step-line (update ⬜→✓ in place as each completes; `⏭ + one-line
 | 12 | Run **`/verify` Checklist D** — cross-check every step fired with evidence |
 | 12.5 | **Meta-audit** — hook-fire reliability + cross-refs + component-liveness |
 | 12.6 | **Resume-readiness sweep** — `node domain/checklist-reactivate/resume-readiness.js`; fill any `✗`/`🔴` qa_doc gap before close |
+| 12.7 | 🚨 **SAVE RULES — MANDATORY, DETERMINISTIC** (added 2026-10-06 per みや). Run `node lib/save-rules.js`, PASTE its `SAVE-RULES:` header + table into the DE reply, and fix every FAIL before the close banner (re-run until 0 FAIL). Each kind of system part (Rules · Workflows · Features · Memory · Kernel · Projects) declares its own save rule in `system/save-rules.json`; the script finds the parts this session touched and prints PASS / FAIL / UNRULED per part and rule. The run logs `save-rules-ran`; **`de-close-gate` C8 BLOCKS close without a full run at 0 FAIL**. UNRULED rows are for みや to rule, not to fix. Detail: `expansion-protocol.md` §Step 12.7. |
 | 13 | **Handoff Block** (tiered — default SILENCE; only blocked/stranded work) |
 
 ## 🚨 STEP 10 IS AN EXPLICIT ORDER — COMMIT + PUSH + MERGE (hard rule, 2026-07-28 per みや)
@@ -82,6 +83,12 @@ Barrier settles. Quest threads are at rest.
 
 **Banned**: silent DE skip · skipping any step without an explicit `⏭ + one-line why` · reconstructing the banner from memory · collapsing the skill-name + storytelling onto one line.
 
+## Why step 12.7 (2026-10-06, per みや)
+
+みや, verbatim: *"have you also finished building the domain expansion to check for Features, Workflows, Tools, etc (all parts of system) to save by checking each part of those things' save rules. Because this is how you will know what is important to be saved for each domain of things we do in a session right? I believe am beginning to see how to structure to make it more deterministic or mechanical so that it won't simply be up to you."* Before this, DE ran one fixed list of steps; what had to be saved for a Feature vs a quest doc vs a memory note lived in my judgment. Now the rule per kind is data (`system/save-rules.json`, each rule citing the file that already states it) and `lib/save-rules.js` applies it.
+
 ## Why a skill now (2026-06-28, per みや)
 
 DE was a protocol + trigger-hook = **model-driven execution** with no Skill-tool invocation, so it could be freelanced or partially skipped. As a skill it gains: Skill-tool invocation (the `skill-invocation-discipline` gate now ensures DE is actually *invoked*, not improvised), a single structured entry point, and the resume-readiness sweep (12.6) as a coded step. The detailed bodies stay in `expansion-protocol.md` — this is the orchestrator, not a copy.
+
+*Update 2026-10-06. Step 12.7 SAVE RULES added per みや (ask quoted in the section above): `node lib/save-rules.js` checks every system part touched this session against its own kind's declared save rule; `de-close-gate` C8 blocks close without a full run at 0 FAIL. Spec-preservation: steps 0a-13, the Step 10 commit + push + merge order, the banner text and every Banned clause are untouched; one step, one row, one why-section added (additive).*
