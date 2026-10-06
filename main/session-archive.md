@@ -4,6 +4,18 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-05, worktree "quest-run-ticket-review-613e4d", #246923 takeover review)
+- **Ask**: run quest on #246923 and review the ticket. Ammar had committed on 2026-10-02, set it Resolved and passed it back with "can help review".
+- **Open item**: only item f (BA 2026-09-15): at PTG the Risalat MMKN stops at Item 5, expected up to Item 6.
+- **Ammar's fix**: etanah-pelupusan `mlk/qa/246923v2`, `e2a2680e8a` + `15fb754499`. One-time refill of the Risalat on first open of PRMMKNPTG (`MlkKertasTemplateForm.repopulateRisalatPlpsPtgOnFirstOpen`) + the three PTG tasks removed from the PLPS generic-template block in `template.config.json`.
+- **Review**: logic holds on every link I could read (task stamp written by `PelupusanTemplateUtil.saveDocuments`, stored document reprocessed in place, both templates carry `paragraphPTGPLPS`, Sedia action does not exclude it, PTG task is in the allow list). Never run by anyone. Confidence given to miya: 80% fix, 65% ticket pass.
+- **Deploy prep**: miya ruled internal only. Merged v2 into `mlk/int-env` → `3fa76655c6`, pushed, compile green. One conflict in `MlkKertasTemplateForm.initData()` resolved to int-env's layout + Ammar's three-line call. Staging NOT merged. miya runs the mlit deploy himself.
+- **Handover drafted** (not posted): Root cause + Solution in Malay, short colleague-fix note to Mira, fields. Text is in the qa_doc.
+- **His rulings**: a ticket branch goes to staging ONLY when he names staging (added to `feedback_commit_deploy_runbook`) · keep both branches · **if #246923 comes back as Rework it goes back to Ammar** (in the quest block `close_note` + qa_doc).
+- **Open**: miya's mlit deploy + Item 6 check + posting the note · the `Co-Authored-By: Claude` line in Ammar's two commits is now on int-env, asked three times, not ruled. Do not ask again; raise only if the branch heads to a release.
+- **Test data**: stg2 PTMLK/02/L/PLPS/2026/17 at PRMMKNPTG (muhammadshafiq@melaka.gov.my) · mlit has no PLPS app on the PTG step, nearest PTMLK/01/L/PLPS/2026/21 at SRMMKNPDT (sanarimah@melaka.gov.my).
+**Last Activity**: 2026-10-05 01:45 — boot audit + system structure: batch 1 LIVE on main (`19bc4963` · `a954de41` · `6beed4ba`), handover written, two read-only Workflow runs in flight (verification `wf_49cf7fce-b89` · batch-2 design `wf_923b9eaf-18e`). NOT a session close; no Domain Expansion run.
+
 ## Session Recap (2026-10-02 → 2026-10-05, session "new-session-77cffa", AWAM build fix → boot audit → structure audit)
 - **READ FIRST**: `main/handoff-2026-10-05-boot-structure-audit.md` (decisions, built pieces, worklist, batch-2 table, resume steps) and `system/INDEX.md` (the one map + "Change record"). Page for みや: https://claude.ai/artifact/FYG8o9tQy6KzRTqMN1doDo
 - **Started as**: Danial's AWAM `mlk/stag-env` compile break (duplicate PDBB method + constants). Fixed and pushed, etanah-awam `98e8595245`. DONE.

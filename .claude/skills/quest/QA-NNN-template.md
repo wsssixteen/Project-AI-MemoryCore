@@ -157,6 +157,19 @@
 2. ...
 3. ...
 
+**Development ticket** (`path=development` — quest SKILL.md "Development path"; a worked doc is `projects/coding-projects/active/QA-268173/QA-268173.md`): this section's heading becomes `## Code-Review (Rubric) — Development build map`, and the doc carries these blocks instead of fix-shape options. Check: `node quest/dev-map-check.js <QA>`.
+
+| Block | Where | Shape |
+|---|---|---|
+| Requirement list | under Context Loading | `\| R1 \| <requirement> \| <verbatim source> \|` |
+| Facts (working-example trace) | under Debugging | `\| F1 \| <fact> \| <path:line or query + rows> \| VERIFIED or MODEL \|` |
+| Work packages | `### Work package N — <layer>` in this section, in delivery order | `\| N.1 \| <change> \| <where> \| <working example> \| R<n> \| ⬜ \|` |
+| A requirement with nothing to build | one line in this section | `R<n>: not needed because <reason>.` |
+| Decisions | `## Decisions` | `\| D1 \| <decision> \| <why it cannot be assumed> \| <owner> \|` or `No open decisions.` |
+| Check queries (when any row is MODEL) | `## Check queries …` | unqualified, no JOIN |
+| Skeptic audit | `## Skeptic audit` | `Auditor: <who, and that they did not write the map>` · `Findings merged: <count + where>` · the findings table |
+| Coverage | `## Coverage` | per work package: touch-points · verified in this state's code · model only · decision needed |
+
 ---
 
 ## Falsifier ledger

@@ -35,7 +35,7 @@
 - [fix-txt](feedback_fix_txt_structure.md) — Fix.txt = 4 short sections: fix, explanation, chain, related
 - [quest-closure](feedback_quest_closure_both_folders.md) — wrap a quest = update BOTH Task and project folder; "save this quest" = Redmine status picks Phase 1 or Phase 2 (`node lib/save-quest.js`)
 - [code-comments](feedback_no_extra_comments.md) — one explanatory line max, no commented-out code; no person names, dates or log stamps
-- [states](feedback_state_aware_knowledge_load.md) — state via lib/states.js; same knowledge file names; Selangor = Oracle
+- [states](feedback_state_aware_knowledge_load.md) — state via lib/states.js; same knowledge file names; Melaka · Terengganu · Kedah = PostgreSQL, never Oracle; Perak · WP · Selangor = Oracle
 - [terengganu](project_terengganu_active.md) — ACTIVE since 2026-10-03: knowledge, stg2 DB, trg/master
 - [perak](reference_perak_codev_scope.md) — co-dev scope, Oracle, branch off origin/master, deploy via master, hotfix box
 

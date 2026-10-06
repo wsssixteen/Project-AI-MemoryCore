@@ -11,6 +11,32 @@
 - **Not verified**: STG `lokasi_fail_pdf` state (two STG queries timed out). If a document fails to open on STG after the copy, set `LOKASI_FAIL_PDF = NULL` for that revision (lever seen for WP, not proven for Perak).
 - **Open**: infra copy · open one document per permohonan on STG · `lib/adhoc-save-audit.eval.js` was 19/24 on main before this session (5 stale fixtures, proposal logged) · the 20-scenario table for the adhoc-titles change was not written; 5 fixtures were added instead.
 - **Knowledge banked**: `etanah-knowledge/perak/STATE-FACTS.md` § Document locator (main checkout only).
+**Last Activity**: 2026-10-06 15:55 — `/doc-sim` built, eval 34/34, live run verified, quest skill made aware of it · #244600 cause reproduced offline, fix branch `a820679f80` reads both test pairs as the same
+
+## Session Recap (2026-10-05 midday to 2026-10-06 15:55, main checkout, offline document generator → `/doc-sim`)
+- **Ask**: an offline reproducer for #244600 (first Kemaskini, no edit, versi goes up). Widened by him mid-run to a complete template generator. Then: make it an invokable skill the quest knows about, save, Domain Expansion.
+- **The tool**: `E:\Dev\scripts\EtanahTemplateGen\` (outside the repo; it compiles against the local WAR). Boots the app's own Spring beans outside JBoss against the local `etanahDS` schema, read-only, and calls `PelupusanTemplateUtil.processTemplate()`. Stops before `saveDocuments()`. 2 to 3 minutes a run.
+- **The Feature**: `domain/doc-sim/` (runner `doc-sim.js`, `doc-sim.eval.js` 34/34, `log.jsonl`, README, NUKE-MARKER) + `.claude/skills/doc-sim/SKILL.md`. Census: PROPER. No hook.
+- **Quest awareness** (`.claude/skills/quest/SKILL.md`): step 6e (`doc-sim applies` / `doc-sim n/a` at Phase 0) · 2 phase-table rows (Recon, Rubric falsifier) · 1 sentence in the falsifier ledger bullet · 1 hand-back row (`DOC-SIM:` line). Additive.
+- **#244600 finding**: PTMLK/01/L/PPTPB/2026/15 @ azmezan@melaka.gov.my and PTMLK/03/L/PRZ/2026/2 @ nfadzilah@melaka.gov.my (PRMMKNPDT, stg2). A no-edit Word save drops run font size 12 (`sz=24`) on `jabatanTeknikalPT` / `jabatanTeknikalPRZ` + `namaJT` because the Normal style is 12. Compare at `f14c58ae64`: CHANGED (10 and 15 paragraphs, format only). Compare at `a820679f80` (`PelupusanWordLogUtil.kandungan`, branch `mlk/review/244600`): SAME on both pairs.
+- **Not done on purpose**: nothing written into the #244600 quest doc. Another live session owns it (worktree `ticket-244600-review-89e02d`, copy newer than main's). No etanah repo touched.
+- **Limits**: runs the classes of the local deployed WAR (a Java fix must be deployed first) · no screen, no save · screens and Jasper reports not attempted · filled RAHSIA files sit in `E:\Dev\scripts\EtanahTemplateGen\out\` until deleted.
+- **Watches added**: `wmuwdrxf2` (quest skill rows) · `wmuwdrxng` (doc-sim skill).
+- **Open for miya**: tell the #244600 session the offline result (both pairs SAME on `a820679f80`) · option to test an undeployed Java fix is not built · delete `out\` when #244600 closes.
+
+**Last Activity**: 2026-10-05 23:00 — Kedah registered active · #268173 (Izz's UAT-CR, MLPS) run as the FIRST development quest · development path built into the quest skill · nothing committed, no Redmine write, no etanah code changed
+
+## Session Recap (2026-10-05 evening, main checkout, #268173 Kedah development quest)
+- **Ask**: brief Izz's Kedah ticket #268173, then (his /goal) build a "development" quest path, like the patch path, and run it fully on this ticket. He chose: role = guide Izz · register Kedah as active · he hates a list presented as complete when it is not.
+- **Why the path exists**: my first guide for Izz was a 6-row list read from the symptom screen. He asked "are you sure those are the things left?" and "how much does our table help?" (about a third). Slip logged `assume-not-verify` (two rows were guesses).
+- **Kedah registry** (`system/states.json`, `etanah-knowledge/kedah/STATE-FACTS.md`): scope active · prefix `PTKED` (was `PTKDH`) · GitLab `git@10.16.63.27:etanah/<repo>.git`, same repos as Melaka · pelupusan trunk `kdh/development` · env `kdh/int-env`, `kdh/release/uat` · Redmine projects 321 / 296 / KED_03_Pelupusan. NOT known: database (no access), local checkout, Task folder, awam trunk. `validate kedah` still ✗ on the missing checkout.
+- **Quest doc**: `projects/coding-projects/active/QA-268173/QA-268173.md` — 9 requirements, 20 facts, 7 work packages, 38 touch-points, 5 decisions (D1-D5, owners Chan Jun / Amin), check queries for Kedah, skeptic audit, coverage count. `node quest/dev-map-check.js 268173` → OK.
+- **Izz's branch**: `kdh/cr/268173` @ `a3693e05e3` (1 commit, 72 lines in `kdhMaklumatTanah.xhtml`). 1 of 38 touch-points started, 0 finished. His block is ungated and the component is mounted on 4 pages.
+- **Biggest findings**: a tugasan's langkah and screens are database rows · the fine is PLPS-only in 4 Java/xhtml guards · the bill is written from a stale total unless Kira runs first · an MLPS SKM config entry already exists and conflicts with the CR · the portal still saves the amount after the fields are removed · Kedah MLPS already charges a fee at submission (decision D2) · no applicant "please pay" message exists anywhere.
+- **Delegation**: 4 Sonnet readers (Kedah pelupusan · Bayaran Pelbagai and flow · Melaka DB model · portal) + 1 Fable 5.1 skeptic. Fable found 6 missing + 5 wrong claims; I re-read each cited line, and found a 4th mount it missed.
+- **System change** (uncommitted): `.claude/skills/quest/SKILL.md` step 6d + section "Development path" (D1-D8, `path=development`) · `.claude/skills/quest/QA-NNN-template.md` development blocks · NEW `quest/dev-map-check.js` + `quest/dev-map-check.eval.js` (21/21 green). Watches `wmuvdadfk`, `wmuvdadm7` added before the edits were committed.
+- **Not reachable**: the live Kedah flow modeler (redirects to login); flow facts come from the 2026-09-03 export.
+- **Open for miya**: send the guide to Izz (it is his message) · local Kedah checkout yes/no · commit the MemoryCore changes.
 
 **Last Activity**: 2026-10-05 17:00 — #278909 (PT Risalat MMKN, cycle 2) review of Farah's rework → shared docx conflict resolved by us → merged to `mlk/int-env` `d0f2177f02` → Redmine handover drafted → Phase 1 closed (cycle 2) · Domain Expansion run.
 

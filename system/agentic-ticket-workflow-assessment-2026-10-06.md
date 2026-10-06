@@ -17,3 +17,15 @@
 | A2 | Make the document locator state-aware: schema names from `system/states.json`, plus the uploaded-document branch | locator for `PTPK/18/E/PT/2024/19` returns 82 paths |
 | A3 | db-claim-proof wording: a SELECT handed to miya for a state whose login owns no tables is schema-qualified | a Perak proof SELECT without `et_main.` is flagged; a Melaka one stays unqualified |
 | A5 | Store an infra message format for "copy files PROD to STG": exact `.main` paths only, no wildcard, no `.pdf` | the stored block is copied word for word next time |
+
+## Session: the document simulator (`/doc-sim`), 2026-10-05 to 2026-10-06, main checkout
+
+| Axis | What this session showed | Instance |
+|---|---|---|
+| A1 agentic system | No fan-out was used; the work was one long serial build. Two sessions worked the same ticket's code without knowing of each other | The #244600 session rewrote the compare into `PelupusanWordLogUtil` while this session's build lifted the old methods by name; the build broke twice |
+| A2 quest workflow | A falsifier that needs JBoss does not get run. The ledger rule existed since 2026-10-04 and still had no cheap test for document claims | #244600 cycle 1 shipped on a compare that never met a freshly filled paper; the offline run found the cause in one pass |
+| A3 debugging | Ten boot rounds at 2 to 3 minutes each, one missing piece per round. Each error was read and fixed singly instead of listing what JBoss supplies first | JNDI name, version map, DMS client, jar without directory entries, JSF implementation jar: five separate reruns |
+| A4 etanah issue-solving | The app's beans can be booted outside JBoss, read-only. Nothing in the knowledge base said so before | `DEV-TESTING-HACKS.md` last section, written this session |
+| A5 sweep | ⏭ no ticket sweep this session | none |
+
+Noise seen: the loop detector fired on 20 of about 60 tool calls with no real loop (parallel reads of one file, successive PowerShell calls). The audit shows it at 11110 s over 7 days with 0 blocks.

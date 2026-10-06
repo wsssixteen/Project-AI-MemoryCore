@@ -114,3 +114,12 @@
 {"ts":"2026-10-05T05:36:41.563Z","id":"ADHOC-PPTPB-2026-4","outcome":"pass","fails":[],"dur_ms":44}
 {"ts":"2026-10-05T06:08:59.951Z","id":"ADHOC-HKMLK-2026-1","outcome":"pass","fails":[],"dur_ms":29}
 {"ts":"2026-10-05T06:52:10.034Z","id":"ADHOC-OPLBP-2026-1","outcome":"pass","fails":[],"dur_ms":26}
+{"ts":"2026-10-06T03:47:01.263Z","id":"ADHOC-PT-2026-11","outcome":"fail","fails":["register: row A2 cites ADHOC-PT-2026-11","register: status ↔ block status","register: A2 not claimed by another open block"],"dur_ms":25}
+{"ts":"2026-10-06T03:47:05.664Z","id":"ADHOC-PT-2026-11","outcome":"fail","fails":["register: A2 not claimed by another open block"],"dur_ms":24}
+{"ts":"2026-10-06T03:47:09.679Z","id":"ADHOC-PT-2026-11","outcome":"fail","fails":["register: A2 not claimed by another open block"],"dur_ms":26}
+{"ts":"2026-10-06T03:47:21.068Z","id":"ADHOC-PT-2026-11","outcome":"fail","fails":["register: A2 not claimed by another open block"],"dur_ms":25}
+{"ts":"2026-10-06T03:47:21.186Z","id":"ADHOC-MLPS-2026-2","outcome":"fail","fails":["register: A2 not claimed by another open block"],"dur_ms":33}
+{"ts":"2026-10-06T03:47:21.301Z","id":"ADHOC-PT-2026-8","outcome":"fail","fails":["block: required keys present","qa_doc: Issue Summary \"Title\" line","qa_doc: \"## Next-Steps Checklist\" section"],"dur_ms":29}
+{"ts":"2026-10-06T03:47:28.756Z","id":"ADHOC-PT-2026-11","outcome":"pass","fails":[],"dur_ms":25}
+{"ts":"2026-10-06T03:47:28.870Z","id":"ADHOC-MLPS-2026-2","outcome":"pass","fails":[],"dur_ms":27}
+{"ts":"2026-10-06T07:38:59.945Z","id":"ADHOC-PT-2026-11","outcome":"pass","fails":[],"dur_ms":59}

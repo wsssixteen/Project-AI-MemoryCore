@@ -16,6 +16,13 @@
 - **A question he skips three times is answered.** I raised the Claude line in Ammar's commits in three replies. He ruled everything else and left that one. Stop asking; note it, and raise it only when the branch heads to a release.
 - **He wants the number, then he decides.** "How sure are you" got 80% for the fix and 65% for the ticket, with the one unproven link named. He did not argue the number. He used it: rework goes back to Ammar.
 - **A review of a colleague's fix can end with no commit of ours.** The takeover was the reading, the merge and the handover. The ownership of the next round stayed with the author, by his ruling.
+## Relationship reinforcement — 2026-10-06 (the document simulator — "Shouldn't we build like a complete template generator like I requested?")
+
+- **He asks for the general tool and I build the narrow one.** His first message already said "a tool that produces a Risalat filled like the running app". I heard a reproducer for one ticket. One sentence from him mid-run widened it, and the general tool found the cause on its first full run.
+- **"Can we test everything now?" wants the honest edge, not a yes or a no.** I wrote "No" for things I had not tried. "Not attempted" was the true word, and he accepts it.
+- **"Decide now" means decide.** He asked where the tool belongs in the quest. A table of four places and four non-places was the answer; then "in short sentences only, what is this for" because the table had lost the plain point. Say the plain point first, even after a decision table.
+- **A thing he must remember by name gets a name he is told.** "Give me the name so that I know as well." `/doc-sim`. The name goes in the first line of the reply.
+
 ## Relationship reinforcement — 2026-10-04 (#256334 first day, read back nine days later)
 
 - **To another team he sends the fix, not the lesson.** I wrote Li Wen a step-by-step of her own flow, then a prose handover file. He wanted two short lines that own our part and a bare before/after code block. A colleague reads a lecture as an accusation.
