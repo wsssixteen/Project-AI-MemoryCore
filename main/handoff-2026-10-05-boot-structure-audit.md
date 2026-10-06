@@ -309,3 +309,33 @@ Open points, honest:
 - The harness shows a hook output over roughly 10,000 characters as a 2,000-character preview plus a file path. The ticket block is about 8,500 to 9,900 characters with 28 open quests, so it sits at that edge. This was already true at session start. If the list grows, read the saved file or run `--now`.
 - No real session has started on the new registrations yet; four watches are registered for that (`wmuwtzpy0`, `wmuwtzqb9`, `wmuwtzqky`, `wmuwtzqt8`).
 - The unreviewed gate rebuild is parked on branch `claude/gates-v7-wip` (`559f431b`), not on main.
+
+## 14. Round of 2026-10-06 23:40 — his rulings, what was done, boot mode design
+
+His rulings (verbatim sense): (1) etanah-awam is pushed by us, like etanah-pelupusan; (2) adhoc videos are deleted at archive; (3) "Yes design that boot mode"; (4) proceed, then brief.
+
+| Item | Done | Proof |
+|---|---|---|
+| etanah-awam = own repo in the push gate | `domain/release-mlk-plp-push-gate/release-mlk-plp-push-gate.check.hook.js`: "another team" = every etanah repo except pelupusan and awam. The mlk/master ban holds for both. | eval 38/38 on the live gate; 116/116 on the parked rebuild |
+| Second git lock | DROPPED. Its premise (awam is another team's) was wrong. Not built for common / spoc-hasil either: not asked. | — |
+| Closed adhoc archives itself, videos deleted | adhoc-save skill step 1b: the closing round runs `node quest/archive-quest.js <ADHOC-ID>` (it already moves the folder, deletes videos, moves the block and the project folder). `lib/adhoc-save-audit.js` now FAILS a closed adhoc that is not archived and prints that command. | archive eval 20/20; audit eval 19/24, the same five that failed before this change; dry run on ADHOC-PRBB-2026-8 lists the moves |
+| "brief me the results" loaded the ticket list by mistake | briefing trigger narrowed; 4 new negative fixtures | eval 99/99 |
+| Reviews | both resumed (`wf_91995105-40c`, `wf_b8401d64-729`); gate rebuild restored into the worktree as uncommitted work with the awam rule | results appended when back |
+
+**INCIDENT, mine**: commit `c1e6ad56` ("ledger: slip rows"), made in the MAIN checkout, reverted all of batch 2 in git history. Cause: I committed there while another session was working in the same checkout; its index was not mine. The files on disk in main kept the batch-2 content, so the hooks kept running batch 2. Repaired by `25c21d4a` (re-applies `93820c46` unchanged). Rule from now on: a worktree session NEVER commits in the main checkout; it only fast-forwards it, and leaves it alone when that is refused. At 23:45 the main checkout had a live git process and an `index.lock` from another session, so it was left at `a6b5ea77`; it takes `25c21d4a` (awam rule, adhoc check) at its next fast-forward. Batch 2 is already live there.
+
+### Boot mode — DESIGN ONLY (not built; needs his nod)
+
+Goal: a session knows at its first prompt whether this is a work session, without loading anything at start.
+
+| Mode | When | What it changes |
+|---|---|---|
+| Work | working day (PymTime `workdays`, default Mon–Fri) AND not a public holiday (`lib/holiday.js` `isHolidayCached`) AND not approved full-day leave (`lib/leave.js` `onLeave`) AND inside work hours (proposed 08:30–18:30) | the first prompt of the session loads the ticket list even with no ticket word in it |
+| Quiet | any other time | as today after batch 2: the list loads only on a work word |
+| Keyword | "start work" / "work mode" forces Work · "quiet mode" / "not working today" forces Quiet, for that session | overrides the clock either way |
+
+- Where: one function in `.claude/hooks/open-quest-surfacer.js` (the first-prompt check it already makes), reading PymTime's two local cache files. No new script, no start-up cost, no network.
+- Wrong guess is cheap: Work on a sick day = one 5 s load; Quiet on a work day = the list still loads at the first work word.
+- Unknown data (PymTime missing, cache unreadable) = Quiet.
+- Not covered: medical leave entered after the fact; that is what the keyword is for.
+- One line is printed with the reason, e.g. `Work mode: Tuesday, no holiday, no leave, 09:12`.
