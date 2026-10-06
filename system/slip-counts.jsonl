@@ -1047,3 +1047,15 @@
 {"ts":"2026-10-04T10:07:38.095Z","category":"trusted-claim-unverified"}
 {"ts":"2026-10-04T10:07:38.195Z","category":"A2"}
 {"ts":"2026-10-05T02:51:04.982Z","category":"adversarial-pass-skipped"}
+{"ts":"2026-10-06T15:14:26.268Z","category":"partial-fix-shipped"}
+{"ts":"2026-10-06T15:14:26.387Z","category":"handoff-claim-unverified"}
+{"ts":"2026-10-06T15:14:26.504Z","category":"expected-result-not-from-ticket"}
+{"ts":"2026-10-06T15:14:26.621Z","category":"answer-the-ask"}
+{"ts":"2026-10-06T15:14:26.743Z","category":"behaviour-fix-as-memory-only"}
+{"ts":"2026-10-06T15:14:26.857Z","category":"commit-subject-language"}
+{"ts":"2026-10-06T15:14:26.971Z","category":"A1"}
+{"ts":"2026-10-06T15:14:27.082Z","category":"A2"}
+{"ts":"2026-10-06T15:14:27.193Z","category":"A3"}
+{"ts":"2026-10-06T15:14:27.303Z","category":"A4"}
+{"ts":"2026-10-06T15:15:32.131Z","category":"A2"}
+{"ts":"2026-10-06T15:16:52.970Z","category":"A1"}
