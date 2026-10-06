@@ -92,6 +92,7 @@ Artifacts (private pages on claude.ai, republished in place; the source HTML is 
 |---|---|---|
 | System map | https://claude.ai/artifact/7rC3ck11zTHQdfqbtAnNGv | the six kinds, what is installed, what is not |
 | Boot sequence | https://claude.ai/artifact/WnyAt8Jdg9LEkZjdytmWzB | every startup script, cost before and after |
+| Quest paths | https://claude.ai/artifact/F6XUQEjvyABeLJaoSY3Ls4 | patch / minor / development: which path, what each phase produces, what is loaded when, development in depth (2026-10-05) |
 | Boot + structure handover | https://claude.ai/artifact/FYG8o9tQy6KzRTqMN1doDo | decided · built · batch 2 · still to do (full text: `main/handoff-2026-10-05-boot-structure-audit.md`) |
 
 Not built: a gate that refuses a system-change commit when a row above is missing. Today this section is a rule that Ruri follows; the gate belongs to the Memory audit.

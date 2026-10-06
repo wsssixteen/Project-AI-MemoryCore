@@ -2,13 +2,17 @@
 name: artifact-registry
 description: List of every published claude.ai artifact with its link; update an existing one by link instead of creating a second copy
 metadata:
+  node_type: memory
   type: reference
+  originSessionId: fed5aaa2-35e9-43a4-8258-a1916ec3c80e
+  modified: 2026-10-05T15:33:29.614Z
 ---
 
 Every artifact published under miya's claude.ai account, newest first. Snapshot of the live list on 2026-10-04 (`Artifact` tool, action `list`, scope `all`: 16 rows).
 
 | Artifact | Link | Updated | About |
 |---|---|---|---|
+| Quest Paths | https://claude.ai/artifact/F6XUQEjvyABeLJaoSY3Ls4 | 2026-10-05 | Infographic, 5 levels: the trip · which path (patch / minor / development, three tests, decided twice) · what each phase produces per path · what is loaded when · development in depth with the #268173 layer sweep. Source of truth: quest SKILL.md step 6d + "Development path" |
 | Quest Workflow Architecture | https://claude.ai/artifact/Xovop2WNEp1hcQS37SkhLJ | 2026-10-04 | Drawing of the quest workflow: ticket path, stores, checks by moment |
 | Ruri Boot Sequence | https://claude.ai/artifact/WnyAt8Jdg9LEkZjdytmWzB | 2026-10-02 | Boot order |
 | Miya's Voice Map | https://claude.ai/artifact/8hHcoyPVrJaD7Umm8oj5RB | 2026-10-02 | His writing voice |

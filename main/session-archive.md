@@ -4,6 +4,108 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-05 evening, main checkout, #268173 Kedah development quest)
+- **Ask**: brief Izz's Kedah ticket #268173, then (his /goal) build a "development" quest path, like the patch path, and run it fully on this ticket. He chose: role = guide Izz · register Kedah as active · he hates a list presented as complete when it is not.
+- **Why the path exists**: my first guide for Izz was a 6-row list read from the symptom screen. He asked "are you sure those are the things left?" and "how much does our table help?" (about a third). Slip logged `assume-not-verify` (two rows were guesses).
+- **Kedah registry** (`system/states.json`, `etanah-knowledge/kedah/STATE-FACTS.md`): scope active · prefix `PTKED` (was `PTKDH`) · GitLab `git@10.16.63.27:etanah/<repo>.git`, same repos as Melaka · pelupusan trunk `kdh/development` · env `kdh/int-env`, `kdh/release/uat` · Redmine projects 321 / 296 / KED_03_Pelupusan. NOT known: database (no access), local checkout, Task folder, awam trunk. `validate kedah` still ✗ on the missing checkout.
+- **Quest doc**: `projects/coding-projects/active/QA-268173/QA-268173.md` — 9 requirements, 20 facts, 7 work packages, 38 touch-points, 5 decisions (D1-D5, owners Chan Jun / Amin), check queries for Kedah, skeptic audit, coverage count. `node quest/dev-map-check.js 268173` → OK.
+- **Izz's branch**: `kdh/cr/268173` @ `a3693e05e3` (1 commit, 72 lines in `kdhMaklumatTanah.xhtml`). 1 of 38 touch-points started, 0 finished. His block is ungated and the component is mounted on 4 pages.
+- **Biggest findings**: a tugasan's langkah and screens are database rows · the fine is PLPS-only in 4 Java/xhtml guards · the bill is written from a stale total unless Kira runs first · an MLPS SKM config entry already exists and conflicts with the CR · the portal still saves the amount after the fields are removed · Kedah MLPS already charges a fee at submission (decision D2) · no applicant "please pay" message exists anywhere.
+- **Delegation**: 4 Sonnet readers (Kedah pelupusan · Bayaran Pelbagai and flow · Melaka DB model · portal) + 1 Fable 5.1 skeptic. Fable found 6 missing + 5 wrong claims; I re-read each cited line, and found a 4th mount it missed.
+- **System change** (uncommitted): `.claude/skills/quest/SKILL.md` step 6d + section "Development path" (D1-D8, `path=development`) · `.claude/skills/quest/QA-NNN-template.md` development blocks · NEW `quest/dev-map-check.js` + `quest/dev-map-check.eval.js` (21/21 green). Watches `wmuvdadfk`, `wmuvdadm7` added before the edits were committed.
+- **Not reachable**: the live Kedah flow modeler (redirects to login); flow facts come from the 2026-09-03 export.
+- **Open for miya**: send the guide to Izz (it is his message) · local Kedah checkout yes/no · commit the MemoryCore changes.
+
+**Last Activity**: 2026-10-05 17:00 — #278909 (PT Risalat MMKN, cycle 2) review of Farah's rework → shared docx conflict resolved by us → merged to `mlk/int-env` `d0f2177f02` → Redmine handover drafted → Phase 1 closed (cycle 2) · Domain Expansion run.
+
+## Session Recap (2026-10-05, worktree "review-farah-ticket-rework-64d3c2", #278909 takeover review)
+- **Ask**: review Farah's latest rework on #278909, then merge to internal Melaka and prepare the Redmine handover, then save quest + Phase 1 close + Domain Expansion.
+- **BA cycle (2026-10-03, MLIT)**: point 6 Perakuan PTG in the Risalat MMKN for PT. Fields not filled (No. Pengenalan, Lot/PT, Tujuan, Penjenisan, Premium), numbering `1.` where 6.1 / 6.2 belong, alignment.
+- **Farah `5fca34a75d`**: Java rows added to `populatePTGParagraph_PT_Tolak` / `_PT_Lulus` in `etanah-pelupusan\src\main\java\my\gov\etanah\pelupusan\constant\PelupusanWordCCMethodConstant.java`; PT sections edited in the shared `additionalJKKLParagraph.docx`; 8 PT templates indent only. Reviewed by diff: right shape, PT sections only, other urusan untouched.
+- **Conflict**: the shared docx had also changed on master (Aaron `ca5811afe2`, #246512, new section `paragraphPTGPPJKLulus`). I first stopped and asked who should rebuild it. みや: "We should resolve the conflict, please remember this rule." Then: merged `origin/mlk/master` into the ticket branch, resolution = master's file + Farah's 3 PT sections, checked section by section, opened in Word with repair off, compile green.
+- **Git**: `mlk/internal-issues/278909` @ `7cc4c84e1e` → `mlk/int-env` @ `d0f2177f02` (10 ticket files). Not on staging (he asked internal only).
+- **Gate**: commit blocked on no local test. He wrote `[risk-ok: 278909 BA tests on MLIT]`. Falsifier ledger written into the quest doc (4 rows, row 4 = his accepted risk).
+- **Not verified**: no Risalat generated with the fix. Test rows: `PTMLK/01/L/PT/2026/35` and `/27` @ muhammadshafiq@melaka.gov.my (PRMMKNPTG, MLIT).
+- **Handover shape he asked for**: BA note, "Thank you very much.", blank lines, then "Dev notes:" (branch, master merge, conflict line, int-env merge). Root cause + Solution drafted. He posts.
+- **Rule saved**: a merge conflict found while reviewing a colleague's branch or helping a deploy is ours to resolve, docx included (`.claude/auto-memory/feedback_commit_deploy_runbook.md`, top block).
+- **Redmine at close**: Resolved, assignee Nurhafizah Hasan, 100%. Quest block `status=closed`, `closed_cycle2=2026-10-05`.
+- **Open**: his internal deploy + a rendered check · planned release list · optional Java tidy (Farah's rows vs the PT PBN sibling shape) · knowledge candidates below need a main-checkout session (the etanah-knowledge folder is not in a worktree) · an empty `3. Rework\Brief` folder was created in the Task folder by the status flip.
+- **Session friction worth knowing**: this worktree session cannot edit the main checkout's quest doc with the Edit tool. The ledger and resume point were written by script after his "write the ledger". `quest/active.txt` in the main checkout was updated through `active-cli` and sits uncommitted there.
+
+**Last Activity**: 2026-10-05 16:00 — #246923 (PLPS Risalat MMKN, cycle 2) review of Ammar's fix → merged to `mlk/int-env` `3fa76655c6` → Redmine handover drafted → Phase 1 closed · Domain Expansion run.
+
+## Session Recap (2026-10-05, worktree "quest-run-ticket-review-613e4d", #246923 takeover review)
+- **Ask**: run quest on #246923 and review the ticket. Ammar had committed on 2026-10-02, set it Resolved and passed it back with "can help review".
+- **Open item**: only item f (BA 2026-09-15): at PTG the Risalat MMKN stops at Item 5, expected up to Item 6.
+- **Ammar's fix**: etanah-pelupusan `mlk/qa/246923v2`, `e2a2680e8a` + `15fb754499`. One-time refill of the Risalat on first open of PRMMKNPTG (`MlkKertasTemplateForm.repopulateRisalatPlpsPtgOnFirstOpen`) + the three PTG tasks removed from the PLPS generic-template block in `template.config.json`.
+- **Review**: logic holds on every link I could read (task stamp written by `PelupusanTemplateUtil.saveDocuments`, stored document reprocessed in place, both templates carry `paragraphPTGPLPS`, Sedia action does not exclude it, PTG task is in the allow list). Never run by anyone. Confidence given to miya: 80% fix, 65% ticket pass.
+- **Deploy prep**: miya ruled internal only. Merged v2 into `mlk/int-env` → `3fa76655c6`, pushed, compile green. One conflict in `MlkKertasTemplateForm.initData()` resolved to int-env's layout + Ammar's three-line call. Staging NOT merged. miya runs the mlit deploy himself.
+- **Handover drafted** (not posted): Root cause + Solution in Malay, short colleague-fix note to Mira, fields. Text is in the qa_doc.
+- **His rulings**: a ticket branch goes to staging ONLY when he names staging (added to `feedback_commit_deploy_runbook`) · keep both branches · **if #246923 comes back as Rework it goes back to Ammar** (in the quest block `close_note` + qa_doc).
+- **Open**: miya's mlit deploy + Item 6 check + posting the note · the `Co-Authored-By: Claude` line in Ammar's two commits is now on int-env, asked three times, not ruled. Do not ask again; raise only if the branch heads to a release.
+- **Test data**: stg2 PTMLK/02/L/PLPS/2026/17 at PRMMKNPTG (muhammadshafiq@melaka.gov.my) · mlit has no PLPS app on the PTG step, nearest PTMLK/01/L/PLPS/2026/21 at SRMMKNPDT (sanarimah@melaka.gov.my).
+**Last Activity**: 2026-10-05 01:45 — boot audit + system structure: batch 1 LIVE on main (`19bc4963` · `a954de41` · `6beed4ba`), handover written, two read-only Workflow runs in flight (verification `wf_49cf7fce-b89` · batch-2 design `wf_923b9eaf-18e`). NOT a session close; no Domain Expansion run.
+
+## Session Recap (2026-10-05, worktree "quest-run-ticket-review-613e4d", #246923 takeover review)
+- **Ask**: run quest on #246923 and review the ticket. Ammar had committed on 2026-10-02, set it Resolved and passed it back with "can help review".
+- **Open item**: only item f (BA 2026-09-15): at PTG the Risalat MMKN stops at Item 5, expected up to Item 6.
+- **Ammar's fix**: etanah-pelupusan `mlk/qa/246923v2`, `e2a2680e8a` + `15fb754499`. One-time refill of the Risalat on first open of PRMMKNPTG (`MlkKertasTemplateForm.repopulateRisalatPlpsPtgOnFirstOpen`) + the three PTG tasks removed from the PLPS generic-template block in `template.config.json`.
+- **Review**: logic holds on every link I could read (task stamp written by `PelupusanTemplateUtil.saveDocuments`, stored document reprocessed in place, both templates carry `paragraphPTGPLPS`, Sedia action does not exclude it, PTG task is in the allow list). Never run by anyone. Confidence given to miya: 80% fix, 65% ticket pass.
+- **Deploy prep**: miya ruled internal only. Merged v2 into `mlk/int-env` → `3fa76655c6`, pushed, compile green. One conflict in `MlkKertasTemplateForm.initData()` resolved to int-env's layout + Ammar's three-line call. Staging NOT merged. miya runs the mlit deploy himself.
+- **Handover drafted** (not posted): Root cause + Solution in Malay, short colleague-fix note to Mira, fields. Text is in the qa_doc.
+- **His rulings**: a ticket branch goes to staging ONLY when he names staging (added to `feedback_commit_deploy_runbook`) · keep both branches · **if #246923 comes back as Rework it goes back to Ammar** (in the quest block `close_note` + qa_doc).
+- **Open**: miya's mlit deploy + Item 6 check + posting the note · the `Co-Authored-By: Claude` line in Ammar's two commits is now on int-env, asked three times, not ruled. Do not ask again; raise only if the branch heads to a release.
+- **Test data**: stg2 PTMLK/02/L/PLPS/2026/17 at PRMMKNPTG (muhammadshafiq@melaka.gov.my) · mlit has no PLPS app on the PTG step, nearest PTMLK/01/L/PLPS/2026/21 at SRMMKNPDT (sanarimah@melaka.gov.my).
+**Last Activity**: 2026-10-05 01:45 — boot audit + system structure: batch 1 LIVE on main (`19bc4963` · `a954de41` · `6beed4ba`), handover written, two read-only Workflow runs in flight (verification `wf_49cf7fce-b89` · batch-2 design `wf_923b9eaf-18e`). NOT a session close; no Domain Expansion run.
+
+## Session Recap (2026-10-02 → 2026-10-05, session "new-session-77cffa", AWAM build fix → boot audit → structure audit)
+- **READ FIRST**: `main/handoff-2026-10-05-boot-structure-audit.md` (decisions, built pieces, worklist, batch-2 table, resume steps) and `system/INDEX.md` (the one map + "Change record"). Page for みや: https://claude.ai/artifact/FYG8o9tQy6KzRTqMN1doDo
+- **Started as**: Danial's AWAM `mlk/stag-env` compile break (duplicate PDBB method + constants). Fixed and pushed, etanah-awam `98e8595245`. DONE.
+- **Then**: session audit → push gate v5 + compile gate v2 name the repo by its git remote (`63f0ebee`, evals 35/35 · 27/27).
+- **Boot audit**: 13 startup scripts, 61.4 s. Batch 1: 10 scripts, 12.7 s. `hook-syntax-check` and `worktree-cleanup-boot` INSTALLED as Features via the new `core/forge.js install hook`; `unmerged-release-boot`, `arabic-nudge`, `knowledge-schema-audit` boot copy taken off boot.
+- **Structure audit**: `system/INDEX.md` is THE one map. Six kinds of parts (Rules · Workflows · Features · Memory · Kernel · Projects), disk-checked by `node lib/folder-structure.js map`. 8 decisions recorded there (4 ruled by みや by popup, 4 Workflow defaults he left open). "Install" = a part enters through the forge.
+- **His corrections (all logged via `core/slips.js`)**: observability + monitoring are layers of EVERY Feature, never "the dashboard" · system rules do not live in auto-memory · check system-design and existing plans before proposing · replies too long on the phone · boot reads skipped silently.
+- **His standing instructions (2026-10-05)**: an artifact for every system change · save at the moment of change, not at Domain Expansion · questions through the popup with a diagram or table. Recorded in `system/INDEX.md` "Change record". A gate for it is NOT built (Memory audit).
+- **Daily-work check (01:30)**: 126 registrations, 0 missing files · 691 real hook fires since the change, 0 errors · ticket gate, intake gate, quest phase gate, compile gate, push gate all fired clean · Redmine board printed live at the 01:26 boot. Detail in the handover §9.
+- **INCIDENT 01:47**: every session worktree lost its git link (folders intact). This session repaired + locked by hand. Cause NOT proven; three local causes excluded; the other laptop's prune through OneDrive is the open candidate. Handover §9a.
+- **Eval battery 01:49**: 129/139. Six older failures, arabic night flake, observatory under load, hook-runtime eval REPAIRED (13/13), cleanup eval QUARANTINED as slow (178 s vs 120 s limit). Handover §9.
+- **Batch 2 design DONE 02:14**: `main/handoff-2026-10-05-boot-batch-2-design.md` (critic first). 4 decisions asked by popup. Pre-step: forge refuses loose-hook installs until `domain/*/cache.json` is skipped.
+- **Next**: みや said "I want to boot batch 2". Design comes from run `wf_923b9eaf-18e`; show it to him by popup BEFORE building (it changes what he sees at boot). After batch 2: rule the overdue watches → install 53 loose hooks → skills → legacy `Feature/` → Memory audit.
+- **Open**: watch `wmuu2uoib` prints the wrong rollback line (true rollback `git revert 6beed4ba a954de41 635197ba 19bc4963`) · 25 adhoc rows ripe for archive (surfaced at the 01:26 boot) · #246923 Resolved on Redmine with no local block.
+
+**Last Activity**: 2026-10-04 18:00 — "save this quest" rule built (`lib/save-quest.js` + close-phase Save-quest mode, on main `50b3c46b`) · #281638 Redmine Closed 2026-09-29, local archived, verdict DONE · Domain Expansion run.
+
+## Session Recap (2026-09-28 → 2026-10-04, session "patch-281638", #281638 + save-quest build)
+- **Ask (4 Oct)**: check Redmine for #281638, save the quest accordingly, and build the rule: "save this quest" = Redmine status picks Phase 1 (not closed) or Phase 2 (Closed). Verify, run evals, audit against system-design. Then Domain Expansion.
+- **Redmine**: #281638 Closed 2026-09-29 by the TSO ("Verified, user dah pergi ke tugasan yang seterusnya"). Local was archived 2026-09-28, one day early. Doc now carries the close note.
+- **Built**: `lib/save-quest.js` (forge script, one Redmine GET, prints `SAVE-QUEST: <QA> · Redmine = … · local = … → <VERDICT>`) · close-phase skill: Save-quest mode + Redmine check before any Phase 2 (override: miya's "archive anyway") · pointers in quest skill, save-commands, closure memory + MEMORY.md line · `domain/save-quest/` README, NUKE-MARKER, eval. Evals: script 54/54, feature 25/25, Redmine probe 18/18. Live: QA-281638 → DONE.
+- **Spec changes named**: "save the quest" now = persist + Redmine-picked stage (was persist only) · Phase 2 now needs Redmine closed (was local status only).
+- **Worktree**: its git link had been pruned while idle (branch merged). Re-attached at `f98bd868`, fast-forwarded, built there. Forge birth commit went straight to main (`a78885ea`).
+- **Slip caught at close**: my trigger text put a colon + space inside the close-phase description, an unquoted YAML value. The harness dropped the whole description for about 25 minutes. Fixed (`db90cc5a`), eval check 2b added (feature eval now 27/27), full description confirmed back in the skill list. Seven other skills carry the same defect (arabic, confidence-table, evaluator-optimizer, hotfix, multi-dim-evidence, patch-mlk-doc, quest-knowledge-save): logged as a proposal, not fixed.
+- **Open**: proposal A2 (refusal inside `quest/archive-quest.js`; its eval runs 20/20, so it can be built once miya rules) · proposal A1 (lock a live session's worktree) · proposal A1 (skill-header lint + the 7 headers) · PRBB/2026/2 still Baru on PROD, variable add not verified.
+
+**Last Activity**: 2026-10-04 17:40 — #256334 (PDBB CR) Phase 2 re-run and ARCHIVED · Redmine Closed (released PROD 1.8.0 on 2026-09-30) · Domain Expansion run.
+
+## Session Recap (2026-09-30 → 2026-10-04, session "medan-agihan-kepada-bug", #256334 → archive)
+- **Li Wen (Hasil) questions answered** in WhatsApp voice: Flowable Source vs Source expression · subflow End auto-resumes PDBB, `pembetulanUnit` "true" loops back to PYPDBB.
+- **TKPDBB rework**: BA asked to remove Senarai Dokumen. `d3128ad449` (xhtml only) broke Hantar; `072115f762` fixed it with the TKJKKLPK analog (viewMode TRUE + view-panel exclusion). Both in mlk/master + release 1.8.0. MLIT proof PDBB/12 Tamat.
+- **Close**: BA verified staging 2026-09-30, Hakiim closed same day. Quest doc got Close block + Fastest Path + post-mortem. BUG-BESTIARY pattern added. 5 re-synced videos pruned.
+- **Memory**: speech style, rojak fillers and technical terms stay English (`feedback_ticket_writing_style` example 6).
+- **Open**: `domain/submit-path-gate/` was queued 2026-09-30 and is NOT on main (re-logged as proposal A3) · PDBB/7 + /9 on MLIT Selesai but not Tamat (untraced) · ADHOC-HSL-2026-1 langkah N set still Hasil's.
+
+**Last Activity**: 2026-10-04 17:45 — #256334 checked on Redmine: **Closed** (2026-09-30, Anis). Phase 2 was already complete since 2026-09-29 (Task folder in Archive, block in active-archive, qa_doc in projects archive, bounty + FLOWABLE-KNOWLEDGE §13). Nothing left to archive. Domain Expansion run.
+
+## Session Recap (opened 2026-09-25 as worktree colleague-cr-issue-ed8731, closed 2026-10-04 on main — #256334 first day + GitLab move)
+- **Ask (25 Sep)**: start quest #256334 (Aaron's PDBB CR), brief the Perakuan Hantar error `Cannot resolve identifier 'urusan'`.
+- **Found + fixed (our side)**: `MLK_PLP_PDBB` step 7.0 Unit Hasil did not pass `urusan` into `MLK_HSL_ISPEKS`, and passed `applicationName=etanah-pelupusan`. In parameters now: `source urusan` + `sourceExpression ${"etanah-spoc-hasil"}` (same shape as `MLK_PLP_MCL:43`). miya did it by hand in the MLIT modeler; PDBB/2026/5 migrated to v3 and reached Hasil Semakan.
+- **Hasil side (not ours)**: `sis_bpm_log` 47161 FAIL for PDBB while PACT SUCCESS; `HasilSpocIntegrationService` lines 46-48 had no `@Autowired`. Later rounds live in the qa_doc + ADHOC-HSL-2026-1.
+- **GitLab move (25 Sep)**: Gitolite 172.16.93.167 → `git@10.16.63.27:etanah/<repo>.git`. miya's old `.ssh` keys are unreadable by his current Windows login; new key `id_ed25519_gitlab` + `~/.ssh/config`. Steps + a handover for a colleague's Claude were given in chat.
+- **Artifact**: https://claude.ai/artifact/MJkHKwSsfwf4s6jMUDinbk (PDBB Unit Hasil Handover) — miya said it did not help; he wanted the code path that reads `urusan`. Given in chat.
+- **Slips this session**: handoff-babble-not-statement (prose .txt handover instead of bare before/after .java) · reused an unreadable SSH key without checking it · lecture-tone message draft for a colleague · artifact showed a diagram when he wanted the code.
+- **Today (4 Oct)**: Redmine status read = Closed. Verified all Phase 2 moves on disk. No new work. The old worktree folder still exists on disk but git no longer knows it; this session's Edit tool is still pinned to it, so saves went through a script.
+
+**Last Activity**: 2026-10-04 17:45 — #280540 (PPTPB fee unit) Phase 2 done and ARCHIVED · Redmine status at close = Closed (2026-10-01, verified with user) · Domain Expansion run.
+
 ## Session Recap (2026-09-29 → 2026-10-04, session "quest 280540 data update", #280540 → archive)
 - **Ask**: reopen #280540 and answer Common ("dev kau tarik data lain") → audit our fixes → BA's last change (Lot shows "per Lot") → make the Task folder shape proper and the rework detection robust → clean up → (4 Oct) check Redmine, Phase 2, Domain Expansion.
 - **Answer to Common**: PPTPB unit order = row `hsl_fi_kadar.kadar_pengiraan_id` → row `unit_luas_id` → header `hsl_fi_pejabat.unit_pengiraan_id`. The 24/09 check script showed only the header, which caused the confusion. Common's save fix (etanah-maintenance `mlk/esokongan/280540`) went to MLKIT 2026-09-29.
@@ -5900,6 +6002,10 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
+
+
+
 
 
 

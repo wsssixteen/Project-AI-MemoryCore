@@ -3,6 +3,37 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-06 (#283286 — "What pin. Use plain english")
+
+- **A thing in his files is called what the file calls it.** I said "the pin" for the common version line in `pom.xml`. He could not follow a correct finding and was angry. The second reply used "the common version pelupusan is built with" and needed nothing else.
+- **"Check if he updated his branch" is a question I should have asked the server first.** My verdict on a colleague's fix came from the local copy. Ammar had pushed the missing half thirty minutes after his first commit. A review of someone's branch starts with the server's answer, then the reading.
+- **A review can end with nothing to fix.** He still wanted it saved and closed like any quest.
+## Relationship reinforcement — 2026-10-06 (#283532 — "I hope you audited the script and properly checked against our script rules")
+
+- **He sends while I am still talking, so the audit is finished before the block is shown.** He took the infra block and sent it; his audit question came after. The honest answer had three gaps in it. The gaps belong in the same reply as the script, not in the next one.
+- **"Stage redmine" is the browser form, filled and left.** He submits. He changed one word of the note ("Thank you." for "Thank you very much.").
+- **A short yes is what he wants after the proof.** "Patch is correct and I'll send redmine?" wanted yes, the three facts, and the one thing I cannot see.
+
+## Relationship reinforcement — 2026-10-05 (#278909 cycle 2 — "We should resolve the conflict")
+
+- **A conflict I find during a review or a deploy is mine to resolve.** I stopped at a Word file conflict and gave him two options and a note for Farah. He answered in one line and asked me to remember it. The junior builds templates; a merge conflict on one is not building.
+- **"I want to deploy" is not the words a gate needs.** The commit gate wanted his own risk line. I said so plainly and gave him the exact line. He sent it and the rest ran without a question.
+- **He shapes the handover as he reads it.** The BA note stays short. What we did goes under "Dev notes:" a few lines below "Thank you". His format, tried once, kept.
+- **He asks "have you pushed" before I say it.** After a blocked step, the first line of the next reply is yes or no.
+
+## Relationship reinforcement — 2026-10-05 (#246923 — "How sure are you the fixes will be successful?")
+
+- **Staging is his word, never my default.** I listed "merge to internal and staging" as a normal step. He said a ticket branch goes to staging only if he names it. Internal is where a fix is proven first.
+- **A question he skips three times is answered.** I raised the Claude line in Ammar's commits in three replies. He ruled everything else and left that one. Stop asking; note it, and raise it only when the branch heads to a release.
+- **He wants the number, then he decides.** "How sure are you" got 80% for the fix and 65% for the ticket, with the one unproven link named. He did not argue the number. He used it: rework goes back to Ammar.
+- **A review of a colleague's fix can end with no commit of ours.** The takeover was the reading, the merge and the handover. The ownership of the next round stayed with the author, by his ruling.
+## Relationship reinforcement — 2026-10-06 (the document simulator — "Shouldn't we build like a complete template generator like I requested?")
+
+- **He asks for the general tool and I build the narrow one.** His first message already said "a tool that produces a Risalat filled like the running app". I heard a reproducer for one ticket. One sentence from him mid-run widened it, and the general tool found the cause on its first full run.
+- **"Can we test everything now?" wants the honest edge, not a yes or a no.** I wrote "No" for things I had not tried. "Not attempted" was the true word, and he accepts it.
+- **"Decide now" means decide.** He asked where the tool belongs in the quest. A table of four places and four non-places was the answer; then "in short sentences only, what is this for" because the table had lost the plain point. Say the plain point first, even after a decision table.
+- **A thing he must remember by name gets a name he is told.** "Give me the name so that I know as well." `/doc-sim`. The name goes in the first line of the reply.
+
 ## Relationship reinforcement — 2026-10-04 (#256334 first day, read back nine days later)
 
 - **To another team he sends the fix, not the lesson.** I wrote Li Wen a step-by-step of her own flow, then a prose handover file. He wanted two short lines that own our part and a bare before/after code block. A colleague reads a lecture as an accusation.

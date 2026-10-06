@@ -8,6 +8,11 @@ metadata:
   modified: 2026-08-21T03:13:08.856Z
 ---
 
+🚨 **A merge conflict found while reviewing a colleague's branch or helping with a deploy is OURS to resolve** (miya 2026-10-05, #278909: "We should resolve the conflict, please remember this rule when we're reviewing and assisting deploy workflow"). Do not hand it back to the colleague and do not ask who resolves it. This covers a template (.docx) conflict too: the junior-builds rule ([[template-work-junior-builds]]) is about building a template, not about a merge conflict on one.
+- What I did on #278909 (my method, not his words): merged `origin/mlk/master` into the ticket branch in a work-clone worktree, rebuilt the conflicted shared docx as master's version plus the ticket's own sections, checked section by section, opened it in Word with repair off, compiled, then merged to the env branch.
+- The `-X ours` rule further down still holds for text conflicts on `mlk/int-env`. It does not fit a binary file the ticket itself changed, because it drops the ticket's fix.
+- Still his call: the falsifier gate at commit (local test or his `[risk-ok: <num> <reason>]`).
+
 🚨 One-pass etanah COMMIT + DEPLOY ceremony (order is the whole rule):
 
 1. Ensure `quest/active.txt` has the ticket's block with `status=active` + `local_test_confirmed=true` (miya saying "local test passed" = set it NOW).
@@ -82,6 +87,8 @@ Flow (both repos): branch the fix off **`mlk/master`** → merge that ticket bra
 🚨 When みや says **deploy to staging**, deploy to **BOTH** staging (`mlk/stag-env`) **and** internal (`mlk/int-env`). When he says **deploy to internal**, deploy to **internal ONLY**.
 
 **Why:** 2026-09-22, みや set this as a standing rule during the 279711/280176 reworks. Staging is the wider BA-facing env, so anything reaching staging must also be on internal — internal must never lag behind staging. Internal is the narrower env, so an internal-only request stays internal.
+
+**🚨 Staging only on his word (2026-10-05, #246923, みや: "We should only deploy ticket branch to staging if I specified it").** A ticket branch is merged to `mlk/stag-env` ONLY when he names staging for that ticket. A bare "deploy" or a BA-test deploy = internal only. Never offer or plan staging as a default step in a deploy card or Next steps.
 
 **How to apply:** at every deploy step read the target from みや's exact words. staging → merge/deploy the fix into both env branches. internal → `mlk/int-env` only. The apply/local-test/STOP-review gates still precede any deploy. Pairs with (merged above) and the commit-deploy-runbook.
 

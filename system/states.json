@@ -124,20 +124,35 @@
       "label": "Kedah",
       "code": "KDH",
       "aliases": ["Kedah", "KDH", "kdh"],
-      "permohonan_prefix": "PTKDH",
-      "_unverified": "permohonan prefix; no local repo checkout (remote branch kdh/master exists on common + pelupusan)",
-      "work_scope": "scaffold",
-      "task_folder": null,
+      "permohonan_prefix": "PTKED",
+      "_unverified": "database connection (engine = postgres per miya 2026-10-05; no MCP server, host or schema names yet); no local repo checkout (repo_dir null); awam + common trunk; which Redmine tracker maps to which branch family",
+      "work_scope": "active",
+      "task_folder": "Kedah",
       "knowledge_dir": "kedah",
       "repo_dir": null,
-      "modules": {},
+      "modules": {
+        "pelupusan":  { "repo": "etanah-pelupusan",  "trunk": "kdh/development" }
+      },
       "branch_prefix": "kdh",
-      "ticket_branch": null,
+      "ticket_branch": "kdh/<tracker>/<num>",
+      "trunk_ref": "origin/kdh/development",
+      "env_branches": ["kdh/int-env", "kdh/release/uat"],
+      "work_clone_root": "E:/Dev/etanah-work",
+      "branch_note": "Verified 2026-10-05 by git ls-remote on GitLab (git@10.16.63.27:etanah/<repo>.git, the same repos as Melaka): pelupusan has NO kdh/master; ticket branch kdh/cr/268173 is cut from kdh/development. kdh/int-env + kdh/release/uat exist. Ticket branch families seen on pelupusan: qa, requirement, uat-or, uat-cr, cr, pat-cr. common has kdh/master; awam has kdh/plp/development and kdh/release/uat (trunk not confirmed).",
       "bpmn": { "prefix": "KDH", "root_module": "PLP" },
-      "db": { "engine": null, "mcp": {}, "schemas": {}, "primary_env": null },
-      "redmine": { "project": null, "project_names": [] },
+      "db": { "engine": "postgres", "mcp": {}, "schemas": {}, "primary_env": null, "note": "engine per miya 2026-10-05; no connection configured yet" },
+      "redmine": {
+        "project": null,
+        "project_names": ["e-Tanah Kedah UAT", "e-Tanah Kedah", "KED_03_Pelupusan"],
+        "project_ids": { "e-Tanah Kedah UAT": 321, "e-Tanah Kedah": 296 }
+      },
       "flowable_alter_file": "FLOWABLE-ALTER.md",
-      "local_server": null
+      "local_server": null,
+      "hosts": {
+        "internal": "https://kedit.kedah.gov.my",
+        "git": "git@10.16.63.27:etanah/<repo>.git",
+        "redmine": "http://172.16.90.169/redmine"
+      }
     },
     "terengganu": {
       "label": "Terengganu",
