@@ -3,6 +3,11 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-06 (#283286 — "What pin. Use plain english")
+
+- **A thing in his files is called what the file calls it.** I said "the pin" for the common version line in `pom.xml`. He could not follow a correct finding and was angry. The second reply used "the common version pelupusan is built with" and needed nothing else.
+- **"Check if he updated his branch" is a question I should have asked the server first.** My verdict on a colleague's fix came from the local copy. Ammar had pushed the missing half thirty minutes after his first commit. A review of someone's branch starts with the server's answer, then the reading.
+- **A review can end with nothing to fix.** He still wanted it saved and closed like any quest.
 ## Relationship reinforcement — 2026-10-06 (#283532 — "I hope you audited the script and properly checked against our script rules")
 
 - **He sends while I am still talking, so the audit is finished before the block is shown.** He took the infra block and sent it; his audit question came after. The honest answer had three gaps in it. The gaps belong in the same reply as the script, not in the next one.

@@ -7,7 +7,7 @@ retention: rotate monthly
 
 **What fires when**: Stop — the reply carries an etanah commit subject: a fenced block whose only line matches `^(QA|Ref) #NNN - `, or a `git commit -m "…"` string inside a fenced block.
 
-**Contract**: BLOCK (exit 2) when the subject breaks any of six deterministic rules:
+**Contract**: BLOCK (exit 2) when the subject breaks any of eight deterministic rules (R7 is the commit-time verb check in `commit-gate.js`, not in this gate):
 
 | Rule | Check |
 |---|---|
@@ -17,6 +17,7 @@ retention: rotate monthly
 | R4 | no non-change word in the description: keep, kept, keeping, leave, leaving, left, untouched, unchanged, retain(ed), remain(s), still |
 | R5 | subject ≤ 100 characters |
 | R6 | a redraft for the same ticket is never longer than the previous draft in this transcript |
+| R8 | mixed but mainly English: no marker phrase anywhere (SEMAKAN SAHAJA, belum diuji, review only, untested, WIP); and the description is not mainly Malay. Of its lowercase-initial words, N in all, M are Malay function words (dan, yang, tidak, buang, banding, untuk, dengan, ...); block when M >= 3 AND M*2 > N (exactly half passes). Capitalised screen and button names never count; Jana Semula, Muat Naik and Muat Turun are also ignored in lowercase |
 
 Bypass: `[skip-commit-subject: <reason>]` in the same reply.
 
@@ -32,7 +33,7 @@ Bypass: `[skip-commit-subject: <reason>]` in the same reply.
 
 **state-scoped**: no, state-agnostic (subject shape is the same for every state's repo).
 
-**Eval**: `node domain/commit-subject-gate/commit-subject-gate.eval.js` — 24 fixtures including the replay.
+**Eval**: `node domain/commit-subject-gate/commit-subject-gate.eval.js` — 54 fixtures including the replay and the R8 block/pass set.
 
 ## Adversarial scenarios (system-design Rule 12)
 
@@ -62,3 +63,18 @@ Bypass: `[skip-commit-subject: <reason>]` in the same reply.
 | 22 | a `-m` with single quotes | handled by the quote-agnostic regex |
 | 23 | user-instruction reversal: miya dictates the exact wording that breaks a rule | bypass token with reason, never silent |
 | 24 | subject drafted in prose, not fenced | accepted-risk, the convention says subjects are shown in a fence |
+| 25 | R8: three rejected 2026-10-05 subjects (#244600) | blocked: two by marker, one mainly Malay (F25 to F27) |
+| 26 | R8: five accepted subjects with Malay screen names | pass (F34 to F38) |
+| 27 | R8: Jana Semula and Muat Naik, capitalised or lowercase | pass (F39, F40) |
+| 28 | R8: one "dan" in the URUSAN segment | pass, only the description is scanned for words (F41) |
+| 29 | R8: marker in lowercase, uppercase or inside the URUSAN segment | blocked (F29, F30, F32) |
+| 30 | R8: English "fail" with a single hit | pass, needs M >= 3 (F42) |
+| 31 | R8: Capitalised Kaki Lima, Papar, Simpan | pass (F43, F44) |
+| 32 | R8: "wiper" vs marker WIP | pass, whole-word match (F45) |
+| 33 | R8: mainly-Malay description (5 of 6, 3 of 4, 5 of 7 lowercase words) | blocked (F31, F33, F49) |
+| 34 | R8: one or two lowercase Malay words | accepted-risk: mixed is allowed by owner ruling (F46, F53) |
+| 35 | R8: bypass token | pass, same token as R1 to R6 (F48) |
+| 36 | R8: block text carries the M of N count and the write-it-in-English instruction | effect fixture (F47) |
+| 37 | R8: mixed subjects, 0 of 8 and 1 of 3 Malay words | pass (F50, F51) |
+| 38 | R8: exactly half Malay (4 of 8) | pass, the rule needs more than half (F52) |
+| 39 | R8: Capitalised first Malay verb ("Buang logger ujian") | pass, only lowercase-initial words count (F54) |

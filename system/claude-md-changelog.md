@@ -91,6 +91,36 @@ Per みや (planning turn, 2026-07-27): *"scrutinize & double check the redmine 
 - **`.claude/hooks/ticket-gate.js`**: deterministic row **1b** injected in the Phase-0 gate checklist (same content, enforcement side).
 - **`domain/ticket-gate/eval.js`**: +4 fixtures (F11) — row injected · timeline-table demanded · OPEN/SOLVED + DO-NOT-RESOLVE demanded · solved-issue-scouting ban present. **22/22 green.**
 
+## commit-conventions.md v1.6 — 2026-10-06
+
+**R8 Malay clause loosened: "allow mixed but mainly English."** Owner ruling 2026-10-06 after the v1.5 history check showed 50 of 200 past subjects would block.
+
+**Change**: the Malay clause now blocks only a description that is mainly Malay. Of its lowercase-initial words (screen phrases Jana Semula, Muat Naik, Muat Turun stripped), M are Malay function words out of N; block when M >= 3 AND M*2 > N (exactly half passes). Block text: "subject is mainly Malay (M of N words): write it mainly in English; screen names stay as shown".
+
+**Spec preservation**: the R8 marker clause (SEMAKAN SAHAJA, belum diuji, review only, untested, WIP) is kept unchanged; R1 to R7 untouched. Dropped and justified: the "2+ distinct Malay words" trigger (replaced by the ratio per the ruling) and the "first word counts in any case" exception (the ratio counts lowercase-initial words only).
+
+| File | Change |
+|---|---|
+| `.claude/commit-conventions.md` | R8 row reworded + version 1.5 → 1.6 |
+| `domain/commit-subject-gate/` | hook ratio rule, eval 48 → 54 fixtures, README row and scenarios |
+| `.claude/hooks/commit-gate.js` | Check 0 R8 mirror updated (hook still disabled at line 38) |
+
+## commit-conventions.md v1.5 — 2026-10-05
+
+**Subject shape gains R8: English only.** Per みや after he rejected three #244600 subjects (marker words such as SEMAKAN SAHAJA and belum diuji, plus Malay sentence words).
+
+**Change**: R8 blocks (a) a marker phrase anywhere (SEMAKAN SAHAJA, belum diuji, review only, untested, WIP) and (b) 2 or more distinct lowercase Malay function words in the description. Capitalised screen and button names never count (Jana Semula, Muat Naik, Simpan, Kemaskini, Terimaan Keputusan). The name is R8 because R7 already exists (verbs must match the staged diff).
+
+**Spec preservation**: R1 to R7 and every v1.4 rule are untouched; additive. Heading "SIX" → "EIGHT" only counts the rules already in the table.
+
+| File | Change |
+|---|---|
+| `.claude/commit-conventions.md` | R8 row + version 1.4 → 1.5 |
+| `domain/commit-subject-gate/` | hook R8 + eval 24 → 48 fixtures + README rule row and scenarios |
+| `.claude/hooks/commit-gate.js` | Check 0 R8 mirror (hook is currently disabled at line 38, so not live) |
+
+**Evidence**: 200 past Ridhwan subjects run through R8 for strictness: 50 would block (38 of the 71 that start `(QA|Ref) #N - `). The rule was not tuned to pass history.
+
 ## commit-conventions.md v1.3 — 2026-07-21
 
 **INTERNAL ISSUE branch prefix corrected: `mlk/internal-issue/` → `mlk/internal/`.** Per みや during #271049.

@@ -360,6 +360,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\quest-exists-gate\\\\quest-exists-gate.check.hook.js\""
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\memory-write-gate\\\\memory-write-gate.check.hook.js\""
+          }
+        ]
       }
     ],
     "Stop": [

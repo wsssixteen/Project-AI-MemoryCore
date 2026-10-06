@@ -152,6 +152,17 @@ process.stdin.on('end', () => {
       if (nonChange) {
         blockCommit(`⚔️ COMMIT MESSAGE — "${nonChange[1]}" describes a NON-change.\n\nA subject says what CHANGED in this commit, never what was left alone. Files that were not touched are not in the diff and do not belong in the message.\nGot: ${msg}`);
       }
+      // R8 mirror of domain/commit-subject-gate: no marker phrase; Malay allowed unless mainly Malay (M >= 3 and M*2 > N).
+      const r8Marker = /\b(semakan sahaja|belum diuji|review only|untested|wip)\b/i.exec(msg);
+      const r8Words = new Set(('dan yang tidak tak tiada buang banding tanpa semasa selepas sebelum untuk dengan pada kepada daripada supaya kerana ikut guna tambah tukar betulkan papar simpan jajaran lorekan ulasan kepala kaki imej fon sebenar ujian panggilan padam fail naik muat semula ke dari bagi atau bukan bila elak ganti kekalkan jangan sahaja hanya').split(' '));
+      const r8Low = (desc.replace(/\b(jana semula|muat naik|muat turun)\b/gi, ' ').match(/\b[A-Za-z]+\b/g) || []).filter(w => /^[a-z]/.test(w));
+      const r8M = r8Low.filter(w => r8Words.has(w)).length;
+      if (r8Marker) {
+        blockCommit(`⚔️ COMMIT MESSAGE — R8: marker "${r8Marker[1]}": no review or test marker words in a commit subject.\nGot: ${msg}`);
+      }
+      if (r8M >= 3 && r8M * 2 > r8Low.length) {
+        blockCommit(`⚔️ COMMIT MESSAGE — R8: subject is mainly Malay (${r8M} of ${r8Low.length} words): write it mainly in English; screen names stay as shown.\nGot: ${msg}`);
+      }
       if (msg.length > 100) {
         blockCommit(`⚔️ COMMIT MESSAGE — ${msg.length} chars, max 100.\n\nShorter, not longer. Got: ${msg}`);
       }
