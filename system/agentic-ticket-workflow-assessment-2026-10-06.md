@@ -81,3 +81,15 @@ Proposals logged: A2 (schema-verify parser scope) · A4 (falsifier check reads t
 | A2 | BA issue coverage matrix across the ticket and its related tickets at every hand-back |
 | A3 | Same-mark writers sweep before a fix ships |
 | A4 | etanah-knowledge entry for document versi, Carian Pintas and Senarai Versi |
+
+## Session: #282966 AWAM RPPLP search screen (worktree "perak-permohonans-doc-paths-c1480c")
+
+| Axis | What this session showed | Instance |
+|---|---|---|
+| A1 agentic system | A small one-file ticket ran faster inline than the Phase 0 workflow would have | Cause found in 4 reads of one form and one xhtml; no familiar spawned |
+| A1 agentic system | A gate that reads the transcript did not see a line that was in my reply | `memory-write-gate` refused 5 writes of `feedback_ticket_writing_style.md` with "no RULE-PLACEMENT line" while the line was in the reply text each time |
+| A2 quest workflow | The falsifier check and the note tool disagree on the risk override | Commit passed on his `[risk-ok: 282966 ...]`; `ticket-close-block.js` then refused the BA note for the same quest because it reads `local_test_confirmed` only |
+| A2 quest workflow | Stop checks fired for cases the ticket did not have | No-Resit check fired on an RPPLP search screen (PPTPB appears only as the searched record); local-prep check fired on an internal-only test |
+| A3 debugging | A recent commit on the same handler was the cause; the git blame gave it in one call | `a105e11d7d` (#263304, 2026-09-02) added the flag reset at `AwamMaklumatLesenTabForm.onSearchNoLesen():351` |
+| A4 etanah issue-solving | Internal and master copies of one file differ in line endings, so a cherry-pick conflicts on the whole file | `AwamMaklumatLesenTabForm.java` on `mlk/int-env`: 3-line change conflicted on 1,600+ lines |
+| A5 sweep | Not used this session | A5 ⏭ single-ticket session |
