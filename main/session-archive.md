@@ -4,6 +4,30 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-06, worktree "perak-permohonans-doc-paths-c1480c", ADHOC-PT-2026-11)
+- **Ask**: paths of all documents for `PTPK/18/E/PT/2024/19` and `PTPK/13/E/PT/2023/2`, for infra to load from Perak PROD to STG. Then: prepare the adhoc for ProTime, save, commit, Domain Expansion.
+- **Result**: 122 `.main` files (82 + 40) = 101 generated (`umm_a_dok_keluaran`) + 21 uploaded (`umm_a_dok_kmskn`), path in `et_dms.dokumen_revision.lokasi_fail`. His list file checked against PROD: 122 matched, 0 missing, 0 extra. File now at Task folder `1. Tasks\Perak\9. AH - PROD - PT - path dokumen untuk infra salin ke STG\2. Fix\PRK PROD paths.txt` (moved off his Desktop).
+- **His corrections**: no `*` wildcard in paths for infra · no `.pdf` lines, `.main` only · the proof SELECT must run as handed (Perak PROD login `ET_READ` owns no tables, so it must be schema-qualified) · ProTime title starts with the env: `PROD - Load documents from PROD to STAG`.
+- **Built**: `lib/adhoc-titles.js` prints `<ENV> - <title>` (eval 18/18) · adhoc-save + adhoc-titles skills say so · `lib/adhoc-save-audit.js` no longer counts another state's block as a clash on the same A# row.
+- **Slip logged**: `answer-the-ask` (ProTime title without the env prefix; the instruction was in no loaded file).
+- **Not verified**: STG `lokasi_fail_pdf` state (two STG queries timed out). If a document fails to open on STG after the copy, set `LOKASI_FAIL_PDF = NULL` for that revision (lever seen for WP, not proven for Perak).
+- **Open**: infra copy · open one document per permohonan on STG · `lib/adhoc-save-audit.eval.js` was 19/24 on main before this session (5 stale fixtures, proposal logged) · the 20-scenario table for the adhoc-titles change was not written; 5 fixtures were added instead.
+- **Knowledge banked**: `etanah-knowledge/perak/STATE-FACTS.md` § Document locator (main checkout only).
+**Last Activity**: 2026-10-06 15:55 — `/doc-sim` built, eval 34/34, live run verified, quest skill made aware of it · #244600 cause reproduced offline, fix branch `a820679f80` reads both test pairs as the same
+
+## Session Recap (2026-10-05 midday to 2026-10-06 15:55, main checkout, offline document generator → `/doc-sim`)
+- **Ask**: an offline reproducer for #244600 (first Kemaskini, no edit, versi goes up). Widened by him mid-run to a complete template generator. Then: make it an invokable skill the quest knows about, save, Domain Expansion.
+- **The tool**: `E:\Dev\scripts\EtanahTemplateGen\` (outside the repo; it compiles against the local WAR). Boots the app's own Spring beans outside JBoss against the local `etanahDS` schema, read-only, and calls `PelupusanTemplateUtil.processTemplate()`. Stops before `saveDocuments()`. 2 to 3 minutes a run.
+- **The Feature**: `domain/doc-sim/` (runner `doc-sim.js`, `doc-sim.eval.js` 34/34, `log.jsonl`, README, NUKE-MARKER) + `.claude/skills/doc-sim/SKILL.md`. Census: PROPER. No hook.
+- **Quest awareness** (`.claude/skills/quest/SKILL.md`): step 6e (`doc-sim applies` / `doc-sim n/a` at Phase 0) · 2 phase-table rows (Recon, Rubric falsifier) · 1 sentence in the falsifier ledger bullet · 1 hand-back row (`DOC-SIM:` line). Additive.
+- **#244600 finding**: PTMLK/01/L/PPTPB/2026/15 @ azmezan@melaka.gov.my and PTMLK/03/L/PRZ/2026/2 @ nfadzilah@melaka.gov.my (PRMMKNPDT, stg2). A no-edit Word save drops run font size 12 (`sz=24`) on `jabatanTeknikalPT` / `jabatanTeknikalPRZ` + `namaJT` because the Normal style is 12. Compare at `f14c58ae64`: CHANGED (10 and 15 paragraphs, format only). Compare at `a820679f80` (`PelupusanWordLogUtil.kandungan`, branch `mlk/review/244600`): SAME on both pairs.
+- **Not done on purpose**: nothing written into the #244600 quest doc. Another live session owns it (worktree `ticket-244600-review-89e02d`, copy newer than main's). No etanah repo touched.
+- **Limits**: runs the classes of the local deployed WAR (a Java fix must be deployed first) · no screen, no save · screens and Jasper reports not attempted · filled RAHSIA files sit in `E:\Dev\scripts\EtanahTemplateGen\out\` until deleted.
+- **Watches added**: `wmuwdrxf2` (quest skill rows) · `wmuwdrxng` (doc-sim skill).
+- **Open for miya**: tell the #244600 session the offline result (both pairs SAME on `a820679f80`) · option to test an undeployed Java fix is not built · delete `out\` when #244600 closes.
+
+**Last Activity**: 2026-10-05 23:00 — Kedah registered active · #268173 (Izz's UAT-CR, MLPS) run as the FIRST development quest · development path built into the quest skill · nothing committed, no Redmine write, no etanah code changed
+
 ## Session Recap (2026-10-05 evening, main checkout, #268173 Kedah development quest)
 - **Ask**: brief Izz's Kedah ticket #268173, then (his /goal) build a "development" quest path, like the patch path, and run it fully on this ticket. He chose: role = guide Izz · register Kedah as active · he hates a list presented as complete when it is not.
 - **Why the path exists**: my first guide for Izz was a 6-row list read from the symptom screen. He asked "are you sure those are the things left?" and "how much does our table help?" (about a third). Slip logged `assume-not-verify` (two rows were guesses).
@@ -6002,6 +6026,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
