@@ -1,5 +1,22 @@
 # Current Session
 
+**Last Activity**: 2026-10-06 23:55 — Arabic class-along (Book 1 Lesson 13 part ب) · class-along mode written into the `/arabic` skill · review set moved to Lesson 13 · memory design discussion OPENED with miya (nothing ruled) · aligned with the "Audit System Retrieval" session on vector search · nothing committed · NOT a session close.
+
+## Session Recap (2026-10-06 night, MAIN checkout on the laptop of user vice4, session "Arabic class exercises")
+- **READ FIRST**: `.claude/skills/arabic/SKILL.md` → "Class-along mode" · `projects/learning-projects/active/arabic/arabic.md` → Progress.
+- **Ask**: help along his Arabic class from screenshots. Then: use the arabic workflow as the base for the system's memory audit (types of memory, layers, what to build), stay aligned with the session weighing vector search, advise model and effort.
+- **Class**: Madina Book 1 Lesson 13 part ب, printed pages 74 to 77 = `source/pages/p071` to `p074`. Dialogue + Exercises 1 to 4 given in chat. Exercises 5 and 6 not opened.
+- **His corrections (all in the skill now)**: pull the book page myself on the first screenshot · one section per reply, an exercise never cut at a page break · Arabic with harakat + Malay only, NO Latin reading column · the example row is labelled `Eg` · revise the recent class until the next class or he names another topic · one journey line per class in `arabic.md`.
+- **State set**: `data/progress.json` `class_position` = Lesson 13 part ب · week set Lesson 1 → Lesson 13 (chunk 1 of 2, 15 words).
+- **Not built**: an engine focus field. `rollIfNeeded` still advances the set on a Monday after `min_reviews`; the skill tells me to re-pin by hand until then.
+- **Correction I owed him**: I said the page's new words were not in `words.json`. Wrong: the part ب new-word box has 3 words (الزوج · المرأة · قريب) and all 3 are there. Nothing to add.
+- **Memory design (opened, nothing ruled)**: his layers = main-memory on top, diary / long-term under it, the plan's details at the bottom, plus a replaceable one. Mapped onto the shelves `system/INDEX.md` already names (identity · knowledge · notes · diary · state). My additions put to him: each shelf needs a load rule and a write rule; diary and knowledge stay two shelves; rules live in the workflow's skill, not in memory.
+- **Measured tonight**: `main/main-memory.md` 248 KB, about 1,000 lines; one Read returned lines 1 to 233; the identity sections start at line 533, under 51 dated "Relationship reinforcement" entries · `.claude/auto-memory` 73 notes (53 feedback) · `daily-diary` 156 files · `main/session-archive.md` 687 KB · `etanah-knowledge` 715 files, 68.8 MB · `main/todo.md` 207 KB.
+- **Other session**: "Audit System Retrieval" (another laptop, worktree `review-farah-ticket-rework-64d3c2`). Its reply: vector search is a recommendation only, etanah-knowledge only, one Tool called on purpose (a row in `system/tools.json`), index outside OneDrive, embeddings local or outside not ruled, a 10-question test offered before any build. It agreed to my four points and will not write a vector design. Its uncommitted change adds Tools as a seventh kind in `system/INDEX.md`; the main copy read tonight still says six.
+- **Slips logged**: `answer-the-ask` (waited for screenshots, then a reading column he did not want) · `assume-not-verify` (the word-list claim).
+- **Uncommitted**: `.claude/skills/arabic/SKILL.md`. `arabic.md` and `data/` are not tracked by git.
+- **Open for miya**: rule the layer map · first build (I recommend the arabic focus field) · whether the dated entries in `main-memory.md` move to the diary shelf (nothing deleted) · model for the design rounds (his own rule says Fable).
+
 **Last Activity**: 2026-10-06 23:55 — #268173 (Izz's Kedah UAT-CR, MLPS) CLOSED as resolved by its owner with a DIFFERENT approach than the one I guided · my 38-item map and 7-fix patch superseded · development path corrected (approach comparison is mandatory, checker refuses a map without it) · short-question brevity check added · boot batch 2 restored on main after a stale-index commit undid it · Domain Expansion run.
 
 ## Session Recap (2026-10-05 night → 2026-10-06 night, MAIN checkout, #268173 Kedah development quest)

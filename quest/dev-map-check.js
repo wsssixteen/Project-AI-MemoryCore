@@ -7,7 +7,7 @@
 //
 // goal: no development quest is handed back with a requirement nobody mapped, no skeptic audit,
 //       or a percentage with no coverage count behind it.
-// retention: regenerate (prints only; writes nothing)
+// retention: rotate monthly (one row per ticket run in quest/dev-map-check.log.jsonl; a --doc run with no ticket number writes nothing)
 // footprint: on-demand: 1 node process, a few ms, no children
 //
 // Checks (each prints PASS/FAIL):
@@ -151,6 +151,10 @@ function main() {
   console.log(`dev-map-check — ${path.basename(md)}`);
   for (const r of results) console.log(`  ${r.ok ? 'PASS' : 'FAIL'}  ${r.id.padEnd(4)} ${r.detail}`);
   console.log(ok ? 'OK — every development block is present' : 'GAP — fill each FAIL before hand-back');
+  if (num) {
+    const log = process.env.DEV_MAP_LOG || path.join(root, 'quest', 'dev-map-check.log.jsonl');
+    try { fs.appendFileSync(log, JSON.stringify({ ts: new Date().toISOString(), qa: 'QA-' + num, ok, failed: results.filter(r => !r.ok).map(r => r.id) }) + '\n'); } catch (_) { /* the check result stands without the row */ }
+  }
   process.exit(ok ? 0 : 1);
 }
 

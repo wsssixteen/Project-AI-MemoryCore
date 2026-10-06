@@ -103,6 +103,13 @@ r = run([]);
 check('S19 CLI exits 2 with no arguments', r.status === 2, 'exit=' + r.status);
 r = run(['999999999']);
 check('S20 CLI exits 2 for a ticket with no quest doc', r.status === 2, 'exit=' + r.status);
+const logPath = path.join(tmp, 'run.log.jsonl');
+const runLogged = (args) => spawnSync(process.execPath, [cli, ...args], { encoding: 'utf8', env: { ...process.env, DEV_MAP_LOG: logPath } });
+runLogged(['--doc', goodPath]);
+check('S25 a --doc run with no ticket number writes no log row', !fs.existsSync(logPath));
+runLogged(['990001', '--doc', badPath]);
+const rows = fs.existsSync(logPath) ? fs.readFileSync(logPath, 'utf8').trim().split('\n').map(l => JSON.parse(l)) : [];
+check('S26 a ticket run writes one row naming the failed block', rows.length === 1 && rows[0].qa === 'QA-990001' && rows[0].ok === false && rows[0].failed.includes('D6'), JSON.stringify(rows));
 fs.rmSync(tmp, { recursive: true, force: true });
 
 console.log(`\ndev-map-check.eval: ${pass}/${pass + fail} ${fail ? 'RED' : 'green'}`);
