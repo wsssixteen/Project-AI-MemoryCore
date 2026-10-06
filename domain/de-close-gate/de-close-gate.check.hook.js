@@ -16,7 +16,8 @@
 // REPLAY: 2026-08-20 QA-276182 — touched all session, deployed to int-env, had NO
 //   active.txt block and NO qa_doc; only miya's explicit audit ask caught it.
 // NOD: miya 2026-08-21 — "audit DE, list non-critical steps and MAKE THEM CRITICAL".
-// PASS (silent): not-DE-close · bypass · all three conditions hold
+//   C8 SAVE RULES RAN: the latest full action=save-rules-ran row (12h) carries fail=0 (lib/save-rules.js, DE step 12.7).
+// PASS (silent): not-DE-close · bypass · all conditions hold
 // BYPASS: [skip-de-close-gate: <reason>] in the last assistant text
 // TEST HOOK: input JSON `_testEvents` overrides transcript parse; `_testActiveText`,
 //   `_testArchiveText`, `_testLogLines`, `_testSessionLineCount` override disk reads.
@@ -146,6 +147,20 @@ function checkC4(gateLogLines, now) { return freshAction(gateLogLines, now, 'rec
 // did. It now logs action=audit-briefing-ran here; DE close blocks without a fresh row (step 7.4).
 function checkC6(gateLogLines, now) { return freshAction(gateLogLines, now, 'audit-briefing-ran'); }
 
+// C8 — SAVE RULES RAN with 0 FAIL (2026-10-06, per miya: each kind of system part declares its own save rule and a
+// script checks it). lib/save-rules.js (DE step 12.7) logs action=save-rules-ran here on every full run. The latest
+// full (non-partial) row within 12h must carry fail=0; --paths/--since runs are partial and never count.
+function checkC8(gateLogLines, now) {
+  for (let i = gateLogLines.length - 1; i >= 0; i--) {
+    let o; try { o = JSON.parse(gateLogLines[i]); } catch (_) { continue; }
+    if (o.action !== 'save-rules-ran' || o.partial) continue;
+    const ts = Date.parse(o.ts || '');
+    if (isNaN(ts) || (now - ts) > LOG_FRESH_MS) return { pass: false, ran: false };
+    return { pass: o.fail === 0, ran: true, fail: o.fail };
+  }
+  return { pass: false, ran: false };
+}
+
 // C5 — watch discipline (plan §M M5, 2026-09-06): every file under domain/ lib/ core/ .claude/hooks/
 // Edit/Write-touched this session must have a `watch` row in system/claude-md-watchlist*.jsonl from
 // this session (lib/watch.js add). Makes the abandoned 08-16 observe tool fire by construction.
@@ -208,8 +223,9 @@ function evaluate(events, disk) {
   const c5 = checkC5(events, disk.watchLines || [], disk.sessionStartMs || 0);
   const c6 = checkC6(disk.gateLogLines, disk.now);
   const c7 = checkC7(events, disk.activeText, disk.archiveText, disk.sessionStartMs || 0, disk.qaDocMtimes);
-  if (c1.pass && c2.pass && c3.pass && c4.pass && c5.pass && c6.pass && c7.pass) return { verdict: 'pass', c1, c2, c3, c4, c5, c6, c7 };
-  return { verdict: 'block', c1, c2, c3, c4, c5, c6, c7 };
+  const c8 = checkC8(disk.gateLogLines, disk.now);
+  if (c1.pass && c2.pass && c3.pass && c4.pass && c5.pass && c6.pass && c7.pass && c8.pass) return { verdict: 'pass', c1, c2, c3, c4, c5, c6, c7, c8 };
+  return { verdict: 'block', c1, c2, c3, c4, c5, c6, c7, c8 };
 }
 
 function readDisk() {
@@ -246,6 +262,8 @@ function buildBlockReason(r) {
     '   Fix: node lib/audit-briefing.js --days 7 — paste the 4 blocks + rulings into the DE reply, then re-close.');
   if (r.c7 && !r.c7.pass) rows.push(`C7 QA_DOC NOT SAVED this session (DE step 2c): ${r.c7.stale.join(', ')}`,
     '   Fix: append the dated save block to each qa_doc (phase/status · what moved · resume point · deferred table), then re-close.');
+  if (r.c8 && !r.c8.pass) rows.push(r.c8.ran ? 'C8 SAVE RULES: ' + r.c8.fail + ' FAIL row(s) in the last full run (DE step 12.7).' : 'C8 SAVE RULES NOT RUN this session (DE step 12.7): no part touched this session was checked against its kind\'s save rule.',
+    '   Fix: node lib/save-rules.js — paste its header + table, fix every FAIL, re-run until 0 FAIL, then re-close.');
   return [
     '⛔ de-close-gate: Domain Expansion is closing but a deterministic close-condition FAILED:',
     ...rows.map(x => '   ' + x),
@@ -278,7 +296,7 @@ if (require.main === module) {
     const r = evaluate(events, disk);
     if (r.verdict === 'block') {
       const text = buildBlockReason(r);
-      logFire('blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4', r.c5 && !r.c5.pass && ('C5:' + r.c5.missing.length), r.c6 && !r.c6.pass && 'C6', r.c7 && !r.c7.pass && ('C7:' + r.c7.stale.length)].filter(Boolean).join(' '));
+      logFire('blocked', [!r.c1.pass && ('C1:' + r.c1.missing.join('/')), !r.c2.pass && 'C2', !r.c3.pass && ('C3:' + r.c3.lineCount), !r.c4.pass && 'C4', r.c5 && !r.c5.pass && ('C5:' + r.c5.missing.length), r.c6 && !r.c6.pass && 'C6', r.c7 && !r.c7.pass && ('C7:' + r.c7.stale.length), r.c8 && !r.c8.pass && ('C8:' + (r.c8.ran ? r.c8.fail + 'fail' : 'not-run'))].filter(Boolean).join(' '));
       return { fired: true, blocked: true, blockReason: text };
     }
     if (r.verdict === 'pass') { logFire('passed', `touched=${r.c1.touchedCount} rr-age=${r.c2.ageH}h lines=${r.c3.lineCount} recon-age=${r.c4.ageH}h`); return { fired: true, blocked: false }; }
@@ -286,4 +304,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4, checkC5, checkC6, checkC7, editedSystemFiles };
+module.exports = { evaluate, touchedTickets, checkC1, checkC2, checkC3, checkC4, checkC5, checkC6, checkC7, checkC8, editedSystemFiles };
