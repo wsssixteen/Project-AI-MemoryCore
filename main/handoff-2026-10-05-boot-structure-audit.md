@@ -285,3 +285,27 @@ Round 2 (`wf_91995105-40c`) is attacking the rebuild: closure of all 37, a repla
 Until the rebuild is on main: main still runs push gate v5 and compile gate v2 (the Git Bash path hole and the multi-line hole are live). Use literal Windows paths and one push per command.
 
 Note for whoever edits this file: the live gates read command text, so a shell command that CONTAINS push examples (a here-string appended to this file) is refused by them. Write such text with the file editor, never through a shell here-string.
+
+## 13. Boot batch 2 — BUILT and on main (2026-10-06, commit `93820c46`, merged as `4dedb429`)
+
+みや's words: "Please just build this and test, eval, etc to make sure everything still meets the previous behaviour just what changed is the efficiency" + "please add a lot of triggers related. work/redmine/tickets".
+
+| Part | What changed | Proof |
+|---|---|---|
+| Ticket list (`.claude/hooks/open-quest-surfacer.js`) | Off SessionStart; 4th child of `domain/bundles/upsm-mode.json`. Same block, printed on a work prompt. ASK (always, live): board, my tickets, retrieve / check / list tickets or redmine, briefing, where were we, update me on my tickets or work. SOFT (once per 4 h per session): any ticket id or number of an open block, redmine, ticket, tiket, esokongan, quest, backlog, permohonan, "let's do some work", "back to work", "jom kerja", "what should we do today". Nothing otherwise. `--now` prints on purpose. | eval 95/95 · block on a signal = session-start block byte-for-byte · real bundle + live Redmine with "Let's do some work": 5.2 s, board present; same prompt again: 0.5 s, silent |
+| Audit (`.claude/hooks/system-audit.js` v1.2) | Full audit on change (hook file, settings, bundle, CLAUDE.md, architecture doc), first start of the day, or `--full`; else one line. A full run also runs `boot-required-read-gate.js`, `evolution-check-trigger.js`, `system-check-trigger.js` (off SessionStart, files kept, ghost-check opt-out marker). | eval 29/29 · old audit text = prefix of the new full run · on main: 4,042 ms then 122 ms |
+| Watches (`lib/watch.js` `brief`, `tick` once a day) | Session start prints count + 3 oldest + the command for the full list. `check` unchanged. | eval 17/17 (was a stub) · on main: 21,234 → 641 characters |
+| Registrations | SessionStart 10 → 6; every other event unchanged; catalog regenerated. | settings check in the edit script + `system-audit --full`: no ghost, no dangling |
+
+Measured on the eight batch-2 scripts (worktree, one run each): 10.1 s / 10,710 characters → 1.3 s / 542 characters on an ordinary start; 4.4 s when the full audit runs.
+
+Design choices that differ from the 2026-10-05 design record, and why: the three small scripts ride on the audit's full run instead of the session-close screen (one mechanism, and the reminder still appears at a start, once a day); no forge install or file move (not needed for the efficiency goal; the forge blocker stays open); the cache and the "shown" marker live in the temp folder (machine-local, outside git and OneDrive).
+
+NOT done: adhoc folders auto-archive (new behaviour, needs his ruling); `adhoc-lifecycle` and the required-reads banner stay at start; the forge fix for loose-hook installs.
+
+Open points, honest:
+- `system-audit.eval.js` failed 1 of 29 once in 6 runs on the live main checkout; the failing check was not captured. Likely a check that compares two full runs while another session changes the repo between them. Not reproduced in 5 further runs.
+- What moved: a pointer in CLAUDE.md that breaks is now seen at the next full audit (after a CLAUDE.md change, or next morning), not at every start.
+- The harness shows a hook output over roughly 10,000 characters as a 2,000-character preview plus a file path. The ticket block is about 8,500 to 9,900 characters with 28 open quests, so it sits at that edge. This was already true at session start. If the list grows, read the saved file or run `--now`.
+- No real session has started on the new registrations yet; four watches are registered for that (`wmuwtzpy0`, `wmuwtzqb9`, `wmuwtzqky`, `wmuwtzqt8`).
+- The unreviewed gate rebuild is parked on branch `claude/gates-v7-wip` (`559f431b`), not on main.

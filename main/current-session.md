@@ -1,5 +1,21 @@
 # Current Session
 
+**Last Activity**: 2026-10-06 23:45 — #282966 (AWAM RPPLP, field and buttons vanish after Cari) fixed, on `mlk/internal/282966` @ `5eb85ed938` and `mlk/int-env` @ `ab3b6770ce`, deployed and tested by miya on internal, BA verified PASSED · quest closed at Phase 1 · Domain Expansion run.
+
+## Session Recap (2026-10-06 afternoon to night, worktree "perak-permohonans-doc-paths-c1480c", branch `claude/quest-282966-status-5b5e1e`, QA-282966)
+- **READ FIRST**: `projects/coding-projects/active/QA-282966/QA-282966.md` (main checkout copy; the folder is ignored by git).
+- **Ask**: start /quest 282966, retrieve from Redmine, see if it was run before. Then: proceed to the end, leave him only the deploy. Then (his /goal): check the Redmine he submitted, learn his writing style, close quest, save quest, Domain Expansion.
+- **Finding**: the quest had never been run (no block, no doc, no branch). Started fresh.
+- **Root cause**: `etanah-awam\src\main\java\my\gov\etanah\awam\common\web\form\AwamMaklumatLesenTabForm.java` `AwamMaklumatLesenTabForm.onSearchNoLesen():351` calls the flag reset added by #263304 (`a105e11d7d`, 2026-09-02). RPPLP hides the Jenis Permohonan radio, so its ID field, Cari and Isi Semula were switched off after Cari.
+- **Fix**: the reset runs only when the radio is shown (+3 −1). PDBB has the same shape and is covered by the same line (code read only, not seen on screen).
+- **Git**: `mlk/internal/282966` @ `5eb85ed93862222e7357c406a4e47c5f483a0e98` · `mlk/int-env` @ `ab3b6770ced102748f701cdd965a224ba79db92f`. A cherry-pick onto int-env conflicted on the whole file (line endings differ), so the same 3 lines were applied by hand on int-env's copy. NOT on `mlk/stag-env` or `mlk/master`.
+- **Gate**: no local test; commit cleared by his own `[risk-ok: 282966 one-line fix, no local test]`.
+- **Test**: miya on internal with PTMLK/03/L/PPTPB/2026/7 (portal login alyaaqilah802@gmail.com); screenshots in the Task folder `2. Fix\`. BA Nurhafizah Hasan: "Verified @ Awam MLIT / Result=PASSED" (20:09).
+- **Redmine**: he posted my note and Root cause unchanged. Status now Verified. `SAVE-QUEST → WAIT`: archive waits for Closed.
+- **Blocked, not done**: adding his posted note to the speech collection in `.claude/auto-memory/feedback_ticket_writing_style.md`. `memory-write-gate` refused 5 writes saying it saw no RULE-PLACEMENT line although the line was in my reply text each time. The lesson is kept in the quest doc, `main/main-memory.md` and the diary. Proposal logged (A1).
+- **Other sessions' gaps seen at close**: `ADHOC-PT-2026-11` quest doc lacks a test login row and has one short path (resume-readiness). Redmine reconcile lists #283550, #278909, #274266, #265691 as assigned-open with no local block.
+- **Open**: the fix needs staging and a release branch when the ticket is planned · archive #282966 once Redmine shows Closed (`node lib/save-quest.js QA-282966`).
+
 **Last Activity**: 2026-10-06 23:40 — #244600 rework cycle 2 CLOSED (Phase 1): `mlk/qa/244600v3` @ `7c3b41a2bd`, `mlk/int-env` @ `281d2b0e59`, deployed and tested by miya on MLIT · covers #275043 · Redmine Resolved, archive waits for Closed · subject gate R8 + `memory-write-gate` on main · Domain Expansion run.
 
 ## Session Recap (2026-10-05 → 2026-10-06, session "ticket-244600-review-89e02d", #244600 cycle 2 + #275043)
@@ -26,16 +42,3 @@
 - **Not verified**: the internal build result and the rendered Slip Akuan Penerimaan.
 - **State**: `QA-283286` status=closed, Redmine = Resolved (with BA), archive waits for Redmine Closed. Quest doc `projects/coding-projects/active/QA-283286/QA-283286.md` (main + worktree copies identical). No etanah repo touched, no Redmine write.
 **Last Activity**: 2026-10-06 23:15 — #283532 (PROD, batal two UPS_PLP) patched through infra, verified on PROD, Redmine submitted by miya, quest closed at Phase 1 · Domain Expansion run.
-
-## Session Recap (2026-10-06 evening, worktree "patch-quest-283532-954012", QA-283532)
-- **Ask**: run the patch quest for #283532, retrieve from Redmine, brief the steps. Then: stage Redmine, verify after infra, close quest, save quest, Domain Expansion.
-- **Result**: PTMLK/01/L/UPS_PLP/2026/7 (3448936) and PTMLK/01/L/UPS_PLP/2026/10 (3469308) cancelled on PROD; both were held by fatimah.salleh@melaka.gov.my at UPS_PS, no active tugasan now. Infra ran at 17:11; re-read = 2 aplikasi rows Tamat / Batal / Tamat, 2 tugasan rows N / Selesai, 0 dashboard rows. Parent PTMLK/01/L/PT/2026/30 (nurul.izza@melaka.gov.my at SRMMKNPDT) untouched.
-- **Script**: `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\269. II #283532 - Pelupusan - UPS - Batalkan ID UPS (PROD)\2. Fix\283532.sql`, the #277442 shape (`etanah-knowledge/melaka/DATABASE.md` section 27) with the two ids.
-- **Redmine**: form staged through the browser, miya submitted (Resolved, BA Nurul Amirah Nadiah, Root Cause (DEV), 283532.sql). Never went through In Progress. At save time Redmine = Ready in PROD (Amila Qistina Rohizat). `SAVE-QUEST → WAIT`: archive waits for Closed.
-- **Quest state**: `status=closed phase=1`, doc `projects/coding-projects/active/QA-283532/QA-283532.md` (copied to the main checkout, the folder is ignored by git).
-- **Slip logged**: `ask-back/searchable` (offered "want the code re-read?" for a fact one file read answers).
-- **Not verified**: the cancel screen was read from master and has no UPS_PLP handling; it was not run with a UPS_PLP id. The Flowable process of each app stays open in the engine (not readable).
-- **Tool gap**: `domain/sql-schema-verify/sql-schema-verify.js emit` pairs subquery columns and `SYSDATE` with the wrong table, so a correct script returned 7 rows and could not be stamped. Proposal logged.
-- **Open**: archive #283532 once Redmine shows Closed (`node lib/save-quest.js QA-283532`).
-
-**Last Activity**: 2026-10-06 15:40 — ADHOC-PT-2026-11 (Perak PT, load documents PROD to STAG): 122 `.main` paths listed and checked for infra · ProTime line now `<ENV> - <title>` · Domain Expansion run.
