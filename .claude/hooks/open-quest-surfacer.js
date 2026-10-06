@@ -25,7 +25,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const REPO_ROOT = require('path').resolve(__dirname, '..', '..'); // machine-independent (GHOST-HOOKS-2 fix 2026-07-19)
+const REPO_ROOT = process.env.OQS_TEST_ROOT || require('path').resolve(__dirname, '..', '..'); // machine-independent (GHOST-HOOKS-2 fix 2026-07-19); OQS_TEST_ROOT = eval fixture root
 const ACTIVE_TXT = path.join(REPO_ROOT, 'quest', 'active.txt');
 
 const OPEN_STATUSES = new Set(['active', 'hold', 'blocked', 'delegated']);
@@ -62,7 +62,8 @@ function printLiveBoard() {
     const { execFileSync } = require('child_process');
     const script = path.join(REPO_ROOT, 'quest', 'redmine-board.js');
     if (!fs.existsSync(script)) return;
-    const out = execFileSync(process.execPath, [script], { encoding: 'utf-8', timeout: 30000 });
+    // 20 s: the prompt bundle kills a child at 30 s, and a killed child prints nothing at all
+    const out = execFileSync(process.execPath, [script], { encoding: 'utf-8', timeout: 20000, windowsHide: true });
     console.log('\n📋 LIVE REDMINE BOARD (Melaka Pelupusan — all trackers, all assignees):\n');
     console.log(out.trimEnd());
   } catch (e) {
@@ -150,7 +151,7 @@ function main() {
   // we sleep). ~0.4s measured for 3 quests in parallel. The primary capture points are in
   // active-cli.js start/update/archive; this is the safety net, not the mechanism.
   try {
-    const rsc = require(require('path').join(__dirname, '..', '..', 'quest', 'redmine-status-check'));
+    const rsc = require(path.join(REPO_ROOT, 'quest', 'redmine-status-check'));
     rsc.checkAll(open.map(q => ({ qa: q.qa, status: String(q.status).split(' ')[0] })));
     // 2026-08-04: the REVERSE direction. checkAll can only judge blocks that exist; it is blind to
     // a ticket assigned on Redmine that was never added locally. On 2026-08-04 boot that blindness
@@ -159,6 +160,77 @@ function main() {
   } catch (_) { /* never let a boot check break boot */ }
 }
 
-try { main(); } catch (e) {
-  console.log(`⚠️  open-quest-surfacer: error — ${e.message}`);
+// ── v2 (2026-10-06, boot audit batch 2, per みや: "nothing loads until I name a ticket, say board or ask
+//    for a briefing" + "add a lot of triggers: work / redmine / tickets / …") ─────────────────────────────
+// The block above is UNCHANGED. What changed is WHEN it prints: no longer at every session start (5-13 s and
+// ~8,000 characters in every session, other projects included) but on the first prompt that is about work.
+//   ask  = he asks for the list itself (board, my tickets, retrieve tickets, briefing …) → always printed, live
+//   soft = the prompt is about ticket work (a ticket number, "redmine", "let's do some work" …) → printed when
+//          this session has not had it in the last 4 hours (a compaction drops it from context; the 4 h window
+//          brings it back without a boot hook)
+//   none → silent, no Redmine call
+// Run with no prompt on stdin (a SessionStart registration, or by hand) or with --now → prints, as before.
+const os = require('os');
+const SHOWN_FILE = process.env.OQS_SHOWN_FILE || path.join(os.tmpdir(), 'ruri-open-quest-surfacer-shown.json');
+const REPRINT_MS = 4 * 60 * 60 * 1000;
+// Words that exist in other projects too ("task", "work", "what should I do") are SOFT only: at most one
+// load per 4 hours. ASK is kept to words that can only mean his ticket list.
+const LIST_NOUN = String.raw`(?:redmine\s+)?(?:tickets?|tiket|redmine|quests?|backlog|esokongan)`;
+const ASK_RX = [
+  /(?:^|\s)\/(?:list-redmine|retrieve-redmine|brief|sweep|quest)\b/i,
+  /\b(?:the|my|our|ticket|tickets|redmine|live|show|refresh|print|open)\s+board\b|^\s*board\s*[?.!]*\s*$/i,
+  // "brief me the results" / "status update on the build" are NOT briefing asks (false load 2026-10-06)
+  /^\s*(?:please\s+)?brief\s+me\s*(?:please)?[.!?]*\s*$|\bbrief\s+me\s+on\s+(?:(?:the|my|our)\s+)?(?:tickets?|tiket|redmine|quests?|work|board|status)\b|^\s*(?:session\s+)?briefing\s*[.!?]*\s*$|\b(?:where\s+were\s+we|where\s+are\s+we|what'?s\s+our\s+status|what\s+is\s+our\s+status|catch\s+me\s+up|standup|stand-up)\b/i,
+  new RegExp(String.raw`\b(?:list|show|give|print|refresh|retrieve|fetch|pull|grab|get|check|read|load|sync|import|senaraikan|tunjuk|semak|ambil)\s+(?:me\s+)?(?:(?:the|my|all|our|any|new|open|latest|newest|recent|pending|on|of|from|semua)\s+)*` + LIST_NOUN + String.raw`\b`, 'i'),
+  new RegExp(String.raw`\bupdate\s+me\s+(?:on|about|with)\s+(?:(?:the|my|our|all|any|new|open)\s+)*(?:` + LIST_NOUN + String.raw`|work|kerja|tasks?)\b|\b(?:what|which|how\s+many|any|apa|berapa)\s+(?:(?:are|is|new|open|the|my|our|ada)\s+)*` + LIST_NOUN + String.raw`\b`, 'i'),
+  /\b(?:my|open|new|pending|outstanding|today'?s|assigned|overdue)\s+(?:redmine\s+)?(?:tickets|tiket|quests|esokongan)\b|\bsenarai\s+tiket\b|\bnext\s+ticket\b/i,
+];
+const SOFT_RX = [
+  /\bwhat'?s\s+(?:on\s+my\s+plate|pending|left\s+to\s+do|due)\b|\bwhat\s+(?:should|shall|do|can)\s+(?:i|we)\s+(?:do|work\s+on|start|pick|tackle)\b|\bto-?do\s+list\b|\bpriorit(?:y|ies)\s+(?:today|for\s+today|this\s+week)\b|\bupdate\s+me\b/i,
+  /\b(?:redmine|tickets?|tiket|esokongan|e-sokongan|quests?|backlog|sla|permohonan|urusan|tugasan)\b/i,
+  /\b(?:let'?s|lets|time\s+to|start|starting|begin|resume|continue|back\s+to|do\s+some|get\s+(?:back\s+)?to|ready\s+to|jom|mula|sambung)\s+(?:(?:the|our|my|some|doing|on)\s+)*(?:work|working|kerja|tasks?|coding|fixing|quest(?:ing)?)\b/i,
+  /\b(?:daily|today'?s|office|etanah|e-tanah)\s+(?:work|kerja|tasks?)\b|\bwork(?:ing)?\s+(?:on\s+)?(?:today|now|mode)\b|\bstart\s+(?:of\s+)?(?:the\s+)?(?:day|work\s*day)\b/i,
+  /\b(?:QA|ADHOC|ALTER|PATCH)-[A-Za-z0-9-]+\b|#\d{5,7}\b|\b(?:QA|FAT-OR|UAT-CR|FAT|UAT|REQUIREMENT|REQ|CR|issue)\s*#?\s*\d{4,}\b|\bPT[A-Z]{2,4}\/\d{2}\//,
+];
+function classify(prompt, activeText) {
+  const p = String(prompt || '');
+  if (!p.trim() || p.length > 20000) return null;
+  if (/\[SYSTEM NOTIFICATION|<task-notification>|📌 OPEN QUESTS|LIVE REDMINE BOARD/.test(p)) return null;   // machine text, or this hook's own output pasted back
+  if (ASK_RX.some(rx => rx.test(p))) return 'ask';
+  if (SOFT_RX.some(rx => rx.test(p))) return 'soft';
+  // a bare ticket number that matches an open block (same test as ticket-gate.js signal A2)
+  for (const n of p.match(/\b\d{5,7}\b/g) || []) if (new RegExp('^qa=(?:QA-)?' + n + '\\b', 'm').test(activeText || '')) return 'soft';
+  return null;
+}
+function readShown() { try { const j = JSON.parse(fs.readFileSync(SHOWN_FILE, 'utf8')); return j && typeof j === 'object' ? j : {}; } catch { return {}; } }
+function markShown(sid) {
+  try {
+    const now = Date.now(); const j = readShown();
+    for (const k of Object.keys(j)) if (now - j[k] > 2 * 24 * 60 * 60 * 1000) delete j[k];
+    j[sid] = now;
+    fs.writeFileSync(SHOWN_FILE + '.tmp', JSON.stringify(j)); fs.renameSync(SHOWN_FILE + '.tmp', SHOWN_FILE);
+  } catch { /* a missing marker only means the board prints once more */ }
+}
+function entry() {
+  if (process.argv.includes('--now')) return main();
+  let raw = '';
+  try { if (!process.stdin.isTTY) raw = fs.readFileSync(0, 'utf8'); } catch { raw = ''; }
+  let data = null;
+  try { data = JSON.parse(raw); } catch { data = null; }
+  if (!data || typeof data.prompt !== 'string') return main();                 // session start or a manual run: as before
+  try { const exp = parseInt(fs.readFileSync(path.join(REPO_ROOT, 'system', 'orchestration-mode.flag'), 'utf8').split('\n')[0], 10); if (Number.isFinite(exp) && Date.now() < exp) return; } catch { /* no sweep running */ }
+  const kind = classify(data.prompt, safeRead(ACTIVE_TXT));
+  if (!kind) return;
+  const sid = String(data.session_id || 'no-session');
+  if (kind === 'soft') { const last = readShown()[sid]; if (last && Date.now() - last < REPRINT_MS) return; }
+  console.log(`📌 Ticket list loaded now (${kind === 'ask' ? 'you asked for it' : 'first work signal in this session'}; live from Redmine at ${new Date().toTimeString().slice(0, 5)}). It is no longer printed at session start.`);
+  main();
+  markShown(sid);
+}
+
+module.exports = { classify, ASK_RX, SOFT_RX };
+if (require.main === module) {
+  try { entry(); } catch (e) {
+    console.log(`⚠️  open-quest-surfacer: error — ${e.message}`);
+  }
 }
