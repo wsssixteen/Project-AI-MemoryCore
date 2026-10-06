@@ -4,6 +4,23 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-02 → 2026-10-05, session "new-session-77cffa", AWAM build fix → boot audit → structure audit)
+- **READ FIRST**: `main/handoff-2026-10-05-boot-structure-audit.md` (decisions, built pieces, worklist, batch-2 table, resume steps) and `system/INDEX.md` (the one map + "Change record"). Page for みや: https://claude.ai/artifact/FYG8o9tQy6KzRTqMN1doDo
+- **Started as**: Danial's AWAM `mlk/stag-env` compile break (duplicate PDBB method + constants). Fixed and pushed, etanah-awam `98e8595245`. DONE.
+- **Then**: session audit → push gate v5 + compile gate v2 name the repo by its git remote (`63f0ebee`, evals 35/35 · 27/27).
+- **Boot audit**: 13 startup scripts, 61.4 s. Batch 1: 10 scripts, 12.7 s. `hook-syntax-check` and `worktree-cleanup-boot` INSTALLED as Features via the new `core/forge.js install hook`; `unmerged-release-boot`, `arabic-nudge`, `knowledge-schema-audit` boot copy taken off boot.
+- **Structure audit**: `system/INDEX.md` is THE one map. Six kinds of parts (Rules · Workflows · Features · Memory · Kernel · Projects), disk-checked by `node lib/folder-structure.js map`. 8 decisions recorded there (4 ruled by みや by popup, 4 Workflow defaults he left open). "Install" = a part enters through the forge.
+- **His corrections (all logged via `core/slips.js`)**: observability + monitoring are layers of EVERY Feature, never "the dashboard" · system rules do not live in auto-memory · check system-design and existing plans before proposing · replies too long on the phone · boot reads skipped silently.
+- **His standing instructions (2026-10-05)**: an artifact for every system change · save at the moment of change, not at Domain Expansion · questions through the popup with a diagram or table. Recorded in `system/INDEX.md` "Change record". A gate for it is NOT built (Memory audit).
+- **Daily-work check (01:30)**: 126 registrations, 0 missing files · 691 real hook fires since the change, 0 errors · ticket gate, intake gate, quest phase gate, compile gate, push gate all fired clean · Redmine board printed live at the 01:26 boot. Detail in the handover §9.
+- **INCIDENT 01:47**: every session worktree lost its git link (folders intact). This session repaired + locked by hand. Cause NOT proven; three local causes excluded; the other laptop's prune through OneDrive is the open candidate. Handover §9a.
+- **Eval battery 01:49**: 129/139. Six older failures, arabic night flake, observatory under load, hook-runtime eval REPAIRED (13/13), cleanup eval QUARANTINED as slow (178 s vs 120 s limit). Handover §9.
+- **Batch 2 design DONE 02:14**: `main/handoff-2026-10-05-boot-batch-2-design.md` (critic first). 4 decisions asked by popup. Pre-step: forge refuses loose-hook installs until `domain/*/cache.json` is skipped.
+- **Next**: みや said "I want to boot batch 2". Design comes from run `wf_923b9eaf-18e`; show it to him by popup BEFORE building (it changes what he sees at boot). After batch 2: rule the overdue watches → install 53 loose hooks → skills → legacy `Feature/` → Memory audit.
+- **Open**: watch `wmuu2uoib` prints the wrong rollback line (true rollback `git revert 6beed4ba a954de41 635197ba 19bc4963`) · 25 adhoc rows ripe for archive (surfaced at the 01:26 boot) · #246923 Resolved on Redmine with no local block.
+
+**Last Activity**: 2026-10-04 18:00 — "save this quest" rule built (`lib/save-quest.js` + close-phase Save-quest mode, on main `50b3c46b`) · #281638 Redmine Closed 2026-09-29, local archived, verdict DONE · Domain Expansion run.
+
 ## Session Recap (2026-09-28 → 2026-10-04, session "patch-281638", #281638 + save-quest build)
 - **Ask (4 Oct)**: check Redmine for #281638, save the quest accordingly, and build the rule: "save this quest" = Redmine status picks Phase 1 (not closed) or Phase 2 (Closed). Verify, run evals, audit against system-design. Then Domain Expansion.
 - **Redmine**: #281638 Closed 2026-09-29 by the TSO ("Verified, user dah pergi ke tugasan yang seterusnya"). Local was archived 2026-09-28, one day early. Doc now carries the close note.
@@ -5931,6 +5948,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

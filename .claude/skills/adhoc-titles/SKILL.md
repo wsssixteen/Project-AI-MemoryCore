@@ -15,8 +15,13 @@ description: List the short ProTime titles of the day's adhocs, ready to paste. 
 3. Read each title before sending. It must carry the ISSUE word (what is wrong). A title that only names the subject is rewritten first, same command as step 2.
 4. Reply with the titles only, ONE fenced block PER title (each gets its own copy button), in the order the script printed them.
 
+## ProTime line = `<ENV> - <title>` (2026-10-06 per みや: "the format starts with PROD - ...")
+The script prints it that way, from the block's `env=` and `title=`. Paste the script's line as is: `PROD - Load documents from PROD to STAG`.
+The stored `title=` carries no env prefix; the script adds it. An env word inside the title itself is fine when the work is about that env.
+For an ask (not a defect) the title is the plain action: `Load documents from PROD to STAG`.
+
 ## Title shape (same rule as adhoc-save)
-`<URUSAN> <subject keywords> <issue word>` · max 6 words · max 40 chars · no ids, no permohonan, no env, no punctuation.
+`<URUSAN> <subject keywords> <issue word>` · max 6 words · max 40 chars · no ids, no permohonan, no punctuation.
 The issue word is mandatory: `missing` · `tiada` · `hilang` · `tak papar` · `ralat` · `salah` · `stuck` · `tak boleh` · or the ask itself (`alter`, `patch`, `semak`).
 The title must also NAME THE THING the issue is about in a plain word (`tugasan`, `dokumen`, `ulasan`, `bayaran`, `surat`). A kod alone (`SKM`) does not say what it is.
 Test before sending: reading only the title, can みや answer "what is wrong with what?" If not, rewrite.
@@ -30,7 +35,8 @@ An adhoc that started on an earlier day and was picked up again today is listed 
 
 ## Banned
 - Making up titles from chat memory instead of running the script.
-- Adding ids, permohonan numbers or the environment to a title.
+- Adding ids or permohonan numbers to a title.
+- Giving a ProTime title without the `<ENV> - ` prefix.
 - Asking みや which adhocs he worked on today; the blocks already say.
 
 symptom: 2026-10-04 miya: "I don't want to keep on repeating to ask for a simple short keyword title to put into protime"

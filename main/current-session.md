@@ -1,5 +1,17 @@
 # Current Session
 
+**Last Activity**: 2026-10-06 15:40 — ADHOC-PT-2026-11 (Perak PT, load documents PROD to STAG): 122 `.main` paths listed and checked for infra · ProTime line now `<ENV> - <title>` · Domain Expansion run.
+
+## Session Recap (2026-10-06, worktree "perak-permohonans-doc-paths-c1480c", ADHOC-PT-2026-11)
+- **Ask**: paths of all documents for `PTPK/18/E/PT/2024/19` and `PTPK/13/E/PT/2023/2`, for infra to load from Perak PROD to STG. Then: prepare the adhoc for ProTime, save, commit, Domain Expansion.
+- **Result**: 122 `.main` files (82 + 40) = 101 generated (`umm_a_dok_keluaran`) + 21 uploaded (`umm_a_dok_kmskn`), path in `et_dms.dokumen_revision.lokasi_fail`. His list file checked against PROD: 122 matched, 0 missing, 0 extra. File now at Task folder `1. Tasks\Perak\9. AH - PROD - PT - path dokumen untuk infra salin ke STG\2. Fix\PRK PROD paths.txt` (moved off his Desktop).
+- **His corrections**: no `*` wildcard in paths for infra · no `.pdf` lines, `.main` only · the proof SELECT must run as handed (Perak PROD login `ET_READ` owns no tables, so it must be schema-qualified) · ProTime title starts with the env: `PROD - Load documents from PROD to STAG`.
+- **Built**: `lib/adhoc-titles.js` prints `<ENV> - <title>` (eval 18/18) · adhoc-save + adhoc-titles skills say so · `lib/adhoc-save-audit.js` no longer counts another state's block as a clash on the same A# row.
+- **Slip logged**: `answer-the-ask` (ProTime title without the env prefix; the instruction was in no loaded file).
+- **Not verified**: STG `lokasi_fail_pdf` state (two STG queries timed out). If a document fails to open on STG after the copy, set `LOKASI_FAIL_PDF = NULL` for that revision (lever seen for WP, not proven for Perak).
+- **Open**: infra copy · open one document per permohonan on STG · `lib/adhoc-save-audit.eval.js` was 19/24 on main before this session (5 stale fixtures, proposal logged) · the 20-scenario table for the adhoc-titles change was not written; 5 fixtures were added instead.
+- **Knowledge banked**: `etanah-knowledge/perak/STATE-FACTS.md` § Document locator (main checkout only).
+
 **Last Activity**: 2026-10-05 17:00 — #278909 (PT Risalat MMKN, cycle 2) review of Farah's rework → shared docx conflict resolved by us → merged to `mlk/int-env` `d0f2177f02` → Redmine handover drafted → Phase 1 closed (cycle 2) · Domain Expansion run.
 
 ## Session Recap (2026-10-05, worktree "review-farah-ticket-rework-64d3c2", #278909 takeover review)
@@ -29,20 +41,3 @@
 - **Open**: miya's mlit deploy + Item 6 check + posting the note · the `Co-Authored-By: Claude` line in Ammar's two commits is now on int-env, asked three times, not ruled. Do not ask again; raise only if the branch heads to a release.
 - **Test data**: stg2 PTMLK/02/L/PLPS/2026/17 at PRMMKNPTG (muhammadshafiq@melaka.gov.my) · mlit has no PLPS app on the PTG step, nearest PTMLK/01/L/PLPS/2026/21 at SRMMKNPDT (sanarimah@melaka.gov.my).
 **Last Activity**: 2026-10-05 01:45 — boot audit + system structure: batch 1 LIVE on main (`19bc4963` · `a954de41` · `6beed4ba`), handover written, two read-only Workflow runs in flight (verification `wf_49cf7fce-b89` · batch-2 design `wf_923b9eaf-18e`). NOT a session close; no Domain Expansion run.
-
-## Session Recap (2026-10-02 → 2026-10-05, session "new-session-77cffa", AWAM build fix → boot audit → structure audit)
-- **READ FIRST**: `main/handoff-2026-10-05-boot-structure-audit.md` (decisions, built pieces, worklist, batch-2 table, resume steps) and `system/INDEX.md` (the one map + "Change record"). Page for みや: https://claude.ai/artifact/FYG8o9tQy6KzRTqMN1doDo
-- **Started as**: Danial's AWAM `mlk/stag-env` compile break (duplicate PDBB method + constants). Fixed and pushed, etanah-awam `98e8595245`. DONE.
-- **Then**: session audit → push gate v5 + compile gate v2 name the repo by its git remote (`63f0ebee`, evals 35/35 · 27/27).
-- **Boot audit**: 13 startup scripts, 61.4 s. Batch 1: 10 scripts, 12.7 s. `hook-syntax-check` and `worktree-cleanup-boot` INSTALLED as Features via the new `core/forge.js install hook`; `unmerged-release-boot`, `arabic-nudge`, `knowledge-schema-audit` boot copy taken off boot.
-- **Structure audit**: `system/INDEX.md` is THE one map. Six kinds of parts (Rules · Workflows · Features · Memory · Kernel · Projects), disk-checked by `node lib/folder-structure.js map`. 8 decisions recorded there (4 ruled by みや by popup, 4 Workflow defaults he left open). "Install" = a part enters through the forge.
-- **His corrections (all logged via `core/slips.js`)**: observability + monitoring are layers of EVERY Feature, never "the dashboard" · system rules do not live in auto-memory · check system-design and existing plans before proposing · replies too long on the phone · boot reads skipped silently.
-- **His standing instructions (2026-10-05)**: an artifact for every system change · save at the moment of change, not at Domain Expansion · questions through the popup with a diagram or table. Recorded in `system/INDEX.md` "Change record". A gate for it is NOT built (Memory audit).
-- **Daily-work check (01:30)**: 126 registrations, 0 missing files · 691 real hook fires since the change, 0 errors · ticket gate, intake gate, quest phase gate, compile gate, push gate all fired clean · Redmine board printed live at the 01:26 boot. Detail in the handover §9.
-- **INCIDENT 01:47**: every session worktree lost its git link (folders intact). This session repaired + locked by hand. Cause NOT proven; three local causes excluded; the other laptop's prune through OneDrive is the open candidate. Handover §9a.
-- **Eval battery 01:49**: 129/139. Six older failures, arabic night flake, observatory under load, hook-runtime eval REPAIRED (13/13), cleanup eval QUARANTINED as slow (178 s vs 120 s limit). Handover §9.
-- **Batch 2 design DONE 02:14**: `main/handoff-2026-10-05-boot-batch-2-design.md` (critic first). 4 decisions asked by popup. Pre-step: forge refuses loose-hook installs until `domain/*/cache.json` is skipped.
-- **Next**: みや said "I want to boot batch 2". Design comes from run `wf_923b9eaf-18e`; show it to him by popup BEFORE building (it changes what he sees at boot). After batch 2: rule the overdue watches → install 53 loose hooks → skills → legacy `Feature/` → Memory audit.
-- **Open**: watch `wmuu2uoib` prints the wrong rollback line (true rollback `git revert 6beed4ba a954de41 635197ba 19bc4963`) · 25 adhoc rows ripe for archive (surfaced at the 01:26 boot) · #246923 Resolved on Redmine with no local block.
-
-**Last Activity**: 2026-10-04 18:00 — "save this quest" rule built (`lib/save-quest.js` + close-phase Save-quest mode, on main `50b3c46b`) · #281638 Redmine Closed 2026-09-29, local archived, verdict DONE · Domain Expansion run.

@@ -23,7 +23,8 @@ description: Save an adhoc's findings as the full 4-part save-set (Task folder �
 
 ## Adhoc title (ProTime) — 2026-10-01 per みや
 Every adhoc gets a **title**: a very short, almost-keyword label みや pastes into ProTime.
-- Shape: `<URUSAN> <subject keywords> <issue word>` · max 6 words · max 40 chars · no ids, no permohonan, no env, no punctuation.
+- **ProTime line = `<ENV> - <title>`** (2026-10-06 per みや: "the format starts with PROD - ..."). Stored `title=` has no env prefix; `lib/adhoc-titles.js` adds it from `env=`. Every title shown to みや for ProTime is shown in that form: `PROD - Load documents from PROD to STAG`. For an ask (not a defect) the title is the plain action.
+- Shape: `<URUSAN> <subject keywords> <issue word>` · max 6 words · max 40 chars · no ids, no permohonan, no punctuation.
 - The issue word is mandatory (what is wrong: `missing` · `tiada` · `tak papar` · `ralat` · `salah` · `stuck`, or the ask: `alter` · `patch`). A subject-only title is wrong (2026-10-04: `MLPS ulasan SOK laporan tanah` → `MLPS ulasan SOK laporan tanah missing`).
 - Name the thing in a plain word too (`tugasan`, `dokumen`, `ulasan`, `bayaran`); a kod alone does not say what it is. Test: from the title only, "what is wrong with what?" must be answerable (2026-10-04: `PLPS SKM tiada dalam senarai` → `PLPS tugasan SKM tiada dalam inbox`).
 - Examples: `PLPS tugasan SKM tiada dalam inbox` · `MLPS ulasan SOK laporan tanah missing`.
