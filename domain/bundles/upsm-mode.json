@@ -1,6 +1,5 @@
 { "name": "upsm-mode", "children": [
   ".claude/hooks/mode-detector.js",
   ".claude/hooks/quest-active-grounding.js",
-  "domain/handoff-load/handoff-load.check.hook.js",
-  ".claude/hooks/open-quest-surfacer.js"
+  "domain/handoff-load/handoff-load.check.hook.js"
 ] }

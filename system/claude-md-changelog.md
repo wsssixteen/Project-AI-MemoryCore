@@ -10,14 +10,6 @@
 
 ---
 
-## v1.79 — 2026-10-06 (boot audit batch 2, per みや: "just build this… everything still meets the previous behaviour, just what changed is the efficiency" + "add a lot of triggers: work / redmine / tickets")
-
-- §Session Boot Order step 5: `read quest/active.txt` removed from the boot reads. New bullet: quest status comes from the ticket list, which is no longer printed at session start; it loads on the first prompt about work (`.claude/hooks/open-quest-surfacer.js` as a child of the `upsm-mode` prompt bundle); when it is not in context the briefing row says `not loaded. Name a ticket or say "board".`; never compose quest status from a Read of `quest/active.txt` (the 2026-05-25 slip the hook was built for). The autoscan bullet runs only when the list is loaded.
-- §System-Layer Layer 0: `system-audit.js` runs the full audit only when something it reads changed or on the first start of the day; otherwise one line; `--full` forces it.
-- §Evolution: the 30-day reminder is printed by the full audit run (the `evolution-check-trigger.js` and `system-check-trigger.js` SessionStart entries were removed; the files stay and are run by `system-audit.js`).
-- Spec preservation: every text that was printed before is still printed, byte-for-byte (parity checked: old audit text = prefix of the new full run; ticket block on a signal = the session-start block). Changed and named: WHEN each prints. Dropped: nothing.
-- Evidence: `.claude/hooks/open-quest-surfacer.eval.js` 95/95 · `.claude/hooks/system-audit.eval.js` 29/29 · `domain/claude-md-watch/claude-md-watch.eval.js` 17/17. Measured on the eight batch-2 scripts: 10.1 s and 10,710 characters → 1.3 s and 542 characters on an ordinary start (4.4 s when the full audit runs).
-
 ## v1.78 — 2026-10-05 (per みや's structure rulings of 2026-10-04/05)
 
 **CLAUDE.md now points at the one map instead of carrying its own.** Two in-place refinements, zero net lines:

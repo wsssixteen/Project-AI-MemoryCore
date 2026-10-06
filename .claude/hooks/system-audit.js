@@ -52,65 +52,6 @@ const SELF_NAME = 'system-audit';
 function safeRead(p) {
   try { return fs.readFileSync(p, 'utf-8'); } catch { return null; }
 }
-
-// ── v1.2 (2026-10-06, boot audit batch 2, per みや: "only when a hook or the settings change") ────────────
-// The audit below is UNCHANGED. What changed is how often it runs: the full audit took ~4 s at every session
-// start and printed the same findings each time. Now it runs in full when
-//   - a hook file, settings.json, settings.local.json, a bundle manifest, CLAUDE.md or system-architecture.md
-//     changed since the last full run (name + mtime + size of each), or
-//   - it is the first session start of the day (covers the checks that are not about hooks), or
-//   - it is called with --full.
-// Otherwise it prints one line when the last full run had findings, and nothing when it had none.
-// A full run also runs the three small start-up scripts that left SessionStart the same day
-// (pointer check, evolution reminder, system-check reminder) and prints what they print.
-const os = require('os');
-const crypto = require('crypto');
-const FULL = process.argv.includes('--full');
-const CACHE_FILE = process.env.SYSTEM_AUDIT_CACHE || path.join(os.tmpdir(), 'ruri-system-audit-' + crypto.createHash('sha1').update(REPO_ROOT.toLowerCase()).digest('hex').slice(0, 8) + '.json');
-const FULL_RUN_CHILDREN = ['boot-required-read-gate.js', 'evolution-check-trigger.js', 'system-check-trigger.js'];
-function fingerprint() {
-  const parts = [];
-  const add = p => { try { const s = fs.statSync(p); parts.push(path.relative(REPO_ROOT, p) + ':' + Math.round(s.mtimeMs) + ':' + s.size); } catch { parts.push(path.relative(REPO_ROOT, p) + ':absent'); } };
-  [SETTINGS_JSON, SETTINGS_LOCAL, CLAUDE_MD, SYSTEM_ARCH].forEach(add);
-  try { for (const f of fs.readdirSync(HOOKS_DIR).sort()) if (f.endsWith('.js')) add(path.join(HOOKS_DIR, f)); } catch {}
-  const walk = (d, depth) => {
-    if (depth > 3) return;
-    let ents = [];
-    try { ents = fs.readdirSync(d, { withFileTypes: true }); } catch { return; }
-    for (const e of ents.sort((a, b) => (a.name < b.name ? -1 : 1))) {
-      if (e.name === 'node_modules' || e.name.startsWith('.')) continue;
-      const p = path.join(d, e.name);
-      if (e.isDirectory()) { walk(p, depth + 1); continue; }
-      if (/\.hook\.js$/.test(e.name) || (path.basename(d) === 'bundles' && e.name.endsWith('.json'))) add(p);
-    }
-  };
-  walk(path.join(REPO_ROOT, 'domain'), 0);
-  return crypto.createHash('sha1').update(parts.join('\n')).digest('hex');
-}
-const dayOf = t => { const d = new Date(t); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
-const FP = fingerprint();
-if (!FULL) {
-  let c = null;
-  try { c = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8')); } catch { c = null; }
-  if (c && c.fp === FP && typeof c.at === 'number' && dayOf(c.at) === dayOf(Date.now())) {
-    if (c.findings > 0) {
-      process.stdout.write(`\n🛡  system-audit: ${c.findings} finding(s), unchanged since the full run at ${new Date(c.at).toTimeString().slice(0, 5)} (no hook, settings, CLAUDE.md or architecture-doc change since).\n   Full list: node .claude/hooks/system-audit.js --full\n`);
-    }
-    process.exit(0);
-  }
-}
-function finishFull(text, findingCount) {
-  const extra = [];
-  for (const f of FULL_RUN_CHILDREN) {
-    try {
-      const out = require('child_process').execFileSync(process.execPath, [path.join(HOOKS_DIR, f)], { encoding: 'utf8', input: '{}', timeout: 20000, windowsHide: true, stdio: ['pipe', 'pipe', 'ignore'] });
-      if (out.trim()) extra.push(out.replace(/\s+$/, ''));
-    } catch (e) { extra.push(`⚠ system-audit: ${f} did not run (${String(e.message).split('\n')[0]})`); }
-  }
-  try { fs.writeFileSync(CACHE_FILE, JSON.stringify({ fp: FP, at: Date.now(), findings: findingCount })); } catch { /* no cache = a full run next time */ }
-  process.stdout.write(text + (extra.length ? extra.join('\n') + '\n' : ''));
-  process.exit(0);
-}
 function safeReadJSON(p) {
   const t = safeRead(p);
   if (!t) return null;
@@ -522,16 +463,17 @@ const evalLine = evalLess.length
 
 // ─── Output ─────────────────────────────────────────────────────────
 if (findings.length === 0) {
-  finishFull([
+  process.stdout.write([
     '',
     '🛡  system-audit: PASS — hook-registration integrity + INV-1..INV-6 verified.',
     `   ${onDisk.size} on disk · ${registered.size} registered · ${documented.size} documented · 0 ghosts · 0 dangling · 0 doc drift · 0 invariant violations`,
     ...(evalLine ? [evalLine] : []),
     ''
-  ].join('\n'), 0);
+  ].join('\n'));
+  process.exit(0);
 }
 
-finishFull([
+process.stdout.write([
   '',
   '🛡  system-audit findings (Layer 0 structural integrity):',
   '',
@@ -542,4 +484,5 @@ finishFull([
   '',
   '(advisory — does not block boot. See .claude/hooks/system-audit.js for the audit rules.)',
   ''
-].join('\n'), findings.length);
+].join('\n'));
+process.exit(0);

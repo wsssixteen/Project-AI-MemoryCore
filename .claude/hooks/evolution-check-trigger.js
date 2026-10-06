@@ -1,4 +1,3 @@
-// system-audit: skip-ghost-check — left SessionStart 2026-10-06 (boot audit batch 2); run by system-audit.js on its full run
 /**
  * evolution-check-trigger.js — SessionStart hook
  *

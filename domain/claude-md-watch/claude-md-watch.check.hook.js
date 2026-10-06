@@ -14,8 +14,7 @@ runHook({ name: 'claude-md-watch', event: 'SessionStart' }, (input) => {
   const { execFileSync } = require('child_process');
   let out = '';
   try {
-    // 2026-10-06: `brief` (count + 3 oldest + where the full list is) instead of `check` (5 lines per watch)
-    out = execFileSync('node', [path.join(ROOT, 'lib', 'watch.js'), 'brief'], { encoding: 'utf8', windowsHide: true, timeout: 15000 });
+    out = execFileSync('node', [path.join(ROOT, 'lib', 'watch.js'), 'check'], { encoding: 'utf8', windowsHide: true, timeout: 15000 });
     if (out.trim()) execFileSync('node', [path.join(ROOT, 'lib', 'watch.js'), 'tick'], { encoding: 'utf8', windowsHide: true, timeout: 15000 });
   } catch (e) { out = ''; } // fail-open: a broken watcher must never block boot
   if (!out.trim()) return { fired: false };
