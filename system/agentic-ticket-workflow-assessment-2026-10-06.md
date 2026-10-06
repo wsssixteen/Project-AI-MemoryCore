@@ -29,3 +29,17 @@
 | A5 sweep | ⏭ no ticket sweep this session | none |
 
 Noise seen: the loop detector fired on 20 of about 60 tool calls with no real loop (parallel reads of one file, successive PowerShell calls). The audit shows it at 11110 s over 7 days with 0 blocks.
+
+## Night session — #283286 colleague review (worktree "ticket-283286-review-bab0c9")
+
+| Axis | What the session showed | Instance |
+|---|---|---|
+| A1 agentic system | ⏭ no delegation; a one-line review, done inline | — |
+| A2 quest workflow | A colleague-review intake has no "ask the server first" step. The verdict was built on a local tracking ref 30 minutes behind | local `c6296fa681` vs remote `2b6d37206a`; Ammar's common version commit at 17:10 was missed until miya asked |
+| A3 debugging accuracy | A PowerShell line that read `$LASTEXITCODE` after a second git call inside the same string printed True for every row; caught only because an earlier grep disagreed | `merge-base --is-ancestor` loop, 1.7.6-MLK shown True then False |
+| A4 etanah issue-solving | A ticket branch merged to an env branch and then reverted there is a trap for the next merge; nothing flags it | `mlk/stag-env`: `f4ceda293b` merge, `3db4027e7d` revert |
+| A5 sweep | ⏭ single ticket, no brief files beyond Description and History | — |
+
+Reply shape: the finding was right and unreadable. An invented word ("the pin") for the common version line in `pom.xml` cost one angry round trip. Slip `reask/invented-label`.
+
+Proposals logged: A2 (ls-remote first at colleague-review intake) · A4 (reverted-merge check before an env merge).

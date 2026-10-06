@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-06 (#283286 — "What pin. Use plain english")
+
+- **A thing in his files is called what the file calls it.** I said "the pin" for the common version line in `pom.xml`. He could not follow a correct finding and was angry. The second reply used "the common version pelupusan is built with" and needed nothing else.
+- **"Check if he updated his branch" is a question I should have asked the server first.** My verdict on a colleague's fix came from the local copy. Ammar had pushed the missing half thirty minutes after his first commit. A review of someone's branch starts with the server's answer, then the reading.
+- **A review can end with nothing to fix.** He still wanted it saved and closed like any quest.
+
 ## Relationship reinforcement — 2026-10-05 (#278909 cycle 2 — "We should resolve the conflict")
 
 - **A conflict I find during a review or a deploy is mine to resolve.** I stopped at a Word file conflict and gave him two options and a note for Farah. He answered in one line and asked me to remember it. The junior builds templates; a merge conflict on one is not building.
