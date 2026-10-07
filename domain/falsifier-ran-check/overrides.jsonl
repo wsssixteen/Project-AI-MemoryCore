@@ -2,3 +2,5 @@
 {"ts":"2026-10-05T08:50:02.192Z","qa":"QA-278909","reason":"BA tests on MLIT"}
 {"ts":"2026-10-06T08:15:22.817Z","qa":"QA-282966","reason":"one-line fix, no local test"}
 {"ts":"2026-10-06T08:18:24.091Z","qa":"QA-282966","reason":"one-line fix, no local test"}
+{"ts":"2026-10-07T03:16:27.045Z","qa":"QA-282587","reason":"internal is the test env"}
+{"ts":"2026-10-07T03:17:47.011Z","qa":"QA-282587","reason":"internal is the test env"}
