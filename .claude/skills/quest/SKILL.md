@@ -761,3 +761,5 @@ The ordered `pull → checkout -b → stage → commit → push → /verify → 
 
 *2026-10-06 — doc-sim awareness per みや (#244600, "Create a proper skill ... that you are aware when we start a quest"): /quest start step 6e (say doc-sim applies or doc-sim n/a), two phase-table rows (Recon, Rubric falsifier), one sentence in the falsifier ledger bullet, one hand-back gate row (DOC-SIM line). Additive; no existing clause changed or dropped. Feature: domain/doc-sim/ + .claude/skills/doc-sim/SKILL.md, eval 
 ode domain/doc-sim/doc-sim.eval.js.*
+
+*Updated 2026-10-07 — Dev notes block + no bare commit hash per miya (#278909): Hand-over to BA gains the Dev notes shape he posted (reviewed · added · merged, our work only) and the rule that a commit hash never stands alone. Spec-preservation: the pass-note template, the greeting rule, the colleague-fix shape and every Banned clause are untouched; additive. No hook; a wording rule in the step that writes the note.*

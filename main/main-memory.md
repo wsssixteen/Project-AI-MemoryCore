@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-07 (#278909 cycle 3 — "How did you decide/know that Diangkat is not lulus or tolak?")
+
+- **Three short questions from him beat my finished verdict.** I had a correction written and compiled. He asked how I knew, whether the flow branches, and how the letter would show it. I had not read the old template's point 5, and my correction was wrong there. Before I call a correction ready, I read what the paper prints for every case the rule must hold.
+- **He clears the business question himself.** I offered "ask BA" as an option. He had already asked her, and came back with the ruling in one line. My part is to show him the cases clearly enough that he knows what to ask.
+- **A colleague's fix is named in words, never by its hash.** He banned the bare hash outright. And Dev notes are about our work: reviewed, added, merged.
+- **He does not need to say "prepare redmine" inside a review.** He asked whether he must. The hand-over is part of the hand-back; only a bare deploy gives the card alone.
 ## Relationship reinforcement — 2026-10-06 (#268173 — "You straight away follow and not scrutinize")
 
 - **A colleague's first commit is one idea, not the design.** Izz had started by copying the payment fields into the land page. I mapped 38 things to finish that idea and wrote him a patch. The team dropped it and reused the page that already owned the payment. He was angrier about this than about anything else this month, and he was right: the rule to check siblings and reuse what exists has been his for months. I had read the right page and only copied lines from it.
