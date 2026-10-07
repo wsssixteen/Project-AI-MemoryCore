@@ -10,6 +10,24 @@
 
 ---
 
+## v1.81 — 2026-10-07 (per みや: "Use Opus 5.5 as the orchestrator and always try to use Sonnet 5.5 where possible on other matters to save time. Please run evals and verifications to make sure it works as intended during Workflows & also if it saves times.")
+
+- §Cost Efficiency → Delegation Economy: the lead rule and the tier table are re-written. Three rows: **Orchestrator** = the main loop on Opus 5.5 (plans, launches, checks every return, gives the final verdict) · **every delegated agent** on `sonnet` (Sonnet 5.5, the default and the floor) · a delegated agent on `opus` only with a reason in its plan row (`// opus-reason:` in a workflow script). New **Enforced by** line and a second **Why** paragraph with the measurement.
+- Enforcement built the same day: `domain/agent-spend-gate/` v2 (README born, eval 7 → 40 fixtures) BLOCKS an Agent call or a workflow `agent()` call that names no model, and any `haiku`; WARNS on opus/fable with no stated reason and on a fan-out started from a session that is not on Opus 5.5; bypass = `[skip-spend-gate: <reason>]` in みや's last message. `domain/spawn-telemetry/` now logs a per-model tally for a Workflow. `.claude/workflows/quest-phase0.js`: every agent names its model (it named none before, so 9 to 16 agents per quest start ran on the session model).
+- Measurement (one Workflow, 7 agents, read-only, the same three tasks on both models; run `wf_6edfe0f8-f85`):
+
+  | Task | sonnet, medium | opus, session effort | Correct |
+  |---|---|---|---|
+  | extract 6 facts from one file | 13.9 s | 16.2 s | both 6 of 6 |
+  | find every site across 5 folders | 36.7 s · 7 of 9 sites (56.1 s · 8 of 9 at high effort) | 124.4 s · 9 of 9 sites | key answers right on all three |
+  | adversarial check of one claim | 20.1 s | 37.5 s | both refuted it, same condition quoted |
+  | total agent time | 70.7 s | 178.1 s | |
+
+  Model routing proven twice per agent: the model ID the agent reported, and `message.model` in its transcript (`claude-sonnet-5-5` × 4, `claude-opus-5-5` × 3). Limits: one run per task; the opus arm used the session effort while the sonnet arm used medium, so the time gap is model plus effort together.
+- Resulting tiers in `quest-phase0.js`: discovery · knowledge-load · working-analog · test-data · reproduce · notes = sonnet medium; code-path · root-cause = sonnet high; blast-radius · verify · synthesis = opus, each with its `// opus-reason:`.
+- **Spec preservation.** Kept unchanged: the DELEGATION PLAN mandate and its columns · the Haiku ban paragraph · disciplines 1 to 4 · the 2026-07-02 Why. **Changed, named and justified**: (1) "every subagent runs the CHEAPEST model that is ENOUGH for its task shape" became a fixed default (sonnet) with a reasoned exception (opus); the "enough" judgment survives only as that exception. Justified by his instruction above. (2) Old row "Adversarial verify · root-cause judgment · final verdicts → session model (opus-tier)": final verdicts stay with the orchestrator; a DELEGATED adversarial verify or root-cause judgment is now sonnet first and opus only with a reason. Justified by his "always try to use Sonnet 5.5 where possible" and the measurement (sonnet refuted the test claim correctly). (3) "Sonnet 5 — the FLOOR" now reads Sonnet 5.5, the model `sonnet` resolves to today.
+- Pointers aligned the same pass: `.claude/cost-efficiency.md` delegation row · `.claude/skills/familiar/SKILL.md` model tier table (it still said `haiku` for retrieval, banned since v1.68) · `.claude/skills/sweep/SKILL.md` step 3 · `.claude/skills/quest/SKILL.md` superpowers pointer · `.claude/settings.json` `$env_note` (it described a `SUBAGENT_MODEL=sonnet` failsafe that was cleared long ago; `env` is `{}`).
+
 ## v1.80 — 2026-10-07 (per みや, reply structure)
 
 - §Explanation & Output-Format Discipline: new line "NAME THE THING, STAY ON NOW" — which thing and which event first, in plain words; current state only; four rows (existing thing · what changed · what I am changing now · what stays) plus a story diagram with the one changed step marked; per-step check tables on ask. Body: `.claude/reply-shape-spec.md` §3d (new).

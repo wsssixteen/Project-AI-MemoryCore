@@ -27,8 +27,8 @@ const spacedWriter = path.join(spacedDir, 'post-note.js'); fs.copyFileSync(postS
 const lookalike = path.join(sb, 'xticket-load-verify.js'); fs.copyFileSync(postScript, lookalike);
 
 // Legacy fixtures (F1-F55) test the post-window behaviour; the v1.4 stage-only fixtures pass their own date.
-function run(payload, until = '2000-01-01') {
-  const r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify(payload), encoding: 'utf8', timeout: 30000, cwd: ROOT, env: { ...process.env, REDMINE_STAGE_ONLY_UNTIL: until, CLAUDE_PROJECT_DIR: ROOT } });
+function run(payload, until = '2000-01-01', root = ROOT) {
+  const r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify(payload), encoding: 'utf8', timeout: 30000, cwd: root, env: { ...process.env, REDMINE_STAGE_ONLY_UNTIL: until, CLAUDE_PROJECT_DIR: root } });
   return { out: (r.stdout || '') + (r.stderr || ''), status: r.status };
 }
 const blocked = r => /redmine-write-gate/.test(r.out) && /⛔/.test(r.out);
@@ -213,6 +213,48 @@ r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 
 check('F72 "I approve" only in an ASSISTANT line → BLOCK (self-approval)', blocked(r), r.out.slice(0, 120));
 r = run({ tool_name: CHROME_JS, tool_input: { action: 'javascript_exec', tabId: 1, text: SUBMIT_JS } }, STAGE);
 check('F73 browser submit with no transcript → BLOCK', blocked(r), r.out.slice(0, 120));
+
+// ── v1.5 (2026-10-07): the one standing-approved API write, the quest-start claim (lib/quest-start-claim.js) ──────────
+const CLAIM = path.join(ROOT, 'lib', 'quest-start-claim.js');
+const CLAIM_CMD = 'node lib/quest-start-claim.js 281324';
+const claimBody = fs.readFileSync(CLAIM, 'utf8');
+const standingOk = r => !blocked(r) && /standing approval/.test(r.out);
+r = run({ tool_name: 'PowerShell', tool_input: { command: CLAIM_CMD }, transcript_path: noApproval() }, STAGE);
+check('F74 the claim script, no approval phrase, inside the stage-only window → allowed as the standing approval', standingOk(r), r.out.slice(0, 200));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${CLAIM}" 281324 --dry-run` }, transcript_path: noApproval() }, STAGE);
+check('F75 absolute quoted path (repo root has spaces) → allowed', standingOk(r), r.out.slice(0, 200));
+r = run({ tool_name: 'PowerShell', tool_input: { command: 'node .\\lib\\quest-start-claim.js --result 281324' }, transcript_path: noApproval() }, STAGE);
+check('F76 backslash path form → allowed', standingOk(r), r.out.slice(0, 200));
+const fakeLib = path.join(sb, 'lib'); fs.mkdirSync(fakeLib);
+const claimCopy = path.join(fakeLib, 'quest-start-claim.js'); fs.writeFileSync(claimCopy, claimBody);
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${claimCopy}" 281324` }, transcript_path: noApproval() });
+check('F77 the same body at another path (…/lib/quest-start-claim.js outside the repo) → BLOCK (one path only)', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'Bash', tool_input: { command: `${CLAIM_CMD} && ${INLINE_WRITE}` }, transcript_path: noApproval() });
+check('F78 claim script + inline curl PUT in the same command → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `${CLAIM_CMD} --x "-X PUT"` }, transcript_path: noApproval() });
+check('F79 claim script + mutation-shaped text in the command → exemption void → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `node "${postScript}" lib/quest-start-claim.js` }, transcript_path: noApproval() });
+check('F80 a writer passes the claim script as an ARGUMENT → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: `${CLAIM_CMD}; node "${postScript}"` }, transcript_path: noApproval() });
+check('F81 claim script chained with a writer script → BLOCK (the writer body is still scanned)', blocked(r), r.out.slice(0, 160));
+// A copy of the repo layout where the script was edited to also send a note: the body check must void the exemption.
+const mkRepo = (name, body) => { const d = path.join(sb, name); fs.mkdirSync(path.join(d, 'lib'), { recursive: true });
+  for (const f of ['hook-runtime.js', 'turn-context.js']) { try { fs.copyFileSync(path.join(ROOT, 'lib', f), path.join(d, 'lib', f)); } catch (_) { /* optional */ } }
+  fs.writeFileSync(path.join(d, 'lib', 'quest-start-claim.js'), body); return d; };
+const cleanRepo = mkRepo('repo-clean', claimBody);
+const tamperedRepo = mkRepo('repo-tampered', claimBody.replace('{ issue: { status_id: IN_PROGRESS_ID } }', "{ issue: { status_id: IN_PROGRESS_ID, notes: 'taken' } }"));
+r = run({ tool_name: 'PowerShell', tool_input: { command: CLAIM_CMD }, transcript_path: noApproval() }, STAGE, cleanRepo);
+check('F82 control: an untouched copy at <root>/lib of another root → allowed', standingOk(r), r.out.slice(0, 200));
+r = run({ tool_name: 'PowerShell', tool_input: { command: CLAIM_CMD }, transcript_path: noApproval() }, STAGE, tamperedRepo);
+check('F83 the script edited to also send a note → exemption void → BLOCK', blocked(r), r.out.slice(0, 200));
+r = run({ tool_name: 'PowerShell', tool_input: { command: 'node quest/active-cli.js update QA-281324 status=active phase=0 quest_start=@now' }, transcript_path: noApproval() }, STAGE);
+check('F84 the quest start command itself (active-cli update … quest_start=@now) → silent, never blocked', silent(r), r.out.slice(0, 160));
+check('F85 guard: lib/quest-start-claim.js stays status-only (else re-review its exemption)',
+  /\{ issue: \{ status_id: IN_PROGRESS_ID \} \}/.test(claimBody) && !/assigned_to_id|done_ratio|["']notes["']|\bnotes\s*[:=]|\bjournal\s*:|\buploads?\s*:/i.test(claimBody) && (claimBody.match(/'PUT'/g) || []).length === 1, 'shape changed in ' + CLAIM);
+r = run({ tool_name: 'PowerShell', tool_input: { command: 'node lib/xquest-start-claim.js 281324; node "' + path.join(fakeLib, 'quest-start-claim.js') + '"' }, transcript_path: noApproval() });
+check('F86 look-alike name + outside copy chained → BLOCK', blocked(r), r.out.slice(0, 160));
+r = run({ tool_name: 'PowerShell', tool_input: { command: WRITE_CMD }, transcript_path: transcript([user('ok post it')]) }, STAGE);
+check('F87 the stage-only window still blocks every OTHER API write (F56 unchanged by v1.5)', blocked(r) && /STAGE-ONLY/.test(r.out), r.out.slice(0, 160));
 
 let failed = 0; for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
 console.log('\nredmine-write-gate.eval: ' + (results.length - failed) + '/' + results.length + (failed ? ' RED' : ' green'));

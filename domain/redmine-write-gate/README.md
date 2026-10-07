@@ -3,7 +3,7 @@ symptom: #275847 2026-09-04: note posted + reassigned to Ammar on the strength o
 goal: BLOCK unless the LAST user message is an explicit post approval (post it / post now / Yes, post / [redmine-post-ok]) — the note text must have been shown and nodded first
 goal_signal: the PreToolUse fire produced: BLOCK unless the LAST user message is an explicit post approval (post it / post 
 retention: rotate monthly
-# redmine-write-gate (hook-only Feature, v1.3 — born 2026-09-04 via core/forge.js)
+# redmine-write-gate (hook-only Feature, v1.5 — born 2026-09-04 via core/forge.js)
 
 **What fires when**: `PreToolUse` on `Bash|PowerShell` — the command (or any `.js` it executes) references the Redmine host / API key AND carries a mutation: a write verb (`method:'PUT'|'POST'|'DELETE'|'PATCH'`, `-X PUT`, `--request POST`, `-Method Put`, a quoted `'PUT'` literal, `requests.put(`, `wget --post-data`), a request body (`-Body`, `curl -d/--data*/-F/-T`), or a payload KEY (`issue: {` · `notes:` · `status_id:` · `assigned_to_id:` · `done_ratio:` · `journal:` · `uploads:`). A field READ (`i.done_ratio`, `i['notes']`) is not a mutation (v1.3).
 
@@ -97,6 +97,34 @@ retention: rotate monthly
 | 32 | a file read whose text starts with "Your questions have been answered:" | accepted-risk — only the harness writes that prefix at the start of a tool_result; worst case is a status change, which can be set back |
 
 **v1.4 (2026-09-30, #282555)**: per みや — *"For a month or until I approve, for now you will always stop at staging. Build at the start, to detect if I request to view first as a gate."* Three additions. (1) **STAGE-ONLY until 2026-10-30** (`STAGE_ONLY_UNTIL`, env `REDMINE_STAGE_ONLY_UNTIL` for evals): every API write is blocked even with "post it"; the route is the browser edit form (`redmine-phase1-prefill`), stop before Submit. Lift = みや's nod → change the constant through `forge refine`. (2) **View-first detection**: a last user message like "let me see / prepare first / in the same page / stop at staging" forces staging after the window too. (3) **Browser branch** (new matcher on `claude-in-chrome` + `Claude_Browser` `javascript_tool|computer|browser_batch`): browser JS that calls the Redmine API (`fetch`/XHR to `/redmine/…json`) is BLOCKED always — it popped a sign-in password box in みや's Chrome on #282555; a form submit (JS `.submit()`/commit `.click()`, or a click on a ref the `find` result named `button "Submit"`) needs "I approve" / "submit it" / "post it" in his LAST message. Reading the DOM and setting field values (staging) stay silent. Spec preservation: every v1.3 spec kept; legacy F1-F55 now run pinned to the post-window mode (`until=2000-01-01`) so they still prove the approval logic. Eval 74/74 green.
+
+**v1.5 (2026-10-07)**: per みや — *"straight away update the Redmine ticket's Status as In progress IF the status is New. This is to avoid people stealing our tickets due to mistake."* ONE standing-approved API write: the quest-start claim (`lib/quest-start-claim.js`, Feature `domain/quest-start-claim/`). `isStandingClaim()` exempts that script when ALL hold: (1) it is the EXECUTED script; (2) its resolved path is `<repo or its worktree>/lib/quest-start-claim.js`, no other folder; (3) its body is status-only (`status_id` present, no `NON_STATUS_MUTATION` key); (4) the command text carries no mutation. The exemption holds inside the stage-only window. The gate writes no log row for it: the script records its own `allowed · surface: quest-start-claim` row in `log.jsonl` only when it really changes a ticket. The normal start path (`node quest/active-cli.js update … quest_start=@now`) starts the script as a child process and never reaches this gate; the exemption exists for the manual run, the dry run and `--result`. Spec preservation: every v1.4 spec kept (F1-F73 unchanged, F87 re-proves the stage-only block for every other write); the two early returns `!REDMINE_REF` / `!isMutation` are merged into one branch with the same result. Eval 88/88 green.
+
+### v1.5 adversarial scenarios (Rule 12 — 20)
+
+| # | Scenario | Verdict |
+|---|---|---|
+| 1 | the claim script, no approval phrase, inside the stage-only window | fixture-added (F74 allow) |
+| 2 | absolute quoted path with spaces | fixture-added (F75 allow) |
+| 3 | backslash relative path | fixture-added (F76 allow) |
+| 4 | the same body saved at another `…/lib/quest-start-claim.js` outside the repo | fixture-added (F77 BLOCK) |
+| 5 | claim script + inline curl PUT in one command | fixture-added (F78 BLOCK) |
+| 6 | claim script + mutation-shaped text in the command | fixture-added (F79 BLOCK) |
+| 7 | a writer passes the claim script as an argument | fixture-added (F80 BLOCK) |
+| 8 | claim script chained with a writer script | fixture-added (F81 BLOCK) |
+| 9 | the script later edited to also send a note | fixture-added (F83 BLOCK; F82 is the control) |
+| 10 | the quest start command itself | fixture-added (F84 silent) |
+| 11 | the real script drifts from status-only | fixture-added (F85 goes RED) |
+| 12 | look-alike name `xquest-start-claim.js` | fixture-added (F86 BLOCK via the chained outside copy; a missing look-alike reads as an empty body) |
+| 13 | every OTHER write inside the stage-only window | fixture-added (F87 BLOCK, same as F56) |
+| 14 | the script run from a worktree of the repo | handled — `WORKTREE_SEG` is stripped from both sides (the eval itself runs from a worktree when built in one) |
+| 15 | a worktree copy edited to change the status id to something else (for example Resolved) | accepted-risk — still status-only and still his own New ticket; a status can be set back; F85 pins the shipped body |
+| 16 | `cwd` missing from the hook input | handled — falls back to the hook process's own directory, the same base `fs.readFileSync(s)` already used |
+| 17 | script path given with a drive-letter case difference | handled — compared lower-cased after `path.normalize` |
+| 18 | someone points `CLAUDE_PROJECT_DIR` at a folder holding a hand-made script | accepted-risk — deliberate evasion (same class as scenario 24 of the first table); the body check still limits it to a status-only write |
+| 19 | the exemption text ("standing approval") quoted back in a later turn | handled — the gate never reads its own output as approval; this branch reads the command and the file only |
+| 20 | main repo still runs v1.4 until this branch is merged | accepted-risk until merged — the manual run is blocked there, the background start is unaffected |
+| 21 | user reversal: "stop the automatic In Progress" | handled outside the gate — remove the two `claimOnStart` calls (NUKE-MARKER of `quest-start-claim`), or `redmine_claim=off` for one ticket |
 
 symptom_v1_4: #282555 2026-09-30 — browser fetch of /redmine/issues/N.json popped a password box in miya's Chrome; miya wants every Redmine update staged and reviewed for a month
 footprint: per-tool: 1 node per Bash/PowerShell call + 1 node per browser javascript/computer/batch call, ~40 MB, exits in <100 ms

@@ -68,6 +68,20 @@ const BROWSER_NET = /\b(?:fetch|XMLHttpRequest|\$\.(?:ajax|get|post|getJSON)|axi
 const BROWSER_REDMINE_URL = /\/redmine\/|172\.16\.90\.169|\/issues\/[^'"`\s]*\.json|\.json\b[^\n]{0,40}issues/i;
 const BROWSER_SUBMIT = /(?:issue-form|name=["']?commit|#issue_notes|issue_status_id)[\s\S]*(?:\.submit\s*\(|requestSubmit|\.click\s*\(\s*\))|(?:\.submit\s*\(|requestSubmit|\.click\s*\(\s*\))[\s\S]*(?:issue-form|name=["']?commit)/i;
 const isBrowserTool = n => /(?:claude-in-chrome|Claude_Browser)__(?:javascript_tool|computer|browser_batch)$/.test(String(n || ''));
+// v1.5 (2026-10-07, miya: "straight away update the Redmine ticket's Status as In progress IF the status is New"):
+// ONE standing-approved API write, the quest-start claim. Exempt only the forge-born script at
+// <repo or its worktree>/lib/quest-start-claim.js, only as the EXECUTED script, only while its body stays status-only,
+// only when the command text itself carries no mutation. It holds inside the stage-only window too.
+const CLAIM_SCRIPT = /(?:^|[\\/])lib[\\/]quest-start-claim\.js$/i;
+const WORKTREE_SEG = /[\\/]\.claude[\\/]worktrees[\\/][^\\/]+/i;
+function isStandingClaim(scriptPath, cwd) {
+  if (!CLAIM_SCRIPT.test(scriptPath)) return false;
+  const abs = path.resolve(cwd || process.cwd(), scriptPath);
+  const home = path.join(ROOT.replace(WORKTREE_SEG, ''), 'lib', 'quest-start-claim.js');
+  if (path.normalize(abs.replace(WORKTREE_SEG, '')).toLowerCase() !== path.normalize(home).toLowerCase()) return false;
+  let body = ''; try { body = fs.readFileSync(abs, 'utf8'); } catch (_) { return false; }
+  return /status_id/.test(body) && !NON_STATUS_MUTATION.test(body);
+}
 
 function transcriptTail(p) {
   try {
@@ -168,13 +182,18 @@ runHook({ name: 'redmine-write-gate', event: 'PreToolUse', log: LOG }, (input) =
   // A writer that passes redmine-sync.js as an argument (to borrow the key) is still a writer.
   let body = cmd;
   const cmdClean = !isMutation(cmd);
+  let standing = false;
   for (const x of cmd.matchAll(NODE_SCRIPT)) {
     const s = x[1] || x[2] || x[3];
     if (cmdClean && READ_ONLY_SCRIPT.test(s)) continue;
+    if (cmdClean && isStandingClaim(s, data.cwd)) { standing = true; continue; }
     try { body += '\n' + fs.readFileSync(s, 'utf8'); } catch (_) { /* absent */ }
   }
-  if (!REDMINE_REF.test(body)) return { fired: false };
-  if (!isMutation(body)) return { fired: false };
+  if (!REDMINE_REF.test(body) || !isMutation(body)) {
+    // Nothing else in the command writes. The claim script records its own row in log.jsonl when it really changes a ticket.
+    if (standing) return { fired: true, blocked: false, contextOut: 'redmine-write-gate: standing approval (miya 2026-10-07): quest-start claim, status New to In Progress only\n' };
+    return { fired: false };
+  }
 
   const last = data.transcript_path ? lastUserText(String(data.transcript_path)) : '';
   if (BYPASS.test(last)) return { fired: true, blocked: false, contextOut: 'redmine-write-gate: bypassed by miya\n' };

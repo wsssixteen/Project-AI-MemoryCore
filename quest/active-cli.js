@@ -112,6 +112,25 @@ function afterArchive(qa) {
     } catch (e) { console.error(`  ⚠ project folder not archived: ${e.message}`); }
 }
 
+// Quest-start claim (2026-10-07, miya): when work on a ticket begins, its Redmine status goes from
+// New to In Progress in a detached background process, so the start never waits on the network.
+// The rule and its three guards have one home: lib/quest-start-claim.js.
+function shouldClaim(qa, lines) {
+    const get = k => ((lines.find(l => l.startsWith(k + '=')) || '').slice(k.length + 1)).trim();
+    return get('status').toLowerCase() === 'active' && get('quest_start') !== '' && !!redmineCheck.numOf(qa);
+}
+function claimOnStart(qa, lines) {
+    if (!LIVE && process.env.QUEST_CLAIM_TEST !== '1') return;
+    if (!shouldClaim(qa, lines)) return;
+    const script = path.join(__dirname, '..', 'lib', 'quest-start-claim.js');
+    if (!fs.existsSync(script)) return;
+    try {
+        const num = redmineCheck.numOf(qa);
+        require('child_process').spawn(process.execPath, [script, qa], { detached: true, stdio: 'ignore', windowsHide: true }).unref();
+        console.log(`  🔖 Redmine #${num}: New → In Progress check started in the background · result: node lib/quest-start-claim.js --result ${num}`);
+    } catch (e) { console.error(`  ⚠ Redmine start check not started: ${e.message}`); }
+}
+
 function writeAtomic(p, content) {
     const tmp = p + '.tmp_' + process.pid;
     fs.writeFileSync(tmp, content);
@@ -134,6 +153,7 @@ function cmdStart(qa, kvs) {
     const startStatus = (lines.find(l => l.startsWith('status=')) || 'status=active').slice(7);
     redmineCheck.checkOne(qa, startStatus, 'start');
     afterStatus(qa, lines);
+    claimOnStart(qa, lines);
 }
 
 function cmdRead(qa) {
@@ -183,6 +203,7 @@ function cmdUpdate(qa, kvs) {
     // to someone else, so he was shown other people's tickets as his open work.
     if (updates.has('status')) redmineCheck.checkOne(qa, updates.get('status'), 'update');
     if (updates.has('status')) afterStatus(qa, b.lines);
+    if (updates.has('quest_start') || updates.get('status') === 'active') claimOnStart(qa, b.lines);
 }
 
 function cmdArchive(qa) {
@@ -237,4 +258,4 @@ function main() {
 }
 
 if (require.main === module) main();
-module.exports = { parseBlocks, renderBlocks };
+module.exports = { parseBlocks, renderBlocks, shouldClaim };
