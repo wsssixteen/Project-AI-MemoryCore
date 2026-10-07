@@ -27,6 +27,18 @@ Pieces are OPTIONAL — some Features are hook-only (no skill), some skill-only 
 
 ### Where a Feature sits, and what "installed" means (added 2026-10-05 per みや — the map itself lives in `system/INDEX.md`, THE one map; this is the pointer + the Feature row)
 
+## Flow first — before ANY change to an existing part (HARD, 2026-10-07 per みや)
+
+Before editing a hook, script, skill or workflow that already exists, show the flow it sits in as a short story diagram, in chat, BEFORE the first edit:
+
+1. the existing flow, top to bottom (who triggers it → what it checks → what happens next);
+2. the ONE step being changed, marked;
+3. what stays the same.
+
+Read from the top: system/INDEX.md (which kind of part, which workflow owns it) → the workflow's skill → the part itself. No diagram = no edit. A change that needs more than one marked step is a redesign: stop and ask.
+
+**Why**: 2026-10-02 the push and commit guards were changed without their flow understood; the change opened a hole, and the repair was over-built into a rewrite plus agent reviews. みや: "you always skip understanding the whole flow … you do not try to understand the thing you're trying to change first".
+
 The system has six kinds of parts: Rules · Workflows · Features · Memory · Kernel · Projects. A **Workflow** is a route (ordered steps across turns, position in `current_phase`); a **Feature** is one job at one moment, and a Workflow is made OF Features. Read `system/INDEX.md` before placing anything.
 
 **A Feature is INSTALLED only when all of these hold** — a hook or skill that merely exists on disk is not installed:
