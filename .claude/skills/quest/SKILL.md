@@ -301,6 +301,15 @@ Issues found and resolved:
 
 Thank you very much.
 ```
+**Dev notes block (2026-10-07 per miya, #278909)** — when the note carries one, it sits a few blank lines under "Thank you very much." and covers OUR work only, three short lines at most: what we reviewed · what we added (hash in brackets after the words) · where it is merged (merge hash in brackets). Shape he picked and posted (he cut "No change needed." from the first line):
+```
+Dev notes:
+- Reviewed Farah's latest commit.
+- Added the Diangkat PBN case for point 6 (c1d90aef9c).
+- Merged mlk/internal-issues/278909 to mlk/int-env (72b5191532).
+```
+**A commit hash never stands alone**, in the note or in chat: say what the commit is ("Farah's latest commit", "our Diangkat commit"); the hash may follow in brackets, never replace the words. **Banned**: a colleague's bare hash used as the name of her fix · retelling the colleague's commits in Dev notes.
+
 Rules: English, like miya's own notes · greet the LIVE assignee (re-sync Redmine first) · one fix per line, no code names · Root cause + Solution rows and the field set (Resolved · Assignee = BA · 100% · Resolved By Ahmad Ridhwan Anuar) go in their own fields, not in the note. **Banned**: a Malay rewrite · a test-data block or restated expected behaviour (miya cut both on #279411) · pointing at a memory file instead of printing the template. **Why**: #282061, the template lived only in `feedback_ticket_writing_style` memory and the deploy skill pointed at it by name; the note came out in my own shape.
 
 ### 🗣️ Plain first — DEFAULT for every quest briefing and explanation (added 2026-09-29 per みや, #282061)
