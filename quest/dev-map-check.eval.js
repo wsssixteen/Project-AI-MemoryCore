@@ -26,6 +26,12 @@ const GOOD = [
   '|---|---|---|---|',
   '| F1 | steps are rows | `ind_langkah` | MODEL |',
   '| F2 | role from flow | `P src/main/java/x/FlowableConfig.java:952` | VERIFIED |',
+  '## Approaches',
+  '| # | Approach | Reuses | Size | Risk |',
+  '|---|---|---|---|---|',
+  '| A1 | Build where the mock-up draws it | nothing | large | high |',
+  '| A2 | Reuse the existing payment page, add the missing panel | helper, save | small | low |',
+  'Chosen: A2',
   '## Code-Review (Rubric) — Development build map',
   '### Work package 1 — Reference data',
   '| # | Table | Rows | Req | Status |',
@@ -76,6 +82,11 @@ check('S14 the phrase quoted in prose (no heading) fails D4',
 check('S15 a build map with no "Work package" heading fails D4',
   failed(checkDoc(GOOD.replace(/### Work package/g, '### Part'))).split(',').includes('D4'));
 
+check('S21 no Approaches section fails D3b', failed(checkDoc(drop(/^## Approaches|^\| A\d \||^Chosen:/))).split(',').includes('D3b'));
+check('S22 one approach only fails D3b', failed(checkDoc(drop(/^\| A1 \|/))).split(',').includes('D3b'));
+check('S23 no Chosen line fails D3b', failed(checkDoc(drop(/^Chosen:/))).split(',').includes('D3b'));
+check('S24 no approach that reuses something existing fails D3b', failed(checkDoc(GOOD.replace('Reuse the existing payment page, add the missing panel', 'Build a second new page').replace('| helper, save |', '| nothing |'))).split(',').includes('D3b'));
+
 // CLI
 const cli = path.join(__dirname, 'dev-map-check.js');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'devmap-'));
@@ -92,6 +103,13 @@ r = run([]);
 check('S19 CLI exits 2 with no arguments', r.status === 2, 'exit=' + r.status);
 r = run(['999999999']);
 check('S20 CLI exits 2 for a ticket with no quest doc', r.status === 2, 'exit=' + r.status);
+const logPath = path.join(tmp, 'run.log.jsonl');
+const runLogged = (args) => spawnSync(process.execPath, [cli, ...args], { encoding: 'utf8', env: { ...process.env, DEV_MAP_LOG: logPath } });
+runLogged(['--doc', goodPath]);
+check('S25 a --doc run with no ticket number writes no log row', !fs.existsSync(logPath));
+runLogged(['990001', '--doc', badPath]);
+const rows = fs.existsSync(logPath) ? fs.readFileSync(logPath, 'utf8').trim().split('\n').map(l => JSON.parse(l)) : [];
+check('S26 a ticket run writes one row naming the failed block', rows.length === 1 && rows[0].qa === 'QA-990001' && rows[0].ok === false && rows[0].failed.includes('D6'), JSON.stringify(rows));
 fs.rmSync(tmp, { recursive: true, force: true });
 
 console.log(`\ndev-map-check.eval: ${pass}/${pass + fail} ${fail ? 'RED' : 'green'}`);

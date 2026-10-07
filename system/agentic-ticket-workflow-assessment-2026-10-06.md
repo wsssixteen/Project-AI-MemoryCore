@@ -64,7 +64,7 @@ Proposals logged: A2 (schema-verify parser scope) · A4 (falsifier check reads t
 |---|---|---|
 | A1 agentic system | A corrected behaviour was answered with a memory note, not an enforcing change | Formal Malay commit subjects on `mlk/review/244600` (2026-10-05). First action: one line in `feedback_commit_deploy_runbook.md`. The subject gate got rule R8 only after miya said "feedback_ is not enough" |
 | A1 agentic system | "close quest" depended on the assistant matching a skill description | `domain/save-quest/` had a script and an eval but no hook; a trigger hook was built in this session |
-| A1 agentic system | Domain Expansion runs a fixed step list; no part declares its own save rule | miya's ask of 2026-10-06; logged as proposal A1 (per-part `save:` line + `lib/save-rules.js`) |
+| A1 agentic system | Domain Expansion runs a fixed step list; no part declares its own save rule | miya's ask of 2026-10-06; built the same night: `system/save-rules.json` + `lib/save-rules.js` + step 12.7 + `de-close-gate` C8. First real run found 3 FAIL: a README with no `footprint:` line, a log the worktree cannot see, a dated block written as a bold line |
 | A2 quest workflow | The rework hand-back did not check every BA issue of the ticket and its related ticket | #275043 Expected: Jana Semula "naik sekali". I told miya "Jana Semula does not add a versi" and wrote it into the test table and a Redmine draft. Found only when he forced a full BA-issue re-list |
 | A2 quest workflow | A BA-raised symptom was parked as another team's without reading our own writers | Carian Pintas missing versi: I said "Common side"; `PelupusanDocumentService.saveDocument` writes the same task link. Fix was 6 lines in our module |
 | A3 debugging | Real stored before/after pairs settled the root cause in one step; guesses did not | Three MLIT pairs gave `kind=format before=[b;sz=24;] draft=[b;]`. The earlier guess (empty content control) had been refuted offline and cost half a day |
@@ -93,3 +93,17 @@ Proposals logged: A2 (schema-verify parser scope) · A4 (falsifier check reads t
 | A3 debugging | A recent commit on the same handler was the cause; the git blame gave it in one call | `a105e11d7d` (#263304, 2026-09-02) added the flag reset at `AwamMaklumatLesenTabForm.onSearchNoLesen():351` |
 | A4 etanah issue-solving | Internal and master copies of one file differ in line endings, so a cherry-pick conflicts on the whole file | `AwamMaklumatLesenTabForm.java` on `mlk/int-env`: 3-line change conflicted on 1,600+ lines |
 | A5 sweep | Not used this session | A5 ⏭ single-ticket session |
+
+## Session: #268173 Kedah development quest (2026-10-05 night to 2026-10-06 night, main checkout)
+
+| Axis | What this session showed | The instance |
+|---|---|---|
+| A1 agentic system | Readers were sound; the skeptic checked the map against the code, not against the question "is this the right approach". Five agents (about 1.65M subagent tokens) audited a plan built on the wrong idea. | Fable found 6 missing items and 5 wrong claims inside the map and estimated "70-75% of the real work". The team then solved the ticket with about 120 lines using a page the map only cited as an example. |
+| A2 quest workflow | The development path I wrote replaced the Rubric's candidate step with a map. The quest skill was never invoked on the ticket because our role was "guide". | `.claude/skills/quest/QA-NNN-template.md` said "instead of fix-shape options" until tonight. Fixed: step D3b + `quest/dev-map-check.js` D3b (yesterday's map fails it). |
+| A3 debugging accuracy | Three claims went out as checked when they were guesses. | Database port 5432 (real: 5444) · guide row naming `tugasan.config.json` (it is `{}`) · "save is skipped without Kira" (the bill is always written). |
+| A4 etanah issue-solving | A BA mock-up was read as the page design. The page that owned the data was read six times and never proposed as the langkah. | `KdhPengiraanBayaranLesenForm` cited as "working example" in every reply; shipped fix makes it the langkah itself. |
+| A5 file sweep | Nothing new: all 5 attachments were opened and the two screenshots read as mock-ups. | Brief of 2026-10-05, "both screenshots are PLPS screens". |
+| Reply shape | Investigation shown instead of the answer; tables passed the brevity gate at any length. | "too long, I just wanted the answer" after two why-questions; "where is the files" after code was pasted three times. Fixed: `domain/terse-gate` signal 2 + reply-shape-spec §3c. |
+| Repo safety | A commit built from a stale index undid another session's work on main and was pushed. | `c1e6ad56` removed boot batch 2 (447 lines). The session that made it found and restored it (`25c21d4a`); this close found it separately by comparing the working files with the commit before it. The same close then met a 0-byte `.git\index` and a second session committing in the same checkout. |
+
+Proposals logged for this session (each with its eval case, in `system/slips.jsonl`): A1 skeptic brief must include "name a smaller approach" · A2 guide role runs the full engine · A3 a claim about a port/path/host carries the command that read it · A4 "which existing page owns this data" as the first Scout question on a development ticket · repo: refuse a commit in the main checkout when the index is older than HEAD.

@@ -12,7 +12,8 @@ const CLOSE_BANNER = '═══ [ Domain Expansion — closed ] ═══\nBarri
 const FRESH_LOG = [JSON.stringify({ ts: new Date().toISOString(), via: 'resume-readiness', checked: 2, gaps: 0 })];
 const STALE_LOG = [JSON.stringify({ ts: '2026-08-01T00:00:00Z', via: 'resume-readiness', checked: 2, gaps: 0 })];
 const FRESH_AUDIT = JSON.stringify({ ts: new Date().toISOString(), action: 'audit-briefing-ran', notWorking: 3, rulings: 2 });
-const FRESH_RECON = [JSON.stringify({ ts: new Date().toISOString(), action: 'reconcile-ran', detail: 'open=11' }), FRESH_AUDIT];
+const FRESH_SAVE = JSON.stringify({ ts: new Date().toISOString(), action: 'save-rules-ran', parts: 3, pass: 9, fail: 0, partial: false });
+const FRESH_RECON = [JSON.stringify({ ts: new Date().toISOString(), action: 'reconcile-ran', detail: 'open=11' }), FRESH_AUDIT, FRESH_SAVE];
 const STALE_RECON = [JSON.stringify({ ts: '2026-08-01T00:00:00Z', action: 'reconcile-ran', detail: 'open=20' })];
 
 function run(overrides) {
@@ -128,6 +129,20 @@ r = run({ _testActiveText: c7active, _testSessionStartMs: c7start, _testQaDocMti
 check('F20 qa_doc saved this session -> pass', r.status === 0, 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 120));
 r = run({ _testActiveText: 'qa=QA-276182\nstatus=active\n', _testSessionStartMs: c7start, _testQaDocMtimes: { 'QA-276182': 0 } });
 check('F21 block without qa_doc -> C7 skipped -> pass', r.status === 0, 'exit=' + r.status);
+
+// F22-F26: C8 save-rules ran with 0 FAIL (2026-10-06, miya: each kind of part declares its own save rule)
+const NO_SAVE = FRESH_RECON.slice(0, 2);
+const saveRow = (o) => JSON.stringify(Object.assign({ ts: new Date().toISOString(), action: 'save-rules-ran', parts: 4, pass: 6, fail: 0, partial: false }, o));
+r = run({ _testGateLogLines: NO_SAVE });
+check('F22 no save-rules-ran row -> BLOCK C8 naming the fix command', r.status === 2 && /C8 SAVE RULES NOT RUN/.test(r.stderr || '') && /node lib\/save-rules\.js/.test(r.stderr || ''), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 120));
+r = run({ _testGateLogLines: NO_SAVE.concat(saveRow({ fail: 2 })) });
+check('F23 latest full run has FAIL rows -> BLOCK C8 with the count', r.status === 2 && /C8 SAVE RULES: 2 FAIL/.test(r.stderr || ''), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 120));
+r = run({ _testGateLogLines: NO_SAVE.concat(saveRow({ ts: '2026-08-01T00:00:00Z' })) });
+check('F24 stale save-rules-ran row -> BLOCK C8', r.status === 2 && /C8 SAVE RULES NOT RUN/.test(r.stderr || ''), 'exit=' + r.status);
+r = run({ _testGateLogLines: NO_SAVE.concat(saveRow({ parts: 0, partial: true })) });
+check('F25 partial (--paths/--since) run never counts -> BLOCK C8', r.status === 2 && /C8 SAVE RULES NOT RUN/.test(r.stderr || ''), 'exit=' + r.status);
+r = run({ _testGateLogLines: NO_SAVE.concat(saveRow({ fail: 2 }), saveRow({ pass: 8 })) });
+check('F26 a clean re-run after a failing run -> pass (latest full row governs)', r.status === 0, 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 120));
 
 // F14: malformed rows in gate log ignored, fresh row still found -> pass
 r = run({ _testGateLogLines: ['not-json', '{broken'].concat(FRESH_RECON) });

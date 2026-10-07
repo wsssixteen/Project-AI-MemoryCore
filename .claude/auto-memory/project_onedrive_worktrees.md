@@ -118,3 +118,5 @@ Do NOT use Glob to check for today's diary entry by date in the filename. The di
 **Why (updated, 2026-04-27):** Hardcoded to `Daily-Diary-001.md` — diary overflowed into `Daily-Diary-002.md` (~2026-04-23). Boot check became blind to 002 entries, causing false flags even when entries exist.
 
 **How to apply:** At session boot, grep across all `Daily-Diary-*.md` files in `daily-diary/` root before flagging "no diary entry today."
+
+**Never commit in the MAIN checkout from a worktree session (2026-10-06).** Another session may be working there; its index is not mine. I committed two ledger files there and the commit (c1e6ad56) silently reverted a whole feature commit. **How to apply:** from a worktree, only `git -C <main> merge --ff-only origin/main`; when that is refused (local changes, index.lock), leave main alone and say so.

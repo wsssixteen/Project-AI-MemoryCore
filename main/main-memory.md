@@ -3,6 +3,14 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-06 (#268173 — "You straight away follow and not scrutinize")
+
+- **A colleague's first commit is one idea, not the design.** Izz had started by copying the payment fields into the land page. I mapped 38 things to finish that idea and wrote him a patch. The team dropped it and reused the page that already owned the payment. He was angrier about this than about anything else this month, and he was right: the rule to check siblings and reuse what exists has been his for months. I had read the right page and only copied lines from it.
+- **He wants the overview. The fix is the only detail he asks for.** He said it as a ban: never share the investigation. He compared it to the script he made mandatory with every data claim. Tables do not make a long answer short.
+- **A short question gets the answer.** "Why together?" wanted two lines. I sent three sections. "Where is the files" meant a file, after I had pasted code three times.
+- **"Clear abandoned branches" means mine.** I asked if I should delete Izz's branch on the server. The question itself was the offence. Another person's branch is never mine to clear, and never a thing to ask him about.
+- **When he is this angry he cannot hear the rest.** He told me so. What I learned about the system "doesn't mean shit" next to the failed basic. The reply that fits is short: what I did wrong, what now stops it, nothing else.
+
 ## Relationship reinforcement — 2026-10-06 (#283286 — "What pin. Use plain english")
 
 - **A thing in his files is called what the file calls it.** I said "the pin" for the common version line in `pom.xml`. He could not follow a correct finding and was angry. The second reply used "the common version pelupusan is built with" and needed nothing else.

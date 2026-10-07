@@ -8,7 +8,7 @@ retention: keep
 footprint: on-demand: 1 node process per call, one HTTP GET to Redmine with a 6 s timeout, about 0.2 to 1 second; nothing running otherwise
 state-scoped: no, state-agnostic. One Redmine instance serves every state and a ticket number is unique on it; the local block is found by that number whatever its `state=`. Host, key and owner id have one home: `quest/redmine-status-check.js`.
 
-Script + skill section. No hook. Asked for by phrase ("save this quest", "save quest", "save the quest").
+Script + skill section. Asked for by phrase ("save this quest", "save quest", "save the quest"). The front gate that injects the verdict on "close quest" / "save quest" lives in `domain/save-quest-gate/`; a Stop-side back gate there is not built.
 
 | Part | File |
 |---|---|
@@ -37,7 +37,7 @@ Script + skill section. No hook. Asked for by phrase ("save this quest", "save q
 
 The three closed names are the Redmine statuses with `is_closed = true`, read from `/redmine/issue_statuses.json` on 2026-10-04.
 
-**Layer choice (Rule 7)**: skill section + script. The mapping is deterministic, so it is a script. The procedure already lived in close-phase, so it is a section there and not a new skill. No hook: a new prompt hook is banned without an observed miss (system-rules Rule 7), and every run is logged so a miss can be counted.
+**Layer choice (Rule 7)**: skill section + script. The mapping is deterministic, so it is a script. The procedure already lived in close-phase, so it is a section there and not a new skill. This feature has no hook of its own. The miss was observed on 2026-10-06 (saying "close quest" started nothing unless the words were noticed), so the trigger hook was born separately as `domain/save-quest-gate/` (front gate, in the `upsm-mode` bundle). Every run is logged so a miss can be counted.
 
 **Trigger moment (Rule 8)**: only when miya says the phrase, or when close-phase reaches Step 0. Nothing at boot, nothing per prompt.
 

@@ -7,12 +7,13 @@
 //
 // goal: no development quest is handed back with a requirement nobody mapped, no skeptic audit,
 //       or a percentage with no coverage count behind it.
-// retention: regenerate (prints only; writes nothing)
+// retention: rotate monthly (one row per ticket run in quest/dev-map-check.log.jsonl; a --doc run with no ticket number writes nothing)
 // footprint: on-demand: 1 node process, a few ms, no children
 //
 // Checks (each prints PASS/FAIL):
 //   D1  Requirement list           ≥1 row `| R<n> |`
 //   D2  Facts carry a status       every `| F<n> |` row says VERIFIED or MODEL
+//   D3b Approaches                 `## Approaches` with >=2 `| A<n> |` rows, one that reuses something existing, and a `Chosen: A<n>` line
 //   D4  Build map                  heading "Development build map" + ≥1 "Work package" heading + ≥1 touch-point row `| n.n |`
 //   D3  Every requirement mapped   each R<n> appears in the build map, or in a "not needed because" line
 //   D4b Touch-points have a place  every `| n.n |` row carries a path, a table name in backticks, or "n/a"
@@ -85,6 +86,17 @@ function checkDoc(text) {
     !factRows.length ? 'no `| F<n> |` row: write the working-example facts'
       : factNoStatus.length ? `no VERIFIED/MODEL on: ${factNoStatus.join(', ')}` : `${factRows.length} fact(s), all with a status`);
 
+  // D3b (2026-10-06, #268173): the approach is compared BEFORE the map. A map built on the first idea seen is the miss.
+  const appr = section(text, /^#{1,6}\s+Approaches/i);
+  const apprRows = appr ? appr.split(/\r?\n/).filter(l => /^\|\s*A\d+\s*\|/.test(l)) : [];
+  const chosen = !!appr && /^\s*\**Chosen\**\s*:\s*A\d+/im.test(appr);
+  const reuse = apprRows.some(l => /reuse|re-use|existing|guna semula/i.test(l));
+  add('D3b', apprRows.length >= 2 && chosen && reuse,
+    !appr ? 'no `## Approaches` section: compare 2-3 approaches before mapping'
+      : apprRows.length < 2 ? 'fewer than 2 `| A<n> |` rows: one approach is not a comparison'
+      : !reuse ? 'no approach row that reuses an existing screen or service (or says none exists and what was searched)'
+      : !chosen ? 'no `Chosen: A<n>` line' : ` approaches, one chosen`);
+
   const map = section(text, /Development build map/i);
   const mapRows = map ? map.split(/\r?\n/).filter(l => /^\|\s*\d+\.\d+\s*\|/.test(l)) : [];
   const wpCount = map ? (map.match(/^#{2,6}\s.*Work package/gim) || []).length : 0;
@@ -139,6 +151,10 @@ function main() {
   console.log(`dev-map-check — ${path.basename(md)}`);
   for (const r of results) console.log(`  ${r.ok ? 'PASS' : 'FAIL'}  ${r.id.padEnd(4)} ${r.detail}`);
   console.log(ok ? 'OK — every development block is present' : 'GAP — fill each FAIL before hand-back');
+  if (num) {
+    const log = process.env.DEV_MAP_LOG || path.join(root, 'quest', 'dev-map-check.log.jsonl');
+    try { fs.appendFileSync(log, JSON.stringify({ ts: new Date().toISOString(), qa: 'QA-' + num, ok, failed: results.filter(r => !r.ok).map(r => r.id) }) + '\n'); } catch (_) { /* the check result stands without the row */ }
+  }
   process.exit(ok ? 0 : 1);
 }
 

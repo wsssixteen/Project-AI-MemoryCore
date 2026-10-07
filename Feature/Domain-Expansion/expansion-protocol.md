@@ -347,6 +347,14 @@ Before the closing banner, run `node domain/checklist-reactivate/resume-readines
 
 ---
 
+## Step 12.7 — SAVE RULES (added 2026-10-06 per みや — MANDATORY, deterministic)
+
+Before the closing banner, run `node lib/save-rules.js` and paste its `SAVE-RULES:` header + table into the reply. It finds the system parts touched this session (git diff since the merge-base with origin/main, `git status`, quest docs modified today in the worktree or the main repo, plus `--quests QA-1,QA-2`), maps each to its kind (Rules · Workflows · Features · Memory · Kernel · Projects, per `system/INDEX.md`), and checks it against the rules that kind declares in `system/save-rules.json` (every rule cites the file that already states it). Output: PASS / FAIL / UNRULED / SKIP per part and rule; FAIL rows first; exit 1 on any FAIL. Fix every FAIL, re-run until 0 FAIL. An UNRULED row means no written save rule exists for that part: surface it for みや to rule, do not invent one.
+
+**Enforced by**: the run logs `action=save-rules-ran` to `domain/de-close-gate/log.jsonl`; `de-close-gate` **C8** blocks the close without a full (non-`--paths`, non-`--since`) run ≤12 h old with `fail=0`. **Why** (みや 2026-10-06): *"this is how you will know what is important to be saved for each domain of things we do in a session … more deterministic or mechanical so that it won't simply be up to you."*
+
+---
+
 ## Step 13 — Handoff Block — tiered (added 2026-05-24 evening; tiered 2026-05-26 after session-end overload slip)
 
 **Default is SILENCE.** A PARTIAL ⚠ step does NOT automatically warrant a Handoff Block. The criterion is *blocked work or stranded state* — not *anything that could be cleaner*.
@@ -399,6 +407,8 @@ Before emitting the closing banner — read `.claude/state/session-items.md` "Ac
 ---
 
 *Updated 2026-08-05 — **Step 7.5 IMPROVEMENT SWEEP added (MANDATORY)** per みや: five fixed axes (A1 agentic system · A2 quest workflow · A3 debugging efficiency+accuracy · A4 etanah issue-solving · A5 sweep/file-sweep), swept every DE, producing (a) a dated assessment under `system/` with a concrete instance per claim and (b) brainstormed proposals logged via `core/slips.js --type proposal` into the new 💡 Open proposals lane of `slip-dashboard.md` for weekly-audit ruling. Paired `core/slips.js` change: `type=proposal` split out of the slip counts and given its own dashboard section, because filing an idea as `upgrade` reads as shipped and makes an open decision invisible (the 2026-07-22 parked-enforcement-row failure). Rationale: みや had to ask for this assessment explicitly two goals running — a thing he must repeatedly request is a missing step, not a missing effort.*
+
+*Updated 2026-10-06 — Step 12.7 SAVE RULES added (MANDATORY, deterministic): `lib/save-rules.js` checks each touched system part against its kind's declared save rule (`system/save-rules.json`); de-close-gate C8 blocks close without a full run at 0 FAIL. Per みや. Spec-preservation: all prior steps and C1-C7 untouched; additive.*
 
 *Updated 2026-08-21 — Step 2b + 12.6 + step-2 trim now DETERMINISTIC via `domain/de-close-gate/` (Stop, BLOCKS): C1 blockless-ticket (QA-276182 replay) · C2 resume-readiness-ran · C3 session-trim-ran. Per みや's DE audit directive "MAKE THEM CRITICAL".*
 
