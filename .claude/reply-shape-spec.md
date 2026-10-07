@@ -138,6 +138,21 @@ fourth strike lands.
 
 ---
 
+## 3d. 🎯 Name the thing, stay on now (2026-10-07, per みや)
+
+His words: "You were not clear WHAT & WHICH event you're referring to … clear, short, concise, straight-forward & use plain words … I need to focus only on the CURRENT things, don't get stuck in the past, in the analysis."
+
+| Rule | Do | Banned |
+|---|---|---|
+| Name it first | First line names the thing in plain words ("the guard that stops my pushes") and the event with its date. | "the gate", "the rebuild", "v6", a hook or file name he has not been told. |
+| Current only | State what is true NOW and what I will do next. | History, how I found it, what I tried, unless he asks. |
+| Four rows | For "what is this / what did you change": the existing thing · what changed · what I am changing now · what stays. One short sentence per cell. | A paragraph, or more than four rows. |
+| Flow diagram | A short story diagram, top to bottom, with the ONE changed step marked. | A diagram with no marked step; a fix described with no flow. |
+| Step tables on ask | "What does each step check" = one small table per step: check · passes when · else. | One wide table for all steps. |
+| Answer the question asked | A one-line question gets one line. | Adding the background he did not ask for. |
+
+**Why**: 2026-10-07, five replies in a row about the push guard that he could not follow ("I don't even know what you're talking about"). The four-row table was the first one he called "not bad".
+
 ## 4. Precedence Note
 
 This file (`.claude/reply-shape-spec.md` — its permanent canonical home since 2026-07-13; the drafting copy is archived under `projects/coding-projects/archive/external-audit-2026-07/`) is the **canonical** source for reply-shape rules. `.claude/CLAUDE.md` §2 "Explanation & Output-Format Discipline" becomes a **pointer only**: its always-on mirror status (so the rule boot-loads every session) is preserved, but the full rule bodies, the gate predicate table, and the situation→shape table live HERE — CLAUDE.md must not carry a second full copy (per the File Ownership table's own "one canonical home" principle). Any future edit to a predicate, budget, or bypass token is made in this file first; CLAUDE.md's pointer text is updated only if the pointer's own summary line goes stale.

@@ -10,6 +10,12 @@
 
 ---
 
+## v1.80 — 2026-10-07 (per みや, reply structure)
+
+- §Explanation & Output-Format Discipline: new line "NAME THE THING, STAY ON NOW" — which thing and which event first, in plain words; current state only; four rows (existing thing · what changed · what I am changing now · what stays) plus a story diagram with the one changed step marked; per-step check tables on ask. Body: `.claude/reply-shape-spec.md` §3d (new).
+- Why: his audit of 2026-10-07 — "You were not clear WHAT & WHICH event you're referring to" and "I didn't see you add anything new into Claude md file based on my latest feedback on the structure you should reply."
+- Spec preservation: additive. Nothing removed.
+
 ## v1.79 — 2026-10-06 (boot audit batch 2, per みや: "just build this… everything still meets the previous behaviour, just what changed is the efficiency" + "add a lot of triggers: work / redmine / tickets")
 
 - §Session Boot Order step 5: `read quest/active.txt` removed from the boot reads. New bullet: quest status comes from the ticket list, which is no longer printed at session start; it loads on the first prompt about work (`.claude/hooks/open-quest-surfacer.js` as a child of the `upsm-mode` prompt bundle); when it is not in context the briefing row says `not loaded. Name a ticket or say "board".`; never compose quest status from a Read of `quest/active.txt` (the 2026-05-25 slip the hook was built for). The autoscan bullet runs only when the list is loaded.
