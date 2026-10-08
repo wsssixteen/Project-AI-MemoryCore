@@ -379,3 +379,60 @@ Open, honest:
 - The main checkout is 13 commits behind `origin/main` and 2 ahead, with 23 edited tracked files of another session (9 differ from the remote). Fast-forward refused; left alone. Hooks run from that checkout, so the major-keyword rule, the `noFolder` fix and the quarantine lift start there only after it syncs. Batch 2, the awam rule and the adhoc archive check were already in its files.
 - Waiting for his word, not built: push guard step 2 (Git Bash path gives an empty repo name, so steps 3 and 4 are skipped); boot mode (section 14); a flow page per Workflow; the 4 closed adhocs above.
 - Parked: gate rewrite on `claude/gates-v7-wip`.
+
+## 16. Round of 2026-10-08 night — main synced, 4 adhocs archived, boot mode BUILT
+
+His words: (1) "okay sync main folder" (2) "okay archive the 4 closed adhocs" (3) "explain to me briefly on the fix push" (4) "build boot mode" (5) "briefly, what is this flow pages for? One page per workflow? What page?"
+
+| Item | Done | Proof |
+|---|---|---|
+| Main checkout in sync | Another session had already saved and synced it at 22:31 (`581f0390`): 0 behind, 0 ahead. The major-keyword rule and the `noFolder` fix are in its files. | `git rev-list --left-right --count origin/main...HEAD` = 0 0; `MAJOR_RX` and `noFolder` found in the main checkout's files |
+| The 4 closed adhocs | Folders of `ADHOC-PT-2026-10` (237), `ADHOC-MLPS-2026-1` (149), `ADHOC-PPTPB-2026-1` (146) moved to `Melaka\Archive\`; 0 videos in them. Four records in `quest/active-archive.txt` now name the real folder (three were written before the "ADHOC" → "AH" folder rename; `ADHOC-0402DIS2025000170` already sat in Archive as 81). | audit on the 46 real adhocs: 46 pass, 0 flagged; 3 lines differ in the record file after the correction step, then 3 tool runs |
+| Archive tool gap, found on the way | `quest/archive-quest.js` did nothing to a folder when the record was already in `active-archive.txt` (it read `task_folder=` from `active.txt` only). Now it reads the archived record, moves the folder, deletes videos, and writes the Archive path back with `active-cli update … --file active-archive.txt`. | fixtures 9f (red first), 9g, 9h; eval 27/27 |
+| Boot mode | `.claude/hooks/open-quest-surfacer.js` v3: `workNow()`, `firstMessageInWorkHours()`, `QUIET_RX`, `--mode`. No new file, no new registration. | eval 157/157 (123 earlier + 34 new, 17 of the new ones negative); 10/10 through the real bundle + real PymTime data + real Redmine with a fixed clock |
+
+Flow of the loader, with the one changed step:
+
+```
+his message → 1. sweep running? → silent
+            → 2. keyword? ask word / "tickets" "redmine" "board" → load · work word → load once per 4 h
+            → 3. no keyword → silent                                   ◀ CHANGED
+                   first real message of the session + Work → load, header says why
+                   "quiet mode" / "not working today"       → no load, one line says so
+            → 4. load = open quests + live board, session marked
+```
+
+Boot mode rules as built:
+
+| Rule | Value | Source |
+|---|---|---|
+| Work | PymTime `workdays` (1=Mon..7=Sun) has today · `isHolidayCached(now)` empty · `onLeave(now)` not (APPROVED and Full) · 08:30 ≤ now < 18:30 local | `E:\Dev\scripts\PymTime\lib\config.js` `holiday.js` `leave.js`, required the way `domain/protime-plan/protime-plan.js:141` does; `PYMTIME_DIR` overrides the folder |
+| Quiet | everything else; also: PymTime folder missing, no config, leave cache unreadable, any throw | fail closed to Quiet |
+| Decided | once per session, at his first real message (not a machine notification, not empty); kept as `mode:<session id>` in the loader's marker file in the temp folder | same file as the "shown" marker |
+| Force Work | "start work" / "work mode" are existing work words: they load on any day | `SOFT_RX`, unchanged |
+| Force Quiet | "quiet mode" / "not working today" / "no work today": no unasked load in that session; keywords still load | `QUIET_RX`; checked before the work words because "not working today" holds "working today" |
+| See the decision | `node .claude/hooks/open-quest-surfacer.js --mode` | prints `Work mode: …` or `Quiet mode: …` with the reason |
+
+Requirements, from his words (section 10 answer 4) to the build:
+
+| His words | Built as |
+|---|---|
+| "a keyword so that you know we are starting our daily work" | "start work", "work mode", "daily work", "let's do some work" load the list on any day (fixtures G10a, G10b, B1) |
+| "detect … is it working day and also holiday" | PymTime workdays + holiday cache + leave cache (fixtures G3, G5, G6, G8) |
+| "to determine if you boot in what mode" | Work = first message loads the list; Quiet = nothing loads unasked (G1, G2) |
+| "Can this be updated by a routine. or quick enough to be done boot time?" | No routine. Read at his first message: 21 ms to load the three PymTime files; outside 08:30 to 18:30 they are not read at all |
+| "holiday days from redmine" | NOT from Redmine: PymTime already keeps the Protime holiday list on this laptop. Said in chat on 2026-10-05; unchanged |
+
+Accepted limits, each on purpose: a session that starts before 08:30 stays Quiet for its whole life (a keyword loads the list) · a scheduled or automated session that starts in work hours gets one unneeded load · leave entered today may not be in the cache yet (one load; "quiet mode" covers it) · on a laptop without PymTime boot mode is always Quiet · work hours 08:30 to 18:30 are two constants (`WORK_FROM`, `WORK_TO`), the value proposed in section 14 and not separately ruled.
+
+Not installed as a Feature: the loader is still a loose hook in `.claude/hooks/` (the forge blocker of section 10 is open). Its goal, symptom and signal are in the file's v3 comment; its fires are in `system/telemetry/hook-fires*.jsonl`. Watch `wmuzp7jiu` registered in the main checkout's watch list (that file is machine-local, not in git).
+
+CLAUDE.md v1.83 (boot step 5 names boot mode) + changelog + session-briefing line.
+
+Push guard step 2, explained to him, NOT built: proven on this laptop that `cd /e/Dev/etanah-work/etanah-common` gives repo name "" while the Windows path gives "etanah-common" (`lib/git-target.js` hands the Git Bash path to `git -C` unchanged, and that fails). With an empty name the "another team's repo" check (steps 3 and 4) is skipped. Fix on offer: read `/e/…` as `E:\…`, and block a push to a shared branch when the repo still cannot be named.
+
+Flow pages, explained to him, NOT started: one published page per Workflow (quest, deploy, release, adhoc, close-phase, hotfix, Domain Expansion …) with its steps in order and what each checks; read before changing any step.
+
+Full battery after these changes: 2026-10-08 23:32 (worktree, 665 s): 142/148 green, 5 quarantined, 6 failing, none from this work: bpmn-check, deploy-check, release-mlk-plp (2), sweep (all as on 5 Oct) and ticket-gate F22 (stale since Kedah got its registry data on 2026-10-06). The archive eval runs in the battery again.
+
+Commits follow system-design Rule 15 (land on main; index built in the same command; stat read before and after).

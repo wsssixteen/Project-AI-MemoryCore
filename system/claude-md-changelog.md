@@ -30,6 +30,12 @@ His words: *"this is critical, you should've done it"* (the skipped Domain Expan
 
 ---
 
+## v1.83 — 2026-10-08 (per みや: "build boot mode")
+
+- §Session Boot Order step 5: one sentence names boot mode. Work = a working day (PymTime workdays) + no public holiday + no approved full-day leave + 08:30 to 18:30. In Work the first message of a session loads the ticket list with no keyword. Anything unreadable = Quiet. "quiet mode" / "not working today" = no unasked load in that session. `--mode` prints the decision.
+- Paired code: `.claude/hooks/open-quest-surfacer.js` v3 (`workNow`, `firstMessageInWorkHours`, `QUIET_RX`); design = `main/handoff-2026-10-05-boot-structure-audit.md` section 14; his words = section 10 answer 4.
+- Spec preservation: additive. Every keyword rule of v1.82 is unchanged (eval 157/157: 123 earlier cases + 34 boot-mode cases). One phrase changes side, named here: "not working today" was a work signal (it holds "working today") and is now a quiet word.
+
 ## v1.82 — 2026-10-08 (per みや: "saying \"board\" is not enough … \"Tickets\" \"Redmine\" should also be it")
 
 - §Session Boot Order step 5: names the major keywords that load the ticket list ("tickets", "redmine", "board"); the hint for a list that is not loaded becomes `not loaded. Say "tickets", "redmine" or "board", or name a ticket.`

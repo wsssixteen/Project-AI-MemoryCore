@@ -128,6 +128,15 @@ function tasksRootFor(block) {
     return DEFAULT_TASKS;
 }
 
+// The record's text when it already sits in active-archive.txt (null when it is in active.txt or nowhere).
+function readArchivedBlock(qa) {
+    try {
+        const out = execFileSync('node', [ACTIVE_CLI, 'read', qa], { encoding: 'utf8', stdio: 'pipe' });
+        if (!out.includes('active-archive.txt')) return null;
+        return out.split(/\r?\n/).filter(l => l && !l.startsWith('#')).join('\n').trim() || null;
+    } catch { return null; }
+}
+
 function blockExistsInArchiveTxt(qa) {
     try {
         const out = execFileSync('node', [ACTIVE_CLI, 'read', qa], { encoding: 'utf8', stdio: 'pipe' });
@@ -151,7 +160,7 @@ function main() {
     const branchIdx = args.indexOf('--branch');
     const branch = branchIdx >= 0 ? args[branchIdx + 1] : null;
     const tasksIdx = args.indexOf('--tasks');
-    const tasksRoot = tasksIdx >= 0 ? args[tasksIdx + 1] : tasksRootFor(readActiveTxtBlock(qa));
+    const tasksRoot = tasksIdx >= 0 ? args[tasksIdx + 1] : tasksRootFor(readActiveTxtBlock(qa) || readArchivedBlock(qa));
     const allowStubIdx = args.indexOf('--allow-stub');
     const allowStubReason = allowStubIdx >= 0 ? (args[allowStubIdx + 1] || '') : null;
 
@@ -207,7 +216,9 @@ function main() {
         console.error(`\n❌ ${qa} not found in active.txt OR active-archive.txt — nothing to archive.`);
         process.exit(1);
     }
-    const taskFolderFromBlock = getField(block, 'task_folder');
+    // A record already in active-archive.txt can still have its Task folder in the live list (2026-10-08: 3 real
+    // adhocs). Its task_folder= is read from there, so Step 1 moves the folder and Step 3 corrects the path.
+    const taskFolderFromBlock = getField(block || (alreadyArchivedBlock ? readArchivedBlock(qa) : null), 'task_folder');
 
     // ── Step 1: move Task folder ───────────────────────────────────────────
     let folderState; // 'moved' | 'already-archived' | 'no-folder' | 'dry'
@@ -285,7 +296,21 @@ function main() {
     // ── Step 3: update active.txt block + archive it ──────────────────────
     let blockState; // 'archived' | 'already-archived' | 'dry'
     if (alreadyArchivedBlock) {
-        console.log(`  ⏭ Step 3: block already in active-archive.txt`);
+        if (folderState === 'moved') {
+            // the record stays where it is; only its folder path changed
+            try {
+                const archiveTxt = process.env.ACTIVE_ARCH || path.join(REPO_ROOT, 'quest', 'active-archive.txt');
+                execFileSync('node', [ACTIVE_CLI, 'update', qa, `task_folder=${dst}`, '--file', archiveTxt], { encoding: 'utf8' });
+                console.log(`  ✓ Step 3: block already in active-archive.txt — task_folder= now names the Archive path`);
+            } catch (e) {
+                console.error(`  ❌ Step 3 FAILED: ${(e.stderr || e.stdout || e.message || '').toString().trim()}`);
+                process.exit(1);
+            }
+        } else if (folderState === 'dry') {
+            console.log(`  [dry] Step 3: block already in active-archive.txt — would set task_folder=${dst}`);
+        } else {
+            console.log(`  ⏭ Step 3: block already in active-archive.txt`);
+        }
         blockState = 'already-archived';
     } else if (dryRun) {
         console.log(`  [dry] Step 3: update task_folder=${dst} + status=archived, then archive block`);
