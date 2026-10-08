@@ -310,4 +310,4 @@ if (require.main === module) {
   process.exit(1);
 }
 
-module.exports = { check, evaluate, parseLedger, statusKind, gateCommit, captureOverride, plainWaiver, lastUserText, message, ticketOf, mainRoot, readBlock, OVERRIDE_RX };
+module.exports = { check, evaluate, parseLedger, statusKind, gateCommit, captureOverride, recordedOverride, plainWaiver, lastUserText, message, ticketOf, mainRoot, readBlock, OVERRIDE_RX };

@@ -319,16 +319,30 @@ Emit only the requested env. Shape:
     git revert -m 1 <merge-sha> && git push origin HEAD:<base>
     ```
 
+### 5b · After the deploy steps: Test scenario, then Redmine handover (2026-10-08 per miya, #283751)
+
+Fires whenever miya says he tests on a server ("test on server", "skip local testing", "deploy to internal / staging / training"). The card does not end at the deploy steps. Right after them, in this order, each under its own heading:
+
+| # | Section heading | Holds |
+|---|---|---|
+| 1 | `## Test scenario — <env>` | table `Login · Screen · Do · Expect`, written for the env HE named. Login and permohonan come from that env's database (the live holder). No test data on that env: say so in one line and give the nearest real login that can create it. |
+| 2 | `## Redmine handover` | Root cause row · Solution row · the BA note from `ticket-close-block.js --envs "<env>"` · the field set (rule 6b). Prepared, never posted. |
+
+- The env is his word. He named none: ask once with a popup (internal / staging + internal / training) before the card. Staging is merged only when he names it.
+- Enforced by `domain/test-scenario-login-gate` v4 (Stop, blocks a deploy card without both sections in this order; bypass `[skip-handover-gate: <reason>]`).
+- His plain words also clear the local-test check at commit (`domain/falsifier-ran-check`, plainWaiver) and the local-prep demand for that ticket.
+
 Then stop.
 
 ---
 
 ## 6 · Hard rules
 
+
 | # | Rule |
 |---|---|
 | 1 | **Read the Redmine ticket first** when given a ticket number — it may name MORE than one env. 2026-07-27: #271721 said *"merge into mlk/int-env and mlk/stag-env"*; deriving from git convention alone caught only stag-env. |
-| 2 | Card only. No explanation, no alternatives, no follow-up questions. |
+| 2 | Card only, plus the two sections of §5b. No explanation, no alternatives. One popup only when he named no env. |
 | 3 | Never claim build/deploy succeeded — Ruri never sees that output. If みや pastes it: quote the literal line or make no claim. |
 | 4 | Zero authored code. This skill merges and reports; it never edits source. |
 | 5 | Not a release. `mlk/release/*` and `mlk/master` are out of scope → `release-mlk-plp`. |
@@ -489,3 +503,5 @@ so that never repeats.
 
 - `.claude/auto-memory/feedback_commit_deploy_runbook.md` — commit + deploy ceremony, subject shape, staging implies internal, int-env conflicts, probes local only, servers, console
 - `.claude/auto-memory/feedback_etanah_git_separate_clone.md` — separate clone, ticket branch first, hotfix off master, `--no-ff`, worktree cleanup, stash naming
+
+*2026-10-08: §5b added per miya (#283751): a server test gets the Test scenario for the env he named and the Redmine handover right after the deploy steps; rule 2 reworded to allow them and the one env popup. Spec preservation: §1-§5, §6 rules 1 and 3-10, §7, §8 unchanged.*
