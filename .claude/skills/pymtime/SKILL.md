@@ -11,6 +11,8 @@ description: Remote control of みや's PymTime clock-in app (E:\Dev\scripts\Pym
 > goal_signal: skip.js verification line quoted in chat + `skip-set` event with `source=remote` in `.pymtime/log.jsonl` + toast fired
 > retention: keep
 
+**Any PymTime work beyond a skip / status / pasted handover** (a fix, a feature, a build, a design change): read `projects/coding-projects/active/PymTime/PROJECT.md` first. It is the project index (state, version record, architecture, proofs, roadmap).
+
 PymTime clocks みや into Protime once a day at a random time in his window. A **skip** is a flag file `skip-YYYYMMDD` in `%USERPROFILE%\.pymtime\`; anything that creates it (Settings page, reminder toast, or this skill) stops that day's clock-in. This skill only ever creates/removes those flags — it can **never** cause a clock-in.
 
 ## 1. Parse → then ASK BACK before touching anything
