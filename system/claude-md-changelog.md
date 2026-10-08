@@ -10,6 +10,12 @@
 
 ---
 
+## v1.82 — 2026-10-08 (per みや: "saying \"board\" is not enough … \"Tickets\" \"Redmine\" should also be it")
+
+- §Session Boot Order step 5: names the major keywords that load the ticket list ("tickets", "redmine", "board"); the hint for a list that is not loaded becomes `not loaded. Say "tickets", "redmine" or "board", or name a ticket.`
+- Paired code: `.claude/hooks/open-quest-surfacer.js` treats a short message (8 words or fewer) containing "tickets" or "redmine" as an ask, so the list loads every time, like "board". Longer messages keep the once-per-4-hours rule.
+- Spec preservation: additive. Every earlier trigger still fires (eval 123/123).
+
 ## v1.81 — 2026-10-07 (per みや: "Use Opus 5.5 as the orchestrator and always try to use Sonnet 5.5 where possible on other matters to save time. Please run evals and verifications to make sure it works as intended during Workflows & also if it saves times.")
 
 - §Cost Efficiency → Delegation Economy: the lead rule and the tier table are re-written. Three rows: **Orchestrator** = the main loop on Opus 5.5 (plans, launches, checks every return, gives the final verdict) · **every delegated agent** on `sonnet` (Sonnet 5.5, the default and the floor) · a delegated agent on `opus` only with a reason in its plan row (`// opus-reason:` in a workflow script). New **Enforced by** line and a second **Why** paragraph with the measurement.

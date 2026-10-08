@@ -46,6 +46,15 @@ for (const p of ASK) check('B2 ask → always loads: "' + p + '"', classify(p, A
 const SOFT = ["let's work", 'lets start working', 'time to work', 'back to work', 'continue our work', 'start work', 'jom kerja', 'sambung kerja', 'daily work', "today's work", 'redmine', 'this ticket is odd', 'tiket ni pelik', 'esokongan', 'the backlog is long', '274323', 'QA-274323 rework', '#282966', 'ticket 244600', 'ADHOC-PT-2026-8', 'PTMLK/02/L/PT/2026/32 tak papar', "what's on my plate", 'what should we do today', 'update me', 'continue the quest', 'check this permohonan'];
 for (const p of SOFT) check('B3 work signal → loads once: "' + p + '"', !!classify(p, ACTIVE), String(classify(p, ACTIVE)));
 
+// ── B4. major keywords (2026-10-08 per みや: "board" is not enough; "Tickets" and "Redmine" should also be it) ──
+const MAJOR = ['tickets', 'Tickets', 'TICKETS', 'tickets?', 'redmine', 'Redmine', 'REDMINE', 'redmine please', 'ok tickets', 'tickets now', 'show redmine', 'any tickets today', 'what about redmine', 'check the tickets for me', 'open redmine', 'Redmine, quickly'];
+for (const p of MAJOR) check('B4 major keyword in a short message → ask (loads every time): "' + p + '"', classify(p, ACTIVE) === 'ask', String(classify(p, ACTIVE)));
+const LONGMSG = 'I was reading the code for the report generator and noticed the tickets table has a column we never fill, can you check why';
+check('B5 the same word inside a long message is a work signal (once per 4 hours), not a reload on every prompt', classify(LONGMSG, ACTIVE) === 'soft' && LONGMSG.split(/\s+/).length > 8, String(classify(LONGMSG, ACTIVE)));
+check('B6 a short message with the singular "ticket" stays a work signal (a ticket discussion says it constantly)', classify('close this ticket', ACTIVE) === 'soft' && classify('fix the ticket', ACTIVE) === 'soft');
+const NOTMAJOR = ['ticketing system design', 'redmines', 'multitickets', 'the predmine tool'];
+for (const p of NOTMAJOR) check('B7 a longer word that only contains the keyword is not it: "' + p + '"', classify(p, ACTIVE) !== 'ask', String(classify(p, ACTIVE)));
+
 // ── C. other-project prompts load nothing (his requirement: not for other projects) ──
 const NONE = ['does this work?', 'why does the workflow fail', 'fix the networking code', 'explain this regex', 'thanks', 'ok', 'yes', 'continue', 'proceed', 'the dashboard is slow', 'keyboard shortcut for copy', 'draw the diagram', 'commit and push it', 'what is the weather', 'it works now', 'homework for arabic', 'rename the variable', '123456 is the port range start', 'onboard the new skill', 'please just build this and test', 'proceed and then brief me the results', 'brief me on what the function does', 'give a status update on the build', 'the briefing format looks wrong'];
 for (const p of NONE) check('C1 not about tickets → nothing: "' + p + '"', classify(p, ACTIVE) === null, String(classify(p, ACTIVE)));
@@ -64,9 +73,14 @@ let d1 = run(prompt('274323', 'sA'));
 check('D1 first ticket mention of a session loads the list', BLOCK(d1.stdout) && calls() === before + 1 && /first work signal in this session/.test(d1.stdout));
 let d2 = run(prompt('continue 274323 please', 'sA'));
 check('D2 the next ticket mention in the same session is silent and makes no call', d2.stdout === '' && calls() === before + 1, JSON.stringify(d2.stdout.slice(0, 60)));
+let dm1 = run(prompt('tickets', 'sA'));
+check('D2b the bare word "tickets" right after still loads it again, live', BLOCK(dm1.stdout) && calls() === before + 2 && /you asked for it/.test(dm1.stdout));
+let dm2 = run(prompt('redmine', 'sA'));
+check('D2c so does the bare word "redmine"', BLOCK(dm2.stdout) && calls() === before + 3);
+before = before + 2;
 let d3 = run(prompt('my tickets', 'sA'));
 check('D3 an explicit ask in that session loads it again, live', BLOCK(d3.stdout) && calls() === before + 2);
-let d4 = run(prompt('redmine', 'sB'));
+let d4 = run(prompt('continue the quest', 'sB'));
 check('D4 another session gets its own first load', BLOCK(d4.stdout) && calls() === before + 3);
 const j = JSON.parse(fs.readFileSync(shown, 'utf8')); j.sA = Date.now() - 5 * 3600 * 1000; fs.writeFileSync(shown, JSON.stringify(j));
 let d5 = run(prompt('274323', 'sA'));
