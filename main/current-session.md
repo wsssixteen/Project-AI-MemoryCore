@@ -1,5 +1,18 @@
 # Current Session
 
+**Last Activity**: 2026-10-08 22:30 — PymTime roadmap phase 1 (design): the v17 page critiqued (27 ranked issues), colour tokens grown from the logo, three mockups published for his pick · no app code changed
+
+## Session Recap (2026-10-08 night, session folder "pymtime-password-auth-failure-4a584e" after a compact, PymTime phase 1 design)
+- **READ FIRST (PymTime)**: `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore\projects\coding-projects\active\PymTime\PROJECT.md`, then `DESIGN.md` (new) and `ROADMAP.md` (the phase 1 status table) in the same folder.
+- **State**: phase 1 steps 1 to 4 and 6 are done. Step 5 = his picks (D1 direction · D2 where messages appear · D3 About · D4 Protime link · D10 the orange boxes), asked by popup on 2026-10-08, open until answered. PymTime repo unchanged: `a66843b`, VERSION 17, 4 commits ahead of GitHub, not pushed.
+- **What exists**: comparison page https://claude.ai/artifact/HradTg5DgGC2wAsBCDWfYg (flip Today / A / B / C through six states) · the three mockups, the v17 screenshots, the raw critique and the tools in `E:\Dev\scripts\PymTime\dev\design\` (ignored by git, not committed) · the design record `DESIGN.md` in the project folder.
+- **Result in one line**: the reviewers and the judge both pick A "Two Cards, Quiet" with B's large headline (40 px mark, 26 px answer) and C's pills and Settings layout; the published A already carries those pieces.
+- **How it was made**: three Workflow tool scripts (critique 9 agents · mockups 10 · polish 3; Fable 5.1 for the lead critique, the synthesis and the judge, Sonnet 5.5 for the rest; 4.5 M subagent tokens). The capture harness serves the real `web\setup.html` with made-up answers on port 8499; PymTime itself was never started, no Protime login, no clock-in.
+- **Next**: his picks → write them to `dev\design\picks.json`, run `node make-design.js` there, copy `DESIGN.md` to the project folder, set ROADMAP phase 1 to done. Then phase 2 (self-check engine, no page change). Phase 3 needs his word on one behaviour change the review proposes: Skip without a confirm box.
+- **Open for miya**: the picks · push PymTime to GitHub · whether the `dev\design` scripts and mockups get committed in the PymTime repo (nothing is committed now) · the four proposals of the evening session.
+- **Noise seen**: the Domain Expansion trigger and the re-ask detector both fired on a background-task notification, not on his words. One proposal logged.
+- **Boot note**: `main/main-memory.md` is 1041 lines; one Read returns lines 1 to 238. I read 1 to 238 and 940 to 1041.
+
 **Last Activity**: 2026-10-08 19:30 — PymTime: project folder built and made the source of truth (v17, roadmap of 10 asks, phase 1 next) · system: project folders are loaded by a hook and checked at Domain Expansion · system-design Rule 15 "land on main, never regress" · a skipped Domain Expansion corrected and run in full
 
 ## Session Recap (2026-10-08 evening, session folder "pymtime-password-auth-failure-4a584e" working in the MAIN checkout, PymTime hand-off + save system)

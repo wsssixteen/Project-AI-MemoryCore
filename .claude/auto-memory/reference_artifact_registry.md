@@ -5,13 +5,14 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: fed5aaa2-35e9-43a4-8258-a1916ec3c80e
-  modified: 2026-10-05T15:33:29.614Z
+  modified: 2026-10-08T14:26:55.047Z
 ---
 
 Every artifact published under miya's claude.ai account, newest first. Snapshot of the live list on 2026-10-04 (`Artifact` tool, action `list`, scope `all`: 16 rows).
 
 | Artifact | Link | Updated | About |
 |---|---|---|---|
+| PymTime Design Directions | https://claude.ai/artifact/HradTg5DgGC2wAsBCDWfYg | 2026-10-08 | PymTime v18 design, roadmap phase 1: the v17 page and three mockups (A Two Cards, Quiet · B One Answer · C Side Rail, One View) flipped through six states, the ranked critique, the colour tokens. Source of truth: `DESIGN.md` in the PymTime project folder; the page is rebuilt with `make-compare.js` in `E:\Dev\scripts\PymTime\dev\design\` |
 | Quest Paths | https://claude.ai/artifact/F6XUQEjvyABeLJaoSY3Ls4 | 2026-10-05 | Infographic, 5 levels: the trip · which path (patch / minor / development, three tests, decided twice) · what each phase produces per path · what is loaded when · development in depth with the #268173 layer sweep. Source of truth: quest SKILL.md step 6d + "Development path" |
 | Quest Workflow Architecture | https://claude.ai/artifact/Xovop2WNEp1hcQS37SkhLJ | 2026-10-04 | Drawing of the quest workflow: ticket path, stores, checks by moment |
 | Ruri Boot Sequence | https://claude.ai/artifact/WnyAt8Jdg9LEkZjdytmWzB | 2026-10-02 | Boot order |
