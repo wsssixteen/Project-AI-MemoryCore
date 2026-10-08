@@ -22,7 +22,7 @@ knowledge_banked=FLOWABLE-KNOWLEDGE.md §10.1 (exclusive-gateway no-default fail
 # ---- archived 2026-06-29 (salvaged to main 2026-07-05 from stranded worktree amazing-bassi-262cd1) ----
 
 qa=ADHOC-0402DIS2025000170
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\81. ADHOC - PROD - 0402DIS2025000170 - Reset status to Awalan
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\81. AH - PROD - 0402DIS2025000170 - Reset status to Awalan
 phase=closed-immediately
 status=closed
 ticket_type=adhoc-patch
@@ -2966,7 +2966,7 @@ adhoc_register_row=A14
 quest_start=2026-08-14
 local_test_confirmed=false
 qa_doc=projects/coding-projects/active/ADHOC-mlps-borang-l1e-tempat-pelan/ADHOC-mlps-borang-l1e-tempat-pelan.md
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\149. ADHOC - PDTJ - MLPS - Borang 4Ae L1e - Tempat papar PT bukan dash + Pelan minta melintang
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\149. AH - PDTJ - MLPS - Borang 4Ae L1e - Tempat papar PT bukan dash + Pelan minta melintang
 test_app=PROD PTMLK/02/L/MLPS/2026/2 aplikasi 3436359 (nurulazura@melaka.gov.my, PT, PYB4AE)
 current_phase=Issue2 fix FOUND (officer-rotate via PDFRotationUtil.rotatePDF, safe; auto-rotate unreliable). Issue1 patch ready. Awaiting quest-start + repro for Issue2 wire-in site.
 issue_one_liner=MLPS Borang 4Ae/L1e PDTJ nurulazura. Issue1 Tempat=PT 1735 (panel MlkBorang4AeForm.xhtml:141 + L1e) VERIFIED migrated data (ind_mklmt_tnh_permit_lesen 4456 MIGRATOR_KTPN_LMS_JASIN -> umm_a_permohonan_tnh 44393). Patch READY: SET tempat=dash WHERE aplikasi_id 3436359 (miya scope=this-app). Issue2 pelan melintang: L1e is JASPER LaporanPelan.jrxml (504x360 landscape frame, RetainShape, NO rotate); Q3=SOURCE PORTRAIT not rotateIfLandscape (word-CC path). No orientation metadata read -> no safe auto-rotate. Repo on stag-env not master.
@@ -3018,7 +3018,7 @@ quest_start=2026-08-13
 local_test_confirmed=false
 tugasan=Penyediaan Laporan Pelukis Pelan (Teknikal)
 qa_doc=projects/coding-projects/active/ADHOC-pptpb-teknikal-location-blank/ADHOC-pptpb-teknikal-location-blank.md
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\146. ADHOC - PROD - PPTPB - Teknikal Laporan Pelukis Pelan papar Selangor (lokasi Maklumat Permohonan kosong)
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\146. AH - PROD - PPTPB - Teknikal Laporan Pelukis Pelan papar Selangor (lokasi Maklumat Permohonan kosong)
 test_app=PROD PTMLK/03/L/PPTPB/2026/4 aplikasi 3413241 (eddie@melaka.gov.my); 2nd PTMLK/01/L/PPTPB/2026/6 aplikasi 3431713
 current_phase=Recon-done (DB-proven root, code fix site not pinned)
 issue_one_liner=PPTPB Teknikal Laporan Pelukis Pelan papar Negeri SELANGOR + daerah/bandar kosong. ROOT (DB-proven): daerah/bandar tak captured di AWAM portal land entry -> umm_p_permohonan_tnh blank -> pra->app copy carries blank into umm_a_permohonan_tnh -> Teknikal grid defaults Selangor. Correct=bandar 87 Padang Sebang/Alor Gajah/Melaka in ind_hkmlk. 2/20 recent PPTPB blank. seksyen blank=normal. AWAM save PelupusanService.java:2160-2164 copies VO no hakmilik fallback; exact PPTPB method+why-empty NOT pinned (needs portal repro). Refuted: QA-273707 dup, patch-not-organic, master-empty. Maybe related QA-274740.
@@ -4189,7 +4189,7 @@ local_test_confirmed=false
 adhoc_register_row=A35
 aplikasi_id=3436849
 qa_doc=projects/coding-projects/active/ADHOC-PT-2026-10/ADHOC-PT-2026-10.md
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\237. AH - MLKSTG - PT - SKM JT Tidak Hantar tiada tugasan seterusnya
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\237. AH - MLKSTG - PT - SKM JT Tidak Hantar tiada tugasan seterusnya
 issue_one_liner=MLKSTG PT PTMLK/03/L/PT/2026/63 (+PT/39): PTBUT row missing after SKM JT=Tidak — VERIFIED node-level async assignation stall 16:50-18:02 (flowable ID block 12050xxx, also hit Pembangunan), drained itself 18:03; not a 1.7.0 code defect, no fix
 branch=none-until-ticket
 
