@@ -230,7 +230,7 @@ function markShown(sid) {
 //           "quiet mode" / "not working today" = no unasked load in this session.
 // The decision is made ONCE per session, at his first real message, and kept in the same marker file ("mode:<sid>").
 const PYMTIME = process.env.PYMTIME_DIR || 'E:\\Dev\\scripts\\PymTime';   // same source as domain/protime-plan/protime-plan.js
-const WORK_FROM = 8 * 60 + 30, WORK_TO = 18 * 60 + 30;                    // minutes of the day, local time
+const WORK_FROM = 8 * 60 + 30, WORK_TO = 18 * 60 + 30;                    // minutes of the day, local time; okayed by みや 2026-10-09 ("Work hours okay")
 const QUIET_RX = /\bquiet\s+mode\b|\bnot\s+working\s+today\b|\bno\s+work\s+today\b/i;
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 function clock() { const d = process.env.OQS_NOW ? new Date(process.env.OQS_NOW) : new Date(); return Number.isNaN(d.getTime()) ? new Date() : d; }   // OQS_NOW = eval clock

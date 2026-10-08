@@ -436,3 +436,54 @@ Flow pages, explained to him, NOT started: one published page per Workflow (ques
 Full battery after these changes: 2026-10-08 23:32 (worktree, 665 s): 142/148 green, 5 quarantined, 6 failing, none from this work: bpmn-check, deploy-check, release-mlk-plp (2), sweep (all as on 5 Oct) and ticket-gate F22 (stale since Kedah got its registry data on 2026-10-06). The archive eval runs in the battery again.
 
 Commits follow system-design Rule 15 (land on main; index built in the same command; stat read before and after).
+
+## 17. Round of 2026-10-09 — the "which repo" reader FIXED; work hours okayed; flow pages = design only
+
+His words: (1) "previously it was reading wrongly is it and waste time? If I understand correctly then please proceed" (2) on flow pages: "I don't want to simply build this until I know you're building this in accordance to our system and it will always check and it is useful and it is the best way to implement and it is not bloat" (3) "Work hours okay".
+
+### The reader (`lib/git-target.js`), one step, two guards
+
+```
+a git commit or git push in a session
+  1. real git commit / push?
+  2. which repo?  folder in the command → ask git there for its remote address → last part = name   ◀ CHANGED
+  3. commit guard: etanah repo → compile green since the last edit?
+     push guard:   another team's repo + shared branch → check report + his approval
+```
+
+| Before | After |
+|---|---|
+| `git -C /e/Dev/etanah-work/etanah-common …` from Node fails, so the name was "" | `winPath()` turns `/e/…`, `/mnt/e/…`, `/cygdrive/e/…` into `E:\…` in `clean()` and `repoIdentity()`; nothing else is rewritten |
+| commit guard: a green commit refused with "is not an etanah git repo" (2026-10-04) | recognised (compile-gate eval F18b; F18c = a non-etanah repo is still refused) |
+| push guard: another team's repo + shared branch PASSED with no check | blocked like the Windows form (push-gate eval F36, F37, F40, F41) |
+| push guard: a named folder it cannot name + shared branch PASSED | refused with its own reason and the remedy "write the folder plainly" (F34, F42, F43, F46). Only when the command NAMES a folder (`cd` / `git -C`); a push that names none runs in the tool's folder as before |
+
+Proof on the real repos (`E:\Dev\etanah-work\etanah-awam`, `etanah-common`, `etanah-pelupusan`): both folder styles now give the same repo name; before, the Git Bash style gave "" for all three.
+
+Evals: `lib/git-target.eval.js` NEW 22/22 (10 red before the fix) · push gate 51/51 (was 38; 7 red before the fix) · compile gate 29/29 (was 27; 1 red before the fix).
+
+Spec change, named (system-design Rule 6 v1.2 a): fixture F34 pinned "a named non-repo folder + a shared branch passes". That was the hole; F34 now expects the refusal, and F34b pins that the same folder + a ticket branch still passes. F10, F11, F15 named a folder that does not exist (`E:\x\etanah-pelupusan`); they now name a real fixture repo so they keep testing the release rules. No other expectation changed.
+
+Accepted limits: a relative folder (`cd ../etanah-awam`) is not resolved against the tool's folder; with a shared branch it is refused once and the remedy is printed · a PowerShell variable as the folder of our own repo + a shared branch is refused once the same way · on a non-Windows machine the reader is unchanged.
+
+The parked rewrite (`claude/gates-v7-wip`) is NOT used: this is one helper function and one refusal rule.
+
+### Work hours
+
+08:30 to 18:30 okayed by him ("Work hours okay"); noted at `WORK_FROM` / `WORK_TO` in `.claude/hooks/open-quest-surfacer.js`.
+
+### Flow pages: DESIGN ONLY, nothing built (he wants it judged by system-design first)
+
+Inventory, read from disk: the step table of a Workflow has a ruled home, its skill (INDEX default 6); 7 of 10 workflow skills have a table, only quest and close-phase keep a position field · the Observatory app already groups Features into departments by a hand-kept `members:` list in `lib/observatory.js` (unordered, not steps) · `lib/folder-structure.js map` already proves the INDEX map against the disk and has an eval · 0 of the Feature READMEs name the Workflow step they serve (a design constraint of 2026-10-04, never built).
+
+Design put to him (one source, one check, one view):
+
+| Part | What | New files |
+|---|---|---|
+| Source | the step table in each Workflow's skill (exists) + ONE README key per Feature naming its step | 0 |
+| Check | one more assertion in the existing map check: a step names a part that is not on disk, or a registered part names a step that is not in the table = fail. It rides the system audit (on change, once a day) | 0 |
+| View | a print command that draws the flow from those files (what "Flow first" needs before an edit); the same data as one Observatory view for him. A published page only as a snapshot on request | 0 hooks, 0 registrations |
+
+Not recommended: one hand-made published page per Workflow. Ten pages kept by hand go stale; a page is outside git, a hook cannot read it, and I do not read it to learn the flow (I read the md).
+
+Open, his: approve the design; the first Workflow (quest: it has the table and the position field); the view (Observatory view vs a published snapshot).
