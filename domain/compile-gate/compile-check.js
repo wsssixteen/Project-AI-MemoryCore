@@ -39,7 +39,7 @@ const LOG = process.env.COMPILE_GATE_LOG || path.join(HERE, 'log.jsonl');
 const TC = path.join(HERE, 'toolchains.xml');
 const MVN = process.env.COMPILE_GATE_MVN || 'mvn';
 const ROOT = path.resolve(HERE, '..', '..');
-const { repoIdentity } = require(path.join(ROOT, 'lib', 'git-target.js'));
+const { repoIdentity, nativePath } = require(path.join(ROOT, 'lib', 'git-target.js'));
 
 // Short module names still work for manual use (the long-standing repos on E:\Projects\Melaka).
 const MODULES = {
@@ -74,7 +74,8 @@ function compileErrors(out) {
 
 // module name or path → { mod, top } ; null when it is not an etanah repo
 function resolveTarget(target) {
-  const dir = MODULES[target] || target;
+  // a repo path may arrive in Git Bash form (/e/Projects/...): turn it into one git can open first
+  const dir = MODULES[target] || path.resolve(nativePath(target) || target);
   const id = repoIdentity(dir);
   if (!id) return null;
   if (!/^etanah-/i.test(id.name)) return null;

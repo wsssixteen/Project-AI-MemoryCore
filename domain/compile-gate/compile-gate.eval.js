@@ -124,6 +124,71 @@ check('F26 hook blocks raw mvn end-to-end with the tool command', r.status === 2
 // F27: end-to-end hook: commit in that repo with no marker → blocked, message carries the repo path
 r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'PowerShell', tool_input: { command: `cd ${awam}; git commit -q -m "Ref #1 - x"` }, cwd: memc }), encoding: 'utf8', timeout: 30000, env: process.env });
 check('F27 hook gates a worktree commit end-to-end', r.status === 2 && /etanah-awam was NOT compiled/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr.slice(0, 200));
+
+// ── v2.1 / v2.2 cases (2026-10-05, two independent reviews): the repo is read the way the tool's SHELL reads the
+//    path, every commit in the command is looked at, and "cannot tell" is said out loud ──
+// Live miss 2026-10-04T08:04:57Z: `cd /e/Projects/Melaka/etanah-awam && git commit` after a green compile was
+// refused with "is not an etanah git repo", and the printed remedy could not work either.
+const gt = require('../../lib/git-target.js');
+const msys = p => '/' + p[0].toLowerCase() + p.slice(2).replace(/\\/g, '/');
+const same = (a, b) => path.resolve(a).toLowerCase() === path.resolve(b).toLowerCase();
+const ctx = (cmd, shell, base, pos) => { const spans = gt.quotedSpans(cmd); return { cmd, spans, assigns: gt.assignments(cmd, spans), shell, pos: pos === undefined ? cmd.length : pos, base: base || null }; };
+const rw = (text, quote, cmd, shell, base) => gt.resolveWritten(text, quote, ctx(cmd, shell, base));
+// F28: how a written path is read
+check('F28a Git Bash drive path is a drive path in the Bash tool', (rw('/e/Dev/x', 'bare', '', 'bash').path || '') === 'E:/Dev/x', JSON.stringify(rw('/e/Dev/x', 'bare', '', 'bash')));
+check('F28b the same text in PowerShell is NOT the E: drive (it is a folder named e on the current drive)', same(rw('/e/Dev/x', 'bare', '', 'powershell', 'E:\\q').path, 'E:\\e\\Dev\\x'), JSON.stringify(rw('/e/Dev/x', 'bare', '', 'powershell', 'E:\\q')));
+let c1 = "$r = 'E:\\a b\\c'; git -C $r status";
+check('F28c PowerShell variable given one literal earlier in the same command', gt.resolveWritten('$r', 'bare', ctx(c1, 'powershell', null, c1.indexOf('git'))).path === 'E:\\a b\\c', JSON.stringify(gt.resolveWritten('$r', 'bare', ctx(c1, 'powershell', null, c1.indexOf('git')))));
+let c2 = 'repo=/e/x; cd "$repo"';
+check('F28d shell variable, quoted use', gt.resolveWritten('$repo', 'double', ctx(c2, 'bash', null, c2.indexOf('cd'))).path === 'E:/x', JSON.stringify(gt.resolveWritten('$repo', 'double', ctx(c2, 'bash', null, c2.indexOf('cd')))));
+check('F28e a variable the command never sets → not resolved, with the reason', rw('$r', 'bare', 'git -C $r status', 'powershell', 'E:\\mc').path === undefined && /not set in this command/.test(rw('$r', 'bare', 'git -C $r status', 'powershell', 'E:\\mc').why), JSON.stringify(rw('$r', 'bare', 'git -C $r status', 'powershell', 'E:\\mc')));
+check('F28f relative path resolved against the folder so far', same(rw('..\\b', 'bare', '', 'powershell', 'E:\\a\\c').path, 'E:\\a\\b'), '');
+check('F28g relative path with no known folder → not resolved', rw('sub', 'bare', '', 'powershell', null).path === undefined, '');
+check('F28h a variable inside single quotes is literal text', same(rw('$r', 'single', "$r = 'E:\\x'; cd '$r'", 'powershell', 'E:\\base').path, 'E:\\base\\$r'), JSON.stringify(rw('$r', 'single', "$r = 'E:\\x'; cd '$r'", 'powershell', 'E:\\base')));
+let c3 = "$r = 'E:\\one'; git -C $r status; $r = 'E:\\two'";
+check('F28i a later re-assignment is not used (position matters)', gt.resolveWritten('$r', 'bare', ctx(c3, 'powershell', null, c3.indexOf('git'))).path === 'E:\\one', '');
+let c4 = "$r = 'E:\\one' + '\\x'; git -C $r status";
+check('F28j a value built by an expression is not guessed', gt.resolveWritten('$r', 'bare', ctx(c4, 'powershell', null, c4.indexOf('git'))).path === undefined, JSON.stringify(gt.resolveWritten('$r', 'bare', ctx(c4, 'powershell', null, c4.indexOf('git')))));
+// F29: what the reader reports for a whole command
+let tr = gt.targetRepo(`cd ${msys(awam)} && git commit -m x`, memc, 'commit', 'bash');
+check('F29a Bash tool, Git Bash path → the real repo identity, certain', !!tr.id && tr.id.name === 'etanah-awam' && tr.named && !tr.unresolved, JSON.stringify(tr));
+tr = gt.targetRepo(`cd ${msys(awam)}; git commit -m x`, memc, 'commit', 'powershell');
+check('F29b PowerShell tool, the same text → unresolved (that cd fails there), with the reason', tr.named && tr.unresolved && !tr.id && /does not exist/.test(tr.why), JSON.stringify(tr));
+tr = gt.targetRepo('git -C $r commit -m x', memc, 'commit', 'powershell');
+check('F29c unset variable: named + unresolved, no identity', tr.named && tr.unresolved && !tr.id, JSON.stringify(tr));
+tr = gt.targetRepo('git commit -m x', awam, 'commit', 'powershell');
+check('F29d no folder named: the tool folder, not "named"', !!tr.id && !tr.named && !tr.unresolved, JSON.stringify(tr));
+tr = gt.targetRepo('git -c commit.gpgsign=false commit -m "x"', awam, 'commit', 'powershell');
+check('F29e git -c key=value is not git -C <folder>', !!tr.id && tr.id.name === 'etanah-awam' && !tr.named, JSON.stringify(tr));
+check('F29f a commit on its own line is found', gt.invokesGit('cd x\n  git commit -m "y"', 'commit') && gt.invokesGit('$o = git commit -m y', 'commit') && !gt.invokesGit('echo "git commit later"', 'commit'), '');
+// end-to-end hook
+const hook = (tool, command, cwd, turn) => { const tp = path.join(tmp, 't-' + Math.random().toString(36).slice(2) + '.jsonl'); fs.writeFileSync(tp, JSON.stringify({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'text', text: turn || '' }] } }) + '\n'); return spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: tool, tool_input: { command }, cwd, transcript_path: tp }), encoding: 'utf8', timeout: 30000, env: process.env }); };
+r = hook('Bash', `cd ${msys(awam)} && git commit -q -m "Ref #1 - x"`, memc);
+check('F30 Bash tool, Git Bash path (the live-miss form): gated as etanah-awam, remedy names a path git can open', r.status === 2 && /etanah-awam was NOT compiled/.test(r.stderr) && !/is not an etanah git repo/.test(r.stderr) && !r.stderr.includes(`run "${msys(awam)}"`), 'exit=' + r.status + ' ' + r.stderr.slice(0, 260));
+r = hook('Bash', `cd ${msys(awam)} && mvn -o -q compile`, memc);
+check('F31 Bash tool, raw mvn through a Git Bash path: blocked with the tool command', r.status === 2 && /compile-check\.js run/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr.slice(0, 200));
+c = cc(['verify', msys(awam)], 'ok');
+check('F32 compile-check verify accepts a Git Bash path', !/not an etanah git repo/.test(c.stderr) && (c.status === 0 || c.status === 1), 'exit=' + c.status + ' ' + c.stderr.slice(0, 200));
+r = hook('Bash', `cd ${msys(memc)} && git commit -q -m "x"`, awam);
+check('F33 a non-etanah repo through a Git Bash path is not gated', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 200));
+r = hook('PowerShell', `cd ${msys(memc)}; git commit -q -m "x"`, awam);
+check('F34 PowerShell tool, a Git Bash path that cannot be entered, tool folder = an etanah repo: the commit would land THERE → refused with the true reason', r.status === 2 && /cannot tell which repo this commit/.test(r.stderr) && /does not exist/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr.slice(0, 260));
+r = hook('PowerShell', `cd ${msys(awam)}; git commit -q -m "notes about etanah-pelupusan"`, memc);
+check('F34b the same shape with a non-etanah tool folder and etanah only in the commit MESSAGE: not this gate\'s business', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 260));
+r = hook('PowerShell', 'git -c commit.gpgsign=false commit -q -m "Ref #1 - x"', awam);
+check('F35 git -c key=value commit in an etanah tool folder is gated (v2 read it as git -C and let it through)', r.status === 2 && /etanah-awam was NOT compiled/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr.slice(0, 200));
+r = hook('PowerShell', `cd ${awam}\n  git add -A\n  git commit -q -m "Ref #1 - x"`, memc);
+check('F36 a commit on its own indented line is gated', r.status === 2 && /etanah-awam was NOT compiled/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr.slice(0, 200));
+r = hook('PowerShell', 'git -C $somewhere commit -q -m "notes"', memc);
+check('F37 an unreadable folder with nothing pointing at etanah is not this gate\'s business', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 200));
+r = hook('PowerShell', 'git -C $somewhere commit -q -m "etanah notes"', memc, 'ok [skip-compile-gate: docs only, not an etanah repo]');
+check('F38 the bypass token still opens the cannot-tell refusal', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 200));
+r = hook('PowerShell', `git -C "${memc}" commit -q --allow-empty -m "a"; git -C "${awam}" commit -q -m "Ref #1 - x"`, memc);
+check('F39 two commits in one command: the second, in an etanah repo, is gated', r.status === 2 && /etanah-awam was NOT compiled/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr.slice(0, 200));
+r = hook('Bash', `export r=${msys(awam)} && cd "$r" && git commit -q -m "Ref #1 - x"`, memc);
+check('F40 Bash: export r=…; cd "$r"; git commit → the variable is read, the commit is gated', r.status === 2 && /etanah-awam was NOT compiled/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr.slice(0, 200));
+r = hook('mcp__terminal__run_in_terminal', `git -C "${awam}" commit -q -m "Ref #1 - x"`, memc);
+check('F41 the Terminal-panel tool is gated too', r.status === 2 && /etanah-awam was NOT compiled/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr.slice(0, 200));
 try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {}
 
 let failed = 0;
