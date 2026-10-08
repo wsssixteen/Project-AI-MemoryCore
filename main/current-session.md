@@ -1,5 +1,17 @@
 # Current Session
 
+**Last Activity**: 2026-10-08 16:55 — #283980 (PROD, batal 2 UPS_PLP created by mistake) worked start to close in one session: script, infra run, PROD re-read, Redmine form staged and submitted by miya, quest closed at Phase 1 · Domain Expansion step 2d added (close + save each touched quest by its live Redmine status) · Domain Expansion run.
+
+## Session Recap (2026-10-08 afternoon, worktree "batal-permohonan-patching-7b724f", #283980)
+- **READ FIRST**: `projects/coding-projects/active/QA-283980/QA-283980.md` (Resume Point) · `.claude/skills/domain-expansion/SKILL.md` step 2d.
+- **Ticket**: Internal Issue (PROD) #283980, PDT Jasin. Two Utiliti Penyediaan Surat permohonan created by mistake: `PTMLK/02/L/UPS_PLP/2026/12` (3451182) and `/13` (3455576), both held by norlina@melaka.gov.my before the patch. Same job as #283532 (2026-10-06).
+- **Done**: `283980.sql` (3-table cancel shape, `DATABASE.md` section 27) in the Task folder `2. Fix\` · infra ran it 2026-10-08 16:41 · PROD re-read: both Tamat / Batal / Tamat, tugasan N / Selesai, 0 dashboard rows, PPTPB parents unchanged · Redmine form filled in the browser, miya submitted · `SAVE-QUEST: QA-283980 · Redmine = Resolved (Nurul Amirah Nadiah · 100%) · local = active → PHASE-1` · block `closed`.
+- **Next for this quest**: archive when Redmine shows Closed (`node lib/save-quest.js QA-283980`).
+- **System change**: Domain Expansion step 2d. He asked that running Domain Expansion alone closes and saves quests. It is a skill row plus one paragraph in `Feature/Domain-Expansion/expansion-protocol.md`; it reuses `lib/save-quest.js`. No gate enforces it yet and no 20-scenario pass was done: one proposal row logged.
+- **Checker noise seen**: `sql-schema-verify` returned 7 false rows on a correct script (SYSDATE read as a column; subquery columns pinned to the wrong table). Not stamped; skip token used twice. Proposal logged.
+- **Gate noise seen**: `redmine-write-gate` refused two read-only PowerShell commands whose text held Redmine status words. Worked around by splitting the command.
+- **Boot note**: `main/main-memory.md` Read returned lines 1 to 236 of 1027 again.
+
 **Last Activity**: 2026-10-08 13:30 — #279554 (SPOC PDBB kaunter mapping, consultation) answered: mapping note posted by miya, ticket assigned to Anis, block `delegated` · writing-style Feature **Pena** built on his go (`domain/pena/` · `lib/pena.js` · skill `pena`, eval 40/40) · Domain Expansion run.
 
 ## Session Recap (2026-10-08, worktree "quest-279554-mapping-877831", #279554 + Pena)

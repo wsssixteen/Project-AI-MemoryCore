@@ -292,6 +292,8 @@ classify before closing DE. This is the session-close half of the guarantee; the
 vN branches exist, so a tool that reads git and blocks is the only real guarantee. `-NEGATIVE` branches
 still on origin are surfaced for deletion (a wrong branch left alive is the next v2/v3 trap).
 
+**🚨 Close + save by live Redmine status, automatic (added 2026-10-08 per みや — *"I just need to run domain expansion you will automatically detect to close the quest & save accordingly"*)** — for every quest above that has a ticket number, run `node lib/save-quest.js <QA>`, paste its `SAVE-QUEST:` line and do the verdict in this same DE (`.claude/skills/close-phase/SKILL.md` → "Save-quest mode"). He does not say "close quest" or "save quest" first. An unfinished quest is saved, never closed; every close-phase stop gate still holds. Orchestrated as step 2d of `.claude/skills/domain-expansion/SKILL.md`.
+
 **Verified by**: step 12.6 `resume-readiness.js` — 2b is the WRITE, 12.6 is the READ-BACK. A `✗` there
 means 2b did not actually run for that quest.
 
@@ -407,6 +409,8 @@ Before emitting the closing banner — read `.claude/state/session-items.md` "Ac
 ---
 
 *Updated 2026-08-05 — **Step 7.5 IMPROVEMENT SWEEP added (MANDATORY)** per みや: five fixed axes (A1 agentic system · A2 quest workflow · A3 debugging efficiency+accuracy · A4 etanah issue-solving · A5 sweep/file-sweep), swept every DE, producing (a) a dated assessment under `system/` with a concrete instance per claim and (b) brainstormed proposals logged via `core/slips.js --type proposal` into the new 💡 Open proposals lane of `slip-dashboard.md` for weekly-audit ruling. Paired `core/slips.js` change: `type=proposal` split out of the slip counts and given its own dashboard section, because filing an idea as `upgrade` reads as shipped and makes an open decision invisible (the 2026-07-22 parked-enforcement-row failure). Rationale: みや had to ask for this assessment explicitly two goals running — a thing he must repeatedly request is a missing step, not a missing effort.*
+
+*Updated 2026-10-08 — Step 2b: close + save by live Redmine status made automatic per みや (`node lib/save-quest.js <QA>` for every touched quest, verdict done in the same DE; skill step 2d). Spec-preservation: every Step 2b row, the extra-robust save, the copy reconcile, the branch-ledger sweep and all Banned clauses untouched; one paragraph added.*
 
 *Updated 2026-10-06 — Step 12.7 SAVE RULES added (MANDATORY, deterministic): `lib/save-rules.js` checks each touched system part against its kind's declared save rule (`system/save-rules.json`); de-close-gate C8 blocks close without a full run at 0 FAIL. Per みや. Spec-preservation: all prior steps and C1-C7 untouched; additive.*
 

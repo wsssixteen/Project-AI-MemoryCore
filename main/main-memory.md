@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-08 (#283980 — "I just need to run domain expansion")
+
+- **A repeat ticket wants the repeat shape, word for word.** "Another batal permohonan as well" meant the #283532 script, the #283532 infra line and the #283532 Redmine note with the ids swapped. Nothing on the work was corrected.
+- **He wants to say less.** Close, save and Domain Expansion were three asks in one line, and he asked that next time one phrase does all three. When he repeats a command sequence, the sequence belongs inside the last step.
+- **"Verify as well" is the PROD re-read shown with its scripts**, before the Redmine form, in the same reply.
+
 ## Relationship reinforcement — 2026-10-08 (#279554 — "I thought we have a rule to not lie and speak something unsubstantiated")
 
 - **He reads every sentence of a note as a claim in his name.** One rule sentence was backed by one permit. He stopped at exactly that one. When I softened another from internal data, he asked for the code and a real environment. Count the table, read the writer, then write the sentence.
