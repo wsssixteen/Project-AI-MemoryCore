@@ -1116,3 +1116,11 @@
 {"ts":"2026-10-07T09:06:07.163Z","category":"A3"}
 {"ts":"2026-10-07T09:06:07.276Z","category":"A4"}
 {"ts":"2026-10-07T09:06:07.393Z","category":"verify/taken-over-change"}
+{"ts":"2026-10-08T03:08:01.166Z","category":"verify-before-claim"}
+{"ts":"2026-10-08T03:13:45.930Z","category":"reply-shape"}
+{"ts":"2026-10-08T03:20:36.542Z","category":"reply-shape"}
+{"ts":"2026-10-08T05:29:37.533Z","category":"A1"}
+{"ts":"2026-10-08T05:29:37.643Z","category":"A2"}
+{"ts":"2026-10-08T05:29:37.744Z","category":"A3"}
+{"ts":"2026-10-08T05:29:37.853Z","category":"A4"}
+{"ts":"2026-10-08T05:29:37.956Z","category":"A5"}
