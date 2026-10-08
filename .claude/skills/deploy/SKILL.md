@@ -329,6 +329,7 @@ Fires whenever miya says he tests on a server ("test on server", "skip local tes
 | 2 | `## Redmine handover` | Root cause row · Solution row · the BA note from `ticket-close-block.js --envs "<env>"` · the field set (rule 6b). Prepared, never posted. |
 
 - The env is his word. He named none: ask once with a popup (internal / staging + internal / training) before the card. Staging is merged only when he names it.
+- **Always point at the env the BA tested on (2026-10-08 per miya, #283751).** Read the BA's latest journal for the env line (`Env:` / `DB Username` / the Session block) and say it in one highlighted line before the card: `BA tested on <env>: deploy there too so the fix is proven on her own permohonan.` In the env popup that env is the first option, marked recommended. He names a different env: still show the line. His reason: we deploy to the BA's env to test and keep the evidence, then ask the BA to verify on internal.
 - Enforced by `domain/test-scenario-login-gate` v4 (Stop, blocks a deploy card without both sections in this order; bypass `[skip-handover-gate: <reason>]`).
 - His plain words also clear the local-test check at commit (`domain/falsifier-ran-check`, plainWaiver) and the local-prep demand for that ticket.
 
