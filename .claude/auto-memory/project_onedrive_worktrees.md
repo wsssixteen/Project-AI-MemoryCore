@@ -1,11 +1,11 @@
 ---
 name: project-onedrive-worktrees
-description: "no worktrees inside OneDrive; deleted branches can reappear; hooks may run from MAIN; untracked = confidential; verify handoffs vs git; grep the diary"
+description: "no worktrees inside OneDrive; deleted branches can reappear; hooks may run from MAIN; untracked = confidential; verify handoffs vs git; grep the diary; every session lands its work on main and never regresses it"
 metadata: 
   node_type: memory
   type: project
   originSessionId: 6e2f7830-916e-4545-ae29-7e0c7f2bb184
-  modified: 2026-10-04T09:02:08.905Z
+  modified: 2026-10-08T10:51:19.168Z
 ---
 
 **What happened (2026-09-04)**: `.claude/worktrees/` inside the OneDrive repo held 213 folders / 15.10 GB while `git worktree list` showed 2. OneDrive syncs `.git/` across two laptops; the other machine's `worktree prune` drops admin entries for folders it cannot see, so folders survive here de-registered — invisible to every cleanup that keys off git's list. The boot hook then deleted their branches as "merged" (D2), leaving folders with no branch and, in 5 cases, whole never-committed Features (etanah-intake-gate, rootcause-format, patch-close-shape, agih, staging-schema-tracker).
@@ -119,4 +119,4 @@ Do NOT use Glob to check for today's diary entry by date in the filename. The di
 
 **How to apply:** At session boot, grep across all `Daily-Diary-*.md` files in `daily-diary/` root before flagging "no diary entry today."
 
-**Never commit in the MAIN checkout from a worktree session (2026-10-06).** Another session may be working there; its index is not mine. I committed two ledger files there and the commit (c1e6ad56) silently reverted a whole feature commit. **How to apply:** from a worktree, only `git -C <main> merge --ff-only origin/main`; when that is refused (local changes, index.lock), leave main alone and say so.
+**Commits in the MAIN checkout: land on main, never regress (rewritten 2026-10-08 per みや).** The 2026-10-06 line that stood here said "never commit in main from a worktree session". It was my own over-correction after commit `c1e6ad56`, never his rule, and it is withdrawn: it kept a session's work off main and on 2026-10-08 it led me to skip a Domain Expansion. Every session brings its work to main (its saves and its system improvements). The danger was never the commit; it was a BARE `git commit` on main's shared, stale index (19 files, 447 lines deleted). **How to apply:** build the index in the same command (`git add -A` at Domain Expansion, `git commit -m … -- <paths>` mid-session), read `git diff --cached --stat` before and `git show --stat HEAD` after; a deletion I cannot name is restored or reverted. Full rule: `.claude/skills/system-design/SKILL.md` Rule 15.

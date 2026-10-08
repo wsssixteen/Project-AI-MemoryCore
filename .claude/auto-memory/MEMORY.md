@@ -85,7 +85,7 @@
 - [multi-ticket-sweep](reference_multi_ticket_sweep.md) — the /sweep design + evidence lives in five places; cite all five
 
 ## MemoryCore repo and rituals (skill: domain-expansion)
-- [memorycore-repo](project_onedrive_worktrees.md) — no worktrees in OneDrive; hooks may run from MAIN; untracked = confidential
+- [memorycore-repo](project_onedrive_worktrees.md) — no worktrees in OneDrive; hooks may run from MAIN; untracked = confidential; every session lands its work on main, never regresses it (system-design Rule 15)
 - [daily-commit](feedback_daily_commit.md) — MemoryCore commit at save is the default; push depends on context
 - [domain-expansion-banner](feedback_domain_expansion_format.md) — Domain Expansion banner, canonical format only
 - [bankai-banner](feedback_bankai_format.md) — Bankai banner format; never referenced casually

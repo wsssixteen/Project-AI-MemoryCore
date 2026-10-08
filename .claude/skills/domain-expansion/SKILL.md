@@ -59,7 +59,7 @@ Every Domain Expansion **ends with all three, verified**:
 
 | # | Action | Verified how |
 |---|---|---|
-| 1 | `git add -A` + `git commit` — **every** modified/untracked path, authorship is NOT a filter | commit SHA emitted |
+| 1 | `git add -A` + `git commit` — **every** modified/untracked path, authorship is NOT a filter. Before the commit read `git diff --cached --stat`; after it read back `git show --stat HEAD`. A deletion I cannot name is restored or reverted (`system-design` Rule 15: land on main, never regress) | commit SHA emitted + the stat line shown |
 | 2 | `git push origin HEAD` (worktree branch) | remote ref matches local SHA |
 | 3 | `git push origin HEAD:main` (**the merge** — FF main on the remote) | `git ls-remote origin refs/heads/main` **equals** local `HEAD` |
 
@@ -81,7 +81,7 @@ Closing banner (VERBATIM, after step 10's commit + push + **merge** are all SHA-
 Barrier settles. Quest threads are at rest.
 ```
 
-**Banned**: silent DE skip · skipping any step without an explicit `⏭ + one-line why` · reconstructing the banner from memory · collapsing the skill-name + storytelling onto one line.
+**Banned**: silent DE skip · skipping any step without an explicit `⏭ + one-line why` · reconstructing the banner from memory · collapsing the skill-name + storytelling onto one line · **skipping or shrinking the ritual itself** (added 2026-10-08): a `⏭` covers ONE step, never the whole Domain Expansion, and "another live session owns today's diary or session file" is never a reason. Every session appends its OWN entry to those files and runs its own full DE.
 
 ## Why step 12.7 (2026-10-06, per みや)
 
@@ -92,3 +92,5 @@ Barrier settles. Quest threads are at rest.
 DE was a protocol + trigger-hook = **model-driven execution** with no Skill-tool invocation, so it could be freelanced or partially skipped. As a skill it gains: Skill-tool invocation (the `skill-invocation-discipline` gate now ensures DE is actually *invoked*, not improvised), a single structured entry point, and the resume-readiness sweep (12.6) as a coded step. The detailed bodies stay in `expansion-protocol.md` — this is the orchestrator, not a copy.
 
 *Update 2026-10-06. Step 12.7 SAVE RULES added per みや (ask quoted in the section above): `node lib/save-rules.js` checks every system part touched this session against its own kind's declared save rule; `de-close-gate` C8 blocks close without a full run at 0 FAIL. Spec-preservation: steps 0a-13, the Step 10 commit + push + merge order, the banner text and every Banned clause are untouched; one step, one row, one why-section added (additive).*
+
+*Update 2026-10-08. Two additions per みや, after a Domain Expansion was skipped with one `⏭` line ("other live sessions own today's diary and session file"): the Banned list now bans skipping or shrinking the ritual itself, and Step 10 row 1 reads the stat before and after the commit (`system-design` Rule 15). Spec-preservation: steps 0a-13, the three Step 10 actions and their SHA proof, the banner text and every earlier Banned clause are untouched; additive.*

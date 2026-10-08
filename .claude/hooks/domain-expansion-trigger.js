@@ -21,6 +21,12 @@
  * (Step 7.5) + status-enum slip (Step 10.5): inline-at-trigger beats
  * reference-file-recall. DE is Ruri's most sacred skill — engraving the
  * exact characters here so it can never be improvised again.
+ *
+ * v1.2 2026-10-08 — the BANNED line now also bans skipping or shrinking the ritual itself.
+ * Slip-driven: on 2026-10-08 Ruri wrote "⏭ Domain Expansion: not run in full. Other live sessions own
+ * today's diary and session file" and saved only a project folder. The ⏭ marker was meant for ONE step;
+ * nothing said it could not cover the whole ritual. みや: "this is critical, you should've done it."
+ * Eval: .claude/hooks/domain-expansion-trigger.eval.js
  */
 const TRIGGERS = [
   // (i) explicit invocation
@@ -109,6 +115,9 @@ process.stdin.on('end', () => {
       '(12) Run /verify Checklist D — cross-check every step fired',
       '',
       'BANNED: silent DE skip, skipping any step without explicit reason marker (⏭ + one-line why)',
+      'BANNED: skipping or shrinking the RITUAL ITSELF. A ⏭ marker covers ONE step, never the whole Domain Expansion ("DE not run in full" = the 2026-10-08 slip).',
+      '        "Another live session owns today\'s diary / session file" is NEVER a reason: append YOUR OWN entry to the same file. Every session runs its own full DE.',
+      '        Step 10 = this session\'s work reaches origin/main (commit + push + merge, SHA shown). Land on main, never regress: read `git diff --cached --stat` before the commit and `git show --stat HEAD` after it; a deletion you cannot name is restored or reverted (system-design Rule 15).',
       '',
     ].join('\n');
 

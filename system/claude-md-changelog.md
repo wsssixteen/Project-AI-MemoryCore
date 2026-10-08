@@ -10,6 +10,26 @@
 
 ---
 
+## system-design SKILL.md v3.1 · Domain Expansion trigger v1.2 · save rules v2 — 2026-10-08 (per みや, after a skipped Domain Expansion)
+
+His words: *"this is critical, you should've done it"* (the skipped Domain Expansion) · *"I don't remember this. Why we want to prevent it? … A rule like add something that will not regress? … What's important is to have the goal, Purpose"* (the commit rule) · *"make sure everything WILL be loaded every single time we load a project. It WILL save everytime at the end of session when we perform domain expansion"* (project documents).
+
+| Part | Change | Why |
+|---|---|---|
+| `.claude/skills/system-design/SKILL.md` v3.1 | **Rule 15 — land on main, never regress**: goal, purpose, agreed understanding, three mechanical checks per commit | Commit `c1e6ad56` (2026-10-06) deleted 447 lines through a bare commit on main's stale shared index. I answered it with "never commit in main from a session folder", a line he never asked for |
+| `.claude/auto-memory/project_onedrive_worktrees.md` | The "never commit in MAIN from a worktree session" paragraph is withdrawn and replaced by a pointer to Rule 15 | It kept a session's work off main, the opposite of what he wants |
+| `.claude/hooks/domain-expansion-trigger.js` v1.2 + its new eval | The injected BANNED text now bans skipping or shrinking the ritual itself; a `⏭` covers one step | 2026-10-08: I skipped the whole Domain Expansion with one `⏭` line |
+| `.claude/skills/domain-expansion/SKILL.md` + `Feature/Domain-Expansion/expansion-protocol.md` | Same ban; Step 10 reads the stat before and after the commit | Same slip; Rule 15 |
+| `lib/save-rules.js` + `system/save-rules.json` v2 + eval (83 rows) | The Projects kind now covers project folders: documents present · documents current with the project's own repo · memory note is a pointer | PymTime went to v17 while its folder stayed at 2026-08-26; nothing checked it |
+| `domain/project-load/` (new Feature, forge-born, eval 30 rows) | Naming a project in a prompt tells the session to read that project's `PROJECT.md` first | "Load the project file first" was prose in CLAUDE.md §Active Project Rules and did not fire for PymTime |
+| `system/INDEX.md` | Projects row names project folders and what installed means for them; map fence lists PymTime; Change record gains the Project row | The one map did not know project folders existed |
+
+**Spec preservation**: nothing removed from any rule. Rules 6–14, Domain Expansion steps 0a–13, the Step 10 commit + push + merge order with SHA proof, the banner text, save rules C1–C8 and every earlier save-rule row are untouched. One line of my own (the 2026-10-06 memory paragraph) is withdrawn on purpose and named here.
+
+**Rollback**: `git revert` the commit that carries this entry; remove the `project-load` line from `.claude/settings.json` (see `domain/project-load/NUKE-MARKER.md`).
+
+---
+
 ## v1.81 — 2026-10-07 (per みや: "Use Opus 5.5 as the orchestrator and always try to use Sonnet 5.5 where possible on other matters to save time. Please run evals and verifications to make sure it works as intended during Workflows & also if it saves times.")
 
 - §Cost Efficiency → Delegation Economy: the lead rule and the tier table are re-written. Three rows: **Orchestrator** = the main loop on Opus 5.5 (plans, launches, checks every return, gives the final verdict) · **every delegated agent** on `sonnet` (Sonnet 5.5, the default and the floor) · a delegated agent on `opus` only with a reason in its plan row (`// opus-reason:` in a workflow script). New **Enforced by** line and a second **Why** paragraph with the measurement.

@@ -183,6 +183,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\pymtime-handover\\\\pymtime-handover.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\project-load\\\\project-load.check.hook.js\""
           }
         ]
       }

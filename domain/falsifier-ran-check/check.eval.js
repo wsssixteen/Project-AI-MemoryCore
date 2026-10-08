@@ -115,6 +115,24 @@ fs.writeFileSync(ENV.FALSIFIER_OVERRIDES, JSON.stringify({ ts: new Date(Date.now
 r = C.check('QA-244600', { ctx: 'note', codeFix: true }); ok('32 an override older than 72 h no longer counts (a rework needs a fresh one)', kinds(r) === 'local-test', kinds(r));
 fs.writeFileSync(ENV.FALSIFIER_OVERRIDES, '');
 
+// ── P1-P10: miya's plain words waive the local test (2026-10-08, #283751) ──
+const plainCase = (name, text) => { fs.writeFileSync(ENV.FALSIFIER_OVERRIDES, ''); doc(GOOD); active('false'); return C.check('QA-244600', { ctx: 'commit', transcriptPath: transcript(name, [['assistant', 'fix ready'], ['user', text]]) }); };
+r = plainCase('p1.jsonl', 'okay please apply I want to test on server. Must I copy and paste what you mention or can\'t you simply create a gate and then you assess if my phrase mentions [test on server/skip local testing]? Please do so.');
+ok('P1 REPLAY #283751: "I want to test on server" in his last message clears the local test', r.ok && r.override && r.override.via === 'plain' && /I want to test on server/.test(r.override.reason), r.fails);
+r = plainCase('p2.jsonl', 'skip local testing, deploy it'); ok('P2 "skip local testing" clears it', r.ok && r.override.via === 'plain', r.fails);
+r = plainCase('p3.jsonl', 'BA will check it on staging'); ok('P3 "check it on staging" clears it', r.ok, r.fails);
+r = plainCase('p4.jsonl', 'can I test on server?'); ok('P4 a QUESTION is not a waiver', kinds(r) === 'local-test', kinds(r));
+r = plainCase('p5.jsonl', 'I do not want to test on server yet'); ok('P5 a NEGATED sentence is not a waiver', kinds(r) === 'local-test', kinds(r));
+r = plainCase('p6.jsonl', 'let me test locally before we test on server'); ok('P6 "before we test on server" is not a waiver', kinds(r) === 'local-test', kinds(r));
+r = plainCase('p7.jsonl', 'for 282442 I will test on server'); ok('P7 a message that names only ANOTHER ticket is not a waiver', kinds(r) === 'local-test', kinds(r));
+r = plainCase('p8.jsonl', 'for 244600 I will test on server'); ok('P8 a message that names THIS ticket is a waiver', r.ok, r.fails);
+r = plainCase('p9.jsonl', 'what does [test on server/skip local testing] mean'); ok('P9 the phrase inside a bracketed option list alone is not a waiver', kinds(r) === 'local-test', kinds(r));
+fs.writeFileSync(ENV.FALSIFIER_OVERRIDES, ''); doc(HEAD + row(1, 'OPEN')); active('false');
+r = C.check('QA-244600', { ctx: 'commit', transcriptPath: transcript('p10.jsonl', [['user', 'I want to test on server']]) }); ok('P10 plain words NEVER clear an OPEN row', kinds(r) === 'open', kinds(r));
+fs.writeFileSync(ENV.FALSIFIER_OVERRIDES, ''); doc(GOOD); active('false');
+r = C.check('QA-244600', { ctx: 'commit', transcriptPath: transcript('p11.jsonl', [['user', 'commit it'], ['assistant', 'he said he will test on server, skip local testing']]) }); ok('P11 the phrase in MY OWN text is not a waiver', kinds(r) === 'local-test', kinds(r));
+fs.writeFileSync(ENV.FALSIFIER_OVERRIDES, '');
+
 // ── 33-37: context + lifecycle ──
 r = C.check('QA-999999', { ctx: 'commit' }); ok('33 a ticket with no quest block is skipped, not blocked (colleague\'s commit)', r.ok && r.skipped === 'no-quest', r);
 fs.unlinkSync(DOC); active('true'); r = C.check('QA-244600', { ctx: 'commit' }); ok('34 a code commit whose quest doc is missing blocks', kinds(r) === 'no-doc', kinds(r));

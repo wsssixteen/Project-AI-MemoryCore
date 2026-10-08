@@ -1111,3 +1111,12 @@
 {"ts":"2026-10-06T15:43:14.609Z","category":"ask-back/not-mine"}
 {"ts":"2026-10-06T15:52:33.303Z","category":"answer-the-ask"}
 {"ts":"2026-10-06T15:52:33.460Z","category":"assume-not-verify"}
+{"ts":"2026-10-07T08:52:33.069Z","category":"assume-not-verify"}
+{"ts":"2026-10-07T08:53:07.394Z","category":"A2"}
+{"ts":"2026-10-07T08:53:07.522Z","category":"A3"}
+{"ts":"2026-10-07T08:53:07.643Z","category":"A2"}
+{"ts":"2026-10-07T08:53:07.778Z","category":"A4"}
+{"ts":"2026-10-08T08:58:54.825Z","category":"commit-in-main-from-session-folder"}
+{"ts":"2026-10-08T10:33:09.073Z","category":"de-skipped-with-marker"}
+{"ts":"2026-10-08T10:33:09.178Z","category":"self-made-rule-cited-without-its-goal"}
+{"ts":"2026-10-08T10:33:09.277Z","category":"unit-docs-not-kept-or-loaded"}
