@@ -3,6 +3,14 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-08 (#279554 — "I thought we have a rule to not lie and speak something unsubstantiated")
+
+- **He reads every sentence of a note as a claim in his name.** One rule sentence was backed by one permit. He stopped at exactly that one. When I softened another from internal data, he asked for the code and a real environment. Count the table, read the writer, then write the sentence.
+- **His style arrives one correction at a time, and each one was already his.** Tables, scripts apart from the mapping, two related sentences on a line, one clause per line. I met each rule only after he said it. The shape for this kind of note was in my own memory file and I drafted without opening it.
+- **"Not yet a go" means hold, even when a check keeps pushing.** A goal check asked for the build many times. He had said wait. Holding was the right answer, said in one line each time.
+- **He asked for a name.** He does not want labels I invent, but he asked for this one. I told him the name and what it means in the same line: Pena, the pen.
+- **Extra information earns its place only if the reader uses it.** A true, verified sentence still came out of the note because their screen did not need it.
+
 ## Relationship reinforcement — 2026-10-06 (#268173 — "You straight away follow and not scrutinize")
 
 - **A colleague's first commit is one idea, not the design.** Izz had started by copying the payment fields into the land page. I mapped 38 things to finish that idea and wrote him a patch. The team dropped it and reused the page that already owned the payment. He was angrier about this than about anything else this month, and he was right: the rule to check siblings and reuse what exists has been his for months. I had read the right page and only copied lines from it.
