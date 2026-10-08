@@ -19,3 +19,15 @@
 | A5 sweep / file sweep | Ticket had no attachments; one journal line and the description were quoted with author and role. Boot Read of main-memory was partial again. | 236 of 1027 lines. |
 
 Proposals logged: A1 write-gate predicate · A2 save-quest check at Domain Expansion close · A3 schema checker parser · A4 batal generator · A5 main-memory trim.
+
+## Session "pymtime-password-auth-failure-4a584e" (evening, PymTime hand-off + save system)
+
+| Axis | What the session showed | Instance |
+|---|---|---|
+| A1 agentic system | One cold-reader agent (sonnet) was the right use: it proved the hand-off and found 11 gaps I could not see myself. The harness treats this session as a worktree session and refuses file writes to the main checkout, so every main edit went through a patch script. A commit can still remove lines without anything noticing; Rule 15 is a rule I follow, not a check. | The agent, given only "let's continue PymTime" and the memory index, reached a stale copy first; fixed with full paths. 21 exact-anchor edits in one script, dry run first. `c1e6ad56` went through on 2026-10-06 with 447 deletions. |
+| A2 quest workflow | Work that is not a ticket had no save path. The quest gates saved tickets; nothing saved PymTime's documents from 2026-08-26 to v17. Domain Expansion could be skipped whole with one marker. A new project still needs a hand-written entry in two lists. | `PROJECT.md` untouched for six weeks. "⏭ Domain Expansion: not run in full" on 2026-10-08. `system/INDEX.md` map fence + `system/save-rules.json` both list PymTime by name. |
+| A3 debugging accuracy | A wrong lesson from one incident stood as a rule for two days and was cited against his ask. One command on the commit gave the real cause. | Memory line "never commit in main from a worktree session"; `git show --stat c1e6ad56` = 19 files, 447 deletions, a bare commit on a stale shared index. |
+| A4 etanah issue-solving | ⏭ no etanah work in this session. | — |
+| A5 sweep / file sweep | The main checkout held stale copies of files that other sessions had already pushed in a newer form. A plain commit of the working tree would have put an old session file on main. The merge plus a line-by-line comparison with origin caught it. | `main/current-session.md` in main was the 10-07 version; origin had the 10-08 one. 11 merge conflicts, all "both sides appended". |
+
+Proposals logged: A1 commit stat guard · A2 a project is found by its `project.json` alone · A3 rule-citation check · A5 stale-copy check at boot.

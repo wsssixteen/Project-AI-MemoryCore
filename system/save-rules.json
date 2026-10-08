@@ -302,7 +302,7 @@
         },
         {
           "id": "quest-doc-dated-today",
-          "text": "The quest doc has a heading dated today.",
+          "text": "The quest doc has a heading, a bold lead line or a \"- Save <date>:\" line dated today.",
           "check": "quest-doc-dated-today",
           "applies": [
             "projects/coding-projects/active/QA-*",
