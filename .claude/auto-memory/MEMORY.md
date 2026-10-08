@@ -97,8 +97,8 @@
 ## Tools and side projects
 - [wa-read](project_wa_read.md) — WaRead WhatsApp reader at E:\Dev\scripts\WaRead; relink number 60186669566, never ask
 - [whatsapp-rules](feedback_whatsapp_read_rules.md) — READ ONLY, paraphrase, no sender names, never the desktop app
-- [pymtime](project_pymtime.md) — PymTime clock-in app: read projects/coding-projects/active/PymTime/PROJECT.md first; remote skip, colleague handover loop, v18 roadmap
-- [side-project-folder](feedback_side_project_folder.md) — 🚨 every project gets projects/coding-projects/active/<Name>/ (PROJECT.md index + VERSIONS, ARCHITECTURE, PROOFS, ROADMAP); update at every bulk change; memory = pointer
+- [pymtime](project_pymtime.md) — PymTime clock-in app: read PROJECT.md in the MAIN checkout's projects/coding-projects/active/PymTime/ first (full path in the note); remote skip, colleague handover loop, roadmap
+- [side-project-folder](feedback_side_project_folder.md) — 🚨 every project gets projects/coding-projects/active/<Name>/ (PROJECT.md index + VERSIONS, ARCHITECTURE, PROOFS, ROADMAP) in the MAIN checkout; update at every bulk change; memory = pointer, no state
 - [arabic-review](project_arabic_review.md) — /arabic daily vocab review, seconds to 2 minutes in chat; meanings are my job
 - [art-and-media](feedback_verify_generated_art_externally.md) — external art check; samples are the spec; MAS animation; Drive video download
 - [parked-projects](project_etanah_organize.md) — etanah-organize, aunt slides, held #255773 SPOC handoff

@@ -25,6 +25,9 @@ Rules:
 4. A test script never stays in the session temp folder; it goes into the project's own repo.
 5. Before a compaction or a hand-off to a new session: check the folder is current; that IS the save.
 6. `projects/` is gitignored (OneDrive keeps it); the code history lives in the project's own git repo.
+7. The folder is read and written at the MAIN checkout's full path (`<MemoryCore>\projects\coding-projects\active\<Name>\`). A session folder under `.claude\worktrees\` has no copy or an old one; the memory note gives the full path.
+8. The memory note and the `MEMORY.md` line carry NO state (version, next phase, counts). State lives in `PROJECT.md` section 1 only.
+9. Prove the hand-off: a fresh agent given only "let's continue <Name>" and the memory index must find the folder and name the next step (done for PymTime 2026-10-08; it found 11 gaps).
 
 **Why:** 2026-10-08 — PymTime's folder was created 2026-08-26 and left untouched while the app went to v17; everything sat in one memory note. みや: "you did not create like a folder for each project on your side, it should be from now on … MD files you can load when needed. This is aside from our system's main memories."
 **How to apply:** a new project → create the folder + `PROJECT.md` before the first build. An existing side project without one (WaRead, db-gateway, protime-plan, observatory) gets it the next time it is worked on. Reference shape: `projects/coding-projects/active/PymTime/`.
