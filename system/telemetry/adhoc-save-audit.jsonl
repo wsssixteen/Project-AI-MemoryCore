@@ -123,3 +123,9 @@
 {"ts":"2026-10-06T03:47:28.756Z","id":"ADHOC-PT-2026-11","outcome":"pass","fails":[],"dur_ms":25}
 {"ts":"2026-10-06T03:47:28.870Z","id":"ADHOC-MLPS-2026-2","outcome":"pass","fails":[],"dur_ms":27}
 {"ts":"2026-10-06T07:38:59.945Z","id":"ADHOC-PT-2026-11","outcome":"pass","fails":[],"dur_ms":59}
+{"ts":"2026-10-07T07:39:50.732Z","id":"ADHOC-OPPTPB-2026-1","outcome":"pass","fails":[],"dur_ms":35}
+{"ts":"2026-10-07T07:46:28.440Z","id":"ADHOC-OPPTPB-2026-1","outcome":"pass","fails":[],"dur_ms":39}
+{"ts":"2026-10-07T07:59:16.012Z","id":"ADHOC-OPPTPB-2026-1","outcome":"pass","fails":[],"dur_ms":36}
+{"ts":"2026-10-07T08:50:24.660Z","id":"ADHOC-OPPTPB-2026-1","outcome":"fail","fails":["block: open ↔ file location","register: A52 not claimed by another open block","task folder: a closed adhoc is archived"],"dur_ms":44}
+{"ts":"2026-10-07T08:50:38.323Z","id":"ADHOC-OPPTPB-2026-1","outcome":"fail","fails":["register: A52 not claimed by another open block"],"dur_ms":34}
+{"ts":"2026-10-07T08:50:53.462Z","id":"ADHOC-OPPTPB-2026-1","outcome":"pass","fails":[],"dur_ms":57}
