@@ -1,0 +1,114 @@
+{
+  "greet": {
+    "title": "Greeting and closing",
+    "means": "Open with Salam and the short name of the person the ticket is assigned to right now. Close with Thank you. Nothing after it.",
+    "rules": [
+      "First line: Salam <short name>, (Redmine) or Hi infra, (infra).",
+      "Greet the person who routed the question to us, not the original asker.",
+      "Last line: Thank you. / Thanks / Thank you very much."
+    ],
+    "banned": ["Hi <full Redmine name>", "any line after the closing"],
+    "check": "greet"
+  },
+  "lean": {
+    "title": "Only what is needed",
+    "means": "Say only what the reader does not have yet. No lead-in sentence, no restating the ticket, no closing remarks, stop after the last item.",
+    "rules": [
+      "No lead-in words: Everything starts from X -> Start from X.",
+      "Do not restate the ticket, the expected behaviour or the test data unless asked.",
+      "No verdict words about our own work (verified, DB-proven, as mentioned)."
+    ],
+    "banned": ["Everything ...", "As you can see", "Please note that", "DB-proven", "verified"],
+    "check": "lean"
+  },
+  "line": {
+    "title": "Lines and sentences",
+    "means": "Short sentences. A sentence that continues the one before it stays on the same line, up to 2 sentences. Then a new line. Never two facts joined into one sentence.",
+    "rules": [
+      "At most 2 sentences on one line.",
+      "Related or continuing sentences share a line. A new point starts a new line.",
+      "A sentence joined by jadi / so / sebab / bila that carries two facts is split.",
+      "Never list 3 or more ids or items inside one sentence. Use a list or summarise."
+    ],
+    "banned": ["3 or more sentences on one line", "a long sentence joined by jadi / so"],
+    "check": "line"
+  },
+  "table": {
+    "title": "Tables for data",
+    "means": "Field, table and column data goes in a table. On Redmine that is a Textile table.",
+    "rules": [
+      "Field / Table / Column answers are a table, one row per field.",
+      "Redmine tables: |_. Head |_. Head | then | cell | cell |.",
+      "Column and table names inside a sentence go in @...@ on Redmine."
+    ],
+    "banned": ["Table : / Column : label lines when a table fits"],
+    "check": "table"
+  },
+  "separate": {
+    "title": "One kind of thing per section",
+    "means": "Each kind of content has its own section: the explanation, the mapping tables, the scripts. Never a script inside the mapping, never a note inside the script.",
+    "rules": [
+      "Order: opener, short explanation, tables, then Scripts as its own section.",
+      "A script block never sits between two mapping tables."
+    ],
+    "banned": ["a SQL block before the last mapping table"],
+    "check": "separate"
+  },
+  "script": {
+    "title": "Scripts for another developer",
+    "means": "A script shows exactly the columns the reader asked about, one clause per line, and can be pasted into any schema.",
+    "rules": [
+      "One clause per line: SELECT / FROM / WHERE / AND / ORDER BY.",
+      "Select the mapped columns only, not SELECT *.",
+      "No JOIN. Resolve ids with a subquery.",
+      "No schema prefix."
+    ],
+    "banned": ["SELECT *", "JOIN", "et_main_xxx. prefix", "a whole script on one line"],
+    "check": "script"
+  },
+  "proven": {
+    "title": "Every rule sentence is counted first",
+    "means": "A sentence that states how the system behaves is written only after it was counted or read this session. What was not checked is said as not checked, to miya, never inside the note.",
+    "rules": [
+      "Before a rule sentence: which query or code line backs it, and across how many rows.",
+      "One sample is not a rule. Count the table.",
+      "Check the code and a second environment before calling it true or test data."
+    ],
+    "banned": ["a rule sentence backed by one row"],
+    "check": "manual",
+    "ask": "For each sentence that states system behaviour: name the query or code line and the count behind it."
+  },
+  "plain": {
+    "title": "Plain words for BA",
+    "means": "A BA reads it. No file names, line numbers, class names or code words. Say what the user now sees.",
+    "rules": [
+      "No file:line, no .java / .xhtml names, no method names.",
+      "No capital letters for emphasis.",
+      "One fix per line, in the words of the screen."
+    ],
+    "banned": ["File.java:123", "ClassName.method()"],
+    "check": "plain"
+  },
+  "rojak": {
+    "title": "His everyday mixed language",
+    "means": "When the note is in Malay it is his rojak, not formal Malay. Developer words stay English. Connectors are casual English.",
+    "rules": [
+      "tak / dah / amik / je, not tidak dapat / dihantar / dipaparkan.",
+      "Refer, commit, merge, branch, table, value stay English.",
+      "Basically / Actually / so / just, not Ringkasnya / Oleh itu."
+    ],
+    "banned": ["dihantar", "tidak dapat", "dipaparkan", "Ringkasnya", "Oleh itu", "Maaf atas kekeliruan", "nilai tetap", "Rujuk", "jadual"],
+    "check": "rojak"
+  },
+  "hint": {
+    "title": "Hints for a junior",
+    "means": "A junior gets where to look and what to compare. Never the cause, the script or the diff.",
+    "rules": [
+      "Each item: symptom, where to start, test data.",
+      "No sentence that says why it breaks."
+    ],
+    "banned": ["the finished SQL or diff", "the cause"],
+    "check": "manual",
+    "ask": "Does any line say why it breaks or give the finished fix? Cut it."
+  }
+}

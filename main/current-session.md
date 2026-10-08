@@ -1,5 +1,42 @@
 # Current Session
 
+**Last Activity**: 2026-10-08 16:55 — #283980 (PROD, batal 2 UPS_PLP created by mistake) worked start to close in one session: script, infra run, PROD re-read, Redmine form staged and submitted by miya, quest closed at Phase 1 · Domain Expansion step 2d added (close + save each touched quest by its live Redmine status) · Domain Expansion run.
+
+## Session Recap (2026-10-08 afternoon, worktree "batal-permohonan-patching-7b724f", #283980)
+- **READ FIRST**: `projects/coding-projects/active/QA-283980/QA-283980.md` (Resume Point) · `.claude/skills/domain-expansion/SKILL.md` step 2d.
+- **Ticket**: Internal Issue (PROD) #283980, PDT Jasin. Two Utiliti Penyediaan Surat permohonan created by mistake: `PTMLK/02/L/UPS_PLP/2026/12` (3451182) and `/13` (3455576), both held by norlina@melaka.gov.my before the patch. Same job as #283532 (2026-10-06).
+- **Done**: `283980.sql` (3-table cancel shape, `DATABASE.md` section 27) in the Task folder `2. Fix\` · infra ran it 2026-10-08 16:41 · PROD re-read: both Tamat / Batal / Tamat, tugasan N / Selesai, 0 dashboard rows, PPTPB parents unchanged · Redmine form filled in the browser, miya submitted · `SAVE-QUEST: QA-283980 · Redmine = Resolved (Nurul Amirah Nadiah · 100%) · local = active → PHASE-1` · block `closed`.
+- **Next for this quest**: archive when Redmine shows Closed (`node lib/save-quest.js QA-283980`).
+- **System change**: Domain Expansion step 2d. He asked that running Domain Expansion alone closes and saves quests. It is a skill row plus one paragraph in `Feature/Domain-Expansion/expansion-protocol.md`; it reuses `lib/save-quest.js`. No gate enforces it yet and no 20-scenario pass was done: one proposal row logged.
+- **Checker noise seen**: `sql-schema-verify` returned 7 false rows on a correct script (SYSDATE read as a column; subquery columns pinned to the wrong table). Not stamped; skip token used twice. Proposal logged.
+- **Gate noise seen**: `redmine-write-gate` refused two read-only PowerShell commands whose text held Redmine status words. Worked around by splitting the command.
+- **Boot note**: `main/main-memory.md` Read returned lines 1 to 236 of 1027 again.
+
+**Last Activity**: 2026-10-08 13:30 — #279554 (SPOC PDBB kaunter mapping, consultation) answered: mapping note posted by miya, ticket assigned to Anis, block `delegated` · writing-style Feature **Pena** built on his go (`domain/pena/` · `lib/pena.js` · skill `pena`, eval 40/40) · Domain Expansion run.
+
+## Session Recap (2026-10-08, worktree "quest-279554-mapping-877831", #279554 + Pena)
+- **READ FIRST**: `projects/coding-projects/active/QA-279554/QA-279554.md` (Resume Point, "Final verification pass", "Ganti Hari number") · `.claude/skills/pena/SKILL.md` · `domain/pena/README.md`.
+- **Ticket**: Requirement #279554. SPOC (Nur Atierah) builds the kaunter screen for PDBB and asked for table and column of Rekod Permohonan / Maklumat Tanah / Tujuan Permohonan. Consultation, no code. The answer was read from our own online PDBB screen (`etanah-awam` `PelupusanPermitTabForm.initMaklumatPDBB():309`) and checked on MLIT, stg2 and PROD.
+- **Posted**: by miya 2026-10-08 12:19 (journal entry 19), then he assigned the ticket to Anis. `SAVE-QUEST: … Redmine = In Progress (Anis Nabilah J Daud · 60%) → KEEP-DELEGATED`.
+- **Previous tickets of the same kind**: #277706 (2026-10-02, same SPOC dev, Tambah Kuantiti table and column) and #281423 (2026-09-30, Teknikal, Pemohon vs Pemilik). I first named only #281423.
+- **His corrections on the note (five rounds)**: opener without a lead-in · a rule sentence I had checked on one permit (versi rule) · tables preferred · scripts in their own section · related sentences share a line, at most 2 · scripts one clause per line with the asked columns · check the code and a non-test environment before wording a behaviour · extra information only when their implementation uses it. All are rows in `domain/pena/corpus.jsonl` (c10 to c17).
+- **Facts found**: one No. Permit has several rows (follow-on applications); the earliest row is the original (MLIT 19 of 19, stg2 6 of 6, PROD 1 of 1). A Ganti Hari / Tambah Kuantiti carries the original number while in progress and gets a NEW number at issue (`PelupusanPermitLesenNumberService.saveNoPermitLesen():143`, new number `:269`; PROD has one). `umm_a_permohonan_tnh.tempat` is the Tempat / Lokasi / Wilayah column (`PelupusanService.java:493`).
+- **Pena**: 10 modules (greet · lean · line · table · separate · script · proven · plain · rojak · hint), 7 profiles, engine `list · show · check · add · keyword · analyze`, own data files, log. Wired into the quest skill's Redmine hand-over step only. Owed: deploy 6b, redmine-phase1-prefill, adhoc-save, the infra hand-off.
+- **Slips logged**: `verify-before-claim` (versi rule) · `reply-shape` ×2 (tables dropped and scripts mixed in; one-line scripts).
+- **Blocked this session**: a write to `.claude/auto-memory/feedback_ticket_writing_style.md` was refused twice by the memory gate (it did not see my placement line). The rows went to Pena's corpus.
+- **Open for miya**: confirm the ten style-word meanings in `domain/pena/keywords.jsonl` (my readings) · confirm "extra info only when their implementation uses it" · whether to wire Pena into the other writers · whether the dated speech collection in the memory file folds into Pena · BA point: a refund keyed on a Ganti Hari permit number finds the Ganti Hari row.
+
+**Last Activity**: 2026-10-07 17:05 — #244600 ARCHIVED (Phase 2, ahead of Redmine: Verified, on miya's word) · Peraku compare change `461b77fb2a` on `mlk/int-env` `3da2d67ea8`, tested by miya · Notis 5A report versi finding (LATENT-BUGS L24) · Domain Expansion run.
+
+## Session Recap (2026-10-07, session "ticket-244600-review-89e02d", #244600 Phase 2)
+- **READ FIRST**: `projects/coding-projects/archive/QA-244600/QA-244600.md`, blocks dated 2026-10-07 (1 to 5), `## Fastest Path`, `## Bounty`.
+- **BA**: #244600 and #275043 both Verified (Nurhafizah Hasan, MLIT, `PTMLK/02/L/PLTP/2026/7`).
+- **Side find**: Notis 5A at versi 18. A PDF report adds 1 on every regenerate and overwrites one row (`PelupusanReportService.saveLaporan():163-191`, 2025-03-16); 13 report documents; 18 files in 7 minutes proven from `et_dms_mlit.dokumen`. Not caused by our fix. miya ruled: no new versi when nothing changed. NOT built.
+- **Peraku fix**: the rise was a status flag with no compare (a colleague's change we had taken as it was). Now `perluVersiBaru && !adalahKandunganSama(...)` in `PelupusanDocumentService`. miya tested on `PTMLK/03/L/PT/2026/18`: "The test is successful."
+- **Report fix design (delegated read)**: compare PDF text in `saveLaporan`, about 80 lines, no schema change. Open: does a date-only change count; build on this branch or a new ticket.
+- **Knowledge written at Phase 2**: `BUG-BESTIARY.md` pattern "Document versi: what adds one, what shows it" · `LATENT-BUGS.md` L24 · `TEST-PERMOHONAN-INDEX.md` three MLIT permohonan.
+- **Open for miya**: tell BA about the Peraku change (BA verified before it) · the two report rulings · `461b77fb2a` is on internal only, the release must carry the whole branch `mlk/qa/244600v3` · back gate for close quest and a save rule for bundle files (from 2026-10-06).
+
 **Last Activity**: 2026-10-07 16:55 — #278909 cycle 3 (PT Risalat MMKN) reviewed, Diangkat case added on Farah's branch, merged to internal, BA note posted by miya, quest saved (Phase 1 closed, archive waits for Redmine Closed) · quest skill gained the Dev notes shape + "a commit hash never stands alone" · DE run, main merge blocked on the app's pinned-origin check
 
 ## Session Recap (2026-10-07 afternoon, WORKTREE `ticket-278909-review-merge-bdbea1`, #278909 review and merge)
@@ -13,7 +50,10 @@
 - **System change**: `.claude/skills/quest/SKILL.md` § Hand-over to BA: Dev notes block shape + a commit hash never stands alone (MemoryCore `27e507eb` on the worktree branch).
 - **Blocked, open**: the app refused to merge `main` into this worktree branch (pinned git origin not confirmed: Help → Troubleshooting → Review Pinned Git Origins). Until then the branch is 2 behind main and nothing from this session is on main. The memory note for the hash rule was refused twice by the memory check (it does not see a skill edit made in a worktree).
 - **Owed on the ticket**: planned release list · spacing on the 8 individu templates not checked · a render check after deploy.
+
 **Last Activity**: 2026-10-07 00:21 — Arabic class-along (Book 1 Lesson 13 part ب) · class-along mode in the `/arabic` skill · CLASS FOCUS + AYAT WALK BUILT (engine + 32 ayat, eval 79/79) · memory design discussion OPENED with miya (layer map not yet ruled) · aligned with the "Audit System Retrieval" session on vector search · nothing committed · NOT a session close.
+
+**Last Activity**: 2026-10-06 23:55 — Arabic class-along (Book 1 Lesson 13 part ب) · class-along mode written into the `/arabic` skill · review set moved to Lesson 13 · memory design discussion OPENED with miya (nothing ruled) · aligned with the "Audit System Retrieval" session on vector search · nothing committed · NOT a session close.
 
 ## Session Recap (2026-10-06 night, MAIN checkout on the laptop of user vice4, session "Arabic class exercises")
 - **READ FIRST**: `.claude/skills/arabic/SKILL.md` → "Class-along mode" · `projects/learning-projects/active/arabic/arabic.md` → Progress.

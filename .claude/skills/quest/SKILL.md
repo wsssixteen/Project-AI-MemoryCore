@@ -272,6 +272,8 @@ Any Redmine hand-over, BA pass, ticket close, "prepare redmine", "both done", "p
 
 ### 🤝 Hand-over to BA — miya's pass note, VERBATIM shape (added 2026-09-29 per みや, #282061)
 
+**→ Pena (miya's writing style, added 2026-10-08, #279554)**: before drafting ANY Redmine text in his name, run `node lib/pena.js show --profile <redmine-ba-pass | redmine-dev-mapping | redmine-dev-fixlist | redmine-rootcause>`; before the hand-back run `node lib/pena.js check --profile <same> --file <draft>` and put its `PENA:` line under the draft. A sentence he changes is stored the same turn (`node lib/pena.js add`). Skill: `pena`.
+
 Fires at every "pass to BA" / "deployed, please verify" / Redmine hand-over after a deploy. Generate it, never hand-write it:
 
 `node domain/ticket-close-block/ticket-close-block.js --repo <work-clone path> --ticket <num> --module <pelupusan|awam> --ba <BA name as on Redmine> --envs "<internal | internal & staging>" [--prod-script <ticket>.sql] [--intenv-sha <sha> --cherrypick]`
@@ -754,3 +756,5 @@ The ordered `pull → checkout -b → stage → commit → push → /verify → 
 ode domain/doc-sim/doc-sim.eval.js.*
 
 *2026-10-07 — per みや (goal message, items 1 and 2). Step 6b: every ticket he starts, Redmine New becomes In Progress automatically in the background (`lib/quest-start-claim.js`, started by `quest/active-cli.js` at the quest_start stamp; Feature `domain/quest-start-claim/`, eval 45/45). Spec preservation for 6b, all kept: status only · never at retrieval or in a multi-ticket sweep · report in the reply's first lines · the 2026-10-02 replay · the patch-ticket rule (a patch ticket whose status is neither New nor In Progress still asks for the approval as row 1 of Next steps). Changed and named: the automatic change fires only when the live status is New (his words), where the patch rule said 'not already In Progress'; and it needs no approval phrase (his standing instruction; write gate v1.5). Boot-summary superpowers pointer #2: model-tiering now reads sonnet by default, opus with a stated reason (CLAUDE.md v1.81); the haiku wording it replaced was banned since v1.68.*
+
+*Updated 2026-10-08 — Pena pointer per みや (#279554, "apply and invoke in other parts ... for example inside Redmine replies/handover"): one line at the top of § Hand-over to BA sends every Redmine draft in his name through `lib/pena.js show` then `check`. Additive; no existing clause changed or dropped. Feature: `domain/pena/` + `.claude/skills/pena/SKILL.md`, eval `node domain/pena/eval.js`.*

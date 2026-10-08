@@ -185,6 +185,8 @@ const ASK_RX = [
   new RegExp(String.raw`\bupdate\s+me\s+(?:on|about|with)\s+(?:(?:the|my|our|all|any|new|open)\s+)*(?:` + LIST_NOUN + String.raw`|work|kerja|tasks?)\b|\b(?:what|which|how\s+many|any|apa|berapa)\s+(?:(?:are|is|new|open|the|my|our|ada)\s+)*` + LIST_NOUN + String.raw`\b`, 'i'),
   /\b(?:my|open|new|pending|outstanding|today'?s|assigned|overdue)\s+(?:redmine\s+)?(?:tickets|tiket|quests|esokongan)\b|\bsenarai\s+tiket\b|\bnext\s+ticket\b/i,
 ];
+const MAJOR_RX = /\b(?:tickets|redmine)\b/i;
+const MAJOR_MAX_WORDS = 8;
 const SOFT_RX = [
   /\bwhat'?s\s+(?:on\s+my\s+plate|pending|left\s+to\s+do|due)\b|\bwhat\s+(?:should|shall|do|can)\s+(?:i|we)\s+(?:do|work\s+on|start|pick|tackle)\b|\bto-?do\s+list\b|\bpriorit(?:y|ies)\s+(?:today|for\s+today|this\s+week)\b|\bupdate\s+me\b/i,
   /\b(?:redmine|tickets?|tiket|esokongan|e-sokongan|quests?|backlog|sla|permohonan|urusan|tugasan)\b/i,
@@ -197,6 +199,10 @@ function classify(prompt, activeText) {
   if (!p.trim() || p.length > 20000) return null;
   if (/\[SYSTEM NOTIFICATION|<task-notification>|📌 OPEN QUESTS|LIVE REDMINE BOARD/.test(p)) return null;   // machine text, or this hook's own output pasted back
   if (ASK_RX.some(rx => rx.test(p))) return 'ask';
+  // Major keywords (2026-10-08 per みや: "board" is not enough, "Tickets" and "Redmine" should also be it): a SHORT
+  // message that says tickets or redmine is an ask for the list, every time. In a longer message the word is a
+  // work signal (below): one load per 4 hours, so a long ticket discussion does not reload the list on every prompt.
+  if (MAJOR_RX.test(p) && p.trim().split(/\s+/).length <= MAJOR_MAX_WORDS) return 'ask';
   if (SOFT_RX.some(rx => rx.test(p))) return 'soft';
   // a bare ticket number that matches an open block (same test as ticket-gate.js signal A2)
   for (const n of p.match(/\b\d{5,7}\b/g) || []) if (new RegExp('^qa=(?:QA-)?' + n + '\\b', 'm').test(activeText || '')) return 'soft';
@@ -228,7 +234,7 @@ function entry() {
   markShown(sid);
 }
 
-module.exports = { classify, ASK_RX, SOFT_RX };
+module.exports = { classify, ASK_RX, SOFT_RX, MAJOR_RX, MAJOR_MAX_WORDS };
 if (require.main === module) {
   try { entry(); } catch (e) {
     console.log(`⚠️  open-quest-surfacer: error — ${e.message}`);

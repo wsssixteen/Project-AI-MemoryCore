@@ -339,3 +339,43 @@ Goal: a session knows at its first prompt whether this is a work session, withou
 - Unknown data (PymTime missing, cache unreadable) = Quiet.
 - Not covered: medical leave entered after the fact; that is what the keyword is for.
 - One line is printed with the reason, e.g. `Work mode: Tuesday, no holiday, no leave, 09:12`.
+
+## 15. Round of 2026-10-08 — major keywords, videos, checks on real use
+
+His words: (1) "board" alone is not enough, "Tickets" and "Redmine" are major keywords too; (2) videos are deleted after archive; (3) ignore the "Incident, 5 Oct 01:47" block; (4) proceed, run the evals, verify, add negative tests.
+
+| Item | Done | Proof |
+|---|---|---|
+| Major keywords | `.claude/hooks/open-quest-surfacer.js`: a message of 8 words or fewer that holds "tickets" or "redmine" loads the ticket list every time (`MAJOR_RX`, `MAJOR_MAX_WORDS`). "board" already did. Hint texts name all three (CLAUDE.md v1.82, session briefing, list-redmine skill). | eval 123/123; 14/14 through the real prompt bundle against the real Redmine, 8 of them negative |
+| Videos deleted after archive | No code change needed: `quest/archive-quest.js` already moves the folder first, then deletes the videos. Four new fixtures 9b to 9e (adhoc, dry run, neighbour folder, unknown id). | eval 24/24 |
+| Adhoc audit eval | Its sample adhoc lacked the title the audit has required since the title rule (19/24 red). Fixture repaired; E25 to E29 added. | eval 29/29 |
+| Adhoc audit, false alarm | Found on real data: a closed adhoc with `task_folder=none (adhoc, no ticket)` was told to archive a folder it never had. One condition in `lib/adhoc-save-audit.js` (`noFolder`), fixture E29 red first, then green. | 29/29 |
+| Archive eval out of quarantine | `system/eval-quarantine.jsonl` row for `quest/archive-quest.eval.js` (since 2026-08-16) removed: the eval passes in the worktree (24/24) and in the main checkout (20/20, older copy), 16 s. | both runs |
+| Page | https://claude.ai/artifact/FYG8o9tQy6KzRTqMN1doDo updated: three keywords, videos deleted, incident block removed, batch 2 shown as built. | published |
+
+Real use since batch 2 went live (main checkout telemetry, 6 Oct 23:45 to 8 Oct, 24 real sessions):
+
+| Measure | Value |
+|---|---|
+| Session start, sum of script medians | 90.4 s (29 Sep to 4 Oct, 12 scripts) → 3.8 s (6 scripts) |
+| Error rows on the changed parts | 0 |
+| The four moved scripts, runs at SessionStart | 0 |
+| Ticket list loads | 31, in 20 of 21 sessions; median 8.6 s, max 27.7 s (bundle kill at 30 s) |
+| Watch countdown | one tick moment per day |
+| Cleanup | 22 finished runs, 9 locks set, 0 lock failures |
+
+Archive rule on the 46 real adhocs (worktree audit code, main checkout data, read-only): 16 archived folders on disk hold 0 videos; no open adhoc is told to archive; 4 closed ones are flagged and are real: `ADHOC-PT-2026-10` (folder 237 still in the live list), `ADHOC-MLPS-2026-1` (149, live, renamed ADHOC → AH), `ADHOC-PPTPB-2026-1` (146, live, renamed), `ADHOC-0402DIS2025000170` (folder is in Archive as 81 under the AH name; the block still names the ADHOC name). The three live folders hold 0 videos. Not acted on: the quest files sit in the main checkout, which another session is using.
+
+Full battery 2026-10-08 16:58 (worktree, 733 s): 138/146 green, 6 quarantined, 8 failing, none from this work.
+
+| Failing | Why |
+|---|---|
+| bpmn-check, deploy-check, release-mlk-plp (2), sweep | same as the 5 Oct baseline; not looked into |
+| observatory | timeout under battery load, as on 5 Oct |
+| `domain/pre-code-check/eval-self-audit.js` | 5/5 alone; failed only inside the battery |
+| `domain/ticket-gate/eval.js` | 60/61: F22 uses Kedah as the empty scaffold state; `system/states.json` gave Kedah its data on 2026-10-06 (`3016d2ec`). Stale fixture, not touched. |
+
+Open, honest:
+- The main checkout is 13 commits behind `origin/main` and 2 ahead, with 23 edited tracked files of another session (9 differ from the remote). Fast-forward refused; left alone. Hooks run from that checkout, so the major-keyword rule, the `noFolder` fix and the quarantine lift start there only after it syncs. Batch 2, the awam rule and the adhoc archive check were already in its files.
+- Waiting for his word, not built: push guard step 2 (Git Bash path gives an empty repo name, so steps 3 and 4 are skipped); boot mode (section 14); a flow page per Workflow; the 4 closed adhocs above.
+- Parked: gate rewrite on `claude/gates-v7-wip`.
