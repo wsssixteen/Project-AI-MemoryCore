@@ -295,7 +295,13 @@ Emit only the requested env. Shape:
     **What replaces them: ONE evidence LINE above the card** (みや 2026-08-06, second correction in
     the same turn) — verified with `git ls-remote` (not local refs), rendered as:
 
-        mlk/<tracker>/<num> @ <sha> → <base> @ <merge-sha>
+        mlk/<tracker>/<num> (commit YYYY-MM-DD HH:MM) → <base> (merge YYYY-MM-DD HH:MM)
+
+    🚫 Date-time, never a short commit code (2026-10-09 per みや: Sourcetree is searched by date). The code
+    appears only inside the revert command. Also say where he sees it: the merge is on the SERVER branch
+    (`origin/<base>`); his local `<base>` shows it only after a pull, so check
+    `git rev-list --count <base>..origin/<base>` in his repo and, when he asks, fast-forward that local
+    branch for him.
 
     **Banned in the evidence**: a What/Remote-ref/SHA table · the commit log · the fix's source
     lines · anything wrapped in a fence. He asked for *"a simple `mlk/xxx/xxx <arrow> <branch>`"*.
