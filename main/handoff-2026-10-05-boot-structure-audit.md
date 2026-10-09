@@ -339,3 +339,151 @@ Goal: a session knows at its first prompt whether this is a work session, withou
 - Unknown data (PymTime missing, cache unreadable) = Quiet.
 - Not covered: medical leave entered after the fact; that is what the keyword is for.
 - One line is printed with the reason, e.g. `Work mode: Tuesday, no holiday, no leave, 09:12`.
+
+## 15. Round of 2026-10-08 — major keywords, videos, checks on real use
+
+His words: (1) "board" alone is not enough, "Tickets" and "Redmine" are major keywords too; (2) videos are deleted after archive; (3) ignore the "Incident, 5 Oct 01:47" block; (4) proceed, run the evals, verify, add negative tests.
+
+| Item | Done | Proof |
+|---|---|---|
+| Major keywords | `.claude/hooks/open-quest-surfacer.js`: a message of 8 words or fewer that holds "tickets" or "redmine" loads the ticket list every time (`MAJOR_RX`, `MAJOR_MAX_WORDS`). "board" already did. Hint texts name all three (CLAUDE.md v1.82, session briefing, list-redmine skill). | eval 123/123; 14/14 through the real prompt bundle against the real Redmine, 8 of them negative |
+| Videos deleted after archive | No code change needed: `quest/archive-quest.js` already moves the folder first, then deletes the videos. Four new fixtures 9b to 9e (adhoc, dry run, neighbour folder, unknown id). | eval 24/24 |
+| Adhoc audit eval | Its sample adhoc lacked the title the audit has required since the title rule (19/24 red). Fixture repaired; E25 to E29 added. | eval 29/29 |
+| Adhoc audit, false alarm | Found on real data: a closed adhoc with `task_folder=none (adhoc, no ticket)` was told to archive a folder it never had. One condition in `lib/adhoc-save-audit.js` (`noFolder`), fixture E29 red first, then green. | 29/29 |
+| Archive eval out of quarantine | `system/eval-quarantine.jsonl` row for `quest/archive-quest.eval.js` (since 2026-08-16) removed: the eval passes in the worktree (24/24) and in the main checkout (20/20, older copy), 16 s. | both runs |
+| Page | https://claude.ai/artifact/FYG8o9tQy6KzRTqMN1doDo updated: three keywords, videos deleted, incident block removed, batch 2 shown as built. | published |
+
+Real use since batch 2 went live (main checkout telemetry, 6 Oct 23:45 to 8 Oct, 24 real sessions):
+
+| Measure | Value |
+|---|---|
+| Session start, sum of script medians | 90.4 s (29 Sep to 4 Oct, 12 scripts) → 3.8 s (6 scripts) |
+| Error rows on the changed parts | 0 |
+| The four moved scripts, runs at SessionStart | 0 |
+| Ticket list loads | 31, in 20 of 21 sessions; median 8.6 s, max 27.7 s (bundle kill at 30 s) |
+| Watch countdown | one tick moment per day |
+| Cleanup | 22 finished runs, 9 locks set, 0 lock failures |
+
+Archive rule on the 46 real adhocs (worktree audit code, main checkout data, read-only): 16 archived folders on disk hold 0 videos; no open adhoc is told to archive; 4 closed ones are flagged and are real: `ADHOC-PT-2026-10` (folder 237 still in the live list), `ADHOC-MLPS-2026-1` (149, live, renamed ADHOC → AH), `ADHOC-PPTPB-2026-1` (146, live, renamed), `ADHOC-0402DIS2025000170` (folder is in Archive as 81 under the AH name; the block still names the ADHOC name). The three live folders hold 0 videos. Not acted on: the quest files sit in the main checkout, which another session is using.
+
+Full battery 2026-10-08 16:58 (worktree, 733 s): 138/146 green, 6 quarantined, 8 failing, none from this work.
+
+| Failing | Why |
+|---|---|
+| bpmn-check, deploy-check, release-mlk-plp (2), sweep | same as the 5 Oct baseline; not looked into |
+| observatory | timeout under battery load, as on 5 Oct |
+| `domain/pre-code-check/eval-self-audit.js` | 5/5 alone; failed only inside the battery |
+| `domain/ticket-gate/eval.js` | 60/61: F22 uses Kedah as the empty scaffold state; `system/states.json` gave Kedah its data on 2026-10-06 (`3016d2ec`). Stale fixture, not touched. |
+
+Open, honest:
+- The main checkout is 13 commits behind `origin/main` and 2 ahead, with 23 edited tracked files of another session (9 differ from the remote). Fast-forward refused; left alone. Hooks run from that checkout, so the major-keyword rule, the `noFolder` fix and the quarantine lift start there only after it syncs. Batch 2, the awam rule and the adhoc archive check were already in its files.
+- Waiting for his word, not built: push guard step 2 (Git Bash path gives an empty repo name, so steps 3 and 4 are skipped); boot mode (section 14); a flow page per Workflow; the 4 closed adhocs above.
+- Parked: gate rewrite on `claude/gates-v7-wip`.
+
+## 16. Round of 2026-10-08 night — main synced, 4 adhocs archived, boot mode BUILT
+
+His words: (1) "okay sync main folder" (2) "okay archive the 4 closed adhocs" (3) "explain to me briefly on the fix push" (4) "build boot mode" (5) "briefly, what is this flow pages for? One page per workflow? What page?"
+
+| Item | Done | Proof |
+|---|---|---|
+| Main checkout in sync | Another session had already saved and synced it at 22:31 (`581f0390`): 0 behind, 0 ahead. The major-keyword rule and the `noFolder` fix are in its files. | `git rev-list --left-right --count origin/main...HEAD` = 0 0; `MAJOR_RX` and `noFolder` found in the main checkout's files |
+| The 4 closed adhocs | Folders of `ADHOC-PT-2026-10` (237), `ADHOC-MLPS-2026-1` (149), `ADHOC-PPTPB-2026-1` (146) moved to `Melaka\Archive\`; 0 videos in them. Four records in `quest/active-archive.txt` now name the real folder (three were written before the "ADHOC" → "AH" folder rename; `ADHOC-0402DIS2025000170` already sat in Archive as 81). | audit on the 46 real adhocs: 46 pass, 0 flagged; 3 lines differ in the record file after the correction step, then 3 tool runs |
+| Archive tool gap, found on the way | `quest/archive-quest.js` did nothing to a folder when the record was already in `active-archive.txt` (it read `task_folder=` from `active.txt` only). Now it reads the archived record, moves the folder, deletes videos, and writes the Archive path back with `active-cli update … --file active-archive.txt`. | fixtures 9f (red first), 9g, 9h; eval 27/27 |
+| Boot mode | `.claude/hooks/open-quest-surfacer.js` v3: `workNow()`, `firstMessageInWorkHours()`, `QUIET_RX`, `--mode`. No new file, no new registration. | eval 157/157 (123 earlier + 34 new, 17 of the new ones negative); 10/10 through the real bundle + real PymTime data + real Redmine with a fixed clock |
+
+Flow of the loader, with the one changed step:
+
+```
+his message → 1. sweep running? → silent
+            → 2. keyword? ask word / "tickets" "redmine" "board" → load · work word → load once per 4 h
+            → 3. no keyword → silent                                   ◀ CHANGED
+                   first real message of the session + Work → load, header says why
+                   "quiet mode" / "not working today"       → no load, one line says so
+            → 4. load = open quests + live board, session marked
+```
+
+Boot mode rules as built:
+
+| Rule | Value | Source |
+|---|---|---|
+| Work | PymTime `workdays` (1=Mon..7=Sun) has today · `isHolidayCached(now)` empty · `onLeave(now)` not (APPROVED and Full) · 08:30 ≤ now < 18:30 local | `E:\Dev\scripts\PymTime\lib\config.js` `holiday.js` `leave.js`, required the way `domain/protime-plan/protime-plan.js:141` does; `PYMTIME_DIR` overrides the folder |
+| Quiet | everything else; also: PymTime folder missing, no config, leave cache unreadable, any throw | fail closed to Quiet |
+| Decided | once per session, at his first real message (not a machine notification, not empty); kept as `mode:<session id>` in the loader's marker file in the temp folder | same file as the "shown" marker |
+| Force Work | "start work" / "work mode" are existing work words: they load on any day | `SOFT_RX`, unchanged |
+| Force Quiet | "quiet mode" / "not working today" / "no work today": no unasked load in that session; keywords still load | `QUIET_RX`; checked before the work words because "not working today" holds "working today" |
+| See the decision | `node .claude/hooks/open-quest-surfacer.js --mode` | prints `Work mode: …` or `Quiet mode: …` with the reason |
+
+Requirements, from his words (section 10 answer 4) to the build:
+
+| His words | Built as |
+|---|---|
+| "a keyword so that you know we are starting our daily work" | "start work", "work mode", "daily work", "let's do some work" load the list on any day (fixtures G10a, G10b, B1) |
+| "detect … is it working day and also holiday" | PymTime workdays + holiday cache + leave cache (fixtures G3, G5, G6, G8) |
+| "to determine if you boot in what mode" | Work = first message loads the list; Quiet = nothing loads unasked (G1, G2) |
+| "Can this be updated by a routine. or quick enough to be done boot time?" | No routine. Read at his first message: 21 ms to load the three PymTime files; outside 08:30 to 18:30 they are not read at all |
+| "holiday days from redmine" | NOT from Redmine: PymTime already keeps the Protime holiday list on this laptop. Said in chat on 2026-10-05; unchanged |
+
+Accepted limits, each on purpose: a session that starts before 08:30 stays Quiet for its whole life (a keyword loads the list) · a scheduled or automated session that starts in work hours gets one unneeded load · leave entered today may not be in the cache yet (one load; "quiet mode" covers it) · on a laptop without PymTime boot mode is always Quiet · work hours 08:30 to 18:30 are two constants (`WORK_FROM`, `WORK_TO`), the value proposed in section 14 and not separately ruled.
+
+Not installed as a Feature: the loader is still a loose hook in `.claude/hooks/` (the forge blocker of section 10 is open). Its goal, symptom and signal are in the file's v3 comment; its fires are in `system/telemetry/hook-fires*.jsonl`. Watch `wmuzp7jiu` registered in the main checkout's watch list (that file is machine-local, not in git).
+
+CLAUDE.md v1.83 (boot step 5 names boot mode) + changelog + session-briefing line.
+
+Push guard step 2, explained to him, NOT built: proven on this laptop that `cd /e/Dev/etanah-work/etanah-common` gives repo name "" while the Windows path gives "etanah-common" (`lib/git-target.js` hands the Git Bash path to `git -C` unchanged, and that fails). With an empty name the "another team's repo" check (steps 3 and 4) is skipped. Fix on offer: read `/e/…` as `E:\…`, and block a push to a shared branch when the repo still cannot be named.
+
+Flow pages, explained to him, NOT started: one published page per Workflow (quest, deploy, release, adhoc, close-phase, hotfix, Domain Expansion …) with its steps in order and what each checks; read before changing any step.
+
+Full battery after these changes: 2026-10-08 23:32 (worktree, 665 s): 142/148 green, 5 quarantined, 6 failing, none from this work: bpmn-check, deploy-check, release-mlk-plp (2), sweep (all as on 5 Oct) and ticket-gate F22 (stale since Kedah got its registry data on 2026-10-06). The archive eval runs in the battery again.
+
+Commits follow system-design Rule 15 (land on main; index built in the same command; stat read before and after).
+
+## 17. Round of 2026-10-09 — the "which repo" reader FIXED; work hours okayed; flow pages = design only
+
+His words: (1) "previously it was reading wrongly is it and waste time? If I understand correctly then please proceed" (2) on flow pages: "I don't want to simply build this until I know you're building this in accordance to our system and it will always check and it is useful and it is the best way to implement and it is not bloat" (3) "Work hours okay".
+
+### The reader (`lib/git-target.js`), one step, two guards
+
+```
+a git commit or git push in a session
+  1. real git commit / push?
+  2. which repo?  folder in the command → ask git there for its remote address → last part = name   ◀ CHANGED
+  3. commit guard: etanah repo → compile green since the last edit?
+     push guard:   another team's repo + shared branch → check report + his approval
+```
+
+| Before | After |
+|---|---|
+| `git -C /e/Dev/etanah-work/etanah-common …` from Node fails, so the name was "" | `winPath()` turns `/e/…`, `/mnt/e/…`, `/cygdrive/e/…` into `E:\…` in `clean()` and `repoIdentity()`; nothing else is rewritten |
+| commit guard: a green commit refused with "is not an etanah git repo" (2026-10-04) | recognised (compile-gate eval F18b; F18c = a non-etanah repo is still refused) |
+| push guard: another team's repo + shared branch PASSED with no check | blocked like the Windows form (push-gate eval F36, F37, F40, F41) |
+| push guard: a named folder it cannot name + shared branch PASSED | refused with its own reason and the remedy "write the folder plainly" (F34, F42, F43, F46). Only when the command NAMES a folder (`cd` / `git -C`); a push that names none runs in the tool's folder as before |
+
+Proof on the real repos (`E:\Dev\etanah-work\etanah-awam`, `etanah-common`, `etanah-pelupusan`): both folder styles now give the same repo name; before, the Git Bash style gave "" for all three.
+
+Evals: `lib/git-target.eval.js` NEW 22/22 (10 red before the fix) · push gate 51/51 (was 38; 7 red before the fix) · compile gate 29/29 (was 27; 1 red before the fix).
+
+Spec change, named (system-design Rule 6 v1.2 a): fixture F34 pinned "a named non-repo folder + a shared branch passes". That was the hole; F34 now expects the refusal, and F34b pins that the same folder + a ticket branch still passes. F10, F11, F15 named a folder that does not exist (`E:\x\etanah-pelupusan`); they now name a real fixture repo so they keep testing the release rules. No other expectation changed.
+
+Accepted limits: a relative folder (`cd ../etanah-awam`) is not resolved against the tool's folder; with a shared branch it is refused once and the remedy is printed · a PowerShell variable as the folder of our own repo + a shared branch is refused once the same way · on a non-Windows machine the reader is unchanged.
+
+The parked rewrite (`claude/gates-v7-wip`) is NOT used: this is one helper function and one refusal rule.
+
+### Work hours
+
+08:30 to 18:30 okayed by him ("Work hours okay"); noted at `WORK_FROM` / `WORK_TO` in `.claude/hooks/open-quest-surfacer.js`.
+
+### Flow pages: DESIGN ONLY, nothing built (he wants it judged by system-design first)
+
+Inventory, read from disk: the step table of a Workflow has a ruled home, its skill (INDEX default 6); 7 of 10 workflow skills have a table, only quest and close-phase keep a position field · the Observatory app already groups Features into departments by a hand-kept `members:` list in `lib/observatory.js` (unordered, not steps) · `lib/folder-structure.js map` already proves the INDEX map against the disk and has an eval · 0 of the Feature READMEs name the Workflow step they serve (a design constraint of 2026-10-04, never built).
+
+Design put to him (one source, one check, one view):
+
+| Part | What | New files |
+|---|---|---|
+| Source | the step table in each Workflow's skill (exists) + ONE README key per Feature naming its step | 0 |
+| Check | one more assertion in the existing map check: a step names a part that is not on disk, or a registered part names a step that is not in the table = fail. It rides the system audit (on change, once a day) | 0 |
+| View | a print command that draws the flow from those files (what "Flow first" needs before an edit); the same data as one Observatory view for him. A published page only as a snapshot on request | 0 hooks, 0 registrations |
+
+Not recommended: one hand-made published page per Workflow. Ten pages kept by hand go stale; a page is outside git, a hook cannot read it, and I do not read it to learn the flow (I read the md).
+
+Open, his: approve the design; the first Workflow (quest: it has the table and the position field); the view (Observatory view vs a published snapshot).

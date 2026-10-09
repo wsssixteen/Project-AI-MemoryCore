@@ -93,6 +93,15 @@ c = cc(['run', memc], 'ok');
 check('F17 non-etanah repo refused (exit 2)', c.status === 2 && /not an etanah git repo/.test(c.stderr), 'exit=' + c.status);
 // F18: every run that reached maven wrote one log row with outcome + dur_ms (Rule 5) — F11/F14/F15/F16 = 4; F17 is refused before maven
 check('F18 each maven run logged with outcome + dur_ms', logRows().filter(x => x.action === 'run' && x.outcome && typeof x.dur_ms === 'number').length === 4, JSON.stringify(logRows().length));
+// F18b/c (2026-10-09): the same repo named the Git Bash way (/c/a/b). On 2026-10-04 a green commit was refused with
+// "is not an etanah git repo" because the reader could not ask git in a folder written that way.
+if (process.platform === 'win32') {
+  const bashPath = p => '/' + p[0].toLowerCase() + p.slice(2).replace(/\\/g, '/');
+  c = cc(['verify', bashPath(awam)], 'ok');
+  check('F18b Git Bash style path of an etanah repo is recognised (was: "not an etanah git repo")', c.status !== 2 && !/not an etanah git repo/.test(c.stderr), 'exit=' + c.status + ' ' + c.stderr.slice(0, 160));
+  c = cc(['verify', bashPath(memc)], 'ok');
+  check('F18c NEGATIVE Git Bash style path of a non-etanah repo is still refused', c.status === 2 && /not an etanah git repo/.test(c.stderr), 'exit=' + c.status);
+}
 
 // Hook decisions — stubbed identity so they do not depend on this machine's repos
 const ID = (map) => (cmd, cwd, verb) => { const { cmdDir } = require('../../lib/git-target.js'); const d = cmdDir(cmd, verb) || cwd; return map[d] || null; };

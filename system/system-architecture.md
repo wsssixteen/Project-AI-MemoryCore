@@ -53,7 +53,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `system/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `system-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node system/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 137 hook registrations across 5 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 139 hook registrations across 5 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
@@ -88,6 +88,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | UserPromptSubmit | — | `prayer-gate.js` | ✓ |
 | UserPromptSubmit | — | `pre-reply-contract.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `prepare-commit-trigger.js` | ✓ |
+| UserPromptSubmit | — | `project-load.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `prose-default-gate.js` | ✓ |
 | UserPromptSubmit | — | `pymtime-handover.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `quest-active-grounding.js (bundle upsm-mode)` | ✓ |
@@ -97,6 +98,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | UserPromptSubmit | — | `release-mlk-plp-ask.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `retrieve-sync-gate.check.hook.js` | ✓ |
 | UserPromptSubmit | — | `route-consult-gate.js (bundle upsm-consult)` | ✓ |
+| UserPromptSubmit | — | `save-quest-gate.check.hook.js (bundle upsm-mode)` | ✓ |
 | UserPromptSubmit | — | `scout-completeness-gate.js` | ✓ |
 | UserPromptSubmit | — | `session-items-manager.js` | ✓ |
 | UserPromptSubmit | — | `skill-invocation-discipline-gate.js (bundle upsm-consult)` | ✓ |
@@ -674,6 +676,7 @@ Every commit that updates this file appends a row here.
 ---
 | 2026-09-04 | **Multi-state audit (todo Q1 row 1)** — `system/states.json` is THE state registry (6 states; tracked) + `system/states.local.json` (gitignored hosts overlay) resolved by `lib/states.js` (cascade: explicit → `ETANAH_STATE` → active.txt `state=`/`task_folder=` → path segment `1. Tasks\<State>` / `E:\Projects\<State>` → `PT<STATE>/` prefix → UNKNOWN, never a silent default; CLI `list · show · resolve · validate · check · add · remove`; eval 40/40). Migrated: `ticket-gate` · `knowledge-first-gate` v3 · `branch-guard` v2 · `alter-ticket-gate` v1.1 · `adhoc-register` · `latent-bugs-gate` · `adhoc-lifecycle` · `awam-no-resit-gate` · `notes-on-test-data` · `pre-action-check-gate` · `quest-resume-preflight` · `quest-knowledge-save-gate` · `lib/test-data-db` · `bug-db` · `knowledge-schema-audit` (its `states` block moved out of `KNOWLEDGE-SCHEMA.json`). `system-audit.js` CHECK 7 = state-literal drift count (`node lib/states.js check`), CHECK 8 = root layout vs `system/FOLDER-STRUCTURE.md` (allow-list + `lib/folder-structure.js`, eval 6/6). 52 files remain UNROUTED (listed by `check`; Melaka-only-by-design tools declare it instead of migrating). | #275847 follow-on, per みや "cater for ALL states & even future ones" |
 | 2026-10-05 | **Structure rulings + Install + boot batch 1** (per みや, boot/structure audit 2026-10-02→05). (1) `system/INDEX.md` is THE one map: six kinds of parts (Rules · Workflows · Features · Memory · Kernel · Projects) with what "installed" means for each + a machine-read fence; `lib/folder-structure.js map` proves it against the disk (eval 15/15); `FOLDER-STRUCTURE.md`, CLAUDE.md v1.78 and the system-design skill v3.0 point at it. (2) `core/forge.js install hook <.claude/hooks/x.js>` NEW — brings an existing loose hook into `domain/<name>/` unchanged (refuses on a location-dependent `__dirname` use or a code referencer; re-points settings.json + bundle manifests; README goal/retention/footprint + NUKE-MARKER; full rollback; eval 39/39). `lib/hook-runtime.js --wrap` takes an optional telemetry-name argument so an installed hook keeps its fire history (eval 12/12). (3) INSTALLED: `hook-syntax-check` (then v2: mtime+size cache, one `git ls-files`, wrapped targets + bundle children now covered — 138 files, was ~90; eval 17/17) · `worktree-cleanup-boot` (then v2.0: launcher + detached background run, last report shown at boot, per-checkout lock; eval 62/62). (4) SessionStart registrations removed: `unmerged-release-boot` (blocking twin stays in `release-prep.js branch`) · `arabic-nudge` (runs on `/arabic` only) · `knowledge-schema-audit` boot copy (write-time registration kept). SessionStart 13 → 10 hooks; measured one-after-another 61.4 s → 12.7 s warm. NOT yet done (next batch): `system-audit`, `open-quest-surfacer`, `boot-required-read-gate`, the two check-triggers, `adhoc-lifecycle`, `boot-load-verification`; the other 53 loose hooks; the 52 skills without a Feature folder; legacy `Feature/`. | みや: "proceed … eval them and test them … top to bottom … start using the term Install" |
+| 2026-10-08 | Hook added: `project-load` (UserPromptSubmit, `domain/project-load/`; a prompt that names a project folder is told to read its `PROJECT.md` first). §3.0 registry regenerated by `sync-hook-catalog.js` (139 registrations; `save-quest-gate` now listed too). `domain-expansion-trigger.js` v1.2: the injected text bans skipping the ritual itself. No hook removed. | みや 2026-10-08: "make sure everything WILL be loaded every single time we load a project" + the skipped Domain Expansion |
 
 ## 10. Open architectural questions (deferred)
 

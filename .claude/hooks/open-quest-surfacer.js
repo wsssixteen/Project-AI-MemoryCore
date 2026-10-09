@@ -185,6 +185,8 @@ const ASK_RX = [
   new RegExp(String.raw`\bupdate\s+me\s+(?:on|about|with)\s+(?:(?:the|my|our|all|any|new|open)\s+)*(?:` + LIST_NOUN + String.raw`|work|kerja|tasks?)\b|\b(?:what|which|how\s+many|any|apa|berapa)\s+(?:(?:are|is|new|open|the|my|our|ada)\s+)*` + LIST_NOUN + String.raw`\b`, 'i'),
   /\b(?:my|open|new|pending|outstanding|today'?s|assigned|overdue)\s+(?:redmine\s+)?(?:tickets|tiket|quests|esokongan)\b|\bsenarai\s+tiket\b|\bnext\s+ticket\b/i,
 ];
+const MAJOR_RX = /\b(?:tickets|redmine)\b/i;
+const MAJOR_MAX_WORDS = 8;
 const SOFT_RX = [
   /\bwhat'?s\s+(?:on\s+my\s+plate|pending|left\s+to\s+do|due)\b|\bwhat\s+(?:should|shall|do|can)\s+(?:i|we)\s+(?:do|work\s+on|start|pick|tackle)\b|\bto-?do\s+list\b|\bpriorit(?:y|ies)\s+(?:today|for\s+today|this\s+week)\b|\bupdate\s+me\b/i,
   /\b(?:redmine|tickets?|tiket|esokongan|e-sokongan|quests?|backlog|sla|permohonan|urusan|tugasan)\b/i,
@@ -192,11 +194,16 @@ const SOFT_RX = [
   /\b(?:daily|today'?s|office|etanah|e-tanah)\s+(?:work|kerja|tasks?)\b|\bwork(?:ing)?\s+(?:on\s+)?(?:today|now|mode)\b|\bstart\s+(?:of\s+)?(?:the\s+)?(?:day|work\s*day)\b/i,
   /\b(?:QA|ADHOC|ALTER|PATCH)-[A-Za-z0-9-]+\b|#\d{5,7}\b|\b(?:QA|FAT-OR|UAT-CR|FAT|UAT|REQUIREMENT|REQ|CR|issue)\s*#?\s*\d{4,}\b|\bPT[A-Z]{2,4}\/\d{2}\//,
 ];
+const MACHINE_RX = /\[SYSTEM NOTIFICATION|<task-notification>|📌 OPEN QUESTS|LIVE REDMINE BOARD/;   // machine text, or this hook's own output pasted back
 function classify(prompt, activeText) {
   const p = String(prompt || '');
   if (!p.trim() || p.length > 20000) return null;
-  if (/\[SYSTEM NOTIFICATION|<task-notification>|📌 OPEN QUESTS|LIVE REDMINE BOARD/.test(p)) return null;   // machine text, or this hook's own output pasted back
+  if (MACHINE_RX.test(p)) return null;
   if (ASK_RX.some(rx => rx.test(p))) return 'ask';
+  // Major keywords (2026-10-08 per みや: "board" is not enough, "Tickets" and "Redmine" should also be it): a SHORT
+  // message that says tickets or redmine is an ask for the list, every time. In a longer message the word is a
+  // work signal (below): one load per 4 hours, so a long ticket discussion does not reload the list on every prompt.
+  if (MAJOR_RX.test(p) && p.trim().split(/\s+/).length <= MAJOR_MAX_WORDS) return 'ask';
   if (SOFT_RX.some(rx => rx.test(p))) return 'soft';
   // a bare ticket number that matches an open block (same test as ticket-gate.js signal A2)
   for (const n of p.match(/\b\d{5,7}\b/g) || []) if (new RegExp('^qa=(?:QA-)?' + n + '\\b', 'm').test(activeText || '')) return 'soft';
@@ -211,24 +218,74 @@ function markShown(sid) {
     fs.writeFileSync(SHOWN_FILE + '.tmp', JSON.stringify(j)); fs.renameSync(SHOWN_FILE + '.tmp', SHOWN_FILE);
   } catch { /* a missing marker only means the board prints once more */ }
 }
+// ── v3 boot mode (2026-10-08, per みや: "detect … is it working day and also holiday … to determine if you boot in
+//    what mode" + "a keyword so that you know we are starting our daily work"; design = handover 2026-10-05 §14) ──
+// symptom:     since v2 the list waits for a keyword; on a working morning he wants it without asking.
+// goal:        in work hours his first message of a session carries the ticket list; outside them nothing loads unasked.
+// goal_signal: the first prompt of a session inside work hours has fired=true for this hook (system/telemetry).
+// Work  = a working day (PymTime workdays) + no public holiday + no approved full-day leave + 08:30 to 18:30.
+// Quiet = everything else, and anything unreadable. A wrong guess is cheap: Quiet on a work day still loads at the
+//         first work word; Work on a sick day is one load.
+// Keywords: "start work" / "work mode" are work words already (SOFT_RX) and load on any day at any hour;
+//           "quiet mode" / "not working today" = no unasked load in this session.
+// The decision is made ONCE per session, at his first real message, and kept in the same marker file ("mode:<sid>").
+const PYMTIME = process.env.PYMTIME_DIR || 'E:\\Dev\\scripts\\PymTime';   // same source as domain/protime-plan/protime-plan.js
+const WORK_FROM = 8 * 60 + 30, WORK_TO = 18 * 60 + 30;                    // minutes of the day, local time; okayed by みや 2026-10-09 ("Work hours okay")
+const QUIET_RX = /\bquiet\s+mode\b|\bnot\s+working\s+today\b|\bno\s+work\s+today\b/i;
+const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+function clock() { const d = process.env.OQS_NOW ? new Date(process.env.OQS_NOW) : new Date(); return Number.isNaN(d.getTime()) ? new Date() : d; }   // OQS_NOW = eval clock
+function workNow(now) {
+  const hhmm = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+  const day = DAYS[now.getDay()], at = `${day} ${hhmm}`;
+  try {
+    const mins = now.getHours() * 60 + now.getMinutes();
+    if (mins < WORK_FROM || mins >= WORK_TO) return { work: false, why: `${at}, outside 08:30 to 18:30` };
+    const cfg = require(path.join(PYMTIME, 'lib', 'config.js')).loadConfig();
+    if (!cfg || !Array.isArray(cfg.workdays)) return { work: false, why: `${at}, PymTime settings not readable` };
+    if (!cfg.workdays.includes(now.getDay() || 7)) return { work: false, why: `${at}, not a working day` };   // 1=Mon..7=Sun
+    const holiday = require(path.join(PYMTIME, 'lib', 'holiday.js')).isHolidayCached(now);
+    if (holiday) return { work: false, why: `${at}, public holiday (${holiday})` };
+    const leave = require(path.join(PYMTIME, 'lib', 'leave.js'));
+    if (!leave.readCache()) return { work: false, why: `${at}, leave data not readable` };
+    const l = leave.onLeave(now);
+    if (l && l.status === 'APPROVED' && /^full/i.test(String(l.session || 'Full'))) return { work: false, why: `${at}, on leave (${l.name || 'leave'})` };
+    return { work: true, why: `${day}, no holiday, no leave, ${hhmm}` };
+  } catch { return { work: false, why: `${at}, PymTime not readable` }; }
+}
+// His first real message of a session: decide once. Returns the reason line when it is work time, else null.
+function firstMessageInWorkHours(prompt, sid) {
+  const p = String(prompt || '');
+  if (!p.trim() || p.length > 20000 || MACHINE_RX.test(p)) return null;   // not his message: wait for his first real one
+  const shown = readShown();
+  if (shown[sid] || shown['mode:' + sid]) return null;                     // this session is decided already
+  markShown('mode:' + sid);
+  const w = workNow(clock());
+  return w.work ? 'work mode: ' + w.why : null;
+}
 function entry() {
   if (process.argv.includes('--now')) return main();
+  if (process.argv.includes('--mode')) { const w = workNow(clock()); return console.log((w.work ? 'Work mode: ' : 'Quiet mode: ') + w.why); }
   let raw = '';
   try { if (!process.stdin.isTTY) raw = fs.readFileSync(0, 'utf8'); } catch { raw = ''; }
   let data = null;
   try { data = JSON.parse(raw); } catch { data = null; }
   if (!data || typeof data.prompt !== 'string') return main();                 // session start or a manual run: as before
   try { const exp = parseInt(fs.readFileSync(path.join(REPO_ROOT, 'system', 'orchestration-mode.flag'), 'utf8').split('\n')[0], 10); if (Number.isFinite(exp) && Date.now() < exp) return; } catch { /* no sweep running */ }
-  const kind = classify(data.prompt, safeRead(ACTIVE_TXT));
-  if (!kind) return;
+  let kind = classify(data.prompt, safeRead(ACTIVE_TXT));
   const sid = String(data.session_id || 'no-session');
+  if (kind !== 'ask' && !MACHINE_RX.test(data.prompt) && QUIET_RX.test(data.prompt)) {   // before the work words: "not working today" holds "working today"
+    markShown('mode:' + sid);
+    return console.log('Quiet mode for this session: the ticket list loads only when you say tickets, redmine or board, or name a ticket.');
+  }
+  let workWhy = null;
+  if (!kind) { workWhy = firstMessageInWorkHours(data.prompt, sid); if (!workWhy) return; kind = 'work'; }
   if (kind === 'soft') { const last = readShown()[sid]; if (last && Date.now() - last < REPRINT_MS) return; }
-  console.log(`📌 Ticket list loaded now (${kind === 'ask' ? 'you asked for it' : 'first work signal in this session'}; live from Redmine at ${new Date().toTimeString().slice(0, 5)}). It is no longer printed at session start.`);
+  console.log(`📌 Ticket list loaded now (${kind === 'ask' ? 'you asked for it' : kind === 'work' ? workWhy : 'first work signal in this session'}; live from Redmine at ${new Date().toTimeString().slice(0, 5)}). It is no longer printed at session start.`);
   main();
   markShown(sid);
 }
 
-module.exports = { classify, ASK_RX, SOFT_RX };
+module.exports = { classify, ASK_RX, SOFT_RX, MAJOR_RX, MAJOR_MAX_WORDS, workNow, QUIET_RX };
 if (require.main === module) {
   try { entry(); } catch (e) {
     console.log(`⚠️  open-quest-surfacer: error — ${e.message}`);

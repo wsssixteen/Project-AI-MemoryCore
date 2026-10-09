@@ -85,7 +85,7 @@
 - [multi-ticket-sweep](reference_multi_ticket_sweep.md) — the /sweep design + evidence lives in five places; cite all five
 
 ## MemoryCore repo and rituals (skill: domain-expansion)
-- [memorycore-repo](project_onedrive_worktrees.md) — no worktrees in OneDrive; hooks may run from MAIN; untracked = confidential
+- [memorycore-repo](project_onedrive_worktrees.md) — no worktrees in OneDrive; hooks may run from MAIN; untracked = confidential; every session lands its work on main, never regresses it (system-design Rule 15)
 - [daily-commit](feedback_daily_commit.md) — MemoryCore commit at save is the default; push depends on context
 - [domain-expansion-banner](feedback_domain_expansion_format.md) — Domain Expansion banner, canonical format only
 - [bankai-banner](feedback_bankai_format.md) — Bankai banner format; never referenced casually
@@ -97,7 +97,8 @@
 ## Tools and side projects
 - [wa-read](project_wa_read.md) — WaRead WhatsApp reader at E:\Dev\scripts\WaRead; relink number 60186669566, never ask
 - [whatsapp-rules](feedback_whatsapp_read_rules.md) — READ ONLY, paraphrase, no sender names, never the desktop app
-- [pymtime](project_pymtime.md) — PymTime clock-in app: self-repair, remote skip, colleague handover loop
+- [pymtime](project_pymtime.md) — PymTime clock-in app: read PROJECT.md in the MAIN checkout's projects/coding-projects/active/PymTime/ first (full path in the note); remote skip, colleague handover loop, roadmap
+- [side-project-folder](feedback_side_project_folder.md) — 🚨 every project gets projects/coding-projects/active/<Name>/ (PROJECT.md index + VERSIONS, ARCHITECTURE, PROOFS, ROADMAP) in the MAIN checkout; update at every bulk change; memory = pointer, no state
 - [arabic-review](project_arabic_review.md) — /arabic daily vocab review, seconds to 2 minutes in chat; meanings are my job
 - [art-and-media](feedback_verify_generated_art_externally.md) — external art check; samples are the spec; MAS animation; Drive video download
 - [parked-projects](project_etanah_organize.md) — etanah-organize, aunt slides, held #255773 SPOC handoff

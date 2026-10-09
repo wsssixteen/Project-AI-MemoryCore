@@ -4,6 +4,7 @@ symptom: 2026-09-04 miya: 'you still haven't answered the monitoring part' — n
 goal: one wide row per user turn in system/telemetry/turns.jsonl carrying tool calls, hooks fired, true/false blocks, bypasses, user signal and quest phase, so gate rulings and cost per phase are read from data
 goal_signal: after a Stop, turns.jsonl has a row whose turn_id equals current-turn-<sid>.json turn_id
 retention: keep
+footprint: per Stop: the hook's own node start, one read of the transcript tail for that turn, one appended row in system/telemetry/turns.jsonl; registered on Stop only, so nothing at boot or per prompt
 
 **What fires when**: Stop — every Stop (not stop_hook_active) — reads the transcript tail for the current turn window
 

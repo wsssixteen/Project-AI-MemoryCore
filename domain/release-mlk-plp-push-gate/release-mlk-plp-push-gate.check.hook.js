@@ -73,6 +73,20 @@ runHook({ name: 'release-mlk-plp-push-gate', event: 'PreToolUse' }, (input) => {
     // 2026-10-06 per miya: etanah-awam is OURS to push, like etanah-pelupusan. "Another team" = every other etanah repo (common, spoc-hasil ...).
   const foreign = /^etanah-/i.test(repoName) && !/^etanah-(?:pelupusan|awam)$/i.test(repoName);
   const shared = /\bmlk\/(release\/|stag-env\b|int-env\b|master\b|mlit\b)/.test(gp[1]);
+  // v6 (2026-10-09, per みや): the command NAMES a folder (cd / git -C) that this guard cannot name a repo for (a shell
+  // variable, a folder that is not there, not a git folder) and pushes a shared branch. That used to PASS, because an
+  // empty name is not "another team's". It is refused now: the repo might be another team's. The remedy is one retry
+  // with the folder written out; no token and no approval opens it. Untouched: ticket branches, non-mlk branches, and
+  // a push that names no folder (it runs in the tool's own folder, as before).
+  const namedFolder = require(path.join(ROOT, 'lib', 'git-target.js')).cmdDir(cmd, 'push');
+  if (namedFolder && !repoName && shared) {
+    return {
+      fired: true, blocked: true,
+      blockReason: `⛔ release-mlk-plp-push-gate v6: this guard could not name the repo for this push (folder read as: ${repo || 'none'}).\n` +
+        `   The branch is a shared one, so the push is not let through unchecked.\n` +
+        `   Write the folder plainly and run it again:  git -C "E:\\path\\to\\repo" push origin <branch>   (no variable, no relative path)`,
+    };
+  }
   if (foreign && shared) {
     let sha = ''; try { sha = execSync(`git -C "${repo}" rev-parse HEAD`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim(); } catch (_) {}
     const report = sha && fs.existsSync(path.join(FOREIGN_DIR, `foreign-check-${sha}.json`));

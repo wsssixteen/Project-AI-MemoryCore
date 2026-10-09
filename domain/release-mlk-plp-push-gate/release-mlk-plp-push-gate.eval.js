@@ -61,12 +61,16 @@ function pwsh(command) { return { tool_name: 'PowerShell', tool_input: { command
 r = run(pwsh('git push origin mlk/release/1.0.9'));
 check('F9 PowerShell release push (phase=verified) passes like Bash', r.status === 0, 'exit=' + r.status);
 
+// 2026-10-09 (v6): F10, F11 and F15 name a folder, so it must be one the guard can NAME: a real fixture repo whose remote
+// is etanah-pelupusan. A named folder that cannot be named is refused with its own reason now (F34, F42).
+const plpEarly = fs.mkdtempSync(path.join(os.tmpdir(), 'rmp-plp-'));
+spawnSync('git', ['init', '-q', plpEarly]); spawnSync('git', ['-C', plpEarly, 'remote', 'add', 'origin', '10.16.63.27:etanah/etanah-pelupusan.git']);
 // F10: `git -C <path> push` form matches (original /git\s+push/ was blind to it since birth)
-r = run(pwsh('git -C E:\\x\\etanah-pelupusan push --force-with-lease origin mlk/release/8.8.8'));
+r = run(pwsh(`git -C "${plpEarly}" push --force-with-lease origin mlk/release/8.8.8`));
 check('F10 git -C form with no state blocks', r.status === 2 && /no pipeline state/.test(r.stderr), 'exit=' + r.status);
 
 // F11: manual mlk/master push BANNED regardless of state (V8: master moves only via merge-to-master)
-r = run(pwsh('git -C E:\\x\\etanah-pelupusan push origin mlk/master'));
+r = run(pwsh(`git -C "${plpEarly}" push origin mlk/master`));
 check('F11 manual mlk/master push blocks', r.status === 2 && /mlk\/master is BANNED/.test(r.stderr), 'exit=' + r.status);
 
 // F12: MemoryCore-style push untouched by the master ban
@@ -81,7 +85,7 @@ check('F13 quoted free text mentioning push + mlk/master ignored', r.status === 
 r = run(pwsh('node core/slips.js add --evidence "manual push of mlk/master blocked"'));
 check('F14 slips evidence text ignored', r.status === 0, 'exit=' + r.status);
 // F15: real chained push to mlk/master after a separator → still BLOCKED
-r = run(pwsh('git fetch origin; git -C "E:\\x\\etanah-pelupusan" push origin HEAD:mlk/master'));
+r = run(pwsh(`git fetch origin; git -C "${plpEarly}" push origin HEAD:mlk/master`));
 check('F15 chained real mlk/master push still blocks', r.status === 2 && /mlk\/master is BANNED/.test(r.stderr), 'exit=' + r.status);
 
 // ── v4 cases (2026-09-30, #256334 AWAM: pushed to another team's release branch twice, self-bypassed) ──
@@ -170,12 +174,48 @@ check('F32 git -C on the push beats an earlier cd', r.status === 2 && /etanah-co
 // F33: a cd mentioned only inside a quoted commit message after the push is ignored
 r = run(pw(`git -C "${mc}" push origin HEAD:mlk/stag-env  # note "cd ${wt}"`, ''));
 check('F33 cd inside trailing text does not redirect the push', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
-// F34: non-repo directory → no identity → not foreign, no crash
+// F34 (changed 2026-10-09, v6): a folder the guard cannot name + a SHARED branch used to pass unchecked — that was the
+// hole. It is refused now, with the reason and the remedy. The same folder + a ticket branch still passes (F34b).
 r = run(pw(`cd ${path.join(v5, 'nope')}; git push origin HEAD:mlk/stag-env`, ''));
-check('F34 non-repo dir: no crash, not treated as foreign', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
+check('F34 non-repo dir + shared branch: refused with the plain reason, no crash', r.status === 2 && /could not name the repo/.test(r.stderr) && /Write the folder plainly/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr.slice(0, 200));
+r = run(pw(`cd ${path.join(v5, 'nope')}; git push origin mlk/esokongan/123456`, ''));
+check('F34b NEGATIVE non-repo dir + ticket branch: passes, no crash', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
 // F35: pushd + & separator (cmd style) resolves
 r = run(pw(`pushd ${wt} & git push origin HEAD:mlk/stag-env`, ''));
 check('F35 pushd form resolves the repo', r.status === 2 && /etanah-common at/.test(r.stderr), 'exit=' + r.status);
+
+// ── v6 (2026-10-09, per みや: "it was reading wrongly … please proceed"): a Git Bash style folder (/c/a/b) is read as
+//    the same folder, and a push to a shared branch from a folder the guard cannot name is refused ──
+if (process.platform === 'win32') {
+  const bashPath = p => '/' + p[0].toLowerCase() + p.slice(2).replace(/\\/g, '/');
+  const bashT = (command, userText) => ({ tool_name: 'Bash', tool_input: { command }, transcript_path: userText == null ? '' : transcript(userText) });
+  fs.rmSync(path.join(fDir, `foreign-check-${wtSha}.json`), { force: true });
+  r = run(bashT(`cd ${bashPath(wt)} && git push origin HEAD:mlk/stag-env`, ''));
+  check('F36 Git Bash style cd: another team\'s repo is recognised and blocked (was: passed unchecked)', r.status === 2 && /ANOTHER team/.test(r.stderr) && r.stderr.includes(`etanah-common at ${wt})`), 'exit=' + r.status + ' ' + r.stderr.slice(0, 200));
+  r = run(bashT(`git -C "${bashPath(wt)}" push origin HEAD:mlk/int-env`, ''));
+  check('F37 Git Bash style git -C: blocked the same way', r.status === 2 && /etanah-common at/.test(r.stderr), 'exit=' + r.status);
+  r = run(bashT(`cd ${bashPath(plp)} && git push origin HEAD:mlk/stag-env`, ''));
+  check('F38 NEGATIVE our own repo in Git Bash style passes', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
+  r = run(bashT(`cd ${bashPath(mc)} && git push origin HEAD:main`, ''));
+  check('F39 NEGATIVE a non-etanah repo in Git Bash style passes', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
+  r = run(bashT(`cd ${bashPath(wt)} && git push origin HEAD:mlk/stag-env`, 'push it'));
+  check('F40 NEGATIVE approval alone is not enough: the check report for this commit is still needed', r.status === 2 && /ANOTHER team/.test(r.stderr), 'exit=' + r.status);
+  fs.writeFileSync(path.join(fDir, `foreign-check-${wtSha}.json`), '{}');
+  r = run(bashT(`cd ${bashPath(wt)} && git push origin HEAD:mlk/stag-env`, 'push it'));
+  check('F41 Git Bash style with report + approval passes (the commit is found through the converted folder)', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
+}
+r = run(pw('git -C $repo push origin HEAD:mlk/stag-env', ''));
+check('F42 a shell variable as the folder + shared branch: refused, the reason says how to write it', r.status === 2 && /could not name the repo/.test(r.stderr) && /Write the folder plainly/.test(r.stderr), 'exit=' + r.status + ' ' + r.stderr.slice(0, 200));
+r = run(pw('git -C $repo push origin HEAD:mlk/stag-env  # RELEASE_GATE_BYPASS', 'push it'));
+check('F43 NEGATIVE no bypass token and no approval opens the unknown-repo refusal', r.status === 2 && /could not name the repo/.test(r.stderr), 'exit=' + r.status);
+r = run(pw('git -C $repo push origin mlk/esokongan/123456', ''));
+check('F44 NEGATIVE unknown folder + a ticket branch passes', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
+r = run(pw('git -C $m push origin HEAD:main', ''));
+check('F45 NEGATIVE unknown folder + main (a MemoryCore push) passes', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
+r = run(pw('git -C $repo push origin HEAD:mlk/release/1.11.1', ''));
+check('F46 unknown folder + a release branch: refused', r.status === 2 && /could not name the repo/.test(r.stderr), 'exit=' + r.status);
+r = run(pw(`node x.js "note: git -C $repo push origin HEAD:mlk/stag-env"`, ''));
+check('F47 NEGATIVE the same words inside a quoted argument are not a push', r.status === 0, 'exit=' + r.status + ' ' + r.stderr.slice(0, 160));
 try { fs.rmSync(v5, { recursive: true, force: true }); } catch (_) {}
 
 try { fs.rmSync(fDir, { recursive: true, force: true }); fs.rmSync(repoDir, { recursive: true, force: true }); } catch (_) {}

@@ -3,6 +3,20 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-08 (PymTime hand-off — "this is critical, you should've done it")
+
+- **"Prepare for another session" is a full Domain Expansion.** I marked the whole ritual as skipped with one line and gave "other sessions own today's diary" as the reason. To him that is not saving. Every session writes its own entry and runs every step.
+- **A rule he does not remember is probably mine.** I told him "the rule says never commit in main from a session folder". I had written that line myself after one bad commit. He wants the opposite: every session lands its work on main, and nothing it lands takes away. Before I cite a rule against his ask, I check whose words it is and what goal it serves.
+- **He wants the goal written first.** "What's important is to have the goal, Purpose." A rule that opens with its goal can be reasoned from. A bare ban gets stretched, as mine was.
+- **He should not be the one who finds the gap.** "Very bad at system design I have to discover it myself." Tickets were saved because gates forced it. PymTime had no gate, so nothing was kept for six weeks. A kind of work with no save check is a gap I report, not one he discovers.
+- **The save system is his design; I extend it, I do not build beside it.** One structure for every kind of part, the same steps, small differences by kind, checked at Domain Expansion. What he described on 2026-10-08 was already `lib/save-rules.js` from his words of 2026-10-06. The missing piece was Projects.
+
+## Relationship reinforcement — 2026-10-08 (#283980 — "I just need to run domain expansion")
+
+- **A repeat ticket wants the repeat shape, word for word.** "Another batal permohonan as well" meant the #283532 script, the #283532 infra line and the #283532 Redmine note with the ids swapped. Nothing on the work was corrected.
+- **He wants to say less.** Close, save and Domain Expansion were three asks in one line, and he asked that next time one phrase does all three. When he repeats a command sequence, the sequence belongs inside the last step.
+- **"Verify as well" is the PROD re-read shown with its scripts**, before the Redmine form, in the same reply.
+
 ## Relationship reinforcement — 2026-10-08 (#279554 — "I thought we have a rule to not lie and speak something unsubstantiated")
 
 - **He reads every sentence of a note as a claim in his name.** One rule sentence was backed by one permit. He stopped at exactly that one. When I softened another from internal data, he asked for the code and a real environment. Count the table, read the writer, then write the sentence.

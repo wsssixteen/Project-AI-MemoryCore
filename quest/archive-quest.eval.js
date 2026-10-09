@@ -269,6 +269,124 @@ const tests = [
             };
         },
     },
+    // ── 2026-10-08 per みや: "Videos are deleted after archive" — an ADHOC archives the same way, and nothing else is touched ──
+    {
+        name: '9b. ADHOC: folder moved to Archive FIRST, then its videos deleted (6 extensions, nested), every other file kept',
+        setup: () => makeWorkspace({ qa: 'ADHOC-PT-2026-99', hasBounty: true, alsoArchived: false }),
+        assert: (ws) => {
+            const brief = path.join(ws.taskFolderPath, '1. Brief'); const deep = path.join(ws.taskFolderPath, '2. Fix', 'rework', 'deep');
+            fs.mkdirSync(brief, { recursive: true }); fs.mkdirSync(deep, { recursive: true });
+            const vids = [[brief, 'a.mp4'], [brief, 'b.MOV'], [brief, 'c.webm'], [deep, 'd.mkv'], [deep, 'e.avi'], [ws.taskFolderPath, 'f.wmv']];
+            for (const [d, n] of vids) fs.writeFileSync(path.join(d, n), 'v'.repeat(500));
+            const keep = [[brief, 'brief.txt'], [brief, 'screen.png'], [deep, 'fix.sql'], [brief, 'video-notes.md'], [brief, 'mp4.txt']];
+            for (const [d, n] of keep) fs.writeFileSync(path.join(d, n), 'keep');
+            const r = runArchive({ ...ws, qa: 'ADHOC-PT-2026-99' });
+            const arch = path.join(ws.tasksRoot, 'Archive', path.basename(ws.taskFolderPath));
+            const rel = d => path.relative(ws.taskFolderPath, d);
+            const vidsLeft = vids.filter(([d, n]) => fs.existsSync(path.join(arch, rel(d), n))).length;
+            const keptAll = keep.every(([d, n]) => fs.existsSync(path.join(arch, rel(d), n)));
+            const moved = fs.existsSync(arch) && !fs.existsSync(ws.taskFolderPath);
+            const blockMoved = /qa=ADHOC-PT-2026-99/.test(fs.readFileSync(path.join(ws.root, 'quest', 'active-archive.txt'), 'utf8')) && !/qa=ADHOC-PT-2026-99/.test(fs.readFileSync(path.join(ws.root, 'quest', 'active.txt'), 'utf8'));
+            return { pass: r.exit === 0 && moved && vidsLeft === 0 && keptAll && blockMoved && /videos pruned 6/.test(r.stdout),
+                     got: `exit=${r.exit} moved=${moved} vidsLeft=${vidsLeft} keptAll=${keptAll} blockMoved=${blockMoved} line=${/videos pruned 6/.test(r.stdout)}` };
+        },
+    },
+    {
+        name: '9c. NEGATIVE: --dry-run deletes no video and moves nothing',
+        setup: () => makeWorkspace({ qa: 'ADHOC-PT-2026-98', hasBounty: true, alsoArchived: false }),
+        assert: (ws) => {
+            fs.writeFileSync(path.join(ws.taskFolderPath, 'demo.mp4'), 'v'.repeat(500));
+            const r = runArchive({ ...ws, qa: 'ADHOC-PT-2026-98', dryRun: true });
+            const still = fs.existsSync(path.join(ws.taskFolderPath, 'demo.mp4'));
+            const notMoved = !fs.existsSync(path.join(ws.tasksRoot, 'Archive', path.basename(ws.taskFolderPath)));
+            const blockStays = /qa=ADHOC-PT-2026-98/.test(fs.readFileSync(path.join(ws.root, 'quest', 'active.txt'), 'utf8'));
+            return { pass: r.exit === 0 && still && notMoved && blockStays, got: `exit=${r.exit} videoStill=${still} notMoved=${notMoved} blockStays=${blockStays}` };
+        },
+    },
+    {
+        name: '9d. NEGATIVE: archiving one adhoc never touches the videos of ANOTHER, still-open folder beside it',
+        setup: () => makeWorkspace({ qa: 'ADHOC-PT-2026-97', hasBounty: true, alsoArchived: false }),
+        assert: (ws) => {
+            const other = path.join(ws.tasksRoot, '98. AH - STG - PT - still open'); fs.mkdirSync(path.join(other, '1. Brief'), { recursive: true });
+            fs.writeFileSync(path.join(other, '1. Brief', 'open.mp4'), 'v'.repeat(500));
+            const oldArch = path.join(ws.tasksRoot, 'Archive', '1. QA #111111 - archived long ago'); fs.mkdirSync(oldArch, { recursive: true });
+            fs.writeFileSync(path.join(oldArch, 'old.txt'), 'keep');
+            fs.writeFileSync(path.join(ws.taskFolderPath, 'mine.mp4'), 'v'.repeat(500));
+            const r = runArchive({ ...ws, qa: 'ADHOC-PT-2026-97' });
+            const otherKept = fs.existsSync(path.join(other, '1. Brief', 'open.mp4')) && fs.existsSync(other);
+            const oldKept = fs.existsSync(path.join(oldArch, 'old.txt'));
+            const mineGone = !fs.existsSync(path.join(ws.tasksRoot, 'Archive', path.basename(ws.taskFolderPath), 'mine.mp4'));
+            return { pass: r.exit === 0 && otherKept && oldKept && mineGone && /videos pruned 1/.test(r.stdout), got: `exit=${r.exit} otherKept=${otherKept} oldKept=${oldKept} mineGone=${mineGone}` };
+        },
+    },
+    {
+        name: '9e. NEGATIVE: an id that has no block is refused and no file is deleted',
+        setup: () => makeWorkspace({ qa: 'ADHOC-PT-2026-96', hasBounty: true, alsoArchived: false }),
+        assert: (ws) => {
+            fs.writeFileSync(path.join(ws.taskFolderPath, 'demo.mp4'), 'v'.repeat(500));
+            const r = runArchive({ ...ws, qa: 'ADHOC-PT-2026-95' });
+            const still = fs.existsSync(path.join(ws.taskFolderPath, 'demo.mp4'));
+            return { pass: r.exit !== 0 && still, got: `exit=${r.exit} videoStill=${still} ${(r.stderr || r.stdout).trim().split('\n')[0].slice(0, 90)}` };
+        },
+    },
+    // ── 2026-10-08: a record that is ALREADY in active-archive.txt while its Task folder still sits in the live list
+    //    (found on 3 real adhocs). The folder must still move, and the record must then name the Archive path. ──
+    {
+        name: '9f. Record already in active-archive.txt + folder still live → folder moved, videos deleted, record names the Archive path, neighbour record untouched',
+        setup: () => makeWorkspace({ qa: 'ADHOC-PT-2026-94', hasBounty: true, alsoArchived: true }),
+        assert: (ws) => {
+            const live = path.join(ws.tasksRoot, ws.taskFolderName), arch = path.join(ws.tasksRoot, 'Archive', ws.taskFolderName);
+            fs.rmSync(arch, { recursive: true, force: true });
+            fs.mkdirSync(path.join(live, '1. Brief'), { recursive: true });
+            fs.writeFileSync(path.join(live, '1. Brief', 'demo.mp4'), 'v'.repeat(500));
+            fs.writeFileSync(path.join(live, '1. Brief', 'brief.txt'), 'keep');
+            const archTxt = path.join(ws.root, 'quest', 'active-archive.txt');
+            const neighbour = `qa=QA-800001\ntask_folder=${path.join(ws.tasksRoot, 'Archive', '1. QA #800001 - neighbour')}\nstatus=archived\n\n# --- archived 2026-01-01 ---`;
+            fs.writeFileSync(archTxt, fs.readFileSync(archTxt, 'utf8').replace(/^task_folder=.*$/m, () => `task_folder=${live}`).replace(/\s*$/, '') + '\n\n' + neighbour + '\n');
+            const r = runArchive({ ...ws, qa: 'ADHOC-PT-2026-94' });
+            const after = fs.readFileSync(archTxt, 'utf8');
+            const moved = fs.existsSync(arch) && !fs.existsSync(live);
+            const videoGone = !fs.existsSync(path.join(arch, '1. Brief', 'demo.mp4')), kept = fs.existsSync(path.join(arch, '1. Brief', 'brief.txt'));
+            const recordOk = after.includes(`qa=ADHOC-PT-2026-94\ntask_folder=${arch}\n`) && (after.match(/^qa=ADHOC-PT-2026-94$/gm) || []).length === 1;
+            const neighbourOk = after.includes(neighbour);
+            const activeEmpty = !/qa=/.test(fs.readFileSync(path.join(ws.root, 'quest', 'active.txt'), 'utf8'));
+            return { pass: r.exit === 0 && moved && videoGone && kept && recordOk && neighbourOk && activeEmpty,
+                     got: `exit=${r.exit} moved=${moved} videoGone=${videoGone} kept=${kept} recordOk=${recordOk} neighbourOk=${neighbourOk} activeEmpty=${activeEmpty}` };
+        },
+    },
+    {
+        name: '9g. NEGATIVE: same case with --dry-run moves nothing and leaves active-archive.txt byte-identical',
+        setup: () => makeWorkspace({ qa: 'ADHOC-PT-2026-93', hasBounty: true, alsoArchived: true }),
+        assert: (ws) => {
+            const live = path.join(ws.tasksRoot, ws.taskFolderName), arch = path.join(ws.tasksRoot, 'Archive', ws.taskFolderName);
+            fs.rmSync(arch, { recursive: true, force: true });
+            fs.mkdirSync(live, { recursive: true });
+            fs.writeFileSync(path.join(live, 'demo.mp4'), 'v'.repeat(500));
+            const archTxt = path.join(ws.root, 'quest', 'active-archive.txt');
+            fs.writeFileSync(archTxt, fs.readFileSync(archTxt, 'utf8').replace(/^task_folder=.*$/m, () => `task_folder=${live}`));
+            const before = fs.readFileSync(archTxt, 'utf8');
+            const r = runArchive({ ...ws, qa: 'ADHOC-PT-2026-93', dryRun: true });
+            const still = fs.existsSync(path.join(live, 'demo.mp4')) && !fs.existsSync(arch);
+            const same = fs.readFileSync(archTxt, 'utf8') === before;
+            return { pass: r.exit === 0 && still && same && /\[dry\] Step 1: move/.test(r.stdout), got: `exit=${r.exit} still=${still} sameFile=${same} dryLine=${/\[dry\] Step 1: move/.test(r.stdout)}` };
+        },
+    },
+    {
+        name: '9h. NEGATIVE: archived record whose task_folder= path is not on disk → nothing moved, active-archive.txt byte-identical, exit 0',
+        setup: () => makeWorkspace({ qa: 'ADHOC-PT-2026-92', hasBounty: true, alsoArchived: true }),
+        assert: (ws) => {
+            const arch = path.join(ws.tasksRoot, 'Archive', ws.taskFolderName);
+            const other = path.join(ws.tasksRoot, '98. AH - STG - PT - other open folder'); fs.mkdirSync(other, { recursive: true });
+            fs.writeFileSync(path.join(other, 'open.mp4'), 'v'.repeat(500));
+            const archTxt = path.join(ws.root, 'quest', 'active-archive.txt');
+            fs.writeFileSync(archTxt, fs.readFileSync(archTxt, 'utf8').replace(/^task_folder=.*$/m, () => `task_folder=${path.join(ws.tasksRoot, '99. OLD NAME - renamed since')}`));
+            const before = fs.readFileSync(archTxt, 'utf8');
+            const r = runArchive({ ...ws, qa: 'ADHOC-PT-2026-92' });
+            const same = fs.readFileSync(archTxt, 'utf8') === before;
+            const untouched = fs.existsSync(path.join(other, 'open.mp4')) && fs.existsSync(arch);
+            return { pass: r.exit === 0 && same && untouched && /does not exist on disk/.test(r.stdout), got: `exit=${r.exit} sameFile=${same} untouched=${untouched} said=${/does not exist on disk/.test(r.stdout)}` };
+        },
+    },
     // ── State-aware archive root (H-07) — no --tasks flag, fake home ──
     {
         name: '10. TERENGGANU quest (state=Terengganu, bracket folder name) → Terengganu\\Archive, never Melaka\\Archive',

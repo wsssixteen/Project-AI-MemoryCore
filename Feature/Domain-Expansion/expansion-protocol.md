@@ -70,7 +70,9 @@ Format: short bullet per gap with a one-line "what to do" suggestion. みや dec
 
 Every DE ends with **all three, SHA-verified**: (1) `git add -A` + commit (every path, authorship is not a filter) · (2) `git push origin HEAD` · (3) `git push origin HEAD:main` — **the merge**. Verify by emitting local `HEAD` and `git ls-remote origin refs/heads/main` and showing they match; "push succeeded" without the remote SHA is not evidence.
 
-**Banned**: emitting the closing banner with step 10 at anything but ✓ · downgrading a failed push/merge into a Handoff Block and closing DE anyway · treating "auto-commit + push" as advisory.
+**Banned**: emitting the closing banner with step 10 at anything but ✓ · downgrading a failed push/merge into a Handoff Block and closing DE anyway · treating "auto-commit + push" as advisory · **skipping or scoping down the ritual itself** (added 2026-10-08): a `⏭` covers ONE step, never the whole Domain Expansion, and "another live session owns today's diary or session file" is never a reason. Every session appends its own entry and runs its own full DE.
+
+**Never regress (added 2026-10-08, `system-design` Rule 15).** Before the commit read `git diff --cached --stat`; after it read back `git show --stat HEAD`. Every deletion is one I can name. One I cannot name is a stale copy: restore that path from `HEAD` (before the commit) or `git revert` (after it). Why: `c1e6ad56` (2026-10-06), a bare `git commit` on main's stale shared index: 19 files, 447 lines deleted.
 
 **On failure — RETRY, don't hand back.** A changed Windows user breaks both `safe.directory` and the credential store: use `git -c safe.directory=*` and retry. Only after retries genuinely fail does it become a Handoff — and **DE stays OPEN**, banner withheld.
 
@@ -292,6 +294,8 @@ classify before closing DE. This is the session-close half of the guarantee; the
 vN branches exist, so a tool that reads git and blocks is the only real guarantee. `-NEGATIVE` branches
 still on origin are surfaced for deletion (a wrong branch left alive is the next v2/v3 trap).
 
+**🚨 Close + save by live Redmine status, automatic (added 2026-10-08 per みや — *"I just need to run domain expansion you will automatically detect to close the quest & save accordingly"*)** — for every quest above that has a ticket number, run `node lib/save-quest.js <QA>`, paste its `SAVE-QUEST:` line and do the verdict in this same DE (`.claude/skills/close-phase/SKILL.md` → "Save-quest mode"). He does not say "close quest" or "save quest" first. An unfinished quest is saved, never closed; every close-phase stop gate still holds. Orchestrated as step 2d of `.claude/skills/domain-expansion/SKILL.md`.
+
 **Verified by**: step 12.6 `resume-readiness.js` — 2b is the WRITE, 12.6 is the READ-BACK. A `✗` there
 means 2b did not actually run for that quest.
 
@@ -407,6 +411,10 @@ Before emitting the closing banner — read `.claude/state/session-items.md` "Ac
 ---
 
 *Updated 2026-08-05 — **Step 7.5 IMPROVEMENT SWEEP added (MANDATORY)** per みや: five fixed axes (A1 agentic system · A2 quest workflow · A3 debugging efficiency+accuracy · A4 etanah issue-solving · A5 sweep/file-sweep), swept every DE, producing (a) a dated assessment under `system/` with a concrete instance per claim and (b) brainstormed proposals logged via `core/slips.js --type proposal` into the new 💡 Open proposals lane of `slip-dashboard.md` for weekly-audit ruling. Paired `core/slips.js` change: `type=proposal` split out of the slip counts and given its own dashboard section, because filing an idea as `upgrade` reads as shipped and makes an open decision invisible (the 2026-07-22 parked-enforcement-row failure). Rationale: みや had to ask for this assessment explicitly two goals running — a thing he must repeatedly request is a missing step, not a missing effort.*
+
+*Updated 2026-10-08 — Step 10: (1) skipping or scoping down the whole ritual is banned (a `⏭` covers one step only; "another session owns the diary" is never a reason); (2) never regress: stat read before and after the commit. Per みや after the skipped DE of 2026-10-08 and the `c1e6ad56` revert. Spec-preservation: the three Step 10 actions, the SHA proof, the retry rule and all other steps untouched; additive.*
+
+*Updated 2026-10-08 — Step 2b: close + save by live Redmine status made automatic per みや (`node lib/save-quest.js <QA>` for every touched quest, verdict done in the same DE; skill step 2d). Spec-preservation: every Step 2b row, the extra-robust save, the copy reconcile, the branch-ledger sweep and all Banned clauses untouched; one paragraph added.*
 
 *Updated 2026-10-06 — Step 12.7 SAVE RULES added (MANDATORY, deterministic): `lib/save-rules.js` checks each touched system part against its kind's declared save rule (`system/save-rules.json`); de-close-gate C8 blocks close without a full run at 0 FAIL. Per みや. Spec-preservation: all prior steps and C1-C7 untouched; additive.*
 
