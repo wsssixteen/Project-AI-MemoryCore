@@ -37,10 +37,10 @@ const server = http.createServer((req, res) => {
       if (req.method === 'GET') {
         if (t.garbage) { res.writeHead(200); return res.end('<html>login</html>'); }
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ issue: { id: Number(num), status: t.status, assigned_to: t.assignee || undefined } }));
+        return res.end(JSON.stringify({ issue: { id: Number(num), status: t.status, done_ratio: t.pct || 0, assigned_to: t.assignee || undefined } }));
       }
       if (t.put === 'refuse') { res.writeHead(422, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ errors: ['Status is not allowed'] })); }
-      if (t.put !== 'ignore') { try { if (JSON.parse(body).issue.status_id === 2) t.status = { id: 2, name: 'In Progress' }; } catch (_) { /* leave as is */ } }
+      if (t.put !== 'ignore') { try { const sent = JSON.parse(body).issue; if (sent.status_id === 2) t.status = { id: 2, name: 'In Progress' }; if (typeof sent.done_ratio === 'number' && !t.keepPct) t.pct = sent.done_ratio; } catch (_) { /* leave as is */ } }
       res.writeHead(204); res.end();
     };
     if (t && t.delay && req.method === 'GET') setTimeout(answer, t.delay); else answer();
@@ -80,8 +80,8 @@ async function until(fn, ms) { const end = Date.now() + ms; while (Date.now() < 
   tickets[900001] = { status: NEW(), assignee: mine() };
   let x = await claim('QA-900001', started(900001));
   const w1 = writes(900001);
-  check('F1 REPLAY: New + mine + started → set', x.res.code === 0 && /New → In Progress \(set\)/.test(x.res.out) && x.log[0] && x.log[0].outcome === 'set', x.res.out);
-  check('F1b exactly one write, and it carries ONLY the status field', w1.length === 1 && w1[0].method === 'PUT' && JSON.stringify(JSON.parse(w1[0].body)) === '{"issue":{"status_id":2}}', w1.map(s => s.method + ' ' + s.body).join(' | '));
+  check('F1 REPLAY: New + mine + started → set', x.res.code === 0 && /New → In Progress, 20% \(set\)/.test(x.res.out) && x.log[0] && x.log[0].outcome === 'set' && x.log[0].pct === 20, x.res.out);
+  check('F1b exactly one write, and it carries ONLY the status and 20 percent', w1.length === 1 && w1[0].method === 'PUT' && JSON.stringify(JSON.parse(w1[0].body)) === '{"issue":{"status_id":2,"done_ratio":20}}', w1.map(s => s.method + ' ' + s.body).join(' | '));
   check('F1c the write carries the API key header', w1.length === 1 && w1[0].hasKey);
   check('F1d log row has ts, num, from, to, dur_ms', x.log[0] && x.log[0].ts && x.log[0].num === '900001' && x.log[0].from === 'New' && x.log[0].to === 'In Progress' && typeof x.log[0].dur_ms === 'number', JSON.stringify(x.log[0]));
   check('F1e a real change adds one row to the write ledger, marked standing', x.ledger.length === 1 && x.ledger[0].outcome === 'allowed' && x.ledger[0].surface === 'quest-start-claim' && /standing: miya 2026-10-07/.test(x.ledger[0].approval), JSON.stringify(x.ledger));
@@ -142,7 +142,7 @@ async function until(fn, ms) { const end = Date.now() + ms; while (Date.now() < 
   x = await claim('900015', started(900015));
   res = await run(SCRIPT, ['--result', 'QA-900015', '--root', x.r], ENV);
   const res15b = await run(SCRIPT, ['--result', '900099', '--root', x.r], ENV);
-  check('F15 --result prints the last run for that ticket, and says so when there is none', /#900015 New → In Progress \(set\)\s+\[20/.test(res.out) && /#900099 no run recorded/.test(res15b.out), res.out + ' | ' + res15b.out);
+  check('F15 --result prints the last run for that ticket, and says so when there is none', /#900015 New → In Progress, 20% \(set\)\s+\[20/.test(res.out) && /#900099 no run recorded/.test(res15b.out), res.out + ' | ' + res15b.out);
 
   tickets[900001].status = NEW();
   const before16 = writes(900001).length;
@@ -211,14 +211,18 @@ async function until(fn, ms) { const end = Date.now() + ms; while (Date.now() < 
 
   const gate = read('domain/redmine-write-gate/redmine-write-gate.check.hook.js');
   const lit = name => { const m = gate.match(new RegExp('const ' + name + ' = /(.+)/([a-z]*);')); return m ? new RegExp(m[1], m[2]) : null; };
-  const NON_STATUS = lit('NON_STATUS_MUTATION'), REF = lit('REDMINE_REF');
+  const NON_STATUS = lit('CLAIM_FORBIDDEN'), REF = lit('REDMINE_REF');
   const src = read('lib/quest-start-claim.js');
-  check('F26 the script is status-only: no note / assignee / % done / journal / upload key anywhere in it', !!NON_STATUS && !NON_STATUS.test(src) && (src.match(/'PUT'/g) || []).length === 1 && /\{ issue: \{ status_id: IN_PROGRESS_ID \} \}/.test(src), NON_STATUS ? String(src.match(NON_STATUS)) : 'gate regex not found');
+  check('F26 the script sends status + 20 percent only: no note / assignee / journal / upload key anywhere in it', !!NON_STATUS && !NON_STATUS.test(src) && (src.match(/'PUT'/g) || []).length === 1 && /\{ issue: \{ status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT \} \}/.test(src) && /const START_PERCENT = 20;/.test(src), NON_STATUS ? String(src.match(NON_STATUS)) : 'gate regex not found');
   check('F27 active-cli.js carries no ticket-server host or key text (else the write gate would block every quest state write)', !!REF && !REF.test(cli), REF ? String(cli.match(REF)) : 'gate regex not found');
 
   tickets[900028] = { status: NEW(), assignee: mine() };
   x = await claim('900028', started(900028, 'redmine_claim=off'));
   check('F28 opt out (redmine_claim=off on the block) → skipped-opt-out, the server is never called', x.log[0].outcome === 'skipped-opt-out' && calls(900028).length === 0, x.res.out);
+
+  tickets[900036] = { status: NEW(), assignee: mine(), keepPct: true };
+  x = await claim('900036', started(900036));
+  check('F36 Redmine takes the status but keeps its own % → set, and the line prints the % Redmine shows', x.log[0].outcome === 'set' && x.log[0].pct === 0 && /New → In Progress, 0% \(set\)/.test(x.res.out), x.res.out);
 
   const { shouldClaim } = require(CLI);
   check('F29 shouldClaim: active + stamp + number only', shouldClaim('QA-900001', ['qa=QA-900001', 'status=active', 'quest_start=2026-10-07']) && !shouldClaim('QA-900001', ['qa=QA-900001', 'status=hold', 'quest_start=2026-10-07']) && !shouldClaim('QA-900001', ['qa=QA-900001', 'status=active']) && !shouldClaim('QA-900001', ['qa=QA-900001', 'status=active', 'quest_start=']) && !shouldClaim('ADHOC-PT-2026-1', ['status=active', 'quest_start=2026-10-07']) && !shouldClaim('QA-900001', ['status=delegated', 'quest_start=2026-10-07']));
@@ -227,7 +231,7 @@ async function until(fn, ms) { const end = Date.now() + ms; while (Date.now() < 
   const skill = read('.claude/skills/quest/SKILL.md');
   const step6b = (skill.match(/^6b\. [^\n]*/m) || [''])[0];
   check('F30 quest skill step 6b names the script, the result command and the opt out', /lib\/quest-start-claim\.js/.test(step6b) && /--result/.test(step6b) && /redmine_claim=off/.test(step6b), step6b.slice(0, 160));
-  check('F31 step 6b keeps: status only · never at retrieval or in a sweep · report in the first lines', /status only/i.test(step6b) && /Never at retrieval or in a multi-ticket sweep/.test(step6b) && /first lines/.test(step6b), step6b.slice(0, 160));
+  check('F31 step 6b keeps: status and 20% only · never at retrieval or in a sweep · report in the first lines', /status and 20% done only/i.test(step6b) && /Never at retrieval or in a multi-ticket sweep/.test(step6b) && /first lines/.test(step6b), step6b.slice(0, 160));
   check('F32 step 6b keeps the patch-ticket path for a status that is not New', /patch/i.test(step6b) && /row 1 of Next steps/.test(step6b), step6b.slice(0, 160));
   const readme = read('domain/quest-start-claim/README.md');
   check('F33 README carries symptom / goal / goal_signal / retention / footprint / state-scoped, no TODO', ['symptom: ', 'goal: ', 'goal_signal: ', 'retention: keep', 'footprint: on-demand', 'state-scoped: no'].every(k => readme.includes('\n' + k)) && !/TODO/.test(readme));
