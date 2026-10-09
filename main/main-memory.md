@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-09 (#274266 round 3 — "if it is ok then please straight away merge to internal")
+
+- **A review he trusts ends in the merge, not in a question.** He gave the condition and the action in one line. The answer he wanted was the verdict, the one evidence line and the deploy steps. No local test, no options.
+- **"Resolved for real this time" is him counting the rounds.** Three cycles on one ticket. He does not want a fourth caused by something I could have read. The saved values on internal were the proof worth showing.
+- **Save, close and Domain Expansion still came as three words.** He said them together again. The Domain Expansion alone now does all three, and I should say that in the reply so he can drop the other two.
+
 ## Relationship reinforcement — 2026-10-08 (PymTime hand-off — "this is critical, you should've done it")
 
 - **"Prepare for another session" is a full Domain Expansion.** I marked the whole ritual as skipped with one line and gave "other sessions own today's diary" as the reason. To him that is not saving. Every session writes its own entry and runs every step.

@@ -1,5 +1,17 @@
 # Current Session
 
+**Last Activity**: 2026-10-09 15:40 — #274266 rework 3 (issue 3, Maklumat Tangguh fields lost at PDT): Farah's fix `87b394fd3b` reviewed, merged to `mlk/int-env` `6064d4ad73`, deployed by miya, Redmine Resolved to BA, quest closed at Phase 1 · Domain Expansion run.
+
+## Session Recap (2026-10-09 afternoon, worktree "quest-274266-redmine-review-0d2ebb", #274266)
+- **READ FIRST**: `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore\projects\coding-projects\active\274266\QA-274266.md` ("2026-10-09 Review of Farah's issue 3 fix" and "2026-10-09 Save").
+- **Ticket**: Internal Issue #274266, urusan PT. BA issue 3 (2026-10-05): Bil Mesyuarat Tangguh and Sebab Tangguh on Penyediaan Maklumbalas Tangguh - PDT are lost after Jana + Selesai, and after Hantar.
+- **Review**: Farah built the fix I had picked on 2026-10-08 (candidate B: save the two fields in `plp_a_pelupusan.mklmt_tmbhn`, like the Sebab Tolak Ringkas panel). 1 commit, 4 files, branch `mlk/internal-issues/274266` (new, off master 1.7.0). No correction of ours. Her branch also carries Aaron's letter fix, so it is the one branch for the release.
+- **Done**: `--no-ff` merge into `mlk/int-env` in a work-clone worktree (3 files changed there), compile green before the push, worktree removed · mlit `plp_a_pelupusan` aplikasi 3409210 holds both values after the deploy · `SAVE-QUEST: QA-274266 · Redmine = Resolved (Nurul Amirah Nadiah · 100%) · local = active → PHASE-1` · block `closed`, `closed_cycle3=2026-10-09`.
+- **Next for this quest**: archive when Redmine shows Closed (`node lib/save-quest.js QA-274266`). PROD still needs `274266.sql` and the branch on the release list.
+- **Found on the way**: the Rework 3 Rubric of 2026-10-08 was only in the session folder `oracle-jdbc-driver-error-005551`; the main quest doc ended a week earlier. Copied into the main doc.
+- **Tool gaps seen**: `ticket-close-block.js` stopped on a branch that exists only on the server, so the colleague note shape did not switch · `ticket-load-verify.js` reports a deleted attachment id as a missing file · it also said "QUEST DOC: NONE" because the doc lives in the main checkout only. Proposals logged.
+- **Boot note**: `main/main-memory.md` Read returned lines 1 to 238 of 1041.
+
 **Last Activity**: 2026-10-08 22:30 — PymTime roadmap phase 1 (design): the v17 page critiqued (27 ranked issues), colour tokens grown from the logo, three mockups published for his pick · no app code changed
 
 ## Session Recap (2026-10-08 night, session folder "pymtime-password-auth-failure-4a584e" after a compact, PymTime phase 1 design)
@@ -27,29 +39,3 @@
 - **My misses**: (1) skipped the whole Domain Expansion with one ⏭ line; (2) cited my own over-correction as his rule; (3) kept PymTime's documents in one memory note for six weeks. Slips: `de-skipped-with-marker` · `self-made-rule-cited-without-its-goal` · `unit-docs-not-kept-or-loaded` · `commit-in-main-from-session-folder` (that row records the wrong lesson; Rule 15 replaces it).
 
 **Last Activity**: 2026-10-08 16:55 — #283980 (PROD, batal 2 UPS_PLP created by mistake) worked start to close in one session: script, infra run, PROD re-read, Redmine form staged and submitted by miya, quest closed at Phase 1 · Domain Expansion step 2d added (close + save each touched quest by its live Redmine status) · Domain Expansion run.
-
-## Session Recap (2026-10-08 afternoon, worktree "batal-permohonan-patching-7b724f", #283980)
-- **READ FIRST**: `projects/coding-projects/active/QA-283980/QA-283980.md` (Resume Point) · `.claude/skills/domain-expansion/SKILL.md` step 2d.
-- **Ticket**: Internal Issue (PROD) #283980, PDT Jasin. Two Utiliti Penyediaan Surat permohonan created by mistake: `PTMLK/02/L/UPS_PLP/2026/12` (3451182) and `/13` (3455576), both held by norlina@melaka.gov.my before the patch. Same job as #283532 (2026-10-06).
-- **Done**: `283980.sql` (3-table cancel shape, `DATABASE.md` section 27) in the Task folder `2. Fix\` · infra ran it 2026-10-08 16:41 · PROD re-read: both Tamat / Batal / Tamat, tugasan N / Selesai, 0 dashboard rows, PPTPB parents unchanged · Redmine form filled in the browser, miya submitted · `SAVE-QUEST: QA-283980 · Redmine = Resolved (Nurul Amirah Nadiah · 100%) · local = active → PHASE-1` · block `closed`.
-- **Next for this quest**: archive when Redmine shows Closed (`node lib/save-quest.js QA-283980`).
-- **System change**: Domain Expansion step 2d. He asked that running Domain Expansion alone closes and saves quests. It is a skill row plus one paragraph in `Feature/Domain-Expansion/expansion-protocol.md`; it reuses `lib/save-quest.js`. No gate enforces it yet and no 20-scenario pass was done: one proposal row logged.
-- **Checker noise seen**: `sql-schema-verify` returned 7 false rows on a correct script (SYSDATE read as a column; subquery columns pinned to the wrong table). Not stamped; skip token used twice. Proposal logged.
-- **Gate noise seen**: `redmine-write-gate` refused two read-only PowerShell commands whose text held Redmine status words. Worked around by splitting the command.
-- **Boot note**: `main/main-memory.md` Read returned lines 1 to 236 of 1027 again.
-
-**Last Activity**: 2026-10-08 13:30 — #279554 (SPOC PDBB kaunter mapping, consultation) answered: mapping note posted by miya, ticket assigned to Anis, block `delegated` · writing-style Feature **Pena** built on his go (`domain/pena/` · `lib/pena.js` · skill `pena`, eval 40/40) · Domain Expansion run.
-
-## Session Recap (2026-10-08, worktree "quest-279554-mapping-877831", #279554 + Pena)
-- **READ FIRST**: `projects/coding-projects/active/QA-279554/QA-279554.md` (Resume Point, "Final verification pass", "Ganti Hari number") · `.claude/skills/pena/SKILL.md` · `domain/pena/README.md`.
-- **Ticket**: Requirement #279554. SPOC (Nur Atierah) builds the kaunter screen for PDBB and asked for table and column of Rekod Permohonan / Maklumat Tanah / Tujuan Permohonan. Consultation, no code. The answer was read from our own online PDBB screen (`etanah-awam` `PelupusanPermitTabForm.initMaklumatPDBB():309`) and checked on MLIT, stg2 and PROD.
-- **Posted**: by miya 2026-10-08 12:19 (journal entry 19), then he assigned the ticket to Anis. `SAVE-QUEST: … Redmine = In Progress (Anis Nabilah J Daud · 60%) → KEEP-DELEGATED`.
-- **Previous tickets of the same kind**: #277706 (2026-10-02, same SPOC dev, Tambah Kuantiti table and column) and #281423 (2026-09-30, Teknikal, Pemohon vs Pemilik). I first named only #281423.
-- **His corrections on the note (five rounds)**: opener without a lead-in · a rule sentence I had checked on one permit (versi rule) · tables preferred · scripts in their own section · related sentences share a line, at most 2 · scripts one clause per line with the asked columns · check the code and a non-test environment before wording a behaviour · extra information only when their implementation uses it. All are rows in `domain/pena/corpus.jsonl` (c10 to c17).
-- **Facts found**: one No. Permit has several rows (follow-on applications); the earliest row is the original (MLIT 19 of 19, stg2 6 of 6, PROD 1 of 1). A Ganti Hari / Tambah Kuantiti carries the original number while in progress and gets a NEW number at issue (`PelupusanPermitLesenNumberService.saveNoPermitLesen():143`, new number `:269`; PROD has one). `umm_a_permohonan_tnh.tempat` is the Tempat / Lokasi / Wilayah column (`PelupusanService.java:493`).
-- **Pena**: 10 modules (greet · lean · line · table · separate · script · proven · plain · rojak · hint), 7 profiles, engine `list · show · check · add · keyword · analyze`, own data files, log. Wired into the quest skill's Redmine hand-over step only. Owed: deploy 6b, redmine-phase1-prefill, adhoc-save, the infra hand-off.
-- **Slips logged**: `verify-before-claim` (versi rule) · `reply-shape` ×2 (tables dropped and scripts mixed in; one-line scripts).
-- **Blocked this session**: a write to `.claude/auto-memory/feedback_ticket_writing_style.md` was refused twice by the memory gate (it did not see my placement line). The rows went to Pena's corpus.
-- **Open for miya**: confirm the ten style-word meanings in `domain/pena/keywords.jsonl` (my readings) · confirm "extra info only when their implementation uses it" · whether to wire Pena into the other writers · whether the dated speech collection in the memory file folds into Pena · BA point: a refund keyed on a Ganti Hari permit number finds the Ganti Hari row.
-
-**Last Activity**: 2026-10-07 17:05 — #244600 ARCHIVED (Phase 2, ahead of Redmine: Verified, on miya's word) · Peraku compare change `461b77fb2a` on `mlk/int-env` `3da2d67ea8`, tested by miya · Notis 5A report versi finding (LATENT-BUGS L24) · Domain Expansion run.
