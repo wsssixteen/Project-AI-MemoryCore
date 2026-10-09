@@ -280,13 +280,13 @@ Fires at every "pass to BA" / "deployed, please verify" / Redmine hand-over afte
 
 **Greeting = miya's short name** for the BA (`domain/ticket-close-block/ba-names.json`: Nurul Amirah Nadiah → Mira, Nurhafizah → Fizah). The tool maps it; an unknown name prints a warning, then add the row.
 
-**🔁 Colleague's fix (commit author is not us, 2026-10-02 per miya, #282587)** — the tool switches shape by itself: NO "Issues found and resolved" list, NO commit details. Branch line only when the Redmine history does not already name the branch; AWAM keeps the branch line. Shape (matches #274266):
+**🔁 Colleague's fix (commit author is not us, 2026-10-02 per miya, #282587)** — the tool switches shape by itself: NO "Issues resolved" list, NO commit details. Branch line only when the Redmine history does not already name the branch; AWAM keeps the branch line. Shape (matches #274266):
 ```
 Salam Mira, have deployed fixes to internal & staging. Please help to verify.
 
 Attached is the script for PROD (282587.sql).
 
-Thank you very much.
+Thank you.
 ```
 
 **Attachments = FULL absolute path, always** (2026-10-02 per miya, #282587). Every file miya must upload is named by its full path (Melaka: `C:\Users\…\1. Tasks\Melaka\<folder>\2. Fix\<ticket>.sql`; another state = the resolved state's Task folder, `node lib/states.js show <state>` → `task_folder`), never `2. Fix\<ticket>.sql`. The tool prints it under `--- not part of the note ---` as `Attach: <full path>`; copy that line as is. **Banned**: a relative or folder-short path in any handover table or field set.
@@ -295,13 +295,13 @@ Our own fix — it prints this shape; fill ONLY the numbered list:
 ```
 Salam <BA>, have deployed fixes to <internal & staging>. Please help to verify.
 
-Issues found and resolved:
+Issues resolved:
 1. <one fix per line, plain English, what the user now sees>
 
 *<branch>*
 <pre>…git block…</pre>
 
-Thank you very much.
+Thank you.
 ```
 Rules: English, like miya's own notes · greet the LIVE assignee (re-sync Redmine first) · one fix per line, no code names · Root cause + Solution rows and the field set (Resolved · Assignee = BA · 100% · Resolved By Ahmad Ridhwan Anuar) go in their own fields, not in the note. **Banned**: a Malay rewrite · a test-data block or restated expected behaviour (miya cut both on #279411) · pointing at a memory file instead of printing the template. **Why**: #282061, the template lived only in `feedback_ticket_writing_style` memory and the deploy skill pointed at it by name; the note came out in my own shape.
 
