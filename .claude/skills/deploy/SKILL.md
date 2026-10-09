@@ -178,6 +178,14 @@ into `mlk/master` (verified 2026-07-27 across full merge history) — a wrong me
 the release path, and `git revert -m 1 <sha>` undoes it additively. Precedent: `aa2db329a8`.
 
 1. `git fetch origin <base> <ticket-branch>`
+1b. **Base-current check — does the env branch hold production? (2026-10-09 per みや, #283960: "every time we merge to mlk/stag-env, we will check that the branch is up to that to production right?")** Before any ticket merge, run and report in ONE line:
+
+   ```bash
+   git fetch origin mlk/master
+   git rev-list --count origin/<base>..origin/mlk/master
+   ```
+   `mlk/master` holds the latest release (check once: `git rev-list --count origin/mlk/master..origin/mlk/release/<latest>` reads 0). Result 0 → `base current: <base> holds mlk/master`, go on. Result N > 0 → the env branch is behind production by N commits: merge `origin/mlk/master` into a fresh copy of `<base>` FIRST (`git merge --no-ff origin/mlk/master -m "Merge remote-tracking branch 'remotes/origin/mlk/master' into <base>"`), compile, then merge the ticket on top, and push both in one push. Conflicts in this catch-up merge are ours to resolve, per file, by this order: the env branch's own `etanah.common.version` pin stays · a file where master's real change (`git diff -w <merge-base> origin/mlk/master -- <file>`) is already in the env branch keeps the env side · a hunk the env branch never changed since the merge base takes master's side · anything else: stop and show him the hunk. Report every resolved file with the side taken. **Banned**: merging a ticket into an env branch whose behind-count was never measured · cherry-pick as the way around a behind base.
+   **Why**: #283960, `mlk/stag-env` was 9 commits behind `mlk/master` (release 1.11.3 missing); the ticket merge conflicted in 3 files that were not the ticket's.
 2. **Already-merged guard — test the FIX COMMITS, never the branch TIP** 🚨 (corrected 2026-08-06).
    `git merge-base --is-ancestor origin/<ticket-branch> origin/<base>` asks about the **tip**, and a
    tip drifts: `mlk/training/273938` grew a release-merge commit *after* int-env had already taken
