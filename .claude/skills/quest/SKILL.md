@@ -280,6 +280,8 @@ Fires at every "pass to BA" / "deployed, please verify" / Redmine hand-over afte
 
 **Greeting = miya's short name** for the BA (`domain/ticket-close-block/ba-names.json`: Nurul Amirah Nadiah → Mira, Nurhafizah → Fizah). The tool maps it; an unknown name prints a warning, then add the row.
 
+**Who to pass to = the resolved state's `STATE-FACTS.md` § People (added 2026-10-12 per みや, #282303).** Read `projects/coding-projects/active/etanah-knowledge/<state>/STATE-FACTS.md` § 8 before naming the BA or the owner of another module in any hand-over. It is hand-kept: when みや names a person and their part ("we will pass to Anis"), add or change the row in the same turn, with the source. Melaka pelupusan BA today: Anis Nabilah J Daud (short name Anis).
+
 **🔁 Colleague's fix (commit author is not us, 2026-10-02 per miya, #282587)** — the tool switches shape by itself: NO "Issues resolved" list, NO commit details. Branch line only when the Redmine history does not already name the branch; AWAM keeps the branch line. Shape (matches #274266):
 ```
 Salam Mira, have deployed fixes to internal & staging. Please help to verify.
