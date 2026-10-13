@@ -106,7 +106,7 @@ Artifacts (private pages on claude.ai, republished in place; the source HTML is 
 
 | Area | URL | Shows |
 |---|---|---|
-| System map | https://claude.ai/artifact/7rC3ck11zTHQdfqbtAnNGv | the six kinds, what is installed, what is not |
+| System map | https://claude.ai/artifact/7rC3ck11zTHQdfqbtAnNGv | the seven kinds (Tools row added 2026-10-14), what is installed, what is not |
 | Boot sequence | https://claude.ai/artifact/WnyAt8Jdg9LEkZjdytmWzB | every startup script, cost before and after |
 | Quest paths | https://claude.ai/artifact/F6XUQEjvyABeLJaoSY3Ls4 | patch / minor / development: which path, what each phase produces, what is loaded when, development in depth (2026-10-05) |
 | Boot + structure handover | https://claude.ai/artifact/FYG8o9tQy6KzRTqMN1doDo | decided · built · batch 2 · still to do (full text: `main/handoff-2026-10-05-boot-structure-audit.md`) |
