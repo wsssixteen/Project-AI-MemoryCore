@@ -1,0 +1,581 @@
+{
+  "_about": "The Tool registry. A Tool = something Ruri picks up on purpose to get an answer or do an action, and it returns a result. It does not fire by itself (that is a Feature) and it has no steps across turns (that is a Workflow). Map + rulings: system/INDEX.md section 'Tools'. retention: keep (rows) + regenerate (the usage block of each row, from a transcript scan).",
+  "_installed_when": "a row here · the home exists · 'answers' names the question it is for · 'groups' names who may use it · 'state_scope' set · 'footprint' set · usage > 0 in the last scan (else status unused: wire it into a route or retire it)",
+  "_usage_scan": {
+    "date": "2026-10-06",
+    "sessions": 357,
+    "window": "2026-08-06 to 2026-10-06",
+    "method": "tool calls counted in session transcripts; counts = sessions in which Ruri called it; a script a hook runs by itself is not counted",
+    "status_rule": "live >= 10 sessions · rare 1-9 · unused 0"
+  },
+  "groups": {
+    "knowledge": "Written etanah facts and rules",
+    "code": "Classes, methods, callers, call chains",
+    "database": "Tables, columns, links, live rows",
+    "flow": "Tugasan, routing, which module owns a step",
+    "documents": "Generated Word and Jasper documents",
+    "tickets": "Open tickets, past symptoms, past asks",
+    "system": "Rules, hooks, skills, memory, health",
+    "states": "The same groups for another state"
+  },
+  "tools": [
+    {
+      "id": "knowledge-index",
+      "answers": "Which knowledge file holds this fact",
+      "call": "Read <state>/index.md, pick the file by SCOPE",
+      "home": "projects/coding-projects/active/etanah-knowledge/<state>/index.md",
+      "groups": [
+        "knowledge",
+        "states"
+      ],
+      "state_scope": "per state",
+      "footprint": "none",
+      "usage": {
+        "sessions": 89,
+        "last": "2026-10-06"
+      },
+      "status": "live"
+    },
+    {
+      "id": "knowledge-files",
+      "answers": "A verified etanah fact, rule, trace or past bug",
+      "call": "Read the file the index points to",
+      "home": "projects/coding-projects/active/etanah-knowledge/<state>/",
+      "groups": [
+        "knowledge",
+        "flow",
+        "database",
+        "documents",
+        "tickets",
+        "states"
+      ],
+      "state_scope": "per state",
+      "footprint": "none",
+      "usage": {
+        "sessions": 251,
+        "last": "2026-10-06"
+      },
+      "status": "live"
+    },
+    {
+      "id": "text-search",
+      "answers": "Where a word, field, method name or string appears",
+      "call": "Grep / Glob",
+      "home": "built in",
+      "groups": [
+        "knowledge",
+        "code",
+        "flow",
+        "documents",
+        "system"
+      ],
+      "state_scope": "none",
+      "footprint": "none",
+      "usage": {
+        "sessions": 290,
+        "last": "2026-10-06"
+      },
+      "status": "live",
+      "note": "The authority for callers of service and interface methods"
+    },
+    {
+      "id": "codegraph-search",
+      "answers": "Where a class or method lives, across repos",
+      "call": "mcp codegraph_search",
+      "home": "codegraph MCP server",
+      "groups": [
+        "code"
+      ],
+      "state_scope": "indexed repos only",
+      "footprint": "shared server",
+      "usage": {
+        "sessions": 18,
+        "last": "2026-09-30"
+      },
+      "status": "live"
+    },
+    {
+      "id": "codegraph-node",
+      "answers": "The shape of one class",
+      "call": "mcp codegraph_node",
+      "home": "codegraph MCP server",
+      "groups": [
+        "code"
+      ],
+      "state_scope": "indexed repos only",
+      "footprint": "shared server",
+      "usage": {
+        "sessions": 13,
+        "last": "2026-09-17"
+      },
+      "status": "live"
+    },
+    {
+      "id": "codegraph-callers",
+      "answers": "Who calls an inherited method",
+      "call": "mcp codegraph_callers",
+      "home": "codegraph MCP server",
+      "groups": [
+        "code"
+      ],
+      "state_scope": "indexed repos only",
+      "footprint": "shared server",
+      "usage": {
+        "sessions": 3,
+        "last": "2026-09-30"
+      },
+      "status": "rare",
+      "note": "Returns zero for service-locator and interface calls; text-search is the authority there"
+    },
+    {
+      "id": "codegraph-context-explore",
+      "answers": "A whole area of code in one call",
+      "call": "mcp codegraph_context / codegraph_explore",
+      "home": "codegraph MCP server",
+      "groups": [
+        "code"
+      ],
+      "state_scope": "indexed repos only",
+      "footprint": "shared server",
+      "usage": {
+        "sessions": 4,
+        "last": "2026-09-14"
+      },
+      "status": "rare"
+    },
+    {
+      "id": "codegraph-trace-impact-callees-files",
+      "answers": "A call path from X to Y; what breaks on a change; what a method calls; a folder listing",
+      "call": "mcp codegraph_trace / codegraph_impact / codegraph_callees / codegraph_files",
+      "home": "codegraph MCP server",
+      "groups": [
+        "code"
+      ],
+      "state_scope": "indexed repos only",
+      "footprint": "shared server",
+      "usage": {
+        "sessions": 0,
+        "last": ""
+      },
+      "status": "unused"
+    },
+    {
+      "id": "java-lsp",
+      "answers": "Go to definition and find references in Java",
+      "call": "LSP tool",
+      "home": "java-lsp plugin",
+      "groups": [
+        "code"
+      ],
+      "state_scope": "none",
+      "footprint": "not measured",
+      "usage": {
+        "sessions": 1,
+        "last": "2026-08-13"
+      },
+      "status": "rare"
+    },
+    {
+      "id": "bpmn-raw-files",
+      "answers": "The exact flow, gateway and listener of an urusan",
+      "call": "Read or search the .bpmn20.xml",
+      "home": "projects/coding-projects/active/etanah-knowledge/<state>/flowables-bpmn/",
+      "groups": [
+        "flow"
+      ],
+      "state_scope": "per state",
+      "footprint": "none",
+      "usage": {
+        "sessions": 78,
+        "last": "2026-10-05"
+      },
+      "status": "live"
+    },
+    {
+      "id": "db-melaka",
+      "answers": "Live rows and schema for a Melaka environment",
+      "call": "mcp postgres-mlkstg-pg / mlit-pg / mlkprod-pg / mlkstg1-pg query_database, schema-prefixed",
+      "home": "DB gateway 127.0.0.1:7411",
+      "groups": [
+        "database",
+        "flow",
+        "tickets"
+      ],
+      "state_scope": "Melaka",
+      "footprint": "shared gateway, on demand",
+      "usage": {
+        "sessions": 145,
+        "last": "2026-10-06"
+      },
+      "status": "live"
+    },
+    {
+      "id": "db-terengganu",
+      "answers": "Live rows and schema for a Terengganu environment",
+      "call": "mcp postgres-trgprd-pg / trgit-pg / trgstg1-pg / trgstg2-pg",
+      "home": "DB gateway 127.0.0.1:7411",
+      "groups": [
+        "database",
+        "states"
+      ],
+      "state_scope": "Terengganu",
+      "footprint": "shared gateway, on demand",
+      "usage": {
+        "sessions": 4,
+        "last": "2026-10-05"
+      },
+      "status": "rare"
+    },
+    {
+      "id": "db-oracle-states",
+      "answers": "Live rows for Perak, Selangor and WP",
+      "call": "mcp oracle-prk-* / oracle-slt / oracle-wp*",
+      "home": "DB gateway 127.0.0.1:7411",
+      "groups": [
+        "database",
+        "states"
+      ],
+      "state_scope": "Perak · Selangor · WP",
+      "footprint": "shared gateway, on demand",
+      "usage": {
+        "sessions": 14,
+        "last": "2026-10-06"
+      },
+      "status": "live",
+      "note": "oracle-wp-kl-stag-*, oracle-wp-wpl-stag and oracle-wp-wppj-stag = 0 sessions"
+    },
+    {
+      "id": "db-vector-search",
+      "answers": "Rows similar in meaning to a text",
+      "call": "mcp postgres-*-pg similarity_search / generate_embedding",
+      "home": "DB gateway",
+      "groups": [
+        "database"
+      ],
+      "state_scope": "per server",
+      "footprint": "not measured",
+      "usage": {
+        "sessions": 0,
+        "last": ""
+      },
+      "status": "unused",
+      "note": "Never called; what it needs on the server side is not verified"
+    },
+    {
+      "id": "sql-schema-verify",
+      "answers": "Do the tables and columns in this script exist",
+      "call": "node domain/sql-schema-verify/sql-schema-verify.js",
+      "home": "domain/sql-schema-verify/",
+      "groups": [
+        "database"
+      ],
+      "state_scope": "per state",
+      "footprint": "on demand",
+      "usage": {
+        "sessions": 46,
+        "last": "2026-10-06"
+      },
+      "status": "live"
+    },
+    {
+      "id": "test-data-db",
+      "answers": "A recent test permohonan at a given tugasan",
+      "call": "node lib/test-data-db.js",
+      "home": "lib/test-data-db.js",
+      "groups": [
+        "database",
+        "tickets"
+      ],
+      "state_scope": "per state",
+      "footprint": "on demand",
+      "usage": {
+        "sessions": 10,
+        "last": "2026-10-04"
+      },
+      "status": "live"
+    },
+    {
+      "id": "doc-sim",
+      "answers": "What a Word document renders for one permohonan, offline",
+      "call": "node domain/doc-sim/doc-sim.js",
+      "home": "domain/doc-sim/",
+      "groups": [
+        "documents"
+      ],
+      "state_scope": "not verified",
+      "footprint": "on demand",
+      "usage": {
+        "sessions": 1,
+        "last": "2026-10-06"
+      },
+      "status": "rare",
+      "note": "Born 2026-10-06"
+    },
+    {
+      "id": "docx-scripts",
+      "answers": "The tags, text and XML inside a .docx",
+      "call": "tools/docx/Read-DocxTags.ps1 · Read-DocxText.ps1 · Dump-DocxXml.ps1",
+      "home": "tools/docx/",
+      "groups": [
+        "documents"
+      ],
+      "state_scope": "none",
+      "footprint": "on demand",
+      "usage": {
+        "sessions": 1,
+        "last": "2026-09-04"
+      },
+      "status": "rare",
+      "note": "Folder is a pending orphan in system/FOLDER-STRUCTURE.md"
+    },
+    {
+      "id": "cc-tags",
+      "answers": "The content-control tags of a template",
+      "call": "node quest/cc-tags.js",
+      "home": "quest/cc-tags.js",
+      "groups": [
+        "documents"
+      ],
+      "state_scope": "none",
+      "footprint": "on demand",
+      "usage": {
+        "sessions": 0,
+        "last": ""
+      },
+      "status": "unused"
+    },
+    {
+      "id": "redmine-sync",
+      "answers": "One ticket's full text, journals and files",
+      "call": "node quest/redmine-sync.js <num>",
+      "home": "quest/redmine-sync.js",
+      "groups": [
+        "tickets"
+      ],
+      "state_scope": "per state project",
+      "footprint": "on demand",
+      "usage": {
+        "sessions": 188,
+        "last": "2026-10-06"
+      },
+      "status": "live"
+    },
+    {
+      "id": "redmine-board",
+      "answers": "The open ticket board",
+      "call": "node quest/redmine-board.js",
+      "home": "quest/redmine-board.js",
+      "groups": [
+        "tickets"
+      ],
+      "state_scope": "Melaka",
+      "footprint": "on demand",
+      "usage": {
+        "sessions": 46,
+        "last": "2026-10-05"
+      },
+      "status": "live"
+    },
+    {
+      "id": "quest-state",
+      "answers": "Open quests, their phase and notes",
+      "call": "node quest/active-cli.js · node quest/notes.js",
+      "home": "quest/",
+      "groups": [
+        "tickets",
+        "system"
+      ],
+      "state_scope": "all",
+      "footprint": "on demand",
+      "usage": {
+        "sessions": 211,
+        "last": "2026-10-06"
+      },
+      "status": "live"
+    },
+    {
+      "id": "urusan-ticket-docs",
+      "answers": "Did this urusan already see this symptom",
+      "call": "Read urusan/<KOD>-TICKETS.md (rebuilt by node domain/urusan-tickets/urusan-tickets.js)",
+      "home": "projects/coding-projects/active/etanah-knowledge/<state>/urusan/",
+      "groups": [
+        "tickets",
+        "knowledge"
+      ],
+      "state_scope": "per state",
+      "footprint": "none",
+      "usage": {
+        "sessions": 19,
+        "last": "2026-10-04"
+      },
+      "status": "live",
+      "note": "The rebuild script ran in 1 session, last 2026-08-23"
+    },
+    {
+      "id": "bug-db-index",
+      "answers": "A past bug that matches this symptom",
+      "call": "search bug-db-index.jsonl (rebuilt by node domain/bug-db/build-index.js)",
+      "home": "projects/coding-projects/active/etanah-knowledge/<state>/bug-db-index.jsonl",
+      "groups": [
+        "tickets"
+      ],
+      "state_scope": "per state",
+      "footprint": "none",
+      "usage": {
+        "sessions": 5,
+        "last": "2026-10-03"
+      },
+      "status": "rare"
+    },
+    {
+      "id": "browser",
+      "answers": "A web page that has no script: Redmine form, Flowable modeler, a deployed screen",
+      "call": "Claude in Chrome tools",
+      "home": "browser extension",
+      "groups": [
+        "tickets",
+        "flow",
+        "documents"
+      ],
+      "state_scope": "none",
+      "footprint": "the user's browser",
+      "usage": {
+        "sessions": 21,
+        "last": "2026-10-05"
+      },
+      "status": "live"
+    },
+    {
+      "id": "states-registry",
+      "answers": "Which state a ticket belongs to and that state's paths, branches and DB servers",
+      "call": "node lib/states.js resolve | show | list",
+      "home": "lib/states.js + system/states.json",
+      "groups": [
+        "states",
+        "system"
+      ],
+      "state_scope": "all",
+      "footprint": "on demand",
+      "usage": {
+        "sessions": 28,
+        "last": "2026-10-06"
+      },
+      "status": "live"
+    },
+    {
+      "id": "system-map",
+      "answers": "Which part of the system owns a thing",
+      "call": "Read system/INDEX.md · node lib/folder-structure.js map",
+      "home": "system/INDEX.md",
+      "groups": [
+        "system"
+      ],
+      "state_scope": "none",
+      "footprint": "none",
+      "usage": {
+        "sessions": 16,
+        "last": "2026-10-05"
+      },
+      "status": "live"
+    },
+    {
+      "id": "system-health",
+      "answers": "What is installed, what fired, what slipped",
+      "call": "node lib/feature-census.js · lib/liveness-report.js · lib/audit-briefing.js · core/slips.js",
+      "home": "lib/ + core/",
+      "groups": [
+        "system"
+      ],
+      "state_scope": "none",
+      "footprint": "on demand",
+      "usage": {
+        "sessions": 85,
+        "last": "2026-10-06"
+      },
+      "status": "live"
+    },
+    {
+      "id": "observatory",
+      "answers": "A first diagnosis of system health in one screen",
+      "call": "node lib/observatory.js --brief",
+      "home": "lib/observatory.js + domain/observatory/",
+      "groups": [
+        "system"
+      ],
+      "state_scope": "none",
+      "footprint": "on demand; server.js = 1 node process when started",
+      "usage": {
+        "sessions": 2,
+        "last": "2026-10-04"
+      },
+      "status": "rare",
+      "note": "domain/observatory/server.js = 0 sessions"
+    },
+    {
+      "id": "session-search",
+      "answers": "What an earlier session said or did",
+      "call": "mcp ccd_session_mgmt search_session_transcripts",
+      "home": "desktop app",
+      "groups": [
+        "system",
+        "tickets"
+      ],
+      "state_scope": "none",
+      "footprint": "none",
+      "usage": {
+        "sessions": 5,
+        "last": "2026-10-06"
+      },
+      "status": "rare"
+    },
+    {
+      "id": "codebase-read-file",
+      "answers": "The etanah project file CLAUDE.md says to load first",
+      "call": "Read Etanah-Codebase-Read.md",
+      "home": "projects/coding-projects/active/Etanah-Codebase-Read.md",
+      "groups": [
+        "knowledge"
+      ],
+      "state_scope": "Melaka",
+      "footprint": "none",
+      "usage": {
+        "sessions": 1,
+        "last": "2026-09-04"
+      },
+      "status": "rare"
+    },
+    {
+      "id": "knowledge-cold-start",
+      "answers": "Full file tree, FK map and DDL dumps",
+      "call": "Read context/repo-map.md · context/db-schema.md · database-archive/*.sql",
+      "home": "projects/coding-projects/active/etanah-knowledge/<state>/context/",
+      "groups": [
+        "knowledge",
+        "database"
+      ],
+      "state_scope": "per state",
+      "footprint": "none",
+      "usage": {
+        "sessions": 6,
+        "last": "2026-09-30"
+      },
+      "status": "rare",
+      "note": "db-schema.md = 0 sessions"
+    }
+  ],
+  "unused_scripts_2026-10-06": {
+    "_note": "On disk, never run by Ruri in the 357 scanned sessions, and not named by settings.json, a skill or a hook. A script started with a relative path after a cd is not matched by the scan, so a row here is a suspect, not a verdict.",
+    "list": [
+      "system/phrase-registry.js",
+      "lib/apply-bundles.js",
+      "lib/shrink-claude-md.js",
+      "lib/wrap-all-hooks.js",
+      "quest/cc-tags.js",
+      "quest/migrate-post-mortems.js",
+      "quest/backfill-active.js",
+      "domain/observatory/server.js",
+      "domain/patch-ticket-intake-flag/patch-intake.js"
+    ]
+  },
+  "_scope": "Tools Ruri calls, set up for Ruri. The codemap and the Atlas are outside projects and are NOT listed (miya, 2026-10-06)."
+}

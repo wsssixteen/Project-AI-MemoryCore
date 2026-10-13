@@ -39,7 +39,7 @@ Read from the top: system/INDEX.md (which kind of part, which workflow owns it) 
 
 **Why**: 2026-10-02 the push and commit guards were changed without their flow understood; the change opened a hole, and the repair was over-built into a rewrite plus agent reviews. みや: "you always skip understanding the whole flow … you do not try to understand the thing you're trying to change first".
 
-The system has six kinds of parts: Rules · Workflows · Features · Memory · Kernel · Projects. A **Workflow** is a route (ordered steps across turns, position in `current_phase`); a **Feature** is one job at one moment, and a Workflow is made OF Features. Read `system/INDEX.md` before placing anything.
+The system has seven kinds of parts: Rules · Workflows · Features · Tools · Memory · Kernel · Projects. A **Workflow** is a route (ordered steps across turns, position in `current_phase`); a **Feature** is one job at one moment, and a Workflow is made OF Features. A **Tool** is called on purpose and returns a result (a lookup index, a script, a database server); it never fires by itself, and its row lives in `system/tools.json`. Read `system/INDEX.md` before placing anything.
 
 **A Feature is INSTALLED only when all of these hold** — a hook or skill that merely exists on disk is not installed:
 
@@ -170,6 +170,8 @@ Components fade if unused. Periodic audit (per /system-rules Rule 3): check hook
 ## Bloat-prevention default
 
 When refining any `/skill` or CLAUDE.md content: apply `/system-rules` Rule 2 (merge in place). The `claude-md-edit-guard.js` hook enforces this deterministically on edits to CLAUDE.md / /system-rules / /system-design.
+
+*Version 3.2 — 2026-10-14 (written 2026-10-06, re-based on v3.1). "six kinds" → "seven kinds" + one sentence defining a Tool, per みや ("another part of our system called Tool. A different part from Workflows & Features"); the Tool row and its rulings live in `system/INDEX.md`. Spec-preservation: the Workflow and Feature sentences, the INSTALLED table and Rules 6–15 are untouched; additive.*
 
 *Version 3.1 — 2026-10-08. Rule 15 added per みや: land on main, never regress. Goal first (one system; every session's improvement reaches every other session), then the guard (main only gains), then three mechanical checks per commit (index built in the same command · stat read before · stat read back after). Root cause: commit `c1e6ad56` (bare commit on main's stale shared index, 447 lines deleted) and the wrong lesson I drew from it ("never commit in main from a session folder"), which he never asked for. Spec-preservation: Rules 6–14, the trinity diagram and the INSTALLED table are untouched; additive.*
 

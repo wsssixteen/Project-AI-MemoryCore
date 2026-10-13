@@ -8,15 +8,16 @@
 
 ---
 
-## The system map — six kinds of parts (THE one map; rewritten 2026-10-05 per みや's rulings below)
+## The system map — seven kinds of parts (THE one map; rewritten 2026-10-05 per みや's rulings below; Tools added 2026-10-06)
 
-Everything in this repo is one of six kinds. **"Installed" has one meaning per kind** (last column): a part that does not meet its row is NOT installed, whatever folder it sits in.
+Everything in this repo is one of seven kinds. **"Installed" has one meaning per kind** (last column): a part that does not meet its row is NOT installed, whatever folder it sits in.
 
 | Kind | Plain meaning | Layer | Home | Installed when |
 |---|---|---|---|---|
 | **Rules** | How Ruri decides, speaks and boots | 0 · 1 · 2 | `.claude/personality.md` (voice) · `system/` (the constitution: this map, the design rules, the ledgers) · `.claude/CLAUDE.md` + the files it routes to (boot rules) · the root guides | the rule has ONE home file; every other mention is a pointer |
 | **Workflows** | A route: ordered steps across many turns, which remembers the step it is on (quest · deploy · release · adhoc · Domain Expansion) | 2 | its skill (owns the step table) + its position in `quest/active.txt` `current_phase`; engines in `quest/` and the legacy `Feature/` folder | a Feature folder (goal + log + eval) · a step table in its skill · a position field |
 | **Features** | One job at one moment: a gate, a check, a tool, a skill | 3 | `domain/<name>/`; its skill in `.claude/skills/<name>/`. Hooks still loose in `.claude/hooks/` are NOT yet installed | home folder · README `goal:` `retention:` `footprint:` · a log (observability) · an eval · a registration → census verdict `PROPER` |
+| **Tools** | Something Ruri picks up on purpose to get an answer or do an action, and it returns a result: a lookup index, a script, a database server, a code graph, the browser. It does not fire by itself (Feature) and has no steps across turns (Workflow) | 3 | the registry `system/tools.json` (one row per Tool); the Tool itself stays in its existing home | a registry row with `answers` · `call` · `home` · `groups` · `state_scope` · `footprint` · the home exists · usage above 0 in the last scan (0 = `unused`: wire it into a route or retire it) |
 | **Memory** | What Ruri knows and remembers | 0 · 4 · 5 | identity `main/main-memory.md` · knowledge `projects/…/etanah-knowledge/` + `library-items/` · notes `.claude/auto-memory/` · diary `daily-diary/` · state `quest/active.txt` + `main/current-session.md` + `main/todo.md` | it sits on a named shelf with an index line. System RULES never live in Memory |
 | **Kernel** | Shared code and wiring that everything else runs on | under all | `core/` (forge · registry · slips · boot) · `lib/` (hook-runtime · states · census …) · `.claude/settings.json` (hook wiring) | its header states its goal; at least one Feature or Workflow uses it |
 | **Projects** | Work Ruri builds for みや — not a system part | — | `etanah_atlas/` (lives in this repo) · `projects/coding-projects/active/<Name>/` (PymTime, with its own repo · DawahMap, code inside the folder) | it has an owner row in `system/FOLDER-STRUCTURE.md`. A project folder also has `project.json` (name · aliases · repo) + `PROJECT.md` `VERSIONS.md` `ARCHITECTURE.md` `PROOFS.md` `ROADMAP.md`, is listed in the map below and in `system/save-rules.json`, is loaded by `domain/project-load/` when a prompt names it, and is checked at Domain Expansion by `lib/save-rules.js` |
@@ -33,6 +34,7 @@ Machine-read map — edit the table AND this fence together. `map` fails on a pa
     "rules": [".claude/CLAUDE.md", ".claude/personality.md", ".claude/reply-shape-spec.md", ".claude/commit-conventions.md", ".claude/cost-efficiency.md", ".claude/save-commands.md", ".claude/new-machine-setup.md", "system", "AGENT-ARCHITECTURE.md", "MIYA-NOTEBOOK.md", "RURI-NOTEBOOK.md", "README.md", "REGISTRY.md"],
     "workflows": ["quest", "Feature", ".claude/workflows"],
     "features": ["domain", ".claude/skills", ".claude/hooks", ".agents", "skills-lock.json"],
+    "tools": ["system/tools.json"],
     "memory": ["main", "daily-diary", "projects", "library-items", ".claude/auto-memory", ".claude/state", "quest/active.txt"],
     "kernel": ["core", "lib", ".claude/settings.json"],
     "projects": ["etanah_atlas", "projects/coding-projects/active/PymTime", "projects/coding-projects/active/DawahMap"]
@@ -69,6 +71,19 @@ Design constraints carried from the 2026-10-04 audit (so the build does not re-i
 
 A Feature's layers, in みや's words (2026-09-04): **observability** = liveness (did it fire, did it block, how long); **monitoring** = context (why, on which quest and phase, was it right, what it cost, did it meet its goal). Both are part of every Feature, not a dashboard. At ruling time: 59 of 115 Features write a log, 9 write a goal log, 41 have README + goal + log + eval together.
 
+### Tools — the seventh kind (みや, 2026-10-06: "creating another part of our system called Tool. A different part from Workflows & Features")
+
+Why: a 357-session scan (2026-08-06 to 2026-10-06) showed lookup tools that were set up for Ruri and then barely called (codegraph callers in 3 sessions; four codegraph calls never). Nothing in the map named them, so nothing could say "installed" or "unused" about them.
+
+| # | Decision | State at decision time |
+|---|---|---|
+| 9 | A **Tool** is called on purpose and returns a result. A **Feature** fires by itself at one moment. A **Workflow** is a route. A Workflow step or a Feature may CALL a Tool; a Tool never calls a Workflow. | みや's ruling: Tool is its own kind |
+| 10 | The registry `system/tools.json` is the one list of Tools. One row = one question it answers + how to call it + its home + the groups that may use it + state scope + footprint + usage. | 32 rows written from the scan (the codemap and the Atlas are outside projects and are not listed, per みや) |
+| 11 | Tools are grouped by WHAT IS BEING LOOKED FOR, eight groups: knowledge · code · database · flow · documents · tickets · system · states. One Tool may serve several groups. | 13 of 32 rows serve more than one group |
+| 12 | Status comes from usage, never from opinion: `live` (10+ sessions) · `rare` (1 to 9) · `unused` (0). An `unused` Tool is wired into a route or retired at the next system audit (system-rules Rule 3). | 18 live · 11 rare · 3 unused |
+
+Decisions 10 to 12 are Ruri's defaults under ruling 9 and are open to his re-ruling. Checked by `node lib/tool-registry.js check` (born through `core/forge.js` 2026-10-14; test `lib/tool-registry.eval.js` 33/33): every row has its keys, a known group, a home on disk, a status that matches its usage, and no codemap or Atlas home. `node lib/tool-registry.js for <group>` prints the Tools of a group, most used first. The etanah lookup hint (`domain/etanah-intake-gate/`, LOOKUP lane) names the list on every lookup prompt, so the Tool is picked from it and not by habit (2026-10-14, eval 54/54). Not built: the usage refresh (re-count from the turn ledger); a router that picks the Tool by itself; any file move (root `tools/` stays a pending orphan in `system/FOLDER-STRUCTURE.md`).
+
 ## Change record — every system change is saved at the moment it is made (みや, 2026-10-05)
 
 His words: "keep creating artifacts for your reference every time a system change" · "I do not want to rely simply on domain expansion to save anything that is important … save every time you updated something. So that you will know the history and purpose and reason behind it."
@@ -91,7 +106,7 @@ Artifacts (private pages on claude.ai, republished in place; the source HTML is 
 
 | Area | URL | Shows |
 |---|---|---|
-| System map | https://claude.ai/artifact/7rC3ck11zTHQdfqbtAnNGv | the six kinds, what is installed, what is not |
+| System map | https://claude.ai/artifact/7rC3ck11zTHQdfqbtAnNGv | the seven kinds (Tools row added 2026-10-14), what is installed, what is not |
 | Boot sequence | https://claude.ai/artifact/WnyAt8Jdg9LEkZjdytmWzB | every startup script, cost before and after |
 | Quest paths | https://claude.ai/artifact/F6XUQEjvyABeLJaoSY3Ls4 | patch / minor / development: which path, what each phase produces, what is loaded when, development in depth (2026-10-05) |
 | Boot + structure handover | https://claude.ai/artifact/FYG8o9tQy6KzRTqMN1doDo | decided · built · batch 2 · still to do (full text: `main/handoff-2026-10-05-boot-structure-audit.md`) |
@@ -103,6 +118,7 @@ Not built: a gate that refuses a system-change commit when a row above is missin
 | File | Purpose | Phase built |
 |---|---|---|
 | `INDEX.md` (this file) | Master index — points to all sub-indexes + cross-refs | Phase 1 ✅ |
+| `tools.json` | The Tool registry — one row per Tool (what it answers · how to call · home · groups · state scope · footprint · usage · status) | 2026-10-06 ✅ |
 | `principles.md` | The 6 proto-system-layer principles + classified rest of 68 principles from personality.md / feedback files | Phase 1 ✅ |
 | `baseline-2026-05-23.md` | Pre-system-layer baseline measurement (slip count + corrections + INDEX validity) for comparative eval | Phase 0 ✅ |
 | `discipline-INDEX.md` | Sub-index for Discipline atomic primitive skills (Rubric / Predicate Box / Grep Rubric / Multi-dim evidence / Sycophancy Circuit-Breaker / Confidence Table) | Phase 1 skeleton ✅ → Phase 3 populates |
