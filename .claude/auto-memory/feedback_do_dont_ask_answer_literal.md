@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 2b6cd66a-a8f1-4759-80ae-3e7b0bd433a6
-  modified: 2026-09-09T11:50:48.565Z
+  modified: 2026-10-13T11:57:31.629Z
 ---
 
 🚨 The time-waste pattern miya called out (2026-09-09, QA-274266). Over several exchanges I made him drive every micro-step and re-ask for the plain answer 3× — he was furious ("give a fucking solution, I am not here all day").
@@ -84,6 +84,8 @@ When I need decisions from みや, ask through the AskUserQuestion popup (batche
 **How to apply:** grilling / wayfinder / any multi-question round → AskUserQuestion (≤4 questions per call, chain calls for more). Side-build detected → spawn_task with a self-contained prompt, then continue the main thread.
 
 **Added 2026-10-04 (#244600), context first:** a popup only PICKS. The context goes in chat BEFORE the popup: very short bullets, a table or a diagram, enough that each option is understood without asking. Never ask a question whose moment has not come (a commit-message question before the test is one). Miya: "fix your behaviour of asking straight away without any very short sentence bullet points or table or diagrams when asking popup questions that require context."
+
+**Corrected 2026-10-13 (DawahMap), the question carries the thing itself:** the context in chat is NOT enough: while the popup is open he does not see the chat, a file sent earlier, or another window. Each candidate goes INTO the popup (the option's `preview`, or quoted in its description). A question never says "above", "in chat", "the table", "the open tab". If the matter is in another window, do not ask: say it in the reply and carry on. Miya, typed into the popup: "I cannot see what simpler you're talking about. YOU ALWAYS DO THIS ... WHY DO YOU NOT BAN YOURSELF FROM REPEATING THIS WHEN ASKING QUESTIONS" and "I CANNOT SEE IT I DON'T KNOW WHAT YOU'RE TALKING ABOUT". **Enforced:** `domain/question-self-contained` (PreToolUse on AskUserQuestion, blocks; its eval holds the two questions he could not answer).
 
 ---
 
