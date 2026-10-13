@@ -27,7 +27,19 @@ Pieces are OPTIONAL — some Features are hook-only (no skill), some skill-only 
 
 ### Where a Feature sits, and what "installed" means (added 2026-10-05 per みや — the map itself lives in `system/INDEX.md`, THE one map; this is the pointer + the Feature row)
 
-The system has six kinds of parts: Rules · Workflows · Features · Memory · Kernel · Projects. A **Workflow** is a route (ordered steps across turns, position in `current_phase`); a **Feature** is one job at one moment, and a Workflow is made OF Features. Read `system/INDEX.md` before placing anything.
+## Flow first — before ANY change to an existing part (HARD, 2026-10-07 per みや)
+
+Before editing a hook, script, skill or workflow that already exists, show the flow it sits in as a short story diagram, in chat, BEFORE the first edit:
+
+1. the existing flow, top to bottom (who triggers it → what it checks → what happens next);
+2. the ONE step being changed, marked;
+3. what stays the same.
+
+Read from the top: system/INDEX.md (which kind of part, which workflow owns it) → the workflow's skill → the part itself. No diagram = no edit. A change that needs more than one marked step is a redesign: stop and ask.
+
+**Why**: 2026-10-02 the push and commit guards were changed without their flow understood; the change opened a hole, and the repair was over-built into a rewrite plus agent reviews. みや: "you always skip understanding the whole flow … you do not try to understand the thing you're trying to change first".
+
+The system has seven kinds of parts: Rules · Workflows · Features · Tools · Memory · Kernel · Projects. A **Workflow** is a route (ordered steps across turns, position in `current_phase`); a **Feature** is one job at one moment, and a Workflow is made OF Features. A **Tool** is called on purpose and returns a result (a lookup index, a script, a database server); it never fires by itself, and its row lives in `system/tools.json`. Read `system/INDEX.md` before placing anything.
 
 **A Feature is INSTALLED only when all of these hold** — a hook or skill that merely exists on disk is not installed:
 
@@ -144,9 +156,24 @@ Components fade if unused. Periodic audit (per /system-rules Rule 3): check hook
 
 14. **Placement at birth — name the level and the schema row before creating any file** (added 2026-09-06 per みや: "follow a certain set of folder structure and file naming"). Every new file states which level it belongs to (root · `system/` · `domain/<feature>/` · `main/` · `quest/` · `lib/` · `core/` · `.claude/hooks/` · `.claude/skills/` · `projects/…/<KEY>/`) and which allow-list entry of `system/FOLDER-STRUCTURE.md` permits it (the per-level `system/STRUCTURE-SCHEMA.json` this rule named on 2026-09-06 was never built — `lib/folder-structure.js:12` reads `FOLDER-STRUCTURE.md`; corrected 2026-09-22, system-check run 3); no entry = propose the entry first (the entry is the nod). Dated series go to `system/<series>/<date>.md`, never `<series>-<date>.md` loose at the top. `lib/folder-structure.js` reports misnamed/missing per level at boot; it never moves files itself. **Banned**: a new top-level folder without a schema row · a Feature file outside `domain/<feature>/` · a per-operation folder (File Ownership row).
 
+15. **🚨 Land on main, never regress — every session brings its work to main, and a commit only adds or refines** (HARD RULE, added 2026-10-08 per みや: *"Don't we only update something important … system improvements that will help other session perform better and updated? At least that is what I WANTED and REQUESTED so far … A rule like add something that will not regress? … What's important is to have the goal, Purpose"*).
+   - **Goal**: ONE system. What one session improves reaches every other session at its next start.
+   - **Purpose of the guard**: main only gains. A commit adds or refines. It removes ONLY what its own change record names (commit subject · changelog entry · the part's README).
+   - **Agreed understanding**: every session, from any folder, commits and pushes its own work to main: its saves (session file, diary, quest docs, memory) and its system improvements. No session is barred from main. "Another session is live" is never a reason to hold work back or to skip a save.
+   - **Mechanical — the same three checks for every commit in this repo**:
+     - (a) **The index is built in the same command.** Main's index is shared between sessions and can be stale. `git add -A` (Domain Expansion Step 10: every path) or `git commit -m … -- <paths>` (a change made mid-session). NEVER a bare `git commit` on an index I did not just build.
+     - (b) **Before**: read `git diff --cached --stat`. Every deleted file and every large `-` count is one I can name. One I cannot name is a stale copy (a OneDrive conflict copy, an old session folder): restore that path from `HEAD`, then commit.
+     - (c) **After**: read back `git show --stat HEAD`. An unnamed deletion that got through is reverted in the same turn (`git revert`) and logged with `core/slips.js`.
+   - **Banned**: a rule or habit that keeps a session's work off main · a bare `git commit` in the main checkout · committing without reading the stat · deleting or shrinking a file as a side effect of saving another.
+   - **Why**: 2026-10-06, commit `c1e6ad56`. A bare commit in main took a stale shared index: 19 files, 447 lines deleted, one Feature commit undone. I then taught myself the wrong lesson ("never commit in main from a session folder"). みや never asked for that; it blocked exactly what he wants, and on 2026-10-08 it led me to skip a Domain Expansion. Same family: `25a0379c` (2026-08-03, a stale conflict copy overwrote two rule files before a `git add -A`). Text-level sibling: Rule 6 v1.2 (spec-preservation diff).
+
 ## Bloat-prevention default
 
 When refining any `/skill` or CLAUDE.md content: apply `/system-rules` Rule 2 (merge in place). The `claude-md-edit-guard.js` hook enforces this deterministically on edits to CLAUDE.md / /system-rules / /system-design.
+
+*Version 3.2 — 2026-10-14 (written 2026-10-06, re-based on v3.1). "six kinds" → "seven kinds" + one sentence defining a Tool, per みや ("another part of our system called Tool. A different part from Workflows & Features"); the Tool row and its rulings live in `system/INDEX.md`. Spec-preservation: the Workflow and Feature sentences, the INSTALLED table and Rules 6–15 are untouched; additive.*
+
+*Version 3.1 — 2026-10-08. Rule 15 added per みや: land on main, never regress. Goal first (one system; every session's improvement reaches every other session), then the guard (main only gains), then three mechanical checks per commit (index built in the same command · stat read before · stat read back after). Root cause: commit `c1e6ad56` (bare commit on main's stale shared index, 447 lines deleted) and the wrong lesson I drew from it ("never commit in main from a session folder"), which he never asked for. Spec-preservation: Rules 6–14, the trinity diagram and the INSTALLED table are untouched; additive.*
 
 *Version 3.0 — 2026-10-05. Section "Where a Feature sits, and what installed means" added per みや (structure audit 2026-10-04/05): pointer to `system/INDEX.md` as the one map (six kinds), Workflow vs Feature in one sentence, the INSTALLED table (home · README keys · observability log · monitoring goal rows · eval · registration), and Install = through `core/forge.js` (`new` / `install`). Root cause: the two layers lived only in an auto-memory note, so I answered "is boot observable?" with the dashboard; and 55 hooks + 52 skills sat outside any Feature with nothing naming that as "not installed". Spec-preservation: the trinity diagram, "pieces are OPTIONAL", the layering doctrine and Rules 6–14 are untouched; additive.*
 

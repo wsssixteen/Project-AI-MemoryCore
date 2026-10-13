@@ -10,6 +10,100 @@
 
 ---
 
+## system-design SKILL.md v3.1 · Domain Expansion trigger v1.2 · save rules v2 — 2026-10-08 (per みや, after a skipped Domain Expansion)
+
+His words: *"this is critical, you should've done it"* (the skipped Domain Expansion) · *"I don't remember this. Why we want to prevent it? … A rule like add something that will not regress? … What's important is to have the goal, Purpose"* (the commit rule) · *"make sure everything WILL be loaded every single time we load a project. It WILL save everytime at the end of session when we perform domain expansion"* (project documents).
+
+| Part | Change | Why |
+|---|---|---|
+| `.claude/skills/system-design/SKILL.md` v3.1 | **Rule 15 — land on main, never regress**: goal, purpose, agreed understanding, three mechanical checks per commit | Commit `c1e6ad56` (2026-10-06) deleted 447 lines through a bare commit on main's stale shared index. I answered it with "never commit in main from a session folder", a line he never asked for |
+| `.claude/auto-memory/project_onedrive_worktrees.md` | The "never commit in MAIN from a worktree session" paragraph is withdrawn and replaced by a pointer to Rule 15 | It kept a session's work off main, the opposite of what he wants |
+| `.claude/hooks/domain-expansion-trigger.js` v1.2 + its new eval | The injected BANNED text now bans skipping or shrinking the ritual itself; a `⏭` covers one step | 2026-10-08: I skipped the whole Domain Expansion with one `⏭` line |
+| `.claude/skills/domain-expansion/SKILL.md` + `Feature/Domain-Expansion/expansion-protocol.md` | Same ban; Step 10 reads the stat before and after the commit | Same slip; Rule 15 |
+| `lib/save-rules.js` + `system/save-rules.json` v2 + eval (85 rows) | The Projects kind now covers project folders: documents present · documents current with the project's own repo · memory note is a pointer. The dated-today check for a quest doc also accepts the `- Save <date>:` line a session writes for a quest it saved but did not work (found on real data: QA-283532, fixtures E2c and E2d) | PymTime went to v17 while its folder stayed at 2026-08-26; nothing checked it |
+| `domain/project-load/` (new Feature, forge-born, eval 30 rows) | Naming a project in a prompt tells the session to read that project's `PROJECT.md` first | "Load the project file first" was prose in CLAUDE.md §Active Project Rules and did not fire for PymTime |
+| `system/INDEX.md` | Projects row names project folders and what installed means for them; map fence lists PymTime; Change record gains the Project row | The one map did not know project folders existed |
+
+**Spec preservation**: nothing removed from any rule. Rules 6–14, Domain Expansion steps 0a–13, the Step 10 commit + push + merge order with SHA proof, the banner text, save rules C1–C8 and every earlier save-rule row are untouched. One line of my own (the 2026-10-06 memory paragraph) is withdrawn on purpose and named here.
+
+**Rollback**: `git revert` the commit that carries this entry; remove the `project-load` line from `.claude/settings.json` (see `domain/project-load/NUKE-MARKER.md`).
+
+---
+
+## v1.87 — 2026-10-14, written 2026-10-06 (per みや: "creating another part of our system called Tool. A different part from Workflows & Features")
+
+**The pointer to the one map now says seven kinds.** One in-place refinement, zero net lines:
+
+- **§File Structure heading**: "six kinds: Rules · Workflows · Features · Memory · Kernel · Projects" → "seven kinds: Rules · Workflows · Features · Tools · Memory · Kernel · Projects", plus the pointer "the Tool list = `system/tools.json`".
+
+**Spec preservation**: every spec of the heading is kept (`system/INDEX.md` is THE one map; the legacy tree and its label are untouched). Nothing dropped. Every line added between v1.78 and v1.85 is untouched: this entry was first written on 2026-10-06 against v1.78, then re-based on v1.85 on 2026-10-14.
+
+**Number**: v1.86 is held by another session's unsaved edit in the main checkout (§Delegation Economy discipline 5), so this entry takes v1.87.
+
+**Dropped, not landed**: the same session wrote a "HARD CAP — answer, then stop" reply line on 2026-10-06. It is NOT in this version: みや's later rulings (sort first: order → one diagram, side by side → a table, 2026-10-09; name the thing, 2026-10-07) replace it.
+
+**Why**: a scan of 357 sessions (2026-08-06 → 2026-10-06) showed lookup tools set up for Ruri and barely called (codegraph callers 3 sessions, four codegraph calls never). No kind in the map named them, so nothing could mark one installed or unused. Paired: `system/INDEX.md` Tools row + fence key + decisions 9–12, NEW `system/tools.json` (32 rows), system-design skill v3.2, `system/system-architecture.md` §9 row.
+
+---
+
+## v1.85 — 2026-10-13 (per みや: "Why do you instead use ambiguous words like that? … If this is 'Claude speech' I want you to ban yourself in the CLAUDE.MD file.")
+
+- §Explanation & Output-Format Discipline: one new line, NO VAGUE WORDS, SAY IT BY ITS NAME. A thing is called by its exact, known term; a claim is stated in one direct sentence; where the source argues with force the force is kept; banned are a roundabout phrase where a plain term exists, an invented label for a thing that has a name, and the softeners "in some way / somehow / a kind of / sort of". It holds for replies, app and page text, tickets and questions.
+- Body: `.claude/reply-shape-spec.md` §3e (new), with his words, a five-row rule table, the test before sending and the case.
+- The case: DawahMap question 7a. A card I wrote asked "Can you be sure which use its maker meant without asking him?" and "Which of them can be read off for certain?", where his reference argues the point as subjective against objective morality. I had treated the exact terms as jargon to avoid.
+- Paired, in that project: `projects/coding-projects/active/DawahMap/app/voice.js` refuses the listed phrases (the build stops); question 7a rewritten in the exact terms; `PROJECT.md` rule 1g item 10.
+- Spec preservation: additive. No line of v1.84 is changed or removed. It sits beside "NAME THE THING, STAY ON NOW" (v1.80), which is about which thing and which event; this one is about the word chosen for it.
+- Enforcement, said plainly: outside DawahMap there is no mechanical check for this line. It is a boot-loaded rule and a spec section.
+
+## v1.84 — 2026-10-12 (per みや: "Please update the ban on Haiku 5.5, though we will need to audit. We will take the change to audit if Haiku is fit enough for what kinds of tasks.")
+
+- §Cost Efficiency → Delegation Economy: the paragraph "Haiku BANNED from delegation" becomes "Haiku 5.5 ON TRIAL in delegation"; the tier table says Sonnet 5.5 is the default and Haiku 5.5 runs on trial only; the Enforced-by line says what is blocked now.
+- Enforcement the same day: `domain/agent-spend-gate/` v3: rule 5 lets a haiku agent through only with a `haiku-trial: <task>` mark and never at effort `low`, warns, and logs each marked launch to `haiku-trial.jsonl`; eval 40 to 45 fixtures, 45/45 green. README section "Haiku 5.5 trial" holds the trial rules, what Anthropic's pages say (read by a research agent 2026-10-12), and the audit plan. Dropped and named: the outright ban of v1.68 and its Sonnet-pricing sentence; kept: the reason for the ban, now stated as the risk the trial measures.
+
+## v1.83 — 2026-10-08 (per みや: "build boot mode")
+
+- §Session Boot Order step 5: one sentence names boot mode. Work = a working day (PymTime workdays) + no public holiday + no approved full-day leave + 08:30 to 18:30. In Work the first message of a session loads the ticket list with no keyword. Anything unreadable = Quiet. "quiet mode" / "not working today" = no unasked load in that session. `--mode` prints the decision.
+- Paired code: `.claude/hooks/open-quest-surfacer.js` v3 (`workNow`, `firstMessageInWorkHours`, `QUIET_RX`); design = `main/handoff-2026-10-05-boot-structure-audit.md` section 14; his words = section 10 answer 4.
+- Spec preservation: additive. Every keyword rule of v1.82 is unchanged (eval 157/157: 123 earlier cases + 34 boot-mode cases). One phrase changes side, named here: "not working today" was a work signal (it holds "working today") and is now a quiet word.
+
+## v1.82 — 2026-10-08 (per みや: "saying \"board\" is not enough … \"Tickets\" \"Redmine\" should also be it")
+
+- §Session Boot Order step 5: names the major keywords that load the ticket list ("tickets", "redmine", "board"); the hint for a list that is not loaded becomes `not loaded. Say "tickets", "redmine" or "board", or name a ticket.`
+- Paired code: `.claude/hooks/open-quest-surfacer.js` treats a short message (8 words or fewer) containing "tickets" or "redmine" as an ask, so the list loads every time, like "board". Longer messages keep the once-per-4-hours rule.
+- Spec preservation: additive. Every earlier trigger still fires (eval 123/123).
+
+## v1.81 — 2026-10-07 (per みや: "Use Opus 5.5 as the orchestrator and always try to use Sonnet 5.5 where possible on other matters to save time. Please run evals and verifications to make sure it works as intended during Workflows & also if it saves times.")
+
+- §Cost Efficiency → Delegation Economy: the lead rule and the tier table are re-written. Three rows: **Orchestrator** = the main loop on Opus 5.5 (plans, launches, checks every return, gives the final verdict) · **every delegated agent** on `sonnet` (Sonnet 5.5, the default and the floor) · a delegated agent on `opus` only with a reason in its plan row (`// opus-reason:` in a workflow script). New **Enforced by** line and a second **Why** paragraph with the measurement.
+- Enforcement built the same day: `domain/agent-spend-gate/` v2 (README born, eval 7 → 40 fixtures) BLOCKS an Agent call or a workflow `agent()` call that names no model, and any `haiku`; WARNS on opus/fable with no stated reason and on a fan-out started from a session that is not on Opus 5.5; bypass = `[skip-spend-gate: <reason>]` in みや's last message. `domain/spawn-telemetry/` now logs a per-model tally for a Workflow. `.claude/workflows/quest-phase0.js`: every agent names its model (it named none before, so 9 to 16 agents per quest start ran on the session model).
+- Measurement (one Workflow, 7 agents, read-only, the same three tasks on both models; run `wf_6edfe0f8-f85`):
+
+  | Task | sonnet, medium | opus, session effort | Correct |
+  |---|---|---|---|
+  | extract 6 facts from one file | 13.9 s | 16.2 s | both 6 of 6 |
+  | find every site across 5 folders | 36.7 s · 7 of 9 sites (56.1 s · 8 of 9 at high effort) | 124.4 s · 9 of 9 sites | key answers right on all three |
+  | adversarial check of one claim | 20.1 s | 37.5 s | both refuted it, same condition quoted |
+  | total agent time | 70.7 s | 178.1 s | |
+
+  Model routing proven twice per agent: the model ID the agent reported, and `message.model` in its transcript (`claude-sonnet-5-5` × 4, `claude-opus-5-5` × 3). Limits: one run per task; the opus arm used the session effort while the sonnet arm used medium, so the time gap is model plus effort together.
+- Resulting tiers in `quest-phase0.js`: discovery · knowledge-load · working-analog · test-data · reproduce · notes = sonnet medium; code-path · root-cause = sonnet high; blast-radius · verify · synthesis = opus, each with its `// opus-reason:`.
+- **Spec preservation.** Kept unchanged: the DELEGATION PLAN mandate and its columns · the Haiku ban paragraph · disciplines 1 to 4 · the 2026-07-02 Why. **Changed, named and justified**: (1) "every subagent runs the CHEAPEST model that is ENOUGH for its task shape" became a fixed default (sonnet) with a reasoned exception (opus); the "enough" judgment survives only as that exception. Justified by his instruction above. (2) Old row "Adversarial verify · root-cause judgment · final verdicts → session model (opus-tier)": final verdicts stay with the orchestrator; a DELEGATED adversarial verify or root-cause judgment is now sonnet first and opus only with a reason. Justified by his "always try to use Sonnet 5.5 where possible" and the measurement (sonnet refuted the test claim correctly). (3) "Sonnet 5 — the FLOOR" now reads Sonnet 5.5, the model `sonnet` resolves to today.
+- Pointers aligned the same pass: `.claude/cost-efficiency.md` delegation row · `.claude/skills/familiar/SKILL.md` model tier table (it still said `haiku` for retrieval, banned since v1.68) · `.claude/skills/sweep/SKILL.md` step 3 · `.claude/skills/quest/SKILL.md` superpowers pointer · `.claude/settings.json` `$env_note` (it described a `SUBAGENT_MODEL=sonnet` failsafe that was cleared long ago; `env` is `{}`).
+
+## v1.80 — 2026-10-07 (per みや, reply structure)
+
+- §Explanation & Output-Format Discipline: new line "NAME THE THING, STAY ON NOW" — which thing and which event first, in plain words; current state only; four rows (existing thing · what changed · what I am changing now · what stays) plus a story diagram with the one changed step marked; per-step check tables on ask. Body: `.claude/reply-shape-spec.md` §3d (new).
+- Why: his audit of 2026-10-07 — "You were not clear WHAT & WHICH event you're referring to" and "I didn't see you add anything new into Claude md file based on my latest feedback on the structure you should reply."
+- Spec preservation: additive. Nothing removed.
+
+## v1.79 — 2026-10-06 (boot audit batch 2, per みや: "just build this… everything still meets the previous behaviour, just what changed is the efficiency" + "add a lot of triggers: work / redmine / tickets")
+
+- §Session Boot Order step 5: `read quest/active.txt` removed from the boot reads. New bullet: quest status comes from the ticket list, which is no longer printed at session start; it loads on the first prompt about work (`.claude/hooks/open-quest-surfacer.js` as a child of the `upsm-mode` prompt bundle); when it is not in context the briefing row says `not loaded. Name a ticket or say "board".`; never compose quest status from a Read of `quest/active.txt` (the 2026-05-25 slip the hook was built for). The autoscan bullet runs only when the list is loaded.
+- §System-Layer Layer 0: `system-audit.js` runs the full audit only when something it reads changed or on the first start of the day; otherwise one line; `--full` forces it.
+- §Evolution: the 30-day reminder is printed by the full audit run (the `evolution-check-trigger.js` and `system-check-trigger.js` SessionStart entries were removed; the files stay and are run by `system-audit.js`).
+- Spec preservation: every text that was printed before is still printed, byte-for-byte (parity checked: old audit text = prefix of the new full run; ticket block on a signal = the session-start block). Changed and named: WHEN each prints. Dropped: nothing.
+- Evidence: `.claude/hooks/open-quest-surfacer.eval.js` 95/95 · `.claude/hooks/system-audit.eval.js` 29/29 · `domain/claude-md-watch/claude-md-watch.eval.js` 17/17. Measured on the eight batch-2 scripts: 10.1 s and 10,710 characters → 1.3 s and 542 characters on an ordinary start (4.4 s when the full audit runs).
+
 ## v1.78 — 2026-10-05 (per みや's structure rulings of 2026-10-04/05)
 
 **CLAUDE.md now points at the one map instead of carrying its own.** Two in-place refinements, zero net lines:
@@ -82,6 +176,36 @@ Per みや (planning turn, 2026-07-27): *"scrutinize & double check the redmine 
 - **`.claude/skills/quest/SKILL.md`** §Quest Preparation Verification: new mandatory row **🚨 LATEST-STATE FIRST** — before Scout, emit the journal-timeline table from History.txt (`date · author · assignee-change · issue raised/solved`, oldest→newest), classify every issue OPEN vs ALREADY-SOLVED (cite the proving journal date), emit solved set as DO-NOT-RESOLVE list; fix targets = latest open issues only, newest entries supersede the Description. Banned: scouting an issue solved earlier in the thread.
 - **`.claude/hooks/ticket-gate.js`**: deterministic row **1b** injected in the Phase-0 gate checklist (same content, enforcement side).
 - **`domain/ticket-gate/eval.js`**: +4 fixtures (F11) — row injected · timeline-table demanded · OPEN/SOLVED + DO-NOT-RESOLVE demanded · solved-issue-scouting ban present. **22/22 green.**
+
+## commit-conventions.md v1.6 — 2026-10-06
+
+**R8 Malay clause loosened: "allow mixed but mainly English."** Owner ruling 2026-10-06 after the v1.5 history check showed 50 of 200 past subjects would block.
+
+**Change**: the Malay clause now blocks only a description that is mainly Malay. Of its lowercase-initial words (screen phrases Jana Semula, Muat Naik, Muat Turun stripped), M are Malay function words out of N; block when M >= 3 AND M*2 > N (exactly half passes). Block text: "subject is mainly Malay (M of N words): write it mainly in English; screen names stay as shown".
+
+**Spec preservation**: the R8 marker clause (SEMAKAN SAHAJA, belum diuji, review only, untested, WIP) is kept unchanged; R1 to R7 untouched. Dropped and justified: the "2+ distinct Malay words" trigger (replaced by the ratio per the ruling) and the "first word counts in any case" exception (the ratio counts lowercase-initial words only).
+
+| File | Change |
+|---|---|
+| `.claude/commit-conventions.md` | R8 row reworded + version 1.5 → 1.6 |
+| `domain/commit-subject-gate/` | hook ratio rule, eval 48 → 54 fixtures, README row and scenarios |
+| `.claude/hooks/commit-gate.js` | Check 0 R8 mirror updated (hook still disabled at line 38) |
+
+## commit-conventions.md v1.5 — 2026-10-05
+
+**Subject shape gains R8: English only.** Per みや after he rejected three #244600 subjects (marker words such as SEMAKAN SAHAJA and belum diuji, plus Malay sentence words).
+
+**Change**: R8 blocks (a) a marker phrase anywhere (SEMAKAN SAHAJA, belum diuji, review only, untested, WIP) and (b) 2 or more distinct lowercase Malay function words in the description. Capitalised screen and button names never count (Jana Semula, Muat Naik, Simpan, Kemaskini, Terimaan Keputusan). The name is R8 because R7 already exists (verbs must match the staged diff).
+
+**Spec preservation**: R1 to R7 and every v1.4 rule are untouched; additive. Heading "SIX" → "EIGHT" only counts the rules already in the table.
+
+| File | Change |
+|---|---|
+| `.claude/commit-conventions.md` | R8 row + version 1.4 → 1.5 |
+| `domain/commit-subject-gate/` | hook R8 + eval 24 → 48 fixtures + README rule row and scenarios |
+| `.claude/hooks/commit-gate.js` | Check 0 R8 mirror (hook is currently disabled at line 38, so not live) |
+
+**Evidence**: 200 past Ridhwan subjects run through R8 for strictness: 50 would block (38 of the 71 that start `(QA|Ref) #N - `). The rule was not tuned to pass history.
 
 ## commit-conventions.md v1.3 — 2026-07-21
 
