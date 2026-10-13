@@ -5,7 +5,7 @@
     "rules": [
       "First line: Salam <short name>, (Redmine) or Hi infra, (infra).",
       "Greet the person who routed the question to us, not the original asker.",
-      "Last line: Thank you. / Thanks / Thank you very much."
+      "Last line: Thank you. (BA pass note: exactly this, miya 2026-10-09; Thanks is fine on WhatsApp)"
     ],
     "banned": ["Hi <full Redmine name>", "any line after the closing"],
     "check": "greet"

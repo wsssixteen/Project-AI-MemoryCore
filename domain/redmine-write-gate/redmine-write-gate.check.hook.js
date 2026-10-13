@@ -73,14 +73,18 @@ const isBrowserTool = n => /(?:claude-in-chrome|Claude_Browser)__(?:javascript_t
 // <repo or its worktree>/lib/quest-start-claim.js, only as the EXECUTED script, only while its body stays status-only,
 // only when the command text itself carries no mutation. It holds inside the stage-only window too.
 const CLAIM_SCRIPT = /(?:^|[\\/])lib[\\/]quest-start-claim\.js$/i;
-const WORKTREE_SEG = /[\\/]\.claude[\\/]worktrees[\\/][^\\/]+/i;
+const CLAIM_PAYLOAD = /\{ issue: \{ status_id: IN_PROGRESS_ID, done_ratio: START_PERCENT \} \}/;
+const CLAIM_FORBIDDEN = /assigned_to_id|["']notes["']|\bnotes\s*[:=]|\bjournal\s*:|\buploads?\s*:/i;
+const WORKTREE_SEG =/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+/i;
 function isStandingClaim(scriptPath, cwd) {
   if (!CLAIM_SCRIPT.test(scriptPath)) return false;
   const abs = path.resolve(cwd || process.cwd(), scriptPath);
   const home = path.join(ROOT.replace(WORKTREE_SEG, ''), 'lib', 'quest-start-claim.js');
   if (path.normalize(abs.replace(WORKTREE_SEG, '')).toLowerCase() !== path.normalize(home).toLowerCase()) return false;
   let body = ''; try { body = fs.readFileSync(abs, 'utf8'); } catch (_) { return false; }
-  return /status_id/.test(body) && !NON_STATUS_MUTATION.test(body);
+  // v1.6 (2026-10-09, miya: "build it"): the claim also sets % done to 20. Its one payload must be exactly
+  // status + done_ratio; a note, assignee, journal or upload key anywhere in the body still voids the exemption.
+  return CLAIM_PAYLOAD.test(body) && !CLAIM_FORBIDDEN.test(body);
 }
 
 function transcriptTail(p) {

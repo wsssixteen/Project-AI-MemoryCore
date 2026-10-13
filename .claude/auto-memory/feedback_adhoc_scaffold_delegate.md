@@ -14,7 +14,9 @@ When an adhoc arrives that involves a real investigation — it names a `PTMLK/�
 
 **Every save round (2026-09-25, みや):** invoke the `adhoc-save` skill → write/update all 4 save-set parts → `node lib/adhoc-save-audit.js <ADHOC-ID>` → fix every FAIL (and the tool that caused it) → re-run until green, in the same turn. AWAM relays anchor on hakmilik id / No Resit, not a PTMLK id.
 
-**How to apply:** on adhoc intake, invoke `/quest` (or delegate a general-purpose subagent) to create the Task folder + `active.txt` block BEFORE or in parallel with the diagnosis. Root gap: the quest `ticket-gate` force-injects on Redmine QA numbers but NOT on bare `PTMLK/…` permohonan-IDs or the word "adhoc" — so the trigger did not fire on its own. Related: [[feedback_do_dont_ask_answer_literal]].
+**Order (2026-10-13, みや, ADHOC-MLPS-2026-4):** investigate → the BRIEF ends the turn (closing line `Saving in the background next: <ADHOC-ID>`) → only then ONE background agent writes the save-set. Nothing is saved and no agent is started before the brief. Steps: `adhoc-save` skill, section "Brief first". Gate: `domain/adhoc-brief-first/`. **Why:** I wrote the whole save-set on the main thread first, then on the second try started the save agent before the brief; his words: "you must brief me first before saving or anything else that should be done in the background".
+
+**How to apply:** on adhoc intake, invoke `/quest`, investigate and brief; AFTER the brief, a background subagent creates the Task folder + `active.txt` block and the rest of the save-set. Root gap: the quest `ticket-gate` force-injects on Redmine QA numbers but NOT on bare `PTMLK/…` permohonan-IDs or the word "adhoc" — so the trigger did not fire on its own. Related: [[feedback_do_dont_ask_answer_literal]].
 
 ---
 

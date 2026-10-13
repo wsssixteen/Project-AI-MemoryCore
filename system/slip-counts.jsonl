@@ -1161,3 +1161,14 @@
 {"ts":"2026-10-12T06:23:01.550Z","category":"build-missed-requirement"}
 {"ts":"2026-10-12T06:44:52.551Z","category":"reask/unrequested-extras"}
 {"ts":"2026-10-13T02:26:06.861Z","category":"build-missed-requirement"}
+{"ts":"2026-10-09T03:12:21.327Z","category":"reask/unclear-item"}
+{"ts":"2026-10-09T03:49:21.894Z","category":"reply-shape/commit-code-not-date"}
+{"ts":"2026-10-09T07:23:01.025Z","category":"show-evidence"}
+{"ts":"2026-10-09T07:23:01.158Z","category":"A2"}
+{"ts":"2026-10-09T07:23:01.297Z","category":"A2"}
+{"ts":"2026-10-09T07:23:01.442Z","category":"A5"}
+{"ts":"2026-10-12T04:53:04.606Z","category":"stored-format-not-used"}
+{"ts":"2026-10-12T05:18:53.107Z","category":"shared-file-not-moved"}
+{"ts":"2026-10-13T02:21:45.938Z","category":"adhoc-save-before-brief"}
+{"ts":"2026-10-13T02:42:51.624Z","category":"banned-reference-in-outgoing-text"}
+{"ts":"2026-10-13T02:42:51.734Z","category":"adhoc-save-before-brief"}

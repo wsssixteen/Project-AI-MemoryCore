@@ -336,3 +336,6 @@
 {"ts":"2026-10-12T08:00:19.903Z","id":"ADHOC-MLPS-2026-3","outcome":"pass","fails":[],"dur_ms":30}
 {"ts":"2026-10-12T08:04:00.089Z","id":"ADHOC-MLPS-2026-3","outcome":"pass","fails":[],"dur_ms":27}
 {"ts":"2026-10-12T08:15:01.089Z","id":"ADHOC-MLPS-2026-3","outcome":"pass","fails":[],"dur_ms":27}
+{"ts":"2026-10-12T05:18:53.227Z","id":"ADHOC-PLP-2026-2","outcome":"fail","fails":["qa_doc: Match Keys \"aplikasi\" line"],"dur_ms":28}
+{"ts":"2026-10-12T05:18:59.409Z","id":"ADHOC-PLP-2026-2","outcome":"pass","fails":[],"dur_ms":27}
+{"ts":"2026-10-12T06:14:35.222Z","id":"ADHOC-PLP-2026-2","outcome":"pass","fails":[],"dur_ms":30}

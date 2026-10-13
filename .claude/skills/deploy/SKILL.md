@@ -178,6 +178,14 @@ into `mlk/master` (verified 2026-07-27 across full merge history) — a wrong me
 the release path, and `git revert -m 1 <sha>` undoes it additively. Precedent: `aa2db329a8`.
 
 1. `git fetch origin <base> <ticket-branch>`
+1b. **Base-current check — does the env branch hold production? (2026-10-09 per みや, #283960: "every time we merge to mlk/stag-env, we will check that the branch is up to that to production right?")** Before any ticket merge, run and report in ONE line:
+
+   ```bash
+   git fetch origin mlk/master
+   git rev-list --count origin/<base>..origin/mlk/master
+   ```
+   `mlk/master` holds the latest release (check once: `git rev-list --count origin/mlk/master..origin/mlk/release/<latest>` reads 0). Result 0 → `base current: <base> holds mlk/master`, go on. Result N > 0 → the env branch is behind production by N commits: merge `origin/mlk/master` into a fresh copy of `<base>` FIRST (`git merge --no-ff origin/mlk/master -m "Merge remote-tracking branch 'remotes/origin/mlk/master' into <base>"`), compile, then merge the ticket on top, and push both in one push. Conflicts in this catch-up merge are ours to resolve, per file, by this order: the env branch's own `etanah.common.version` pin stays · a file where master's real change (`git diff -w <merge-base> origin/mlk/master -- <file>`) is already in the env branch keeps the env side · a hunk the env branch never changed since the merge base takes master's side · anything else: stop and show him the hunk. Report every resolved file with the side taken. **Banned**: merging a ticket into an env branch whose behind-count was never measured · cherry-pick as the way around a behind base.
+   **Why**: #283960, `mlk/stag-env` was 9 commits behind `mlk/master` (release 1.11.3 missing); the ticket merge conflicted in 3 files that were not the ticket's.
 2. **Already-merged guard — test the FIX COMMITS, never the branch TIP** 🚨 (corrected 2026-08-06).
    `git merge-base --is-ancestor origin/<ticket-branch> origin/<base>` asks about the **tip**, and a
    tip drifts: `mlk/training/273938` grew a release-merge commit *after* int-env had already taken
@@ -287,7 +295,13 @@ Emit only the requested env. Shape:
     **What replaces them: ONE evidence LINE above the card** (みや 2026-08-06, second correction in
     the same turn) — verified with `git ls-remote` (not local refs), rendered as:
 
-        mlk/<tracker>/<num> @ <sha> → <base> @ <merge-sha>
+        mlk/<tracker>/<num> (commit YYYY-MM-DD HH:MM) → <base> (merge YYYY-MM-DD HH:MM)
+
+    🚫 Date-time, never a short commit code (2026-10-09 per みや: Sourcetree is searched by date). The code
+    appears only inside the revert command. Also say where he sees it: the merge is on the SERVER branch
+    (`origin/<base>`); his local `<base>` shows it only after a pull, so check
+    `git rev-list --count <base>..origin/<base>` in his repo and, when he asks, fast-forward that local
+    branch for him.
 
     **Banned in the evidence**: a What/Remote-ref/SHA table · the commit log · the fix's source
     lines · anything wrapped in a fence. He asked for *"a simple `mlk/xxx/xxx <arrow> <branch>`"*.
@@ -348,7 +362,7 @@ Then stop.
 | 4 | Zero authored code. This skill merges and reports; it never edits source. |
 | 5 | Not a release. `mlk/release/*` and `mlk/master` are out of scope → `release-mlk-plp`. |
 | 6 | After a successful run, ONE line: the ticket still needs to be on the Redmine planned-release list — env branches never reach `mlk/master`. |
-| 6b | 🚨 **A "Redmine handover" after the card = the FULL close set, never the pass note alone** (2026-09-28, #279411 slip). Read first: voice `.claude/auto-memory/feedback_ticket_writing_style.md` (speech collection) · root cause shape `.claude/auto-memory/feedback_redmine_rootcause_format.md` · fill every Redmine field that exists on the form, skip only absent ones. In order: **Root cause** row + **Solution** row (rules in auto-memory `feedback_redmine_rootcause_format`: category sentence first, plain Malay, no code identifiers, no dashes/semicolons) → **pass note + git block in ONE run**: `node domain/ticket-close-block/ticket-close-block.js … --ba <BA first name> --envs "<internal | internal & staging>"` prints miya's note (`Salam <BA>, have deployed fixes to <envs>. Please help to verify.` · `Issues found and resolved:` numbered list · git block · `Thank you very much.`); fill only the list (quest SKILL.md § Hand-over to BA, 2026-09-29 #282061). Colleague's fix → the tool drops the list and the commit block by itself (2026-10-02 #282587); greet with miya's short name (`ba-names.json`), add `--prod-script <ticket>.sql` when a PROD script is attached; every attachment is named by its FULL absolute path (the tool's `Attach:` line), never `2. Fix\…` → **field set** (Status Resolved · Assignee = BA · % Done 100 · Resolved By Ahmad Ridhwan Anuar). |
+| 6b | 🚨 **A "Redmine handover" after the card = the FULL close set, never the pass note alone** (2026-09-28, #279411 slip). Read first: voice `.claude/auto-memory/feedback_ticket_writing_style.md` (speech collection) · root cause shape `.claude/auto-memory/feedback_redmine_rootcause_format.md` · fill every Redmine field that exists on the form, skip only absent ones. In order: **Root cause** row + **Solution** row (rules in auto-memory `feedback_redmine_rootcause_format`: category sentence first, plain Malay, no code identifiers, no dashes/semicolons) → **pass note + git block in ONE run**: `node domain/ticket-close-block/ticket-close-block.js … --ba <BA first name> --envs "<internal | internal & staging>"` prints miya's note (`Salam <BA>, have deployed fixes to <envs>. Please help to verify.` · `Issues resolved:` numbered list · git block · `Thank you.`); fill only the list (quest SKILL.md § Hand-over to BA, 2026-09-29 #282061). Colleague's fix → the tool drops the list and the commit block by itself (2026-10-02 #282587); greet with miya's short name (`ba-names.json`), add `--prod-script <ticket>.sql` when a PROD script is attached; every attachment is named by its FULL absolute path (the tool's `Attach:` line), never `2. Fix\…` → **field set** (Status Resolved · Assignee = BA · % Done 100 · Resolved By Ahmad Ridhwan Anuar). |
 | 7 | 🚨 **Merge order: training → `int-env` FIRST, release → training SECOND** (§3b). Never merge a training branch into `int-env` after it has taken a release merge — that drags the whole release lineage in. |
 | 8 | 🚨 **`int-env` receives ONLY the ticket's fixes.** If the staged merge diff vs `origin/mlk/int-env` shows a `pom.xml` version bump or other tickets' files, you are merging the wrong thing — stop. |
 | 9 | 🚨 **A deploy-script failure is read TOP-DOWN, never from the last line.** The final error is usually a cascade symptom (§7). |

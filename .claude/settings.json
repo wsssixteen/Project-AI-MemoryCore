@@ -373,6 +373,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\memory-write-gate\\\\memory-write-gate.check.hook.js\""
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit|PowerShell|Bash|Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\adhoc-brief-first\\\\adhoc-brief-first.check.hook.js\""
+          }
+        ]
       }
     ],
     "Stop": [
