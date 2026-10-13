@@ -16,7 +16,8 @@
 //   status = OPEN | RAN: <evidence> | BROKE: <evidence> → row N | ACCEPTED-RISK: "<miya's words>" miya YYYY-MM-DD
 //            | SUPERSEDED: row N
 // Callers: compile-gate (etanah commit) · close-phase Phase 1 · ticket-close-block --ba.
-// The local-test override is read from miya's LAST message only ([risk-ok: <num> <reason>]); it never clears a row.
+// The local-test override is read from miya's LAST message only: his plain words ("test on server", "skip local testing")
+// or [risk-ok: <num> <reason>]; it never clears a row.
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -32,6 +33,14 @@ const LEDGER_HEAD = /^(#{1,4})\s*Falsifier ledger\b.*$/im;
 const RUBRIC_HEAD = /^#{1,4}[^\n]*\bRubric\b|═══\s*RUBRIC\b/im;
 const OVERRIDE_RX = /\[risk-ok:\s*#?(?:QA-)?(\d{4,})\b\s*([^\]]{3,})\]/gi;
 const POPUP_ANSWER = /^\s*Your questions have been answered:/;
+// miya's plain words waive the local test too (2026-10-08 per miya, #283751): "test on server", "skip local testing".
+const PLAIN_WAIVE_RX = new RegExp([
+  String.raw`\b(?:test(?:ing|ed)?|check|verify|try)\b[^.?!\n]{0,40}?\b(?:on|in|at)\s+(?:the\s+)?(?:server|internal|staging|stag|mlit|int[- ]env|stag[- ]env|stg\d?)\b`,
+  String.raw`\b(?:skip|skipping|without|no need (?:for|to do|to)|don'?t need|do not need)\b[^.?!\n]{0,20}?\blocal(?:ly)?\s*test(?:ing|s)?\b`,
+  String.raw`\bno\s+local\s+test(?:ing|s)?\b`,
+].join('|'), 'gi');
+const PLAIN_NEGATE_RX = /\b(?:don'?t|do not|never|not|cannot|can'?t|won'?t|jangan|tak|before|after|until|unless|if|whether)\b[^.?!\n]{0,30}$/i;
+const TICKET_NUM_RX = /(?<![\d/])\d{5,6}(?![\d/])/g;
 
 // A worktree session shares the MAIN quest/active.txt and projects/ folder.
 function mainRoot(p) { return String(p).replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+[\\/]?$/i, ''); }
@@ -182,6 +191,33 @@ function captureOverride(qa, transcriptPath) {
     try { fs.appendFileSync(OVERRIDES, JSON.stringify(row) + '\n'); } catch (_) {}
     return row;
   }
+  const plain = plainWaiver(qa, last);
+  if (plain) {
+    const row = { ts: new Date().toISOString(), qa, reason: 'plain words: "' + plain.slice(0, 160) + '"', via: 'plain' };
+    try { fs.appendFileSync(OVERRIDES, JSON.stringify(row) + '\n'); } catch (_) {}
+    return row;
+  }
+  return null;
+}
+
+// His own sentence that says the test happens on a server, or that the local test is skipped.
+// Not a waiver: a question, a negated or conditional sentence, or a message that names only OTHER tickets.
+function plainWaiver(qa, text) {
+  const t = String(text || '');
+  const nums = t.match(TICKET_NUM_RX) || [];
+  if (nums.length && !nums.includes(num(qa))) return null;
+  for (const m of t.matchAll(PLAIN_WAIVE_RX)) {
+    const start = Math.max(t.lastIndexOf('.', m.index), t.lastIndexOf('?', m.index), t.lastIndexOf('!', m.index), t.lastIndexOf('\n', m.index)) + 1;
+    const rest = t.slice(m.index + m[0].length);
+    const endRel = rest.search(/[.?!\n]/);
+    const end = endRel < 0 ? t.length : m.index + m[0].length + endRel + 1;
+    const sentence = t.slice(start, end).trim();
+    if (/\?\s*$/.test(sentence)) continue;
+    if (/[[\]/]/.test(t.slice(Math.max(0, m.index - 1), m.index + m[0].length + 1))) continue;   // a quoted option list, not his decision
+    if (PLAIN_NEGATE_RX.test(t.slice(start, m.index))) continue;
+    if (!/\blocal(?:ly)?\s*test/i.test(m[0]) && /\b(?:before|after|until|unless|local(?:ly)?)\b/i.test(m[0])) continue;   // "test locally before we test on server"
+    return sentence;
+  }
   return null;
 }
 
@@ -200,7 +236,7 @@ function check(qa, opts) {
     if (codeFix || ctx === 'cli') {
       if (String(block.local_test_confirmed || '').toLowerCase() !== 'true') {
         override = captureOverride(qa, o.transcriptPath) || recordedOverride(qa);
-        if (!override) res.fails.push({ kind: 'local-test', msg: `local_test_confirmed=${block.local_test_confirmed || '(unset)'} in quest/active.txt — test locally and set it true, or miya writes [risk-ok: ${num(qa)} <reason>] in his own message` });
+        if (!override) res.fails.push({ kind: 'local-test', msg: `local_test_confirmed=${block.local_test_confirmed || '(unset)'} in quest/active.txt — test locally and set it true, or miya says in his own message that he tests on the server / skips the local test (plain words count; [risk-ok: ${num(qa)} <reason>] still works)` });
       }
     }
     const ok = res.fails.length === 0;
@@ -274,4 +310,4 @@ if (require.main === module) {
   process.exit(1);
 }
 
-module.exports = { check, evaluate, parseLedger, statusKind, gateCommit, captureOverride, lastUserText, message, ticketOf, mainRoot, readBlock, OVERRIDE_RX };
+module.exports = { check, evaluate, parseLedger, statusKind, gateCommit, captureOverride, recordedOverride, plainWaiver, lastUserText, message, ticketOf, mainRoot, readBlock, OVERRIDE_RX };

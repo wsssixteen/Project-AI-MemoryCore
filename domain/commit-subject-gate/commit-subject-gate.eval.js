@@ -118,6 +118,50 @@ check('F23 QA prefix clean → pass', silent(r), 'exit=' + r.status);
 r = runT([fenced('Ref #277697 - Remove TRG') + fenced('Ref #277698 - Fix logo; keep old file')]);
 check('F24 two subjects, one bad → BLOCK names 277698', blocked(r) && /277698/.test(r.stdout) , 'exit=' + r.status);
 
+// R8: a review/test marker blocks; Malay words block only when the description is mainly Malay (M >= 3 and M*2 > N).
+const R8_BLOCK = [
+  ['F25 R8 rejected: SEMAKAN SAHAJA + belum diuji marker', 'QA #244600 - SEMAKAN SAHAJA: banding format sebenar, Jana Semula, logger WORDDOC (belum diuji)'],
+  ['F26 R8 rejected: marker + 7 Malay words', 'QA #244600 - SEMAKAN SAHAJA: banding fon, jajaran, kepala/kaki dan imej (belum diuji)'],
+  ['F27 R8 rejected: mainly Malay, 6 of 7 words', 'QA #244600 - Kertas/Surat: buang logger ujian dan panggilan padam fail'],
+  ['F28 R8 marker "untested" alone', 'Ref #111111 - Fix save on Hantar, untested'],
+  ['F29 R8 marker "wip" lowercase', 'Ref #111111 - fix label, wip'],
+  ['F30 R8 marker "REVIEW ONLY" uppercase', 'Ref #111111 - Fix label REVIEW ONLY'],
+  ['F31 R8 mainly Malay: 5 of 6 words', 'Ref #111111 - PT - buang logger ujian dan padam fail'],
+  ['F32 R8 marker inside the URUSAN segment', 'Ref #111111 - WIP - PT - Fix label'],
+  ['F33 R8 mainly Malay: kaki dan kepala, 3 of 4 words', 'Ref #111111 - Fix kaki dan kepala on Surat'],
+  ['F49 R8 mainly Malay: 5 of 7 words, no marker', 'Ref #111111 - PT - tambah semakan tanah dan simpan ke fail'],
+];
+for (const [n, s] of R8_BLOCK) { r = runT([fenced(s)]); check(n + ' → BLOCK R8', blocked(r) && /R8/.test(r.stdout), 'exit=' + r.status + ' ' + (r.stdout || '').slice(0, 120)); }
+const R8_PASS = [
+  ['F34 R8 accepted: Kemaskini + Jana Semula', 'QA #244600 - Fix version rising on Kemaskini with no edit and on Jana Semula, add Word logs'],
+  ['F35 R8 accepted: Hantar + Terimaan Keputusan', 'Ref #256334 - Fix Hantar error on PDBB Terimaan Keputusan tugasan'],
+  ['F36 R8 accepted: Senarai Dokumen', 'Ref #256334 - Remove Senarai Dokumen panel from PDBB Terimaan Keputusan tugasan'],
+  ['F37 R8 accepted: font but no size', 'Ref #280029 - Fix error when a template field has a font but no size'],
+  ['F38 R8 accepted: approved TRG subject', 'Ref #277697 - Remove TRG code & resources, rename 2 shared composites to mlk'],
+  ['F39 R8 screen names Jana Semula + Muat Naik only', 'Ref #111111 - Fix Jana Semula and Muat Naik buttons'],
+  ['F40 R8 lowercase screen phrases are stripped', 'Ref #111111 - Fix muat naik and jana semula buttons'],
+  ['F41 R8 single "dan" in the URUSAN segment', 'Ref #111111 - Pendaftaran dan Pengeluaran Lesen - Fix error on Hantar'],
+  ['F42 R8 English "fail" with one hit only', 'Ref #111111 - PT - Fix fail to save on Simpan'],
+  ['F43 R8 Capitalised Kaki Lima screen name', 'Ref #111111 - Fix Kaki Lima field on Maklumat Tanah'],
+  ['F44 R8 Capitalised Papar and Simpan buttons', 'Ref #111111 - Fix Papar and Simpan buttons on Borang 4Ae'],
+  ['F45 R8 "wiper" is not the marker WIP', 'Ref #111111 - Add wiper blade field'],
+  ['F46 R8 one lowercase Malay word only', 'Ref #111111 - Fix dan once'],
+  ['F50 R8 mixed: English with a camelCase bean name (0 Malay words)', 'Ref #280895 - UPP - KMPPP - change panel maklumatUrusanPRBB rendered to isPRBB only'],
+  ['F51 R8 mixed: Malay screen names, 1 of 3 lowercase words', 'Ref #280540 - PPTPB - Pengiraan Bayaran - Kadar Bayaran unit Lot papar per Lot'],
+  ['F52 R8 mixed: exactly half Malay (4 of 8) passes', 'Ref #280191 - PLPS Maklumat Tanah - fix Butir-butir lanjut tak papar bila buka semula'],
+  ['F53 R8 mixed: 2 Malay words only (M < 3)', 'Ref #111111 - PT - buang ujian'],
+  ['F54 R8 mixed: Capitalised first Malay verb is not counted', 'Ref #111111 - Buang logger ujian'],
+];
+for (const [n, s] of R8_PASS) { r = runT([fenced(s)]); check(n + ' → pass', silent(r), 'exit=' + r.status + ' ' + (r.stdout || '').slice(0, 160)); }
+
+// F47: effect check — the R8 block text carries the M of N count and the write-it-in-English instruction
+r = runT([fenced('QA #244600 - Kertas/Surat: buang logger ujian dan panggilan padam fail')]);
+check('F47 R8 block text: mainly-Malay count + instruction', blocked(r) && /subject is mainly Malay \(6 of 7 words\): write it mainly in English; screen names stay as shown/.test(r.stdout), (r.stdout || '').slice(0, 200));
+
+// F48: bypass token still releases an R8 block
+r = runT([fenced('Ref #111111 - Fix kaki dan kepala on Surat') + ' [skip-commit-subject: miya dictated this wording]']);
+check('F48 R8 bypass token → pass', silent(r), 'exit=' + r.status);
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
 console.log('\ncommit-subject-gate.eval: ' + (results.length - failed) + '/' + results.length + ' green');

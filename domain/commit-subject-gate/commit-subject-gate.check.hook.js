@@ -12,6 +12,9 @@
 //   R5  subject longer than 100 characters
 //   R6  a REDRAFT for the same ticket that is LONGER than the previous draft in this transcript —
 //       a correction rewrite must be shorter or equal, never longer
+//   R8  a review/test marker phrase (SEMAKAN SAHAJA, belum diuji, review only, untested, WIP) anywhere, OR a
+//       description that is mainly Malay: of its lowercase-initial words, M are Malay function words, N in
+//       all, and M >= 3 AND M*2 > N (mixed but mainly English passes; Capitalised screen names never count)
 // WHY: QA-277697 2026-09-02 — five drafts of one subject, each longer than the last, carrying ';', dashes
 //      and "keep 3 trg pages" (a non-change), until miya wrote the message himself. A prose rule existed
 //      in .claude/commit-conventions.md and was skipped five times in one hour.
@@ -26,6 +29,11 @@ const { runHook } = require(path.join(ROOT, 'lib', 'hook-runtime.js'));
 
 const SUBJECT_RE = /^(QA|Ref) #(\d{4,}) - /i;
 const NON_CHANGE = /\b(keep|kept|keeping|leave|leaving|left|untouched|unchanged|retain|retained|retains|remain|remains|remained|still)\b/i;
+const MARKER_RE = /\b(semakan sahaja|belum diuji|review only|untested|wip)\b/i;
+const MALAY_WORDS = new Set(('dan yang tidak tak tiada buang banding tanpa semasa selepas sebelum untuk dengan pada kepada daripada ' +
+  'supaya kerana ikut guna tambah tukar betulkan papar simpan jajaran lorekan ulasan kepala kaki imej fon sebenar ujian panggilan ' +
+  'padam fail naik muat semula ke dari bagi atau bukan bila elak ganti kekalkan jangan sahaja hanya').split(' '));
+const SCREEN_PHRASE_RE = /\b(jana semula|muat naik|muat turun)\b/gi;
 const MAX_LEN = 100;
 const MAX_SEPARATORS = 3;
 
@@ -62,6 +70,12 @@ function extractSubjects(text) {
   return subjects;
 }
 
+// Only lowercase-initial words are counted (screen names are Capitalised): m = Malay ones, n = all of them.
+function malayCount(description) {
+  const words = (description.replace(SCREEN_PHRASE_RE, ' ').match(/\b[A-Za-z]+\b/g) || []).filter(w => /^[a-z]/.test(w));
+  return { m: words.filter(w => MALAY_WORDS.has(w)).length, n: words.length };
+}
+
 function violations(subject, previousSameTicket) {
   const v = [];
   const ticket = (SUBJECT_RE.exec(subject) || [])[2];
@@ -76,6 +90,10 @@ function violations(subject, previousSameTicket) {
   if (previousSameTicket && subject.length > previousSameTicket.length) {
     v.push(`R6 redraft is LONGER than the previous draft (${subject.length} > ${previousSameTicket.length}); a correction rewrite gets shorter, never longer`);
   }
+  const marker = MARKER_RE.exec(subject);
+  const { m, n } = malayCount(description);
+  if (marker) v.push(`R8 marker "${marker[1]}": no review or test marker words in a commit subject`);
+  if (m >= 3 && m * 2 > n) v.push(`R8 subject is mainly Malay (${m} of ${n} words): write it mainly in English; screen names stay as shown`);
   return { ticket, v };
 }
 

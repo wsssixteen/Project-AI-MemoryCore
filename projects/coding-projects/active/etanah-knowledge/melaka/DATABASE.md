@@ -1673,3 +1673,16 @@ Not here: `hakmilik_pihak_berkepentingan` (does not exist in `et_main`). A caria
 | Individu / Syarikat | either | `jns_no_id` 452 JNKP_BARU / 456 JNSYKT |
 - TRAP: PRBB pemohon rows ALWAYS carry `jns_pihak_bkptg_id = 625` (JENPPM) — 432/433 on MLIT, owner or not. Never use it to find the owner.
 - Code: `PelupusanExcelReaderHelper.java:4310-4318` → `PihakBerkepentinganRepository.findByJenisPBKodInAndDhdVersiBerkuatkuasa` (etanah-common :42).
+
+## 31. PRBB: where No. Lot and Luas are kept (2026-10-09, ADHOC-PRBB-2026-12, MLIT-proven)
+| Data | Table.column | Note |
+|---|---|---|
+| No. Lot / PT | `umm_a_permohonan_tnh.no_lot` + `unit_lot_id` | filled for every PRBB, with or without hakmilik |
+| Luas dipohon | `umm_a_permohonan_tnh.luas_dipohon` + `unit_luas_dipohon_id` | same |
+| Luas siasatan | `umm_a_permohonan_tnh.luas_siasatan` + `unit_luas_siasatan_id` | written at Laporan Tanah |
+| By-hakmilik marker | `umm_a_permohonan_tnh.mklmt_tmbhn` key `idHkmlk` (+ `luasKesuluruhan`, `kodUnitLuasKesuluruhan`) | |
+| Registry lot + luas | `ind_mklmt_hkmlk.no_lot` / `luas` via `umm_a_hkmlk.rujukan_dhd_versi_id` → `ind_versi_dhd.mklmt_hkmlk_id` | |
+- TRAP: for a PRBB applied by ID hakmilik, `umm_a_hkmlk.no_lot` / `unit_lot_id` / `luas` / `unit_luas_id` are OFTEN empty (MLIT 2026: filled on 9 of 35 PRBB, 6 of 27 PLTP, 6 of 26 PPTPB, 5 of 20 MCL, 6 of 6 PSBS). A reader that takes lot/luas from `umm_a_hkmlk` shows blank.
+- Tugasan PLT (Penyediaan Laporan Tanah) and its Maklumat Siasatan screen are teknikal (`MLK_TKL_ST`), not pelupusan.
+- Same table for the other pelupusan urusan (MLIT 2026, row in `umm_a_permohonan_tnh` with lot + luas): PT, PLPS, PLTP, PPTPB, MCL, MLPS, PSBS, PRZ, BPRZ, PPJK, PRU, RPPLP, PDBB, PLBP, OPRBB, OPLPS, OPPTPB, OMLPS. No row at all: UPS_PLP, UPP, UTBPB, OPLBP, PNL.
+- JSON key `idHkmlk` exists only on PRBB (48 of 111) and PDBB (5 of 16). Other hakmilik-based urusan link the hakmilik through `umm_a_hkmlk.id_hkmlk` only.

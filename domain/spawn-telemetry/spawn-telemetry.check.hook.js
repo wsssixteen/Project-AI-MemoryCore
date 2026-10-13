@@ -15,12 +15,23 @@ runHook({ name: 'spawn-telemetry', event: 'PostToolUse' }, (input) => {
   const fired = /^(Task|Agent|Workflow)$/.test(toolName);
   if (!fired) return { fired: false };
   const toolInput = data.tool_input || {};
+  // A Workflow carries its models inside the script, one per agent() call: tally them (2026-10-07),
+  // so sonnet-vs-opus share per run is measurable. `none` = a call that named no model.
+  let models;
+  if (toolName === 'Workflow') {
+    try {
+      const fs = require('fs');
+      const src = typeof toolInput.script === 'string' ? toolInput.script : (toolInput.scriptPath ? fs.readFileSync(toolInput.scriptPath, 'utf8') : '');
+      if (src) models = require(path.join(ROOT, 'domain', 'agent-spend-gate', 'workflow-models.js')).modelCounts(src);
+    } catch (_) { /* telemetry never breaks a spawn */ }
+  }
   appendTelemetry({
     hook: 'spawn-telemetry',
     event: 'PostToolUse',
     mode: 'native',
     spawn_tool: toolName,
     model: toolInput.model || toolInput.subagent_type || 'unspecified',
+    ...(models ? { models } : {}),
   });
   // Silent — no contextOut, no stdout, never blocks.
   return { fired: true, blocked: false };

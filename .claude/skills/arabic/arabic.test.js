@@ -113,6 +113,65 @@ t('S62 golden paradigm values (regression guard on the form tables)', () => {
 });
 t('S63 form-drill degenerate near is rejected as miss', () => { loadReal(); run('form', 'dhamir-munfasil', '--date', '2026-09-07'); const o = run('answer', 'zzz', '--date', '2026-09-07'); ok(o.startsWith('✗'), o); });
 
+// ---- class focus + ayat walk (S64–S77) ----
+const SENT = { version: 1, sebab: { mubtada: { t: 'mubtada: baris depan', cite: '55.ms', topic: 'binaan-ayat-asas' }, khabar: { t: 'khabar: baris depan', cite: '34.ms', topic: 'binaan-ayat-asas' } },
+  sentences: [
+    { id: 'T1', lesson: 1, part: 'ب', page: 7, src: 'dialog', ar: 'هٰذَا بَيْتٌ.', ms: 'Ini rumah.', binaan: 'mubtada + khabar', words: [{ ar: 'هٰذَا', apa: 'kata tunjuk', peranan: 'mubtada', baris: 'tetap', sebab: ['mubtada'] }, { ar: 'بَيْتٌ', apa: 'isim', peranan: 'khabar', baris: 'depan, tanwin', sebab: ['khabar'] }] },
+    { id: 'T2', lesson: 1, part: 'ب', page: 7, src: 'dialog', ar: 'هٰذَا مَسْجِدٌ.', ms: 'Ini masjid.', binaan: 'mubtada + khabar', words: [{ ar: 'هٰذَا', apa: 'kata tunjuk', peranan: 'mubtada', baris: 'tetap', sebab: ['mubtada'] }, { ar: 'مَسْجِدٌ', apa: 'isim', peranan: 'khabar', baris: 'depan, tanwin', sebab: ['khabar'] }] },
+    { id: 'T3', lesson: 1, part: 'ج', page: 8, src: 'dialog', ar: 'ذٰلِكَ بَابٌ.', ms: 'Itu pintu.', binaan: 'mubtada + khabar', words: [{ ar: 'ذٰلِكَ', apa: 'kata tunjuk', peranan: 'mubtada', baris: 'tetap', sebab: ['mubtada'] }, { ar: 'بَابٌ', apa: 'isim', peranan: 'khabar', baris: 'depan, tanwin', sebab: ['khabar'] }] }
+  ] };
+function sent(o) { fs.writeFileSync(path.join(tmp, 'sentences.json'), JSON.stringify(o || SENT)); }
+function noSent() { try { fs.unlinkSync(path.join(tmp, 'sentences.json')); } catch {} }
+const D = '2026-09-07';
+t('S64 focus <lesson> moves the Week Set there and status shows the focus', () => { reset(small); sent(); const o = run('focus', '2', '--date', D); ok(o.startsWith('Focus → Lesson 2'), o); eq(prog().focus.lesson, 2); eq(prog().week_set[0], 'L2-01'); ok(run('status', '--date', D).includes('focus: Lesson 2'), run('status', '--date', D)); });
+t('S65 a focused lesson is held across a week roll (5 reviews do not advance it)', () => { reset(small); noSent(); run('focus', '1', '--date', D); ['07', '08', '09', '10', '11'].forEach(d => run('review', '--date', '2026-09-' + d)); const o = run('review', '--date', '2026-09-14'); ok(o.startsWith('Week 2 · Lesson 1'), o.split('\n')[0]); });
+t('S66 focus on a 2-chunk lesson: advances to chunk 2, then wraps to chunk 1, never leaves the lesson', () => { reset(big); noSent(); run('focus', '3', '--date', D); ['07', '08', '09'].forEach(d => run('review', '--date', '2026-09-' + d)); const a = run('review', '--date', '2026-09-14'); ok(a.startsWith('Week 2 · Lesson 3 (2/2)'), a.split('\n')[0]); ['15', '16'].forEach(d => run('review', '--date', '2026-09-' + d)); const b = run('review', '--date', '2026-09-21'); ok(b.startsWith('Week 3 · Lesson 3 (1/2)'), b.split('\n')[0]); });
+t('S67 week <same lesson> keeps the focus; week <other lesson> replaces it', () => { reset(small); noSent(); run('focus', '1', '--date', D); ok(!run('week', '1', '--date', D).includes('cleared')); ok(prog().focus); const o = run('week', '2', '--date', D); ok(o.includes('Class focus cleared'), o); eq(prog().focus, null); });
+t('S68 focus off returns the normal weekly roll', () => { reset(small); noSent(); run('focus', '1', '--date', D); ok(run('focus', 'off', '--date', D).includes('cleared')); ['07', '08', '09'].forEach(d => run('review', '--date', '2026-09-' + d)); ok(run('review', '--date', '2026-09-14').startsWith('Week 2 · Lesson 2')); });
+t('S69 focus on a lesson with nothing = message; bare focus reports', () => { reset(small); noSent(); ok(run('focus', '8', '--date', D).includes('Nothing for lesson 8')); ok(run('focus', '--date', D).includes('No class focus')); });
+t('S70 sentence without a focus, or without ayat for it = guidance', () => { reset(small); sent(); ok(run('sentence', '--date', D).includes('No class focus')); run('focus', '2', '--date', D); ok(run('sentence', '--date', D).includes('No ayat entered')); });
+t('S71 sentence walks ayat by ayat inside the focus part; one table row per word; wraps with a round count', () => { reset(small); sent(); run('focus', '1', 'ب', '--date', D); const a = run('sentence', '--date', D); ok(a.startsWith('Ayat 1/2 · Lesson 1 ب · hlm. 7 · dialog'), a.split('\n')[0]); ok(a.includes('هٰذَا بَيْتٌ.')); ok(a.includes('Ini rumah.')); eq((a.match(/^\| (?!Kalimah)/gm) || []).length, 2); ok(a.includes('mubtada: baris depan')); ok(a.includes('Sumber kelas: rakaman 34 · 55'), a); const b = run('sentence', '--date', D); ok(b.startsWith('Ayat 2/2'), b.split('\n')[0]); const c = run('sentence', '--date', '2026-09-08'); ok(c.startsWith('Ayat 1/2') && c.split('\n')[0].endsWith('pusingan 2'), c.split('\n')[0]); });
+t('S72 sentence again re-shows without advancing; <n> jumps; list marks the next', () => { reset(small); sent(); run('focus', '1', 'ب', '--date', D); const a = run('sentence', '--date', D); eq(run('sentence', 'again', '--date', D), a); eq(prog().focus.ayat, 1); ok(run('sentence', 'list', '--date', D).split('\n')[1].startsWith('▶ 2.')); ok(run('sentence', '9', '--date', D).includes('does not exist')); ok(run('sentence', '1', '--date', D).startsWith('Ayat 1/2')); ok(run('sentence', 'zzz', '--date', D).startsWith('Unknown: sentence')); });
+t('S73 focus without a part takes every part of the lesson', () => { reset(small); sent(); run('focus', '1', '--date', D); ok(run('sentence', '--date', D).startsWith('Ayat 1/3')); });
+t('S74 daily = the ayat walk when the focus has ayat, else the word review', () => { reset(small); sent(); ok(run('daily', '--date', D).startsWith('Week 1 · Lesson 1 · review 1 of 5')); run('focus', '1', 'ب', '--date', D); ok(run('daily', '--date', D).startsWith('Ayat 1/2')); run('focus', '2', '--date', D); ok(run('daily', '--date', '2026-09-08').startsWith('Week 1 · Lesson 2')); });
+t('S75 a word row with an unknown reason key = a clean error, not a crash', () => { reset(small); const bad = JSON.parse(JSON.stringify(SENT)); bad.sentences[0].words[0].sebab = ['made-up']; sent(bad); run('focus', '1', 'ب', '--date', D); const o = run('sentence', '--date', D); ok(o.startsWith('✗ sentences.json error'), o); eq(prog().focus.ayat, 0); });
+t('S76 real sentences.json: every reason is class-cited or marked belum, rows use only those reasons, words rebuild the ayat', () => {
+  const S2 = JSON.parse(fs.readFileSync(path.join(REALDIR, 'sentences.json'), 'utf8'));
+  const syl = JSON.parse(fs.readFileSync(path.join(REALDIR, 'syllabus.json'), 'utf8'));
+  const AR = /[؀-ۿ]/; const LATIN = /[A-Za-z]/;
+  for (const [k, r] of Object.entries(S2.sebab)) {
+    ok(r.t && r.t.length <= 110, `sebab ${k} text`); ok(!AR.test(r.t), `sebab ${k} mixes Arabic into a Malay line`);
+    if (r.belum) { ok(/belum/.test(r.t) && !r.cite, `sebab ${k} belum shape`); continue; }
+    ok(/^(doc:\d+|\d\d\.ms)$/.test(r.cite || ''), `sebab ${k} has no class cite`);
+    const m = /^doc:(\d+)$/.exec(r.cite); if (m) ok(Number(m[1]) <= 4821, `sebab ${k} doc line`);
+    const n = /^(\d\d)\.ms$/.exec(r.cite); if (n) ok(Number(n[1]) >= 1 && Number(n[1]) <= 69, `sebab ${k} recording`);
+    ok(r.topic === null || !!syl[r.topic], `sebab ${k} topic ${r.topic}`);
+  }
+  const ids = new Set(); const BARIS = /^(depan|atas|bawah|mati|tetap|tiada|wau|hujung)/;
+  const strip = x => x.replace(/[ً-ْٰـ\s؟،.]/g, '');
+  for (const s of S2.sentences) {
+    ok(!ids.has(s.id), 'duplicate id ' + s.id); ids.add(s.id);
+    for (const f of ['id', 'lesson', 'part', 'page', 'src', 'ar', 'ms', 'binaan']) ok(s[f] !== undefined && s[f] !== '', `${s.id} missing ${f}`);
+    ok(AR.test(s.ar) && !LATIN.test(s.ar), `${s.id} ar must be Arabic script only`);
+    ok(!AR.test(s.ms) && !AR.test(s.binaan), `${s.id} Arabic inside a Malay line`);
+    ok(s.words.length >= 1, `${s.id} no words`);
+    for (const w of s.words) {
+      ok(AR.test(w.ar) && !LATIN.test(w.ar), `${s.id} word ar`);
+      ok(w.apa && w.peranan && BARIS.test(w.baris), `${s.id} ${w.ar} apa/peranan/baris`);
+      ok(!AR.test(w.apa + w.peranan + w.baris), `${s.id} ${w.ar} Arabic inside a Malay cell`);
+      ok(Array.isArray(w.sebab) && w.sebab.length >= 1 && w.sebab.every(k => S2.sebab[k]), `${s.id} ${w.ar} sebab keys`);
+    }
+    eq(strip(s.words.map(w => w.ar).join('')), strip(s.ar), `${s.id} words do not rebuild the ayat`);
+  }
+});
+t('S77 real sentences.json: every ayat of Lesson 13 ب renders through the engine', () => {
+  reset(small); copyReal('sentences.json');
+  const n = JSON.parse(fs.readFileSync(path.join(REALDIR, 'sentences.json'), 'utf8')).sentences.filter(s => s.lesson === 13 && s.part === 'ب').length; ok(n >= 9, 'ayat count ' + n);
+  ok(run('focus', '13', 'ب', '--date', D).startsWith('Focus → Lesson 13 ب'));
+  for (let i = 0; i < n; i++) { const o = run('sentence', '--date', D); ok(o.startsWith(`Ayat ${i + 1}/${n} · Lesson 13 ب`), o.split('\n')[0]); ok(!o.includes('✗') && o.includes('Sumber kelas:'), o.split('\n')[0]); }
+  noSent();
+});
+
 console.log(rows.join('\n'));
 console.log(`\n${pass} passed, ${fail} failed`);
 fs.rmSync(tmp, { recursive: true, force: true });

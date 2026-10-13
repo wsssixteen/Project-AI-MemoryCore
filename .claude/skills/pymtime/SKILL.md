@@ -1,6 +1,6 @@
 ---
 name: pymtime
-description: Remote control of みや's PymTime clock-in app (E:\Dev\scripts\PymTime) — skip / unskip a day, pause, status — AND diagnosing a colleague's pasted PymTime HANDOVER block (§Handover). Triggers — "===== PYMTIME HANDOVER", "pymtime handover", "handover from <colleague>", "colleague's pymtime", "/pymtime", "skip today", "skip tomorrow", "skip clock in", "skip clock-in today", "skip pymtime", "skip pymtime clock in", "skip attendance", "don't clock in today/tomorrow", "cuti hari ini", "EL today", "emergency leave", "did pymtime run", "pymtime status", "pause pymtime", "resume pymtime", "undo skip", AND the ProTime weekly plan (§Weekly plan) — "fill my protime plan", "fill the planner", "weekly planning", "my weekly planning", "plan the week in protime", "isi plan". ANY of these = invoke this skill BEFORE replying — the phrase alone never triggers an action; this skill's confirm step does.
+description: Remote control of みや's PymTime clock-in app (E:\Dev\scripts\PymTime) — skip / unskip a day, pause, status — AND diagnosing a colleague's pasted PymTime HANDOVER block (§Handover). Triggers — "===== PYMTIME HANDOVER", "pymtime handover", "handover from <colleague>", "colleague's pymtime", "continue pymtime", "work on pymtime", "pymtime feature", "pymtime roadmap" (→ read the project folder first), "/pymtime", "skip today", "skip tomorrow", "skip clock in", "skip clock-in today", "skip pymtime", "skip pymtime clock in", "skip attendance", "don't clock in today/tomorrow", "cuti hari ini", "EL today", "emergency leave", "did pymtime run", "pymtime status", "pause pymtime", "resume pymtime", "undo skip", AND the ProTime weekly plan (§Weekly plan) — "fill my protime plan", "fill the planner", "weekly planning", "my weekly planning", "plan the week in protime", "isi plan". ANY of these = invoke this skill BEFORE replying — the phrase alone never triggers an action; this skill's confirm step does.
 ---
 
 # /pymtime — remote skip / status for the daily clock-in
@@ -10,6 +10,8 @@ description: Remote control of みや's PymTime clock-in app (E:\Dev\scripts\Pym
 > goal: every remote skip lands on the exact intended date and is confirmed in chat AND on the laptop before みや moves on
 > goal_signal: skip.js verification line quoted in chat + `skip-set` event with `source=remote` in `.pymtime/log.jsonl` + toast fired
 > retention: keep
+
+**Any PymTime work beyond a skip / status / pasted handover** (a fix, a feature, a build, a design change): read `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore\projects\coding-projects\active\PymTime\PROJECT.md` first (the MAIN checkout, always this full path; a session folder may hold an old copy). It is the project index (state, version record, architecture, proofs, roadmap).
 
 PymTime clocks みや into Protime once a day at a random time in his window. A **skip** is a flag file `skip-YYYYMMDD` in `%USERPROFILE%\.pymtime\`; anything that creates it (Settings page, reminder toast, or this skill) stops that day's clock-in. This skill only ever creates/removes those flags — it can **never** cause a clock-in.
 
@@ -66,16 +68,15 @@ If the command errors (`date is in the past`, `bad date`) — show the error, re
 
 ## Weekly plan — ProTime "My Weekly Planning" (added 2026-09-30)
 
-Feature `domain/protime-plan/` (README has the rule + schedule). It runs by itself every Monday 08:30 and at logon until the week is done. On demand:
+Feature `domain/protime-plan/` (README has the rule + schedule). Since 2026-10-13 it runs by itself twice every working day: 08:30 (settle yesterday, top up today to 4, plan the rest of the week) and 23:00 (settle today: add worked tickets and the day's adhocs, remove tickets it placed that were not worked). On demand:
 
-1. Dry run first, show him the printed plan:
-   `node domain/protime-plan/protime-plan.js`
-2. He asked to fill (or already said "fill") → write + read back:
-   `node domain/protime-plan/protime-plan.js --live`
-0. "did the plan fill" / "plan status" / "check Monday" → `node domain/protime-plan/protime-plan.js --status` and paste its verdict + `next:` line. Do that next action when it is mine to do.
-3. Reply = the printed day lines + `WRITTEN and read back: N entries`. A result without that read-back line is NOT filled — say so.
+1. Dry run first, show him the printed lines:
+   `node domain/protime-plan/protime-plan.js` (morning) · `--night` (today) · `--day YYYY-MM-DD` (one day)
+2. He asked to fill (or already said "fill") → write + read back: the same command with `--live`
+0. "did the plan fill" / "plan status" → `node domain/protime-plan/protime-plan.js --status` and paste its verdict + `next:` line. Do that next action when it is mine to do.
+3. Reply = the printed lines + `WRITTEN and read back: N added, M removed`. A result without that read-back line is NOT written — say so.
 
-Rule: 4 tickets a day; if they cannot fill every open day at 4, then 3 a day; leftover days stay empty; days that already have any entry are never touched. **Banned**: typing the plan in the ProTime page by browser · saying "filled" from a chat plan without the script's read-back line (2026-09-30: a session reported Wed-Fri filled while ProTime showed Thu/Fri empty).
+Rule: an entry he typed or edited is never touched. Adds use ProTime's add-only call; the create-or-update call replaces the whole day and is never used. **Banned**: typing the plan in the ProTime page by browser · saying "filled" from a chat plan without the script's read-back line (2026-09-30: a session reported Wed-Fri filled while ProTime showed Thu/Fri empty) · `--live --day` on a past day he already keyed by hand in his own words (the adhocs would be added a second time in mine).
 
 ## Handover — a colleague's laptop reports back (added 2026-09-28)
 
@@ -110,6 +111,7 @@ Rule: 4 tickets a day; if they cannot fill every open day at 4, then 3 a day; le
 3. **Reply to みや**: first line = the cause in plain words (or "healthy"). Then the rows that prove it (quote them). Then a **sendable reply to the colleague** in a `text` block: plain short sentences, what to do, no jargon (same style as a BA-facing reply). If the fix is on our side (a PymTime bug), say that instead and name the file.
 4. If the block shows a PymTime **bug** (not the colleague's setup), fix it in `E:\Dev\scripts\PymTime` like any bug: root cause first, then the fix, `_selftest.js`, and a new build.
 5. **みや's ask wins**: if he only asks "what does it say", summarise; do not start a fix.
+6. **Record it**: add a row to "Colleague installs" in `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore\projects\coding-projects\active\PymTime\PROJECT.md` (section 7: date · person · build · verdict · note) and update its section 1. Installed = the install-day block says READY; proven = a second block after their first workday shows a clock-in made by PymTime.
 
 Banned: diagnosing from memory without opening the cited source · asking the colleague for their password · telling them to re-enter a password when the signature is a PowerShell timeout (the 2026-09-28 misdiagnosis this loop exists to stop).
 

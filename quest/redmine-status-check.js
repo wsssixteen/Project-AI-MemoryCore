@@ -192,4 +192,4 @@ async function checkMissing(localOpenQa) {
   console.log('   → A briefing that omits any of these is a 🔴 verify failure (undercount hides his own work).');
 }
 
-module.exports = { checkOne, checkAll, checkMissing, fetchAssignedOpen, fetchIssue, OPEN_STATUSES, OWNER_ID, classify, toResult, numOf };
+module.exports = { checkOne, checkAll, checkMissing, fetchAssignedOpen, fetchIssue, OPEN_STATUSES, OWNER_ID, REDMINE_HOST, REDMINE_KEY, classify, toResult, numOf };

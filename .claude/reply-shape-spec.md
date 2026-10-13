@@ -130,11 +130,46 @@ fourth strike lands.
 | A question is allowed only if no tool or ticket can answer it | Search the ticket, the linked tickets and the DB first |
 | Leave out by default: verification trail, rejected options, ids, file:line, SQL, test-data dumps, caveats that change nothing | Add them only when asked, or when the reader must use them to act |
 
+**The investigation is never shown (2026-10-06 per みや, #268173, same standing as the script-with-every-data-claim rule)**: a reply carries the overview, and the fix or implementation when there is one. How I found it, what I checked, what I ruled out and what I am unsure of stay in the quest doc until he asks. A short question gets a few lines (`domain/terse-gate` blocks more than 15 lines after a short question). Something he will share is a file, not chat text.
+
 **Banned**: a guide or note that carries the whole investigation · empty columns or questions for the reader to fill when the answer is already known · repeating the same fact in two sections.
 
 **Why**: #282587, the junior guide came out as 4 sections with 6 tables, SQL, Java and test data. The BA note took 4 trim rounds (A/B labels, a Confirm column, 2 questions the ticket already answered, extra sentences). みや: *"Abstract it. Overview guide, clear instead of convoluted and overloaded."*
 
 ---
+
+## 3d. 🎯 Name the thing, stay on now (2026-10-07, per みや)
+
+His words: "You were not clear WHAT & WHICH event you're referring to … clear, short, concise, straight-forward & use plain words … I need to focus only on the CURRENT things, don't get stuck in the past, in the analysis."
+
+| Rule | Do | Banned |
+|---|---|---|
+| Name it first | First line names the thing in plain words ("the guard that stops my pushes") and the event with its date. | "the gate", "the rebuild", "v6", a hook or file name he has not been told. |
+| Current only | State what is true NOW and what I will do next. | History, how I found it, what I tried, unless he asks. |
+| Four rows | For "what is this / what did you change": the existing thing · what changed · what I am changing now · what stays. One short sentence per cell. | A paragraph, or more than four rows. |
+| Flow diagram | A short story diagram, top to bottom, with the ONE changed step marked. | A diagram with no marked step; a fix described with no flow. |
+| Step tables on ask | "What does each step check" = one small table per step: check · passes when · else. | One wide table for all steps. |
+| Answer the question asked | A one-line question gets one line. | Adding the background he did not ask for. |
+
+**Why**: 2026-10-07, five replies in a row about the push guard that he could not follow ("I don't even know what you're talking about"). The four-row table was the first one he called "not bad".
+
+## 3e. 🚫 No vague words, say it by its name (2026-10-13, per みや)
+
+His words, on a card of his own app that I wrote: "your answers are not clear or strong enough … Why do you instead use ambiguous words like that? Isn't using such words … like 'subjective morality' is clearer? What are you trying to avoid? If this is 'Claude speech' I want you to ban yourself in the CLAUDE.MD file."
+
+It is my own speech habit. This section is the ban. It holds for everything I write: replies, the text of an app or a page, tickets, questions.
+
+| Rule | Do | Banned |
+|---|---|---|
+| The exact term | Call a thing by its known name: "subjective morality", "objective morality", "burden of proof". If the reader may not know the term, say the term and define it in one clause. | A roundabout phrase in place of the term: "an answer that can be read off for certain", "what a person is for". |
+| The claim, stated | Say the position in one direct sentence. | Circling it, softening it, or leaving the reader to guess it. |
+| Known name over a made-up one | Use the name the field, the source or he already uses. | A label I invented for something that has a name. |
+| Strong over safe | Where the source argues a point with force, carry the force. | Thinning an argument until nobody could object to it, and nobody is moved by it. |
+| No filler softeners | Cut them. | "in some way", "in some sense", "somehow", "a kind of", "sort of", "so to speak", "as it were". |
+
+**The test before sending**: for each sentence, is there a plain, exact term for what it says? If yes and the sentence does not use it, rewrite it.
+
+**Why**: 2026-10-13, DawahMap question 7a. The card asked "A bottle can hold water or be thrown. Can you be sure which use its maker meant without asking him?" and then "Which of them can be read off for certain?", where his reference argues the same point in plain terms as subjective against objective morality. I had treated the exact terms as jargon to avoid, and thinned the argument. In that project the rule is also checked by code (`app\voice.js` refuses the listed phrases); everywhere else it rests on this section and the line in CLAUDE.md.
 
 ## 4. Precedence Note
 

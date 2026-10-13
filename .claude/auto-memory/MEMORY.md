@@ -16,6 +16,7 @@
 - [browser](feedback_browser_edge_default.md) — Edge via Claude in Chrome extension; built-in browser banned
 - [bash-tool](feedback_bash_tool.md) — Bash hangs on simple shell ops here; use PowerShell or Node; scripts are mine to run
 - [model-tiering](feedback_model_tiering_session.md) — Fable = judgment and planning; building and recon on Sonnet or Opus
+- [workflow-name-runs-stale-copy](feedback_workflow_name_runs_stale_copy.md) — a workflow file edited in-session is launched by `scriptPath`, never by `name:`; check the first agent's label
 
 ## System design (skills: system-rules, system-design)
 - [system-design-rules](feedback_inventory_first.md) — inventory first, universal + mechanical rules, top-down apps, RAM footprint
@@ -35,7 +36,7 @@
 - [fix-txt](feedback_fix_txt_structure.md) — Fix.txt = 4 short sections: fix, explanation, chain, related
 - [quest-closure](feedback_quest_closure_both_folders.md) — wrap a quest = update BOTH Task and project folder; "save this quest" = Redmine status picks Phase 1 or Phase 2 (`node lib/save-quest.js`)
 - [code-comments](feedback_no_extra_comments.md) — one explanatory line max, no commented-out code; no person names, dates or log stamps
-- [states](feedback_state_aware_knowledge_load.md) — state via lib/states.js; same knowledge file names; Selangor = Oracle
+- [states](feedback_state_aware_knowledge_load.md) — state via lib/states.js; same knowledge file names; Melaka · Terengganu · Kedah = PostgreSQL, never Oracle; Perak · WP · Selangor = Oracle
 - [terengganu](project_terengganu_active.md) — ACTIVE since 2026-10-03: knowledge, stg2 DB, trg/master
 - [perak](reference_perak_codev_scope.md) — co-dev scope, Oracle, branch off origin/master, deploy via master, hotfix box
 
@@ -73,7 +74,7 @@
 
 ## Redmine and writing for people (skills: list-redmine, redmine-phase1-prefill)
 - [redmine-board](feedback_esokongan_means_tracker.md) — eSOKONGAN = tracker; board script first; shared filter; BA vs TSO; delegated quests
-- [redmine-write-nod](feedback_redmine_write_needs_nod.md) — Redmine writes are under miya's name; exact text + nod first
+- [redmine-write-nod](feedback_redmine_write_needs_nod.md) — Redmine writes are under miya's name; exact text + nod first; one standing exception: New to In Progress at quest start
 - [redmine-sla](reference_redmine_sla_hours.md) — Priority = SLA hours: Critical 1, High 6, Medium 22
 - [redmine-rootcause](feedback_redmine_rootcause_format.md) — cause only, max 2 plain-Malay sentences, no fix line
 - [ticket-writing-style](feedback_ticket_writing_style.md) — miya's plain ticket voice; BA reply first; junior gets hints only
@@ -85,7 +86,7 @@
 - [multi-ticket-sweep](reference_multi_ticket_sweep.md) — the /sweep design + evidence lives in five places; cite all five
 
 ## MemoryCore repo and rituals (skill: domain-expansion)
-- [memorycore-repo](project_onedrive_worktrees.md) — no worktrees in OneDrive; hooks may run from MAIN; untracked = confidential
+- [memorycore-repo](project_onedrive_worktrees.md) — no worktrees in OneDrive; hooks may run from MAIN; untracked = confidential; every session lands its work on main, never regresses it (system-design Rule 15)
 - [daily-commit](feedback_daily_commit.md) — MemoryCore commit at save is the default; push depends on context
 - [domain-expansion-banner](feedback_domain_expansion_format.md) — Domain Expansion banner, canonical format only
 - [bankai-banner](feedback_bankai_format.md) — Bankai banner format; never referenced casually
@@ -97,7 +98,10 @@
 ## Tools and side projects
 - [wa-read](project_wa_read.md) — WaRead WhatsApp reader at E:\Dev\scripts\WaRead; relink number 60186669566, never ask
 - [whatsapp-rules](feedback_whatsapp_read_rules.md) — READ ONLY, paraphrase, no sender names, never the desktop app
-- [pymtime](project_pymtime.md) — PymTime clock-in app: self-repair, remote skip, colleague handover loop
+- [pymtime](project_pymtime.md) — PymTime clock-in app: read PROJECT.md in the MAIN checkout's projects/coding-projects/active/PymTime/ first (full path in the note); remote skip, colleague handover loop, roadmap
+- [dawahmap](project_dawahmap.md) — DawahMap, his yes/no map from reason to Islam (page "Reason to Islam"): read PROJECT.md in the MAIN checkout's projects/coding-projects/active/DawahMap/ first; it argues FOR Islam from the scholars' verbatim words; content first, design later
+- [islamic-content-sources](feedback_islamic_content_sources.md) — 🚨 Islamic content: scholars of Islam in their verbatim words, never Western academia or a neutral survey; "fair" is not conceding; every quote found on its page first
+- [side-project-folder](feedback_side_project_folder.md) — 🚨 every project gets projects/coding-projects/active/<Name>/ (PROJECT.md index + VERSIONS, ARCHITECTURE, PROOFS, ROADMAP) in the MAIN checkout; update at every bulk change; memory = pointer, no state
 - [arabic-review](project_arabic_review.md) — /arabic daily vocab review, seconds to 2 minutes in chat; meanings are my job
 - [art-and-media](feedback_verify_generated_art_externally.md) — external art check; samples are the spec; MAS animation; Drive video download
 - [parked-projects](project_etanah_organize.md) — etanah-organize, aunt slides, held #255773 SPOC handoff

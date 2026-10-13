@@ -1,0 +1,37 @@
+{
+  "redmine-dev-mapping": {
+    "for": "Redmine note that answers another team's developer: which table and column, how to read a value",
+    "modules": ["greet", "lean", "line", "table", "separate", "script", "proven"],
+    "pointers": [".claude/auto-memory/feedback_ticket_writing_style.md (entries 10 and 14)"]
+  },
+  "redmine-ba-pass": {
+    "for": "Redmine note that passes a fix or a patch to the BA for testing",
+    "modules": ["greet", "lean", "line", "plain", "proven"],
+    "pointers": [".claude/auto-memory/feedback_ticket_writing_style.md (entries 1, 2, 5, 13)", "domain/ticket-close-block/ticket-close-block.js prints the note shape"]
+  },
+  "redmine-dev-fixlist": {
+    "for": "Redmine note to a developer listing fixes left or findings",
+    "modules": ["greet", "lean", "line", "rojak", "proven"],
+    "pointers": [".claude/auto-memory/feedback_ticket_writing_style.md (entries 3, 9 and the Dev-to-dev fix list shape)"]
+  },
+  "redmine-rootcause": {
+    "for": "The Root cause and Solution fields on Redmine",
+    "modules": ["lean", "line", "plain", "rojak", "proven"],
+    "pointers": [".claude/auto-memory/feedback_redmine_rootcause_format.md", ".claude/auto-memory/feedback_ticket_writing_style.md (entry 8)"]
+  },
+  "infra-handoff": {
+    "for": "Message to infra with a script to run",
+    "modules": ["lean", "line", "proven"],
+    "pointers": [".claude/auto-memory/feedback_prod_patch_infra_handoff.md (copy the stored block word for word)", ".claude/auto-memory/feedback_infra_script_schema_env.md (infra scripts ARE schema-qualified)"]
+  },
+  "whatsapp-dev": {
+    "for": "WhatsApp reply to a developer or BA",
+    "modules": ["lean", "line", "rojak", "proven"],
+    "pointers": [".claude/auto-memory/feedback_ticket_writing_style.md (entries 4, 6, 12)"]
+  },
+  "junior-handover": {
+    "for": "Guide note for a junior developer",
+    "modules": ["greet", "lean", "line", "rojak", "hint"],
+    "pointers": [".claude/auto-memory/feedback_ticket_writing_style.md (entry 7)", ".claude/auto-memory/feedback_template_work_junior_builds.md"]
+  }
+}

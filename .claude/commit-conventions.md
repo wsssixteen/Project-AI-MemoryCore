@@ -1,6 +1,10 @@
 # Commit Conventions
 
 > Routed out of CLAUDE.md 2026-05-22 (decomposition).
+> *Version: 1.6 | Last updated: 2026-10-06 — R8 Malay clause LOOSENED per owner ruling 2026-10-06 ("allow mixed but mainly English"): the description is blocked only when mainly Malay (of its lowercase-initial words, M Malay function words out of N: M >= 3 AND M*2 > N). Spec-preservation: R8 marker clause kept unchanged (SEMAKAN SAHAJA / belum diuji / review only / untested / WIP anywhere in the subject); R1–R7 untouched; DROPPED and justified: the "2+ distinct Malay words" trigger (replaced by the ratio, per the ruling) and the "first word counts in any case" exception (the ratio counts lowercase-initial words only).*
+>
+> *Version: 1.5 | Last updated: 2026-10-05 — §Subject shape adds R8 (English only: no marker phrase SEMAKAN SAHAJA / belum diuji / review only / untested / WIP; no 2+ distinct lowercase Malay function words in the description; Capitalised screen and button names never count), enforced at DRAFT time by `domain/commit-subject-gate/` (eval 48/48) and mirrored in `commit-gate.js` Check 0. Per みや after the #244600 subjects he rejected. Spec-preservation: R1–R7 and every v1.4 rule untouched; additive.*
+>
 > *Version: 1.4 | Last updated: 2026-09-02 — §Subject shape HARD RULES R1–R6 (deterministic, enforced at DRAFT time by `domain/commit-subject-gate/` Stop hook and at COMMIT time by `commit-gate.js` Check 0 v4 incl. verb-vs-staged-diff): no `;`, no dash inside the description, no arrows/pipes, no non-change words (keep/leave/untouched…), ≤100 chars, a redraft is never longer than the draft it replaces, verbs come from the staged status letters (A add · D remove · R rename · M fix/change). Per みや 2026-09-02 /goal after the QA-277697 five-draft slip. Spec-preservation: every v1.3 rule intact; additive.*
 >
 > *Version: 1.3 | Last updated: 2026-07-21 — INTERNAL ISSUE branch prefix corrected `mlk/internal-issue/` → **`mlk/internal/`** (retired the old form; new branches only, existing pushed branches untouched), per みや (#271049). Evidence: Baseline 1.0.10 recon found the team already using `mlk/internal/270727`.*
@@ -51,7 +55,7 @@ Subject-only — **no body, no trailer at all** (per `main/post-mortems.md:99` a
 - Tugasan-kod + action-oriented (canonical from 2026-06-01): `QA #262762 - OPLPS - PB - Tujuan Pengiklanan save + Borang papar maklumat reflect changes` ✓ (commit `f4a73be3cc`)
 
 
-### 🚨 Subject shape — SIX HARD RULES, deterministic (added 2026-09-02 per みや, QA-277697)
+### 🚨 Subject shape — EIGHT HARD RULES, deterministic (added 2026-09-02 per みや, QA-277697)
 
 The subject is `<QA|Ref> #<num> - <URUSAN> - <TUGASAN> - <what changed>` (URUSAN / TUGASAN segments only when specific). The description segment obeys:
 
@@ -64,6 +68,7 @@ The subject is `<QA|Ref> #<num> - <URUSAN> - <TUGASAN> - <what changed>` (URUSAN
 | R5 | ≤ 100 characters. Join clauses with `,` or `and` or `&` | draft gate + commit gate |
 | R6 | a redraft after a correction is SHORTER or equal, never longer. "Better words" means fewer words | draft gate (transcript compare, per ticket) |
 | R7 | verbs come from the staged status letters only: A → add · D → remove · R → rename (never "move") · M → fix/change. A verb with no matching letter, or an R with no "rename", is blocked | commit gate (reads `git diff --cached --name-status`) |
+| R8 | mixed but mainly English. No marker phrase (SEMAKAN SAHAJA, belum diuji, review only, untested, WIP). The description is not mainly Malay: of its lowercase-initial words, M are Malay function words (dan, yang, tidak, buang, banding, untuk, dengan ...) out of N; blocked when M >= 3 and M*2 > N. Screen and button names stay as shown on screen (Jana Semula, Simpan, Kemaskini, Terimaan Keputusan) | draft gate + commit gate |
 
 Draft gate: `domain/commit-subject-gate/` (Stop; bypass `[skip-commit-subject: <reason>]`). Commit gate: `.claude/hooks/commit-gate.js` Check 0 v4.
 

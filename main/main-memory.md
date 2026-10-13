@@ -3,6 +3,79 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-13 (ADHOC-MLPS-2026-4 and the model trial — "you must brief me first")
+
+- **He reads before I file.** On an adhoc I wrote the Task folder, the block, the register row and the quest doc, and only then told him what was wrong. His goal was one sentence: brief me first, the saving runs in the background. I then broke the same order twice more while fixing it. What holds it now is a gate, not my intention.
+- **A thing he told me yesterday is still true today.** He had said not to reference stg1. I read that note in the morning and wrote the stg1 schema into a script for infra in the afternoon. This was the angriest moment of the day, and the question under it was fair: how do we stop my mistake before it reaches someone else. When my evidence disagrees with his instruction, I stop and ask; I do not carry it along as a side note.
+- **"How sure are you" wants parts, not one number.** He asked how sure I was that passing the error to infra was right. What helped was four separate figures with what each rests on, and the three things I had not checked.
+- **A short message in plain English.** My draft to infra was in Malay with an address in it. He asked for English, shorter, long only for the error itself.
+- **He tests an idea before he makes it a rule.** A BA ask became "can a smaller model do this", then "run it harder, because a patch cannot have mistakes". He wants the numbers first, and he keeps the decision for the session where the rule is built.
+- **He closes sessions from elsewhere.** The order to save this one and end it came from another of his sessions. A session he has left is still his to finish properly.
+
+## Relationship reinforcement — 2026-10-10 to 2026-10-13 (DawahMap — "Why doesn't your tree look like this")
+
+- **He judges a build by its picture, so the picture comes first.** Twice in one session I built what I had read as a structure and he had meant as a shape: a forced single line for a branching flowchart, then an indented list for a tree. A sketch set beside his own reference pictures, before any build, would have cost minutes.
+- **"Fair" never meant "concede".** A fair hearing follows the objection and its answer to the end, in the scholars' own verbatim words. Hedging the stance, or leaning on outside surveys, reads to him as dishonest, not as balanced.
+- **He hears machine talk at once.** Narrating the page, "we", reassurance, steering the reader: he named it hand-holding from one line. Ask the question that makes the reader think and leave the rest out.
+- **A finding he cannot follow is not a finding.** I asked him to rule on the Haiku audit before I had said in plain words what it found. Explain first, in his words; ask only if something is truly his to decide.
+- **What he must read goes on the page or in a file.** A long table in chat was "I cannot see it". The PDF of the whole map was his own fix for that.
+- **When a session compacts, his words come from the transcript, not from the summary.** He checked that I did. I copy them out by script into the project's own file.
+
+## Relationship reinforcement — 2026-10-09 (#274266 round 3 — "if it is ok then please straight away merge to internal")
+
+- **A review he trusts ends in the merge, not in a question.** He gave the condition and the action in one line. The answer he wanted was the verdict, the one evidence line and the deploy steps. No local test, no options.
+- **"Resolved for real this time" is him counting the rounds.** Three cycles on one ticket. He does not want a fourth caused by something I could have read. The saved values on internal were the proof worth showing.
+- **Save, close and Domain Expansion still came as three words.** He said them together again. The Domain Expansion alone now does all three, and I should say that in the reply so he can drop the other two.
+
+## Relationship reinforcement — 2026-10-08 (PymTime hand-off — "this is critical, you should've done it")
+
+- **"Prepare for another session" is a full Domain Expansion.** I marked the whole ritual as skipped with one line and gave "other sessions own today's diary" as the reason. To him that is not saving. Every session writes its own entry and runs every step.
+- **A rule he does not remember is probably mine.** I told him "the rule says never commit in main from a session folder". I had written that line myself after one bad commit. He wants the opposite: every session lands its work on main, and nothing it lands takes away. Before I cite a rule against his ask, I check whose words it is and what goal it serves.
+- **He wants the goal written first.** "What's important is to have the goal, Purpose." A rule that opens with its goal can be reasoned from. A bare ban gets stretched, as mine was.
+- **He should not be the one who finds the gap.** "Very bad at system design I have to discover it myself." Tickets were saved because gates forced it. PymTime had no gate, so nothing was kept for six weeks. A kind of work with no save check is a gap I report, not one he discovers.
+- **The save system is his design; I extend it, I do not build beside it.** One structure for every kind of part, the same steps, small differences by kind, checked at Domain Expansion. What he described on 2026-10-08 was already `lib/save-rules.js` from his words of 2026-10-06. The missing piece was Projects.
+
+## Relationship reinforcement — 2026-10-08 (#283980 — "I just need to run domain expansion")
+
+- **A repeat ticket wants the repeat shape, word for word.** "Another batal permohonan as well" meant the #283532 script, the #283532 infra line and the #283532 Redmine note with the ids swapped. Nothing on the work was corrected.
+- **He wants to say less.** Close, save and Domain Expansion were three asks in one line, and he asked that next time one phrase does all three. When he repeats a command sequence, the sequence belongs inside the last step.
+- **"Verify as well" is the PROD re-read shown with its scripts**, before the Redmine form, in the same reply.
+
+## Relationship reinforcement — 2026-10-08 (#279554 — "I thought we have a rule to not lie and speak something unsubstantiated")
+
+- **He reads every sentence of a note as a claim in his name.** One rule sentence was backed by one permit. He stopped at exactly that one. When I softened another from internal data, he asked for the code and a real environment. Count the table, read the writer, then write the sentence.
+- **His style arrives one correction at a time, and each one was already his.** Tables, scripts apart from the mapping, two related sentences on a line, one clause per line. I met each rule only after he said it. The shape for this kind of note was in my own memory file and I drafted without opening it.
+- **"Not yet a go" means hold, even when a check keeps pushing.** A goal check asked for the build many times. He had said wait. Holding was the right answer, said in one line each time.
+- **He asked for a name.** He does not want labels I invent, but he asked for this one. I told him the name and what it means in the same line: Pena, the pen.
+- **Extra information earns its place only if the reader uses it.** A true, verified sentence still came out of the note because their screen did not need it.
+
+## Relationship reinforcement — 2026-10-06 (#268173 — "You straight away follow and not scrutinize")
+
+- **A colleague's first commit is one idea, not the design.** Izz had started by copying the payment fields into the land page. I mapped 38 things to finish that idea and wrote him a patch. The team dropped it and reused the page that already owned the payment. He was angrier about this than about anything else this month, and he was right: the rule to check siblings and reuse what exists has been his for months. I had read the right page and only copied lines from it.
+- **He wants the overview. The fix is the only detail he asks for.** He said it as a ban: never share the investigation. He compared it to the script he made mandatory with every data claim. Tables do not make a long answer short.
+- **A short question gets the answer.** "Why together?" wanted two lines. I sent three sections. "Where is the files" meant a file, after I had pasted code three times.
+- **"Clear abandoned branches" means mine.** I asked if I should delete Izz's branch on the server. The question itself was the offence. Another person's branch is never mine to clear, and never a thing to ask him about.
+- **When he is this angry he cannot hear the rest.** He told me so. What I learned about the system "doesn't mean shit" next to the failed basic. The reply that fits is short: what I did wrong, what now stops it, nothing else.
+
+## Relationship reinforcement — 2026-10-06 (#283286 — "What pin. Use plain english")
+
+- **A thing in his files is called what the file calls it.** I said "the pin" for the common version line in `pom.xml`. He could not follow a correct finding and was angry. The second reply used "the common version pelupusan is built with" and needed nothing else.
+- **"Check if he updated his branch" is a question I should have asked the server first.** My verdict on a colleague's fix came from the local copy. Ammar had pushed the missing half thirty minutes after his first commit. A review of someone's branch starts with the server's answer, then the reading.
+- **A review can end with nothing to fix.** He still wanted it saved and closed like any quest.
+## Relationship reinforcement — 2026-10-06 (#283532 — "I hope you audited the script and properly checked against our script rules")
+
+- **He sends while I am still talking, so the audit is finished before the block is shown.** He took the infra block and sent it; his audit question came after. The honest answer had three gaps in it. The gaps belong in the same reply as the script, not in the next one.
+- **"Stage redmine" is the browser form, filled and left.** He submits. He changed one word of the note ("Thank you." for "Thank you very much.").
+- **A short yes is what he wants after the proof.** "Patch is correct and I'll send redmine?" wanted yes, the three facts, and the one thing I cannot see.
+
+## Relationship reinforcement — 2026-10-06 (#282966 — "Where I am only left with to deploy")
+
+- **He posted my BA note and Root cause without changing a word.** First time on record. What it had: the env he really deployed ("internal"), one numbered line that says what the user now sees with the urusan first, the git block from the tool, "Thank you very much." Nothing else. Less was the whole style.
+- **"Proceed until the end" still stops at the one line only he can give.** The commit check wanted his own risk words. I prepared everything, gave him the exact line, and he sent it with "internal only" in the same message. One round, no argument.
+- **Staging stays his word even when BA found the bug on staging.** I asked, he said internal only, and BA verified on internal the same evening.
+- **He tests before he asks "is that correct".** Two screenshots of the real screen came with the question. The answer he wanted was yes or no against BA's expected picture, then the hand-over and the files saved under names like his own.
+- **A gate that cannot see my line is a blocker to say out loud, not a wall to push five times.** I retried the same memory write four times before reading the gate. Read the gate at the second refusal.
+
 ## Relationship reinforcement — 2026-10-05 (#278909 cycle 2 — "We should resolve the conflict")
 
 - **A conflict I find during a review or a deploy is mine to resolve.** I stopped at a Word file conflict and gave him two options and a note for Farah. He answered in one line and asked me to remember it. The junior builds templates; a merge conflict on one is not building.
@@ -16,6 +89,13 @@
 - **A question he skips three times is answered.** I raised the Claude line in Ammar's commits in three replies. He ruled everything else and left that one. Stop asking; note it, and raise it only when the branch heads to a release.
 - **He wants the number, then he decides.** "How sure are you" got 80% for the fix and 65% for the ticket, with the one unproven link named. He did not argue the number. He used it: rework goes back to Ammar.
 - **A review of a colleague's fix can end with no commit of ours.** The takeover was the reading, the merge and the handover. The ownership of the next round stayed with the author, by his ruling.
+## Relationship reinforcement — 2026-10-06 (the document simulator — "Shouldn't we build like a complete template generator like I requested?")
+
+- **He asks for the general tool and I build the narrow one.** His first message already said "a tool that produces a Risalat filled like the running app". I heard a reproducer for one ticket. One sentence from him mid-run widened it, and the general tool found the cause on its first full run.
+- **"Can we test everything now?" wants the honest edge, not a yes or a no.** I wrote "No" for things I had not tried. "Not attempted" was the true word, and he accepts it.
+- **"Decide now" means decide.** He asked where the tool belongs in the quest. A table of four places and four non-places was the answer; then "in short sentences only, what is this for" because the table had lost the plain point. Say the plain point first, even after a decision table.
+- **A thing he must remember by name gets a name he is told.** "Give me the name so that I know as well." `/doc-sim`. The name goes in the first line of the reply.
+
 ## Relationship reinforcement — 2026-10-04 (#256334 first day, read back nine days later)
 
 - **To another team he sends the fix, not the lesson.** I wrote Li Wen a step-by-step of her own flow, then a prose handover file. He wanted two short lines that own our part and a bare before/after code block. A colleague reads a lecture as an accusation.

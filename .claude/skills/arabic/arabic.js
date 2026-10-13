@@ -14,6 +14,9 @@
  *   node arabic.js settings [key value]           show/set: words · pace · min_reviews · set_max
  *   node arabic.js stats                          weekly table + mastery (observability)
  *   node arabic.js nudge                          one boot line or nothing
+ *   node arabic.js focus [<lesson> [part]|off]    class focus: the Week Set and the ayat walk stay on that class until replaced
+ *   node arabic.js sentence [again|<n>|list]      next ayat of the class focus, word by word (data/sentences.json)
+ *   node arabic.js daily                          `sentence` when a class focus has ayat, else `review`
  * Env: ARABIC_DATA_DIR overrides the data folder (used by tests).
  */
 'use strict';
@@ -30,6 +33,8 @@ const LOG = path.join(DATA_DIR, 'log.jsonl');
 const SYLLABUS = path.join(DATA_DIR, 'syllabus.json');
 const PARADIGMS = path.join(DATA_DIR, 'paradigms.json');
 const ROOTS = path.join(DATA_DIR, 'roots.json');
+// Class-focus data: the ayat of a class, each word explained only with class-cited reasons
+const SENTENCES = path.join(DATA_DIR, 'sentences.json');
 // Settings (みや-adjustable via `settings <key> <value>`): words = rows per review · pace = lessons (chunks) per week ·
 // min_reviews = reviews needed before the week advances · set_max = words per chunk
 const DEFAULTS = { words: 5, pace: 1, min_reviews: 3, set_max: 15 };
@@ -44,6 +49,7 @@ function loadWords() { const w = readJson(WORDS, null); if (!w) throw new Error(
 function loadSyllabus() { return readJson(SYLLABUS, null); }
 function loadParadigms() { return readJson(PARADIGMS, null); }
 function loadRoots() { return readJson(ROOTS, null); }
+function loadSentences() { return readJson(SENTENCES, null); }
 function loadProgress() {
   return readJson(PROGRESS, { week_start: null, set_index: 0, week_set: [], reviews: [], words: {}, class_position: null, override: null });
 }
@@ -76,6 +82,13 @@ function activeSet(all, idx) {
   return { lesson: first.lesson, lessonTo: last.lesson, chunk: first.chunk, of: first.of, parts: parts.length, ids: parts.flatMap(c => c.ids) };
 }
 function chunkIndexForLesson(all, lesson) { const i = all.findIndex(c => c.lesson === Number(lesson)); return i < 0 ? null : i; }
+// A class focus pins the Week Set inside its lesson: an advance past the lesson's last chunk wraps to its first.
+function clampToFocus(p, all) {
+  if (!p.focus) return;
+  const first = chunkIndexForLesson(all, p.focus.lesson); if (first === null) return;
+  const last = first + all.filter(c => c.lesson === Number(p.focus.lesson)).length - 1;
+  if (p.set_index < first || p.set_index > last) p.set_index = first;
+}
 
 // ---------- state transitions ----------
 function reviewsThisWeek(p) { return p.reviews.filter(r => r.week_start === p.week_start); }
@@ -91,6 +104,7 @@ function rollIfNeeded(p, words, date) {
     else if (prev >= S.min_reviews && p.set_index < all.length - 1) p.set_index = Math.min(p.set_index + S.pace, all.length - 1);   // else carry-over
     p.week_start = monday;
   } else if (p.override && p.override.week_start === monday) { p.set_index = p.override.set_index; p.override = null; }
+  clampToFocus(p, all);
   p.set_index = Math.min(p.set_index, all.length - 1);
   const set = activeSet(all, p.set_index);
   p.week_set = set.ids;
@@ -223,9 +237,11 @@ function cmdWeek(arg, date) {
   if (arg === 'next') idx = Math.min(p.set_index + S.pace, all.length - 1);
   else { idx = chunkIndexForLesson(all, arg); if (idx === null) return `No words for lesson ${arg} (lessons with words: ${[...new Set(all.map(c => c.lesson))].join(', ')}).`; }
   p.set_index = idx; const set = activeSet(all, idx); p.week_set = set.ids; p.override = null;
+  let note = '';
+  if (p.focus && set.lesson !== Number(p.focus.lesson)) { p.focus = null; note = ' Class focus cleared.'; }   // naming another lesson replaces the focus
   writeJson(PROGRESS, p);
   const name = set.lessonTo !== set.lesson ? `Lessons ${set.lesson}–${set.lessonTo}` : `Lesson ${set.lesson}${set.of > 1 ? ' (' + set.chunk + '/' + set.of + ')' : ''}`;
-  return `Week set → ${name} (${set.ids.length} words).`;
+  return `Week set → ${name} (${set.ids.length} words).${note}`;
 }
 function cmdSettings(key, value) {
   const s = readJson(SETTINGS, {});
@@ -268,7 +284,72 @@ function cmdStatus(date) {
   const { set, done, misses } = statusLine(p, words, date);
   const weekNo = new Set(p.reviews.map(r => r.week_start)).size || 1;
   const lesson = set.lessonTo !== set.lesson ? `Lessons ${set.lesson}–${set.lessonTo}` : `Lesson ${set.lesson} (chunk ${set.chunk}/${set.of})`;
-  return `Week ${weekNo} · ${lesson} · ${done}/5 reviews · misses: ${misses} · next roll Mon`;
+  return `Week ${weekNo} · ${lesson} · ${done}/5 reviews · misses: ${misses} · next roll Mon${p.focus ? ' · focus: ' + focusLine(p, loadSentences()) : ''}`;
+}
+
+// ---------- class focus + ayat walk (v1.2, 2026-10-07) ----------
+// focus = State: ONE value, replaced by the next `focus`, by `week <other lesson>`, or by `focus off`. Never a list.
+function focusSentences(p, S2) {
+  if (!S2 || !p.focus || !Array.isArray(S2.sentences)) return [];
+  return S2.sentences.filter(s => s.lesson === Number(p.focus.lesson) && (!p.focus.part || s.part === p.focus.part));
+}
+function focusLine(p, S2) {
+  const f = p.focus; const n = focusSentences(p, S2).length;
+  return `Lesson ${f.lesson}${f.part ? ' ' + f.part : ''} · ${n ? `ayat ${((f.ayat || 0) % n) + 1}/${n} next` : 'no ayat entered'}${(f.round || 1) > 1 ? ' · round ' + f.round : ''}`;
+}
+function cmdFocus(lessonArg, partArg, date) {
+  const words = loadWords(); const p = loadProgress(); const all = chunks(words);
+  rollIfNeeded(p, words, date);
+  const S2 = loadSentences();
+  if (!lessonArg) return p.focus ? `Focus: ${focusLine(p, S2)}` : 'No class focus. Set one with `focus <lesson> [part]`.';
+  if (lessonArg === 'off') { p.focus = null; writeJson(PROGRESS, p); return 'Class focus cleared. The weekly roll is back to normal.'; }
+  const lesson = Number(lessonArg); const idx = Number.isInteger(lesson) ? chunkIndexForLesson(all, lesson) : null;
+  const hasAyat = !!(S2 && Array.isArray(S2.sentences) && S2.sentences.some(s => s.lesson === lesson && (!partArg || s.part === partArg)));
+  if (!Number.isInteger(lesson) || (idx === null && !hasAyat)) return `Nothing for lesson ${lessonArg} (no words, no ayat).`;
+  p.focus = { lesson, part: partArg || null, set: date, ayat: 0, last: null, round: 1 };
+  if (idx !== null) { p.set_index = idx; p.week_set = activeSet(all, idx).ids; }
+  p.override = null;
+  writeJson(PROGRESS, p);
+  return `Focus → ${focusLine(p, S2)}. Stays until the next \`focus\`, a \`week <other lesson>\`, or \`focus off\`.`;
+}
+// One ayat, word by word. Every reason text comes from the closed `sebab` table of sentences.json (class-cited or marked belum).
+function renderSentence(S2, s, i, n, round) {
+  const rows = []; const cites = new Set();
+  for (const w of s.words) {
+    const texts = w.sebab.map(k => { const r = S2.sebab[k]; if (!r) throw new Error(`unknown sebab "${k}" in ${s.id}`); if (r.cite) cites.add(r.cite); return r.t; });
+    rows.push(`| ${w.ar} | ${w.apa} | ${w.peranan} | ${w.baris} | ${texts.join(' · ')} |`);
+  }
+  const rec = [...cites].filter(c => /\.ms$/.test(c)).map(c => c.slice(0, 2)).sort();
+  const doc = [...cites].filter(c => /^doc:/.test(c)).map(c => c.slice(4)).sort((a, b) => a - b);
+  const sumber = [rec.length ? 'rakaman ' + rec.join(' · ') : '', doc.length ? 'nota guru baris ' + doc.join(' · ') : ''].filter(Boolean).join(' | ');
+  return [`Ayat ${i + 1}/${n} · Lesson ${s.lesson}${s.part ? ' ' + s.part : ''} · hlm. ${s.page} · ${s.src}${round > 1 ? ' · pusingan ' + round : ''}`, '',
+    s.ar, '', s.ms, '',
+    '| Kalimah | Jenis | Peranan | Baris akhir | Sebab (dari kelas) |', '|---|---|---|---|---|', ...rows, '',
+    `Binaan: ${s.binaan}`, '',
+    `Sumber kelas: ${sumber || 'tiada (semua belum dipelajari)'}`].join('\n');
+}
+function cmdSentence(arg, date) {
+  const S2 = loadSentences(); if (!S2) return 'No sentences.json yet.';
+  const p = loadProgress();
+  if (!p.focus) return 'No class focus set. Run `focus <lesson> [part]` first.';
+  const f = p.focus; const list = focusSentences(p, S2); const n = list.length;
+  if (!n) return `No ayat entered yet for Lesson ${f.lesson}${f.part ? ' ' + f.part : ''}.`;
+  const next = (f.ayat || 0) % n;
+  if (arg === 'list') return list.map((s, i) => `${i === next ? '▶' : '·'} ${i + 1}. ${s.ar}`).join('\n');
+  let i;
+  if (arg === 'again') i = Number.isInteger(f.last) ? f.last : next;
+  else if (arg && /^\d+$/.test(arg)) { i = Number(arg) - 1; if (i < 0 || i >= n) return `Ayat ${arg} does not exist (1–${n}).`; }
+  else if (arg) return `Unknown: sentence ${arg}. Use: sentence · sentence again · sentence <n> · sentence list.`;
+  else i = next;
+  let out;
+  try { out = renderSentence(S2, list[i], i, n, f.round || 1); } catch (e) { return `✗ sentences.json error: ${e.message}`; }
+  if (arg !== 'again') { f.last = i; f.ayat = i + 1; if (f.ayat >= n) { f.ayat = 0; f.round = (f.round || 1) + 1; } writeJson(PROGRESS, p); }
+  return out;
+}
+function cmdDaily(date) {
+  const p = loadProgress();
+  if (p.focus && focusSentences(p, loadSentences()).length) return cmdSentence(null, date);
+  return cmdReview(date);
 }
 function cmdNudge(date) {
   const words = readJson(WORDS, null); const p = readJson(PROGRESS, null);
@@ -419,6 +500,9 @@ function main(argv) {
     case 'drill': out = cmdDrill(date); break;
     case 'sync': out = cmdSync(); break;
     case 'nudge': out = cmdNudge(date); break;
+    case 'focus': out = cmdFocus(args[1], args[2], date); break;
+    case 'sentence': out = cmdSentence(args[1], date); break;
+    case 'daily': out = cmdDaily(date); break;
     default: out = `Unknown command ${cmd}`;
   }
   if (cmd !== 'nudge') logRow({ cmd, date, arg: args.slice(1).join(' ') || undefined, outcome: (out || '').split('\n')[0].slice(0, 80), dur_ms: Date.now() - t0 });

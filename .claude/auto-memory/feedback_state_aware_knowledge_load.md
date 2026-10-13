@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: b1b3201c-7ff8-45c3-b969-f80bc749ba4c
-  modified: 2026-09-04T08:35:24.505Z
+  modified: 2026-10-05T15:54:28.378Z
 ---
 
 🚨 The quest workflow hard-codes `etanah-knowledge/melaka/`. For a **non-Melaka** ticket this loads the WRONG knowledge and the state's own knowledge base is skipped.
@@ -18,6 +18,9 @@ metadata:
 | `PTPK` | Perak | `etanah-knowledge/perak/` (STATE-FACTS.md · DATABASE.md · index.md) | Oracle (oracle-prk-dev/denda/prod) |
 | `PTSGR` | Selangor | (oracle-slt) | Oracle |
 | `PTTRG` | Terengganu (ACTIVE since 2026-10-03) | `etanah-knowledge/terengganu/` (index.md · STATE-FACTS.md) | Postgres (`postgres-trgstg2-pg` default · `postgres-trgstg1-pg` = only Flowable reader) |
+| `PTKED` | Kedah (ACTIVE since 2026-10-05) | `etanah-knowledge/kedah/` (index.md · STATE-FACTS.md) | Postgres (per miya 2026-10-05). No connection set up on this laptop yet. |
+
+**Database engine per state (miya, 2026-10-05: "we do not use Oracle anymore … postgresql for quite some time", scoped by his popup answer to "our working states")**: Melaka · Terengganu · Kedah = **PostgreSQL**. Perak · Wilayah Persekutuan · Selangor stay recorded as Oracle because their servers still are (checked 2026-10-05: the Perak staging connection answered `Oracle Database 19c`, schema `ET_MAIN_STAG`). He confirmed the same evening: "Only those 3 uses Oracle, moving forward we'll use postgresql", so **any NEW state is PostgreSQL by default**; Oracle is only Perak, WP and Selangor. **How to apply**: for a Melaka, Terengganu or Kedah ticket never reach for an `oracle-*` tool and never report "only Oracle servers found" as if it said something about that state; a missing connection for one of these states is a missing PostgreSQL connection. The descriptions of the `oracle-prk-*` tools all say "Selangor Oracle DB (ET_MAIN_DEV, SLIT)", which is wrong text: trust the tool name and a `select ... from dual` probe, not the description.
 
 **Why** (2026-08-28, #277439/#277115): started two Perak PT tickets and never loaded `etanah-knowledge/perak/` — it existed since 2026-08-26 (Oracle MCP map, repo topology, `prk/internal/<num>` + `prk/stag-env` branch convention). Improvised all of it, and used `internal/<num>` instead of the documented `prk/internal/<num>`. A state-prefix check at Phase 0 would have loaded it in seconds.
 

@@ -43,7 +43,7 @@ Skipping W3 is not skipping rigour — it is spending the round where the disagr
 
 ## Step 3 — DELEGATION PLAN table BEFORE any fan-out (mandatory)
 
-Emit: stage · #agents · model · effort · output schema · expected token band. Model floor = Sonnet 5 (Haiku BANNED from delegation, CLAUDE.md v1.68); wave default = the proven contract (one familiar per ticket per wave, medium effort); W4 audit = session model. **Never Fable.**
+Emit: stage · #agents · model · effort · output schema · expected token band. Model default and floor = `sonnet`, Sonnet 5.5 (Haiku BANNED from delegation, CLAUDE.md v1.68; every familiar names its model, CLAUDE.md v1.81); wave default = the proven contract (one familiar per ticket per wave, medium effort); W4 audit = the orchestrator, Opus 5.5 (the session model). **Never Fable.**
 
 ## Step 4 — the wave ladder
 

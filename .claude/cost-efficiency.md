@@ -36,7 +36,7 @@
 
 | Rule | Home |
 |---|---|
-| DELEGATION PLAN table + cheapest-model-that-is-ENOUGH (`haiku` retrieval · `sonnet` synthesis · session-model verify) + scout-inline-first + resume-not-rerun + controller-verifies | **CLAUDE.md §🎛️ Delegation Economy** (v1.56) — evidence: Phase A 2.1M crash vs 0.79M strategic resume, same quality |
+| DELEGATION PLAN table + Opus 5.5 orchestrates, every delegated agent on `sonnet` (Sonnet 5.5), `opus` only with a stated reason, `haiku` banned + scout-inline-first + resume-not-rerun + controller-verifies | **CLAUDE.md §🎛️ Delegation Economy** (v1.56, re-tiered v1.81) — evidence: Phase A 2.1M crash vs 0.79M strategic resume, same quality · 2026-10-07 measurement in `system/claude-md-changelog.md` v1.81 |
 | Only spawn a familiar for files >500 lines or multi-file investigations; pass exact path, never make it search | CLAUDE.md §10 + `familiar/SKILL.md` |
 
 ## DB / MCP queries

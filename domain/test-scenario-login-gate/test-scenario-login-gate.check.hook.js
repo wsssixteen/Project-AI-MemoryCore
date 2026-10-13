@@ -71,6 +71,41 @@ runHook({ name: 'test-scenario-login-gate', event: 'Stop' }, (input) => {
     };
   }
 
+  // v4 (2026-10-08, per みや, #283751): a deploy card is followed, in this order, by a Test scenario
+  // section that names the env he chose and a Redmine handover section (Root cause + Solution + BA note).
+  // "If I say test on server, straight away prepare test scenario & redmine handover in clear separate sections."
+  const HANDOVER_BYPASS_RE = /\[skip-handover-gate:\s*[^\]<]+\]/i;
+  if (DEPLOY_RE.test(text) && !HANDOVER_BYPASS_RE.test(text)) {
+    const deployAt = text.search(DEPLOY_RE);
+    const ENV_WORD = '(?:internal|staging|training|mlit|stag|int-env|stag-env)';
+    const scen = text.match(new RegExp('^#{1,4}[^\\n]*\\btest scenario\\b[^\\n]*$', 'im'));
+    const hand = text.match(/^#{1,4}[^\n]*\bredmine (?:handover|hand-over|hand over)\b[^\n]*$/im);
+    const missing = [];
+    if (!scen) missing.push('a heading "Test scenario — <env>"');
+    else {
+      if (!new RegExp('\\b' + ENV_WORD + '\\b', 'i').test(scen[0])) missing.push('the env in the Test scenario heading (internal / staging / training: the one miya named)');
+      if (scen.index < deployAt) missing.push('the Test scenario section AFTER the deploy steps');
+    }
+    if (!hand) missing.push('a heading "Redmine handover"');
+    else {
+      if (scen && hand.index < scen.index) missing.push('the Redmine handover section AFTER the Test scenario');
+      const body = text.slice(hand.index);
+      if (!/\bRoot cause\b/i.test(body)) missing.push('a Root cause row in the Redmine handover');
+      if (!/\bSolution\b/i.test(body)) missing.push('a Solution row in the Redmine handover');
+    }
+    if (missing.length) {
+      return {
+        fired: true,
+        blocked: true,
+        blockReason:
+          '⛔ test-scenario-login-gate v4: the deploy card is not followed by its two sections.\n' +
+          '   Missing: ' + missing.join(' · ') + '\n' +
+          '   Shape, right after the deploy steps: "## Test scenario — <env>" (table Login | Screen | Do | Expect)\n' +
+          '   then "## Redmine handover" (Root cause · Solution · BA note from ticket-close-block.js · field set).\n' +
+          '   miya named no env? ask him with one popup first. Bypass: [skip-handover-gate: <reason>]\n',
+      };
+    }
+  }
   // v3 (2026-10-04, per みや, #282442): a test hand-back that names a permohonan must be backed
   // by a local-test-prep run that is still true on the machine (local DB = the schema holding
   // the test data, the ticket's fix files on his repo). He may run locally at any moment.
@@ -79,7 +114,9 @@ runHook({ name: 'test-scenario-login-gate', event: 'Stop' }, (input) => {
   if ((HANDBACK_RE.test(text) || TEST_TABLE_RE.test(text) || DEPLOY_RE.test(text)) && !PREP_BYPASS_RE.test(text)) {
     const prep = require(path.join(ROOT, 'quest', 'local-test-prep.js'));
     const ids = Array.from(new Set(text.match(prep.PERMOHONAN_RE) || []));
-    if (ids.length) {
+    let waived = false;
+    try { const F = require(path.join(ROOT, 'domain', 'falsifier-ran-check', 'check.js')); waived = (text.match(/#(\d{5,6})\b/g) || []).some(n => F.recordedOverride && F.recordedOverride('QA-' + n.slice(1))); } catch (_) {}
+    if (ids.length && !waived) {
       let c; try { c = prep.check(ids); } catch (e) { c = { ok: false, reason: 'check failed: ' + e.message }; }
       if (!c.ok) {
         return {

@@ -71,6 +71,18 @@ const before5 = countSpawnRows();
 r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'TaskRunner', tool_input: { model: 'x' } }), encoding: 'utf8', timeout: 30000, env: process.env });
 check('F5 non-matching tool_name does not fire', countSpawnRows() === before5, 'before=' + before5 + ' after=' + countSpawnRows());
 
+// F6 (2026-10-07): a Workflow with an inline script → the row carries a per-model tally of its agent() calls
+const before6 = countSpawnRows();
+const wfScript = "export const meta = { name: 'x', description: 'y' }\nconst a = await agent('r', { model: 'sonnet' })\nconst b = await agent('r2', { model: 'sonnet' })\nconst v = await agent('v', { model: 'opus' })\nconst w = await agent('w', { label: 'bare' })\n";
+r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'Workflow', tool_input: { script: wfScript } }), encoding: 'utf8', timeout: 30000, env: process.env });
+const row6 = lastSpawnRow();
+check('F6 Workflow with a script: silent, one row, models tally = sonnet 2 · opus 1 · none 1', r.status === 0 && (r.stdout || '') === '' && countSpawnRows() === before6 + 1 && !!row6 && JSON.stringify(row6.models) === '{"sonnet":2,"opus":1,"none":1}', JSON.stringify(row6));
+check('F6b the older rows keep their shape: no models key when there is no script', !!row3 && row3.models === undefined && !!row4 && row4.models === undefined, JSON.stringify(row3));
+// F7: an unreadable scriptPath never breaks the spawn or the row
+const before7 = countSpawnRows();
+r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: 'Workflow', tool_input: { scriptPath: 'Z:\\nope\\missing.js' } }), encoding: 'utf8', timeout: 30000, env: process.env });
+check('F7 unreadable scriptPath: exit 0, row still written, no models key', r.status === 0 && countSpawnRows() === before7 + 1 && lastSpawnRow().models === undefined, JSON.stringify(lastSpawnRow()));
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
 console.log('\nspawn-telemetry.eval: ' + (results.length - failed) + '/' + results.length + ' green');

@@ -85,6 +85,42 @@ const shortPath = writeTranscript('fixture-terse-short.jsonl', shortHeavy);
 r = runHook(shortPath);
 check('F4 short reply (<800 chars) passes regardless of shape', r.status === 0 && !isBlocked(r), 'exit=' + r.status);
 
+// --- F5..F9: short question -> short answer (2026-10-06) ---
+function writeQA(file, userText, assistantText) {
+  const p = path.join(os.tmpdir(), file);
+  fs.writeFileSync(p, [
+    JSON.stringify({ message: { role: 'user', content: [{ type: 'text', text: userText }] } }),
+    JSON.stringify({ message: { role: 'user', content: [{ type: 'tool_result', content: 'ok' }] } }),
+    JSON.stringify({ message: { role: 'assistant', content: [{ type: 'text', text: assistantText }] } }),
+  ].join('\n') + '\n', 'utf8');
+  return p;
+}
+const longTables = Array.from({ length: 24 }, (_, i) => '| row ' + i + ' | a finding that was moved into a table cell to look short | where |').join('\n') + '\n' + 'x'.repeat(200);
+const fiveLines = ['It is one shared calculation.', 'His copy left out four amounts.', 'Only the fine line needed MLPS.', 'So MLPS goes back in.', 'Read from the code, not run.'].join('\n') + '\n' + 'y'.repeat(800).replace(/(.{100})/g, '$1 ').split(' ').slice(0, 0).join('');
+const qaPaths = [];
+let qp = writeQA('fixture-terse-q1.jsonl', 'why we have to include plps and mlps together not separately?', longTables); qaPaths.push(qp);
+r = runHook(qp);
+check('F5 short why-question + 24-row table reply is BLOCKED', isBlocked(r) && /short question/.test(r.stdout), 'stdout=' + (r.stdout || '').slice(0, 80));
+qp = writeQA('fixture-terse-q2.jsonl', 'show me the code for rows 3 to 5', longTables); qaPaths.push(qp);
+r = runHook(qp);
+check('F6 a request that is not a question is NOT capped', !isBlocked(r), 'stdout=' + (r.stdout || '').slice(0, 80));
+qp = writeQA('fixture-terse-q3.jsonl', 'why is the breakpoint not hit?', longTables + '\n[skip-terse: he asked for the full table]'); qaPaths.push(qp);
+r = runHook(qp);
+check('F7 bypass token lets a long answer through', !isBlocked(r), 'stdout=' + (r.stdout || '').slice(0, 80));
+qp = writeQA('fixture-terse-q4.jsonl', 'why? ' + 'context '.repeat(60), longTables); qaPaths.push(qp);
+r = runHook(qp);
+check('F8 a long message (>300 chars) is not treated as a short question', !isBlocked(r), 'stdout=' + (r.stdout || '').slice(0, 80));
+qp = writeQA('fixture-terse-q5.jsonl', 'is it compiled?', 'Yes.\n' + '```\n' + Array.from({ length: 40 }, (_, i) => 'line ' + i).join('\n') + '\n```\n' + 'z'.repeat(820)); qaPaths.push(qp);
+r = runHook(qp);
+check('F9 lines inside a code fence do not count toward the cap', !isBlocked(r), 'stdout=' + (r.stdout || '').slice(0, 80));
+qp = writeQA('fixture-terse-q6.jsonl', 'what are my tickets? show the board', longTables); qaPaths.push(qp);
+r = runHook(qp);
+check('F10 a question that asks for a list/board/table is NOT capped', !isBlocked(r), 'stdout=' + (r.stdout || '').slice(0, 80));
+qp = writeQA('fixture-terse-q7.jsonl', 'Then how much has Izz progressed on his branch?', longTables); qaPaths.push(qp);
+r = runHook(qp);
+check('F11 a plain how-much question is capped', isBlocked(r), 'stdout=' + (r.stdout || '').slice(0, 80));
+for (const p of qaPaths) { try { fs.unlinkSync(p); } catch (_) {} }
+
 // cleanup tmp fixtures
 for (const p of [cleanPath, triggerPath, bypassPath, shortPath]) { try { fs.unlinkSync(p); } catch (_) {} }
 

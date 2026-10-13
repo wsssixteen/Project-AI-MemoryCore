@@ -30,6 +30,27 @@ r = fire('Test scenario:' + pad);
 r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ last_assistant_message: 'Test scenario:' + pad, stop_hook_active: true }), encoding: 'utf8', timeout: 30000, env: process.env });
 check('F7 stop_hook_active → exit 0 (no loop)', r.status === 0, 'exit=' + r.status);
 
+// ── v4 (2026-10-08, #283751): deploy card → Test scenario — <env> → Redmine handover ──
+const CARD = 'DEPLOY 283751 to internal\nssh app@172.16.100.162\ncd deployment-scripts/mlit\nsh deploy-pelupusan.sh\n';
+const SCEN = '\n## Test scenario — internal\n| Login | Screen | Do | Expect |\n|---|---|---|---|\n| saffuanh@melaka.gov.my | Penyediaan Permit Khas | click Papar Jadual VIII | (6) (7) (8) print |\n';
+const HAND = '\n## Redmine handover\n| Root cause | Borang tidak ambil syarat tambahan. |\n| Solution | Borang kini papar syarat tambahan. |\nSalam Mira, have deployed fixes to internal. Please help to verify.\n';
+r = fire(CARD + SCEN + pad);
+check('V4-1 REPLAY #283751: deploy card + scenario but NO Redmine handover → exit 2 (v4)', r.status === 2 && /v4/.test(r.stderr || '') && /Redmine handover/.test(r.stderr || ''), 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 160));
+r = fire(CARD + SCEN + HAND + pad);
+check('V4-2 deploy card → Test scenario — internal → Redmine handover passes', r.status === 0, 'exit=' + r.status + ' ' + (r.stderr || '').slice(0, 200));
+r = fire(CARD + SCEN.replace(' — internal', '') + HAND + pad);
+check('V4-3 Test scenario heading with no env → exit 2', r.status === 2 && /env/.test(r.stderr || ''), 'exit=' + r.status);
+r = fire(CARD + HAND + SCEN + pad);
+check('V4-4 Redmine handover placed before the Test scenario → exit 2', r.status === 2 && /AFTER the Test scenario/.test(r.stderr || ''), 'exit=' + r.status);
+r = fire(SCEN + CARD + HAND + pad);
+check('V4-5 Test scenario placed before the deploy steps → exit 2', r.status === 2 && /AFTER the deploy steps/.test(r.stderr || ''), 'exit=' + r.status);
+r = fire(CARD + SCEN + HAND.replace(/\| Solution[^\n]*\n/, '') + pad);
+check('V4-6 handover with no Solution row → exit 2', r.status === 2 && /Solution/.test(r.stderr || ''), 'exit=' + r.status);
+r = fire(CARD + SCEN + pad + ' [skip-handover-gate: deploy for a colleague, no ticket of ours]');
+check('V4-7 bypass token → exit 0', r.status === 0, 'exit=' + r.status);
+r = fire('Test scenario: login nurulazura@melaka.gov.my.' + pad);
+check('V4-8 a plain test scenario with no deploy steps is untouched by v4', r.status === 0, 'exit=' + r.status);
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d)); }
 console.log('\ntest-scenario-login-gate.eval: ' + (results.length - failed) + '/' + results.length + ' green');

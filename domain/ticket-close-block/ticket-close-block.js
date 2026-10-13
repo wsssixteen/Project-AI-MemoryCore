@@ -127,12 +127,12 @@ if (foreign && ba && ba !== true) {
   if (prodScript && prodScript !== true) { console.log(''); console.log(`Attached is the script for PROD (${prodScript}).`); }
   if (isAwam || !historyHasBranch) { console.log(''); console.log(`Branch: ${branch || '(not found)'}`); }
   console.log('');
-  console.log('Thank you very much.');
+  console.log('Thank you.');
 } else {
   if (ba && ba !== true) {
     console.log(`Salam ${ba}, have deployed fixes to ${env}. Please help to verify.`);
     console.log('');
-    console.log('Issues found and resolved:');
+    console.log('Issues resolved:');
     console.log('1. ');
     console.log('');
   }
@@ -141,7 +141,7 @@ if (foreign && ba && ba !== true) {
   if (ba && ba !== true) {
     if (prodScript && prodScript !== true) { console.log(''); console.log(`Attached is the script for PROD (${prodScript}).`); }
     console.log('');
-    console.log('Thank you very much.');
+    console.log('Thank you.');
   }
 }
 

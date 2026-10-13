@@ -50,7 +50,7 @@ Skipped, never blocked: a commit with no ticket number · a ticket with no block
 
 ## Override
 
-- `local-test` only: miya writes `[risk-ok: <num> <reason>]` in his own message. It is read from his LAST message (or his popup answer), recorded in `overrides.jsonl`, and counts for 72 hours.
+- `local-test` only: miya says in his own message that he tests on the server or skips the local test. Plain words count (2026-10-08, #283751): "I want to test on server", "skip local testing", "BA will check it on staging". Not counted: a question, a negated or "before / unless" sentence, the phrase inside a bracketed option list, a message that names only other ticket numbers, my own text. The token `[risk-ok: <num> <reason>]` still works. It is read from his LAST message (or his popup answer), recorded in `overrides.jsonl`, and counts for 72 hours.
 - An OPEN row has no override. Run it, or miya accepts the risk in the row.
 - There is no skip token. `[skip-compile-gate:]` does not reach this check.
 - Fail-open only on the check's own crash (logged `outcome=error`).

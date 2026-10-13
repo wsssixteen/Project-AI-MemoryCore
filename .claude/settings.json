@@ -1,7 +1,7 @@
 {
   "$schema_note": "Project-scope settings — committed to git so hook registrations propagate across machines. Sibling .claude/settings.local.json holds machine-specific permissions (gitignored). Both files MERGE per Claude Code convention; keep hooks ONLY here to avoid double-fire.",
   "env": {},
-  "$env_note": "SUBAGENT_MODEL=sonnet — Layer-1 spend failsafe (2026-07-19, per miya after 105-agent Fable blowup, 4.08M tokens). Highest-precedence: every subagent runs sonnet regardless of spawner. Trade-off accepted: flattens haiku tiering + opus verify stages need miya's nod to unset. Pairs with domain/agent-spend-gate (Layer 2). ⚠️ UNVERIFIED until a post-restart probe confirms a subagent reports sonnet.",
+  "$env_note": "env is EMPTY on purpose. The 2026-07-19 failsafe CLAUDE_CODE_SUBAGENT_MODEL=sonnet was cleared later because it silently overrode every model: 'opus' passed to an agent. The model of a subagent is now decided per call and enforced by domain/agent-spend-gate (an Agent call or a workflow agent() with no model is blocked; CLAUDE.md Delegation Economy v1.81). Verified 2026-10-07: model 'sonnet' ran on claude-sonnet-5-5 and model 'opus' on claude-opus-5-5.",
   "hooks": {
     "SessionStart": [
       {
@@ -16,23 +16,7 @@
           },
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\boot-required-read-gate.js\" SessionStart"
-          },
-          {
-            "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\domain\\worktree-cleanup-boot\\worktree-cleanup-boot.hook.js\" SessionStart worktree-cleanup-boot"
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\evolution-check-trigger.js\" SessionStart"
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\system-check-trigger.js\" SessionStart"
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PROJECT_DIR}\\lib\\hook-runtime.js\" --wrap \"${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\open-quest-surfacer.js\" SessionStart"
           },
           {
             "type": "command",
@@ -199,6 +183,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\pymtime-handover\\\\pymtime-handover.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\project-load\\\\project-load.check.hook.js\""
           }
         ]
       }
@@ -374,6 +362,33 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\quest-exists-gate\\\\quest-exists-gate.check.hook.js\""
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\memory-write-gate\\\\memory-write-gate.check.hook.js\""
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|PowerShell|Bash|Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\adhoc-brief-first\\\\adhoc-brief-first.check.hook.js\""
+          }
+        ]
+      },
+      {
+        "matcher": "AskUserQuestion",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\question-self-contained\\\\question-self-contained.check.hook.js\""
           }
         ]
       }
