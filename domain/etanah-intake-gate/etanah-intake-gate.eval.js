@@ -166,12 +166,13 @@ check('A11 bare permohonan-ID + error fires ADHOC-CANDIDATE', r.status === 0 && 
   check('S12 #ticket + state word -> silent', s.status === 0 && s.out === '', s.out);
 
   // M: MELAKA UNCHANGED — stdout byte-identical to the pre-change capture (no state / PTMLK id / "Melaka" word).
+  // M3 + M5 re-captured 2026-10-14: the LOOKUP lane gained two lines (pick the Tool from lib/tool-registry.js; codegraph search for "where is X").
   const GOLD = [
     ['M1 no-state DATA-PATCH', '5040140PM00000100\n040202PM00000298\n040327HSM00001293\n\nHi boleh tolong patch luas hakmilik to 6 hektar @ stg & it, thanks', '378b2280fe862892c761a2636493c1c1365c2d43'],
     ['M2 PTMLK id ADHOC-CANDIDATE', 'boleh check kenapa PTMLK/02/L/PT/2026/26 stuck, ada error kat SKM', 'db22147a0ec1465a04805b8d8c9473cf97197beb'],
-    ['M3 no-state LOOKUP', 'apa beza ind_hkmlk dengan fatmk.hakmilik?', 'a2885ad6b776d94360ced1368b6c3fb1c45b7e84'],
+    ['M3 no-state LOOKUP', 'apa beza ind_hkmlk dengan fatmk.hakmilik?', '579c18bc0b5f75c278ea1deff27cdf524946da33'],
     ['M4 no-state HOTFIX', 'hotfix for #280176 — PROD borang 4Ae null', 'ac83eca47478bdfb033be39a41644b056ae3e5ab'],
-    ['M5 no-route index.md fallback', 'permohonan tu macam mana?', '0c1ae708c44af1b7e810a6ad72520bd72796fc68'],
+    ['M5 no-route index.md fallback', 'permohonan tu macam mana?', '9939386f424e070c590f2258ec154a7594eab129'],
     ['M6 "Melaka" word ADHOC-CANDIDATE', 'Melaka: kenapa tugasan SKM tak papar dropdown, error', '9410f1005ff924af0ddbe939da02dde18b4ac7ad'],
   ];
   for (const [n, p, h] of GOLD) {

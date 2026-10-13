@@ -220,6 +220,8 @@ runHook({ name: 'etanah-intake-gate', event: 'UserPromptSubmit' }, (input) => {
     lines = [
       '📖 etanah-intake: LOOKUP lane — KNOWLEDGE-FIRST before grep/codegraph/SQL. Read NOW:',
       knowledge,
+      '   Not in the knowledge file? Pick the Tool from the list, not by habit: node lib/tool-registry.js for code   (or: knowledge · database · flow · documents · tickets).',
+      '   "Where is class or method X" = codegraph search first; "who calls a service method" = text search on the method name.',
       '   After answering, write any new reusable fact back to the knowledge file (next lookup is cheap).',
     ];
   }
