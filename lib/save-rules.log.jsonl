@@ -20,3 +20,5 @@
 {"ts":"2026-10-10T07:23:54.867Z","parts":1,"pass":2,"fail":0,"unruled":0,"skip":0,"dur_ms":89,"partial":true}
 {"ts":"2026-10-09T07:23:32.671Z","parts":9,"pass":24,"fail":0,"unruled":2,"skip":0,"dur_ms":1695,"partial":false}
 {"ts":"2026-10-09T07:23:39.476Z","parts":9,"pass":24,"fail":0,"unruled":2,"skip":0,"dur_ms":1437,"partial":false}
+{"ts":"2026-10-13T08:15:38.175Z","parts":42,"pass":43,"fail":14,"unruled":18,"skip":0,"dur_ms":82912,"partial":false}
+{"ts":"2026-10-13T08:18:48.156Z","parts":42,"pass":45,"fail":12,"unruled":18,"skip":0,"dur_ms":61623,"partial":false}

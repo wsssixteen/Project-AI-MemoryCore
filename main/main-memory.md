@@ -3,6 +3,15 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-10 to 2026-10-13 (DawahMap — "Why doesn't your tree look like this")
+
+- **He judges a build by its picture, so the picture comes first.** Twice in one session I built what I had read as a structure and he had meant as a shape: a forced single line for a branching flowchart, then an indented list for a tree. A sketch set beside his own reference pictures, before any build, would have cost minutes.
+- **"Fair" never meant "concede".** A fair hearing follows the objection and its answer to the end, in the scholars' own verbatim words. Hedging the stance, or leaning on outside surveys, reads to him as dishonest, not as balanced.
+- **He hears machine talk at once.** Narrating the page, "we", reassurance, steering the reader: he named it hand-holding from one line. Ask the question that makes the reader think and leave the rest out.
+- **A finding he cannot follow is not a finding.** I asked him to rule on the Haiku audit before I had said in plain words what it found. Explain first, in his words; ask only if something is truly his to decide.
+- **What he must read goes on the page or in a file.** A long table in chat was "I cannot see it". The PDF of the whole map was his own fix for that.
+- **When a session compacts, his words come from the transcript, not from the summary.** He checked that I did. I copy them out by script into the project's own file.
+
 ## Relationship reinforcement — 2026-10-09 (#274266 round 3 — "if it is ok then please straight away merge to internal")
 
 - **A review he trusts ends in the merge, not in a question.** He gave the condition and the action in one line. The answer he wanted was the verdict, the one evidence line and the deploy steps. No local test, no options.
