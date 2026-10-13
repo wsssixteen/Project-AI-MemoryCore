@@ -51,14 +51,14 @@ ID = `ADHOC-<URUSAN>-<YYYY>-<n>` — next n after grepping `active.txt` + `activ
 | # | Step | Where it runs |
 |---|---|---|
 | 1 | Investigate (knowledge, error store, DB, code). Read only. | main thread |
-| 2 | **Brief みや in chat**: `Title:` line, the finding, the evidence with its SELECTs, Next steps. The brief is written as reply text BEFORE any save-set tool call. | main thread |
-| 3 | Hand the save-set to ONE background agent (`Agent`, `model: sonnet`, background). Its prompt carries the ADHOC id, the title, the env, the Task folder name, the register row text and the full quest doc text, and tells it to run "Each round" below until the audit is green. | background |
+| 2 | Start ONE background agent for the save-set (`Agent`, `model: sonnet`, `run_in_background: true`). Its prompt opens with the line `[skip-brief-first: background save agent]` and carries the ADHOC id, the title, the env, the Task folder name, every file to MOVE, the register row text and the full quest doc text, and tells it to run "Each round" below until the audit is green. The call returns at once. | background |
+| 3 | **END THE TURN with the brief**: `Title:` line, the finding, the evidence with its SELECTs, Next steps, and one line saying what is being saved in the background. Never wait for the agent. A text written in the middle of a turn is not always shown or recorded; the closing reply is. | main thread |
 | 4 | When the agent reports, check its audit line against disk (`node lib/adhoc-save-audit.js <ADHOC-ID>`) and give みや ONE line: `adhoc saved → <ADHOC-ID>: audit N/N PASS`. | main thread |
 
-- Anything else that can wait runs the same way, after the brief and in the background: memory notes, register and knowledge edits, a slip row, a skill edit.
-- No agent tool in the session: do step 3 yourself, still AFTER the brief.
-- Check: `node lib/adhoc-brief-first.js --latest` → `ADHOC-BRIEF-FIRST: PASS`. Eval: `node lib/adhoc-brief-first.eval.js`.
-- **Banned**: a save-set write (Task folder, `active-cli.js start`, register row, quest doc, `notes.js`, the audit) before the brief is shown · a one-line "now saving" note counted as the brief · holding the brief until the audit is green.
+- Anything else that can wait runs the same way, in the background and never in front of the brief: moving his files, memory notes, register and knowledge edits, a slip row, a skill edit.
+- No agent tool in the session: end the turn with the brief, then save in the next turn only after みや's waiver in his own message.
+- **Gate**: `domain/adhoc-brief-first/` (PreToolUse) BLOCKS a save-set write on the main thread in a turn that has no brief and no adhoc save agent. Eval: `node domain/adhoc-brief-first/adhoc-brief-first.eval.js`. After-the-fact check of a session: `node lib/adhoc-brief-first.js --latest`.
+- **Banned**: a save-set write (Task folder, `active-cli.js start` / `update`, register row, quest doc, `notes.js`, the audit) on the main thread before the brief · a one-line "now saving" note counted as the brief · holding the brief until the audit is green · the `skip-brief-first` line anywhere except the save agent's prompt.
 
 ## Each round
 1. Write or update every part the new finding touches. A status change (approved / ticketed / answered) updates BOTH the block `status=`/`issue_one_liner=` AND the register Status cell in the same round.
