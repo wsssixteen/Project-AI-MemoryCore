@@ -45,6 +45,22 @@ His words: *"this is critical, you should've done it"* (the skipped Domain Expan
 **Why**: a scan of 357 sessions (2026-08-06 → 2026-10-06) showed lookup tools set up for Ruri and barely called (codegraph callers 3 sessions, four codegraph calls never). No kind in the map named them, so nothing could mark one installed or unused. Paired: `system/INDEX.md` Tools row + fence key + decisions 9–12, NEW `system/tools.json` (32 rows), system-design skill v3.2, `system/system-architecture.md` §9 row.
 
 ---
+## v1.87 — 2026-10-14 (per みや: "I only get frustrated when you don't explain, or over-explaining, or blabber that you don't make any sense where the hell we are going. Those are the things that should even be banned in the highest order … inside CLAUDE.MD but I am always worried you're going to abliterate yourself")
+
+- §Disposition: one new line, 0a SAY WHERE WE ARE GOING, right under rule 0. Three faults are banned at the top level: unexplained (a label, number or name he was not told; a reply that does not say what it is for), over-explained (anything he did not ask for), blabber (a sentence that does not say what was done, what was found, or what happens next). In work that runs over several replies the first line says where we are and where it is going.
+- His worry is answered inside the rule: it cuts what is shown to him, never what is thought, checked or done.
+- Body: `.claude/reply-shape-spec.md` §3f (new): his words, the three-fault table, the direction line, what the rule does not cut, the test before sending, the case.
+- The case: DawahMap, 2026-10-14. A report said "walk step 2"; he replied "I don't know what step 2 you're talking about". Logged as slip `reask/unclear-item`.
+- Spec preservation: additive. Rule 0 and rules 1 to 6 are unchanged. It sits beside NO INFORMATION OVERLOAD (v1.75), NAME THE THING (v1.80) and NO VAGUE WORDS (v1.85): those say what a reply holds and which word it uses; this one names the three faults together and adds the direction line, which none of them carried.
+- Enforcement, said plainly: no mechanical check. It is a boot-loaded line and a spec section. A watch is registered for three sessions.
+
+## v1.86 — 2026-10-14 (per みや: "I agree with all the '6. Yours to rule'", the delegation brief of 2026-10-09)
+
+- §Cost Efficiency → Delegation Economy: new Mandatory discipline 5 "Side by side, not one after another". Goal first: delegated work finishes sooner with the same correctness. Jobs that need no other job's answer and write no file another job writes get one agent each, all launched together; steps that need an earlier step's answer stay in one agent, and so do jobs that write the same file. A third **Why** paragraph carries the measurement.
+- Effect check before the change went in (2026-10-14, six planners laid out four work lists from the rule text alone, layouts scored by script): with the v1.85 text 10 of 12 layouts matched (one Sonnet reader split two dependent chains into one agent per step, launched one after another); with this text 12 of 12. The first draft did not say where same-file writers go (an Opus reader named the gap); the clause was added and the candidate re-read.
+- Measurement (2026-10-09, three Workflow runs, 41 agents, 8 kinds of job, answers scored against keys built before the run): the same 7 jobs on Sonnet 5.5 medium, one agent 108 s (7 of 7 right) against seven agents launched together 31 s (6 of 7 fully right), 1.33 times the tokens; 20 agents launched together finished 490 s of agent work in 59 s. Limits: one or two runs per cell.
+- Pointer aligned the same pass: `.claude/cost-efficiency.md` delegation row.
+- **Spec preservation.** Additive. Disciplines 1 to 4, the tier table, the Haiku trial paragraph, the plan-table columns and both earlier Why paragraphs are untouched. Not added, because not ruled: "small job done inline", "no verify stage after a narrow job". No workflow file is changed: `quest-phase0.js` waits for the etanah replay.
 
 ## v1.85 — 2026-10-13 (per みや: "Why do you instead use ambiguous words like that? … If this is 'Claude speech' I want you to ban yourself in the CLAUDE.MD file.")
 
