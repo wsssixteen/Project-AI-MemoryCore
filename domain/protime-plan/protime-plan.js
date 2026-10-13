@@ -479,6 +479,13 @@ async function main() {
   const after = await read();
   const has = (d, name, cat) => (((after || {})[d] || {})[cat === 'ADHOC' ? 'adhoc' : 'plan'] || []).some(e => e.name === name);
   const missing = adds.filter(a => !has(a.date, a.name, a.cat)).map(a => `${a.date} ${a.name}`);
+  // ProTime's answer to a mixed PLAN + ADHOC write lists only part of what it created (2026-10-13: 3 of 4),
+  // so the ids of this run's entries are taken from the read-back: same day, list and name, id not there before.
+  const idsBefore = new Set(Object.values(before).flatMap(d => [...d.plan, ...d.adhoc]).map(e => e.id));
+  for (const a of adds) {
+    const e = ((((after || {})[a.date] || {})[a.cat === 'ADHOC' ? 'adhoc' : 'plan']) || []).find(x => x.name === a.name && !idsBefore.has(x.id) && !created.some(c => c.id === x.id));
+    if (e) created.push({ id: e.id, name: a.name, cat: a.cat, date: a.date });
+  }
   const still = removed.filter(r => (((after || {})[r.date] || {}).plan || []).some(e => e.id === r.id)).map(r => `${r.date} ${r.name} still there`);
   // ids are logged even on a mismatch, so a later run still knows which entries are its own
   if (!after || missing.length || still.length) { logRow({ ...base, mode: 'live', result: 'ok-partial', created, removed }); return fail(2, 'read-back-mismatch', [...missing, ...still].join('; ') || 'plan unreadable after write'); }
