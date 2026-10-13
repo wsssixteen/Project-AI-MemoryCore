@@ -16,6 +16,7 @@
 - [browser](feedback_browser_edge_default.md) — Edge via Claude in Chrome extension; built-in browser banned
 - [bash-tool](feedback_bash_tool.md) — Bash hangs on simple shell ops here; use PowerShell or Node; scripts are mine to run
 - [model-tiering](feedback_model_tiering_session.md) — Fable = judgment and planning; building and recon on Sonnet or Opus
+- [workflow-name-runs-stale-copy](feedback_workflow_name_runs_stale_copy.md) — a workflow file edited in-session is launched by `scriptPath`, never by `name:`; check the first agent's label
 
 ## System design (skills: system-rules, system-design)
 - [system-design-rules](feedback_inventory_first.md) — inventory first, universal + mechanical rules, top-down apps, RAM footprint
@@ -98,6 +99,8 @@
 - [wa-read](project_wa_read.md) — WaRead WhatsApp reader at E:\Dev\scripts\WaRead; relink number 60186669566, never ask
 - [whatsapp-rules](feedback_whatsapp_read_rules.md) — READ ONLY, paraphrase, no sender names, never the desktop app
 - [pymtime](project_pymtime.md) — PymTime clock-in app: read PROJECT.md in the MAIN checkout's projects/coding-projects/active/PymTime/ first (full path in the note); remote skip, colleague handover loop, roadmap
+- [dawahmap](project_dawahmap.md) — DawahMap, his yes/no map from reason to Islam (page "Reason to Islam"): read PROJECT.md in the MAIN checkout's projects/coding-projects/active/DawahMap/ first; it argues FOR Islam from the scholars' verbatim words; content first, design later
+- [islamic-content-sources](feedback_islamic_content_sources.md) — 🚨 Islamic content: scholars of Islam in their verbatim words, never Western academia or a neutral survey; "fair" is not conceding; every quote found on its page first
 - [side-project-folder](feedback_side_project_folder.md) — 🚨 every project gets projects/coding-projects/active/<Name>/ (PROJECT.md index + VERSIONS, ARCHITECTURE, PROOFS, ROADMAP) in the MAIN checkout; update at every bulk change; memory = pointer, no state
 - [arabic-review](project_arabic_review.md) — /arabic daily vocab review, seconds to 2 minutes in chat; meanings are my job
 - [art-and-media](feedback_verify_generated_art_externally.md) — external art check; samples are the spec; MAS animation; Drive video download

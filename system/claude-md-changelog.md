@@ -30,6 +30,11 @@ His words: *"this is critical, you should've done it"* (the skipped Domain Expan
 
 ---
 
+## v1.84 — 2026-10-12 (per みや: "Please update the ban on Haiku 5.5, though we will need to audit. We will take the change to audit if Haiku is fit enough for what kinds of tasks.")
+
+- §Cost Efficiency → Delegation Economy: the paragraph "Haiku BANNED from delegation" becomes "Haiku 5.5 ON TRIAL in delegation"; the tier table says Sonnet 5.5 is the default and Haiku 5.5 runs on trial only; the Enforced-by line says what is blocked now.
+- Enforcement the same day: `domain/agent-spend-gate/` v3: rule 5 lets a haiku agent through only with a `haiku-trial: <task>` mark and never at effort `low`, warns, and logs each marked launch to `haiku-trial.jsonl`; eval 40 to 45 fixtures, 45/45 green. README section "Haiku 5.5 trial" holds the trial rules, what Anthropic's pages say (read by a research agent 2026-10-12), and the audit plan. Dropped and named: the outright ban of v1.68 and its Sonnet-pricing sentence; kept: the reason for the ban, now stated as the risk the trial measures.
+
 ## v1.83 — 2026-10-08 (per みや: "build boot mode")
 
 - §Session Boot Order step 5: one sentence names boot mode. Work = a working day (PymTime workdays) + no public holiday + no approved full-day leave + 08:30 to 18:30. In Work the first message of a session loads the ticket list with no keyword. Anything unreadable = Quiet. "quiet mode" / "not working today" = no unasked load in that session. `--mode` prints the decision.

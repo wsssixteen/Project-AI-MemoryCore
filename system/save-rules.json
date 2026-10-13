@@ -398,7 +398,8 @@
       "kind": "projects",
       "match": [
         "etanah_atlas",
-        "projects/coding-projects/active/PymTime"
+        "projects/coding-projects/active/PymTime",
+        "projects/coding-projects/active/DawahMap"
       ],
       "rules": [
         {

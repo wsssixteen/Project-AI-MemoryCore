@@ -5,3 +5,6 @@
 {"ts":"2026-10-07T03:16:27.045Z","qa":"QA-282587","reason":"internal is the test env"}
 {"ts":"2026-10-07T03:17:47.011Z","qa":"QA-282587","reason":"internal is the test env"}
 {"ts":"2026-10-08T01:24:15.431Z","qa":"QA-283751","reason":"plain words: \"okay please apply I want to test on server.\"","via":"plain"}
+{"ts":"2026-10-09T03:20:40.270Z","qa":"QA-283960","reason":"plain words: \"Fires whenever miya says he tests on a server (\"test on server\", \"skip local testing\", \"deploy to internal / staging / training\").\"","via":"plain"}
+{"ts":"2026-10-09T03:21:11.257Z","qa":"QA-283960","reason":"plain words: \"Fires whenever miya says he tests on a server (\"test on server\", \"skip local testing\", \"deploy to internal / staging / training\").\"","via":"plain"}
+{"ts":"2026-10-12T03:00:17.610Z","qa":"QA-283286","reason":"pom common version only, compile green, test on staging"}

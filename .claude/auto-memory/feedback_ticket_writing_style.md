@@ -293,6 +293,17 @@ Thank you.
 ```
 Rules from it: ask which env he deployed before writing the env line, never assume both · a Note line states a fact in one short sentence · no extra asks to the BA unless he says so.
 
+14. Chat answer to a BA who pasted a ticket URL and asked "what is this, where is it used", #283286 (2026-10-12, Fizah). His own reply, verbatim:
+```
+Morning Fizah...
+
+Aah, tiket ni rename method je.
+
+Dalam pelupusan guna dekat satu tempat je, PelupusanReportMethodConstant.populateImagePath().
+
+Untuk logo PTG dekat Slip Akuan Penerimaan (LaporanSlipAkuanPenerimaan).
+```
+What he cut from my draft: the old and new method names ("getPtgLogo -> getLogoPTG (ikut common)") and the whole line about the common version in pom.xml. Rules he stated: (a) a person who pastes the ticket URL already has the ticket's context, so never restate what the ticket says; (b) when the asker is a BA, the only concern is TESTING, so the reply ends on the thing to test (which document or screen shows the change), and build details (pom, common version, compile) are left out. Shape: greeting with the time of day + short name ("Morning Fizah...") · "Aah," to confirm a yes · one fact per line with a blank line between · ends on the document name in plain words with the report name in brackets. Before drafting any relayed answer: ask or work out WHO is asking (BA or dev), because the content changes, not only the tone. For a BA the most accurate pointer is the SKRIN (screen) where the thing shows, then urusan and tugasan; never a class or method name. Trace the screen before naming it: on #283286 the slip turned out to have no reachable screen at all, so "nothing to test on screen" was the true answer.
 **File names in his Task folder (2026-10-04, #282924)**: his own name for the test video was `1. Test tick lebih satu hakmilik.mp4`. Mine was `2. PRBB - Ujian tanda lebih satu hakmilik papar ralat.mp4`. Shape = number, then what it is in his everyday words, short. No urusan prefix, no full sentence, no result in the name. Check a name against his existing files in that folder before saving.
 
 **BA short names miya uses in greetings** (Redmine name → what he writes): Nurul Amirah Nadiah → **Mira** · Nurhafizah → Fizah · Siti Farhanih Abdul Razak → Farah.

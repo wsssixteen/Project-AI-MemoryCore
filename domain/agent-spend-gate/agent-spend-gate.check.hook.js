@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // agent-spend-gate.check.hook.js — born via core/forge.js (2026-07-19) · v2 2026-10-07
 // TRIGGER: an Agent tool call, or a Workflow tool call (by name, by scriptPath, or with an inline script)
-// ACTION: HARD-BLOCK an agent that names no model (it would inherit the session model), a haiku agent, and a
+// ACTION: HARD-BLOCK an agent that names no model (it would inherit the session model), a haiku agent that carries no
+//         trial mark or runs at effort 'low' (haiku is ON TRIAL since 2026-10-12, each marked launch is logged), and a
 //         Workflow launched by canned name. Advisory WARN: opus/fable agent with no stated reason · a session that is
 //         not on the orchestrator model · a scriptPath with no agent-count cap. Bypass: miya writes
 //         [skip-spend-gate: <reason>] in his LAST message.
@@ -18,7 +19,13 @@ const { agentCalls, reasonCount } = require(path.join(__dirname, 'workflow-model
 
 const ORCHESTRATOR = /claude-opus-5-5/;         // the orchestrator model named in CLAUDE.md Delegation Economy
 const DEFAULT_TIER = 'sonnet';                  // Sonnet 5.5: the default and the floor for delegated agents
-const BANNED = new Set(['haiku']);              // banned from delegation since CLAUDE.md v1.68
+// Haiku 5.5: ON TRIAL since 2026-10-12 per miya (it was banned outright since CLAUDE.md v1.68). A haiku agent is let
+// through only when the launch says what kind of task it is ("haiku-trial: <task>"), never at effort 'low'; every such
+// launch is written to haiku-trial.jsonl, the audit's ledger. Without the mark it is blocked as before.
+const ON_TRIAL = new Set(['haiku']);
+const TRIAL_MARK = /haiku-trial:\s*([^\n\r]{3,200})/i;
+const TRIAL_LOG = path.join(__dirname, 'haiku-trial.jsonl');
+function logTrial(row) { try { fs.appendFileSync(TRIAL_LOG, JSON.stringify(Object.assign({ ts: new Date().toISOString() }, row)) + '\n'); } catch (_) {} }
 const NEEDS_REASON = new Set(['opus', 'fable']);
 const BYPASS = /\[skip-spend-gate:\s*[^\]\s][^\]]*\]/i;
 const NOT_A_TURN_START = /^\s*(<system-reminder>|<task-notification|Stop hook feedback)/i;
@@ -83,9 +90,21 @@ runHook({ name: 'agent-spend-gate', event: 'PreToolUse' }, (input) => {
       return block('⛔ agent-spend-gate: Agent launch WITHOUT explicit model — it would run on the session model\n' +
         '   (the 2026-07-19 blowup root). Add model: \'' + DEFAULT_TIER + '\'.\n' + RULE);
     }
-    if (BANNED.has(model)) {
-      return block('⛔ agent-spend-gate: model: \'' + model + '\' is banned from delegation (CLAUDE.md v1.68: a reader decides what to include,\n' +
-        '   and a partial retrieval cannot be seen). Use model: \'' + DEFAULT_TIER + '\'.\n');
+    if (ON_TRIAL.has(model)) {
+      const mark = TRIAL_MARK.exec(String(ti.prompt || '') + '\n' + String(ti.description || ''));
+      if (!mark) {
+        return block('⛔ agent-spend-gate: model: \'' + model + '\' is banned from delegation outside the trial (a weaker reader can return a partial\n' +
+          '   result that nobody sees). On trial since 2026-10-12: write  haiku-trial: <the kind of task>  in the agent\'s prompt, and give it\n' +
+          '   only a task whose every answer a script or a second reader checks. Otherwise use model: \'' + DEFAULT_TIER + '\'.\n');
+      }
+      if (String(ti.effort || '').toLowerCase() === 'low') {
+        return block('⛔ agent-spend-gate: a haiku agent at effort \'low\' is banned from delegation (Anthropic\'s own prompting guide: at low effort it can\n' +
+          '   stop early or skip a search). Use \'medium\' or higher.\n');
+      }
+      if (data.transcript_path) logTrial({ tool: 'Agent', task: mark[1].trim(), agents: 1, effort: String(ti.effort || 'default') });
+      warns.push('⚠️ agent-spend-gate: haiku ON TRIAL for: ' + mark[1].trim() + '\n' +
+        '   Its answer is data, not truth: check every answer by script or a second reader, then add the result (right, wrong, partial) to\n' +
+        '   domain/agent-spend-gate/haiku-trial.jsonl. The audit reads that file.\n');
     }
     if (NEEDS_REASON.has(model)) {
       warns.push('⚠️ agent-spend-gate: this agent runs on ' + model + '. Delegated work defaults to ' + DEFAULT_TIER + ' (Sonnet 5.5);\n' +
@@ -104,10 +123,18 @@ runHook({ name: 'agent-spend-gate', event: 'PreToolUse' }, (input) => {
         return block('⛔ agent-spend-gate: ' + bare.length + ' of ' + calls.length + ' agent() call(s) in this workflow name no model — each would run on the session model.\n' +
           '   ' + bare.slice(0, 12).map(c => 'line ' + c.line + (c.label ? ' (' + c.label + ')' : '')).join(' · ') + (bare.length > 12 ? ' · …' : '') + '\n' + RULE);
       }
-      const banned = calls.filter(c => BANNED.has(c.model));
-      if (banned.length) {
-        return block('⛔ agent-spend-gate: ' + banned.length + ' agent() call(s) use a model banned from delegation (' + [...new Set(banned.map(c => c.model))].join(', ') + ') — ' +
-          banned.slice(0, 12).map(c => 'line ' + c.line).join(' · ') + '.\n   Use model: \'' + DEFAULT_TIER + '\'.\n');
+      const trial = calls.filter(c => ON_TRIAL.has(c.model));
+      if (trial.length) {
+        const marks = src.match(/\/\/[^\n]*haiku-trial:\s*\S[^\n]*/gi) || [];
+        if (marks.length < trial.length) {
+          return block('⛔ agent-spend-gate: ' + trial.length + ' agent() call(s) use haiku, which is banned from delegation outside the trial, and the script carries ' +
+            marks.length + ' trial mark(s) — ' + trial.slice(0, 12).map(c => 'line ' + c.line).join(' · ') + '.\n' +
+            '   Add one  // haiku-trial: <the kind of task>  comment per haiku call (a task whose every answer a script or a second reader checks),\n' +
+            '   or use model: \'' + DEFAULT_TIER + '\'.\n');
+        }
+        if (data.transcript_path) logTrial({ tool: 'Workflow', task: marks.map(x => x.replace(/^.*haiku-trial:\s*/i, '').trim()).join(' | ').slice(0, 400), agents: trial.length });
+        warns.push('⚠️ agent-spend-gate: ' + trial.length + ' haiku agent(s) ON TRIAL in this workflow. Check every answer by script or a second reader, then add the\n' +
+          '   result to domain/agent-spend-gate/haiku-trial.jsonl. The audit reads that file.\n');
       }
       const heavy = calls.filter(c => NEEDS_REASON.has(c.model));
       if (heavy.length > reasonCount(src)) {

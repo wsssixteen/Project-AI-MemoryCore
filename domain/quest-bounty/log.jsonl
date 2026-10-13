@@ -127,3 +127,5 @@
 {"ts":"2026-10-08T15:24:06.438Z","qa":"ADHOC-PT-2026-10","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":null,"allow_stub_reason":"record was archived earlier; this run only moves the Task folder to Archive"}
 {"ts":"2026-10-08T15:24:07.230Z","qa":"ADHOC-MLPS-2026-1","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":null,"allow_stub_reason":"record was archived earlier; this run only moves the Task folder to Archive"}
 {"ts":"2026-10-08T15:24:07.976Z","qa":"ADHOC-PPTPB-2026-1","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":null,"allow_stub_reason":"record was archived earlier; this run only moves the Task folder to Archive"}
+{"ts":"2026-10-09T04:07:06.630Z","qa":"ADHOC-PRBB-2026-12","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-09T04:07:22.483Z","qa":"ADHOC-PRBB-2026-12","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none-until-ticket"}

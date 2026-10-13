@@ -1148,3 +1148,16 @@
 {"ts":"2026-10-08T14:31:12.894Z","category":"resource-blindness"}
 {"ts":"2026-10-08T15:34:23.713Z","category":"reask/verbose"}
 {"ts":"2026-10-08T16:36:42.523Z","category":"reask/rephrase-check"}
+{"ts":"2026-10-10T13:58:35.885Z","category":"misread-intent"}
+{"ts":"2026-10-10T23:11:43.029Z","category":"verify-before-claim"}
+{"ts":"2026-10-10T23:11:43.145Z","category":"verify-before-claim"}
+{"ts":"2026-10-10T23:11:43.258Z","category":"islamic-content-fairness"}
+{"ts":"2026-10-11T00:53:18.037Z","category":"resource-blindness"}
+{"ts":"2026-10-11T05:25:59.899Z","category":"ask-back/decidable"}
+{"ts":"2026-10-11T14:39:38.998Z","category":"resource-blindness"}
+{"ts":"2026-10-11T16:03:50.679Z","category":"A1"}
+{"ts":"2026-10-11T19:38:17.584Z","category":"ask-back/decidable"}
+{"ts":"2026-10-12T05:26:00.596Z","category":"reply-talks-past-the-person"}
+{"ts":"2026-10-12T06:23:01.550Z","category":"build-missed-requirement"}
+{"ts":"2026-10-12T06:44:52.551Z","category":"reask/unrequested-extras"}
+{"ts":"2026-10-13T02:26:06.861Z","category":"build-missed-requirement"}

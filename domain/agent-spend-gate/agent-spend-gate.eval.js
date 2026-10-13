@@ -125,6 +125,17 @@ check('F39 README carries symptom / goal / goal_signal / retention / footprint /
 const claudeMd = fs.readFileSync(path.join(ROOT, '.claude', 'CLAUDE.md'), 'utf8');
 check('F40 CLAUDE.md Delegation Economy names the orchestrator and the default the gate enforces', /Orchestrator[^\n]*Opus 5\.5/.test(claudeMd) && /`sonnet` \(Sonnet 5\.5/.test(claudeMd) && /agent-spend-gate/.test(claudeMd));
 
+// Haiku 5.5 on trial (2026-10-12): the mark lets it through, low effort and a missing mark do not.
+rr = fx('Agent', { prompt: 'haiku-trial: find a hadith by its number, checked by script\nFind it.', model: 'haiku' });
+check('F41 haiku ON TRIAL: Agent with a haiku-trial mark → allowed and told to check and log', !blocked(rr) && /ON TRIAL/.test(rr.out) && /haiku-trial\.jsonl/.test(rr.out), rr.out.slice(0, 160));
+rr = fx('Agent', { prompt: 'haiku-trial: extraction\nDo it.', model: 'haiku', effort: 'low' });
+check('F42 haiku at effort low → BLOCKED even with the mark', blocked(rr) && /effort 'low'/.test(rr.out), rr.out.slice(0, 160));
+rr = fx('Workflow', { script: META + "// haiku-trial: classify 40 rows, each checked by script\nconst a = await agent('x', { model: 'haiku' })\n" });
+check('F43 haiku ON TRIAL: a workflow call with its mark → allowed and told to check and log', !blocked(rr) && /ON TRIAL/.test(rr.out), rr.out.slice(0, 160));
+rr = fx('Workflow', { script: META + "// haiku-trial: one mark only\nconst a = await agent('x', { model: 'haiku' })\nconst b = await agent('y', { model: 'haiku' })\n" });
+check('F44 two haiku calls and one mark → BLOCKED', blocked(rr) && /banned from delegation/.test(rr.out), rr.out.slice(0, 160));
+check('F45 no trial row is written by a launch that has no session record (the fixtures above)', !fs.existsSync(path.join(path.dirname(HOOK), 'haiku-trial.jsonl')) || !/find a hadith by its number, checked by script|classify 40 rows/.test(fs.readFileSync(path.join(path.dirname(HOOK), 'haiku-trial.jsonl'), 'utf8')), 'fixture rows leaked into the trial log');
+
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + x.d.slice(0, 300))); }
 console.log('\nagent-spend-gate.eval: ' + (results.length - failed) + '/' + results.length + ' green');

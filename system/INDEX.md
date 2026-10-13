@@ -19,7 +19,7 @@ Everything in this repo is one of six kinds. **"Installed" has one meaning per k
 | **Features** | One job at one moment: a gate, a check, a tool, a skill | 3 | `domain/<name>/`; its skill in `.claude/skills/<name>/`. Hooks still loose in `.claude/hooks/` are NOT yet installed | home folder · README `goal:` `retention:` `footprint:` · a log (observability) · an eval · a registration → census verdict `PROPER` |
 | **Memory** | What Ruri knows and remembers | 0 · 4 · 5 | identity `main/main-memory.md` · knowledge `projects/…/etanah-knowledge/` + `library-items/` · notes `.claude/auto-memory/` · diary `daily-diary/` · state `quest/active.txt` + `main/current-session.md` + `main/todo.md` | it sits on a named shelf with an index line. System RULES never live in Memory |
 | **Kernel** | Shared code and wiring that everything else runs on | under all | `core/` (forge · registry · slips · boot) · `lib/` (hook-runtime · states · census …) · `.claude/settings.json` (hook wiring) | its header states its goal; at least one Feature or Workflow uses it |
-| **Projects** | Work Ruri builds for みや — not a system part | — | `etanah_atlas/` (lives in this repo) · `projects/coding-projects/active/<Name>/` (a project with its own repo: PymTime) | it has an owner row in `system/FOLDER-STRUCTURE.md`. A project folder also has `project.json` (name · aliases · repo) + `PROJECT.md` `VERSIONS.md` `ARCHITECTURE.md` `PROOFS.md` `ROADMAP.md`, is listed in the map below and in `system/save-rules.json`, is loaded by `domain/project-load/` when a prompt names it, and is checked at Domain Expansion by `lib/save-rules.js` |
+| **Projects** | Work Ruri builds for みや — not a system part | — | `etanah_atlas/` (lives in this repo) · `projects/coding-projects/active/<Name>/` (PymTime, with its own repo · DawahMap, code inside the folder) | it has an owner row in `system/FOLDER-STRUCTURE.md`. A project folder also has `project.json` (name · aliases · repo) + `PROJECT.md` `VERSIONS.md` `ARCHITECTURE.md` `PROOFS.md` `ROADMAP.md`, is listed in the map below and in `system/save-rules.json`, is loaded by `domain/project-load/` when a prompt names it, and is checked at Domain Expansion by `lib/save-rules.js` |
 
 Layer numbers are unchanged, so every existing "Layer N" reference still resolves: **0** Identity · **1** Constitution · **2** Boot config & Workflow · **3** Capabilities · **4** Knowledge · **5** State.
 
@@ -35,7 +35,7 @@ Machine-read map — edit the table AND this fence together. `map` fails on a pa
     "features": ["domain", ".claude/skills", ".claude/hooks", ".agents", "skills-lock.json"],
     "memory": ["main", "daily-diary", "projects", "library-items", ".claude/auto-memory", ".claude/state", "quest/active.txt"],
     "kernel": ["core", "lib", ".claude/settings.json"],
-    "projects": ["etanah_atlas", "projects/coding-projects/active/PymTime"]
+    "projects": ["etanah_atlas", "projects/coding-projects/active/PymTime", "projects/coding-projects/active/DawahMap"]
   },
   "ignored": [".git", ".gitattributes", ".gitignore", "node_modules", "backups", "meta", "outputs-temp.gitkeep", ".claude/worktrees", ".claude/settings.local.json", ".claude/launch.json"]
 }

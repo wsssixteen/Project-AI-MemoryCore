@@ -13,6 +13,9 @@ metadata:
 - The `-X ours` rule further down still holds for text conflicts on `mlk/int-env`. It does not fit a binary file the ticket itself changed, because it drops the ticket's fix.
 - Still his call: the falsifier gate at commit (local test or his `[risk-ok: <num> <reason>]`).
 
+🚨 **Ticket branch behind the env branch on the common version → raise the common ON THE TICKET BRANCH first, push it, then merge** (miya 2026-10-12, #283286, angry: "there is a reason why I asked you to up first the branch before merging"). His ask was "create a branch for Ammar's fixes, then merge into both". I merged the branch as it was (common 1.9.2-MLK.beta.patch4) into `mlk/stag-env` (1.10.1-MLK.beta.patch3), kept the env side of the pom conflict and took the Java file from the branch inside the merge commit.
+- **Why** (my reading): the ticket branch is what a release picks up later, so it must itself carry the working state; a fix that lives only inside an env merge commit is invisible to the branch.
+- **How to apply**: before any env merge, compare `<etanah.common.version>` on the ticket branch with the env branch. Branch older → one commit on the branch (`Ref #<num> - Up common to <version>`), compile, push, then merge. The merge then has no conflict. A pom conflict during an env merge is the signal I skipped this step: stop, do not resolve it in the merge.
 🚨 One-pass etanah COMMIT + DEPLOY ceremony (order is the whole rule):
 
 1. Ensure `quest/active.txt` has the ticket's block with `status=active` + `local_test_confirmed=true` (miya saying "local test passed" = set it NOW).
