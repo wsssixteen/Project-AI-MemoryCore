@@ -30,6 +30,15 @@ His words: *"this is critical, you should've done it"* (the skipped Domain Expan
 
 ---
 
+## v1.85 — 2026-10-13 (per みや: "Why do you instead use ambiguous words like that? … If this is 'Claude speech' I want you to ban yourself in the CLAUDE.MD file.")
+
+- §Explanation & Output-Format Discipline: one new line, NO VAGUE WORDS, SAY IT BY ITS NAME. A thing is called by its exact, known term; a claim is stated in one direct sentence; where the source argues with force the force is kept; banned are a roundabout phrase where a plain term exists, an invented label for a thing that has a name, and the softeners "in some way / somehow / a kind of / sort of". It holds for replies, app and page text, tickets and questions.
+- Body: `.claude/reply-shape-spec.md` §3e (new), with his words, a five-row rule table, the test before sending and the case.
+- The case: DawahMap question 7a. A card I wrote asked "Can you be sure which use its maker meant without asking him?" and "Which of them can be read off for certain?", where his reference argues the point as subjective against objective morality. I had treated the exact terms as jargon to avoid.
+- Paired, in that project: `projects/coding-projects/active/DawahMap/app/voice.js` refuses the listed phrases (the build stops); question 7a rewritten in the exact terms; `PROJECT.md` rule 1g item 10.
+- Spec preservation: additive. No line of v1.84 is changed or removed. It sits beside "NAME THE THING, STAY ON NOW" (v1.80), which is about which thing and which event; this one is about the word chosen for it.
+- Enforcement, said plainly: outside DawahMap there is no mechanical check for this line. It is a boot-loaded rule and a spec section.
+
 ## v1.84 — 2026-10-12 (per みや: "Please update the ban on Haiku 5.5, though we will need to audit. We will take the change to audit if Haiku is fit enough for what kinds of tasks.")
 
 - §Cost Efficiency → Delegation Economy: the paragraph "Haiku BANNED from delegation" becomes "Haiku 5.5 ON TRIAL in delegation"; the tier table says Sonnet 5.5 is the default and Haiku 5.5 runs on trial only; the Enforced-by line says what is blocked now.
