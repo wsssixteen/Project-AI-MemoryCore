@@ -375,7 +375,7 @@
         ]
       },
       {
-        "matcher": "Write|Edit|PowerShell|Bash",
+        "matcher": "Write|Edit|PowerShell|Bash|Agent",
         "hooks": [
           {
             "type": "command",

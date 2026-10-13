@@ -72,6 +72,14 @@ expectBlock('A3 a brief shown in an EARLIER turn does not cover this turn', run(
 expectBlock('A4 an Agent started for something else does not count', run('PowerShell', START, [ASK, AU('Agent', { description: 'Explore', prompt: 'find callers of insertGITP in etanah-common' })]));
 expectBlock('A5 an empty waiver has no reason and does not waive it', run('PowerShell', START, [U('save it [skip-brief-first: ]'), QUERY]));
 
+// ── the save agent itself may only start AFTER the brief (the second miss of 2026-10-13: agent first, brief second)
+const SAVE_AGENT = { description: 'Save adhoc', prompt: '[skip-brief-first: background save agent] write the save-set for ADHOC-MLPS-2026-4 and run adhoc-save-audit', model: 'sonnet', run_in_background: true };
+expectBlock('G1 the adhoc save agent started BEFORE any brief', run('Agent', SAVE_AGENT, [ASK, QUERY]));
+expectPass('G2 the adhoc save agent started after the brief (stop feedback in between)', run('Agent', SAVE_AGENT, [ASK, QUERY, AT(BRIEF), UM('Stop hook feedback:\n▶ adhoc-brief-first: the brief is delivered')]));
+expectPass('G3 an Agent that is not a save agent is not touched', run('Agent', { description: 'Explore', prompt: 'find callers of insertGITP in etanah-common' }, [ASK, QUERY]));
+expectBlock('G4 the waiver line inside the agent prompt does not let the PARENT start it early', run('Agent', SAVE_AGENT, [ASK]));
+expectPass('G5 seen from the agent: its own prompt opens the turn and carries the waiver line', run('PowerShell', START, [U(SAVE_AGENT.prompt)]));
+
 // ── adversarial: broken inputs never block
 let r = spawnSync(process.execPath, [HOOK], { input: '{}', encoding: 'utf8', timeout: 30000, env: process.env });
 check('F1 clean input exits 0 (no false block)', r.status === 0, 'exit=' + r.status);
