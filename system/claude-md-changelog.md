@@ -30,7 +30,7 @@ His words: *"this is critical, you should've done it"* (the skipped Domain Expan
 
 ---
 
-## v1.87 — 2026-10-14, written 2026-10-06 (per みや: "creating another part of our system called Tool. A different part from Workflows & Features")
+## v1.88 — 2026-10-14, written 2026-10-06 (per みや: "creating another part of our system called Tool. A different part from Workflows & Features")
 
 **The pointer to the one map now says seven kinds.** One in-place refinement, zero net lines:
 
@@ -38,7 +38,7 @@ His words: *"this is critical, you should've done it"* (the skipped Domain Expan
 
 **Spec preservation**: every spec of the heading is kept (`system/INDEX.md` is THE one map; the legacy tree and its label are untouched). Nothing dropped. Every line added between v1.78 and v1.85 is untouched: this entry was first written on 2026-10-06 against v1.78, then re-based on v1.85 on 2026-10-14.
 
-**Number**: v1.86 is held by another session's unsaved edit in the main checkout (§Delegation Economy discipline 5), so this entry takes v1.87.
+**Number**: v1.86 (§Delegation Economy discipline 5) and v1.87 (§Disposition 0a, say where we are going) are held by another session's unsaved edits in the main checkout, so this entry takes v1.88.
 
 **Dropped, not landed**: the same session wrote a "HARD CAP — answer, then stop" reply line on 2026-10-06. It is NOT in this version: みや's later rulings (sort first: order → one diagram, side by side → a table, 2026-10-09; name the thing, 2026-10-07) replace it.
 
