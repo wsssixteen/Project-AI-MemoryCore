@@ -5,4 +5,4 @@ Set sh = CreateObject("WScript.Shell")
 Set fso = CreateObject("Scripting.FileSystemObject")
 here = fso.GetParentFolderName(WScript.ScriptFullName)
 nodeExe = "C:\Program Files\nodejs\node.exe"
-WScript.Quit sh.Run("""" & nodeExe & """ """ & here & "\protime-plan.js"" --live --once-per-week --notify", 0, True)
+WScript.Quit sh.Run("""" & nodeExe & """ """ & here & "\protime-plan.js"" --auto --live --once --notify", 0, True)

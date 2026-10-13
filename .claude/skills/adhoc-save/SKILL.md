@@ -24,8 +24,15 @@ description: Save an adhoc's findings as the full 4-part save-set (Task folder �
 ## Adhoc title (ProTime) — 2026-10-01 per みや
 Every adhoc gets a **title**: a very short, almost-keyword label みや pastes into ProTime.
 - **ProTime line = `<ENV> - <title>`** (2026-10-06 per みや: "the format starts with PROD - ..."). Stored `title=` has no env prefix; `lib/adhoc-titles.js` adds it from `env=`. Every title shown to みや for ProTime is shown in that form: `PROD - Load documents from PROD to STAG`. For an ask (not a defect) the title is the plain action.
-- Shape: `<URUSAN> <subject keywords> <issue word>` · max 6 words · max 40 chars · no ids, no permohonan, no punctuation.
+- Shape: `<URUSAN> <subject keywords> <issue word>` · max 8 words · max 60 chars · no ids, no permohonan, no punctuation.
 - The issue word is mandatory (what is wrong: `missing` · `tiada` · `tak papar` · `ralat` · `salah` · `stuck`, or the ask: `alter` · `patch`). A subject-only title is wrong (2026-10-04: `MLPS ulasan SOK laporan tanah` → `MLPS ulasan SOK laporan tanah missing`).
+- **His wording (2026-10-13, read from the 121 adhoc entries he keyed in ProTime, 2026-07-13 to 2026-10-12, set beside 23 of my titles; the night run of `domain/protime-plan` now WRITES this title into ProTime, so it must read as his):**
+  - Say what the user sees, not the mechanism. Mine `PLP dashboard ralat Invalid path TestGis` → his `MLK internal server issue (infra migration)`. Mine `PRBB Ganti Hari bayaran royalti` → his `PRBB cannot proceed due to previous fees`.
+  - The problem word is a plain English one: `issue` · `missing` · `error` · `cannot proceed` · `wrong`. Screen and form names stay as the screen shows them (`Borang 4Ae`, `surat keputusan`, `laporan tanah`). Mine `AWAM slip permohonan gagal jana` → his `AWAM - Slip permohonan page error`; mine `... tandatangan pecah` → his `... tandatangan issue`. His own Malay phrases are fine when the screen says them (`tak papar`, `tiada dalam senarai`).
+  - An ask opens with the action: `Check ...` · `Patch ...` · `Verify ...` · `Retrieve ...`. An ask from a BA may be the whole line `Assist BA - <what>` (no env word in front).
+  - Work on a ticket that is not his own opens with the number and has no env word: `246923 - Review & deploy` · `268173 - Assist debug` · `274266 - Review & delegate`.
+  - A state other than Melaka goes after the env word: `PROD - TRG - PLPS SKM tiada dalam senarai`. The script adds env and state (`protimeLine` in `domain/protime-plan/protime-plan.js`: PROD · Internal · Staging); a stored title that already opens with one is kept as it is.
+  - No tugasan kod alone, no class name, no exception name.
 - Name the thing in a plain word too (`tugasan`, `dokumen`, `ulasan`, `bayaran`); a kod alone does not say what it is. Test: from the title only, "what is wrong with what?" must be answerable (2026-10-04: `PLPS SKM tiada dalam senarai` → `PLPS tugasan SKM tiada dalam inbox`).
 - Examples: `PLPS tugasan SKM tiada dalam inbox` · `MLPS ulasan SOK laporan tanah missing`.
 - Lives in 3 places: block `title=` · qa_doc `- Title : ...` (first line of ## Issue Summary) · the reply (first line, `Title: ...`).
