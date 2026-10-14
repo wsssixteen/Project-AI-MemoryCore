@@ -46,6 +46,8 @@ const ACTIVE_CLI = path.join(__dirname, 'active-cli.js');
 // (one-time sweep found 151 videos / 1.35 GB). Applies to EVERY subfolder (0. Brief · 2. Fix ·
 // N. Rework · 1. Simulate) — miya nod 2026-08-24 "All subfolders".
 const VIDEO_EXT = new Set(['.mp4', '.mov', '.avi', '.mkv', '.webm', '.wmv', '.m4v', '.mpg', '.mpeg']);
+// Downloads pruned with the videos (2026-10-14, per みや): PROD/STAG zip copies and .main document dumps.
+const DOWNLOAD_EXT = new Set(['.zip', '.main']);
 function fmtMB(bytes) { return (bytes / 1048576).toFixed(1) + ' MB'; }
 function pruneVideos(root, opts) {
     const dryRun = !!(opts && opts.dryRun);
@@ -56,7 +58,8 @@ function pruneVideos(root, opts) {
         for (const e of entries) {
             const full = path.join(dir, e.name);
             if (e.isDirectory()) { walk(full); continue; }
-            if (!VIDEO_EXT.has(path.extname(e.name).toLowerCase())) continue;
+            const ext = path.extname(e.name).toLowerCase();
+            if (!VIDEO_EXT.has(ext) && !DOWNLOAD_EXT.has(ext)) continue;
             let sz = 0; try { sz = fs.statSync(full).size; } catch {}
             if (!dryRun) { try { fs.unlinkSync(full); } catch (err) { res.failed.push(`${full} — ${err.message}`); continue; } }
             res.count++; res.bytes += sz; res.files.push(path.relative(root, full));
@@ -73,7 +76,7 @@ function sweepVideos(args) {
     console.log(`\n🎞  Video sweep — all archived quests${dryRun ? ' (DRY-RUN)' : ''}\n   ${archiveRoot}`);
     if (!fs.existsSync(archiveRoot)) { console.log('   (no Archive folder — nothing to do)'); return; }
     const r = pruneVideos(archiveRoot, { dryRun });
-    console.log(`   ${dryRun ? 'would delete' : 'deleted'} ${r.count} video(s), ${fmtMB(r.bytes)}`);
+    console.log(`   ${dryRun ? 'would delete' : 'deleted'} ${r.count} video/zip/.main file(s), ${fmtMB(r.bytes)}`);
     if (r.failed.length) { console.log(`   ⚠ ${r.failed.length} failed (likely locked/hydrating):`); r.failed.slice(0, 10).forEach(f => console.log('     ' + f)); }
 }
 
@@ -257,7 +260,7 @@ function main() {
     const pruneTarget = (folderState === 'moved' || folderState === 'already-archived') ? dst : null;
     if (pruneTarget && fs.existsSync(pruneTarget)) {
         videoState = pruneVideos(pruneTarget, { dryRun });
-        console.log(`  ${dryRun ? '[dry] Step 1.5: would prune' : '✓ Step 1.5: pruned'} ${videoState.count} video(s), ${fmtMB(videoState.bytes)}`);
+        console.log(`  ${dryRun ? '[dry] Step 1.5: would prune' : '✓ Step 1.5: pruned'} ${videoState.count} video/zip/.main file(s), ${fmtMB(videoState.bytes)}`);
     } else {
         console.log(`  ⬜ Step 1.5: no archived folder to prune videos from`);
     }
