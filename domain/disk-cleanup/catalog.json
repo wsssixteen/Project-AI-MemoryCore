@@ -1,0 +1,26 @@
+{
+  "note": "Frozen list of what the cleanup knows (found on the 2026-10-14 manual cleanup). The engine acts ONLY on paths listed here. An item is added by editing this file, never decided at run time. %VARS% expand from the environment.",
+  "clips": {
+    "dir": "%USERPROFILE%\\Videos\\Captures",
+    "ext": [".mp4"],
+    "frames": 4
+  },
+  "items": [
+    { "id": "npm-cache", "label": "npm download cache", "path": "%LOCALAPPDATA%\\npm-cache", "action": "auto", "run": ["npm", "cache", "clean", "--force"], "note": "refills by itself on the next install" },
+    { "id": "pip-cache", "label": "pip download cache", "path": "%LOCALAPPDATA%\\pip\\cache", "action": "auto", "run": ["py", "-m", "pip", "cache", "purge"], "note": "refills by itself on the next install" },
+    { "id": "temp-old", "label": "temp files older than 7 days", "path": "%LOCALAPPDATA%\\Temp", "action": "auto", "olderThanDays": 7, "skipNames": ["claude"], "note": "files in use are skipped; Claude's own temp folder is never touched" },
+    { "id": "recycle-bin", "label": "Recycle Bin", "path": "C:\\$Recycle.Bin", "action": "recycle", "note": "permanent; emptied only on his yes" },
+    { "id": "amd-installer", "label": "AMD driver installer copy", "path": "C:\\AMD\\AMDSoftwareInstaller", "action": "delete", "admin": true, "note": "the driver stays installed; comes back after a driver update" },
+    { "id": "claude-worktrees", "label": "old Claude worktrees in MemoryCore (OneDrive)", "path": "%USERPROFILE%\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\worktrees", "action": "handoff", "handoff": "/worktree-retrieve", "sizeFrom": { "file": "%USERPROFILE%\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\.claude\\state\\worktree-cleanup-last.json", "regex": "kept \\d+ \\(([\\d.]+) GB\\)" }, "note": "unmerged work may live there; the worktree-cleanup Feature owns them, this only reports" },
+    { "id": "onedrive-tasks", "label": "OneDrive '1. Tasks' local copies", "path": "%USERPROFILE%\\OneDrive - Pymsoft Sdn Bhd\\1. Tasks", "action": "online-only", "note": "files stay in OneDrive and download again when opened; size shown includes files already online-only" },
+    { "id": "genshin-screenshots", "label": "Genshin in-game screenshots", "path": "C:\\Program Files\\Genshin Impact\\Genshin Impact game\\ScreenShot", "action": "move", "to": "D:\\Genshin\\ScreenShot", "admin": true, "note": "moved to D:, not deleted" },
+    { "id": "genshin-game", "label": "Genshin Impact game", "path": "C:\\Program Files\\Genshin Impact", "action": "report", "note": "his action: move the game to D: from the launcher's settings (Game resources, then Move)" },
+    { "id": "eclipse-p2", "label": "Eclipse plugin store (.p2)", "path": "%USERPROFILE%\\.p2", "action": "delete", "note": "ONLY after E: is checked: a work Eclipse there may share it" },
+    { "id": "eclipse-installs", "label": "personal Eclipse installs", "path": "%USERPROFILE%\\eclipse", "action": "delete", "note": "ONLY with eclipse-p2; the workspaces are separate folders and stay" },
+    { "id": "maven-repo", "label": "personal Maven cache (.m2)", "path": "%USERPROFILE%\\.m2", "action": "delete", "note": "work Maven lives on E:\\Dev\\.m2; locked files are skipped" },
+    { "id": "intellij-jdks", "label": "IntelliJ JDK downloads (.jdks)", "path": "%USERPROFILE%\\.jdks", "action": "delete", "note": "jdk-17 in Program Files is not this" },
+    { "id": "claude-vm", "label": "Claude Cowork VM", "path": "%LOCALAPPDATA%\\Packages\\Claude_pzs8sxrjxfjjc\\LocalCache\\Roaming\\Claude\\vm_bundles", "action": "keep", "note": "kept: he uses Cowork (2026-10-14)" },
+    { "id": "whisper-models", "label": "Whisper transcription models", "path": "%USERPROFILE%\\.cache\\huggingface", "action": "keep", "note": "kept: used for transcription" },
+    { "id": "python-torch", "label": "Python torch + nvidia (runs Whisper)", "path": "%LOCALAPPDATA%\\Programs\\Python\\Python314\\Lib\\site-packages\\torch", "action": "keep", "note": "kept: used for transcription" }
+  ]
+}
