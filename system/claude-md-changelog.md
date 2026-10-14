@@ -30,6 +30,14 @@ His words: *"this is critical, you should've done it"* (the skipped Domain Expan
 
 ---
 
+## v1.89 — 2026-10-14 (per みや: "Sorry what's the difference between A & B? You're always not giving examples or diagram. You should really put this into your CLAUDE.MD at this point.")
+
+- §Disposition 0a, inside "unexplained": a choice told in words only is now named as unexplained. Every option he must pick from comes with a worked example (a real reader, step by step under that option) or one drawing of the options side by side, before he is asked to pick.
+- Body: `.claude/reply-shape-spec.md` §3f, new paragraph "A choice is shown, never only told": the two allowed forms, the cost-or-gain line, the recommended pick, the Banned clause, the test ("could he say what he would SEE under each option without asking?").
+- The case: DawahMap, 2026-10-14. A Next steps row offered "B: right after the first question … A: a new obstacle at the last question" as two sentences; he could not tell them apart. Logged with `core/slips.js`.
+- Spec preservation: additive, inside 0a. Every word of 0a as written in v1.87 is kept; one clause is added to the parentheses of "unexplained". §3f's table, direction line, "what this rule does NOT cut" and test are untouched.
+- Enforcement, said plainly: no mechanical check. A boot-loaded clause and a spec paragraph. A watch is registered for three sessions.
+
 ## v1.88 — 2026-10-14, written 2026-10-06 (per みや: "creating another part of our system called Tool. A different part from Workflows & Features")
 
 **The pointer to the one map now says seven kinds.** One in-place refinement, zero net lines:
