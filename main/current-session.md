@@ -113,3 +113,5 @@
 - **DawahMap, 2026-10-15 02:40**: version 52 PUBLISHED: a short lane for every faith on the faith question (Judaism, Hinduism, Buddhism, Sikhism, Baha'i, another faith), each read by a follower of that faith and a reviewer trained in the scholars of Islam; "still being written" retired; 52 of 52 walks. Notebook version 4.
 
 - **DawahMap, 2026-10-15 03:20**: version 53 PUBLISHED: the science-only lane ("Does science show that the world needs no maker?") and the nothing-can-be-known lane ("Can anything be known for certain?") on the No road; 55 of 55 walks. Notebook version 5. Shia: no lane (rule 1k, the notebook's ruling).
+
+- **DawahMap, 2026-10-15 04:05**: version 54 PUBLISHED: the Shia lane ("Do you hold that God appointed infallible imams after the Messenger ﷺ?"), read by a Twelver Shia lens and a Sunni scholar lens; 56 of 56 walks. Notebook version 6: 10 groups built. Every group he named now has its place.
