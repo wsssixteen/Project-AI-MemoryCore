@@ -131,7 +131,7 @@
       "refers_to": "melaka",
       "refers_to_note": "miya 2026-10-14 (popup): Kedah refers to Melaka",
       "flowable_source": { "modeler": "https://kedit.kedah.gov.my/flowable-ui/modeler/", "how": "export per melaka/FLOWABLE-KNOWLEDGE.md §12.1 in miya's logged-in browser" },
-      "_unverified": "database connection (engine = postgres per miya 2026-10-05; no MCP server, host or schema names yet); no local repo checkout (repo_dir null); awam + common trunk; which Redmine tracker maps to which branch family",
+      "_unverified": "staging / PROD database connections; no local repo checkout (repo_dir null); awam + common trunk; which Redmine tracker maps to which branch family",
       "work_scope": "active",
       "task_folder": "Kedah",
       "knowledge_dir": "kedah",
@@ -146,7 +146,7 @@
       "work_clone_root": "E:/Dev/etanah-work",
       "branch_note": "Verified 2026-10-05 by git ls-remote on GitLab (git@10.16.63.27:etanah/<repo>.git, the same repos as Melaka): pelupusan has NO kdh/master; ticket branch kdh/cr/268173 is cut from kdh/development. kdh/int-env + kdh/release/uat exist. Ticket branch families seen on pelupusan: qa, requirement, uat-or, uat-cr, cr, pat-cr. common has kdh/master; awam has kdh/plp/development and kdh/release/uat (trunk not confirmed).",
       "bpmn": { "prefix": "KDH", "root_module": "PLP" },
-      "db": { "engine": "postgres", "mcp": {}, "schemas": {}, "primary_env": null, "note": "engine per miya 2026-10-05; no connection configured yet" },
+      "db": { "engine": "postgres", "mcp": { "it": "postgres-kdhit-pg" }, "schemas": { "it": "et_main_kdit" }, "primary_env": "it", "note": "verified 2026-10-14: postgres-kdhit-pg = 10.16.63.54:5444 database kdhit, user + schema et_main_kdit, 1239 tables (the same server holds Melaka mkit). Staging / PROD connections not configured" },
       "redmine": {
         "project": null,
         "project_names": ["e-Tanah Kedah UAT", "e-Tanah Kedah", "KED_03_Pelupusan"],
