@@ -63,7 +63,7 @@
 - [infra-script-format](feedback_infra_script_schema_env.md) — Infra/PROD scripts schema-qualified, BEFORE/UPDATE/AFTER
 
 ## Databases and environments (skill: env-check)
-- [staging-and-db-access](feedback_staging_schema_stg2.md) — stg2 current, never assume; MLIT/STG writable; MCP timeout is not VPN
+- [staging-and-db-access](feedback_staging_schema_stg2.md) — 🚫 stg1 not for root cause / test data / test scenarios; a read of rows that exist only there is allowed, announce "Read from stg1: ..."; stg2 current, never assume; MLIT/STG writable; MCP timeout is not VPN
 - [environments](feedback_uat_fat_environments.md) — UAT + FAT gone; env table, datasource naming (mlit-primary line is stale)
 - [db-gateway](project_db_gateway.md) — one gateway 127.0.0.1:7411; fix = schtasks /run /tn "DB Gateway"
 - [local-dev](project_jboss_launched_by_eclipse.md) — E:\Projects\Melaka, JBoss from Eclipse, hibernate overlay error, GitLab 10.16.63.27

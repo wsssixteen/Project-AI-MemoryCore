@@ -6,6 +6,7 @@
   "mcp_server": "postgres-mlkstg-pg",
   "standalone_datasource": "etanahDS",
   "standalone_path": "E:/Dev/jboss-7.4-plp-melaka/standalone/configuration/standalone.xml",
+  "banned_note": "stg1: do not use it to find a root cause or to prepare test data or a test scenario (miya 2026-10-12, 2026-10-14). Reading rows that already exist only on stg1 is allowed; say so in the reply as \"Read from stg1: what and why\". Never switch the local env to it unless miya asks.",
   "updated": "2026-08-10",
   "source": "miya",
   "history": [
