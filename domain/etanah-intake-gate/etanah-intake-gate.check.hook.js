@@ -87,9 +87,16 @@ function resolveState(prompt) {
     if (byId.size > 1) return { rec: null, unknown: [...byId].map(label) };
     if (byName.size === 1) return { rec: STATES.get([...byName][0]), src: 'state named in the prompt' };
     if (byName.size > 1) return { rec: null, unknown: [...byName].map(label) };
+    // 2026-10-14 (Penang): a state the registry does not know fell through to the Melaka default with no word,
+    // and Melaka files were read for a Penang question. Any Malaysian state name no registry record claims -> warn.
+    const known = new Set(all.flatMap(s => [s.label].concat(s.aliases || [])).filter(Boolean).map(a => String(a).toLowerCase()));
+    const unreg = MY_STATE_NAMES.filter(n => !known.has(n.toLowerCase()) && new RegExp('\\b' + n.replace(/ /g, '\\s+') + '\\b', 'i').test(prompt));
+    if (unreg.length) return { rec: null, unregistered: unreg };
   } catch (_) { /* registry unreadable -> today's default */ }
   return { rec: null };
 }
+const MY_STATE_NAMES = ['Johor', 'Kedah', 'Kelantan', 'Melaka', 'Malacca', 'Negeri Sembilan', 'Pahang', 'Pulau Pinang', 'Penang', 'Perak', 'Perlis', 'Sabah', 'Sarawak', 'Selangor', 'Terengganu', 'Kuala Lumpur', 'Labuan', 'Putrajaya'];
+const unregLine = (rs) => '   ⚠ state UNREGISTERED — the prompt names ' + rs.unregistered.join(' + ') + ', which has no record in system/states.json. The paths below are Melaka\'s and are NOT evidence for it: search E:\\Projects\\<State> (its code) first, never answer from Melaka files, and say what is unverified. Register it: node lib/states.js add.';
 
 // A lane file the resolved state does not have on disk -> that state's index.md + STATE-FACTS.md stand in.
 function stateFiles(st, list) {
@@ -171,7 +178,7 @@ runHook({ name: 'etanah-intake-gate', event: 'UserPromptSubmit' }, (input) => {
       hot.splice(4, 1, ...stateBranchLines(st.rec));
       hot[hot.length - 1] = '   KNOWLEDGE — Read: ' + [...new Set(stateFiles(st, [KNOWLEDGE_DIR + '/BRANCH-AND-DEPLOY.md']))].join(' + ') + missingNote();
       hot.splice(1, 0, head);
-    }
+    } else if (rs.unregistered) hot.splice(1, 0, unregLine(rs));
     return { fired: true, blocked: false, lane: 'HOTFIX', contextOut: hot.concat(tail).join('\n') + '\n' };
   }
 
@@ -230,7 +237,7 @@ runHook({ name: 'etanah-intake-gate', event: 'UserPromptSubmit' }, (input) => {
     const i = lines.findIndex(l => l.startsWith('   6. ALL named envs'));
     if (i >= 0) lines.splice(i, 2, ...stateDbLines(st.rec));
     lines.splice(1, 0, head);
-  }
+  } else if (rs.unregistered) lines.splice(1, 0, unregLine(rs));
 
   return { fired: true, blocked: false, lane, contextOut: lines.concat(tail).join('\n') + '\n' };
 });

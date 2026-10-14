@@ -82,7 +82,7 @@ const STATE_FOLDERS = [
     { match: /kedah|^KED_/i,      folder: 'Kedah' },
     { match: /labuan/i,           folder: 'Labuan' },
     { match: /putrajaya/i,        folder: 'Putrajaya' },
-    { match: /pulau pinang/i,     folder: 'PulauPinang' },
+    { match: /pulau pinang|penang|^PNG_/i, folder: 'Penang' },   // registry task_folder (2026-10-14: PNG_03_Pelupusan used to fall through to Melaka)
 ];
 function taskBaseFor(issue) {
     const proj = (issue && issue.project && issue.project.name) || '';

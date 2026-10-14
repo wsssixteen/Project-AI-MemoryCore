@@ -196,6 +196,50 @@
       "redmine": { "project": "esokongan-terengganu", "project_names": ["eSOKONGAN TERENGGANU", "TRG_03_Pelupusan", "TRG_16_Awam", "e-Tanah Terengganu"], "member_projects": ["esokongan-terengganu", "e-tanah-terengganu", "e-tanah-terengganu-fat", "e-tanah-terengganu-uat", "e-tanah-terengganu-pat"], "module_field": { "id": 17, "value": "Pelupusan" }, "awam_sub_module_field": { "id": 77, "value": "Awam Pelupusan" } },
       "flowable_alter_file": "FLOWABLE-ALTER.md",
       "local_server": null
+    },
+    "penang": {
+      "label": "Penang",
+      "code": "PNG",
+      "aliases": ["Penang", "Pulau Pinang", "PulauPinang", "PNG", "png"],
+      "permohonan_prefix": "PTPNG",
+      "_unverified": "permohonan prefix PTPNG read from NegeriEnum.java (no live Penang permohonan seen yet); database connection (engine postgres = the default for a new state per miya 2026-10-05; no MCP server, host or schema known on this laptop); Flowable process-key prefix PNG inferred from the Png* class naming (no Penang BPMN on disk); awam + common trunks (awam ticket branches look cut from png/int-env, common from master: not proven, the work clones point at the old server); which Redmine tracker maps to which branch family",
+      "work_scope": "active",
+      "task_folder": "Penang",
+      "knowledge_dir": "penang",
+      "repo_dir": "Penang",
+      "modules": {
+        "pelupusan":  { "repo": "etanah-pelupusan",  "trunk": "png/development" },
+        "awam":       { "repo": "etanah-awam",       "trunk": "png/int-env" },
+        "common":     { "repo": "etanah-common",     "trunk": "master" },
+        "spoc-hasil": { "repo": "etanah-spoc-hasil", "trunk": "png/int-env" },
+        "teknikal":    { "repo": "etanah-teknikal",    "trunk": "png/master", "reference_only": true },
+        "uam":         { "repo": "etanah-uam",         "trunk": "master", "reference_only": true },
+        "integration": { "repo": "etanah-integration", "trunk": "png/master", "reference_only": true },
+        "dms":         { "repo": "etanah-dms",         "trunk": "master", "reference_only": true },
+        "pembangunan": { "repo": "etanah-pembangunan", "trunk": "png/development", "reference_only": true },
+        "report":      { "repo": "etanah-report",      "trunk": "png/int-env", "reference_only": true }
+      },
+      "modules_note": "All ten repos are checked out under E:\\Projects\\Penang (GitLab remote). Penang is a DEVELOPMENT-stage state: the Penang codebase is the Melaka layout with a Png* class family next to the Mlk* one (91 Png*.java, config/PNG + template/PNG beside config/MLK + template/MLK). reference_only = read to debug, not ours to edit.",
+      "branch_prefix": "png",
+      "ticket_branch": "png/<tracker>/<num>",
+      "ticket_branch_shapes": { "pelupusan": "none: the team commits straight to png/development (subject = #<num> or a short urusan label)", "awam": "png/development/<num> · png/requirement/<num> · png/req/<num>", "common": "png/development/<num> · png/requirement/<num> · png/requirements/<num>", "spoc-hasil": "png/req/<num>" },
+      "trunk_ref": "origin/png/development",
+      "env_branches": ["png/int-env"],
+      "work_clone_root": "E:/Dev/etanah-work",
+      "branch_note": "Verified 2026-10-14 by git ls-remote on GitLab (git@10.16.63.27:etanah/<repo>.git): etanah-pelupusan has exactly ONE png branch, png/development, and no ticket branches. png/int-env exists on awam, spoc-hasil, report, pembangunan, integration (not pelupusan). E:\\Projects\\Penang\\etanah-pelupusan was behind the remote on 2026-10-14 (local cbb3bbb0c4, remote 56cd612067): fetch before trusting a 'not in the code' answer. The E:/Dev/etanah-work clones point at the OLD server (172.16.93.167, auth refused) and cannot fetch png refs. Detail: penang/BRANCH-AND-DEPLOY.md.",
+      "bpmn": { "prefix": "PNG", "root_module": "PLP" },
+      "db": { "engine": "postgres", "mcp": {}, "schemas": {}, "primary_env": null, "note": "no Penang DB connection on this laptop (checked 2026-10-14: no MCP server, no datasource in the local JBoss configs). Ask miya for the host before any query." },
+      "redmine": {
+        "project": "png_03_pelupusan",
+        "project_names": ["PNG_03_Pelupusan", "PNG_16_Awam", "PNG_14_Common", "PNG_04_SPOC_Hasil", "PNG_12_Teknikal", "PNG_11_Integration", "PNG_07_Pembangunan", "e-Tanah Pulau Pinang"],
+        "project_ids": { "e-Tanah Pulau Pinang": 331, "PNG_03_Pelupusan": 336, "PNG_16_Awam": 340, "PNG_14_Common": 342, "PNG_04_SPOC_Hasil": 337, "PNG_12_Teknikal": 343 }
+      },
+      "flowable_alter_file": "FLOWABLE-ALTER.md",
+      "local_server": null,
+      "hosts": {
+        "git": "git@10.16.63.27:etanah/<repo>.git",
+        "redmine": "http://172.16.90.169/redmine"
+      }
     }
   }
 }

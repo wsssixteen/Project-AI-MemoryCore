@@ -151,6 +151,9 @@ const block = (status, ...closed) => ['qa=QA-999999', `status=${status}`, ...clo
         check('(m9) routing untouched: TRG projects → Terengganu, Melaka + unknown → Melaka',
             base('eSOKONGAN TERENGGANU') === 'Terengganu' && base('TRG_03_Pelupusan') === 'Terengganu'
             && base('eSOKONGAN MELAKA') === 'Melaka' && base('MLK_03_Pelupusan') === 'Melaka' && path.basename(taskBaseFor(null)) === 'Melaka', base('eSOKONGAN TERENGGANU'));
+        check('(m10) Penang projects → Penang (PNG_03_Pelupusan fell through to Melaka before 2026-10-14)',
+            base('PNG_03_Pelupusan') === 'Penang' && base('PNG_16_Awam') === 'Penang' && base('e-Tanah Pulau Pinang') === 'Penang'
+            && base('eSOKONGAN MELAKA') === 'Melaka', base('PNG_03_Pelupusan'));
     }
 
     // (n) BA-given test ids are surfaced for EVERY registered id shape, not only the reference state's.
