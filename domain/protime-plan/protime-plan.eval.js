@@ -86,9 +86,9 @@ eq('S48 typed by him, not worked -> NEVER removed', settle({ existing: { plan: [
 eq('S49 placed by the script but he edited the text -> never removed', settle({ existing: { plan: [E(10, '274323 - 50%')], adhoc: [] }, worked: [], mine: mineIds([10]) }).remove, []);
 eq('S50 placed by the script and he marked it RESOLVED -> never removed', settle({ existing: { plan: [E(10, '274323', 'RESOLVED')], adhoc: [] }, worked: [], mine: mineIds([10]) }).remove, []);
 eq('S51 Redmine unreachable (canRemove false) -> nothing removed', settle({ existing: { plan: [E(10, '274323')], adhoc: [] }, worked: [], mine: mineIds([10]), canRemove: false }).remove, []);
-eq('S52 adhoc of the day missing -> added', settle({ existing: { plan: [], adhoc: [] }, adhocs: ['PROD - MLPS Borang 4Ae cop tak papar'] }).addAdhoc, ['PROD - MLPS Borang 4Ae cop tak papar']);
+eq('S52 adhoc of the day missing -> added', settle({ existing: { plan: [], adhoc: [] }, adhocs: ['PROD (MLK) - MLPS Borang 4Ae cop tak papar'] }).addAdhoc, ['PROD (MLK) - MLPS Borang 4Ae cop tak papar']);
 eq('S53 adhoc he already typed in near-same words -> not added again', settle({ existing: { plan: [], adhoc: [E(3, 'PROD - TRG - PLPS SKM tiada dalam senarai')] }, adhocs: ['PROD - TRG - PLPS tugasan SKM tiada dalam inbox'] }).addAdhoc, []);
-eq('S54 the same adhoc twice in one run -> added once', settle({ existing: { plan: [], adhoc: [] }, adhocs: ['PROD - PRBB surat keputusan tandatangan issue', 'PROD - PRBB surat keputusan tandatangan issue'] }).addAdhoc.length, 1);
+eq('S54 the same adhoc twice in one run -> added once', settle({ existing: { plan: [], adhoc: [] }, adhocs: ['PROD (MLK) - PRBB surat keputusan tandatangan issue', 'PROD (MLK) - PRBB surat keputusan tandatangan issue'] }).addAdhoc.length, 1);
 eq('S55 an adhoc entry is never removed', settle({ existing: { plan: [], adhoc: [E(4, '283286')] }, worked: [], mine: mineIds([4]) }).remove, []);
 
 eq('S56 two different adhocs are not the same', sameTitle('PROD - PRBB surat keputusan tandatangan issue', 'PROD - MLPS Borang 4Ae cop tak papar'), false);
@@ -116,5 +116,42 @@ eq('S74 yesterday\'s row does not count for today', statusOf([{ day: '2026-10-12
 eq('S75 Saturday -> NOT DUE YET', statusOf([], new Date('2026-10-17T12:00:00')).verdict, 'NOT DUE YET');
 
 eq('S76 ProTime line: his own example (Penang, internal)', protimeLine({ env: 'MLIT', state: 'penang', title: 'Check SPOC service data save from Awam' }), 'Internal (PNG) - Check SPOC service data save from Awam');
+// ---- the line check: his real lines pass, my known-wrong lines fail (2026-10-14) ----
+const { lintLine, MANUAL, manualArgsError, rulesText } = require('./protime-plan.js');
+const HIS = ['Assist BA - Query to patch Tarikh Tamat permit', 'Assist BA - Patch Tujuan permit', 'Internal (MLK) - PDF viewer error, document not showing',
+  '281650 - Clarify to user', 'Internal (PNG) - Check SPOC service data save from Awam', 'Setup clone for Penang project', 'Staging (MLK) - MLPS Borang 4Ae Tandatangan error',
+  '246923 - Review & deploy', '264355 & 274266 - Debug & delegate to junior.', 'Assist BA - Retrieve Data PRBB Permit & Tugasan Semua Daerah', 'PROD (MLK) - Missing Tujuan in Borang 4Ae',
+  'PROD (TRG) - PLPS SKM tiada dalam senarai', 'Baseline Pelupusan 1.8.1', 'Update Redmine details (Root Cause, Solutions, etc) for tickets 276584, 276549'];
+eq('S77 every line he keyed or approved passes the line check', HIS.filter(l => lintLine(l).length).map(l => l + ' -> ' + lintLine(l).join(';')), []);
+const BAD = ['PROD - TRG - PLPS SKM tiada dalam senarai', 'Staging - PT tugasan PSJT ralat buka', 'AWAM slip permohonan gagal jana', 'Internal - PLP dashboard ralat Invalid path TestGis',
+  '281650 - Answer user questions', 'PROD (MLK) - NPE at MlkBorang4CeForm.initMklmt()', 'Assist BA - Retrieve PRBB Permit &amp; Tugasan', 'PROD (MLK) - Wrong data PTMLK/02/L/PT/2026/7', '', 'PROD (XYZ) - Something wrong'];
+eq('S78 every known-wrong line is refused', BAD.filter(l => !lintLine(l).length), []);
+eq('S79 a run never writes an adhoc line that breaks his format', settle({ existing: { plan: [], adhoc: [] }, adhocs: ['Staging - PT tugasan PSJT ralat buka', 'PROD (MLK) - PT tugasan PSJT error'] }).addAdhoc, ['PROD (MLK) - PT tugasan PSJT error']);
+eq('S80 --add-adhoc refuses a bad line before any login', /line refused/.test(manualArgsError('--add-adhoc', ['2026-10-14', 'PROD - TRG - X missing'])), true);
+eq('S81 --add-plan needs a 6-digit ticket', manualArgsError('--add-plan', ['2026-10-14', '12345']) !== null, true);
+eq('S82 --rename needs a numeric entry id', manualArgsError('--rename', ['2026-10-14', 'abc', 'PROD (MLK) - X issue']) !== null, true);
+eq('S83 a good --resolve passes the argument check', manualArgsError('--resolve', ['2026-10-14', '284775']), null);
+eq('S84 a bad date is refused', manualArgsError('--show', ['14-10-2026']) !== null, true);
+
+// ---- skill and scheduler stay one (2026-10-14: "if I update the skill or the scheduler, it will reflect each other") ----
+const fsE = require('fs'), pathE = require('path');
+const SKILL = pathE.join(__dirname, '..', '..', '.claude', 'skills', 'protime-plan', 'SKILL.md');
+const skillText = (() => { try { return fsE.readFileSync(SKILL, 'utf8'); } catch (_) { return ''; } })();
+const srcText = fsE.readFileSync(pathE.join(__dirname, 'protime-plan.js'), 'utf8');
+eq('S85 the skill file exists', skillText.length > 0, true);
+const skillFlags = [...new Set((skillText.match(/`--[a-z-]+/g) || []).map(s => s.slice(1)))];
+eq('S86 every command the skill names exists in the script', skillFlags.filter(f => !srcText.includes(`'${f}'`)), []);
+eq('S87 every on-demand command of the script is named in the skill', MANUAL.map(m => m.flag).filter(f => !skillText.includes('`' + f)), []);
+eq('S88 the skill copies no rule numbers (rules come from --rules)', /4 a day|3 a day|08:30 and 23:00/.test(skillText.replace(/^description:.*$/m, '')), false);
+const xml = fsE.readFileSync(pathE.join(__dirname, 'task.xml'), 'utf8');
+eq('S89 --rules prints the times that are really in task.xml', [...xml.matchAll(/<StartBoundary>[^T]+T(\d\d:\d\d)/g)].every(m => rulesText().includes(m[1])), true);
+eq('S90 the scheduled launcher runs the same script the skill runs', /protime-plan\.js"" --auto --live --once --notify/.test(fsE.readFileSync(pathE.join(__dirname, 'run-hidden.vbs'), 'utf8')), true);
+const ADHOC_SKILL = (() => { try { return fsE.readFileSync(pathE.join(__dirname, '..', '..', '.claude', 'skills', 'adhoc-save', 'SKILL.md'), 'utf8'); } catch (_) { return ''; } })();
+const ruleSection = (ADHOC_SKILL.split('## Adhoc title (ProTime)')[1] || '').split('\n## ')[0];
+const ruleExamples = [...ruleSection.matchAll(/his `([^`]+)`|\| `([^`]+)` ·|`((?:PROD|Internal|Staging) \([A-Z]+\) - [^`]+)`/g)].map(m => m[1] || m[2] || m[3]).filter(x => /^(\d{6}|Assist BA|PROD|Internal|Staging)\b/.test(x));
+eq('S91 the wording rule still has its examples', ruleExamples.length >= 4, true);
+eq('S92 every full line in the wording rule passes the script line check', ruleExamples.filter(l => !/<|\.\.\./.test(l) && lintLine(l).length), []);
+eq('S93 the wording rule names the same format the script writes', ruleSection.includes('`<ENV> (<STATE>) - <title>`') && protimeLine({ env: 'PROD', state: 'melaka', title: 'X' }) === 'PROD (MLK) - X', true);
+
 console.log(`\n${pass}/${pass + fail} passed`);
 process.exit(fail ? 1 : 0);

@@ -68,15 +68,7 @@ If the command errors (`date is in the past`, `bad date`) — show the error, re
 
 ## Weekly plan — ProTime "My Weekly Planning" (added 2026-09-30)
 
-Feature `domain/protime-plan/` (README has the rule + schedule). Since 2026-10-13 it runs by itself twice every working day: 08:30 (settle yesterday, top up today to 4, plan the rest of the week) and 23:00 (settle today: add worked tickets and the day's adhocs, remove tickets it placed that were not worked). On demand:
-
-1. Dry run first, show him the printed lines:
-   `node domain/protime-plan/protime-plan.js` (morning) · `--night` (today) · `--day YYYY-MM-DD` (one day)
-2. He asked to fill (or already said "fill") → write + read back: the same command with `--live`
-0. "did the plan fill" / "plan status" → `node domain/protime-plan/protime-plan.js --status` and paste its verdict + `next:` line. Do that next action when it is mine to do.
-3. Reply = the printed lines + `WRITTEN and read back: N added, M removed`. A result without that read-back line is NOT written — say so.
-
-Rule: an entry he typed or edited is never touched. Adds use ProTime's add-only call; the create-or-update call replaces the whole day and is never used. **Banned**: typing the plan in the ProTime page by browser · saying "filled" from a chat plan without the script's read-back line (2026-09-30: a session reported Wed-Fri filled while ProTime showed Thu/Fri empty) · `--live --day` on a past day he already keyed by hand in his own words (the adhocs would be added a second time in mine).
+Moved 2026-10-14 to its own skill: **`protime-plan`** (`.claude/skills/protime-plan/SKILL.md`), Feature `domain/protime-plan/`. Any ProTime plan or adhoc ask → invoke that skill. **Banned**: typing the plan in the ProTime page by browser · saying "filled" without the script's `WRITTEN and read back` line.
 
 ## Handover — a colleague's laptop reports back (added 2026-09-28)
 

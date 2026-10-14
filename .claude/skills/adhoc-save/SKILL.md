@@ -21,24 +21,32 @@ description: Save an adhoc's findings as the full 4-part save-set (Task folder �
 | 5 | qa_doc | `projects/coding-projects/active/<ADHOC-ID>/<ADHOC-ID>.md` — opens with `## Issue Summary` (Title · Symptom · Screen · Verdict) + `## Match Keys` (permohonan · aplikasi · warta · lesen/resit/hakmilik), then `## 0. Resume Point` (mandatory while status is hold/blocked/delegated — expansion-protocol §Step 2b rows) · Status · Env · evidence SELECTs · mechanism · analog · `## Next-Steps Checklist` | Write to scratchpad → copy (projects/ is main-checkout only) |
 | 6 | Bug awareness (when the adhoc finds a bug with NO ticket yet) | `etanah-knowledge/<state>/LATENT-BUGS.md` row `L<next>` + Sweep-log row (a live bug a ticket already owns goes in that ticket's qa_doc instead); if a BUG-BESTIARY pattern covers the family, add a pointer line there | append, then `node domain/bug-db/build-index.js --state <key>` |
 
-## Adhoc title (ProTime) — 2026-10-01 per みや
-Every adhoc gets a **title**: a very short, almost-keyword label みや pastes into ProTime.
-- **ProTime line = `<ENV> - <title>`** (2026-10-06 per みや: "the format starts with PROD - ..."). Stored `title=` has no env prefix; `lib/adhoc-titles.js` adds it from `env=`. Every title shown to みや for ProTime is shown in that form: `PROD - Load documents from PROD to STAG`. For an ask (not a defect) the title is the plain action.
-- Shape: `<URUSAN> <subject keywords> <issue word>` · max 8 words · max 60 chars · no ids, no permohonan, no punctuation.
-- The issue word is mandatory (what is wrong: `missing` · `tiada` · `tak papar` · `ralat` · `salah` · `stuck`, or the ask: `alter` · `patch`). A subject-only title is wrong (2026-10-04: `MLPS ulasan SOK laporan tanah` → `MLPS ulasan SOK laporan tanah missing`).
-- **His wording (2026-10-13, read from the 121 adhoc entries he keyed in ProTime, 2026-07-13 to 2026-10-12, set beside 23 of my titles; the night run of `domain/protime-plan` now WRITES this title into ProTime, so it must read as his):**
-  - Say what the user sees, not the mechanism. Mine `PLP dashboard ralat Invalid path TestGis` → his `MLK internal server issue (infra migration)`. Mine `PRBB Ganti Hari bayaran royalti` → his `PRBB cannot proceed due to previous fees`.
-  - The problem word is a plain English one: `issue` · `missing` · `error` · `cannot proceed` · `wrong`. Screen and form names stay as the screen shows them (`Borang 4Ae`, `surat keputusan`, `laporan tanah`). Mine `AWAM slip permohonan gagal jana` → his `AWAM - Slip permohonan page error`; mine `... tandatangan pecah` → his `... tandatangan issue`. His own Malay phrases are fine when the screen says them (`tak papar`, `tiada dalam senarai`).
-  - An ask opens with the action: `Check ...` · `Patch ...` · `Verify ...` · `Retrieve ...`. An ask from a BA may be the whole line `Assist BA - <what>` (no env word in front).
-  - Work on a ticket that is not his own opens with the number and has no env word: `246923 - Review & deploy` · `268173 - Assist debug` · `274266 - Review & delegate`.
-  - **His line format (given 2026-10-14): `<ENV> (<STATE>) - <title>`**, state always written: `Internal (PNG) - Check SPOC service data save from Awam` · `PROD (MLK) - Missing Tujuan in Borang 4Ae`. ENV = PROD · Internal · Staging; STATE = MLK · TRG · PNG · PRK · SGR · KDH · WP. The script adds both (`protimeLine` in `domain/protime-plan/protime-plan.js`); a stored title that already opens with an env word, `Assist BA`, or a ticket number is kept as it is. Banned: `PROD - TRG - ...` (my earlier form, wrong) and a line with no state.
-  - A question from a user on his own ticket: `<number> - Clarify to user` (2026-10-14, not "Answer user questions").
-  - No tugasan kod alone, no class name, no exception name.
-- Name the thing in a plain word too (`tugasan`, `dokumen`, `ulasan`, `bayaran`); a kod alone does not say what it is. Test: from the title only, "what is wrong with what?" must be answerable (2026-10-04: `PLPS SKM tiada dalam senarai` → `PLPS tugasan SKM tiada dalam inbox`).
-- Examples: `PLPS tugasan SKM tiada dalam inbox` · `MLPS ulasan SOK laporan tanah missing`.
-- Lives in 3 places: block `title=` · qa_doc `- Title : ...` (first line of ## Issue Summary) · the reply (first line, `Title: ...`).
-- Audit FAILs if it is missing or too long.
-- みや asks for the day's titles ("adhoc titles", "protime titles", "tajuk protime") → the `adhoc-titles` skill (`node lib/adhoc-titles.js`).
+## Adhoc title (ProTime) — the ONE rule (v2, 2026-10-14 per みや; read from the 121 adhoc entries he keyed in ProTime, 2026-07-13 to 2026-10-12)
+Every adhoc gets a **title**: the short line みや would type in ProTime himself. The `protime` skill and the 23:00 run of `domain/protime-plan` WRITE it into his ProTime, so it must read as his.
+
+**The line = `<ENV> (<STATE>) - <title>`** (his format, given 2026-10-14). Stored `title=` has no env or state; `protimeLine` in `domain/protime-plan/protime-plan.js` adds both from the block's `env=` and `state=`. ENV = `PROD` · `Internal` (MLIT / internal) · `Staging` (STG). STATE = `MLK` · `TRG` · `PNG` · `PRK` · `SGR` · `KDH` · `WP`, always written.
+
+Three line shapes. The first that fits wins:
+
+| Case | Line | His examples |
+|---|---|---|
+| Work on a ticket that is not his own, or a user question on his ticket | `<number> - <action>` · no env, no state | `246923 - Review & deploy` · `268173 - Assist debug` · `282275 - Assist Hasil` · `281650 - Clarify to user` |
+| A BA asked for data, a script or a check | `Assist BA - <what>` · no env, no state | `Assist BA - Retrieve Data PRBB Permit & Tugasan Semua Daerah` · `Assist BA - Query to patch Tarikh Tamat permit` |
+| His own task, not about a screen or an environment (setup, training, documentation, Redmine updates, a release). Reading code to answer a question about a system is NOT this shape: it keeps env and state | plain action line · no env, no state | `Setup clone for Penang project` · `Set up GitLab` · `Update Redmine details (Root Cause, Solutions, etc) for tickets ...` · `Baseline Pelupusan 1.8.1` |
+| Anything else | `<ENV> (<STATE>) - <title>` | `PROD (MLK) - Missing Tujuan in Borang 4Ae` · `Internal (PNG) - Check SPOC service data save from Awam` |
+
+The title:
+- Says what the user sees, not the mechanism. Mine `PLP dashboard ralat Invalid path TestGis` → his `MLK internal server issue (infra migration)`. Mine `PRBB Ganti Hari bayaran royalti` → his `PRBB cannot proceed due to previous fees`.
+- Ends on, or carries, a plain English problem word: `issue` · `missing` · `error` · `page error` · `cannot proceed` · `wrong`. Mine `AWAM slip permohonan gagal jana` → his `AWAM - Slip permohonan page error`; mine `... tandatangan pecah` → his `... tandatangan issue`. A Malay phrase only when the screen itself says it: `tak papar`, `tiada dalam senarai`, `kosong`.
+- An ask opens with the verb: `Check ...` · `Patch ...` · `Verify ...` · `Retrieve ...` · `Create ...`. A check he did opens or ends with `check`: `Keluasan issue check`, `Missing Jabatan Teknikal check`.
+- Names the urusan first when there is one (`PRBB`, `MLPS`, `PPTPB`), then the screen or form as the screen names it (`Borang 4Ae`, `surat keputusan`, `laporan tanah`, `Kuantiti Disyorkan`).
+- 3 to 8 words, at most 60 characters. No permohonan id, no tugasan kod alone, no class, method or exception name, no person name, no office name (`PDT Jasin`), no regulation number (`Peraturan 11(B)`). `&` is written as `&`.
+- Keeps the words the screen or the BA used for the problem when they are short: `tak papar`, `kosong`, `cannot proceed`. Mine `MLPS Borang 4Ae cop PDT Jasin missing` → his `MLPS Borang 4Ae cop tak papar`; mine `PRBB Maklumat Siasatan No Lot & Luas missing` → his `PRBB lot luas laporan tanah kosong`.
+- Sentence case as he types it: first word capital, urusan and form names as written on screen.
+
+**Banned**: `PROD - TRG - ...` (my old form) · a line with no state · a Malay failure verb the screen does not show (`ralat buka`, `gagal jana`, `pecah`, `fail mati`) · the mechanism as the title (`NPE`, `NonUniqueResult`, `Invalid path TestGis`) · `Answer user questions` (his word is `Clarify to user`).
+
+Lives in 3 places: block `title=` · qa_doc `- Title : ...` (first line of ## Issue Summary) · the reply (first line, `Title: ...`). Audit FAILs if it is missing or too long. The day's titles on ask ("adhoc titles", "protime titles", "tajuk protime") → the `adhoc-titles` skill (`node lib/adhoc-titles.js`). Tested: `domain/protime-plan/naming-cases.json` (his real lines) via `domain/protime-plan/naming.eval.md`.
 
 ## Daily adhoc session — 2026-10-01 per みや
 みや keeps ONE session open all day for adhocs. Many adhocs pass through the same chat, so every message is routed first.

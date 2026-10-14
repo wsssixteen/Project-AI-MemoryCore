@@ -170,6 +170,30 @@ function protimeLine(block) {
   return env ? `${env} (${stateWord(block.state)}) - ${t}` : t;
 }
 
+// Mechanical half of his adhoc wording (the judgment half is the rule in .claude/skills/adhoc-save/SKILL.md "Adhoc title").
+// Returns the faults; an empty list = the line may be written. Every line this script or the skill writes passes it first.
+const SHAPES = [
+  /^\d{6}( & \d{6})* - \S/,                                          // ticket work: 246923 - Review & deploy
+  /^Assist BA - \S/,                                                   // a BA ask
+  /^(PROD|Internal|Staging) \((MLK|TRG|PNG|PRK|SGR|KDH|WP)\) - \S/,    // his format, given 2026-10-14
+];
+const ENV_LEAD = /^(PROD|PROG|Internal|MLIT|MLKIT|Staging|STAG|STG|AWAM)\b/i;
+function lintLine(line) {
+  const s = String(line || '').trim(), out = [];
+  if (!s) return ['empty'];
+  if (ENV_LEAD.test(s) && !SHAPES[2].test(s)) out.push('env line not in his format "<ENV> (<STATE>) - <title>"');
+  const title = s.replace(/^(\d{6}( & \d{6})*|Assist BA|(PROD|Internal|Staging) \([A-Z]+\)) - /, '');
+  const envShape = SHAPES[2].test(s);
+  if (s.length > (envShape ? 80 : 200)) out.push('too long');
+  if (envShape && title.split(/\s+/).length > 10) out.push('title longer than 10 words');
+  if (/&(amp|lt|gt);/.test(s)) out.push('HTML entity, write the plain character');
+  if (/\b(NPE|NullPointer|Exception|ECONNRESET|\w+Form\.\w+\(|\.java\b|\.xhtml\b(?!.*screen))/i.test(s)) out.push('mechanism or code name in the line');
+  if (/\b(ralat buka|gagal jana|pecah|fail mati)\b/i.test(s)) out.push('Malay failure verb the screen does not show');
+  if (/\bAnswer user questions?\b/i.test(s)) out.push('his words are "Clarify to user"');
+  if (/PT[A-Z]{3}\/\d{2}\/[A-Z]\/[A-Z]+\/\d{4}\/\d+/.test(s)) out.push('permohonan id in the line');
+  return out;
+}
+
 // What settling one day changes. No network.
 //   existing: { plan: [{id,name,status}], adhoc: [...] }   worked: [{ id:'284201', own:true|false, title? }]
 //   adhocs: ['PROD - ...']   mine: entry => true when this script created that entry
@@ -183,7 +207,7 @@ function settle({ existing, worked = [], adhocs = [], mine = () => false, canRem
     onDay.add(String(w.id));
   }
   for (const line of adhocs) {
-    if (!line) continue;
+    if (!line || lintLine(line).length) continue;                    // a line that breaks his format is never written by a run
     if ([...adhoc, ...plan].some(e => sameTitle(e.name, line)) || addAdhoc.some(x => sameTitle(x, line))) continue;
     if (ticketsIn(line).length && ticketsIn(line).every(t => onDay.has(t))) continue;
     addAdhoc.push(line);
@@ -238,6 +262,44 @@ function statusOf(rows, now) {
   if (live.length) { const last = live[live.length - 1]; return { week: monday, verdict: 'FAILED', next: nextFor(last.result), row: last }; }
   if (weekend || now < due) return { week: monday, verdict: 'NOT DUE YET', next: 'nothing to do until the next working day 08:30', row: null };
   return { week: monday, verdict: 'DID NOT RUN', next: 'the Windows task never started: run --live by hand, then check `schtasks /Query /TN "\\MemoryCore\\ProTime Weekly Plan" /V /FO LIST`', row: null };
+}
+
+// On-demand commands. Each one: one ProTime login, the change, a read-back of that day. Pure argument check below.
+const MANUAL = [
+  { flag: '--show', usage: '--show YYYY-MM-DD' },
+  { flag: '--add-adhoc', usage: '--add-adhoc YYYY-MM-DD "<line>"' },
+  { flag: '--add-plan', usage: '--add-plan YYYY-MM-DD <ticket>' },
+  { flag: '--resolve', usage: '--resolve YYYY-MM-DD <ticket>' },
+  { flag: '--rename', usage: '--rename YYYY-MM-DD <entry id> "<new line>"' },
+  { flag: '--remove', usage: '--remove YYYY-MM-DD <entry id>' },
+];
+function manualArgsError(flag, a) {
+  const m = MANUAL.find(x => x.flag === flag);
+  const need = { '--show': 1, '--add-adhoc': 2, '--add-plan': 2, '--resolve': 2, '--rename': 3, '--remove': 2 }[flag];
+  if (!m || a.length < need || !/^\d{4}-\d{2}-\d{2}$/.test(a[0])) return 'usage: node domain/protime-plan/protime-plan.js ' + (m ? m.usage : '');
+  if ((flag === '--add-plan' || flag === '--resolve') && !/^\d{6}$/.test(a[1])) return 'a ticket number has 6 digits: ' + a[1];
+  if ((flag === '--rename' || flag === '--remove') && !/^\d+$/.test(a[1])) return 'an entry id is a number (see --show): ' + a[1];
+  if ((flag === '--add-adhoc' || flag === '--rename') && !String(a[flag === '--rename' ? 2 : 1]).trim()) return 'the line is empty';
+  if (flag === '--add-adhoc' || flag === '--rename') { const f = lintLine(a[flag === '--rename' ? 2 : 1]); if (f.length) return 'line refused: ' + f.join('; '); }
+  return null;
+}
+
+// The live rules, printed from this file's own constants and task.xml, so the skill never holds a second copy.
+function rulesText() {
+  let times = 'task.xml unreadable';
+  try {
+    const x = fs.readFileSync(path.join(__dirname, 'task.xml'), 'utf8');
+    times = [...x.matchAll(/<StartBoundary>[^T]+T(\d\d:\d\d)/g)].map(m => m[1]).join(' and ') + (/<LogonTrigger>/.test(x) ? ', and at logon' : '') + (/<WakeToRun>true/.test(x) ? ', wakes the laptop' : '');
+  } catch (_) {}
+  return [
+    `Runs: Mon-Fri ${times}. Before ${NIGHT_FROM_HOUR}:00 = morning run, from ${NIGHT_FROM_HOUR}:00 = night run.`,
+    `Morning: settle the previous working day, top up today to ${PER_DAY_MAX}, plan the rest of the week ${PER_DAY_MAX} a day (else ${PER_DAY_MIN}).`,
+    `Night: settle today.`,
+    `Settle: add worked tickets (his: PLAN, never his: ADHOC "<n> - Assist") and the day's adhocs; remove PLAN entries this script placed that were not worked.`,
+    `Worked: ${LEDGER_MIN_TURNS}+ turns in the turn ledger, or a Redmine note of his that day.`,
+    `Never touched: an entry he typed, edited or resolved; any adhoc entry; a day off.`,
+    `Adhoc line: ${protimeLine({ env: 'PROD', state: 'melaka', title: '<title>' })} - title wording: .claude/skills/adhoc-save/SKILL.md "Adhoc title".`,
+  ].join('\n');
 }
 
 function readLog() { try { return fs.readFileSync(LOG, 'utf8').split('\n').filter(Boolean).map(l => { try { return JSON.parse(l); } catch (_) { return null; } }).filter(Boolean); } catch (_) { return []; } }
@@ -328,56 +390,8 @@ function adhocsOfDay(day, adhocIds, blocks) {
   return { lines, untitled };
 }
 
-// Redmine: tickets he wrote on that day, and whether each one was ever assigned to him.
-const REDMINE = (() => {
-  try {
-    const src = fs.readFileSync(path.join(ROOT, 'quest', 'redmine-board.js'), 'utf8');   // the one home of the Redmine address + key
-    return { base: /REDMINE_BASE\s*=\s*'([^']+)'/.exec(src)[1], key: /REDMINE_KEY\s*=\s*'([^']+)'/.exec(src)[1], project: (/PROJECT\s*=\s*'([^']+)'/.exec(src) || [])[1] || 'helpdesk_melaka' };
-  } catch (_) { return null; }
-})();
-async function rget(p) {
-  for (let attempt = 1; attempt <= 3; attempt++) {
-    const j = await rgetOnce(p);
-    if (j) return j;
-    await new Promise(r => setTimeout(r, 3000 * attempt));
-  }
-  return null;
-}
-function rgetOnce(p) {
-  return new Promise(resolve => {
-    const req = http.get(REDMINE.base + p, { headers: { 'X-Redmine-API-Key': REDMINE.key }, timeout: 30000 }, res => {
-      let b = ''; res.setEncoding('utf8'); res.on('data', d => b += d);
-      res.on('end', () => { try { resolve(res.statusCode === 200 ? JSON.parse(b) : null); } catch (_) { resolve(null); } });
-    });
-    req.on('error', () => resolve(null));
-    req.on('timeout', () => { req.destroy(); resolve(null); });
-  });
-}
-async function redmineDays(days, extraIds) {
-  if (!REDMINE) return { ok: false, error: 'redmine address not readable' };
-  const me = await rget('/users/current.json');
-  if (!me || !me.user) return { ok: false, error: 'redmine unreachable' };
-  const myId = me.user.id, since = [...days].sort()[0];
-  const cand = new Set(extraIds.map(String));
-  for (const base of [`/issues.json?status_id=*&assigned_to_id=me`, `/projects/${REDMINE.project}/issues.json?status_id=*`]) {
-    for (let offset = 0; offset < 600; offset += 100) {
-      const j = await rget(`${base}&updated_on=%3E%3D${since}&limit=100&offset=${offset}`);
-      if (!j || !Array.isArray(j.issues)) return { ok: false, error: 'redmine list failed' };
-      for (const is of j.issues) cand.add(String(is.id));
-      if (offset + 100 >= (j.total_count || 0)) break;
-    }
-  }
-  const worked = Object.fromEntries(days.map(d => [d, []]));
-  for (const id of cand) {
-    const j = await rget(`/issues/${id}.json?include=journals`);
-    if (!j || !j.issue) continue;                                // a ticket he cannot open: skipped
-    const is = j.issue, journals = is.journals || [];
-    const own = (is.assigned_to && is.assigned_to.id === myId) || journals.some(jr => (jr.details || []).some(det => det.property === 'attr' && det.name === 'assigned_to_id' && (String(det.new_value) === String(myId) || String(det.old_value) === String(myId))));
-    const wrote = new Set(journals.filter(jr => jr.user && jr.user.id === myId).map(jr => iso(new Date(jr.created_on))));
-    for (const d of days) if (wrote.has(d) || (extraIds.includes(id) && (extraIds.byDay || {})[d] && extraIds.byDay[d].includes(id))) worked[d].push({ id, own: !!own });
-  }
-  return { ok: true, worked, candidates: cand.size };
-}
+// Redmine (read-only): tickets he wrote on that day, and whether each was ever his. See redmine-read.js.
+const { redmineDays } = require('./redmine-read.js');
 
 async function main() {
   const args = process.argv.slice(2);
@@ -402,6 +416,77 @@ async function main() {
     console.log(`ProTime plan, ${todayIso}: ${s.verdict}`);
     if (s.row) console.log(`  last row: ${s.row.ts} run=${s.row.run || 'weekly'} result=${s.row.result}${s.row.detail ? ' (' + s.row.detail + ')' : ''}${s.row.created ? ' added=' + s.row.created.map(c => `${c.date} ${c.name}`).join('; ') : s.row.placed ? ' placed=' + JSON.stringify(s.row.placed) : ''}${s.row.removed && s.row.removed.length ? ' removed=' + s.row.removed.map(c => `${c.date} ${c.name}`).join('; ') : ''}`);
     console.log(`  next: ${s.next}`);
+    return;
+  }
+
+  // ---------- on-demand commands (the protime skill, 2026-10-14) ----------
+  if (args.includes('--rules')) { console.log(rulesText()); return; }
+  if (args.includes('--sessions')) {
+    const day = args[args.indexOf('--sessions') + 1] || todayIso;
+    for (const s of require('./sessions.js').sessionsOn(day)) {
+      console.log(`\n== ${s.session} (${s.folder}) ${s.prompts[0].time}`);
+      for (const p of s.prompts) console.log(`  ${p.time} > ${p.text}`);
+    }
+    return;
+  }
+  const manual = MANUAL.find(m => args.includes(m.flag));
+  if (manual) {
+    const a = args.slice(args.indexOf(manual.flag) + 1).filter(x => !x.startsWith('--'));
+    const bad = manualArgsError(manual.flag, a);
+    if (bad) { console.log(bad); process.exit(2); }
+    const cfgM = require(path.join(PYMTIME, 'lib', 'config.js'));
+    const apiM = require(path.join(PYMTIME, 'lib', 'api.js'));
+    const cM = cfgM.loadConfig(); const pwM = cM && cfgM.loadPassword();
+    if (!cM || !cM.username || !pwM) return fail(1, 'no-protime-login', 'PymTime has no saved ProTime login on this laptop');
+    const base = await apiM.liveApiBase(cM);
+    const lgM = await apiM.login(base, cM.username, pwM, 2);
+    if (!lgM.ok) return fail(1, 'protime-' + (lgM.reason || 'login-failed'));
+    const day = a[0];
+    const readDay = async () => { const r = await apiM.request(base, `/staff-plan/self?startDate=${day}&endDate=${day}`, { token: lgM.token }); return r.ok && r.json && Array.isArray(r.json.data) ? (entriesByDate(r.json.data)[day] || { plan: [], adhoc: [] }) : null; };
+    const show = d => { for (const k of ['plan', 'adhoc']) for (const e of d[k]) console.log(`  ${k.padEnd(5)} ${String(e.id).padEnd(6)} ${e.status.padEnd(8)} ${e.name}`); };
+    const before = await readDay();
+    if (!before) return fail(1, 'protime-read-failed');
+    if (manual.flag === '--show') { console.log(day); show(before); return; }
+    const created = [], removed = [];
+    if (manual.flag === '--add-adhoc' || manual.flag === '--add-plan') {
+      const cat = manual.flag === '--add-adhoc' ? 'ADHOC' : 'PLAN', name = a[1];
+      if ([...before.plan, ...before.adhoc].some(e => e.name === name)) console.log(`already there: ${name}`);
+      else {
+        const w = await apiM.request(base, '/staff-plan/bulk/create', { method: 'POST', token: lgM.token, body: [{ moduleId: MODULE_ID, planName: name, status: 'PENDING', categoryTask: cat, planDate: day }] });
+        if (!w.ok) return fail(1, 'protime-write-failed', 'HTTP ' + w.status);
+      }
+    }
+    if (manual.flag === '--rename') {
+      const old = [...before.plan, ...before.adhoc].find(e => String(e.id) === a[1]);
+      if (!old) { console.log(`no entry ${a[1]} on ${day}`); process.exit(2); }
+      const cat = before.adhoc.includes(old) ? 'ADHOC' : 'PLAN';
+      const w = await apiM.request(base, '/staff-plan/bulk/create', { method: 'POST', token: lgM.token, body: [{ moduleId: MODULE_ID, planName: a[2], status: 'PENDING', categoryTask: cat, planDate: day }] });
+      if (!w.ok) return fail(1, 'protime-write-failed', 'HTTP ' + w.status);
+      const mid = await readDay();
+      if (mid && [...mid.plan, ...mid.adhoc].some(e => e.name === a[2])) { const d = await apiM.request(base, `/staff-plan/${old.id}`, { method: 'DELETE', token: lgM.token }); if (d.ok) removed.push({ id: old.id, name: old.name, date: day }); }
+    }
+    if (manual.flag === '--resolve') {
+      const t = before.plan.find(e => e.name === a[1] || ticketsIn(e.name).includes(a[1]));
+      if (!t) { console.log(`no plan entry for ${a[1]} on ${day}; add it first with --add-plan`); process.exit(2); }
+      if (t.status !== 'RESOLVED') { const r = await apiM.request(base, '/staff-plan/bulk/create-resolved', { method: 'POST', token: lgM.token, body: [{ parentId: t.id, resolvedDate: day }] }); if (!r.ok) return fail(1, 'protime-write-failed', 'HTTP ' + r.status); }
+    }
+    if (manual.flag === '--remove') {
+      const old = [...before.plan, ...before.adhoc].find(e => String(e.id) === a[1]);
+      if (!old) { console.log(`no entry ${a[1]} on ${day}`); process.exit(2); }
+      const d = await apiM.request(base, `/staff-plan/${old.id}`, { method: 'DELETE', token: lgM.token });
+      if (d.ok) removed.push({ id: old.id, name: old.name, date: day });
+    }
+    const after = await readDay();
+    if (!after) return fail(2, 'read-back-mismatch', 'plan unreadable after write');
+    const ids0 = new Set([...before.plan, ...before.adhoc].map(e => e.id));
+    for (const k of ['plan', 'adhoc']) for (const e of after[k]) if (!ids0.has(e.id)) created.push({ id: e.id, name: e.name, cat: k === 'adhoc' ? 'ADHOC' : 'PLAN', date: day });
+    const want = manual.flag === '--resolve' ? after.plan.some(e => (e.name === a[1] || ticketsIn(e.name).includes(a[1])) && e.status === 'RESOLVED')
+      : manual.flag === '--remove' ? ![...after.plan, ...after.adhoc].some(e => String(e.id) === a[1])
+      : [...after.plan, ...after.adhoc].some(e => e.name === (manual.flag === '--rename' ? a[2] : a[1])) && (manual.flag !== '--rename' || removed.length === 1);
+    logRow({ day: todayIso, week: monday, run: 'manual:' + manual.flag.slice(2), mode: 'live', result: want ? 'ok' : 'ok-partial', created, removed });
+    console.log(day); show(after);
+    if (!want) return fail(2, 'read-back-mismatch', `${manual.flag} ${a.slice(1).join(' ')} not seen after the write`);
+    console.log(`WRITTEN and read back: ${created.length} added, ${removed.length} removed${manual.flag === '--resolve' ? ', resolved' : ''}`);
     return;
   }
 
@@ -513,4 +598,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(e => { logRow({ mode: 'error', result: 'crash', detail: String(e && e.stack || e).slice(0, 400) }); console.error(e); process.exit(1); });
-module.exports = { weekDays, prevWorkday, planByDate, entriesByDate, distribute, decide, settle, sameTitle, protimeLine, ticketsIn, mineOf, iso, fromDmy, statusOf, nextFor, NEXT };
+module.exports = { weekDays, prevWorkday, planByDate, entriesByDate, distribute, decide, settle, sameTitle, protimeLine, ticketsIn, mineOf, iso, fromDmy, statusOf, nextFor, NEXT, MANUAL, manualArgsError, rulesText, lintLine };

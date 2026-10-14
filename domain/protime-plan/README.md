@@ -77,8 +77,12 @@ Where a run shows itself: a toast on the laptop (when it changed something, or a
 
 | File | Role |
 |---|---|
-| `protime-plan.js` | the procedure (pure `decide()` + `settle()` + ProTime read / add / delete / read-back) |
-| `protime-plan.eval.js` | 75 behaviour fixtures, no network |
+| `protime-plan.js` | the procedure (pure `decide()` + `settle()` + `lintLine()` + ProTime read / add / delete / resolve / read-back) and the on-demand commands of the skill |
+| `.claude/skills/protime-plan/SKILL.md` | the skill: one door for his asks; runs only this script; copies no rule (`--rules` prints them) |
+| `redmine-read.js` | Redmine reads only (GET): tickets he wrote on a day, and whether each was ever his |
+| `sessions.js` | his own prompts of a day, read from the session transcripts (`--sessions`) |
+| `naming-cases.json` | 37 of his real ProTime adhoc lines beside what our records said; the blind naming test set |
+| `eval.js` → `protime-plan.eval.js` | 93 fixtures, no network: planning, settle, his line format, the skill-script sync checks |
 | `run-hidden.vbs` | scheduled launcher, no console window, passes the exit code back |
 | `task.xml` | the Windows task definition (registered with `schtasks /Create /XML`) |
 | `log.jsonl` | one row per run: day, run, mode, result, created, removed, placed, notes. Lives in the MAIN checkout only. |
