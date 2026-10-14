@@ -52,6 +52,10 @@ check('F32 TRG substring branch (trg/master-backup, trg/stag-env2) → not prote
 check('F33 TRG bypass token → pass', decide(TRG_MERGE, '[skip-probe-gate: intentional]', true, 'trg/stag-env').block === false);
 check('F34 TRG free text mentioning trg/master + push → pass', decide('node core/slips.js add --evidence "git push into trg/master blocked"', '', true, 'main').block === false);
 check('F35 Melaka unchanged: mlk/mlit protected, mlk ticket branch not', decide('git push origin HEAD:mlk/mlit', '', true, 'x').block === true && decide('git push origin HEAD:mlk/qa/123', '', true, 'x').block === false);
+// 2026-10-14: trunks and env branches of every registered state come from system/states.json (png/ and kdh/ were unprotected)
+check('F36 Penang trunk png/development + awam trunk png/plp_development + png/int-env protected', decide('git push origin HEAD:png/development', '', true, 'x').block === true && decide('git push origin HEAD:png/plp_development', '', true, 'x').block === true && decide('git push origin HEAD:png/int-env', '', true, 'x').block === true);
+check('F37 Kedah trunk kdh/development protected', decide('git push origin HEAD:kdh/development', '', true, 'x').block === true);
+check('F38 Penang ticket branch png/requirement/281327 NOT protected', decide('git push origin HEAD:png/requirement/281327', '', true, 'x').block === false);
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' → ' + (x.d || ''))); }

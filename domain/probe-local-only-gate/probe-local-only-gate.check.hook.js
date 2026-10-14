@@ -15,7 +15,23 @@ const LOG = path.join(__dirname, 'log.jsonl');
 
 // One git invocation = "git [ -C <path> ] <verb> ..." — the verb must be the first non-option word after git.
 const GIT_CMD_RX = /(?:^|[;&|]\s*|\n\s*)git\s+(?:-C\s+(?:"[^"]+"|'[^']+'|\S+)\s+)?(merge|push|cherry-pick|rebase)\b([^;&|\n]*)/g;
-const PROTECTED_RX = /(?:^|[\s"':])(?:origin\/)?(mlk\/(?:int-env|stag-env|master|mlit|release\/[^\s"']+)|trg\/(?:int-env|stag-env|master|release\/[^\s"']+)|prk\/[^\s"']+|sgr\/master|master)(?=$|[\s"':])/;
+// Hand-written list kept as is; every registered state's trunks, env branches and <prefix>/release/* are added from
+// system/states.json (2026-10-14: kdh/ and png/ trunks were unprotected). Registry unreadable -> the hand-written list alone.
+const HAND = String.raw`mlk\/(?:int-env|stag-env|master|mlit|release\/[^\s"']+)|trg\/(?:int-env|stag-env|master|release\/[^\s"']+)|prk\/[^\s"']+|sgr\/master|master`;
+function registryBranches() {
+  const out = [];
+  try {
+    const S = require(path.join(__dirname, '..', '..', 'lib', 'states.js'));
+    const esc = (b) => b.replace(/[.*+?^${}()|[\]\\\/]/g, '\\$&');
+    for (const s of Object.values(S.all())) {
+      for (const m of Object.values(s.modules || {})) if (m && m.trunk && m.trunk.includes('/')) out.push(esc(m.trunk));
+      for (const e of s.env_branches || []) out.push(esc(e));
+      if (s.branch_prefix) out.push(esc(s.branch_prefix) + String.raw`\/release\/[^\s"']+`);
+    }
+  } catch (_) { /* hand-written list only */ }
+  return [...new Set(out)];
+}
+const PROTECTED_RX = new RegExp(String.raw`(?:^|[\s"':])(?:origin\/)?(` + [HAND].concat(registryBranches()).join('|') + String.raw`)(?=$|[\s"':])`);
 const MARKER_GREP = 'QA[0-9]+[A-Z]*-PROBE|\\bQALOG\\b';
 
 function repoOf(cmd) {
