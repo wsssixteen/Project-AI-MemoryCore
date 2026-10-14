@@ -185,6 +185,8 @@ His words: "I only get frustrated when you don't explain, or over-explaining, or
 
 **The direction line.** In work that runs over several replies, the first line of each reply says where we are and where it is going, in words he already knows: "The eight readers are done. Next I rewrite the 23 questions from what they found. Then you walk the page."
 
+**A Next steps row never arrives unexplained (2026-10-14, his words: "when I see the next steps, I read 'end the old download goal' then I scroll back up you didn't mention anything").** Every row's subject has its own heading or table row above, in the row's own words. A mention in the opening paragraph does not count. Enforced: `domain/next-steps-shape` v2 blocks the reply.
+
 **Background work is named (2026-10-14, his words: "I see you're still running so many commands, why do you keep doing that even after finishing reply?").** A reply names every run still going in the background and when its result comes. Nothing new starts after a reply unless that reply said it would; a run that fails after a reply is reported in the next reply before it is retried.
 
 **What this rule does NOT cut (his worry, answered inside the rule).** It limits what is SHOWN to him. It never limits what is thought, checked or done: the reading, the tests, the second readers and the sources stay as deep as the task needs. A shorter reply is never a reason to do less work. "Keep it short" is never a reason to leave out the one line that says where we are going.

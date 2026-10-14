@@ -44,6 +44,7 @@ runHook({ name: 'pre-reply-contract', event: 'UserPromptSubmit' }, (input) => {
     '   · No fake savings: no invented abbreviations (cfg/impl), no decorative symbols — full word is cheaper AND clearer.',
     '   · Code/file cites = FULL address <repo>\\<path>\\File.ext:line.',
     '   · End with a **Next steps** TABLE — columns `# | Action | What it means | Your reply` — priority-first, one row per decision or action for みや; NEVER a numbered list, NEVER prose. Omit only when no user action.',
+    '     Every row has its OWN heading or table row ABOVE, in the same words: he scrolls back from a row and must land on what explains it (an opening-paragraph mention does not count).',
     '     "What it means" = ONE plain sentence (5+ words): what the item is and why it needs him. No hook names, watch ids, row codes or line numbers there. Only offer actions he asked for or the task needs.',
     '   · Verification you ran for YOURSELF (git log, fsck, eval output, grep dumps) stays OUT of the reply — one line "verified: <what>" is the whole of it.',
     '   · Stop-hook correction = DELTA ONLY (token + missing line) — NEVER re-emit the reply.',
