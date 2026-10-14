@@ -37,6 +37,22 @@
       "status": "live"
     },
     {
+      "id": "land-on-main",
+      "answers": "Did this session-folder commit reach the main folder with exactly its own change, and is main's shared index clean",
+      "call": "node lib/land-on-main.js <commit> [--dry-run] (run from the session folder)",
+      "home": "lib/land-on-main.js",
+      "groups": [
+        "system"
+      ],
+      "state_scope": "none",
+      "footprint": "on-demand: 1 node process plus a few git processes, ~40 MB, exits after printing",
+      "usage": {
+        "sessions": 0,
+        "last": ""
+      },
+      "status": "unused"
+    },
+    {
       "id": "state-migration",
       "answers": "What a state still lacks (reference state, DB, Flowable source, routing, code index) and which of its knowledge files came from which state, checked or not",
       "call": "node lib/state-migration.js gates --state <s> · migrate --state <s> [--dry-run] · audit --state <s>|--all · verify --state <s> --file <F> --evidence \"<source>\"",
