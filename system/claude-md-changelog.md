@@ -30,6 +30,15 @@ His words: *"this is critical, you should've done it"* (the skipped Domain Expan
 
 ---
 
+## v1.90 — 2026-10-14 (per みや: "I thought I already asked you change CLAUDE.MD to replace this style of writing to always use diagrams whenever possible even though the reply might seem longer, but lesser words or sentences due to being shown using diagrams & table.")
+
+- §Explanation, PILLAR SHOW, DON'T EXPLAIN: new clause "Diagram first, whenever one can carry it". An example, walk-through, comparison, flow or structure is drawn or laid out as a table, even when the reply gets longer on screen; the measure is fewer words and sentences, not fewer lines. Banned: bullets of sentences carrying what a drawing or a table could show.
+- §Disposition 0a, the choice clause of v1.89: "a worked example … or one drawing" narrowed to "one drawing, or a worked example drawn as a story diagram or laid out as a table of steps; an example told in sentences is still told". v1.89's wording let an example be told as sentences, and the next reply did exactly that.
+- Body: `.claude/reply-shape-spec.md` §3f, the choice paragraph: form (a) must be drawn or tabled; his words added.
+- The case: DawahMap, 2026-10-14, the reply on the "why do you believe" chain and the stance opening: two diagrams, then each section's example told as bullet sentences. His screenshot of those bullets came with this ask. Logged with `core/slips.js` (reask/redundant).
+- Not changed, said plainly: the terse-gate's short-question cap (15 lines, table rows counted) stays as he ruled on 2026-10-06. A drawn diagram adds no text lines, so the two rules do not collide.
+- Spec preservation: the pillar's v1.59 text is kept word for word; one clause is added after it. 0a: only the choice clause changes, and it narrows (a told example no longer counts).
+
 ## v1.89 — 2026-10-14 (per みや: "Sorry what's the difference between A & B? You're always not giving examples or diagram. You should really put this into your CLAUDE.MD at this point.")
 
 - §Disposition 0a, inside "unexplained": a choice told in words only is now named as unexplained. Every option he must pick from comes with a worked example (a real reader, step by step under that option) or one drawing of the options side by side, before he is asked to pick.
