@@ -110,7 +110,10 @@ check('exactly one cas.url left uncommented', () => fs.readFileSync(propsPath, '
 
 // 5 — round-trip back to stg1 restores the original bytes
 check('round-trip mlit -> stg1 restores both files byte-for-byte', () => {
-    run(['--to', 'stg1']);
+    let refused = false;
+    try { run(['--to', 'stg1']); } catch (_) { refused = true; }
+    if (!refused) return false;
+    run(['--to', 'stg1', '--miya-asked']);
     return fs.readFileSync(xmlPath, 'utf-8') === XML_FIXTURE
         && fs.readFileSync(propsPath, 'utf-8') === PROPS_FIXTURE;
 });

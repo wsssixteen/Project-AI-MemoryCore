@@ -8,6 +8,8 @@ metadata:
   modified: 2026-08-11T03:50:40.184Z
 ---
 
+**🚫 stg1 is NOT used (miya 2026-10-12, repeated angrily 2026-10-14).** Never query `et_main_stg1`, never switch the local env to it, never offer "check stg1" as an option, never cite its rows as staging evidence. Only when miya himself asks for stg1 in that message. Enforced by `domain/stg1-block/` (blocks every stg1 database call unless his latest message names stg1), `quest/env-switch.js` (refuses `--to stg1` without `--miya-asked`), and the every-prompt staging reminder (`system/melaka-env-state.json` `banned_note`). **Why**: #284544, I read stg1 unasked and reported it as a BA staging repro (withdrawn), then offered "check stg1" in four replies after he had banned it, because the 2026-10-12 ban only reached my session's copy of the index.
+
 **CURRENT STAGING TARGET = `et_main_stg2`** — stated by みや 2026-08-10 (*"WE HAVE SWITCHED TO STG2 FOR NOW … amend your current memory everywhere"*). This line is the live pointer; update it the moment he says otherwise, in the same turn he says it. (Was `et_main_stg1` 2026-07-27 → 2026-08-10.)
 
 **🤖 MACHINE-READABLE SOURCE (added 2026-08-10, みや /goal) = `system/melaka-env-state.json`.** The hook `domain/staging-schema-tracker/` reads it and (A) rewrites it when みや says "we switched to stgN" / "use stgN now", (B) injects the live target + auto-verifies `standalone.xml` etanahDS matches, at every env-prep / test-scenario prompt. This prose line and the JSON must stay in sync — when one changes, change both. Built because this file's prose decayed and env was "prepared" without checking standalone against the live target (QA-273460).

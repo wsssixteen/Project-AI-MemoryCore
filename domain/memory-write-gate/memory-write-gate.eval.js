@@ -80,6 +80,13 @@ check('F0 NUKE-MARKER.md + README keys present', fs.existsSync(path.join(__dirna
   check('F2 valid line, existing path, edited this turn -> PASS', passed(r), 'exit=' + r.status + ' ' + r.stderr);
   check('F2 logged as pass', lastDecision(sb) === 'pass', JSON.stringify(sb.log())); }
 
+// F2b: the line sits only in a shell command of this turn (assistant text before a tool call is not in the transcript yet, 2026-10-14) -> PASS
+{ const sb = sandbox(); const r = fire(sb, { events: [U('go'), TU('PowerShell', { command: "Write-Output @'\n" + line(ENF) + "\n'@" }, 't0'), R('t0', 'ok'), TU('Edit', { file_path: sb.rel(ENF) }, 't1'), R('t1', 'ok')] });
+  check('F2b line in a PowerShell command of this turn -> PASS', passed(r), 'exit=' + r.status + ' ' + r.stderr); }
+// F2c: the line in a shell command BEFORE the last user message does not count -> BLOCK
+{ const sb = sandbox(); const r = fire(sb, { events: [U('first'), TU('PowerShell', { command: "Write-Output @'\n" + line(ENF) + "\n'@" }, 't0'), R('t0', 'ok'), U('second'), TU('Edit', { file_path: sb.rel(ENF) }, 't1'), R('t1', 'ok')] });
+  check('F2c line in an older turn command -> BLOCK', blocked(r), 'exit=' + r.status); }
+
 // F3: path that does not exist -> BLOCK
 { const sb = sandbox(); const r = fire(sb, { events: [U('go'), A(line('domain/nope/nope.hook.js'))] });
   check('F3 path not on disk -> BLOCK, says not found', blocked(r) && /not found on disk/.test(r.stderr), r.stderr); }

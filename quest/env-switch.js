@@ -111,6 +111,7 @@ if (targetDs.suffix === '') {
     console.log('No edit needed. JBoss restart NOT required.');
     process.exit(0);
 }
+if (to === 'stg1' && !hasFlag('miya-asked')) fail('stg1 is NOT used (miya 2026-10-12, repeated 2026-10-14). Use stg2. Only when miya asks for stg1 in his own message, add --miya-asked.');
 
 const movedSuffix = targetDs.suffix; // the number the target parked on goes to the outgoing block
 let newXml = xml;

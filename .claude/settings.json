@@ -391,6 +391,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\question-self-contained\\\\question-self-contained.check.hook.js\""
           }
         ]
+      },
+      {
+        "matcher": "mcp__postgres-mlkstg1-pg__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\stg1-block\\\\stg1-block.check.hook.js\""
+          }
+        ]
       }
     ],
     "Stop": [
