@@ -1,0 +1,23 @@
+{
+  "_source": "kod list = E:\\Projects\\Penang\\etanah-pelupusan\\src\\main\\resources\\config\\PNG\\flowable.config.json PLP.included_urusan_list (18 kods, read 2026-10-14). Titles from the built-in catalog in urusan-tickets.js (Melaka ind_ursn names, same product); Penang ind_ursn not read yet (no DB connection). Re-source from et_main_pgit.ind_ursn once connected. Kods with no title in the built-in catalog: 49KTN, KMTK, PLBP.",
+  "urusan": {
+    "PT": "Permohonan Pemberimilikan",
+    "PRU": "Permohonan Permit Ruang Udara",
+    "PLPS": "Permohonan Lesen Pendudukan Sementara",
+    "MLPS": "Membaharui Lesen Pendudukan Sementara",
+    "PLTP": "Pemohonan Lanjut Tempoh Pajakan",
+    "PRBB": "Permohonan Permit Bahan Batuan (Borang 4C)",
+    "PSBS": "Permohonan Serahbalik Berimilik Semula",
+    "PRZ": "Permohonan Perizaban",
+    "BPRZ": "Permohonan Pembatalan Perizaban",
+    "PPJK": "Permohonan Pajakan Tanah Perizaban",
+    "OMLPS": "Membaharui Lesen Pendudukan Sementara",
+    "OPRBB": "Pengeluaran Permit Bahan Batuan",
+    "OPLBP": "Pengeluaran Lesen Bercantum Permit",
+    "OPLPS": "Pengeluaran Lesen Pendudukan Sementara",
+    "OPRU": "Pengeluaran Permit Ruang Udara",
+    "49KTN": "49KTN",
+    "KMTK": "KMTK",
+    "PLBP": "PLBP"
+  }
+}
