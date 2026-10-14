@@ -202,7 +202,7 @@
       "code": "PNG",
       "aliases": ["Penang", "Pulau Pinang", "PulauPinang", "PNG", "png"],
       "permohonan_prefix": "PTPNG",
-      "_unverified": "permohonan prefix PTPNG read from NegeriEnum.java (no live Penang permohonan seen yet); database connection (engine postgres = the default for a new state per miya 2026-10-05; no MCP server, host or schema known on this laptop); Flowable process-key prefix PNG inferred from the Png* class naming (no Penang BPMN on disk); awam + common trunks (awam ticket branches look cut from png/int-env, common from master: not proven, the work clones point at the old server); which Redmine tracker maps to which branch family",
+      "_unverified": "permohonan prefix PTPNG read from NegeriEnum.java (no live Penang permohonan seen yet); database connection (engine postgres = the default for a new state per miya 2026-10-05; no MCP server, host or schema known on this laptop); Flowable process-key prefix PNG inferred from the Png* class naming (no Penang BPMN on disk); awam + common trunks (awam ticket branches look cut from png/int-env, common from master: not proven; the common work clone points at the old server); which Redmine tracker maps to which branch family",
       "work_scope": "active",
       "task_folder": "Penang",
       "knowledge_dir": "penang",
@@ -226,7 +226,7 @@
       "trunk_ref": "origin/png/development",
       "env_branches": ["png/int-env"],
       "work_clone_root": "E:/Dev/etanah-work",
-      "branch_note": "Verified 2026-10-14 by git ls-remote on GitLab (git@10.16.63.27:etanah/<repo>.git): etanah-pelupusan has exactly ONE png branch, png/development, and no ticket branches. png/int-env exists on awam, spoc-hasil, report, pembangunan, integration (not pelupusan). E:\\Projects\\Penang\\etanah-pelupusan was behind the remote on 2026-10-14 (local cbb3bbb0c4, remote 56cd612067): fetch before trusting a 'not in the code' answer. The E:/Dev/etanah-work clones point at the OLD server (172.16.93.167, auth refused) and cannot fetch png refs. Detail: penang/BRANCH-AND-DEPLOY.md.",
+      "branch_note": "Verified 2026-10-14 by git ls-remote on GitLab (git@10.16.63.27:etanah/<repo>.git): etanah-pelupusan has exactly ONE png branch, png/development, and no ticket branches. png/int-env exists on awam, spoc-hasil, report, pembangunan, integration (not pelupusan). E:\\Projects\\Penang\\etanah-pelupusan was behind the remote on 2026-10-14 (local cbb3bbb0c4, remote 56cd612067): fetch before trusting a 'not in the code' answer. Fetch in the work clone E:/Dev/etanah-work: its etanah-pelupusan and etanah-awam reach GitLab and fetch png refs (2026-10-14: png/development = 56cd612067); its etanah-common still points at the OLD server (172.16.93.167, auth refused). Detail: penang/BRANCH-AND-DEPLOY.md.",
       "bpmn": { "prefix": "PNG", "root_module": "PLP" },
       "db": { "engine": "postgres", "mcp": {}, "schemas": {}, "primary_env": null, "note": "no Penang DB connection on this laptop (checked 2026-10-14: no MCP server, no datasource in the local JBoss configs). Ask miya for the host before any query." },
       "redmine": {
