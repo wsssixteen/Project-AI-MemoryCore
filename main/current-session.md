@@ -105,3 +105,5 @@
 - **DawahMap, 2026-10-14 22:45**: version 49 PUBLISHED: "Do you believe in God, or a higher power?", then "Which faith do you follow?" (9 options); the Christian question only after Christianity is picked; 42 of 42 walks. Building: the evil branch at the first No (his goal), the review notebook (workflow wf_44cd7ef0-534).
 
 - **DawahMap, 2026-10-14 23:15**: the review notebook is PUBLISHED, its own link https://claude.ai/artifact/DnfM46kk2ZLUWJCbjU5uFt (rule 1l; 23 pages, 16 groups scored on 12 checks). Running: the evil branch (agent), a re-read of Judaism and Sikhism (their talks sat in other folders).
+
+- **DawahMap, 2026-10-15 00:30**: version 50 PUBLISHED: a No on the first question asks what keeps the reader from believing (6 counted options); evil and suffering opens its own step (child at the injection, objective morality with the fitra granted, a world with choice), checked by two readers first; 49 of 49 walks. Notebook republished (version 2, Judaism and Sikhism re-read).
