@@ -115,3 +115,5 @@
 - **DawahMap, 2026-10-15 03:20**: version 53 PUBLISHED: the science-only lane ("Does science show that the world needs no maker?") and the nothing-can-be-known lane ("Can anything be known for certain?") on the No road; 55 of 55 walks. Notebook version 5. Shia: no lane (rule 1k, the notebook's ruling).
 
 - **DawahMap, 2026-10-15 04:05**: version 54 PUBLISHED: the Shia lane ("Do you hold that God appointed infallible imams after the Messenger ﷺ?"), read by a Twelver Shia lens and a Sunni scholar lens; 56 of 56 walks. Notebook version 6: 10 groups built. Every group he named now has its place.
+
+- **DawahMap, 2026-10-15 04:50**: the wording of every verse and passage the lanes name fetched by script (105 items: Bible, Pirkei Avot, Quran with commentary, hadith with numbers found); the page unchanged; notebook version 7. Waiting on him: his review of the page and the notebook.
