@@ -16,9 +16,10 @@
     "rules": [
       "No lead-in words: Everything starts from X -> Start from X.",
       "Do not restate the ticket, the expected behaviour or the test data unless asked.",
-      "No verdict words about our own work (verified, DB-proven, as mentioned)."
+      "No verdict words about our own work (verified, DB-proven, as mentioned).",
+      "No pushback lines to another team (miya 2026-10-14, #282303): never say what we will not do, never compare their version or work against ours to refuse, never tell them to raise a ticket. State the finding only; they decide the next step."
     ],
-    "banned": ["Everything ...", "As you can see", "Please note that", "DB-proven", "verified"],
+    "banned": ["Everything ...", "As you can see", "Please note that", "DB-proven", "verified", "We will not", "raise a separate ticket", "is also older than"],
     "check": "lean"
   },
   "line": {
