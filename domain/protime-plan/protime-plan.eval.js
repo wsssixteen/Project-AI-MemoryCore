@@ -93,11 +93,11 @@ eq('S55 an adhoc entry is never removed', settle({ existing: { plan: [], adhoc: 
 
 eq('S56 two different adhocs are not the same', sameTitle('PROD - PRBB surat keputusan tandatangan issue', 'PROD - MLPS Borang 4Ae cop tak papar'), false);
 eq('S57 env and state words alone do not make two titles the same', sameTitle('PROD - MLK - No Lesen missing', 'PROD - MLK - Peranan KPT missing'), false);
-eq('S58 ProTime line: PROD + title', protimeLine({ env: 'PROD', title: 'MLPS Borang 4Ae cop tak papar' }), 'PROD - MLPS Borang 4Ae cop tak papar');
-eq('S59 ProTime line: MLIT is written Internal', protimeLine({ env: 'MLIT', title: 'PRBB lot luas laporan tanah kosong' }), 'Internal - PRBB lot luas laporan tanah kosong');
-eq('S60 ProTime line: staging', protimeLine({ env: 'MLKSTG', title: 'PT tugasan PSJT error' }), 'Staging - PT tugasan PSJT error');
-eq('S61 ProTime line: a state other than Melaka goes second', protimeLine({ env: 'PROD', state: 'terengganu', title: 'PLPS tugasan SKM missing' }), 'PROD - TRG - PLPS tugasan SKM missing');
-eq('S62 ProTime line: Melaka adds no state word', protimeLine({ env: 'PROD', state: 'melaka', title: 'No Lesen date issue' }), 'PROD - No Lesen date issue');
+eq('S58 ProTime line: PROD + title', protimeLine({ env: 'PROD', title: 'MLPS Borang 4Ae cop tak papar' }), 'PROD (MLK) - MLPS Borang 4Ae cop tak papar');
+eq('S59 ProTime line: MLIT is written Internal', protimeLine({ env: 'MLIT', title: 'PRBB lot luas laporan tanah kosong' }), 'Internal (MLK) - PRBB lot luas laporan tanah kosong');
+eq('S60 ProTime line: staging', protimeLine({ env: 'MLKSTG', title: 'PT tugasan PSJT error' }), 'Staging (MLK) - PT tugasan PSJT error');
+eq('S61 ProTime line: the state goes in brackets after the env', protimeLine({ env: 'PROD', state: 'terengganu', title: 'PLPS tugasan SKM missing' }), 'PROD (TRG) - PLPS tugasan SKM missing');
+eq('S62 ProTime line: Melaka is written MLK', protimeLine({ env: 'PROD', state: 'melaka', title: 'No Lesen date issue' }), 'PROD (MLK) - No Lesen date issue');
 eq('S63 ProTime line: a title that already opens with an env word is kept', protimeLine({ env: 'MLKSTG', title: 'Internal (PLP) - PPTPB sewa tahunan peraturan hardcoded' }), 'Internal (PLP) - PPTPB sewa tahunan peraturan hardcoded');
 eq('S64 ProTime line: unknown env -> title alone', protimeLine({ env: 'CODE', title: 'AWAM senarai semak module check' }), 'AWAM senarai semak module check');
 eq('S65 ProTime line: no title -> empty, never invented', protimeLine({ env: 'PROD' }), '');
@@ -115,5 +115,6 @@ eq('S73 today\'s night row with a removal -> FILLED', statusOf([{ day: '2026-10-
 eq('S74 yesterday\'s row does not count for today', statusOf([{ day: '2026-10-12', run: 'morning', mode: 'live', result: 'ok', created: [{ id: 1 }] }], new Date('2026-10-13T12:00:00')).verdict, 'DID NOT RUN');
 eq('S75 Saturday -> NOT DUE YET', statusOf([], new Date('2026-10-17T12:00:00')).verdict, 'NOT DUE YET');
 
+eq('S76 ProTime line: his own example (Penang, internal)', protimeLine({ env: 'MLIT', state: 'penang', title: 'Check SPOC service data save from Awam' }), 'Internal (PNG) - Check SPOC service data save from Awam');
 console.log(`\n${pass}/${pass + fail} passed`);
 process.exit(fail ? 1 : 0);

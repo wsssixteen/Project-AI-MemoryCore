@@ -141,8 +141,8 @@ function sameTitle(a, b) {
   return shared >= 2 && shared / Math.min(A.length, B.length) >= 0.6;
 }
 
-// His ProTime wording for an adhoc (read from 121 adhoc entries he keyed, 2026-07-13 to 2026-10-12):
-//   "<ENV> - <title>", ENV = PROD / Internal / Staging; a state other than Melaka goes second: "PROD - TRG - <title>".
+// His ProTime wording for an adhoc (his format, given 2026-10-14: "Internal (PNG) - Check SPOC service data save from Awam"):
+//   "<ENV> (<STATE>) - <title>", ENV = PROD / Internal / Staging, STATE = MLK / TRG / PNG / PRK / SGR / KDH / WP, always written.
 //   A title that already opens with an env word, "Assist", "BA", "Baseline" or a ticket number is his own line: kept as it is.
 const OWN_LINE = /^(PROD|Internal|MLIT|MLKIT|Staging|STAG|AWAM|BA|Assist|Baseline|MLK Baseline)\b|^\d{6}\b/i;
 function envWord(env) {
@@ -159,13 +159,15 @@ function stateWord(state) {
   if (/selangor|sgr/i.test(s)) return 'SGR';
   if (/kedah|kdh/i.test(s)) return 'KDH';
   if (/\bwp\b|kuala lumpur|\bkl\b/i.test(s)) return 'WP';
-  return '';                                     // Melaka, or unknown: no state word
+  if (/penang|pulau pinang|png/i.test(s)) return 'PNG';
+  return 'MLK';                                  // Melaka, or no state recorded: the home state
 }
 function protimeLine(block) {
   const t = String((block && block.title) || '').trim();
   if (!t) return '';
   if (OWN_LINE.test(t)) return t;
-  return [envWord(block.env), stateWord(block.state), t].filter(Boolean).join(' - ');
+  const env = envWord(block.env);
+  return env ? `${env} (${stateWord(block.state)}) - ${t}` : t;
 }
 
 // What settling one day changes. No network.
@@ -244,14 +246,21 @@ function readLog() { try { return fs.readFileSync(LOG, 'utf8').split('\n').filte
 const STARTED = Date.now();
 function logRow(row) { try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), dur_ms: Date.now() - STARTED, ...row }) + '\n'); } catch (_) {} }
 
+// Redmine resets a connection now and then (2026-10-14: 1 read in 3 got ECONNRESET), and the board then prints
+// a warning instead of JSON. So the read is tried 3 times, 20 s apart, before the run counts as failed.
 function readBoard() {
-  const r = spawnSync(process.execPath, [path.join(ROOT, 'quest', 'redmine-board.js'), '--json'], { encoding: 'utf8', timeout: 180000, windowsHide: true });
-  if (r.status !== 0) return { ok: false, error: (r.stderr || r.error || 'redmine-board failed').toString().slice(0, 300) };
-  try {
-    const j = JSON.parse(r.stdout);
-    const ids = [...(j.esokongan || []), ...(j.patch || []), ...(j.other || [])].map(x => String(x.id));
-    return { ok: true, ids };
-  } catch (e) { return { ok: false, error: 'board json unreadable: ' + e.message }; }
+  let last = 'redmine-board failed';
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    if (attempt > 1) spawnSync(process.execPath, ['-e', 'setTimeout(()=>{},20000)'], { windowsHide: true });
+    const r = spawnSync(process.execPath, [path.join(ROOT, 'quest', 'redmine-board.js'), '--json'], { encoding: 'utf8', timeout: 180000, windowsHide: true });
+    if (r.status !== 0) { last = (r.stderr || r.error || 'redmine-board failed').toString().slice(0, 300); continue; }
+    try {
+      const j = JSON.parse(r.stdout);
+      const ids = [...(j.esokongan || []), ...(j.patch || []), ...(j.other || [])].map(x => String(x.id));
+      return { ok: true, ids };
+    } catch (e) { last = 'board json unreadable: ' + String(r.stdout || '').split('\n')[0].slice(0, 120); }
+  }
+  return { ok: false, error: last + ' (3 tries)' };
 }
 
 function offDays(days) {
@@ -326,7 +335,15 @@ const REDMINE = (() => {
     return { base: /REDMINE_BASE\s*=\s*'([^']+)'/.exec(src)[1], key: /REDMINE_KEY\s*=\s*'([^']+)'/.exec(src)[1], project: (/PROJECT\s*=\s*'([^']+)'/.exec(src) || [])[1] || 'helpdesk_melaka' };
   } catch (_) { return null; }
 })();
-function rget(p) {
+async function rget(p) {
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    const j = await rgetOnce(p);
+    if (j) return j;
+    await new Promise(r => setTimeout(r, 3000 * attempt));
+  }
+  return null;
+}
+function rgetOnce(p) {
   return new Promise(resolve => {
     const req = http.get(REDMINE.base + p, { headers: { 'X-Redmine-API-Key': REDMINE.key }, timeout: 30000 }, res => {
       let b = ''; res.setEncoding('utf8'); res.on('data', d => b += d);
