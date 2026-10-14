@@ -44,7 +44,9 @@ Settle a day = make it say what was really worked:
 
 "Worked" = 2 or more turns on the quest in the turn ledger that day (`system/telemetry/turns*.jsonl`, the ledger's fallback guess `top-active` excluded), or a Redmine note he wrote that day. Adhocs: block `quest_start` = the day, or 2 or more ledger turns. An adhoc with no `title=` is listed in the run's notes and not written.
 
-Plan rule: tickets = his open board in board order (eSOKONGAN → PROD patch → rest). Today is topped up to 4. A later day that already has any plan entry is not touched. 4 a day; if the tickets cannot fill every open day at 4, then 3 a day; days left over stay empty.
+Plan rule (KPI 3, miya 2026-10-14): tickets = his open board in board order (eSOKONGAN → PROD patch → rest). Today is topped up to 3. A later day that already has any plan entry is not touched. 3 a day; days left over stay empty. A night run adds a worked ticket of his to the plan only while the day holds fewer than 3, finished ones first.
+
+Plan or adhoc (miya 2026-10-14): a worked ticket is PLAN when it is his (first fix commit his, no other owner in our record) or he added his own fix or patch that day; a ticket someone else fixed is ADHOC `<number> - <action>`. Resolve: a plan ticket passed on in Redmine that day; an assist he worked that day; any other adhoc unless it waits on infra or a user. A day he approved line by line is left alone.
 
 Adhoc wording: read from the 121 adhoc entries he keyed (2026-07-13 to 2026-10-12). The rule lives in `.claude/skills/adhoc-save/SKILL.md` § Adhoc title; this script only adds the env and state words.
 

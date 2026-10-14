@@ -44,8 +44,10 @@ const MAIN = ROOT.replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+$/i, '');
 const PYMTIME = process.env.PYMTIME_DIR || 'E:\\Dev\\scripts\\PymTime';
 const LOG = path.join(MAIN, 'domain', 'protime-plan', 'log.jsonl');
 const MODULE_ID = 101;          // "E-tanah" project module, hardcoded the same way by ProTime's own form
-const PER_DAY_MAX = 4;
-const PER_DAY_MIN = 3;
+// His KPI is 3 tickets a day (miya 2026-10-14: "if there is already so many tickets, our base is the 3 ticket KPI").
+const KPI = 3;
+const PER_DAY_MAX = KPI;
+const PER_DAY_MIN = KPI;
 const NIGHT_FROM_HOUR = 18;     // a night run that fires late (laptop was asleep at 23:00) must not settle the NEXT day
 const LEDGER_MIN_TURNS = 2;     // one turn that names a ticket is a mention, not work
 
@@ -201,9 +203,12 @@ function settle({ existing, worked = [], adhocs = [], mine = () => false, canRem
   const plan = (existing && existing.plan) || [], adhoc = (existing && existing.adhoc) || [];
   const onDay = new Set([...plan, ...adhoc].flatMap(e => ticketsIn(e.name)));
   const addPlan = [], addAdhoc = [];
-  for (const w of worked) {
+  // the plan holds at most KPI tickets: a worked ticket of his is added only while the day has fewer; finished ones first
+  let planCount = plan.length;
+  for (const w of [...worked].sort((a, b) => (b.done ? 1 : 0) - (a.done ? 1 : 0))) {
     if (onDay.has(String(w.id))) continue;
-    if (w.own) addPlan.push(String(w.id)); else addAdhoc.push(w.title || `${w.id} - Assist`);
+    if (w.own) { if (planCount >= KPI) continue; addPlan.push(String(w.id)); planCount++; }
+    else addAdhoc.push(w.title || `${w.id} - Assist`);
     onDay.add(String(w.id));
   }
   // a day he approved line by line (manual:approved-day) keeps his adhoc wording: the run adds no adhoc line beside it
@@ -327,7 +332,7 @@ function rulesText() {
   } catch (_) {}
   return [
     `Runs: Mon-Fri ${times}. Before ${NIGHT_FROM_HOUR}:00 = morning run, from ${NIGHT_FROM_HOUR}:00 = night run.`,
-    `Morning: settle the previous working day, top up today to ${PER_DAY_MAX}, plan the rest of the week ${PER_DAY_MAX} a day (else ${PER_DAY_MIN}).`,
+    `Morning: settle the previous working day, top up today to ${KPI}, plan the rest of the week ${KPI} a day (his KPI).`,
     `Night: settle today.`,
     `Settle: add worked tickets (his: PLAN, never his: ADHOC "<n> - Assist") and the day's adhocs; remove PLAN entries this script placed that were not worked.`,
     `Worked: ${LEDGER_MIN_TURNS}+ turns in the turn ledger, or a Redmine note of his that day.`,

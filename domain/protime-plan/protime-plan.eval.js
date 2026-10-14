@@ -21,8 +21,8 @@ eq('S3 Saturday -> same Mon..Fri', weekDays(D('2026-10-10'))[0], '2026-10-05');
 eq('S4 month/year boundary', weekDays(D('2026-12-31')), ['2026-12-28', '2026-12-29', '2026-12-30', '2026-12-31', '2027-01-01']);
 
 // the 4 / 3 / empty rule on a full Monday
-eq('S5 20 tickets -> 4 a day, all placed', (r => [r.perDay, Object.values(r.placed).map(x => x.length), r.unplaced.length])(decide({ today: D('2026-10-05'), board: T(20), existing: none })), [4, [4, 4, 4, 4, 4], 0]);
-eq('S6 25 tickets -> 4 a day, 5 unplaced', (r => [r.perDay, r.unplaced.length])(decide({ today: D('2026-10-05'), board: T(25), existing: none })), [4, 5]);
+eq('S5 20 tickets -> 3 a day (his KPI), 5 left unplaced', (r => [r.perDay, Object.values(r.placed).map(x => x.length), r.unplaced.length])(decide({ today: D('2026-10-05'), board: T(20), existing: none })), [3, [3, 3, 3, 3, 3], 5]);
+eq('S6 25 tickets -> 3 a day, 10 unplaced', (r => [r.perDay, r.unplaced.length])(decide({ today: D('2026-10-05'), board: T(25), existing: none })), [3, 10]);
 eq('S7 19 tickets -> 3 a day, 15 placed, 4 unplaced', (r => [r.perDay, Object.values(r.placed).flat().length, r.unplaced.length])(decide({ today: D('2026-10-05'), board: T(19), existing: none })), [3, 15, 4]);
 eq('S8 7 tickets -> 3,3,1 then Thu/Fri empty', (r => Object.fromEntries(Object.entries(r.placed).map(([k, v]) => [k, v.length])))(decide({ today: D('2026-10-05'), board: T(7), existing: none })), { '2026-10-05': 3, '2026-10-06': 3, '2026-10-07': 1 });
 eq('S9 0 tickets -> nothing placed, no crash', decide({ today: D('2026-10-05'), board: [], existing: none }).placed, {});
@@ -31,7 +31,7 @@ eq('S10 rank order kept (first ticket on Monday)', decide({ today: D('2026-10-05
 // midweek / manual entries
 eq('S11 Wed run -> only Wed..Fri considered', decide({ today: D('2026-10-07'), board: T(12), existing: none }).days, WEEK.slice(2));
 eq('S12 a day with ANY plan entry is never touched', Object.keys(decide({ today: D('2026-10-05'), board: T(12), existing: { '2026-10-05': ['Baseline MLK PLP 1.8.0'] } }).placed).includes('2026-10-05'), false);
-eq('S13 capacity uses OPEN days only (2 open, 8 tickets -> 4 a day)', decide({ today: D('2026-10-08'), board: T(8), existing: none }).perDay, 4);
+eq('S13 2 open days, 8 tickets -> still 3 a day (the KPI is the cap)', decide({ today: D('2026-10-08'), board: T(8), existing: none }).perDay, 3);
 eq('S14 the 2026-09-30 real case: 7 tickets, Thu+Fri open -> 3 a day, 1 unplaced', (r => [r.perDay, r.unplaced])(decide({ today: D('2026-09-30'), board: ['275043', '274323', '246923', '265109', '244600', '281324', '282587'], existing: { '2026-09-30': ['281650'] } })), [3, ['282587']]);
 eq('S15 ticket already on a remaining day ("282198 - 50%") is not planned twice', decide({ today: D('2026-10-05'), board: ['282198', '281324'], existing: { '2026-10-05': ['282198 - 50% (Pending user update)'] } }).placed, { '2026-10-06': ['281324'] });
 eq('S16 duplicate ids on the board collapse to one', Object.values(decide({ today: D('2026-10-05'), board: ['1', '1', '2'].map(x => '28000' + x), existing: none }).placed).flat(), ['280001', '280002']);
@@ -70,7 +70,7 @@ const { settle, sameTitle, protimeLine, prevWorkday, entriesByDate, mineOf, tick
 const E = (id, name, status = 'PENDING') => ({ id, name, status });
 const mineIds = ids => e => ids.includes(e.id);
 
-eq('S37 top-up: today has 1 entry -> 3 more today, rest of week 4 a day', (r => [r.placed['2026-10-05'].length, r.placed['2026-10-06'].length])(decide({ today: D('2026-10-05'), board: T(20), existing: { '2026-10-05': ['Baseline'] }, topUp: true })), [3, 4]);
+eq('S37 top-up: today has 1 entry -> 2 more today (KPI 3), rest of week 3 a day', (r => [r.placed['2026-10-05'].length, r.placed['2026-10-06'].length])(decide({ today: D('2026-10-05'), board: T(20), existing: { '2026-10-05': ['Baseline'] }, topUp: true })), [2, 3]);
 eq('S38 top-up: today already has 4 -> today left alone', decide({ today: D('2026-10-05'), board: T(8), existing: { '2026-10-05': ['a', 'b', 'c', 'd'] }, topUp: true }).placed['2026-10-05'], undefined);
 eq('S39 top-up never repeats a ticket already on today', decide({ today: D('2026-10-05'), board: ['284201', '281324'], existing: { '2026-10-05': ['284201'] }, topUp: true }).placed['2026-10-05'], ['281324']);
 eq('S40 top-up only for today: a later day with an entry stays untouched', Object.keys(decide({ today: D('2026-10-05'), board: T(20), existing: { '2026-10-06': ['x'] }, topUp: true }).placed).includes('2026-10-06'), false);
@@ -176,5 +176,10 @@ eq('S107 a line he typed himself -> never resolved by the run', RS.includes(7), 
 eq('S109 the run skips a day he approved line by line (no add, remove or resolve)', /if \(approvedDays\.has\(d\)\) \{ console\.log\(`\$\{d\}: approved by him line by line - left alone`\); continue; \}/.test(require('fs').readFileSync(require('path').join(__dirname, 'protime-plan.js'), 'utf8')), true);
 eq('S108 an approved day is left alone: settle adds no adhoc there', settle({ existing: { plan: [], adhoc: [] }, adhocs: ['PROD (MLK) - X issue'], approvedDay: true }).addAdhoc, []);
 
+// ---- the 3-ticket KPI at night (miya 2026-10-14: 284831 should not have been added to a day already holding 4) ----
+const FULL = { plan: [E(1, '284544'), E(2, '284775'), E(3, '240907'), E(4, '283960')], adhoc: [] };
+eq('S110 a day already at the KPI gets no more plan tickets', settle({ existing: FULL, worked: [{ id: '284831', own: true, done: false }] }).addPlan, []);
+eq('S111 a day with 1 plan ticket gets finished ones first, up to 3', settle({ existing: { plan: [E(1, '111111')], adhoc: [] }, worked: [{ id: '222222', own: true, done: false }, { id: '333333', own: true, done: true }, { id: '444444', own: true, done: true }] }).addPlan, ['333333', '444444']);
+eq('S112 assists still go to adhoc on a full day', settle({ existing: FULL, worked: [{ id: '283345', own: false }] }).addAdhoc, ['283345 - Assist']);
 console.log(`\n${pass}/${pass + fail} passed`);
 process.exit(fail ? 1 : 0);
