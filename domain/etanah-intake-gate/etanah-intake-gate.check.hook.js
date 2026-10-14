@@ -95,7 +95,7 @@ function resolveState(prompt) {
   } catch (_) { /* registry unreadable -> today's default */ }
   return { rec: null };
 }
-const MY_STATE_NAMES = ['Johor', 'Kedah', 'Kelantan', 'Melaka', 'Malacca', 'Negeri Sembilan', 'Pahang', 'Pulau Pinang', 'Penang', 'Perak', 'Perlis', 'Sabah', 'Sarawak', 'Selangor', 'Terengganu', 'Kuala Lumpur', 'Labuan', 'Putrajaya'];
+const MY_STATE_NAMES = ['Johor', 'Kedah', 'Kelantan', 'Melaka', 'Negeri Sembilan', 'Pahang', 'Pulau Pinang', 'Penang', 'Perak', 'Perlis', 'Sabah', 'Sarawak', 'Selangor', 'Terengganu', 'Kuala Lumpur', 'Labuan', 'Putrajaya'];
 const unregLine = (rs) => '   ⚠ state UNREGISTERED — the prompt names ' + rs.unregistered.join(' + ') + ', which has no record in system/states.json. The paths below are Melaka\'s and are NOT evidence for it: search E:\\Projects\\<State> (its code) first, never answer from Melaka files, and say what is unverified. Register it: node lib/states.js add.';
 
 // A lane file the resolved state does not have on disk -> that state's index.md + STATE-FACTS.md stand in.

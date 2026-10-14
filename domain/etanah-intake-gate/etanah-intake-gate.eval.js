@@ -191,6 +191,10 @@ check('A11 bare permohonan-ID + error fires ADHOC-CANDIDATE', r.status === 0 && 
   check('U11 two unregistered names -> both listed', /names Johor \+ Selangor,|names Selangor \+ Johor,/.test(s.out), s.out);
   s = fireS('⚠ state UNREGISTERED — the prompt names Penang (pasted hook text) urusan');
   check('U12 the warning text pasted back in -> still one warning, exit 0', s.status === 0 && (s.out.match(/⚠ state UNREGISTERED/g) || []).length === 1, s.out);
+  s = fireS('Malacca: tugasan SKM papar ralat');
+  check('U13 "Malacca" (English spelling of the default state) -> no warning', !UNREG.test(s.out) && /ADHOC-CANDIDATE/.test(s.out), s.out);
+  s = fireS('penang punya tugasan error');
+  check('U14 lower-case state name still caught', /names Penang,/.test(s.out), s.out);
 
   // M: MELAKA UNCHANGED — stdout byte-identical to the pre-change capture (no state / PTMLK id / "Melaka" word).
   // M3 + M5 re-captured 2026-10-14: the LOOKUP lane gained two lines (pick the Tool from lib/tool-registry.js; codegraph search for "where is X").
