@@ -72,11 +72,13 @@
     "rules": [
       "Before a rule sentence: which query or code line backs it, and across how many rows.",
       "One sample is not a rule. Count the table.",
-      "Check the code and a second environment before calling it true or test data."
+      "Check the code and a second environment before calling it true or test data.",
+      "Self-audit before the hand-back: read the note as the reader. A frequency word must match the count (11 of 36 is not sometimes). A cause is named, never called a factor."
     ],
-    "banned": ["a rule sentence backed by one row"],
+    "banned": ["a rule sentence backed by one row", "sometimes / rarely / kadang-kadang where a count exists", "uncontrolled factors / certain cases with the factor not named"],
     "check": "manual",
-    "ask": "For each sentence that states system behaviour: name the query or code line and the count behind it."
+    "also": "vague",
+    "ask": "For each sentence that states system behaviour: name the query or code line and the count behind it. Then the self-audit: does every how-often word match that count, and is every cause named in words the reader knows?"
   },
   "plain": {
     "title": "Plain words for BA",

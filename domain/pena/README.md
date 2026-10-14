@@ -92,3 +92,34 @@ Owed (not wired this session): `.claude/skills/deploy/SKILL.md` 6b · `.claude/s
 - The check reads shape only.
 - `proven` and `hint` are questions, not checks.
 - Wiring into the deploy, prefill, adhoc and infra steps is owed.
+
+## Changed 2026-10-13 (#284544): self-audit scan on module `proven`
+
+miya: "always add an audit for your self when preparing that redmine note handover. What do you mean only sometimes, that happened quite often."
+What changed: `proven` keeps its by-hand question and also runs the script check `vague` (key `also` in modules.json). The by-hand question gained the self-audit line. Skill step 4b added.
+Spec kept: `proven` is still never auto-passed (fixture 03, 44); every other module, the profiles and the PENA line are untouched. Nothing dropped.
+Eval: 46/46 (fixtures 41 to 46 new).
+
+| # | Scenario outside the spec | Verdict |
+|---|---|---|
+| 1 | "sometimes" where the count exists (the founding case) | fixture 41 |
+| 2 | "uncontrolled factors", factor not named | fixture 42 |
+| 3 | Malay "kadang-kadang" | fixture 43 |
+| 4 | a counted sentence | fixture 44, passes |
+| 5 | modules chosen without `proven` | fixture 45, no scan |
+| 6 | "something", "someone" | fixture 46, not flagged |
+| 7 | upper case "SOMETIMES" | handled, case-insensitive |
+| 8 | the word inside a table row | accepted-risk: tables carry data, prose only is scanned |
+| 9 | the word inside a script block | handled, not prose |
+| 10 | the word inside a sentence quoted from the BA | accepted-risk: flagged, the by-hand look decides |
+| 11 | "some cases" where nothing was counted | handled: flagged, the note says the count or the sentence goes to miya as not counted |
+| 12 | "often", "usually", "most" | accepted-risk: not flagged, the by-hand question asks it |
+| 13 | a number is given but it is the wrong number | accepted-risk: a script cannot know, by-hand |
+| 14 | a cause is named but it is the wrong cause | accepted-risk: by-hand |
+| 15 | a profile without `proven` (junior-handover) | accepted-risk: that text is hints, no rule sentences |
+| 16 | an older modules.json with no `also` key | handled: scan off, no crash |
+| 17 | `also` names a check that does not exist | handled: skipped, no crash |
+| 18 | an empty draft | handled: exit 2 as before |
+| 19 | two vague words on one line | handled: one finding for the line |
+| 20 | "rarely" in an infra note | handled: infra-handoff carries `proven` |
+| 21 | the finding is cleared by deleting the sentence | accepted-risk: the note then says less; by-hand |

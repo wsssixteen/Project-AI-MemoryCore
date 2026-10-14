@@ -130,6 +130,21 @@ check('39 the skill exists and tells the caller to run show then check', fs.exis
 const quest = fs.readFileSync(path.join(ROOT, '.claude', 'skills', 'quest', 'SKILL.md'), 'utf8');
 check('40 the quest hand-over section points to Pena', /lib\/pena\.js/.test(quest));
 
+// --- self-audit scan of the proven module (#284544, 2026-10-13) ---
+const BA = (line) => ['Salam Fizah,', '', line, '', 'Thank you.'].join('\n');
+r = run(['check', '--profile', 'redmine-ba-pass', '--file', draft('v1.txt', BA('The cop is missing only sometimes, so a normal test can show no issue.'))]);
+check('41 replay #284544: "only sometimes" caught by proven', r.status === 1 && has(r, 'proven') && /sometimes/.test(r.stdout), r.stdout);
+r = run(['check', '--profile', 'redmine-ba-pass', '--file', draft('v2.txt', BA('It only happens under uncontrolled factors.'))]);
+check('42 "uncontrolled factors" caught: the factor is not named', r.status === 1 && has(r, 'proven'), r.stdout);
+r = run(['check', '--profile', 'redmine-ba-pass', '--file', draft('v3.txt', BA('Kadang-kadang cop tak keluar.'))]);
+check('43 Malay "kadang-kadang" caught', r.status === 1 && has(r, 'proven'), r.stdout);
+r = run(['check', '--profile', 'redmine-ba-pass', '--file', draft('v4.txt', BA('On PROD, 11 of the 36 Borang 4Ae signed since July have no cop.'))]);
+check('44 a counted sentence passes, and the by-hand question still shows', r.status === 0 && /0 finding/.test(r.stdout) && /\[proven\] by hand:.*self-audit/.test(r.stdout), r.stdout);
+r = run(['check', '--module', 'line,lean', '--file', draft('v5.txt', BA('The cop is missing only sometimes.'))]);
+check('45 a check without the proven module does not run the scan', r.status === 0 && !has(r, 'proven'), r.stdout);
+r = run(['check', '--profile', 'redmine-ba-pass', '--file', draft('v6.txt', BA('Something in the stamp is wrong for someone.'))]);
+check('46 "something" / "someone" are not flagged (whole words only)', r.status === 0, r.stdout);
+
 const failed = results.filter((x) => !x.pass);
 for (const x of results) console.log((x.pass ? 'PASS ' : 'FAIL ') + x.n + (x.pass ? '' : '\n      ' + String(x.d).slice(0, 400)));
 console.log('\npena eval: ' + (results.length - failed.length) + '/' + results.length);

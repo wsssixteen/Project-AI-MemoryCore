@@ -6,6 +6,7 @@
   "mcp_server": "postgres-mlkstg-pg",
   "standalone_datasource": "etanahDS",
   "standalone_path": "E:/Dev/jboss-7.4-plp-melaka/standalone/configuration/standalone.xml",
+  "banned_note": "stg1 is NOT used (miya 2026-10-12, repeated 2026-10-14): never query it, never switch to it, never offer it as an option, never cite its rows. Only when miya himself asks for stg1 in that message.",
   "updated": "2026-08-10",
   "source": "miya",
   "history": [

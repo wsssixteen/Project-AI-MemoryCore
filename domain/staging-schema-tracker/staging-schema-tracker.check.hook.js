@@ -138,6 +138,7 @@ runHook({ name: 'staging-schema-tracker', event: 'UserPromptSubmit' }, (input) =
       const sa = standaloneSchema(state);
       out.push('');
       out.push('\ud83c\udfaf Melaka staging target = ' + sch + ' (' + t + ') \u00b7 MCP ' + srv + ' \u00b7 per system/melaka-env-state.json (set ' + state.updated + ').');
+    if (state.banned_note) out.push('   \ud83d\udeab ' + state.banned_note);
       if (!sa.found) {
         out.push('   standalone.xml not readable here \u2014 verify ' + state.standalone_datasource + ' currentSchema=' + t + ' manually before declaring env ready.');
       } else if (sa.schema === t) {
