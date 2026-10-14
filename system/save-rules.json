@@ -399,7 +399,8 @@
       "match": [
         "etanah_atlas",
         "projects/coding-projects/active/PymTime",
-        "projects/coding-projects/active/DawahMap"
+        "projects/coding-projects/active/DawahMap",
+        "projects/coding-projects/active/mas-ergonomics-animation"
       ],
       "rules": [
         {
