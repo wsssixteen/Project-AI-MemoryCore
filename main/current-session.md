@@ -111,3 +111,5 @@
 - **DawahMap, 2026-10-15 01:15**: version 51 PUBLISHED: the Christian lane cut to 20 questions and 6 reasons (rule 1k; dropped reasons named on the "Something else?" card), one reader's fixes in; 49 of 49 walks. Notebook republished (version 3). His goal of 22:15: every point has its change.
 
 - **DawahMap, 2026-10-15 02:40**: version 52 PUBLISHED: a short lane for every faith on the faith question (Judaism, Hinduism, Buddhism, Sikhism, Baha'i, another faith), each read by a follower of that faith and a reviewer trained in the scholars of Islam; "still being written" retired; 52 of 52 walks. Notebook version 4.
+
+- **DawahMap, 2026-10-15 03:20**: version 53 PUBLISHED: the science-only lane ("Does science show that the world needs no maker?") and the nothing-can-be-known lane ("Can anything be known for certain?") on the No road; 55 of 55 walks. Notebook version 5. Shia: no lane (rule 1k, the notebook's ruling).
