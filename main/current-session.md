@@ -107,3 +107,5 @@
 - **DawahMap, 2026-10-14 23:15**: the review notebook is PUBLISHED, its own link https://claude.ai/artifact/DnfM46kk2ZLUWJCbjU5uFt (rule 1l; 23 pages, 16 groups scored on 12 checks). Running: the evil branch (agent), a re-read of Judaism and Sikhism (their talks sat in other folders).
 
 - **DawahMap, 2026-10-15 00:30**: version 50 PUBLISHED: a No on the first question asks what keeps the reader from believing (6 counted options); evil and suffering opens its own step (child at the injection, objective morality with the fitra granted, a world with choice), checked by two readers first; 49 of 49 walks. Notebook republished (version 2, Judaism and Sikhism re-read).
+
+- **DawahMap, 2026-10-15 01:15**: version 51 PUBLISHED: the Christian lane cut to 20 questions and 6 reasons (rule 1k; dropped reasons named on the "Something else?" card), one reader's fixes in; 49 of 49 walks. Notebook republished (version 3). His goal of 22:15: every point has its change.
