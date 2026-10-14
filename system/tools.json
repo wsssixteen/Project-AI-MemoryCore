@@ -37,6 +37,23 @@
       "status": "live"
     },
     {
+      "id": "state-migration",
+      "answers": "What a state still lacks (reference state, DB, Flowable source, routing, code index) and which of its knowledge files came from which state, checked or not",
+      "call": "node lib/state-migration.js gates --state <s> · migrate --state <s> [--dry-run] · audit --state <s>|--all · verify --state <s> --file <F> --evidence \"<source>\"",
+      "home": "lib/state-migration.js",
+      "groups": [
+        "states",
+        "knowledge"
+      ],
+      "state_scope": "per state (follows refers_to in system/states.json)",
+      "footprint": "on-demand: 1 node process per call, ~40 MB, exits after printing",
+      "usage": {
+        "sessions": 0,
+        "last": ""
+      },
+      "status": "unused"
+    },
+    {
       "id": "knowledge-files",
       "answers": "A verified etanah fact, rule, trace or past bug",
       "call": "Read the file the index points to",
