@@ -228,7 +228,7 @@
       "work_clone_root": "E:/Dev/etanah-work",
       "branch_note": "Verified 2026-10-14 by git ls-remote on GitLab (git@10.16.63.27:etanah/<repo>.git): etanah-pelupusan has exactly ONE png branch, png/development, and no ticket branches. png/int-env exists on awam, spoc-hasil, report, pembangunan, integration (not pelupusan). E:\\Projects\\Penang\\etanah-pelupusan was behind the remote on 2026-10-14 (local cbb3bbb0c4, remote 56cd612067): fetch before trusting a 'not in the code' answer. Fetch in the work clone E:/Dev/etanah-work: its etanah-pelupusan and etanah-awam reach GitLab and fetch png refs (2026-10-14: png/development = 56cd612067); its etanah-common still points at the OLD server (172.16.93.167, auth refused). Detail: penang/BRANCH-AND-DEPLOY.md.",
       "bpmn": { "prefix": "PNG", "root_module": "PLP" },
-      "db": { "engine": "postgres", "mcp": {}, "schemas": {}, "primary_env": null, "note": "no Penang DB connection on this laptop (checked 2026-10-14: no MCP server, no datasource in the local JBoss configs). Ask miya for the host before any query." },
+      "db": { "engine": "postgres", "mcp": {}, "schemas": {}, "primary_env": null, "note": "no Penang DB connection on this laptop (checked 2026-10-14: no MCP server, no datasource in the local JBoss configs, no Penang database on 10.16.63.54 or 172.30.12.202). Penang IT DB user = et_main_pgit (ticket session blocks #284917 #284786); server address + password not known: ask miya before any query." },
       "redmine": {
         "project": "png_03_pelupusan",
         "project_names": ["PNG_03_Pelupusan", "PNG_16_Awam", "PNG_14_Common", "PNG_04_SPOC_Hasil", "PNG_12_Teknikal", "PNG_11_Integration", "PNG_07_Pembangunan", "e-Tanah Pulau Pinang"],
@@ -237,6 +237,10 @@
       "flowable_alter_file": "FLOWABLE-ALTER.md",
       "local_server": null,
       "hosts": {
+        "internal_awam": "http://10.16.56.21",
+        "internal": "http://10.16.56.22",
+        "tukarganti": "http://172.28.59.51",
+        "dms_check": "http://semakandms.penang.gov.my",
         "git": "git@10.16.63.27:etanah/<repo>.git",
         "redmine": "http://172.16.90.169/redmine"
       }
