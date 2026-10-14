@@ -144,7 +144,7 @@ function sameTitle(a, b) {
 // His ProTime wording for an adhoc (his format, given 2026-10-14: "Internal (PNG) - Check SPOC service data save from Awam"):
 //   "<ENV> (<STATE>) - <title>", ENV = PROD / Internal / Staging, STATE = MLK / TRG / PNG / PRK / SGR / KDH / WP, always written.
 //   A title that already opens with an env word, "Assist", "BA", "Baseline" or a ticket number is his own line: kept as it is.
-const OWN_LINE = /^(PROD|Internal|MLIT|MLKIT|Staging|STAG|AWAM|BA|Assist|Baseline|MLK Baseline)\b|^\d{6}\b/i;
+const OWN_LINE = /^(PROD|Internal|MLIT|MLKIT|Staging|STAG|STG|AWAM|BA|Assist|Baseline|MLK Baseline)\b|^\d{6}\b/i;
 function envWord(env) {
   const e = String(env || '');
   if (/prod/i.test(e)) return 'PROD';
