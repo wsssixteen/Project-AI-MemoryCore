@@ -165,6 +165,33 @@ check('A11 bare permohonan-ID + error fires ADHOC-CANDIDATE', r.status === 0 && 
   s = fireS('#281000 Terengganu continue the Rubric please');
   check('S12 #ticket + state word -> silent', s.status === 0 && s.out === '', s.out);
 
+  // U: UNREGISTERED state named (2026-10-14, Penang answered from Melaka files). Sandbox has no penang/johor/selangor record.
+  const UNREG = /⚠ state UNREGISTERED — the prompt names /;
+  s = fireS('Ruri, Can you check this flowable issue for Penang. FlowableException: Unknown property used in expression: ${perluUlasanJT == "true"}. Where is the fix typically, before or after tugasan in the flowable/bpmn?');
+  check('U1 founding replay (Penang, unregistered) -> warning on line 2, under the lane header', s.status === 0 && s.out.split('\n')[1].startsWith('   ⚠ state UNREGISTERED — the prompt names Penang,') && /search E:\\Projects\\<State>/.test(s.out) && /NOT evidence/.test(s.out), s.out);
+  s = fireS('Johor hotfix, PROD papar ralat lepas release semalam');
+  check('U2 HOTFIX lane carries the warning too', /HOTFIX lane/.test(s.out) && s.out.split('\n')[1].includes('names Johor,'), s.out);
+  s = fireS('Pulau Pinang: tugasan PGSJT papar ralat');
+  check('U3 two-word name "Pulau Pinang" caught', UNREG.test(s.out) && /names Pulau Pinang,/.test(s.out), s.out);
+  s = fireS('Negeri   Sembilan tugasan error');
+  check('U4 extra spaces inside a two-word name still caught', /names Negeri Sembilan,/.test(s.out), s.out);
+  s = fireS('Terengganu: skrin tugasan papar ralat bila klik dropdown');
+  check('U5 registered state -> no UNREGISTERED line', /STATE — Terengganu/.test(s.out) && !UNREG.test(s.out), s.out);
+  s = fireS('cuti ke Sabah minggu depan');
+  check('U6 state word with no etanah context -> silent', s.status === 0 && s.out === '', s.out);
+  s = fireS('Johorian tugasan error kat skrin');
+  check('U7 name inside a longer word -> no warning', !UNREG.test(s.out), s.out);
+  s = fireS('PTTRG/02/L/OPLPS/2026/47 error, macam kes Johor');
+  check('U8 registered id wins over an unregistered name (accepted: the id is the stronger signal)', /STATE — Terengganu/.test(s.out) && !UNREG.test(s.out), s.out);
+  s = fireS('apa beza ind_hkmlk dengan fatmk.hakmilik?');
+  check('U9 no state named -> no warning (Melaka default text unchanged)', !UNREG.test(s.out) && /LOOKUP lane/.test(s.out), s.out);
+  s = fireS('Penang: tugasan papar ralat', { STATES_FILE: path.join(tmp, 'gone.json') });
+  check('U10 registry missing -> exit 0, no warning (cannot tell registered from not)', s.status === 0 && !UNREG.test(s.out), s.out + s.err);
+  s = fireS('Selangor dan Johor: tugasan error');
+  check('U11 two unregistered names -> both listed', /names Johor \+ Selangor,|names Selangor \+ Johor,/.test(s.out), s.out);
+  s = fireS('⚠ state UNREGISTERED — the prompt names Penang (pasted hook text) urusan');
+  check('U12 the warning text pasted back in -> still one warning, exit 0', s.status === 0 && (s.out.match(/⚠ state UNREGISTERED/g) || []).length === 1, s.out);
+
   // M: MELAKA UNCHANGED — stdout byte-identical to the pre-change capture (no state / PTMLK id / "Melaka" word).
   // M3 + M5 re-captured 2026-10-14: the LOOKUP lane gained two lines (pick the Tool from lib/tool-registry.js; codegraph search for "where is X").
   const GOLD = [

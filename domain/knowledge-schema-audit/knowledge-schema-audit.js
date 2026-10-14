@@ -50,7 +50,7 @@ function logLine(row) {
 }
 function moduleOf(key, stateCode) {
   const parts = key.split('_');
-  const known = new Set(['MLK', 'KDH', 'PRK', 'TRG', 'SGR', 'WP', stateCode].filter(Boolean));
+  const known = new Set(['MLK', 'KDH', 'PRK', 'TRG', 'SGR', 'WP', 'PNG', stateCode].filter(Boolean));
   return (parts.length > 1 && known.has(parts[0])) ? parts[1] : parts[0];
 }
 
