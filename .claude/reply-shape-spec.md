@@ -185,6 +185,8 @@ His words: "I only get frustrated when you don't explain, or over-explaining, or
 
 **The direction line.** In work that runs over several replies, the first line of each reply says where we are and where it is going, in words he already knows: "The eight readers are done. Next I rewrite the 23 questions from what they found. Then you walk the page."
 
+**Background work is named (2026-10-14, his words: "I see you're still running so many commands, why do you keep doing that even after finishing reply?").** A reply names every run still going in the background and when its result comes. Nothing new starts after a reply unless that reply said it would; a run that fails after a reply is reported in the next reply before it is retried.
+
 **What this rule does NOT cut (his worry, answered inside the rule).** It limits what is SHOWN to him. It never limits what is thought, checked or done: the reading, the tests, the second readers and the sources stay as deep as the task needs. A shorter reply is never a reason to do less work. "Keep it short" is never a reason to leave out the one line that says where we are going.
 
 **The test before sending**: (1) Is every name in this reply one he already knows? (2) Did he ask for each part? (3) Does each sentence say what was done, found, or next? (4) Can he tell from the first line where this is going?
