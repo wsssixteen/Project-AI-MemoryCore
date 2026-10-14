@@ -31,6 +31,7 @@ function sessionsOn(day) {
   let dirs = [];
   try { dirs = fs.readdirSync(PROJECTS); } catch (_) { return res; }
   for (const d of dirs) {
+    if (!/Project-AI-MemoryCore/i.test(d)) continue;          // his work sessions only; automated runs (WaRead judge) live elsewhere
     let files = [];
     try { files = fs.readdirSync(path.join(PROJECTS, d)).filter(f => f.endsWith('.jsonl')); } catch (_) { continue; }
     for (const f of files) {

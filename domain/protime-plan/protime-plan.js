@@ -197,7 +197,7 @@ function lintLine(line) {
 // What settling one day changes. No network.
 //   existing: { plan: [{id,name,status}], adhoc: [...] }   worked: [{ id:'284201', own:true|false, title? }]
 //   adhocs: ['PROD - ...']   mine: entry => true when this script created that entry
-function settle({ existing, worked = [], adhocs = [], mine = () => false, canRemove = true }) {
+function settle({ existing, worked = [], adhocs = [], mine = () => false, canRemove = true, approvedDay = false }) {
   const plan = (existing && existing.plan) || [], adhoc = (existing && existing.adhoc) || [];
   const onDay = new Set([...plan, ...adhoc].flatMap(e => ticketsIn(e.name)));
   const addPlan = [], addAdhoc = [];
@@ -206,7 +206,8 @@ function settle({ existing, worked = [], adhocs = [], mine = () => false, canRem
     if (w.own) addPlan.push(String(w.id)); else addAdhoc.push(w.title || `${w.id} - Assist`);
     onDay.add(String(w.id));
   }
-  for (const line of adhocs) {
+  // a day he approved line by line (manual:approved-day) keeps his adhoc wording: the run adds no adhoc line beside it
+  for (const line of approvedDay ? [] : adhocs) {
     if (!line || lintLine(line).length) continue;                    // a line that breaks his format is never written by a run
     if ([...adhoc, ...plan].some(e => sameTitle(e.name, line)) || addAdhoc.some(x => sameTitle(x, line))) continue;
     if (ticketsIn(line).length && ticketsIn(line).every(t => onDay.has(t))) continue;
@@ -217,6 +218,39 @@ function settle({ existing, worked = [], adhocs = [], mine = () => false, canRem
     ? plan.filter(e => mine(e) && e.status === 'PENDING' && /^\d{6}$/.test(e.name) && !workedIds.has(e.name)).map(e => ({ id: e.id, name: e.name }))
     : [];
   return { addPlan, addAdhoc, remove };
+}
+
+// PLAN or ADHOC for a worked ticket (miya 2026-10-14: "283345 ... we only assisted. It should be under adhoc. Unless when we
+// audit we added something a fix a patch"). commits = non-merge commits naming the ticket, oldest first: [{date, mine, subject}].
+// His ticket = the first fix commit is his (or there is no commit and our record names no other owner).
+// Someone else's ticket = the first fix commit is another developer's, or our record has delegated_to.
+// On someone else's ticket, a day he adds his own fix commit or a patch script counts as his (PLAN) for that day.
+const NOT_A_FIX = /\b(remove|revert|up common|merge|bump)\b/i;
+function ownerOfDay({ commits = [], delegatedTo = '', patchToday = false, day }) {
+  const fixes = commits.filter(c => !NOT_A_FIX.test(c.subject));
+  const othersTicket = !!String(delegatedTo || '').trim() || (fixes.length > 0 && !fixes[0].mine);
+  if (!othersTicket) return 'PLAN';
+  return patchToday || fixes.some(c => c.mine && c.date === day) ? 'PLAN' : 'ADHOC';
+}
+
+// Which PENDING entries of a day the run marks RESOLVED (miya 2026-10-14; his history: 115 of 121 adhocs resolved,
+// plan tickets resolved on the day he passed them on). Only entries this script or an approved day created are touched.
+//   plan entry  -> resolved when the ticket's work that day is done (passed on in Redmine, or a note and now with someone else)
+//   adhoc entry -> "<n> - ..." resolved when he worked that ticket that day; any other line resolved unless it is waiting
+function toResolve({ existing, worked = [], waiting = [], mine = () => false }) {
+  const byId = new Map(worked.map(w => [String(w.id), w]));
+  const out = [];
+  for (const e of (existing && existing.plan) || []) {
+    if (e.status !== 'PENDING' || !mine(e)) continue;
+    const w = ticketsIn(e.name).map(t => byId.get(t)).find(Boolean);
+    if (w && w.done) out.push({ id: e.id, name: e.name });
+  }
+  for (const e of (existing && existing.adhoc) || []) {
+    if (e.status !== 'PENDING' || !mine(e)) continue;
+    const ts = ticketsIn(e.name);
+    if (ts.length ? ts.some(t => byId.has(t)) : !waiting.some(w => sameTitle(w, e.name) || w === e.name)) out.push({ id: e.id, name: e.name });
+  }
+  return out;
 }
 
 // Which entries this script created: ids from its own log, plus the names the old weekly script placed (it kept no ids).
@@ -359,6 +393,34 @@ function ledgerDay(day) {
   }
   const quests = Object.keys(count).filter(q => count[q] >= LEDGER_MIN_TURNS);
   return { tickets: quests.map(q => (/^QA-(\d{6})$/.exec(q) || [])[1]).filter(Boolean), adhocIds: quests.filter(q => /^ADHOC-/i.test(q)) };
+}
+
+// Non-merge commits naming the ticket in our two module repos, oldest first. Read-only git log.
+const REPOS = (process.env.PROTIME_PLAN_REPOS || 'E:\\Projects\\Melaka\\etanah-pelupusan;E:\\Projects\\Melaka\\etanah-awam').split(';');
+function ticketCommits(id) {
+  const out = [];
+  for (const r of REPOS) {
+    const o = spawnSync('git', ['-C', r, 'log', '--all', '--no-merges', '--format=%ad|%an|%s', '--date=short', '--grep=' + id], { encoding: 'utf8', windowsHide: true, timeout: 60000 });
+    for (const l of String(o.stdout || '').split('\n').filter(Boolean)) { const [date, author, ...s] = l.split('|'); out.push({ date, mine: /ridhwan/i.test(author), subject: s.join('|') }); }
+  }
+  return out.sort((a, b) => a.date.localeCompare(b.date));
+}
+
+// A patch script for the ticket in its Task folder, changed on that day.
+const TASKS = process.env.PROTIME_PLAN_TASKS || path.join(process.env.USERPROFILE || 'C:\\Users\\Ridhwan', 'OneDrive - Pymsoft Sdn Bhd', '1. Tasks');
+function patchOnDay(id, day) {
+  let found = false;
+  const walk = (dir, depth) => {
+    if (found || depth > 4) return;
+    let ls = []; try { ls = fs.readdirSync(dir, { withFileTypes: true }); } catch (_) { return; }
+    for (const e of ls) {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) { if (depth < 2 || e.name.includes(id) || /fix/i.test(e.name)) walk(p, depth + 1); }
+      else if (e.name.startsWith(id) && e.name.endsWith('.sql') && !/check/i.test(e.name)) { try { if (iso(fs.statSync(p).mtime) === day) found = true; } catch (_) {} }
+    }
+  };
+  walk(TASKS, 0);
+  return found;
 }
 
 // Blocks of quest/active.txt + active-archive.txt (MAIN checkout).
@@ -529,14 +591,20 @@ async function main() {
 
   // settle
   const mine = mineOf(readLog());
-  const settled = {}, notes = [];
+  // a day he approved line by line keeps his own resolve marks and wording: the run adds no adhoc and resolves nothing there
+  const approvedDays = new Set(readLog().filter(r => r.run === 'manual:approved-day' && r.mode === 'live').map(r => r.day));
+  const settled = {}, notes = [], workedByDay = {}, waitingByDay = {};
   for (const d of settleDays) {
     if (isOff(d)) { console.log(`${d}: day off - left alone`); continue; }
+    if (approvedDays.has(d)) { console.log(`${d}: approved by him line by line - left alone`); continue; }
     const ad = adhocsOfDay(d, ledger[d].adhocIds, blocks);
     if (ad.untitled.length) notes.push(`${d}: adhoc with no title, not written: ${ad.untitled.join(', ')}`);
     const titleOf = id => { const b = blocks.find(x => x.qa === 'QA-' + id && x.title); return b ? protimeLine(b) : null; };
-    const worked = red.ok ? red.worked[d].map(w => ({ ...w, title: w.own ? null : titleOf(w.id) })) : [];
-    const s = settle({ existing: before[d] || { plan: [], adhoc: [] }, worked, adhocs: ad.lines, mine: e => mine(e, d), canRemove: red.ok });
+    const worked = red.ok ? red.worked[d].map(w => { const own = ownerOfDay({ commits: ticketCommits(w.id), delegatedTo: (blocks.find(x => x.qa === 'QA-' + w.id) || {}).delegated_to, patchToday: patchOnDay(w.id, d), day: d }) === 'PLAN'; return { ...w, own, title: own ? null : titleOf(w.id) }; }) : [];
+    workedByDay[d] = worked;
+    waitingByDay[d] = adhocsOfDay(d, ledger[d].adhocIds, blocks.filter(b => /^(hold|blocked|delegated)$/i.test(b.status || '') || /\b(owner infra|waiting|awaiting|menunggu)\b/i.test(b.issue_one_liner || ''))).lines;
+    const approvedDay = approvedDays.has(d);
+    const s = settle({ existing: before[d] || { plan: [], adhoc: [] }, worked, adhocs: ad.lines, mine: e => mine(e, d), canRemove: red.ok, approvedDay });
     settled[d] = s;
     console.log(`${d} settle - worked: ${worked.map(w => w.id + (w.own ? '' : ' (not his)')).join(', ') || 'none found'}${red.ok ? '' : ' (Redmine unreachable: nothing added or removed from tickets)'}`);
     for (const n of s.addPlan) console.log(`  + plan   ${n}`);
@@ -592,10 +660,21 @@ async function main() {
   // ids are logged even on a mismatch, so a later run still knows which entries are its own
   if (!after || missing.length || still.length) { logRow({ ...base, mode: 'live', result: 'ok-partial', created, removed }); return fail(2, 'read-back-mismatch', [...missing, ...still].join('; ') || 'plan unreadable after write'); }
 
-  logRow({ ...base, mode: 'live', result: 'ok', created, removed });
-  console.log(`WRITTEN and read back: ${adds.length} added, ${removed.length} removed`);
+  // resolve step (night and morning settle): only entries this script created today or earlier, never on an approved day
+  const resolved = [];
+  const createdIds = new Set(created.map(c => c.id));
+  for (const d of Object.keys(settled)) {
+    if (approvedDays.has(d) || !red.ok) continue;
+    const rs = toResolve({ existing: (after || {})[d], worked: workedByDay[d] || [], waiting: waitingByDay[d] || [], mine: e => createdIds.has(e.id) || mine(e, d) });
+    if (!rs.length) continue;
+    const r = await api.request(apiBase, '/staff-plan/bulk/create-resolved', { method: 'POST', token: lg.token, body: rs.map(e => ({ parentId: e.id, resolvedDate: d })) });
+    if (r.ok) resolved.push(...rs.map(e => ({ ...e, date: d }))); else notes.push(d + ': resolve failed HTTP ' + r.status);
+  }
+  if (resolved.length) { const again = await read(); const notRes = resolved.filter(x => !((((again || {})[x.date] || {}).plan || []).concat((((again || {})[x.date] || {}).adhoc) || [])).some(e => e.id === x.id && e.status === 'RESOLVED')); if (notRes.length) notes.push('not resolved after write: ' + notRes.map(x => x.name).join('; ')); }
+  logRow({ ...base, mode: 'live', result: 'ok', created, removed, resolved });
+  console.log(`WRITTEN and read back: ${adds.length} added, ${removed.length} removed, ${resolved.length} resolved`);
   if (args.includes('--notify') && (adds.length || removed.length)) notify('ProTime plan updated', `${run} run: ${adds.length} added, ${removed.length} removed`, 'Info');
 }
 
 if (require.main === module) main().catch(e => { logRow({ mode: 'error', result: 'crash', detail: String(e && e.stack || e).slice(0, 400) }); console.error(e); process.exit(1); });
-module.exports = { weekDays, prevWorkday, planByDate, entriesByDate, distribute, decide, settle, sameTitle, protimeLine, ticketsIn, mineOf, iso, fromDmy, statusOf, nextFor, NEXT, MANUAL, manualArgsError, rulesText, lintLine };
+module.exports = { weekDays, prevWorkday, planByDate, entriesByDate, distribute, decide, settle, sameTitle, protimeLine, ticketsIn, mineOf, iso, fromDmy, statusOf, nextFor, NEXT, MANUAL, manualArgsError, rulesText, lintLine, ownerOfDay, toResolve };

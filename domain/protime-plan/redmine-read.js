@@ -55,7 +55,10 @@ async function redmineDays(days, extraIds) {
     const is = j.issue, journals = is.journals || [];
     const own = (is.assigned_to && is.assigned_to.id === myId) || journals.some(jr => (jr.details || []).some(det => det.property === 'attr' && det.name === 'assigned_to_id' && (String(det.new_value) === String(myId) || String(det.old_value) === String(myId))));
     const wrote = new Set(journals.filter(jr => jr.user && jr.user.id === myId).map(jr => iso(new Date(jr.created_on))));
-    for (const d of days) if (wrote.has(d) || (extraIds.includes(id) && (extraIds.byDay || {})[d] && extraIds.byDay[d].includes(id))) worked[d].push({ id, own: !!own });
+    // resolve facts (miya 2026-10-14): he passed it on that day, or wrote on it that day and it now sits with someone else
+    const handedOn = d => journals.some(jr => jr.user && jr.user.id === myId && iso(new Date(jr.created_on)) === d && (jr.details || []).some(det => det.name === 'assigned_to_id' && String(det.old_value) === String(myId)));
+    const withOther = !!(is.assigned_to && is.assigned_to.id !== myId);
+    for (const d of days) if (wrote.has(d) || (extraIds.includes(id) && (extraIds.byDay || {})[d] && extraIds.byDay[d].includes(id))) worked[d].push({ id, own: !!own, done: handedOn(d) || (wrote.has(d) && withOther) });
   }
   return { ok: true, worked, candidates: cand.size };
 }

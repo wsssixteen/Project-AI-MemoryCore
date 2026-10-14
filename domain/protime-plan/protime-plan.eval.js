@@ -153,5 +153,28 @@ eq('S91 the wording rule still has its examples', ruleExamples.length >= 4, true
 eq('S92 every full line in the wording rule passes the script line check', ruleExamples.filter(l => !/<|\.\.\./.test(l) && lintLine(l).length), []);
 eq('S93 the wording rule names the same format the script writes', ruleSection.includes('`<ENV> (<STATE>) - <title>`') && protimeLine({ env: 'PROD', state: 'melaka', title: 'X' }) === 'PROD (MLK) - X', true);
 
+// ---- plan or adhoc, and resolve (miya 2026-10-14) ----
+const { ownerOfDay, toResolve } = require('./protime-plan.js');
+const C = (date, mine, subject) => ({ date, mine, subject });
+eq('S94 283345 today: Ammar wrote the fix, his commit today only removed code -> ADHOC', ownerOfDay({ commits: [C('2026-10-08', false, 'refs #283345'), C('2026-10-09', true, 'Ref #283345 - PRBB - SKM - read counter'), C('2026-10-14', false, 'refs #283345 - customizer'), C('2026-10-14', true, 'Ref #283345 - Remove checklist fix from int-env')], day: '2026-10-14' }), 'ADHOC');
+eq('S95 the same ticket on the day he added his own fix -> PLAN', ownerOfDay({ commits: [C('2026-10-08', false, 'refs #283345'), C('2026-10-09', true, 'Ref #283345 - PRBB - SKM - read counter')], day: '2026-10-09' }), 'PLAN');
+eq('S96 his own fix ticket -> PLAN', ownerOfDay({ commits: [C('2026-10-14', true, 'Ref #284544 - MLPS - PB4AE - fix cop')], day: '2026-10-14' }), 'PLAN');
+eq('S97 only "Up common" commits by him, no other owner -> PLAN (his requirement)', ownerOfDay({ commits: [C('2026-10-14', true, 'Ref #240907 - Up common to 1.10.5-MLK')], day: '2026-10-14' }), 'PLAN');
+eq('S98 our record says delegated_to a colleague -> ADHOC', ownerOfDay({ commits: [], delegatedTo: 'Ammar', day: '2026-10-14' }), 'ADHOC');
+eq('S99 a colleague\'s ticket where he wrote a patch script today -> PLAN', ownerOfDay({ commits: [C('2026-10-01', false, 'refs #1')], patchToday: true, day: '2026-10-14' }), 'PLAN');
+eq('S100 no commit, no other owner (his ticket at rubric) -> PLAN', ownerOfDay({ commits: [], day: '2026-10-14' }), 'PLAN');
+const EX = { plan: [E(1, '240907'), E(2, '284831'), E(3, '284775', 'RESOLVED'), E(9, '284544')], adhoc: [E(4, '283345 - Assist'), E(5, 'Internal (MLK) - Document PDF not showing'), E(6, 'Setup Penang DB connections'), E(7, 'Assist BA - Typed by him')] };
+const W2 = [{ id: '240907', done: true }, { id: '284831', done: false }, { id: '283345', done: true }, { id: '284544', done: false }];
+const RS = toResolve({ existing: EX, worked: W2, waiting: ['Internal (MLK) - Document PDF not showing'], mine: e => e.id !== 7 }).map(e => e.id);
+eq('S101 plan ticket passed on today -> resolved', RS.includes(1), true);
+eq('S102 plan ticket still with him -> not resolved', RS.includes(2) || RS.includes(9), false);
+eq('S103 already resolved -> not touched again', RS.includes(3), false);
+eq('S104 assist adhoc on a ticket worked today -> resolved', RS.includes(4), true);
+eq('S105 adhoc waiting on infra -> not resolved', RS.includes(5), false);
+eq('S106 plain adhoc of the day -> resolved', RS.includes(6), true);
+eq('S107 a line he typed himself -> never resolved by the run', RS.includes(7), false);
+eq('S109 the run skips a day he approved line by line (no add, remove or resolve)', /if \(approvedDays\.has\(d\)\) \{ console\.log\(`\$\{d\}: approved by him line by line - left alone`\); continue; \}/.test(require('fs').readFileSync(require('path').join(__dirname, 'protime-plan.js'), 'utf8')), true);
+eq('S108 an approved day is left alone: settle adds no adhoc there', settle({ existing: { plan: [], adhoc: [] }, adhocs: ['PROD (MLK) - X issue'], approvedDay: true }).addAdhoc, []);
+
 console.log(`\n${pass}/${pass + fail} passed`);
 process.exit(fail ? 1 : 0);
