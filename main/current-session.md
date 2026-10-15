@@ -119,3 +119,5 @@
 - **DawahMap, 2026-10-15 04:50**: the wording of every verse and passage the lanes name fetched by script (105 items: Bible, Pirkei Avot, Quran with commentary, hadith with numbers found); the page unchanged; notebook version 7. Waiting on him: his review of the page and the notebook.
 
 - **DawahMap, 2026-10-15 05:30**: notebook version 8 (139 pass): the sources check passes for the Christianity and Judaism lanes, re-judged against the fetched texts; John 11:43-44 and the three Torah verses for "everlasting" fetched for the last two lines; 1 of 5 doubts given its talk, 4 come from the books of the scholars. The goal of 2026-10-14 22:15 cleared by him. Waiting on him: his review of the page and the notebook.
+
+- **DawahMap, 2026-10-15 21:30**: the wording page published (https://claude.ai/artifact/NbhHvp4wm2WQ5S9rUvjFMq): his 12 kinds of reply, the first 10 stages today beside his way. Still running: the every-card pass (rule 1n). Next: the neutral-wording pass written against the wording page; then version 55.
