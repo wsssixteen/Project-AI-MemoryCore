@@ -147,7 +147,7 @@ Trigger: "close reconcile" / "phase 2 reconcile" / "reconcile closed tickets" / 
 | 1 | Detect: Redmine-Closed vs local state | boot surfacer divergence table, or per-ticket probe (redmine-board.js API pattern) |
 | 2 | Enumerate harvest debt | `node domain/quest-bounty/bulk.js --debt` — the number is the truth, never estimate |
 | 3 | Per quest: HARVEST first (standing 7-category schema, domain/quest-bounty/README.md) | bounty familiar per quest, controller verifies cites |
-| 4 | Then archive | `node quest/archive-quest.js <QA>` — Step -1 harvest gate REFUSES un-harvested archives (exit 3; `--allow-stub "<reason>"` audited bypass) |
+| 4 | Then archive | `node quest/archive-quest.js <QA>` — Step -1 harvest gate REFUSES un-harvested archives (exit 3; `--allow-stub "<reason>"` audited bypass). Step -2 REFUSES a block carrying `archive_hold=` (exit 3; no bypass — release with `node domain/archive-hold/archive-hold.js clear <QA>` only when みや says so; save-quest prints `HELD` for it) |
 | 5 | ADHOC supersede: if the Redmine ticket matches an ADHOC-* block / register row | append ticket # to the register row + archive the ADHOC block via active-cli; the TICKET becomes the tracked item (adhoc evidence folds into the ticket's qa_doc) |
 
 Acceptance: `bulk.js --debt` prints `0 unharvested` and the boot surfacer shows no divergence.

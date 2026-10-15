@@ -26,6 +26,9 @@ function makeWorkspace({ qa, stateFolder, state, folderName, noTaskFolder, start
         if (f.endsWith('.js') && !f.endsWith('.eval.js')) fs.copyFileSync(path.join(REPO_ROOT, 'quest', f), path.join(root, 'quest', f));
     }
     fs.writeFileSync(path.join(root, 'quest', 'redmine-status-check.js'), STUB_REDMINE);
+    // delegate-quest.js + active-cli.js require the archive-hold gate (2026-10-15).
+    fs.mkdirSync(path.join(root, 'domain', 'archive-hold'), { recursive: true });
+    fs.copyFileSync(path.join(REPO_ROOT, 'domain', 'archive-hold', 'archive-hold.js'), path.join(root, 'domain', 'archive-hold', 'archive-hold.js'));
     fs.mkdirSync(path.join(root, 'lib'), { recursive: true });
     fs.copyFileSync(path.join(REPO_ROOT, 'lib', 'states.js'), path.join(root, 'lib', 'states.js'));
     const home = path.join(root, 'home');

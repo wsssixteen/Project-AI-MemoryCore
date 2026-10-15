@@ -139,6 +139,10 @@ function main() {
 
     // ── Step 0: locate the block (may already be delegated/archived) ───────
     const block = readActiveTxtBlock(qa);
+    // Archive hold (2026-10-15): delegating moves the Task folder to Archive\, so a held id stays put.
+    const archiveHold = require(path.join(__dirname, '..', 'domain', 'archive-hold', 'archive-hold.js'));
+    const holdReason = archiveHold.holdIn(block);
+    if (holdReason && !dryRun) { console.error('\n' + archiveHold.refusal(qa, holdReason, 'delegate-quest.js')); process.exit(3); }
     const alreadyArchivedBlock = !block && blockExistsInArchiveTxt(qa);
     if (!block && !alreadyArchivedBlock) {
         console.error(`\n❌ ${qa} not found in active.txt OR active-archive.txt — nothing to delegate.`);

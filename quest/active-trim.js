@@ -37,10 +37,14 @@ const body = raw.split(/\r?\n/).filter((l) => !/^(active|closed):\s*$/.test(l)).
 // split into blocks at every line beginning with "qa="
 const blocks = body.split(/\n(?=qa=)/).map((b) => b.trim()).filter((b) => b.startsWith('qa='));
 
+const { holdIn } = require(path.join(__dirname, '..', 'domain', 'archive-hold', 'archive-hold.js'));
 const open = [];
 const done = [];
 const noStatus = [];
+const held = [];
 for (const b of blocks) {
+  // Archive hold (2026-10-15): a held block stays in working memory whatever its status.
+  if (holdIn(b)) { held.push(b); open.push(b); continue; }
   const m = b.match(/^status=([\w-]+)/m);
   const status = m ? m[1] : '';
   const phaseDone = /^phase=(complete|1-complete|2-complete)/m.test(b); // legacy blocks: phase= instead of status=
@@ -52,6 +56,7 @@ for (const b of blocks) {
 const qaOf = (b) => (b.match(/^qa=(\S+)/m) || [null, '?'])[1];
 console.log(`blocks total=${blocks.length}  open=${open.length}  done=${done.length}  no-status(kept)=${noStatus.length}`);
 console.log('OPEN kept :', open.map(qaOf).join(', '));
+if (held.length) console.log('HELD kept :', held.map(qaOf).join(', '), '(archive_hold set)');
 console.log('DONE moved:', done.map(qaOf).join(', '));
 
 if (!apply) { console.log('\nDRY RUN — re-run with --apply to write.'); process.exit(0); }
