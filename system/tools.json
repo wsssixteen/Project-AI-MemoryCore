@@ -594,6 +594,23 @@
       },
       "status": "rare",
       "note": "db-schema.md = 0 sessions"
+    },
+    {
+      "id": "archive-hold",
+      "answers": "Is this quest or adhoc held from archiving, and why; set or release the hold",
+      "call": "node domain/archive-hold/archive-hold.js set <ID> --reason \"<why>\" | clear <ID> | check <ID> | list",
+      "home": "domain/archive-hold/",
+      "groups": [
+        "tickets",
+        "system"
+      ],
+      "state_scope": "none (per id; active.txt holds every state)",
+      "footprint": "on-demand: 1 node process per call, about 0.1 s",
+      "usage": {
+        "sessions": 0,
+        "last": null
+      },
+      "status": "new"
     }
   ],
   "unused_scripts_2026-10-06": {

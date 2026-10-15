@@ -211,6 +211,10 @@ function cmdArchive(qa) {
     const { header: aHeader, blocks: aBlocks } = parseBlocks(activeText);
     const b = findBlock(aBlocks, qa);
     if (!b) throw new Error(`${qa} not found in active.txt`);
+    // Archive hold (2026-10-15): a held block stays in active.txt until the hold is cleared.
+    const archiveHold = require(path.join(__dirname, '..', 'domain', 'archive-hold', 'archive-hold.js'));
+    const holdReason = archiveHold.holdIn(b.lines);
+    if (holdReason) throw new Error('\n' + archiveHold.refusal(qa, holdReason, 'active-cli.js archive'));
     const remaining = aBlocks.filter(x => x.qa !== qa);
 
     const archText = readText(ARCHIVE);

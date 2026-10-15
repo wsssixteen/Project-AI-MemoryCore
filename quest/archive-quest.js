@@ -169,6 +169,15 @@ function main() {
 
     console.log(`\n📦 Archive harness — ${qa}${dryRun ? ' (DRY-RUN)' : ''}\n   Tasks root: ${tasksRoot}`);
 
+    // ── Step -2: ARCHIVE HOLD (2026-10-15, per みや — an adhoc may get its ticket late, so a held
+    // id must never be archived by any path). Clearing the hold is the only release. Dry-run reports.
+    {
+        const hold = require(path.join(__dirname, '..', 'domain', 'archive-hold', 'archive-hold.js'));
+        const reason = hold.holdIn(readActiveTxtBlock(qa));
+        if (reason && !dryRun) { console.error('\n' + hold.refusal(qa, reason, 'archive-quest.js')); process.exit(3); }
+        if (reason) console.log(`  [dry] Step -2: ARCHIVE HOLD would BLOCK — ${reason}`);
+    }
+
     // ── Step -1: HARVEST GATE (2026-08-16, per みや — "archive without harvest must be
     // mechanically impossible"; slip archive-without-harvest, 35-quest debt). An archive
     // may not proceed unless the qa_doc carries a harvest section (## Bounty or

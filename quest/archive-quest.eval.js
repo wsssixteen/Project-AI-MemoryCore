@@ -55,6 +55,9 @@ function makeWorkspace({ qa, hasBounty, alsoArchived, stateFolder, state, folder
             fs.copyFileSync(path.join(realQuestDir, f), path.join(root, 'quest', f));
         }
     }
+    // archive-quest.js + active-cli.js require the archive-hold gate (2026-10-15).
+    fs.mkdirSync(path.join(root, 'domain', 'archive-hold'), { recursive: true });
+    fs.copyFileSync(path.join(REPO_ROOT, 'domain', 'archive-hold', 'archive-hold.js'), path.join(root, 'domain', 'archive-hold', 'archive-hold.js'));
 
     // Fake Tasks root (avoids touching the real OneDrive folder)
     const home = path.join(root, 'home');

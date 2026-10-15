@@ -161,9 +161,15 @@ function moveDir(slug, dir) {
   catch (e) { return { moved: false, why: String(e && e.message || e), from, to }; }
 }
 
+// Archive hold (2026-10-15): active.txt of --root in tests, else the main checkout's (archive-hold resolves it).
+const archiveHold = require(path.join(__dirname, '..', 'archive-hold', 'archive-hold.js'));
+const holdFile = () => (arg('root') ? path.join(ROOT, 'quest', 'active.txt') : undefined);
+
 function cmdPromote() {
   const id = arg('row'), ticket = arg('ticket'), slug = arg('slug');
   if (!id || !ticket) { console.error('usage: promote --row <id> --ticket <QA-n> [--slug <dir>]'); process.exit(2); }
+  // The ticket a hold waited for has arrived: release it so the normal close path can run later.
+  for (const released of archiveHold.releaseByRegisterRow(id, ticket, holdFile())) console.log('  archive hold released on ' + released + ' (ticket ' + ticket + ' arrived)');
   const mv = slug ? moveDir(slug, 'archive') : { moved: false, why: 'no-slug-given' };
   editStatus(id, 'TICKETED → ' + ticket + ' (' + nowIso().slice(0, 10) + ')', 'promote', { ticket, dirMove: mv });
   if (mv.moved) console.log('  qa_doc moved -> archive\\' + slug);
@@ -173,6 +179,8 @@ function cmdPromote() {
 function cmdArchive() {
   const id = arg('row'), reason = arg('reason') || 'archived', slug = arg('slug');
   if (!id) { console.error('usage: archive --row <id> [--reason <text>] [--slug <dir>]'); process.exit(2); }
+  const holds = archiveHold.heldByRegisterRow(id, holdFile());
+  if (holds.length) { console.error(archiveHold.refusal(holds[0].id, holds[0].reason, 'adhoc-lifecycle archive')); logRow('archive', 'refused-held', { id, held: holds[0].id }, hrms()); process.exit(3); }
   const mv = slug ? moveDir(slug, 'archive') : { moved: false, why: 'no-slug-given' };
   editStatus(id, 'OWNED-ELSEWHERE (' + reason + ', ' + nowIso().slice(0, 10) + ')', 'archive', { reason, dirMove: mv });
   if (mv.moved) console.log('  qa_doc moved -> archive\\' + slug);
@@ -194,16 +202,21 @@ function cmdSweep() {
   if (!lines) { console.error('adhoc-lifecycle: register not found at ' + p); logRow('sweep', 'no-register', {}, t0); process.exit(3); }
   const TERMINAL = /\b(ANSWERED|OWNED-ELSEWHERE|TICKETED|RESOLVED)\b/;
   const rows = [];
+  const heldRows = [];
   for (const line of lines) {
     const t = line.trim();
     if (!/^\|\s*[A-Z]?\d+\s*\|/.test(t)) continue;
     const cells = t.split('|').slice(1, -1).map(c => c.trim());
     if (cells.length < 7) continue;
     const status = cells[6].replace(/[`*]/g, '');
-    if (TERMINAL.test(status)) rows.push({ id: cells[0], date: cells[1], status: status.slice(0, 40) });
+    if (!TERMINAL.test(status)) continue;
+    // A row whose block carries an archive hold is reported apart: it must NOT be archived.
+    const holds = archiveHold.heldByRegisterRow(cells[0], holdFile());
+    if (holds.length) heldRows.push({ id: cells[0], heldBlock: holds[0].id, hold: holds[0].reason });
+    else rows.push({ id: cells[0], date: cells[1], status: status.slice(0, 40) });
   }
-  console.log(JSON.stringify({ terminalRows: rows, note: 'terminal-status rows — safe to archive folder + drop from active surfacing' }, null, 2));
-  logRow('sweep', 'listed', { terminalCount: rows.length }, t0);
+  console.log(JSON.stringify({ terminalRows: rows, heldRows, note: 'terminal-status rows — safe to archive folder + drop from active surfacing; heldRows carry an archive hold — leave them' }, null, 2));
+  logRow('sweep', 'listed', { terminalCount: rows.length, heldCount: heldRows.length }, t0);
 }
 
 const cmd = process.argv[2];
