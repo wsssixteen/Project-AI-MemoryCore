@@ -1,6 +1,6 @@
 ---
 name: feedback-staging-schema-stg2
-description: "two STG schemas, stg2 current, never assume; MLIT/STG writable via gateway login; MCP CONNECT_TIMEOUT = connector, not VPN"
+description: "two STG schemas, the switch file system/melaka-env-state.json says which is ON (stg1 since 2026-10-15), never assume; MLIT/STG writable via gateway login; MCP CONNECT_TIMEOUT = connector, not VPN"
 metadata: 
   node_type: memory
   type: feedback
@@ -10,7 +10,7 @@ metadata:
 
 **🚫 stg1: not for root cause, test data or test scenarios (miya 2026-10-12, repeated 2026-10-14; narrowed 2026-10-14).** Never query `et_main_stg1` to find a root cause or to prepare test data / a test scenario (picking permohonan, logins, patch or test scripts), never switch the local env to it, never offer "check stg1" for that. **Allowed**: a read-only lookup of data that already lives only on stg1 (example: permohonan the BA created on the staging app). **Always**: announce every stg1 query in the reply, one line `Read from stg1: <what and why>`. Asking miya is required only for root cause / test data / test scenario, not for a lookup of existing rows. Enforced by `domain/stg1-block/` (allows a read with a reminder, refuses write-like SQL), `quest/env-switch.js` (refuses `--to stg1` without `--miya-asked`), and the every-prompt staging reminder (`system/melaka-env-state.json` `banned_note`). **Why**: 2026-10-14 (Baseline 1.8.3): the BA's 5 permohonan for the #240907 flow-version check existed only on stg1; the blanket ban stopped me from giving miya the Flowable links and I asked instead of reading. Earlier cause of the ban: #284544, stg1 read unasked and reported as a BA staging repro (withdrawn).
 
-**CURRENT STAGING TARGET = `et_main_stg2`** — stated by みや 2026-08-10 (*"WE HAVE SWITCHED TO STG2 FOR NOW … amend your current memory everywhere"*). This line is the live pointer; update it the moment he says otherwise, in the same turn he says it. (Was `et_main_stg1` 2026-07-27 → 2026-08-10.)
+**CURRENT STAGING TARGET = `et_main_stg1`** — stated by みや 2026-10-15 (*"We have switched back to stg1 … ensure we have switched back to stg1 as default for now. Make it mechanical. Like a turn on/off or switch"*). **The switch is mechanical since 2026-10-15**: `system/melaka-env-state.json` `melaka_staging_schema` is ON, the other schema is OFF, and the stg1 ban above applies to whichever schema is OFF (now stg2). Readers follow it: `quest/env-switch.js`, `domain/stg1-block`, the env-prompt `banned_note`. This line mirrors it; update both in the same turn he switches. (Was `et_main_stg2` 2026-08-10 → 2026-10-15; `et_main_stg1` 2026-07-27 → 2026-08-10.)
 
 **🤖 MACHINE-READABLE SOURCE (added 2026-08-10, みや /goal) = `system/melaka-env-state.json`.** The hook `domain/staging-schema-tracker/` reads it and (A) rewrites it when みや says "we switched to stgN" / "use stgN now", (B) injects the live target + auto-verifies `standalone.xml` etanahDS matches, at every env-prep / test-scenario prompt. This prose line and the JSON must stay in sync — when one changes, change both. Built because this file's prose decayed and env was "prepared" without checking standalone against the live target (QA-273460).
 
