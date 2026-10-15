@@ -244,6 +244,7 @@ Sequence (isolated worktree so みや's live checkout is untouched):
 2. `git -C <module> worktree add -b intenv-<num> <tmpdir> origin/<base>`
 3. Edit ONLY the `<etanah.common.version>` line → the released version.
 4. **🚨 Ticket-first commit message** (みや 2026-08-12): `Ref #<num>: bump etanah-common to <ver> for <env>`.
+   **The verb follows the DIRECTION (2026-10-15 per みや, #282303)**: compare the old and new version first. Higher → `Up` / `bump`. Lower, or a side patch with the same number, for a test → `Ref #<num> - Change common to <ver> for testing`. Going back afterwards → `Ref #<num> - Revert common to <ver>`. Checked at the commit by `domain/commit-subject-gate/version-direction.js` (called from compile-gate). **Banned**: copying an earlier "Up common" subject without checking the direction (#282303 said "Up common to 1.7.23…" for 1.10.5 → 1.7.23).
    Banned: a bare `Bump etanah-common version to <ver>` with no ticket ref — every version-pin bump
    must be greppable to the ticket that needed it. (The pre-2026-08-12 int-env bumps had no ref;
    that is the gap this rule closes.)
