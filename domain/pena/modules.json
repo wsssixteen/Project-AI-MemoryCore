@@ -97,7 +97,8 @@
     "rules": [
       "tak / dah / amik / je, not tidak dapat / dihantar / dipaparkan.",
       "Refer, commit, merge, branch, table, value stay English.",
-      "Basically / Actually / so / just, not Ringkasnya / Oleh itu."
+      "Basically / Actually / so / just, not Ringkasnya / Oleh itu.",
+      "A thinking pause is written \"...\" (Kalau nak test kat staging... P_APLIKASI_ID 62405). A line that sums up opens with \"So untuk <x>:\". A table-to-table path is written with \"-->\"."
     ],
     "banned": ["dihantar", "tidak dapat", "dipaparkan", "Ringkasnya", "Oleh itu", "Maaf atas kekeliruan", "nilai tetap", "Rujuk", "jadual"],
     "check": "rojak"
