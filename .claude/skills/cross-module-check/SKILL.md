@@ -1,7 +1,9 @@
 ---
 name: cross-module-check
-description: Use when an etanah finding touches a module we do not own (etanah-common, GIS, SPOC etanah-spoc-hasil, Hasil, etanah-teknikal, reports, DMS, infra/DB), or BEFORE any "not our issue" / OWNED-ELSEWHERE / "common issue" / "GIS issue" / "pass to common" / "bukan isu kami" verdict or hand-off. Triggers - "cross-module", "is this common", "pass to common", "other team", "whose issue", "hand over to", a stack trace whose top frame is my.gov.etanah.common.* or GIS, the cross-module-intake scanner alert.
+description: Use when an etanah finding touches a module we do not own (etanah-common, GIS, SPOC etanah-spoc-hasil, Hasil, etanah-teknikal, reports, DMS, infra/DB), or BEFORE any "not our issue" / OWNED-ELSEWHERE / "common issue" / "GIS issue" / "pass to common" / "bukan isu kami" verdict or hand-off. Triggers - "cross-module", "is this common", "pass to common", "other team", "whose issue", "hand over to", a stack trace whose top frame is my.gov.etanah.common.* or GIS, the cross-module-intake scanner alert, ANY fix that changes a .jrxml file (reports team), even one inside etanah-awam or etanah-pelupusan.
 ---
+
+> **Reports are not ours even in our repo (2026-10-15 per みや, #284884).** A fix that changes a `.jrxml` (Jasper report, `src/main/resources/reports/...`) belongs to the reports team, even though the file sits in etanah-awam or etanah-pelupusan. We do not commit it. Output = the hand-off: one bare `<File>.jrxml` per changed report in `2. Fix\` (filename header + `Line N (BEFORE)` / `Line N (AFTER)` blocks), plus the Redmine note. Only the Java / xhtml part of the fix is ours to commit. Say this at Rubric, before any Apply or staging. **Why**: #284884, all 4 changed files were reports; I staged them on our ticket branch and miya caught it at commit review.
 
 # cross-module-check — prove who owns it BEFORE handing it over
 

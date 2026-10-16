@@ -108,4 +108,5 @@
 - [parked-projects](project_etanah_organize.md) — etanah-organize, aunt slides, held #255773 SPOC handoff
 
 ## User
+- [appraisal-self-initiatives](project_appraisal_self_initiatives.md) — miya's appraisal list: every fix BA did not ask for that we included, one row per ticket
 - [user-profile](user_career_vision.md) — career vision; male; learning JSF tracing; みや + Japanese acknowledgments
