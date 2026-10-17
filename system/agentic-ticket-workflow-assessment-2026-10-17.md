@@ -13,3 +13,18 @@
 | A5 sweep / file sweep | Reading a contact sheet of all deck photos at once (one image, 19 tiles) chose photos in one look and caught a watermarked stock image and identifiable faces before any page used them. | `slide09-image-9-2` (watermark) and `slide14-image-14-2` (portrait) excluded |
 
 Proposals logged (`core/slips.js --type proposal`, category A1): audit-briefing TELEMETRY-BLIND banner · scoped DE commit in a shared worktree.
+
+## Session `project-system` (the project system, Masterline S7, delegated by the orchestrator)
+
+| Axis | Assessment | Instance |
+|---|---|---|
+| A1 agentic system | Inventory found the design half-done by another of his sessions: DawahMap's foundation map had his ruling (index = START.md) and a checker's binding facts (hook output over 10,000 characters arrives as a 2,000-character preview). Building on it avoided a second design. | `DawahMap\wayfinder\foundation\issues\03` + `research_notes\Foundation\design-check.md` flaw 1 |
+| A1 | His rulings often live only in popup answers, which the transcript stores as tool results. A words copier that reads only typed prompts misses them. | DawahMap transcript be5b16b4: 13 AskUserQuestion answers, one says "Please add into your project quest md that we need to produce this always" |
+| A1 | The 7-day audit briefing runs out of memory against the main checkout's telemetry (13,279,702 hook fires in 7 days); it only finished with a 6 GB heap. The "rotate monthly" retention is not keeping the file small. | `node lib/audit-briefing.js --days 7` with CLAUDE_PROJECT_DIR = main: exit 134, last GCs |
+| A1 | Hooks run from the main folder, so a session folder's own new hook is not live in that session; the design gate also looks for the eval in the main folder and refused the new hook files three times. | design-consult-gate "expected domain/project-load/eval.js" while it existed in the session folder |
+| A2 quest workflow | After a compaction a quest now gets its Resume Point back (read only). An agreed fix stated mid-quest still has only the advisory quest-doc-freshness nudge, no block. | `domain/quest-doc-freshness` REPORT-ONLY vs the new project decision gate (blocks) |
+| A3 debugging efficiency + accuracy | ⏭ no debugging this session | — |
+| A4 etanah issue-solving | ⏭ no etanah work this session | — |
+| A5 sweep / file sweep | ⏭ no sweep this session | — |
+
+Proposals logged (`core/slips.js --type proposal`): A1 live-compaction proof watch · A1 telemetry rotation so the audit runs on a default heap · A2 quest decision gate (agreed fix with no qa_doc write).
