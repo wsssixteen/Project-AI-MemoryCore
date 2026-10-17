@@ -108,7 +108,7 @@ function card(p, opts) {
     head.push(fs.existsSync(idx) ? '   READ FIRST: ' + idx : '   ⚠️ its index is MISSING: ' + idx + ' — create it first (/project skill).');
     head.push('   It is the index: state now, which file answers which question, hard rules, how to resume. Then open only the file its table names.');
     head.push('   Every bulk change ends with: VERSIONS.md row + PROJECT.md state + ROADMAP.md status, same turn (Domain Expansion checks this with lib/save-rules.js).');
-    if (o.kind === 'compact' || o.kind === 'resume') head.push('   Re-read that index now, before the next step. ' + minedLine(o));
+    if (o.kind === 'compact' || o.kind === 'resume') head.push('   Re-read that index now, before the next step. ' + minedLine(o, 'its decisions record'));
     return head.join('\n') + '\n';
   }
   head.push('   READ FIRST: ' + startPath + '  (then only the file its table names)');
@@ -141,9 +141,10 @@ function card(p, opts) {
   if (text.length > max) text = text.slice(0, max - 60) + '\n…(card cut at ' + max + ' characters: read START.md)\n';
   return text;
 }
-function minedLine(o) {
+function minedLine(o, ledger) {
+  const where = ledger || 'DECISIONS.md';
   if (o.mined === undefined || o.mined === null) return 'His words are copied to history\\words.md at every compaction and at /project save.';
-  return o.mined + ' of his prompt(s) were copied to history\\words.md just before the compaction: read the newest ones now and put any decision in them into DECISIONS.md.';
+  return o.mined + ' of his prompt(s) were copied to history\\words.md just before the compaction: read the newest ones now and put any decision in them into ' + where + '.';
 }
 
 // ---------- quests (read only: the quest save path is unchanged) ----------
