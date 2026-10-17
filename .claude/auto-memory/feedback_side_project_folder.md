@@ -1,42 +1,18 @@
 ---
 name: feedback_side_project_folder
-description: "🚨 every project of ours has its own folder projects/coding-projects/active/<Name>/ with PROJECT.md as the index (+ VERSIONS, ARCHITECTURE, PROOFS, ROADMAP); updated at every bulk change; the memory note is only a pointer"
+description: "🚨 every project of ours has its own folder projects/coding-projects/active/<Name>/ (shape 2: START.md the spec anchor read first, DECISIONS.md the ledger, PROJECT.md, VERSIONS, ARCHITECTURE, PROOFS, ROADMAP); the rules live in the /project skill; an orchestrated project = Fable briefs and checks, Opus 5.5 high child sessions build and report; the memory note is only a pointer"
 metadata:
   node_type: memory
   type: feedback
-  modified: 2026-10-17T08:47:23.655Z
+  modified: 2026-10-17T09:40:00.000Z
   originSessionId: be5b16b4-6a21-45ba-abb5-f619d46b57d4
 ---
 
-🚨 Every project (PymTime, WaRead, db-gateway, protime-plan, any new one) has its OWN structured folder on my side: `projects/coding-projects/active/<Name>/`. The memory note for the project is a pointer to it plus the few always-needed facts, never the store of everything.
+🚨 Every project (Masterline, DawahMap, PymTime, WaRead, db-gateway, protime-plan, any new one) has its OWN structured folder on my side: `projects/coding-projects/active/<Name>/` in the MAIN checkout. The memory note for the project is a pointer to it plus the few always-needed facts, never the store of everything.
 
-| File | Holds |
-|---|---|
-| `project.json` | What makes the folder a project: `name` · `aliases` (the words that mean it in a prompt) · `repo` (its own code repo) · `index` = `START.md` |
-| `START.md` | **Read first, every session and after every compaction** (ruling 2026-10-16): about 5,000 tokens at most: what the project is, its hard rules one line each with their home file, where it stands, the next ticket. Nothing dated older than the current work |
-| `PROJECT.md` | The full index: state now · where everything lives · which file answers which question · hard rules in full · how to resume. Opened from START.md when needed |
-| `history/` | Dated notes and old version rows moved out of the read path word for word (nothing lost, never read at start) |
-| `wayfinder/` | The project's wayfinder maps when the work is planned in phases |
-| `.claude/skills/<name>/` | The project's own skill, the way `/quest` works for tickets: load START.md, resume the open ticket, save at every change (PymTime's skill is the first; DawahMap's is built in its phase 1) |
-| `VERSIONS.md` | One row per version or bulk change: date, commit, what changed, proof |
-| `ARCHITECTURE.md` | Parts, flows, data, screens (with ids), what repairs itself |
-| `PROOFS.md` | How it is tested, harness rules, the mistakes that cost days |
-| `ROADMAP.md` | The asks in みや's own words, the order, open decisions |
-| topic files when needed | Outside systems, design, and so on (PymTime: `PROTIME-AND-GOOGLE.md`, later `DESIGN.md`) |
+**The rules live in the skill, not here (since 2026-10-17):** `.claude/skills/project/SKILL.md` (`/project`): section 1 the folder (shape 2: `START.md` the spec anchor under 20,000 characters, read first every session and after every compaction; `DECISIONS.md` the ledger; `history\words.md` his words copied by script; `reports\<session>.md`), section 2 the commands (`new` · `load` · `decide` · `save` · `drill` · `check`), section 3 the 16 rules, section 4 what comes back after a compaction, section 5 delegated sessions. Loaded every time by `domain/project-load/` (the PROJECT CARD on every mention, after every compaction and resume); saved every time by `lib/save-rules.js` at Domain Expansion. A project whose index is still `PROJECT.md` (shape 1: PymTime, DawahMap) is read from `PROJECT.md` until it opts in (skill section 6). Also in a folder when needed: `history/` (dated notes and old version rows moved out of the read path word for word), `wayfinder/` (the project's maps when the work is planned in phases) and the project's own skill (`/pymtime` is the first; DawahMap's is built in its phase 1).
 
-Rules:
-1. Read `START.md` first in any session on that project, and again after every compaction (`PROJECT.md` until a project has its START.md).
-2. Every bulk change ends with a `VERSIONS.md` row + the `PROJECT.md` state + the `ROADMAP.md` status, in the same pass.
-3. A new durable fact goes into the folder, not into the memory note.
-4. A test script never stays in the session temp folder; it goes into the project's own repo.
-5. Before a compaction or a hand-off to a new session: check the folder is current; that IS the save.
-6. `projects/` is gitignored (OneDrive keeps it); the code history lives in the project's own git repo.
-7. The folder is read and written at the MAIN checkout's full path (`<MemoryCore>\projects\coding-projects\active\<Name>\`). A session folder under `.claude\worktrees\` has no copy or an old one; the memory note gives the full path.
-8. The memory note and the `MEMORY.md` line carry NO state (version, next phase, counts). State lives in `PROJECT.md` section 1 only.
-9. Prove the hand-off: a fresh agent given only "let's continue <Name>" and the memory index must find the folder and name the next step (done for PymTime 2026-10-08; it found 11 gaps).
-10. LOADED every time: `domain/project-load/` (a hook on every prompt) sees a project's name or alias and tells the session to read its `PROJECT.md` first. The folders with a `project.json` are the list.
-11. SAVED every time: at Domain Expansion step 12.7, `lib/save-rules.js` fails the close when the five documents are missing, when the project's own repo has a commit that `VERSIONS.md` does not name or `PROJECT.md` is older than, or when the memory note is not a pointer.
-12. A new project also gets one entry in the `projects` list of `system/INDEX.md` (the map fence) and of `system/save-rules.json`.
+**Orchestrated projects (2026-10-17, Masterline):** みや: *"I would like you to only orchestrate and delegate tasks ... having another session is better compared to only summoning them and losing familiars if it accidentally stopped. ... make sure each sessions keep on saving and pushing to project's folder ... send you the summary properly, not missing anything critical."* · *"I am expecting summoned sessions uses Opus 5.5 High as a default."* · *"Please brief very shortly here, I don't want to waste context & usage here. I'll read the details inside the other Opus 5.5 session."* The Fable session plans, briefs, checks every return against the folder and keeps the ledger; one Opus 5.5 high child session per independent piece builds, saves at every bulk change and writes its report (skill section 5); familiars only for a short read. A report is a claim: check the folder before telling him it is done.
 
-**Why:** 2026-10-08 — PymTime's folder was created 2026-08-26 and left untouched while the app went to v17; everything sat in one memory note. みや: "you did not create like a folder for each project on your side, it should be from now on … MD files you can load when needed. This is aside from our system's main memories."
-**How to apply:** a new project → create the folder + `PROJECT.md` before the first build. An existing side project without one (WaRead, db-gateway, protime-plan, observatory) gets it the next time it is worked on. Reference shape: `projects/coding-projects/active/PymTime/`.
+**Why:** 2026-10-08 — PymTime's folder was created 2026-08-26 and left untouched while the app went to v17; everything sat in one memory note. みや: "you did not create like a folder for each project on your side, it should be from now on … MD files you can load when needed. This is aside from our system's main memories." 2026-10-17 — DawahMap grew past the context window, auto-compaction dropped the goal and the spec, the same mistakes repeated and he had to keep reminding; a stopped familiar loses everything, a session does not.
+**How to apply:** a new project → `/project new <Name>` before the first build, `START.md` filled from his words. An existing side project without a folder (WaRead, db-gateway, protime-plan, observatory) gets one the next time it is worked on. Reference shape: `projects/coding-projects/active/Masterline/` (shape 2); `PymTime/` (shape 1).

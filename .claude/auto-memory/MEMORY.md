@@ -101,8 +101,9 @@
 - [whatsapp-rules](feedback_whatsapp_read_rules.md) — READ ONLY, paraphrase, no sender names, never the desktop app
 - [pymtime](project_pymtime.md) — PymTime clock-in app: read PROJECT.md in the MAIN checkout's projects/coding-projects/active/PymTime/ first (full path in the note); remote skip, colleague handover loop, roadmap
 - [dawahmap](project_dawahmap.md) — DawahMap, his yes/no map from reason to Islam (page "Reason to Islam"): read PROJECT.md in the MAIN checkout's projects/coding-projects/active/DawahMap/ first; it argues FOR Islam from the scholars' verbatim words; content first, design later
+- [masterline](project_masterline.md) — Masterline Integrated Sdn Bhd (HVACR, Kemaman, oil and gas clients) app + website, born 2026-10-17, shape 2: read START.md in the MAIN checkout's projects/coding-projects/active/Masterline/ first
 - [islamic-content-sources](feedback_islamic_content_sources.md) — 🚨 Islamic content: scholars of Islam in their verbatim words, never Western academia or a neutral survey; "fair" is not conceding; every quote found on its page first
-- [side-project-folder](feedback_side_project_folder.md) — 🚨 every project gets projects/coding-projects/active/<Name>/ (PROJECT.md index + VERSIONS, ARCHITECTURE, PROOFS, ROADMAP) in the MAIN checkout; update at every bulk change; memory = pointer, no state
+- [side-project-folder](feedback_side_project_folder.md) — 🚨 every project gets projects/coding-projects/active/<Name>/ in the MAIN checkout (shape 2: START.md first, DECISIONS.md ledger); rules in the /project skill; orchestrated project = Fable briefs and checks, Opus 5.5 high child sessions build and report; memory = pointer, no state
 - [arabic-review](project_arabic_review.md) — /arabic daily vocab review, seconds to 2 minutes in chat; meanings are my job
 - [art-and-media](feedback_verify_generated_art_externally.md) — external art check; samples are the spec; MAS animation; Drive video download
 - [parked-projects](project_etanah_organize.md) — etanah-organize, aunt slides, held #255773 SPOC handoff
