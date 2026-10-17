@@ -53,7 +53,7 @@ Scout/Recon overlap is **intentional redundancy** — Scout = parallel-fast (mul
 > Generated from `.claude/settings.json` by `system/sync-hook-catalog.js` — **do not hand-edit between the markers.** This is the canonical list the `system-audit` boot check reads, so it can never drift again (it caused the ~month-long DOC-DRIFT false alarm fixed 2026-06-19, QA-266215 session). The rich §3.1–§3.7 tables below stay hand-written for semantic detail (Owner / Action / why-fragile) the registry can't carry — they are commentary, not the source of truth for "what is registered." Re-run `node system/sync-hook-catalog.js` after any settings.json hook change; `--check` exits 1 if stale.
 
 <!-- HOOK-REGISTRY:AUTO-START -->
-_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 139 hook registrations across 5 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
+_AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` — do NOT hand-edit. 147 hook registrations across 6 events. Re-run after any settings.json hook change (`node system/sync-hook-catalog.js`)._
 
 | Event | Matcher | Hook | On disk? |
 |---|---|---|---|
@@ -61,6 +61,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | SessionStart | — | `boot-load-verification.js` | ✓ |
 | SessionStart | — | `claude-md-watch.check.hook.js` | ✓ |
 | SessionStart | — | `hook-syntax-check.hook.js` | ✓ |
+| SessionStart | compact|resume | `project-load.resume.hook.js` | ✓ |
 | SessionStart | — | `system-audit.js` | ✓ |
 | SessionStart | — | `worktree-cleanup-boot.hook.js` | ✓ |
 | UserPromptSubmit | — | `adhoc-paste-detector.check.hook.js` | ✓ |
@@ -107,6 +108,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | UserPromptSubmit | — | `TurnChecklistGate.js` | ✓ |
 | UserPromptSubmit | — | `user-side-guardrail.js` | ✓ |
 | UserPromptSubmit | — | `word-ui-vocab-gate.js` | ✓ |
+| PreToolUse | Write|Edit|PowerShell|Bash|Agent | `adhoc-brief-first.check.hook.js` | ✓ |
 | PreToolUse | Agent|Workflow | `agent-spend-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash | `branch-at-apply-gate.js` | ✓ |
 | PreToolUse | — | `branch-guard.check.hook.js` | ✓ |
@@ -135,11 +137,14 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | PreToolUse | Bash|PowerShell | `probe-local-only-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash|PowerShell | `quest-exists-gate.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `quest-phase-gate.gate.hook.js` | ✓ |
+| PreToolUse | AskUserQuestion | `question-self-contained.check.hook.js` | ✓ |
 | PreToolUse | mcp__claude-in-chrome__javascript_tool|mcp__claude-in-chrome__computer|mcp__claude-in-chrome__browser_batch|mcp__Claude_Browser__javascript_tool|mcp__Claude_Browser__computer|mcp__Claude_Browser__browser_batch | `redmine-write-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash|PowerShell | `redmine-write-gate.check.hook.js` | ✓ |
 | PreToolUse | Bash | `release-mlk-plp-push-gate.check.hook.js` | ✓ |
 | PreToolUse | PowerShell | `release-mlk-plp-push-gate.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `release-mlk-plp-scope-gate.check.hook.js` | ✓ |
+| PreToolUse | mcp__ccd_session__spawn_task | `spawn-task-folder-guard.check.hook.js` | ✓ |
+| PreToolUse | mcp__postgres-mlkstg1-pg__.* | `stg1-block.check.hook.js` | ✓ |
 | PreToolUse | Edit|Write | `system-edit-gate.js (bundle pretool-editwrite-gates)` | ✓ |
 | PostToolUse | Edit|Write | `bpmn-check.check.hook.js` | ✓ |
 | PostToolUse | Grep | `grep-rubric-gate.js` | ✓ |
@@ -147,6 +152,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | PostToolUse | Skill | `skill-invocation-log.check.hook.js` | ✓ |
 | PostToolUse | — | `slip-count-tracker.js` | ✓ |
 | PostToolUse | Task|Agent|Workflow | `spawn-telemetry.check.hook.js` | ✓ |
+| Stop | — | `adhoc-brief-first.check.hook.js (bundle stop-claim-integrity)` | ✓ |
 | Stop | — | `ask-back-gate.js` | ✓ |
 | Stop | — | `atlas-full-check.check.hook.js` | ✓ |
 | Stop | — | `atlas-ship-gate.check.hook.js` | ✓ |
@@ -178,6 +184,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | Stop | — | `patch-close-shape.check.hook.js` | ✓ |
 | Stop | — | `patch-script-gate.discipline.hook.js` | ✓ |
 | Stop | — | `predicate-box.discipline.hook.js` | ✓ |
+| Stop | — | `project-load.save.hook.js (bundle stop-claim-integrity)` | ✓ |
 | Stop | — | `quest-context-load-gate.js` | ✓ |
 | Stop | — | `quest-deferrals-gate.discipline.hook.js` | ✓ |
 | Stop | — | `quest-doc-freshness.discipline.hook.js` | ✓ |
@@ -196,6 +203,7 @@ _AUTO-GENERATED from `.claude/settings.json` by `system/sync-hook-catalog.js` �
 | Stop | — | `turn-ledger.check.hook.js` | ✓ |
 | Stop | — | `verify-basis-gate.discipline.hook.js (bundle stop-claim-integrity)` | ✓ |
 | Stop | — | `veritas-claim-gate.js (bundle stop-claim-integrity)` | ✓ |
+| PreCompact | — | `project-load.precompact.hook.js` | ✓ |
 <!-- HOOK-REGISTRY:AUTO-END -->
 
 ### 3.1 SessionStart (10 registrations since 2026-10-05; the live list is the generated table in §3.0 above)
@@ -678,6 +686,7 @@ Every commit that updates this file appends a row here.
 | 2026-10-05 | **Structure rulings + Install + boot batch 1** (per みや, boot/structure audit 2026-10-02→05). (1) `system/INDEX.md` is THE one map: six kinds of parts (Rules · Workflows · Features · Memory · Kernel · Projects) with what "installed" means for each + a machine-read fence; `lib/folder-structure.js map` proves it against the disk (eval 15/15); `FOLDER-STRUCTURE.md`, CLAUDE.md v1.78 and the system-design skill v3.0 point at it. (2) `core/forge.js install hook <.claude/hooks/x.js>` NEW — brings an existing loose hook into `domain/<name>/` unchanged (refuses on a location-dependent `__dirname` use or a code referencer; re-points settings.json + bundle manifests; README goal/retention/footprint + NUKE-MARKER; full rollback; eval 39/39). `lib/hook-runtime.js --wrap` takes an optional telemetry-name argument so an installed hook keeps its fire history (eval 12/12). (3) INSTALLED: `hook-syntax-check` (then v2: mtime+size cache, one `git ls-files`, wrapped targets + bundle children now covered — 138 files, was ~90; eval 17/17) · `worktree-cleanup-boot` (then v2.0: launcher + detached background run, last report shown at boot, per-checkout lock; eval 62/62). (4) SessionStart registrations removed: `unmerged-release-boot` (blocking twin stays in `release-prep.js branch`) · `arabic-nudge` (runs on `/arabic` only) · `knowledge-schema-audit` boot copy (write-time registration kept). SessionStart 13 → 10 hooks; measured one-after-another 61.4 s → 12.7 s warm. NOT yet done (next batch): `system-audit`, `open-quest-surfacer`, `boot-required-read-gate`, the two check-triggers, `adhoc-lifecycle`, `boot-load-verification`; the other 53 loose hooks; the 52 skills without a Feature folder; legacy `Feature/`. | みや: "proceed … eval them and test them … top to bottom … start using the term Install" |
 | 2026-10-08 | Hook added: `project-load` (UserPromptSubmit, `domain/project-load/`; a prompt that names a project folder is told to read its `PROJECT.md` first). §3.0 registry regenerated by `sync-hook-catalog.js` (139 registrations; `save-quest-gate` now listed too). `domain-expansion-trigger.js` v1.2: the injected text bans skipping the ritual itself. No hook removed. | みや 2026-10-08: "make sure everything WILL be loaded every single time we load a project" + the skipped Domain Expansion |
 | 2026-10-14 | **Tools — the seventh kind of part** (written 2026-10-06, re-based on main 2026-10-14). `system/INDEX.md` map gains the Tools row + fence key + decisions 9–12; NEW `system/tools.json` = the Tool registry (32 rows: what it answers · how to call · home · groups · state scope · footprint · usage · status; 18 live · 11 rare · 3 unused, from a 357-session transcript scan 2026-08-06→2026-10-06) + a list of 9 scripts never run in that window. `lib/folder-structure.js map` reads the new kind with no code change (kinds are generic). system-design skill v3.2 + CLAUDE.md v1.88 point at it. NEW script `lib/tool-registry.js` (via `core/forge.js new script`, on demand, no hook): `check` · `list` · `for <group>`; test `lib/tool-registry.eval.js` 33/33; real registry 32 rows · 0 problems against the main checkout; log `system/telemetry/tool-registry.jsonl`. No hook added, moved or removed; ONE hook text refined: `etanah-intake-gate` LOOKUP lane gains two lines (pick the Tool with `node lib/tool-registry.js for <group>`; codegraph search for "where is X", text search for callers of a service method), its two pinned outputs re-captured, eval 54/54. NOT built: the usage refresh from the turn ledger, a router that picks the Tool by itself, any file move. | みや: "creating another part of our system called Tool. A different part from Workflows & Features" |
+| 2026-10-17 | **The project system** (Feature `domain/project-load` v2; session project-system, Masterline brief). NEW hooks: `project-load.resume.hook.js` (SessionStart, matcher `compact|resume`: the PROJECT CARD cut from START.md and a QUEST CARD from the qa_doc Resume Point, under 9,200 characters) · `project-load.precompact.hook.js` (PreCompact, first registration of this event: copies his prompts word for word into `history\words.md`) · `project-load.save.hook.js` (Stop, child of bundle `stop-claim-integrity`, no new Stop registration: BLOCKS a stated decision with no DECISIONS.md write this turn, and a delegated report that is missing, lacks a heading or is older than the session's last change). CHANGED: `project-load.check.hook.js` prints the card for a shape-2 project, binds the session (and its report) in `log.jsonl`, falls back to the card on the next prompt when the SessionStart card did not arrive. NEW module `domain/project-load/project.js` (+ CLI) and `templates/`; NEW skill `.claude/skills/project/` (the folder rules moved here from auto-memory). `lib/save-rules.js` + `system/save-rules.json` v3: checks `project-shape2` and `project-report-current`. Evals: `domain/project-load/eval.js` 50/50, `project-load.eval.js` 30/30. Quest save path unchanged. | みや 2026-10-17: "a proper project management for you to be able to survive autocompactions" |
 
 ## 10. Open architectural questions (deferred)
 

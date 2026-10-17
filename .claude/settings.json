@@ -31,6 +31,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\adhoc-lifecycle\\\\adhoc-lifecycle.check.hook.js\""
           }
         ]
+      },
+      {
+        "matcher": "compact|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\project-load\\project-load.resume.hook.js\""
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
@@ -631,6 +640,16 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\skill-invocation-log\\\\skill-invocation-log.check.hook.js\""
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\project-load\\project-load.precompact.hook.js\""
           }
         ]
       }
