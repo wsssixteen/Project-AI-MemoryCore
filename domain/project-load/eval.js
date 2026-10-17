@@ -26,6 +26,7 @@ const SCENARIOS = [
   ['Compaction in a session working a ticket, no project', 'fixture-added (E8: the quest card with its Resume Point)'],
   ['A qa_doc without a "0. Resume Point" section', 'fixture-added (E8b: the head of the doc)'],
   ['Transcript holds tool results, skill expansions (isMeta), task notifications, peer messages, compaction summaries', 'fixture-added (E9: none of them copied as his words)'],
+  ['His ruling given only in a popup answer (AskUserQuestion)', 'fixture-added (E9: copied as his popup answer, question and answer)'],
   ['A prompt carries a system-reminder block or a slash command', 'fixture-added (E9: reminder stripped, the command and its arguments kept)'],
   ['PreCompact runs twice on the same transcript', 'fixture-added (E9b: nothing copied twice)'],
   ['The SessionStart card does not arrive after a compaction', 'fixture-added (E12: the next prompt prints it, once)'],
@@ -36,8 +37,8 @@ const SCENARIOS = [
   ['A "Decisions made: none" section in a report-shaped reply', 'fixture-added (E20b: no block)'],
   ['A delegated report that is missing, lacks a heading, or is older than the last change', 'fixture-added (E19 a/b/c: BLOCK; current report passes)'],
   ['Stdin that is not JSON, for every hook', 'fixture-added (E21: exit 0, silent)'],
-  ['Huge START.md (60,000 characters)', 'fixture-added (E22: card stays under 8,500 characters, says it was cut)'],
-  ['Two projects and two quests bound in one session', 'fixture-added (E23: one SessionStart output under 9,200 characters)'],
+  ['Huge START.md (60,000 characters)', 'fixture-added (E22: card stays under 9,300 characters, says it was cut)'],
+  ['Two projects and two quests bound in one session', 'fixture-added (E23: one SessionStart output under 9,500 characters)'],
   ['A table cell with a pipe in a decision written by the CLI', 'fixture-added (E24: escaped, row stays one row)'],
   ['A new project from the templates', 'fixture-added (E25: passes the shape-2 check and gets a card at once)'],
   ['save-rules at Domain Expansion with a stale report in the Stop log', 'fixture-added (E26: FAIL row, PASS once the report is rewritten)'],
@@ -87,6 +88,7 @@ const L = {
   note: (minAgo) => JSON.stringify({ type: 'user', uuid: 'u' + (++u), timestamp: iso(minAgo), sessionId: 'S', turnOrigin: 'task_notification', message: { role: 'user', content: '<task-notification> masterline agent done </task-notification>' } }),
   peer: (minAgo) => JSON.stringify({ type: 'user', uuid: 'u' + (++u), timestamp: iso(minAgo), sessionId: 'S', turnOrigin: 'peer', isMeta: true, message: { role: 'user', content: 'Another Claude session sent a message: masterline' } }),
   summary: (text, minAgo) => JSON.stringify({ type: 'user', uuid: 'u' + (++u), timestamp: iso(minAgo), sessionId: 'S', isCompactSummary: true, isVisibleInTranscriptOnly: true, turnOrigin: 'human', message: { role: 'user', content: 'This session is being continued from a previous conversation that ran out of context. ' + text } }),
+  popup: (q, a, minAgo) => JSON.stringify({ type: 'user', uuid: 'u' + (++u), timestamp: iso(minAgo), sessionId: 'S', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: 'ask1', content: 'The user answered: ' + q + '=' + a }] }, toolUseResult: { questions: [{ question: q }], answers: { [q]: a } } }),
   assistant: (text, minAgo) => JSON.stringify({ type: 'assistant', uuid: 'a' + (++u), timestamp: iso(minAgo), sessionId: 'S', message: { role: 'assistant', content: [{ type: 'text', text }] } }),
 };
 function transcript(t, lines) { const f = path.join(t.main, 'tx-' + (++seq) + '.jsonl'); fs.writeFileSync(f, lines.join('\n') + '\n'); return f; }
@@ -95,7 +97,7 @@ function age(file, minAgo) { const d = new Date(Date.now() - minAgo * 60000); fs
 // ── Requirement 2: load fast on mention ──
 let t = tree();
 let r = run(HOOK.prompt, t, { session_id: 's1', prompt: "let's continue Masterline" });
-check('E1 req 2: naming Masterline prints its card: goal, spec rows, hard rules, state, next step, open decisions, last decision, the START.md path', r.status === 0 && /PROJECT CARD/.test(r.out) && /build the reminder app/.test(r.out) && /S2 \| "documents for the engineers"/.test(r.out) && /Blue first, from the logo/.test(r.out) && /0 discovery/.test(r.out) && /Show him the module table/.test(r.out) && /Which modules/.test(r.out) && /Reminder module first/.test(r.out) && r.out.includes(path.join(t.ml, 'START.md')) && r.out.length < 8500, r.out.slice(0, 400));
+check('E1 req 2: naming Masterline prints its card: goal, spec rows, hard rules, state, next step, open decisions, last decision, the START.md path', r.status === 0 && /PROJECT CARD/.test(r.out) && /build the reminder app/.test(r.out) && /S2 \| "documents for the engineers"/.test(r.out) && /Blue first, from the logo/.test(r.out) && /0 discovery/.test(r.out) && /Show him the module table/.test(r.out) && /Which modules/.test(r.out) && /Reminder module first/.test(r.out) && r.out.includes(path.join(t.ml, 'START.md')) && r.out.length < 9300, r.out.slice(0, 400));
 check('E1b the fire binds the session in the log (card:true, shape 2)', rows(t).some(x => x.action === 'fired' && x.session === 's1' && x.project === 'Masterline' && x.card === true && x.shape === 2));
 r = run(HOOK.prompt, t, { session_id: 's1', prompt: 'masterline again' });
 check('E2 a second mention in the same session (inside the re-arm time) is silent', r.status === 0 && r.out === '', r.out.slice(0, 200));
@@ -114,7 +116,7 @@ check('E4 a shape-1 project keeps the 2026-10-08 pointer text (no card)', /PymTi
 t = tree(); run(HOOK.prompt, t, { session_id: 'c1', prompt: 'Masterline please' });
 let tx = transcript(t, [L.human('Masterline please', 30), L.assistant('ok', 29), L.human('we go with the light sample for the app', 10)]);
 r = run(HOOK.resume, t, { session_id: 'c1', source: 'compact', transcript_path: tx });
-check('E5 req 1 (compaction drill): SessionStart compact prints the card marked COMPACTED, under 9,200 characters, and logs resumed', r.status === 0 && /just COMPACTED/.test(r.out) && /The summary is not the record/.test(r.out) && /── HARD RULES ──/.test(r.out) && r.out.length < 9200 && rows(t).some(x => x.action === 'resumed' && x.session === 'c1' && x.source === 'compact'), r.out.slice(0, 300));
+check('E5 req 1 (compaction drill): SessionStart compact prints the card marked COMPACTED, under 9,500 characters, and logs resumed', r.status === 0 && /just COMPACTED/.test(r.out) && /The summary is not the record/.test(r.out) && /── HARD RULES ──/.test(r.out) && r.out.length < 9500 && rows(t).some(x => x.action === 'resumed' && x.session === 'c1' && x.source === 'compact'), r.out.slice(0, 300));
 r = run(HOOK.resume, t, { session_id: 'c1', source: 'resume', transcript_path: tx });
 check('E5b SessionStart resume prints the card marked RESUMED', /was RESUMED/.test(r.out));
 r = run(HOOK.resume, t, { session_id: 'c1', source: 'startup', transcript_path: tx });
@@ -130,15 +132,15 @@ check('E8b a qa_doc with no Resume Point: the head of the doc instead', /QUEST C
 
 // ── his words out of the transcript ──
 t = tree(); run(HOOK.prompt, t, { session_id: 'w1', prompt: 'Masterline: start' });
-tx = transcript(t, [L.human('Masterline: start', 1), L.tool(1), L.meta('skill body text masterline', 1), L.note(1), L.peer(1), L.human('<system-reminder>noise masterline</system-reminder>Use blue as the main colour.\nSecond line stays.', 1), L.human('<command-name>/goal</command-name> <command-message>goal</command-message> <command-args>finish the reminder module</command-args>', 1), L.summary('old summary text', 1), L.assistant('we decided nothing', 1)]);
+tx = transcript(t, [L.human('Masterline: start', 1), L.tool(1), L.meta('skill body text masterline', 1), L.note(1), L.peer(1), L.human('<system-reminder>noise masterline</system-reminder>Use blue as the main colour.\nSecond line stays.', 1), L.human('<command-name>/goal</command-name> <command-message>goal</command-message> <command-args>finish the reminder module</command-args>', 1), L.summary('old summary text', 1), L.popup('Which sample for the app?', 'The light one, and add a dark toggle later', 1), L.assistant('we decided nothing', 1)]);
 r = run(HOOK.pre, t, { session_id: 'w1', transcript_path: tx, trigger: 'auto' });
 const words = fs.readFileSync(path.join(t.ml, 'history', 'words.md'), 'utf8');
-check('E9 req 1 (mining): PreCompact copies exactly his 3 prompts word for word (reminder stripped, slash command kept); no tool result, skill body, notification, peer message or summary', r.status === 0 && (words.match(/^### /gm) || []).length === 3 && /> Use blue as the main colour\.\n> Second line stays\./.test(words) && /> \/goal finish the reminder module/.test(words) && !/noise|skill body|task-notification|Another Claude|old summary|tool output/.test(words), words.slice(0, 600));
-check('E9a the compact row records how many were copied', rows(t).some(x => x.action === 'compact' && x.project === 'Masterline' && x.mined === 3 && x.trigger === 'auto'));
+check('E9 req 1 (mining): PreCompact copies exactly his 3 prompts and his 1 popup answer word for word (reminder stripped, slash command kept); no tool result, skill body, notification, peer message or summary', r.status === 0 && (words.match(/^### /gm) || []).length === 4 && /his popup answer/.test(words) && /> A: The light one, and add a dark toggle later/.test(words) && /> Use blue as the main colour\.\n> Second line stays\./.test(words) && /> \/goal finish the reminder module/.test(words) && !/noise|skill body|task-notification|Another Claude|old summary|tool output/.test(words), words.slice(0, 600));
+check('E9a the compact row records how many were copied', rows(t).some(x => x.action === 'compact' && x.project === 'Masterline' && x.mined === 4 && x.trigger === 'auto'));
 run(HOOK.pre, t, { session_id: 'w1', transcript_path: tx, trigger: 'manual' });
-check('E9b a second PreCompact on the same transcript copies nothing twice', (fs.readFileSync(path.join(t.ml, 'history', 'words.md'), 'utf8').match(/^### /gm) || []).length === 3);
+check('E9b a second PreCompact on the same transcript copies nothing twice', (fs.readFileSync(path.join(t.ml, 'history', 'words.md'), 'utf8').match(/^### /gm) || []).length === 4);
 r = run(HOOK.resume, t, { session_id: 'w1', source: 'compact', transcript_path: tx });
-check('E10 the compact card says how many of his prompts were copied', /0 of his prompt\(s\) were copied|3 of his prompt\(s\) were copied/.test(r.out), (r.out.match(/\d+ of his prompt[^\n]*/) || [''])[0]);
+check('E10 the compact card says how many of his prompts were copied', /4 of his prompt\(s\) were copied/.test(r.out), (r.out.match(/\d+ of his prompt[^\n]*/) || [''])[0]);
 const comp = path.join(t.ml, 'history', 'compactions.md');
 check('E11 the compaction summary is copied once into history\\compactions.md', fs.existsSync(comp) && /old summary text/.test(fs.readFileSync(comp, 'utf8')));
 run(HOOK.resume, t, { session_id: 'w1', source: 'compact', transcript_path: tx });
@@ -201,11 +203,11 @@ const bad = Object.values(HOOK).map(h => run(h, t, 'this is not json masterline'
 check('E21 stdin that is not JSON: every hook exits 0 and prints nothing', bad.every(x => x.status === 0 && x.out === '' && x.err === ''), bad.map(x => x.status).join(','));
 t = tree({ start: START_OK.replace(/X/g, 'Masterline').replace('| S2 |', '| S2 | ' + 'long words '.repeat(5000) + ' |') });
 r = run(HOOK.prompt, t, { session_id: 'h1', prompt: 'masterline' });
-check('E22 a 60,000-character START.md: the card stays under 8,500 characters and says it was cut', r.out.length < 8500 && /cut, read the file|card cut/.test(r.out), 'len=' + r.out.length);
+check('E22 a 60,000-character START.md: the card stays under 9,300 characters and says it was cut', r.out.length < 9300 && /cut, read the file|card cut/.test(r.out), 'len=' + r.out.length);
 t = tree({ second: true }); run(HOOK.prompt, t, { session_id: 'm1', prompt: 'masterline and waread' });
 tx = transcript(t, [L.human('masterline and waread, plus 285159 and QA-285171', 10)]);
 r = run(HOOK.resume, t, { session_id: 'm1', source: 'compact', transcript_path: tx });
-check('E23 two projects + two quests in one session: one output under 9,200 characters with all four cards', r.out.length < 9200 && /Masterline — PROJECT CARD/.test(r.out) && /WaRead — PROJECT CARD/.test(r.out) && /QA-285159/.test(r.out) && /QA-285171/.test(r.out), 'len=' + r.out.length);
+check('E23 two projects + two quests in one session: one output under 9,500 characters with all four cards', r.out.length < 9500 && /Masterline — PROJECT CARD/.test(r.out) && /WaRead — PROJECT CARD/.test(r.out) && /QA-285159/.test(r.out) && /QA-285171/.test(r.out), 'len=' + r.out.length);
 
 // ── CLI: decide · new · check ──
 t = tree();
@@ -246,7 +248,7 @@ check('R4 UserPromptSubmit still registers project-load once', cmds('UserPromptS
   else {
     const out = spawnSync(process.execPath, [CLI, 'check', 'Masterline'], { encoding: 'utf8', env: Object.assign({}, process.env, { CLAUDE_PROJECT_DIR: ROOT }) });
     const crd = spawnSync(process.execPath, [CLI, 'card', 'Masterline'], { encoding: 'utf8', env: Object.assign({}, process.env, { CLAUDE_PROJECT_DIR: ROOT }) });
-    check('R5 req 4 + 6: the real Masterline is shape 2, passes the check, and its card carries his goal words and spec row S8 whole', out.status === 0 && /core idea from the founder and CEO/.test(crd.stdout) && /\| S8 \|/.test(crd.stdout) && crd.stdout.length < 8500, out.stdout + ' len=' + crd.stdout.length);
+    check('R5 req 4 + 6: the real Masterline is shape 2, passes the check, and its card carries his goal words and spec row S8 whole', out.status === 0 && /core idea from the founder and CEO/.test(crd.stdout) && /\| S8 \|/.test(crd.stdout) && crd.stdout.length < 9300, out.stdout + ' len=' + crd.stdout.length);
   }
 }
 const skill = path.join(ROOT, '.claude', 'skills', 'project', 'SKILL.md');

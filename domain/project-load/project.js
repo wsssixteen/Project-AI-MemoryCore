@@ -27,8 +27,8 @@ const LOG = process.env.PROJECT_LOAD_LOG || path.join(MAIN, 'domain', 'project-l
 const ACTIVE_TXT = process.env.PROJECT_LOAD_ACTIVE_TXT || path.join(MAIN, 'quest', 'active.txt');
 const TEMPLATES = path.join(__dirname, 'templates');
 
-const CARD_MAX = 8500;          // one project's card; the harness cuts hook output over 10,000 characters to a 2,000-char preview
-const SESSION_MAX = 9200;       // everything one SessionStart prints
+const CARD_MAX = 9300;          // one project's card; the harness cuts hook output over 10,000 characters to a 2,000-char preview
+const SESSION_MAX = 9500;       // everything one SessionStart prints (the cut is per hook output, at 10,000)
 const START_MAX = 20000;        // START.md stays short (about 5,000 tokens, his ruling 2026-10-16)
 const START_HEADINGS = ['Goal', 'Spec', 'Hard rules', 'State now', 'Next step', 'Open decisions'];
 const REPORT_HEADINGS = [['What changed', /^#+\s*(\d+\.\s*)?What changed/im], ['Decisions made', /^#+\s*(\d+\.\s*)?Decisions made/im],
@@ -118,10 +118,11 @@ function card(p, opts) {
   const map = sections(start);
   const caps = { 'goal': 0.15, 'spec': 0.24, 'hard rules': 0.22, 'state now': 0.10, 'next step': 0.07, 'open decisions': 0.08 };
   const dec = lastDecisions(p, 5);
-  const budget = max - head.join('\n').length - foot.length - 260 - Math.min(900, dec.reduce((n, r) => n + Math.min(240, r.length) + 1, 0));
+  const budget = max - head.join('\n').length - foot.length - 260 - Math.min(2100, dec.reduce((n, r) => n + Math.min(420, r.length) + 1, 0));
   // Each section gets its share; what a short section leaves unused passes to the sections that would be cut.
   const texts = START_HEADINGS.map(h => section(map, h));
-  const alloc = START_HEADINGS.map(h => Math.floor(budget * caps[h.toLowerCase()]));
+  const capSum = Object.values(caps).reduce((x, y) => x + y, 0);
+  const alloc = START_HEADINGS.map(h => Math.floor(budget * caps[h.toLowerCase()] / capSum));
   for (let pass = 0; pass < 4; pass++) {
     let spare = 0; const want = [];
     texts.forEach((s, i) => { const len = s === null ? 0 : s.length; if (len < alloc[i]) { spare += alloc[i] - len; alloc[i] = len; } else if (len > alloc[i]) want.push(i); });
@@ -135,7 +136,7 @@ function card(p, opts) {
     body.push(texts[i] === null ? '   (START.md has no "' + h + '" section)' : cut(texts[i], Math.max(alloc[i], 120)));
   });
   body.push('── LAST DECISIONS (DECISIONS.md, newest last) ──');
-  body.push(dec.length ? dec.map(r => cut(r, 240)).join('\n') : '   (none yet)');
+  body.push(dec.length ? dec.map(r => cut(r, 420)).join('\n') : '   (none yet)');
   let text = head.join('\n') + '\n' + body.join('\n') + '\n' + foot + '\n';
   if (text.length > max) text = text.slice(0, max - 60) + '\n…(card cut at ' + max + ' characters: read START.md)\n';
   return text;
@@ -173,6 +174,12 @@ function questCard(q, max) {
 // ---------- the log (one row per fire; the session→project binding lives here) ----------
 function logRows() { const t = read(LOG); if (!t) return []; const out = []; for (const l of t.split('\n').slice(-4000)) { try { const r = JSON.parse(l); if (r && r.ts) out.push(r); } catch (_) {} } return out; }
 function logAppend(row) { try { fs.mkdirSync(path.dirname(LOG), { recursive: true }); fs.appendFileSync(LOG, JSON.stringify(Object.assign({ ts: new Date().toISOString() }, row)) + '\n'); } catch (_) {} }
+// prompts copied since this session last got a card for the project (several compactions can come between two cards)
+function minedSince(session, project) {
+  let n = 0;
+  for (const r of logRows()) { if (r.session !== session || r.project !== project) continue; if (r.action === 'resumed') n = 0; else if (r.action === 'compact') n += Number(r.mined) || 0; }
+  return n;
+}
 function bindings(session) {
   const out = new Map();
   for (const r of logRows()) if (r.session === session && r.project && (r.action === 'fired' || r.action === 'bound')) {
@@ -209,6 +216,14 @@ function humanPrompts(file) {
     if (!l || l[0] !== '{') continue;
     let o; try { o = JSON.parse(l); } catch (_) { continue; }
     if (o.type !== 'user' || o.isMeta || o.isCompactSummary || o.isSidechain) continue;
+    // His answers in a popup (AskUserQuestion) are his words too: a ruling often lives only there (DawahMap 2026-10-11..13).
+    const tur = o.toolUseResult;
+    if (tur && tur.answers && typeof tur.answers === 'object' && !Array.isArray(tur.answers)) {
+      const notes = tur.annotations && typeof tur.annotations === 'object' ? tur.annotations : {};
+      const qa = Object.keys(tur.answers).map(q => 'Q: ' + q + '\nA: ' + tur.answers[q] + (notes[q] && notes[q].notes ? '\nNote: ' + notes[q].notes : '')).join('\n\n');
+      if (qa) out.push({ uuid: o.uuid || '', ts: o.timestamp || '', origin: 'popup', session: o.sessionId || '', text: qa });
+      continue;
+    }
     const origin = o.turnOrigin || o.promptSource || '';
     if (origin && !/^(human|sdk|user|cli)$/.test(origin)) continue;
     const text = entryText(o);
@@ -270,7 +285,7 @@ function mineWords(p, file, opts) {
   const parts = [];
   if (!have) parts.push('# ' + p.name + ' — his words, copied from the session transcripts by script\n\n> Never edited by hand. Newest at the bottom. Written by `node domain/project-load/project.js words` (run at every compaction by the PreCompact hook, and at /project save). A decision found here goes into DECISIONS.md.\n');
   for (const x of fresh) {
-    parts.push('\n### ' + (x.ts ? stamp(Date.parse(x.ts)) : '?') + ' · ' + (x.origin === 'sdk' ? 'brief from another session' : 'typed by him') + ' · session ' + String(x.session).slice(0, 8) + ' <!-- uuid:' + x.uuid + ' -->\n');
+    parts.push('\n### ' + (x.ts ? stamp(Date.parse(x.ts)) : '?') + ' · ' + (x.origin === 'sdk' ? 'brief from another session' : x.origin === 'popup' ? 'his popup answer' : 'typed by him') + ' · session ' + String(x.session).slice(0, 8) + ' <!-- uuid:' + x.uuid + ' -->\n');
     parts.push(x.text.split(/\r?\n/).map(l => '> ' + l).join('\n') + '\n');
   }
   try { fs.mkdirSync(hist, { recursive: true }); fs.appendFileSync(out, parts.join('')); } catch (e) { return { added: 0, file: out, error: e.message }; }
@@ -365,7 +380,7 @@ function scaffold(name, opts) {
   return written;
 }
 
-module.exports = { MAIN, ACTIVE, LOG, ACTIVE_TXT, CARD_MAX, SESSION_MAX, START_HEADINGS, REPORT_HEADINGS, listProjects, findProject, namedIn, mainRootOf, sections, section, card, questBlocks, questCard, questsNamed, logRows, logAppend, bindings, humanPrompts, lastSummary, turnStartMs, sessionStartMs, mineWords, saveSummary, decide, newestChange, reportMissing, checkShape2, reportVerdicts, scaffold, read, mtime };
+module.exports = { MAIN, ACTIVE, LOG, ACTIVE_TXT, CARD_MAX, SESSION_MAX, START_HEADINGS, REPORT_HEADINGS, listProjects, findProject, namedIn, mainRootOf, sections, section, card, questBlocks, questCard, questsNamed, logRows, logAppend, bindings, minedSince, humanPrompts, lastSummary, turnStartMs, sessionStartMs, mineWords, saveSummary, decide, newestChange, reportMissing, checkShape2, reportVerdicts, scaffold, read, mtime };
 
 // ---------- CLI ----------
 if (require.main === module) {
