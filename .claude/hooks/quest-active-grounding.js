@@ -85,6 +85,7 @@ function isPastTesting(block) {
 }
 
 function main() {
+  try { if (!require(path.join(__dirname, '..', '..', 'lib', 'session-scope.js')).wantsEtanah(undefined, 'quest-active-grounding')) return; } catch (_) { /* DawahMap prompt, no etanah signal: silent; check unusable: print as before */ }
   const text = safeRead(ACTIVE_TXT);
   if (!text) return; // silent on read failure (don't noise the prompt)
 
