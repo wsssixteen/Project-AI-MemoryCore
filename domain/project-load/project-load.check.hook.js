@@ -69,7 +69,7 @@ function decide(data, rows, now) {
     const compacted = last(['compact']);
     if (!compacted || last(['resumed', 'fired']) > compacted) continue;
     const p = projects.find(x => x.name === b.project); if (!p) continue;
-    const mined = (mine.filter(r => r.project === b.project && r.action === 'compact').pop() || {}).mined;
+    const mined = P.minedSince(session, b.project);
     out.push('⚠️ project-load fallback: the SessionStart card did not arrive after the compaction; here it is.\n' + P.card(p, { kind: 'compact', report: b.report, mined }));
     log.push({ action: 'resumed', via: 'prompt-fallback', session, project: p.name });
   }

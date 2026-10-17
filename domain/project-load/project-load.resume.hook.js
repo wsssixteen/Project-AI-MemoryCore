@@ -40,7 +40,7 @@ function targets(data) {
   }
   const quests = tp ? P.questsNamed(tp, P.questBlocks()) : [];
   const mined = {};
-  for (const r of P.logRows()) if (r.session === session && r.action === 'compact' && r.project) mined[r.project] = r.mined;
+  for (const p of projects) mined[p.name] = P.minedSince(session, p.name);
   return { session, projects: projects.slice(0, 2), quests: quests.slice(0, 2), reports, mined };
 }
 

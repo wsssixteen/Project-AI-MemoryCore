@@ -210,4 +210,59 @@ See `system/principles.md` for the full 68-principle classified inventory.
 
 ---
 
+## 12 · Projects — how one survives compaction (added 2026-10-17, the project system)
+
+A personal or outside project (Masterline, DawahMap, PymTime …) lives in its own folder. The folder is the record; my memory and the compaction summary are not.
+
+### 12a · How a project starts
+
+| You say | What happens |
+|---|---|
+| "new project Kedai" (or `/project new`) | `node domain/project-load/project.js new Kedai --aliases "kedai app"` makes the folder from the templates: `START.md` · `DECISIONS.md` · `history\` · `reports\` · `PROJECT.md` · `VERSIONS.md` · `ROADMAP.md` … |
+| your goal and requirements | I write them into `START.md` in your words: Goal, Spec rows S1 S2 …, Hard rules, State now, Next step, Open decisions |
+
+### 12b · What you say to load it
+
+| You say | What comes back |
+|---|---|
+| any sentence with its name or alias ("let's continue Masterline") | the PROJECT CARD, printed by a hook before I answer: goal, spec rows, hard rules, state, next step, your open decisions, the last 5 decisions |
+| a ticket number | the quest, as today (unchanged) |
+
+### 12c · What happens at a compaction
+
+```
+  long session ──► context full (or you type /compact)
+       │
+       ├─► BEFORE: a hook copies every prompt and popup answer of yours,
+       │           word for word, into history\words.md
+       │
+       ├─► the summary replaces the old turns   (lossy: never trusted)
+       │
+       └─► AFTER:  a hook prints the PROJECT CARD again
+                   (a ticket gets its Resume Point back the same way)
+                   if that card is missing, your next prompt prints it
+                   ► I read START.md + your newest words, check every decision
+                     is in DECISIONS.md, then do the next step
+```
+
+### 12d · What a delegated session must do
+
+| Must | Checked by |
+|---|---|
+| save to the project folder at every bulk change | Domain Expansion save check |
+| write `reports\<session-name>.md` with: What changed · Decisions made · Open questions for みや · Blockers · Unverified · Next step | a Stop check: missing, a heading missing, or older than its last change = the turn is stopped |
+| write every decision into `DECISIONS.md` the moment it is made | a Stop check: a reply that says "we agreed / you ruled / the fix is …" with no ledger row is stopped |
+| post the report as its final message | the orchestrator reads it |
+
+### 12e · How you check nothing was lost
+
+| Look at | It shows |
+|---|---|
+| `DECISIONS.md` | every decision, dated, with why, who, and the spec row it serves |
+| `history\words.md` | everything you typed, copied by script (newest at the bottom) |
+| `history\compactions.md` | each compaction summary, to compare with your words |
+| `node domain/project-load/project.js drill <Name>` | exactly what I will be shown after the next compaction |
+| `node domain/project-load/project.js check <Name>` | PASS when START.md and DECISIONS.md are in shape |
+---
+
 *Maintained by Ruri. Refined as みや's patterns evolve and as new anti-patterns surface.*
