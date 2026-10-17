@@ -4,15 +4,20 @@ description: "🚨 every project of ours has its own folder projects/coding-proj
 metadata:
   node_type: memory
   type: feedback
-  modified: 2026-10-08T10:51:19.171Z
+  modified: 2026-10-17T08:47:23.655Z
+  originSessionId: be5b16b4-6a21-45ba-abb5-f619d46b57d4
 ---
 
 🚨 Every project (PymTime, WaRead, db-gateway, protime-plan, any new one) has its OWN structured folder on my side: `projects/coding-projects/active/<Name>/`. The memory note for the project is a pointer to it plus the few always-needed facts, never the store of everything.
 
 | File | Holds |
 |---|---|
-| `project.json` | What makes the folder a project: `name` · `aliases` (the words that mean it in a prompt) · `repo` (its own code repo) · `index` |
-| `PROJECT.md` | The index: state now · where everything lives · which file answers which question · hard rules · how to resume |
+| `project.json` | What makes the folder a project: `name` · `aliases` (the words that mean it in a prompt) · `repo` (its own code repo) · `index` = `START.md` |
+| `START.md` | **Read first, every session and after every compaction** (ruling 2026-10-16): about 5,000 tokens at most: what the project is, its hard rules one line each with their home file, where it stands, the next ticket. Nothing dated older than the current work |
+| `PROJECT.md` | The full index: state now · where everything lives · which file answers which question · hard rules in full · how to resume. Opened from START.md when needed |
+| `history/` | Dated notes and old version rows moved out of the read path word for word (nothing lost, never read at start) |
+| `wayfinder/` | The project's wayfinder maps when the work is planned in phases |
+| `.claude/skills/<name>/` | The project's own skill, the way `/quest` works for tickets: load START.md, resume the open ticket, save at every change (PymTime's skill is the first; DawahMap's is built in its phase 1) |
 | `VERSIONS.md` | One row per version or bulk change: date, commit, what changed, proof |
 | `ARCHITECTURE.md` | Parts, flows, data, screens (with ids), what repairs itself |
 | `PROOFS.md` | How it is tested, harness rules, the mistakes that cost days |
@@ -20,7 +25,7 @@ metadata:
 | topic files when needed | Outside systems, design, and so on (PymTime: `PROTIME-AND-GOOGLE.md`, later `DESIGN.md`) |
 
 Rules:
-1. Read `PROJECT.md` first in any session on that project.
+1. Read `START.md` first in any session on that project, and again after every compaction (`PROJECT.md` until a project has its START.md).
 2. Every bulk change ends with a `VERSIONS.md` row + the `PROJECT.md` state + the `ROADMAP.md` status, in the same pass.
 3. A new durable fact goes into the folder, not into the memory note.
 4. A test script never stays in the session temp folder; it goes into the project's own repo.
