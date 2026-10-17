@@ -400,6 +400,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\stg1-block\\\\stg1-block.check.hook.js\""
           }
         ]
+      },
+      {
+        "matcher": "mcp__ccd_session__spawn_task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\spawn-task-folder-guard\\spawn-task-folder-guard.check.hook.js\""
+          }
+        ]
       }
     ],
     "Stop": [

@@ -27,7 +27,7 @@ A folder `projects/coding-projects/active/<Name>/` in the MAIN checkout (the fol
 | `name` | The project's name |
 | `aliases` | Words that mean this project in a prompt (3 letters or more, whole-word match) |
 | `repo` | The project's own code repo, when it has one (used by the save check) |
-| `index` | The file to read first; default `PROJECT.md` |
+| `index` | The file to read first; default `PROJECT.md`. **Every new project (his ruling 2026-10-16) sets `index` to `START.md`**: a start file of about 5,000 tokens (what the project is, its hard rules one line each, where it stands, the next ticket), so loading a project costs little and history never sits in the read path. DawahMap is the first; PymTime and Eisenhower follow once DawahMap passes its 10-question test. |
 
 No registry to keep: the folders are the list. The other half is `lib/save-rules.js` (kind `projects`): at Domain Expansion it fails when the repo moved and the documents did not.
 
