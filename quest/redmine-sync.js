@@ -403,6 +403,27 @@ function fetchIssueFields(id) {
 // "-Sila Pilih-" is Redmine's unselected sentinel and means the same as empty.
 const FIELD_NOISE = /^(|-\s*sila\s*pilih\s*-|0)$/i;
 
+// Close-out fields differ by tracker: eSOKONGAN has "Solutions", Internal Issue (PROD)
+// does not (#285181, 2026-10-19). The API lists every field the form has, empty ones
+// included, so "absent from custom_fields" = "not on this form".
+const CLOSE_FIELDS = [
+    ['Root Cause (DEV)', /^root cause issue \(dev\)$/i],
+    ['Solutions', /^solutions?$/i],
+    ['Resolved By', /^resolved by$/i],
+    ['Resolved By Text', /^resolved by text$/i],
+    ['Jenis Penyelesaian', /^jenis penyelesaian$/i],
+];
+
+function formatCloseFields(customFields) {
+    const cells = CLOSE_FIELDS.map(([label, re]) => {
+        const f = (customFields || []).find(x => re.test(String(x.name || '').trim()));
+        if (!f) return `${label} ✗ not on form`;
+        const v = Array.isArray(f.value) ? f.value.join(',') : String(f.value == null ? '' : f.value);
+        return `${label} ✓ ${FIELD_NOISE.test(v.trim()) ? 'empty' : 'filled'}`;
+    });
+    return [`CLOSE FIELDS (live from the form): ${cells.join(' · ')}`];
+}
+
 function formatTicketFields({ customFields, relations }) {
     const out = [];
     const filled = (customFields || []).filter(f => {
@@ -425,6 +446,7 @@ function formatTicketFields({ customFields, relations }) {
             out.push(`   ${f.name} = ${v}`);
         });
     }
+    out.push(...formatCloseFields(customFields));
     if (relations && relations.length) {
         out.push('🔗 RELATIONS — read each; a related ticket can carry the fix or the spec:');
         relations.forEach(r => out.push(`   ${r.relation_type} → #${r.issue_to_id === undefined ? r.issue_id : r.issue_to_id}`));
@@ -1038,7 +1060,7 @@ async function runSingle(id) {
 }
 
 // v10: exported for quest/redmine-sync.eval.js (fixture-driven; no Redmine call in these).
-module.exports = { formatJournalsForHistory, descriptionByLine, roleTag, addStatusFolder, isReworkTransition, isGenuineReopen, genuineReopenCount, REWORK_STATUS_IDS, abbreviateType, buildFolderSlug, taskBaseFor, TYPE_ABBR, extractBaGivenTestData };
+module.exports = { formatCloseFields, formatJournalsForHistory, descriptionByLine, roleTag, addStatusFolder, isReworkTransition, isGenuineReopen, genuineReopenCount, REWORK_STATUS_IDS, abbreviateType, buildFolderSlug, taskBaseFor, TYPE_ABBR, extractBaGivenTestData };
 
 if (require.main === module) {
     const args   = process.argv.slice(2);
