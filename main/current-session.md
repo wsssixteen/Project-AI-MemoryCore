@@ -102,3 +102,5 @@
 - **Boot note**: `main/main-memory.md` Read returned lines 1 to 238 of 1041.
 
 **Last Activity**: 2026-10-08 22:30 — PymTime roadmap phase 1 (design): the v17 page critiqued (27 ranked issues), colour tokens grown from the logo, three mockups published for his pick · no app code changed
+
+- **DawahMap, 2026-10-19 (phase 2 opened)**: phase 1 done; the etanah-quiet check now follows the session's last topic on a prompt that names nothing and on a background-task notice (d5473717, cfc54f4a; eval 128/128). Run wf_8a42fc41-016 built what needs no answer from him: the evidence page prototype (ticket 04) https://claude.ai/artifact/7KpKCcuh6WYPmaq7BPZZsy and the connected line prototype (ticket 08) https://claude.ai/artifact/CCR2n3WVxyQaaTm4pF7cYP, three versions each; the sources for the simple proofs (ticket 12, 51:47 not read as expansion by the classical scholars); the question set for his voice session (ticket 01). Next: his picks on 04 and 08, then ticket 01 in its own session.
