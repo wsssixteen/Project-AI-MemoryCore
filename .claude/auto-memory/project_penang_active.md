@@ -18,7 +18,7 @@ metadata:
 | Redmine | `PNG_03_Pelupusan` (id 336) under "e-Tanah Pulau Pinang"; Requirement / Development tickets; team Aaron · Vincent · Izz |
 | Task folder | `1. Tasks\Penang` (redmine-sync routes `PNG_*` there) |
 | BPMN | `penang/flowables-bpmn/`: 17 `PNG_PLP_*` from Redmine #279199 zip (2026-09-22 snapshot). Live: modeler `http://10.16.56.22/flowable-ui/modeler/` (miya logs in) |
-| DB | `10.16.65.54:5444/pgit`, user `et_main_pgit` (ticket #280747). NOT connected until miya runs `E:\Dev\scripts\db-gateway\add-penang-db.py` |
+| DB | `jdbc:edb://10.16.65.54:5444/pgit` (EDB Postgres, given by miya 2026-10-19), user `et_main_pgit` (ticket #280747). Schemas: `et_main_pgit` · `et_sistem_pgit` · `et_dms_pgit` · `et_flowable_pgit`. CONNECTED 2026-10-19 as MCP `postgres-pgit-pg` behind the db-gateway (engine schema `et_flowable17_pgit`; a session started before the add reaches it through the gateway HTTP endpoint) |
 | Permohonan prefix | `PTPNG` (from NegeriEnum.java; no live id seen) |
 
 **Why**: 2026-10-14 I asked みや four times for files that one grep of `E:\Projects\Penang` found, said "we have no Penang BPMN" as a fact, and then called Penang "set up" while the playbook's Flowable-source check had never run (the BPMN was on Redmine #279199 and the modeler answered on 10.16.56.22).

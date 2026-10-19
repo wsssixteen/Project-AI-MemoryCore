@@ -97,6 +97,8 @@ Rather than directly saying "this is wrong", みや asks "is X truly different f
 
 **[2026-10-19]** T1 — **His fence comes before the work, so it goes on before any automatic step.** #285532: *"DO NOT UPDATE REDMINE. IT IS NOT UNDER OUR NAME."* The quest has one automatic Redmine write at start (the New→In Progress claim). I set `redmine_claim=off` before flipping the block to active, and the claim printed "nothing sent". A per-ticket "no Redmine at all" switch does not exist yet; only the claim has one (proposal logged A2).
 
+**[2026-10-19]** T2 recurrence of the 2026-08-04 "short question, long answer" row — ADHOC-PRU-2026-1: he asked "in a single short sentence why" and got three tables; `reask/verbose` is at 3 in 7 days (escalation). Also new T1: **the database is the evidence, so making it reachable is my first job, not his.** I asked him three times to connect the Penang DB before I opened the setup script in a terminal tab for him.
+
 ## Retired Observations
 
 *(Observations that have been fully integrated — moved to memory or Forge)*

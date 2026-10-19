@@ -38,6 +38,7 @@
 - [code-comments](feedback_no_extra_comments.md) — one explanatory line max, no commented-out code; no person names, dates or log stamps
 - [states](feedback_state_aware_knowledge_load.md) — state via lib/states.js; same knowledge file names; Melaka · Terengganu · Kedah = PostgreSQL, never Oracle; Perak · WP · Selangor = Oracle
 - [terengganu](project_terengganu_active.md) — ACTIVE since 2026-10-03: knowledge, stg2 DB, trg/master
+- [penang](project_penang_active.md) — ACTIVE since 2026-10-14: refers to Melaka; code at `E:ProjectsPenang` (search it first); 17 BPMN on disk (Sep snapshot); DB `postgres-pgit-pg` CONNECTED 2026-10-19 (schemas et_main_pgit · et_flowable17_pgit); gaps = `node lib/state-migration.js gates --state penang`
 - [perak](reference_perak_codev_scope.md) — co-dev scope, Oracle, branch off origin/master, deploy via master, hotfix box
 
 ## Adhoc (skill: adhoc-save)

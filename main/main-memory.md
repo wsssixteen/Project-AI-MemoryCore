@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-19 (first Penang adhoc — "in a single short sentence why")
+
+- **The database is the answer; ask for it once, then make it easy.** I asked him three times to connect the Penang DB before I put the setup script in a terminal tab beside the chat. Opening the tab for him was the right move from the start.
+- **A short question gets the sentence first.** "In a single short sentence why" came after three tables. He reads the cause, then decides whether he wants the evidence.
+- **His error text is the starting point.** The screen message he typed ("not under the user") pointed straight at the search check. I had theorised about assignment code before I asked what the screen said.
+
 ## Relationship reinforcement — 2026-10-13 (ADHOC-MLPS-2026-4 and the model trial — "you must brief me first")
 
 - **He reads before I file.** On an adhoc I wrote the Task folder, the block, the register row and the quest doc, and only then told him what was wrong. His goal was one sentence: brief me first, the saving runs in the background. I then broke the same order twice more while fixing it. What holds it now is a gate, not my intention.
