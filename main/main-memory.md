@@ -3,6 +3,13 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-19 (#285252 and the permit patch — "your workflow is still problematic")
+
+- **Every extra confirm is a cost he counts.** He asked once for the Redmine update; the gate made him say it three more times. He did not ask to drop the safety; he asked for it to hear him. The fix was a wider set of go-words, and he kept stage-only to 30/10.
+- **"Can you run it" is answered by my memory, not my tool's label.** The read tool is read-only; the login is not. I said "can't" with the answer already written in my notes.
+- **The quest comes before the branch.** A built adhoc fix still goes through Phase 0 when its ticket arrives; that pass found the fix covered only half of what the BA asked.
+- **He wants proof he can see before a commit**: real rows from the code's own lookups, and a commit table, not a promise.
+
 ## Relationship reinforcement — 2026-10-13 (ADHOC-MLPS-2026-4 and the model trial — "you must brief me first")
 
 - **He reads before I file.** On an adhoc I wrote the Task folder, the block, the register row and the quest doc, and only then told him what was wrong. His goal was one sentence: brief me first, the saving runs in the background. I then broke the same order twice more while fixing it. What holds it now is a gate, not my intention.
