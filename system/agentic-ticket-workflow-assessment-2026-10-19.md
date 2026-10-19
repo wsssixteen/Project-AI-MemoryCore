@@ -33,3 +33,6 @@ The 4 proposals are rows in `system/slips.jsonl` (type proposal, 2026-10-19T06:4
 | A5 sweep | ⏭ no sweep ran this session | — | — | — |
 
 The 3 proposals of session 2 are rows in `system/slips.jsonl` (type proposal, 2026-10-19), each with its eval case.
+
+
+Rulings for session mlit-updates-failing-b8e56d (Domain Expansion, 2026-10-19, by Ruri; miya may overrule): A1 DEFER to the weekly audit, same fault as session 1's A1 row, rule them together; the 12.5 meta-audit finding is this same item. A2 DEFER to the weekly audit (second case needed per the observation T1). A4 DEFER: the row-count fact is written into PERMIT-LESEN-RUNNING-NUMBER.md:186, the script rewrite waits for miya. Old MLIT DB 172.16.100.197: NOT READ; the cause of Ammar's missed patch stays not verified until his script and row counts are seen.
