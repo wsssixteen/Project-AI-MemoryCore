@@ -10,7 +10,7 @@ footprint: per-prompt: 0 extra processes beyond the hook's own node start; one d
 
 | Hook file | Event | Fires | Does |
 |---|---|---|---|
-| `project-load.check.hook.js` | UserPromptSubmit | the prompt names a project's alias (whole word) | shape 1: the pointer to its index (unchanged since 2026-10-08) · shape 2: the PROJECT CARD on the first mention in the session, one pointer line after · binds the session (and a `reports\<name>.md` named in the prompt) in `log.jsonl` · fallback: a bound session compacted with no card since gets the card on its next prompt |
+| `project-load.check.hook.js` | UserPromptSubmit | the prompt names a project's alias (whole word) | shape 1: the pointer to its index (unchanged since 2026-10-08) · shape 2: the PROJECT CARD on the first mention in the session, one pointer line after · binds the session in `log.jsonl`; marks it delegated only when its START BRIEF (first prompt) says to write `reports\<name>.md` (v2.1, 2026-10-19); `[project-unbind: <Name>]` turns that off · fallback: a bound session compacted with no card since gets the card on its next prompt |
 | `project-load.resume.hook.js` | SessionStart, matcher `compact\|resume` | a compaction or a resume | the card of every bound project (or the projects his prompts name, if the log has no binding) and a QUEST CARD for each open ticket his prompts name (block fields + qa_doc `0. Resume Point`); under 9,200 characters in all; copies the compaction summary to `history\compactions.md` |
 | `project-load.precompact.hook.js` | PreCompact (manual and auto) | before every compaction | copies his prompts (typed by him, or the brief of a delegated session) word for word into each bound project's `history\words.md`; never blocks |
 | `project-load.save.hook.js` | Stop (child of `domain/bundles/stop-claim-integrity.json`) | a session bound to a shape-2 project ends a turn | BLOCKS a reply that states a decision when no bound DECISIONS.md was written this turn; BLOCKS a delegated session whose report is missing, lacks one of the six headings, or is older than the newest change in the folder since the session began; never blocks twice in a row |
@@ -41,8 +41,12 @@ No registry to keep: the folders are the list. The other half is `lib/save-rules
 
 **New project**: `node domain/project-load/project.js new <Name> --aliases "a,b"` (templates in `templates/`). Everything else: `.claude/skills/project/SKILL.md`.
 
+**Unbind / bind**: `[project-unbind: <Name>]` in a prompt · `node domain/project-load/project.js unbind <Name> --session <id> [--all]` · `bind <Name> --session <id> --report <file>.md`. Log rows `unbound` (report_only) and `bound` (via cli).
+
 **Bypass**: `[skip-project-load: <reason>]` in the prompt (the card); `[skip-project-decision: <reason>]` · `[skip-project-report: <reason>]` in the reply (the Stop gate). An empty reason does not count.
 
 **Eval**: `node domain/project-load/project-load.eval.js` (the 2026-10-08 prompt hook: 22 fixtures + registration, 30 checks) and `node domain/project-load/eval.js` (the project system: requirements 1-7, 28 scenarios, 50 checks). `--table` prints the scenario table.
+
+**Version**: 2.1 — 2026-10-19: delegation from the start brief only, the written report path only; unbind marker and commands; eval 59 checks. Spec preservation: every 2.0 contract kept; the report binding narrowed.
 
 **Version**: 2.0 — 2026-10-17. Spec preservation against 1.0: alias matching, the 30-minute re-arm, the bypass token, the shape-1 text and the log row fields are unchanged; additive.

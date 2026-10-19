@@ -20,6 +20,9 @@ const SCENARIOS = [
   ['A shape-1 project (PymTime, DawahMap today) is named', 'fixture-added (E4: the old pointer text, unchanged)'],
   ['The same project is named again in the same session', 'fixture-added (E2: one short pointer line, not the card again)'],
   ['A delegated brief names reports\\<name>.md', 'fixture-added (E3: card says "delegated", binding carries the report)'],
+  ['A later prompt quotes another session report path (the orchestrator, 2026-10-19)', 'fixture-added (E3c: never binds; only the start brief can)'],
+  ['A start brief quotes one report and says to write another (app-samples, 2026-10-19)', 'fixture-added (E3d: the written one; E3e: two with no write = none)'],
+  ['A session wrongly bound as delegated', 'fixture-added (E19f marker, E19h command: report check off, decision gate kept)'],
   ['The brief names the template placeholder reports\\_template.md', 'fixture-added (E3b: not bound as a report)'],
   ['SessionStart with source startup or clear', 'fixture-added (E6: silent; the first prompt loads the project)'],
   ['Compaction in a session never bound in the log (log lost, or resume under a new id)', 'fixture-added (E7: bound from the aliases in his prompts in the transcript)'],
@@ -104,11 +107,21 @@ check('E2 a second mention in the same session (inside the re-arm time) is silen
 fs.writeFileSync(t.log, JSON.stringify({ ts: iso(40), action: 'fired', session: 's9', project: 'Masterline' }) + '\n');
 r = run(HOOK.prompt, t, { session_id: 's9', prompt: 'back to masterline' });
 check('E2b after the re-arm time a session that already had the card gets one pointer line, not the card again', /its card was given earlier/.test(r.out) && !/── SPEC ──/.test(r.out), r.out.slice(0, 200));
+// A start brief = the first prompt of the session (the transcript holds no earlier prompt).
+function briefRun(t, session, prompt, earlier) { const tx = transcript(t, (earlier || []).map((e, i) => L.human(e, 30 - i)).concat([L.human(prompt, 1)])); return run(HOOK.prompt, t, { session_id: session, prompt, transcript_path: tx }); }
 t = tree();
-r = run(HOOK.prompt, t, { session_id: 'd1', prompt: 'Task for Masterline. At every bulk change write C:\\x\\Masterline\\reports\\project-system.md with the fixed headings.' });
-check('E3 req 5: a delegated brief naming reports\\project-system.md: the card says delegated and the binding carries the report', /YOU ARE A DELEGATED SESSION/.test(r.out) && rows(t).some(x => x.report === path.join(t.ml, 'reports', 'project-system.md')), r.out.slice(0, 300));
-t = tree(); run(HOOK.prompt, t, { session_id: 'd2', prompt: 'Masterline: copy reports\\_template.md' });
+r = briefRun(t, 'd1', 'Task for Masterline. At every bulk change write C:\\x\\Masterline\\reports\\project-system.md with the fixed headings.');
+check('E3 req 5: a start brief that says write reports\\project-system.md: the card says delegated and the binding carries the report', /YOU ARE A DELEGATED SESSION/.test(r.out) && rows(t).some(x => x.report === path.join(t.ml, 'reports', 'project-system.md')), r.out.slice(0, 300));
+t = tree(); briefRun(t, 'd2', 'Masterline: copy reports\\_template.md');
 check('E3b the template placeholder is not bound as a report', !rows(t).some(x => x.report));
+t = tree(); r = briefRun(t, 'd3', 'Masterline status? The website session wrote reports\\website.md, see its decision 13.', ['start the orchestration please']);
+check('E3c RED (2026-10-19 orchestrator): a LATER prompt quoting another session\'s reports\\website.md does not make this session delegated', !/DELEGATED/.test(r.out) && !rows(t).some(x => x.report), r.out.slice(0, 200));
+t = tree(); r = briefRun(t, 'd4', 'Masterline app samples. Use the website session\'s method (its report reports\\website.md decision 13). At every bulk change write ...\\Masterline\\reports\\app-samples.md with exactly the headings.');
+check('E3d RED (2026-10-19 app-samples): a start brief naming two reports binds the one it says to write (app-samples.md), never the first one quoted', rows(t).some(x => x.report === path.join(t.ml, 'reports', 'app-samples.md')) && !rows(t).some(x => x.report && /website\.md$/.test(x.report)), JSON.stringify(rows(t).map(x => x.report)));
+t = tree(); briefRun(t, 'd5', 'Masterline: compare reports\\website.md and reports\\app-samples.md');
+check('E3e a start brief naming two reports with no write instruction binds none', !rows(t).some(x => x.report));
+t = tree(); run(HOOK.prompt, t, { session_id: 'd6', prompt: 'Masterline: write reports\\x.md' });
+check('E3f no transcript to prove it is the start brief: not delegated', !rows(t).some(x => x.report));
 t = tree(); r = run(HOOK.prompt, t, { session_id: 's1', prompt: 'continue pymtime' });
 check('E4 a shape-1 project keeps the 2026-10-08 pointer text (no card)', /PymTime is a project with its own folder/.test(r.out) && /READ FIRST: .*PROJECT\.md/.test(r.out) && !/PROJECT CARD/.test(r.out), r.out.slice(0, 200));
 
@@ -154,7 +167,7 @@ const r3 = run(HOOK.prompt, t, { session_id: 'f1', prompt: 'and then' });
 check('E12 compacted with no SessionStart card: the next prompt prints the card (fallback), the one after is silent', /fallback/.test(r.out) && /2 of his prompt\(s\) were copied/.test(r.out) && r3.out === '', r.out.slice(0, 200) + ' | ' + r3.out.slice(0, 80));
 
 // ── Requirement 3: the decisions ledger and its Stop gate ──
-function bound(session, extra) { const x = tree(extra); run(HOOK.prompt, x, { session_id: session, prompt: 'Masterline' + ((extra && extra.brief) || '') }); return x; }
+function bound(session, extra) { const x = tree(extra); briefRun(x, session, 'Masterline' + ((extra && extra.brief) || '')); return x; }
 t = bound('g1'); age(path.join(t.ml, 'DECISIONS.md'), 60);
 tx = transcript(t, [L.human('Masterline', 30), L.human('ok go with the light one', 2)]);
 r = run(HOOK.save, t, { session_id: 'g1', transcript_path: tx, last_assistant_message: 'Done. We agreed: the internal app uses the light sample.' });
@@ -196,6 +209,24 @@ check('E19c the report is older than the last change in the folder → BLOCK nam
 fs.writeFileSync(rep, fs.readFileSync(rep, 'utf8') + '\nupdated');
 r = run(HOOK.save, t, { session_id: 'r1', transcript_path: tx, last_assistant_message: 'progress made' });
 check('E19d a current report with all six headings passes', r.status === 0, r.err.slice(0, 160));
+// unbind: by a prompt marker and by the command; the report gate never fires on an unbound session
+fs.writeFileSync(rep, '# stale'); age(rep, 5); fs.writeFileSync(path.join(t.ml, 'ARCHITECTURE.md'), 'changed again');
+r = run(HOOK.save, t, { session_id: 'r1', transcript_path: tx, last_assistant_message: 'progress made' });
+check('E19e (before the unbind) the stale report blocks', r.status === 2);
+r = run(HOOK.prompt, t, { session_id: 'r1', prompt: 'not your report [project-unbind: Masterline]' });
+const r2b = run(HOOK.save, t, { session_id: 'r1', transcript_path: tx, last_assistant_message: 'progress made' });
+check('E19f the prompt marker [project-unbind: Masterline] turns the report check off for this session (no block), the card binding stays', /no longer bound as delegated/.test(r.out) && r2b.status === 0 && rows(t).some(x => x.action === 'unbound' && x.report_only === true), r.out.slice(0, 160) + ' | exit ' + r2b.status);
+age(path.join(t.ml, 'DECISIONS.md'), 60);
+r = run(HOOK.save, t, { session_id: 'r1', transcript_path: tx, last_assistant_message: 'We agreed: nothing new.' });
+check('E19g after the unbind the decision gate still holds for the bound project', r.status === 2 && /decisions ledger/.test(r.err));
+{ const u = bound('r2', { brief: ' — write reports\\child2.md' });
+  const c1 = spawnSync(process.execPath, [CLI, 'unbind', 'Masterline', '--session', 'r2', '--reason', 'misbound'], { encoding: 'utf8', env: env(u) });
+  const r3 = run(HOOK.save, u, { session_id: 'r2', last_assistant_message: 'progress made' });
+  const c2 = spawnSync(process.execPath, [CLI, 'bind', 'Masterline', '--session', 'r2', '--report', 'child2.md'], { encoding: 'utf8', env: env(u) });
+  const r4 = run(HOOK.save, u, { session_id: 'r2', last_assistant_message: 'progress made' });
+  check('E19h the unbind command turns the report check off; the bind command puts it back (missing report → block)', c1.status === 0 && r3.status === 0 && c2.status === 0 && r4.status === 2 && /does not exist/.test(r4.err), c1.stdout + c1.stderr + ' | ' + r3.status + ' | ' + r4.status); }
+{ const u = tree(); const c = spawnSync(process.execPath, [CLI, 'unbind', 'Masterline', '--session', 'z9', '--all'], { encoding: 'utf8', env: env(u) }); run(HOOK.prompt, u, { session_id: 'z9', prompt: 'hello' }); const r5 = run(HOOK.save, u, { session_id: 'z9', last_assistant_message: 'We agreed: x' });
+  check('E19i a session never bound (or unbound with --all) is never gated', c.status === 0 && r5.status === 0 && r5.err === ''); }
 
 // ── robustness ──
 t = tree();

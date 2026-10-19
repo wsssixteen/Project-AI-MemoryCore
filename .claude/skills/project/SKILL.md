@@ -32,6 +32,7 @@ description: The project system — how a personal or outside project (Masterlin
 | save | (1) START.md state + next step · (2) VERSIONS.md row · (3) ROADMAP.md status · (4) `node domain/project-load/project.js words "<Name>" --transcript <this session's .jsonl>` · (5) the report if delegated · (6) commit what is in git |
 | what would come back after a compaction | `node domain/project-load/project.js drill "<Name>"` |
 | is the folder in shape | `node domain/project-load/project.js check "<Name>"` |
+| a session wrongly marked delegated | `[project-unbind: <Name>]` in a prompt, or `node domain/project-load/project.js unbind "<Name>" --session <id>` |
 
 ## 3. Rules (canonical home; the auto-memory note only points here)
 
@@ -66,7 +67,8 @@ me, first thing  ─► read START.md · read the newest entries of history\word
 
 ## 5. Delegated sessions (his rule 2026-10-17)
 
-- The brief names the project and `reports\<session-name>.md`; the hook binds the session as delegated.
+- Only the session's START BRIEF (its first prompt) makes it delegated, and only for the report path the brief says to write ("write …\reports\<session-name>.md"). A report path quoted later (a child's note, a message from another session) never binds. Two paths in a brief with no write instruction bind none.
+- Wrongly bound? In a prompt: `[project-unbind: <Name>]` (the report check goes off, the card stays). By command: `node domain/project-load/project.js unbind "<Name>" --session <session id> [--all]`; repair: `bind "<Name>" --session <id> --report <file>.md`.
 - Report headings, exactly: **What changed** (file · change · serves) · **Decisions made** (each with its reason) · **Open questions for みや** (options SHOWN) · **Blockers** · **Unverified** · **Next step**.
 - Written at every bulk change and before every end of turn; the same text is the final message.
 - The Stop gate blocks when the report is missing, lacks a heading, or is older than the newest change in the project folder since the session began. Bypass only for a turn that changed nothing of mine: `[skip-project-report: <reason>]`.
@@ -75,5 +77,7 @@ me, first thing  ─► read START.md · read the newest entries of history\word
 ## 6. Shape 1 → shape 2 (migrating an existing project)
 
 Keep every line. Move, never delete: hard rules → START section 3, decisions → DECISIONS.md rows, state → START section 4; leave a pointer where each stood and a word-for-word copy in `history\`. Then set `index: "START.md"` and `shape: 2` in project.json and run `/project check`.
+
+*Version 1.1 — 2026-10-19. Delegation binds only from the start brief and only the report it says to write; unbind marker and unbind/bind commands (the orchestrator, app-samples and project-system sessions were all bound to website.md by a quoted path). Spec preservation: every 1.0 rule kept; section 5 first bullet narrowed, two bullets and one command row added.*
 
 *Version 1.0 — 2026-10-17. Born with domain/project-load v2 (session project-system, Masterline brief). Rules 1-12 moved here from `.claude/auto-memory/feedback_side_project_folder.md` (word for word in meaning; rule 1 and 11 extended to shape 2); rules 13-16 new.*
