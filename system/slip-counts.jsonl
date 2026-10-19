@@ -1197,3 +1197,4 @@
 {"ts":"2026-10-17T09:19:21.111Z","category":"A2"}
 {"ts":"2026-10-19T02:10:36.665Z","category":"verify-before-claim/read-only-db"}
 {"ts":"2026-10-19T07:01:35.882Z","category":"workflow/redundant-confirm"}
+{"ts":"2026-10-19T06:54:33.597Z","category":"regression"}
