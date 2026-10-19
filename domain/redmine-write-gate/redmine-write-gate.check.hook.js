@@ -61,7 +61,8 @@ const STAGE_ONLY_UNTIL = process.env.REDMINE_STAGE_ONLY_UNTIL || '2026-10-30';
 const stageOnly = () => new Date().toISOString().slice(0, 10) < STAGE_ONLY_UNTIL;
 const VIEW_FIRST = /\b(?:let me (?:see|check|view|review)|(?:view|see|check|review|prepare) (?:it |them |this )?first|show me (?:it )?first|in the same page|stage (?:it|first|only)|stop at staging)\b/i;
 // Submit on the staged form needs miya's explicit send approval in his LAST message.
-const SUBMIT_APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never)\s)\b(?:post it|post now|yes,? post|\[redmine-post-ok\]|I approve|approved?\b[^.\n]{0,20}\b(?:send|post|submit|update)|submit it|go (?:ahead and )?submit)\b/i;
+// 2026-10-19 per miya (#285252, "I have to confirm it many times"): plain go-words also approve a staged submit.
+const SUBMIT_APPROVAL = /(?<!\b(?:don'?t|do not|jangan|not|never)\s)\b(?:post it|post now|yes,? post|\[redmine-post-ok\]|I approve|approved?\b[^.\n]{0,20}\b(?:send|post|submit|update)|submit it|go (?:ahead and )?submit|proceed|go ahead|submit|confirm(?:ed)?|yes|ok(?:ay)?,? (?:submit|proceed|go)|hantar)\b/i;
 // Browser JS: any network call to Redmine (the .json API pops a basic-auth password box; a PUT/POST posts) is banned —
 // read the open page's DOM instead. Form submit via JS needs SUBMIT_APPROVAL.
 const BROWSER_NET = /\b(?:fetch|XMLHttpRequest|\$\.(?:ajax|get|post|getJSON)|axios)\b/;
