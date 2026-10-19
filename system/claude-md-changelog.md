@@ -10,6 +10,17 @@
 
 ---
 
+## v1.91 — 2026-10-19 (per みや, ticket order by tracker tier)
+
+His words: *"Default priority by ticket type/tracker: Maintenance: eSokongan → Internal Issue (Permanent Fix) → Internal Issue → CR → Team Initiative. Project: PAT/UAT/FAT → QA → Development/Requirement"* · PROD patching ahead of eSOKONGAN · *"Interleave though, QA is same as Internal Issue & CR is the same level as Development/Requirement. I'll be the one to choose based on prioriti semasa and complexity/effort"*.
+
+- §Vocabulary ticket-order sentence replaced: PROD patching → eSOKONGAN + PAT/UAT/FAT → Permanent Fix → Internal Issue + QA → CR + Development/Requirement → rest. Default only; he picks.
+- Retired: the 2026-09-29 order (eSOKONGAN tracker → PROD → one pile for the rest). The pile hid Permanent Fix behind Internal Issue and had no place for Development, QA or CR.
+- Paired: `quest/redmine-board.js` `TRACKER_TIER` (tables now PROD → eSOKONGAN → rest by tier) + `quest/redmine-board.eval.js` K1 (34/34) · `domain/protime-plan/protime-plan.js` reads PROD first (eval 112/112) · `feedback_esokongan_means_tracker.md` · list-redmine, sweep, retrieve-redmine skills and session-briefing.md mirrors.
+- Open: MA Fix (79) and Team Initiative (no Redmine tracker has that name) are not placed yet; they sort last.
+
+---
+
 ## system-design SKILL.md v3.1 · Domain Expansion trigger v1.2 · save rules v2 — 2026-10-08 (per みや, after a skipped Domain Expansion)
 
 His words: *"this is critical, you should've done it"* (the skipped Domain Expansion) · *"I don't remember this. Why we want to prevent it? … A rule like add something that will not regress? … What's important is to have the goal, Purpose"* (the commit rule) · *"make sure everything WILL be loaded every single time we load a project. It WILL save everytime at the end of session when we perform domain expansion"* (project documents).
