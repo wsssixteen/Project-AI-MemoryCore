@@ -12,6 +12,8 @@
 //       node domain/project-load/project.js decide <Name> --decision "..." --why "..." --who "..." [--serves S1]
 //       node domain/project-load/project.js words <Name> --transcript <file.jsonl> [--session <id>]
 //       node domain/project-load/project.js check <Name>
+//       node domain/project-load/project.js unbind <Name> --session <id> [--all] [--reason "..."]   (not delegated; --all: not bound)
+//       node domain/project-load/project.js bind <Name> --session <id> [--report <file>.md]          (repair a binding)
 // The transcript format is internal to Claude Code (docs: it changes between versions): every parser here fails open.
 'use strict';
 const fs = require('fs');
@@ -183,7 +185,13 @@ function minedSince(session, project) {
 }
 function bindings(session) {
   const out = new Map();
-  for (const r of logRows()) if (r.session === session && r.project && (r.action === 'fired' || r.action === 'bound')) {
+  for (const r of logRows()) {
+    if (r.session !== session || !r.project) continue;
+    if (r.action === 'unbound') {   // a later unbind wins: report_only keeps the project card, otherwise the binding goes
+      if (r.report_only) { const b = out.get(r.project); if (b) b.report = null; } else out.delete(r.project);
+      continue;
+    }
+    if (r.action !== 'fired' && r.action !== 'bound') continue;
     const b = out.get(r.project) || { project: r.project, first: r.ts, report: null };
     if (r.report) b.report = r.report;
     out.set(r.project, b);
@@ -398,8 +406,20 @@ if (require.main === module) {
     }
     else if (cmd === 'new') { const w = scaffold(name, { aliases: String(flag('aliases') || '').split(',').map(s => s.trim()).filter(Boolean), repo: flag('repo') }); console.log('created:\n  ' + w.join('\n  ')); }
     else if (cmd === 'decide') { const p = need(); if (!flag('decision') || !flag('why') || !flag('who')) { console.error('decide needs --decision --why --who'); process.exit(2); } const n = decide(p, { decision: flag('decision'), why: flag('why'), who: flag('who'), serves: flag('serves'), date: flag('date') }); logAppend({ action: 'decided', project: p.name, n }); console.log('DECISIONS.md row ' + n + ' written: ' + path.join(p.dir, 'DECISIONS.md')); }
+    else if (cmd === 'unbind') {   // unbind <Name> --session <id> [--all] [--reason "..."]: not delegated (default) or not bound at all
+      const p = need(); const s = flag('session'); if (!s) { console.error('unbind needs --session <session id>'); process.exit(2); }
+      const all = a.includes('--all');
+      logAppend({ action: 'unbound', via: 'cli', report_only: !all, session: s, project: p.name, ...(flag('reason') ? { reason: flag('reason') } : {}) });
+      console.log(p.name + ': session ' + s + (all ? ' unbound' : ' no longer delegated (report check off, card kept)'));
+    }
+    else if (cmd === 'bind') {   // bind <Name> --session <id> [--report <file.md>]: repair a binding by hand
+      const p = need(); const s = flag('session'); if (!s) { console.error('bind needs --session <session id>'); process.exit(2); }
+      const rep = flag('report') ? path.join(p.dir, 'reports', path.basename(flag('report'))) : null;
+      logAppend({ action: 'bound', via: 'cli', session: s, project: p.name, ...(rep ? { report: rep } : {}) });
+      console.log(p.name + ': session ' + s + ' bound' + (rep ? ', delegated, report ' + rep : ''));
+    }
     else if (cmd === 'words') { const p = need(); const t = flag('transcript'); if (!t) { console.error('words needs --transcript <file.jsonl>'); process.exit(2); } const r = mineWords(p, t, { session: flag('session'), sinceTs: flag('since') }); console.log(r.added + ' prompt(s) added to ' + r.file + (r.error ? ' (error: ' + r.error + ')' : '')); }
     else if (cmd === 'check') { const p = need(); const e = checkShape2(p); console.log(p.shape < 2 ? p.name + ': shape 1 (no START.md checks)' : e.length ? 'FAIL ' + p.name + ':\n  ' + e.join('\n  ') : 'PASS ' + p.name + ': START.md, DECISIONS.md, index'); process.exit(e.length ? 1 : 0); }
-    else { console.log('usage: project.js card|drill|new|decide|words|check <Name> [...]'); process.exit(cmd ? 2 : 0); }
+    else { console.log('usage: project.js card|drill|new|decide|words|check|unbind|bind <Name> [...]'); process.exit(cmd ? 2 : 0); }
   } catch (e) { console.error('project.js: ' + e.message); process.exit(1); }
 }
