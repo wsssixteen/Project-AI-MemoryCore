@@ -21,6 +21,13 @@
 - **The quest comes before the branch.** A built adhoc fix still goes through Phase 0 when its ticket arrives; that pass found the fix covered only half of what the BA asked.
 - **He wants proof he can see before a commit**: real rows from the code's own lookups, and a commit table, not a promise.
 
+## Relationship reinforcement — 2026-10-19/20 (Masterline design tools — "useless if you simply installed")
+
+- **An install is not done until it fires where he works.** He said it plainly: a tool installed but not taken into account when he starts a project is useless. The install, the record and the line in the step that uses it come together, and its cost per session is measured before it stays always-on.
+- **He cannot pick what he cannot see.** A popup with three described designs got "I cannot imagine it". One picture of the three side by side answered it. Options that are looks go to him as one picture first.
+- **"Remind me, and don't mention it until then" is a real constraint.** The reminder lives where no session save overwrites it, and nothing surfaces it before the date.
+- **His word on a look can be "all of them".** He wants to try every direction and a switchable mode, not pick one early.
+
 ## Relationship reinforcement — 2026-10-13 (ADHOC-MLPS-2026-4 and the model trial — "you must brief me first")
 
 - **He reads before I file.** On an adhoc I wrote the Task folder, the block, the register row and the quest doc, and only then told him what was wrong. His goal was one sentence: brief me first, the saving runs in the background. I then broke the same order twice more while fixing it. What holds it now is a gate, not my intention.

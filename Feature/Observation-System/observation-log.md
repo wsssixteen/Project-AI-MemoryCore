@@ -111,3 +111,5 @@ Rather than directly saying "this is wrong", みや asks "is X truly different f
 *Observation System v1.0 — 2026-04-02*
 
 **[2026-10-19]** T2 recurrence of the 2026-10-13 DawahMap rule 1g (photograph at phone and desk and LOOK before reporting) — Masterline app prototype: 3 layout faults (a tile split by a reused class name, 4 tiles in one phone row, a nav pill stretched into a circle on a short page) were found only by looking at the screenshots, none by reading the code; a scripted click-walk then found 1 more (a page linking to itself). For any built screen, pictures plus a click-walk are the proof, not the code read.
+
+**[2026-10-20]** T1 — **An install he asks for counts only when wired to the step that uses it.** Masterline design tools: his words 'it will be useless if you simply installed and not take into account if I say it when starting a project'. Same family as wayfinder 2026-09-11 (installed, never recorded). This time the record was blocked by the app's folder guard and handed to the owner session; the template line landed. Watch: the next new project's card must show hard rule 2.

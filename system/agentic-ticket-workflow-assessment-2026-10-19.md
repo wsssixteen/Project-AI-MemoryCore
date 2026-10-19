@@ -55,3 +55,13 @@ Rulings for session mlit-updates-failing-b8e56d (Domain Expansion, 2026-10-19, b
 | A3 debugging accuracy | 3 layout faults were found only by looking at screenshots (tile split by a reused class name, 4 tiles in one phone row, a stretched nav pill); the click-walk found 1 more (a self-link); the walk's length-based change test gave 26 false "no effect" rows | compare an HTML hash, not its length |
 | A4 etanah issue-solving | ⏭ no etanah work this session | — |
 | A5 sweep / file sweep | ⏭ no ticket sweep this session; the two 2025 proposal PDFs were read by a keyword-line extract, enough for document names | — |
+
+## Session app-samples rounds 2-3 (2026-10-20) — Step 7.5
+
+| Axis | Instance | Proposal |
+|---|---|---|
+| A1 agentic system | two Sonnet readers side by side (skill vetting 134k tokens, design references 173k); controller recheck of all 8 star counts on the GitHub API matched; installs could not be recorded because the app guards the worktree owner's .claude and the shared memory | save-rules check: every installed plugin has a memory row and a skill/template mention |
+| A2 quest workflow | ⏭ no quest | — |
+| A3 debugging accuracy | ⏭ no debugging; one PowerShell slip: alias 'R' shadowed my function (aliases beat functions), caught by the MISSING counter | — |
+| A4 etanah | ⏭ no etanah work | — |
+| A5 sweep | ⏭ no sweep | — |
