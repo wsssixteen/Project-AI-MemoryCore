@@ -55,10 +55,14 @@ const PERMOHONAN_ID_RE = /\b[A-Z]{2,5}\/\d{2}(?:\/\d{2})?\/[A-Z]\/[A-Z0-9_]+\/\d
 // No. resit carian rasmi : 02CR3761/2026" matched neither shape and was answered with no scaffold).
 const AWAM_KEY_RE = /\bid\s*hakmilik\s*:\s*\S+|\bno\.?\s*resit(?:\s*carian(?:\s*rasmi)?)?\s*:\s*\S+|\b\d{6}[A-Z]{2,5}\d{5,8}\b/i;
 const ATTACHED_RE = /@"?([A-Za-z]:[\\/][^"\n]*?[\\/](?:Desktop|Downloads)[\\/][^"\n]+?)"?(?=\s|$)/gi;
+// A photo or video pasted into chat arrives as "[Image: source: <temp path>]" (2026-10-19, ADHOC-PRBB-2026-16).
+const PASTED_RE = /\[(?:Image|Video|File)[^\]\n]*?source:\s*([A-Za-z]:[\\/][^\]\n]+?)\s*\]/gi;
 function attachedFiles(prompt) {
   const out = []; let m;
-  ATTACHED_RE.lastIndex = 0;
-  while ((m = ATTACHED_RE.exec(prompt)) !== null) out.push(m[1].trim());
+  for (const re of [ATTACHED_RE, PASTED_RE]) {
+    re.lastIndex = 0;
+    while ((m = re.exec(prompt)) !== null) out.push(m[1].trim());
+  }
   return out;
 }
 function hasAnchor(prompt) { return PERMOHONAN_ID_RE.test(prompt) || AWAM_KEY_RE.test(prompt); }
@@ -129,7 +133,7 @@ runHook({ name: 'adhoc-paste-detector', event: 'UserPromptSubmit' }, (input) => 
     '        NOT umm_p_aplikasi.no_rujukan_permohonan) BEFORE any schema hunting.',
     '     1. Task folder: "1. Tasks\\' + taskDir + '\\<N+1>. ADHOC - <ENV> - ' + urusan + ' - <short desc>"',
     '        + 1. Brief/brief.txt (BA verbatim Isu/Expected/ask) + notes via:',
-    '     1a. MOVE every file he downloaded into 1. Brief/ (Move-Item, never Copy; the Desktop/Downloads copy must be gone):',
+    '     1a. MOVE every file he downloaded or pasted into 1. Brief/ (Move-Item, never Copy; the Desktop/Downloads/temp copy must be gone):',
     ...(files.length ? files.map(f => '         ' + f) : ['         (none attached this prompt; if he mentions a download, find it in Desktop / Downloads)']),
     '        node quest/notes.js --folder "<folder>" --qa ADHOC-' + urusan + '-<year>-<n> --env <ENV> --urusan ' + urusan + ' --id "<permohonan>" --user "<login>" --reset',
     '     2. active.txt block:',
