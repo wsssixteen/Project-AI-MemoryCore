@@ -26,7 +26,7 @@ description: The project system — how a personal or outside project (Masterlin
 
 | Say | Run |
 |---|---|
-| new project `<Name>` | `node domain/project-load/project.js new <Name> --aliases "a,b" [--repo <dir>]`, then fill START.md from his words, add `projects/coding-projects/active/<Name>` to the `projects` list of `system/save-rules.json` and the Projects row of `system/INDEX.md`, and a pointer note in auto-memory |
+| new project `<Name>` | `node domain/project-load/project.js new <Name> --aliases "a,b" [--repo <dir>]`, then fill START.md from his words, add `projects/coding-projects/active/<Name>` to the `projects` list of `system/save-rules.json` and the Projects row of `system/INDEX.md`, and a pointer note in auto-memory; if the project has screens, run `/impeccable init` in the project folder before the first screen (section 7) |
 | load / continue `<Name>` | the hook already printed the card; read `START.md`, then only the file its table names; say in one line where we are and where it is going |
 | a decision is made | `node domain/project-load/project.js decide "<Name>" --decision "…" --why "…" --who "みや" --serves S#` in the SAME turn |
 | save | (1) START.md state + next step · (2) VERSIONS.md row · (3) ROADMAP.md status · (4) `node domain/project-load/project.js words "<Name>" --transcript <this session's .jsonl>` · (5) the report if delegated · (6) commit what is in git |
@@ -77,6 +77,26 @@ me, first thing  ─► read START.md · read the newest entries of history\word
 ## 6. Shape 1 → shape 2 (migrating an existing project)
 
 Keep every line. Move, never delete: hard rules → START section 3, decisions → DECISIONS.md rows, state → START section 4; leave a pointer where each stood and a word-for-word copy in `history\`. Then set `index: "START.md"` and `shape: 2` in project.json and run `/project check`.
+
+## 7. Design and build tools (his rule 2026-10-19)
+
+> His words: "Please make full good use of them where appropriate inside our system" · "It seems we need to install/setup things so that you do not forget … it will be useless if you simply installed and not take into account if I say it when starting a project". Installed 2026-10-19 and 2026-10-20 (user scope); install record and footprints: `.claude/auto-memory/project_installed_skills.md`.
+
+| The job | Tool | How, every time |
+|---|---|---|
+| Any screen, page or app UI (web or native) | **impeccable** (plugin) | `/impeccable init` once per project; `/impeccable craft` or `shape` to design; `/impeccable critique` and `/impeccable audit` before anything is shown to him; its hook checks UI files on every edit and at Stop |
+| Choosing a look | **impeccable** + the project's design research | directions drawn from named outside references, shown as screenshots; never the default Claude look (big rounded cards, soft shadows, pill chips, Inter, KPI tile row, greeting heading) |
+| An art direction from real references, checked in a real browser at three widths | **taste-skill** (plugin) | `taste-skill:design-taste-frontend` once the direction is drawn; needs Node 22+ and Edge |
+| Styles, colours and fonts to search; a design-system file; a pre-delivery checklist | **ui-ux-pro-max** (plugin) | `ui-ux-pro-max:design-system` for the project's file; its checklist before a delivery |
+| A real brand's design system to start from | **awesome-design-md** (84 DESIGN.md files in `~/.claude/design-library/awesome-design-md/`) | copy the closest brand's DESIGN.md into the project and adapt it; refresh with `git -C ~/.claude/design-library/awesome-design-md pull` |
+| Architecture, flow, system, sequence diagrams | **diagram-design** (plugin) | one HTML + SVG file in the project's brand; PNG export only if he asks |
+| A product video, explainer or motion graphic | **hyperframes** (plugin) | HTML → MP4; read the sub-skill it routes to first |
+| Understanding how an existing app or binary works | **REA** (skill `reverse-engineer-anything`; its server is on demand) | turn the server on for that session only: `claude mcp add rea --scope local -- cmd /d /c npx -y rea-agents@6.7.0 mcp`; only on apps we own or may inspect |
+| Planning before building: interview, spec, tickets | **mattpocock-skills** (`grill-me`, `to-spec`, `to-tickets`, `wayfinder`, `tdd`, `code-review`) | grill-me before a new module; our own quest workflow still owns etanah tickets |
+
+Mechanical, not remembered: hard rule 2 of the START.md template carries the design line into every new project's card; impeccable's own hook runs on UI edits.
+
+*Version 1.2 — 2026-10-20. Section 7 Design and build tools (impeccable, diagram-design, hyperframes, REA, mattpocock-skills installed 2026-10-19 on his word; taste-skill, ui-ux-pro-max, awesome-design-md on 2026-10-20); "new project" runs `/impeccable init` for projects with screens; the START.md template carries hard rule 2 (the design line). Applied by the orchestrator from the app-samples session's hand-over patch. Spec preservation: sections 1 to 6 and rules 1 to 16 unchanged; one command cell extended, one section added.*
 
 *Version 1.1 — 2026-10-19. Delegation binds only from the start brief and only the report it says to write; unbind marker and unbind/bind commands (the orchestrator, app-samples and project-system sessions were all bound to website.md by a quoted path). Spec preservation: every 1.0 rule kept; section 5 first bullet narrowed, two bullets and one command row added.*
 

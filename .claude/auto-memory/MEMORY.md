@@ -92,7 +92,7 @@
 - [domain-expansion-banner](feedback_domain_expansion_format.md) — Domain Expansion banner, canonical format only
 - [bankai-banner](feedback_bankai_format.md) — Bankai banner format; never referenced casually
 - [project-name](project_name_lapis_lazuli.md) — project = "Lapis Lazuli"; "Ruri" = my name only; physical rename not done
-- [installed-skills](project_installed_skills.md) — third-party skills (wayfinder); record every install here
+- [installed-skills](project_installed_skills.md) — third-party skills and plugins (wayfinder 2026-09-11; impeccable, diagram-design, hyperframes, mattpocock-skills, REA, taste-skill, ui-ux-pro-max, awesome-design-md 2026-10-19/20): how each was installed and what it costs; which tool for which job = /project skill section 7; record every install here the moment it happens
 - [artifact-registry](reference_artifact_registry.md) — every published artifact + link; update by link, never a second copy
 - [observatory](reference_observatory.md) — diagnose first with node lib/observatory.js --brief; app on :7790
 
