@@ -359,7 +359,8 @@ function checkShape2(p) {
 // Stop-log verdict per delegated report (read by lib/save-rules.js at Domain Expansion)
 function reportVerdicts(projectName, dayIso) {
   const last = new Map();
-  for (const r of logRows()) if (r.action === 'stop-check' && r.project === projectName && r.report && String(r.ts).slice(0, 10) >= (dayIso || '0000')) last.set(r.session + '\u0000' + r.report, r);
+  // the row's LOCAL day, as save-rules counts today (a UTC slice skipped every row written 00:00-08:00 MYT, 2026-10-20)
+  for (const r of logRows()) if (r.action === 'stop-check' && r.project === projectName && r.report && (!dayIso || ymd(new Date(Date.parse(r.ts))) >= dayIso)) last.set(r.session + '\u0000' + r.report, r);
   const out = [];
   for (const r of last.values()) {
     const now = mtime(r.report);
