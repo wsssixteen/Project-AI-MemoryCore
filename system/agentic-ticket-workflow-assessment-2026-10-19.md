@@ -44,3 +44,14 @@ The 3 proposals of session 2 are rows in `system/slips.jsonl` (type proposal, 20
 | A5 sweep | DB gateway down killed all MCP DB links; psycopg2 fallback hand-written | proposal logged (helper) |
 
 Rulings for session mlit-updates-failing-b8e56d (Domain Expansion, 2026-10-19, by Ruri; miya may overrule): A1 DEFER to the weekly audit, same fault as session 1's A1 row, rule them together; the 12.5 meta-audit finding is this same item. A2 DEFER to the weekly audit (second case needed per the observation T1). A4 DEFER: the row-count fact is written into PERMIT-LESEN-RUNNING-NUMBER.md:186, the script rewrite waits for miya. Old MLIT DB 172.16.100.197: NOT READ; the cause of Ammar's missed patch stays not verified until his script and row counts are seen.
+
+## Session app-samples (Masterline app prototype, delegated) — Step 7.5
+
+| Axis | What this session showed (instance) | Proposal logged |
+|---|---|---|
+| A1 agentic system | the orchestrator brief was complete enough to build with zero questions (files to read, output paths, report schema, proof method); the one gap was a tooling one: the website session's proof script lived only in its scratchpad, so I wrote a larger one | one shared proof Tool (shots, PDF, flows, walk) |
+| A1 agentic system | `audit-briefing.js` from a worktree saw 4 hooks and 0 turns, so its 76 "never fired" rows were a telemetry gap, not dead hooks | read telemetry from the main checkout when in a worktree |
+| A2 quest workflow | ⏭ no quest this session | — |
+| A3 debugging accuracy | 3 layout faults were found only by looking at screenshots (tile split by a reused class name, 4 tiles in one phone row, a stretched nav pill); the click-walk found 1 more (a self-link); the walk's length-based change test gave 26 false "no effect" rows | compare an HTML hash, not its length |
+| A4 etanah issue-solving | ⏭ no etanah work this session | — |
+| A5 sweep / file sweep | ⏭ no ticket sweep this session; the two 2025 proposal PDFs were read by a keyword-line extract, enough for document names | — |

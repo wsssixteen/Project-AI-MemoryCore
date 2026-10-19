@@ -109,3 +109,5 @@ Rather than directly saying "this is wrong", みや asks "is X truly different f
 ---
 
 *Observation System v1.0 — 2026-04-02*
+
+**[2026-10-19]** T2 recurrence of the 2026-10-13 DawahMap rule 1g (photograph at phone and desk and LOOK before reporting) — Masterline app prototype: 3 layout faults (a tile split by a reused class name, 4 tiles in one phone row, a nav pill stretched into a circle on a short page) were found only by looking at the screenshots, none by reading the code; a scripted click-walk then found 1 more (a page linking to itself). For any built screen, pictures plus a click-walk are the proof, not the code read.
