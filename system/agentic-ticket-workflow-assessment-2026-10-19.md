@@ -33,3 +33,12 @@ The 4 proposals are rows in `system/slips.jsonl` (type proposal, 2026-10-19T06:4
 | A5 sweep | ⏭ no sweep ran this session | — | — | — |
 
 The 3 proposals of session 2 are rows in `system/slips.jsonl` (type proposal, 2026-10-19), each with its eval case.
+
+## Session borang-4ae-pdt-jasin-stamp (#284544)
+| Axis | Instance | Verdict |
+|---|---|---|
+| A1 agentic system | stg1 used after the ban, then offered again; now a hook guards the OFF staging schema (17 blocks in 7 d) | fixed mechanically |
+| A2 quest workflow | PROD alter question answered from staging rows; caught by miya | proposal logged (PROD-claim needs a PROD read) |
+| A3 debugging | the cop clash was reproduced only by 20,000 local signings; counts replaced "only sometimes" (11 of 36) | Pena proven module holds |
+| A4 etanah | sub-process task needs Init & Alter, not Alter | proposal logged (knowledge row) |
+| A5 sweep | DB gateway down killed all MCP DB links; psycopg2 fallback hand-written | proposal logged (helper) |
