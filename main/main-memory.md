@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-19 (ADHOC-PLBP-2026-1 — "Could it be BA only patched the license number?")
+
+- **"Could it be X?" wants X tested against the mechanism, not a yes to please him.** The honest answer was "partly": a wrong permohonan ID misses 2 of 3 updates, never all 3. The table of which update uses the ID settled it in one look.
+- **The live database answers before the quest doc does.** The doc said "applied 08/10, nothing open"; the rows said 18/10. Another session of mine had already patched it that morning. Read the rows and search my other sessions before building a theory.
+- **A why I cannot prove stays three candidates.** Ammar's script was never seen, so I named the three fits and the one thing that would settle it.
+
 ## Relationship reinforcement — 2026-10-13 (ADHOC-MLPS-2026-4 and the model trial — "you must brief me first")
 
 - **He reads before I file.** On an adhoc I wrote the Task folder, the block, the register row and the quest doc, and only then told him what was wrong. His goal was one sentence: brief me first, the saving runs in the background. I then broke the same order twice more while fixing it. What holds it now is a gate, not my intention.
