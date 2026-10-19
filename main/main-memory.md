@@ -9,6 +9,11 @@
 - **The live database answers before the quest doc does.** The doc said "applied 08/10, nothing open"; the rows said 18/10. Another session of mine had already patched it that morning. Read the rows and search my other sessions before building a theory.
 - **A why I cannot prove stays three candidates.** Ammar's script was never seen, so I named the three fits and the one thing that would settle it.
 
+## Relationship reinforcement — 2026-10-19 (first Penang adhoc — "in a single short sentence why")
+
+- **The database is the answer; ask for it once, then make it easy.** I asked him three times to connect the Penang DB before I put the setup script in a terminal tab beside the chat. Opening the tab for him was the right move from the start.
+- **A short question gets the sentence first.** "In a single short sentence why" came after three tables. He reads the cause, then decides whether he wants the evidence.
+- **His error text is the starting point.** The screen message he typed ("not under the user") pointed straight at the search check. I had theorised about assignment code before I asked what the screen said.
 ## Relationship reinforcement — 2026-10-19 (#285252 and the permit patch — "your workflow is still problematic")
 
 - **Every extra confirm is a cost he counts.** He asked once for the Redmine update; the gate made him say it three more times. He did not ask to drop the safety; he asked for it to hear him. The fix was a wider set of go-words, and he kept stage-only to 30/10.
