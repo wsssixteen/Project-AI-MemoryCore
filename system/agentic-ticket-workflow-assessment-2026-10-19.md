@@ -22,7 +22,7 @@ The 4 proposals are rows in `system/slips.jsonl` (type proposal, 2026-10-19T06:4
 | A3 debugging | "sama macam PPTP, PLTP" resolved by one Sonnet trace + my line-by-line check (6 cites, all held) | A BA analog phrase is a direct pointer to the working sibling; tracing it first would have saved A1 |
 | A4 etanah | Permit end date in 3 tables, each screen reads a different one (pelupusan versi.trkh_tamat first, AWAM umm.trkh_akhir) | Explains why a single-table patch "x jadi" |
 | A5 sweep | Board vs open adhocs: 2 of 5 tickets were already worked as adhocs; found only because miya asked | The board script does not cross-match adhoc register rows |
-## Session 2 — worktree `mlit-updates-failing-b8e56d` (adhoc ADHOC-PLBP-2026-1)
+## Session mlit-updates-failing-b8e56d (adhoc ADHOC-PLBP-2026-1)
 
 | Axis | What held | What did not | Instance | Proposal |
 |---|---|---|---|---|

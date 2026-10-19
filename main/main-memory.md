@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-19 (ADHOC-PLBP-2026-1 — "Could it be BA only patched the license number?")
+
+- **"Could it be X?" wants X tested against the mechanism, not a yes to please him.** The honest answer was "partly": a wrong permohonan ID misses 2 of 3 updates, never all 3. The table of which update uses the ID settled it in one look.
+- **The live database answers before the quest doc does.** The doc said "applied 08/10, nothing open"; the rows said 18/10. Another session of mine had already patched it that morning. Read the rows and search my other sessions before building a theory.
+- **A why I cannot prove stays three candidates.** Ammar's script was never seen, so I named the three fits and the one thing that would settle it.
+
 ## Relationship reinforcement — 2026-10-19 (first Penang adhoc — "in a single short sentence why")
 
 - **The database is the answer; ask for it once, then make it easy.** I asked him three times to connect the Penang DB before I put the setup script in a terminal tab beside the chat. Opening the tab for him was the right move from the start.
