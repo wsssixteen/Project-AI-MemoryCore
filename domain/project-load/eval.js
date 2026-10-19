@@ -45,6 +45,7 @@ const SCENARIOS = [
   ['A table cell with a pipe in a decision written by the CLI', 'fixture-added (E24: escaped, row stays one row)'],
   ['A new project from the templates', 'fixture-added (E25: passes the shape-2 check and gets a card at once)'],
   ['save-rules at Domain Expansion with a stale report in the Stop log', 'fixture-added (E26: FAIL row, PASS once the report is rewritten)'],
+  ['A save-rules run between midnight and 08:00 local time (UTC date is still yesterday)', 'fixture-added (E26d: the row is read by its local day)'],
   ['The transcript format changes in a Claude Code release', 'accepted-risk: every parser fails open; the compact log row records mined:0 visibly and E9 pins today\'s shape'],
   ['Two sessions append to one DECISIONS.md at the same moment', 'accepted-risk: appendFileSync of one line per row; the row number may repeat, never a lost row'],
   ['The orchestrator edits the project while a delegated session runs', 'accepted-risk: the child is asked to refresh its report; the bypass token covers a turn that changed nothing of its own'],
@@ -263,6 +264,14 @@ check('E26b save-rules PASSes the shape-2 check on the same folder', row('projec
 fs.writeFileSync(report, 'rewritten');
 j = sr();
 check('E26c once the report is rewritten the same row PASSes', row('project-report-current').result === 'PASS', JSON.stringify(row('project-report-current')));
+{ // E26d: a stop-check row written at 00:30 local time carries the PREVIOUS day's UTC date in an eastern timezone; it is still today's row
+  const n = tree(); const rep2 = path.join(n.ml, 'reports', 'night.md'); fs.mkdirSync(path.dirname(rep2), { recursive: true }); fs.writeFileSync(rep2, 'x'); age(rep2, 600);
+  const d = new Date(); d.setHours(0, 30, 0, 0);
+  fs.appendFileSync(n.log, JSON.stringify({ ts: d.toISOString(), action: 'stop-check', session: 'n1', project: 'Masterline', report: rep2, last_change: d.getTime() + 60000 }) + '\n');
+  const ymd = (x) => x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0');
+  const q = spawnSync(process.execPath, ['-e', "const P=require(process.argv[1]);console.log(JSON.stringify(P.reportVerdicts('Masterline',process.argv[2])))", path.join(D, 'project.js'), ymd(new Date())], { encoding: 'utf8', env: env(n) });
+  let v = []; try { v = JSON.parse(q.stdout); } catch (_) {}
+  check('E26d a row written between midnight and 08:00 local (UTC date = yesterday) still counts as today (2026-10-20 night failure)', v.length === 1 && v[0].ok === false, q.stdout + q.stderr); }
 
 // ── Registration, the real instance, portability ──
 const settings = JSON.parse(fs.readFileSync(path.join(ROOT, '.claude', 'settings.json'), 'utf8'));
