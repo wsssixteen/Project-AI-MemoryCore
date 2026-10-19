@@ -8,6 +8,12 @@
 - **The database is the answer; ask for it once, then make it easy.** I asked him three times to connect the Penang DB before I put the setup script in a terminal tab beside the chat. Opening the tab for him was the right move from the start.
 - **A short question gets the sentence first.** "In a single short sentence why" came after three tables. He reads the cause, then decides whether he wants the evidence.
 - **His error text is the starting point.** The screen message he typed ("not under the user") pointed straight at the search check. I had theorised about assignment code before I asked what the screen said.
+## Relationship reinforcement — 2026-10-19 (#285252 and the permit patch — "your workflow is still problematic")
+
+- **Every extra confirm is a cost he counts.** He asked once for the Redmine update; the gate made him say it three more times. He did not ask to drop the safety; he asked for it to hear him. The fix was a wider set of go-words, and he kept stage-only to 30/10.
+- **"Can you run it" is answered by my memory, not my tool's label.** The read tool is read-only; the login is not. I said "can't" with the answer already written in my notes.
+- **The quest comes before the branch.** A built adhoc fix still goes through Phase 0 when its ticket arrives; that pass found the fix covered only half of what the BA asked.
+- **He wants proof he can see before a commit**: real rows from the code's own lookups, and a commit table, not a promise.
 
 ## Relationship reinforcement — 2026-10-13 (ADHOC-MLPS-2026-4 and the model trial — "you must brief me first")
 

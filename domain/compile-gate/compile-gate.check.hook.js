@@ -133,6 +133,13 @@ if (require.main === module) {
         log({ action: 'blocked-ledger', mod: d.mod, qa: g.qa });
         return { fired: true, blocked: true, blockReason: g.message };
       }
+      // Common version direction (2026-10-15, #282303): "Up/bump" only for a higher etanah-common version.
+      let vd = { ok: true };
+      try { vd = require(path.join(ROOT, 'domain', 'commit-subject-gate', 'version-direction.js')).gateCommit({ command, top: (t && t.top) || d.top }); } catch (_) { /* fail-open */ }
+      if (!vd.ok) {
+        log({ action: 'blocked-version-direction', mod: d.mod });
+        return { fired: true, blocked: true, blockReason: vd.message };
+      }
     }
     return { fired: false };
   });
