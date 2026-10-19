@@ -183,9 +183,9 @@ const section = (txt, heading) => { const at = txt.indexOf(heading); return at <
     MLK.push(...TIER);
     const tierSec = section(await board(MLK), '### 3. Internal fixes & other');
     MLK.splice(MLK.length - TIER.length, TIER.length);
-    // tier 1 UAT · tier 2 Permanent Fix · tier 3 QA + Internal Issue (Medium before Low, then oldest) ·
-    // tier 4 Development + CR (High before Medium) · not placed MA Fix last even at High
-    check('K1 table 3 sorts by tracker tier before priority', ids(tierSec).join(',') === '1106,1105,1103,1002,1104,1101,1102,1107', ids(tierSec).join(','));
+    // tier 1 UAT · tier 2 MA Fix (High) + Permanent Fix (Low) · tier 3 QA + Internal Issue (Medium before Low,
+    // then oldest) · tier 4 Development + CR (High before Medium)
+    check('K1 table 3 sorts by tracker tier before priority', ids(tierSec).join(',') === '1106,1107,1105,1103,1002,1104,1101,1102', ids(tierSec).join(','));
 
     // ── pure helpers ────────────────────────────────────────────────────────────────────
     const sp = B.splitByState([]);

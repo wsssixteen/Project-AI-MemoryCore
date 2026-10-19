@@ -13,10 +13,10 @@ Ticket priority order (2026-10-19, replaces the 2026-09-29 order). Maintenance a
 |---|---|
 | 0 | PROD patching: Internal Issue (PROD) 71 · Data Patching (PROD) 64 · Internal Issue (PROD-CR) 63 |
 | 1 | eSOKONGAN 51 · PAT / UAT / FAT family (30 31 32 36 37 38 39 40 45 46 47 57 58) |
-| 2 | Internal Issue (Permanent Fix) 77 |
+| 2 | Internal Issue (Permanent Fix) 77 · Internal Issue (MA Fix) 79 |
 | 3 | Internal Issue 53 · QA 15 |
 | 4 | CR (68 70 73 74 75) · Development 12 · Requirement(s) 13 28 |
-| last | not placed yet: MA Fix 79, Team Initiative (no Redmine tracker has that name), any other tracker |
+| last | not placed yet: Team Initiative (no Redmine tracker has that name), any other tracker |
 | inside a tier | Priority Critical > High > Medium > Low, then an urgent-worded ticket (urgent / segera / kritikal / critical / ASAP / mendesak / secepat mungkin / immediate / emergency / kecemasan), then eSOKONGAN nearest due, others 3-DAY age |
 
 **This is the default order only. He picks the day's tickets himself** by current priority and complexity / effort. On "what tickets today", show the ordered list with each ticket's state; never pick for him.

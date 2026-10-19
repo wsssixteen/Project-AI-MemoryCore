@@ -44,7 +44,7 @@
 
 **"Awareness" = the context a workflow / feature / skill LOADS while it runs.** *"Add X to <workflow> awareness"* (quest awareness, deploy awareness, adhoc awareness …) = put X into what that workflow brings into context every time it fires (its `SKILL.md`, its hook-injected text, its pre-emit gate), so X is a step I always do inside that workflow. Example: "quest awareness" → a rule in `.claude/skills/quest/SKILL.md` (JIT-loaded by `ticket-gate.js` on every ticket). **Banned**: treating an awareness ask as a one-off for this turn only · parking it in CLAUDE.md when it belongs to one workflow's loaded file.
 
-**"eSOKONGAN ticket" (added 2026-09-29 per みや)** = a ticket whose **Tracker** is eSOKONGAN (id 51, the SLA one), ALWAYS — never the Redmine project "eSOKONGAN MELAKA". Ticket order (2026-10-19, default only, he picks the day's tickets): PROD patching → eSOKONGAN + PAT/UAT/FAT → Permanent Fix → Internal Issue + QA → CR + Development/Requirement → the rest; inside each, Priority Critical > High > Medium > Low, then urgent-worded descriptions first. Canonical: `quest/redmine-board.js` + `.claude/auto-memory/feedback_esokongan_means_tracker.md`.
+**"eSOKONGAN ticket" (added 2026-09-29 per みや)** = a ticket whose **Tracker** is eSOKONGAN (id 51, the SLA one), ALWAYS — never the Redmine project "eSOKONGAN MELAKA". Ticket order (2026-10-19, default only, he picks the day's tickets): PROD patching → eSOKONGAN + PAT/UAT/FAT → Permanent Fix + MA Fix → Internal Issue + QA → CR + Development/Requirement → the rest; inside each, Priority Critical > High > Medium > Low, then urgent-worded descriptions first. Canonical: `quest/redmine-board.js` + `.claude/auto-memory/feedback_esokongan_means_tracker.md`.
 
 ---
 

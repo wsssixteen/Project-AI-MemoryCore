@@ -17,7 +17,8 @@ His words: *"Default priority by ticket type/tracker: Maintenance: eSokongan →
 - §Vocabulary ticket-order sentence replaced: PROD patching → eSOKONGAN + PAT/UAT/FAT → Permanent Fix → Internal Issue + QA → CR + Development/Requirement → rest. Default only; he picks.
 - Retired: the 2026-09-29 order (eSOKONGAN tracker → PROD → one pile for the rest). The pile hid Permanent Fix behind Internal Issue and had no place for Development, QA or CR.
 - Paired: `quest/redmine-board.js` `TRACKER_TIER` (tables now PROD → eSOKONGAN → rest by tier) + `quest/redmine-board.eval.js` K1 (34/34) · `domain/protime-plan/protime-plan.js` reads PROD first (eval 112/112) · `feedback_esokongan_means_tracker.md` · list-redmine, sweep, retrieve-redmine skills and session-briefing.md mirrors.
-- Open: MA Fix (79) and Team Initiative (no Redmine tracker has that name) are not placed yet; they sort last.
+- MA Fix (79) placed with Permanent Fix (tier 2), per みや the same day.
+- Open: Team Initiative (no Redmine tracker has that name) is not placed; any unplaced tracker sorts last.
 
 ---
 

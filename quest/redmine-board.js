@@ -343,14 +343,14 @@ function categoryOf(r) {
 // day's work himself by current priority and effort.
 //   0 PROD patching: 63 · 64 · 71
 //   1 eSOKONGAN 51 · PAT / UAT / FAT (30 31 32 36 37 38 39 40 45 46 47 57 58)
-//   2 Internal Issue (Permanent Fix) 77
+//   2 Internal Issue (Permanent Fix) 77 · Internal Issue (MA Fix) 79
 //   3 Internal Issue 53 · QA 15
 //   4 CR (68 70 73 74 75) · Development 12 · Requirement(s) 13 28
-//   9 not placed yet: MA Fix 79, Team Initiative (no tracker of that name), any other tracker
+//   9 not placed yet: Team Initiative (no tracker of that name), any other tracker
 const TRACKER_TIER = new Map([
     ...[63, 64, 71].map(id => [id, 0]),
     ...[51, 30, 31, 32, 36, 37, 38, 39, 40, 45, 46, 47, 57, 58].map(id => [id, 1]),
-    [77, 2],
+    ...[77, 79].map(id => [id, 2]),
     ...[53, 15].map(id => [id, 3]),
     ...[68, 70, 73, 74, 75, 12, 13, 28].map(id => [id, 4]),
 ]);
