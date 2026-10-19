@@ -117,6 +117,13 @@ try {
   seed();
   const r41 = run('not json at all');
   check('F41 malformed stdin exits 0 without writing', r41.status === 0 && state().updated === '2000-01-01', 'exit=' + r41.status);
+  // ── v3 (2026-10-15): the switch rewrites the OFF-schema note ──
+  seed('stg2');
+  say('switched back to stg1');
+  check('F44 switch to stg1 → banned_note names stg2 OFF', state().melaka_staging_schema === 'stg1' && /^stg2 is switched OFF \(staging switch = stg1\)/.test(state().banned_note || ''), state().banned_note);
+  check('F45 the env prompt shows the new note', /stg2 is switched OFF/.test(say('prepare the env please').out), 'note not shown');
+  say('switch to stg2');
+  check('F46 switch back to stg2 → banned_note names stg1 OFF', /^stg1 is switched OFF \(staging switch = stg2\)/.test(state().banned_note || ''), state().banned_note);
   fs.unlinkSync(STATE);
   check('F42 missing state file + env prompt → UNKNOWN, never a default', /target UNKNOWN/.test(say('prepare the env please').out), 'no UNKNOWN line');
 } finally {
