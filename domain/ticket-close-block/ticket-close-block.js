@@ -121,7 +121,9 @@ if (ba && ba !== true && commit && !foreign) {
   }
 }
 
-const env = envs && envs !== true ? envs : 'internal';
+// AWAM: the env line names the module, "internal (Awam)" (2026-10-19 per miya, #285252).
+let env = envs && envs !== true ? envs : 'internal';
+if (isAwam && !/\(awam\)/i.test(env)) env = `${env} (Awam)`;
 if (foreign && ba && ba !== true) {
   console.log(`Salam ${ba}, have deployed fixes to ${env}. Please help to verify.`);
   if (prodScript && prodScript !== true) { console.log(''); console.log(`Attached is the script for PROD (${prodScript}).`); }

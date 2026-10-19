@@ -58,6 +58,7 @@ Hand みや ONE copy-paste box, exactly this shape (added 2026-09-29 per みや,
 Hi infra, kindly need your help to download this file from <STATE> <ENV>. Thank you.
 <lokasi_fail>
 ```
+More than one file = ONE box: "these files", then every `lokasi_fail` on its own line (2026-10-19 per みや, ADHOC-PRBB-2026-16). **Banned**: one box per file.
 
 ## STEP 2 — deliverables (Task folder `2. Fix\`) — EXACTLY these two files, nothing else
 | File | Holds |

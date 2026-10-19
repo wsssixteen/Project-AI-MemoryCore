@@ -63,11 +63,10 @@
 - [infra-script-format](feedback_infra_script_schema_env.md) — Infra/PROD scripts schema-qualified, BEFORE/UPDATE/AFTER
 
 ## Databases and environments (skill: env-check)
-- [staging-and-db-access](feedback_staging_schema_stg2.md) — 🚫 stg1 NOT used: never query, switch to or offer it unless miya asks; stg2 current, never assume; MLIT/STG writable; MCP timeout is not VPN
+- [staging-and-db-access](feedback_staging_schema_stg2.md) — 🚫 stg1 not for root cause / test data / test scenarios; a read of rows that exist only there is allowed, announce "Read from stg1: ..."; stg2 current, never assume; MLIT/STG writable; MCP timeout is not VPN
 - [environments](feedback_uat_fat_environments.md) — UAT + FAT gone; env table, datasource naming (mlit-primary line is stale)
 - [db-gateway](project_db_gateway.md) — one gateway 127.0.0.1:7411; fix = schtasks /run /tn "DB Gateway"
 - [local-dev](project_jboss_launched_by_eclipse.md) — E:\Projects\Melaka, JBoss from Eclipse, hibernate overlay error, GitLab 10.16.63.27
-- [prod-server-logs](reference_prod_server_logs.md) — PROD server logs of WP, Perak, Selangor, Terengganu, Melaka: we fetch them ourselves by SFTP; details in the git-ignored PROD-SERVER-LOGS.md
 - [location-check](feedback_location_check.md) — ask office or home before any network diagnosis; never assume
 
 ## Flowable (skill: bpmn-check)
@@ -101,13 +100,11 @@
 - [whatsapp-rules](feedback_whatsapp_read_rules.md) — READ ONLY, paraphrase, no sender names, never the desktop app
 - [pymtime](project_pymtime.md) — PymTime clock-in app: read PROJECT.md in the MAIN checkout's projects/coding-projects/active/PymTime/ first (full path in the note); remote skip, colleague handover loop, roadmap
 - [dawahmap](project_dawahmap.md) — DawahMap, his yes/no map from reason to Islam (page "Reason to Islam"): read PROJECT.md in the MAIN checkout's projects/coding-projects/active/DawahMap/ first; it argues FOR Islam from the scholars' verbatim words; content first, design later
-- [masterline](project_masterline.md) — Masterline Integrated Sdn Bhd (HVACR, Kemaman, oil and gas clients) app + website, born 2026-10-17, shape 2: read START.md in the MAIN checkout's projects/coding-projects/active/Masterline/ first
 - [islamic-content-sources](feedback_islamic_content_sources.md) — 🚨 Islamic content: scholars of Islam in their verbatim words, never Western academia or a neutral survey; "fair" is not conceding; every quote found on its page first
-- [side-project-folder](feedback_side_project_folder.md) — 🚨 every project gets projects/coding-projects/active/<Name>/ in the MAIN checkout (shape 2: START.md first, DECISIONS.md ledger); rules in the /project skill; orchestrated project = Fable briefs and checks, Opus 5.5 high child sessions build and report; memory = pointer, no state
+- [side-project-folder](feedback_side_project_folder.md) — 🚨 every project gets projects/coding-projects/active/<Name>/ (PROJECT.md index + VERSIONS, ARCHITECTURE, PROOFS, ROADMAP) in the MAIN checkout; update at every bulk change; memory = pointer, no state
 - [arabic-review](project_arabic_review.md) — /arabic daily vocab review, seconds to 2 minutes in chat; meanings are my job
 - [art-and-media](feedback_verify_generated_art_externally.md) — external art check; samples are the spec; MAS animation; Drive video download
 - [parked-projects](project_etanah_organize.md) — etanah-organize, aunt slides, held #255773 SPOC handoff
 
 ## User
-- [appraisal-self-initiatives](project_appraisal_self_initiatives.md) — miya's appraisal list: every fix BA did not ask for that we included, one row per ticket
 - [user-profile](user_career_vision.md) — career vision; male; learning JSF tracing; みや + Japanese acknowledgments
