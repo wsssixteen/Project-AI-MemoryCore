@@ -1,6 +1,6 @@
-# Agentic ticket workflow assessment — 2026-10-20 (session permohonan-stg2-stg1-issue)
+# Agentic ticket workflow assessment — 2026-10-20 (session ticket-284884-rubric)
 
-| Axis | Instance this session | Assessment |
+| Axis | What happened (concrete instance) | Assessment |
 |---|---|---|
 | A1 agentic system | `lib/audit-briefing.js --days 7` printed "0 hook fires · 0 turns" while ticket-gate, alter-ticket-gate and five Stop hooks visibly fired this session | The audit reads an empty telemetry source; every "never fired" row in its NOT WORKING block is unproven. The RETIRE list it hands miya must not be acted on until the source is fixed. |
 | A1 agentic system | DB gateway on 127.0.0.1:7411: task "running", listener dead (`OSError: [WinError 64]`), `schtasks /run` alone did nothing | The memory fix line (`schtasks /run`) is not enough when the task is alive but its socket died; `/end` then `/run` restored it. The session's MCP tools stayed failed after the restore. |
@@ -59,3 +59,8 @@ Proposals logged: A1 audit-read exemption in adhoc-brief-first · A2 ask for the
 - A3 debugging: the PLTP root cause took ~15 tool calls once the right source was found; the slow part was finding the teknikal source at all (no Melaka clone; Terengganu then Penang clones read first). Instance: wrong-state-source slip.
 - A4 etanah: staging answers were given from stg2 for hours although the switch said stg1; the BA's AWAM screen disagreed before I checked. Instance: C01/2026/12 stg1 vs stg2.
 - A5 sweep: the audit briefing run from a worktree reports 0 fires / 0 turns and lists every hook as dead (telemetry lives only in the main checkout). Instance: this DE's first 7.4 run.
+| A1 agentic system | `lib/audit-briefing.js` run from the worktree reported 0 hook fires and listed ~80 hooks as "never fired", while ticket-gate, auto-skill-trigger, PlainFirstGate, TurnChecklistGate and others fired visibly in this session. Telemetry logs live in the main checkout (gitignored), so a worktree run sees none. | The audit's NOT WORKING list is false when run from a worktree. Proposal logged. |
+| A2 quest workflow | #284884: Rubric chose a fix in 4 `.jrxml` files and Apply staged them on our ticket branch. OTHER-MODULES.md and JASPER-REPORTS.md (`printReportUsingSQL` = reports team) already said reports are not ours. miya caught it at commit review. | Ownership was not checked at Rubric. Rule added to cross-module-check skill; a deterministic check is proposed. |
+| A3 debugging efficiency | Blank page 2 was found by an offline Jasper render (WAR lib jars + JDBC creds read from standalone.xml), and it caught that the first fix (remove break) orphaned a header on a short page 1. | High value; the render script lives only in a scratchpad. Proposal to promote it. |
+| A4 etanah issue-solving | Jadual 1 points h/i/j come from `UMM_P_HKMLK_LAIN` with no HKMLK_ID; PROD 0 of 429 rows carry ID_HAKMILIK. Fatin (reports) needed this to make the fix. | Fact not yet in DATABASE.md (deferred in QA-284884). |
+| A5 sweep / file sweep | ⏭ no sweep ran this session. | — |
