@@ -96,3 +96,16 @@
 {"ts":"2026-10-20T02:55:23.387Z","parts":9,"pass":30,"fail":1,"unruled":0,"skip":0,"dur_ms":9226,"partial":false}
 {"ts":"2026-10-20T03:06:34.713Z","parts":9,"pass":34,"fail":1,"unruled":0,"skip":0,"dur_ms":17949,"partial":false}
 {"ts":"2026-10-20T03:08:46.276Z","parts":10,"pass":39,"fail":1,"unruled":0,"skip":0,"dur_ms":23467,"partial":false}
+{"ts":"2026-10-20T03:22:37.120Z","parts":8,"pass":38,"fail":0,"unruled":0,"skip":0,"dur_ms":12505,"partial":false}
+{"ts":"2026-10-19T17:09:32.994Z","parts":1,"pass":1,"fail":2,"unruled":0,"skip":0,"dur_ms":48,"partial":true}
+{"ts":"2026-10-19T17:09:33.169Z","parts":1,"pass":1,"fail":2,"unruled":0,"skip":0,"dur_ms":51,"partial":true}
+{"ts":"2026-10-19T17:10:22.620Z","parts":1,"pass":1,"fail":2,"unruled":0,"skip":0,"dur_ms":63,"partial":true}
+{"ts":"2026-10-19T17:10:22.808Z","parts":1,"pass":1,"fail":2,"unruled":0,"skip":0,"dur_ms":57,"partial":true}
+{"ts":"2026-10-19T17:11:57.113Z","parts":1,"pass":1,"fail":2,"unruled":0,"skip":0,"dur_ms":59,"partial":true}
+{"ts":"2026-10-19T17:11:57.312Z","parts":1,"pass":1,"fail":2,"unruled":0,"skip":0,"dur_ms":62,"partial":true}
+{"ts":"2026-10-19T17:12:56.968Z","parts":1,"pass":1,"fail":3,"unruled":0,"skip":0,"dur_ms":61,"partial":true}
+{"ts":"2026-10-19T17:12:57.143Z","parts":1,"pass":2,"fail":2,"unruled":0,"skip":0,"dur_ms":54,"partial":true}
+{"ts":"2026-10-19T17:13:31.113Z","parts":1,"pass":1,"fail":3,"unruled":0,"skip":0,"dur_ms":58,"partial":true}
+{"ts":"2026-10-19T17:13:31.310Z","parts":1,"pass":2,"fail":2,"unruled":0,"skip":0,"dur_ms":53,"partial":true}
+{"ts":"2026-10-20T03:22:31.726Z","parts":4,"pass":15,"fail":3,"unruled":0,"skip":0,"dur_ms":1594,"partial":false}
+{"ts":"2026-10-20T03:22:33.127Z","parts":4,"pass":15,"fail":3,"unruled":0,"skip":0,"dur_ms":1258,"partial":false}
