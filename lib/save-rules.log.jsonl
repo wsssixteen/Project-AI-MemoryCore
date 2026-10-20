@@ -125,3 +125,4 @@
 {"ts":"2026-10-20T03:26:35.143Z","parts":1,"pass":2,"fail":2,"unruled":0,"skip":0,"dur_ms":181,"partial":true}
 {"ts":"2026-10-20T04:08:08.209Z","parts":1,"pass":1,"fail":3,"unruled":0,"skip":0,"dur_ms":89,"partial":true}
 {"ts":"2026-10-20T04:08:08.804Z","parts":1,"pass":2,"fail":2,"unruled":0,"skip":0,"dur_ms":61,"partial":true}
+{"ts":"2026-10-20T04:08:30.143Z","parts":14,"pass":50,"fail":0,"unruled":2,"skip":0,"dur_ms":9242,"partial":false}
