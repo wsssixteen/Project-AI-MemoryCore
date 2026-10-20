@@ -64,6 +64,7 @@ process.stdin.setEncoding('utf8');
 process.stdin.on('data', d => input += d);
 process.stdin.on('end', () => {
   try {
+    try { if (!require(path.join(__dirname, '..', '..', 'lib', 'session-scope.js')).wantsEtanah(input, 'codemap-recon-consult')) process.exit(0); } catch (_) { /* DawahMap prompt, no etanah signal: silent; check unusable: as before */ }
     const text = safeRead(ACTIVE_TXT);
     if (!text) process.exit(0);
 

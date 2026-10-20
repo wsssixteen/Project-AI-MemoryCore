@@ -1,63 +1,111 @@
 #!/usr/bin/env node
-// project-load.check.hook.js — born via core/forge.js (2026-10-08)
+// project-load.check.hook.js — born via core/forge.js (2026-10-08); v2 2026-10-17 (the project system)
 // TRIGGER: the prompt names a project that has a folder projects/coding-projects/active/<Name>/ with project.json (matched by its aliases)
-// ACTION: inject: read that project's PROJECT.md in the main checkout first, then only the file its table names; documents updated at every bulk change
+// ACTION: inject: read that project's index first. v2: a project in shape 2 (project.json "shape": 2, index START.md) gets its
+//         PROJECT CARD on the first mention in a session (goal, spec, hard rules, state, next step, open decisions, last
+//         decisions), the session is bound to the project in log.jsonl, and a report path named in the prompt marks the
+//         session as delegated. Fallback: a session bound to a project that was compacted and got no card at SessionStart
+//         gets the card on its next prompt, named or not.
 // Lifecycle: created (narrow trigger — widen only with confirmed-fire evidence).
 //
 // NOD: miya 2026-10-08 — "make sure everything WILL be loaded every single time we load a project".
-// A project = a folder with project.json { name, aliases[], repo?, index? }. No registry to keep: the folders ARE the list.
+// NOD v2: miya 2026-10-17 — "it will only naturally survive compaction ... I can confidently and without worry know you'll remember the critical & key details".
+// A project = a folder with project.json { name, aliases[], repo?, index?, shape? }. No registry to keep: the folders ARE the list.
 // The folder is not in git, so it is always read from the MAIN checkout, whatever folder this session runs in.
 'use strict';
 const fs = require('fs');
 const path = require('path');
 const ROOT = process.env.CLAUDE_PROJECT_DIR || path.resolve(__dirname, '..', '..');
-
-function mainRootOf(root) {
-  try { return require(path.join(root, 'lib', 'states.js')).mainRoot(root); } catch (_) { return String(root).replace(/[\\/]\.claude[\\/]worktrees[\\/][^\\/]+[\\/]?$/, ''); }
-}
-const MAIN = path.resolve(process.env.PROJECT_LOAD_MAIN_ROOT || mainRootOf(ROOT));
-const ACTIVE = path.join(MAIN, 'projects', 'coding-projects', 'active');
-const LOG = process.env.PROJECT_LOAD_LOG || path.join(MAIN, 'domain', 'project-load', 'log.jsonl');
-const REARM_MS = Number(process.env.PROJECT_LOAD_REARM_MS) || 30 * 60000;   // the same project is announced again after 30 min (a compaction may have dropped it)
+const P = require(path.join(__dirname, 'project.js'));
+const { listProjects, namedIn, mainRootOf } = P;
+const REARM_MS = Number(process.env.PROJECT_LOAD_REARM_MS) || 30 * 60000;   // the same project is announced again after 30 min
 const BYPASS_RE = /\[skip-project-load:\s*[^\]\s][^\]]*\]/i;
-const esc = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-// → [{ name, dir, index, aliases[] }] for every folder that holds a readable project.json
-function listProjects() {
-  let dirs; try { dirs = fs.readdirSync(ACTIVE, { withFileTypes: true }); } catch (_) { return []; }
-  const out = [];
-  for (const d of dirs) {
-    if (!d.isDirectory()) continue;
-    let j; try { j = JSON.parse(fs.readFileSync(path.join(ACTIVE, d.name, 'project.json'), 'utf8').replace(/^﻿/, '')); } catch (_) { continue; }
-    if (!j || typeof j !== 'object') continue;
-    const name = typeof j.name === 'string' && j.name ? j.name : d.name;
-    const aliases = [...new Set([name].concat(Array.isArray(j.aliases) ? j.aliases : []).map(a => String(a || '').trim().toLowerCase()).filter(a => a.length >= 3))];
-    out.push({ name, dir: path.join(ACTIVE, d.name), index: typeof j.index === 'string' && j.index ? j.index : 'PROJECT.md', aliases });
-  }
-  return out;
-}
-
-// whole-word match: "pymtime" fires, "pymtimer" and "mypymtime" do not
-function namedIn(prompt, projects) {
-  const text = String(prompt || '').toLowerCase();
-  return projects.filter(p => p.aliases.some(a => new RegExp('(^|[^a-z0-9])' + esc(a) + '([^a-z0-9]|$)').test(text)));
-}
-
-function firedLately(session, name, now) {
-  let lines; try { lines = fs.readFileSync(LOG, 'utf8').trim().split('\n').slice(-300); } catch (_) { return false; }
-  for (const l of lines) { try { const r = JSON.parse(l); if (r.action === 'fired' && r.session === session && r.project === name && now - Date.parse(r.ts) < REARM_MS) return true; } catch (_) {} }
-  return false;
-}
-
+// Shape 1 (the 2026-10-08 folder): the pointer text, unchanged.
 function contextFor(p) {
   const idx = path.join(p.dir, p.index);
   const has = fs.existsSync(idx);
   return [
     '📂 project-load: ' + p.name + ' is a project with its own folder (main checkout, not in git).',
-    has ? '   READ FIRST: ' + idx : '   ⚠️ its index is MISSING: ' + idx + ' — create it first (shape: .claude/auto-memory/feedback_side_project_folder.md).',
+    has ? '   READ FIRST: ' + idx : '   ⚠️ its index is MISSING: ' + idx + ' — create it first (shape: .claude/skills/project/SKILL.md).',
     '   It is the index: state now, which file answers which question, hard rules, how to resume. Then open only the file its table names.',
     '   Every bulk change ends with: VERSIONS.md row + PROJECT.md state + ROADMAP.md status, same turn (Domain Expansion checks this with lib/save-rules.js).',
   ].join('\n') + '\n';
+}
+function pointerFor(p) {
+  return '📂 project-load: ' + p.name + ' — its card was given earlier in this session; START.md is the record: ' + path.join(p.dir, 'START.md') + '\n';
+}
+// A session is delegated only by its START BRIEF (the first prompt of the session), and only for the report path its
+// brief tells it to write. A path quoted later (a child's note, a SendMessage, a reference to another session's report)
+// never binds (2026-10-19: the orchestrator, the app-samples session and project-system were all bound to website.md).
+const REPORT_RE = /reports[\\/]([A-Za-z0-9._-]+\.md)\b/gi;
+function reportIn(prompt, p) {
+  const text = String(prompt || '');
+  const names = []; let m;
+  REPORT_RE.lastIndex = 0;
+  while ((m = REPORT_RE.exec(text))) {
+    if (/^_template\.md$/i.test(m[1])) continue;
+    const before = text.slice(Math.max(0, m.index - 240), m.index);
+    const line = before.slice(before.lastIndexOf('\n') + 1);
+    names.push({ name: m[1], write: /\b(write|writes|update|keep)\b/i.test(line) });
+  }
+  const written = [...new Set(names.filter(x => x.write).map(x => x.name))];
+  const all = [...new Set(names.map(x => x.name))];
+  const pick = written.length === 1 ? written[0] : (!written.length && all.length === 1 ? all[0] : null);
+  return pick ? path.join(p.dir, 'reports', pick) : null;
+}
+// The start brief: no earlier prompt of this session in the transcript (the prompt itself may already be written there).
+function isStartBrief(transcriptPath, prompt) {
+  if (!transcriptPath) return false;
+  const here = String(prompt || '').trim();
+  let earlier; try { earlier = P.humanPrompts(transcriptPath).filter(x => x.origin !== 'popup' && x.text.trim() !== here); } catch (_) { return false; }
+  return earlier.length === 0;
+}
+const UNBIND_RE = /\[project-unbind:\s*([^\]]+?)\s*\]/gi;
+
+function decide(data, rows, now) {
+  const prompt = data && data.prompt;
+  if (!prompt || BYPASS_RE.test(prompt)) return { out: '', log: [] };
+  const session = String((data && data.session_id) || 'no-session');
+  const mine = rows.filter(r => r.session === session);
+  const projects = listProjects();
+  const out = [], log = [];
+  const seen = new Set();
+  // [project-unbind: Masterline] in a prompt: this session is not a delegated session of that project (report check off).
+  let um; UNBIND_RE.lastIndex = 0;
+  while ((um = UNBIND_RE.exec(prompt))) {
+    const p = P.findProject(um[1]); if (!p) continue;
+    log.push({ action: 'unbound', via: 'prompt-marker', report_only: true, session, project: p.name });
+    out.push('📂 project-load: ' + p.name + ' — this session is no longer bound as delegated (report check off).\n');
+    seen.add(p.name);
+  }
+  const brief = isStartBrief(data.transcript_path, prompt);
+  for (const p of namedIn(prompt, projects).slice(0, 3)) {
+    if (seen.has(p.name)) continue;
+    const prior = mine.filter(r => r.project === p.name && (r.action === 'fired' || r.action === 'resumed'));
+    const recent = prior.some(r => now - Date.parse(r.ts) < REARM_MS);
+    const report = brief ? reportIn(prompt, p) : null;
+    if (recent && !report) continue;
+    seen.add(p.name);
+    let text;
+    if (p.shape >= 2) text = prior.length ? pointerFor(p) : P.card(p, { kind: 'mention', report });
+    else text = contextFor(p);
+    if (recent && report) text = P.card(p, { kind: 'mention', report });
+    out.push(text);
+    log.push({ action: 'fired', session, project: p.name, index_exists: fs.existsSync(path.join(p.dir, p.index)), shape: p.shape, card: p.shape >= 2 && (!prior.length || !!report), ...(report ? { report } : {}) });
+  }
+  // Fallback: compacted after its last card and no card came back at SessionStart → print it now.
+  for (const b of P.bindings(session)) {
+    if (seen.has(b.project)) continue;
+    const last = (act) => mine.filter(r => r.project === b.project && act.includes(r.action)).map(r => Date.parse(r.ts)).reduce((a, x) => Math.max(a, x), 0);
+    const compacted = last(['compact']);
+    if (!compacted || last(['resumed', 'fired']) > compacted) continue;
+    const p = projects.find(x => x.name === b.project); if (!p) continue;
+    const mined = P.minedSince(session, b.project);
+    out.push('⚠️ project-load fallback: the SessionStart card did not arrive after the compaction; here it is.\n' + P.card(p, { kind: 'compact', report: b.report, mined }));
+    log.push({ action: 'resumed', via: 'prompt-fallback', session, project: p.name });
+  }
+  return { out: out.join(''), log };
 }
 
 if (require.main === module) {
@@ -65,15 +113,11 @@ if (require.main === module) {
   runHook({ name: 'project-load', event: 'UserPromptSubmit' }, (input) => {
     let data = input;
     if (typeof input === 'string') { try { data = JSON.parse(input || '{}'); } catch (_) { return { fired: false }; } }
-    const prompt = data && data.prompt;
-    if (!prompt || BYPASS_RE.test(prompt)) return { fired: false };
-    const session = String((data && data.session_id) || 'no-session');
     const now = Date.now();
-    const hits = namedIn(prompt, listProjects()).filter(p => !firedLately(session, p.name, now)).slice(0, 3);
-    if (!hits.length) return { fired: false };
-    for (const p of hits) { try { fs.mkdirSync(path.dirname(LOG), { recursive: true }); fs.appendFileSync(LOG, JSON.stringify({ ts: new Date(now).toISOString(), action: 'fired', session, project: p.name, index_exists: fs.existsSync(path.join(p.dir, p.index)) }) + '\n'); } catch (_) {} }
-    return { fired: true, blocked: false, contextOut: hits.map(contextFor).join('') };
+    const d = decide(data, P.logRows(), now);
+    for (const row of d.log) P.logAppend(row);
+    return d.out ? { fired: true, blocked: false, contextOut: d.out } : { fired: false };
   });
 }
 
-module.exports = { listProjects, namedIn, mainRootOf, contextFor };
+module.exports = { listProjects, namedIn, mainRootOf, contextFor, decide };

@@ -31,6 +31,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\adhoc-lifecycle\\\\adhoc-lifecycle.check.hook.js\""
           }
         ]
+      },
+      {
+        "matcher": "compact|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\project-load\\project-load.resume.hook.js\""
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
@@ -400,6 +409,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\stg1-block\\\\stg1-block.check.hook.js\""
           }
         ]
+      },
+      {
+        "matcher": "mcp__ccd_session__spawn_task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\spawn-task-folder-guard\\spawn-task-folder-guard.check.hook.js\""
+          }
+        ]
       }
     ],
     "Stop": [
@@ -622,6 +640,16 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\skill-invocation-log\\\\skill-invocation-log.check.hook.js\""
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\project-load\\project-load.precompact.hook.js\""
           }
         ]
       }

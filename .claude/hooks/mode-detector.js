@@ -93,6 +93,7 @@ function detectMode() {
 }
 
 function main() {
+  try { if (!require(path.join(__dirname, '..', '..', 'lib', 'session-scope.js')).wantsEtanah(undefined, 'mode-detector')) return console.log('🎯 Mode: Discussion'); } catch (_) { /* DawahMap prompt, no etanah signal: not quest work; check unusable: as before */ }
   const mode = detectMode();
   console.log(`🎯 Mode: ${mode}`);
 }

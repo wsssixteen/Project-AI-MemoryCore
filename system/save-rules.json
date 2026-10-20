@@ -1,6 +1,6 @@
 {
-  "version": 2,
-  "note": "THE one place a save rule is declared. Each rule cites the file that already states it; lib/save-rules.js holds only the check implementations. Kinds and paths follow system/INDEX.md (six kinds). Path patterns: * = one segment part, ** = anything; a pattern matches the path itself and everything under it; the part is the path cut at the pattern's depth. The most specific pattern wins. A kind with no rule for a part gives one UNRULED row (not a FAIL) so the owner can rule it. Version 2 (2026-10-08): a project with its own repo is a folder projects/coding-projects/active/<Name>/ that holds project.json; listing its literal path under the projects kind (and in the INDEX.md map fence) is what installs it.",
+  "version": 3,
+  "note": "THE one place a save rule is declared. Each rule cites the file that already states it; lib/save-rules.js holds only the check implementations. Kinds and paths follow system/INDEX.md (six kinds). Path patterns: * = one segment part, ** = anything; a pattern matches the path itself and everything under it; the part is the path cut at the pattern's depth. The most specific pattern wins. A kind with no rule for a part gives one UNRULED row (not a FAIL) so the owner can rule it. Version 2 (2026-10-08): a project with its own repo is a folder projects/coding-projects/active/<Name>/ that holds project.json; listing its literal path under the projects kind (and in the INDEX.md map fence) is what installs it. Version 3 (2026-10-17): kind projects gains project-shape2 and project-report-current for folders in the project system shape (project.json \"shape\": 2). The kind tools (system/tools.json, the Tool registry, INDEX.md seventh kind since 2026-10-14) is listed with no rule yet: its rows print UNRULED for みや to rule.",
   "ignore": [
     "**/log.jsonl",
     "**/*.log.jsonl",
@@ -229,6 +229,13 @@
       ]
     },
     {
+      "kind": "tools",
+      "match": [
+        "system/tools.json"
+      ],
+      "rules": []
+    },
+    {
       "kind": "memory",
       "match": [
         "main/*",
@@ -400,7 +407,8 @@
         "etanah_atlas",
         "projects/coding-projects/active/PymTime",
         "projects/coding-projects/active/DawahMap",
-        "projects/coding-projects/active/mas-ergonomics-animation"
+        "projects/coding-projects/active/mas-ergonomics-animation",
+        "projects/coding-projects/active/Masterline"
       ],
       "rules": [
         {
@@ -438,6 +446,24 @@
             "projects/coding-projects/active/*"
           ],
           "source": ".claude/auto-memory/feedback_side_project_folder.md and system/INDEX.md (Change record: the Project row)"
+        },
+        {
+          "id": "project-shape2",
+          "text": "A project in shape 2 (project.json \"shape\": 2) has START.md with the six sections (Goal, Spec with numbered rows, Hard rules, State now, Next step, Open decisions) under 20,000 characters, project.json index START.md, and a DECISIONS.md ledger table.",
+          "check": "project-shape2",
+          "applies": [
+            "projects/coding-projects/active/*"
+          ],
+          "source": ".claude/skills/project/SKILL.md and domain/project-load/README.md (the project system, 2026-10-17)"
+        },
+        {
+          "id": "project-report-current",
+          "text": "Every delegated session of a shape-2 project that ended a turn today left its reports\\<session-name>.md newer than its last change in the project folder (read from the Stop gate log).",
+          "check": "project-report-current",
+          "applies": [
+            "projects/coding-projects/active/*"
+          ],
+          "source": ".claude/skills/project/SKILL.md (delegated sessions) and domain/project-load/README.md"
         }
       ]
     }

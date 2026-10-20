@@ -97,6 +97,7 @@ runHook({ name: 'latent-bugs-gate', event: 'UserPromptSubmit' }, (input) => {
   const prompt = (data && data.prompt) || '';
   if (!prompt) return { fired: false };
   if (BYPASS_RE.test(prompt)) return { fired: false };
+  try { if (!require(path.join(__dirname, '..', '..', 'lib', 'session-scope.js')).wantsEtanah(data, 'latent-bugs-gate')) return { fired: false }; } catch (_) { /* DawahMap prompt, no etanah signal: silent; check unusable: as before */ }
 
   if (!(PREFIXED_RE.test(prompt) || QUEST_START_RE.test(prompt) ||
         RETRIEVAL_RE.test(prompt) || BARE_NUM_RE.test(prompt))) {

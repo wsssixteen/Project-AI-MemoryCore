@@ -1,0 +1,7 @@
+{
+  "name": "{{NAME}}",
+  "aliases": [],
+  "index": "START.md",
+  "shape": 2,
+  "docs": ["START.md", "DECISIONS.md", "PROJECT.md", "VERSIONS.md", "ARCHITECTURE.md", "PROOFS.md", "ROADMAP.md"]
+}

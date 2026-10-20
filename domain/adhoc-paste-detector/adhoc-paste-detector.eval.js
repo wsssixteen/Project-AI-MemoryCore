@@ -101,6 +101,13 @@ const cases = [
       '', 'Isu', 'Papar ralat bila klik jana',
     ].join('\n'),
     want: ['adhoc-paste-detector', '1a. MOVE', 'Desktop\\RalatPRBB.txt', 'Move-Item'], notWant: [] },
+  // ── 2026-10-19 (miya): a photo pasted into chat is MOVED too (ADHOC-PRBB-2026-16 replay) ──
+  { id: 'P14b pasted chat image is named in the MOVE step', prompt: [
+      'Ruri, can you please help this adhoc melaka prod issue.', 'PDTAG', 'Urusan : PRBB',
+      'ID : PTMLK/03/L/PRBB/2026/5 User: samsiah@melaka.gov.my', 'Issue : takde tandatangan pegawai pada borang', 'Mohon Semak',
+      '[Image: source: C:\\Users\\Ridhwan\\AppData\\Local\\Temp\\claude\\x\\images\\1.jpg]',
+    ].join('\n'),
+    want: ['adhoc-paste-detector', '1a. MOVE', 'images\\1.jpg'], notWant: ['none attached'] },
   { id: 'P15 no attachment still carries the MOVE step', prompt: 'boleh check kenapa PTMLK/03/L/MCL/2026/12 tak boleh proceed? ralat keluar',
     want: ['1a. MOVE', 'none attached'], notWant: [] },
   // ── 2026-10-03 (Terengganu support): the scaffold names the pasted state's Task folder + knowledge dir ──

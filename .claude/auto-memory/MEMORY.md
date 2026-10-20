@@ -38,6 +38,7 @@
 - [code-comments](feedback_no_extra_comments.md) — one explanatory line max, no commented-out code; no person names, dates or log stamps
 - [states](feedback_state_aware_knowledge_load.md) — state via lib/states.js; same knowledge file names; Melaka · Terengganu · Kedah = PostgreSQL, never Oracle; Perak · WP · Selangor = Oracle
 - [terengganu](project_terengganu_active.md) — ACTIVE since 2026-10-03: knowledge, stg2 DB, trg/master
+- [penang](project_penang_active.md) — ACTIVE since 2026-10-14: refers to Melaka; code at `E:ProjectsPenang` (search it first); 17 BPMN on disk (Sep snapshot); DB `postgres-pgit-pg` CONNECTED 2026-10-19 (schemas et_main_pgit · et_flowable17_pgit); gaps = `node lib/state-migration.js gates --state penang`
 - [perak](reference_perak_codev_scope.md) — co-dev scope, Oracle, branch off origin/master, deploy via master, hotfix box
 
 ## Adhoc (skill: adhoc-save)
@@ -63,11 +64,10 @@
 - [infra-script-format](feedback_infra_script_schema_env.md) — Infra/PROD scripts schema-qualified, BEFORE/UPDATE/AFTER
 
 ## Databases and environments (skill: env-check)
-- [staging-and-db-access](feedback_staging_schema_stg2.md) — 🚫 stg1 NOT used: never query, switch to or offer it unless miya asks; stg2 current, never assume; MLIT/STG writable; MCP timeout is not VPN
+- [staging-and-db-access](feedback_staging_schema_stg2.md) — 🚫 stg1 not for root cause / test data / test scenarios; a read of rows that exist only there is allowed, announce "Read from stg1: ..."; stg2 current, never assume; MLIT/STG writable; MCP timeout is not VPN
 - [environments](feedback_uat_fat_environments.md) — UAT + FAT gone; env table, datasource naming (mlit-primary line is stale)
 - [db-gateway](project_db_gateway.md) — one gateway 127.0.0.1:7411; fix = schtasks /run /tn "DB Gateway"
 - [local-dev](project_jboss_launched_by_eclipse.md) — E:\Projects\Melaka, JBoss from Eclipse, hibernate overlay error, GitLab 10.16.63.27
-- [prod-server-logs](reference_prod_server_logs.md) — PROD server logs of WP, Perak, Selangor, Terengganu, Melaka: we fetch them ourselves by SFTP; details in the git-ignored PROD-SERVER-LOGS.md
 - [location-check](feedback_location_check.md) — ask office or home before any network diagnosis; never assume
 
 ## Flowable (skill: bpmn-check)
@@ -78,7 +78,7 @@
 - [redmine-write-nod](feedback_redmine_write_needs_nod.md) — Redmine writes are under miya's name; exact text + nod first; one standing exception: New to In Progress at quest start
 - [redmine-sla](reference_redmine_sla_hours.md) — Priority = SLA hours: Critical 1, High 6, Medium 22
 - [redmine-rootcause](feedback_redmine_rootcause_format.md) — cause only, max 2 plain-Malay sentences, no fix line
-- [ticket-writing-style](feedback_ticket_writing_style.md) — miya's plain ticket voice; BA reply first; junior gets hints only
+- [ticket-writing-style](feedback_ticket_writing_style.md) — miya's plain ticket voice; BA reply first; junior gets hints only; BA test scenario = SENARIO list of key names
 - [template-junior-builds](feedback_template_work_junior_builds.md) — template .docx: junior builds, I draft the guide, ask first
 
 ## Etanah facts
@@ -92,7 +92,7 @@
 - [domain-expansion-banner](feedback_domain_expansion_format.md) — Domain Expansion banner, canonical format only
 - [bankai-banner](feedback_bankai_format.md) — Bankai banner format; never referenced casually
 - [project-name](project_name_lapis_lazuli.md) — project = "Lapis Lazuli"; "Ruri" = my name only; physical rename not done
-- [installed-skills](project_installed_skills.md) — third-party skills (wayfinder); record every install here
+- [installed-skills](project_installed_skills.md) — third-party skills and plugins (wayfinder 2026-09-11; impeccable, diagram-design, hyperframes, mattpocock-skills, REA, taste-skill, ui-ux-pro-max, awesome-design-md 2026-10-19/20): how each was installed and what it costs; which tool for which job = /project skill section 7; record every install here the moment it happens
 - [artifact-registry](reference_artifact_registry.md) — every published artifact + link; update by link, never a second copy
 - [observatory](reference_observatory.md) — diagnose first with node lib/observatory.js --brief; app on :7790
 

@@ -36,6 +36,7 @@ runHook({ name: 'bug-db', event: 'UserPromptSubmit' }, (input) => {
   let data = {}; try { data = JSON.parse(input || '{}'); } catch (_) {}
   const prompt = String(data.prompt || '');
   if (!/#?\d{6}\b/.test(prompt)) return { fired: false }; // narrow trigger: ticket engagement only
+  try { if (!require(path.join(__dirname, '..', '..', 'lib', 'session-scope.js')).wantsEtanah(data, 'bug-db')) return { fired: false }; } catch (_) { /* DawahMap prompt, no etanah signal: silent; check unusable: as before */ }
   let hits = [];
   let st = { state: null, record: states.get(states.reference()) };
   try {

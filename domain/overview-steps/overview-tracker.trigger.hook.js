@@ -24,6 +24,7 @@ process.stdin.on('data', d => input += d);
 process.stdin.on('end', () => {
   try {
     JSON.parse(input || '{}'); // validate (prompt unused; fires every turn while state exists)
+    try { if (!require(path.join(__dirname, '..', '..', 'lib', 'session-scope.js')).wantsEtanah(input, 'overview-tracker')) process.exit(0); } catch (_) { /* DawahMap prompt, no etanah signal: silent; check unusable: as before */ }
     let files = [];
     try { files = fs.readdirSync(STATE).filter(f => f.endsWith('.json')); } catch (_) { process.exit(0); }
     const out = [];

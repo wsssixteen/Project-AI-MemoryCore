@@ -23,3 +23,5 @@ metadata:
 
 **Why:** he watched a scholar's street discussions and wants a methodical path of sound questions, rational first, then other religions, then the Quran and the Prophet ﷺ. Version 0.1 and 0.2 were built by me as a neutral academic survey (my prompts told the agents to use the Western academic literature, build up every objection and rate steps "contested"); he rejected that outright.
 **How to apply:** any DawahMap work → read `PROJECT.md`, then `PROOFS.md` section 1 before writing or briefing an agent. An agent brief for this project quotes his words above.
+
+**Read first, every start and after every auto-compact (his ruling 2026-10-15):** `DawahMap\SPEC.md`, the signed spec, "almost like your own CLAUDE.MD file". Until it exists and is signed: `DawahMap\wayfinder\map.md` (the agreement map, worked with the wayfinder skill, one ticket per session) and the corrections ledger `app\review\feedback.json` (rule 1o). PROJECT.md section 5 step -1 says the same.

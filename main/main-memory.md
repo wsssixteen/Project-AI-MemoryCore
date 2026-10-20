@@ -3,6 +3,37 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-19 (ADHOC-PLBP-2026-1 — "Could it be BA only patched the license number?")
+
+- **"Could it be X?" wants X tested against the mechanism, not a yes to please him.** The honest answer was "partly": a wrong permohonan ID misses 2 of 3 updates, never all 3. The table of which update uses the ID settled it in one look.
+- **The live database answers before the quest doc does.** The doc said "applied 08/10, nothing open"; the rows said 18/10. Another session of mine had already patched it that morning. Read the rows and search my other sessions before building a theory.
+- **A why I cannot prove stays three candidates.** Ammar's script was never seen, so I named the three fits and the one thing that would settle it.
+
+## Relationship reinforcement — 2026-10-19 (first Penang adhoc — "in a single short sentence why")
+
+- **The database is the answer; ask for it once, then make it easy.** I asked him three times to connect the Penang DB before I put the setup script in a terminal tab beside the chat. Opening the tab for him was the right move from the start.
+- **A short question gets the sentence first.** "In a single short sentence why" came after three tables. He reads the cause, then decides whether he wants the evidence.
+- **His error text is the starting point.** The screen message he typed ("not under the user") pointed straight at the search check. I had theorised about assignment code before I asked what the screen said.
+## Relationship reinforcement — 2026-10-19 (#285252 and the permit patch — "your workflow is still problematic")
+
+- **Every extra confirm is a cost he counts.** He asked once for the Redmine update; the gate made him say it three more times. He did not ask to drop the safety; he asked for it to hear him. The fix was a wider set of go-words, and he kept stage-only to 30/10.
+- **"Can you run it" is answered by my memory, not my tool's label.** The read tool is read-only; the login is not. I said "can't" with the answer already written in my notes.
+- **The quest comes before the branch.** A built adhoc fix still goes through Phase 0 when its ticket arrives; that pass found the fix covered only half of what the BA asked.
+- **He wants proof he can see before a commit**: real rows from the code's own lookups, and a commit table, not a promise.
+
+## Relationship reinforcement — 2026-10-19/20 (Masterline design tools — "useless if you simply installed")
+
+- **An install is not done until it fires where he works.** He said it plainly: a tool installed but not taken into account when he starts a project is useless. The install, the record and the line in the step that uses it come together, and its cost per session is measured before it stays always-on.
+- **He cannot pick what he cannot see.** A popup with three described designs got "I cannot imagine it". One picture of the three side by side answered it. Options that are looks go to him as one picture first.
+- **"Remind me, and don't mention it until then" is a real constraint.** The reminder lives where no session save overwrites it, and nothing surfaces it before the date.
+- **His word on a look can be "all of them".** He wants to try every direction and a switchable mode, not pick one early.
+
+## Relationship reinforcement — 2026-10-19/20 (Baseline 1.8.4 — "why not just simply reconcile it")
+
+- **He prefers a tidy history to a clever exclusion.** I proposed leaving Aaron's duplicate branch out. He asked for Aaron's branch to be merged into Farah's and one branch shipped. That leaves nothing for the next baseline to puzzle over.
+- **"Run it for me" means I run it, then prove it in one short table.** He asked for the staging script, then for me to run it and verify. Counts against expected, plus a check that the other schema was untouched, was all he wanted.
+- **Some runs belong to the release team, not to me.** The training SQL is theirs to run. My job ended at the file and the Redmine attachment.
+
 ## Relationship reinforcement — 2026-10-13 (ADHOC-MLPS-2026-4 and the model trial — "you must brief me first")
 
 - **He reads before I file.** On an adhoc I wrote the Task folder, the block, the register row and the quest doc, and only then told him what was wrong. His goal was one sentence: brief me first, the saving runs in the background. I then broke the same order twice more while fixing it. What holds it now is a gate, not my intention.
