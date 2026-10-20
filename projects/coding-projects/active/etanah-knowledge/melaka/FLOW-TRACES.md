@@ -299,3 +299,8 @@ Utiliti Penyediaan Surat (UPS_PLP) created by officer (PT/KPT)
 ```
 
 Verified end-state rows on PROD: `PTMLK/02/L/UPS_PLP/2026/2` (3415610), `PTMLK/01/L/UPS_PLP/2026/4` (3439000), and the four #277442 apps after Alex's run at 16:22 MYT 2026-09-04.
+
+## PLPS Sewa Tahunan — where it is calculated (verified 2026-10-20, #265109)
+- Preparation tugasan (PKPPT · PRMMKNPDT/PTG · PYRJKKLPDT/PTG · PRJKKLPDT/PTG) → langkah "Pengiraan Bayaran Lesen" → `MlkPengiraanBayaranLesenForm` → `PelupusanMaklumatBayaranHelper.calculatePlpsSewaTahunan()` on the APPLIED tujuan/luas.
+- Decision tugasan (KKMMKN · PKMMKN · KJKKLPSK · PKJKKLPSK) → `MlkMuatNaikCabutanMinitForm` (component `mlkKeputusanJKKTForm.xhtml`, panel `plpsLulusDetailPanel`, shown only on Keputusan = Lulus) → `calculatePlpsLulusSewaTahunan()` feeds the DILULUSKAN kategori/tujuan/keluasan/unit into the same helper (int-env 665887b576, Ammar c162244010).
+- Pengiklanan tujuan (PLP_TNH_KERAJAAN_IKLAN · PLPS_TNH_RIZAB_IKLAN · PLPS_TNH_LOMBONG_IKLAN) use the prorata 2-band rule; needs a second PLPSL rate row with Luas Dari > 0.

@@ -126,14 +126,14 @@ Superseded by the table above. **Switching envs is a JNDI-rename, not a URL swap
 |---|---|---|---|---|---|
 | **pelupusan + FAT** | `etprdmlk@172.30.17.104:5444 / et_main` | `https://etanah-app.melaka.gov.my/etanah-cas` (FAT) | etanah-pelupusan @ `mlk/master` | etanah-pelupusan.war | ✅ **DEFAULT** — most tickets come from FAT |
 | pelupusan + UAT | `mlkuat@172.30.59.185:5444 / et_main_uat` | `http://172.30.59.150/etanah-cas` (UAT) | etanah-pelupusan @ `mlk/master` | etanah-pelupusan.war | Only when FAT lacks test data, OR BA states UAT in ticket |
-| **awam + UAT** | `mkit@172.16.100.197:5444 / et_main_mlit` | `http://172.30.59.150/etanah-cas` (UAT) | etanah-awam @ `mlk/master` | etanah-awam.war | All AWAM tickets (local base mlk/master; downstream = stag-env/mlit) |
+| **awam + UAT** | `mkit@10.16.63.54:5444 / et_main_mlit` | `http://172.30.59.150/etanah-cas` (UAT) | etanah-awam @ `mlk/master` | etanah-awam.war | All AWAM tickets (local base mlk/master; downstream = stag-env/mlit) |
 | awam + FAT | **N/A** — FAT-AWAM not exposed for local testing | | | | |
 
 **Switch mechanic** (verified against current standalone.xml lines 193-235 on 2026-05-11):
 ```xml
 <!-- Currently active (AWAM-UAT): jndi-name = etanahDS, no suffix -->
 <datasource jndi-name="java:jboss/datasources/etanahDS"  pool-name="etanahDS"  ...>
-    <connection-url>jdbc:postgresql://172.16.100.197:5444/mkit?currentSchema=et_main_mlit</connection-url>
+    <connection-url>jdbc:postgresql://10.16.63.54:5444/mkit?currentSchema=et_main_mlit</connection-url>
 <!-- Inactive: gets etanahDS2 -->
 <datasource jndi-name="java:jboss/datasources/etanahDS2" pool-name="etanahDS2" ...>
     <connection-url>jdbc:postgresql://172.30.17.104:5444/etprdmlk?currentSchema=et_main</connection-url>

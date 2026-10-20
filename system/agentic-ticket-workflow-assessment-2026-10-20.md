@@ -62,3 +62,10 @@ Proposals logged: A1 audit-read exemption in adhoc-brief-first · A2 ask for the
 | A3 debugging | told miya a KPT setting fix was still needed from the 07/10 agihan log; the current ind_tgsn row (PT, 15/10) disproved it | read the current setting row before recommending a setting change |
 | A4 etanah | a setting fix on ind_tgsn.peranan does not restamp a live task; it keeps the old peranan until an alter re-creates it | knowledge candidate (BUG-BESTIARY, awaiting nod) |
 | A5 sweep | cross-session SendMessage to "MLIT updates not working" was held (permission-mode mismatch) and expired; session_mgmt send_message delivered it; 3 sessions not running only answered once started | sweep needs a fallback route and must include non-running sessions from list_sessions |
+
+## Session ec4a7ea5 (Adhoc - 15/10/2026, DE 2026-10-20)
+- A1 agentic: background save agent for ADHOC-PLTP-2026-2 worked in two rounds (29/29 both); the re-brief by SendMessage kept one agent and one save-set. Instance: ADHOC-PLTP-2026-2.
+- A2 quest workflow: #285012 reached Phase 2 only through this DE's save-quest sweep; nothing else would have archived it. Instance: SAVE-QUEST PHASE-2 found at DE.
+- A3 debugging: the PLTP root cause took ~15 tool calls once the right source was found; the slow part was finding the teknikal source at all (no Melaka clone; Terengganu then Penang clones read first). Instance: wrong-state-source slip.
+- A4 etanah: staging answers were given from stg2 for hours although the switch said stg1; the BA's AWAM screen disagreed before I checked. Instance: C01/2026/12 stg1 vs stg2.
+- A5 sweep: the audit briefing run from a worktree reports 0 fires / 0 turns and lists every hook as dead (telemetry lives only in the main checkout). Instance: this DE's first 7.4 run.

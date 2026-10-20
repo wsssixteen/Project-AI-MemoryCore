@@ -64,10 +64,22 @@ function printLiveBoard() {
     if (!fs.existsSync(script)) return;
     // 20 s: the prompt bundle kills a child at 30 s, and a killed child prints nothing at all
     const out = execFileSync(process.execPath, [script], { encoding: 'utf-8', timeout: 20000, windowsHide: true });
+    if (out.includes('LIVE REDMINE NOT READ')) { // = OFFLINE_MARK in quest/redmine-board.js
+      console.log('\n⚠️  live board unavailable — the OPEN QUESTS list above is the LEDGER, not ticket status.\n');
+      console.log(out.trimEnd());
+      return;
+    }
     console.log('\n📋 LIVE REDMINE BOARD (Melaka Pelupusan — all trackers, all assignees):\n');
     console.log(out.trimEnd());
   } catch (e) {
-    console.log(`⚠️  live board unavailable (${e.message.split('\n')[0]}) — fall back to quest/active.txt`);
+    let notice = '';
+    try {
+      notice = require('child_process').execFileSync(process.execPath,
+        [path.join(REPO_ROOT, 'quest', 'redmine-board.js'), '--offline-notice', e.message.split('\n')[0]],
+        { encoding: 'utf-8', timeout: 5000, windowsHide: true }).trimEnd();
+    } catch { /* board script unusable: the plain line below still says the list is the ledger */ }
+    console.log(`⚠️  live board unavailable (${e.message.split('\n')[0]}) — the OPEN QUESTS list above is the LEDGER, not ticket status.`);
+    if (notice) console.log(notice);
   }
 }
 

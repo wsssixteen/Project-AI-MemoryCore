@@ -175,7 +175,7 @@ folder there, which is why staging deploy lives on the other box.
 The build script's env menu is `pat/uat/stag/train/prod/hotfix` — **there is no `int`/`mlit`
 option**, because internal never uses the build script at all.
 
-`172.16.100.197:5444` is the mlit **database** (`mkit` / `et_main_mlit`) — never an ssh target.
+`10.16.63.54:5444` (before 2026-10-12: `172.16.100.197:5444`) is the mlit **database** (`mkit` / `et_main_mlit`) — never an ssh target.
 See [[feedback_uat_fat_environments]].
 
 Use the `/deploy <env> <module> <ticket>` skill rather than re-deriving this.

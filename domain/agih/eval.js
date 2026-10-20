@@ -107,7 +107,7 @@ check('Stage-Match Block required', /Stage-Match Block[\s\S]{0,120}5 rows/i.test
 check('omitting companions declared revert-shape', /omits the companions[\s\S]{0,80}revert-shape/i.test(src));
 
 // --- 9. environments ------------------------------------------------------
-check('mlit row present', /et_main_mlit[\s\S]{0,60}172\.16\.100\.197:5444\/mkit/.test(src));
+check('mlit row present', /et_main_mlit[\s\S]{0,60}10\.16\.63\.54:5444\/mkit/.test(src));
 check('stg1 row present', /et_main_stg1[\s\S]{0,60}172\.30\.12\.202:5444/.test(src));
 check('stg2 row present', /et_main_stg2[\s\S]{0,60}172\.30\.12\.202:5444/.test(src));
 check('trn row present and marked pending', /`trn`[\s\S]{0,120}pending/i.test(src));

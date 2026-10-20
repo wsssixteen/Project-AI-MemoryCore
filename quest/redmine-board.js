@@ -566,10 +566,27 @@ async function main(argv) {
     }
 }
 
-// Exported for quest/redmine-board.eval.js (stubbed issue list; no Redmine call in it).
-module.exports = { main, shape, splitByState, rankStateBoard, renderStateBoard };
+// When the API cannot be reached (home PC has no route to 172.16.90.169), the ledger is
+// NOT a substitute: 2026-10-16 the ledger said #284831 was ours and unsent; Redmine had moved it.
+const OFFLINE_MARK = 'LIVE REDMINE NOT READ';
+const BROWSER_BOARD_URL = 'http://172.16.90.169/redmine/issues?set_filter=1&f%5B%5D=status_id&op%5Bstatus_id%5D=o&f%5B%5D=assigned_to_id&op%5Bassigned_to_id%5D=%3D&v%5Bassigned_to_id%5D%5B%5D=me&c%5B%5D=project&c%5B%5D=tracker&c%5B%5D=status&c%5B%5D=priority&c%5B%5D=subject&c%5B%5D=updated_on&per_page=100';
+function offlineNotice(reason) {
+    return [
+        `⛔ ${OFFLINE_MARK}: Redmine unreachable (${reason}).`,
+        '   Do NOT state any ticket status, owner, progress or "sent to BA" from quest/active.txt, Task folders or quest docs.',
+        '   NEXT STEP, before answering: read the board through Claude in Chrome (the connected Edge reaches Redmine when this PC cannot):',
+        `   ${BROWSER_BOARD_URL}`,
+        '   Then open each ticket you will talk about (http://172.16.90.169/redmine/issues/<id>) for its assignee and last journal.',
+        '   If the browser fails too: every status line says "Redmine not read, ledger of <date>".',
+    ].join('\n');
+}
 
-if (require.main === module) main().catch(e => {
-    console.log(`⚠️  redmine-board: ${e.message} — Redmine unreachable, fall back to quest/active.txt`);
+// Exported for quest/redmine-board.eval.js (stubbed issue list; no Redmine call in it).
+module.exports = { main, shape, splitByState, rankStateBoard, renderStateBoard, OFFLINE_MARK, BROWSER_BOARD_URL, offlineNotice };
+
+// --offline-notice <reason>: the surfacer's path when it had to kill this script at its own timeout
+if (require.main === module && process.argv[2] === '--offline-notice') console.log(offlineNotice(process.argv[3] || 'no reason given'));
+else if (require.main === module) main().catch(e => {
+    console.log(offlineNotice(`redmine-board: ${e.message}`));
     process.exitCode = 0; // never break boot
 });
