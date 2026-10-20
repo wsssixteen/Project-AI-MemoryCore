@@ -17,7 +17,8 @@
       "No lead-in words: Everything starts from X -> Start from X.",
       "Do not restate the ticket, the expected behaviour or the test data unless asked.",
       "No verdict words about our own work (verified, DB-proven, as mentioned).",
-      "Every draft reply to another person comes in 2 versions: SHORT first (1-2 lines, the answer only, e.g. \"Bukan id ni je... Isu ni akan jadi untuk semua permohonan yang isi tanah dimiliki.\"), then FULL. He picks one."
+      "Every draft reply to another person comes in 2 versions: SHORT first (1-2 lines, the answer only, e.g. \"Bukan id ni je... Isu ni akan jadi untuk semua permohonan yang isi tanah dimiliki.\"), then FULL. He picks one.",
+      "A chat reply answers ONLY the question in the last message, in about 3 short fragments. No background on how it works today and no process line (change request, please confirm) unless that message asks for it (ADHOC-UPP-PDTJ: 5 lines cut to \"Sepatutnya waktu dijana. Waktu ADO sign tu ke. Jana semula load balik tarikh ADO sign.\")."
     ],
     "banned": ["Everything ...", "As you can see", "Please note that", "DB-proven", "verified"],
     "check": "lean"
