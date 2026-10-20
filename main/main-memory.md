@@ -3,6 +3,15 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-20 (#285159 and the sweep — "just answer in a short sentence")
+
+- **A yes/no question gets the yes or no first.** "Is this a simple alter or what?" came twice. Both times the answer was in the reply, under detail. The third time he wrote "just answer in a short sentence". The first line is the verdict; the reasons wait until he asks.
+- **A verdict built on the agihan log is a verdict about the past.** I told him a KPT setting fix was still needed. The setting had been fixed the day before. One read of the current row would have said so. Read the row as it is now before recommending a change to it.
+- **"Verify this statement" means show him the query.** He wanted the SELECT he could run himself, next to the fact, and the Redmine text ready to paste. Nothing else.
+- **His instruction outranks a goal check that misreads it.** He said: sessions with work left list it, they do not close. The check kept asking for them to close. Holding his line and saying so was right; he cleared the goal himself.
+
+---
+
 ## Relationship reinforcement — 2026-10-19 (ADHOC-PLBP-2026-1 — "Could it be BA only patched the license number?")
 
 - **"Could it be X?" wants X tested against the mechanism, not a yes to please him.** The honest answer was "partly": a wrong permohonan ID misses 2 of 3 updates, never all 3. The table of which update uses the ID settled it in one look.
