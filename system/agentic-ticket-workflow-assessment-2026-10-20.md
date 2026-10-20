@@ -122,9 +122,17 @@ Note: child session qa285252-audit-fix reported its quest-skill "Screen-path aud
 | A3 debugging | 2026-10-19 04:08 "the new code's lookups return one row" was SQL, not the code; 2026-10-20 a 6-check harness on the real GsonUtil / DynamicFieldUtil ran in under a minute | A harness on the real classes is cheap and catches JSON-key and null-drop behaviour (GsonUtil drops null properties). Re-enactment detector proposed (A3). |
 | A4 etanah | PRBB Butir-butir dialog: table binds daerahSAK/luasDipohon, save reads idHkmlk, Ganti Hari dialog has no Simpan | Not yet in etanah-knowledge; proposal A4. |
 | A5 sweep | miya's queued mid-turn question was invisible to transcript search; found only in the exported jsonl attachment rows | Proposal A5 (queued_command in search helpers). |
+## Session permohonan-init-issue-bc0592 (#285181) — 2026-10-20 18:45
+
+| Axis | Instance this session | Assessment |
+|---|---|---|
+| A1 agentic system | Reply-type loading tested on 7 prompts: only 2 loaded the style rules | style choice is still model judgment; Pena profiles exist but nothing routes to them |
+| A2 quest workflow | save-quest WAIT blocked "close it" in a /goal loop until miya said "archive anyway" | the rule held; the goal checker could not tell Phase 1 close from archive |
+| A3 debugging | one Flowable admin REST read of /variables found the cause in minutes; support had run 9 blind Initiates | reading live process variables first is the cheap falsifier for any "Success Alter, no tugasan" case |
+| A4 etanah issue-solving | I turned an empty TaskMap screenshot into a rule ("Alter cannot pick the current node"); code had no filter | a screen observation must be checked against the code path before it becomes knowledge |
+| A5 sweep / file sweep | ⏭ no sweep this session | — |
 ## Session tugasan-not-found-c0904c — second DE (#285252 rework 2, 18:10)
 | Axis | Assessment (instance) | Proposal logged |
-|---|---|---|
 | A1 agentic system | quest-context-load-gate still 3.5 s avg, 0 blocks (audit 2026-10-20) | already proposed at 15:30 (cache) |
 | A2 quest workflow | rework 2 went straight to Edit, no Scout for BA issue 4 | Rework Scout gate in quest-phase-gate |
 | A3 debugging | field meaning never traced before writing it (luasDipohon prints on Borang 4Ce) | Downstream readers table before a field-write |
@@ -133,7 +141,6 @@ Note: child session qa285252-audit-fix reported its quest-skill "Screen-path aud
 
 ## Session melaka-internal-id-check (ADHOC-PLP-2026-3 report 2, 18:40)
 | Axis | Instance this session | Assessment / proposal |
-|---|---|---|
 | A1 agentic system | `lib/audit-briefing.js` run inside the worktree printed "0 hook fires" and 77 hooks "never fired", while hooks fired all session; the telemetry lives only in the main folder | The NOT WORKING block is false when run from a worktree. Proposal A1: resolve telemetry from the main checkout. |
 | A2 quest workflow | adhoc-paste-detector asked for a NEW scaffold; the right move was Report 2 on the open A63 (same env MLIT, same DMS cause) | Matching to an open register row is judgment today. Proposal A2: detector lists OPEN register rows with the same env + symptom words. |
 | A3 debugging | Cause path found in about 6 code reads: row built at `DocumentService:1101`, file silently dropped in `BaseDocumentService.populateDocumentList` | ⏭ fast enough; the fact is now in DATABASE.md §9.1 so the next lookup is one read. |

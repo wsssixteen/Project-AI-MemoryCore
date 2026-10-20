@@ -1,0 +1,25 @@
+{
+  "_note": "ONE source for the numbers render.py draws with and lint.js checks against. anim_end = second after which the scene is still; caption_full = second the caption is fully visible.",
+  "timing": { "crossfade_half": 0.3, "fade_in": 0.5, "fade_out": 0.8, "fps": 30 },
+  "limits": {
+    "max_scenes": 7,
+    "caption_max_chars": 55,
+    "caption_scene_min_seconds": 9,
+    "caption_visible_min_seconds": 7,
+    "detail_max_chars": 60,
+    "headline_max_chars": 36,
+    "title_headline_max_chars": 30,
+    "max_labelled_per_scene": 4,
+    "max_allowed_terms": 3,
+    "max_known_names": 6
+  },
+  "roles": ["title", "saw", "event", "fix", "after"],
+  "kinds": {
+    "title":     { "anim_end": 2.0, "caption_full": null },
+    "card":      { "anim_end": 2.0, "caption_full": 2.0 },
+    "copy":      { "anim_end": 2.0, "caption_full": 2.0 },
+    "steps":     { "anim_end": 2.6, "caption_full": 2.6 },
+    "checklist": { "anim_end": 2.8, "caption_full": 2.8 },
+    "screen":    { "anim_end": 2.6, "caption_full": 2.6 }
+  }
+}

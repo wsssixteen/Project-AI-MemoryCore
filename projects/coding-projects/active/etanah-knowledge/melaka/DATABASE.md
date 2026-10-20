@@ -726,6 +726,8 @@ SELECT * FROM et_dms_stg1.dokumen_revision WHERE dokumen_id = 40963183;
 **Path shape on the server** — `/home/app/etanah/files/dms/SISTEM-FAIL/<KELUARAN|KEMASUKAN>/<kategori>/<YYYY>/<MM>/<id_dokumen>_<versi>.main`
 > When every `skg_dok`/`dok_id` link is NULL on PROD (it happens — §21), get the `LAIN-…` id from outside the DB instead (BA's executor.log) and query DMS forwards.
 
+> **Senarai Dokumen row shown but Fail column = "Tiada rekod yang dijumpai"** (2026-10-20, ADHOC-PLP-2026-3 report 2): the row exists, so `umm_a_dok_keluaran` + `skg_dok` are fine. The Fail list is empty because etanah-common `BaseDocumentService.populateDocumentList():134-298` drops a file without a message when the DMS call (`getAsPDF` / `get` / `getWithoutData`) returns null or throws (catch at :172 and :253-258). Check the DMS side first: `dokumen_revision.lokasi_fail` set means the file itself is missing on the DMS server (MLIT: files made before the 2026-10-12 server move). On the DB side only `skg_dok.flag_aktif = N` drops a file. Row builder: `DocumentService.java:1101-1159`.
+
 Verified examples (ESOKONGAN #272096, stg1):
 
 | Permohonan | Path |
@@ -1514,6 +1516,8 @@ Always guard an INSERT with `AND NOT EXISTS (…)`.
 > ~90 min BEFORE the wrong verdict and never cross-checked. When the tugasan is PSJT/PGSJT, TIDAK rows
 > are INVISIBLE on screen, not absent.
 
+> **Ticket case (#280265, PT, PROD 2026-09-21)**: symptom "a JT added before is missing from Penyediaan Surat JT dan Ulasan YB and cannot be added again" = flip `generateSurat` TIDAK to YA in `mklmt_tmbhn` on that one `umm_a_jabatan_teknikal` row (row 7547). Script: `1. Tasks\Melaka\Archive\218. II #280265 ...\2. Fix\280265.sql`.
+
 ## 25. Permit/Lesen tables: 99.6% of PROD rows are MIGRATED, not generated (2026-08-06, #273461) *(formerly §20)*
 
 Any query shaped "applications holding a No Lesen" is dominated by the June-2026 migration. Counting
@@ -1543,6 +1547,10 @@ umm_a_permit_lesen.no_permit_lesen ──(by value)──► ind_permit_lesen.pe
 `information_schema` returns **0 foreign keys** for `ind_permit_lesen` / `ind_versi_permit_lesen` —
 find referencing tables by COLUMN NAME (`permit_lesen_id`, `versi_permit_lesen_id`), never by FK.
 Safe clear order: NULL the app row's number+versi first, then delete children, then the induk row.
+
+**First-year lesen dates (#279882, OMLPS, PROD 2026-09-15)**: the dates printed for year 1 live in `ind_versi_permit_lesen` (`versi_dok = 0`, `trkh_mula` / `trkh_tamat`), reached through `ind_permit_lesen.no_permit_lesen`; `ind_permit_lesen` itself holds blank dates; `umm_a_permit_lesen` holds the application-side renewal dates and must not be touched for a year-1 correction. Script: `1. Tasks\Melaka\Archive\209. DP #279882 ...\2. Fix\279882.sql`.
+
+**Pelan replace on PROD (#279793, MLPS L1e, 2026-09-18, done by Nik Muhammad Akram)**: 4 tables, 6 columns, one row each: `et_dms.dokumen_revision` (`nama_fail`, `lokasi_fail`, `lokasi_fail_pdf`), `et_dms.dokumen` (`nama_dokumen`), `et_main.skg_dok` (`nama_fail`), `et_main.umm_a_dok_keluaran` (`nama`); the new file goes under `WORM/PERMIT/<pejabat>/4A - LMS/<file ref with / as ~>/`. Source: the #279793 Redmine journal 2026-09-18.
 
 **Lesen vs permit split + reporting views (2026-09-30, ADHOC-VIEW-2026-1)**: `ind_permit_lesen.jns_borang_id` → `rjk_jns_dok.kod` (NOT `rjk_senarai_ahli_kumpulan`): lesen = `BRG_4AE` (PLPS/MLPS/OPLPS/OMLPS/PT), permit = `BRG_4CE` (PRBB bahan batuan) + `BRG_4DE` (PRU/PPRUS ruang udara); `status_id` → `rjk_senarai_ahli_kumpulan` (KuatKuasa / Pembetulan — never flips to expired). Views `tkllesentableview` + `tklpermittableview` (ports of KL's Oracle views) live on `et_main_mlit` + `et_main_stg2`; source `1. Tasks\Melaka\Archive\236. …\2. Fix\*_MLK.sql`. EDB quirks hit: `date - date` = interval (use `EXTRACT(DAY FROM …)`), `NULL || 'x'` = `'x'` (guard with `CASE`).
 

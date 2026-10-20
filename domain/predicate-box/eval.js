@@ -116,7 +116,7 @@ const fixtures = [
     run() {
       const t = writeTranscript('f1', [
         userLine('Please fix the JT-empty bug on the kertas template.'),
-        asstLine(ETANAH_EDIT_TEXT),
+        editLine(XHTML), asstLine(ETANAH_EDIT_TEXT),
       ]);
       return expectBlock(runHook(t, false));
     },
@@ -126,7 +126,7 @@ const fixtures = [
     run() {
       const t = writeTranscript('f2', [
         userLine('Please fix the JT-empty bug on the kertas template.'),
-        asstLine(MARKERS_TEXT),
+        editLine(XHTML), asstLine(MARKERS_TEXT),
       ]);
       return expectSilent(runHook(t, false));
     },
@@ -136,7 +136,7 @@ const fixtures = [
     run() {
       const t = writeTranscript('f3', [
         userLine('Please fix the JT-empty bug. [skip-predicate-box: test]'),
-        asstLine(ETANAH_EDIT_TEXT),
+        editLine(XHTML), asstLine(ETANAH_EDIT_TEXT),
       ]);
       return expectSilent(runHook(t, false));
     },
@@ -146,7 +146,7 @@ const fixtures = [
     run() {
       const t = writeTranscript('f4', [
         userLine('Thanks, looks good. Show me the summary table again.'),
-        asstLine(ETANAH_EDIT_TEXT),
+        editLine(XHTML), asstLine(ETANAH_EDIT_TEXT),
       ]);
       return expectSilent(runHook(t, false));
     },
@@ -166,7 +166,7 @@ const fixtures = [
     run() {
       const t = writeTranscript('f6', [
         userLine('Please fix the JT-empty bug on the kertas template.'),
-        asstLine(ETANAH_EDIT_TEXT),
+        editLine(XHTML), asstLine(ETANAH_EDIT_TEXT),
       ]);
       return expectSilent(runHook(t, true));
     },
@@ -178,7 +178,7 @@ const fixtures = [
       if (fs.existsSync(activeTxt)) return 'test setup broken: temp quest/active.txt exists';
       const t = writeTranscript('f7', [
         userLine('Debug why the syarat dropdown is broken and patch it.'),
-        asstLine(ETANAH_EDIT_TEXT),
+        editLine(XHTML), asstLine(ETANAH_EDIT_TEXT),
       ]);
       return expectBlock(runHook(t, false));
     },
@@ -322,7 +322,7 @@ const fixtures = [
   {
     name: '26. old token quoted with its placeholder no longer disarms requirement 1 -> block',
     run() {
-      const t = writeTranscript('f26', [userLine('Please fix the JT-empty bug.'),
+      const t = writeTranscript('f26', [userLine('Please fix the JT-empty bug.'), editLine(XHTML),
         asstLine(ETANAH_EDIT_TEXT + '\nThe gate offers [skip-predicate-box: <reason>] as a bypass.')]);
       return expectBlock(runHook(t, false));
     },
@@ -478,6 +478,33 @@ const fixtures = [
       const t = writeTranscript('f46', [userLine('ok proceed'), editLine(JAVA), asstLine(DIAGRAM)]);
       const out = runHook(t, false);
       return /eighty percent or more/.test(out.stderr) ? null : 'stderr lacks the confidence line: ' + out.stderr.slice(-200);
+    },
+  },
+// ── v5 (2026-10-20, #285680): requirement 1 counts real edit tool calls only ──
+  {
+    name: '47. THE #285680 FALSE FIRE: fix word in a loaded skill body + etanah .java path only READ / quoted in knowledge text, no edit tool -> silent',
+    run() {
+      const t = writeTranscript('f47', [
+        userLine('Launching skill: quest. ... fix the bug ... file_path ... Edit'),
+        toolLine('Read', { file_path: 'C:\\repo\\etanah-knowledge\\melaka\\FLOWABLE-KNOWLEDGE.md' }),
+        asstLine('Bean etanah-pelupusan\\src\\main\\java\\my\\gov\\etanah\\pelupusan\\web\\form\\internal\\InitiateBPMFlowableForm.java is the Alter page. Edit nothing; alter on the page.'),
+        toolLine('Write', { file_path: 'C:\\Tasks\\2. Fix\\285680-check.sql', content: 'SELECT * FROM umm_aplikasi;' }),
+      ]);
+      return expectSilent(runHook(t, false));
+    },
+  },
+  {
+    name: '48. fix-intent + etanah edit only DESCRIBED in text (no tool call) -> silent (dropped spec, named in v5 header)',
+    run() {
+      const t = writeTranscript('f48', [userLine('Please fix the JT-empty bug.'), asstLine(ETANAH_EDIT_TEXT)]);
+      return expectSilent(runHook(t, false));
+    },
+  },
+  {
+    name: '49. fix-intent + real Write of an etanah .xhtml + no diagram -> block (requirement 1 still fires)',
+    run() {
+      const t = writeTranscript('f49', [userLine('Please fix the dropdown.'), toolLine('Write', { file_path: XHTML, content: '<h:form/>' }), asstLine('Done.')]);
+      return expectBlock(runHook(t, false));
     },
   },
 ];

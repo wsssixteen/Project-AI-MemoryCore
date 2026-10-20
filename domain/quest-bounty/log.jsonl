@@ -152,3 +152,67 @@
 {"ts":"2026-10-20T03:57:48.078Z","qa":"QA-285012","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"6c243cd277","branch":null}
 {"ts":"2026-10-20T04:04:20.011Z","qa":"QA-284831","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
 {"ts":"2026-10-20T04:07:14.279Z","qa":"QA-285159","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T07:22:42.577Z","qa":"QA-285252","kind":"wrong-fix","n":1,"was":"B1 (c23825fe5d): add the hakmilik row on tab load outside the Butir-butir dialog","why":"BA MLIT re-test 2026-10-19: Daerah + Luas blank, no mandatory check on Seterusnya, ID Hakmilik lost after Sebelum","learned":"A row added outside its dialog must copy what the dialog Simpan does: display fields bound by the table, the saved JSON keys, and the mandatory checks; walk display, save, reload and every button before hand-back"}
+{"ts":"2026-10-20T09:03:27.658Z","qa":"ADHOC-PRBB-2026-14","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T09:03:35.059Z","qa":"ADHOC-PRBB-2026-14","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"adhoc promoted to QA-285252; bounty harvest happens at QA-285252 Phase 2"}
+{"ts":"2026-10-20T09:19:29.681Z","qa":"QA-283532","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T09:19:30.004Z","qa":"QA-283670","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T09:19:30.327Z","qa":"QA-283980","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T09:19:30.636Z","qa":"QA-284775","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T09:19:31.931Z","qa":"QA-282721","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:19:42.379Z","qa":"QA-283532","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T09:20:13.323Z","qa":"QA-283532","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:20:14.879Z","qa":"QA-283670","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none (data patch on MLIT, no code)"}
+{"ts":"2026-10-20T09:20:16.154Z","qa":"QA-283980","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:20:17.636Z","qa":"QA-284775","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.172Z","qa":"QA-277346","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.193Z","qa":"QA-277926","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.205Z","qa":"QA-278304","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.219Z","qa":"QA-277442","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.264Z","qa":"QA-279391","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.278Z","qa":"QA-279793","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.291Z","qa":"QA-280099","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.307Z","qa":"QA-280265","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.376Z","qa":"QA-279882","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.409Z","qa":"QA-275847","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.419Z","qa":"QA-275092","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.428Z","qa":"QA-277291","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:39:22.401Z","qa":"QA-279898","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:39:22.415Z","qa":"QA-279984","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:51:43.799Z","qa":"QA-279984","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:00:14.743Z","qa":"QA-283532","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.746Z","qa":"QA-283670","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.747Z","qa":"QA-283980","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.749Z","qa":"QA-284775","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.750Z","qa":"QA-282721","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.751Z","qa":"QA-277346","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.752Z","qa":"QA-277926","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.753Z","qa":"QA-278304","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.755Z","qa":"QA-277442","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.756Z","qa":"QA-279391","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.757Z","qa":"QA-279793","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.758Z","qa":"QA-280099","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.759Z","qa":"QA-280265","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.760Z","qa":"QA-279882","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.762Z","qa":"QA-275847","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.763Z","qa":"QA-275092","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.764Z","qa":"QA-277291","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.766Z","qa":"QA-279898","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:00:14.768Z","qa":"QA-279984","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:01:11.996Z","qa":"QA-233646","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":null,"allow_stub_reason":"sync-only block for a closed CR re-read as context; no quest work here, the work lives in ADHOC-PT-2026-13"}
+{"ts":"2026-10-20T10:06:10.282Z","qa":"QA-285252","kind":"wrong-fix","n":2,"was":"Rework 1 (4a0dd122fd): set luasDipohon = luas on the auto row so the table Luas Tanah column showed a value","why":"BA 2026-10-20 issue 4: Keluasan Yang Dipohon pre-filled with Keluasan Tanah; it must be empty for the applicant; it prints on Borang 4Ce as Keluasan tanah","learned":"Before filling any field, trace what it means downstream (copy to officer, documents, reports); a display gap is fixed at the display, never by writing data into a field the user owns"}
+{"ts":"2026-10-20T10:08:42.285Z","qa":"QA-277346","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:43.474Z","qa":"QA-277926","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:45.401Z","qa":"QA-278304","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:46.624Z","qa":"QA-277442","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:47.779Z","qa":"QA-279391","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:48.789Z","qa":"QA-279793","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:49.849Z","qa":"QA-280099","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:50.842Z","qa":"QA-280265","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:51.842Z","qa":"QA-279882","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:53.735Z","qa":"QA-275847","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:54.827Z","qa":"QA-275092","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:55.790Z","qa":"QA-277291","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:56.692Z","qa":"QA-279898","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:57.611Z","qa":"QA-279984","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:42:14.907Z","qa":"QA-272982","gate":"harvest-gate","action":"refused"}
