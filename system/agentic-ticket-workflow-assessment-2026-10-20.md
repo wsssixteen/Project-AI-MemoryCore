@@ -52,3 +52,16 @@ Proposals logged (`core/slips.js --type proposal`): A1 telemetry source · A1 ga
 | A5 sweep | ⏭ no multi-ticket sweep this session | — |
 
 Proposals logged: A1 audit-read exemption in adhoc-brief-first · A2 ask for the page error before a "slow/fails" diagnosis.
+
+## Session redmine-284831-audit (#284831, 2026-10-14 → 2026-10-20)
+
+| Axis | Instance this session | Assessment |
+|---|---|---|
+| A1 agentic system | `lib/audit-briefing.js` from this worktree printed "0 hook fires · 0 turns" again; the worktree holds only the committed `system/telemetry/hook-fires-*.jsonl` snapshots, the live fires go to the main checkout; running main's copy did not finish in 300 s | Same defect as the row above, with its cause: `TEL` uses the worktree root while line 41 already resolves `MAIN_ROOT`. Corroborates the logged A1 telemetry proposal; no second proposal. |
+| A1 agentic system | The harness blocked Write/Edit on the main-checkout quest doc from the worktree, while `quest/notes.js`, `quest/active-cli.js` and `quest/archive-quest.js` all write main by design | The quest doc split into two copies for 6 days and the Phase 2 harvest gate could not pass until miya said yes to a copy. Logged as the bounty proposal `quest/qa-doc.js`. |
+| A2 quest workflow | `.claude/workflows/quest-phase0.js:66,103-110` reads `0. Brief` and writes the retired `1. <NNN NNN>.txt`; Phase 0 ran inline instead | The engine the quest skill names first is out of date with the Task-folder shape of 2026-09-30. |
+| A3 debugging | Two wrong-column queries in the first Recon minutes (`umm_a_tgsn.pengguna_semasa` vs `pengguna_semasa_id`; `ind_skrin.kod` vs `kod_skrin`) | Knowledge-first was skipped: the code trace ran before `DATABASE.md`. Each cost one `information_schema` round trip. |
+| A4 etanah issue-solving | A Tanah Rizab land report sets `disableJenisTanah` with no prefill for PT; same flag pattern may hold elsewhere (LATENT-BUGS L27, L28) | A lock whose writer does not fill the value first is a class, not one bug. A sweep of `disabled="#{… eq true}"` composites against their flag writers would find the rest. |
+| A5 sweep | ⏭ single ticket, one attachment, opened and ledgered | — |
+
+Proposals logged (`core/slips.js --type proposal`): A2 quest-phase0 workflow shape · A3 task-state helper · A4 lock-without-prefill sweep (plus the bounty `quest/qa-doc.js`).

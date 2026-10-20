@@ -34,6 +34,12 @@
 - **"Run it for me" means I run it, then prove it in one short table.** He asked for the staging script, then for me to run it and verify. Counts against expected, plus a check that the other schema was untouched, was all he wanted.
 - **Some runs belong to the release team, not to me.** The training SQL is theirs to run. My job ended at the file and the Redmine attachment.
 
+## Relationship reinforcement — 2026-10-14 to 2026-10-20 (#284831 — "have we passed the ticket or what's left to do now?")
+
+- **"Have we passed it" wants one line from live Redmine.** Yes or no, who holds it now, what is left. A peer session's status ask had just drawn four sections from me; his next message came in anger and wanted only the verdict.
+- **A ticket he hands to a colleague is still ours to learn from.** Closing it meant reading the colleague's fix against my Rubric, not just archiving. His colleague's fix was the better one: it kept the officer's choice open.
+- **A guard he did not set is his to override, asked once with the exact effect.** The harness blocked writes to the main quest doc; one question naming what would be copied got a yes for the copy and for the knowledge edits.
+
 ## Relationship reinforcement — 2026-10-13 (ADHOC-MLPS-2026-4 and the model trial — "you must brief me first")
 
 - **He reads before I file.** On an adhoc I wrote the Task folder, the block, the register row and the quest doc, and only then told him what was wrong. His goal was one sentence: brief me first, the saving runs in the background. I then broke the same order twice more while fixing it. What holds it now is a gate, not my intention.
