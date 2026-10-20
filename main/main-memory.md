@@ -3,6 +3,20 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-19/20 (ADHOC-PRBB-2026-16 — "explain your fucking self what the fuck you mean by this")
+
+- **"Not verified" is a claim too, and it must be plain.** I wrote one line naming a Terengganu copy, a disk and a "branch" he never asked about. It was jargon hiding a gap I could have closed with one command: Melaka's DMS code was on the git server the whole time. Before writing "not verified", check every place it could be; if it is still open, say it in one plain sentence.
+- **"What do I reply to the BA, before anything else" means the reply comes first.** The answer he needed was three lines for the BA. My options table and evidence went above it. He then wrote his own shorter line ("Boleh, sebab report tu dah generate."), and it was right.
+- **An infra message for several files is one box.** He corrected "one box per file" at once. The stored shape is now in the skill.
+- **He asks the operational question behind the patch.** "Is the .main editable, does it go through conversion, will it error after replace": each wanted the code path read, not a guess. The answer that held came from the DMS source, line by line.
+
+## Relationship reinforcement — 2026-10-15 (#282303 — "answer straight shortly, pelupusan or common, show evidence")
+
+- **"Pelupusan or common" wants one word and two pieces of code.** I had already sent two long replies, one of them wrong. The answer that landed was "Common." plus the lookup lines and the jar listing.
+- **A word that says direction must match the direction.** "Up common" on a downgrade read to him as a wrong record in git. He asked for an audit, not an apology; a check at the commit is the answer he accepts.
+- **He does not want us pushing back at other teams in writing.** "We will not move IT back" and "please raise a ticket" read as hostile to him, even when true. State the finding; they decide.
+- **He tests the claim himself before he trusts it.** He deployed 1.7.23 and showed the PDF without the watermark: proof that pelupusan does not use the API, and the moment the real fix (call the API) became clear.
+
 ## Relationship reinforcement — 2026-10-19 (ADHOC-PLBP-2026-1 — "Could it be BA only patched the license number?")
 
 - **"Could it be X?" wants X tested against the mechanism, not a yes to please him.** The honest answer was "partly": a wrong permohonan ID misses 2 of 3 updates, never all 3. The table of which update uses the ID settled it in one look.
