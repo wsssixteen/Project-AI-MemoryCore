@@ -73,12 +73,12 @@ process.stdin.on('end', () => {
       `${list}\n\n` +
       `   Shipping unverified SQL to infra or miya is banned — that is the #274510 failure.\n` +
       `   For each file:\n` +
-      `     1. node domain/sql-schema-verify/sql-schema-verify.js emit "<file>"\n` +
+      `     1. node domain/sql-schema-verify/sql-schema-verify.js emit "<file>" [schema]   (unqualified tables are checked in [schema], default et_main)\n` +
       `     2. Run the emitted query via a postgres MCP tool on any environment carrying that schema.\n` +
       `     3. Zero rows returned -> node domain/sql-schema-verify/sql-schema-verify.js stamp "<file>" <env>\n` +
       `        Any rows returned -> fix the script, then start again at step 1.\n\n` +
       `   The stamp binds to the file's content hash, so editing after stamping re-arms this gate.\n` +
-      `   Genuinely not applicable (no schema-qualified tables)? [skip-sql-schema-verify: <reason>]`
+      `   Genuinely not applicable (no table in the file)? [skip-sql-schema-verify: <reason>]`
     );
     process.exit(2);
   } catch (e) {

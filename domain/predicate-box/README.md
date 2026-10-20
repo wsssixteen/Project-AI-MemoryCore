@@ -73,4 +73,6 @@ Per みや 2026-07-07: "checks must always fire."
 Cannot verify the diagram's or the matrix's CONTENT is correct, that cited Evidence is real, or
 that it was emitted BEFORE the specific edit. Requirement 2 does not see a `.java` change made
 through a shell command (`git apply`, a script) or by a sub-agent, and one matrix covers every
-ticket worked in the same session.
+ticket worked in the same session. Since v5 (2026-10-20, #285680) requirement 1 has the same
+blind spot: it counts only Edit / Write / MultiEdit tool calls on an etanah `.java` / `.xhtml`,
+never a path that merely appears in text that was read.

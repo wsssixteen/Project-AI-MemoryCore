@@ -3,6 +3,17 @@
  *
  * Power: domain/predicate-box/
  *
+ * v5 (2026-10-20, #285680): requirement 1 condition (a) now counts REAL edit tool calls
+ *   (Edit / Write / MultiEdit whose file_path is an etanah .java or .xhtml), the same
+ *   source requirement 2 already used. The v1 text heuristic (an etanah path anywhere in
+ *   the raw transcript near the word Edit / file_path) fired on an alter ticket with no
+ *   code edit: the path came from a knowledge file and a skill body that were READ, and
+ *   "fix" came from the skill text loaded as a user message.
+ *   Spec preservation v4 -> v5: fix-intent regex, ASSUMPTION+FALSIFIER pass, bypass token,
+ *   stop_hook_active, fail-open, every log row, requirement 2: all kept. Changed: (a) only.
+ *   Dropped on purpose: an etanah edit only DESCRIBED in assistant text (a shell write or a
+ *   sub-agent edit) no longer counts; requirement 2 never counted it either.
+ *
  * v4.1 (2026-10-04): block text reworded. It said logging is not optional for a
  *   code fix, which contradicted v4. Wording only; every verdict unchanged.
  *
@@ -97,8 +108,7 @@ const LOG = process.env.PREDICATE_BOX_LOG || path.resolve(__dirname, 'log.jsonl'
 
 const FIX_INTENT = /\b(fix|fixes|patch|bug|debug|error|issue|implement|apply|broken|salah|tak keluar)\b/i;
 const BYPASS = /\[skip-predicate-box:\s*([^\]]+)\]/gi;
-const ETANAH_PATH = /etanah-(pelupusan|awam|common|teknikal)[\\/][^\s"'`]*\.(java|xhtml)\b/i;
-const EDIT_CUE = /\b(Edit|Write|old_string|new_string|file_path)\b/i;
+const ETANAH_SOURCE_FILE = /etanah-(pelupusan|awam|common|teknikal)[\\/].*\.(java|xhtml)$/i;
 
 // Probe requirement (v3).
 const EDIT_TOOLS = new Set(['Edit', 'Write', 'MultiEdit']);
@@ -134,7 +144,7 @@ function parseTranscript(transcriptPath) {
   const assistantTexts = [];
   const assistantAt = [];
   const mdWritten = [];
-  let javaEdits = 0, lastJavaEditIdx = -1, cleanupEdits = 0;
+  let javaEdits = 0, lastJavaEditIdx = -1, cleanupEdits = 0, sourceEdits = 0;
   lines.forEach((line, idx) => {
     let obj;
     try { obj = JSON.parse(line); } catch (e) { return; }
@@ -147,6 +157,7 @@ function parseTranscript(transcriptPath) {
     for (const b of msg.content) {
       if (!b || b.type !== 'tool_use' || !EDIT_TOOLS.has(b.name) || !b.input) continue;
       const fp = String(b.input.file_path || '');
+      if (ETANAH_SOURCE_FILE.test(fp)) sourceEdits++;
       if (ETANAH_JAVA_FILE.test(fp)) {
         javaEdits++; lastJavaEditIdx = idx;
         if (isProbeCleanup(b.input)) cleanupEdits++;
@@ -155,7 +166,7 @@ function parseTranscript(transcriptPath) {
       }
     }
   });
-  return { raw, lastUserText, assistantText: assistantTexts.join('\n'), assistantAt, mdWritten, javaEdits, lastJavaEditIdx, cleanupEdits };
+  return { raw, lastUserText, assistantText: assistantTexts.join('\n'), assistantAt, mdWritten, javaEdits, lastJavaEditIdx, cleanupEdits, sourceEdits };
 }
 
 // A bypass reason is real only when it is not the placeholder from the help text.
@@ -201,7 +212,7 @@ function matrixComplete(m) { return !!m && m.rows >= MIN_ROWS && m.fallback; }
 // Requirement 1 verdict — v2 logic, order unchanged.
 function predicateVerdict(t) {
   if (!FIX_INTENT.test(t.lastUserText)) return 'skipped-no-intent';
-  if (!(ETANAH_PATH.test(t.raw) && EDIT_CUE.test(t.raw))) return 'no-edit';
+  if (!t.sourceEdits) return 'no-edit';
   if (hasRealBypass(t.raw, BYPASS)) return 'bypassed';
   if (/\bASSUMPTION\b/i.test(t.assistantText) && /\bFALSIFIER\b/i.test(t.assistantText)) return 'passed';
   return 'blocked';
