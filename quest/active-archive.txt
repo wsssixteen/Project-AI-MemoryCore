@@ -4933,3 +4933,19 @@ issue_one_liner=5 - Semua urusan Pelupusan - Perubahan Template minit bebas foll
 assigned_to_me=2026-04-22
 closed=2026-10-20
 current_phase=Closed
+
+qa=ADHOC-PRBB-2026-16
+phase=0
+status=archived
+ticket_type=adhoc
+env=PROD
+urusan=PRBB
+state=melaka
+quest_start=2026-10-19
+local_test_confirmed=false
+adhoc_register_row=A68
+qa_doc=projects/coding-projects/archive/ADHOC-PRBB-2026-16/ADHOC-PRBB-2026-16.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\306. AH - PROD - PRBB - Borang 4Ce P1e signature missing
+issue_one_liner=PROD PRBB PTMLK/03/L/PRBB/2026/5 apl 3410544: Borang 4Ce + P1e no GPKI signature; PB4CE signer luqmannulhakim jnsSahSign=Token (no OTP, no signing_log row 19/10); files last built 15/10 during 10 failed GPKI tries by azlikasim (IC not registered); BA asks hand-signed copy patched in (A) vs reopen PB4CE + OTP (B); awaiting miya/BA choice; BA told: confirm PDT accepts hand signature, then infra download (one message, 2 paths); replace = file only (.main is PDF, DMS serves as is), open: WORM overwrite; option A chosen (PDF-tool signing), next infra download; archive_hold set, runbook ready; session closed 2026-10-20, hold for ticket
+title=PRBB Borang 4Ce & P1e signature missing
+branch=none-until-ticket
