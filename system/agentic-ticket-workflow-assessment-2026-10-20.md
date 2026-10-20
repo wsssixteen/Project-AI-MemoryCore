@@ -40,3 +40,15 @@ Proposals logged (`core/slips.js --type proposal`): A1 telemetry source · A1 ga
 | A3 debugging | "1.10.5 has the API" was stated from master source + compile; the jar proved it only after miya asked | jar-check advisory (logged) |
 | A4 etanah | "REPORT-API watermark" = the "(REPORT API)" title prefix, not an image; BA screenshots confirm | ⏭ fact written to QA-285171.md Ship — Verify |
 | A5 sweep | ⏭ no sweep or file sweep ran this session | — |
+
+## Session melaka-staging-flowable-perf (ADHOC-PRBB-2026-15)
+
+| Axis | Instance this session | Assessment |
+|---|---|---|
+| A1 agentic system | `adhoc-brief-first` blocked a read-only `adhoc-save-audit.js` run after the save agent reported, so the "audit N/N PASS" line could only be relayed, not re-checked | The gate treats the audit (a read) like a save write; the skill's own step 4 asks for that re-check. |
+| A2 quest workflow | Briefed "one bad JVM, restart helps" before asking for the error text; miya's screenshot overturned it within minutes | For a "slow / fails" ask on a screen, the page error is the cheapest falsifier and should be asked for (or read from the log) before any inference. |
+| A3 debugging | Id-block gap reasoning (block 14130001 had 0 committed rows) looked strong but explained nothing the FK error did not | Side-channel evidence is a hypothesis; marked as such too late. |
+| A4 etanah issue-solving | FK `act_fk_task_exe` on Alter Flow = stale `act_ru_execution.task_count_`; 3 live executions affected; Initiate & Alter works | Written to FLOWABLE-KNOWLEDGE §20 + LATENT-BUGS L25. |
+| A5 sweep | ⏭ no multi-ticket sweep this session | — |
+
+Proposals logged: A1 audit-read exemption in adhoc-brief-first · A2 ask for the page error before a "slow/fails" diagnosis.

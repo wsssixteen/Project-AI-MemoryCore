@@ -1231,6 +1231,7 @@
 {"ts":"2026-10-20T02:11:26.339Z","category":"A1"}
 {"ts":"2026-10-20T02:56:45.063Z","category":"A2"}
 {"ts":"2026-10-20T03:04:45.486Z","category":"A1"}
+{"ts":"2026-10-20T03:07:29.055Z","category":"regression"}
 {"ts":"2026-10-20T02:56:46.074Z","category":"assume-not-verify"}
 {"ts":"2026-10-20T03:01:39.989Z","category":"A1"}
 {"ts":"2026-10-20T03:01:44.345Z","category":"A2"}
@@ -1240,3 +1241,6 @@
 {"ts":"2026-10-20T02:37:39.040Z","category":"verify-before-claim"}
 {"ts":"2026-10-20T02:54:04.844Z","category":"A1"}
 {"ts":"2026-10-20T02:54:08.690Z","category":"A2"}
+{"ts":"2026-10-20T02:49:50.312Z","category":"verify-before-claim"}
+{"ts":"2026-10-20T03:02:29.177Z","category":"A1"}
+{"ts":"2026-10-20T03:02:31.267Z","category":"A2"}

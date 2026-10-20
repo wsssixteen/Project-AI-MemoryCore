@@ -267,11 +267,17 @@ check('E26c once the report is rewritten the same row PASSes', row('project-repo
 { // E26d: a stop-check row written at 00:30 local time carries the PREVIOUS day's UTC date in an eastern timezone; it is still today's row
   const n = tree(); const rep2 = path.join(n.ml, 'reports', 'night.md'); fs.mkdirSync(path.dirname(rep2), { recursive: true }); fs.writeFileSync(rep2, 'x'); age(rep2, 600);
   const d = new Date(); d.setHours(0, 30, 0, 0);
-  fs.appendFileSync(n.log, JSON.stringify({ ts: d.toISOString(), action: 'stop-check', session: 'n1', project: 'Masterline', report: rep2, last_change: d.getTime() + 60000 }) + '\n');
+  fs.appendFileSync(n.log, JSON.stringify({ ts: d.toISOString(), action: 'stop-check', session: 'n1', project: 'Masterline', report: rep2, last_change: Date.now() + 60000 }) + '\n');
   const ymd = (x) => x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0');
   const q = spawnSync(process.execPath, ['-e', "const P=require(process.argv[1]);console.log(JSON.stringify(P.reportVerdicts('Masterline',process.argv[2])))", path.join(D, 'project.js'), ymd(new Date())], { encoding: 'utf8', env: env(n) });
   let v = []; try { v = JSON.parse(q.stdout); } catch (_) {}
   check('E26d a row written between midnight and 08:00 local (UTC date = yesterday) still counts as today (2026-10-20 night failure)', v.length === 1 && v[0].ok === false, q.stdout + q.stderr); }
+{ // E26e: a stop-check row written on another machine names that machine's path; the same report here is found, not "missing" (2026-10-20, vice4 vs Ridhwan)
+  const n = tree(); const rep3 = path.join(n.ml, 'reports', 'other.md'); fs.mkdirSync(path.dirname(rep3), { recursive: true }); fs.writeFileSync(rep3, 'x');
+  fs.appendFileSync(n.log, JSON.stringify({ ts: new Date().toISOString(), action: 'stop-check', session: 'o1', project: 'Masterline', report: 'C:\\Users\\someoneelse\\X\\projects\\coding-projects\\active\\Masterline\\reports\\other.md', last_change: Date.now() - 60000 }) + '\n');
+  const q = spawnSync(process.execPath, ['-e', "const P=require(process.argv[1]);console.log(JSON.stringify(P.reportVerdicts('Masterline')))", path.join(D, 'project.js')], { encoding: 'utf8', env: env(n) });
+  let v = []; try { v = JSON.parse(q.stdout); } catch (_) {}
+  check('E26e a report path from another machine resolves under this machine\'s active folder', v.length === 1 && v[0].ok === true, q.stdout + q.stderr); }
 
 // ── Registration, the real instance, portability ──
 const settings = JSON.parse(fs.readFileSync(path.join(ROOT, '.claude', 'settings.json'), 'utf8'));
