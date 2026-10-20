@@ -131,3 +131,7 @@
 {"ts":"2026-10-09T04:07:22.483Z","qa":"ADHOC-PRBB-2026-12","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none-until-ticket"}
 {"ts":"2026-10-12T06:14:21.362Z","qa":"QA-283286","kind":"wrong-fix","n":1,"was":"revert #283286 line and common version on mlk/int-env and mlk/stag-env to clear the TestGis.html dashboard error","why":"server logs of the new MLIT show the first error at 08:29, before the #283286 merges of 11:00; same error on common 1.7.5-MLK and 1.10.1-MLK.beta.patch3","learned":"for an error seen right after a deploy, read the server start line and the first error time in the log before blaming the deployed change"}
 {"ts":"2026-10-19T08:22:11.334Z","qa":"QA-285252","kind":"wrong-fix","n":1,"was":"A1: fill the hakmilik only after Tambah + Status Tanah = Tanah Milik","why":"BA asked for papar terus; PLTP/PPTPB fill the table on tab load, A1 still needed manual Tambah","learned":"When BA says sama macam urusan X, trace X's behaviour before choosing the trigger point"}
+{"ts":"2026-10-20T02:55:00.514Z","qa":"ADHOC-PRU-2026-2","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T02:55:02.187Z","qa":"ADHOC-PRU-2026-1","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T02:59:49.573Z","qa":"ADHOC-PRU-2026-2","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none-until-ticket"}
+{"ts":"2026-10-20T02:59:56.328Z","qa":"ADHOC-PRU-2026-1","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none-until-ticket"}

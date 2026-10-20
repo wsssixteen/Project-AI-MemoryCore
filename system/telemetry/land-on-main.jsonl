@@ -12,3 +12,5 @@
 {"ts":"2026-10-19T14:06:05.185Z","commit":"2d214241","outcome":"LANDED","exit":0,"dur_ms":13036}
 {"ts":"2026-10-19T15:00:39.555Z","commit":"0d66af63","outcome":"REFUSED","exit":2,"dur_ms":638}
 {"ts":"2026-10-19T15:00:49.972Z","commit":"0d66af63","outcome":"LANDED","exit":0,"dur_ms":3659}
+{"ts":"2026-10-19T06:08:55.425Z","commit":"cbfd1d07","outcome":"REFUSED","exit":2,"dur_ms":4134}
+{"ts":"2026-10-20T03:00:09.388Z","commit":"4e4ae5f5","outcome":"REFUSED","exit":2,"dur_ms":10989}

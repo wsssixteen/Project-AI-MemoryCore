@@ -109,7 +109,8 @@ const section = (txt, heading) => { const at = txt.indexOf(heading); return at <
     const mlkOnlyAgain = await board(MLK);
     check('M1 Melaka-only: no state heading, no OUTSIDE note', !/### Terengganu|### Perak|OUTSIDE Melaka/.test(mlkOnly), mlkOnly);
     check('M2 Melaka-only: exactly the three Melaka tables', (mlkOnly.match(/^### /gm) || []).length === 3
-        && /^### 1\. eSOKONGAN tracker \(SLA\) — 1 open/m.test(mlkOnly) && /^### 2\. PROD .* — 1 open/m.test(mlkOnly) && /^### 3\. Internal fixes & other — 1 open/m.test(mlkOnly), mlkOnly);
+        && /^### 1\. PROD .* — 1 open/m.test(mlkOnly) && /^### 2\. eSOKONGAN tracker \(SLA\) — 1 open/m.test(mlkOnly) && /^### 3\. Internal fixes & other — 1 open/m.test(mlkOnly)
+        && mlkOnly.indexOf('### 1. PROD') < mlkOnly.indexOf('### 2. eSOKONGAN'), mlkOnly);
     check('M3 Melaka-only: same input, same bytes', mlkOnly === mlkOnlyAgain, '');
     const withTrg = await board([...MLK, ...TRG]);
     const cut = withTrg.indexOf('\n\n### Terengganu');
@@ -127,8 +128,9 @@ const section = (txt, heading) => { const at = txt.indexOf(heading); return at <
     const trgSec = section(withTrg, '### Terengganu');
     check('T1 Terengganu heading counts his open tickets (Resolved hidden like Melaka)', /^### Terengganu — 6 open, assigned to you/m.test(trgSec), trgSec.split('\n')[0]);
     check('T2 same columns as the Melaka tables', trgSec.includes('| # | Severity | Days | Due date | Subject | State |'), trgSec);
-    // eSOKONGAN tracker first (High before Medium), then PROD, then the rest (High, then Medium oldest first, then Low)
-    check('T3 ranked: eSOKONGAN tracker, then PROD, then the rest', ids(trgSec).join(',') === '2004,2003,2002,2001,2005,2007', ids(trgSec).join(','));
+    // PROD first, then eSOKONGAN tracker (High before Medium), then the rest by tracker tier:
+    // Permanent Fix 2007 (tier 2), Internal Issue 2005 (tier 3), eSOKONGAN-CR 2001 (not placed, last)
+    check('T3 ranked: PROD, then eSOKONGAN tracker, then the rest by tracker tier', ids(trgSec).join(',') === '2002,2004,2003,2007,2005,2001', ids(trgSec).join(','));
     check('T4 no Terengganu ticket leaks into a Melaka table or the OUTSIDE note',
         !ids(withTrg.slice(0, cut)).some(i => i >= 2000) && !/OUTSIDE Melaka/.test(withTrg), withTrg);
     check('T5 urgent word in the description is flagged in the Severity cell', /\| 2002 \| Medium · URGENT \(segera\) \|/.test(trgSec), trgSec);
@@ -166,7 +168,24 @@ const section = (txt, heading) => { const at = txt.indexOf(heading); return at <
     check('S6 non-active state says it has no board (never an empty table that reads as "nothing open")', /state selangor has no board — work_scope=scaffold/.test(scaffold) && !/###/.test(scaffold), scaffold);
     check('S7 --state melaka prints the normal Melaka board', await board([...MLK, ...TRG], ['--state', 'melaka']) === withTrg, '');
     const sj = JSON.parse(await board([...MLK, ...TRG], ['--state', 'terengganu', '--json']));
-    check('S8 --state terengganu --json → that board only', sj.state === 'terengganu' && sj.rows.map(r => r.id).join(',') === '2004,2003,2002,2001,2005,2007', JSON.stringify(sj).slice(0, 120));
+    check('S8 --state terengganu --json → that board only', sj.state === 'terengganu' && sj.rows.map(r => r.id).join(',') === '2002,2004,2003,2007,2005,2001', JSON.stringify(sj).slice(0, 120));
+
+    // ── tracker tier inside table 3 (miya 2026-10-19) ───────────────────────────────────
+    const TIER = [
+        iss(1101, 'MLK_03_Pelupusan', 12, 'Development', 'High', { start: '2026-08-01' }),
+        iss(1102, 'MLK_03_Pelupusan', 68, 'CR', 'Medium'),
+        iss(1103, 'MLK_03_Pelupusan', 15, 'QA', 'Medium'),
+        iss(1104, 'MLK_03_Pelupusan', 53, 'Internal Issue', 'Low'),
+        iss(1105, 'MLK_03_Pelupusan', 77, 'Internal Issue (Permanent Fix)', 'Low'),
+        iss(1106, 'MLK_03_Pelupusan', 57, 'UAT-OR', 'Low'),
+        iss(1107, 'MLK_03_Pelupusan', 79, 'Internal Issue (MA Fix)', 'High'),
+    ];
+    MLK.push(...TIER);
+    const tierSec = section(await board(MLK), '### 3. Internal fixes & other');
+    MLK.splice(MLK.length - TIER.length, TIER.length);
+    // tier 1 UAT · tier 2 MA Fix (High) + Permanent Fix (Low) · tier 3 QA + Internal Issue (Medium before Low,
+    // then oldest) · tier 4 Development + CR (High before Medium)
+    check('K1 table 3 sorts by tracker tier before priority', ids(tierSec).join(',') === '1106,1107,1105,1103,1002,1104,1101,1102', ids(tierSec).join(','));
 
     // ── pure helpers ────────────────────────────────────────────────────────────────────
     const sp = B.splitByState([]);

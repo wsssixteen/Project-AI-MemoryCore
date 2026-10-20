@@ -69,6 +69,8 @@
 {"ts":"2026-10-20T02:16:20.864Z","parts":5,"pass":14,"fail":1,"unruled":0,"skip":0,"dur_ms":38552,"partial":false}
 {"ts":"2026-10-20T02:08:51.550Z","parts":4,"pass":10,"fail":1,"unruled":0,"skip":0,"dur_ms":3263,"partial":false}
 {"ts":"2026-10-20T02:09:23.166Z","parts":4,"pass":10,"fail":1,"unruled":0,"skip":0,"dur_ms":3397,"partial":false}
+{"ts":"2026-10-20T03:03:23.040Z","parts":8,"pass":33,"fail":1,"unruled":0,"skip":0,"dur_ms":36437,"partial":false}
+{"ts":"2026-10-20T03:04:37.652Z","parts":8,"pass":33,"fail":1,"unruled":0,"skip":0,"dur_ms":31542,"partial":false}
 {"ts":"2026-10-20T02:40:24.279Z","parts":3,"pass":12,"fail":0,"unruled":0,"skip":0,"dur_ms":45387,"partial":false}
 {"ts":"2026-10-20T02:47:18.918Z","parts":4,"pass":17,"fail":1,"unruled":0,"skip":0,"dur_ms":8594,"partial":false}
 {"ts":"2026-10-20T02:50:33.749Z","parts":4,"pass":17,"fail":1,"unruled":0,"skip":0,"dur_ms":26692,"partial":false}
@@ -89,3 +91,7 @@
 {"ts":"2026-10-20T03:16:49.505Z","parts":1,"pass":1,"fail":3,"unruled":0,"skip":0,"dur_ms":86,"partial":true}
 {"ts":"2026-10-20T03:16:50.553Z","parts":1,"pass":2,"fail":2,"unruled":0,"skip":0,"dur_ms":109,"partial":true}
 {"ts":"2026-10-20T03:17:15.946Z","parts":9,"pass":41,"fail":0,"unruled":0,"skip":0,"dur_ms":62790,"partial":false}
+{"ts":"2026-10-20T02:54:56.329Z","parts":9,"pass":30,"fail":1,"unruled":0,"skip":0,"dur_ms":8709,"partial":false}
+{"ts":"2026-10-20T02:55:23.387Z","parts":9,"pass":30,"fail":1,"unruled":0,"skip":0,"dur_ms":9226,"partial":false}
+{"ts":"2026-10-20T03:06:34.713Z","parts":9,"pass":34,"fail":1,"unruled":0,"skip":0,"dur_ms":17949,"partial":false}
+{"ts":"2026-10-20T03:08:46.276Z","parts":10,"pass":39,"fail":1,"unruled":0,"skip":0,"dur_ms":23467,"partial":false}
