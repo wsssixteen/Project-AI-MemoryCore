@@ -1245,10 +1245,6 @@
 {"ts":"2026-10-20T03:02:29.177Z","category":"A1"}
 {"ts":"2026-10-20T03:02:31.267Z","category":"A2"}
 {"ts":"2026-10-20T03:22:45.912Z","category":"A1"}
-{"ts":"2026-10-20T03:57:41.648Z","category":"bounty"}
-{"ts":"2026-10-20T04:05:36.065Z","category":"A4"}
-{"ts":"2026-10-20T04:05:37.487Z","category":"A5"}
-{"ts":"2026-10-20T04:05:39.017Z","category":"A4"}
 {"ts":"2026-10-12T08:56:23.430Z","category":"wrong-env"}
 {"ts":"2026-10-12T09:27:14.676Z","category":"stale-copy/ran-tool-from-behind-checkout"}
 {"ts":"2026-10-13T11:20:06.869Z","category":"guess-as-fact"}
@@ -1303,3 +1299,7 @@
 {"ts":"2026-10-20T02:59:04.770Z","category":"bounty"}
 {"ts":"2026-10-20T03:21:54.140Z","category":"omission"}
 {"ts":"2026-10-20T04:07:10.713Z","category":"bounty"}
+{"ts":"2026-10-20T03:57:41.648Z","category":"bounty"}
+{"ts":"2026-10-20T04:05:36.065Z","category":"A4"}
+{"ts":"2026-10-20T04:05:37.487Z","category":"A5"}
+{"ts":"2026-10-20T04:05:39.017Z","category":"A4"}
