@@ -29,3 +29,10 @@
 - **Business logic learned**: risalat doc lifecycle — generated-once-stored, regenerated only via onJana (unused in Melaka) or now Simpan; `TGS_TO_JNS_DOK_MAP` = tugasan→doc-kod; `isFirstEntry` gate at `refreshDokumenList` skips populators on entry → stale stored doc served
 - **Skills / patterns built**: CLAUDE.md v1.40 (Phase 2 Archive Hygiene) + v1.41 (table-first hard pre-send gate)
 - **Audit-log / slip entries**: traced-display-path-not-save-path-first (working-analog miss); cluttered prose-wall hand-back (table-default violation) — both → CLAUDE.md gates + slip-log
+
+### 2026-10-20 — QA-275092 — Perak PT Semakan Permohonan (HKGHS) Seterusnya error (PROD)
+- **Time**: 2026-08-12 → 2026-08-26 (about two weeks, 20 journal entries); Phase 2 written 2026-10-20
+- **Extras beyond ticket scope**: none
+- **Business logic learned**: the alter had to go one tugasan hop at a time (Muatnaik PA/PW Dan Pelan B1, then a concurrent tugasan, then HKGHS); BA asked for the same alter three times and one hold (Pelan B1 lost)
+- **Skills / patterns built**: ALTER-TICKET-PLAYBOOK Perak convention + 5.3 blocked-on-user reply came from this ticket
+- **Audit-log / slip entries**: none; latent cause (pendaftaran to pelupusan ModuleIntegrationRemotingService failure on PROD) not fixed
