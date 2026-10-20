@@ -111,7 +111,11 @@ if (targetDs.suffix === '') {
     console.log('No edit needed. JBoss restart NOT required.');
     process.exit(0);
 }
-if (to === 'stg1' && !hasFlag('miya-asked')) fail('stg1 is NOT used (miya 2026-10-12, repeated 2026-10-14). Use stg2. Only when miya asks for stg1 in his own message, add --miya-asked.');
+// The staging switch (system/melaka-env-state.json `melaka_staging_schema`, set by miya's own words) names the one
+// stg schema that is ON; the other one is refused unless miya asked for it in his own message.
+const STATE = process.env.ENV_SWITCH_STATE || path.join(__dirname, '..', 'system', 'melaka-env-state.json');
+let liveStg = null; try { liveStg = JSON.parse(fs.readFileSync(STATE, 'utf-8')).melaka_staging_schema || null; } catch (_) {}
+if (/^stg\d$/.test(to) && to !== liveStg && !hasFlag('miya-asked')) fail(`${to} is switched OFF (staging switch = ${liveStg || 'unset'}, system/melaka-env-state.json). Use ${liveStg || 'the schema miya names'}. Only when miya asks for ${to} in his own message, add --miya-asked.`);
 
 const movedSuffix = targetDs.suffix; // the number the target parked on goes to the outgoing block
 let newXml = xml;

@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "note": "THE one place a save rule is declared. Each rule cites the file that already states it; lib/save-rules.js holds only the check implementations. Kinds and paths follow system/INDEX.md (six kinds). Path patterns: * = one segment part, ** = anything; a pattern matches the path itself and everything under it; the part is the path cut at the pattern's depth. The most specific pattern wins. A kind with no rule for a part gives one UNRULED row (not a FAIL) so the owner can rule it. Version 2 (2026-10-08): a project with its own repo is a folder projects/coding-projects/active/<Name>/ that holds project.json; listing its literal path under the projects kind (and in the INDEX.md map fence) is what installs it. Version 3 (2026-10-17): kind projects gains project-shape2 and project-report-current for folders in the project system shape (project.json \"shape\": 2). The kind tools (system/tools.json, the Tool registry, INDEX.md seventh kind since 2026-10-14) is listed with no rule yet: its rows print UNRULED for みや to rule.",
+  "note": "THE one place a save rule is declared. Each rule cites the file that already states it; lib/save-rules.js holds only the check implementations. Kinds and paths follow system/INDEX.md (six kinds). Path patterns: * = one segment part, ** = anything; a pattern matches the path itself and everything under it; the part is the path cut at the pattern's depth. The most specific pattern wins. A kind with no rule for a part gives one UNRULED row (not a FAIL) so the owner can rule it. Version 2 (2026-10-08): a project with its own repo is a folder projects/coding-projects/active/<Name>/ that holds project.json; listing its literal path under the projects kind (and in the INDEX.md map fence) is what installs it. 2026-10-13: a learning project is a folder projects/learning-projects/active/<name>/ (git-ignored); its engine .claude/skills/<name>/<name>.js answers `save-check`, and that answer is its save rule. Version 3 (2026-10-17): kind projects gains project-shape2 and project-report-current for folders in the project system shape (project.json \"shape\": 2). The kind tools (system/tools.json, the Tool registry, INDEX.md seventh kind since 2026-10-14) is listed with no rule yet: its rows print UNRULED for みや to rule.",
   "ignore": [
     "**/log.jsonl",
     "**/*.log.jsonl",
@@ -243,6 +243,7 @@
         "daily-diary/*/*",
         "projects/**",
         "projects/coding-projects/active/*",
+        "projects/learning-projects/active/*",
         "library-items/*",
         ".claude/auto-memory/*",
         ".claude/state/*",
@@ -284,6 +285,15 @@
             "daily-diary/current/*.md"
           ],
           "source": "daily-diary/diary-format.md (Entry template, locked)"
+        },
+        {
+          "id": "learning-class-saved",
+          "text": "A class worked today is closed in the learning project's engine: where it stopped, what was discussed and the revision asks are in the class log, and the journal has a line dated today.",
+          "check": "learning-class-saved",
+          "applies": [
+            "projects/learning-projects/active/*"
+          ],
+          "source": ".claude/skills/arabic/SKILL.md (Class-along mode: class close) and .claude/skills/arabic/arabic.js (save-check)"
         },
         {
           "id": "quest-block",
@@ -407,6 +417,7 @@
         "etanah_atlas",
         "projects/coding-projects/active/PymTime",
         "projects/coding-projects/active/DawahMap",
+        "projects/coding-projects/active/Eisenhower",
         "projects/coding-projects/active/mas-ergonomics-animation",
         "projects/coding-projects/active/Masterline"
       ],

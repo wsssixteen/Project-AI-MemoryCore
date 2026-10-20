@@ -316,7 +316,8 @@ function rankMine(rows) {
     });
 }
 
-// THREE-TABLE SPLIT — order REVISED by miya 2026-09-29. Categorised DETERMINISTICALLY
+// THREE-TABLE SPLIT — table order REVISED again 2026-10-19: PROD first, then the eSOKONGAN
+// tracker, then the rest sorted by TRACKER TIER (below). Categorised DETERMINISTICALLY
 // by tracker_id — the tracker IS the category, never a subject parse.
 //   🚨 VOCABULARY: "eSOKONGAN ticket" ALWAYS means TRACKER = eSOKONGAN (id 51) — the one
 //     carrying the SLA. The Redmine PROJECT "eSOKONGAN MELAKA" also holds Internal Issue /
@@ -336,6 +337,24 @@ function categoryOf(r) {
     if (PATCH_TRACKER_IDS.has(r.tracker_id)) return 'patch';
     return 'other';
 }
+
+// TRACKER TIER — miya 2026-10-19, supersedes the 2026-09-29 order: PROD patching first, then
+// Maintenance and Project interleaved tier by tier. This is the DEFAULT order only; he picks the
+// day's work himself by current priority and effort.
+//   0 PROD patching: 63 · 64 · 71
+//   1 eSOKONGAN 51 · PAT / UAT / FAT (30 31 32 36 37 38 39 40 45 46 47 57 58)
+//   2 Internal Issue (Permanent Fix) 77 · Internal Issue (MA Fix) 79
+//   3 Internal Issue 53 · QA 15
+//   4 CR (68 70 73 74 75) · Development 12 · Requirement(s) 13 28
+//   9 not placed yet: Team Initiative (no tracker of that name), any other tracker
+const TRACKER_TIER = new Map([
+    ...[63, 64, 71].map(id => [id, 0]),
+    ...[51, 30, 31, 32, 36, 37, 38, 39, 40, 45, 46, 47, 57, 58].map(id => [id, 1]),
+    ...[77, 79].map(id => [id, 2]),
+    ...[53, 15].map(id => [id, 3]),
+    ...[68, 70, 73, 74, 75, 12, 13, 28].map(id => [id, 4]),
+]);
+function trackerTier(r) { const t = TRACKER_TIER.get(r.tracker_id); return t == null ? 9 : t; }
 
 // Severity = Redmine Priority. Higher rank = more severe. Named map first (this
 // instance names them per reference_redmine_sla_hours), then fall back to
@@ -370,7 +389,8 @@ function rankEsokongan(rows) { return rows.slice().sort(bySeverityThen(byNearest
 function rankAged(rows) {
     const aged = rankMine(rows);
     const pos = new Map(aged.map((r, n) => [r.id, n]));
-    return aged.slice().sort(bySeverityThen((a, b) => pos.get(a.id) - pos.get(b.id)));
+    const bySeverity = bySeverityThen((a, b) => pos.get(a.id) - pos.get(b.id));
+    return aged.slice().sort((a, b) => (trackerTier(a) - trackerTier(b)) || bySeverity(a, b));
 }
 
 // Severity cell carries the urgent flag + its evidence words, e.g. "High · URGENT (segera)".
@@ -383,18 +403,18 @@ function renderRows6(rows) {
     return rows.map(r => `| ${r.id} | ${severityCell(r)} | ${r.days ?? '—'} | ${shortDate(r.due)} | ${r.subject} | ${r.state} |`);
 }
 
-function renderEsokongan(rows) {
-    return [`### 1. eSOKONGAN tracker (SLA) — ${rows.length} open (ranked: priority, urgent, then nearest due)`, '',
+function renderPatch(rows) {
+    return [`### 1. PROD (Data Patching / Internal Issue PROD) — ${rows.length} open (ranked: priority, urgent, then oldest)`, '',
         ...HEADER6, ...renderRows6(rows)].join('\n');
 }
 
-function renderPatch(rows) {
-    return [`### 2. PROD (Data Patching / Internal Issue PROD) — ${rows.length} open (ranked: priority, urgent, then oldest)`, '',
+function renderEsokongan(rows) {
+    return [`### 2. eSOKONGAN tracker (SLA) — ${rows.length} open (ranked: priority, urgent, then nearest due)`, '',
         ...HEADER6, ...renderRows6(rows)].join('\n');
 }
 
 function renderOther(rows) {
-    return [`### 3. Internal fixes & other — ${rows.length} open (ranked: priority, urgent, then oldest)`, '',
+    return [`### 3. Internal fixes & other — ${rows.length} open (ranked: tracker tier, priority, urgent, then oldest)`, '',
         ...HEADER6, ...renderRows6(rows)].join('\n');
 }
 
@@ -412,19 +432,19 @@ function splitByState(offRows) {
     return { boards, rest };
 }
 
-// One table per state, same order as the three Melaka tables stacked: eSOKONGAN tracker,
-// then PROD, then the rest — each block ranked by its own helper.
+// One table per state, same order as the three Melaka tables stacked: PROD, then the
+// eSOKONGAN tracker, then the rest — each block ranked by its own helper.
 function rankStateBoard(rows) {
     const aged = rankMine(rows);
     return [
-        ...rankEsokongan(aged.filter(r => categoryOf(r) === 'esokongan')),
         ...rankAged(aged.filter(r => categoryOf(r) === 'patch')),
+        ...rankEsokongan(aged.filter(r => categoryOf(r) === 'esokongan')),
         ...rankAged(aged.filter(r => categoryOf(r) === 'other')),
     ];
 }
 
 function renderStateBoard(board) {
-    return [`### ${board.label} — ${board.rows.length} open, assigned to you (ranked: eSOKONGAN tracker, then PROD, then the rest; inside each: priority, urgent, then due / oldest)`, '',
+    return [`### ${board.label} — ${board.rows.length} open, assigned to you (ranked: PROD, then eSOKONGAN tracker, then the rest by tracker tier; inside each: priority, urgent, then due / oldest)`, '',
         ...HEADER6, ...renderRows6(board.rows)].join('\n');
 }
 
@@ -521,9 +541,9 @@ async function main(argv) {
 
     // Default is MINE ONLY (miya 2026-08-05: "present to me ONLY my list").
     // The colleagues' table is still built — ask for it with --tracking.
-    console.log(renderEsokongan(mineEsok));
-    console.log('');
     console.log(renderPatch(minePatch));
+    console.log('');
+    console.log(renderEsokongan(mineEsok));
     console.log('');
     console.log(renderOther(mineOther));
     if (args.includes('--tracking')) {
@@ -546,10 +566,27 @@ async function main(argv) {
     }
 }
 
-// Exported for quest/redmine-board.eval.js (stubbed issue list; no Redmine call in it).
-module.exports = { main, shape, splitByState, rankStateBoard, renderStateBoard };
+// When the API cannot be reached (home PC has no route to 172.16.90.169), the ledger is
+// NOT a substitute: 2026-10-16 the ledger said #284831 was ours and unsent; Redmine had moved it.
+const OFFLINE_MARK = 'LIVE REDMINE NOT READ';
+const BROWSER_BOARD_URL = 'http://172.16.90.169/redmine/issues?set_filter=1&f%5B%5D=status_id&op%5Bstatus_id%5D=o&f%5B%5D=assigned_to_id&op%5Bassigned_to_id%5D=%3D&v%5Bassigned_to_id%5D%5B%5D=me&c%5B%5D=project&c%5B%5D=tracker&c%5B%5D=status&c%5B%5D=priority&c%5B%5D=subject&c%5B%5D=updated_on&per_page=100';
+function offlineNotice(reason) {
+    return [
+        `⛔ ${OFFLINE_MARK}: Redmine unreachable (${reason}).`,
+        '   Do NOT state any ticket status, owner, progress or "sent to BA" from quest/active.txt, Task folders or quest docs.',
+        '   NEXT STEP, before answering: read the board through Claude in Chrome (the connected Edge reaches Redmine when this PC cannot):',
+        `   ${BROWSER_BOARD_URL}`,
+        '   Then open each ticket you will talk about (http://172.16.90.169/redmine/issues/<id>) for its assignee and last journal.',
+        '   If the browser fails too: every status line says "Redmine not read, ledger of <date>".',
+    ].join('\n');
+}
 
-if (require.main === module) main().catch(e => {
-    console.log(`⚠️  redmine-board: ${e.message} — Redmine unreachable, fall back to quest/active.txt`);
+// Exported for quest/redmine-board.eval.js (stubbed issue list; no Redmine call in it).
+module.exports = { main, shape, splitByState, rankStateBoard, renderStateBoard, OFFLINE_MARK, BROWSER_BOARD_URL, offlineNotice };
+
+// --offline-notice <reason>: the surfacer's path when it had to kill this script at its own timeout
+if (require.main === module && process.argv[2] === '--offline-notice') console.log(offlineNotice(process.argv[3] || 'no reason given'));
+else if (require.main === module) main().catch(e => {
+    console.log(offlineNotice(`redmine-board: ${e.message}`));
     process.exitCode = 0; // never break boot
 });

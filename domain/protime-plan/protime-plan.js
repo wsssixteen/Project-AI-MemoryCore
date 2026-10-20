@@ -357,7 +357,7 @@ function readBoard() {
     if (r.status !== 0) { last = (r.stderr || r.error || 'redmine-board failed').toString().slice(0, 300); continue; }
     try {
       const j = JSON.parse(r.stdout);
-      const ids = [...(j.esokongan || []), ...(j.patch || []), ...(j.other || [])].map(x => String(x.id));
+      const ids = [...(j.patch || []), ...(j.esokongan || []), ...(j.other || [])].map(x => String(x.id));
       return { ok: true, ids };
     } catch (e) { last = 'board json unreadable: ' + String(r.stdout || '').split('\n')[0].slice(0, 120); }
   }

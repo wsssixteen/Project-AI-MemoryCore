@@ -2,25 +2,31 @@
 name: feedback_esokongan_means_tracker
 description: "eSOKONGAN = the tracker; board from redmine-board.js first; shared miya+Ammar filter; BA vs TSO roster; delegated quest stays open, learn before close"
 metadata:
+  node_type: memory
   type: feedback
+  originSessionId: feb49556-3152-4a25-8a15-544795a07418
+  modified: 2026-10-16T05:11:17.828Z
 ---
 
 "eSOKONGAN ticket", from みや or anyone, ALWAYS means a ticket whose **Tracker** is eSOKONGAN (Redmine tracker id 51). The Redmine project "eSOKONGAN MELAKA" also holds Internal Issue and Data Patching tickets; the project name never makes a ticket eSOKONGAN.
 
-Ticket priority order:
+Ticket priority order (2026-10-19, replaces the 2026-09-29 order). Maintenance and Project trackers interleave tier by tier:
 
-| Step | Rule |
+| Tier | Trackers (Redmine id) |
 |---|---|
-| 1 | eSOKONGAN tracker first (the real SLA tickets) |
-| 2 | anything PROD next: Data Patching (PROD) 64 · Internal Issue (PROD) 71 · Internal Issue (PROD-CR) 63 |
-| 3 | everything else (Internal Issue 53, QA, Permanent Fix, MA Fix) |
-| inside each | Priority Critical > High > Medium > Low |
-| then | a ticket whose description or journal says urgent / segera / kritikal / critical / ASAP / mendesak / secepat mungkin / immediate / emergency / kecemasan goes ahead; never miss it |
-| then | old tie-break: eSOKONGAN nearest due, others 3-DAY age |
+| 0 | PROD patching: Internal Issue (PROD) 71 · Data Patching (PROD) 64 · Internal Issue (PROD-CR) 63 |
+| 1 | eSOKONGAN 51 · PAT / UAT / FAT family (30 31 32 36 37 38 39 40 45 46 47 57 58) |
+| 2 | Internal Issue (Permanent Fix) 77 · Internal Issue (MA Fix) 79 |
+| 3 | Internal Issue 53 · QA 15 |
+| 4 | CR (68 70 73 74 75) · Development 12 · Requirement(s) 13 28 |
+| last | not placed yet: Team Initiative (no Redmine tracker has that name), any other tracker |
+| inside a tier | Priority Critical > High > Medium > Low, then an urgent-worded ticket (urgent / segera / kritikal / critical / ASAP / mendesak / secepat mungkin / immediate / emergency / kecemasan), then eSOKONGAN nearest due, others 3-DAY age |
 
-**Why:** 2026-09-29 みや: the eSOKONGAN tracker carries the SLA, so it must be prioritised over tickets that merely live in the eSOKONGAN MELAKA project. PROD tickets are "just as important, settle first".
+**This is the default order only. He picks the day's tickets himself** by current priority and complexity / effort. On "what tickets today", show the ordered list with each ticket's state; never pick for him.
 
-**How to apply:** `quest/redmine-board.js` implements it (table order + Severity column with URGENT flag + urgent banner). Any hand-made ranking (sweep brief, retrieve-redmine, briefing) follows the same order. Mirrored in list-redmine, sweep, retrieve-redmine skills, session-briefing.md and CLAUDE.md §Vocabulary.
+**Why:** 2026-10-19 みや: "Maintenance: eSokongan → Internal Issue (Permanent Fix) → Internal Issue → CR → Team Initiative. Project: PAT/UAT/FAT → QA → Development/Requirement"; PROD patching goes ahead of eSOKONGAN; "QA is same as Internal Issue & CR is the same level as Development/Requirement. I'll be the one to choose based on prioriti semasa and complexity/effort". The 2026-09-29 board lumped Permanent Fix, Development and QA into one pile. The eSOKONGAN tracker (not the project name) is still what makes a ticket eSOKONGAN.
+
+**How to apply:** `quest/redmine-board.js` `TRACKER_TIER` implements it (tables: PROD, then eSOKONGAN, then the rest by tier); the ProTime weekly plan reads that same order. Any hand-made ranking (sweep brief, retrieve-redmine, briefing) follows this file.
 
 Related: [[reference_redmine_sla_hours]] · (merged above)
 
@@ -37,6 +43,8 @@ Related: [[reference_redmine_sla_hours]] · (merged above)
 **Root cause (miya's own question answered)**: NOT because miya added context instead of just summoning "Ruri" — context is never the disruption. The cause was reading my own derived artifact (active.txt) as the board instead of the live source. Same family as the 07-27 lesson "active.txt rots while Redmine stays true" and [[feedback_readable_safe_script]] — my ledgers decay, Redmine is truth.
 
 **How to apply**: board request → `redmine-board.js` first → map each active.txt block to a live row → drop rows not in mine-open (closed/handed/reassigned) → only THEN show the list. Pure-adhoc (no Redmine ticket) rows are labeled as such, not counted as open Redmine work.
+
+**Script times out (`LIVE REDMINE NOT READ`) → the browser, never the ledger** (2026-10-16): the home PC has no route to 172.16.90.169, but Claude in Chrome drives an Edge that does. Read the board and each named ticket there before any status line. On 2026-10-16 I answered from active.txt instead, called #284831 ours and "not sent to BA", and messaged its session; Redmine had moved it. A "No folder" session loads only MEMORY.md, so the pointer to this sits in Always on. Steps: `list-redmine` skill section "When the script prints LIVE REDMINE NOT READ".
 
 ---
 

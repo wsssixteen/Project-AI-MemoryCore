@@ -27,6 +27,19 @@ Flags — add ONLY when みや asks for that view:
 | `--all-trains` | re-include other teams' release trains (SPOC etc.) |
 | `--json` | raw rows for other tooling |
 
+## ⛔ When the script prints `LIVE REDMINE NOT READ`
+
+The PC has no route to Redmine (the home PC never has one). The ledger is NOT the board.
+
+| Step | Do |
+|---|---|
+| 1 | Read the board through Claude in Chrome: the URL the script prints (open tickets assigned to me). The connected Edge reaches Redmine when this PC cannot. |
+| 2 | Open each ticket you will talk about (`/redmine/issues/<id>`) for assignee, status and last journal. |
+| 3 | Only then answer. A ticket not on the live board is not mine: never call it "ours", "not sent to BA" or "stuck". |
+| 4 | If the browser fails too: every line says `Redmine not read, ledger of <date>`. |
+
+**Why** (2026-10-16): the script timed out at home; I answered from `active.txt` and the Task folder, said #284831 was ours and "not sent to BA", and messaged another session on it. Redmine had already moved it. The browser path worked on the first try once used.
+
 ## 🚨 The one hard rule
 
 **Paste the script's output. Do not retype a cell, do not re-sort, do not
@@ -64,7 +77,7 @@ Trackers: eSOKONGAN · Internal Issue · Internal Issue (PROD-CR) · Internal Is
 
 ## Ranking
 
-🚨 **TICKET PRIORITY RULE (miya 2026-09-29 — overrides the bare 3-DAY RULE order)**: "eSOKONGAN ticket" ALWAYS means **TRACKER = eSOKONGAN** (id 51, the one with SLA) — never the Redmine *project* "eSOKONGAN MELAKA", which also holds Internal Issue / Data Patching tickets. Order: **(1) eSOKONGAN tracker → (2) anything PROD** (Data Patching (PROD) · Internal Issue (PROD) · Internal Issue (PROD-CR)) **→ (3) the rest**. Inside each group: Priority **Critical > High > Medium > Low**, then any ticket whose description/journal says **urgent / segera / kritikal / critical / ASAP / mendesak / secepat mungkin / immediate / emergency / kecemasan** ahead of a same-priority one — never miss the urgent word. Then the old tie-break (eSOKONGAN nearest due; others 3-DAY age). `quest/redmine-board.js` implements this deterministically.
+🚨 **TICKET PRIORITY RULE (miya 2026-10-19, replaces 2026-09-29)**: default order by tracker tier — **(0) PROD patching** (Internal Issue (PROD) · Data Patching (PROD) · Internal Issue (PROD-CR)) → **(1) eSOKONGAN tracker** (id 51, never the project name "eSOKONGAN MELAKA") + PAT/UAT/FAT → **(2) Internal Issue (Permanent Fix) + Internal Issue (MA Fix)** → **(3) Internal Issue + QA** → **(4) CR + Development/Requirement** → Team Initiative and any other tracker last (not placed yet). Inside a tier: Priority **Critical > High > Medium > Low**, then a ticket whose description/journal says **urgent / segera / kritikal / critical / ASAP / mendesak / secepat mungkin / immediate / emergency / kecemasan**, then eSOKONGAN nearest due, others 3-DAY age. It is a default only: **he picks the day's tickets** by current priority and effort, so show the ordered list and never pick for him. `quest/redmine-board.js` `TRACKER_TIER` implements it; full table in `.claude/auto-memory/feedback_esokongan_means_tracker.md`.
 
 Tie-break inside a group (the old 3-DAY RULE): descending by days elapsed since received; tie-break on the nearer due date.
 Difficulty is **not** the sort axis — secondary column on request only.
