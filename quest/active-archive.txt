@@ -4949,3 +4949,19 @@ task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\
 issue_one_liner=PROD PRBB PTMLK/03/L/PRBB/2026/5 apl 3410544: Borang 4Ce + P1e no GPKI signature; PB4CE signer luqmannulhakim jnsSahSign=Token (no OTP, no signing_log row 19/10); files last built 15/10 during 10 failed GPKI tries by azlikasim (IC not registered); BA asks hand-signed copy patched in (A) vs reopen PB4CE + OTP (B); awaiting miya/BA choice; BA told: confirm PDT accepts hand signature, then infra download (one message, 2 paths); replace = file only (.main is PDF, DMS serves as is), open: WORM overwrite; option A chosen (PDF-tool signing), next infra download; archive_hold set, runbook ready; session closed 2026-10-20, hold for ticket
 title=PRBB Borang 4Ce & P1e signature missing
 branch=none-until-ticket
+
+qa=ADHOC-PLPS-2026-2
+phase=0
+status=archived
+ticket_type=adhoc
+env=PROD
+urusan=PLPS
+state=melaka
+quest_start=2026-10-15
+local_test_confirmed=false
+adhoc_register_row=A66
+qa_doc=projects/coding-projects/archive/ADHOC-PLPS-2026-2/ADHOC-PLPS-2026-2.md
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\300. AH - PROD - PLPS - SDS tiada tugasan seterusnya
+issue_one_liner=PROD PTMLK/02/L/PLPS/2026/2 apl 3384691: SDS Hantar 2026-09-29 18:35 left engine task 23393230 (8.0 SJTLT) on process 15590595 with no tugasan row; cause = 2026-07-06 Initiate+Alter (Reset=No) copied UPND notis vars penghantaranId=PND/02/L/2026/7 + urusan=UPND into the PLPS process; BpmCallbackService switches urusan to UPND, SJTLT not found, rollback; fix = delete penghantaranId + urusan=PLPS on 15590595 then Alter Flow to SJTLT; awaiting miya
+branch=none-until-ticket
+title=PLPS SDS no next tugasan
