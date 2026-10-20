@@ -3990,7 +3990,7 @@ state=melaka
 env=PROD
 local_test_confirmed=false
 quest_start=2026-09-15
-task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\209. DP #279882 - Pelupusan - OMLPS - Patch tarikh mula dan tarikh tamat lesen bagi no l (PROD)
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\209. DP #279882 - Pelupusan - OMLPS - Patch tarikh mula dan tarikh tamat lesen bagi no l (PROD)
 qa_doc=projects/coding-projects/active/279882/279882.md
 closed=2026-09-15
 
@@ -4920,3 +4920,15 @@ qa_doc=projects/coding-projects/archive/QA-279984/QA-279984.md
 redmine_status=Closed
 closed=2026-09-21
 note=block created 2026-10-20 at Phase 2; the quest ran as ADHOC-PRK-PT-2026-1 before the ticket
+
+qa=QA-233646
+quest_start_ts=2026-10-20T07:57:39.209Z
+task_folder=C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\1. Tasks\Melaka\Archive\308. UAT-CR #233646 - 5 - Semua urusan Pelupusan - Perubahan Template minit bebas follow PDT
+phase=0
+status=archived
+ticket_type=bug
+env=5
+issue_one_liner=5 - Semua urusan Pelupusan - Perubahan Template minit bebas follow PDT Melaka Tengah dan PDT Alor Gajah (papar 3 tandatangan)
+assigned_to_me=2026-04-22
+closed=2026-10-20
+current_phase=Closed

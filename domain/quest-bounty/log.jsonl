@@ -197,3 +197,19 @@
 {"ts":"2026-10-20T10:00:14.764Z","qa":"QA-277291","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
 {"ts":"2026-10-20T10:00:14.766Z","qa":"QA-279898","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
 {"ts":"2026-10-20T10:00:14.768Z","qa":"QA-279984","harvests":{"quest":true,"system":true,"knowledge":true},"refinement":"proposed: active-cli archive delegates to archive-quest.js (tracked in system/slips.jsonl)","banked_sha":"9014c39d"}
+{"ts":"2026-10-20T10:01:11.996Z","qa":"QA-233646","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":null,"allow_stub_reason":"sync-only block for a closed CR re-read as context; no quest work here, the work lives in ADHOC-PT-2026-13"}
+{"ts":"2026-10-20T10:06:10.282Z","qa":"QA-285252","kind":"wrong-fix","n":2,"was":"Rework 1 (4a0dd122fd): set luasDipohon = luas on the auto row so the table Luas Tanah column showed a value","why":"BA 2026-10-20 issue 4: Keluasan Yang Dipohon pre-filled with Keluasan Tanah; it must be empty for the applicant; it prints on Borang 4Ce as Keluasan tanah","learned":"Before filling any field, trace what it means downstream (copy to officer, documents, reports); a display gap is fixed at the display, never by writing data into a field the user owns"}
+{"ts":"2026-10-20T10:08:42.285Z","qa":"QA-277346","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:43.474Z","qa":"QA-277926","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:45.401Z","qa":"QA-278304","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:46.624Z","qa":"QA-277442","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:47.779Z","qa":"QA-279391","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:48.789Z","qa":"QA-279793","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:49.849Z","qa":"QA-280099","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:50.842Z","qa":"QA-280265","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:51.842Z","qa":"QA-279882","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:53.735Z","qa":"QA-275847","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:54.827Z","qa":"QA-275092","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:55.790Z","qa":"QA-277291","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:56.692Z","qa":"QA-279898","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:08:57.611Z","qa":"QA-279984","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
