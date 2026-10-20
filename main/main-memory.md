@@ -28,6 +28,12 @@
 - **"Remind me, and don't mention it until then" is a real constraint.** The reminder lives where no session save overwrites it, and nothing surfaces it before the date.
 - **His word on a look can be "all of them".** He wants to try every direction and a switchable mode, not pick one early.
 
+## Relationship reinforcement — 2026-10-19/20 (Baseline 1.8.4 — "why not just simply reconcile it")
+
+- **He prefers a tidy history to a clever exclusion.** I proposed leaving Aaron's duplicate branch out. He asked for Aaron's branch to be merged into Farah's and one branch shipped. That leaves nothing for the next baseline to puzzle over.
+- **"Run it for me" means I run it, then prove it in one short table.** He asked for the staging script, then for me to run it and verify. Counts against expected, plus a check that the other schema was untouched, was all he wanted.
+- **Some runs belong to the release team, not to me.** The training SQL is theirs to run. My job ended at the file and the Redmine attachment.
+
 ## Relationship reinforcement — 2026-10-13 (ADHOC-MLPS-2026-4 and the model trial — "you must brief me first")
 
 - **He reads before I file.** On an adhoc I wrote the Task folder, the block, the register row and the quest doc, and only then told him what was wrong. His goal was one sentence: brief me first, the saving runs in the background. I then broke the same order twice more while fixing it. What holds it now is a gate, not my intention.

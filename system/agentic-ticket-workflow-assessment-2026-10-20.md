@@ -10,3 +10,15 @@
 | A5 sweep | ⏭ no multi-ticket sweep this session | — |
 
 Proposals logged (`core/slips.js --type proposal`): A1 telemetry source · A1 gateway health probe · A2 re-read at hand-back · A4 env on every test-data line.
+
+## Session melaka-baseline (Baseline Pelupusan 1.8.4) — 2026-10-20
+
+| Axis | Finding | Instance |
+|---|---|---|
+| A1 agentic | ⏭ no delegation this session; all recon by direct script runs | — |
+| A2 quest workflow | archive-quest.js harvest gate cannot find a qa_doc stored under `active/<num>/` (it looks for `active/QA-<num>/`) and refuses a harvested quest | QA-274266: refused twice, archived with `--allow-stub`; proposal logged (A2) |
+| A2 release | audit-ticket STACKED does not say when one branch is a subset of another; the reconcile choice was miya's, not offered by me | #274266 Aaron 1-line ⊂ Farah 4-file; proposal logged (bounty) |
+| A3 debugging | ⏭ no debugging this session | — |
+| A4 etanah | DB MCP servers dropped mid-session; JDBC with gateway backends.json kept reads and writes going on stg1/stg2/mlit | luas patch + 274266.sql verified that way |
+| A4 etanah | audit-briefing run from the worktree reports 0 hook fires (ledger lives in main checkout only) | this DE; logged as proposal (A1) |
+| A5 sweep | ⏭ no multi-ticket sweep | — |
