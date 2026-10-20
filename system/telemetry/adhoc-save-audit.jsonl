@@ -392,3 +392,7 @@
 {"ts":"2026-10-20T10:38:15.779Z","id":"ADHOC-UPP-2026-2","outcome":"fail","fails":["qa_doc: Match Keys \"permohonan\" line","qa_doc: Match Keys \"aplikasi\" line","register: status ↔ block status"],"dur_ms":54}
 {"ts":"2026-10-20T10:38:24.992Z","id":"ADHOC-UPP-2026-2","outcome":"pass","fails":[],"dur_ms":50}
 {"ts":"2026-10-20T10:42:49.942Z","id":"ADHOC-PRBB-2026-16","outcome":"pass","fails":[],"dur_ms":110}
+{"ts":"2026-10-20T10:50:46.951Z","id":"ADHOC-PRBB-2026-16","outcome":"pass","fails":[],"dur_ms":77}
+{"ts":"2026-10-20T10:54:13.541Z","id":"ADHOC-UPP-2026-2","outcome":"pass","fails":[],"dur_ms":51}
+{"ts":"2026-10-20T10:56:09.903Z","id":"ADHOC-PLPS-2026-2","outcome":"pass","fails":[],"dur_ms":31}
+{"ts":"2026-10-20T10:56:37.034Z","id":"ADHOC-PRBB-2026-16","outcome":"pass","fails":[],"dur_ms":32}

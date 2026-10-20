@@ -214,3 +214,8 @@
 {"ts":"2026-10-20T10:08:56.692Z","qa":"QA-279898","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
 {"ts":"2026-10-20T10:08:57.611Z","qa":"QA-279984","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
 {"ts":"2026-10-20T10:42:14.907Z","qa":"QA-272982","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T10:47:16.498Z","qa":"QA-274532","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T10:56:27.056Z","qa":"ADHOC-PRBB-2026-16","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T10:56:32.679Z","qa":"ADHOC-PRBB-2026-16","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"adhoc answered, no ticket yet; findings and runbook already in qa_doc and register A68; bounty runs on promote"}
+{"ts":"2026-10-20T10:57:24.248Z","qa":"ADHOC-PLPS-2026-2","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T10:57:32.875Z","qa":"ADHOC-PLPS-2026-2","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"superseded by QA-285181, harvest banked there"}
