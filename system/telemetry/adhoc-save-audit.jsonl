@@ -385,3 +385,7 @@
 {"ts":"2026-10-20T02:54:16.936Z","id":"ADHOC-PRU-2026-2","outcome":"fail","fails":["block: open ↔ file location","task folder: a closed adhoc is archived"],"dur_ms":72}
 {"ts":"2026-10-20T03:00:36.392Z","id":"ADHOC-PRU-2026-2","outcome":"pass","fails":[],"dur_ms":162}
 {"ts":"2026-10-20T03:00:38.613Z","id":"ADHOC-PRU-2026-1","outcome":"pass","fails":[],"dur_ms":164}
+{"ts":"2026-10-20T07:57:30.672Z","id":"ADHOC-PT-2026-13","outcome":"pass","fails":[],"dur_ms":34}
+{"ts":"2026-10-20T08:04:45.816Z","id":"ADHOC-PT-2026-13","outcome":"pass","fails":[],"dur_ms":30}
+{"ts":"2026-10-20T09:29:43.481Z","id":"ADHOC-PT-2026-13","outcome":"pass","fails":[],"dur_ms":90}
+{"ts":"2026-10-20T09:30:51.641Z","id":"ADHOC-PT-2026-13","outcome":"pass","fails":[],"dur_ms":27}

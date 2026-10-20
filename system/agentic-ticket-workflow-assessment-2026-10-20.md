@@ -92,3 +92,41 @@ Proposals logged (`core/slips.js --type proposal`): A2 quest-phase0 workflow sha
 | A3 debugging efficiency | Blank page 2 was found by an offline Jasper render (WAR lib jars + JDBC creds read from standalone.xml), and it caught that the first fix (remove break) orphaned a header on a short page 1. | High value; the render script lives only in a scratchpad. Proposal to promote it. |
 | A4 etanah issue-solving | Jadual 1 points h/i/j come from `UMM_P_HKMLK_LAIN` with no HKMLK_ID; PROD 0 of 429 rows carry ID_HAKMILIK. Fatin (reports) needed this to make the fix. | Fact not yet in DATABASE.md (deferred in QA-284884). |
 | A5 sweep / file sweep | ⏭ no sweep ran this session. | — |
+
+## Session tugasan-not-found-c0904c (#285252 PRBB rework, 2026-10-20 15:30)
+| Axis | Assessment (instance) | Proposal logged |
+|---|---|---|
+| A1 agentic system | One #285252 turn spent 1283 s in hooks; quest-context-load-gate averages 3.3 s with 0 blocks in 7 days | cache the gate per session + quest |
+| A2 quest workflow | An internal-env test by miya had no ledger status: row 9 went ACCEPTED-RISK, then had to be rewritten to RAN | TESTED-ENV status in falsifier-ran-check |
+| A3 debugging | Cycle 1 answered "will the values show" with an SQL re-enactment; the xhtml binding (daerahSAK, luasDipohon) was never read | stop gate: display claim needs an .xhtml:line |
+| A4 etanah | Column binding differs from the populated field on the PRBB land table; save reads id from JSON | JSF-WIRING section "column binding vs populated field" |
+| A5 sweep | ⏭ no sweep or multi-ticket work this session | — |
+Note: child session qa285252-audit-fix reported its quest-skill "Screen-path audit" commit 4bdbd9fe as on main; it is on branch claude/fervent-lamarr-89925e only (1 ahead of origin/main), not merged by this session (needs miya's word).
+
+## Session separate-maklumatpenggunambptnh (ADHOC-PT-2026-13, Minit Bebas signing sections)
+
+| Axis | What happened (instance) | Assessment |
+|---|---|---|
+| A1 agentic system | `lib/audit-briefing.js` run from the worktree printed 0 fires / 0 turns and listed every hook as never fired; run from the main checkout it read 5 006 320 fires | The DE audit gives a false all-broken picture from any worktree session |
+| A2 quest workflow | adhoc-save rule put the env in the Task folder name (`AH - <ENV> - …`); miya never asked for it | Fixed this session: rule is `AH - <URUSAN> - <desc>` |
+| A3 debugging | Offline doc-sim needed three tool changes to test a 4-step signing flow (chain input, pick a_tgsn, force the Selesai action); each problem cost a 6-10 min rerun | A chain mode in the tool would make a multi-step document test one command |
+| A4 etanah | `addSdtAndNested` skips tags inside a wrapper with a registered filler; `isValidUser` uses the user's MAIN role (m.ikram main KPPT fails at KPPD Semakan) | Both are reusable facts for WORD-TEMPLATE-RENDERING.md; the main-role check is a latent bug for any multi-role officer |
+| A5 sweep | ⏭ no sweep or file sweep this session | — |
+
+## Session qa285252-audit-fix (18:10)
+
+| Axis | Instance this session | Assessment |
+|---|---|---|
+| A1 agentic system | ACCEPTED-RISK accepted a quoted commit order on #285252 cycle 1; a stricter gate would block 12 rows in 6 open quests | The falsifier ledger proves a row was cleared, not that the person accepted that risk; the quote check is pattern-only. Proposal A1 logged. |
+| A2 quest workflow | Rubric had no step tying a screen fix to the fields the .xhtml binds, the keys the save reads, and the buttons per mode | Fixed as prose: quest SKILL Screen-path audit block (4bdbd9fe). Mechanical gate proposed (A2). |
+| A3 debugging | 2026-10-19 04:08 "the new code's lookups return one row" was SQL, not the code; 2026-10-20 a 6-check harness on the real GsonUtil / DynamicFieldUtil ran in under a minute | A harness on the real classes is cheap and catches JSON-key and null-drop behaviour (GsonUtil drops null properties). Re-enactment detector proposed (A3). |
+| A4 etanah | PRBB Butir-butir dialog: table binds daerahSAK/luasDipohon, save reads idHkmlk, Ganti Hari dialog has no Simpan | Not yet in etanah-knowledge; proposal A4. |
+| A5 sweep | miya's queued mid-turn question was invisible to transcript search; found only in the exported jsonl attachment rows | Proposal A5 (queued_command in search helpers). |
+## Session tugasan-not-found-c0904c — second DE (#285252 rework 2, 18:10)
+| Axis | Assessment (instance) | Proposal logged |
+|---|---|---|
+| A1 agentic system | quest-context-load-gate still 3.5 s avg, 0 blocks (audit 2026-10-20) | already proposed at 15:30 (cache) |
+| A2 quest workflow | rework 2 went straight to Edit, no Scout for BA issue 4 | Rework Scout gate in quest-phase-gate |
+| A3 debugging | field meaning never traced before writing it (luasDipohon prints on Borang 4Ce) | Downstream readers table before a field-write |
+| A4 etanah | PRBB luas chain now in BUG-BESTIARY | bug-db surfaces it on next PRBB land ticket |
+| A5 sweep | ⏭ no sweep work | — |
