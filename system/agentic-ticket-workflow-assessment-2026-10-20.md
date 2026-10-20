@@ -112,3 +112,12 @@ Note: child session qa285252-audit-fix reported its quest-skill "Screen-path aud
 | A3 debugging | Offline doc-sim needed three tool changes to test a 4-step signing flow (chain input, pick a_tgsn, force the Selesai action); each problem cost a 6-10 min rerun | A chain mode in the tool would make a multi-step document test one command |
 | A4 etanah | `addSdtAndNested` skips tags inside a wrapper with a registered filler; `isValidUser` uses the user's MAIN role (m.ikram main KPPT fails at KPPD Semakan) | Both are reusable facts for WORD-TEMPLATE-RENDERING.md; the main-role check is a latent bug for any multi-role officer |
 | A5 sweep | ⏭ no sweep or file sweep this session | — |
+
+## Session tugasan-not-found-c0904c — second DE (#285252 rework 2, 18:10)
+| Axis | Assessment (instance) | Proposal logged |
+|---|---|---|
+| A1 agentic system | quest-context-load-gate still 3.5 s avg, 0 blocks (audit 2026-10-20) | already proposed at 15:30 (cache) |
+| A2 quest workflow | rework 2 went straight to Edit, no Scout for BA issue 4 | Rework Scout gate in quest-phase-gate |
+| A3 debugging | field meaning never traced before writing it (luasDipohon prints on Borang 4Ce) | Downstream readers table before a field-write |
+| A4 etanah | PRBB luas chain now in BUG-BESTIARY | bug-db surfaces it on next PRBB land ticket |
+| A5 sweep | ⏭ no sweep work | — |
