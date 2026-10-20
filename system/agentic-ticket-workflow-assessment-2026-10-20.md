@@ -130,3 +130,12 @@ Note: child session qa285252-audit-fix reported its quest-skill "Screen-path aud
 | A3 debugging | field meaning never traced before writing it (luasDipohon prints on Borang 4Ce) | Downstream readers table before a field-write |
 | A4 etanah | PRBB luas chain now in BUG-BESTIARY | bug-db surfaces it on next PRBB land ticket |
 | A5 sweep | ⏭ no sweep work | — |
+
+## Session melaka-internal-id-check (ADHOC-PLP-2026-3 report 2, 18:40)
+| Axis | Instance this session | Assessment / proposal |
+|---|---|---|
+| A1 agentic system | `lib/audit-briefing.js` run inside the worktree printed "0 hook fires" and 77 hooks "never fired", while hooks fired all session; the telemetry lives only in the main folder | The NOT WORKING block is false when run from a worktree. Proposal A1: resolve telemetry from the main checkout. |
+| A2 quest workflow | adhoc-paste-detector asked for a NEW scaffold; the right move was Report 2 on the open A63 (same env MLIT, same DMS cause) | Matching to an open register row is judgment today. Proposal A2: detector lists OPEN register rows with the same env + symptom words. |
+| A3 debugging | Cause path found in about 6 code reads: row built at `DocumentService:1101`, file silently dropped in `BaseDocumentService.populateDocumentList` | ⏭ fast enough; the fact is now in DATABASE.md §9.1 so the next lookup is one read. |
+| A4 etanah | "Fail = Tiada rekod" on a shown row has a fixed meaning (DMS returned nothing) | Proposal A4: BUG-BESTIARY entry so bug-db surfaces it on "dokumen hilang" prompts. |
+| A5 sweep | ⏭ no sweep work this session | — |
