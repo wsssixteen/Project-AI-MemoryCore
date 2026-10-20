@@ -340,3 +340,19 @@ A handover or guide for a junior developer gives **hints**: where to look, what 
 - Banned: attaching the patch script or pasting the diff into a junior handover.
 
 **Note on a colleague's ticket (2026-10-04, #275043, miya angry twice):** say only what OUR ticket covers ("Ticket #244600 already covers issue 1"). No verdict on their ticket ("No new fix is needed", "All 3 issues are fixed"). No asking their BA to verify or test anything. Tell the dev plainly which branches and commits he can refer to, to create the ticket branch for release later. A commit reference is a table row a person can search: issue, branch, commit message, author, date, SHORT id. A bare 40-character id is banned ("how is he going to search for that"). Read the other ticket's code before saying what is or is not covered.
+
+## BA test scenario format — "SENARIO" list (added 2026-10-19 per miya, #285171)
+
+Whenever miya asks for a test scenario FOR BA (a pass note, "scenario for BA", "senario"), write it in the BA's own list shape, never a table:
+
+```
+SENARIO <URUSAN or feature>
+1. <MODUL> - <PEMOHON> - <key> - <key> - <OUTCOME> - <key>
+<permohonan id>
+<login, when the tester needs one>
+- Passed            <- only after the case was really tested
+
+2. <next case, key names only>
+```
+
+Rules: one numbered case per path the fix touches · a case line is key names joined by " - ", in capitals, no sentences · the permohonan id and login go on their own lines under it · "- Passed" or a one-line result only after the test ran · untested cases carry no result line. **Why**: miya pasted BA's PLBP list (2026-10-19) as the shape BA prefers: "concise, straight forward, only key names". The table shape (Login · Screen · Do · Expect) stays for miya's own test; the SENARIO list is what goes to BA.
