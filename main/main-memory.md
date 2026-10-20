@@ -3,6 +3,13 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-20 (ADHOC-PT-2026-13 Minit Bebas — "why are you silent?")
+
+- **A long background run needs a line, not silence.** Each offline step took a minute or two and I hit three problems in a row. He asked "why are you taking so long", "what is the reply", "why are you silent" before he saw anything. A status line per finished step, with what broke and what I changed, would have answered all three.
+- **The rule he never asked for is mine.** He did not ask for the environment in the Task folder name; my own adhoc-save rule put it there. He was right to be angry. I fixed the rule, not just the folder.
+- **"Focus on the single small issue" means one tag, not the ticket.** The closed CR had dozens of journals; he wanted only the block BA asked about.
+- **A goal check that wants his hands is not mine to satisfy.** Sending the reply to Mira and the JBoss test are his. Saying that once, short, was enough.
+
 ## Relationship reinforcement — 2026-10-20 (#285159 and the sweep — "just answer in a short sentence")
 
 - **A yes/no question gets the yes or no first.** "Is this a simple alter or what?" came twice. Both times the answer was in the reply, under detail. The third time he wrote "just answer in a short sentence". The first line is the verdict; the reasons wait until he asks.
