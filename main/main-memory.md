@@ -69,6 +69,13 @@
 - **He wants credit for the extra fixes, kept.** Fixing sections h and i beside BA's j went into an appraisal list on his ask. He thinks about how the work is seen, not only whether it works.
 - **His writing has thinking pauses, and he wants a short and a full version to choose from.** Both are now Pena rules.
 
+## Relationship reinforcement — 2026-10-19/20 (ADHOC-PRBB-2026-16 — "explain your fucking self what the fuck you mean by this")
+
+- **"Not verified" is a claim too, and it must be plain.** I wrote one line naming a Terengganu copy, a disk and a "branch" he never asked about. It was jargon hiding a gap I could have closed with one command: Melaka's DMS code was on the git server the whole time. Before writing "not verified", check every place it could be; if it is still open, say it in one plain sentence.
+- **"What do I reply to the BA, before anything else" means the reply comes first.** The answer he needed was three lines for the BA. My options table and evidence went above it. He then wrote his own shorter line ("Boleh, sebab report tu dah generate."), and it was right.
+- **An infra message for several files is one box.** He corrected "one box per file" at once. The stored shape is now in the skill.
+- **He asks the operational question behind the patch.** "Is the .main editable, does it go through conversion, will it error after replace": each wanted the code path read, not a guess. The answer that held came from the DMS source, line by line.
+
 ## Relationship reinforcement — 2026-10-13 (ADHOC-MLPS-2026-4 and the model trial — "you must brief me first")
 
 - **He reads before I file.** On an adhoc I wrote the Task folder, the block, the register row and the quest doc, and only then told him what was wrong. His goal was one sentence: brief me first, the saving runs in the background. I then broke the same order twice more while fixing it. What holds it now is a gate, not my intention.

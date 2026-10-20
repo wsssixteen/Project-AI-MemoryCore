@@ -139,3 +139,17 @@ Note: child session qa285252-audit-fix reported its quest-skill "Screen-path aud
 | A3 debugging | Cause path found in about 6 code reads: row built at `DocumentService:1101`, file silently dropped in `BaseDocumentService.populateDocumentList` | ⏭ fast enough; the fact is now in DATABASE.md §9.1 so the next lookup is one read. |
 | A4 etanah | "Fail = Tiada rekod" on a shown row has a fixed meaning (DMS returned nothing) | Proposal A4: BUG-BESTIARY entry so bug-db surfaces it on "dokumen hilang" prompts. |
 | A5 sweep | ⏭ no sweep work this session | — |
+
+
+## Session vibrant-solomon (ADHOC-PRBB-2026-16, PRBB Borang 4Ce + P1e unsigned)
+
+| Axis | Instance this session | Assessment |
+|---|---|---|
+| A1 agentic system | `adhoc-brief-first` blocked a read-only `adhoc-save-audit.js` on the notification turn after the save agent reported 29/29 | The controller could not verify the agent's audit line itself; the gate treats a read-only check like a save-set write. |
+| A1 agentic system | Round-6 save agent wrote another adhoc's one-liner into this block, then restored it; I re-checked all 68 one-liners unique | Agent edits to the shared `active.txt` need a before/after diff by the controller every time. |
+| A2 quest workflow | First brief buried the BA answer under an options table; miya asked again for "what I should respond to BA first" | The adhoc brief has no slot for "reply to the BA" first, when the BA asked a direct question. |
+| A3 debugging | "Not verified: Terengganu copy" while Melaka's `etanah-dms mlk/master` was one `git ls-remote` away | A "not verified" line went out before every source was checked; slip `verify-before-claim`. |
+| A4 etanah issue-solving | patch-mlk-doc assumed Word `.main` + PDF reset; these Borang are Jasper PDFs (`lokasi_fail_pdf = lokasi_fail`) | The skill lacks the PDF branch; caught by reading `mime_type` and the DMS code. |
+| A5 sweep | Pasted chat image was not moved into the Task folder (only `@Desktop` files were detected) | Fixed this session: adhoc-paste-detector reads `[Image: source: ...]` (eval 26/26). |
+
+Proposals logged (`core/slips.js --type proposal`): A4 Melaka DMS source in tool-registry · A1 allow read-only audit after the brief · A4 Redmine find by permohonan id · A2 patch-mlk-doc PDF branch.
