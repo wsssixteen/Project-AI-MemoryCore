@@ -54,6 +54,7 @@ Trigger: "save this quest" · "save quest" · "save the quest" · "save quest <n
 | `UNKNOWN` | did not answer | Step 1 only. Change no stage. Say the Redmine status is not verified. |
 | `ADHOC` | no ticket number | Save with the `adhoc-save` skill. |
 | `NO-BLOCK` | any | No local quest for this ticket. Say so. |
+| `HELD` | any | The block carries `archive_hold=`. Do not archive. Release only when みや says so: `node domain/archive-hold/archive-hold.js clear <QA>`. |
 
 **Banned**: picking the stage from the local status alone or from memory of the ticket · archiving on `PHASE-1` / `WAIT` / `UNKNOWN` · asking みや which phase to run · a reply without the pasted `SAVE-QUEST:` line.
 
