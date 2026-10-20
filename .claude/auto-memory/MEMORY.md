@@ -7,12 +7,13 @@
 ## Always on
 - [simple-fix-no-probe-no-local-test](feedback_simple_fix_no_probe_no_local_test.md) — 🚨 simple 80%+ additive fix he agreed to → commit + deploy straight away; no probe loggers, no local-test ask
 - [no-unrequested-fix-photo](feedback_no_unrequested_fix_photo.md) — 🚨 no fix photo or image unless miya asks; only a real after-fix screen, never a box drawn on BA's before-screenshot
-- [reply-shape](feedback_reply_separation_of_concerns.md) — numbered topics, tables, 2-sentence default, shortest option, lean diagram, mark extras
+- [reply-shape](feedback_reply_separation_of_concerns.md) — 🚨 long table or list (over ~5 rows, over 2 tables) becomes ONE drawing, one thing at a time; numbered topics, 2-sentence default, shortest option, mark extras
 - [reply-mechanics](feedback_commands_never_fenced.md) — one bash block per command, full paths, plain punctuation, show it in chat
 - [hook-noise](feedback_delta_correction_on_stop_block.md) — Stop block = delta only; hidden bypass tokens; canonical formats only
 - [act-dont-ask](feedback_do_dont_ask_answer_literal.md) — do the safe step, answer literally, fix not reroute, popup questions
 - [verify-before-claim](feedback_verify_before_claim.md) — re-read first, diff real values, DB first, try before "blocked"
 - [show-evidence](feedback_show_evidence_script_or_code.md) — every claim or fix shows a runnable script or the code lines
+- [tickets-from-live-redmine](feedback_esokongan_means_tracker.md) — 🚨 any ticket status = live Redmine only; script timeout → read it in Edge via Claude in Chrome; ledger is never status; a "No folder" session still moves to the MemoryCore folder first
 - [browser](feedback_browser_edge_default.md) — Edge via Claude in Chrome extension; built-in browser banned
 - [bash-tool](feedback_bash_tool.md) — Bash hangs on simple shell ops here; use PowerShell or Node; scripts are mine to run
 - [model-tiering](feedback_model_tiering_session.md) — Fable = judgment and planning; building and recon on Sonnet or Opus
@@ -64,7 +65,7 @@
 - [infra-script-format](feedback_infra_script_schema_env.md) — Infra/PROD scripts schema-qualified, BEFORE/UPDATE/AFTER
 
 ## Databases and environments (skill: env-check)
-- [staging-and-db-access](feedback_staging_schema_stg2.md) — 🚫 stg1 not for root cause / test data / test scenarios; a read of rows that exist only there is allowed, announce "Read from stg1: ..."; stg2 current, never assume; MLIT/STG writable; MCP timeout is not VPN
+- [staging-and-db-access](feedback_staging_schema_stg2.md) — 🔀 staging switch `system/melaka-env-state.json`: ON schema (stg1 since 2026-10-15) for everything; OFF schema not for root cause / test data / test scenarios, a read of rows only there is allowed, announce "Read from <schema>: ..."; never assume; MLIT/STG writable; MCP timeout is not VPN
 - [environments](feedback_uat_fat_environments.md) — UAT + FAT gone; env table, datasource naming (mlit-primary line is stale)
 - [db-gateway](project_db_gateway.md) — one gateway 127.0.0.1:7411; fix = schtasks /run /tn "DB Gateway"
 - [local-dev](project_jboss_launched_by_eclipse.md) — E:\Projects\Melaka, JBoss from Eclipse, hibernate overlay error, GitLab 10.16.63.27
@@ -100,9 +101,11 @@
 - [wa-read](project_wa_read.md) — WaRead WhatsApp reader at E:\Dev\scripts\WaRead; relink number 60186669566, never ask
 - [whatsapp-rules](feedback_whatsapp_read_rules.md) — READ ONLY, paraphrase, no sender names, never the desktop app
 - [pymtime](project_pymtime.md) — PymTime clock-in app: read PROJECT.md in the MAIN checkout's projects/coding-projects/active/PymTime/ first (full path in the note); remote skip, colleague handover loop, roadmap
+- [eisenhower](project_eisenhower.md) — Eisenhower matrix app REBUILD on Rust + egui + SQLite: read PROJECT.md then MAP.md (wayfinder) in the MAIN checkout's projects/coding-projects/active/Eisenhower/ first
 - [dawahmap](project_dawahmap.md) — DawahMap, his yes/no map from reason to Islam (page "Reason to Islam"): read PROJECT.md in the MAIN checkout's projects/coding-projects/active/DawahMap/ first; it argues FOR Islam from the scholars' verbatim words; content first, design later
+- [masterline](project_masterline.md) — Masterline Integrated Sdn Bhd (HVACR, Kemaman, oil and gas clients) app + website, born 2026-10-17, shape 2: read START.md in the MAIN checkout's projects/coding-projects/active/Masterline/ first
 - [islamic-content-sources](feedback_islamic_content_sources.md) — 🚨 Islamic content: scholars of Islam in their verbatim words, never Western academia or a neutral survey; "fair" is not conceding; every quote found on its page first
-- [side-project-folder](feedback_side_project_folder.md) — 🚨 every project gets projects/coding-projects/active/<Name>/ (PROJECT.md index + VERSIONS, ARCHITECTURE, PROOFS, ROADMAP) in the MAIN checkout; update at every bulk change; memory = pointer, no state
+- [side-project-folder](feedback_side_project_folder.md) — 🚨 every project gets projects/coding-projects/active/<Name>/ in the MAIN checkout (shape 2: START.md first, DECISIONS.md ledger); rules in the /project skill; orchestrated project = Fable briefs and checks, Opus 5.5 high child sessions build and report; memory = pointer, no state
 - [arabic-review](project_arabic_review.md) — /arabic daily vocab review, seconds to 2 minutes in chat; meanings are my job
 - [art-and-media](feedback_verify_generated_art_externally.md) — external art check; samples are the spec; MAS animation; Drive video download
 - [parked-projects](project_etanah_organize.md) — etanah-organize, aunt slides, held #255773 SPOC handoff

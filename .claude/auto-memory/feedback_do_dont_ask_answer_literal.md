@@ -98,3 +98,9 @@ When I need decisions from みや, ask through the AskUserQuestion popup (batche
 **Why:** 2026-08-16 — caveman digest arrived as its own reply with a new Sample D while みや was mid-way writing a long response about Samples A-C; he had to re-evaluate. His read: "I still get 2 replies… you wasted my time." Slip logged: `surprise-turn-mid-decision`.
 
 **How to apply:** (1) On task-notification: if the result changes a decision みや is actively weighing → hold + fold. (2) Urgent results (blocking his current action, errors) may still emit — briefly. (3) Pairs with [[delta-correction-on-stop-block]] — both kill the pattern of him reading more turns than he initiated.
+
+**Added 2026-10-14 (Eisenhower):** a reply that ENDS with questions for him ("Next, I need you for two questions") is the same slip: those questions go into the popup in that same turn, never as a closing text list. His words: "You're not being direct. you didn't ask me using the question tool also."
+
+**Added 2026-10-14 (Eisenhower, after a status reply):** EVERY reply ends by saying what HE does now, in one line: either "Nothing for you, I am doing X now" (and then I actually do X in the same turn), or the popup with the one thing I need. A status table that ends with a NEXT list and no move for him is the slip. His words: "??? please fix this behaviour I don't understand what to do now".
+
+- **Lead with the option that needs the least from miya (2026-10-20, alter-script login).** When several ways exist, the first one offered is the one where Ruri does the work and miya only gives an instruction; options that cost him effort (a new login, closing apps) come after, with the catch named. **Why**: asked him to log in on MLIT before mentioning that the script could reuse his existing Edge login; he wants work done by Ruri on his instructions, and the closest thing when that is impossible.

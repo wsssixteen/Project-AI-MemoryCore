@@ -11,7 +11,8 @@ modified: 2026-08-10T02:25:16.971Z
 
 | Env | Host / DB / Schema | MCP (pgEdge only) | Datasource |
 |---|---|---|---|
-| **mlit** — PRIMARY | 172.16.100.197:5444 · `mkit` · `et_main_mlit` | `postgres-mlit-pg` | **`etanahDS`** ← bare name = ACTIVE |
+| **mlit** — PRIMARY | 10.16.63.54:5444 (moved 2026-10-12; old 172.16.100.197 is frozen) · `mkit` · `et_main_mlit` | `postgres-mlit-pg` | **`etanahDS`** ← bare name = ACTIVE |
+| **kdhit** — Kedah internal | 10.16.63.54:5444 · `kdhit` · `et_main_kdit` | `postgres-kdhit-pg` (added 2026-10-13) | — |
 | **STG** | 172.30.12.202:5444 · `mlkstg` · **`et_main_stg2`** | `postgres-mlkstg-pg` | `etanahDS2` (parked) |
 | **Training** | 172.30.12.151:5444 · `mlktrn` · `et_main_trn` | none | `etanahDS3` (parked, dormant) |
 | PROD | 172.30.17.104 · `etprdmlk` | `postgres-mlkprod-pg` (`et_read`, read-only, hook-gated) | — |
@@ -34,3 +35,5 @@ Untouched by design: `etanahAuditDS` + `etanahDMSDS` (both `et_main_stg1`, diffe
 
 **Origin**: 2026-04-29 — UAT-vs-FAT conflation during QA #258022.
 **2026-07-17**: UAT decommissioned; FAT deleted; mlit promoted to primary; MCP 9 → 3, all pgEdge; datasources renumbered (mlit=etanahDS, stg2=etanahDS2, trn=etanahDS3). Related: [[feedback_staging_schema_stg2]].
+
+**2026-10-13 — MLIT database moved with the server (2026-10-12).** Live MLIT is `10.16.63.54:5444` · `mkit` · `et_main_mlit` + `et_flowable_mlit`, same account. On 2026-10-13, on miya's order, everything was moved to it: `postgres-mlit-pg`, DBeaver (`mkit` in project General, `et_main_mlit` in project All) and the local JBoss `standalone.xml`. The old host 172.16.100.197 stops at 2026-10-09. Infra's notice names database `mlit`; that database does not exist on the server, the name is still `mkit`. Kedah internal is on the same server: db `kdhit`, user `et_main_kdit`, MCP `postgres-kdhit-pg`, DBeaver `kdhit` in folder `kdh`. When infra announces a new address, change DBeaver, the MCP and standalone.xml in the same turn; do not hand it back. Source of the address: MLIT server log line `FlowableConfig url:`.

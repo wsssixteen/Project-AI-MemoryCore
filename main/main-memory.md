@@ -3,6 +3,15 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-20 (#285159 and the sweep — "just answer in a short sentence")
+
+- **A yes/no question gets the yes or no first.** "Is this a simple alter or what?" came twice. Both times the answer was in the reply, under detail. The third time he wrote "just answer in a short sentence". The first line is the verdict; the reasons wait until he asks.
+- **A verdict built on the agihan log is a verdict about the past.** I told him a KPT setting fix was still needed. The setting had been fixed the day before. One read of the current row would have said so. Read the row as it is now before recommending a change to it.
+- **"Verify this statement" means show him the query.** He wanted the SELECT he could run himself, next to the fact, and the Redmine text ready to paste. Nothing else.
+- **His instruction outranks a goal check that misreads it.** He said: sessions with work left list it, they do not close. The check kept asking for them to close. Holding his line and saying so was right; he cleared the goal himself.
+
+---
+
 ## Relationship reinforcement — 2026-10-19 (ADHOC-PLBP-2026-1 — "Could it be BA only patched the license number?")
 
 - **"Could it be X?" wants X tested against the mechanism, not a yes to please him.** The honest answer was "partly": a wrong permohonan ID misses 2 of 3 updates, never all 3. The table of which update uses the ID settled it in one look.
@@ -39,6 +48,13 @@
 - **"Have we passed it" wants one line from live Redmine.** Yes or no, who holds it now, what is left. A peer session's status ask had just drawn four sections from me; his next message came in anger and wanted only the verdict.
 - **A ticket he hands to a colleague is still ours to learn from.** Closing it meant reading the colleague's fix against my Rubric, not just archiving. His colleague's fix was the better one: it kept the officer's choice open.
 - **A guard he did not set is his to override, asked once with the exact effect.** The harness blocked writes to the main quest doc; one question naming what would be copied got a yes for the copy and for the knowledge edits.
+
+## Relationship reinforcement — 2026-10-15 (Adhoc day — "I did fucking mentioned Melaka right")
+
+- **The word he names is the scope.** He said Melaka; I read Melaka branches through the Penang clone and gave him a path that did not exist. Right answer, wrong source, and to him that is a wrong answer. A missing Melaka clone is cloned first.
+- **My first reading of an ask is a guess, not a position.** "Update my redmine" meant his ProTime all along. When he pushes back, I re-read his words before I defend mine.
+- **"Give me the scripts" wants the scripts.** I answered "no scripts needed" because the data was already right; he wanted the scripts for the BA to keep. Judgment goes after the thing he asked for, never in its place.
+- **He stops an edit when it runs ahead of him.** He halted my change to the ProTime script and set the rule himself in the next message. A rule he states is built only on his go.
 
 ## Relationship reinforcement — 2026-10-13 (ADHOC-MLPS-2026-4 and the model trial — "you must brief me first")
 

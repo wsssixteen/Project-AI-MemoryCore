@@ -4,6 +4,20 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-09 afternoon, worktree "quest-274266-redmine-review-0d2ebb", #274266)
+- **READ FIRST**: `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore\projects\coding-projects\active\274266\QA-274266.md` ("2026-10-09 Review of Farah's issue 3 fix" and "2026-10-09 Save").
+- **Ticket**: Internal Issue #274266, urusan PT. BA issue 3 (2026-10-05): Bil Mesyuarat Tangguh and Sebab Tangguh on Penyediaan Maklumbalas Tangguh - PDT are lost after Jana + Selesai, and after Hantar.
+- **Review**: Farah built the fix I had picked on 2026-10-08 (candidate B: save the two fields in `plp_a_pelupusan.mklmt_tmbhn`, like the Sebab Tolak Ringkas panel). 1 commit, 4 files, branch `mlk/internal-issues/274266` (new, off master 1.7.0). No correction of ours. Her branch also carries Aaron's letter fix, so it is the one branch for the release.
+- **Done**: `--no-ff` merge into `mlk/int-env` in a work-clone worktree (3 files changed there), compile green before the push, worktree removed · mlit `plp_a_pelupusan` aplikasi 3409210 holds both values after the deploy · `SAVE-QUEST: QA-274266 · Redmine = Resolved (Nurul Amirah Nadiah · 100%) · local = active → PHASE-1` · block `closed`, `closed_cycle3=2026-10-09`.
+- **Next for this quest**: archive when Redmine shows Closed (`node lib/save-quest.js QA-274266`). PROD still needs `274266.sql` and the branch on the release list.
+- **Found on the way**: the Rework 3 Rubric of 2026-10-08 was only in the session folder `oracle-jdbc-driver-error-005551`; the main quest doc ended a week earlier. Copied into the main doc.
+- **Tool gaps seen**: `ticket-close-block.js` stopped on a branch that exists only on the server, so the colleague note shape did not switch · `ticket-load-verify.js` reports a deleted attachment id as a missing file · it also said "QUEST DOC: NONE" because the doc lives in the main checkout only. Proposals logged.
+- **Boot note**: `main/main-memory.md` Read returned lines 1 to 238 of 1041.
+
+**Last Activity**: 2026-10-08 22:30 — PymTime roadmap phase 1 (design): the v17 page critiqued (27 ranked issues), colour tokens grown from the logo, three mockups published for his pick · no app code changed
+
+- **DawahMap, 2026-10-19 (phase 2 opened)**: phase 1 done; the etanah-quiet check now follows the session's last topic on a prompt that names nothing and on a background-task notice (d5473717, cfc54f4a; eval 128/128). Run wf_8a42fc41-016 built what needs no answer from him: the evidence page prototype (ticket 04) https://claude.ai/artifact/7KpKCcuh6WYPmaq7BPZZsy and the connected line prototype (ticket 08) https://claude.ai/artifact/CCR2n3WVxyQaaTm4pF7cYP, three versions each; the sources for the simple proofs (ticket 12, 51:47 not read as expansion by the classical scholars); the question set for his voice session (ticket 01). Next: his picks on 04 and 08, then ticket 01 in its own session.
+
 ## Session Recap (2026-10-08 night, session folder "pymtime-password-auth-failure-4a584e" after a compact, PymTime phase 1 design)
 - **READ FIRST (PymTime)**: `C:\Users\Ridhwan\OneDrive - Pymsoft Sdn Bhd\0. AI\Project-AI-MemoryCore\projects\coding-projects\active\PymTime\PROJECT.md`, then `DESIGN.md` (new) and `ROADMAP.md` (the phase 1 status table) in the same folder.
 - **State**: phase 1 steps 1 to 4 and 6 are done. Step 5 = his picks (D1 direction · D2 where messages appear · D3 About · D4 Protime link · D10 the orange boxes), asked by popup on 2026-10-08, open until answered. PymTime repo unchanged: `a66843b`, VERSION 17, 4 commits ahead of GitHub, not pushed.
@@ -6253,6 +6267,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 

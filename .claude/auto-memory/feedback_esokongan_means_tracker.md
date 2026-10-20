@@ -2,7 +2,10 @@
 name: feedback_esokongan_means_tracker
 description: "eSOKONGAN = the tracker; board from redmine-board.js first; shared miya+Ammar filter; BA vs TSO roster; delegated quest stays open, learn before close"
 metadata:
+  node_type: memory
   type: feedback
+  originSessionId: feb49556-3152-4a25-8a15-544795a07418
+  modified: 2026-10-16T05:11:17.828Z
 ---
 
 "eSOKONGAN ticket", from みや or anyone, ALWAYS means a ticket whose **Tracker** is eSOKONGAN (Redmine tracker id 51). The Redmine project "eSOKONGAN MELAKA" also holds Internal Issue and Data Patching tickets; the project name never makes a ticket eSOKONGAN.
@@ -40,6 +43,8 @@ Related: [[reference_redmine_sla_hours]] · (merged above)
 **Root cause (miya's own question answered)**: NOT because miya added context instead of just summoning "Ruri" — context is never the disruption. The cause was reading my own derived artifact (active.txt) as the board instead of the live source. Same family as the 07-27 lesson "active.txt rots while Redmine stays true" and [[feedback_readable_safe_script]] — my ledgers decay, Redmine is truth.
 
 **How to apply**: board request → `redmine-board.js` first → map each active.txt block to a live row → drop rows not in mine-open (closed/handed/reassigned) → only THEN show the list. Pure-adhoc (no Redmine ticket) rows are labeled as such, not counted as open Redmine work.
+
+**Script times out (`LIVE REDMINE NOT READ`) → the browser, never the ledger** (2026-10-16): the home PC has no route to 172.16.90.169, but Claude in Chrome drives an Edge that does. Read the board and each named ticket there before any status line. On 2026-10-16 I answered from active.txt instead, called #284831 ours and "not sent to BA", and messaged its session; Redmine had moved it. A "No folder" session loads only MEMORY.md, so the pointer to this sits in Always on. Steps: `list-redmine` skill section "When the script prints LIVE REDMINE NOT READ".
 
 ---
 

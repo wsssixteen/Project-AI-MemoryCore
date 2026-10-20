@@ -23,6 +23,8 @@ Engine (deterministic, no dependencies): `.claude/skills/arabic/arabic.js`. Data
 | `/arabic more` | `node .claude/skills/arabic/arabic.js more` | write 3 new short sentences using ONLY the closed vocabulary + function words printed. Malay under each. |
 | `/arabic week <lesson>` · `/arabic week next` | `node .claude/skills/arabic/arabic.js week <lesson\|next>` | paste output. |
 | `/arabic class at <text>` | `node .claude/skills/arabic/arabic.js class "<text>"` | paste output. |
+| in class: a section sent · a thing discussed · "add to my revision" · class ends | `class "<text>"` · `note "<text>"` · `revise add "<text>"` · `class close` | see "Class save". `revise` lists the open asks; `save-check` says whether today's class is saved. |
+| before translating a page | `node .claude/skills/arabic/arabic.js gloss "<arabic>"` | use **Makna kelas** for every word returned (see "Class vocabulary"). |
 | `/arabic status` | `node .claude/skills/arabic/arabic.js status` | paste output. |
 | `/arabic settings` · `/arabic settings <key> <n>` (keys: `words` rows per review 3–15 · `pace` lessons per week 1–4 · `min_reviews` 1–7 · `set_max` 5–30) | `node .claude/skills/arabic/arabic.js settings [key n]` | paste output. |
 | `/arabic stats` | `node .claude/skills/arabic/arabic.js stats` | paste the table. Observability: every engine call also appends to `data/log.jsonl` (ts · cmd · outcome · dur_ms). |
@@ -42,7 +44,31 @@ Trigger: みや says he is in class / learning along the class and loads `/arabi
 3. **Fixed format, every row**: Arabic with full harakat · Malay translation. Exercises add the answer column, and the answer also carries its translation. The book's example (مثال) is the first table row, labelled `Eg` in the `#` column (never the full word "Example", never a mixed Arabic/Latin line above the table: it breaks the layout). **NO Latin transliteration / "Reading" column, ever** (per みや 2026-10-06: the harakat is how he reads it).
 4. Record the position with `class "<book lesson + part>"` once per class. Hard rules 1 and 5 (effort ceiling, 5-word cap) apply to the daily review only, not to this mode.
 5. **Revision focus = the most recent class** (per みや 2026-10-06). After a class-along, every `/arabic` stays on that class until the next class, or until みや names another topic. This is State: one value, overwritten, never a list. Set it with `focus <lesson> <part>` + `class "<lesson + part>"`. The engine holds it (since 2026-10-07): the Week Set cannot leave the focus lesson on a Monday roll, and only a new `focus`, a `week <other lesson>` or `focus off` replaces it.
-6. After each class, add one dated line to `projects/learning-projects/active/arabic/arabic.md` → Progress (lesson + part, pages, sections worked, anything he asked to repeat). That file is the journey of the classes.
+6. The class journal is `projects/learning-projects/active/arabic/arabic.md` → Progress. The line is written by the engine at `class close` (step 10), never by hand.
+
+### Class save — the steps of a class, in order (added 2026-10-13 per みや)
+
+Class-along is the Workflow part of `/arabic` (a route with a position: `class_position` + the class log `data/class.json`); the engine and the daily review are Feature parts. Each step below is an engine call, so nothing depends on my memory at the end of the session.
+
+| # | When | Run | Kept in |
+|---|---|---|---|
+| 7 | every section sent (dialogue, exercise, page) | `class "<lesson + part + section, pages>"` | class log: every position of the day, in order |
+| 8 | he asks a question, the teacher corrects or prefers a form, a section is skipped or not done, he rules on the format | `note "<one sentence>"` in the same turn | class log |
+| 9 | he says "add this to my revision" | `revise add "<what>"`, then build the ayat (Ayat walk rule 4) and `revise link <id> <lesson> <part>` | revision asks |
+| 10 | class ends, or Domain Expansion | `class close` | journal line in `arabic.md` |
+
+- **Where the class stopped is what HE says**, not the last section I sent (2026-10-13: I sent Exercise 2, the class had stopped at Exercise 1). When he corrects it, run `class` again with his words.
+- **A revision ask is cleared by amount, never by date**: each ayat walked for that class part counts one; the ask clears at its goal (7, or the number of ayat of the part if that is more; `revise goal <id> <n>` changes it). `revise` lists the open asks.
+- **The save check**: `node .claude/skills/arabic/arabic.js save-check` (exit 1 = today's class is not saved, and the line says which step is missing). Domain Expansion step 12.7 runs it through `lib/save-rules.js` (rule `learning-class-saved` in `system/save-rules.json`): a class day cannot close with the class open.
+
+### Class vocabulary — the teacher's words first (added 2026-10-13 per みや)
+
+His words: "I hate being disrespectful to my teacher by not applying what he taught in the class."
+
+1. Before writing the Malay of a page, run `gloss "<the Arabic of the section>"`. Every word it returns is translated with **Makna kelas**; my own or the more common word goes after it in brackets, only when it adds something. The habits it prints (how the teacher renders alif lam, the fi'il madhi, the link between mubtada and khabar) shape every sentence.
+2. The teacher corrects a word or a form in class, or みや reports one → add the row to `data/class-vocab.json` in the same turn (`cite: "kelas:<date>"`) and a `note`.
+3. `data/class-vocab.json` holds ONLY rows where the class differs from my choice, each with its cite (`doc:<line>` of the teacher's notes · `<NN>.ms@<mm:ss>` of a recording · `kelas:<date>`). Eval S95 fails on an uncited row.
+4. Coverage is stated in the file's `coverage` key (which notes and recordings were read). A word outside it is my translation: say so when he asks.
 
 ## Ayat walk — one class, sentence by sentence (added 2026-10-07 per みや)
 
@@ -52,15 +78,17 @@ His reason for the focus: review ONE class through the week, sentence by sentenc
 2. **Learned-only is mechanical, not a promise.** Every reason text comes from the closed `sebab` table in `data/sentences.json`. A reason either cites the class that taught it (`doc:<line>` of the teacher's notes or `<NN>.ms` = recording NN) or is marked `belum` and reads "belum dipelajari di kelas". Eval S76 fails on an uncited reason, on a row that uses a key outside the table, and on word rows that do not rebuild the ayat.
 3. **A "why?" beyond the table**: answer only from `topic <id>` output or by reading the cited recording in `source/transcripts/`. If the class did not cover it, the answer is "belum dipelajari di kelas". Never explain from general Arabic grammar. The teacher's own words are the vocabulary: baris depan / atas / bawah, tanwin, mubtada, khabar, mudaf, mudaf ilaih, sifat, mawsuf, badal, huruf jarr, majrur; he avoided "mabni" (say "barisnya tetap").
 4. **Adding a class's ayat is a BUILD step** (once, verified, frozen): read the page images, write full harakat, split attached pronouns and prefixes into their own rows, use only existing `sebab` keys. A new reason needs its class cite found first (grep `source/transcripts/` and `data/syllabus.json`); no cite = `belum`. Run the eval, add a row to `data/VERIFY-LOG.md`.
-5. Entered so far: Lesson 13 part ب, the dialogue (9 ayat) and Exercise 2 (23 ayat). NOT entered: Exercises 1, 3, 4, 5, 6 of that part (pattern drills), and every other lesson.
+5. Entered so far: Lesson 13 part ب, the dialogue (9 ayat) and Exercise 2 (23 ayat); Lesson 13 part ج, the dialogue (13 ayat, 2026-10-13). NOT entered: Exercises 1, 3, 4, 5, 6 of part ب, the exercises of part ج, and every other lesson.
 6. Format: Arabic stands alone in its cell or on its own line; Malay cells carry no Arabic letters; no Latin transliteration (S76 checks all three).
+7. **In chat, Arabic sits ONLY in a table cell, alone** (2026-10-13 per みや: "no writing from the right"). Never in a heading, a bullet, a sentence, or a cell that also holds Latin text: his app turns any line that holds Arabic to right-to-left and scrambles the word order. A heading is Latin only (`Ayat 1`); a reason names the thing in Malay ("seorang lelaki"), never by quoting the Arabic word. Applies to class-along and the ayat walk alike.
 
 ## Data (built by the Phase 1–2 pipeline, frozen + verified)
 
 - `data/syllabus.json` — 24 grammar topics in class order (rules + examples, doc-cited). `data/classes.json` — 69 classes. Both verified against the teacher's doc (`data/VERIFY-LOG.md`).
 - `data/paradigms.json` — 8 closed form-tables (pronouns ×3 · demonstratives · relative · numbers · verb madhi + mudhari) keyed by person/gender/number → deterministic form-drill lookup.
 - `data/roots.json` — 16 root families where harakat flips meaning. `data/words.json` v2 — 198 words with `root` + `pos`.
-- `data/sentences.json` — the ayat of a class for the ayat walk: a closed `sebab` table (25 reasons, class-cited or `belum`) + 32 ayat of Lesson 13 part ب, each split into word rows. Schema in `data/SCHEMA.md`.
+- `data/sentences.json` — the ayat of a class for the ayat walk: a closed `sebab` table (26 reasons, class-cited or `belum`) + 45 ayat (Lesson 13 part ب 32, part ج 13), each split into word rows. Schema in `data/SCHEMA.md`.
+- `data/class.json` — the class log (one session per class day: positions, notes, closed) + the revision asks. `data/class-vocab.json` — the teacher's own Malay where it differs from mine, each row cited.
 - Rebuild provenance: `library/scripts/phase1|phase2/` (BUILD once → verify → freeze; USE = script over the frozen JSON).
 - Checking whether a word is in `words.json`: compare with harakat stripped (a node one-liner over the file), never a bare-letter Grep. Vocalised text does not match bare letters, so a present word looks absent. The list holds each lesson's الكلمات الجديدة box only, not every word of a dialogue.
 
@@ -80,4 +108,4 @@ Rules 1, 3 and 5 are for the word review. In the ayat walk the engine's ayat blo
 
 ## Eval
 
-`node .claude/skills/arabic/arabic.test.js` — 79 checks (S1–S48 core: matching incl. no-shadda + typed-ن tanwin, chunk split, week roll, carry-over, override, modes, miss-first, idempotent same-day, status, nudge, corrupt state, real-data full walk; S49–S63 Phase-3: syllabus/paradigms/roots load, topic review, root families, form drill pose+resolve, drill routing, no-disturbance of the daily flow; S64–S77 class focus + ayat walk: hold across the week roll, wrap inside the lesson, replace rules, walk / again / jump / list, `daily` routing, S76 the learned-only gate on the real data, S77 every real ayat renders). Must be green before any engine change ships.
+`node .claude/skills/arabic/arabic.test.js` — 97 checks (S78–S95, 2026-10-13: class log, close and journal line, reopen after a late note, save check pass / fail / no class, revision asks counted by ayat and never by date, `gloss` matching, the real class vocabulary cited; S1–S48 core: matching incl. no-shadda + typed-ن tanwin, chunk split, week roll, carry-over, override, modes, miss-first, idempotent same-day, status, nudge, corrupt state, real-data full walk; S49–S63 Phase-3: syllabus/paradigms/roots load, topic review, root families, form drill pose+resolve, drill routing, no-disturbance of the daily flow; S64–S77 class focus + ayat walk: hold across the week roll, wrap inside the lesson, replace rules, walk / again / jump / list, `daily` routing, S76 the learned-only gate on the real data, S77 every real ayat renders). Must be green before any engine change ships.
