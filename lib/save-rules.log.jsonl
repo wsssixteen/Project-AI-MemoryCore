@@ -140,3 +140,6 @@
 {"ts":"2026-10-20T10:05:11.275Z","parts":18,"pass":70,"fail":0,"unruled":1,"skip":0,"dur_ms":6113,"partial":false}
 {"ts":"2026-10-20T10:13:53.559Z","parts":15,"pass":60,"fail":1,"unruled":1,"skip":0,"dur_ms":2328,"partial":false}
 {"ts":"2026-10-20T10:14:18.433Z","parts":15,"pass":61,"fail":0,"unruled":1,"skip":0,"dur_ms":2535,"partial":false}
+{"ts":"2026-10-20T10:10:58.818Z","parts":14,"pass":59,"fail":0,"unruled":0,"skip":0,"dur_ms":3505,"partial":false}
+{"ts":"2026-10-20T10:11:29.868Z","parts":15,"pass":59,"fail":0,"unruled":1,"skip":0,"dur_ms":4275,"partial":false}
+{"ts":"2026-10-20T10:11:48.910Z","parts":15,"pass":59,"fail":0,"unruled":1,"skip":0,"dur_ms":5347,"partial":false}
