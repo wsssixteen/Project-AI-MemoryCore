@@ -9,7 +9,11 @@
  *   node arabic.js answer "<text>" [--date ...]   check the recall answer, reveal, log hit/miss
  *   node arabic.js more                            print the closed vocabulary for /arabic more (no log)
  *   node arabic.js week <lesson>|next             override this week's set / force-advance
- *   node arabic.js class <text>                   record class position (informational)
+ *   node arabic.js class <text>|close             record where the class is (kept in the class log) · close = write the journal line
+ *   node arabic.js note <text>                    something discussed in class, kept in today's class log
+ *   node arabic.js revise [add <text>|link <id> <lesson> [part]|goal <id> <n>]   revision asks, cleared by ayat walked
+ *   node arabic.js save-check                     is today's class saved? exit 1 when not (run by lib/save-rules.js)
+ *   node arabic.js gloss [all|<arabic text>]      the teacher's own Malay for the class words in a text
  *   node arabic.js status                         one status line
  *   node arabic.js settings [key value]           show/set: words · pace · min_reviews · set_max
  *   node arabic.js stats                          weekly table + mastery (observability)
@@ -35,6 +39,10 @@ const PARADIGMS = path.join(DATA_DIR, 'paradigms.json');
 const ROOTS = path.join(DATA_DIR, 'roots.json');
 // Class-focus data: the ayat of a class, each word explained only with class-cited reasons
 const SENTENCES = path.join(DATA_DIR, 'sentences.json');
+// Class session data: the class log + revision asks, the teacher's vocabulary, and the journal the class close writes to
+const CLASSLOG = path.join(DATA_DIR, 'class.json');
+const VOCAB = path.join(DATA_DIR, 'class-vocab.json');
+const JOURNAL = process.env.ARABIC_JOURNAL || path.join(DATA_DIR, '..', 'arabic.md');
 // Settings (みや-adjustable via `settings <key> <value>`): words = rows per review · pace = lessons (chunks) per week ·
 // min_reviews = reviews needed before the week advances · set_max = words per chunk
 const DEFAULTS = { words: 5, pace: 1, min_reviews: 3, set_max: 15 };
@@ -270,7 +278,6 @@ function cmdStats() {
     `Words: ${words.length} total · ${seen} seen · ${mastered} mastered (2+ hits, more hits than misses) · shaky: ${shaky.length ? shaky.join(' ') : 'none'}`,
     `Settings: ${cmdSettings()}`].join('\n');
 }
-function cmdClass(text) { const p = loadProgress(); p.class_position = { text, set: today() }; writeJson(PROGRESS, p); return `Class position noted: ${text}`; }
 function statusLine(p, words, date) {
   const all = chunks(words); const set = activeSet(all, Math.min(p.set_index, all.length - 1));
   const rs = reviewsThisWeek(p); const done = distinctDates(rs).length;
@@ -343,7 +350,10 @@ function cmdSentence(arg, date) {
   else i = next;
   let out;
   try { out = renderSentence(S2, list[i], i, n, f.round || 1); } catch (e) { return `✗ sentences.json error: ${e.message}`; }
-  if (arg !== 'again') { f.last = i; f.ayat = i + 1; if (f.ayat >= n) { f.ayat = 0; f.round = (f.round || 1) + 1; } writeJson(PROGRESS, p); }
+  if (arg !== 'again') {
+    f.last = i; f.ayat = i + 1; if (f.ayat >= n) { f.ayat = 0; f.round = (f.round || 1) + 1; } writeJson(PROGRESS, p);
+    const rev = countRevise(list[i], date); if (rev.length) out += '\n\n' + rev.join('\n');
+  }
   return out;
 }
 function cmdDaily(date) {
@@ -478,6 +488,114 @@ function cmdSync() {
     `New class? Drive folder enumeration is not automatable (owner-shared folder is not searchable via the Drive API, verified twice). To ingest one, follow library/sync.md: get its file id, then run the download+transcribe pipeline and re-run the Phase-1 finalize.`].join('\n');
 }
 
+// ---------- class session: log, revision asks, class vocabulary, save check (v1.3, 2026-10-13) ----------
+// class.json = { sessions: [{ date, positions[], notes[], closed }], revise: [{ id, added, text, lesson, part, done, goal, cleared }] }
+// A revision ask is cleared by AMOUNT (ayat walked), never by date. The save check is what lib/save-rules.js runs at Domain Expansion.
+function loadClass() { const c = readJson(CLASSLOG, null) || {}; return { sessions: Array.isArray(c.sessions) ? c.sessions : [], revise: Array.isArray(c.revise) ? c.revise : [] }; }
+function sessionFor(c, date, create) {
+  let s = c.sessions.find(x => x.date === date);
+  if (!s && create) { s = { date, positions: [], notes: [], closed: null }; c.sessions.push(s); }
+  return s;
+}
+function journalLine(c, s) {
+  const asks = c.revise.filter(r => r.added === s.date).map(r => r.text);
+  return `- ${s.date} class: stopped at ${s.positions[s.positions.length - 1]}. Worked: ${[...new Set(s.positions)].join(' → ')}. Notes: ${s.notes.join(' | ') || 'none'}. Revision asks: ${asks.join(' | ') || 'none'}.`;
+}
+function writeJournal(line, date) {
+  let t; try { t = fs.readFileSync(JOURNAL, 'utf8'); } catch { return false; }
+  const lines = t.split(/\r?\n/); const mark = `- ${date} class: `;
+  const at = lines.findIndex(l => l.startsWith(mark));
+  if (at >= 0) lines[at] = line;
+  else {
+    const h = lines.findIndex(l => /^##\s+Progress\b/.test(l));
+    if (h < 0) lines.push('', '## Progress', line);
+    else { let end = lines.findIndex((l, i) => i > h && /^##\s/.test(l)); if (end < 0) end = lines.length; while (end > h + 1 && !lines[end - 1].trim()) end--; lines.splice(end, 0, line); }
+  }
+  fs.writeFileSync(JOURNAL, lines.join('\n'), 'utf8'); return true;
+}
+function cmdClass(text, date) {
+  const c = loadClass();
+  if (!text) { const s = sessionFor(c, date); const p = loadProgress(); return `Class position: ${p.class_position ? p.class_position.text + ' (' + p.class_position.set + ')' : 'none'}${s ? ` · today: ${s.positions.length} position(s), ${s.notes.length} note(s), ${s.closed ? 'closed' : 'open'}` : ''}`; }
+  if (text === 'close') {
+    const s = sessionFor(c, date);
+    if (!s || !s.positions.length) return '✗ No class position recorded today. Run `class "<where we stopped>"` first.';
+    const line = journalLine(c, s);
+    if (!writeJournal(line, date)) return `✗ Journal file not found: ${JOURNAL}`;
+    s.closed = new Date().toISOString(); writeJson(CLASSLOG, c);
+    return `Class ${date} closed. Journal line written:\n${line}`;
+  }
+  const p = loadProgress(); p.class_position = { text, set: date }; writeJson(PROGRESS, p);
+  const s = sessionFor(c, date, true); s.positions.push(text); s.closed = null; writeJson(CLASSLOG, c);
+  return `Class position noted: ${text}`;
+}
+function cmdNote(text, date) {
+  if (!text) return 'Usage: note "<what was discussed>"';
+  const c = loadClass(); const s = sessionFor(c, date, true); s.notes.push(text); s.closed = null; writeJson(CLASSLOG, c);
+  return `Class note saved (${s.notes.length} today): ${text}`;
+}
+const REVISE_GOAL = 7;   // a week's worth of exercises; raised to the ayat count when an ask is linked to a longer class part
+function cmdRevise(args, date) {
+  const c = loadClass(); const sub = args[0];
+  const open = () => c.revise.filter(r => !r.cleared);
+  const row = r => `#${r.id} · ${r.text} · ${r.lesson == null ? 'not built yet' : `Lesson ${r.lesson}${r.part ? ' ' + r.part : ''} · ${r.done}/${r.goal}`}`;
+  if (!sub || sub === 'list') return open().length ? open().map(row).join('\n') : `No open revision ask. Cleared: ${c.revise.filter(r => r.cleared).length}.`;
+  if (sub === 'add') {
+    const text = args.slice(1).join(' '); if (!text) return 'Usage: revise add "<what to revise>"';
+    const r = { id: c.revise.reduce((m, x) => Math.max(m, x.id), 0) + 1, added: date, text, lesson: null, part: null, done: 0, goal: REVISE_GOAL, cleared: null };
+    c.revise.push(r); const s = sessionFor(c, date); if (s) s.closed = null; writeJson(CLASSLOG, c);
+    return `Revision ask saved: ${row(r)}`;
+  }
+  const r = c.revise.find(x => String(x.id) === String(args[1]));
+  if ((sub === 'link' || sub === 'goal') && !r) return `No revision ask #${args[1]}.`;
+  if (sub === 'link') {
+    const lesson = Number(args[2]); const part = args[3] || null; const S2 = loadSentences();
+    const n = S2 && Array.isArray(S2.sentences) ? S2.sentences.filter(s => s.lesson === lesson && (!part || s.part === part)).length : 0;
+    if (!Number.isInteger(lesson) || !n) return `No ayat entered for lesson ${args[2]}${part ? ' ' + part : ''}: build them first.`;
+    r.lesson = lesson; r.part = part; r.goal = Math.max(REVISE_GOAL, n); writeJson(CLASSLOG, c);
+    return `Linked: ${row(r)} (${n} ayat)`;
+  }
+  if (sub === 'goal') {
+    const n = Number(args[2]); if (!Number.isInteger(n) || n < 3 || n > 60) return 'goal must be a whole number 3–60.';
+    r.goal = n; if (r.done >= r.goal) r.cleared = date; writeJson(CLASSLOG, c); return row(r);
+  }
+  return 'Use: revise · revise add "<text>" · revise link <id> <lesson> [part] · revise goal <id> <n>.';
+}
+// One ayat walked = one exercise for every open ask linked to that class part.
+function countRevise(s, date) {
+  const c = loadClass(); const out = [];
+  for (const r of c.revise) {
+    if (r.cleared || r.lesson !== s.lesson || (r.part && r.part !== s.part)) continue;
+    r.done++; if (r.done >= r.goal) r.cleared = date;
+    out.push(`Ulang kaji #${r.id}: ${r.done}/${r.goal}${r.cleared ? ' · selesai' : ''}`);
+  }
+  if (out.length) writeJson(CLASSLOG, c);
+  return out;
+}
+function cmdSaveCheck(date) {
+  const c = loadClass(); const p = loadProgress(); const s = sessionFor(c, date);
+  if (!s && !(p.class_position && p.class_position.set === date)) return '✓ no class today';
+  const bad = [];
+  if (!s || !s.positions.length) bad.push('class position not in the class log (run `class "<where we stopped>"`)');
+  else if (!s.closed) bad.push('class not closed (run `class close`)');
+  let j = ''; try { j = fs.readFileSync(JOURNAL, 'utf8'); } catch {}
+  if (!j.split(/\r?\n/).some(l => l.startsWith(`- ${date} class: `))) bad.push('no journal line dated today in arabic.md');
+  if (bad.length) return `✗ class ${date} not saved: ${bad.join('; ')}`;
+  const open = c.revise.filter(r => !r.cleared);
+  return `✓ class ${date} saved · stopped at: ${s.positions[s.positions.length - 1]} · notes ${s.notes.length} · revision asks open ${open.length} (not built ${open.filter(r => r.lesson == null).length})`;
+}
+// Class vocabulary: the teacher's own Malay for a word, where it differs from the engine's. class-vocab.json = { habits: [{ t, cite }], words: [{ ar, kelas, lain, cite, forms[] }] }
+function cmdGloss(text) {
+  const v = readJson(VOCAB, null);
+  if (!v || !Array.isArray(v.words)) return 'No class-vocab.json yet.';
+  const habits = (v.habits || []).map(h => `• ${h.t} (${h.cite})`);
+  const tbl = ws => ['| Arab | Makna kelas | Makna lain | Sumber |', '|---|---|---|---|', ...ws.map(w => `| ${w.ar} | ${w.kelas} | ${w.lain || ''} | ${w.cite} |`)];
+  if (!text) return [`Class vocabulary: ${v.words.length} words · ${habits.length} habits. \`gloss all\` lists them; \`gloss <arabic text>\` finds the class words in a text.`, ...habits].join('\n');
+  if (text === 'all') return [...tbl(v.words), ...habits].join('\n');
+  const toks = new Set(text.split(/[^ء-ْٰـ]+/).filter(Boolean).flatMap(t => { const k = arabicSkeleton(t); return [k, k.replace(/^[وفبلك]/, '').replace(/^ال/, '')]; }));
+  const hit = v.words.filter(w => [w.ar, ...(w.forms || [])].some(f => toks.has(arabicSkeleton(f))));
+  return hit.length ? [...tbl(hit), ...habits].join('\n') : ['No class word in this text.', ...habits].join('\n');
+}
+
 // ---------- main ----------
 function main(argv) {
   const args = argv.slice(2); const di = args.indexOf('--date'); let date = null;
@@ -490,7 +608,11 @@ function main(argv) {
     case 'answer': out = cmdAnswer(args.slice(1).join(' '), date); break;
     case 'more': out = cmdMore(); break;
     case 'week': out = cmdWeek(args[1], date); break;
-    case 'class': out = cmdClass(args.slice(1).join(' ')); break;
+    case 'class': out = cmdClass(args.slice(1).join(' '), date); break;
+    case 'note': out = cmdNote(args.slice(1).join(' '), date); break;
+    case 'revise': out = cmdRevise(args.slice(1), date); break;
+    case 'save-check': out = cmdSaveCheck(date); break;
+    case 'gloss': out = cmdGloss(args.slice(1).join(' ')); break;
     case 'status': out = cmdStatus(date); break;
     case 'settings': out = cmdSettings(args[1], args[2]); break;
     case 'stats': out = cmdStats(); break;
@@ -508,5 +630,5 @@ function main(argv) {
   if (cmd !== 'nudge') logRow({ cmd, date, arg: args.slice(1).join(' ') || undefined, outcome: (out || '').split('\n')[0].slice(0, 80), dur_ms: Date.now() - t0 });
   return out;
 }
-if (require.main === module) { const out = main(process.argv); if (out) process.stdout.write(out + '\n'); }
+if (require.main === module) { const out = main(process.argv); if (out) process.stdout.write(out + '\n'); if (process.argv[2] === 'save-check' && /^✗/.test(out || '')) process.exitCode = 1; }
 module.exports = { main, match, chunks, mondayOf, translitToSkeleton, arabicSkeleton, modeFor, DATA_DIR, slotDesc, formExpected, topicCeiling };

@@ -402,7 +402,7 @@
         ]
       },
       {
-        "matcher": "mcp__postgres-mlkstg1-pg__.*",
+        "matcher": "mcp__postgres-mlkstg1?-pg__.*",
         "hooks": [
           {
             "type": "command",

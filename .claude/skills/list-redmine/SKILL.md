@@ -27,6 +27,19 @@ Flags — add ONLY when みや asks for that view:
 | `--all-trains` | re-include other teams' release trains (SPOC etc.) |
 | `--json` | raw rows for other tooling |
 
+## ⛔ When the script prints `LIVE REDMINE NOT READ`
+
+The PC has no route to Redmine (the home PC never has one). The ledger is NOT the board.
+
+| Step | Do |
+|---|---|
+| 1 | Read the board through Claude in Chrome: the URL the script prints (open tickets assigned to me). The connected Edge reaches Redmine when this PC cannot. |
+| 2 | Open each ticket you will talk about (`/redmine/issues/<id>`) for assignee, status and last journal. |
+| 3 | Only then answer. A ticket not on the live board is not mine: never call it "ours", "not sent to BA" or "stuck". |
+| 4 | If the browser fails too: every line says `Redmine not read, ledger of <date>`. |
+
+**Why** (2026-10-16): the script timed out at home; I answered from `active.txt` and the Task folder, said #284831 was ours and "not sent to BA", and messaged another session on it. Redmine had already moved it. The browser path worked on the first try once used.
+
 ## 🚨 The one hard rule
 
 **Paste the script's output. Do not retype a cell, do not re-sort, do not

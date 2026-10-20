@@ -133,5 +133,20 @@
 {"ts":"2026-10-19T08:22:11.334Z","qa":"QA-285252","kind":"wrong-fix","n":1,"was":"A1: fill the hakmilik only after Tambah + Status Tanah = Tanah Milik","why":"BA asked for papar terus; PLTP/PPTPB fill the table on tab load, A1 still needed manual Tambah","learned":"When BA says sama macam urusan X, trace X's behaviour before choosing the trigger point"}
 {"ts":"2026-10-20T02:55:00.514Z","qa":"ADHOC-PRU-2026-2","gate":"harvest-gate","action":"refused"}
 {"ts":"2026-10-20T02:55:02.187Z","qa":"ADHOC-PRU-2026-1","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-12T09:18:36.479Z","qa":"ADHOC-AWAM-2026-1","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none-until-ticket"}
+{"ts":"2026-10-13T02:14:56.799Z","qa":"ADHOC-MLPS-2026-3","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-13T02:15:15.254Z","qa":"ADHOC-MLPS-2026-3","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"ticketed to QA-284544 on 2026-10-13; whole investigation carried into that quest doc, harvest runs at that quest's Phase 2"}
+{"ts":"2026-10-19T03:53:01.226Z","qa":"QA-285181","kind":"wrong-fix","n":1,"was":"Told miya Alter Flow cannot pick the current node; use Initiate and Alter","why":"miya re-picked ID Process and TaskMap listed SJTLT; code onPopulateTaskList has no filter","learned":"Alter page TaskMap fills only on ID Process change; re-pick it before judging the list"}
+{"ts":"2026-10-19T04:10:14.453Z","qa":"QA-285181","kind":"wrong-fix","n":1,"verdict":"knowledge:melaka/FLOWABLE-KNOWLEDGE.md §19 (Alter page trap line, written 2026-10-19)"}
+{"ts":"2026-10-19T04:10:37.367Z","qa":"QA-285181","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-19T04:11:00.039Z","qa":"QA-285181","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-19T05:57:23.258Z","qa":"ADHOC-PRBB-2026-15","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-19T05:57:34.343Z","qa":"ADHOC-PRBB-2026-15","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none-until-ticket"}
+{"ts":"2026-10-20T02:53:49.076Z","qa":"QA-274266","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T02:55:35.143Z","qa":"QA-274266","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T02:56:16.447Z","qa":"QA-274266","archive_atomic":true,"qa_doc_has_bounty":false,"commit":"data-only","branch":"mlk/internal-issues/274266","allow_stub_reason":"harvest IS written: ## Bounty in projects/coding-projects/active/274266/QA-274266.md; gate looks for active/QA-274266/ and does not find a folder named 274266"}
 {"ts":"2026-10-20T02:59:49.573Z","qa":"ADHOC-PRU-2026-2","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none-until-ticket"}
 {"ts":"2026-10-20T02:59:56.328Z","qa":"ADHOC-PRU-2026-1","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none-until-ticket"}
+{"ts":"2026-10-20T03:57:48.078Z","qa":"QA-285012","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"6c243cd277","branch":null}
+{"ts":"2026-10-20T04:04:20.011Z","qa":"QA-284831","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T04:07:14.279Z","qa":"QA-285159","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
