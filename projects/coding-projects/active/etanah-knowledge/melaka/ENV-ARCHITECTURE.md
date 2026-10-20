@@ -62,6 +62,8 @@ user et_main_mlit
 
 Matches the long-standing note that `172.16.100.197:5444` is the mlit DB and never an ssh target.
 
+**Since 2026-10-12 (server move)**: the live MLIT database is `10.16.63.54:5444`, db `mkit`, same schemas and account (infra notice 2026-10-13; login verified). The `172.16.100.x` addresses above are the old servers; the old database stops at 2026-10-09. Kedah internal is on the same server: db `kdhit`, user `et_main_kdit`.
+
 ---
 
 ### 2a. Reading the Fudge1 server.log (verified 2026-09-30, ADHOC-PDBB-2026-1)

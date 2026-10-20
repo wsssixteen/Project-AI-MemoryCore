@@ -4,7 +4,8 @@
 const fs = require('fs'); const path = require('path'); const os = require('os');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'arabic-eval-'));
 process.env.ARABIC_DATA_DIR = tmp;
-const REAL = path.join(__dirname, '..', '..', '..', 'projects', 'learning-projects', 'active', 'arabic', 'data', 'words.json');
+process.env.ARABIC_JOURNAL = path.join(tmp, 'arabic.md');
+const REAL =path.join(__dirname, '..', '..', '..', 'projects', 'learning-projects', 'active', 'arabic', 'data', 'words.json');
 const engine = require('./arabic.js');
 const { main, match, chunks, mondayOf, modeFor } = engine;
 
@@ -170,6 +171,63 @@ t('S77 real sentences.json: every ayat of Lesson 13 ب renders through the engin
   ok(run('focus', '13', 'ب', '--date', D).startsWith('Focus → Lesson 13 ب'));
   for (let i = 0; i < n; i++) { const o = run('sentence', '--date', D); ok(o.startsWith(`Ayat ${i + 1}/${n} · Lesson 13 ب`), o.split('\n')[0]); ok(!o.includes('✗') && o.includes('Sumber kelas:'), o.split('\n')[0]); }
   noSent();
+});
+
+// ---- class session: log, revision asks, save check, class vocabulary (S78–S95) ----
+const J = path.join(tmp, 'arabic.md');
+const journal = t0 => fs.writeFileSync(J, t0 === undefined ? '# arabic\n\n## Progress\n- old line\n\n## Notes\n- n\n' : t0);
+const cls = () => JSON.parse(fs.readFileSync(path.join(tmp, 'class.json'), 'utf8'));
+function fresh() { reset(small); noSent(); for (const f of ['class.json', 'class-vocab.json']) { try { fs.unlinkSync(path.join(tmp, f)); } catch {} } journal(); }
+const jl = () => fs.readFileSync(J, 'utf8').split('\n');
+t('S78 class + note + revise + close: journal line holds where it stopped, what was worked, the note and the ask; save-check passes', () => {
+  fresh(); run('class', 'L13 Ex 1', '--date', D); run('class', 'L13 Ex 2', '--date', D); run('note', 'teacher prefers X', '--date', D); run('revise', 'add', 'mubtada badal', '--date', D);
+  ok(run('class', 'close', '--date', D).startsWith('Class ' + D + ' closed.'));
+  const l = jl().find(x => x.startsWith(`- ${D} class: `)); ok(l, 'no journal line');
+  ok(l.includes('stopped at L13 Ex 2') && l.includes('L13 Ex 1 → L13 Ex 2') && l.includes('teacher prefers X') && l.includes('mubtada badal'), l);
+  ok(jl().indexOf(l) < jl().indexOf('## Notes'), 'line must sit inside Progress');
+  const o = run('save-check', '--date', D); ok(o.startsWith('✓ class ' + D + ' saved') && o.includes('notes 1') && o.includes('open 1 (not built 1)'), o);
+});
+t('S79 class recorded but not closed = save-check fails and names the step', () => { fresh(); run('class', 'L13 Ex 1', '--date', D); const o = run('save-check', '--date', D); ok(o.startsWith('✗') && o.includes('class close') && o.includes('no journal line'), o); });
+t('S80 no class today = save-check passes (a daily review alone is not a class)', () => { fresh(); run('review', '--date', D); eq(run('save-check', '--date', D), '✓ no class today'); });
+t('S81 a note, a position or an ask after the close reopens the class', () => {
+  for (const again of [['note', 'late note'], ['class', 'L13 Ex 3'], ['revise', 'add', 'late ask']]) { fresh(); run('class', 'L13 Ex 1', '--date', D); run('class', 'close', '--date', D); run(...again, '--date', D); ok(run('save-check', '--date', D).startsWith('✗'), again[0]); }
+});
+t('S82 closing twice keeps ONE journal line, updated', () => { fresh(); run('class', 'A', '--date', D); run('class', 'close', '--date', D); run('class', 'B', '--date', D); run('class', 'close', '--date', D); const ls = jl().filter(x => x.startsWith(`- ${D} class: `)); eq(ls.length, 1); ok(ls[0].includes('stopped at B')); });
+t('S83 journal with no Progress section gets one; a missing journal file = a clean error, class stays open', () => {
+  fresh(); journal('# arabic\n'); run('class', 'A', '--date', D); run('class', 'close', '--date', D); ok(jl().includes('## Progress'));
+  fresh(); fs.unlinkSync(J); run('class', 'A', '--date', D); ok(run('class', 'close', '--date', D).startsWith('✗ Journal file not found')); eq(cls().sessions[0].closed, null);
+});
+t('S84 close with no position today = a clean refusal', () => { fresh(); run('note', 'only a note', '--date', D); ok(run('class', 'close', '--date', D).startsWith('✗ No class position')); });
+t('S85 a class on an earlier day does not make today a class day; closing today leaves the old session alone', () => {
+  fresh(); run('class', 'old', '--date', '2026-09-01'); eq(run('save-check', '--date', D), '✓ no class today');
+  run('class', 'new', '--date', D); run('class', 'close', '--date', D); eq(cls().sessions.find(s => s.date === '2026-09-01').closed, null);
+});
+t('S86 position set by an older engine (progress.json only, no class log) = save-check fails, not a silent pass', () => { fresh(); run('review', '--date', D); const p = prog(); p.class_position = { text: 'x', set: D }; fs.writeFileSync(path.join(tmp, 'progress.json'), JSON.stringify(p)); ok(run('save-check', '--date', D).startsWith('✗')); });
+t('S87 corrupt class.json = treated as empty, no crash', () => { fresh(); fs.writeFileSync(path.join(tmp, 'class.json'), '{not json'); eq(run('save-check', '--date', D), '✓ no class today'); ok(run('revise').startsWith('No open revision ask')); });
+t('S88 a revision ask not linked to a class part is listed as not built and never counts', () => { fresh(); sent(); run('revise', 'add', 'ask one', '--date', D); ok(run('revise').includes('not built yet')); run('focus', '1', 'ب', '--date', D); ok(!run('sentence', '--date', D).includes('Ulang kaji')); eq(cls().revise[0].done, 0); });
+t('S89 link refuses a class part with no ayat entered; an unknown id = a clean message', () => { fresh(); sent(); run('revise', 'add', 'ask', '--date', D); ok(run('revise', 'link', '1', '9', 'ب').startsWith('No ayat entered')); ok(run('revise', 'link', '7', '1', 'ب').startsWith('No revision ask #7')); });
+t('S90 each ayat walked counts one; `again` and `list` do not; the ask clears at its goal, by amount', () => {
+  fresh(); sent(); run('revise', 'add', 'ask', '--date', D); ok(run('revise', 'link', '1', '1', 'ب').includes('0/7'));
+  run('focus', '1', 'ب', '--date', D); ok(run('sentence', '--date', D).includes('Ulang kaji #1: 1/7')); run('sentence', 'again', '--date', D); run('sentence', 'list', '--date', D); eq(cls().revise[0].done, 1);
+  for (let i = 0; i < 5; i++) run('sentence', '--date', D); eq(cls().revise[0].cleared, null);
+  ok(run('sentence', '--date', '2026-12-01').includes('7/7 · selesai')); eq(cls().revise[0].cleared, '2026-12-01'); ok(!run('sentence', '--date', D).includes('Ulang kaji'));
+});
+t('S91 time alone never clears an ask', () => { fresh(); sent(); run('revise', 'add', 'ask', '--date', D); run('revise', 'link', '1', '1', 'ب'); run('review', '--date', '2027-01-01'); eq(cls().revise[0].cleared, null); ok(run('revise').includes('0/7')); });
+t('S92 goal: bounds refused; lowering it under the done count clears the ask', () => { fresh(); sent(); run('revise', 'add', 'ask', '--date', D); run('revise', 'link', '1', '1', 'ب'); ok(run('revise', 'goal', '1', '2').includes('3–60')); run('focus', '1', 'ب', '--date', D); for (let i = 0; i < 3; i++) run('sentence', '--date', D); run('revise', 'goal', '1', '3', '--date', D); eq(cls().revise[0].cleared, D); });
+t('S93 an ayat of another class part does not count for the ask', () => { fresh(); sent(); run('revise', 'add', 'ask', '--date', D); run('revise', 'link', '1', '1', 'ب'); const c = cls(); c.revise[0].part = 'ج'; fs.writeFileSync(path.join(tmp, 'class.json'), JSON.stringify(c)); run('focus', '1', 'ب', '--date', D); run('sentence', '--date', D); eq(cls().revise[0].done, 0); });
+t('S94 gloss: finds a class word through harakat, alif lam and a prefix; Arabic alone in its cell; no file = a clean line', () => {
+  fresh(); ok(run('gloss').startsWith('No class-vocab.json'));
+  fs.writeFileSync(path.join(tmp, 'class-vocab.json'), JSON.stringify({ habits: [{ t: 'alif lam dibaca "itu"', cite: 'doc:3757' }], words: [{ ar: 'نَاسٌ', kelas: 'manusia', lain: 'orang ramai', cite: 'doc:4386' }, { ar: 'صَغِيرٌ', kelas: 'kecil', cite: 'kelas:2026-10-13', forms: ['صَغِيرَاتٌ'] }] }));
+  const o = run('gloss', 'مَنْ هٰؤُلَاءِ النَّاسُ؟ وَالصَّغِيرَاتُ'); ok(o.includes('| نَاسٌ | manusia | orang ramai | doc:4386 |') && o.includes('| صَغِيرٌ | kecil |') && o.includes('alif lam'), o);
+  ok(run('gloss', 'كِتَابٌ').startsWith('No class word in this text.')); ok(run('gloss').startsWith('Class vocabulary: 2 words · 1 habits'));
+});
+t('S95 real class-vocab.json: every row is the teacher\'s (cited), Arabic and Malay kept apart, the cite resolves', () => {
+  const v = JSON.parse(fs.readFileSync(path.join(REALDIR, 'class-vocab.json'), 'utf8')); const AR = /[؀-ۿ]/;
+  const docLines = fs.readFileSync(path.join(REALDIR, '..', 'source', 'syllabus.txt'), 'utf8').split(/\r?\n/).length;
+  const cite = (c, who) => { const d = /^doc:(\d+)$/.exec(c); const r = /^(\d\d)\.ms@\d{1,3}:\d\d$/.exec(c); ok(d || r || /^kelas:\d{4}-\d{2}-\d{2}$/.test(c), who + ' cite ' + c); if (d) ok(Number(d[1]) <= docLines, who + ' doc line'); if (r) ok(fs.existsSync(path.join(REALDIR, '..', 'source', 'transcripts', r[1] + '.ms.md')), who + ' recording'); };
+  ok(v.words.length >= 1, 'no words'); const seen = new Set();
+  for (const w of v.words) { ok(AR.test(w.ar) && !/[A-Za-z]/.test(w.ar), 'ar ' + w.ar); ok(w.kelas && !AR.test(w.kelas + (w.lain || '')), w.ar + ' Malay cell'); cite(w.cite, w.ar); ok(!seen.has(w.ar), 'duplicate ' + w.ar); seen.add(w.ar); for (const f of w.forms || []) ok(AR.test(f), w.ar + ' form'); }
+  for (const h of v.habits || []) { ok(h.t && !AR.test(h.t), 'habit text'); cite(h.cite, 'habit'); }
 });
 
 console.log(rows.join('\n'));

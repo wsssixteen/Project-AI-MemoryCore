@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: be5b16b4-6a21-45ba-abb5-f619d46b57d4
-  modified: 2026-10-10T14:01:38.371Z
+  modified: 2026-10-15T15:32:59.778Z
 ---
 
 **DawahMap** = みや's personal project (started 2026-10-10): a yes/no decision map, street-dawah style, that walks a person from basic rational questions to Islam in six stages. The published page is **Reason to Islam**: https://claude.ai/artifact/22CRAptuNqGqRUonHDfe28 ([[artifact-registry]]).

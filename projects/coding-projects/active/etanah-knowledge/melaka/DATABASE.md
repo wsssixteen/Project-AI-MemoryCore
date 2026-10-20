@@ -912,7 +912,7 @@ Flag columns are `bpchar(1)` with values `'Y'`/`'N'` (or `'y'`/`'n'` — case va
 
 | Env | MCP server (Ruri-run queries) | Schema prefix (MCP queries) | Notes |
 |---|---|---|---|
-| mlit (internal test — PRIMARY) | `postgres-mlit-pg` | `et_main_mlit.` · flowable `et_flowable_mlit.` | 172.16.100.197:5444 db `mkit` |
+| mlit (internal test — PRIMARY) | `postgres-mlit-pg` | `et_main_mlit.` · flowable `et_flowable_mlit.` | 10.16.63.54:5444 db `mkit` (since 2026-10-12; before: 172.16.100.197) |
 | staging stg2 (default) | `postgres-mlkstg-pg` | `et_main_stg2.` · dms `et_dms_stg2.` | miya switches stg1↔stg2 |
 | staging stg1 (PROD refresh) | `postgres-mlkstg1-pg` | `et_main_stg1.` · flowable `et_flowable17.` (§18.1) | aplikasi_id identical to PROD (§22b) |
 | PROD | `postgres-mlkprod-pg` | `et_main.` (user `et_read` defaults to `public` — always qualify) | permission-gated by prod-db-confirm hook |

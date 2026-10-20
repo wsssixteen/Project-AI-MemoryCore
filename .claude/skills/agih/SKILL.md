@@ -36,7 +36,7 @@ amira PRU dropdown case, where the config screen closed it in under a minute.
 
 | みや says | Schema | Host | Reach |
 |---|---|---|---|
-| `mlit` (usual target for patch requests) | `et_main_mlit` | `172.16.100.197:5444/mkit` | MCP `postgres-mlit-pg`, else direct |
+| `mlit` (usual target for patch requests) | `et_main_mlit` | `10.16.63.54:5444/mkit` | MCP `postgres-mlit-pg`, else direct |
 | `stg1` | `et_main_stg1` | `172.30.12.202:5444/mlkstg` | MCP `postgres-mlkstg1-pg` |
 | `stg2` | `et_main_stg2` | `172.30.12.202:5444/mlkstg` | MCP `postgres-mlkstg-pg` |
 | `trn` (training) | *pending* | *pending* | connection pending — みや to add |

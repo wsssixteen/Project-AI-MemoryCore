@@ -115,6 +115,9 @@ runHook({ name: 'staging-schema-tracker', event: 'UserPromptSubmit' }, (input) =
     if (!state) state = { standalone_datasource: 'etanahDS', standalone_path: 'E:/Dev/jboss-7.4-plp-melaka/standalone/configuration/standalone.xml', history: [] };
     if (state.melaka_staging_schema !== meta.melaka_staging_schema) {
       Object.assign(state, meta);
+      // The switch turns the OTHER staging schema off; the note every env prompt shows names that one.
+      const off = n === '1' ? 'stg2' : 'stg1';
+      state.banned_note = off + ' is switched OFF (staging switch = ' + meta.melaka_staging_schema + '): do not use it to find a root cause or to prepare test data or a test scenario. Reading rows that already exist only on ' + off + ' is allowed; say so in the reply as "Read from ' + off + ': what and why". Never switch the local env to it unless miya asks.';
       state.updated = new Date().toISOString().slice(0, 10);
       state.source = 'miya';
       state.history = (state.history || []).concat([{ schema: meta.melaka_staging_schema, from: state.updated }]);
