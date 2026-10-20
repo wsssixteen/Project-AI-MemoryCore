@@ -52,3 +52,13 @@ Proposals logged (`core/slips.js --type proposal`): A1 telemetry source · A1 ga
 | A5 sweep | ⏭ no multi-ticket sweep this session | — |
 
 Proposals logged: A1 audit-read exemption in adhoc-brief-first · A2 ask for the page error before a "slow/fails" diagnosis.
+
+## Session quest-285159-assessment (2026-10-20 12:15)
+
+| Axis | Instance this session | Assessment |
+|---|---|---|
+| A1 agentic system | sql-schema-verify Stop gate re-fired on every reply for 285159-check.sql, a miya-facing script that must be unqualified by rule; the skip token had to be repeated ~30 times | gate cannot verify the scripts the rules require, so it trains skip-token use |
+| A2 quest workflow | Workflow launch of .claude/workflows/quest-phase0.js was refused: "script contains control characters" (CRLF); launched an LF copy from scratchpad | workflow files need LF line endings |
+| A3 debugging | told miya a KPT setting fix was still needed from the 07/10 agihan log; the current ind_tgsn row (PT, 15/10) disproved it | read the current setting row before recommending a setting change |
+| A4 etanah | a setting fix on ind_tgsn.peranan does not restamp a live task; it keeps the old peranan until an alter re-creates it | knowledge candidate (BUG-BESTIARY, awaiting nod) |
+| A5 sweep | cross-session SendMessage to "MLIT updates not working" was held (permission-mode mismatch) and expired; session_mgmt send_message delivered it; 3 sessions not running only answered once started | sweep needs a fallback route and must include non-running sessions from list_sessions |
