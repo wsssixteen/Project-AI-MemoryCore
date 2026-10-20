@@ -1189,6 +1189,7 @@
 {"ts":"2026-10-13T16:22:21.043Z","category":"A4"}
 {"ts":"2026-10-14T02:34:00.976Z","category":"format-not-followed"}
 {"ts":"2026-10-14T08:56:32.285Z","category":"plan-vs-adhoc"}
+{"ts":"2026-10-16T05:08:39.585Z","category":"reask/verbose"}
 {"ts":"2026-10-17T08:51:39.917Z","category":"A1"}
 {"ts":"2026-10-17T08:51:40.046Z","category":"A1"}
 {"ts":"2026-10-17T08:51:40.184Z","category":"side-effect/unchecked-command"}
@@ -1245,6 +1246,9 @@
 {"ts":"2026-10-20T03:02:29.177Z","category":"A1"}
 {"ts":"2026-10-20T03:02:31.267Z","category":"A2"}
 {"ts":"2026-10-20T03:22:45.912Z","category":"A1"}
+{"ts":"2026-10-20T04:14:25.291Z","category":"A2"}
+{"ts":"2026-10-20T04:14:27.632Z","category":"A5"}
+{"ts":"2026-10-20T04:14:29.169Z","category":"A1"}
 {"ts":"2026-10-12T08:56:23.430Z","category":"wrong-env"}
 {"ts":"2026-10-12T09:27:14.676Z","category":"stale-copy/ran-tool-from-behind-checkout"}
 {"ts":"2026-10-13T11:20:06.869Z","category":"guess-as-fact"}
@@ -1303,3 +1307,7 @@
 {"ts":"2026-10-20T04:05:36.065Z","category":"A4"}
 {"ts":"2026-10-20T04:05:37.487Z","category":"A5"}
 {"ts":"2026-10-20T04:05:39.017Z","category":"A4"}
+{"ts":"2026-10-20T04:04:23.293Z","category":"A2"}
+{"ts":"2026-10-20T04:04:23.703Z","category":"A3"}
+{"ts":"2026-10-20T04:04:24.297Z","category":"A1"}
+{"ts":"2026-10-20T04:14:04.091Z","category":"regression"}

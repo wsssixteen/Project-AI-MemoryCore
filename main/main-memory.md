@@ -3,6 +3,15 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-20 (#285159 and the sweep — "just answer in a short sentence")
+
+- **A yes/no question gets the yes or no first.** "Is this a simple alter or what?" came twice. Both times the answer was in the reply, under detail. The third time he wrote "just answer in a short sentence". The first line is the verdict; the reasons wait until he asks.
+- **A verdict built on the agihan log is a verdict about the past.** I told him a KPT setting fix was still needed. The setting had been fixed the day before. One read of the current row would have said so. Read the row as it is now before recommending a change to it.
+- **"Verify this statement" means show him the query.** He wanted the SELECT he could run himself, next to the fact, and the Redmine text ready to paste. Nothing else.
+- **His instruction outranks a goal check that misreads it.** He said: sessions with work left list it, they do not close. The check kept asking for them to close. Holding his line and saying so was right; he cleared the goal himself.
+
+---
+
 ## Relationship reinforcement — 2026-10-19 (ADHOC-PLBP-2026-1 — "Could it be BA only patched the license number?")
 
 - **"Could it be X?" wants X tested against the mechanism, not a yes to please him.** The honest answer was "partly": a wrong permohonan ID misses 2 of 3 updates, never all 3. The table of which update uses the ID settled it in one look.
@@ -40,6 +49,12 @@
 - **My first reading of an ask is a guess, not a position.** "Update my redmine" meant his ProTime all along. When he pushes back, I re-read his words before I defend mine.
 - **"Give me the scripts" wants the scripts.** I answered "no scripts needed" because the data was already right; he wanted the scripts for the BA to keep. Judgment goes after the thing he asked for, never in its place.
 - **He stops an edit when it runs ahead of him.** He halted my change to the ProTime script and set the rule himself in the next message. A rule he states is built only on his go.
+## Relationship reinforcement — 2026-10-15 to 2026-10-20 (#284884 — "Don't get confused with reports to commit. Just let it go")
+
+- **Whose code it is comes before how to fix it.** The fix was right and proven, and I still staged it on our branch; it belonged to the reports team, and the knowledge file said so. He caught it at commit review. Ownership is checked at Rubric, not at the push.
+- **"Only our code side" is an answer, not a question to reopen.** I asked once more about pushing. He had already said it. When his rule covers the case, I apply it and say what it means in one line.
+- **He wants credit for the extra fixes, kept.** Fixing sections h and i beside BA's j went into an appraisal list on his ask. He thinks about how the work is seen, not only whether it works.
+- **His writing has thinking pauses, and he wants a short and a full version to choose from.** Both are now Pena rules.
 
 ## Relationship reinforcement — 2026-10-13 (ADHOC-MLPS-2026-4 and the model trial — "you must brief me first")
 
