@@ -363,9 +363,12 @@ function reportVerdicts(projectName, dayIso) {
   for (const r of logRows()) if (r.action === 'stop-check' && r.project === projectName && r.report && (!dayIso || ymd(new Date(Date.parse(r.ts))) >= dayIso)) last.set(r.session + '\u0000' + r.report, r);
   const out = [];
   for (const r of last.values()) {
-    const now = mtime(r.report);
+    // a row written on another machine carries that machine's absolute path; find the same file under this machine's ACTIVE
+    const rel = String(r.report).split(/[\\/]projects[\\/]coding-projects[\\/]active[\\/]/i)[1];
+    const local = !fs.existsSync(r.report) && rel ? path.join(ACTIVE, rel) : r.report;
+    const now = mtime(local);
     const stale = r.last_change && (now + 2000 < r.last_change);
-    const missing = !fs.existsSync(r.report);
+    const missing = !fs.existsSync(local);
     out.push({ report: r.report, session: r.session, ok: !stale && !missing, why: missing ? 'report missing' : stale ? 'report older than the session\'s last change (' + path.basename(r.last_change_file || '?') + ')' : 'current' });
   }
   return out;
