@@ -82,3 +82,13 @@ Proposals logged (`core/slips.js --type proposal`): A2 quest-phase0 workflow sha
 - A3 debugging: the PLTP root cause took ~15 tool calls once the right source was found; the slow part was finding the teknikal source at all (no Melaka clone; Terengganu then Penang clones read first). Instance: wrong-state-source slip.
 - A4 etanah: staging answers were given from stg2 for hours although the switch said stg1; the BA's AWAM screen disagreed before I checked. Instance: C01/2026/12 stg1 vs stg2.
 - A5 sweep: the audit briefing run from a worktree reports 0 fires / 0 turns and lists every hook as dead (telemetry lives only in the main checkout). Instance: this DE's first 7.4 run.
+
+## Session ticket-284884-rubric
+
+| Axis | What happened (concrete instance) | Assessment |
+|---|---|---|
+| A1 agentic system | `lib/audit-briefing.js` run from the worktree reported 0 hook fires and listed ~80 hooks as "never fired", while ticket-gate, auto-skill-trigger, PlainFirstGate, TurnChecklistGate and others fired visibly in this session. Telemetry logs live in the main checkout (gitignored), so a worktree run sees none. | The audit's NOT WORKING list is false when run from a worktree. Proposal logged. |
+| A2 quest workflow | #284884: Rubric chose a fix in 4 `.jrxml` files and Apply staged them on our ticket branch. OTHER-MODULES.md and JASPER-REPORTS.md (`printReportUsingSQL` = reports team) already said reports are not ours. miya caught it at commit review. | Ownership was not checked at Rubric. Rule added to cross-module-check skill; a deterministic check is proposed. |
+| A3 debugging efficiency | Blank page 2 was found by an offline Jasper render (WAR lib jars + JDBC creds read from standalone.xml), and it caught that the first fix (remove break) orphaned a header on a short page 1. | High value; the render script lives only in a scratchpad. Proposal to promote it. |
+| A4 etanah issue-solving | Jadual 1 points h/i/j come from `UMM_P_HKMLK_LAIN` with no HKMLK_ID; PROD 0 of 429 rows carry ID_HAKMILIK. Fatin (reports) needed this to make the fix. | Fact not yet in DATABASE.md (deferred in QA-284884). |
+| A5 sweep / file sweep | ⏭ no sweep ran this session. | — |

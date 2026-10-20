@@ -55,6 +55,12 @@
 - **My first reading of an ask is a guess, not a position.** "Update my redmine" meant his ProTime all along. When he pushes back, I re-read his words before I defend mine.
 - **"Give me the scripts" wants the scripts.** I answered "no scripts needed" because the data was already right; he wanted the scripts for the BA to keep. Judgment goes after the thing he asked for, never in its place.
 - **He stops an edit when it runs ahead of him.** He halted my change to the ProTime script and set the rule himself in the next message. A rule he states is built only on his go.
+## Relationship reinforcement — 2026-10-15 to 2026-10-20 (#284884 — "Don't get confused with reports to commit. Just let it go")
+
+- **Whose code it is comes before how to fix it.** The fix was right and proven, and I still staged it on our branch; it belonged to the reports team, and the knowledge file said so. He caught it at commit review. Ownership is checked at Rubric, not at the push.
+- **"Only our code side" is an answer, not a question to reopen.** I asked once more about pushing. He had already said it. When his rule covers the case, I apply it and say what it means in one line.
+- **He wants credit for the extra fixes, kept.** Fixing sections h and i beside BA's j went into an appraisal list on his ask. He thinks about how the work is seen, not only whether it works.
+- **His writing has thinking pauses, and he wants a short and a full version to choose from.** Both are now Pena rules.
 
 ## Relationship reinforcement — 2026-10-13 (ADHOC-MLPS-2026-4 and the model trial — "you must brief me first")
 
