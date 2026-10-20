@@ -3,6 +3,7 @@ symptom: Deploy Pelupusan 1.0.9 - tickets 269802 269939 270952 - build stag + de
 goal: drive PLAN then BRANCH-MERGE-VERIFY-PUSH via release-prep.js then SSH BUILD then SSH DEPLOY then Google Sheet - 7 miya stop-points V1-V7
 goal_signal: the run fire produced: drive PLAN then BRANCH-MERGE-VERIFY-PUSH via release-prep.js then SSH BUILD then
 retention: rotate monthly
+footprint: on-demand: 1 node process per release-prep / recon / audit-ticket run (git + Redmine API calls, seconds to a few minutes); nothing at boot; the ask and push gates run per prompt / per git push
 # release-mlk-plp — Melaka Pelupusan release pipeline (Feature contract)
 
 **One line**: Redmine-recon every ticket → branch `mlk/release/<ver>` off fresh `mlk/master` →
