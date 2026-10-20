@@ -144,7 +144,7 @@ Trigger: "close reconcile" / "phase 2 reconcile" / "reconcile closed tickets" / 
 
 | Step | Action | Tool (all pre-built) |
 |---|---|---|
-| 1 | Detect: Redmine-Closed vs local state | boot surfacer divergence table, or per-ticket probe (redmine-board.js API pattern) |
+| 1 | Detect: Redmine-Closed vs local state. **Start from the Task folder on disk, never from `active.txt` alone** (2026-10-20, #285680): list every folder in the state's Task root that matches the ask (e.g. `II #` + `(PROD)`, `DP #`), then for each read `node lib/save-quest.js <QA>` AND whether its block sits in `active.txt` or `active-archive.txt`. A block in `active-archive.txt` whose folder is still in the live root is **half-archived**: move the folder to `Archive\` (`-LiteralPath`) and repoint `task_folder=`. Report the folder count before and after | boot surfacer divergence table, or per-ticket probe (redmine-board.js API pattern) |
 | 2 | Enumerate harvest debt | `node domain/quest-bounty/bulk.js --debt` — the number is the truth, never estimate |
 | 3 | Per quest: HARVEST first (standing 7-category schema, domain/quest-bounty/README.md) | bounty familiar per quest, controller verifies cites |
 | 4 | Then archive | `node quest/archive-quest.js <QA>` — Step -1 harvest gate REFUSES un-harvested archives (exit 3; `--allow-stub "<reason>"` audited bypass). Step -2 REFUSES a block carrying `archive_hold=` (exit 3; no bypass — release with `node domain/archive-hold/archive-hold.js clear <QA>` only when みや says so; save-quest prints `HELD` for it) |
@@ -153,6 +153,8 @@ Trigger: "close reconcile" / "phase 2 reconcile" / "reconcile closed tickets" / 
 Acceptance: `bulk.js --debt` prints `0 unharvested` and the boot surfacer shows no divergence.
 
 *Rule 6 v1.2 note: additive section; prior stage behaviours (Phase 1 close / Phase 2 archive) untouched. Smoke = the 2026-08-16 gate+enumerator evals (refuse exit 3 · pass-on-harvest · allow-stub · refusal-not-evidence · stub-not-evidence), all green same day.*
+
+*2026-10-20 — Reconcile step 1 per みや ("there are 109 items inside Melaka's Task folder only"): the sweep starts from the Task folder on disk and catches half-archived quests (block archived, folder left in the live root). Root cause: a sweep built from `active.txt` reported 5 closed patch tickets while 9 more sat half-archived (8 II + 1 DP, plus a stray Perak copy). Spec-preservation: the step's tools and steps 2-5 unchanged; additive.*
 
 *2026-09-07 — plan §9a/9b per みや: Phase 1 step 0 (wrong-fix rows saved via `lib/wrong-fix.js add`) + Phase 2 step 0 🔧 WORKFLOW UPGRADE (mandatory, first, highlighted: `lib/wrong-fix.js upgrade-table` → one verdict per row, DONE in the same close; `quest/archive-quest.js` Step -0.5 refuses while any row is unruled). Spec-preservation: every prior step kept, renumbered none — both additions are step 0. Fire check: `lib/wrong-fix.eval.js` 14/14 + archive-quest refusal path smoke (`--dry-run` reports, live refuses exit 3).*
 
