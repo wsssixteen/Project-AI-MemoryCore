@@ -92,3 +92,13 @@ Proposals logged (`core/slips.js --type proposal`): A2 quest-phase0 workflow sha
 | A3 debugging efficiency | Blank page 2 was found by an offline Jasper render (WAR lib jars + JDBC creds read from standalone.xml), and it caught that the first fix (remove break) orphaned a header on a short page 1. | High value; the render script lives only in a scratchpad. Proposal to promote it. |
 | A4 etanah issue-solving | Jadual 1 points h/i/j come from `UMM_P_HKMLK_LAIN` with no HKMLK_ID; PROD 0 of 429 rows carry ID_HAKMILIK. Fatin (reports) needed this to make the fix. | Fact not yet in DATABASE.md (deferred in QA-284884). |
 | A5 sweep / file sweep | ⏭ no sweep ran this session. | — |
+
+## Session tugasan-not-found-c0904c (#285252 PRBB rework, 2026-10-20 15:30)
+| Axis | Assessment (instance) | Proposal logged |
+|---|---|---|
+| A1 agentic system | One #285252 turn spent 1283 s in hooks; quest-context-load-gate averages 3.3 s with 0 blocks in 7 days | cache the gate per session + quest |
+| A2 quest workflow | An internal-env test by miya had no ledger status: row 9 went ACCEPTED-RISK, then had to be rewritten to RAN | TESTED-ENV status in falsifier-ran-check |
+| A3 debugging | Cycle 1 answered "will the values show" with an SQL re-enactment; the xhtml binding (daerahSAK, luasDipohon) was never read | stop gate: display claim needs an .xhtml:line |
+| A4 etanah | Column binding differs from the populated field on the PRBB land table; save reads id from JSON | JSF-WIRING section "column binding vs populated field" |
+| A5 sweep | ⏭ no sweep or multi-ticket work this session | — |
+Note: child session qa285252-audit-fix reported its quest-skill "Screen-path audit" commit 4bdbd9fe as on main; it is on branch claude/fervent-lamarr-89925e only (1 ahead of origin/main), not merged by this session (needs miya's word).
