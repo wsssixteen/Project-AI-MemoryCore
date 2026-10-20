@@ -14,9 +14,18 @@
  *   stamp  — record a clean result against the file's CURRENT content hash
  *   check  — exit 0 if a clean stamp matches the current hash, else exit 1
  *
- * Parsing is reliable because hand-off scripts are single-table-per-statement (the NO JOIN
- * convention, CLAUDE.md section 8). One table per statement means every identifier in that
- * statement belongs to that table — no ambiguity to resolve.
+ * v2 (2026-10-20, #285680): two changes.
+ *   1. Unqualified tables are accepted. Scripts handed to miya are unqualified by rule (CLAUDE.md
+ *      section 8, he runs them connected to the target schema), so v1 refused every one of them
+ *      ("No schema-qualified tables found") and the Stop gate could only be skipped. They are now
+ *      checked in the schema named on the command line: emit <file> [schema], default et_main.
+ *      A qualified table keeps its own schema.
+ *   2. A column passes when ANY table of its own statement has it. The kod-subquery convention
+ *      (NO JOIN, CLAUDE.md section 8) puts two or more tables in one statement, and v1 required
+ *      every column on every table of the statement, so a correct script reported false misses.
+ *   Spec preservation v1 -> v2: emit / stamp / check commands, hash binding, shared stamp store,
+ *   legacy store read, "zero rows = clean" contract: all kept. Changed: the VALUES row shape
+ *   (statement number added) and the result shape (problem · sch · tbl · col).
  */
 const fs = require('fs');
 const path = require('path');
@@ -113,18 +122,21 @@ function stripNoise(sql) {
     .replace(/'(?:[^']|'')*'/g, " '' ");
 }
 
-function parse(file) {
+const DEFAULT_SCHEMA = 'et_main';
+const IDENT = /^[a-z_][a-z0-9_]*$/;
+
+// -> [{ st, tables: ["schema.table", ...], cols: Set }] — one entry per statement that names a table.
+function parse(file, defaultSchema) {
   const statements = stripNoise(fs.readFileSync(file, 'utf8'))
     .split(';')
     .map(s => s.trim())
     .filter(Boolean);
 
-  const refs = new Map(); // "schema.table" -> Set(columns)
-
-  for (const st of statements) {
-    const tables = [...st.matchAll(/\b(?:from|join|update|into)\s+([a-z_][\w]*)\.([a-z_][\w]*)/gi)]
-      .map(m => `${m[1].toLowerCase()}.${m[2].toLowerCase()}`);
-    if (!tables.length) continue;
+  const out = [];
+  statements.forEach((st, i) => {
+    const tables = [...new Set([...st.matchAll(/\b(?:from|join|update|into)\s+(?:([a-z_][\w]*)\.)?([a-z_][\w]*)/gi)]
+      .map(m => `${(m[1] || defaultSchema).toLowerCase()}.${m[2].toLowerCase()}`))];
+    if (!tables.length) return;
 
     const own = new Set();
     tables.forEach(t => t.split('.').forEach(p => own.add(p)));
@@ -135,39 +147,46 @@ function parse(file) {
       if (KEYWORDS.has(id) || own.has(id)) continue;
       cols.add(id);
     }
-    for (const t of tables) {
-      if (!refs.has(t)) refs.set(t, new Set());
-      cols.forEach(c => refs.get(t).add(c));
-    }
-  }
-  return refs;
+    out.push({ st: i + 1, tables, cols });
+  });
+  return out;
 }
 
-function emit(file) {
-  const refs = parse(file);
-  if (!refs.size) {
-    console.error('No schema-qualified tables found. Hand-off scripts must qualify every table.');
+function emit(file, schemaArg) {
+  const schema = (schemaArg || DEFAULT_SCHEMA).toLowerCase();
+  if (!IDENT.test(schema)) { console.error(`bad schema name: ${schemaArg}`); process.exit(1); }
+  const stmts = parse(file, schema);
+  if (!stmts.length) {
+    console.error('No table found in any statement (FROM / JOIN / UPDATE / INTO).');
     process.exit(1);
   }
   const rows = [];
-  for (const [tbl, cols] of refs) {
-    const [schema, name] = tbl.split('.');
-    for (const c of cols) rows.push(`('${schema}','${name}','${c}')`);
+  for (const s of stmts) {
+    for (const t of s.tables) {
+      const [sch, name] = t.split('.');
+      rows.push(`(${s.st},'${sch}','${name}',NULL)`);
+      for (const c of s.cols) rows.push(`(${s.st},'${sch}','${name}','${c}')`);
+    }
   }
-  console.log(`-- ${path.basename(file)}  hash=${hashFile(file)}  refs=${rows.length}`);
+  console.log(`-- ${path.basename(file)}  hash=${hashFile(file)}  refs=${rows.length}  unqualified tables checked in: ${schema}`);
   console.log('-- Run on the TARGET environment (or any environment with the identical schema).');
-  console.log('-- Zero rows = every table and column exists. Any row = the script is broken.');
+  console.log('-- Zero rows = every table exists and every column exists on a table of its own statement.');
   console.log('');
-  console.log('WITH refs(sch, tbl, col) AS (VALUES');
+  console.log('WITH refs(st, sch, tbl, col) AS (VALUES');
   console.log('  ' + rows.join(',\n  '));
+  console.log('),');
+  console.log('chk AS (');
+  console.log('  SELECT r.st, r.sch, r.tbl, r.col, c.oid AS reloid,');
+  console.log('         EXISTS (SELECT 1 FROM pg_attribute a WHERE a.attrelid = c.oid AND a.attname = r.col');
+  console.log('                 AND a.attnum > 0 AND NOT a.attisdropped) AS col_ok');
+  console.log('  FROM   refs r');
+  console.log('  LEFT   JOIN pg_class c ON c.relname = r.tbl');
+  console.log('         AND c.relnamespace = (SELECT oid FROM pg_namespace n WHERE n.nspname = r.sch)');
   console.log(')');
-  console.log('SELECT r.sch, r.tbl, r.col');
-  console.log('FROM   refs r');
-  console.log('LEFT   JOIN pg_class c ON c.relname = r.tbl');
-  console.log('       AND c.relnamespace = (SELECT oid FROM pg_namespace n WHERE n.nspname = r.sch)');
-  console.log('LEFT   JOIN pg_attribute a ON a.attrelid = c.oid AND a.attname = r.col');
-  console.log('       AND a.attnum > 0 AND NOT a.attisdropped');
-  console.log('WHERE  a.attname IS NULL;');
+  console.log("SELECT DISTINCT 'missing table' AS problem, sch, tbl, NULL::text AS col FROM chk WHERE reloid IS NULL");
+  console.log('UNION ALL');
+  console.log("SELECT 'missing column', min(sch), string_agg(DISTINCT tbl, ' / '), col FROM chk WHERE col IS NOT NULL");
+  console.log('GROUP  BY st, col HAVING NOT bool_or(col_ok);');
 }
 
 function stamp(file, env) {
@@ -190,10 +209,10 @@ function check(file) {
 
 const [cmd, file, env] = process.argv.slice(2);
 if (!cmd || !file) {
-  console.error('usage: sql-schema-verify.js <emit|stamp|check> <file.sql> [env]');
+  console.error('usage: sql-schema-verify.js emit <file.sql> [schema]  |  stamp <file.sql> <env>  |  check <file.sql>');
   process.exit(1);
 }
-if (cmd === 'emit') emit(file);
+if (cmd === 'emit') emit(file, env);
 else if (cmd === 'stamp') stamp(file, env);
 else if (cmd === 'check') check(file);
 else { console.error(`unknown command: ${cmd}`); process.exit(1); }
