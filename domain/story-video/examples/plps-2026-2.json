@@ -1,0 +1,63 @@
+{
+  "ticket": "PTMLK/02/L/PLPS/2026/2",
+  "story": "Why the file stopped after Semakan Dan Syor (#300, PROD, PLPS)",
+  "allowed_terms": ["penghantaranId", "urusan"],
+  "known_names": ["PLPS", "Semakan JTLTPM"],
+  "scenes": [
+    {
+      "kind": "title", "role": "title", "seconds": 6,
+      "headline": "PTMLK/02/L/PLPS/2026/2",
+      "detail": "Why the file stopped after Semakan Dan Syor"
+    },
+    {
+      "kind": "screen", "role": "saw", "seconds": 10,
+      "headline": "What the officer saw",
+      "detail": "The file stopped after Semakan Dan Syor",
+      "screen": {
+        "title": "PTMLK/02/L/PLPS/2026/2",
+        "values": [
+          { "label": "Pergerakan Fail", "value": "tiada rekod", "bad": true },
+          { "label": "Carian Pintas", "value": "Baru", "bad": true }
+        ]
+      },
+      "caption": "The file shows no movement and no next task."
+    },
+    {
+      "kind": "card", "role": "event", "seconds": 10,
+      "headline": "1 Jul: notis sent",
+      "detail": "A notis was sent for this file",
+      "card": { "title": "Notis", "lines": [ { "k": "penghantaranId", "v": "PND/02/L/2026/7" } ] },
+      "caption": "The notis step saves its own notis number."
+    },
+    {
+      "kind": "copy", "role": "event", "seconds": 11,
+      "headline": "6 Jul: file altered",
+      "detail": "A data alter was run on this file",
+      "from": { "title": "Notis", "lines": [ { "k": "penghantaranId", "v": "PND/02/L/2026/7" } ] },
+      "to": { "title": "Main file", "bad": true, "lines": [ { "k": "penghantaranId", "v": "PND/02/L/2026/7" } ] },
+      "label": "copied",
+      "caption": "The alter copied the notis number into the main file."
+    },
+    {
+      "kind": "steps", "role": "event", "seconds": 11,
+      "headline": "29 Sep: SO Kanan clicks Hantar",
+      "detail": "On Semakan Dan Syor (Siasatan Tanah)",
+      "steps": [ "Sees the notis number", "Thinks it is a notis", { "text": "Next task not created", "bad": true } ],
+      "caption": "So the file has no next task."
+    },
+    {
+      "kind": "checklist", "role": "fix", "seconds": 11,
+      "headline": "The fix",
+      "detail": "Three changes on the file",
+      "items": [ "Remove penghantaranId", "Set urusan back to PLPS", "Alter to Semakan JTLTPM" ],
+      "caption": "These three changes remove the cause."
+    },
+    {
+      "kind": "card", "role": "after", "seconds": 10,
+      "headline": "After the fix",
+      "detail": "Who gets the file next",
+      "card": { "title": "Semakan JTLTPM", "lines": [ "Back on the officer's list" ] },
+      "caption": "The file moves on to Semakan JTLTPM."
+    }
+  ]
+}
