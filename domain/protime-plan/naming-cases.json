@@ -1,0 +1,391 @@
+[
+ {
+  "id": "ADHOC-PRBB-2026-1",
+  "split": "test",
+  "source": {
+   "env": "PROD",
+   "state": "",
+   "urusan": "PRBB",
+   "issue": "PRBB Penyediaan Borang 4Ce dan P1e - NPE clicking tugasan (PROD ID Rujukan 254883). MlkBorang4CeForm.initMklmtPemegangLesen():367 null getBandarBerdaftar() (bandar_daftar_id null); twin :369. Origin CONFIRMED: manual-pemohon entry path stores IC/name/phone only, no IC->account address backfill (apps 3408179/3408184; foreign-negara REFUTED, applicant Malaysian). Patch handed: fill 5523923 real addr"
+  },
+  "his": "PROD - Page load error, missing Bandar & Negeri. (PTMLK/01/L/PRBB/2026/11)"
+ },
+ {
+  "id": "ADHOC-MLPS-2026-1",
+  "split": "test",
+  "source": {
+   "env": "mlit",
+   "state": "",
+   "urusan": "MLPS",
+   "issue": "MLPS Borang 4Ae/L1e PDTJ nurulazura. Issue1 Tempat=PT 1735 (panel MlkBorang4AeForm.xhtml:141 + L1e) VERIFIED migrated data (ind_mklmt_tnh_permit_lesen 4456 MIGRATOR_KTPN_LMS_JASIN -> umm_a_permohonan_tnh 44393). Patch READY: SET tempat=dash WHERE aplikasi_id 3436359 (miya scope=this-app). Issue2 pelan melintang: L1e is JASPER LaporanPelan.jrxml (504x360 landscape frame, RetainShape, NO rotate); Q3"
+  },
+  "his": "PROD - MLPS - Pelan & migration data issue check (PTMLK/02/L/MLPS/2026/2)"
+ },
+ {
+  "id": "ADHOC-PPJK-2026-1",
+  "split": "test",
+  "source": {
+   "env": "PROD (et_main) — code fix on mlk/master etanah-awam",
+   "state": "",
+   "urusan": "PPJK",
+   "issue": "PPJK e-Mohon Senarai Warta papar 1 rekod (Lot 7324) untuk No.Warta NO.85/29-03-2007 sedangkan Carian Pintas papar 2 (Lot 7263+7324). ROOT (DB-proven): ind_rizab ada 2 rows (1553/7263, 1554/7324 both Kuatkuasa Y); repository AwamRizabRepository.java:18 returns List; BUG PelupusanService.findMaklumatPerizabanVOByNoWartaAndTarikhWarta():10232-10285 for-loop reassigns vo each iteration, returns LAST o"
+  },
+  "his": "Internal - Assist BA no warta missing in AWAM (NO. 85, 29/03/2007)"
+ },
+ {
+  "id": "ADHOC-PT-2026-4",
+  "split": "test",
+  "source": {
+   "env": "MLKSTG",
+   "state": "",
+   "urusan": "PT",
+   "issue": "PT SKM click Seterusnya -> NPE JsonObject.get null at PelupusanMaklumatPemohonHelper.initPemohon:2194 (tempatTinggalList [{}]); NOT caused by 275475; STG PTMLK/02/L/PT/2026/26 apl 3432839"
+  },
+  "his": "Internal - Assist BA issue PT cannot proceed. Will create ticket."
+ },
+ {
+  "id": "ADHOC-PT-2026-6",
+  "split": "test",
+  "source": {
+   "env": "PROD",
+   "state": "",
+   "urusan": "PT",
+   "issue": "Ulasan JPPH Keluasan shows 4.7004 (luas_siasatan) vs 4.763 (luas_dipohon); PROD/STG2 have luas_siasatan set, STG1/MLIT do not — display works as designed, data-side"
+  },
+  "his": "PROD - Keluasan issue check (PTMLK/03/L/PT/2026/4)"
+ },
+ {
+  "id": "ADHOC-PT-2026-5",
+  "split": "test",
+  "source": {
+   "env": "PROD",
+   "state": "",
+   "urusan": "PT",
+   "issue": "PROD PTMLK/02/L/PT/2026/1 apl 3386051 - JKR (JKRNM) deleted from Utiliti Kemaskini JT/JPPH grid; diagnosed+DB-proven, patch ready in 2.Fix; awaiting Redmine #"
+  },
+  "his": "PROD - Missing Jabatan Teknikal check (PTMLK/02/L/PT/2026/1)"
+ },
+ {
+  "id": "ADHOC-PRBB-2026-2",
+  "split": "test",
+  "source": {
+   "env": "PROD/mlit (answer env-independent)",
+   "state": "",
+   "urusan": "PRBB+MCL",
+   "issue": "PDTJ asks Ulasan JT field character limit — ANSWERED: tugasan dialog 4000 (mlkUlasanJabatanTeknikalDataTable.xhtml:211) vs utiliti JT grid 500 (UtilitiKemaskiniUlasanJPPHForm.xhtml:291); same column umm_a_jabatan_teknikal.ulasan varchar(4000). Awaiting possible ticket."
+  },
+  "his": "PROD - Assist BA to check field sizes for Rencana Pentadbir Tanah & Utiliti Kemaskini Ulasan JPPH"
+ },
+ {
+  "id": "ADHOC-PRBB-2026-3",
+  "split": "test",
+  "source": {
+   "env": "PROD",
+   "state": "",
+   "urusan": "PRBB",
+   "issue": "PROD PRBB PTMLK/02/L/PRBB/2026/12 apl 3440281: masuk tugasan Penyediaan Borang 4Ce dan P1e -> NPE multiplicand null at MlkBorang4CeForm.calculateBayaranRoyalti():671 — kuantitiDisyor null (PRBB carve-out, syor never wrote key); fix = mirror #248989 guarded sibling shape; ROOT-CAUSED+PROD-PROVEN, awaiting Redmine #"
+  },
+  "his": "PROD - PRBB page load issue - missing Kuantiti Disyorkan"
+ },
+ {
+  "id": "ADHOC-PT-2026-8",
+  "split": "test",
+  "source": {
+   "env": "MLKSTG",
+   "state": "",
+   "urusan": "PT",
+   "issue": "MLKSTG PT PTMLK/02/L/PT/2026/32 PRMMKNPDT - KPT tak papar di Agihan Kepada; 2 KPT officers Jasin (aqmar,fariza) capaian PLP = penuh w/ 0 pcp_capaian_ursn rows so PT-urusan row absent - agihan INNER JOIN drops them (A2/A3 family). DATA fix via Capaian screen"
+  },
+  "his": "PROD - Peranan KPT missing."
+ },
+ {
+  "id": "ADHOC-UPP-2026-1",
+  "split": "test",
+  "source": {
+   "env": "PROD",
+   "state": "",
+   "urusan": "UPP",
+   "issue": "UPP Pembatalan langkah 2 -> PropertyNotFoundException isGantiHari on MlkMaklumatPermohonanPembatalanForm; fix=add getIsGantiHari+getIsTambahKuantiti(false); PROD apl 3454379 cancels PLTP 3423754; NOT applied"
+  },
+  "his": "PROD - UPP Pembatalan page error."
+ },
+ {
+  "id": "ADHOC-PLTP-2026-1",
+  "split": "test",
+  "source": {
+   "env": "PROD",
+   "state": "",
+   "urusan": "PLTP",
+   "issue": "PROD Portal Awam PLTP hakmilik 040210PM00001265 - popup syer tidak sah on Seterusnya; AWAM checkingSyer():462 sums numerators vs max denominator (11 vs 28) though real total = 1 (1/28,1/4,1/8). CODE fix APPROVED by BA ketua 2026-09-25; awaiting BA Redmine ticket"
+  },
+  "his": "PROD - MLK - Awal syer calculation logic error"
+ },
+ {
+  "id": "ADHOC-VIEW-2026-1",
+  "split": "test",
+  "source": {
+   "env": "MLKSTG",
+   "state": "",
+   "urusan": "PLP",
+   "issue": "Alex ask: KL views TKLLESENTABLEVIEW + TKLPREMITTABLEVIEW in Melaka; DONE as tkllesentableview + tklpermittableview (KL typo corrected) on internal + staging, verified 2026-09-30; PROD via infra"
+  },
+  "his": "PROD/STAG/INT - MLK - Create view tables for lesen & permit"
+ },
+ {
+  "id": "ADHOC-HSL-2026-1",
+  "split": "test",
+  "source": {
+   "env": "MLIT",
+   "state": "",
+   "urusan": "ABB",
+   "issue": "Assist Hasil #282275 (Li Wen): ABB from PDBB subflow ISPEKS - Semakan ok, AppLangkah 0 due flag_integrasi Y vs langkah N; her N->Y flip breaks counter ABB; fix = add N set"
+  },
+  "his": "282275 - Assist Hasil"
+ },
+ {
+  "id": "ADHOC-PRBB-2026-6",
+  "split": "test",
+  "source": {
+   "env": "PROD",
+   "state": "",
+   "urusan": "PRBB",
+   "issue": "PROD PDTMT Utiliti Pembatalan Permohonan PTMLK/01/L/PRBB/2026/13 Jana ralat NPE = common/GIS: PROD GIS table et_ptg.log_service missing (server.log 6x 09:50-10:03) + common PostgresUpdateService null helper. OWNED-ELSEWHERE, common told. Pelupusan try/catch enhancement parked in qa_doc, not applied"
+  },
+  "his": "PROD - Ralat pembatalan permohonan"
+ },
+ {
+  "id": "ADHOC-REDMINE-RC-2026-1",
+  "split": "test",
+  "source": {
+   "env": "REDMINE",
+   "state": "",
+   "urusan": "MULTI",
+   "issue": "Fyza ask: fill Redmine Root Cause (DEV) + Solutions for 30 closed Melaka tickets; v3 written 2026-09-04 (29 + 272558 kept); miya wants more audit rounds vs evidence; deadline Tue 2026-09-08"
+  },
+  "his": "Update Redmine details (Root Cause, Solutions, etc) for tickets 276584, 276549, ..."
+ },
+ {
+  "id": "ADHOC-PRBB-2026-7",
+  "split": "example",
+  "source": {
+   "env": "PROD",
+   "state": "",
+   "urusan": "PRBB",
+   "issue": "PROD PRBB PTMLK/02/L/PRBB/2026/4 apl 3408435: AWAM Ganti Hari C02/2026/3 ralat bayaran royalti belum dijelaskan; 4 prepared hsl_bayaran_fi rows still N (royalti dup of counter row 2166364 + deposit jalan/deposit/doket unpaid); data patch after BA confirms"
+  },
+  "his": "PROD - MLK - PRBB cannot proceed due to previous fees"
+ },
+ {
+  "id": "ADHOC-PRBB-2026-8",
+  "split": "example",
+  "source": {
+   "env": "AWAM",
+   "state": "",
+   "urusan": "PRBB",
+   "issue": "AWAM PRBB Jenis Permohonan SK kod? Answer: no SK, hardcoded PelupusanConstant 1 Baru/6 Ganti Hari/8 Tambah Kuantiti/7 Langkau Tahun"
+  },
+  "his": "PRBB jenis permohonan SK"
+ },
+ {
+  "id": "ADHOC-UPS-2026-1",
+  "split": "test",
+  "source": {
+   "env": "STG",
+   "state": "",
+   "urusan": "UPS_PLP",
+   "issue": "3 common templates (SN_JPPH, CON_SRT_JT, SMPG) only via UPS_PLP / UPS_PS; Surat Ulangan JT is pelupusan-own in Melaka; STG test data given; awaiting BA test"
+  },
+  "his": "BA - Verify common templates used under UPS_PLP"
+ },
+ {
+  "id": "ADHOC-PRBB-2026-10",
+  "split": "example",
+  "source": {
+   "env": "MLKSTG",
+   "state": "",
+   "urusan": "PRBB",
+   "issue": "AWAM MLKSTG Slip Permohonan 500 Failed to generate report on Hantar, all modules; common #282299 commit 8fb3d0334d routes MLK to printReportUsingAPI; owned by common, message drafted"
+  },
+  "his": "AWAM - Slip permohonan page error"
+ },
+ {
+  "id": "ADHOC-PRBB-2026-11",
+  "split": "test",
+  "source": {
+   "env": "PROD",
+   "state": "",
+   "urusan": "PRBB",
+   "issue": "Assist BA Nurhafizah Hasan: PROD permit C02/2026/3 tujuan MERATAKAN TAPAK, kuantiti diluluskan 5000 meter padu, tempoh 30 hari 21/08-29/09/2026, GM 230 Lot 2211 Ayer Panas; MLIT 4 rows = follow-on permohonan copy permit asal (test data, no alter no patch); tugasan all-daerah query given"
+  },
+  "his": "Assist BA - Retrieve Data PRBB Permit & Tugasan Semua Daerah"
+ },
+ {
+  "id": "ADHOC-PLP-2026-1",
+  "split": "test",
+  "source": {
+   "env": "CODE",
+   "state": "melaka",
+   "urusan": "PLP",
+   "issue": "AWAM plpMaklumatUrusan.xhtml is a dead file in Melaka: deploys but 0 of 19 urusan tab lists (Pelupusan_Provider.xls Tab Rules) load it; Maklumat Urusan tab = PDBB plpMaklumatPermit.xhtml"
+  },
+  "his": "272642 - Assist to find plpMaklumatUrusan.xhtml screen"
+ },
+ {
+  "id": "ADHOC-PLPS-2026-1",
+  "split": "test",
+  "source": {
+   "env": "PROD",
+   "state": "Terengganu",
+   "urusan": "PLPS",
+   "issue": "PROD PTTRG/02/07/L/PLPS/2025/155 SKM hidden from noraida83: failed Hantar 2025-07-10 left status Selesai, then Utiliti Pengagihan Semula (last 2026-02-15) did not reset status (bug fixed common c402a5766e #226218 2026-03-04); likely fix = redo Pengagihan Semula, no DB patch; open: perluJT Hantar failure"
+  },
+  "his": "PROD - TRG - PLPS SKM tiada dalam senarai"
+ },
+ {
+  "id": "ADHOC-MLPS-2026-2",
+  "split": "test",
+  "source": {
+   "env": "PROD",
+   "state": "Terengganu",
+   "urusan": "MLPS",
+   "issue": "PROD PTTRG/03/01/L/MLPS/2025/101 Laporan Tanah in task shows empty SOK ulasan (teknikal report, common viewer, fault not pinned); 2026-10-05 STG simulate at PLT fails 512045 b is null at teknikal BaseTeknikalForm.java:2204, pelan file LAIN-33295398 made on PROD before the stg2 copy, staging DMS gives no bytes; not pelupusan"
+  },
+  "his": "PROG - TRG - MLPS ulasan SOK laporan tanah missing"
+ },
+ {
+  "id": "ADHOC-PPTPB-2026-4",
+  "split": "test",
+  "source": {
+   "env": "MLKSTG",
+   "state": "",
+   "urusan": "PPTPB",
+   "issue": "MLKSTG PPTPB PTMLK/01/L/PPTPB/2026/1 Sewa Tahunan: ayat Peraturan 11(B)(11)(a) hardcoded? Yes - literal in mlkPengiraanBayaranLesen.xhtml:295; amount + unit from hsl_fi_kadar; reply to BA owed"
+  },
+  "his": "Internal - PPTPB sewa tahunan peraturan hardcode check"
+ },
+ {
+  "id": "ADHOC-HKMLK-2026-1",
+  "split": "test",
+  "source": {
+   "env": "MLKSTG",
+   "state": "",
+   "urusan": "HKMLK",
+   "issue": "Query to patch Maklumat Hakmilik Tempoh Pajakan / Tarikh Luput / Luas (040129PM00001413): all on ind_mklmt_hkmlk active version via ind_versi_dhd; Baki Tempoh has no column; script handed, new values + env owed"
+  },
+  "his": "Internal - Hakmilik pajakan luas patch query"
+ },
+ {
+  "id": "ADHOC-PLBP-2026-1",
+  "split": "test",
+  "source": {
+   "env": "MLIT",
+   "state": "",
+   "urusan": "PLBP",
+   "issue": "MLIT permit B01/2026/1 (PTMLK/01/L/PLBP/2026/2) BA asks Tarikh Tamat 09/10/2026 -> 08/10/2026; 3 rows (ind_permit_lesen.trkh_luput, ind_versi_permit_lesen.trkh_tamat, umm_a_permit_lesen.trkh_akhir); script written, not run"
+  },
+  "his": "MLIT - Patch data No Lesen"
+ },
+ {
+  "id": "ADHOC-PRBB-2026-13",
+  "split": "example",
+  "source": {
+   "env": "PROD",
+   "state": "",
+   "urusan": "PRBB",
+   "issue": "PROD PRBB PTMLK/03/L/PRBB/2026/5 Surat Keputusan Lulus: b.p Pentadbir Tanah + pejabat fall to the next page after the signature. Template signature block (TemplateSuratKeputusanLulusPRBB.docx and eDoket twin) has no Keep with next on its 7 lines, so a block that lands at a page end splits. Fix = template change (needs ticket); this letter = document patch or redo, miya ruling"
+  },
+  "his": "PROD - PRBB surat keputusan tandatangan issue"
+ },
+ {
+  "id": "ADHOC-PRBB-2026-12",
+  "split": "test",
+  "source": {
+   "env": "MLIT",
+   "state": "",
+   "urusan": "PRBB",
+   "issue": "MLIT PRBB PTMLK/02/L/PRBB/2026/28 PLT Maklumat Siasatan No Lot and Luas empty when applied by ID hakmilik; pelupusan keeps both in umm_a_permohonan_tnh, umm_a_hkmlk copy is empty; screen is teknikal MLK_TKL_ST; answered"
+  },
+  "his": "MLIT - PRBB lot luas laporan tanah kosong"
+ },
+ {
+  "id": "ADHOC-MLPS-2026-3",
+  "split": "test",
+  "source": {
+   "env": "PROD",
+   "state": "melaka",
+   "urusan": "MLPS",
+   "issue": "PROD MLPS /3 /4 /5 /9 Borang 4Ae cop PDT Jasin missing: timing clash at signing, 4Ae and L1e built in parallel read the signer office together, one gets an empty kod and builds without the stamp; reproduced with the real classes offline; NOT yet seen on staging (stg2), stg1 rows withdrawn; fix A written uncommitted in scratch worktree; owed: ticket, build, re-sign"
+  },
+  "his": "PROD - MLPS Borang 4Ae cop tak papar"
+ },
+ {
+  "id": "ADHOC-PLP-2026-2",
+  "split": "example",
+  "source": {
+   "env": "MLIT",
+   "state": "",
+   "urusan": "PLP",
+   "issue": "MLK INT dashboard Invalid path TestGis.html: only on the new MLIT server (JBoss EAP 7.4.25, jsf-impl 2.3.14.SP11) after the 2026-10-12 migration; first error 08:29 before the #283286 deploy; files are in etanah-common; exact refusal reason not proven; waiting on common and infra"
+  },
+  "his": "Internal - MLK internal server issue (infra migration)"
+ },
+ {
+  "id": "ADHOC-MLPS-2026-4",
+  "split": "test",
+  "source": {
+   "env": "MLKSTG",
+   "state": "melaka",
+   "urusan": "MLPS",
+   "issue": "STG MLPS PB4AE klik Tandatangan ralat NPE gisRequestService null: staging server log shows radome1 + radome2 have no network route to the GIS database host (NoRouteToHostException, 5 of 5 clicks); common masks it as the NPE (L18); our kodPejabat 02 is correct; English infra message drafted 2026-10-13, not confirmed sent; open: first recipient (infra or GIS team) and whether staging is meant to rea"
+  },
+  "his": "Staging (MLK) - MLPS Borang 4Ae Tandatangan error"
+ },
+ {
+  "id": "PROMPT-2026-10-13-1",
+  "split": "test",
+  "source": {
+   "issue": "ridhwan nak query utk patch tarikh tamat permit leh ke (BA ask, PROD)"
+  },
+  "his": "Assist BA - Query to patch Tarikh Tamat permit"
+ },
+ {
+  "id": "PROMPT-2026-10-13-2",
+  "split": "test",
+  "source": {
+   "issue": "ridhwan kalau nak patch tujuan kt permit boleh ke? ke takleh? (BA ask)"
+  },
+  "his": "Assist BA - Patch Tujuan permit"
+ },
+ {
+  "id": "PROMPT-2026-10-13-3",
+  "split": "test",
+  "source": {
+   "issue": "mlk internal: PDF viewer engine is not working, document does not exist / blank after delete"
+  },
+  "his": "Internal (MLK) - PDF viewer error, document not showing"
+ },
+ {
+  "id": "PROMPT-2026-10-13-4",
+  "split": "test",
+  "source": {
+   "issue": "load /quest 281650 again as user has some questions on it (his own ticket)"
+  },
+  "his": "281650 - Clarify to user"
+ },
+ {
+  "id": "PROMPT-2026-10-13-5",
+  "split": "test",
+  "source": {
+   "issue": "Penang project: where does pelupusanspocservice save maklumat tanah and maklumat pemohon from awam"
+  },
+  "his": "Internal (PNG) - Check SPOC service data save from Awam"
+ },
+ {
+  "id": "PROMPT-2026-10-13-6",
+  "split": "test",
+  "source": {
+   "issue": "setup the clone for projek Penang inside the project folder along with other states"
+  },
+  "his": "Setup clone for Penang project"
+ }
+]

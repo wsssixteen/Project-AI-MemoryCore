@@ -59,8 +59,25 @@ function evaluate(text) {
     if (words < 5) short.push(c[0] || '?');
   }
   if (short.length) return { verdict: 'block', reason: 'meaning-too-short', rows: short };
+  // v2 (2026-10-14 miya: "when I see the next steps, I read 'end the old download goal' then I scroll back up you didn't
+  // mention anything"): every row's subject must have its own place in the reply above, a heading or a table row, in the same
+  // words, so scrolling back from a row lands on what explains it. A mention inside the opening paragraph does not count: that
+  // is where his row was "mentioned" and he could not find it. Without any heading or table, the words must be in the text above.
+  const act = header.findIndex(c => /action/i.test(c));
+  const above = lines.slice(0, h), heads = above.filter(l => /^\s*#{1,6}\s/.test(l) || /^\s*\|/.test(l));
+  const pool = heads.length ? heads.join(' ') : above.join(' ');
+  const have = new Set(stems(pool)), orphans = [];
+  for (const row of table.slice(2)) {
+    const c = cells(row), words = [...new Set(stems(c[act >= 0 ? act : 1] || ''))];
+    const hits = words.filter(w => have.has(w)).length;
+    if (words.length && hits < Math.min(2, words.length)) orphans.push((c[0] || '?') + ' "' + (c[act >= 0 ? act : 1] || '') + '"');
+  }
+  if (orphans.length) return { verdict: 'block', reason: 'row-not-explained-above', rows: orphans, headings: heads.length };
   return { verdict: 'pass', reason: 'shape-ok' };
 }
+// content words reduced to a short stem, so "ending" meets "end" no better than any other word: the first 5 letters of words of 4+ letters
+const STOP = new Set(['with', 'from', 'that', 'this', 'your', 'what', 'when', 'will', 'have', 'them', 'they', 'then', 'only', 'into', 'about', 'after', 'before', 'there', 'their', 'which', 'would', 'could', 'should', 'each', 'every', 'more', 'than', 'also', 'here', 'just', 'like', 'make', 'look']);
+function stems(s) { return (String(s).toLowerCase().match(/[a-zÀ-ɏ]{4,}/g) || []).filter(w => !STOP.has(w)).map(w => w.slice(0, 5)); }
 
 if (require.main === module) {
   let input = '';
@@ -75,10 +92,14 @@ if (require.main === module) {
       if (r.verdict !== 'block') { log({ action: 'passed', reason: r.reason }); process.exit(0); }
       log({ action: 'blocked', reason: r.reason, detail: r.rows || r.header });
       process.stderr.write([
-        '⛔ next-steps-shape: your Next steps table does not tell みや what each row means.',
+        r.reason === 'row-not-explained-above'
+          ? '⛔ next-steps-shape: a Next steps row has no section above that explains it. He scrolls back from the row and finds nothing.'
+          : '⛔ next-steps-shape: your Next steps table does not tell みや what each row means.',
         r.reason === 'no-meaning-column'
           ? '   Missing column. Use: | # | Action | What it means | Your reply |'
-          : `   Rows with a meaning shorter than 5 words: ${r.rows.join(', ')}`,
+          : r.reason === 'row-not-explained-above'
+            ? `   Give each of these its own heading above, in the row's own words (or reword the row to the heading that explains it): ${r.rows.join(' · ')}`
+            : `   Rows with a meaning shorter than 5 words: ${r.rows.join(', ')}`,
         '   "What it means" = ONE plain sentence: what the item is and why it needs him.',
         '   No hook names, watch ids, row codes (L16) or line numbers in that cell.',
         '   ⚡ DELTA ONLY: re-send just the corrected Next steps table, not the whole reply.',

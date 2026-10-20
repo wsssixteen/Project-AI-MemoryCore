@@ -38,6 +38,7 @@
     <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
     <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
     <StartWhenAvailable>true</StartWhenAvailable>
+    <WakeToRun>true</WakeToRun>
     <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>
     <ExecutionTimeLimit>PT15M</ExecutionTimeLimit>
     <Priority>4</Priority>

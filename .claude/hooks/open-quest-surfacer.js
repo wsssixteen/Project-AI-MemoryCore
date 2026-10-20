@@ -270,6 +270,7 @@ function entry() {
   let data = null;
   try { data = JSON.parse(raw); } catch { data = null; }
   if (!data || typeof data.prompt !== 'string') return main();                 // session start or a manual run: as before
+  try { if (!require(path.join(__dirname, '..', '..', 'lib', 'session-scope.js')).wantsEtanah(data, 'open-quest-surfacer')) return; } catch { /* DawahMap prompt, no etanah signal: silent, session not marked; check unusable: as before */ }
   try { const exp = parseInt(fs.readFileSync(path.join(REPO_ROOT, 'system', 'orchestration-mode.flag'), 'utf8').split('\n')[0], 10); if (Number.isFinite(exp) && Date.now() < exp) return; } catch { /* no sweep running */ }
   let kind = classify(data.prompt, safeRead(ACTIVE_TXT));
   const sid = String(data.session_id || 'no-session');

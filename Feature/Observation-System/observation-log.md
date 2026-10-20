@@ -95,7 +95,12 @@ Rather than directly saying "this is wrong", みや asks "is X truly different f
 
 **[2026-10-03]** T1 — **A lead carried in my own summary is still a claim.** Terengganu prep: my notes held "the PROD PT model differs from staging" and "a worktree session cannot see quest/active.txt". Both went into a brief or an audit prompt before I probed them, and both were wrong (23 of 24 keys byte-identical; the file is untracked in main and the tools strip the worktree suffix). Same family as the 2026-10-01 entry above: a statement inherited from an earlier turn needs the same proof as a fresh one.
 
+**[2026-10-19]** T2 — **Wrong environment, third time in one quest.** #284544: stg1 used after his ban (2026-10-12), offered again (2026-10-14), then a PROD alter question answered from staging rows (2026-10-19, he caught /3 not at Pengesahan). The stg switch hook covers the first two; the third is logged as proposal A1 (a reply stating PROD rows needs a PROD read in the same turn).
+
 **[2026-10-19]** T1 — **His fence comes before the work, so it goes on before any automatic step.** #285532: *"DO NOT UPDATE REDMINE. IT IS NOT UNDER OUR NAME."* The quest has one automatic Redmine write at start (the New→In Progress claim). I set `redmine_claim=off` before flipping the block to active, and the claim printed "nothing sent". A per-ticket "no Redmine at all" switch does not exist yet; only the claim has one (proposal logged A2).
+
+**[2026-10-19]** T1 — **Two sessions on one adhoc, and only one of them knew.** ADHOC-PLBP-2026-1: the morning session patched permit B01/2026/1 to 18/10 on live MLIT and never wrote it into the open adhoc, so the block, register and quest doc still said 08/10 in the afternoon. I found it only because the rows disagreed with the doc and a transcript search named the other session. Same family as the 2026-09-25 T2 "outputs strand outside their home", one level up: here the work reached the database but not the record. **Promotion criterion**: a second case of a DB write on an id an open adhoc or quest names, with no update to that record in the same session → promote to T2 and build the A2 proposal (2026-10-19).
+**[2026-10-19]** T2 recurrence of the 2026-08-04 "short question, long answer" row — ADHOC-PRU-2026-1: he asked "in a single short sentence why" and got three tables; `reask/verbose` is at 3 in 7 days (escalation). Also new T1: **the database is the evidence, so making it reachable is my first job, not his.** I asked him three times to connect the Penang DB before I opened the setup script in a terminal tab for him.
 
 ## Retired Observations
 
@@ -104,3 +109,7 @@ Rather than directly saying "this is wrong", みや asks "is X truly different f
 ---
 
 *Observation System v1.0 — 2026-04-02*
+
+**[2026-10-19]** T2 recurrence of the 2026-10-13 DawahMap rule 1g (photograph at phone and desk and LOOK before reporting) — Masterline app prototype: 3 layout faults (a tile split by a reused class name, 4 tiles in one phone row, a nav pill stretched into a circle on a short page) were found only by looking at the screenshots, none by reading the code; a scripted click-walk then found 1 more (a page linking to itself). For any built screen, pictures plus a click-walk are the proof, not the code read.
+
+**[2026-10-20]** T1 — **An install he asks for counts only when wired to the step that uses it.** Masterline design tools: his words 'it will be useless if you simply installed and not take into account if I say it when starting a project'. Same family as wayfinder 2026-09-11 (installed, never recorded). This time the record was blocked by the app's folder guard and handed to the owner session; the template line landed. Watch: the next new project's card must show hard rule 2.

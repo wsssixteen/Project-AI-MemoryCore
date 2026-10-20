@@ -11,3 +11,57 @@ Session: worktree `esokongon-285532-quest-2c4d87` · one ticket, eSOKONGAN #2855
 | A5 sweep | ⏭ no multi-ticket or file sweep ran this session | — | — | — |
 
 The 4 proposals are rows in `system/slips.jsonl` (type proposal, 2026-10-19T06:49Z), each with its eval case.
+
+## Session melaka-permit-patch-b856f7 (2026-10-19 afternoon)
+
+| Axis | Instance this session | What it shows |
+|---|---|---|
+| A1 agentic system | The audit briefing reported "0 turns, 2 hooks seen" and listed pre-reply-contract as never fired, while it fired on every prompt of this session | Hook-fire telemetry in a worktree does not reach the file the briefing reads; the NOT WORKING list is mostly false here |
+| A1 agentic system | Redmine submit needed 3 extra messages after "update the redmine ticket" (proceed, close-tab-once-submitted, submit it) | An approval gate keyed on a few exact phrases costs him turns; fixed by a wider go-word set (eval 90/90) |
+| A2 quest workflow | Ticket branch made before /quest start on #285252; miya asked "do you need to run quest first" | A promoted adhoc skips Phase 0 unless a gate says so; Phase 0 then found A1 met only half of the BA ask |
+| A3 debugging | "sama macam PPTP, PLTP" resolved by one Sonnet trace + my line-by-line check (6 cites, all held) | A BA analog phrase is a direct pointer to the working sibling; tracing it first would have saved A1 |
+| A4 etanah | Permit end date in 3 tables, each screen reads a different one (pelupusan versi.trkh_tamat first, AWAM umm.trkh_akhir) | Explains why a single-table patch "x jadi" |
+| A5 sweep | Board vs open adhocs: 2 of 5 tickets were already worked as adhocs; found only because miya asked | The board script does not cross-match adhoc register rows |
+## Session mlit-updates-failing-b8e56d (adhoc ADHOC-PLBP-2026-1)
+
+| Axis | What held | What did not | Instance | Proposal |
+|---|---|---|---|---|
+| A1 agentic system | Brief first, then a sonnet background agent wrote the save-set; its 30/30 audit matched my own re-run | Audit briefing in the worktree again read 0 fires (second instance of session 1's A1 row) | `node lib/audit-briefing.js --days 7`, 2026-10-19 16:3x | A1 (duplicate instance logged; rule with session 1's row) |
+| A2 quest workflow | Transcript search found the morning session that already ran the 18/10 patch | That session patched live MLIT and never wrote it into the open adhoc, so the block and register still said 08/10 | ADHOC-PLBP-2026-1, session "Adhoc 19/10/2026" | A2: a DB write on an id an open adhoc names asks for that adhoc's save |
+| A3 debugging | The live DB answered first (18/10 already in place), which reframed the question before any theory | Reading the old MLIT DB to test the "wrong database" cause was refused at the credential lookup | permission classifier, 2026-10-19 | ⏭ needs miya's ruling on old-DB access, not a build |
+| A4 etanah solving | Reading the handy script line by line answered "missing permohonan ID?" exactly: 2 of 3 updates use it | The script pins its 3 updates on different anchors, so a wrong ID gives a confusing 0/0/1 | `PERMIT-LESEN-RUNNING-NUMBER.md:171-184` | A4: pin all 3 on one anchor |
+| A5 sweep | ⏭ no sweep ran this session | — | — | — |
+
+The 3 proposals of session 2 are rows in `system/slips.jsonl` (type proposal, 2026-10-19), each with its eval case.
+
+## Session borang-4ae-pdt-jasin-stamp (#284544)
+| Axis | Instance | Verdict |
+|---|---|---|
+| A1 agentic system | stg1 used after the ban, then offered again; now a hook guards the OFF staging schema (17 blocks in 7 d) | fixed mechanically |
+| A2 quest workflow | PROD alter question answered from staging rows; caught by miya | proposal logged (PROD-claim needs a PROD read) |
+| A3 debugging | the cop clash was reproduced only by 20,000 local signings; counts replaced "only sometimes" (11 of 36) | Pena proven module holds |
+| A4 etanah | sub-process task needs Init & Alter, not Alter | proposal logged (knowledge row) |
+| A5 sweep | DB gateway down killed all MCP DB links; psycopg2 fallback hand-written | proposal logged (helper) |
+
+Rulings for session mlit-updates-failing-b8e56d (Domain Expansion, 2026-10-19, by Ruri; miya may overrule): A1 DEFER to the weekly audit, same fault as session 1's A1 row, rule them together; the 12.5 meta-audit finding is this same item. A2 DEFER to the weekly audit (second case needed per the observation T1). A4 DEFER: the row-count fact is written into PERMIT-LESEN-RUNNING-NUMBER.md:186, the script rewrite waits for miya. Old MLIT DB 172.16.100.197: NOT READ; the cause of Ammar's missed patch stays not verified until his script and row counts are seen.
+
+## Session app-samples (Masterline app prototype, delegated) — Step 7.5
+
+| Axis | What this session showed (instance) | Proposal logged |
+|---|---|---|
+| A1 agentic system | the orchestrator brief was complete enough to build with zero questions (files to read, output paths, report schema, proof method); the one gap was a tooling one: the website session's proof script lived only in its scratchpad, so I wrote a larger one | one shared proof Tool (shots, PDF, flows, walk) |
+| A1 agentic system | `audit-briefing.js` from a worktree saw 4 hooks and 0 turns, so its 76 "never fired" rows were a telemetry gap, not dead hooks | read telemetry from the main checkout when in a worktree |
+| A2 quest workflow | ⏭ no quest this session | — |
+| A3 debugging accuracy | 3 layout faults were found only by looking at screenshots (tile split by a reused class name, 4 tiles in one phone row, a stretched nav pill); the click-walk found 1 more (a self-link); the walk's length-based change test gave 26 false "no effect" rows | compare an HTML hash, not its length |
+| A4 etanah issue-solving | ⏭ no etanah work this session | — |
+| A5 sweep / file sweep | ⏭ no ticket sweep this session; the two 2025 proposal PDFs were read by a keyword-line extract, enough for document names | — |
+
+## Session app-samples rounds 2-3 (2026-10-20) — Step 7.5
+
+| Axis | Instance | Proposal |
+|---|---|---|
+| A1 agentic system | two Sonnet readers side by side (skill vetting 134k tokens, design references 173k); controller recheck of all 8 star counts on the GitHub API matched; installs could not be recorded because the app guards the worktree owner's .claude and the shared memory | save-rules check: every installed plugin has a memory row and a skill/template mention |
+| A2 quest workflow | ⏭ no quest | — |
+| A3 debugging accuracy | ⏭ no debugging; one PowerShell slip: alias 'R' shadowed my function (aliases beat functions), caught by the MISSING counter | — |
+| A4 etanah | ⏭ no etanah work | — |
+| A5 sweep | ⏭ no sweep | — |

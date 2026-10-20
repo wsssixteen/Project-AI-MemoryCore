@@ -1,0 +1,31 @@
+{"ts":"2026-10-17T08:39:06.620Z","decision":"pass","checked":0}
+{"ts":"2026-10-17T08:39:07.740Z","decision":"block","paths":["C:\\Users\\vice4\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\DawahMap (gitignored)"]}
+{"ts":"2026-10-17T08:39:08.515Z","decision":"block","paths":["C:\\Users\\vice4\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\DawahMap\\wayfinder (gitignored)"]}
+{"ts":"2026-10-17T08:39:08.939Z","decision":"pass","checked":1}
+{"ts":"2026-10-17T08:39:09.768Z","decision":"pass","checked":1}
+{"ts":"2026-10-17T08:39:09.963Z","decision":"bypassed","token":"[skip-spawn-task-folder-guard: the task only reads the tracked lib folder]"}
+{"ts":"2026-10-17T08:39:11.941Z","decision":"block","paths":["C:\\Users\\vice4\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\domain\\spawn-task-folder-guard\\_eval-untracked-26484 (untracked (no file under it is in git))"]}
+{"ts":"2026-10-17T08:39:12.571Z","decision":"pass","checked":1}
+{"ts":"2026-10-17T08:39:13.462Z","decision":"block","paths":["C:\\Users\\vice4\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\DawahMap (gitignored)"]}
+{"ts":"2026-10-17T08:39:14.650Z","decision":"block","paths":["C:\\Users\\vice4\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\DawahMap (gitignored)"]}
+{"ts":"2026-10-17T08:39:15.277Z","decision":"pass","checked":1}
+{"ts":"2026-10-17T08:39:16.075Z","decision":"pass","checked":1}
+{"ts":"2026-10-17T08:39:16.343Z","decision":"pass","checked":0}
+{"ts":"2026-10-17T08:39:17.265Z","decision":"block","paths":["C:\\Users\\vice4\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\DawahMap (gitignored)"]}
+{"ts":"2026-10-17T08:39:18.612Z","decision":"pass","checked":2}
+{"ts":"2026-10-17T08:40:04.225Z","decision":"pass","checked":0}
+{"ts":"2026-10-17T08:40:04.984Z","decision":"block","paths":["C:\\Users\\vice4\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\DawahMap (gitignored)"]}
+{"ts":"2026-10-17T08:40:05.573Z","decision":"block","paths":["C:\\Users\\vice4\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\DawahMap\\wayfinder\\foundation (gitignored)"]}
+{"ts":"2026-10-17T08:40:06.297Z","decision":"pass","checked":1}
+{"ts":"2026-10-17T08:40:07.041Z","decision":"pass","checked":1}
+{"ts":"2026-10-17T08:40:07.215Z","decision":"bypassed","token":"[skip-spawn-task-folder-guard: the task only reads the tracked lib folder]"}
+{"ts":"2026-10-17T08:40:08.287Z","decision":"block","paths":["C:\\Users\\vice4\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\domain\\spawn-task-folder-guard\\_eval-untracked-16096 (untracked (no file under it is in git))"]}
+{"ts":"2026-10-17T08:40:08.655Z","decision":"pass","checked":1}
+{"ts":"2026-10-17T08:40:09.244Z","decision":"block","paths":["C:\\Users\\vice4\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\DawahMap (gitignored)"]}
+{"ts":"2026-10-17T08:40:09.887Z","decision":"block","paths":["C:\\Users\\vice4\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\DawahMap (gitignored)"]}
+{"ts":"2026-10-17T08:40:10.326Z","decision":"pass","checked":1}
+{"ts":"2026-10-17T08:40:11.282Z","decision":"block","paths":["C:\\Users\\vice4\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\DawahMap (gitignored)"]}
+{"ts":"2026-10-17T08:40:11.467Z","decision":"pass","checked":0}
+{"ts":"2026-10-17T08:40:11.870Z","decision":"block","paths":["C:\\Users\\vice4\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\DawahMap (gitignored)"]}
+{"ts":"2026-10-17T08:40:12.371Z","decision":"block","paths":["C:\\Users\\vice4\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\DawahMap (gitignored)"]}
+{"ts":"2026-10-17T08:40:54.015Z","decision":"block","paths":["C:\\Users\\vice4\\OneDrive - Pymsoft Sdn Bhd\\0. AI\\Project-AI-MemoryCore\\projects\\coding-projects\\active\\DawahMap (gitignored)"]}

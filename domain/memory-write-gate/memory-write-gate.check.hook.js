@@ -40,6 +40,8 @@ function frontmatterType(text) {
   return t ? t[1].toLowerCase() : null;
 }
 
+const SHELL = new Set(['PowerShell', 'Bash']);
+
 function readTurn(transcriptPath) {
   let raw; try { raw = fs.readFileSync(transcriptPath || '', 'utf8'); } catch (_) { return null; }
   const ev = []; let parsed = 0;
@@ -75,7 +77,7 @@ function readTurn(transcriptPath) {
     }
   }
   const hash = n ? crypto.createHash('sha1').update(ev[last].text).digest('hex').slice(0, 8) : '0';
-  return { key: path.basename(transcriptPath) + '#' + n + ':' + hash, texts: turn.filter(e => e.k === 'a').map(e => e.text), edited };
+  return { key: path.basename(transcriptPath) + '#' + n + ':' + hash, texts: turn.filter(e => e.k === 'a' || (e.k === 't' && SHELL.has(e.name) && typeof e.input.command === 'string')).map(e => e.k === 'a' ? e.text : e.input.command), edited };
 }
 
 function validBypass(text) {

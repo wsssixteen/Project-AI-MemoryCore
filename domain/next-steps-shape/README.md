@@ -8,7 +8,7 @@ footprint: per-turn: joins the stop-reply-shape bundle, 1 node child, ~30 MB, <2
 
 **What fires when**: Stop — a reply ends with a Next steps table
 
-**Contract**: BLOCK when the table has no 'What it means' column or a meaning cell under 5 words
+**Contract**: BLOCK when the table has no 'What it means' column or a meaning cell under 5 words. **v2 (2026-10-14)**: also BLOCK when a row's subject has no heading or table row of its own above (at least 2 shared word stems; a mention in the opening paragraph does not count; a reply with no heading and no table is matched against its whole text). His words: "when I see the next steps, I read 'end the old download goal' then I scroll back up you didn't mention anything". Eval 11/11 (N3 = his exact reply).
 
 **Layer choice (Rule 7)**: TODO(forge): hook-only | skill-only | hook+skill — justify.
 

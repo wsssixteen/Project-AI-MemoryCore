@@ -10,6 +10,18 @@
 
 ---
 
+## v1.91 — 2026-10-19 (per みや, ticket order by tracker tier)
+
+His words: *"Default priority by ticket type/tracker: Maintenance: eSokongan → Internal Issue (Permanent Fix) → Internal Issue → CR → Team Initiative. Project: PAT/UAT/FAT → QA → Development/Requirement"* · PROD patching ahead of eSOKONGAN · *"Interleave though, QA is same as Internal Issue & CR is the same level as Development/Requirement. I'll be the one to choose based on prioriti semasa and complexity/effort"*.
+
+- §Vocabulary ticket-order sentence replaced: PROD patching → eSOKONGAN + PAT/UAT/FAT → Permanent Fix → Internal Issue + QA → CR + Development/Requirement → rest. Default only; he picks.
+- Retired: the 2026-09-29 order (eSOKONGAN tracker → PROD → one pile for the rest). The pile hid Permanent Fix behind Internal Issue and had no place for Development, QA or CR.
+- Paired: `quest/redmine-board.js` `TRACKER_TIER` (tables now PROD → eSOKONGAN → rest by tier) + `quest/redmine-board.eval.js` K1 (34/34) · `domain/protime-plan/protime-plan.js` reads PROD first (eval 112/112) · `feedback_esokongan_means_tracker.md` · list-redmine, sweep, retrieve-redmine skills and session-briefing.md mirrors.
+- MA Fix (79) placed with Permanent Fix (tier 2), per みや the same day.
+- Open: Team Initiative (no Redmine tracker has that name) is not placed; any unplaced tracker sorts last.
+
+---
+
 ## system-design SKILL.md v3.1 · Domain Expansion trigger v1.2 · save rules v2 — 2026-10-08 (per みや, after a skipped Domain Expansion)
 
 His words: *"this is critical, you should've done it"* (the skipped Domain Expansion) · *"I don't remember this. Why we want to prevent it? … A rule like add something that will not regress? … What's important is to have the goal, Purpose"* (the commit rule) · *"make sure everything WILL be loaded every single time we load a project. It WILL save everytime at the end of session when we perform domain expansion"* (project documents).
@@ -29,6 +41,23 @@ His words: *"this is critical, you should've done it"* (the skipped Domain Expan
 **Rollback**: `git revert` the commit that carries this entry; remove the `project-load` line from `.claude/settings.json` (see `domain/project-load/NUKE-MARKER.md`).
 
 ---
+
+## v1.90 — 2026-10-14 (per みや: "I thought I already asked you change CLAUDE.MD to replace this style of writing to always use diagrams whenever possible even though the reply might seem longer, but lesser words or sentences due to being shown using diagrams & table.")
+
+- §Explanation, PILLAR SHOW, DON'T EXPLAIN: new clause "Diagram first, whenever one can carry it". An example, walk-through, comparison, flow or structure is drawn or laid out as a table, even when the reply gets longer on screen; the measure is fewer words and sentences, not fewer lines. Banned: bullets of sentences carrying what a drawing or a table could show.
+- §Disposition 0a, the choice clause of v1.89: "a worked example … or one drawing" narrowed to "one drawing, or a worked example drawn as a story diagram or laid out as a table of steps; an example told in sentences is still told". v1.89's wording let an example be told as sentences, and the next reply did exactly that.
+- Body: `.claude/reply-shape-spec.md` §3f, the choice paragraph: form (a) must be drawn or tabled; his words added.
+- The case: DawahMap, 2026-10-14, the reply on the "why do you believe" chain and the stance opening: two diagrams, then each section's example told as bullet sentences. His screenshot of those bullets came with this ask. Logged with `core/slips.js` (reask/redundant).
+- Not changed, said plainly: the terse-gate's short-question cap (15 lines, table rows counted) stays as he ruled on 2026-10-06. A drawn diagram adds no text lines, so the two rules do not collide.
+- Spec preservation: the pillar's v1.59 text is kept word for word; one clause is added after it. 0a: only the choice clause changes, and it narrows (a told example no longer counts).
+
+## v1.89 — 2026-10-14 (per みや: "Sorry what's the difference between A & B? You're always not giving examples or diagram. You should really put this into your CLAUDE.MD at this point.")
+
+- §Disposition 0a, inside "unexplained": a choice told in words only is now named as unexplained. Every option he must pick from comes with a worked example (a real reader, step by step under that option) or one drawing of the options side by side, before he is asked to pick.
+- Body: `.claude/reply-shape-spec.md` §3f, new paragraph "A choice is shown, never only told": the two allowed forms, the cost-or-gain line, the recommended pick, the Banned clause, the test ("could he say what he would SEE under each option without asking?").
+- The case: DawahMap, 2026-10-14. A Next steps row offered "B: right after the first question … A: a new obstacle at the last question" as two sentences; he could not tell them apart. Logged with `core/slips.js`.
+- Spec preservation: additive, inside 0a. Every word of 0a as written in v1.87 is kept; one clause is added to the parentheses of "unexplained". §3f's table, direction line, "what this rule does NOT cut" and test are untouched.
+- Enforcement, said plainly: no mechanical check. A boot-loaded clause and a spec paragraph. A watch is registered for three sessions.
 
 ## v1.88 — 2026-10-14, written 2026-10-06 (per みや: "creating another part of our system called Tool. A different part from Workflows & Features")
 

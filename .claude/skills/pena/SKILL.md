@@ -52,6 +52,7 @@ The full meaning, rules and banned list of each module live in `domain/pena/modu
 | 2 | Read the modules BEFORE the first draft. It prints each meaning, his style words and his last changed sentences. | `node lib/pena.js show --profile <profile>` |
 | 3 | Write the draft into a scratch file. | — |
 | 4 | Check it. Fix every finding, then answer each "by hand" question (for `proven`: the query or code line and the count behind each rule sentence). | `node lib/pena.js check --profile <profile> --file <draft>` |
+| 4b | Self-audit, every Redmine note and hand-over, before it is shown. Read it as the reader. Each how-often word matches the count behind it (11 of 36 is not "sometimes"). Each cause is named in words the reader knows, never "factors". The check flags the vague words; the rest is mine to answer. | same `check` (module `proven`) |
 | 5 | Put the `PENA:` line of the last check under the draft in the reply. | — |
 
 ## Steps — when miya changes a sentence or uses a style word

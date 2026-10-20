@@ -44,7 +44,9 @@ Settle a day = make it say what was really worked:
 
 "Worked" = 2 or more turns on the quest in the turn ledger that day (`system/telemetry/turns*.jsonl`, the ledger's fallback guess `top-active` excluded), or a Redmine note he wrote that day. Adhocs: block `quest_start` = the day, or 2 or more ledger turns. An adhoc with no `title=` is listed in the run's notes and not written.
 
-Plan rule: tickets = his open board in board order (eSOKONGAN → PROD patch → rest). Today is topped up to 4. A later day that already has any plan entry is not touched. 4 a day; if the tickets cannot fill every open day at 4, then 3 a day; days left over stay empty.
+Plan rule (KPI 3, miya 2026-10-14): tickets = his open board in board order (eSOKONGAN → PROD patch → rest). Today is topped up to 3. A later day that already has any plan entry is not touched. 3 a day; days left over stay empty. A night run adds a worked ticket of his to the plan only while the day holds fewer than 3, finished ones first.
+
+Plan or adhoc (miya 2026-10-14): a worked ticket is PLAN when it is his (first fix commit his, no other owner in our record) or he added his own fix or patch that day; a ticket someone else fixed is ADHOC `<number> - <action>`. Resolve: a plan ticket passed on in Redmine that day; an assist he worked that day; any other adhoc unless it waits on infra or a user. A day he approved line by line is left alone.
 
 Adhoc wording: read from the 121 adhoc entries he keyed (2026-07-13 to 2026-10-12). The rule lives in `.claude/skills/adhoc-save/SKILL.md` § Adhoc title; this script only adds the env and state words.
 
@@ -77,8 +79,12 @@ Where a run shows itself: a toast on the laptop (when it changed something, or a
 
 | File | Role |
 |---|---|
-| `protime-plan.js` | the procedure (pure `decide()` + `settle()` + ProTime read / add / delete / read-back) |
-| `protime-plan.eval.js` | 75 behaviour fixtures, no network |
+| `protime-plan.js` | the procedure (pure `decide()` + `settle()` + `lintLine()` + ProTime read / add / delete / resolve / read-back) and the on-demand commands of the skill |
+| `.claude/skills/protime-plan/SKILL.md` | the skill: one door for his asks; runs only this script; copies no rule (`--rules` prints them) |
+| `redmine-read.js` | Redmine reads only (GET): tickets he wrote on a day, and whether each was ever his |
+| `sessions.js` | his own prompts of a day, read from the session transcripts (`--sessions`) |
+| `naming-cases.json` | 37 of his real ProTime adhoc lines beside what our records said; the blind naming test set |
+| `eval.js` → `protime-plan.eval.js` | 93 fixtures, no network: planning, settle, his line format, the skill-script sync checks |
 | `run-hidden.vbs` | scheduled launcher, no console window, passes the exit code back |
 | `task.xml` | the Windows task definition (registered with `schtasks /Create /XML`) |
 | `log.jsonl` | one row per run: day, run, mode, result, created, removed, placed, notes. Lives in the MAIN checkout only. |
