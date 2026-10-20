@@ -78,7 +78,7 @@
 - [redmine-write-nod](feedback_redmine_write_needs_nod.md) — Redmine writes are under miya's name; exact text + nod first; one standing exception: New to In Progress at quest start
 - [redmine-sla](reference_redmine_sla_hours.md) — Priority = SLA hours: Critical 1, High 6, Medium 22
 - [redmine-rootcause](feedback_redmine_rootcause_format.md) — cause only, max 2 plain-Malay sentences, no fix line
-- [ticket-writing-style](feedback_ticket_writing_style.md) — miya's plain ticket voice; BA reply first; junior gets hints only
+- [ticket-writing-style](feedback_ticket_writing_style.md) — miya's plain ticket voice; BA reply first; junior gets hints only; BA test scenario = SENARIO list of key names
 - [template-junior-builds](feedback_template_work_junior_builds.md) — template .docx: junior builds, I draft the guide, ask first
 
 ## Etanah facts
