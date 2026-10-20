@@ -35,11 +35,33 @@ function contextFor(p) {
 function pointerFor(p) {
   return '📂 project-load: ' + p.name + ' — its card was given earlier in this session; START.md is the record: ' + path.join(p.dir, 'START.md') + '\n';
 }
+// A session is delegated only by its START BRIEF (the first prompt of the session), and only for the report path its
+// brief tells it to write. A path quoted later (a child's note, a SendMessage, a reference to another session's report)
+// never binds (2026-10-19: the orchestrator, the app-samples session and project-system were all bound to website.md).
+const REPORT_RE = /reports[\\/]([A-Za-z0-9._-]+\.md)\b/gi;
 function reportIn(prompt, p) {
-  const m = /reports[\\/]([A-Za-z0-9._-]+\.md)\b/i.exec(String(prompt || ''));
-  if (!m || /^_template\.md$/i.test(m[1])) return null;
-  return path.join(p.dir, 'reports', m[1]);
+  const text = String(prompt || '');
+  const names = []; let m;
+  REPORT_RE.lastIndex = 0;
+  while ((m = REPORT_RE.exec(text))) {
+    if (/^_template\.md$/i.test(m[1])) continue;
+    const before = text.slice(Math.max(0, m.index - 240), m.index);
+    const line = before.slice(before.lastIndexOf('\n') + 1);
+    names.push({ name: m[1], write: /\b(write|writes|update|keep)\b/i.test(line) });
+  }
+  const written = [...new Set(names.filter(x => x.write).map(x => x.name))];
+  const all = [...new Set(names.map(x => x.name))];
+  const pick = written.length === 1 ? written[0] : (!written.length && all.length === 1 ? all[0] : null);
+  return pick ? path.join(p.dir, 'reports', pick) : null;
 }
+// The start brief: no earlier prompt of this session in the transcript (the prompt itself may already be written there).
+function isStartBrief(transcriptPath, prompt) {
+  if (!transcriptPath) return false;
+  const here = String(prompt || '').trim();
+  let earlier; try { earlier = P.humanPrompts(transcriptPath).filter(x => x.origin !== 'popup' && x.text.trim() !== here); } catch (_) { return false; }
+  return earlier.length === 0;
+}
+const UNBIND_RE = /\[project-unbind:\s*([^\]]+?)\s*\]/gi;
 
 function decide(data, rows, now) {
   const prompt = data && data.prompt;
@@ -49,10 +71,20 @@ function decide(data, rows, now) {
   const projects = listProjects();
   const out = [], log = [];
   const seen = new Set();
+  // [project-unbind: Masterline] in a prompt: this session is not a delegated session of that project (report check off).
+  let um; UNBIND_RE.lastIndex = 0;
+  while ((um = UNBIND_RE.exec(prompt))) {
+    const p = P.findProject(um[1]); if (!p) continue;
+    log.push({ action: 'unbound', via: 'prompt-marker', report_only: true, session, project: p.name });
+    out.push('📂 project-load: ' + p.name + ' — this session is no longer bound as delegated (report check off).\n');
+    seen.add(p.name);
+  }
+  const brief = isStartBrief(data.transcript_path, prompt);
   for (const p of namedIn(prompt, projects).slice(0, 3)) {
+    if (seen.has(p.name)) continue;
     const prior = mine.filter(r => r.project === p.name && (r.action === 'fired' || r.action === 'resumed'));
     const recent = prior.some(r => now - Date.parse(r.ts) < REARM_MS);
-    const report = reportIn(prompt, p);
+    const report = brief ? reportIn(prompt, p) : null;
     if (recent && !report) continue;
     seen.add(p.name);
     let text;

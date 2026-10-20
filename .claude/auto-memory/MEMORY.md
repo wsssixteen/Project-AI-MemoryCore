@@ -7,12 +7,13 @@
 ## Always on
 - [simple-fix-no-probe-no-local-test](feedback_simple_fix_no_probe_no_local_test.md) — 🚨 simple 80%+ additive fix he agreed to → commit + deploy straight away; no probe loggers, no local-test ask
 - [no-unrequested-fix-photo](feedback_no_unrequested_fix_photo.md) — 🚨 no fix photo or image unless miya asks; only a real after-fix screen, never a box drawn on BA's before-screenshot
-- [reply-shape](feedback_reply_separation_of_concerns.md) — numbered topics, tables, 2-sentence default, shortest option, lean diagram, mark extras
+- [reply-shape](feedback_reply_separation_of_concerns.md) — 🚨 long table or list (over ~5 rows, over 2 tables) becomes ONE drawing, one thing at a time; numbered topics, 2-sentence default, shortest option, mark extras
 - [reply-mechanics](feedback_commands_never_fenced.md) — one bash block per command, full paths, plain punctuation, show it in chat
 - [hook-noise](feedback_delta_correction_on_stop_block.md) — Stop block = delta only; hidden bypass tokens; canonical formats only
 - [act-dont-ask](feedback_do_dont_ask_answer_literal.md) — do the safe step, answer literally, fix not reroute, popup questions
 - [verify-before-claim](feedback_verify_before_claim.md) — re-read first, diff real values, DB first, try before "blocked"
 - [show-evidence](feedback_show_evidence_script_or_code.md) — every claim or fix shows a runnable script or the code lines
+- [tickets-from-live-redmine](feedback_esokongan_means_tracker.md) — 🚨 any ticket status = live Redmine only; script timeout → read it in Edge via Claude in Chrome; ledger is never status; a "No folder" session still moves to the MemoryCore folder first
 - [browser](feedback_browser_edge_default.md) — Edge via Claude in Chrome extension; built-in browser banned
 - [bash-tool](feedback_bash_tool.md) — Bash hangs on simple shell ops here; use PowerShell or Node; scripts are mine to run
 - [model-tiering](feedback_model_tiering_session.md) — Fable = judgment and planning; building and recon on Sonnet or Opus
@@ -38,6 +39,7 @@
 - [code-comments](feedback_no_extra_comments.md) — one explanatory line max, no commented-out code; no person names, dates or log stamps
 - [states](feedback_state_aware_knowledge_load.md) — state via lib/states.js; same knowledge file names; Melaka · Terengganu · Kedah = PostgreSQL, never Oracle; Perak · WP · Selangor = Oracle
 - [terengganu](project_terengganu_active.md) — ACTIVE since 2026-10-03: knowledge, stg2 DB, trg/master
+- [penang](project_penang_active.md) — ACTIVE since 2026-10-14: refers to Melaka; code at `E:ProjectsPenang` (search it first); 17 BPMN on disk (Sep snapshot); DB `postgres-pgit-pg` CONNECTED 2026-10-19 (schemas et_main_pgit · et_flowable17_pgit); gaps = `node lib/state-migration.js gates --state penang`
 - [perak](reference_perak_codev_scope.md) — co-dev scope, Oracle, branch off origin/master, deploy via master, hotfix box
 
 ## Adhoc (skill: adhoc-save)
@@ -63,11 +65,10 @@
 - [infra-script-format](feedback_infra_script_schema_env.md) — Infra/PROD scripts schema-qualified, BEFORE/UPDATE/AFTER
 
 ## Databases and environments (skill: env-check)
-- [staging-and-db-access](feedback_staging_schema_stg2.md) — 🚫 stg1 NOT used: never query, switch to or offer it unless miya asks; stg2 current, never assume; MLIT/STG writable; MCP timeout is not VPN
+- [staging-and-db-access](feedback_staging_schema_stg2.md) — 🔀 staging switch `system/melaka-env-state.json`: ON schema (stg1 since 2026-10-15) for everything; OFF schema not for root cause / test data / test scenarios, a read of rows only there is allowed, announce "Read from <schema>: ..."; never assume; MLIT/STG writable; MCP timeout is not VPN
 - [environments](feedback_uat_fat_environments.md) — UAT + FAT gone; env table, datasource naming (mlit-primary line is stale)
 - [db-gateway](project_db_gateway.md) — one gateway 127.0.0.1:7411; fix = schtasks /run /tn "DB Gateway"
 - [local-dev](project_jboss_launched_by_eclipse.md) — E:\Projects\Melaka, JBoss from Eclipse, hibernate overlay error, GitLab 10.16.63.27
-- [prod-server-logs](reference_prod_server_logs.md) — PROD server logs of WP, Perak, Selangor, Terengganu, Melaka: we fetch them ourselves by SFTP; details in the git-ignored PROD-SERVER-LOGS.md
 - [location-check](feedback_location_check.md) — ask office or home before any network diagnosis; never assume
 
 ## Flowable (skill: bpmn-check)
@@ -78,7 +79,7 @@
 - [redmine-write-nod](feedback_redmine_write_needs_nod.md) — Redmine writes are under miya's name; exact text + nod first; one standing exception: New to In Progress at quest start
 - [redmine-sla](reference_redmine_sla_hours.md) — Priority = SLA hours: Critical 1, High 6, Medium 22
 - [redmine-rootcause](feedback_redmine_rootcause_format.md) — cause only, max 2 plain-Malay sentences, no fix line
-- [ticket-writing-style](feedback_ticket_writing_style.md) — miya's plain ticket voice; BA reply first; junior gets hints only
+- [ticket-writing-style](feedback_ticket_writing_style.md) — miya's plain ticket voice; BA reply first; junior gets hints only; BA test scenario = SENARIO list of key names
 - [template-junior-builds](feedback_template_work_junior_builds.md) — template .docx: junior builds, I draft the guide, ask first
 
 ## Etanah facts
@@ -92,7 +93,7 @@
 - [domain-expansion-banner](feedback_domain_expansion_format.md) — Domain Expansion banner, canonical format only
 - [bankai-banner](feedback_bankai_format.md) — Bankai banner format; never referenced casually
 - [project-name](project_name_lapis_lazuli.md) — project = "Lapis Lazuli"; "Ruri" = my name only; physical rename not done
-- [installed-skills](project_installed_skills.md) — third-party skills (wayfinder); record every install here
+- [installed-skills](project_installed_skills.md) — third-party skills and plugins (wayfinder 2026-09-11; impeccable, diagram-design, hyperframes, mattpocock-skills, REA, taste-skill, ui-ux-pro-max, awesome-design-md 2026-10-19/20): how each was installed and what it costs; which tool for which job = /project skill section 7; record every install here the moment it happens
 - [artifact-registry](reference_artifact_registry.md) — every published artifact + link; update by link, never a second copy
 - [observatory](reference_observatory.md) — diagnose first with node lib/observatory.js --brief; app on :7790
 
@@ -100,6 +101,7 @@
 - [wa-read](project_wa_read.md) — WaRead WhatsApp reader at E:\Dev\scripts\WaRead; relink number 60186669566, never ask
 - [whatsapp-rules](feedback_whatsapp_read_rules.md) — READ ONLY, paraphrase, no sender names, never the desktop app
 - [pymtime](project_pymtime.md) — PymTime clock-in app: read PROJECT.md in the MAIN checkout's projects/coding-projects/active/PymTime/ first (full path in the note); remote skip, colleague handover loop, roadmap
+- [eisenhower](project_eisenhower.md) — Eisenhower matrix app REBUILD on Rust + egui + SQLite: read PROJECT.md then MAP.md (wayfinder) in the MAIN checkout's projects/coding-projects/active/Eisenhower/ first
 - [dawahmap](project_dawahmap.md) — DawahMap, his yes/no map from reason to Islam (page "Reason to Islam"): read PROJECT.md in the MAIN checkout's projects/coding-projects/active/DawahMap/ first; it argues FOR Islam from the scholars' verbatim words; content first, design later
 - [masterline](project_masterline.md) — Masterline Integrated Sdn Bhd (HVACR, Kemaman, oil and gas clients) app + website, born 2026-10-17, shape 2: read START.md in the MAIN checkout's projects/coding-projects/active/Masterline/ first
 - [islamic-content-sources](feedback_islamic_content_sources.md) — 🚨 Islamic content: scholars of Islam in their verbatim words, never Western academia or a neutral survey; "fair" is not conceding; every quote found on its page first
@@ -109,5 +111,4 @@
 - [parked-projects](project_etanah_organize.md) — etanah-organize, aunt slides, held #255773 SPOC handoff
 
 ## User
-- [appraisal-self-initiatives](project_appraisal_self_initiatives.md) — miya's appraisal list: every fix BA did not ask for that we included, one row per ticket
 - [user-profile](user_career_vision.md) — career vision; male; learning JSF tracing; みや + Japanese acknowledgments

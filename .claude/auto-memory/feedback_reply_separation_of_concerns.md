@@ -196,3 +196,17 @@ The diagram shape:
 - "Every static check says X should happen, so the block is somewhere at runtime in the code path between A and B" — long prose sentence describing a topology the reader now has to draw mentally
 - Sequential bullet lists of the code chain as text — same failure mode
 - "Suspect A: …, Suspect C: …, Suspect D: …" as prose paragraphs instead of ? markers on the diagram nodes
+
+## Added 2026-10-13: a long table or list becomes a DRAWING, and one thing at a time
+
+> 🚨 More than about 5 rows, or more than 2 tables in one reply → draw it instead (one ASCII drawing in a code block). Never many tables and lists at once.
+
+- A flow, a plan, a "what I built" report = ONE drawing first. Tables only for small data (5 rows or fewer).
+- One topic per reply. The rest waits until he asks.
+- Next steps = the ONE next action. Other open decisions are asked later, one at a time.
+- A check that demands a long table in the reply (the 20-scenario table of system-design Rule 12, the file list, the Next-steps table) is met with its skip token or by putting the table in the Feature's README, never by pasting it in chat.
+- Draw in plain text. The in-app widget does not show on remote control.
+
+**Why:** 2026-10-13, ProTime plan session. He asked for a diagram instead of lists. The build report still came back as 6 tables, one with 20 rows, plus a 5-row Next-steps table. His words: use a drawing if the table or list is too long; do not list many things at once.
+
+**How to apply:** before sending, count tables and rows. Over the limit → replace with one drawing and cut the rest. This outranks "tables carry the data" above.

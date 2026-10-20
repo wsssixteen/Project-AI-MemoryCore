@@ -12,6 +12,8 @@
 //       node domain/project-load/project.js decide <Name> --decision "..." --why "..." --who "..." [--serves S1]
 //       node domain/project-load/project.js words <Name> --transcript <file.jsonl> [--session <id>]
 //       node domain/project-load/project.js check <Name>
+//       node domain/project-load/project.js unbind <Name> --session <id> [--all] [--reason "..."]   (not delegated; --all: not bound)
+//       node domain/project-load/project.js bind <Name> --session <id> [--report <file>.md]          (repair a binding)
 // The transcript format is internal to Claude Code (docs: it changes between versions): every parser here fails open.
 'use strict';
 const fs = require('fs');
@@ -183,7 +185,13 @@ function minedSince(session, project) {
 }
 function bindings(session) {
   const out = new Map();
-  for (const r of logRows()) if (r.session === session && r.project && (r.action === 'fired' || r.action === 'bound')) {
+  for (const r of logRows()) {
+    if (r.session !== session || !r.project) continue;
+    if (r.action === 'unbound') {   // a later unbind wins: report_only keeps the project card, otherwise the binding goes
+      if (r.report_only) { const b = out.get(r.project); if (b) b.report = null; } else out.delete(r.project);
+      continue;
+    }
+    if (r.action !== 'fired' && r.action !== 'bound') continue;
     const b = out.get(r.project) || { project: r.project, first: r.ts, report: null };
     if (r.report) b.report = r.report;
     out.set(r.project, b);
@@ -351,12 +359,16 @@ function checkShape2(p) {
 // Stop-log verdict per delegated report (read by lib/save-rules.js at Domain Expansion)
 function reportVerdicts(projectName, dayIso) {
   const last = new Map();
-  for (const r of logRows()) if (r.action === 'stop-check' && r.project === projectName && r.report && String(r.ts).slice(0, 10) >= (dayIso || '0000')) last.set(r.session + '\u0000' + r.report, r);
+  // the row's LOCAL day, as save-rules counts today (a UTC slice skipped every row written 00:00-08:00 MYT, 2026-10-20)
+  for (const r of logRows()) if (r.action === 'stop-check' && r.project === projectName && r.report && (!dayIso || ymd(new Date(Date.parse(r.ts))) >= dayIso)) last.set(r.session + '\u0000' + r.report, r);
   const out = [];
   for (const r of last.values()) {
-    const now = mtime(r.report);
+    // a row written on another machine carries that machine's absolute path; find the same file under this machine's ACTIVE
+    const rel = String(r.report).split(/[\\/]projects[\\/]coding-projects[\\/]active[\\/]/i)[1];
+    const local = !fs.existsSync(r.report) && rel ? path.join(ACTIVE, rel) : r.report;
+    const now = mtime(local);
     const stale = r.last_change && (now + 2000 < r.last_change);
-    const missing = !fs.existsSync(r.report);
+    const missing = !fs.existsSync(local);
     out.push({ report: r.report, session: r.session, ok: !stale && !missing, why: missing ? 'report missing' : stale ? 'report older than the session\'s last change (' + path.basename(r.last_change_file || '?') + ')' : 'current' });
   }
   return out;
@@ -398,8 +410,20 @@ if (require.main === module) {
     }
     else if (cmd === 'new') { const w = scaffold(name, { aliases: String(flag('aliases') || '').split(',').map(s => s.trim()).filter(Boolean), repo: flag('repo') }); console.log('created:\n  ' + w.join('\n  ')); }
     else if (cmd === 'decide') { const p = need(); if (!flag('decision') || !flag('why') || !flag('who')) { console.error('decide needs --decision --why --who'); process.exit(2); } const n = decide(p, { decision: flag('decision'), why: flag('why'), who: flag('who'), serves: flag('serves'), date: flag('date') }); logAppend({ action: 'decided', project: p.name, n }); console.log('DECISIONS.md row ' + n + ' written: ' + path.join(p.dir, 'DECISIONS.md')); }
+    else if (cmd === 'unbind') {   // unbind <Name> --session <id> [--all] [--reason "..."]: not delegated (default) or not bound at all
+      const p = need(); const s = flag('session'); if (!s) { console.error('unbind needs --session <session id>'); process.exit(2); }
+      const all = a.includes('--all');
+      logAppend({ action: 'unbound', via: 'cli', report_only: !all, session: s, project: p.name, ...(flag('reason') ? { reason: flag('reason') } : {}) });
+      console.log(p.name + ': session ' + s + (all ? ' unbound' : ' no longer delegated (report check off, card kept)'));
+    }
+    else if (cmd === 'bind') {   // bind <Name> --session <id> [--report <file.md>]: repair a binding by hand
+      const p = need(); const s = flag('session'); if (!s) { console.error('bind needs --session <session id>'); process.exit(2); }
+      const rep = flag('report') ? path.join(p.dir, 'reports', path.basename(flag('report'))) : null;
+      logAppend({ action: 'bound', via: 'cli', session: s, project: p.name, ...(rep ? { report: rep } : {}) });
+      console.log(p.name + ': session ' + s + ' bound' + (rep ? ', delegated, report ' + rep : ''));
+    }
     else if (cmd === 'words') { const p = need(); const t = flag('transcript'); if (!t) { console.error('words needs --transcript <file.jsonl>'); process.exit(2); } const r = mineWords(p, t, { session: flag('session'), sinceTs: flag('since') }); console.log(r.added + ' prompt(s) added to ' + r.file + (r.error ? ' (error: ' + r.error + ')' : '')); }
     else if (cmd === 'check') { const p = need(); const e = checkShape2(p); console.log(p.shape < 2 ? p.name + ': shape 1 (no START.md checks)' : e.length ? 'FAIL ' + p.name + ':\n  ' + e.join('\n  ') : 'PASS ' + p.name + ': START.md, DECISIONS.md, index'); process.exit(e.length ? 1 : 0); }
-    else { console.log('usage: project.js card|drill|new|decide|words|check <Name> [...]'); process.exit(cmd ? 2 : 0); }
+    else { console.log('usage: project.js card|drill|new|decide|words|check|unbind|bind <Name> [...]'); process.exit(cmd ? 2 : 0); }
   } catch (e) { console.error('project.js: ' + e.message); process.exit(1); }
 }

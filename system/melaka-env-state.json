@@ -1,16 +1,26 @@
 {
-  "_purpose": "Single machine-readable pointer for which Melaka staging schema is live. Written by miya-switch phrases, read by staging-schema-tracker.js at every env-prep / test-scenario prompt. NO default — this file IS the truth. Prose mirror: .claude/auto-memory/feedback_staging_schema_stg2.md (keep in sync).",
-  "melaka_staging_schema": "stg2",
-  "schema_name": "et_main_stg2",
-  "schema_user": "et_main_stg2",
-  "mcp_server": "postgres-mlkstg-pg",
+  "_purpose": "THE staging switch: melaka_staging_schema names the ONE Melaka staging schema that is ON; the other is OFF. Written only by miya's own switch phrase (domain/staging-schema-tracker). Readers: quest/env-switch.js (refuses --to the OFF schema), domain/stg1-block (guards the OFF schema's DB tool), the every-env-prompt note (banned_note names the OFF schema). NO default. Prose mirror: .claude/auto-memory/feedback_staging_schema_stg2.md (keep in sync).",
+  "melaka_staging_schema": "stg1",
+  "schema_name": "et_main_stg1",
+  "schema_user": "et_main_stg1",
+  "mcp_server": "postgres-mlkstg1-pg",
   "standalone_datasource": "etanahDS",
   "standalone_path": "E:/Dev/jboss-7.4-plp-melaka/standalone/configuration/standalone.xml",
-  "banned_note": "stg1 is NOT used (miya 2026-10-12, repeated 2026-10-14): never query it, never switch to it, never offer it as an option, never cite its rows. Only when miya himself asks for stg1 in that message.",
-  "updated": "2026-08-10",
+  "banned_note": "stg2 is switched OFF (staging switch = stg1): do not use it to find a root cause or to prepare test data or a test scenario. Reading rows that already exist only on stg2 is allowed; say so in the reply as \"Read from stg2: what and why\". Never switch the local env to it unless miya asks.",
+  "updated": "2026-10-15",
   "source": "miya",
   "history": [
-    { "schema": "stg1", "from": "2026-07-27" },
-    { "schema": "stg2", "from": "2026-08-10" }
+    {
+      "schema": "stg1",
+      "from": "2026-07-27"
+    },
+    {
+      "schema": "stg2",
+      "from": "2026-08-10"
+    },
+    {
+      "schema": "stg1",
+      "from": "2026-10-15"
+    }
   ]
 }

@@ -50,16 +50,19 @@ const PROPS_FIXTURE = [
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'env-switch-eval-'));
 const xmlPath = path.join(dir, 'standalone.xml');
 const propsPath = path.join(dir, 'environment.properties');
+const statePath = path.join(dir, 'melaka-env-state.json');
+const setSwitch = (s) => fs.writeFileSync(statePath, JSON.stringify({ melaka_staging_schema: s }), 'utf-8');
 
 function reset() {
     fs.writeFileSync(xmlPath, XML_FIXTURE, 'utf-8');
     fs.writeFileSync(propsPath, PROPS_FIXTURE, 'utf-8');
+    setSwitch('stg2');
 }
 
 function run(args = []) {
     return execFileSync(process.execPath, [SCRIPT, ...args], {
         encoding: 'utf-8',
-        env: { ...process.env, ENV_SWITCH_STANDALONE: xmlPath, ENV_SWITCH_ENVPROPS: propsPath },
+        env: { ...process.env, ENV_SWITCH_STANDALONE: xmlPath, ENV_SWITCH_ENVPROPS: propsPath, ENV_SWITCH_STATE: statePath },
     });
 }
 function runFail(args) {
@@ -159,6 +162,29 @@ check('sidecar DMS/Audit mismatch is surfaced on switch', () => {
     const out = run(['--to', 'mlit']);
     return /etanahDMSDS/.test(out) && /NOT changed/.test(out);
 });
+
+// 11 — the staging switch decides: switch = stg1 lets --to stg1 through with no flag
+reset();
+check('switch = stg1: --to stg1 allowed without --miya-asked', () => {
+    run(['--to', 'mlit']);
+    setSwitch('stg1');
+    run(['--to', 'stg1']);
+    return activeSchema() === 'et_main_stg1';
+});
+
+// 12 — switch = stg1 turns stg2 OFF: --to stg2 refused without writing, allowed with --miya-asked
+reset();
+check('switch = stg1: --to stg2 refused, named in the error, nothing written', () => {
+    setSwitch('stg1');
+    const before = fs.readFileSync(xmlPath, 'utf-8');
+    const out = runFail(['--to', 'stg2']);
+    return out && /stg2 is switched OFF/.test(out) && /staging switch = stg1/.test(out) && fs.readFileSync(xmlPath, 'utf-8') === before
+        && /ENV SWITCHED/.test(run(['--to', 'stg2', '--miya-asked']));
+});
+
+// 13 — mlit is never gated by the staging switch
+reset();
+check('mlit ignores the staging switch', () => { setSwitch('stg1'); return /ENV SWITCHED/.test(run(['--to', 'mlit'])); });
 
 fs.rmSync(dir, { recursive: true, force: true });
 

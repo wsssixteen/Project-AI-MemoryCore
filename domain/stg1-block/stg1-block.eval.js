@@ -12,6 +12,9 @@ const results = [];
 function check(n, c, d) { results.push({ n, pass: !!c, d }); }
 
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'stg1-block-'));
+const STATE = path.join(TMP, 'melaka-env-state.json');
+const setSwitch = s => fs.writeFileSync(STATE, JSON.stringify({ melaka_staging_schema: s }));
+setSwitch('stg2');
 const U = t => ({ type: 'user', message: { role: 'user', content: [{ type: 'text', text: t }] } });
 const UM = t => ({ type: 'user', isMeta: true, message: { role: 'user', content: [{ type: 'text', text: t }] } });
 const A = t => ({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'text', text: t }] } });
@@ -20,44 +23,72 @@ function fire(tool, events, raw) {
   let tp;
   if (events) { tp = path.join(TMP, 't' + (++n) + '.jsonl'); fs.writeFileSync(tp, events.map(e => JSON.stringify(e)).join('\n') + '\n'); }
   const input = raw !== undefined ? raw : JSON.stringify({ tool_name: tool, tool_input: { query: 'SELECT 1' }, ...(tp ? { transcript_path: tp } : {}) });
-  return spawnSync(process.execPath, [HOOK], { input, encoding: 'utf8', timeout: 30000, env: { ...process.env, CLAUDE_PROJECT_DIR: ROOT } });
+  return spawnSync(process.execPath, [HOOK], { input, encoding: 'utf8', timeout: 30000, env: { ...process.env, CLAUDE_PROJECT_DIR: ROOT, STG_BLOCK_STATE: STATE } });
 }
 const Q1 = 'mcp__postgres-mlkstg1-pg__query_database';
 const blocked = r => r.status === 2 && /stg1-block/.test(r.stderr || '');
 
-let r = fire(Q1, [U('check the staging test data for 284544')]);
-check('F1 replay: stg1 query while miya did not name stg1 -> BLOCK', blocked(r), 'exit=' + r.status);
-check('F2 block text names stg2 as the one to use', /stg2/.test(r.stderr || ''), r.stderr);
+const out = r => (r.stdout || '') + (r.stderr || '');
+const WQ = (sql, ev) => { const tp = path.join(TMP, 'w' + (++n) + '.jsonl'); fs.writeFileSync(tp, ev.map(e => JSON.stringify(e)).join('\n') + '\n');
+  return spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: Q1, tool_input: { query: sql }, transcript_path: tp }), encoding: 'utf8', timeout: 30000, env: { ...process.env, CLAUDE_PROJECT_DIR: ROOT, STG_BLOCK_STATE: STATE } }); };
+
+let r = fire(Q1, [U('give me the flowable links for the 5 permohonan the BA made')]);
+check('F1 plain read, miya did not name stg1 -> ALLOWED (exit 0)', r.status === 0, 'exit=' + r.status);
+check('F2 allowed read carries the reminder: announce + no root cause / test data', /Read from stg1/.test(out(r)) && /root cause/.test(out(r)) && /test data/.test(out(r)), out(r));
 r = fire(Q1, [U('please check stg1 for the BA test')]);
-check('F3 miya names stg1 in his latest message -> allowed', r.status === 0, 'exit=' + r.status + ' ' + r.stderr);
-r = fire(Q1, [U('check stg1'), A('done'), U('now prepare the local test')]);
-check('F4 stg1 named in an OLDER message only -> BLOCK', blocked(r), 'exit=' + r.status);
-r = fire(Q1, [U('prepare local test'), A('I could check stg1 for you')]);
-check('F5 stg1 in my own text does not unlock it -> BLOCK', blocked(r), 'exit=' + r.status);
-r = fire(Q1, [U('prepare local test'), UM('<system-reminder>stg1 is NOT used</system-reminder>')]);
-check('F6 a meta / reminder message naming stg1 does not unlock it -> BLOCK', blocked(r), 'exit=' + r.status);
-r = fire(Q1, [U('prepare local test'), U('<system-reminder>stg1</system-reminder>')]);
-check('F7 a reminder block typed as user text does not unlock it -> BLOCK', blocked(r), 'exit=' + r.status);
+check('F3 miya names stg1 -> allowed, announce reminder', r.status === 0 && /Read from stg1/.test(out(r)), 'exit=' + r.status + ' ' + out(r));
+r = WQ('UPDATE et_main_stg1.x SET a=1', [U('look at the data')]);
+check('F4 UPDATE on stg1, stg1 not named -> BLOCK', blocked(r), 'exit=' + r.status);
+r = WQ('delete from x', [U('look at the data')]);
+check('F5 DELETE lower case -> BLOCK', blocked(r), 'exit=' + r.status);
+for (const kw of ['INSERT INTO x VALUES (1)', 'ALTER TABLE x ADD y int', 'DROP TABLE x', 'TRUNCATE x'])
+  check('F6 ' + kw.split(' ')[0] + ' -> BLOCK', blocked(WQ(kw, [U('look at the data')])), kw);
+r = WQ('SELECT * FROM x', [U('look at the data')]);
+check('F7 SELECT -> allowed', r.status === 0, 'exit=' + r.status);
 r = fire('mcp__postgres-mlkstg-pg__query_database', [U('anything')]);
-check('F8 stg2 query is never touched -> exit 0, silent', r.status === 0 && !(r.stderr || '').trim(), 'exit=' + r.status);
+check('F8 stg2 query is never touched -> exit 0, silent', r.status === 0 && !out(r).trim(), 'exit=' + r.status);
 r = fire('mcp__postgres-mlkstg1-pg__get_schema_info', [U('look at the schema')]);
-check('F9 every stg1 tool, not only query_database -> BLOCK', blocked(r), 'exit=' + r.status);
+check('F9 other stg1 tools, plain read -> allowed with reminder', r.status === 0 && /Read from stg1/.test(out(r)), 'exit=' + r.status);
 r = fire(Q1, null);
-check('F10 no transcript path -> BLOCK (no proof miya asked)', blocked(r), 'exit=' + r.status);
+check('F10 no transcript path, SELECT -> allowed with reminder', r.status === 0 && /Read from stg1/.test(out(r)), 'exit=' + r.status);
 r = fire(null, null, '');
 check('F11 empty stdin -> exit 0', r.status === 0, 'exit=' + r.status);
 r = fire(null, null, 'not json');
 check('F12 malformed stdin -> exit 0', r.status === 0, 'exit=' + r.status);
-r = fire(Q1, [U('the stg10 schema')]);
-check('F13 "stg10" does not count as stg1 -> BLOCK', blocked(r), 'exit=' + r.status);
-r = fire(Q1, [U('use STG1 this time')]);
-check('F14 upper case STG1 from miya -> allowed', r.status === 0, 'exit=' + r.status);
-{ let reg = false;
+r = WQ('UPDATE x SET a=1', [U('the stg10 schema')]);
+check('F13 "stg10" does not unlock a write -> BLOCK', blocked(r), 'exit=' + r.status);
+r = WQ('UPDATE x SET a=1', [U('use STG1 this time')]);
+check('F14 miya names STG1 -> write allowed', r.status === 0, 'exit=' + r.status);
+r = WQ('UPDATE x SET a=1', [U('prepare local test'), UM('<system-reminder>stg1</system-reminder>')]);
+check('F14b meta reminder naming stg1 does not unlock a write -> BLOCK', blocked(r), 'exit=' + r.status);{ let reg = false;
   try { const s = JSON.parse(fs.readFileSync(path.join(ROOT, '.claude', 'settings.json'), 'utf8'));
-    for (const g of (s.hooks.PreToolUse || [])) for (const h of g.hooks || []) if (/stg1-block/.test(h.command) && /mlkstg1/.test(g.matcher || '')) reg = true; } catch (_) {}
-  check('F15 registered in settings.json PreToolUse on the stg1 tools', reg, 'not registered'); }
+    for (const g of (s.hooks.PreToolUse || [])) for (const h of g.hooks || []) if (/stg1-block/.test(h.command)) {
+      const re = new RegExp('^(?:' + (g.matcher || '') + ')$');
+      if (re.test(Q1) && re.test('mcp__postgres-mlkstg-pg__query_database') && !re.test('mcp__postgres-mlkprod-pg__query_database')) reg = true; } } catch (_) {}
+  check('F15 registered in settings.json PreToolUse on BOTH staging DB tools (not prod)', reg, 'not registered on both'); }
+
+// v2 — the staging switch decides which schema is guarded
+const Q2 = 'mcp__postgres-mlkstg-pg__query_database';
+setSwitch('stg1');
+r = fire(Q1, [U('look at the data')]);
+check('F16 switch = stg1: stg1 read is silent (schema is ON)', r.status === 0 && !out(r).trim(), 'exit=' + r.status + ' ' + out(r));
+r = WQ('UPDATE x SET a=1', [U('look at the data')]);
+check('F17 switch = stg1: stg1 write not guarded by this hook', r.status === 0, 'exit=' + r.status);
+r = fire(Q2, [U('look at the data')]);
+check('F18 switch = stg1: stg2 read allowed with the reminder naming stg2 OFF', r.status === 0 && /stg2 is switched OFF/.test(out(r)) && /Read from stg2/.test(out(r)) && /use stg1/.test(out(r)), out(r));
+{ const tp = path.join(TMP, 'q2w.jsonl'); fs.writeFileSync(tp, JSON.stringify(U('look at the data')) + '\n');
+  r = spawnSync(process.execPath, [HOOK], { input: JSON.stringify({ tool_name: Q2, tool_input: { query: 'DELETE FROM x' }, transcript_path: tp }), encoding: 'utf8', timeout: 30000, env: { ...process.env, CLAUDE_PROJECT_DIR: ROOT, STG_BLOCK_STATE: STATE } }); }
+check('F19 switch = stg1: stg2 write refused, reason names the switch', blocked(r) && /staging switch = stg1/.test(r.stderr || ''), 'exit=' + r.status + ' ' + out(r));
+fs.writeFileSync(STATE, 'not json');
+r = fire(Q1, [U('look at the data')]);
+check('F20 unreadable switch file -> falls back to the old rule (stg1 guarded)', r.status === 0 && /stg1 is switched OFF/.test(out(r)), out(r));
+setSwitch('stg9');
+r = fire(Q2, [U('look at the data')]);
+check('F21 unknown switch value -> stg2 treated ON (silent), never both guarded', r.status === 0 && !out(r).trim(), out(r));
+setSwitch('stg2');
 
 let failed = 0;
 for (const x of results) { if (!x.pass) failed++; console.log((x.pass ? 'PASS' : 'FAIL') + '  ' + x.n + (x.pass ? '' : ' -> ' + x.d)); }
 console.log('\nstg1-block.eval: ' + (results.length - failed) + '/' + results.length + ' green');
 process.exit(failed ? 1 : 0);
+

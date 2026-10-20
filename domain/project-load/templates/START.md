@@ -18,6 +18,7 @@
 | # | Rule | Why |
 |---|---|---|
 | 1 | … | his words, date |
+| 2 | Any screen or page: design with **impeccable** (`/impeccable init` once, then `/impeccable critique` and `audit` before he sees it); diagrams with **diagram-design**; never the default Claude look (big rounded cards, soft shadows, pill chips, Inter, a row of KPI tiles, a greeting heading); he sees every screen as a screenshot first. Delete this row only if the project has no screens or diagrams. | his words 2026-10-19: "we need to install/setup things so that you do not forget … take into account if I say it when starting a project" |
 
 ## 4. State now
 

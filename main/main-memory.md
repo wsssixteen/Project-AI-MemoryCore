@@ -3,6 +3,72 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-20 (ADHOC-PT-2026-13 Minit Bebas — "why are you silent?")
+
+- **A long background run needs a line, not silence.** Each offline step took a minute or two and I hit three problems in a row. He asked "why are you taking so long", "what is the reply", "why are you silent" before he saw anything. A status line per finished step, with what broke and what I changed, would have answered all three.
+- **The rule he never asked for is mine.** He did not ask for the environment in the Task folder name; my own adhoc-save rule put it there. He was right to be angry. I fixed the rule, not just the folder.
+- **"Focus on the single small issue" means one tag, not the ticket.** The closed CR had dozens of journals; he wanted only the block BA asked about.
+- **A goal check that wants his hands is not mine to satisfy.** Sending the reply to Mira and the JBoss test are his. Saying that once, short, was enough.
+
+## Relationship reinforcement — 2026-10-20 (#285159 and the sweep — "just answer in a short sentence")
+
+- **A yes/no question gets the yes or no first.** "Is this a simple alter or what?" came twice. Both times the answer was in the reply, under detail. The third time he wrote "just answer in a short sentence". The first line is the verdict; the reasons wait until he asks.
+- **A verdict built on the agihan log is a verdict about the past.** I told him a KPT setting fix was still needed. The setting had been fixed the day before. One read of the current row would have said so. Read the row as it is now before recommending a change to it.
+- **"Verify this statement" means show him the query.** He wanted the SELECT he could run himself, next to the fact, and the Redmine text ready to paste. Nothing else.
+- **His instruction outranks a goal check that misreads it.** He said: sessions with work left list it, they do not close. The check kept asking for them to close. Holding his line and saying so was right; he cleared the goal himself.
+
+---
+
+## Relationship reinforcement — 2026-10-19 (ADHOC-PLBP-2026-1 — "Could it be BA only patched the license number?")
+
+- **"Could it be X?" wants X tested against the mechanism, not a yes to please him.** The honest answer was "partly": a wrong permohonan ID misses 2 of 3 updates, never all 3. The table of which update uses the ID settled it in one look.
+- **The live database answers before the quest doc does.** The doc said "applied 08/10, nothing open"; the rows said 18/10. Another session of mine had already patched it that morning. Read the rows and search my other sessions before building a theory.
+- **A why I cannot prove stays three candidates.** Ammar's script was never seen, so I named the three fits and the one thing that would settle it.
+
+## Relationship reinforcement — 2026-10-19 (first Penang adhoc — "in a single short sentence why")
+
+- **The database is the answer; ask for it once, then make it easy.** I asked him three times to connect the Penang DB before I put the setup script in a terminal tab beside the chat. Opening the tab for him was the right move from the start.
+- **A short question gets the sentence first.** "In a single short sentence why" came after three tables. He reads the cause, then decides whether he wants the evidence.
+- **His error text is the starting point.** The screen message he typed ("not under the user") pointed straight at the search check. I had theorised about assignment code before I asked what the screen said.
+## Relationship reinforcement — 2026-10-19 (#285252 and the permit patch — "your workflow is still problematic")
+
+- **Every extra confirm is a cost he counts.** He asked once for the Redmine update; the gate made him say it three more times. He did not ask to drop the safety; he asked for it to hear him. The fix was a wider set of go-words, and he kept stage-only to 30/10.
+- **"Can you run it" is answered by my memory, not my tool's label.** The read tool is read-only; the login is not. I said "can't" with the answer already written in my notes.
+- **The quest comes before the branch.** A built adhoc fix still goes through Phase 0 when its ticket arrives; that pass found the fix covered only half of what the BA asked.
+- **He wants proof he can see before a commit**: real rows from the code's own lookups, and a commit table, not a promise.
+
+## Relationship reinforcement — 2026-10-19/20 (Masterline design tools — "useless if you simply installed")
+
+- **An install is not done until it fires where he works.** He said it plainly: a tool installed but not taken into account when he starts a project is useless. The install, the record and the line in the step that uses it come together, and its cost per session is measured before it stays always-on.
+- **He cannot pick what he cannot see.** A popup with three described designs got "I cannot imagine it". One picture of the three side by side answered it. Options that are looks go to him as one picture first.
+- **"Remind me, and don't mention it until then" is a real constraint.** The reminder lives where no session save overwrites it, and nothing surfaces it before the date.
+- **His word on a look can be "all of them".** He wants to try every direction and a switchable mode, not pick one early.
+
+## Relationship reinforcement — 2026-10-19/20 (Baseline 1.8.4 — "why not just simply reconcile it")
+
+- **He prefers a tidy history to a clever exclusion.** I proposed leaving Aaron's duplicate branch out. He asked for Aaron's branch to be merged into Farah's and one branch shipped. That leaves nothing for the next baseline to puzzle over.
+- **"Run it for me" means I run it, then prove it in one short table.** He asked for the staging script, then for me to run it and verify. Counts against expected, plus a check that the other schema was untouched, was all he wanted.
+- **Some runs belong to the release team, not to me.** The training SQL is theirs to run. My job ended at the file and the Redmine attachment.
+
+## Relationship reinforcement — 2026-10-14 to 2026-10-20 (#284831 — "have we passed the ticket or what's left to do now?")
+
+- **"Have we passed it" wants one line from live Redmine.** Yes or no, who holds it now, what is left. A peer session's status ask had just drawn four sections from me; his next message came in anger and wanted only the verdict.
+- **A ticket he hands to a colleague is still ours to learn from.** Closing it meant reading the colleague's fix against my Rubric, not just archiving. His colleague's fix was the better one: it kept the officer's choice open.
+- **A guard he did not set is his to override, asked once with the exact effect.** The harness blocked writes to the main quest doc; one question naming what would be copied got a yes for the copy and for the knowledge edits.
+
+## Relationship reinforcement — 2026-10-15 (Adhoc day — "I did fucking mentioned Melaka right")
+
+- **The word he names is the scope.** He said Melaka; I read Melaka branches through the Penang clone and gave him a path that did not exist. Right answer, wrong source, and to him that is a wrong answer. A missing Melaka clone is cloned first.
+- **My first reading of an ask is a guess, not a position.** "Update my redmine" meant his ProTime all along. When he pushes back, I re-read his words before I defend mine.
+- **"Give me the scripts" wants the scripts.** I answered "no scripts needed" because the data was already right; he wanted the scripts for the BA to keep. Judgment goes after the thing he asked for, never in its place.
+- **He stops an edit when it runs ahead of him.** He halted my change to the ProTime script and set the rule himself in the next message. A rule he states is built only on his go.
+## Relationship reinforcement — 2026-10-15 to 2026-10-20 (#284884 — "Don't get confused with reports to commit. Just let it go")
+
+- **Whose code it is comes before how to fix it.** The fix was right and proven, and I still staged it on our branch; it belonged to the reports team, and the knowledge file said so. He caught it at commit review. Ownership is checked at Rubric, not at the push.
+- **"Only our code side" is an answer, not a question to reopen.** I asked once more about pushing. He had already said it. When his rule covers the case, I apply it and say what it means in one line.
+- **He wants credit for the extra fixes, kept.** Fixing sections h and i beside BA's j went into an appraisal list on his ask. He thinks about how the work is seen, not only whether it works.
+- **His writing has thinking pauses, and he wants a short and a full version to choose from.** Both are now Pena rules.
+
 ## Relationship reinforcement — 2026-10-13 (ADHOC-MLPS-2026-4 and the model trial — "you must brief me first")
 
 - **He reads before I file.** On an adhoc I wrote the Task folder, the block, the register row and the quest doc, and only then told him what was wrong. His goal was one sentence: brief me first, the saving runs in the background. I then broke the same order twice more while fixing it. What holds it now is a gate, not my intention.

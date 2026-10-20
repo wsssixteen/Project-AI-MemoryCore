@@ -8,3 +8,8 @@
 {"ts":"2026-10-09T03:20:40.270Z","qa":"QA-283960","reason":"plain words: \"Fires whenever miya says he tests on a server (\"test on server\", \"skip local testing\", \"deploy to internal / staging / training\").\"","via":"plain"}
 {"ts":"2026-10-09T03:21:11.257Z","qa":"QA-283960","reason":"plain words: \"Fires whenever miya says he tests on a server (\"test on server\", \"skip local testing\", \"deploy to internal / staging / training\").\"","via":"plain"}
 {"ts":"2026-10-12T03:00:17.610Z","qa":"QA-283286","reason":"pom common version only, compile green, test on staging"}
+{"ts":"2026-10-19T06:42:59.1301898Z","qa":"QA-285252","reason":"BA tests on internal (miya: okay approve commit. [risk-ok: 285252 BA tests on internal] commit)","via":"risk-ok"}
+{"ts":"2026-10-12T09:15:44.905Z","qa":"QA-284201","reason":"plain words: \"test on internal, skip local testing\"","via":"plain"}
+{"ts":"2026-10-13T11:59:02.343Z","qa":"QA-240907","reason":"plain words: \"Test on server (Recommended)\"","via":"plain"}
+{"ts":"2026-10-14T04:50:48.860Z","qa":"QA-240907","reason":"plain words: \"Please revert internal's common version so that BA can test this on internal and the other ticket on STAGING\"","via":"plain"}
+{"ts":"2026-10-15T07:21:57.282Z","qa":"QA-282303","reason":"plain words: \"Fires whenever miya says he tests on a server (\"test on server\", \"skip local testing\", \"deploy to internal / staging / training\").\"","via":"plain"}
