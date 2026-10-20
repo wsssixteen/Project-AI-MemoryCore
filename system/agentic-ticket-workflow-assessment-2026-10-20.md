@@ -112,3 +112,13 @@ Note: child session qa285252-audit-fix reported its quest-skill "Screen-path aud
 | A3 debugging | Offline doc-sim needed three tool changes to test a 4-step signing flow (chain input, pick a_tgsn, force the Selesai action); each problem cost a 6-10 min rerun | A chain mode in the tool would make a multi-step document test one command |
 | A4 etanah | `addSdtAndNested` skips tags inside a wrapper with a registered filler; `isValidUser` uses the user's MAIN role (m.ikram main KPPT fails at KPPD Semakan) | Both are reusable facts for WORD-TEMPLATE-RENDERING.md; the main-role check is a latent bug for any multi-role officer |
 | A5 sweep | ⏭ no sweep or file sweep this session | — |
+
+## Session qa285252-audit-fix (18:10)
+
+| Axis | Instance this session | Assessment |
+|---|---|---|
+| A1 agentic system | ACCEPTED-RISK accepted a quoted commit order on #285252 cycle 1; a stricter gate would block 12 rows in 6 open quests | The falsifier ledger proves a row was cleared, not that the person accepted that risk; the quote check is pattern-only. Proposal A1 logged. |
+| A2 quest workflow | Rubric had no step tying a screen fix to the fields the .xhtml binds, the keys the save reads, and the buttons per mode | Fixed as prose: quest SKILL Screen-path audit block (4bdbd9fe). Mechanical gate proposed (A2). |
+| A3 debugging | 2026-10-19 04:08 "the new code's lookups return one row" was SQL, not the code; 2026-10-20 a 6-check harness on the real GsonUtil / DynamicFieldUtil ran in under a minute | A harness on the real classes is cheap and catches JSON-key and null-drop behaviour (GsonUtil drops null properties). Re-enactment detector proposed (A3). |
+| A4 etanah | PRBB Butir-butir dialog: table binds daerahSAK/luasDipohon, save reads idHkmlk, Ganti Hari dialog has no Simpan | Not yet in etanah-knowledge; proposal A4. |
+| A5 sweep | miya's queued mid-turn question was invisible to transcript search; found only in the exported jsonl attachment rows | Proposal A5 (queued_command in search helpers). |
