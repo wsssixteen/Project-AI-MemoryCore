@@ -150,3 +150,31 @@
 {"ts":"2026-10-20T03:57:48.078Z","qa":"QA-285012","archive_atomic":true,"qa_doc_has_bounty":true,"commit":"6c243cd277","branch":null}
 {"ts":"2026-10-20T04:04:20.011Z","qa":"QA-284831","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
 {"ts":"2026-10-20T04:07:14.279Z","qa":"QA-285159","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T07:22:42.577Z","qa":"QA-285252","kind":"wrong-fix","n":1,"was":"B1 (c23825fe5d): add the hakmilik row on tab load outside the Butir-butir dialog","why":"BA MLIT re-test 2026-10-19: Daerah + Luas blank, no mandatory check on Seterusnya, ID Hakmilik lost after Sebelum","learned":"A row added outside its dialog must copy what the dialog Simpan does: display fields bound by the table, the saved JSON keys, and the mandatory checks; walk display, save, reload and every button before hand-back"}
+{"ts":"2026-10-20T09:03:27.658Z","qa":"ADHOC-PRBB-2026-14","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T09:03:35.059Z","qa":"ADHOC-PRBB-2026-14","archive_atomic":true,"qa_doc_has_bounty":false,"commit":null,"branch":"none-until-ticket","allow_stub_reason":"adhoc promoted to QA-285252; bounty harvest happens at QA-285252 Phase 2"}
+{"ts":"2026-10-20T09:19:29.681Z","qa":"QA-283532","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T09:19:30.004Z","qa":"QA-283670","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T09:19:30.327Z","qa":"QA-283980","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T09:19:30.636Z","qa":"QA-284775","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T09:19:31.931Z","qa":"QA-282721","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:19:42.379Z","qa":"QA-283532","gate":"harvest-gate","action":"refused"}
+{"ts":"2026-10-20T09:20:13.323Z","qa":"QA-283532","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:20:14.879Z","qa":"QA-283670","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":"none (data patch on MLIT, no code)"}
+{"ts":"2026-10-20T09:20:16.154Z","qa":"QA-283980","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:20:17.636Z","qa":"QA-284775","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.172Z","qa":"QA-277346","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.193Z","qa":"QA-277926","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.205Z","qa":"QA-278304","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.219Z","qa":"QA-277442","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.264Z","qa":"QA-279391","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.278Z","qa":"QA-279793","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.291Z","qa":"QA-280099","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.307Z","qa":"QA-280265","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.376Z","qa":"QA-279882","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.409Z","qa":"QA-275847","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.419Z","qa":"QA-275092","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:38:25.428Z","qa":"QA-277291","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:39:22.401Z","qa":"QA-279898","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:39:22.415Z","qa":"QA-279984","archive_atomic":false,"qa_doc_has_bounty":true,"phase2_rebuilt":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T09:51:43.799Z","qa":"QA-279984","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
