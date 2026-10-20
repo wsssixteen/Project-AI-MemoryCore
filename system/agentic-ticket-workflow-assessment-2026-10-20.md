@@ -102,3 +102,13 @@ Proposals logged (`core/slips.js --type proposal`): A2 quest-phase0 workflow sha
 | A4 etanah | Column binding differs from the populated field on the PRBB land table; save reads id from JSON | JSF-WIRING section "column binding vs populated field" |
 | A5 sweep | ⏭ no sweep or multi-ticket work this session | — |
 Note: child session qa285252-audit-fix reported its quest-skill "Screen-path audit" commit 4bdbd9fe as on main; it is on branch claude/fervent-lamarr-89925e only (1 ahead of origin/main), not merged by this session (needs miya's word).
+
+## Session separate-maklumatpenggunambptnh (ADHOC-PT-2026-13, Minit Bebas signing sections)
+
+| Axis | What happened (instance) | Assessment |
+|---|---|---|
+| A1 agentic system | `lib/audit-briefing.js` run from the worktree printed 0 fires / 0 turns and listed every hook as never fired; run from the main checkout it read 5 006 320 fires | The DE audit gives a false all-broken picture from any worktree session |
+| A2 quest workflow | adhoc-save rule put the env in the Task folder name (`AH - <ENV> - …`); miya never asked for it | Fixed this session: rule is `AH - <URUSAN> - <desc>` |
+| A3 debugging | Offline doc-sim needed three tool changes to test a 4-step signing flow (chain input, pick a_tgsn, force the Selesai action); each problem cost a 6-10 min rerun | A chain mode in the tool would make a multi-step document test one command |
+| A4 etanah | `addSdtAndNested` skips tags inside a wrapper with a registered filler; `isValidUser` uses the user's MAIN role (m.ikram main KPPT fails at KPPD Semakan) | Both are reusable facts for WORD-TEMPLATE-RENDERING.md; the main-role check is a latent bug for any multi-role officer |
+| A5 sweep | ⏭ no sweep or file sweep this session | — |
