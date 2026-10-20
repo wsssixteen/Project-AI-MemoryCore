@@ -33,3 +33,4 @@
 {"ts":"2026-10-20T10:41:49.100Z","commit":"aa905226","outcome":"REFUSED","exit":2,"dur_ms":4612}
 {"ts":"2026-10-20T04:31:27.614Z","commit":"a72c94a0","outcome":"REFUSED","exit":2,"dur_ms":10552}
 {"ts":"2026-10-20T10:15:44.727Z","commit":"745682b8","outcome":"REFUSED","exit":2,"dur_ms":2772}
+{"ts":"2026-10-20T10:52:56.716Z","commit":"f74419a6","outcome":"nothing","exit":1,"dur_ms":3122}

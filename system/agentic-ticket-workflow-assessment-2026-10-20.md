@@ -148,6 +148,16 @@ Note: child session qa285252-audit-fix reported its quest-skill "Screen-path aud
 | A5 sweep | ⏭ no sweep work this session | — |
 
 
+## Session redmine-282303-review (2026-10-12 → 2026-10-20)
+
+| Axis | Finding (instance) | Proposal |
+|---|---|---|
+| A1 agentic system | The groundwork for #285171 lived in a session copy of QA-282303.md (git-ignored) and never reached main until this DE; the 2026-10-19 session found the pointer empty. | A1: save-rules flags a worktree qa_doc newer than or missing from main |
+| A2 quest workflow | Commit subject "Up common" for a 1.10.5 → 1.7.23 test downgrade, copied from #283286's real upgrade without checking direction. | Fixed: version-direction check at commit (eval 62/62). A2 proposal extends it to awam + module version lines |
+| A3 debugging accuracy | Told miya pelupusan uses its own jrxml from a "0 callers" grep, without reading the classpath lookup order or the jar. Two wrong replies before the jar listing settled it. | A4 report-path probe (below) |
+| A4 etanah issue-solving | Which template file a report really uses depends on the lookup order + what the dependency jar ships; a source grep cannot answer it. | A4: report-path probe script, eval #282303 |
+| A5 sweep | ⏭ no multi-ticket sweep this session |  |
+
 ## Session vibrant-solomon (ADHOC-PRBB-2026-16, PRBB Borang 4Ce + P1e unsigned)
 
 | Axis | Instance this session | Assessment |
