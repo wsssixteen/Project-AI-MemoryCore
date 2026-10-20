@@ -53,12 +53,65 @@ Proposals logged (`core/slips.js --type proposal`): A1 telemetry source · A1 ga
 
 Proposals logged: A1 audit-read exemption in adhoc-brief-first · A2 ask for the page error before a "slow/fails" diagnosis.
 
+## Session redmine-284831-audit (#284831, 2026-10-14 → 2026-10-20)
+
+| Axis | Instance this session | Assessment |
+|---|---|---|
+| A1 agentic system | `lib/audit-briefing.js` from this worktree printed "0 hook fires · 0 turns" again; the worktree holds only the committed `system/telemetry/hook-fires-*.jsonl` snapshots, the live fires go to the main checkout; running main's copy did not finish in 300 s | Same defect as the row above, with its cause: `TEL` uses the worktree root while line 41 already resolves `MAIN_ROOT`. Corroborates the logged A1 telemetry proposal; no second proposal. |
+| A1 agentic system | The harness blocked Write/Edit on the main-checkout quest doc from the worktree, while `quest/notes.js`, `quest/active-cli.js` and `quest/archive-quest.js` all write main by design | The quest doc split into two copies for 6 days and the Phase 2 harvest gate could not pass until miya said yes to a copy. Logged as the bounty proposal `quest/qa-doc.js`. |
+| A2 quest workflow | `.claude/workflows/quest-phase0.js:66,103-110` reads `0. Brief` and writes the retired `1. <NNN NNN>.txt`; Phase 0 ran inline instead | The engine the quest skill names first is out of date with the Task-folder shape of 2026-09-30. |
+| A3 debugging | Two wrong-column queries in the first Recon minutes (`umm_a_tgsn.pengguna_semasa` vs `pengguna_semasa_id`; `ind_skrin.kod` vs `kod_skrin`) | Knowledge-first was skipped: the code trace ran before `DATABASE.md`. Each cost one `information_schema` round trip. |
+| A4 etanah issue-solving | A Tanah Rizab land report sets `disableJenisTanah` with no prefill for PT; same flag pattern may hold elsewhere (LATENT-BUGS L27, L28) | A lock whose writer does not fill the value first is a class, not one bug. A sweep of `disabled="#{… eq true}"` composites against their flag writers would find the rest. |
+| A5 sweep | ⏭ single ticket, one attachment, opened and ledgered | — |
+
+Proposals logged (`core/slips.js --type proposal`): A2 quest-phase0 workflow shape · A3 task-state helper · A4 lock-without-prefill sweep (plus the bounty `quest/qa-doc.js`).
+
+## Session quest-285159-assessment (2026-10-20 12:15)
+
+| Axis | Instance this session | Assessment |
+|---|---|---|
+| A1 agentic system | sql-schema-verify Stop gate re-fired on every reply for 285159-check.sql, a miya-facing script that must be unqualified by rule; the skip token had to be repeated ~30 times | gate cannot verify the scripts the rules require, so it trains skip-token use |
+| A2 quest workflow | Workflow launch of .claude/workflows/quest-phase0.js was refused: "script contains control characters" (CRLF); launched an LF copy from scratchpad | workflow files need LF line endings |
+| A3 debugging | told miya a KPT setting fix was still needed from the 07/10 agihan log; the current ind_tgsn row (PT, 15/10) disproved it | read the current setting row before recommending a setting change |
+| A4 etanah | a setting fix on ind_tgsn.peranan does not restamp a live task; it keeps the old peranan until an alter re-creates it | knowledge candidate (BUG-BESTIARY, awaiting nod) |
+| A5 sweep | cross-session SendMessage to "MLIT updates not working" was held (permission-mode mismatch) and expired; session_mgmt send_message delivered it; 3 sessions not running only answered once started | sweep needs a fallback route and must include non-running sessions from list_sessions |
+
 ## Session ec4a7ea5 (Adhoc - 15/10/2026, DE 2026-10-20)
 - A1 agentic: background save agent for ADHOC-PLTP-2026-2 worked in two rounds (29/29 both); the re-brief by SendMessage kept one agent and one save-set. Instance: ADHOC-PLTP-2026-2.
 - A2 quest workflow: #285012 reached Phase 2 only through this DE's save-quest sweep; nothing else would have archived it. Instance: SAVE-QUEST PHASE-2 found at DE.
 - A3 debugging: the PLTP root cause took ~15 tool calls once the right source was found; the slow part was finding the teknikal source at all (no Melaka clone; Terengganu then Penang clones read first). Instance: wrong-state-source slip.
 - A4 etanah: staging answers were given from stg2 for hours although the switch said stg1; the BA's AWAM screen disagreed before I checked. Instance: C01/2026/12 stg1 vs stg2.
 - A5 sweep: the audit briefing run from a worktree reports 0 fires / 0 turns and lists every hook as dead (telemetry lives only in the main checkout). Instance: this DE's first 7.4 run.
+
+## Session ticket-284884-rubric
+
+| Axis | What happened (concrete instance) | Assessment |
+|---|---|---|
+| A1 agentic system | `lib/audit-briefing.js` run from the worktree reported 0 hook fires and listed ~80 hooks as "never fired", while ticket-gate, auto-skill-trigger, PlainFirstGate, TurnChecklistGate and others fired visibly in this session. Telemetry logs live in the main checkout (gitignored), so a worktree run sees none. | The audit's NOT WORKING list is false when run from a worktree. Proposal logged. |
+| A2 quest workflow | #284884: Rubric chose a fix in 4 `.jrxml` files and Apply staged them on our ticket branch. OTHER-MODULES.md and JASPER-REPORTS.md (`printReportUsingSQL` = reports team) already said reports are not ours. miya caught it at commit review. | Ownership was not checked at Rubric. Rule added to cross-module-check skill; a deterministic check is proposed. |
+| A3 debugging efficiency | Blank page 2 was found by an offline Jasper render (WAR lib jars + JDBC creds read from standalone.xml), and it caught that the first fix (remove break) orphaned a header on a short page 1. | High value; the render script lives only in a scratchpad. Proposal to promote it. |
+| A4 etanah issue-solving | Jadual 1 points h/i/j come from `UMM_P_HKMLK_LAIN` with no HKMLK_ID; PROD 0 of 429 rows carry ID_HAKMILIK. Fatin (reports) needed this to make the fix. | Fact not yet in DATABASE.md (deferred in QA-284884). |
+| A5 sweep / file sweep | ⏭ no sweep ran this session. | — |
+
+## Session tugasan-not-found-c0904c (#285252 PRBB rework, 2026-10-20 15:30)
+| Axis | Assessment (instance) | Proposal logged |
+|---|---|---|
+| A1 agentic system | One #285252 turn spent 1283 s in hooks; quest-context-load-gate averages 3.3 s with 0 blocks in 7 days | cache the gate per session + quest |
+| A2 quest workflow | An internal-env test by miya had no ledger status: row 9 went ACCEPTED-RISK, then had to be rewritten to RAN | TESTED-ENV status in falsifier-ran-check |
+| A3 debugging | Cycle 1 answered "will the values show" with an SQL re-enactment; the xhtml binding (daerahSAK, luasDipohon) was never read | stop gate: display claim needs an .xhtml:line |
+| A4 etanah | Column binding differs from the populated field on the PRBB land table; save reads id from JSON | JSF-WIRING section "column binding vs populated field" |
+| A5 sweep | ⏭ no sweep or multi-ticket work this session | — |
+Note: child session qa285252-audit-fix reported its quest-skill "Screen-path audit" commit 4bdbd9fe as on main; it is on branch claude/fervent-lamarr-89925e only (1 ahead of origin/main), not merged by this session (needs miya's word).
+
+## Session separate-maklumatpenggunambptnh (ADHOC-PT-2026-13, Minit Bebas signing sections)
+
+| Axis | What happened (instance) | Assessment |
+|---|---|---|
+| A1 agentic system | `lib/audit-briefing.js` run from the worktree printed 0 fires / 0 turns and listed every hook as never fired; run from the main checkout it read 5 006 320 fires | The DE audit gives a false all-broken picture from any worktree session |
+| A2 quest workflow | adhoc-save rule put the env in the Task folder name (`AH - <ENV> - …`); miya never asked for it | Fixed this session: rule is `AH - <URUSAN> - <desc>` |
+| A3 debugging | Offline doc-sim needed three tool changes to test a 4-step signing flow (chain input, pick a_tgsn, force the Selesai action); each problem cost a 6-10 min rerun | A chain mode in the tool would make a multi-step document test one command |
+| A4 etanah | `addSdtAndNested` skips tags inside a wrapper with a registered filler; `isValidUser` uses the user's MAIN role (m.ikram main KPPT fails at KPPD Semakan) | Both are reusable facts for WORD-TEMPLATE-RENDERING.md; the main-role check is a latent bug for any multi-role officer |
+| A5 sweep | ⏭ no sweep or file sweep this session | — |
 
 ## Session qa285252-audit-fix (18:10)
 
@@ -78,6 +131,22 @@ Proposals logged: A1 audit-read exemption in adhoc-brief-first · A2 ask for the
 | A3 debugging | one Flowable admin REST read of /variables found the cause in minutes; support had run 9 blind Initiates | reading live process variables first is the cheap falsifier for any "Success Alter, no tugasan" case |
 | A4 etanah issue-solving | I turned an empty TaskMap screenshot into a rule ("Alter cannot pick the current node"); code had no filter | a screen observation must be checked against the code path before it becomes knowledge |
 | A5 sweep / file sweep | ⏭ no sweep this session | — |
+## Session tugasan-not-found-c0904c — second DE (#285252 rework 2, 18:10)
+| Axis | Assessment (instance) | Proposal logged |
+| A1 agentic system | quest-context-load-gate still 3.5 s avg, 0 blocks (audit 2026-10-20) | already proposed at 15:30 (cache) |
+| A2 quest workflow | rework 2 went straight to Edit, no Scout for BA issue 4 | Rework Scout gate in quest-phase-gate |
+| A3 debugging | field meaning never traced before writing it (luasDipohon prints on Borang 4Ce) | Downstream readers table before a field-write |
+| A4 etanah | PRBB luas chain now in BUG-BESTIARY | bug-db surfaces it on next PRBB land ticket |
+| A5 sweep | ⏭ no sweep work | — |
+
+## Session melaka-internal-id-check (ADHOC-PLP-2026-3 report 2, 18:40)
+| Axis | Instance this session | Assessment / proposal |
+| A1 agentic system | `lib/audit-briefing.js` run inside the worktree printed "0 hook fires" and 77 hooks "never fired", while hooks fired all session; the telemetry lives only in the main folder | The NOT WORKING block is false when run from a worktree. Proposal A1: resolve telemetry from the main checkout. |
+| A2 quest workflow | adhoc-paste-detector asked for a NEW scaffold; the right move was Report 2 on the open A63 (same env MLIT, same DMS cause) | Matching to an open register row is judgment today. Proposal A2: detector lists OPEN register rows with the same env + symptom words. |
+| A3 debugging | Cause path found in about 6 code reads: row built at `DocumentService:1101`, file silently dropped in `BaseDocumentService.populateDocumentList` | ⏭ fast enough; the fact is now in DATABASE.md §9.1 so the next lookup is one read. |
+| A4 etanah | "Fail = Tiada rekod" on a shown row has a fixed meaning (DMS returned nothing) | Proposal A4: BUG-BESTIARY entry so bug-db surfaces it on "dokumen hilang" prompts. |
+| A5 sweep | ⏭ no sweep work this session | — |
+
 
 ## Session redmine-282303-review (2026-10-12 → 2026-10-20)
 

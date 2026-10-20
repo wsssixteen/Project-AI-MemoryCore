@@ -397,3 +397,7 @@
 {"ts":"2026-10-20T10:56:09.903Z","id":"ADHOC-PLPS-2026-2","outcome":"pass","fails":[],"dur_ms":31}
 {"ts":"2026-10-20T10:56:37.034Z","id":"ADHOC-PRBB-2026-16","outcome":"pass","fails":[],"dur_ms":32}
 {"ts":"2026-10-20T10:57:45.648Z","id":"ADHOC-PLPS-2026-2","outcome":"pass","fails":[],"dur_ms":37}
+{"ts":"2026-10-20T07:57:30.672Z","id":"ADHOC-PT-2026-13","outcome":"pass","fails":[],"dur_ms":34}
+{"ts":"2026-10-20T08:04:45.816Z","id":"ADHOC-PT-2026-13","outcome":"pass","fails":[],"dur_ms":30}
+{"ts":"2026-10-20T09:29:43.481Z","id":"ADHOC-PT-2026-13","outcome":"pass","fails":[],"dur_ms":90}
+{"ts":"2026-10-20T09:30:51.641Z","id":"ADHOC-PT-2026-13","outcome":"pass","fails":[],"dur_ms":27}

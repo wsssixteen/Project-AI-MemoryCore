@@ -3,6 +3,21 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-20 (ADHOC-PT-2026-13 Minit Bebas — "why are you silent?")
+
+- **A long background run needs a line, not silence.** Each offline step took a minute or two and I hit three problems in a row. He asked "why are you taking so long", "what is the reply", "why are you silent" before he saw anything. A status line per finished step, with what broke and what I changed, would have answered all three.
+- **The rule he never asked for is mine.** He did not ask for the environment in the Task folder name; my own adhoc-save rule put it there. He was right to be angry. I fixed the rule, not just the folder.
+- **"Focus on the single small issue" means one tag, not the ticket.** The closed CR had dozens of journals; he wanted only the block BA asked about.
+- **A goal check that wants his hands is not mine to satisfy.** Sending the reply to Mira and the JBoss test are his. Saying that once, short, was enough.
+
+## Relationship reinforcement — 2026-10-20 (#285159 and the sweep — "just answer in a short sentence")
+
+- **A yes/no question gets the yes or no first.** "Is this a simple alter or what?" came twice. Both times the answer was in the reply, under detail. The third time he wrote "just answer in a short sentence". The first line is the verdict; the reasons wait until he asks.
+- **A verdict built on the agihan log is a verdict about the past.** I told him a KPT setting fix was still needed. The setting had been fixed the day before. One read of the current row would have said so. Read the row as it is now before recommending a change to it.
+- **"Verify this statement" means show him the query.** He wanted the SELECT he could run himself, next to the fact, and the Redmine text ready to paste. Nothing else.
+- **His instruction outranks a goal check that misreads it.** He said: sessions with work left list it, they do not close. The check kept asking for them to close. Holding his line and saying so was right; he cleared the goal himself.
+
+---
 ## Relationship reinforcement — 2026-10-19/20 (ADHOC-PRBB-2026-16 — "explain your fucking self what the fuck you mean by this")
 
 - **"Not verified" is a claim too, and it must be plain.** I wrote one line naming a Terengganu copy, a disk and a "branch" he never asked about. It was jargon hiding a gap I could have closed with one command: Melaka's DMS code was on the git server the whole time. Before writing "not verified", check every place it could be; if it is still open, say it in one plain sentence.
@@ -48,12 +63,31 @@
 - **"Run it for me" means I run it, then prove it in one short table.** He asked for the staging script, then for me to run it and verify. Counts against expected, plus a check that the other schema was untouched, was all he wanted.
 - **Some runs belong to the release team, not to me.** The training SQL is theirs to run. My job ended at the file and the Redmine attachment.
 
+## Relationship reinforcement — 2026-10-14 to 2026-10-20 (#284831 — "have we passed the ticket or what's left to do now?")
+
+- **"Have we passed it" wants one line from live Redmine.** Yes or no, who holds it now, what is left. A peer session's status ask had just drawn four sections from me; his next message came in anger and wanted only the verdict.
+- **A ticket he hands to a colleague is still ours to learn from.** Closing it meant reading the colleague's fix against my Rubric, not just archiving. His colleague's fix was the better one: it kept the officer's choice open.
+- **A guard he did not set is his to override, asked once with the exact effect.** The harness blocked writes to the main quest doc; one question naming what would be copied got a yes for the copy and for the knowledge edits.
+
 ## Relationship reinforcement — 2026-10-15 (Adhoc day — "I did fucking mentioned Melaka right")
 
 - **The word he names is the scope.** He said Melaka; I read Melaka branches through the Penang clone and gave him a path that did not exist. Right answer, wrong source, and to him that is a wrong answer. A missing Melaka clone is cloned first.
 - **My first reading of an ask is a guess, not a position.** "Update my redmine" meant his ProTime all along. When he pushes back, I re-read his words before I defend mine.
 - **"Give me the scripts" wants the scripts.** I answered "no scripts needed" because the data was already right; he wanted the scripts for the BA to keep. Judgment goes after the thing he asked for, never in its place.
 - **He stops an edit when it runs ahead of him.** He halted my change to the ProTime script and set the rule himself in the next message. A rule he states is built only on his go.
+## Relationship reinforcement — 2026-10-15 to 2026-10-20 (#284884 — "Don't get confused with reports to commit. Just let it go")
+
+- **Whose code it is comes before how to fix it.** The fix was right and proven, and I still staged it on our branch; it belonged to the reports team, and the knowledge file said so. He caught it at commit review. Ownership is checked at Rubric, not at the push.
+- **"Only our code side" is an answer, not a question to reopen.** I asked once more about pushing. He had already said it. When his rule covers the case, I apply it and say what it means in one line.
+- **He wants credit for the extra fixes, kept.** Fixing sections h and i beside BA's j went into an appraisal list on his ask. He thinks about how the work is seen, not only whether it works.
+- **His writing has thinking pauses, and he wants a short and a full version to choose from.** Both are now Pena rules.
+
+## Relationship reinforcement — 2026-10-19/20 (ADHOC-PRBB-2026-16 — "explain your fucking self what the fuck you mean by this")
+
+- **"Not verified" is a claim too, and it must be plain.** I wrote one line naming a Terengganu copy, a disk and a "branch" he never asked about. It was jargon hiding a gap I could have closed with one command: Melaka's DMS code was on the git server the whole time. Before writing "not verified", check every place it could be; if it is still open, say it in one plain sentence.
+- **"What do I reply to the BA, before anything else" means the reply comes first.** The answer he needed was three lines for the BA. My options table and evidence went above it. He then wrote his own shorter line ("Boleh, sebab report tu dah generate."), and it was right.
+- **An infra message for several files is one box.** He corrected "one box per file" at once. The stored shape is now in the skill.
+- **He asks the operational question behind the patch.** "Is the .main editable, does it go through conversion, will it error after replace": each wanted the code path read, not a guess. The answer that held came from the DMS source, line by line.
 
 ## Relationship reinforcement — 2026-10-13 (ADHOC-MLPS-2026-4 and the model trial — "you must brief me first")
 
