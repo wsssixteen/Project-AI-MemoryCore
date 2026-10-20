@@ -213,3 +213,4 @@
 {"ts":"2026-10-20T10:08:55.790Z","qa":"QA-277291","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
 {"ts":"2026-10-20T10:08:56.692Z","qa":"QA-279898","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
 {"ts":"2026-10-20T10:08:57.611Z","qa":"QA-279984","archive_atomic":true,"qa_doc_has_bounty":true,"commit":null,"branch":null}
+{"ts":"2026-10-20T10:42:14.907Z","qa":"QA-272982","gate":"harvest-gate","action":"refused"}

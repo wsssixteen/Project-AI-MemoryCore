@@ -59,3 +59,22 @@ Proposals logged: A1 audit-read exemption in adhoc-brief-first · A2 ask for the
 - A3 debugging: the PLTP root cause took ~15 tool calls once the right source was found; the slow part was finding the teknikal source at all (no Melaka clone; Terengganu then Penang clones read first). Instance: wrong-state-source slip.
 - A4 etanah: staging answers were given from stg2 for hours although the switch said stg1; the BA's AWAM screen disagreed before I checked. Instance: C01/2026/12 stg1 vs stg2.
 - A5 sweep: the audit briefing run from a worktree reports 0 fires / 0 turns and lists every hook as dead (telemetry lives only in the main checkout). Instance: this DE's first 7.4 run.
+
+## Session qa285252-audit-fix (18:10)
+
+| Axis | Instance this session | Assessment |
+|---|---|---|
+| A1 agentic system | ACCEPTED-RISK accepted a quoted commit order on #285252 cycle 1; a stricter gate would block 12 rows in 6 open quests | The falsifier ledger proves a row was cleared, not that the person accepted that risk; the quote check is pattern-only. Proposal A1 logged. |
+| A2 quest workflow | Rubric had no step tying a screen fix to the fields the .xhtml binds, the keys the save reads, and the buttons per mode | Fixed as prose: quest SKILL Screen-path audit block (4bdbd9fe). Mechanical gate proposed (A2). |
+| A3 debugging | 2026-10-19 04:08 "the new code's lookups return one row" was SQL, not the code; 2026-10-20 a 6-check harness on the real GsonUtil / DynamicFieldUtil ran in under a minute | A harness on the real classes is cheap and catches JSON-key and null-drop behaviour (GsonUtil drops null properties). Re-enactment detector proposed (A3). |
+| A4 etanah | PRBB Butir-butir dialog: table binds daerahSAK/luasDipohon, save reads idHkmlk, Ganti Hari dialog has no Simpan | Not yet in etanah-knowledge; proposal A4. |
+| A5 sweep | miya's queued mid-turn question was invisible to transcript search; found only in the exported jsonl attachment rows | Proposal A5 (queued_command in search helpers). |
+## Session permohonan-init-issue-bc0592 (#285181) — 2026-10-20 18:45
+
+| Axis | Instance this session | Assessment |
+|---|---|---|
+| A1 agentic system | Reply-type loading tested on 7 prompts: only 2 loaded the style rules | style choice is still model judgment; Pena profiles exist but nothing routes to them |
+| A2 quest workflow | save-quest WAIT blocked "close it" in a /goal loop until miya said "archive anyway" | the rule held; the goal checker could not tell Phase 1 close from archive |
+| A3 debugging | one Flowable admin REST read of /variables found the cause in minutes; support had run 9 blind Initiates | reading live process variables first is the cheap falsifier for any "Success Alter, no tugasan" case |
+| A4 etanah issue-solving | I turned an empty TaskMap screenshot into a rule ("Alter cannot pick the current node"); code had no filter | a screen observation must be checked against the code path before it becomes knowledge |
+| A5 sweep / file sweep | ⏭ no sweep this session | — |

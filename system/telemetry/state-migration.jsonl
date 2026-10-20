@@ -1,0 +1,59 @@
+{"ts":"2026-10-14T13:42:56.622Z","cmd":"migrate","state":"penang","outcome":"31 files","exit":0,"dur_ms":446}
+{"ts":"2026-10-14T13:43:21.468Z","cmd":"migrate","state":"penang","outcome":"31 files","exit":0,"dur_ms":375}
+{"ts":"2026-10-14T13:43:21.952Z","cmd":"audit","state":"penang","outcome":"problems","exit":1,"dur_ms":349}
+{"ts":"2026-10-14T13:44:57.386Z","cmd":"gates","state":"penang","outcome":"1 bad","exit":1,"dur_ms":334}
+{"ts":"2026-10-14T13:44:58.930Z","cmd":"audit","state":null,"outcome":"problems","exit":1,"dur_ms":1412}
+{"ts":"2026-10-14T13:48:39.618Z","cmd":"audit","state":"penang","outcome":"problems","exit":1,"dur_ms":411}
+{"ts":"2026-10-14T13:50:51.377Z","cmd":"gates","state":"penang","outcome":"1 bad","exit":1,"dur_ms":333}
+{"ts":"2026-10-14T13:52:41.836Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":12}
+{"ts":"2026-10-14T13:52:42.034Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T13:52:42.208Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":11}
+{"ts":"2026-10-14T13:52:42.400Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":10}
+{"ts":"2026-10-14T14:20:19.543Z","cmd":"check","state":"penang","outcome":"checked","exit":0,"dur_ms":11}
+{"ts":"2026-10-14T14:20:19.647Z","cmd":"check","state":"penang","outcome":"checked","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T14:20:19.757Z","cmd":"check","state":"penang","outcome":"checked","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T14:20:19.860Z","cmd":"check","state":"penang","outcome":"checked","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T14:20:19.960Z","cmd":"check","state":"penang","outcome":"checked","exit":0,"dur_ms":8}
+{"ts":"2026-10-14T14:20:20.057Z","cmd":"check","state":"penang","outcome":"checked","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T14:20:20.154Z","cmd":"check","state":"penang","outcome":"checked","exit":0,"dur_ms":10}
+{"ts":"2026-10-14T14:20:20.253Z","cmd":"check","state":"penang","outcome":"checked","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T14:20:20.366Z","cmd":"check","state":"penang","outcome":"checked","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T14:20:20.465Z","cmd":"check","state":"penang","outcome":"checked","exit":0,"dur_ms":8}
+{"ts":"2026-10-14T14:20:20.563Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":8}
+{"ts":"2026-10-14T14:20:20.660Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":8}
+{"ts":"2026-10-14T14:20:20.760Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":8}
+{"ts":"2026-10-14T14:20:21.365Z","cmd":"audit","state":"penang","outcome":"problems","exit":1,"dur_ms":421}
+{"ts":"2026-10-14T14:22:26.587Z","cmd":"gates","state":"penang","outcome":"1 bad","exit":1,"dur_ms":402}
+{"ts":"2026-10-14T14:22:27.223Z","cmd":"audit","state":"penang","outcome":"problems","exit":1,"dur_ms":448}
+{"ts":"2026-10-14T14:57:40.135Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T14:57:40.251Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":8}
+{"ts":"2026-10-14T14:57:40.372Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":8}
+{"ts":"2026-10-14T14:57:40.492Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T14:57:40.613Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":8}
+{"ts":"2026-10-14T14:57:40.731Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":8}
+{"ts":"2026-10-14T14:57:40.849Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":8}
+{"ts":"2026-10-14T14:57:40.964Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T14:57:41.083Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":8}
+{"ts":"2026-10-14T14:57:41.201Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":8}
+{"ts":"2026-10-14T14:57:46.856Z","cmd":"audit","state":"penang","outcome":"problems","exit":1,"dur_ms":489}
+{"ts":"2026-10-14T14:57:47.492Z","cmd":"gates","state":"penang","outcome":"1 bad","exit":1,"dur_ms":434}
+{"ts":"2026-10-14T15:07:04.182Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T15:07:04.315Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":8}
+{"ts":"2026-10-14T15:07:04.447Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":10}
+{"ts":"2026-10-14T15:07:04.577Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T15:07:04.710Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":10}
+{"ts":"2026-10-14T15:07:04.867Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T15:07:05.000Z","cmd":"check","state":"penang","outcome":"checked","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T15:07:05.136Z","cmd":"check","state":"penang","outcome":"checked","exit":0,"dur_ms":10}
+{"ts":"2026-10-14T15:07:05.796Z","cmd":"audit","state":"penang","outcome":"problems","exit":1,"dur_ms":500}
+{"ts":"2026-10-14T15:14:49.623Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":10}
+{"ts":"2026-10-14T15:14:49.755Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T15:14:49.894Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":10}
+{"ts":"2026-10-14T15:14:50.071Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T15:14:50.213Z","cmd":"check","state":"penang","outcome":"checked","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T15:14:50.862Z","cmd":"audit","state":"penang","outcome":"problems","exit":1,"dur_ms":458}
+{"ts":"2026-10-14T15:22:18.525Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T15:22:18.633Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":8}
+{"ts":"2026-10-14T15:25:50.625Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T15:25:50.725Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}
+{"ts":"2026-10-14T15:25:50.827Z","cmd":"verify","state":"penang","outcome":"verified","exit":0,"dur_ms":9}

@@ -23,3 +23,7 @@
 {"ts":"2026-10-15T08:45:51.903Z","commit":"aa905226","outcome":"REFUSED","exit":2,"dur_ms":1912}
 {"ts":"2026-10-15T08:45:52.984Z","commit":"752a6d08","outcome":"REFUSED","exit":2,"dur_ms":732}
 {"ts":"2026-10-15T08:46:13.384Z","commit":"752a6d08","outcome":"LANDED","exit":0,"dur_ms":8650}
+{"ts":"2026-10-20T10:13:21.629Z","commit":"--except-dirty","outcome":"land-on-main:","exit":2,"dur_ms":4}
+{"ts":"2026-10-20T10:13:28.900Z","commit":"956f7801","outcome":"REFUSED","exit":2,"dur_ms":1819}
+{"ts":"2026-10-20T10:41:44.122Z","commit":"c0212061","outcome":"REFUSED","exit":2,"dur_ms":4907}
+{"ts":"2026-10-20T10:41:49.100Z","commit":"aa905226","outcome":"REFUSED","exit":2,"dur_ms":4612}
