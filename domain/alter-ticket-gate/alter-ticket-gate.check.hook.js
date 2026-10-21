@@ -159,7 +159,8 @@ runHook({ name: 'alter-ticket-gate', event: 'UserPromptSubmit', log: LOG }, (inp
   try { fs.appendFileSync(LOG, JSON.stringify({ ts: new Date().toISOString(), qa: qaNum || null, state, state_src: stateSrc, signal, signal_src: src, mode: alreadyRead ? 'reminder' : 'full', outcome: 'fired' }) + '\n'); } catch (_) { /* never block */ }
 
   if (alreadyRead) {
-    return { fired: true, blocked: false, contextOut: `🔀 alter-ticket-gate: ALTER layer already loaded this session (state=${state}) — rows A0–A6 + the §5 reply format still apply; re-read ${row ? row.file : 'the state file'} if the target node or action changed.\n` };
+    const run = state === 'melaka' ? ' Melaka A5 = run it yourself: alter.js --dry-run → APPROVAL CODE → みや approves → --approve <code> (E:\\Dev\\scripts\\FlowableAlter\\README.md).' : '';
+    return { fired: true, blocked: false, contextOut: `🔀 alter-ticket-gate: ALTER layer already loaded this session (state=${state}) — rows A0–A6 + the §5 reply format still apply; re-read ${row ? row.file : 'the state file'} if the target node or action changed.${run}\n` };
   }
 
   const lines = [
@@ -175,7 +176,9 @@ runHook({ name: 'alter-ticket-gate', event: 'UserPromptSubmit', log: LOG }, (inp
     `     A3 ⬜ NODE EDGE-TRACE table for the target (grep receiveUserTask(&quot;KOD&quot; in <state>/flowables-bpmn/<KEY>.bpmn20.xml — dump if absent); OUTGOING edge = intended next step? twins by edges, never by name`,
     `     A3b ⬜ VARIABLE TRACE for a sub-flow target: node domain/alter-ticket-gate/subflow-trace.js <bpmn-dir> <parent.bpmn20.xml> <callActivityId> — the callActivity NAME is a label; the in-mapped variables (nextUrusan, flagSemakanPemohonan, …) decide what the child does`,
     `     A4 ⬜ ACTION DECISION: Alter Flow (live) | Initiate→Alter (ended, node in LATEST model) | NOT EXECUTABLE (no process / node absent / born elsewhere) — one row, evidence per cell`,
-    `     A5 ⬜ RUNBOOK for みや (he types the login, Ruri never does) + BEFORE/AFTER verify SQL in the state dialect — or the not-executable evidence. ASSIGNEE = agihan default (previous holder of that tugasan kod, else peranan); NEVER add nextUser / nextUser<KOD> to pin an officer — verify the assignee AFTER`,
+    state === 'melaka'
+      ? `     A5 ⬜ RUN IT YOURSELF (2026-10-21): node E:\\Dev\\scripts\\FlowableAlter\\alter.js --env <prod|stg|mlit> --action <…> --id <ID> --target <KOD> … --dry-run --headless → PLAN + APPROVAL CODE (prod) → show みや the plan table + code (AskUserQuestion option "Approve <code>") → same command + --approve <code>; prod-alter-gate blocks it without his approval; the built-in AFTER check must print VERIFIED. Logged out (exit 4) → ask him for: node keeper.js --login --env prod. Procedure: E:\\Dev\\scripts\\FlowableAlter\\README.md. ASSIGNEE = agihan default; NEVER add nextUser / nextUser<KOD> — report the holder from the AFTER rows`
+      : `     A5 ⬜ RUNBOOK for みや (he types the login, Ruri never does) + BEFORE/AFTER verify SQL in the state dialect — or the not-executable evidence. ASSIGNEE = agihan default (previous holder of that tugasan kod, else peranan); NEVER add nextUser / nextUser<KOD> to pin an officer — verify the assignee AFTER`,
     `     A6 ⬜ REPLY in みや's voice (.claude/auto-memory/feedback_ticket_writing_style.md speech collection; playbook §5.1) | not-executable options block · Redmine: fill every field that exists on the form (Root Cause (DEV) per feedback_redmine_rootcause_format), skip only absent ones — BA register, no file:line / SQL / engine ids`,
     `   Bypass: [skip-alter-gate: <reason>]`,
     '',

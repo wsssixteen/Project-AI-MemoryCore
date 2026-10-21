@@ -371,6 +371,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\quest-exists-gate\\\\quest-exists-gate.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\prod-alter-gate\\\\prod-alter-gate.check.hook.js\""
           }
         ]
       },
