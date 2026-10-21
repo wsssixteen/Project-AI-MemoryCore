@@ -72,7 +72,7 @@ Use `mcp__Claude_in_Chrome__form_input` for each:
 
 | Field | Selector hint | Value |
 |---|---|---|
-| Status | `#issue_status_id` (select) | `Resolved` |
+| Status | `#issue_status_id` (select) | `Resolved` — ONLY when the live status is lower (New · Open · In Progress · Rework · KIV · Reviewing). A status at or past Resolved (**Verified** · Ready in PROD · Closed) stays as it is: never set it back (2026-10-21 per みや, #282587: Verified was set back to Resolved) |
 | Assignee | `#issue_assigned_to_id` (select) | `<assignee>` (default Aaron Loh Zhi Yong) |
 | % Done | `#issue_done_ratio` (select) | `100` |
 | Resolved By | `#issue_custom_field_values_<id>` (select) | `Ahmad Ridhwan Anuar` |

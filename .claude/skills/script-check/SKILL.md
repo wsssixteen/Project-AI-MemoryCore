@@ -58,6 +58,10 @@ Patched `ind_tgsn.nama = 'Semakan Minit Bebas'`; the Sejarah Tugasan grid reads 
 
 `SCRIPT-CHECK — rule 1 ✓ · rule 2 <✓|⏭ ref> · rule 3 ✓ · rule 4 ✓ · rule 5 <display col = `<col>`, verified via <grep/DB-match>> · rule 6 <schema `<et_main|et_main_stg2|et_main_mlit|ET_MAIN>` (Melaka / Perak examples; else the resolved state's schema from `node lib/states.js show <state>`, with its MCP server named when the schema name is shared across states) on every table · every statement ends with `-- <expected>` (DML: N rows updated/deleted/inserted · SELECT: N rows + state) · env in handoff MESSAGE> · rule 8 <patch-only: cause `<File.java:line>` write-path + why-not-code · scope-sweep = N affected (query cited), this = `<permohonan>` | ⏭ code fix applied>`
 
+## Running a master-data script on staging (2026-10-21 per みや, #282587)
+
+A script that changes master or reference data (`ind_*` · `rjk_*` · `kod_*` · `sis_*`) runs on BOTH `et_main_stg1` and `et_main_stg2`, whichever one the staging switch says is ON. On each schema: a dry run in a rolled-back transaction, then one transaction with every row count matched to its `-- N rows` note, then COMMIT, then a SELECT check. **Banned**: running it on the ON schema only. (#282587: the script ran on stg1 only, and みや had to ask for stg2.)
+
 ## Hook pairing
 
 - **Front gate (this skill)** — run when preparing the script.
