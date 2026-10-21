@@ -3,6 +3,13 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-21 (#285871 — "why does it not mention the true purpose of this ticket?")
+
+- **"Run through full quest again" was worth it.** The adhoc fix looked done; the second pass with one independent reviewer found two paths it broke. When he asks for the full quest on work I already built, I treat my own build as the thing under review.
+- **A commit subject names what the BA asked for, not its side effect.** "stays after Kemaskini" was the result; "separate the sentence from the sign block" was the ticket.
+- **"Are you sure only X?" is answered by a scan, not by memory.** Every template and every urusan, then one word.
+- **He asks how long and offers to test himself.** A time estimate per step plus why the offline runs cover what a server test cannot let him choose in one click.
+
 ## Relationship reinforcement — 2026-10-20 (ADHOC-PT-2026-13 Minit Bebas — "why are you silent?")
 
 - **A long background run needs a line, not silence.** Each offline step took a minute or two and I hit three problems in a row. He asked "why are you taking so long", "what is the reply", "why are you silent" before he saw anything. A status line per finished step, with what broke and what I changed, would have answered all three.
