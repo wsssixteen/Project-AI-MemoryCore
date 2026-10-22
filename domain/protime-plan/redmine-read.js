@@ -58,7 +58,7 @@ async function redmineDays(days, extraIds) {
     // resolve facts (miya 2026-10-14): he passed it on that day, or wrote on it that day and it now sits with someone else
     const handedOn = d => journals.some(jr => jr.user && jr.user.id === myId && iso(new Date(jr.created_on)) === d && (jr.details || []).some(det => det.name === 'assigned_to_id' && String(det.old_value) === String(myId)));
     const withOther = !!(is.assigned_to && is.assigned_to.id !== myId);
-    for (const d of days) if (wrote.has(d) || (extraIds.includes(id) && (extraIds.byDay || {})[d] && extraIds.byDay[d].includes(id))) worked[d].push({ id, own: !!own, done: handedOn(d) || (wrote.has(d) && withOther) });
+    for (const d of days) if (wrote.has(d) || (extraIds.includes(id) && (extraIds.byDay || {})[d] && extraIds.byDay[d].includes(id))) worked[d].push({ id, own: !!own, touched: wrote.has(d), done: handedOn(d) || (wrote.has(d) && withOther) });
   }
   return { ok: true, worked, candidates: cand.size };
 }

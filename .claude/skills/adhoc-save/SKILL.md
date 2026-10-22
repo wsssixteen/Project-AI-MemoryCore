@@ -43,6 +43,7 @@ The title:
 - 3 to 8 words, at most 60 characters. No permohonan id, no tugasan kod alone, no class, method or exception name, no person name, no office name (`PDT Jasin`), no regulation number (`Peraturan 11(B)`). `&` is written as `&`.
 - Keeps the words the screen or the BA used for the problem when they are short: `tak papar`, `kosong`, `cannot proceed`. Mine `MLPS Borang 4Ae cop PDT Jasin missing` → his `MLPS Borang 4Ae cop tak papar`; mine `PRBB Maklumat Siasatan No Lot & Luas missing` → his `PRBB lot luas laporan tanah kosong`.
 - Sentence case as he types it: first word capital, urusan and form names as written on screen.
+- Same adhoc on a later day (a follow-up): the new line never repeats or near-repeats the earlier day's line. Paraphrase it by what was done that day (2026-10-22 per みや). Earlier `Assist BA - Retrieve ID Permohonan & No Permit Pelupusan` → follow-up `Assist BA - Prepare script to filter by eTanah 2.0`.
 
 **Banned**: `PROD - TRG - ...` (my old form) · a line with no state · a Malay failure verb the screen does not show (`ralat buka`, `gagal jana`, `pecah`, `fail mati`) · the mechanism as the title (`NPE`, `NonUniqueResult`, `Invalid path TestGis`) · `Answer user questions` (his word is `Clarify to user`).
 

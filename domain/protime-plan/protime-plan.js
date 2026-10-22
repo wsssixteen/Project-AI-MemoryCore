@@ -22,6 +22,8 @@
 //              a worked ticket that was never his      -> ADHOC entry "<number> - Assist" (or the block's title)
 //              an adhoc that is missing                -> ADHOC entry, his ProTime wording (protimeLine)
 //   remove   = a PLAN entry THIS SCRIPT placed, still PENDING, still the bare number, and not worked
+//   PLAN needs Redmine: a ticket of his is added or kept as PLAN only when a Redmine update of his is dated that day
+//              (miya 2026-10-22); turns in our ledger alone never keep a PLAN entry
 //   never    = an entry he typed, an entry he edited, a RESOLVED entry, a day off
 //
 // ProTime (read from its own web bundle, service "weeklyPlanningForm"; proven 2026-10-13 on an empty day):
@@ -207,7 +209,7 @@ function settle({ existing, worked = [], adhocs = [], mine = () => false, canRem
   let planCount = plan.length;
   for (const w of [...worked].sort((a, b) => (b.done ? 1 : 0) - (a.done ? 1 : 0))) {
     if (onDay.has(String(w.id))) continue;
-    if (w.own) { if (planCount >= KPI) continue; addPlan.push(String(w.id)); planCount++; }
+    if (w.own) { if (w.touched === false || planCount >= KPI) continue; addPlan.push(String(w.id)); planCount++; }
     else addAdhoc.push(w.title || `${w.id} - Assist`);
     onDay.add(String(w.id));
   }
@@ -218,7 +220,8 @@ function settle({ existing, worked = [], adhocs = [], mine = () => false, canRem
     if (ticketsIn(line).length && ticketsIn(line).every(t => onDay.has(t))) continue;
     addAdhoc.push(line);
   }
-  const workedIds = new Set(worked.map(w => String(w.id)));
+  // a PLAN ticket stays only when it moved in Redmine that day (miya 2026-10-22: no Redmine progress = not touched)
+  const workedIds = new Set(worked.filter(w => w.touched !== false).map(w => String(w.id)));
   const remove = canRemove
     ? plan.filter(e => mine(e) && e.status === 'PENDING' && /^\d{6}$/.test(e.name) && !workedIds.has(e.name)).map(e => ({ id: e.id, name: e.name }))
     : [];
@@ -308,7 +311,7 @@ const MANUAL = [
   { flag: '--show', usage: '--show YYYY-MM-DD' },
   { flag: '--add-adhoc', usage: '--add-adhoc YYYY-MM-DD "<line>"' },
   { flag: '--add-plan', usage: '--add-plan YYYY-MM-DD <ticket>' },
-  { flag: '--resolve', usage: '--resolve YYYY-MM-DD <ticket>' },
+  { flag: '--resolve', usage: '--resolve YYYY-MM-DD <ticket | entry:<id>>' },
   { flag: '--rename', usage: '--rename YYYY-MM-DD <entry id> "<new line>"' },
   { flag: '--remove', usage: '--remove YYYY-MM-DD <entry id>' },
 ];
@@ -316,7 +319,7 @@ function manualArgsError(flag, a) {
   const m = MANUAL.find(x => x.flag === flag);
   const need = { '--show': 1, '--add-adhoc': 2, '--add-plan': 2, '--resolve': 2, '--rename': 3, '--remove': 2 }[flag];
   if (!m || a.length < need || !/^\d{4}-\d{2}-\d{2}$/.test(a[0])) return 'usage: node domain/protime-plan/protime-plan.js ' + (m ? m.usage : '');
-  if ((flag === '--add-plan' || flag === '--resolve') && !/^\d{6}$/.test(a[1])) return 'a ticket number has 6 digits: ' + a[1];
+  if ((flag === '--add-plan' || flag === '--resolve') && !/^\d{6}$/.test(a[1]) && !(flag === '--resolve' && /^entry:\d+$/.test(a[1]))) return 'a ticket number has 6 digits: ' + a[1];
   if ((flag === '--rename' || flag === '--remove') && !/^\d+$/.test(a[1])) return 'an entry id is a number (see --show): ' + a[1];
   if ((flag === '--add-adhoc' || flag === '--rename') && !String(a[flag === '--rename' ? 2 : 1]).trim()) return 'the line is empty';
   if (flag === '--add-adhoc' || flag === '--rename') { const f = lintLine(a[flag === '--rename' ? 2 : 1]); if (f.length) return 'line refused: ' + f.join('; '); }
@@ -530,10 +533,14 @@ async function main() {
       const w = await apiM.request(base, '/staff-plan/bulk/create', { method: 'POST', token: lgM.token, body: [{ moduleId: MODULE_ID, planName: a[2], status: 'PENDING', categoryTask: cat, planDate: day }] });
       if (!w.ok) return fail(1, 'protime-write-failed', 'HTTP ' + w.status);
       const mid = await readDay();
+      // a renamed entry keeps its RESOLVED mark (miya 2026-10-22: the 21/10 rename left the new line Pending)
+      const fresh = mid && [...mid.plan, ...mid.adhoc].find(e => e.name === a[2] && e.status === 'PENDING');
+      if (fresh && old.status === 'RESOLVED') { const r = await apiM.request(base, '/staff-plan/bulk/create-resolved', { method: 'POST', token: lgM.token, body: [{ parentId: fresh.id, resolvedDate: day }] }); if (!r.ok) return fail(1, 'protime-write-failed', 'HTTP ' + r.status); }
       if (mid && [...mid.plan, ...mid.adhoc].some(e => e.name === a[2])) { const d = await apiM.request(base, `/staff-plan/${old.id}`, { method: 'DELETE', token: lgM.token }); if (d.ok) removed.push({ id: old.id, name: old.name, date: day }); }
     }
     if (manual.flag === '--resolve') {
-      const t = before.plan.find(e => e.name === a[1] || ticketsIn(e.name).includes(a[1]));
+      const byEntry = /^entry:(\d+)$/.exec(a[1]);
+      const t = byEntry ? [...before.plan, ...before.adhoc].find(e => String(e.id) === byEntry[1]) : before.plan.find(e => e.name === a[1] || ticketsIn(e.name).includes(a[1]));
       if (!t) { console.log(`no plan entry for ${a[1]} on ${day}; add it first with --add-plan`); process.exit(2); }
       if (t.status !== 'RESOLVED') { const r = await apiM.request(base, '/staff-plan/bulk/create-resolved', { method: 'POST', token: lgM.token, body: [{ parentId: t.id, resolvedDate: day }] }); if (!r.ok) return fail(1, 'protime-write-failed', 'HTTP ' + r.status); }
     }
@@ -547,7 +554,7 @@ async function main() {
     if (!after) return fail(2, 'read-back-mismatch', 'plan unreadable after write');
     const ids0 = new Set([...before.plan, ...before.adhoc].map(e => e.id));
     for (const k of ['plan', 'adhoc']) for (const e of after[k]) if (!ids0.has(e.id)) created.push({ id: e.id, name: e.name, cat: k === 'adhoc' ? 'ADHOC' : 'PLAN', date: day });
-    const want = manual.flag === '--resolve' ? after.plan.some(e => (e.name === a[1] || ticketsIn(e.name).includes(a[1])) && e.status === 'RESOLVED')
+    const want = manual.flag === '--resolve' ? [...after.plan, ...after.adhoc].some(e => (/^entry:/.test(a[1]) ? 'entry:' + e.id === a[1] : e.name === a[1] || ticketsIn(e.name).includes(a[1])) && e.status === 'RESOLVED')
       : manual.flag === '--remove' ? ![...after.plan, ...after.adhoc].some(e => String(e.id) === a[1])
       : [...after.plan, ...after.adhoc].some(e => e.name === (manual.flag === '--rename' ? a[2] : a[1])) && (manual.flag !== '--rename' || removed.length === 1);
     logRow({ day: todayIso, week: monday, run: 'manual:' + manual.flag.slice(2), mode: 'live', result: want ? 'ok' : 'ok-partial', created, removed });

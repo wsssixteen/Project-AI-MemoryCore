@@ -27,6 +27,7 @@ Adhoc wording (the judgment half): `.claude/skills/adhoc-save/SKILL.md` § "Adho
 | "show today" / a date | `--show YYYY-MM-DD` | one drawing of the day: plan, adhoc, resolved |
 | "update my protime", "key in today's adhocs" | 1. `--sessions YYYY-MM-DD` 2. title each ask with the wording rule 3. show the lines in one drawing 4. on his yes, `--add-adhoc YYYY-MM-DD "<line>"` per line | the read-back line of each command |
 | "I finished <ticket>", "add <ticket> to today" | `--show` first; on the day → `--resolve YYYY-MM-DD <ticket>`; not there → `--add-plan YYYY-MM-DD <ticket>`, then `--resolve` | read-back line |
+| "resolve that adhoc line" | `--resolve YYYY-MM-DD entry:<entry id>` | read-back line |
 | "fix that line" | `--rename YYYY-MM-DD <entry id> "<new line>"` (adds the new line, then deletes the old one) | read-back line |
 | "remove that line" | `--remove YYYY-MM-DD <entry id>` | only on his word, one line at a time |
 | "run it now", "fill the plan" | dry first: no flag (morning) or `--night`; then the same with `--live` | read-back line |
