@@ -18,7 +18,10 @@ const UM = text => L({ type: 'user', isMeta: true, message: { role: 'user', cont
 const AT = text => L({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'text', text }] } });
 const AU = (name, input) => L({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 't' + (++seq), name, input }] } });
 const BODY = 'Title: MLKSTG - MLPS tandatangan Borang 4Ae ralat GIS\n' + 'The Tandatangan click fails because the licence write to GIS fails. '.repeat(8);
-const BRIEF = BODY + '\nSaving in the background next: ADHOC-MLPS-2026-4';
+const BA = '\n## Reply to BA\n**Short**\n```\nCuba klik semula.\n```\n**Full**\n```\nLicence tak sampai GIS. Cuba klik semula.\n```\n';
+const BRIEF = BODY + BA + '\nSaving in the background next: ADHOC-MLPS-2026-4';
+// ADHOC-MLMS-2026-1 first brief (2026-10-22): finding + Next steps, no reply to the BA
+const NO_BA = BODY + '\n## Next steps\n| # | Action |\n|---|---|\n| 1 | Reply to the BA with the workaround in section 3 |\n\nSaving in the background next: ADHOC-MLPS-2026-4';
 const ASK = U('start adhoc quest for melaka internal staging: klik tandatangan > error');
 const QUERY = AU('mcp__postgres-mlkstg1-pg__query_database', { query: 'SELECT 1' });
 const AGENT = AU('Agent', { description: 'Save adhoc', prompt: '[skip-brief-first: background save agent] write the save-set for ADHOC-MLPS-2026-4, run adhoc-save-audit', model: 'sonnet', run_in_background: true });
@@ -46,6 +49,15 @@ expectPass('S5 a brief with no marker (nothing to save this round)', run([ASK, Q
 expectPass('S6 a plain reply turn', run([U('thanks'), AT('Noted.')]));
 expectPass('S7 the marker in an EARLIER turn does not hold this turn', run([ASK, AT(BRIEF), U('ok'), AT('Noted.')]));
 expectPass('S8 the marker quoted inside hook feedback (meta) is not my brief', run([ASK, UM('Stop hook feedback:\nSaving in the background next: ADHOC-MLPS-2026-4'), AT('delta')]));
+const expectBaBlock = (n, r) => check(n, blocked(r) && /no reply to the BA/.test(said(r)) && /Short then Full/.test(said(r)), 'exit=' + r.status + ' out=' + said(r).slice(0, 120));
+expectBaBlock('B1 the ADHOC-MLMS-2026-1 miss: brief with no Reply to BA blocks, even with the save agent started', run([ASK, QUERY, AT(NO_BA), AGENT]));
+expectBaBlock('B2 a Reply to BA heading with only the Short version blocks', run([ASK, AT(BODY + '\n## Reply to BA\n**Short**\n```\nx\n```\nSaving in the background next: ADHOC-MLPS-2026-4'), AGENT]));
+expectPass('B3 the BA reply sent as the delta after the block, then the agent', run([ASK, AT(NO_BA), UM('Stop hook feedback:\nno reply to the BA'), AT(BA), AGENT]));
+expectPass('B4 a round with nothing for the BA says so in one line', run([ASK, AT(BODY + '\nBA reply: none (internal check only)\nSaving in the background next: ADHOC-MLPS-2026-4'), AGENT]));
+expectBaBlock('B5 "Reply to the BA" only inside a Next steps row is not the section', run([ASK, AT(NO_BA)]));
+expectBaBlock('B6 "BA reply: none" with no reason does not count', run([ASK, AT(BODY + '\nBA reply: none\nSaving in the background next: ADHOC-MLPS-2026-4'), AGENT]));
+expectBaBlock('B7 the BA heading quoted inside hook feedback (meta) is not my section', run([ASK, AT(NO_BA), UM('## Reply to BA\nShort Full'), AGENT]));
+expectPass('B8 heading "### BA reply (WhatsApp)" with Short and Full', run([ASK, AT(BODY + '\n### BA reply (WhatsApp)\n**Short**\na\n**Full**\nb\nSaving in the background next: ADHOC-MLPS-2026-4'), AGENT]));
 let r = spawnSync(process.execPath, [HOOK], { input: 'not json', encoding: 'utf8', timeout: 30000, env: process.env });
 check('S9 malformed stdin exits 0', r.status === 0, 'exit=' + r.status);
 expectPass('S10 no transcript path: fail-open', run(undefined));

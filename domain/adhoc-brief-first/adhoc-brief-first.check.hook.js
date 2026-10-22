@@ -55,6 +55,17 @@ function savePart(tool, input) {
 //    "Saving in the background next: ADHOC-<...>" and no save agent was started AFTER it → block the stop once
 //    and ask for the ONE background save agent. The brief is already on his screen, so the save starts after it.
 const MARK_RE = /^[ \t>*`-]*Saving in the background next:[ \t`*]*(ADHOC-[A-Z0-9]+-\d{4}-\d+)/im;
+// Every adhoc brief carries the reply to the BA in two versions, Short then Full (miya 2026-10-22, ADHOC-MLMS-2026-1).
+// A round with nothing for the BA says so in one line: "BA reply: none (<reason>)".
+const BA_HEAD_RE = /^#{1,4}[^\n]*\b(?:reply to (?:the )?BA|BA reply)\b[^\n]*$/im;
+const BA_NONE_RE = /^[ \t>*`-]*BA reply:\s*none\s*\([^)\n]+\)/im;
+function hasBaReply(text) {
+  if (BA_NONE_RE.test(text)) return true;
+  const m = text.match(BA_HEAD_RE);
+  if (!m) return false;
+  const after = text.slice(m.index);
+  return /\bShort\b/.test(after) && /\bFull\b/.test(after);
+}
 function stopCheck(data) {
   let all;
   try { all = turns(parse(data.transcript_path || '')); } catch (_) { return { fired: false }; }
@@ -63,6 +74,19 @@ function stopCheck(data) {
   const first = ev.findIndex(e => e.kind === 'text' && MARK_RE.test(e.text));
   if (first === -1) return { fired: false };
   const id = ev[first].text.match(MARK_RE)[1];
+  const said = ev.filter(e => e.kind === 'text').map(e => e.text).join('\n');
+  if (!hasBaReply(said)) {
+    return {
+      fired: true, blocked: true,
+      blockReason: [
+        '⛔ adhoc-brief-first: the brief for ' + id + ' has no reply to the BA.',
+        '   Every adhoc brief carries "## Reply to BA" with two versions, Short then Full,',
+        '   drafted with Pena (profile whatsapp-dev + module plain), placed just above Next steps (miya 2026-10-22).',
+        '   Nothing to tell the BA this round? One line instead: BA reply: none (<reason>).',
+        '   ⚡ DELTA ONLY: send just the Reply to BA section, then start the save agent.',
+      ].join('\n') + '\n',
+    };
+  }
   const started = ev.slice(first + 1).some(e => e.kind === 'tool' && e.name === 'Agent' && e.input.includes(id));
   if (started) return { fired: true, blocked: false };
   return {
