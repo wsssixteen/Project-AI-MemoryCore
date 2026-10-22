@@ -66,10 +66,45 @@ function hasBaReply(text) {
   const after = text.slice(m.index);
   return /\bShort\b/.test(after) && /\bFull\b/.test(after);
 }
+// A step the BA is told to click / fill / add is traced through the screen's disabled/rendered conditions for THIS
+// record first, and says how it was tested (miya 2026-10-22, ADHOC-MLMS-2026-1: "Tambah Kawasan, isi luas" was sent;
+// the luas fields are disabled for MLMS when kwsnAsal=false, which the analog record did not share).
+const ACTION_RE = /\b(?:klik|click|tekan|tambah|isi|pilih|simpan|hantar)\b/i;
+const USER_STEP_RE = /^[ \t>*`|-]*User-step:/im;
+function baSection(text) {
+  const m = text.match(BA_HEAD_RE);
+  if (!m) return '';
+  const rest = text.slice(m.index + m[0].length);
+  const next = rest.search(/^#{1,4}\s/m);
+  return next === -1 ? rest : rest.slice(0, next);
+}
+// "How sure are you" is answered with a Confidence table, never a bare % (same day, same adhoc: 85% given after
+// reading only the save path).
+const SURE_ASK_RE = /\bhow (?:sure|confident)\b|\bberapa (?:yakin|pasti)\b|\bconfidence\b.*\?|\bsure\b.*\bin\s*%/i;
+const PCT_RE = /\b\d{1,3}\s?%/;
+const CONF_TABLE_RE = /^#{1,4}[^\n]*\bConfidence table\b/im;
+function confidenceCheck(turn) {
+  if (!SURE_ASK_RE.test(turn.prompt || '')) return null;
+  const said = turn.events.filter(e => e.kind === 'text').map(e => e.text).join('\n');
+  if (!PCT_RE.test(said) || CONF_TABLE_RE.test(said)) return null;
+  return {
+    fired: true, blocked: true,
+    blockReason: [
+      '⛔ adhoc-brief-first: a % was given to "how sure" with no Confidence table.',
+      '   Add "## Confidence table": one row per check, ⬜ caps the %: read AND write path incl. the screen\'s',
+      '   disabled/rendered conditions (cap 50) · THIS record\'s value of each condition field (cap 50) · analog',
+      '   compared on those fields (cap 60) · build-match PROD = local, behind 0 (cap 70) · falsifier checked (cap 80)',
+      '   · live test or photo after the step (needed for 90+). Steps: .claude/skills/adhoc-save/SKILL.md step 1.',
+      '   ⚡ DELTA ONLY: send just the table and the corrected %.',
+    ].join('\n') + '\n',
+  };
+}
 function stopCheck(data) {
   let all;
   try { all = turns(parse(data.transcript_path || '')); } catch (_) { return { fired: false }; }
   if (!all.length) return { fired: false };
+  const conf = confidenceCheck(all[all.length - 1]);
+  if (conf) return conf;
   const ev = all[all.length - 1].events;
   const first = ev.findIndex(e => e.kind === 'text' && MARK_RE.test(e.text));
   if (first === -1) return { fired: false };
@@ -84,6 +119,19 @@ function stopCheck(data) {
         '   drafted with Pena (profile whatsapp-dev + module plain), placed just above Next steps (miya 2026-10-22).',
         '   Nothing to tell the BA this round? One line instead: BA reply: none (<reason>).',
         '   ⚡ DELTA ONLY: send just the Reply to BA section, then start the save agent.',
+      ].join('\n') + '\n',
+    };
+  }
+  if (!BA_NONE_RE.test(said) && ACTION_RE.test(baSection(said)) && !USER_STEP_RE.test(said)) {
+    return {
+      fired: true, blocked: true,
+      blockReason: [
+        '⛔ adhoc-brief-first: the reply to the BA for ' + id + ' tells the user to act on a screen, with no User-step trace.',
+        '   For each field or button named: the xhtml disabled=/rendered= on it, the flag it reads, that flag\'s value',
+        '   for THIS record, the analog\'s value, and how it was tested. One line each:',
+        '   User-step: <field/button> · gate <xhtml:line> <expr> · flag <col>=<this> (analog <that>) · ENABLED|DISABLED · tested: <code trace|DB|photo|not tested>',
+        '   A DISABLED step is not sent to the BA (miya 2026-10-22, ADHOC-MLMS-2026-1).',
+        '   ⚡ DELTA ONLY: send just the User-step lines (and a corrected Reply to BA if a step is DISABLED).',
       ].join('\n') + '\n',
     };
   }

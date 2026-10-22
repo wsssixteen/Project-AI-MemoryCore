@@ -18,7 +18,9 @@ const UM = text => L({ type: 'user', isMeta: true, message: { role: 'user', cont
 const AT = text => L({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'text', text }] } });
 const AU = (name, input) => L({ type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: 't' + (++seq), name, input }] } });
 const BODY = 'Title: MLKSTG - MLPS tandatangan Borang 4Ae ralat GIS\n' + 'The Tandatangan click fails because the licence write to GIS fails. '.repeat(8);
-const BA = '\n## Reply to BA\n**Short**\n```\nCuba klik semula.\n```\n**Full**\n```\nLicence tak sampai GIS. Cuba klik semula.\n```\n';
+const BA = '\n## Reply to BA\n**Short**\n```\nCuba klik semula.\n```\n**Full**\n```\nLicence tak sampai GIS. Cuba klik semula.\n```\nUser-step: Tandatangan button · gate PB4AE.xhtml:88 rendered=#{mb.sign} · flag sign=true (analog true) · ENABLED · tested: code trace\n';
+// ADHOC-MLMS-2026-1 second miss (2026-10-22): the BA was told to fill a field that is disabled for this record
+const MLMS_BA = '\n## Reply to BA\n**Short**\n```\nMaklumat Plot kosong. Cuba minta user klik Tambah Kawasan dulu, isi luas dan unit, Simpan, then Hantar.\n```\n**Full**\n```\nTambah Kawasan, isi luas dan unit luas, then Simpan.\n```\n';
 const BRIEF = BODY + BA + '\nSaving in the background next: ADHOC-MLPS-2026-4';
 // ADHOC-MLMS-2026-1 first brief (2026-10-22): finding + Next steps, no reply to the BA
 const NO_BA = BODY + '\n## Next steps\n| # | Action |\n|---|---|\n| 1 | Reply to the BA with the workaround in section 3 |\n\nSaving in the background next: ADHOC-MLPS-2026-4';
@@ -58,6 +60,21 @@ expectBaBlock('B5 "Reply to the BA" only inside a Next steps row is not the sect
 expectBaBlock('B6 "BA reply: none" with no reason does not count', run([ASK, AT(BODY + '\nBA reply: none\nSaving in the background next: ADHOC-MLPS-2026-4'), AGENT]));
 expectBaBlock('B7 the BA heading quoted inside hook feedback (meta) is not my section', run([ASK, AT(NO_BA), UM('## Reply to BA\nShort Full'), AGENT]));
 expectPass('B8 heading "### BA reply (WhatsApp)" with Short and Full', run([ASK, AT(BODY + '\n### BA reply (WhatsApp)\n**Short**\na\n**Full**\nb\nSaving in the background next: ADHOC-MLPS-2026-4'), AGENT]));
+const MARK = '\nSaving in the background next: ADHOC-MLPS-2026-4';
+const expectStepBlock = (n, r) => check(n, blocked(r) && /no User-step trace/.test(said(r)) && /User-step: <field/.test(said(r)), 'exit=' + r.status + ' out=' + said(r).slice(0, 120));
+expectStepBlock('U1 the ADHOC-MLMS-2026-1 miss: BA told to isi luas with no User-step trace blocks', run([ASK, QUERY, AT(BODY + MLMS_BA + MARK), AGENT]));
+expectPass('U2 the same reply with its User-step line passes', run([ASK, AT(BODY + MLMS_BA + 'User-step: luas · gate plpMaklumatPlotForm.xhtml:166 disabled when MLMS and kawasanAsal · flag kwsnAsal=false (analog true) · DISABLED · tested: code trace' + MARK), AGENT]));
+expectStepBlock('U3 a User-step line quoted only inside hook feedback (meta) does not count', run([ASK, AT(BODY + MLMS_BA + MARK), UM('User-step: x'), AGENT]));
+expectPass('U4 a BA reply with no screen action needs no User-step', run([ASK, AT(BODY + '\n## Reply to BA\n**Short**\nIsu data, kami patch.\n**Full**\nIsu data. Kami sedang sediakan patch.\n' + MARK), AGENT]));
+expectStepBlock('U5 action verb in English (click) also counts', run([ASK, AT(BODY + '\n## Reply to BA\n**Short**\nPlease click Tambah.\n**Full**\nPlease click Tambah then save.\n' + MARK), AGENT]));
+expectPass('U6 an action word outside the Reply to BA section (Next steps) does not count', run([ASK, AT(BODY + '\n## Reply to BA\n**Short**\nIsu data.\n**Full**\nIsu data, patch.\n## Next steps\n| 1 | klik Hantar later |' + MARK), AGENT]));
+const SURE = U('How sure are you in %?');
+const expectConfBlock = (n, r) => check(n, blocked(r) && /no Confidence table/.test(said(r)), 'exit=' + r.status + ' out=' + said(r).slice(0, 120));
+expectConfBlock('C1 the ADHOC-MLMS-2026-1 miss: "how sure" answered with 85% and no Confidence table blocks', run([SURE, AT('I am 85% sure the workaround works.')]));
+expectPass('C2 the same answer with a Confidence table passes', run([SURE, AT('60% sure.\n## Confidence table\n| check | done |\n|---|---|\n| screen conditions | ⬜ |')]));
+expectPass('C3 a % in a turn that did not ask how sure passes', run([U('how many rows?'), AT('23 rows, 70% of them from mita.')]));
+expectPass('C4 "how sure" answered without any % passes', run([SURE, AT('Not sure yet: the screen conditions are not read.')]));
+expectConfBlock('C5 Malay ask "berapa yakin" with a bare % blocks', run([U('berapa yakin?'), AT('90%.')]));
 let r = spawnSync(process.execPath, [HOOK], { input: 'not json', encoding: 'utf8', timeout: 30000, env: process.env });
 check('S9 malformed stdin exits 0', r.status === 0, 'exit=' + r.status);
 expectPass('S10 no transcript path: fail-open', run(undefined));
