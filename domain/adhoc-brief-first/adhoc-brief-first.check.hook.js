@@ -122,6 +122,19 @@ function stopCheck(data) {
       ].join('\n') + '\n',
     };
   }
+  // Fix ladder rung 2: a data patch in the brief carries the code's own read run on the after-state
+  // (ADHOC-MLMS-2026-1: two area rows with different units would have made the fee ~RM0.04).
+  if (/\b(?:UPDATE\s+[\w.]+\s+SET|DELETE\s+FROM|INSERT\s+INTO)\b/i.test(said) && !/^[ \t>*`|-]*After-state:/im.test(said)) {
+    return {
+      fired: true, blocked: true,
+      blockReason: [
+        '⛔ adhoc-brief-first: the brief for ' + id + ' offers a data patch with no After-state line.',
+        '   Run the code\'s own read on the rows as they will be AFTER the patch and write one line:',
+        '   After-state: <code read, file:line> on <rows after patch> → <what the screen/fee/flow gets> · checked: <SELECT|code trace>',
+        '   ⚡ DELTA ONLY: send just the After-state line.',
+      ].join('\n') + '\n',
+    };
+  }
   if (!BA_NONE_RE.test(said) && ACTION_RE.test(baSection(said)) && !USER_STEP_RE.test(said)) {
     return {
       fired: true, blocked: true,

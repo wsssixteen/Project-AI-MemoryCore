@@ -68,6 +68,10 @@ expectStepBlock('U3 a User-step line quoted only inside hook feedback (meta) doe
 expectPass('U4 a BA reply with no screen action needs no User-step', run([ASK, AT(BODY + '\n## Reply to BA\n**Short**\nIsu data, kami patch.\n**Full**\nIsu data. Kami sedang sediakan patch.\n' + MARK), AGENT]));
 expectStepBlock('U5 action verb in English (click) also counts', run([ASK, AT(BODY + '\n## Reply to BA\n**Short**\nPlease click Tambah.\n**Full**\nPlease click Tambah then save.\n' + MARK), AGENT]));
 expectPass('U6 an action word outside the Reply to BA section (Next steps) does not count', run([ASK, AT(BODY + '\n## Reply to BA\n**Short**\nIsu data.\n**Full**\nIsu data, patch.\n## Next steps\n| 1 | klik Hantar later |' + MARK), AGENT]));
+const PATCH = '\n```sql\nDELETE FROM ET_MAIN.UMM_A_PERMOHONAN_TNH WHERE A_PERMOHONAN_TNH_ID IN (915909);\n```\n';
+check('P1 a brief with a data patch and no After-state line blocks', (r => blocked(r) && /no After-state line/.test(said(r)))(run([ASK, AT(BODY + PATCH + BA + MARK), AGENT])), '');
+expectPass('P2 the same brief with its After-state line passes', run([ASK, AT(BODY + PATCH + 'After-state: initBayaranLesenMLMS:604-630 on row 915916 only → unit 2531, fee RM330.40 · checked: SELECT' + BA + MARK), AGENT]));
+expectPass('P3 the word "update" in prose is not a patch', run([ASK, AT(BODY + '\nWe will update the BA after this.\n' + BA + MARK), AGENT]));
 const SURE = U('How sure are you in %?');
 const expectConfBlock = (n, r) => check(n, blocked(r) && /no Confidence table/.test(said(r)), 'exit=' + r.status + ' out=' + said(r).slice(0, 120));
 expectConfBlock('C1 the ADHOC-MLMS-2026-1 miss: "how sure" answered with 85% and no Confidence table blocks', run([SURE, AT('I am 85% sure the workaround works.')]));
