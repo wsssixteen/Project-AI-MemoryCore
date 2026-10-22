@@ -57,6 +57,15 @@ fs.writeFileSync(path.join(TMP, 'changed.txt'), CHANGED);
 fs.writeFileSync(path.join(TMP, 'same.txt'), SAME);
 fs.writeFileSync(path.join(TMP, 'gen.txt'), GEN_ONLY);
 fs.writeFileSync(path.join(TMP, 'empty.txt'), '');
+// Replay case: QA-285871 2026-10-22 3sign flow, the fills and signature images of the four steps.
+const CHAIN = ['[boot] context ready in 45000 ms'];
+[[1, 2757501, 'CREATE', 3945, 0], [2, 2757934, 'STATUS_PENYEDIAAN_SEMAK', 3507, 1], [3, 2761973, 'STATUS_PENYEDIAAN_SEMAK', 7573, 2], [4, 2764770, 'STATUS_PENYEDIAAN_PERAKU', 3853, 3]].forEach(([n, id, act, ms, img]) => {
+  CHAIN.push('[chain] step ' + n + '/4: a_tgsn ' + id + ', action ' + act, '   * PLP_MNTBBS_TLKRNGKS  <-  TemplateMinitBebasKPPD.docx',
+    '[gen] PLP_MNTBBS_TLKRNGKS: action ' + act + ', filled in ' + ms + ' ms -> X:\\out\\' + n + '\\a__filled.docx', '[tags] images ' + img + ' [] · placeholder 0 [] · text 9');
+});
+CHAIN.push('[chain] done: 4 steps -> X:\\out\\4\\a__filled.docx');
+fs.writeFileSync(path.join(TMP, 'chain.txt'), CHAIN.join('\n'));
+fs.writeFileSync(path.join(TMP, 'warm.txt'), ['[warm] reusing JVM pid 4242', GEN_ONLY].join('\n'));
 
 let r;
 
@@ -128,9 +137,46 @@ if (hasPwsh) {
   const BUILD_HOME = toolHome('tool-build', 'Write-Output "[build] ok (compare: X @ HEAD (abc1234))"\nexit 0\n');
   r = run(['build'], { DOC_SIM_HOME: BUILD_HOME });
   check('F34 build mode: line says build ok with the compare ref', r.status === 0 && /DOC-SIM: build ok \(compare: X @ HEAD/.test(r.stdout), r.stdout.slice(-200));
+  const ENV_HOME = toolHome('tool-env', 'Write-Output "[gen] X: action CREATE, filled in 5 ms -> y"\nWrite-Output "runner=$env:DOC_SIM_RUNNER"\nexit 0\n');
+  r = run(['gen', '--permohonan', PID, '--jboss', STG], { DOC_SIM_HOME: ENV_HOME });
+  check('F43 the runner tells tg.ps1 it writes the log row itself (one row per run)', r.status === 0 && /runner=1/.test(r.stdout), r.stdout.slice(-200));
+  const CHAIN_HOME = toolHome('tool-chain', 'Write-Output @"\n' + fs.readFileSync(path.join(TMP, 'chain.txt'), 'utf8') + '\n"@\nexit 0\n');
+  fs.rmSync(path.join(TMP, 'log.jsonl'), { force: true });
+  r = run(['chain', '--permohonan', PID, '--jboss', STG, '--steps', '1:CREATE,2:SEMAK,3:SEMAK,4:PERAKU'], { DOC_SIM_HOME: CHAIN_HOME });
+  const chainRows = fs.existsSync(path.join(TMP, 'log.jsonl')) ? fs.readFileSync(path.join(TMP, 'log.jsonl'), 'utf8').trim().split('\n').map(l => JSON.parse(l)) : [];
+  check('F42 chain log row carries steps, images, boot ms and the runner name', chainRows.length === 1 && chainRows[0].steps === 4 && JSON.stringify(chainRows[0].images) === '[0,1,2,3]' && chainRows[0].boot_ms === 45000 && chainRows[0].via === 'doc-sim.js' && chainRows[0].warm === false, JSON.stringify(chainRows));
 } else {
-  check('F23-F26, F33-F34 pwsh not on this machine (skipped)', true);
+  check('F23-F26, F33-F34, F42-F43 pwsh not on this machine (skipped)', true);
 }
+
+// --- chain, warm, changed classes (no tool needed) ---
+r = run(['chain', '--permohonan', PID, '--jboss', STG]);
+check('F35 chain without --steps -> exit 2', r.status === 2 && /chain needs --steps/.test(r.stderr), 'exit=' + r.status);
+r = run(['gen', '--permohonan', PID, '--jboss', STG, '--steps', '1:CREATE']);
+check('F36 --steps on gen -> exit 2', r.status === 2 && /only for the chain mode/.test(r.stderr), 'exit=' + r.status);
+for (const bad of ['2757501', '2757501:CREATE;rm', 'x:CREATE', '1:CREATE,,2:SEMAK', '1:E:\\file.docx']) {
+  r = run(['chain', '--permohonan', PID, '--jboss', STG, '--steps', bad]);
+  check('F37 malformed step list refused: ' + bad, r.status === 2 && /a chain step is/.test(r.stderr), 'exit=' + r.status);
+}
+r = run(['gen', '--permohonan', PID, '--jboss', STG, '--a-tgsn', '12a']);
+check('F39 --a-tgsn that is not a number -> exit 2', r.status === 2 && /--a-tgsn is a number/.test(r.stderr), 'exit=' + r.status);
+r = run(['gen', '--permohonan', PID, '--jboss', STG, '--input', path.join(TMP, 'nope.docx')]);
+check('F46 --input that does not exist -> exit 2', r.status === 2 && /--input not found/.test(r.stderr), 'exit=' + r.status);
+r = run(['gen', '--permohonan', PID, '--jboss', STG, '--java-src', path.join(TMP, 'Nope.java')]);
+check('F47 --java-src absolute file that does not exist -> exit 2', r.status === 2 && /--java-src file not found/.test(r.stderr), 'exit=' + r.status);
+fs.writeFileSync(path.join(TMP, 'in.docx'), 'x');
+r = run(['chain', '--permohonan', PID, '--jboss', STG, '--steps', '2757501:CREATE,2757934:SEMAK', '--input', path.join(TMP, 'in.docx'), '--java-src', 'src/main/java/A.java,src/main/java/B.java', '--classes-dir', TMP, '--warm', '--idle-min', '5', '--dry-run'], { DOC_SIM_HOME: OK_HOME });
+check('F38 dry-run maps chain, -Steps, -InputDoc, -JavaSrc, -ClassesDir, -Warm, -IdleMin', r.status === 0 && / chain /.test(r.stdout) && /-Steps 2757501:CREATE,2757934:SEMAK/.test(r.stdout) && /-InputDoc /.test(r.stdout) && /-JavaSrc src\/main\/java\/A\.java,src\/main\/java\/B\.java/.test(r.stdout) && /-ClassesDir /.test(r.stdout) && /-Warm/.test(r.stdout) && /-IdleMin 5/.test(r.stdout), r.stdout.slice(0, 300));
+r = run(['gen', '--permohonan', PID, '--jboss', STG, '--a-tgsn', '2757934', '--action', 'SEMAK', '--dry-run'], { DOC_SIM_HOME: OK_HOME });
+check('F48 dry-run maps one step: -ATgsn and -Action', r.status === 0 && /-ATgsn 2757934/.test(r.stdout) && /-Action SEMAK/.test(r.stdout), r.stdout.slice(0, 300));
+r = run(['stop', '--jboss', LIVE, '--dry-run'], { DOC_SIM_HOME: OK_HOME });
+check('F45 stop needs no permohonan and no schema check', r.status === 0 && / stop/.test(r.stdout) && /schema=n\/a/.test(r.stdout), r.stdout + r.stderr);
+r = run(['--where-log'], { DOC_SIM_LOG: '' });
+check('F44 the log lives in the main checkout, never inside a worktree copy', r.status === 0 && /domain[\\/]doc-sim[\\/]log\.jsonl$/.test(r.stdout.trim()) && !/[\\/]\.claude[\\/]worktrees[\\/]/.test(r.stdout), r.stdout.trim());
+r = run(['--parse', path.join(TMP, 'chain.txt'), '--permohonan', PID, '--mode', 'chain']);
+check('F40 chain summary: steps, images per step, fills joined, template once, boot ms', /chain 4 steps/.test(r.stdout) && /images 0→1→2→3/.test(r.stdout) && /fill 3945\+3507\+7573\+3853 ms/.test(r.stdout) && (r.stdout.match(/TemplateMinitBebasKPPD\.docx/g) || []).length === 1 && /boot 45000 ms/.test(r.stdout), r.stdout.trim());
+r = run(['--parse', path.join(TMP, 'warm.txt'), '--permohonan', PID]);
+check('F41 warm run says warm JVM, not a boot time', /warm JVM/.test(r.stdout) && !/boot \d+ ms/.test(r.stdout), r.stdout.trim());
 
 // --- the skill, the quest rows, the Feature files ---
 const skill = fs.readFileSync(path.join(ROOT, '.claude', 'skills', 'doc-sim', 'SKILL.md'), 'utf8');
