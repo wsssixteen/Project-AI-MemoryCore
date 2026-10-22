@@ -64,3 +64,5 @@ retention: rotate monthly
 ## v2 (2026-10-04, #282924)
 
 The gate fires only when miya asked for a fix photo in his own words this session. A fix photo is a real after-fix screen (a frame of his test video or a screenshot he gave), never BA's before-screenshot with a box drawn on it. Why: an unrequested marked-up BA screenshot was created for #282924 and read as a fake screenshot of the fix. Eval 46/46.
+
+- **One box per change (2026-10-22 per miya, #285768).** Draw exactly one box for each change the note or ticket names. Never box an unchanged field (no 'Kekal' boxes) and never box an empty spot where something was removed: a removal is said in the note, not drawn. Count the boxes against the note's changes before handing back.
