@@ -59,7 +59,7 @@ check('P7 clean input exits 0 (no false block)', r.status === 0, 'exit=' + r.sta
 
 const cases = [
   { id: 'P1 real PPTPB paste fires + injects scaffold + echoes urusan', prompt: PASTE,
-    want: ['adhoc-paste-detector', 'MANDATORY scaffold', 'ADHOC-PPTPB', 'active-cli.js start'], notWant: [] },
+    want: ['adhoc-paste-detector', 'MANDATORY scaffold', 'ADHOC-PPTPB', 'active-cli.js start', 'FIX LADDER', '1. User side', 'rung 1 out'], notWant: [] },
   { id: 'P2 same shape WITH a Redmine number is SILENT', prompt: PASTE + '\nESOKONGAN #275999',
     want: [], notWant: ['adhoc-paste-detector'] },
   { id: 'P3 ordinary prose is SILENT', prompt: 'can you check why the surat looks wrong',

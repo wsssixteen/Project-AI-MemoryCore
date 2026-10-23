@@ -39,6 +39,7 @@ archived                              --close-->   (no-op: already archived)
 Trigger: "save this quest" · "save quest" · "save the quest" · "save quest <num>". The LIVE Redmine status picks the stage. Never ask みや which phase to run.
 
 1. **Persist first, always.** Write the quest doc and the block the way the quest skill says (`.claude/skills/quest/SKILL.md` → "Vocabulary — save everything": qa_doc section · `## Test data` · active.txt fields), and check both folders (`.claude/auto-memory/feedback_quest_closure_both_folders.md`).
+1b. **Clean up the quest's temp files (2026-10-22 per みや, #285768).** After step 1 is written, run `node lib/quest-cleanup.js <QA> --apply` and paste its `QUEST-CLEANUP:` line. It removes this ticket's TEMP folders, scratchpad drafts and Office junk (`~$*`, `*.bak*`, `*.tmp`) in the Task folder, and LISTS its etanah work worktrees (`E:\Dev\etanah-work\wt-*<num>*`) as kept. A worktree is removed only on みや's yes: `--apply --drop-worktree`. **Banned**: a save reply without the `QUEST-CLEANUP:` line · deleting a worktree he did not say yes to.
 2. **Run the resolver and paste its line:** `node lib/save-quest.js <QA>` → `SAVE-QUEST: <QA> · Redmine = <status> · local = <status> → <VERDICT>`.
 3. **Do what the verdict says, in the same turn:**
 
@@ -173,4 +174,5 @@ Acceptance: `bulk.js --debt` prints `0 unharvested` and the boot surfacer shows 
 
 *2026-10-03 — Terengganu active per みや: Phase 1 step 2/4/5 made state-neutral (`<trunk>` + `<ticket-branch>` from `node lib/states.js show <state>`) + the work-clone rule (`work_clone_root` → ref-moving git only in the work clone). Spec-preservation: step ORDER and every ban untouched; the Melaka values `mlk/master` / `mlk/qa/<num>` stay visible as the "Melaka:" example on each line.*
 
+*2026-10-22 — Save-quest step 1b per みや (#285768, "check if you've added into quest save that you will always clean all the temp files"): `lib/quest-cleanup.js <QA> --apply` after the persist step, paste the `QUEST-CLEANUP:` line; worktrees only on his yes. Spec-preservation: steps 1, 2, 3 and the verdict table untouched; additive. Fire + effect check: `node domain/quest-cleanup/eval.js`.*
 *2026-10-23 — per みや (KPI Feature `domain/kpi/`): Phase 2 Step 2 runs the `kpi` skill (list this ticket's rows, add any missed moment, self-audit PASS) instead of hand-appending to `main/kpi-tracker.md`, which is now generated. Spec kept: the skip line when nothing stands out; a step that is never silent. Changed and named: "only-if-significant" becomes "any appraisal moment, one sentence + evidence" (his 2026-10-23 ask: note anything that might help the assessment).*

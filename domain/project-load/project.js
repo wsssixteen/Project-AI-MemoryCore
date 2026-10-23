@@ -95,6 +95,8 @@ function lastDecisions(p, n) {
 }
 
 // ---------- the card ----------
+// His rule 2026-10-23 (PymTime Phase P: a colleague's Plan-or-Assist choice was first designed as a line in a file).
+const PEOPLE_RULE = "   Design rule (every project, his rule 2026-10-23): a person does everything through the app's own page; a file or an API is only for machines. No design asks a person to edit a file.";
 function card(p, opts) {
   const o = opts || {};
   const max = o.max || CARD_MAX;
@@ -110,10 +112,12 @@ function card(p, opts) {
     head.push(fs.existsSync(idx) ? '   READ FIRST: ' + idx : '   ⚠️ its index is MISSING: ' + idx + ' — create it first (/project skill).');
     head.push('   It is the index: state now, which file answers which question, hard rules, how to resume. Then open only the file its table names.');
     head.push('   Every bulk change ends with: VERSIONS.md row + PROJECT.md state + ROADMAP.md status, same turn (Domain Expansion checks this with lib/save-rules.js).');
+    head.push(PEOPLE_RULE);
     if (o.kind === 'compact' || o.kind === 'resume') head.push('   Re-read that index now, before the next step. ' + minedLine(o, 'its decisions record'));
     return head.join('\n') + '\n';
   }
   head.push('   READ FIRST: ' + startPath + '  (then only the file its table names)');
+  head.push(PEOPLE_RULE);
   if (o.kind === 'compact' || o.kind === 'resume') head.push('   ' + minedLine(o) + ' Never re-decide a row of DECISIONS.md.');
   if (o.report) head.push('   YOU ARE A DELEGATED SESSION. Your report: ' + o.report + ' — headings: ' + REPORT_HEADINGS.map(h => h[0]).join(' · ') + '. Update it at every bulk change and before every end of turn (the Stop gate checks).');
   const foot = '   Rules of the system: every deliverable names the spec row it serves (S1, S2 …). A decision (his ruling, an agreed fix, a spec change) goes into DECISIONS.md the moment it is made: node domain/project-load/project.js decide ' + JSON.stringify(p.name) + ' --decision "…" --why "…" --who "…" --serves S#. The Stop gate blocks a reply that states a decision with no ledger write.';
@@ -393,7 +397,7 @@ function scaffold(name, opts) {
   return written;
 }
 
-module.exports = { MAIN, ACTIVE, LOG, ACTIVE_TXT, CARD_MAX, SESSION_MAX, START_HEADINGS, REPORT_HEADINGS, listProjects, findProject, namedIn, mainRootOf, sections, section, card, questBlocks, questCard, questsNamed, logRows, logAppend, bindings, minedSince, humanPrompts, lastSummary, turnStartMs, sessionStartMs, mineWords, saveSummary, decide, newestChange, reportMissing, checkShape2, reportVerdicts, scaffold, read, mtime };
+module.exports = { PEOPLE_RULE, MAIN, ACTIVE, LOG, ACTIVE_TXT, CARD_MAX, SESSION_MAX, START_HEADINGS, REPORT_HEADINGS, listProjects, findProject, namedIn, mainRootOf, sections, section, card, questBlocks, questCard, questsNamed, logRows, logAppend, bindings, minedSince, humanPrompts, lastSummary, turnStartMs, sessionStartMs, mineWords, saveSummary, decide, newestChange, reportMissing, checkShape2, reportVerdicts, scaffold, read, mtime };
 
 // ---------- CLI ----------
 if (require.main === module) {

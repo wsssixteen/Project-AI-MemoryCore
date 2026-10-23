@@ -17,10 +17,22 @@ One run answers what a deploy would: does this permohonan produce this document,
 | Force a template whose conditions are not met yet | add `--template "<file>.docx"` |
 | Compare two files | `node domain/doc-sim/doc-sim.js compare --a "<docx>" --b "<docx>"` |
 | Compare code changed in the source | `node domain/doc-sim/doc-sim.js build` once |
+| One tugasan step as Selesai fills it | add `--a-tgsn <umm_a_tgsn id> --action <CREATE|SEMAK|PERAKU|full name>` and `--input "<docx of the step before>"` |
+| A multi-step flow in ONE start | `node domain/doc-sim/doc-sim.js chain --permohonan "<id>" --steps "<a_tgsn>:<action>,<a_tgsn>:<action>,..." --template "<file>.docx" --dokumen <kod>` |
+| A Java fix not deployed locally | add `--java-src "<file.java>,<file.java>"` (full path, or relative to `E:\Dev\etanah-work\etanah-pelupusan`); compiled against the WAR, cached |
+| Several runs in a row, or a script edits the file between steps | add `--warm`; one JVM stays up 15 idle minutes; `node domain/doc-sim/doc-sim.js stop` ends it |
 
-Each run takes 2 to 3 minutes. The last line is the one to carry:
+A cold run takes 1.5 to 2 minutes. A warm step or a chain step takes 12 to 15 s. The last line is the one to carry:
 
-`DOC-SIM: <permohonan> · <template> · fill <ms> ms · <n> hidden errors · compare <SAME|CHANGED|n/a> · first diff …`
+`DOC-SIM: <permohonan> · <template> · [chain <n> steps ·] fill <ms> ms · [images a→b→c ·] <n> hidden errors · boot <ms> ms|warm JVM · compare <SAME|CHANGED|n/a> · first diff …`
+
+| Pick | When |
+|---|---|
+| `chain` | the steps follow each other with no edit in between |
+| `--warm` | an edit between steps (Kemaskini), several permohonan, or repeated checks; skip it when the laptop is short of memory |
+| neither | one run |
+
+Each step of a flow runs with its own Selesai action (`--action`, or the action in `--steps`), never CREATE for every step: a SEMAK or PERAKU tag fills only under its own action.
 
 ## When to use it in a quest
 
@@ -47,7 +59,7 @@ The DOC-SIM line goes into `QA-<num>.md` and into the reply. The permohonan is p
 | Case | Why |
 |---|---|
 | miya's local test | No screen and no logged-in user. It never sets `local_test_confirmed` |
-| A Java populator fix not deployed locally | It runs the classes of the local deployed WAR. Deploy first, or say the fix is unverified |
+| A Java fix that needs other changed classes the local WAR does not have | `--java-src` compiles only the files given, against the deployed WAR. List every changed file, or use an adapted copy; otherwise say the fix is unverified |
 | Screens, Simpan, Hantar, signature | Read-only by design |
 | PROD or any live schema | The runner refuses a schema that is not a test schema. RAHSIA text must not land on the laptop |
 
@@ -57,6 +69,7 @@ The DOC-SIM line goes into `QA-<num>.md` and into the reply. The permohonan is p
 - A `[ERROR]` line is an error the real system catches and hides. Name the tag.
 - `FAILED (exit N)` means the run did not finish. Read the lines above it. Never report a verdict from a failed run.
 - Delete `E:\Dev\scripts\EtanahTemplateGen\out\` when the quest closes.
+- Each run leaves a row in `domain/doc-sim/log.jsonl` (main checkout): boot ms, fill ms, steps, images, warm, exit. Where the time went is the `[time]` line of the run.
 
 ## Where things are
 
@@ -69,4 +82,4 @@ symptom: 2026-10-05 QA-244600 BA failed the fix: first Kemaskini with no edit st
 goal: every document-ticket claim about a fill result or a Word save is backed by one offline run before it reaches miya or BA
 goal_signal: the quest doc or the reply carries a DOC-SIM line with the permohonan, the template and the verdict
 retention: rotate monthly
-footprint: on-demand: 1 java process about 2 GB for 2 to 3 minutes, 1 Word process for the save step
+footprint: on-demand: 1 java process about 1.1 to 2 GB per cold run; with --warm one shared JVM, about 1.1 GB, up to 15 idle minutes; 1 Word process for the save step
