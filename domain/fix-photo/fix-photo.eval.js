@@ -76,6 +76,45 @@ check('H22 large transcript (~1.7MB) still decides, under 5s', blocked(r) && ms 
 r = run([PASTED, say(UI_HANDBACK + '\nFIX-PHOTO: `' + GOOD_PHOTO + '` ✓')]); check('H23 FIX-PHOTO path wrapped in backticks → accepted', silent(r), d(r));
 r = run([PASTED, say('Redmine note for #256334: medan Perlu Surat Iringan dibuang pada semua tugasan PDBB.' + PAD)]); check('H24 Redmine note describing a UI change → BLOCK', blocked(r), d(r));
 
+// ── v3 test-share fixtures (2026-10-23, #246964: "test result: save the before and after jana semula photos") ──
+{
+  const shareMsg = (text, img = true) => ({ type: 'user', message: { role: 'user', content: img ? [{ type: 'text', text }, { type: 'image', source: { type: 'base64', data: 'AAAA' } }] : text } });
+  const plainReply = say('Saved and prepared the Redmine form for your approval. Nothing else changed in the repository this turn.' + PAD);
+  let t = runNoAsk([shareMsg('test result: save the before and after jana semula photos'), plainReply]);
+  check('T01 REPLAY: "test result" + image, reply has no FIX-PHOTO → BLOCK', blocked(t), d(t));
+  check('T02 EFFECT: block text names the test-share case and the Task folder', /shared test screenshots/.test(t.stderr || '') && /2\. Fix/.test(t.stderr || ''), d(t));
+  t = runNoAsk([shareMsg('test result: save the before and after jana semula photos'), say(plainReply.message.content[0].text + '\nFIX-PHOTO: ' + GOOD_PHOTO + ' ✓')]);
+  check('T03 valid FIX-PHOTO line → silent', silent(t), d(t));
+  t = runNoAsk([shareMsg('test result: passed, no screenshot', false), plainReply]);
+  check('T04 keyword with NO image → silent', silent(t), d(t));
+  t = runNoAsk([shareMsg('here is the BA screenshot from the ticket'), plainReply]);
+  check('T05 image with no test-share keyword → silent', silent(t), d(t));
+  t = runNoAsk([say('I will save the test result later.' + PAD), plainReply]);
+  check('T06 keyword only in MY own text → silent', silent(t), d(t));
+  t = runNoAsk([shareMsg('Test results: + photos attached'), plainReply]);
+  check('T07 "Test results:" (plural, capital) + image → BLOCK', blocked(t), d(t));
+  t = runNoAsk([shareMsg('please save this'), plainReply]);
+  check('T08 "please save this" + image → BLOCK', blocked(t), d(t));
+  t = runNoAsk([shareMsg('here test scenario'), plainReply]);
+  check('T09 "here test scenario" + image → BLOCK', blocked(t), d(t));
+  t = runNoAsk([shareMsg('here screenshot of test'), plainReply]);
+  check('T10 "here screenshot of test" + image → BLOCK', blocked(t), d(t));
+  t = runNoAsk([shareMsg('Stop hook feedback: fix-photo: test result FIX-PHOTO: <full path>'), plainReply]);
+  check('T11 SELF-TRIGGER: gate text echoed back as a user turn → silent', silent(t), d(t));
+  t = runNoAsk([shareMsg('test result'), say(plainReply.message.content[0].text + '\nFIX-PHOTO: ' + STRAY_PHOTO + ' ✓')]);
+  check('T12 FIX-PHOTO outside "2. Fix" / "N. Rework" → BLOCK naming it', blocked(t) && /2\. Fix/.test(t.stderr || ''), d(t));
+  t = runNoAsk([shareMsg('test result'), say(plainReply.message.content[0].text + ' [skip-fix-photo: screenshots were of the login page only]')]);
+  check('T13 real bypass reason → silent', silent(t), d(t));
+  t = runNoAsk([shareMsg('test result'), say('Saved.')]);
+  check('T14 short reply (<200 chars) → silent', silent(t), d(t));
+  t = runNoAsk([shareMsg('test result'), say('Earlier: FIX-PHOTO: ' + GOOD_PHOTO + ' ✓' + PAD), plainReply]);
+  check('T15 FIX-PHOTO saved in an EARLIER reply after the share → silent', silent(t), d(t));
+  t = runNoAsk([{ type: 'user', message: { role: 'user', content: '[Image: source: C:\\tmp\\images\\1.webp] test result: before and after' } }, plainReply]);
+  check('T16 string-content message with "[Image: source:" marker + keyword → BLOCK', blocked(t), d(t));
+  t = runNoAsk([shareMsg('the latest test results look odd, check the code'), plainReply]);
+  check('T17 accepted-risk: "test results" in a question with an image still asks for the save → BLOCK', blocked(t), d(t));
+}
+
 // ── mark.py fixtures ─────────────────────────────────────────────────────────
 const py = spawnSync('python', ['-c', 'import PIL; print("ok")'], { encoding: 'utf8' });
 if (py.status !== 0) {
