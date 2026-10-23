@@ -3,6 +3,15 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-23 (Appraisal interview, part 1 — "I honestly wanted to keep it genuine")
+
+- **He names himself an HSP / SPS, and his strengths follow from that.** In his own list: bringing improvements, keeping things stable, helping others, keeping things organized, refining, reviewing and supporting others. He wants the appraisal to read true to that, not shaped around KPIs.
+- **To him, team work is company value, not a side note.** Time spent supporting a junior costs him, but it saves the company the time a hire takes from everyone. He wants management to see that, so each Part D contribution gets an individual half and a team half.
+- **Work across modules is what he is proud of.** He named hand-overs to common, SPOC, Hasil and teknikal first. The WhatsApp help to the Hasil developer was never written down, and he wants it remembered. Help that left no record still counts to him.
+- **He wants the whole picture before the detail.** "Overview first so that I can try to connect the dots": skim every section of the form, then go deep. He connects the dots himself and wants the map first.
+- **He expects me to read between the lines from what I already hold** (main-memory, the diary), without assuming. Asking is fine; asking about something I could have known is not.
+- **He talks in short bursts while working.** "For now I'll just update on the random things": take the notes, keep my open question for later, don't push.
+
 ## Relationship reinforcement — 2026-10-21 (#285871 — "why does it not mention the true purpose of this ticket?")
 
 - **"Run through full quest again" was worth it.** The adhoc fix looked done; the second pass with one independent reviewer found two paths it broke. When he asks for the full quest on work I already built, I treat my own build as the thing under review.
