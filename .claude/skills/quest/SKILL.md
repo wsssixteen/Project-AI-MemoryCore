@@ -424,6 +424,7 @@ Quest is a **workflow-type skill, not a one-shot**. Its job is to programmatical
 | Rubric emit (≥2-layer fix) | `→ Skill: system-design` (Step 6 Multi-Perspective Scrutiny Table) |
 | Apply boundary (per Edit while debugging) | `→ Skill: predicate-box` (Debug Mode Ritual 1) + `→ Skill: scope-anchor-echo` |
 | Hand-back (every emit) | `→ Skill: claim-verification` + `→ Skill: test-data-echo` + `→ Skill: task-assignment-honesty` |
+| Any phase, the moment a KPI moment happens (a colleague's commit found as the cause · a fix found never shipped / missing from a release · a wrong patch or script caught · a colleague's fix reviewed or taken over, or cross-team help · a latent bug found before any ticket · a PROD root cause proven · our own fix came back) | `→ Skill: kpi` — one row per moment via `node domain/kpi/kpi.js add` (competency B1-B6/C1-C2 + evidence); self-audit must PASS before the reply; reply line `KPI: <code> recorded — <ticket>` |
 | Phase 1 close-out | `prepare-commit-trigger.js` injects 12-step sequence (incl. Step 7.5 commit-conventions.md read); → Skill: verify (Checklist C) |
 
 **`current_phase=` tracking in active.txt**: as Quest progresses through phases, the `current_phase=` field updates so boot-time resume reads know where to pick up. Mutable per turn.
@@ -780,3 +781,5 @@ ode domain/doc-sim/doc-sim.eval.js.*
 *Updated 2026-10-08 — Pena pointer per みや (#279554, "apply and invoke in other parts ... for example inside Redmine replies/handover"): one line at the top of § Hand-over to BA sends every Redmine draft in his name through `lib/pena.js show` then `check`. Additive; no existing clause changed or dropped. Feature: `domain/pena/` + `.claude/skills/pena/SKILL.md`, eval `node domain/pena/eval.js`.*
 
 *Updated 2026-10-20 — per みや (#285252 rework: "build a proper audit and debug for this type of issues"): Rubric gains the SCREEN-PATH AUDIT block (sibling end-to-end · display binding · save path · reload path · button x mode matrix; verification by run, not SQL re-enactment) and the falsifier-ledger bullet gains "a commit or deploy order is not ACCEPTED-RISK" (prose only; a gate version was built, then held back for miya's nod because 12 existing ledger rows in 6 open quests quote "test on server" orders). Additive; no clause changed or dropped.*
+
+*2026-10-23 — KPI awareness per みや ("include a simple step in Quest Workflow, to invoke a skill inside that Feature ... if we detect someone breaking something, or doing a wrong patch"): one row in the Workflow runner phase table, `→ Skill: kpi` at the moment an appraisal moment happens. Feature `domain/kpi/` + `.claude/skills/kpi/SKILL.md`, eval `node domain/kpi/kpi.eval.js`. Additive; no clause changed or dropped.*

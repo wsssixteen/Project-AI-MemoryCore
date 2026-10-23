@@ -611,6 +611,22 @@
         "last": null
       },
       "status": "new"
+    },
+    {
+      "id": "kpi-moments",
+      "answers": "Which recorded appraisal moments back competency X (B1-B6, C1-C2) or ticket Y, with their evidence",
+      "call": "node domain/kpi/kpi.js list [--competency B4] [--ticket <n>] [--since YYYY-MM-DD] [--json]",
+      "home": "domain/kpi/kpi.js",
+      "groups": [
+        "system"
+      ],
+      "state_scope": "none",
+      "footprint": "on-demand: 1 node process, about 0.2 s, exits after printing",
+      "usage": {
+        "sessions": 0,
+        "last": ""
+      },
+      "status": "unused"
     }
   ],
   "unused_scripts_2026-10-06": {

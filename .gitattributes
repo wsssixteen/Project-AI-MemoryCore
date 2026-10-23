@@ -8,3 +8,5 @@ main/session-archive.md   merge=union
 
 # system/slip-dashboard.md is GENERATED from slips.jsonl — regenerate after a
 # merge (`node core/slips.js dashboard`), never hand-merge it.
+main/kpi-moments.jsonl    merge=union
+# main/kpi-tracker.md is GENERATED from kpi-moments.jsonl — after a merge run `node domain/kpi/kpi.js render`.
