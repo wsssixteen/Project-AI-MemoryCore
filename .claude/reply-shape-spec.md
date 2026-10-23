@@ -195,6 +195,23 @@ His words: "I only get frustrated when you don't explain, or over-explaining, or
 
 **Why**: 2026-10-14, DawahMap. A report said "walk step 2" and he replied "I don't know what step 2 you're talking about"; the reports of the same night ran to five sections. Four rules already stood near this (answer the ask · no information overload · name the thing · no vague words). None put the three faults together at the top, and none said that a reply in long work must say where it is going. Not mechanical: it rests on this section and the boot-loaded line in CLAUDE.md.
 
+## 3g. 📋 Brief at the end of every reply, in simple technical English (2026-10-23, per みや)
+
+His words: "use simple technical english to brief me (Add this into claude.md if needed on every end of reply aside from the next steps)."
+
+Every work reply ends with a **Brief** section, placed just above the Next steps table (or last, when there is no table).
+
+| Part | Rule |
+|---|---|
+| Heading | `## Brief` |
+| Content | 3 to 6 bullets: what was done · what it does now · what is left or blocked |
+| Words | simple technical English: short sentences, the real technical names (branch, commit, pom pin, nexus, eval), no idioms, no invented labels |
+| Not in it | proof I ran for myself, history, a second copy of the Next steps rows |
+
+A one-line answer (a yes/no, a single value) needs no Brief: the line is the brief. **Banned**: a work reply with no Brief · a Brief that only repeats the Next steps table · a Brief longer than the reply above it.
+
+**Why**: 2026-10-23, stag-env catch-up build. After a long report he asked for the brief in simple technical English and for it at the end of every reply.
+
 ## 4. Precedence Note
 
 This file (`.claude/reply-shape-spec.md` — its permanent canonical home since 2026-07-13; the drafting copy is archived under `projects/coding-projects/archive/external-audit-2026-07/`) is the **canonical** source for reply-shape rules. `.claude/CLAUDE.md` §2 "Explanation & Output-Format Discipline" becomes a **pointer only**: its always-on mirror status (so the rule boot-loads every session) is preserved, but the full rule bodies, the gate predicate table, and the situation→shape table live HERE — CLAUDE.md must not carry a second full copy (per the File Ownership table's own "one canonical home" principle). Any future edit to a predicate, budget, or bypass token is made in this file first; CLAUDE.md's pointer text is updated only if the pointer's own summary line goes stale.

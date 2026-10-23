@@ -10,6 +10,16 @@
 
 ---
 
+## v1.92 — 2026-10-23 (per みや, brief at the end of every reply)
+
+His words: *"use simple technical english to brief me (Add this into claude.md if needed on every end of reply aside from the next steps)"*
+
+- §Explanation += BRIEF AT THE END OF EVERY REPLY: a `## Brief` section, simple technical English, 3 to 6 bullets (done · what it does now · what is left), just above the Next steps table; a one-line answer needs none.
+- Body: `.claude/reply-shape-spec.md` §3g (new). Not mechanical yet: no Stop gate checks for the section.
+- Spec preservation: additive. The Next steps table rules, Disposition 0 (no unrequested sections) and §3c (no overload) stand; the Brief is now a requested section, capped at 6 bullets.
+
+---
+
 ## release-mlk-plp SKILL Phase G · deploy SKILL step 1b · release-prep.js stag-catchup — 2026-10-23 (per みや, #246964)
 
 His words (2026-08-10): *"We need to have this built as well later"* — never built; on 2026-10-23 `mlk/stag-env` sat 21 commits behind release 1.8.4 (slip `asked-build-never-built`).
