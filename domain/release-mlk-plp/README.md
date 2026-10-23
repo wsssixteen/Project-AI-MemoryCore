@@ -4,7 +4,7 @@ goal: drive PLAN then BRANCH-MERGE-VERIFY-PUSH via release-prep.js then SSH BUIL
 goal_signal: the run fire produced: drive PLAN then BRANCH-MERGE-VERIFY-PUSH via release-prep.js then SSH BUILD then
 retention: rotate monthly
 footprint: on-demand: 1 node process per release-prep / recon / audit-ticket run (git + Redmine API calls, seconds to a few minutes); nothing at boot; the ask and push gates run per prompt / per git push
-self_audit: stag-catchup --push re-fetches and fails unless origin/<env> = the merge commit, holds the source, and pins the chosen common (log row goal_met)
+self_audit: stag-catchup --push re-fetches and fails unless origin/<env> = the merge commit, holds the source, and pins the release's own common (log row goal_met)
 # release-mlk-plp — Melaka Pelupusan release pipeline (Feature contract)
 
 **One line**: Redmine-recon every ticket → branch `mlk/release/<ver>` off fresh `mlk/master` →
@@ -24,7 +24,7 @@ no keys). Stop-points V1-V3. PLP-only; duplicate as `release-<state>-<module>` f
 | Push guard | `domain/release-mlk-plp-push-gate/*.check.hook.js` | PreToolUse Bash — blocks raw release pushes |
 | **Scope counter-rail** | `domain/release-mlk-plp-scope-gate/*.check.hook.js` | PreToolUse Edit\|Write — blocks ANY etanah-pelupusan edit while a release is in flight |
 | Eval (script, e2e) | `domain/release-mlk-plp/eval.js` | scratch repo + planted conflict + counter-rail — 15 fixtures |
-| Eval (stag catch-up) | `domain/release-mlk-plp/eval-stag-catchup.js` | scratch repos + etanah-common fixture — 33 fixtures |
+| Eval (stag catch-up) | `domain/release-mlk-plp/eval-stag-catchup.js` | scratch repos + nexus metadata fixture + compile stub — 32 fixtures |
 | Eval (recon) | `domain/release-mlk-plp/eval-recon.js` | offline verdict matrix + the 2 real 2026-07-16 misses — 17 fixtures |
 | Evals (hooks) | sibling folders' `*.eval.js` | 8 (push) + 6 (ask) + 11 (scope) fixtures |
 | Config (gitignored) | `servers.local.json` · `redmine.local.json` | infra endpoints + API key — `.example` twins are committed |

@@ -380,8 +380,8 @@ merge-to-master (F) ──▶ stag-catchup (G) ──▶ stag build + deploy car
 ```
 
 ```powershell
-node domain/release-mlk-plp/release-prep.js stag-catchup --release <ver>          # dry run: merge in a temp worktree, nothing pushed
-node domain/release-mlk-plp/release-prep.js stag-catchup --release <ver> --push   # push + read origin back
+node domain/release-mlk-plp/release-prep.js stag-catchup --release <ver> --ticket <num>          # dry run: merge in a temp worktree, nothing pushed
+node domain/release-mlk-plp/release-prep.js stag-catchup --release <ver> --ticket <num> --push   # compile, push, read origin back
 ```
 
 | Step | What the script does |
@@ -389,17 +389,19 @@ node domain/release-mlk-plp/release-prep.js stag-catchup --release <ver> --push 
 | Source | `origin/mlk/master` once it holds `mlk/release/<ver>`, else the release branch (says so) |
 | Latest release | prints the latest release that is in master (slip proposal A4, 2026-09-29) |
 | Behind | `git rev-list --count origin/mlk/stag-env..<source>` + the ticket numbers of the missing non-merge commits; 0 → "nothing to catch up" |
-| Common pin | keeps stag-env's own `<etanah.common.version>` when the release's common is an ancestor of it in `E:\Dev\etanah-work\etanah-common` (deploy skill step 1b) |
-| 🛑 Pin stop | release common NOT inside the env line (two lines, or release newer) → exit 2, prints both versions and the commits each lacks. みや picks: `--common env` · `--common release` · `--common <ver>` |
-| Merge | `--no-ff`, team message `Merge remote-tracking branch 'remotes/origin/mlk/master' into mlk/stag-env`; a pin the merge changed is set back inside the merge commit |
-| 🛑 Conflict | any conflict (the pin line included) → abort, nothing kept, files listed. Never auto-resolved |
-| Push + audit | `--push` pushes, re-fetches, and fails unless origin stag-env = the merge, holds the source, and pins the chosen common |
+| Common pin (miya 2026-10-23) | stag-env ends on the **release's own** `<etanah.common.version>` — never the env's old pin, never the newest number in nexus. Facts: BRANCH-AND-DEPLOY.md §7 "Common pin at the catch-up" |
+| 🛑 Nexus | the release pin must be in nexus `maven-metadata.xml` before anything merges (1.10.17-MLK was tagged in git but unpublished) → else exit 2 |
+| Merge | `--no-ff`, team message `Merge remote-tracking branch 'remotes/origin/mlk/master' into mlk/stag-env` |
+| Pin commit | if the merged pom does not carry the release pin: a SEPARATE commit `Ref #<num> - Up common to <ver>` (`Change common to` when the version is lower, per the version-direction rule); `--ticket <num>` = the ticket that needs staging. No ticket → stop |
+| pom-only conflict | both sides changed the pin line → the script aborts, puts the pin commit on the env side first, and merges again (git merges it; nothing hand-resolved) |
+| 🛑 Conflict | any other conflict → abort, nothing kept, files listed. Never auto-resolved |
+| Push + audit | `--push` compiles the merged tree, pushes, re-fetches, and fails unless origin stag-env = what was pushed, holds the source, and pins the release common |
 
 Then emit the two-host stag build + deploy card (deploy skill §5, one command per fenced block).
 
 **AWAM**: when the BAQA message carried an AWAM release and it passed, run the same with `--module awam --release <awam ver>` (work clone `E:\Dev\etanah-work\etanah-awam`). This is env-branch work, not release assembly, so the "no AWAM git work" row above does not cover it.
 
-**Guards (deterministic, `eval-stag-catchup.js` 30 fixtures)**:
+**Guards (deterministic, `eval-stag-catchup.js` 32 fixtures)**:
 - `merge-to-master` ends with `🚨 NEXT (mandatory): … stag-catchup` while stag-env is behind.
 - The next baseline's `init` REFUSES while `origin/mlk/stag-env` lacks `origin/mlk/master`. Override only with `--stag-behind-ack "<reason>"`.
 - `stag-catchup --check` (exit 3 = behind, 0 = current) is what deploy skill step 1b runs before any stag-env merge.
@@ -461,4 +463,4 @@ Then emit the two-host stag build + deploy card (deploy skill §5, one command p
 - **`status` anytime**: `node domain/release-mlk-plp/release-prep.js status --release <ver>`.
 - Resume after interruption: state survives in `domain/release-mlk-plp/state/release-<ver>.json`.
 
-*2026-10-23: Phase G (stag-env catch-up after the master merge) added, `release-prep.js stag-catchup`, guards in `init` + `merge-to-master`, eval `eval-stag-catchup.js` 33/33 (#246964, asked 2026-08-10). DON'T #12 widened to name Phases F and G. Other phases unchanged.*
+*2026-10-23: Phase G (stag-env catch-up after the master merge) added, `release-prep.js stag-catchup`, guards in `init` + `merge-to-master`, eval `eval-stag-catchup.js` (#246964, asked 2026-08-10). DON'T #12 widened to name Phases F and G. Common pin = the release's own, in a separate commit, nexus-checked (miya same day; replaced a first "keep the env pin" draft). Other phases unchanged.*

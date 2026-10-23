@@ -9,9 +9,9 @@
 // after each baseline; int-env is never the source).
 //
 // Steps: identity + work-clone guard → Melaka fetch → latest-release report (slip proposal A4,
-// 2026-09-29) → behind count + missing tickets → common-pin decision (keep the env pin unless the
-// release's common is outside the env pin's line → STOP and show both) → merge in a temp worktree →
-// [--push] push + read-back audit of origin. Never auto-resolves a conflict.
+// 2026-09-29) → behind count + missing tickets → merge in a temp worktree → common pin set to the
+// RELEASE's own pin in a separate `Ref #<num> - Up common to <ver>` commit, after a nexus check
+// (miya 2026-10-23) → compile → [--push] push + read-back audit of origin. Never auto-resolves a conflict.
 'use strict';
 const { spawnSync } = require('child_process');
 const fs = require('fs');
@@ -49,34 +49,28 @@ function pinAt(repo, ref) {
   return m ? m[2].trim() : null;
 }
 
-// The etanah-common commit that IS version <ver>: the common team commits each version with the
-// version as its subject (1.10.8-MLK = 6955479ac9). Subject search reads no blobs, so it stays fast in
-// the partial clone (a pickaxe -S scan took over 2 minutes there). Candidate must carry <ver> in its pom.
-function commonCommitOf(commonRepo, ver) {
-  if (!ver || !fs.existsSync(commonRepo)) return null;
-  const esc = ver.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const verInPom = new RegExp(`<version>\\s*${esc}\\s*</version>`);
-  const cands = (git(commonRepo, ['log', '--all', '--format=%H%x09%s', '--fixed-strings', `--grep=${ver}`], true).stdout || '')
-    .split('\n').filter(Boolean).map(l => l.split('\t')).filter(([, s]) => s && s.trim() === ver).map(([h]) => h);
-  for (const h of cands.reverse()) {   // oldest first = the commit that introduced the version
-    if (verInPom.test(git(commonRepo, ['show', `${h}:pom.xml`], true).stdout || '')) return h;
+// A version tagged in etanah-common git may not be published (1.10.17-MLK, 2026-10-22): the build then
+// fails "Could not find artifact". Read nexus's published list before pinning.
+const NEXUS = process.env.STAG_CATCHUP_NEXUS_METADATA ||
+  'http://172.16.90.169/nexus/content/groups/public/my/gov/etanah/etanah-common/maven-metadata.xml';
+const HTTP_GET = "require('http').get(process.argv[1],{timeout:15000},res=>{let d='';res.on('data',c=>d+=c);" +
+  "res.on('end',()=>{process.stdout.write(d);process.exit(res.statusCode===200?0:1)})}).on('error',e=>{console.error(e.message);process.exit(1)})";
+function nexusVersions() {
+  let xml;
+  if (!/^https?:/i.test(NEXUS)) xml = fs.readFileSync(NEXUS, 'utf8');   // eval fixture: a local file
+  else {
+    const r = spawnSync(process.execPath, ['-e', HTTP_GET, NEXUS], { encoding: 'utf8', timeout: 30000, windowsHide: true });
+    if (r.status !== 0) throw new Stop(`cannot read nexus (${NEXUS}): ${(r.stderr || '').trim() || 'no answer'} — VPN? Re-run, or --skip-nexus "<reason>"`);
+    xml = r.stdout;
   }
-  return null;
+  return new Set((xml.match(/<version>[^<]+<\/version>/g) || []).map(v => v.replace(/<\/?version>/g, '').trim()));
 }
-
-// Keep the env pin when the release's common is inside the env pin's line (release common is an
-// ancestor of, or equal to, the env common). Anything else is みや's pick.
-function decideCommon(commonRepo, envPin, relPin) {
-  if (!envPin || !relPin) return { verdict: 'no-pin', pin: envPin || relPin };
-  if (envPin === relPin) return { verdict: 'same', pin: envPin };
-  const envSha = commonCommitOf(commonRepo, envPin);
-  const relSha = commonCommitOf(commonRepo, relPin);
-  if (!envSha || !relSha) return { verdict: 'unresolved', envPin, relPin, envSha, relSha };
-  if (ok(commonRepo, ['merge-base', '--is-ancestor', relSha, envSha])) return { verdict: 'keep-env', pin: envPin, envSha, relSha };
-  const envLacks = out(commonRepo, ['log', '--oneline', '--no-merges', `${envSha}..${relSha}`]).split('\n').filter(Boolean);
-  const relLacks = out(commonRepo, ['log', '--oneline', '--no-merges', `${relSha}..${envSha}`]).split('\n').filter(Boolean);
-  const envAncestor = ok(commonRepo, ['merge-base', '--is-ancestor', envSha, relSha]);
-  return { verdict: envAncestor ? 'release-newer' : 'separate-lines', envPin, relPin, envSha, relSha, envLacks, relLacks };
+// Subject verb follows the direction (domain/commit-subject-gate/version-direction.js, #282303).
+function pinSubject(ticket, from, to) {
+  const { direction, checkSubject } = require('../commit-subject-gate/version-direction.js');
+  const subject = `Ref #${ticket} - ${direction(from, to) === 1 ? 'Up' : 'Change'} common to ${to}`;
+  if (!checkSubject(subject, from, to).ok) throw new Stop(`internal: subject "${subject}" fails the version-direction rule`, 1);
+  return subject;
 }
 
 // Non-merge commits only: a release merge commit names a ticket whose code may already be on the env.
@@ -96,7 +90,7 @@ function latestPassedRelease(repo) {
 // The read-only measurement every caller shares (stag-catchup --check, init guard, merge-to-master hint).
 function measure(repo, env, source) {
   const behind = Number(out(repo, ['rev-list', '--count', `origin/${env}..${source}`]));
-  return { env, source, behind, tickets: behind ? ticketsIn(repo, `origin/${env}..${source}`) : [] };
+  return { env, source, behind, envTip: out(repo, ['rev-parse', `origin/${env}`]), tickets: behind ? ticketsIn(repo, `origin/${env}..${source}`) : [] };
 }
 
 function resolveRepo(a) {
@@ -113,7 +107,7 @@ function resolveRepo(a) {
   if (!new RegExp(`${mod.repoName}(\\.git)?$`, 'i').test(url.replace(/[\\/]+$/, ''))) {
     throw new Stop(`MODULE GUARD: origin "${url}" is not ${mod.repoName} — refusing`);
   }
-  return { mod, repo, commonRepo: a['common-repo'] || path.join(path.dirname(repo), 'etanah-common') };
+  return { mod, repo };
 }
 
 function pickSource(repo, release) {
@@ -122,22 +116,6 @@ function pickSource(repo, release) {
   if (!ok(repo, ['rev-parse', '--verify', '--quiet', rel])) throw new Stop(`${rel} does not exist`);
   if (ok(repo, ['merge-base', '--is-ancestor', rel, 'origin/mlk/master'])) return { source: 'origin/mlk/master', note: `release ${release} is in origin/mlk/master` };
   return { source: rel, note: `⚠️ release ${release} is NOT in origin/mlk/master yet (Phase F not run) — using the release branch` };
-}
-
-function printCommon(d) {
-  console.log(`· common pin: env ${d.envPin} · release ${d.relPin}`);
-  if (d.verdict === 'unresolved') {
-    console.log(`  cannot place ${!d.envSha ? d.envPin : d.relPin} in etanah-common (no commit with that version as its subject) — cannot prove the lines`);
-    return;
-  }
-  const label = d.verdict === 'release-newer' ? 'the release common is NEWER on the same line' : 'two separate lines — neither contains the other';
-  console.log(`  ${label}`);
-  console.log(`  ${d.envPin} (${d.envSha.slice(0, 10)}) lacks ${d.envLacks.length} commit(s) the release common has:`);
-  d.envLacks.slice(0, 15).forEach(l => console.log(`     ${l}`));
-  if (d.envLacks.length > 15) console.log(`     … +${d.envLacks.length - 15} more`);
-  console.log(`  ${d.relPin} (${d.relSha.slice(0, 10)}) lacks ${d.relLacks.length} commit(s) the env common has:`);
-  d.relLacks.slice(0, 15).forEach(l => console.log(`     ${l}`));
-  if (d.relLacks.length > 15) console.log(`     … +${d.relLacks.length - 15} more`);
 }
 
 function card(mod, env) {
@@ -151,7 +129,8 @@ function card(mod, env) {
 
 function run(a) {
   const t0 = Date.now();
-  const { mod, repo, commonRepo } = resolveRepo(a);
+  if ('common' in a) throw new Stop("--common is retired: the pin is always the release's own common (miya 2026-10-23)");
+  const { mod, repo } = resolveRepo(a);
   const env = a.env || 'mlk/stag-env';
   if (!ENVS.includes(env)) throw new Stop(`--env must be one of ${ENVS.join(' / ')}`);
   const f = fetchMlk(repo);
@@ -172,26 +151,31 @@ function run(a) {
     return 3;
   }
 
-  // ── common pin ──
-  const envPin = pinAt(repo, `origin/${env}`), relPin = pinAt(repo, source);
-  let pin, pinWhy;
-  const choice = a.common;
-  if (choice === 'env') { pin = envPin; pinWhy = 'みや picked the env pin'; }
-  else if (choice === 'release') { pin = relPin; pinWhy = 'みや picked the release pin'; }
-  else if (choice) {
-    if (!/^\d+\.\d+\.\d+[\w.-]*-MLK[\w.-]*$/.test(choice)) throw new Stop(`--common must be env, release, or a version like 1.10.8-MLK (got "${choice}")`);
-    pin = choice; pinWhy = 'みや named the version';
-  } else {
-    const d = decideCommon(commonRepo, envPin, relPin);
-    if (d.verdict === 'same' || d.verdict === 'no-pin') { pin = d.pin; pinWhy = 'env and release pin the same common'; }
-    else if (d.verdict === 'keep-env') { pin = envPin; pinWhy = `release common ${relPin} is inside the env line (${envPin})`; }
-    else {
-      printCommon(d);
-      log('stop-common', { module: a.module || 'plp', env, envPin, relPin, verdict: d.verdict });
-      throw new Stop(`🛑 COMMON PIN — みや picks. Re-run with --common env (keep ${envPin}) · --common release (${relPin}) · --common <version>`);
-    }
+  // ── common pin (miya 2026-10-23, #246964): the RELEASE's own pin — never the env's old pin, never the
+  // newest number in nexus. BRANCH-AND-DEPLOY.md §7 "Common pin at the catch-up".
+  const envPin = pinAt(repo, `origin/${env}`), pin = pinAt(repo, source);
+  if (!pin) throw new Stop(`${source} pom.xml has no <etanah.common.version>`, 1);
+  console.log(`· common pin: ${env} ${envPin} → release ${pin}${envPin === pin ? ' (same)' : ''}`);
+  if (envPin !== pin) {
+    if (a['skip-nexus']) console.log(`⚠️  nexus check skipped: ${a['skip-nexus']}`);
+    else if (!nexusVersions().has(pin)) {
+      log('stop-nexus', { module: a.module || 'plp', env, pin });
+      throw new Stop(`🛑 etanah-common ${pin} is NOT published in nexus (${NEXUS}) — the build would fail "Could not find artifact". Nothing merged.`);
+    } else console.log(`· nexus: ${pin} is published ✓`);
   }
-  console.log(`· common pin after catch-up: ${pin} (${pinWhy})`);
+  const needTicket = () => {
+    const t = String(a.ticket || '').replace(/^#/, '');
+    if (!/^\d{4,}$/.test(t)) throw new Stop(`🛑 the pin moves ${envPin} → ${pin}: its separate commit "Ref #<num> - Up common to ${pin}" needs --ticket <num>. Nothing pushed.`);
+    return t;
+  };
+  const commitPin = (dir, from) => {
+    const pomPath = path.join(dir, 'pom.xml');
+    fs.writeFileSync(pomPath, fs.readFileSync(pomPath, 'utf8').replace(PIN_RE, `$1${pin}$3`));
+    git(dir, ['add', 'pom.xml']);
+    const subject = pinSubject(needTicket(), from, pin);
+    git(dir, ['commit', '-m', subject]);
+    console.log(`· pin commit: ${subject}`);
+  };
 
   // ── merge in a temp worktree off origin/<env> (the local env branch goes stale — never used) ──
   const wt = fs.mkdtempSync(path.join(os.tmpdir(), 'stag-catchup-'));
@@ -200,29 +184,33 @@ function run(a) {
   try {
     const srcName = source.replace(/^origin\//, '');
     const msg = `Merge remote-tracking branch 'remotes/origin/${srcName}' into ${env}`;
-    const r = git(wt, ['merge', '--no-ff', source, '-m', msg], true);
-    if (r.status !== 0) {
-      const files = out(wt, ['diff', '--name-only', '--diff-filter=U']).split('\n').filter(Boolean);
+    const unmergedIn = () => out(wt, ['diff', '--name-only', '--diff-filter=U']).split('\n').filter(Boolean);
+    let r = git(wt, ['merge', '--no-ff', source, '-m', msg], true);
+    let unmerged = r.status ? unmergedIn() : [];
+    if (r.status && unmerged.length === 1 && unmerged[0] === 'pom.xml' && envPin !== pin) {
+      // pom-only conflict: put the pin commit on the env side FIRST (the runbook order for env merges) so
+      // both sides carry the same pin line, then merge again. Git merges it; nothing is hand-resolved.
       git(wt, ['merge', '--abort'], true);
-      log('conflict', { module: a.module || 'plp', env, source, files });
-      throw new Stop(`🛑 CONFLICT merging ${source} into ${env} — nothing kept, nothing pushed. Files:\n   ${files.join('\n   ')}\n` +
-        'Resolve by the deploy skill step 1b order (env common pin stays · master change already in env keeps env · untouched env hunk takes master · else show みや the hunk).');
+      console.log('· pom.xml conflicted — pin commit first, then the merge again');
+      commitPin(wt, envPin);
+      r = git(wt, ['merge', '--no-ff', source, '-m', msg], true);
+      unmerged = r.status ? unmergedIn() : [];
     }
-    const pomPath = path.join(wt, 'pom.xml');
-    const pom = fs.existsSync(pomPath) ? fs.readFileSync(pomPath, 'utf8') : '';
-    const merged = (pom.match(PIN_RE) || [])[2];
-    if (pin && merged && merged.trim() !== pin) {
-      fs.writeFileSync(pomPath, pom.replace(PIN_RE, `$1${pin}$3`));
-      git(wt, ['add', 'pom.xml']);
-      git(wt, ['commit', '--amend', '--no-edit']);
-      console.log(`· merge took common ${merged.trim()}; pin set back to ${pin} inside the merge commit`);
+    if (r.status !== 0) {
+      git(wt, ['merge', '--abort'], true);
+      log('conflict', { module: a.module || 'plp', env, source, files: unmerged });
+      throw new Stop(`🛑 CONFLICT merging ${source} into ${env} — nothing kept, nothing pushed. Files:\n   ${unmerged.join('\n   ')}\n` +
+        'Resolve by hand in the work clone (deploy skill step 1b order), then merge + push.');
     }
+    const merged = pinAt(wt, 'HEAD');
+    if (merged !== pin) commitPin(wt, merged);   // separate commit after the merge (miya 2026-10-23)
     const head = out(wt, ['rev-parse', 'HEAD']);
     const files = out(wt, ['diff', '--name-only', `origin/${env}`, 'HEAD']).split('\n').filter(Boolean);
     if (Number(out(wt, ['rev-list', '--count', `HEAD..${source}`])) !== 0) throw new Stop('merge result does not contain the source — investigate', 1);
     console.log(`· merged ${source} → ${env} @ ${head.slice(0, 10)} · ${files.length} file(s) change on ${env}`);
     if (!('push' in a)) {
       console.log(`DRY RUN — merge is clean, nothing pushed. Push it: add --push`);
+      out(wt, ['log', '--first-parent', '--format=   %h %s', `origin/${env}..HEAD`]).split('\n').forEach(l => console.log(l));
       log('dry-run', { module: a.module || 'plp', env, source, head, pin, files: files.length });
       return 0;
     }
@@ -248,7 +236,8 @@ function run(a) {
     log(problems.length ? 'audit-fail' : 'pushed', { module: a.module || 'plp', env, source, head, pin, behind: m.behind, tickets: m.tickets, dur_ms: Date.now() - t0, goal_met: !problems.length });
     if (problems.length) throw new Stop(`🚨 SELF-AUDIT FAILED after push:\n  - ${problems.join('\n  - ')}`, 1);
     console.log(`✅ pushed + read back: origin/${env} = ${head.slice(0, 10)} holds ${source} · common ${pin}`);
-    console.log(`   revert if needed: git revert -m 1 ${head.slice(0, 10)} && git push origin HEAD:${env}`);
+    console.log(`   new on ${env} (newest first; revert each, merge with -m 1):`);
+    out(repo, ['log', '--first-parent', '--format=   %h %s', `${m.envTip}..${remote}`]).split('\n').forEach(l => console.log(l));
     console.log(`\nBUILD + DEPLOY card (one command per block when shown to みや):`);
     card(mod, env).forEach((l, i) => console.log(`  ${i + 1}. ${l}`));
     return 0;
@@ -258,4 +247,4 @@ function run(a) {
   }
 }
 
-module.exports = { run, measure, decideCommon, commonCommitOf, latestPassedRelease, ticketsIn, Stop };
+module.exports = { run, measure, nexusVersions, pinSubject, latestPassedRelease, ticketsIn, Stop };
