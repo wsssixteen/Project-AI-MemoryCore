@@ -41,6 +41,7 @@ When みや says **"save everything" / "save it" / "document the quest"** DURING
 1. **`projects/coding-projects/active/QA-<num>/QA-<num>.md`** — the canonical per-quest doc (primary). Write the section matching the phase that just completed: Scout→`Context Loading (Discovery)` · Recon→`Debugging` · Rubric→`Code-Review` · Apply→`Ship — Apply` · test→`Ship — Verify`.
 2. **`QA-<num>.md` → `## Test data`** — test-data only, via `node quest/notes.js --qa <num>` (never hand-write). The Task-folder `1. <NNN NNN>.txt` is RETIRED (2026-09-30).
 3. **`quest/active.txt`** block — phase/status/scope fields, via `node quest/active-cli.js update`.
+4. **KPI check (every save, 2026-10-23 per みや)** — `→ Skill: kpi`: `node domain/kpi/kpi.js list --ticket <num>`; add any appraisal moment since the last save that has no row (self-audit PASS); a PENDING row whose BA verdict is now in gets `confirm` or `drop` after reading the live journal. Reply line: `KPI: <n> rows · <m> pending — <added CODE | no new moment>`.
 
 See "QA-NNNN.md persistence — save after EVERY stop" below for the full rule.
 
@@ -356,7 +357,7 @@ Before emitting ▶ YOUR MOVE, run this gate and emit it as the FIRST lines of t
 
 ### QA-NNNN.md persistence — save after EVERY stop (added 2026-06-04 by みや)
 
-At **every** stop / hand-back (each ▶ YOUR MOVE), persist the just-completed phase's findings into `QA-NNNN.md` BEFORE the chat evaporates — whether the stop is a single phase (Recon now, Rubric later) or a combined pass (Recon+Rubric in one go → save once after). Write the matching section: Scout→`Context Loading (Discovery)` · Recon→`Debugging` · Rubric→`Code-Review` · Apply→`Ship — Apply` · test result→`Ship — Verify`.
+At **every** stop / hand-back (each ▶ YOUR MOVE), persist the just-completed phase's findings into `QA-NNNN.md` BEFORE the chat evaporates (and run item 4 of the save list above, the KPI check) — whether the stop is a single phase (Recon now, Rubric later) or a combined pass (Recon+Rubric in one go → save once after). Write the matching section: Scout→`Context Loading (Discovery)` · Recon→`Debugging` · Rubric→`Code-Review` · Apply→`Ship — Apply` · test result→`Ship — Verify`.
 
 **Spawn a `general-purpose` familiar to do the write so it does NOT block the main thread** — hand it the phase content + the target section name; it formats + writes per the QA-NNN template while the main thread proceeds to the hand-back. (For a tiny append, an inline Edit is fine — the familiar is to avoid slowing a substantive multi-section write.)
 
@@ -785,3 +786,5 @@ ode domain/doc-sim/doc-sim.eval.js.*
 *Updated 2026-10-20 — per みや (#285252 rework: "build a proper audit and debug for this type of issues"): Rubric gains the SCREEN-PATH AUDIT block (sibling end-to-end · display binding · save path · reload path · button x mode matrix; verification by run, not SQL re-enactment) and the falsifier-ledger bullet gains "a commit or deploy order is not ACCEPTED-RISK" (prose only; a gate version was built, then held back for miya's nod because 12 existing ledger rows in 6 open quests quote "test on server" orders). Additive; no clause changed or dropped.*
 
 *2026-10-23 — KPI awareness per みや ("include a simple step in Quest Workflow, to invoke a skill inside that Feature ... if we detect someone breaking something, or doing a wrong patch"): one row in the Workflow runner phase table, `→ Skill: kpi` at the moment an appraisal moment happens. Feature `domain/kpi/` + `.claude/skills/kpi/SKILL.md`, eval `node domain/kpi/kpi.eval.js`. Additive; no clause changed or dropped.*
+
+*2026-10-23 — KPI check moved to every quest save per みや ("Instead invoking it during phase 2 which is to archive, can we actually do this during every single time a quest saves?"): item 4 in the "save everything" persist list (followed by "save this quest", the save after every stop and "save everything"); the per-stop save points at it. Spec kept: the phase-table row that records a moment the moment it happens. Changed and named: the KPI check no longer waits for Phase 2.*

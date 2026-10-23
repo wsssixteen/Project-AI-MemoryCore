@@ -1118,7 +1118,7 @@ Format (the `## Fastest Path` block):
 
 **Banned**: closing a quest that took >1 wrong turn with only the fix recorded and no Fastest-Path block. The wrong turns ARE the signal — name them so they're never re-walked.
 
-**Step 2 — KPI moments (`kpi` skill, `domain/kpi/`; replaced the high-bar hand entry 2026-10-23 per みや)** — moments are recorded WHEN they happen during the quest (`→ Skill: kpi`, see the quest skill's phase table). At Phase 2 run `node domain/kpi/kpi.js list --ticket <num>` and add any moment of this quest not yet recorded (one sentence, a competency code B1-B6/C1-C2, an evidence pointer; the script self-audits and must PASS). `main/kpi-tracker.md` is GENERATED from `main/kpi-moments.jsonl`: never hand-edit it. If no moment: emit one line in chat at Phase 2 — `KPI: skip — no moment on this quest`.
+**Step 2 — KPI moments (`kpi` skill, `domain/kpi/`; 2026-10-23 per みや)** — moments are recorded WHEN they happen (`→ Skill: kpi`, the quest skill's phase table) and checked at EVERY quest save (the quest skill's save list, item 4: `node domain/kpi/kpi.js list --ticket <num>`, add any missed moment, settle a pending row whose BA verdict is in). Phase 2 starts from a save, so this step pastes that save's line: `KPI: <n> rows · <m> pending — <added CODE | no new moment>`. `main/kpi-tracker.md` is GENERATED from `main/kpi-moments.jsonl`: never hand-edit it.
 
 **Step 3 — REMOVED (2026-06-08 per みや).** The per-ticket Post-Mortem META was restating the slip-log; its process-learning is already captured by Step 1 (Faster-finding) + Step 1b (Fastest Path). Cross-ticket pattern synthesis (its only unique value) moves to a **weekly slip-log pattern-pass**: a 5-minute review that reads `system/slip-log.md` running-count and acts ONLY on patterns at ≥3 recurrences (promote to a structural rule/hook). Not a per-quest emit.
 
@@ -1409,6 +1409,8 @@ Fire as soon as heard, mid-conversation — mutate `active.txt` immediately, sam
 **Behaviour for Ruri at Hand-back checkpoint:**
 - Before emitting "▶ YOUR MOVE" block: invoke #1-#3 (always); invoke #4 conditionally; check #5 condition
 - Each invocation produces a visible-gate output in the response — みや can audit what fired
+
+*Protocol version: 3.10 — 2026-10-23 (Phase 2 Step 2: the KPI check runs at every quest save, not only at Phase 2, per みや; Step 2 pastes the save's KPI line. Spec kept: the step is never silent.).*
 
 *Protocol version: 3.9 — 2026-10-23 (Phase 2 Step 2 KPI: the high-bar hand entry into main/kpi-tracker.md is replaced by the kpi Feature (domain/kpi/): moments recorded when they happen, competency-tagged, self-audited; Phase 2 lists the ticket rows and adds any missed one; kpi-tracker.md is generated. Spec kept: the skip line, a never-silent step. Changed and named: "default SKIP, rare-by-design, banner moments only" becomes "any appraisal moment with evidence", per みや 2026-10-23 ("take note anything that might help with our KPI or assessment for an increment"); the upward-report row now reads the ledger.).*
 

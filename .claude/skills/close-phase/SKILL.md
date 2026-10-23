@@ -40,6 +40,7 @@ Trigger: "save this quest" · "save quest" · "save the quest" · "save quest <n
 
 1. **Persist first, always.** Write the quest doc and the block the way the quest skill says (`.claude/skills/quest/SKILL.md` → "Vocabulary — save everything": qa_doc section · `## Test data` · active.txt fields), and check both folders (`.claude/auto-memory/feedback_quest_closure_both_folders.md`).
 1b. **Clean up the quest's temp files (2026-10-22 per みや, #285768).** After step 1 is written, run `node lib/quest-cleanup.js <QA> --apply` and paste its `QUEST-CLEANUP:` line. It removes this ticket's TEMP folders, scratchpad drafts and Office junk (`~$*`, `*.bak*`, `*.tmp`) in the Task folder, and LISTS its etanah work worktrees (`E:\Dev\etanah-work\wt-*<num>*`) as kept. A worktree is removed only on みや's yes: `--apply --drop-worktree`. **Banned**: a save reply without the `QUEST-CLEANUP:` line · deleting a worktree he did not say yes to.
+1c. **KPI check (every save, 2026-10-23 per みや).** Item 4 of the quest skill's save list: `node domain/kpi/kpi.js list --ticket <num>`, add any moment since the last save, settle a pending row whose BA verdict is in; paste `KPI: <n> rows · <m> pending — <added CODE | no new moment>`.
 2. **Run the resolver and paste its line:** `node lib/save-quest.js <QA>` → `SAVE-QUEST: <QA> · Redmine = <status> · local = <status> → <VERDICT>`.
 3. **Do what the verdict says, in the same turn:**
 
@@ -113,7 +114,7 @@ Trigger: "save this quest" · "save quest" · "save the quest" · "save quest <n
 1. **Phase 2 emit** (the 5 streamlined steps — `quest/quest-protocol.md` Phase 2, each emitted inline, not just ticked):
    - **Step 1 — Faster-finding** (1-2 lines + the applied artifact).
    - **Step 1b — Fastest-Path Retrospective** (if the quest took >1 wrong turn): write a `## Fastest Path` block into `QA-NNNN.md` — symptom signature · the clean shortest path to root cause · wrong turns removed · reusable recipe (promote a recurring class to `BUG-BESTIARY.md`).
-   - **Step 2 — KPI** → `Skill: kpi` (§Phase 2): `node domain/kpi/kpi.js list --ticket <num>`; add any moment of this quest not yet recorded (self-audit must PASS); none → emit `KPI: skip — no moment on this quest`.
+   - **Step 2 — KPI** — already done by the save that started this pass (Save-quest step 1c); paste that `KPI:` line here. Run it now only if this Phase 2 did not start from a save.
    - **Step 3 — Post-mortem META** (Contributing Factors / Process Notes / Carry Forward) into the archive QA doc.
    - **Step 4 — Refine pass** (skill/protocol refinements; promote the Improvement Checklist).
 2. **🚨 Archive hygiene — run the atomic mover:** `node quest/archive-quest.js QA-<num>` — moves the Task folder → `Archive\`, the active.txt block → `active-archive.txt` (status=archived + task_folder repointed), the project subfolder → `archive\` if present, **AND prunes every video (mp4/mov/… in all subfolders) from the archived Task folder** (Step 1.5 — BA-evidence videos stay on Redmine, re-fetchable via redmine-sync; local copies are pure disk space). Use `-LiteralPath` semantics for `[FAT]`-bracketed folder names (the script handles this). One-time / catch-up sweep of every archived quest: `node quest/archive-quest.js --sweep-videos` (`--dry-run` to preview).
@@ -176,3 +177,5 @@ Acceptance: `bulk.js --debt` prints `0 unharvested` and the boot surfacer shows 
 
 *2026-10-22 — Save-quest step 1b per みや (#285768, "check if you've added into quest save that you will always clean all the temp files"): `lib/quest-cleanup.js <QA> --apply` after the persist step, paste the `QUEST-CLEANUP:` line; worktrees only on his yes. Spec-preservation: steps 1, 2, 3 and the verdict table untouched; additive. Fire + effect check: `node domain/quest-cleanup/eval.js`.*
 *2026-10-23 — per みや (KPI Feature `domain/kpi/`): Phase 2 Step 2 runs the `kpi` skill (list this ticket's rows, add any missed moment, self-audit PASS) instead of hand-appending to `main/kpi-tracker.md`, which is now generated. Spec kept: the skip line when nothing stands out; a step that is never silent. Changed and named: "only-if-significant" becomes "any appraisal moment, one sentence + evidence" (his 2026-10-23 ask: note anything that might help the assessment).*
+
+*2026-10-23 — per みや ("can we actually do this during every single time a quest saves?"): Save-quest step 1c runs the KPI check at every save; Phase 2 Step 2 reuses that line. Spec kept: the step is never silent (the KPI line is pasted). Changed and named: the check moved from Phase 2 to every save.*

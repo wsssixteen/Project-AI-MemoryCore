@@ -94,6 +94,9 @@ const skill = fs.readFileSync(path.join(REPO, '.claude', 'skills', 'kpi', 'SKILL
 check('28 skill runs kpi.js add and the fix loop', /kpi\.js add/.test(skill) && /FAIL/.test(skill) && !/TODO\(forge\)/.test(skill), 'skill not filled');
 const quest = fs.readFileSync(path.join(REPO, '.claude', 'skills', 'quest', 'SKILL.md'), 'utf8');
 check('29 quest workflow invokes the kpi skill', /Skill: kpi/.test(quest), 'quest step missing');
+check('29b every quest save runs the KPI check (save list item 4)', /4\. \*\*KPI check \(every save/.test(quest) && /kpi\.js list --ticket/.test(quest), 'save list item missing');
+const closePhase = fs.readFileSync(path.join(REPO, '.claude', 'skills', 'close-phase', 'SKILL.md'), 'utf8');
+check('29c save-quest step 1c runs it; Phase 2 Step 2 reuses the save line', /1c\. \*\*KPI check \(every save/.test(closePhase) && /Step 2 — KPI\*\* — already done by the save/.test(closePhase), 'close-phase not wired');
 check('30 NUKE-MARKER present', fs.existsSync(path.join(__dirname, 'NUKE-MARKER.md')), 'missing');
 
 // 31-42 pending rows (miya 2026-10-23, #262027: counts only once the BA verifies with no objection)

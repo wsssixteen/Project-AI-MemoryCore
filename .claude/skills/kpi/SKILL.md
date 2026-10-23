@@ -1,6 +1,6 @@
 ---
 name: kpi
-description: Record an appraisal (KPI) moment the day it happens, tagged by competency, with evidence. ALWAYS invoke inside a quest or adhoc the moment one of these happens - a colleague's commit found as the cause, a fix found never shipped / missing from a release, a wrong patch or wrong script caught, cross-team or cross-module help, a latent bug found before any ticket, a PROD root cause proven, our own fix coming back (rework, honest row). Also on "/kpi", "kpi this", "log this for my appraisal", "add to my KPI", "appraisal moment", "for my increment", and at Phase 2 close (close-phase step 2). Writes with domain/kpi/kpi.js, which self-audits every run.
+description: Record an appraisal (KPI) moment the day it happens, tagged by competency, with evidence. ALWAYS invoke inside a quest or adhoc the moment one of these happens - a colleague's commit found as the cause, a fix found never shipped / missing from a release, a wrong patch or wrong script caught, cross-team or cross-module help, a latent bug found before any ticket, a PROD root cause proven, our own fix coming back (rework, honest row). Also on "/kpi", "kpi this", "log this for my appraisal", "add to my KPI", "appraisal moment", "for my increment", and at every quest save ("save this quest", the save after every stop, "save everything"). Writes with domain/kpi/kpi.js, which self-audits every run.
 ---
 
 # kpi — appraisal moments, recorded when they happen
@@ -50,9 +50,9 @@ node domain/kpi/kpi.js pending add --ticket "#NNNNNN" --competency B4 --what "<o
 - Settle it only after reading the live Redmine journal yourself: condition held → `node domain/kpi/kpi.js confirm <id> --evidence "#NNNNNN journal <date>"`; condition failed or the BA objected → `node domain/kpi/kpi.js drop <id> --why "<reason>"`.
 - A pending row older than 30 days raises a WARN in the self-audit.
 
-## Phase 2 (close-phase step 2)
+## Every quest save (quest skill save list item 4 · close-phase Save-quest step 1c)
 
-`node domain/kpi/kpi.js list --ticket <n>` (pending rows show as PENDING: settle them if the BA verdict is in). A moment from this quest that is not there gets added now. None: `KPI: skip — no moment on this quest`.
+`node domain/kpi/kpi.js list --ticket <n>` (pending rows show as PENDING: settle them if the BA verdict is in). A moment since the last save that is not there gets added now. Reply line: `KPI: <n> rows · <m> pending — <added CODE | no new moment>`. Phase 2 pastes the line of the save that started it.
 
 ## Banned
 
