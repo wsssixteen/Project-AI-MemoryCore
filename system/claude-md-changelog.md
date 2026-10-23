@@ -10,6 +10,20 @@
 
 ---
 
+## release-mlk-plp SKILL Phase G · deploy SKILL step 1b · release-prep.js stag-catchup — 2026-10-23 (per みや, #246964)
+
+His words (2026-08-10): *"We need to have this built as well later"* — never built; on 2026-10-23 `mlk/stag-env` sat 21 commits behind release 1.8.4 (slip `asked-build-never-built`).
+
+| Part | Change | Why |
+|---|---|---|
+| `domain/release-mlk-plp/stag-catchup.js` (new, called as `release-prep.js stag-catchup`) | merge `origin/mlk/master` (or the release) into `mlk/stag-env` in the work clone · keep the env common pin when the release common is inside its line, else stop and show both versions + the commits each lacks · stop on any conflict · compile the merged tree · `--push` pushes and reads origin back · `--check` measures only (exit 3 = behind) | the catch-up step itself |
+| `release-prep.js` | `init` refuses while `origin/mlk/stag-env` lacks `origin/mlk/master` (`--stag-behind-ack "<reason>"`) · `merge-to-master` ends with the mandatory next step · arg parser: a bare flag no longer swallows the next `--flag` | the deterministic guard so the step cannot be skipped again |
+| `release-mlk-plp` SKILL | Phase G after Phase F; DON'T #12 names F and G as established steps | home of the step |
+| `deploy` SKILL step 1b | the manual `rev-list` check is replaced by `stag-catchup --check`; the catch-up runs through the script | slip proposal A4 (2026-09-29): show the latest PROD release + missing tickets before a stag-env merge |
+
+- Eval: `domain/release-mlk-plp/eval-stag-catchup.js` 33 fixtures.
+- Spec changes, named: step 1b's "merge master into a fresh copy of the base, then the ticket, push both in one push" becomes "catch-up pushed by the script first, then the ticket merge"; the compile step is kept (inside the script before push). Step 1b's conflict-resolution order is kept for a catch-up that stopped on a conflict; the script never auto-resolves (auto mode refused an auto-resolve of the pin line, and release DON'T #7 bans it).
+
 ## v1.91 — 2026-10-19 (per みや, ticket order by tracker tier)
 
 His words: *"Default priority by ticket type/tracker: Maintenance: eSokongan → Internal Issue (Permanent Fix) → Internal Issue → CR → Team Initiative. Project: PAT/UAT/FAT → QA → Development/Requirement"* · PROD patching ahead of eSOKONGAN · *"Interleave though, QA is same as Internal Issue & CR is the same level as Development/Requirement. I'll be the one to choose based on prioriti semasa and complexity/effort"*.
