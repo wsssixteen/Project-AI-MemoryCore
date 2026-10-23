@@ -12,7 +12,10 @@
   },
   "what_max_chars": 220,
   "coverage_days": 90,
-  "self_names": ["Ahmad Ridhwan Anuar", "Ahmad Ridhwan bin Anuar"],
+  "self_names": [
+    "Ahmad Ridhwan Anuar",
+    "Ahmad Ridhwan bin Anuar"
+  ],
   "evidence_shapes": [
     "\\b(?=[0-9a-f]*\\d)(?=[0-9a-f]*[a-f])[0-9a-f]{7,40}\\b",
     "#\\d{4,7}",
@@ -21,5 +24,6 @@
     "\\.[a-z]{2,5}:\\d+",
     "[\\\\/][^\\s]+\\.(md|java|xhtml|xml|docx|json|js|txt|pdf|jrxml)\\b",
     "https?://\\S+"
-  ]
+  ],
+  "pending_stale_days": 30
 }

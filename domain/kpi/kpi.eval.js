@@ -96,6 +96,38 @@ const quest = fs.readFileSync(path.join(REPO, '.claude', 'skills', 'quest', 'SKI
 check('29 quest workflow invokes the kpi skill', /Skill: kpi/.test(quest), 'quest step missing');
 check('30 NUKE-MARKER present', fs.existsSync(path.join(__dirname, 'NUKE-MARKER.md')), 'missing');
 
+// 31-42 pending rows (miya 2026-10-23, #262027: counts only once the BA verifies with no objection)
+R = fresh();
+const pend = ['pending', 'add', '--ticket', '#262027', '--competency', 'B4', '--what', 'Changed the Tolak salutation to Datuk on our own initiative to match the requirement.', '--evidence', '#262027 journal'];
+r = run(R, ['pending', '--boot']);
+check('31 --boot with no pending row prints nothing', r.code === 0 && r.out.trim() === '', JSON.stringify(r.out));
+r = run(R, pend);
+check('32 pending without --until refused', r.code === 2 && /needs --until/.test(r.out), r.out);
+r = run(R, pend.concat(['--until', 'BA verifies #262027 and no BA journal mentions the salutation']));
+const pid = (r.out.match(/P-262027-B4-\d{8}/) || [''])[0];
+check('33 pending add → PASS with an id', r.code === 0 && !!pid, r.out);
+check('34 pending row is on the page under Pending, not under B4', /## Pending[\s\S]*P-262027-B4/.test(fs.readFileSync(view(R), 'utf8')) && /## B4 — Ownership & Initiative\n\n_No rows yet\._/.test(fs.readFileSync(view(R), 'utf8')), 'page wrong');
+r = run(R, ['pending', '--boot']);
+check('35 --boot prints the pending row, its condition and the two commands', /KPI PENDING \(1\)/.test(r.out) && /counts when: BA verifies/.test(r.out) && /kpi\.js confirm/.test(r.out) && /kpi\.js drop/.test(r.out), r.out);
+check('36 list shows it as PENDING, not as a counted row', /PENDING P-262027/.test(run(R, ['list', '--ticket', '262027']).out) && /0 row\(s\) · 1 pending/.test(run(R, ['list', '--ticket', '262027']).out), 'list wrong');
+r = run(R, ['confirm', 'P-000000-B4-20261023']);
+check('37 confirm of an unknown id refused', r.code === 2 && /no pending row/.test(r.out), r.out);
+r = run(R, ['confirm', pid, '--evidence', '#262027 journal 2026-10-30 verified']);
+check('38 confirm → PASS, row counts under B4, Pending section gone, boot quiet', r.code === 0 && /## B4[\s\S]*confirmed \d{4}-\d{2}-\d{2}/.test(fs.readFileSync(view(R), 'utf8')) && !/## Pending/.test(fs.readFileSync(view(R), 'utf8')) && run(R, ['pending', '--boot']).out.trim() === '', r.out);
+r = run(R, ['drop', pid, '--why', 'late objection']);
+check('39 a second event on the same id refused', r.code === 2 && /already confirmed or dropped/.test(r.out), r.out);
+R = fresh(); r = run(R, pend.concat(['--until', 'BA verifies']));
+const pid2 = (r.out.match(/P-262027-B4-\d{8}/) || [''])[0];
+r = run(R, ['drop', pid2]);
+check('40 drop without --why refused', r.code === 2 && /needs --why/.test(r.out), r.out);
+r = run(R, ['drop', pid2, '--why', 'BA asked to keep Tuan']);
+check('41 drop → PASS, row gone from the page and from boot', r.code === 0 && !/P-262027/.test(fs.readFileSync(view(R), 'utf8')) && run(R, ['pending', '--boot']).out.trim() === '', r.out);
+fs.appendFileSync(ledger(R), JSON.stringify({ kind: 'confirm', id: 'P-999999-B1-20261001', date: '2026-10-01' }) + '\n');
+r = run(R, ['render']);
+check('42 an event for a pending id that does not exist fails the audit', r.code === 1 && /unknown pending id/.test(r.out), r.out);
+const bootHook = path.join(REPO, 'domain', 'kpi-pending', 'kpi-pending.check.hook.js');
+check('43 SessionStart hook calls pending --boot', fs.existsSync(bootHook) && /pending['", ]+--boot/.test(fs.readFileSync(bootHook, 'utf8')), 'hook missing');
+
 const fail = results.filter(x => !x.pass);
 for (const x of results) console.log((x.pass ? 'PASS ' : 'FAIL ') + x.n + (x.pass ? '' : '\n      ' + String(x.d).slice(0, 300)));
 console.log('kpi eval: ' + (results.length - fail.length) + '/' + results.length);

@@ -38,9 +38,21 @@ node domain/kpi/kpi.js add --ticket "#NNNNNN" --competency B4 --what "<one sente
 4. **Self-audit (system-design Rule 16)**: the command ends with `kpi self-audit: PASS|FAIL`. On `REFUSED` or `FAIL`, apply the fix the line names and re-run until PASS, before the reply. A WARN about competencies with no recent row is a hint for the next quest, not a blocker.
 5. In the reply: one line `KPI: <code> recorded — <ticket>`. Nothing more.
 
+## Pending rows (counts only if a later condition holds)
+
+Use when the moment only counts once something happens later, e.g. a change we made on our own initiative that the BA must accept (#262027: Tuan to Datuk, counts if the BA verifies with no mention of it).
+
+```bash
+node domain/kpi/kpi.js pending add --ticket "#NNNNNN" --competency B4 --what "<one sentence>" --evidence "<pointer>" --until "<the condition>"
+```
+
+- Every session start prints each open pending row (`domain/kpi-pending/` SessionStart hook) until it is settled.
+- Settle it only after reading the live Redmine journal yourself: condition held → `node domain/kpi/kpi.js confirm <id> --evidence "#NNNNNN journal <date>"`; condition failed or the BA objected → `node domain/kpi/kpi.js drop <id> --why "<reason>"`.
+- A pending row older than 30 days raises a WARN in the self-audit.
+
 ## Phase 2 (close-phase step 2)
 
-`node domain/kpi/kpi.js list --ticket <n>`. A moment from this quest that is not there gets added now. None: `KPI: skip — no moment on this quest`.
+`node domain/kpi/kpi.js list --ticket <n>` (pending rows show as PENDING: settle them if the BA verdict is in). A moment from this quest that is not there gets added now. None: `KPI: skip — no moment on this quest`.
 
 ## Banned
 

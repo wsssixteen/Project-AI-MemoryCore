@@ -15,6 +15,12 @@
 | C1 | Code Quality & Engineering Practice | 0 | - |
 | C2 | Problem Solving & Production Support | 2 | 2026-10-23 |
 
+## Pending — counts once its condition holds (printed at every session start)
+
+| Id | Date | Ticket | Code | What happened | Counts when |
+|---|---|---|---|---|---|
+| P-262027-B4-20261023 | 2026-10-23 | #262027 | B4 | Changed the Tolak letter salutation from Tuan to Datuk on our own initiative, to match Requirement #237882 and the Lulus template, though the BA did not mark it. | BA verifies #262027 AND no BA journal mentions the salutation change; if the BA objects, drop it |
+
 ## B1 — Technical & Domain Knowledge
 
 | Date | Ticket | What happened | Evidence |

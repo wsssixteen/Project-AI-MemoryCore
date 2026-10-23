@@ -17,6 +17,7 @@ state-scoped: no — one ledger per person; tickets from every state (the ticket
 | Page (generated, people) | `main/kpi-tracker.md` |
 | Eval | `domain/kpi/kpi.eval.js` |
 | Log | `domain/kpi/log.jsonl` |
+| Pending rows + SessionStart reminder | `kpi.js pending add / pending --boot / confirm / drop` · hook `domain/kpi-pending/` |
 | Quest step | `.claude/skills/quest/SKILL.md` Workflow runner table, row "Any phase, the moment a KPI moment happens" · `close-phase` Phase 2 Step 2 · `quest/quest-protocol.md` Phase 2 Step 2 · `verify` Checklist E2 |
 
 A row: `{ date, ticket, competency, what, evidence }`. Competencies (Pymsoft appraisal form 2026): B1 Technical & Domain Knowledge · B2 Quality of Work · B3 Delivery & Planning · B4 Ownership & Initiative · B5 Communication · B6 Teamwork & Collaboration · C1 Code Quality & Engineering Practice · C2 Problem Solving & Production Support. Honest rows count (own rework under B2).
@@ -80,6 +81,32 @@ A row: `{ date, ticket, competency, what, evidence }`. Competencies (Pymsoft app
 | 25 | User says "add the fixes to master" style reversal: "log this as B4" for a wrong code | accepted-risk: the code is his call; the script only refuses codes outside the 8 |
 | 26 | Unknown command / no args | fixture-added: exit 2 with usage (eval 26) |
 
+## Pending rows (added 2026-10-23 per miya, #262027)
+
+His words: "add this into our kpi to note under this ticket IF the ticket gets verified later. Please add this into session start to always check & will only be removed after you confirmed the ticket has been verified and no mention of our particular change on this (meaning it passes)."
+
+| Row kind | Meaning | On the page |
+|---|---|---|
+| (none) | a recorded moment | its competency table |
+| `pending` (id `P-<ticket>-<code>-<yyyymmdd>`, `until`) | counts only once the condition holds | the Pending table; printed at every session start |
+| `confirm` event | the condition held | the row moves into its competency table with "confirmed <date>" |
+| `drop` event (`why`) | the condition failed or the BA objected | the row disappears |
+
+Events are appended, never edited, so the `merge=union` rule stays safe. The self-audit adds: every event points at a real pending id, one event per id, `until` and `why` present, pending older than 30 days = WARN.
+
+| # | Scenario outside the spec (pending) | Verdict |
+|---|---|---|
+| 27 | Session start with no pending row | fixture-added: silent (kpi 31, kpi-pending F2) |
+| 28 | Pending row with no condition | fixture-added: refused (kpi 32) |
+| 29 | Confirm of a wrong id | fixture-added: refused (kpi 37) |
+| 30 | Confirm then a late drop of the same id | fixture-added: refused (kpi 39) |
+| 31 | Drop with no reason | fixture-added: refused (kpi 40) |
+| 32 | Merge brings an event whose pending row is missing | fixture-added: audit FAIL (kpi 42) |
+| 33 | Ledger broken at boot | fixture-added: hook silent, exit 0 (kpi-pending F5) |
+| 34 | Confirming without reading Redmine | accepted-risk: the skill requires reading the live journal first; the evidence field records which journal |
+| 35 | Pending forgotten for weeks | handled: printed every session start + 30-day WARN |
+
 ## Change log
 
 - 2026-10-23 born (forge `new skill kpi`, registry row). Eval 30/30.
+- 2026-10-23 pending rows + `domain/kpi-pending/` SessionStart reminder (forge `new check kpi-pending`). Spec kept: add / list / render / audit and every earlier check unchanged (fixtures 1-30 still green). Eval 43/43, kpi-pending 6/6. First pending row: P-262027-B4-20261023.

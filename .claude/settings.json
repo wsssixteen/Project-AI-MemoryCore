@@ -29,6 +29,10 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\adhoc-lifecycle\\\\adhoc-lifecycle.check.hook.js\""
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\kpi-pending\\\\kpi-pending.check.hook.js\""
           }
         ]
       },
