@@ -18,6 +18,7 @@ function check(n, c, d) { results.push({ n, pass: !!c, d }); }
 // ═══ ADVERSARIAL SCENARIOS — system-design Rule 12 (scenario | verdict) ═══
 const SCENARIOS = [
   ['A shape-1 project (PymTime, DawahMap today) is named', 'fixture-added (E4: the old pointer text, unchanged)'],
+  ['A design asks a person to edit a file (PymTime Phase P, 2026-10-23: a Plan-or-Assist choice written as a line in the adhoc inbox file)', 'fixture-added (E4p shape 1, E1p shape 2: the card carries the rule "a person does everything through the app\'s own page")'],
   ['The same project is named again in the same session', 'fixture-added (E2: one short pointer line, not the card again)'],
   ['A delegated brief names reports\\<name>.md', 'fixture-added (E3: card says "delegated", binding carries the report)'],
   ['A later prompt quotes another session report path (the orchestrator, 2026-10-19)', 'fixture-added (E3c: never binds; only the start brief can)'],
@@ -102,6 +103,7 @@ function age(file, minAgo) { const d = new Date(Date.now() - minAgo * 60000); fs
 let t = tree();
 let r = run(HOOK.prompt, t, { session_id: 's1', prompt: "let's continue Masterline" });
 check('E1 req 2: naming Masterline prints its card: goal, spec rows, hard rules, state, next step, open decisions, last decision, the START.md path', r.status === 0 && /PROJECT CARD/.test(r.out) && /build the reminder app/.test(r.out) && /S2 \| "documents for the engineers"/.test(r.out) && /Blue first, from the logo/.test(r.out) && /0 discovery/.test(r.out) && /Show him the module table/.test(r.out) && /Which modules/.test(r.out) && /Reminder module first/.test(r.out) && r.out.includes(path.join(t.ml, 'START.md')) && r.out.length < 9300, r.out.slice(0, 400));
+check('E1p the shape-2 card carries the people rule', /a person does everything through the app's own page/.test(r.out), r.out.slice(0, 600));
 check('E1b the fire binds the session in the log (card:true, shape 2)', rows(t).some(x => x.action === 'fired' && x.session === 's1' && x.project === 'Masterline' && x.card === true && x.shape === 2));
 r = run(HOOK.prompt, t, { session_id: 's1', prompt: 'masterline again' });
 check('E2 a second mention in the same session (inside the re-arm time) is silent', r.status === 0 && r.out === '', r.out.slice(0, 200));
@@ -124,6 +126,7 @@ check('E3e a start brief naming two reports with no write instruction binds none
 t = tree(); run(HOOK.prompt, t, { session_id: 'd6', prompt: 'Masterline: write reports\\x.md' });
 check('E3f no transcript to prove it is the start brief: not delegated', !rows(t).some(x => x.report));
 t = tree(); r = run(HOOK.prompt, t, { session_id: 's1', prompt: 'continue pymtime' });
+check('E4p RED 2026-10-23: the PymTime pointer carries the people rule (a person acts through the page, files are for machines)', /a person does everything through the app's own page/.test(r.out) && /only for machines/.test(r.out), r.out.slice(0, 600));
 check('E4 a shape-1 project keeps the 2026-10-08 pointer text (no card)', /PymTime is a project with its own folder/.test(r.out) && /READ FIRST: .*PROJECT\.md/.test(r.out) && !/PROJECT CARD/.test(r.out), r.out.slice(0, 200));
 
 // ── Requirement 1: survive compaction mechanically ──

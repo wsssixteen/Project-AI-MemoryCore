@@ -52,6 +52,7 @@ description: The project system — how a personal or outside project (Masterlin
 14. **Decisions**: written to DECISIONS.md the moment they are made, with why and who. Never re-decide a row; a change is a new row that names the old one. The Stop gate blocks a reply that states a decision with no ledger write this turn.
 15. **His words are the record, not the summary.** After a compaction, `history\words.md` and DECISIONS.md win over anything the summary says.
 16. **Every option he must pick from is SHOWN** as a table or a drawing before he is asked (CLAUDE.md 0a).
+17. **A person does everything through the app's own page** (his rule 2026-10-23, every project). A file or an API is only for machines (another AI, a script). No design asks a person to edit a file; a person's choice is a control on the page. Printed in every project card by `project.js` (eval E4p, E1p). *Why*: PymTime Phase P, a colleague's Plan-or-Assist choice was first designed as a line in the adhoc inbox file; his words: "why are they changing it in that file but not through pymtime?"
 
 ## 4. After a compaction (this skill body comes back with it)
 
@@ -95,6 +96,8 @@ Keep every line. Move, never delete: hard rules → START section 3, decisions �
 | Planning before building: interview, spec, tickets | **mattpocock-skills** (`grill-me`, `to-spec`, `to-tickets`, `wayfinder`, `tdd`, `code-review`) | grill-me before a new module; our own quest workflow still owns etanah tickets |
 
 Mechanical, not remembered: hard rule 2 of the START.md template carries the design line into every new project's card; impeccable's own hook runs on UI edits.
+
+*Version 1.3 — 2026-10-23. Rule 17: a person does everything through the app's own page; files are for machines (his answer "Every project", after the PymTime Phase P inbox-file slip). The card prints it for shape 1 and shape 2 (`project.js` PEOPLE_RULE, eval E4p and E1p). Spec preservation: sections 1 to 7 and rules 1 to 16 unchanged; one rule added.*
 
 *Version 1.2 — 2026-10-20. Section 7 Design and build tools (impeccable, diagram-design, hyperframes, REA, mattpocock-skills installed 2026-10-19 on his word; taste-skill, ui-ux-pro-max, awesome-design-md on 2026-10-20); "new project" runs `/impeccable init` for projects with screens; the START.md template carries hard rule 2 (the design line). Applied by the orchestrator from the app-samples session's hand-over patch. Spec preservation: sections 1 to 6 and rules 1 to 16 unchanged; one command cell extended, one section added.*
 

@@ -30,6 +30,7 @@ function contextFor(p) {
     has ? '   READ FIRST: ' + idx : '   ⚠️ its index is MISSING: ' + idx + ' — create it first (shape: .claude/skills/project/SKILL.md).',
     '   It is the index: state now, which file answers which question, hard rules, how to resume. Then open only the file its table names.',
     '   Every bulk change ends with: VERSIONS.md row + PROJECT.md state + ROADMAP.md status, same turn (Domain Expansion checks this with lib/save-rules.js).',
+    P.PEOPLE_RULE,
   ].join('\n') + '\n';
 }
 function pointerFor(p) {
