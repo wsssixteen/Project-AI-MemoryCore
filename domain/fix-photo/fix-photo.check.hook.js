@@ -30,6 +30,11 @@ const ETANAH_RE = new RegExp(PT_PREFIXES + '|\\btugasan\\b|#\\d{6}\\b|QA-\\d{6}'
 const BYPASS_RE = /\[skip-fix-photo:\s*([^\]<>]{3,})\]/i;
 const PHOTO_RE = /FIX-PHOTO:\s*`?([^`\r\n]+?\.(?:png|jpe?g))`?\s*(?:✓|$)/gim;
 const ASK_RE = /\b(fix[- ]?photo|red[- ]?box|kotak merah)\b/i;
+// v3 (2026-10-23, #246964, miya: "install the keyword test result"): miya sharing test screenshots
+//   ("test result(s)", "here test scenario", "here screenshot of test", "please save this") together with
+//   an image in the SAME message = save them into the Task folder now. The next long reply must carry a
+//   valid FIX-PHOTO line, whatever it is about (no hand-back / UI / etanah words needed).
+const TEST_SHARE_RE = /\b(test results?\b|here(?:'s| is)? (?:the )?test scenario|here(?:'s| is)? (?:the )?screenshots? of (?:the )?test|please save (?:this|these|it)\b)/i;
 const HOOK_TEXT_RE = /FIX-PHOTO:|mark\.py|skip-fix-photo|Stop hook/;
 const BRIEF_IMG_RE = /[\\/](?:[01]\. )?Brief[\\/][^\\/]+\.(png|jpe?g|webp|gif|bmp)$/i;
 
@@ -46,8 +51,9 @@ function readTranscript(p) {
 }
 
 function scan(raw) {
-  const out = { assistantTexts: [], hasBaImage: false, asked: false };
+  const out = { assistantTexts: [], hasBaImage: false, asked: false, testShare: false };
   const ask = (t) => { if (typeof t === 'string' && ASK_RE.test(t) && !HOOK_TEXT_RE.test(t)) out.asked = true; };
+  const share = (texts, hasImg) => { if (hasImg && texts.some(t => TEST_SHARE_RE.test(t) && !HOOK_TEXT_RE.test(t))) out.testShare = true; };
   for (const line of raw.split('\n')) {
     if (!line.trim()) continue;
     let obj; try { obj = JSON.parse(line); } catch (_) { continue; }
@@ -55,14 +61,16 @@ function scan(raw) {
     const role = msg.role || obj.type;
     const c = msg.content;
     if (role === 'user') {
-      if (typeof c === 'string') { ask(c); if (c.includes('[Image: source:')) out.hasBaImage = true; continue; }
+      if (typeof c === 'string') { ask(c); if (c.includes('[Image: source:')) { out.hasBaImage = true; share([c], true); } continue; }
       if (!Array.isArray(c)) continue;
+      const texts = []; let img = false;
       for (const b of c) {
         if (!b) continue;
-        if (b.type === 'image') out.hasBaImage = true;
-        if (b.type === 'text') ask(b.text);
-        if (b.type === 'text' && typeof b.text === 'string' && b.text.includes('[Image: source:')) out.hasBaImage = true;
+        if (b.type === 'image') { out.hasBaImage = true; img = true; }
+        if (b.type === 'text') { ask(b.text); if (typeof b.text === 'string') texts.push(b.text); }
+        if (b.type === 'text' && typeof b.text === 'string' && b.text.includes('[Image: source:')) { out.hasBaImage = true; img = true; }
       }
+      share(texts, img);
     } else if (role === 'assistant' && Array.isArray(c)) {
       const texts = [];
       for (const b of c) {
@@ -105,6 +113,17 @@ function blockText(bad) {
   ].filter(Boolean).join('\n') + '\n';
 }
 
+function testShareText(bad) {
+  return [
+    '\u{1F5BC}️ fix-photo: miya shared test screenshots ("test result" / "here test scenario" / "please save this"), but none is saved in the Task folder.',
+    '   Save EACH one into the current cycle folder ("2. Fix" or the "N. Rework" root), named "<n>. <what it shows>.png" (e.g. "1. Before Jana Semula.png").',
+    '   Red box on the changed area when it helps:',
+    '      python domain/fix-photo/mark.py --src "<pasted image>" --dst "<Task folder>\\2. Fix\\<n>. <what it shows>.png" --box "x0,y0,x1,y1"',
+    '   Open each saved file and look at it, then put one line per photo in the reply:  FIX-PHOTO: <full path> ✓',
+    bad.length ? '   Rejected FIX-PHOTO line(s): ' + bad.join(' · ') : '',
+  ].filter(Boolean).join('\n') + '\n';
+}
+
 runHook({ name: 'fix-photo', event: 'Stop' }, (input) => {
   let data = {}; try { data = JSON.parse(input || '{}'); } catch (_) {}
   if (!data.transcript_path) return { fired: false };
@@ -114,6 +133,11 @@ runHook({ name: 'fix-photo', event: 'Stop' }, (input) => {
   const current = s.assistantTexts[s.assistantTexts.length - 1] || '';
   if (current.length < 200) return { fired: false };
   if (BYPASS_RE.test(current)) return { fired: true, bypassed: true, bypassToken: 'skip-fix-photo' };
+  if (s.testShare) {
+    const v = photoVerdict(s.assistantTexts);
+    if (v.ok) return { fired: false };
+    return { fired: true, blocked: true, blockReason: testShareText(v.bad) };
+  }
   if (!HANDBACK_RE.test(current) || !UI_RE.test(current) || !ETANAH_RE.test(current) || !s.hasBaImage || !s.asked) return { fired: false };
   const v = photoVerdict(s.assistantTexts);
   if (v.ok) return { fired: false };
