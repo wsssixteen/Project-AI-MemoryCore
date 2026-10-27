@@ -83,3 +83,13 @@ writing — escalated → mechanical gate built: `domain/attempt-before-blocked-
 unreachable / no config / missing / not set up", STOP — run the real operation this turn, and either it
 succeeds (delete the claim) or quote its actual failure output as the evidence. Enforced by
 `attempt-before-blocked-gate` (Stop hook): a blocked/can't claim with no tool-attempt this turn BLOCKS.
+
+---
+
+## Added 2026-10-28: a "remote tool" fault is tested on the PC itself first
+
+> An app looks blank or unclickable over remote desktop → capture it ON the PC (local GDI screen grab, PrintWindow) BEFORE blaming the remote tool, elevation or settings.
+
+**Why (2026-10-27, RustDesk session)**: Sourcetree and Notepad++ showed blank over RustDesk. I gave graphics leads, then claimed elevation (UIPI) as the cause, all from a research note, with nothing tested on the PC. みや pushed back twice. One local capture settled it: the window was blank on the PC itself, so RustDesk was never the cause; a fresh Notepad++ with DirectWrite off drew the text, so the GPU drawing path (Direct2D/Direct3D) fails on PJNBRidhwan while GDI works. Fix applied per app: Notepad++ `writeTechnologyEngine="0"`, WPF `HKCU\Software\Microsoft\Avalon.Graphics\DisableHWAcceleration` = 1. Why the GPU path fails is not verified (Parsec virtual display adapter or AMD driver state).
+
+**How to apply**: (1) one test on the machine that splits "drawn wrong" from "shown wrong" comes before any cause is named; (2) a researched cause is a lead until a test on his machine confirms it; (3) A/B one setting in a fresh copy (separate settings folder) so his open work is untouched. Note: `library-items/remote-desktop/rustdesk-elevated-app-control.md`.

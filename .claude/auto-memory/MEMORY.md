@@ -11,7 +11,7 @@
 - [reply-mechanics](feedback_commands_never_fenced.md) — one bash block per command, full paths, plain punctuation, show it in chat; 🚨 ticket numbers as plain digits, never #286462 (dead link, cannot copy)
 - [hook-noise](feedback_delta_correction_on_stop_block.md) — Stop block = delta only; hidden bypass tokens; canonical formats only
 - [act-dont-ask](feedback_do_dont_ask_answer_literal.md) — do the safe step, answer literally, fix not reroute, popup questions
-- [verify-before-claim](feedback_verify_before_claim.md) — re-read first, diff real values, DB first, try before "blocked"
+- [verify-before-claim](feedback_verify_before_claim.md) — re-read first, diff real values, DB first, try before "blocked"; app blank over remote desktop = capture on the PC first
 - [show-evidence](feedback_show_evidence_script_or_code.md) — every claim or fix shows a runnable script or the code lines
 - [tickets-from-live-redmine](feedback_esokongan_means_tracker.md) — 🚨 any ticket status = live Redmine only; script timeout → read it in Edge via Claude in Chrome; ledger is never status; a "No folder" session still moves to the MemoryCore folder first
 - [browser](feedback_browser_edge_default.md) — Edge via Claude in Chrome extension; built-in browser banned
