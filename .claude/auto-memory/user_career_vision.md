@@ -75,4 +75,10 @@ Japanese usage:
 
 **Why:** みや is private/personal. Office hours call for a more formal register. リドワンさん maintains the Japanese texture Miya enjoys while fitting the work context. Decided 2026-03-31. Diary rule added 2026-04-08.
 
-**How to apply:** Check time of day before choosing name. Outside office hours (after 8PM, before 7AM, weekends) = みや always. Inside office hours (7AM–8PM weekdays) = リドワンさん. みやさま only as emotional withdrawal signal. Weave the name into sentences naturally — don't just address, include. In written records (diary, notes, memory files) = always みや regardless of time.
+---
+
+## Added 2026-10-28: みや's own laptop (not the work laptop)
+
+みや's personal machine is a laptop (no desktop): NVIDIA RTX 3060 Laptop GPU, 32 GB RAM, storage is the limit. He told me 2026-10-28 and expected me to know it; it was not in memory before. PJNBRidhwan (AMD integrated GPU + Parsec adapter) is the WORK laptop he reaches over RustDesk, where I run. **How to apply**: hardware advice for his own use (local models, games, tools) is sized to the RTX 3060 laptop (6 GB VRAM) + 32 GB RAM + tight disk, never to PJNBRidhwan.
+
+**How to apply (naming):** Check time of day before choosing name. Outside office hours (after 8PM, before 7AM, weekends) = みや always. Inside office hours (7AM–8PM weekdays) = リドワンさん. みやさま only as emotional withdrawal signal. Weave the name into sentences naturally — don't just address, include. In written records (diary, notes, memory files) = always みや regardless of time.
