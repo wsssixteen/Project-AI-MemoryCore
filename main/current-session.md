@@ -1,5 +1,14 @@
 # Current Session
 
+**Last Activity**: 2026-10-28 00:40 — worktree `arabic-command-b8399a` (/arabic: class-along, baris drill + class mode), Domain Expansion.
+
+## Session Recap (2026-10-27 → 28, worktree "arabic-command-b8399a", /arabic)
+- Live class 2026-10-27 walked with miya (Lesson 13 ج Exercises 2-4, page 81 ذهب table, Lesson 14 dialogue). Class closed; **next class starts at Lesson 14 · Exercise 1 (answering questions), pages 83-84**. `save-check` PASS.
+- Class-word fix: فلاح = petani (not peladang); a child session checked every class-vocab row against all recordings and fixed 4 more (فتاة, زميل, درس, نافذة). Data files only (untracked), VERIFY-LOG rows written.
+- Built (miya asked for it here, child session stopped and archived unused): **baris drill mode** (5 class-ayat words; he answers baris + reason number; engine judges both; only class-cited reasons, a `belum` reason never asked) + **class mode** (continue the live class from the class-log stop point, pages mapped to files) + menu of 5 modes, switch by saying a mode name. The 2026-10-27 start-menu merge had never become a commit on main (code sat uncommitted); landed together on main `49cf06b1`, eval 115/115 run in main on real data.
+- DE found: main folder held 127 telemetry conflict-copy shards (6 GB) that `git add -A` staged; `.gitignore` rule only matched a one-digit suffix. Widened to `-miyazaki-NN` / `-PJNBRidhwan-NN`; nothing large committed.
+- Open: teacher's 2 extra plurals of ضعيف (miya to say them) · Lesson 14 ayat not built (baris and latest-class modes have Lesson 13 only) · `lib/diagram-render.js` looks for Playwright on E: (not connected); worked with `DIAGRAM_PLAYWRIGHT` = npm-cache playwright-core.
+
 **Last Activity**: 2026-10-28 00:15 — worktree `rustdesk-software-visibility-e047d5` (RustDesk blank apps), Domain Expansion.
 
 ## Session Recap (2026-10-27 → 28, worktree "rustdesk-software-visibility-e047d5", RustDesk blank apps)
@@ -23,9 +32,3 @@
 - Working-memory cleanup: quest/active.txt 77 → 27 blocks (25 closed tickets via `active-trim.js --apply`, 25 adhocs started before 2026-10-13 archived block-only; Task folders and videos untouched; backups `quest/active.txt.bak_2026-10-27_pre_trim` + `_pre_adhoc_sweep`).
 - Memory-system plan: every memory item consolidated into `main/todo.md` section "🧠 MEMORY SYSTEM UPGRADE" M1-M14 (b7779ffe). The 2026-05-28 "Memory System Audit" session was unarchived but needs miya's workspace trust approval to take messages; its plan file and transcript are gone (M13).
 - Lesson (slip `bloated-reply`, memory `reply-shape` 2026-10-27 block): a multi-session close-out = wait silently, then ONE table Session | Result.
-
-## Session Recap (2026-10-27, worktree "esokongan-quest-sweep-2bce09", 286315 + 286462)
-- 286315 PPTPB Risalat bold: commit `eb108928dc` on `mlk/esokongan/286315`, merged `mlk/int-env`, server test passed, Redmine Resolved to Amani. 20:12 still Resolved, no reply. Quest Phase 1 closed. Standby: noRujukanSuratJT bold (Option A) not built, waits for miya.
-- 286462 PRBB Borang 4C Plot: handed to Reports. 20:12 CRITICAL: Fatin Resolved it to Amani herself; current output follows Requirement #222056 (no Plot option); Plot as "No. Plot" needs a CR. The kak Yati tab in Edge is stale, never submit it. Quest Phase 1 closed.
-- Built: `lib/handover-check.js` (Tool) + `domain/handover-check-gate` (Stop, bundle) after miya's audit of the bad hand-over note (TSO vs BA, guessed Lot/PT rows, bare line numbers); `domain/system-change-title` v2 (every system change gets a `System › kind › parent › name` heading, reply-shape-spec 3i); Pena bans "ye"; ba-names + STATE-FACTS §8 add kak Yati (Reports TL) and Fatin. All on main.
-- Open: planned-release list for 286315; Amani or BA on both tickets; 2 handover-check-gate gaps (stamp check, tab-vs-draft compare) offered, not approved.
