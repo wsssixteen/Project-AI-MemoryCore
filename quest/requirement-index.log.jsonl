@@ -1,3 +1,0 @@
-{"ts":"2026-10-27T07:54:58.048Z","mode":"build","outcome":"FAIL: Redmine 2083 · jsonl 2083 · md 316510","rows":2083,"exit":1,"dur_ms":48970}
-{"ts":"2026-10-27T07:56:02.815Z","mode":"build","outcome":"PASS","rows":2083,"exit":0,"dur_ms":53764}
-{"ts":"2026-10-27T07:56:03.126Z","mode":"ticket","ticket":286315,"source":"Task folder","outcome":"hits","top":220489,"rebuilt":false,"exit":0,"dur_ms":108}
