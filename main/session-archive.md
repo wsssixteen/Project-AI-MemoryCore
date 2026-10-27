@@ -4,6 +4,12 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-27, worktree "surat-tawaran-missing-e1e49c", Perak ADHOC-PRBB-2026-17 + quest rule 6f)
+- **Last Activity**: 2026-10-27 20:15, Domain Expansion; miya archives the session after it.
+- BA relay (LEN): PROD Perak PRBB `PTPK/15/E/PRBB/2025/7` (apl 11291084), PYSTW Penyediaan Surat Tawaran, mita@perak.gov.my: no Surat Tawaran, retry gives NPE (ID Rujukan 3853128). Cause verified on PROD: `UMM_A_PERMIT_LESEN` 126243 KUANTITI_DILULUS 1000, UNIT_KUANTITI_DILULUS_ID null → NPE `PelupusanWordEditorHelperForm.java:3494` (reads the approved unit since 4422003a204, 2025-04-10); writer `PelupusanService.saveMaklumatBayaranPRBB` has the unit setter commented out at `:11294`; 98 PRBB permits share it.
+- Fix ladder: data patch unit 11891 Tan Metrik (`2. Fix\ADHOC-PRBB-2026-17.sql`, ready, NOT sent) · code fix (uncomment :11294 + fallback to getUnitKuantitiDipohon at :3494) pending. **miya deferred the fix-order choice 2026-10-27**; block status=hold, register perak A5 OPEN, Resume Point written. Save audit 30/30 PASS (background agent).
+- Built: quest skill step 6f (code fix → offer a ticket from BA/TSO; `Code-fix route:` line at Phase 0 and Phase 1; basic check, to be refined), landed on main `c78d26bd`.
+
 ## Session Recap (2026-10-27, worktree "esokongan-ticket-selection-cad51f", 246964)
 - Picked 246964 (PSBS Surat Tolak) as the extra ticket while 3 sessions took the eSOKONGAN tickets. Mira had sent it back: staging was rebuilt on 26 Oct from Ammar's `mlk/release/1.8.5` baseline, which lacks the fix (ef49baf78f + 6feb2525c6 are on stag-env only).
 - miya redeployed stag-env. Release 1.8.5 merged into stag-env `cc56a92240` (only the version bump was missing), compile green, pushed. Master stays 1.8.4 until BA passes the 1.8.5 baseline (release skill V8).
@@ -6700,6 +6706,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
