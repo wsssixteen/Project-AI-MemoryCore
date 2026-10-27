@@ -1397,3 +1397,6 @@
 {"ts":"2026-10-27T03:35:09.260Z","category":"commit-message"}
 {"ts":"2026-10-27T05:36:48.687Z","category":"gate-missed-approval"}
 {"ts":"2026-10-27T05:38:30.246Z","category":"branch-state-unexplained"}
+{"ts":"2026-10-27T12:20:58.862Z","category":"ask-back-searchable-fact"}
+{"ts":"2026-10-27T12:23:01.108Z","category":"A1"}
+{"ts":"2026-10-27T12:24:27.640Z","category":"A2"}
