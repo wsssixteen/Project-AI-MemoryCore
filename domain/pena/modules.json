@@ -1,11 +1,17 @@
 {
   "greet": {
     "title": "Greeting and closing",
-    "means": "Open with Salam and the short name of the person the ticket is assigned to right now. Close with Thank you. Nothing after it.",
+    "means": "Open with Salam and the short name of the person the ticket is assigned to right now. Close with one of his five closings, picked by judgement. Nothing after it.",
     "rules": [
       "First line: Salam <short name>, (Redmine) or Hi infra, (infra).",
       "Greet the person who routed the question to us, not the original asker.",
-      "Last line: Thank you. (BA pass note: exactly this, miya 2026-10-09; Thanks is fine on WhatsApp)"
+      "Closing, picked by judgement (miya 2026-10-27, #285768). Default: Thank you.",
+      "Thank you very much. = a large ticket: 3 or more fixes in the note, a PROD patch, a long review or rework, or a ticket that came back more than once.",
+      "Thank you <short name>. (or Thanks <short name>.) = the reader does extra for us: re-tests, re-routes, or is not the usual BA (QA, another team's developer).",
+      "Thanks. = a one-line developer hand-over (please find the fix at ...) or a quick alter note.",
+      "Terima kasih. = the note is written in Malay.",
+      "Out-of-the-norm closing (Thank you in abundance. / Thank you & Godspeed.) = ONLY when the other person started that tone first, e.g. a ticket by Ammar Zakwan. Never as an opener of my own (miya 2026-10-27).",
+      "His closings in 134 Redmine notes (May to Oct 2026): Thank you. 103 · Thanks 16 · Thank you very much 10 · with a name 3 · Terima kasih 2. Size alone does not decide: 17 large notes still end Thank you."
     ],
     "banned": ["Hi <full Redmine name>", "any line after the closing"],
     "check": "greet"
@@ -103,7 +109,7 @@
       "Basically / Actually / so / just, not Ringkasnya / Oleh itu.",
       "A thinking pause is written \"...\" (Kalau nak test kat staging... P_APLIKASI_ID 62405). A line that sums up opens with \"So untuk <x>:\". A table-to-table path is written with \"-->\"."
     ],
-    "banned": ["dihantar", "tidak dapat", "dipaparkan", "Ringkasnya", "Oleh itu", "Maaf atas kekeliruan", "nilai tetap", "Rujuk", "jadual"],
+    "banned": ["dihantar", "tidak dapat", "dipaparkan", "Ringkasnya", "Oleh itu", "Maaf atas kekeliruan", "nilai tetap", "Rujuk", "jadual", "ye"],
     "check": "rojak"
   },
   "hint": {

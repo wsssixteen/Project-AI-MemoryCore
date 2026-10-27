@@ -31,7 +31,9 @@ const BASE_BRANCH = t.baseBranch || 'the trunk of that module in `node lib/state
 const FULL = t.depth === 'full' || t.depth === 'deep' || t.ticketType === 'bug'
 
 // ---- structured-output schemas ----
-const DISCOVERY_SCHEMA = { type: 'object', required: ['symptom', 'ticketType', 'entryContext', 'codebaseRoot', 'baseBranch', 'urusans', 'layerGuess', 'scopeAnchor'], properties: {
+const DISCOVERY_SCHEMA = { type: 'object', required: ['symptom', 'ticketType', 'entryContext', 'codebaseRoot', 'baseBranch', 'urusans', 'layerGuess', 'scopeAnchor', 'specSource', 'requirementMatch'], properties: {
+  specSource: { type: 'string', description: 'the manifest B + B2 lines copied verbatim: who wrote the Description and the latest Issue/Expected list, each with [BA] / [TSO…] / [role unknown]' },
+  requirementMatch: { type: 'string', description: 'the REQUIREMENT-MATCH header + top match lines from quest/requirement-index.js, verbatim' },
   symptom: { type: 'string' }, ticketType: { type: 'string', description: 'bug | enhancement | template | cr' }, entryContext: { type: 'string', description: 'New | Rework | Addition' },
   codebaseRoot: { type: 'string' }, baseBranch: { type: 'string' }, urusans: { type: 'array', items: { type: 'string' } }, tugasans: { type: 'array', items: { type: 'string' } },
   layerGuess: { type: 'string', description: 'template | java | jsf | config | db | flowable' }, scopeAnchor: { type: 'string' }, baProvidedPermohonanId: { type: 'string' }, expected: { type: 'string' }, observed: { type: 'string' } } }
@@ -63,10 +65,12 @@ log(`Discovery for ${t.qa}`)
 const discovery = await agent(`${base}
 
 Read ${PROTO} section "Phase 0 — Accept the Quest" (about line 465, up to the next "### Read-Redmine sub-protocol" heading) for the exact Discovery procedure, then:
-- Read the task folder's "0. Brief/History.txt" (FULL), "Description.txt", "1. <NNN NNN>.txt", and any PNG/PDF in 0. Brief.
+- Read the task folder's "1. Brief/History.txt" (legacy "0. Brief"; FULL), "Description.txt", and any PNG/PDF in the Brief folder.
+- WHO WROTE IT (BA or TSO) — run \`node quest/ticket-load-verify.js ${String(t.qa || '').replace(/^QA-/, '')}\` and copy its B line (Description author + role) and B2 lines (latest Issue / Expected author + role) VERBATIM into specSource. Only a BA-written list is the spec. A TSO text (often the shared account "ITSO Melaka Admin") is a REPORT of what a user asked; a role-unknown name is never called BA. Every "BA says / BA wants" in your output must sit over BA-written text.
+- ORIGINAL REQUIREMENT — run \`node quest/requirement-index.js --ticket ${String(t.qa || '').replace(/^QA-/, '')} --state ${t.state || 'melaka'}\` and copy its REQUIREMENT-MATCH header + top 3 lines VERBATIM into requirementMatch. Read the top match's subject: does the ask on this ticket fit what that Requirement specified for the screen/feature? Add one line "verdict: aligned | extends | contradicts | none found — <why>". A TSO ask that extends or contradicts the requirement is NOT a bug fix: say so in the scope anchor.
 - Classify ticket_type (bug | enhancement | template | cr) and entry context (New | Rework | Addition).
 - Pick codebase_root (etanah-pelupusan for APPS/PELUPUSAN; etanah-awam for AWAM) and base-branch (${BASE_BRANCH}). State: ${STATE}.
-- Extract urusan(s), tugasan(s), the layer guess, the BA-provided permohonan ID (if any), Expected vs Observed, and the scope anchor (BA's LITERAL scope: what is IN + explicit DO-NOT).`,
+- Extract urusan(s), tugasan(s), the layer guess, the permohonan ID given on the ticket (if any), Expected vs Observed, and the scope anchor (the spec owner's LITERAL scope: what is IN + explicit DO-NOT; name the owner and role, e.g. "BA Anis" or "TSO report, no BA list yet").`,
   { ...READ, label: 'discovery', phase: 'Discovery', schema: DISCOVERY_SCHEMA })
 
 // ---- KnowledgeLoad (protocol paragraph "etanah-knowledge tiered load at Phase 0", about line 103) ----
@@ -125,7 +129,7 @@ phase('Synthesize')
 // opus-reason: it weighs every finding against the verdicts and writes the fix-shape and confidence the orchestrator presents
 const synthesis = await agent(`${base}
 
-Synthesize Phase 0 for the live /quest skill, and WRITE the QA-NNN.md investigation sections to ${t.qaDocPath} (mirror the template at .claude/skills/quest/QA-NNN-template.md or an existing QA-NNN.md). Sections: Issue (BA) / Scope incl. blast-radius / Fix-shape hypothesis / Test-data / and — ONLY if genuinely stuck — a single Residual blocker.
+Synthesize Phase 0 for the live /quest skill, and WRITE the QA-NNN.md investigation sections to ${t.qaDocPath} (mirror the template at .claude/skills/quest/QA-NNN-template.md or an existing QA-NNN.md). Sections: Issue (named by its author and role: "Issue (BA <name>)" or "Issue (TSO report)") / Scope incl. blast-radius / Fix-shape hypothesis / Test-data / and — ONLY if genuinely stuck — a single Residual blocker. The Context Loading section carries Discovery's specSource and requirementMatch lines verbatim, under the headings "Spec source" and "Original requirement".
 Inputs:
 - Discovery: ${JSON.stringify(discovery)}
 - Knowledge + analogs: ${JSON.stringify(knowledge)}

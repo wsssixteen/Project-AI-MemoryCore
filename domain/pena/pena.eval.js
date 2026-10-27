@@ -145,6 +145,16 @@ check('45 a check without the proven module does not run the scan', r.status ===
 r = run(['check', '--profile', 'redmine-ba-pass', '--file', draft('v6.txt', BA('Something in the stamp is wrong for someone.'))]);
 check('46 "something" / "someone" are not flagged (whole words only)', r.status === 0, r.stdout);
 
+// --- closing picked by judgement (2026-10-27, #285768) ---
+const CL = (closing) => ['Salam Amani,', '', 'Have deployed fixes to internal. Please help to verify.', '', closing].join('\n');
+const okClosings = ['Thank you.', 'Thank you very much.', 'Thank you Amani.', 'Thanks.', 'Thanks Amirul.', 'Terima kasih.'];
+check('47 each of his five closings passes greet', okClosings.every((c, i) => run(['check', '--module', 'greet', '--file', draft(`c${i}.txt`, CL(c))]).status === 0));
+r = run(['check', '--module', 'greet', '--file', draft('c9.txt', CL('Regards.'))]);
+check('48 a closing he never uses is caught', r.status === 1 && has(r, 'greet'), r.stdout);
+r = run(['check', '--module', 'greet', '--file', draft('c10.txt', CL('thank you all the very best'))]);
+check('49 a closing sentence with extra words is caught', r.status === 1 && has(r, 'greet'), r.stdout);
+check('50 greet rules name the default and the large-ticket closing', modules.greet.rules.some((x) => /Default: Thank you\./.test(x)) && modules.greet.rules.some((x) => /^Thank you very much\. = a large ticket/.test(x)));
+
 const failed = results.filter((x) => !x.pass);
 for (const x of results) console.log((x.pass ? 'PASS ' : 'FAIL ') + x.n + (x.pass ? '' : '\n      ' + String(x.d).slice(0, 400)));
 console.log('\npena eval: ' + (results.length - failed.length) + '/' + results.length);

@@ -426,6 +426,15 @@
             "command": "node \"${CLAUDE_PROJECT_DIR}\\domain\\spawn-task-folder-guard\\spawn-task-folder-guard.check.hook.js\""
           }
         ]
+      },
+      {
+        "matcher": "mcp__claude-in-chrome__file_upload",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}\\\\domain\\\\redmine-upload-path\\\\redmine-upload-path.check.hook.js\""
+          }
+        ]
       }
     ],
     "Stop": [

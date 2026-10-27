@@ -165,12 +165,15 @@ check('F48 R8 bypass token → pass', silent(r), 'exit=' + r.status);
 // F60-F66: version direction at the commit moment (2026-10-15, #282303 replay)
 const VD = require(path.join(__dirname, 'version-direction.js'));
 check('F60 replay: "Up common" for 1.10.5-MLK -> 1.7.23 patch → BLOCK', !VD.checkSubject('Ref #282303 - Up common to 1.7.23-MLK.beta.patch.280808.1', '1.10.5-MLK', '1.7.23-MLK.beta.patch.280808.1').ok, '');
-check('F61 "Change common ... for testing" on a lower version → pass', VD.checkSubject('Ref #282303 - Change common to 1.7.23-MLK.beta.patch.280808.1 for testing', '1.10.5-MLK', '1.7.23-MLK.beta.patch.280808.1').ok, '');
-check('F62 real upgrade "Up common" 1.10.1 -> 1.10.3 → pass', VD.checkSubject('Ref #283286 - Up common to 1.10.3-MLK.beta.patch', '1.10.1-MLK.beta.patch3', '1.10.3-MLK.beta.patch').ok, '');
+check('F61 beta/patch target needs "Verify common <ver>" (2026-10-27 #285768): "Change ... for testing" → BLOCK', !VD.checkSubject('Ref #282303 - Change common to 1.7.23-MLK.beta.patch.280808.1 for testing', '1.10.5-MLK', '1.7.23-MLK.beta.patch.280808.1').ok, '');
+check('F62 "Up common" to a beta patch, even when higher → BLOCK', !VD.checkSubject('Ref #283286 - Up common to 1.10.3-MLK.beta.patch', '1.10.1-MLK.beta.patch3', '1.10.3-MLK.beta.patch').ok, '');
 check('F63 "Revert common to 1.10.5-MLK" (going up after a test) → pass', VD.checkSubject('Ref #282303 - Revert common to 1.10.5-MLK', '1.7.23-MLK.beta.patch.280808.1', '1.10.5-MLK').ok, '');
 check('F64 side line, same number, "Bump" → BLOCK', !VD.checkSubject('Ref #111111 - Bump common to 1.10.5-MLK.beta.patch2', '1.10.5-MLK', '1.10.5-MLK.beta.patch2').ok, '');
 check('F65 lower version with no change verb → BLOCK', !VD.checkSubject('Ref #111111 - common 1.7.5-MLK', '1.10.5-MLK', '1.7.5-MLK').ok, '');
-check('F66 block text names the version move and the replacement subject', /LOWER version \(1\.10\.5-MLK -> 1\.7\.23-MLK\.beta\.patch\.280808\.1\)[\s\S]*Change common to 1\.7\.23-MLK\.beta\.patch\.280808\.1 for testing/.test(VD.checkSubject('Ref #282303 - Up common to 1.7.23-MLK.beta.patch.280808.1', '1.10.5-MLK', '1.7.23-MLK.beta.patch.280808.1').message || ''), '');
+check('F66 block text names the Verify subject', /Verify common 1\.7\.23-MLK\.beta\.patch\.280808\.1/.test(VD.checkSubject('Ref #282303 - Up common to 1.7.23-MLK.beta.patch.280808.1', '1.10.5-MLK', '1.7.23-MLK.beta.patch.280808.1').message || ''), '');
+check('F67 replay #285768: "Verify common 1.10.17-MLK.beta.patch1" → pass', VD.checkSubject('Ref #285768 - Verify common 1.10.17-MLK.beta.patch1', '1.10.5-MLK', '1.10.17-MLK.beta.patch1').ok, '');
+check('F68 replay #285768: "Up common to 1.10.17-MLK.beta.patch1" → BLOCK', !VD.checkSubject('Ref #285768 - Up common to 1.10.17-MLK.beta.patch1', '1.10.5-MLK', '1.10.17-MLK.beta.patch1').ok, '');
+check('F69 release version still uses Up / Revert: "Up common to 1.10.8-MLK" → pass', VD.checkSubject('Ref #246964 - Up common to 1.10.8-MLK', '1.10.3-MLK.beta.patch5', '1.10.8-MLK').ok, '');
 check('F67 subject read from a git -C commit -m command', VD.subjectFromCommand('git -C "E:\\x" commit -q -m "Ref #282303 - Up common to 1.7.23"') === 'Ref #282303 - Up common to 1.7.23', '');
 
 let failed = 0;
