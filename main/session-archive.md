@@ -4,6 +4,14 @@
 > Rotated out by `core/session-trim.js` so working memory stays under the
 > 500-line limit in `main/session-format.md:57`. Newest first. Nothing is ever deleted.
 
+## Session Recap (2026-10-27, worktree "melaka-prod-adhoc-permohonan-f52ca5", Melaka adhoc day + end-of-day close-out)
+- ADHOC-PT-2026-15 (PROD PT `PTMLK/02/L/PT/2026/9` at PRMMKNPDT, advised alter to KKMMKN): saved, status hold + archive_hold, waits BA confirmation or a Redmine ticket (promote with `adhoc-lifecycle.js promote --row A75 --ticket QA-<n>`).
+- 264355: deployed AWAM fix `mlk/qa/264355v2` (Awam) is the whole ticket, BA Mira Verified 2026-10-27; Pelupusan `mlk/qa/264355` (Pelupusan) notifikasi stays HELD by miya since 2026-10-01, do NOT merge. Built `lib/quest-branches.js` (+eval 8/8) and quest save list item 5 / close-phase 1d "Branches table" (2fc2c809); ticket-close-block labels each branch (Awam)/(Pelupusan).
+- End-of-day close-out for miya: Sweep, Extra tickets, Tickets ran DE and are ARCHIVED. Requirement Documentation (30-ticket blind test decision; `.git/worktrees/base2fc` prune Permission denied) and Surat Tawaran (Perak ADHOC-PRBB-2026-17 fix order) still NEED MIYA and stay open. Excluded by miya: RustDesk, PymTime, 286650 (+ its audit child), System Upgrade 23/9.
+- Working-memory cleanup: quest/active.txt 77 → 27 blocks (25 closed tickets via `active-trim.js --apply`, 25 adhocs started before 2026-10-13 archived block-only; Task folders and videos untouched; backups `quest/active.txt.bak_2026-10-27_pre_trim` + `_pre_adhoc_sweep`).
+- Memory-system plan: every memory item consolidated into `main/todo.md` section "🧠 MEMORY SYSTEM UPGRADE" M1-M14 (b7779ffe). The 2026-05-28 "Memory System Audit" session was unarchived but needs miya's workspace trust approval to take messages; its plan file and transcript are gone (M13).
+- Lesson (slip `bloated-reply`, memory `reply-shape` 2026-10-27 block): a multi-session close-out = wait silently, then ONE table Session | Result.
+
 ## Session Recap (2026-10-27, worktree "esokongan-quest-sweep-2bce09", 286315 + 286462)
 - 286315 PPTPB Risalat bold: commit `eb108928dc` on `mlk/esokongan/286315`, merged `mlk/int-env`, server test passed, Redmine Resolved to Amani. 20:12 still Resolved, no reply. Quest Phase 1 closed. Standby: noRujukanSuratJT bold (Option A) not built, waits for miya.
 - 286462 PRBB Borang 4C Plot: handed to Reports. 20:12 CRITICAL: Fatin Resolved it to Amani herself; current output follows Requirement #222056 (no Plot option); Plot as "No. Plot" needs a CR. The kak Yati tab in Edge is stale, never submit it. Quest Phase 1 closed.
@@ -6712,6 +6720,7 @@ mlit = PRIMARY (`etanahDS` bare name) · stg2 = `etanahDS2` · trn = `etanahDS3`
 **Prev activity**: 2026-07-24 17:42 — Baseline 1.0.12 prepared + pushed (`b874b4e2b1`, one merge #270916 covering #272302); awaiting みや's build/deploy + the V6b SHA.
 
 **Prev activity**: 2026-07-24 00:50 — retrieved 3 new eSOKONGAN tickets (#271985 MLPS · #271918 PT warganegara · #272181 PT popup) + quested each to Rubric via 1 Opus familiar; qa_docs written, active.txt enriched, ranked. NEXT SESSION = **QA-271985** (my rec — ownable pelupusan Java fix; run 3 verify SELECTs → Apply additive fallbacks).
+
 
 
 
