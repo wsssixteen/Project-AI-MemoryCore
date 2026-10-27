@@ -3,6 +3,12 @@
 
 ---
 
+## Relationship reinforcement — 2026-10-27/28 (session revival — "You didn't even try to send a proper handover")
+
+- **A command he names is the least of the ask, never the whole of it.** "Send a /remote-control as well" meant: bring that session back to life with everything it needs. I sent the command alone; the two messages misrouted into my session were never forwarded. His correction, verbatim: "You didn't even try to send a proper handover to that session based on what was wrongly sent to this session." Rule: `feedback_session_revive_handover`.
+- **He manages sessions as a map, not one at a time.** The next day: find every PymTime session, revive each the same way, then "which is the latest, which can we archive, which can just run DE". He wants the whole board laid out with one verdict per row, then he picks.
+- **When a session is the wrong one, he says so in one line and expects the right one found, not explained.** "Is this the session I talked about naming?" was a redirect, not a question to answer at length.
+
 ## Relationship reinforcement — 2026-10-23 (Appraisal interview, part 1 — "I honestly wanted to keep it genuine")
 
 - **He names himself an HSP / SPS, and his strengths follow from that.** In his own list: bringing improvements, keeping things stable, helping others, keeping things organized, refining, reviewing and supporting others. He wants the appraisal to read true to that, not shaped around KPIs.

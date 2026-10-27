@@ -1,5 +1,24 @@
 # Current Session
 
+**Last Activity**: 2026-10-28 01:24 — session "PymTime attendance scheduler planning" (main checkout, born 2026-08-26, the September PymTime session; reopened 2026-10-27 by mistake), Domain Expansion, then archive.
+
+## Session Recap (2026-10-27 → 28, "PymTime attendance scheduler planning", session revival)
+- Reopened by mistake: he took this for the session-naming session. Found the real one ("System Upgrade 23/9/2026"), unarchived it, sent "/remote-control", then on his correction the full handover of the two messages misrouted here (2026-10-27 08:57 "/remote-control" from the 286650 session; 08:58 the weekly-plan relay from the "Protime weekly plan" bridge). Rule written: `.claude/auto-memory/feedback_session_revive_handover.md` + index line; slip `handover` logged.
+- 2026-10-28: found the 5 other PymTime / ProTime sessions; handover + "/remote-control" sent to each: 4 delivered ("PymTime password authentication failure", "Protime weekly plan changes", "Protime scheduler automation", "Routines scheduler and Weekly Planning priorities"); "Protime weekly plan" unarchived but blocked by a workspace trust prompt (his click). He picked "PymTime password authentication failure" for phase 2 (its reply: the weekly plan is ROADMAP Phase P, D11 decided 2026-10-23 = inside v18).
+- Archive verdict given: weekly-plan-changes, scheduler-automation, weekly-plan = clean (0 commits off main), can run DE; routines-scheduler has 2 commits of 2026-10-05 (plan order by tracker) not on main, superseded by main's `563ee4e2` tracker-tier order; he rules keep or drop.
+- PymTime state unchanged: v17, HEAD `a66843b`, 4 commits after v16 unpushed; no build here (his 2026-09-23 rule). v16 zip stays unsent.
+- DE found the shared main index holding 377 staged OneDrive conflict copies (127 telemetry shards = 6 GB); unstaged before the commit, nothing large committed.
+- Nothing pending in this session; archive after DE.
+
+
+**Last Activity**: 2026-10-28 01:25 — worktree `ticket-286650-quest-188daf` (eSOKONGAN 286650, PROD SPI Dokumen Verifikasi NPE), Domain Expansion, then archived.
+
+## Session Recap (2026-10-27 → 28, worktree "ticket-286650-quest-188daf", 286650)
+- 286650: Phase 0 → Rubric + independent audit. Crash is in etanah-pendaftaran (`populateInfo:1546`): after KP "Semak Semula", `nextUrusan` is empty; only crashes since the pendaftaran build of 14/10 (two earlier empty cases did not crash). Handed to Fathimah (Pendaftaran) on Redmine 2026-10-27; block now `status=delegated`. We set % to 50; miya: leave it.
+- Built (landed on main via `086ac2cd` → land-on-main, eval 48/48): quest-start-claim sets % done only when the ticket Module is Pelupusan/Awam; quest SKILL hand-over % rule + automatic claim audit (`CLAIM-AUDIT:` line) + BPMN step points to the MLIT modeler as newest design; explain-diagram no Claude fonts + padding; redmine-sync journal fetch retries 3x and never writes an empty History.txt. FLOWABLE-KNOWLEDGE diagnose step 5 (latest model ≠ deployed).
+- ProTime 27/10 night run: 261986 removed correctly (only one turn named it, a session report; nothing worked). Left off the plan.
+- Open: "system changes run on the highest model" rule not written into CLAUDE.md · child session quest-audit-fixes waits on miya's answer about where system changes run · Phase 0 audit of all Melaka tickets not started.
+
 **Last Activity**: 2026-10-28 01:05 — session "System Upgrade 23/9/2026" (born 2026-09-23 in worktree `session-naming-format-b88025`, revived 2026-10-27 by a PymTime handover), Domain Expansion, then archived.
 
 ## Session Recap (2026-09-23 → 2026-10-28, "System Upgrade 23/9/2026", session naming)
@@ -18,17 +37,3 @@
 - Open: teacher's 2 extra plurals of ضعيف (miya to say them) · Lesson 14 ayat not built (baris and latest-class modes have Lesson 13 only) · `lib/diagram-render.js` looks for Playwright on E: (not connected); worked with `DIAGRAM_PLAYWRIGHT` = npm-cache playwright-core.
 
 **Last Activity**: 2026-10-28 00:15 — worktree `rustdesk-software-visibility-e047d5` (RustDesk blank apps), Domain Expansion.
-
-## Session Recap (2026-10-27 → 28, worktree "rustdesk-software-visibility-e047d5", RustDesk blank apps)
-- Symptom: Sourcetree and Notepad++ blank or unclickable over RustDesk on PJNBRidhwan. Proven: blank on the PC itself (local GDI capture + PrintWindow), so not RustDesk; GPU drawing path (Direct2D/Direct3D) fails, GDI works (Notepad++ DirectWrite A/B in a fresh copy).
-- Applied (permanent, per app): Notepad++ `writeTechnologyEngine="0"` (backup `config.xml.bak-directwrite`); WPF `HKCU\Software\Microsoft\Avalon.Graphics\DisableHWAcceleration` = 1. NOT tested on screen yet: miya reopens both apps and reports.
-- Open: why the GPU path fails (leads: Parsec Virtual Display Adapter 0.45, AMD driver 31.0.21921.1000). Note `library-items/remote-desktop/rustdesk-elevated-app-control.md`. Slip assume-not-verify logged.
-**Last Activity**: 2026-10-27 20:14 — session `esokongan-ticket-selection-cad51f` (246964 Verified by BA; 261986 briefed, fix not started), closed by its own Domain Expansion.
-
-**Last Activity**: 2026-10-21 16:40 — session `vibrant-solomon-cd24c1` (#285871 Minit Bebas Tolak Ringkas, from ADHOC-PT-2026-13), Phase 1 closed, closed by its own Domain Expansion (bullet below).
-
-- **SESSION vibrant-solomon-cd24c1 (#285871), 2026-10-21 10:27 → 16:40.** BA Mira opened Internal Issue #285871 for yesterday's adhoc ADHOC-PT-2026-13 (A69 promoted → TICKETED). Full quest re-run: one sonnet adversarial review found 2 gaps in the adhoc fix: B1 PPD → PTNH path (no KPPD Semakan; 3 PROD Pengesahan rows) left an empty KPPD section; B2 Minit Bebas made before deploy lost both sign blocks (fill list from the classpath template, `TemplateConfig.readAllContentControl():747`). Fixed in `PelupusanTemplateUtil`: `isPerakuanMinitBebasTanpaSemakanKppd` (wrapper `blokSemakanMinitBebasKPPD` removed at PMB unless previous tugasan = SMB by KPPD) + `addMinitBebasKppdTagLama` (old docs keep old tags). Offline doc-sim 4 flows PASS. Scope check: only TemplateMinitBebasKPPD.docx locked the sentence. Commit 2026-10-21 14:52 `66422b3ddf` on `mlk/internal-issues/285871` (+56/0, compile green), merged `mlk/int-env` 14:53 `e30e4206cb`. miya deployed + tested internal PLPS/2026/48; screenshot `2. Fix\1. Ayat boleh kemaskini.png`; Redmine Resolved to Mira. Quest Phase 1 closed (archive waits Redmine Closed). Wrong-fix row 1. Open: planned-release list; staging not merged; optional hide outer box label; ADHOC-PT-2026-13 archive save (brief-first, background). Slip `reask/verbose` (commit subject described the effect).
-**Last Activity**: 2026-10-22 19:00 — PymTime roadmap phase 1 (design) DONE: A with a left rail, every pick in DESIGN.md · new Phase P (the ProTime weekly plan moves into PymTime, handover from the ProTime plan session 2026-10-20) · its architecture explained to miya, his decisions next
-**Last Activity**: 2026-10-27 20:15 — worktree `esokongan-quest-sweep-2bce09` (286315 + 286462), Domain Expansion.
-
-**Last Activity**: 2026-10-27 21:30 — worktree `melaka-prod-adhoc-permohonan-f52ca5` (Melaka adhoc day session), Domain Expansion.
